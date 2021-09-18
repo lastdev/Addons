@@ -1,10 +1,14 @@
-local __exports = LibStub:NewLibrary("ovale/ui/Score", 90103)
+local __exports = LibStub:NewLibrary("ovale/ui/Score", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local __Ovale = LibStub:GetLibrary("ovale/Ovale")
-local messagePrefix = __Ovale.messagePrefix
-local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
-local aceSerializer = LibStub:GetLibrary("AceSerializer-3.0", true)
+local __imports = {}
+__imports.__Ovale = LibStub:GetLibrary("ovale/Ovale")
+__imports.messagePrefix = __imports.__Ovale.messagePrefix
+__imports.aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+__imports.aceSerializer = LibStub:GetLibrary("AceSerializer-3.0", true)
+local messagePrefix = __imports.messagePrefix
+local aceEvent = __imports.aceEvent
+local aceSerializer = __imports.aceSerializer
 local pairs = pairs
 local IsInGroup = IsInGroup
 local SendAddonMessage = SendAddonMessage

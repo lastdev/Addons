@@ -1,9 +1,10 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="GuildMembers.lua"></Script>
 
-	<Frame parentKey="Members" parent="AltoholicTabGuild" inherits="AltoDataPanelTemplate">
+	<Frame parentKey="Members" hidden="true">
+		<Size x="615" y="306" />
 		<Frames>
-			<ScrollFrame parentKey="ScrollFrame" inherits="AltoBaseScrollFrameTemplate">
+			<ScrollFrame parentKey="ScrollFrame" inherits="AddonFactory_BaseScrollFrameTemplate">
 				<Scripts>
 					<OnVerticalScroll>
 						local parent = self:GetParent()
@@ -11,7 +12,7 @@
 					</OnVerticalScroll>
 				</Scripts>
 				<KeyValues>
-					<KeyValue key="numRows" value="14" type="number" />
+					<KeyValue key="numRows" value="30" type="number" />
 					<KeyValue key="rowHeight" value="18" type="number" />
 					<KeyValue key="rowTemplate" value="AltoGuildMemberRowTemplate" />
 				</KeyValues>
@@ -20,7 +21,7 @@
 			<Frame parentKey="Equipment">
 				<Size x="170" y="306" />
 				<Anchors>
-					<Anchor point="TOPLEFT" x="440" y="0" />
+					<Anchor point="TOPLEFT" x="465" y="0" />
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
@@ -28,6 +29,12 @@
 							<Size x="170" />
 							<Anchors>
 								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT" x="0" y="20" />
+							</Anchors>
+						</FontString>
+						<FontString parentKey="Info" inherits="GameFontNormal" justifyH="Center">
+							<Size x="150" />
+							<Anchors>
+								<Anchor point="TOPLEFT" relativeKey="$parent.Name" relativePoint="BOTTOMLEFT" x="10" y="-20" />
 							</Anchors>
 						</FontString>
 					</Layer>
@@ -135,14 +142,14 @@
 				</Frames>
 				<Scripts>
 					<OnLoad>
-						Altoholic:BindViewToController(self, "AltoholicUI.GuildMemberEquipment")
+						Altoholic:BindViewToController(self, "AltoholicUI.TabGuild.Members.Equipment")
 					</OnLoad>
 				</Scripts>
 			</Frame>
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:BindViewToController(self, "AltoholicUI.GuildMembers")
+				Altoholic:BindViewToController(self, "AltoholicUI.TabGuild.Members")
 			</OnLoad>
 		</Scripts>
 	</Frame>

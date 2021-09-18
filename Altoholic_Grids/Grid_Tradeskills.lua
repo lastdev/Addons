@@ -3,10 +3,13 @@ local addon = _G[addonName]
 local colors = addon.Colors
 local icons = addon.Icons
 
+local MVC = LibStub("LibMVC-1.0")
+local Options = MVC:GetService("AltoholicUI.Options")
+
 local LCI = LibStub("LibCraftInfo-1.0")
 local LCL = LibStub("LibCraftLevels-1.0")
 
-local ICON_QUESTIONMARK = "Interface\\RaidFrame\\ReadyCheck-Waiting"
+local tab = AltoholicFrame.TabGrids
 
 local xPacks = {
 	EXPANSION_NAME0,	-- "Classic"
@@ -23,65 +26,15 @@ local xPacks = {
 local OPTION_XPACK = "UI.Tabs.Grids.Tradeskills.CurrentXPack"
 local OPTION_TRADESKILL = "UI.Tabs.Grids.Tradeskills.CurrentTradeSkill"
 
-local currentDDMText
 local currentItemID
 local currentList
-local dropDownFrame
-
-local function OnXPackChange(self)
-	local currentXPack = self.value
-	
-	addon:SetOption(OPTION_XPACK, currentXPack)
-
-	AltoholicTabGrids:SetViewDDMText(xPacks[currentXPack])
-	AltoholicTabGrids:Update()
-end
-
-local function OnTradeSkillChange(self)
-	dropDownFrame:Close()
-	addon:SetOption(OPTION_TRADESKILL, self.value)
-	AltoholicTabGrids:Update()
-end
-
-local function DropDown_Initialize(frame, level)
-
-	if not level then return end
-
-	local tradeskills = addon.TradeSkills.spellIDs
-	local currentXPack = addon:GetOption(OPTION_XPACK)
-	local currentTradeSkill = addon:GetOption(OPTION_TRADESKILL)
-	
-	if level == 1 then
-		frame:AddCategoryButton(PRIMARY_SKILLS, 1, level)
-		frame:AddCategoryButton(SECONDARY_SKILLS, 2, level)
-		frame:AddTitle()
-		
-		-- XPack Selection
-		for i, xpack in pairs(xPacks) do
-			frame:AddButton(xpack, i, OnXPackChange, nil, (currentXPack == i))
-		end
-		frame:AddCloseMenu()
-	
-	elseif level == 2 then
-		local spell, icon, _
-		local firstSecondarySkill = addon.TradeSkills.firstSecondarySkillIndex
-	
-		if frame:GetCurrentOpenMenuValue() == 1 then				-- Primary professions
-			for i = 1, (firstSecondarySkill - 1) do
-				spell, _, icon = GetSpellInfo(tradeskills[i])
-				frame:AddButton(spell, i, OnTradeSkillChange, icon, (currentTradeSkill == i), level)
-			end
-		
-		elseif frame:GetCurrentOpenMenuValue() == 2 then		-- Secondary professions
-			for i = firstSecondarySkill, #tradeskills do
-				spell, _, icon = GetSpellInfo(tradeskills[i])
-				frame:AddButton(spell, i, OnTradeSkillChange, icon, (currentTradeSkill == i), level)
-			end
-		end
-	end
-end
+local currentProfession
+local currentTexture
+local view
+local isViewValid
 
 local function SortByCraftLevel(a, b)
+	
 	local o1, y1, g1, gr1 = LCL:GetCraftLevels(a)	-- get color level : orange, yellow, green, grey
 	local o2, y2, g2, gr2 = LCL:GetCraftLevels(b)
 	
@@ -121,25 +74,39 @@ local function SortByCraftLevel(a, b)
 	return a < b
 end
 
-local callbacks = {
+local function BuildView()
+	local tradeskills = addon.TradeSkills.spellIDs
+	local currentXPack = Options.Get(OPTION_XPACK)
+	local currentTradeSkill = Options.Get(OPTION_TRADESKILL)
+			
+	view = LCI:GetProfessionCraftList(tradeskills[currentTradeSkill], currentXPack)
+	if not view.isSorted then
+		table.sort(view, SortByCraftLevel)
+		view.isSorted = true
+	end
+	
+	currentProfession = GetSpellInfo(tradeskills[currentTradeSkill])
+	isViewValid = true
+end
+
+tab:RegisterGrid(7, {
+	InvalidateView = function()
+		isViewValid = nil
+	end,
 	OnUpdate = function() 
-			local tradeskills = addon.TradeSkills.spellIDs
-			local currentXPack = addon:GetOption(OPTION_XPACK)
-			local currentTradeSkill = addon:GetOption(OPTION_TRADESKILL)
+			if isViewValid then return end
 			
-			currentList = LCI:GetProfessionCraftList(tradeskills[currentTradeSkill], currentXPack)
-			if not currentList.isSorted then
-				table.sort(currentList, SortByCraftLevel)
-				currentList.isSorted = true
-			end
-			
-			local prof = GetSpellInfo(tradeskills[currentTradeSkill])
-			AltoholicTabGrids:SetStatus(format("%s / %s", colors.green..prof, colors.white .. xPacks[currentXPack]))
+			BuildView()			
+	
+			local currentXPack = Options.Get(OPTION_XPACK)
+			tab:SetStatus(format("%s%s|r / %s%s|r / %s%s", 
+				colors.white, TRADESKILLS, 
+				colors.white, xPacks[currentXPack], 
+				colors.green, currentProfession))
 		end,
-	OnUpdateComplete = function() end,
-	GetSize = function() return #currentList end,
+	GetSize = function() return #view end,
 	RowSetup = function(self, rowFrame, dataRowID)
-			local spellID = currentList[dataRowID]
+			local spellID = view[dataRowID]
 			local itemName = GetSpellInfo(spellID)
 			local text
 			
@@ -149,25 +116,25 @@ local callbacks = {
 			end
 			
 			currentItemID = DataStore:GetCraftResultItem(spellID)
-			local orange, yellow, green, grey = LCL:GetCraftLevels(spellID)
+			-- local orange, yellow, green, grey = LCL:GetCraftLevels(spellID)
+			
+			currentTexture = GetItemIcon(currentItemID) or icons.questionMark
 			
 			if orange then
-				text = format("%s\n%s %s %s %s",
-					colors.white..itemName, 
-					-- colors.white..spellID, 
-					colors.recipeOrange..orange, 
-					colors.yellow..yellow, 
-					colors.recipeGreen..green, 
-					colors.recipeGrey..grey )
+				text = format("%s%s\n%s%s %s%s %s%s %s%s",
+					colors.white, itemName, 
+					-- colors.white, spellID, 
+					colors.recipeOrange, orange, 
+					colors.yellow, yellow, 
+					colors.recipeGreen, green, 
+					colors.recipeGrey, grey )
 			end
 			
-			text = text or format("%s", colors.white..itemName)
+			text = text or format("%s%s", colors.white, itemName)
 
 			rowFrame.Name.Text:SetText(text)
 			rowFrame.Name.Text:SetJustifyH("LEFT")
 		end,
-	RowOnEnter = function()	end,
-	RowOnLeave = function() end,
 	ColumnSetup = function(self, button, dataRowID, character)
 			button.Name:SetFontObject("GameFontNormalSmall")
 			button.Name:SetJustifyH("CENTER")
@@ -175,14 +142,14 @@ local callbacks = {
 			button.Background:SetDesaturated(false)
 			button.Background:SetTexCoord(0, 1, 0, 1)
 			
-			button.Background:SetTexture(GetItemIcon(currentItemID) or ICON_QUESTIONMARK)
+			button.Background:SetTexture(currentTexture)
 
 			local text = icons.notReady
 			local vc = 0.25	-- vertex color
-			local tradeskills = addon.TradeSkills.spellIDs
-			local profession = DataStore:GetProfession(character, GetSpellInfo(tradeskills[addon:GetOption(OPTION_TRADESKILL)]))			
-
-			if #profession.Crafts ~= 0 then
+			
+			if DataStore:IsProfessionKnown(character, currentProfession) then
+				local profession = DataStore:GetProfession(character, currentProfession)			
+				
 				-- do not enable this yet .. working fine, but better if more filtering allowed. ==> filtering on rarity
 				
 				-- local _, _, itemRarity, itemLevel = GetItemInfo(currentItemID)
@@ -192,14 +159,14 @@ local callbacks = {
 					-- button.IconBorder:Show()
 				-- end
 				
-				if DataStore:IsCraftKnown(profession, currentList[dataRowID]) then
+				if DataStore:IsCraftKnown(profession, view[dataRowID]) then
 					vc = 1.0
 					text = icons.ready
 				else
 					vc = 0.4
 				end
 			end
-
+			
 			button.Background:SetVertexColor(vc, vc, vc)
 			button.Name:SetText(text)
 			button.id = currentItemID
@@ -215,17 +182,4 @@ local callbacks = {
 	OnLeave = function(self)
 			GameTooltip:Hide() 
 		end,
-		
-	InitViewDDM = function(frame, title)
-			dropDownFrame = frame
-			frame:Show()
-			title:Show()
-			
-			frame:SetMenuWidth(100) 
-			frame:SetButtonWidth(20)
-			frame:SetText(xPacks[addon:GetOption(OPTION_XPACK)])
-			frame:Initialize(DropDown_Initialize, "MENU_NO_BORDERS")
-		end,
-}
-
-AltoholicTabGrids:RegisterGrid(7, callbacks)
+})

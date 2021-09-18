@@ -1,9 +1,15 @@
-local __exports = LibStub:NewLibrary("ovale/states/SpellBook", 90103)
+local __exports = LibStub:NewLibrary("ovale/states/SpellBook", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local __uiLocalization = LibStub:GetLibrary("ovale/ui/Localization")
-local l = __uiLocalization.l
-local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+local __imports = {}
+__imports.__uiLocalization = LibStub:GetLibrary("ovale/ui/Localization")
+__imports.l = __imports.__uiLocalization.l
+__imports.aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+__imports.__toolstools = LibStub:GetLibrary("ovale/tools/tools")
+__imports.isNumber = __imports.__toolstools.isNumber
+__imports.oneTimeMessage = __imports.__toolstools.oneTimeMessage
+local l = __imports.l
+local aceEvent = __imports.aceEvent
 local ipairs = ipairs
 local pairs = pairs
 local tonumber = tonumber
@@ -31,9 +37,8 @@ local BOOKTYPE_PET = BOOKTYPE_PET
 local BOOKTYPE_SPELL = BOOKTYPE_SPELL
 local MAX_TALENT_TIERS = MAX_TALENT_TIERS
 local NUM_TALENT_COLUMNS = NUM_TALENT_COLUMNS
-local __toolstools = LibStub:GetLibrary("ovale/tools/tools")
-local isNumber = __toolstools.isNumber
-local oneTimeMessage = __toolstools.oneTimeMessage
+local isNumber = __imports.isNumber
+local oneTimeMessage = __imports.oneTimeMessage
 local parseHyperlink = function(hyperlink)
     local color, linkType, linkData, text = match(hyperlink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d*):?%d?|?h?%[?([^%[%]]*)%]?|?h?|?r?")
     return color, linkType, linkData, text

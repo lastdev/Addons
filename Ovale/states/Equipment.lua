@@ -1,8 +1,13 @@
-local __exports = LibStub:NewLibrary("ovale/states/Equipment", 90103)
+local __exports = LibStub:NewLibrary("ovale/states/Equipment", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
-local aceTimer = LibStub:GetLibrary("AceTimer-3.0", true)
+local __imports = {}
+__imports.aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+__imports.__enginecondition = LibStub:GetLibrary("ovale/engine/condition")
+__imports.returnBoolean = __imports.__enginecondition.returnBoolean
+__imports.returnConstant = __imports.__enginecondition.returnConstant
+__imports.returnValueBetween = __imports.__enginecondition.returnValueBetween
+local aceEvent = __imports.aceEvent
 local ipairs = ipairs
 local kpairs = pairs
 local pairs = pairs
@@ -26,10 +31,9 @@ local GetItemStats = GetItemStats
 local GetTime = GetTime
 local GetWeaponEnchantInfo = GetWeaponEnchantInfo
 local ItemLocation = ItemLocation
-local __enginecondition = LibStub:GetLibrary("ovale/engine/condition")
-local returnBoolean = __enginecondition.returnBoolean
-local returnConstant = __enginecondition.returnConstant
-local returnValueBetween = __enginecondition.returnValueBetween
+local returnBoolean = __imports.returnBoolean
+local returnConstant = __imports.returnConstant
+local returnValueBetween = __imports.returnValueBetween
 __exports.inventorySlotNames = {
     AMMOSLOT = true,
     BACKSLOT = true,
@@ -97,9 +101,11 @@ local slotNameByName = {
     waistslot = "WAISTSLOT",
     wristslot = "WRISTSLOT"
 }
+local ovaleSlotNameByName = {}
 local function resetItemInfo(item)
     item.exists = false
     item.guid = ""
+    item.pending = nil
     item.link = nil
     item.location = nil
     item.name = nil
@@ -111,7 +117,7 @@ local function resetItemInfo(item)
     wipe(item.modifier)
 end
 __exports.OvaleEquipmentClass = __class(nil, {
-    constructor = function(self, ovale, ovaleDebug, ovaleProfiler, data)
+    constructor = function(self, ovale, ovaleDebug, data)
         self.ovale = ovale
         self.data = data
         self.mainHandDPS = 0
@@ -137,27 +143,36 @@ __exports.OvaleEquipmentClass = __class(nil, {
             }
         }
         self.handleInitialize = function()
-            self.module:RegisterEvent("PLAYER_LOGIN", self.handlePlayerLogin)
-            self.module:RegisterEvent("PLAYER_ENTERING_WORLD", self.updateEquippedItems)
+            self.module:RegisterEvent("ITEM_DATA_LOAD_RESULT", self.handleItemDataLoadResult)
+            self.module:RegisterEvent("PLAYER_ENTERING_WORLD", self.handlePlayerEnteringWorld)
             self.module:RegisterEvent("PLAYER_EQUIPMENT_CHANGED", self.handlePlayerEquipmentChanged)
         end
         self.handleDisable = function()
-            self.module:UnregisterEvent("PLAYER_LOGIN")
+            self.module:UnregisterEvent("ITEM_DATA_LOAD_RESULT")
             self.module:UnregisterEvent("PLAYER_ENTERING_WORLD")
             self.module:UnregisterEvent("PLAYER_EQUIPMENT_CHANGED")
         end
-        self.handlePlayerLogin = function(event)
-            self.module:ScheduleTimer(self.updateEquippedItems, 3)
+        self.handleItemDataLoadResult = function(event, itemId, success)
+            if success and self.isEquippedItemById[itemId] then
+                for slot, item in pairs(self.equippedItem) do
+                    if item.pending then
+                        local slotId = slotIdByName[slot]
+                        local location = ItemLocation:CreateFromEquipmentSlot(slotId)
+                        if location:IsValid() and item.pending == itemId then
+                            self.finishUpdateForSlot(slot, itemId, location)
+                        end
+                    end
+                end
+            end
+        end
+        self.handlePlayerEnteringWorld = function(event)
+            for slot in kpairs(__exports.inventorySlotNames) do
+                self.queueUpdateForSlot(slot)
+            end
         end
         self.handlePlayerEquipmentChanged = function(event, slotId, hasCurrent)
-            self.profiler:startProfiling("OvaleEquipment_PLAYER_EQUIPMENT_CHANGED")
             local slot = slotNameById[slotId]
-            local changed = self.updateEquippedItem(slot)
-            if changed then
-                self.ovale:needRefresh()
-                self.module:SendMessage("Ovale_EquipmentChanged", slot)
-            end
-            self.profiler:stopProfiling("OvaleEquipment_PLAYER_EQUIPMENT_CHANGED")
+            self.queueUpdateForSlot(slot)
         end
         self.parseItemLink = function(link, item)
             local s = match(link, "item:([%-?%d:]+)")
@@ -199,37 +214,47 @@ __exports.OvaleEquipmentClass = __class(nil, {
                 end
             end
         end
-        self.updateEquippedItem = function(slot)
-            self.tracer:debug("Updating slot " .. slot)
-            local item = self.equippedItem[slot]
-            local prevGUID = item.guid
-            local prevItemId = item.id
-            if prevItemId ~= nil then
-                self.isEquippedItemById[prevItemId] = nil
-            end
-            resetItemInfo(item)
+        self.queueUpdateForSlot = function(slot)
             local slotId = slotIdByName[slot]
             local location = ItemLocation:CreateFromEquipmentSlot(slotId)
-            local exists = C_Item.DoesItemExist(location)
-            if exists then
+            local item = self.equippedItem[slot]
+            if location:IsValid() then
+                local itemId = C_Item.GetItemID(location)
+                self.isEquippedItemById[itemId] = true
+                local link = C_Item.GetItemLink(location)
+                if link then
+                    self.finishUpdateForSlot(slot, itemId, location)
+                else
+                    item.pending = itemId
+                    C_Item.RequestLoadItemData(location)
+                    self.tracer:debug("Slot " .. slot .. ", item " .. itemId .. ": queued")
+                end
+            else
+                self.tracer:debug("Slot " .. slot .. ": empty")
+                resetItemInfo(item)
+            end
+        end
+        self.finishUpdateForSlot = function(slot, itemId, location)
+            self.tracer:debug("Slot " .. slot .. ", item " .. itemId .. ": finished")
+            local item = self.equippedItem[slot]
+            if location:IsValid() then
+                local prevGUID = item.guid
+                local prevItemId = item.id
+                if prevItemId ~= nil then
+                    self.isEquippedItemById[prevItemId] = nil
+                end
+                resetItemInfo(item)
                 item.exists = true
                 item.guid = C_Item.GetItemGUID(location)
+                item.id = itemId
                 item.location = location
                 item.name = C_Item.GetItemName(location)
                 item.quality = C_Item.GetItemQuality(location)
                 item.type = C_Item.GetItemInventoryType(location)
                 local link = C_Item.GetItemLink(location)
-                if link ~= nil then
+                if link then
                     item.link = link
                     self.parseItemLink(link, item)
-                    local id = item.id
-                    if id ~= nil then
-                        self.isEquippedItemById[id] = true
-                        local info = self.data.itemInfo[id]
-                        if info ~= nil and info.shared_cd ~= nil then
-                            self.equippedItemBySharedCooldown[info.shared_cd] = id
-                        end
-                    end
                     if slot == "MAINHANDSLOT" or slot == "SECONDARYHANDSLOT" then
                         local stats = GetItemStats(link)
                         if stats ~= nil then
@@ -242,21 +267,19 @@ __exports.OvaleEquipmentClass = __class(nil, {
                         end
                     end
                 end
+                self.isEquippedItemById[itemId] = true
+                local info = self.data.itemInfo[itemId]
+                if info ~= nil and info.shared_cd ~= nil then
+                    self.equippedItemBySharedCooldown[info.shared_cd] = itemId
+                end
+                if prevGUID ~= item.guid then
+                    self.ovale:needRefresh()
+                    local slotName = ovaleSlotNameByName[slot]
+                    self.module:SendMessage("Ovale_EquipmentChanged", slotName)
+                end
+            else
+                resetItemInfo(item)
             end
-            return prevGUID ~= item.guid
-        end
-        self.updateEquippedItems = function()
-            self.profiler:startProfiling("OvaleEquipment_UpdateEquippedItems")
-            local anyChanged = false
-            for slot in kpairs(__exports.inventorySlotNames) do
-                local changed = self.updateEquippedItem(slot)
-                anyChanged = anyChanged or changed
-            end
-            if anyChanged then
-                self.ovale:needRefresh()
-                self.module:SendMessage("Ovale_EquipmentChanged")
-            end
-            self.profiler:stopProfiling("OvaleEquipment_UpdateEquippedItems")
         end
         self.debugEquipment = function()
             local output = {}
@@ -345,13 +368,23 @@ __exports.OvaleEquipmentClass = __class(nil, {
             end
             return returnBoolean(boolean)
         end
+        self.hasWeapon = function(positionalParameter, namedParameter, atTime)
+            local slot = positionalParameter[1]
+            local handedness = positionalParameter[2]
+            local invSlot = slotNameByName[slot]
+            local invType = (handedness == "1h" and Enum.InventoryType.IndexWeaponType) or Enum.InventoryType.Index2HweaponType
+            local item = self.equippedItem[invSlot]
+            if item.exists and item.type then
+                return returnBoolean(item.type == invType)
+            end
+            return returnBoolean(false)
+        end
         self.itemCooldown = function(atTime, itemId, slot, sharedCooldown)
             if sharedCooldown then
                 itemId = self:getEquippedItemIdBySharedCooldown(sharedCooldown)
             end
             if slot ~= nil then
-                local invSlot = slotNameByName[slot]
-                itemId = self:getEquippedItemId(invSlot)
+                itemId = self:getEquippedItemId(slot)
             end
             if itemId then
                 local start, duration = GetItemCooldown(itemId)
@@ -364,8 +397,7 @@ __exports.OvaleEquipmentClass = __class(nil, {
         end
         self.itemCooldownDuration = function(atTime, itemId, slot)
             if slot ~= nil then
-                local invSlot = slotNameByName[slot]
-                itemId = self:getEquippedItemId(invSlot)
+                itemId = self:getEquippedItemId(slot)
             end
             if  not itemId then
                 return returnConstant(0)
@@ -377,8 +409,7 @@ __exports.OvaleEquipmentClass = __class(nil, {
             return returnConstant(duration)
         end
         self.itemInSlot = function(atTime, slot)
-            local invSlot = slotNameByName[slot]
-            local itemId = self:getEquippedItemId(invSlot)
+            local itemId = self:getEquippedItemId(slot)
             return returnConstant(itemId)
         end
         self.weaponEnchantExpires = function(positionalParams)
@@ -419,8 +450,7 @@ __exports.OvaleEquipmentClass = __class(nil, {
         end
         self.itemRppm = function(atTime, itemId, slot)
             if slot then
-                local invSlot = slotNameByName[slot]
-                itemId = self:getEquippedItemId(invSlot)
+                itemId = self:getEquippedItemId(slot)
             end
             if itemId then
                 local rppm = self.data:getItemInfoProperty(itemId, atTime, "rppm")
@@ -428,13 +458,13 @@ __exports.OvaleEquipmentClass = __class(nil, {
             end
             return 
         end
-        self.module = ovale:createModule("OvaleEquipment", self.handleInitialize, self.handleDisable, aceEvent, aceTimer)
+        self.module = ovale:createModule("OvaleEquipment", self.handleInitialize, self.handleDisable, aceEvent)
         self.tracer = ovaleDebug:create("OvaleEquipment")
-        self.profiler = ovaleProfiler:create(self.module:GetName())
         for k, v in pairs(self.debugOptions) do
             ovaleDebug.defaultOptions.args[k] = v
         end
         for slot in kpairs(__exports.inventorySlotNames) do
+            ovaleSlotNameByName[slot] = lower(slot)
             local slotId = GetInventorySlotInfo(slot)
             slotIdByName[slot] = slotId
             slotNameById[slotId] = slot
@@ -447,10 +477,49 @@ __exports.OvaleEquipmentClass = __class(nil, {
             }
         end
     end,
+    getArmorSetCount = function(self, name)
+        return 0
+    end,
+    getEquippedItemId = function(self, slot)
+        local invSlot = slotNameByName[slot]
+        local item = self.equippedItem[invSlot]
+        return (item and item.exists and item.id) or nil
+    end,
+    getEquippedItemIdBySharedCooldown = function(self, sharedCooldown)
+        return self.equippedItemBySharedCooldown[sharedCooldown]
+    end,
+    getEquippedItemLocation = function(self, slot)
+        local invSlot = slotNameByName[slot]
+        local item = self.equippedItem[invSlot]
+        if item and item.exists then
+            if item.location and item.location:IsValid() then
+                return item.location
+            end
+        end
+        return nil
+    end,
+    getEquippedItemQuality = function(self, slot)
+        local invSlot = slotNameByName[slot]
+        local item = self.equippedItem[invSlot]
+        return (item and item.exists and item.quality) or nil
+    end,
+    getEquippedItemBonusIds = function(self, slot)
+        local invSlot = slotNameByName[slot]
+        local item = self.equippedItem[invSlot]
+        return (item and item.bonus) or {}
+    end,
+    hasRangedWeapon = function(self)
+        local item = self.equippedItem["MAINHANDSLOT"]
+        if item.exists and item.type ~= nil then
+            return (item.type == Enum.InventoryType.IndexRangedType or item.type == Enum.InventoryType.IndexRangedrightType)
+        end
+        return false
+    end,
     registerConditions = function(self, ovaleCondition)
         ovaleCondition:registerCondition("hasequippeditem", false, self.hasItemEquipped)
         ovaleCondition:registerCondition("hasshield", false, self.hasShield)
         ovaleCondition:registerCondition("hastrinket", false, self.hasTrinket)
+        ovaleCondition:registerCondition("hasweapon", false, self.hasWeapon)
         local slotParameter = {
             type = "string",
             name = "slot",
@@ -495,34 +564,5 @@ __exports.OvaleEquipmentClass = __class(nil, {
             name = "slot",
             checkTokens = checkSlotName
         })
-    end,
-    getArmorSetCount = function(self, name)
-        return 0
-    end,
-    getEquippedItemId = function(self, slot)
-        local item = self.equippedItem[slot]
-        return (item.exists and item.id) or nil
-    end,
-    getEquippedItemIdBySharedCooldown = function(self, sharedCooldown)
-        return self.equippedItemBySharedCooldown[sharedCooldown]
-    end,
-    getEquippedItemLocation = function(self, slot)
-        local item = self.equippedItem[slot]
-        return (item.exists and item.location) or nil
-    end,
-    getEquippedItemQuality = function(self, slot)
-        local item = self.equippedItem[slot]
-        return (item.exists and item.quality) or nil
-    end,
-    getEquippedItemBonusIds = function(self, slot)
-        local item = self.equippedItem[slot]
-        return item.bonus
-    end,
-    hasRangedWeapon = function(self)
-        local item = self.equippedItem["MAINHANDSLOT"]
-        if item.exists and item.type ~= nil then
-            return (item.type == Enum.InventoryType.IndexRangedType or item.type == Enum.InventoryType.IndexRangedrightType)
-        end
-        return false
     end,
 })

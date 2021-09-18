@@ -2,19 +2,29 @@
 ## Title: Altoholic_Grids
 ## Notes: Altoholic's Grids Tab
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: r192
+## Version: 9.1.005
 ## Dependencies: Altoholic, DataStore, DataStore_Characters
 ## LoadOnDemand: 1
 ## X-Category: Interface Enhancements
 
+Locale.xml
+Services\DungeonsLists.lua
+Services\TransmogSetsLists.lua
+
 Templates\UITemplates.xml
 TabGrids.xml
-Grids.xml
+Frames\Grids.xml
 
-Data\FactionLeveling_deDE.lua
-Data\FactionLeveling_enUS.lua
-Data\FactionLeveling_frFR.lua
-Data\FactionLeveling_koKR.lua
-Data\FactionLeveling_ruRU.lua
-Data\FactionLeveling_zhCN.lua
-Data\FactionLeveling_zhTW.lua
+Grid_Equipment.lua
+Grid_Reputations.lua
+Grid_Currencies.lua
+Grid_Mounts.lua
+Grid_Tradeskills.lua
+Grid_Archeology.lua
+Grid_Dailies.lua
+Grid_Dungeons.lua
+Grid_GarrisonArchitect.lua
+Grid_GarrisonFollowers.lua
+Grid_FollowerAbilities.lua
+Grid_Emissaries.lua
+Grid_Sets.lua

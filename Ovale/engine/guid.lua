@@ -1,153 +1,94 @@
-local __exports = LibStub:NewLibrary("ovale/engine/guid", 90103)
+local __exports = LibStub:NewLibrary("ovale/engine/guid", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
-local floor = math.floor
+local __imports = {}
+__imports.aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+__imports.__toolsarray = LibStub:GetLibrary("ovale/tools/array")
+__imports.binaryInsertUnique = __imports.__toolsarray.binaryInsertUnique
+__imports.binaryRemove = __imports.__toolsarray.binaryRemove
+__imports.__toolscache = LibStub:GetLibrary("ovale/tools/cache")
+__imports.LRUCache = __imports.__toolscache.LRUCache
+local aceEvent = __imports.aceEvent
 local ipairs = ipairs
-local setmetatable = setmetatable
-local type = type
+local pairs = pairs
 local unpack = unpack
+local concat = table.concat
 local insert = table.insert
-local remove = table.remove
-local GetTime = GetTime
+local sort = table.sort
+local GetUnitName = GetUnitName
 local UnitGUID = UnitGUID
-local UnitName = UnitName
-local __condition = LibStub:GetLibrary("ovale/engine/condition")
-local returnConstant = __condition.returnConstant
-local __toolstools = LibStub:GetLibrary("ovale/tools/tools")
-local isString = __toolstools.isString
-local petUnits = {}
-do
-    petUnits["player"] = "pet"
-    for i = 1, 5, 1 do
-        petUnits["arena" .. i] = "arenapet" .. i
-    end
-    for i = 1, 4, 1 do
-        petUnits["party" .. i] = "partypet" .. i
-    end
-    for i = 1, 40, 1 do
-        petUnits["raid" .. i] = "raidpet" .. i
-    end
-    setmetatable(petUnits, {
-        __index = function(t, unitId)
-            return unitId .. "pet"
-        end
-
-    })
-end
-local unitAuraUnits = {}
-do
-    insert(unitAuraUnits, "player")
-    insert(unitAuraUnits, "pet")
-    insert(unitAuraUnits, "vehicle")
-    insert(unitAuraUnits, "target")
-    insert(unitAuraUnits, "focus")
-    for i = 1, 40, 1 do
-        local unitId = "raid" .. i
-        insert(unitAuraUnits, unitId)
-        insert(unitAuraUnits, petUnits[unitId])
-    end
-    for i = 1, 4, 1 do
-        local unitId = "party" .. i
-        insert(unitAuraUnits, unitId)
-        insert(unitAuraUnits, petUnits[unitId])
-    end
-    for i = 1, 4, 1 do
-        insert(unitAuraUnits, "boss" .. i)
-    end
-    for i = 1, 5, 1 do
-        local unitId = "arena" .. i
-        insert(unitAuraUnits, unitId)
-        insert(unitAuraUnits, petUnits[unitId])
-    end
-    insert(unitAuraUnits, "npc")
-end
-local unitAuraUnit = {}
-for i, unitId in ipairs(unitAuraUnits) do
-    unitAuraUnit[unitId] = i
-end
-setmetatable(unitAuraUnit, {
-    __index = function(t, unitId)
-        return #unitAuraUnits + 1
-    end
-
-})
-local function compareDefault(a, b)
-    return a < b
-end
-local function isCompareFunction(a)
-    return type(a) == "function"
-end
-local function binaryInsert(t, value, unique, compare)
-    if isCompareFunction(unique) then
-        unique, compare = false, unique
-    end
-    compare = compare or compareDefault
-    local low, high = 1, #t
-    while low <= high do
-        local mid = floor((low + high) / 2)
-        if compare(value, t[mid]) then
-            high = mid - 1
-        elseif  not unique or compare(t[mid], value) then
-            low = mid + 1
-        else
-            return mid
+local UnitIsUnit = UnitIsUnit
+local binaryInsertUnique = __imports.binaryInsertUnique
+local binaryRemove = __imports.binaryRemove
+local LRUCache = __imports.LRUCache
+local function dumpMapping(t, output)
+    for key, array in pairs(t) do
+        local size = #array
+        if size > 1 then
+            insert(output, "    " .. key .. ": {")
+            for _, value in ipairs(array) do
+                insert(output, "        " .. value .. ",")
+            end
+            insert(output, [[    },]])
+        elseif size == 1 then
+            insert(output, "    " .. key .. ": " .. array[1] .. ",")
         end
     end
-    insert(t, low, value)
-    return low
 end
-local function binarySearch(t, value, compare)
-    compare = compare or compareDefault
-    local low, high = 1, #t
-    while low <= high do
-        local mid = floor((low + high) / 2)
-        if compare(value, t[mid]) then
-            high = mid - 1
-        elseif compare(t[mid], value) then
-            low = mid + 1
-        else
-            return mid
-        end
-    end
-    return nil
-end
-local function binaryRemove(t, value, compare)
-    local index = binarySearch(t, value, compare)
-    if index then
-        remove(t, index)
-    end
-    return index
-end
-local compareUnit = function(a, b)
-    return unitAuraUnit[a] < unitAuraUnit[b]
-end
-
 __exports.Guids = __class(nil, {
-    constructor = function(self, ovale, ovaleDebug, condition)
+    constructor = function(self, ovale, debug)
         self.ovale = ovale
-        self.unitGUID = {}
-        self.guidUnit = {}
-        self.unitName = {}
-        self.nameUnit = {}
-        self.guidName = {}
-        self.nameGUID = {}
+        self.guidByUnit = {}
+        self.unitByGUID = {}
+        self.nameByUnit = {}
+        self.unitByName = {}
+        self.nameByGUID = {}
+        self.guidByName = {}
+        self.ownerGUIDByGUID = {}
+        self.childUnitByUnit = {}
+        self.petUnitByUnit = {}
+        self.eventfulUnits = {}
+        self.unitPriority = {}
+        self.unitAuraUnits = {}
         self.petGUID = {}
-        self.unitAuraUnits = unitAuraUnit
-        self.getGuid = function(_, namedParameters)
-            local target = (isString(namedParameters.target) and namedParameters.target) or "target"
-            return returnConstant(self:getUnitGUID(target))
-        end
-        self.getTargetGuid = function(_, namedParameters)
-            local target = (isString(namedParameters.target) and namedParameters.target) or "target"
-            return returnConstant(self:getUnitGUID(target .. "target"))
-        end
+        self.debugGUIDs = {
+            type = "group",
+            name = "GUID",
+            args = {
+                guid = {
+                    type = "input",
+                    name = "GUID",
+                    multiline = 25,
+                    width = "full",
+                    get = function()
+                        local output = {}
+                        insert(output, "Unit by GUID = {")
+                        dumpMapping(self.unitByGUID, output)
+                        insert(output, "}\n")
+                        insert(output, "Unit by Name = {")
+                        dumpMapping(self.unitByName, output)
+                        insert(output, "}\n")
+                        insert(output, "GUID by Name = {")
+                        dumpMapping(self.guidByName, output)
+                        insert(output, "}\n")
+                        insert(output, "Unused GUIDs = {")
+                        local guids = self.unusedGUIDCache:asArray()
+                        sort(guids)
+                        for _, guid in ipairs(guids) do
+                            insert(output, "    " .. guid)
+                        end
+                        insert(output, "}")
+                        return concat(output, "\n")
+                    end
+                }
+            }
+        }
         self.handleInitialize = function()
             self.module:RegisterEvent("ARENA_OPPONENT_UPDATE", self.handleArenaOpponentUpdated)
             self.module:RegisterEvent("GROUP_ROSTER_UPDATE", self.handleGroupRosterUpdated)
             self.module:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT", self.handleInstanceEncounterEngageUnit)
             self.module:RegisterEvent("PLAYER_ENTERING_WORLD", function(event)
-                return self:updateAllUnits()
+                return self.updateAllUnits()
             end)
             self.module:RegisterEvent("PLAYER_FOCUS_CHANGED", self.handlePlayerFocusChanged)
             self.module:RegisterEvent("PLAYER_TARGET_CHANGED", self.handlePlayerTargetChanged)
@@ -167,165 +108,296 @@ __exports.Guids = __class(nil, {
             self.module:UnregisterEvent("UNIT_TARGET")
         end
         self.handleArenaOpponentUpdated = function(event, unitId, eventType)
-            if eventType ~= "cleared" or self.unitGUID[unitId] then
+            if eventType ~= "cleared" or self.guidByUnit[unitId] then
                 self.tracer:debug(event, unitId, eventType)
-                self:updateUnitWithTarget(unitId)
+                self.updateUnitWithTarget(unitId)
             end
         end
         self.handleGroupRosterUpdated = function(event)
             self.tracer:debug(event)
-            self:updateAllUnits()
+            self.updateAllUnits()
             self.module:SendMessage("Ovale_GroupChanged")
         end
         self.handleInstanceEncounterEngageUnit = function(event)
             self.tracer:debug(event)
-            for i = 1, 4, 1 do
-                self:updateUnitWithTarget("boss" .. i)
+            for i = 1, 5, 1 do
+                self.updateUnitWithTarget("boss" .. i)
             end
         end
         self.handlePlayerFocusChanged = function(event)
             self.tracer:debug(event)
-            self:updateUnitWithTarget("focus")
+            self.updateUnitWithTarget("focus")
         end
         self.handlePlayerTargetChanged = function(event, cause)
             self.tracer:debug(event, cause)
-            self:updateUnit("target")
+            self.updateUnit("target")
         end
         self.handleUnitNameUpdate = function(event, unitId)
             self.tracer:debug(event, unitId)
-            self:updateUnit(unitId)
+            self.updateUnit(unitId)
         end
-        self.handleUnitPet = function(event, unitId)
-            self.tracer:debug(event, unitId)
-            local pet = petUnits[unitId]
-            self:updateUnitWithTarget(pet)
-            if unitId == "player" then
-                local guid = self:getUnitGUID("pet")
-                if guid then
-                    self.petGUID[guid] = GetTime()
-                end
-                self.module:SendMessage("Ovale_PetChanged", guid)
+        self.handleUnitPet = function(event, unit)
+            self.tracer:debug(event, unit)
+            local petUnit = self.getPetUnitByUnit(unit)
+            self.addChildUnit(unit, petUnit)
+            self.updateUnitWithTarget(petUnit)
+            local petGUID = self.guidByUnit[petUnit]
+            if petGUID then
+                local guid = self.guidByUnit[unit]
+                self.tracer:debug("Ovale_PetChanged", guid, unit, petGUID, petUnit)
+                self.mapOwnerGUIDToGUID(guid, petGUID)
+                self.module:SendMessage("Ovale_PetChanged", guid, unit, petGUID, petUnit)
             end
             self.module:SendMessage("Ovale_GroupChanged")
         end
-        self.handleUnitTarget = function(event, unitId)
-            if unitId ~= "player" then
-                self.tracer:debug(event, unitId)
-                local target = unitId .. "target"
-                self:updateUnit(target)
+        self.handleUnitTarget = function(event, unit)
+            if unit ~= "player" and  not UnitIsUnit(unit, "player") then
+                self.tracer:debug(event, unit)
+                local targetUnit = self.getTargetUnitByUnit(unit)
+                self.addChildUnit(unit, targetUnit)
+                self.updateUnit(targetUnit)
             end
         end
+        self.updateAllUnits = function()
+            for _, unitId in ipairs(self.eventfulUnits) do
+                self.updateUnitWithTarget(unitId)
+            end
+        end
+        self.getOwnerGUIDByGUID = function(guid)
+            return self.ownerGUIDByGUID[guid]
+        end
+        self.getPetUnitByUnit = function(unit)
+            return self.petUnitByUnit[unit] or unit .. "pet"
+        end
+        self.getTargetUnitByUnit = function(unit)
+            return (unit == "player" and "target") or unit .. "target"
+        end
+        self.addChildUnit = function(unit, childUnit)
+            local t = self.childUnitByUnit[unit] or {}
+            if  not t[childUnit] then
+                t[childUnit] = true
+                self.childUnitByUnit[unit] = t
+            end
+        end
+        self.getUnitPriority = function(unit)
+            local t = self.unitPriority
+            local priority = t[unit]
+            if  not priority then
+                priority = #t + 1
+                t[unit] = priority
+            end
+            return priority
+        end
+        self.compareUnit = function(a, b)
+            return self.getUnitPriority(a) < self.getUnitPriority(b)
+        end
+        self.mapOwnerGUIDToGUID = function(ownerGUID, guid)
+            self.ownerGUIDByGUID[guid] = ownerGUID
+            if ownerGUID == self.ovale.playerGUID then
+                self.petGUID[guid] = true
+            end
+        end
+        self.mapNameToUnit = function(name, unit)
+            self.nameByUnit[unit] = name
+            local t = self.unitByName[name] or {}
+            binaryInsertUnique(t, unit, self.compareUnit)
+            self.unitByName[name] = t
+        end
+        self.unmapNameToUnit = function(name, unit)
+            self.nameByUnit[unit] = nil
+            local t = self.unitByName[name] or {}
+            if t then
+                binaryRemove(t, unit, self.compareUnit)
+                if #t == 0 then
+                    self.unitByName[name] = nil
+                end
+            end
+        end
+        self.mapNameToGUID = function(name, guid)
+            self.nameByGUID[guid] = name
+            local t = self.guidByName[name] or {}
+            binaryInsertUnique(t, guid)
+            self.guidByName[name] = t
+        end
+        self.unmapNameToGUID = function(name, guid)
+            self.nameByGUID[guid] = nil
+            local t = self.guidByName[name] or {}
+            if t then
+                binaryRemove(t, guid)
+                if #t == 0 then
+                    self.guidByName[name] = nil
+                end
+            end
+        end
+        self.mapGUIDToUnit = function(guid, unit)
+            self.guidByUnit[unit] = guid
+            local t = self.unitByGUID[guid] or {}
+            binaryInsertUnique(t, unit, self.compareUnit)
+            self.unitByGUID[guid] = t
+            self.unusedGUIDCache:remove(guid)
+        end
+        self.unmapGUIDToUnit = function(guid, unit)
+            self.guidByUnit[unit] = nil
+            local t = self.unitByGUID[guid] or {}
+            if t then
+                binaryRemove(t, unit, self.compareUnit)
+                if #t == 0 then
+                    self.unitByGUID[unit] = nil
+                    local evictedGUID = self.unusedGUIDCache:put(guid)
+                    if evictedGUID then
+                        local name = self.nameByGUID[evictedGUID]
+                        if name then
+                            self.unmapNameToGUID(name, evictedGUID)
+                        end
+                        self.ownerGUIDByGUID[evictedGUID] = nil
+                        self.petGUID[evictedGUID] = nil
+                        self.module:SendMessage("Ovale_UnusedGUID", evictedGUID)
+                    end
+                end
+            end
+        end
+        self.unmapUnit = function(unit)
+            local children = self.childUnitByUnit[unit]
+            if children then
+                for childUnit in pairs(children) do
+                    children[childUnit] = nil
+                    self.unmapUnit(childUnit)
+                end
+            end
+            local guid = self.guidByUnit[unit]
+            if guid then
+                self.unmapGUIDToUnit(guid, unit)
+            end
+            local name = self.nameByUnit[unit]
+            if name then
+                self.unmapNameToUnit(name, unit)
+            end
+        end
+        self.updateUnit = function(unit, guid, changed)
+            guid = guid or UnitGUID(unit)
+            local name = GetUnitName(unit, true)
+            if guid and name then
+                local updated = false
+                local oldGUID = self.guidByUnit[unit]
+                local oldName = self.nameByUnit[unit]
+                if guid ~= oldGUID then
+                    if oldGUID then
+                        self.unmapGUIDToUnit(oldGUID, unit)
+                    end
+                    self.tracer:debug("'" .. unit .. "' is '" .. guid .. "'")
+                    self.mapGUIDToUnit(guid, unit)
+                    updated = true
+                    self.ovale.refreshNeeded[guid] = true
+                end
+                if name ~= oldName then
+                    if oldName then
+                        self.unmapNameToUnit(oldName, unit)
+                        if guid == oldGUID then
+                            self.unmapNameToGUID(oldName, guid)
+                        end
+                    end
+                    self.tracer:debug("'" .. unit .. "' is '" .. name .. "'")
+                    self.mapNameToUnit(name, unit)
+                    updated = true
+                end
+                if updated then
+                    local nameByGUID = self.nameByGUID[guid]
+                    if  not nameByGUID then
+                        self.tracer:debug("'" .. guid .. "' is '" .. name .. "'")
+                        self.mapNameToGUID(name, guid)
+                    elseif name ~= nameByGUID then
+                        self.tracer:debug("'" .. guid .. "' changed names to '" .. name .. "'")
+                        self.mapNameToGUID(name, guid)
+                    end
+                    if changed then
+                        changed[guid] = unit
+                    else
+                        self.tracer:debug("Ovale_UnitChanged", unit, guid, name)
+                        self.module:SendMessage("Ovale_UnitChanged", unit, guid, name)
+                    end
+                end
+            else
+                self.unmapUnit(unit)
+            end
+        end
+        self.updateUnitWithTarget = function(unit, guid, changed)
+            self.updateUnit(unit, guid, changed)
+            local targetUnit = self.getTargetUnitByUnit(unit)
+            local targetGUID = self:getUnitGUID(targetUnit)
+            if targetGUID then
+                self.addChildUnit(unit, targetUnit)
+                self.updateUnit(targetUnit, targetGUID, changed)
+            end
+        end
+        debug.defaultOptions.args["guid"] = self.debugGUIDs
         self.module = ovale:createModule("OvaleGUID", self.handleInitialize, self.handleDisable, aceEvent)
-        self.tracer = ovaleDebug:create(self.module:GetName())
-        condition:registerCondition("guid", false, self.getGuid)
-        condition:registerCondition("targetguid", false, self.getTargetGuid)
-    end,
-    updateAllUnits = function(self)
-        for _, unitId in ipairs(unitAuraUnits) do
-            self:updateUnitWithTarget(unitId)
+        self.tracer = debug:create(self.module:GetName())
+        self.unusedGUIDCache = __imports.LRUCache(100)
+        self.petUnitByUnit["player"] = "pet"
+        insert(self.eventfulUnits, "player")
+        insert(self.eventfulUnits, "vehicle")
+        insert(self.eventfulUnits, "pet")
+        for i = 1, 40, 1 do
+            local unit = "raid" .. i
+            local petUnit = "raidpet" .. i
+            self.petUnitByUnit[unit] = petUnit
+            insert(self.eventfulUnits, unit)
+            insert(self.eventfulUnits, petUnit)
         end
-    end,
-    updateUnit = function(self, unitId)
-        local guid = UnitGUID(unitId)
-        local name = UnitName(unitId)
-        local previousGUID = self.unitGUID[unitId]
-        local previousName = self.unitName[unitId]
-        if  not guid or guid ~= previousGUID then
-            self.unitGUID[unitId] = nil
-            if previousGUID then
-                if self.guidUnit[previousGUID] then
-                    binaryRemove(self.guidUnit[previousGUID], unitId, compareUnit)
-                end
-                self.ovale.refreshNeeded[previousGUID] = true
-            end
+        for i = 1, 4, 1 do
+            local unit = "party" .. i
+            local petUnit = "partypet" .. i
+            self.petUnitByUnit[unit] = petUnit
+            insert(self.eventfulUnits, unit)
+            insert(self.eventfulUnits, petUnit)
         end
-        if  not name or name ~= previousName then
-            self.unitName[unitId] = nil
-            if previousName and self.nameUnit[previousName] then
-                binaryRemove(self.nameUnit[previousName], unitId, compareUnit)
-            end
+        for i = 1, 3, 1 do
+            local unit = "arena" .. i
+            local petUnit = "arenapet" .. i
+            self.petUnitByUnit[unit] = petUnit
+            insert(self.eventfulUnits, unit)
+            insert(self.eventfulUnits, petUnit)
         end
-        if guid and guid == previousGUID and name and name ~= previousName then
-            self.guidName[guid] = nil
-            if previousName and self.nameGUID[previousName] then
-                binaryRemove(self.nameGUID[previousName], guid, compareUnit)
-            end
+        for i = 1, 5, 1 do
+            insert(self.eventfulUnits, [[boss{i}]])
         end
-        if guid and guid ~= previousGUID then
-            self.unitGUID[unitId] = guid
-            do
-                local list = self.guidUnit[guid] or {}
-                binaryInsert(list, unitId, true, compareUnit)
-                self.guidUnit[guid] = list
-            end
-            self.tracer:debug("'%s' is '%s'.", unitId, guid)
-            self.ovale.refreshNeeded[guid] = true
+        insert(self.eventfulUnits, "target")
+        insert(self.eventfulUnits, "focus")
+        for priority, unit in ipairs(self.eventfulUnits) do
+            self.unitAuraUnits[unit] = true
+            self.unitPriority[unit] = priority
         end
-        if name and name ~= previousName then
-            self.unitName[unitId] = name
-            do
-                local list = self.nameUnit[name] or {}
-                binaryInsert(list, unitId, true, compareUnit)
-                self.nameUnit[name] = list
-            end
-            self.tracer:debug("'%s' is '%s'.", unitId, name)
-        end
-        if guid and name then
-            local previousNameFromGUID = self.guidName[guid]
-            self.guidName[guid] = name
-            if name ~= previousNameFromGUID then
-                local list = self.nameGUID[name] or {}
-                binaryInsert(list, guid, true)
-                self.nameGUID[name] = list
-                if guid == previousGUID then
-                    self.tracer:debug("'%s' changed names to '%s'.", guid, name)
-                else
-                    self.tracer:debug("'%s' is '%s'.", guid, name)
-                end
-            end
-        end
-        if guid and guid ~= previousGUID then
-            self.module:SendMessage("Ovale_UnitChanged", unitId, guid)
-        end
-    end,
-    updateUnitWithTarget = function(self, unitId)
-        self:updateUnit(unitId)
-        self:updateUnit(unitId .. "target")
-    end,
-    isPlayerPet = function(self, guid)
-        local atTime = self.petGUID[guid]
-        return  not  not atTime, atTime
     end,
     getUnitGUID = function(self, unitId)
-        return self.unitGUID[unitId] or UnitGUID(unitId)
+        return self.guidByUnit[unitId] or UnitGUID(unitId)
     end,
-    getUnitByGuid = function(self, guid)
-        if guid and self.guidUnit[guid] then
-            return unpack(self.guidUnit[guid])
+    getUnitByGUID = function(self, guid)
+        if guid and self.unitByGUID[guid] then
+            return unpack(self.unitByGUID[guid])
         end
         return nil
     end,
     getUnitName = function(self, unitId)
         if unitId then
-            return self.unitName[unitId] or UnitName(unitId)
+            return self.nameByUnit[unitId] or GetUnitName(unitId, true)
         end
         return nil
     end,
     getUnitByName = function(self, name)
-        if name and self.nameUnit[name] then
-            return unpack(self.nameUnit[name])
+        if name and self.unitByName[name] then
+            return unpack(self.unitByName[name])
         end
         return nil
     end,
-    getNameByGuid = function(self, guid)
+    getNameByGUID = function(self, guid)
         if guid then
-            return self.guidName[guid]
+            return self.nameByGUID[guid]
         end
         return nil
     end,
-    getGuidByName = function(self, name)
-        if name and self.nameGUID[name] then
-            return unpack(self.nameGUID[name])
+    getGUIDByName = function(self, name)
+        if name and self.guidByName[name] then
+            return unpack(self.guidByName[name])
         end
         return 
     end,

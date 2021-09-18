@@ -496,6 +496,7 @@ if AL then
 	AL["SOUND_OPTIONS"] = "Options audio"
 	AL["SOUND_VOLUME"] = "Volume"
 	AL["SOUND_VOLUME_DESC"] = "Règle le niveau du volume sonore"
+	AL["STOLEN_ANIMA_VESSEL"] = "Réceptacle d’anima volé"
 	AL["TEST"] = "Lancement du test"
 	AL["TEST_DESC"] = "Appuyez sur le bouton pour afficher un exemple d'alerte. Vous pouvez faire glisser le panneau jusqu'à une autre position où il sera désormais affiché."
 	AL["TOC_NOTES"] = "Minimap scanner. Vous avertit visuellement grâce à un bouton et une miniature et émet un son chaque fois qu'un PNJ, un trésor ou un événement rare apparaît dans votre minimap"

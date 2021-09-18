@@ -540,6 +540,13 @@ local function _GetProfessionInfo(profession)
 	return tonumber(rank) or 0, tonumber(maxRank) or 0, tonumber(spellID)
 end
 	
+local function _IsProfessionKnown(character, professionName)
+	if (character.Prof1 and character.Prof1 == professionName) or
+		(character.Prof2 and character.Prof2 == professionName) then 
+		return true 
+	end
+end
+	
 local function _GetNumRecipeCategories(profession)
 	return (profession.Categories) and #profession.Categories or 0
 end
@@ -760,6 +767,7 @@ local PublicMethods = {
 	GetProfession = _GetProfession,
 	GetProfessions = _GetProfessions,
 	GetProfessionInfo = _GetProfessionInfo,
+	IsProfessionKnown = _IsProfessionKnown,
 	GetCraftCooldownInfo = _GetCraftCooldownInfo,
 	GetNumActiveCooldowns = _GetNumActiveCooldowns,
 	ClearExpiredCooldowns = _ClearExpiredCooldowns,
@@ -794,6 +802,7 @@ function addon:OnInitialize()
 	DataStore:RegisterModule(addonName, addon, PublicMethods)
 	DataStore:SetCharacterBasedMethod("GetProfession")
 	DataStore:SetCharacterBasedMethod("GetProfessions")
+	DataStore:SetCharacterBasedMethod("IsProfessionKnown")
 	
 	DataStore:SetCharacterBasedMethod("GetProfession1")
 	DataStore:SetCharacterBasedMethod("GetProfession2")

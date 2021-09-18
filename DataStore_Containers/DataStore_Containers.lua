@@ -16,7 +16,6 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 
 local addon = _G[addonName]
 
-local THIS_ACCOUNT = "Default"
 local commPrefix = "DS_Cont"		-- let's keep it a bit shorter than the addon name, this goes on a comm channel, a byte is a byte ffs :p
 local MAIN_BANK_SLOTS = 100		-- bag id of the 28 main bank slots
 
@@ -63,6 +62,7 @@ local AddonDB_Defaults = {
 				numFreeBagSlots = 0,
 				numBankSlots = 0,
 				numFreeBankSlots = 0,
+				bankType = 0,					-- alt is a bank type (flags)
 				Containers = {
 					['*'] = {					-- Containers["Bag0"]
 						icon = nil,				-- Containers's texture
@@ -134,6 +134,17 @@ local function UpdateDB()
 end
 
 -- *** Utility functions ***
+local bAnd = bit.band
+local bOr = bit.bor
+local bXOr = bit.bxor
+
+local function TestBit(value, pos)
+   local mask = 2^pos
+   if bAnd(value, mask) == mask then
+      return true
+   end
+end
+
 local function GetThisGuild()
 	local key = DataStore:GetThisGuildKey()
 	return key and addon.db.global.Guilds[key] 
@@ -714,6 +725,19 @@ local function _GetContainerItemCount(character, searchedID)
 	return bagCount, bankCount, voidCount, reagentBankCount
 end
 
+local function _IterateContainerSlots(character, callback)
+	for containerName, container in pairs(character.Containers) do
+		for slotID = 1, container.size do
+			local itemID, itemLink, itemCount, isBattlePet = _GetSlotInfo(container, slotID)
+			
+			-- Callback only if there is an item in that slot
+			if itemID then
+				callback(containerName, itemID, itemLink, itemCount, isBattlePet)
+			end
+		end
+	end
+end
+
 local function _GetNumBagSlots(character)
 	return character.numBagSlots
 end
@@ -742,14 +766,6 @@ local function _GetKeystoneLevel(character)
 	return character.Keystone.level or 0
 end
 
--- local function _DeleteGuild(name, realm, account)
-	-- realm = realm or GetRealmName()
-	-- account = account or THIS_ACCOUNT
-	
-	-- local key = format("%s.%s.%s", account, realm, name)
-	-- addon.db.global.Guilds[key] = nil
--- end
-
 local function _GetGuildBankItemCount(guild, searchedID)
 	local count = 0
 	for _, container in pairs(guild.Tabs) do
@@ -768,6 +784,23 @@ end
 	
 local function _GetGuildBankTabName(guild, tabID)
 	return guild.Tabs[tabID].name
+end
+
+local function _IterateGuildBankSlots(guild, callback)
+	for tabID, tab in pairs(guild.Tabs) do
+		if tab.name then
+			for slotID = 1, 98 do
+				local itemID, itemLink, itemCount, isBattlePet = _GetSlotInfo(tab, slotID)
+				
+				-- Callback only if there is an item in that slot
+				if itemID then
+					local location = format("%s, %s - col %d/row %d)", GUILD_BANK, tab.name, floor((slotID-1)/7)+1, ((slotID-1)%7)+1)
+				
+					callback(location, itemID, itemLink, itemCount, isBattlePet)
+				end
+			end
+		end
+	end
 end
 
 local function _GetGuildBankTabIcon(guild, tabID)
@@ -842,6 +875,45 @@ local function _SendBankTabToGuildMember(member, tabName)
 	end
 end
 
+local function _ToggleBankType(character, bankType)
+	local types = DataStore.Enum.BankTypes
+	
+	if bankType >= types.Minimum and bankType <= types.Maximum then
+		-- toggle the appropriate bit for this bank type
+		character.bankType = bXOr(character.bankType, 2^(bankType - 1))
+	end
+end
+
+local function _IsBankType(character, bankType)
+	-- speed up the process a bit if all flags are 0
+	return (character.bankType == 0)
+		and false
+		or TestBit(character.bankType, bankType - 1)
+end
+
+local function _GetBankType(character)
+	return character.bankType
+end
+
+local function _GetBankTypes(character)
+	if character.bankType == 0 then return ""	end
+	
+	local bankTypeLabels = {}
+	
+	local types = DataStore.Enum.BankTypes
+	local labels = DataStore.Enum.BankTypesLabels
+	
+	-- loop through all types
+	for i = types.Minimum, types.Maximum do
+		-- add label if bit is set
+		if TestBit(character.bankType, i - 1) then
+			table.insert(bankTypeLabels, labels[i])
+		end
+	end
+	
+	return table.concat(bankTypeLabels, ", "), bankTypeLabels
+end
+
 local PublicMethods = {
 	GetContainer = _GetContainer,
 	GetContainers = _GetContainers,
@@ -851,6 +923,7 @@ local PublicMethods = {
 	GetSlotInfo = _GetSlotInfo,
 	GetContainerCooldownInfo = _GetContainerCooldownInfo,
 	GetContainerItemCount = _GetContainerItemCount,
+	IterateContainerSlots = _IterateContainerSlots,
 	GetNumBagSlots = _GetNumBagSlots,
 	GetNumFreeBagSlots = _GetNumFreeBagSlots,
 	GetNumBankSlots = _GetNumBankSlots,
@@ -858,10 +931,10 @@ local PublicMethods = {
 	GetVoidStorageItem = _GetVoidStorageItem,
 	GetKeystoneName = _GetKeystoneName,
 	GetKeystoneLevel = _GetKeystoneLevel,
-	-- DeleteGuild = _DeleteGuild,
 	GetGuildBankItemCount = _GetGuildBankItemCount,
 	GetGuildBankTab = _GetGuildBankTab,
 	GetGuildBankTabName = _GetGuildBankTabName,
+	IterateGuildBankSlots = _IterateGuildBankSlots,
 	GetGuildBankTabIcon = _GetGuildBankTabIcon,
 	GetGuildBankTabItemCount = _GetGuildBankTabItemCount,
 	GetGuildBankTabLastUpdate = _GetGuildBankTabLastUpdate,
@@ -873,6 +946,10 @@ local PublicMethods = {
 	RejectBankTabRequest = _RejectBankTabRequest,
 	SendBankTabToGuildMember = _SendBankTabToGuildMember,
 	GetGuildBankTabSuppliers = _GetGuildBankTabSuppliers,
+	ToggleBankType = _ToggleBankType,
+	IsBankType = _IsBankType,
+	GetBankType = _GetBankType,
+	GetBankTypes = _GetBankTypes,
 }
 
 -- *** Guild Comm ***
@@ -958,6 +1035,7 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetContainerSize")
 	DataStore:SetCharacterBasedMethod("GetColoredContainerSize")
 	DataStore:SetCharacterBasedMethod("GetContainerItemCount")
+	DataStore:SetCharacterBasedMethod("IterateContainerSlots")
 	DataStore:SetCharacterBasedMethod("GetNumBagSlots")
 	DataStore:SetCharacterBasedMethod("GetNumFreeBagSlots")
 	DataStore:SetCharacterBasedMethod("GetNumBankSlots")
@@ -965,10 +1043,15 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetVoidStorageItem")
 	DataStore:SetCharacterBasedMethod("GetKeystoneName")
 	DataStore:SetCharacterBasedMethod("GetKeystoneLevel")
+	DataStore:SetCharacterBasedMethod("ToggleBankType")
+	DataStore:SetCharacterBasedMethod("IsBankType")
+	DataStore:SetCharacterBasedMethod("GetBankType")
+	DataStore:SetCharacterBasedMethod("GetBankTypes")
 	
 	DataStore:SetGuildBasedMethod("GetGuildBankItemCount")
 	DataStore:SetGuildBasedMethod("GetGuildBankTab")
 	DataStore:SetGuildBasedMethod("GetGuildBankTabName")
+	DataStore:SetGuildBasedMethod("IterateGuildBankSlots")
 	DataStore:SetGuildBasedMethod("GetGuildBankTabIcon")
 	DataStore:SetGuildBasedMethod("GetGuildBankTabItemCount")
 	DataStore:SetGuildBasedMethod("GetGuildBankTabLastUpdate")

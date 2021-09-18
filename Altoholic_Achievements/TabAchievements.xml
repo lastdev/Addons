@@ -9,52 +9,57 @@
 			<OnEnter>
 				self:Icon_OnEnter()
 			</OnEnter>
-			<OnClick>
-				-- make that configurable
-				--self:Icon_OnEnter()
-			</OnClick>
 		</Scripts>
 	</Button>
 	
-	<Frame name="AltoholicTabAchievements" parent="AltoholicFrame" hidden="true">
+	<Frame parentKey="TabAchievements" inherits="AddonFactory_AuctionHouseTabFrameTemplate" parent="AltoholicFrame" id="5">
 		<Size x="758" y="447" />
 		<Anchors>
 			<Anchor point="TOPLEFT"/>
 		</Anchors>
 		<Layers>
 			<Layer level="OVERLAY">
-				<FontString parentKey="Label1" inherits="GameFontNormalSmall" justifyH="LEFT" text="GUILD_ROSTER_VIEW">
+				<FontString parentKey="LabelView" inherits="GameFontNormalSmall" justifyH="LEFT" text="GUILD_ROSTER_VIEW">
 					<Size x="60" y="18" />
 					<Anchors>
-						<Anchor point="LEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="RIGHT" x="60" y="-5" />
+						<Anchor point="TOPLEFT" x="245" y="-30" />
 					</Anchors>
 					<Color r="255" g="255" b="255" />
 				</FontString>
 				<FontString parentKey="Status" inherits="GameFontNormal" justifyH="LEFT">
-					<Size x="320" y="24" />
+					<Size x="350" y="24" />
 					<Anchors>
-						<Anchor point="BOTTOMRIGHT" x="-250" y="13" />
+						<Anchor point="BOTTOMLEFT" x="200" y="4" />
 					</Anchors>
-					<Color r="255" g="255" b="255" />
 				</FontString>
 				<FontString parentKey="PageNumber" inherits="GameFontHighlightSmallOutline" justifyH="RIGHT">
 					<Anchors>
-						<Anchor point="BOTTOMRIGHT" x="-50" y="20" />
+						<Anchor point="BOTTOMRIGHT" x="-130" y="10" />
 					</Anchors>
 				</FontString>
 			</Layer>
 		</Layers>
 		<Frames>
+			<Frame parentKey="CategoriesList" inherits="AddonFactory_AuctionHouseCategoriesListTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" x="4" y="-68"/>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						Altoholic:BindViewToController(self, "AltoholicUI.TabAchievementsCategoriesList", "AddonFactory.AuctionHouseCategoriesList")
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			
 			<Frame parentKey="SelectRealm" inherits="AltoRealmPickerTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.Label1" relativePoint="BOTTOMLEFT" x="-30" y="-2" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.LabelView" relativePoint="BOTTOMLEFT" x="-30" y="-2" />
 				</Anchors>
 				<KeyValues>
-					<KeyValue key="menuWidth" value="100" type="number" />
+					<KeyValue key="menuWidth" value="140" type="number" />
 				</KeyValues>
 			</Frame>
-		
-			<!-- Menu Icons -->
+			
 			<Frame parentKey="ClassIcons" inherits="AltoClassIconsContainerTemplate">
 				<KeyValues>
 					<KeyValue key="numIcons" value="12" type="number" />
@@ -62,47 +67,11 @@
 					<KeyValue key="tabName" value="Achievements" />
 				</KeyValues>
 			</Frame>
-		
-			<Frame parentKey="ContextualMenu" inherits="AltoContextualMenuTemplate" />
-
-			<ScrollFrame parentKey="ScrollFrame" inherits="AltoMenuScrollFrameTemplate">
-				<Scripts>
-					<OnVerticalScroll>
-						local parent = self:GetParent()
-						self:OnVerticalScroll(offset, 20, parent.Update, parent)
-					</OnVerticalScroll>
-					<OnShow>
-						self:GetParent().Achievements:Update()
-					</OnShow>
-				</Scripts>
-				<KeyValues>
-					<KeyValue key="numRows" value="15" type="number" />
-					<KeyValue key="rowHeight" value="20" type="number" />
-					<KeyValue key="rowTemplate" value="AltoMenuItemTemplate" />
-					<KeyValue key="xOffset" value="23" type="number" />
-					<KeyValue key="yOffset" value="-105" type="number" />
-				</KeyValues>
-			</ScrollFrame>
 			
-			<Button parentKey="PrevPage">
-				<Size x="32" y="32" />
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" x="730" y="10" />
-				</Anchors>
-				<Scripts>
-					<OnClick>
-						self:GetParent():GoToPreviousPage()
-					</OnClick>
-				</Scripts>
-				<NormalTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Up"/>
-				<PushedTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Down"/>
-				<DisabledTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Disabled"/>
-				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
-			</Button>
 			<Button parentKey="NextPage">
 				<Size x="32" y="32" />
 				<Anchors>
-					<Anchor point="LEFT" relativeKey="$Parent.PrevPage" relativePoint="RIGHT" x="10" y="0" />
+					<Anchor point="BOTTOMRIGHT" x="-40" y="0" />
 				</Anchors>
 				<Scripts>
 					<OnClick>
@@ -114,14 +83,44 @@
 				<DisabledTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Disabled"/>
 				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
 			</Button>
+			<Button parentKey="PrevPage">
+				<Size x="32" y="32" />
+				<Anchors>
+					<Anchor point="RIGHT" relativeKey="$Parent.NextPage" relativePoint="LEFT" x="-10" y="0" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						self:GetParent():GoToPreviousPage()
+					</OnClick>
+				</Scripts>
+				<NormalTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Up"/>
+				<PushedTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Down"/>
+				<DisabledTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Disabled"/>
+				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
+			</Button>
+			
+			<Frame parentKey="Background" useParentLevel="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.CategoriesList" relativePoint="TOPRIGHT" x="4" y="-25"/>
+					<Anchor point="RIGHT" relativeTo="AltoholicFrame" relativePoint="RIGHT" x="-30" y="0"/>
+					<Anchor point="BOTTOM" relativeTo="AltoholicFrame" relativePoint="BOTTOM" x="0" y="28"/>
+				</Anchors>
+				<Layers>
+					<Layer level="BACKGROUND" textureSubLevel="-5">
+						<Texture parentKey="bg" atlas="auctionhouse-background-index" useAtlasSize="true" />
+					</Layer>
+				</Layers>
+			</Frame>		
+			
+			<Frame parentKey="ContextualMenu" inherits="AddonFactory_ContextualMenuTemplate" />
 		</Frames>
 		<Scripts>
 			<OnLoad>
 				Altoholic:BindViewToController(self, "AltoholicUI.TabAchievements")
 			</OnLoad>
-			<OnShow>
-				self:Update()
-			</OnShow>
+			<OnHide>
+				self.ContextualMenu:Close()
+			</OnHide>
 		</Scripts>
 	</Frame>
 </Ui>

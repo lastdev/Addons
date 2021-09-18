@@ -1,9 +1,17 @@
-local __exports = LibStub:NewLibrary("ovale/states/Power", 90103)
+local __exports = LibStub:NewLibrary("ovale/states/Power", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local __uiLocalization = LibStub:GetLibrary("ovale/ui/Localization")
-local l = __uiLocalization.l
-local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+local __imports = {}
+__imports.__uiLocalization = LibStub:GetLibrary("ovale/ui/Localization")
+__imports.l = __imports.__uiLocalization.l
+__imports.aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+__imports.__toolstools = LibStub:GetLibrary("ovale/tools/tools")
+__imports.isNumber = __imports.__toolstools.isNumber
+__imports.oneTimeMessage = __imports.__toolstools.oneTimeMessage
+__imports.__enginestate = LibStub:GetLibrary("ovale/engine/state")
+__imports.States = __imports.__enginestate.States
+local l = __imports.l
+local aceEvent = __imports.aceEvent
 local ceil = math.ceil
 local INFINITY = math.huge
 local floor = math.floor
@@ -20,16 +28,9 @@ local UnitPowerMax = UnitPowerMax
 local UnitPowerType = UnitPowerType
 local Enum = Enum
 local MAX_COMBO_POINTS = MAX_COMBO_POINTS
-local __toolstools = LibStub:GetLibrary("ovale/tools/tools")
-local isNumber = __toolstools.isNumber
-local oneTimeMessage = __toolstools.oneTimeMessage
-local __enginestate = LibStub:GetLibrary("ovale/engine/state")
-local States = __enginestate.States
-local strlower = lower
-local spellcastInfoPowerTypes = {
-    [1] = "chi",
-    [2] = "holypower"
-}
+local isNumber = __imports.isNumber
+local oneTimeMessage = __imports.oneTimeMessage
+local States = __imports.States
 local PowerState = __class(nil, {
     constructor = function(self)
         self.powerType = "mana"
@@ -70,7 +71,7 @@ __exports.primaryPowers = {
     mana = true
 }
 __exports.OvalePowerClass = __class(States, {
-    constructor = function(self, ovaleDebug, ovale, ovaleProfiler, ovaleData, baseState, ovaleSpellBook, combat)
+    constructor = function(self, ovaleDebug, ovale, ovaleData, baseState, ovaleSpellBook, combat)
         self.ovale = ovale
         self.ovaleData = ovaleData
         self.baseState = baseState
@@ -143,31 +144,19 @@ __exports.OvalePowerClass = __class(States, {
                 self:updatePowerRegen(event)
             end
         end
-        self.copySpellcastInfo = function(mod, spellcast, dest)
-            for _, powerType in pairs(spellcastInfoPowerTypes) do
-                if spellcast[powerType] then
-                    dest[powerType] = spellcast[powerType]
-                end
-            end
-        end
         self.applySpellStartCast = function(spellId, targetGUID, startCast, endCast, isChanneled, spellcast)
-            self.profiler:startProfiling("OvalePower_ApplySpellStartCast")
             if isChanneled then
                 self:applyPowerCost(spellId, targetGUID, startCast, spellcast)
             end
-            self.profiler:stopProfiling("OvalePower_ApplySpellStartCast")
         end
         self.applySpellAfterCast = function(spellId, targetGUID, startCast, endCast, isChanneled, spellcast)
-            self.profiler:startProfiling("OvalePower_ApplySpellAfterCast")
             if  not isChanneled then
                 self:applyPowerCost(spellId, targetGUID, endCast, spellcast)
             end
-            self.profiler:stopProfiling("OvalePower_ApplySpellAfterCast")
         end
         States.constructor(self, PowerState)
         self.module = ovale:createModule("OvalePower", self.handleInitialize, self.handleDisable, aceEvent)
         self.tracer = ovaleDebug:create(self.module:GetName())
-        self.profiler = ovaleProfiler:create(self.module:GetName())
         local debugOptions = {
             power = {
                 name = l["power"],
@@ -242,7 +231,7 @@ __exports.OvalePowerClass = __class(States, {
             }
         }
         for powerType, powerId in pairs(Enum.PowerType) do
-            local powerTypeLower = strlower(powerType)
+            local powerTypeLower = lower(powerType)
             local powerToken = self.ovale.playerClass ~= nil and possiblePowerTypes[self.ovale.playerClass][powerTypeLower]
             if powerToken then
                 self.powerTypes[powerId] = powerTypeLower
@@ -259,7 +248,6 @@ __exports.OvalePowerClass = __class(States, {
         end
     end,
     updateMaxPower = function(self, event, powerType)
-        self.profiler:startProfiling("OvalePower_UpdateMaxPower")
         if powerType then
             local powerInfo = self.powerInfos[powerType]
             if powerInfo then
@@ -278,10 +266,8 @@ __exports.OvalePowerClass = __class(States, {
                 end
             end
         end
-        self.profiler:stopProfiling("OvalePower_UpdateMaxPower")
     end,
     updatePower = function(self, event, powerType)
-        self.profiler:startProfiling("OvalePower_UpdatePower")
         if powerType then
             local powerInfo = self.powerInfos[powerType]
             if powerInfo then
@@ -303,10 +289,8 @@ __exports.OvalePowerClass = __class(States, {
         if event == "UNIT_POWER_UPDATE" then
             self.ovale:needRefresh()
         end
-        self.profiler:stopProfiling("OvalePower_UpdatePower")
     end,
     updatePowerRegen = function(self, event)
-        self.profiler:startProfiling("OvalePower_UpdatePowerRegen")
         for powerType in pairs(self.powerInfos) do
             local currentType = self.current.powerType
             if powerType == currentType then
@@ -326,17 +310,14 @@ __exports.OvalePowerClass = __class(States, {
                 self.ovale:needRefresh()
             end
         end
-        self.profiler:stopProfiling("OvalePower_UpdatePowerRegen")
     end,
     updatePowerType = function(self, event)
-        self.profiler:startProfiling("OvalePower_UpdatePowerType")
         local powerId = UnitPowerType("player")
         local powerType = self.powerTypes[powerId]
         if self.current.powerType ~= powerType then
             self.current.powerType = powerType
             self.ovale:needRefresh()
         end
-        self.profiler:stopProfiling("OvalePower_UpdatePowerType")
     end,
     getSpellCost = function(self, spell, powerType)
         local spellId = self.ovaleSpellBook:getKnownSpellId(spell)
@@ -375,14 +356,12 @@ __exports.OvalePowerClass = __class(States, {
         end
     end,
     resetState = function(self)
-        self.profiler:startProfiling("OvalePower_ResetState")
         for powerType in kpairs(self.powerInfos) do
             self.next.power[powerType] = self.current.power[powerType] or 0
             self.next.maxPower[powerType] = self.current.maxPower[powerType] or 0
             self.next.activeRegen[powerType] = self.current.activeRegen[powerType] or 0
             self.next.inactiveRegen[powerType] = self.current.inactiveRegen[powerType] or 0
         end
-        self.profiler:stopProfiling("OvalePower_ResetState")
     end,
     cleanState = function(self)
         for powerType in kpairs(self.powerInfos) do
@@ -390,7 +369,6 @@ __exports.OvalePowerClass = __class(States, {
         end
     end,
     applyPowerCost = function(self, spellId, targetGUID, atTime, spellcast)
-        self.profiler:startProfiling("OvalePower_state_ApplyPowerCost")
         local si = self.ovaleData.spellInfo[spellId]
         do
             local cost, powerType = self:getSpellCost(spellId)
@@ -417,7 +395,6 @@ __exports.OvalePowerClass = __class(States, {
                 self.next.power[powerType] = power
             end
         end
-        self.profiler:stopProfiling("OvalePower_state_ApplyPowerCost")
     end,
     powerCost = function(self, spellId, powerType, atTime, targetGUID, maximumCost)
         return self:getPowerCostAt(self:getState(atTime), spellId, powerType, atTime, targetGUID, maximumCost)
@@ -456,7 +433,6 @@ __exports.OvalePowerClass = __class(States, {
         return 0
     end,
     getPowerCostAt = function(self, state, spellId, powerType, atTime, targetGUID, maximumCost)
-        self.profiler:startProfiling("OvalePower_PowerCost")
         local spellCost = 0
         local spellRefund = 0
         local si = self.ovaleData.spellInfo[spellId]
@@ -501,7 +477,6 @@ __exports.OvalePowerClass = __class(States, {
                 spellCost = cost
             end
         end
-        self.profiler:stopProfiling("OvalePower_PowerCost")
         return spellCost, spellRefund
     end,
 })

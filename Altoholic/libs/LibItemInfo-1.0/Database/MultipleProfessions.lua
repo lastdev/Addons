@@ -33,9 +33,12 @@ lib:RegisterItems({
 	[23572] = SetReagent(1, e.Multi), -- Primal Nether
 	[24478] = SetReagent(1, e.Multi, 0, bag.GemBag), -- Jaggal Pearl
 	[30183] = SetReagent(1, e.Multi, 0, bag.LeatherworkingBag), -- Nether Vortex
+	[32428] = SetReagent(1, e.Multi, 0, bag.LeatherworkingBag), -- Heart of Darkness
 	
 	-- 3.0 WotLK
 	[36784] = SetReagent(2, e.Multi, 0, bag.GemBag), -- Siren's Tear
+	[43102] = SetReagent(2, e.Multi), -- Frozen Orb
+	[49908] = SetReagent(2, e.Multi, 0, bag.LeatherworkingBag), -- Primordial Saronite
 	
 	-- 4.0 Cataclysm
 	[52325] = SetReagent(3, e.Multi), -- Volatile Fire
@@ -49,6 +52,7 @@ lib:RegisterItems({
 	[76061] = SetReagent(4, e.Multi), -- Spirit of Harmony
 	
 	-- 6.0 Warlords of Draenor
+	[127759] = SetReagent(4, e.Multi), -- Felblight
 	
 	-- 7.0 Legion
 	[124438] = SetReagent(6, e.Multi), -- Unbroken Claw
@@ -68,4 +72,5 @@ lib:RegisterItems({
 	[178788] = SetReagent(8, e.Multi), -- Relic of the Past III
 	[178759] = SetReagent(8, e.Multi), -- Relic of the Past IV
 	[178760] = SetReagent(8, e.Multi), -- Relic of the Past V
+	[186017] = SetReagent(8, e.Multi), -- Korthite Crystal
 })

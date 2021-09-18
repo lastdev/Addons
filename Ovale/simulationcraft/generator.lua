@@ -1,8 +1,17 @@
-local __exports = LibStub:NewLibrary("ovale/simulationcraft/generator", 90103)
+local __exports = LibStub:NewLibrary("ovale/simulationcraft/generator", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local __engineast = LibStub:GetLibrary("ovale/engine/ast")
-local isAstNodeWithChildren = __engineast.isAstNodeWithChildren
+local __imports = {}
+__imports.__engineast = LibStub:GetLibrary("ovale/engine/ast")
+__imports.isAstNodeWithChildren = __imports.__engineast.isAstNodeWithChildren
+__imports.__definitions = LibStub:GetLibrary("ovale/simulationcraft/definitions")
+__imports.optionalSkills = __imports.__definitions.optionalSkills
+__imports.__texttools = LibStub:GetLibrary("ovale/simulationcraft/text-tools")
+__imports.toLowerSpecialization = __imports.__texttools.toLowerSpecialization
+__imports.toOvaleFunctionName = __imports.__texttools.toOvaleFunctionName
+__imports.toOvaleTaggedFunctionName = __imports.__texttools.toOvaleTaggedFunctionName
+__imports.outputPool = __imports.__texttools.outputPool
+local isAstNodeWithChildren = __imports.isAstNodeWithChildren
 local type = type
 local ipairs = ipairs
 local wipe = wipe
@@ -13,13 +22,11 @@ local remove = table.remove
 local insert = table.insert
 local sort = table.sort
 local concat = table.concat
-local __definitions = LibStub:GetLibrary("ovale/simulationcraft/definitions")
-local optionalSkills = __definitions.optionalSkills
-local __texttools = LibStub:GetLibrary("ovale/simulationcraft/text-tools")
-local toLowerSpecialization = __texttools.toLowerSpecialization
-local toOvaleFunctionName = __texttools.toOvaleFunctionName
-local toOvaleTaggedFunctionName = __texttools.toOvaleTaggedFunctionName
-local outputPool = __texttools.outputPool
+local optionalSkills = __imports.optionalSkills
+local toLowerSpecialization = __imports.toLowerSpecialization
+local toOvaleFunctionName = __imports.toOvaleFunctionName
+local toOvaleTaggedFunctionName = __imports.toOvaleTaggedFunctionName
+local outputPool = __imports.outputPool
 local format = string.format
 local maxDesiredTargets = 3
 local definedFunctions = {}
@@ -483,6 +490,42 @@ __exports.Generator = __class(nil, {
                 extraCondition = "target.RemainingCastTime() > CastTime(hex) + GCDRemaining() and target.CreatureType(Humanoid Beast)"
             })
         end
+        if annotation.interrupt == "WARLOCK" then
+            insert(interrupts, {
+                name = "spell_lock",
+                interrupt = 1,
+                worksOnBoss = 1,
+                order = 10
+            })
+            if annotation.specialization == "demonology" then
+                insert(interrupts, {
+                    name = "axe_toss",
+                    interrupt = 1,
+                    worksOnBoss = 1,
+                    order = 20
+                })
+            end
+            insert(interrupts, {
+                name = "shadowfury",
+                stun = 1,
+                order = 100,
+                range = 35,
+                extraCondition = "target.RemainingCastTime() > CastTime(shadowfury) + GCDRemaining()"
+            })
+            insert(interrupts, {
+                name = "banish",
+                cc = 1,
+                order = 200,
+                range = 30,
+                extraCondition = "target.RemainingCastTime() > CastTime(banish) + GCDRemaining()"
+            })
+            insert(interrupts, {
+                name = "seduction",
+                cc = 1,
+                order = 300,
+                extraCondition = "target.RemainingCastTime() > CastTime(seduction) + GCDRemaining()"
+            })
+        end
         if annotation.pummel == "WARRIOR" then
             insert(interrupts, {
                 name = "pummel",
@@ -522,8 +565,12 @@ __exports.Generator = __class(nil, {
         local lowerSpecialization = toLowerSpecialization(annotation)
         if annotation.desired_targets then
             local lines = {}
-            for k = maxDesiredTargets, 1, -1 do
-                insert(lines, "if List(opt_" .. lowerSpecialization .. "_desired_targets desired_targets_" .. k .. ") " .. k)
+            do
+                local k = maxDesiredTargets
+                while k > 1 do
+                    insert(lines, "if List(opt_" .. lowerSpecialization .. "_desired_targets desired_targets_" .. k .. ") " .. k)
+                    k = k + -1
+                end
             end
             insert(lines, "1")
             local fmt = [[
@@ -832,8 +879,8 @@ __exports.Generator = __class(nil, {
             local fmt = [[
                 AddFunction %sUseItemActions
                 {
-                    Item(Trinket0Slot usable=1 text=13)
-                    Item(Trinket1Slot usable=1 text=14)
+                    Item("trinket0Slot" usable=1 text=13)
+                    Item("trinket1Slot" usable=1 text=14)
                 }
             ]]
             local code = format(fmt, camelSpecialization)
@@ -894,12 +941,16 @@ __exports.Generator = __class(nil, {
             end
         end
         if annotation.desired_targets then
-            for k = maxDesiredTargets, 0, -1 do
-                local fmt = "AddListItem(%s %s %s %s%s)"
-                local code = format(fmt, "opt_" .. lowerSpecialization .. "_desired_targets", "desired_targets_" .. k, "\"Desired targets: " .. k .. "\"", (k == 1 and "default ") or "", ifSpecialization)
-                local node = self.ovaleAst:parseCode("list_item", code, nodeList, annotation.astAnnotation)
-                insert(child, 1, node)
-                count = count + 1
+            do
+                local k = maxDesiredTargets
+                while k > 0 do
+                    local fmt = "AddListItem(%s %s %s %s%s)"
+                    local code = format(fmt, "opt_" .. lowerSpecialization .. "_desired_targets", "desired_targets_" .. k, "\"Desired targets: " .. k .. "\"", (k == 1 and "default ") or "", ifSpecialization)
+                    local node = self.ovaleAst:parseCode("list_item", code, nodeList, annotation.astAnnotation)
+                    insert(child, 1, node)
+                    count = count + 1
+                    k = k + -1
+                end
             end
         end
         if annotation.options then

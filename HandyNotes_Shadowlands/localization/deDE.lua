@@ -339,6 +339,7 @@ L["nirvaska_note"] = "Erscheint nur, wenn die Weltquest {wq:Tödliche Erinnerung
 L["ravenomous_note"] = "Zerquetsche {npc:159901} in der Gegend, bis der seltene Gegner erscheint."
 L["sabriel_note"] = "Kann als einer der Champions im Theater der Schmerzen auftreten."
 L["schmitd_note"] = "Benutze nahegelegene {spell:313451}, um sein Schild zu brechen."
+L["tahonta_note"] = "Das Reittier kann nur geplündert werden, wenn {npc:159239} dir folgt!"
 L["taskmaster_xox_note"] = "Teilt sich einen spawn mit {npc:160204}, {npc:160230} und {npc:160226}."
 L["theater_of_pain_note"] = "Bei der ersten Tötung am Tag, besteht die Chance, dass das Reittier fallen gelassen wird."
 L["zargox_the_reborn_note"] = [[
@@ -487,6 +488,18 @@ L["high_inquisitor_note"] = "Gib 250 {currency:1816} bei {npc:160248} ab, um ein
 L["inquisitor_note"] = "Gib 100 {currency:1816} bei {npc:160248} ab, um eine Chance auf diesen Sündenstein zu erhalten."
 L["options_icons_inquisitors"] = "{achievement:14276}"
 L["options_icons_inquisitors_desc"] = "Zeigt die Inquisitoren für den Erfolg {achievement:14276} an."
+
+L["broken_mirror"] = "Zerbrochener Spiegel"
+L["broken_mirror_note"] = "Täglich wird eine Gruppe von drei zerbrochenen Spiegeln aktiv sein. Benutze ein {item:181363}, um die Spiegel zu reparieren und die |cFFFFFD00Vergessene Truhe|r auf der anderen Seite des Spiegels zu plündern."
+L["broken_mirror_crypt"] = "In einer Gruft."
+L["broken_mirror_elite"] = "In einem kleinen Raum mit Elite Gegnern."
+L["broken_mirror_group"] = "Gruppe"
+L["broken_mirror_house"] = "Im Haus."
+L["broken_mirror_61818"] = "In einem kleinen Raum mit {npc:173699}."
+L["broken_mirror_61819"] = "In einem kleinen Raum auf der untersten Ebene."
+L["broken_mirror_61827"] = "In einem kleinen Raum."
+L["options_icons_broken_mirror"] = "Zerbrochene Spiegel"
+L["options_icons_broken_mirror_desc"] = "Zeigt die Position der Zerbrochenen Spiegel an."
 
 -------------------------------------------------------------------------------
 ----------------------------------- THE MAW -----------------------------------
@@ -658,3 +671,11 @@ L["desmotaeron"] = "Desmotaeron"
 L["zovault_note"] = "Ziehe täglich {npc:179883} zu {npc:179904} für einen garantierten Rissstein."
 L["options_icons_zovault"] = "{npc:179883}"
 L["options_icons_zovault_desc"] = "Zeigt mögliche Positionen für {npc:179883} an."
+
+L["tormentors"] = "Peiniger von Torghast"
+L["tormentors_note"] = [[
+Das Event erscheint alle 2 Stunden, zur vollen ungeraden Stunde (z.B. 13:00 Uhr).
+Die Bosse erscheinen in der unten aufgeführten Reihenfolge.
+
+Die {item:185972} kann wöchentlich geplündert werden und enthält 50 {currency:1906}.
+]]

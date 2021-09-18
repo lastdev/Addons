@@ -1,7 +1,7 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
 
-addon:Controller("AltoholicUI.GarrisonMissionFollower", {
+addon:Controller("AltoholicUI.TabCharacters.GarrisonMissionFollower", {
 	SetPortrait = function(frame, id)
 		local icon = frame.Portrait
 		local texture

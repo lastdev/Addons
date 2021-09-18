@@ -1,35 +1,36 @@
-local __exports = LibStub:NewLibrary("ovale/states/Health", 90103)
+local __exports = LibStub:NewLibrary("ovale/states/Health", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+local __imports = {}
+__imports.aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+__imports.__toolstools = LibStub:GetLibrary("ovale/tools/tools")
+__imports.oneTimeMessage = __imports.__toolstools.oneTimeMessage
+local aceEvent = __imports.aceEvent
+local pairs = pairs
 local wipe = wipe
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 local UnitGetTotalAbsorbs = UnitGetTotalAbsorbs
 local UnitGetTotalHealAbsorbs = UnitGetTotalHealAbsorbs
-local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
-local huge = math.huge
-local __toolstools = LibStub:GetLibrary("ovale/tools/tools")
-local oneTimeMessage = __toolstools.oneTimeMessage
-local infinity = huge
-local damageEvents = {
+local infinity = math.huge
+local oneTimeMessage = __imports.oneTimeMessage
+local healthEvent = {
     DAMAGE_SHIELD = true,
     DAMAGE_SPLIT = true,
+    ENVIRONMENTAL_DAMAGE = true,
     RANGE_DAMAGE = true,
     SPELL_BUILDING_DAMAGE = true,
     SPELL_DAMAGE = true,
-    SPELL_PERIODIC_DAMAGE = true,
-    SWING_DAMAGE = true,
-    ENVIRONMENTAL_DAMAGE = true
-}
-local healEvents = {
     SPELL_HEAL = true,
-    SPELL_PERIODIC_HEAL = true
+    SPELL_PERIODIC_DAMAGE = true,
+    SPELL_PERIODIC_HEAL = true,
+    SWING_DAMAGE = true
 }
 __exports.OvaleHealthClass = __class(nil, {
-    constructor = function(self, ovaleGuid, ovale, ovaleOptions, ovaleDebug, ovaleProfiler)
+    constructor = function(self, ovaleGuid, ovale, ovaleOptions, ovaleDebug, combatLogEvent)
         self.ovaleGuid = ovaleGuid
         self.ovaleOptions = ovaleOptions
+        self.combatLogEvent = combatLogEvent
         self.health = {}
         self.maxHealth = {}
         self.absorb = {}
@@ -61,26 +62,26 @@ __exports.OvaleHealthClass = __class(nil, {
             self.module:UnregisterEvent("UNIT_HEAL_ABSORB_AMOUNT_CHANGED")
             self.module:UnregisterMessage("Ovale_UnitChanged")
         end
-        self.handleCombatLogEventUnfiltered = function(event, ...)
-            local timestamp, cleuEvent, _, _, _, _, _, destGUID, _, _, _, arg12, arg13, _, arg15 = CombatLogGetCurrentEventInfo()
-            self.profiler:startProfiling("OvaleHealth_COMBAT_LOG_EVENT_UNFILTERED")
+        self.handleCombatLogEvent = function(cleuEvent)
+            if  not healthEvent[cleuEvent] then
+                return 
+            end
+            local cleu = self.combatLogEvent
+            local timestamp = cleu.timestamp
+            local destGUID = cleu.destGUID
+            local destName = cleu.destName
             local healthUpdate = false
-            if damageEvents[cleuEvent] then
-                local amount
-                if cleuEvent == "SWING_DAMAGE" then
-                    amount = arg12
-                elseif cleuEvent == "ENVIRONMENTAL_DAMAGE" then
-                    amount = arg13
-                else
-                    amount = arg15
-                end
-                self.tracer:debug(cleuEvent, destGUID, amount)
+            if cleu.payload.type == "DAMAGE" then
+                local payload = cleu.payload
+                local amount = payload.amount
+                self.tracer:debug(cleuEvent, destGUID, destName, amount)
                 local total = self.totalDamage[destGUID] or 0
                 self.totalDamage[destGUID] = total + amount
                 healthUpdate = true
-            elseif healEvents[cleuEvent] then
-                local amount = arg15
-                self.tracer:debug(cleuEvent, destGUID, amount)
+            elseif cleu.payload.type == "HEAL" then
+                local payload = cleu.payload
+                local amount = payload.amount
+                self.tracer:debug(cleuEvent, destGUID, destName, amount)
                 local total = self.totalHealing[destGUID] or 0
                 self.totalHealing[destGUID] = total + amount
                 healthUpdate = true
@@ -91,20 +92,20 @@ __exports.OvaleHealthClass = __class(nil, {
                 end
                 self.lastUpdated[destGUID] = timestamp
             end
-            self.profiler:stopProfiling("OvaleHealth_COMBAT_LOG_EVENT_UNFILTERED")
         end
         self.handlePlayerRegenDisabled = function(event)
-            self.module:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", self.handleCombatLogEventUnfiltered)
+            for event in pairs(healthEvent) do
+                self.combatLogEvent.registerEvent(event, self, self.handleCombatLogEvent)
+            end
         end
         self.handlePlayerRegenEnabled = function(event)
-            self.module:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+            self.combatLogEvent.unregisterAllEvents(self)
             wipe(self.totalDamage)
             wipe(self.totalHealing)
             wipe(self.firstSeen)
             wipe(self.lastUpdated)
         end
         self.handleUnitChanged = function(event, unitId, guid)
-            self.profiler:startProfiling("Ovale_UnitChanged")
             if unitId == "target" or unitId == "focus" then
                 self.tracer:debug(event, unitId, guid)
                 self.handleUpdateHealth("UNIT_HEALTH", unitId)
@@ -112,13 +113,11 @@ __exports.OvaleHealthClass = __class(nil, {
                 self.handleUpdateAbsorb("UNIT_ABSORB_AMOUNT_CHANGED", unitId)
                 self.handleUpdateAbsorb("UNIT_HEAL_ABSORB_AMOUNT_CHANGED", unitId)
             end
-            self.profiler:stopProfiling("Ovale_UnitChanged")
         end
         self.handleUpdateAbsorb = function(event, unitId)
             if  not unitId then
                 return 
             end
-            self.profiler:startProfiling("OvaleHealth_UpdateAbsorb")
             local func
             local db
             if event == "UNIT_ABSORB_AMOUNT_CHANGED" then
@@ -139,13 +138,11 @@ __exports.OvaleHealthClass = __class(nil, {
                     db[guid] = amount
                 end
             end
-            self.profiler:stopProfiling("OvaleHealth_UpdateHealth")
         end
         self.handleUpdateHealth = function(event, unitId)
             if  not unitId then
                 return 
             end
-            self.profiler:startProfiling("OvaleHealth_UpdateHealth")
             local func
             local db
             if event == "UNIT_HEALTH" then
@@ -172,11 +169,9 @@ __exports.OvaleHealthClass = __class(nil, {
                     end
                 end
             end
-            self.profiler:stopProfiling("OvaleHealth_UpdateHealth")
         end
         self.module = ovale:createModule("OvaleHealth", self.handleInitialize, self.handleDisable, aceEvent)
         self.tracer = ovaleDebug:create(self.module:GetName())
-        self.profiler = ovaleProfiler:create(self.module:GetName())
     end,
     getUnitHealth = function(self, unitId, guid)
         return self:getUnitAmount(UnitHealth, self.health, unitId, guid)
@@ -214,7 +209,6 @@ __exports.OvaleHealthClass = __class(nil, {
         return amount
     end,
     getUnitTimeToDie = function(self, unitId, effectiveHealth, guid)
-        self.profiler:startProfiling("OvaleHealth_UnitTimeToDie")
         local timeToDie = infinity
         guid = guid or self.ovaleGuid:getUnitGUID(unitId)
         if guid then
@@ -238,7 +232,6 @@ __exports.OvaleHealthClass = __class(nil, {
                 end
             end
         end
-        self.profiler:stopProfiling("OvaleHealth_UnitTimeToDie")
         return timeToDie
     end,
     cleanState = function(self)

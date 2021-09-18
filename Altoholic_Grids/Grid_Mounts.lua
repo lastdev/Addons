@@ -3,14 +3,18 @@ local addon = _G[addonName]
 local colors = addon.Colors
 local icons = addon.Icons
 
+local MVC = LibStub("LibMVC-1.0")
+local Options = MVC:GetService("AltoholicUI.Options")
+
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
+
+local tab = AltoholicFrame.TabGrids
 
 local spellList
 local currentSpellID
 local currentPetTexture
 
 local OPTION_XPACK = "UI.Tabs.Grids.Companions.CurrentXPack"
-local OPTION_FACTION = "UI.Tabs.Grids.Mounts.CurrentFaction"
 
 local function SortPets(a, b)
 	local textA = GetSpellInfo(a) or ""
@@ -95,31 +99,10 @@ local xPacks = {
 
 local CAT_ALLINONE = #xPacks
 
-local function OnXPackChange(self)
-	local currentXPack = self.value
-	
-	addon:SetOption(OPTION_XPACK, currentXPack)
-
-	AltoholicTabGrids:SetViewDDMText(xPacks[currentXPack])
-	AltoholicTabGrids:Update()
-end
-
-local function DropDown_Initialize(frame)
-	local currentXPack = addon:GetOption(OPTION_XPACK)
-
-	for i, xpack in pairs(xPacks) do
-		frame:AddButton(xpack, i, OnXPackChange, nil, (i==currentXPack))
-	end
-	
-	frame:AddCloseMenu()
-end
-
-local callbacks = {
+tab:RegisterGrid(5, {
 	OnUpdate = function() 
-			local currentXPack = addon:GetOption(OPTION_XPACK)
+			local currentXPack = Options.Get(OPTION_XPACK)
 			spellList = (currentXPack <= CAT_ALLINONE) and petList[currentXPack] or DataStore:GetCompanionList()
-
-			AltoholicTabGrids:SetStatus(xPacks[currentXPack])
 		end,
 	GetSize = function() return #spellList end,
 	RowSetup = function(self, rowFrame, dataRowID)
@@ -128,12 +111,10 @@ local callbacks = {
 			petName, _, currentPetTexture = GetSpellInfo(currentSpellID)
 			
 			if petName then
-				rowFrame.Name.Text:SetText(colors.white .. petName)
+				rowFrame.Name.Text:SetText(format("%s%s", colors.white, petName))
 				rowFrame.Name.Text:SetJustifyH("LEFT")
 			end
 		end,
-	RowOnEnter = function()	end,
-	RowOnLeave = function() end,
 	ColumnSetup = function(self, button, dataRowID, character)
 			button.Name:SetFontObject("GameFontNormalSmall")
 			button.Name:SetJustifyH("CENTER")
@@ -143,38 +124,28 @@ local callbacks = {
 			button.Background:SetTexture(currentPetTexture)
 			
 			if DataStore:IsPetKnown(character, "CRITTER", currentSpellID) then
-				button.Background:SetVertexColor(1.0, 1.0, 1.0);
+				button.Background:SetVertexColor(1.0, 1.0, 1.0)
 				button.Name:SetText(icons.ready)
 			else
-				button.Background:SetVertexColor(0.4, 0.4, 0.4);
+				button.Background:SetVertexColor(0.4, 0.4, 0.4)
 				button.Name:SetText(icons.notReady)
 			end
 			button.id = currentSpellID
 		end,
 	OnEnter = function(frame) 
 			local id = frame.id
-			if id then 
-				AltoTooltip:SetOwner(frame, "ANCHOR_LEFT");
-				AltoTooltip:ClearLines();
-				AltoTooltip:SetHyperlink("spell:" ..id);
-				AltoTooltip:Show();
+			if id then
+				local tooltip = AddonFactory_Tooltip
+				
+				tooltip:SetOwner(frame, "ANCHOR_LEFT")
+				tooltip:ClearLines()
+				tooltip:SetHyperlink(format("spell:%d", id))
+				tooltip:Show()
 			end
 			
 		end,
 	OnClick = CompanionOnClick,
 	OnLeave = function(self)
-			AltoTooltip:Hide() 
+			AddonFactory_Tooltip:Hide() 
 		end,
-		
-	InitViewDDM = function(frame, title)
-			frame:Show()
-			title:Show()
-			
-			frame:SetMenuWidth(100) 
-			frame:SetButtonWidth(20)
-			frame:SetText(xPacks[addon:GetOption(OPTION_XPACK)])
-			frame:Initialize(DropDown_Initialize, "MENU_NO_BORDERS")
-		end,
-}
-
-AltoholicTabGrids:RegisterGrid(5, callbacks)
+})

@@ -1,11 +1,13 @@
-## Interface: 90100
+﻿## Interface: 90100
 ## Title: Altoholic_Characters
 ## Notes: Altoholic's Characters UI
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: r192
+## Version: 9.1.005
 ## Dependencies: Altoholic, DataStore, DataStore_Characters
 ## LoadOnDemand: 1
 ## X-Category: Interface Enhancements
+
+Locale.xml
 
 Templates\UITemplates.xml
 TabCharacters.xml
@@ -13,8 +15,7 @@ TabCharacters.xml
 Frames\AuctionHouse.xml
 Frames\Containers.xml
 Frames\Mails.xml
-Frames\Pets.xml
-Frames\Quests.xml
+Frames\QuestLog.xml
 Frames\Recipes.xml
 Frames\Spellbook.xml
 Frames\Talents.xml

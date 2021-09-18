@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/engine/controls", 90103)
+local __exports = LibStub:NewLibrary("ovale/engine/controls", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local wipe = wipe

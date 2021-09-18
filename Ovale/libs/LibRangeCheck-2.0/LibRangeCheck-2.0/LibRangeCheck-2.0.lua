@@ -199,6 +199,9 @@ local FriendItems  = {
         136605, -- Solendra's Compassion
         63427, -- Worgsaw
     },
+    [6] = {
+        164766, -- Iwen's Enchanting Rod
+    },
     [7] = {
         61323, -- Ruby Seeds
     },
@@ -300,6 +303,9 @@ local HarmItems = {
         8149, -- Voodoo Charm
         136605, -- Solendra's Compassion
         63427, -- Worgsaw
+    },
+    [6] = {
+        164766, -- Iwen's Enchanting Rod
     },
     [7] = {
         61323, -- Ruby Seeds

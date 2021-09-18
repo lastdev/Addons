@@ -149,6 +149,8 @@ L["Array"] = "Tableau"
 L["Ascending"] = "Croissant"
 --[[Translation missing --]]
 L["Assigned Role"] = "Assigned Role"
+--[[Translation missing --]]
+L["Assigned Role Icon"] = "Assigned Role Icon"
 L["At Least One Enemy"] = "Au moins un ennemi"
 --[[Translation missing --]]
 L["At missing Value"] = "At missing Value"
@@ -594,6 +596,8 @@ L["Heal Absorbed"] = "Heal Absorbed"
 L["Health"] = "Vie"
 L["Health (%)"] = "Vie (%)"
 --[[Translation missing --]]
+L["Health Deficit"] = "Health Deficit"
+--[[Translation missing --]]
 L["Heigan the Unclean"] = "Heigan the Unclean"
 L["Height"] = "Hauteur"
 --[[Translation missing --]]
@@ -619,6 +623,10 @@ L["High Priestess Mar'li"] = "High Priestess Mar'li"
 --[[Translation missing --]]
 L["High Warlord Naj'entus"] = "High Warlord Naj'entus"
 L["Higher Than Tank"] = "Plus haut que le tank"
+--[[Translation missing --]]
+L["Hit (%)"] = "Hit (%)"
+--[[Translation missing --]]
+L["Hit Rating"] = "Hit Rating"
 L["Holy Resistance"] = "Résistance au sacré"
 L["Horde"] = "Horde"
 L["Hostile"] = "Hostile"
@@ -654,6 +662,8 @@ L["In Raid"] = "En Raid"
 L["In Vehicle"] = "Dans un véhicule"
 L["Include Bank"] = "Inclure Banque"
 L["Include Charges"] = "Inclure charges"
+--[[Translation missing --]]
+L["Include Pets"] = "Include Pets"
 L["Incoming Heal"] = "Soins en Cours"
 --[[Translation missing --]]
 L["Increase Precision Below"] = "Increase Precision Below"
@@ -977,6 +987,8 @@ L["Pet"] = "Familier "
 L["Pet Behavior"] = "Comportement du familier"
 L["Pet Specialization"] = "Spécialisation du Familier"
 L["Pet Spell"] = "Sort du Familier"
+--[[Translation missing --]]
+L["Pets only"] = "Pets only"
 L["Phase"] = "Phase"
 L["Pixel Glow"] = "Pixel surbrillant"
 L["Placement"] = "Placement"
@@ -1001,9 +1013,13 @@ L["Player(s) Affected"] = "Joueur(s) affecté(s)"
 L["Player(s) Not Affected"] = "Joueur(s) non affecté(s)"
 --[[Translation missing --]]
 L["Player/Unit Info"] = "Player/Unit Info"
+--[[Translation missing --]]
+L["Players and Pets"] = "Players and Pets"
 L["Poison"] = "Poison"
 L["Power"] = "Puissance"
 L["Power (%)"] = "Puissance (%)"
+--[[Translation missing --]]
+L["Power Deficit"] = "Power Deficit"
 L["Power Type"] = "Type de puissance"
 L["Precision"] = "Précision"
 L["Preset"] = "Préréglé"
@@ -1047,6 +1063,8 @@ L["Raid (Mythic)"] = "Raid (Mythic)"
 L["Raid (Normal)"] = "Raid (Normal)"
 --[[Translation missing --]]
 L["Raid (Timewalking)"] = "Raid (Timewalking)"
+--[[Translation missing --]]
+L["Raid Mark"] = "Raid Mark"
 --[[Translation missing --]]
 L["Raid Role"] = "Raid Role"
 L["Raid Warning"] = "Avertissement de Raid"
@@ -1360,6 +1378,8 @@ L["This aura was created with a newer version of WeakAuras."] = "Cette aura a é
 L["This aura was created with the Classic version of World of Warcraft."] = "This aura was created with the Classic version of World of Warcraft."
 --[[Translation missing --]]
 L["This aura was created with the retail version of World of Warcraft."] = "This aura was created with the retail version of World of Warcraft."
+--[[Translation missing --]]
+L["This import requires a newer WeakAuras version."] = "This import requires a newer WeakAuras version."
 L["This is a modified version of your aura, |cff9900FF%s.|r"] = "Ceci est une version modifiée de votre aura, |cff9900FF%s.|r"
 L["This is a modified version of your group, |cff9900FF%s.|r"] = "Ceci est une version modifiée de votre groupe, |cff9900FF%s.|r"
 --[[Translation missing --]]

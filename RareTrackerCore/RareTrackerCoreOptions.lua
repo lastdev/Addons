@@ -60,6 +60,15 @@ local sound_options = {
     [554236] = "I see you",
 }
 
+local sound_channel_options = {
+    ["SFX"] = "SFX",
+    ["Master"] = "Master",
+    ["Music"] = "Music",
+    ["Ambience"] = "Ambience",
+    ["Dialog"] = "Dialog",
+}
+
+
 -- Initialize the minimap button.
 function RareTracker:InitializeRareTrackerLDB()
     self.ldb_data = {
@@ -105,7 +114,7 @@ end
 -- Initialize the options menu for the addon.
 function RareTracker:InitializeOptionsMenu()
     self.options_table = {
-        name = "RareTracker (RT)",
+        name = "RareTracker (RTC)",
         handler = RareTracker,
         type = 'group',
         childGroups = "tree",
@@ -196,7 +205,21 @@ function RareTracker:InitializeOptionsMenu()
                                 end,
                                 set = function(_, val)
                                     self.db.global.favorite_alert.favorite_sound_alert = val
-                                    PlaySoundFile(val)
+                                    PlaySoundFile(val, self.db.global.favorite_alert.favorite_alert_sound_channel)
+                                end
+                            },
+                            favorite_alert_sound_channel = {
+                                type = "select",
+                                name = L["Favorite sound alert channel"],
+                                style = "dropdown",
+                                values = sound_channel_options,
+                                order = self:GetOrder(),
+                                width = 1.2,
+                                get = function()
+                                    return self.db.global.favorite_alert.favorite_alert_sound_channel
+                                end,
+                                set = function(_, val)
+                                    self.db.global.favorite_alert.favorite_alert_sound_channel = val
                                 end
                             }
                         }
@@ -365,19 +388,19 @@ function RareTracker:InitializeOptionsMenu()
                 order = self:GetOrder(),
                 args = {
                     chat_description_1 = {
-                        name = L[" - [/rt show] shows the RareTracker window."],
+                        name = L[" - [/rtc show] shows the RareTracker window."],
                         type = 'description',
                         order = self:GetOrder(),
                         fontSize = "medium"
                     },
                     chat_description_2 = {
-                        name = L[" - [/rt hide] hides the RareTracker window."],
+                        name = L[" - [/rtc hide] hides the RareTracker window."],
                         type = 'description',
                         order = self:GetOrder(),
                         fontSize = "medium"
                     },
                     chat_description_3 = {
-                        name = L[" - [/rt refresh] reset your data and replace it with the data of others."],
+                        name = L[" - [/rtc refresh] reset your data and replace it with the data of others."],
                         type = 'description',
                         order = self:GetOrder(),
                         fontSize = "medium"

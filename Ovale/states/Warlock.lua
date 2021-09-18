@@ -1,15 +1,15 @@
-local __exports = LibStub:NewLibrary("ovale/states/Warlock", 90103)
+local __exports = LibStub:NewLibrary("ovale/states/Warlock", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+local __imports = {}
+__imports.__enginecondition = LibStub:GetLibrary("ovale/engine/condition")
+__imports.returnConstant = __imports.__enginecondition.returnConstant
 local tonumber = tonumber
 local pairs = pairs
 local GetTime = GetTime
-local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
 local find = string.find
 local pow = math.pow
-local __enginecondition = LibStub:GetLibrary("ovale/engine/condition")
-local returnConstant = __enginecondition.returnConstant
+local returnConstant = __imports.returnConstant
 local customAuras = {
     [80240] = {
         customId = -80240,
@@ -48,64 +48,68 @@ local demonData = {
     }
 }
 __exports.OvaleWarlockClass = __class(nil, {
-    constructor = function(self, ovale, ovaleAura, ovalePaperDoll, ovaleSpellBook, future, power)
+    constructor = function(self, ovale, ovaleAura, ovalePaperDoll, ovaleSpellBook, future, power, combatLogEvent)
         self.ovale = ovale
         self.ovaleAura = ovaleAura
         self.ovalePaperDoll = ovalePaperDoll
         self.ovaleSpellBook = ovaleSpellBook
         self.future = future
         self.power = power
+        self.combatLogEvent = combatLogEvent
         self.demonsCount = {}
         self.serial = 1
         self.handleInitialize = function()
             if self.ovale.playerClass == "WARLOCK" then
-                self.module:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", self.handleCombatLogEventUnfiltered)
+                self.combatLogEvent.registerEvent("SPELL_SUMMON", self, self.handleCombatLogEvent)
+                self.combatLogEvent.registerEvent("SPELL_CAST_SUCCESS", self, self.handleCombatLogEvent)
                 self.demonsCount = {}
             end
         end
         self.handleDisable = function()
             if self.ovale.playerClass == "WARLOCK" then
-                self.module:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+                self.combatLogEvent.unregisterAllEvents(self)
             end
         end
-        self.handleCombatLogEventUnfiltered = function(event, ...)
-            local _, cleuEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId = CombatLogGetCurrentEventInfo()
-            if sourceGUID ~= self.ovale.playerGUID then
-                return 
-            end
-            self.serial = self.serial + 1
-            if cleuEvent == "SPELL_SUMMON" then
-                local _, _, _, _, _, _, _, creatureId = find(destGUID, "(%S+)-(%d+)-(%d+)-(%d+)-(%d+)-(%d+)-(%S+)")
-                creatureId = tonumber(creatureId)
-                local now = GetTime()
-                for id, v in pairs(demonData) do
-                    if id == creatureId then
-                        self.demonsCount[destGUID] = {
-                            id = creatureId,
-                            timestamp = now,
-                            finish = now + v.duration
-                        }
-                        break
+        self.handleCombatLogEvent = function(cleuEvent)
+            local cleu = self.combatLogEvent
+            if cleu.sourceGUID == self.ovale.playerGUID then
+                self.serial = self.serial + 1
+                if cleuEvent == "SPELL_SUMMON" then
+                    local destGUID = cleu.destGUID
+                    local _, _, _, _, _, _, _, creatureId = find(destGUID, "(%S+)-(%d+)-(%d+)-(%d+)-(%d+)-(%d+)-(%S+)")
+                    creatureId = tonumber(creatureId)
+                    local now = GetTime()
+                    for id, v in pairs(demonData) do
+                        if id == creatureId then
+                            self.demonsCount[destGUID] = {
+                                id = creatureId,
+                                timestamp = now,
+                                finish = now + v.duration
+                            }
+                            break
+                        end
                     end
-                end
-                for k, d in pairs(self.demonsCount) do
-                    if d.finish < now then
-                        self.demonsCount[k] = nil
-                    end
-                end
-                self.ovale:needRefresh()
-            elseif cleuEvent == "SPELL_CAST_SUCCESS" then
-                if spellId == 196277 then
                     for k, d in pairs(self.demonsCount) do
-                        if d.id == 55659 or d.id == 143622 then
+                        if d.finish < now then
                             self.demonsCount[k] = nil
                         end
                     end
                     self.ovale:needRefresh()
-                end
-                local aura = customAuras[spellId]
-                if aura then
-                    self:addCustomAura(aura.customId, aura.stacks, aura.duration, aura.auraName)
+                elseif cleuEvent == "SPELL_CAST_SUCCESS" then
+                    local header = cleu.header
+                    local spellId = header.spellId
+                    if spellId == 196277 then
+                        for k, d in pairs(self.demonsCount) do
+                            if d.id == 55659 or d.id == 143622 then
+                                self.demonsCount[k] = nil
+                            end
+                        end
+                        self.ovale:needRefresh()
+                    end
+                    local aura = customAuras[spellId]
+                    if aura then
+                        self:addCustomAura(aura.customId, aura.stacks, aura.duration, aura.auraName)
+                    end
                 end
             end
         end
@@ -148,7 +152,7 @@ __exports.OvaleWarlockClass = __class(nil, {
             local value = self:getTimeToShard(atTime)
             return returnConstant(value)
         end
-        self.module = ovale:createModule("OvaleWarlock", self.handleInitialize, self.handleDisable, aceEvent)
+        ovale:createModule("OvaleWarlock", self.handleInitialize, self.handleDisable)
     end,
     registerConditions = function(self, condition)
         condition:registerCondition("timetoshard", false, self.timeToShard)
@@ -179,10 +183,10 @@ __exports.OvaleWarlockClass = __class(nil, {
         local expire = now + duration
         self.ovaleAura:gainedAuraOnGUID(self.ovale.playerGUID, now, customId, self.ovale.playerGUID, "HELPFUL", false, nil, stacks, nil, duration, expire, false, buffName, nil, nil, nil)
     end,
-    getTimeToShard = function(self, now)
+    getTimeToShard = function(self, atTime)
         local value = 3600
-        local tickTime = 2 / self.ovalePaperDoll:getHasteMultiplier("spell", self.ovalePaperDoll.next)
-        local activeAgonies = self.ovaleAura:auraCount(980, "HARMFUL", true, nil, now, nil)
+        local tickTime = 2 / self.ovalePaperDoll:getHasteMultiplier("spell", atTime)
+        local activeAgonies = self.ovaleAura:auraCount(980, "HARMFUL", true, nil, atTime, nil)
         if activeAgonies > 0 then
             value = ((1 / (0.184 * pow(activeAgonies, -2 / 3))) * tickTime) / activeAgonies
             if self.ovaleSpellBook:isKnownTalent(19281) then

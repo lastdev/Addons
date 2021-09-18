@@ -1,8 +1,10 @@
-local __exports = LibStub:NewLibrary("ovale/states/LastSpell", 90103)
+local __exports = LibStub:NewLibrary("ovale/states/LastSpell", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local __toolsPool = LibStub:GetLibrary("ovale/tools/Pool")
-local OvalePool = __toolsPool.OvalePool
+local __imports = {}
+__imports.__toolsPool = LibStub:GetLibrary("ovale/tools/Pool")
+__imports.OvalePool = __imports.__toolsPool.OvalePool
+local OvalePool = __imports.OvalePool
 local pairs = pairs
 local remove = table.remove
 local insert = table.insert
@@ -12,17 +14,12 @@ __exports.createSpellCast = function()
         stop = 0,
         start = 0,
         queued = 0,
-        hastePercent = 0,
-        meleeAttackSpeedPercent = 0,
-        rangedAttackSpeedPercent = 0,
-        spellCastSpeedPercent = 0,
-        masteryEffect = 0,
-        target = "unknown",
+        targetGuid = "unknown",
         targetName = "target",
         spellName = "Unknown spell"
     }
 end
-__exports.lastSpellCastPool = OvalePool("OvaleFuture_pool")
+__exports.lastSpellCastPool = __imports.OvalePool("OvaleFuture_pool")
 __exports.LastSpell = __class(nil, {
     lastInFlightSpell = function(self)
         local spellcast = nil
@@ -41,13 +38,16 @@ __exports.LastSpell = __class(nil, {
         return spellcast
     end,
     copySpellcastInfo = function(self, spellcast, dest)
-        if spellcast.damageMultiplier then
-            dest.damageMultiplier = spellcast.damageMultiplier
-        end
         for _, mod in pairs(self.modules) do
-            local func = mod.copySpellcastInfo
-            if func then
-                func(spellcast, dest)
+            if mod.copySpellcastInfo then
+                mod.copySpellcastInfo(spellcast, dest)
+            end
+        end
+    end,
+    saveSpellcastInfo = function(self, spellcast, atTime)
+        for _, mod in pairs(self.modules) do
+            if mod.saveSpellcastInfo then
+                mod.saveSpellcastInfo(spellcast, atTime)
             end
         end
     end,

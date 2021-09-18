@@ -1,0 +1,8 @@
+## Interface: 90100
+## Title: AddonFactory by |cFF69CCF0Thaoky|r
+## Notes: AddonFactory is a collection of templates for rapid UI development.
+## Author: Thaoky (EU-Marécages de Zangar)
+
+Libs\LibStub\LibStub.lua
+Libs\LibMVC-1.0\LibMVC-1.0.xml
+AddonFactory.xml

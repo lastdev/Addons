@@ -131,23 +131,29 @@ local already_notified_loot = {
 local MOB = 1
 local LOOT = 2
 local visible_overrides = {
-	[1550] = LOOT, -- The Shadowlands, because of...
-	[1565] = LOOT, -- Ardenweald, where all chests are notified from the entire zone
+	-- [1550] = LOOT, -- The Shadowlands, because of...
+	-- [1565] = LOOT, -- Ardenweald, where all chests are notified from the entire zone
 	-- But also all the Shadowlands zones, because callings quests are fucky about this and I need to work out a heuristic for them
-	[1533] = LOOT, -- Bastion
-	[1536] = LOOT, -- Maldraxxus
-	[1525] = LOOT, -- Revendreth
-	[1543] = true, -- Maw
+	-- [1533] = LOOT, -- Bastion
+	-- [1536] = LOOT, -- Maldraxxus
+	-- [1525] = LOOT, -- Revendreth
+	[1543] = true, -- Maw (where there's just so *many*)
 }
 local vignette_denylist = {
 	[637] = true, -- Garrison Cache
 }
 local function shouldShowNotVisible(vignetteInfo, zone)
-	if vignetteInfo.onWorldMap and db.pointsofinterest then
-		-- on the world map, it's cool
+	local variant = (vignetteInfo.atlasName == "VignetteLoot" or vignetteInfo.atlasName == "VignetteLootElite") and LOOT or MOB
+	if vignetteInfo.onWorldMap and db.pointsofinterest and variant == MOB then
+		-- If it's on the world map, it's cool
+		-- BUT don't alert for treasures on the world map, because there's no time-sensitive ones so far (9.1), and
+		-- it results in bursts of alerts when zoning into the Shadowlands area with the daily chests
 		return true
 	end
-	local variant = (vignetteInfo.atlasName == "VignetteLoot" or vignetteInfo.atlasName == "VignetteLootElite") and LOOT or MOB
+	if vignetteInfo.zoneInfiniteAOI then
+		-- It can be semi-seen from the entire zone, and so we should wait until it's actually-visible
+		return false
+	end
 	if zone and (visible_overrides[zone] == true or visible_overrides[zone] == variant) then
 		return false
 	end
@@ -200,8 +206,8 @@ function module:WorkOutMobFromVignette(instanceid)
 			return -- Debug("skipping notification", "delay not exceeded")
 		end
 		already_notified_loot[vignetteInfo.vignetteID] = time()
-		core.events:Fire("SeenVignette", vignetteInfo.name, vignetteInfo.vignetteID, vignetteInfo.atlasName, current_zone, x or 0, y or 0)
-		core.events:Fire("SeenLoot", vignetteInfo.name, vignetteInfo.vignetteID, current_zone, x or 0, y or 0)
+		core.events:Fire("SeenVignette", vignetteInfo.name, vignetteInfo.vignetteID, vignetteInfo.atlasName, current_zone, x or 0, y or 0, instanceid)
+		core.events:Fire("SeenLoot", vignetteInfo.name, vignetteInfo.vignetteID, current_zone, x or 0, y or 0, instanceid)
 		return true
 	end
 	if vignetteInfo.objectGUID then
@@ -254,11 +260,7 @@ function module:VIGNETTES_UPDATED()
 end
 
 function module:NotifyIfNeeded(id, current_zone, x, y, variant, instanceid)
-	local force = true
-	if x and y then
-		--Triggered by map update, vignette has exact location that does not match player, so update x, y
-		force = false
-	else
+	if not (x and y) then
 		x, y = HBD:GetPlayerZonePosition()
 	end
 	if not (current_zone and x and y) then
@@ -266,6 +268,7 @@ function module:NotifyIfNeeded(id, current_zone, x, y, variant, instanceid)
 	end
 	already_notified[instanceid] = true
 	local vignetteInfo = C_VignetteInfo.GetVignetteInfo(instanceid)
-	core.events:Fire("SeenVignette", vignetteInfo.name, vignetteInfo.vignetteID, vignetteInfo.atlasName, current_zone, x, y)
-	return core:NotifyForMob(id, current_zone, x, y, false, variant or "vignette", false, nil, force)
+	local ret = core:NotifyForMob(id, current_zone, x, y, false, variant or "vignette", false, nil, false, instanceid)
+	core.events:Fire("SeenVignette", vignetteInfo.name, vignetteInfo.vignetteID, vignetteInfo.atlasName, current_zone, x, y, instanceid, id)
+	return ret
 end

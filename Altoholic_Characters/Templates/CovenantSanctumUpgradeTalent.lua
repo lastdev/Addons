@@ -1,10 +1,7 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
 
-local BORDER_TEXTURE = "CovenantSanctum-Icon-Border-%s"
-
-
-addon:Controller("AltoholicUI.CovenantSanctumUpgradeTalent", {
+addon:Controller("AltoholicUI.TabCharacters.CovenantSanctumUpgradeTalent", {
 	Update = function(frame, talentID, tier, learnedTier)
 		if not talentID then return end
 		
@@ -31,8 +28,7 @@ addon:Controller("AltoholicUI.CovenantSanctumUpgradeTalent", {
 		frame.name = info.name
 		frame.description = info.description
 		frame.costString = GetGarrisonTalentCostString(info)
-		
-		
+				
 		frame:Show()
 	end,
 })

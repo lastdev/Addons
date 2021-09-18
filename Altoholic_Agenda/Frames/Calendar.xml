@@ -10,12 +10,13 @@
 		<Color r="1.0" g="1.0" b="0.6039215686274509803921568627451"/>
 	</Font>
 
-	<Frame parentKey="Calendar" parent="AltoholicTabAgenda" inherits="AltoDataPanelTemplate">
+	<Frame parentKey="Calendar" hidden="true">
+		<Size x="615" y="306" />	
 		<Layers>
 			<Layer level="BACKGROUND">
 				<Texture parentKey="Weekday1Background" inherits="AltoWeekdayBackgroundTemplate">
 					<Anchors>
-						<Anchor point="TOPLEFT" x="280" y="25" />
+						<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="280" y="25" />
 					</Anchors>
 				</Texture>
 				<Texture parentKey="Weekday2Background" inherits="AltoWeekdayBackgroundTemplate">
@@ -129,12 +130,12 @@
 			</Button>
 
 			<Frame parentKey="EventList">
-				<Size x="250" y="306" />
+				<Size x="272" />
 				<Anchors>
 					<Anchor point="TOPLEFT" x="3" y="0" />
 				</Anchors>
 				<Frames>
-					<ScrollFrame parentKey="ScrollFrame" inherits="AltoBaseScrollFrameTemplate">
+					<ScrollFrame parentKey="ScrollFrame" inherits="AddonFactory_BaseScrollFrameTemplate">
 						<Scripts>
 							<OnVerticalScroll>
 								self:OnVerticalScroll(offset, 18, self:GetParent():Update())
@@ -378,7 +379,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:BindViewToController(self, "AltoholicUI.Calendar")
+				Altoholic:BindViewToController(self, "AltoholicUI.TabAgenda.Calendar")
 			</OnLoad>
 		</Scripts>
 	</Frame>

@@ -27,6 +27,15 @@ local function any(test, ...)
 	return false
 end
 
+-- we need non-localized covenant names for atlases
+-- can't use the texturekit value from covenant data, since the atlas I want doesn't conform to it
+local covenants = {
+	[Enum.CovenantType.Kyrian] = "Kyrian",
+	[Enum.CovenantType.Necrolord] = "Necrolords",
+	[Enum.CovenantType.NightFae] = "NightFae",
+	[Enum.CovenantType.Venthyr] = "Venthyr",
+}
+
 local brokenItems = {
 	-- itemid : {appearanceid, sourceid}
 	[153268] = {25124, 90807}, -- Enclave Aspirant's Axe
@@ -190,6 +199,7 @@ do
 		return quest_iter, ns.mobdb[id].loot or noloot, nil
 	end
 	function ns.Loot.IterRegularLoot(id)
+		-- this includes any transmog loot
 		return regular_iter, ns.mobdb[id].loot or noloot, nil
 	end
 end
@@ -238,6 +248,7 @@ ns.Loot.Status = setmetatable({}, {__call = function(_, id, include_transmog)
 	-- returns true if all knowable loot is collected
 	-- returns false if not all knowable loot is collected
 	-- if knowable loot, also returns the status for mount,toy,pet after the first return
+	-- knowable loot that's restricted from the current character will still return true if collected, but nil if not
 	if not id or not ns.mobdb[id] then
 		return
 	end
@@ -252,69 +263,38 @@ ns.Loot.Status = setmetatable({}, {__call = function(_, id, include_transmog)
 	end
 	return (mount ~= false and toy ~= false and pet ~= false and quest ~= false and transmog ~= false), mount, toy, pet, quest, transmog
 end})
-function ns.Loot.Status.Toy(id)
-	if not id or not ns.mobdb[id] then return end
-	local ret = nil
-	for _, toyid, item in ns.Loot.IterToys(id) do
-		if not itemRestricted(item) then
-			if not PlayerHasToy(toyid) then
+local function restrictedCheck(test, id, item)
+	local known = test(id)
+	if known then return true end
+	if known == nil or itemRestricted(item) then return nil end
+	return false
+end
+local function statusChecker(iterator, test)
+	return function(id)
+		if not id or not ns.mobdb[id] then return end
+		local ret = nil
+		for _, typeid, item in iterator(id) do
+			local known = restrictedCheck(test, typeid, item)
+			if known then
+				ret = true
+			elseif known == false then
 				return false
 			end
-			ret = true
 		end
+		return ret
 	end
-	return ret
 end
-function ns.Loot.Status.Mount(id)
-	if not id or not ns.mobdb[id] then return end
-	local ret = nil
-	for _, mountid, item in ns.Loot.IterMounts(id) do
-		if not itemRestricted(item) then
-			if not PlayerHasMount(mountid) then
-				return false
-			end
-			ret = true
-		end
+ns.Loot.Status.Toy = statusChecker(ns.Loot.IterToys, PlayerHasToy)
+ns.Loot.Status.Mount = statusChecker(ns.Loot.IterMounts, PlayerHasMount)
+ns.Loot.Status.Pet = statusChecker(ns.Loot.IterPets, PlayerHasPet)
+ns.Loot.Status.Quest = statusChecker(ns.Loot.IterQuests, function(questid)
+	return C_QuestLog.IsQuestFlaggedCompleted(questid) or C_QuestLog.IsOnQuest(questid)
+end)
+ns.Loot.Status.Transmog = statusChecker(ns.Loot.IterRegularLoot, function(itemid)
+	if CanLearnAppearance(itemid) then
+		return HasAppearance(itemid)
 	end
-	return ret
-end
-function ns.Loot.Status.Pet(id)
-	if not id or not ns.mobdb[id] then return end
-	local ret = nil
-	for _, petid, item in ns.Loot.IterPets(id) do
-		if not itemRestricted(item) then
-			if not PlayerHasPet(petid) then
-				return false
-			end
-			ret = true
-		end
-	end
-	return ret
-end
-function ns.Loot.Status.Quest(id)
-	if not id or not ns.mobdb[id] then return end
-	local ret = nil
-	for _, questid, item in ns.Loot.IterQuests(id) do
-		if not (C_QuestLog.IsQuestFlaggedCompleted(questid) or C_QuestLog.IsOnQuest(questid)) then
-			return false
-		end
-		ret = true
-	end
-	return ret
-end
-function ns.Loot.Status.Transmog(id)
-	if not id or not ns.mobdb[id] then return end
-	local ret = nil
-	for _, itemid, item in ns.Loot.IterRegularLoot(id) do
-		if not itemRestricted(item) and CanLearnAppearance(itemid) then
-			if not HasAppearance(itemid) then
-				return false
-			end
-			ret = true
-		end
-	end
-	return ret
-end
+end)
 
 local function get_tooltip(tooltip, i)
 	if i > 1 then
@@ -388,12 +368,10 @@ local Details = {
 		if itemdata.covenant then
 			local covenant = C_Covenants.GetCovenantData(itemdata.covenant)
 			local active = itemdata.covenant == C_Covenants.GetActiveCovenantID()
-			if covenant then
-				tooltip:AddLine(
-					ITEM_REQ_SKILL:format(COVENANT_COLORS[covenant.ID]:WrapTextInColorCode(covenant.name)),
-					(active and GREEN_FONT_COLOR or RED_FONT_COLOR):GetRGB()
-				)
-			end
+			tooltip:AddLine(
+				ITEM_REQ_SKILL:format(COVENANT_COLORS[itemdata.covenant]:WrapTextInColorCode(covenant and covenant.name or covenants[itemdata.covenant])),
+				(active and GREEN_FONT_COLOR or RED_FONT_COLOR):GetRGB()
+			)
 		end
 		if itemdata.class then
 			local active = select(2, UnitClass("player")) == itemdata.class
@@ -433,18 +411,17 @@ function ns.Loot.Details.UpdateTooltip(tooltip, id, only)
 		end
 	end
 	local n = (pet or mount) and 2 or 1
+	local itemtip
 	if toy then
-		local toytip
 		for i, toyid, itemdata in ns.Loot.IterToys(id) do
-			toytip = get_tooltip(toytip or tooltip, n)
-			if not toytip then return end -- out of comparisons
-			Details.toy(toytip, n, toyid)
-			Details.restrictions(toytip, itemdata)
+			itemtip = get_tooltip(itemtip or tooltip, n)
+			if not itemtip then return end -- out of comparisons
+			Details.toy(itemtip, n, toyid)
+			Details.restrictions(itemtip, itemdata)
 			n = n + 1
 		end
 	end
 	if regular then
-		local itemtip
 		for i, itemid, itemdata in ns.Loot.IterRegularLoot(id) do
 			itemtip = get_tooltip(itemtip or tooltip, n)
 			if not itemtip then return end -- out of comparisons
@@ -462,9 +439,7 @@ local function requiresLabel(item)
 		if item.covenant then
 			local data = C_Covenants.GetCovenantData(item.covenant)
 			-- local active = item.covenant == C_Covenants.GetActiveCovenantID()
-			if data then
-				ret = ret .. PARENS_TEMPLATE:format(COVENANT_COLORS[item.covenant]:WrapTextInColorCode(data.name))
-			end
+			ret = ret .. PARENS_TEMPLATE:format(COVENANT_COLORS[item.covenant]:WrapTextInColorCode(data and data.name or covenants[item.covenant]))
 		end
 		if item.class then
 			ret = ret .. PARENS_TEMPLATE:format(RAID_CLASS_COLORS[item.class]:WrapTextInColorCode(LOCALIZED_CLASS_NAMES_FEMALE[item.class]))
@@ -582,15 +557,6 @@ do
 	local ITEM_XOFFSET = 4
 	local ITEM_YOFFSET = -5
 	local TITLE_SPACING = 16
-
-	-- we need non-localized covenant names for atlases
-	-- can't use the texturekit value from covenant data, since the atlas I want doesn't conform to it
-	local covenants = {
-		[Enum.CovenantType.Kyrian] = "Kyrian",
-		[Enum.CovenantType.Necrolord] = "Necrolords",
-		[Enum.CovenantType.NightFae] = "NightFae",
-		[Enum.CovenantType.Venthyr] = "Venthyr",
-	}
 
 	local function isMouseOver(...)
 		for i=1, select("#", ...) do

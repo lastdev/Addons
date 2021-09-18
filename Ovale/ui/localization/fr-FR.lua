@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/ui/localization/fr-FR", 90103)
+local __exports = LibStub:NewLibrary("ovale/ui/localization/fr-FR", 90107)
 if not __exports then return end
 __exports.setFRFR = function(l)
     l.action_bar = [[Barre d'action]]
@@ -150,4 +150,7 @@ Lancer dès que possible.]]
     l.scan_all_auras = [[Analyse complète des auras]]
     l.remaining_time_font_color = [[Couleur de la police du temps restant]]
     l.icon_snapshot = [[Capture de la valeur des nœuds des icônes]]
+    l.numberOfIcons = [[Number of icons]]
+    l.numberOfIconsDesc = [[Number of icons to show in the icon group.]]
+    l.predictiveIcon = [[Predictive icons]]
 end

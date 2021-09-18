@@ -336,6 +336,7 @@ L["nirvaska_note"] = "Sólo aparece cuando la misión del mundo {wq:Recordatorio
 L["ravenomous_note"] = "Aplasta las {npc:159901} neutrales de la zona hasta que aparezca {npc:159753}."
 L["sabriel_note"] = "Puede aparecer como uno de los campeones del Teatro del Dolor."
 L["schmitd_note"] = "Usa un {spell:313451} cercano para romper su escudo."
+L["tahonta_note"] = "¡La montura sólo cae si llevas a {npc:159239} contigo!"
 L["taskmaster_xox_note"] = "Comparte el lugar de aparición con {npc:160204}, {npc:160230} y {npc:160226}."
 L["theater_of_pain_note"] = "El primer boss que mates cada día tiene una probabilidad de soltar la montura."
 L["zargox_the_reborn_note"] = [[
@@ -483,6 +484,18 @@ L["high_inquisitor_note"] = "Entrega 250 {currency:1816} al {npc:160248} para te
 L["inquisitor_note"] = "Entrega 100 {currency:1816} al {npc:160248} para tener una oportunidad en esta piedra del pecado."
 L["options_icons_inquisitors"] = "Inquisidores"
 L["options_icons_inquisitors_desc"] = "Muestra dónde están los inquisidores para el logro {achievement:14276}."
+
+L["broken_mirror"] = "Espejo Roto"
+L["broken_mirror_note"] = "Cada día estará activo un grupo de tres espejos rotos. Usa un {item:181363} para reparar cada espejo y abrir el |cFFFFFD00Cofre Olvidado|r de dentro."
+L["broken_mirror_crypt"] = "Dentro de una cripta."
+L["broken_mirror_elite"] = "En una habitación pequeña con enemigos élite."
+L["broken_mirror_group"] = "Grupo"
+L["broken_mirror_house"] = "Dentro de la casa."
+L["broken_mirror_61818"] = "En una habitación pequeña con {npc:173699}."
+L["broken_mirror_61819"] = "En una habitación pequeña en el piso inferior."
+L["broken_mirror_61827"] = "En una habitación pequeña."
+L["options_icons_broken_mirror"] = "Espejos Rotos"
+L["options_icons_broken_mirror_desc"] = "Muestra donde están los espejos rotos."
 
 -------------------------------------------------------------------------------
 ----------------------------------- THE MAW -----------------------------------
@@ -638,7 +651,7 @@ L["mawsworn_cache_quest_note"] = "The {item:186573} will only drop after you hav
 
 L["nilg_silver_ring_note"] = "Recoge 4 {item:186727} en Desmotaeron para abrir el Cofre Sellado de Dominación."
 L["nilg_silver_ring_note1"] = "Mata a {npc:177444} y abre la {item:186970}."
-L["nilg_silver_ring_note2"] = "Despoja el Llavero del Lacerante, que está en una habitación subterránea de la pared al lado de {npc:178311}."
+L["nilg_silver_ring_note2"] = "Despoja el Llavero de La Lacerante, que está en una habitación subterránea de la pared al lado de {npc:178311}."
 L["nilg_silver_ring_note3"] = "Abre Alijos de Suministros de Helgarde en la zona de Desmotaeron. Tu {npc:180598} puede ayudarte a encontrarlos."
 L["nilg_silver_ring_note4"] = "Mata {npc:177134} en la zona de Desmotaeron (drop bajo)."
 L["nilg_stone_ring_note"] = "Recoge 4 {item:186600} durante el asalto de los Necroseñores y combínalos en cualquier {npc:171492} en la Caldera de Zovaal."
@@ -654,3 +667,10 @@ L["desmotaeron"] = "Desmotaeron"
 L["zovault_note"] = "Trae {npc:179883} a {npc:179904} una vez al día para una piedra de falla garantizada."
 L["options_icons_zovault"] = "{npc:179883}"
 L["options_icons_zovault_desc"] = "Muestra donde están {npc:179883}."
+
+L["tormentors"] = "Torturadores de Torghast"
+L["tormentors_note"] = [[
+Los eventos de torturadores aparecen cada 2 horas impares en punto. Aparecerán siempre en el orden listado abajo.
+
+El {item:185972} se puede despojar una vez a la semana y contiene 50 {currency:1906}.
+]]

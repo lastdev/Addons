@@ -151,6 +151,8 @@ L["Array"] = "Array"
 L["Ascending"] = "Crescente"
 --[[Translation missing --]]
 L["Assigned Role"] = "Assigned Role"
+--[[Translation missing --]]
+L["Assigned Role Icon"] = "Assigned Role Icon"
 L["At Least One Enemy"] = "Almeno un nemico"
 --[[Translation missing --]]
 L["At missing Value"] = "At missing Value"
@@ -747,6 +749,8 @@ L["Health"] = "Health"
 --[[Translation missing --]]
 L["Health (%)"] = "Health (%)"
 --[[Translation missing --]]
+L["Health Deficit"] = "Health Deficit"
+--[[Translation missing --]]
 L["Heigan the Unclean"] = "Heigan the Unclean"
 --[[Translation missing --]]
 L["Height"] = "Height"
@@ -776,6 +780,10 @@ L["High Priestess Mar'li"] = "High Priestess Mar'li"
 L["High Warlord Naj'entus"] = "High Warlord Naj'entus"
 --[[Translation missing --]]
 L["Higher Than Tank"] = "Higher Than Tank"
+--[[Translation missing --]]
+L["Hit (%)"] = "Hit (%)"
+--[[Translation missing --]]
+L["Hit Rating"] = "Hit Rating"
 --[[Translation missing --]]
 L["Holy Resistance"] = "Holy Resistance"
 --[[Translation missing --]]
@@ -838,6 +846,8 @@ L["In Vehicle"] = "In Vehicle"
 L["Include Bank"] = "Include Bank"
 --[[Translation missing --]]
 L["Include Charges"] = "Include Charges"
+--[[Translation missing --]]
+L["Include Pets"] = "Include Pets"
 --[[Translation missing --]]
 L["Incoming Heal"] = "Incoming Heal"
 --[[Translation missing --]]
@@ -1307,6 +1317,8 @@ L["Pet Specialization"] = "Pet Specialization"
 --[[Translation missing --]]
 L["Pet Spell"] = "Pet Spell"
 --[[Translation missing --]]
+L["Pets only"] = "Pets only"
+--[[Translation missing --]]
 L["Phase"] = "Phase"
 --[[Translation missing --]]
 L["Pixel Glow"] = "Pixel Glow"
@@ -1343,11 +1355,15 @@ L["Player(s) Not Affected"] = "Player(s) Not Affected"
 --[[Translation missing --]]
 L["Player/Unit Info"] = "Player/Unit Info"
 --[[Translation missing --]]
+L["Players and Pets"] = "Players and Pets"
+--[[Translation missing --]]
 L["Poison"] = "Poison"
 --[[Translation missing --]]
 L["Power"] = "Power"
 --[[Translation missing --]]
 L["Power (%)"] = "Power (%)"
+--[[Translation missing --]]
+L["Power Deficit"] = "Power Deficit"
 --[[Translation missing --]]
 L["Power Type"] = "Power Type"
 --[[Translation missing --]]
@@ -1408,6 +1424,8 @@ L["Raid (Mythic)"] = "Raid (Mythic)"
 L["Raid (Normal)"] = "Raid (Normal)"
 --[[Translation missing --]]
 L["Raid (Timewalking)"] = "Raid (Timewalking)"
+--[[Translation missing --]]
+L["Raid Mark"] = "Raid Mark"
 --[[Translation missing --]]
 L["Raid Role"] = "Raid Role"
 --[[Translation missing --]]
@@ -1848,6 +1866,8 @@ L["This aura was created with a newer version of WeakAuras."] = "This aura was c
 L["This aura was created with the Classic version of World of Warcraft."] = "This aura was created with the Classic version of World of Warcraft."
 --[[Translation missing --]]
 L["This aura was created with the retail version of World of Warcraft."] = "This aura was created with the retail version of World of Warcraft."
+--[[Translation missing --]]
+L["This import requires a newer WeakAuras version."] = "This import requires a newer WeakAuras version."
 --[[Translation missing --]]
 L["This is a modified version of your aura, |cff9900FF%s.|r"] = "This is a modified version of your aura, |cff9900FF%s.|r"
 --[[Translation missing --]]

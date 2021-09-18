@@ -241,11 +241,13 @@ end
 function addon:AUCTION_HOUSE_SHOW()
 	addon:RegisterEvent("AUCTION_HOUSE_CLOSED")
 	addon:RegisterEvent("OWNED_AUCTIONS_UPDATED", ScanAuctions)
+	addon:RegisterEvent("AUCTION_HOUSE_AUCTION_CREATED", ScanAuctions)
 	addon:RegisterEvent("BIDS_UPDATED", ScanBids)
 end
 
 function addon:AUCTION_HOUSE_CLOSED()
 	addon:UnregisterEvent("AUCTION_HOUSE_CLOSED")
 	addon:UnregisterEvent("OWNED_AUCTIONS_UPDATED")
+	addon:UnregisterEvent("AUCTION_HOUSE_AUCTION_CREATED")
 	addon:UnregisterEvent("BIDS_UPDATED")
 end

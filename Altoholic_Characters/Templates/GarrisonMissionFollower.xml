@@ -23,7 +23,7 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				Altoholic:BindViewToController(self, "AltoholicUI.GarrisonMissionFollower")
+				Altoholic:BindViewToController(self, "AltoholicUI.TabCharacters.GarrisonMissionFollower")
 			</OnLoad>
 			<OnEnter>
 				Altoholic:DrawFollowerTooltip(self)

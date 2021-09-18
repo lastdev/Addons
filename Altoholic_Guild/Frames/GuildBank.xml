@@ -1,13 +1,14 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="GuildBank.lua"></Script>
 	
-	<Frame parentKey="Bank" parent="AltoholicTabGuild" inherits="AltoDataPanelTemplate">
+	<Frame parentKey="Bank" hidden="true">
+		<Size x="615" y="306" />
 		<Layers>
 			<Layer level="OVERLAY">
 				<FontString parentKey="Info1" inherits="GameFontNormalSmall" justifyH="LEFT">
 					<Size x="250" y="16" />
 					<Anchors>
-						<Anchor point="LEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="RIGHT" x="360" y="-5" />
+						<Anchor point="TOPLEFT" x="360" y="62" />
 					</Anchors>
 					<Color r="255" g="255" b="255" />
 				</FontString>
@@ -32,7 +33,7 @@
 			<Frame parentKey="MenuIcons">
 				<Size x="170" y="37" />
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="RIGHT" x="60" y="-23" />
+					<Anchor point="TOPLEFT" x="60" y="55" />
 				</Anchors>
 				<Frames>
 					<Button parentKey="GuildIcon" inherits="AltoGuildBankIconTemplate" id="1">
@@ -67,39 +68,39 @@
 				</Frames>
 			</Frame>
 			
-			<Frame parentKey="ContextualMenu" inherits="AltoContextualMenuTemplate" />
+			<Frame parentKey="ContextualMenu" inherits="AddonFactory_ContextualMenuTemplate" />
 			
-			<Button parentArray="ItemRows" parentKey="Entry1" inherits="AltoContainerTemplate" id="1">
+			<Button parentArray="ItemRows" parentKey="Entry1" inherits="AltoGuildBankRowTemplate" id="1">
 				<Anchors>
 					<Anchor point="TOPLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-			<Button parentArray="ItemRows" parentKey="Entry2" inherits="AltoContainerTemplate" id="2">
+			<Button parentArray="ItemRows" parentKey="Entry2" inherits="AltoGuildBankRowTemplate" id="2">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.Entry1" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 			</Button>
-			<Button parentArray="ItemRows" parentKey="Entry3" inherits="AltoContainerTemplate" id="3">
+			<Button parentArray="ItemRows" parentKey="Entry3" inherits="AltoGuildBankRowTemplate" id="3">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.Entry2" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 			</Button>
-			<Button parentArray="ItemRows" parentKey="Entry4" inherits="AltoContainerTemplate" id="4">
+			<Button parentArray="ItemRows" parentKey="Entry4" inherits="AltoGuildBankRowTemplate" id="4">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.Entry3" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 			</Button>
-			<Button parentArray="ItemRows" parentKey="Entry5" inherits="AltoContainerTemplate" id="5">
+			<Button parentArray="ItemRows" parentKey="Entry5" inherits="AltoGuildBankRowTemplate" id="5">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.Entry4" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 			</Button>
-			<Button parentArray="ItemRows" parentKey="Entry6" inherits="AltoContainerTemplate" id="6">
+			<Button parentArray="ItemRows" parentKey="Entry6" inherits="AltoGuildBankRowTemplate" id="6">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.Entry5" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 			</Button>
-			<Button parentArray="ItemRows" parentKey="Entry7" inherits="AltoContainerTemplate" id="7">
+			<Button parentArray="ItemRows" parentKey="Entry7" inherits="AltoGuildBankRowTemplate" id="7">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.Entry6" relativePoint="BOTTOMLEFT" />
 				</Anchors>
@@ -148,7 +149,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:BindViewToController(self, "AltoholicUI.GuildBank")
+				Altoholic:BindViewToController(self, "AltoholicUI.TabGuild.Bank")
 			</OnLoad>
 		</Scripts>
 	</Frame>

@@ -1,12 +1,16 @@
-local __exports = LibStub:NewLibrary("ovale/simulationcraft/splitter", 90103)
+local __exports = LibStub:NewLibrary("ovale/simulationcraft/splitter", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
+local __imports = {}
+__imports.__definitions = LibStub:GetLibrary("ovale/simulationcraft/definitions")
+__imports.getTagPriority = __imports.__definitions.getTagPriority
+__imports.__texttools = LibStub:GetLibrary("ovale/simulationcraft/text-tools")
+__imports.toOvaleTaggedFunctionName = __imports.__texttools.toOvaleTaggedFunctionName
 local ipairs = ipairs
+local tostring = tostring
 local wipe = wipe
-local __definitions = LibStub:GetLibrary("ovale/simulationcraft/definitions")
-local getTagPriority = __definitions.getTagPriority
-local __texttools = LibStub:GetLibrary("ovale/simulationcraft/text-tools")
-local toOvaleTaggedFunctionName = __texttools.toOvaleTaggedFunctionName
+local getTagPriority = __imports.getTagPriority
+local toOvaleTaggedFunctionName = __imports.toOvaleTaggedFunctionName
 local find = string.find
 local sub = string.sub
 local insert = table.insert
@@ -28,24 +32,45 @@ __exports.Splitter = __class(nil, {
             local actionTag, invokesGCD
             local name = "UNKNOWN"
             local actionType = node.name
-            if actionType == "item" or actionType == "spell" then
+            if actionType == "item" then
                 local firstParamNode = node.rawPositionalParams[1]
-                local id, name
+                local id, slot
                 if firstParamNode.type == "variable" then
-                    name = firstParamNode.name
+                    local paramNode = firstParamNode
+                    name = paramNode.name
                     id = annotation.dictionary and annotation.dictionary[name]
                 elseif firstParamNode.type == "value" then
-                    name = firstParamNode.value
-                    id = firstParamNode.value
+                    local paramNode = firstParamNode
+                    id = paramNode.value
+                    name = tostring(id)
+                elseif firstParamNode.type == "string" then
+                    local paramNode = firstParamNode
+                    name = paramNode.value
+                    slot = name
                 end
                 if id then
-                    if actionType == "item" then
-                        actionTag, invokesGCD = self.ovaleData:getItemTagInfo(id)
-                    elseif actionType == "spell" then
-                        actionTag, invokesGCD = self.ovaleData:getSpellTagInfo(id)
-                    end
+                    actionTag, invokesGCD = self.ovaleData:getItemTagInfo(id)
+                elseif slot then
+                    actionTag, invokesGCD = "cd", false
                 else
-                    self.tracer:print("Warning: Unable to find %s '%s'", actionType, name)
+                    self.tracer:print("Warning: Unable to find item '" .. name .. "'")
+                end
+            elseif actionType == "spell" then
+                local firstParamNode = node.rawPositionalParams[1]
+                local id
+                if firstParamNode.type == "variable" then
+                    local paramNode = firstParamNode
+                    name = paramNode.name
+                    id = annotation.dictionary and annotation.dictionary[name]
+                elseif firstParamNode.type == "value" then
+                    local paramNode = firstParamNode
+                    id = paramNode.value
+                    name = tostring(id)
+                end
+                if id then
+                    actionTag, invokesGCD = self.ovaleData:getSpellTagInfo(id)
+                else
+                    self.tracer:print("Warning: Unable to find spell '" .. name .. "'")
                 end
             elseif actionType == "texture" then
                 local firstParamNode = node.rawPositionalParams[1]

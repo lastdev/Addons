@@ -40,6 +40,8 @@ do
     ---@field public KEYSTONE_LEVEL_PATTERN table<number, string> @Table over patterns matching keystone levels in strings
     ---@field public KEYSTONE_LEVEL_TO_SCORE table<number, number> @Table over keystone levels and the base score for that level
     ---@field public RAID_DIFFICULTY table<number, RaidDifficulty> @Table of 1=normal, 2=heroic, 3=mythic difficulties and their names and colors
+    ---@field public PREVIOUS_SEASON_SCORE_RELEVANCE_THRESHOLD number @Threshold that current season must surpass from previous season to be considered better and shown as primary in addon
+    ---@field public PREVIOUS_SEASON_MAIN_SCORE_RELEVANCE_THRESHOLD number @Threshold that current season current character must surpass from previous season main to be considered better and shown as primary in addon
 
     ns.Print = function(text, r, g, b, ...)
         r, g, b = r or 1, g or 1, b or 0
@@ -58,7 +60,7 @@ do
     ns.OUTDATED_BLOCK_CUTOFF = 86400 * 7 -- number of seconds before we hide the data (block showing score as its most likely inaccurate)
     ns.PROVIDER_DATA_TYPE = {MythicKeystone = 1, Raid = 2, PvP = 3}
     ns.LOOKUP_MAX_SIZE = floor(2^18-1)
-    ns.CURRENT_SEASON = 1 -- TODO: dynamic?
+    ns.CURRENT_SEASON = 1
     ns.RAIDERIO_ADDON_DOWNLOAD_URL = "https://rio.gg/addon"
 
     ns.HEADLINE_MODE = {
@@ -66,6 +68,11 @@ do
         BEST_SEASON = 1,
         BEST_RUN = 2
     }
+
+    -- threshold for comparing current character's previous season score to current score
+    -- meaning: once current score exceeds this fraction of previous season, then show current season
+    ns.PREVIOUS_SEASON_SCORE_RELEVANCE_THRESHOLD = 0.75
+    ns.PREVIOUS_SEASON_MAIN_SCORE_RELEVANCE_THRESHOLD = 0.75
 
     ---@class RoleIcon
     ---@field full string @The full icon in "|T|t" syntax
@@ -99,35 +106,35 @@ do
     }
 
     ns.KEYSTONE_LEVEL_TO_SCORE = {
-        [2] = 20,
-        [3] = 30,
-        [4] = 40,
-        [5] = 50,
-        [6] = 60,
-        [7] = 70,
+        [2] = 40,
+        [3] = 45,
+        [4] = 55,
+        [5] = 60,
+        [6] = 65,
+        [7] = 75,
         [8] = 80,
-        [9] = 90,
+        [9] = 85,
         [10] = 100,
-        [11] = 110,
-        [12] = 121,
-        [13] = 133,
-        [14] = 146,
-        [15] = 161,
-        [16] = 177,
-        [17] = 195,
-        [18] = 214,
-        [19] = 236,
-        [20] = 259,
-        [21] = 285,
-        [22] = 314,
-        [23] = 345,
-        [24] = 380,
-        [25] = 418,
-        [26] = 459,
-        [27] = 505,
-        [28] = 556,
-        [29] = 612,
-        [30] = 673
+        [11] = 105,
+        [12] = 110,
+        [13] = 115,
+        [14] = 120,
+        [15] = 125,
+        [16] = 130,
+        [17] = 135,
+        [18] = 140,
+        [19] = 145,
+        [20] = 150,
+        [21] = 155,
+        [22] = 160,
+        [23] = 165,
+        [24] = 170,
+        [25] = 175,
+        [26] = 180,
+        [27] = 185,
+        [28] = 190,
+        [29] = 195,
+        [30] = 200
     }
 
     ---@class RaidDifficultyColor : table
@@ -258,15 +265,20 @@ do
         return ns.CLIENT_CONFIG
     end
 
-    ---@class Dungeon
+    ---@class DungeonInstance
     ---@field public id number
-    ---@field public keystone_instance number
     ---@field public instance_map_id number
     ---@field public lfd_activity_ids number[]
     ---@field public name string
     ---@field public shortName string
+
+    ---@class Dungeon : DungeonInstance
+    ---@field public keystone_instance number
     ---@field public shortNameLocale string @Assigned dynamically based on the user preference regarding the short dungeon names.
     ---@field public index number @Assigned dynamically based on the index of the dungeon in the table.
+
+    ---@class DungeonRaid : DungeonInstance
+    ---@field public index number @Assigned dynamically based on the index of the raid in the table.
 
     ---@type Dungeon[]
     local DUNGEONS = ns.DUNGEONS or ns.dungeons -- DEPRECATED: ns.dungeons
@@ -276,9 +288,22 @@ do
         dungeon.index = i
     end
 
+    ---@type DungeonRaid[]
+    local RAIDS = ns.RAIDS or ns.raids -- DEPRECATED: ns.raids
+
+    for i = 1, #RAIDS do
+        local raid = RAIDS[i] ---@type DungeonRaid
+        raid.index = i
+    end
+
     ---@return Dungeon[]
     function ns:GetDungeonData()
         return DUNGEONS
+    end
+
+    ---@return DungeonRaid[]
+    function ns:GetDungeonRaidData()
+        return RAIDS
     end
 
     ---@class RealmCollection
@@ -680,7 +705,8 @@ do
         lockProfile = false,
         showRoleIcons = true,
         profilePoint = { point = nil, x = 0, y = 0 },
-        debugMode = false
+        debugMode = false,
+        rwfMode = false -- NEW in 9.1
     }
 
     -- fallback metatable looks up missing keys into the fallback config table
@@ -701,6 +727,9 @@ do
         config:Enable()
         if config:Get("debugMode") then
             ns.Print(format(L.WARNING_DEBUG_MODE_ENABLE, addonName))
+        end
+        if config:Get("rwfMode") then
+            ns.Print(format(L.WARNING_RWF_MODE_ENABLE, addonName))
         end
         callback:SendEvent("RAIDERIO_CONFIG_READY")
     end
@@ -1963,6 +1992,9 @@ do
                     end
                 end
             end
+            if not provider.desynced and not provider.blocked and provider.data == ns.PROVIDER_DATA_TYPE.MythicKeystone then
+                ns.CURRENT_SEASON = max(ns.CURRENT_SEASON, provider.currentSeasonId)
+            end
         end
         if desynced then
             ns.Print(format(L.OUT_OF_SYNC_DATABASE_S, addonName))
@@ -2526,7 +2558,7 @@ do
             roles = ORDERED_ROLES[results.currentRoleOrdinalIndex] or ORDERED_ROLES[1]
         }
         results.mplusPrevious = {
-            season = results.previousScoreSeason + 1,
+            season = results.previousScoreSeason,
             score = results.previousScore,
             roles = ORDERED_ROLES[results.previousRoleOrdinalIndex] or ORDERED_ROLES[1]
         }
@@ -2535,7 +2567,7 @@ do
             roles = ORDERED_ROLES[results.mainCurrentRoleOrdinalIndex] or ORDERED_ROLES[1]
         }
         results.mplusMainPrevious = {
-            season = results.mainPreviousScoreSeason + 1,
+            season = results.mainPreviousScoreSeason,
             score = results.mainPreviousScore,
             roles = ORDERED_ROLES[results.mainPreviousRoleOrdinalIndex] or ORDERED_ROLES[1]
         }
@@ -2826,6 +2858,7 @@ do
     local function CreateEmptyMythicKeystoneData()
         ---@type DataProviderMythicKeystoneProfile
         local results = {
+            currentScore = 0,
             mplusCurrent = {
                 score = 0,
                 roles = {}
@@ -2880,36 +2913,35 @@ do
     ---@param overallScore number @BIO score directly from the game.
     ---@param keystoneRuns BlizzardKeystoneRun[] @BIO runs directly from the game.
     function provider:OverrideProfile(name, realm, faction, overallScore, keystoneRuns)
-        if type(name) ~= "string" or type(realm) ~= "string" or type(faction) ~= "number" or type(overallScore) ~= "number" or overallScore < 1 then
+        if type(name) ~= "string" or type(realm) ~= "string" or type(faction) ~= "number" or (type(overallScore) ~= "number" and type(keystoneRuns) ~= "table") then
             return
         end
         local region = ns.PLAYER_REGION
         local guid = region .. " " .. faction .. " " .. realm .. " " .. name
         local cache = provider:GetProfile(name, realm, faction, region) ---@type DataProviderCharacterProfile
         local mythicKeystoneProfile
-        if cache and cache.success and cache.mythicKeystoneProfile then
+        if cache and cache.success and cache.mythicKeystoneProfile and not cache.mythicKeystoneProfile.blocked and cache.mythicKeystoneProfile.hasRenderableData then
             mythicKeystoneProfile = cache.mythicKeystoneProfile
         end
         if not mythicKeystoneProfile then
             mythicKeystoneProfile = CreateEmptyMythicKeystoneData()
         end
-
-		-- Avoid reducing the score of a player
-		if overallScore > mythicKeystoneProfile.mplusCurrent.score then
-			mythicKeystoneProfile.hasOverrideScore = true
-			if not mythicKeystoneProfile.hasOverrideScore then
-				mythicKeystoneProfile.originalCurrentScore = mythicKeystoneProfile.currentScore
-				mythicKeystoneProfile.mplusCurrent.originalScore = mythicKeystoneProfile.mplusCurrent.score
-			end
-			mythicKeystoneProfile.currentScore = overallScore
-			mythicKeystoneProfile.mplusCurrent.score = overallScore
-		end
-
-        if type(keystoneRuns) == "table" then
+        if type(overallScore) == "number" and overallScore > 0 and overallScore > mythicKeystoneProfile.currentScore then
+            if not mythicKeystoneProfile.hasOverrideScore then
+                mythicKeystoneProfile.hasOverrideScore = true
+                mythicKeystoneProfile.originalCurrentScore = mythicKeystoneProfile.currentScore
+                mythicKeystoneProfile.mplusCurrent.originalScore = mythicKeystoneProfile.mplusCurrent.score
+            end
+            mythicKeystoneProfile.currentScore = overallScore
+            mythicKeystoneProfile.mplusCurrent.score = overallScore
+        end
+        if type(keystoneRuns) == "table" and keystoneRuns[1] then
             local maxDungeonIndex = 0
+            -- local maxDungeonTime = 999
+            -- local maxDungeonScore = 0
             local maxDungeonLevel = 0
             local maxDungeonUpgrades = 0
-			local maxDungeonRunTimer = 2
+            local maxDungeonRunTimer = 2
             local needsMaxDungeonUpgrade
             local needsDungeonSort
             for i = 1, #keystoneRuns do
@@ -2926,7 +2958,7 @@ do
                 end
                 local runLevel = run.bestRunLevel
                 if dungeonIndex and mythicKeystoneProfile.dungeons[dungeonIndex] <= runLevel then
-					mythicKeystoneProfile.hasOverrideDungeonRuns = true
+                    mythicKeystoneProfile.hasOverrideDungeonRuns = true
                     local _, _, dungeonTimeLimit = C_ChallengeMode.GetMapUIInfo(run.challengeModeID)
                     local goldTimeLimit, silverTimeLimit, bronzeTimeLimit = -1, -1, dungeonTimeLimit
                     if dungeon.timers then
@@ -2935,7 +2967,7 @@ do
                     local runSeconds = run.bestRunDurationMS / 1000
                     local runNumUpgrades = 0
                     if run.finishedSuccess then
-						runNumUpgrades = 1 -- minimum 1 if timed
+                        runNumUpgrades = 1
                         if runSeconds <= goldTimeLimit then
                             runNumUpgrades = 3
                         elseif runSeconds <= silverTimeLimit then
@@ -2944,16 +2976,19 @@ do
                     end
                     local runTimerAsFraction = runSeconds / (dungeonTimeLimit and dungeonTimeLimit > 0 and dungeonTimeLimit or 1) -- convert game timer to a fraction (1 or below is timed, above is depleted)
                     local fractionalTime = run.finishedSuccess and (mythicKeystoneProfile.isEnhanced and runTimerAsFraction or (3 - runNumUpgrades)) or 3 -- the data here depends if we are using client enhanced data or not
-                    local runScore = run.mapScore
+                    -- local runScore = run.mapScore
                     needsMaxDungeonUpgrade = true
                     mythicKeystoneProfile.dungeons[dungeonIndex] = runLevel
                     mythicKeystoneProfile.dungeonUpgrades[dungeonIndex] = runNumUpgrades
                     mythicKeystoneProfile.dungeonTimes[dungeonIndex] = fractionalTime
+                    -- if runNumUpgrades > 0 and (runScore > maxDungeonScore or (runScore == maxDungeonScore and fractionalTime < maxDungeonTime)) then
                     if runNumUpgrades > 0 and (runLevel > maxDungeonLevel or (runLevel == maxDungeonLevel and runTimerAsFraction < maxDungeonRunTimer)) then
                         maxDungeonIndex = dungeonIndex
+                        -- maxDungeonTime = fractionalTime
+                        -- maxDungeonScore = runScore
                         maxDungeonLevel = runLevel
                         maxDungeonUpgrades = runNumUpgrades
-						maxDungeonRunTimer = runTimerAsFraction
+                        maxDungeonRunTimer = runTimerAsFraction
                     end
                     local sortedDungeon
                     for j = 1, #mythicKeystoneProfile.sortedDungeons do
@@ -3140,6 +3175,7 @@ do
         _G.RaiderIO_LastCharacter = format("%s-%s-%s", ns.PLAYER_REGION, ns.PLAYER_NAME, ns.PLAYER_REALM_SLUG or ns.PLAYER_REALM)
         _G.RaiderIO_MissingCharacters = {}
         _G.RaiderIO_MissingServers = {}
+        if type(_G.RaiderIO_RWF) ~= "table" then _G.RaiderIO_RWF = {} end
         callback:SendEvent("RAIDERIO_PLAYER_LOGIN")
         LoadModules()
     end
@@ -3381,11 +3417,11 @@ do
 
     local EASTER_EGG = {
         ["eu"] = {
-            ["Ravencrest"] = {
-                ["Voidzone"] = "Raider.IO AddOn Author"
+            ["TarrenMill"] = {
+                ["Vladinator"] = "Raider.IO AddOn Author"
             },
             ["Ysondre"] = {
-                ["Isakem"] = "Raider.IO Contributor"
+                ["Isakem"] = "Raider.IO Developer"
             }
         },
         ["us"] = {
@@ -3393,6 +3429,7 @@ do
                 ["Aspyric"] = "Raider.IO Creator",
                 ["Ulsoga"] = "Raider.IO Creator",
                 ["Mccaffrey"] = "Killing Keys Since 1977!",
+                ["Puffymüffins"] = "Raider.IO Guild Recruiter",
                 ["Oscassey"] = "Master of dis guys"
             },
             ["Thrall"] = {
@@ -3404,10 +3441,11 @@ do
         }
     }
 
-    local DUNGEONS = ns:GetDungeonData()
-
-    local function GetSeasonLabel(label, season)
-        return format(label, format(L["SEASON_LABEL_" .. season], season))
+    local function GetSeasonLabel(label, seasonId)
+        if not seasonId then
+            seasonId = ns.CURRENT_SEASON
+        end
+        return format(label, L["SEASON_LABEL_" .. (1 + seasonId)] or "")
     end
 
     ---@param data DataProviderMythicKeystoneScore
@@ -3577,13 +3615,13 @@ do
                     local headlineMode = config:Get("mplusHeadlineMode")
                     if showHeader then
                         if headlineMode == ns.HEADLINE_MODE.BEST_SEASON then
-                            if keystoneProfile.mplusPrevious.score > keystoneProfile.mplusCurrent.score then
+                            if ns.PREVIOUS_SEASON_SCORE_RELEVANCE_THRESHOLD * keystoneProfile.mplusPrevious.score > keystoneProfile.mplusCurrent.score then
                                 tooltip:AddDoubleLine(GetSeasonLabel(L.RAIDERIO_MP_BEST_SCORE, keystoneProfile.mplusPrevious.season), GetScoreText(keystoneProfile.mplusPrevious, true), 1, 0.85, 0, util:GetScoreColor(keystoneProfile.mplusPrevious.score, true))
                                 if keystoneProfile.mplusCurrent.score > 0 then
-                                    tooltip:AddDoubleLine(GetSeasonLabel(L.CURRENT_SCORE, ns.CURRENT_SEASON), GetScoreText(keystoneProfile.mplusCurrent), 1, 1, 1, util:GetScoreColor(keystoneProfile.mplusCurrent.score))
+                                    tooltip:AddDoubleLine(GetSeasonLabel(L.CURRENT_SCORE), GetScoreText(keystoneProfile.mplusCurrent), 1, 1, 1, util:GetScoreColor(keystoneProfile.mplusCurrent.score))
                                 end
                             else
-                                tooltip:AddDoubleLine(GetSeasonLabel(L.RAIDERIO_MP_SCORE, ns.CURRENT_SEASON), GetScoreText(keystoneProfile.mplusCurrent), 1, 0.85, 0, util:GetScoreColor(keystoneProfile.mplusCurrent.score))
+                                tooltip:AddDoubleLine(GetSeasonLabel(L.RAIDERIO_MP_SCORE), GetScoreText(keystoneProfile.mplusCurrent), 1, 0.85, 0, util:GetScoreColor(keystoneProfile.mplusCurrent.score))
                             end
                         elseif headlineMode == ns.HEADLINE_MODE.BEST_RUN then
                             local r, g, b = 1, 0.85, 0
@@ -3591,14 +3629,14 @@ do
                                 r, g, b = 1, 1, 1
                             end
                             if keystoneProfile.mplusCurrent.score > 0 then
-                                tooltip:AddDoubleLine(GetSeasonLabel(L.CURRENT_SCORE, ns.CURRENT_SEASON), GetScoreText(keystoneProfile.mplusCurrent), r, g, b, util:GetScoreColor(keystoneProfile.mplusCurrent.score))
+                                tooltip:AddDoubleLine(GetSeasonLabel(L.CURRENT_SCORE), GetScoreText(keystoneProfile.mplusCurrent), r, g, b, util:GetScoreColor(keystoneProfile.mplusCurrent.score))
                             end
-                            if keystoneProfile.mplusPrevious.score > keystoneProfile.mplusCurrent.score then
+                            if ns.PREVIOUS_SEASON_SCORE_RELEVANCE_THRESHOLD * keystoneProfile.mplusPrevious.score > keystoneProfile.mplusCurrent.score then
                                 tooltip:AddDoubleLine(GetSeasonLabel(L.PREVIOUS_SCORE, keystoneProfile.mplusPrevious.season), GetScoreText(keystoneProfile.mplusPrevious, true), r, g, b, util:GetScoreColor(keystoneProfile.mplusPrevious.score, true))
                             end
                         else -- if headlineMode == ns.HEADLINE_MODE.CURRENT_SEASON then
-                            tooltip:AddDoubleLine(GetSeasonLabel(L.RAIDERIO_MP_SCORE, ns.CURRENT_SEASON), GetScoreText(keystoneProfile.mplusCurrent), 1, 0.85, 0, util:GetScoreColor(keystoneProfile.mplusCurrent.score))
-                            if keystoneProfile.mplusPrevious.score > keystoneProfile.mplusCurrent.score then
+                            tooltip:AddDoubleLine(GetSeasonLabel(L.RAIDERIO_MP_SCORE), GetScoreText(keystoneProfile.mplusCurrent), 1, 0.85, 0, util:GetScoreColor(keystoneProfile.mplusCurrent.score))
+                            if ns.PREVIOUS_SEASON_SCORE_RELEVANCE_THRESHOLD * keystoneProfile.mplusPrevious.score > keystoneProfile.mplusCurrent.score then
                                 tooltip:AddDoubleLine(GetSeasonLabel(L.PREVIOUS_SCORE, keystoneProfile.mplusPrevious.season), GetScoreText(keystoneProfile.mplusPrevious, true), 1, 1, 1, util:GetScoreColor(keystoneProfile.mplusPrevious.score, true))
                             end
                         end
@@ -3608,8 +3646,8 @@ do
                             if keystoneProfile.mplusMainCurrent.score > keystoneProfile.mplusCurrent.score then
                                 tooltip:AddDoubleLine(L.MAINS_SCORE, GetScoreText(keystoneProfile.mplusMainCurrent), 1, 1, 1, util:GetScoreColor(keystoneProfile.mplusMainCurrent.score))
                             end
-                        elseif keystoneProfile.mplusMainCurrent.score > keystoneProfile.mplusCurrent.score or keystoneProfile.mplusMainPrevious.score > keystoneProfile.mplusCurrent.score then
-                            if keystoneProfile.mplusMainCurrent.score < keystoneProfile.mplusMainPrevious.score then
+                        elseif keystoneProfile.mplusMainCurrent.score > keystoneProfile.mplusCurrent.score or (ns.PREVIOUS_SEASON_MAIN_SCORE_RELEVANCE_THRESHOLD * keystoneProfile.mplusMainPrevious.score) > keystoneProfile.mplusCurrent.score then
+                            if keystoneProfile.mplusMainCurrent.score < (ns.PREVIOUS_SEASON_MAIN_SCORE_RELEVANCE_THRESHOLD * keystoneProfile.mplusMainPrevious.score) then
                                 tooltip:AddDoubleLine(GetSeasonLabel(L.MAINS_BEST_SCORE_BEST_SEASON, keystoneProfile.mplusMainPrevious.season), GetScoreText(keystoneProfile.mplusMainPrevious, true), 1, 1, 1, util:GetScoreColor(keystoneProfile.mplusMainPrevious.score, true))
                             elseif keystoneProfile.mplusMainCurrent.score > 0 or hasMod or hasModSticky then
                                 tooltip:AddDoubleLine(L.CURRENT_MAINS_SCORE, GetScoreText(keystoneProfile.mplusMainCurrent), 1, 1, 1, util:GetScoreColor(keystoneProfile.mplusMainCurrent.score))
@@ -4241,7 +4279,7 @@ do
 
 end
 
--- fanfare.lua
+-- fanfare.lua (requires debug mode)
 -- dependencies: module, config, util, provider
 do
 
@@ -4461,6 +4499,7 @@ do
                 self.model = LEVEL_UP_EFFECT.green
                 self.Texture:SetAtlas("loottoast-arrow-green")
             end
+            --[=[
             if upgrade.levelDiff and upgrade.levelDiff > 0 then
                 self.Text:SetText(upgrade.levelDiff .. (upgrade.levelDiff > 1 and " levels" or " level") .. " higher") -- TODO: locale
             elseif upgrade.fractionalTimeDiff and upgrade.fractionalTimeDiff < 0 then
@@ -4473,9 +4512,11 @@ do
             else
                 self.Text:SetText()
             end
+            --]=]
         else
             self.model = nil
             self.Texture:SetTexture()
+            --[=[
             if upgrade.levelDiff and upgrade.levelDiff < 0 then
                 self.Text:SetText((-upgrade.levelDiff) .. (upgrade.levelDiff > 1 and " levels" or " level") .. " lower") -- TODO: locale
             elseif upgrade.levelDiff == 0 and upgrade.fractionalTimeDiff and upgrade.fractionalTimeDiff > 0 then
@@ -4490,6 +4531,7 @@ do
             else
                 self.Text:SetText()
             end
+            --]=]
         end
     end
 
@@ -4689,7 +4731,7 @@ do
 
     -- DEBUG: force show the end screen for MIST+15 (1800/1440/1080 is the timer)
     -- /run wipe(RaiderIO_CachedRuns)
-    -- /run C_ChallengeMode.GetCompletionInfo=function()return 375, 15, 1800, true, 1, false end
+    -- /run C_ChallengeMode.GetCompletionInfo=function()return 375, 15, 1800, true, 1, false, 123, 234, true, true, 9, nil end
     -- /run for _,f in ipairs({GetFramesRegisteredForEvent("CHALLENGE_MODE_COMPLETED")})do f:GetScript("OnEvent")(f,"CHALLENGE_MODE_COMPLETED")end
 
 end
@@ -4735,7 +4777,7 @@ do
         tooltip:SetOwner(anchorFrame, "ANCHOR_NONE")
         tooltip:ClearAllPoints()
         tooltip:SetPoint("TOPLEFT", frame, "TOPRIGHT", 0, 0)
-        tooltip:SetFrameStrata(frameStrata or FALLBACK_ANCHOR_STRATA)
+        tooltip:SetFrameStrata(strata)
         return frame, strata
     end
 
@@ -5648,7 +5690,7 @@ do
         do
             -- look and feel
             frame:SetScale(1.2)
-            frame:SetFrameStrata("HIGH")
+            frame:SetFrameStrata("MEDIUM")
             frame:SetSize(115, 115)
             if frame.SetBackdrop then
                 frame:SetBackdrop(BACKDROP_TOOLTIP_16_16_5555 or GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT)
@@ -6155,6 +6197,638 @@ do
 
 end
 
+-- rwf.lua (requires rwf mode)
+-- dependencies: module, callback, config
+do
+
+    ---@class RaceWorldFirstModule : Module
+    local rwf = ns:NewModule("RaceWorldFirst") ---@type RaceWorldFirstModule
+    local callback = ns:GetModule("Callback") ---@type CallbackModule
+    local config = ns:GetModule("Config") ---@type ConfigModule
+
+    local LOCATION = {}
+    local LOOT_FRAME
+
+    local TRACKING_EVENTS = {
+        "LOOT_READY",
+        "LOOT_HISTORY_FULL_UPDATE",
+        "LOOT_HISTORY_ROLL_COMPLETE",
+        "CHAT_MSG_LOOT",
+        "CHAT_MSG_CURRENCY",
+    }
+
+    local HEX_COLOR_QUALITY = {
+        ["9d9d9d"] = 0,
+        ["ffffff"] = 1,
+        ["1eff00"] = 2,
+        ["0070dd"] = 3,
+        ["a335ee"] = 4,
+        ["ff8000"] = 5,
+        ["e6cc80"] = 6,
+        ["00ccff"] = 7,
+    }
+
+    local function GetItemFromText(text)
+        if not text or type(text) ~= "string" then
+            return
+        end
+        local linkHexColor, linkType, linkArg1, linkArg2N, linkText, trailingText = text:match("|cff(......)|H([^:]-):(%d+)(.-)|h%[(.-)%]|h|r(.*)")
+        if not linkHexColor then
+            return
+        end
+        local link = format("|cff%s|H%s:%s%s|h[%s]|h|r", linkHexColor, linkType, linkArg1, linkArg2N, linkText)
+        local linkCount
+        if trailingText ~= "" then
+            local trailingCount, trailingText2 = trailingText:match("%s*[Xx](%d+)(.*)")
+            if trailingCount then
+                linkCount = tonumber(trailingCount)
+            end
+        end
+        return linkType, linkArg1, link, linkCount, HEX_COLOR_QUALITY[linkHexColor]
+    end
+
+    -- Sanctum of Domination (Mythic)
+    local LOG_FILTER = {
+        GUILD_NEWS = "item:.-:1:28:2106:",
+        ITEM_LEVEL = 252,
+    }
+
+    local LOG_TYPE = {
+        Loot = 1,
+        Roll = 2,
+        Chat = 3,
+        News = 4,
+    }
+
+    local LOG_TYPE_LABEL = {
+        [1] = "Loot",
+        [2] = "Roll",
+        [3] = "Chat",
+        [4] = "News",
+    }
+
+    local function GetNestedTable(db, ...)
+        local args = {...}
+        if args[1] == nil then
+            return
+        end
+        local path = {}
+        local i = 0
+        local temp = db
+        for _, k in ipairs(args) do
+            if k == nil then
+                return nil, path, temp
+            end
+            local o = temp[k]
+            if not o then
+                o = {}
+                temp[k] = o
+            end
+            temp = o
+            i = i + 1
+            path[i] = temp
+        end
+        if i ~= #args then
+            return false, path, temp
+        end
+        return true, path, temp
+    end
+
+    local function CountItems(t)
+        local count = 0
+        for _, _ in pairs(t) do
+            count = count + 1
+        end
+        return count
+    end
+
+    ---@class RWFLootEntry
+
+    local function LogItemLink(logType, linkType, id, link, count, sources, useTimestamp)
+        local isLogging, instanceName, instanceDifficulty, instanceID = rwf:GetLocation()
+        if logType == LOG_TYPE.News then
+            instanceName = _G.GUILD_NEWS or _G.GUILD_NEWS_TITLE
+            instanceID, instanceDifficulty = 0, 0
+        end
+        if not instanceID or not instanceDifficulty then
+            return
+        end
+        local linkAsKey = link:gsub("%[[^%]]*%]", "")
+        local success, tables = GetNestedTable(_G.RaiderIO_RWF, instanceID, instanceDifficulty, logType, linkAsKey)
+        if not success then
+            return false
+        end
+        tables[1].name = instanceName
+        local lootEntry = tables[4] ---@type RWFLootEntry
+        local timestamp = useTimestamp or GetServerTime()
+        lootEntry.type = logType
+        lootEntry.isNew = not lootEntry.timestamp
+        lootEntry.timestamp = lootEntry.timestamp or timestamp
+        lootEntry.isUpdated = timestamp - lootEntry.timestamp > 60
+        lootEntry.id, lootEntry.itemType, lootEntry.itemSubType, lootEntry.itemEquipLoc, lootEntry.itemIcon, lootEntry.itemClassID, lootEntry.itemSubClassID = GetItemInfoInstant(link)
+        lootEntry.link = link
+        lootEntry.index = lootEntry.index or CountItems(tables[3]) -- keep same index or count (our item is already included in the count)
+        lootEntry.guid = lootEntry.guid or format("%05d %010d %s", lootEntry.index, lootEntry.timestamp, linkAsKey) -- attempt to create unique loot guid when the item is inserted into the SV
+        if logType == LOG_TYPE.Chat then
+            lootEntry.count = (lootEntry.count or 0) + (count or 0)
+        elseif logType == LOG_TYPE.News then
+            lootEntry.count = count or 0
+        else
+            lootEntry.count = 1
+        end
+        lootEntry.sources = lootEntry.sources or {}
+        lootEntry.hasNewSources = false
+        if logType == LOG_TYPE.Loot then
+            for k, v in pairs(sources) do
+                if not lootEntry.sources[k] then
+                    lootEntry.hasNewSources = true
+                end
+                lootEntry.sources[k] = (lootEntry.sources[k] or 0) + v
+            end
+        end
+        lootEntry.addLoot = lootEntry.isNew or lootEntry.hasNewSources -- lootEntry.isUpdated
+        return lootEntry
+    end
+
+    local LOG_GUILD_NEWS_TYPES = {
+        [NEWS_ITEM_LOOTED] = 1,
+        [NEWS_LEGENDARY_LOOTED] = 1,
+    }
+
+    local function CanLogItem(itemLink, itemType, itemQuality, itemLinkFilter)
+        if itemType == "currency" then
+            return false
+        end
+        if itemQuality and itemQuality == Enum.ItemQuality.Poor then
+            return false
+        end
+        if itemLinkFilter and itemLink:find(itemLinkFilter) then
+            return true
+        end
+        local _, _, _, itemEquipLoc = GetItemInfoInstant(itemLink) 
+        if itemEquipLoc and itemEquipLoc == "" then
+            return true
+        end
+        local effectiveILvl = GetDetailedItemLevelInfo(itemLink)
+        if effectiveILvl and effectiveILvl >= LOG_FILTER.ITEM_LEVEL then
+            return true
+        end
+    end
+
+    local function PrepareLootEntryForSV(lootEntry)
+        -- lootEntry.isNew, lootEntry.isUpdated, lootEntry.hasNewSources, lootEntry.addLoot = nil -- TODO: if we uncomment we'll keep adding old processed loot to the frame and we don't want that so let this be in the SV file we can afford that
+    end
+
+    local function HandleLootEntry(lootEntry)
+        if not lootEntry then
+            return
+        end
+        if lootEntry.addLoot then
+            LOOT_FRAME:AddLoot(lootEntry)
+        else
+            PrepareLootEntryForSV(lootEntry)
+        end
+    end
+
+    local function OnEvent(event, ...)
+        if event == "LOOT_READY" then
+            for i = 1, GetNumLootItems() do
+                local slotType = GetLootSlotType(i)
+                if slotType == LOOT_SLOT_ITEM or slotType == LOOT_SLOT_CURRENCY then
+                    local lootLink = GetLootSlotLink(i)
+                    local itemType, itemID, itemLink, itemCount, itemQuality = GetItemFromText(lootLink)
+                    if itemType and CanLogItem(itemLink, itemType, itemQuality) then
+                        local lootIcon, lootName, lootQuantity, currencyID, lootQuality, locked, isQuestItem, questID, isActive = GetLootSlotInfo(i)
+                        local lootSources = {GetLootSourceInfo(i)}
+                        local itemSources = {}
+                        for j = 1, #lootSources, 2 do
+                            local guid, quantity = lootSources[j], lootSources[j + 1]
+                            itemSources[guid] = quantity
+                        end
+                        HandleLootEntry(LogItemLink(LOG_TYPE.Loot, itemType, itemID, lootLink, lootQuantity or itemCount or 1, itemSources))
+                    end
+                end
+            end
+        elseif event == "LOOT_HISTORY_FULL_UPDATE" or event == "LOOT_HISTORY_ROLL_COMPLETE" then
+            for i = 1, C_LootHistory.GetNumItems() do
+                local rollID, rollLink, numPlayers, isDone, winnerIdx, isMasterLoot, isCurrency = C_LootHistory.GetItem(i)
+                local itemType, itemID, itemLink, itemCount, itemQuality = GetItemFromText(rollLink)
+                if itemType and CanLogItem(itemLink, itemType, itemQuality) then
+                    HandleLootEntry(LogItemLink(LOG_TYPE.Roll, itemType, itemID, rollLink, itemCount or 1))
+                end
+            end
+        elseif event == "CHAT_MSG_LOOT" or event == "CHAT_MSG_CURRENCY" then
+            local text = ...
+            local itemType, itemID, itemLink, itemCount, itemQuality = GetItemFromText(text)
+            if itemType and CanLogItem(itemLink, itemType, itemQuality) then
+                HandleLootEntry(LogItemLink(LOG_TYPE.Chat, itemType, itemID, itemLink, itemCount or 1))
+            end
+        elseif event == "GUILD_NEWS_UPDATE" then
+            for i = 1, GetNumGuildNews() do
+                local newsInfo = C_GuildInfo.GetGuildNewsInfo(i)
+                if newsInfo and newsInfo.newsType and LOG_GUILD_NEWS_TYPES[newsInfo.newsType] then
+                    local itemType, itemID, itemLink, itemCount, itemQuality = GetItemFromText(newsInfo.whatText)
+                    if itemType and CanLogItem(itemLink, itemType, itemQuality, LOG_FILTER.GUILD_NEWS) then
+                        newsInfo.year = newsInfo.year + 2000
+                        local timestamp = time(newsInfo)
+                        HandleLootEntry(LogItemLink(LOG_TYPE.News, itemType, itemID, itemLink, itemCount or 1, nil, timestamp))
+                    end
+                end
+            end
+        end
+        if LOOT_FRAME:IsShown() then
+            LOOT_FRAME:OnShow()
+        end
+    end
+
+    local function OnZoneEvent()
+        rwf:CheckLocation()
+    end
+
+    local function CreateLootFrame()
+
+        local function CreateCounter(initialCount)
+            local count = initialCount or 0
+            return function()
+                count = count + 1
+                return count
+            end
+        end
+
+        local frame = CreateFrame("Frame", nil, UIParent, "ButtonFrameTemplate")
+        frame:SetSize(400, 250)
+        frame:SetPoint("CENTER")
+        frame:SetFrameStrata("HIGH")
+        ButtonFrameTemplate_HidePortrait(frame)
+        frame:SetMovable(true)
+        frame:SetResizable(true)
+        frame:EnableMouse(true)
+        frame:SetClampedToScreen(true)
+        frame.showingArguments = true
+        frame.showingTimestamp = true
+        frame.loadTime = GetTime()
+        frame.idCounter = CreateCounter()
+        frame.logDataProvider = CreateDataProvider()
+        frame.frameCounter = 0
+        frame.TitleText:SetText(L.RWF_TITLE)
+
+        frame.TitleBar = CreateFrame("Frame", nil, frame, "PanelDragBarTemplate")
+        frame.TitleBar:OnLoad()
+        frame.TitleBar:SetHeight(24)
+        frame.TitleBar:SetPoint("TOPLEFT", 0, 0)
+        frame.TitleBar:SetPoint("TOPRIGHT", 0, 0)
+        frame.TitleBar:Init(frame)
+
+        frame.Log = CreateFrame("Frame", nil, frame)
+        frame.Log:SetPoint("TOPLEFT", frame.TitleBar, "BOTTOMLEFT", 8, -32 + 24)
+        frame.Log:SetPoint("BOTTOMRIGHT", -9, 28)
+
+        frame.Log.Bar = CreateFrame("Frame", nil, frame.Log)
+        frame.Log.Bar:SetHeight(24)
+        frame.Log.Bar:SetPoint("TOPLEFT", 0, 0)
+        frame.Log.Bar:SetPoint("TOPRIGHT", 0, 0)
+
+        frame.Log.Events = CreateFrame("Frame", nil, frame.Log)
+        frame.Log.Events:SetPoint("TOPLEFT", frame.Log.Bar, "BOTTOMLEFT", 0, -2)
+        frame.Log.Events:SetPoint("BOTTOMRIGHT", 0, 0)
+
+        frame.Log.Events.ScrollBox = CreateFrame("Frame", nil, frame.Log.Events, "WowScrollBoxList")
+        frame.Log.Events.ScrollBox:OnLoad()
+        frame.Log.Events.ScrollBox:SetPoint("TOPLEFT", 0, -8) -- 0, 0
+        frame.Log.Events.ScrollBox:SetPoint("BOTTOMRIGHT", -25, 0)
+        frame.Log.Events.ScrollBox.bgTexture = frame.Log.Events.ScrollBox:CreateTexture(nil, "BACKGROUND")
+        frame.Log.Events.ScrollBox.bgTexture:SetColorTexture(0.03, 0.03, 0.03)
+
+        frame.Log.Events.ScrollBar = CreateFrame("EventFrame", nil, frame.Log.Events, "WowTrimScrollBar")
+        frame.Log.Events.ScrollBar:OnLoad()
+        frame.Log.Events.ScrollBar:SetPoint("TOPLEFT", frame.Log.Events.ScrollBox, "TOPRIGHT", 0, 3) -- 0, -3
+        frame.Log.Events.ScrollBar:SetPoint("BOTTOMLEFT", frame.Log.Events.ScrollBox, "BOTTOMRIGHT", 0, 0)
+
+        frame.SubTitle = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+        frame.SubTitle:SetWordWrap(false)
+        frame.SubTitle:SetJustifyH("CENTER")
+        frame.SubTitle:SetJustifyV("MIDDLE")
+        frame.SubTitle:SetPoint("TOPLEFT", frame.TitleBar, "BOTTOMLEFT", 0, 0)
+        frame.SubTitle:SetPoint("BOTTOMRIGHT", frame.Log.Events, "TOPRIGHT", 0, 0)
+
+        frame.EnableModule = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+        frame.EnableModule:SetSize(80, 22)
+        frame.EnableModule:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -5, 3)
+        frame.EnableModule:SetScript("OnClick", function() config:Set("rwfMode", true) ReloadUI() end)
+        frame.EnableModule:SetText(L.ENABLE_RWF_MODE_BUTTON)
+        frame.EnableModule.tooltip = L.ENABLE_RWF_MODE_BUTTON_TOOLTIP
+        frame.EnableModule.GetAppropriateTooltip = UIButtonMixin.GetAppropriateTooltip
+        frame.EnableModule:SetScript("OnEnter", UIButtonMixin.OnEnter)
+        frame.EnableModule:SetScript("OnLeave", UIButtonMixin.OnLeave)
+
+        frame.DisableModule = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+        frame.DisableModule:SetSize(80, 22)
+        frame.DisableModule:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -5, 3)
+        frame.DisableModule:SetScript("OnClick", function() config:Set("rwfMode", false) ReloadUI() end)
+        frame.DisableModule:SetText(L.DISABLE_RWF_MODE_BUTTON)
+        frame.DisableModule.tooltip = L.DISABLE_RWF_MODE_BUTTON_TOOLTIP
+        frame.DisableModule.GetAppropriateTooltip = UIButtonMixin.GetAppropriateTooltip
+        frame.DisableModule:SetScript("OnEnter", UIButtonMixin.OnEnter)
+        frame.DisableModule:SetScript("OnLeave", UIButtonMixin.OnLeave)
+
+        frame.ReloadUI = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+        frame.ReloadUI:SetSize(80, 22)
+        frame.ReloadUI:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 5, 3)
+        frame.ReloadUI:SetScript("OnClick", ReloadUI)
+        frame.ReloadUI:SetText(L.RELOAD_RWF_MODE_BUTTON)
+        frame.ReloadUI.tooltip = L.RELOAD_RWF_MODE_BUTTON_TOOLTIP
+        frame.ReloadUI.GetAppropriateTooltip = UIButtonMixin.GetAppropriateTooltip
+        frame.ReloadUI:SetScript("OnEnter", UIButtonMixin.OnEnter)
+        frame.ReloadUI:SetScript("OnLeave", UIButtonMixin.OnLeave)
+
+        frame.WipeLog = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+        frame.WipeLog:SetSize(80, 22)
+        frame.WipeLog:SetPoint("RIGHT", frame.DisableModule, "LEFT", 2, 0)
+        frame.WipeLog:SetScript("OnClick", function() _G.RaiderIO_RWF = {} ReloadUI() end)
+        frame.WipeLog:SetText(L.WIPE_RWF_MODE_BUTTON)
+        frame.WipeLog.tooltip = L.WIPE_RWF_MODE_BUTTON_TOOLTIP
+        frame.WipeLog.GetAppropriateTooltip = UIButtonMixin.GetAppropriateTooltip
+        frame.WipeLog:SetScript("OnEnter", UIButtonMixin.OnEnter)
+        frame.WipeLog:SetScript("OnLeave", UIButtonMixin.OnLeave)
+
+        function frame:OnShow()
+            local isEnabled = config:Get("rwfMode")
+            local isLogging, instanceName = rwf:GetLocation()
+            local isLoggingGuildNews = true -- always logging guild news
+            if not isLogging and isLoggingGuildNews then
+                instanceName = _G.GUILD_NEWS or _G.GUILD_NEWS_TITLE
+            end
+            self.SubTitle:SetText(format("%s |cff%s%s|r", instanceName or "", (isLogging or isLoggingGuildNews) and "55ff55" or "ff55ff", isLogging and L.RWF_SUBTITLE_LOGGING_LOOT or L.RWF_SUBTITLE_LOGGING_FILTERED_LOOT))
+            self.EnableModule:SetShown(not isEnabled)
+            self.DisableModule:SetShown(isEnabled)
+            local numItems = self:GetNumLootItems()
+            self.ReloadUI:SetEnabled(numItems > 0)
+            self.WipeLog:SetEnabled(numItems == 0)
+        end
+
+        local NEWS_TICKER = {
+            Timer = 60,
+            Tick = function()
+                GuildNewsSort(0)
+            end,
+            Start = function(self)
+                self:Stop()
+                self:Tick()
+                self.handle = C_Timer.NewTicker(self.Timer, self.Tick)
+            end,
+            Stop = function(self)
+                if not self.handle then
+                    return
+                end
+                self.handle:Cancel()
+                self.handle = nil
+            end,
+        }
+
+        frame:HookScript("OnShow", function()
+            frame:OnShow()
+            NEWS_TICKER:Start()
+        end)
+
+        frame:HookScript("OnHide", function()
+            NEWS_TICKER:Stop()
+        end)
+
+        local function OnSettingsChanged()
+            if not config:IsEnabled() then
+                return
+            end
+            frame:OnShow()
+        end
+        callback:RegisterEvent(OnSettingsChanged, "RAIDERIO_CONFIG_READY")
+        callback:RegisterEvent(OnSettingsChanged, "RAIDERIO_SETTINGS_SAVED")
+
+        local function CalculateEventDelta(oldTimestamp, oldFrameCounter, currentTimestamp, currentFrameCounter)
+            if oldTimestamp ~= currentTimestamp then
+                return ("(%.3fs, %d)"):format(currentTimestamp - oldTimestamp, currentFrameCounter - oldFrameCounter)
+            end
+        end
+
+        function frame:GenerateTimestampData()
+            local systemTimestamp = GetTime()
+            local relativeTimestamp = systemTimestamp - self.loadTime
+            local eventDelta
+            local endElement = self.logDataProvider:Find(self.logDataProvider:GetSize())
+            if endElement then
+                eventDelta = CalculateEventDelta(endElement.relativeTimestamp, endElement.frameCounter, relativeTimestamp, self.frameCounter)
+            end
+            return systemTimestamp, relativeTimestamp, eventDelta
+        end
+
+        local MaxEvents = 1000
+
+        local function TrimDataProvider(dataProvider)
+            local dataProviderSize = dataProvider:GetSize()
+            if dataProviderSize > MaxEvents then
+                local extra = 100
+                local overflow = dataProviderSize - MaxEvents
+                dataProvider:RemoveIndexRange(1, overflow + extra)
+            end
+        end
+
+        local function CountSources(sources)
+            if not sources then
+                return
+            end
+            local count = 0
+            for _, _ in pairs(sources) do
+                count = count + 1
+            end
+            if count < 2 then
+                return
+            end
+            return format(" from %d %s", count, count == 0 or count > 1 and "sources" or "source")
+        end
+
+        local function GetDisplayText(elementData)
+            local lootEntry = elementData.lootEntry ---@type RWFLootEntry
+            local timeText = lootEntry.timestamp and date(lootEntry.type == LOG_TYPE.News and "%Y/%m/%d --:--:--" or "%Y/%m/%d %H:%M:%S", lootEntry.timestamp) or "----/--/-- --:--:--"
+            local typeText = lootEntry.type and LOG_TYPE_LABEL[lootEntry.type] or "Unknown"
+            local linkText = lootEntry.count and lootEntry.count > 1 and format("%sx%d", lootEntry.link, lootEntry.count) or lootEntry.link
+            local sourcesText = lootEntry.sources and CountSources(lootEntry.sources) or ""
+            return format("%s | %s | %s%s", timeText, typeText, linkText, sourcesText)
+        end
+
+        local function GetHyperlink(elementData)
+            local lootEntry = elementData.lootEntry ---@type RWFLootEntry
+            return lootEntry.link
+        end
+
+        local function UpdateLootEntryLink(elementData, event)
+            local lootEntry = elementData.lootEntry ---@type RWFLootEntry
+            if lootEntry.link and not lootEntry.link:find("[]", nil, true) then return end
+            local _, link = GetItemInfo(lootEntry.link)
+            if not link then return end
+            lootEntry.link = link
+            return true
+        end
+
+        local function UpdateButtonText(button)
+            local elementData = button.elementData
+            elementData.text = GetDisplayText(elementData)
+            button.LeftLabel:SetText(elementData.text)
+        end
+
+        function frame:CreateButtonAndInit(factory, elementData)
+            local button = factory("Button")
+            button.elementData = elementData
+            if not button.isInit then
+                button.isInit = true
+                button:SetHeight(20)
+                local function OnEvent(self, event, itemID, success)
+                    if event ~= "GET_ITEM_INFO_RECEIVED" or not success or itemID ~= self.elementData.lootEntry.id then return end
+                    if not UpdateLootEntryLink(self.elementData, event) then return end
+                    UpdateButtonText(self)
+                end
+                local function OnClick(self)
+                    local elementData = self.elementData
+                    local link = GetHyperlink(elementData)
+                    if not link then
+                        return
+                    end
+                    SetItemRef(link, link, GetMouseButtonClicked() or "LeftButton", ChatEdit_GetActiveWindow())
+                end
+                local function OnEnter(self)
+                    local elementData = self.elementData
+                    local link = GetHyperlink(elementData)
+                    if not link then
+                        return
+                    end
+                    GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+                    GameTooltip:SetHyperlink(link)
+                    GameTooltip:Show()
+                end
+                local function OnLeave(self)
+                    GameTooltip:Hide()
+                end
+                button:RegisterEvent("GET_ITEM_INFO_RECEIVED")
+                button:SetScript("OnEvent", OnEvent)
+                button:SetScript("OnClick", OnClick)
+                button:SetScript("OnEnter", OnEnter)
+                button:SetScript("OnLeave", OnLeave)
+                button.RightLabel = button:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+                button.RightLabel:SetWordWrap(false)
+                button.RightLabel:SetJustifyH("RIGHT")
+                button.RightLabel:SetHeight(20)
+                button.RightLabel:SetPoint("RIGHT", 0, -5)
+                button.LeftLabel = button:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+                button.LeftLabel:SetWordWrap(false)
+                button.LeftLabel:SetJustifyH("LEFT")
+                button.LeftLabel:SetHeight(20)
+                button.LeftLabel:SetPoint("LEFT", 24 - 20, 0)
+                button.LeftLabel:SetPoint("RIGHT", button.RightLabel, "LEFT", -5, 0)
+            end
+            UpdateLootEntryLink(elementData, self:IsShown())
+            UpdateButtonText(button)
+        end
+
+        function frame:GetNumLootItems()
+            return self.logDataProvider:GetSize()
+        end
+
+        function frame:AddLoot(lootEntry, showFrame)
+            if showFrame then
+                self:Show()
+            end
+            PrepareLootEntryForSV(lootEntry)
+            local preInsertAtScrollEnd = self.Log.Events.ScrollBox:IsAtEnd()
+            local preInsertScrollable = self.Log.Events.ScrollBox:HasScrollableExtent()
+            local systemTimestamp, relativeTimestamp, eventDelta = self:GenerateTimestampData()
+            local elementData = { lootEntry = lootEntry, text = lootEntry.link }
+            elementData.id = self.idCounter()
+            elementData.systemTimestamp = systemTimestamp
+            elementData.relativeTimestamp = relativeTimestamp
+            elementData.frameCounter = self.frameCounter
+            elementData.eventDelta = eventDelta
+            self.logDataProvider:Insert(elementData)
+            TrimDataProvider(self.logDataProvider)
+            if preInsertAtScrollEnd or (not preInsertScrollable and self.Log.Events.ScrollBox:HasScrollableExtent()) then
+                self.Log.Events.ScrollBox:ScrollToEnd(ScrollBoxConstants.NoScrollInterpolation)
+            end
+        end
+
+        local function SetScrollBoxButtonAlternateState(scrollBox)
+            local index = scrollBox:GetDataIndexBegin()
+            scrollBox:ForEachFrame(function(button)
+                -- button:SetAlternateOverlayShown(index % 2 == 1)
+                index = index + 1
+            end)
+        end
+
+        frame.Log.Events.ScrollBox:RegisterCallback(ScrollBoxListMixin.Event.OnDataRangeChanged, function(sortPending) SetScrollBoxButtonAlternateState(frame.Log.Events.ScrollBox) end, frame)
+
+        local view = CreateScrollBoxListLinearView()
+        view:SetElementExtent(20)
+        view:SetElementFactory(function(factory, elementData) frame:CreateButtonAndInit(factory, elementData) end)
+
+        local pad, spacing = 2
+        view:SetPadding(pad, pad, pad, pad, spacing)
+        ScrollUtil.InitScrollBoxListWithScrollBar(frame.Log.Events.ScrollBox, frame.Log.Events.ScrollBar, view)
+        frame.Log.Events.ScrollBox:SetDataProvider(frame.logDataProvider)
+
+        frame:Hide()
+        return frame
+    end
+
+    function rwf:CheckLocation()
+        if not config:Get("rwfMode") then
+            return
+        end
+        local name, instanceType, difficultyID, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceID, instanceGroupSize, LfgDungeonID = GetInstanceInfo()
+        -- if config:Get("debugMode") then instanceType, difficultyID = "raid", 16 end -- DEBUG: treat any zone as a loggable zone
+        if instanceType == "raid" and difficultyID == 16 then
+            LOCATION.logging, LOCATION.instanceName, LOCATION.instanceDifficulty, LOCATION.instanceID = true, name, difficultyID, instanceID
+            self:Enable()
+        else
+            LOCATION.logging = false
+            self:Disable()
+        end
+    end
+
+    function rwf:GetLocation()
+        return LOCATION.logging, LOCATION.instanceName, LOCATION.instanceDifficulty, LOCATION.instanceID
+    end
+
+    function rwf:CanLoad()
+        return config:IsEnabled() and config:Get("rwfMode")
+    end
+
+    function rwf:OnLoad()
+        LOOT_FRAME = CreateLootFrame()
+        self:CheckLocation()
+        callback:RegisterEvent(OnZoneEvent, "PLAYER_ENTERING_WORLD", "ZONE_CHANGED", "ZONE_CHANGED_NEW_AREA")
+        callback:RegisterEvent(OnEvent, "GUILD_NEWS_UPDATE")
+    end
+
+    function rwf:OnEnable()
+        LOOT_FRAME:OnShow()
+        callback:RegisterEvent(OnEvent, unpack(TRACKING_EVENTS))
+    end
+
+    function rwf:OnDisable()
+        LOOT_FRAME:OnShow()
+        callback:UnregisterEvent(OnEvent, unpack(TRACKING_EVENTS))
+    end
+
+    function rwf:ToggleFrame()
+        LOOT_FRAME:SetShown(not LOOT_FRAME:IsShown())
+    end
+
+    function rwf:ShowFrame()
+        LOOT_FRAME:Show()
+    end
+
+    function rwf:HideFrame()
+        LOOT_FRAME:Hide()
+    end
+
+end
+
 -- settings.lua
 -- dependencies: module, callback, json, config, profile, search
 do
@@ -6166,6 +6840,7 @@ do
     local config = ns:GetModule("Config") ---@type ConfigModule
     local profile = ns:GetModule("Profile") ---@type ProfileModule
     local search = ns:GetModule("Search") ---@type SearchModule
+    local rwf = ns:GetModule("RaceWorldFirst") ---@type RaceWorldFirstModule
 
     local settingsFrame
     local reloadPopup = {
@@ -6197,6 +6872,24 @@ do
         OnHide = nil,
         OnAccept = function ()
             config:Set("debugMode", not config:Get("debugMode"))
+            ReloadUI()
+        end,
+        OnCancel = nil
+    }
+    local rtwfPopup = {
+        id = "RAIDERIO_RWF_CONFIRM",
+        text = function() return config:Get("rwfMode") and L.DISABLE_RWF_MODE_RELOAD or L.ENABLE_RWF_MODE_RELOAD end,
+        button1 = L.CONFIRM,
+        button2 = L.CANCEL,
+        hasEditBox = false,
+        preferredIndex = 3,
+        timeout = 0,
+        whileDead = true,
+        hideOnEscape = true,
+        OnShow = nil,
+        OnHide = nil,
+        OnAccept = function ()
+            config:Set("rwfMode", not config:Get("rwfMode"))
             ReloadUI()
         end,
         OnCancel = nil
@@ -6804,6 +7497,15 @@ do
                     return
                 end
 
+                if text:find("[Rr][Ww][Ff]") then
+                    if rwf:IsLoaded() and config:Get("rwfMode") then
+                        rwf:ToggleFrame()
+                    else
+                        StaticPopup_Show(rtwfPopup.id)
+                    end
+                    return
+                end
+
                 if text:find("[Gg][Rr][Oo][Uu][Pp]") then
                     json:OpenCopyDialog()
                     return
@@ -6843,6 +7545,7 @@ do
         settingsFrame = CreateOptions()
         StaticPopupDialogs[reloadPopup.id] = PreparePopup(reloadPopup)
         StaticPopupDialogs[debugPopup.id] = PreparePopup(debugPopup)
+        StaticPopupDialogs[rtwfPopup.id] = PreparePopup(rtwfPopup)
     end
 
     function settings:OnLoad()
@@ -6908,39 +7611,50 @@ do
     local LibCombatLogging = LibStub and LibStub:GetLibrary("LibCombatLogging-1.0", true) ---@type LibCombatLogging
     local LoggingCombat = LibCombatLogging and function(...) return LibCombatLogging.LoggingCombat("Raider.IO", ...) end or _G.LoggingCombat
 
-    local autoLogInstanceMapIDs
-    local autoLogDifficultyIDs do
-        autoLogInstanceMapIDs = {
-            -- [2162] = true, -- Torghast, Tower of the Damned
-            [2296] = true, -- Castle Nathria
-            [2450] = true, -- Sanctum of Domination
-        }
-        autoLogDifficultyIDs = {
-            -- scenario
-            [167] = true, -- Torghast
-            -- party
-            [23] = true, -- Mythic
-            [8] = true, -- Mythic Keystone
-            -- raid
-            [14] = true, -- Normal
-            [15] = true, -- Heroic
-            [16] = true, -- Mythic
-        }
-        local dungeons = ns:GetDungeonData()
-        for _, dungeon in ipairs(dungeons) do
-            autoLogInstanceMapIDs[dungeon.instance_map_id] = true
+    local autoLogFromMapID do
+        ---@param instances DungeonInstance[]
+        local function getLowestMapIdForInstances(instances)
+            local mapID
+            for _, instance in ipairs(instances) do
+                if not mapID or mapID > instance.instance_map_id then
+                    mapID = instance.instance_map_id
+                end
+            end
+            return mapID
+        end
+        local raidMapID = getLowestMapIdForInstances(ns:GetDungeonRaidData())
+        local keystoneMapID = getLowestMapIdForInstances(ns:GetDungeonData())
+        if raidMapID and keystoneMapID then
+            autoLogFromMapID = keystoneMapID > raidMapID and raidMapID or keystoneMapID
+        elseif raidMapID then
+            autoLogFromMapID = raidMapID
+        elseif keystoneMapID then
+            autoLogFromMapID = keystoneMapID
+        else
+            autoLogFromMapID = 0
         end
     end
 
+    local autoLogDifficultyIDs = {
+        -- scenario
+        [167] = true, -- Torghast
+        -- party
+        [23] = true, -- Mythic
+        [8] = true, -- Mythic Keystone
+        -- raid
+        [14] = true, -- Normal
+        [15] = true, -- Heroic
+        [16] = true, -- Mythic
+    }
+
     local lastActive
     local previouslyEnabledLogging
-
     local function CheckInstance(newModuleState)
         local _, _, difficultyID, _, _, _, _, instanceMapID = GetInstanceInfo()
         if not difficultyID or not instanceMapID then
             return
         end
-        local isActive = not not (autoLogInstanceMapIDs[instanceMapID] and autoLogDifficultyIDs[difficultyID])
+        local isActive = not not (instanceMapID >= autoLogFromMapID and autoLogDifficultyIDs[difficultyID])
         if isActive == lastActive then
             return
         end
@@ -6974,7 +7688,7 @@ do
     function combatlog:OnEnable()
         previouslyEnabledLogging = config:Get("previouslyEnabledLogging")
         CheckInstance(true)
-        callback:RegisterEvent(CheckInstance, "PLAYER_ENTERING_WORLD", "ZONE_CHANGED", "ZONE_CHANGED_NEW_AREA", "ZONE_CHANGED_INDOORS")
+        callback:RegisterEvent(CheckInstance, "PLAYER_ENTERING_WORLD", "ZONE_CHANGED", "ZONE_CHANGED_NEW_AREA", "ZONE_CHANGED_INDOORS", "RAID_INSTANCE_WELCOME")
     end
 
     function combatlog:OnDisable()
@@ -6986,7 +7700,7 @@ do
 
 end
 
--- serverlog.lua
+-- serverlog.lua (requires debug mode)
 -- dependencies: module, callback, config, util
 do
 
@@ -7099,7 +7813,7 @@ do
 
 end
 
--- tests.lua
+-- tests.lua (requires debug mode)
 -- dependencies: module, config, provider
 do
 
@@ -7162,8 +7876,8 @@ do
 
     ---@type TestData[]
     local collection = {
-        { region = "eu", faction = 1, realm = "Ravencrest", name = "Voidzone", success = true },
-        { region = "eu", faction = 1, realm = "rAvEnCrEsT", name = "vOIdZoNe", success = true },
+        { region = "eu", faction = 2, realm = "TarrenMill", name = "Vladinator", success = true },
+        { region = "eu", faction = 2, realm = "tArReNmIlL", name = "vLaDiNaToR", success = true },
         CheckBothTestsAboveForSameProfiles,
         { region = "us", faction = 2, realm = "Skullcrusher", name = "Aspyrox", exists = false },
         { region = "us", faction = 2, realm = "sKuLLcRuSHeR", name = "aSpYrOx", exists = false },

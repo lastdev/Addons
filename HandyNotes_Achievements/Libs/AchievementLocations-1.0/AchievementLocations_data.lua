@@ -141,32 +141,6 @@ A{"BladesEdgeMountains", 1262, criterion=3887} -- On the Blade's Edge
 A{"BladesEdgeMountains", 1276, 0.278, 0.527}
 
 -- Exploration/Outland: Medium Rare
-A{"BladesEdgeMountains", 1311, 0.306, 0.586, criterion=4504, note="[various]"} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1311, 0.298, 0.522, criterion=4504} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1311, 0.282, 0.480, criterion=4504} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1311, 0.466, 0.660, criterion=4504} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1311, 0.456, 0.680, criterion=4504} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1311, 0.480, 0.684, criterion=4504} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1311, 0.468, 0.708, criterion=4504} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1311, 0.716, 0.632, criterion=4504} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1311, 0.680, 0.614, criterion=4504} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1311, 0.596, 0.372, criterion=4504} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1311, 0.562, 0.386, criterion=4504} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1311, 0.570, 0.342, criterion=4504} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1311, 0.456, 0.312, criterion=4504} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1311, 0.468, 0.266, criterion=4504} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1311, 0.456, 0.522, criterion=4508} -- Collidus the Warp-Watcher
-A{"BladesEdgeMountains", 1311, 0.386, 0.424, criterion=4508} -- Collidus the Warp-Watcher
-A{"BladesEdgeMountains", 1311, 0.364, 0.454, criterion=4508} -- Collidus the Warp-Watcher
-A{"BladesEdgeMountains", 1311, 0.592, 0.220, criterion=4508} -- Collidus the Warp-Watcher
-A{"BladesEdgeMountains", 1311, 0.668, 0.218, criterion=4508} -- Collidus the Warp-Watcher
-A{"BladesEdgeMountains", 1311, 0.674, 0.286, criterion=4508} -- Collidus the Warp-Watcher
-A{"BladesEdgeMountains", 1311, 0.738, 0.292, criterion=4508} -- Collidus the Warp-Watcher
-A{"BladesEdgeMountains", 1311, 0.558, 0.736, criterion=4508} -- Collidus the Warp-Watcher
-A{"BladesEdgeMountains", 1311, 0.582, 0.736, criterion=4508} -- Collidus the Warp-Watcher
-A{"BladesEdgeMountains", 1311, 0.626, 0.626, criterion=4508} -- Collidus the Warp-Watcher
-A{"BladesEdgeMountains", 1311, 0.716, 0.666, criterion=4508} -- Collidus the Warp-Watcher
-A{"BladesEdgeMountains", 1311, 0.646, 0.680, criterion=4508} -- Collidus the Warp-Watcher
 A{"BladesEdgeMountains", 1311, 0.308, 0.718, criterion=4514} -- Hemathion
 A{"BladesEdgeMountains", 1311, 0.290, 0.682, criterion=4514} -- Hemathion
 A{"BladesEdgeMountains", 1311, 0.308, 0.678, criterion=4514} -- Hemathion
@@ -197,20 +171,6 @@ A{"BladesEdgeMountains", 1311, 0.468, 0.764, criterion=4521} -- Speaker Mar'grom
 A{"BladesEdgeMountains", 1311, 0.428, 0.812, criterion=4521} -- Speaker Mar'grom
 
 -- Exploration/Outland: Bloody Rare
-A{"BladesEdgeMountains", 1312, 0.306, 0.586, criterion=4504} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1312, 0.298, 0.522, criterion=4504} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1312, 0.282, 0.480, criterion=4504} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1312, 0.466, 0.660, criterion=4504} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1312, 0.456, 0.680, criterion=4504} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1312, 0.480, 0.684, criterion=4504} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1312, 0.468, 0.708, criterion=4504} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1312, 0.716, 0.632, criterion=4504} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1312, 0.680, 0.614, criterion=4504} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1312, 0.596, 0.372, criterion=4504} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1312, 0.562, 0.386, criterion=4504} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1312, 0.570, 0.342, criterion=4504} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1312, 0.456, 0.312, criterion=4504} -- Ambassador Jerrikar
-A{"BladesEdgeMountains", 1312, 0.468, 0.266, criterion=4504} -- Ambassador Jerrikar
 A{"BladesEdgeMountains", 1312, 0.308, 0.718, criterion=4514} -- Hemathion
 A{"BladesEdgeMountains", 1312, 0.290, 0.682, criterion=4514} -- Hemathion
 A{"BladesEdgeMountains", 1312, 0.308, 0.678, criterion=4514} -- Hemathion
@@ -234,18 +194,6 @@ A{"BladesEdgeMountains", 1312, 0.426, 0.502, criterion=4521} -- Speaker Mar'grom
 A{"BladesEdgeMountains", 1312, 0.398, 0.570, criterion=4521} -- Speaker Mar'grom
 A{"BladesEdgeMountains", 1312, 0.468, 0.764, criterion=4521} -- Speaker Mar'grom
 A{"BladesEdgeMountains", 1312, 0.428, 0.812, criterion=4521} -- Speaker Mar'grom
-A{"BladesEdgeMountains", 1312, 0.456, 0.522, criterion=4508} -- Collidus the Warp-Watcher
-A{"BladesEdgeMountains", 1312, 0.386, 0.424, criterion=4508} -- Collidus the Warp-Watcher
-A{"BladesEdgeMountains", 1312, 0.364, 0.454, criterion=4508} -- Collidus the Warp-Watcher
-A{"BladesEdgeMountains", 1312, 0.592, 0.220, criterion=4508} -- Collidus the Warp-Watcher
-A{"BladesEdgeMountains", 1312, 0.668, 0.218, criterion=4508} -- Collidus the Warp-Watcher
-A{"BladesEdgeMountains", 1312, 0.674, 0.286, criterion=4508} -- Collidus the Warp-Watcher
-A{"BladesEdgeMountains", 1312, 0.738, 0.292, criterion=4508} -- Collidus the Warp-Watcher
-A{"BladesEdgeMountains", 1312, 0.558, 0.736, criterion=4508} -- Collidus the Warp-Watcher
-A{"BladesEdgeMountains", 1312, 0.582, 0.736, criterion=4508} -- Collidus the Warp-Watcher
-A{"BladesEdgeMountains", 1312, 0.626, 0.626, criterion=4508} -- Collidus the Warp-Watcher
-A{"BladesEdgeMountains", 1312, 0.716, 0.666, criterion=4508} -- Collidus the Warp-Watcher
-A{"BladesEdgeMountains", 1312, 0.646, 0.680, criterion=4508} -- Collidus the Warp-Watcher
 A{"BladesEdgeMountains", 1312, 0.456, 0.126, criterion=4515} -- Kraator
 A{"BladesEdgeMountains", 1312, 0.420, 0.400, criterion=4515} -- Kraator
 A{"BladesEdgeMountains", 1312, 0.312, 0.456, criterion=4515} -- Kraator
@@ -2961,6 +2909,62 @@ A{"ShadowmoonValley", 1195, criterion=3589} -- 90 Shadowmoon Valley quests
 
 -- Quests/Outland: Loremaster of Outland
 A{"ShadowmoonValley", 1262, criterion=3889} -- Shadow of the Betrayer
+
+-- Exploration/Outland: Medium Rare
+A{"ShadowmoonValley", 1311, 0.306, 0.586, criterion=4504, note="[various]"} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1311, 0.298, 0.522, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1311, 0.282, 0.480, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1311, 0.466, 0.660, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1311, 0.456, 0.680, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1311, 0.480, 0.684, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1311, 0.468, 0.708, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1311, 0.716, 0.632, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1311, 0.680, 0.614, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1311, 0.596, 0.372, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1311, 0.562, 0.386, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1311, 0.570, 0.342, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1311, 0.456, 0.312, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1311, 0.468, 0.266, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1311, 0.456, 0.522, criterion=4508} -- Collidus the Warp-Watcher
+A{"ShadowmoonValley", 1311, 0.386, 0.424, criterion=4508} -- Collidus the Warp-Watcher
+A{"ShadowmoonValley", 1311, 0.364, 0.454, criterion=4508} -- Collidus the Warp-Watcher
+A{"ShadowmoonValley", 1311, 0.592, 0.220, criterion=4508} -- Collidus the Warp-Watcher
+A{"ShadowmoonValley", 1311, 0.668, 0.218, criterion=4508} -- Collidus the Warp-Watcher
+A{"ShadowmoonValley", 1311, 0.674, 0.286, criterion=4508} -- Collidus the Warp-Watcher
+A{"ShadowmoonValley", 1311, 0.738, 0.292, criterion=4508} -- Collidus the Warp-Watcher
+A{"ShadowmoonValley", 1311, 0.558, 0.736, criterion=4508} -- Collidus the Warp-Watcher
+A{"ShadowmoonValley", 1311, 0.582, 0.736, criterion=4508} -- Collidus the Warp-Watcher
+A{"ShadowmoonValley", 1311, 0.626, 0.626, criterion=4508} -- Collidus the Warp-Watcher
+A{"ShadowmoonValley", 1311, 0.716, 0.666, criterion=4508} -- Collidus the Warp-Watcher
+A{"ShadowmoonValley", 1311, 0.646, 0.680, criterion=4508} -- Collidus the Warp-Watcher
+
+-- Exploration/Outland: Bloody Rare
+A{"ShadowmoonValley", 1312, 0.306, 0.586, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1312, 0.298, 0.522, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1312, 0.282, 0.480, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1312, 0.466, 0.660, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1312, 0.456, 0.680, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1312, 0.480, 0.684, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1312, 0.468, 0.708, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1312, 0.716, 0.632, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1312, 0.680, 0.614, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1312, 0.596, 0.372, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1312, 0.562, 0.386, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1312, 0.570, 0.342, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1312, 0.456, 0.312, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1312, 0.468, 0.266, criterion=4504} -- Ambassador Jerrikar
+A{"ShadowmoonValley", 1312, 0.456, 0.522, criterion=4508} -- Collidus the Warp-Watcher
+A{"ShadowmoonValley", 1312, 0.386, 0.424, criterion=4508} -- Collidus the Warp-Watcher
+A{"ShadowmoonValley", 1312, 0.364, 0.454, criterion=4508} -- Collidus the Warp-Watcher
+A{"ShadowmoonValley", 1312, 0.592, 0.220, criterion=4508} -- Collidus the Warp-Watcher
+A{"ShadowmoonValley", 1312, 0.668, 0.218, criterion=4508} -- Collidus the Warp-Watcher
+A{"ShadowmoonValley", 1312, 0.674, 0.286, criterion=4508} -- Collidus the Warp-Watcher
+A{"ShadowmoonValley", 1312, 0.738, 0.292, criterion=4508} -- Collidus the Warp-Watcher
+A{"ShadowmoonValley", 1312, 0.558, 0.736, criterion=4508} -- Collidus the Warp-Watcher
+A{"ShadowmoonValley", 1312, 0.582, 0.736, criterion=4508} -- Collidus the Warp-Watcher
+A{"ShadowmoonValley", 1312, 0.626, 0.626, criterion=4508} -- Collidus the Warp-Watcher
+A{"ShadowmoonValley", 1312, 0.716, 0.666, criterion=4508} -- Collidus the Warp-Watcher
+A{"ShadowmoonValley", 1312, 0.646, 0.680, criterion=4508} -- Collidus the Warp-Watcher
 
 -- Garrisons: Ten Hit Tunes
 A{"ShadowmoonValley", 9828, 0.573, 0.472, criterion=27756, note="from Warden's Scroll Case\nentrance at 57.2,49.7", side="alliance"} -- The Black Temple

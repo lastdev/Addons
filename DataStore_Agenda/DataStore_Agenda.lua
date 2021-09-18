@@ -101,12 +101,13 @@ local function ScanDungeonIDs()
 				instanceName = format("%s %s", instanceName, difficultyName)
 			end
 
-			local key = instanceName.. "|" .. instanceID
+			local key = format("%s|%d", instanceName, instanceID)
 			dungeons[key] = format("%s|%s|%s|%s", instanceReset, time(), extended, isRaid )
 		end
 	end
 	
 	character.lastUpdate = time()
+	addon:SendMessage("DATASTORE_DUNGEON_IDS_SCANNED")
 end
 
 local function ScanLFGDungeon(dungeonID)
@@ -119,10 +120,10 @@ local function ScanLFGDungeon(dungeonID)
 	
 	-- unknown ? exit
 	if not dungeonName then return end
-	
+
 	-- type 1 = instance, 2 = raid. We don't want the rest
 	if typeID > 2 then return end
-		
+
 	-- difficulty levels we don't need
 	--	0 = invalid (pvp 10v10 rated bg has this)
 	-- 1 = normal (no lock)
@@ -133,7 +134,7 @@ local function ScanLFGDungeon(dungeonID)
 	-- how many did we kill in that instance ?
 	local numEncounters, numCompleted = GetLFGDungeonNumEncounters(dungeonID)
 	if not numCompleted or numCompleted == 0 then return end		-- no kills ? exit
-	
+
 	local dungeons = addon.ThisCharacter.LFGDungeons
 	local count = 0
 	local key
@@ -262,6 +263,7 @@ end
 
 local function OnEncounterEnd(event, dungeonID, name, difficulty, raidSize, endStatus)
 	ScanLFGDungeon(dungeonID)
+	addon:SendMessage("DATASTORE_DUNGEON_SCANNED")
 end
 
 local function OnChatMsgSystem(event, arg)

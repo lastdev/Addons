@@ -3,7 +3,12 @@ local addon = _G[addonName]
 local colors = addon.Colors
 local icons = addon.Icons
 
+local MVC = LibStub("LibMVC-1.0")
+local Options = MVC:GetService("AltoholicUI.Options")
+
 local ICON_VIEW_QUESTS = "Interface\\LFGFrame\\LFGIcon-Quest"
+
+local tab = AltoholicFrame.TabGrids
 
 local questList
 local view
@@ -12,12 +17,14 @@ local isViewValid
 local QUEST_IN_PROGRESS = 1
 local QUEST_COMPLETE = 2
 
-local OPTION_XPACK = "UI.Tabs.Grids.Emissaries.ShowXPack%d"
+local OPTION_XPACK = "UI.Tabs.Grids.Emissaries.CurrentXPack"
 
 local function GetExpansionLabel(level, withVersion)
+	local expansion = _G[ format("EXPANSION_NAME%d", level) ]
+
 	return (withVersion) 
-		and format("%s[%s%s.0%s] %s%s", colors.white, colors.green, level+1, colors.white, colors.gold, _G["EXPANSION_NAME" .. level])
-		or format("%s%s", colors.white, _G["EXPANSION_NAME" .. level])
+		and format("%s[%s%s.0%s] %s%s", colors.white, colors.green, level+1, colors.white, colors.gold, expansion)
+		or format("%s%s", colors.white, expansion)
 end
 
 local function GetPercentageColor(percent)
@@ -36,15 +43,15 @@ local function BuildView()
 	questList = {}
 	view = {}
 	
-	local account, realm = AltoholicTabGrids:GetRealm()
+	local currentXPack = Options.Get(OPTION_XPACK)
 	
 	-- parse the emissary quests, but only the ones that have NOT been completed
-	for _, character in pairs(DataStore:GetCharacters(realm, account)) do	-- all alts on this realm
+	for _, character in pairs(DataStore:GetCharacters(tab:GetRealm())) do	-- all alts on this realm
 		for questID, _ in pairs(DataStore:GetEmissaryQuests()) do
 			local isOnQuest, questLogIndex = DataStore:IsCharacterOnQuest(character, questID)
 			local _, _, timeLeft, _, _, expansionLevel = DataStore:GetEmissaryQuestInfo(character, questID)
 
-			if isOnQuest and timeLeft and timeLeft > 0 and addon:GetOption(format(OPTION_XPACK, expansionLevel)) then
+			if isOnQuest and timeLeft and timeLeft > 0 and expansionLevel == currentXPack then
 				-- 2021-01-10 : Callings injected as emissaries will cause the player not yet to be "on the quest"
 				-- Param 3 : questID important if it is a calling, not used otherwise
 				local questName = DataStore:GetQuestLogInfo(character, questLogIndex, questID)
@@ -63,7 +70,7 @@ local function BuildView()
 	end
 
 	-- .. and only when the questList table is ready with emissaries info for all alts, loop again on the dailies
-	for _, character in pairs(DataStore:GetCharacters(realm, account)) do	-- all alts on this realm
+	for _, character in pairs(DataStore:GetCharacters(tab:GetRealm())) do	-- all alts on this realm
 		local num = DataStore:GetDailiesHistorySize(character) or 0
 		for i = 1, num do
 			local questID = DataStore:GetDailiesHistoryInfo(character, i)
@@ -82,23 +89,10 @@ local function BuildView()
 	end)
 end
 
-local function OnExpansionChange(self)
-	addon:ToggleOption(nil, format(OPTION_XPACK, self.value))
-
-	isViewValid = nil
-	AltoholicTabGrids:Update()
-end
-
-local function DropDown_Initialize(frame)
-	-- add from the 6th to the 8th expansion
-	for i = 6, 8 do
-		frame:AddButtonWithArgs(GetExpansionLabel(i, true), i, OnExpansionChange, nil, nil, addon:GetOption(format(OPTION_XPACK, i)))
-	end
-	
-	frame:AddCloseMenu()
-end
-
-local callbacks = {
+tab:RegisterGrid(12, {
+	InvalidateView = function()
+		isViewValid = nil
+	end,
 	OnUpdate = function() 
 			if not isViewValid then
 				BuildView()
@@ -115,8 +109,6 @@ local callbacks = {
 				rowFrame.Name.Text:SetJustifyH("LEFT")
 			end
 		end,
-	RowOnEnter = function() end,
-	RowOnLeave = function() end,
 	ColumnSetup = function(self, button, dataRowID, character)
 			button.key = nil
 			button.questID = nil
@@ -175,7 +167,7 @@ local callbacks = {
 			local quest = questList[questID]
 			local _, _, timeLeft, objective = DataStore:GetEmissaryQuestInfo(character, questID)
 
-			local tooltip = AltoTooltip
+			local tooltip = AddonFactory_Tooltip
 			tooltip:SetOwner(self, "ANCHOR_LEFT")
 			tooltip:ClearLines()
 			tooltip:AddLine(format("%s%s", colors.white, quest.title))
@@ -188,20 +180,8 @@ local callbacks = {
 			end
 			tooltip:Show()
 		end,
-	OnClick = nil,
 	OnLeave = function(self)
-			AltoTooltip:Hide() 
+			AddonFactory_Tooltip:Hide() 
 		end,
-		
-	InitViewDDM = function(frame, title) 
-			frame:Show()
-			title:Show()
-			
-			frame:SetMenuWidth(100) 
-			frame:SetButtonWidth(20)
-			frame:SetText(EXPANSION_FILTER_TEXT)
-			frame:Initialize(DropDown_Initialize, "MENU_NO_BORDERS")
-		end,
-}
 
-AltoholicTabGrids:RegisterGrid(12, callbacks)
+})

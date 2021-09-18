@@ -1,7 +1,7 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
 
-addon:Controller("AltoholicUI.SoulbindTreeButton", {
+addon:Controller("AltoholicUI.TabCharacters.SoulbindTreeButton", {
 	EnableIcon = function(frame)
 		-- frame:Enable()
 		frame.Icon:SetDesaturated(false)
@@ -13,7 +13,7 @@ addon:Controller("AltoholicUI.SoulbindTreeButton", {
 	Node_OnEnter = function(frame)
 		if not frame.spellID then return end
 		
-		local tt = AltoTooltip
+		local tt = AddonFactory_Tooltip
 		tt:SetOwner(frame, "ANCHOR_LEFT")
 		tt:ClearLines()
 		

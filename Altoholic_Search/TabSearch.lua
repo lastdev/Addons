@@ -3,373 +3,493 @@ local addon = _G[addonName]
 local colors = addon.Colors
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
+local MVC = LibStub("LibMVC-1.0")
+local Options = MVC:GetService("AltoholicUI.Options")
+local Equipment = MVC:GetService("AltoholicUI.Equipment")
 
-local parentName = "AltoholicTabSearch"
-local parent
+local tab		-- small shortcut to easily address the frame (set in OnBind)
+local currentPanelKey = "Search"
 
-local highlightIndex
+local searchType, searchSubType, searchedValue
 
-addon.Tabs.Search = {}
+local OPTION_LOCATION = "UI.Tabs.Search.CurrentLocation"
+local OPTION_RARITY = "UI.Tabs.Search.CurrentRarity"
+local OPTION_EQUIPMENT = "UI.Tabs.Search.CurrentSlot"
+local OPTION_PROFESSION = "UI.Tabs.Search.CurrentProfession"
+local OPTION_NO_MIN_LEVEL = "UI.Tabs.Search.IncludeNoMinLevel"
+local OPTION_MAILBOXES = "UI.Tabs.Search.IncludeMailboxItems"
+local OPTION_GUILD_BANKS = "UI.Tabs.Search.IncludeGuildBankItems"
+local OPTION_RECIPES = "UI.Tabs.Search.IncludeKnownRecipes"
+local OPTION_COLORED_ALTS = "UI.Tabs.Search.UseColorsForAlts"
+local OPTION_COLORED_REALMS = "UI.Tabs.Search.UseColorsForRealms"
 
-local ns = addon.Tabs.Search		-- ns = namespace
+local function OnSearchLocationChange(frame)
+	Options.Set(OPTION_LOCATION, frame.value)
+	tab:Update()
+end
 
-local currentClass
-local currentSubClass
+local function OnSearchRarityChange(frame)
+	Options.Set(OPTION_RARITY, frame.value)
+	
+	if searchedValue then
+		tab:Find(searchedValue)
+		tab:Update()
+	end
+end
 
--- from Blizzard_AuctionData.lua & LuaEnum.lua
--- Note : review this later on, I suspect Blizzard will change this again
-local categories = {
-	{
-		name = AUCTION_CATEGORY_WEAPONS,
-		class = LE_ITEM_CLASS_WEAPON,
-		subClasses = {
-			LE_ITEM_WEAPON_AXE1H, LE_ITEM_WEAPON_MACE1H, LE_ITEM_WEAPON_SWORD1H,
-			LE_ITEM_WEAPON_AXE2H, LE_ITEM_WEAPON_MACE2H, LE_ITEM_WEAPON_SWORD2H, 
-			LE_ITEM_WEAPON_WARGLAIVE, LE_ITEM_WEAPON_DAGGER, LE_ITEM_WEAPON_UNARMED, LE_ITEM_WEAPON_WAND,
-			LE_ITEM_WEAPON_POLEARM, LE_ITEM_WEAPON_STAFF,
-			LE_ITEM_WEAPON_BOWS, LE_ITEM_WEAPON_CROSSBOW, LE_ITEM_WEAPON_GUNS, LE_ITEM_WEAPON_THROWN,
-			LE_ITEM_WEAPON_FISHINGPOLE,
-		},
-		isCollapsed = true,
-	},
-	{
-		name = AUCTION_CATEGORY_ARMOR,
-		class = LE_ITEM_CLASS_ARMOR,
-		subClasses = {
-			LE_ITEM_ARMOR_PLATE, LE_ITEM_ARMOR_MAIL, LE_ITEM_ARMOR_LEATHER, LE_ITEM_ARMOR_CLOTH, 
-			LE_ITEM_ARMOR_GENERIC, LE_ITEM_ARMOR_SHIELD, LE_ITEM_ARMOR_COSMETIC,
-		},
-		isCollapsed = true,
-	},
-	{
-		name = AUCTION_CATEGORY_CONTAINERS,
-		class = LE_ITEM_CLASS_CONTAINER,
-		subClasses = C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_CONTAINER),
-		isCollapsed = true,
-	},
-	{
-		name = AUCTION_CATEGORY_GEMS,
-		class = LE_ITEM_CLASS_GEM,
-		subClasses = C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_GEM),
-		isCollapsed = true,
-	},
-	{
-		name = AUCTION_CATEGORY_ITEM_ENHANCEMENT,
-		class = LE_ITEM_CLASS_ITEM_ENHANCEMENT,
-		subClasses = C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_ITEM_ENHANCEMENT),
-		isCollapsed = true,
-	},
-	{
-		name = AUCTION_CATEGORY_CONSUMABLES,
-		class = LE_ITEM_CLASS_CONSUMABLE,
-		subClasses = C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_CONSUMABLE),
-		isCollapsed = true,
-	},
-	{
-		name = AUCTION_CATEGORY_GLYPHS,
-		class = LE_ITEM_CLASS_GLYPH,
-		subClasses = C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_GLYPH),
-		isCollapsed = true,
-	},
-	{
-		name = AUCTION_CATEGORY_TRADE_GOODS,
-		class = LE_ITEM_CLASS_TRADEGOODS,
-		subClasses = C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_TRADEGOODS),
-		isCollapsed = true,
-	},
-	{
-		name = AUCTION_CATEGORY_RECIPES,
-		class = LE_ITEM_CLASS_RECIPE,
-		subClasses = C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_RECIPE),
-		isCollapsed = true,
-	},
-	{
-		name = AUCTION_CATEGORY_BATTLE_PETS,
-		class = LE_ITEM_CLASS_BATTLEPET,
-		subClasses = C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_BATTLEPET),
-		isCollapsed = true,
-	},
-	{
-		name = AUCTION_CATEGORY_QUEST_ITEMS,
-		class = LE_ITEM_CLASS_QUESTITEM,
-		subClasses = C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_QUESTITEM),
-		isCollapsed = true,
-	},
-	{
-		name = AUCTION_CATEGORY_MISCELLANEOUS,
-		class = LE_ITEM_CLASS_MISCELLANEOUS,
-		subClasses = C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_MISCELLANEOUS),
-		isCollapsed = true,
-	},
+local function OnSearchEquipmentSlotChange(frame, itemType, itemSubType)
+	Options.Set(OPTION_EQUIPMENT, frame.value)
+	
+	if frame.value == 0 then
+		searchType = nil
+		searchSubType = nil
+	end
+	
+	-- Only overwrite existing filters if values are actually passed as argument
+	if itemType then 
+		searchType = GetItemClassInfo(itemType)
+		
+		if itemSubType then
+			searchSubType = GetItemSubClassInfo(itemType, itemSubType) 	
+		end
+	else
+		searchType = nil
+		searchSubType = nil
+	end
+	
+	if searchedValue then
+		tab:Find(searchedValue)
+		tab:Update()
+	end
+end
+
+local function OnSearchProfessionChange(frame)
+	Options.Set(OPTION_PROFESSION, frame.value)
+	tab:Update()
+end
+
+local function OnSearchOptionsChange(frame)
+	Options.Toggle(nil, frame.value)
+	tab:Update()
+end
+
+-- ** Menu Icons **
+local function LocationIcon_Initialize(frame, level)
+	local option = Options.Get(OPTION_LOCATION)
+
+	frame:AddTitle(L["FILTER_SEARCH_LOCATION"])
+	frame:AddButton(L["This character"], 1, OnSearchLocationChange, nil, (option == 1))
+	frame:AddButton(format("%s %s(%s)", L["This realm"], colors.green, L["This faction"]), 2, OnSearchLocationChange, nil, (option == 2))
+	frame:AddButton(format("%s %s(%s)", L["This realm"], colors.green, L["Both factions"]), 3, OnSearchLocationChange, nil, (option == 3))
+	frame:AddButton(L["All realms"], 4, OnSearchLocationChange, nil, (option == 4))
+	frame:AddButton(L["All accounts"], 5, OnSearchLocationChange, nil, (option == 5))
+	frame:AddCloseMenu()
+end
+
+local function RarityIcon_Initialize(frame, level)
+	local option = Options.Get(OPTION_RARITY)
+
+	frame:AddTitle(L["FILTER_SEARCH_RARITY"])
+	
+	for i = 0, Enum.ItemQuality.Heirloom do		-- Quality: 0 = poor .. 5 = legendary ..
+		local quality = format("|c%s%s", select(4, GetItemQualityColor(i)), _G[format("ITEM_QUALITY%d_DESC", i)])
+		
+		frame:AddButton(quality, i, OnSearchRarityChange, nil, (option == i))
+	end
+	
+	frame:AddCloseMenu()
+end
+
+local function EquipmentIcon_Initialize(frame, level)
+	local option = Options.Get(OPTION_EQUIPMENT)
+
+	frame:AddTitle(L["FILTER_SEARCH_SLOT"])
+	frame:AddButton(L["Any"], 0, OnSearchEquipmentSlotChange, nil, (option == 0))
+	
+	local e = Enum.InventoryType
+	
+	frame:AddTitle()
+	frame:AddTitle(ARMOR)
+	frame:AddButton(INVTYPE_HEAD, e.IndexHeadType, OnSearchEquipmentSlotChange, nil, (option == e.IndexHeadType))
+	frame:AddButton(INVTYPE_SHOULDER, e.IndexShoulderType, OnSearchEquipmentSlotChange, nil, (option == e.IndexShoulderType))
+	frame:AddButton(INVTYPE_CHEST, e.IndexChestType, OnSearchEquipmentSlotChange, nil, (option == e.IndexChestType))
+	frame:AddButton(INVTYPE_WAIST, e.IndexWaistType, OnSearchEquipmentSlotChange, nil, (option == e.IndexWaistType))
+	frame:AddButton(INVTYPE_LEGS, e.IndexLegsType, OnSearchEquipmentSlotChange, nil, (option == e.IndexLegsType))
+	frame:AddButton(INVTYPE_FEET, e.IndexFeetType, OnSearchEquipmentSlotChange, nil, (option == e.IndexFeetType))
+	frame:AddButton(INVTYPE_WRIST, e.IndexWristType, OnSearchEquipmentSlotChange, nil, (option == e.IndexWristType))
+	frame:AddButton(INVTYPE_HAND, e.IndexHandType, OnSearchEquipmentSlotChange, nil, (option == e.IndexHandType))
+
+	frame:AddTitle()
+	frame:AddTitle(MISCELLANEOUS)
+	
+	frame:AddButton(INVTYPE_NECK, e.IndexNeckType, OnSearchEquipmentSlotChange, nil, (option == e.IndexNeckType))
+	frame:AddButtonWithArgs(INVTYPE_CLOAK, e.IndexCloakType, OnSearchEquipmentSlotChange,LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_CLOTH, (option == e.IndexCloakType))
+	frame:AddButton(INVTYPE_FINGER, e.IndexFingerType, OnSearchEquipmentSlotChange, nil, (option == e.IndexFingerType))
+	frame:AddButton(INVTYPE_TRINKET, e.IndexTrinketType, OnSearchEquipmentSlotChange, nil, (option == e.IndexTrinketType))
+	
+	-- Note, use negative values for special cases, to avoid filtering on item slot (for shields, only type & subtype are needed)
+	frame:AddButtonWithArgs(GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_SHIELD), -1, 
+		OnSearchEquipmentSlotChange, LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_SHIELD, (option == -1))
+	frame:AddButtonWithArgs(INVTYPE_HOLDABLE, "INVTYPE_HOLDABLE", 
+		OnSearchEquipmentSlotChange, LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_GENERIC, (option == "INVTYPE_HOLDABLE"))
+	
+	frame:AddTitle()
+	-- frame:AddTitle(AUCTION_CATEGORY_WEAPONS)
+	
+	frame:AddCloseMenu()
+end
+
+local function ProfessionsIcon_Initialize(frame, level)
+	local option = Options.Get(OPTION_PROFESSION)
+
+	-- frame:AddTitle(L["FILTER_SEARCH_SLOT"])
+	-- frame:AddButton(L["Any"], 0, OnSearchProfessionChange, nil, (option == i))
+	-- frame:AddCloseMenu()
+end
+
+local function SearchOptionsIcon_Initialize(frame, level)
+	frame:AddTitle(L["FILTER_SEARCH_OPTIONS"])
+	frame:AddButton(L["Include items without level requirement"], OPTION_NO_MIN_LEVEL, OnSearchOptionsChange, nil, (Options.Get(OPTION_NO_MIN_LEVEL) == true))
+	frame:AddButton(L["Include mailboxes"], OPTION_MAILBOXES, OnSearchOptionsChange, nil, (Options.Get(OPTION_MAILBOXES) == true))
+	frame:AddButton(L["Include guild banks"], OPTION_GUILD_BANKS, OnSearchOptionsChange, nil, (Options.Get(OPTION_GUILD_BANKS) == true))
+	frame:AddButton(L["Include known recipes"], OPTION_RECIPES, OnSearchOptionsChange, nil, (Options.Get(OPTION_RECIPES) == true))
+	
+	frame:AddTitle()
+	frame:AddButton(L["USE_CLASS_COLOR"], OPTION_COLORED_ALTS, OnSearchOptionsChange, nil, (Options.Get(OPTION_COLORED_ALTS) == true))
+	frame:AddButton(L["USE_FACTION_COLOR"], OPTION_COLORED_REALMS, OnSearchOptionsChange, nil, (Options.Get(OPTION_COLORED_REALMS) == true))
+	frame:AddTitle()
+	frame:AddButtonWithArgs(HELP_LABEL, 30, addon.ShowOptionsPanel, 13)
+	
+	frame:AddCloseMenu()
+end
+
+local menuIconCallbacks = {
+	LocationIcon_Initialize,
+	RarityIcon_Initialize,
+	EquipmentIcon_Initialize,
+	ProfessionsIcon_Initialize,
+	SearchOptionsIcon_Initialize,
 }
 
-local function Header_OnClick(frame)
-	local header = categories[frame.itemTypeIndex]
-	header.isCollapsed = not header.isCollapsed
+addon:Controller("AltoholicUI.TabSearch", { 
+	"AltoholicUI.Options", "AltoholicUI.ItemFilters", "AltoholicUI.DataBrowser", "AltoholicUI.SearchResults",
+	function(Options, ItemFilters, DataBrowser, Results)
 
-	ns:Update()
-end
+	return {
+		OnBind = function(frame)
+			tab = frame
+			
+			local hc = frame.HeaderContainer
+		
+			hc:SetButton(1, RARITY, 60, function() frame:SortBy("rarity", 1) end)
+			hc:SetButton(2, NAME, 240, function() frame:SortBy("name", 2) end)
+			hc:SetButton(3, "iLvl", 50, function() frame:SortBy("level", 3) end)
+			hc:SetButton(4, format("%s/%s", PLAYER, BANK), 140, function() frame:SortBy("source", 4) end)
+			hc:SetButton(5, "Realm" , 140, function() frame:SortBy("realm", 5) end)
+		end,
+		Reset_OnClick = function(frame)
+			-- Note: do not auto reset, let the user choose with the reset button
 
-local function Item_OnClick(frame)
-	local category = categories[frame.itemTypeIndex]
-	local class = category.class
-	local subClass = category.subClasses[frame.itemSubTypeIndex]
-	
-	-- 1005 = class 1, sub 5
-	highlightIndex = (frame.itemTypeIndex * 1000) + frame.itemSubTypeIndex
-	ns:Update()
-	
-	addon.Search:FindItem(GetItemClassInfo(class), GetItemSubClassInfo(class, subClass))
-end
+			searchType = nil
+			searchSubType = nil
+			searchedValue = nil
+			
+			Options.Set(OPTION_RARITY, 0)
+			Options.Set(OPTION_EQUIPMENT, 0)
+			
+			-- reset also min max
+			frame.MinLevel:SetText("")
+			frame.MaxLevel:SetText("")
+			AltoholicFrame.SearchBox:SetText("")
+			ItemFilters.Clear()
+			Results.Clear()
+			frame:Update()
+			frame:SetStatus("")
+			collectgarbage()
+		end,
+		FilterIcon_OnEnter = function(frame, icon)
+			local currentMenuID = icon:GetID()
+			
+			local menu = frame.ContextualMenu
+			
+			menu:Initialize(menuIconCallbacks[currentMenuID], "LIST")
+			menu:Close()
+			menu:Toggle(icon, 0, 0)
+		end,
+		RegisterPanel = function(frame, key, panel)
+			-- a simple list of all the child frames
+			frame.Panels = frame.Panels or {}
+			frame.Panels[key] = panel
+		end,
+		HideAllPanels = function(frame)
+			for _, panel in pairs(frame.Panels) do
+				panel:Hide()
+			end
+		end,
+		ShowPanel = function(frame, panelKey)
+			if not panelKey then return end
+			
+			currentPanelKey = panelKey
+			
+			frame:HideAllPanels()
+			
+			local panel = frame.Panels[currentPanelKey]
+			
+			panel:Show()
+			if panel.PreUpdate then
+				panel:PreUpdate()
+			end
+			panel:Update()
+		end,
+		SetStatus = function(frame, text)
+			frame.Status:SetText(text)
+		end,
+		SortBy = function(frame, columnName, buttonIndex)
+			Options.Toggle(nil, "UI.Tabs.Search.SortAscending")
+			
+			-- Sort the whole view by a given column
+			local hc = frame.HeaderContainer
+			local sortOrder = Options.Get("UI.Tabs.Search.SortAscending")		
+			
+			hc.SortButtons[buttonIndex]:DrawArrow(sortOrder)
+			
+			Results.Sort(columnName, sortOrder)
+			frame:Update()
+		end,
+		Update = function(frame)
+			frame:ShowPanel(currentPanelKey)
+		end,
 
-function ns:OnLoad()
-	parent = _G[parentName]
-	parent.SortButtons.Sort1:SetText(L["Item / Location"])
-	parent.SortButtons.Sort2:SetText(L["Character"])
-	parent.SortButtons.Sort3:SetText(L["Realm"])
-	parent.Slot:SetText(L["Equipment Slot"])
-	parent.Location:SetText(L["Location"])
-end
+		Find = function(frame, value)
+			searchedValue = value
+			
+			-- Set Filters
+			ItemFilters.Clear()
+			ItemFilters.EnableFilter("Existence")	-- should be first in the list !
+			
+			if value ~= "" then
+				ItemFilters.SetFilterValue("itemName", strlower(value))
+				ItemFilters.EnableFilter("Name")
+			end
+			
+			if searchType then
+				ItemFilters.SetFilterValue("itemType", searchType)
+				ItemFilters.EnableFilter("Type")
+			end
 
-function ns:Update()
-	local itemTypeCacheIndex		-- index of the item type in the cache table
-	local MenuCache = {}
-	
-	for categoryIndex, category in ipairs (categories) do
-	
-		table.insert(MenuCache, { linetype = 1, dataIndex = categoryIndex } )
-		itemTypeCacheIndex = #MenuCache
-	
-		if category.isCollapsed == false then
-			for subCategoryIndex, subCategory in ipairs(category.subClasses) do
-				table.insert(MenuCache, { linetype = 2, dataIndex = subCategoryIndex, parentIndex = categoryIndex } )
+			if searchSubType then
+				ItemFilters.SetFilterValue("itemSubType", searchSubType)
+				ItemFilters.EnableFilter("SubType")
+			end
 				
-				if (highlightIndex) and (highlightIndex == ((categoryIndex*1000)+ subCategoryIndex)) then
-					MenuCache[#MenuCache].needsHighlight = true
-					MenuCache[itemTypeCacheIndex].needsHighlight = true
+			local itemMinLevel = frame.MinLevel:GetNumber()
+			ItemFilters.SetFilterValue("itemMinLevel", itemMinLevel)
+			ItemFilters.EnableFilter("MinLevel")
+			
+			local itemMaxLevel = frame.MaxLevel:GetNumber()	
+			if itemMaxLevel ~= 0 then			-- enable the filter only if a max level has been set
+				ItemFilters.SetFilterValue("itemMaxLevel", itemMaxLevel)
+				ItemFilters.EnableFilter("Maxlevel")
+			end	
+			
+			local itemSlot = Options.Get(OPTION_EQUIPMENT)
+			
+			if itemSlot then
+				if type(itemSlot) == "string" then			-- for special inventory types, like INVTYPE_HOLDABLE (off-hands)
+					ItemFilters.SetFilterValue("itemSlot", itemSlot)
+					ItemFilters.EnableFilter("EquipmentSlotText")
+
+				-- don't apply filter if = 0, it means we take them all
+				elseif type(itemSlot) == "number" and itemSlot > 0 then
+					ItemFilters.SetFilterValue("itemSlot", itemSlot)
+					ItemFilters.EnableFilter("EquipmentSlot")				
 				end
 			end
-		end
-	end
-	
-	local buttonWidth = 156
-	if #MenuCache > 15 then
-		buttonWidth = 136
-	end
-	
-	local scrollFrame = parent.ScrollFrame
-	local numRows = scrollFrame.numRows
-	local offset = scrollFrame:GetOffset()
-	local menuButton
-	
-	for rowIndex = 1, numRows do
-		menuButton = scrollFrame:GetRow(rowIndex)
-		
-		local line = rowIndex + offset
-		
-		if line > #MenuCache then
-			menuButton:Hide()
-		else
-			local p = MenuCache[line]
 			
-			menuButton:SetWidth(buttonWidth)
-			menuButton.Text:SetWidth(buttonWidth - 21)
-			if p.needsHighlight then
-				menuButton:LockHighlight()
-			else
-				menuButton:UnlockHighlight()
-			end			
-			
-			if p.linetype == 1 then
-				menuButton.Text:SetText(format("%s%s", colors.white, categories[p.dataIndex].name))
-				menuButton:SetScript("OnClick", Header_OnClick)
-				menuButton.itemTypeIndex = p.dataIndex
-			elseif p.linetype == 2 then
-				local category = categories[p.parentIndex]
-				local class = category.class
-				local subClass = category.subClasses[p.dataIndex]
-			
-				menuButton.Text:SetText("|cFFBBFFBB   " .. GetItemSubClassInfo(class, subClass))
-				menuButton:SetScript("OnClick", Item_OnClick)
-				menuButton.itemTypeIndex = p.parentIndex
-				menuButton.itemSubTypeIndex = p.dataIndex
+			local itemRarity = Options.Get(OPTION_RARITY)
+			if itemRarity and itemRarity > 0 then	-- don't apply filter if = 0, it means we take them all
+				ItemFilters.SetFilterValue("itemRarity", itemRarity)
+				ItemFilters.EnableFilter("Rarity")
 			end
-
-			menuButton:Show()
-		end
-	end
-	
-	scrollFrame:Update(#MenuCache)
-end
-
-function ns:Reset()
-	AltoholicFrame_SearchEditBox:SetText("")
-	parent.MinLevel:SetText("")
-	parent.MaxLevel:SetText("")
-	parent.Status:SetText("")				-- .. the search results
-	AltoholicFrameSearch:Hide()
-	addon.Search:ClearResults()
-	collectgarbage()
-	
-	for _, category in pairs(categories) do			-- rebuild the cache
-		category.isCollapsed = true
-	end
-	highlightIndex = nil
-	
-	for i = 1, 8 do 
-		parent.SortButtons["Sort"..i]:Hide()
-		parent.SortButtons["Sort"..i].ascendingSort = nil
-	end
-	ns:Update()
-end
-
-function ns:DropDownRarity_Initialize()
-	local info = UIDropDownMenu_CreateInfo(); 
-
-	for i = 0, Enum.ItemQuality.Heirloom do		-- Quality: 0 = poor .. 5 = legendary ..
-		info.text = format("|c%s%s", select(4, GetItemQualityColor(i)), _G["ITEM_QUALITY"..i.."_DESC"])
-		info.value = i
-		info.func = function(self)	
-			UIDropDownMenu_SetSelectedValue(parent.SelectRarity, self.value)
-		end
-		info.checked = nil; 
-		info.icon = nil; 
-		UIDropDownMenu_AddButton(info, 1);
-	end
-end 
-
-local slotNames = {		-- temporary workaround
-	[1] = INVTYPE_HEAD,
-	[2] = INVTYPE_SHOULDER,
-	[3] = INVTYPE_CHEST,
-	[4] = INVTYPE_WRIST,
-	[5] = INVTYPE_HAND,
-	[6] = INVTYPE_WAIST,
-	[7] = INVTYPE_LEGS,
-	[8] = INVTYPE_FEET,
-	[9] = INVTYPE_NECK,
-	[10] = INVTYPE_CLOAK,
-	[11] = INVTYPE_FINGER,
-	[12] = INVTYPE_TRINKET,
-	[13] = INVTYPE_WEAPON,
-	[14] = INVTYPE_2HWEAPON,
-	[15] = INVTYPE_WEAPONMAINHAND,
-	[16] = INVTYPE_WEAPONOFFHAND,
-	[17] = INVTYPE_SHIELD,
-	[18] = INVTYPE_RANGED
-}
-
-function ns:DropDownSlot_Initialize()
-	local function SetSearchSlot(self) 
-		UIDropDownMenu_SetSelectedValue(parent.SelectSlot, self.value);
-	end
-	
-	local info = UIDropDownMenu_CreateInfo(); 
-	info.text = L["Any"]
-	info.value = 0
-	info.func = SetSearchSlot
-	info.checked = nil; 
-	info.icon = nil; 
-	UIDropDownMenu_AddButton(info, 1); 	
-	
-	for i = 1, 18 do
-		--info.text = addon.Equipment:GetSlotName(i)
-		info.text = slotNames[i]		-- temporary workaround
-		info.value = i
-		info.func = SetSearchSlot
-		info.checked = nil; 
-		info.icon = nil; 
-		UIDropDownMenu_AddButton(info, 1); 
-	end
-end 
-
-function ns:DropDownLocation_Initialize()
-	local info = UIDropDownMenu_CreateInfo();
-	local text = {
-		L["This character"],
-		format("%s %s(%s)", L["This realm"], colors.green, L["This faction"]),
-		format("%s %s(%s)", L["This realm"], colors.green, L["Both factions"]),
-		L["All realms"],
-		L["All accounts"],
-		L["Loot tables"]
+			
+			-- print(ItemFilters.GetFiltersString())
+			DataBrowser.Find()		-- The actual search happens in here
+			
+			frame:Update()
+		end,
 	}
+end})
+
+local function categoriesList_OnClick(categoryData)
+	tab.ContextualMenu:Close()
 	
-	for i = 1, #text do
-		info.text = text[i]
-		info.value = i
-		info.func = function(self) 
-				UIDropDownMenu_SetSelectedValue(parent.SelectLocation, self.value)
-			end
-		info.checked = nil; 
-		info.icon = nil; 
-		UIDropDownMenu_AddButton(info, 1); 		
-	end
+	-- If we filter by category, the search box will be deleted
+	AltoholicFrame.SearchBox:SetText("")
+
+	searchType = GetItemClassInfo(categoryData.itemType)
+	searchSubType = GetItemSubClassInfo(categoryData.itemType, categoryData.subType) 
+	Options.Set(OPTION_EQUIPMENT, categoryData.slot)
+
+	tab:Find("")
+	tab:Update()
 end
 
-function ns:SetMode(mode)
+local function GetCategoryName(category)
+	return format("%s%s", colors.gold, category)
+end
 
-	-- sets the search mode, and prepares the frame accordingly (search update callback, column sizes, headers, etc..)
-	if mode == "realm" then
-		addon.Search:SetUpdateHandler("Realm_Update")
-		
-		parent.SortButtons:SetButton(1, L["Item / Location"], 240, function(self) addon.Search:SortResults(self, "name") end)
-		parent.SortButtons:SetButton(2, L["Character"], 160, function(self) addon.Search:SortResults(self, "char") end)
-		parent.SortButtons:SetButton(3, L["Realm"], 150, function(self) addon.Search:SortResults(self, "realm") end)
+addon:Controller("AltoholicUI.TabSearchCategoriesList", {
+	OnBind = function(frame)
+		local classIDs = {
+			LE_ITEM_CLASS_CONTAINER,
+			LE_ITEM_CLASS_GEM,
+			LE_ITEM_CLASS_ITEM_ENHANCEMENT,
+			LE_ITEM_CLASS_CONSUMABLE,
+			LE_ITEM_CLASS_GLYPH,
+			LE_ITEM_CLASS_TRADEGOODS,
+			LE_ITEM_CLASS_RECIPE,
+			-- LE_ITEM_CLASS_BATTLEPET,
+		}
 	
-	elseif mode == "loots" then
-		addon.Search:SetUpdateHandler("Loots_Update")
-		
-		parent.SortButtons:SetButton(1, L["Item / Location"], 240, function(self) addon.Search:SortResults(self, "item") end)
-		parent.SortButtons:SetButton(2, L["Source"], 160, function(self) addon.Search:SortResults(self, "bossName") end)
-		parent.SortButtons:SetButton(3, L["Item Level"], 150, function(self) addon.Search:SortResults(self, "iLvl") end)
-		
-	elseif mode == "upgrade" then
-		addon.Search:SetUpdateHandler("Upgrade_Update")
+		-- info : https://wowpedia.fandom.com/wiki/ItemType
+	
+		local categories = {
+			{ text = GetCategoryName(AUCTION_CATEGORY_WEAPONS), subMenu = {
+				{ text = AUCTION_SUBCATEGORY_ONE_HANDED, subMenu = {
+					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_AXE1H },
+					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_MACE1H },
+					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_SWORD1H },
+					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_WARGLAIVE },
+					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_DAGGER },
+					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_UNARMED },
+					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_WAND },
+				}},
+				{ text = AUCTION_SUBCATEGORY_TWO_HANDED, subMenu = {
+					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_AXE2H },
+					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_MACE2H },
+					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_SWORD2H },
+					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_POLEARM },
+					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_STAFF },
+				}},
+				{ text = AUCTION_SUBCATEGORY_RANGED, subMenu = {
+					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_BOWS },
+					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_CROSSBOW },
+					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_GUNS },
+					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_THROWN },
+				}},
+				{ text = AUCTION_SUBCATEGORY_MISCELLANEOUS, subMenu = {
+					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_FISHINGPOLE },
+					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_GENERIC },
+				}},
+			}},
+			{ text = GetCategoryName(AUCTION_CATEGORY_ARMOR), subMenu = {
+				{ text = GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_PLATE), subMenu = {
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_PLATE, slot = Enum.InventoryType.IndexHeadType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_PLATE, slot = Enum.InventoryType.IndexShoulderType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_PLATE, slot = Enum.InventoryType.IndexChestType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_PLATE, slot = Enum.InventoryType.IndexWaistType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_PLATE, slot = Enum.InventoryType.IndexLegsType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_PLATE, slot = Enum.InventoryType.IndexFeetType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_PLATE, slot = Enum.InventoryType.IndexWristType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_PLATE, slot = Enum.InventoryType.IndexHandType },
+				}},
+				{ text = GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_MAIL), subMenu = {
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_MAIL, slot = Enum.InventoryType.IndexHeadType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_MAIL, slot = Enum.InventoryType.IndexShoulderType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_MAIL, slot = Enum.InventoryType.IndexChestType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_MAIL, slot = Enum.InventoryType.IndexWaistType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_MAIL, slot = Enum.InventoryType.IndexLegsType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_MAIL, slot = Enum.InventoryType.IndexFeetType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_MAIL, slot = Enum.InventoryType.IndexWristType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_MAIL, slot = Enum.InventoryType.IndexHandType },
+				}},
+				{ text = GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_LEATHER), subMenu = {
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_LEATHER, slot = Enum.InventoryType.IndexHeadType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_LEATHER, slot = Enum.InventoryType.IndexShoulderType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_LEATHER, slot = Enum.InventoryType.IndexChestType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_LEATHER, slot = Enum.InventoryType.IndexWaistType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_LEATHER, slot = Enum.InventoryType.IndexLegsType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_LEATHER, slot = Enum.InventoryType.IndexFeetType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_LEATHER, slot = Enum.InventoryType.IndexWristType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_LEATHER, slot = Enum.InventoryType.IndexHandType },
+				}},
+				{ text = GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_CLOTH), subMenu = {
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_CLOTH, slot = Enum.InventoryType.IndexHeadType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_CLOTH, slot = Enum.InventoryType.IndexShoulderType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_CLOTH, slot = Enum.InventoryType.IndexChestType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_CLOTH, slot = Enum.InventoryType.IndexWaistType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_CLOTH, slot = Enum.InventoryType.IndexLegsType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_CLOTH, slot = Enum.InventoryType.IndexFeetType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_CLOTH, slot = Enum.InventoryType.IndexWristType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_CLOTH, slot = Enum.InventoryType.IndexHandType },
+				}},
+				{ text = GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_GENERIC), subMenu = {
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_GENERIC, slot = Enum.InventoryType.IndexNeckType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_CLOTH, slot = Enum.InventoryType.IndexCloakType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_GENERIC, slot = Enum.InventoryType.IndexFingerType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_GENERIC, slot = Enum.InventoryType.IndexTrinketType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_GENERIC, slot = "INVTYPE_HOLDABLE" },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_SHIELD },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_GENERIC, slot = Enum.InventoryType.IndexBodyType },
+					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_GENERIC, slot = Enum.InventoryType.IndexHeadType },
+				}},
+				{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_COSMETIC },
+			}},
+			{ text = GetCategoryName(AUCTION_CATEGORY_CONTAINERS), subMenu = {} },
+			{ text = GetCategoryName(AUCTION_CATEGORY_GEMS), subMenu = {} },
+			{ text = GetCategoryName(AUCTION_CATEGORY_ITEM_ENHANCEMENT), subMenu = {} },
+			{ text = GetCategoryName(AUCTION_CATEGORY_CONSUMABLES), subMenu = {} },
+			{ text = GetCategoryName(AUCTION_CATEGORY_GLYPHS), subMenu = {} },
+			{ text = GetCategoryName(AUCTION_CATEGORY_TRADE_GOODS), subMenu = {} },
+			{ text = GetCategoryName(AUCTION_CATEGORY_RECIPES), subMenu = {} },
+			-- { text = GetCategoryName(AUCTION_CATEGORY_BATTLE_PETS), subMenu = {} },
+			{ itemType = LE_ITEM_CLASS_QUESTITEM, subType = 0 },
+			{ text = GetCategoryName(AUCTION_CATEGORY_MISCELLANEOUS), subMenu = {
+				{ itemType = LE_ITEM_CLASS_MISCELLANEOUS, subType = LE_ITEM_MISCELLANEOUS_JUNK },
+				{ itemType = LE_ITEM_CLASS_MISCELLANEOUS, subType = LE_ITEM_MISCELLANEOUS_REAGENT },
+				{ itemType = LE_ITEM_CLASS_MISCELLANEOUS, subType = LE_ITEM_MISCELLANEOUS_COMPANION_PET },
+				{ itemType = LE_ITEM_CLASS_MISCELLANEOUS, subType = LE_ITEM_MISCELLANEOUS_HOLIDAY },
+				{ itemType = LE_ITEM_CLASS_MISCELLANEOUS, subType = LE_ITEM_MISCELLANEOUS_OTHER },
+				{ itemType = LE_ITEM_CLASS_MISCELLANEOUS, subType = LE_ITEM_MISCELLANEOUS_MOUNT },
+				{ itemType = LE_ITEM_CLASS_MISCELLANEOUS, subType = LE_ITEM_MISCELLANEOUS_MOUNT_EQUIPMENT },
+			}},
+		}
 
-		parent.SortButtons:SetButton(1, L["Item / Location"], 200, function(self) addon.Search:SortResults(self, "item") end)
-		
-		for i=1, 6 do 
-			local text = select(i, strsplit("|", addon.Equipment.FormatStats[addon.Search:GetClass()]))
+		-- Dynamically fill these categories
+		for i, classID in ipairs(classIDs) do
+			local menu = categories[i + 2].subMenu
 			
-			if text then
-				parent.SortButtons:SetButton(i+1, string.sub(text, 1, 3), 50, function(self)
-					addon.Search:SortResults(self, "stat") -- use a getID to know which stat
-				end)
-			else
-				parent.SortButtons:SetButton(i+1, nil)
+			for _, subClassID in ipairs(C_AuctionHouse.GetAuctionItemSubClasses(classID)) do
+				table.insert(menu, { 
+					text = GetItemSubClassInfo(classID, subClassID),
+					itemType = classID,
+					subType = subClassID
+				})
 			end
 		end
 		
-		parent.SortButtons:SetButton(8, "iLvl", 50, function(self) addon.Search:SortResults(self, "iLvl") end)
-	end
-end
-
-function ns:TooltipStats(frame)
-	AltoTooltip:ClearLines();
-	AltoTooltip:SetOwner(frame, "ANCHOR_RIGHT");
-	
-	AltoTooltip:AddLine(STATS_LABEL)
-	AltoTooltip:AddLine(" ");
-	
-	local s = addon.Search:GetResult(frame:GetID())
-
-	for i=1, 6 do
-		local text = select(i, strsplit("|", addon.Equipment.FormatStats[addon.Search:GetClass()]))
-		if text then 
-			local color
-			local diff = select(2, strsplit("|", s["stat"..i]))
-			diff = tonumber(diff)
-
-			if diff < 0 then
-				color = colors.red
-			elseif diff > 0 then 
-				color = colors.green
-				diff = "+" .. diff
-			else
-				color = colors.white
+		-- Initialize categories (auto-fill .callback)
+		frame:IterateCategories(categories, function(category) 
+			-- if no text has been set, get one from the available data
+			if not category.text then
+				if category.slot then
+					if type(category.slot) == "string" then
+						category.text = _G[category.slot]		-- "INVTYPE_HOLDABLE" => "Held In Off-hand"
+					else
+						category.text = GetItemInventorySlotInfo(category.slot)
+					end
+				elseif category.itemType and category.subType then
+					category.text = GetItemSubClassInfo(category.itemType, category.subType)
+				end
 			end
-			AltoTooltip:AddLine(format("%s%s %s", color, diff, text))
-		end
-	end
-	AltoTooltip:Show()
-end
+			
+			-- set the onClick callback, if there is no submenu, we are at the lowest level
+			if not category.subMenu then
+				category.callback = categoriesList_OnClick
+			end
+		end)
+		
+		frame:SetCategories(categories)
+	end,
+
+})

@@ -1,122 +1,168 @@
-local __exports = LibStub:NewLibrary("ovale/states/DemonHunterSigils", 90103)
+local __exports = LibStub:NewLibrary("ovale/states/DemonHunterSigils", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
-local ipairs = ipairs
-local tonumber = tonumber
-local insert = table.insert
-local remove = table.remove
+local __imports = {}
+__imports.aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+__imports.__enginestate = LibStub:GetLibrary("ovale/engine/state")
+__imports.States = __imports.__enginestate.States
+__imports.__toolsQueue = LibStub:GetLibrary("ovale/tools/Queue")
+__imports.Queue = __imports.__toolsQueue.Queue
+local aceEvent = __imports.aceEvent
+local pairs = pairs
 local GetTime = GetTime
-local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
-local updateDelay = 0.5
-local sigilActivationTime = 2
-local activatedSigils = {}
-local sigilStart = {
-    [204513] = {
-        type = "flame"
-    },
-    [204596] = {
-        type = "flame"
+local States = __imports.States
+local Queue = __imports.Queue
+local SigilData = __class(nil, {
+    constructor = function(self)
+        self.chains = __imports.Queue()
+        self.flame = __imports.Queue()
+        self.kyrian = __imports.Queue()
+        self.misery = __imports.Queue()
+        self.silence = __imports.Queue()
+    end,
+})
+local checkSigilType = {
+    chains = true,
+    flame = true,
+    kyrian = true,
+    misery = true,
+    silence = true
+}
+local sigilTrigger = {
+    [306830] = {
+        type = "kyrian"
     },
     [189110] = {
         type = "flame",
         talent = 22502
     },
-    [202137] = {
-        type = "silence"
+    [202138] = {
+        type = "chains"
+    },
+    [204596] = {
+        type = "flame"
     },
     [207684] = {
         type = "misery"
     },
-    [202138] = {
-        type = "chains"
-    }
-}
-local sigilEnd = {
-    [204598] = {
-        type = "flame"
-    },
-    [204490] = {
+    [202137] = {
         type = "silence"
-    },
-    [207685] = {
-        type = "misery"
-    },
-    [204834] = {
-        type = "chains"
     }
 }
-__exports.OvaleSigilClass = __class(nil, {
-    constructor = function(self, ovalePaperDoll, ovale, ovaleSpellBook)
-        self.ovalePaperDoll = ovalePaperDoll
+__exports.OvaleSigilClass = __class(States, {
+    constructor = function(self, ovale, debug, paperDoll, spellBook)
         self.ovale = ovale
-        self.ovaleSpellBook = ovaleSpellBook
-        self.handleInitialize = function()
+        self.paperDoll = paperDoll
+        self.spellBook = spellBook
+        self.chargeDuration = 2
+        self.onEnable = function()
             if self.ovale.playerClass == "DEMONHUNTER" then
-                self.module:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED", self.handleUnitSpellCastSucceeded)
-                self.module:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", self.handleCombatLogEventUnfiltered)
+                self.module:RegisterMessage("Ovale_SpecializationChanged", self.onOvaleSpecializationChanged)
+                self.module:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED", self.onUnitSpellCastSucceeded)
+                local specialization = self.paperDoll:getSpecialization()
+                self.onOvaleSpecializationChanged("onEnable", specialization, specialization)
             end
         end
-        self.handleDisable = function()
+        self.onDisable = function()
             if self.ovale.playerClass == "DEMONHUNTER" then
+                self.module:UnregisterMessage("Ovale_SpecializationChanged")
+                self.module:UnregisterMessage("Ovale_TalentsChanged")
                 self.module:UnregisterEvent("UNIT_SPELLCAST_SUCCEEDED")
-                self.module:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
             end
         end
-        self.handleCombatLogEventUnfiltered = function(event, ...)
-            if  not self.ovalePaperDoll:isSpecialization("vengeance") then
-                return 
+        self.onOvaleSpecializationChanged = function(event, newSpecialization, oldSpecialization)
+            if newSpecialization == "vengeance" then
+                self.module:RegisterMessage("Ovale_TalentsChanged", self.onOvaleTalentsChanged)
+                self.onOvaleTalentsChanged(event)
             end
-            local _, cleuEvent, _, sourceGUID, _, _, _, _, _, _, _, spellid = CombatLogGetCurrentEventInfo()
-            if sourceGUID == self.ovale.playerGUID and cleuEvent == "SPELL_AURA_APPLIED" then
-                if sigilEnd[spellid] ~= nil then
-                    local s = sigilEnd[spellid]
-                    local t = s.type
-                    remove(activatedSigils[t], 1)
+        end
+        self.onOvaleTalentsChanged = function(event)
+            local talent = 22510
+            local hasQuickenedSigils = self.spellBook:getTalentPoints(talent) > 0
+            self.chargeDuration = 2
+            if hasQuickenedSigils then
+                self.chargeDuration = self.chargeDuration - 1
+            end
+        end
+        self.onUnitSpellCastSucceeded = function(event, unitId, guid, spellId)
+            if unitId == "player" then
+                if sigilTrigger[spellId] then
+                    local info = sigilTrigger[spellId]
+                    local sigilType = info.type
+                    local talent = info.talent
+                    if  not talent or self.spellBook:getTalentPoints(talent) > 0 then
+                        local now = GetTime()
+                        local state = self.current
+                        self.triggerSigil(state, sigilType, now)
+                        local count = state[sigilType].length
+                        self.tracer:debug("\"" .. sigilType .. "\" (" .. count .. ") placed at " .. now)
+                    end
                 end
             end
         end
-        self.handleUnitSpellCastSucceeded = function(event, unitId, guid, spellId, ...)
-            if  not self.ovalePaperDoll:isSpecialization("vengeance") then
-                return 
+        self.triggerSigil = function(state, sigilType, atTime)
+            local queue = state[sigilType]
+            local activationTime = queue:front()
+            while activationTime and activationTime < atTime do
+                queue:shift()
+                activationTime = queue:front()
             end
-            if unitId == nil or unitId ~= "player" then
-                return 
-            end
-            local id = tonumber(spellId)
-            if sigilStart[id] ~= nil then
-                local s = sigilStart[id]
-                local t = s.type
-                local tal = s.talent or nil
-                if tal == nil or self.ovaleSpellBook:getTalentPoints(tal) > 0 then
-                    insert(activatedSigils[t], GetTime())
+            activationTime = atTime + self.chargeDuration
+            queue:push(activationTime)
+        end
+        self.applySpellAfterCast = function(spellId, targetGUID, startCast, endCast, channel, spellcast)
+            if self.ovale.playerClass == "DEMONHUNTER" then
+                if sigilTrigger[spellId] then
+                    local info = sigilTrigger[spellId]
+                    local sigilType = info.type
+                    local talent = info.talent
+                    if  not talent or self.spellBook:getTalentPoints(talent) > 0 then
+                        local state = self.next
+                        self.triggerSigil(state, sigilType, endCast)
+                        local count = state[sigilType].length
+                        self.tracer:log("\"" .. sigilType .. "\" (" .. count .. ") placed at " .. endCast)
+                    end
                 end
             end
         end
-        self.module = ovale:createModule("OvaleSigil", self.handleInitialize, self.handleDisable, aceEvent)
-        activatedSigils["flame"] = {}
-        activatedSigils["silence"] = {}
-        activatedSigils["misery"] = {}
-        activatedSigils["chains"] = {}
-    end,
-    isSigilCharging = function(self, type, atTime)
-        if #activatedSigils[type] == 0 then
-            return false
-        end
-        local charging = false
-        for _, v in ipairs(activatedSigils[type]) do
-            local activationTime = sigilActivationTime + updateDelay
-            if self.ovaleSpellBook:getTalentPoints(22510) > 0 then
-                activationTime = activationTime - 1
-            end
-            charging = charging or atTime < v + activationTime
-        end
-        return charging
-    end,
-    cleanState = function(self)
+        States.constructor(self, SigilData)
+        self.module = ovale:createModule("OvaleSigil", self.onEnable, self.onDisable, aceEvent)
+        self.tracer = debug:create(self.module:GetName())
     end,
     initializeState = function(self)
     end,
     resetState = function(self)
+        if self.ovale.playerClass == "DEMONHUNTER" then
+            for sigilType in pairs(checkSigilType) do
+                local current = self.current[sigilType]
+                local next = self.next[sigilType]
+                do
+                    next.first = 0
+                    next.last = 0
+                    next.length = 0
+                end
+                for i = 1, current.length do
+                    local activationTime = current:at(i)
+                    if activationTime then
+                        next:push(activationTime)
+                    end
+                end
+            end
+        end
+    end,
+    cleanState = function(self)
+    end,
+    isSigilCharging = function(self, sigilType, atTime)
+        local queue = self.next[sigilType]
+        for i = 1, queue.length do
+            local activationTime = queue:at(i)
+            if activationTime then
+                local start = activationTime - self.chargeDuration
+                if start <= atTime and atTime < activationTime then
+                    return true
+                end
+            end
+        end
+        return false
     end,
 })

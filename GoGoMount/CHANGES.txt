@@ -1,18 +1,16 @@
-tag 114418d6230a57d6cf0a90c3e41ca05aac6bfd80 2.9.1
+tag 42c83f80d0d6a3636193929949fc28711992f74f 2.9.2
 Author:	ghudavj <72996267+ghudavj@users.noreply.github.com>
-Date:	Tue Jul 27 22:46:49 2021 +0200
+Date:	Sat Aug 28 07:37:13 2021 +0200
 
-commit 8a3a907dfb6050d31c79630abddd73fc4d243f1a
+commit 8794093505eaa488a634fe040a4d112b55028d07
 Author: ghudavj <72996267+ghudavj@users.noreply.github.com>
-Date:   Tue Jul 27 22:46:36 2021 +0200
+Date:   Sat Aug 28 07:36:51 2021 +0200
 
-    2.9.1
+    2.9.2
 
-commit 44ca7dd5e187944d2fe4f9464c243c7bed9d2413
+commit 4c7b0f4a656f95476fe37cac1038535c0917ecab
 Author: ghudavj <72996267+ghudavj@users.noreply.github.com>
-Date:   Tue Jul 27 22:46:15 2021 +0200
+Date:   Sat Aug 28 07:34:58 2021 +0200
 
-    SL Flying improved
-    
-    Detects SL Flying on any character and saves it for alts on same account that did not complete the needed quest
+    Flying in Elysean Hold
 

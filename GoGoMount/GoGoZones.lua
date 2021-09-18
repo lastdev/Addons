@@ -4216,6 +4216,15 @@ function GoGo_ZoneCheck()
 		end --if
 		GoGo_Variables.ZoneExclude.CanFly = GoGo_SLFlying
 		-- can ride = true
+	elseif GoGo_Variables.Player.MapID == 1707 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Bastion - Elysean Hold")
+		end --if
+		if (not GoGo_SLFlying) then
+			GoGo_SLFlying = C_QuestLog.IsQuestFlaggedCompleted(GoGo_Variables.Localize.MemoriesOfSunlessSkies)
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = GoGo_SLFlying
+		-- can ride = true
 	elseif GoGo_Variables.Player.MapID == 1961 then  -- Korthia
 		if GoGo_Variables.Debug >= 10
 		then

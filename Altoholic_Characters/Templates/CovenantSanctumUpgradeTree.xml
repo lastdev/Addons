@@ -42,14 +42,16 @@
 			<OnEnter>
 				if not self.title then return end
 				
-				AltoTooltip:ClearLines()
-				AltoTooltip:SetOwner(self, "ANCHOR_RIGHT")
-				AltoTooltip:SetText(self.title, 1, 1, 1)
-				AltoTooltip:AddLine(self.description, 1, 0.82, 0, true)
-				AltoTooltip:Show()
+				local tooltip = AddonFactory_Tooltip
+				
+				tooltip:ClearLines()
+				tooltip:SetOwner(self, "ANCHOR_RIGHT")
+				tooltip:SetText(self.title, 1, 1, 1)
+				tooltip:AddLine(self.description, 1, 0.82, 0, true)
+				tooltip:Show()
 			</OnEnter> 
 			<OnLeave>
-				AltoTooltip:Hide()
+				AddonFactory_Tooltip:Hide()
 			</OnLeave>
 		</Scripts>
 	</Frame>
@@ -92,7 +94,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:BindViewToController(self, "AltoholicUI.CovenantSanctumUpgradeTree")
+				Altoholic:BindViewToController(self, "AltoholicUI.TabCharacters.CovenantSanctumUpgradeTree")
 			</OnLoad>
 		</Scripts>
 	</Frame>

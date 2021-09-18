@@ -6,14 +6,32 @@ local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
 local currentCovenantID
 
-addon:Controller("AltoholicUI.SoulbindsPanel", {
-	Update = function(frame)
+addon:Controller("AltoholicUI.TabCharacters.SoulbindsPanel", {
+	OnBind = function(frame)
+		local parent = AltoholicFrame.TabCharacters
+		
+		frame:SetParent(parent)
+		frame:SetPoint("TOPLEFT", parent.Background, "TOPLEFT", 0, 0)
+		frame:SetPoint("BOTTOMRIGHT", parent.Background, "BOTTOMRIGHT", 26, 0)
+		parent:RegisterPanel("Soulbinds", frame)
+		
+		-- Handle resize
+		frame:SetScript("OnSizeChanged", function(self, width, height)
+			if not frame:IsVisible() then return end
+		
+			frame:Update(true)
+		end)
+	end,
+	Update = function(frame, isResizing)
 		frame:Hide()
 		
-		local character = addon.Tabs.Characters:GetAltKey()
+		local parent = frame:GetParent()
+		local character = parent:GetCharacter()
 		if not character then return end
 		
-		AltoholicTabCharacters.Status:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), COVENANT_PREVIEW_SOULBINDS))
+		if not isResizing then
+			parent:SetStatus(format("%s|r / %s%s|r", DataStore:GetColoredCharacterName(character), colors.white, COVENANT_PREVIEW_SOULBINDS))
+		end
 		
 		local covenantID, _, renownLevel =  DataStore:GetCovenantInfo(character)
 		if covenantID == 0 then return end		-- 0 if no covenant has been chosen yet
@@ -26,7 +44,7 @@ addon:Controller("AltoholicUI.SoulbindsPanel", {
 		-- Loop on the soulbinds of this covenant
 		local i = 1
 		for _, soulbindID in pairs(covenantData.soulbindIDs) do
-			frame["Spec" .. i]:Update(character, C_Soulbinds.GetSoulbindData(soulbindID), (activeSoulbindID == soulbindID))
+			frame[format("Spec%d", i)]:Update(character, C_Soulbinds.GetSoulbindData(soulbindID), (activeSoulbindID == soulbindID))
 			i = i + 1
 		end		
 		

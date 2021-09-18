@@ -1,9 +1,12 @@
-local __exports = LibStub:NewLibrary("ovale/states/Runes", 90103)
+local __exports = LibStub:NewLibrary("ovale/states/Runes", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local __enginestate = LibStub:GetLibrary("ovale/engine/state")
-local States = __enginestate.States
-local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+local __imports = {}
+__imports.__enginestate = LibStub:GetLibrary("ovale/engine/state")
+__imports.States = __imports.__enginestate.States
+__imports.aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+local States = __imports.States
+local aceEvent = __imports.aceEvent
 local ipairs = ipairs
 local wipe = wipe
 local GetRuneCooldown = GetRuneCooldown
@@ -23,7 +26,7 @@ local RuneData = __class(nil, {
 })
 local usedRune = {}
 __exports.OvaleRunesClass = __class(States, {
-    constructor = function(self, ovale, ovaleDebug, ovaleProfiler, ovaleData, ovalePower, ovalePaperDoll)
+    constructor = function(self, ovale, ovaleDebug, ovaleData, ovalePower, ovalePaperDoll)
         self.ovale = ovale
         self.ovaleData = ovaleData
         self.ovalePower = ovalePower
@@ -70,14 +73,11 @@ __exports.OvaleRunesClass = __class(States, {
             end
         end
         self.applySpellStartCast = function(spellId, targetGUID, startCast, endCast, isChanneled, spellcast)
-            self.profiler:startProfiling("OvaleRunes_ApplySpellStartCast")
             if isChanneled then
                 self:applyRuneCost(spellId, startCast, spellcast)
             end
-            self.profiler:stopProfiling("OvaleRunes_ApplySpellStartCast")
         end
         self.applySpellAfterCast = function(spellId, targetGUID, startCast, endCast, isChanneled, spellcast)
-            self.profiler:startProfiling("OvaleRunes_ApplySpellAfterCast")
             if  not isChanneled then
                 self:applyRuneCost(spellId, endCast, spellcast)
                 if spellId == empowerRuneWeapon then
@@ -86,15 +86,12 @@ __exports.OvaleRunesClass = __class(States, {
                     end
                 end
             end
-            self.profiler:stopProfiling("OvaleRunes_ApplySpellAfterCast")
         end
         States.constructor(self, RuneData)
         self.module = ovale:createModule("OvaleRunes", self.handleInitialize, self.handleDisable, aceEvent)
         self.tracer = ovaleDebug:create(self.module:GetName())
-        self.profiler = ovaleProfiler:create(self.module:GetName())
     end,
     updateRune = function(self, slot)
-        self.profiler:startProfiling("OvaleRunes_UpdateRune")
         local rune = self.current.rune[slot]
         local start, duration = GetRuneCooldown(slot)
         if start and duration then
@@ -109,7 +106,6 @@ __exports.OvaleRunesClass = __class(States, {
         else
             self.tracer:debug("Warning: rune information for slot %d not available.", slot)
         end
-        self.profiler:stopProfiling("OvaleRunes_UpdateRune")
     end,
     debugRunes = function(self)
         local now = GetTime()
@@ -132,13 +128,11 @@ __exports.OvaleRunesClass = __class(States, {
         end
     end,
     resetState = function(self)
-        self.profiler:startProfiling("OvaleRunes_ResetState")
         for slot, rune in ipairs(self.current.rune) do
             local stateRune = self.next.rune[slot]
             stateRune.endCooldown = rune.endCooldown
             stateRune.startCooldown = rune.startCooldown
         end
-        self.profiler:stopProfiling("OvaleRunes_ResetState")
     end,
     cleanState = function(self)
         for slot, rune in ipairs(self.next.rune) do
@@ -151,7 +145,7 @@ __exports.OvaleRunesClass = __class(States, {
         if si then
             local count = si.runes or 0
             while count > 0 do
-                self:consumeRune(spellId, atTime, spellcast)
+                self:consumeRune(spellId, atTime)
                 count = count - 1
             end
         end
@@ -163,8 +157,7 @@ __exports.OvaleRunesClass = __class(States, {
         end
         rune.endCooldown = atTime
     end,
-    consumeRune = function(self, spellId, atTime, snapshot)
-        self.profiler:startProfiling("OvaleRunes_state_ConsumeRune")
+    consumeRune = function(self, spellId, atTime)
         local consumedRune
         for slot = 1, runeSlots, 1 do
             local rune = self.next.rune[slot]
@@ -181,17 +174,15 @@ __exports.OvaleRunesClass = __class(States, {
                     start = rune.endCooldown
                 end
             end
-            local duration = 10 / self.ovalePaperDoll:getSpellCastSpeedPercentMultiplier(snapshot)
+            local duration = 10 / self.ovalePaperDoll:getSpellCastSpeedPercentMultiplier(atTime)
             consumedRune.startCooldown = start
             consumedRune.endCooldown = start + duration
             local runicpower = (self.ovalePower.next.power.runicpower or 0) + 10
             local maxi = self.ovalePower.current.maxPower.runicpower
             self.ovalePower.next.power.runicpower = (runicpower < maxi and runicpower) or maxi
         end
-        self.profiler:stopProfiling("OvaleRunes_state_ConsumeRune")
     end,
     runeCount = function(self, atTime)
-        self.profiler:startProfiling("OvaleRunes_state_RuneCount")
         local state = self:getState(atTime)
         local count = 0
         local startCooldown, endCooldown = huge, huge
@@ -203,11 +194,9 @@ __exports.OvaleRunesClass = __class(States, {
                 startCooldown, endCooldown = rune.startCooldown, rune.endCooldown
             end
         end
-        self.profiler:stopProfiling("OvaleRunes_state_RuneCount")
         return count, startCooldown, endCooldown
     end,
     runeDeficit = function(self, atTime)
-        self.profiler:startProfiling("OvaleRunes_state_RuneDeficit")
         local state = self:getState(atTime)
         local count = 0
         local startCooldown, endCooldown = huge, huge
@@ -220,7 +209,6 @@ __exports.OvaleRunesClass = __class(States, {
                 end
             end
         end
-        self.profiler:stopProfiling("OvaleRunes_state_RuneDeficit")
         return count, startCooldown, endCooldown
     end,
     getRunesCooldown = function(self, atTime, runes)
@@ -232,7 +220,6 @@ __exports.OvaleRunesClass = __class(States, {
             return 0
         end
         local state = self:getState(atTime)
-        self.profiler:startProfiling("OvaleRunes_state_GetRunesCooldown")
         for slot = 1, runeSlots, 1 do
             local rune = state.rune[slot]
             if isActiveRune(rune, atTime) then
@@ -242,7 +229,6 @@ __exports.OvaleRunesClass = __class(States, {
             end
         end
         sort(usedRune)
-        self.profiler:stopProfiling("OvaleRunes_state_GetRunesCooldown")
         return usedRune[runes]
     end,
 })

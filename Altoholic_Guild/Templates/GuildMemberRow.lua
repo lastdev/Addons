@@ -37,7 +37,7 @@ addon:Controller("AltoholicUI.GuildMemberRow", {
 		local name, rank, rankIndex, _, _, zone, note, officerNote, _, _, englishClass = DataStore:GetGuildMemberInfo(member)
 		if name ~= member then return end
 	  
-		local tooltip = AltoTooltip
+		local tooltip = AddonFactory_Tooltip
 		
 		tooltip:ClearLines()
 		tooltip:SetOwner(frame.Name, "ANCHOR_RIGHT")
@@ -64,22 +64,22 @@ addon:Controller("AltoholicUI.GuildMemberRow", {
 	end,
 	Level_OnEnter = function(frame)
 		local member = frame.CharName
-		if member == L["Offline Members"] then return end
+		if member == L["OFFLINE_MEMBERS"] then return end
 		
 		local _, _, _, _, _, _, _, _, _, _, englishClass = DataStore:GetGuildMemberInfo(member)
 		local guild = DataStore:GetGuild()
 		local averageItemLvl = DataStore:GetGuildMemberAverageItemLevel(guild, member) or 0
 		
-		local tooltip = AltoTooltip
+		local tooltip = AddonFactory_Tooltip
 		
 		tooltip:ClearLines()
 		tooltip:SetOwner(frame, "ANCHOR_RIGHT")
 		tooltip:AddLine(format("%s%s", DataStore:GetClassColor(englishClass), member), 1, 1, 1)
 		tooltip:AddLine(format("%s%s: %s%s", colors.white, L["COLUMN_ILEVEL_TITLE"], colors.green, format("%.1f", averageItemLvl)), 1, 1, 1)
 
-		addon:AiLTooltip()
+		-- addon:AiLTooltip()
 		tooltip:AddLine(" ", 1, 1, 1)
-		tooltip:AddLine(format("%s%s", colors.green, L["Left-click to see this character's equipment"]), 1, 1, 1)
+		tooltip:AddLine(format("%s%s", colors.green, L["LEFT_CLICK_SEE_PLAYER_EQUIPMENT"]), 1, 1, 1)
 		tooltip:Show()
 	end,
 	Level_OnClick = function(frame, button)

@@ -2,7 +2,7 @@
 ## Title: DataStore by |cFF69CCF0Thaoky|r
 ## Notes: Main DataStore Module
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: r67
+## Version: 9.1.002
 ## OptionalDeps: Ace3, LibAboutPanel 
 ## SavedVariables: DataStoreDB
 ## X-Embeds: Ace3

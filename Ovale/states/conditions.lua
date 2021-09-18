@@ -1,14 +1,25 @@
-local __exports = LibStub:NewLibrary("ovale/states/conditions", 90103)
+local __exports = LibStub:NewLibrary("ovale/states/conditions", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local LibBabbleCreatureType = LibStub:GetLibrary("LibBabble-CreatureType-3.0", true)
-local LibRangeCheck = LibStub:GetLibrary("LibRangeCheck-2.0", true)
-local __enginecondition = LibStub:GetLibrary("ovale/engine/condition")
-local parseCondition = __enginecondition.parseCondition
-local returnBoolean = __enginecondition.returnBoolean
-local returnConstant = __enginecondition.returnConstant
-local returnValue = __enginecondition.returnValue
-local returnValueBetween = __enginecondition.returnValueBetween
+local __imports = {}
+__imports.LibBabbleCreatureType = LibStub:GetLibrary("LibBabble-CreatureType-3.0", true)
+__imports.LibRangeCheck = LibStub:GetLibrary("LibRangeCheck-2.0", true)
+__imports.__enginecondition = LibStub:GetLibrary("ovale/engine/condition")
+__imports.parseCondition = __imports.__enginecondition.parseCondition
+__imports.returnBoolean = __imports.__enginecondition.returnBoolean
+__imports.returnConstant = __imports.__enginecondition.returnConstant
+__imports.returnValue = __imports.__enginecondition.returnValue
+__imports.returnValueBetween = __imports.__enginecondition.returnValueBetween
+__imports.__toolstools = LibStub:GetLibrary("ovale/tools/tools")
+__imports.isNumber = __imports.__toolstools.isNumber
+__imports.oneTimeMessage = __imports.__toolstools.oneTimeMessage
+local LibBabbleCreatureType = __imports.LibBabbleCreatureType
+local LibRangeCheck = __imports.LibRangeCheck
+local parseCondition = __imports.parseCondition
+local returnBoolean = __imports.returnBoolean
+local returnConstant = __imports.returnConstant
+local returnValue = __imports.returnValue
+local returnValueBetween = __imports.returnValueBetween
 local ipairs = ipairs
 local pairs = pairs
 local type = type
@@ -16,6 +27,7 @@ local GetBuildInfo = GetBuildInfo
 local GetItemCount = GetItemCount
 local GetNumTrackingTypes = GetNumTrackingTypes
 local GetTrackingInfo = GetTrackingInfo
+local GetUnitName = GetUnitName
 local GetUnitSpeed = GetUnitSpeed
 local HasFullControl = HasFullControl
 local IsStealthed = IsStealthed
@@ -34,7 +46,6 @@ local UnitIsFriend = UnitIsFriend
 local UnitIsPVP = UnitIsPVP
 local UnitIsUnit = UnitIsUnit
 local UnitLevel = UnitLevel
-local UnitName = UnitName
 local UnitPower = UnitPower
 local UnitPowerMax = UnitPowerMax
 local UnitRace = UnitRace
@@ -43,9 +54,8 @@ local min = math.min
 local lower = string.lower
 local upper = string.upper
 local sub = string.sub
-local __toolstools = LibStub:GetLibrary("ovale/tools/tools")
-local isNumber = __toolstools.isNumber
-local oneTimeMessage = __toolstools.oneTimeMessage
+local isNumber = __imports.isNumber
+local oneTimeMessage = __imports.oneTimeMessage
 local function bossArmorDamageReduction(target)
     return 0.3
 end
@@ -74,14 +84,14 @@ __exports.OvaleConditions = __class(nil, {
     computeParameter = function(self, spellId, paramName, atTime)
         return self.data:getSpellInfoProperty(spellId, atTime, paramName, nil)
     end,
-    getHastedTime = function(self, seconds, haste)
+    getHastedTime = function(self, seconds, haste, atTime)
         seconds = seconds or 0
-        local multiplier = self.paperDoll:getHasteMultiplier(haste, self.paperDoll.next)
+        local multiplier = self.paperDoll:getHasteMultiplier(haste, atTime)
         return seconds / multiplier
     end,
     getDiseases = function(self, target, atTime)
         local bpAura = self.auras:getAura(target, 55078, atTime, "HARMFUL", true)
-        local ffAura = self.auras:getAura(target, 195617, atTime, "HARMFUL", true)
+        local ffAura = self.auras:getAura(target, 55095, atTime, "HARMFUL", true)
         return bpAura, ffAura
     end,
     maxPower = function(self, powerType, positionalParams, namedParams, atTime)
@@ -200,12 +210,13 @@ __exports.OvaleConditions = __class(nil, {
     parseCondition = function(self, positionalParams, namedParams, defaultTarget)
         return parseCondition(namedParams, self.baseState, defaultTarget)
     end,
-    constructor = function(self, ovaleCondition, data, paperDoll, azeriteEssence, auras, baseState, cooldown, future, spellBook, frameModule, guids, damageTaken, powers, enemies, lastSpell, health, ovaleOptions, lossOfControl, spellDamage, totem, sigil, demonHunterSoulFragments, runes, bossMod, spells)
+    constructor = function(self, ovaleCondition, data, paperDoll, azeriteEssence, auras, baseState, bloodtalons, cooldown, future, spellBook, frameModule, guids, damageTaken, powers, enemies, lastSpell, health, ovaleOptions, lossOfControl, spellDamage, totem, sigil, demonHunterSoulFragments, runes, bossMod, spells)
         self.data = data
         self.paperDoll = paperDoll
         self.azeriteEssence = azeriteEssence
         self.auras = auras
         self.baseState = baseState
+        self.bloodtalons = bloodtalons
         self.cooldown = cooldown
         self.future = future
         self.spellBook = spellBook
@@ -261,15 +272,44 @@ __exports.OvaleConditions = __class(nil, {
             if self.data.buffSpellList[auraId] then
                 local spellList = self.data.buffSpellList[auraId]
                 for id in pairs(spellList) do
-                    value = self.auras:getBaseDuration(id, nil, atTime, self.paperDoll.next)
+                    value = self.auras:getBaseDuration(id, nil, atTime)
                     if value ~= INFINITY then
                         break
                     end
                 end
             else
-                value = self.auras:getBaseDuration(auraId, nil, atTime, self.paperDoll.next)
+                value = self.auras:getBaseDuration(auraId, nil, atTime)
             end
             return returnConstant(value)
+        end
+        self.bloodtalonsTriggerCount = function(atTime)
+            local active = self.bloodtalons:getActiveTrigger(atTime)
+            return returnConstant(active)
+        end
+        self.bloodtalonsTriggerBuffPresent = function(atTime, name)
+            local active, start, ending = self.bloodtalons:getActiveTrigger(atTime, name)
+            if active > 0 then
+                return start, ending
+            end
+            return 
+        end
+        self.bloodtalonsBrutalSlashPresent = function(atTime)
+            return self.bloodtalonsTriggerBuffPresent(atTime, "brutal_slash")
+        end
+        self.bloodtalonsMoonfirePresent = function(atTime)
+            return self.bloodtalonsTriggerBuffPresent(atTime, "moonfire_cat")
+        end
+        self.bloodtalonsRakePresent = function(atTime)
+            return self.bloodtalonsTriggerBuffPresent(atTime, "rake")
+        end
+        self.bloodtalonsShredPresent = function(atTime)
+            return self.bloodtalonsTriggerBuffPresent(atTime, "shred")
+        end
+        self.bloodtalonsSwipePresent = function(atTime)
+            return self.bloodtalonsTriggerBuffPresent(atTime, "swipe_cat")
+        end
+        self.bloodtalonsThrashPresent = function(atTime)
+            return self.bloodtalonsTriggerBuffPresent(atTime, "thrash_cat")
         end
         self.buffAmount = function(positionalParams, namedParams, atTime)
             local auraId = positionalParams[1]
@@ -291,14 +331,9 @@ __exports.OvaleConditions = __class(nil, {
             return returnConstant(0)
         end
         self.buffComboPoints = function(positionalParams, namedParams, atTime)
-            local auraId = positionalParams[1]
-            local target, filter, mine = self:parseCondition(positionalParams, namedParams)
-            local aura = self.auras:getAura(target, auraId, atTime, filter, mine)
-            if aura and self.auras:isActiveAura(aura, atTime) then
-                local value = (aura and aura.combopoints) or 0
-                return returnValueBetween(aura.gain, aura.ending, value, aura.start, 0)
-            end
-            return returnConstant(0)
+            local combopoints = 0
+            oneTimeMessage("Warning: 'BuffComboPoints()' is not implemented.")
+            return returnConstant(combopoints)
         end
         self.buffCooldown = function(positionalParams, namedParams, atTime)
             local auraId = positionalParams[1]
@@ -383,7 +418,7 @@ __exports.OvaleConditions = __class(nil, {
             local aura = self.auras:getAura(target, auraId, atTime, filter, mine)
             if aura then
                 local gain, _, ending = aura.gain, aura.start, aura.ending
-                local hastedSeconds = self:getHastedTime(seconds, namedParams.haste)
+                local hastedSeconds = self:getHastedTime(seconds, namedParams.haste, atTime)
                 if ending - hastedSeconds <= gain then
                     return gain, INFINITY
                 else
@@ -396,7 +431,7 @@ __exports.OvaleConditions = __class(nil, {
             local aura = self.auras:getAura(target, auraId, atTime, filter, mine)
             if aura then
                 local gain, _, ending = aura.gain, aura.start, aura.ending
-                seconds = self:getHastedTime(seconds, haste)
+                seconds = self:getHastedTime(seconds, haste, atTime)
                 if ending - seconds <= gain then
                     return 
                 else
@@ -803,6 +838,15 @@ __exports.OvaleConditions = __class(nil, {
         self.glyph = function(positionalParams, namedParams, atTime)
             return returnBoolean(false)
         end
+        self.getGuid = function(positionalParams, namedParams)
+            local target = self:parseCondition(positionalParams, namedParams, "target")
+            return returnConstant(self.guids:getUnitGUID(target))
+        end
+        self.getTargetGuid = function(positionalParams, namedParams)
+            local target = self:parseCondition(positionalParams, namedParams, "target")
+            local unitId = target .. "target"
+            return returnConstant(self.guids:getUnitGUID(unitId))
+        end
         self.hasFullControlCondition = function(positionalParams, namedParams, atTime)
             local boolean = HasFullControl()
             return returnBoolean(boolean)
@@ -990,7 +1034,7 @@ __exports.OvaleConditions = __class(nil, {
             return 
         end
         self.name = function(atTime, target)
-            return returnConstant(UnitName(target))
+            return returnConstant(GetUnitName(target, true))
         end
         self.isPtr = function(positionalParams, namedParams, atTime)
             local version, _, _, uiVersion = GetBuildInfo()
@@ -1010,7 +1054,7 @@ __exports.OvaleConditions = __class(nil, {
         self.petPresent = function(positionalParams, namedParams, atTime)
             local name = namedParams.name
             local target = "pet"
-            local boolean = UnitExists(target) and  not UnitIsDead(target) and (name == nil or name == UnitName(target))
+            local boolean = UnitExists(target) and  not UnitIsDead(target) and (name == nil or name == GetUnitName(target, true))
             return returnBoolean(boolean)
         end
         self.alternatePower = function(positionalParams, namedParams, atTime)
@@ -1354,14 +1398,17 @@ __exports.OvaleConditions = __class(nil, {
             end
             local earliest = INFINITY
             for _, spellId in ipairs(positionalParams) do
-                if  not usable or self.spells:isUsableSpell(spellId, atTime, targetGuid) then
-                    local start, duration = self.cooldown:getSpellCooldown(spellId, atTime)
-                    local t = 0
-                    if start > 0 and duration > 0 then
-                        t = start + duration
-                    end
-                    if earliest > t then
-                        earliest = t
+                local id = self.data:resolveSpell(spellId, atTime, targetGuid)
+                if id then
+                    if  not usable or self.spells:isUsableSpell(id, atTime, targetGuid) then
+                        local start, duration = self.cooldown:getSpellCooldown(id, atTime)
+                        local t = 0
+                        if start > 0 and duration > 0 then
+                            t = start + duration
+                        end
+                        if earliest > t then
+                            earliest = t
+                        end
                     end
                 end
             end
@@ -1476,7 +1523,7 @@ __exports.OvaleConditions = __class(nil, {
             if aura and self.auras:isActiveAura(aura, atTime) then
                 tickTime = aura.tick
             else
-                tickTime = self.auras:getTickLength(auraId, self.paperDoll.next)
+                tickTime = self.auras:getTickLength(auraId, atTime)
             end
             if tickTime and tickTime > 0 then
                 return returnConstant(tickTime)
@@ -1513,7 +1560,7 @@ __exports.OvaleConditions = __class(nil, {
             local aura = self.auras:getAura(target, auraId, atTime, filter, mine)
             if aura and self.auras:isActiveAura(aura, atTime) then
                 local lastTickTime = aura.lastTickTime or aura.start
-                local tick = aura.tick or self.auras:getTickLength(auraId, self.paperDoll.next)
+                local tick = aura.tick or self.auras:getTickLength(auraId, atTime)
                 local remainingTime = tick - (atTime - lastTickTime)
                 if remainingTime and remainingTime > 0 then
                     return returnValueBetween(aura.gain, INFINITY, tick, lastTickTime, -1)
@@ -1575,7 +1622,7 @@ __exports.OvaleConditions = __class(nil, {
         self.timeWithHaste = function(positionalParams, namedParams, atTime)
             local seconds = positionalParams[1]
             local haste = (namedParams.haste) or "spell"
-            local value = self:getHastedTime(seconds, haste)
+            local value = self:getHastedTime(seconds, haste, atTime)
             return returnConstant(value)
         end
         self.totemExpires = function(positionalParams, namedParams, atTime)
@@ -1748,6 +1795,27 @@ __exports.OvaleConditions = __class(nil, {
         ovaleCondition:registerCondition("baseduration", false, self.baseDuration)
         ovaleCondition:registerCondition("buffdurationifapplied", false, self.baseDuration)
         ovaleCondition:registerCondition("debuffdurationifapplied", false, self.baseDuration)
+        ovaleCondition:register("bloodtalonstriggercount", self.bloodtalonsTriggerCount, {
+            type = "number"
+        })
+        ovaleCondition:register("bloodtalonsbrutalslashpresent", self.bloodtalonsBrutalSlashPresent, {
+            type = "none"
+        })
+        ovaleCondition:register("bloodtalonsmoonfirepresent", self.bloodtalonsMoonfirePresent, {
+            type = "none"
+        })
+        ovaleCondition:register("bloodtalonsrakepresent", self.bloodtalonsRakePresent, {
+            type = "none"
+        })
+        ovaleCondition:register("bloodtalonsshredpresent", self.bloodtalonsShredPresent, {
+            type = "none"
+        })
+        ovaleCondition:register("bloodtalonsswipepresent", self.bloodtalonsSwipePresent, {
+            type = "none"
+        })
+        ovaleCondition:register("bloodtalonsthrashpresent", self.bloodtalonsThrashPresent, {
+            type = "none"
+        })
         ovaleCondition:registerCondition("buffamount", false, self.buffAmount)
         ovaleCondition:registerCondition("debuffamount", false, self.buffAmount)
         ovaleCondition:registerCondition("tickvalue", false, self.buffAmount)
@@ -1790,7 +1858,6 @@ __exports.OvaleConditions = __class(nil, {
         }, {
             name = "aura",
             type = "number",
-            isSpell = true,
             optional = false
         }, targetParameter, filterParameter, mineParameter, {
             name = "seconds",
@@ -1866,6 +1933,8 @@ __exports.OvaleConditions = __class(nil, {
         ovaleCondition:registerCondition("gcd", false, self.getGCD)
         ovaleCondition:registerCondition("gcdremaining", false, self.getGCDRemaining)
         ovaleCondition:registerCondition("glyph", false, self.glyph)
+        ovaleCondition:registerCondition("guid", false, self.getGuid)
+        ovaleCondition:registerCondition("targetguid", false, self.getTargetGuid)
         ovaleCondition:registerCondition("hasfullcontrol", false, self.hasFullControlCondition)
         ovaleCondition:registerCondition("health", false, self.getHealth)
         ovaleCondition:registerCondition("life", false, self.getHealth)

@@ -1,30 +1,47 @@
-local __exports = LibStub:NewLibrary("ovale/simulationcraft/parser", 90103)
+local __exports = LibStub:NewLibrary("ovale/simulationcraft/parser", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local __enginelexer = LibStub:GetLibrary("ovale/engine/lexer")
-local OvaleLexer = __enginelexer.OvaleLexer
+local __imports = {}
+__imports.__enginelexer = LibStub:GetLibrary("ovale/engine/lexer")
+__imports.OvaleLexer = __imports.__enginelexer.OvaleLexer
+__imports.__definitions = LibStub:GetLibrary("ovale/simulationcraft/definitions")
+__imports.keywords = __imports.__definitions.keywords
+__imports.specialActions = __imports.__definitions.specialActions
+__imports.sequenceActions = __imports.__definitions.sequenceActions
+__imports.unaryOperators = __imports.__definitions.unaryOperators
+__imports.binaryOperators = __imports.__definitions.binaryOperators
+__imports.functionKeywords = __imports.__definitions.functionKeywords
+__imports.modifierKeywords = __imports.__definitions.modifierKeywords
+__imports.targetIfKeywords = __imports.__definitions.targetIfKeywords
+__imports.litteralModifiers = __imports.__definitions.litteralModifiers
+__imports.runeOperands = __imports.__definitions.runeOperands
+__imports.__toolsPool = LibStub:GetLibrary("ovale/tools/Pool")
+__imports.OvalePool = __imports.__toolsPool.OvalePool
+__imports.__toolstools = LibStub:GetLibrary("ovale/tools/tools")
+__imports.checkToken = __imports.__toolstools.checkToken
+local OvaleLexer = __imports.OvaleLexer
 local tostring = tostring
 local tonumber = tonumber
 local ipairs = ipairs
 local wipe = wipe
-local __definitions = LibStub:GetLibrary("ovale/simulationcraft/definitions")
-local keywords = __definitions.keywords
-local specialActions = __definitions.specialActions
-local unaryOperators = __definitions.unaryOperators
-local binaryOperators = __definitions.binaryOperators
-local functionKeywords = __definitions.functionKeywords
-local modifierKeywords = __definitions.modifierKeywords
-local litteralModifiers = __definitions.litteralModifiers
-local runeOperands = __definitions.runeOperands
+local keywords = __imports.keywords
+local specialActions = __imports.specialActions
+local sequenceActions = __imports.sequenceActions
+local unaryOperators = __imports.unaryOperators
+local binaryOperators = __imports.binaryOperators
+local functionKeywords = __imports.functionKeywords
+local modifierKeywords = __imports.modifierKeywords
+local targetIfKeywords = __imports.targetIfKeywords
+local litteralModifiers = __imports.litteralModifiers
+local runeOperands = __imports.runeOperands
 local gsub = string.gsub
 local gmatch = string.gmatch
 local sub = string.sub
+local insert = table.insert
 local concat = table.concat
-local __toolsPool = LibStub:GetLibrary("ovale/tools/Pool")
-local OvalePool = __toolsPool.OvalePool
-local __toolstools = LibStub:GetLibrary("ovale/tools/tools")
-local checkToken = __toolstools.checkToken
-local childrenPool = OvalePool("OvaleSimulationCraft_childrenPool")
+local OvalePool = __imports.OvalePool
+local checkToken = __imports.checkToken
+local childrenPool = __imports.OvalePool("OvaleSimulationCraft_childrenPool")
 local SelfPool = __class(OvalePool, {
     constructor = function(self)
         OvalePool.constructor(self, "OvaleSimulationCraft_pool")
@@ -80,60 +97,61 @@ local noToken = function()
     return nil, nil
 end
 
-local tokenMatches = {
-    [1] = {
-        [1] = "^%d+%a[%w_]*[.:]?[%w_.:]*",
+local tokenMatches = {}
+do
+    insert(tokenMatches, {
+        [1] = "^%d+%a[%w_]+%.?[%w_.]*",
         [2] = tokenizeName
-    },
-    [2] = {
+    })
+    insert(tokenMatches, {
         [1] = "^%d+%.?%d*",
         [2] = tokenizeNumber
-    },
-    [3] = {
-        [1] = "^[%a_][%w_]*[.:]?[%w_.:]*",
+    })
+    insert(tokenMatches, {
+        [1] = "^[%w_]+%.?[%w_.]*",
         [2] = tokenizeName
-    },
-    [4] = {
+    })
+    insert(tokenMatches, {
         [1] = "^!=",
         [2] = tokenize
-    },
-    [5] = {
+    })
+    insert(tokenMatches, {
         [1] = "^<=",
         [2] = tokenize
-    },
-    [6] = {
+    })
+    insert(tokenMatches, {
         [1] = "^>=",
         [2] = tokenize
-    },
-    [7] = {
+    })
+    insert(tokenMatches, {
         [1] = "^!~",
         [2] = tokenize
-    },
-    [8] = {
+    })
+    insert(tokenMatches, {
         [1] = "^==",
         [2] = tokenize
-    },
-    [9] = {
+    })
+    insert(tokenMatches, {
         [1] = "^>%?",
         [2] = tokenize
-    },
-    [10] = {
+    })
+    insert(tokenMatches, {
         [1] = "^<%?",
         [2] = tokenize
-    },
-    [11] = {
+    })
+    insert(tokenMatches, {
         [1] = "^%%%%",
         [2] = tokenize
-    },
-    [12] = {
+    })
+    insert(tokenMatches, {
         [1] = "^.",
         [2] = tokenize
-    },
-    [13] = {
+    })
+    insert(tokenMatches, {
         [1] = "^$",
         [2] = noToken
-    }
-}
+    })
+end
 __exports.Parser = __class(nil, {
     constructor = function(self, ovaleDebug)
         self.tracer = ovaleDebug:create("SimulationCraftParser")
@@ -159,6 +177,22 @@ __exports.Parser = __class(nil, {
         end
         self.tracer:warning(concat(context, " "))
     end,
+    parseActionList = function(self, name, actionList, nodeList, annotation)
+        local child = childrenPool:get()
+        for action in gmatch(actionList, "[^/]+") do
+            local actionNode = self:parseAction(action, nodeList, annotation, name)
+            if  not actionNode then
+                childrenPool:release(child)
+                return nil
+            end
+            child[#child + 1] = actionNode
+        end
+        local node = newNode(nodeList)
+        node.type = "action_list"
+        node.name = name
+        node.child = child
+        return node
+    end,
     parseAction = function(self, action, nodeList, annotation, actionListName)
         local stream = action
         do
@@ -168,6 +202,14 @@ __exports.Parser = __class(nil, {
             stream = gsub(stream, ",,", ",")
             stream = gsub(stream, "%&%&", "&")
             stream = gsub(stream, "target%.target%.", "target.")
+            stream = gsub(stream, "name=name=", "name=")
+            stream = gsub(stream, "name=BT&", "name=BT_")
+            stream = gsub(stream, "ebonsoul_vice", "ebonsoul_vise")
+        end
+        do
+            stream = gsub(stream, "buff%.from_the_shadows%.", "target.debuff.from_the_shadows.")
+            stream = gsub(stream, "tormented_insight_355321", "shadowed_orb_of_torment_355321")
+            stream = gsub(stream, "darkmoon_deck_+", "darkmoon_deck_")
         end
         do
             stream = gsub(stream, "(active_dot%.[%w_]+)=0", "!(%1>0)")
@@ -189,76 +231,108 @@ __exports.Parser = __class(nil, {
             stream = gsub(stream, "!talent%.([a-z_%.]+)%.enabled", "talent.%1.disabled")
         end
         do
-            stream = gsub(stream, ",target_if=first:", ",target_if_first=")
-            stream = gsub(stream, ",target_if=max:", ",target_if_max=")
-            stream = gsub(stream, ",target_if=min:", ",target_if_min=")
-        end
-        do
             stream = gsub(stream, "sim.target", "sim_target")
         end
-        local tokenStream = OvaleLexer("SimulationCraft", stream, tokenMatches)
-        local name
-        local tokenType, token = tokenStream:consume()
+        local tokenStream = __imports.OvaleLexer("SimulationCraft", stream, tokenMatches)
+        local tokenType, token = tokenStream:peek()
         if  not token then
             self:syntaxError(tokenStream, "Warning: end of stream when parsing Action")
             return nil
         end
         if (tokenType == "keyword" and specialActions[token]) or tokenType == "name" then
-            name = token
+            local node
+            if sequenceActions[token] then
+                node = self:parseSequenceAction(tokenStream, nodeList, annotation, action)
+            else
+                node = self:parseSimpleAction(tokenStream, nodeList, annotation, action)
+            end
+            if node then
+                node.actionListName = actionListName
+            end
+            return node
         else
+            tokenStream:consume()
             self:syntaxError(tokenStream, "Syntax error: unexpected token '%s' when parsing action line '%s'; name or special action expected.", token, action)
             return nil
         end
-        local modifiers = childrenPool:get()
-        tokenType, token = tokenStream:peek()
-        while tokenType do
-            if tokenType == "," then
+    end,
+    parseSimpleAction = function(self, tokenStream, nodeList, annotation, action)
+        local tokenType, token = tokenStream:consume()
+        if token then
+            local name = token
+            local modifiers = childrenPool:get()
+            tokenType, token = tokenStream:peek()
+            while tokenType == "," do
                 tokenStream:consume()
                 local modifier, expressionNode = self:parseModifier(tokenStream, nodeList, annotation)
                 if modifier and expressionNode then
                     modifiers[modifier] = expressionNode
                     tokenType, token = tokenStream:peek()
                 else
+                    self:syntaxError(tokenStream, "Warning: missing modifier when parsing simple action '%s' in '%s'.", name, action)
+                    childrenPool:release(modifiers)
                     return nil
                 end
-            else
-                self:syntaxError(tokenStream, "Syntax error: unexpected token '%s' when parsing action line '%s'; ',' expected.", token, action)
-                childrenPool:release(modifiers)
-                return nil
             end
+            local node = newNode(nodeList)
+            node.type = "action"
+            node.action = action
+            node.name = name
+            node.modifiers = modifiers
+            annotation.sync = annotation.sync or {}
+            annotation.sync[name] = annotation.sync[name] or node
+            return node
         end
-        local node = newNode(nodeList)
-        node.type = "action"
-        node.action = action
-        node.name = name
-        node.actionListName = actionListName
-        node.modifiers = modifiers
-        annotation.sync = annotation.sync or {}
-        annotation.sync[name] = annotation.sync[name] or node
-        return node
+        return nil
     end,
-    parseActionList = function(self, name, actionList, nodeList, annotation)
-        local child = childrenPool:get()
-        for action in gmatch(actionList, "[^/]+") do
-            local actionNode = self:parseAction(action, nodeList, annotation, name)
-            if  not actionNode then
-                childrenPool:release(child)
+    parseSequenceAction = function(self, tokenStream, nodeList, annotation, action)
+        local tokenType, token = tokenStream:peek()
+        if  not (token and sequenceActions[token]) then
+            tokenStream:consume()
+            self:syntaxError(tokenStream, "Syntax error: unexpected token '%s' when parsing sequence; 'sequence' or 'strict_sequence' expected.", token)
+            return nil
+        end
+        local sequenceNode = self:parseSimpleAction(tokenStream, nodeList, annotation, action)
+        if sequenceNode then
+            tokenType, token = tokenStream:peek()
+            if tokenType ~= ":" then
+                tokenStream:consume()
+                self:syntaxError(tokenStream, "Syntax error: unexpected token '%s' when parsing sequence; ':' expected.", token)
                 return nil
             end
-            child[#child + 1] = actionNode
+            local sequence = childrenPool:get()
+            while token == ":" do
+                tokenStream:consume()
+                local node = self:parseSimpleAction(tokenStream, nodeList, annotation, action)
+                if  not node then
+                    self:syntaxError(tokenStream, "Warning: missing simple action when parsing sequence action '%s'.", action)
+                    childrenPool:release(sequence)
+                    return nil
+                end
+                insert(sequence, node)
+                tokenType, token = tokenStream:peek()
+            end
+            sequenceNode.sequence = sequence
+            return sequenceNode
         end
-        local node = newNode(nodeList)
-        node.type = "action_list"
-        node.name = name
-        node.child = child
-        return node
+        return nil
     end,
     parseExpression = function(self, tokenStream, nodeList, annotation, minPrecedence)
         minPrecedence = minPrecedence or 0
         local node
+        local targetIf
         local tokenType, token = tokenStream:peek()
         if  not tokenType then
             return nil
+        end
+        if targetIfKeywords[token] then
+            local tokenType2 = tokenStream:peek(2)
+            if tokenType2 == ":" then
+                targetIf = token
+                tokenStream:consume()
+                tokenStream:consume()
+                tokenType, token = tokenStream:peek()
+            end
         end
         local opInfo = unaryOperators[token]
         if opInfo then
@@ -339,6 +413,7 @@ __exports.Parser = __class(nil, {
                 break
             end
         end
+        node.targetIf = targetIf
         return node
     end,
     parseFunction = function(self, tokenStream, nodeList, annotation)

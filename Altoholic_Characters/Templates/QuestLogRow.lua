@@ -4,17 +4,17 @@ local colors = addon.Colors
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
-addon:Controller("AltoholicUI.QuestLogRow", { "AltoholicUI.Formatter", function(formatter)
+addon:Controller("AltoholicUI.TabCharacters.QuestLogRow", { "AltoholicUI.Formatter", function(Formatter)
 	return {
 		SetName = function(frame, name, level)
-			frame.Name.Text:SetText(format("%s[%s%d%s] |r%s", colors.white, colors.cyan, level, colors.white, name))
+			frame.Name.Text:SetText(format("%s[%s%d%s] %s%s", colors.white, colors.cyan, level, colors.white, colors.gold, name))
 		end,
 		SetInfo = function(frame, isComplete, isDaily, groupSize, money)
 			local infos = {}
 		
 			local moneyText = ""
 			if money and money > 0 then
-				moneyText = formatter.MoneyString(money or 0, colors.white)
+				moneyText = Formatter.MoneyString(money or 0, colors.white)
 			end
 			
 			if moneyText ~= "" then table.insert(infos, moneyText) end
@@ -38,14 +38,13 @@ addon:Controller("AltoholicUI.QuestLogRow", { "AltoholicUI.Formatter", function(
 			end
 			icon:Show()
 		end,
-		SetRewards = function(frame)
+		SetRewards = function(frame, character)
 			frame.Reward1:Hide()
 			frame.Reward2:Hide()
 			
 			local id = frame:GetID()
 			if id == 0 then return end
 
-			local character = addon.Tabs.Characters:GetAltKey()
 			local numRewards = DataStore:GetQuestLogNumRewards(character, id)
 			
 			local index = 2	-- simply to justify rewards to the right
@@ -64,7 +63,7 @@ addon:Controller("AltoholicUI.QuestLogRow", { "AltoholicUI.Formatter", function(
 			local id = frame:GetID()
 			if id == 0 then return end
 
-			local character = addon.Tabs.Characters:GetAltKey()
+			local character = frame:GetParent():GetParent():GetCharacter()
 			local questName, questID, link, _, level = DataStore:GetQuestLogInfo(character, id)
 			if not link then return end
 
@@ -75,8 +74,8 @@ addon:Controller("AltoholicUI.QuestLogRow", { "AltoholicUI.Formatter", function(
 			
 			GameTooltip:AddDoubleLine(format("%s: %s%d", LEVEL, colors.teal, level), format("%s: %s%d", L["QuestID"], colors.teal, questID))
 			
-			local player = addon.Tabs.Characters:GetAlt()
-			addon:ListCharsOnQuest(questName, player, GameTooltip)
+			-- local player = addon.Tabs.Characters:GetAlt()
+			-- addon:ListCharsOnQuest(questName, player, GameTooltip)
 			GameTooltip:Show()
 		end,
 		Name_OnClick = function(frame, button)
@@ -88,7 +87,7 @@ addon:Controller("AltoholicUI.QuestLogRow", { "AltoholicUI.Formatter", function(
 			local id = frame:GetID()
 			if id == 0 then return end
 			
-			local character = addon.Tabs.Characters:GetAltKey()
+			local character = frame:GetParent():GetParent():GetCharacter()
 			local _, _, link = DataStore:GetQuestLogInfo(character, id)
 			if link then
 				chat:Insert(link)

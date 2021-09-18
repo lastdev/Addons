@@ -19,7 +19,9 @@ local AddonDB_Defaults = {
 				SeasonBestMaps = {},
 				SeasonBestMapsOvertime = {},
 				WeeklyBestMaps = {},
-				WeeklyBestKeystone = {}
+				WeeklyBestKeystone = {},
+				
+				dungeonScore = 0,					-- Mythic+ dungeon score
 			}
 		}
 	}
@@ -182,6 +184,8 @@ local function ScanMythicPlusBestForMapInfo()
 	end
 
 	char.lastUpdate = time()
+	
+	char.dungeonScore = C_ChallengeMode.GetOverallDungeonScore()
 end
 
 -- *** Event Handlers ***
@@ -239,6 +243,10 @@ local function _GetSeasonBestMapsOvertime(character)
 	return character.SeasonBestMapsOvertime
 end
 
+local function _GetDungeonScore(character)
+	return character.dungeonScore
+end
+
 local PublicMethods = {
 	GetStats = _GetStats,
 	GetWeeklyBestKeystoneName = _GetWeeklyBestKeystoneName,
@@ -247,6 +255,7 @@ local PublicMethods = {
 	GetWeeklyBestMaps = _GetWeeklyBestMaps,
 	GetSeasonBestMaps = _GetSeasonBestMaps,
 	GetSeasonBestMapsOvertime = _GetSeasonBestMapsOvertime,
+	GetDungeonScore = _GetDungeonScore,
 }
 
 function addon:OnInitialize()
@@ -260,6 +269,7 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetWeeklyBestMaps")
 	DataStore:SetCharacterBasedMethod("GetSeasonBestMaps")
 	DataStore:SetCharacterBasedMethod("GetSeasonBestMapsOvertime")
+	DataStore:SetCharacterBasedMethod("GetDungeonScore")
 end
 
 function addon:OnEnable()

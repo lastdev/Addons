@@ -1,8 +1,10 @@
-local __exports = LibStub:NewLibrary("ovale/engine/state", 90103)
+local __exports = LibStub:NewLibrary("ovale/engine/state", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local __toolsQueue = LibStub:GetLibrary("ovale/tools/Queue")
-local OvaleQueue = __toolsQueue.OvaleQueue
+local __imports = {}
+__imports.__toolsQueue = LibStub:GetLibrary("ovale/tools/Queue")
+__imports.Queue = __imports.__toolsQueue.Queue
+local Queue = __imports.Queue
 __exports.States = __class(nil, {
     constructor = function(self, c)
         self.current = c()
@@ -17,17 +19,13 @@ __exports.States = __class(nil, {
 })
 __exports.OvaleStateClass = __class(nil, {
     registerState = function(self, stateAddon)
-        self.stateAddons:insert(stateAddon)
+        self.stateAddons:push(stateAddon)
     end,
     unregisterState = function(self, stateAddon)
-        local stateModules = OvaleQueue("OvaleState_stateModules")
-        while self.stateAddons:size() > 0 do
-            local addon = self.stateAddons:remove()
-            if stateAddon ~= addon then
-                stateModules:insert(addon)
-            end
+        local index = self.stateAddons:indexOf(stateAddon)
+        if index > 0 then
+            self.stateAddons:removeAt(index)
         end
-        self.stateAddons = stateModules
         stateAddon:cleanState()
     end,
     initializeState = function(self)
@@ -67,6 +65,6 @@ __exports.OvaleStateClass = __class(nil, {
         end
     end,
     constructor = function(self)
-        self.stateAddons = OvaleQueue("OvaleState_stateAddons")
+        self.stateAddons = __imports.Queue()
     end
 })

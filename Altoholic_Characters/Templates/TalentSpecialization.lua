@@ -29,7 +29,7 @@ addon:Controller("AltoholicUI.TalentSpecialization", {
 		frame:Show()
 	end,
 	SpecInfo_OnEnter = function(frame, button)
-		local tt = AltoTooltip
+		local tt = AddonFactory_Tooltip
 	
 		if frame.tooltip == STAT_PRIO then
 			tt:ClearLines()
@@ -41,7 +41,7 @@ addon:Controller("AltoholicUI.TalentSpecialization", {
 			end
 
 			tt:AddLine(" ", 1, 1, 1)
-			tt:AddLine("Source: Icy Veins (9.0)", 1, 1, 0)
+			tt:AddLine(format("%s: %s", L["Source"], "Icy Veins (9.0)"), 1, 1, 0)
 			tt:Show()
 			
 		elseif frame.tooltip == STAT_UNKNOWN then

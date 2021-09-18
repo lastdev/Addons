@@ -12,6 +12,7 @@ local addon = _G[addonName]
 
 local enum = DataStore.Enum.CurrencyIDs
 
+-- TODO: Deprecated, enums are used with GetCurrencyTotals, also deprecate the specific methods below
 local CURRENCY_ID_JUSTICE = 395
 local CURRENCY_ID_VALOR = 1191
 local CURRENCY_ID_APEXIS = 823
@@ -19,18 +20,8 @@ local CURRENCY_ID_GARRISON = 824
 local CURRENCY_ID_SOTF = 994		-- Seals of Tempered Fate (WoD)
 local CURRENCY_ID_ORDER_HALL = 1220
 local CURRENCY_ID_SOBF = 1273		-- Seals of the Broken Fate (Legion)
-local CURRENCY_ID_NETHERSHARD = 1226
-local CURRENCY_ID_LFWS = 1342
-local CURRENCY_ID_BFA_WAR_RES = 1560			-- BfA: War Resources
-local CURRENCY_ID_BFA_SOWF = 1580				-- BfA: Seals of the Wartorn Fate
-local CURRENCY_ID_BFA_DUBLOONS = 1710			-- BfA: Seafarer's Dubloon
-local CURRENCY_ID_BFA_WAR_SUPPLIES = 1587		-- BfA: War Supplies
-local CURRENCY_ID_BFA_AZERITE = 1565			-- BfA: Rich Azerite Fragment
-local CURRENCY_ID_BFA_COALESCING_VISIONS = 1755			-- BfA: Coalescing Visions
-local CURRENCY_ID_BFA_TITAN_RESIDUUM = 1718
-local CURRENCY_ID_CONQUEST = 1602
-local CURRENCY_ID_REDEEMED_SOUL = 1810			-- Shadowlands: Redeemed Soul
-local CURRENCY_ID_ANIMA = 1813			-- Shadowlands: Reservoir Anima
+
+
 
 local AddonDB_Defaults = {
 	global = {
@@ -342,47 +333,47 @@ local function _GetOrderHallResources(character)
 end
 
 local function _GetNethershards(character)
-	return _GetCurrencyTotals(character, CURRENCY_ID_NETHERSHARD)
+	return _GetCurrencyTotals(character, enum.Nethershard)
 end
 
 local function _GetWarSupplies(character)
-	return _GetCurrencyTotals(character, CURRENCY_ID_LFWS)
+	return _GetCurrencyTotals(character, enum.LegionfallWarSupplies)
 end
 
 local function _GetBfAWarResources(character)
-	return _GetCurrencyTotals(character, CURRENCY_ID_BFA_WAR_RES)
+	return _GetCurrencyTotals(character, enum.WarResources)
 end
 
 local function _GetBfASealsOfWartornFate(character)
-	return _GetCurrencyTotals(character, CURRENCY_ID_BFA_SOWF)
+	return _GetCurrencyTotals(character, enum.SealsOfWartornFate)
 end
 
 local function _GetBfADubloons(character)
-	return _GetCurrencyTotals(character, CURRENCY_ID_BFA_DUBLOONS)
+	return _GetCurrencyTotals(character, enum.SeafarersDubloon)
 end
 
 local function _GetBfAWarSupplies(character)
-	return _GetCurrencyTotals(character, CURRENCY_ID_BFA_WAR_SUPPLIES)
+	return _GetCurrencyTotals(character, enum.BfAWarSupplies)
 end
 
 local function _GetBfARichAzerite(character)
-	return _GetCurrencyTotals(character, CURRENCY_ID_BFA_AZERITE)
+	return _GetCurrencyTotals(character, enum.RichAzeriteFragment)
 end
 
 local function _GetBfACoalescingVisions(character)
-	return _GetCurrencyTotals(character, CURRENCY_ID_BFA_COALESCING_VISIONS)
+	return _GetCurrencyTotals(character, enum.CoalescingVisions)
 end
 
 local function _GetBfATitanResiduum(character)
-	return _GetCurrencyTotals(character, CURRENCY_ID_BFA_TITAN_RESIDUUM)
+	return _GetCurrencyTotals(character, enum.TitanResiduum)
 end
 
 local function _GetRedeemedSouls(character)
-	return _GetCurrencyTotals(character, CURRENCY_ID_REDEEMED_SOUL)
+	return _GetCurrencyTotals(character, enum.RedeemedSoul)
 end
 
 local function _GetReservoirAnima(character)
-	return _GetCurrencyTotals(character, CURRENCY_ID_ANIMA)
+	return _GetCurrencyTotals(character, enum.ReservoirAnima)
 end
 
 

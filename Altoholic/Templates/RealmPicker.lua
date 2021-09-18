@@ -3,7 +3,6 @@ local addon = _G[addonName]
 local colors = addon.Colors
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
-local THIS_ACCOUNT = "Default"
 
 local function OnRealmChange(frame, dropDownFrame)
 	local oldAccount, oldRealm = dropDownFrame:GetCurrentRealm()
@@ -29,12 +28,12 @@ addon:Controller("AltoholicUI.RealmPicker", {
 		if not frame.currentAccount or not frame.currentRealm then return end
 
 		-- this account first ..
-		frame:AddTitle(colors.gold..L["This account"])
+		frame:AddTitle(format("%s%s", colors.gold, L["This account"]))
 		for realm in pairs(DataStore:GetRealms()) do
 			local info = frame:CreateInfo()
 
-			info.text = colors.white..realm
-			info.value = format("%s|%s", THIS_ACCOUNT, realm) 
+			info.text = format("%s%s", colors.white, realm)
+			info.value = format("%s|%s", DataStore.ThisAccount, realm) 
 			info.checked = nil
 			info.func = OnRealmChange
 			info.arg1 = frame
@@ -45,17 +44,17 @@ addon:Controller("AltoholicUI.RealmPicker", {
 		local accounts = DataStore:GetAccounts()
 		local count = 0
 		for account in pairs(accounts) do
-			if account ~= THIS_ACCOUNT then
+			if account ~= DataStore.ThisAccount then
 				count = count + 1
 			end
 		end
 		
 		if count > 0 then
 			frame:AddTitle()
-			frame:AddTitle(colors.gold..OTHER)
+			frame:AddTitle(format("%s%s", colors.gold, OTHER))
 			
 			for account in pairs(accounts) do
-				if account ~= THIS_ACCOUNT then
+				if account ~= DataStore.ThisAccount then
 					for realm in pairs(DataStore:GetRealms(account)) do
 						local info = frame:CreateInfo()
 						info.text = format("%s%s: %s%s", colors.green, account, colors.white, realm)
@@ -72,7 +71,7 @@ addon:Controller("AltoholicUI.RealmPicker", {
 		frame:TriggerClassEvent("DropDownInitialized")
 	end,
 	SetCurrentRealm = function(frame, realm, account)
-		account = account or THIS_ACCOUNT
+		account = account or DataStore.ThisAccount
 
 		frame.currentAccount = account
 		frame.currentRealm = realm

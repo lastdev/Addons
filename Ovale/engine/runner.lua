@@ -1,6 +1,18 @@
-local __exports = LibStub:NewLibrary("ovale/engine/runner", 90103)
+local __exports = LibStub:NewLibrary("ovale/engine/runner", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
+local __imports = {}
+__imports.__ast = LibStub:GetLibrary("ovale/engine/ast")
+__imports.isAstNodeWithChildren = __imports.__ast.isAstNodeWithChildren
+__imports.setResultType = __imports.__ast.setResultType
+__imports.__toolsTimeSpan = LibStub:GetLibrary("ovale/tools/TimeSpan")
+__imports.newTimeSpan = __imports.__toolsTimeSpan.newTimeSpan
+__imports.releaseTimeSpans = __imports.__toolsTimeSpan.releaseTimeSpans
+__imports.universe = __imports.__toolsTimeSpan.universe
+__imports.__toolstools = LibStub:GetLibrary("ovale/tools/tools")
+__imports.isNumber = __imports.__toolstools.isNumber
+__imports.isString = __imports.__toolstools.isString
+__imports.oneTimeMessage = __imports.__toolstools.oneTimeMessage
 local ipairs = ipairs
 local kpairs = pairs
 local loadstring = loadstring
@@ -11,19 +23,16 @@ local huge = math.huge
 local INFINITY = math.huge
 local max = math.max
 local min = math.min
-local __ast = LibStub:GetLibrary("ovale/engine/ast")
-local isAstNodeWithChildren = __ast.isAstNodeWithChildren
-local setResultType = __ast.setResultType
-local __toolsTimeSpan = LibStub:GetLibrary("ovale/tools/TimeSpan")
-local newTimeSpan = __toolsTimeSpan.newTimeSpan
-local releaseTimeSpans = __toolsTimeSpan.releaseTimeSpans
-local universe = __toolsTimeSpan.universe
-local __toolstools = LibStub:GetLibrary("ovale/tools/tools")
-local isNumber = __toolstools.isNumber
-local isString = __toolstools.isString
-local oneTimeMessage = __toolstools.oneTimeMessage
+local isAstNodeWithChildren = __imports.isAstNodeWithChildren
+local setResultType = __imports.setResultType
+local newTimeSpan = __imports.newTimeSpan
+local releaseTimeSpans = __imports.releaseTimeSpans
+local universe = __imports.universe
+local isNumber = __imports.isNumber
+local isString = __imports.isString
+local oneTimeMessage = __imports.oneTimeMessage
 __exports.Runner = __class(nil, {
-    constructor = function(self, ovaleProfiler, ovaleDebug, baseState, ovaleCondition)
+    constructor = function(self, ovaleDebug, baseState, ovaleCondition)
         self.baseState = baseState
         self.ovaleCondition = ovaleCondition
         self.serial = 0
@@ -37,7 +46,6 @@ __exports.Runner = __class(nil, {
             return node.result
         end
         self.computeAction = function(node, atTime)
-            self.profiler:startProfiling("OvaleBestAction_ComputeAction")
             local nodeId = node.nodeId
             local timeSpan = self:getTimeSpan(node)
             self.tracer:log("[%d]    evaluating action: %s()", nodeId, node.name)
@@ -103,11 +111,9 @@ __exports.Runner = __class(nil, {
                 self.tracer:log("[%d]    Action %s can start at %f.", nodeId, action, start)
                 timeSpan:copy(start, huge)
             end
-            self.profiler:stopProfiling("OvaleBestAction_ComputeAction")
             return result
         end
         self.computeArithmetic = function(element, atTime)
-            self.profiler:startProfiling("OvaleBestAction_ComputeArithmetic")
             local timeSpan = self:getTimeSpan(element)
             local result = element.result
             local nodeA = self:compute(element.child[1], atTime)
@@ -204,11 +210,9 @@ __exports.Runner = __class(nil, {
                 self.tracer:log("[%d]    arithmetic '%s' returns %s+(t-%s)*%s", element.nodeId, operator, l, m, n)
                 self:setValue(element, l, m, n)
             end
-            self.profiler:stopProfiling("OvaleBestAction_ComputeArithmetic")
             return result
         end
         self.computeCompare = function(element, atTime)
-            self.profiler:startProfiling("OvaleBestAction_ComputeCompare")
             local timeSpan = self:getTimeSpan(element)
             local elementA = self:compute(element.child[1], atTime)
             local a, b, c, timeSpanA = self:asValue(atTime, elementA)
@@ -257,11 +261,9 @@ __exports.Runner = __class(nil, {
                 end
                 self.tracer:log("[%d]    compare '%s' returns %s", element.nodeId, operator, timeSpan)
             end
-            self.profiler:stopProfiling("OvaleBestAction_ComputeCompare")
             return element.result
         end
         self.computeCustomFunction = function(element, atTime)
-            self.profiler:startProfiling("OvaleBestAction_ComputeCustomFunction")
             local timeSpan = self:getTimeSpan(element)
             local result = element.result
             local node = element.annotation.customFunction and element.annotation.customFunction[element.name]
@@ -279,11 +281,9 @@ __exports.Runner = __class(nil, {
                 self.tracer:error("Unable to find " .. element.name)
                 wipe(timeSpan)
             end
-            self.profiler:stopProfiling("OvaleBestAction_ComputeCustomFunction")
             return result
         end
         self.computeFunction = function(element, atTime)
-            self.profiler:startProfiling("OvaleBestAction_ComputeFunction")
             local timeSpan = self:getTimeSpan(element)
             local positionalParams, namedParams = self:computeParameters(element, atTime)
             local start, ending, value, origin, rate = self.ovaleCondition:evaluateCondition(element.name, positionalParams, namedParams, atTime)
@@ -296,11 +296,9 @@ __exports.Runner = __class(nil, {
                 self:setValue(element, value, origin, rate)
             end
             self.tracer:log("[%d]    condition '%s' returns %s, %s, %s, %s, %s", element.nodeId, element.name, start, ending, value, origin, rate)
-            self.profiler:stopProfiling("OvaleBestAction_ComputeFunction")
             return element.result
         end
         self.computeTypedFunction = function(element, atTime)
-            self.profiler:startProfiling("OvaleBestAction_ComputeFunction")
             local timeSpan = self:getTimeSpan(element)
             local positionalParams = self:computePositionalParameters(element, atTime)
             local start, ending, value, origin, rate = self.ovaleCondition:call(element.name, atTime, positionalParams)
@@ -313,11 +311,9 @@ __exports.Runner = __class(nil, {
                 self:setValue(element, value, origin, rate)
             end
             self.tracer:log("[%d]    condition '%s' returns %s, %s, %s, %s, %s", element.nodeId, element.name, start, ending, value, origin, rate)
-            self.profiler:stopProfiling("OvaleBestAction_ComputeFunction")
             return element.result
         end
         self.computeGroup = function(group, atTime)
-            self.profiler:startProfiling("OvaleBestAction_ComputeGroup")
             local bestTimeSpan, bestElement
             local best = newTimeSpan()
             local currentTimeSpanAfterTime = newTimeSpan()
@@ -362,11 +358,9 @@ __exports.Runner = __class(nil, {
                 setResultType(group.result, "none")
                 self.tracer:log("[%d]    group no best action returns %s at %s", group.nodeId, self:resultToString(group.result), timeSpan)
             end
-            self.profiler:stopProfiling("OvaleBestAction_ComputeGroup")
             return group.result
         end
         self.computeIf = function(element, atTime)
-            self.profiler:startProfiling("OvaleBestAction_ComputeIf")
             local timeSpan = self:getTimeSpan(element)
             local result = element.result
             local timeSpanA = self:computeBool(element.child[1], atTime)
@@ -386,11 +380,9 @@ __exports.Runner = __class(nil, {
             if element.type == "unless" then
                 conditionTimeSpan:release()
             end
-            self.profiler:stopProfiling("OvaleBestAction_ComputeIf")
             return result
         end
         self.computeLogical = function(element, atTime)
-            self.profiler:startProfiling("OvaleBestAction_ComputeLogical")
             local timeSpan = self:getTimeSpan(element)
             local timeSpanA = self:computeBool(element.child[1], atTime)
             if element.operator == "and" then
@@ -422,29 +414,24 @@ __exports.Runner = __class(nil, {
                 wipe(timeSpan)
             end
             self.tracer:log("[%d]    logical '%s' returns %s", element.nodeId, element.operator, timeSpan)
-            self.profiler:stopProfiling("OvaleBestAction_ComputeLogical")
             return element.result
         end
         self.computeLua = function(element)
             if  not element.lua then
                 return element.result
             end
-            self.profiler:startProfiling("OvaleBestAction_ComputeLua")
             local value = loadstring(element.lua)()
             self.tracer:log("[%d]    lua returns %s", element.nodeId, value)
             if value ~= nil then
                 self:setValue(element, value)
             end
             self:getTimeSpan(element, universe)
-            self.profiler:stopProfiling("OvaleBestAction_ComputeLua")
             return element.result
         end
         self.computeValue = function(element)
-            self.profiler:startProfiling("OvaleBestAction_ComputeValue")
             self.tracer:log("[%d]    value is %s", element.nodeId, element.value)
             self:getTimeSpan(element, universe)
             self:setValue(element, element.value, element.origin, element.rate)
-            self.profiler:stopProfiling("OvaleBestAction_ComputeValue")
             return element.result
         end
         self.computeString = function(element)
@@ -477,7 +464,6 @@ __exports.Runner = __class(nil, {
             ["value"] = self.computeValue,
             ["variable"] = self.computeVariable
         }
-        self.profiler = ovaleProfiler:create("runner")
         self.tracer = ovaleDebug:create("runner")
     end,
     refresh = function(self)
@@ -485,7 +471,6 @@ __exports.Runner = __class(nil, {
         self.tracer:log("Advancing age to %d.", self.serial)
     end,
     postOrderCompute = function(self, element, atTime)
-        self.profiler:startProfiling("OvaleBestAction_PostOrderCompute")
         local result
         local postOrder = element.postOrder
         if postOrder and element.result.serial ~= self.serial then
@@ -524,11 +509,9 @@ __exports.Runner = __class(nil, {
             self.tracer:log("[%d] ]]] Compute '%s' post-order nodes: complete.", element.nodeId, element.type)
         end
         self:recursiveCompute(element, atTime)
-        self.profiler:stopProfiling("OvaleBestAction_PostOrderCompute")
         return element.result
     end,
     recursiveCompute = function(self, element, atTime)
-        self.profiler:startProfiling("OvaleBestAction_RecursiveCompute")
         self.tracer:log("[%d] >>> Computing '%s' at time=%f", element.nodeId, element.asString or element.type, atTime)
         if element.result.constant then
             self.tracer:log("[%d] <<< '%s' returns %s with constant %s", element.nodeId, element.asString or element.type, element.result.timeSpan, self:resultToString(element.result))
@@ -552,7 +535,6 @@ __exports.Runner = __class(nil, {
                 element.result.serial = self.serial
             end
         end
-        self.profiler:stopProfiling("OvaleBestAction_RecursiveCompute")
         return element.result
     end,
     computeBool = function(self, element, atTime)

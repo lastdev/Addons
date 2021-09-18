@@ -1,10 +1,10 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
-local colors = addon.Colors
-local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
-addon:Controller("AltoholicUI.GuildBank", { "AltoholicUI.Formatter", function(formatter)
-	local THIS_ACCOUNT = "Default"
+addon:Controller("AltoholicUI.TabGuild.Bank", { "AltoholicUI.Options", "AltoholicUI.Formatter", function(Options, Formatter)
+
+	local colors = addon.Colors
+	local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 	local MAX_BANK_TABS = 8
 
 	local currentGuildKey
@@ -12,11 +12,18 @@ addon:Controller("AltoholicUI.GuildBank", { "AltoholicUI.Formatter", function(fo
 
 	return {
 		OnBind = function(frame)
+			local parent = AltoholicFrame.TabGuild
+			
+			frame:SetParent(parent)
+			frame:SetPoint("TOPLEFT", parent.Background, "TOPLEFT", 0, 0)
+			frame:SetPoint("BOTTOMRIGHT", parent.Background, "BOTTOMRIGHT", 26, 0)
+			parent:RegisterPanel("Bank", frame)	
+			parent:Update()		
+		
 			local menuIcons = frame.MenuIcons
-			menuIcons.RarityIcon:SetRarity(addon:GetOption("UI.Tabs.Guild.BankItemsRarity"))
+			menuIcons.RarityIcon:SetRarity(Options.Get("UI.Tabs.Guild.BankItemsRarity"))
 				
 			-- load the drop down with a guild
-			local currentRealm = GetRealmName()
 			local currentGuild = GetGuildInfo("player")
 			
 			-- if the player is not in a guild, set the drop down to the first available guild on this realm, if any.
@@ -25,7 +32,8 @@ addon:Controller("AltoholicUI.GuildBank", { "AltoholicUI.Formatter", function(fo
 				menuIcons.UpdateIcon:Disable()
 				menuIcons.UpdateIcon.Icon:SetDesaturated(true)
 			
-				for guildName, guild in pairs(DataStore:GetGuilds(currentRealm, THIS_ACCOUNT)) do
+				-- Get this realms/this account's guilds
+				for guildName, guild in pairs(DataStore:GetGuilds()) do
 					local money = DataStore:GetGuildBankMoney(guild)
 					if money then		-- if money is not nil, the guild bank has been populated
 						currentGuild = guildName
@@ -62,18 +70,21 @@ addon:Controller("AltoholicUI.GuildBank", { "AltoholicUI.Formatter", function(fo
 			if not tab.name then return end		-- tab not yet scanned ? exit
 			
 			local _, _, guildName = strsplit(".", currentGuildKey)
-			frame:GetParent():SetStatus(format("%s%s %s/ %s", colors.green, guildName, colors.white, tab.name))
-
-			frame.Info1:SetText(format(L["Last visit: %s by %s"], colors.green..tab.ClientDate..colors.white, colors.green..tab.visitedBy))
+			local parent = frame:GetParent()
+			parent:SetStatus(format("%s%s|r / %s%s|r / %s%s", colors.white, L["GUILD_BANKS"], colors.green, guildName, colors.gold, tab.name ))
+			
+			frame.Info1:SetText(format(L["GUILD_BANK_LAST_VISIT_BY"], colors.gold, colors.green, tab.ClientDate, colors.green, tab.visitedBy))
 
 			local localTime = format("%s%02d%s:%s%02d", colors.green, tab.ClientHour, colors.white, colors.green, tab.ClientMinute )
 			local realmTime = format("%s%02d%s:%s%02d", colors.green, tab.ServerHour, colors.white, colors.green, tab.ServerMinute )
-			frame.Info2:SetText(format(L["Local Time: %s   %sRealm Time: %s"], localTime, colors.white, realmTime))
+			frame.Info2:SetText(format("%s%s   %s%s", 
+				colors.gold, format(L["GUILD_BANK_LOCAL_TIME"], colors.green, localTime),
+				colors.gold, format(L["GUILD_BANK_REALM_TIME"], colors.green, realmTime)))
 			
 			local money = DataStore:GetGuildBankMoney(currentGuildKey)
-			frame.Info3:SetText(format("%s: %s", MONEY, formatter.MoneyString(money or 0, colors.white)))
+			frame.Info3:SetText(format("%s%s: %s", colors.gold, MONEY, Formatter.MoneyString(money or 0, colors.white)))
 			
-			local rarity = addon:GetOption("UI.Tabs.Guild.BankItemsRarity")
+			local rarity = Options.Get("UI.Tabs.Guild.BankItemsRarity")
 			
 			local numGuildBankRows = #frame.ItemRows
 			

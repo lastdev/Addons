@@ -2809,7 +2809,7 @@ function ConRO:GlowSpell(spellID)
 		end
 		self.SpellsGlowing[spellID] = 1;
 	else
-		if UnitAffectingCombat('player') and not (spellID == 162794 or spellID == 188499 or spellID == 205448 or spellID == 326446 or spellID == 33917) then
+		if UnitAffectingCombat('player') and not (spellID == 162794 or spellID == 188499 or spellID == 205448) then
 			if spellName ~= nil then
 				self:Print(self.Colors.Error .. 'Spell not found on action bars: ' .. ' ' .. spellName .. ' ' .. '(' .. spellID .. ')');
 			else
@@ -2832,7 +2832,7 @@ function ConRO:GlowDef(spellID)
 		end
 		self.DefGlowing[spellID] = 1;
 	else
-		if UnitAffectingCombat('player') and not (spellID == 326446 or spellID == 33917) then
+		if UnitAffectingCombat('player') then
 			if spellName ~= nil then
 				self:Print(self.Colors.Error .. 'Spell not found on action bars: ' .. ' ' .. spellName .. ' ' .. '(' .. spellID .. ')');
 			else

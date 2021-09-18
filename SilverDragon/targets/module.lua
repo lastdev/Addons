@@ -4,6 +4,7 @@ local core = LibStub("AceAddon-3.0"):GetAddon("SilverDragon")
 local module = core:NewModule("ClickTarget", "AceEvent-3.0")
 local Debug = core.Debug
 
+local HBD = LibStub("HereBeDragons-2.0")
 local LibWindow = LibStub("LibWindow-1.1")
 local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
 
@@ -53,6 +54,8 @@ function module:OnInitialize()
 	core.RegisterCallback(self, "Announce")
 	core.RegisterCallback(self, "AnnounceLoot")
 	core.RegisterCallback(self, "Marked")
+	core.RegisterCallback(self, "SeenVignette")
+	core.RegisterCallback(self, "SeenLoot")
 	self:RegisterEvent("PLAYER_REGEN_ENABLED", "ProcessQueue")
 
 	self.anchor = self:CreateAnchor()
@@ -61,7 +64,7 @@ function module:OnInitialize()
 end
 
 local pending
-function module:Announce(callback, id, zone, x, y, dead, source, unit)
+function module:Announce(callback, id, zone, x, y, dead, source, unit, _, vignetteGUID)
 	if not db.show then return end
 	if source:match("^sync") then
 		local channel, player = source:match("sync:(.+):(.+)")
@@ -84,12 +87,13 @@ function module:Announce(callback, id, zone, x, y, dead, source, unit)
 		zone = zone,
 		x = x or 0,
 		y = y or 0,
+		vignetteGUID = vignetteGUID,
 	}
 	self:Enqueue(data)
 	FlashClientIcon() -- If you're tabbed out, bounce the WoW icon if we're in a context that supports that
 	data.unit = nil -- can't be trusted to remain the same
 end
-function module:AnnounceLoot(_, name, id, zone, x, y)
+function module:AnnounceLoot(_, name, id, zone, x, y, vignetteGUID)
 	if not db.loot then return end
 	local data = {
 		type = "loot",
@@ -98,9 +102,37 @@ function module:AnnounceLoot(_, name, id, zone, x, y)
 		zone = zone,
 		x = x or 0,
 		y = y or 0,
+		vignetteGUID = vignetteGUID,
 	}
 	self:Enqueue(data)
 	FlashClientIcon() -- If you're tabbed out, bounce the WoW icon if we're in a context that supports that
+end
+function module:SeenVignette(_, name, vigentteID, atlasName, uiMapID, x, y, vignetteGUID, mobid)
+	if not mobid then return end
+	for popup in self:EnumerateActive() do
+		if popup.data and popup.data.type == "mob" and popup.data.id == mobid then
+			Debug("Updated mob from vignette", name, vignetteGUID)
+			popup.data.vignetteGUID = vignetteGUID
+			popup.data.zone = uiMapID
+			popup.data.x = x
+			popup.data.y = y
+			popup.data.source = "vignette"
+			popup.source:SetText("vignette")
+		end
+	end
+end
+function module:SeenLoot(_, name, vigentteID, uiMapID, x, y, vignetteGUID)
+	for popup in self:EnumerateActive() do
+		if popup.data and popup.data.type == "loot" and popup.data.id == vigentteID then
+			Debug("Updated loot from vignette", name, vignetteGUID)
+			popup.data.vignetteGUID = vignetteGUID
+			popup.data.zone = uiMapID
+			popup.data.x = x
+			popup.data.y = y
+			popup.data.source = "vignette"
+			popup.source:SetText("vignette")
+		end
+	end
 end
 
 function module:Point(data)
@@ -129,7 +161,7 @@ end
 
 function module:SendLink(prefix, uiMapID, x, y)
 	local message = ("%s|cffffff00|Hworldmap:%d:%d:%d|h[%s]|h|r"):format(
-		prefix,
+		prefix and (prefix .. " ") or "",
 		uiMapID,
 		x * 10000,
 		y * 10000,
@@ -166,10 +198,10 @@ end
 
 function module:SendLinkToMob(id, uiMapID, x, y)
 	local unit = core:FindUnitWithID(id)
-	local prefix = ("%s %s"):format(
-		core:NameForMob(id, unit),
-		(unit and ('(' .. math.ceil(UnitHealth(unit) / UnitHealthMax(unit) * 100) .. '%) ') or '')
-	)
+	local prefix = core:NameForMob(id, unit)
+	if unit then
+		prefix = ("%s %s"):format(prefix, ('(' .. math.ceil(UnitHealth(unit) / UnitHealthMax(unit) * 100) .. '%)'))
+	end
 	self:SendLink(prefix, uiMapID, x, y)
 end
 
@@ -177,12 +209,29 @@ function module:SendLinkToLoot(name, uiMapID, x, y)
 	self:SendLink(name, uiMapID, x, y)
 end
 
-function module:SendLinkFromData(data, uiMapID, x, y)
+function module:SendLinkFromData(data)
+	-- worldmap:uiMapId:x:y
+	local uiMapID, x, y = module:GetPositionFromData(data)
 	if data.type == "mob" then
 		self:SendLinkToMob(data.id, uiMapID, x, y)
 	elseif data.type == "loot" then
 		self:SendLinkToLoot(data.name, uiMapID, x, y)
 	end
+end
+
+function module:GetPositionFromData(data)
+	local x, y, uiMapID = data.x, data.y, data.zone
+	if uiMapID and data.vignetteGUID then
+		local position = C_VignetteInfo.GetVignettePosition(data.vignetteGUID, uiMapID)
+		if position then
+			x, y = position:GetXY()
+		end
+	end
+	if not (x and y) then
+		-- fall back to sending a link to the current position
+		x, y, uiMapID = HBD:GetPlayerZonePosition()
+	end
+	return uiMapID, x, y
 end
 
 function module:CreateAnchor()

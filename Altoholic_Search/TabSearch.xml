@@ -1,7 +1,7 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="TabSearch.lua"></Script>
 	
-	<Frame name="AltoholicTabSearch" parent="AltoholicFrame" hidden="true">
+	<Frame parentKey="TabSearch" inherits="AddonFactory_AuctionHouseTabFrameTemplate" parent="AltoholicFrame" id="3">
 		<Size x="758" y="447" />
 		<Anchors>
 			<Anchor point="TOPLEFT"/>
@@ -11,67 +11,121 @@
 				<FontString parentKey="LevelRange" inherits="GameFontNormalSmall" text="LEVEL_RANGE">
 					<Size x="70" y="20" />
 					<Anchors>
-						<Anchor point="LEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="RIGHT" x="33" y="0" />
-					</Anchors>
-					<Color r="255" g="255" b="255" />
-				</FontString>
-				<FontString parentKey="Rarity" inherits="GameFontNormalSmall" text="RARITY">
-					<Size x="90" y="20" />
-					<Anchors>
-						<Anchor point="LEFT" relativeKey="$parent.LevelRange" relativePoint="RIGHT" x="10" y="0" />
-					</Anchors>
-					<Color r="255" g="255" b="255" />
-				</FontString>
-				<FontString parentKey="Slot" inherits="GameFontNormalSmall">
-					<Size x="100" y="20" />
-					<Anchors>
-						<Anchor point="LEFT" relativeKey="$parent.Rarity" relativePoint="RIGHT" x="40" y="0" />
-					</Anchors>
-					<Color r="255" g="255" b="255" />
-				</FontString>
-				<FontString parentKey="Location" inherits="GameFontNormalSmall">
-					<Size x="100" y="20" />
-					<Anchors>
-						<Anchor point="LEFT" relativeKey="$parent.Slot" relativePoint="RIGHT" x="20" y="0" />
+						<Anchor point="TOPLEFT" x="470" y="-26" />
 					</Anchors>
 					<Color r="255" g="255" b="255" />
 				</FontString>
 				<FontString parentKey="Status" inherits="GameFontNormal" justifyH="LEFT">
-					<Size x="320" y="24" />
+					<Size x="670" y="24" />
 					<Anchors>
-						<Anchor point="BOTTOMRIGHT" x="-250" y="13" />
+						<Anchor point="BOTTOMLEFT" x="200" y="4" />
 					</Anchors>
-					<Color r="255" g="255" b="255" />
 				</FontString>
 			</Layer>
 		</Layers>
 		<Frames>
-			<ScrollFrame parentKey="ScrollFrame" inherits="AltoMenuScrollFrameTemplate">
+			<Frame parentKey="CategoriesList" inherits="AddonFactory_AuctionHouseCategoriesListTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" x="4" y="-68"/>
+				</Anchors>
 				<Scripts>
-					<OnVerticalScroll>
-						self:OnVerticalScroll(offset, 20, Altoholic.Tabs.Search.Update)
-					</OnVerticalScroll>
-					<OnShow>
-						Altoholic.Tabs.Search:Update()
-					</OnShow>
+					<OnLoad>
+						Altoholic:BindViewToController(self, "AltoholicUI.TabSearchCategoriesList", "AddonFactory.AuctionHouseCategoriesList")
+					</OnLoad>
 				</Scripts>
+			</Frame>
+
+			<Button parentKey="Reset" inherits="UIPanelButtonTemplate">
+				<Size x="80" y="24" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="228" y="-32" />
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self:SetText(RESET)
+					</OnLoad>
+					<OnClick>
+						self:GetParent():Reset_OnClick()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button parentKey="LocationIcon" inherits="AddonFactory_ButtonTemplate" id="1">
+				<Anchors>
+					<Anchor point="TOPLEFT" x="330" y="-30" />
+				</Anchors>
 				<KeyValues>
-					<KeyValue key="numRows" value="15" type="number" />
-					<KeyValue key="rowHeight" value="20" type="number" />
-					<KeyValue key="rowTemplate" value="AltoMenuItemTemplate" />
-					<KeyValue key="xOffset" value="23" type="number" />
-					<KeyValue key="yOffset" value="-105" type="number" />
+					<KeyValue key="iconFile" value="Interface\Icons\inv_legion_cache_dreamweavers" />
 				</KeyValues>
-			</ScrollFrame>
+				<Scripts>
+					<OnEnter>
+						self:GetParent():FilterIcon_OnEnter(self)
+					</OnEnter>
+				</Scripts>
+			</Button>
+			<Button parentKey="RarityIcon" inherits="AddonFactory_ButtonTemplate" id="2">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.LocationIcon" relativePoint="TOPRIGHT" x="5" y="0" />
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\inv_helm_cloth_holiday_christmas_a_03" />
+				</KeyValues>
+				<Scripts>
+					<OnEnter>
+						self:GetParent():FilterIcon_OnEnter(self)
+					</OnEnter>
+				</Scripts>
+			</Button>
+			<Button parentKey="EquipmentIcon" inherits="AddonFactory_ButtonTemplate" id="3">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.RarityIcon" relativePoint="TOPRIGHT" x="5" y="0" />
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\inv_chest_cloth_81" />
+				</KeyValues>
+				<Scripts>
+					<OnEnter>
+						self:GetParent():FilterIcon_OnEnter(self)
+					</OnEnter>
+				</Scripts>
+			</Button>	
+			<Button parentKey="ProfessionsIcon" inherits="AddonFactory_ButtonTemplate" id="4" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.EquipmentIcon" relativePoint="TOPRIGHT" x="5" y="0" />
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\Achievement_GuildPerk_WorkingOvertime" />
+				</KeyValues>
+				<Scripts>
+					<OnEnter>
+						self:GetParent():FilterIcon_OnEnter(self)
+					</OnEnter>
+				</Scripts>
+			</Button>
+			<Button parentKey="SearchOptionsIcon" inherits="AddonFactory_ButtonTemplate" id="5">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.ProfessionsIcon" relativePoint="TOPRIGHT" x="80" y="0" />
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\Trade_Engineering" />
+				</KeyValues>
+				<Scripts>
+					<OnEnter>
+						self:GetParent():FilterIcon_OnEnter(self)
+					</OnEnter>
+				</Scripts>
+			</Button>
 			
 			<EditBox parentKey="MinLevel" letters="3" numeric="true" autoFocus="false" inherits="InputBoxTemplate">
 				<Size x="25" y="16" />
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="AltoholicFrame_SearchEditBox" relativePoint="RIGHT" x="10" y="0" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.LevelRange" relativePoint="BOTTOMLEFT" x="6" y="-2" />
 				</Anchors>
 				<Scripts>
+					<OnTabPressed>
+						self:GetParent().MaxLevel:SetFocus()
+					</OnTabPressed>
 					<OnEnterPressed>
-						self:ClearFocus();
+						self:ClearFocus()
 					</OnEnterPressed>
 				</Scripts>
 			</EditBox>
@@ -81,72 +135,50 @@
 					<Anchor point="LEFT" relativeKey="$parent.MinLevel" relativePoint="RIGHT" x="12" y="0" />
 				</Anchors>
 				<Scripts>
+					<OnTabPressed>
+						self:GetParent().MinLevel:SetFocus()
+					</OnTabPressed>
 					<OnEnterPressed>
-						self:ClearFocus();
+						self:ClearFocus()
 					</OnEnterPressed>
 				</Scripts>
 			</EditBox>
-			<Frame parentKey="SelectRarity" name="$parent_SelectRarity" inherits="UIDropDownMenuTemplate">
-				<Anchors>
-					<Anchor point="LEFT" relativeKey="$parent.MaxLevel" relativePoint="RIGHT" x="0" y="-5" />
-				</Anchors>
-				<Scripts>
-					<OnLoad>
-						UIDropDownMenu_SetWidth(self, 100) 
-						UIDropDownMenu_SetButtonWidth(self, 20)
-						Altoholic:DDM_Initialize(self, Altoholic.Tabs.Search.DropDownRarity_Initialize)
-						UIDropDownMenu_SetSelectedValue(self, 0);
-						UIDropDownMenu_SetText(self, ITEM_QUALITY_COLORS[0].hex .. _G["ITEM_QUALITY0_DESC"])
-					</OnLoad>
-				</Scripts>
-			</Frame>
-			<Frame parentKey="SelectSlot" name="$parent_SelectSlot" inherits="UIDropDownMenuTemplate">
-				<Anchors>
-					<Anchor point="LEFT" relativeKey="$parent.MaxLevel" relativePoint="RIGHT" x="130" y="-5" />
-				</Anchors>
-				<Scripts>
-					<OnLoad>
-						local L = LibStub("AceLocale-3.0"):GetLocale("Altoholic")
-						
-						UIDropDownMenu_SetWidth(self, 80) 
-						UIDropDownMenu_SetButtonWidth(self, 20)
-						Altoholic:DDM_Initialize(self, Altoholic.Tabs.Search.DropDownSlot_Initialize)
-						UIDropDownMenu_SetSelectedValue(self, 0);
-						UIDropDownMenu_SetText(self, L["Any"])
-					</OnLoad>
-				</Scripts>
-			</Frame>
-			<Frame parentKey="SelectLocation" name="$parent_SelectLocation" inherits="UIDropDownMenuTemplate">
-				<Anchors>
-					<Anchor point="LEFT" relativeKey="$parent.MaxLevel" relativePoint="RIGHT" x="250" y="-5" />
-				</Anchors>
-				<Scripts>
-					<OnLoad>
-						local L = LibStub("AceLocale-3.0"):GetLocale("Altoholic")
-						
-						UIDropDownMenu_SetWidth(self, 150) 
-						UIDropDownMenu_SetButtonWidth(self, 20)
-						Altoholic:DDM_Initialize(self, Altoholic.Tabs.Search.DropDownLocation_Initialize)
-						UIDropDownMenu_SetSelectedValue(self, 2);
-						UIDropDownMenu_SetText(self, format("%s %s(%s)", L["This realm"], "|cFF00FF00", L["This faction"]))
-					</OnLoad>
-				</Scripts>
-			</Frame>		
 			
-			<Frame parentKey="SortButtons" inherits="AltoSortButtonsContainerTemplate">
+			
+
+			<Frame parentKey="HeaderContainer" inherits="AddonFactory_AuctionHouseHeaderContainerTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.CategoriesList" relativePoint="TOPRIGHT" x="0" y="-4"/>
+					<Anchor point="RIGHT" x="-20" y="0"/>
+				</Anchors>
 				<KeyValues>
-					<KeyValue key="numButtons" value="8" type="number" />
+					<KeyValue key="numButtons" value="5" type="number" />
 					<KeyValue key="option" value="UI.Tabs.Search.SortAscending" />
 				</KeyValues>
 			</Frame>
+
+			<Frame parentKey="Background" useParentLevel="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.CategoriesList" relativePoint="TOPRIGHT" x="4" y="-25"/>
+					<Anchor point="RIGHT" relativeTo="AltoholicFrame" relativePoint="RIGHT" x="-30" y="0"/>
+					<Anchor point="BOTTOM" relativeTo="AltoholicFrame" relativePoint="BOTTOM" x="0" y="28"/>
+				</Anchors>
+				<Layers>
+					<Layer level="BACKGROUND" textureSubLevel="-5">
+						<Texture parentKey="bg" atlas="auctionhouse-background-index" useAtlasSize="true" />
+					</Layer>
+				</Layers>
+			</Frame>
+
+			<Frame parentKey="ContextualMenu" inherits="AddonFactory_ContextualMenuTemplate" />
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic.Tabs.Search:OnLoad()
+				Altoholic:BindViewToController(self, "AltoholicUI.TabSearch")
 			</OnLoad>
-			<OnShow>
-				Altoholic.Tabs.Search:Update()
-			</OnShow>
+			<OnHide>
+				self.ContextualMenu:Close()
+			</OnHide>
 		</Scripts>
 	</Frame>
 </Ui>

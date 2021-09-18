@@ -46,7 +46,6 @@ function HealBot_Init_FindSpellRangeCast(id, spellName, spellBookId)
    
     local hbMana=nil
     if spellBookId then
-        HealBot_TooltipInit();
         HealBot_ScanTooltip:SetSpellBookItem(spellBookId, BOOKTYPE_SPELL);
         local ttText = getglobal("HealBot_ScanTooltipTextLeft2");
         if (ttText:GetText()) then
@@ -225,11 +224,4 @@ function HealBot_Init_SmartCast()
         if HealBot_Spell_IDs[HEALBOT_ANCESTRAL_VISION] then SmartCast_MassRes=HealBot_Spell_IDs[HEALBOT_ANCESTRAL_VISION].name end
         if HealBot_Spell_IDs[HEALBOT_ANCESTRALSPIRIT] then SmartCast_Res=HealBot_Spell_IDs[HEALBOT_ANCESTRALSPIRIT].name end
     end
-    local massResNames={}
-    if GetSpellInfo(HEALBOT_RESURRECTION) then massResNames[GetSpellInfo(HEALBOT_RESURRECTION)]=true end
-    if GetSpellInfo(HEALBOT_REVITALIZE) then massResNames[GetSpellInfo(HEALBOT_REVITALIZE)]=true end
-    if GetSpellInfo(HEALBOT_REAWAKEN) then massResNames[GetSpellInfo(HEALBOT_REAWAKEN)]=true end
-    if GetSpellInfo(HEALBOT_ABSOLUTION) then massResNames[GetSpellInfo(HEALBOT_ABSOLUTION)]=true end
-    if GetSpellInfo(HEALBOT_ANCESTRAL_VISION) then massResNames[GetSpellInfo(HEALBOT_ANCESTRAL_VISION)]=true end
-    HealBot_setHealBot_MassResNames(massResNames)
 end

@@ -183,6 +183,11 @@ GTFO.SpellID["350163"] = {
   tankSound = 2;
 };
 
+GTFO.SpellID["355738"] = {
+  --desc = "Scorching Blast (Incinerator Arkolath)";
+  sound = 1;
+};
+
 --- **********************
 --- * Halls of Atonement *
 --- **********************
@@ -527,6 +532,10 @@ GTFO.SpellID["353633"] = {
   sound = 1;
 };
 
+GTFO.SpellID["352676"] = {
+  --desc = "Slice (Trap)";
+  sound = 1;
+};
 
 --- ******************
 --- * Castle Nathria *
@@ -658,7 +667,7 @@ GTFO.SpellID["353429"] = {
 };
 
 GTFO.SpellID["350851"] = {
-  --desc = "Vessel of Torment (Soulrender Dormazain)";
+  --desc = "River of Souls (Soulrender Dormazain)";
   sound = 1;
 };
 
@@ -685,7 +694,8 @@ GTFO.SpellID["358243"] = {
 
 GTFO.SpellID["358204"] = {
   --desc = "Bellows' Flames (Screamspike)";
-  sound = 1;
+  sound = 2;
+  applicationOnly = true;
 };
 
 GTFO.SpellID["355524"] = {
@@ -718,6 +728,7 @@ GTFO.SpellID["356820"] = {
 GTFO.SpellID["354033"] = {
   --desc = "Frozen Wastes (Kel'Thuzad)";
   sound = 1;
+  ignoreApplication = true;
 };
 
 GTFO.SpellID["354208"] = {
@@ -739,6 +750,11 @@ GTFO.SpellID["347518"] = {
 
 GTFO.SpellID["354639"] = {
   --desc = "Deep Freeze (Kel'Thuzad)";
+  sound = 1;
+};
+
+GTFO.SpellID["350489"] = {
+  --desc = "Lingering Malevolence (Remnant of Ner'zhul)";
   sound = 1;
 };
 

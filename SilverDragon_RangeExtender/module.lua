@@ -15,6 +15,7 @@ function module:OnInitialize()
 	self.db = core.db:RegisterNamespace("VignetteStretch", {
 		profile = {
 			enabled = true,
+			mystery = true,
 			types = {
 				vignettekill = true,
 				vignettekillelite = true,
@@ -51,13 +52,12 @@ function module:VIGNETTE_MINIMAP_UPDATED(event, instanceid, onMinimap, ...)
 	-- Debug("VIGNETTE_MINIMAP_UPDATED", instanceid, onMinimap, ...)
 	if not instanceid then
 		-- ...just in case
-		Debug("No Vignette instanceid")
 		return
 	end
 
 	local icon = vignetteIcons[instanceid]
 	if not icon then
-		return module:UpdateVignetteOnMinimap(instanceid)
+		return self:UpdateVignetteOnMinimap(instanceid)
 	end
 
 	if onMinimap then
@@ -71,7 +71,7 @@ function module:VIGNETTES_UPDATED()
 	-- Debug("VIGNETTES_UPDATED", #vignetteids)
 
 	for instanceid, icon in pairs(vignetteIcons) do
-		if not tContains(vignetteids, instanceid) or not db.types[icon.info.atlasName:lower()] or not db.enabled then
+		if not tContains(vignetteids, instanceid) or (icon.info and not db.types[icon.info.atlasName:lower()]) or (not icon.info and not db.mystery) or not db.enabled then
 			HBDPins:RemoveMinimapIcon(self, icon)
 			icon:Hide()
 			icon.info = nil
@@ -90,21 +90,20 @@ function module:UpdateVignetteOnMinimap(instanceid)
 		return
 	end
 	-- Debug("considering vignette", instanceid)
-	local uiMapID = HBD:GetPlayerZone()
+	local uiMapID = C_Map.GetBestMapForUnit("player")
 	if not uiMapID then
 		return -- Debug("can't determine current zone")
 	end
 	local vignetteInfo = C_VignetteInfo.GetVignetteInfo(instanceid)
-	if not (vignetteInfo and vignetteInfo.vignetteGUID and vignetteInfo.atlasName) then
+	if not db.mystery and not (vignetteInfo and vignetteInfo.vignetteGUID and vignetteInfo.atlasName) then
 		return -- Debug("vignette had no info")
 	end
-	if vignetteInfo.type ~= Enum.VignetteType.Normal then
-		return -- Debug("vignette isn't normal")
+	if vignetteInfo then
+		if not db.types[vignetteInfo.atlasName:lower()] then
+			return -- Debug("vignette type not enabled", vignetteInfo.atlasName)
+		end
 	end
-	if not db.types[vignetteInfo.atlasName:lower()] then
-		return -- Debug("vignette type not enabled", vignetteInfo.atlasName)
-	end
-	local position = C_VignetteInfo.GetVignettePosition(vignetteInfo.vignetteGUID, uiMapID)
+	local position = C_VignetteInfo.GetVignettePosition(instanceid, uiMapID)
 	if not position then
 		return -- Debug("vignette had no position")
 	end
@@ -113,14 +112,15 @@ function module:UpdateVignetteOnMinimap(instanceid)
 	local icon = vignetteIcons[instanceid]
 	if not icon then
 		icon = self.pool:Acquire()
-		icon.texture:SetAtlas(vignetteInfo.atlasName)
+		icon.texture:SetAtlas(vignetteInfo and vignetteInfo.atlasName or "poi-nzothvision")
 		icon.texture:SetDesaturated(true)
 		vignetteIcons[instanceid] = icon
 		HBDPins:AddMinimapIconMap(self, icon, uiMapID, x, y, false, true)
+		-- icon.instanceid = instanceid
 		icon.info = vignetteInfo
 	end
 
-	if vignetteInfo.onMinimap then
+	if vignetteInfo and vignetteInfo.onMinimap then
 		icon.texture:Hide()
 	else
 		icon.texture:Show()
@@ -141,20 +141,20 @@ end)
 
 SilverDragonVignetteStretchPinMixin = {}
 function SilverDragonVignetteStretchPinMixin:OnLoad()
-	-- self:SetMovable(true)
-	-- self:RegisterForClicks("AnyUp", "AnyDown")
-	-- Debug("OnLoad")
+	self:SetMouseClickEnabled(false)
 end
 function SilverDragonVignetteStretchPinMixin:OnMouseEnter()
 	-- TODO: see VignettePinMixin for PVP bounty vignettes if I want to handle this?
 	-- Debug("OnMouseEnter", self, self.info and self.info.name)
-	if not (self.info and self.info.name) then return end
 	if self:GetCenter() > UIParent:GetCenter() then
 		GameTooltip:SetOwner(self, "ANCHOR_LEFT")
 	else
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 	end
-	GameTooltip_SetTitle(GameTooltip, self.info.name)
+	GameTooltip_SetTitle(GameTooltip, self.info and self.info.name or UNKNOWN)
+	if not self.info then
+		GameTooltip:AddLine("This mystery vignette has no information available", 1, 1, 1, true)
+	end
 	GameTooltip:Show()
 end
 function SilverDragonVignetteStretchPinMixin:OnMouseLeave()

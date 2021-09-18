@@ -126,39 +126,80 @@ addon:Controller("AltoholicUI.RenownLevel", {
 	end,
 })
 
-addon:Controller("AltoholicUI.RenownPanel", {
-	Update = function(frame)
-		local character = addon.Tabs.Characters:GetAltKey()
+addon:Controller("AltoholicUI.TabCharacters.RenownPanel", {
+	OnBind = function(frame)
+		local parent = AltoholicFrame.TabCharacters
+		
+		frame:SetParent(parent)
+		frame:SetPoint("TOPLEFT", parent.Background, "TOPLEFT", 0, 0)
+		frame:SetPoint("BOTTOMRIGHT", parent.Background, "BOTTOMRIGHT", 26, 0)
+		parent:RegisterPanel("Renown", frame)
+		
+		-- Handle resize
+		frame:SetScript("OnSizeChanged", function(self, width, height)
+			if not frame:IsVisible() then return end
+		
+			frame:Update(true)
+		end)
+	end,
+	Update = function(frame, isResizing)
+		local parent = frame:GetParent()
+		local character = parent:GetCharacter()
+		if not character then return end
+		
+		local maxDisplayedRows = math.floor(frame:GetHeight() / 75)		-- height 55 + VSpacing 20
 		local covenantID, _, renownLevel =  DataStore:GetCovenantInfo(character)
 
 		currentCovenantID = covenantID
-	
+		
 		-- 0 if no covenant has been chosen yet
 		if covenantID == 0 then
-			AltoholicTabCharacters.Status:SetText(format("%s|r / %s / %s", 
-				DataStore:GetColoredCharacterName(character), 
-				LANDING_PAGE_RENOWN_LABEL, 
-				format(LEVEL_GAINED, renownLevel)))
-				
+			if not isResizing then
+				parent:SetStatus(format("%s|r / %s%s|r / %s%s", 
+					DataStore:GetColoredCharacterName(character), 
+					colors.white, LANDING_PAGE_RENOWN_LABEL, 
+					colors.white, format(LEVEL_GAINED, renownLevel)))
+			end
+			
 			frame:Hide()
 			return
-		else
-			currentCovenantData = C_Covenants.GetCovenantData(covenantID)
-			
-			AltoholicTabCharacters.Status:SetText(format("%s|r / %s / %s (%s)", 
+		end
+		
+		currentCovenantData = C_Covenants.GetCovenantData(covenantID)
+		
+		if not isResizing then
+			parent:SetStatus(format("%s|r / %s%s|r / %s%s (%s)|r", 
 				DataStore:GetColoredCharacterName(character), 
-				LANDING_PAGE_RENOWN_LABEL, 
-				format(LEVEL_GAINED, renownLevel),
+				colors.white, LANDING_PAGE_RENOWN_LABEL, 
+				colors.white, format(LEVEL_GAINED, renownLevel),
 				currentCovenantData.name))
 		end
 		
 		local levels = C_CovenantSanctumUI.GetRenownLevels(covenantID)
-
-		for i = 1, #frame.Items do
-			local item = frame.Items[i]
 		
-			item:SetInfo(levels[i])
-			item:Refresh(renownLevel, (i <= renownLevel))
+		local i = 1
+		for row = 1, #frame.Rows do
+			local rowFrame = frame.Rows[row]
+		
+			if row <= maxDisplayedRows then
+				if not (isResizing and rowFrame:IsVisible()) then
+					for item = 1, #rowFrame.Items do
+						local f = rowFrame.Items[item]
+					
+						f:SetInfo(levels[i])
+						f:Refresh(renownLevel, (i <= renownLevel))
+					
+						i = i + 1
+					end
+				else
+					i = i + 10
+				end
+				
+				rowFrame:Show()
+			else
+				i = i + 10
+				rowFrame:Hide()
+			end
 		end
 		
 		frame:Show()

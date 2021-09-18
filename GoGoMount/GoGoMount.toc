@@ -1,6 +1,6 @@
 ## Interface: 90100
 ## Title: GoGoMount (Ghuda's fork)
-## Version: 2.9.1
+## Version: 2.9.2
 ## Notes: One-key solution for mounting/dismounting, supports spells, shapeshifting
 ## Notes-enGB: One-key solution for mounting/dismounting, supports spells, shapeshifting
 ## Notes-deDE: Ein-Tasten-Lösung für das Auf- und Absitzen von Reittieren, unterstützt auch Zaubersprüche und Gestaltwandlung

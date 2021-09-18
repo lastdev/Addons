@@ -1,9 +1,9 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="Recipes.lua"></Script>
 
-	<Frame parentKey="Recipes" parent="AltoholicTabCharacters" inherits="AltoDataPanelTemplate">
+	<Frame parentKey="Recipes" hidden="true">
 		<Frames>
-			<ScrollFrame parentKey="ScrollFrame" inherits="AltoBaseScrollFrameTemplate">
+			<ScrollFrame parentKey="ScrollFrame" inherits="AddonFactory_BaseScrollFrameTemplate">
 				<Scripts>
 					<OnVerticalScroll>
 						local parent = self:GetParent()
@@ -11,10 +11,10 @@
 					</OnVerticalScroll>
 				</Scripts>
 				<KeyValues>
-					<KeyValue key="numRows" value="7" type="number" />
+					<KeyValue key="numRows" value="15" type="number" />
 					<KeyValue key="rowHeight" value="43" type="number" />
 					<KeyValue key="rowTemplate" value="AltoRecipeRowTemplate" />
-					<KeyValue key="xOffset" value="2" type="number" />
+					<KeyValue key="xOffset" value="5" type="number" />
 					<KeyValue key="yOffset" value="-5" type="number" />
 				</KeyValues>
 			</ScrollFrame>
@@ -22,7 +22,7 @@
 			<Button parentKey="LinkButton"> 
 				<Size x="32" y="16" /> 
 				<Anchors> 
-					<Anchor point="TOPLEFT" x="450" y="50" />
+					<Anchor point="TOPLEFT" x="550" y="50" />
 				</Anchors> 
 				<Scripts> 
 					<OnClick> 
@@ -47,7 +47,7 @@
 			<EditBox parentKey="SearchBox" autoFocus="false" inherits="SearchBoxTemplate">
 				<Size x="112" y="20"/>
 				<Anchors>
-					<Anchor point="TOPLEFT" x="450" y="30"/>
+					<Anchor point="TOPLEFT" x="550" y="30"/>
 				</Anchors>
 				<Scripts>
 					<OnShow>
@@ -61,7 +61,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:BindViewToController(self, "AltoholicUI.Recipes")
+				Altoholic:BindViewToController(self, "AltoholicUI.TabCharacters.Recipes")
 			</OnLoad>
 		</Scripts>
 	</Frame>

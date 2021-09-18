@@ -60,7 +60,6 @@ local function parseData ()
     shared.toyData = nil;
   end
 
-
   local function parseAchievementdata ()
     local achievementData = shared.achievementData;
 

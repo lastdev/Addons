@@ -360,6 +360,11 @@ local function _GetRestXPRate(character)
 		end
 	end
 	
+	-- ensure to report that a max level has not earned xp while resting
+	if character.level == MAX_PLAYER_LEVEL then
+		xpEarnedResting = -1
+	end
+	
 	return rate, savedXP, savedRate, rateEarnedResting, xpEarnedResting, maxXP, isFullyRested, timeUntilFullyRested
 end
 
@@ -378,6 +383,12 @@ end
 local function _GetPlayTime(character)
 	return (GetOption("HideRealPlayTime")) and 0 or character.played, character.playedThisLevel
 end
+
+local function _GetRealPlayTime(character)
+	-- return the real play time, not to be displayed, but just for computing (ex: which alt has the highest/lowest played ?)
+	return character.played
+end
+
 
 local function _GetLocation(character)
 	return character.zone, character.subZone
@@ -419,6 +430,7 @@ local PublicMethods = {
 	IsXPDisabled = _IsXPDisabled,
 	GetGuildInfo = _GetGuildInfo,
 	GetPlayTime = _GetPlayTime,
+	GetRealPlayTime = _GetRealPlayTime,
 	GetLocation = _GetLocation,
 	GetCovenantInfo = _GetCovenantInfo,
 	GetCovenantNameByID = _GetCovenantNameByID,
@@ -450,6 +462,7 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("IsXPDisabled")
 	DataStore:SetCharacterBasedMethod("GetGuildInfo")
 	DataStore:SetCharacterBasedMethod("GetPlayTime")
+	DataStore:SetCharacterBasedMethod("GetRealPlayTime")
 	DataStore:SetCharacterBasedMethod("GetLocation")
 	DataStore:SetCharacterBasedMethod("GetCovenantInfo")
 	DataStore:SetCharacterBasedMethod("GetCovenantName")

@@ -3,38 +3,16 @@ local addon = _G[addonName]
 local colors = addon.Colors
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
+local MVC = LibStub("LibMVC-1.0")
+local Options = MVC:GetService("AltoholicUI.Options")
+local Equipment = MVC:GetService("AltoholicUI.Equipment")
 
-local parentName = "AltoholicTabCharacters"
-local parent
-
-local currentView = 0		-- current view in the characters category
-local currentSpellTab
-local currentProfession			-- currently selected profession
-local currentMenuProfession	-- profession currently being navigated in the DDM
-
-local THIS_ACCOUNT = "Default"
-local currentAccount = THIS_ACCOUNT
-local currentRealm = GetRealmName()
-local currentAlt = UnitName("player")
+local ICON_BAGS_HALLOWSEND = "Interface\\Icons\\INV_Misc_Bag_28_Halloween"
+local ICON_VIEW_BAGS = "Interface\\Icons\\INV_MISC_BAG_09"
 
 local SKILL_ANY = 4
 
--- ** Icons Menus **
-local VIEW_BAGS = 1
-local VIEW_QUESTS = 2
-local VIEW_TALENTS = 3
-local VIEW_AUCTIONS = 4
-local VIEW_BIDS = 5
-local VIEW_MAILS = 6
-local VIEW_COMPANIONS = 7
-local VIEW_SPELLS = 8
-local VIEW_PROFESSION = 9
-local VIEW_GARRISONS = 10
-local VIEW_COVENANT_RENOWN = 11
-local VIEW_COVENANT_SOULBINDS = 12
-local VIEW_COVENANT_RESERVOIR = 13
-
--- Second mini easter egg, the bag icon changes depending on the amount of chars at level max (on the current realm), or based on the time of the year
+-- Mini easter egg, the bag icon changes depending on the amount of chars at level max (on the current realm), or based on the time of the year
 local BAG_ICONS = {
 	"Interface\\Icons\\INV_MISC_BAG_09",			-- mini pouch
 	"Interface\\Icons\\INV_MISC_BAG_10_BLUE",		-- small bag
@@ -50,361 +28,37 @@ local BAG_ICONS = {
 	"Interface\\Icons\\inv_tailoring_hexweavebag",
 }
 
-local ICON_BAGS_HALLOWSEND = "Interface\\Icons\\INV_Misc_Bag_28_Halloween"
-local ICON_VIEW_BAGS = "Interface\\Icons\\INV_MISC_BAG_09"
-
--- ** Left menu **
-local ICON_CHARACTERS = "Interface\\Icons\\Achievement_GuildPerk_Everyones a Hero_rank2"
-
-addon.Tabs.Characters = {}
-
-local ns = addon.Tabs.Characters		-- ns = namespace
-
--- *** Utility functions ***
-local function HideAll()
-	
-	AltoholicTabCharacters.QuestLog:Hide()
-	AltoholicTabCharacters.Talents:Hide()
-	AltoholicTabCharacters.Spellbook:Hide()
-	AltoholicTabCharacters.GarrisonMissions:Hide()
-	AltoholicTabCharacters.Recipes:Hide()
-	AltoholicTabCharacters.Renown:Hide()
-	AltoholicTabCharacters.Soulbinds:Hide()
-	AltoholicTabCharacters.Reservoir:Hide()
-	
-	AltoholicFrameContainers:Hide()
-
-	AltoholicFrameMail:Hide()
-	AltoholicFramePets:Hide()
-	AltoholicFrameAuctions:Hide()
-end
-
-local function EnableIcon(frame)
-	frame:Enable()
-	frame.Icon:SetDesaturated(false)
-end
-
-local DDM_Add = addon.Helpers.DDM_Add
-local DDM_AddTitle = addon.Helpers.DDM_AddTitle
-local DDM_AddCloseMenu = addon.Helpers.DDM_AddCloseMenu
-
-function ns:OnShow()
-	if currentView == 0 then
-		ns:ViewCharInfo(VIEW_BAGS)
-	end
-end
-
-function ns:MenuItem_OnClick(frame, button)
-	-- 2017/05/15 : frame no longer used, callers not yet updated
-	HideAll()
-	DropDownList1:Hide()		-- hide any right-click menu that could be open
-
-	local menuIcons = parent.MenuIcons
-	menuIcons.CharactersIcon:Show()
-	menuIcons.BagsIcon:Show()
-	menuIcons.QuestsIcon:Show()
-	menuIcons.TalentsIcon:Show()
-	menuIcons.AuctionIcon:Show()
-	menuIcons.MailIcon:Show()
-	menuIcons.SpellbookIcon:Show()
-	menuIcons.ProfessionsIcon:Show()
-	menuIcons.GarrisonIcon:Show()
-	menuIcons.CovenantIcon:Show()
-end
-
-function ns:ViewCharInfo(index)
-	index = index or self.value
-	
-	currentView = index
-	HideAll()
-	ns:SetMode(index)
-	ns:ShowCharInfo(index)
-end
-
-function ns:ShowCharInfo(view)
-	if view == VIEW_BAGS then
-		addon.Containers:SetView(addon:GetOption("UI.Tabs.Characters.ViewBagsAllInOne"))
-		AltoholicFrameContainers:Show()
-		addon.Containers:Update()
-		
-	elseif view == VIEW_QUESTS then
-		AltoholicTabCharacters.QuestLog:Update()
-	elseif view == VIEW_TALENTS then
-		AltoholicTabCharacters.Talents:Update()
-	
-	elseif view == VIEW_AUCTIONS then
-		addon.AuctionHouse:SetListType("Auctions")
-		AltoholicFrameAuctions:Show()
-		addon.AuctionHouse:InvalidateView()
-		addon.AuctionHouse:Update()
-	elseif view == VIEW_BIDS then
-		addon.AuctionHouse:SetListType("Bids")
-		AltoholicFrameAuctions:Show()
-		addon.AuctionHouse:InvalidateView()
-		addon.AuctionHouse:Update()
-	elseif view == VIEW_MAILS then
-		AltoholicFrameMail:Show()
-		addon.Mail:BuildView()
-		addon.Mail:Update()
-		
-	elseif view == VIEW_SPELLS then
-		AltoholicTabCharacters.Spellbook:Update()
-
-	elseif view == VIEW_COMPANIONS then
-		addon.Pets:SetSinglePetView("CRITTER")
-		addon.Pets:UpdatePets()
-
-	elseif view == VIEW_PROFESSION then
-		AltoholicTabCharacters.Recipes:Update()
-				
-	elseif view == VIEW_GARRISONS then
-		AltoholicTabCharacters.GarrisonMissions:Update()
-	elseif view == VIEW_COVENANT_RENOWN then
-		AltoholicTabCharacters.Renown:Update()
-	elseif view == VIEW_COVENANT_SOULBINDS then
-		AltoholicTabCharacters.Soulbinds:Update()
-	elseif view == VIEW_COVENANT_RESERVOIR then
-		AltoholicTabCharacters.Reservoir:Update()
-	end
-end
-
-function ns:SetMode(mode)
-	if not mode then return end		-- called without parameter for professions
-
-	local showButtons = false
-	
-	if mode == VIEW_MAILS then
-		parent.SortButtons:SetButton(1, MAIL_SUBJECT_LABEL, 220, function(self) addon.Mail:Sort(self, "name") end)
-		parent.SortButtons:SetButton(2, FROM, 140, function(self) addon.Mail:Sort(self, "from") end)
-		parent.SortButtons:SetButton(3, L["Expiry:"], 200, function(self) addon.Mail:Sort(self, "expiry") end)
-		showButtons = true
-		
-	elseif mode == VIEW_AUCTIONS then
-		parent.SortButtons:SetButton(1, HELPFRAME_ITEM_TITLE, 220, function(self) addon.AuctionHouse:Sort(self, "name", "Auctions") end)
-		parent.SortButtons:SetButton(2, HIGH_BIDDER, 160, function(self) addon.AuctionHouse:Sort(self, "highBidder", "Auctions") end)
-		parent.SortButtons:SetButton(3, CURRENT_BID, 170, function(self) addon.AuctionHouse:Sort(self, "buyoutPrice", "Auctions") end)
-		showButtons = true
-	
-	elseif mode == VIEW_BIDS then
-		parent.SortButtons:SetButton(1, HELPFRAME_ITEM_TITLE, 220, function(self) addon.AuctionHouse:Sort(self, "name", "Bids") end)
-		parent.SortButtons:SetButton(2, NAME, 160, function(self) addon.AuctionHouse:Sort(self, "owner", "Bids") end)
-		parent.SortButtons:SetButton(3, CURRENT_BID, 170, function(self) addon.AuctionHouse:Sort(self, "buyoutPrice", "Bids") end)
-		showButtons = true
-	end
-	
-	if showButtons then
-		parent.SortButtons:ShowChildFrames()
-	else
-		parent.SortButtons:HideChildFrames()
-	end
-end
-
-function ns:SetCurrentProfession(prof)
-	if not prof then return end
-	
-	currentProfession = prof
-
-	local recipes = AltoholicTabCharacters.Recipes
-	recipes:SetCurrentProfession(currentProfession)
-	recipes:SetMainCategory(0)
-	recipes:SetSubCategory(0)
-	recipes:SetCurrentColor(SKILL_ANY)
-	recipes:SetCurrentSlots(ALL_INVENTORY_SLOTS)
-	
-	ns:ViewCharInfo(VIEW_PROFESSION)
-end
-
--- ** DB / Get **
-function ns:GetAccount()
-	return currentAccount
-end
-
-function ns:GetRealm()
-	return currentRealm, currentAccount
-end
-
-
-function ns:GetAlt()
-	return currentAlt, currentRealm, currentAccount
-end
-
-function ns:GetAltKey()
-	if currentAlt and currentRealm and currentAccount then
-		return format("%s.%s.%s", currentAccount, currentRealm, currentAlt)
-	end
-end
-
--- ** DB / Set **
-function ns:SetAlt(alt, realm, account)
-	currentAlt = alt
-	currentRealm = realm
-	currentAccount = account
-end
-
-function ns:SetAltKey(key)
-	local account, realm, char = strsplit(".", key)
-	ns:SetAlt(char, realm, account)
-end
+local tab		-- small shortcut to easily address the frame (set in OnBind)
+local currentPanelKey
 
 -- ** Icon events **
-local function OnCharacterChange(self)
-	local oldAlt = currentAlt
-	ns:SetAltKey(self.value)
-	local newAlt = currentAlt
-	
-	local menuIcons = parent.MenuIcons
-	EnableIcon(menuIcons.BagsIcon)
-	EnableIcon(menuIcons.QuestsIcon)
-	EnableIcon(menuIcons.TalentsIcon)
-	EnableIcon(menuIcons.AuctionIcon)
-	EnableIcon(menuIcons.MailIcon)
-	EnableIcon(menuIcons.SpellbookIcon)
-	EnableIcon(menuIcons.ProfessionsIcon)
-	EnableIcon(menuIcons.GarrisonIcon)
-	EnableIcon(menuIcons.CovenantIcon)
-	
-	DropDownList1:Hide()
-	
-	if (not oldAlt) or (oldAlt == newAlt) then return end
-
-	currentSpellTab = nil
-	currentProfession = nil
-	
-	if currentView ~= VIEW_SPELLS and currentView ~= VIEW_PROFESSION then
-		ns:ShowCharInfo(currentView)		-- this will show the same info from another alt (ex: containers/mail/ ..)
-	else
-		HideAll()
-		parent.Status:SetText(format("%s|r /", DataStore:GetColoredCharacterName(self.value)))
-	end
-end
-
 local function OnContainerChange(self)
-	if self.value == 1 then
-		addon:ToggleOption(nil, "UI.Tabs.Characters.ViewBags")
-	elseif self.value == 2 then
-		addon:ToggleOption(nil, "UI.Tabs.Characters.ViewBank")
-	elseif self.value == 3 then
-		addon:ToggleOption(nil, "UI.Tabs.Characters.ViewVoidStorage")
-	elseif self.value == 4 then
-		addon:ToggleOption(nil, "UI.Tabs.Characters.ViewReagentBank")
-	elseif self.value == 5 then
-		addon:ToggleOption(nil, "UI.Tabs.Characters.ViewBagsAllInOne")
-	end
-	
-	ns:ViewCharInfo(VIEW_BAGS)
+	Options.Toggle(nil, self.value)
+	currentPanelKey = "Containers"
+	tab:Update()
 end
 
 local function OnRarityChange(self)
-	addon:SetOption("UI.Tabs.Characters.ViewBagsRarity", self.value)
-	addon.Containers:Update()
+	Options.Set("UI.Tabs.Characters.ViewBagsRarity", self.value)
+	currentPanelKey = "Containers"
+	tab:Update()
 end
 
 local function OnQuestHeaderChange(self)
-	AltoholicTabCharacters.QuestLog:SetCategory(self.value or 0)
-	ns:ViewCharInfo(VIEW_QUESTS)
+	Options.Set("UI.Tabs.Characters.ViewQuestLogCategory", self.value or 0)
+	currentPanelKey = "QuestLog"
+	tab:Update()
 end
 
-local function OnTalentChange(self)
+local function OnAuctionsChange(self, listType)
 	CloseDropDownMenus()
-	
-	ns:ViewCharInfo(VIEW_TALENTS)
+	Options.Set("UI.Tabs.Characters.ViewAuctionHouse", listType)
+	currentPanelKey = self.value
+	tab:Update()
 end
 
-local function OnSpellTabChange(self)
-	CloseDropDownMenus()
-	
-	if self.value then
-		currentSpellTab = self.value
-		AltoholicTabCharacters.Spellbook:SetSchool(self.value)
-		ns:ViewCharInfo(VIEW_SPELLS)
-	end
-end
-
-local function OnProfessionChange(self)
-	CloseDropDownMenus()
-	ns:SetCurrentProfession(self.value)
-end
-
-local function OnProfessionColorChange(self)
-	CloseDropDownMenus()
-	
-	if not self.value then return end
-	
-	AltoholicTabCharacters.Recipes:SetCurrentColor(self.value)
-	ns:ViewCharInfo(VIEW_PROFESSION)
-end
-
-local function OnProfessionSlotChange(self)
-	CloseDropDownMenus()
-	
-	if not self.value then return end
-	
-	AltoholicTabCharacters.Recipes:SetCurrentSlots(self.value)
-	ns:ViewCharInfo(VIEW_PROFESSION)
-end
-
-local function OnProfessionCategoryChange(self)
-	CloseDropDownMenus()
-	
-	if not self.value then return end
-	
-	currentView = VIEW_PROFESSION
-	HideAll()
-	ns:SetMode(VIEW_PROFESSION)
-	
-	local previousProfession = currentProfession
-	local professionName, mainCategory, subCategory = strsplit(",", self.value)
-	currentProfession = professionName
-	
-	local recipes = AltoholicTabCharacters.Recipes
-	-- if profession has changed, reset the slots filter
-	if previousProfession and previousProfession ~= currentProfession then
-		recipes:SetCurrentColor(SKILL_ANY)
-		recipes:SetCurrentSlots(ALL_INVENTORY_SLOTS)
-	end
-	recipes:SetCurrentProfession(currentProfession)
-	recipes:SetMainCategory(tonumber(mainCategory))
-	recipes:SetSubCategory(tonumber(subCategory))
-	recipes:Update()
-end
-
-local function OnShowLearned(self)
-	addon:ToggleOption(nil, "UI.Tabs.Characters.ViewLearnedRecipes")
-	ns:ViewCharInfo(VIEW_PROFESSION)
-end
-
-local function OnShowUnlearned(self)
-	addon:ToggleOption(nil, "UI.Tabs.Characters.ViewUnlearnedRecipes")
-	ns:ViewCharInfo(VIEW_PROFESSION)
-end
-
-local function OnGarrisonMenuChange(self)
-	addon:SetOption("UI.Tabs.Characters.GarrisonMissions", self.value)
-	CloseDropDownMenus()
-	ns:ViewCharInfo(VIEW_GARRISONS)
-end
-
-local function OnCovenantChange(self)
-	addon:SetOption("UI.Tabs.Characters.CovenantSanctum", self.value)
-	CloseDropDownMenus()
-	ns:ViewCharInfo(self.value)
-end
-
-local function OnViewChange(self)
-	if self.value then
-		ns:ViewCharInfo(self.value)
-	end
-end
-
-local function OnClearAHEntries(self)
-	local character = ns:GetAltKey()
-	
-	local listType
-	if currentView == VIEW_AUCTIONS then
-		listType = "Auctions"
-	elseif currentView == VIEW_BIDS then
-		listType = "Bids"
-	end
+local function OnClearAHEntries(self, character)
+	local listType = Options.Get("UI.Tabs.Characters.ViewAuctionHouse")
 	
 	if (self.value == 1) or (self.value == 3) then	-- clean this faction's data
 		DataStore:ClearAuctionEntries(character, listType, 0)
@@ -414,114 +68,157 @@ local function OnClearAHEntries(self)
 		DataStore:ClearAuctionEntries(character, listType, 1)
 	end
 	
-	addon.AuctionHouse:InvalidateView()
+	tab.Panels["Auctions"]:InvalidateView()
+	tab:Update()
+end
+
+local function OnMenuChange(self)
+	-- Generic callback, shared by multiple drop down menus
+	CloseDropDownMenus()
+	currentPanelKey = self.value
+	tab:Update()
+end
+
+local function OnSpellTabChange(self)
+	CloseDropDownMenus()
+	Options.Set("UI.Tabs.Characters.ViewSpellTab", self.value)
+	currentPanelKey = "Spellbook"
+	tab:Update()
+end
+
+local function OnProfessionChange(self)
+	CloseDropDownMenus()
+	
+	currentProfession = self.value
+
+	local recipes = tab.Panels.Recipes
+
+	recipes:SetCurrentProfession(currentProfession)
+	recipes:ResetFilters()
+
+	currentPanelKey = "Recipes"
+	tab:Update()
+end
+
+local function OnProfessionColorChange(self)
+	CloseDropDownMenus()
+	
+	if not self.value then return end
+	
+	tab.Panels.Recipes:SetCurrentColor(self.value)
+	currentPanelKey = "Recipes"
+	tab:Update()
+end
+
+local function OnProfessionSlotChange(self)
+	CloseDropDownMenus()
+	
+	if not self.value then return end
+	
+	tab.Panels.Recipes:SetCurrentSlots(self.value)
+	currentPanelKey = "Recipes"
+	tab:Update()
+end
+
+local function OnProfessionCategoryChange(self, mainCategory, subCategory)
+	CloseDropDownMenus()
+	
+	if not self.value then return end
+	
+	local previousProfession = currentProfession
+	local professionName, mainCategory, subCategory = strsplit(",", self.value)
+	currentProfession = professionName
+	
+	local recipes = tab.Panels.Recipes
+	
+	-- if profession has changed, reset the slots filter
+	if previousProfession and previousProfession ~= currentProfession then
+		recipes:SetCurrentColor(SKILL_ANY)
+		recipes:SetCurrentSlots(ALL_INVENTORY_SLOTS)
+	end
+	
+	recipes:SetCurrentProfession(currentProfession)
+	recipes:SetMainCategory(tonumber(mainCategory))
+	recipes:SetSubCategory(tonumber(subCategory))
+	
+	currentPanelKey = "Recipes"
+	tab:Update()
+end
+
+local function OnShowLearned(self)
+	CloseDropDownMenus()
+	
+	Options.Toggle(nil, "UI.Tabs.Characters.ViewLearnedRecipes")
+	currentPanelKey = "Recipes"
+	tab:Update()
+end
+
+local function OnShowUnlearned(self)
+	Options.Toggle(nil, "UI.Tabs.Characters.ViewUnlearnedRecipes")
+	currentPanelKey = "Recipes"
+	tab:Update()
+end
+
+local function OnGarrisonMenuChange(self)
+	CloseDropDownMenus()
+	Options.Set("UI.Tabs.Characters.GarrisonMissions", self.value)
+	currentPanelKey = "GarrisonMissions"
+	tab:Update()
+end
+
+local function OnCovenantChange(self)
+	CloseDropDownMenus()
+	Options.Set("UI.Tabs.Characters.CovenantSanctum", self.value)
+	currentPanelKey = self.value
+	tab:Update()
 end
 
 local function OnClearMailboxEntries(self)
-	local character = ns:GetAltKey()
+	local character = self.value
+	
 	DataStore:ClearMailboxEntries(character)
-	addon.Mail:Update()
+	tab:Update()
 end
 
-local function GetCharacterLoginText(character)
-	local last = DataStore:GetLastLogout(character)
-	local _, _, name = strsplit(".", character)
-	
-	if last then
-		if name == UnitName("player") then
-			last = colors.green..GUILD_ONLINE_LABEL
-		else
-			last = format("%s: %s", LASTONLINE, colors.yellow..date("%m/%d/%Y %H:%M", last))
-		end
-	else
-		last = format("%s: %s", LASTONLINE, RED..L["N/A"])
-	end
-	return format("%s %s(%s%s)", DataStore:GetColoredCharacterName(character), colors.white, last, colors.white)
-end
 
 -- ** Menu Icons **
-local function CharactersIcon_Initialize(self, level)
-	
-	if level == 1 then
-		DDM_AddTitle(L["Characters"])
+local function BagsIcon_Initialize(frame, level)
+	local character = tab:GetCharacter()
+	if not character then return end
+
+	frame:AddTitle(format("%s / %s", L["Containers"], DataStore:GetColoredCharacterName(character)))
+
+	frame:AddButton(L["View"], nil, function() tab:ShowPanel("Containers") end)
+	frame:AddButton(L["Bags"], "UI.Tabs.Characters.ViewBags", OnContainerChange, nil, Options.Get("UI.Tabs.Characters.ViewBags"))
+	frame:AddButton(L["Bank"], "UI.Tabs.Characters.ViewBank", OnContainerChange, nil, Options.Get("UI.Tabs.Characters.ViewBank"))
+	frame:AddButton(VOID_STORAGE, "UI.Tabs.Characters.ViewVoidStorage", OnContainerChange, nil, Options.Get("UI.Tabs.Characters.ViewVoidStorage"))
+	frame:AddButton(REAGENT_BANK , "UI.Tabs.Characters.ViewReagentBank", OnContainerChange, nil, Options.Get("UI.Tabs.Characters.ViewReagentBank"))
+	frame:AddButton(L["All-in-one"], "UI.Tabs.Characters.ViewBagsAllInOne", OnContainerChange, nil, Options.Get("UI.Tabs.Characters.ViewBagsAllInOne"))
 		
-		for account in pairs(DataStore:GetAccounts()) do
-			for realm in pairs(DataStore:GetRealms(account)) do
-
-				local info = UIDropDownMenu_CreateInfo()
-
-				info.text = realm
-				info.hasArrow = 1
-				info.checked = nil
-				info.value = format("%s.%s", account, realm)
-				info.func = nil
-				UIDropDownMenu_AddButton(info, level)
-			end
-		end
-
-		DDM_AddCloseMenu()
-
-	elseif level == 2 then
-		local menuAccount, menuRealm = strsplit(".", UIDROPDOWNMENU_MENU_VALUE)
-		
-		local nameList = {}		-- we want to list characters alphabetically
-		for _, character in pairs(DataStore:GetCharacters(menuRealm, menuAccount)) do
-			table.insert(nameList, character)	-- we can add the key instead of just the name, since they will all be like account.realm.name, where account & realm are identical
-		end
-		table.sort(nameList)
-		
-		local currentCharacterKey = ns:GetAltKey()
-		for _, character in ipairs(nameList) do
-			
-			local info = UIDropDownMenu_CreateInfo()
-			
-			info.text		= GetCharacterLoginText(character)
-			info.value		= character
-			info.func		= OnCharacterChange
-			info.icon		= nil
-			info.checked	= (currentCharacterKey == character)
-			
-			UIDropDownMenu_AddButton(info, level)
-		end
-	end
-end
-
-local function BagsIcon_Initialize(self, level)
-	local currentCharacterKey = ns:GetAltKey()
-	if not currentCharacterKey then return end
-
-	DDM_AddTitle(format("%s / %s", L["Containers"], DataStore:GetColoredCharacterName(currentCharacterKey)))
-	DDM_Add(L["View"], nil, function() ns:ViewCharInfo(VIEW_BAGS) end)
-	DDM_Add(L["Bags"], 1, OnContainerChange, nil, addon:GetOption("UI.Tabs.Characters.ViewBags"))
-	DDM_Add(L["Bank"], 2, OnContainerChange, nil, addon:GetOption("UI.Tabs.Characters.ViewBank"))
-	DDM_Add(VOID_STORAGE, 3, OnContainerChange, nil, addon:GetOption("UI.Tabs.Characters.ViewVoidStorage"))
-	DDM_Add(REAGENT_BANK , 4, OnContainerChange, nil, addon:GetOption("UI.Tabs.Characters.ViewReagentBank"))
-	DDM_Add(L["All-in-one"], 5, OnContainerChange, nil, addon:GetOption("UI.Tabs.Characters.ViewBagsAllInOne"))
-		
-	DDM_AddTitle(" ")
-	DDM_AddTitle("|r" ..RARITY)
-	local rarity = addon:GetOption("UI.Tabs.Characters.ViewBagsRarity")
-	DDM_Add(L["Any"], 0, OnRarityChange, nil, (rarity == 0))
+	frame:AddTitle(" ")
+	frame:AddTitle(format("|r%s", RARITY))
+	local rarity = Options.Get("UI.Tabs.Characters.ViewBagsRarity")
+	frame:AddButton(L["Any"], 0, OnRarityChange, nil, (rarity == 0))
 	
 	for i = Enum.ItemQuality.Uncommon, Enum.ItemQuality.Heirloom do		-- Quality: 0 = poor .. 5 = legendary
-		DDM_Add(format("|c%s%s", select(4, GetItemQualityColor(i)), _G["ITEM_QUALITY"..i.."_DESC"]), i, OnRarityChange, nil, (rarity == i))
+		frame:AddButton(format("|c%s%s", select(4, GetItemQualityColor(i)), _G["ITEM_QUALITY"..i.."_DESC"]), i, OnRarityChange, nil, (rarity == i))
 	end
 	
-	DDM_AddCloseMenu()
+	frame:AddCloseMenu()
 end
 
-local function QuestsIcon_Initialize(self, level)
-	local currentCharacterKey = ns:GetAltKey()
-	if not currentCharacterKey then return end
+local function QuestsIcon_Initialize(frame, level)
+	local character = tab:GetCharacter()
+	if not character then return end
 	
-	local questLog = AltoholicTabCharacters.QuestLog
+	local questLogCategory = Options.Get("UI.Tabs.Characters.ViewQuestLogCategory")
 	
-	DDM_AddTitle(format("%s / %s", QUESTS_LABEL, DataStore:GetColoredCharacterName(currentCharacterKey)))
-	DDM_Add(ALL, 0, OnQuestHeaderChange, nil, (questLog:GetCategory() == 0))
+	frame:AddTitle(format("%s / %s", QUESTS_LABEL, DataStore:GetColoredCharacterName(character)))
+	frame:AddButton(ALL, 0, OnQuestHeaderChange, nil, (questLogCategory == 0))
 	
 	-- get the list of quest headers/categories
 	local sortedHeaders = {}
-	for headerIndex, header in pairs(DataStore:GetQuestHeaders(currentCharacterKey)) do
+	for headerIndex, header in pairs(DataStore:GetQuestHeaders(character)) do
 		table.insert(sortedHeaders, { name = header, index = headerIndex })
 	end
 	-- sort them
@@ -529,229 +226,215 @@ local function QuestsIcon_Initialize(self, level)
 
 	-- then add them to the drop-down
 	for _, v in pairs(sortedHeaders) do
-		DDM_Add(v.name, v.index, OnQuestHeaderChange, nil, (questLog:GetCategory() == v.index))
+		frame:AddButton(v.name, v.index, OnQuestHeaderChange, nil, (questLogCategory == v.index))
 	end
 	
-	DDM_AddTitle("|r ")
-	DDM_AddTitle(GAMEOPTIONS_MENU)
+	frame:AddTitle("|r ")
+	frame:AddTitle(GAMEOPTIONS_MENU)
 	if DataStore_Quests then
-		DDM_Add("DataStore Quests", nil, function() Altoholic:ToggleUI(); InterfaceOptionsFrame_OpenToCategory("DataStore_Quests") end)
+		frame:AddButton("DataStore Quests", 15, addon.ShowOptionsPanel)
 	end
-	DDM_AddCloseMenu()
+	frame:AddCloseMenu()
 end
 
-local function TalentsIcon_Initialize(self, level)
+local function TalentsIcon_Initialize(frame, level)
+	local character = tab:GetCharacter()
+	if not character then return end
 	
-	local currentCharacterKey = ns:GetAltKey()
-	if not currentCharacterKey then return end
-	
-	DDM_AddTitle(format("%s / %s", TALENTS, DataStore:GetColoredCharacterName(currentCharacterKey)))
-	DDM_AddTitle(" ")
-	DDM_Add(TALENTS, 1, OnTalentChange, nil, nil)
-	-- DDM_Add(TALENT_SPEC_SECONDARY, 2, OnTalentChange, nil, nil)
-	DDM_AddCloseMenu()
+	frame:AddTitle(format("%s / %s", TALENTS, DataStore:GetColoredCharacterName(character)))
+	frame:AddTitle(" ")
+	frame:AddButton(TALENTS, "Talents", OnMenuChange)
+	frame:AddCloseMenu()
 end
 
-local function AuctionIcon_Initialize(self, level)
-	local currentCharacterKey = ns:GetAltKey()
-	if not currentCharacterKey then return end
+local function AuctionIcon_Initialize(frame, level)
+	local character = tab:GetCharacter()
+	if not character then return end
 	
-	DDM_AddTitle(format("%s / %s", BUTTON_LAG_AUCTIONHOUSE, DataStore:GetColoredCharacterName(currentCharacterKey)))
+	frame:AddTitle(format("%s / %s", BUTTON_LAG_AUCTIONHOUSE, DataStore:GetColoredCharacterName(character)))
 	
-	local last = DataStore:GetModuleLastUpdateByKey("DataStore_Auctions", currentCharacterKey)
+	local last = DataStore:GetModuleLastUpdateByKey("DataStore_Auctions", character)
 	if DataStore_Auctions and last then
-		local numAuctions = DataStore:GetNumAuctions(currentCharacterKey) or 0
-		local numBids = DataStore:GetNumBids(currentCharacterKey) or 0
+		local numAuctions = DataStore:GetNumAuctions(character) or 0
+		local numBids = DataStore:GetNumBids(character) or 0
 		
-		DDM_Add(format(L["Auctions %s(%d)"], colors.green, numAuctions), VIEW_AUCTIONS, OnViewChange, nil, (currentView == VIEW_AUCTIONS))
-		DDM_Add(format(L["Bids %s(%d)"], colors.green, numBids), VIEW_BIDS, OnViewChange, nil, (currentView == VIEW_BIDS))
+		frame:AddButtonWithArgs(format("%s %s(%d)", AUCTIONS, colors.green, numAuctions), "Auctions", OnAuctionsChange, "Auctions")
+		frame:AddButtonWithArgs(format("%s %s(%d)", BIDS, colors.green, numBids), "Auctions", OnAuctionsChange, "Bids")
 	else
-		DDM_Add(format(L["Auctions %s(%d)"], colors.grey, 0), nil, nil)
-		DDM_Add(format(L["Bids %s(%d)"], colors.grey, 0), nil, nil)
+		frame:AddButton(format("%s %s(%d)", AUCTIONS, colors.grey, 0))
+		frame:AddButton(format("%s %s(%d)", BIDS, colors.grey, 0))
 	end
 	
 	-- actions
-	DDM_AddTitle(" ")
-	DDM_Add(colors.white .. L["Clear your faction's entries"], 1, OnClearAHEntries)
-	DDM_Add(colors.white .. L["Clear goblin AH entries"], 2, OnClearAHEntries)
-	DDM_Add(colors.white .. L["Clear all entries"], 3, OnClearAHEntries)
+	frame:AddTitle(" ")
+	frame:AddButtonWithArgs(format("%s%s", colors.white, L["Clear your faction's entries"]), 1, OnClearAHEntries, character)
+	frame:AddButtonWithArgs(format("%s%s", colors.white, L["Clear goblin AH entries"]), 2, OnClearAHEntries, character)
+	frame:AddButtonWithArgs(format("%s%s", colors.white, L["Clear all entries"]), 3, OnClearAHEntries, character)
 	
-	DDM_AddTitle("|r ")
-	DDM_AddTitle(GAMEOPTIONS_MENU)
+	frame:AddTitle("|r ")
+	frame:AddTitle(GAMEOPTIONS_MENU)
 	if DataStore_Auctions then
-		DDM_Add("DataStore Auctions", nil, function() Altoholic:ToggleUI(); InterfaceOptionsFrame_OpenToCategory("DataStore_Auctions") end)
+		frame:AddButton("DataStore Auctions", 10, addon.ShowOptionsPanel)
 	end
-	DDM_AddCloseMenu()
+	frame:AddCloseMenu()
 end
 
-local function MailIcon_Initialize(self, level)
-	local currentCharacterKey = ns:GetAltKey()
-	if not currentCharacterKey then return end
+local function MailIcon_Initialize(frame, level)
+	local character = tab:GetCharacter()
+	if not character then return end
 		
-	DDM_AddTitle(format("%s / %s", MINIMAP_TRACKING_MAILBOX, DataStore:GetColoredCharacterName(currentCharacterKey)))
+	frame:AddTitle(format("%s / %s", MINIMAP_TRACKING_MAILBOX, DataStore:GetColoredCharacterName(character)))
 
-	local last = DataStore:GetModuleLastUpdateByKey("DataStore_Mails", currentCharacterKey)
+	local last = DataStore:GetModuleLastUpdateByKey("DataStore_Mails", character)
 	if DataStore_Mails and last then
-		local numMails = DataStore:GetNumMails(currentCharacterKey) or 0
-		DDM_Add(format(L["Mails %s(%d)"], colors.green, numMails), VIEW_MAILS, OnViewChange, nil, (currentView == VIEW_MAILS))
+		local numMails = DataStore:GetNumMails(character) or 0
+		frame:AddButton(format("%s %s(%d)", L["Mails"], colors.green, numMails), "Mails", OnMenuChange)
 	else
-		DDM_Add(format(L["Mails %s(%d)"], colors.grey, 0), nil, nil)
+		frame:AddButton(format("%s %s(%d)", L["Mails"], colors.grey, 0))
 	end
 
-	DDM_Add(colors.white .. L["Clear all entries"], nil, OnClearMailboxEntries)
-	DDM_AddTitle("|r ")
-	DDM_AddTitle(GAMEOPTIONS_MENU)
-	DDM_Add(MAIL_LABEL, nil, function() Altoholic:ToggleUI(); InterfaceOptionsFrame_OpenToCategory(AltoholicMailOptions) end)
+	frame:AddButton(format("%s%s", colors.white, L["Clear all entries"]), character, OnClearMailboxEntries)
+	frame:AddTitle("|r ")
+	frame:AddTitle(GAMEOPTIONS_MENU)
+	frame:AddButton(MAIL_LABEL, 2, addon.ShowOptionsPanel)
 	if DataStore_Mails then
-		DDM_Add("DataStore Mails", nil, function() Altoholic:ToggleUI(); InterfaceOptionsFrame_OpenToCategory(DataStoreMailOptions) end)
+		frame:AddButton("DataStore Mails", 14, addon.ShowOptionsPanel)
 	end
 	
-	DDM_AddCloseMenu()
+	frame:AddCloseMenu()
 end
 
-local function SpellbookIcon_Initialize(self, level)
-	local currentCharacterKey = ns:GetAltKey()
-	if not currentCharacterKey then return end
+local function SpellbookIcon_Initialize(frame, level)
+	local character = tab:GetCharacter()
+	if not character then return end
 	
-	DDM_AddTitle(format("%s / %s", SPELLBOOK, DataStore:GetColoredCharacterName(currentCharacterKey)))
+	frame:AddTitle(format("%s / %s", SPELLBOOK, DataStore:GetColoredCharacterName(character)))
 	
-	for index, spellTab in ipairs(DataStore:GetSpellTabs(currentCharacterKey)) do
-		DDM_Add(spellTab, spellTab, OnSpellTabChange, nil, (currentSpellTab == spellTab))
+	for index, spellTab in ipairs(DataStore:GetSpellTabs(character)) do
+		frame:AddButton(spellTab, spellTab, OnSpellTabChange, nil, (Options.Get("UI.Tabs.Characters.ViewSpellTab") == spellTab))
 	end
-	
-	DDM_AddTitle(" ")
-	
-	local last = DataStore:GetModuleLastUpdateByKey("DataStore_Pets", currentCharacterKey)
-	if DataStore_Pets and last then
-		local pets = DataStore:GetPets(currentCharacterKey, "CRITTER")
-		local numPets = DataStore:GetNumPets(pets) or 0
-
-		DDM_Add(format(COMPANIONS .. " %s(%d)", colors.green, numPets), VIEW_COMPANIONS, OnViewChange, nil, (currentView == VIEW_COMPANIONS))
-	else
-		DDM_Add(format(COMPANIONS .. " %s(%d)", colors.grey, numPets), nil, nil)
-	end
-	DDM_AddCloseMenu()
+	frame:AddCloseMenu()
 end
 
-local function ProfessionsIcon_Initialize(self, level)
+local function ProfessionsIcon_Initialize(frame, level)
 	if not DataStore_Crafts then return end
 	
-	local currentCharacterKey = ns:GetAltKey()
-	if not currentCharacterKey then return end
+	local character = tab:GetCharacter()
+	if not character then return end
 	
-	local recipes = AltoholicTabCharacters.Recipes
+	local recipes = tab.Panels.Recipes
 	
 	if level == 1 then
-		DDM_AddTitle(format("%s / %s", TRADE_SKILLS, DataStore:GetColoredCharacterName(currentCharacterKey)))
+		frame:AddTitle(format("%s / %s", TRADE_SKILLS, DataStore:GetColoredCharacterName(character)))
 
-		local last = DataStore:GetModuleLastUpdateByKey("DataStore_Crafts", currentCharacterKey)
+		local last = DataStore:GetModuleLastUpdateByKey("DataStore_Crafts", character)
 		local rank, professionName, _
 
 		-- Cooking
-		rank = DataStore:GetCookingRank(currentCharacterKey)
+		rank = DataStore:GetCookingRank(character)
 		if last and rank then
-			local info = UIDropDownMenu_CreateInfo()
+			local info = frame:CreateInfo()
 			
 			info.text = format("%s %s(%s)", PROFESSIONS_COOKING, colors.green, rank )
 			info.hasArrow = 1
 			info.checked = (PROFESSIONS_COOKING == (currentProfession or ""))
 			info.value = PROFESSIONS_COOKING
 			info.func = OnProfessionChange
-			UIDropDownMenu_AddButton(info, level)
-			
+			frame:AddButtonInfo(info, level)
 		else
-			DDM_Add(colors.grey..PROFESSIONS_COOKING, nil, nil)
+			frame:AddButton(colors.grey..PROFESSIONS_COOKING, nil, nil)
 		end
 		
 		-- Profession 1
-		rank, _, _, professionName = DataStore:GetProfession1(currentCharacterKey)
+		rank, _, _, professionName = DataStore:GetProfession1(character)
 		if last and rank and professionName then
-			local info = UIDropDownMenu_CreateInfo()
+			local info = frame:CreateInfo()
 			
 			info.text = format("%s %s(%s)", professionName, colors.green, rank )
 			info.hasArrow = 1
 			info.checked = (professionName == (currentProfession or ""))
 			info.value = professionName
 			info.func = OnProfessionChange
-			UIDropDownMenu_AddButton(info, level)
+			frame:AddButtonInfo(info, level)
 			
 		elseif professionName then
-			DDM_Add(colors.grey..professionName, nil, nil)
+			frame:AddButton(colors.grey..professionName, nil, nil)
 		end
 		
 		-- Profession 2
-		rank, _, _, professionName = DataStore:GetProfession2(currentCharacterKey)
+		rank, _, _, professionName = DataStore:GetProfession2(character)
 		if last and rank and professionName then
-			local info = UIDropDownMenu_CreateInfo()
+			local info = frame:CreateInfo()
 			
 			info.text = format("%s %s(%s)", professionName, colors.green, rank )
 			info.hasArrow = 1
 			info.checked = (professionName == (currentProfession or ""))
 			info.value = professionName
 			info.func = OnProfessionChange
-			UIDropDownMenu_AddButton(info, level)
+			frame:AddButtonInfo(info, level)
 			
 		elseif professionName then
-			DDM_Add(colors.grey..professionName, nil, nil)
+			frame:AddButton(colors.grey..professionName, nil, nil)
 		end
 		
-		DDM_AddTitle(" ")
-		DDM_Add(TRADE_SKILLS_LEARNED_TAB, nil, OnShowLearned, nil, addon:GetOption("UI.Tabs.Characters.ViewLearnedRecipes"))
-		DDM_Add(TRADE_SKILLS_UNLEARNED_TAB, nil, OnShowUnlearned, nil, addon:GetOption("UI.Tabs.Characters.ViewUnlearnedRecipes"))
-		DDM_AddTitle(" ")
-		DDM_AddTitle(FILTERS)
+		frame:AddTitle(" ")
+		frame:AddButton(TRADE_SKILLS_LEARNED_TAB, nil, OnShowLearned, nil, Options.Get("UI.Tabs.Characters.ViewLearnedRecipes"))
+		frame:AddButton(TRADE_SKILLS_UNLEARNED_TAB, nil, OnShowUnlearned, nil, Options.Get("UI.Tabs.Characters.ViewUnlearnedRecipes"))
+		frame:AddTitle(" ")
+		frame:AddTitle(FILTERS)
 		
 		if currentProfession then		-- if a profession is visible, display filters
-			local info = UIDropDownMenu_CreateInfo()
+			local info = frame:CreateInfo()
 
 			info.text = format("%s%s", colors.white, COLOR)
 			info.hasArrow = 1
 			info.checked = nil
 			info.value = "colors"
 			info.func = nil
-			UIDropDownMenu_AddButton(info, level)
+			frame:AddButtonInfo(info, level)
 
 			info.text = format("%s%s", colors.white, SLOT_ABBR)
 			info.hasArrow = 1
 			info.checked = nil
 			info.value = "slots"
 			info.func = nil
-			UIDropDownMenu_AddButton(info, level)
+			frame:AddButtonInfo(info, level)
 			
 		else		-- grey out filters
-			DDM_Add(format("%s%s", colors.grey, COLOR), nil, nil)
-			DDM_Add(format("%s%s", colors.grey, SLOT_ABBR), nil, nil)
+			frame:AddButton(format("%s%s", colors.grey, COLOR), nil, nil)
+			frame:AddButton(format("%s%s", colors.grey, SLOT_ABBR), nil, nil)
 		end
 		
-		DDM_AddCloseMenu()
+		frame:AddCloseMenu()
 		
 	elseif level == 2 then	-- ** filters **
-		local info = UIDropDownMenu_CreateInfo()
+		local info = frame:CreateInfo()
+		local currentMenu = frame:GetCurrentOpenMenuValue()
 
-		if UIDROPDOWNMENU_MENU_VALUE == "colors" then
+		if currentMenu == "colors" then
 			for index = 0, 3 do 
 				info.text = recipes:GetRecipeColorName(index)
 				info.value = index
 				info.checked = (recipes:GetCurrentColor() == index)
 				info.func = OnProfessionColorChange
-				UIDropDownMenu_AddButton(info, level)
+				frame:AddButtonInfo(info, level)
 			end
 
 			info.text = L["Any"]
 			info.value = SKILL_ANY
 			info.checked = (recipes:GetCurrentColor() == SKILL_ANY)
 			info.func = OnProfessionColorChange
-			UIDropDownMenu_AddButton(info, level)
+			frame:AddButtonInfo(info, level)
 			
-		elseif UIDROPDOWNMENU_MENU_VALUE == "slots" then
+		elseif currentMenu == "slots" then
 			info.text = ALL_INVENTORY_SLOTS
 			info.value = ALL_INVENTORY_SLOTS
 			info.checked = (recipes:GetCurrentSlots() == ALL_INVENTORY_SLOTS)
 			info.func = OnProfessionSlotChange
-			UIDropDownMenu_AddButton(info, level)
+			frame:AddButtonInfo(info, level)
 			
 			local invSlots = {}
-			local profession = DataStore:GetProfession(currentCharacterKey, currentProfession)
+			local profession = DataStore:GetProfession(character, currentProfession)
 			
 			DataStore:IterateRecipes(profession, 0, 0, function(recipeData)
 				local color, recipeID = DataStore:GetRecipeInfo(recipeData)
@@ -761,7 +444,7 @@ local function ProfessionsIcon_Initialize(self, level)
 				local _, _, _, _, _, itemType, _, _, itemEquipLoc = GetItemInfo(itemID)
 
 				if itemEquipLoc and strlen(itemEquipLoc) > 0 then
-					local slot = Altoholic.Equipment:GetInventoryTypeName(itemEquipLoc)
+					local slot = Equipment.GetInventoryTypeName(itemEquipLoc)
 					if slot then
 						invSlots[slot] = itemEquipLoc
 					end
@@ -773,7 +456,7 @@ local function ProfessionsIcon_Initialize(self, level)
 				info.value = v
 				info.checked = (recipes:GetCurrentSlots() == v)
 				info.func = OnProfessionSlotChange
-				UIDropDownMenu_AddButton(info, level)
+				frame:AddButtonInfo(info, level)
 			end
 
 			--NONEQUIPSLOT = "Created Items"; -- Items created by enchanting
@@ -781,10 +464,11 @@ local function ProfessionsIcon_Initialize(self, level)
 			info.value = NONEQUIPSLOT
 			info.checked = (recipes:GetCurrentSlots() == NONEQUIPSLOT)
 			info.func = OnProfessionSlotChange
-			UIDropDownMenu_AddButton(info, level)
+			frame:AddButtonInfo(info, level)
 			
 		else
-			local profession = DataStore:GetProfession(currentCharacterKey, UIDROPDOWNMENU_MENU_VALUE)
+			local currentMenu = frame:GetCurrentOpenMenuValue()
+			local profession = DataStore:GetProfession(character, currentMenu)
 			
 			for index = 1, DataStore:GetNumRecipeCategories(profession) do
 				local categoryID, name, rank, maxRank = DataStore:GetRecipeCategoryInfo(profession, index)
@@ -795,20 +479,21 @@ local function ProfessionsIcon_Initialize(self, level)
 				end
 				
 				info.text = name
-				info.value = format("%s,%d,0", UIDROPDOWNMENU_MENU_VALUE, index)		-- "Tailoring,1,0"
+				info.value = format("%s,%d,0", currentMenu, index)		-- "Tailoring,1,0"
 				info.hasArrow = (DataStore:GetNumRecipeCategorySubItems(profession, index) > 0) and 1 or nil
-				info.checked = ((recipes:GetCurrentProfession() == UIDROPDOWNMENU_MENU_VALUE) and (recipes:GetMainCategory() == index))
+				info.checked = ((recipes:GetCurrentProfession() == currentMenu) and (recipes:GetMainCategory() == index))
 				info.func = OnProfessionCategoryChange
-				UIDropDownMenu_AddButton(info, level)	
+				frame:AddButtonInfo(info, level)	
 			end
 		end
 	
 	elseif level == 3 then	-- ** filters **
 		
-		local info = UIDropDownMenu_CreateInfo()
-		local professionName, categoryIndex = strsplit(",", UIDROPDOWNMENU_MENU_VALUE)
+		local info = frame:CreateInfo()
+		local currentMenu = frame:GetCurrentOpenMenuValue()
+		local professionName, categoryIndex = strsplit(",", currentMenu)
 		
-		local profession = DataStore:GetProfession(currentCharacterKey, professionName)
+		local profession = DataStore:GetProfession(character, professionName)
 		categoryIndex = tonumber(categoryIndex)
 		
 		for subCatIndex = 1, DataStore:GetNumRecipeCategorySubItems(profession, categoryIndex) do
@@ -821,7 +506,7 @@ local function ProfessionsIcon_Initialize(self, level)
 				(recipes:GetSubCategory() == subCatIndex)
 			)
 			info.func = OnProfessionCategoryChange
-			UIDropDownMenu_AddButton(info, level)	
+			frame:AddButtonInfo(info, level)	
 		end
 	end
 end
@@ -840,51 +525,50 @@ local garrisonHeaders = {
 	GARRISON_TYPE_9_0_LANDING_PAGE_TITLE
 }
 
-local function GarrisonIcon_Initialize(self, level)
+local function GarrisonIcon_Initialize(frame, level)
 	if not DataStore_Garrisons then return end
 	
-	local currentCharacterKey = ns:GetAltKey()
-	if not currentCharacterKey then return end
+	local character = tab:GetCharacter()
+	if not character then return end
 	
-	local currentMenu = addon:GetOption("UI.Tabs.Characters.GarrisonMissions")
+	local currentMenu = Options.Get("UI.Tabs.Characters.GarrisonMissions")
 	local index = 1
 	local num
 	
 	for i, garrisonType in ipairs(garrisonTypes) do
-		DDM_AddTitle(garrisonHeaders[i])
+		frame:AddTitle(garrisonHeaders[i])
 		
 		-- Available missions
-		num = DataStore:GetNumAvailableMissions(currentCharacterKey, garrisonType)
-		DDM_Add(format(GARRISON_LANDING_AVAILABLE, num), index, OnGarrisonMenuChange, nil, (currentMenu == index))
+		num = DataStore:GetNumAvailableMissions(character, garrisonType)
+		frame:AddButton(format(GARRISON_LANDING_AVAILABLE, num), index, OnGarrisonMenuChange, nil, (currentMenu == index))
 		index = index + 1
 		
 		-- Active missions
-		num = DataStore:GetNumActiveMissions(currentCharacterKey, garrisonType)
-		DDM_Add(format(GARRISON_LANDING_IN_PROGRESS, num), index, OnGarrisonMenuChange, nil, (currentMenu == index))
+		num = DataStore:GetNumActiveMissions(character, garrisonType)
+		frame:AddButton(format(GARRISON_LANDING_IN_PROGRESS, num), index, OnGarrisonMenuChange, nil, (currentMenu == index))
 		index = index + 1
-		DDM_AddTitle(" ")
+		frame:AddTitle(" ")
 	end
 	
-	DDM_AddCloseMenu()
+	frame:AddCloseMenu()
 end
 
-local function CovenantIcon_Initialize(self, level)
+local function CovenantIcon_Initialize(frame, level)
 
-	local currentMenu = addon:GetOption("UI.Tabs.Characters.CovenantSanctum") or 0
+	local currentMenu = Options.Get("UI.Tabs.Characters.CovenantSanctum") or ""
 
-	DDM_AddTitle(GARRISON_TYPE_9_0_LANDING_PAGE_TITLE)
+	frame:AddTitle(GARRISON_TYPE_9_0_LANDING_PAGE_TITLE)
 	
-	DDM_Add(LANDING_PAGE_RENOWN_LABEL, VIEW_COVENANT_RENOWN, OnCovenantChange, nil, (currentMenu == VIEW_COVENANT_RENOWN))					-- Renown
-	DDM_Add(COVENANT_PREVIEW_SOULBINDS, VIEW_COVENANT_SOULBINDS, OnCovenantChange, nil, (currentMenu == VIEW_COVENANT_SOULBINDS))			-- Soulbinds
-	DDM_Add(COVENANT_SANCTUM_TAB_UPGRADES, VIEW_COVENANT_RESERVOIR, OnCovenantChange, nil, (currentMenu == VIEW_COVENANT_RESERVOIR))		-- Sanctum Reservoir
-	-- DDM_Add(ANIMA_DIVERSION_ORIGIN_TOOLTIP, 4, OnCovenantChange)	-- Anima Conductor
+	frame:AddButton(LANDING_PAGE_RENOWN_LABEL, "Renown", OnCovenantChange, nil, (currentMenu == "Renown"))
+	frame:AddButton(COVENANT_PREVIEW_SOULBINDS, "Soulbinds", OnCovenantChange, nil, (currentMenu == "Soulbinds"))
+	frame:AddButton(COVENANT_SANCTUM_TAB_UPGRADES, "Reservoir", OnCovenantChange, nil, (currentMenu == "Reservoir"))
+	-- frame:AddButton(ANIMA_DIVERSION_ORIGIN_TOOLTIP, 4, OnCovenantChange)	-- Anima Conductor
 	
-	DDM_AddTitle(" ")
-	DDM_AddCloseMenu()
+	frame:AddTitle(" ")
+	frame:AddCloseMenu()
 end
 
 local menuIconCallbacks = {
-	CharactersIcon_Initialize,
 	BagsIcon_Initialize,
 	QuestsIcon_Initialize,
 	TalentsIcon_Initialize,
@@ -896,71 +580,185 @@ local menuIconCallbacks = {
 	CovenantIcon_Initialize,
 }
 
-function ns:Icon_OnEnter(frame)
-	-- local currentMenuID = frame:GetID()
+addon:Controller("AltoholicUI.TabCharacters", { "AltoholicUI.Characters", function(characters)
+	local currentAltKey
 	
-	-- local menu = frame:GetParent():GetParent().ContextualMenu
+	return {
+		OnBind = function(frame)
+			tab = frame
+		
+			-- Mini easter egg, change the bag icon depending on the amount of level max or the time of year :)
+			-- if you find this code, please don't spoil it :)
+
+			local day = (tonumber(date("%m")) * 100) + tonumber(date("%d"))	-- ex: dec 15 = 1215, for easy tests below
+			local bagIcon = ICON_VIEW_BAGS
+
+			-- bag icon gets better with more chars at lv max
+			local LVMax = 60
+			local numLvMax = 0
+			for _, character in pairs(DataStore:GetCharacters()) do
+				if DataStore:GetCharacterLevel(character) >= LVMax then
+					numLvMax = numLvMax + 1
+				end
+			end
+
+			if numLvMax > 0 then
+				if numLvMax > #BAG_ICONS then
+					numLvMax = #BAG_ICONS
+				end
+				
+				bagIcon = BAG_ICONS[numLvMax]
+			end
+			
+			if (day >= 1018) and (day <= 1031) then		-- hallow's end
+				bagIcon = ICON_BAGS_HALLOWSEND
+			end
+			
+			frame.BagsIcon.Icon:SetTexture(bagIcon)
+			frame:SetStatus(format("%s%s", colors.white, L["Select a character on the left"]))
+		end,
+		FilterIcon_OnEnter = function(frame, icon)
+			local currentMenuID = icon:GetID()
+			
+			local menu = frame.ContextualMenu
+			
+			menu:Initialize(menuIconCallbacks[currentMenuID], "LIST")
+			menu:Close()
+			menu:Toggle(icon, 0, 0)
+		end,
+		RegisterPanel = function(frame, key, panel)
+			-- a simple list of all the child frames
+			frame.Panels = frame.Panels or {}
+			frame.Panels[key] = panel
+		end,
+		HideAllPanels = function(frame)
+			for _, panel in pairs(frame.Panels) do
+				panel:Hide()
+			end
+		end,
+		ShowPanel = function(frame, panelKey)
+			if not panelKey then return end
+			
+			currentPanelKey = panelKey
+			
+			frame:HideAllPanels()
+			
+			local panel = frame.Panels[currentPanelKey]
+			
+			panel:Show()
+			if panel.PreUpdate then
+				panel:PreUpdate()
+			end
+			panel:Update()
+		end,
+		SetStatus = function(frame, text)
+			frame.Status:SetText(text)
+		end,
+		GetCharacter = function(frame)
+			return currentAltKey
+		end,
+		SetCharacter = function(frame, key)
+			currentAltKey = key
+		end,
+		SortBy = function(frame, columnName, buttonIndex)
+			Options.Toggle(nil, "UI.Tabs.Characters.SortAscending")
+			
+			-- Sort the whole view by a given column
+			local hc = frame.HeaderContainer
+			local sortOrder = Options.Get("UI.Tabs.Characters.SortAscending")		
+			
+			hc.SortButtons[buttonIndex]:DrawArrow(sortOrder)
+			
+			if currentPanelKey == "Mails" then
+				frame.Panels.Mails:Sort(columnName, sortOrder)
+			elseif currentPanelKey == "Auctions" then
+				frame.Panels.Auctions:Sort(columnName, sortOrder)
+			end
+			frame:Update()
+		end,
+		SetColumns = function(frame, panel)
+			if not panel then return end
+			
+			local hc = frame.HeaderContainer
+		
+			if panel == "Mails" then
+				hc:SetButton(1, MAIL_SUBJECT_LABEL, 280, function() frame:SortBy("name", 1) end)
+				hc:SetButton(2, FROM, 140, function() frame:SortBy("from", 2) end)
+				hc:SetButton(3, L["Expiry:"], 200, function() frame:SortBy("expiry", 3) end)
+				hc:Show()
+				
+			elseif panel == "Auctions" then
+				hc:SetButton(1, HELPFRAME_ITEM_TITLE, 280, function() frame:SortBy("name", 1) end)
+				hc:SetButton(2, HIGH_BIDDER, 160, function() frame:SortBy("highBidder", 2) end)
+				hc:SetButton(3, CURRENT_BID, 170, function() frame:SortBy("buyoutPrice", 3) end)
+				hc:Show()
+				
+			elseif panel == "Bids" then
+				hc:SetButton(1, HELPFRAME_ITEM_TITLE, 280, function() frame:SortBy("name", 1) end)
+				hc:SetButton(2, NAME, 160, function() frame:SortBy("owner", 2) end)
+				hc:SetButton(3, CURRENT_BID, 170, function() frame:SortBy("buyoutPrice", 3) end)
+				hc:Show()
+				
+			else
+				hc:Hide()
+			end
+			
+			-- hc:LimitWidth(frame.Background:GetWidth())
+		end,
+		Update = function(frame)
+			frame:SetColumns(currentPanelKey)
+			frame:ShowPanel(currentPanelKey)
+		end,
+	}
+end})
+
+local function categoriesList_OnClick(categoryData)
+	local character = categoryData.key
 	
-	-- menu:Initialize(menuIconCallbacks[currentMenuID], "LIST")
-	-- menu:Close()
-	-- menu:Toggle(frame, 0, 0)
-
-
-
-	local currentMenuID = frame:GetID()
-	
-	addon:DDM_Initialize(parent.ContextualMenu, menuIconCallbacks[currentMenuID])
-	
-	CloseDropDownMenus()
-
-	ToggleDropDownMenu(1, nil, parent.ContextualMenu, AltoholicTabCharacters_MenuIcons, (currentMenuID-1)*42, -5)
+	tab:SetCharacter(character)
+	tab:SetStatus(DataStore:GetColoredCharacterName(character))
+	tab:Update()
 end
 
-function ns:OnLoad()
-	parent = _G[parentName]
-
-	-- Menu Icons
-	-- mini easter egg, change the character icon depending on the time of year :)
-	-- if you find this code, please don't spoil it :)
-
-	local day = (tonumber(date("%m")) * 100) + tonumber(date("%d"))	-- ex: dec 15 = 1215, for easy tests below
-	local bagIcon = ICON_VIEW_BAGS
-
-	-- bag icon gets better with more chars at lv max
-	local LVMax = 110
-	local numLvMax = 0
-	for _, character in pairs(DataStore:GetCharacters()) do
-		if DataStore:GetCharacterLevel(character) >= LVMax then
-			numLvMax = numLvMax + 1
-		end
-	end
-
-	if numLvMax > 0 then
-		bagIcon = BAG_ICONS[numLvMax]
-	end
+addon:Controller("AltoholicUI.TabCharactersCategoriesList", {
+	OnBind = function(frame)
+		local categories = {}
 	
-	if (day >= 1018) and (day <= 1031) then		-- hallow's end
-		bagIcon = ICON_BAGS_HALLOWSEND
-	end
+		local realmTable
+		local accountTable
+		local currentRealm = ""
+		local currentAccount = ""
 	
-	local menuIcons = parent.MenuIcons
-	menuIcons.CharactersIcon.Icon:SetTexture(addon:GetCharacterIcon())
-	menuIcons.BagsIcon.Icon:SetTexture(bagIcon)
+		DataStore:IterateCharacters(nil, nil, function(account, realm, characterName, character) 
+			-- Sequence break on the account ? add an account line
+			if account ~= currentAccount then
+				table.insert(categories, { text = format("%s%s: %s%s", colors.white, L["Account"], colors.green, account), isExpanded = (account == DataStore.ThisAccount) })
+				accountTable = categories[#categories]
+				
+				currentAccount = account
+			end
+			
+			-- Sequence break on the realm ? add a realm line
+			if realm ~= currentRealm then
+				accountTable.subMenu = accountTable.subMenu or {}
+				table.insert(accountTable.subMenu, { text = format("%s%s", colors.gold, realm), subMenu = {} })
+				realmTable = accountTable.subMenu[#accountTable.subMenu]
+				
+				currentRealm = realm
+			end
+			
+			-- Add the character and its key
+			table.insert(realmTable.subMenu, { text = DataStore:GetColoredCharacterName(character), key = character })
+		end)
+		
+		-- Initialize categories (auto-fill the on-click callback)
+		frame:IterateCategories(categories, function(category) 
+			if category.key then
+				category.callback = categoriesList_OnClick
+			end
+		end)
 	
-	addon:RegisterMessage("DATASTORE_RECIPES_SCANNED")
-	addon:RegisterMessage("DATASTORE_QUESTLOG_SCANNED")
-end
+		frame:SetCategories(categories)
+	end,
 
-function addon:DATASTORE_RECIPES_SCANNED(event, sender, tradeskillName)
-	local recipes = AltoholicTabCharacters.Recipes
-	if recipes:IsVisible() then
-		recipes:Update()
-	end
-end
-
-function addon:DATASTORE_QUESTLOG_SCANNED(event, sender)
-	if AltoholicTabCharacters.QuestLog:IsVisible() then 
-		AltoholicTabCharacters.QuestLog:Update()
-	end
-end
-
+})

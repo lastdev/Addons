@@ -88,7 +88,7 @@
 		</HighlightTexture>
 		<Scripts>
 			<OnLoad>
-				Altoholic:BindViewToController(self, "AltoholicUI.GarrisonMissionRow")
+				Altoholic:BindViewToController(self, "AltoholicUI.TabCharacters.GarrisonMissionRow")
 			</OnLoad>
 		</Scripts>
 	</Button>

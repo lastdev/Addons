@@ -1,18 +1,24 @@
-local __exports = LibStub:NewLibrary("ovale/engine/scripts", 90103)
+local __exports = LibStub:NewLibrary("ovale/engine/scripts", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local AceConfig = LibStub:GetLibrary("AceConfig-3.0", true)
-local AceConfigDialog = LibStub:GetLibrary("AceConfigDialog-3.0", true)
-local __uiLocalization = LibStub:GetLibrary("ovale/ui/Localization")
-local l = __uiLocalization.l
-local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+local __imports = {}
+__imports.AceConfig = LibStub:GetLibrary("AceConfig-3.0", true)
+__imports.AceConfigDialog = LibStub:GetLibrary("AceConfigDialog-3.0", true)
+__imports.__uiLocalization = LibStub:GetLibrary("ovale/ui/Localization")
+__imports.l = __imports.__uiLocalization.l
+__imports.aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+__imports.__toolstools = LibStub:GetLibrary("ovale/tools/tools")
+__imports.isLuaArray = __imports.__toolstools.isLuaArray
+local AceConfig = __imports.AceConfig
+local AceConfigDialog = __imports.AceConfigDialog
+local l = __imports.l
+local aceEvent = __imports.aceEvent
 local format = string.format
 local gsub = string.gsub
 local lower = string.lower
 local pairs = pairs
 local kpairs = pairs
-local __toolstools = LibStub:GetLibrary("ovale/tools/tools")
-local isLuaArray = __toolstools.isLuaArray
+local isLuaArray = __imports.isLuaArray
 local GetNumSpecializations = GetNumSpecializations
 __exports.defaultScriptName = "Ovale"
 local defaultScriptDescription = l["default_script"]
@@ -115,7 +121,7 @@ __exports.OvaleScriptsClass = __class(nil, {
             scClassName = "death_knight"
         end
         if specialization then
-            name = format("sc_t26_%s_%s", scClassName, specialization)
+            name = format("sc_t27_%s_%s", scClassName, specialization)
             if  not self.script[name] then
                 self.tracer:log("Script " .. name .. " not found")
                 name = disabledScriptName

@@ -1,7 +1,8 @@
-## Interface: 80000
+## Interface: 90001
+## X-Min-Interface: 90001
 ## Title: HandyNotes: Achievements
-## Description: Shows location of incomplete achievements
-## Version: 0.4.21
+## Notes: Shows location of incomplete achievements
+## Version: 0.5.0
 ## Author: idiomatiq
 ## Dependencies: HandyNotes
 ## SavedVariables: HandyNotesAchievementsDB
@@ -12,11 +13,12 @@
 ## X-License: Apache
 
 Libs/LibStub/LibStub.lua
-Libs/CallbackHandler-1.0/CallbackHandler-1.0.lua
-Libs/AceAddon-3.0/AceAddon-3.0.lua
-Libs/AceDB-3.0/AceDB-3.0.lua
-Libs/AceEvent-3.0/AceEvent-3.0.lua
-Libs/AceTimer-3.0/AceTimer-3.0.lua
+Libs/Ace3/CallbackHandler-1.0/CallbackHandler-1.0.lua
+Libs/Ace3/AceAddon-3.0/AceAddon-3.0.lua
+Libs/Ace3/AceDB-3.0/AceDB-3.0.lua
+Libs/Ace3/AceEvent-3.0/AceEvent-3.0.lua
+Libs/Ace3/AceTimer-3.0/AceTimer-3.0.lua
+Libs/Ace3/AceLocale-3.0/AceLocale-3.0.lua
 Libs/LibQTip-1.0/LibQTip-1.0.lua
 
 # first-party libraries

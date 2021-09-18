@@ -1,0 +1,12 @@
+tag 47611dcdbb0da50cd807c258e4c96687507f0a89 v3
+Author:	David Lynch <kemayo@gmail.com>
+Date:	Tue Oct 13 12:17:59 2020 -0500
+
+Tagging v3
+
+commit acbf1e3ece04e62615f148f8bf3a612af4f4838b
+Author: David Lynch <kemayo@gmail.com>
+Date:   Tue Oct 13 04:07:58 2020 -0500
+
+    Update for 9.0.1
+

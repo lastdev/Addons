@@ -70,11 +70,14 @@ local AddonDB_Defaults = {
 			--	["Account.Realm.Name"]  = true means the char is shared,
 			--	["Account.Realm.Name.Module"]  = true means the module is shared for that char
 		},
-		ConnectedRealms = nil,
+		ConnectedRealms = {},
 		ShortToLongRealmNames = {
 			-- relationship between "short" and "long" realm names, 
 			-- ex: ["MarécagedeZangar"] = "Marécage de Zangar"
 			-- necessary for guild banks on other realms..
+		},
+		AltGroups = {
+			-- ["GroupName"] = { "Alt 1 Key", "Alt 2 Key" .. }
 		},
 	}
 }
@@ -82,7 +85,7 @@ local AddonDB_Defaults = {
 local function GetKey(name, realm, account)
 	-- default values
 	name = name or UnitName("player")
-	realm = realm or GetRealmName()
+	realm = realm or addon.ThisRealm
 	account = account or addon.ThisAccount
 
 	return format("%s.%s.%s", account, realm, name)
@@ -136,7 +139,7 @@ local function GetAlts(guild)
 		local accountKey, realmKey, charKey = strsplit(".", k)
 
 		if accountKey and accountKey == addon.ThisAccount then			-- same account
-			if realmKey and realmKey == GetRealmName() then			-- same realm
+			if realmKey and realmKey == addon.ThisRealm then			-- same realm
 				if charKey and charKey ~= UnitName("player") then	-- skip current char
 					if v.guildName and v.guildName == guild then		-- same guild (to send only guilded alts, privacy concern, do not change this)
 						table.insert(out, charKey)
@@ -202,9 +205,15 @@ local function OnPlayerGuildUpdate()
 			else
 				-- if realm is not nil, the guild key will use the long realm name
 				local longName = addon:GetLongRealmName(realmName)	
-			
+
 				if longName then
 					guildKey = GetKey(currentGuildName, longName)
+					
+					-- Now check for a connected realm !
+					if longName ~= addon.ThisRealm then
+						addon.db.global.ConnectedRealms[longName] = addon.ThisRealm
+						addon.db.global.ConnectedRealms[addon.ThisRealm] = longName
+					end
 				end
 			end
 			
@@ -371,7 +380,6 @@ function addon:OnEnable()
 		end
 	end
 
-	addon.db.global.ConnectedRealms = nil
 	addon:SetLongRealmName(addon.ThisRealm:gsub(" ", ""), addon.ThisRealm)
 end
 
@@ -526,7 +534,7 @@ function addon:GetThisGuildKey()
 	
 	if not realm then
 		-- realm = nil : guild is on the same realm as the player
-		return format("%s.%s.%s", addon.ThisAccount, GetRealmName(), guild)
+		return format("%s.%s.%s", addon.ThisAccount, addon.ThisRealm, guild)
 	end
 	
 	-- realm not nil : guild is on a connected realm
@@ -538,6 +546,16 @@ function addon:GetThisGuildKey()
 	return format("%s.%s.%s", addon.ThisAccount, longName, guild)
 end
 
+function addon:IsCurrentPlayer(playerName, realm, account)
+	return (playerName == addon.ThisChar) 
+		and (realm == addon.ThisRealm) 
+		and (account == addon.ThisAccount)
+end
+
+function addon:IsCurrentPlayerKey(playerKey)
+	return playerKey == addon.ThisCharKey
+end
+
 function addon:GetCharacter(name, realm, account)
 	local key = GetKey(name, realm, account)
 	if Characters[key] then		-- if the key is known, return it to caller, it can be passed to other modules
@@ -547,7 +565,7 @@ end
 
 function addon:GetCharacters(realm, account)
 	-- get a list of characters on a given realm/account
-	realm = realm or GetRealmName()
+	realm = realm or addon.ThisRealm
 	account = account or addon.ThisAccount
 
 	local out = {}
@@ -602,15 +620,21 @@ end
 function addon:GetGuild(name, realm, account)
 	name = name or GetGuildInfo("player")
 	local key = GetKey(name, realm, account)
-
+	
 	if Guilds[key] then		-- if the key is known, return it to caller, it can be passed to other modules
 		return key
+	else	-- if the key is not known, try checking the connected realm info
+		key = GetKey(name, addon.db.global.ConnectedRealms[addon.ThisRealm], account)
+		
+		if Guilds[key] then	-- if the key is known, return it to caller, it can be passed to other modules
+			return key
+		end
 	end
 end
 
 function addon:GetGuilds(realm, account)
 	-- get a list of guilds on a given realm/account
-	realm = realm or GetRealmName()
+	realm = realm or addon.ThisRealm
 	account = account or addon.ThisAccount
 
 	local out = {}
@@ -642,19 +666,18 @@ function addon:GetGuildFaction(name, realm, account)
 	end
 end
 
-function addon:DeleteGuild(name, realm, account)
-	local key = GetKey(name, realm, account)
-	if not Guilds[key] then return end
+function addon:DeleteGuild(guildKey)
+	if not Guilds[guildKey] then return end
 
 	-- delete the guild in all modules
 	for moduleName, moduleDB in pairs(RegisteredModules) do
 		if moduleDB.Guilds then
-			moduleDB.Guilds[key] = nil
+			moduleDB.Guilds[guildKey] = nil
 		end
 	end
 
 	-- delete the key in DataStore
-	Guilds[key] = nil
+	Guilds[guildKey] = nil
 end
 
 function addon:DeleteRealm(realm, account)
@@ -740,12 +763,14 @@ function addon:IterateCharacters(realmFilter, accountFilter, callback)
 	
 	local accounts = addon:GetAccounts()							-- Get the accounts
 	accounts[addon.ThisAccount] = nil								-- Remove the current account, because we want to put it first in the list
+	
 	local sortedAccounts = addon:HashToSortedArray(accounts)	-- Sort the remaining accounts in alphabetical order
 	table.insert(sortedAccounts, 1, addon.ThisAccount)			-- Then add the current account in first position
 
 	for _, account in pairs(sortedAccounts) do
 		local realms = addon:GetRealms(account)					-- Get the realms
 		realms[addon.ThisRealm] = nil									-- Remove the current realm, because we want to put it first in the list
+		
 		local sortedRealms = addon:HashToSortedArray(realms)	-- Sort the remaining realms in alphabetical order
 		table.insert(sortedRealms, 1, addon.ThisRealm)			-- Then add the current realm in first position
 	
@@ -940,6 +965,94 @@ function addon:GetRealmsConnectedWith(realm)
 	
 	return out
 end
+
+-- *** Alt Groups ***
+function addon:CreateAltGroup(group)
+	local altGroups = addon.db.global.AltGroups
+
+	if not altGroups[group] then
+		altGroups[group] = {}
+		
+		-- return true to confirm that the group was not already found and was created
+		return true
+	end
+end
+
+function addon:DeleteAltGroup(group)
+	local altGroups = addon.db.global.AltGroups
+
+	if altGroups[group] then
+		altGroups[group] = nil
+		
+		-- return true to confirm that the group was found and deleted
+		return true
+	end
+end
+
+function addon:RenameAltGroup(oldGroup, newGroup)
+	local altGroups = addon.db.global.AltGroups
+	
+	if altGroups[oldGroup] then
+		-- make the new group point to the same table as the old
+		altGroups[newGroup] = altGroups[oldGroup]
+		
+		-- delete the old reference
+		altGroups[oldGroup] = nil
+		
+		-- return true to confirm that the group was found and renamed
+		return true
+	end	
+end
+
+function addon:IsAltGroupExisting(group)
+	local altGroups = addon.db.global.AltGroups
+	
+	return (altGroups[group] ~= nil)
+end
+
+function addon:IterateAltGroups(callback)
+	local altGroups = addon.db.global.AltGroups
+	local sortedGroups = addon:HashToSortedArray(altGroups)
+
+	for _, groupName in pairs(sortedGroups) do
+		callback(groupName, altGroups[groupName])
+	end
+end
+
+function addon:AddToAltGroup(group, character)
+	local altGroups = addon.db.global.AltGroups
+	
+	altGroups[group] = altGroups[group] or {}
+	altGroups[group][character] = true
+end
+
+function addon:RemoveFromAltGroup(group, character)
+	local altGroups = addon.db.global.AltGroups
+	
+	if altGroups[group] then
+		altGroups[group][character] = nil
+	end
+end
+
+function addon:IsInAltGroup(group, character)
+	local altGroups = addon.db.global.AltGroups
+	
+	return (altGroups[group] and altGroups[group][character])
+end
+
+function addon:GetAltGroups(character)
+	local altGroups = addon.db.global.AltGroups
+	local groups = {}
+	
+	for groupName, groupMembers in pairs(altGroups) do
+		if groupMembers[character] then
+			table.insert(groups, groupName)
+		end
+	end
+	
+	return table.concat(groups, ", "), groups
+end
+
 
 -- *** Global Utility Functions ***
 function addon:GetHashSize(hash)

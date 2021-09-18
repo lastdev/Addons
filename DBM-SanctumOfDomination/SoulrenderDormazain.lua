@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod(2445, "DBM-SanctumOfDomination", nil, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210715050601")
+mod:SetRevision("20210831171020")
 mod:SetCreatureID(175727)
 mod:SetEncounterID(2434)
 mod:SetUsedIcons(1, 2, 3, 4)
-mod:SetHotfixNoticeRev(20210714000000)--2021-07-14
+mod:SetHotfixNoticeRev(20210731000000)--2021-07-31
 mod:SetMinSyncRevision(20210714000000)
 --mod.respawnTime = 29
 
@@ -51,7 +51,7 @@ local specWarnTorment						= mod:NewSpecialWarningDodge(352158, nil, nil, nil, 2
 local specWarnTormentedEruptions			= mod:NewSpecialWarningDodge(349985, nil, nil, nil, 2, 2)
 local specWarnBrandofTorment				= mod:NewSpecialWarningYou(350647, nil, nil, nil, 1, 2)
 local yellBrandofTorment					= mod:NewYell(350647)
-local specWarnRuinblade						= mod:NewSpecialWarningStack(350422, nil, 2, nil, nil, 1, 6)
+local specWarnRuinblade						= mod:NewSpecialWarningStack(350422, nil, 1, nil, nil, 1, 6)
 local specWarnRuinbladeTaunt				= mod:NewSpecialWarningTaunt(350422, nil, nil, nil, 1, 2)
 --Mawsworn Agonizer
 local specWarnAgonizingSpike				= mod:NewSpecialWarningInterruptCount(351779, "false", nil, nil, 1, 2)--Opt in
@@ -122,22 +122,12 @@ local allTimers = {
 		--Ruinblade
 		[350422] = {8.1, 32.5, 32.7, 43.7, 53.4, 32.8, 36.4, 45, 65.6, 32.8, 35.2, 44.9},
 		--Torment
-		[349873] = {14, 46.1, 46.2, 76.5, 46.1, 45, 88.7, 45, 45},
+		[349873] = {14, 45.6, 46, 75.2, 46.1, 45, 86.2, 45, 45},
 		--Call Mawsworn
-		[350615] = {28, 165, 181, 150},
+		[350615] = {28, 165, 180.9, 150},
 		--Hellscream
-		[350411] = {80, 164.5, 178.8},
+		[350411] = {80, 164, 178.8},
 	},
---	["lfr"] = {
-		--Ruinblade
---		[350422] = {},
-		--Torment
---		[349873] = {},
-		--Call Mawsworn
---		[351680] = {},
-		--Hellscream
---		[350421] = {},
---	},
 }
 
 --Assume these won't be exposed forever
@@ -164,12 +154,12 @@ function mod:OnCombatStart(delay)
 	elseif self:IsHeroic() then
 		difficultyName = "heroic"
 		timerSpawnMawswornCD:Start(28-delay, 1)
-		timerBrandofTormentCD:Start(31.4-delay, 1)
+		timerBrandofTormentCD:Start(30.4-delay, 1)
 		timerShacklesCD:Start(80-delay, 1)--Only one that's really consistent the whole fight
 	else
 		difficultyName = "normal"
 		timerSpawnMawswornCD:Start(28-delay, 1)
-		timerBrandofTormentCD:Start(31.4-delay, 1)
+		timerBrandofTormentCD:Start(30.4-delay, 1)
 		timerShacklesCD:Start(80-delay, 1)--Only one that's really consistent the whole fight
 	end
 	timerTormentedEruptionsCD:Start(130-delay, 1)--Same across all
@@ -181,7 +171,7 @@ function mod:OnCombatStart(delay)
 	if self.Options.NPAuraOnDefiance or self.Options.NPAuraOnTormented then
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
 	end
-	DBM:AddMsg("Abilities on this fight can be volatile and sometimes skip casts/change order. DBM timers attempt to match the most common scenario of events but sometimes fight will do it's own thing")
+--	DBM:AddMsg("Abilities on this fight can be volatile and sometimes skip casts/change order. DBM timers attempt to match the most common scenario of events but sometimes fight will do it's own thing")
 end
 
 function mod:OnCombatEnd()
@@ -273,7 +263,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		self.vb.eruptionCount = self.vb.eruptionCount + 1
 		specWarnTormentedEruptions:Show(self.vb.eruptionCount)
 		specWarnTormentedEruptions:Play("watchstep")
-		timerTormentedEruptionsCD:Start(nil, self.vb.eruptionCount+1)--160
+		timerTormentedEruptionsCD:Start(self:IsEasy() and 180 or 160, self.vb.eruptionCount+1)--160
 --		timerSpawnMawswornCD:Stop()
 --		timerTormentCD:Stop()
 --		timerRuinbladeCD:Stop()
@@ -286,7 +276,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif spellId == 350648 then
 		self.vb.brandIcon = 1
 		self.vb.brandCount = self.vb.brandCount + 1
-		timerBrandofTormentCD:Start(15.7, self.vb.brandCount+1)
+		timerBrandofTormentCD:Start(15.1, self.vb.brandCount+1)
 	end
 end
 
@@ -315,12 +305,17 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 350422 or spellId == 350448 then
 		local amount = args.amount or 1
-		if amount >= 2 then
+		if amount >= 1 then
 			if args:IsPlayer() then
 				specWarnRuinblade:Show(amount)
 				specWarnRuinblade:Play("stackhigh")
 			else
-				if not UnitIsDeadOrGhost("player") and not DBM:UnitDebuff("player", spellId) then
+				local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
+				local remaining
+				if expireTime then
+					remaining = expireTime-GetTime()
+				end
+				if (not remaining or remaining and remaining < 32.8) and not UnitIsDeadOrGhost("player") then
 					specWarnRuinbladeTaunt:Show(args.destName)
 					specWarnRuinbladeTaunt:Play("tauntboss")
 				else

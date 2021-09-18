@@ -1,11 +1,17 @@
-local __exports = LibStub:NewLibrary("ovale/engine/best-action", 90103)
+local __exports = LibStub:NewLibrary("ovale/engine/best-action", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+local __imports = {}
+__imports.aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+__imports.__ast = LibStub:GetLibrary("ovale/engine/ast")
+__imports.setResultType = __imports.__ast.setResultType
+__imports.__toolstools = LibStub:GetLibrary("ovale/tools/tools")
+__imports.isNumber = __imports.__toolstools.isNumber
+__imports.isString = __imports.__toolstools.isString
+local aceEvent = __imports.aceEvent
 local pairs = pairs
 local tonumber = tonumber
 local tostring = tostring
-local upper = string.upper
 local GetActionCooldown = GetActionCooldown
 local GetActionTexture = GetActionTexture
 local GetItemIcon = GetItemIcon
@@ -16,14 +22,11 @@ local IsActionInRange = IsActionInRange
 local IsItemInRange = IsItemInRange
 local IsUsableAction = IsUsableAction
 local IsUsableItem = IsUsableItem
-local __ast = LibStub:GetLibrary("ovale/engine/ast")
-local setResultType = __ast.setResultType
-local __toolstools = LibStub:GetLibrary("ovale/tools/tools")
-local isNumber = __toolstools.isNumber
-local isString = __toolstools.isString
-local oneTimeMessage = __toolstools.oneTimeMessage
+local setResultType = __imports.setResultType
+local isNumber = __imports.isNumber
+local isString = __imports.isString
 __exports.OvaleBestActionClass = __class(nil, {
-    constructor = function(self, ovaleEquipment, ovaleActionBar, ovaleData, ovaleCooldown, ovale, guids, future, spellBook, ovaleProfiler, ovaleDebug, variables, spells, runner)
+    constructor = function(self, ovaleEquipment, ovaleActionBar, ovaleData, ovaleCooldown, ovale, guids, future, spellBook, ovaleDebug, variables, spells, runner)
         self.ovaleEquipment = ovaleEquipment
         self.ovaleActionBar = ovaleActionBar
         self.ovaleData = ovaleData
@@ -37,12 +40,11 @@ __exports.OvaleBestActionClass = __class(nil, {
         self.onInitialize = function()
         end
         self.getActionItemInfo = function(node, atTime, target)
-            self.profiler:startProfiling("OvaleBestAction_GetActionItemInfo")
             local itemId = node.cachedParams.positional[1]
             local result = node.result
             setResultType(result, "action")
             if  not isNumber(itemId) then
-                local slot = upper(tostring(itemId))
+                local slot = tostring(itemId)
                 local itemIdFromSlot = self.ovaleEquipment:getEquippedItemId(slot)
                 if  not itemIdFromSlot then
                     self.tracer:log("Unknown item '%s'.", itemId)
@@ -66,11 +68,9 @@ __exports.OvaleBestActionClass = __class(nil, {
             result.actionId = itemId
             result.actionTarget = target
             result.castTime = self.future:getGCD(atTime)
-            self.profiler:stopProfiling("OvaleBestAction_GetActionItemInfo")
             return result
         end
         self.getActionMacroInfo = function(element, atTime, target)
-            self.profiler:startProfiling("OvaleBestAction_GetActionMacroInfo")
             local result = element.result
             local macro = element.cachedParams.positional[1]
             local actionSlot = self.ovaleActionBar:getMacroActionSlot(macro)
@@ -91,11 +91,9 @@ __exports.OvaleBestActionClass = __class(nil, {
             result.actionType = "macro"
             result.actionId = macro
             result.castTime = self.future:getGCD(atTime)
-            self.profiler:stopProfiling("OvaleBestAction_GetActionMacroInfo")
             return result
         end
         self.getActionSpellInfo = function(element, atTime, target)
-            self.profiler:startProfiling("OvaleBestAction_GetActionSpellInfo")
             local spell = element.cachedParams.positional[1]
             if isNumber(spell) then
                 return self:getSpellActionInfo(spell, element, atTime, target)
@@ -113,7 +111,6 @@ __exports.OvaleBestActionClass = __class(nil, {
             return element.result
         end
         self.getActionTextureInfo = function(element, atTime, target)
-            self.profiler:startProfiling("OvaleBestAction_GetActionTextureInfo")
             local result = element.result
             setResultType(result, "action")
             result.actionTarget = target
@@ -137,14 +134,12 @@ __exports.OvaleBestActionClass = __class(nil, {
             result.actionType = "texture"
             result.actionId = actionTexture
             result.castTime = self.future:getGCD(atTime)
-            self.profiler:stopProfiling("OvaleBestAction_GetActionTextureInfo")
             return result
         end
         self.handleDisable = function()
             self.module:UnregisterMessage("Ovale_ScriptChanged")
         end
         self.module = ovale:createModule("BestAction", self.onInitialize, self.handleDisable, aceEvent)
-        self.profiler = ovaleProfiler:create(self.module:GetName())
         self.tracer = ovaleDebug:create(self.module:GetName())
         runner:registerActionInfoHandler("item", self.getActionItemInfo)
         runner:registerActionInfoHandler("macro", self.getActionMacroInfo)
@@ -158,20 +153,10 @@ __exports.OvaleBestActionClass = __class(nil, {
         local si = self.ovaleData.spellInfo[spellId]
         local replacedSpellId = nil
         if si then
-            local maxGuard = 20
-            local guard = 0
-            local replacementId = spellId
-            local id = replacementId
-            while id ~= nil and guard < maxGuard do
-                guard = guard + 1
-                replacementId = id
-                id = self.ovaleData:getSpellInfoProperty(replacementId, atTime, "replaced_by", targetGUID)
-            end
-            if guard >= maxGuard then
-                oneTimeMessage("Recursive 'replaced_by' chain for spell ID '%s'.", spellId)
-            elseif replacementId ~= spellId then
+            local replacementSpellId = self.ovaleData:resolveSpell(spellId, atTime, targetGUID)
+            if replacementSpellId and replacementSpellId ~= spellId then
                 replacedSpellId = spellId
-                spellId = replacementId
+                spellId = replacementSpellId
                 si = self.ovaleData.spellInfo[spellId]
                 self.tracer:log("Spell ID '%s' is replaced by spell ID '%s'.", replacedSpellId, spellId)
             end
@@ -240,16 +225,12 @@ __exports.OvaleBestActionClass = __class(nil, {
         result.actionTarget = target
         local offgcd = element.cachedParams.named.offgcd or self.ovaleData:getSpellInfoProperty(spellId, atTime, "offgcd", targetGUID) or 0
         result.offgcd = (offgcd == 1 and true) or nil
-        if result.timeSpan then
-            self.profiler:stopProfiling("OvaleBestAction_GetActionSpellInfo")
-        end
         return result
     end,
     startNewAction = function(self)
         self.runner:refresh()
     end,
     getAction = function(self, node, atTime)
-        self.profiler:startProfiling("OvaleBestAction_GetAction")
         local groupNode = node.child[1]
         local element = self.runner:postOrderCompute(groupNode, atTime)
         if element.type == "state" and element.timeSpan:hasTime(atTime) then
@@ -259,7 +240,6 @@ __exports.OvaleBestActionClass = __class(nil, {
                 self.variables:putState(variable, value, isFuture, atTime)
             end
         end
-        self.profiler:stopProfiling("OvaleBestAction_GetAction")
         return element
     end,
 })

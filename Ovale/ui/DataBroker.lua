@@ -1,13 +1,19 @@
-local __exports = LibStub:NewLibrary("ovale/ui/DataBroker", 90103)
+local __exports = LibStub:NewLibrary("ovale/ui/DataBroker", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local __Localization = LibStub:GetLibrary("ovale/ui/Localization")
-local l = __Localization.l
-local LibDataBroker = LibStub:GetLibrary("LibDataBroker-1.1", true)
-local LibDBIcon = LibStub:GetLibrary("LibDBIcon-1.0", true)
-local __enginescripts = LibStub:GetLibrary("ovale/engine/scripts")
-local defaultScriptName = __enginescripts.defaultScriptName
-local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+local __imports = {}
+__imports.__Localization = LibStub:GetLibrary("ovale/ui/Localization")
+__imports.l = __imports.__Localization.l
+__imports.LibDataBroker = LibStub:GetLibrary("LibDataBroker-1.1", true)
+__imports.LibDBIcon = LibStub:GetLibrary("LibDBIcon-1.0", true)
+__imports.__enginescripts = LibStub:GetLibrary("ovale/engine/scripts")
+__imports.defaultScriptName = __imports.__enginescripts.defaultScriptName
+__imports.aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+local l = __imports.l
+local LibDataBroker = __imports.LibDataBroker
+local LibDBIcon = __imports.LibDBIcon
+local defaultScriptName = __imports.defaultScriptName
+local aceEvent = __imports.aceEvent
 local pairs = pairs
 local kpairs = pairs
 local insert = table.insert
@@ -46,7 +52,7 @@ __exports.OvaleDataBrokerClass = __class(nil, {
             text = ""
         }
         self.handleTooltipShow = function(tooltip)
-            self.tooltipTitle = self.tooltipTitle or self.ovale:GetName() .. " " .. "90103"
+            self.tooltipTitle = self.tooltipTitle or self.ovale:GetName() .. " " .. "90107"
             tooltip:SetText(self.tooltipTitle, 1, 1, 1)
             tooltip:AddLine(l["script_tooltip"])
             tooltip:AddLine(l["middle_click_help"])

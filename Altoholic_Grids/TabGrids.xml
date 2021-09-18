@@ -12,181 +12,107 @@
 		</Scripts>
 	</Button>
 	
-	<Frame name="AltoholicTabGrids" parent="AltoholicFrame" hidden="true">
+	<Frame parentKey="TabGrids" inherits="AddonFactory_AuctionHouseTabFrameTemplate" parent="AltoholicFrame" id="7">
 		<Size x="758" y="447" />
 		<Anchors>
 			<Anchor point="TOPLEFT" />
 		</Anchors>
 		<Layers>
 			<Layer level="OVERLAY">
-				<FontString parentKey="Label1" inherits="GameFontNormalSmall" justifyH="LEFT">
-					<Size x="100" y="18" />
-					<Anchors>
-						<Anchor point="TOPLEFT" x="35" y="-105" />
-					</Anchors>
-				</FontString>
-				<FontString parentKey="TextView" inherits="GameFontNormalSmall" justifyH="LEFT" text="GUILD_ROSTER_VIEW" hidden="true">
+				<FontString parentKey="LabelView" inherits="GameFontNormalSmall" justifyH="LEFT" text="GUILD_ROSTER_VIEW">
 					<Size x="60" y="18" />
 					<Anchors>
-						<Anchor point="LEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="RIGHT" x="60" y="-5" />
+						<Anchor point="TOPLEFT" x="245" y="-30" />
 					</Anchors>
 					<Color r="255" g="255" b="255" />
 				</FontString>
 				<FontString parentKey="Status" inherits="GameFontNormal" justifyH="LEFT">
-					<Size x="320" y="24" />
+					<Size x="450" y="24" />
 					<Anchors>
-						<Anchor point="BOTTOMRIGHT" x="-250" y="13" />
+						<Anchor point="BOTTOMLEFT" x="200" y="4" />
 					</Anchors>
-					<Color r="255" g="255" b="255" />
 				</FontString>
 				<FontString parentKey="PageNumber" inherits="GameFontHighlightSmallOutline" justifyH="RIGHT">
 					<Anchors>
-						<Anchor point="BOTTOMRIGHT" x="-50" y="20" />
+						<Anchor point="BOTTOMRIGHT" x="-130" y="10" />
 					</Anchors>
 				</FontString>
 			</Layer>
 		</Layers>
 		<Frames>
-			<Frame parentKey="SelectView" inherits="AltoDropDownMenuTemplate" hidden="true">
+			<Frame parentKey="CategoriesList" inherits="AddonFactory_AuctionHouseCategoriesListTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.TextView" relativePoint="BOTTOMLEFT" x="-30" y="-2"/>
+					<Anchor point="TOPLEFT" x="4" y="-68"/>
 				</Anchors>
+				<Scripts>
+					<OnLoad>
+						Altoholic:BindViewToController(self, "AltoholicUI.TabGridsCategoriesList", "AddonFactory.AuctionHouseCategoriesList")
+					</OnLoad>
+				</Scripts>
 			</Frame>
+			
 			<Frame parentKey="SelectRealm" inherits="AltoRealmPickerTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.Label1" relativePoint="BOTTOMLEFT" x="-25" y="-2" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.LabelView" relativePoint="BOTTOMLEFT" x="-30" y="-2" />
 				</Anchors>
 				<KeyValues>
-					<KeyValue key="menuWidth" value="120" type="number" />
+					<KeyValue key="menuWidth" value="140" type="number" />
 				</KeyValues>
 			</Frame>
-				
-			<!-- Menu Icons -->
+			
 			<Frame parentKey="ClassIcons" inherits="AltoClassIconsContainerTemplate">
 				<KeyValues>
-					<!-- <KeyValue key="numIcons" value="11" type="number" /> -->
 					<KeyValue key="numIcons" value="12" type="number" />
 					<KeyValue key="iconTemplate" value="AltoTabGridsClassIconTemplate" />
 					<KeyValue key="tabName" value="Grids" />
 				</KeyValues>
 			</Frame>
-		
-			<Frame parentKey="ContextualMenu" inherits="AltoContextualMenuTemplate" />
 			
-			<Button parentKey="Equipment" inherits="AltoTabGridsMenuIconTemplate" id="1">
+			<Button parentKey="NextPage">
+				<Size x="32" y="32" />
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="AltoholicTabGrids" relativePoint="BOTTOMLEFT" x="30" y="240" />
+					<Anchor point="BOTTOMRIGHT" x="-40" y="0" />
 				</Anchors>
-				<KeyValues>
-					<KeyValue key="iconFile" value="Interface\Icons\INV_Chest_Plate04" />
-				</KeyValues>
+				<Scripts>
+					<OnClick>
+						self:GetParent():GoToNextPage()
+					</OnClick>
+				</Scripts>
+				<NormalTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Up"/>
+				<PushedTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Down"/>
+				<DisabledTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Disabled"/>
+				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
 			</Button>
-			<Button parentKey="Factions" inherits="AltoTabGridsMenuIconTemplate" id="2">
+			<Button parentKey="PrevPage">
+				<Size x="32" y="32" />
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Equipment" relativePoint="BOTTOMRIGHT" x="5" y="0" />
+					<Anchor point="RIGHT" relativeKey="$Parent.NextPage" relativePoint="LEFT" x="-10" y="0" />
 				</Anchors>
-				<KeyValues>
-					<KeyValue key="iconFile" value="Interface\Icons\INV_BannerPVP_02" />
-				</KeyValues>
-			</Button>
-			<Button parentKey="Tokens" inherits="AltoTabGridsMenuIconTemplate" id="3">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Factions" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="iconFile" value="Interface\Icons\Spell_Holy_SummonChampion" />
-					<KeyValue key="text" value="CURRENCY" type="global" />
-				</KeyValues>
-			</Button>
-			<Button parentKey="Dailies" inherits="AltoTabGridsMenuIconTemplate" id="4">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Tokens" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="iconFile" value="Interface\LFGFrame\LFGIcon-Quest" />
-				</KeyValues>
-			</Button>
-
-			<Button parentKey="Pets" inherits="AltoTabGridsMenuIconTemplate" id="5">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="AltoholicTabGrids" relativePoint="BOTTOMLEFT" x="30" y="200" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="iconFile" value="Interface\Icons\INV_Box_Birdcage_01" />
-					<KeyValue key="text" value="COMPANIONS" type="global" />
-				</KeyValues>
-			</Button>
-			<Button parentKey="Dungeons" inherits="AltoTabGridsMenuIconTemplate" id="6">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Pets" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="iconFile" value="Interface\Icons\inv_helmet_189" />
-					<KeyValue key="text" value="LOOKING_FOR_DUNGEON" type="global" />
-				</KeyValues>
-			</Button>
-			<Button parentKey="TradeSkills" inherits="AltoTabGridsMenuIconTemplate" id="7">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Dungeons" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="iconFile" value="Interface\Icons\Ability_Repair" />
-					<KeyValue key="text" value="TRADESKILLS" type="global" />
-				</KeyValues>
-			</Button>
-			<Button parentKey="Archeology" inherits="AltoTabGridsMenuIconTemplate" id="8">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.TradeSkills" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="iconFile" value="Interface\Icons\trade_archaeology" />
-				</KeyValues>
-			</Button>
-
-			<Button parentKey="GarrisonArchitect" inherits="AltoTabGridsMenuIconTemplate" id="9">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="AltoholicTabGrids" relativePoint="BOTTOMLEFT" x="30" y="160" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="iconFile" value="Interface\Icons\inv_garrison_blueprints3" />
-					<KeyValue key="text" value="GARRISON_ARCHITECT" type="global" />
-				</KeyValues>
-			</Button>
-			<Button parentKey="GarrisonFollowers" inherits="AltoTabGridsMenuIconTemplate" id="10">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.GarrisonArchitect" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="iconFile" value="Interface\Icons\achievement_garrisonfollower_epic" />
-					<KeyValue key="text" value="GARRISON_FOLLOWERS_TITLE" type="global" />
-				</KeyValues>
-			</Button>
-			<Button parentKey="FollowerAbilities" inherits="AltoTabGridsMenuIconTemplate" id="11">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.GarrisonFollowers" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="iconFile" value="Interface\Icons\spell_shadow_shadowwordpain" />
-				</KeyValues>
-			</Button>
-			<Button parentKey="Emissaries" inherits="AltoTabGridsMenuIconTemplate" id="12">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.FollowerAbilities" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="iconFile" value="Interface\Icons\inv_legion_cache_dreamweavers" />
-					<KeyValue key="text" value="BOUNTY_BOARD_LOCKED_TITLE" type="global" />
-				</KeyValues>
+				<Scripts>
+					<OnClick>
+						self:GetParent():GoToPreviousPage()
+					</OnClick>
+				</Scripts>
+				<NormalTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Up"/>
+				<PushedTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Down"/>
+				<DisabledTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Disabled"/>
+				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
 			</Button>
 			
-			<Button parentKey="Sets" inherits="AltoTabGridsMenuIconTemplate" id="13">
+			<Frame parentKey="Background" useParentLevel="true">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="AltoholicTabGrids" relativePoint="BOTTOMLEFT" x="30" y="120" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.CategoriesList" relativePoint="TOPRIGHT" x="4" y="-25"/>
+					<Anchor point="RIGHT" relativeTo="AltoholicFrame" relativePoint="RIGHT" x="-30" y="0"/>
+					<Anchor point="BOTTOM" relativeTo="AltoholicFrame" relativePoint="BOTTOM" x="0" y="28"/>
 				</Anchors>
-				<KeyValues>
-					<KeyValue key="iconFile" value="Interface\Icons\inv_chest_cloth_81" />
-				</KeyValues>
-			</Button>
+				<Layers>
+					<Layer level="BACKGROUND" textureSubLevel="-5">
+						<Texture parentKey="bg" atlas="auctionhouse-background-index" useAtlasSize="true" />
+					</Layer>
+				</Layers>
+			</Frame>		
+			
+			<Frame parentKey="ContextualMenu" inherits="AddonFactory_ContextualMenuTemplate" />
 			
 			<!-- Tooltip for Garrison Levels, to avoid messing with Blizzard's own -->
 			<Frame parentKey="BuildingLevelTooltip" inherits="TooltipBorderedFrameTemplate" hidden="true" frameStrata="TOOLTIP" clampedToScreen="true">
@@ -254,46 +180,18 @@
 					</Layer>
 				</Layers>
 			</Frame>
-			
-			<Button parentKey="PrevPage">
-				<Size x="32" y="32" />
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" x="730" y="10" />
-				</Anchors>
-				<Scripts>
-					<OnClick>
-						self:GetParent():GoToPreviousPage()
-					</OnClick>
-				</Scripts>
-				<NormalTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Up"/>
-				<PushedTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Down"/>
-				<DisabledTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Disabled"/>
-				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
-			</Button>
-			<Button parentKey="NextPage">
-				<Size x="32" y="32" />
-				<Anchors>
-					<Anchor point="LEFT" relativeKey="$Parent.PrevPage" relativePoint="RIGHT" x="10" y="0" />
-				</Anchors>
-				<Scripts>
-					<OnClick>
-						self:GetParent():GoToNextPage()
-					</OnClick>
-				</Scripts>
-				<NormalTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Up"/>
-				<PushedTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Down"/>
-				<DisabledTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Disabled"/>
-				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
-			</Button>
 		</Frames>
 		<Scripts>
 			<OnLoad>
 				Altoholic:BindViewToController(self, "AltoholicUI.TabGrids")
 			</OnLoad>
 			<OnShow>
-				self:UpdateMenuIcons()
-				self:Update()
+--				self:UpdateMenuIcons()
+--				self:Update()
 			</OnShow>
+			<OnHide>
+				self.ContextualMenu:Close()
+			</OnHide>
 		</Scripts>
 	</Frame>
 </Ui>

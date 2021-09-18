@@ -1,9 +1,9 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="Garrisons.lua"></Script>
 
-	<Frame parentKey="GarrisonMissions" parent="AltoholicTabCharacters" inherits="AltoDataPanelTemplate">
+	<Frame parentKey="GarrisonMissions" hidden="true">
 		<Frames>
-			<ScrollFrame parentKey="ScrollFrame" inherits="AltoBaseScrollFrameTemplate" hidden="true">
+			<ScrollFrame parentKey="ScrollFrame" inherits="AddonFactory_BaseScrollFrameTemplate" hidden="true">
 				<Scripts>
 					<OnVerticalScroll>
 						local parent = self:GetParent()
@@ -11,15 +11,17 @@
 					</OnVerticalScroll>
 				</Scripts>
 				<KeyValues>
-					<KeyValue key="numRows" value="7" type="number" />
+					<KeyValue key="numRows" value="15" type="number" />
 					<KeyValue key="rowHeight" value="43" type="number" />
 					<KeyValue key="rowTemplate" value="AltoGarrisonMissionRowTemplate" />
+					<KeyValue key="xOffset" value="4" type="number" />
+					<KeyValue key="yOffset" value="0" type="number" />
 				</KeyValues>
 			</ScrollFrame>
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:BindViewToController(self, "AltoholicUI.GarrisonMissionsPanel")
+				Altoholic:BindViewToController(self, "AltoholicUI.TabCharacters.GarrisonMissionsPanel")
 			</OnLoad>
 		</Scripts>
 	</Frame>

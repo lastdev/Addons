@@ -1,8 +1,8 @@
 local addonName, shared = ...;
 
-if LibStub == nil then return end
+if _G.LibStub == nil then return end
 
-shared.HandyNotes = LibStub('AceAddon-3.0'):GetAddon('HandyNotes', true)
+shared.HandyNotes = _G.LibStub('AceAddon-3.0'):GetAddon('HandyNotes', true)
 
 if shared.HandyNotes == nil then return end
 

@@ -2,13 +2,14 @@
 ## Title: Altoholic_Agenda
 ## Notes: Altoholic's Agenda UI
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: r192
+## Version: 9.1.005
 ## Dependencies: Altoholic, DataStore, DataStore_Agenda, DataStore_Characters
 ## LoadOnDemand: 1
 ## X-Category: Interface Enhancements
 
+Locale.xml
 Templates\UITemplates.xml
 TabAgenda.xml
 
 Frames\Calendar.xml
-Frames\Contacts.xml
+#Frames\Contacts.xml

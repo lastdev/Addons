@@ -1,14 +1,26 @@
-local __exports = LibStub:NewLibrary("ovale/engine/ast", 90103)
+local __exports = LibStub:NewLibrary("ovale/engine/ast", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local __uiLocalization = LibStub:GetLibrary("ovale/ui/Localization")
-local l = __uiLocalization.l
-local __toolsPool = LibStub:GetLibrary("ovale/tools/Pool")
-local OvalePool = __toolsPool.OvalePool
-local __condition = LibStub:GetLibrary("ovale/engine/condition")
-local getFunctionSignature = __condition.getFunctionSignature
-local __lexer = LibStub:GetLibrary("ovale/engine/lexer")
-local OvaleLexer = __lexer.OvaleLexer
+local __imports = {}
+__imports.__uiLocalization = LibStub:GetLibrary("ovale/ui/Localization")
+__imports.l = __imports.__uiLocalization.l
+__imports.__toolsPool = LibStub:GetLibrary("ovale/tools/Pool")
+__imports.OvalePool = __imports.__toolsPool.OvalePool
+__imports.__condition = LibStub:GetLibrary("ovale/engine/condition")
+__imports.getFunctionSignature = __imports.__condition.getFunctionSignature
+__imports.__lexer = LibStub:GetLibrary("ovale/engine/lexer")
+__imports.OvaleLexer = __imports.__lexer.OvaleLexer
+__imports.__toolstools = LibStub:GetLibrary("ovale/tools/tools")
+__imports.checkToken = __imports.__toolstools.checkToken
+__imports.isNumber = __imports.__toolstools.isNumber
+__imports.__toolsTimeSpan = LibStub:GetLibrary("ovale/tools/TimeSpan")
+__imports.emptySet = __imports.__toolsTimeSpan.emptySet
+__imports.newTimeSpan = __imports.__toolsTimeSpan.newTimeSpan
+__imports.universe = __imports.__toolsTimeSpan.universe
+local l = __imports.l
+local OvalePool = __imports.OvalePool
+local getFunctionSignature = __imports.getFunctionSignature
+local OvaleLexer = __imports.OvaleLexer
 local ipairs = ipairs
 local next = next
 local pairs = pairs
@@ -25,13 +37,11 @@ local concat = table.concat
 local insert = table.insert
 local sort = table.sort
 local GetItemInfo = GetItemInfo
-local __toolstools = LibStub:GetLibrary("ovale/tools/tools")
-local checkToken = __toolstools.checkToken
-local isNumber = __toolstools.isNumber
-local __toolsTimeSpan = LibStub:GetLibrary("ovale/tools/TimeSpan")
-local emptySet = __toolsTimeSpan.emptySet
-local newTimeSpan = __toolsTimeSpan.newTimeSpan
-local universe = __toolsTimeSpan.universe
+local checkToken = __imports.checkToken
+local isNumber = __imports.isNumber
+local emptySet = __imports.emptySet
+local newTimeSpan = __imports.newTimeSpan
+local universe = __imports.universe
 local keywords = {
     ["and"] = true,
     ["if"] = true,
@@ -510,21 +520,21 @@ local function isAstNode(a)
     return type(a) == "table"
 end
 __exports.OvaleASTClass = __class(nil, {
-    constructor = function(self, ovaleCondition, ovaleDebug, ovaleProfiler, ovaleScripts, ovaleSpellBook)
+    constructor = function(self, ovaleCondition, ovaleDebug, ovaleScripts, ovaleSpellBook)
         self.ovaleCondition = ovaleCondition
         self.ovaleScripts = ovaleScripts
         self.ovaleSpellBook = ovaleSpellBook
         self.indent = 0
-        self.outputPool = OvalePool("OvaleAST_outputPool")
-        self.listPool = OvalePool("OvaleAST_listPool")
-        self.checkboxPool = OvalePool("OvaleAST_checkboxPool")
-        self.positionalParametersPool = OvalePool("OvaleAST_FlattenParameterValues")
-        self.rawNamedParametersPool = OvalePool("OvaleAST_rawNamedParametersPool")
-        self.rawPositionalParametersPool = OvalePool("OVALEAST_rawPositionParametersPool")
-        self.namedParametersPool = OvalePool("OvaleAST_FlattenParametersPool")
-        self.childrenPool = OvalePool("OvaleAST_childrenPool")
-        self.postOrderPool = OvalePool("OvaleAST_postOrderPool")
-        self.postOrderVisitedPool = OvalePool("OvaleAST_postOrderVisitedPool")
+        self.outputPool = __imports.OvalePool("OvaleAST_outputPool")
+        self.listPool = __imports.OvalePool("OvaleAST_listPool")
+        self.checkboxPool = __imports.OvalePool("OvaleAST_checkboxPool")
+        self.positionalParametersPool = __imports.OvalePool("OvaleAST_FlattenParameterValues")
+        self.rawNamedParametersPool = __imports.OvalePool("OvaleAST_rawNamedParametersPool")
+        self.rawPositionalParametersPool = __imports.OvalePool("OVALEAST_rawPositionParametersPool")
+        self.namedParametersPool = __imports.OvalePool("OvaleAST_FlattenParametersPool")
+        self.childrenPool = __imports.OvalePool("OvaleAST_childrenPool")
+        self.postOrderPool = __imports.OvalePool("OvaleAST_postOrderPool")
+        self.postOrderVisitedPool = __imports.OvalePool("OvaleAST_postOrderVisitedPool")
         self.nodesPool = SelfPool(self)
         self.unparseAddCheckBox = function(node)
             local s
@@ -1086,7 +1096,7 @@ __exports.OvaleASTClass = __class(nil, {
                         return nil
                     end
                 elseif token == "{" then
-                    local expression = self:parseGroup(tokenStream, annotation)
+                    local expression = self.parseGroup(tokenStream, annotation)
                     if  not expression then
                         return nil
                     end
@@ -1234,6 +1244,15 @@ __exports.OvaleASTClass = __class(nil, {
             end
             return node
         end
+        self.parseGroup = function(tokenStream, annotation)
+            local group = self.innerParseGroup(tokenStream, annotation)
+            if group and #group.child == 1 then
+                local result = group.child[1]
+                self.nodesPool:release(group)
+                return result
+            end
+            return group
+        end
         self.innerParseGroup = function(tokenStream, annotation)
             local tokenType, token = tokenStream:consume()
             if tokenType ~= "{" then
@@ -1309,7 +1328,7 @@ __exports.OvaleASTClass = __class(nil, {
                 self.debug:error("Script '%s' not found when parsing INCLUDE.", name)
                 return nil
             end
-            local includeTokenStream = OvaleLexer(name, code, tokenMatches, lexerFilters)
+            local includeTokenStream = __imports.OvaleLexer(name, code, tokenMatches, lexerFilters)
             local node = self.parseScriptStream(includeTokenStream, nodeList, annotation)
             includeTokenStream:release()
             return node
@@ -1473,7 +1492,6 @@ __exports.OvaleASTClass = __class(nil, {
             return node
         end
         self.parseScriptStream = function(tokenStream, annotation)
-            self.profiler:startProfiling("OvaleAST_ParseScript")
             local ast = self:newNodeWithChildren("script", annotation)
             local child = ast.child
             while true do
@@ -1497,7 +1515,6 @@ __exports.OvaleASTClass = __class(nil, {
                     break
                 end
             end
-            self.profiler:stopProfiling("OvaleAST_ParseScript")
             return ast
         end
         self.parseSimpleParameterValue = function(tokenStream, annotation)
@@ -1662,7 +1679,7 @@ __exports.OvaleASTClass = __class(nil, {
                     if  not tokenType or binaryOperators[token] then
                         node = self.parseExpression(tokenStream, annotation)
                     else
-                        node = self:parseGroup(tokenStream, annotation)
+                        node = self.parseGroup(tokenStream, annotation)
                     end
                 elseif token == "if" then
                     node = self.parseIf(tokenStream, annotation)
@@ -1762,7 +1779,6 @@ __exports.OvaleASTClass = __class(nil, {
             ["variable"] = self.parseVariable
         }
         self.debug = ovaleDebug:create("OvaleAST")
-        self.profiler = ovaleProfiler:create("OvaleAST")
     end,
     printRecurse = function(self, node, indent, done, output)
         done = done or {}
@@ -2008,15 +2024,6 @@ __exports.OvaleASTClass = __class(nil, {
             annotation.spellNode[#annotation.spellNode + 1] = parameter
         end
         return node
-    end,
-    parseGroup = function(self, tokenStream, annotation)
-        local group = self.innerParseGroup(tokenStream, annotation)
-        if group and #group.child == 1 then
-            local result = group.child[1]
-            self.nodesPool:release(group)
-            return result
-        end
-        return group
     end,
     parseParameters = function(self, tokenStream, methodName, annotation, maxNumberOfParameters, namedParameters)
         local positionalParams = self.rawPositionalParametersPool:get()
@@ -2353,7 +2360,7 @@ __exports.OvaleASTClass = __class(nil, {
         self.nodesPool:release(ast)
     end,
     parseCode = function(self, nodeType, code, nodeList, annotation)
-        local tokenStream = OvaleLexer("Ovale", code, tokenMatches, {
+        local tokenStream = __imports.OvaleLexer("Ovale", code, tokenMatches, {
             comments = tokenizeComment,
             space = tokenizeWhitespace
         })
@@ -2416,7 +2423,6 @@ __exports.OvaleASTClass = __class(nil, {
         return 0
     end,
     propagateConstants = function(self, ast)
-        self.profiler:startProfiling("OvaleAST_PropagateConstants")
         if ast.annotation then
             local dictionary = ast.annotation.definition
             if dictionary and ast.annotation.nameReference then
@@ -2456,10 +2462,8 @@ __exports.OvaleASTClass = __class(nil, {
                 end
             end
         end
-        self.profiler:stopProfiling("OvaleAST_PropagateConstants")
     end,
     propagateStrings = function(self, ast)
-        self.profiler:startProfiling("OvaleAST_PropagateStrings")
         if ast.annotation and ast.annotation.stringReference then
             for _, node in ipairs(ast.annotation.stringReference) do
                 local nodeAsString = node
@@ -2519,10 +2523,8 @@ __exports.OvaleASTClass = __class(nil, {
                 end
             end
         end
-        self.profiler:stopProfiling("OvaleAST_PropagateStrings")
     end,
     verifyFunctionCalls = function(self, ast)
-        self.profiler:startProfiling("OvaleAST_VerifyFunctionCalls")
         if ast.annotation and ast.annotation.verify then
             local customFunction = ast.annotation.customFunction
             local functionCall = ast.annotation.functionCall
@@ -2534,10 +2536,8 @@ __exports.OvaleASTClass = __class(nil, {
                 end
             end
         end
-        self.profiler:stopProfiling("OvaleAST_VerifyFunctionCalls")
     end,
     insertPostOrderTraversal = function(self, ast)
-        self.profiler:startProfiling("OvaleAST_InsertPostOrderTraversal")
         local annotation = ast.annotation
         if annotation and annotation.postOrderReference then
             for _, node in ipairs(annotation.postOrderReference) do
@@ -2548,10 +2548,8 @@ __exports.OvaleASTClass = __class(nil, {
                 node.postOrder = array
             end
         end
-        self.profiler:stopProfiling("OvaleAST_InsertPostOrderTraversal")
     end,
     optimize = function(self, ast)
-        self.profiler:startProfiling("OvaleAST_CommonSubExpressionElimination")
         if ast and ast.annotation and ast.annotation.nodeList then
             local expressionHash = {}
             for _, node in ipairs(ast.annotation.nodeList) do
@@ -2577,6 +2575,5 @@ __exports.OvaleASTClass = __class(nil, {
             end
             ast.annotation.expressionHash = expressionHash
         end
-        self.profiler:stopProfiling("OvaleAST_CommonSubExpressionElimination")
     end,
 })

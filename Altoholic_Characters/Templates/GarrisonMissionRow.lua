@@ -2,7 +2,7 @@ local addonName = "Altoholic"
 local addon = _G[addonName]
 local colors = addon.Colors
 
-addon:Controller("AltoholicUI.GarrisonMissionRow", {
+addon:Controller("AltoholicUI.TabCharacters.GarrisonMissionRow", {
 	SetName = function(frame, missionID, duration)
 		frame.Name:SetText(format("%s%s |r(%s)", colors.white, C_Garrison.GetMissionName(missionID), SecondsToTime(duration)))
 	end,
@@ -82,7 +82,7 @@ addon:Controller("AltoholicUI.GarrisonMissionRow", {
 	SetFollowers = function(frame, followers, missionID, character)
 		-- hide all icons
 		for i = 1, 5 do
-			frame["Follower"..i]:Hide()
+			frame[format("Follower%d", i)]:Hide()
 		end
 
 		-- 'followers' could be nil for the list of available missions
@@ -90,7 +90,7 @@ addon:Controller("AltoholicUI.GarrisonMissionRow", {
 		local numFollowers = C_Garrison.GetMissionMaxFollowers(missionID)
 		
 		for i = 1, numFollowers do
-			local followerFrame = frame["Follower"..i]
+			local followerFrame = frame[format("Follower%d", i)]
 			
 			if followers then
 				local followerID = followers[i]
@@ -110,7 +110,7 @@ addon:Controller("AltoholicUI.GarrisonMissionRow", {
 		
 		local index = 2
 		for id, reward in pairs(rewards) do
-			local button = frame["Reward" ..index]
+			local button = frame[format("Reward%d", index)]
 			button:SetReward(reward)
 			index = index - 1
 		end

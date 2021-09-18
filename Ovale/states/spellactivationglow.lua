@@ -1,9 +1,12 @@
-local __exports = LibStub:NewLibrary("ovale/states/spellactivationglow", 90103)
+local __exports = LibStub:NewLibrary("ovale/states/spellactivationglow", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
-local __enginecondition = LibStub:GetLibrary("ovale/engine/condition")
-local returnBoolean = __enginecondition.returnBoolean
+local __imports = {}
+__imports.aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+__imports.__enginecondition = LibStub:GetLibrary("ovale/engine/condition")
+__imports.returnBoolean = __imports.__enginecondition.returnBoolean
+local aceEvent = __imports.aceEvent
+local returnBoolean = __imports.returnBoolean
 local GetSpellInfo = GetSpellInfo
 __exports.SpellActivationGlow = __class(nil, {
     constructor = function(self, ovale, ovaleDebug)

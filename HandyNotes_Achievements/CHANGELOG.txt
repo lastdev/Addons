@@ -1,3 +1,18 @@
+== v0.5.0 ==
+
+* updated Ace3, LibStub, and LibQTip [JanGalek]
+* German localization [lulukmr]
+
+== v0.4.23 ==
+
+* Russian localization [Makemeloco]
+* updated for 8.1.0: fixed GetCurrentCalendarTime [JanGalek]
+* updated for 8.2.5: fixed IsQuestFlagCompleted [JanGalek]
+
+== v0.4.22 ==
+
+* moved some bloody rares [ldeveber]
+
 == v0.4.21 ==
 
 * removed MapMap/MapExcursion dead code [journeym]

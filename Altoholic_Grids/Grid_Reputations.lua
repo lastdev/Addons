@@ -3,6 +3,9 @@ local addon = _G[addonName]
 local colors = addon.Colors
 local icons = addon.Icons
 
+local MVC = LibStub("LibMVC-1.0")
+local Options = MVC:GetService("AltoholicUI.Options")
+
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local PARAGON_LABEL = "Paragon"
 
@@ -323,15 +326,13 @@ local OPTION_XPACK = "UI.Tabs.Grids.Reputations.CurrentXPack"
 local OPTION_FACTION = "UI.Tabs.Grids.Reputations.CurrentFactionGroup"
 
 local currentFaction
-local currentDDMText
-local dropDownFrame
 
 local function BuildView()
 	view = view or {}
 	wipe(view)
 	
-	local currentXPack = addon:GetOption(OPTION_XPACK)
-	local currentFactionGroup = addon:GetOption(OPTION_FACTION)
+	local currentXPack = Options.Get(OPTION_XPACK)
+	local currentFactionGroup = Options.Get(OPTION_FACTION)
 
 	if (currentXPack ~= CAT_ALLINONE) then
 		for index, faction in ipairs(Factions[currentXPack][currentFactionGroup]) do
@@ -384,137 +385,32 @@ local function AddGuildsToFactionsTable(realm, account)
 	end
 end
 
-local function OnFactionChange(self, xpackIndex, factionGroupIndex)
-	dropDownFrame:Close()
+local tab = AltoholicFrame.TabGrids
 
-	addon:SetOption(OPTION_XPACK, xpackIndex)
-	addon:SetOption(OPTION_FACTION, factionGroupIndex)
-		
-	local factionGroup = Factions[xpackIndex][factionGroupIndex]
-	currentDDMText = factionGroup.name
-	AltoholicTabGrids:SetViewDDMText(currentDDMText)
-	
-	isViewValid = nil
-	AltoholicTabGrids:Update()
-end
-
-local lastRealm, lastAccount
-
-local function OnGuildSelected(self)
-	dropDownFrame:Close()
-	
-	addon:SetOption(OPTION_XPACK, CAT_GUILD)
-	addon:SetOption(OPTION_FACTION, 1)
-	
-	local account, realm = AltoholicTabGrids:GetRealm()
-	
-	if not lastRealm or not lastAccount or lastRealm ~= realm or lastAccount ~= account then	-- realm/account changed ? rebuild view
-		AddGuildsToFactionsTable(realm, account)
-	end
-	
-	lastRealm = realm
-	lastAccount = account
-	currentDDMText = GUILD
-	AltoholicTabGrids:SetViewDDMText(currentDDMText)
-	
-	isViewValid = nil
-	AltoholicTabGrids:Update()
-end
-
-local function OnAllInOneSelected(self)
-	dropDownFrame:Close()
-	addon:SetOption(OPTION_XPACK, CAT_ALLINONE)
-	addon:SetOption(OPTION_FACTION, 1)
-	
-	currentDDMText = L["All-in-one"]
-	AltoholicTabGrids:SetViewDDMText(currentDDMText)
-	isViewValid = nil
-	AltoholicTabGrids:Update()
-end
-
-local function DropDown_Initialize(frame, level)
-	if not level then return end
-
-	local info = frame:CreateInfo()
-	
-	local currentXPack = addon:GetOption(OPTION_XPACK)
-	local currentFactionGroup = addon:GetOption(OPTION_FACTION)
-	
-	if level == 1 then
-		for xpackIndex = 1, (CAT_GUILD - 1) do
-			info.text = Factions[xpackIndex].name
-			info.hasArrow = 1
-			info.checked = (currentXPack == xpackIndex)
-			info.value = xpackIndex
-			frame:AddButtonInfo(info, level)
-		end
-		
-		-- Guild factions
-		info.text = GUILD
-		info.hasArrow = nil
-		info.func = OnGuildSelected
-		info.checked = (currentXPack == CAT_GUILD)
-		frame:AddButtonInfo(info, level)
-
-		info.text = L["All-in-one"]
-		info.hasArrow = nil
-		info.func = OnAllInOneSelected
-		info.checked = (currentXPack == CAT_ALLINONE)
-		frame:AddButtonInfo(info, level)
-		
-		frame:AddCloseMenu()
-	
-	elseif level == 2 then
-		local menuValue = frame:GetCurrentOpenMenuValue()
-		
-		for factionGroupIndex, factionGroup in ipairs(Factions[menuValue]) do
-			info.text = factionGroup.name
-			info.func = OnFactionChange
-			info.checked = ((currentXPack == menuValue) and (currentFactionGroup == factionGroupIndex))
-			info.arg1 = menuValue
-			info.arg2 = factionGroupIndex
-			frame:AddButtonInfo(info, level)
-		end
-	end
-end
-
-local function GetSuggestion(faction, bottom)
-	if not addon.FactionLeveling then return end
-	
-	local factionTable = addon.FactionLeveling[faction]
-	if not factionTable then return end
-	
-	local levels = {}
-	for k, _ in pairs(factionTable) do		-- get the levels for which we have a suggestion for this faction
-		table.insert(levels, k)
-	end
-	table.sort(levels)	-- sort them, otherwise there's a risk of returning a suggestion for the wrong level
-	
-	-- at this point, levels may look like : { 0, 9000, 42000 }
-	
-	for _, level in ipairs(levels) do
-		if bottom < level then	-- the suggestions are sorted by level, so whenever we're below, return the text
-			return format("%s:\n%s", format(L["Up to %s"], DataStore:GetReputationLevelText(level)), factionTable[level] )
-		end
-	end
-end
-
-local callbacks = {
+tab:RegisterGrid(2, {
+	InvalidateView = function()
+		isViewValid = nil
+	end,
 	OnUpdate = function() 
-			if not isViewValid then
-				BuildView()
-			end
+			if isViewValid then return end
 
-			local currentXPack = addon:GetOption(OPTION_XPACK)
-			local currentFactionGroup = addon:GetOption(OPTION_FACTION)
+			local currentXPack = Options.Get(OPTION_XPACK)
+			local currentFactionGroup = Options.Get(OPTION_FACTION)
 			
 			if (currentXPack == CAT_GUILD) then
-				AltoholicTabGrids:SetStatus(GUILD)
+				tab:SetStatus(format("%s%s|r / %s%s", colors.white, L["Reputations"], colors.green, GUILD))
+				AddGuildsToFactionsTable(tab:GetRealm())
+				
 			elseif (currentXPack == CAT_ALLINONE) then
-				AltoholicTabGrids:SetStatus(L["All-in-one"])
+				tab:SetStatus(format("%s%s|r / %s%s", colors.white, L["Reputations"], colors.green, L["All-in-one"]))
 			else
-				AltoholicTabGrids:SetStatus(format("%s / %s", Factions[currentXPack].name, Factions[currentXPack][currentFactionGroup].name))
+				tab:SetStatus(format("%s%s|r / %s%s|r / %s%s", 
+					colors.white, L["Reputations"], 
+					colors.white, Factions[currentXPack].name, 
+					colors.green, Factions[currentXPack][currentFactionGroup].name))
 			end
+
+			BuildView()
 		end,
 	GetSize = function() return #view end,
 	RowSetup = function(self, rowFrame, dataRowID)
@@ -523,8 +419,6 @@ local callbacks = {
 			rowFrame.Name.Text:SetText(format("%s%s", colors.white, currentFaction.name))
 			rowFrame.Name.Text:SetJustifyH("LEFT")
 		end,
-	RowOnEnter = function()	end,
-	RowOnLeave = function() end,
 	ColumnSetup = function(self, button, dataRowID, character)
 			local faction = currentFaction
 			
@@ -532,7 +426,7 @@ local callbacks = {
 				button.Background:SetTexture(faction.icon)
 				button.Background:SetTexCoord(faction.left, faction.right, faction.top, faction.bottom)
 			else
-				button.Background:SetTexture("Interface\\Icons\\"..faction.icon)
+				button.Background:SetTexture(format("Interface\\Icons\\%s", faction.icon))
 				button.Background:SetTexCoord(0, 1, 0, 1)
 			end		
 			
@@ -560,7 +454,7 @@ local callbacks = {
 					button.Name:SetFontObject("NumberFontNormalSmall")
 					button.Name:SetJustifyH("RIGHT")
 					button.Name:SetPoint("BOTTOMRIGHT", 0, 0)
-					text = format("%2d", floor(rate)) .. "%"
+					text = format("%2d%%", floor(rate))
 				end
 
 				local vc = VertexColors[status]
@@ -575,9 +469,9 @@ local callbacks = {
 
 				button.key = character
 				button:SetID(dataRowID)
-				button.Name:SetText(color..text)
+				button.Name:SetText(format("%s%s", color, text))
 			else
-				button.Background:SetVertexColor(0.3, 0.3, 0.3);	-- greyed out
+				button.Background:SetVertexColor(0.3, 0.3, 0.3)		-- greyed out
 				button.Name:SetText(icons.notReady)
 				button:SetID(0)
 				button.key = nil
@@ -592,36 +486,31 @@ local callbacks = {
 			local status, currentLevel, maxLevel, rate = DataStore:GetReputationInfo(character, faction)
 			if not status then return end
 			
-			AltoTooltip:SetOwner(frame, "ANCHOR_LEFT");
-			AltoTooltip:ClearLines();
-			AltoTooltip:AddLine(DataStore:GetColoredCharacterName(character) .. colors.white .. " @ " ..	colors.teal .. faction,1,1,1);
+			local tooltip = AddonFactory_Tooltip
+			
+			tooltip:SetOwner(frame, "ANCHOR_LEFT")
+			tooltip:ClearLines()
+			tooltip:AddLine(format("%s %s@ %s%s", 
+				DataStore:GetColoredCharacterName(character), colors.white, colors.teal, faction))
 
-			rate = format("%d", floor(rate)) .. "%"
-			AltoTooltip:AddLine(format("%s: %d/%d (%s)", status, currentLevel, maxLevel, rate),1,1,1 )
-						
-			local bottom = DataStore:GetRawReputationInfo(character, faction)
-			local suggestion = GetSuggestion(faction, bottom)
-			if suggestion then
-				AltoTooltip:AddLine(" ",1,1,1)
-				AltoTooltip:AddLine("Suggestion: ",1,1,1)
-				AltoTooltip:AddLine(colors.teal .. suggestion,1,1,1)
-			end
+			rate = format("%d%%", floor(rate))
+			tooltip:AddLine(format("%s: %d/%d (%s)", status, currentLevel, maxLevel, rate),1,1,1 )
 			
-			AltoTooltip:AddLine(" ",1,1,1)
-			AltoTooltip:AddLine(format("%s = %s", icons.notReady, UNKNOWN), 0.8, 0.13, 0.13)
-			AltoTooltip:AddLine(FACTION_STANDING_LABEL1, 0.8, 0.13, 0.13)
-			AltoTooltip:AddLine(FACTION_STANDING_LABEL2, 1.0, 0.0, 0.0)
-			AltoTooltip:AddLine(FACTION_STANDING_LABEL3, 0.93, 0.4, 0.13)
-			AltoTooltip:AddLine(FACTION_STANDING_LABEL4, 1.0, 1.0, 0.0)
-			AltoTooltip:AddLine(FACTION_STANDING_LABEL5, 0.0, 1.0, 0.0)
-			AltoTooltip:AddLine(FACTION_STANDING_LABEL6, 0.0, 1.0, 0.8)
-			AltoTooltip:AddLine(FACTION_STANDING_LABEL7, 1.0, 0.4, 1.0)
-			AltoTooltip:AddLine(format("%s = %s", icons.ready, FACTION_STANDING_LABEL8), 1, 1, 1)
-			AltoTooltip:AddLine(format("%s = %s%s", icons.waiting, colors.epic, PARAGON_LABEL), 1, 1, 1)
+			tooltip:AddLine(" ",1,1,1)
+			tooltip:AddLine(format("%s = %s", icons.notReady, UNKNOWN), 0.8, 0.13, 0.13)
+			tooltip:AddLine(FACTION_STANDING_LABEL1, 0.8, 0.13, 0.13)
+			tooltip:AddLine(FACTION_STANDING_LABEL2, 1.0, 0.0, 0.0)
+			tooltip:AddLine(FACTION_STANDING_LABEL3, 0.93, 0.4, 0.13)
+			tooltip:AddLine(FACTION_STANDING_LABEL4, 1.0, 1.0, 0.0)
+			tooltip:AddLine(FACTION_STANDING_LABEL5, 0.0, 1.0, 0.0)
+			tooltip:AddLine(FACTION_STANDING_LABEL6, 0.0, 1.0, 0.8)
+			tooltip:AddLine(FACTION_STANDING_LABEL7, 1.0, 0.4, 1.0)
+			tooltip:AddLine(format("%s = %s", icons.ready, FACTION_STANDING_LABEL8), 1, 1, 1)
+			tooltip:AddLine(format("%s = %s%s", icons.waiting, colors.epic, PARAGON_LABEL), 1, 1, 1)
 			
-			AltoTooltip:AddLine(" ",1,1,1)
-			AltoTooltip:AddLine(colors.green .. L["Shift+Left click to link"])
-			AltoTooltip:Show()
+			tooltip:AddLine(" ",1,1,1)
+			tooltip:AddLine(format("%s%s", colors.green, L["Shift+Left click to link"]))
+			tooltip:Show()
 			
 		end,
 	OnClick = function(frame, button)
@@ -632,7 +521,7 @@ local callbacks = {
 			local status, currentLevel, maxLevel, rate = DataStore:GetReputationInfo(character, faction)
 			if not status then return end
 			
-			if ( button == "LeftButton" ) and ( IsShiftKeyDown() ) then
+			if button == "LeftButton" and IsShiftKeyDown() then
 				local chat = ChatEdit_GetLastActiveWindow()
 				if chat:IsShown() then
 					chat:Insert(format(L["%s is %s with %s (%d/%d)"], DataStore:GetCharacterName(character), status, faction, currentLevel, maxLevel))
@@ -640,32 +529,6 @@ local callbacks = {
 			end
 		end,
 	OnLeave = function(self)
-			AltoTooltip:Hide() 
+			AddonFactory_Tooltip:Hide() 
 		end,
-	InitViewDDM = function(frame, title)
-			dropDownFrame = frame
-			frame:Show()
-			title:Show()
-
-			local currentXPack = addon:GetOption(OPTION_XPACK)
-			local currentFactionGroup = addon:GetOption(OPTION_FACTION)
-			
-			if (currentXPack ~= CAT_ALLINONE) then
-				currentDDMText = Factions[currentXPack][currentFactionGroup].name
-			else
-				currentDDMText = L["All-in-one"]
-			end
-			
-			if (currentXPack == CAT_GUILD) then
-				local account, realm = AltoholicTabGrids:GetRealm()
-				AddGuildsToFactionsTable(realm, account)
-			end
-			
-			frame:SetMenuWidth(100) 
-			frame:SetButtonWidth(20)
-			frame:SetText(currentDDMText)
-			frame:Initialize(DropDown_Initialize, "MENU_NO_BORDERS")
-		end,
-}
-
-AltoholicTabGrids:RegisterGrid(2, callbacks)
+})

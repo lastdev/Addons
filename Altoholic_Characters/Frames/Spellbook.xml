@@ -1,7 +1,7 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="Spellbook.lua"></Script>
 
-	<Frame parentKey="Spellbook" parent="AltoholicTabCharacters" inherits="AltoDataPanelTemplate">
+	<Frame parentKey="Spellbook" hidden="true">
 		<Layers>
 			<Layer level="BACKGROUND">
 				<FontString parentKey="PageNumber" inherits="GameFontHighlightSmallOutline" justifyH="RIGHT">
@@ -108,7 +108,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:BindViewToController(self, "AltoholicUI.SpellbookPanel")
+				Altoholic:BindViewToController(self, "AltoholicUI.TabCharacters.Spellbook")
 			</OnLoad>
 			<OnMouseWheel>
 				self:OnMouseWheel(delta)

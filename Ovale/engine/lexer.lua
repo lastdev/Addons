@@ -1,8 +1,10 @@
-local __exports = LibStub:NewLibrary("ovale/engine/lexer", 90103)
+local __exports = LibStub:NewLibrary("ovale/engine/lexer", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local __toolsQueue = LibStub:GetLibrary("ovale/tools/Queue")
-local OvaleQueue = __toolsQueue.OvaleQueue
+local __imports = {}
+__imports.__toolsQueue = LibStub:GetLibrary("ovale/tools/Queue")
+__imports.Queue = __imports.__toolsQueue.Queue
+local Queue = __imports.Queue
 local ipairs = ipairs
 local kpairs = pairs
 local wrap = coroutine.wrap
@@ -11,8 +13,8 @@ local sub = string.sub
 __exports.OvaleLexer = __class(nil, {
     constructor = function(self, name, stream, matches, filter)
         self.name = name
-        self.typeQueue = OvaleQueue("typeQueue")
-        self.tokenQueue = OvaleQueue("tokenQueue")
+        self.typeQueue = __imports.Queue()
+        self.tokenQueue = __imports.Queue()
         self.endOfStream = nil
         self.finished = false
         self.iterator = self:scan(stream, matches, filter)
@@ -54,9 +56,9 @@ __exports.OvaleLexer = __class(nil, {
     consume = function(self, index)
         index = index or 1
         local tokenType, token
-        while index > 0 and self.typeQueue:size() > 0 do
-            tokenType = self.typeQueue:removeFront()
-            token = self.tokenQueue:removeFront()
+        while index > 0 and self.typeQueue.length > 0 do
+            tokenType = self.typeQueue:shift()
+            token = self.tokenQueue:shift()
             if  not tokenType then
                 break
             end
@@ -74,7 +76,7 @@ __exports.OvaleLexer = __class(nil, {
     peek = function(self, index)
         index = index or 1
         local tokenType, token
-        while index > self.typeQueue:size() do
+        while index > self.typeQueue.length do
             if self.endOfStream then
                 break
             else
@@ -83,11 +85,11 @@ __exports.OvaleLexer = __class(nil, {
                     self.endOfStream = true
                     break
                 end
-                self.typeQueue:insertBack(tokenType)
-                self.tokenQueue:insertBack(token)
+                self.typeQueue:push(tokenType)
+                self.tokenQueue:push(token)
             end
         end
-        if index <= self.typeQueue:size() then
+        if index <= self.typeQueue.length then
             tokenType = self.typeQueue:at(index)
             token = self.tokenQueue:at(index)
         end

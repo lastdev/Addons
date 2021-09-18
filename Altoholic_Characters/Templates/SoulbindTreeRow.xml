@@ -23,7 +23,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:BindViewToController(self, "AltoholicUI.SoulbindTreeRow")
+				Altoholic:BindViewToController(self, "AltoholicUI.TabCharacters.SoulbindTreeRow")
 			</OnLoad>
 		</Scripts>
 	</Frame>

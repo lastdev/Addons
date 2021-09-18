@@ -34,7 +34,6 @@ local ConRO_Rogue, ids = ...;
 	ids.Covenant_Ability = {
 		EchoingReprimand = 323547,
 		Flagellation = 323654,
-			FlagellationEnd = 346975,
 		FleshCraft = 324631,
 		PhialofSerenity = 177278,
 		SerratedBoneSpike = 328547,

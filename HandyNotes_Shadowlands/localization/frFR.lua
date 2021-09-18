@@ -336,6 +336,7 @@ L["nirvaska_note"] = "N'apparaît que lorsque l'expédition {wq:Rappel Mortel} e
 L["ravenomous_note"] = "Écrasez les {npc:159901s} dans la zone, jusqu'à ce que le rare apparaisse."
 L["sabriel_note"] = "Peut apparaître comme l'un des champions du Théâtre de la souffrance."
 L["schmitd_note"] = "Utilisez la {spell:313451} proche pour briser son bouclier."
+L["tahonta_note"] = "La monture ne pourra être obtenue que si vous avez {npc:159239} avec vous !"
 L["taskmaster_xox_note"] = "Partage son apparition avec {npc:160204}, {npc:160230} et {npc:160226}."
 L["theater_of_pain_note"] = "Votre premier boss tué chaque jour a une chance de donner la monture."
 L["zargox_the_reborn_note"] = [[
@@ -481,6 +482,18 @@ L["high_inquisitor_note"] = "Donnez 250 {currency:1816} à l'{npc:160248} pour a
 L["inquisitor_note"] = "Donnez 100 {currency:1816} à l'{npc:160248} our avoir une chance d'obtenir cette stèle du vice."
 L["options_icons_inquisitors"] = "Inquisiteurs"
 L["options_icons_inquisitors_desc"] = "Afficher les emplacements des inquisiteurs pour le succès {achievement:14276}."
+
+L["broken_mirror"] = "Miroir brisé"
+L["broken_mirror_note"] = "Un groupe de trois miroirs brisés sera actif chaque jour. Utilisez une {item:181363} pour réparer chaque miroir et ouvrir le |cFFFFFD00Coffre oublié|r à l'intérieur."
+L["broken_mirror_crypt"] = "Dans une crypte."
+L["broken_mirror_elite"] = "Dans une petite pièce remplie de monstres élite."
+L["broken_mirror_group"] = nil
+L["broken_mirror_house"] = "A l'intérieur de la maison."
+L["broken_mirror_61818"] = "Dans une petite pièce avec {npc:173699}."
+L["broken_mirror_61819"] = "Dans une petite pièce au rez-de-chaussée."
+L["broken_mirror_61827"] = "Dans une petite pièce."
+L["options_icons_broken_mirror"] = "Miroirs brisés"
+L["options_icons_broken_mirror_desc"] = "Afficher les emplacements des miroirs brisés."
 
 -------------------------------------------------------------------------------
 ----------------------------------- THE MAW -----------------------------------
@@ -656,3 +669,10 @@ L["desmotaeron"] = "Desmotæron"
 L["zovault_note"] = "Traînez le {npc:179883} vers {npc:179904} une fois par jour pour des pierres de faille garanties."
 L["options_icons_zovault"] = "{npc:179883}"
 L["options_icons_zovault_desc"] = "Afficher les emplacements possibles pour le {npc:179883}."
+
+L["tormentors"] = "Tourmenteurs de Tourment"
+L["tormentors_note"] = [[
+Un événement de tourmenteur apparaît toutes les 2 heures à heure pile. Les boss apparaîtront toujours dans l'ordre indiqué ci-dessous.
+
+La {item:185972} peut être obtenue une fois par semaine et contient 50 {currency:1906}.
+]]

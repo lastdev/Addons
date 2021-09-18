@@ -1,11 +1,18 @@
-## Interface: 90100
+﻿## Interface: 90100
 ## Title: Altoholic_Search
 ## Notes: Altoholic's Search UI
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: r192
+## Version: 9.1.005
 ## Dependencies: Altoholic, DataStore, DataStore_Characters
 ## LoadOnDemand: 1
 ## X-Category: Interface Enhancements
 
+Locale.xml
+Services\ItemFilters.lua
+Services\Results.lua
+Services\DataBrowser.lua
+
+Templates\UITemplates.xml
 TabSearch.xml
-Search.xml
+
+Frames\Search.xml

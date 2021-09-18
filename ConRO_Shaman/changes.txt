@@ -1,3 +1,6 @@
+Ver 9.1.12
+	-Adjusted Stormkeeper for Enhancement rotation to be chain lightning only.
+
 Ver 9.1.11
 	-Updated PvP code.
 	-Fixed Weapon buffs for Enhancement specialization.

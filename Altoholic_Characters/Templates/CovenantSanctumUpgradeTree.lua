@@ -33,7 +33,7 @@ local covenantSanctumFeatureDescription = {
 
 local talentCache = { 0, 0, 0, 0, 0 }	-- make room for 5 talents
 
-addon:Controller("AltoholicUI.CovenantSanctumUpgradeTree", {
+addon:Controller("AltoholicUI.TabCharacters.CovenantSanctumUpgradeTree", {
 	Update = function(frame, character, covenantID, treeType)
 		
 		-- Get a valid tree ID
@@ -69,7 +69,7 @@ addon:Controller("AltoholicUI.CovenantSanctumUpgradeTree", {
 		
 		-- Update the talent icon
 		for i = 1, 5 do
-			frame["Item"..i]:Update(talentCache[i], i, treeInfo.tier)
+			frame[format("Item%d", i)]:Update(talentCache[i], i, treeInfo.tier)
 		end
 		
 		frame:Show()

@@ -3,6 +3,8 @@ local addon = _G[addonName]
 local colors = addon.Colors
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
+local MVC = LibStub("LibMVC-1.0")
+local Options = MVC:GetService("AltoholicUI.Options")
 
 local MAX_BANK_TABS = 8
 
@@ -15,62 +17,19 @@ local rarityIcons = {
 	[6] = "Interface\\Icons\\inv_misc_uncutgemnormal5",
 }
 
-local function DeleteGuild_MsgBox_Handler(self, button, guildKey)
-	if not button then return end
-	
-	local account, realm, guildName = strsplit(".", guildKey)
-	local guild = addon:GetGuild(guildName, realm, account)
-	wipe(guild)
-	
-	DataStore:DeleteGuild(guildName, realm, account)
-	
-	addon:Print(format( L["Guild %s successfully deleted"], guildName))
-	
-	if guildKey == currentGuildKey then
-		currentGuildKey = nil
-		currentGuildBankTab = nil
-		ns:Update()
-	end
-end
-
 -- ** Icon events **
 
-local function OnGuildChange(frame, guildBank)
+local function OnHideInTooltip(frame, guildBank)
 	local guildKey = frame.value
 	
-	guildBank:SetCurrentGuild(guildKey)
-	guildBank:SetCurrentBankTab(nil)
-	guildBank:Update()
+	-- Option for this guild will be like : "Default.Dalaran.MyGuild.HideInTooltip"
+	local optionName = format("%s.HideInTooltip", guildKey)
 	
-	local _, _, guildName = strsplit(".", guildKey)
-	AltoholicTabGuild.Status:SetText(format("%s%s %s/", colors.green, guildName, colors.white))
-
-	local currentGuild = GetGuildInfo("player")
-	
-	local menuIcons = guildBank.MenuIcons
-	
-	if guildName == currentGuild then
-		menuIcons.UpdateIcon:Enable()
-		menuIcons.UpdateIcon.Icon:SetDesaturated(false)
+	local option = Options.Get(optionName)
+	if option then
+		Options.Toggle(nil, optionName)		-- if the option already exists, toggle it
 	else
-		menuIcons.UpdateIcon:Disable()
-		menuIcons.UpdateIcon.Icon:SetDesaturated(true)
-	end
-	
-	guildBank.Info1:SetText("")
-	guildBank.Info2:SetText("")
-	guildBank.Info3:SetText("")
-	guildBank:UpdateBankTabButtons()
-	guildBank:Update()
-	
-	guildBank.ContextualMenu:Close()
-end
-
-local function OnHideInTooltip(frame, guildBank)
-	local account, realm, name = strsplit(".", frame.value)
-	local guild = addon:GetGuild(name, realm, account)
-	if guild	then
-		guild.hideInTooltip = not guild.hideInTooltip
+		Options.Set(optionName, true)			-- otherwise set it to true (hidden)
 	end
 
 	guildBank.ContextualMenu:Close()
@@ -80,9 +39,17 @@ local function OnGuildDelete(frame, guildBank)
 	local guildKey = frame.value
 	local _, realm, guildName = strsplit(".", guildKey)
 	
-	AltoMessageBox:SetHandler(DeleteGuild_MsgBox_Handler, guildKey)
-	AltoMessageBox:SetText(format("%s\n%s%s %s(%s)", L["Delete Guild Bank?"], colors.green, guildName, colors.white, realm ))
-	AltoMessageBox:Show()
+	AltoMessageBox:Ask(format("%s\n%s%s %s(%s)", L["Delete Guild Bank?"], colors.green, guildName, colors.white, realm), function() 
+		DataStore:DeleteGuild(guildKey)
+	
+		addon:Print(format( L["Guild %s successfully deleted"], guildName))
+	
+		if guildKey == currentGuildKey then
+			currentGuildKey = nil
+			currentGuildBankTab = nil
+			ns:Update()
+		end
+	end)
 	
 	guildBank.ContextualMenu:Close()
 end
@@ -103,7 +70,7 @@ end
 local function OnRarityChange(frame, guildBank)
 	local rarity = frame.value
 
-	addon:SetOption("UI.Tabs.Guild.BankItemsRarity", rarity)
+	Options.Set("UI.Tabs.Guild.BankItemsRarity", rarity)
 	
 	guildBank.MenuIcons.RarityIcon:SetRarity(rarity)
 	guildBank:Update()
@@ -114,59 +81,14 @@ end
 
 local function GuildIcon_Initialize(frame, level)
 	local guildBank = frame:GetParent()
+	local guildKey = guildBank:GetCurrentGuild()
+	local guildName = select(3, strsplit(".", guildKey))
+	local hideInTooltip = Options.Get(format("%s.HideInTooltip", guildKey)) or false
 	
-	local info = frame:CreateInfo()
-
-	if level == 1 then
-		local guildKey = guildBank:GetCurrentGuild()
-	
-		for account in pairs(DataStore:GetAccounts()) do
-			for realm in pairs(DataStore:GetRealms(account)) do
-				for guildName, guild in pairs(DataStore:GetGuilds(realm, account)) do
-					local text = format("%s%s / %s%s", colors.white, realm, colors.green, guildName)
-
-					if account ~= "Default" then
-						text = format("%s %s(%s)", text, colors.yellow, account)
-					end
-				
-					info.text = text
-					info.hasArrow = 1
-					info.checked = (guild == guildKey) and true or nil
-					info.value = guild		-- guild key
-					info.func = OnGuildChange
-					info.arg1 = guildBank
-					frame:AddButtonInfo(info, level)
-				end
-			end
-		end
-		
-	elseif level == 2 then
-	
-		-- frame:GetCurrentOpenMenuValue()
-		-- UIDROPDOWNMENU_MENU_VALUE
-		
-		local currentMenu = frame:GetCurrentOpenMenuValue()
-	
-		local account, realm, name = strsplit(".", currentMenu)
-		-- local account, realm, name = strsplit(".", UIDROPDOWNMENU_MENU_VALUE)
-		local guild = addon:GetGuild(name, realm, account)
-	
-		info.text = colors.white ..  L["Hide this guild in the tooltip"]
-		-- info.value = UIDROPDOWNMENU_MENU_VALUE
-		info.value = currentMenu
-		info.checked = guild.hideInTooltip
-		info.func = OnHideInTooltip
-		info.arg1 = guildBank
-		frame:AddButtonInfo(info, level)
-		
-		info.text = colors.white .. DELETE
-		-- info.value = UIDROPDOWNMENU_MENU_VALUE
-		info.value = currentMenu
-		info.checked = nil
-		info.func = OnGuildDelete
-		info.arg1 = guildBank
-		frame:AddButtonInfo(info, level)
-	end
+	frame:AddTitle(guildName)
+	frame:AddButtonWithArgs(format("%s%s", colors.white, L["Hide this guild in the tooltip"]), guildKey, OnHideInTooltip, guildBank, nil, (hideInTooltip == true))
+	frame:AddButtonWithArgs(format("%s%s", colors.white, DELETE), guildKey, OnGuildDelete, guildBank)
+	frame:AddCloseMenu()
 end
 
 local function TabsIcon_Initialize(frame, level)
@@ -228,10 +150,9 @@ local function UpdateIcon_Initialize(frame, level)
 	
 	if #newer > 0 then
 		frame:AddTitle(" ")
-		frame:AddTitle(colors.yellow..L["Newer data"])
+		frame:AddTitle(format("%s%s", colors.yellow, L["Newer data"]))
 		
 		table.sort(newer, function(a,b) return a.timeStamp > b.timeStamp end)
-		
 		
 		local info = frame:CreateInfo()
 		
@@ -248,7 +169,7 @@ local function UpdateIcon_Initialize(frame, level)
 
 	if #older > 0 then
 		frame:AddTitle(" ")
-		frame:AddTitle(colors.yellow..L["Older data"])
+		frame:AddTitle(format("%s%s", colors.yellow, L["Older data"]))
 		
 		table.sort(older, function(a,b) return a.timeStamp > b.timeStamp end)
 		
@@ -269,7 +190,7 @@ local function UpdateIcon_Initialize(frame, level)
 end
 
 local function RarityIcon_Initialize(frame, level)
-	local rarity = addon:GetOption("UI.Tabs.Guild.BankItemsRarity")
+	local rarity = Options.Get("UI.Tabs.Guild.BankItemsRarity")
 	
 	local guildBank = frame:GetParent()
 	
@@ -278,9 +199,9 @@ local function RarityIcon_Initialize(frame, level)
 	-- Add the 'Any rarity' option
 	frame:AddButtonWithArgs(L["Any"], 0, OnRarityChange, guildBank, nil, (rarity == 0))
 
-	-- Add the rarity levels higher than green (Quality: 0 = poor .. 5 = legendary)
+	-- Add the rarity levels higher than green (Quality: 0 = poor, 5 = legendary)
 	for i = 2, 6 do
-		frame:AddButtonWithArgs(format("%s%s", ITEM_QUALITY_COLORS[i].hex, _G["ITEM_QUALITY"..i.."_DESC"]), i, OnRarityChange, guildBank, nil, (rarity == i))
+		frame:AddButtonWithArgs(format("%s%s", ITEM_QUALITY_COLORS[i].hex, _G[format("ITEM_QUALITY%d_DESC", i)]), i, OnRarityChange, guildBank, nil, (rarity == i))
 	end
 
 	frame:AddCloseMenu()
@@ -305,7 +226,7 @@ addon:Controller("AltoholicUI.GuildBankIcon", {
 		menu:Toggle(frame, 0, 0)
 	end,
 	SetRarity = function(frame, rarity)
-		-- technically, this will only be applied to the rarity icon.. but I'll settle for a function a this level ..
+		-- technically, this will only be applied to the rarity icon, but I'll settle for a function a this level.
 		
 		if rarityIcons[rarity] then
 			frame.Icon:SetTexture(rarityIcons[rarity])

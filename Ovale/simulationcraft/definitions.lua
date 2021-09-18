@@ -1,10 +1,11 @@
-local __exports = LibStub:NewLibrary("ovale/simulationcraft/definitions", 90103)
+local __exports = LibStub:NewLibrary("ovale/simulationcraft/definitions", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local pairs = pairs
 local ipairs = ipairs
 local kpairs = pairs
 __exports.interruptsClasses = {
+    pet_interrupt = "WARLOCK",
     mind_freeze = "DEATHKNIGHT",
     pummel = "WARRIOR",
     disrupt = "DEMONHUNTER",
@@ -113,7 +114,17 @@ __exports.classInfos = {
             interrupt = "wind_shear"
         }
     },
-    WARLOCK = {},
+    WARLOCK = {
+        affliction = {
+            interrupt = "pet_interrupt"
+        },
+        demonology = {
+            interrupt = "pet_interrupt"
+        },
+        destruction = {
+            interrupt = "pet_interrupt"
+        }
+    },
     WARRIOR = {
         fury = {
             interrupt = "pummel"
@@ -159,16 +170,18 @@ __exports.modifierKeywords = {
     ["max_cycle_targets"] = true,
     ["max_energy"] = true,
     ["min_frenzy"] = true,
+    ["mode"] = true,
     ["moving"] = true,
     ["name"] = true,
     ["nonlethal"] = true,
     ["op"] = true,
     only_cwc = true,
     ["pct_health"] = true,
+    ["precast_etf_equip"] = true,
+    ["precast_time"] = true,
     ["precombat"] = true,
     ["precombat_seconds"] = true,
     precombat_time = true,
-    ["precast_time"] = true,
     ["range"] = true,
     ["sec"] = true,
     ["slot"] = true,
@@ -178,9 +191,6 @@ __exports.modifierKeywords = {
     ["sync_weapons"] = true,
     ["target"] = true,
     ["target_if"] = true,
-    ["target_if_first"] = true,
-    ["target_if_max"] = true,
-    ["target_if_min"] = true,
     ["toggle"] = true,
     ["travel_speed"] = true,
     ["type"] = true,
@@ -193,11 +203,17 @@ __exports.modifierKeywords = {
     ["weapon"] = true
 }
 __exports.litteralModifiers = {
-    ["name"] = true
+    ["name"] = true,
+    ["op"] = true
 }
 __exports.functionKeywords = {
     ["ceil"] = true,
     ["floor"] = true
+}
+__exports.targetIfKeywords = {
+    ["first"] = true,
+    ["max"] = true,
+    ["min"] = true
 }
 __exports.specialActions = {
     ["apply_poison"] = true,
@@ -210,8 +226,10 @@ __exports.specialActions = {
     ["flask"] = true,
     ["food"] = true,
     ["health_stone"] = true,
+    ["interrupt"] = true,
     ["pool_resource"] = true,
     ["potion"] = true,
+    ["retarget_auto_attack"] = true,
     ["run_action_list"] = true,
     ["sequence"] = true,
     ["snapshot_stats"] = true,
@@ -225,6 +243,10 @@ __exports.specialActions = {
     ["use_item"] = true,
     ["variable"] = true,
     ["wait"] = true
+}
+__exports.sequenceActions = {
+    ["sequence"] = true,
+    ["strict_sequence"] = true
 }
 local powerModifiers = {
     ["max"] = {
@@ -241,6 +263,10 @@ local powerModifiers = {
         name = "regenrate",
         type = 0
     },
+    ["regen_combined"] = {
+        name = "regenrate",
+        type = 0
+    },
     ["time_to_40"] = {
         name = "timeto",
         type = 1,
@@ -254,6 +280,10 @@ local powerModifiers = {
     ["time_to_max"] = {
         name = "timetomax",
         type = 1
+    },
+    ["time_to_max_combined"] = {
+        name = "timetomax",
+        type = 1
     }
 }
 __exports.miscOperands = {
@@ -261,8 +291,7 @@ __exports.miscOperands = {
         name = "enemies"
     },
     ["active_bt_triggers"] = {
-        name = "buffcount",
-        extraSymbol = "bt_buffs"
+        name = "bloodtalonstriggercount"
     },
     ["animacharged_cp"] = {
         name = "maxcombopoints"
@@ -274,6 +303,18 @@ __exports.miscOperands = {
     ["astral_power"] = {
         name = "astralpower",
         modifiers = powerModifiers
+    },
+    ["bloodseeker"] = {
+        modifiers = {
+            remains = {
+                type = 5,
+                code = "target.debuffremains(kill_command_debuff)",
+                symbolsInCode = {
+                    [1] = "kill_command_debuff",
+                    [2] = "bloodseeker_talent"
+                }
+            }
+        }
     },
     ["ca_active"] = {
         code = "talent(careful_aim_talent) and target.healthpercent() > 70",
@@ -380,6 +421,10 @@ __exports.miscOperands = {
             remains = {
                 type = 4,
                 name = "buffremains"
+            },
+            active_remains = {
+                type = 4,
+                name = "buffremains"
             }
         },
         extraSymbol = "death_and_decay"
@@ -421,37 +466,56 @@ __exports.miscOperands = {
                 name = "buffpresent",
                 extraSymbol = "eclipse_solar_buff"
             },
+            solar_in = {
+                type = 4,
+                name = "eclipsesolarin"
+            },
             solar_in_1 = {
                 type = 5,
-                code = "counter(solar) == 1"
+                code = "eclipsesolarin() == 1"
+            },
+            solar_in_2 = {
+                type = 5,
+                code = "eclipsesolarin() == 2"
             },
             solar_next = {
-                type = 5,
-                code = "counter(solar) == 1"
+                type = 4,
+                name = "eclipsesolarnext"
+            },
+            lunar_in = {
+                type = 4,
+                name = "eclipselunarin"
             },
             lunar_in_1 = {
-                type = 4,
-                code = "counter(lunar) == 1"
+                type = 5,
+                code = "eclipselunarin() == 1"
+            },
+            lunar_in_2 = {
+                type = 5,
+                code = "eclipselunarin() == 2"
             },
             lunar_next = {
                 type = 4,
-                code = "counter(lunar) == 1"
+                name = "eclipselunarnext"
             },
             any_next = {
-                type = 5,
-                code = "counter(lunar) + counter(solar) == 1"
+                type = 4,
+                name = "eclipseanynext"
             },
             in_any = {
-                type = 4,
-                name = "buffpresent",
-                extraSymbol = "eclipse_any"
+                type = 5,
+                code = "buffpresent(eclipse_lunar_buff) or buffpresent(eclipse_solar_buff)",
+                symbolsInCode = {
+                    [1] = "eclipse_lunar_buff",
+                    [2] = "eclipse_solar_buff"
+                }
             },
             in_both = {
                 type = 5,
-                code = "buffpresent(eclipse_solar_buff) and buffpresent(eclipse_lunar_buff)",
+                code = "buffpresent(eclipse_lunar_buff) and buffpresent(eclipse_solar_buff)",
                 symbolsInCode = {
-                    [1] = "eclipse_solar_buff",
-                    [2] = "eclipse_lunar_buff"
+                    [1] = "eclipse_lunar_buff",
+                    [2] = "eclipse_solar_buff"
                 }
             }
         }
@@ -462,6 +526,9 @@ __exports.miscOperands = {
     },
     ["expected_combat_length"] = {
         name = "expectedcombatlength"
+    },
+    ["expected_kindling_reduction"] = {
+        code = "1"
     },
     ["exsanguinated"] = {
         name = "targetdebuffremaining",
@@ -545,7 +612,7 @@ __exports.miscOperands = {
         modifiers = powerModifiers
     },
     ["remaining_winters_chill"] = {
-        name = "debuffstacks",
+        code = "target.debuffstacks(winters_chill_debuff)",
         extraSymbol = "winters_chill_debuff"
     },
     ["rune"] = {
@@ -563,6 +630,17 @@ __exports.miscOperands = {
     ["runic_power"] = {
         name = "runicpower",
         modifiers = powerModifiers
+    },
+    ["searing_touch"] = {
+        modifiers = {
+            active = {
+                type = 5,
+                code = "talent(searing_touch_talent) and target.healthpercent() < 30",
+                symbolsInCode = {
+                    [1] = "searing_touch_talent"
+                }
+            }
+        }
     },
     ["soul_fragments"] = {
         name = "soulfragments",
@@ -652,6 +730,9 @@ do
         __exports.keywords[keyword] = value
     end
     for keyword, value in pairs(__exports.functionKeywords) do
+        __exports.keywords[keyword] = value
+    end
+    for keyword, value in pairs(__exports.targetIfKeywords) do
         __exports.keywords[keyword] = value
     end
     for keyword, value in pairs(__exports.specialActions) do

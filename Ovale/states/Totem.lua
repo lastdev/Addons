@@ -1,14 +1,17 @@
-local __exports = LibStub:NewLibrary("ovale/states/Totem", 90103)
+local __exports = LibStub:NewLibrary("ovale/states/Totem", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+local __imports = {}
+__imports.aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+__imports.__enginestate = LibStub:GetLibrary("ovale/engine/state")
+__imports.States = __imports.__enginestate.States
+local aceEvent = __imports.aceEvent
 local ipairs = ipairs
 local pairs = pairs
 local kpairs = pairs
 local GetTotemInfo = GetTotemInfo
 local MAX_TOTEMS = MAX_TOTEMS
-local __enginestate = LibStub:GetLibrary("ovale/engine/state")
-local States = __enginestate.States
+local States = __imports.States
 local serial = 0
 local TotemData = __class(nil, {
     constructor = function(self)
@@ -16,7 +19,7 @@ local TotemData = __class(nil, {
     end
 })
 __exports.OvaleTotemClass = __class(States, {
-    constructor = function(self, ovale, ovaleState, ovaleProfiler, ovaleData, ovaleFuture, ovaleAura, ovaleSpellBook, ovaleDebug)
+    constructor = function(self, ovale, ovaleState, ovaleData, ovaleFuture, ovaleAura, ovaleSpellBook, ovaleDebug)
         self.ovale = ovale
         self.ovaleData = ovaleData
         self.ovaleFuture = ovaleFuture
@@ -39,17 +42,14 @@ __exports.OvaleTotemClass = __class(States, {
             self.ovale:needRefresh()
         end
         self.applySpellAfterCast = function(spellId, targetGUID, startCast, endCast, isChanneled, spellcast)
-            self.profiler:startProfiling("OvaleTotem_ApplySpellAfterCast")
             local si = self.ovaleData.spellInfo[spellId]
             if si and si.totem then
                 self:summonTotem(spellId, endCast)
             end
-            self.profiler:stopProfiling("OvaleTotem_ApplySpellAfterCast")
         end
         States.constructor(self, TotemData)
         self.debug = ovaleDebug:create("OvaleTotem")
         self.module = ovale:createModule("OvaleTotem", self.handleInitialize, self.handleDisable, aceEvent)
-        self.profiler = ovaleProfiler:create(self.module:GetName())
         ovaleState:registerState(self)
     end,
     initializeState = function(self)
@@ -83,7 +83,6 @@ __exports.OvaleTotemClass = __class(States, {
         return (totem and totem.serial == serial and totem.start and totem.duration and totem.start < atTime and atTime < totem.start + totem.duration)
     end,
     getTotem = function(self, slot)
-        self.profiler:startProfiling("OvaleTotem_state_GetTotem")
         local totem = self.next.totems[slot]
         if totem and ( not totem.serial or totem.serial < serial) then
             local haveTotem, name, startTime, duration, icon = GetTotemInfo(slot)
@@ -101,7 +100,6 @@ __exports.OvaleTotemClass = __class(States, {
             totem.slot = slot
             totem.serial = serial
         end
-        self.profiler:stopProfiling("OvaleTotem_state_GetTotem")
         return totem
     end,
     getTotemInfo = function(self, spellId, atTime)
@@ -140,7 +138,6 @@ __exports.OvaleTotemClass = __class(States, {
         return count, start, ending
     end,
     summonTotem = function(self, spellId, atTime)
-        self.profiler:startProfiling("OvaleTotem_state_SummonTotem")
         local totemSlot = self:getAvailableTotemSlot(spellId, atTime)
         if totemSlot then
             local name, _, icon = self.ovaleSpellBook:getSpellInfo(spellId)
@@ -153,10 +150,8 @@ __exports.OvaleTotemClass = __class(States, {
             totem.slot = totemSlot
             self.debug:log("Spell ID '%d' summoned a totem in state slot %d", spellId, totemSlot)
         end
-        self.profiler:stopProfiling("OvaleTotem_state_SummonTotem")
     end,
     getAvailableTotemSlot = function(self, spellId, atTime)
-        self.profiler:startProfiling("OvaleTotem_state_GetNextAvailableTotemSlot")
         local availableSlot = nil
         local si = self.ovaleData.spellInfo[spellId]
         if si and si.totem then
@@ -180,7 +175,6 @@ __exports.OvaleTotemClass = __class(States, {
                 end
             end
         end
-        self.profiler:stopProfiling("OvaleTotem_state_GetNextAvailableTotemSlot")
         return availableSlot
     end,
 })

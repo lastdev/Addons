@@ -21,16 +21,19 @@ local continents = {
 	[13]  = true, -- Eastern Kingdoms
 	[101] = true, -- Outland
 	[113] = true, -- Northrend
+	[203] = true, -- Vashj'ir
+	[224] = true, -- Stranglethorn Vale
 	[424] = true, -- Pandaria
 	[572] = true, -- Draenor
 	[619] = true, -- Broken Isles
 	[875] = true, -- Zandalar
 	[876] = true, -- Kul Tiras
+	[947] = true, -- Azeroth
 }
 
 local notes = {
 	[8619]  = "Inside the dungeon.", -- Elder Morndeep, Blackrock Depths
-	[8635]  = "Inside the dungeon.", -- Elder Splitrock, Maraudon
+	[8635]  = "Inside Earthsong Falls.", -- Elder Splitrock, Maraudon
 	[8644]  = "Inside Lower Blackrock Spire.", -- Elder Stonefort, Lower Blackrock Spire
 	[8647]  = "Speak to Zidormi at the north of the zone to gain access to this Elder.",
 	[8648]  = "Speak to Zidormi in Tirisfal to gain access to The Undercity.",
@@ -51,21 +54,17 @@ local notes = {
 }
 
 -- upvalues
-local _G = getfenv(0)
-
-local C_Timer_NewTicker = _G.C_Timer.NewTicker
 local C_Calendar = _G.C_Calendar
+local C_DateAndTime = _G.C_DateAndTime
+local C_Map = _G.C_Map
+local C_QuestLog = _G.C_QuestLog
+local C_Timer_After = _G.C_Timer.After
 local GameTooltip = _G.GameTooltip
 local GetAchievementCriteriaInfo = _G.GetAchievementCriteriaInfo
-local GetQuestsCompleted = _G.GetQuestsCompleted
-local gsub = _G.string.gsub
 local IsControlKeyDown = _G.IsControlKeyDown
-local LibStub = _G.LibStub
-local next = _G.next
 local UIParent = _G.UIParent
-local WorldMapButton = _G.WorldMapButton
-local WorldMapTooltip = _G.WorldMapTooltip
 
+local LibStub = _G.LibStub
 local HandyNotes = _G.HandyNotes
 local TomTom = _G.TomTom
 
@@ -75,38 +74,32 @@ local points = LunarFestival.points
 
 -- plugin handler for HandyNotes
 function LunarFestival:OnEnter(mapFile, coord)
-	local tooltip = self:GetParent() == WorldMapButton and WorldMapTooltip or GameTooltip
-
 	if self:GetCenter() > UIParent:GetCenter() then -- compare X coordinate
-		tooltip:SetOwner(self, "ANCHOR_LEFT")
+		GameTooltip:SetOwner(self, "ANCHOR_LEFT")
 	else
-		tooltip:SetOwner(self, "ANCHOR_RIGHT")
+		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 	end
 
 	local point = points[mapFile] and points[mapFile][coord]
 	local nameOfElder = GetAchievementCriteriaInfo(point[2], point[3])
 
-	tooltip:SetText(nameOfElder)
+	GameTooltip:SetText(nameOfElder)
 
 	if notes[point[1]] then
-		tooltip:AddLine(notes[point[1]])
-		tooltip:AddLine(" ")
+		GameTooltip:AddLine(notes[point[1]])
+		GameTooltip:AddLine(" ")
 	end
 
 	if TomTom then
-		tooltip:AddLine("Right-click to set a waypoint.", 1, 1, 1)
-		tooltip:AddLine("Control-Right-click to set waypoints to every Elder.", 1, 1, 1)
+		GameTooltip:AddLine("Right-click to set a waypoint.", 1, 1, 1)
+		GameTooltip:AddLine("Control-Right-click to set waypoints to every Elder.", 1, 1, 1)
 	end
 
-	tooltip:Show()
+	GameTooltip:Show()
 end
 
 function LunarFestival:OnLeave()
-	if self:GetParent() == WorldMapButton then
-		WorldMapTooltip:Hide()
-	else
 		GameTooltip:Hide()
-	end
 end
 
 
@@ -120,10 +113,12 @@ end
 
 local function createAllWaypoints()
 	for mapFile, coords in next, points do
+		if not continents[mapFile] then
 		for coord, questID in next, coords do
 			if coord and (db.completed or not completedQuests[questID[1]]) then
 				createWaypoint(mapFile, coord)
 			end
+		end
 		end
 	end
 	TomTom:SetClosestWaypoint()
@@ -157,7 +152,7 @@ do
 		end
 	end
 
-	function LunarFestival:GetNodes2(mapID, minimap)
+	function LunarFestival:GetNodes2(mapID)
 		return iterator, points[mapID]
 	end
 end
@@ -210,8 +205,9 @@ local options = {
 -- check
 local setEnabled = false
 local function CheckEventActive()
-	local calendar = C_Calendar.GetDate()
+	local calendar = C_DateAndTime.GetCurrentCalendarTime()
 	local month, day, year = calendar.month, calendar.monthDay, calendar.year
+	local hour, minute = calendar.hour, calendar.minute
 
 	local monthInfo = C_Calendar.GetMonthInfo()
 	local curMonth, curYear = monthInfo.month, monthInfo.year
@@ -223,22 +219,20 @@ local function CheckEventActive()
 		local event = C_Calendar.GetDayEvent(monthOffset, day, i)
 
 		if event.iconTexture == 235469 or event.iconTexture == 235470 or event.iconTexture == 235471 then
-			if event.sequenceType == "ONGOING" then
-				setEnabled = true
-			else
-				local hour = tonumber(date("%H"))
+			setEnabled = event.sequenceType == "ONGOING" -- or event.sequenceType == "INFO"
 
-				if (event.sequenceType == "END" and hour <= event.endTime.hour) or (event.sequenceType == "START" and hour >= event.startTime.hour) then
-					setEnabled = true
-				else
-					setEnabled = false
-				end
+			if event.sequenceType == "START" then
+				setEnabled = hour >= event.startTime.hour and (hour > event.startTime.hour or minute >= event.startTime.minute)
+			elseif event.sequenceType == "END" then
+				setEnabled = hour <= event.endTime.hour and (hour < event.endTime.hour or minute <= event.endTime.minute)
 			end
 		end
 	end
 
 	if setEnabled and not LunarFestival.isEnabled then
-		completedQuests = GetQuestsCompleted(completedQuests)
+		for _, id in ipairs(C_QuestLog.GetAllCompletedQuestIDs()) do
+			completedQuests[id] = true
+		end
 
 		LunarFestival.isEnabled = true
 		LunarFestival:Refresh()
@@ -254,6 +248,10 @@ local function CheckEventActive()
 	end
 end
 
+local function RepeatingCheck()
+	CheckEventActive()
+	C_Timer_After(60, RepeatingCheck)
+end
 
 -- initialise
 function LunarFestival:OnEnable()
@@ -266,7 +264,7 @@ function LunarFestival:OnEnable()
 	end
 
 	for continentMapID in next, continents do
-		local children = C_Map.GetMapChildrenInfo(continentMapID)
+		local children = C_Map.GetMapChildrenInfo(continentMapID, nil, true)
 		for _, map in next, children do
 			local coords = points[map.mapID]
 			if coords then
@@ -282,13 +280,18 @@ function LunarFestival:OnEnable()
 		end
 	end
 
-	local calendar = C_Calendar.GetDate()
+	local calendar = C_DateAndTime.GetCurrentCalendarTime()
 	C_Calendar.SetAbsMonth(calendar.month, calendar.year)
+	CheckEventActive()
 
-	C_Timer_NewTicker(15, CheckEventActive)
 	HandyNotes:RegisterPluginDB("LunarFestival", self, options)
-
 	db = LibStub("AceDB-3.0"):New("HandyNotes_LunarFestivalDB", defaults, "Default").profile
+
+	self:RegisterEvent("CALENDAR_UPDATE_EVENT", CheckEventActive)
+	self:RegisterEvent("CALENDAR_UPDATE_EVENT_LIST", CheckEventActive)
+	self:RegisterEvent("ZONE_CHANGED", CheckEventActive)
+
+	C_Timer_After(60, RepeatingCheck)
 end
 
 function LunarFestival:Refresh(_, questID)

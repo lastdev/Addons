@@ -1,6 +1,6 @@
 ## Interface: 90100
 ## Title: LiteMount
-## Version: 9.1.10
+## Version: 9.1.12
 ## Author: Xodiv-Nagrand
 ## Email: mib@post.com
 ## OptionalDependencies: LibDebug

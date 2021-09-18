@@ -19,7 +19,7 @@ function InSeason:CalendarExcursion(fn, ...)
 end
 
 function InSeason:CacheValidation()
-    local date = C_Calendar.GetDate()
+    local date = C_DateAndTime.GetCurrentCalendarTime()
     if self.currentMonth ~= date.month then
         -- the month changed while we were logged in (or we just logged in)
         self.currentMonth = date.month
@@ -122,7 +122,7 @@ function InSeason:TimeUntil(monthOffset, day, hour, minute)
 
     while monthOffset < 0 do
         day = day - self:DaysInMonth(monthOffset)
-        monthOffset = monthOffset + 1        
+        monthOffset = monthOffset + 1
     end
 
     while monthOffset > 0 do
@@ -130,7 +130,7 @@ function InSeason:TimeUntil(monthOffset, day, hour, minute)
         monthOffset = monthOffset - 1
     end
 
-    local date = C_Calendar.GetDate()
+    local date = C_DateAndTime.GetCurrentCalendarTime()
     local d = date.monthDay
     local h, m = GetGameTime()
 

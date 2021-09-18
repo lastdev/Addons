@@ -84,6 +84,7 @@ L["Into the Maw"] = "Dans l'Antre"
 L["Mailbox"] = "Boite aux lettres"
 L["Portal to Orgrimmar"] = "Portail vers Orgrimmar"
 L["Portal to Stormwind"] = "Portail vers Hurlevent"
+L["To Keeper's Respite"] = "Vers le Répit du Gardien"
 L["To Ring of Fates"] = "Vers l'Anneau des Destins"
 L["To Ring of Transference"] = "Vers l'Anneau de Transfert"
 L["TomTom"] = true

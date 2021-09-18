@@ -130,7 +130,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:BindViewToController(self, "AltoholicUI.RecipeRow")
+				Altoholic:BindViewToController(self, "AltoholicUI.TabCharacters.RecipeRow")
 			</OnLoad>
 		</Scripts>
 	</Button>

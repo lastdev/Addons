@@ -39,6 +39,7 @@ function module:OnInitialize()
                 tooltip_lootwindow = false,
                 icon_scale = 1,
                 icon_alpha = 1,
+                routes = true,
                 edge = module.const.EDGE_FOCUS
             },
             icon_theme = 'skulls', -- circles / skulls
@@ -87,8 +88,6 @@ function module:OnInitialize()
         db.icon_alpha_minimap = nil
     end
 
-    -- frame pool for minimap pins (world map is handled by the data provider)
-    self.pool = CreateFramePool("FRAME", Minimap, "SilverDragonOverlayMinimapPinTemplate")
     self.tooltip = ns.Tooltip.Get("OverlayPin")
 
     GameTooltip:HookScript("OnShow", function(tooltip) self:CleanupTooltip() end)
@@ -202,12 +201,6 @@ function module:Update()
     self:UpdateMinimapIcons()
     self:UpdateWorldMapIcons()
 end
-
-C_Timer.NewTicker(0.5, function(...)
-    for pin in pairs(module.minimapPins) do
-        pin:UpdateEdge()
-    end
-end)
 
 function module:ShowTooltip(pin)
     local tooltip = self.tooltip

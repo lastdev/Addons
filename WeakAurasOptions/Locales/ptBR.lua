@@ -27,6 +27,8 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["%s is not a valid SubEvent for COMBAT_LOG_EVENT_UNFILTERED"] = "%s is not a valid SubEvent for COMBAT_LOG_EVENT_UNFILTERED"
 	L["%s Keep Aspect Ratio"] = "%s Manter Proporção"
+	--[[Translation missing --]]
+	L["%s Texture"] = "%s Texture"
 	L["%s total auras"] = "%s auras totais"
 	L["%s Zoom: %d%%"] = "%s Zoom: %d%%"
 	L["%s, Border"] = "%s, Borda"
@@ -79,6 +81,10 @@ local L = WeakAuras.L
 	L["Add Option"] = "Adicionar Opção"
 	L["Add Overlay"] = "Adicionar sobreposição"
 	L["Add Property Change"] = "Adicionar mudança de propriedade"
+	--[[Translation missing --]]
+	L["Add Raid Mark Information"] = "Add Raid Mark Information"
+	--[[Translation missing --]]
+	L["Add Role Information"] = "Add Role Information"
 	--[[Translation missing --]]
 	L["Add Snippet"] = "Add Snippet"
 	--[[Translation missing --]]
@@ -601,6 +607,8 @@ Supports multiple entries, separated by commas
 	L["Import"] = "Importar"
 	L["Import a display from an encoded string"] = "Importar um display de um string codificado"
 	--[[Translation missing --]]
+	L["Include Pets"] = "Include Pets"
+	--[[Translation missing --]]
 	L["Indent Size"] = "Indent Size"
 	--[[Translation missing --]]
 	L["Information"] = "Information"
@@ -1072,6 +1080,10 @@ Supports multiple entries, separated by commas
 	L["Then "] = "Then "
 	--[[Translation missing --]]
 	L["Thickness"] = "Thickness"
+	--[[Translation missing --]]
+	L["This adds %raidMark as text replacements."] = "This adds %raidMark as text replacements."
+	--[[Translation missing --]]
+	L["This adds %role, %roleIcon as text replacements."] = "This adds %role, %roleIcon as text replacements."
 	--[[Translation missing --]]
 	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."] = "This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."
 	--[[Translation missing --]]

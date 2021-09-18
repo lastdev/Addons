@@ -1,13 +1,19 @@
-local __exports = LibStub:NewLibrary("ovale/ui/Version", 90103)
+local __exports = LibStub:NewLibrary("ovale/ui/Version", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local __Localization = LibStub:GetLibrary("ovale/ui/Localization")
-local l = __Localization.l
-local __Ovale = LibStub:GetLibrary("ovale/Ovale")
-local messagePrefix = __Ovale.messagePrefix
-local aceComm = LibStub:GetLibrary("AceComm-3.0", true)
-local aceSerializer = LibStub:GetLibrary("AceSerializer-3.0", true)
-local aceTimer = LibStub:GetLibrary("AceTimer-3.0", true)
+local __imports = {}
+__imports.__Localization = LibStub:GetLibrary("ovale/ui/Localization")
+__imports.l = __imports.__Localization.l
+__imports.__Ovale = LibStub:GetLibrary("ovale/Ovale")
+__imports.messagePrefix = __imports.__Ovale.messagePrefix
+__imports.aceComm = LibStub:GetLibrary("AceComm-3.0", true)
+__imports.aceSerializer = LibStub:GetLibrary("AceSerializer-3.0", true)
+__imports.aceTimer = LibStub:GetLibrary("AceTimer-3.0", true)
+local l = __imports.l
+local messagePrefix = __imports.messagePrefix
+local aceComm = __imports.aceComm
+local aceSerializer = __imports.aceSerializer
+local aceTimer = __imports.aceTimer
 local format = string.format
 local ipairs = ipairs
 local next = next
@@ -36,7 +42,7 @@ __exports.OvaleVersionClass = __class(nil, {
                 if ok then
                     self.tracer:debug(msgType, senderVersion, channel, sender)
                     if msgType == "V" then
-                        local msg = self.module:Serialize("VR", "90103")
+                        local msg = self.module:Serialize("VR", "90107")
                         self.module:SendCommMessage(messagePrefix, msg, channel)
                     elseif msgType == "VR" then
                         userVersions[sender] = senderVersion
@@ -73,7 +79,7 @@ __exports.OvaleVersionClass = __class(nil, {
                 name = l["show_version_number"],
                 type = "execute",
                 func = function()
-                    self.tracer:print("90103")
+                    self.tracer:print("90107")
                 end
             }
         }
@@ -85,7 +91,7 @@ __exports.OvaleVersionClass = __class(nil, {
     versionCheck = function(self)
         if  not timer then
             wipe(userVersions)
-            local message = self.module:Serialize("V", "90103")
+            local message = self.module:Serialize("V", "90107")
             local channel
             if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
                 channel = "INSTANCE_CHAT"

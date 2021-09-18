@@ -15,6 +15,148 @@ How to support Altoholic's development :
 If you like the addon, consider supporting it, this has been the long term effort and commitment of a single person. #ArmyOfOne
 
 
+9.1.005 (05/09/2021)
+
+- Account Sharing: fixed a Lua error on the receiving end of the process.
+- Fixed a minor tooltip issue.
+- Characters Tab : fixed an error when clicking on the DataStore_Quests options in the Quest Log drop down menu.
+- Fixed a few minor navigation issues when clicking on menu items that send you to the Options Tab.
+- Achievements Tab : Added missing 9.1 achievements in Quests and Exploration.
+- Achievements Tab : Added Feats of Strength. (Legacy still missing)
+
+
+9.1.004 (29/08/2021)
+
+- Fixed a Lua error when clicking on a quest link.
+- Re-activated disabled code from the 9.1.001 to detect the amount of ores/herbs when mousing over gathering nodes. Code is also moved to its own library : LibObjectInfo.
+- Fixed the text displayed when a calendar event expires (no longer "%s Begins") (Thanks Belazor !)
+- Fixed an error in the account sharing process when trying to share a guild bank tab.
+
+
+9.1.003 (22/08/2021)
+
+- Summary Tab : Added tracking of the Mythic+ dungeon score (levels panel).
+- Summary Tab : Added a new filter to find characters who could upgrade their riding skills (miscellaneous filters).
+- Fixed an issue with the German localization files (thanks Honkinator22 !)
+- Options Tab : fixed an issue where DataStore options were not properly updated.
+- Options Tab : fixed a Lua error in the DataStore_Auctions panel.
+- Options Tab : in the Memory Used panel, changed the 'disabled' text to 'Tab not loaded yet', for clarity.
+- Brought back addon:GetItemCount for add-on's that use it (like XLoot), overlooked in previous version.
+- Tooltip: added an option to show a guild bank's realm (default: hidden)
+- DataStore_Quests: Added tracking of the 9.1 Storyline.
+- Summary Tab : Added a column for the 9.1 Storyline (in expansion features).
+- Summary Tab : Added an option under the tradeskill filter, to choose if you want to display tradeskill levels using colors or not, this affects only the Skills panel.
+- DataStore_Reputations: fixed a minor issue where negative reputation levels were not kept track of.
+- Fixed an issue where unknown recipes were colored in red, but there is still an issue with higher ranks seen as known when a lower rank is known.
+- Characters Tab : fixed an issue when switching to another alt while viewing mails.
+- Agenda Tab : fixed a few bugs related to the event manager and the expiry of events.
+
+9.1.002b (15/08/2021)
+
+- Brought back the LibDataBroker launcher forgotten in .002
+- Fixed a Lua error when reporting expired mails.
+
+
+9.1.002 (15/08/2021)
+
+For the past 4 months, I have been hard at work on a major UI overhaul, and I hope you enjoy the results.
+
+My first goal was to migrate Altoholic's UI from the "old" auction house to the "new" one, which is something I had been looking up to for a long time.
+But as I also have other add-on's in mind (3 of them are in the works, and 2 more are in the planning phase), it became clear that I would need to do something to speed up development.
+So what started as a sandbox version of the new Altoholic has since become "AddonFactory", a small add-on that does nothing in itself, except provide a collection of templates and code to rapidly build add-ons.
+
+Objects like the list of categories you see on the left of each panel are now super easy to manage, and I have already reaped the benefits of this approach while rewriting Altoholic.
+Yes, you read it right, I did a full rewrite of the add-on, from scratch.
+One of my secondary goals was to get rid of all the legacy code that had been there practically since the beginning, some of which I was not happy with.
+Not everything was bad though, the most recent panels (ie: since Blizzard introduced parentKey's in XML), were already quite ok, but the older ones needed work.
+Altoholic has always been a hobby project, but I felt it was more than time to professionalize the whole thing.
+
+The whole thing results in a more robust framework, and way less sources of errors.
+That is not to say that there won't be bugs (it would be pretentious to think so), but it will definitely be better than before.
+
+"But Thaoky, I loved the old interface, will it be back ??" : nope, it's gone, forever. Out with the old, in with the new.
+
+Now for the good stuff, here is what changed:
+
+- Fixed a crapton of bugs.
+- AddonFactory : this is a new folder that is part of the package. It will be the core of multiple add-on's I will release in the future (nope, don't ask, not sayin' ;-D)
+- Altoholic's UI now uses the "new" auction house layout.
+- Altoholic's UI is now resizable !
+- Summary tab: Introducing alt groups => you can now group your alts the way you like.
+Ex: I have 24 alts on my main server, 12 are my mains, 12 are banks, I created 2 groups to separate them.
+Check the help in-game for the details.
+
+- Summary tab: Introducting bank characters filters => you can now mark an alt as a special type of bank.
+Ex: Mark an alt as a mining bank, or a cloth bank, or both !
+You can then easily find these alts back using filters.
+
+Note: Both alt groups & bank character marks are just a first iteration, I do have more plans to expand on those features.
+
+- Summary tab: Added an icon for "miscellaneous filters". Quickly filter alts that have mails, or mail about to expire, etc..
+If you have more ideas about quick filters you'd like to see here, let me know !
+
+- Summary tab: Added an icon for "bank characters filters".
+- Summary tab: Added a count of how many characters/realms are visible, and a warning to check the filters if none are visible.
+- Summary tab: Added several new views/columns.
+
+- Characters tab: Changed the navigation by adding the list of accounts/realms/alts to the category list on the left.
+- Characters tab: Everything now supports resizing, although admittedly I use more vertical space than horizontal (that will come where applicable).
+
+- Search tab : Complete rewrite. 
+- Guild tab : Complete rewrite. 
+- Achievements tab : Complete rewrite. 
+- Achievements tab : The achievement lists have now been broken down in more subcategories than Blizzard provides. 
+I was tired of very long lists and achievements that were not grouped together as they should.
+This is my attempt at making things better. If you find areas to improve, let me know !
+
+Note : Feats of strength and Legacy are temporarily missing. Dungeons & Raids could be broken down in subcategories more (but it takes a ton of time).
+
+- Agenda tab : Fixed a few refresh issues.
+- Grids tab : Complete rewrite. 
+- Grids tab : The navigation has also been changed to use a category list. 
+- Options tab : This tab is completely new.
+My goal with this was to move all the options to Altoholic's UI, and also to make room for help pages.
+I strongly recommend you give it a look, and take time to read what's there, you might learn a thing or two :)
+
+- Account sharing : Complete rewrite, and moved to the Options tab. Here too, be sure to read the "how to".
+- Options tab : added icons for Discord, CurseForge, WoW Interface, and my e-mail address, so that you always know where to find me !
+
+Known issues : 
+- Color coding at the Auction House is not working, will be back soon.
+- Mousing over a gathering node does not display the counters in the tooltip, will be back soon.
+
+Oh and to end up on a good note : if you are upgrading from a recent version (any release of 2021), you do not need to clean your saved variables.
+Only Altoholic has changed, DataStore was only improved, so your data are good :)
+
+How you can help :
+
+- Test everything ! as mentioned above, it's a complete rewrite, I may have left out a thing or two.
+- Achievements lists : check them in details, especially dungeons, raids, feats of strength and legacy, if you can help with those lists, that would be great.
+They are in : Altoholic_Achievements\Services\AchievementsLists.lua
+
+- Localizations : from now on I will stop using the Curseforge packager. 
+Making releases in the past has always been too much work because the add-on's structure, and releasing should be as simple 
+as zipping and uploading, but it's not, thus I'm done with losing time because of that. 
+As part of the rewrite, I also cleaned-up and split the localization files, 
+which instead of all being located under Altoholic/Locales are now in all of Altoholic*/Locales.
+Ex: text shown in the Options tab is in Altoholic_Options/Locales.
+
+Note that some strings may exist in multiple files, since we do not know which tab the user will load first.
+The rule is : if a string is used in a tab, it should be in its own localization file.
+
+I did carry over most of the old translations, but there are some new ones. 
+Any help you can provide about this is welcome. 
+
+You can send me your work by mail of on the localization channel on Discord.
+Join us on : https://discord.gg/J7JnuQV
+
+Well that's it, it may not seem like much, but it was a lot of work to get here. 
+Totally worth it though, one of the add-on's I am preparing on the side started reaping benefits in barely 2 hours of coding.
+New features will hopefully come faster in Altoholic from now on.
+
+I hope you enjoy what you see :)
+
+
 9.1.001 (01/07/2021)
 
 - DataStore_Inventory : fixed a Lua error when scanning transmog collections.

@@ -1,5 +1,44 @@
 # Changelog
 
+## Changed in v90100.8
+
+* Improve sending locations to chat:
+    * If there's a vignette available it'll be used for the most-reliable location, and vignettes being seen *after* a chat announcement will update the target popup
+    * Show the associated location in the tooltip for the target popup
+* Improve the minimap:
+    * Show mob routes (if present) on the minimap
+    * Fix minimap icon alpha settings not being applied
+    * Make minimap icon motion smoother
+* Burning Crusade: add a few mob patrol routes
+* Vignette range extender: let clicks pass through the icons onto the minimap
+* Ardenweald: Show the Ardenweald's a Stage achievement in tooltips
+* Add a few sounds to the default set I register with LibSharedMedia
+* If loot is restricted (covenant, class), still show it as known if you've got it
+
+## Changed in v90100.7
+
+* The vignette range extender has a new option to show "mystery" vignettes that exist but are hidden from the API. I can't tell *what* any specific one is, but they tend to be lootable things like relic caches in Korthia.
+* Observer Yorik has a new questid, and so won't keep on looking incomplete
+* Reliwik has an associated vignetteid that'll help with alerts
+* Mobs that had a mount/pet *and* toys *and* regular items as loot had a tooltip glitch with overlapping loot tooltips
+
+## Changed in v90100.6
+
+* Changed some anti-loot-spam code that had gone overzealous and was stopping you seeing the off-minimap rares in Korthia
+
+## Changed in v90100.5
+
+* Maw:
+    * Added Traitor Balthier, Demen the Vortex, Guard Orguluus
+    * Skittering Broodmother has moved
+* Korthia:
+    * A few new Maelie locations
+    * Show Zelnithop inside Gromit Hollow
+    * Recognize the Stygian Stonecrusher vignette and Drippy's yell
+* Revendreth: more loot on the inquisitors
+* Rewrote some tracking quest handling so that Maelie will now stay counted as complete once you've completed the final day
+* Removed the Glimmerfly Cocoon, since it seems to definitely not be dropping
+
 ## Changed in v90100.4
 
 * Mine new loot; lots added to the Maw rares

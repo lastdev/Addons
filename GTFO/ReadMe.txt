@@ -1653,3 +1653,17 @@ Change Log:
 * Added Shadowlands spells (world)
 * Added SL spells for Torghast
 * Added SL spells for Sanctum of Domination
+
+4.64
+* Don't alert when the player is mind-controlled
+* Fixed SL spells for Sanctum of Domination
+* Added Shadowlands spells (world)
+* Added SL spells for Sanctum of Domination
+* Added SL spells for Torghast
+
+4.64.1
+* Updated ToCs for all versions
+* Added SL spells for Sanctum of Domination
+
+4.64.2
+* Added Generic spells

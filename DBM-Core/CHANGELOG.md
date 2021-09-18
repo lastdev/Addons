@@ -1,24 +1,34 @@
 # Deadly Boss Mods Core
 
-## [9.1.7](https://github.com/DeadlyBossMods/DeadlyBossMods/tree/9.1.7) (2021-07-25)
-[Full Changelog](https://github.com/DeadlyBossMods/DeadlyBossMods/compare/9.1.6...9.1.7) [Previous Releases](https://github.com/DeadlyBossMods/DeadlyBossMods/releases)
+## [9.1.13](https://github.com/DeadlyBossMods/DeadlyBossMods/tree/9.1.13) (2021-09-14)
+[Full Changelog](https://github.com/DeadlyBossMods/DeadlyBossMods/compare/9.1.12...9.1.13) [Previous Releases](https://github.com/DeadlyBossMods/DeadlyBossMods/releases)
 
-- Prep tag  
-- Hard reset on GameTooltip points, to fix any potential "3rd parties" causing issues. (#629)  
-- Added bridge cast bars  
-- Apply short text to leap on Echelon to help truncate warnings/timers quite a bit  
-    Disable bane taunt warning, it's misleading and doesn't fit all strats/situations. this is one of those things you don't automate.  
-- Change how target count and cd count bars display so that they display the count next to spellname. reduces chance of the count being truncated and makes it more prominant in timers. It also makes it more uniform with warnings which already do count next to spell name. Don't worry this was done in a way that the arg order doesn't have to change nor does it break non updated locales. If you do localize though take note on syntax for flipping arg order in translated text from targetcount example.  
-- Forgot to subtrack the 2.5 when adjusting to a new trigger. now it looks good  
-- Actually show portal cast announce and time for more clarity of P2 end  
-- Found an arrow spellid that has translations in database, applying it to shorten some warning/timer text  
-    Reassigned some timer colors as well to differenciate some timers in p3 better  
-- Move p2 start timers since the intermission fix only fixes when windrunner delays things, not when other spells delay things (several do)  
-- Fix count not showing in non special warning merciless  
-- Fix more dumb. Add notes so my peanut brain can stop breaking heroic  
-- Update localization.cn.lua (#627)  
-- Sigh  
-- Fix me being stupid, actually that can't be fixed, but I can fix this  
-- Some sylvanas adjustments/fixes  
-- Port better world boss sync code from TBC, since apparently it's possible to now get bad syncs on retail. This is a more robust solution that has worked on TBC by explicitely specifiying which mods can send world boss syncs.  
-- actually bump alpha revision this time  
+- prep tag  
+- Fixed a bug where updateEnemyPower had a specific check in wrong place  
+- Update zhTW (#664)  
+- Update koKR (#663)  
+- Fix missed line and add vibrate to special warning test buttons as well.  
+- Fix vibration api so it works, also revert flash duration local change since vibration duration is fixed and can't actually be changed.  
+- Fix incorrect autoplace flag, to prevent wasted cycles placing the option twice  
+- Fixed typo and updated luacheck  
+- Added controller support to special announce configuration and global disable configurations for patch 9.1.5. These options won't do anything on 9.1 or if not using a controller  
+- Update koKR (#661)  
+- Update zhTW (#660)  
+- stray copy/paste  
+- aggregate consumption and acid Expulsion alerts to a shared throttle and reduce number of similtanious dodge warnings on tradova. if you were told to watch step from things on ground within last 3 seconds, you don't need to be told again.  
+- Adjust sin quake timing a little to not be as big of a pre warning., also gave it a throttle  
+- Download infestor to a target warning, reducing special warning spam on Tredova slightly. Shouldn't get two special warnings for same mechanic if it just happens to be on you.  
+- Add additional 2 sec aggregation to interrupt warnings to Tirna Scithe trash mod, to reduce chance of overlapping interrupt spam  
+- Few timer tweaks/fixes, especially to LFR frost blast on stage 3 KelThuzad which seems to have been buffed since week one LFR  
+- Update localization.cn.lua (#659)  
+- Update zhTW (#658)  
+- Update koKR (#657)  
+- remove some stray bad copy/paste  
+- Made it possible to select whether icon marking for bombs on guardian uses default dbm method of prioritizing melee over ranged, or default bigwigs method that just uses combat log order. Per usual, raid leaders option overrides rest of raid, unless RL isn't running DBM, then local user preference is used.  
+- Forgot about that debug I added  
+- Mob auto marking prototype bugfixes and improvements:  
+     - Fixed a bug where if already marked filter was used, it did reverse of what it was supposed to do  
+     - Swtiched logic of friendly target auto marking filtering to be more clear and concise as well as use a more trustworthy api that also just happens to have performance benefits since it's one already upvalued by core for other reasons  
+     - Fixed a bug where the already marked fllter and icon elect overrides would fail too pass on beyond first scan cycle, causing these options to be near useless (I mean, marked filter was already useless but it was double useless, yay!).  
+     - Improved debug to be more verbose for identifying areas auto marking fails as well as ensuring that when it fails, it logged by transcriptor even if user doesn't set debuglevel to 3  
+- bump alpha  

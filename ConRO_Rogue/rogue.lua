@@ -213,7 +213,7 @@ function ConRO.Rogue.Assassination(_, timeShift, currentSpell, gcd, tChosen, pvp
 		local _, _Shadowstep_RANGE																			= ConRO:Targets(ids.Ass_Ability.Shadowstep);
 	local _Shiv, _Shiv_RDY																				= ConRO:AbilityReady(ids.Ass_Ability.Shiv, timeShift);
 	local _SliceandDice, _SliceandDice_RDY																= ConRO:AbilityReady(ids.Ass_Ability.SliceandDice, timeShift);
-		local _SliceandDice_BUFF																			= ConRO:Aura(ids.Ass_Buff.SliceandDice, timeShift);
+		local _SliceandDice_BUFF, _, _SliceandDice_DUR														= ConRO:Aura(ids.Ass_Buff.SliceandDice, timeShift);
 	local _Sprint, _Sprint_RDY 																			= ConRO:AbilityReady(ids.Ass_Ability.Sprint, timeShift);	
 	local _Stealth, _Stealth_RDY 																		= ConRO:AbilityReady(ids.Ass_Ability.Stealth, timeShift);
 	local _Subterfuge_Stealth, _, _Subterfuge_Stealth_CD												= ConRO:AbilityReady(ids.Ass_Talent.Subterfuge_Stealth, timeShift);
@@ -239,9 +239,9 @@ function ConRO.Rogue.Assassination(_, timeShift, currentSpell, gcd, tChosen, pvp
 		local _EchoingReprimand_3_BUFF																		= ConRO:Aura(ids.Covenant_Buff.EchoingReprimand_3, timeShift);
 		local _EchoingReprimand_4_BUFF																		= ConRO:Aura(ids.Covenant_Buff.EchoingReprimand_4, timeShift);
 	local _Flagellation, _Flagellation_RDY																= ConRO:AbilityReady(ids.Covenant_Ability.Flagellation, timeShift);
-	local _FlagellationEnd, _FlagellationEnd_RDY														= ConRO:AbilityReady(ids.Covenant_Ability.FlagellationEnd, timeShift);
 		local _Flagellation_BUFF, _, _Flagellation_DUR														= ConRO:Aura(ids.Covenant_Buff.Flagellation, timeShift);
 	local _SerratedBoneSpike, _SerratedBoneSpike_RDY													= ConRO:AbilityReady(ids.Covenant_Ability.SerratedBoneSpike, timeShift);
+		local _SerratedBoneSpike_CHARGES, _SerratedBoneSpike_MaxCHARGES, _SerratedBoneSpike_CCD				= ConRO:SpellCharges(ids.Covenant_Ability.SerratedBoneSpike);
 		local _SerratedBoneSpike_DEBUFF																		= ConRO:PersistentDebuff(ids.Covenant_Debuff.SerratedBoneSpike);
 	local _Sepsis, _Sepsis_RDY																			= ConRO:AbilityReady(ids.Covenant_Ability.Sepsis, timeShift);
 	local _Soulshape, _Soulshape_RDY																	= ConRO:AbilityReady(ids.Covenant_Ability.Soulshape, timeShift);
@@ -289,7 +289,7 @@ function ConRO.Rogue.Assassination(_, timeShift, currentSpell, gcd, tChosen, pvp
 	
 	ConRO:AbilityBurst(_Vendetta, _Vendetta_RDY and _Rupture_DEBUFF and _Garrote_DEBUFF and _Energy <= (_Energy_Max - 30) and ConRO:BurstMode(_Vendetta));
 	ConRO:AbilityBurst(_Vanish, _Vanish_RDY and _in_combat and not ConRO:TarYou() and ((_Combo >= _Combo_Max and not _Rupture_DEBUFF and tChosen[ids.Ass_Talent.Subterfuge]) or (tChosen[ids.Ass_Talent.Subterfuge] and not _Garrote_DEBUFF)) and ConRO:BurstMode(_Vanish));
-	ConRO:AbilityBurst(_Flagellation, _Flagellation_RDY and not _Flagellation_BUFF and ConRO:BurstMode(_Flagellation));
+	ConRO:AbilityBurst(_Flagellation, _Flagellation_RDY and ConRO:BurstMode(_Flagellation));
 	ConRO:AbilityBurst(_Sepsis, _Sepsis_RDY and _Combo <= _Combo_Max - 1 and ConRO:BurstMode(_Sepsis));
 	ConRO:AbilityBurst(_EchoingReprimand, _EchoingReprimand_RDY and _Combo <= _Combo_Max - 2 and ConRO:BurstMode(_EchoingReprimand));
 	
@@ -326,8 +326,20 @@ function ConRO.Rogue.Assassination(_, timeShift, currentSpell, gcd, tChosen, pvp
 			return _PoisonedKnife;
 		end
 
-		if _FlagellationEnd_RDY and _Flagellation_BUFF and _Flagellation_DUR <= 1.5 then
-			return _FlagellationEnd;
+		if _Flagellation_RDY and _Combo >= (_Combo_Max - 1) and ConRO:FullMode(_Flagellation) then
+			return _Flagellation;
+		end
+
+		if _Sepsis_RDY and _Combo <= (_Combo_Max - 1) and _Rupture_DEBUFF and _Garrote_DEBUFF and not _is_stealthed and ConRO:FullMode(_Sepsis) then
+			return _Sepsis;
+		end
+
+		if _EchoingReprimand_RDY and _Combo <= _Combo_Max - 2 and ConRO:FullMode(_EchoingReprimand) then
+			return _EchoingReprimand;
+		end
+
+		if _SerratedBoneSpike_RDY and (not _SerratedBoneSpike_DEBUFF or _SerratedBoneSpike_CHARGES == _SerratedBoneSpike_MaxCHARGES) and _Combo <= _Combo_Max - 2 then
+			return _SerratedBoneSpike;
 		end
 		
 		if _MarkedforDeath_RDY and _Combo == 0 and not _Subterfuge_BUFF and not _MasterAssassin_BUFF then
@@ -336,22 +348,6 @@ function ConRO.Rogue.Assassination(_, timeShift, currentSpell, gcd, tChosen, pvp
 		
 		if _Vendetta_RDY and _Rupture_DEBUFF and _Garrote_DEBUFF and not _is_stealthed and not _Subterfuge_BUFF and not _MasterAssassin_BUFF and ConRO:FullMode(_Vendetta) then
 			return _Vendetta;
-		end
-
-		if _Flagellation_RDY and not _Flagellation_BUFF and ConRO:FullMode(_Flagellation) then
-			return _Flagellation;
-		end
-		
-		if _Exsanguinate_RDY and not _is_stealthed and not _Subterfuge_BUFF and not _MasterAssassin_BUFF then
-			if tChosen[ids.Ass_Talent.DeeperStratagem] then
-				if _Rupture_DUR >= 29 and _Garrote_DUR >= 6 then
-					return _Exsanguinate;
-				end					
-			else
-				if _Rupture_DUR >= 25 and _Garrote_DUR >= 6 then
-					return _Exsanguinate;
-				end
-			end
 		end
 		
 		if _Vanish_RDY and not _is_stealthed and not _Subterfuge_BUFF and not _MasterAssassin_BUFF and not ConRO:TarYou() and ConRO:FullMode(_Vanish) then
@@ -381,41 +377,49 @@ function ConRO.Rogue.Assassination(_, timeShift, currentSpell, gcd, tChosen, pvp
 				end
 			end
 		end
-
-		if _Rupture_RDY and (_Combo >= (_Combo_Max - 1) or _Combo == EchoingReprimand_COUNT) and (not _Rupture_DEBUFF or (_Rupture_DEBUFF and _Rupture_DUR <= 7)) then	
-			return _Rupture;
+		
+		if _Shiv_RDY and _Player_Level >= 58 then
+			return _Shiv;
 		end		
+		
+		if _Exsanguinate_RDY and not _is_stealthed and not _Subterfuge_BUFF and not _MasterAssassin_BUFF then
+			if tChosen[ids.Ass_Talent.DeeperStratagem] then
+				if _Rupture_DUR >= 29 and _Garrote_DUR >= 6 then
+					return _Exsanguinate;
+				end					
+			else
+				if _Rupture_DUR >= 25 and _Garrote_DUR >= 6 then
+					return _Exsanguinate;
+				end
+			end
+		end
+		
+		if _SliceandDice_RDY and not _SliceandDice_BUFF and _Combo >= 3 then
+			return _SliceandDice;
+		end		
+
+		if _Envenom_RDY and (_Combo >= (_Combo_Max - 1) or _Combo == EchoingReprimand_COUNT) and (_Player_Level >= 56 and _SliceandDice_BUFF and _SliceandDice_DUR <= 2) then
+			return _Envenom;
+		end
+		
+		if _Rupture_RDY and (_Combo >= (_Combo_Max - 1) or _Combo == EchoingReprimand_COUNT) and _Exsanguinate_RDY then	
+			return _Rupture;
+		end
 
 		if _Garrote_RDY and (not _Garrote_DEBUFF or (_Garrote_DEBUFF and _Garrote_DUR <= 3)) and not _MasterAssassin_BUFF then
 			return _Garrote;
 		end
-		
-		if _SliceandDice_RDY and not _SliceandDice_BUFF and _Combo >= (_Combo_Max - 1) then
-			return _SliceandDice;
-		end
-		
+
 		if _CrimsonTempest_RDY and not _CrimsonTempest_DEBUFF and (_Combo >= (_Combo_Max - 1) or _Combo == EchoingReprimand_COUNT) and ((ConRO_AutoButton:IsVisible() and _enemies_in_melee >= 2) or ConRO_AoEButton:IsVisible()) then
 			return _CrimsonTempest;
 		end
 		
-		if _Shiv_RDY and _Player_Level >= 58 then
-			return _Shiv;
+		if _Rupture_RDY and (_Combo >= (_Combo_Max - 1) or _Combo == EchoingReprimand_COUNT) and (not _Rupture_DEBUFF or (_Rupture_DEBUFF and _Rupture_DUR <= 7)) then	
+			return _Rupture;
 		end
 	
 		if _Envenom_RDY and (_Combo >= (_Combo_Max - 1) or _Combo == EchoingReprimand_COUNT) and not ebuff then
 			return _Envenom;
-		end
-		
-		if _SerratedBoneSpike_RDY and not _SerratedBoneSpike_DEBUFF and _Combo <= _Combo_Max - 2 then
-			return _SerratedBoneSpike;
-		end
-		
-		if _Sepsis_RDY and _Combo <= _Combo_Max - 1 and ConRO:FullMode(_Sepsis) then
-			return _Sepsis;
-		end
-		
-		if _EchoingReprimand_RDY and _Combo <= _Combo_Max - 2 and ConRO:FullMode(_EchoingReprimand) then
-			return _EchoingReprimand;
 		end
 
 		if _FanofKnives_RDY and _Combo <= (_Combo_Max - 1) and ((ConRO_AutoButton:IsVisible() and _enemies_in_melee >= 3) or ConRO_AoEButton:IsVisible() or _HiddenBlades_COUNT >= 20) then
@@ -426,7 +430,7 @@ function ConRO.Rogue.Assassination(_, timeShift, currentSpell, gcd, tChosen, pvp
 			return _Ambush;
 		end
 		
-		if _Mutilate_RDY and _Combo <= (_Combo_Max - 1) and ((ConRO_AutoButton:IsVisible() and _enemies_in_melee <= 3) or ConRO_SingleButton:IsVisible()) then
+		if _Mutilate_RDY and _Combo <= (_Combo_Max - 1) and ((ConRO_AutoButton:IsVisible() and _enemies_in_melee <= 2) or ConRO_SingleButton:IsVisible()) then
 			return _Mutilate;
 		end
 	end
@@ -550,7 +554,6 @@ function ConRO.Rogue.Outlaw(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 		local _EchoingReprimand_3_BUFF																		= ConRO:Aura(ids.Covenant_Buff.EchoingReprimand_3, timeShift);
 		local _EchoingReprimand_4_BUFF																		= ConRO:Aura(ids.Covenant_Buff.EchoingReprimand_4, timeShift);
 	local _Flagellation, _Flagellation_RDY																= ConRO:AbilityReady(ids.Covenant_Ability.Flagellation, timeShift);
-	local _FlagellationEnd, _FlagellationEnd_RDY														= ConRO:AbilityReady(ids.Covenant_Ability.FlagellationEnd, timeShift);
 		local _Flagellation_BUFF, _, _Flagellation_DUR														= ConRO:Aura(ids.Covenant_Buff.Flagellation, timeShift);
 	local _SerratedBoneSpike, _SerratedBoneSpike_RDY													= ConRO:AbilityReady(ids.Covenant_Ability.SerratedBoneSpike, timeShift);
 		local _SerratedBoneSpike_DEBUFF																		= ConRO:PersistentDebuff(ids.Covenant_Debuff.SerratedBoneSpike);
@@ -628,7 +631,7 @@ function ConRO.Rogue.Outlaw(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 	ConRO:AbilityBurst(_Vanish, _Vanish_RDY and not _combat_stealth and not ConRO:TarYou() and _Combo <= 1 and _Energy >= 50 and ConRO:BurstMode(_Vanish));
 	ConRO:AbilityBurst(_Shadowmeld, _Shadowmeld_RDY and not _combat_stealth and not ConRO:TarYou() and _Combo <= 1 and _Energy >= 50 and ConRO:BurstMode(_Shadowmeld));
 		
-	ConRO:AbilityBurst(_Flagellation, _Flagellation_RDY and not _Flagellation_BUFF and ConRO:BurstMode(_Flagellation));
+	ConRO:AbilityBurst(_Flagellation, _Flagellation_RDY and ConRO:BurstMode(_Flagellation));
 	ConRO:AbilityBurst(_Sepsis, _Sepsis_RDY and _Combo <= _Combo_Max - 1 and ConRO:BurstMode(_Sepsis, timeShift));
 	ConRO:AbilityBurst(_EchoingReprimand, _EchoingReprimand_RDY and _Combo <= _Combo_Max - 2 and ConRO:BurstMode(_EchoingReprimand));
 
@@ -673,11 +676,7 @@ function ConRO.Rogue.Outlaw(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 			return _Ambush;
 		end		
 	else
-		if _FlagellationEnd_RDY and _Flagellation_BUFF and _Flagellation_DUR <= 1.5 then
-			return _FlagellationEnd;
-		end
-
-		if _Flagellation_RDY and not _Flagellation_BUFF and _Combo >= (_Combo_Max - 1) and ConRO:FullMode(_Flagellation) then
+		if _Flagellation_RDY and _Combo >= (_Combo_Max - 1) and ConRO:FullMode(_Flagellation) then
 			return _Flagellation;
 		end
 		
@@ -883,7 +882,6 @@ function ConRO.Rogue.Subtlety(_, timeShift, currentSpell, gcd, tChosen, pvpChose
 		local _EchoingReprimand_3_BUFF																		= ConRO:Aura(ids.Covenant_Buff.EchoingReprimand_3, timeShift);
 		local _EchoingReprimand_4_BUFF																		= ConRO:Aura(ids.Covenant_Buff.EchoingReprimand_4, timeShift);
 	local _Flagellation, _Flagellation_RDY																= ConRO:AbilityReady(ids.Covenant_Ability.Flagellation, timeShift);
-	local _FlagellationEnd, _FlagellationEnd_RDY														= ConRO:AbilityReady(ids.Covenant_Ability.FlagellationEnd, timeShift);
 		local _Flagellation_BUFF, _, _Flagellation_DUR														= ConRO:Aura(ids.Covenant_Buff.Flagellation, timeShift);
 	local _SerratedBoneSpike, _SerratedBoneSpike_RDY													= ConRO:AbilityReady(ids.Covenant_Ability.SerratedBoneSpike, timeShift);
 		local _SerratedBoneSpike_CHARGES, _SerratedBoneSpike_MaxCHARGES, _SerratedBoneSpike_CCD				= ConRO:SpellCharges(ids.Covenant_Ability.SerratedBoneSpike);
@@ -948,7 +946,7 @@ function ConRO.Rogue.Subtlety(_, timeShift, currentSpell, gcd, tChosen, pvpChose
 	ConRO:AbilityBurst(_Vanish, _Vanish_RDY and not ConRO:TarYou() and not _combat_stealth and _Energy >= 45 and _Combo <= 1 and ConRO:BurstMode(_Vanish))
 	ConRO:AbilityBurst(_MarkedforDeath, _MarkedforDeath_RDY and _Combo <= 1 and ConRO:BurstMode(_MarkedforDeath));
 
-	ConRO:AbilityBurst(_Flagellation, _Flagellation_RDY and not _Flagellation_BUFF and ConRO:BurstMode(_Flagellation));
+	ConRO:AbilityBurst(_Flagellation, _Flagellation_RDY and ConRO:BurstMode(_Flagellation));
 	ConRO:AbilityBurst(_Sepsis, _Sepsis_RDY and _Combo <= _Combo_Max - 1 and ConRO:BurstMode(_Sepsis));
 	ConRO:AbilityBurst(_EchoingReprimand, _EchoingReprimand_RDY and _Combo <= _Combo_Max - 2 and ((ConRO_AutoButton:IsVisible() and _enemies_in_melee <= 4) or ConRO_SingleButton:IsVisible()) and ConRO:BurstMode(_EchoingReprimand));
 
@@ -992,16 +990,12 @@ function ConRO.Rogue.Subtlety(_, timeShift, currentSpell, gcd, tChosen, pvpChose
 				return _ShurikenToss;
 			end
 		end
-	
-		if _FlagellationEnd_RDY and _Flagellation_BUFF and _Flagellation_DUR <= 1.5 then
-			return _FlagellationEnd;
-		end
 		
 		if _ShadowBlades_RDY and _SymbolsofDeath_BUFF and ConRO:FullMode(_ShadowBlades) then
 			return _ShadowBlades;
 		end
 		
-		if _Flagellation_RDY and not _Flagellation_BUFF and ConRO:FullMode(_Flagellation) then
+		if _Flagellation_RDY and ConRO:FullMode(_Flagellation) then
 			return _Flagellation;
 		end
 

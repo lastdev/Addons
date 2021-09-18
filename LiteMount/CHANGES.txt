@@ -1,28 +1,32 @@
-tag 9907e007e6ce7075ca8d8f25f65e30d4acc7772d 9.1.10
+tag 4f6ae5e05c06c74050045163f2b924239549ee0e 9.1.12
 Author:	Mike "Xodiv" Battersby <mib@post.com>
-Date:	Sun Jul 11 19:50:32 2021 +1000
+Date:	Sat Aug 28 07:07:32 2021 +1000
 
-LiteMount 9.1.10
+LiteMount 9.1.12
 
- - Fix covenant test with no covenant in advanced action list
- - Add Covenant to rules conditions
- - Add localized names for Covenant (fingers crossed)
+ - Fix error with no-family mounts in non-English locales
 
-commit 78f7db800bb01be805eb49f85c94f91fe2cef045
+commit 382755be771901140a0fb062402db47807f82047
 Author: Mike "Xodiv" Battersby <mib@post.com>
-Date:   Sun Jul 11 19:49:06 2021 +1000
+Date:   Sat Aug 28 06:59:47 2021 +1000
 
-    Add covenants to the rules condition drop-down
+    Fix error with no-family mounts in non-English locales
 
-commit ad1109bc363fcd51e7bd469583a8ab8d0adb23fb
+commit cbf9077274e0a01de7214d728162dad2176b69ab
 Author: Mike "Xodiv" Battersby <mib@post.com>
-Date:   Sun Jul 11 19:48:44 2021 +1000
+Date:   Sat Aug 28 06:59:47 2021 +1000
 
-    Import "Covenant" localizations
+    Fix error with no-family mounts in non-English locales
 
-commit 9725463025b6bc3bdc93f540f8f06124c76b360d
+commit a6638b70222eb2e6dd906aabb433fe522f387028
 Author: Mike "Xodiv" Battersby <mib@post.com>
-Date:   Sun Jul 11 19:32:25 2021 +1000
+Date:   Thu Aug 26 17:53:10 2021 +1000
 
-    Bug fix for covenant test with no covenant (#58)
+    Add LM.Rule:IsSimpleRule and LM.RuleBoolean:IsSimpleCondition
+
+commit 7c907de97ec2cc43a8db022a452c31795c04e5b3
+Author: Mike "Xodiv" Battersby <mib@post.com>
+Date:   Thu Aug 26 15:04:14 2021 +1000
+
+    Put the LM.Conditions:Check() cache back in from the old days
 

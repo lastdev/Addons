@@ -24,8 +24,8 @@ RSConstants.LOOT_ITEM_ID = nil
 -- Current versions
 ---============================================================================
 
-RSConstants.CURRENT_DB_VERSION = 43
-RSConstants.CURRENT_LOOT_DB_VERSION = 55
+RSConstants.CURRENT_DB_VERSION = 44
+RSConstants.CURRENT_LOOT_DB_VERSION = 58
 
 ---============================================================================
 -- Special events
@@ -77,7 +77,8 @@ RSConstants.PROFILE_DEFAULTS = {
 			soundObjectDisabled = false,
 			soundObjectPlayed = "PVP Horde",
 			soundVolume = 4,
-			soundChannel = "Master"
+			soundChannel = "Master",
+			soundCustomFolder = "RareScannerSounds"
 		},
 		display = {
 			displayButton = true,
@@ -167,6 +168,25 @@ RSConstants.PROFILE_DEFAULTS = {
 }
 
 ---============================================================================
+-- Sounds
+---============================================================================
+
+RSConstants.DEFAULT_SOUNDS = {
+	["Achievement Sound"] = "Interface\\AddOns\\RareScanner\\Media\\achievmentsound1-4.ogg",
+	["Alarm Clock"] = "Interface\\AddOns\\RareScanner\\Media\\alarmclockwarning2-4.ogg",
+	["Boat Docking"] = "Interface\\AddOns\\RareScanner\\Media\\boatdockedwarning-4.ogg",
+	["Siege Engineer Weapon"] = "Interface\\AddOns\\RareScanner\\Media\\fx_ograid_siege_weaponmachine_warning-4.ogg",
+	["PVP Alliance"] = "Interface\\AddOns\\RareScanner\\Media\\pvpwarningalliance-4.ogg",
+	["PVP Horde"] = "Interface\\AddOns\\RareScanner\\Media\\pvpwarninghorde-4.ogg",
+	["Ready Check"] = "Interface\\AddOns\\RareScanner\\Media\\readycheck-4.ogg",
+	["Horn"] = "Interface\\AddOns\\RareScanner\\Media\\gruntling_horn_bb-4.ogg",
+	["Event Wardrum Ogre"] = "Interface\\AddOns\\RareScanner\\Media\\Event_wardrum_ogre-4.ogg",
+	["Level Up"] = "Interface\\AddOns\\RareScanner\\Media\\levelup2-4.ogg",
+}
+
+RSConstants.EXTERNAL_SOUND_FOLDER = "Interface\\AddOns\\%s\\%s"
+
+---============================================================================
 -- CMD commands
 ---============================================================================
 
@@ -251,7 +271,9 @@ RSConstants.RIFT_NPCS_MAW = { 179735, 179853, 179851 }
 RSConstants.RELIC_CACHE = { 369292, 369294, 369310 }
 RSConstants.PILE_BONES = { 369297, 369295 }
 RSConstants.SHARDHIDE_STASH = { 369296 }
-RSConstants.CACHEs_SWAGSNOUT_GROMIT = { 369292, 369294, 369310, 369297, 369295, 369296 }
+RSConstants.CACHES_SWAGSNOUT_GROMIT = { 369292, 369294, 369310, 369297, 369295, 369296 }
+RSConstants.STOLEN_ANIMA_VESSEL = { 368946, 368947, 368948, 368949, 368950, 368951, 368952, 368953 }
+RSConstants.STOLEN_ANIMA_VESSEL_RIFT = { 369227, 369235, 369236 }
 
 -- NPCs that spawn after completing an event
 RSConstants.NPCS_WITH_PRE_EVENT = {
@@ -286,7 +308,7 @@ RSConstants.NPCS_WITH_PRE_NPCS = {
 -- 156480 Next door entity inside Torghast
 -- 155660 Summons from the Depths
 RSConstants.INGNORED_VIGNETTES = { 156480, 155660, 163373 }
-RSConstants.NPCS_WITH_EVENT_VIGNETTE = { 154330, 164547, 164477, 160629, 175012, 157833, 166398, 164064, 162829, 157964, 162844, 171317, 170774, 162849, 170301, 170302, 170711, 170634, 170731, 172862, 172577, 158025, 158278, 170303, 179684, 179791, 179805, 177444, 180246, 179108, 179853, 179755, 179768, 179779, 179460 }
+RSConstants.NPCS_WITH_EVENT_VIGNETTE = { 154330, 164547, 164477, 160629, 175012, 157833, 166398, 164064, 162829, 157964, 162844, 171317, 170774, 162849, 170301, 170302, 170711, 170634, 170731, 172862, 172577, 158025, 158278, 170303, 179684, 179791, 179805, 177444, 180246, 179108, 179853, 179755, 179768, 179779, 179460, 179851, 179735 }
 RSConstants.NPCS_WITH_CONTAINER_VIGNETTE = { 179883 }
 RSConstants.CONTAINERS_WITH_NPC_VIGNETTE = { 369435 }
 RSConstants.NPCS_WITH_MULTIPLE_SPAWNS = { 69768, 69769, 69841, 69842, 70323 }
@@ -482,6 +504,7 @@ RSConstants.START_COLLECTIONS_SCAN = "RARESCANNER_START_COLLECTIONS_SCAN"
 
 RSConstants.RAID_WARNING_SHOWING_TIME = 3
 RSConstants.MINIMUM_DISTANCE_PINS_WORLD_MAP = 0.015
+RSConstants.MAXIMUN_MINIMAP_DISTANCE_RANGE = 0.096
 RSConstants.TOOLTIP_MAX_WIDTH = 250
 
 ---============================================================================

@@ -22,6 +22,8 @@ local L = WeakAuras.L
 	L["%s Inset: %d%%"] = "%s Вставка %d%%"
 	L["%s is not a valid SubEvent for COMBAT_LOG_EVENT_UNFILTERED"] = "%s не является допустимым внутренним событием COMBAT_LOG_EVENT_UNFILTERED"
 	L["%s Keep Aspect Ratio"] = "%s Сохранение пропорций изображения"
+	--[[Translation missing --]]
+	L["%s Texture"] = "%s Texture"
 	L["%s total auras"] = "Всего %s |4индикация:индикации:индикаций;"
 	L["%s Zoom: %d%%"] = "%s Увеличение %d%%"
 	L["%s, Border"] = "%s; Граница"
@@ -65,6 +67,10 @@ local L = WeakAuras.L
 	L["Add Option"] = "Добавить параметр"
 	L["Add Overlay"] = "Добавить наложение"
 	L["Add Property Change"] = "Добавить свойство"
+	--[[Translation missing --]]
+	L["Add Raid Mark Information"] = "Add Raid Mark Information"
+	--[[Translation missing --]]
+	L["Add Role Information"] = "Add Role Information"
 	L["Add Snippet"] = "Добавить фрагмент кода"
 	L["Add Sub Option"] = "Добавить внутр. параметр"
 	L["Add to group %s"] = "Добавить в группу %s"
@@ -439,6 +445,8 @@ Supports multiple entries, separated by commas
 	L["Ignored Spell ID"] = "Исключаемый ID заклинания"
 	L["Import"] = "Импорт"
 	L["Import a display from an encoded string"] = "Импортировать индикацию из закодированной строки"
+	--[[Translation missing --]]
+	L["Include Pets"] = "Include Pets"
 	L["Indent Size"] = "Размер отступа"
 	L["Information"] = "Информация"
 	L["Inner"] = "Внутри"
@@ -713,6 +721,10 @@ Supports multiple entries, separated by commas
 	L["The type of trigger"] = "Тип триггера"
 	L["Then "] = "Тогда "
 	L["Thickness"] = "Толщина"
+	--[[Translation missing --]]
+	L["This adds %raidMark as text replacements."] = "This adds %raidMark as text replacements."
+	--[[Translation missing --]]
+	L["This adds %role, %roleIcon as text replacements."] = "This adds %role, %roleIcon as text replacements."
 	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."] = "Добавляет строки %tooltip, %tooltip1, %tooltip2 и %tooltip3 к специальным кодам отображения динамической информации в тексте."
 	L["This display is currently loaded"] = "Эта индикация загружена"
 	L["This display is not currently loaded"] = "Эта индикация не загружена"

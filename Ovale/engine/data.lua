@@ -1,13 +1,17 @@
-local __exports = LibStub:NewLibrary("ovale/engine/data", 90103)
+local __exports = LibStub:NewLibrary("ovale/engine/data", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
+local __imports = {}
+__imports.__toolstools = LibStub:GetLibrary("ovale/tools/tools")
+__imports.isNumber = __imports.__toolstools.isNumber
+__imports.oneTimeMessage = __imports.__toolstools.oneTimeMessage
 local type = type
 local ipairs = ipairs
 local pairs = pairs
 local wipe = wipe
 local find = string.find
-local __toolstools = LibStub:GetLibrary("ovale/tools/tools")
-local isNumber = __toolstools.isNumber
+local isNumber = __imports.isNumber
+local oneTimeMessage = __imports.oneTimeMessage
 local GetSpellInfo = GetSpellInfo
 local concat = table.concat
 local insert = table.insert
@@ -141,147 +145,86 @@ __exports.OvaleDataClass = __class(nil, {
         }
         self.buffSpellList = {
             attack_power_multiplier_buff = {
-                [6673] = true,
-                [19506] = true,
-                [57330] = true
+                [6673] = true
             },
             critical_strike_buff = {
-                [1459] = true,
-                [24604] = true,
-                [24932] = true,
-                [61316] = true,
-                [90309] = true,
-                [90363] = true,
-                [97229] = true,
-                [116781] = true,
-                [126309] = true,
-                [126373] = true,
-                [128997] = true,
-                [160052] = true,
-                [160200] = true
+                [1459] = true
             },
-            haste_buff = {
-                [49868] = true,
-                [55610] = true,
-                [113742] = true,
-                [128432] = true,
-                [135678] = true,
-                [160003] = true,
-                [160074] = true,
-                [160203] = true
-            },
-            mastery_buff = {
-                [19740] = true,
-                [24907] = true,
-                [93435] = true,
-                [116956] = true,
-                [128997] = true,
-                [155522] = true,
-                [160073] = true,
-                [160198] = true
-            },
+            haste_buff = {},
+            mastery_buff = {},
             spell_power_multiplier_buff = {
-                [1459] = true,
-                [61316] = true,
-                [90364] = true,
-                [109773] = true,
-                [126309] = true,
-                [128433] = true,
-                [160205] = true
+                [1459] = true
             },
             stamina_buff = {
-                [469] = true,
-                [21562] = true,
-                [50256] = true,
-                [90364] = true,
-                [160003] = true,
-                [160014] = true,
-                [166928] = true,
-                [160199] = true
+                [21562] = true
             },
-            str_agi_int_buff = {
-                [1126] = true,
-                [20217] = true,
-                [90363] = true,
-                [115921] = true,
-                [116781] = true,
-                [159988] = true,
-                [160017] = true,
-                [160077] = true,
-                [160206] = true
-            },
-            versatility_buff = {
-                [1126] = true,
-                [35290] = true,
-                [50518] = true,
-                [55610] = true,
-                [57386] = true,
-                [159735] = true,
-                [160045] = true,
-                [160077] = true,
-                [167187] = true,
-                [167188] = true,
-                [172967] = true
-            },
+            str_agi_int_buff = {},
+            versatility_buff = {},
             bleed_debuff = {
-                [1079] = true,
-                [16511] = true,
-                [33745] = true,
-                [77758] = true,
                 [113344] = true,
+                [121411] = true,
                 [115767] = true,
-                [122233] = true,
+                [703] = true,
                 [154953] = true,
-                [155722] = true
+                [155722] = true,
+                [772] = true,
+                [1079] = true,
+                [1943] = true,
+                [106830] = true,
+                [324073] = true
             },
             healing_reduced_debuff = {
                 [8680] = true,
-                [54680] = true,
-                [115625] = true,
                 [115804] = true
             },
             stealthed_buff = {
-                [1784] = true,
-                [115191] = true,
+                [102543] = true,
                 [5215] = true,
+                [58984] = true,
+                [185422] = true,
+                [1784] = true,
+                [115192] = true,
                 [1856] = true,
                 [11327] = true,
-                [58984] = true,
-                [102543] = true,
-                [115192] = true,
+                [115191] = true,
                 [115193] = true,
-                [185313] = true,
-                [185422] = true,
                 [347037] = true
             },
             rogue_stealthed_buff = {
                 [1784] = true,
-                [115191] = true,
-                [1856] = true,
-                [11327] = true,
-                [185313] = true,
                 [185422] = true,
                 [115192] = true,
+                [1856] = true,
+                [11327] = true,
+                [115191] = true,
+                [115193] = true,
                 [347037] = true
             },
             mantle_stealthed_buff = {
                 [1784] = true,
-                [1856] = true
+                [1856] = true,
+                [11327] = true,
+                [115193] = true
             },
             burst_haste_buff = {
                 [2825] = true,
+                [309658] = true,
+                [178207] = true,
+                [146555] = true,
+                [256740] = true,
+                [230935] = true,
                 [32182] = true,
-                [80353] = true,
-                [90355] = true
+                [264667] = true,
+                [80353] = true
             },
             burst_haste_debuff = {
                 [57723] = true,
                 [57724] = true,
-                [80354] = true,
-                [95809] = true
+                [80354] = true
             },
             raid_movement_buff = {
-                [106898] = true
+                [106898] = true,
+                [192082] = true
             },
             roll_the_bones_buff = {
                 [193356] = true,
@@ -293,8 +236,12 @@ __exports.OvaleDataClass = __class(nil, {
             },
             lethal_poison_buff = {
                 [2823] = true,
-                [8679] = true,
-                [315584] = true
+                [315584] = true,
+                [8679] = true
+            },
+            non_lethal_poison_buff = {
+                [3408] = true,
+                [5761] = true
             }
         }
         self.defaultSpellLists = {}
@@ -505,6 +452,21 @@ __exports.OvaleDataClass = __class(nil, {
             return value, ratio
         end
         return value * ratio
+    end,
+    resolveSpell = function(self, spellId, atTime, targetGUID)
+        local maxGuard = 20
+        local guard = 0
+        local nextId
+        local id = spellId
+        while id and guard < maxGuard do
+            guard = guard + 1
+            nextId = id
+            id = self:getSpellInfoProperty(nextId, atTime, "replaced_by", targetGUID)
+        end
+        if guard >= maxGuard then
+            oneTimeMessage("Recursive 'replaced_by' chain for spell ID '" .. spellId .. "'.")
+        end
+        return nextId
     end,
     getDamage = function(self, spellId, attackpower, spellpower, mainHandWeaponDPS, offHandWeaponDPS, combopoints)
         local si = self.spellInfo[spellId]

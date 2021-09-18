@@ -461,6 +461,7 @@ local achievements = {
 	[14308] = {}, -- Adventurer of Maldraxxus
 	[14309] = {}, -- Adventurer of Ardenweald
 	[14310] = {}, -- Adventurer of Revendreth
+	[14353] = {}, -- Ardenweald's a Stage
 	[14660] = {}, -- It's About Sending A Message (Maw)
 	[14721] = {}, -- It's In The Mix (Maldraxxus)
 	[14744] = {}, -- Better to Be Lucky Than Dead (Maw)
@@ -505,14 +506,56 @@ function ns:AchievementMobStatus(id)
 	return achievement, name, completed, achievement_completed and not completedByMe
 end
 
+local allQuestsComplete
+do
+	local faction = UnitFactionGroup("player")
+	local function doTestAll(test, input, ...)
+		for _, value in ipairs(input) do
+			if not test(value, ...) then
+				return false
+			end
+		end
+		return true
+	end
+	local function doTestAny(test, input, ...)
+		for _, value in ipairs(input) do
+			if test(value, ...) then
+				return true
+			end
+		end
+		return false
+	end
+	local function doTest(test, input, ...)
+		if type(input) == "table" then
+			if input.alliance then
+				return doTest(test, faction == "Alliance" and input.alliance or input.horde, ...)
+			end
+			if input.any then
+				return doTestAny(test, input, ...)
+			end
+			return doTestAll(test, input, ...)
+		else
+			return test(input, ...)
+		end
+	end
+	local function testMaker(test, override)
+		return function(...)
+			return (override or doTest)(test, ...)
+		end
+	end
+
+	-- local itemInBags = testMaker(function(item) return GetItemCount(item, true) > 0 end)
+	allQuestsComplete = testMaker(function(quest) return C_QuestLog.IsQuestFlaggedCompleted(quest) end)
+end
+
 -- return quest_complete, criteria_complete, achievement_completed_by_alt
 -- `nil` if completion not knowable, true/false if knowable
 function ns:CompletionStatus(id)
-	local _, questid = core:GetMobInfo(id)
+	if not ns.mobdb[id] then return end
 	local _, _, criteria_complete, achievement_completed_by_alt = ns:AchievementMobStatus(id)
 	local quest_complete
-	if questid then
-		quest_complete = C_QuestLog.IsQuestFlaggedCompleted(questid)
+	if ns.mobdb[id].quest then
+		quest_complete = allQuestsComplete(ns.mobdb[id].quest)
 	end
 	return quest_complete, criteria_complete, achievement_completed_by_alt
 end
@@ -542,7 +585,7 @@ function ns:LoadAllAchievementMobs()
 						Debug('Missing mobs from achievement')
 						DebugF('[%s] = { -- %s', achievement, name)
 					end
-					DebugF('    [] = %d, -- %s', criteriaid, description)
+					DebugF('	[] = %d, -- %s', criteriaid, description)
 					missing = missing + 1
 				end
 			end
@@ -570,9 +613,8 @@ function ns:UpdateTooltipWithCompletion(tooltip, id)
 			completed and 0 or 1, completed and 1 or 0, 0
 		)
 	end
-	local _, questid = core:GetMobInfo(id)
-	if questid then
-		completed = C_QuestLog.IsQuestFlaggedCompleted(questid)
+	if ns.mobdb[id] and ns.mobdb[id].quest then
+		completed = allQuestsComplete(ns.mobdb[id].quest)
 		tooltip:AddDoubleLine(
 			QUESTS_COLON:gsub(":", ""),
 			completed and COMPLETE or INCOMPLETE,

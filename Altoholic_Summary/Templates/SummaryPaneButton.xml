@@ -16,7 +16,7 @@
 				self:RegisterForClicks("LeftButtonDown", "RightButtonDown")
 			</OnLoad>
 			<OnLeave>
-				AltoTooltip:Hide()
+				AddonFactory_Tooltip:Hide()
 			</OnLeave>
 		</Scripts>
 		<NormalFont style="GameFontNormalSmallLeft"/>

@@ -17,7 +17,7 @@ is only valid for BfA & Shadowlands. Older items are mostly invalid.
 
 --]]
 
-local LIB_VERSION_MAJOR, LIB_VERSION_MINOR = "LibItemInfo-1.0", 1
+local LIB_VERSION_MAJOR, LIB_VERSION_MINOR = "LibItemInfo-1.0", 2
 local lib = LibStub:NewLibrary(LIB_VERSION_MAJOR, LIB_VERSION_MINOR)
 
 if not lib then return end -- No upgrade needed
@@ -28,7 +28,7 @@ local L = {
 
 local locale = GetLocale()
 if locale == "frFR" then
-	L["Multiple Professions"] = "Plusieurs Professions"
+	L["Multiple Professions"] = "Professions multiples"
 elseif locale == "deDE" then
 	L["Multiple Professions"] = "Mehrere Berufe"
 end
@@ -95,6 +95,8 @@ lib.Enum = {
 }
 
 local TYPE_REAGENT = 1
+local TYPE_DUNGEON_LOOT = 2
+local TYPE_RAID_LOOT = 3
 
 local reagentTypes = {
 	[1] = GetSpellInfo(2259),		-- Alchemy
@@ -126,8 +128,9 @@ function lib:RegisterItems(itemList)
 	for itemID, itemInfo in pairs(itemList) do
 		if not itemDB[itemID] then
 			itemDB[itemID] = itemInfo
-		else
-			print(format("LibItemInfo: item %d is already registered", itemID))
+		-- debug only
+		-- else
+			-- print(format("LibItemInfo: item %d is already registered", itemID))
 		end
 	end
 end
@@ -162,6 +165,16 @@ function lib:GetItemSource(itemID)
 			profession = format("%s, %d", profession, level)
 		end
 		
-		return _G[format("EXPANSION_NAME%d", expansion)], expansion, profession, bagTypes[goesInBag]
+		return itemType, _G[format("EXPANSION_NAME%d", expansion)], expansion, profession, bagTypes[goesInBag]
+	
+	elseif itemType == TYPE_DUNGEON_LOOT or itemType == TYPE_RAID_LOOT then
+		local instanceID = bAnd(RightShift(attrib, 10), 65535)	-- Bits 10-25 : instance id
+		local bossID = bAnd(RightShift(attrib, 26), 65535)			-- Bits 26+ : boss/encounter id
+
+		local bossName = EJ_GetEncounterInfo(bossID)
+		-- local instanceName = EJ_GetInstanceInfo(instanceID)	-- not reliable !!
+		local instanceName = GetRealZoneText(instanceID)
+	
+		return itemType, _G[format("EXPANSION_NAME%d", expansion)], expansion, instanceName, bossName
 	end
 end

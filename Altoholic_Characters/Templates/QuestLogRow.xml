@@ -14,7 +14,7 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Button parentKey="QuestType" inherits="AltoButtonTemplate">
+			<Button parentKey="QuestType" inherits="AddonFactory_ButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" x="2" y="-2" />
 				</Anchors>
@@ -67,7 +67,7 @@
 		</HighlightTexture>
 		<Scripts>
 			<OnLoad>
-				Altoholic:BindViewToController(self, "AltoholicUI.QuestLogRow")
+				Altoholic:BindViewToController(self, "AltoholicUI.TabCharacters.QuestLogRow")
 			</OnLoad>
 		</Scripts>
 	</Button>

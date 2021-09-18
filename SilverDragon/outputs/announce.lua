@@ -15,6 +15,7 @@ LSM:Register("sound", "Wham!", 566946)
 LSM:Register("sound", "Simon Chime", 566076)
 LSM:Register("sound", "War Drums", 567275)--NPC Scan default
 LSM:Register("sound", "Scourge Horn", 567386)--NPC Scan default
+LSM:Register("sound", "Dwarf Horn", 566064)
 LSM:Register("sound", "Pygmy Drums", 566508)
 LSM:Register("sound", "Cheer", 567283)
 LSM:Register("sound", "Humm", 569518)
@@ -22,6 +23,7 @@ LSM:Register("sound", "Short Circuit", 568975)
 LSM:Register("sound", "Fel Portal", 569215)
 LSM:Register("sound", "Fel Nova", 568582)
 LSM:Register("sound", "PVP Flag", 569200)
+LSM:Register("sound", "PvP Flag Horde", 568165) -- PVPFlagTakenHorde
 LSM:Register("sound", "Thunder crack", 566202) -- doodad/fx_thundercrack04.ogg
 LSM:Register("sound", "Algalon: Beware!", 543587)
 LSM:Register("sound", "Yogg Saron: Laugh", 564859)
@@ -30,6 +32,11 @@ LSM:Register("sound", "Magtheridon: I am Unleashed", 554554)
 LSM:Register("sound", "Loatheb: I see you", 554236)
 LSM:Register("sound", "Ikiss: Trinkets", 561403)
 LSM:Register("sound", "NPCScan", 567275)--Sound file is actually bogus, this just forces the option NPCScan into menu. We hack it later.
+LSM:Register("sound", "PvP Alliance", 568320) -- PVPWarningAllianceLong
+LSM:Register("sound", "PvP Horde", 569112) -- PVPWarningHordeLong
+LSM:Register("sound", "Grimrail Train Horn", 1023633)
+LSM:Register("sound", "Squire Horn", 598079)
+LSM:Register("sound", "Gruntling Horn", 598196)
 
 function module:OnInitialize()
 	self.db = core.db:RegisterNamespace("Announce", {
@@ -183,6 +190,7 @@ function module:OnInitialize()
 					-- faeflayer = faker(171688, "Faeflayer", 1536, 0.5, 0.5),
 					scrapking = faker(151625, "Scrap King (loot)", 1462, 0.5, 0.5),
 					kash = faker(159105, "Collector Kash (lots of loot)", 1536, 0.5, 0.5),
+					-- worldcracker = faker(180032, "Wild Worldcracker", 1961, 0.5, 0.5),
 					chest = {
 						type = "execute", name = "Waterlogged Chest",
 						desc = "Fake seeing a Waterlogged Chest",

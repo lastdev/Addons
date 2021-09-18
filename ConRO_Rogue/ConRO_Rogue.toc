@@ -1,7 +1,7 @@
 ## Title:-|cffFFFFFFConRO|r- |cffFFF569Rogue|r
-## Version: 9.1.7
+## Version: 9.1.9
 ## Author: Vae
-## Interface: 90002
+## Interface: 90005
 ## Dependencies: ConRO
 ## LoadOnDemand: 1
 

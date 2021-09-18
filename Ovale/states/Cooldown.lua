@@ -1,17 +1,21 @@
-local __exports = LibStub:NewLibrary("ovale/states/Cooldown", 90103)
+local __exports = LibStub:NewLibrary("ovale/states/Cooldown", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+local __imports = {}
+__imports.aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+__imports.__enginestate = LibStub:GetLibrary("ovale/engine/state")
+__imports.States = __imports.__enginestate.States
+__imports.__toolstools = LibStub:GetLibrary("ovale/tools/tools")
+__imports.isNumber = __imports.__toolstools.isNumber
+local aceEvent = __imports.aceEvent
 local next = next
 local pairs = pairs
 local kpairs = pairs
 local GetSpellCooldown = GetSpellCooldown
 local GetTime = GetTime
 local GetSpellCharges = GetSpellCharges
-local __enginestate = LibStub:GetLibrary("ovale/engine/state")
-local States = __enginestate.States
-local __toolstools = LibStub:GetLibrary("ovale/tools/tools")
-local isNumber = __toolstools.isNumber
+local States = __imports.States
+local isNumber = __imports.isNumber
 local globalCooldown = 61304
 local cooldownThreshold = 0.1
 local baseGcds = {
@@ -70,7 +74,7 @@ __exports.CooldownData = __class(nil, {
     end
 })
 __exports.OvaleCooldownClass = __class(States, {
-    constructor = function(self, ovalePaperDoll, ovaleData, lastSpell, ovale, ovaleDebug, ovaleProfiler)
+    constructor = function(self, ovalePaperDoll, ovaleData, lastSpell, ovale, ovaleDebug)
         self.ovalePaperDoll = ovalePaperDoll
         self.ovaleData = ovaleData
         self.lastSpell = lastSpell
@@ -131,33 +135,28 @@ __exports.OvaleCooldownClass = __class(States, {
                 dest.offgcd = spellcast.offgcd
             end
         end
-        self.saveSpellcastInfo = function(spellcast)
+        self.saveSpellcastInfo = function(spellcast, atTime)
             local spellId = spellcast.spellId
             if spellId then
-                local gcd = self.ovaleData:getSpellInfoProperty(spellId, spellcast.start, "gcd", spellcast.target)
+                local gcd = self.ovaleData:getSpellInfoProperty(spellId, spellcast.start, "gcd", spellcast.targetGuid)
                 if gcd and gcd == 0 then
                     spellcast.offgcd = true
                 end
             end
         end
         self.applySpellStartCast = function(spellId, targetGUID, startCast, endCast, isChanneled, spellcast)
-            self.profiler:startProfiling("OvaleCooldown_ApplySpellStartCast")
             if isChanneled then
                 self:applyCooldown(spellId, targetGUID, startCast)
             end
-            self.profiler:stopProfiling("OvaleCooldown_ApplySpellStartCast")
         end
         self.applySpellAfterCast = function(spellId, targetGUID, startCast, endCast, isChanneled, spellcast)
-            self.profiler:startProfiling("OvaleCooldown_ApplySpellAfterCast")
             if  not isChanneled then
                 self:applyCooldown(spellId, targetGUID, endCast)
             end
-            self.profiler:stopProfiling("OvaleCooldown_ApplySpellAfterCast")
         end
         States.constructor(self, __exports.CooldownData)
         self.module = ovale:createModule("OvaleCooldown", self.handleInitialize, self.handleDisable, aceEvent)
         self.tracer = ovaleDebug:create("OvaleCooldown")
-        self.profiler = ovaleProfiler:create("OvaleCooldown")
     end,
     resetSharedCooldowns = function(self)
         for _, spellTable in pairs(self.sharedCooldown) do
@@ -228,7 +227,6 @@ __exports.OvaleCooldownClass = __class(States, {
         return gcd, haste
     end,
     getCD = function(self, spellId, atTime)
-        self.profiler:startProfiling("OvaleCooldown_state_GetCD")
         local cdName = spellId
         local si = self.ovaleData.spellInfo[spellId]
         if si and si.shared_cd then
@@ -288,7 +286,6 @@ __exports.OvaleCooldownClass = __class(States, {
             cd.chargeStart = chargeStart
         end
         self.tracer:log("Cooldown of spell %d is %f + %f", spellId, cd.start, cd.duration)
-        self.profiler:stopProfiling("OvaleCooldown_state_GetCD")
         return cd
     end,
     getSpellCooldownDuration = function(self, spellId, atTime, targetGUID)
@@ -308,7 +305,7 @@ __exports.OvaleCooldownClass = __class(States, {
             if duration > 0 then
                 local haste = self.ovaleData:getSpellInfoProperty(spellId, atTime, "cd_haste", targetGUID)
                 if haste then
-                    local multiplier = self.ovalePaperDoll:getBaseHasteMultiplier(self.ovalePaperDoll.next)
+                    local multiplier = self.ovalePaperDoll:getBaseHasteMultiplier(atTime)
                     duration = duration / multiplier
                 end
             end
@@ -346,7 +343,6 @@ __exports.OvaleCooldownClass = __class(States, {
         end
     end,
     applyCooldown = function(self, spellId, targetGUID, atTime)
-        self.profiler:startProfiling("OvaleCooldown_state_ApplyCooldown")
         local cd = self:getCD(spellId, atTime)
         local duration = self:getSpellCooldownDuration(spellId, atTime, targetGUID)
         if duration == 0 then
@@ -366,7 +362,6 @@ __exports.OvaleCooldownClass = __class(States, {
             end
         end
         self.tracer:log("Spell %d cooldown info: start=%f, duration=%f, charges=%s", spellId, cd.start, cd.duration, cd.charges or "(nil)")
-        self.profiler:stopProfiling("OvaleCooldown_state_ApplyCooldown")
     end,
     debugCooldown = function(self)
         for spellId, cd in pairs(self.next.cd) do

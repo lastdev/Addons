@@ -1,21 +1,24 @@
-local __exports = LibStub:NewLibrary("ovale/states/Spells", 90103)
+local __exports = LibStub:NewLibrary("ovale/states/Spells", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
+local __imports = {}
+__imports.aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+__imports.__toolstools = LibStub:GetLibrary("ovale/tools/tools")
+__imports.isNumber = __imports.__toolstools.isNumber
 local INFINITY = math.huge
 local kpairs = pairs
 local tonumber = tonumber
-local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+local aceEvent = __imports.aceEvent
 local GetSpellCount = GetSpellCount
 local IsSpellInRange = IsSpellInRange
 local IsUsableItem = IsUsableItem
 local IsUsableSpell = IsUsableSpell
 local UnitIsFriend = UnitIsFriend
-local __toolstools = LibStub:GetLibrary("ovale/tools/tools")
-local isNumber = __toolstools.isNumber
+local isNumber = __imports.isNumber
 local warriorInterceptSpellId = 198304
 local warriorHeroicThrowSpellId = 57755
 __exports.OvaleSpellsClass = __class(nil, {
-    constructor = function(self, spellBook, ovale, ovaleDebug, ovaleProfiler, ovaleData, power, runes, spellActivationGlow)
+    constructor = function(self, spellBook, ovale, ovaleDebug, ovaleData, power, runes, spellActivationGlow)
         self.spellBook = spellBook
         self.ovaleData = ovaleData
         self.power = power
@@ -27,7 +30,6 @@ __exports.OvaleSpellsClass = __class(nil, {
         end
         self.module = ovale:createModule("OvaleSpells", self.handleInitialize, self.handleDisable, aceEvent)
         self.tracer = ovaleDebug:create(self.module:GetName())
-        self.profiler = ovaleProfiler:create(self.module:GetName())
     end,
     getCastTime = function(self, spellId)
         if spellId then
@@ -89,7 +91,6 @@ __exports.OvaleSpellsClass = __class(nil, {
     resetState = function(self)
     end,
     isUsableItem = function(self, itemId, atTime)
-        self.profiler:startProfiling("OvaleSpellBook_state_IsUsableItem")
         local isUsable = IsUsableItem(itemId)
         local ii = self.ovaleData:getItemInfo(itemId)
         if ii then
@@ -101,11 +102,9 @@ __exports.OvaleSpellsClass = __class(nil, {
                 end
             end
         end
-        self.profiler:stopProfiling("OvaleSpellBook_state_IsUsableItem")
         return isUsable
     end,
     isUsableSpell = function(self, spellId, atTime, targetGUID)
-        self.profiler:startProfiling("OvaleSpellBook_state_IsUsableSpell")
         local isUsable, noMana = false, false
         local isKnown = self.spellBook:isKnownSpell(spellId)
         local si = self.ovaleData.spellInfo[spellId]
@@ -134,7 +133,6 @@ __exports.OvaleSpellsClass = __class(nil, {
         else
             isUsable, noMana = IsUsableSpell(spellId)
         end
-        self.profiler:stopProfiling("OvaleSpellBook_state_IsUsableSpell")
         return isUsable, noMana
     end,
     timeToPowerForSpell = function(self, spellId, atTime, targetGUID, powerType, extraPower)

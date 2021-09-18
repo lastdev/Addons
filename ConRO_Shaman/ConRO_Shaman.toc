@@ -1,7 +1,7 @@
 ## Title:-|cffFFFFFFConRO|r- |cff0070DEShaman|r
-## Version: 9.1.11
+## Version: 9.1.12
 ## Author: Vae
-## Interface: 90002
+## Interface: 90005
 ## Dependencies: ConRO
 ## LoadOnDemand: 1
 

@@ -51,7 +51,7 @@
 				self:Button_OnEnter()
 			</OnEnter> 
 			<OnLeave>
-				AltoTooltip:Hide()
+				AddonFactory_Tooltip:Hide()
 			</OnLeave>
 			<OnClick>
 				if button ~= "LeftButton" or not IsShiftKeyDown() or not self.key then return end

@@ -33,6 +33,8 @@ local L = WeakAuras.L
 	L["%s is not a valid SubEvent for COMBAT_LOG_EVENT_UNFILTERED"] = "%s is not a valid SubEvent for COMBAT_LOG_EVENT_UNFILTERED"
 	--[[Translation missing --]]
 	L["%s Keep Aspect Ratio"] = "%s Keep Aspect Ratio"
+	--[[Translation missing --]]
+	L["%s Texture"] = "%s Texture"
 	L["%s total auras"] = "%s gesamte Auren"
 	--[[Translation missing --]]
 	L["%s Zoom: %d%%"] = "%s Zoom: %d%%"
@@ -99,6 +101,10 @@ local L = WeakAuras.L
 	L["Add Option"] = "Option hinzufügen"
 	L["Add Overlay"] = "Overlay hinzufügen"
 	L["Add Property Change"] = "Weitere Änderung"
+	--[[Translation missing --]]
+	L["Add Raid Mark Information"] = "Add Raid Mark Information"
+	--[[Translation missing --]]
+	L["Add Role Information"] = "Add Role Information"
 	--[[Translation missing --]]
 	L["Add Snippet"] = "Add Snippet"
 	L["Add Sub Option"] = "Unteroption hinzufügen"
@@ -604,6 +610,8 @@ Falls die Zahl als Dezimalzahl (z.B. 0.5), Bruch (z.B. 1/2) oder Prozentsatz (z.
 	L["Import"] = "Importieren"
 	L["Import a display from an encoded string"] = "Anzeige von Klartext importieren"
 	--[[Translation missing --]]
+	L["Include Pets"] = "Include Pets"
+	--[[Translation missing --]]
 	L["Indent Size"] = "Indent Size"
 	--[[Translation missing --]]
 	L["Information"] = "Information"
@@ -985,6 +993,10 @@ Nur ein Wert kann ausgewählt werden.]=]
 	L["Then "] = "Dann"
 	--[[Translation missing --]]
 	L["Thickness"] = "Thickness"
+	--[[Translation missing --]]
+	L["This adds %raidMark as text replacements."] = "This adds %raidMark as text replacements."
+	--[[Translation missing --]]
+	L["This adds %role, %roleIcon as text replacements."] = "This adds %role, %roleIcon as text replacements."
 	--[[Translation missing --]]
 	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."] = "This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."
 	L["This display is currently loaded"] = "Diese Anzeige ist momentan geladen"

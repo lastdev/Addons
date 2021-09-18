@@ -23,6 +23,8 @@ local L = WeakAuras.L
 	L["%s Inset: %d%%"] = "%s Inserción: %d%%"
 	L["%s is not a valid SubEvent for COMBAT_LOG_EVENT_UNFILTERED"] = "%s no es un válido SubEvent para COMBAT_LOG_EVENT_UNFILTERED"
 	L["%s Keep Aspect Ratio"] = "%s Mantener relación de aspecto"
+	--[[Translation missing --]]
+	L["%s Texture"] = "%s Texture"
 	L["%s total auras"] = "%s auras en total"
 	L["%s Zoom: %d%%"] = "%s Zoom: %d%%"
 	L["%s, Border"] = "%s, Borde"
@@ -78,6 +80,10 @@ local L = WeakAuras.L
 	L["Add Option"] = "Añadir opción"
 	L["Add Overlay"] = "Añadir capa sobrepuesta"
 	L["Add Property Change"] = "Añadir cambio de propiedad"
+	--[[Translation missing --]]
+	L["Add Raid Mark Information"] = "Add Raid Mark Information"
+	--[[Translation missing --]]
+	L["Add Role Information"] = "Add Role Information"
 	L["Add Snippet"] = "Añadir Snippet"
 	L["Add Sub Option"] = "Añadir opción secundaria"
 	L["Add to group %s"] = "añadir al grupo %s"
@@ -665,6 +671,8 @@ Con |cFF00CC00>= 0|r se activará siempre.]=]
 	L["Import"] = "Importar"
 	L["Import a display from an encoded string"] = "Importar un aura desde un texto cifrado"
 	--[[Translation missing --]]
+	L["Include Pets"] = "Include Pets"
+	--[[Translation missing --]]
 	L["Indent Size"] = "Indent Size"
 	--[[Translation missing --]]
 	L["Information"] = "Information"
@@ -1125,6 +1133,10 @@ Sólo un valor coincidente puede ser escogido.]=]
 	L["Then "] = "Then "
 	--[[Translation missing --]]
 	L["Thickness"] = "Thickness"
+	--[[Translation missing --]]
+	L["This adds %raidMark as text replacements."] = "This adds %raidMark as text replacements."
+	--[[Translation missing --]]
+	L["This adds %role, %roleIcon as text replacements."] = "This adds %role, %roleIcon as text replacements."
 	--[[Translation missing --]]
 	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."] = "This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."
 	--[[Translation missing --]]

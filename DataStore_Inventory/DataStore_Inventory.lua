@@ -331,6 +331,12 @@ local function _GetAverageItemLevel(character)
 	return character.averageItemLvl, character.overallAIL
 end
 
+local function _IterateInventory(character, callback)
+	for _, item in pairs(character.Inventory) do
+		callback(item)
+	end
+end
+
 local sentRequests		-- recently sent requests
 
 local function _RequestGuildMemberEquipment(member)
@@ -440,6 +446,7 @@ local PublicMethods = {
 	GetInventoryItem = _GetInventoryItem,
 	GetInventoryItemCount = _GetInventoryItemCount,
 	GetAverageItemLevel = _GetAverageItemLevel,
+	IterateInventory = _IterateInventory,
 	RequestGuildMemberEquipment = _RequestGuildMemberEquipment,
 	GetGuildMemberInventoryItem = _GetGuildMemberInventoryItem,
 	GetGuildMemberAverageItemLevel = _GetGuildMemberAverageItemLevel,
@@ -500,6 +507,7 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetInventoryItem")
 	DataStore:SetCharacterBasedMethod("GetInventoryItemCount")
 	DataStore:SetCharacterBasedMethod("GetAverageItemLevel")
+	DataStore:SetCharacterBasedMethod("IterateInventory")
 	DataStore:SetGuildBasedMethod("GetGuildMemberInventoryItem")
 	DataStore:SetGuildBasedMethod("GetGuildMemberAverageItemLevel")
 	

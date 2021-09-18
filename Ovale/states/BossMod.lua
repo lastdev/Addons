@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/states/BossMod", 90103)
+local __exports = LibStub:NewLibrary("ovale/states/BossMod", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local UnitExists = UnitExists
@@ -8,7 +8,7 @@ local hooksecurefunc = hooksecurefunc
 local bigWigsLoader = _G["BigWigsLoader"]
 local dbmClass = _G["DBM"]
 __exports.OvaleBossModClass = __class(nil, {
-    constructor = function(self, ovale, ovaleDebug, ovaleProfiler, combat)
+    constructor = function(self, ovale, ovaleDebug, combat)
         self.combat = combat
         self.engagedDBM = nil
         self.engagedBigWigs = nil
@@ -36,7 +36,6 @@ __exports.OvaleBossModClass = __class(nil, {
         end
         self.module = ovale:createModule("BossMod", self.handleInitialize, self.handleDisable)
         self.tracer = ovaleDebug:create(self.module:GetName())
-        self.profiler = ovaleProfiler:create(self.module:GetName())
     end,
     handleDisable = function(self)
     end,
@@ -56,12 +55,10 @@ __exports.OvaleBossModClass = __class(nil, {
         return dbmEngaged or bigWigsEngaged or neitherEngaged
     end,
     scanTargets = function(self)
-        self.profiler:startProfiling("OvaleBossMod:ScanTargets")
         local bossEngaged = false
         if UnitExists("target") then
             bossEngaged = UnitClassification("target") == "worldboss" or false
         end
-        self.profiler:stopProfiling("OvaleBossMod:ScanTargets")
         return bossEngaged
     end,
 })

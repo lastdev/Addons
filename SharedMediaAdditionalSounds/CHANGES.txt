@@ -1,10 +1,10 @@
-tag 9e375ba5ebb53ab4cf953ccfe7f3a9c4d765544d 9.0.2a
-Author:	AllInOneMighty <emmanuel.cron@gmail.com>
-Date:	Wed Nov 18 17:51:07 2020 -0800
+tag e925128c5ec2129a54a18e7be0165b52f5fd855c 9.0.5
+Author:	AllInOneMighty <mighty@allinonemighty.com>
+Date:	Tue Jun 8 20:30:57 2021 -0700
 
-commit 93c0ecfdf74fcbe089a0fbe73f437f86c6e67a21
-Author: AllInOneMighty <emmanuel.cron@gmail.com>
-Date:   Wed Nov 18 01:20:57 2020 -0800
+commit ba923b7f78855866be10d83ee7a5a8a75c792eb3
+Author: AllInOneMighty <mighty@allinonemighty.com>
+Date:   Tue Jun 8 20:30:51 2021 -0700
 
-    Fixing version number not incrementing with tag number
+    Updated TOC
 

@@ -7,7 +7,7 @@ ns.dungeons = {
 		["keystone_instance"] = 378,
 		["instance_map_id"] = 2287,
 		["lfd_activity_ids"] = { 696, 697, 698, 699 },
-		["timers"] = { 1116, 1488, 1860 },
+		["timers"] = { 1152, 1536, 1920 },
 		["name"] = "Halls of Atonement",
 		["shortName"] = "HOA",
 	},
@@ -25,7 +25,7 @@ ns.dungeons = {
 		["keystone_instance"] = 382,
 		["instance_map_id"] = 2293,
 		["lfd_activity_ids"] = { 716, 717, 718, 719 },
-		["timers"] = { 1332, 1776, 2220 },
+		["timers"] = { 1368, 1824, 2280 },
 		["name"] = "Theater of Pain",
 		["shortName"] = "TOP",
 	},
@@ -73,5 +73,23 @@ ns.dungeons = {
 		["timers"] = { 1080, 1440, 1800 },
 		["name"] = "Mists of Tirna Scithe",
 		["shortName"] = "MISTS",
+	}
+}
+
+-- Raid listing sorted by id
+ns.raids = {
+	[1] = {
+		["id"] = 13224,
+		["instance_map_id"] = 2296,
+		["lfd_activity_ids"] = { 720, 721, 722 },
+		["name"] = "Castle Nathria",
+		["shortName"] = "CN",
+	},
+	[2] = {
+		["id"] = 13561,
+		["instance_map_id"] = 2450,
+		["lfd_activity_ids"] = { 743, 744, 745 },
+		["name"] = "Sanctum of Domination",
+		["shortName"] = "SOD",
 	}
 }

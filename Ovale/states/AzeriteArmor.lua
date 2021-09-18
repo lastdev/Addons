@@ -1,7 +1,12 @@
-local __exports = LibStub:NewLibrary("ovale/states/AzeriteArmor", 90103)
+local __exports = LibStub:NewLibrary("ovale/states/AzeriteArmor", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+local __imports = {}
+__imports.aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+__imports.__enginecondition = LibStub:GetLibrary("ovale/engine/condition")
+__imports.returnBoolean = __imports.__enginecondition.returnBoolean
+__imports.returnConstant = __imports.__enginecondition.returnConstant
+local aceEvent = __imports.aceEvent
 local wipe = wipe
 local pairs = pairs
 local tostring = tostring
@@ -12,13 +17,12 @@ local insert = table.insert
 local concat = table.concat
 local C_AzeriteEmpoweredItem = C_AzeriteEmpoweredItem
 local GetSpellInfo = GetSpellInfo
-local __enginecondition = LibStub:GetLibrary("ovale/engine/condition")
-local returnBoolean = __enginecondition.returnBoolean
-local returnConstant = __enginecondition.returnConstant
+local returnBoolean = __imports.returnBoolean
+local returnConstant = __imports.returnConstant
 local azeriteSlots = {
-    HEADSLOT = true,
-    SHOULDERSLOT = true,
-    CHESTSLOT = true
+    headslot = true,
+    shoulderslot = true,
+    chestslot = true
 }
 __exports.OvaleAzeriteArmor = __class(nil, {
     constructor = function(self, equipment, ovale, ovaleDebug)
@@ -53,9 +57,7 @@ __exports.OvaleAzeriteArmor = __class(nil, {
             self.module:UnregisterEvent("PLAYER_ENTERING_WORLD")
         end
         self.handleOvaleEquipmentChanged = function(event, slot)
-            if slot == nil then
-                self:updateTraits()
-            elseif azeriteSlots[slot] then
+            if azeriteSlots[slot] then
                 self:updateTraits()
             end
         end

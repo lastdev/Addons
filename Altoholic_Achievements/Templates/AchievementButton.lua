@@ -21,7 +21,7 @@ addon:Controller("AltoholicUI.AchievementButton", { "AltoholicUI.Formatter", fun
 			
 			local isAccountBound = ( bit.band(flags, ACHIEVEMENT_FLAGS_ACCOUNT) == ACHIEVEMENT_FLAGS_ACCOUNT ) 
 			
-			local tooltip = AltoTooltip
+			local tooltip = AddonFactory_Tooltip
 			tooltip:SetOwner(frame, "ANCHOR_LEFT")
 			tooltip:ClearLines()
 			tooltip:AddDoubleLine(DataStore:GetColoredCharacterName(character), achName)
@@ -101,8 +101,7 @@ addon:Controller("AltoholicUI.AchievementButton", { "AltoholicUI.Formatter", fun
 			tooltip:Show()
 		end,
 		SetImage = function(frame, achievementID)
-			local _, _, _, _, _, _, _, _, _, achImage = GetAchievementInfo(achievementID)
-			frame.Background:SetTexture(achImage)
+			frame.Background:SetTexture(select(10, GetAchievementInfo(achievementID)))
 		end,
 		SetCompletionStatus = function(frame, character, achievementID, isAccountBound)
 			local isStarted, isComplete = DataStore:GetAchievementInfo(character, achievementID, isAccountBound)
@@ -127,4 +126,5 @@ addon:Controller("AltoholicUI.AchievementButton", { "AltoholicUI.Formatter", fun
 			frame.key = character
 			frame.id = achievementID
 		end,
-}end})
+	}
+end})

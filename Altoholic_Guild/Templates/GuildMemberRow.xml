@@ -26,7 +26,7 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Button parentKey="Collapse" inherits="AltoToggleButtonTemplate">
+			<Button parentKey="Collapse" inherits="AddonFactory_ToggleButtonTemplate">
 				<Size x="16" y="16" />
 				<Anchors>
 					<Anchor point="LEFT" x="0" y="0" />
@@ -57,7 +57,7 @@
 						self:GetParent():Name_OnEnter()
 					</OnEnter>
 					<OnLeave>
-						AltoTooltip:Hide()
+						AddonFactory_Tooltip:Hide()
 					</OnLeave>
 				</Scripts>
 				<NormalFont style="GameFontNormalSmallLeft"/>
@@ -79,7 +79,7 @@
 						self:GetParent():Level_OnEnter(self)
 					</OnEnter>
 					<OnLeave>
-						AltoTooltip:Hide()
+						AddonFactory_Tooltip:Hide()
 					</OnLeave>
 					<OnClick>
 						self:GetParent():Level_OnClick(button)

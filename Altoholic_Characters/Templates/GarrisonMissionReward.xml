@@ -20,13 +20,14 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				Altoholic:BindViewToController(self, "AltoholicUI.GarrisonMissionReward", "AltoholicUI.ItemIcon")
+				Altoholic:BindViewToController(self, "AltoholicUI.TabCharacters.GarrisonMissionReward", "AltoholicUI.ItemIcon")
 			</OnLoad>
 			<OnEnter>
 				if self.itemID then
 					self:Item_OnEnter()
 					return
 				end
+				
 				GameTooltip:SetOwner(self, "ANCHOR_LEFT")
 				GameTooltip:AddLine(self.title)
 				GameTooltip:AddLine(self.tooltip, 1, 1, 1)

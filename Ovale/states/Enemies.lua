@@ -1,40 +1,41 @@
-local __exports = LibStub:NewLibrary("ovale/states/Enemies", 90103)
+local __exports = LibStub:NewLibrary("ovale/states/Enemies", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
-local aceTimer = LibStub:GetLibrary("AceTimer-3.0", true)
+local __imports = {}
+__imports.aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+__imports.aceTimer = LibStub:GetLibrary("AceTimer-3.0", true)
+__imports.__enginestate = LibStub:GetLibrary("ovale/engine/state")
+__imports.States = __imports.__enginestate.States
+__imports.__enginecombatlogevent = LibStub:GetLibrary("ovale/engine/combat-log-event")
+__imports.unitFlag = __imports.__enginecombatlogevent.unitFlag
+local aceEvent = __imports.aceEvent
+local aceTimer = __imports.aceTimer
 local band = bit.band
 local bor = bit.bor
-local ipairs = ipairs
 local pairs = pairs
 local wipe = wipe
-local find = string.find
 local GetTime = GetTime
-local COMBATLOG_OBJECT_AFFILIATION_MINE = COMBATLOG_OBJECT_AFFILIATION_MINE
-local COMBATLOG_OBJECT_AFFILIATION_PARTY = COMBATLOG_OBJECT_AFFILIATION_PARTY
-local COMBATLOG_OBJECT_AFFILIATION_RAID = COMBATLOG_OBJECT_AFFILIATION_RAID
-local COMBATLOG_OBJECT_REACTION_FRIENDLY = COMBATLOG_OBJECT_REACTION_FRIENDLY
-local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
-local __enginestate = LibStub:GetLibrary("ovale/engine/state")
-local States = __enginestate.States
-local groupMembers = bor(COMBATLOG_OBJECT_AFFILIATION_MINE, COMBATLOG_OBJECT_AFFILIATION_PARTY, COMBATLOG_OBJECT_AFFILIATION_RAID)
-local eventTagSuffixes = {
-    [1] = "_DAMAGE",
-    [2] = "_MISSED",
-    [3] = "_AURA_APPLIED",
-    [4] = "_AURA_APPLIED_DOSE",
-    [5] = "_AURA_REFRESH",
-    [6] = "_CAST_START",
-    [7] = "_INTERRUPT",
-    [8] = "_DISPEL",
-    [9] = "_DISPEL_FAILED",
-    [10] = "_STOLEN",
-    [11] = "_DRAIN",
-    [12] = "_LEECH"
-}
-local autoAttackEvents = {
-    RANGED_DAMAGE = true,
-    RANGED_MISSED = true,
+local States = __imports.States
+local unitFlag = __imports.unitFlag
+local groupMembers = bor(unitFlag.affiliation.mine, unitFlag.affiliation.party, unitFlag.affiliation.raid)
+local friendlyReaction = unitFlag.reaction.friendly
+local tagEvent = {
+    DAMAGE_SHIELD = true,
+    DAMAGE_SHIELD_MISSED = true,
+    RANGE_DAMAGE = true,
+    RANGE_MISSED = true,
+    SPELL_AURA_APPLIED = true,
+    SPELL_AURA_APPLIED_DOSE = true,
+    SPELL_AURA_REFRESH = true,
+    SPELL_CAST_START = true,
+    SPELL_DAMAGE = true,
+    SPELL_DISPEL = true,
+    SPELL_DISPEL_FAILED = true,
+    SPELL_DRAIN = true,
+    SPELL_INTERRUPT = true,
+    SPELL_LEECH = true,
+    SPELL_MISSED = true,
+    SPELL_STOLEN = true,
     SWING_DAMAGE = true,
     SWING_MISSED = true
 }
@@ -48,23 +49,8 @@ local lastSeenEnemies = {}
 local taggedEnemyLastSeens = {}
 local reaperTimer = nil
 local reapInterval = 3
-local isTagEvent = function(cleuEvent)
-    local isTagEvent = false
-    if autoAttackEvents[cleuEvent] then
-        isTagEvent = true
-    else
-        for _, suffix in ipairs(eventTagSuffixes) do
-            if find(cleuEvent, suffix .. "$") then
-                isTagEvent = true
-                break
-            end
-        end
-    end
-    return isTagEvent
-end
-
 local isFriendly = function(unitFlags, isGroupMember)
-    return (band(unitFlags, COMBATLOG_OBJECT_REACTION_FRIENDLY) > 0 and ( not isGroupMember or band(unitFlags, groupMembers) > 0))
+    return (band(unitFlags, friendlyReaction) > 0 and ( not isGroupMember or band(unitFlags, groupMembers) > 0))
 end
 
 local EnemiesData = __class(nil, {
@@ -75,43 +61,45 @@ local EnemiesData = __class(nil, {
     end
 })
 __exports.OvaleEnemiesClass = __class(States, {
-    constructor = function(self, ovaleGuid, ovale, ovaleProfiler, ovaleDebug)
+    constructor = function(self, ovaleGuid, combatLogEvent, ovale, ovaleDebug)
         self.ovaleGuid = ovaleGuid
+        self.combatLogEvent = combatLogEvent
         self.ovale = ovale
         self.handleInitialize = function()
             if  not reaperTimer then
                 reaperTimer = self.module:ScheduleRepeatingTimer(self.removeInactiveEnemies, reapInterval)
             end
-            self.module:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", self.handleCombatLogEventUnfiltered)
             self.module:RegisterEvent("PLAYER_REGEN_DISABLED", self.handlePlayerRegenDisabled)
+            for event in pairs(tagEvent) do
+                self.combatLogEvent.registerEvent(event, self, self.handleCombatLogEvent)
+            end
         end
         self.handleDisable = function()
             if reaperTimer then
                 self.module:CancelTimer(reaperTimer)
                 reaperTimer = nil
             end
-            self.module:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
             self.module:UnregisterEvent("PLAYER_REGEN_DISABLED")
+            self.combatLogEvent.unregisterAllEvents(self)
         end
-        self.handleCombatLogEventUnfiltered = function(event, ...)
-            local _, cleuEvent, _, sourceGUID, sourceName, sourceFlags, _, destGUID, destName, destFlags = CombatLogGetCurrentEventInfo()
+        self.handleCombatLogEvent = function(cleuEvent)
+            local cleu = self.combatLogEvent
+            local sourceGUID = cleu.sourceGUID
+            local sourceName = cleu.sourceName
+            local sourceFlags = cleu.sourceFlags
+            local destGUID = cleu.destGUID
+            local destName = cleu.destName
+            local destFlags = cleu.destFlags
             if unitRemovedEvents[cleuEvent] then
                 local now = GetTime()
                 self:removeEnemy(cleuEvent, destGUID, now, true)
-            elseif sourceGUID and sourceGUID ~= "" and sourceName and sourceFlags and destGUID and destGUID ~= "" and destName and destFlags then
+            elseif sourceGUID ~= "" and destGUID ~= "" and tagEvent[cleuEvent] then
                 if  not isFriendly(sourceFlags) and isFriendly(destFlags, true) then
-                    if  not (cleuEvent == "SPELL_PERIODIC_DAMAGE" and isTagEvent(cleuEvent)) then
-                        local now = GetTime()
-                        self:addEnemy(cleuEvent, sourceGUID, sourceName, now)
-                    end
-                elseif isFriendly(sourceFlags, true) and  not isFriendly(destFlags) and isTagEvent(cleuEvent) then
                     local now = GetTime()
-                    local isPlayerTag
-                    if sourceGUID == self.ovale.playerGUID then
-                        isPlayerTag = true
-                    else
-                        isPlayerTag = self.ovaleGuid:isPlayerPet(sourceGUID)
-                    end
+                    self:addEnemy(cleuEvent, sourceGUID, sourceName, now)
+                elseif isFriendly(sourceFlags, true) and  not isFriendly(destFlags) then
+                    local now = GetTime()
+                    local isPlayerTag = sourceGUID == self.ovale.playerGUID or self.ovaleGuid.getOwnerGUIDByGUID(sourceGUID) == self.ovale.playerGUID
                     self:addEnemy(cleuEvent, destGUID, destName, now, isPlayerTag)
                 end
             end
@@ -124,7 +112,6 @@ __exports.OvaleEnemiesClass = __class(States, {
             self.current.taggedEnemies = 0
         end
         self.removeInactiveEnemies = function()
-            self.profiler:startProfiling("OvaleEnemies_RemoveInactiveEnemies")
             local now = GetTime()
             for guid, timestamp in pairs(lastSeenEnemies) do
                 if now - timestamp > reapInterval then
@@ -136,15 +123,12 @@ __exports.OvaleEnemiesClass = __class(States, {
                     self:removeTaggedEnemy("REAPED", guid, now)
                 end
             end
-            self.profiler:stopProfiling("OvaleEnemies_RemoveInactiveEnemies")
         end
         States.constructor(self, EnemiesData)
         self.module = ovale:createModule("OvaleEnemies", self.handleInitialize, self.handleDisable, aceEvent, aceTimer)
-        self.profiler = ovaleProfiler:create(self.module:GetName())
         self.tracer = ovaleDebug:create(self.module:GetName())
     end,
     addEnemy = function(self, cleuEvent, guid, name, timestamp, isTagged)
-        self.profiler:startProfiling("OvaleEnemies_AddEnemy")
         if guid then
             enemyNames[guid] = name
             local changed = false
@@ -167,10 +151,8 @@ __exports.OvaleEnemiesClass = __class(States, {
                 self.ovale:needRefresh()
             end
         end
-        self.profiler:stopProfiling("OvaleEnemies_AddEnemy")
     end,
     removeEnemy = function(self, cleuEvent, guid, timestamp, isDead)
-        self.profiler:startProfiling("OvaleEnemies_RemoveEnemy")
         if guid then
             local name = enemyNames[guid]
             local changed = false
@@ -194,10 +176,8 @@ __exports.OvaleEnemiesClass = __class(States, {
                 self.module:SendMessage("Ovale_InactiveUnit", guid, isDead)
             end
         end
-        self.profiler:stopProfiling("OvaleEnemies_RemoveEnemy")
     end,
     removeTaggedEnemy = function(self, cleuEvent, guid, timestamp)
-        self.profiler:startProfiling("OvaleEnemies_RemoveTaggedEnemy")
         if guid then
             local name = enemyNames[guid]
             local tagged = taggedEnemyLastSeens[guid]
@@ -210,7 +190,6 @@ __exports.OvaleEnemiesClass = __class(States, {
                 self.ovale:needRefresh()
             end
         end
-        self.profiler:stopProfiling("OvaleEnemies_RemoveTaggedEnemy")
     end,
     debugEnemies = function(self)
         for guid, seen in pairs(lastSeenEnemies) do
@@ -229,10 +208,8 @@ __exports.OvaleEnemiesClass = __class(States, {
         self.next.enemies = nil
     end,
     resetState = function(self)
-        self.profiler:startProfiling("OvaleEnemies_ResetState")
         self.next.activeEnemies = self.current.activeEnemies
         self.next.taggedEnemies = self.current.taggedEnemies
-        self.profiler:stopProfiling("OvaleEnemies_ResetState")
     end,
     cleanState = function(self)
         self.next.activeEnemies = 0

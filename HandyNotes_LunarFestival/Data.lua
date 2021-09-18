@@ -17,7 +17,7 @@ points[33] = { -- "BlackrockMountain"
 }
 
 points[35] = { -- "BlackrockMountain"
-	[55458399] = { 8619, 910, 5 }, -- Elder Morndeep
+	[38841820] = { 8619, 910, 5 }, -- Elder Morndeep
 }
 
 points[252] = { -- "BlackrockSpire"
@@ -36,6 +36,7 @@ points[36] = { -- "BurningSteppes"
 }
 
 points[27] = { -- "DunMorogh"
+	[62962194] = { 8866, 915, 2 }, -- Elder Bronzebeard
 	[53914991] = { 8653, 912, 1 }, -- Elder Goldwell
 }
 
@@ -55,7 +56,7 @@ points[26] = { -- "Hinterlands"
 }
 
 points[87] = { -- "Ironforge"
-	[29211706] = { 8866, 915, 2 }, -- Elder Bronzebeard
+	[29331715] = { 8866, 915, 2 }, -- Elder Bronzebeard
 }
 
 points[48] = { -- "LochModan"
@@ -72,11 +73,6 @@ points[21] = { -- "Silverpine"
 
 points[50] = { -- "StranglethornJungle"
 	[71043430] = { 8716, 912, 5 }, -- Elder Starglade
-}
-
-points[224] = { -- "StranglethornVale"
-	[63282265] = { 8716, 912, 5 }, -- Elder Starglade
-	[37327920] = { 8674, 912, 6 }, -- Elder Winterhoof
 }
 
 points[317] = { -- "Stratholme"
@@ -140,6 +136,10 @@ points[89] = { -- "Darnassus"
 
 points[66] = { -- "Desolace"
 	[29106255] = { 8635, 910, 3, true }, -- Elder Splitrock in Maraudon
+}
+
+points[68] = { -- "Desolace"
+	[44637652] = { 8635, 910, 3, true }, -- Elder Splitrock in Maraudon
 }
 
 points[1] = { -- "Durotar"
@@ -314,10 +314,6 @@ points[241] = { -- "TwilightHighlands"
 points[249] = { -- "Uldum"
 	[65521867] = { 29742, 6006, 2 }, -- Elder Menkhaf
 	[31596298] = { 29741, 6006, 3 }, -- Elder Sekhemi
-}
-
-points[203] = { -- "Vashjir"
-	[69828251] = { 29738, 6006, 8 }, -- Elder Moonlance
 }
 
 points[205] = { -- "VashjirRuins"

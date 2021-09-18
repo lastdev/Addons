@@ -164,6 +164,7 @@ if AL then
 	AL["SOUND_OPTIONS"] = "Opzioni del suono"
 	AL["SOUND_VOLUME"] = "Volume"
 	AL["SOUND_VOLUME_DESC"] = "Imposta il livello del volume sonoro"
+	AL["STOLEN_ANIMA_VESSEL"] = "Ricettacolo d'Animum Rubato"
 	AL["TEST"] = "Avvia il Test"
 	AL["TEST_DESC"] = "Premi il pulsante per mostrare un avviso di esempio. Puoi trascinare e rilasciare il pannello in un'altra posizione di propria preferenza."
 	AL["TOC_NOTES"] = "Scanner Minimappa. Crea un avviso sonoro e grafico riportante una miniatura e un pulsante ogniqualvolta un PNG, tesoro, cassa o evento apparirà sulla minimappa"

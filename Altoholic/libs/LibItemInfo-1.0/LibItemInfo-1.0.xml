@@ -15,4 +15,7 @@
 	<Script file="Database\MultipleProfessions.lua"/>
 	<Script file="Database\Skinning.lua"/>
 	<Script file="Database\Tailoring.lua"/>
+	
+	<Script file="Database\DungeonLoots.lua"/>
+	<Script file="Database\RaidLoots.lua"/>
 </Ui>

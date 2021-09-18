@@ -2,9 +2,9 @@ local addonName = "Altoholic"
 local addon = _G[addonName]
 local colors = addon.Colors
 
-local NUM_TALENT_TIERS = 8
+local NUM_TALENT_TIERS = 12
 
-addon:Controller("AltoholicUI.SoulbindTree", {
+addon:Controller("AltoholicUI.TabCharacters.SoulbindTree", {
 	Update = function(frame, character, soulbindData, isActive)
 
 		-- Set the soulbind name
@@ -12,7 +12,8 @@ addon:Controller("AltoholicUI.SoulbindTree", {
 
 		-- Loop on each tier/row
 		for tier = 1, NUM_TALENT_TIERS do
-			frame["Tier"..tier]:Update(character, soulbindData, tier)
+			local rowFrame = frame[format("Row%d", tier)]
+			rowFrame:Update(character, soulbindData, tier)
 		end
 		
 		frame:Show()

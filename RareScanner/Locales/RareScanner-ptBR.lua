@@ -150,6 +150,7 @@ if AL then
 	AL["SHOW_CHAT_ALERT_DESC"] = "Mostra no chat uma mensagem privada, cada vez que se detecte um cofre, tesouro ou NPC."
 	AL["SOUND"] = "Áudio"
 	AL["SOUND_OPTIONS"] = "Opções de áudio"
+	AL["STOLEN_ANIMA_VESSEL"] = "Recipiente de Ânima Roubada"
 	AL["TEST"] = "Iniciar teste"
 	AL["TEST_DESC"] = "Pulse o botão para mostrar um exemplo de alerta. Pode arrastar o botão até outra posição onde se mostrarão alertas futuros."
 	AL["TOC_NOTES"] = "Scanner do minimapa. Avisa com uma mensagem, uma miniatura e produz um sinal sonoro cada vez que um NPC raro, tesouro ou evento aparece no seu minimapa."

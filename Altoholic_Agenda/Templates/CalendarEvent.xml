@@ -48,7 +48,7 @@
 				self:Event_OnEnter()
 			</OnEnter>
 			<OnLeave>
-				AltoTooltip:Hide()
+				AddonFactory_Tooltip:Hide()
 			</OnLeave>
 		</Scripts>
 	</Button>

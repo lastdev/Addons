@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/ui/localization/en-US", 90103)
+local __exports = LibStub:NewLibrary("ovale/ui/localization/en-US", 90107)
 if not __exports then return end
 __exports.getENUS = function()
     return {
@@ -153,6 +153,9 @@ Cast as soon as possible.]],
 Warning!: Very CPU intensive]],
         scan_all_auras = [[Full buffs/debuffs scan]],
         remaining_time_font_color = [[Remaining time font color]],
-        icon_snapshot = [[Icon nodes snapshot]]
+        icon_snapshot = [[Icon nodes snapshot]],
+        numberOfIcons = [[Number of icons]],
+        numberOfIconsDesc = [[Number of icons to show in the icon group.]],
+        predictiveIcon = [[Predictive icons]]
     }
 end

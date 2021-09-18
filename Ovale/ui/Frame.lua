@@ -1,11 +1,26 @@
-local __exports = LibStub:NewLibrary("ovale/ui/Frame", 90103)
+local __exports = LibStub:NewLibrary("ovale/ui/Frame", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local AceGUI = LibStub:GetLibrary("AceGUI-3.0", true)
-local Masque = LibStub:GetLibrary("Masque", true)
-local __Icon = LibStub:GetLibrary("ovale/ui/Icon")
-local OvaleIcon = __Icon.OvaleIcon
-local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+local __imports = {}
+__imports.AceGUI = LibStub:GetLibrary("AceGUI-3.0", true)
+__imports.Masque = LibStub:GetLibrary("Masque", true)
+__imports.__Icon = LibStub:GetLibrary("ovale/ui/Icon")
+__imports.OvaleIcon = __imports.__Icon.OvaleIcon
+__imports.aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+__imports.__aceguihelpers = LibStub:GetLibrary("ovale/ui/acegui-helpers")
+__imports.WidgetContainer = __imports.__aceguihelpers.WidgetContainer
+__imports.__toolstools = LibStub:GetLibrary("ovale/tools/tools")
+__imports.isNumber = __imports.__toolstools.isNumber
+__imports.oneTimeMessage = __imports.__toolstools.oneTimeMessage
+__imports.printOneTimeMessages = __imports.__toolstools.printOneTimeMessages
+__imports.stringify = __imports.__toolstools.stringify
+__imports.LibTextDump = LibStub:GetLibrary("LibTextDump-1.0", true)
+__imports.__Localization = LibStub:GetLibrary("ovale/ui/Localization")
+__imports.l = __imports.__Localization.l
+local AceGUI = __imports.AceGUI
+local Masque = __imports.Masque
+local OvaleIcon = __imports.OvaleIcon
+local aceEvent = __imports.aceEvent
 local ipairs = ipairs
 local next = next
 local pairs = pairs
@@ -22,17 +37,14 @@ local UnitIsDead = UnitIsDead
 local UnitCanAttack = UnitCanAttack
 local UIParent = UIParent
 local huge = math.huge
-local __aceguihelpers = LibStub:GetLibrary("ovale/ui/acegui-helpers")
-local WidgetContainer = __aceguihelpers.WidgetContainer
-local __toolstools = LibStub:GetLibrary("ovale/tools/tools")
-local isNumber = __toolstools.isNumber
-local oneTimeMessage = __toolstools.oneTimeMessage
-local printOneTimeMessages = __toolstools.printOneTimeMessages
-local stringify = __toolstools.stringify
+local WidgetContainer = __imports.WidgetContainer
+local isNumber = __imports.isNumber
+local oneTimeMessage = __imports.oneTimeMessage
+local printOneTimeMessages = __imports.printOneTimeMessages
+local stringify = __imports.stringify
 local insert = table.insert
-local LibTextDump = LibStub:GetLibrary("LibTextDump-1.0", true)
-local __Localization = LibStub:GetLibrary("ovale/ui/Localization")
-local l = __Localization.l
+local LibTextDump = __imports.LibTextDump
+local l = __imports.l
 local infinity = huge
 local dragHandlerHeight = 8
 local OvaleFrame = __class(WidgetContainer, {
@@ -156,13 +168,16 @@ local OvaleFrame = __class(WidgetContainer, {
             local top = 0
             local maxHeight = 0
             local maxWidth = 0
+            local now = GetTime()
             for k, node in ipairs(iconNodes) do
                 local icon = self.actions[k]
                 self.tracer:log("+++ Icon %d", k)
                 local element, atTime = self:getIconAction(node)
                 if element and atTime then
                     left, top, maxWidth, maxHeight = self:goNextIcon(icon, left, top, maxWidth, maxHeight)
-                    icon.icons:Show()
+                    for _, v in ipairs(icon.icons) do
+                        v:Show()
+                    end
                     local start
                     if element.type == "action" and element.offgcd then
                         start = element.timeSpan:nextTime(self.baseState.currentTime)
@@ -170,14 +185,16 @@ local OvaleFrame = __class(WidgetContainer, {
                         start = element.timeSpan:nextTime(atTime)
                     end
                     if profile.apparence.enableIcons then
-                        self:updateActionIcon(icon, element, start or 0)
+                        self:updateActionIcon(icon, element, start or 0, now, node)
                     end
                     if profile.apparence.spellFlash.enabled then
                         self.ovaleSpellFlash:flash(node.cachedParams.named.flash, node.cachedParams.named.help, element, start or 0, k)
                     end
                 else
                     self.ovaleSpellFlash:hideFlash(k)
-                    icon.icons:Hide()
+                    for _, v in ipairs(icon.icons) do
+                        v:Hide()
+                    end
                 end
             end
             self:updateDragHandle(maxWidth, maxHeight)
@@ -187,56 +204,69 @@ local OvaleFrame = __class(WidgetContainer, {
             self.timeSinceLastUpdate = 0
         end
     end,
-    updateActionIcon = function(self, action, element, start, now)
+    updateActionIcon = function(self, action, element, start, now, node)
         local profile = self.ovaleOptions.db.profile
         local icons = action.icons
-        now = now or GetTime()
-        if element.type == "value" then
-            local value
-            if isNumber(element.value) and element.origin and element.rate then
-                value = element.value + (now - element.origin) * element.rate
-            end
-            self.tracer:log("GetAction: start=%s, value=%f", start, value)
-            icons:setValue(value, nil)
-        elseif element.type == "none" then
-            icons:setValue(nil, nil)
-        elseif element.type == "action" then
-            if element.actionResourceExtend and element.actionResourceExtend > 0 then
-                if element.actionCooldownDuration and element.actionCooldownDuration > 0 then
-                    self.tracer:log("Extending cooldown of spell ID '%s' for primary resource by %fs.", element.actionId, element.actionResourceExtend)
-                    element.actionCooldownDuration = element.actionCooldownDuration + element.actionResourceExtend
-                elseif element.options and element.options.pool_resource == 1 then
-                    self.tracer:log("Delaying spell ID '%s' for primary resource by %fs.", element.actionId, element.actionResourceExtend)
-                    start = start + element.actionResourceExtend
+        for i = 1, profile.apparence.numberOfIcons do
+            if i > 1 then
+                if element.type == "action" then
+                    if element.actionType == "spell" and isNumber(element.actionId) then
+                        local atTime = self.ovaleFuture.next.nextCast
+                        start = element.timeSpan:nextTime(atTime) or huge
+                        self.ovaleFuture:applySpell(element.actionId, self.guids:getUnitGUID(element.actionTarget or "target"), start)
+                        self.ovaleBestAction:startNewAction()
+                        element = self.ovaleBestAction:getAction(node, atTime)
+                    end
                 end
             end
-            self.tracer:log("GetAction: start=%s, id=%s", start, element.actionId)
-            if element.actionType == "spell" and element.actionId == self.ovaleFuture.next.currentCast.spellId and start and self.ovaleFuture.next.nextCast and start < self.ovaleFuture.next.nextCast then
-                start = self.ovaleFuture.next.nextCast
-            end
-            icons:update(element, start)
-            if element.actionType == "spell" then
-                action.spellId = element.actionId
-            else
-                action.spellId = nil
-            end
-            if start and start <= now and element.actionUsable then
-                action.waitStart = action.waitStart or now
-            else
-                action.waitStart = nil
-            end
-            if profile.apparence.moving and icons.cooldownStart and icons.cooldownEnd then
-                local ratio = 1 - (now - icons.cooldownStart) / (icons.cooldownEnd - icons.cooldownStart)
-                if ratio < 0 then
-                    ratio = 0
-                elseif ratio > 1 then
-                    ratio = 1
+            local icon = icons[i]
+            if element.type == "value" then
+                local value
+                if isNumber(element.value) and element.origin and element.rate then
+                    value = element.value + (now - element.origin) * element.rate
                 end
-                icons:setPoint("TOPLEFT", self.iconsFrame, "TOPLEFT", (action.left + ratio * action.dx) / action.scale, (action.top + ratio * action.dy) / action.scale)
+                self.tracer:log("GetAction: start=%s, value=%f", start, value)
+                icon:setValue(value, nil)
+            elseif element.type == "none" then
+                icon:setValue(nil, nil)
+            elseif element.type == "action" then
+                if element.actionResourceExtend and element.actionResourceExtend > 0 then
+                    if element.actionCooldownDuration and element.actionCooldownDuration > 0 then
+                        self.tracer:log("Extending cooldown of spell ID '%s' for primary resource by %fs.", element.actionId, element.actionResourceExtend)
+                        element.actionCooldownDuration = element.actionCooldownDuration + element.actionResourceExtend
+                    elseif element.options and element.options.pool_resource == 1 then
+                        self.tracer:log("Delaying spell ID '%s' for primary resource by %fs.", element.actionId, element.actionResourceExtend)
+                        start = start + element.actionResourceExtend
+                    end
+                end
+                self.tracer:log("GetAction: start=%s, id=%s", start, element.actionId)
+                if element.actionType == "spell" and element.actionId == self.ovaleFuture.next.currentCast.spellId and start and self.ovaleFuture.next.nextCast and start < self.ovaleFuture.next.nextCast then
+                    start = self.ovaleFuture.next.nextCast
+                end
+                icon:update(element, start)
+                if element.actionType == "spell" then
+                    action.spellId = element.actionId
+                else
+                    action.spellId = nil
+                end
+                if start and start <= now and element.actionUsable then
+                    action.waitStart = action.waitStart or now
+                else
+                    action.waitStart = nil
+                end
+                if profile.apparence.moving and icon.cooldownStart and icon.cooldownEnd then
+                    local ratio = 1 - (now - icon.cooldownStart) / (icon.cooldownEnd - icon.cooldownStart)
+                    if ratio < 0 then
+                        ratio = 0
+                    elseif ratio > 1 then
+                        ratio = 1
+                    end
+                    icon:setPoint("TOPLEFT", self.iconsFrame, "TOPLEFT", (action.left + ratio * action.dx) / action.scale, (action.top + ratio * action.dy) / action.scale)
+                end
             end
-        end
-        if  not profile.apparence.moving then
-            icons:setPoint("TOPLEFT", self.iconsFrame, "TOPLEFT", action.left / action.scale, action.top / action.scale - dragHandlerHeight - profile.apparence.margin)
+            if  not profile.apparence.moving then
+                icon:setPoint("TOPLEFT", self.iconsFrame, "TOPLEFT", (action.left + action.dy * (i - 1)) / action.scale, (action.top - action.dx * (i - 1)) / action.scale - dragHandlerHeight - profile.apparence.margin)
+            end
         end
     end,
     updateFrame = function(self)
@@ -353,8 +383,9 @@ local OvaleFrame = __class(WidgetContainer, {
     end,
     updateIcons = function(self)
         for _, action in pairs(self.actions) do
-            action.icons:Hide()
-            action.icons:Hide()
+            for _, icon in ipairs(action.icons) do
+                icon:Hide()
+            end
         end
         local profile = self.ovaleOptions.db.profile
         self.frame:EnableMouse( not profile.apparence.clickThru)
@@ -362,7 +393,7 @@ local OvaleFrame = __class(WidgetContainer, {
         for k, node in ipairs(iconNodes) do
             if  not self.actions[k] then
                 self.actions[k] = {
-                    icons = OvaleIcon(k, "Icon" .. k, self, false, self.ovaleOptions, self.ovaleSpellBook, self.actionBar),
+                    icons = {},
                     dx = 0,
                     dy = 0,
                     left = 0,
@@ -371,29 +402,34 @@ local OvaleFrame = __class(WidgetContainer, {
                 }
             end
             local action = self.actions[k]
-            local newScale
-            if node.rawNamedParams.size ~= nil and node.rawNamedParams.size.type == "string" and node.rawNamedParams.size.value == "small" then
-                newScale = profile.apparence.smallIconScale
-            else
-                newScale = profile.apparence.iconScale
+            for i = 1, profile.apparence.numberOfIcons do
+                local icon = action.icons[i]
+                if icon == nil then
+                    icon = __imports.OvaleIcon(k, "Icon" .. k .. i, self, false, self.ovaleOptions, self.ovaleSpellBook, self.actionBar)
+                    action.icons[i] = icon
+                end
+                local newScale
+                if node.rawNamedParams.size ~= nil and node.rawNamedParams.size.type == "string" and node.rawNamedParams.size.value == "small" then
+                    newScale = profile.apparence.smallIconScale
+                else
+                    newScale = profile.apparence.iconScale
+                end
+                action.scale = newScale
+                local scale = action.scale
+                icon:setScale(scale)
+                icon:setRemainsFont(profile.apparence.remainsFontColor)
+                icon:setFontScale(profile.apparence.fontScale)
+                icon:setParams(node.rawPositionalParams, node.rawNamedParams)
+                icon:setHelp((node.rawNamedParams.help ~= nil and node.rawNamedParams.help.type == "string" and node.rawNamedParams.help.value) or nil)
+                icon:setRangeIndicator(profile.apparence.targetText)
+                icon:enableMouse( not profile.apparence.clickThru)
+                icon.frame:SetAlpha(profile.apparence.alpha)
+                icon.cdShown = true
+                if self.skinGroup then
+                    self.skinGroup:AddButton(icon.frame)
+                end
+                icon:Show()
             end
-            action.scale = newScale
-            local icon
-            icon = action.icons
-            local scale = action.scale
-            icon:setScale(scale)
-            icon:setRemainsFont(profile.apparence.remainsFontColor)
-            icon:setFontScale(profile.apparence.fontScale)
-            icon:setParams(node.rawPositionalParams, node.rawNamedParams)
-            icon:setHelp((node.rawNamedParams.help ~= nil and node.rawNamedParams.help.type == "string" and node.rawNamedParams.help.value) or nil)
-            icon:setRangeIndicator(profile.apparence.targetText)
-            icon:enableMouse( not profile.apparence.clickThru)
-            icon.frame:SetAlpha(profile.apparence.alpha)
-            icon.cdShown = true
-            if self.skinGroup then
-                self.skinGroup:AddButton(icon.frame)
-            end
-            icon:Show()
         end
         self.content:SetAlpha(profile.apparence.optionsAlpha)
     end,
@@ -406,7 +442,7 @@ local OvaleFrame = __class(WidgetContainer, {
         self.frame:SetHeight(maxHeight + dragHandlerHeight + margin)
         self.content:SetPoint("TOPLEFT", maxWidth + profile.apparence.iconShiftX, profile.apparence.iconShiftY - dragHandlerHeight)
     end,
-    constructor = function(self, ovaleState, ovaleFrameModule, ovaleCompile, ovaleFuture, baseState, ovaleEnemies, ovale, ovaleOptions, ovaleDebug, ovaleSpellFlash, ovaleSpellBook, ovaleBestAction, combat, runner, controls, scripts, actionBar, petFrame)
+    constructor = function(self, ovaleState, ovaleFrameModule, ovaleCompile, ovaleFuture, baseState, ovaleEnemies, ovale, ovaleOptions, ovaleDebug, ovaleSpellFlash, ovaleSpellBook, ovaleBestAction, combat, runner, controls, scripts, actionBar, petFrame, guids)
         self.ovaleState = ovaleState
         self.ovaleFrameModule = ovaleFrameModule
         self.ovaleCompile = ovaleCompile
@@ -425,6 +461,7 @@ local OvaleFrame = __class(WidgetContainer, {
         self.scripts = scripts
         self.actionBar = actionBar
         self.petFrame = petFrame
+        self.guids = guids
         self.checkBoxWidget = {}
         self.listWidget = {}
         self.visible = true
@@ -510,8 +547,7 @@ local OvaleFrame = __class(WidgetContainer, {
         self.dragHandleTexture:SetColorTexture(0.8, 0.8, 0.8, 0.5)
         self.dragHandleTexture:SetPoint("TOPLEFT", 0, 0)
         self.dragHandleTexture:Hide()
-        local content = self.content
-        content:Hide()
+        self.content:Hide()
     end,
     debugIcon = function(self, index)
         local iconNodes = self.ovaleCompile:getIconNodes()
@@ -575,7 +611,7 @@ local OvaleFrame = __class(WidgetContainer, {
     end,
 })
 __exports.OvaleFrameModuleClass = __class(nil, {
-    constructor = function(self, ovaleState, ovaleCompile, ovaleFuture, baseState, ovaleEnemies, ovale, ovaleOptions, ovaleDebug, ovaleSpellFlash, ovaleSpellBook, ovaleBestAction, combat, runner, controls, scripts, actionBar)
+    constructor = function(self, ovaleState, ovaleCompile, ovaleFuture, baseState, ovaleEnemies, ovale, ovaleOptions, ovaleDebug, ovaleSpellFlash, ovaleSpellBook, ovaleBestAction, combat, runner, controls, scripts, actionBar, guids)
         self.ovaleState = ovaleState
         self.ovaleCompile = ovaleCompile
         self.ovaleFuture = ovaleFuture
@@ -623,6 +659,6 @@ __exports.OvaleFrameModuleClass = __class(nil, {
         RegisterStateDriver(petFrame, "visibility", "[petbattle] hide; show")
         petFrame:SetAllPoints(UIParent)
         self.module = ovale:createModule("OvaleFrame", self.handleInitialize, self.handleDisable, aceEvent)
-        self.frame = OvaleFrame(self.ovaleState, self, self.ovaleCompile, self.ovaleFuture, self.baseState, self.ovaleEnemies, self.ovale, self.ovaleOptions, self.ovaleDebug, self.ovaleSpellFlash, self.ovaleSpellBook, self.ovaleBestAction, combat, runner, controls, scripts, actionBar, petFrame)
+        self.frame = OvaleFrame(self.ovaleState, self, self.ovaleCompile, self.ovaleFuture, self.baseState, self.ovaleEnemies, self.ovale, self.ovaleOptions, self.ovaleDebug, self.ovaleSpellFlash, self.ovaleSpellBook, self.ovaleBestAction, combat, runner, controls, scripts, actionBar, petFrame, guids)
     end,
 })

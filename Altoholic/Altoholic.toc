@@ -1,6 +1,5 @@
 ﻿## Interface: 90100
 ## Title: Altoholic by |cFF69CCF0Thaoky|r
-## Title-zhCN: |cffeedd99 [物品] |r: 全角色统计 Altoholic
 
 ## Notes: Provides information about your alts
 ## Notes-ruRU: Предоставляет информацию о вашем персонажах
@@ -9,32 +8,17 @@
 ## Notes-koKR: 부캐들(alts)의 정보들을 제공해 줍니다.
 
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: r195
-## X-Category: Inventory, Tradeskill, Mail
-## X-Localizations: enUS, frFR, zhCN, zhTW, deDE, koKR, esES, esMX, ruRU
-## X-Website: http://wow.curse.com/downloads/wow-addons/details/altoholic.aspx
-## X-eMail: thaoky.altoholic@yahoo.com
-## X-Donate: http://wow.curse.com/downloads/wow-addons/details/altoholic.aspx
-## X-Credits: My guild (Odysseüs), all translators, the wowace community, and all users for their invaluable suggestions !
-## X-Curse-Project-ID: 13402
-## X-WoWI-ID: 8533
-## Dependencies: DataStore, DataStore_Characters
-
-## OptionalDeps: Ace3, LibDataBroker-1.1, LibPeriodicTable-3.1, LibBabble-Boss-3.0, LibBabble-Inventory-3.0
+## Version: 9.1.005
+## Dependencies: AddonFactory, DataStore, DataStore_Characters
+## OptionalDeps: Ace3
 ## SavedVariables: AltoholicDB
-## X-Category: Interface Enhancements
 
 # Libraries
 embeds.xml
 
-locale.xml
+Locale.xml
 
 Core.lua
 Services\Services.xml
 Templates\UITemplates.xml
-Altoholic.xml
-
-Frames\MessageBox.xml
-Frames\TabOptions.xml
-Frames\MinimapButton.xml
-Frames\AccountSharing.xml
+Main.xml

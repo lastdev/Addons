@@ -57,12 +57,18 @@ enum.CurrencyIDs = {
 	CoalescingVisions = 1755,
 	TitanResiduum = 1718,
 	
-	-- Shadowlands
+	-- Shadowlands 9.0
 	Conquest = 1602,
 	RedeemedSoul = 1810,
 	ReservoirAnima = 1813,
 	SoulAsh = 1828,
 	Stygia = 1767,
 	ValorPoints = 1191,
-		
+	
+	-- Shadowlands 9.1
+	CatalogedResearch = 1931,
+	TowerKnowledge = 1904,
+	StygianEmber = 1977,
+	SoulCinders = 1906,
+	
 }

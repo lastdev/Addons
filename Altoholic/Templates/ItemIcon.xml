@@ -2,7 +2,7 @@
 	<Script file="ItemIcon.lua"></Script>
 
 	<!-- parentArray="Items" so that multiple instantiations with the same parent are easily addressable  -->
- 	<Button name="AltoItemIconTemplate" inherits="AltoButtonTemplate" parentArray="Items" virtual="true">
+ 	<Button name="AltoItemIconTemplate" inherits="AddonFactory_ButtonTemplate" parentArray="Items" virtual="true">
 		<Layers>
 			<Layer level="ARTWORK" textureSubLevel="2">
 				<FontString parentKey="Count" inherits="NumberFontNormal" justifyH="RIGHT" hidden="true" >
@@ -31,7 +31,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:BindViewToController(self, "AltoholicUI.ItemIcon", "AltoholicUI.Button")
+				Altoholic:BindViewToController(self, "AltoholicUI.ItemIcon", "AddonFactory.Button")
 			</OnLoad>
 			<OnEnter>
 				self:Item_OnEnter()

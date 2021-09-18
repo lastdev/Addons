@@ -41,6 +41,7 @@ local AddonDB_Defaults = {
 				Callings = {},
 				activeCovenantID = 0,				-- Active Covenant ID (0 = None)
 				covenantCampaignProgress = 0,		-- Track the progress in the covenant storyline
+				story91Progress = 0,					-- Track the progress in the 9.1 storyline (Chains of Domination)
 			}
 		}
 	}
@@ -90,6 +91,9 @@ local covenantCampaignQuestChapters = {
 }
 
 local TorghastQuestLine = { 62932, 62935, 62938, 60139, 62966, 62969, 60146, 62836, 61730 }
+
+local ChainsCampaignQuestChapters = { 63639, 64555, 63902, 63727, 63622, 63656, 64437, 63593, 64314 }
+
 
 -- *** Utility functions ***
 local bAnd = bit.band
@@ -316,6 +320,20 @@ local function ScanRewardSpells(rewards)
 	end
 end
 
+local function ScanCampaignProgress(chapters, field)
+	local count = 0
+	
+	-- loop through the quest id's of the last quest of each chapter, and check if it is flagged completed
+	for _, questID in pairs(chapters) do
+		if C_QuestLog.IsQuestFlaggedCompleted(questID) then
+			count = count + 1
+		end
+	end
+	
+	local char = addon.ThisCharacter
+	char[field] = count
+end
+
 local function ScanCovenantCampaignProgress()
 	-- Get the covenant ID, exit if invalid
 	local covenantID = C_Covenants.GetActiveCovenantID()
@@ -420,6 +438,7 @@ local function ScanQuests()
 	RestoreHeaders()
 	C_QuestLog.SetSelectedQuest(currentSelection)		-- restore the selection to match the cursor, must be properly set if a user abandons a quest
 	ScanCovenantCampaignProgress()
+	ScanCampaignProgress(ChainsCampaignQuestChapters, "story91Progress")
 	
 	addon.ThisCharacter.lastUpdate = time()
 	
@@ -754,6 +773,33 @@ local function _GetCovenantCampaignChaptersInfo(character)
 	return chaptersInfo
 end
 
+local function _GetCampaignChaptersInfo(character, campaignID, field)
+	local chapters = C_CampaignInfo.GetChapterIDs(campaignID)	-- get the chapters of that campaign (always available for all covenants)
+	
+	local chaptersInfo = {}
+
+	for index, id in ipairs(chapters) do
+		local info = C_CampaignInfo.GetCampaignChapterInfo(id)
+		
+		-- completed will be true/false or nil
+		-- ex: progress is 3/9
+		-- 1 & 2 are true (completed)
+		-- 3 is false (ongoing, but not completed yet)
+		-- 4+ = nil (not yet started)
+			
+		local completed = nil
+		if (index <= character[field]) then
+			completed = true
+		elseif (index == character[field] + 1) and (character[field] ~= 0) then
+			completed = false
+		end
+		
+		table.insert(chaptersInfo, { name = info.name, completed = completed})
+	end	
+	
+	return chaptersInfo
+end
+
 local function _GetTorghastStorylineProgress(character)
 	local count = 0
 	
@@ -768,6 +814,14 @@ end
 
 local function _GetTorghastStorylineLength(character)
 	return #TorghastQuestLine
+end
+
+local function _GetChainsOfDominationStorylineProgress(character)
+	return character.story91Progress
+end
+
+local function _GetChainsOfDominationStorylineLength(character)
+	return #ChainsCampaignQuestChapters
 end
 
 local PublicMethods = {
@@ -793,8 +847,11 @@ local PublicMethods = {
 	GetCovenantCampaignProgress = _GetCovenantCampaignProgress,
 	GetCovenantCampaignLength = _GetCovenantCampaignLength,
 	GetCovenantCampaignChaptersInfo = _GetCovenantCampaignChaptersInfo,
+	GetCampaignChaptersInfo = _GetCampaignChaptersInfo,
 	GetTorghastStorylineProgress = _GetTorghastStorylineProgress,
 	GetTorghastStorylineLength = _GetTorghastStorylineLength,
+	GetChainsOfDominationStorylineProgress = _GetChainsOfDominationStorylineProgress,
+	GetChainsOfDominationStorylineLength = _GetChainsOfDominationStorylineLength,
 }
 
 function addon:OnInitialize()
@@ -819,8 +876,11 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetCovenantCampaignProgress")
 	DataStore:SetCharacterBasedMethod("GetCovenantCampaignLength")
 	DataStore:SetCharacterBasedMethod("GetCovenantCampaignChaptersInfo")
+	DataStore:SetCharacterBasedMethod("GetCampaignChaptersInfo")
 	DataStore:SetCharacterBasedMethod("GetTorghastStorylineProgress")
 	DataStore:SetCharacterBasedMethod("GetTorghastStorylineLength")
+	DataStore:SetCharacterBasedMethod("GetChainsOfDominationStorylineProgress")
+	DataStore:SetCharacterBasedMethod("GetChainsOfDominationStorylineLength")
 end
 
 function addon:OnEnable()

@@ -1,8 +1,0 @@
-## Interface: 90100
-## Title: Covenant Mission Success Estimates
-## Author: Kvalyr
-## Notes: Simple Covenant Mission Success Estimates
-## Version: 0.3.7
-
-KayrCovenantMissions.lua
-i18n.lua

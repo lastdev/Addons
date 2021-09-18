@@ -1,7 +1,7 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="Covenants_Reservoir.lua"></Script>
 
-	<Frame parentKey="Reservoir" parent="AltoholicTabCharacters" inherits="AltoDataPanelTemplate">
+	<Frame parentKey="Reservoir" hidden="true">
 		<Frames>
 			<Frame parentKey="TravelUpgrade" inherits="AltoCovenantSanctumUpgradeTreeTemplate" frameLevel="100">
 				<Anchors>
@@ -26,7 +26,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:BindViewToController(self, "AltoholicUI.ReservoirPanel")
+				Altoholic:BindViewToController(self, "AltoholicUI.TabCharacters.ReservoirPanel")
 			</OnLoad>
 		</Scripts>
 	</Frame>

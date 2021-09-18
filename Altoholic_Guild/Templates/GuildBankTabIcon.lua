@@ -9,7 +9,7 @@ addon:Controller("AltoholicUI.GuildBankTabIcon", {
 		local tabName = DataStore:GetGuildBankTabName(guildKey, frame:GetID())
 		if not tabName then return end
 
-		local tooltip = AltoTooltip
+		local tooltip = AddonFactory_Tooltip
 		tooltip:ClearLines()
 		tooltip:SetOwner(frame, "ANCHOR_RIGHT")
 		tooltip:AddLine(tabName)

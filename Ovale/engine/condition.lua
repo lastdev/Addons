@@ -1,12 +1,14 @@
-local __exports = LibStub:NewLibrary("ovale/engine/condition", 90103)
+local __exports = LibStub:NewLibrary("ovale/engine/condition", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
+local __imports = {}
+__imports.__toolstools = LibStub:GetLibrary("ovale/tools/tools")
+__imports.isString = __imports.__toolstools.isString
 local next = next
 local ipairs = ipairs
 local unpack = unpack
 local huge = math.huge
-local __toolstools = LibStub:GetLibrary("ovale/tools/tools")
-local isString = __toolstools.isString
+local isString = __imports.isString
 local insert = table.insert
 local infinity = huge
 __exports.getFunctionSignature = function(name, infos)

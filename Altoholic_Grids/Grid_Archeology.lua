@@ -1,50 +1,34 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
+local colors = addon.Colors
 local icons = addon.Icons
 
-local OPTION_RACE = "UI.Tabs.Grids.Archaeology.CurrentRace"
+local MVC = LibStub("LibMVC-1.0")
+local Options = MVC:GetService("AltoholicUI.Options")
+
+local tab = AltoholicFrame.TabGrids
+
+local currentRace
 local currentItemID
 
-local function OnRaceChange(self)
-	addon:SetOption(OPTION_RACE, self.value)
+-- Just in case
+-- https://wowpedia.fandom.com/wiki/Archaeology#Race_descriptions
 
-	AltoholicTabGrids:SetViewDDMText(GetArchaeologyRaceInfo(self.value))
-	AltoholicTabGrids:Update()
-end
-
-local function DropDown_Initialize(frame)
-	local numRaces = GetNumArchaeologyRaces()
-	local race, icon
-	
-	local currentRace = addon:GetOption(OPTION_RACE)
-	
-	for i = 1, numRaces do
-		race, icon = GetArchaeologyRaceInfo(i)
-		frame:AddButton(race, i, OnRaceChange, icon, (i==currentRace))
-	end
-
-	frame:AddCloseMenu()
-end
-
-local callbacks = {
-	OnUpdate = function()
-			AltoholicTabGrids:SetStatus(GetArchaeologyRaceInfo(addon:GetOption(OPTION_RACE)))
-		end,
-	GetSize = function() return DataStore:GetRaceNumArtifacts(addon:GetOption(OPTION_RACE)) end,
+tab:RegisterGrid(8, {
+	OnUpdate = function() currentRace = Options.Get("UI.Tabs.Grids.Archaeology.CurrentRace") end,
+	GetSize = function() return DataStore:GetRaceNumArtifacts(currentRace) end,
 	RowSetup = function(self, rowFrame, dataRowID)
-			local artifact = DataStore:GetArtifactInfo(addon:GetOption(OPTION_RACE), dataRowID)
+			local artifact = DataStore:GetArtifactInfo(currentRace, dataRowID)
 			currentItemID = artifact.itemID
 			
 			if currentItemID then
 				local _, _, _, hexColor = GetItemQualityColor(artifact.rarity)
 				local itemName = GetSpellInfo(artifact.spellID)
 				
-				rowFrame.Name.Text:SetText("|c" .. hexColor .. itemName)
+				rowFrame.Name.Text:SetText(format("|c%s%s", hexColor, itemName))
 				rowFrame.Name.Text:SetJustifyH("LEFT")
 			end
 		end,
-	RowOnEnter = function()	end,
-	RowOnLeave = function() end,
 	ColumnSetup = function(self, button, dataRowID, character)
 			button.Name:SetFontObject("GameFontNormalSmall")
 			button.Name:SetJustifyH("CENTER")
@@ -53,9 +37,9 @@ local callbacks = {
 			button.Background:SetTexCoord(0, 1, 0, 1)
 			button.Background:SetTexture(GetItemIcon(currentItemID))
 			
-			local artifact = DataStore:GetArtifactInfo(addon:GetOption(OPTION_RACE), dataRowID)
+			local artifact = DataStore:GetArtifactInfo(currentRace, dataRowID)
 			if DataStore:IsArtifactKnown(character, artifact.spellID) then
-				button.Background:SetVertexColor(1.0, 1.0, 1.0);
+				button.Background:SetVertexColor(1.0, 1.0, 1.0)
 				button.Name:SetText(icons.ready)
 				
 				local _, _, itemRarity, itemLevel = GetItemInfo(currentItemID)
@@ -65,7 +49,7 @@ local callbacks = {
 					button.IconBorder:Show()
 				end
 			else
-				button.Background:SetVertexColor(0.4, 0.4, 0.4);
+				button.Background:SetVertexColor(0.4, 0.4, 0.4)
 				button.Name:SetText(icons.notReady)
 			end
 			button.id = currentItemID
@@ -81,16 +65,4 @@ local callbacks = {
 	OnLeave = function(self)
 			GameTooltip:Hide() 
 		end,
-		
-	InitViewDDM = function(frame, title) 
-			frame:Show()
-			title:Show()
-			
-			frame:SetMenuWidth(100) 
-			frame:SetButtonWidth(20)
-			frame:SetText(GetArchaeologyRaceInfo(addon:GetOption(OPTION_RACE)))
-			frame:Initialize(DropDown_Initialize, "MENU_NO_BORDERS")
-		end,
-}
-
-AltoholicTabGrids:RegisterGrid(8, callbacks)
+})

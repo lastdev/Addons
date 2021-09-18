@@ -5,14 +5,14 @@
 		<Size x="615" y="38" />
 		<Frames>
 			<Button parentKey="Name">
-				<Size x="160" y="37"/>
+				<Size x="190" y="37"/>
 				<Anchors>
 					<Anchor point="TOPLEFT" x="0" y="0" />
 				</Anchors>
 				<Layers>
 					<Layer level="BACKGROUND">
 						<FontString parentKey="Text" inherits="GameFontNormal" justifyH="LEFT" justifyV="MIDDLE">
-							<Size x="160" y="37"/>
+							<Size x="190" y="37"/>
 							<Anchors>
 								<Anchor point="TOPLEFT" x="10" y="0" />
 							</Anchors>
@@ -24,13 +24,13 @@
 						self:GetParent():Name_OnEnter()
 					</OnEnter> 
 					<OnLeave>
-						AltoTooltip:Hide()
+						AddonFactory_Tooltip:Hide()
 					</OnLeave>
 				</Scripts>
 			</Button>
 			<Button parentKey="Item1" inherits="AltoAchievementButtonTemplate">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent" relativePoint="BOTTOMLEFT" x="175" y="3" />
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent" relativePoint="BOTTOMLEFT" x="205" y="3" />
 				</Anchors>
 			</Button>
 			<Button parentKey="Item2" inherits="AltoAchievementButtonTemplate">

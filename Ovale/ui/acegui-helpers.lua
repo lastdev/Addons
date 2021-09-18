@@ -1,8 +1,10 @@
-local __exports = LibStub:NewLibrary("ovale/ui/acegui-helpers", 90103)
+local __exports = LibStub:NewLibrary("ovale/ui/acegui-helpers", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
+local __imports = {}
+__imports.AceGUI = LibStub:GetLibrary("AceGUI-3.0", true)
 local CreateFrame = CreateFrame
-local AceGUI = LibStub:GetLibrary("AceGUI-3.0", true)
+local AceGUI = __imports.AceGUI
 __exports.Widget = __class(AceGUI.WidgetBase, {
     constructor = function(self, frame)
         self.userdata = {}

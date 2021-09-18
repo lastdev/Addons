@@ -1,7 +1,7 @@
 ## Interface: 90100
 ## Title: SilverDragon (Shadowlands)
 ## Notes: Mobs for Shadowlands
-## Version: v90100.4
+## Version: v90100.8
 ## Author: Kemayo
 ## eMail: kemayo at gmail dot com
 ## X-Category: Interface Enhancements

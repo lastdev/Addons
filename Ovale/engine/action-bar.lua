@@ -1,10 +1,15 @@
-local __exports = LibStub:NewLibrary("ovale/engine/action-bar", 90103)
+local __exports = LibStub:NewLibrary("ovale/engine/action-bar", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local __uiLocalization = LibStub:GetLibrary("ovale/ui/Localization")
-local l = __uiLocalization.l
-local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
-local aceTimer = LibStub:GetLibrary("AceTimer-3.0", true)
+local __imports = {}
+__imports.__uiLocalization = LibStub:GetLibrary("ovale/ui/Localization")
+__imports.l = __imports.__uiLocalization.l
+__imports.aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+__imports.aceTimer = LibStub:GetLibrary("AceTimer-3.0", true)
+__imports.ElvUI = LibStub:GetLibrary("LibActionButton-1.0-ElvUI", true)
+local l = __imports.l
+local aceEvent = __imports.aceEvent
+local aceTimer = __imports.aceTimer
 local gsub = string.gsub
 local len = string.len
 local match = string.match
@@ -24,7 +29,7 @@ local GetBindingKey = GetBindingKey
 local GetBonusBarIndex = GetBonusBarIndex
 local GetMacroItem = GetMacroItem
 local GetMacroSpell = GetMacroSpell
-local ElvUI = LibStub:GetLibrary("LibActionButton-1.0-ElvUI", true)
+local ElvUI = __imports.ElvUI
 local actionBars = {
     [1] = "ActionButton",
     [2] = "MultiBarRightButton",
@@ -33,7 +38,7 @@ local actionBars = {
     [5] = "MultiBarBottomLeftButton"
 }
 __exports.OvaleActionBarClass = __class(nil, {
-    constructor = function(self, ovaleDebug, ovale, ovaleProfiler, ovaleSpellBook)
+    constructor = function(self, ovaleDebug, ovale, ovaleSpellBook)
         self.ovaleSpellBook = ovaleSpellBook
         self.debugOptions = {
             actionbar = {
@@ -104,7 +109,6 @@ __exports.OvaleActionBarClass = __class(nil, {
             self.handleActionSlotUpdate("TimerUpdateActionSlots")
         end
         self.handleActionSlotUpdate = function(event)
-            self.profiler:startProfiling("OvaleActionBar_UpdateActionSlots")
             self.debug:debug("%s: Updating all action slot mappings.", event)
             wipe(self.action)
             wipe(self.item)
@@ -132,12 +136,10 @@ __exports.OvaleActionBarClass = __class(nil, {
             if event ~= "TimerUpdateActionSlots" then
                 self.module:ScheduleTimer(self.handleTimerUpdateActionSlots, 1)
             end
-            self.profiler:stopProfiling("OvaleActionBar_UpdateActionSlots")
         end
         self.output = {}
         self.module = ovale:createModule("OvaleActionBar", self.handleInitialize, self.handleDisable, aceEvent, aceTimer)
         self.debug = ovaleDebug:create("OvaleActionBar")
-        self.profiler = ovaleProfiler:create(self.module:GetName())
         for k, v in pairs(self.debugOptions) do
             ovaleDebug.defaultOptions.args[k] = v
         end
@@ -180,7 +182,6 @@ __exports.OvaleActionBarClass = __class(nil, {
         return color, linkType, linkData, text
     end,
     updateActionSlot = function(self, slot)
-        self.profiler:startProfiling("OvaleActionBar_UpdateActionSlot")
         local action = self.action[slot]
         if self.spell[action] == slot then
             self.spell[action] = nil
@@ -247,14 +248,11 @@ __exports.OvaleActionBarClass = __class(nil, {
             self.debug:debug("Clearing mapping for button %s.", slot)
         end
         self.keybind[slot] = self:getKeyBinding(slot)
-        self.profiler:stopProfiling("OvaleActionBar_UpdateActionSlot")
     end,
     updateKeyBindings = function(self)
-        self.profiler:startProfiling("OvaleActionBar_UpdateKeyBindings")
         for slot = 1, 120, 1 do
             self.keybind[slot] = self:getKeyBinding(slot)
         end
-        self.profiler:stopProfiling("OvaleActionBar_UpdateKeyBindings")
     end,
     getSpellActionSlot = function(self, spellId)
         return self.spell[spellId]

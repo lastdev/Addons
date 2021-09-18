@@ -1,8 +1,11 @@
-local __exports = LibStub:NewLibrary("ovale/ui/Recount", 90103)
+local __exports = LibStub:NewLibrary("ovale/ui/Recount", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local AceLocale = LibStub:GetLibrary("AceLocale-3.0", true)
-local Recount = LibStub:GetLibrary("recount", true)
+local __imports = {}
+__imports.AceLocale = LibStub:GetLibrary("AceLocale-3.0", true)
+__imports.Recount = LibStub:GetLibrary("recount", true)
+local AceLocale = __imports.AceLocale
+local Recount = __imports.Recount
 local setmetatable = setmetatable
 local GameTooltip = GameTooltip
 local dataModes = function(self, data, num)

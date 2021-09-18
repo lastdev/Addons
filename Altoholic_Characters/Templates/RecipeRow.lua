@@ -2,7 +2,7 @@ local addonName = "Altoholic"
 local addon = _G[addonName]
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
-addon:Controller("AltoholicUI.RecipeRow", {
+addon:Controller("AltoholicUI.TabCharacters.RecipeRow", {
 	Update = function(frame, profession, recipeID, color, isLearned, recipeRank, totalRanks)
 		
 		-- ** set the crafted item **
@@ -75,7 +75,7 @@ addon:Controller("AltoholicUI.RecipeRow", {
 		
 		if reagents then
 			for reagent in reagents:gmatch("([^|]+)") do
-				local reagentIcon = frame["Reagent" .. index]
+				local reagentIcon = frame[format("Reagent%d", index)]
 				local reagentID, reagentCount = strsplit(",", reagent)
 				reagentID = tonumber(reagentID)
 				
@@ -97,7 +97,7 @@ addon:Controller("AltoholicUI.RecipeRow", {
 		
 		-- hide unused reagent icons
 		while index <= 8 do
-			frame["Reagent" .. index]:Hide()
+			frame[format("Reagent%d", index)]:Hide()
 			index = index + 1
 		end
 

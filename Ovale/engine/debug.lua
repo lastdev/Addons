@@ -1,18 +1,25 @@
-local __exports = LibStub:NewLibrary("ovale/engine/debug", 90103)
+local __exports = LibStub:NewLibrary("ovale/engine/debug", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local AceConfig = LibStub:GetLibrary("AceConfig-3.0", true)
-local AceConfigDialog = LibStub:GetLibrary("AceConfigDialog-3.0", true)
-local __uiLocalization = LibStub:GetLibrary("ovale/ui/Localization")
-local l = __uiLocalization.l
-local LibTextDump = LibStub:GetLibrary("LibTextDump-1.0", true)
-local aceTimer = LibStub:GetLibrary("AceTimer-3.0", true)
+local __imports = {}
+__imports.AceConfig = LibStub:GetLibrary("AceConfig-3.0", true)
+__imports.AceConfigDialog = LibStub:GetLibrary("AceConfigDialog-3.0", true)
+__imports.__uiLocalization = LibStub:GetLibrary("ovale/ui/Localization")
+__imports.l = __imports.__uiLocalization.l
+__imports.LibTextDump = LibStub:GetLibrary("LibTextDump-1.0", true)
+__imports.aceTimer = LibStub:GetLibrary("AceTimer-3.0", true)
+__imports.__toolstools = LibStub:GetLibrary("ovale/tools/tools")
+__imports.makeString = __imports.__toolstools.makeString
+local AceConfig = __imports.AceConfig
+local AceConfigDialog = __imports.AceConfigDialog
+local l = __imports.l
+local LibTextDump = __imports.LibTextDump
+local aceTimer = __imports.aceTimer
 local format = string.format
 local pairs = pairs
 local GetTime = GetTime
 local DEFAULT_CHAT_FRAME = DEFAULT_CHAT_FRAME
-local __toolstools = LibStub:GetLibrary("ovale/tools/tools")
-local makeString = __toolstools.makeString
+local makeString = __imports.makeString
 local traceLogMaxLines = 4096
 __exports.Tracer = __class(nil, {
     constructor = function(self, options, debugTools, name)
@@ -26,15 +33,18 @@ __exports.Tracer = __class(nil, {
             type = "toggle"
         }
     end,
+    isDebugging = function(self)
+        return (self.options.db.global.debug[self.name] and true) or false
+    end,
     debug = function(self, pattern, ...)
         local name = self.name
-        if self.options.db.global.debug[name] then
+        if self:isDebugging() then
             DEFAULT_CHAT_FRAME:AddMessage(format("|cff33ff99%s|r: %s", name, makeString(pattern, ...)))
         end
     end,
     debugTimestamp = function(self, pattern, ...)
         local name = self.name
-        if self.options.db.global.debug[name] then
+        if self:isDebugging() then
             local now = GetTime()
             local s = format("|cffffff00%f|r %s", now, makeString(pattern, ...))
             DEFAULT_CHAT_FRAME:AddMessage(format("|cff33ff99%s|r: %s", name, s))

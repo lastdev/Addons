@@ -834,16 +834,8 @@ function ConRO.Shaman.Enhancement(_, timeShift, currentSpell, gcd, tChosen, pvpC
 			return _FaeTransfusion;
 		end
 
-		if _Stormkeeper_BUFF then
-			if (ConRO_AutoButton:IsVisible() and _enemies_in_melee >= 2) or ConRO_AoEButton:IsVisible() then
-				if _ChainLightning_RDY then
-					return _ChainLightning;
-				end
-			else
-				if _LightningBolt_RDY then
-					return _LightningBolt;
-				end
-			end
+		if _ChainLightning_RDY and _Stormkeeper_BUFF then
+			return _ChainLightning;
 		end
 
 		if _ElementalBlast_RDY and _MaelstromWeapon_COUNT >= 5 then

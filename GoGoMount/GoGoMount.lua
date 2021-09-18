@@ -82,8 +82,7 @@ function GoGo_OnEvent(self, event, ...)
 					GoGo_DebugAddLine("GoGo_OnEvent: Shaman entering combat.  Setting macro.")
 				end --if
 				GoGo_FillButton(button, GoGo_InBook(GOGO_SPELLS["SHAMAN"]))
-			-- ICH - Disable combat SoulShape
-			elseif false and GoGo_Variables.Player.Covenant == GoGo_Variables.Localize.NightFae then
+			elseif GoGo_Variables.Player.Covenant == GoGo_Variables.Localize.NightFae then
 				if GoGo_Variables.Debug >= 10 then 
 					GoGo_DebugAddLine("GoGo_OnEvent: Night Fae entering combat.  Setting macro.")
 				end --if

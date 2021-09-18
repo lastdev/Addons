@@ -1,3 +1,3 @@
-@Terciob:
-- Changed the way caches are stored.
+@cont1nuity:
+- Fixing an issue with player pet nameplates.
 

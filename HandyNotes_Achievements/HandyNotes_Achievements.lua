@@ -1,4 +1,4 @@
--- Copyright 2015-2018, r. brian harrison.  all rights reserved.
+-- Copyright 2015-2020, r. brian harrison.  all rights reserved.
 
 local ADDON_NAME = ...
 local HNA = LibStub("AceAddon-3.0"):NewAddon(ADDON_NAME, "AceEvent-3.0", "AceTimer-3.0")
@@ -111,7 +111,7 @@ function HNA:OnEnter(mapFile, nearCoord)
                 else
                     criterionDescription, _, _, _, _, _, _, _, quantityString, _ = HNA:GetAchievementCriteriaInfoByDescription(achievementID, criterion)
                 end
-                
+
                 if quantityString == "0" then
                     quantityString = ""
                 end
@@ -306,7 +306,7 @@ function HNA:Valid(row)
     end
 
     if row.quest then
-        completed = IsQuestFlaggedCompleted(row.quest)
+        completed = C_QuestLog.IsQuestFlaggedCompleted(row.quest)
         if completed then return false end
     end
 

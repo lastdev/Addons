@@ -2,24 +2,23 @@ local addonName = "Altoholic"
 local addon = _G[addonName]
 local colors = addon.Colors
 
+local MVC = LibStub("LibMVC-1.0")
+local Options = MVC:GetService("AltoholicUI.Options")
+
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
-local OPTION_STATS = "UI.Tabs.Grids.Garrisons.CurrentStats"
+local tab = AltoholicFrame.TabGrids
 
 local view
 local viewItems
 local isViewValid
 local counters = {}
 
+local OPTION_STATS = "UI.Tabs.Grids.Garrisons.CurrentStats"
+
 local KEY_ABILITIES = "Abilities"
 local KEY_TRAITS = "Traits"
 local KEY_COUNTERS = "AbilityCounters"
-
-local statTypes = {
-	{ label = GARRISON_RECRUIT_ABILITIES, key = KEY_ABILITIES },
-	{ label = GARRISON_RECRUIT_TRAITS, key = KEY_TRAITS },
-	{ label = L["Counters"], key = KEY_COUNTERS },
-}
 
 local currentKey
 
@@ -42,7 +41,7 @@ local function AddIDToView(id, isCounter)
 	if isCounter then
 		local counterID = C_Garrison.GetFollowerAbilityCounterMechanicInfo(id)
 		
-		if not counters[counterID] then	-- if this counter does not exist yet
+		if counterID and not counters[counterID] then	-- if this counter does not exist yet
 			counters[counterID] = true		-- add it
 			viewItems[id] = true				-- and add this ability to the view (any ability with that counter, it's the counter that matters anyway)
 		end
@@ -57,12 +56,10 @@ local function BuildView()
 	viewItems = {}
 	wipe(counters)
 	
-	local account, realm = AltoholicTabGrids:GetRealm()
-	
-	local currentStats = addon:GetOption(OPTION_STATS)
+	currentKey = Options.Get(OPTION_STATS)
 	
 	-- Get a list of all collected followers across all alts on this realm
-	for characterKey, character in pairs(DataStore:GetCharacters(realm, account)) do
+	for characterKey, character in pairs(DataStore:GetCharacters(tab:GetRealm())) do
 		followers = DataStore:GetFollowers(character)
 		
 		if followers then
@@ -105,32 +102,14 @@ local function BuildView()
 	isViewValid = true
 end
 
-local function OnStatsFilterChange(self)
-	local currentStats = self.value
-	
-	addon:SetOption(OPTION_STATS, currentStats)
-	currentKey = statTypes[currentStats].key
-
-	AltoholicTabGrids:SetViewDDMText(statTypes[currentStats].label)
-	
-	isViewValid = nil
-	AltoholicTabGrids:Update()
-end
-
-local function DropDown_Initialize(frame)
-	local currentStats = addon:GetOption(OPTION_STATS)
-	
-	for i = 1, #statTypes do
-		frame:AddButton(statTypes[i].label, i, OnStatsFilterChange, nil, (i==currentStats))
-	end
-	frame:AddCloseMenu()
-end
-
-local callbacks = {
+tab:RegisterGrid(11, {
+	InvalidateView = function()
+		isViewValid = nil
+	end,
 	OnUpdate = function() 
-			if not isViewValid then
-				BuildView()
-			end
+			if isViewValid then return end
+			
+			BuildView()
 		end,
 	GetSize = function() return #view end,
 	RowSetup = function(self, rowFrame, dataRowID)
@@ -144,7 +123,7 @@ local callbacks = {
 			end
 	
 			if name then
-				rowFrame.Name.Text:SetText(colors.white .. name)
+				rowFrame.Name.Text:SetText(format("%s%s", colors.white, name))
 				rowFrame.Name.Text:SetJustifyH("LEFT")
 			end
 		end,
@@ -174,37 +153,11 @@ local callbacks = {
 				button.IconBorder:Hide()
 				button.Background:SetTexture(icon)
 				button.Background:SetVertexColor(0.5, 0.5, 0.5)
-				button.Name:SetText(colors.white .. numFollowers)
+				button.Name:SetText(format("%s%d", colors.white, numFollowers))
 				button:Show()
 			else
 				-- button.key = nil
 				button:Hide()
 			end
 		end,
-	OnEnter = function(frame) 
-			-- local character = frame.key
-			-- if not character then return end
-
-		end,
-	OnClick = function(frame, button)
-			-- local character = frame.key
-			-- if not character then return end
-			
-		end,
-	OnLeave = function(self)
-		end,
-	InitViewDDM = function(frame, title)
-			frame:Show()
-			title:Show()
-
-			local currentStats = addon:GetOption(OPTION_STATS)
-			currentKey = statTypes[currentStats].key
-			
-			frame:SetMenuWidth(100) 
-			frame:SetButtonWidth(20)
-			frame:SetText(statTypes[currentStats].label)
-			frame:Initialize(DropDown_Initialize, "MENU_NO_BORDERS")
-		end,
-}
-
-AltoholicTabGrids:RegisterGrid(11, callbacks)
+})

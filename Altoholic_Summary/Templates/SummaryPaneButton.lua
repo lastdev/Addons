@@ -1,9 +1,6 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
 
-local function EmptyFunc()
-end
-
 addon:Controller("AltoholicUI.SummaryPaneButton", {
 	SetColumnData = function(frame, character, column)
 		-- Set basic properties
@@ -14,8 +11,8 @@ addon:Controller("AltoholicUI.SummaryPaneButton", {
 		frame:Show()
 
 		-- Set Scripts
-		frame:SetScript("OnEnter", column.OnEnter or EmptyFunc)
-		frame:SetScript("OnClick", column.OnClick or EmptyFunc)
+		frame:SetScript("OnEnter", column.OnEnter or addon.EmptyFunc)
+		frame:SetScript("OnClick", column.OnClick or addon.EmptyFunc)
 	end,
 	SetColumnTotal = function(frame, line, column)
 		-- Set basic properties
@@ -37,7 +34,7 @@ addon:Controller("AltoholicUI.SummaryPaneButton", {
 		end
 
 		-- Set Scripts
-		frame:SetScript("OnEnter", EmptyFunc)
-		frame:SetScript("OnClick", EmptyFunc)
+		frame:SetScript("OnEnter", addon.EmptyFunc)
+		frame:SetScript("OnClick", addon.EmptyFunc)
 	end,
 })

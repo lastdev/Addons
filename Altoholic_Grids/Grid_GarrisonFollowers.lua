@@ -2,13 +2,18 @@ local addonName = "Altoholic"
 local addon = _G[addonName]
 local colors = addon.Colors
 
+local MVC = LibStub("LibMVC-1.0")
+local Options = MVC:GetService("AltoholicUI.Options")
+
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
-local OPTION_FOLLOWERS = "UI.Tabs.Grids.Garrisons.CurrentFollowers"
+local tab = AltoholicFrame.TabGrids
 
 local view
 local isViewValid
 local collected = {}
+
+local OPTION_FOLLOWERS = "UI.Tabs.Grids.Garrisons.CurrentFollowers"
 
 -- Followers not recruited at the inn
 local nonInnFollowers = { 
@@ -62,14 +67,6 @@ local nonInnFollowers = {
 	[463] = true,
 }
 
-local followerTypes = {
-	ALL,
-	L["Collected"],
-	L["Not collected"],
-	L["Recruited at the inn"],
-	L["Not recruited at the inn"],
-}
-
 local function SortByFollowerName(a, b)
 	local nameA = C_Garrison.GetFollowerNameByID(a)
 	local nameB = C_Garrison.GetFollowerNameByID(b)
@@ -82,12 +79,11 @@ local function BuildView()
 	-- list all collected followers (across all alts), sorted alphabetically
 	-- .. then list all uncollected followers, also sorted alphabetically
 
-	local account, realm = AltoholicTabGrids:GetRealm()
 	local uncollected = {}
 	local followers
 	
 	-- Prepare a list of all collected followers across all alts on this realm
-	for characterKey, character in pairs(DataStore:GetCharacters(realm, account)) do
+	for characterKey, character in pairs(DataStore:GetCharacters(tab:GetRealm())) do
 		followers = DataStore:GetFollowers(character)
 		
 		if followers then
@@ -122,7 +118,7 @@ local function BuildView()
 	-- Now prepare the view, depending on user selection.
 	view = {}
 	
-	local currentFollowers = addon:GetOption(OPTION_FOLLOWERS)
+	local currentFollowers = Options.Get(OPTION_FOLLOWERS)
 	
 	if currentFollowers == 3 then		-- Not collected only
 		for k, id in pairs(uncollected) do
@@ -158,31 +154,19 @@ local function BuildView()
 	isViewValid = true
 end
 
-local function OnFollowerFilterChange(self)
-	local currentFollowers = self.value
-	
-	addon:SetOption(OPTION_FOLLOWERS, currentFollowers)
-
-	AltoholicTabGrids:SetViewDDMText(followerTypes[currentFollowers])
-	
+addon:RegisterMessage("DATASTORE_GARRISON_FOLLOWERS_UPDATED", function() 
 	isViewValid = nil
-	AltoholicTabGrids:Update()
-end
+	tab:Update()
+end)
 
-local function DropDown_Initialize(frame)
-	local currentFollowers = addon:GetOption(OPTION_FOLLOWERS)
-	
-	for i = 1, #followerTypes do
-		frame:AddButton(followerTypes[i], i, OnFollowerFilterChange, nil, (i==currentFollowers))
-	end
-	frame:AddCloseMenu()
-end
-
-local callbacks = {
+tab:RegisterGrid(10, {
+	InvalidateView = function()
+		isViewValid = nil
+	end,
 	OnUpdate = function() 
-			if not isViewValid then
-				BuildView()
-			end
+			if isViewValid then return end
+			
+			BuildView()
 		end,
 	GetSize = function() return #view end,
 	RowSetup = function(self, rowFrame, dataRowID)
@@ -192,7 +176,7 @@ local callbacks = {
 			rowFrame.Name.followerName = name
 
 			if name then
-				rowFrame.Name.Text:SetText(colors.white .. name)
+				rowFrame.Name.Text:SetText(format("%s%s", colors.white, name))
 				rowFrame.Name.Text:SetJustifyH("LEFT")
 			end
 		end,
@@ -201,15 +185,17 @@ local callbacks = {
 			local text = C_Garrison.GetFollowerSourceTextByID(id)
 			if not text then return end
 			
-			AltoTooltip:SetOwner(self, "ANCHOR_TOP")
-			AltoTooltip:ClearLines()
-			AltoTooltip:AddLine(self.followerName, 1, 1, 1)
-			AltoTooltip:AddLine(" ")
-			AltoTooltip:AddLine(text)
-			AltoTooltip:Show()
+			local tooltip = AddonFactory_Tooltip
+			
+			tooltip:SetOwner(self, "ANCHOR_TOP")
+			tooltip:ClearLines()
+			tooltip:AddLine(self.followerName, 1, 1, 1)
+			tooltip:AddLine(" ")
+			tooltip:AddLine(text)
+			tooltip:Show()
 		end,
 	RowOnLeave = function(self)
-			AltoTooltip:Hide()
+			AddonFactory_Tooltip:Hide()
 		end,
 	ColumnSetup = function(self, button, dataRowID, character)
 			local id = view[dataRowID]
@@ -227,8 +213,8 @@ local callbacks = {
 			if level then
 				button.key = character
 				button.followerID = id
-				button.Background:SetVertexColor(1.0, 1.0, 1.0);
-				button.Name:SetText(colors.green .. level)
+				button.Background:SetVertexColor(1.0, 1.0, 1.0)
+				button.Name:SetText(format("%s%d", colors.green, level))
 				
 				local r, g, b = GetItemQualityColor(rarity)
 				button.IconBorder:SetVertexColor(r, g, b, 0.5)
@@ -237,7 +223,7 @@ local callbacks = {
 			else
 				button.key = nil
 				button.followerID = nil
-				button.Background:SetVertexColor(0.4, 0.4, 0.4);
+				button.Background:SetVertexColor(0.4, 0.4, 0.4)
 				button.Name:SetText("")
 				button.IconBorder:SetVertexColor(1.0, 1.0, 1.0, 0.5)
 				button.IconBorder:Hide()
@@ -255,7 +241,7 @@ local callbacks = {
 			if not link then return end
 			
 			-- on shift-click, insert in chat
-			if ( button == "LeftButton" ) and ( IsShiftKeyDown() ) then
+			if button == "LeftButton" and IsShiftKeyDown() then
 				local chat = ChatEdit_GetLastActiveWindow()
 				if chat:IsShown() then
 					chat:Insert(link)
@@ -265,24 +251,4 @@ local callbacks = {
 	OnLeave = function(self)
 			FloatingGarrisonFollowerTooltip:Hide()
 		end,
-	InitViewDDM = function(frame, title)
-			frame:Show()
-			title:Show()
-
-			local currentFollowers = addon:GetOption(OPTION_FOLLOWERS)
-			
-			frame:SetMenuWidth(100) 
-			frame:SetButtonWidth(20)
-			frame:SetText(followerTypes[currentFollowers])
-			frame:Initialize(DropDown_Initialize, "MENU_NO_BORDERS")
-		end,
-}
-
-local function OnFollowersUpdated()
-	isViewValid = nil
-	AltoholicTabGrids:Update()
-end
-
-addon:RegisterMessage("DATASTORE_GARRISON_FOLLOWERS_UPDATED", OnFollowersUpdated)
-
-AltoholicTabGrids:RegisterGrid(10, callbacks)
+})

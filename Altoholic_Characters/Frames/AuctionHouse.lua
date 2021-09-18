@@ -1,297 +1,240 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
-local colors = addon.Colors
 
-local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
+addon:Controller("AltoholicUI.TabCharacters.Auctions", { "AltoholicUI.Options", function(Options)
 
-local view
-local viewSortField = "name"
-local viewSortOrder
-local isViewValid
-local listType			-- "Auctions" or "Bids"
-
-local function SortByName(a, b)
-	local DS = DataStore
-	local character = addon.Tabs.Characters:GetAltKey()
-
-	local _, idA = DS:GetAuctionHouseItemInfo(character, listType, a)
-	local _, idB = DS:GetAuctionHouseItemInfo(character, listType, b)
+	local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
+	local colors = addon.Colors
+	local currentCharacter
+	local view, isViewValid
+	local viewSortField, viewSortOrder
+	local listType		-- "Auctions" or "Bids"
 	
-	local textA = GetItemInfo(idA) or ""
-	local textB = GetItemInfo(idB) or ""
-	
-	if viewSortOrder then
-		return textA < textB
-	else
-		return textA > textB
-	end
-end
+	local OPTION_VIEW_AUCTION_HOUSE = "UI.Tabs.Characters.ViewAuctionHouse"
 
-local function SortByPlayer(a, b)
-	-- sort by owner (for bids), or highBidder (for auctions), both the 4th return value
-	local DS = DataStore
-	local character = addon.Tabs.Characters:GetAltKey()
-	
-	local _, _, _, nameA = DS:GetAuctionHouseItemInfo(character, listType, a)
-	local _, _, _, nameB = DS:GetAuctionHouseItemInfo(character, listType, b)
-
-	nameA = nameA or ""
-	nameB = nameB or ""
-	
-	if viewSortOrder then
-		return nameA < nameB
-	else
-		return nameA > nameB
-	end
-end
-
-local function SortByPrice(a, b)
-	-- sort by owner (for bids), or highBidder (for auctions), both the 4th return value
-	local DS = DataStore
-	local character = addon.Tabs.Characters:GetAltKey()
-	
-	local _, _, _, _, _, priceA = DS:GetAuctionHouseItemInfo(character, listType, a)
-	local _, _, _, _, _, priceB = DS:GetAuctionHouseItemInfo(character, listType, b)
-
-	if viewSortOrder then
-		return priceA < priceB
-	else
-		return priceA > priceB
-	end
-end
-
-local PrimaryLevelSort = {	-- sort functions for the mains
-	["name"] = SortByName,
-	["owner"] = SortByPlayer,
-	["highBidder"] = SortByPlayer,
-	["buyoutPrice"] = SortByPrice,
-}
-
-local function BuildView()
-	view = view or {}
-	wipe(view)
-	
-	local character = addon.Tabs.Characters:GetAltKey()
-	if not character then return end
-	
-	local num
-	if listType == "Auctions" then
-		num = DataStore:GetNumAuctions(character) or 0
-	else
-		num = DataStore:GetNumBids(character) or 0
-	end
-	
-	for i = 1, num do
-		table.insert(view, i)
-	end
-	
-	table.sort(view, PrimaryLevelSort[viewSortField])
-
-	isViewValid = true
-end
-
-addon.AuctionHouse = {}
-
-local ns = addon.AuctionHouse		-- ns = namespace
-
-local updateHandler
-
-function ns:Update()
-	if not isViewValid then
-		BuildView()
-	end
-
-	ns[updateHandler](ns)
-end
-
-function ns:SetUpdateHandler(h)
-	updateHandler = h
-end
-
-function ns:SetListType(list)
-	listType = list
-	ns:SetUpdateHandler("Update"..list)
-end
-
-function ns:Sort(self, field, AHType)
-	viewSortField = field
-	viewSortOrder = addon:GetOption("UI.Tabs.Characters.SortAscending")
-	
-	ns:SetListType(AHType)
-	ns:InvalidateView()
-end
-
-function ns:InvalidateView()
-	isViewValid = nil
-	if AltoholicFrameAuctions:IsVisible() then
-		ns:Update()
-	end
-end
-
-function ns:UpdateAuctions()
-	local VisibleLines = 7
-	local frame = "AltoholicFrameAuctions"
-	local entry = frame.."Entry"
-
-	local scrollFrame = _G[ frame.."ScrollFrame" ]
-	
-	local DS = DataStore
-	local character = addon.Tabs.Characters:GetAltKey()
-	
-	local numAuctions = DS:GetNumAuctions(character) or 0
-	AltoholicTabCharacters.Status:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), format(L["Auctions %s(%d)"], colors.green, numAuctions)))
-	
-	if numAuctions == 0 then		-- make sure the scroll frame is cleared !
-		for i=1, VisibleLines do					-- Hides all entries of the scrollframe, and updates it accordingly
-			_G[ entry..i ]:Hide()
-		end
-
-		scrollFrame:Update(VisibleLines, VisibleLines, 41)
+	local function SortByName(a, b, ascending)
+		local idA = select(2, DataStore:GetAuctionHouseItemInfo(currentCharacter, listType, a))
+		local idB = select(2, DataStore:GetAuctionHouseItemInfo(currentCharacter, listType, b))
 		
-		return
+		local textA = GetItemInfo(idA) or ""
+		local textB = GetItemInfo(idB) or ""
+		
+		if ascending then
+			return textA < textB
+		else
+			return textA > textB
+		end
 	end
 
-	local offset = scrollFrame:GetOffset()
+	local function SortByPlayer(a, b, ascending)
+		local valueA = select(4, DataStore:GetAuctionHouseItemInfo(currentCharacter, listType, a)) or ""
+		local valueB = select(4, DataStore:GetAuctionHouseItemInfo(currentCharacter, listType, b)) or ""
+		
+		if ascending then
+			return valueA < valueB
+		else
+			return valueA > valueB
+		end
+	end
+
+	local function SortByPrice(a, b, ascending)
+		local valueA = select(6, DataStore:GetAuctionHouseItemInfo(currentCharacter, listType, a))
+		local valueB = select(6, DataStore:GetAuctionHouseItemInfo(currentCharacter, listType, b))
 	
-	for i=1, VisibleLines do
-		local line = i + offset
-		if line <= numAuctions then
-			local index = view[line]
+		if ascending then
+			return valueA < valueB
+		else
+			return valueA > valueB
+		end
+	end
 
-			local isGoblin, itemID, count, highBidder, startPrice, buyoutPrice, timeLeft = DS:GetAuctionHouseItemInfo(character, "Auctions", index)
+	local function BuildView(field, ascending)
+		field = field or "expiry"
+		
+		view = view or {}
+		wipe(view)
+		
+		listType = Options.Get(OPTION_VIEW_AUCTION_HOUSE)
+		
+		local num
+		if listType == "Auctions" then
+			num = DataStore:GetNumAuctions(currentCharacter) or 0
+		else
+			num = DataStore:GetNumBids(currentCharacter) or 0
+		end
+		
+		for i = 1, num do
+			table.insert(view, i)
+		end
+		
+		if field == "name" then
+			table.sort(view, function(a, b) return SortByName(a, b, ascending) end)
+		elseif field == "owner" then
+			table.sort(view, function(a, b) return SortByPlayer(a, b, ascending) end)
+		elseif field == "highBidder" then
+			table.sort(view, function(a, b) return SortByPlayer(a, b, ascending) end)
+		elseif field == "buyoutPrice" then
+			table.sort(view, function(a, b) return SortByPrice(a, b, ascending) end)
+		end
+		
+		isViewValid = true
+	end
 
-			local itemName, _, itemRarity = GetItemInfo(itemID)
-			itemName = itemName or L["N/A"]
-			itemRarity = itemRarity or 1
-			_G[ entry..i.."Name" ]:SetText("|c" .. select(4, GetItemQualityColor(itemRarity)) .. itemName)
-			_G[ entry..i.."TimeLeft" ]:SetText(addon:GetTimeString(timeLeft)) 
-
-			local bidder = (isGoblin) and L["Goblin AH"] .. "\n" or ""
-			bidder = (highBidder) and colors.white .. highBidder or colors.red .. NO_BIDS
-			_G[ entry..i.."HighBidder" ]:SetText(bidder)
+	return {
+		OnBind = function(frame)
+			local parent = AltoholicFrame.TabCharacters
 			
-			_G[ entry..i.."Price" ]:SetText(addon:GetMoneyString(startPrice) .. "\n"  
-					.. colors.green .. BUYOUT .. ": " ..  addon:GetMoneyString(buyoutPrice))
-			_G[ entry..i.."ItemIconTexture" ]:SetTexture(GetItemIcon(itemID));
-			if count and count > 1 then
-				_G[ entry..i.."ItemCount" ]:SetText(count)
-				_G[ entry..i.."ItemCount" ]:Show()
+			frame:SetParent(parent)
+			frame:SetPoint("TOPLEFT", parent.Background, "TOPLEFT", 0, 0)
+			frame:SetPoint("BOTTOMRIGHT", parent.Background, "BOTTOMRIGHT", 26, 0)
+			parent:RegisterPanel("Auctions", frame)
+			
+			addon:RegisterMessage("DATASTORE_AUCTIONS_UPDATED", function() 
+
+				frame:InvalidateView()
+				if frame:IsVisible() then
+					frame:Update()
+				end
+			end)
+			
+			-- Handle resize
+			frame:SetScript("OnSizeChanged", function(self, width, height)
+				if not frame:IsVisible() then return end
+			
+				frame:PreUpdate()
+				frame:Update(true)
+			end)
+		end,
+		
+		PreUpdate = function(frame)
+			-- There is no Update(), it points to UpdateAuctions or UpdateBids
+			if Options.Get(OPTION_VIEW_AUCTION_HOUSE) == "Auctions" then
+				frame.Update = frame.UpdateAuctions
 			else
-				_G[ entry..i.."ItemCount" ]:Hide()
+				frame.Update = frame.UpdateBids
+			end
+		end,
+		Sort = function(frame, field, sortOrder)
+			viewSortField = field
+			viewSortOrder = sortOrder
+			
+			frame:InvalidateView()
+		end,
+		InvalidateView = function()
+			isViewValid = nil
+		end,
+		
+		UpdateAuctions = function(frame, isResizing)
+			local parent = frame:GetParent()
+			local character = parent:GetCharacter()
+			if not character then return end
+			
+			currentCharacter = character
+			
+			if not isViewValid then
+				BuildView(viewSortField, viewSortOrder)
+			end
+			
+			local numAuctions = DataStore:GetNumAuctions(character) or 0
+		
+			-- Set the tab status
+			parent:SetStatus(format("%s|r / %s%s", DataStore:GetColoredCharacterName(character), 
+				colors.white, format("%s %s(%d)", AUCTIONS, colors.green, numAuctions)))
+			
+			-- Update the scrollframe
+			local scrollFrame = frame.ScrollFrame
+			local numRows = scrollFrame.numRows
+			local offset = scrollFrame:GetOffset()
+			
+			local maxDisplayedRows = math.floor(scrollFrame:GetHeight() / scrollFrame.rowHeight)
+			
+			for rowIndex = 1, numRows do
+				local rowFrame = scrollFrame:GetRow(rowIndex)
+				local line = rowIndex + offset
+				
+				if line <= numAuctions and (rowIndex <= maxDisplayedRows)then	-- if the line is visible
+					if not (isResizing and rowFrame:IsVisible()) then
+						local index = view[line]
+						
+						local isGoblin, itemID, count, highBidder, startPrice, buyoutPrice, timeLeft = DataStore:GetAuctionHouseItemInfo(character, "Auctions", index)
+						
+						if itemID then
+							local itemName, _, itemRarity = GetItemInfo(itemID)
+							rowFrame:SetName(itemName or L["N/A"], itemRarity or 1)
+							rowFrame.Item:SetID(index)
+						end
+						
+						rowFrame:SetTimeLeft(timeLeft)
+						rowFrame:SetHighBidder(isGoblin, highBidder)
+						rowFrame:SetPrice(startPrice, buyoutPrice)
+						rowFrame.Item:SetIcon(GetItemIcon(itemID))
+						rowFrame.Item:SetCount(count)
+						rowFrame.Item.listType = listType
+					end
+					rowFrame:Show()
+				else
+					rowFrame:Hide()
+				end
 			end
 
-			_G[ entry..i.."Item" ]:SetID(index)
-			_G[ entry..i ]:Show()
-		else
-			_G[ entry..i ]:Hide()
-		end
-	end
-	
-	if numAuctions < VisibleLines then
-		scrollFrame:Update(VisibleLines, VisibleLines, 41)
-	else
-		scrollFrame:Update(numAuctions, VisibleLines, 41)
-	end
-end
-
-function ns:UpdateBids()
-	local VisibleLines = 7
-	local frame = "AltoholicFrameAuctions"
-	local entry = frame.."Entry"
-	
-	local scrollFrame = _G[ frame.."ScrollFrame" ]
-	
-	local DS = DataStore
-	local character = addon.Tabs.Characters:GetAltKey()
-	
-	local numBids = DS:GetNumBids(character) or 0
-	AltoholicTabCharacters.Status:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), format(L["Bids %s(%d)"], colors.green, numBids)))
-	
-	if numBids == 0 then		-- make sure the scroll frame is cleared !
-		for i=1, VisibleLines do					-- Hides all entries of the scrollframe, and updates it accordingly
-			_G[ entry..i ]:Hide()
-		end
-
-		scrollFrame:Update(VisibleLines, VisibleLines, 41)
-		return
-	end
-	
-	local offset = scrollFrame:GetOffset()
-	
-	for i=1, VisibleLines do
-		local line = i + offset
-		if line <= numBids then
-			local index = view[line]
-			local isGoblin, itemID, count, ownerName, bidPrice, buyoutPrice, timeLeft = DS:GetAuctionHouseItemInfo(character, "Bids", index)
+			scrollFrame:Update(#view, maxDisplayedRows)
+			frame:Show()
+		end,
+		UpdateBids = function(frame, isResizing)
+			local parent = frame:GetParent()
+			local character = parent:GetCharacter()
+			if not character then return end
 			
-			local itemName, _, itemRarity = GetItemInfo(itemID)
-			itemName = itemName or L["N/A"]
-			itemRarity = itemRarity or 1
-			_G[ entry..i.."Name" ]:SetText("|c" .. select(4, GetItemQualityColor(itemRarity)) .. itemName)
+			currentCharacter = character
 			
-			_G[ entry..i.."TimeLeft" ]:SetText( colors.teal .. _G["AUCTION_TIME_LEFT"..timeLeft] 
-								.. " (" .. _G["AUCTION_TIME_LEFT"..timeLeft .. "_DETAIL"] .. ")")
-			
-			if isGoblin then
-				_G[ entry..i.."HighBidder" ]:SetText(L["Goblin AH"] .. "\n" .. colors.white .. ownerName)
-			else
-				_G[ entry..i.."HighBidder" ]:SetText(colors.white .. ownerName)
+			if not isViewValid then
+				BuildView(viewSortField, viewSortOrder)
 			end
 			
-			_G[ entry..i.."Price" ]:SetText(colors.orange .. CURRENT_BID .. ": " .. addon:GetMoneyString(bidPrice) .. "\n"  
-					.. colors.green .. BUYOUT .. ": " ..  addon:GetMoneyString(buyoutPrice))
-			_G[ entry..i.."ItemIconTexture" ]:SetTexture(GetItemIcon(itemID));
-			if count and count > 1 then
-				_G[ entry..i.."ItemCount" ]:SetText(count)
-				_G[ entry..i.."ItemCount" ]:Show()
-			else
-				_G[ entry..i.."ItemCount" ]:Hide()
+			local numBids = DataStore:GetNumBids(character) or 0
+		
+			-- Set the tab status
+			parent:SetStatus(format("%s|r / %s%s", DataStore:GetColoredCharacterName(character), 
+				colors.white, format("%s %s(%d)", BIDS, colors.green, numBids)))
+			
+			-- Update the scrollframe
+			local scrollFrame = frame.ScrollFrame
+			local numRows = scrollFrame.numRows
+			local offset = scrollFrame:GetOffset()
+			
+			local maxDisplayedRows = math.floor(scrollFrame:GetHeight() / scrollFrame.rowHeight)
+			
+			for rowIndex = 1, numRows do
+				local rowFrame = scrollFrame:GetRow(rowIndex)
+				local line = rowIndex + offset
+				
+				if line <= numBids and (rowIndex <= maxDisplayedRows)then	-- if the line is visible
+					if not (isResizing and rowFrame:IsVisible()) then
+						local index = view[line]
+						
+						local isGoblin, itemID, count, ownerName, bidPrice, buyoutPrice, timeLeft = DataStore:GetAuctionHouseItemInfo(character, "Bids", index)
+						
+						if itemID then
+							local itemName, _, itemRarity = GetItemInfo(itemID)
+							rowFrame:SetName(itemName or L["N/A"], itemRarity or 1)
+							rowFrame.Item:SetID(index)
+						end
+						
+						rowFrame:SetTimeLeftForBid(timeLeft)
+						rowFrame:SetOwnBid(isGoblin, ownerName)
+						rowFrame:SetBidPrice(bidPrice, buyoutPrice)
+						rowFrame.Item:SetIcon(GetItemIcon(itemID))
+						rowFrame.Item:SetCount(count)
+						rowFrame.Item.listType = listType
+					end
+					rowFrame:Show()
+				else
+					rowFrame:Hide()
+				end
 			end
 
-			_G[ entry..i.."Item" ]:SetID(index)
-			_G[ entry..i ]:Show()
-		else
-			_G[ entry..i ]:Hide()
-		end
-	end
-	
-	if numBids < VisibleLines then
-		scrollFrame:Update(VisibleLines, VisibleLines, 41)
-	else
-		scrollFrame:Update(numBids, VisibleLines, 41)
-	end
-end
-
-function ns:OnEnter(frame)
-	local character = addon.Tabs.Characters:GetAltKey()
-	local _, id = DataStore:GetAuctionHouseItemInfo(character, listType, frame:GetID())
-	if not id then return end
-	
-	local _, link = GetItemInfo(id)
-	if not link then return end
-
-	GameTooltip:SetOwner(frame, "ANCHOR_RIGHT");
-	GameTooltip:SetHyperlink(link);
-	GameTooltip:Show();
-end
-
-function ns:OnClick(frame, button)
-	local character = addon.Tabs.Characters:GetAltKey()
-	local _, id = DataStore:GetAuctionHouseItemInfo(character, listType, frame:GetID())
-	if not id then return end
-
-	local _, link = GetItemInfo(id)
-	if not link then return end
-	
-	if ( button == "LeftButton" ) and ( IsControlKeyDown() ) then
-		DressUpItemLink(link);
-	elseif ( button == "LeftButton" ) and ( IsShiftKeyDown() ) then
-		local chat = ChatEdit_GetLastActiveWindow()
-		if chat:IsShown() then
-			chat:Insert(link)
-		else
-			AltoholicFrame_SearchEditBox:SetText(GetItemInfo(link))
-		end
-	end
-end
-
+			scrollFrame:Update(#view, maxDisplayedRows)
+			frame:Show()
+		end,
+	}
+end})

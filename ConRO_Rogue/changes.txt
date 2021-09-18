@@ -1,3 +1,10 @@
+Ver 9.1.9
+	-Adjusted Assassination for 9.0.5 changes.
+
+Ver 9.1.8
+	-Adjusted for changes to Flagellation Covenant ability.
+	-Adjusted Assassination rotation for new Cut to the Chase Passive at level 56.
+
 Ver 9.1.7
 	-Updated PvP code.
 	-Updated warning code.

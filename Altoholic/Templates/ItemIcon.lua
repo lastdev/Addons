@@ -23,7 +23,7 @@ addon:Controller("AltoholicUI.ItemIcon", {
 			end
 		else
 			-- this line queries the server for an unknown id
-			GameTooltip:SetHyperlink("item:"..itemID..":0:0:0:0:0:0:0")	
+			GameTooltip:SetHyperlink(format("item:%d:0:0:0:0:0:0:0", itemID))
 			
 			-- don't leave residual info in the tooltip after the server query
 			GameTooltip:ClearLines()	
@@ -45,7 +45,7 @@ addon:Controller("AltoholicUI.ItemIcon", {
 			if chat:IsShown() then
 				chat:Insert(itemLink)
 			else
-				AltoholicFrame_SearchEditBox:SetText(GetItemInfo(itemLink))
+				AltoholicFrame.SearchBox:SetText(GetItemInfo(itemLink))
 			end
 		end
 	end,

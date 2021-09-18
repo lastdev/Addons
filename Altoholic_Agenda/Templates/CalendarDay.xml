@@ -36,7 +36,7 @@
 				self:Day_OnEnter()
 			</OnEnter>
 			<OnLeave>
-				AltoTooltip:Hide()
+				AddonFactory_Tooltip:Hide()
 			</OnLeave>
 			<OnClick>
 				self:Day_OnClick(button)

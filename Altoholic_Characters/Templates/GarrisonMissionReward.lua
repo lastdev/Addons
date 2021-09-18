@@ -2,7 +2,7 @@ local addonName = "Altoholic"
 local addon = _G[addonName]
 local colors = addon.Colors
 
-addon:Controller("AltoholicUI.GarrisonMissionReward", {
+addon:Controller("AltoholicUI.TabCharacters.GarrisonMissionReward", {
 	SetQuantity = function(frame, quantity)
 		frame.Quantity:SetText(quantity)
 		frame.Quantity:Show()

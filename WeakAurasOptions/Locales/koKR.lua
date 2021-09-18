@@ -23,6 +23,8 @@ local L = WeakAuras.L
 	L["%s Inset: %d%%"] = "%s 삽입: %d%%"
 	L["%s is not a valid SubEvent for COMBAT_LOG_EVENT_UNFILTERED"] = "%s|1은;는; COMBAT_LOG_EVENT_UNFILTERED에 유효한 하위 이벤트가 아닙니다."
 	L["%s Keep Aspect Ratio"] = "%s 종횡비 유지"
+	--[[Translation missing --]]
+	L["%s Texture"] = "%s Texture"
 	L["%s total auras"] = "총 %s개 효과"
 	L["%s Zoom: %d%%"] = "%s 확대: %d%%"
 	L["%s, Border"] = "%s, 테두리"
@@ -67,6 +69,10 @@ local L = WeakAuras.L
 	L["Add Option"] = "옵션 추가"
 	L["Add Overlay"] = "오버레이 추가"
 	L["Add Property Change"] = "속성 변경 추가"
+	--[[Translation missing --]]
+	L["Add Raid Mark Information"] = "Add Raid Mark Information"
+	--[[Translation missing --]]
+	L["Add Role Information"] = "Add Role Information"
 	L["Add Snippet"] = "스니핏 추가"
 	L["Add Sub Option"] = "하위 옵션 추가"
 	L["Add to group %s"] = "그룹 %s에 추가"
@@ -485,6 +491,8 @@ Supports multiple entries, separated by commas
 	L["Import"] = "가져오기"
 	L["Import a display from an encoded string"] = "암호화된 문자열에서 디스플레이 가져오기"
 	--[[Translation missing --]]
+	L["Include Pets"] = "Include Pets"
+	--[[Translation missing --]]
 	L["Indent Size"] = "Indent Size"
 	L["Information"] = "정보"
 	L["Inner"] = "내부"
@@ -788,6 +796,10 @@ Supports multiple entries, separated by commas
 	--[[Translation missing --]]
 	L["Then "] = "Then "
 	L["Thickness"] = "굵기"
+	--[[Translation missing --]]
+	L["This adds %raidMark as text replacements."] = "This adds %raidMark as text replacements."
+	--[[Translation missing --]]
+	L["This adds %role, %roleIcon as text replacements."] = "This adds %role, %roleIcon as text replacements."
 	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."] = "텍스트를 %tooltip, %tooltip1, %tooltip2, %tooltip3 로 대체 합니다"
 	L["This display is currently loaded"] = "이 디스플레이는 불러온 상태입니다"
 	L["This display is not currently loaded"] = "이 디스플레이는 불러오지 않았습니다"

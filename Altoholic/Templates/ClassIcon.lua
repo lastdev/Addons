@@ -3,6 +3,8 @@ local addon = _G[addonName]
 local colors = addon.Colors
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
+local MVC = LibStub("LibMVC-1.0")
+local Options = MVC:GetService("AltoholicUI.Options")
 
 local ICON_PARTIAL = "Interface\\RaidFrame\\ReadyCheck-Waiting"
 
@@ -12,7 +14,7 @@ local function OnCharacterChange(frame, option, classIcons)
 		key = nil
 	end
 
-	addon:SetOption(option, key)
+	Options.Set(option, key)
 
 	if classIcons.OnCharacterChanged then
 		classIcons:OnCharacterChanged()		-- callback method in the container
@@ -34,7 +36,7 @@ local function ClassIcon_Initialize(frame, level)
 	-- get the key associated with this button
 	-- ex: "Tabs.Grids.<account>.<realm>.Column5"
 	local option = format(frame.optionFormat, account, realm, id)
-	local key = addon:GetOption(option) or ""
+	local key = Options.Get(option) or ""
 	
 	for _, character in ipairs(nameList) do
 		local info = frame:CreateInfo()
@@ -77,7 +79,7 @@ addon:Controller("AltoholicUI.ClassIcon", {
 		-- get the key associated with this button
 		-- ex: "Tabs.Grids.<account>.<realm>.Column5"
 		local account, realm = parent.SelectRealm:GetCurrentRealm()
-		local key = addon:GetOption(format(frame.optionFormat, account, realm, currentMenuID))
+		local key = Options.Get(format(frame.optionFormat, account, realm, currentMenuID))
 		if key then
 			frame:DrawTooltip(key)
 		end
@@ -121,13 +123,13 @@ addon:Controller("AltoholicUI.ClassIcon", {
 		local name = DataStore:GetColoredCharacterName(character)
 		if not name then return end
 
-		local tt = AltoTooltip
+		local tt = AddonFactory_Tooltip
 		tt:SetOwner(frame, "ANCHOR_LEFT")
-		tt:ClearLines();
+		tt:ClearLines()
 		tt:AddDoubleLine(name, DataStore:GetColoredCharacterFaction(character))
 
 		tt:AddLine(format("%s %s%s |r%s %s", 
-			L["Level"], 
+			LEVEL, 
 			colors.green,
 			DataStore:GetCharacterLevel(character), 
 			DataStore:GetCharacterRace(character),

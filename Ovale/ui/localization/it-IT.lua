@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/ui/localization/it-IT", 90103)
+local __exports = LibStub:NewLibrary("ovale/ui/localization/it-IT", 90107)
 if not __exports then return end
 __exports.setITIT = function(l)
     l.action_bar = [[Action bar]]
@@ -151,4 +151,7 @@ Warning!: Very CPU intensive]]
     l.scan_all_auras = [[Full buffs/debuffs scan]]
     l.remaining_time_font_color = [[Remaining time font color]]
     l.icon_snapshot = [[Icon nodes snapshot]]
+    l.numberOfIcons = [[Number of icons]]
+    l.numberOfIconsDesc = [[Number of icons to show in the icon group.]]
+    l.predictiveIcon = [[Predictive icons]]
 end

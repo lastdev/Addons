@@ -3,7 +3,7 @@
 
 	<!-- Copy of Blizzard's own CovenantRenownLevelTemplate in Blizzard_CovenantRenown.xml -->
 
-	<Frame parentKey="Soulbinds" parent="AltoholicTabCharacters" inherits="AltoDataPanelTemplate">
+	<Frame parentKey="Soulbinds" hidden="true">
 		<Frames>
 			<Frame parentKey="Spec1" inherits="AltoSoulbindTreeTemplate">
 				<Anchors>
@@ -23,7 +23,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:BindViewToController(self, "AltoholicUI.SoulbindsPanel")
+				Altoholic:BindViewToController(self, "AltoholicUI.TabCharacters.SoulbindsPanel")
 			</OnLoad>
 		</Scripts>
 	</Frame>

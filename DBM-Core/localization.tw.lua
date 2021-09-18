@@ -5,6 +5,9 @@ local L = DBM_CORE_L
 
 L.HOW_TO_USE_MOD				= "歡迎使用"..L.DBM.."。在聊天頻道輸入 /dbm 打開設定開始設定。你可以載入特定區域後為任何首領設定你喜歡的特別設置。DBM會在設定你的職業天賦的預設值，但有些選項可能需要調整。"
 L.SILENT_REMINDER				= "提醒："..L.DBM.."正處於無聲模式。"
+L.NEWS_UPDATE					= "|h|c11ff1111更新說明|r|h: 此更新基本上是重新發佈的9.1.9，以清除上一個文件發佈時的錯誤惡意軟件檢測驗證。讀取更多訊息在|Hgarrmission:DBM:news|h|cff3588ff[此處]|r|h"
+
+L.COPY_URL_DIALOG_NEWS			= "要閱讀最新說明，請拜訪以下連結"
 
 L.LOAD_MOD_ERROR				= "載入%s模組時發生錯誤：%s"
 L.LOAD_MOD_SUCCESS				= "成功載入%s模組。更多選項例如自訂警告音效或是個人提醒註記請輸入/dbm或/dbm help。"
@@ -192,7 +195,7 @@ L.RETAIL_ONLY						= "警告: 此版本的DBM僅適用於最新正式版魔獸�
 
 L.MOVABLE_BAR					= "拖動我!"
 
-L.PIZZA_SYNC_INFO				= "|Hplayer:%1$s|h[%1$s]|h sent you a " .. L.DBM .. " timer: '%2$s'\n|HDBM:cancel:%2$s:nil|h|cff3588ff[Cancel this timer]|r|h  |HDBM:ignore:%2$s:%1$s|h|cff3588ff[Ignore timers from %1$s]|r|h"
+L.PIZZA_SYNC_INFO				= "|Hplayer:%1$s|h[%1$s]|h 向你發送了" .. L.DBM .. "的倒數計時: '%2$s'\n|Hgarrmission:DBM:cancel:%2$s:nil|h|cff3588ff[取消此倒數計時]|r|h  |Hgarrmission:DBM:ignore:%2$s:%1$s|h|cff3588ff[忽略來自 %1$s 的倒數計時]|r|h"
 --L.PIZZA_SYNC_INFO				= "|Hplayer:%1$s|h[%1$s]|h向你發送了一個倒數計時"
 L.PIZZA_CONFIRM_IGNORE			= "是否要在該次遊戲連結中忽略來自%s的計時？"
 L.PIZZA_ERROR_USAGE				= "命令：/dbm [broadcast] timer <時間（秒）> <文字>。<時間>必須大於等於3"
@@ -466,7 +469,7 @@ L.AUTO_SPEC_WARN_OPTIONS.addscustom			= "特別警告：即將到來的小怪"
 L.AUTO_SPEC_WARN_OPTIONS.targetchange		= "特別警告：當需要更換主要目標時"
 
 L.AUTO_TIMER_TEXTS.target					= "%s: %%s"
-L.AUTO_TIMER_TEXTS.targetcount				= "%s: %%s (%%s)"
+L.AUTO_TIMER_TEXTS.targetcount				= "%s (%%2$s): %%1$s"
 L.AUTO_TIMER_TEXTS.cast						= "%s"
 L.AUTO_TIMER_TEXTS.castshort				= "%s "
 L.AUTO_TIMER_TEXTS.castcount				= "%s (%%s)"
@@ -478,7 +481,7 @@ L.AUTO_TIMER_TEXTS.fades					= "%s消退"
 L.AUTO_TIMER_TEXTS.ai						= "%s AI"
 L.AUTO_TIMER_TEXTS.cd						= "%s冷卻"
 L.AUTO_TIMER_TEXTS.cdshort					= "~%s"
-L.AUTO_TIMER_TEXTS.cdcount					= "%s冷卻 (%%s)"
+L.AUTO_TIMER_TEXTS.cdcount					= "%s (%%s)冷卻"
 L.AUTO_TIMER_TEXTS.cdcountshort				= "~%s (%%s)"
 L.AUTO_TIMER_TEXTS.cdsource					= "%s冷卻:>%%s<"
 L.AUTO_TIMER_TEXTS.cdsourceshort			= "~%s: >%%s<"

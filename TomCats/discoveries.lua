@@ -324,6 +324,7 @@ do
 		["Embercourt-Guest-HuntCaptainKorayn"] = true, -- from discord dump
 		["EmberCourt-32x32"] = true, -- from discord dump
 		["Embercourt-Guest-PlagueDeviserMarileth"] = true, -- from discord dump
+		["Tormentors-Boss"] = true,
 	}
 	for k in pairs(tmp1) do
 		atlasNameExclusions[string.lower(k)] = true
@@ -526,11 +527,11 @@ local function OnEvent(event, arg1)
 	if (event == "ADDON_LOADED") then
 		if (addonName == arg1) then
 			TomCatsDiscoveryAlertSystem = AlertFrame:AddQueuedAlertFrameSubSystem("TomCatsDiscoveryAlertFrameTemplate", TomCatsDiscoveryAlertFrame_SetUp);
-			if (_G["TomCats_Account"].discoveriesVersion ~= "2.3.14") then
+			if (_G["TomCats_Account"].discoveriesVersion ~= "2.3.18") then
 				_G["TomCats_Account"].discoveries.vignettes = { }
 				_G["TomCats_Account"].discoveries.vignetteAtlases = { }
 				_G["TomCats_Account"].discoveriesResetCount = 0
-				_G["TomCats_Account"].discoveriesVersion = "2.3.14"
+				_G["TomCats_Account"].discoveriesVersion = "2.3.18"
 			end
 			local discoveries = 0
 			discoveredVignettes = _G["TomCats_Account"].discoveries.vignettes

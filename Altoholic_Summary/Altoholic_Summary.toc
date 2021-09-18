@@ -1,22 +1,23 @@
-## Interface: 90100
+﻿## Interface: 90100
 ## Title: Altoholic_Summary
 ## Notes: Altoholic's Summary Tab
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: r192
+## Version: 9.1.005
 ## Dependencies: Altoholic, DataStore, DataStore_Characters
 ## LoadOnDemand: 1
 ## X-Category: Interface Enhancements
 
+Locale.xml
+Services\Characters.lua
+Services\Columns.lua
+
+Columns_CharacterInformation.lua
+Columns_Containers.lua
+Columns_Skills.lua
+Columns_Activity.lua
+Columns_Currencies.lua
+Columns_ExpansionFeatures.lua
+Columns_MythicKeystones.lua
+
 Templates\UITemplates.xml
 TabSummary.xml
-Characters.lua
-
-AccountSummary.xml
-
-Data\Suggestions_enUS.lua
-Data\Suggestions_deDE.lua
-Data\Suggestions_frFR.lua
-Data\Suggestions_koKR.lua
-Data\Suggestions_ruRU.lua
-Data\Suggestions_zhCN.lua
-Data\Suggestions_zhTW.lua

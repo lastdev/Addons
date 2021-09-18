@@ -12,6 +12,9 @@ ns.groups["dailymount"] = "Daily Mounts"
 ns.groups["mawsworncache"] = "Mawsworn Caches"
 ns.groups["riftboundcache"] = "Riftbound Caches"
 ns.groups["relic"] = "Relics"
+ns.groups["nests"] = "Nests of Unusual Materials"
+ns.groups["mawshrooms"] = "Invasive Mawshrooms"
+ns.groups["riftportal"] = "Rift Portals"
 
 local researched = ns.nodeMaker{
     IsActive = function(point)
@@ -103,6 +106,7 @@ ns.RegisterPoints(1961, { -- Korthia
     [57504930] = {quest=64248, atlas="warfronts-basemapicons-alliance-workshop-minimap"},
     [58204870] = {quest=64248, atlas="warfronts-basemapicons-alliance-workshop-minimap"},
     [59205671] = {quest=64248, atlas="warfronts-basemapicons-alliance-workshop-minimap"},
+    [59154870] = {quest=64248, atlas="warfronts-basemapicons-alliance-workshop-minimap"},
     [61504735] = {quest=64248, atlas="warfronts-basemapicons-alliance-workshop-minimap"},
     [62755135] = {quest=64248, atlas="warfronts-basemapicons-alliance-workshop-minimap"},
 
@@ -178,6 +182,7 @@ ns.RegisterPoints(1961, { -- Korthia
     atlas="poi-rift1",
     requires_no_buff={352795, 354870, any=true},
     note="Rifts let you enter an alternate phase, if you have a {item:186731}. There are rares and chests that're only in the rift.",
+    group="riftportal"
 })
 
 -- Riftbound Caches
@@ -236,6 +241,88 @@ ns.RegisterPoints(1961, { -- Korthia
 }, {
     quest=64472,
     texture=ns.atlas_texture("VignetteLoot", {r=1,g=1,b=0,a=1,scale=1}),
+})
+
+--Mawshrooms
+local mawshroom = ns.nodeMaker{
+    label="Invasive Mawshroom",
+    loot={
+        187244, -- Questionable Mawshroom
+        {187153, mount=1507}, -- Tasty Mawshroom
+        {185963, questComplete=63892}, -- Diviner's Rune Chit
+    },
+    note="Multiple spawn points. Feed the {item:187153} to {npc:180063}.",
+    group="mawshrooms",
+}
+ns.RegisterPoints(1961, {
+    [54204120] = mawshroom(),
+    [56905160] = mawshroom(),
+    [57303940] = mawshroom(),
+    [58154050] = mawshroom(),
+    [60304160] = mawshroom(),
+    [60703820] = mawshroom(),
+}, {
+    quest=64351,
+    texture=ns.atlas_texture("teleportationnetwork-ardenweald-32x32", {r=1,g=1,b=0,a=1,scale=1}),
+})
+ns.RegisterPoints(1961, {
+    [48504115] = mawshroom(),
+    [49504070] = mawshroom(),
+    [49903250] = mawshroom(),
+    [51504690] = mawshroom(),
+    [53703790] = mawshroom(),
+}, {
+    quest=64354,
+    texture=ns.atlas_texture("teleportationnetwork-ardenweald-32x32", {r=0,g=1,b=0,a=1,scale=1}),
+})
+ns.RegisterPoints(1961, {
+    [42103580] = mawshroom(),
+    [43703670] = mawshroom(),
+    [45603450] = mawshroom(),
+    [52402500] = mawshroom(),
+    [55101640] = mawshroom(),
+}, {
+    quest=64355,
+    texture=ns.atlas_texture("teleportationnetwork-ardenweald-32x32", {r=0,g=0.5,b=1,a=1,scale=1}),
+})
+ns.RegisterPoints(1961, {
+    [35703110] = mawshroom(),
+    [37503480] = mawshroom(),
+    [38803380] = mawshroom(),
+    [39503070] = mawshroom(),
+    [39703490] = mawshroom(),
+    [42103250] = mawshroom(),
+}, {
+    quest=64356,
+    texture=ns.atlas_texture("teleportationnetwork-ardenweald-32x32", {r=1,g=0,b=1,a=1,scale=1}),
+})
+ns.RegisterPoints(1961, {
+    [39703010] = mawshroom(),
+    [41204490] = mawshroom(),
+    [43455635] = mawshroom(),
+    [45204790] = mawshroom(),
+    [46504850] = mawshroom(),
+    [54805550] = mawshroom(),
+}, {
+    quest=64357,
+    texture=ns.atlas_texture("teleportationnetwork-ardenweald-32x32", {r=0,g=1,b=1,a=1,scale=1}),
+})
+
+--Nests
+ns.RegisterPoints(1961, {
+    [42205600] = {quest=63459},
+    [51904390] = {quest=64360},
+    [63703150] = {quest=64361},
+    [52407270] = {quest=64362},
+    [40003970] = {quest=64385},
+}, {
+    label="Nest of Unusual Materials",
+    texture=ns.atlas_texture("vehicle-trap-grey", {r=0.8,g=0,b=0.8,a=1,scale=1}),
+    loot={
+        187440, -- Feather Stuffed Helm
+        {185963, questComplete=63892}, -- Diviner's Rune Chit
+    },
+    group="nests",
 })
 
 --Relics

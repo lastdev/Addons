@@ -1,185 +1,181 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="TabCharacters.lua"></Script>
-
-	<Button name="AltoTabCharactersIconTemplate" inherits="AltoButtonTemplate" virtual="true">
-		<Scripts>
-			<OnEnter>
-				Altoholic.Tabs.Characters:Icon_OnEnter(self)
-			</OnEnter>
-		</Scripts>
-	</Button>
 	
-	<Frame name="AltoholicTabCharacters" parent="AltoholicFrame" hidden="true">
+	<Frame parentKey="TabCharacters" inherits="AddonFactory_AuctionHouseTabFrameTemplate" parent="AltoholicFrame" id="2">
 		<Size x="758" y="447" />
 		<Anchors>
-			<Anchor point="TOPLEFT" x="0" y="0" />
+			<Anchor point="TOPLEFT"/>
 		</Anchors>
 		<Layers>
 			<Layer level="OVERLAY">
 				<FontString parentKey="Status" inherits="GameFontNormal" justifyH="LEFT">
-					<Size x="600" y="24" />
+					<Size x="550" y="24" />
 					<Anchors>
-						<Anchor point="BOTTOMLEFT" x="190" y="13" />
+						<Anchor point="BOTTOMLEFT" x="200" y="4" />
 					</Anchors>
-					<Color r="255" g="255" b="255" />
 				</FontString>
 			</Layer>
 		</Layers>
 		<Frames>
-			<!-- Menu Icons -->
-			<Frame parentKey="MenuIcons" name="AltoholicTabCharacters_MenuIcons">
-				<Size x="340" y="37" />
+			<Frame parentKey="CategoriesList" inherits="AddonFactory_AuctionHouseCategoriesListTemplate">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="RIGHT" x="60" y="-15" />
+					<Anchor point="TOPLEFT" x="4" y="-68"/>
 				</Anchors>
-				<Frames>
-					<Button parentKey="CharactersIcon" inherits="AltoTabCharactersIconTemplate" id="1">
-						<Anchors>
-							<Anchor point="TOPLEFT" />
-						</Anchors>
-					</Button>
-					<Button parentKey="BagsIcon" inherits="AltoTabCharactersIconTemplate" id="2">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.CharactersIcon" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-					</Button>
-					<Button parentKey="QuestsIcon" inherits="AltoTabCharactersIconTemplate" id="3">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.BagsIcon" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-						<KeyValues>
-							<KeyValue key="iconFile" value="Interface\LFGFrame\LFGIcon-Quest" />
-						</KeyValues>
-					</Button>
-					<Button parentKey="TalentsIcon" inherits="AltoTabCharactersIconTemplate" id="4">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.QuestsIcon" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-						<KeyValues>
-							<KeyValue key="iconFile" value="Interface\Icons\Spell_Nature_NatureGuardian" />
-						</KeyValues>
-					</Button>
-					<Button parentKey="AuctionIcon" inherits="AltoTabCharactersIconTemplate" id="5">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.TalentsIcon" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-						<KeyValues>
-							<KeyValue key="iconFile" value="Interface\Icons\INV_Misc_Coin_01" />
-						</KeyValues>
-					</Button>
-					<Button parentKey="MailIcon" inherits="AltoTabCharactersIconTemplate" id="6">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.AuctionIcon" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-						<KeyValues>
-							<KeyValue key="iconFile" value="Interface\Icons\INV_Misc_Note_01" />
-						</KeyValues>
-					</Button>
-					<Button parentKey="SpellbookIcon" inherits="AltoTabCharactersIconTemplate" id="7">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.MailIcon" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-						<KeyValues>
-							<KeyValue key="iconFile" value="Interface\Icons\INV_Misc_Book_09" />
-						</KeyValues>
-					</Button>
-					<Button parentKey="ProfessionsIcon" inherits="AltoTabCharactersIconTemplate" id="8">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.SpellbookIcon" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-						<KeyValues>
-							<KeyValue key="iconFile" value="Interface\Icons\Achievement_GuildPerk_WorkingOvertime" />
-						</KeyValues>
-					</Button>
-					<Button parentKey="GarrisonIcon" inherits="AltoTabCharactersIconTemplate" id="9">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.ProfessionsIcon" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-						<KeyValues>
-							<KeyValue key="iconFile" value="Interface\Icons\inv_garrison_resource" />
-						</KeyValues>
-					</Button>
-					<Button parentKey="CovenantIcon" inherits="AltoTabCharactersIconTemplate" id="10">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.GarrisonIcon" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-						<KeyValues>
-							<KeyValue key="iconFile" value="Interface\Icons\achievement_mythicdungeons_shadowlands" />
-						</KeyValues>
-					</Button>
-				</Frames>
+				<Scripts>
+					<OnLoad>
+						Altoholic:BindViewToController(self, "AltoholicUI.TabCharactersCategoriesList", "AddonFactory.AuctionHouseCategoriesList")
+					</OnLoad>
+				</Scripts>
 			</Frame>
-	
-			<Frame parentKey="ContextualMenu" inherits="AltoContextualMenuTemplate" />
-	
-			<!-- Left Menu -->
-			<!--
-			Future menu with character icons on the left
 			
-			<Button name="$parent_Test1" inherits="AltoMenuNamedIconTemplate" id="1">
+			<Button parentKey="BagsIcon" inherits="AddonFactory_ButtonTemplate" id="1">
 				<Anchors>
-					<Anchor point="TOPLEFT">
-						<Offset x="30" y="-165" />
-					</Anchor>
+					<Anchor point="TOPLEFT" x="330" y="-30" />
 				</Anchors>
+				<Scripts>
+					<OnEnter>
+						self:GetParent():FilterIcon_OnEnter(self)
+					</OnEnter>
+				</Scripts>
 			</Button>
-			<Button name="$parent_Test2" inherits="AltoMenuNamedIconTemplate" id="2">
+			<Button parentKey="QuestsIcon" inherits="AddonFactory_ButtonTemplate" id="2">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_Test1" relativePoint="BOTTOMLEFT">
-						<Offset x="0" y="0" />
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.BagsIcon" relativePoint="TOPRIGHT" x="5" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\LFGFrame\LFGIcon-Quest" />
+				</KeyValues>
+				<Scripts>
+					<OnEnter>
+						self:GetParent():FilterIcon_OnEnter(self)
+					</OnEnter>
+				</Scripts>
 			</Button>
-			<Button name="$parent_Test3" inherits="AltoMenuNamedIconTemplate" id="3">
+			<Button parentKey="TalentsIcon" inherits="AddonFactory_ButtonTemplate" id="3">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_Test2" relativePoint="BOTTOMLEFT">
-						<Offset x="0" y="0" />
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.QuestsIcon" relativePoint="TOPRIGHT" x="5" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\Spell_Nature_NatureGuardian" />
+				</KeyValues>
+				<Scripts>
+					<OnEnter>
+						self:GetParent():FilterIcon_OnEnter(self)
+					</OnEnter>
+				</Scripts>
 			</Button>
-			<Button name="$parent_Test4" inherits="AltoMenuNamedIconTemplate" id="4">
+			<Button parentKey="AuctionIcon" inherits="AddonFactory_ButtonTemplate" id="4">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_Test3" relativePoint="BOTTOMLEFT">
-						<Offset x="0" y="0" />
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.TalentsIcon" relativePoint="TOPRIGHT" x="5" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\INV_Misc_Coin_01" />
+				</KeyValues>
+				<Scripts>
+					<OnEnter>
+						self:GetParent():FilterIcon_OnEnter(self)
+					</OnEnter>
+				</Scripts>
 			</Button>
-			<Button name="$parent_Test5" inherits="AltoMenuNamedIconTemplate" id="5">
+			<Button parentKey="MailIcon" inherits="AddonFactory_ButtonTemplate" id="5">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_Test4" relativePoint="BOTTOMLEFT">
-						<Offset x="0" y="0" />
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.AuctionIcon" relativePoint="TOPRIGHT" x="5" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\INV_Misc_Note_01" />
+				</KeyValues>
+				<Scripts>
+					<OnEnter>
+						self:GetParent():FilterIcon_OnEnter(self)
+					</OnEnter>
+				</Scripts>
 			</Button>
-			<Button name="$parent_Test6" inherits="AltoMenuNamedIconTemplate" id="6">
+			<Button parentKey="SpellbookIcon" inherits="AddonFactory_ButtonTemplate" id="6">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_Test5" relativePoint="BOTTOMLEFT">
-						<Offset x="0" y="0" />
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.MailIcon" relativePoint="TOPRIGHT" x="5" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\INV_Misc_Book_09" />
+				</KeyValues>
+				<Scripts>
+					<OnEnter>
+						self:GetParent():FilterIcon_OnEnter(self)
+					</OnEnter>
+				</Scripts>
 			</Button>
-			-->
-		
+			<Button parentKey="ProfessionsIcon" inherits="AddonFactory_ButtonTemplate" id="7">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.SpellbookIcon" relativePoint="TOPRIGHT" x="5" y="0" />
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\Achievement_GuildPerk_WorkingOvertime" />
+				</KeyValues>
+				<Scripts>
+					<OnEnter>
+						self:GetParent():FilterIcon_OnEnter(self)
+					</OnEnter>
+				</Scripts>
+			</Button>
+			<Button parentKey="GarrisonIcon" inherits="AddonFactory_ButtonTemplate" id="8">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.ProfessionsIcon" relativePoint="TOPRIGHT" x="5" y="0" />
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\inv_garrison_resource" />
+				</KeyValues>
+				<Scripts>
+					<OnEnter>
+						self:GetParent():FilterIcon_OnEnter(self)
+					</OnEnter>
+				</Scripts>
+			</Button>
+			<Button parentKey="CovenantIcon" inherits="AddonFactory_ButtonTemplate" id="9">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.GarrisonIcon" relativePoint="TOPRIGHT" x="5" y="0" />
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\achievement_mythicdungeons_shadowlands" />
+				</KeyValues>
+				<Scripts>
+					<OnEnter>
+						self:GetParent():FilterIcon_OnEnter(self)
+					</OnEnter>
+				</Scripts>
+			</Button>
 
-			
-			<Frame parentKey="SortButtons" inherits="AltoSortButtonsContainerTemplate">
+			<Frame parentKey="HeaderContainer" inherits="AddonFactory_AuctionHouseHeaderContainerTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.CategoriesList" relativePoint="TOPRIGHT" x="0" y="-4"/>
+					<Anchor point="RIGHT" x="-20" y="0"/>
+				</Anchors>
 				<KeyValues>
 					<KeyValue key="numButtons" value="4" type="number" />
 					<KeyValue key="option" value="UI.Tabs.Characters.SortAscending" />
 				</KeyValues>
+			</Frame>	
+			
+			<Frame parentKey="Background" useParentLevel="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.CategoriesList" relativePoint="TOPRIGHT" x="4" y="-25"/>
+					<Anchor point="RIGHT" relativeTo="AltoholicFrame" relativePoint="RIGHT" x="-30" y="0"/>
+					<Anchor point="BOTTOM" relativeTo="AltoholicFrame" relativePoint="BOTTOM" x="0" y="28"/>
+				</Anchors>
+				<Layers>
+					<Layer level="BACKGROUND" textureSubLevel="-5">
+						<Texture parentKey="bg" atlas="auctionhouse-background-index" useAtlasSize="true" />
+					</Layer>
+				</Layers>
 			</Frame>
+			
+			<Frame parentKey="ContextualMenu" inherits="AddonFactory_ContextualMenuTemplate" />
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic.Tabs.Characters:OnLoad()
+				Altoholic:BindViewToController(self, "AltoholicUI.TabCharacters")
 			</OnLoad>
-			<OnShow>
-				Altoholic.Tabs.Characters:OnShow()
-			</OnShow>
 			<OnHide>
-				DropDownList1:Hide()
+				self.ContextualMenu:Close()
 			</OnHide>
 		</Scripts>
 	</Frame>
-	
 </Ui>

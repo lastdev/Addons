@@ -1,15 +1,21 @@
-local __exports = LibStub:NewLibrary("ovale/simulationcraft/unparser", 90103)
+local __exports = LibStub:NewLibrary("ovale/simulationcraft/unparser", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local __definitions = LibStub:GetLibrary("ovale/simulationcraft/definitions")
-local unaryOperators = __definitions.unaryOperators
-local binaryOperators = __definitions.binaryOperators
-local tostring = tostring
+local __imports = {}
+__imports.__definitions = LibStub:GetLibrary("ovale/simulationcraft/definitions")
+__imports.unaryOperators = __imports.__definitions.unaryOperators
+__imports.binaryOperators = __imports.__definitions.binaryOperators
+__imports.__texttools = LibStub:GetLibrary("ovale/simulationcraft/text-tools")
+__imports.outputPool = __imports.__texttools.outputPool
+local unaryOperators = __imports.unaryOperators
+local binaryOperators = __imports.binaryOperators
+local ipairs = ipairs
+local kpairs = pairs
 local pairs = pairs
 local tonumber = tonumber
-local kpairs = pairs
-local __texttools = LibStub:GetLibrary("ovale/simulationcraft/text-tools")
-local outputPool = __texttools.outputPool
+local tostring = tostring
+local wipe = wipe
+local outputPool = __imports.outputPool
 local concat = table.concat
 local function getPrecedence(node)
     if node.type ~= "operator" then
@@ -37,6 +43,14 @@ __exports.Unparser = __class(nil, {
                 output[#output + 1] = modifier .. "=" .. self:unparse(expressionNode)
             end
             local s = concat(output, ",")
+            if node.sequence then
+                wipe(output)
+                output[#output + 1] = s
+                for _, actionNode in ipairs(node.sequence) do
+                    output[#output + 1] = self.unparseAction(actionNode)
+                end
+                s = concat(output, ":")
+            end
             outputPool:release(output)
             return s
         end

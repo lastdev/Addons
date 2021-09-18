@@ -229,6 +229,7 @@ if AL then
 	AL["SOUND_OPTIONS"] = "Soundeinstellungen"
 	AL["SOUND_VOLUME"] = "Lautstärke"
 	AL["SOUND_VOLUME_DESC"] = "Stellt die Lautstärke von Alarmen ein."
+	AL["STOLEN_ANIMA_VESSEL"] = "Gestohlenes Animagefäß"
 	AL["TEST"] = "Test starten"
 	AL["TEST_DESC"] = "Drücke die Taste, um eine Beispielwarnung zu zeigen. Du kannst die Anzeige anklicken und auf eine andere Position ziehen, wo sie von nun an angezeigt wird. "
 	AL["TOC_NOTES"] = "Minikartenüberprüfung. Warnt dich visuell mit einer Schaltfläche und einer Miniaturansicht und spielt jedes Mal einen Ton ab, wenn ein seltener Gegner, ein Schatz/eine Kiste oder ein Ereignis auf deiner Minikarte entdeckt wird. "

@@ -1,9 +1,14 @@
-local __exports = LibStub:NewLibrary("ovale/engine/compile", 90103)
+local __exports = LibStub:NewLibrary("ovale/engine/compile", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local __statesPower = LibStub:GetLibrary("ovale/states/Power")
-local powerTypes = __statesPower.powerTypes
-local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+local __imports = {}
+__imports.__statesPower = LibStub:GetLibrary("ovale/states/Power")
+__imports.powerTypes = __imports.__statesPower.powerTypes
+__imports.aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+__imports.__toolstools = LibStub:GetLibrary("ovale/tools/tools")
+__imports.isNumber = __imports.__toolstools.isNumber
+local powerTypes = __imports.powerTypes
+local aceEvent = __imports.aceEvent
 local ipairs = ipairs
 local pairs = pairs
 local tonumber = tonumber
@@ -14,8 +19,7 @@ local match = string.match
 local sub = string.sub
 local insert = table.insert
 local GetSpellInfo = GetSpellInfo
-local __toolstools = LibStub:GetLibrary("ovale/tools/tools")
-local isNumber = __toolstools.isNumber
+local isNumber = __imports.isNumber
 local numberPattern = "^%-?%d+%.?%d*$"
 __exports.requireValue = function(value)
     local required = sub(tostring(value), 1, 1) ~= "!"
@@ -73,7 +77,7 @@ local auraTableDispatch = {
     }
 }
 __exports.OvaleCompileClass = __class(nil, {
-    constructor = function(self, ovaleAzerite, ovaleAst, ovaleCondition, ovaleCooldown, ovaleData, ovaleProfiler, ovaleDebug, ovale, ovaleScore, ovaleSpellBook, controls, script)
+    constructor = function(self, ovaleAzerite, ovaleAst, ovaleCondition, ovaleCooldown, ovaleData, ovaleDebug, ovale, ovaleScore, ovaleSpellBook, controls, script)
         self.ovaleAzerite = ovaleAzerite
         self.ovaleAst = ovaleAst
         self.ovaleCondition = ovaleCondition
@@ -128,7 +132,6 @@ __exports.OvaleCompileClass = __class(nil, {
             self.ovale:needRefresh()
         end
         self.tracer = ovaleDebug:create("OvaleCompile")
-        self.profiler = ovaleProfiler:create("OvaleCompile")
         self.module = ovale:createModule("OvaleCompile", self.handleInitialize, self.handleDisable, aceEvent)
     end,
     evaluateAddCheckBox = function(self, node)
@@ -385,7 +388,6 @@ __exports.OvaleCompileClass = __class(nil, {
         return self.ast
     end,
     evaluateScript = function(self, ast, forceEvaluation)
-        self.profiler:startProfiling("OvaleCompile_EvaluateScript")
         local changed = false
         ast = ast or self.ast
         if ast and (forceEvaluation or  not self.serial or self.serial < self.nextSerial) then
@@ -433,7 +435,6 @@ __exports.OvaleCompileClass = __class(nil, {
                 self:updateTrinketInfo()
             end
         end
-        self.profiler:stopProfiling("OvaleCompile_EvaluateScript")
         return changed
     end,
     getFunctionNode = function(self, name)

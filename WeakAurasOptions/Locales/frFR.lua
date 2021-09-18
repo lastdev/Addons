@@ -27,6 +27,8 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["%s is not a valid SubEvent for COMBAT_LOG_EVENT_UNFILTERED"] = "%s is not a valid SubEvent for COMBAT_LOG_EVENT_UNFILTERED"
 	L["%s Keep Aspect Ratio"] = "%s Conserver les proportions"
+	--[[Translation missing --]]
+	L["%s Texture"] = "%s Texture"
 	L["%s total auras"] = "%s auras au total"
 	L["%s Zoom: %d%%"] = "%s Zoom: %d%%"
 	L["%s, Border"] = "%s, Bordure"
@@ -76,6 +78,10 @@ local L = WeakAuras.L
 	L["Add Option"] = "Ajouter Option"
 	L["Add Overlay"] = "Ajouter un Overlay"
 	L["Add Property Change"] = "Ajouter un Changement de Propriété"
+	--[[Translation missing --]]
+	L["Add Raid Mark Information"] = "Add Raid Mark Information"
+	--[[Translation missing --]]
+	L["Add Role Information"] = "Add Role Information"
 	--[[Translation missing --]]
 	L["Add Snippet"] = "Add Snippet"
 	L["Add Sub Option"] = "Ajouter un sous-option"
@@ -520,6 +526,8 @@ Si cette case est cochée, ce séparateur inclura du texte. Sinon, ce sera juste
 	L["Import"] = "Importer"
 	L["Import a display from an encoded string"] = "Importer un graphique d'un texte encodé"
 	--[[Translation missing --]]
+	L["Include Pets"] = "Include Pets"
+	--[[Translation missing --]]
 	L["Indent Size"] = "Indent Size"
 	L["Information"] = "Information"
 	L["Inner"] = "Intérieur"
@@ -853,6 +861,10 @@ Seule une unique valeur peut être choisie]=]
 	L["The type of trigger"] = "Le type de déclencheur"
 	L["Then "] = "Alors"
 	L["Thickness"] = "Épaisseur"
+	--[[Translation missing --]]
+	L["This adds %raidMark as text replacements."] = "This adds %raidMark as text replacements."
+	--[[Translation missing --]]
+	L["This adds %role, %roleIcon as text replacements."] = "This adds %role, %roleIcon as text replacements."
 	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."] = "Cela ajoute %infobulle, %infobulle1, %infobulle2, %infobulle3 en remplacement du texte."
 	L["This display is currently loaded"] = "Cet affichage est actuellement chargé"
 	L["This display is not currently loaded"] = "Cet affichage n'est pas chargé"

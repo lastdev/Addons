@@ -3,6 +3,11 @@
 local AL = LibStub:GetLibrary("AchievementLocations-1.0")
 local function A(row) AL:AddLocation(row) end
 
+-- Dungeons & Raids/Cataclysm Raid: Baradin Hold Guild Run
+A{"BaradinHold", 5425} -- Argaloth slain
+A{"BaradinHold", 5425} -- Occu'thar slain
+A{"BaradinHold", 5425} -- Alizabal slain
+
 -- Dungeons & Raids/Cataclysm Raid: Only the Penitent...
 A{"Firelands", 5799, 0.500, 0.820, floor=3}
 

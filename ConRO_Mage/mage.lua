@@ -367,7 +367,7 @@ function ConRO.Mage.Arcane(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 			return _ArcaneBarrage;
 		end
 
-		if _ArcanePower_RDY and _TouchoftheMagi_DEBUFF or currentSpell == _TouchoftheMagi then
+		if _ArcanePower_RDY and (not _TouchoftheMagi_RDY or currentSpell == _TouchoftheMagi) then
 			return _ArcanePower;
 		end	
 		

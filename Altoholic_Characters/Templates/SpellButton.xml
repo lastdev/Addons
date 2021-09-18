@@ -42,18 +42,13 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				Altoholic:BindViewToController(self, "AltoholicUI.SpellButton", "AltoholicUI.Button")
+				Altoholic:BindViewToController(self, "AltoholicUI.SpellButton", "AddonFactory.Button")
 			</OnLoad>
 			<OnEnter>
-				if self.spellID then 
-					AltoTooltip:SetOwner(self, "ANCHOR_LEFT")
-					AltoTooltip:ClearLines()
-					AltoTooltip:SetHyperlink("spell:" .. self.spellID)
-					AltoTooltip:Show()
-				end
+				AddonFactory_Tooltip:ShowSpellInfo(self, self.spellID)
 			</OnEnter>
 			<OnLeave>
-				AltoTooltip:Hide()
+				AddonFactory_Tooltip:Hide()
 			</OnLeave>
 			<OnClick>
 				if button ~= "LeftButton" or not IsShiftKeyDown() or not self.spellID then return end

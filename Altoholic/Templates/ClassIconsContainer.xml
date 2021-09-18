@@ -4,14 +4,14 @@
 	<Frame name="AltoClassIconsContainerTemplate" virtual="true">
 		<Size x="457" y="37" />
 		<Anchors>
-			<Anchor point="TOPLEFT" x="365" y="-55" />
+			<Anchor point="TOPLEFT" x="402" y="-45" />
 		</Anchors>
 		<KeyValues>
 			<KeyValue key="iconPrefix" value="Icon" />
 		</KeyValues>
 		<Scripts>
 			<OnLoad>
-				Altoholic:BindViewToController(self, "AltoholicUI.ClassIconsContainer", "AltoholicUI.Frame")
+				Altoholic:BindViewToController(self, "AltoholicUI.ClassIconsContainer", "AddonFactory.Frame")
 			</OnLoad>
 		</Scripts>
 	</Frame>

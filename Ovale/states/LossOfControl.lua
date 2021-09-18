@@ -1,7 +1,9 @@
-local __exports = LibStub:NewLibrary("ovale/states/LossOfControl", 90103)
+local __exports = LibStub:NewLibrary("ovale/states/LossOfControl", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+local __imports = {}
+__imports.aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+local aceEvent = __imports.aceEvent
 local C_LossOfControl = C_LossOfControl
 local GetTime = GetTime
 local GetSpellInfo = GetSpellInfo

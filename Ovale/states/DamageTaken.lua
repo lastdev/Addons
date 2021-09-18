@@ -1,79 +1,103 @@
-local __exports = LibStub:NewLibrary("ovale/states/DamageTaken", 90103)
+local __exports = LibStub:NewLibrary("ovale/states/DamageTaken", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local __toolsPool = LibStub:GetLibrary("ovale/tools/Pool")
-local OvalePool = __toolsPool.OvalePool
-local __toolsQueue = LibStub:GetLibrary("ovale/tools/Queue")
-local OvaleQueue = __toolsQueue.OvaleQueue
-local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+local __imports = {}
+__imports.__toolsPool = LibStub:GetLibrary("ovale/tools/Pool")
+__imports.OvalePool = __imports.__toolsPool.OvalePool
+__imports.__toolsQueue = LibStub:GetLibrary("ovale/tools/Queue")
+__imports.Deque = __imports.__toolsQueue.Deque
+__imports.aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+local OvalePool = __imports.OvalePool
+local Deque = __imports.Deque
+local aceEvent = __imports.aceEvent
 local band = bit.band
-local sub = string.sub
-local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
+local pairs = pairs
 local Enum = Enum
 local GetTime = GetTime
-local pool = OvalePool("OvaleDamageTaken_pool")
+local pool = __imports.OvalePool("OvaleDamageTaken_pool")
 local damageTakenWindow = 20
 local schoolMaskMagic = Enum.Damageclass.MaskMagical
+local damageTakenEvent = {
+    RANGE_DAMAGE = true,
+    SPELL_DAMAGE = true,
+    SPELL_PERIODIC_DAMAGE = true,
+    SWING_DAMAGE = true
+}
 __exports.OvaleDamageTakenClass = __class(nil, {
-    constructor = function(self, ovale, profiler, ovaleDebug)
+    constructor = function(self, ovale, ovaleDebug, combatLogEvent)
         self.ovale = ovale
-        self.damageEvent = OvaleQueue("OvaleDamageTaken_damageEvent")
+        self.combatLogEvent = combatLogEvent
+        self.damageEvent = __imports.Deque()
         self.handleInitialize = function()
-            self.module:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", self.handleCombatLogEventUnfiltered)
             self.module:RegisterEvent("PLAYER_REGEN_ENABLED", self.handlePlayerRegenEnabled)
+            for event in pairs(damageTakenEvent) do
+                self.combatLogEvent.registerEvent(event, self, self.handleCombatLogEvent)
+            end
         end
         self.handleDisable = function()
-            self.module:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
             self.module:UnregisterEvent("PLAYER_REGEN_ENABLED")
+            self.combatLogEvent.unregisterAllEvents(self)
             pool:drain()
         end
-        self.handleCombatLogEventUnfiltered = function(event, ...)
-            local _, cleuEvent, _, _, _, _, _, destGUID, _, _, _, arg12, arg13, arg14, arg15 = CombatLogGetCurrentEventInfo()
-            if destGUID == self.ovale.playerGUID and sub(cleuEvent, -7) == "_DAMAGE" then
-                self.profiler:startProfiling("OvaleDamageTaken_COMBAT_LOG_EVENT_UNFILTERED")
+        self.handleCombatLogEvent = function(cleuEvent)
+            local cleu = self.combatLogEvent
+            local destGUID = cleu.destGUID
+            if destGUID == self.ovale.playerGUID then
+                local payload = cleu.payload
+                local amount = payload.amount
                 local now = GetTime()
-                local eventPrefix = sub(cleuEvent, 1, 6)
-                if eventPrefix == "SWING_" then
-                    local amount = arg12
+                if cleu.header.type == "SWING" then
                     self.tracer:debug("%s caused %d damage.", cleuEvent, amount)
                     self:addDamageTaken(now, amount)
-                elseif eventPrefix == "RANGE_" or eventPrefix == "SPELL_" then
-                    local spellName, spellSchool, amount = arg13, arg14, arg15
-                    local isMagicDamage = band(spellSchool, schoolMaskMagic) > 0
-                    if isMagicDamage then
-                        self.tracer:debug("%s (%s) caused %d magic damage.", cleuEvent, spellName, amount)
-                    else
-                        self.tracer:debug("%s (%s) caused %d damage.", cleuEvent, spellName, amount)
+                else
+                    local spellName
+                    local school
+                    if cleu.header.type == "RANGE" then
+                        local header = cleu.header
+                        spellName = header.spellName
+                        school = header.school
+                    elseif cleu.header.type == "SPELL" then
+                        local header = cleu.header
+                        spellName = header.spellName
+                        school = header.school
+                    elseif cleu.header.type == "SPELL_PERIODIC" then
+                        local header = cleu.header
+                        spellName = header.spellName
+                        school = header.school
                     end
-                    self:addDamageTaken(now, amount, isMagicDamage)
+                    if spellName and school then
+                        local isMagicDamage = band(school, schoolMaskMagic) > 0
+                        if isMagicDamage then
+                            self.tracer:debug("%s (%s) caused %d magic damage.", cleuEvent, spellName, amount)
+                        else
+                            self.tracer:debug("%s (%s) caused %d damage.", cleuEvent, spellName, amount)
+                        end
+                        self:addDamageTaken(now, amount, isMagicDamage)
+                    end
                 end
-                self.profiler:stopProfiling("OvaleDamageTaken_COMBAT_LOG_EVENT_UNFILTERED")
             end
         end
         self.handlePlayerRegenEnabled = function(event)
             pool:drain()
         end
         self.module = ovale:createModule("OvaleDamageTaken", self.handleInitialize, self.handleDisable, aceEvent)
-        self.profiler = profiler:create(self.module:GetName())
         self.tracer = ovaleDebug:create(self.module:GetName())
     end,
     addDamageTaken = function(self, timestamp, damage, isMagicDamage)
-        self.profiler:startProfiling("OvaleDamageTaken_AddDamageTaken")
         local event = pool:get()
         event.timestamp = timestamp
         event.damage = damage
         event.magic = isMagicDamage or false
-        self.damageEvent:insertFront(event)
+        self.damageEvent:push(event)
         self:removeExpiredEvents(timestamp)
         self.ovale:needRefresh()
-        self.profiler:stopProfiling("OvaleDamageTaken_AddDamageTaken")
     end,
     getRecentDamage = function(self, interval)
         local now = GetTime()
         local lowerBound = now - interval
         self:removeExpiredEvents(now)
         local total, totalMagic = 0, 0
-        local iterator = self.damageEvent:frontToBackIterator()
+        local iterator = self.damageEvent:backToFrontIterator()
         while iterator:next() do
             local event = iterator.value
             if event.timestamp < lowerBound then
@@ -87,25 +111,21 @@ __exports.OvaleDamageTakenClass = __class(nil, {
         return total, totalMagic
     end,
     removeExpiredEvents = function(self, timestamp)
-        self.profiler:startProfiling("OvaleDamageTaken_RemoveExpiredEvents")
         while true do
-            local event = self.damageEvent:back()
+            local event = self.damageEvent:front()
             if  not event then
                 break
             end
-            if event then
-                if timestamp - event.timestamp < damageTakenWindow then
-                    break
-                end
-                self.damageEvent:removeBack()
-                pool:release(event)
-                self.ovale:needRefresh()
+            if timestamp - event.timestamp < damageTakenWindow then
+                break
             end
+            self.damageEvent:shift()
+            pool:release(event)
+            self.ovale:needRefresh()
         end
-        self.profiler:stopProfiling("OvaleDamageTaken_RemoveExpiredEvents")
     end,
     debugDamageTaken = function(self)
-        self.tracer:print(self.damageEvent:debuggingInfo())
+        self.tracer:print(self.module:GetName())
         local iterator = self.damageEvent:backToFrontIterator()
         while iterator:next() do
             local event = iterator.value

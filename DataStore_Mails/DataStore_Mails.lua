@@ -291,6 +291,16 @@ local function _GetMailInfo(character, index)
 	return data.icon, data.count, data.link, data.money, data.text, data.returned
 end
 
+local function _IterateMails(character, callback)
+	for index = 1, _GetNumMails(character) do
+		callback(_GetMailInfo(character, index))
+		
+		-- Sample:
+		-- DataStore:IterateMails(character, function(icon, count, itemLink, money, text, returned) 
+		-- end)
+	end
+end
+
 local function _GetMailSender(character, index)
 	local data = GetMailTable(character, index)
 	return data.sender
@@ -377,6 +387,7 @@ local PublicMethods = {
 	GetMailItemCount = _GetMailItemCount,
 	GetNumMails = _GetNumMails,
 	GetMailInfo = _GetMailInfo,
+	IterateMails = _IterateMails,
 	GetMailSender = _GetMailSender,
 	GetMailExpiry = _GetMailExpiry,
 	GetMailSubject = _GetMailSubject,
@@ -439,7 +450,7 @@ local function CheckExpiries()
 			addon.db.global.Characters[key] = nil
 		else
 			if allAccounts or ((allAccounts == false) and (account == DataStore.ThisAccount)) then		-- all accounts, or only current and current was found
-				if allRealms or ((allRealms == false) and (realm == GetRealmName())) then			-- all realms, or only current and current was found
+				if allRealms or ((allRealms == false) and (realm == DataStore.ThisRealm)) then			-- all realms, or only current and current was found
 		
 					-- detect return vs delete
 					local numExpiredMails = _GetNumExpiredMails(character, threshold)
@@ -471,6 +482,7 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetMailItemCount")
 	DataStore:SetCharacterBasedMethod("GetNumMails")
 	DataStore:SetCharacterBasedMethod("GetMailInfo")
+	DataStore:SetCharacterBasedMethod("IterateMails")
 	DataStore:SetCharacterBasedMethod("GetMailSender")
 	DataStore:SetCharacterBasedMethod("GetMailExpiry")
 	DataStore:SetCharacterBasedMethod("GetMailSubject")
@@ -532,12 +544,14 @@ local function SendOwnMail(characterKey, subject, body)
 end
 
 hooksecurefunc("SendMail", function(recipient, subject, body, ...)
+	body = body or ""			-- body could be nil when SendMail is used in a macro
+	
 	-- this function takes care of saving mails sent to alts directly into their mailbox, so that client addons don't have to take care about it
 	local isRecipientAnAlt
 
 	local recipientName, recipientRealm = strsplit("-", recipient)
 	
-	recipientRealm = recipientRealm or GetRealmName()
+	recipientRealm = recipientRealm or DataStore.ThisRealm
 	-- for the current realm, recipientRealm could be
 	-- 	- empty (recipient = "Thaoky")
 	--		- packed named (recipient = "Thaoky-MarécagedeZangar" => realm should be "Marécage de Zangar"
@@ -596,7 +610,7 @@ hooksecurefunc("ReturnInboxItem", function(index, ...)
 
 	local recipientName, recipientRealm = strsplit("-", mailSender)
 
-	recipientRealm = recipientRealm or GetRealmName()
+	recipientRealm = recipientRealm or DataStore.ThisRealm
 	
 	-- do we have an alt on the target realm ?
 	for realm in pairs(DataStore:GetRealms()) do

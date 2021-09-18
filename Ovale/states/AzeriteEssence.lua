@@ -1,7 +1,9 @@
-local __exports = LibStub:NewLibrary("ovale/states/AzeriteEssence", 90103)
+local __exports = LibStub:NewLibrary("ovale/states/AzeriteEssence", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+local __imports = {}
+__imports.aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+local aceEvent = __imports.aceEvent
 local pairs = pairs
 local tostring = tostring
 local ipairs = ipairs

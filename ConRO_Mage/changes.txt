@@ -1,3 +1,6 @@
+Ver 9.1.5
+	-Fixed issue that came up with activating burn phase with Touch of magi on cooldown for Arcane rotation.
+
 Ver 9.1.4
 	-Updated PvP code.
 	-Updated Warning code.

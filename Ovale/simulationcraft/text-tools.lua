@@ -1,5 +1,8 @@
-local __exports = LibStub:NewLibrary("ovale/simulationcraft/text-tools", 90103)
+local __exports = LibStub:NewLibrary("ovale/simulationcraft/text-tools", 90107)
 if not __exports then return end
+local __imports = {}
+__imports.__toolsPool = LibStub:GetLibrary("ovale/tools/Pool")
+__imports.OvalePool = __imports.__toolsPool.OvalePool
 local tonumber = tonumber
 local setmetatable = setmetatable
 local rawset = rawset
@@ -11,8 +14,7 @@ local gsub = string.gsub
 local upper = string.upper
 local lower = string.lower
 local match = string.match
-local __toolsPool = LibStub:GetLibrary("ovale/tools/Pool")
-local OvalePool = __toolsPool.OvalePool
+local OvalePool = __imports.OvalePool
 __exports.indentations = {}
 do
     __exports.indentations[0] = ""
@@ -36,7 +38,7 @@ __exports.printRepeat = function(data)
     local max = 10
 local function _repeat(str, num)
         local output = ""
-        for i = 0, num, 1 do
+        for i = 1, num, 1 do
             output = output .. str
         end
         return output
@@ -63,7 +65,7 @@ local function _dumpvar(d, depth)
     _dumpvar(data, 0)
     return buffer
 end
-__exports.outputPool = OvalePool("OvaleSimulationCraft_outputPool")
+__exports.outputPool = __imports.OvalePool("OvaleSimulationCraft_outputPool")
 local function camelCaseHelper(first, rest)
     return upper(first) .. lower(rest)
 end

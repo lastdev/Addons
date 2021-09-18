@@ -4,12 +4,13 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 
 local addon = _G[addonName]
 
-addon.Version = "v9.1.001"
-addon.VersionNum = 901001
+addon.Version = "v9.1.005"
+addon.VersionNum = 901005
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local commPrefix = addonName
 
+-- Reminder: binding is done in bindings.xml
 BINDING_HEADER_ALTOHOLIC = addonName
 BINDING_NAME_ALTOHOLIC_TOGGLE = "Toggle UI"
 
@@ -18,7 +19,7 @@ local options = {
 	args = {
 		search = {
 			type = "input",
-			name = L['search'],
+			name = SEARCH,
 			usage = "<item name>",
 			desc = L["Search in bags"],
 			get = false,
@@ -26,21 +27,21 @@ local options = {
 		},
 		show = {
 			type = "execute",
-			name = L['show'],
+			name = SHOW,
 			desc = L["Shows the UI"],
 			func = function() AltoholicFrame:Show() end
 		},
 		hide = {
 			type = "execute",
-			name = L['hide'],
+			name = HIDE,
 			desc = L["Hides the UI"],
 			func = function() AltoholicFrame:Hide() end
 		},
 		toggle = {
 			type = "execute",
-			name = L['toggle'],
+			name = "toggle",
 			desc = L["Toggles the UI"],
-			func = function() addon:ToggleUI() end
+			func = function() AltoholicFrame:ToggleUI() end
 		},
 	},
 }
@@ -77,12 +78,16 @@ local AddonDB_Defaults = {
 			["UI.Tabs.Summary.CurrentMode"] = 1,								-- current mode (1 = account summary, 2 = bags, ...)
 			["UI.Tabs.Summary.CurrentColumn"] = "Name",						-- current column (default = "Name")
 			["UI.Tabs.Summary.CurrentRealms"] = 2,								-- selected realms (current/all in current/all accounts)
+			["UI.Tabs.Summary.CurrentAltGroup"] = 0,							-- selected alt group
 			["UI.Tabs.Summary.CurrentFactions"] = 3,							-- 1 = Alliance, 2 = Horde, 3 = Both
 			["UI.Tabs.Summary.CurrentLevels"] = 1,								-- 1 = All
 			["UI.Tabs.Summary.CurrentLevelsMin"] = 1,							
 			["UI.Tabs.Summary.CurrentLevelsMax"] = 60,					
+			["UI.Tabs.Summary.CurrentBankType"] = 0,							-- 0 = All
 			["UI.Tabs.Summary.CurrentClasses"] = 0,							-- 0 = All
 			["UI.Tabs.Summary.CurrentTradeSkill"] = 0,						-- 0 = All
+			["UI.Tabs.Summary.CurrentMisc"] = 0,								-- 
+			["UI.Tabs.Summary.UseColorForTradeSkills"] = true,				-- Use color coding for tradeskills, or neutral
 			["UI.Tabs.Summary.SortAscending"] = true,							-- ascending or descending sort order
 			["UI.Tabs.Summary.ShowLevelDecimals"] = true,					-- display character level with decimals or not
 			["UI.Tabs.Summary.ShowILevelDecimals"] = true,					-- display character level with decimals or not
@@ -99,6 +104,8 @@ local AddonDB_Defaults = {
 			["UI.Tabs.Characters.SortAscending"] = true,						-- ascending or descending sort order
 			["UI.Tabs.Characters.ViewLearnedRecipes"] = true,				-- View learned recipes ?
 			["UI.Tabs.Characters.ViewUnlearnedRecipes"] = false,			-- View unlearned recipes ?
+			["UI.Tabs.Characters.ViewQuestLogCategory"] = 0,				-- Quest log category to show
+			["UI.Tabs.Characters.ViewSpellTab"] = 1,							-- Spellbook tab to show
 						
 			-- ** Search tab options **
 			["UI.Tabs.Search.ItemInfoAutoQuery"] = false,
@@ -106,6 +113,9 @@ local AddonDB_Defaults = {
 			["UI.Tabs.Search.IncludeMailboxItems"] = true,
 			["UI.Tabs.Search.IncludeGuildBankItems"] = true,
 			["UI.Tabs.Search.IncludeKnownRecipes"] = true,
+			["UI.Tabs.Search.CurrentLocation"] = 1,
+			["UI.Tabs.Search.UseColorsForAlts"] = true,
+			["UI.Tabs.Search.UseColorsForRealms"] = true,
 			["UI.Tabs.Search.SortAscending"] = true,							-- ascending or descending sort order
 			TotalLoots = 0,					-- make at least one search in the loot tables to initialize these values
 			UnknownLoots = 0,
@@ -149,6 +159,7 @@ local AddonDB_Defaults = {
 			["UI.Tooltip.ShowMergedRealmsCount"] = true,			-- display counters for characters on connected realms
 			["UI.Tooltip.ShowAllAccountsCount"] = true,			-- display counters for all accounts on the same realm
 			["UI.Tooltip.ShowGuildBankCount"] = true,				-- display guild bank counters
+			["UI.Tooltip.ShowGuildBankRealm"] = false,			-- display the realm of the guild bank
 			["UI.Tooltip.ShowHearthstoneCount"] = true,			-- display hearthstone counters
 			["UI.Tooltip.IncludeGuildBankInTotal"] = true,		-- total count = alts + guildbank (1) or alts only (0)
 			["UI.Tooltip.ShowGuildBankCountPerTab"] = false,	-- guild count = guild:count or guild (tab 1: x, tab2: y ..)
@@ -156,6 +167,7 @@ local AddonDB_Defaults = {
 			-- ** Mail options **
 			["UI.Mail.GuildMailWarning"] = true,					-- be informed when a guildie sends a mail to one of my alts
 			["UI.Mail.AutoCompleteRecipient"] = true,				-- Auto complete recipient name when sending a mail
+			["UI.Mail.AutoCompletePriority"] = 1,					-- Auto complete priority (1 = alphabetical, 2 = most played, 3 = most recent)
 			["UI.Mail.LastExpiryWarning"] = 0,						-- Last time a mail expiry warning was triggered
 			["UI.Mail.TimeToNextWarning"] = 3,						-- Time before the warning is repeated ('3' = no warning for 3 hours)
 			
@@ -169,10 +181,10 @@ local AddonDB_Defaults = {
 			["UI.Calendar.UseDialogBoxForWarnings"] = false,	-- use a dialog box for warnings (true), or default chat frame (false)
 			["UI.Calendar.WeekStartsOnMonday"] = false,
 
-			WarningType1 = "30|15|10|5|4|3|2|1",		-- for profession cooldowns
-			WarningType2 = "30|15|10|5|4|3|2|1",		-- for dungeon resets
-			WarningType3 = "30|15|10|5|4|3|2|1",		-- for calendar events
-			WarningType4 = "30|15|10|5|4|3|2|1",		-- for item timers (like mysterious egg)
+			WarningType1 = "30,15,10,5,4,3,2,1",		-- for profession cooldowns
+			WarningType2 = "30,15,10,5,4,3,2,1",		-- for dungeon resets
+			WarningType3 = "30,15,10,5,4,3,2,1",		-- for calendar events
+			WarningType4 = "30,15,10,5,4,3,2,1",		-- for item timers (like mysterious egg)
 			
 			-- ** Global options **
 			["UI.AHColorCoding"] = true,					-- color coded recipes at the AH
@@ -240,120 +252,8 @@ addon.Enum = {
 		[2] = GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_LEATHER),		-- "Leather"
 		[3] = GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_MAIL),			-- "Mail"
 		[4] = GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_PLATE)			-- "Plate"
-	}
+	},
 }
-
--- ** LDB Launcher **
-LibStub:GetLibrary("LibDataBroker-1.1"):NewDataObject(addonName, {
-	type = "launcher",
-	icon = "Interface\\Icons\\INV_Drink_13",
-	OnClick = function(clickedframe, button)
-		addon:ToggleUI()
-	end,
-	text = (Broker2FuBar) and addonName or nil,		-- only for fubar,  not for ldb
-	label = addonName,
-})
-
-
-
-local guildMembersVersion = {} 	-- hash table containing guild member info
-
--- Message types
-local MSG_SEND_VERSION							= 1	-- Send Altoholic's version
-local MSG_VERSION_REPLY							= 2	-- Reply
-
--- *** Utility functions ***
-local function GuildBroadcast(messageType, ...)
-	local serializedData = addon:Serialize(messageType, ...)
-	addon:SendCommMessage(commPrefix, serializedData, "GUILD")
-end
-
-local function GuildWhisper(player, messageType, ...)
-	if DataStore:IsGuildMemberOnline(player) then
-		local serializedData = addon:Serialize(messageType, ...)
-		addon:SendCommMessage(commPrefix, serializedData, "WHISPER", player)
-	end
-end
-
-local function SaveVersion(sender, version)
-	guildMembersVersion[sender] = version
-end
-
--- *** Guild Comm ***
-local function OnAnnounceLogin(self, guildName)
-	GuildBroadcast(MSG_SEND_VERSION, addon.Version, addon.VersionNum)
-end
-
-local function OnSendVersion(sender, version, versionNum)
-	if sender ~= UnitName("player") then								-- don't send back to self
-		GuildWhisper(sender, MSG_VERSION_REPLY, addon.Version)		-- reply by sending my own version
-	end
-	SaveVersion(sender, version)											-- .. and save it
-	
-	if versionNum and versionNum > addon.VersionNum and not addon.db.global.moreRecentVersion then
-		addon:Print("A new version of Altoholic is available, consider upgrading to get the latest features.")
-		addon:Print("Official sources : Curseforge & WoW Interface")
-		
-		addon.db.global.moreRecentVersion = addon.VersionNum
-	end
-end
-
-local function OnVersionReply(sender, version)
-	SaveVersion(sender, version)
-end
-
-local GuildCommCallbacks = {
-	[MSG_SEND_VERSION] = OnSendVersion,
-	[MSG_VERSION_REPLY] = OnVersionReply,
-}
-
-function addon:OnInitialize()
-	addon.db = LibStub("AceDB-3.0"):New(addonName .. "DB", AddonDB_Defaults)
-	LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options)
-
-	addon:RegisterChatCommand("Altoholic", "ChatCommand")
-	addon:RegisterChatCommand("Alto", "ChatCommand")
-	
-	DataStore:SetGuildCommCallbacks(commPrefix, GuildCommCallbacks)
-
-	addon:RegisterMessage("DATASTORE_ANNOUNCELOGIN", OnAnnounceLogin)
-	
-	addon:RegisterComm("AltoShare", "AccSharingHandler")
-	addon:RegisterComm(commPrefix, DataStore:GetGuildCommHandler())
-	
-	-- this event MUST stay here, we have to be able to respond to a request event if the guild tab is not loaded
-	addon:RegisterMessage("DATASTORE_BANKTAB_REQUESTED")
-	addon:RegisterMessage("DATASTORE_GUILD_MAIL_RECEIVED")
-	addon:RegisterMessage("DATASTORE_GLOBAL_MAIL_EXPIRY")
-	addon:RegisterMessage("DATASTORE_CS_TIMEGAP_FOUND")
-	addon:RegisterMessage("DATASTORE_AUCTIONS_NOT_CHECKED_SINCE")
-	addon:RegisterMessage("DATASTORE_GUILD_LEFT")
-	
-	local global = addon.db.global
-	if global.moreRecentVersion and addon.VersionNum >= global.moreRecentVersion then
-		global.moreRecentVersion = nil
-	end
-end
-
-function addon:GetGuildMemberVersion(member)
-	if guildMembersVersion[member] then			-- version number of a main ?
-		return guildMembersVersion[member]		-- return it immediately
-	end
-	
-	-- check if member is an alt
-	local main = DataStore:GetNameOfMain(member)
-	if main and guildMembersVersion[main] then
-		return guildMembersVersion[main]
-	end
-end
-
-function addon:ChatCommand(input)
-	if not input then
-		LibStub("AceConfigDialog-3.0"):Open(addonName)
-	else
-		LibStub("AceConfigCmd-3.0").HandleCommand(addon, "Alto", "Altoholic", input)
-	end
-end
 
 addon.TradeSkills = {
 	Recipes = {},
@@ -383,98 +283,186 @@ addon.TradeSkills = {
 	},
 }
 
--- ** Tabs **
-local tabList = {
-	"Summary",
-	"Characters",
-	"Search",
-	"Guild",
-	"Achievements",
-	"Agenda",
-	"Grids",
-}
+-- One empty function to rule them all
+addon.EmptyFunc = function() end
 
-local frameToID = {}
-for index, name in ipairs(tabList) do
-	frameToID[name] = index
+-- ** LDB Launcher **
+LibStub:GetLibrary("LibDataBroker-1.1"):NewDataObject(addonName, {
+	type = "launcher",
+	icon = "Interface\\Icons\\INV_Drink_13",
+	OnClick = function(clickedframe, button)
+		AltoholicFrame:ToggleUI()
+	end,
+	text = (Broker2FuBar) and addonName or nil,		-- only for fubar,  not for ldb
+	label = addonName,
+})
+
+
+-- *** Guild Comm ***
+local guildMembersVersion = {} 	-- hash table containing guild member info
+
+-- ** Message types **
+local MSG_SEND_VERSION							= 1	-- Send Altoholic's version
+local MSG_VERSION_REPLY							= 2	-- Reply
+
+-- *** Utility functions ***
+local function GuildBroadcast(messageType, ...)
+	local serializedData = addon:Serialize(messageType, ...)
+	addon:SendCommMessage(commPrefix, serializedData, "GUILD")
 end
 
-local function SafeLoadAddOn(name)
-	if not IsAddOnLoaded(name) then
-		LoadAddOn(name)
+local function GuildWhisper(player, messageType, ...)
+	if DataStore:IsGuildMemberOnline(player) then
+		local serializedData = addon:Serialize(messageType, ...)
+		addon:SendCommMessage(commPrefix, serializedData, "WHISPER", player)
 	end
 end
 
-local function ShowTab(name)
-	local tab = _G[addonName.."Tab" .. name]
-	if tab then
-		tab:Show()
-	end
+local function SaveVersion(sender, version)
+	guildMembersVersion[sender] = version
 end
 
-local function HideTab(name)
-	local tab = _G[addonName.."Tab" .. name]
-	if tab then
-		tab:Hide()
-	end
-end
+function addon:OnInitialize()
+	addon.db = LibStub("AceDB-3.0"):New(addonName .. "DB", AddonDB_Defaults)
+	LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options)
 
-addon.Tabs = {}
-
-function addon.Tabs:HideAll()
-	for _, tabName in pairs(tabList) do
-		HideTab(tabName)
-	end
-end
-
-function addon.Tabs:OnClick(index)
-	if type(index) == "string" then
-		index = frameToID[index]
-	end
+	addon:RegisterChatCommand("Altoholic", "ChatCommand")
+	addon:RegisterChatCommand("Alto", "ChatCommand")
 	
-	PanelTemplates_SetTab(_G[addonName.."Frame"], index);
-	self:HideAll()
-	self.current = index
-	
-	if index >= 1 and index <= 7 then
-		local moduleName = format("%s_%s", addonName, tabList[index])
-		SafeLoadAddOn(moduleName)		-- make this part a bit more generic once we'll have more LoD parts
-		
-		local parentLevel = AltoholicFrame:GetFrameLevel()
-		local childName = format("%sTab%s", addonName, tabList[index])
-
-		local tabFrame = _G[ childName ]
-		
-		if tabFrame then
-			local childLevel = tabFrame:GetFrameLevel()
-			
-			if childLevel <= parentLevel then	-- if for any reason a child frame has a level lower or equal to its parent, fix it
-				tabFrame:SetFrameLevel(parentLevel+1)
+	DataStore:SetGuildCommCallbacks(commPrefix, {
+		[MSG_SEND_VERSION] = function(sender, version, versionNum)
+			if sender ~= UnitName("player") then								-- don't send back to self
+				GuildWhisper(sender, MSG_VERSION_REPLY, addon.Version)		-- reply by sending my own version
 			end
-		else
-			addon:Print(format("%s is disabled.", moduleName))
-		end
-	end
+			SaveVersion(sender, version)											-- .. and save it
+			
+			if versionNum and versionNum > addon.VersionNum and not addon.db.global.moreRecentVersion then
+				addon:Print(L["NEW_VERSION_AVAILABLE"])
+				addon:Print(L["OFFICIAL_SOURCES"])
+				
+				addon.db.global.moreRecentVersion = addon.VersionNum
+			end
+		end,
+		[MSG_VERSION_REPLY] = function(sender, version)
+			SaveVersion(sender, version)
+		end,
+	})
 	
-	ShowTab(tabList[index])
+	addon:RegisterMessage("DATASTORE_ANNOUNCELOGIN", function(self, guildName)
+		GuildBroadcast(MSG_SEND_VERSION, addon.Version, addon.VersionNum)
+	end)
+
+	addon:RegisterComm(commPrefix, DataStore:GetGuildCommHandler())
+	
+	local MVC = LibStub("LibMVC-1.0")
+	local Options = MVC:GetService("AltoholicUI.Options")
+	local colors = addon.Colors
+	
+	-- this event MUST stay here, we have to be able to respond to a request event if the guild tab is not loaded
+	addon:RegisterMessage("DATASTORE_BANKTAB_REQUESTED", function(event, sender, tabName)
+		if Options.Get("UI.Tabs.Guild.BankAutoUpdate") then
+			DataStore:SendBankTabToGuildMember(sender, tabName)
+			return
+		end
+		
+		AltoMessageBox:SetHeight(130)
+		AltoMessageBox.Text:SetHeight(60)
+		AltoMessageBox:Ask(format("%s\n\n%s",
+				format(L["%s%s|r has requested the bank tab %s%s|r\nSend this information ?"], colors.white, sender, colors.white, tabName),
+				format(L["%sWarning:|r make sure this user may view this information before accepting"], colors.white)), 
+			
+			-- On Yes
+			function() DataStore:SendBankTabToGuildMember(sender, tabName) end, 
+		
+			-- On no
+			function() DataStore:RejectBankTabRequest(sender) end)
+
+	end)
+	
+	addon:RegisterMessage("DATASTORE_GUILD_MAIL_RECEIVED", function(event, sender, recipient)
+		if Options.Get("UI.Mail.GuildMailWarning") then
+			addon:Print(format(L["%s|r has received a mail from %s"], format("%s%s", colors.green, recipient), format("%s%s", colors.green, sender)))
+		end
+	end)
+
+	addon:RegisterMessage("DATASTORE_GLOBAL_MAIL_EXPIRY", function(event, threshold) 
+		-- at least one mail has expired
+		
+		local lastWarning = Options.Get("UI.Mail.LastExpiryWarning")
+		local timeToNext = Options.Get("UI.Mail.TimeToNextWarning")
+		local now = time()
+		
+		if (now - lastWarning) < (timeToNext * 3600) then	-- has enough time passed ?
+			return		-- no ? exit !
+		end
+		
+		AltoMessageBox:SetHeight(130)
+		AltoMessageBox.Text:SetHeight(60)
+		AltoMessageBox:Ask(format("%sAltoholic: %s\n%s\n%s\n\n%s", colors.teal, colors.white, 
+			L["Mail is about to expire on at least one character."],
+			L["Refer to the activity pane for more details."],
+			L["Do you want to view it now ?"]), 
+			
+			-- On Yes
+			function()
+				AltoholicFrame:Show()
+				AltoholicFrame:SwitchToTab("Summary")
+				
+				-- Show the activity panel
+				local tab = AltoholicFrame.TabSummary
+				tab.CategoriesList:ClickCategory("profile", 9)
+				tab:Update()
+			end)
+		
+		Options.Set("UI.Mail.LastExpiryWarning", now)
+	end)
+	
+	addon:RegisterMessage("DATASTORE_AUCTIONS_NOT_CHECKED_SINCE", function(event, character, key, days, threshold)
+		if days >= threshold then
+			addon:Print(format(L["AUCTION_HOUSE_NOT_VISITED_WARNING"], DataStore:GetColoredCharacterName(key), days))
+		end
+	end)
+	
+	local global = addon.db.global
+	if global.moreRecentVersion and addon.VersionNum >= global.moreRecentVersion then
+		global.moreRecentVersion = nil
+	end
 end
 
--- Allow ESC to close the main frame
-tinsert(UISpecialFrames, "AltoholicFrame")
-tinsert(UISpecialFrames, "AltoMessageBox")
-
-function addon:CmdSearchBags(arg1, arg2)
-	-- arg 1 is a table, no idea of what it does, investigate later, only  arg2 matters at this point
+function addon:GetGuildMemberVersion(member)
+	if guildMembersVersion[member] then			-- version number of a main ?
+		return guildMembersVersion[member]		-- return it immediately
+	end
 	
-	if string.len(arg2) == 0 then
-		addon:Print("|cFF00FF9A" .. L["Altoholic:|r Usage = /altoholic search <item name>"])
+	-- check if member is an alt
+	local main = DataStore:GetNameOfMain(member)
+	if main and guildMembersVersion[main] then
+		return guildMembersVersion[main]
+	end
+end
+
+function addon:ChatCommand(input)
+	if not input then
+		LibStub("AceConfigDialog-3.0"):Open(addonName)
+	else
+		LibStub("AceConfigCmd-3.0").HandleCommand(addon, "Alto", addonName, input)
+	end
+end
+
+function addon:CmdSearchBags(arg1, searchText)
+
+	if not searchText or string.len(searchText) == 0 then
+		addon:Print("Usage = /altoholic search <item name>")
 		return
 	end
 	
 	if not (AltoholicFrame:IsVisible()) then
 		AltoholicFrame:Show()
 	end
-	AltoholicFrame_SearchEditBox:SetText(strlower(arg2))
-	addon.Tabs:OnClick("Search")
-	addon.Search:FindItem()
+	
+	searchText = strlower(searchText)
+	
+	AltoholicFrame.SearchBox:SetText(searchText)
+	AltoholicFrame:SwitchToTab("Search")
+	AltoholicFrame.TabSearch:Find(searchText)
 end	

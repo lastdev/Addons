@@ -1,9 +1,16 @@
-local __exports = LibStub:NewLibrary("ovale/states/Stance", 90103)
+local __exports = LibStub:NewLibrary("ovale/states/Stance", 90107)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local __uiLocalization = LibStub:GetLibrary("ovale/ui/Localization")
-local l = __uiLocalization.l
-local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+local __imports = {}
+__imports.__uiLocalization = LibStub:GetLibrary("ovale/ui/Localization")
+__imports.l = __imports.__uiLocalization.l
+__imports.aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
+__imports.__enginestate = LibStub:GetLibrary("ovale/engine/state")
+__imports.States = __imports.__enginestate.States
+__imports.__enginecondition = LibStub:GetLibrary("ovale/engine/condition")
+__imports.returnBoolean = __imports.__enginecondition.returnBoolean
+local l = __imports.l
+local aceEvent = __imports.aceEvent
 local pairs = pairs
 local type = type
 local wipe = wipe
@@ -14,10 +21,8 @@ local GetNumShapeshiftForms = GetNumShapeshiftForms
 local GetShapeshiftForm = GetShapeshiftForm
 local GetShapeshiftFormInfo = GetShapeshiftFormInfo
 local GetSpellInfo = GetSpellInfo
-local __enginestate = LibStub:GetLibrary("ovale/engine/state")
-local States = __enginestate.States
-local __enginecondition = LibStub:GetLibrary("ovale/engine/condition")
-local returnBoolean = __enginecondition.returnBoolean
+local States = __imports.States
+local returnBoolean = __imports.returnBoolean
 local druidCatForm = GetSpellInfo(768)
 local druidTravelForm = GetSpellInfo(783)
 local druidAquaticForm = GetSpellInfo(1066)
@@ -68,7 +73,7 @@ local StanceData = __class(nil, {
     end
 })
 __exports.OvaleStanceClass = __class(States, {
-    constructor = function(self, ovaleDebug, ovale, ovaleProfiler, ovaleData)
+    constructor = function(self, ovaleDebug, ovale, ovaleData)
         self.ovale = ovale
         self.ovaleData = ovaleData
         self.ready = false
@@ -106,7 +111,6 @@ __exports.OvaleStanceClass = __class(States, {
             self.ready = true
         end
         self.applySpellAfterCast = function(spellId, targetGUID, startCast, endCast, isChanneled, spellcast)
-            self.profiler:startProfiling("OvaleStance_ApplySpellAfterCast")
             local stance = self.ovaleData:getSpellInfoProperty(spellId, endCast, "to_stance", targetGUID)
             if stance then
                 if type(stance) == "string" then
@@ -114,11 +118,9 @@ __exports.OvaleStanceClass = __class(States, {
                 end
                 self.next.stance = stance
             end
-            self.profiler:stopProfiling("OvaleStance_ApplySpellAfterCast")
         end
         States.constructor(self, StanceData)
         self.module = ovale:createModule("OvaleStance", self.handleInitialize, self.handleDisable, aceEvent)
-        self.profiler = ovaleProfiler:create(self.module:GetName())
         local debugOptions = {
             stance = {
                 name = l["stances"],
@@ -144,7 +146,6 @@ __exports.OvaleStanceClass = __class(States, {
         ovaleCondition:registerCondition("stance", false, self.stance)
     end,
     createStanceList = function(self)
-        self.profiler:startProfiling("OvaleStance_CreateStanceList")
         wipe(self.stanceList)
         wipe(self.stanceId)
         local name, stanceName, spellId
@@ -159,7 +160,6 @@ __exports.OvaleStanceClass = __class(States, {
                 end
             end
         end
-        self.profiler:stopProfiling("OvaleStance_CreateStanceList")
     end,
     debugStances = function(self)
         wipe(array)
@@ -193,7 +193,6 @@ __exports.OvaleStanceClass = __class(States, {
         return  not  not (name and spellNameToStance[name])
     end,
     shapeshiftEventHandler = function(self)
-        self.profiler:startProfiling("OvaleStance_ShapeshiftEventHandler")
         local oldStance = self.current.stance
         local newStance = GetShapeshiftForm()
         if oldStance ~= newStance then
@@ -201,7 +200,6 @@ __exports.OvaleStanceClass = __class(States, {
             self.ovale:needRefresh()
             self.module:SendMessage("Ovale_StanceChanged", self:getStance(newStance), self:getStance(oldStance))
         end
-        self.profiler:stopProfiling("OvaleStance_ShapeshiftEventHandler")
     end,
     initializeState = function(self)
         self.next.stance = 0
@@ -209,8 +207,6 @@ __exports.OvaleStanceClass = __class(States, {
     cleanState = function(self)
     end,
     resetState = function(self)
-        self.profiler:startProfiling("OvaleStance_ResetState")
         self.next.stance = self.current.stance
-        self.profiler:stopProfiling("OvaleStance_ResetState")
     end,
 })
