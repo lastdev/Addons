@@ -32,6 +32,7 @@ addon:Controller("AltoholicUI.TabOptions.SettingsAltoholicTooltip", { "Altoholic
 			frame.ShowGatheringNodesCount:SetChecked(Options.Get("UI.Tooltip.ShowGatheringNodesCount"))
 			frame.ShowCrossFactionCount:SetChecked(Options.Get("UI.Tooltip.ShowCrossFactionCount"))
 			frame.ShowMergedRealmsCount:SetChecked(Options.Get("UI.Tooltip.ShowMergedRealmsCount"))
+			frame.ShowAllRealmsCount:SetChecked(Options.Get("UI.Tooltip.ShowAllRealmsCount"))
 			frame.ShowAllAccountsCount:SetChecked(Options.Get("UI.Tooltip.ShowAllAccountsCount"))
 			
 			frame.ShowGuildBankCount:SetChecked(Options.Get("UI.Tooltip.ShowGuildBankCount"))

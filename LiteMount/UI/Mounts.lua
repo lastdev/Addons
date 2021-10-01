@@ -12,7 +12,7 @@ local _, LM = ...
 
 local L = LM.Localize
 
---[[--------------------------------------------------------------------------]]--
+--[[------------------------------------------------------------------------]]--
 
 LiteMountPriorityMixin = {}
 
@@ -61,21 +61,21 @@ function LiteMountPriorityMixin:Decrement()
 end
 
 function LiteMountPriorityMixin:OnEnter()
-    LiteMountTooltip:SetOwner(self, "ANCHOR_RIGHT")
-    LiteMountTooltip:ClearLines()
-    LiteMountTooltip:AddLine(L.LM_PRIORITY)
+    GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+    GameTooltip:ClearLines()
+    GameTooltip:AddLine(L.LM_PRIORITY)
     for _,p in ipairs(LM.UIFilter.GetPriorities()) do
         local t, d = LM.UIFilter.GetPriorityText(p)
-        LiteMountTooltip:AddLine(t .. ' - ' .. d)
+        GameTooltip:AddLine(t .. ' - ' .. d)
     end
-    LiteMountTooltip:Show()
+    GameTooltip:Show()
 end
 
 function LiteMountPriorityMixin:OnLeave()
-    LiteMountTooltip:Hide()
+    GameTooltip:Hide()
 end
 
---[[--------------------------------------------------------------------------]]--
+--[[------------------------------------------------------------------------]]--
 
 LiteMountAllPriorityMixin = {}
 
@@ -103,7 +103,7 @@ function LiteMountAllPriorityMixin:Get()
     return allValue
 end
 
---[[--------------------------------------------------------------------------]]--
+--[[------------------------------------------------------------------------]]--
 
 LiteMountFlagBitMixin = {}
 
@@ -120,15 +120,15 @@ end
 
 function LiteMountFlagBitMixin:OnEnter()
     if self.flag then
-        LiteMountTooltip:SetOwner(self, "ANCHOR_RIGHT")
-        LiteMountTooltip:SetText(L[self.flag])
-        LiteMountTooltip:Show()
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:SetText(L[self.flag])
+        GameTooltip:Show()
     end
 end
 
 function LiteMountFlagBitMixin:OnLeave()
-    if LiteMountTooltip:GetOwner() == self then
-        LiteMountTooltip:Hide()
+    if GameTooltip:GetOwner() == self then
+        GameTooltip:Hide()
     end
 end
 
@@ -152,7 +152,7 @@ function LiteMountFlagBitMixin:Update(flag, mount)
     self:Enable()
 end
 
---[[--------------------------------------------------------------------------]]--
+--[[------------------------------------------------------------------------]]--
 
 LiteMountMountIconMixin = {}
 
@@ -190,7 +190,7 @@ function LiteMountMountIconMixin:OnDragStart()
 end
 
 
---[[--------------------------------------------------------------------------]]--
+--[[------------------------------------------------------------------------]]--
 
 LiteMountMountButtonMixin = {}
 
@@ -230,7 +230,7 @@ function LiteMountMountButtonMixin:OnShow()
     self:SetWidth(self:GetParent():GetWidth())
 end
 
---[[--------------------------------------------------------------------------]]--
+--[[------------------------------------------------------------------------]]--
 
 LiteMountMountScrollMixin = {}
 
@@ -300,7 +300,7 @@ function LiteMountMountScrollMixin:SetControl(v)
     self:GetParent():Update()
 end
 
---[[--------------------------------------------------------------------------]]--
+--[[------------------------------------------------------------------------]]--
 
 LiteMountMountsPanelMixin = {}
 
@@ -314,7 +314,7 @@ function LiteMountMountsPanelMixin:default()
     LM.UIDebug(self, 'Custom_Default')
     self.MountScroll.isDirty = true
     LM.Options:ResetAllMountFlags()
-    LM.Options:SetPriorities(LM.PlayerMounts.mounts, LM.Options.DEFAULT_PRIORITY)
+    LM.Options:SetPriorities(LM.PlayerMounts.mounts, nil)
 end
 
 function LiteMountMountsPanelMixin:OnLoad()
@@ -327,8 +327,7 @@ function LiteMountMountsPanelMixin:OnLoad()
 
     self.allFlags = LM.Options:GetFlags()
 
-    -- Note, explicitly not FAVORITES (#5)
-    for i = 1, 4 do
+    for i = 1, 3 do
         local label = self["BitLabel"..i]
         if self.allFlags[i] then
             label:SetText(L[self.allFlags[i]])

@@ -26,8 +26,8 @@ LibSharedMedia:Register ("statusbar", "testbar", [[Interface\AddOns\Plater\image
 LibSharedMedia:Register ("statusbar", "You Are Beautiful!", [[Interface\AddOns\Plater\images\regular_white]])
 LibSharedMedia:Register ("statusbar", "PlaterBackground 2", [[Interface\AddOns\Plater\images\noise_background]])
 
-LibSharedMedia:Register ("font", "Oswald", [[Interface\Addons\Plater\fonts\Oswald-Regular.otf]])
-LibSharedMedia:Register ("font", "Nueva Std Cond", [[Interface\Addons\Plater\fonts\NuevaStd-Cond.otf]])
+LibSharedMedia:Register ("font", "Oswald", [[Interface\Addons\Plater\fonts\Oswald-Regular.ttf]])
+LibSharedMedia:Register ("font", "Nueva Std Cond", [[Interface\Addons\Plater\fonts\NuevaStd-Cond.ttf]])
 LibSharedMedia:Register ("font", "Accidental Presidency", [[Interface\Addons\Plater\fonts\Accidental Presidency.ttf]])
 LibSharedMedia:Register ("font", "TrashHand", [[Interface\Addons\Plater\fonts\TrashHand.TTF]])
 LibSharedMedia:Register ("font", "Harry P", [[Interface\Addons\Plater\fonts\HARRYP__.TTF]])

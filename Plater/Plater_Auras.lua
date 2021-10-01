@@ -27,7 +27,6 @@ local UnitAuraSlots = _G.UnitAuraSlots
 local UnitAuraBySlot = _G.UnitAuraBySlot
 local UnitAura = _G.UnitAura
 local BackdropTemplateMixin = _G.BackdropTemplateMixin
-local NamePlateTooltip = _G.NamePlateTooltip
 local BUFF_MAX_DISPLAY = _G.BUFF_MAX_DISPLAY
 local _
 
@@ -48,6 +47,7 @@ local DB_AURA_SHOW_ENRAGE
 local DB_AURA_SHOW_MAGIC
 local DB_AURA_SHOW_BYUNIT
 local DB_AURA_ALPHA
+local DB_AURA_ENABLED
 
 local DebuffTypeColor = _G.DebuffTypeColor
 
@@ -96,19 +96,26 @@ local AUTO_TRACKING_EXTRA_BUFFS = {}
 local AUTO_TRACKING_EXTRA_DEBUFFS = {}
 
 
+local NamePlateTooltip = _G.NamePlateTooltip -- can be removed later
+local PlaterNamePlateAuraTooltip = CreateFrame("GameTooltip", "PlaterNamePlateAuraTooltip", UIParent, "GameTooltipTemplate")
+PlaterNamePlateAuraTooltip:SetBackdrop ({edgeFile = [[Interface\Buttons\WHITE8X8]], edgeSize = 1, bgFile = [[Interface\Buttons\WHITE8X8]], tileSize = 0, tile = false, tileEdge = true})
+PlaterNamePlateAuraTooltip:SetBackdropColor (0.05, 0.05, 0.05, 0.8)
+PlaterNamePlateAuraTooltip:SetBackdropBorderColor (0, 0, 0, 1)
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --> aura buffs and debuffs ~aura ~buffs ~debuffs ~auras
 
 	--> show the tooltip in the aura icon
 	function Plater.OnEnterAura (iconFrame) --private
-		NamePlateTooltip:SetOwner (iconFrame, "ANCHOR_LEFT")
-		NamePlateTooltip:SetUnitAura (iconFrame:GetParent().unit, iconFrame:GetID(), iconFrame.filter)
+		PlaterNamePlateAuraTooltip:SetOwner (iconFrame, "ANCHOR_LEFT")
+		PlaterNamePlateAuraTooltip:SetUnitAura (iconFrame:GetParent().unit, iconFrame:GetID(), iconFrame.filter)
 		iconFrame.UpdateTooltip = Plater.OnEnterAura
 	end
 
 	function Plater.OnLeaveAura (iconFrame) --private
-		NamePlateTooltip:Hide()
+		PlaterNamePlateAuraTooltip:Hide()
+		if NamePlateTooltip:IsForbidden() then return end
+		NamePlateTooltip:Hide() -- backwards compatibility for mods (should be removed later)
 	end
 	
 	--called from the options panel, request a refresh on all auras shown
@@ -1793,9 +1800,6 @@ local AUTO_TRACKING_EXTRA_DEBUFFS = {}
 			
 			wipe (AUTO_TRACKING_EXTRA_BUFFS)
 			wipe (AUTO_TRACKING_EXTRA_DEBUFFS)
-			
-			CAN_TRACK_EXTRA_BUFFS = false
-			CAN_TRACK_EXTRA_DEBUFFS = false
 
 			for spellId, flag in pairs (extraBuffsToTrack) do
 				local spellName = GetSpellInfo (tonumber(spellId) or spellId)
@@ -1805,7 +1809,6 @@ local AUTO_TRACKING_EXTRA_DEBUFFS = {}
 					else
 						AUTO_TRACKING_EXTRA_BUFFS [spellId] = true
 					end
-					CAN_TRACK_EXTRA_BUFFS = true
 				end
 			end
 			
@@ -1817,7 +1820,6 @@ local AUTO_TRACKING_EXTRA_DEBUFFS = {}
 					else
 						AUTO_TRACKING_EXTRA_DEBUFFS [spellId] = true
 					end
-					CAN_TRACK_EXTRA_DEBUFFS = true
 				end
 			end
 			
@@ -1828,7 +1830,6 @@ local AUTO_TRACKING_EXTRA_DEBUFFS = {}
 						--AUTO_TRACKING_EXTRA_DEBUFFS [spellName] = true
 						AUTO_TRACKING_EXTRA_DEBUFFS [spellId] = true
 						CROWDCONTROL_AURA_IDS [spellId] = true
-						CAN_TRACK_EXTRA_BUFFS = true
 					end
 				end
 			end
@@ -1840,7 +1841,6 @@ local AUTO_TRACKING_EXTRA_DEBUFFS = {}
 						--AUTO_TRACKING_EXTRA_BUFFS [spellName] = true
 						AUTO_TRACKING_EXTRA_BUFFS [spellId] = true
 						OFFENSIVE_AURA_IDS [spellId] = true
-						CAN_TRACK_EXTRA_BUFFS = true
 					end
 				end
 			end
@@ -1852,7 +1852,6 @@ local AUTO_TRACKING_EXTRA_DEBUFFS = {}
 						--AUTO_TRACKING_EXTRA_BUFFS [spellName] = true
 						AUTO_TRACKING_EXTRA_BUFFS [spellId] = true
 						DEFENSIVE_AURA_IDS [spellId] = true
-						CAN_TRACK_EXTRA_BUFFS = true
 					end
 				end
 			end

@@ -181,10 +181,7 @@ ACTIONS['Buff'] = {
             for _, arg in ipairs(args) do
                 LM.Debug(' - trying buff: ' .. tostring(arg))
                 local name, id = GetUsableSpell(arg)
-                -- Glide won't cast while mounted
-                if id == 131347 and IsMounted() then return end
-                if name and not LM.UnitAura(env.unit or 'player', name) and
-                   IsUsableSpell(name) and GetSpellCooldown(name) == 0 then
+                if name and not LM.UnitAura(env.unit or 'player', name) then
                     LM.Debug(" - setting action to spell " .. name)
                     return LM.SecureAction:Spell(name, env.unit)
                 end
@@ -287,14 +284,12 @@ ACTIONS['CopyTargetsMount'] = {
 ACTIONS['ApplyRules'] = {
     handler =
         function (args, env)
-            local rules = LM.Options:GetRules(env.id)
-            LM.Debug(string.format(" - checking %d rules for button %d", #rules, env.id))
-            for i,rule in ipairs(rules) do
-                local act = LM.Rules:Dispatch(rule, env)
-                if act then
-                    LM.Debug(string.format(" - found matching rule %d", i))
-                    return act
-                end
+            local ruleSet = LM.Options:GetCompiledRuleSet(env.id)
+            LM.Debug(string.format(" - checking %d rules for button %d", #ruleSet, env.id))
+            local act, n = ruleSet:Run(env)
+            if act then
+                LM.Debug(string.format(" - found matching rule %d", n))
+                return act
             end
             LM.Debug(" - no rules matched")
         end
@@ -317,37 +312,37 @@ ACTIONS['SmartMount'] = {
 
             local m
 
-            if not m and LM.Conditions:Check({"submerged"}, env) then
-                LM.Debug(" - trying Swimming Mount (underwater)")
+            if not m and LM.Conditions:Check("[submerged]", env) then
+                LM.Debug(" - trying Aquatic Mount (underwater)")
                 local swim = filteredList:FilterSearch('SWIM')
                 LM.Debug(" - found " .. #swim .. " mounts.")
                 m = swim:PriorityRandom(env.random)
             end
 
-            if not m and LM.Conditions:Check({"flyable"}, env) then
+            if not m and LM.Conditions:Check("[flyable]", env) then
                 LM.Debug(" - trying Flying Mount")
                 local fly = filteredList:FilterSearch('FLY')
                 LM.Debug(" - found " .. #fly .. " mounts.")
                 m = fly:PriorityRandom(env.random)
             end
 
-            if not m and LM.Conditions:Check({"floating", { "waterwalking", op="NOT" }}, env) then
-                LM.Debug(" - trying Swimming Mount (on the surface)")
+            if not m and LM.Conditions:Check("[floating,nowaterwalking]", env) then
+                LM.Debug(" - trying Aquatic Mount (on the surface)")
                 local swim = filteredList:FilterSearch('SWIM')
                 LM.Debug(" - found " .. #swim .. " mounts.")
                 m = swim:PriorityRandom(env.random)
             end
 
             if not m then
-                LM.Debug(" - trying Running Mount")
-                local run = filteredList:FilterSearch('RUN')
+                LM.Debug(" - trying Ground Mount")
+                local run = filteredList:FilterSearch('RUN', '~SLOW')
                 LM.Debug(" - found " .. #run .. " mounts.")
                 m = run:PriorityRandom(env.random)
             end
 
             if not m then
-                LM.Debug(" - trying Walking Mount")
-                local walk = filteredList:FilterSearch('WALK')
+                LM.Debug(" - trying Slow Ground Mount")
+                local walk = filteredList:FilterSearch('RUN', 'SLOW')
                 LM.Debug(" - found " .. #walk .. " mounts.")
                 m = walk:PriorityRandom(env.random)
             end
@@ -434,13 +429,7 @@ ACTIONS['Stop'] = {
         end
 }
 
-local function IsCastableItem(item)
-    if not item then
-        return false
-    end
-
-    local itemID = GetItemInfoInstant(item)
-
+local function IsCastableItem(itemID)
     if not itemID then
         return false
     end
@@ -463,19 +452,46 @@ local function IsCastableItem(item)
     return false
 end
 
+-- A derpy version of SecureCmdItemParse that doesn't support bags but does
+-- support item IDs as well as slot names. The assumption is that if you have
+-- the item then GetItemInfo will always return values immediately.
+
+local function UsableItemParse(arg)
+    local name, itemID, slotNum
+
+    local slotOrID = tonumber(arg)
+    if slotOrID and slotOrID <= INVSLOT_LAST_EQUIPPED then
+        slotNum = slotOrID
+    elseif slotOrID then
+        name = GetItemInfo(slotOrID)
+        itemID = slotOrID
+    else
+        local slotName = "INVSLOT_"..arg:upper()
+        if _G[slotName] then
+            slotNum = _G[slotName]
+        else
+            name = arg
+            itemID = GetItemInfoInstant(arg)
+        end
+    end
+
+    return name, itemID, slotNum
+end
+
 ACTIONS['Use'] = {
     handler =
         function (args, env)
             for _, arg in ipairs(args) do
-                local name, bag, slot = SecureCmdItemParse(arg)
-                if slot then
-                    local s, d, e = GetInventoryItemCooldown('player', slot)
+                local name, itemID, slotNum = UsableItemParse(arg)
+                if slotNum then
+                    local s, d, e = GetInventoryItemCooldown('player', slotNum)
                     if s == 0 and e == 1 then
-                        LM.Debug(' - Setting action to use slot ' .. slot)
-                        return LM.SecureAction:Item(slot, env.unit)
+                        LM.Debug(' - Setting action to use slot ' .. slotNum)
+                        return LM.SecureAction:Item(slotNum, env.unit)
                     end
-                elseif name then
-                    if IsCastableItem(name) then
+                    return
+                else
+                    if name and IsCastableItem(itemID) then
                         LM.Debug(' - setting action to use item ' .. name)
                         return LM.SecureAction:Item(name, env.unit)
                     end

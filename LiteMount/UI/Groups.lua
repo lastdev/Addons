@@ -12,7 +12,7 @@ local _, LM = ...
 
 local L = LM.Localize
 
---[[--------------------------------------------------------------------------]]--
+--[[------------------------------------------------------------------------]]--
 
 -- Group names can't match anything that LM.Mount:MatchesOneFilter will parse
 -- as something other than a group. Don't care about mount names though that
@@ -20,7 +20,8 @@ local L = LM.Localize
 
 local function IsValidGroupName(text)
     if not text or text == "" then return false end
-    if LM.Options:IsActiveFlag(text) then return false end
+    if LM.Options:IsFlag(text) then return false end
+    if LM.Options:IsGroup(text) then return false end
     if tonumber(text) then return false end
     if text:sub(1, 3) == 'id:' then return false end
     if text:sub(1, 3) == 'mt:' then return false end
@@ -31,8 +32,9 @@ end
 
 StaticPopupDialogs["LM_OPTIONS_NEW_GROUP"] = {
     text = format("LiteMount : %s", L.LM_NEW_GROUP),
-    button1 = ACCEPT,
-    button2 = CANCEL,
+    button1 = L.LM_CREATE_PROFILE_GROUP,    -- Note: OnAccept
+    button2 = L.LM_CREATE_GLOBAL_GROUP,     -- Note: OnCancel (ugh)
+    button3 = CANCEL,                       -- Note: OnAlt
     hasEditBox = 1,
     maxLetters = 24,
     timeout = 0,
@@ -43,8 +45,17 @@ StaticPopupDialogs["LM_OPTIONS_NEW_GROUP"] = {
             LiteMountGroupsPanel.Groups.isDirty = true
             local text = self.editBox:GetText()
             LiteMountGroupsPanel.Groups.selectedGroup = text
-            LM.Options:CreateFlag(text)
+            LM.Options:CreateGroup(text)
         end,
+    -- This is not "Cancel", it's "Global" == button2
+    OnCancel = function (self)
+            LiteMountGroupsPanel.Groups.isDirty = true
+            local text = self.editBox:GetText()
+            LiteMountGroupsPanel.Groups.selectedGroup = text
+            LM.Options:CreateGroup(text, true)
+        end,
+    -- This is cancel (button3)
+    OnAlt = function (self) end,
     EditBoxOnEnterPressed = function (self)
             if self:GetParent().button1:IsEnabled() then
                 StaticPopup_OnClick(self:GetParent(), 1)
@@ -57,6 +68,7 @@ StaticPopupDialogs["LM_OPTIONS_NEW_GROUP"] = {
             local text = self:GetText()
             local valid = IsValidGroupName(text)
             self:GetParent().button1:SetEnabled(valid)
+            self:GetParent().button2:SetEnabled(valid)
         end,
     OnShow = function (self)
         self.editBox:SetFocus()
@@ -77,7 +89,7 @@ StaticPopupDialogs["LM_OPTIONS_RENAME_GROUP"] = {
             LiteMountGroupsPanel.Groups.isDirty = true
             local text = self.editBox:GetText()
             LiteMountGroupsPanel.Groups.selectedGroup = text
-            LM.Options:RenameFlag(self.data, text)
+            LM.Options:RenameGroup(self.data, text)
         end,
     EditBoxOnEnterPressed = function (self)
             if self:GetParent().button1:IsEnabled() then
@@ -107,7 +119,7 @@ StaticPopupDialogs["LM_OPTIONS_DELETE_GROUP"] = {
     hideOnEscape = 1,
     OnAccept = function (self)
             LiteMountGroupsPanel.Groups.isDirty = true
-            LM.Options:DeleteFlag(self.data)
+            LM.Options:DeleteGroup(self.data)
         end,
     OnShow = function (self)
             self.text:SetText(format("LiteMount : %s : %s", L.LM_DELETE_GROUP, self.data))
@@ -115,7 +127,7 @@ StaticPopupDialogs["LM_OPTIONS_DELETE_GROUP"] = {
 }
 
 
---[[--------------------------------------------------------------------------]]--
+--[[------------------------------------------------------------------------]]--
 
 LiteMountGroupsPanelMixin = {}
 
@@ -144,7 +156,7 @@ function LiteMountGroupsPanelMixin:Update()
     self.ShowAll:SetChecked(self.showAll)
 end
 
---[[--------------------------------------------------------------------------]]--
+--[[------------------------------------------------------------------------]]--
 
 LiteMountGroupsPanelGroupMixin = {}
 
@@ -156,7 +168,7 @@ function LiteMountGroupsPanelGroupMixin:OnClick()
 end
 
 
---[[--------------------------------------------------------------------------]]--
+--[[------------------------------------------------------------------------]]--
 
 LiteMountGroupsPanelGroupsMixin = {}
 
@@ -164,7 +176,7 @@ function LiteMountGroupsPanelGroupsMixin:Update()
     if not self.buttons then return end
 
     local offset = HybridScrollFrame_GetOffset(self)
-    local allGroups = LM.Options:GetGroups()
+    local allGroups = LM.Options:GetGroupNames()
 
     if not tContains(allGroups, self.selectedGroup) then
         self.selectedGroup = allGroups[1]
@@ -183,6 +195,9 @@ function LiteMountGroupsPanelGroupsMixin:Update()
         index = offset + i
         if index <= #allGroups then
             local groupText = allGroups[index]
+            if LM.Options:IsGlobalGroup(groupText) then
+                groupText = BLUE_FONT_COLOR:WrapTextInColorCode(groupText)
+            end
             button.Text:SetFormattedText(groupText)
             button.Text:Show()
             button:Show()
@@ -233,11 +248,11 @@ function LiteMountGroupsPanelGroupsMixin:OnLoad()
 end
 
 function LiteMountGroupsPanelGroupsMixin:GetOption()
-    return LM.Options:GetRawFlags()
+    return { LM.Options:GetRawGroups() }
 end
 
 function LiteMountGroupsPanelGroupsMixin:SetOption(v)
-    LM.Options:SetRawFlags(v)
+    LM.Options:SetRawGroups(unpack(v))
 end
 
 function LiteMountGroupsPanelGroupsMixin:SetControl(v)
@@ -245,17 +260,17 @@ function LiteMountGroupsPanelGroupsMixin:SetControl(v)
 end
 
 
---[[--------------------------------------------------------------------------]]--
+--[[------------------------------------------------------------------------]]--
 
 LiteMountGroupsPanelMountMixin = {}
 
 function LiteMountGroupsPanelMountMixin:OnClick()
-    LiteMountGroupsPanel.Mounts.isDirty = true
+    LiteMountGroupsPanel.Groups.isDirty = true
     local group = LiteMountGroupsPanel.Groups.selectedGroup
-    if self.mount:MatchesFilters(group) then
-        LM.Options:ClearMountFlag(self.mount, group)
+    if LM.Options:IsMountInGroup(self.mount, group) then
+        LM.Options:ClearMountGroup(self.mount, group)
     else
-        LM.Options:SetMountFlag(self.mount, group)
+        LM.Options:SetMountGroup(self.mount, group)
     end
     LiteMountGroupsPanel.Mounts:Update()
 end
@@ -276,7 +291,7 @@ function LiteMountGroupsPanelMountMixin:SetMount(mount, group)
     self.mount = mount
 
     self.Name:SetText(mount.name)
-    if group and mount:MatchesFilters(group) then
+    if group and LM.Options:IsMountInGroup(self.mount, group) then
         self.Checked:Show()
     else
         self.Checked:Hide()
@@ -292,7 +307,7 @@ function LiteMountGroupsPanelMountMixin:SetMount(mount, group)
 end
 
 
---[[--------------------------------------------------------------------------]]--
+--[[------------------------------------------------------------------------]]--
 
 LiteMountGroupsPanelMountScrollMixin = {}
 
@@ -314,7 +329,7 @@ function LiteMountGroupsPanelMountScrollMixin:Update()
     end
 
     if not self:GetParent().showAll then
-        mounts = mounts:Search(function (m) return m:GetFlags()[group] end)
+        mounts = mounts:Search(function (m) return LM.Options:IsMountInGroup(m, group) end)
     end
 
     for i, button in ipairs(self.buttons) do
@@ -352,14 +367,6 @@ function LiteMountGroupsPanelMountScrollMixin:OnLoad()
     local track = _G[self.scrollBar:GetName().."Track"]
     track:Hide()
     self.update = self.Update
-end
-
-function LiteMountGroupsPanelMountScrollMixin:GetOption()
-    return LM.Options:GetRawFlagChanges()
-end
-
-function LiteMountGroupsPanelMountScrollMixin:SetOption(v)
-    LM.Options:SetRawFlagChanges(v)
 end
 
 function LiteMountGroupsPanelMountScrollMixin:SetControl(v)

@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
 
-mod:SetRevision((string.sub("20200912135206", 1, -5)):sub(12, -3))
+mod:SetRevision("20210903015120")
 mod:SetCreatureID(83846)
 mod:SetEncounterID(1756)
 

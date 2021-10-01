@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/states/DemonHunterSigils", 90107)
+local __exports = LibStub:NewLibrary("ovale/states/DemonHunterSigils", 90108)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local __imports = {}
@@ -136,11 +136,7 @@ __exports.OvaleSigilClass = __class(States, {
             for sigilType in pairs(checkSigilType) do
                 local current = self.current[sigilType]
                 local next = self.next[sigilType]
-                do
-                    next.first = 0
-                    next.last = 0
-                    next.length = 0
-                end
+                next:clear()
                 for i = 1, current.length do
                     local activationTime = current:at(i)
                     if activationTime then

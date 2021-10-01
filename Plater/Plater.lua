@@ -8624,7 +8624,11 @@ function Plater.SetCVarsOnFirstRun()
 	SetCVar ("nameplatePersonalHideDelaySeconds", 0.2)
 
 	--> view distance
-	SetCVar ("nameplateMaxDistance", 100)
+	if IS_WOW_PROJECT_MAINLINE then
+		SetCVar ("nameplateMaxDistance", 100)
+	else
+		SetCVar ("nameplateMaxDistance", 41)
+	end
 	
 	--> ensure resource on target consistency:
 	if IS_WOW_PROJECT_MAINLINE then
@@ -9751,6 +9755,9 @@ end
 	function Plater.ExportProfileToString()
 		local profile = Plater.db.profile
 		
+		--store current profile name
+		profile.profile_name = Plater.db:GetCurrentProfile()
+		
 		--temp store the animations on another table
 		local spellAnimations = profile.spell_animation_list
 		--remove the animation list from the profile
@@ -9779,6 +9786,9 @@ end
 		profile.spell_animation_list = spellAnimations
 		profile.script_data_trash = trashcanScripts
 		profile.hook_data_trash = trashcanHooks
+		
+		--reset profile_name
+		profile.profile_name = nil
 		
 		return data
 	end

@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/tools/array", 90107)
+local __exports = LibStub:NewLibrary("ovale/tools/array", 90108)
 if not __exports then return end
 local floor = math.floor
 local insert = table.insert

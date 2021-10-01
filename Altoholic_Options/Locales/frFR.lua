@@ -3,11 +3,11 @@ local L = LibStub("AceLocale-3.0"):NewLocale( "Altoholic", "frFR" )
 if not L then return end
 
 -- ** Menu **
-L["Settings"] = "Paramètres"
+L["Settings"] = "ParamÃ¨tres"
 L["Calendar"] = "Calendrier"
 L["Tooltip"] = "Info-bulle"
-L["Enabled"] = "Activé"
-L["Disabled"] = "Désactivé"
+L["Enabled"] = "ActivÃ©"
+L["Disabled"] = "DÃ©sactivÃ©"
 L["Character"] = "Personnage"
 L["Characters"] = "Personnages"
 -- L["Bank characters"] = true
@@ -15,62 +15,62 @@ L["Account Sharing"] = "Partage de compte"
 L["How to"] = "Comment faire"
 -- L["Saved Variables"] = true
 L["Getting support"] = "Obtenir de l'aide"
-L["About"] = "À propos"
+L["About"] = "Ã€ propos"
 
 L["CTRL_C_TO_COPY"] = "|cFF1CFAFECTRL+C|r pour copier cette adresse, |cFF1CFAFEECHAP|r pour la cacher"
 L["WOWI_ICON_ON_ENTER"] = "Cliquer pour afficher la page de l'add-on sur WoW Interface"
 L["CURSE_ICON_ON_ENTER"] = "Cliquer pour afficher la page de l'add-on sur Curseforge"
 L["DISCORD_ICON_ON_ENTER"] = "Cliquer pour afficher l'adresse du serveur Discord"
 L["EMAIL_ICON_ON_ENTER"] = "Cliquer pour afficher l'adresse e-mail de Thaoky"
-L["TAB_NOT_LOADED_YET"] = "Onglet pas encore chargé"
+L["TAB_NOT_LOADED_YET"] = "Onglet pas encore chargÃ©"
 
 -- ** Settings / Altoholic / General **
-L["General Options"] = "Options Générales"
-L["Minimap Icon Angle"] = "Angle de l'icône de la minicarte"
-L["Minimap Icon Radius"] = "Rayon de l'icône de la minicarte"
+L["General Options"] = "Options GÃ©nÃ©rales"
+L["Minimap Icon Angle"] = "Angle de l'icÃ´ne de la minicarte"
+L["Minimap Icon Radius"] = "Rayon de l'icÃ´ne de la minicarte"
 L["Transparency"] = "Transparence"
 
-L["BANK_AUTO_UPDATE_TEXT"] = "Autoriser automatiquement les mises à jour de la banque de guilde"
-L["BANK_AUTO_UPDATE_TITLE"] = "Mises à jour de la banque de guilde"
-L["BANK_AUTO_UPDATE_ENABLED"] = "Les membres de la guilde qui utilisent aussi Altoholic seront automatiquement capables de mettre à jour leurs informations de banque de guilde sur base des vôtres, si elles sont plus récentes."
+L["BANK_AUTO_UPDATE_TEXT"] = "Autoriser automatiquement les mises Ã  jour de la banque de guilde"
+L["BANK_AUTO_UPDATE_TITLE"] = "Mises Ã  jour de la banque de guilde"
+L["BANK_AUTO_UPDATE_ENABLED"] = "Les membres de la guilde qui utilisent aussi Altoholic seront automatiquement capables de mettre Ã  jour leurs informations de banque de guilde sur base des vÃ´tres, si elles sont plus rÃ©centes."
 L["BANK_AUTO_UPDATE_DISABLED"] = "Votre confirmation sera requise avant tout envoi d'information."
 
-L["CLAMP_TO_SCREEN_TEXT"] = "Restreindre la fenêtre à l'écran"
-L["CLAMP_TO_SCREEN_TITLE"] = "Restreindre la fenêtre à l'écran"
-L["CLAMP_TO_SCREEN_ENABLED"] = "La fenêtre d'Altoholic ne dépassera pas les limites de l'écran"
-L["CLAMP_TO_SCREEN_DISABLED"] = "La fenêtre d'Altoholic sera déplaçable partout, même partiellement hors-écran"
+L["CLAMP_TO_SCREEN_TEXT"] = "Restreindre la fenÃªtre Ã  l'Ã©cran"
+L["CLAMP_TO_SCREEN_TITLE"] = "Restreindre la fenÃªtre Ã  l'Ã©cran"
+L["CLAMP_TO_SCREEN_ENABLED"] = "La fenÃªtre d'Altoholic ne dÃ©passera pas les limites de l'Ã©cran"
+L["CLAMP_TO_SCREEN_DISABLED"] = "La fenÃªtre d'Altoholic sera dÃ©plaÃ§able partout, mÃªme partiellement hors-Ã©cran"
 
-L["SHOW_ICON_TEXT"] = "Afficher l'icône de la minicarte"
-L["SHOW_ICON_TITLE"] = "Afficher l'icône de la minicarte"
-L["SHOW_ICON_ENABLED"] = "L'icône d'Altoholic sera visible autour de la minicarte"
-L["SHOW_ICON_DISABLED"] = "L'icône d'Altoholic sera cachée"
+L["SHOW_ICON_TEXT"] = "Afficher l'icÃ´ne de la minicarte"
+L["SHOW_ICON_TITLE"] = "Afficher l'icÃ´ne de la minicarte"
+L["SHOW_ICON_ENABLED"] = "L'icÃ´ne d'Altoholic sera visible autour de la minicarte"
+L["SHOW_ICON_DISABLED"] = "L'icÃ´ne d'Altoholic sera cachÃ©e"
 
-L["Move to change the angle of the minimap icon"] = "Déplacer pour changer l'angle de l'icône de la minicarte"
-L["Move to change the radius of the minimap icon"] = "Déplacer pour changer le rayon de l'icône de la minicarte"
-L["UI_SCALE_TOOLTIP"] = "Déplacer pour changer l'échelle de l'interface"
-L["UI_TRANSPARENCY_TOOLTIP"] = "Déplacer pour rendre l'interface transparente"
+L["Move to change the angle of the minimap icon"] = "DÃ©placer pour changer l'angle de l'icÃ´ne de la minicarte"
+L["Move to change the radius of the minimap icon"] = "DÃ©placer pour changer le rayon de l'icÃ´ne de la minicarte"
+L["UI_SCALE_TOOLTIP"] = "DÃ©placer pour changer l'Ã©chelle de l'interface"
+L["UI_TRANSPARENCY_TOOLTIP"] = "DÃ©placer pour rendre l'interface transparente"
 
 
 -- ** Settings / Altoholic / Mail **
 L["Mail Options"] = "Options de Messagerie"
 
-L["AUTO_COMPLETE_PRIORITY"] = "Priorité de saisie automatique"
-L["AUTO_COMPLETE_BY_NAME"] = "Ordre alphabétique"
-L["AUTO_COMPLETE_BY_MOST_PLAYED"] = "Temps de jeu le plus élevé"
-L["AUTO_COMPLETE_BY_LAST_PLAYED"] = "Plus récemment joué"
+L["AUTO_COMPLETE_PRIORITY"] = "PrioritÃ© de saisie automatique"
+L["AUTO_COMPLETE_BY_NAME"] = "Ordre alphabÃ©tique"
+L["AUTO_COMPLETE_BY_MOST_PLAYED"] = "Temps de jeu le plus Ã©levÃ©"
+L["AUTO_COMPLETE_BY_LAST_PLAYED"] = "Plus rÃ©cemment jouÃ©"
 
 L["GUILD_WARNING_TEXT"] = "Notification de nouveau courrier"
 L["GUILD_WARNING_TITLE"] = "Notification de courrier de guilde"
-L["GUILD_WARNING_ENABLED"] = "Vous serez notifié lorsqu'un membre de la guilde envoie du courrier à l'un de vos rerolls.\n\nLe contenu du courrier sera directement visible sans avoir à reconnecter ce reroll."
-L["GUILD_WARNING_DISABLED"] = "Le courrier sera toujours déposé directement dans la boîte aux lettres de vos rerolls, mais vous ne serez pas notifié."
+L["GUILD_WARNING_ENABLED"] = "Vous serez notifiÃ© lorsqu'un membre de la guilde envoie du courrier Ã  l'un de vos rerolls.\n\nLe contenu du courrier sera directement visible sans avoir Ã  reconnecter ce reroll."
+L["GUILD_WARNING_DISABLED"] = "Le courrier sera toujours dÃ©posÃ© directement dans la boÃ®te aux lettres de vos rerolls, mais vous ne serez pas notifiÃ©."
 
 L["AUTO_COMPLETE_TEXT"] = "Saisie automatique du destinataire"
 L["AUTO_COMPLETE_TITLE"] = "Saisie automatique du destinataire"
-L["AUTO_COMPLETE_ENABLED"] = "Les noms de vos rerolls seront suggérés lors de la saisie du destinataire à la boîte aux lettres."
-L["AUTO_COMPLETE_DISABLED"] = "Les noms de vos rerolls ne seront pas suggérés."
+L["AUTO_COMPLETE_ENABLED"] = "Les noms de vos rerolls seront suggÃ©rÃ©s lors de la saisie du destinataire Ã  la boÃ®te aux lettres."
+L["AUTO_COMPLETE_DISABLED"] = "Les noms de vos rerolls ne seront pas suggÃ©rÃ©s."
 
-L["TIME_TO_NEXT_WARNING_TEXT"] = "Temps jusqu'à l'avertissement suivant"
-L["TIME_TO_NEXT_WARNING_TOOLTIP"] = "Délai minimum avant d'obtenir le prochain avertissement d'expiration de courrier."
+L["TIME_TO_NEXT_WARNING_TEXT"] = "Temps jusqu'Ã  l'avertissement suivant"
+L["TIME_TO_NEXT_WARNING_TOOLTIP"] = "DÃ©lai minimum avant d'obtenir le prochain avertissement d'expiration de courrier."
 
 
 -- ** Settings / Altoholic / Tooltip **
@@ -140,7 +140,7 @@ L["Tooltip Options"] = "Options Info-Bulle"
 
 -- E.g. 
 
-    -- |cFF00FF00Odysseüs|r     |cFFFF7F0084|r |cFFFFFFFF(Guild Bank: |cFF00FF9A84|r)|r]]
+    -- |cFF00FF00OdysseÃ¼s|r     |cFFFF7F0084|r |cFFFFFFFF(Guild Bank: |cFF00FF9A84|r)|r]]
 -- L["TT_SHOW_GUILDBANKCOUNT_DISABLED"] = "No information is displayed."
 
 -- L["TT_INCLUDE_GUILDBANKCOUNT_TEXT"] = "Include guild bank count in the total count"
@@ -154,7 +154,7 @@ L["Tooltip Options"] = "Options Info-Bulle"
 
 -- E.g.
 
-    -- |cFF00FF00Odysseüs|r     |cFFFF7F0084|r |cFFFFFFFF(Consumables: |cFF00FF9A84|r)|r]]
+    -- |cFF00FF00OdysseÃ¼s|r     |cFFFF7F0084|r |cFFFFFFFF(Consumables: |cFF00FF9A84|r)|r]]
 -- L["TT_DETAILED_BANKCOUNT_DISABLED"] = [[Display 'Guild Bank' instead of the tab name.]]
 
 -- L["TT_SHOW_GUILDBANKREALM_TEXT"] = "Show guild bank realm"
@@ -163,7 +163,7 @@ L["Tooltip Options"] = "Options Info-Bulle"
 
 -- E.g. 
 
-    -- |cFF00FF00Odysseüs|r |cFFFFFF00(Marécages de Zangar)|r    |cFFFF7F0084|r |cFFFFFFFF(Guild Bank: |cFF00FF9A84|r)|r]]
+    -- |cFF00FF00OdysseÃ¼s|r |cFFFFFF00(MarÃ©cages de Zangar)|r    |cFFFF7F0084|r |cFFFFFFFF(Guild Bank: |cFF00FF9A84|r)|r]]
 -- L["TT_SHOW_GUILDBANKREALM_DISABLED"] = "Display only the guild name"
 
 -- L["TT_SHOW_ITEMID_TEXT"] = "Show item ID and item level"
@@ -204,6 +204,13 @@ L["Tooltip Options"] = "Options Info-Bulle"
 -- L["TT_SHOW_MERGEDREALMS_ENABLED"] = "Display the amount of items owned by characters on realms connected to the current realm."
 -- L["TT_SHOW_MERGEDREALMS_DISABLED"] = "Only information about the current realm is displayed."
 
+-- L["TT_SHOW_ALLREALMS_TEXT"] = "Show counters for all realms"
+-- L["TT_SHOW_ALLREALMS_TITLE"] = "Show counters for all realms"
+-- L["TT_SHOW_ALLREALMS_ENABLED"] = "Information from all realms is also displayed for account bound items."
+-- L["TT_SHOW_ALLREALMS_DISABLED"] = [[Only information about the current realm is displayed.
+
+-- Note: this option supersedes |cFFFF7F00Show counters for connected realms|r for account bound items.]]
+
 -- L["TT_SHOW_ALLACCOUNTS_TEXT"] = "Show counters for all accounts"
 -- L["TT_SHOW_ALLACCOUNTS_TITLE"] = "Show counters for all accounts"
 -- L["TT_SHOW_ALLACCOUNTS_ENABLED"] = "Information from all imported accounts is also displayed."
@@ -220,127 +227,127 @@ L["Tooltip Options"] = "Options Info-Bulle"
 -- ** Settings / Altoholic / Calendar **
 L["Calendar Options"] = "Options du Calendrier"
 L["Week starts on Monday"] = "La semaine commence le lundi"
-L["Display warnings in a dialog box"] = "Afficher les avertissements dans une boîte de dialogue"
-L["Disable warnings"] = "Désactiver les avertissements"
+L["Display warnings in a dialog box"] = "Afficher les avertissements dans une boÃ®te de dialogue"
+L["Disable warnings"] = "DÃ©sactiver les avertissements"
 L["Profession Cooldowns"] = "Temps de recharge des professions"
-L["Dungeon Resets"] = "Réinitialisations des donjons"
-L["Calendar Events"] = "Evènements calendrier"
+L["Dungeon Resets"] = "RÃ©initialisations des donjons"
+L["Calendar Events"] = "EvÃ¨nements calendrier"
 -- L["Item Timers"] = true
 
 -- ** Settings / Altoholic / Miscellaneous **
 L["Miscellaneous Options"] = "Options Diverses"
-L["Use color-coding for recipes at the AH"] = "Colorer les recettes à l'hôtel des ventes"
+L["Use color-coding for recipes at the AH"] = "Colorer les recettes Ã  l'hÃ´tel des ventes"
 L["Use color-coding for recipes at vendors"] = "Colorer les recettes chez les vendeurs"
 
 
 -- ** Settings / DataStore / Auctions **
 L["DataStore_Auctions' Options"] = "Options DataStore_Auctions"
 
-L["LAST_VISIT_SLIDER_LABEL"] = "Avertissement de dernière visite"
-L["LAST_VISIT_SLIDER_TITLE"] = "Avertissement de dernière visite de l'hôtel des ventes"
-L["LAST_VISIT_SLIDER_TOOLTIP"] = "Avertir quand l'hôtel des ventes n'a pas été visité depuis plus de jours que cette valeur"
+L["LAST_VISIT_SLIDER_LABEL"] = "Avertissement de derniÃ¨re visite"
+L["LAST_VISIT_SLIDER_TITLE"] = "Avertissement de derniÃ¨re visite de l'hÃ´tel des ventes"
+L["LAST_VISIT_SLIDER_TOOLTIP"] = "Avertir quand l'hÃ´tel des ventes n'a pas Ã©tÃ© visitÃ© depuis plus de jours que cette valeur"
 
-L["LAST_VISIT_CHECK_LABEL"] = "Dernière visite de l'hôtel des ventes"
-L["LAST_VISIT_CHECK_TITLE"] = "Vérifier l'heure de la dernière visite"
-L["LAST_VISIT_CHECK_ENABLED"] = "L'heure de la dernière visite de l'hôtel des ventes de chaque personnage sera vérifiée. Les add-ons clients recevront une notification pour chaque personnage n'ayant pas visité l'hôtel des ventes depuis plus longtemps que cette valeur."
-L["LAST_VISIT_CHECK_DISABLED"] = "L'heure de la dernière visite de l'hôtel des ventes ne sera pas vérifiée."
+L["LAST_VISIT_CHECK_LABEL"] = "DerniÃ¨re visite de l'hÃ´tel des ventes"
+L["LAST_VISIT_CHECK_TITLE"] = "VÃ©rifier l'heure de la derniÃ¨re visite"
+L["LAST_VISIT_CHECK_ENABLED"] = "L'heure de la derniÃ¨re visite de l'hÃ´tel des ventes de chaque personnage sera vÃ©rifiÃ©e. Les add-ons clients recevront une notification pour chaque personnage n'ayant pas visitÃ© l'hÃ´tel des ventes depuis plus longtemps que cette valeur."
+L["LAST_VISIT_CHECK_DISABLED"] = "L'heure de la derniÃ¨re visite de l'hÃ´tel des ventes ne sera pas vÃ©rifiÃ©e."
 
-L["CLEAR_EXPIRED_ITEMS_LABEL"] = "Effacer automatiquement les enchères et les offres"
-L["CLEAR_EXPIRED_ITEMS_TITLE"] = "Effacer les objets de l'hôtel des ventes"
-L["CLEAR_EXPIRED_ITEMS_ENABLED"] = "Les objets expirés sont automatiquement effacés de la base de données."
-L["CLEAR_EXPIRED_ITEMS_DISABLED"] = "Les objets expirés restent dans la base de données jusqu'à la prochaine visite du joueur à l'hôtel des ventes."
+L["CLEAR_EXPIRED_ITEMS_LABEL"] = "Effacer automatiquement les enchÃ¨res et les offres"
+L["CLEAR_EXPIRED_ITEMS_TITLE"] = "Effacer les objets de l'hÃ´tel des ventes"
+L["CLEAR_EXPIRED_ITEMS_ENABLED"] = "Les objets expirÃ©s sont automatiquement effacÃ©s de la base de donnÃ©es."
+L["CLEAR_EXPIRED_ITEMS_DISABLED"] = "Les objets expirÃ©s restent dans la base de donnÃ©es jusqu'Ã  la prochaine visite du joueur Ã  l'hÃ´tel des ventes."
 
 -- ** Settings / DataStore / Characters **
 L["DataStore_Characters' Options"] = "Options DataStore_Characters"
-L["HIDE_PLAYTIME_TEXT"] = "Cacher le temps de jeu réel."
-L["HIDE_PLAYTIME_TITLE"] = "Cacher Le Temps De Jeu Réel"
-L["HIDE_PLAYTIME_ENABLED"] = "Un temps de jeu de zéro sera affiché."
-L["HIDE_PLAYTIME_DISABLED"] = "Votre temps de jeu réel sera affiché."
+L["HIDE_PLAYTIME_TEXT"] = "Cacher le temps de jeu rÃ©el."
+L["HIDE_PLAYTIME_TITLE"] = "Cacher Le Temps De Jeu RÃ©el"
+L["HIDE_PLAYTIME_ENABLED"] = "Un temps de jeu de zÃ©ro sera affichÃ©."
+L["HIDE_PLAYTIME_DISABLED"] = "Votre temps de jeu rÃ©el sera affichÃ©."
 
-L["REQUEST_PLAYTIME_TEXT"] = "Lire le temps de jeu à la connexion."
+L["REQUEST_PLAYTIME_TEXT"] = "Lire le temps de jeu Ã  la connexion."
 L["REQUEST_PLAYTIME_TITLE"] = "Lire le temps de jeu"
-L["REQUEST_PLAYTIME_ENABLED"] = "Le temps de jeu sera lu à chaque connexion."
-L["REQUEST_PLAYTIME_DISABLED"] = "Le temps de jeu ne sera pas lu à la connexion. La dernière valeur connue sera envoyée aux addons clients."
+L["REQUEST_PLAYTIME_ENABLED"] = "Le temps de jeu sera lu Ã  chaque connexion."
+L["REQUEST_PLAYTIME_DISABLED"] = "Le temps de jeu ne sera pas lu Ã  la connexion. La derniÃ¨re valeur connue sera envoyÃ©e aux addons clients."
 
 
 -- ** Settings / DataStore / Garrisons **
 L["DataStore_Garrisons' Options"] = "Options DataStore_Garrisons"
-L["REPORT_LEVEL_LABEL"] = "Signaler à %s%s"
+L["REPORT_LEVEL_LABEL"] = "Signaler Ã  %s%s"
 L["REPORT_LEVEL_TITLE"] = "Niveau limite de signalement"
-L["REPORT_LEVEL_TOOLTIP"] = "Signaler quand le niveau de ressources non collectées est supérieur à cette valeur"
+L["REPORT_LEVEL_TOOLTIP"] = "Signaler quand le niveau de ressources non collectÃ©es est supÃ©rieur Ã  cette valeur"
 
-L["REPORT_UNCOLLECTED_LABEL"] = "Signaler les ressources non collectées"
-L["REPORT_UNCOLLECTED_TITLE"] = "Signaler les ressources non collectées"
-L["REPORT_UNCOLLECTED_ENABLED"] = "Au logon, les personnages avec plus de 400 ressources non collectées seront signalés dans la fenêtre de chat."
-L["REPORT_UNCOLLECTED_DISABLED"] = "Rien ne sera signalé"
-L["UNCOLLECTED_RESOURCES_ALERT"] = "%s a %s ressources non collectées"
+L["REPORT_UNCOLLECTED_LABEL"] = "Signaler les ressources non collectÃ©es"
+L["REPORT_UNCOLLECTED_TITLE"] = "Signaler les ressources non collectÃ©es"
+L["REPORT_UNCOLLECTED_ENABLED"] = "Au logon, les personnages avec plus de 400 ressources non collectÃ©es seront signalÃ©s dans la fenÃªtre de chat."
+L["REPORT_UNCOLLECTED_DISABLED"] = "Rien ne sera signalÃ©"
+L["UNCOLLECTED_RESOURCES_ALERT"] = "%s a %s ressources non collectÃ©es"
 
 
 -- ** Settings / DataStore / Inventory **
 L["DataStore_Inventory's Options"] = "Options DataStore_Inventory"
-L["CLEAR_INVENTORY_TEXT"] = "Effacer automatiquement l'équipement des membres de la guilde"
-L["CLEAR_INVENTORY_TITLE"] = "Effacer l'équipement des membres de la guilde"
-L["CLEAR_INVENTORY_ENABLED"] = "Pour économiser la mémoire, les inventaires locaux des membres de la guilde sont effacés à chaque login."
-L["CLEAR_INVENTORY_DISABLED"] = "L'équipement des membres de la guilde reste dans la base de données, et est visible même s'ils sont hors-ligne."
+L["CLEAR_INVENTORY_TEXT"] = "Effacer automatiquement l'Ã©quipement des membres de la guilde"
+L["CLEAR_INVENTORY_TITLE"] = "Effacer l'Ã©quipement des membres de la guilde"
+L["CLEAR_INVENTORY_ENABLED"] = "Pour Ã©conomiser la mÃ©moire, les inventaires locaux des membres de la guilde sont effacÃ©s Ã  chaque login."
+L["CLEAR_INVENTORY_DISABLED"] = "L'Ã©quipement des membres de la guilde reste dans la base de donnÃ©es, et est visible mÃªme s'ils sont hors-ligne."
 
-L["BROADCAST_AIL_TEXT"] = "Envoyer le niveau d'objets moyen à la guilde au login."
+L["BROADCAST_AIL_TEXT"] = "Envoyer le niveau d'objets moyen Ã  la guilde au login."
 L["BROADCAST_AIL_TITLE"] = "Envoyer le niveau d'objets moyen"
-L["BROADCAST_AIL_ENABLED"] = "Le niveau d'objets moyen de vos rerolls sera envoyé sur le canal guilde au login."
-L["BROADCAST_AIL_DISABLED"] = "Rien ne sera envoyé."
+L["BROADCAST_AIL_ENABLED"] = "Le niveau d'objets moyen de vos rerolls sera envoyÃ© sur le canal guilde au login."
+L["BROADCAST_AIL_DISABLED"] = "Rien ne sera envoyÃ©."
 
-L["EQUIP_REQ_TEXT"] = "Etre informé quand quelqu'un inspecte l'équipement d'un de mes personnages."
-L["EQUIP_REQ_TITLE"] = "Avertissement de requête d'équipement."
+L["EQUIP_REQ_TEXT"] = "Etre informÃ© quand quelqu'un inspecte l'Ã©quipement d'un de mes personnages."
+L["EQUIP_REQ_TITLE"] = "Avertissement de requÃªte d'Ã©quipement."
 L["EQUIP_REQ_ENABLED"] = "Un message vous informera de quel membre de guilde inspecte quel reroll."
-L["EQUIP_REQ_DISABLED"] = "Rien ne sera affiché."
+L["EQUIP_REQ_DISABLED"] = "Rien ne sera affichÃ©."
 
 -- ** Settings / DataStore / Mails **
 L["DataStore_Mails' Options"] = "Options DataStore_Mails"
 
 L["SLIDER_EXPIRY_TITLE"] = "Mail Expiry Threshold"
-L["SLIDER_EXPIRY_TOOLTIP"] = "Avertir quand du courrier arrive à expiration dans moins de jours que cette valeur"
+L["SLIDER_EXPIRY_TOOLTIP"] = "Avertir quand du courrier arrive Ã  expiration dans moins de jours que cette valeur"
 
 L["EXPIRY_CHECK_LABEL"] = "Avertis. d'expiration du courrier"
-L["EXPIRY_CHECK_TITLE"] = "Vérifier les expirations de courrier"
-L["EXPIRY_CHECK_ENABLED"] = "Les expirations de courrier seront vérifiées 5 secondes après le login. Les add-ons client en seront informé si au moins un courrier expiré est trouvé."
-L["EXPIRY_CHECK_DISABLED"] = "Aucune vérification ne sera effectuée."
+L["EXPIRY_CHECK_TITLE"] = "VÃ©rifier les expirations de courrier"
+L["EXPIRY_CHECK_ENABLED"] = "Les expirations de courrier seront vÃ©rifiÃ©es 5 secondes aprÃ¨s le login. Les add-ons client en seront informÃ© si au moins un courrier expirÃ© est trouvÃ©."
+L["EXPIRY_CHECK_DISABLED"] = "Aucune vÃ©rification ne sera effectuÃ©e."
 
-L["REPORT_EXPIRED_MAILS_LABEL"] = "Avertis. d'expiration du courrier (fenêtre de chat)"
-L["REPORT_EXPIRED_MAILS_TITLE"] = "Avertis. d'expiration du courrier (fenêtre de chat)"
-L["REPORT_EXPIRED_MAILS_ENABLED"] = "Lors de la verification d'expiration du courrier, la liste des personnages ayant du courrier expire sera également affichée dans la fenêtre de chat."
-L["REPORT_EXPIRED_MAILS_DISABLED"] = "Rien ne sera affiché dans la fenêtre de chat."
+L["REPORT_EXPIRED_MAILS_LABEL"] = "Avertis. d'expiration du courrier (fenÃªtre de chat)"
+L["REPORT_EXPIRED_MAILS_TITLE"] = "Avertis. d'expiration du courrier (fenÃªtre de chat)"
+L["REPORT_EXPIRED_MAILS_ENABLED"] = "Lors de la verification d'expiration du courrier, la liste des personnages ayant du courrier expire sera Ã©galement affichÃ©e dans la fenÃªtre de chat."
+L["REPORT_EXPIRED_MAILS_DISABLED"] = "Rien ne sera affichÃ© dans la fenÃªtre de chat."
 
 L["SCAN_MAIL_BODY_LABEL"] = "Lire le courrier (le marque comme lu)"
 L["SCAN_MAIL_BODY_TITLE"] = "Lire le corps du courrier"
-L["SCAN_MAIL_BODY_ENABLED"] = "Le corps de chaque lettre sera lu durant le scan de la boîte aux lettres. Tous les courriers seront marqués comme lus."
-L["SCAN_MAIL_BODY_DISABLED"] = "Seules les pièces jointes seront lues. Les lettres garderont leur statut 'non-lu'."
+L["SCAN_MAIL_BODY_ENABLED"] = "Le corps de chaque lettre sera lu durant le scan de la boÃ®te aux lettres. Tous les courriers seront marquÃ©s comme lus."
+L["SCAN_MAIL_BODY_DISABLED"] = "Seules les piÃ¨ces jointes seront lues. Les lettres garderont leur statut 'non-lu'."
 
-L["EXPIRY_ALL_ACCOUNTS_LABEL"] = "Vérifier les expirations sur tous les comptes connus"
-L["EXPIRY_ALL_ACCOUNTS_TITLE"] = "Vérifier tous les comptes"
-L["EXPIRY_ALL_ACCOUNTS_ENABLED"] = "La routine de vérification recherchera les courriers expirés sur tous les comptes connus."
-L["EXPIRY_ALL_ACCOUNTS_DISABLED"] = "Seul le compte en cours d'utilisation sera pris en considération; les comptes importés seront ignorés."
+L["EXPIRY_ALL_ACCOUNTS_LABEL"] = "VÃ©rifier les expirations sur tous les comptes connus"
+L["EXPIRY_ALL_ACCOUNTS_TITLE"] = "VÃ©rifier tous les comptes"
+L["EXPIRY_ALL_ACCOUNTS_ENABLED"] = "La routine de vÃ©rification recherchera les courriers expirÃ©s sur tous les comptes connus."
+L["EXPIRY_ALL_ACCOUNTS_DISABLED"] = "Seul le compte en cours d'utilisation sera pris en considÃ©ration; les comptes importÃ©s seront ignorÃ©s."
 
-L["EXPIRY_ALL_REALMS_LABEL"] = "Vérifier les expirations sur tous les royaumes connus"
-L["EXPIRY_ALL_REALMS_TITLE"] = "Vérifier tous les royaumes"
-L["EXPIRY_ALL_REALMS_ENABLED"] = "La routine de vérification recherchera les courriers expirés sur tous les royaumes connus."
-L["EXPIRY_ALL_REALMS_DISABLED"] = "Seul le royaume en cours d'utilisation sera pris en considération; les autres royaumes seront ignorés."
+L["EXPIRY_ALL_REALMS_LABEL"] = "VÃ©rifier les expirations sur tous les royaumes connus"
+L["EXPIRY_ALL_REALMS_TITLE"] = "VÃ©rifier tous les royaumes"
+L["EXPIRY_ALL_REALMS_ENABLED"] = "La routine de vÃ©rification recherchera les courriers expirÃ©s sur tous les royaumes connus."
+L["EXPIRY_ALL_REALMS_DISABLED"] = "Seul le royaume en cours d'utilisation sera pris en considÃ©ration; les autres royaumes seront ignorÃ©s."
 
-L["EXPIRED_EMAILS_WARNING"] = "%s (%s) a du courrier expiré (ou proche de l'expiration)"
+L["EXPIRED_EMAILS_WARNING"] = "%s (%s) a du courrier expirÃ© (ou proche de l'expiration)"
 
 
 -- ** Settings / DataStore / Quests **
 L["DataStore_Quests' Options"] = "Options DataStore_Quests"
 
-L["TRACK_TURNINS_LABEL"] = "Suivre les validations de quêtes"
-L["TRACK_TURNINS_TITLE"] = "Suivre les validations de quêtes"
-L["TRACK_TURNINS_ENABLED"] = "Les validations de quêtes sont sauvées dans l'historique, afin d'assurer qu'il soit toujours valide."
-L["TRACK_TURNINS_DISABLED"] = "L'historique de quêtes restera dans son état actuel, soit vide ou obsolète."
+L["TRACK_TURNINS_LABEL"] = "Suivre les validations de quÃªtes"
+L["TRACK_TURNINS_TITLE"] = "Suivre les validations de quÃªtes"
+L["TRACK_TURNINS_ENABLED"] = "Les validations de quÃªtes sont sauvÃ©es dans l'historique, afin d'assurer qu'il soit toujours valide."
+L["TRACK_TURNINS_DISABLED"] = "L'historique de quÃªtes restera dans son Ã©tat actuel, soit vide ou obsolÃ¨te."
 
-L["AUTO_UPDATE_LABEL"] = "Mise à jour automatique de l'historique"
-L["AUTO_UPDATE_TITLE"] = "Mise à jour automatique de l'historique de quêtes"
-L["AUTO_UPDATE_ENABLED"] = "L'historique de quêtes d'un personnage sera rafraîchi à chaque connexion de ce personnage."
-L["AUTO_UPDATE_DISABLED"] = "L'historique de quêtes restera dans son état actuel, soit vide ou obsolète."
+L["AUTO_UPDATE_LABEL"] = "Mise Ã  jour automatique de l'historique"
+L["AUTO_UPDATE_TITLE"] = "Mise Ã  jour automatique de l'historique de quÃªtes"
+L["AUTO_UPDATE_ENABLED"] = "L'historique de quÃªtes d'un personnage sera rafraÃ®chi Ã  chaque connexion de ce personnage."
+L["AUTO_UPDATE_DISABLED"] = "L'historique de quÃªtes restera dans son Ã©tat actuel, soit vide ou obsolÃ¨te."
 
-L["DAILY_QUESTS_RESET_LABEL"] = "Réinitialiser les quêtes journalières à"
+L["DAILY_QUESTS_RESET_LABEL"] = "RÃ©initialiser les quÃªtes journaliÃ¨res Ã "
 
 
 -- ** Sharing / Authorizations **

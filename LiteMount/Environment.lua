@@ -37,6 +37,7 @@ function LM.Environment:Initialize()
     self:RegisterEvent("PLAYER_STARTED_MOVING")
     self:RegisterEvent("PLAYER_STOPPED_MOVING")
     self:RegisterEvent("UPDATE_SHAPESHIFT_FORM")
+    self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 end
 
 -- I hate OnUpdate handlers but there are just no good events for determining
@@ -148,6 +149,29 @@ function LM.Environment:ZONE_CHANGED_NEW_AREA()
     LM.Options:RecordInstance()
 end
 
+local herbSpellName = GetSpellInfo(2366)
+local mineSpellName = GetSpellInfo(2575)
+-- local mineSpellName2 = GetSpellInfo(195122)
+
+function LM.Environment:UNIT_SPELLCAST_SUCCEEDED(ev, unit, guid, spellID)
+    if unit == 'player' then
+        local spellName = GetSpellInfo(spellID)
+        if spellName == herbSpellName then
+            self.lastHerbTime = GetTime()
+        elseif spellName == mineSpellName then
+            self.lastMineTime = GetTime()
+        end
+    end
+end
+
+function LM.Environment:GetHerbTime()
+    return self.lastHerbTime or 0
+end
+
+function LM.Environment:GetMineTime()
+    return self.lastMineTime or 0
+end
+
 function LM.Environment:UPDATE_SHAPESHIFT_FORM()
     if GetShapeshiftFormID() == 3 and InCombatLockdown() then
         LM.Debug("Changed to travel form in combat.")
@@ -175,7 +199,9 @@ end
 
 function LM.Environment:IsOnMap(mapID)
     local currentMapID = C_Map.GetBestMapForUnit('player')
-    return self:MapIsMap(currentMapID, mapID)
+    if currentMapID then
+        return self:MapIsMap(currentMapID, mapID)
+    end
 end
 
 function LM.Environment:GetMapPath()
@@ -267,6 +293,7 @@ local InstanceFlyableOverride = {
     [2296] = false,         -- Castle Nathria
     [2363] = false,         -- Queen's Winter Conservatory
     [2364] = false,         -- The Maw (Starting Experience)
+    [2464] = false,         -- Battle of Ardenweald (9.1)
 }
 
 function LM.Environment:ForceFlyable(instanceID)
@@ -328,7 +355,7 @@ function LM.Environment:GetLocation()
 
     local info = { GetInstanceInfo() }
     return {
-        "map: " .. path[1],
+        "map: " .. ( path[1] or "" ),
         "mapPath: " .. table.concat(path, " -> "),
         "instance: " .. string.format("%s (%d)", info[1], info[8]),
         "zoneText: " .. GetZoneText(),

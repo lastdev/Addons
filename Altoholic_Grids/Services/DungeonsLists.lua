@@ -228,18 +228,74 @@ local dungeons = {
 		name = EXPANSION_NAME5,	-- "Warlords of Draenor"
 		{	-- [1] LFR Raids
 			name = format("%s - %s", RAIDS, RAID_LFR),
-			{ id = 849, achID = 8986, bosses = 3 },	--	Walled City
-			{ id = 850, achID = 8987, bosses = 3 },	--	Arcane Sanctum
-			{ id = 851, achID = 8988, bosses = 1 },	--	Imperator's Rise
-			{ id = 847, achID = 8989, bosses = 3 },	--	Slagworks
-			{ id = 846, achID = 8990, bosses = 3 },	--	The Black Forge
-			{ id = 848, achID = 8991, bosses = 3 },	--	Iron Assembly
-			{ id = 823, achID = 8992, bosses = 1 },	--	Blackhand's Crucible
-			{ id = 982, achID = 10023, bosses = 3 }, --  Hellbreach
-			{ id = 983, achID = 10024, bosses = 3 }, --  Halls of Blood
-			{ id = 984, achID = 10025, bosses = 3 }, --  Bastion of Shadows
-			{ id = 985, achID = 10026, bosses = 3 }, --  Destructor's Rise
-			{ id = 986, achID = 10027, bosses = 1 }, --  The Black Gate
+			{ id = 849, achID = 8986, bosses = 3 },	--	Highmaul 1 : Walled City
+			{ id = 850, achID = 8987, bosses = 3 },	--	Highmaul 2 : Arcane Sanctum
+			{ id = 851, achID = 8988, bosses = 1 },	--	Highmaul 3 : Imperator's Rise
+			{ id = 847, achID = 8989, bosses = 3 },	--	Blackrock Foundry 1 : Slagworks
+			{ id = 846, achID = 8990, bosses = 3 },	--	Blackrock Foundry 2 : The Black Forge
+			{ id = 848, achID = 8991, bosses = 3 },	--	Blackrock Foundry 3 : Iron Assembly
+			{ id = 823, achID = 8992, bosses = 1 },	--	Blackrock Foundry 4 : Blackhand's Crucible
+			{ id = 982, achID = 10023, bosses = 3 }, --  Hellfire Citadel 1 : Hellbreach
+			{ id = 983, achID = 10024, bosses = 3 }, --  Hellfire Citadel 2 : Halls of Blood
+			{ id = 984, achID = 10025, bosses = 3 }, --  Hellfire Citadel 3 : Bastion of Shadows
+			{ id = 985, achID = 10026, bosses = 3 }, --  Hellfire Citadel 4 : Destructor's Rise
+			{ id = 986, achID = 10027, bosses = 1 }, --  Hellfire Citadel 5 : The Black Gate
+		},
+	},
+	{	-- [7]
+		name = EXPANSION_NAME6,	-- "Legion"
+		{	-- [1] LFR Raids
+			name = format("%s - %s", RAIDS, RAID_LFR),
+			{ id = 1925, achID = 10829, bosses = 3 },	--	Nighthold 1 : Arcing Aqueducts
+			{ id = 1924, achID = 10837, bosses = 3 },	--	Nighthold 2 : Royal Athenaeum
+			{ id = 1923, achID = 10838, bosses = 3 },	--	Nighthold 3 : Nightspire
+			{ id = 1922, achID = 10839, bosses = 1 },	--	Nighthold 4 : Betrayer's Rise
+			{ id = 1920, achID = 11787, bosses = 3 },	--	Tomb of Sargeras 1 : The Gates of Hell
+			{ id = 1919, achID = 11788, bosses = 3 },	--	Tomb of Sargeras 2 : Wailing Halls
+			{ id = 1918, achID = 11789, bosses = 2 },	--	Tomb of Sargeras 3 : Chamber of the Avatar
+			{ id = 1917, achID = 11790, bosses = 1 },	--	Tomb of Sargeras 4 : Deceiver's Fall
+			{ id = 1916, achID = 11988, bosses = 3 },	--	Antorus, the Burning Throne 1 : Light's Breach
+			{ id = 1914, achID = 11990, bosses = 3 },	--	Antorus, the Burning Throne 2 : Hope's End
+			{ id = 1915, achID = 11989, bosses = 3 },	--	Antorus, the Burning Throne 3 : Forbidden Descent
+			{ id = 1913, achID = 11991, bosses = 2 },	--	Antorus, the Burning Throne 4 : Seat of the Pantheon
+		},
+	},
+	{	-- [8]
+		name = EXPANSION_NAME7,	-- "Battle for Azeroth"
+		{	-- [1] LFR Raids
+			name = format("%s - %s", RAIDS, RAID_LFR),
+			{ id = 1731, achID = 12521, bosses = 3 },	--	Uldir 1 : Halls of Containment
+			{ id = 1732, achID = 12522, bosses = 3 },	--	Uldir 2 : Crimson Descent
+			{ id = 1733, achID = 12523, bosses = 2 },	--	Uldir 3 : Heart of Corruption
+			{ id = 1945, achID = 13286, bosses = 3 },	--	Battle of Dazar'alor 1 : Siege of Dazar'alor (A)
+			{ id = 1946, achID = 13287, bosses = 3 },	--	Battle of Dazar'alor 2 : Empire's Fall (A)
+			{ id = 1947, achID = 13288, bosses = 3 },	--	Battle of Dazar'alor 3 : Might of the Alliance (A)
+			{ id = 1948, achID = 13289, bosses = 3 },	--	Battle of Dazar'alor 1 : Defense of Dazar'alor (H)
+			{ id = 1949, achID = 13290, bosses = 3 },	--	Battle of Dazar'alor 2 : Death's Bargain (H)
+			{ id = 1950, achID = 13291, bosses = 3 },	--	Battle of Dazar'alor 3 : Victory or Death (H)
+			
+			{ id = 1951, achID = 13414, bosses = 2 },	--	Crucible of Storms
+			{ id = 2009, achID = 13718, bosses = 3 },	--	The Eternal Palace 1 : The Grand Reception
+			{ id = 2010, achID = 13719, bosses = 3 },	--	The Eternal Palace 2 : Depths of the Devoted
+			{ id = 2011, achID = 13725, bosses = 2 },	--	The Eternal Palace 3 : The Circle of Stars
+			{ id = 2036, achID = 14193, bosses = 3 },	--	Ny'alotha, the Waking City 1 : Vision of Destiny
+			{ id = 2037, achID = 14194, bosses = 4 },	--	Ny'alotha, the Waking City 2 : Halls of Devotion
+			{ id = 2038, achID = 14195, bosses = 3 },	--	Ny'alotha, the Waking City 3 : Gift of Flesh
+			{ id = 2039, achID = 14196, bosses = 2 },	--	Ny'alotha, the Waking City 4 : The Waking Dream
+		},
+	},
+	{	-- [9]
+		name = EXPANSION_NAME8,	-- "Shadowlands"
+		{	-- [1] LFR Raids
+			name = format("%s - %s", RAIDS, RAID_LFR),
+			{ id = 2090, achID = 14715, bosses = 3 },	--	Castle Nathria 1 : The Leeching Vaults
+			{ id = 2091, achID = 14715, bosses = 3 },	--	Castle Nathria 2 : Reliquary of Opulence
+			{ id = 2092, achID = 14715, bosses = 3 },	--	Castle Nathria 3 : Blood from Stone
+			{ id = 2096, achID = 14715, bosses = 1 },	--	Castle Nathria 4 : An Audience with Arrogance
+			{ id = 2221, achID = 15122, bosses = 3 },	--	Sanctum of Domination 1 : The Jailer's Vanguard
+			{ id = 2222, achID = 15123, bosses = 3 },	--	Sanctum of Domination 2 : The Dark Bastille
+			{ id = 2223, achID = 15124, bosses = 3 },	--	Sanctum of Domination 3 : Shackles of Fate
+			{ id = 2224, achID = 15125, bosses = 1 },	--	Sanctum of Domination 4 : The Reckoning
 		},
 	},
 }

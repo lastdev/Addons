@@ -2800,6 +2800,8 @@ function ConRO:AbilityMovement(_Spell, _Condition)
 	end
 end
 
+noWarnSpells = {33917, 162794, 188499, 205448, 213771, 326446}
+
 function ConRO:GlowSpell(spellID)
 	local spellName = GetSpellInfo(spellID);
 	
@@ -2809,13 +2811,14 @@ function ConRO:GlowSpell(spellID)
 		end
 		self.SpellsGlowing[spellID] = 1;
 	else
-		if UnitAffectingCombat('player') and not (spellID == 162794 or spellID == 188499 or spellID == 205448) then
+--		if UnitAffectingCombat('player') then
+		if UnitAffectingCombat('player') and (nil == noWarnSpells[spellID]) then
 			if spellName ~= nil then
-				self:Print(self.Colors.Error .. 'Spell not found on action bars: ' .. ' ' .. spellName .. ' ' .. '(' .. spellID .. ')');
+				self:Print(self.Colors.Error .. 'Spell not found on action bars1: ' .. ' ' .. spellName .. ' ' .. '(' .. spellID .. ')');
 			else
 				local itemName = GetItemInfo(spellID);
 				if itemName ~= nil then
-					self:Print(self.Colors.Error .. 'Item not found on action bars: ' .. ' ' .. itemName .. ' ' .. '(' .. spellID .. ')');
+					self:Print(self.Colors.Error .. 'Item not found on action bars1: ' .. ' ' .. itemName .. ' ' .. '(' .. spellID .. ')');
 				end
 			end
 		end
@@ -2832,13 +2835,14 @@ function ConRO:GlowDef(spellID)
 		end
 		self.DefGlowing[spellID] = 1;
 	else
-		if UnitAffectingCombat('player') then
+--		if UnitAffectingCombat('player') then
+		if UnitAffectingCombat('player') and (nil == noWarnSpells[spellID]) then
 			if spellName ~= nil then
-				self:Print(self.Colors.Error .. 'Spell not found on action bars: ' .. ' ' .. spellName .. ' ' .. '(' .. spellID .. ')');
+				self:Print(self.Colors.Error .. 'Spell not found on action bars2: ' .. ' ' .. spellName .. ' ' .. '(' .. spellID .. ')');
 			else
 				local itemName = GetItemInfo(spellID);
 				if itemName ~= nil then
-					self:Print(self.Colors.Error .. 'Item not found on action bars: ' .. ' ' .. itemName .. ' ' .. '(' .. spellID .. ')');
+					self:Print(self.Colors.Error .. 'Item not found on action bars2: ' .. ' ' .. itemName .. ' ' .. '(' .. spellID .. ')');
 				end
 			end
 		end

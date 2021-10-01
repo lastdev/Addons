@@ -193,9 +193,21 @@
 					<KeyValue key="locDisabled" value="TT_SHOW_MERGEDREALMS_DISABLED" />
 				</KeyValues>
 			</CheckButton>
-			<CheckButton parentKey="ShowAllAccountsCount" inherits="AltoToggleableOptionTemplate">
+			<CheckButton parentKey="ShowAllRealmsCount" inherits="AltoToggleableOptionTemplate">
 				<Anchors> 
 					<Anchor point="TOPLEFT" relativeKey="$parent.ShowMergedRealmsCount" relativePoint="BOTTOMLEFT" x="0" y="-10" />
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="option" value="UI.Tooltip.ShowAllRealmsCount" />
+					<KeyValue key="locLabel" value="TT_SHOW_ALLREALMS_TEXT" />
+					<KeyValue key="locTitle" value="TT_SHOW_ALLREALMS_TITLE" />
+					<KeyValue key="locEnabled" value="TT_SHOW_ALLREALMS_ENABLED" />
+					<KeyValue key="locDisabled" value="TT_SHOW_ALLREALMS_DISABLED" />
+				</KeyValues>
+			</CheckButton>
+			<CheckButton parentKey="ShowAllAccountsCount" inherits="AltoToggleableOptionTemplate">
+				<Anchors> 
+					<Anchor point="TOPLEFT" relativeKey="$parent.ShowAllRealmsCount" relativePoint="BOTTOMLEFT" x="0" y="-10" />
 				</Anchors>
 				<KeyValues>
 					<KeyValue key="option" value="UI.Tooltip.ShowAllAccountsCount" />

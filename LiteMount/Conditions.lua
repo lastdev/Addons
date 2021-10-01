@@ -125,6 +125,15 @@ CONDITIONS["class"] = {
         end,
 }
 
+CONDITIONS["click"] = {
+    handler =
+        function (cond, env, v)
+            if v and env.clickArg == v then
+                return true
+            end
+        end
+}
+
 -- This can never work, but included for completeness.
 CONDITIONS["combat"] = {
     -- name = GARRISON_LANDING_STATUS_MISSION_COMBAT,
@@ -222,9 +231,11 @@ CONDITIONS["difficulty"] = {
 -- Persistent "deck of cards" draw randomness
 
 CONDITIONS["draw"] = {
+    args = true,
     handler =
         function (cond, env, x, y)
             x, y = tonumber(x), tonumber(y)
+            if not x or not y then return end
             if not cond.deck then
                 if y > 52 then
                     x, y = math.ceil(52 * x/y), 52
@@ -249,6 +260,7 @@ CONDITIONS["draw"] = {
 }
 
 CONDITIONS["elapsed"] = {
+    args = true,
     handler =
         function (cond, env, v)
             v = tonumber(v)
@@ -383,6 +395,39 @@ CONDITIONS["form"] = {
         end
 }
 
+CONDITIONS["gather"] = {
+    name = L.LM_GATHERED_RECENTLY,
+    tostring =
+        function (v)
+            if not v or v == "any" then
+                return CLUB_FINDER_ANY_FLAG
+            elseif v == "ore" then
+                return L.LM_ORE
+            elseif v == "herb" then
+                return L.LM_HERB
+            end
+        end,
+    menu = {
+        { val = "gather:any" },
+        { val = "gather:herb" },
+        { val = "gather:ore" },
+    },
+    args = true,
+    handler =
+        function (cond, env, what, n)
+            local sinceHerb = GetTime() - LM.Environment:GetHerbTime()
+            local sinceMine = GetTime() - LM.Environment:GetMineTime()
+            n = tonumber(n) or 30
+            if what == "herb" then
+                return sinceHerb < n
+            elseif what == "ore" then
+                return sinceMine < n
+            elseif what == nil or what == "any" then
+                return math.min(sinceHerb, sinceMine) < n
+            end
+        end
+}
+
 CONDITIONS["group"] = {
     name = L.LM_PARTY_OR_RAID_GROUP,
     handler =
@@ -469,6 +514,23 @@ CONDITIONS["keybind"] = {
         end
 }
 
+-- GetMaxLevelForLatestExpansion()
+CONDITIONS["level"] = {
+    name = string.format(UNIT_LEVEL_TEMPLATE, GetMaxLevelForLatestExpansion()),
+    args = true,
+    handler =
+        function (cond, env, l1, l2)
+            local level = UnitLevel('player')
+            if not l1 then
+                return level == GetMaxLevelForLatestExpansion()
+            elseif not l2 then
+                return level == tonumber(l1)
+            elseif l2 then
+                return level >= tonumber(l1) and level <= tonumber(l2)
+            end
+        end
+}
+
 CONDITIONS["location"] = {
 --  name = LOCATION_COLON:gsub(":", ""),
     tostring =
@@ -478,7 +540,7 @@ CONDITIONS["location"] = {
     handler =
         function (cond, env, v)
             local mapID = C_Map.GetBestMapForUnit('player')
-            if C_Map.GetMapInfo(mapID).name == v then
+            if mapID and C_Map.GetMapInfo(mapID).name == v then
                 return true
             end
             if GetInstanceInfo() == v then
@@ -565,15 +627,6 @@ CONDITIONS["mounted"] = {
         end
 }
 
-CONDITIONS["click"] = {
-    handler =
-        function (cond, env, v)
-            if v and env.clickArg == v then
-                return true
-            end
-        end
-}
-
 CONDITIONS["moving"] = {
     handler =
         function (cond, env)
@@ -586,6 +639,24 @@ CONDITIONS["name"] = {
         function (cond, env, v)
             if v then
                 return UnitName(env.unit or "player") == v
+            end
+        end
+}
+
+CONDITIONS["option"] = {
+    args = true,
+    handler =
+        function (cond, env, setting, ...)
+            if not setting then return end
+            setting = setting:lower()
+            if setting == "copytargetsmount" then
+                return LM.Options:GetCopyTargetsMount()
+            elseif setting == "instantonlymoving" then
+                return LM.Options:GetInstantOnlyMoving()
+            elseif setting == "debug" then
+                return LM.Options:GetDebug(v)
+            elseif setting == "uidebug" then
+                return LM.Options:GetUIDebug()
             end
         end
 }
@@ -1041,105 +1112,19 @@ do
     end
 end
 
---[[--------------------------------------------------------------------------]]--
-
-local function any(f, cond, env, ...)
-    local n = select('#', ...)
-    for i = 1, n do
-        local v = select(i, ...)
-        if f(cond, env, v) then return true end
-    end
-    return false
-end
-
+--[[------------------------------------------------------------------------]]--
 
 LM.Conditions = { }
 
-function LM.Conditions:IsTrue(condition, env, vars)
-    if vars then
-        condition = LM.Vars:StrSubVars(condition)
+local CheckConditionCache = {}
+
+function LM.Conditions:Check(conditions, env)
+    local line = "DUMMY " .. conditions
+    if not CheckConditionCache[line] then
+        local rule = LM.Rule:ParseLine(line)
+        CheckConditionCache[line] = rule.conditions
     end
-
-    local newunit = condition:match('^@(.+)')
-    if newunit then
-        env.unit = newunit
-        return true
-    end
-
-    local cond, valuestr = strsplit(':', condition)
-
-    -- Empty condition [] is true
-    if cond == "" then return true end
-
-    local values
-    if valuestr then
-        values = { strsplit('/', valuestr) }
-    else
-        values = { }
-    end
-
-    local c = CONDITIONS[cond]
-    if not c then
-        LM.WarningAndPrint(format(L.LM_ERR_BAD_CONDITION, cond))
-        return false
-    end
-
-    if c.args then
-        return c.handler(condition, env, unpack(values))
-    elseif #values == 0 then
-        return c.handler(condition, env)
-    else
-        return any(c.handler, condition, env, unpack(values))
-    end
-end
-
-function LM.Conditions:EvalNot(conditions, env, vars)
-    local v = self:Eval(conditions[1], env, vars)
-    return not v
-end
-
--- the ANDed sections carry the unit between them
-function LM.Conditions:EvalAnd(conditions, env, vars)
-    for _,e in ipairs(conditions) do
-        local v = self:Eval(e, env, vars)
-        if not v then return false end
-    end
-    return true
-end
-
--- Note: deliberately resets the unit on false
-function LM.Conditions:EvalOr(conditions, env, vars)
-    for _,e in ipairs(conditions) do
-        local v = self:Eval(e, env, vars)
-        if v then return v end
-        env.unit = nil
-    end
-    return false
-end
-
--- outer grouping is ORed together
-function LM.Conditions:Eval(conditions, env, vars)
-    if not conditions then return true end
-
-    if type(conditions) == 'table' then
-        if conditions.op == "NOT" then
-            return self:EvalNot(conditions, env, vars)
-        elseif conditions.op == "AND" then
-            return self:EvalAnd(conditions, env, vars)
-        else
-            return self:EvalOr(conditions, env, vars)
-        end
-    else
-        return self:IsTrue(conditions, env, vars)
-    end
-end
-
-function LM.Conditions:Check(checks, env)
-    local conditions = { op = "AND" }
-    for _, check in ipairs(checks) do
-        table.insert(conditions, { check })
-    end
-    return self:Eval(conditions, env or {})
+    return CheckConditionCache[line]:Eval(env or {})
 end
 
 function LM.Conditions:GetCondition(cond)
@@ -1210,26 +1195,4 @@ function LM.Conditions:ArgsToString(text)
         argText = table.concat(LM.tMap(values, c.tostring, values), " ")
     end
     return argText
-end
-
--- I regret not turning conditions into a proper parse tree about now
-
-local function SquareBracket(txt) return '[' .. txt .. ']' end
-
-local function ToLineRecursive(c)
-    if type(c) == 'table' then
-        if c.op == 'NOT' then return 'no' .. c[1] end
-        local children = LM.tMap(c, ToLineRecursive)
-        if c.op == 'AND' then
-            return SquareBracket(table.concat(children, ','))
-        elseif c.op == 'OR' then
-            return table.concat(LM.tMap(children, SquareBracket), '')
-        end
-    else
-        return c
-    end
-end
-
-function LM.Conditions:ToLine(conditions)
-    return ToLineRecursive(conditions)
 end

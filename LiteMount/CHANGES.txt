@@ -1,32 +1,21 @@
-tag 4f6ae5e05c06c74050045163f2b924239549ee0e 9.1.12
-Author:	Mike "Xodiv" Battersby <mib@post.com>
-Date:	Sat Aug 28 07:07:32 2021 +1000
+tag face63a8c7bc1adb3b7cfaaa61e8442bbae7bbd7 9.1.15
+Author:	Mike Battersby <mib@post.com>
+Date:	Tue Sep 28 09:26:46 2021 +1000
 
-LiteMount 9.1.12
+LiteMount 9.1.15
 
- - Fix error with no-family mounts in non-English locales
+- Remember again that the chauffeurs are slow
+- Add NONE to group filter menu for mounts with no groups
 
-commit 382755be771901140a0fb062402db47807f82047
-Author: Mike "Xodiv" Battersby <mib@post.com>
-Date:   Sat Aug 28 06:59:47 2021 +1000
+commit 7ab5a2b55e4cc900f328ee41abe7fed1f4dd43bd
+Author: Mike Battersby <mib@post.com>
+Date:   Mon Sep 27 11:54:09 2021 +1000
 
-    Fix error with no-family mounts in non-English locales
+    Fix some leftover WALK flag use
 
-commit cbf9077274e0a01de7214d728162dad2176b69ab
-Author: Mike "Xodiv" Battersby <mib@post.com>
-Date:   Sat Aug 28 06:59:47 2021 +1000
+commit 6f7ec846112cc16041f9235acb5a8dad0896fbf3
+Author: Mike Battersby <mib@post.com>
+Date:   Mon Sep 27 11:34:15 2021 +1000
 
-    Fix error with no-family mounts in non-English locales
-
-commit a6638b70222eb2e6dd906aabb433fe522f387028
-Author: Mike "Xodiv" Battersby <mib@post.com>
-Date:   Thu Aug 26 17:53:10 2021 +1000
-
-    Add LM.Rule:IsSimpleRule and LM.RuleBoolean:IsSimpleCondition
-
-commit 7c907de97ec2cc43a8db022a452c31795c04e5b3
-Author: Mike "Xodiv" Battersby <mib@post.com>
-Date:   Thu Aug 26 15:04:14 2021 +1000
-
-    Put the LM.Conditions:Check() cache back in from the old days
+    Add NONE selection to groups filter
 

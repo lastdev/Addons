@@ -1667,3 +1667,15 @@ Change Log:
 
 4.64.2
 * Added Generic spells
+
+4.64.3
+* Added Shadowlands spells (world)
+* Added SL spells for Mists of Tirna Scithe
+* Added SL spells for Theater of Pain
+* Added SL spells for Torghast
+* Added SL spells for Sanctum of Domination
+* Added BC spells for Magtheridon's Lair
+* Added BC spells for The Eye
+* Added BC spells for Serpentshrine Cavern
+
+

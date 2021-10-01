@@ -2,6 +2,7 @@
 ## Title: AddonFactory by |cFF69CCF0Thaoky|r
 ## Notes: AddonFactory is a collection of templates for rapid UI development.
 ## Author: Thaoky (EU-Marécages de Zangar)
+## Version: 9.1.005
 
 Libs\LibStub\LibStub.lua
 Libs\LibMVC-1.0\LibMVC-1.0.xml

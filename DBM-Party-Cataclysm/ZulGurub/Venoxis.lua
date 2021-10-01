@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "heroic,timewalker"
 
-mod:SetRevision("20210119194132")
+mod:SetRevision("20210922153837")
 mod:SetCreatureID(52155)
 mod:SetEncounterID(1178)
 mod:SetUsedIcons(7, 8)
@@ -55,6 +55,10 @@ function mod:OnCombatStart(delay)
 			"SPELL_MISSED 96685 96521"
 		)
 	end
+end
+
+function mod:OnCombatEnd()
+	self:UnregisterShortTermEvents()
 end
 
 function mod:SPELL_AURA_APPLIED(args)

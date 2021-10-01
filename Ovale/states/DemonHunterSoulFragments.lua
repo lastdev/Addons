@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/states/DemonHunterSoulFragments", 90107)
+local __exports = LibStub:NewLibrary("ovale/states/DemonHunterSoulFragments", 90108)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local __imports = {}
@@ -7,6 +7,8 @@ __imports.__enginestate = LibStub:GetLibrary("ovale/engine/state")
 __imports.States = __imports.__enginestate.States
 local aceEvent = __imports.aceEvent
 local pairs = pairs
+local max = math.max
+local min = math.min
 local GetTime = GetTime
 local States = __imports.States
 local generator = {
@@ -101,19 +103,14 @@ __exports.OvaleDemonHunterSoulFragmentsClass = __class(States, {
                         if aura and self.aura:isActiveAura(aura, atTime) then
                             local gained = aura.stacks - self.count
                             if gained > 0 then
-                                local pending = self.pending - gained
-                                self.pending = (pending > 0 and pending) or 0
+                                self.pending = max(self.pending - gained, 0)
                             end
-                            self.count = aura.stacks
-                            local count = self.count + self.pending
-                            self.current.count = (count < 5 and count) or 5
-                            self.pending = self.current.count - self.count
-                            self.tracer:debug(self.current.count .. " = " .. self.count .. " + " .. self.pending)
+                            self.count = min(aura.stacks, 5)
+                            self.updateCurrentSoulFragments()
                         end
                     elseif event == "Ovale_AuraRemoved" then
                         self.count = 0
-                        self.current.count = self.pending
-                        self.tracer:debug(self.current.count .. " = " .. self.count .. " + " .. self.pending)
+                        self.updateCurrentSoulFragments()
                     end
                 end
             end
@@ -123,29 +120,36 @@ __exports.OvaleDemonHunterSoulFragmentsClass = __class(States, {
             if cleu.sourceGUID == self.ovale.playerGUID then
                 local header = cleu.header
                 local spellId = header.spellId
-                if generator[spellId] then
-                    local fragments = generator[spellId]
-                    if fragments > 0 and self.hasMetamorphosis then
-                        fragments = fragments + 1
-                    end
+                local fragments = generator[spellId]
+                if fragments and fragments > 0 then
                     self.pending = self.pending + fragments
-                    local count = self.count + self.pending
-                    self.current.count = (count < 5 and count) or 5
-                    self.pending = self.current.count - self.count
-                    self.tracer:debug(self.current.count .. " = " .. self.count .. " + " .. self.pending)
+                    if self.hasMetamorphosis then
+                        self.pending = self.pending + 1
+                    end
+                    self.updateCurrentSoulFragments()
                 end
             end
         end
+        self.updateCurrentSoulFragments = function()
+            self.current.count = min(self.count + self.pending, 5)
+            self.pending = max(self.current.count - self.count, 0)
+            self.tracer:debug(self.current.count .. " = " .. self.count .. " + " .. self.pending)
+        end
         self.applySpellAfterCast = function(spellId, targetGUID, startCast, endCast, channel, spellcast)
             if self.hasSoulFragmentsHandlers then
+                if spender[spellId] then
+                    local fragments = spender[spellId]
+                    if fragments < 0 then
+                        local count = self.next.count + fragments
+                        self.next.count = max(count, 0)
+                    end
+                end
                 if generator[spellId] then
                     local fragments = generator[spellId]
-                    local count = self.next.count + fragments
-                    self.next.count = (count < 5 and count) or 5
-                elseif spender[spellId] then
-                    local fragments = spender[spellId]
-                    local count = self.next.count + fragments
-                    self.next.count = (count > 0 and count) or 0
+                    if fragments > 0 then
+                        local count = self.next.count + fragments
+                        self.next.count = min(count, 5)
+                    end
                 end
             end
         end

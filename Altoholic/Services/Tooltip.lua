@@ -70,12 +70,19 @@ local function WriteTotal(tooltip)
 	end
 end
 
-local function GetRealmsList()
+local function GetRealmsList(isAccountBound)
 	-- returns the list of realms to check, either only this realm, or merged realms too.
 	local realms = {}
-	table.insert(realms, DataStore.ThisRealm)
+	table.insert(realms, DataStore.ThisRealm)		-- always "this realm" first
 	
-	if Options.Get("UI.Tooltip.ShowMergedRealmsCount") then
+	if isAccountBound and Options.Get("UI.Tooltip.ShowAllRealmsCount") then
+		for realm, _ in pairs(DataStore:GetRealms()) do
+			if realm ~= DataStore.ThisRealm then
+				table.insert(realms, realm)
+			end
+		end
+	
+	elseif Options.Get("UI.Tooltip.ShowMergedRealmsCount") then
 		for _, connectedRealm in pairs(DataStore:GetRealmsConnectedWith(DataStore.ThisRealm)) do
 			table.insert(realms, connectedRealm)
 		end
@@ -128,10 +135,10 @@ local function GetCharacterItemCount(character, searchedID)
 	return charCount
 end
 
-local function GetAccountItemCount(account, searchedID)
+local function GetAccountItemCount(account, searchedID, isAccountBound)
 	local count = 0
 
-	for _, realm in pairs(GetRealmsList()) do
+	for _, realm in pairs(GetRealmsList(isAccountBound)) do
 		for _, character in pairs(DataStore:GetCharacters(realm, account)) do
 			if Options.Get("UI.Tooltip.ShowCrossFactionCount") then
 				count = count + GetCharacterItemCount(character, searchedID)
@@ -142,29 +149,54 @@ local function GetAccountItemCount(account, searchedID)
 			end
 		end
 	end
+	
 	return count
 end
 
-local function GetItemCount(searchedID)
+local function IsItemAccountBound(itemLink)
+	if not itemLink then return end
+	
+	local tooltip = AltoScanningTooltip
+	
+	tooltip:ClearLines()
+	tooltip:SetHyperlink(itemLink)
+	
+	-- ITEM_BIND_TO_BNETACCOUNT = "Binds to Blizzard account"
+	-- ITEM_BNETACCOUNTBOUND = "Blizzard Account Bound"
+	
+	local tooltipName = tooltip:GetName()
+	local numLines = tooltip:NumLines()
+	if numLines > 5 then numLines = 5 end
+	
+	for i = 1, numLines do		-- parse the first 5 lines maximum
+		local tooltipText = _G[format("%sTextLeft%d", tooltipName, i)]:GetText()
+		
+		if tooltipText == ITEM_BIND_TO_BNETACCOUNT or tooltipText == ITEM_BNETACCOUNTBOUND then
+			return true
+		end
+	end
+end
+
+local function GetItemCount(searchedID, itemLink)
 	-- Return the total amount of times an item is present on this realm, and prepares the counterLines table for later display by the tooltip
 	wipe(counterLines)
-
 	local count = 0
-	if Options.Get("UI.Tooltip.ShowAllAccountsCount") 
-		and not AccountSharing.IsSharingInProgress()
-	then
+
+	-- determine if the item is account bound
+	local isAccountBound = IsItemAccountBound(itemLink)
 	
+	if Options.Get("UI.Tooltip.ShowAllAccountsCount") and not AccountSharing.IsSharingInProgress() then
 		for account in pairs(DataStore:GetAccounts()) do
-			count = count + GetAccountItemCount(account, searchedID)
+			count = count + GetAccountItemCount(account, searchedID, isAccountBound)
 		end
 	else
-		count = GetAccountItemCount(DataStore.ThisAccount, searchedID)
+		count = GetAccountItemCount(DataStore.ThisAccount, searchedID, isAccountBound)
 	end
 	
 	local showCrossFaction = Options.Get("UI.Tooltip.ShowCrossFactionCount")
 	
 	if Options.Get("UI.Tooltip.ShowGuildBankCount") then
-		for _, realm in pairs(GetRealmsList()) do
+		for _, realm in pairs(GetRealmsList(isAccountBound)) do
 			for guildName, guildKey in pairs(DataStore:GetGuilds(realm)) do
 				local hideInTooltip = Options.Get(format("%s.HideInTooltip", guildKey)) or false
 				local bankFaction = DataStore:GetGuildBankFaction(guildKey)
@@ -278,15 +310,15 @@ local function GetRecipeOwnersText(professionName, link, recipeLevel)
 	
 	local lines = {}
 	if #know > 0 then
-		table.insert(lines, format("%s%s: %s%s\n", colors.teal, L["Already known by "], colors.white, table.concat(know, ", ")))
+		table.insert(lines, format("%s%s|r : %s%s\n", colors.teal, L["Already known by"], colors.white, table.concat(know, ", ")))
 	end
 	
 	if #couldLearn > 0 then
-		table.insert(lines, format("%s%s: %s%s\n", colors.yellow, L["Could be learned by "], colors.white, table.concat(couldLearn, ", ")))
+		table.insert(lines, format("%s%s|r : %s%s\n", colors.yellow, L["Could be learned by"], colors.white, table.concat(couldLearn, ", ")))
 	end
 	
 	if #willLearn > 0 then
-		table.insert(lines, format("%s%s: %s%s", colors.red, L["Will be learnable by "], colors.white, table.concat(willLearn, ", ")))
+		table.insert(lines, format("%s%s|r : %s%s", colors.red, L["Will be learnable by"], colors.white, table.concat(willLearn, ", ")))
 	end
 	
 	return table.concat(lines, "\n")
@@ -308,12 +340,12 @@ local function AddGlyphOwners(itemID, tooltip)
 	
 	if #know > 0 then
 		tooltip:AddLine(" ",1,1,1)
-		tooltip:AddLine(format("%s%s: %s%s", colors.teal, L["Already known by "], colors.white, table.concat(know, ", ")), 1, 1, 1, 1)
+		tooltip:AddLine(format("%s%s|r : %s%s", colors.teal, L["Already known by"], colors.white, table.concat(know, ", ")), 1, 1, 1, 1)
 	end
 	
 	if #couldLearn > 0 then
 		tooltip:AddLine(" ",1,1,1)
-		tooltip:AddLine(format("%s%s: %s%s", colors.yellow, L["Could be learned by "], colors.white, table.concat(couldLearn, ", ")), 1, 1, 1, 1)
+		tooltip:AddLine(format("%s%s|r : %s%s", colors.yellow, L["Could be learned by"], colors.white, table.concat(couldLearn, ", ")), 1, 1, 1, 1)
 	end
 end
 
@@ -383,7 +415,7 @@ local function ProcessTooltip(tooltip, link)
 		
 		-- .. then check player bags to see how many times he owns this item, and where
 		if Options.Get("UI.Tooltip.ShowItemCount") or Options.Get("UI.Tooltip.ShowTotalItemCount") then
-			cachedCount = GetItemCount(itemID) -- if one of the 2 options is active, do the count
+			cachedCount = GetItemCount(itemID, link) -- if one of the 2 options is active, do the count
 			cachedTotal = (cachedCount > 0) and format("%s%s: %s%s", colors.gold, L["Total owned"], colors.teal, cachedCount) or nil
 		end
 	end

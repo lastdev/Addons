@@ -1,7 +1,9 @@
 local mod	= DBM:NewMod(640, "DBM-Party-WotLK", 10, 285)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210614230033")
+mod.statTypes = "normal,heroic,timewalker"
+
+mod:SetRevision("20210922153837")
 mod:SetCreatureID(23954)--23980 is no longer used like it was in wrath. Kept just to keep first death from ending fight early
 mod:SetMainBossID(23954)
 mod:SetEncounterID(2025)

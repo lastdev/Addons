@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/ioc", 90107)
+local __exports = LibStub:NewLibrary("ovale/ioc", 90108)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local __imports = {}
@@ -257,7 +257,9 @@ __exports.IoC = __class(nil, {
         self.state:registerState(self.paperDoll)
         self.state:registerState(self.baseState)
         self.state:registerState(self.bloodtalons)
+        self.state:registerState(self.demonHunterDemonic)
         self.state:registerState(self.demonHunterSigils)
+        self.state:registerState(self.demonHunterSoulFragments)
         self.state:registerState(self.eclipse)
         self.state:registerState(self.enemies)
         self.state:registerState(self.future)

@@ -204,6 +204,13 @@ L["Move to change the radius of the minimap icon"] = "Mover para cambiar el angu
 -- L["TT_SHOW_MERGEDREALMS_ENABLED"] = "Display the amount of items owned by characters on realms connected to the current realm."
 -- L["TT_SHOW_MERGEDREALMS_DISABLED"] = "Only information about the current realm is displayed."
 
+-- L["TT_SHOW_ALLREALMS_TEXT"] = "Show counters for all realms"
+-- L["TT_SHOW_ALLREALMS_TITLE"] = "Show counters for all realms"
+-- L["TT_SHOW_ALLREALMS_ENABLED"] = "Information from all realms is also displayed for account bound items."
+-- L["TT_SHOW_ALLREALMS_DISABLED"] = [[Only information about the current realm is displayed.
+
+-- Note: this option supersedes |cFFFF7F00Show counters for connected realms|r for account bound items.]]
+
 -- L["TT_SHOW_ALLACCOUNTS_TEXT"] = "Show counters for all accounts"
 -- L["TT_SHOW_ALLACCOUNTS_TITLE"] = "Show counters for all accounts"
 -- L["TT_SHOW_ALLACCOUNTS_ENABLED"] = "Information from all imported accounts is also displayed."

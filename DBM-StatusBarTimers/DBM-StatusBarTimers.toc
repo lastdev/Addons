@@ -18,6 +18,8 @@
 ## SavedVariables: DBT_AllPersistentOptions
 ## LoadOnDemand: 0
 ## DefaultState: enabled
-## X-Website: http://www.deadlybossmods.com
+## Author: MysticalOS, QartemisT
+## Version: 8ed2049
+## X-Website: https://deadlybossmods.com
 
 DBT.lua

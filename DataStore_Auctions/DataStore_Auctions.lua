@@ -197,7 +197,7 @@ local function ScanAuctions()
 			
 		if info.itemLink and itemID and not saleStatus then
 			table.insert(character.Auctions, format("%s|%s|%s|%s|%s|%s|%s", 
-				AHZone, itemID, info.quantity, info.bidder or "", info.bidAmount or 0, info.buyoutAmount, info.timeLeftSeconds))
+				AHZone, itemID, info.quantity or 1, info.bidder or "", info.bidAmount or 0, info.buyoutAmount, info.timeLeftSeconds))
 		end
 	end
 	
@@ -219,7 +219,7 @@ local function ScanBids()
 	
 		-- review item.name ? item.quantity ?
 		table.insert(character.Bids, format("%s|%s|%s|%s|%s|%s|%s", 
-			AHZone, itemID, info.quantity, info.bidder or "", info.bidAmount or 0, info.buyoutAmount, info.timeLeftSeconds))	
+			AHZone, itemID, info.quantity or 1, info.bidder or "", info.bidAmount or 0, info.buyoutAmount, info.timeLeftSeconds))	
 	
 		-- local itemName, _, count, _, _, _, _, _, 
 			-- _, buyoutPrice, bidPrice, _, ownerName = C_AuctionHouse.GetReplicateItemInfo("bidder", i);

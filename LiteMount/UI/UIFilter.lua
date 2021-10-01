@@ -309,11 +309,17 @@ function LM.UIFilter.SetAllGroupFilters(v)
 end
 
 function LM.UIFilter.GetGroups()
-    return LM.Options:GetGroups()
+    local groups = LM.Options:GetGroupNames()
+    table.insert(groups, NONE)
+    return groups
 end
 
 function LM.UIFilter.GetGroupText(f)
-    return f
+    if f == NONE then
+        return f:upper()
+    else
+        return f
+    end
 end
 
 
@@ -448,13 +454,15 @@ function LM.UIFilter.IsFilteredMount(m)
         end
     end
 
-    -- If all are checked, include the mounts with no groups as well
-    if next(LM.UIFilter.filterList.group) then
+    -- Groups filter has a magic NONE for anything with no groups
+    local mountGroups = m:GetGroups()
+    if not next(mountGroups) then
+        if LM.UIFilter.filterList.group[NONE] then return true end
+    else
         local isFiltered = true
-        for g in pairs(m:GetGroups()) do
+        for g in pairs(mountGroups) do
             if not LM.UIFilter.filterList.group[g] then
                 isFiltered = false
-                break
             end
         end
         if isFiltered then return true end
@@ -464,7 +472,7 @@ function LM.UIFilter.IsFilteredMount(m)
     if next(LM.UIFilter.filterList.flag) then
         local isFiltered = true
         for f in pairs(m:GetFlags()) do
-            if LM.Options:IsPrimaryFlag(f) and not LM.UIFilter.filterList.flag[f] then
+            if LM.Options:IsFlag(f) and not LM.UIFilter.filterList.flag[f] then
                 isFiltered = false
                 break
             end

@@ -105,13 +105,13 @@ COMMANDS['mounts'] =
 COMMANDS['group'] =
     function (argstr, action, arg1, arg2)
         if action == "add" and arg1 then
-            LM.Options:CreateFlag(arg1)
+            LM.Options:CreateGroup(arg1)
         elseif action == "del" and arg1 then
-            LM.Options:DeleteFlag(arg1)
+            LM.Options:DeleteGroup(arg1)
         elseif action == "rename" and arg1 and arg2 then
-            LM.Options:RenameFlag(arg1, arg2)
+            LM.Options:RenameGroup(arg1, arg2)
         elseif action == "list" and arg1 == nil then
-            local groups = LM.Options:GetGroups()
+            local groups = LM.Options:GetGroupNames()
             LM.Print(table.concat(groups, ' '))
         end
     end

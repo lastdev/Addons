@@ -97,6 +97,7 @@ lib.Enum = {
 local TYPE_REAGENT = 1
 local TYPE_DUNGEON_LOOT = 2
 local TYPE_RAID_LOOT = 3
+local TYPE_PVP_LOOT = 4
 
 local reagentTypes = {
 	[1] = GetSpellInfo(2259),		-- Alchemy
@@ -146,6 +147,14 @@ function lib.SetReagent(expansion, professionID, level, goesInBag)
 		+ ((goesInBag or 0) * 2^15)						-- Bits 15-18 : bag type
 		+ ((level or 0) * 2^19)								-- Bits 19+ : level
 end
+
+function lib.SetPvPItem(expansion, season, classes)
+	return expansion											-- Bits 0-4 : expansion (classic = 0)
+		+ (TYPE_PVP_LOOT * 32)								-- Bits 5-9 : type
+		+ (season * 2^10)										-- Bits 10-14 : season
+		+ ((classes or 0) * 2^15)							-- Bits 15+ : classes (1 bit per class)
+end
+
 
 -- Returns the name of the profession that created the item
 function lib:GetItemSource(itemID)

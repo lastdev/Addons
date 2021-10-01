@@ -33,7 +33,7 @@ SendMailNameEditBox:SetScript("OnChar", function(self, ...)
 		local matches = {}
 		
 		for characterName, character in pairs(DataStore:GetCharacters()) do
-			if DataStore:GetCharacterFaction(character) == currentFaction then
+			if DataStore:GetCharacterFaction(character) == addon.ThisFaction then
 				if ( strfind(strupper(characterName), strupper(text), 1, 1) == 1 ) and characterName ~= DataStore.ThisChar then
 					-- We have a match starting with the user input ..
 	

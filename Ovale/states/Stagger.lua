@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/states/Stagger", 90107)
+local __exports = LibStub:NewLibrary("ovale/states/Stagger", 90108)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local __imports = {}
@@ -42,7 +42,7 @@ __exports.OvaleStaggerClass = __class(nil, {
                 self.module:UnregisterMessage("Ovale_SpecializationChanged")
                 self.module:UnregisterMessage("Ovale_AuraRemoved")
                 self.combatLogEvent.unregisterAllEvents(self)
-                self.emptyTickQueue()
+                self.staggerTicks:clear()
             end
         end
         self.onOvaleSpecializationChanged = function(event, newSpecialization, oldSpecialization)
@@ -54,7 +54,7 @@ __exports.OvaleStaggerClass = __class(nil, {
                 self.tracer:debug("Removing stagger event handlers.")
                 self.module:UnregisterMessage("Ovale_AuraRemoved")
                 self.combatLogEvent.unregisterAllEvents(self)
-                self.emptyTickQueue()
+                self.staggerTicks:clear()
             end
         end
         self.onOvaleAuraRemoved = function(event, atTime, guid, auraId, caster)
@@ -62,7 +62,7 @@ __exports.OvaleStaggerClass = __class(nil, {
                 local stagger = UnitStagger("player")
                 if stagger == 0 then
                     self.tracer:debug("Empty stagger pool; clearing ticks.")
-                    self.emptyTickQueue()
+                    self.staggerTicks:clear()
                 end
             end
         end
@@ -77,12 +77,6 @@ __exports.OvaleStaggerClass = __class(nil, {
                     self.staggerTicks:push(amount)
                 end
             end
-        end
-        self.emptyTickQueue = function()
-            local queue = self.staggerTicks
-            queue.first = 0
-            queue.last = 0
-            queue.length = 0
         end
         self.staggerRemaining = function(positionalParams, namedParams, atTime)
             local aura = self:getAnyStaggerAura(atTime)

@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(New)
 	for k, v in pairs(PartyPetFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: e465fe16508990efacd6c524381066a3b6519002 $")
+end, "$Revision: ca5399c8bf642c4acf2c0506bc6ebf1f3c4ba311 $")
 
 --local new, del, copy = XPerl_GetReusableTable, XPerl_FreeTable, XPerl_CopyTable
 
@@ -43,6 +43,7 @@ function XPerl_Party_Pet_OnLoadEvents(self)
 		"UNIT_AURA",
 		"UNIT_FLAGS",
 		IsClassic and "UNIT_HEALTH_FREQUENT" or "UNIT_HEALTH",
+		IsClassic and "UNIT_HEALTH",
 		"UNIT_MAXHEALTH",
 		"UNIT_PET",
 		"PLAYER_ENTERING_WORLD",

@@ -1,7 +1,9 @@
 local mod	= DBM:NewMod(1138, "DBM-Party-WoD", 3, 536)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142123")
+mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
+
+mod:SetRevision("20210922153837")
 mod:SetCreatureID(77803, 77816)
 mod:SetEncounterID(1715)
 mod:SetBossHPInfoToHighest()

@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
 
-mod:SetRevision((string.sub("20210614230033", 1, -5)):sub(12, -3))
+mod:SetRevision("20210903015120")
 mod:SetCreatureID(84550)
 mod:SetEncounterID(1752)--TODO: VERIFY, "Boss 4" isn't descriptive enough
 mod:SetReCombatTime(120, 3)--this boss can quickly re-enter combat if boss reset occurs.

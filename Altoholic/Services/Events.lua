@@ -2,9 +2,9 @@ local addonName = ...
 local addon = _G[addonName]
 local colors = addon.Colors
 
-addon:Service("AltoholicUI.EventsList", { "AltoholicUI.Options", "AltoholicUI.Formatter", function(Options, Formatter) 
+local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
-	local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
+addon:Service("AltoholicUI.EventsList", { "AltoholicUI.Options", "AltoholicUI.Formatter", function(Options, Formatter) 
 
 	local timeTable = {}				-- to pass as an argument to time()	see http://lua-users.org/wiki/OsLibraryTutorial for details
 	

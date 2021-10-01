@@ -320,7 +320,6 @@ LM.MOUNTFAMILY["Dragonhawk"] = {
     [ 96503] = true, -- Amani Dragonhawk
     [142478] = true, -- Armored Blue Dragonhawk
     [142266] = true, -- Armored Red Dragonhawk
-    [ 62048] = true, -- Black Dragonhawk Mount
     [ 61996] = true, -- Blue Dragonhawk
     [194464] = true, -- Eclipse Dragonhawk
     [ 62048] = true, -- Illidari Doomhawk
@@ -497,6 +496,7 @@ LM.MOUNTFAMILY["Gorm"] = {
 }
 
 LM.MOUNTFAMILY["Gravewing"] = {
+    [215545] = true, -- Mastercraft Gravewing
     [353866] = true, -- Obsidian Gravewing
     [353873] = true, -- Pale Gravewing
     [353872] = true, -- Sinfall Gravewing

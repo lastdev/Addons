@@ -15,6 +15,19 @@ How to support Altoholic's development :
 If you like the addon, consider supporting it, this has been the long term effort and commitment of a single person. #ArmyOfOne
 
 
+9.1.006b (20/09/2021)
+
+- Fixed a Lua error when mousing over items with a shorter tooltip.
+
+9.1.006 (19/09/2021)
+
+- Minor localization fixes.
+- Fixed an issue with the French localization files (thanks Diru !)
+- Account bound items from all realms are now visible in the tooltip.
+- Grids Tab : added the missing LFR raids into the dungeon finder tracker.
+- Options Tab : added an option to show counters for all realms for account bound items (default : true)
+- DataStore Auctions : fixes an occasional error when placing a bid.
+
 9.1.005 (05/09/2021)
 
 - Account Sharing: fixed a Lua error on the receiving end of the process.

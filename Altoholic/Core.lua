@@ -4,8 +4,8 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 
 local addon = _G[addonName]
 
-addon.Version = "v9.1.005"
-addon.VersionNum = 901005
+addon.Version = "v9.1.006b"
+addon.VersionNum = 901006
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local commPrefix = addonName
@@ -157,6 +157,7 @@ local AddonDB_Defaults = {
 			["UI.Tooltip.ShowGatheringNodesCount"] = true,		-- display counters when mousing over a gathering node (default:  on)
 			["UI.Tooltip.ShowCrossFactionCount"] = true,			-- display counters for both factions on a pve server
 			["UI.Tooltip.ShowMergedRealmsCount"] = true,			-- display counters for characters on connected realms
+			["UI.Tooltip.ShowAllRealmsCount"] = true,				-- display counters for all realms (for BoA items)
 			["UI.Tooltip.ShowAllAccountsCount"] = true,			-- display counters for all accounts on the same realm
 			["UI.Tooltip.ShowGuildBankCount"] = true,				-- display guild bank counters
 			["UI.Tooltip.ShowGuildBankRealm"] = false,			-- display the realm of the guild bank

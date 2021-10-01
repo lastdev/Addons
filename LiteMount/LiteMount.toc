@@ -1,6 +1,6 @@
 ## Interface: 90100
 ## Title: LiteMount
-## Version: 9.1.12
+## Version: 9.1.15
 ## Author: Xodiv-Nagrand
 ## Email: mib@post.com
 ## OptionalDependencies: LibDebug
@@ -38,7 +38,9 @@ SlashCommand.lua
 Conditions.lua
 Vars.lua
 Actions.lua
-Rules.lua
+RuleBoolean.lua
+Rule.lua
+RuleSet.lua
 ActionButton.lua
 Core.lua
 

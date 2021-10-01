@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/tools/TimeSpan", 90107)
+local __exports = LibStub:NewLibrary("ovale/tools/TimeSpan", 90108)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local select = select

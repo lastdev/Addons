@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/ui/Version", 90107)
+local __exports = LibStub:NewLibrary("ovale/ui/Version", 90108)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local __imports = {}
@@ -42,7 +42,7 @@ __exports.OvaleVersionClass = __class(nil, {
                 if ok then
                     self.tracer:debug(msgType, senderVersion, channel, sender)
                     if msgType == "V" then
-                        local msg = self.module:Serialize("VR", "90107")
+                        local msg = self.module:Serialize("VR", "90108")
                         self.module:SendCommMessage(messagePrefix, msg, channel)
                     elseif msgType == "VR" then
                         userVersions[sender] = senderVersion
@@ -79,7 +79,7 @@ __exports.OvaleVersionClass = __class(nil, {
                 name = l["show_version_number"],
                 type = "execute",
                 func = function()
-                    self.tracer:print("90107")
+                    self.tracer:print("90108")
                 end
             }
         }
@@ -91,7 +91,7 @@ __exports.OvaleVersionClass = __class(nil, {
     versionCheck = function(self)
         if  not timer then
             wipe(userVersions)
-            local message = self.module:Serialize("V", "90107")
+            local message = self.module:Serialize("V", "90108")
             local channel
             if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
                 channel = "INSTANCE_CHAT"
