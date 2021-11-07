@@ -1,8 +1,8 @@
-## Interface: 90100
+## Interface: 90105
 ## Title: RareTrackerMaw
 ## Notes: Track and coordinate rare spawn timers in The Maw.
 ## Author: Melroy
-## Version: 7.0.10
+## Version: 7.0.11
 ## Dependencies: RareTrackerCore
 
 Locales\enUS.lua

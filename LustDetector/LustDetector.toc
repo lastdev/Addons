@@ -1,4 +1,4 @@
-## Interface: 90100
+## Interface: 90105
 ## Title: LUSTDETECTOR
 ## Author: Reencoded By Vicksmile - Goldrinn realm
 ## Version: v2 Definitive version for SL

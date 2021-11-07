@@ -379,6 +379,7 @@ SI.defaultDB = {
     Progress4 = false, -- N'Zoth Assaults
     Progress5 = false, -- Lesser Visions of N'Zoth
     Progress6 = true, -- Torghast Weekly
+    Progress7 = true, -- Covenant Assaults
     Warfront1 = false, -- Arathi Highlands
     Warfront2 = false, -- Darkshores
     KeystoneReportTarget = "EXPORT",
@@ -2418,10 +2419,33 @@ hoverTooltip.ShowTorghastTooltip = function (cell, arg, ...)
   for i, data in ipairs(P.TrackedQuest[index].widgetID) do
     if t.Progress[index]['Available' .. i] then
       local nameInfo = C_UIWidgetManager.GetTextWithStateWidgetVisualizationInfo(data[1])
-      local nameText = strmatch(nameInfo.text, '|n|cffffffff(.+)|r')
+      local nameText = nameInfo and strmatch(nameInfo.text, '|n|cffffffff(.+)|r')
 
-      indicatortip:AddLine(nameText, t.Progress[index]['Level' .. i])
+      indicatortip:AddLine(nameText or '', t.Progress[index]['Level' .. i])
     end
+  end
+
+  finishIndicator()
+end
+
+hoverTooltip.ShowCovenantAssaultTooltip = function (cell, arg, ...)
+  -- Should be in Module Progress
+  local toon, index = unpack(arg)
+  local t = SI.db.Toons[toon]
+  if not t or not t.Progress or not t.Progress[index] then return end
+  if not t or not t.Quests then return end
+  openIndicator(2, "LEFT", "RIGHT")
+  indicatortip:AddHeader(ClassColorise(t.Class, toon), L["Covenant Assaults"])
+
+  local P = SI:GetModule("Progress")
+  for _, questID in ipairs(P.TrackedQuest[index].relatedQuest) do
+    indicatortip:AddLine(SI:QuestInfo(questID),
+      t.Quests[questID] and (REDFONT .. CRITERIA_COMPLETED .. FONTEND) or (
+        t.Progress[index][questID] and
+        (GREENFONT .. AVAILABLE .. FONTEND) or
+        (REDFONT .. ADDON_NOT_AVAILABLE .. FONTEND)
+      )
+    )
   end
 
   finishIndicator()
@@ -2455,7 +2479,7 @@ end
 function SI:OnInitialize()
   local versionString = GetAddOnMetadata("SavedInstances", "version")
   --[==[@debug@
-  if versionString == "9.1.3" then
+  if versionString == "9.1.4" then
     versionString = "Dev"
   end
   --@end-debug@]==]
@@ -4306,10 +4330,10 @@ function SI:ShowTooltip(anchorframe)
               earned = CurrencyColor(ci.amount,ci.totalMax)..totalmax
             end
             local str
-            if (ci.amount or 0) > 0 or (ci.earnedThisWeek or 0) > 0 then
+            if (ci.amount or 0) > 0 or (ci.earnedThisWeek or 0) > 0 or (ci.totalEarned or 0) > 0 then
               if (ci.weeklyMax or 0) > 0 then
                 str = earned.." ("..CurrencyColor(ci.earnedThisWeek,ci.weeklyMax)..weeklymax..")"
-              elseif (ci.amount or 0) > 0 then
+              elseif (ci.amount or 0) > 0 or (ci.totalEarned or 0) > 0 then
                 str = CurrencyColor(ci.amount,ci.totalMax)..totalmax
               end
               if SI.specialCurrency[idx] and SI.specialCurrency[idx].relatedItem then

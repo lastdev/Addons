@@ -468,6 +468,8 @@ L["WAITING_AT_MOST_X_LONGER"] = "Ожидание не более %ss дольш
 L["X_PRICE_HISTORY"] = "%s История цен"
 L["X_STACK_OF_X"] = "%s по %s"
 L["X_STACKS_OF_X"] = "%s по %s"
+--[[Translation missing --]]
+L["YOU_COLUMN"] = "You?"
 L["YOUR_HISTORY"] = "Ваша история"
 
 

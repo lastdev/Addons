@@ -469,6 +469,7 @@ L["WAITING_AT_MOST_X_LONGER"] = "最多等候 %ss 時間..."
 L["X_PRICE_HISTORY"] = "%s 價格紀錄"
 L["X_STACK_OF_X"] = "%s 組的 %s"
 L["X_STACKS_OF_X"] = "%s 組的 %s"
+L["YOU_COLUMN"] = "你？"
 L["YOUR_HISTORY"] = "你的歷史記錄"
 
 

@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(New)
 	for k, v in pairs(PartyPetFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: ca5399c8bf642c4acf2c0506bc6ebf1f3c4ba311 $")
+end, "$Revision: 0e5dac9771e21852086c9ae73250c5d5d507c244 $")
 
 --local new, del, copy = XPerl_GetReusableTable, XPerl_FreeTable, XPerl_CopyTable
 
@@ -191,19 +191,21 @@ function XPerl_Party_Pet_OnLoad(self)
 		}
 	end
 
-	--XPerl_SecureUnitButton_OnLoad(self, nil, nil, nil, XPerl_ShowGenericMenu)
-	--XPerl_SecureUnitButton_OnLoad(self.nameFrame, nil, nil, nil, XPerl_ShowGenericMenu)
+	--[[XPerl_SecureUnitButton_OnLoad(self, nil, nil, nil, XPerl_ShowGenericMenu)
+	XPerl_SecureUnitButton_OnLoad(self.nameFrame, nil, nil, nil, XPerl_ShowGenericMenu)--]]
 
 	self:SetAttribute("*type1", "target")
 	self:SetAttribute("type2", "togglemenu")
 	self.nameFrame:SetAttribute("*type1", "target")
 	self.nameFrame:SetAttribute("type2", "togglemenu")
 
-
-	self:SetAttribute("useparent-unit", true)
+	--[[self:SetAttribute("useparent-unit", true)
 	self:SetAttribute("unitsuffix", "pet")
 	self.nameFrame:SetAttribute("useparent-unit", true)
-	self.nameFrame:SetAttribute("unitsuffix", "pet")
+	self.nameFrame:SetAttribute("unitsuffix", "pet")--]]
+
+	self:SetAttribute("unit", self.partyid)
+	self.nameFrame:SetAttribute("unit", self.partyid)
 
 	XPerl_RegisterClickCastFrame(self.nameFrame)
 	XPerl_RegisterClickCastFrame(self)
@@ -303,7 +305,7 @@ local function XPerl_Party_Pet_UpdateHealth(self)
 		healthPct = 0 -- So just automatically set percent to 0 and avoid division of 0/0 all together in this situation.
 	elseif health > 0 and healthmax == 0 then -- We have current ho but max hp failed.
 		healthmax = health -- Make max hp at least equal to current health
-		healthPct = 100 -- And percent 100% cause a number divided by itself is 1, duh.
+		healthPct = 1 -- And percent 100% cause a number divided by itself is 1, duh.
 	else
 		healthPct = health / healthmax -- Everything is dandy, so just do it right way.
 	end

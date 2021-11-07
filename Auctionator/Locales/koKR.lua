@@ -4,8 +4,7 @@ AUCTIONATOR_LOCALES.koKR = function()
   L["ADD_FAVOURITE"] = "즐겨찾기 추가"
 L["ADD_ITEM"] = "아이템 추가"
 L["ADD_TERM_TO_LIST_DIALOG"] = "이름으로 목록 추가"
---[[Translation missing --]]
-L["ALREADY_PURCHASED_X"] = "Already purchased %s"
+L["ALREADY_PURCHASED_X"] = "%s 구매함"
 L["ALT_LEFT_CLICK"] = "클릭"
 L["ALT_RIGHT_CLICK"] = "우클릭"
 L["ANY_LOWER"] = "모두"
@@ -23,10 +22,8 @@ L["BIDDING_AUCTION_INFO"] = "%s를 %s에 입찰했습니다."
 L["BUG_REPORT"] = "오류를 보고하기"
 L["BUG_TOOLTIP_HEADER"] = "깃허브에 오류를 보고하기"
 L["BUG_TOOLTIP_TEXT"] = "옥셔네이터 사용 도중 오류가 발생하면 깃허브에 어떤 상황에 오류가 났는지 알려주시기 바랍니다. !BugGrabber와 Bugssack 애드온 또한 사용 가능합니다."
---[[Translation missing --]]
-L["BUY"] = "Buy"
---[[Translation missing --]]
-L["BUY_STACK"] = "Buy Stack"
+L["BUY"] = "구매"
+L["BUY_STACK"] = "묶음 구매"
 --[[Translation missing --]]
 L["BUYING"] = "Buying"
 --[[Translation missing --]]
@@ -308,15 +305,13 @@ L["PROFILE_TOGGLE_TOOLTIP_HEADER"] = "캐릭터 별 설정"
 L["PROFILE_TOGGLE_TOOLTIP_TEXT"] = "캐릭터 별 옥셔네이터 설정을 적용합니다."
 --[[Translation missing --]]
 L["PROFIT_COLON"] = "Profit:"
---[[Translation missing --]]
-L["PURCHASED_X_XX"] = "Purchased %s x%s"
+L["PURCHASED_X_XX"] = "%s x%s 구매함"
 L["QUANTITY"] = "수량"
 L["REAGENT_SEARCH"] = "재료 검색"
 L["REALM_HISTORY"] = "서버 내역"
 --[[Translation missing --]]
 L["RECENT_SEARCHES"] = "Recent Searches"
---[[Translation missing --]]
-L["REFRESH"] = "Refresh"
+L["REFRESH"] = "새로고침"
 L["REMOVE_FAVOURITE"] = "즐겨찾기 삭제"
 L["RENAME"] = "목록명 변경"
 --[[Translation missing --]]
@@ -603,6 +598,8 @@ L["X_PRICE_HISTORY"] = "%s Price History"
 L["X_STACK_OF_X"] = "%s stack of %s"
 --[[Translation missing --]]
 L["X_STACKS_OF_X"] = "%s stacks of %s"
+--[[Translation missing --]]
+L["YOU_COLUMN"] = "You?"
 L["YOUR_HISTORY"] = "올린 아이템 기록"
 
 

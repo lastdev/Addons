@@ -2,7 +2,7 @@
 -- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 00a3cadfbbc8615840794db77581992f54190a2b $")
+XPerl_SetModuleRevision("$Revision: 0e5dac9771e21852086c9ae73250c5d5d507c244 $")
 
 ZPerl_MainTanks = {}
 local MainTankCount, blizzMTanks, ctraTanks = 0, 0, 0
@@ -129,7 +129,7 @@ local function UpdateUnit(self,forcedUpdate)
 			percBar = 0 -- So just automatically set percent to 0 and avoid division of 0/0 all together in this situation.
 		elseif health > 0 and healthMax == 0 then -- We have current ho but max hp failed.
 			healthMax = health -- Make max hp at least equal to current health
-			percBar = 100 -- And percent 100% cause a number divided by itself is 1, duh.
+			percBar = 1 -- And percent 100% cause a number divided by itself is 1, duh.
 		else
 			percBar = health / healthMax--Everything is dandy, so just do it right way.
 		end

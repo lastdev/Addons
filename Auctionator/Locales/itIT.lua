@@ -128,12 +128,9 @@ L["CONFIG_SELLING_SHOW_BID_PRICE_TOOLTIP_HEADER"] = "Opzioni Offerta"
 L["CONFIG_SELLING_SHOW_BID_PRICE_TOOLTIP_TEXT"] = "Controlla se attivare o meno l'opzione per il prezzo d'asta per un'oggetto."
 L["CONFIG_SELLING_SKIP_SHORTCUT"] = "La scorciatoia per saltare l'asta dell'oggetto corrente è"
 L["CONFIG_SELLING_TBC_ALL_ITEMS"] = "Opzione per impostare la creazione predefinita delle aste per tutti gli oggetti."
---[[Translation missing --]]
-L["CONFIG_SELLING_TBC_SHOW_ALL_RESULTS"] = "Include auctions not needed to get the minimum price in results"
---[[Translation missing --]]
-L["CONFIG_SELLING_TBC_SHOW_ALL_RESULTS_TOOLTIP_HEADER"] = "Show All Results"
---[[Translation missing --]]
-L["CONFIG_SELLING_TBC_SHOW_ALL_RESULTS_TOOLTIP_TEXT"] = "Enabling this setting causes all pages of results to be searched and all the auctions found to be listed, even though only the first page is needed to determine the minimum price."
+L["CONFIG_SELLING_TBC_SHOW_ALL_RESULTS"] = "Include aste non necessarie per recuperare il prezzo minimo dei risultati"
+L["CONFIG_SELLING_TBC_SHOW_ALL_RESULTS_TOOLTIP_HEADER"] = "Mostra tutti i risultati"
+L["CONFIG_SELLING_TBC_SHOW_ALL_RESULTS_TOOLTIP_TEXT"] = "Abilitare questa impostazione forza la ricerca dei risultati in tutte le pagine per tutte le aste trovate, anche se è necessaria solamente la prima pagina per determinare il prezzo minimo."
 L["CONFIG_SELLING_TEXT"] = "Opzioni per modificare il comportamento della scheda Acquista."
 L["CONFIG_SHOPPING_CATEGORY"] = "Vendi"
 L["CONFIG_SHOPPING_LIST"] = "Impostazioni Lista Acquisti"
@@ -472,6 +469,8 @@ L["WAITING_AT_MOST_X_LONGER"] = "Aspetta al massimo %ss..."
 L["X_PRICE_HISTORY"] = "%S Storico Prezzo"
 L["X_STACK_OF_X"] = "%s pila di %s"
 L["X_STACKS_OF_X"] = "\"s pile di %s"
+--[[Translation missing --]]
+L["YOU_COLUMN"] = "You?"
 L["YOUR_HISTORY"] = "Storico Personale"
 
 

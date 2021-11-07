@@ -588,12 +588,12 @@ function HealBot_Text_DoSetHealthText(button, IgnoreInHeals, force)
     if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["HLTHTYPE"]==1 then
         if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["INCHEALS"]==2 then
             if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["INCABSORBS"]==2 then
-                vHealthTextTotal=button.health.current+button.health.incoming+button.health.absorbs
+                vHealthTextTotal=button.health.current+button.text.healin+button.text.absorbs
             else
-                vHealthTextTotal=button.health.current+button.health.incoming
+                vHealthTextTotal=button.health.current+button.text.healin
             end
         elseif Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["INCABSORBS"]==2 then
-            vHealthTextTotal=button.health.current+button.health.absorbs
+            vHealthTextTotal=button.health.current+button.text.absorbs
         else
             vHealthTextTotal=button.health.current
         end
@@ -606,12 +606,12 @@ function HealBot_Text_DoSetHealthText(button, IgnoreInHeals, force)
     elseif Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["HLTHTYPE"]==2 then
         if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["INCHEALS"]==2 then
             if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["INCABSORBS"]==2 then
-                vHealthTextTotal=(button.health.current+button.health.incoming+button.health.absorbs)-button.health.max
+                vHealthTextTotal=(button.health.current+button.text.healin+button.text.absorbs)-button.health.max
             else
-                vHealthTextTotal=(button.health.current+button.health.incoming)-button.health.max
+                vHealthTextTotal=(button.health.current+button.text.healin)-button.health.max
             end
         elseif Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["INCABSORBS"]==2 then
-            vHealthTextTotal=(button.health.current+button.health.absorbs)-button.health.max
+            vHealthTextTotal=(button.health.current+button.text.absorbs)-button.health.max
         else
             vHealthTextTotal=button.health.current-button.health.max
         end
@@ -629,12 +629,12 @@ function HealBot_Text_DoSetHealthText(button, IgnoreInHeals, force)
     else
         if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["INCHEALS"]==2 then
             if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["INCABSORBS"]==2 then
-                vHealthTextTotal=floor(((button.health.current+button.health.incoming+button.health.absorbs)/button.health.max)*100)
+                vHealthTextTotal=floor(((button.health.current+button.text.healin+button.text.absorbs)/button.health.max)*100)
             else
-                vHealthTextTotal=floor(((button.health.current+button.health.incoming)/button.health.max)*100)
+                vHealthTextTotal=floor(((button.health.current+button.text.healin)/button.health.max)*100)
             end
         elseif Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["INCABSORBS"]==2 then
-            vHealthTextTotal=floor(((button.health.current+button.health.absorbs)/button.health.max)*100)
+            vHealthTextTotal=floor(((button.health.current+button.text.absorbs)/button.health.max)*100)
         else
             vHealthTextTotal=floor((button.health.current/button.health.max)*100)
         end
@@ -753,10 +753,10 @@ function HealBot_Text_setSeparateInHealsAbsorbs()
         if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][x]["INCHEALS"]==3 or 
            Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][x]["INCABSORBS"]==3 then
             hbSeparateInHealsAbsorbs[x]=true
-            HealBot_setOptions_Timer(86)
+            HealBot_Timers_Set("SKINS","TextUpdateHealth")
         else
             if hbSeparateInHealsAbsorbs[x] then
-                HealBot_setOptions_Timer(88)
+                HealBot_Timers_Set("SKINS","ClearSeparateInHealsAbsorbs")
             end
             hbSeparateInHealsAbsorbs[x]=false
         end
@@ -764,7 +764,7 @@ function HealBot_Text_setSeparateInHealsAbsorbs()
             hbOverHeal[x]=true
         else
             if hbOverHeal[x] then
-                HealBot_setOptions_Timer(87)
+                HealBot_Timers_Set("SKINS","ClearOverHeals")
             end
             hbOverHeal[x]=false
         end
@@ -786,12 +786,12 @@ function HealBot_Text_setInHealAbsorbsText(button)
             else
                 if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["INCHEALS"]==3 then
                     if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["INCABSORBS"]==3 then
-                        sepHealTxt=button.health.incoming+button.health.absorbs
+                        sepHealTxt=button.text.healin+button.text.absorbs
                     else
-                        sepHealTxt=button.health.incoming
+                        sepHealTxt=button.text.healin
                     end
                 else
-                    sepHealTxt=button.health.absorbs
+                    sepHealTxt=button.text.absorbs
                 end
             end
             if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["HLTHTYPE"]==3 then
@@ -1196,6 +1196,7 @@ function HealBot_Text_UpdateNames()
     for _,xButton in pairs(HealBot_Extra_Button) do
         HealBot_Text_setNameText(xButton)
     end
+   -- HealBot_Timers_Set("PARTYSLOW","ResetUnitStatusSlow")
 end
 
 function HealBot_Text_UpdateHealth()
@@ -1223,6 +1224,7 @@ function HealBot_Text_UpdateHealth()
         xButton.text.health=""
         HealBot_Text_setHealthText(xButton)
     end
+   -- HealBot_Timers_Set("PARTYSLOW","ResetUnitStatusSlow")
 end
 
 function HealBot_Text_UpdateButton(button)

@@ -1,8 +1,8 @@
-## Interface: 90100
+## Interface: 90105
 ## Title: RareTrackerNazjatar
 ## Notes: Track and coordinate rare spawn timers in Nazjatar.
 ## Author: Melroy
-## Version: 7.1.4
+## Version: 7.1.5
 ## SavedVariables: RareTrackerNazjatarDB
 ## Dependencies: RareTrackerCore
 

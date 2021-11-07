@@ -12,7 +12,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player) then
 		XPerl_Player.conf = conf.player
 	end
-end, "$Revision: 5c662b54cdac4a0fffa4fbd38c040b6efc0f311e $")
+end, "$Revision: 0e5dac9771e21852086c9ae73250c5d5d507c244 $")
 
 local perc1F = "%.1f"..PERCENT_SYMBOL
 local percD = "%.0f"..PERCENT_SYMBOL
@@ -682,7 +682,7 @@ local function XPerl_Player_UpdateMana(self)
 	local percent
 	if playermana > 0 and playermanamax == 0 then -- We have current mana but max mana failed.
 		playermanamax = playermana -- Make max mana at least equal to current health
-		percent = 100 -- And percent 100% cause a number divided by itself is 1, duh.
+		percent = 1 -- And percent 100% cause a number divided by itself is 1, duh.
 	elseif playermana == 0 and playermanamax == 0 then -- Probably doesn't use mana or is oom?
 		percent = 0 -- So just automatically set percent to 0 and avoid division of 0/0 all together in this situation.
 	else

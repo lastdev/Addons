@@ -596,7 +596,6 @@ function GoGo_ChooseMount()
 	end --if
 	
 	-- The True Maw Walker is not in the speelbook. Using quest completion instead
-	-- if not GoGo_Variables.ZoneExclude.TheMaw or GoGo_InBook(GoGo_Variables.Localize.TheTrueMawWalker) then
 	if not (GoGo_Variables.ZoneExclude.TheMaw or C_QuestLog.IsQuestFlaggedCompleted(GoGo_Variables.Localize.TheTrueMawWalkerQuest) ) then
 	    -- cannot summon mounts in The Maw
 	    GoGo_Variables.FilteredMounts = GoGo_GetInstantMounts(GoGo_Variables.FilteredMounts) or {}

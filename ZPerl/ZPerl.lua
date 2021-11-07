@@ -8,8 +8,8 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: 78aca3ad18f4048c9499f83c85dbfb3f32db5ce0 $")
-XPerl_SetModuleRevision("$Revision: 78aca3ad18f4048c9499f83c85dbfb3f32db5ce0 $")
+end, "$Revision: b9ae7160131a6798535cfb57538ca3cb013bb4c9 $")
+XPerl_SetModuleRevision("$Revision: b9ae7160131a6798535cfb57538ca3cb013bb4c9 $")
 
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
@@ -349,7 +349,7 @@ local function DoRangeCheck(unit, opt)
 			percent = 0 -- So just automatically set percent to 0 and avoid division of 0/0 all together in this situation.
 		elseif hp > 0 and hpMax == 0 then -- We have current HP but max hp failed.
 			hpMax = hp -- Make max hp at least equal to current health
-			percent = 100 -- 100% if they are alive with > 0 cur hp, since curhp = maxhp in this hack.
+			percent = 1 -- 100% if they are alive with > 0 cur hp, since curhp = maxhp in this hack.
 		else
 			percent = hp / hpMax -- Everything is dandy, so just do it right way.
 		end
@@ -1066,13 +1066,13 @@ function XPerl_SetHealthBar(self, hp, Max)
 	local percent
 	if hp >= 1 and Max == 0 then -- For some dumb reason max HP is 0, normal HP is not, so lets use normal HP as max
 		Max = hp
-		percent = 100
+		percent = 1
 	elseif hp == 0 and Max == 0 then -- Both are 0, so it's probably dead since usually current HP returns correctly when Max HP fails.
 		percent = 0
 	else
 		percent = hp / Max
 	end
-	if percent > 100 then percent = 100 end -- percent only goes to 100
+	if percent > 1 then percent = 1 end -- percent only goes to 100
 	if (conf.bar.inverse) then
 		bar:SetValue(Max - hp)
 		bar.tex:SetTexCoord(0, max(0,(1 - percent)), 0, 1)
@@ -1119,9 +1119,9 @@ function XPerl_SetHealthBar(self, hp, Max)
 		else
 			local show = percent * 100
 			if (show < 10) then
-				bar.percent:SetFormattedText(perc1F or "%.1f%%", show + 0.05)
+				bar.percent:SetFormattedText(perc1F or "%.1f%%", percent == 1 and 100 or show + 0.05)
 			else
-				bar.percent:SetFormattedText(percD or "%d%%", show + 0.5)
+				bar.percent:SetFormattedText(percD or "%d%%", percent == 1 and 100 or show + 0.5)
 			end
 		end
 	end

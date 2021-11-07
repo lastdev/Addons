@@ -474,6 +474,16 @@ local achievements = {
 		[174726] = 50016, -- A Naughty Story
 	},
 	[14802] = {}, -- Bloodsport (Maldraxxus)
+	[15037] = { -- This Army
+		completed = CRITERIA_COMPLETED,
+		[177771] = 52044, -- Cutter Fin
+		[177769] = 52045, -- Kearnen the Blade
+		[177764] = 52046, -- Winslow Swan
+		[177767] = 52047, -- Boil Master Yetch
+		[158300] = 52048, -- Flytrap
+	},
+	[15042] = {}, -- Tea for the Troubled
+	[15044] = {}, -- Krrprripripkraak's Heroes
 	[15107] = { -- Conquering Korthia
 		[179755] = 52285, -- Consumption (has multiple ids)
 		[179768] = 52285, -- Consumption (has multiple ids)
@@ -608,7 +618,7 @@ function ns:UpdateTooltipWithCompletion(tooltip, id)
 
 	local achievement, name, completed = ns:AchievementMobStatus(id)
 	if achievement then
-		tooltip:AddDoubleLine(name, completed and ACTION_PARTY_KILL or NEED,
+		tooltip:AddDoubleLine(name, completed and (achievements[achievement].completed or ACTION_PARTY_KILL) or NEED,
 			1, 1, 0,
 			completed and 0 or 1, completed and 1 or 0, 0
 		)

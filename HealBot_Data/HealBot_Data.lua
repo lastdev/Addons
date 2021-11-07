@@ -4169,3 +4169,4 @@ HealBot_Extra_Button={};
 HealBot_Pet_Button={};
 HealBot_Vehicle_Button={};
 HealBot_Emerg_Button={};
+HealBot_Buttons={};

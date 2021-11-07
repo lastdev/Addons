@@ -87,7 +87,7 @@ function HealBot_Aggro_UpdateUnit(button,status,threatStatus,threatPct,extra,thr
         mobName=""
     end
     if (button.aggro.status==3 or threatStatus==3) and button.aggro.status~=threatStatus then
-        button.status.refresh=true
+        HealBot_RefreshUnit(button)
     end
     button.aggro.status=threatStatus
     if Healbot_Config_Skins.BarAggro[Healbot_Config_Skins.Current_Skin][button.frame]["SHOW"] and 
@@ -105,7 +105,7 @@ function HealBot_Aggro_UpdateUnit(button,status,threatStatus,threatPct,extra,thr
             HealBot_Text_setAggroText(button)
         end
         if HealBot_Aggro_luVars["pluginThreat"] and button.status.plugin then HealBot_Plugin_Threat_UnitUpdate(button) end
-        if HealBot_Data["TIPBUTTON"] and HealBot_Data["TIPBUTTON"]==button then HealBot_Action_RefreshTooltip() end
+        if button.mouseover and HealBot_Data["TIPBUTTON"] then HealBot_Action_RefreshTooltip() end
         if threatPct<1 then
             HealBot_Aux_ClearThreatBar(button)
         else

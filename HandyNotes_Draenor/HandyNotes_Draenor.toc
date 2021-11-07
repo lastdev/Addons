@@ -1,6 +1,6 @@
-## Interface: 90100
+## Interface: 90150
 ## Title: HandyNotes: Draenor
-## Version: 2.2
+## Version: 2.3
 ## Notes: Find Draenor Rares and Treasures easily
 ## Author: Lorade
 ## RequiredDeps: HandyNotes

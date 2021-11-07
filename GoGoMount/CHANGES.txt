@@ -1,16 +1,18 @@
-tag 42c83f80d0d6a3636193929949fc28711992f74f 2.9.2
+tag 98d8135001e05524366e1d4e9b05b676718d1ac0 3.0.0
 Author:	ghudavj <72996267+ghudavj@users.noreply.github.com>
-Date:	Sat Aug 28 07:37:13 2021 +0200
+Date:	Wed Nov 3 15:34:41 2021 +0100
 
-commit 8794093505eaa488a634fe040a4d112b55028d07
+commit db17be309041d10e8bbb7936cd3f6a3349408907
 Author: ghudavj <72996267+ghudavj@users.noreply.github.com>
-Date:   Sat Aug 28 07:36:51 2021 +0200
+Date:   Wed Nov 3 15:34:14 2021 +0100
 
-    2.9.2
+    version 3.0.0 (for WoW 9.1.5)
 
-commit 4c7b0f4a656f95476fe37cac1038535c0917ecab
+commit 207da587a2f698c9dee6a95834dbf75778a71b0e
 Author: ghudavj <72996267+ghudavj@users.noreply.github.com>
-Date:   Sat Aug 28 07:34:58 2021 +0200
+Date:   Fri Oct 8 09:36:45 2021 +0200
 
-    Flying in Elysean Hold
+    Fixed issue in the Maw
+    
+    Fixed issue in the Maw during the campaign (quest The Hunt for the Baron and following ones)
 

@@ -556,6 +556,8 @@ L["X_PRICE_HISTORY"] = "%s Price History"
 L["X_STACK_OF_X"] = "%s stack of %s"
 --[[Translation missing --]]
 L["X_STACKS_OF_X"] = "%s stacks of %s"
+--[[Translation missing --]]
+L["YOU_COLUMN"] = "You?"
 L["YOUR_HISTORY"] = "Tu historial"
 
 

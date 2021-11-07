@@ -7538,10 +7538,7 @@
                   </Frame>
                 </Frames>
               </Frame>
-              
-              
-              
-              
+
               <Frame name="HealBot_Options_FramesSkinsFrame" hidden="true" inherits="BackdropTemplate">
                 <Size>
                   <AbsDimension y="540"/>
@@ -7794,7 +7791,7 @@
                     <Anchors>
                       <Anchor point="TOPLEFT" relativeTo="HealBot_Options_AutoShow" relativePoint="TOPLEFT">
                         <Offset>
-                          <AbsDimension x="47" y="-95" />
+                          <AbsDimension x="47" y="-75" />
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -7806,12 +7803,12 @@
                   </Slider>
                   <Slider name="HealBot_FrameStickyOffsetHorizontal" inherits="HealBot_Options_SliderTemplate">
                     <Size>
-                      <AbsDimension x="210" y="16" />
+                      <AbsDimension x="450" y="16" />
                     </Size>
                     <Anchors>
-                      <Anchor point="TOPLEFT" relativeTo="HealBot_FrameScale" relativePoint="TOPLEFT">
+                      <Anchor point="TOP" relativeTo="HealBot_FrameScale" relativePoint="TOP">
                         <Offset>
-                          <AbsDimension x="0" y="-70" />
+                          <AbsDimension x="0" y="-55" />
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -7823,12 +7820,12 @@
                   </Slider>
                   <Slider name="HealBot_FrameStickyOffsetVertical" inherits="HealBot_Options_SliderTemplate">
                     <Size>
-                      <AbsDimension x="210" y="16" />
+                      <AbsDimension x="450" y="16" />
                     </Size>
                     <Anchors>
-                      <Anchor point="TOPRIGHT" relativeTo="HealBot_FrameScale" relativePoint="TOPRIGHT">
+                      <Anchor point="TOP" relativeTo="HealBot_FrameStickyOffsetHorizontal" relativePoint="TOP">
                         <Offset>
-                          <AbsDimension x="0" y="-70" />
+                          <AbsDimension x="0" y="-55" />
                         </Offset>
                       </Anchor>
                     </Anchors>

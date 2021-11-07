@@ -92,17 +92,36 @@ if not lib.new then
 end
 
 -- Make the frame match the tooltip
+
 local function InitializeFrame(frame)
-	local backdrop = GameTooltip:GetBackdrop()
+	local backdrop = NineSliceUtil.GetLayout("TooltipDefaultLayout")
+		--
+	--frame:SetBackdrop(backdrop)
+	frame:SetBackdrop({
+		bgFile = [[Interface\Buttons\UI-SliderBar-Background]],
+		edgeFile = [[Interface\DialogFrame\UI-DialogBox-Border]],
+	tile     = true,
+	tileSize = 32,
+	edgeSize = 32,
+	insets   = { left = 12, right = 12, top = 12, bottom = 12 }	})
+	
+--	if backdrop then
+--		frame:SetBackdropColor(1, 1, 1, 0.8)
+--		frame:SetBackdropBorderColor(0.1,0.1,0.1,0.5)
+--	end
+frame:SetBackdropColor(0, 0, 0, 1)
+frame:EnableMouse(true)
+frame:EnableMouseWheel(true)
 
-	frame:SetBackdrop(backdrop)
-
-	if backdrop then
-		frame:SetBackdropColor(GameTooltip:GetBackdropColor())
-		frame:SetBackdropBorderColor(GameTooltip:GetBackdropBorderColor())
-	end
-	frame:SetScale(GameTooltip:GetScale())
+-- Make movable/resizable
+frame:SetMovable(true)
+--frame:SetResizable(enable)
+--frame:SetMinResize(100, 100)
+frame:RegisterForDrag("LeftButton")
+frame:SetScript("OnDragStart", frame.StartMoving)
+frame:SetScript("OnDragStop", frame.StopMovingOrSizing)
 end
+
 
 local editBoxCount = 1
 local function AcquireInput()

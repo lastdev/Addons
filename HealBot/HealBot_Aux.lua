@@ -246,7 +246,7 @@ function HealBot_Aux_resetAllBars()
             end
         end
     end
-    HealBot_fastUpdateEveryFrame(1)
+    HealBot_fastUpdateEveryFrame()
       --HealBot_setCall("HealBot_resetAllAuxBar")
 end
 
@@ -902,7 +902,7 @@ end
 function HealBot_Aux_setOORAssigned(frame, id)
     hbAuxOORAssigned[frame][id]=true
     HealBot_setAuxAssigns("OORBar", frame, true)
-    HealBot_setOptions_Timer(9400)
+    HealBot_Timers_Set("PARTYSLOW","ResetRange")
 end
 
 function HealBot_Aux_UpdateOORBar(button)
