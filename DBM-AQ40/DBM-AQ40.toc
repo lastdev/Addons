@@ -1,4 +1,4 @@
-## Interface: 90100
+## Interface: 90105
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Temple of Ahn'Qiraj|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Tempel von Ahn'Qiraj|r
@@ -18,9 +18,7 @@
 ## X-DBM-Mod-Sort: 1102
 ## X-DBM-Mod-MinCoreRevision: 20200524142133
 ## X-DBM-Mod-MinExpansion: 0
-## X-Curse-Project-ID: 16442
-## X-WoWI-ID: 11700
-## Version: r681
+
 localization.en.lua
 localization.de.lua
 localization.es.lua

@@ -130,10 +130,10 @@ local EVENTS_AUTOMARKER = {
 };
 
 local DEFAULT_COLORS = {
-    Active    = { 0.4, 0.52, 0.95, 1 },
-    Received  = { 0.9,    1,  0.1, 1 },
-    Solution  = { 0.2,  0.8,  0.4, 1 },
-    Predicted = {   1,  0.9, 0.71, 1 },
+    Active    = {  0.4, 0.52, 0.95, 1 },
+    Received  = { 0.63, 0.55,    1, 1 },
+    Solution  = {  0.2,  0.8,  0.4, 1 },
+    Predicted = {    1,  0.9, 0.71, 1 },
 };
 
 local buttons = {};
@@ -342,7 +342,7 @@ MazeHelper.frame:HookScript('OnShow', function(self)
     if SOLUTION_BUTTON_ID then
         self.LargeSymbol:SetShown(true);
     end
-end)
+end);
 E.CreateSmoothShowing(MazeHelper.frame);
 MazeHelper.frame:HookScript('OnEnter', function()
     MazeHelper.frame.LockDragButton:SetShown(not isMinimized);
@@ -1247,6 +1247,12 @@ local function GetMinimumReservedSequence()
     end
 end
 
+local BUTTON_BACKDROP = {
+    insets   = { top = 1, left = 1, bottom = 1, right = 1 },
+    edgeFile = 'Interface\\Buttons\\WHITE8x8',
+    edgeSize = 2,
+};
+
 function MazeHelper:CreateButton(index)
     local button = CreateFrame('Button', nil, MazeHelper.frame.MainHolder, 'BackdropTemplate');
 
@@ -1274,11 +1280,7 @@ function MazeHelper:CreateButton(index)
     PixelUtil.SetPoint(button.SequenceText, 'BOTTOMRIGHT', button, 'BOTTOMRIGHT', -2, 2);
     button.SequenceText:SetShown(MHMOTSConfig.ShowSequenceNumbers);
 
-    button:SetBackdrop({
-        insets   = { top = 1, left = 1, bottom = 1, right = 1 },
-        edgeFile = 'Interface\\Buttons\\WHITE8x8',
-        edgeSize = 2,
-    });
+    button:SetBackdrop(BUTTON_BACKDROP);
 
     button.SetActiveBorder = function(self)
         self:SetBackdropBorderColor(unpack(MHMOTSConfig.ActiveColor));
@@ -1497,6 +1499,7 @@ local TryFullSolution do
 
     function TryFullSolution()
         local fillSum, leafSum, circleSum = GetSumCharacteristics();
+
         local sButtonId;
         local sFoundCount = 0;
 

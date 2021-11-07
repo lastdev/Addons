@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/ui/localization/de-DE", 90108)
+local __exports = LibStub:NewLibrary("ovale/ui/localization/de-DE", 90112)
 if not __exports then return end
 __exports.setDEDE = function(l)
     l.action_bar = [[Aktionsleiste]]

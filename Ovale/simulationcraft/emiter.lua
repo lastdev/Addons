@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/simulationcraft/emiter", 90108)
+local __exports = LibStub:NewLibrary("ovale/simulationcraft/emiter", 90112)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local __imports = {}
@@ -694,10 +694,13 @@ __exports.Emiter = __class(nil, {
                             actionTarget = "other"
                         end
                         if actionTarget ~= "1" then
-                            bodyCode = format("%s(%s text=%s)", type, action, actionTarget)
+                            bodyCode = type .. "(" .. action .. " text=" .. actionTarget .. ")"
                         end
+                    elseif modifiers.cycle_targets then
+                        bodyCode = type .. "(" .. action .. " text=cycle)"
+                    else
+                        bodyCode = type .. "(" .. action .. ")"
                     end
-                    bodyCode = bodyCode or type .. "(" .. action .. ")"
                 end
                 if  not bodyNode and bodyCode then
                     bodyNode = self.ovaleAst:parseCode(expressionType, bodyCode, nodeList, annotation.astAnnotation)

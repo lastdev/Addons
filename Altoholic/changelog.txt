@@ -15,6 +15,12 @@ How to support Altoholic's development :
 If you like the addon, consider supporting it, this has been the long term effort and commitment of a single person. #ArmyOfOne
 
 
+9.1.007 (26/09/2021)
+
+- Summary Tab : added a new panel to display the level of the sanctum reservoir (Expansion Features => Shadowlands)
+- Fixed an error introduced in previous release, preventing the name-completion from working properly when sending a mail to an alt.
+- Fixed an issue with the Portuguese localization files (thanks Thommas !)
+
 9.1.006b (20/09/2021)
 
 - Fixed a Lua error when mousing over items with a shorter tooltip.

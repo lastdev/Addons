@@ -27,7 +27,9 @@
 	<Script file="db/db_regions.lua" />
 	<Script file="db/db_score_stats.lua" />
 	<Script file="db/db_score_tiers.lua" />
+	<Script file="db/db_score_tiers_prev.lua" />
 
+	<Script file="utf8.lua" />
 	<Script file="core.lua" />
 
 </Ui>

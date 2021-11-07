@@ -11,13 +11,13 @@ L["All-in-one"] = "Tudo em um"
 L["Any"] = "Qualquer"
 L["Clear all entries"] = "Apagar todas as entradas"
 L["Clear goblin AH entries"] = "Apagar as entradas da CdL goblin"
-L["Clear your faction's entries"] = "Apagar as entradas da sua facÁ„o"
+L["Clear your faction's entries"] = "Apagar as entradas da sua fac√ß√£o"
 L["Mails"] = "Correios"
 
 -- ** Containers **
 L["Bank"] = "Banco"
 L["Bank bag"] = "Bolsa do banco"
-L["slots"] = "espaÁos"
+L["slots"] = "espa√ßos"
 
 -- ** Quest Log **
 -- L["QuestID"] = true
@@ -30,8 +30,8 @@ L["N/A"] = "N/D"
 L["Expiry:"] = "Validade:"
 L["Mails %s(%d)"] = "Correios %s(%d)"
 -- L["Attached Money"] = true
-L["Will be %sdeleted|r in"] = "Ser· %sapagado|r em"
-L["Will be %sreturned|r in"] = "Ser· %sdevolvido|r em"
+L["Will be %sdeleted|r in"] = "Ser√° %sapagado|r em"
+L["Will be %sreturned|r in"] = "Ser√° %sdevolvido|r em"
 
 -- ** Recipes **
 L["COLOR_GREEN"] = "Verde"
@@ -39,9 +39,9 @@ L["COLOR_GREY"] = "Cinza"
 L["COLOR_ORANGE"] = "Laranja"
 L["COLOR_RED"] = "Vermelha"
 L["COLOR_YELLOW"] = "Amarela"
-L["Invalid tradeskill link"] = "VÌnculo de habilidade comercial inv·lida"
-L["Cannot link another account's tradeskill"] = "ImpossÌvel associar profiss„o de outra conta"
-L["Cannot link another realm's tradeskill"] = "ImpossÌvel associar profiss„o de outro reino"
+L["Invalid tradeskill link"] = "V√≠nculo de habilidade comercial inv√°lida"
+L["Cannot link another account's tradeskill"] = "Imposs√≠vel associar profiss√£o de outra conta"
+L["Cannot link another realm's tradeskill"] = "Imposs√≠vel associar profiss√£o de outro reino"
 
 
 -- ** Talents **

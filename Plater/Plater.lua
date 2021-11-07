@@ -45,14 +45,12 @@ local ipairs = ipairs
 local pairs = pairs
 local rawset = rawset
 local rawget = rawget
-local error = error
 local setfenv = setfenv
 local pcall = pcall
 local InCombatLockdown = InCombatLockdown
 local UnitIsPlayer = UnitIsPlayer
 local UnitClassification = UnitClassification
 local UnitDetailedThreatSituation = UnitDetailedThreatSituation
-local AuraUtilForEachAura = AuraUtil.ForEachAura
 local UnitCanAttack = UnitCanAttack
 local IsSpellInRange = IsSpellInRange
 local abs = math.abs
@@ -70,6 +68,8 @@ local min = math.min
 
 local IS_WOW_PROJECT_MAINLINE = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local IS_WOW_PROJECT_NOT_MAINLINE = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE
+local IS_WOW_PROJECT_CLASSIC_ERA = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+local IS_WOW_PROJECT_CLASSIC_TBC = WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC
 
 local PixelUtil = PixelUtil or DFPixelUtil
 
@@ -119,6 +119,11 @@ function Plater.IncreaseRefreshID() --private
 	PLATER_REFRESH_ID = PLATER_REFRESH_ID + 1
 	Plater.IncreaseRefreshID_Auras()
 end
+
+--> namespaces:
+	--resources
+	Plater.Resources = {}
+
 
 --all functions below can be overridden by scripts, hooks or any external code
 --this allows the user to fully modify Plater at a high level
@@ -1187,7 +1192,7 @@ local class_specs_coords = {
 			end
 		
 		else
-			-- TBC
+			-- TBC and classic
 			local classLoc, class = UnitClass ("player")
 			if (class) then
 				if (class == "WARRIOR") then
@@ -1977,7 +1982,7 @@ local class_specs_coords = {
 		Plater.UpdateAuraCache() --on Plater_Auras.lua
 
 		--refresh resources
-		Plater.RefreshResourcesDBUpvalues() --Plater_Resources.lua
+		Plater.Resources.RefreshResourcesDBUpvalues() --Plater_Resources.lua
 	end
 	
 	function Plater.RefreshDBLists()
@@ -2440,7 +2445,7 @@ local class_specs_coords = {
 		end,
 
 		PLAYER_SPECIALIZATION_CHANGED = function()
-			C_Timer.After (1.5, Plater.CanUsePlaterResourceFrame) --~resource
+			C_Timer.After (1.5, Plater.Resources.CanUsePlaterResourceFrame) --~resource
 			C_Timer.After (2, Plater.GetSpellForRangeCheck)
 			C_Timer.After (2, Plater.GetHealthCutoffValue)
 			C_Timer.After (1, Plater.DispatchTalentUpdateHookEvent)
@@ -2702,7 +2707,7 @@ local class_specs_coords = {
 			--end
 
 			--create the frame to hold the plater resoruce bar
-			Plater.CreatePlaterResourceFrame() --~resource
+			Plater.Resources.CreatePlaterResourceFrame() --~resource
 			
 			--run hooks on load screen
 			if (HOOK_LOAD_SCREEN.ScriptAmount > 0) then
@@ -3707,6 +3712,9 @@ local class_specs_coords = {
 			--range
 			--Plater.CheckRange (plateFrame, true)
 			
+			--resources - TODO:
+			Plater.Resources.UpdatePlaterResourceFramePosition() --~resource
+			
 			--hooks
 			if (HOOK_NAMEPLATE_ADDED.ScriptAmount > 0) then
 				for i = 1, HOOK_NAMEPLATE_ADDED.ScriptAmount do
@@ -4272,6 +4280,7 @@ function Plater.OnInit() --private --~oninit ~init
 				if (NamePlateDriverFrame.classNamePlatePowerBar and NamePlateDriverFrame.classNamePlatePowerBar:IsShown()) then
 					--hide the power bar from default ui
 					NamePlateDriverFrame.classNamePlatePowerBar:Hide()
+					NamePlateDriverFrame.classNamePlatePowerBar:UnregisterAllEvents()
 				end
 				
 				local unitFrame = plateFrame.unitFrame
@@ -5559,7 +5568,7 @@ end
 	function Plater.NameplateTick (tickFrame, deltaTime) --private
 		Plater.StartLogPerformanceCore("Plater-Core", "Update", "NameplateTick")
 
-		tickFrame.ThrottleUpdate = tickFrame.ThrottleUpdate - deltaTime
+		tickFrame.ThrottleUpdate = (tickFrame.ThrottleUpdate or 0) - deltaTime
 		local unitFrame = tickFrame.unitFrame
 		local healthBar = unitFrame.healthBar
 		local profile = Plater.db.profile
@@ -6259,7 +6268,7 @@ end
 			end
 		end
 
-		Plater.CanUsePlaterResourceFrame() --~resource
+		Plater.Resources.UpdatePlaterResourceFramePosition() --~resource
 	end
 
 	function Plater.UpdateTargetHighlight (plateFrame)

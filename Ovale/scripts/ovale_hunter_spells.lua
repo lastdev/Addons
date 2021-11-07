@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/scripts/ovale_hunter_spells", 90108)
+local __exports = LibStub:NewLibrary("ovale/scripts/ovale_hunter_spells", 90112)
 if not __exports then return end
 __exports.registerHunterSpells = function(scripts)
     local name = "ovale_hunter_spells"

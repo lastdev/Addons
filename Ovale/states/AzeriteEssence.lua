@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/states/AzeriteEssence", 90108)
+local __exports = LibStub:NewLibrary("ovale/states/AzeriteEssence", 90112)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local __imports = {}

@@ -53,6 +53,10 @@ local function GetRenownLevel(self, character)
 end
 
 
+
+
+
+
 -- ** Garrison Followers **
 Columns.RegisterColumn("FollowersLV40", {
 	-- Header
@@ -446,3 +450,128 @@ Columns.RegisterColumn("Story91", {
 			tt:Show()
 		end,
 })
+
+-- ** Sanctum Reservoir **
+local function GetReservoirFeatureLevel(character, featureType)
+	local level = 0
+	local treeInfo = DataStore:GetReservoirTalentTreeInfo(character, featureType)
+	
+	if treeInfo then 
+		level = treeInfo.tier
+	end
+
+	return level
+end
+
+local function GetTransportNetworkLevel(self, character)
+	return GetReservoirFeatureLevel(character, Enum.GarrTalentFeatureType.TravelPortals)
+end
+
+local function GetAnimaConductorLevel(self, character)
+	return GetReservoirFeatureLevel(character, Enum.GarrTalentFeatureType.AnimaDiversion)
+end
+
+local function GetCommandTableLevel(self, character)
+	return GetReservoirFeatureLevel(character, Enum.GarrTalentFeatureType.Adventures)
+end
+
+local function GetSanctumUniqueLevel(self, character)
+	return GetReservoirFeatureLevel(character, Enum.GarrTalentFeatureType.SanctumUnique)
+end
+
+local function GetLevelColor(level, maxLevel)
+	if level == 0 then return colors.grey end
+	return (level == maxLevel) and colors.gold or colors.white
+end
+
+local function Reservoir_OnClick(frame)
+	local character = frame:GetParent().character
+	if not character then return end
+	
+	local covenantID = DataStore:GetCovenantInfo(character)
+	if not covenantID or covenantID == 0 then return end
+
+	addon:ShowCharacterPanel(character, "Reservoir")
+end
+
+
+Columns.RegisterColumn("TransportNetwork", {
+	-- Header
+	headerWidth = 60,
+	headerLabel = format("   %s", Formatter.Texture18("Interface\\Icons\\sanctum_features_transportationnetwork")),
+	tooltipTitle = L["COLUMN_TRANSPORT_NETWORK_TITLE"],
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("TransportNetwork") end,
+	headerSort = GetTransportNetworkLevel,
+	
+	-- Content
+	Width = 60,
+	JustifyH = "CENTER",
+	GetText = function(character) 
+		local level = GetTransportNetworkLevel(nil, character)
+		local color = GetLevelColor(level, 3)
+	
+		return format("%s%s", color, level)
+	end,
+	OnClick = Reservoir_OnClick,
+})
+
+Columns.RegisterColumn("AnimaConductor", {
+	-- Header
+	headerWidth = 60,
+	headerLabel = format("   %s", Formatter.Texture18("Interface\\Icons\\sanctum_features_animadiversion")),
+	tooltipTitle = L["COLUMN_ANIMA_TITLE"],
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("AnimaConductor") end,
+	headerSort = GetAnimaConductorLevel,
+	
+	-- Content
+	Width = 60,
+	JustifyH = "CENTER",
+	GetText = function(character) 
+		local level = GetAnimaConductorLevel(nil, character)
+		local color = GetLevelColor(level, 3)
+	
+		return format("%s%s", color, level)
+	end,
+	OnClick = Reservoir_OnClick,
+})
+
+Columns.RegisterColumn("CommandTable", {
+	-- Header
+	headerWidth = 60,
+	headerLabel = format("   %s", Formatter.Texture18("Interface\\Icons\\sanctum_features_missiontable")),
+	tooltipTitle = L["COLUMN_COMMAND_TABLE_TITLE"],
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("CommandTable") end,
+	headerSort = GetCommandTableLevel,
+	
+	-- Content
+	Width = 60,
+	JustifyH = "CENTER",
+	GetText = function(character) 
+		local level = GetCommandTableLevel(nil, character)
+		local color = GetLevelColor(level, 3)
+	
+		return format("%s%s", color, level)
+	end,
+	OnClick = Reservoir_OnClick,
+})
+
+Columns.RegisterColumn("SanctumUnique", {
+	-- Header
+	headerWidth = 60,
+	headerLabel = format("   %s", Formatter.Texture18("Interface\\Icons\\spell_animaardenweald_buff")),
+	tooltipTitle = L["COLUMN_SANCTUM_UNIQUE_TITLE"],
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("SanctumUnique") end,
+	headerSort = GetSanctumUniqueLevel,
+	
+	-- Content
+	Width = 60,
+	JustifyH = "CENTER",
+	GetText = function(character) 
+		local level = GetSanctumUniqueLevel(nil, character)
+		local color = GetLevelColor(level, 5)
+	
+		return format("%s%s", color, level)
+	end,
+	OnClick = Reservoir_OnClick,
+})
+

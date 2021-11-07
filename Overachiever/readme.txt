@@ -1,5 +1,5 @@
 
-Overachiever v1.1.4
+Overachiever v1.1.5
 ==============================
 
 Author: Tuhljin
@@ -112,6 +112,10 @@ Change log
 ==========
 
 The change log lists changes of particular note to users, not every change made.
+
+v1.1.5
+- Updated TOC for WoW patch 9.1.x.
+- Fixed an error when a holiday/event toast is displayed.
 
 v1.1.4
 - "Afterlife Express" (new): Added an option to display a reminder tooltip for riding carriages in Revendreth.

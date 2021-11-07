@@ -23,10 +23,10 @@ do
     ---@field public MAX_LEVEL number @The currently accessible expansion max level to the playerbase
     ---@field public REGION_TO_LTD string[] @Region ID to LTD conversion table
     ---@field public FACTION_TO_ID number[] @Faction group string to ID conversion table
-    ---@field public PLAYER_REGION string @"us","kr","eu","tw","cn"
-    ---@field public PLAYER_REGION_ID number @1 (us), 2 (kr), 3 (eu), 4 (tw), 5 (cn)
-    ---@field public PLAYER_FACTION number @1 (alliance), 2 (horde), 3 (neutral)
-    ---@field public PLAYER_FACTION_TEXT string @"Alliance", "Horde", "Neutral"
+    ---@field public PLAYER_REGION string @`us`, `kr`, `eu`, `tw`, `cn`
+    ---@field public PLAYER_REGION_ID number @`1` (us), `2` (kr), `3` (eu), `4` (tw), `5` (cn)
+    ---@field public PLAYER_FACTION number @`1` (alliance), `2` (horde), `3` (neutral)
+    ---@field public PLAYER_FACTION_TEXT string @`Alliance`, `Horde`, `Neutral`
     ---@field public PLAYER_NAME string @The name of the player character
     ---@field public PLAYER_REALM string @The realm of the player character
     ---@field public PLAYER_REALM_SLUG string @The realm slug of the player character
@@ -42,6 +42,10 @@ do
     ---@field public RAID_DIFFICULTY table<number, RaidDifficulty> @Table of 1=normal, 2=heroic, 3=mythic difficulties and their names and colors
     ---@field public PREVIOUS_SEASON_SCORE_RELEVANCE_THRESHOLD number @Threshold that current season must surpass from previous season to be considered better and shown as primary in addon
     ---@field public PREVIOUS_SEASON_MAIN_SCORE_RELEVANCE_THRESHOLD number @Threshold that current season current character must surpass from previous season main to be considered better and shown as primary in addon
+    ---@field public REGIONS_RESET_TIME table<string, number> @Maps each region string to their weekly reset timer
+    ---@field public KEYSTONE_AFFIX_SCHEDULE number[] @Maps each weekly rotation, primarily for Tyrannical (`9`) and Fortified (`10`) tracking
+    ---@field public KEYSTONE_AFFIX_INTERNAL table<number, string> @Maps each affix ID to a internal string version like `tyrannical` (`9`) and `fortified` (`10`)
+    ---@field public KEYSTONE_AFFIX_TEXTURE table<number, string> @Maps each affix to a texture string Tyrannical (`9`/`-9`) and Fortified (`10`/`-10`)
 
     ns.Print = function(text, r, g, b, ...)
         r, g, b = r or 1, g or 1, b or 0
@@ -73,6 +77,31 @@ do
     -- meaning: once current score exceeds this fraction of previous season, then show current season
     ns.PREVIOUS_SEASON_SCORE_RELEVANCE_THRESHOLD = 0.75
     ns.PREVIOUS_SEASON_MAIN_SCORE_RELEVANCE_THRESHOLD = 0.75
+
+    ns.REGIONS_RESET_TIME = {
+        us = 1135695600,
+        eu = 1135753200,
+        tw = 1135810800,
+        kr = 1135810800,
+        cn = 1135810800,
+    }
+
+    ns.KEYSTONE_AFFIX_SCHEDULE = {
+        9,  -- Tyrannical
+        10, -- Fortified
+    }
+
+    ns.KEYSTONE_AFFIX_INTERNAL = {
+        [9] = "tyrannical",
+        [10] = "fortified",
+    }
+
+    ns.KEYSTONE_AFFIX_TEXTURE = {
+        [-9] = CreateTextureMarkup("Interface\\AddOns\\RaiderIO\\icons\\affixes", 32, 32, 0, 0, 0.5, 1, 0.5, 1, 0, 0),
+        [-10] = CreateTextureMarkup("Interface\\AddOns\\RaiderIO\\icons\\affixes", 32, 32, 0, 0, 0.5, 1, 0, 0.5, 0, 0),
+        [9] = CreateTextureMarkup("Interface\\AddOns\\RaiderIO\\icons\\affixes", 32, 32, 0, 0, 0, 0.5, 0.5, 1, 0, 0),
+        [10] = CreateTextureMarkup("Interface\\AddOns\\RaiderIO\\icons\\affixes", 32, 32, 0, 0, 0, 0.5, 0, 0.5, 0, 0),
+    }
 
     ---@class RoleIcon
     ---@field full string @The full icon in "|T|t" syntax
@@ -706,7 +735,8 @@ do
         showRoleIcons = true,
         profilePoint = { point = nil, x = 0, y = 0 },
         debugMode = false,
-        rwfMode = false -- NEW in 9.1
+        rwfMode = false, -- NEW in 9.1
+        showMedalsInsteadOfText = false,-- NEW in 9.1.5
     }
 
     -- fallback metatable looks up missing keys into the fallback config table
@@ -1076,7 +1106,7 @@ do
         if unitExists then
             unit = arg1
             if unitIsPlayer then
-                name, realm = UnitName(arg1)
+                name, realm = UnitNameUnmodified(arg1)
                 realm = realm and realm ~= "" and realm or GetNormalizedRealmName()
             end
             return name, realm, unit
@@ -1317,22 +1347,61 @@ do
         return 0.62, 0.62, 0.62
     end
 
+    ---@type table<string, string>
+    local MEDAL_TEXTURE = {
+        none = 982414,
+        none2 = 982414,
+        bronze = 627120,
+        bronze2 = 627121,
+        silver = 627125,
+        silver2 = 607862,
+        gold = 627122,
+        gold2 = 607858,
+        plat = 627123,
+        plat2 = 627124,
+    }
+
+    for k, v in pairs(MEDAL_TEXTURE) do
+        MEDAL_TEXTURE[k] = CreateTextureMarkup(v, 64, 64, 10, 10, 20/64, (20+22)/64, 20/64, (20+22)/64, -2, 0) -- 20 left/top and 22 width/height looks pretty good
+    end
+
     ---@param chests number @the amount of chests/upgrades at the end of the keystone run. returns a string containing stars representing each chest/upgrade.
-    function util:GetNumChests(chests)
-        local stars = ""
-        if chests < 1 then
-            return stars
+    function util:GetNumChests(chests, isInactive)
+        if config:Get("showMedalsInsteadOfText") then -- TODO: isInactive
+            if not chests or chests < 1 then
+                return MEDAL_TEXTURE.none
+            elseif chests > 3 then
+                return MEDAL_TEXTURE.plat
+            elseif chests > 2 then
+                return MEDAL_TEXTURE.gold
+            elseif chests > 1 then
+                return MEDAL_TEXTURE.silver
+            end
+            return MEDAL_TEXTURE.bronze
         end
+        if not chests or chests < 1 then
+            return ""
+        end
+        local stars = {
+            isInactive and "|cffb28d2e" or "|cffffcf40",
+        }
         for i = 1, chests do
-            stars = stars .. "+"
+            stars[i + 1] = "+"
         end
-        return "|cffffcf40" .. stars .. "|r"
+        stars[chests + 2] = "|r"
+        return table.concat(stars, "")
     end
 
     ---@param chests number @the amount of chests/upgrades at the end of the keystone run. returns the color representing the depletion or timed result.
-    function util:GetKeystoneChestColor(chests)
+    function util:GetKeystoneChestColor(chests, asHex)
         if not chests or chests < 1 then
-            return 0.62, 0.62, 0.62
+            if asHex then
+                return "808080"
+            end
+            return 0.5, 0.5, 0.5
+        end
+        if asHex then
+            return "FFFFFF"
         end
         return 1, 1, 1
     end
@@ -1340,6 +1409,47 @@ do
     ---@param level number @The keystone level.
     function util:GetKeystoneAverageScoreForLevel(level)
         return SCORE_STATS[level]
+    end
+
+    ---@param weekOffset number @optional weekly offset. set this to 1 for next week affixes.
+    ---@return number, string @`affixID`, `affixInternal`
+    function util:GetWeeklyAffix(weekOffset)
+        local timestamp = (time() - util:GetTimeZoneOffset()) + 604800 * (weekOffset or 0)
+        local timestampWeeklyReset = ns.REGIONS_RESET_TIME[ns.PLAYER_REGION]
+        local diff = difftime(timestamp, timestampWeeklyReset)
+        local index = floor(diff / 604800) % #ns.KEYSTONE_AFFIX_SCHEDULE + 1
+        local affixID = ns.KEYSTONE_AFFIX_SCHEDULE[index]
+        return affixID, affixID and ns.KEYSTONE_AFFIX_INTERNAL[affixID]
+    end
+
+    local TOOLTIP_TEXT_FONTSTRING do
+        TOOLTIP_TEXT_FONTSTRING = UIParent:CreateFontString(nil, nil, "GameTooltipText")
+        local fontObject = _G.GameTooltipTextRight2:GetFontObject()
+        if fontObject then
+            TOOLTIP_TEXT_FONTSTRING:SetFontObject(fontObject)
+        else
+            TOOLTIP_TEXT_FONTSTRING:SetFont(fontObject:GetFont())
+        end
+    end
+
+    ---@param text string @The text to measure the width in pixels. Assumes standard tooltip font when calculating.
+    ---@return number @Text width of the text in pixels.
+    function util:GetTooltipTextWidth(text)
+        TOOLTIP_TEXT_FONTSTRING:SetText(text)
+        TOOLTIP_TEXT_FONTSTRING:Show()
+        local width = TOOLTIP_TEXT_FONTSTRING:GetUnboundedStringWidth()
+        TOOLTIP_TEXT_FONTSTRING:Hide()
+        return width
+    end
+
+    ---@param width number @The width of the transparent texture.
+    ---@param height number @Optional height, defaults to 1px if ommited, not required, but available if needed.
+    ---@return string @String containing texture escape sequence. If width provided is 0 or less, the return is an empty string.
+    function util:GetTextPaddingTexture(width, height)
+        if not width or width <= 0 then
+            return ""
+        end
+        return format("|T982414:%d:%d:0:0:64:64:0:1:0:1|t", height or 1, width)
     end
 
 end
@@ -1584,7 +1694,7 @@ do
 
     local function CreateExportButton()
         local button = CreateFrame("Button", addonName .. "_ExportButton", _G.LFGListFrame)
-        button:SetPoint("BOTTOMRIGHT", button:GetParent(), "BOTTOM", 4, 6)
+        button:SetPoint("BOTTOMRIGHT", button:GetParent(), "BOTTOM", -12, 7)
         button:SetSize(16, 16)
         -- script handlers
         button:SetScript("OnEnter", function() button.Border:SetVertexColor(1, 1, 1) end)
@@ -2372,12 +2482,25 @@ do
     ---@field public keystoneTenPlus number
     ---@field public keystoneFifteenPlus number
     ---@field public keystoneTwentyPlus number
-    ---@field public dungeons number[]
-    ---@field public dungeonUpgrades number[]
-    ---@field public dungeonTimes number[]
-    ---@field public maxDungeonIndex number
-    ---@field public maxDungeonLevel number
-    ---@field public maxDungeon Dungeon
+    ---@field public fortifiedDungeons number[]
+    ---@field public fortifiedDungeonUpgrades number[]
+    ---@field public fortifiedDungeonTimes number[]
+    ---@field public tyrannicalDungeons number[]
+    ---@field public tyrannicalDungeonUpgrades number[]
+    ---@field public tyrannicalDungeonTimes number[]
+    ---@field public dungeons number[] @Proxy table that looks up the correct weekly affix table if used. Use `fortifiedDungeons` and `tyrannicalDungeons` when possible.
+    ---@field public dungeonUpgrades number[] @Proxy table that looks up the correct weekly affix table if used. Use `fortifiedDungeonUpgrades` and `tyrannicalDungeonUpgrades` when possible.
+    ---@field public dungeonTimes number[] @Proxy table that looks up the correct weekly affix table if used. Use `fortifiedDungeonTimes` and `tyrannicalDungeonTimes` when possible.
+    ---@field public fortifiedMaxDungeonIndex number
+    ---@field public fortifiedMaxDungeonLevel number
+    ---@field public fortifiedMaxDungeon Dungeon
+    ---@field public tyrannicalMaxDungeonIndex number
+    ---@field public tyrannicalMaxDungeonLevel number
+    ---@field public tyrannicalMaxDungeon Dungeon
+    ---@field public maxDungeonIndex number @Proxy table that looks up the correct weekly affix table if used. Use `fortifiedMaxDungeonIndex` and `tyrannicalMaxDungeonIndex` when possible.
+    ---@field public maxDungeonLevel number @Proxy table that looks up the correct weekly affix table if used. Use `fortifiedMaxDungeonLevel` and `tyrannicalMaxDungeonLevel` when possible.
+    ---@field public maxDungeon Dungeon @Proxy table that looks up the correct weekly affix table if used. Use `fortifiedMaxDungeon` and `tyrannicalMaxDungeon` when possible.
+    ---@field public maxDungeonUpgrades number @Proxy table that looks up the correct weekly affix table if used. Part of the override score functionality, possibly client data as well.
     ---@field public sortedDungeons SortedDungeon[]
     ---@field public sortedMilestones SortedMilestone[]
     ---@field public mplusCurrent DataProviderMythicKeystoneScore
@@ -2387,9 +2510,18 @@ do
 
     ---@class SortedDungeon
     ---@field public dungeon Dungeon
-    ---@field public level number
-    ---@field public chests number
-    ---@field public fractionalTime number If we have client data `isEnhanced` is set and the values are then `0.0` to `1.0` is within the timer, anything above is depleted over the timer. If `isEnhanced` is false then this value is 0 to 3 where 3 is depleted, and the rest is in time.
+    ---@field public level number @Proxy table that looks up the correct weekly affix table if used. Use `fortifiedLevel` and `tyrannicalLevel` when possible.
+    ---@field public chests number @Proxy table that looks up the correct weekly affix table if used. Use `fortifiedChests` and `tyrannicalChests` when possible.
+    ---@field public fractionalTime number @Proxy table that looks up the correct weekly affix table if used. Use `fortifiedFractionalTime` and `tyrannicalFractionalTime` when possible. If we have client data `isEnhanced` is set and the values are then `0.0` to `1.0` is within the timer, anything above is depleted over the timer. If `isEnhanced` is false then this value is 0 to 3 where 3 is depleted, and the rest is in time.
+    ---@field public sortOrder string @Proxy table that looks up the correct weekly affix table if used. Use `fortifiedSortOrder` and `tyrannicalSortOrder` when possible.
+    ---@field public fortifiedLevel number @Keystone level
+    ---@field public fortifiedChests number @Number of medals where 1=Bronze, 2=Silver, 3=Gold
+    ---@field public fortifiedFractionalTime number @If we have client data `isEnhanced` is set and the values are then `0.0` to `1.0` is within the timer, anything above is depleted over the timer. If `isEnhanced` is false then this value is 0 to 3 where 3 is depleted, and the rest is in time.
+    ---@field public fortifiedSortOrder string @The sorting weight assigned this entry. Combination of level, chests and name of the dungeon.
+    ---@field public tyrannicalLevel number @Keystone level
+    ---@field public tyrannicalChests number @Number of medals where 1=Bronze, 2=Silver, 3=Gold
+    ---@field public tyrannicalFractionalTime number @If we have client data `isEnhanced` is set and the values are then `0.0` to `1.0` is within the timer, anything above is depleted over the timer. If `isEnhanced` is false then this value is 0 to 3 where 3 is depleted, and the rest is in time.
+    ---@field public tyrannicalSortOrder string @The sorting weight assigned this entry. Combination of level, chests and name of the dungeon.
 
     ---@class SortedMilestone
     ---@field public level number
@@ -2398,6 +2530,216 @@ do
 
     local CLIENT_CHARACTERS = ns:GetClientData()
     local DUNGEONS = ns:GetDungeonData()
+
+    ---@param a SortedDungeon
+    ---@param b SortedDungeon
+    local function SortDungeons(a, b)
+        return strcmputf8i(a.sortOrder, b.sortOrder) < 0
+    end
+
+    ---@param results DataProviderMythicKeystoneProfile
+    local function ApplyWeeklyAffixForDungeons(results, bucket, bitOffset, weeklyAffixInternal)
+        local dungeons = {}
+        local dungeonUpgrades = {}
+        local dungeonTimes = {}
+        for i = 1, #DUNGEONS do
+            dungeons[i], bitOffset = ReadBitsFromString(bucket, bitOffset, 5)
+            dungeonUpgrades[i], bitOffset = ReadBitsFromString(bucket, bitOffset, 2)
+            dungeonTimes[i] = 3 - dungeonUpgrades[i]
+            results.hasRenderableData = results.hasRenderableData or dungeons[i] > 0
+        end
+        results[weeklyAffixInternal .. "Dungeons"] = dungeons
+        results[weeklyAffixInternal .. "DungeonUpgrades"] = dungeonUpgrades
+        results[weeklyAffixInternal .. "DungeonTimes"] = dungeonTimes
+        return bitOffset
+    end
+
+    ---@param results DataProviderMythicKeystoneProfile
+    local function ApplyWeeklyAffixForDungeonBest(results, bucket, bitOffset, weeklyAffixInternal)
+        local value, bitOffset = ReadBitsFromString(bucket, bitOffset, 4)
+        local maxDungeonIndex = 1 + value
+        if maxDungeonIndex > #DUNGEONS then
+            maxDungeonIndex = 1
+        end
+        results[weeklyAffixInternal .. "MaxDungeonIndex"] = maxDungeonIndex
+        results[weeklyAffixInternal .. "MaxDungeonLevel"] = results[weeklyAffixInternal .. "Dungeons"][maxDungeonIndex]
+        results[weeklyAffixInternal .. "MaxDungeon"] = DUNGEONS[maxDungeonIndex]
+        return bitOffset
+    end
+
+    ---@param results DataProviderMythicKeystoneProfile
+    local function ApplyWeeklyAffixWrapper(results)
+        local dynamicKeys = {
+            dungeons = true,
+            dungeonUpgrades = true,
+            dungeonTimes = true,
+            maxDungeonIndex = true,
+            maxDungeonLevel = true,
+            maxDungeon = true,
+        }
+        setmetatable(results, {
+            __metatable = false,
+            __index = function(self, key)
+                if not dynamicKeys[key] then
+                    return
+                end
+                local _, weeklyAffixInternal = util:GetWeeklyAffix()
+                local destKey = key:sub(1, 1):upper() .. key:sub(2)
+                return self[weeklyAffixInternal .. destKey]
+            end,
+        })
+    end
+
+    ---@param results DataProviderMythicKeystoneProfile
+    local function ApplySortedDungeonsForAffix(results, weeklyAffixInternal)
+        ---@param sortedDungeon SortedDungeon
+        local function getSortOrderForAffix(sortedDungeon, weeklyAffixInternal)
+            local index = sortedDungeon.dungeon.index
+            local level = results[weeklyAffixInternal .. "Dungeons"][index]
+            local chests = results[weeklyAffixInternal .. "DungeonUpgrades"][index]
+            -- local fractionalTime = results[weeklyAffixInternal .. "DungeonTimes"][index]
+            return format("%02d-%02d", 99 - level, 99 - chests)
+        end
+        ---@param sortedDungeon SortedDungeon
+        ---@param focusAffix number @`nil` = consider both affixes when making the weights, `1` = focus on primary affix, `2` = focus on secondary affix
+        local function getSortOrder(sortedDungeon, primaryAffixInternal, secondaryAffixInternal, focusAffix)
+            local primaryOrder
+            if focusAffix == nil or focusAffix == 1 then
+                primaryOrder = getSortOrderForAffix(sortedDungeon, primaryAffixInternal)
+                if focusAffix == 1 then
+                    return format("%s-%s", primaryOrder, sortedDungeon.dungeon.shortNameLocale)
+                end
+            end
+            local secondaryOrder
+            if focusAffix == nil or focusAffix == 2 then
+                secondaryOrder = getSortOrderForAffix(sortedDungeon, secondaryAffixInternal)
+                if focusAffix == 2 then
+                    return format("%s-%s", secondaryOrder, sortedDungeon.dungeon.shortNameLocale)
+                end
+            end
+            return format("%s-%s-%s", primaryOrder, secondaryOrder, sortedDungeon.dungeon.shortNameLocale)
+        end
+        local sortedDungeonMetatable = {
+            __metatable = false,
+            __index = function(self, key)
+                local index = self.dungeon.index
+                local _, weeklyAffixInternal = util:GetWeeklyAffix()
+                if key == "level" then
+                    return results[weeklyAffixInternal .. "Dungeons"][index]
+                elseif key == "chests" then
+                    return results[weeklyAffixInternal .. "DungeonUpgrades"][index]
+                elseif key == "fractionalTime" then
+                    return results[weeklyAffixInternal .. "DungeonTimes"][index]
+                elseif key == "fortifiedLevel" then
+                    return results.fortifiedDungeons[index]
+                elseif key == "fortifiedChests" then
+                    return results.fortifiedDungeonUpgrades[index]
+                elseif key == "fortifiedFractionalTime" then
+                    return results.fortifiedDungeonTimes[index]
+                elseif key == "tyrannicalLevel" then
+                    return results.tyrannicalDungeons[index]
+                elseif key == "tyrannicalChests" then
+                    return results.tyrannicalDungeonUpgrades[index]
+                elseif key == "tyrannicalFractionalTime" then
+                    return results.tyrannicalDungeonTimes[index]
+                elseif key == "sortOrder" then
+                    return getSortOrder(self, weeklyAffixInternal, weeklyAffixInternal == "fortified" and "tyrannical" or "fortified")
+                -- elseif key == "sortOrder1" then
+                --     return getSortOrder(self, weeklyAffixInternal, weeklyAffixInternal == "fortified" and "tyrannical" or "fortified", 1)
+                -- elseif key == "sortOrder2" then
+                --     return getSortOrder(self, weeklyAffixInternal == "fortified" and "tyrannical" or "fortified", weeklyAffixInternal, 2)
+                elseif key == "fortifiedSortOrder" then
+                    return getSortOrder(self, "fortified", "tyrannical")
+                -- elseif key == "fortifiedSortOrder1" then
+                --     return getSortOrder(self, "fortified", "tyrannical", 1)
+                -- elseif key == "fortifiedSortOrder2" then
+                --     return getSortOrder(self, "fortified", "tyrannical", 2)
+                elseif key == "tyrannicalSortOrder" then
+                    return getSortOrder(self, "tyrannical", "fortified")
+                -- elseif key == "tyrannicalSortOrder1" then
+                --     return getSortOrder(self, "tyrannical", "fortified", 1)
+                -- elseif key == "tyrannicalSortOrder2" then
+                --     return getSortOrder(self, "tyrannical", "fortified", 2)
+                end
+            end,
+        }
+        results.sortedDungeons = {}
+        local dungeonKey = "dungeons"
+        local dungeonUpgradeKey = "dungeonUpgrades"
+        local dungeonTimeKey = "dungeonTimes"
+        if weeklyAffixInternal then
+            dungeonKey = weeklyAffixInternal .. "Dungeons"
+            dungeonUpgradeKey = weeklyAffixInternal .. "DungeonUpgrades"
+            dungeonTimeKey = weeklyAffixInternal .. "DungeonTimes"
+        end
+        for i = 1, #DUNGEONS do
+            local dungeon = DUNGEONS[i]
+            if weeklyAffixInternal then
+                results.sortedDungeons[i] = setmetatable({
+                    dungeon = dungeon,
+                    level = results[dungeonKey][i],
+                    chests = results[dungeonUpgradeKey][dungeon.index],
+                    fractionalTime = results[dungeonTimeKey][dungeon.index],
+                }, sortedDungeonMetatable)
+            else
+                results.sortedDungeons[i] = setmetatable({
+                    dungeon = dungeon,
+                }, sortedDungeonMetatable)
+            end
+        end
+        table.sort(results.sortedDungeons, SortDungeons)
+    end
+
+    ---@param results DataProviderMythicKeystoneProfile
+    local function ApplySortedMilestonesForAffix(results, weeklyAffixInternal)
+        results.sortedMilestones = {}
+        if results.keystoneTwentyPlus > 0 then
+            results.sortedMilestones[#results.sortedMilestones + 1] = {
+                level = 20,
+                label = L.TIMED_20_RUNS,
+                text = results.keystoneTwentyPlus .. (results.keystoneTwentyPlus > 10 and "+" or "")
+            }
+        end
+        if results.keystoneFifteenPlus > 0 then
+            results.sortedMilestones[#results.sortedMilestones + 1] = {
+                level = 15,
+                label = L.TIMED_15_RUNS,
+                text = results.keystoneFifteenPlus .. (results.keystoneFifteenPlus > 10 and "+" or "")
+            }
+        end
+        if results.keystoneTenPlus > 0 then
+            results.sortedMilestones[#results.sortedMilestones + 1] = {
+                level = 10,
+                label = L.TIMED_10_RUNS,
+                text = results.keystoneTenPlus .. (results.keystoneTenPlus > 10 and "+" or "")
+            }
+        end
+        if results.keystoneFivePlus > 0 then
+            results.sortedMilestones[#results.sortedMilestones + 1] = {
+                level = 5,
+                label = L.TIMED_5_RUNS,
+                text = results.keystoneFivePlus .. (results.keystoneFivePlus > 10 and "+" or "")
+            }
+        end
+        results.mplusCurrent = {
+            score = results.currentScore,
+            roles = ORDERED_ROLES[results.currentRoleOrdinalIndex] or ORDERED_ROLES[1]
+        }
+        results.mplusPrevious = {
+            season = results.previousScoreSeason,
+            score = results.previousScore,
+            roles = ORDERED_ROLES[results.previousRoleOrdinalIndex] or ORDERED_ROLES[1]
+        }
+        results.mplusMainCurrent = {
+            score = results.mainCurrentScore,
+            roles = ORDERED_ROLES[results.mainCurrentRoleOrdinalIndex] or ORDERED_ROLES[1]
+        }
+        results.mplusMainPrevious = {
+            season = results.mainPreviousScoreSeason,
+            score = results.mainPreviousScore,
+            roles = ORDERED_ROLES[results.mainPreviousRoleOrdinalIndex] or ORDERED_ROLES[1]
+        }
+    end
 
     ---@param results DataProviderMythicKeystoneProfile
     local function ApplyClientDataToMythicKeystoneData(results, name, realm)
@@ -2435,20 +2777,6 @@ do
             results.maxDungeonLevel = maxDungeonLevel
             results.maxDungeonUpgrades = maxDungeonUpgrades
         end
-    end
-
-    ---@param a SortedDungeon
-    ---@param b SortedDungeon
-    local function SortDungeons(a, b)
-        local al, bl = a.level, b.level
-        if al == bl then
-            local at, bt = a.fractionalTime, b.fractionalTime
-            if at == bt then
-                return a.dungeon.shortNameLocale < b.dungeon.shortNameLocale
-            end
-            return at < bt
-        end
-        return al > bl
     end
 
     local function UnpackMythicKeystoneData(bucket, baseOffset, encodingOrder, providerOutdated, providerBlocked, name, realm, region)
@@ -2504,84 +2832,17 @@ do
                 results.keystoneTwentyPlus = DecodeBits8(value)
                 results.hasRenderableData = results.hasRenderableData or results.keystoneFivePlus > 0 or results.keystoneTenPlus > 0 or results.keystoneFifteenPlus > 0 or results.keystoneTwentyPlus > 0
             elseif field == ENCODER_MYTHICPLUS_FIELDS.DUNGEON_LEVELS then
-                results.dungeons = {}
-                results.dungeonUpgrades = {}
-                results.dungeonTimes = {}
-                for i = 1, #DUNGEONS do
-                    results.dungeons[i], bitOffset = ReadBitsFromString(bucket, bitOffset, 5)
-                    results.dungeonUpgrades[i], bitOffset = ReadBitsFromString(bucket, bitOffset, 2)
-                    results.dungeonTimes[i] = 3 - results.dungeonUpgrades[i]
-                    results.hasRenderableData = results.hasRenderableData or results.dungeons[i] > 0
-                end
+                bitOffset = ApplyWeeklyAffixForDungeons(results, bucket, bitOffset, "fortified")
+                bitOffset = ApplyWeeklyAffixForDungeons(results, bucket, bitOffset, "tyrannical")
             elseif field == ENCODER_MYTHICPLUS_FIELDS.DUNGEON_BEST_INDEX then
-                value, bitOffset = ReadBitsFromString(bucket, bitOffset, 4)
-                results.maxDungeonIndex = 1 + value
+                bitOffset = ApplyWeeklyAffixForDungeonBest(results, bucket, bitOffset, "fortified")
+                bitOffset = ApplyWeeklyAffixForDungeonBest(results, bucket, bitOffset, "tyrannical")
             end
         end
-        if results.maxDungeonIndex > #results.dungeons then
-            results.maxDungeonIndex = 1
-        end
-        results.maxDungeonLevel = results.dungeons[results.maxDungeonIndex]
-        results.maxDungeon = DUNGEONS[results.maxDungeonIndex]
-        ApplyClientDataToMythicKeystoneData(results, name, realm)
-        results.sortedMilestones = {}
-        if results.keystoneTwentyPlus > 0 then
-            results.sortedMilestones[#results.sortedMilestones + 1] = {
-                level = 20,
-                label = L.TIMED_20_RUNS,
-                text = results.keystoneTwentyPlus .. (results.keystoneTwentyPlus > 10 and "+" or "")
-            }
-        end
-        if results.keystoneFifteenPlus > 0 then
-            results.sortedMilestones[#results.sortedMilestones + 1] = {
-                level = 15,
-                label = L.TIMED_15_RUNS,
-                text = results.keystoneFifteenPlus .. (results.keystoneFifteenPlus > 10 and "+" or "")
-            }
-        end
-        if results.keystoneTenPlus > 0 then
-            results.sortedMilestones[#results.sortedMilestones + 1] = {
-                level = 10,
-                label = L.TIMED_10_RUNS,
-                text = results.keystoneTenPlus .. (results.keystoneTenPlus > 10 and "+" or "")
-            }
-        end
-        if results.keystoneFivePlus > 0 then
-            results.sortedMilestones[#results.sortedMilestones + 1] = {
-                level = 5,
-                label = L.TIMED_5_RUNS,
-                text = results.keystoneFivePlus .. (results.keystoneFivePlus > 10 and "+" or "")
-            }
-        end
-        results.mplusCurrent = {
-            score = results.currentScore,
-            roles = ORDERED_ROLES[results.currentRoleOrdinalIndex] or ORDERED_ROLES[1]
-        }
-        results.mplusPrevious = {
-            season = results.previousScoreSeason,
-            score = results.previousScore,
-            roles = ORDERED_ROLES[results.previousRoleOrdinalIndex] or ORDERED_ROLES[1]
-        }
-        results.mplusMainCurrent = {
-            score = results.mainCurrentScore,
-            roles = ORDERED_ROLES[results.mainCurrentRoleOrdinalIndex] or ORDERED_ROLES[1]
-        }
-        results.mplusMainPrevious = {
-            season = results.mainPreviousScoreSeason,
-            score = results.mainPreviousScore,
-            roles = ORDERED_ROLES[results.mainPreviousRoleOrdinalIndex] or ORDERED_ROLES[1]
-        }
-        results.sortedDungeons = {}
-        for i = 1, #DUNGEONS do
-            local dungeon = DUNGEONS[i]
-            results.sortedDungeons[i] = {
-                dungeon = dungeon,
-                level = results.dungeons[i],
-                chests = results.dungeonUpgrades[dungeon.index],
-                fractionalTime = results.dungeonTimes[dungeon.index]
-            }
-        end
-        table.sort(results.sortedDungeons, SortDungeons)
+        ApplyWeeklyAffixWrapper(results)
+        ApplySortedDungeonsForAffix(results)
+        ApplySortedMilestonesForAffix(results)
+        -- ApplyClientDataToMythicKeystoneData(results, name, realm) -- TODO: weekly affix handling so we disable this until we know what kind of data we expect here
         return results
     end
 
@@ -2875,29 +3136,41 @@ do
                 score = 0,
                 roles = {}
             },
-            dungeons = {},
-            dungeonUpgrades = {},
-            dungeonTimes = {},
-            maxDungeon = 0,
-            maxDungeonLevel = 0,
-            maxDungeonUpgrades = 0,
-            sortedDungeons = {},
+            fortifiedDungeons = {},
+            fortifiedDungeonUpgrades = {},
+            fortifiedDungeonTimes = {},
+            fortifiedMaxDungeonIndex = 1,
+            fortifiedMaxDungeonLevel = 0,
+            fortifiedMaxDungeon = 0,
+            fortifiedMaxDungeonUpgrades = 0,
+            tyrannicalDungeons = {},
+            tyrannicalDungeonUpgrades = {},
+            tyrannicalDungeonTimes = {},
+            tyrannicalMaxDungeonIndex = 1,
+            tyrannicalMaxDungeonLevel = 0,
+            tyrannicalMaxDungeon = 0,
+            tyrannicalMaxDungeonUpgrades = 0,
             sortedMilestones = {}
         }
+        ApplyWeeklyAffixWrapper(results)
         for i = 1, #DUNGEONS do
-            results.dungeons[i] = 0
-            results.dungeonUpgrades[i] = 0
-            results.dungeonTimes[i] = 0
-            results.sortedDungeons[i] = {
-                dungeon = DUNGEONS[i],
-                level = 0,
-                chests = 0,
-                fractionalTime = 999
-            }
+            results.fortifiedDungeons[i] = 0
+            results.fortifiedDungeonUpgrades[i] = 0
+            results.fortifiedDungeonTimes[i] = 999
+            results.tyrannicalDungeons[i] = 0
+            results.tyrannicalDungeonUpgrades[i] = 0
+            results.tyrannicalDungeonTimes[i] = 999
         end
-        table.sort(results.sortedDungeons, SortDungeons)
+        ApplySortedDungeonsForAffix(results)
         return results
     end
+
+    ---@class BlizzardKeystoneAffixInfo
+    ---@field public name string @Affix name.
+    ---@field public level number @Run keystone level.
+    ---@field public score number @Score earned from keystone.
+    ---@field public overTime boolean @Is the run depleted?
+    ---@field public durationSec number @Run duration in seconds.
 
     ---@class BlizzardKeystoneRun
     ---@field public bestRunDurationMS number @Timer in milliseconds
@@ -2905,6 +3178,8 @@ do
     ---@field public challengeModeID number @Keystone instance ID
     ---@field public finishedSuccess boolean @If the run was timed or not
     ---@field public mapScore number @The score worth for the run
+    ---@field public fortified BlizzardKeystoneAffixInfo @Fortified affix data. Only accessible for the players own profile override.
+    ---@field public tyrannical BlizzardKeystoneAffixInfo @Tyrannical affix data. Only accessible for the players own profile override.
 
     -- override or inject cache entry for tooltip rendering for this character with their BIO score and keystune run data
     ---@param name string @Character name
@@ -2936,84 +3211,89 @@ do
             mythicKeystoneProfile.mplusCurrent.score = overallScore
         end
         if type(keystoneRuns) == "table" and keystoneRuns[1] then
-            local maxDungeonIndex = 0
-            -- local maxDungeonTime = 999
-            -- local maxDungeonScore = 0
-            local maxDungeonLevel = 0
-            local maxDungeonUpgrades = 0
-            local maxDungeonRunTimer = 2
-            local needsMaxDungeonUpgrade
-            local needsDungeonSort
-            for i = 1, #keystoneRuns do
-                local run = keystoneRuns[i]
-                local dungeonIndex
-                local dungeon
-                for j = 1, #DUNGEONS do
-                    dungeon = DUNGEONS[j]
-                    if dungeon.keystone_instance == run.challengeModeID then
-                        dungeonIndex = j
-                        break
-                    end
-                    dungeon = nil
-                end
-                local runLevel = run.bestRunLevel
-                if dungeonIndex and mythicKeystoneProfile.dungeons[dungeonIndex] <= runLevel then
-                    mythicKeystoneProfile.hasOverrideDungeonRuns = true
-                    local _, _, dungeonTimeLimit = C_ChallengeMode.GetMapUIInfo(run.challengeModeID)
-                    local goldTimeLimit, silverTimeLimit, bronzeTimeLimit = -1, -1, dungeonTimeLimit
-                    if dungeon.timers then
-                        goldTimeLimit, silverTimeLimit, bronzeTimeLimit = dungeon.timers[1], dungeon.timers[2], dungeonTimeLimit or dungeon.timers[3] -- TODO: always prefer the game data time limit for bronze or the addons time limit?
-                    end
-                    local runSeconds = run.bestRunDurationMS / 1000
-                    local runNumUpgrades = 0
-                    if run.finishedSuccess then
-                        runNumUpgrades = 1
-                        if runSeconds <= goldTimeLimit then
-                            runNumUpgrades = 3
-                        elseif runSeconds <= silverTimeLimit then
-                            runNumUpgrades = 2
-                        end
-                    end
-                    local runTimerAsFraction = runSeconds / (dungeonTimeLimit and dungeonTimeLimit > 0 and dungeonTimeLimit or 1) -- convert game timer to a fraction (1 or below is timed, above is depleted)
-                    local fractionalTime = run.finishedSuccess and (mythicKeystoneProfile.isEnhanced and runTimerAsFraction or (3 - runNumUpgrades)) or 3 -- the data here depends if we are using client enhanced data or not
-                    -- local runScore = run.mapScore
-                    needsMaxDungeonUpgrade = true
-                    mythicKeystoneProfile.dungeons[dungeonIndex] = runLevel
-                    mythicKeystoneProfile.dungeonUpgrades[dungeonIndex] = runNumUpgrades
-                    mythicKeystoneProfile.dungeonTimes[dungeonIndex] = fractionalTime
-                    -- if runNumUpgrades > 0 and (runScore > maxDungeonScore or (runScore == maxDungeonScore and fractionalTime < maxDungeonTime)) then
-                    if runNumUpgrades > 0 and (runLevel > maxDungeonLevel or (runLevel == maxDungeonLevel and runTimerAsFraction < maxDungeonRunTimer)) then
-                        maxDungeonIndex = dungeonIndex
-                        -- maxDungeonTime = fractionalTime
-                        -- maxDungeonScore = runScore
-                        maxDungeonLevel = runLevel
-                        maxDungeonUpgrades = runNumUpgrades
-                        maxDungeonRunTimer = runTimerAsFraction
-                    end
-                    local sortedDungeon
-                    for j = 1, #mythicKeystoneProfile.sortedDungeons do
-                        sortedDungeon = mythicKeystoneProfile.sortedDungeons[j]
-                        if sortedDungeon.dungeon == dungeon then
+            local isPlayer = util:IsUnitPlayer(name, realm)
+            local _, realWeeklyAffixInternal = util:GetWeeklyAffix()
+            local weeklyAffixInternals = { realWeeklyAffixInternal }
+            if isPlayer then
+                weeklyAffixInternals[1] = "fortified"
+                weeklyAffixInternals[2] = "tyrannical"
+            end
+            for _, weeklyAffixInternal in pairs(weeklyAffixInternals) do
+                local weekDungeons = mythicKeystoneProfile[weeklyAffixInternal .. "Dungeons"]
+                local weekDungeonUpgrades = mythicKeystoneProfile[weeklyAffixInternal .. "DungeonUpgrades"]
+                local weekDungeonTimes = mythicKeystoneProfile[weeklyAffixInternal .. "DungeonTimes"]
+                local maxDungeonIndex = 0
+                -- local maxDungeonTime = 999
+                -- local maxDungeonScore = 0
+                local maxDungeonLevel = 0
+                local maxDungeonUpgrades = 0
+                local maxDungeonRunTimer = 2
+                local needsMaxDungeonUpgrade
+                for i = 1, #keystoneRuns do
+                    local run = keystoneRuns[i]
+                    local runAffixData = run[weeklyAffixInternal] ---@type BlizzardKeystoneAffixInfo
+                    local dungeonIndex
+                    local dungeon
+                    for j = 1, #DUNGEONS do
+                        dungeon = DUNGEONS[j]
+                        if dungeon.keystone_instance == run.challengeModeID then
+                            dungeonIndex = j
                             break
                         end
-                        sortedDungeon = nil
+                        dungeon = nil
                     end
-                    if sortedDungeon and sortedDungeon.level <= runLevel then
-                        needsDungeonSort = true
-                        sortedDungeon.level = runLevel
-                        sortedDungeon.chests = runNumUpgrades
-                        sortedDungeon.fractionalTime = fractionalTime
+                    if dungeonIndex and (not isPlayer or runAffixData) then
+                        local runBestRunLevel = run.bestRunLevel
+                        local runBestRunDurationMS = run.bestRunDurationMS
+                        local runFinishedSuccess = run.finishedSuccess
+                        -- local runMapScore = run.mapScore
+                        if runAffixData then
+                            runBestRunLevel = runAffixData.level
+                            runBestRunDurationMS = runAffixData.durationSec * 1000
+                            runFinishedSuccess = not runAffixData.overTime
+                        end
+                        if dungeonIndex and weekDungeons[dungeonIndex] <= runBestRunLevel then
+                            mythicKeystoneProfile.hasOverrideDungeonRuns = true
+                            local _, _, dungeonTimeLimit = C_ChallengeMode.GetMapUIInfo(run.challengeModeID)
+                            local goldTimeLimit, silverTimeLimit, bronzeTimeLimit = -1, -1, dungeonTimeLimit
+                            if dungeon.timers then
+                                goldTimeLimit, silverTimeLimit, bronzeTimeLimit = dungeon.timers[1], dungeon.timers[2], dungeonTimeLimit or dungeon.timers[3] -- TODO: always prefer the game data time limit for bronze or the addons time limit?
+                            end
+                            local runSeconds = runBestRunDurationMS / 1000
+                            local runNumUpgrades = 0
+                            if runFinishedSuccess then
+                                runNumUpgrades = 1
+                                if runSeconds <= goldTimeLimit then
+                                    runNumUpgrades = 3
+                                elseif runSeconds <= silverTimeLimit then
+                                    runNumUpgrades = 2
+                                end
+                            end
+                            local runTimerAsFraction = runSeconds / (dungeonTimeLimit and dungeonTimeLimit > 0 and dungeonTimeLimit or 1) -- convert game timer to a fraction (1 or below is timed, above is depleted)
+                            local fractionalTime = runFinishedSuccess and (mythicKeystoneProfile.isEnhanced and runTimerAsFraction or (3 - runNumUpgrades)) or 3 -- the data here depends if we are using client enhanced data or not
+                            needsMaxDungeonUpgrade = true
+                            weekDungeons[dungeonIndex] = runBestRunLevel
+                            weekDungeonUpgrades[dungeonIndex] = runNumUpgrades
+                            weekDungeonTimes[dungeonIndex] = fractionalTime
+                            -- if runNumUpgrades > 0 and (runMapScore > maxDungeonScore or (runMapScore == maxDungeonScore and fractionalTime < maxDungeonTime)) then
+                            if runNumUpgrades > 0 and (runBestRunLevel > maxDungeonLevel or (runBestRunLevel == maxDungeonLevel and runTimerAsFraction < maxDungeonRunTimer)) then
+                                maxDungeonIndex = dungeonIndex
+                                -- maxDungeonTime = fractionalTime
+                                -- maxDungeonScore = runMapScore
+                                maxDungeonLevel = runBestRunLevel
+                                maxDungeonUpgrades = runNumUpgrades
+                                maxDungeonRunTimer = runTimerAsFraction
+                            end
+                        end
                     end
                 end
+                if needsMaxDungeonUpgrade then
+                    mythicKeystoneProfile[weeklyAffixInternal .. "MaxDungeon"] = DUNGEONS[maxDungeonIndex]
+                    mythicKeystoneProfile[weeklyAffixInternal .. "MaxDungeonLevel"] = maxDungeonLevel
+                    mythicKeystoneProfile[weeklyAffixInternal .. "MaxDungeonUpgrades"] = maxDungeonUpgrades
+                end
             end
-            if needsMaxDungeonUpgrade then
-                mythicKeystoneProfile.maxDungeon = DUNGEONS[maxDungeonIndex]
-                mythicKeystoneProfile.maxDungeonLevel = maxDungeonLevel
-                mythicKeystoneProfile.maxDungeonUpgrades = maxDungeonUpgrades
-            end
-            if needsDungeonSort then
-                table.sort(mythicKeystoneProfile.sortedDungeons, SortDungeons)
-            end
+            table.sort(mythicKeystoneProfile.sortedDungeons, SortDungeons)
         end
         if mythicKeystoneProfile.hasOverrideScore or mythicKeystoneProfile.hasOverrideDungeonRuns then
             mythicKeystoneProfile.blocked = nil
@@ -3110,9 +3390,39 @@ do
         return cache
     end
 
+    ---@class BlizzardKeystoneSummary
+    ---@field public currentSeasonScore number @The current season keystone score.
+    ---@field public runs BlizzardKeystoneRun[] @Table over each keystone dungeon.
+
+    ---@param bioSummary BlizzardKeystoneSummary
+    local function ExpandSummaryWithChallengeModeMapData(bioSummary)
+        local mapIDs = C_ChallengeMode.GetMapTable()
+        for _, mapID in ipairs(mapIDs) do
+            local affixScores, bestOverAllScore
+            local mapRun
+            for _, run in ipairs(bioSummary.runs) do
+                if mapID == run.challengeModeID then
+                    affixScores, bestOverAllScore = C_MythicPlus.GetSeasonBestAffixScoreInfoForMap(mapID)
+                    mapRun = run
+                    break
+                end
+            end
+            if affixScores and mapRun then
+                for _, data in pairs(affixScores) do
+                    if data.name == "Fortified" then
+                        mapRun.fortified = data
+                    elseif data.name == "Tyrannical" then
+                        mapRun.tyrannical = data
+                    end
+                end
+            end
+        end
+    end
+
     local function OverridePlayerData()
-        local bioSummary = C_PlayerInfo.GetPlayerMythicPlusRatingSummary("player")
+        local bioSummary = C_PlayerInfo.GetPlayerMythicPlusRatingSummary("player") ---@type BlizzardKeystoneSummary
         if bioSummary and bioSummary.currentSeasonScore then
+            ExpandSummaryWithChallengeModeMapData(bioSummary)
             provider:OverrideProfile(ns.PLAYER_NAME, ns.PLAYER_REALM, ns.PLAYER_FACTION, bioSummary.currentSeasonScore, bioSummary.runs)
         end
     end
@@ -3463,31 +3773,63 @@ do
         return table.concat(icons, "") .. " " .. score
     end
 
-    ---@class BestRun
-    ---@field public dungeon Dungeon|nil
-    ---@field public level number
-    ---@field public text string|nil
+    ---Takes tripples of `Dungeon, Level, Chests` args, returns the best run back.
+    ---@return Dungeon, number, number @`arg1`= the Dungeon, `arg2` = keystone level, `arg3` = chests
+    local function GetBestRunOfDungeons(...)
+        local bestDungeon ---@type Dungeon|nil
+        local bestLevel = 0 ---@type number
+        local bestChests = 0 ---@type number
+        local args = {...}
+        for i = 1, #args, 3 do
+            local dungeon = args[i]
+            local level = args[i + 1]
+            local chests = args[i + 2]
+            if dungeon and (level > bestLevel or (level >= bestLevel and chests > bestChests)) then
+                bestDungeon, bestLevel, bestChests = dungeon, level, chests
+            end
+        end
+        return bestDungeon, bestLevel, bestChests
+    end
 
+    ---@class BestRun
+    ---@field public dungeon Dungeon|nil @The dungeon.
+    ---@field public level number @The keystone level.
+    ---@field public chests number @The amount of chests/medals earned.
+
+    ---@param tooltip GameTooltip
     ---@param keystoneProfile DataProviderMythicKeystoneProfile
     ---@param state TooltipState
+    ---@param isHeader boolean
     ---@return boolean|nil @Returns true if this is a header and it has added data to the tooltip, otherwise false, or nil if it's not a header request.
     local function AppendBestRunToTooltip(tooltip, keystoneProfile, state, isHeader)
         local options = state.options
         local showLFD = Has(options, render.Flags.SHOW_LFD)
-        local best = { dungeon = nil, level = 0, text = nil } ---@type BestRun @best dungeon
-        local overallBest = { dungeon = keystoneProfile.maxDungeon, level = keystoneProfile.maxDungeonLevel, text = nil } ---@type BestRun @overall best
+        local best = { dungeon = nil, level = 0, chests = 0 } ---@type BestRun
+        local overallBest = { dungeon = nil, level = 0, chests = 0 } ---@type BestRun
+        overallBest.dungeon,
+        overallBest.level,
+        overallBest.chests = GetBestRunOfDungeons(
+            keystoneProfile.fortifiedMaxDungeon,
+            keystoneProfile.fortifiedMaxDungeonLevel,
+            keystoneProfile.fortifiedDungeonUpgrades[keystoneProfile.fortifiedMaxDungeonIndex],
+            keystoneProfile.tyrannicalMaxDungeon,
+            keystoneProfile.tyrannicalMaxDungeonLevel,
+            keystoneProfile.tyrannicalDungeonUpgrades[keystoneProfile.tyrannicalMaxDungeonIndex]
+        )
         if showLFD then
             local focusDungeon = util:GetLFDStatusForCurrentActivity(state.args and state.args.activityID)
             if focusDungeon then
-                best.dungeon = focusDungeon
-                best.level = keystoneProfile.dungeons[focusDungeon.index]
+                best.dungeon,
+                best.level,
+                best.chests = GetBestRunOfDungeons(
+                    focusDungeon,
+                    keystoneProfile.fortifiedDungeons[focusDungeon.index],
+                    keystoneProfile.fortifiedDungeonUpgrades[focusDungeon.index],
+                    focusDungeon,
+                    keystoneProfile.tyrannicalDungeons[focusDungeon.index],
+                    keystoneProfile.tyrannicalDungeonUpgrades[focusDungeon.index]
+                )
             end
-        end
-        if best.dungeon and (not best.level or best.level < 1) then
-            best.level = keystoneProfile.dungeons[best.dungeon.index] or 0
-        end
-        if not best.dungeon or (best.level and best.level < 1) then
-            best.dungeon, best.level = nil, 0
         end
         local hasHeaderData = false
         if overallBest.level > 0 and (not best.dungeon or best.dungeon ~= overallBest.dungeon) then
@@ -3498,7 +3840,7 @@ do
             else
                 label, r, g, b = L.BEST_RUN, 1, 1, 1
             end
-            tooltip:AddDoubleLine(label, util:GetNumChests(keystoneProfile.dungeonUpgrades[overallBest.dungeon.index]) .. "|cffffffff" .. overallBest.level .. "|r " .. overallBest.dungeon.shortNameLocale, r, g, b, util:GetScoreColor(keystoneProfile.mplusCurrent.score))
+            tooltip:AddDoubleLine(label, util:GetNumChests(overallBest.chests) .. "|cffffffff" .. overallBest.level .. "|r " .. overallBest.dungeon.shortNameLocale, r, g, b, util:GetScoreColor(keystoneProfile.mplusCurrent.score))
         end
         if best.dungeon and best.level > 0 then
             local label, r, g, b = L.BEST_FOR_DUNGEON, 1, 1, 1
@@ -3510,7 +3852,7 @@ do
                     label, r, g, b = L.BEST_FOR_DUNGEON, 0, 1, 0
                 end
             end
-            tooltip:AddDoubleLine(label, util:GetNumChests(keystoneProfile.dungeonUpgrades[best.dungeon.index]) .. "|cffffffff" .. best.level .. "|r " .. best.dungeon.shortNameLocale, r, g, b, util:GetScoreColor(keystoneProfile.mplusCurrent.score))
+            tooltip:AddDoubleLine(label, util:GetNumChests(best.chests) .. "|cffffffff" .. best.level .. "|r " .. best.dungeon.shortNameLocale, r, g, b, util:GetScoreColor(keystoneProfile.mplusCurrent.score))
         end
         if isHeader then
             return hasHeaderData
@@ -3550,7 +3892,7 @@ do
                 local level = profile.mythicKeystoneProfile.dungeons[dungeon.index]
                 if level > 0 then
                     index = index + 1
-                    members[index] = { unit = unit, level = level, name = UnitName(unit), chests = profile.mythicKeystoneProfile.dungeonUpgrades[dungeon.index] }
+                    members[index] = { unit = unit, level = level, name = UnitNameUnmodified(unit), chests = profile.mythicKeystoneProfile.dungeonUpgrades[dungeon.index] }
                 end
             end
         end
@@ -3559,8 +3901,37 @@ do
         end
         for i = 1, index do
             local member = members[i]
-            tooltip:AddDoubleLine(UnitName(member.unit), util:GetNumChests(member.chests) .. member.level .. " " .. dungeon.shortNameLocale, 1, 1, 1, util:GetKeystoneChestColor(member.chests))
+            tooltip:AddDoubleLine(UnitNameUnmodified(member.unit), util:GetNumChests(member.chests) .. member.level .. " " .. dungeon.shortNameLocale, 1, 1, 1, util:GetKeystoneChestColor(member.chests))
         end
+    end
+
+    ---@param sortedDungeons SortedDungeon[]
+    local function GetSortedDungeonsTooltipText(sortedDungeons, weeklyAffixInternal, currentWeeklyAffixInternal)
+        local isActive = not currentWeeklyAffixInternal or weeklyAffixInternal == currentWeeklyAffixInternal
+        local lines = {}
+        local lineWidth = {}
+        local maxWidth = 0
+        for i = 1, #sortedDungeons do
+            local sortedDungeon = sortedDungeons[i]
+            local chests = sortedDungeon[weeklyAffixInternal .. "Chests"]
+            local level = sortedDungeon[weeklyAffixInternal .. "Level"]
+            -- local fractionalTime = sortedDungeon[weeklyAffixInternal .. "FractionalTime"]
+            local text = {
+                util:GetNumChests(chests, not isActive),
+                "|cff",
+                isActive and util:GetKeystoneChestColor(chests, true) or "bfbfbf",
+                level > 0 and level or "-",
+                "|r",
+            }
+            text = table.concat(text)
+            lines[i] = text
+            local width = util:GetTooltipTextWidth(text)
+            lineWidth[i] = width
+            if width > maxWidth then
+                maxWidth = width
+            end
+        end
+        return lines, lineWidth, maxWidth
     end
 
     ---@param state TooltipState
@@ -3674,23 +4045,39 @@ do
                             end
                         end
                         if hasBestDungeons or true then -- HOTFIX: we prefer to always display this in the expanded profile so even empty profiles can display what dungeons there are for the player to complete
+                            local focusDungeon = showLFD and util:GetLFDStatusForCurrentActivity(state.args and state.args.activityID)
+                            local fortifiedLines, fortifiedLinesWidth, fortifiedMaxWidth = GetSortedDungeonsTooltipText(keystoneProfile.sortedDungeons, "fortified")
+                            local tyrannicalLines, tyrannicalLinesWidth, tyrannicalMaxWidth = GetSortedDungeonsTooltipText(keystoneProfile.sortedDungeons, "tyrannical")
+                            local paddingBetweenColumns = 15 -- additional column padding in order to avoid the columns appearing glued together
+                            tyrannicalMaxWidth = tyrannicalMaxWidth + paddingBetweenColumns
                             if showHeader then
                                 if showPadding then
                                     tooltip:AddLine(" ")
                                 end
-                                tooltip:AddLine(L.PROFILE_BEST_RUNS, 1, 0.85, 0)
+                                local weeklyAffixID = util:GetWeeklyAffix()
+                                local leftHeaderText = ns.KEYSTONE_AFFIX_TEXTURE[weeklyAffixID == 10 and 10 or -10]
+                                local rightHeaderText = ns.KEYSTONE_AFFIX_TEXTURE[weeklyAffixID == 9 and 9 or -9]
+                                local rightHeaderTextWidth = util:GetTooltipTextWidth(rightHeaderText)
+                                if rightHeaderTextWidth > tyrannicalMaxWidth then
+                                    tyrannicalMaxWidth = rightHeaderTextWidth + paddingBetweenColumns
+                                end
+                                local paddingTexture = util:GetTextPaddingTexture(tyrannicalMaxWidth - rightHeaderTextWidth)
+                                local text = { leftHeaderText, paddingTexture, rightHeaderText }
+                                tooltip:AddDoubleLine(L.PROFILE_BEST_RUNS, table.concat(text, ""), 1, 0.85, 0, 1, 0.85, 0)
                             end
-                            local focusDungeon = showLFD and util:GetLFDStatusForCurrentActivity(state.args and state.args.activityID)
                             for i = 1, #keystoneProfile.sortedDungeons do
                                 local sortedDungeon = keystoneProfile.sortedDungeons[i]
                                 local r, g, b = 1, 1, 1
                                 if sortedDungeon.dungeon == focusDungeon then
                                     r, g, b = 0, 1, 0
                                 end
-                                if sortedDungeon.level > 0 then
-                                    tooltip:AddDoubleLine(sortedDungeon.dungeon.shortNameLocale, util:GetNumChests(sortedDungeon.chests) .. sortedDungeon.level, r, g, b, util:GetKeystoneChestColor(sortedDungeon.chests))
+                                local paddingTexture = util:GetTextPaddingTexture(tyrannicalMaxWidth - tyrannicalLinesWidth[i])
+                                if sortedDungeon.fortifiedLevel > 0 or sortedDungeon.tyrannicalLevel > 0 then
+                                    local text = { fortifiedLines[i], paddingTexture, tyrannicalLines[i] }
+                                    tooltip:AddDoubleLine(sortedDungeon.dungeon.shortNameLocale, table.concat(text, ""), r, g, b, 0.5, 0.5, 0.5)
                                 else
-                                    tooltip:AddDoubleLine(sortedDungeon.dungeon.shortNameLocale, "-", r, g, b, 0.5, 0.5, 0.5)
+                                    local text = { "-", paddingTexture, "-" }
+                                    tooltip:AddDoubleLine(sortedDungeon.dungeon.shortNameLocale, table.concat(text, ""), r, g, b, 0.5, 0.5, 0.5)
                                 end
                             end
                         end
@@ -3827,6 +4214,17 @@ do
         return false
     end
 
+    ---@param frame Frame @The frame to inspect. Its safe if there are no protected APIs called when the handler is executed.
+    ---@param onEnter function @Optional function, the OnEnter handler that we can also compare against for matches.
+    local function IsSafeFrame(frame, onEnter)
+        local parent = frame:GetParent()
+        -- LFGListSearchEntry_OnEnter > LFGListUtil_SetSearchEntryTooltip > C_LFGList.GetPlaystyleString
+        if onEnter == _G.LFGListSearchEntry_OnEnter or (frame.resultID and parent == _G.LFGListSearchPanelScrollFrameScrollChild) then
+            return false
+        end
+        return true
+    end
+
     ---@param state TooltipState
     local function UpdateTooltip(tooltip, state)
         -- if unit simply refresh the unit and the original hook will force update the tooltip with the desired behavior
@@ -3850,9 +4248,12 @@ do
         if o1 then
             local oe = o1:GetScript("OnEnter")
             if oe then
-                tooltip:Hide()
-                pcall(oe, o1)
-                return
+                if IsSafeFrame(o1, oe) then
+                    tooltip:Hide()
+                    pcall(oe, o1)
+                    return
+                end
+                return false
             end
         end
         -- if the owner is the UIParent we must beware as it might be the fading out unit tooltips that linger, we do not wish to update these as we do not have a valid unit anymore for reference so we just don't do anything instead
@@ -4744,41 +5145,124 @@ do
     local profile = ns:NewModule("Profile") ---@type ProfileModule
     local callback = ns:GetModule("Callback") ---@type CallbackModule
     local config = ns:GetModule("Config") ---@type ConfigModule
-    local util = ns:GetModule("Util") ---@type UtilModule
     local render = ns:GetModule("Render") ---@type RenderModule
 
     local function IsFrame(widget)
-        return type(widget) == "table" and type(widget.GetObjectType) == "function"
+        return type(widget) == "table" and type(widget.GetObjectType) == "function" and widget
     end
 
-    local FALLBACK_ANCHOR = _G.PVEFrame
-    local FALLBACK_ANCHOR_STRATA = "LOW"
-    local FALLBACK_FRAME = _G.UIParent
-    local FALLBACK_FRAME_STRATA = "LOW"
+    local STRATA_MAP = {
+        "TOOLTIP",
+        "FULLSCREEN_DIALOG",
+        "FULLSCREEN",
+        "DIALOG",
+        "HIGH",
+        "MEDIUM",
+        "LOW",
+        "BACKGROUND",
+    }
 
+    for k, v in ipairs(STRATA_MAP) do
+        STRATA_MAP[v] = k
+    end
+
+    local function GetHighestStrata(...)
+        local s, o
+        for _, v in ipairs({...}) do
+            if type(v) == "string" then
+                local c = STRATA_MAP[v]
+                if not o or o > c then
+                    s, o = v, c
+                end
+            end
+        end
+        return s
+    end
+
+    local fallbackFrame = _G.UIParent
+    local fallbackStrata = "LOW"
+
+    local tooltipAnchor
     local tooltip
 
-    ---@param isDraggable boolean
-    ---@return boolean @true if frame is draggable, otherwise false.
-    local function SetDraggable(isDraggable)
-        tooltip:EnableMouse(isDraggable)
-        tooltip:SetMovable(isDraggable)
-        return isDraggable
+    local tooltipAnchorPriority = {
+        -- this entry is updated with the latest anchor from previous `profile:ShowProfile(anchor, ...)` call so that we can prioritize this anchor above all others
+        {
+            name = nil,
+            strata = "TOOLTIP",
+        },
+        -- overrides the default PVEFrame anchor behavior when Premade Groups Filter is loaded
+        {
+            name = "PremadeGroupsFilterDialog",
+            hook = function(anchor, frame, updatePosition)
+                if not anchor.toggleHooked and IsFrame(frame.MoveableToggle) then
+                    anchor.toggleHooked = true
+                    frame.MoveableToggle:HookScript("OnClick", updatePosition)
+                end
+            end,
+            usable = function(anchor, frame)
+                return frame:IsShown() and (not frame.MoveableToggle or not frame.MoveableToggle:GetChecked())
+            end,
+        },
+        -- the default PVEFrame player profile and anchor behavior
+        {
+            name = "PVEFrame",
+            show = function(anchor, frame)
+                if not frame:IsShown() or not config:Get("showRaiderIOProfile") then
+                    return
+                end
+                profile:ShowProfile(false, "player", ns.PLAYER_FACTION)
+            end,
+            hide = function()
+                profile:HideProfile()
+            end,
+        },
+    }
+
+    local hookedFrames = {}
+
+    local function Eval(o, f, ...)
+        if type(o) == "function" then
+            return o(...)
+        end
+        return o or f
     end
 
-    ---@param anchorFrame table @The widget to anchor
-    ---@param frameStrata string @The frame strata "LOW", "HIGH", "DIALOG", etc.
+    local function GetAnchorPoint(anchor, frame)
+        return 
+            Eval(anchor.point, "TOPLEFT", anchor, frame),
+            Eval(anchor.rpoint, "TOPRIGHT", anchor, frame),
+            Eval(anchor.x, -16, anchor, frame),
+            Eval(anchor.y, 0, anchor, frame),
+            Eval(anchor.strata, fallbackStrata, anchor, frame)
+    end
+
     ---@return table, string @Returns the used frame and strata after logical checks have been performed on the provided frame and strata values.
-    local function SetAnchor(anchorFrame, frameStrata)
-        anchorFrame = IsFrame(anchorFrame) and anchorFrame or FALLBACK_ANCHOR
-        local frame = anchorFrame or FALLBACK_ANCHOR
-        local strata = frameStrata or FALLBACK_ANCHOR_STRATA
-        tooltip:SetParent(frame)
-        tooltip:SetOwner(anchorFrame, "ANCHOR_NONE")
-        tooltip:ClearAllPoints()
-        tooltip:SetPoint("TOPLEFT", frame, "TOPRIGHT", 0, 0)
-        tooltip:SetFrameStrata(strata)
-        return frame, strata
+    local function SetAnchor()
+        for _, anchor in ipairs(tooltipAnchorPriority) do
+            local frame = anchor.name
+            if frame then
+                frame = IsFrame(frame) or IsFrame(_G[frame])
+                if frame then
+                    local usable = anchor.usable
+                    if usable == nil then
+                        usable = true
+                    elseif type(usable) == "function" then
+                        usable = anchor.usable(anchor, frame)
+                    end
+                    if usable then
+                        local p, rp, x, y, strata = GetAnchorPoint(anchor, frame)
+                        strata = GetHighestStrata(strata, frame:GetFrameStrata())
+                        tooltipAnchor:SetParent(frame)
+                        tooltipAnchor:ClearAllPoints()
+                        tooltipAnchor:SetPoint(p, frame, rp, x, y)
+                        tooltipAnchor:SetFrameStrata(strata)
+                        tooltip:SetFrameStrata(strata)
+                        return frame, strata
+                    end
+                end
+            end
+        end
     end
 
     ---@class ConfigProfilePoint
@@ -4789,64 +5273,105 @@ do
     ---@return table, string @Returns the used frame and strata after logical checks have been performed on the provided frame and strata values.
     local function SetUserAnchor()
         local profilePoint = config:Get("profilePoint") ---@type ConfigProfilePoint
-        tooltip:SetParent(FALLBACK_FRAME)
-        tooltip:SetOwner(FALLBACK_FRAME, "ANCHOR_NONE")
-        tooltip:ClearAllPoints()
         local p = profilePoint.point or "CENTER"
         local x = profilePoint.x or 0
         local y = profilePoint.y or 0
-        tooltip:SetPoint(p, FALLBACK_FRAME, p, x, y)
-        tooltip:SetFrameStrata(FALLBACK_FRAME_STRATA)
-        return FALLBACK_FRAME, FALLBACK_FRAME_STRATA
+        tooltipAnchor:SetParent(fallbackFrame)
+        tooltipAnchor:ClearAllPoints()
+        tooltipAnchor:SetPoint(p, fallbackFrame, p, x, y)
+        tooltipAnchor:SetFrameStrata(fallbackStrata)
+        tooltip:SetFrameStrata(fallbackStrata)
+        return fallbackFrame, fallbackStrata
+    end
+
+    ---@param isDraggable boolean
+    ---@return boolean @true if frame is draggable, otherwise false.
+    local function SetDraggable(self, isDraggable)
+        self:EnableMouse(isDraggable)
+        self:SetMovable(isDraggable)
+        self.Indicator:SetShown(isDraggable)
+        self.Icon:SetShown(isDraggable)
+        return isDraggable
     end
 
     ---@return boolean, table, string @arg1 returns true if position is automatic, otherwise false. `arg2+` are the same as returned from `SetAnchor` or `SetUserAnchor`.
-    local function UpdatePosition()
-        SetDraggable(not config:Get("positionProfileAuto") and not config:Get("lockProfile"))
+    local function UpdatePosition(anchor, frame)
+        if anchor and frame then
+            if frame:IsShown() and anchor.show and type(anchor.show) == "function" then
+                anchor.show(anchor, frame)
+            elseif not frame:IsShown() and anchor.hide and type(anchor.hide) == "function" then
+                anchor.hide(anchor, frame)
+            end
+        end
+        SetDraggable(tooltipAnchor, not config:Get("positionProfileAuto") and not config:Get("lockProfile"))
         if config:Get("positionProfileAuto") then
-            return true, SetAnchor(FALLBACK_ANCHOR, FALLBACK_ANCHOR_STRATA)
+            return true, SetAnchor()
         else
             return false, SetUserAnchor()
         end
     end
 
-    local function Tooltip_OnShow()
-        if GameTooltip_SetBackdropStyle then
-            GameTooltip_SetBackdropStyle(tooltip, GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT)
+    local function UpdateAnchorHooks()
+        for _, anchor in ipairs(tooltipAnchorPriority) do
+            local frame = anchor.name
+            if frame then
+                frame = IsFrame(frame) or IsFrame(_G[frame])
+                if frame then
+                    local function updatePosition()
+                        return UpdatePosition(anchor, frame)
+                    end
+                    if not hookedFrames[frame] then
+                        hookedFrames[frame] = true
+                        frame:HookScript("OnShow", updatePosition)
+                        frame:HookScript("OnHide", updatePosition)
+                    end
+                    if anchor.hook and type(anchor.hook) == "function" then
+                        anchor.hook(anchor, frame, updatePosition)
+                    end
+                end
+            end
         end
     end
 
-    local function Tooltip_OnDragStart()
-        tooltip:StartMoving()
+    local function OnDragStart(self)
+        self:StartMoving()
     end
 
-    local function Tooltip_OnDragStop()
-        tooltip:StopMovingOrSizing()
-        local point, _, _, x, y = tooltip:GetPoint() -- TODO: improve this to store a corner so that when the tip is resized the corner is the anchor point and not the center as that makes it very wobbly and unpleasant to look at
+    local function OnDragStop(self)
+        self:StopMovingOrSizing()
+        local point, _, _, x, y = self:GetPoint() -- TODO: improve this to store a corner so that when the tip is resized the corner is the anchor point and not the center as that makes it very wobbly and unpleasant to look at
         local profilePoint = config:Get("profilePoint") ---@type ConfigProfilePoint
         config:Set("profilePoint", profilePoint)
         profilePoint.point, profilePoint.x, profilePoint.y = point, x, y
     end
 
+    local function CreateTooltipAnchor()
+        local frame = CreateFrame("Frame", nil, fallbackFrame)
+        frame:SetFrameStrata(fallbackStrata)
+        frame:SetFrameLevel(100)
+        frame:SetClampedToScreen(true)
+        frame:RegisterForDrag("LeftButton")
+        frame:SetScript("OnDragStart", OnDragStart)
+        frame:SetScript("OnDragStop", OnDragStop)
+        frame:SetSize(16, 16)
+        frame.Indicator = frame:CreateTexture(nil, "BACKGROUND")
+        frame.Indicator:SetAllPoints()
+        frame.Indicator:SetColorTexture(0.3, 0.3, 0.3)
+        frame.Icon = frame:CreateTexture(nil, "ARTWORK")
+        frame.Icon:SetAllPoints()
+        frame.Icon:SetTexture(386863)
+        return frame
+    end
+
     local function CreateTooltip()
-        local tooltip = CreateFrame("GameTooltip", addonName .. "ProfileTooltip", UIParent, "GameTooltipTemplate")
+        local tooltip = CreateFrame("GameTooltip", addonName .. "_ProfileTooltip", tooltipAnchor, "GameTooltipTemplate")
         tooltip:SetClampedToScreen(true)
-        tooltip:RegisterForDrag("LeftButton")
-        tooltip:SetScript("OnShow", Tooltip_OnShow)
-        tooltip:SetScript("OnDragStart", Tooltip_OnDragStart)
-        tooltip:SetScript("OnDragStop", Tooltip_OnDragStop)
+        tooltip:SetOwner(tooltipAnchor, "ANCHOR_NONE")
+        tooltip:ClearAllPoints()
+        tooltip:SetPoint("TOPLEFT", tooltipAnchor, "TOPRIGHT", 0, 0)
+        tooltip:SetFrameStrata(fallbackStrata)
+        tooltip:SetFrameLevel(100)
         return tooltip
-    end
-
-    local function PVEFrame_OnShow()
-        if not PVEFrame:IsShown() or not config:Get("showRaiderIOProfile") then
-            return
-        end
-        profile:ShowProfile(false, "player", ns.PLAYER_FACTION)
-    end
-
-    local function PVEFrame_OnHide()
-        profile:HideProfile()
     end
 
     local function OnSettingsSaved()
@@ -4854,7 +5379,15 @@ do
             return
         end
         UpdatePosition()
-        profile:HideProfile()
+    end
+
+    local showProfileArgs
+
+    local function OnModifierStateChanged()
+        if not showProfileArgs or not showProfileArgs[1] or not showProfileArgs[2] then
+            return
+        end
+        return profile:ShowProfile(unpack(showProfileArgs))
     end
 
     function profile:CanLoad()
@@ -4863,11 +5396,13 @@ do
 
     function profile:OnLoad()
         self:Enable()
+        tooltipAnchor = CreateTooltipAnchor()
         tooltip = CreateTooltip()
-        PVEFrame:HookScript("OnShow", PVEFrame_OnShow)
-        PVEFrame:HookScript("OnHide", PVEFrame_OnHide)
+        UpdateAnchorHooks()
         UpdatePosition()
         callback:RegisterEvent(OnSettingsSaved, "RAIDERIO_SETTINGS_SAVED")
+        callback:RegisterEvent(UpdateAnchorHooks, "ADDON_LOADED")
+        callback:RegisterEvent(OnModifierStateChanged, "MODIFIER_STATE_CHANGED")
     end
 
     ---@return boolean, boolean @arg1 is true if the toggle was successfull, otherwise false if we can't toggle right now. arg2 is set to true if the frame is now draggable, otherwise false for locked.
@@ -4886,7 +5421,7 @@ do
         else
             ns.Print(L.UNLOCKING_PROFILE_FRAME)
         end
-        return true, SetDraggable(not isLocking)
+        return true, SetDraggable(tooltipAnchor, not isLocking)
     end
 
     local function IsPlayer(unit, name, realm, region)
@@ -4901,18 +5436,20 @@ do
         if not profile:IsEnabled() or not config:Get("showRaiderIOProfile") then
             return
         end
+        showProfileArgs = { anchor, ... }
+        tooltipAnchorPriority[1].name = anchor
+        UpdateAnchorHooks()
+        UpdatePosition()
         local unit, name, realm, faction, options, args, region = render.GetQuery(...)
         options = options or render.Preset.Profile()
-        local positionProfileAuto = UpdatePosition()
-        if positionProfileAuto and IsFrame(anchor) then
-            SetAnchor(anchor, anchor:GetFrameStrata())
-        end
         local isPlayer = IsPlayer(unit, name, realm, region)
         if not isPlayer and config:Get("enableProfileModifier") and band(options, render.Flags.IGNORE_MOD) ~= render.Flags.IGNORE_MOD then
             if config:Get("inverseProfileModifier") == (config:Get("alwaysExtendTooltip") or band(options, render.Flags.MOD) == render.Flags.MOD) then
                 unit, name, realm, faction = "player", nil, nil, ns.PLAYER_FACTION
             end
         end
+        tooltip:SetOwner(tooltipAnchor, "ANCHOR_NONE")
+        tooltip:SetPoint("TOPLEFT", tooltipAnchor, "TOPRIGHT", 0, 0)
         local success
         if not isPlayer or not config:Get("hidePersonalRaiderIOProfile") then
             if unit and UnitExists(unit) then
@@ -4930,6 +5467,9 @@ do
     function profile:HideProfile()
         if not profile:IsEnabled() then
             return
+        end
+        if showProfileArgs then
+            table.wipe(showProfileArgs)
         end
         render:HideTooltip(tooltip)
     end
@@ -5693,7 +6233,7 @@ do
             frame:SetFrameStrata("MEDIUM")
             frame:SetSize(115, 115)
             if frame.SetBackdrop then
-                frame:SetBackdrop(BACKDROP_TOOLTIP_16_16_5555 or GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT)
+                frame:SetBackdrop(BACKDROP_TUTORIAL_16_16 or BACKDROP_TOOLTIP_16_16_5555 or GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT)
                 frame:SetBackdropBorderColor(1, 1, 1, 1)
                 frame:SetBackdropColor(0, 0, 0, 0.6)
             end
@@ -5988,7 +6528,7 @@ do
             Frame:SetSize(310, config:Get("debugMode") and 115 or 100)
             Frame:SetPoint("CENTER")
             if Frame.SetBackdrop then
-                Frame:SetBackdrop(BACKDROP_TOOLTIP_16_16_5555 or GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT)
+                Frame:SetBackdrop(BACKDROP_TUTORIAL_16_16 or BACKDROP_TOOLTIP_16_16_5555 or GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT)
                 Frame:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR:GetRGB())
                 Frame:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR:GetRGB())
                 Frame:SetBackdropColor(0, 0, 0, 1) -- TODO: ?
@@ -7319,6 +7859,7 @@ do
             configOptions:CreateOptionToggle(L.SHOW_ROLE_ICONS, L.SHOW_ROLE_ICONS_DESC, "showRoleIcons")
             configOptions:CreateOptionToggle(L.ENABLE_SIMPLE_SCORE_COLORS, L.ENABLE_SIMPLE_SCORE_COLORS_DESC, "showSimpleScoreColors")
             configOptions:CreateOptionToggle(L.ENABLE_NO_SCORE_COLORS, L.ENABLE_NO_SCORE_COLORS_DESC, "disableScoreColors")
+            -- configOptions:CreateOptionToggle(L.SHOW_CHESTS_AS_MEDALS, L.SHOW_CHESTS_AS_MEDALS_DESC, "showMedalsInsteadOfText")
             configOptions:CreateOptionToggle(L.SHOW_KEYSTONE_INFO, L.SHOW_KEYSTONE_INFO_DESC, "enableKeystoneTooltips")
             configOptions:CreateOptionToggle(L.SHOW_AVERAGE_PLAYER_SCORE_INFO, L.SHOW_AVERAGE_PLAYER_SCORE_INFO_DESC, "showAverageScore")
             configOptions:CreateOptionToggle(L.SHOW_SCORE_IN_COMBAT, L.SHOW_SCORE_IN_COMBAT_DESC, "showScoreInCombat")
@@ -7879,9 +8420,9 @@ do
         { region = "eu", faction = 2, realm = "TarrenMill", name = "Vladinator", success = true },
         { region = "eu", faction = 2, realm = "tArReNmIlL", name = "vLaDiNaToR", success = true },
         CheckBothTestsAboveForSameProfiles,
-        { region = "us", faction = 2, realm = "Skullcrusher", name = "Aspyrox", exists = false },
-        { region = "us", faction = 2, realm = "sKuLLcRuSHeR", name = "aSpYrOx", exists = false },
-        CheckBothTestsAboveForSameProfiles,
+        -- { region = "us", faction = 2, realm = "Skullcrusher", name = "Aspyrox", exists = false },
+        -- { region = "us", faction = 2, realm = "sKuLLcRuSHeR", name = "aSpYrOx", exists = false },
+        -- CheckBothTestsAboveForSameProfiles,
         { region = "eu", faction = 1, realm = "Ysondre", name = "Isak", success = true },
         { region = "eu", faction = 1, realm = "ySoNdRe", name = "iSaK", success = true },
         CheckBothTestsAboveForSameProfiles,
@@ -7891,15 +8432,15 @@ do
         { region = "eu", faction = 2, realm = "СвежевательДуш", name = "Хитей", success = true },
         { region = "eu", faction = 2, realm = "СВЕЖЕВАТЕЛЬДУШ", name = "ХИТЕЙ", success = true },
         CheckBothTestsAboveForSameProfiles,
-        { region = "eu", faction = 2, realm = "Ravencrest", name = "Mßx", success = true },
-        { region = "eu", faction = 2, realm = "RAVENCREST", name = "MßX", success = true },
-        CheckBothTestsAboveForSameProfiles,
+        -- { region = "eu", faction = 2, realm = "Ravencrest", name = "Mßx", success = true },
+        -- { region = "eu", faction = 2, realm = "RAVENCREST", name = "MßX", success = true },
+        -- CheckBothTestsAboveForSameProfiles,
         { region = "eu", faction = 2, realm = "Kazzak", name = "Donskís", success = true },
         { region = "eu", faction = 2, realm = "KAZZAK", name = "DONSKÍS", success = true },
         CheckBothTestsAboveForSameProfiles,
-        { region = "tw", faction = 2, realm = "憤怒使者", name = "凸姿姿凸", success = true },
-        { region = "tw", faction = 2, realm = "憤怒使者", name = "凸姿姿凸", success = true },
-        CheckBothTestsAboveForSameProfiles,
+        -- { region = "tw", faction = 2, realm = "憤怒使者", name = "凸姿姿凸", success = true },
+        -- { region = "tw", faction = 2, realm = "憤怒使者", name = "凸姿姿凸", success = true },
+        -- CheckBothTestsAboveForSameProfiles,
         { region = "kr", faction = 1, realm = "윈드러너", name = "갊깖읾옮짊맒", success = true },
         { region = "kr", faction = 1, realm = "윈드러너", name = "갊깖읾옮짊맒", success = true },
         CheckBothTestsAboveForSameProfiles,
@@ -7912,2063 +8453,15 @@ do
 
     local function AppendTestsFromProviders(callback, progress)
 
-        -- "UTF8" by phanxaddons and pastamancer_wow (https://www.wowace.com/projects/utf8)
-        local utf8lower
-        local utf8upper do
+        local utf8 = ns.utf8
 
-            -- $Id: utf8.lua 179 2009-04-03 18:10:03Z pasta $
-            --
-            -- Provides UTF-8 aware string functions implemented in pure lua:
-            -- * string.utf8len(s)
-            -- * string.utf8sub(s, i, j)
-            -- * string.utf8reverse(s)
-            --
-            -- If utf8data.lua (containing the lower<->upper case mappings) is loaded, these
-            -- additional functions are available:
-            -- * string.utf8upper(s)
-            -- * string.utf8lower(s)
-            --
-            -- All functions behave as their non UTF-8 aware counterparts with the exception
-            -- that UTF-8 characters are used instead of bytes for all units.
-
-            --[[
-            Copyright (c) 2006-2007, Kyle Smith
-            All rights reserved.
-
-            Redistribution and use in source and binary forms, with or without
-            modification, are permitted provided that the following conditions are met:
-
-                * Redistributions of source code must retain the above copyright notice,
-                this list of conditions and the following disclaimer.
-                * Redistributions in binary form must reproduce the above copyright
-                notice, this list of conditions and the following disclaimer in the
-                documentation and/or other materials provided with the distribution.
-                * Neither the name of the author nor the names of its contributors may be
-                used to endorse or promote products derived from this software without
-                specific prior written permission.
-
-            THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-            AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-            IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-            DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
-            FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-            DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-            SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-            CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-            OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-            OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-            --]]
-
-            -- ABNF from RFC 3629
-            --
-            -- UTF8-octets = *( UTF8-char )
-            -- UTF8-char   = UTF8-1 / UTF8-2 / UTF8-3 / UTF8-4
-            -- UTF8-1      = %x00-7F
-            -- UTF8-2      = %xC2-DF UTF8-tail
-            -- UTF8-3      = %xE0 %xA0-BF UTF8-tail / %xE1-EC 2( UTF8-tail ) /
-            --               %xED %x80-9F UTF8-tail / %xEE-EF 2( UTF8-tail )
-            -- UTF8-4      = %xF0 %x90-BF 2( UTF8-tail ) / %xF1-F3 3( UTF8-tail ) /
-            --               %xF4 %x80-8F 2( UTF8-tail )
-            -- UTF8-tail   = %x80-BF
-            --
-
-            local strbyte, strlen, strsub, type = string.byte, string.len, string.sub, type
-
-            local utf8_lc_uc = {
-                ["a"] = "A",
-                ["b"] = "B",
-                ["c"] = "C",
-                ["d"] = "D",
-                ["e"] = "E",
-                ["f"] = "F",
-                ["g"] = "G",
-                ["h"] = "H",
-                ["i"] = "I",
-                ["j"] = "J",
-                ["k"] = "K",
-                ["l"] = "L",
-                ["m"] = "M",
-                ["n"] = "N",
-                ["o"] = "O",
-                ["p"] = "P",
-                ["q"] = "Q",
-                ["r"] = "R",
-                ["s"] = "S",
-                ["t"] = "T",
-                ["u"] = "U",
-                ["v"] = "V",
-                ["w"] = "W",
-                ["x"] = "X",
-                ["y"] = "Y",
-                ["z"] = "Z",
-                ["µ"] = "Μ",
-                ["à"] = "À",
-                ["á"] = "Á",
-                ["â"] = "Â",
-                ["ã"] = "Ã",
-                ["ä"] = "Ä",
-                ["å"] = "Å",
-                ["æ"] = "Æ",
-                ["ç"] = "Ç",
-                ["è"] = "È",
-                ["é"] = "É",
-                ["ê"] = "Ê",
-                ["ë"] = "Ë",
-                ["ì"] = "Ì",
-                ["í"] = "Í",
-                ["î"] = "Î",
-                ["ï"] = "Ï",
-                ["ð"] = "Ð",
-                ["ñ"] = "Ñ",
-                ["ò"] = "Ò",
-                ["ó"] = "Ó",
-                ["ô"] = "Ô",
-                ["õ"] = "Õ",
-                ["ö"] = "Ö",
-                ["ø"] = "Ø",
-                ["ù"] = "Ù",
-                ["ú"] = "Ú",
-                ["û"] = "Û",
-                ["ü"] = "Ü",
-                ["ý"] = "Ý",
-                ["þ"] = "Þ",
-                ["ÿ"] = "Ÿ",
-                ["ā"] = "Ā",
-                ["ă"] = "Ă",
-                ["ą"] = "Ą",
-                ["ć"] = "Ć",
-                ["ĉ"] = "Ĉ",
-                ["ċ"] = "Ċ",
-                ["č"] = "Č",
-                ["ď"] = "Ď",
-                ["đ"] = "Đ",
-                ["ē"] = "Ē",
-                ["ĕ"] = "Ĕ",
-                ["ė"] = "Ė",
-                ["ę"] = "Ę",
-                ["ě"] = "Ě",
-                ["ĝ"] = "Ĝ",
-                ["ğ"] = "Ğ",
-                ["ġ"] = "Ġ",
-                ["ģ"] = "Ģ",
-                ["ĥ"] = "Ĥ",
-                ["ħ"] = "Ħ",
-                ["ĩ"] = "Ĩ",
-                ["ī"] = "Ī",
-                ["ĭ"] = "Ĭ",
-                ["į"] = "Į",
-                ["ı"] = "I",
-                ["ĳ"] = "Ĳ",
-                ["ĵ"] = "Ĵ",
-                ["ķ"] = "Ķ",
-                ["ĺ"] = "Ĺ",
-                ["ļ"] = "Ļ",
-                ["ľ"] = "Ľ",
-                ["ŀ"] = "Ŀ",
-                ["ł"] = "Ł",
-                ["ń"] = "Ń",
-                ["ņ"] = "Ņ",
-                ["ň"] = "Ň",
-                ["ŋ"] = "Ŋ",
-                ["ō"] = "Ō",
-                ["ŏ"] = "Ŏ",
-                ["ő"] = "Ő",
-                ["œ"] = "Œ",
-                ["ŕ"] = "Ŕ",
-                ["ŗ"] = "Ŗ",
-                ["ř"] = "Ř",
-                ["ś"] = "Ś",
-                ["ŝ"] = "Ŝ",
-                ["ş"] = "Ş",
-                ["š"] = "Š",
-                ["ţ"] = "Ţ",
-                ["ť"] = "Ť",
-                ["ŧ"] = "Ŧ",
-                ["ũ"] = "Ũ",
-                ["ū"] = "Ū",
-                ["ŭ"] = "Ŭ",
-                ["ů"] = "Ů",
-                ["ű"] = "Ű",
-                ["ų"] = "Ų",
-                ["ŵ"] = "Ŵ",
-                ["ŷ"] = "Ŷ",
-                ["ź"] = "Ź",
-                ["ż"] = "Ż",
-                ["ž"] = "Ž",
-                ["ſ"] = "S",
-                ["ƀ"] = "Ƀ",
-                ["ƃ"] = "Ƃ",
-                ["ƅ"] = "Ƅ",
-                ["ƈ"] = "Ƈ",
-                ["ƌ"] = "Ƌ",
-                ["ƒ"] = "Ƒ",
-                ["ƕ"] = "Ƕ",
-                ["ƙ"] = "Ƙ",
-                ["ƚ"] = "Ƚ",
-                ["ƞ"] = "Ƞ",
-                ["ơ"] = "Ơ",
-                ["ƣ"] = "Ƣ",
-                ["ƥ"] = "Ƥ",
-                ["ƨ"] = "Ƨ",
-                ["ƭ"] = "Ƭ",
-                ["ư"] = "Ư",
-                ["ƴ"] = "Ƴ",
-                ["ƶ"] = "Ƶ",
-                ["ƹ"] = "Ƹ",
-                ["ƽ"] = "Ƽ",
-                ["ƿ"] = "Ƿ",
-                ["ǅ"] = "Ǆ",
-                ["ǆ"] = "Ǆ",
-                ["ǈ"] = "Ǉ",
-                ["ǉ"] = "Ǉ",
-                ["ǋ"] = "Ǌ",
-                ["ǌ"] = "Ǌ",
-                ["ǎ"] = "Ǎ",
-                ["ǐ"] = "Ǐ",
-                ["ǒ"] = "Ǒ",
-                ["ǔ"] = "Ǔ",
-                ["ǖ"] = "Ǖ",
-                ["ǘ"] = "Ǘ",
-                ["ǚ"] = "Ǚ",
-                ["ǜ"] = "Ǜ",
-                ["ǝ"] = "Ǝ",
-                ["ǟ"] = "Ǟ",
-                ["ǡ"] = "Ǡ",
-                ["ǣ"] = "Ǣ",
-                ["ǥ"] = "Ǥ",
-                ["ǧ"] = "Ǧ",
-                ["ǩ"] = "Ǩ",
-                ["ǫ"] = "Ǫ",
-                ["ǭ"] = "Ǭ",
-                ["ǯ"] = "Ǯ",
-                ["ǲ"] = "Ǳ",
-                ["ǳ"] = "Ǳ",
-                ["ǵ"] = "Ǵ",
-                ["ǹ"] = "Ǹ",
-                ["ǻ"] = "Ǻ",
-                ["ǽ"] = "Ǽ",
-                ["ǿ"] = "Ǿ",
-                ["ȁ"] = "Ȁ",
-                ["ȃ"] = "Ȃ",
-                ["ȅ"] = "Ȅ",
-                ["ȇ"] = "Ȇ",
-                ["ȉ"] = "Ȉ",
-                ["ȋ"] = "Ȋ",
-                ["ȍ"] = "Ȍ",
-                ["ȏ"] = "Ȏ",
-                ["ȑ"] = "Ȑ",
-                ["ȓ"] = "Ȓ",
-                ["ȕ"] = "Ȕ",
-                ["ȗ"] = "Ȗ",
-                ["ș"] = "Ș",
-                ["ț"] = "Ț",
-                ["ȝ"] = "Ȝ",
-                ["ȟ"] = "Ȟ",
-                ["ȣ"] = "Ȣ",
-                ["ȥ"] = "Ȥ",
-                ["ȧ"] = "Ȧ",
-                ["ȩ"] = "Ȩ",
-                ["ȫ"] = "Ȫ",
-                ["ȭ"] = "Ȭ",
-                ["ȯ"] = "Ȯ",
-                ["ȱ"] = "Ȱ",
-                ["ȳ"] = "Ȳ",
-                ["ȼ"] = "Ȼ",
-                ["ɂ"] = "Ɂ",
-                ["ɇ"] = "Ɇ",
-                ["ɉ"] = "Ɉ",
-                ["ɋ"] = "Ɋ",
-                ["ɍ"] = "Ɍ",
-                ["ɏ"] = "Ɏ",
-                ["ɓ"] = "Ɓ",
-                ["ɔ"] = "Ɔ",
-                ["ɖ"] = "Ɖ",
-                ["ɗ"] = "Ɗ",
-                ["ə"] = "Ə",
-                ["ɛ"] = "Ɛ",
-                ["ɠ"] = "Ɠ",
-                ["ɣ"] = "Ɣ",
-                ["ɨ"] = "Ɨ",
-                ["ɩ"] = "Ɩ",
-                ["ɫ"] = "Ɫ",
-                ["ɯ"] = "Ɯ",
-                ["ɲ"] = "Ɲ",
-                ["ɵ"] = "Ɵ",
-                ["ɽ"] = "Ɽ",
-                ["ʀ"] = "Ʀ",
-                ["ʃ"] = "Ʃ",
-                ["ʈ"] = "Ʈ",
-                ["ʉ"] = "Ʉ",
-                ["ʊ"] = "Ʊ",
-                ["ʋ"] = "Ʋ",
-                ["ʌ"] = "Ʌ",
-                ["ʒ"] = "Ʒ",
-                ["ͅ"] = "Ι",
-                ["ͻ"] = "Ͻ",
-                ["ͼ"] = "Ͼ",
-                ["ͽ"] = "Ͽ",
-                ["ά"] = "Ά",
-                ["έ"] = "Έ",
-                ["ή"] = "Ή",
-                ["ί"] = "Ί",
-                ["α"] = "Α",
-                ["β"] = "Β",
-                ["γ"] = "Γ",
-                ["δ"] = "Δ",
-                ["ε"] = "Ε",
-                ["ζ"] = "Ζ",
-                ["η"] = "Η",
-                ["θ"] = "Θ",
-                ["ι"] = "Ι",
-                ["κ"] = "Κ",
-                ["λ"] = "Λ",
-                ["μ"] = "Μ",
-                ["ν"] = "Ν",
-                ["ξ"] = "Ξ",
-                ["ο"] = "Ο",
-                ["π"] = "Π",
-                ["ρ"] = "Ρ",
-                ["ς"] = "Σ",
-                ["σ"] = "Σ",
-                ["τ"] = "Τ",
-                ["υ"] = "Υ",
-                ["φ"] = "Φ",
-                ["χ"] = "Χ",
-                ["ψ"] = "Ψ",
-                ["ω"] = "Ω",
-                ["ϊ"] = "Ϊ",
-                ["ϋ"] = "Ϋ",
-                ["ό"] = "Ό",
-                ["ύ"] = "Ύ",
-                ["ώ"] = "Ώ",
-                ["ϐ"] = "Β",
-                ["ϑ"] = "Θ",
-                ["ϕ"] = "Φ",
-                ["ϖ"] = "Π",
-                ["ϙ"] = "Ϙ",
-                ["ϛ"] = "Ϛ",
-                ["ϝ"] = "Ϝ",
-                ["ϟ"] = "Ϟ",
-                ["ϡ"] = "Ϡ",
-                ["ϣ"] = "Ϣ",
-                ["ϥ"] = "Ϥ",
-                ["ϧ"] = "Ϧ",
-                ["ϩ"] = "Ϩ",
-                ["ϫ"] = "Ϫ",
-                ["ϭ"] = "Ϭ",
-                ["ϯ"] = "Ϯ",
-                ["ϰ"] = "Κ",
-                ["ϱ"] = "Ρ",
-                ["ϲ"] = "Ϲ",
-                ["ϵ"] = "Ε",
-                ["ϸ"] = "Ϸ",
-                ["ϻ"] = "Ϻ",
-                ["а"] = "А",
-                ["б"] = "Б",
-                ["в"] = "В",
-                ["г"] = "Г",
-                ["д"] = "Д",
-                ["е"] = "Е",
-                ["ж"] = "Ж",
-                ["з"] = "З",
-                ["и"] = "И",
-                ["й"] = "Й",
-                ["к"] = "К",
-                ["л"] = "Л",
-                ["м"] = "М",
-                ["н"] = "Н",
-                ["о"] = "О",
-                ["п"] = "П",
-                ["р"] = "Р",
-                ["с"] = "С",
-                ["т"] = "Т",
-                ["у"] = "У",
-                ["ф"] = "Ф",
-                ["х"] = "Х",
-                ["ц"] = "Ц",
-                ["ч"] = "Ч",
-                ["ш"] = "Ш",
-                ["щ"] = "Щ",
-                ["ъ"] = "Ъ",
-                ["ы"] = "Ы",
-                ["ь"] = "Ь",
-                ["э"] = "Э",
-                ["ю"] = "Ю",
-                ["я"] = "Я",
-                ["ѐ"] = "Ѐ",
-                ["ё"] = "Ё",
-                ["ђ"] = "Ђ",
-                ["ѓ"] = "Ѓ",
-                ["є"] = "Є",
-                ["ѕ"] = "Ѕ",
-                ["і"] = "І",
-                ["ї"] = "Ї",
-                ["ј"] = "Ј",
-                ["љ"] = "Љ",
-                ["њ"] = "Њ",
-                ["ћ"] = "Ћ",
-                ["ќ"] = "Ќ",
-                ["ѝ"] = "Ѝ",
-                ["ў"] = "Ў",
-                ["џ"] = "Џ",
-                ["ѡ"] = "Ѡ",
-                ["ѣ"] = "Ѣ",
-                ["ѥ"] = "Ѥ",
-                ["ѧ"] = "Ѧ",
-                ["ѩ"] = "Ѩ",
-                ["ѫ"] = "Ѫ",
-                ["ѭ"] = "Ѭ",
-                ["ѯ"] = "Ѯ",
-                ["ѱ"] = "Ѱ",
-                ["ѳ"] = "Ѳ",
-                ["ѵ"] = "Ѵ",
-                ["ѷ"] = "Ѷ",
-                ["ѹ"] = "Ѹ",
-                ["ѻ"] = "Ѻ",
-                ["ѽ"] = "Ѽ",
-                ["ѿ"] = "Ѿ",
-                ["ҁ"] = "Ҁ",
-                ["ҋ"] = "Ҋ",
-                ["ҍ"] = "Ҍ",
-                ["ҏ"] = "Ҏ",
-                ["ґ"] = "Ґ",
-                ["ғ"] = "Ғ",
-                ["ҕ"] = "Ҕ",
-                ["җ"] = "Җ",
-                ["ҙ"] = "Ҙ",
-                ["қ"] = "Қ",
-                ["ҝ"] = "Ҝ",
-                ["ҟ"] = "Ҟ",
-                ["ҡ"] = "Ҡ",
-                ["ң"] = "Ң",
-                ["ҥ"] = "Ҥ",
-                ["ҧ"] = "Ҧ",
-                ["ҩ"] = "Ҩ",
-                ["ҫ"] = "Ҫ",
-                ["ҭ"] = "Ҭ",
-                ["ү"] = "Ү",
-                ["ұ"] = "Ұ",
-                ["ҳ"] = "Ҳ",
-                ["ҵ"] = "Ҵ",
-                ["ҷ"] = "Ҷ",
-                ["ҹ"] = "Ҹ",
-                ["һ"] = "Һ",
-                ["ҽ"] = "Ҽ",
-                ["ҿ"] = "Ҿ",
-                ["ӂ"] = "Ӂ",
-                ["ӄ"] = "Ӄ",
-                ["ӆ"] = "Ӆ",
-                ["ӈ"] = "Ӈ",
-                ["ӊ"] = "Ӊ",
-                ["ӌ"] = "Ӌ",
-                ["ӎ"] = "Ӎ",
-                ["ӏ"] = "Ӏ",
-                ["ӑ"] = "Ӑ",
-                ["ӓ"] = "Ӓ",
-                ["ӕ"] = "Ӕ",
-                ["ӗ"] = "Ӗ",
-                ["ә"] = "Ә",
-                ["ӛ"] = "Ӛ",
-                ["ӝ"] = "Ӝ",
-                ["ӟ"] = "Ӟ",
-                ["ӡ"] = "Ӡ",
-                ["ӣ"] = "Ӣ",
-                ["ӥ"] = "Ӥ",
-                ["ӧ"] = "Ӧ",
-                ["ө"] = "Ө",
-                ["ӫ"] = "Ӫ",
-                ["ӭ"] = "Ӭ",
-                ["ӯ"] = "Ӯ",
-                ["ӱ"] = "Ӱ",
-                ["ӳ"] = "Ӳ",
-                ["ӵ"] = "Ӵ",
-                ["ӷ"] = "Ӷ",
-                ["ӹ"] = "Ӹ",
-                ["ӻ"] = "Ӻ",
-                ["ӽ"] = "Ӽ",
-                ["ӿ"] = "Ӿ",
-                ["ԁ"] = "Ԁ",
-                ["ԃ"] = "Ԃ",
-                ["ԅ"] = "Ԅ",
-                ["ԇ"] = "Ԇ",
-                ["ԉ"] = "Ԉ",
-                ["ԋ"] = "Ԋ",
-                ["ԍ"] = "Ԍ",
-                ["ԏ"] = "Ԏ",
-                ["ԑ"] = "Ԑ",
-                ["ԓ"] = "Ԓ",
-                ["ա"] = "Ա",
-                ["բ"] = "Բ",
-                ["գ"] = "Գ",
-                ["դ"] = "Դ",
-                ["ե"] = "Ե",
-                ["զ"] = "Զ",
-                ["է"] = "Է",
-                ["ը"] = "Ը",
-                ["թ"] = "Թ",
-                ["ժ"] = "Ժ",
-                ["ի"] = "Ի",
-                ["լ"] = "Լ",
-                ["խ"] = "Խ",
-                ["ծ"] = "Ծ",
-                ["կ"] = "Կ",
-                ["հ"] = "Հ",
-                ["ձ"] = "Ձ",
-                ["ղ"] = "Ղ",
-                ["ճ"] = "Ճ",
-                ["մ"] = "Մ",
-                ["յ"] = "Յ",
-                ["ն"] = "Ն",
-                ["շ"] = "Շ",
-                ["ո"] = "Ո",
-                ["չ"] = "Չ",
-                ["պ"] = "Պ",
-                ["ջ"] = "Ջ",
-                ["ռ"] = "Ռ",
-                ["ս"] = "Ս",
-                ["վ"] = "Վ",
-                ["տ"] = "Տ",
-                ["ր"] = "Ր",
-                ["ց"] = "Ց",
-                ["ւ"] = "Ւ",
-                ["փ"] = "Փ",
-                ["ք"] = "Ք",
-                ["օ"] = "Օ",
-                ["ֆ"] = "Ֆ",
-                ["ᵽ"] = "Ᵽ",
-                ["ḁ"] = "Ḁ",
-                ["ḃ"] = "Ḃ",
-                ["ḅ"] = "Ḅ",
-                ["ḇ"] = "Ḇ",
-                ["ḉ"] = "Ḉ",
-                ["ḋ"] = "Ḋ",
-                ["ḍ"] = "Ḍ",
-                ["ḏ"] = "Ḏ",
-                ["ḑ"] = "Ḑ",
-                ["ḓ"] = "Ḓ",
-                ["ḕ"] = "Ḕ",
-                ["ḗ"] = "Ḗ",
-                ["ḙ"] = "Ḙ",
-                ["ḛ"] = "Ḛ",
-                ["ḝ"] = "Ḝ",
-                ["ḟ"] = "Ḟ",
-                ["ḡ"] = "Ḡ",
-                ["ḣ"] = "Ḣ",
-                ["ḥ"] = "Ḥ",
-                ["ḧ"] = "Ḧ",
-                ["ḩ"] = "Ḩ",
-                ["ḫ"] = "Ḫ",
-                ["ḭ"] = "Ḭ",
-                ["ḯ"] = "Ḯ",
-                ["ḱ"] = "Ḱ",
-                ["ḳ"] = "Ḳ",
-                ["ḵ"] = "Ḵ",
-                ["ḷ"] = "Ḷ",
-                ["ḹ"] = "Ḹ",
-                ["ḻ"] = "Ḻ",
-                ["ḽ"] = "Ḽ",
-                ["ḿ"] = "Ḿ",
-                ["ṁ"] = "Ṁ",
-                ["ṃ"] = "Ṃ",
-                ["ṅ"] = "Ṅ",
-                ["ṇ"] = "Ṇ",
-                ["ṉ"] = "Ṉ",
-                ["ṋ"] = "Ṋ",
-                ["ṍ"] = "Ṍ",
-                ["ṏ"] = "Ṏ",
-                ["ṑ"] = "Ṑ",
-                ["ṓ"] = "Ṓ",
-                ["ṕ"] = "Ṕ",
-                ["ṗ"] = "Ṗ",
-                ["ṙ"] = "Ṙ",
-                ["ṛ"] = "Ṛ",
-                ["ṝ"] = "Ṝ",
-                ["ṟ"] = "Ṟ",
-                ["ṡ"] = "Ṡ",
-                ["ṣ"] = "Ṣ",
-                ["ṥ"] = "Ṥ",
-                ["ṧ"] = "Ṧ",
-                ["ṩ"] = "Ṩ",
-                ["ṫ"] = "Ṫ",
-                ["ṭ"] = "Ṭ",
-                ["ṯ"] = "Ṯ",
-                ["ṱ"] = "Ṱ",
-                ["ṳ"] = "Ṳ",
-                ["ṵ"] = "Ṵ",
-                ["ṷ"] = "Ṷ",
-                ["ṹ"] = "Ṹ",
-                ["ṻ"] = "Ṻ",
-                ["ṽ"] = "Ṽ",
-                ["ṿ"] = "Ṿ",
-                ["ẁ"] = "Ẁ",
-                ["ẃ"] = "Ẃ",
-                ["ẅ"] = "Ẅ",
-                ["ẇ"] = "Ẇ",
-                ["ẉ"] = "Ẉ",
-                ["ẋ"] = "Ẋ",
-                ["ẍ"] = "Ẍ",
-                ["ẏ"] = "Ẏ",
-                ["ẑ"] = "Ẑ",
-                ["ẓ"] = "Ẓ",
-                ["ẕ"] = "Ẕ",
-                ["ẛ"] = "Ṡ",
-                ["ạ"] = "Ạ",
-                ["ả"] = "Ả",
-                ["ấ"] = "Ấ",
-                ["ầ"] = "Ầ",
-                ["ẩ"] = "Ẩ",
-                ["ẫ"] = "Ẫ",
-                ["ậ"] = "Ậ",
-                ["ắ"] = "Ắ",
-                ["ằ"] = "Ằ",
-                ["ẳ"] = "Ẳ",
-                ["ẵ"] = "Ẵ",
-                ["ặ"] = "Ặ",
-                ["ẹ"] = "Ẹ",
-                ["ẻ"] = "Ẻ",
-                ["ẽ"] = "Ẽ",
-                ["ế"] = "Ế",
-                ["ề"] = "Ề",
-                ["ể"] = "Ể",
-                ["ễ"] = "Ễ",
-                ["ệ"] = "Ệ",
-                ["ỉ"] = "Ỉ",
-                ["ị"] = "Ị",
-                ["ọ"] = "Ọ",
-                ["ỏ"] = "Ỏ",
-                ["ố"] = "Ố",
-                ["ồ"] = "Ồ",
-                ["ổ"] = "Ổ",
-                ["ỗ"] = "Ỗ",
-                ["ộ"] = "Ộ",
-                ["ớ"] = "Ớ",
-                ["ờ"] = "Ờ",
-                ["ở"] = "Ở",
-                ["ỡ"] = "Ỡ",
-                ["ợ"] = "Ợ",
-                ["ụ"] = "Ụ",
-                ["ủ"] = "Ủ",
-                ["ứ"] = "Ứ",
-                ["ừ"] = "Ừ",
-                ["ử"] = "Ử",
-                ["ữ"] = "Ữ",
-                ["ự"] = "Ự",
-                ["ỳ"] = "Ỳ",
-                ["ỵ"] = "Ỵ",
-                ["ỷ"] = "Ỷ",
-                ["ỹ"] = "Ỹ",
-                ["ἀ"] = "Ἀ",
-                ["ἁ"] = "Ἁ",
-                ["ἂ"] = "Ἂ",
-                ["ἃ"] = "Ἃ",
-                ["ἄ"] = "Ἄ",
-                ["ἅ"] = "Ἅ",
-                ["ἆ"] = "Ἆ",
-                ["ἇ"] = "Ἇ",
-                ["ἐ"] = "Ἐ",
-                ["ἑ"] = "Ἑ",
-                ["ἒ"] = "Ἒ",
-                ["ἓ"] = "Ἓ",
-                ["ἔ"] = "Ἔ",
-                ["ἕ"] = "Ἕ",
-                ["ἠ"] = "Ἠ",
-                ["ἡ"] = "Ἡ",
-                ["ἢ"] = "Ἢ",
-                ["ἣ"] = "Ἣ",
-                ["ἤ"] = "Ἤ",
-                ["ἥ"] = "Ἥ",
-                ["ἦ"] = "Ἦ",
-                ["ἧ"] = "Ἧ",
-                ["ἰ"] = "Ἰ",
-                ["ἱ"] = "Ἱ",
-                ["ἲ"] = "Ἲ",
-                ["ἳ"] = "Ἳ",
-                ["ἴ"] = "Ἴ",
-                ["ἵ"] = "Ἵ",
-                ["ἶ"] = "Ἶ",
-                ["ἷ"] = "Ἷ",
-                ["ὀ"] = "Ὀ",
-                ["ὁ"] = "Ὁ",
-                ["ὂ"] = "Ὂ",
-                ["ὃ"] = "Ὃ",
-                ["ὄ"] = "Ὄ",
-                ["ὅ"] = "Ὅ",
-                ["ὑ"] = "Ὑ",
-                ["ὓ"] = "Ὓ",
-                ["ὕ"] = "Ὕ",
-                ["ὗ"] = "Ὗ",
-                ["ὠ"] = "Ὠ",
-                ["ὡ"] = "Ὡ",
-                ["ὢ"] = "Ὢ",
-                ["ὣ"] = "Ὣ",
-                ["ὤ"] = "Ὤ",
-                ["ὥ"] = "Ὥ",
-                ["ὦ"] = "Ὦ",
-                ["ὧ"] = "Ὧ",
-                ["ὰ"] = "Ὰ",
-                ["ά"] = "Ά",
-                ["ὲ"] = "Ὲ",
-                ["έ"] = "Έ",
-                ["ὴ"] = "Ὴ",
-                ["ή"] = "Ή",
-                ["ὶ"] = "Ὶ",
-                ["ί"] = "Ί",
-                ["ὸ"] = "Ὸ",
-                ["ό"] = "Ό",
-                ["ὺ"] = "Ὺ",
-                ["ύ"] = "Ύ",
-                ["ὼ"] = "Ὼ",
-                ["ώ"] = "Ώ",
-                ["ᾀ"] = "ᾈ",
-                ["ᾁ"] = "ᾉ",
-                ["ᾂ"] = "ᾊ",
-                ["ᾃ"] = "ᾋ",
-                ["ᾄ"] = "ᾌ",
-                ["ᾅ"] = "ᾍ",
-                ["ᾆ"] = "ᾎ",
-                ["ᾇ"] = "ᾏ",
-                ["ᾐ"] = "ᾘ",
-                ["ᾑ"] = "ᾙ",
-                ["ᾒ"] = "ᾚ",
-                ["ᾓ"] = "ᾛ",
-                ["ᾔ"] = "ᾜ",
-                ["ᾕ"] = "ᾝ",
-                ["ᾖ"] = "ᾞ",
-                ["ᾗ"] = "ᾟ",
-                ["ᾠ"] = "ᾨ",
-                ["ᾡ"] = "ᾩ",
-                ["ᾢ"] = "ᾪ",
-                ["ᾣ"] = "ᾫ",
-                ["ᾤ"] = "ᾬ",
-                ["ᾥ"] = "ᾭ",
-                ["ᾦ"] = "ᾮ",
-                ["ᾧ"] = "ᾯ",
-                ["ᾰ"] = "Ᾰ",
-                ["ᾱ"] = "Ᾱ",
-                ["ᾳ"] = "ᾼ",
-                ["ι"] = "Ι",
-                ["ῃ"] = "ῌ",
-                ["ῐ"] = "Ῐ",
-                ["ῑ"] = "Ῑ",
-                ["ῠ"] = "Ῠ",
-                ["ῡ"] = "Ῡ",
-                ["ῥ"] = "Ῥ",
-                ["ῳ"] = "ῼ",
-                ["ⅎ"] = "Ⅎ",
-                ["ⅰ"] = "Ⅰ",
-                ["ⅱ"] = "Ⅱ",
-                ["ⅲ"] = "Ⅲ",
-                ["ⅳ"] = "Ⅳ",
-                ["ⅴ"] = "Ⅴ",
-                ["ⅵ"] = "Ⅵ",
-                ["ⅶ"] = "Ⅶ",
-                ["ⅷ"] = "Ⅷ",
-                ["ⅸ"] = "Ⅸ",
-                ["ⅹ"] = "Ⅹ",
-                ["ⅺ"] = "Ⅺ",
-                ["ⅻ"] = "Ⅻ",
-                ["ⅼ"] = "Ⅼ",
-                ["ⅽ"] = "Ⅽ",
-                ["ⅾ"] = "Ⅾ",
-                ["ⅿ"] = "Ⅿ",
-                ["ↄ"] = "Ↄ",
-                ["ⓐ"] = "Ⓐ",
-                ["ⓑ"] = "Ⓑ",
-                ["ⓒ"] = "Ⓒ",
-                ["ⓓ"] = "Ⓓ",
-                ["ⓔ"] = "Ⓔ",
-                ["ⓕ"] = "Ⓕ",
-                ["ⓖ"] = "Ⓖ",
-                ["ⓗ"] = "Ⓗ",
-                ["ⓘ"] = "Ⓘ",
-                ["ⓙ"] = "Ⓙ",
-                ["ⓚ"] = "Ⓚ",
-                ["ⓛ"] = "Ⓛ",
-                ["ⓜ"] = "Ⓜ",
-                ["ⓝ"] = "Ⓝ",
-                ["ⓞ"] = "Ⓞ",
-                ["ⓟ"] = "Ⓟ",
-                ["ⓠ"] = "Ⓠ",
-                ["ⓡ"] = "Ⓡ",
-                ["ⓢ"] = "Ⓢ",
-                ["ⓣ"] = "Ⓣ",
-                ["ⓤ"] = "Ⓤ",
-                ["ⓥ"] = "Ⓥ",
-                ["ⓦ"] = "Ⓦ",
-                ["ⓧ"] = "Ⓧ",
-                ["ⓨ"] = "Ⓨ",
-                ["ⓩ"] = "Ⓩ",
-                ["ⰰ"] = "Ⰰ",
-                ["ⰱ"] = "Ⰱ",
-                ["ⰲ"] = "Ⰲ",
-                ["ⰳ"] = "Ⰳ",
-                ["ⰴ"] = "Ⰴ",
-                ["ⰵ"] = "Ⰵ",
-                ["ⰶ"] = "Ⰶ",
-                ["ⰷ"] = "Ⰷ",
-                ["ⰸ"] = "Ⰸ",
-                ["ⰹ"] = "Ⰹ",
-                ["ⰺ"] = "Ⰺ",
-                ["ⰻ"] = "Ⰻ",
-                ["ⰼ"] = "Ⰼ",
-                ["ⰽ"] = "Ⰽ",
-                ["ⰾ"] = "Ⰾ",
-                ["ⰿ"] = "Ⰿ",
-                ["ⱀ"] = "Ⱀ",
-                ["ⱁ"] = "Ⱁ",
-                ["ⱂ"] = "Ⱂ",
-                ["ⱃ"] = "Ⱃ",
-                ["ⱄ"] = "Ⱄ",
-                ["ⱅ"] = "Ⱅ",
-                ["ⱆ"] = "Ⱆ",
-                ["ⱇ"] = "Ⱇ",
-                ["ⱈ"] = "Ⱈ",
-                ["ⱉ"] = "Ⱉ",
-                ["ⱊ"] = "Ⱊ",
-                ["ⱋ"] = "Ⱋ",
-                ["ⱌ"] = "Ⱌ",
-                ["ⱍ"] = "Ⱍ",
-                ["ⱎ"] = "Ⱎ",
-                ["ⱏ"] = "Ⱏ",
-                ["ⱐ"] = "Ⱐ",
-                ["ⱑ"] = "Ⱑ",
-                ["ⱒ"] = "Ⱒ",
-                ["ⱓ"] = "Ⱓ",
-                ["ⱔ"] = "Ⱔ",
-                ["ⱕ"] = "Ⱕ",
-                ["ⱖ"] = "Ⱖ",
-                ["ⱗ"] = "Ⱗ",
-                ["ⱘ"] = "Ⱘ",
-                ["ⱙ"] = "Ⱙ",
-                ["ⱚ"] = "Ⱚ",
-                ["ⱛ"] = "Ⱛ",
-                ["ⱜ"] = "Ⱜ",
-                ["ⱝ"] = "Ⱝ",
-                ["ⱞ"] = "Ⱞ",
-                ["ⱡ"] = "Ⱡ",
-                ["ⱥ"] = "Ⱥ",
-                ["ⱦ"] = "Ⱦ",
-                ["ⱨ"] = "Ⱨ",
-                ["ⱪ"] = "Ⱪ",
-                ["ⱬ"] = "Ⱬ",
-                ["ⱶ"] = "Ⱶ",
-                ["ⲁ"] = "Ⲁ",
-                ["ⲃ"] = "Ⲃ",
-                ["ⲅ"] = "Ⲅ",
-                ["ⲇ"] = "Ⲇ",
-                ["ⲉ"] = "Ⲉ",
-                ["ⲋ"] = "Ⲋ",
-                ["ⲍ"] = "Ⲍ",
-                ["ⲏ"] = "Ⲏ",
-                ["ⲑ"] = "Ⲑ",
-                ["ⲓ"] = "Ⲓ",
-                ["ⲕ"] = "Ⲕ",
-                ["ⲗ"] = "Ⲗ",
-                ["ⲙ"] = "Ⲙ",
-                ["ⲛ"] = "Ⲛ",
-                ["ⲝ"] = "Ⲝ",
-                ["ⲟ"] = "Ⲟ",
-                ["ⲡ"] = "Ⲡ",
-                ["ⲣ"] = "Ⲣ",
-                ["ⲥ"] = "Ⲥ",
-                ["ⲧ"] = "Ⲧ",
-                ["ⲩ"] = "Ⲩ",
-                ["ⲫ"] = "Ⲫ",
-                ["ⲭ"] = "Ⲭ",
-                ["ⲯ"] = "Ⲯ",
-                ["ⲱ"] = "Ⲱ",
-                ["ⲳ"] = "Ⲳ",
-                ["ⲵ"] = "Ⲵ",
-                ["ⲷ"] = "Ⲷ",
-                ["ⲹ"] = "Ⲹ",
-                ["ⲻ"] = "Ⲻ",
-                ["ⲽ"] = "Ⲽ",
-                ["ⲿ"] = "Ⲿ",
-                ["ⳁ"] = "Ⳁ",
-                ["ⳃ"] = "Ⳃ",
-                ["ⳅ"] = "Ⳅ",
-                ["ⳇ"] = "Ⳇ",
-                ["ⳉ"] = "Ⳉ",
-                ["ⳋ"] = "Ⳋ",
-                ["ⳍ"] = "Ⳍ",
-                ["ⳏ"] = "Ⳏ",
-                ["ⳑ"] = "Ⳑ",
-                ["ⳓ"] = "Ⳓ",
-                ["ⳕ"] = "Ⳕ",
-                ["ⳗ"] = "Ⳗ",
-                ["ⳙ"] = "Ⳙ",
-                ["ⳛ"] = "Ⳛ",
-                ["ⳝ"] = "Ⳝ",
-                ["ⳟ"] = "Ⳟ",
-                ["ⳡ"] = "Ⳡ",
-                ["ⳣ"] = "Ⳣ",
-                ["ⴀ"] = "Ⴀ",
-                ["ⴁ"] = "Ⴁ",
-                ["ⴂ"] = "Ⴂ",
-                ["ⴃ"] = "Ⴃ",
-                ["ⴄ"] = "Ⴄ",
-                ["ⴅ"] = "Ⴅ",
-                ["ⴆ"] = "Ⴆ",
-                ["ⴇ"] = "Ⴇ",
-                ["ⴈ"] = "Ⴈ",
-                ["ⴉ"] = "Ⴉ",
-                ["ⴊ"] = "Ⴊ",
-                ["ⴋ"] = "Ⴋ",
-                ["ⴌ"] = "Ⴌ",
-                ["ⴍ"] = "Ⴍ",
-                ["ⴎ"] = "Ⴎ",
-                ["ⴏ"] = "Ⴏ",
-                ["ⴐ"] = "Ⴐ",
-                ["ⴑ"] = "Ⴑ",
-                ["ⴒ"] = "Ⴒ",
-                ["ⴓ"] = "Ⴓ",
-                ["ⴔ"] = "Ⴔ",
-                ["ⴕ"] = "Ⴕ",
-                ["ⴖ"] = "Ⴖ",
-                ["ⴗ"] = "Ⴗ",
-                ["ⴘ"] = "Ⴘ",
-                ["ⴙ"] = "Ⴙ",
-                ["ⴚ"] = "Ⴚ",
-                ["ⴛ"] = "Ⴛ",
-                ["ⴜ"] = "Ⴜ",
-                ["ⴝ"] = "Ⴝ",
-                ["ⴞ"] = "Ⴞ",
-                ["ⴟ"] = "Ⴟ",
-                ["ⴠ"] = "Ⴠ",
-                ["ⴡ"] = "Ⴡ",
-                ["ⴢ"] = "Ⴢ",
-                ["ⴣ"] = "Ⴣ",
-                ["ⴤ"] = "Ⴤ",
-                ["ⴥ"] = "Ⴥ",
-                ["ａ"] = "Ａ",
-                ["ｂ"] = "Ｂ",
-                ["ｃ"] = "Ｃ",
-                ["ｄ"] = "Ｄ",
-                ["ｅ"] = "Ｅ",
-                ["ｆ"] = "Ｆ",
-                ["ｇ"] = "Ｇ",
-                ["ｈ"] = "Ｈ",
-                ["ｉ"] = "Ｉ",
-                ["ｊ"] = "Ｊ",
-                ["ｋ"] = "Ｋ",
-                ["ｌ"] = "Ｌ",
-                ["ｍ"] = "Ｍ",
-                ["ｎ"] = "Ｎ",
-                ["ｏ"] = "Ｏ",
-                ["ｐ"] = "Ｐ",
-                ["ｑ"] = "Ｑ",
-                ["ｒ"] = "Ｒ",
-                ["ｓ"] = "Ｓ",
-                ["ｔ"] = "Ｔ",
-                ["ｕ"] = "Ｕ",
-                ["ｖ"] = "Ｖ",
-                ["ｗ"] = "Ｗ",
-                ["ｘ"] = "Ｘ",
-                ["ｙ"] = "Ｙ",
-                ["ｚ"] = "Ｚ",
-                ["𐐨"] = "𐐀",
-                ["𐐩"] = "𐐁",
-                ["𐐪"] = "𐐂",
-                ["𐐫"] = "𐐃",
-                ["𐐬"] = "𐐄",
-                ["𐐭"] = "𐐅",
-                ["𐐮"] = "𐐆",
-                ["𐐯"] = "𐐇",
-                ["𐐰"] = "𐐈",
-                ["𐐱"] = "𐐉",
-                ["𐐲"] = "𐐊",
-                ["𐐳"] = "𐐋",
-                ["𐐴"] = "𐐌",
-                ["𐐵"] = "𐐍",
-                ["𐐶"] = "𐐎",
-                ["𐐷"] = "𐐏",
-                ["𐐸"] = "𐐐",
-                ["𐐹"] = "𐐑",
-                ["𐐺"] = "𐐒",
-                ["𐐻"] = "𐐓",
-                ["𐐼"] = "𐐔",
-                ["𐐽"] = "𐐕",
-                ["𐐾"] = "𐐖",
-                ["𐐿"] = "𐐗",
-                ["𐑀"] = "𐐘",
-                ["𐑁"] = "𐐙",
-                ["𐑂"] = "𐐚",
-                ["𐑃"] = "𐐛",
-                ["𐑄"] = "𐐜",
-                ["𐑅"] = "𐐝",
-                ["𐑆"] = "𐐞",
-                ["𐑇"] = "𐐟",
-                ["𐑈"] = "𐐠",
-                ["𐑉"] = "𐐡",
-                ["𐑊"] = "𐐢",
-                ["𐑋"] = "𐐣",
-                ["𐑌"] = "𐐤",
-                ["𐑍"] = "𐐥",
-                ["𐑎"] = "𐐦",
-                ["𐑏"] = "𐐧",
-            }
-
-            local utf8_uc_lc = {
-                ["A"] = "a",
-                ["B"] = "b",
-                ["C"] = "c",
-                ["D"] = "d",
-                ["E"] = "e",
-                ["F"] = "f",
-                ["G"] = "g",
-                ["H"] = "h",
-                ["I"] = "i",
-                ["J"] = "j",
-                ["K"] = "k",
-                ["L"] = "l",
-                ["M"] = "m",
-                ["N"] = "n",
-                ["O"] = "o",
-                ["P"] = "p",
-                ["Q"] = "q",
-                ["R"] = "r",
-                ["S"] = "s",
-                ["T"] = "t",
-                ["U"] = "u",
-                ["V"] = "v",
-                ["W"] = "w",
-                ["X"] = "x",
-                ["Y"] = "y",
-                ["Z"] = "z",
-                ["À"] = "à",
-                ["Á"] = "á",
-                ["Â"] = "â",
-                ["Ã"] = "ã",
-                ["Ä"] = "ä",
-                ["Å"] = "å",
-                ["Æ"] = "æ",
-                ["Ç"] = "ç",
-                ["È"] = "è",
-                ["É"] = "é",
-                ["Ê"] = "ê",
-                ["Ë"] = "ë",
-                ["Ì"] = "ì",
-                ["Í"] = "í",
-                ["Î"] = "î",
-                ["Ï"] = "ï",
-                ["Ð"] = "ð",
-                ["Ñ"] = "ñ",
-                ["Ò"] = "ò",
-                ["Ó"] = "ó",
-                ["Ô"] = "ô",
-                ["Õ"] = "õ",
-                ["Ö"] = "ö",
-                ["Ø"] = "ø",
-                ["Ù"] = "ù",
-                ["Ú"] = "ú",
-                ["Û"] = "û",
-                ["Ü"] = "ü",
-                ["Ý"] = "ý",
-                ["Þ"] = "þ",
-                ["Ā"] = "ā",
-                ["Ă"] = "ă",
-                ["Ą"] = "ą",
-                ["Ć"] = "ć",
-                ["Ĉ"] = "ĉ",
-                ["Ċ"] = "ċ",
-                ["Č"] = "č",
-                ["Ď"] = "ď",
-                ["Đ"] = "đ",
-                ["Ē"] = "ē",
-                ["Ĕ"] = "ĕ",
-                ["Ė"] = "ė",
-                ["Ę"] = "ę",
-                ["Ě"] = "ě",
-                ["Ĝ"] = "ĝ",
-                ["Ğ"] = "ğ",
-                ["Ġ"] = "ġ",
-                ["Ģ"] = "ģ",
-                ["Ĥ"] = "ĥ",
-                ["Ħ"] = "ħ",
-                ["Ĩ"] = "ĩ",
-                ["Ī"] = "ī",
-                ["Ĭ"] = "ĭ",
-                ["Į"] = "į",
-                ["İ"] = "i",
-                ["Ĳ"] = "ĳ",
-                ["Ĵ"] = "ĵ",
-                ["Ķ"] = "ķ",
-                ["Ĺ"] = "ĺ",
-                ["Ļ"] = "ļ",
-                ["Ľ"] = "ľ",
-                ["Ŀ"] = "ŀ",
-                ["Ł"] = "ł",
-                ["Ń"] = "ń",
-                ["Ņ"] = "ņ",
-                ["Ň"] = "ň",
-                ["Ŋ"] = "ŋ",
-                ["Ō"] = "ō",
-                ["Ŏ"] = "ŏ",
-                ["Ő"] = "ő",
-                ["Œ"] = "œ",
-                ["Ŕ"] = "ŕ",
-                ["Ŗ"] = "ŗ",
-                ["Ř"] = "ř",
-                ["Ś"] = "ś",
-                ["Ŝ"] = "ŝ",
-                ["Ş"] = "ş",
-                ["Š"] = "š",
-                ["Ţ"] = "ţ",
-                ["Ť"] = "ť",
-                ["Ŧ"] = "ŧ",
-                ["Ũ"] = "ũ",
-                ["Ū"] = "ū",
-                ["Ŭ"] = "ŭ",
-                ["Ů"] = "ů",
-                ["Ű"] = "ű",
-                ["Ų"] = "ų",
-                ["Ŵ"] = "ŵ",
-                ["Ŷ"] = "ŷ",
-                ["Ÿ"] = "ÿ",
-                ["Ź"] = "ź",
-                ["Ż"] = "ż",
-                ["Ž"] = "ž",
-                ["Ɓ"] = "ɓ",
-                ["Ƃ"] = "ƃ",
-                ["Ƅ"] = "ƅ",
-                ["Ɔ"] = "ɔ",
-                ["Ƈ"] = "ƈ",
-                ["Ɖ"] = "ɖ",
-                ["Ɗ"] = "ɗ",
-                ["Ƌ"] = "ƌ",
-                ["Ǝ"] = "ǝ",
-                ["Ə"] = "ə",
-                ["Ɛ"] = "ɛ",
-                ["Ƒ"] = "ƒ",
-                ["Ɠ"] = "ɠ",
-                ["Ɣ"] = "ɣ",
-                ["Ɩ"] = "ɩ",
-                ["Ɨ"] = "ɨ",
-                ["Ƙ"] = "ƙ",
-                ["Ɯ"] = "ɯ",
-                ["Ɲ"] = "ɲ",
-                ["Ɵ"] = "ɵ",
-                ["Ơ"] = "ơ",
-                ["Ƣ"] = "ƣ",
-                ["Ƥ"] = "ƥ",
-                ["Ʀ"] = "ʀ",
-                ["Ƨ"] = "ƨ",
-                ["Ʃ"] = "ʃ",
-                ["Ƭ"] = "ƭ",
-                ["Ʈ"] = "ʈ",
-                ["Ư"] = "ư",
-                ["Ʊ"] = "ʊ",
-                ["Ʋ"] = "ʋ",
-                ["Ƴ"] = "ƴ",
-                ["Ƶ"] = "ƶ",
-                ["Ʒ"] = "ʒ",
-                ["Ƹ"] = "ƹ",
-                ["Ƽ"] = "ƽ",
-                ["Ǆ"] = "ǆ",
-                ["ǅ"] = "ǆ",
-                ["Ǉ"] = "ǉ",
-                ["ǈ"] = "ǉ",
-                ["Ǌ"] = "ǌ",
-                ["ǋ"] = "ǌ",
-                ["Ǎ"] = "ǎ",
-                ["Ǐ"] = "ǐ",
-                ["Ǒ"] = "ǒ",
-                ["Ǔ"] = "ǔ",
-                ["Ǖ"] = "ǖ",
-                ["Ǘ"] = "ǘ",
-                ["Ǚ"] = "ǚ",
-                ["Ǜ"] = "ǜ",
-                ["Ǟ"] = "ǟ",
-                ["Ǡ"] = "ǡ",
-                ["Ǣ"] = "ǣ",
-                ["Ǥ"] = "ǥ",
-                ["Ǧ"] = "ǧ",
-                ["Ǩ"] = "ǩ",
-                ["Ǫ"] = "ǫ",
-                ["Ǭ"] = "ǭ",
-                ["Ǯ"] = "ǯ",
-                ["Ǳ"] = "ǳ",
-                ["ǲ"] = "ǳ",
-                ["Ǵ"] = "ǵ",
-                ["Ƕ"] = "ƕ",
-                ["Ƿ"] = "ƿ",
-                ["Ǹ"] = "ǹ",
-                ["Ǻ"] = "ǻ",
-                ["Ǽ"] = "ǽ",
-                ["Ǿ"] = "ǿ",
-                ["Ȁ"] = "ȁ",
-                ["Ȃ"] = "ȃ",
-                ["Ȅ"] = "ȅ",
-                ["Ȇ"] = "ȇ",
-                ["Ȉ"] = "ȉ",
-                ["Ȋ"] = "ȋ",
-                ["Ȍ"] = "ȍ",
-                ["Ȏ"] = "ȏ",
-                ["Ȑ"] = "ȑ",
-                ["Ȓ"] = "ȓ",
-                ["Ȕ"] = "ȕ",
-                ["Ȗ"] = "ȗ",
-                ["Ș"] = "ș",
-                ["Ț"] = "ț",
-                ["Ȝ"] = "ȝ",
-                ["Ȟ"] = "ȟ",
-                ["Ƞ"] = "ƞ",
-                ["Ȣ"] = "ȣ",
-                ["Ȥ"] = "ȥ",
-                ["Ȧ"] = "ȧ",
-                ["Ȩ"] = "ȩ",
-                ["Ȫ"] = "ȫ",
-                ["Ȭ"] = "ȭ",
-                ["Ȯ"] = "ȯ",
-                ["Ȱ"] = "ȱ",
-                ["Ȳ"] = "ȳ",
-                ["Ⱥ"] = "ⱥ",
-                ["Ȼ"] = "ȼ",
-                ["Ƚ"] = "ƚ",
-                ["Ⱦ"] = "ⱦ",
-                ["Ɂ"] = "ɂ",
-                ["Ƀ"] = "ƀ",
-                ["Ʉ"] = "ʉ",
-                ["Ʌ"] = "ʌ",
-                ["Ɇ"] = "ɇ",
-                ["Ɉ"] = "ɉ",
-                ["Ɋ"] = "ɋ",
-                ["Ɍ"] = "ɍ",
-                ["Ɏ"] = "ɏ",
-                ["Ά"] = "ά",
-                ["Έ"] = "έ",
-                ["Ή"] = "ή",
-                ["Ί"] = "ί",
-                ["Ό"] = "ό",
-                ["Ύ"] = "ύ",
-                ["Ώ"] = "ώ",
-                ["Α"] = "α",
-                ["Β"] = "β",
-                ["Γ"] = "γ",
-                ["Δ"] = "δ",
-                ["Ε"] = "ε",
-                ["Ζ"] = "ζ",
-                ["Η"] = "η",
-                ["Θ"] = "θ",
-                ["Ι"] = "ι",
-                ["Κ"] = "κ",
-                ["Λ"] = "λ",
-                ["Μ"] = "μ",
-                ["Ν"] = "ν",
-                ["Ξ"] = "ξ",
-                ["Ο"] = "ο",
-                ["Π"] = "π",
-                ["Ρ"] = "ρ",
-                ["Σ"] = "σ",
-                ["Τ"] = "τ",
-                ["Υ"] = "υ",
-                ["Φ"] = "φ",
-                ["Χ"] = "χ",
-                ["Ψ"] = "ψ",
-                ["Ω"] = "ω",
-                ["Ϊ"] = "ϊ",
-                ["Ϋ"] = "ϋ",
-                ["Ϙ"] = "ϙ",
-                ["Ϛ"] = "ϛ",
-                ["Ϝ"] = "ϝ",
-                ["Ϟ"] = "ϟ",
-                ["Ϡ"] = "ϡ",
-                ["Ϣ"] = "ϣ",
-                ["Ϥ"] = "ϥ",
-                ["Ϧ"] = "ϧ",
-                ["Ϩ"] = "ϩ",
-                ["Ϫ"] = "ϫ",
-                ["Ϭ"] = "ϭ",
-                ["Ϯ"] = "ϯ",
-                ["ϴ"] = "θ",
-                ["Ϸ"] = "ϸ",
-                ["Ϲ"] = "ϲ",
-                ["Ϻ"] = "ϻ",
-                ["Ͻ"] = "ͻ",
-                ["Ͼ"] = "ͼ",
-                ["Ͽ"] = "ͽ",
-                ["Ѐ"] = "ѐ",
-                ["Ё"] = "ё",
-                ["Ђ"] = "ђ",
-                ["Ѓ"] = "ѓ",
-                ["Є"] = "є",
-                ["Ѕ"] = "ѕ",
-                ["І"] = "і",
-                ["Ї"] = "ї",
-                ["Ј"] = "ј",
-                ["Љ"] = "љ",
-                ["Њ"] = "њ",
-                ["Ћ"] = "ћ",
-                ["Ќ"] = "ќ",
-                ["Ѝ"] = "ѝ",
-                ["Ў"] = "ў",
-                ["Џ"] = "џ",
-                ["А"] = "а",
-                ["Б"] = "б",
-                ["В"] = "в",
-                ["Г"] = "г",
-                ["Д"] = "д",
-                ["Е"] = "е",
-                ["Ж"] = "ж",
-                ["З"] = "з",
-                ["И"] = "и",
-                ["Й"] = "й",
-                ["К"] = "к",
-                ["Л"] = "л",
-                ["М"] = "м",
-                ["Н"] = "н",
-                ["О"] = "о",
-                ["П"] = "п",
-                ["Р"] = "р",
-                ["С"] = "с",
-                ["Т"] = "т",
-                ["У"] = "у",
-                ["Ф"] = "ф",
-                ["Х"] = "х",
-                ["Ц"] = "ц",
-                ["Ч"] = "ч",
-                ["Ш"] = "ш",
-                ["Щ"] = "щ",
-                ["Ъ"] = "ъ",
-                ["Ы"] = "ы",
-                ["Ь"] = "ь",
-                ["Э"] = "э",
-                ["Ю"] = "ю",
-                ["Я"] = "я",
-                ["Ѡ"] = "ѡ",
-                ["Ѣ"] = "ѣ",
-                ["Ѥ"] = "ѥ",
-                ["Ѧ"] = "ѧ",
-                ["Ѩ"] = "ѩ",
-                ["Ѫ"] = "ѫ",
-                ["Ѭ"] = "ѭ",
-                ["Ѯ"] = "ѯ",
-                ["Ѱ"] = "ѱ",
-                ["Ѳ"] = "ѳ",
-                ["Ѵ"] = "ѵ",
-                ["Ѷ"] = "ѷ",
-                ["Ѹ"] = "ѹ",
-                ["Ѻ"] = "ѻ",
-                ["Ѽ"] = "ѽ",
-                ["Ѿ"] = "ѿ",
-                ["Ҁ"] = "ҁ",
-                ["Ҋ"] = "ҋ",
-                ["Ҍ"] = "ҍ",
-                ["Ҏ"] = "ҏ",
-                ["Ґ"] = "ґ",
-                ["Ғ"] = "ғ",
-                ["Ҕ"] = "ҕ",
-                ["Җ"] = "җ",
-                ["Ҙ"] = "ҙ",
-                ["Қ"] = "қ",
-                ["Ҝ"] = "ҝ",
-                ["Ҟ"] = "ҟ",
-                ["Ҡ"] = "ҡ",
-                ["Ң"] = "ң",
-                ["Ҥ"] = "ҥ",
-                ["Ҧ"] = "ҧ",
-                ["Ҩ"] = "ҩ",
-                ["Ҫ"] = "ҫ",
-                ["Ҭ"] = "ҭ",
-                ["Ү"] = "ү",
-                ["Ұ"] = "ұ",
-                ["Ҳ"] = "ҳ",
-                ["Ҵ"] = "ҵ",
-                ["Ҷ"] = "ҷ",
-                ["Ҹ"] = "ҹ",
-                ["Һ"] = "һ",
-                ["Ҽ"] = "ҽ",
-                ["Ҿ"] = "ҿ",
-                ["Ӏ"] = "ӏ",
-                ["Ӂ"] = "ӂ",
-                ["Ӄ"] = "ӄ",
-                ["Ӆ"] = "ӆ",
-                ["Ӈ"] = "ӈ",
-                ["Ӊ"] = "ӊ",
-                ["Ӌ"] = "ӌ",
-                ["Ӎ"] = "ӎ",
-                ["Ӑ"] = "ӑ",
-                ["Ӓ"] = "ӓ",
-                ["Ӕ"] = "ӕ",
-                ["Ӗ"] = "ӗ",
-                ["Ә"] = "ә",
-                ["Ӛ"] = "ӛ",
-                ["Ӝ"] = "ӝ",
-                ["Ӟ"] = "ӟ",
-                ["Ӡ"] = "ӡ",
-                ["Ӣ"] = "ӣ",
-                ["Ӥ"] = "ӥ",
-                ["Ӧ"] = "ӧ",
-                ["Ө"] = "ө",
-                ["Ӫ"] = "ӫ",
-                ["Ӭ"] = "ӭ",
-                ["Ӯ"] = "ӯ",
-                ["Ӱ"] = "ӱ",
-                ["Ӳ"] = "ӳ",
-                ["Ӵ"] = "ӵ",
-                ["Ӷ"] = "ӷ",
-                ["Ӹ"] = "ӹ",
-                ["Ӻ"] = "ӻ",
-                ["Ӽ"] = "ӽ",
-                ["Ӿ"] = "ӿ",
-                ["Ԁ"] = "ԁ",
-                ["Ԃ"] = "ԃ",
-                ["Ԅ"] = "ԅ",
-                ["Ԇ"] = "ԇ",
-                ["Ԉ"] = "ԉ",
-                ["Ԋ"] = "ԋ",
-                ["Ԍ"] = "ԍ",
-                ["Ԏ"] = "ԏ",
-                ["Ԑ"] = "ԑ",
-                ["Ԓ"] = "ԓ",
-                ["Ա"] = "ա",
-                ["Բ"] = "բ",
-                ["Գ"] = "գ",
-                ["Դ"] = "դ",
-                ["Ե"] = "ե",
-                ["Զ"] = "զ",
-                ["Է"] = "է",
-                ["Ը"] = "ը",
-                ["Թ"] = "թ",
-                ["Ժ"] = "ժ",
-                ["Ի"] = "ի",
-                ["Լ"] = "լ",
-                ["Խ"] = "խ",
-                ["Ծ"] = "ծ",
-                ["Կ"] = "կ",
-                ["Հ"] = "հ",
-                ["Ձ"] = "ձ",
-                ["Ղ"] = "ղ",
-                ["Ճ"] = "ճ",
-                ["Մ"] = "մ",
-                ["Յ"] = "յ",
-                ["Ն"] = "ն",
-                ["Շ"] = "շ",
-                ["Ո"] = "ո",
-                ["Չ"] = "չ",
-                ["Պ"] = "պ",
-                ["Ջ"] = "ջ",
-                ["Ռ"] = "ռ",
-                ["Ս"] = "ս",
-                ["Վ"] = "վ",
-                ["Տ"] = "տ",
-                ["Ր"] = "ր",
-                ["Ց"] = "ց",
-                ["Ւ"] = "ւ",
-                ["Փ"] = "փ",
-                ["Ք"] = "ք",
-                ["Օ"] = "օ",
-                ["Ֆ"] = "ֆ",
-                ["Ⴀ"] = "ⴀ",
-                ["Ⴁ"] = "ⴁ",
-                ["Ⴂ"] = "ⴂ",
-                ["Ⴃ"] = "ⴃ",
-                ["Ⴄ"] = "ⴄ",
-                ["Ⴅ"] = "ⴅ",
-                ["Ⴆ"] = "ⴆ",
-                ["Ⴇ"] = "ⴇ",
-                ["Ⴈ"] = "ⴈ",
-                ["Ⴉ"] = "ⴉ",
-                ["Ⴊ"] = "ⴊ",
-                ["Ⴋ"] = "ⴋ",
-                ["Ⴌ"] = "ⴌ",
-                ["Ⴍ"] = "ⴍ",
-                ["Ⴎ"] = "ⴎ",
-                ["Ⴏ"] = "ⴏ",
-                ["Ⴐ"] = "ⴐ",
-                ["Ⴑ"] = "ⴑ",
-                ["Ⴒ"] = "ⴒ",
-                ["Ⴓ"] = "ⴓ",
-                ["Ⴔ"] = "ⴔ",
-                ["Ⴕ"] = "ⴕ",
-                ["Ⴖ"] = "ⴖ",
-                ["Ⴗ"] = "ⴗ",
-                ["Ⴘ"] = "ⴘ",
-                ["Ⴙ"] = "ⴙ",
-                ["Ⴚ"] = "ⴚ",
-                ["Ⴛ"] = "ⴛ",
-                ["Ⴜ"] = "ⴜ",
-                ["Ⴝ"] = "ⴝ",
-                ["Ⴞ"] = "ⴞ",
-                ["Ⴟ"] = "ⴟ",
-                ["Ⴠ"] = "ⴠ",
-                ["Ⴡ"] = "ⴡ",
-                ["Ⴢ"] = "ⴢ",
-                ["Ⴣ"] = "ⴣ",
-                ["Ⴤ"] = "ⴤ",
-                ["Ⴥ"] = "ⴥ",
-                ["Ḁ"] = "ḁ",
-                ["Ḃ"] = "ḃ",
-                ["Ḅ"] = "ḅ",
-                ["Ḇ"] = "ḇ",
-                ["Ḉ"] = "ḉ",
-                ["Ḋ"] = "ḋ",
-                ["Ḍ"] = "ḍ",
-                ["Ḏ"] = "ḏ",
-                ["Ḑ"] = "ḑ",
-                ["Ḓ"] = "ḓ",
-                ["Ḕ"] = "ḕ",
-                ["Ḗ"] = "ḗ",
-                ["Ḙ"] = "ḙ",
-                ["Ḛ"] = "ḛ",
-                ["Ḝ"] = "ḝ",
-                ["Ḟ"] = "ḟ",
-                ["Ḡ"] = "ḡ",
-                ["Ḣ"] = "ḣ",
-                ["Ḥ"] = "ḥ",
-                ["Ḧ"] = "ḧ",
-                ["Ḩ"] = "ḩ",
-                ["Ḫ"] = "ḫ",
-                ["Ḭ"] = "ḭ",
-                ["Ḯ"] = "ḯ",
-                ["Ḱ"] = "ḱ",
-                ["Ḳ"] = "ḳ",
-                ["Ḵ"] = "ḵ",
-                ["Ḷ"] = "ḷ",
-                ["Ḹ"] = "ḹ",
-                ["Ḻ"] = "ḻ",
-                ["Ḽ"] = "ḽ",
-                ["Ḿ"] = "ḿ",
-                ["Ṁ"] = "ṁ",
-                ["Ṃ"] = "ṃ",
-                ["Ṅ"] = "ṅ",
-                ["Ṇ"] = "ṇ",
-                ["Ṉ"] = "ṉ",
-                ["Ṋ"] = "ṋ",
-                ["Ṍ"] = "ṍ",
-                ["Ṏ"] = "ṏ",
-                ["Ṑ"] = "ṑ",
-                ["Ṓ"] = "ṓ",
-                ["Ṕ"] = "ṕ",
-                ["Ṗ"] = "ṗ",
-                ["Ṙ"] = "ṙ",
-                ["Ṛ"] = "ṛ",
-                ["Ṝ"] = "ṝ",
-                ["Ṟ"] = "ṟ",
-                ["Ṡ"] = "ṡ",
-                ["Ṣ"] = "ṣ",
-                ["Ṥ"] = "ṥ",
-                ["Ṧ"] = "ṧ",
-                ["Ṩ"] = "ṩ",
-                ["Ṫ"] = "ṫ",
-                ["Ṭ"] = "ṭ",
-                ["Ṯ"] = "ṯ",
-                ["Ṱ"] = "ṱ",
-                ["Ṳ"] = "ṳ",
-                ["Ṵ"] = "ṵ",
-                ["Ṷ"] = "ṷ",
-                ["Ṹ"] = "ṹ",
-                ["Ṻ"] = "ṻ",
-                ["Ṽ"] = "ṽ",
-                ["Ṿ"] = "ṿ",
-                ["Ẁ"] = "ẁ",
-                ["Ẃ"] = "ẃ",
-                ["Ẅ"] = "ẅ",
-                ["Ẇ"] = "ẇ",
-                ["Ẉ"] = "ẉ",
-                ["Ẋ"] = "ẋ",
-                ["Ẍ"] = "ẍ",
-                ["Ẏ"] = "ẏ",
-                ["Ẑ"] = "ẑ",
-                ["Ẓ"] = "ẓ",
-                ["Ẕ"] = "ẕ",
-                ["Ạ"] = "ạ",
-                ["Ả"] = "ả",
-                ["Ấ"] = "ấ",
-                ["Ầ"] = "ầ",
-                ["Ẩ"] = "ẩ",
-                ["Ẫ"] = "ẫ",
-                ["Ậ"] = "ậ",
-                ["Ắ"] = "ắ",
-                ["Ằ"] = "ằ",
-                ["Ẳ"] = "ẳ",
-                ["Ẵ"] = "ẵ",
-                ["Ặ"] = "ặ",
-                ["Ẹ"] = "ẹ",
-                ["Ẻ"] = "ẻ",
-                ["Ẽ"] = "ẽ",
-                ["Ế"] = "ế",
-                ["Ề"] = "ề",
-                ["Ể"] = "ể",
-                ["Ễ"] = "ễ",
-                ["Ệ"] = "ệ",
-                ["Ỉ"] = "ỉ",
-                ["Ị"] = "ị",
-                ["Ọ"] = "ọ",
-                ["Ỏ"] = "ỏ",
-                ["Ố"] = "ố",
-                ["Ồ"] = "ồ",
-                ["Ổ"] = "ổ",
-                ["Ỗ"] = "ỗ",
-                ["Ộ"] = "ộ",
-                ["Ớ"] = "ớ",
-                ["Ờ"] = "ờ",
-                ["Ở"] = "ở",
-                ["Ỡ"] = "ỡ",
-                ["Ợ"] = "ợ",
-                ["Ụ"] = "ụ",
-                ["Ủ"] = "ủ",
-                ["Ứ"] = "ứ",
-                ["Ừ"] = "ừ",
-                ["Ử"] = "ử",
-                ["Ữ"] = "ữ",
-                ["Ự"] = "ự",
-                ["Ỳ"] = "ỳ",
-                ["Ỵ"] = "ỵ",
-                ["Ỷ"] = "ỷ",
-                ["Ỹ"] = "ỹ",
-                ["Ἀ"] = "ἀ",
-                ["Ἁ"] = "ἁ",
-                ["Ἂ"] = "ἂ",
-                ["Ἃ"] = "ἃ",
-                ["Ἄ"] = "ἄ",
-                ["Ἅ"] = "ἅ",
-                ["Ἆ"] = "ἆ",
-                ["Ἇ"] = "ἇ",
-                ["Ἐ"] = "ἐ",
-                ["Ἑ"] = "ἑ",
-                ["Ἒ"] = "ἒ",
-                ["Ἓ"] = "ἓ",
-                ["Ἔ"] = "ἔ",
-                ["Ἕ"] = "ἕ",
-                ["Ἠ"] = "ἠ",
-                ["Ἡ"] = "ἡ",
-                ["Ἢ"] = "ἢ",
-                ["Ἣ"] = "ἣ",
-                ["Ἤ"] = "ἤ",
-                ["Ἥ"] = "ἥ",
-                ["Ἦ"] = "ἦ",
-                ["Ἧ"] = "ἧ",
-                ["Ἰ"] = "ἰ",
-                ["Ἱ"] = "ἱ",
-                ["Ἲ"] = "ἲ",
-                ["Ἳ"] = "ἳ",
-                ["Ἴ"] = "ἴ",
-                ["Ἵ"] = "ἵ",
-                ["Ἶ"] = "ἶ",
-                ["Ἷ"] = "ἷ",
-                ["Ὀ"] = "ὀ",
-                ["Ὁ"] = "ὁ",
-                ["Ὂ"] = "ὂ",
-                ["Ὃ"] = "ὃ",
-                ["Ὄ"] = "ὄ",
-                ["Ὅ"] = "ὅ",
-                ["Ὑ"] = "ὑ",
-                ["Ὓ"] = "ὓ",
-                ["Ὕ"] = "ὕ",
-                ["Ὗ"] = "ὗ",
-                ["Ὠ"] = "ὠ",
-                ["Ὡ"] = "ὡ",
-                ["Ὢ"] = "ὢ",
-                ["Ὣ"] = "ὣ",
-                ["Ὤ"] = "ὤ",
-                ["Ὥ"] = "ὥ",
-                ["Ὦ"] = "ὦ",
-                ["Ὧ"] = "ὧ",
-                ["ᾈ"] = "ᾀ",
-                ["ᾉ"] = "ᾁ",
-                ["ᾊ"] = "ᾂ",
-                ["ᾋ"] = "ᾃ",
-                ["ᾌ"] = "ᾄ",
-                ["ᾍ"] = "ᾅ",
-                ["ᾎ"] = "ᾆ",
-                ["ᾏ"] = "ᾇ",
-                ["ᾘ"] = "ᾐ",
-                ["ᾙ"] = "ᾑ",
-                ["ᾚ"] = "ᾒ",
-                ["ᾛ"] = "ᾓ",
-                ["ᾜ"] = "ᾔ",
-                ["ᾝ"] = "ᾕ",
-                ["ᾞ"] = "ᾖ",
-                ["ᾟ"] = "ᾗ",
-                ["ᾨ"] = "ᾠ",
-                ["ᾩ"] = "ᾡ",
-                ["ᾪ"] = "ᾢ",
-                ["ᾫ"] = "ᾣ",
-                ["ᾬ"] = "ᾤ",
-                ["ᾭ"] = "ᾥ",
-                ["ᾮ"] = "ᾦ",
-                ["ᾯ"] = "ᾧ",
-                ["Ᾰ"] = "ᾰ",
-                ["Ᾱ"] = "ᾱ",
-                ["Ὰ"] = "ὰ",
-                ["Ά"] = "ά",
-                ["ᾼ"] = "ᾳ",
-                ["Ὲ"] = "ὲ",
-                ["Έ"] = "έ",
-                ["Ὴ"] = "ὴ",
-                ["Ή"] = "ή",
-                ["ῌ"] = "ῃ",
-                ["Ῐ"] = "ῐ",
-                ["Ῑ"] = "ῑ",
-                ["Ὶ"] = "ὶ",
-                ["Ί"] = "ί",
-                ["Ῠ"] = "ῠ",
-                ["Ῡ"] = "ῡ",
-                ["Ὺ"] = "ὺ",
-                ["Ύ"] = "ύ",
-                ["Ῥ"] = "ῥ",
-                ["Ὸ"] = "ὸ",
-                ["Ό"] = "ό",
-                ["Ὼ"] = "ὼ",
-                ["Ώ"] = "ώ",
-                ["ῼ"] = "ῳ",
-                ["Ω"] = "ω",
-                ["K"] = "k",
-                ["Å"] = "å",
-                ["Ⅎ"] = "ⅎ",
-                ["Ⅰ"] = "ⅰ",
-                ["Ⅱ"] = "ⅱ",
-                ["Ⅲ"] = "ⅲ",
-                ["Ⅳ"] = "ⅳ",
-                ["Ⅴ"] = "ⅴ",
-                ["Ⅵ"] = "ⅵ",
-                ["Ⅶ"] = "ⅶ",
-                ["Ⅷ"] = "ⅷ",
-                ["Ⅸ"] = "ⅸ",
-                ["Ⅹ"] = "ⅹ",
-                ["Ⅺ"] = "ⅺ",
-                ["Ⅻ"] = "ⅻ",
-                ["Ⅼ"] = "ⅼ",
-                ["Ⅽ"] = "ⅽ",
-                ["Ⅾ"] = "ⅾ",
-                ["Ⅿ"] = "ⅿ",
-                ["Ↄ"] = "ↄ",
-                ["Ⓐ"] = "ⓐ",
-                ["Ⓑ"] = "ⓑ",
-                ["Ⓒ"] = "ⓒ",
-                ["Ⓓ"] = "ⓓ",
-                ["Ⓔ"] = "ⓔ",
-                ["Ⓕ"] = "ⓕ",
-                ["Ⓖ"] = "ⓖ",
-                ["Ⓗ"] = "ⓗ",
-                ["Ⓘ"] = "ⓘ",
-                ["Ⓙ"] = "ⓙ",
-                ["Ⓚ"] = "ⓚ",
-                ["Ⓛ"] = "ⓛ",
-                ["Ⓜ"] = "ⓜ",
-                ["Ⓝ"] = "ⓝ",
-                ["Ⓞ"] = "ⓞ",
-                ["Ⓟ"] = "ⓟ",
-                ["Ⓠ"] = "ⓠ",
-                ["Ⓡ"] = "ⓡ",
-                ["Ⓢ"] = "ⓢ",
-                ["Ⓣ"] = "ⓣ",
-                ["Ⓤ"] = "ⓤ",
-                ["Ⓥ"] = "ⓥ",
-                ["Ⓦ"] = "ⓦ",
-                ["Ⓧ"] = "ⓧ",
-                ["Ⓨ"] = "ⓨ",
-                ["Ⓩ"] = "ⓩ",
-                ["Ⰰ"] = "ⰰ",
-                ["Ⰱ"] = "ⰱ",
-                ["Ⰲ"] = "ⰲ",
-                ["Ⰳ"] = "ⰳ",
-                ["Ⰴ"] = "ⰴ",
-                ["Ⰵ"] = "ⰵ",
-                ["Ⰶ"] = "ⰶ",
-                ["Ⰷ"] = "ⰷ",
-                ["Ⰸ"] = "ⰸ",
-                ["Ⰹ"] = "ⰹ",
-                ["Ⰺ"] = "ⰺ",
-                ["Ⰻ"] = "ⰻ",
-                ["Ⰼ"] = "ⰼ",
-                ["Ⰽ"] = "ⰽ",
-                ["Ⰾ"] = "ⰾ",
-                ["Ⰿ"] = "ⰿ",
-                ["Ⱀ"] = "ⱀ",
-                ["Ⱁ"] = "ⱁ",
-                ["Ⱂ"] = "ⱂ",
-                ["Ⱃ"] = "ⱃ",
-                ["Ⱄ"] = "ⱄ",
-                ["Ⱅ"] = "ⱅ",
-                ["Ⱆ"] = "ⱆ",
-                ["Ⱇ"] = "ⱇ",
-                ["Ⱈ"] = "ⱈ",
-                ["Ⱉ"] = "ⱉ",
-                ["Ⱊ"] = "ⱊ",
-                ["Ⱋ"] = "ⱋ",
-                ["Ⱌ"] = "ⱌ",
-                ["Ⱍ"] = "ⱍ",
-                ["Ⱎ"] = "ⱎ",
-                ["Ⱏ"] = "ⱏ",
-                ["Ⱐ"] = "ⱐ",
-                ["Ⱑ"] = "ⱑ",
-                ["Ⱒ"] = "ⱒ",
-                ["Ⱓ"] = "ⱓ",
-                ["Ⱔ"] = "ⱔ",
-                ["Ⱕ"] = "ⱕ",
-                ["Ⱖ"] = "ⱖ",
-                ["Ⱗ"] = "ⱗ",
-                ["Ⱘ"] = "ⱘ",
-                ["Ⱙ"] = "ⱙ",
-                ["Ⱚ"] = "ⱚ",
-                ["Ⱛ"] = "ⱛ",
-                ["Ⱜ"] = "ⱜ",
-                ["Ⱝ"] = "ⱝ",
-                ["Ⱞ"] = "ⱞ",
-                ["Ⱡ"] = "ⱡ",
-                ["Ɫ"] = "ɫ",
-                ["Ᵽ"] = "ᵽ",
-                ["Ɽ"] = "ɽ",
-                ["Ⱨ"] = "ⱨ",
-                ["Ⱪ"] = "ⱪ",
-                ["Ⱬ"] = "ⱬ",
-                ["Ⱶ"] = "ⱶ",
-                ["Ⲁ"] = "ⲁ",
-                ["Ⲃ"] = "ⲃ",
-                ["Ⲅ"] = "ⲅ",
-                ["Ⲇ"] = "ⲇ",
-                ["Ⲉ"] = "ⲉ",
-                ["Ⲋ"] = "ⲋ",
-                ["Ⲍ"] = "ⲍ",
-                ["Ⲏ"] = "ⲏ",
-                ["Ⲑ"] = "ⲑ",
-                ["Ⲓ"] = "ⲓ",
-                ["Ⲕ"] = "ⲕ",
-                ["Ⲗ"] = "ⲗ",
-                ["Ⲙ"] = "ⲙ",
-                ["Ⲛ"] = "ⲛ",
-                ["Ⲝ"] = "ⲝ",
-                ["Ⲟ"] = "ⲟ",
-                ["Ⲡ"] = "ⲡ",
-                ["Ⲣ"] = "ⲣ",
-                ["Ⲥ"] = "ⲥ",
-                ["Ⲧ"] = "ⲧ",
-                ["Ⲩ"] = "ⲩ",
-                ["Ⲫ"] = "ⲫ",
-                ["Ⲭ"] = "ⲭ",
-                ["Ⲯ"] = "ⲯ",
-                ["Ⲱ"] = "ⲱ",
-                ["Ⲳ"] = "ⲳ",
-                ["Ⲵ"] = "ⲵ",
-                ["Ⲷ"] = "ⲷ",
-                ["Ⲹ"] = "ⲹ",
-                ["Ⲻ"] = "ⲻ",
-                ["Ⲽ"] = "ⲽ",
-                ["Ⲿ"] = "ⲿ",
-                ["Ⳁ"] = "ⳁ",
-                ["Ⳃ"] = "ⳃ",
-                ["Ⳅ"] = "ⳅ",
-                ["Ⳇ"] = "ⳇ",
-                ["Ⳉ"] = "ⳉ",
-                ["Ⳋ"] = "ⳋ",
-                ["Ⳍ"] = "ⳍ",
-                ["Ⳏ"] = "ⳏ",
-                ["Ⳑ"] = "ⳑ",
-                ["Ⳓ"] = "ⳓ",
-                ["Ⳕ"] = "ⳕ",
-                ["Ⳗ"] = "ⳗ",
-                ["Ⳙ"] = "ⳙ",
-                ["Ⳛ"] = "ⳛ",
-                ["Ⳝ"] = "ⳝ",
-                ["Ⳟ"] = "ⳟ",
-                ["Ⳡ"] = "ⳡ",
-                ["Ⳣ"] = "ⳣ",
-                ["Ａ"] = "ａ",
-                ["Ｂ"] = "ｂ",
-                ["Ｃ"] = "ｃ",
-                ["Ｄ"] = "ｄ",
-                ["Ｅ"] = "ｅ",
-                ["Ｆ"] = "ｆ",
-                ["Ｇ"] = "ｇ",
-                ["Ｈ"] = "ｈ",
-                ["Ｉ"] = "ｉ",
-                ["Ｊ"] = "ｊ",
-                ["Ｋ"] = "ｋ",
-                ["Ｌ"] = "ｌ",
-                ["Ｍ"] = "ｍ",
-                ["Ｎ"] = "ｎ",
-                ["Ｏ"] = "ｏ",
-                ["Ｐ"] = "ｐ",
-                ["Ｑ"] = "ｑ",
-                ["Ｒ"] = "ｒ",
-                ["Ｓ"] = "ｓ",
-                ["Ｔ"] = "ｔ",
-                ["Ｕ"] = "ｕ",
-                ["Ｖ"] = "ｖ",
-                ["Ｗ"] = "ｗ",
-                ["Ｘ"] = "ｘ",
-                ["Ｙ"] = "ｙ",
-                ["Ｚ"] = "ｚ",
-                ["𐐀"] = "𐐨",
-                ["𐐁"] = "𐐩",
-                ["𐐂"] = "𐐪",
-                ["𐐃"] = "𐐫",
-                ["𐐄"] = "𐐬",
-                ["𐐅"] = "𐐭",
-                ["𐐆"] = "𐐮",
-                ["𐐇"] = "𐐯",
-                ["𐐈"] = "𐐰",
-                ["𐐉"] = "𐐱",
-                ["𐐊"] = "𐐲",
-                ["𐐋"] = "𐐳",
-                ["𐐌"] = "𐐴",
-                ["𐐍"] = "𐐵",
-                ["𐐎"] = "𐐶",
-                ["𐐏"] = "𐐷",
-                ["𐐐"] = "𐐸",
-                ["𐐑"] = "𐐹",
-                ["𐐒"] = "𐐺",
-                ["𐐓"] = "𐐻",
-                ["𐐔"] = "𐐼",
-                ["𐐕"] = "𐐽",
-                ["𐐖"] = "𐐾",
-                ["𐐗"] = "𐐿",
-                ["𐐘"] = "𐑀",
-                ["𐐙"] = "𐑁",
-                ["𐐚"] = "𐑂",
-                ["𐐛"] = "𐑃",
-                ["𐐜"] = "𐑄",
-                ["𐐝"] = "𐑅",
-                ["𐐞"] = "𐑆",
-                ["𐐟"] = "𐑇",
-                ["𐐠"] = "𐑈",
-                ["𐐡"] = "𐑉",
-                ["𐐢"] = "𐑊",
-                ["𐐣"] = "𐑋",
-                ["𐐤"] = "𐑌",
-                ["𐐥"] = "𐑍",
-                ["𐐦"] = "𐑎",
-                ["𐐧"] = "𐑏",
-            }
-
-            -- returns the number of bytes used by the UTF-8 character at byte i in s
-            -- also doubles as a UTF-8 character validator
-            local function utf8charbytes(s, i)
-                -- argument defaults
-                i = i or 1
-
-                -- argument checking
-                if type(s) ~= "string" then
-                    error("bad argument #1 to 'utf8charbytes' (string expected, got ".. type(s).. ")")
-                end
-                if type(i) ~= "number" then
-                    error("bad argument #2 to 'utf8charbytes' (number expected, got ".. type(i).. ")")
-                end
-
-                local c = strbyte(s, i)
-
-                -- determine bytes needed for character, based on RFC 3629
-                -- validate byte 1
-                if c > 0 and c <= 127 then
-                    -- UTF8-1
-                    return 1
-
-                elseif c >= 194 and c <= 223 then
-                    -- UTF8-2
-                    local c2 = strbyte(s, i + 1)
-
-                    if not c2 then
-                        error("UTF-8 string terminated early")
-                    end
-
-                    -- validate byte 2
-                    if c2 < 128 or c2 > 191 then
-                        error("Invalid UTF-8 character")
-                    end
-
-                    return 2
-
-                elseif c >= 224 and c <= 239 then
-                    -- UTF8-3
-                    local c2 = strbyte(s, i + 1)
-                    local c3 = strbyte(s, i + 2)
-
-                    if not c2 or not c3 then
-                        error("UTF-8 string terminated early")
-                    end
-
-                    -- validate byte 2
-                    if c == 224 and (c2 < 160 or c2 > 191) then
-                        error("Invalid UTF-8 character")
-                    elseif c == 237 and (c2 < 128 or c2 > 159) then
-                        error("Invalid UTF-8 character")
-                    elseif c2 < 128 or c2 > 191 then
-                        error("Invalid UTF-8 character")
-                    end
-
-                    -- validate byte 3
-                    if c3 < 128 or c3 > 191 then
-                        error("Invalid UTF-8 character")
-                    end
-
-                    return 3
-
-                elseif c >= 240 and c <= 244 then
-                    -- UTF8-4
-                    local c2 = strbyte(s, i + 1)
-                    local c3 = strbyte(s, i + 2)
-                    local c4 = strbyte(s, i + 3)
-
-                    if not c2 or not c3 or not c4 then
-                        error("UTF-8 string terminated early")
-                    end
-
-                    -- validate byte 2
-                    if c == 240 and (c2 < 144 or c2 > 191) then
-                        error("Invalid UTF-8 character")
-                    elseif c == 244 and (c2 < 128 or c2 > 143) then
-                        error("Invalid UTF-8 character")
-                    elseif c2 < 128 or c2 > 191 then
-                        error("Invalid UTF-8 character")
-                    end
-
-                    -- validate byte 3
-                    if c3 < 128 or c3 > 191 then
-                        error("Invalid UTF-8 character")
-                    end
-
-                    -- validate byte 4
-                    if c4 < 128 or c4 > 191 then
-                        error("Invalid UTF-8 character")
-                    end
-
-                    return 4
-
-                else
-                    error("Invalid UTF-8 character")
-                end
-            end
-
-            -- replace UTF-8 characters based on a mapping table
-            local function utf8replace(s, mapping)
-                -- argument checking
-                if type(s) ~= "string" then
-                    error("bad argument #1 to 'utf8replace' (string expected, got ".. type(s).. ")")
-                end
-                if type(mapping) ~= "table" then
-                    error("bad argument #2 to 'utf8replace' (table expected, got ".. type(mapping).. ")")
-                end
-
-                local pos = 1
-                local bytes = strlen(s)
-                local charbytes
-                local newstr = ""
-
-                while pos <= bytes do
-                    charbytes = utf8charbytes(s, pos)
-                    local c = strsub(s, pos, pos + charbytes - 1)
-
-                    newstr = newstr .. (mapping[c] or c)
-
-                    pos = pos + charbytes
-                end
-
-                return newstr
-            end
-
-            -- identical to string.upper except it knows about unicode simple case conversions
-            function utf8upper(s)
-                return utf8replace(s, utf8_lc_uc)
-            end
-
-            -- identical to string.lower except it knows about unicode simple case conversions
-            function utf8lower(s)
-                return utf8replace(s, utf8_uc_lc)
-            end
-
+        if not utf8 then
+            ns.Print("|cffFFFFFFRaiderIO|r Unable to append excessive tests because utf8 is not available.")
+            return false
         end
+
+        local utf8lower = utf8.utf8upper
+        local utf8upper = utf8.utf8lower
 
         local index = #collection
 
@@ -10086,6 +8579,8 @@ do
         cc = OnCreateSuccess
         cp = progress
         coroutine.resume(co, cq)
+
+        return true
 
     end
 

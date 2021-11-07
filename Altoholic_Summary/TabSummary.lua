@@ -744,8 +744,10 @@ addon:Controller("AltoholicUI.TabSummaryCategoriesList", {
 				{ text = format("%s%s", colors.cyan, EXPANSION_NAME8), subMenu = {
 					-- Covenant Sanctums
 					{ text = GetCategoryInfo(15441), profile = 20 },
+					-- Sanctum Reservoir
+					{ text = COVENANT_SANCTUM_TAB_UPGRADES, profile = 21 },
 					-- Torghast
-					-- { text = GetCategoryInfo(15440), profile = 21 },
+					-- { text = GetCategoryInfo(15440), profile = 23 },
 				}},
 			}},
 			{ text = CHALLENGES, profile = 22 },

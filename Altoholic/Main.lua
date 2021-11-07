@@ -33,7 +33,7 @@ SendMailNameEditBox:SetScript("OnChar", function(self, ...)
 		local matches = {}
 		
 		for characterName, character in pairs(DataStore:GetCharacters()) do
-			if DataStore:GetCharacterFaction(character) == addon.ThisFaction then
+			if DataStore:GetCharacterFaction(character) == currentFaction then
 				if ( strfind(strupper(characterName), strupper(text), 1, 1) == 1 ) and characterName ~= DataStore.ThisChar then
 					-- We have a match starting with the user input ..
 	
@@ -48,7 +48,7 @@ SendMailNameEditBox:SetScript("OnChar", function(self, ...)
 		
 		if #matches > 0 then					-- if we have at least a match..
 			local currentPriority = Options.Get("UI.Mail.AutoCompletePriority")
-			
+
 			if currentPriority == 3 then
 				table.sort(matches, function(a, b) return a.lastLogout > b.lastLogout end)
 			elseif currentPriority == 2 then

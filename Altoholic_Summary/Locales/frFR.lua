@@ -269,6 +269,12 @@ L["COLUMN_CAMPAIGNPROGRESS_TITLE_SHORT"] = "Histoire"
 L["COLUMN_CAMPAIGNPROGRESS_TITLE"] = "Progression de la campagne"
 L["COLUMN_CAMPAIGNPROGRESS_SUBTITLE"] = "Nombre de chapitres complétés dans la campagne de congrégation"
 
+-- *** Expansion Features / Reservoir ***
+-- L["COLUMN_TRANSPORT_NETWORK_TITLE"] = "Transport Network"
+-- L["COLUMN_ANIMA_TITLE"] = "Anima Conductor"
+-- L["COLUMN_COMMAND_TABLE_TITLE"] = "Command Table"
+-- L["COLUMN_SANCTUM_UNIQUE_TITLE"] = "Sanctum Unique"
+
 L["Overall"] = "Globalement"
 L["Torghast"] = true
 -- L["Single target build"] = true

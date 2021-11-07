@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/ui/localization/es-MX", 90108)
+local __exports = LibStub:NewLibrary("ovale/ui/localization/es-MX", 90112)
 if not __exports then return end
 __exports.setESMX = function(l)
     l.action_bar = [[Action bar]]

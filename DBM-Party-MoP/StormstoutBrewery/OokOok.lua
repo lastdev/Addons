@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,challenge,timewalker"
 
-mod:SetRevision("20200912135206")
+mod:SetRevision("20211007190759")
 mod:SetCreatureID(56637)
 mod:SetEncounterID(1412)
 
@@ -19,7 +19,7 @@ mod:RegisterEventsInCombat(
 local warnGroundPound		= mod:NewSpellAnnounce(106807, 3)
 local warnBananas			= mod:NewStackAnnounce(106651, 2)
 
-local specWarnGroundPound	= mod:NewSpecialWarningMove(106807, "Tank")
+local specWarnGroundPound	= mod:NewSpecialWarningMove(106807, "Tank")--Evaluate in timewalking
 
 --local timerGroundPoundCD	= mod:NewCDTimer(4.8, 106807, nil, "Melee", 2, 5)
 

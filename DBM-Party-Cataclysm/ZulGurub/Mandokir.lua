@@ -4,7 +4,7 @@ local Ohgan	= DBM:EJ_GetSectionInfo(2615)
 
 mod.statTypes = "heroic,timewalker"
 
-mod:SetRevision("20200912135206")
+mod:SetRevision("20211011150827")
 mod:SetCreatureID(52151)
 mod:SetEncounterID(1179)
 mod:SetUsedIcons(8)
@@ -82,7 +82,7 @@ function mod:SPELL_HEAL(_, _, _, _, destGUID, _, _, _, spellId)
 		specWarnOhgan:Show()
 		specWarnOhgan:Play("bigmob")
 		if self.Options.SetIconOnOhgan then
-			self:ScanForMobs(destGUID, 0, 8, 1, 0.1, 10, "SetIconOnOhgan")
+			self:ScanForMobs(destGUID, 0, 8, 1, nil, 10, "SetIconOnOhgan")
 		end
 	end
 end

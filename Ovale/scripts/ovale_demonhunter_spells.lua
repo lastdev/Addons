@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/scripts/ovale_demonhunter_spells", 90108)
+local __exports = LibStub:NewLibrary("ovale/scripts/ovale_demonhunter_spells", 90112)
 if not __exports then return end
 __exports.registerDemonHunterSpells = function(scripts)
     local name = "ovale_demonhunter_spells"
@@ -293,6 +293,7 @@ Define(unbound_chaos_talent 22494)
 # Activating Immolation Aura increases the damage of your next Fel Rush by 347462s1. Lasts 20 seconds.
 Define(potion_of_phantom_fire_item 171349)
     ItemInfo(potion_of_phantom_fire_item cd=300 shared_cd="item_cd_4" rppm=12 proc=307495)
+Define(agony_gaze_runeforge 7681)
 Define(blind_faith_runeforge 7699)
 Define(burning_wound_runeforge 7219)
 Define(chaos_theory_runeforge 7050)

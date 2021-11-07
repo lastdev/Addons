@@ -4,13 +4,13 @@ local addonName, addon = ...
 local function OnEvent(event, arg1)
 	local TomCats_Account = _G["TomCats_Account"]
 	if (event == "PLAYER_STARTED_MOVING") then
-		if (TomCats_Account.lastVersionSeen ~= "2.3.19") then
-			TomCats_Account.lastVersionSeen = "2.3.19"
+		if (TomCats_Account.lastVersionSeen ~= "2.3.21") then
+			TomCats_Account.lastVersionSeen = "2.3.21"
 		end
 		addon.UnregisterEvent("PLAYER_STARTED_MOVING", OnEvent)
 	end
 	if (event == "ADDON_LOADED" and addonName == arg1) then
-		if (TomCats_Account.lastVersionSeen ~= "2.3.19") then
+		if (TomCats_Account.lastVersionSeen ~= "2.3.21") then
 			addon.IsNewVersion = true
 		end
 		addon.UnregisterEvent("ADDON_LOADED", OnEvent)

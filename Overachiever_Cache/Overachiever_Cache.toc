@@ -1,6 +1,6 @@
-## Interface: 90002
+## Interface: 90100
 ## Title: Overachiever - Cache
-## Version: 1.1.4
+## Version: 1.1.5
 ## Author: Tuhljin
 ## Notes: Shorten load times and improve accuracy of cross-faction data.
 ## Dependencies: Overachiever

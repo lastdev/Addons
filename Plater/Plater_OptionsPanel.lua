@@ -475,7 +475,7 @@ function Plater.OpenOptionsPanel()
 				profilesFrame.ImportStringField.importDataText = nil
 				local editbox = profilesFrame.ImportStringField.editbox
 				local pasteBuffer, pasteCharCount, isPasting = {}, 0, false
-				editbox:SetMaxBytes (1) -- for performance
+				--editbox:SetMaxBytes (1) -- for performance
 				
 				local function clearBuffer(self)
 					self:SetScript('OnUpdate', nil)
@@ -485,22 +485,55 @@ function Plater.OpenOptionsPanel()
 						local paste = strtrim(table.concat(pasteBuffer))
 						
 						local wagoProfile = Plater.DecompressData (paste, "print")
-						if (wagoProfile and type (wagoProfile == "table") and wagoProfile.plate_config) then
-						
-							local wagoInfoText = "Got the following Profile data:\n"
-							wagoInfoText = wagoInfoText .. "Name: " .. (wagoProfile.profile_name or "N/A") .. "\n"
-							wagoInfoText = wagoInfoText .. "Wago-Revision: " .. (wagoProfile.version or "-") .. "\n"
-							wagoInfoText = wagoInfoText .. "Wago-Version: " .. (wagoProfile.semver or "-") .. "\n"
-							wagoInfoText = wagoInfoText .. (wagoProfile.url or "")
-							
-							editbox:SetText (wagoInfoText)
-							profilesFrame.ImportStringField.importDataText = paste
-							local curNewProfName = profilesFrame.NewProfileTextEntry:GetText()
-							if wagoProfile.profile_name and wagoProfile.profile_name ~= "Default" and curNewProfName and curNewProfName == "MyNewProfile" then
-								profilesFrame.NewProfileTextEntry:SetText(wagoProfile.profile_name)
+						if (wagoProfile and type (wagoProfile == "table")) then
+							if  (wagoProfile.plate_config) then
+								local existingProfileName = nil
+								local wagoInfoText = "Import data verified.\n\n"
+								if wagoProfile.url then
+									local impProfUrl = wagoProfile.url or ""
+									local impProfID = impProfUrl:match("wago.io/([^/]+)/([0-9]+)") or impProfUrl:match("wago.io/([^/]+)$")
+									local profiles = Plater.db.profiles
+									if impProfID then
+										for pName, pData in pairs(profiles) do
+											local pUrl = pData.url or ""
+											local id = pUrl:match("wago.io/([^/]+)/([0-9]+)") or pUrl:match("wago.io/([^/]+)$")
+											if id and impProfID == id then
+												existingProfileName = pName
+												break
+											end									
+										end
+									end
+								
+									wagoInfoText = wagoInfoText .. "Extracted the following wago information from the profile data:\n"
+									wagoInfoText = wagoInfoText .. "  Local Profile Name: " .. (wagoProfile.profile_name or "N/A") .. "\n"
+									wagoInfoText = wagoInfoText .. "  Wago-Revision: " .. (wagoProfile.version or "-") .. "\n"
+									wagoInfoText = wagoInfoText .. "  Wago-Version: " .. (wagoProfile.semver or "-") .. "\n"
+									wagoInfoText = wagoInfoText .. "  Wago-URL: " .. (wagoProfile.url and (wagoProfile.url .. "\n") or "")
+									wagoInfoText = wagoInfoText .. (existingProfileName and ("\nThis profile already exists as: '" .. existingProfileName .. "' in your profiles.\n") or "")
+								else
+									wagoInfoText = "This profile does not contain any wago.io information.\n"
+								end
+								
+								wagoInfoText = wagoInfoText .. "\nYou may change the name below and click on '".. L["OPTIONS_OKAY"] .. "' to import the profile."
+								
+								editbox:SetText (wagoInfoText)
+								profilesFrame.ImportStringField.importDataText = paste
+								local curNewProfName = profilesFrame.NewProfileTextEntry:GetText()
+								if existingProfileName and curNewProfName and curNewProfName == "MyNewProfile" then
+									profilesFrame.NewProfileTextEntry:SetText(existingProfileName)
+								elseif wagoProfile.profile_name and wagoProfile.profile_name ~= "Default" and curNewProfName and curNewProfName == "MyNewProfile" then
+									profilesFrame.NewProfileTextEntry:SetText(wagoProfile.profile_name)
+								end
+							else
+								local scriptType = Plater.GetDecodedScriptType (wagoProfile)
+								if (scriptType == "hook" or scriptType == "script") then
+									editbox:SetText (L["OPTIONS_PROFILE_ERROR_WRONGTAB"])
+								else
+									editbox:SetText (L["OPTIONS_PROFILE_ERROR_STRINGINVALID"])
+								end
 							end
 						else
-							editbox:SetText("Could not decompress the data... Try copying the import string again.")
+							editbox:SetText("Could not decompress the data. The text pasted does not appear to be a serialized Plater profile.\nTry copying the import string again.")
 						end
 						
 						editbox:ClearFocus()
@@ -521,7 +554,7 @@ function Plater.OpenOptionsPanel()
 				profilesFrame.ImportStringField:Show()
 				
 				C_Timer.After (.2, function()
-					profilesFrame.ImportStringField:SetText ("")
+					profilesFrame.ImportStringField:SetText ("<Paste import string here>")
 					profilesFrame.ImportStringField:SetFocus (true)
 				end)
 				
@@ -720,7 +753,7 @@ function Plater.OpenOptionsPanel()
 					profilesFrame.IsImporting = true
 					
 					profilesFrame.NewProfileTextEntry:SetText(Plater.db:GetCurrentProfile())
-					profilesFrame.ImportStringField:SetText(update.encoded)
+					profilesFrame.ImportStringField.importDataText = update.encoded
 					
 					profilesFrame.ConfirmImportProfile(true)
 				end
@@ -6450,11 +6483,11 @@ local relevance_options = {
 					Plater:Msg (L["OPTIONS_ERROR_CVARMODIFY"])
 				end
 			end,
-			min = IS_WOW_PROJECT_MAINLINE and 1 or 20, --20y for tbc
+			min = IS_WOW_PROJECT_MAINLINE and 1 or 20, --20y for tbc and classic
 			max = IS_WOW_PROJECT_MAINLINE and 100 or 41, --41y for tbc
 			step = 1,
 			name = "View Distance" .. CVarIcon,
-			desc = "How far you can see nameplates (in yards).\n\n|cFFFFFFFFCurrent limitations: Retail = 60y, TBC = 20-41y|r" .. CVarDesc,
+			desc = "How far you can see nameplates (in yards).\n\n|cFFFFFFFFCurrent limitations: Retail = 60y, TBC = 20-41y, Classic = 20y|r" .. CVarDesc,
 			nocombat = true,
 		},
 	

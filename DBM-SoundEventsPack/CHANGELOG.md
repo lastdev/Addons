@@ -1,6 +1,7 @@
 # <DBM> Sound Events Pack
 
-## [1.6.12](https://github.com/DeadlyBossMods/DBM-SoundEventsPack/tree/1.6.12) (2021-08-31)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-SoundEventsPack/compare/1.6.11...1.6.12) [Previous Releases](https://github.com/DeadlyBossMods/DBM-SoundEventsPack/releases)
+## [1.6.13](https://github.com/DeadlyBossMods/DBM-SoundEventsPack/tree/1.6.13) (2021-11-02)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-SoundEventsPack/compare/1.6.12...1.6.13) [Previous Releases](https://github.com/DeadlyBossMods/DBM-SoundEventsPack/releases)
 
-- bump toc for BCC  
+- bump retail toc  
+- classic toc  

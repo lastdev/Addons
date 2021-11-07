@@ -3,7 +3,7 @@ local L = LibStub("AceLocale-3.0"):NewLocale( "Altoholic", "ptBR" )
 if not L then return end
 
 -- ** Menu **
-L["Riding"] = "EquitaÁ„o"
+L["Riding"] = "Equita√ß√£o"
 -- L["Daily Quests"] = true
 -- L["Dungeon Quests"] = true
 -- L["Explorer"] = true
@@ -41,10 +41,10 @@ L["Honor"] = "Honra"
 
 -- ** Achievements **
 -- L["ACCOUNT_WIDE"] = "Account Wide"
-L["Started"] = "ComeÁou"
-L["Not started"] = "N„o iniciado"
+L["Started"] = "Come√ßou"
+L["Not started"] = "N√£o iniciado"
 L["This account"] = "Esta conta"
-L["Shift+Left click to link"] = "Shift+Bot„o direito do mouse para vincular"
+L["Shift+Left click to link"] = "Shift+Bot√£o direito do mouse para vincular"
 L["Zone"] = "Zona"
 L["Characters"] = "Personagens"
 L["Rest XP"] = "Exp em repouso"

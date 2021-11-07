@@ -8,6 +8,14 @@ function Plater.GetChangelogTable()
 	if (not Plater.ChangeLogTable) then
 		Plater.ChangeLogTable = {
 
+			{1634909553,  "Backend Change", "October 31st, 2021", "TOC update for 9.1.5.", "cont1nuity"},
+			{1634909553,  "Backend Change", "October 31st, 2021", "Improvements to profile import and wrong data recognition.", "cont1nuity"},
+			{1634909553,  "Backend Change", "October 22nd, 2021", "Adjustments for tooltip backdrop changes in 9.1.5.", "cont1nuity"},
+			
+			{1633679186,  "Backend Change", "October 2nd, 2021", "Small adjustments for profile names and additional information during imports.", "cont1nuity"},
+			{1633679186,  "Backend Change", "October 2nd, 2021", "Fixing an issue with profile updates not working.", "cont1nuity"},
+			{1633679186,  "Backend Change", "September 30th, 2021", "Adding support for Classic Era.", "cont1nuity"},
+			
 			{1632595917,  "Backend Change", "September 25th, 2021", "Adjustments of view distance values for TBC.", "cont1nuity"},
 			{1632595917,  "Backend Change", "September 23rd, 2021", "Switching Aura Tooltip implementation from 'NameplateTooltip' to 'PlaterNamePlateAuraTooltip'.", "cont1nuity"},
 			{1632595917,  "Bug Fix", "September 14th, 2021", "Adding fonts 'Oswald' and 'NuevaStd' as ttf fonts again.", "cont1nuity"},

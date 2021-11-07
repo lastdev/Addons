@@ -540,13 +540,16 @@ function InitializeTooltip(tooltip, key)
 	----------------------------------------------------------------------
 	-- (Re)set frame settings
 	----------------------------------------------------------------------
+	print("TEST")
+	print(GameTooltip)
 	local backdrop = GameTooltip:GetBackdrop()
 
-	tooltip:SetBackdrop(backdrop)
-
 	if backdrop then
+		tooltip:SetBackdrop(backdrop)
 		tooltip:SetBackdropColor(GameTooltip:GetBackdropColor())
 		tooltip:SetBackdropBorderColor(GameTooltip:GetBackdropBorderColor())
+	else
+		cell:SetBackdropColor(0, 0, 0, 1)
 	end
 
 	tooltip:SetScale(GameTooltip:GetScale())

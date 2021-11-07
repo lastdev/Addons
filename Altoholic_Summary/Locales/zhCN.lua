@@ -268,6 +268,12 @@ L["Visited"] = "已访问"
 -- L["COLUMN_CAMPAIGNPROGRESS_TITLE"] = "Campaign Progress"
 -- L["COLUMN_CAMPAIGNPROGRESS_SUBTITLE"] = "Number of completed chapters in the covenant campaign"
 
+-- *** Expansion Features / Reservoir ***
+-- L["COLUMN_TRANSPORT_NETWORK_TITLE"] = "Transport Network"
+-- L["COLUMN_ANIMA_TITLE"] = "Anima Conductor"
+-- L["COLUMN_COMMAND_TABLE_TITLE"] = "Command Table"
+-- L["COLUMN_SANCTUM_UNIQUE_TITLE"] = "Sanctum Unique"
+
 -- L["Overall"] = true
 -- L["Torghast"] = true
 -- L["Single target build"] = true

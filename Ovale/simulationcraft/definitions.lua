@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/simulationcraft/definitions", 90108)
+local __exports = LibStub:NewLibrary("ovale/simulationcraft/definitions", 90112)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local pairs = pairs
@@ -165,6 +165,7 @@ __exports.modifierKeywords = {
     ["interrupt_if"] = true,
     ["interrupt_immediate"] = true,
     ["interval"] = true,
+    ["landing_distance"] = true,
     ["lethal"] = true,
     ["line_cd"] = true,
     ["max_cycle_targets"] = true,
@@ -558,6 +559,10 @@ __exports.miscOperands = {
         modifiers = {
             max = {
                 type = 1
+            },
+            pct = {
+                name = "percent",
+                type = 0
             }
         }
     },

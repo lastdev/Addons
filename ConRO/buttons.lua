@@ -2800,7 +2800,14 @@ function ConRO:AbilityMovement(_Spell, _Condition)
 	end
 end
 
-noWarnSpells = {33917, 162794, 188499, 205448, 213771, 326446}
+noWarnInit = {2643, 33917, 53600, 53595, 77758, 162794, 188499, 205448, 213771, 326446}
+noWarnSpells = {}
+
+
+for _, v in pairs(noWarnInit) do
+  noWarnSpells[v] = true
+end
+
 
 function ConRO:GlowSpell(spellID)
 	local spellName = GetSpellInfo(spellID);
@@ -2813,6 +2820,7 @@ function ConRO:GlowSpell(spellID)
 	else
 --		if UnitAffectingCombat('player') then
 		if UnitAffectingCombat('player') and (nil == noWarnSpells[spellID]) then
+			self:Print(noWarnSpells);
 			if spellName ~= nil then
 				self:Print(self.Colors.Error .. 'Spell not found on action bars1: ' .. ' ' .. spellName .. ' ' .. '(' .. spellID .. ')');
 			else

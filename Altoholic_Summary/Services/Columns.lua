@@ -65,6 +65,8 @@ addon:Service("AltoholicUI.TabSummaryColumnProfiles",  function()
 
 		-- Expansion Features / Shadowlands / Covenant Sanctums
 		[20] = { "Name", "Level", "CovenantName", "SoulbindName", "Renown", "Story90", "Story91" },
+		-- Expansion Features / Shadowlands / Sanctum Reservoir
+		[21] = { "Name", "Level", "CovenantName", "TransportNetwork", "AnimaConductor", "CommandTable", "SanctumUnique" },
 
 		-- Mythic Keystones
 		[22] = { "Name", "Level", "KeyName", "KeyLevel", "WeeklyBestKeyName", "WeeklyBestKeyLevel", "WeeklyBestKeyTime" },	

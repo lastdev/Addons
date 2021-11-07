@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "heroic,timewalker"
 
-mod:SetRevision("20210404132302")
+mod:SetRevision("20211011150827")
 mod:SetCreatureID(23574)
 mod:SetEncounterID(1189)
 mod:SetUsedIcons(1, 8)
@@ -49,7 +49,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsDestTypePlayer() then
 			warnPlucked:Show(args.destName)
 		else
-			self:ScanForMobs(args.destGUID, 2, 8, 1, 0.1, 10, "SetIconOnEagle")
+			self:ScanForMobs(args.destGUID, 2, 8, 1, nil, 10, "SetIconOnEagle")
 		end
 	end
 end
