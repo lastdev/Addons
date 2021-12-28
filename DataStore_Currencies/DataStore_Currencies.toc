@@ -1,4 +1,4 @@
-## Interface: 90100
+## Interface: 90105
 ## Title: DataStore_Currencies
 ## Notes: Stores information about character currencies
 ## Author: Thaoky (EU-Marécages de Zangar)

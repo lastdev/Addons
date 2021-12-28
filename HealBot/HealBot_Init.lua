@@ -318,7 +318,11 @@ function HealBot_Init_SmartCast()
         if HealBot_Spell_IDs[HEALBOT_RESURRECTION] then SmartCast_Res=HealBot_Spell_IDs[HEALBOT_RESURRECTION].name end
     elseif HealBot_Data["PCLASSTRIM"]=="DRUI" then
         if HealBot_Spell_IDs[HEALBOT_REVITALIZE] then SmartCast_MassRes=HealBot_Spell_IDs[HEALBOT_REVITALIZE].name end
-        if HealBot_Spell_IDs[HEALBOT_REVIVE] then SmartCast_Res=HealBot_Spell_IDs[HEALBOT_REVIVE].name end
+        if HealBot_Spell_IDs[HEALBOT_REVIVE] then 
+            SmartCast_Res=HealBot_Spell_IDs[HEALBOT_REVIVE].name 
+        elseif HealBot_Spell_IDs[HEALBOT_REBIRTH] then 
+            SmartCast_Res=HealBot_Spell_IDs[HEALBOT_REBIRTH].name
+        end
     elseif HealBot_Data["PCLASSTRIM"]=="MONK" then
         if HealBot_Spell_IDs[HEALBOT_REAWAKEN] then SmartCast_MassRes=HealBot_Spell_IDs[HEALBOT_REAWAKEN].name end
         if HealBot_Spell_IDs[HEALBOT_RESUSCITATE] then SmartCast_Res=HealBot_Spell_IDs[HEALBOT_RESUSCITATE].name end

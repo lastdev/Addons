@@ -4,8 +4,7 @@
 
 local XPerl_Party_Pet_Events = { }
 local conf, pconf, petconf
-XPerl_PartyPetFrames = { }
-local PartyPetFrames = XPerl_PartyPetFrames
+local PartyPetFrames = { }
 XPerl_RequestConfig(function(New)
 	conf = New
 	pconf = New.party
@@ -13,7 +12,7 @@ XPerl_RequestConfig(function(New)
 	for k, v in pairs(PartyPetFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 0e5dac9771e21852086c9ae73250c5d5d507c244 $")
+end, "$Revision: c52d6da2c580f292231cbce24418a3ae3ca2b620 $")
 
 --local new, del, copy = XPerl_GetReusableTable, XPerl_FreeTable, XPerl_CopyTable
 
@@ -21,13 +20,16 @@ local AllPetFrames = {}
 
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 
-local UnitName = UnitName
+local UnitExists = UnitExists
+local UnitGUID = UnitGUID
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 local UnitIsConnected = UnitIsConnected
-local UnitIsGhost = UnitIsGhost
 local UnitIsDead = UnitIsDead
 local UnitIsDeadOrGhost = UnitIsDeadOrGhost
+local UnitIsGhost = UnitIsGhost
+local UnitIsPVP = UnitIsPVP
+local UnitName = UnitName
 local UnitPower = UnitPower
 local UnitPowerMax = UnitPowerMax
 
@@ -35,8 +37,6 @@ local UnitPowerMax = UnitPowerMax
 -- Loading Function --
 ----------------------
 function XPerl_Party_Pet_OnLoadEvents(self)
-	self.time = 0
-
 	local events = {
 		"UNIT_COMBAT",
 		"UNIT_FACTION",
@@ -46,6 +46,8 @@ function XPerl_Party_Pet_OnLoadEvents(self)
 		IsClassic and "UNIT_HEALTH",
 		"UNIT_MAXHEALTH",
 		"UNIT_PET",
+		"UNIT_NAME_UPDATE",
+		"GROUP_ROSTER_UPDATE",
 		"PLAYER_ENTERING_WORLD",
 		"PET_BATTLE_OPENING_START",
 		"PET_BATTLE_CLOSE",
@@ -58,23 +60,23 @@ function XPerl_Party_Pet_OnLoadEvents(self)
 		end
 	end
 
-	-- Set here to reduce amount of function calls made
 	self:SetScript("OnEvent", XPerl_Party_Pet_OnEvent)
-	self:SetScript("OnUpdate", XPerl_Party_Pet_OnUpdate)
 
-	XPerl_RegisterOptionChanger(XPerl_Party_Pet_Set_Bits, "PartyPet")
+	XPerl_RegisterOptionChanger(XPerl_Party_Pet_Set_Bits)
 
 	XPerl_Highlight:Register(XPerl_Party_Pet_HighlightCallback, self)
+
+	XPerl_Party_Pet_Set_Bits()
 
 	XPerl_Party_Pet_OnLoadEvents = nil
 end
 
-local guids
+local guids = { }
 -- XPerl_Party_Pet_UpdateGUIDs
 function XPerl_Party_Pet_UpdateGUIDs()
 	--del(guids)
 	--guids = new()
-	guids = { }
+	wipe(guids)
 	if pconf.showPlayer then
 		guids[UnitGUID("player")] = PartyPetFrames["pet"]
 	end
@@ -89,6 +91,22 @@ end
 -- XPerl_Party_Pet_GetUnitFrameByGUID
 function XPerl_Party_Pet_GetUnitFrameByGUID(guid)
 	return guids and guids[guid]
+end
+
+function XPerl_Party_Pet_SetFrame(id, unit, owner)
+	PartyPetFrames[unit] = _G["XPerl_partypet"..id]
+	PartyPetFrames[unit].partyid = unit
+	PartyPetFrames[unit].ownerid = owner
+end
+
+function XPerl_Party_Pet_ClearFrame(unit)
+	if not PartyPetFrames[unit] then
+		return
+	end
+
+	PartyPetFrames[unit].partyid = nil
+	PartyPetFrames[unit].ownerid = nil
+	PartyPetFrames[unit] = nil
 end
 
 -- XPerl_Party_Pet_HighlightCallback
@@ -191,21 +209,15 @@ function XPerl_Party_Pet_OnLoad(self)
 		}
 	end
 
-	--[[XPerl_SecureUnitButton_OnLoad(self, nil, nil, nil, XPerl_ShowGenericMenu)
-	XPerl_SecureUnitButton_OnLoad(self.nameFrame, nil, nil, nil, XPerl_ShowGenericMenu)--]]
-
 	self:SetAttribute("*type1", "target")
 	self:SetAttribute("type2", "togglemenu")
 	self.nameFrame:SetAttribute("*type1", "target")
 	self.nameFrame:SetAttribute("type2", "togglemenu")
 
-	--[[self:SetAttribute("useparent-unit", true)
+	self:SetAttribute("useparent-unit", true)
 	self:SetAttribute("unitsuffix", "pet")
 	self.nameFrame:SetAttribute("useparent-unit", true)
-	self.nameFrame:SetAttribute("unitsuffix", "pet")--]]
-
-	self:SetAttribute("unit", self.partyid)
-	self.nameFrame:SetAttribute("unit", self.partyid)
+	self.nameFrame:SetAttribute("unitsuffix", "pet")
 
 	XPerl_RegisterClickCastFrame(self.nameFrame)
 	XPerl_RegisterClickCastFrame(self)
@@ -216,7 +228,9 @@ function XPerl_Party_Pet_OnLoad(self)
 	self.FlashFrames = {self.nameFrame, self.statsFrame}
 
 	self:SetScript("OnShow", function(self)
-		self.conf = conf.partypet
+		if not self.conf then
+			self.conf = conf.partypet
+		end
 		--CheckVisiblity()
 		XPerl_Party_Pet_UpdateDisplay(self)
 		XPerl_Party_SetDebuffLocation(self:GetParent())
@@ -225,8 +239,6 @@ function XPerl_Party_Pet_OnLoad(self)
 		--CheckVisiblity()
 		XPerl_Party_SetDebuffLocation(self:GetParent())
 	end)
-
-	self.time = 0
 
 	if (XPerlDB) then
 		self.conf = conf.partypet
@@ -244,9 +256,13 @@ local function XPerl_Party_Pet_UpdateName(self)
 		return
 	end
 
-	local Partypetname = UnitName(self.partyid)
-	if (Partypetname ~= nil) then
-		self.nameFrame.text:SetText(Partypetname)
+	if not petconf.name then
+		return
+	end
+
+	local unitName = UnitName(self.partyid)
+	if unitName then
+		self.nameFrame.text:SetText(unitName)
 		if (UnitIsPVP(self.ownerid)) then
 			self.nameFrame.text:SetTextColor(0, 1, 0)
 		else
@@ -285,11 +301,16 @@ end
 local function XPerl_Party_Pet_UpdateHealth(self)
 	local partyid = self.partyid
 	if not partyid then
+		self.pethp = 0
+		self.pethpmax = 0
 		return
 	end
 
 	local health = UnitIsGhost(partyid) and 1 or (UnitIsDead(partyid) and 0 or UnitHealth(partyid))
 	local healthmax = UnitHealthMax(partyid)
+
+	self.pethp = health
+	self.pethpmax = healthmax
 
 	-- PTR region fix
 	if not healthmax or healthmax <= 0 then
@@ -346,30 +367,33 @@ end
 local function XPerl_Party_Pet_UpdateMana(self)
 	local partyid = self.partyid
 	if not partyid then
+		self.petmana = 0
+		self.petmanamax = 0
 		return
 	end
 
-	local Partypetmana = UnitPower(partyid)
-	local Partypetmanamax = UnitPowerMax(partyid)
+	local unitPower = UnitPower(partyid)
+	local unitPowerMax = UnitPowerMax(partyid)
+
+	self.petmana = unitPower
+	self.petmanamax = unitPowerMax
 
 	-- PTR region fix
-	if not Partypetmanamax or Partypetmanamax <= 0 then
-		if Partypetmanamax > 0 then
-			Partypetmanamax = Partypetmana
+	if not unitPowerMax or unitPowerMax <= 0 then
+		if unitPowerMax > 0 then
+			unitPowerMax = unitPower
 		else
-			Partypetmanamax = 1
+			unitPowerMax = 1
 		end
 	end
 
-	self.statsFrame.manaBar:SetMinMaxValues(0, Partypetmanamax)
-	self.statsFrame.manaBar:SetValue(Partypetmana)
+	self.statsFrame.manaBar:SetMinMaxValues(0, unitPowerMax)
+	self.statsFrame.manaBar:SetValue(unitPower)
 
-	pmanaPct = (Partypetmana * 100.0) / Partypetmanamax
-	pmanaPct =  format("%3.0f", pmanaPct)
 	if (XPerl_GetDisplayedPowerType(partyid) >= 1) then
-		self.statsFrame.manaBar.text:SetText(Partypetmana)
+		self.statsFrame.manaBar.text:SetText(unitPower)
 	else
-		self.statsFrame.manaBar.text:SetFormattedText("%.0f%%", (100 * (Partypetmana / Partypetmanamax)))
+		self.statsFrame.manaBar.text:SetFormattedText("%.0f%%", (100 * (unitPower / unitPowerMax)))
 	end
 end
 
@@ -386,7 +410,6 @@ function XPerl_Party_Pet_Buff_UpdateAll(self)
 
 	if (petconf.buffs.enable) then
 		if (UnitExists(partyid)) then
-			self.buffFrame:Show()
 			if (XPerlDB) then
 				if (not self.conf) then
 					self.conf = conf.partypet
@@ -415,8 +438,14 @@ end
 
 -- XPerl_Party_Pet_UpdateDisplay
 function XPerl_Party_Pet_UpdateDisplay(self)
-	if not self.partyid then
+	local partyid = self.partyid
+	if not partyid then
+		self.guid = nil
 		return
+	end
+
+	if IsClassic then
+		self.guid = UnitGUID(partyid)
 	end
 
 	XPerl_Party_Pet_UpdateName(self)
@@ -427,6 +456,8 @@ function XPerl_Party_Pet_UpdateDisplay(self)
 	XPerl_Party_Pet_UpdateCombat(self)
 	XPerl_Party_Pet_Buff_UpdateAll(self)
 	XPerl_UpdateSpellRange(self)
+
+	self.guid = UnitGUID(partyid)
 end
 
 --------------------
@@ -480,11 +511,43 @@ function XPerl_Party_Pet_OnUpdate(self, elapsed)
 			end
 
 			if conf.rangeFinder.enabled then
-				frame.time = frame.time + elapsed
-				if (frame.time > 0.2) then
-					frame.time = 0
+				frame.rangeTime = elapsed + (frame.rangeTime or 0)
+				if (frame.rangeTime > 0.2) then
+					frame.rangeTime = 0
 					XPerl_UpdateSpellRange(frame, nil, false)
 				end
+			end
+		end
+	end
+
+	if IsClassic then
+		local partyid = self.partyid
+
+		local newGuid = UnitGUID(partyid)
+		local newHP = UnitIsGhost(partyid) and 1 or (UnitIsDead(partyid) and 0 or XPerl_Unit_GetHealth(self))
+		local newHPMax = UnitHealthMax(partyid)
+		local newMana = UnitPower(partyid)
+		local newManaMax = UnitPowerMax(partyid)
+
+		if (newHP ~= self.pethp or newHPMax ~= self.pethpmax) then
+			XPerl_Party_Pet_UpdateHealth(self)
+		end
+
+		if (newMana ~= self.petmana or newManaMax ~= self.petmanamax) then
+			XPerl_Party_Pet_UpdateMana(self)
+		end
+
+		if (newGuid ~= self.guid) then
+			XPerl_Party_Pet_UpdateDisplay(self)
+		else
+			self.time = elapsed + (self.time or 0)
+			if self.time >= 0.5 then
+				if self.conf.buffs.enable then
+					XPerl_Unit_UpdateBuffs(self, nil, nil, self.conf.buffs.castable, self.conf.debuffs.curable)
+				end
+				XPerl_UpdateSpellRange(self, partyid)
+				XPerl_Highlight:SetHighlight(self, UnitGUID(partyid))
+				self.time = 0
 			end
 		end
 	end
@@ -583,7 +646,6 @@ end
 function XPerl_Party_Pet_Events:UNIT_NAME_UPDATE()
 	XPerl_Party_Pet_UpdateGUIDs()
 	XPerl_Party_Pet_UpdateName(self)
-	XPerl_Party_Pet_UpdateHealth(self)
 end
 
 -- UNIT_FACTION
@@ -748,6 +810,16 @@ function XPerl_Party_Pet_Set_Bits1(self)
 		end
 	end
 
+	if IsClassic or conf.combatFlash or conf.rangeFinder.enabled then
+		if not self:GetScript("OnUpdate") then
+			self:SetScript("OnUpdate", XPerl_Party_Pet_OnUpdate)
+		end
+	else
+		if self:GetScript("OnUpdate") then
+			self:SetScript("OnUpdate", nil)
+		end
+	end
+
 	XPerl_ProtectedCall(EnableDisable, self)
 end
 
@@ -768,13 +840,13 @@ function XPerl_Party_Pet_Set_Bits()
 	end
 
 	RegisterEvents(XPerl_Party_Pet_EventFrame, petconf.mana, {"UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_MANA", "UNIT_DISPLAYPOWER"})
-	RegisterEvents(XPerl_Party_Pet_EventFrame, petconf.name, {"UNIT_NAME_UPDATE"})
+	--RegisterEvents(XPerl_Party_Pet_EventFrame, petconf.name, {"UNIT_NAME_UPDATE"})
 	RegisterEvents(XPerl_Party_Pet_EventFrame, petconf.name and petconf.level, {"UNIT_LEVEL"})
 
 	XPerl_Party_Pet_EventFrame:RegisterEvent("PARTY_MEMBER_ENABLE")
 	XPerl_Party_Pet_EventFrame:RegisterEvent("PARTY_MEMBER_DISABLE")
 
-	XPerl_Register_Prediction(self, pconf, function(guid)
+	XPerl_Register_Prediction(XPerl_Party_Pet_EventFrame, pconf, function(guid)
 		local frame = XPerl_Party_Pet_GetUnitFrameByGUID(guid)
 		if frame then
 			return frame.partyid

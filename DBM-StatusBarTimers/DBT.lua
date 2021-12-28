@@ -88,6 +88,7 @@ DBT.DefaultOptions = {
 	FillUpBars = true,
 	TimerPoint = "TOPRIGHT",
 	Sort = "Sort",
+	DesaturateValue = 1,
 	-- Huge bar
 	EnlargeBarTime = 11,
 	HugeBarXOffset = 0,
@@ -334,6 +335,16 @@ do
 end
 
 do
+	local gsub = string.gsub
+
+	local function fixElv(optionName)
+		if DBT.Options[optionName]:lower():find("interface\\addons\\elvui\\media\\") then
+			DBT.Options[optionName] = gsub(DBT.Options[optionName], gsub("Interface\\AddOns\\ElvUI\\Media\\", "(%a)", function(v)
+				return "[" .. v:upper() .. v:lower() .. "]"
+			end), "Interface\\AddOns\\ElvUI\\Core\\Media\\")
+		end
+	end
+
 	function DBT:LoadOptions(id)
 		if not DBT_AllPersistentOptions then
 			DBT_AllPersistentOptions = {}
@@ -358,6 +369,9 @@ do
 		if self.Options.Sort == true then
 			self.Options.Sort = "Sort"
 		end
+		-- Migrate ElvUI changes
+		fixElv("Texture")
+		fixElv("Font")
 	end
 
 	function DBT:CreateProfile(id)
@@ -777,6 +791,10 @@ function barPrototype:Update(elapsed)
 				b = barOptions.StartColorB + (barOptions.EndColorB - barOptions.StartColorB) * (1 - timerValue/totaltimeValue)
 			end
 		end
+		if not DBT.Options.HugeBarsEnabled and timerValue > enlargeTime then
+			local x = (barOptions.DesaturateValue * r) + (barOptions.DesaturateValue * g) + (barOptions.DesaturateValue * b)
+			r, g, b = x, x, x
+		end
 		bar:SetStatusBarColor(r, g, b)
 		if sparkEnabled then
 			spark:SetVertexColor(r, g, b)
@@ -1129,7 +1147,7 @@ do
 		end
 		if not DBT_AllPersistentOptions[DBM_UsedProfile][id] then
 			DBT_AllPersistentOptions[DBM_UsedProfile][id] = DBT_AllPersistentOptions[DBM_UsedProfile].DBM or {}
-			for option, value in pairs(skin.Defaults) do
+			for option, value in pairs(skins[id].Defaults) do
 				DBT_AllPersistentOptions[DBM_UsedProfile][id][option] = value
 			end
 		end

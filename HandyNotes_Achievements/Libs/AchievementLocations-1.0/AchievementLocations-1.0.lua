@@ -20,6 +20,8 @@ function AchievementLocations:AddLocation(mapFile, achievementID, x, y, options)
     if type(mapFile) == "table" then
         row = mapFile
         mapFile = row[1]
+	-- interim memory optimization
+	row.trivia = nil
     else
         -- deprecated
         row = {mapFile, achievementID, x, y}

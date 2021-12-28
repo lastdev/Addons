@@ -469,8 +469,7 @@ L["WAITING_AT_MOST_X_LONGER"] = "Höchstens %ss länger warten..."
 L["X_PRICE_HISTORY"] = "%s Preisverlauf"
 L["X_STACK_OF_X"] = "%s Stapel von %s"
 L["X_STACKS_OF_X"] = "%s Stapel von %s"
---[[Translation missing --]]
-L["YOU_COLUMN"] = "You?"
+L["YOU_COLUMN"] = "Deine?"
 L["YOUR_HISTORY"] = "Deine Historie"
 
 

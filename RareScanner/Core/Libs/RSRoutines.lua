@@ -9,7 +9,14 @@ local RSRoutines = private.NewLib("RareScannerRoutines")
 local RSUtils = private.ImportLib("RareScannerUtils")
 
 local function getDelay()
-	return 500/(tonumber(C_CVar.GetCVar("targetFPS")) or GetFrameRate() or 35)
+	local fps = 35
+	if (C_CVar.GetCVar("targetFPS") and tonumber(C_CVar.GetCVar("targetFPS")) > 0) then
+		fps = tonumber(C_CVar.GetCVar("targetFPS"))
+	else
+		fps = GetFramerate()
+	end
+	
+	return 500/fps
 end
 
 local function clone(object)

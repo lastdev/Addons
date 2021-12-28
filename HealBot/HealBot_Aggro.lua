@@ -67,13 +67,11 @@ end
 
 function HealBot_Aggro_UpdateUnit(button,status,threatStatus,threatPct,extra,threatValue,mobName)
     if button.status.current<HealBot_Unit_Status["DEAD"] and UnitIsFriend("player",button.unit) and UnitAffectingCombat(button.unit) then
-        if status then
-            if Healbot_Config_Skins.BarAggro[Healbot_Config_Skins.Current_Skin][button.frame]["SHOW"] then
-                if threatStatus>Healbot_Config_Skins.BarAggro[Healbot_Config_Skins.Current_Skin][button.frame]["ALERT"] then
-                    HealBot_Aux_UpdateAggroBar(button)
-                else
-                    HealBot_Aux_ClearAggroBar(button)
-                end
+        if status and Healbot_Config_Skins.BarAggro[Healbot_Config_Skins.Current_Skin][button.frame]["SHOW"] then
+            if threatStatus>Healbot_Config_Skins.BarAggro[Healbot_Config_Skins.Current_Skin][button.frame]["ALERT"] then
+                HealBot_Aux_UpdateAggroBar(button)
+            else
+                HealBot_Aux_ClearAggroBar(button)
             end
         else
             threatStatus=0
@@ -86,8 +84,11 @@ function HealBot_Aggro_UpdateUnit(button,status,threatStatus,threatPct,extra,thr
         threatValue=0
         mobName=""
     end
-    if (button.aggro.status==3 or threatStatus==3) and button.aggro.status~=threatStatus then
-        HealBot_RefreshUnit(button)
+    if (button.aggro.status==3 or threatStatus==3) then
+        if button.aggro.status~=threatStatus then
+            button.aggro.status=threatStatus
+            HealBot_Action_UpdateHealthButtonState(button, true)
+        end
     end
     button.aggro.status=threatStatus
     if Healbot_Config_Skins.BarAggro[Healbot_Config_Skins.Current_Skin][button.frame]["SHOW"] and 

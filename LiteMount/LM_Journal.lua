@@ -92,9 +92,15 @@ function LM.Journal:Get(id, isUsable)
         m.flags['SLOW'] = true
     elseif m.mountType == 398 then      -- Kua'fon
         -- Kua'fon can fly if achievement 13573 is completed, otherwise run
+    elseif m.mountType == 407 then      -- Aurelid
+        m.flags['FLY'] = true
+        m.flags['SWIM'] = true
+    elseif m.mountType == 408 then      -- Unsuccessful Prototype Fleetpod
+        m.flags['RUN'] = true
+        -- m.flags['SLOW'] = true          -- irony?
 --[===[@debug@
     else
-        LM.PrintError('Mount with unknown type number: ' .. m.name)
+        LM.PrintError(string.format('Mount with unknown type number: %s = %d', m.name, m.mountType))
 --@end-debug@]===]
     end
 
@@ -137,15 +143,15 @@ function LM.Journal:IsCastable()
     return LM.Mount.IsCastable(self)
 end
 
-function LM.Journal:GetCastAction(env)
+function LM.Journal:GetCastAction(context)
     local spellName = GetSpellInfo(self.spellID)
-    if env and env.preCast then
+    if context and context.preCast then
         return LM.SecureAction:Macro(
-                "/cast [@player] !" .. env.preCast .. "\n" ..
+                "/cast [@player] !" .. context.preCast .. "\n" ..
                 "/cast " .. spellName
             )
     else
-        return LM.Mount.GetCastAction(self, env)
+        return LM.Mount.GetCastAction(self, context)
     end
 end
 

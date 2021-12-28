@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/tools/tools", 90112)
+local __exports = LibStub:NewLibrary("ovale/tools/tools", 90113)
 if not __exports then return end
 local type = type
 local pairs = pairs

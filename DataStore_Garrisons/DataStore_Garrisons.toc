@@ -1,4 +1,4 @@
-## Interface: 90100
+## Interface: 90105
 ## Title: DataStore_Garrisons
 ## Notes: Stores information about garrisons and followers
 ## Author: Thaoky (EU-Marécages de Zangar)

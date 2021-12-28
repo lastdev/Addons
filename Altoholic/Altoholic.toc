@@ -1,4 +1,4 @@
-﻿## Interface: 90100
+﻿## Interface: 90105
 ## Title: Altoholic by |cFF69CCF0Thaoky|r
 
 ## Notes: Provides information about your alts

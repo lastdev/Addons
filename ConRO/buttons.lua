@@ -2800,15 +2800,6 @@ function ConRO:AbilityMovement(_Spell, _Condition)
 	end
 end
 
-noWarnInit = {2643, 33917, 53600, 53595, 77758, 162794, 188499, 205448, 213771, 326446}
-noWarnSpells = {}
-
-
-for _, v in pairs(noWarnInit) do
-  noWarnSpells[v] = true
-end
-
-
 function ConRO:GlowSpell(spellID)
 	local spellName = GetSpellInfo(spellID);
 	
@@ -2818,15 +2809,13 @@ function ConRO:GlowSpell(spellID)
 		end
 		self.SpellsGlowing[spellID] = 1;
 	else
---		if UnitAffectingCombat('player') then
-		if UnitAffectingCombat('player') and (nil == noWarnSpells[spellID]) then
-			self:Print(noWarnSpells);
+		if UnitAffectingCombat('player') and not (spellID == 162794 or spellID == 188499 or spellID == 205448) then
 			if spellName ~= nil then
-				self:Print(self.Colors.Error .. 'Spell not found on action bars1: ' .. ' ' .. spellName .. ' ' .. '(' .. spellID .. ')');
+				self:Print(self.Colors.Error .. 'Spell not found on action bars: ' .. ' ' .. spellName .. ' ' .. '(' .. spellID .. ')');
 			else
 				local itemName = GetItemInfo(spellID);
 				if itemName ~= nil then
-					self:Print(self.Colors.Error .. 'Item not found on action bars1: ' .. ' ' .. itemName .. ' ' .. '(' .. spellID .. ')');
+					self:Print(self.Colors.Error .. 'Item not found on action bars: ' .. ' ' .. itemName .. ' ' .. '(' .. spellID .. ')');
 				end
 			end
 		end
@@ -2843,14 +2832,13 @@ function ConRO:GlowDef(spellID)
 		end
 		self.DefGlowing[spellID] = 1;
 	else
---		if UnitAffectingCombat('player') then
-		if UnitAffectingCombat('player') and (nil == noWarnSpells[spellID]) then
+		if UnitAffectingCombat('player') then
 			if spellName ~= nil then
-				self:Print(self.Colors.Error .. 'Spell not found on action bars2: ' .. ' ' .. spellName .. ' ' .. '(' .. spellID .. ')');
+				self:Print(self.Colors.Error .. 'Spell not found on action bars: ' .. ' ' .. spellName .. ' ' .. '(' .. spellID .. ')');
 			else
 				local itemName = GetItemInfo(spellID);
 				if itemName ~= nil then
-					self:Print(self.Colors.Error .. 'Item not found on action bars2: ' .. ' ' .. itemName .. ' ' .. '(' .. spellID .. ')');
+					self:Print(self.Colors.Error .. 'Item not found on action bars: ' .. ' ' .. itemName .. ' ' .. '(' .. spellID .. ')');
 				end
 			end
 		end

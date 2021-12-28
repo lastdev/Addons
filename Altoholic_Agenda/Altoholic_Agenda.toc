@@ -1,4 +1,4 @@
-## Interface: 90100
+## Interface: 90105
 ## Title: Altoholic_Agenda
 ## Notes: Altoholic's Agenda UI
 ## Author: Thaoky (EU-Marécages de Zangar)

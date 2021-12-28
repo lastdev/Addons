@@ -647,12 +647,14 @@ ns.RegisterPoints(1543, {
 }, {
     label="Stolen Anima Vessel",
     poi={ASSAULT_NECRO},
+    group="Stolen Anima",
 })
 ns.RegisterPoints(1823, { -- Altar of Domination
     [20105250] = {quest=64045,texture=icon_green,},
 }, {
     label="Stolen Anima Vessel",
     poi={ASSAULT_NECRO},
+    group="Stolen Anima",
 })
 ns.RegisterPoints(1543, {
     [28905710] = {quest=64209},
@@ -694,17 +696,20 @@ ns.RegisterPoints(1543, {
 }, {
     label="Stolen Anima Vessel",
     poi={ASSAULT_VENTHYR},
+    group="Stolen Anima",
 })
 ns.RegisterPoints(1822, { -- Extractor's Sanatorium
     [73705060] = {quest=64056,texture=icon_green,},
 }, {
     label="Stolen Anima Vessel",
     poi={ASSAULT_VENTHYR},
+    group="Stolen Anima",
 })
 -- Kyrian
 ns.RegisterPoints(1543, {
     [32604090] = {quest=64057,texture=icon_red,},
     [32604340] = {quest=64057,texture=icon_red,},
+    [37504500] = {quest=64057,texture=icon_red,},
     [34103580] = {quest=64058,texture=icon_green,},
     [36604010] = {quest=64058,texture=icon_green,},
     [38354870] = {quest=64058,texture=icon_green,},
@@ -712,6 +717,7 @@ ns.RegisterPoints(1543, {
 }, {
     label="Stolen Anima Vessel",
     poi={ASSAULT_KYRIAN},
+    group="Stolen Anima",
 })
 ns.RegisterPoints(1543, {
     [29954327] = {
@@ -745,6 +751,7 @@ ns.RegisterPoints(1543, {
 })
 -- Night Fae
 ns.RegisterPoints(1543, {
+    [19103320] = {quest=64059,texture=icon_red,},
     [25303330] = {quest=64059,texture=icon_red,},
     [25303820] = {quest=64059,texture=icon_red,},
     [27804180] = {quest=64059,texture=icon_red,},
@@ -755,6 +762,7 @@ ns.RegisterPoints(1543, {
 }, {
     label="Stolen Anima Vessel",
     poi={ASSAULT_NIGHTFAE},
+    group="Stolen Anima",
 })
 ns.RegisterPoints(1543, {
     [19104620] = {quest=63993,texture=icon_red,},
@@ -778,6 +786,7 @@ ns.RegisterPoints(1543, {
     loot={
         187251, -- Shaded Skull Shoulderguards
     },
+    group="Rift Hidden Caches",
 })
 -- Rifts
 ns.RegisterPoints(1543, {
@@ -794,6 +803,7 @@ ns.RegisterPoints(1543, {
     label="Stolen Anima Vessel",
     active=rift_active,
     poi={ASSAULT_NECRO, ASSAULT_VENTHYR, ASSAULT_KYRIAN, ASSAULT_NIGHTFAE},
+    group="Stolen Anima",
 })
 
 -- Fallen Charger
@@ -819,27 +829,30 @@ ns.RegisterPoints(1543, {
 
 -- Zovaal's Vault
 ns.RegisterPoints(1543, {
-    [33006630] = {},
+    [33606630] = {},
     [47257968] = {},
     [62176427] = {},
     [66405820] = {},
 }, {
     label="{npc:179883}",
     quest=64283,
-    atlas="VignetteLootElite",
+    atlas="VignetteLootElite", scale=1.3,
     active=rift_active,
     loot={
         187251, -- Shaded Skull Shoulderguards
         {187113, toy=true}, -- Personal Ball and Chain
         {187416, toy=true}, -- Jailer's Cage
     },
-    note="In the rift, drag {npc:179883} to {npc:179904:Ve'nari} @ 44.5, 51.5",
+    note="In the rift, get {quest:64282} from {npc:179904:Ve'nari} @ 44.5, 51.5, then drag {npc:179883} back. You can drag it back before getting the quest, but you have to put it down before you can accept the quest.",
 })
 ns.RegisterPoints(1543, {
-    [44505150] = {
+    [44805140] = {
         label="{npc:179904:Ve'nari}",
-        requires_buff=355650, -- Zovaal's Vault Chain
+        atlas="questdaily", scale=1.2,
+        active=rift_active,
+        -- requires_buff=355650, -- Zovaal's Vault Chain
         quest=64283,
+        note="Get {quest:64282} here, find {npc:179883}, and drag it back here",
     },
 })
 
@@ -940,6 +953,7 @@ ns.RegisterPoints(1543, {
         label="Waystone to Oribos",
         atlas="adventures-32x32", scale=1.2,
         minimap=true,
+        group="Transportation",
     },
 })
 
@@ -948,25 +962,33 @@ local riftstone = ns.nodeMaker{
     atlas="WarlockPortalHorde", scale=1.3,
     active={quest=63177},
     note="Buy access from {npc:162804}",
+    group="Transportation",
 }
+local rift_three = ns.atlas_texture("WarlockPortalAlliance", {r=0,g=0.75,b=0.75,a=1,scale=1})
 -- Chaotic Riftstones
 ns.RegisterPoints(1543, {
-    -- First pair
+    -- First pair: Tremaculum / Crucible
     [19204780] = riftstone{route=25201785,},
     [25201785] = riftstone{route={19204780,25201785,r=0.75,g=0,b=0},},
-    -- Second pair
+    -- Second pair: Calcis / Cauldron of Flame
     [23453120] = riftstone{atlas="WarlockPortalAlliance",route=34804360,},
     [34804360] = riftstone{atlas="WarlockPortalAlliance",route={23453120,34804360,r=0,g=0,b=0.75},},
+    -- Third pair: Perdition Hold / Desmotaeron
+    [33905665] = riftstone{texture=rift_three,route={33905665,68753675,r=0,g=0.75,b=0.75},},
+    [68753675] = riftstone{texture=rift_three,route=33905665,},
 })
 
 -- Animaflow
 ns.RegisterPoints(1543, {
     [34201475] = {}, -- Tremaculum
     [53406365] = {}, -- Beastwarrens (also gated behind Rule 6)
+    [33955675] = {}, -- Perdition Hold
+    [68903680] = {active={quest=61600,achievement=15126,note="Requires the {achievement:15126} achievement"}}, -- Desmotaeron
 }, {
     label="{npc:172925} " .. EXIT,
     atlas="MagePortalAlliance",
     active={quest=61600},
     note="Buy access from {npc:162804}",
     scale = 1.2,
+    group="Transportation",
 })

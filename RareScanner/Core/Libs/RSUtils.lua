@@ -55,12 +55,27 @@ function RSUtils.JoinTables(table1, table2)
 end
 
 function RSUtils.GetTableLength(table)
+	if (not table) then
+		return 0
+	end
+	
 	local getN = 0
 	for n in pairs(table) do 
     	getN = getN + 1 
 	end
 	
   	return getN
+end
+
+function RSUtils.CloneTable(src, dest)
+	for index, value in pairs(src) do
+		if (type(value) == "table") then
+			dest[index] = {}
+			RSUtils.CloneTable(value, dest[index])
+		else
+			dest[index] = value
+		end
+	end
 end
 
 ---============================================================================

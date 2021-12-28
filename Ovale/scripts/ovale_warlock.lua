@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/scripts/ovale_warlock", 90112)
+local __exports = LibStub:NewLibrary("ovale/scripts/ovale_warlock", 90113)
 if not __exports then return end
 __exports.registerWarlock = function(scripts)
     do
@@ -1625,6 +1625,8 @@ AddFunction demonologyopenercdactions
 {
  unless soulbind(grove_invigoration_soulbind) and spell(soul_rot)
  {
+  #nether_portal
+  spell(nether_portal)
   #grimoire_felguard
   spell(grimoire_felguard)
  }
@@ -2389,6 +2391,8 @@ AddFunction demonologyopenercdactions
 {
  unless soulbind(grove_invigoration_soulbind) and spell(soul_rot)
  {
+  #nether_portal
+  spell(nether_portal)
   #grimoire_felguard
   spell(grimoire_felguard)
  }

@@ -382,7 +382,7 @@ local function _ClearMailboxEntries(character)
 	wipe(character.MailCache)
 end
 
-local PublicMethods = {
+local mixins = {
 	GetMailboxLastVisit = _GetMailboxLastVisit,
 	GetMailItemCount = _GetMailItemCount,
 	GetNumMails = _GetNumMails,
@@ -473,9 +473,9 @@ local function CheckExpiries()
 end
 
 function addon:OnInitialize()
-	addon.db = LibStub("AceDB-3.0"):New(addonName .. "DB", AddonDB_Defaults)
+	addon.db = LibStub("AceDB-3.0"):New(format("%sDB", addonName), AddonDB_Defaults)
 
-	DataStore:RegisterModule(addonName, addon, PublicMethods)
+	DataStore:RegisterModule(addonName, addon, mixins)
 	DataStore:SetGuildCommCallbacks(commPrefix, GuildCommCallbacks)
 	
 	DataStore:SetCharacterBasedMethod("GetMailboxLastVisit")

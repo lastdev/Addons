@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/simulationcraft/text-tools", 90112)
+local __exports = LibStub:NewLibrary("ovale/simulationcraft/text-tools", 90113)
 if not __exports then return end
 local __imports = {}
 __imports.__toolsPool = LibStub:GetLibrary("ovale/tools/Pool")

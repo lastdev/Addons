@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/simulationcraft/definitions", 90112)
+local __exports = LibStub:NewLibrary("ovale/simulationcraft/definitions", 90113)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local pairs = pairs
@@ -632,6 +632,9 @@ __exports.miscOperands = {
         },
         symbol = "runeforge"
     },
+    ["rune_word"] = {
+        code = "always(rune_word)"
+    },
     ["runic_power"] = {
         name = "runicpower",
         modifiers = powerModifiers
@@ -719,6 +722,9 @@ __exports.miscOperands = {
     },
     ["time_to_shard"] = {
         name = "timetoshard"
+    },
+    ["time_to_sht"] = {
+        code = "1"
     }
 }
 __exports.runeOperands = {

@@ -200,5 +200,8 @@ L.WIPE_RWF_MODE_BUTTON_TOOLTIP = "Click to wipe the log from the storage file.\r
 L.RWF_TITLE = "|cffFFFFFFRaider.IO|r Race World First"
 L.RWF_SUBTITLE_LOGGING_LOOT = "(logging loot)"
 L.RWF_SUBTITLE_LOGGING_FILTERED_LOOT = "(logging relevant items)"
+L.SEARCH_REGION_LABEL = "Region"
+L.SEARCH_REALM_LABEL = "Realm"
+L.SEARCH_NAME_LABEL = "Name"
 
 ns.L = L

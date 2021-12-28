@@ -1,534 +1,632 @@
--- this file is machine generated.  do not edit.
-
 local AL = LibStub:GetLibrary("AchievementLocations-1.0")
 local function A(row) AL:AddLocation(row) end
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"Arathi", 966, 0.401, 0.491, criterion=18418, side="alliance", season="Hallow's End"} -- Arathi Highlands, Refuge Point
+A{"Arathi", 966, 0.4010, 0.4910, criterion=18418, side="alliance", season="Hallow's End", trivia={criteria="Arathi Highlands, Refuge Point", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="ArathiHighlands", uiMapID=14, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"Arathi", 967, 0.690, 0.332, criterion=2147, side="horde", season="Hallow's End"} -- Arathi Highlands, Hammerfall
+A{"Arathi", 967, 0.6900, 0.3320, criterion=2147, side="horde", season="Hallow's End", trivia={criteria="Arathi Highlands, Hammerfall", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="ArathiHighlands", uiMapID=14, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"Ashenvale", 963, 0.370, 0.492, criterion=2071, side="alliance", season="Hallow's End"} -- Ashenvale, Astranaar
+A{"Ashenvale", 963, 0.3700, 0.4920, criterion=2071, side="alliance", season="Hallow's End", trivia={criteria="Ashenvale, Astranaar", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Ashenvale", uiMapID=63, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"Ashenvale", 965, 0.739, 0.606, criterion=2105, side="horde", season="Hallow's End"} -- Ashenvale, Splintertree Post
-A{"Ashenvale", 965, 0.502, 0.672, criterion=17611, side="horde", season="Hallow's End"} -- Ashenvale, Silverwind Refuge
-A{"Ashenvale", 965, 0.386, 0.423, criterion=17610, side="horde", season="Hallow's End"} -- Ashenvale, Hellscream's Watch
-A{"Ashenvale", 965, 0.130, 0.341, criterion=17612, side="horde", season="Hallow's End"} -- Ashenvale, Zoram'gar Outpost
-A{"Aszhara", 965, 0.571, 0.501, criterion=17613, side="horde", season="Hallow's End"} -- Azshara, Bilgewater Harbor
+A{"Ashenvale", 965, 0.7390, 0.6060, criterion=2105, side="horde", season="Hallow's End", trivia={criteria="Ashenvale, Splintertree Post", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Ashenvale", uiMapID=63, points=10, parent="World Events", type="quest"}}
+A{"Ashenvale", 965, 0.5020, 0.6720, criterion=17611, side="horde", season="Hallow's End", trivia={criteria="Ashenvale, Silverwind Refuge", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Ashenvale", uiMapID=63, points=10, parent="World Events", type="quest"}}
+A{"Ashenvale", 965, 0.3860, 0.4230, criterion=17610, side="horde", season="Hallow's End", trivia={criteria="Ashenvale, Hellscream's Watch", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Ashenvale", uiMapID=63, points=10, parent="World Events", type="quest"}}
+A{"Ashenvale", 965, 0.1300, 0.3410, criterion=17612, side="horde", season="Hallow's End", trivia={criteria="Ashenvale, Zoram'gar Outpost", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Ashenvale", uiMapID=63, points=10, parent="World Events", type="quest"}}
+A{"Aszhara", 965, 0.5710, 0.5010, criterion=17613, side="horde", season="Hallow's End", trivia={criteria="Azshara, Bilgewater Harbor", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Aszhara", points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Azeroth
-A{"Azeroth", 971, criterion=2226, season="Hallow's End"} -- Tricks and Treats of Eastern Kingdoms
+A{"Azeroth", 971, criterion=2226, season="Hallow's End", trivia={criteria="Tricks and Treats of Eastern Kingdoms", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Azeroth", description="Complete the Kalimdor, Eastern Kingdoms and Outland Tricks and Treats achievements.", points=20, parent="World Events", type="achievement"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"AzuremystIsle", 963, 0.484, 0.490, criterion=2073, side="alliance", season="Hallow's End"} -- Azuremyst Isle, Azure Watch
+A{"AzuremystIsle", 963, 0.4840, 0.4900, criterion=2073, side="alliance", season="Hallow's End", trivia={criteria="Azuremyst Isle, Azure Watch", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="AzuremystIsle", uiMapID=97, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"Badlands", 966, 0.208, 0.563, criterion=18419, side="alliance", season="Hallow's End"} -- Badlands, Dragon's Mouth
-A{"Badlands", 966, 0.658, 0.356, criterion=18429, side="alliance", season="Hallow's End"} -- Badlands, Fuselight
+A{"Badlands", 966, 0.2080, 0.5630, criterion=18419, side="alliance", season="Hallow's End", trivia={criteria="Badlands, Dragon's Mouth", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="Badlands", uiMapID=15, points=10, parent="World Events", type="quest"}}
+A{"Badlands", 966, 0.6580, 0.3560, criterion=18429, side="alliance", season="Hallow's End", trivia={criteria="Badlands, Fuselight", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="Badlands", uiMapID=15, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"Badlands", 967, 0.658, 0.356, criterion=18429, side="horde", season="Hallow's End"} -- Badlands, Fuselight
-A{"Badlands", 967, 0.183, 0.427, criterion=17626, side="horde", season="Hallow's End"} -- Badlands, New Kargath
+A{"Badlands", 967, 0.6580, 0.3560, criterion=18429, side="horde", season="Hallow's End", trivia={criteria="Badlands, Fuselight", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="Badlands", uiMapID=15, points=10, parent="World Events", type="quest"}}
+A{"Badlands", 967, 0.1830, 0.4270, criterion=17626, side="horde", season="Hallow's End", trivia={criteria="Badlands, New Kargath", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="Badlands", uiMapID=15, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"Barrens", 963, 0.673, 0.746, criterion=2083, side="alliance", season="Hallow's End"} -- Northern Barrens, Ratchet
+A{"Barrens", 963, 0.6730, 0.7460, criterion=2083, side="alliance", season="Hallow's End", trivia={criteria="Northern Barrens, Ratchet", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="NorthernBarrens", uiMapID=10, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"Barrens", 965, 0.495, 0.578, criterion=2107, side="horde", season="Hallow's End"} -- Northern Barrens, The Crossroads
-A{"Barrens", 965, 0.673, 0.746, criterion=2083, side="horde", season="Hallow's End"} -- Northern Barrens, Ratchet
-A{"Barrens", 965, 0.562, 0.400, criterion=17618, side="horde", season="Hallow's End"} -- Northern Barrens, Grol'dom Farm
-A{"Barrens", 965, 0.625, 0.165, criterion=17619, side="horde", season="Hallow's End"} -- Northern Barrens, Nozzlepot's Outpost
+A{"Barrens", 965, 0.4950, 0.5780, criterion=2107, side="horde", season="Hallow's End", trivia={criteria="Northern Barrens, The Crossroads", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="NorthernBarrens", uiMapID=10, points=10, parent="World Events", type="quest"}}
+A{"Barrens", 965, 0.6730, 0.7460, criterion=2083, side="horde", season="Hallow's End", trivia={criteria="Northern Barrens, Ratchet", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="NorthernBarrens", uiMapID=10, points=10, parent="World Events", type="quest"}}
+A{"Barrens", 965, 0.5620, 0.4000, criterion=17618, side="horde", season="Hallow's End", trivia={criteria="Northern Barrens, Grol'dom Farm", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="NorthernBarrens", uiMapID=10, points=10, parent="World Events", type="quest"}}
+A{"Barrens", 965, 0.6250, 0.1650, criterion=17619, side="horde", season="Hallow's End", trivia={criteria="Northern Barrens, Nozzlepot's Outpost", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="NorthernBarrens", uiMapID=10, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Outland
-A{"BladesEdgeMountains", 968, 0.534, 0.555, criterion=2218, side="horde", season="Hallow's End"} -- Blade's Edge Mountains, Thunderlord Stronghold
-A{"BladesEdgeMountains", 968, 0.629, 0.383, criterion=2204, side="horde", season="Hallow's End"} -- Blade's Edge Mountains, Evergrove
-A{"BladesEdgeMountains", 968, 0.762, 0.604, criterion=2217, side="horde", season="Hallow's End"} -- Blade's Edge Mountains, Mok'Nathal Village
+A{"BladesEdgeMountains", 968, 0.5340, 0.5550, criterion=2218, side="horde", season="Hallow's End", trivia={criteria="Blade's Edge Mountains, Thunderlord Stronghold", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="BladesEdgeMountains", uiMapID=105, points=10, parent="World Events", type="quest"}}
+A{"BladesEdgeMountains", 968, 0.6290, 0.3830, criterion=2204, side="horde", season="Hallow's End", trivia={criteria="Blade's Edge Mountains, Evergrove", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="BladesEdgeMountains", uiMapID=105, points=10, parent="World Events", type="quest"}}
+A{"BladesEdgeMountains", 968, 0.7620, 0.6040, criterion=2217, side="horde", season="Hallow's End", trivia={criteria="Blade's Edge Mountains, Mok'Nathal Village", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="BladesEdgeMountains", uiMapID=105, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Outland
-A{"BladesEdgeMountains", 969, 0.611, 0.681, criterion=2196, side="alliance", season="Hallow's End"} -- Blade's Edge Mountains, Toshley's Station
-A{"BladesEdgeMountains", 969, 0.629, 0.383, criterion=2204, side="alliance", season="Hallow's End"} -- Blade's Edge Mountains, Evergrove
-A{"BladesEdgeMountains", 969, 0.358, 0.637, criterion=2195, side="alliance", season="Hallow's End"} -- Blade's Edge Mountains, Sylvanaar
+A{"BladesEdgeMountains", 969, 0.6110, 0.6810, criterion=2196, side="alliance", season="Hallow's End", trivia={criteria="Blade's Edge Mountains, Toshley's Station", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="BladesEdgeMountains", uiMapID=105, points=10, parent="World Events", type="quest"}}
+A{"BladesEdgeMountains", 969, 0.6290, 0.3830, criterion=2204, side="alliance", season="Hallow's End", trivia={criteria="Blade's Edge Mountains, Evergrove", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="BladesEdgeMountains", uiMapID=105, points=10, parent="World Events", type="quest"}}
+A{"BladesEdgeMountains", 969, 0.3580, 0.6370, criterion=2195, side="alliance", season="Hallow's End", trivia={criteria="Blade's Edge Mountains, Sylvanaar", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="BladesEdgeMountains", uiMapID=105, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"BlastedLands", 966, 0.606, 0.140, criterion=18420, side="alliance", season="Hallow's End"} -- Blasted Lands, Nethergarde Keep
-A{"BlastedLands", 966, 0.443, 0.875, criterion=18421, side="alliance", season="Hallow's End"} -- Blasted Lands, Surwich
+A{"BlastedLands", 966, 0.6060, 0.1400, criterion=18420, side="alliance", season="Hallow's End", trivia={criteria="Blasted Lands, Nethergarde Keep", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="BlastedLands", uiMapID=17, points=10, parent="World Events", type="quest"}}
+A{"BlastedLands", 966, 0.4430, 0.8750, criterion=18421, side="alliance", season="Hallow's End", trivia={criteria="Blasted Lands, Surwich", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="BlastedLands", uiMapID=17, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"BlastedLands", 967, 0.404, 0.112, criterion=17627, side="horde", season="Hallow's End"} -- Blasted Lands, Dreadmaul Hold
+A{"BlastedLands", 967, 0.4040, 0.1120, criterion=17627, side="horde", season="Hallow's End", trivia={criteria="Blasted Lands, Dreadmaul Hold", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="BlastedLands", uiMapID=17, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"BloodmystIsle", 963, 0.557, 0.599, criterion=2074, side="alliance", season="Hallow's End"} -- Bloodmyst Isle, Blood Watch
+A{"BloodmystIsle", 963, 0.5570, 0.5990, criterion=2074, side="alliance", season="Hallow's End", trivia={criteria="Bloodmyst Isle, Blood Watch", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="BloodmystIsle", uiMapID=106, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Northrend
-A{"BoreanTundra", 5835, 0.766, 0.374, criterion=17637, side="horde", season="Hallow's End"} -- Borean Tundra, Taunka'le Village
-A{"BoreanTundra", 5835, 0.784, 0.491, criterion=17661, side="horde", season="Hallow's End"} -- Borean Tundra, Unu'pe
-A{"BoreanTundra", 5835, 0.417, 0.544, criterion=17639, side="horde", season="Hallow's End"} -- Borean Tundra, Warsong Hold
-A{"BoreanTundra", 5835, 0.497, 0.099, criterion=17636, side="horde", season="Hallow's End"} -- Borean Tundra, Bor'gorok Outpost
+A{"BoreanTundra", 5835, 0.7660, 0.3740, criterion=17637, side="horde", season="Hallow's End", trivia={criteria="Borean Tundra, Taunka'le Village", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="BoreanTundra", uiMapID=114, points=10, parent="World Events", type="quest"}}
+A{"BoreanTundra", 5835, 0.7840, 0.4910, criterion=17661, side="horde", season="Hallow's End", trivia={criteria="Borean Tundra, Unu'pe", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="BoreanTundra", uiMapID=114, points=10, parent="World Events", type="quest"}}
+A{"BoreanTundra", 5835, 0.4170, 0.5440, criterion=17639, side="horde", season="Hallow's End", trivia={criteria="Borean Tundra, Warsong Hold", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="BoreanTundra", uiMapID=114, points=10, parent="World Events", type="quest"}}
+A{"BoreanTundra", 5835, 0.4970, 0.0990, criterion=17636, side="horde", season="Hallow's End", trivia={criteria="Borean Tundra, Bor'gorok Outpost", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="BoreanTundra", uiMapID=114, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Northrend
-A{"BoreanTundra", 5836, 0.571, 0.188, criterion=17660, side="alliance", season="Hallow's End"} -- Borean Tundra, Fizzcrank Airstrip
-A{"BoreanTundra", 5836, 0.585, 0.678, criterion=17662, side="alliance", season="Hallow's End"} -- Borean Tundra, Valiance Keep
-A{"BoreanTundra", 5836, 0.784, 0.491, criterion=17661, side="alliance", season="Hallow's End"} -- Borean Tundra, Unu'pe
+A{"BoreanTundra", 5836, 0.5710, 0.1880, criterion=17660, side="alliance", season="Hallow's End", trivia={criteria="Borean Tundra, Fizzcrank Airstrip", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="BoreanTundra", uiMapID=114, points=10, parent="World Events", type="quest"}}
+A{"BoreanTundra", 5836, 0.5850, 0.6780, criterion=17662, side="alliance", season="Hallow's End", trivia={criteria="Borean Tundra, Valiance Keep", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="BoreanTundra", uiMapID=114, points=10, parent="World Events", type="quest"}}
+A{"BoreanTundra", 5836, 0.7840, 0.4910, criterion=17661, side="alliance", season="Hallow's End", trivia={criteria="Borean Tundra, Unu'pe", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="BoreanTundra", uiMapID=114, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Northrend
-A{"Dalaran", 5835, 0.668, 0.296, criterion=17641, floor=1, side="horde", season="Hallow's End"} -- Dalaran, Sunreaver's Sanctuary
-A{"Dalaran", 5835, 0.382, 0.596, criterion=17665, floor=2, side="horde", season="Hallow's End"} -- Dalaran, The Underbelly
-A{"Dalaran", 5835, 0.481, 0.413, criterion=17663, floor=1, side="horde", season="Hallow's End"} -- Dalaran, The Legerdemain Lounge
+A{"Dalaran", 5835, 0.6680, 0.2960, criterion=17641, floor=1, side="horde", season="Hallow's End", trivia={criteria="Dalaran, Sunreaver's Sanctuary", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="Dalaran_DalaranCity", uiMapID=125, points=10, parent="World Events", type="quest"}}
+A{"Dalaran", 5835, 0.3820, 0.5960, criterion=17665, floor=2, side="horde", season="Hallow's End", trivia={criteria="Dalaran, The Underbelly", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="Dalaran_TheUnderbelly", uiMapID=126, points=10, parent="World Events", type="quest"}}
+A{"Dalaran", 5835, 0.4810, 0.4130, criterion=17663, floor=1, side="horde", season="Hallow's End", trivia={criteria="Dalaran, The Legerdemain Lounge", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="Dalaran_DalaranCity", uiMapID=125, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Northrend
-A{"Dalaran", 5836, 0.481, 0.413, criterion=17663, floor=1, side="alliance", season="Hallow's End"} -- Dalaran, The Legerdemain Lounge
-A{"Dalaran", 5836, 0.423, 0.630, criterion=17664, floor=1, side="alliance", season="Hallow's End"} -- Dalaran, Silver Enclave
-A{"Dalaran", 5836, 0.382, 0.596, criterion=17665, floor=2, note="[check]", side="alliance", season="Hallow's End"} -- Dalaran, The Underbelly
+A{"Dalaran", 5836, 0.4810, 0.4130, criterion=17663, floor=1, side="alliance", season="Hallow's End", trivia={criteria="Dalaran, The Legerdemain Lounge", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="Dalaran_DalaranCity", uiMapID=125, points=10, parent="World Events", type="quest"}}
+A{"Dalaran", 5836, 0.4230, 0.6300, criterion=17664, floor=1, side="alliance", season="Hallow's End", trivia={criteria="Dalaran, Silver Enclave", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="Dalaran_DalaranCity", uiMapID=125, points=10, parent="World Events", type="quest"}}
+A{"Dalaran", 5836, 0.3820, 0.5960, criterion=17665, floor=2, note="[check]", side="alliance", season="Hallow's End", trivia={criteria="Dalaran, The Underbelly", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="Dalaran_TheUnderbelly", uiMapID=126, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"Darkshore", 963, 0.509, 0.189, criterion=2075, side="alliance", season="Hallow's End"} -- Darkshore, Lor'danel
-A{"Darnassus", 963, 0.622, 0.331, criterion=2076, note="/dance", side="alliance", season="Hallow's End"} -- Darnassus, Craftsmen's Terrace
+A{"Darkshore", 963, 0.5090, 0.1890, criterion=2075, side="alliance", season="Hallow's End", trivia={criteria="Darkshore, Lor'danel", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Darkshore", uiMapID=62, points=10, parent="World Events", type="quest"}}
+A{"Darnassus", 963, 0.6220, 0.3310, criterion=2076, note="/dance", side="alliance", season="Hallow's End", trivia={criteria="Darnassus, Craftsmen's Terrace", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Darnassus", uiMapID=89, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of the Cataclysm
-A{"Deepholm", 5837, criterion=17682, side="alliance", season="Hallow's End"} -- Deepholm, Temple of Earth
+A{"Deepholm", 5837, criterion=17682, side="alliance", season="Hallow's End", trivia={criteria="Deepholm, Temple of Earth", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="Deepholm", uiMapID=207, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of the Cataclysm
-A{"Deepholm", 5838, criterion=17704, side="horde", season="Hallow's End"} -- Deepholm, Temple of Earth
+A{"Deepholm", 5838, criterion=17704, side="horde", season="Hallow's End", trivia={criteria="Deepholm, Temple of Earth", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="Deepholm", uiMapID=207, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"Desolace", 963, 0.663, 0.065, criterion=2077, side="alliance", season="Hallow's End"} -- Desolace, Nijel's Point
-A{"Desolace", 963, 0.567, 0.501, criterion=18396, side="alliance", season="Hallow's End"} -- Desolace, Karnum's Glade
+A{"Desolace", 963, 0.6630, 0.0650, criterion=2077, side="alliance", season="Hallow's End", trivia={criteria="Desolace, Nijel's Point", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Desolace", uiMapID=66, points=10, parent="World Events", type="quest"}}
+A{"Desolace", 963, 0.5670, 0.5010, criterion=18396, side="alliance", season="Hallow's End", trivia={criteria="Desolace, Karnum's Glade", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Desolace", uiMapID=66, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"Desolace", 965, 0.240, 0.682, criterion=2108, side="horde", season="Hallow's End"} -- Desolace, Shadowprey Village
-A{"Desolace", 965, 0.567, 0.501, criterion=18396, side="horde", season="Hallow's End"} -- Desolace, Karnum's Glade
+A{"Desolace", 965, 0.2400, 0.6820, criterion=2108, side="horde", season="Hallow's End", trivia={criteria="Desolace, Shadowprey Village", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Desolace", uiMapID=66, points=10, parent="World Events", type="quest"}}
+A{"Desolace", 965, 0.5670, 0.5010, criterion=18396, side="horde", season="Hallow's End", trivia={criteria="Desolace, Karnum's Glade", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Desolace", uiMapID=66, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Northrend
-A{"Dragonblight", 5835, 0.378, 0.464, criterion=17643, side="horde", season="Hallow's End"} -- Dragonblight, Agmar's Hammer
-A{"Dragonblight", 5835, 0.601, 0.534, criterion=17669, side="horde", season="Hallow's End"} -- Dragonblight, Wyrmrest Temple
-A{"Dragonblight", 5835, 0.768, 0.632, criterion=17645, side="horde", season="Hallow's End"} -- Dragonblight, Venomspite
-A{"Dragonblight", 5835, 0.481, 0.746, criterion=17666, side="horde", season="Hallow's End"} -- Dragonblight, Moa'ki Harbor
+A{"Dragonblight", 5835, 0.3780, 0.4640, criterion=17643, side="horde", season="Hallow's End", trivia={criteria="Dragonblight, Agmar's Hammer", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="Dragonblight", uiMapID=115, points=10, parent="World Events", type="quest"}}
+A{"Dragonblight", 5835, 0.6010, 0.5340, criterion=17669, side="horde", season="Hallow's End", trivia={criteria="Dragonblight, Wyrmrest Temple", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="Dragonblight", uiMapID=115, points=10, parent="World Events", type="quest"}}
+A{"Dragonblight", 5835, 0.7680, 0.6320, criterion=17645, side="horde", season="Hallow's End", trivia={criteria="Dragonblight, Venomspite", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="Dragonblight", uiMapID=115, points=10, parent="World Events", type="quest"}}
+A{"Dragonblight", 5835, 0.4810, 0.7460, criterion=17666, side="horde", season="Hallow's End", trivia={criteria="Dragonblight, Moa'ki Harbor", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="Dragonblight", uiMapID=115, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Northrend
-A{"Dragonblight", 5836, 0.775, 0.512, criterion=17668, side="alliance", season="Hallow's End"} -- Dragonblight, Wintergarde Keep
-A{"Dragonblight", 5836, 0.289, 0.562, criterion=17667, side="alliance", season="Hallow's End"} -- Dragonblight, Stars' Rest
-A{"Dragonblight", 5836, 0.481, 0.746, criterion=17666, side="alliance", season="Hallow's End"} -- Dragonblight, Moa'ki Harbor
-A{"Dragonblight", 5836, 0.601, 0.534, criterion=17669, side="alliance", season="Hallow's End"} -- Dragonblight, Wyrmrest Temple
+A{"Dragonblight", 5836, 0.7750, 0.5120, criterion=17668, side="alliance", season="Hallow's End", trivia={criteria="Dragonblight, Wintergarde Keep", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="Dragonblight", uiMapID=115, points=10, parent="World Events", type="quest"}}
+A{"Dragonblight", 5836, 0.2890, 0.5620, criterion=17667, side="alliance", season="Hallow's End", trivia={criteria="Dragonblight, Stars' Rest", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="Dragonblight", uiMapID=115, points=10, parent="World Events", type="quest"}}
+A{"Dragonblight", 5836, 0.4810, 0.7460, criterion=17666, side="alliance", season="Hallow's End", trivia={criteria="Dragonblight, Moa'ki Harbor", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="Dragonblight", uiMapID=115, points=10, parent="World Events", type="quest"}}
+A{"Dragonblight", 5836, 0.6010, 0.5340, criterion=17669, side="alliance", season="Hallow's End", trivia={criteria="Dragonblight, Wyrmrest Temple", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="Dragonblight", uiMapID=115, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Pandaria
-A{"DreadWastes", 7601, criterion=21927, side="alliance", season="Hallow's End"} -- Dread Wastes, Klaxxi'vess
-A{"DreadWastes", 7601, criterion=21928, side="alliance", season="Hallow's End"} -- Dread Wastes, Soggy's Gamble
+A{"DreadWastes", 7601, criterion=21927, side="alliance", season="Hallow's End", trivia={criteria="Dread Wastes, Klaxxi'vess", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="DreadWastes", uiMapID=422, points=10, parent="World Events", type="quest"}}
+A{"DreadWastes", 7601, criterion=21928, side="alliance", season="Hallow's End", trivia={criteria="Dread Wastes, Soggy's Gamble", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="DreadWastes", uiMapID=422, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Pandaria
-A{"DreadWastes", 7602, criterion=21927, side="horde", season="Hallow's End"} -- Dread Wastes, Klaxxi'vess
-A{"DreadWastes", 7602, criterion=21928, side="horde", season="Hallow's End"} -- Dread Wastes, Soggy's Gamble
+A{"DreadWastes", 7602, criterion=21927, side="horde", season="Hallow's End", trivia={criteria="Dread Wastes, Klaxxi'vess", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="DreadWastes", uiMapID=422, points=10, parent="World Events", type="quest"}}
+A{"DreadWastes", 7602, criterion=21928, side="horde", season="Hallow's End", trivia={criteria="Dread Wastes, Soggy's Gamble", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="DreadWastes", uiMapID=422, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"DunMorogh", 966, 0.544, 0.507, criterion=2132, side="alliance", season="Hallow's End"} -- Dun Morogh, Kharanos
+A{"DunMorogh", 966, 0.5440, 0.5070, criterion=2132, side="alliance", season="Hallow's End", trivia={criteria="Dun Morogh, Kharanos", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="DunMorogh", uiMapID=27, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"Durotar", 965, 0.515, 0.415, criterion=2109, side="horde", season="Hallow's End"} -- Durotar, Razor Hill
+A{"Durotar", 965, 0.5150, 0.4150, criterion=2109, side="horde", season="Hallow's End", trivia={criteria="Durotar, Razor Hill", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Durotar", uiMapID=1, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"Duskwood", 966, 0.737, 0.442, criterion=2133, side="alliance", season="Hallow's End"} -- Duskwood, Darkshire
+A{"Duskwood", 966, 0.7370, 0.4420, criterion=2133, side="alliance", season="Hallow's End", trivia={criteria="Duskwood, Darkshire", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="Duskwood", uiMapID=47, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"Dustwallow", 963, 0.418, 0.740, criterion=2084, side="alliance", season="Hallow's End"} -- Dustwallow Marsh, Mudsprocket
+A{"Dustwallow", 963, 0.4180, 0.7400, criterion=2084, side="alliance", season="Hallow's End", trivia={criteria="Dustwallow Marsh, Mudsprocket", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="DustwallowMarsh", uiMapID=70, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"Dustwallow", 965, 0.367, 0.324, criterion=2110, side="horde", season="Hallow's End"} -- Dustwallow Marsh, Brackenwall Village
-A{"Dustwallow", 965, 0.418, 0.740, criterion=2084, side="horde", season="Hallow's End"} -- Dustwallow Marsh, Mudsprocket
+A{"Dustwallow", 965, 0.3670, 0.3240, criterion=2110, side="horde", season="Hallow's End", trivia={criteria="Dustwallow Marsh, Brackenwall Village", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="DustwallowMarsh", uiMapID=70, points=10, parent="World Events", type="quest"}}
+A{"Dustwallow", 965, 0.4180, 0.7400, criterion=2084, side="horde", season="Hallow's End", trivia={criteria="Dustwallow Marsh, Mudsprocket", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="DustwallowMarsh", uiMapID=70, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"EasternPlaguelands", 966, 0.755, 0.523, criterion=2143, side="alliance", season="Hallow's End"} -- Eastern Plaguelands, Light's Hope Chapel
+A{"EasternPlaguelands", 966, 0.7550, 0.5230, criterion=2143, side="alliance", season="Hallow's End", trivia={criteria="Eastern Plaguelands, Light's Hope Chapel", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="EasternPlaguelands", uiMapID=23, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"EasternPlaguelands", 967, 0.755, 0.523, criterion=2143, side="horde", season="Hallow's End"} -- Eastern Plaguelands, Light's Hope Chapel
+A{"EasternPlaguelands", 967, 0.7550, 0.5230, criterion=2143, side="horde", season="Hallow's End", trivia={criteria="Eastern Plaguelands, Light's Hope Chapel", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="EasternPlaguelands", uiMapID=23, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"Elwynn", 966, 0.437, 0.658, criterion=2134, side="alliance", season="Hallow's End"} -- Elwynn Forest, Goldshire
+A{"Elwynn", 966, 0.4370, 0.6580, criterion=2134, side="alliance", season="Hallow's End", trivia={criteria="Elwynn Forest, Goldshire", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="ElwynnForest", uiMapID=37, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Rotten Hallow
-A{"Elwynn", 1040, criterion=3217, side="alliance", season="Hallow's End"} -- Clean Up In Stormwind
+A{"Elwynn", 1040, criterion=3217, side="alliance", season="Hallow's End", trivia={criteria="Clean Up In Stormwind", module="seasonal_hallow", category="World Events/Hallow's End", name="Rotten Hallow", description="Ruin Hallow's End for the Horde and foil their attempts to wreck the Alliance celebration by completing the following quests.", mapID="ElwynnForest", uiMapID=37, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"EversongWoods", 967, 0.482, 0.478, criterion=2150, side="horde", season="Hallow's End"} -- Eversong Woods, Falconwing Square
-A{"EversongWoods", 967, 0.437, 0.710, criterion=2149, side="horde", season="Hallow's End"} -- Eversong Woods, Fairbreeze Village
+A{"EversongWoods", 967, 0.4820, 0.4780, criterion=2150, side="horde", season="Hallow's End", trivia={criteria="Eversong Woods, Falconwing Square", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="EversongWoods", uiMapID=94, points=10, parent="World Events", type="quest"}}
+A{"EversongWoods", 967, 0.4370, 0.7100, criterion=2149, side="horde", season="Hallow's End", trivia={criteria="Eversong Woods, Fairbreeze Village", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="EversongWoods", uiMapID=94, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Azeroth
-A{"Expansion01", 971, criterion=2227, season="Hallow's End"} -- Tricks and Treats of Outland
+A{"Expansion01", 971, criterion=2227, season="Hallow's End", trivia={criteria="Tricks and Treats of Outland", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Azeroth", description="Complete the Kalimdor, Eastern Kingdoms and Outland Tricks and Treats achievements.", points=20, parent="World Events", type="achievement"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"Felwood", 963, 0.445, 0.289, criterion=18397, side="alliance", season="Hallow's End"} -- Felwood - Whisperwind Grove
-A{"Felwood", 963, 0.618, 0.267, criterion=18398, side="alliance", season="Hallow's End"} -- Felwood - Talonbranch Glade
+A{"Felwood", 963, 0.4450, 0.2890, criterion=18397, side="alliance", season="Hallow's End", trivia={criteria="Felwood - Whisperwind Grove", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Felwood", uiMapID=77, points=10, parent="World Events", type="quest"}}
+A{"Felwood", 963, 0.6180, 0.2670, criterion=18398, side="alliance", season="Hallow's End", trivia={criteria="Felwood - Talonbranch Glade", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Felwood", uiMapID=77, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"Felwood", 965, 0.445, 0.289, criterion=18397, side="horde", season="Hallow's End"} -- Felwood, Whisperwind Grove
+A{"Felwood", 965, 0.4450, 0.2890, criterion=18397, side="horde", season="Hallow's End", trivia={criteria="Felwood, Whisperwind Grove", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Felwood", uiMapID=77, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"Feralas", 963, 0.463, 0.452, criterion=2080, side="alliance", season="Hallow's End"} -- Feralas, Feathermoon Stronghold
-A{"Feralas", 963, 0.510, 0.178, criterion=18399, side="alliance", season="Hallow's End"} -- Feralas, Dreamer's Rest
+A{"Feralas", 963, 0.4630, 0.4520, criterion=2080, side="alliance", season="Hallow's End", trivia={criteria="Feralas, Feathermoon Stronghold", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Feralas", uiMapID=69, points=10, parent="World Events", type="quest"}}
+A{"Feralas", 963, 0.5100, 0.1780, criterion=18399, side="alliance", season="Hallow's End", trivia={criteria="Feralas, Dreamer's Rest", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Feralas", uiMapID=69, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"Feralas", 965, 0.748, 0.451, criterion=2111, side="horde", season="Hallow's End"} -- Feralas, Camp Mojache
-A{"Feralas", 965, 0.414, 0.156, criterion=17616, side="horde", season="Hallow's End"} -- Feralas, Camp Ataya
-A{"Feralas", 965, 0.519, 0.476, criterion=17617, side="horde", season="Hallow's End"} -- Feralas, Stonemaul Hold
+A{"Feralas", 965, 0.7480, 0.4510, criterion=2111, side="horde", season="Hallow's End", trivia={criteria="Feralas, Camp Mojache", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Feralas", uiMapID=69, points=10, parent="World Events", type="quest"}}
+A{"Feralas", 965, 0.4140, 0.1560, criterion=17616, side="horde", season="Hallow's End", trivia={criteria="Feralas, Camp Ataya", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Feralas", uiMapID=69, points=10, parent="World Events", type="quest"}}
+A{"Feralas", 965, 0.5190, 0.4760, criterion=17617, side="horde", season="Hallow's End", trivia={criteria="Feralas, Stonemaul Hold", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Feralas", uiMapID=69, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"Ghostlands", 967, 0.486, 0.319, criterion=2151, side="horde", season="Hallow's End"} -- Ghostlands, Tranquillien
+A{"Ghostlands", 967, 0.4860, 0.3190, criterion=2151, side="horde", season="Hallow's End", trivia={criteria="Ghostlands, Tranquillien", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="Ghostlands", uiMapID=95, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Northrend
-A{"GrizzlyHills", 5835, 0.653, 0.470, criterion=17647, side="horde", season="Hallow's End"} -- Grizzly Hills, Camp Oneqwah
-A{"GrizzlyHills", 5835, 0.208, 0.647, criterion=17648, side="horde", season="Hallow's End"} -- Grizzly Hills, Conquest Hold
+A{"GrizzlyHills", 5835, 0.6530, 0.4700, criterion=17647, side="horde", season="Hallow's End", trivia={criteria="Grizzly Hills, Camp Oneqwah", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="GrizzlyHills", uiMapID=116, points=10, parent="World Events", type="quest"}}
+A{"GrizzlyHills", 5835, 0.2080, 0.6470, criterion=17648, side="horde", season="Hallow's End", trivia={criteria="Grizzly Hills, Conquest Hold", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="GrizzlyHills", uiMapID=116, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Northrend
-A{"GrizzlyHills", 5836, 0.319, 0.602, criterion=17670, side="alliance", season="Hallow's End"} -- Grizzly Hills, Amberpine Lodge
-A{"GrizzlyHills", 5836, 0.596, 0.263, criterion=17671, side="alliance", season="Hallow's End"} -- Grizzly Hills, Westfall Brigade
+A{"GrizzlyHills", 5836, 0.3190, 0.6020, criterion=17670, side="alliance", season="Hallow's End", trivia={criteria="Grizzly Hills, Amberpine Lodge", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="GrizzlyHills", uiMapID=116, points=10, parent="World Events", type="quest"}}
+A{"GrizzlyHills", 5836, 0.5960, 0.2630, criterion=17671, side="alliance", season="Hallow's End", trivia={criteria="Grizzly Hills, Westfall Brigade", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="GrizzlyHills", uiMapID=116, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Outland
-A{"Hellfire", 968, 0.568, 0.375, criterion=2221, side="horde", season="Hallow's End"} -- Hellfire Peninsula, Thrallmar
-A{"Hellfire", 968, 0.269, 0.596, criterion=2219, side="horde", season="Hallow's End"} -- Hellfire Peninsula, Falcon Watch
+A{"Hellfire", 968, 0.5680, 0.3750, criterion=2221, side="horde", season="Hallow's End", trivia={criteria="Hellfire Peninsula, Thrallmar", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="HellfirePeninsula", uiMapID=100, points=10, parent="World Events", type="quest"}}
+A{"Hellfire", 968, 0.2690, 0.5960, criterion=2219, side="horde", season="Hallow's End", trivia={criteria="Hellfire Peninsula, Falcon Watch", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="HellfirePeninsula", uiMapID=100, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Outland
-A{"Hellfire", 969, 0.542, 0.637, criterion=2197, side="alliance", season="Hallow's End"} -- Hellfire Peninsula, Honor Hold
-A{"Hellfire", 969, 0.234, 0.364, criterion=2198, side="alliance", season="Hallow's End"} -- Hellfire Peninsula, Temple of Telhamat
+A{"Hellfire", 969, 0.5420, 0.6370, criterion=2197, side="alliance", season="Hallow's End", trivia={criteria="Hellfire Peninsula, Honor Hold", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="HellfirePeninsula", uiMapID=100, points=10, parent="World Events", type="quest"}}
+A{"Hellfire", 969, 0.2340, 0.3640, criterion=2198, side="alliance", season="Hallow's End", trivia={criteria="Hellfire Peninsula, Temple of Telhamat", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="HellfirePeninsula", uiMapID=100, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"HillsbradFoothills", 967, 0.578, 0.472, criterion=2152, side="horde", season="Hallow's End"} -- Hillsbrad Foothills, Tarren Mill
-A{"HillsbradFoothills", 967, 0.602, 0.637, criterion=17628, side="horde", season="Hallow's End"} -- Hillsbrad Foothills, Eastpoint Tower
+A{"HillsbradFoothills", 967, 0.5780, 0.4720, criterion=2152, side="horde", season="Hallow's End", trivia={criteria="Hillsbrad Foothills, Tarren Mill", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="HillsbradFoothills", uiMapID=25, points=10, parent="World Events", type="quest"}}
+A{"HillsbradFoothills", 967, 0.6020, 0.6370, criterion=17628, side="horde", season="Hallow's End", trivia={criteria="Hillsbrad Foothills, Eastpoint Tower", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="HillsbradFoothills", uiMapID=25, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"Hinterlands", 966, 0.141, 0.446, criterion=2136, side="alliance", season="Hallow's End"} -- The Hinterlands, Aerie Peak
-A{"Hinterlands", 966, 0.661, 0.444, criterion=18425, side="alliance", season="Hallow's End"} -- The Hinterlands, Stormfeather Outpost
+A{"Hinterlands", 966, 0.1410, 0.4460, criterion=2136, side="alliance", season="Hallow's End", trivia={criteria="The Hinterlands, Aerie Peak", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="TheHinterlands", uiMapID=26, points=10, parent="World Events", type="quest"}}
+A{"Hinterlands", 966, 0.6610, 0.4440, criterion=18425, side="alliance", season="Hallow's End", trivia={criteria="The Hinterlands, Stormfeather Outpost", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="TheHinterlands", uiMapID=26, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"Hinterlands", 967, 0.781, 0.814, criterion=2153, side="horde", season="Hallow's End"} -- The Hinterlands, Revantusk Village
-A{"Hinterlands", 967, 0.318, 0.578, criterion=17629, side="horde", season="Hallow's End"} -- The Hinterlands, Hiri'watha Research Station
+A{"Hinterlands", 967, 0.7810, 0.8140, criterion=2153, side="horde", season="Hallow's End", trivia={criteria="The Hinterlands, Revantusk Village", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="TheHinterlands", uiMapID=26, points=10, parent="World Events", type="quest"}}
+A{"Hinterlands", 967, 0.3180, 0.5780, criterion=17629, side="horde", season="Hallow's End", trivia={criteria="The Hinterlands, Hiri'watha Research Station", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="TheHinterlands", uiMapID=26, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Northrend
-A{"HowlingFjord", 5835, 0.792, 0.306, criterion=17652, side="horde", season="Hallow's End"} -- Howling Fjord, Vengeance Landing
-A{"HowlingFjord", 5835, 0.494, 0.107, criterion=17649, side="horde", season="Hallow's End"} -- Howling Fjord, Camp Winterhoof
-A{"HowlingFjord", 5835, 0.254, 0.598, criterion=17673, side="horde", season="Hallow's End"} -- Howling Fjord, Kamagua
-A{"HowlingFjord", 5835, 0.521, 0.661, criterion=17651, side="horde", season="Hallow's End"} -- Howling Fjord, New Agamand
+A{"HowlingFjord", 5835, 0.7920, 0.3060, criterion=17652, side="horde", season="Hallow's End", trivia={criteria="Howling Fjord, Vengeance Landing", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="HowlingFjord", uiMapID=117, points=10, parent="World Events", type="quest"}}
+A{"HowlingFjord", 5835, 0.4940, 0.1070, criterion=17649, side="horde", season="Hallow's End", trivia={criteria="Howling Fjord, Camp Winterhoof", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="HowlingFjord", uiMapID=117, points=10, parent="World Events", type="quest"}}
+A{"HowlingFjord", 5835, 0.2540, 0.5980, criterion=17673, side="horde", season="Hallow's End", trivia={criteria="Howling Fjord, Kamagua", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="HowlingFjord", uiMapID=117, points=10, parent="World Events", type="quest"}}
+A{"HowlingFjord", 5835, 0.5210, 0.6610, criterion=17651, side="horde", season="Hallow's End", trivia={criteria="Howling Fjord, New Agamand", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="HowlingFjord", uiMapID=117, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Northrend
-A{"HowlingFjord", 5836, 0.604, 0.159, criterion=17672, side="alliance", season="Hallow's End"} -- Howling Fjord, Fort Wildervar
-A{"HowlingFjord", 5836, 0.308, 0.414, criterion=17675, side="alliance", season="Hallow's End"} -- Howling Fjord, Westguard Keep
-A{"HowlingFjord", 5836, 0.583, 0.628, criterion=17674, side="alliance", season="Hallow's End"} -- Howling Fjord, Valgarde
-A{"HowlingFjord", 5836, 0.254, 0.598, criterion=17673, side="alliance", season="Hallow's End"} -- Howling Fjord, Kamagua
+A{"HowlingFjord", 5836, 0.6040, 0.1590, criterion=17672, side="alliance", season="Hallow's End", trivia={criteria="Howling Fjord, Fort Wildervar", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="HowlingFjord", uiMapID=117, points=10, parent="World Events", type="quest"}}
+A{"HowlingFjord", 5836, 0.3080, 0.4140, criterion=17675, side="alliance", season="Hallow's End", trivia={criteria="Howling Fjord, Westguard Keep", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="HowlingFjord", uiMapID=117, points=10, parent="World Events", type="quest"}}
+A{"HowlingFjord", 5836, 0.5830, 0.6280, criterion=17674, side="alliance", season="Hallow's End", trivia={criteria="Howling Fjord, Valgarde", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="HowlingFjord", uiMapID=117, points=10, parent="World Events", type="quest"}}
+A{"HowlingFjord", 5836, 0.2540, 0.5980, criterion=17673, side="alliance", season="Hallow's End", trivia={criteria="Howling Fjord, Kamagua", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="HowlingFjord", uiMapID=117, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of the Cataclysm
-A{"Hyjal", 5837, criterion=17685, side="alliance", season="Hallow's End"} -- Mount Hyjal, Shrine of Aviana
-A{"Hyjal", 5837, criterion=17684, side="alliance", season="Hallow's End"} -- Mount Hyjal, Nordrassil
-A{"Hyjal", 5837, criterion=17683, side="alliance", season="Hallow's End"} -- Mount Hyjal, Grove of Aessina
+A{"Hyjal", 5837, criterion=17685, side="alliance", season="Hallow's End", trivia={criteria="Mount Hyjal, Shrine of Aviana", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="MountHyjal", uiMapID=198, points=10, parent="World Events", type="quest"}}
+A{"Hyjal", 5837, criterion=17684, side="alliance", season="Hallow's End", trivia={criteria="Mount Hyjal, Nordrassil", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="MountHyjal", uiMapID=198, points=10, parent="World Events", type="quest"}}
+A{"Hyjal", 5837, criterion=17683, side="alliance", season="Hallow's End", trivia={criteria="Mount Hyjal, Grove of Aessina", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="MountHyjal", uiMapID=198, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of the Cataclysm
-A{"Hyjal", 5838, criterion=17684, side="horde", season="Hallow's End"} -- Mount Hyjal, Nordrassil
-A{"Hyjal", 5838, criterion=17683, side="horde", season="Hallow's End"} -- Mount Hyjal, Grove of Aessina
-A{"Hyjal", 5838, criterion=17685, side="horde", season="Hallow's End"} -- Mount Hyjal, Shrine of Aviana
+A{"Hyjal", 5838, criterion=17684, side="horde", season="Hallow's End", trivia={criteria="Mount Hyjal, Nordrassil", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="MountHyjal", uiMapID=198, points=10, parent="World Events", type="quest"}}
+A{"Hyjal", 5838, criterion=17683, side="horde", season="Hallow's End", trivia={criteria="Mount Hyjal, Grove of Aessina", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="MountHyjal", uiMapID=198, points=10, parent="World Events", type="quest"}}
+A{"Hyjal", 5838, criterion=17685, side="horde", season="Hallow's End", trivia={criteria="Mount Hyjal, Shrine of Aviana", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="MountHyjal", uiMapID=198, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"Ironforge", 966, 0.183, 0.509, criterion=2137, note="/chicken", side="alliance", season="Hallow's End"} -- Ironforge, The Commons
+A{"Ironforge", 966, 0.1830, 0.5090, criterion=2137, note="/chicken", side="alliance", season="Hallow's End", trivia={criteria="Ironforge, The Commons", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="Ironforge", uiMapID=87, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Azeroth
-A{"Kalimdor", 971, criterion=2225, season="Hallow's End"} -- Tricks and Treats of Kalimdor
+A{"Kalimdor", 971, criterion=2225, season="Hallow's End", trivia={criteria="Tricks and Treats of Kalimdor", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Azeroth", description="Complete the Kalimdor, Eastern Kingdoms and Outland Tricks and Treats achievements.", points=20, parent="World Events", type="achievement"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Pandaria
-A{"Krasarang", 7601, criterion=21934, side="alliance", season="Hallow's End"} -- Krasarang Wilds, Marista
-A{"Krasarang", 7601, criterion=21935, side="alliance", season="Hallow's End"} -- Krasarang Wilds, Zhu's Watch
+A{"Krasarang", 7601, criterion=21934, side="alliance", season="Hallow's End", trivia={criteria="Krasarang Wilds, Marista", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="KrasarangWilds", uiMapID=418, points=10, parent="World Events", type="quest"}}
+A{"Krasarang", 7601, criterion=21935, side="alliance", season="Hallow's End", trivia={criteria="Krasarang Wilds, Zhu's Watch", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="KrasarangWilds", uiMapID=418, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Pandaria
-A{"Krasarang", 7602, criterion=21934, side="horde", season="Hallow's End"} -- Krasarang Wilds, Marista
-A{"Krasarang", 7602, criterion=21935, side="horde", season="Hallow's End"} -- Krasarang Wilds, Zhu's Watch
-A{"Krasarang", 7602, criterion=21948, side="horde", season="Hallow's End"} -- Krasarang Wilds, Dawnchaser Retreat
-A{"Krasarang", 7602, criterion=21951, side="horde", season="Hallow's End"} -- Krasarang Wilds, Thunder Cleft
+A{"Krasarang", 7602, criterion=21934, side="horde", season="Hallow's End", trivia={criteria="Krasarang Wilds, Marista", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="KrasarangWilds", uiMapID=418, points=10, parent="World Events", type="quest"}}
+A{"Krasarang", 7602, criterion=21935, side="horde", season="Hallow's End", trivia={criteria="Krasarang Wilds, Zhu's Watch", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="KrasarangWilds", uiMapID=418, points=10, parent="World Events", type="quest"}}
+A{"Krasarang", 7602, criterion=21948, side="horde", season="Hallow's End", trivia={criteria="Krasarang Wilds, Dawnchaser Retreat", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="KrasarangWilds", uiMapID=418, points=10, parent="World Events", type="quest"}}
+A{"Krasarang", 7602, criterion=21951, side="horde", season="Hallow's End", trivia={criteria="Krasarang Wilds, Thunder Cleft", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="KrasarangWilds", uiMapID=418, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Pandaria
-A{"KunLaiSummit", 7601, criterion=21925, side="alliance", season="Hallow's End"} -- Kun-Lai Summit, Westwind Rest
-A{"KunLaiSummit", 7601, criterion=21936, side="alliance", season="Hallow's End"} -- Kun-Lai Summit, Binan Village
-A{"KunLaiSummit", 7601, criterion=21937, side="alliance", season="Hallow's End"} -- Kun-Lai Summit, One Keg
-A{"KunLaiSummit", 7601, criterion=21938, side="alliance", season="Hallow's End"} -- Kun-Lai Summit, The Grummle Bazaar
-A{"KunLaiSummit", 7601, criterion=21939, side="alliance", season="Hallow's End"} -- Kun-Lai Summit, Zouchin Village
+A{"KunLaiSummit", 7601, criterion=21925, side="alliance", season="Hallow's End", trivia={criteria="Kun-Lai Summit, Westwind Rest", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="KunLaiSummit", uiMapID=379, points=10, parent="World Events", type="quest"}}
+A{"KunLaiSummit", 7601, criterion=21936, side="alliance", season="Hallow's End", trivia={criteria="Kun-Lai Summit, Binan Village", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="KunLaiSummit", uiMapID=379, points=10, parent="World Events", type="quest"}}
+A{"KunLaiSummit", 7601, criterion=21937, side="alliance", season="Hallow's End", trivia={criteria="Kun-Lai Summit, One Keg", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="KunLaiSummit", uiMapID=379, points=10, parent="World Events", type="quest"}}
+A{"KunLaiSummit", 7601, criterion=21938, side="alliance", season="Hallow's End", trivia={criteria="Kun-Lai Summit, The Grummle Bazaar", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="KunLaiSummit", uiMapID=379, points=10, parent="World Events", type="quest"}}
+A{"KunLaiSummit", 7601, criterion=21939, side="alliance", season="Hallow's End", trivia={criteria="Kun-Lai Summit, Zouchin Village", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="KunLaiSummit", uiMapID=379, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Pandaria
-A{"KunLaiSummit", 7602, criterion=21936, side="horde", season="Hallow's End"} -- Kun-Lai Summit, Binan Village
-A{"KunLaiSummit", 7602, criterion=21938, side="horde", season="Hallow's End"} -- Kun-Lai Summit, The Grummle Bazaar
-A{"KunLaiSummit", 7602, criterion=21937, side="horde", season="Hallow's End"} -- Kun-Lai Summit, One Keg
-A{"KunLaiSummit", 7602, criterion=21939, side="horde", season="Hallow's End"} -- Kun-Lai Summit, Zouchin Village
-A{"KunLaiSummit", 7602, criterion=21949, side="horde", season="Hallow's End"} -- Kun-Lai Summit, Eastwind Rest
+A{"KunLaiSummit", 7602, criterion=21936, side="horde", season="Hallow's End", trivia={criteria="Kun-Lai Summit, Binan Village", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="KunLaiSummit", uiMapID=379, points=10, parent="World Events", type="quest"}}
+A{"KunLaiSummit", 7602, criterion=21938, side="horde", season="Hallow's End", trivia={criteria="Kun-Lai Summit, The Grummle Bazaar", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="KunLaiSummit", uiMapID=379, points=10, parent="World Events", type="quest"}}
+A{"KunLaiSummit", 7602, criterion=21937, side="horde", season="Hallow's End", trivia={criteria="Kun-Lai Summit, One Keg", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="KunLaiSummit", uiMapID=379, points=10, parent="World Events", type="quest"}}
+A{"KunLaiSummit", 7602, criterion=21939, side="horde", season="Hallow's End", trivia={criteria="Kun-Lai Summit, Zouchin Village", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="KunLaiSummit", uiMapID=379, points=10, parent="World Events", type="quest"}}
+A{"KunLaiSummit", 7602, criterion=21949, side="horde", season="Hallow's End", trivia={criteria="Kun-Lai Summit, Eastwind Rest", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="KunLaiSummit", uiMapID=379, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"LochModan", 966, 0.355, 0.485, criterion=2138, side="alliance", season="Hallow's End"} -- Loch Modan, Thelsamar
-A{"LochModan", 966, 0.830, 0.635, criterion=18422, side="alliance", season="Hallow's End"} -- Loch Modan, Farstrider Lodge
+A{"LochModan", 966, 0.3550, 0.4850, criterion=2138, side="alliance", season="Hallow's End", trivia={criteria="Loch Modan, Thelsamar", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="LochModan", uiMapID=48, points=10, parent="World Events", type="quest"}}
+A{"LochModan", 966, 0.8300, 0.6350, criterion=18422, side="alliance", season="Hallow's End", trivia={criteria="Loch Modan, Farstrider Lodge", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="LochModan", uiMapID=48, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"Mulgore", 965, 0.468, 0.604, criterion=2112, side="horde", season="Hallow's End"} -- Mulgore, Bloodhoof Village
+A{"Mulgore", 965, 0.4680, 0.6040, criterion=2112, side="horde", season="Hallow's End", trivia={criteria="Mulgore, Bloodhoof Village", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Mulgore", uiMapID=7, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Outland
-A{"Nagrand", 968, 0.567, 0.346, criterion=2220, side="horde", season="Hallow's End"} -- Nagrand, Garadar
+A{"Nagrand", 968, 0.5670, 0.3460, criterion=2220, side="horde", season="Hallow's End", trivia={criteria="Nagrand, Garadar", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="Nagrand", uiMapID=107, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Outland
-A{"Nagrand", 969, 0.542, 0.759, criterion=2199, side="alliance", season="Hallow's End"} -- Nagrand, Telaar
+A{"Nagrand", 969, 0.5420, 0.7590, criterion=2199, side="alliance", season="Hallow's End", trivia={criteria="Nagrand, Telaar", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="Nagrand", uiMapID=107, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Outland
-A{"Netherstorm", 968, 0.321, 0.645, criterion=2205, side="horde", season="Hallow's End"} -- Netherstorm, Area 52
-A{"Netherstorm", 968, 0.434, 0.361, criterion=2206, side="horde", season="Hallow's End"} -- Netherstorm, The Stormspire
+A{"Netherstorm", 968, 0.3210, 0.6450, criterion=2205, side="horde", season="Hallow's End", trivia={criteria="Netherstorm, Area 52", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="Netherstorm", uiMapID=109, points=10, parent="World Events", type="quest"}}
+A{"Netherstorm", 968, 0.4340, 0.3610, criterion=2206, side="horde", season="Hallow's End", trivia={criteria="Netherstorm, The Stormspire", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="Netherstorm", uiMapID=109, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Outland
-A{"Netherstorm", 969, 0.320, 0.646, criterion=2205, side="alliance", season="Hallow's End"} -- Netherstorm, Area 52
-A{"Netherstorm", 969, 0.433, 0.361, criterion=2206, side="alliance", season="Hallow's End"} -- Netherstorm, The Stormspire
+A{"Netherstorm", 969, 0.3200, 0.6460, criterion=2205, side="alliance", season="Hallow's End", trivia={criteria="Netherstorm, Area 52", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="Netherstorm", uiMapID=109, points=10, parent="World Events", type="quest"}}
+A{"Netherstorm", 969, 0.4330, 0.3610, criterion=2206, side="alliance", season="Hallow's End", trivia={criteria="Netherstorm, The Stormspire", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="Netherstorm", uiMapID=109, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"Orgrimmar", 965, 0.539, 0.789, criterion=2113, side="horde", season="Hallow's End"} -- Orgrimmar, Valley of Strength
+A{"Orgrimmar", 965, 0.5390, 0.7890, criterion=2113, side="horde", season="Hallow's End", trivia={criteria="Orgrimmar, Valley of Strength", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Orgrimmar", uiMapID=85, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"Redridge", 966, 0.264, 0.415, criterion=2139, side="alliance", season="Hallow's End"} -- Redridge Mountains, Lakeshire
+A{"Redridge", 966, 0.2640, 0.4150, criterion=2139, side="alliance", season="Hallow's End", trivia={criteria="Redridge Mountains, Lakeshire", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="RedridgeMountains", uiMapID=49, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Bring Me The Head of... Oh Wait
-A{"ScarletMonastery", 255, 0.444, 0.550, floor=1, season="Hallow's End"}
+A{"ScarletMonastery", 255, 0.4440, 0.5500, floor=1, season="Hallow's End", trivia={module="seasonal_hallow", category="World Events/Hallow's End", name="Bring Me The Head of... Oh Wait", description="Kill the Headless Horseman.", mapID="ScarletMonastery_ForlornCloister", uiMapID=435, points=10, parent="World Events"}}
 
 -- Feats of Strength: The Horseman's Reins
-A{"ScarletMonastery", 980, 0.444, 0.550, floor=1}
+A{"ScarletMonastery", 980, 0.4440, 0.5500, floor=1, trivia={module="seasonal_hallow", category="Feats of Strength", name="The Horseman's Reins", description="Obtain The Horseman's Reins from The Headless Horseman in the Scarlet Monastery during Hallow's End.", mapID="ScarletMonastery_ForlornCloister", uiMapID=435, points=0}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"SearingGorge", 966, 0.394, 0.660, criterion=18430, side="alliance", season="Hallow's End"} -- Searing Gorge, Iron Summit
+A{"SearingGorge", 966, 0.3940, 0.6600, criterion=18430, side="alliance", season="Hallow's End", trivia={criteria="Searing Gorge, Iron Summit", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="SearingGorge", uiMapID=32, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"SearingGorge", 967, 0.394, 0.660, criterion=18430, side="horde", season="Hallow's End"} -- Searing Gorge, Iron Summit
+A{"SearingGorge", 967, 0.3940, 0.6600, criterion=18430, side="horde", season="Hallow's End", trivia={criteria="Searing Gorge, Iron Summit", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="SearingGorge", uiMapID=32, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Outland
-A{"ShadowmoonValley", 968, 0.303, 0.278, criterion=2222, side="horde", season="Hallow's End"} -- Shadowmoon Valley, Shadowmoon Village
-A{"ShadowmoonValley", 968, 0.610, 0.282, criterion=2210, side="horde", season="Hallow's End"} -- Shadowmoon Valley, Altar of Sha'tar or Sanctum of the Stars
-A{"ShadowmoonValley", 968, 0.563, 0.598, criterion=2210, side="horde", season="Hallow's End"} -- Shadowmoon Valley, Altar of Sha'tar or Sanctum of the Stars
+A{"ShadowmoonValley", 968, 0.3030, 0.2780, criterion=2222, side="horde", season="Hallow's End", trivia={criteria="Shadowmoon Valley, Shadowmoon Village", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="ShadowmoonValley", uiMapID=104, points=10, parent="World Events", type="quest"}}
+A{"ShadowmoonValley", 968, 0.6100, 0.2820, criterion=2210, side="horde", season="Hallow's End", trivia={criteria="Shadowmoon Valley, Altar of Sha'tar or Sanctum of the Stars", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="ShadowmoonValley", uiMapID=104, points=10, parent="World Events", type="quest"}}
+A{"ShadowmoonValley", 968, 0.5630, 0.5980, criterion=2210, side="horde", season="Hallow's End", trivia={criteria="Shadowmoon Valley, Altar of Sha'tar or Sanctum of the Stars", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="ShadowmoonValley", uiMapID=104, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Outland
-A{"ShadowmoonValley", 969, 0.610, 0.282, criterion=2210, side="alliance", season="Hallow's End"} -- Shadowmoon Valley, Altar of Sha'tar or Sanctum of the Stars
-A{"ShadowmoonValley", 969, 0.564, 0.598, criterion=2210, side="alliance", season="Hallow's End"} -- Shadowmoon Valley, Altar of Sha'tar or Sanctum of the Stars
-A{"ShadowmoonValley", 969, 0.370, 0.583, criterion=2200, side="alliance", season="Hallow's End"} -- Shadowmoon Valley, Wildhammer Stronghold
+A{"ShadowmoonValley", 969, 0.6100, 0.2820, criterion=2210, side="alliance", season="Hallow's End", trivia={criteria="Shadowmoon Valley, Altar of Sha'tar or Sanctum of the Stars", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="ShadowmoonValley", uiMapID=104, points=10, parent="World Events", type="quest"}}
+A{"ShadowmoonValley", 969, 0.5640, 0.5980, criterion=2210, side="alliance", season="Hallow's End", trivia={criteria="Shadowmoon Valley, Altar of Sha'tar or Sanctum of the Stars", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="ShadowmoonValley", uiMapID=104, points=10, parent="World Events", type="quest"}}
+A{"ShadowmoonValley", 969, 0.3700, 0.5830, criterion=2200, side="alliance", season="Hallow's End", trivia={criteria="Shadowmoon Valley, Wildhammer Stronghold", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="ShadowmoonValley", uiMapID=104, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Outland
-A{"ShattrathCity", 968, 0.281, 0.490, criterion=2207, side="horde", season="Hallow's End"} -- Shattrath City, Aldor Rise or Scryer's Tier
-A{"ShattrathCity", 968, 0.562, 0.818, criterion=2207, side="horde", season="Hallow's End"} -- Shattrath City, Aldor Rise or Scryer's Tier
+A{"ShattrathCity", 968, 0.2810, 0.4900, criterion=2207, side="horde", season="Hallow's End", trivia={criteria="Shattrath City, Aldor Rise or Scryer's Tier", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="ShattrathCity", uiMapID=111, points=10, parent="World Events", type="quest"}}
+A{"ShattrathCity", 968, 0.5620, 0.8180, criterion=2207, side="horde", season="Hallow's End", trivia={criteria="Shattrath City, Aldor Rise or Scryer's Tier", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="ShattrathCity", uiMapID=111, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Outland
-A{"ShattrathCity", 969, 0.282, 0.491, criterion=2207, side="alliance", season="Hallow's End"} -- Shattrath City, Aldor Rise or Scryer's Tier
-A{"ShattrathCity", 969, 0.563, 0.819, criterion=2207, side="alliance", season="Hallow's End"} -- Shattrath City, Aldor Rise or Scryer's Tier
+A{"ShattrathCity", 969, 0.2820, 0.4910, criterion=2207, side="alliance", season="Hallow's End", trivia={criteria="Shattrath City, Aldor Rise or Scryer's Tier", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="ShattrathCity", uiMapID=111, points=10, parent="World Events", type="quest"}}
+A{"ShattrathCity", 969, 0.5630, 0.8190, criterion=2207, side="alliance", season="Hallow's End", trivia={criteria="Shattrath City, Aldor Rise or Scryer's Tier", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="ShattrathCity", uiMapID=111, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Northrend
-A{"SholazarBasin", 5835, 0.266, 0.592, criterion=17681, side="horde", season="Hallow's End"} -- Sholazar Basin, Nesingwary Base Camp
+A{"SholazarBasin", 5835, 0.2660, 0.5920, criterion=17681, side="horde", season="Hallow's End", trivia={criteria="Sholazar Basin, Nesingwary Base Camp", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="SholazarBasin", uiMapID=119, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Northrend
-A{"SholazarBasin", 5836, 0.266, 0.592, criterion=17681, side="alliance", season="Hallow's End"} -- Sholazar Basin, Nesingwary Base Camp
+A{"SholazarBasin", 5836, 0.2660, 0.5920, criterion=17681, side="alliance", season="Hallow's End", trivia={criteria="Sholazar Basin, Nesingwary Base Camp", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="SholazarBasin", uiMapID=119, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"Silithus", 963, 0.554, 0.367, criterion=2085, side="alliance", season="Hallow's End"} -- Silithus, Cenarion Hold
+A{"Silithus", 963, 0.5540, 0.3670, criterion=2085, side="alliance", season="Hallow's End", trivia={criteria="Silithus, Cenarion Hold", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Silithus", uiMapID=81, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"Silithus", 965, 0.554, 0.368, criterion=2085, side="horde", season="Hallow's End"} -- Silithus, Cenarion Hold
+A{"Silithus", 965, 0.5540, 0.3680, criterion=2085, side="horde", season="Hallow's End", trivia={criteria="Silithus, Cenarion Hold", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Silithus", uiMapID=81, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"SilvermoonCity", 967, 0.675, 0.728, criterion=2154, side="horde", season="Hallow's End"} -- Silvermoon City, The Bazaar
-A{"SilvermoonCity", 967, 0.794, 0.576, criterion=2155, side="horde", season="Hallow's End"} -- Silvermoon City, The Royal Exchange
-A{"Silverpine", 967, 0.464, 0.427, criterion=2156, side="horde", season="Hallow's End"} -- Silverpine Forest, The Sepulcher
-A{"Silverpine", 967, 0.443, 0.202, criterion=17631, side="horde", season="Hallow's End"} -- Silverpine Forest, Forsaken Rear Guard
+A{"SilvermoonCity", 967, 0.6750, 0.7280, criterion=2154, side="horde", season="Hallow's End", trivia={criteria="Silvermoon City, The Bazaar", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="SilvermoonCity", uiMapID=110, points=10, parent="World Events", type="quest"}}
+A{"SilvermoonCity", 967, 0.7940, 0.5760, criterion=2155, side="horde", season="Hallow's End", trivia={criteria="Silvermoon City, The Royal Exchange", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="SilvermoonCity", uiMapID=110, points=10, parent="World Events", type="quest"}}
+A{"Silverpine", 967, 0.4640, 0.4270, criterion=2156, side="horde", season="Hallow's End", trivia={criteria="Silverpine Forest, The Sepulcher", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="SilverpineForest", uiMapID=21, points=10, parent="World Events", type="quest"}}
+A{"Silverpine", 967, 0.4430, 0.2020, criterion=17631, side="horde", season="Hallow's End", trivia={criteria="Silverpine Forest, Forsaken Rear Guard", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="SilverpineForest", uiMapID=21, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"SouthernBarrens", 963, 0.490, 0.685, criterion=18400, side="alliance", season="Hallow's End"} -- Southern Barrens, Fort Triumph
-A{"SouthernBarrens", 963, 0.390, 0.109, criterion=18401, side="alliance", season="Hallow's End"} -- Southern Barrens, Honor's Stand
-A{"SouthernBarrens", 963, 0.656, 0.465, criterion=18402, side="alliance", season="Hallow's End"} -- Southern Barrens, Northwatch Hold
+A{"SouthernBarrens", 963, 0.4900, 0.6850, criterion=18400, side="alliance", season="Hallow's End", trivia={criteria="Southern Barrens, Fort Triumph", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="SouthernBarrens", uiMapID=199, points=10, parent="World Events", type="quest"}}
+A{"SouthernBarrens", 963, 0.3900, 0.1090, criterion=18401, side="alliance", season="Hallow's End", trivia={criteria="Southern Barrens, Honor's Stand", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="SouthernBarrens", uiMapID=199, points=10, parent="World Events", type="quest"}}
+A{"SouthernBarrens", 963, 0.6560, 0.4650, criterion=18402, side="alliance", season="Hallow's End", trivia={criteria="Southern Barrens, Northwatch Hold", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="SouthernBarrens", uiMapID=199, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"SouthernBarrens", 965, 0.407, 0.693, criterion=17620, side="horde", season="Hallow's End"} -- Southern Barrens, Desolation Hold
-A{"SouthernBarrens", 965, 0.393, 0.201, criterion=17621, side="horde", season="Hallow's End"} -- Southern Barrens, Hunter's Hill
+A{"SouthernBarrens", 965, 0.4070, 0.6930, criterion=17620, side="horde", season="Hallow's End", trivia={criteria="Southern Barrens, Desolation Hold", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="SouthernBarrens", uiMapID=199, points=10, parent="World Events", type="quest"}}
+A{"SouthernBarrens", 965, 0.3930, 0.2010, criterion=17621, side="horde", season="Hallow's End", trivia={criteria="Southern Barrens, Hunter's Hill", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="SouthernBarrens", uiMapID=199, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"StonetalonMountains", 963, 0.394, 0.328, criterion=2081, side="alliance", season="Hallow's End"} -- Stonetalon Mountains, Thal'darah Overlook
-A{"StonetalonMountains", 963, 0.315, 0.606, criterion=18403, side="alliance", season="Hallow's End"} -- Stonetalon Mountains, Farwatcher's Glen
-A{"StonetalonMountains", 963, 0.710, 0.790, criterion=18412, side="alliance", season="Hallow's End"} -- Stonetalon Mountains, Northwatch Expedition Base
-A{"StonetalonMountains", 963, 0.590, 0.563, criterion=18413, side="alliance", season="Hallow's End"} -- Stonetalon Mountains, Windshear Hold
+A{"StonetalonMountains", 963, 0.3940, 0.3280, criterion=2081, side="alliance", season="Hallow's End", trivia={criteria="Stonetalon Mountains, Thal'darah Overlook", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="StonetalonMountains", uiMapID=65, points=10, parent="World Events", type="quest"}}
+A{"StonetalonMountains", 963, 0.3150, 0.6060, criterion=18403, side="alliance", season="Hallow's End", trivia={criteria="Stonetalon Mountains, Farwatcher's Glen", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="StonetalonMountains", uiMapID=65, points=10, parent="World Events", type="quest"}}
+A{"StonetalonMountains", 963, 0.7100, 0.7900, criterion=18412, side="alliance", season="Hallow's End", trivia={criteria="Stonetalon Mountains, Northwatch Expedition Base", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="StonetalonMountains", uiMapID=65, points=10, parent="World Events", type="quest"}}
+A{"StonetalonMountains", 963, 0.5900, 0.5630, criterion=18413, side="alliance", season="Hallow's End", trivia={criteria="Stonetalon Mountains, Windshear Hold", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="StonetalonMountains", uiMapID=65, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"StonetalonMountains", 965, 0.503, 0.638, criterion=2114, side="horde", season="Hallow's End"} -- Stonetalon Mountains, Sun Rock Retreat
-A{"StonetalonMountains", 965, 0.665, 0.642, criterion=17622, side="horde", season="Hallow's End"} -- Stonetalon Mountains, Krom'gar Fortress
+A{"StonetalonMountains", 965, 0.5030, 0.6380, criterion=2114, side="horde", season="Hallow's End", trivia={criteria="Stonetalon Mountains, Sun Rock Retreat", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="StonetalonMountains", uiMapID=65, points=10, parent="World Events", type="quest"}}
+A{"StonetalonMountains", 965, 0.6650, 0.6420, criterion=17622, side="horde", season="Hallow's End", trivia={criteria="Stonetalon Mountains, Krom'gar Fortress", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="StonetalonMountains", uiMapID=65, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"StormwindCity", 966, 0.605, 0.753, criterion=2140, note="/flex", side="alliance", season="Hallow's End"} -- Stormwind, The Trade District
-A{"StranglethornJungle", 966, 0.531, 0.669, criterion=18423, side="alliance", season="Hallow's End"} -- Northern Stranglethorn, Fort Livingston
+A{"StormwindCity", 966, 0.6050, 0.7530, criterion=2140, note="/flex", side="alliance", season="Hallow's End", trivia={criteria="Stormwind, The Trade District", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="StormwindCity", uiMapID=84, points=10, parent="World Events", type="quest"}}
+A{"StranglethornJungle", 966, 0.5310, 0.6690, criterion=18423, side="alliance", season="Hallow's End", trivia={criteria="Northern Stranglethorn, Fort Livingston", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="NorthernStranglethorn", uiMapID=50, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"StranglethornJungle", 967, 0.373, 0.517, criterion=2157, side="horde", season="Hallow's End"} -- Northern Stranglethorn, Grom'gol Base Camp
+A{"StranglethornJungle", 967, 0.3730, 0.5170, criterion=2157, side="horde", season="Hallow's End", trivia={criteria="Northern Stranglethorn, Grom'gol Base Camp", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="NorthernStranglethorn", uiMapID=50, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"SwampOfSorrows", 966, 0.289, 0.323, criterion=18424, side="alliance", season="Hallow's End"} -- Swamp of Sorrows, The Harborage
-A{"SwampOfSorrows", 966, 0.716, 0.141, criterion=18431, side="alliance", season="Hallow's End"} -- Swamp of Sorrows, Bogpaddle
+A{"SwampOfSorrows", 966, 0.2890, 0.3230, criterion=18424, side="alliance", season="Hallow's End", trivia={criteria="Swamp of Sorrows, The Harborage", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="SwampOfSorrows", uiMapID=51, points=10, parent="World Events", type="quest"}}
+A{"SwampOfSorrows", 966, 0.7160, 0.1410, criterion=18431, side="alliance", season="Hallow's End", trivia={criteria="Swamp of Sorrows, Bogpaddle", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="SwampOfSorrows", uiMapID=51, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"SwampOfSorrows", 967, 0.468, 0.569, criterion=2158, side="horde", season="Hallow's End"} -- Swamp of Sorrows, Stonard
-A{"SwampOfSorrows", 967, 0.716, 0.140, criterion=18431, side="horde", season="Hallow's End"} -- Swamp of Sorrows, Bogpaddle
+A{"SwampOfSorrows", 967, 0.4680, 0.5690, criterion=2158, side="horde", season="Hallow's End", trivia={criteria="Swamp of Sorrows, Stonard", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="SwampOfSorrows", uiMapID=51, points=10, parent="World Events", type="quest"}}
+A{"SwampOfSorrows", 967, 0.7160, 0.1400, criterion=18431, side="horde", season="Hallow's End", trivia={criteria="Swamp of Sorrows, Bogpaddle", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="SwampOfSorrows", uiMapID=51, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"Tanaris", 963, 0.525, 0.271, criterion=2086, side="alliance", season="Hallow's End"} -- Tanaris, Gadgetzan
-A{"Tanaris", 963, 0.557, 0.609, criterion=18415, side="alliance", season="Hallow's End"} -- Tanaris, Bootlegger Outpost
+A{"Tanaris", 963, 0.5250, 0.2710, criterion=2086, side="alliance", season="Hallow's End", trivia={criteria="Tanaris, Gadgetzan", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Tanaris", uiMapID=71, points=10, parent="World Events", type="quest"}}
+A{"Tanaris", 963, 0.5570, 0.6090, criterion=18415, side="alliance", season="Hallow's End", trivia={criteria="Tanaris, Bootlegger Outpost", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Tanaris", uiMapID=71, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"Tanaris", 965, 0.525, 0.271, criterion=2086, side="horde", season="Hallow's End"} -- Tanaris, Gadgetzan
-A{"Tanaris", 965, 0.557, 0.609, criterion=18415, side="horde", season="Hallow's End"} -- Tanaris, Bootlegger Outpost
+A{"Tanaris", 965, 0.5250, 0.2710, criterion=2086, side="horde", season="Hallow's End", trivia={criteria="Tanaris, Gadgetzan", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Tanaris", uiMapID=71, points=10, parent="World Events", type="quest"}}
+A{"Tanaris", 965, 0.5570, 0.6090, criterion=18415, side="horde", season="Hallow's End", trivia={criteria="Tanaris, Bootlegger Outpost", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Tanaris", uiMapID=71, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"Teldrassil", 963, 0.553, 0.522, criterion=2082, side="alliance", season="Hallow's End"} -- Teldrassil, Dolanaar
+A{"Teldrassil", 963, 0.5530, 0.5220, criterion=2082, side="alliance", season="Hallow's End", trivia={criteria="Teldrassil, Dolanaar", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Teldrassil", uiMapID=57, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Outland
-A{"TerokkarForest", 968, 0.488, 0.452, criterion=2223, side="horde", season="Hallow's End"} -- Terokkar Forest, Stonebreaker Hold
+A{"TerokkarForest", 968, 0.4880, 0.4520, criterion=2223, side="horde", season="Hallow's End", trivia={criteria="Terokkar Forest, Stonebreaker Hold", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="TerokkarForest", uiMapID=108, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Outland
-A{"TerokkarForest", 969, 0.556, 0.532, criterion=2201, side="alliance", season="Hallow's End"} -- Terokkar Forest, Allerian Stronghold
+A{"TerokkarForest", 969, 0.5560, 0.5320, criterion=2201, side="alliance", season="Hallow's End", trivia={criteria="Terokkar Forest, Allerian Stronghold", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="TerokkarForest", uiMapID=108, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"TheCapeOfStranglethorn", 966, 0.409, 0.737, criterion=2144, side="alliance", season="Hallow's End"} -- The Cape of Stranglethorn, Booty Bay
+A{"TheCapeOfStranglethorn", 966, 0.4090, 0.7370, criterion=2144, side="alliance", season="Hallow's End", trivia={criteria="The Cape of Stranglethorn, Booty Bay", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="TheCapeOfStranglethorn", uiMapID=210, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"TheCapeOfStranglethorn", 967, 0.409, 0.737, criterion=2144, side="horde", season="Hallow's End"} -- The Cape of Stranglethorn, Booty Bay
-A{"TheCapeOfStranglethorn", 967, 0.350, 0.272, criterion=17633, side="horde", season="Hallow's End"} -- The Cape of Stranglethorn, Hardwrench Hideaway
+A{"TheCapeOfStranglethorn", 967, 0.4090, 0.7370, criterion=2144, side="horde", season="Hallow's End", trivia={criteria="The Cape of Stranglethorn, Booty Bay", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="TheCapeOfStranglethorn", uiMapID=210, points=10, parent="World Events", type="quest"}}
+A{"TheCapeOfStranglethorn", 967, 0.3500, 0.2720, criterion=17633, side="horde", season="Hallow's End", trivia={criteria="The Cape of Stranglethorn, Hardwrench Hideaway", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="TheCapeOfStranglethorn", uiMapID=210, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"TheExodar", 963, 0.592, 0.184, criterion=2079, side="alliance", season="Hallow's End"} -- Exodar, Seat of the Naaru
+A{"TheExodar", 963, 0.5920, 0.1840, criterion=2079, side="alliance", season="Hallow's End", trivia={criteria="Exodar, Seat of the Naaru", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="TheExodar", uiMapID=103, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Pandaria
-A{"TheHiddenPass", 7601, criterion=21940, side="alliance", season="Hallow's End"} -- The Veiled Stair, Tavern in the Mists
+A{"TheHiddenPass", 7601, criterion=21940, side="alliance", season="Hallow's End", trivia={criteria="The Veiled Stair, Tavern in the Mists", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="TheVeiledStair", uiMapID=433, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Pandaria
-A{"TheHiddenPass", 7602, criterion=21940, side="horde", season="Hallow's End"} -- The Veiled Stair, Tavern in the Mists
+A{"TheHiddenPass", 7602, criterion=21940, side="horde", season="Hallow's End", trivia={criteria="The Veiled Stair, Tavern in the Mists", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="TheVeiledStair", uiMapID=433, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Pandaria
-A{"TheJadeForest", 7601, criterion=21923, side="alliance", season="Hallow's End"} -- Jade Forest, Paw'don Village
-A{"TheJadeForest", 7601, criterion=21924, side="alliance", season="Hallow's End"} -- Jade Forest, Pearlfin Village
-A{"TheJadeForest", 7601, criterion=21929, side="alliance", season="Hallow's End"} -- Jade Forest, Dawn's Blossom
-A{"TheJadeForest", 7601, criterion=21930, side="alliance", season="Hallow's End"} -- Jade Forest, Greenstone Village
-A{"TheJadeForest", 7601, criterion=21931, side="alliance", season="Hallow's End"} -- Jade Forest, Jade Temple Grounds
-A{"TheJadeForest", 7601, criterion=21932, side="alliance", season="Hallow's End"} -- Jade Forest, Sri-La Village
-A{"TheJadeForest", 7601, criterion=21933, side="alliance", season="Hallow's End"} -- Jade Forest, Tian Monastery
+A{"TheJadeForest", 7601, criterion=21923, side="alliance", season="Hallow's End", trivia={criteria="Jade Forest, Paw'don Village", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="TheJadeForest", uiMapID=371, points=10, parent="World Events", type="quest"}}
+A{"TheJadeForest", 7601, criterion=21924, side="alliance", season="Hallow's End", trivia={criteria="Jade Forest, Pearlfin Village", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="TheJadeForest", uiMapID=371, points=10, parent="World Events", type="quest"}}
+A{"TheJadeForest", 7601, criterion=21929, side="alliance", season="Hallow's End", trivia={criteria="Jade Forest, Dawn's Blossom", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="TheJadeForest", uiMapID=371, points=10, parent="World Events", type="quest"}}
+A{"TheJadeForest", 7601, criterion=21930, side="alliance", season="Hallow's End", trivia={criteria="Jade Forest, Greenstone Village", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="TheJadeForest", uiMapID=371, points=10, parent="World Events", type="quest"}}
+A{"TheJadeForest", 7601, criterion=21931, side="alliance", season="Hallow's End", trivia={criteria="Jade Forest, Jade Temple Grounds", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="TheJadeForest", uiMapID=371, points=10, parent="World Events", type="quest"}}
+A{"TheJadeForest", 7601, criterion=21932, side="alliance", season="Hallow's End", trivia={criteria="Jade Forest, Sri-La Village", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="TheJadeForest", uiMapID=371, points=10, parent="World Events", type="quest"}}
+A{"TheJadeForest", 7601, criterion=21933, side="alliance", season="Hallow's End", trivia={criteria="Jade Forest, Tian Monastery", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="TheJadeForest", uiMapID=371, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Pandaria
-A{"TheJadeForest", 7602, criterion=21929, side="horde", season="Hallow's End"} -- Jade Forest, Dawn's Blossom
-A{"TheJadeForest", 7602, criterion=21930, side="horde", season="Hallow's End"} -- Jade Forest, Greenstone Village
-A{"TheJadeForest", 7602, criterion=21931, side="horde", season="Hallow's End"} -- Jade Forest, Jade Temple Grounds
-A{"TheJadeForest", 7602, criterion=21932, side="horde", season="Hallow's End"} -- Jade Forest, Sri-La Village
-A{"TheJadeForest", 7602, criterion=21933, side="horde", season="Hallow's End"} -- Jade Forest, Tian Monastery
-A{"TheJadeForest", 7602, criterion=21946, side="horde", season="Hallow's End"} -- Jade Forest, Grookin Hill
-A{"TheJadeForest", 7602, criterion=21947, side="horde", season="Hallow's End"} -- Jade Forest, Honeydew Village
+A{"TheJadeForest", 7602, criterion=21929, side="horde", season="Hallow's End", trivia={criteria="Jade Forest, Dawn's Blossom", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="TheJadeForest", uiMapID=371, points=10, parent="World Events", type="quest"}}
+A{"TheJadeForest", 7602, criterion=21930, side="horde", season="Hallow's End", trivia={criteria="Jade Forest, Greenstone Village", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="TheJadeForest", uiMapID=371, points=10, parent="World Events", type="quest"}}
+A{"TheJadeForest", 7602, criterion=21931, side="horde", season="Hallow's End", trivia={criteria="Jade Forest, Jade Temple Grounds", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="TheJadeForest", uiMapID=371, points=10, parent="World Events", type="quest"}}
+A{"TheJadeForest", 7602, criterion=21932, side="horde", season="Hallow's End", trivia={criteria="Jade Forest, Sri-La Village", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="TheJadeForest", uiMapID=371, points=10, parent="World Events", type="quest"}}
+A{"TheJadeForest", 7602, criterion=21933, side="horde", season="Hallow's End", trivia={criteria="Jade Forest, Tian Monastery", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="TheJadeForest", uiMapID=371, points=10, parent="World Events", type="quest"}}
+A{"TheJadeForest", 7602, criterion=21946, side="horde", season="Hallow's End", trivia={criteria="Jade Forest, Grookin Hill", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="TheJadeForest", uiMapID=371, points=10, parent="World Events", type="quest"}}
+A{"TheJadeForest", 7602, criterion=21947, side="horde", season="Hallow's End", trivia={criteria="Jade Forest, Honeydew Village", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="TheJadeForest", uiMapID=371, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Northrend
-A{"TheStormPeaks", 5835, 0.370, 0.495, criterion=17656, side="horde", season="Hallow's End"} -- Storm Peaks, Grom'arsh Crash Site
-A{"TheStormPeaks", 5835, 0.309, 0.371, criterion=17676, side="horde", season="Hallow's End"} -- Storm Peaks, Bouldercrag's Refuge
-A{"TheStormPeaks", 5835, 0.410, 0.858, criterion=17678, side="horde", season="Hallow's End"} -- Storm Peaks, K3
-A{"TheStormPeaks", 5835, 0.676, 0.506, criterion=17655, side="horde", season="Hallow's End"} -- Storm Peaks, Camp Tunka'lo
+A{"TheStormPeaks", 5835, 0.3700, 0.4950, criterion=17656, side="horde", season="Hallow's End", trivia={criteria="Storm Peaks, Grom'arsh Crash Site", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="TheStormPeaks", uiMapID=120, points=10, parent="World Events", type="quest"}}
+A{"TheStormPeaks", 5835, 0.3090, 0.3710, criterion=17676, side="horde", season="Hallow's End", trivia={criteria="Storm Peaks, Bouldercrag's Refuge", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="TheStormPeaks", uiMapID=120, points=10, parent="World Events", type="quest"}}
+A{"TheStormPeaks", 5835, 0.4100, 0.8580, criterion=17678, side="horde", season="Hallow's End", trivia={criteria="Storm Peaks, K3", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="TheStormPeaks", uiMapID=120, points=10, parent="World Events", type="quest"}}
+A{"TheStormPeaks", 5835, 0.6760, 0.5060, criterion=17655, side="horde", season="Hallow's End", trivia={criteria="Storm Peaks, Camp Tunka'lo", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="TheStormPeaks", uiMapID=120, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Northrend
-A{"TheStormPeaks", 5836, 0.309, 0.371, criterion=17676, side="alliance", season="Hallow's End"} -- Storm Peaks, Bouldercrag's Refuge
-A{"TheStormPeaks", 5836, 0.410, 0.858, criterion=17678, side="alliance", season="Hallow's End"} -- Storm Peaks, K3
-A{"TheStormPeaks", 5836, 0.287, 0.742, criterion=17677, side="alliance", season="Hallow's End"} -- Storm Peaks, Frosthold
+A{"TheStormPeaks", 5836, 0.3090, 0.3710, criterion=17676, side="alliance", season="Hallow's End", trivia={criteria="Storm Peaks, Bouldercrag's Refuge", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="TheStormPeaks", uiMapID=120, points=10, parent="World Events", type="quest"}}
+A{"TheStormPeaks", 5836, 0.4100, 0.8580, criterion=17678, side="alliance", season="Hallow's End", trivia={criteria="Storm Peaks, K3", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="TheStormPeaks", uiMapID=120, points=10, parent="World Events", type="quest"}}
+A{"TheStormPeaks", 5836, 0.2870, 0.7420, criterion=17677, side="alliance", season="Hallow's End", trivia={criteria="Storm Peaks, Frosthold", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="TheStormPeaks", uiMapID=120, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"ThunderBluff", 965, 0.456, 0.649, criterion=2115, side="horde", season="Hallow's End"} -- Thunder Bluff, Lower Rise
+A{"ThunderBluff", 965, 0.4560, 0.6490, criterion=2115, side="horde", season="Hallow's End", trivia={criteria="Thunder Bluff, Lower Rise", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="ThunderBluff", uiMapID=88, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"Tirisfal", 967, 0.609, 0.514, criterion=2159, side="horde", season="Hallow's End"} -- Tirisfal Glades, Brill
-A{"Tirisfal", 967, 0.830, 0.720, criterion=17634, side="horde", season="Hallow's End"} -- Tirisfal Glades, The Bulwark
+A{"Tirisfal", 967, 0.6090, 0.5140, criterion=2159, side="horde", season="Hallow's End", trivia={criteria="Tirisfal Glades, Brill", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="TirisfalGlades", uiMapID=18, points=10, parent="World Events", type="quest"}}
+A{"Tirisfal", 967, 0.8300, 0.7200, criterion=17634, side="horde", season="Hallow's End", trivia={criteria="Tirisfal Glades, The Bulwark", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="TirisfalGlades", uiMapID=18, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Pandaria
-A{"TownlongWastes", 7601, criterion=21941, side="alliance", season="Hallow's End"} -- Townlong Steppes, Longying Outpost
+A{"TownlongWastes", 7601, criterion=21941, side="alliance", season="Hallow's End", trivia={criteria="Townlong Steppes, Longying Outpost", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="TownlongSteppes", uiMapID=388, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Pandaria
-A{"TownlongWastes", 7602, criterion=21941, side="horde", season="Hallow's End"} -- Townlong Steppes, Longying Outpost
+A{"TownlongWastes", 7602, criterion=21941, side="horde", season="Hallow's End", trivia={criteria="Townlong Steppes, Longying Outpost", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="TownlongSteppes", uiMapID=388, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of the Cataclysm
-A{"TwilightHighlands", 5837, criterion=17686, side="alliance", season="Hallow's End"} -- Twilight Highlands, Firebeard's Patrol
-A{"TwilightHighlands", 5837, criterion=17688, side="alliance", season="Hallow's End"} -- Twilight Highlands, Thundermar
-A{"TwilightHighlands", 5837, criterion=17687, side="alliance", season="Hallow's End"} -- Twilight Highlands, Highbank
-A{"TwilightHighlands", 5837, criterion=17689, side="alliance", season="Hallow's End"} -- Twilight Highlands, Victor's Point
+A{"TwilightHighlands", 5837, criterion=17686, side="alliance", season="Hallow's End", trivia={criteria="Twilight Highlands, Firebeard's Patrol", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="TwilightHighlands", uiMapID=241, points=10, parent="World Events", type="quest"}}
+A{"TwilightHighlands", 5837, criterion=17688, side="alliance", season="Hallow's End", trivia={criteria="Twilight Highlands, Thundermar", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="TwilightHighlands", uiMapID=241, points=10, parent="World Events", type="quest"}}
+A{"TwilightHighlands", 5837, criterion=17687, side="alliance", season="Hallow's End", trivia={criteria="Twilight Highlands, Highbank", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="TwilightHighlands", uiMapID=241, points=10, parent="World Events", type="quest"}}
+A{"TwilightHighlands", 5837, criterion=17689, side="alliance", season="Hallow's End", trivia={criteria="Twilight Highlands, Victor's Point", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="TwilightHighlands", uiMapID=241, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of the Cataclysm
-A{"TwilightHighlands", 5838, criterion=17711, side="horde", season="Hallow's End"} -- Twilight Highlands, The Krazzworks
-A{"TwilightHighlands", 5838, criterion=17708, side="horde", season="Hallow's End"} -- Twilight Highlands, Bloodgulch
-A{"TwilightHighlands", 5838, criterion=17709, side="horde", season="Hallow's End"} -- Twilight Highlands, Crushblow
+A{"TwilightHighlands", 5838, 0.7536, 0.1654, criterion=17711, side="horde", season="Hallow's End", trivia={criteria="Twilight Highlands, The Krazzworks", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="TwilightHighlands", uiMapID=241, points=10, parent="World Events", type="quest"}}
+A{"TwilightHighlands", 5838, 0.5342, 0.4229, criterion=17708, side="horde", season="Hallow's End", trivia={criteria="Twilight Highlands, Bloodgulch", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="TwilightHighlands", uiMapID=241, points=10, parent="World Events", type="quest"}}
+A{"TwilightHighlands", 5838, 0.4509, 0.7680, criterion=17709, side="horde", season="Hallow's End", trivia={criteria="Twilight Highlands, Crushblow", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="TwilightHighlands", uiMapID=241, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of the Cataclysm
-A{"Uldum", 5837, criterion=17690, side="alliance", season="Hallow's End"} -- Uldum, Oasis of Vir'sar
-A{"Uldum", 5837, criterion=17691, side="alliance", season="Hallow's End"} -- Uldum, Ramkahen
+A{"Uldum", 5837, criterion=17690, side="alliance", season="Hallow's End", trivia={criteria="Uldum, Oasis of Vir'sar", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="Uldum", uiMapID=249, points=10, parent="World Events", type="quest"}}
+A{"Uldum", 5837, criterion=17691, side="alliance", season="Hallow's End", trivia={criteria="Uldum, Ramkahen", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="Uldum", uiMapID=249, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of the Cataclysm
-A{"Uldum", 5838, criterion=17690, side="horde", season="Hallow's End"} -- Uldum, Oasis of Vir'sar
-A{"Uldum", 5838, criterion=17691, side="horde", season="Hallow's End"} -- Uldum, Ramkahen
+A{"Uldum", 5838, criterion=17690, side="horde", season="Hallow's End", trivia={criteria="Uldum, Oasis of Vir'sar", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="Uldum", uiMapID=249, points=10, parent="World Events", type="quest"}}
+A{"Uldum", 5838, criterion=17691, side="horde", season="Hallow's End", trivia={criteria="Uldum, Ramkahen", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="Uldum", uiMapID=249, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"Undercity", 967, 0.677, 0.373, criterion=2160, side="horde", season="Hallow's End"} -- Undercity, The Trade Quarter
+A{"Undercity", 967, 0.6770, 0.3730, criterion=2160, side="horde", season="Hallow's End", trivia={criteria="Undercity, The Trade Quarter", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="Undercity", uiMapID=90, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Rotten Hallow
-A{"Undercity", 1041, criterion=3219, side="horde", season="Hallow's End"} -- Clean Up in Undercity
+A{"Undercity", 1041, criterion=3219, side="horde", season="Hallow's End", trivia={criteria="Clean Up in Undercity", module="seasonal_hallow", category="World Events/Hallow's End", name="Rotten Hallow", description="Ruin Hallow's End for the Alliance and foil their attempts to wreck the Horde celebration by completing the following quests.", mapID="Undercity", uiMapID=90, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"UngoroCrater", 963, 0.552, 0.621, criterion=18417, side="alliance", season="Hallow's End"} -- Un'Goro Crater, Marshal's Stand
+A{"UngoroCrater", 963, 0.5520, 0.6210, criterion=18417, side="alliance", season="Hallow's End", trivia={criteria="Un'Goro Crater, Marshal's Stand", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="UnGoroCrater", uiMapID=78, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"UngoroCrater", 965, 0.552, 0.621, criterion=18417, side="horde", season="Hallow's End"} -- Un'Goro Crater, Marshal's Stand
+A{"UngoroCrater", 965, 0.5520, 0.6210, criterion=18417, side="horde", season="Hallow's End", trivia={criteria="Un'Goro Crater, Marshal's Stand", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="UnGoroCrater", uiMapID=78, points=10, parent="World Events", type="quest"}}
+
+-- World Events/Hallow's End: The Masquerade
+A{"unknown", 283, criterion=3215, season="Hallow's End", trivia={criteria="Transformed by Hallowed Wand - Wisp", module="seasonal_hallow", category="World Events/Hallow's End", name="The Masquerade", description="Get transformed by the Hallowed Wands listed below.", points=10, parent="World Events", type=28}}
+A{"unknown", 283, criterion=3210, season="Hallow's End", trivia={criteria="Transformed by Hallowed Wand - Ghost", module="seasonal_hallow", category="World Events/Hallow's End", name="The Masquerade", description="Get transformed by the Hallowed Wands listed below.", points=10, parent="World Events", type=28}}
+A{"unknown", 283, criterion=3211, season="Hallow's End", trivia={criteria="Transformed by Hallowed Wand - Leper Gnome", module="seasonal_hallow", category="World Events/Hallow's End", name="The Masquerade", description="Get transformed by the Hallowed Wands listed below.", points=10, parent="World Events", type=28}}
+A{"unknown", 283, criterion=3213, season="Hallow's End", trivia={criteria="Transformed by Hallowed Wand - Pirate", module="seasonal_hallow", category="World Events/Hallow's End", name="The Masquerade", description="Get transformed by the Hallowed Wands listed below.", points=10, parent="World Events", type=28}}
+A{"unknown", 283, criterion=3212, season="Hallow's End", trivia={criteria="Transformed by Hallowed Wand - Ninja", module="seasonal_hallow", category="World Events/Hallow's End", name="The Masquerade", description="Get transformed by the Hallowed Wands listed below.", points=10, parent="World Events", type=28}}
+A{"unknown", 283, criterion=3214, season="Hallow's End", trivia={criteria="Transformed by Hallowed Wand - Skeleton", module="seasonal_hallow", category="World Events/Hallow's End", name="The Masquerade", description="Get transformed by the Hallowed Wands listed below.", points=10, parent="World Events", type=28}}
+A{"unknown", 283, criterion=3209, season="Hallow's End", trivia={criteria="Transformed by Hallowed Wand - Bat", module="seasonal_hallow", category="World Events/Hallow's End", name="The Masquerade", description="Get transformed by the Hallowed Wands listed below.", points=10, parent="World Events", type=28}}
+
+-- World Events/Hallow's End: A Mask for All Occasions
+A{"unknown", 284, criterion=2262, season="Hallow's End", trivia={criteria="Dwarf Female Mask", module="seasonal_hallow", category="World Events/Hallow's End", name="A Mask for All Occasions", description="Collect the 24 unique Masks listed below.", points=20, parent="World Events", type=36}}
+A{"unknown", 284, criterion=2267, season="Hallow's End", trivia={criteria="Tauren Female Mask", module="seasonal_hallow", category="World Events/Hallow's End", name="A Mask for All Occasions", description="Collect the 24 unique Masks listed below.", points=20, parent="World Events", type=36}}
+A{"unknown", 284, criterion=2272, season="Hallow's End", trivia={criteria="Dwarf Male Mask", module="seasonal_hallow", category="World Events/Hallow's End", name="A Mask for All Occasions", description="Collect the 24 unique Masks listed below.", points=20, parent="World Events", type=36}}
+A{"unknown", 284, criterion=2274, season="Hallow's End", trivia={criteria="Human Male Mask", module="seasonal_hallow", category="World Events/Hallow's End", name="A Mask for All Occasions", description="Collect the 24 unique Masks listed below.", points=20, parent="World Events", type=36}}
+A{"unknown", 284, criterion=2273, season="Hallow's End", trivia={criteria="Gnome Male Mask", module="seasonal_hallow", category="World Events/Hallow's End", name="A Mask for All Occasions", description="Collect the 24 unique Masks listed below.", points=20, parent="World Events", type=36}}
+A{"unknown", 284, criterion=2275, season="Hallow's End", trivia={criteria="Night Elf Male Mask", module="seasonal_hallow", category="World Events/Hallow's End", name="A Mask for All Occasions", description="Collect the 24 unique Masks listed below.", points=20, parent="World Events", type=36}}
+A{"unknown", 284, criterion=2277, season="Hallow's End", trivia={criteria="Tauren Male Mask", module="seasonal_hallow", category="World Events/Hallow's End", name="A Mask for All Occasions", description="Collect the 24 unique Masks listed below.", points=20, parent="World Events", type=36}}
+A{"unknown", 284, criterion=2261, season="Hallow's End", trivia={criteria="Draenei Female Mask", module="seasonal_hallow", category="World Events/Hallow's End", name="A Mask for All Occasions", description="Collect the 24 unique Masks listed below.", points=20, parent="World Events", type=36}}
+A{"unknown", 284, criterion=2263, season="Hallow's End", trivia={criteria="Gnome Female Mask", module="seasonal_hallow", category="World Events/Hallow's End", name="A Mask for All Occasions", description="Collect the 24 unique Masks listed below.", points=20, parent="World Events", type=36}}
+A{"unknown", 284, criterion=2264, season="Hallow's End", trivia={criteria="Human Female Mask", module="seasonal_hallow", category="World Events/Hallow's End", name="A Mask for All Occasions", description="Collect the 24 unique Masks listed below.", points=20, parent="World Events", type=36}}
+A{"unknown", 284, criterion=2266, season="Hallow's End", trivia={criteria="Orc Female Mask", module="seasonal_hallow", category="World Events/Hallow's End", name="A Mask for All Occasions", description="Collect the 24 unique Masks listed below.", points=20, parent="World Events", type=36}}
+A{"unknown", 284, criterion=2270, season="Hallow's End", trivia={criteria="Blood Elf Male Mask", module="seasonal_hallow", category="World Events/Hallow's End", name="A Mask for All Occasions", description="Collect the 24 unique Masks listed below.", points=20, parent="World Events", type=36}}
+A{"unknown", 284, criterion=2276, season="Hallow's End", trivia={criteria="Orc Male Mask", module="seasonal_hallow", category="World Events/Hallow's End", name="A Mask for All Occasions", description="Collect the 24 unique Masks listed below.", points=20, parent="World Events", type=36}}
+A{"unknown", 284, criterion=2265, season="Hallow's End", trivia={criteria="Night Elf Female Mask", module="seasonal_hallow", category="World Events/Hallow's End", name="A Mask for All Occasions", description="Collect the 24 unique Masks listed below.", points=20, parent="World Events", type=36}}
+A{"unknown", 284, criterion=2271, season="Hallow's End", trivia={criteria="Draenei Male Mask", module="seasonal_hallow", category="World Events/Hallow's End", name="A Mask for All Occasions", description="Collect the 24 unique Masks listed below.", points=20, parent="World Events", type=36}}
+A{"unknown", 284, criterion=2279, season="Hallow's End", trivia={criteria="Undead Male Mask", module="seasonal_hallow", category="World Events/Hallow's End", name="A Mask for All Occasions", description="Collect the 24 unique Masks listed below.", points=20, parent="World Events", type=36}}
+A{"unknown", 284, criterion=2268, season="Hallow's End", trivia={criteria="Troll Female Mask", module="seasonal_hallow", category="World Events/Hallow's End", name="A Mask for All Occasions", description="Collect the 24 unique Masks listed below.", points=20, parent="World Events", type=36}}
+A{"unknown", 284, criterion=2269, season="Hallow's End", trivia={criteria="Undead Female Mask", module="seasonal_hallow", category="World Events/Hallow's End", name="A Mask for All Occasions", description="Collect the 24 unique Masks listed below.", points=20, parent="World Events", type=36}}
+A{"unknown", 284, criterion=2278, season="Hallow's End", trivia={criteria="Troll Male Mask", module="seasonal_hallow", category="World Events/Hallow's End", name="A Mask for All Occasions", description="Collect the 24 unique Masks listed below.", points=20, parent="World Events", type=36}}
+A{"unknown", 284, criterion=2260, season="Hallow's End", trivia={criteria="Blood Elf Female Mask", module="seasonal_hallow", category="World Events/Hallow's End", name="A Mask for All Occasions", description="Collect the 24 unique Masks listed below.", points=20, parent="World Events", type=36}}
+A{"unknown", 284, criterion=17591, season="Hallow's End", trivia={criteria="Goblin Male Mask", module="seasonal_hallow", category="World Events/Hallow's End", name="A Mask for All Occasions", description="Collect the 24 unique Masks listed below.", points=20, parent="World Events", type=36}}
+A{"unknown", 284, criterion=17590, season="Hallow's End", trivia={criteria="Goblin Female Mask", module="seasonal_hallow", category="World Events/Hallow's End", name="A Mask for All Occasions", description="Collect the 24 unique Masks listed below.", points=20, parent="World Events", type=36}}
+A{"unknown", 284, criterion=17593, season="Hallow's End", trivia={criteria="Worgen Male Mask", module="seasonal_hallow", category="World Events/Hallow's End", name="A Mask for All Occasions", description="Collect the 24 unique Masks listed below.", points=20, parent="World Events", type=36}}
+A{"unknown", 284, criterion=17592, season="Hallow's End", trivia={criteria="Worgen Female Mask", module="seasonal_hallow", category="World Events/Hallow's End", name="A Mask for All Occasions", description="Collect the 24 unique Masks listed below.", points=20, parent="World Events", type=36}}
+
+-- World Events/Hallow's End: Out With It
+A{"unknown", 288, season="Hallow's End", trivia={module="seasonal_hallow", category="World Events/Hallow's End", name="Out With It", description="Eat so many Tricky Treats that you get an upset tummy.", points=10, parent="World Events"}}
+
+-- World Events/Hallow's End: The Savior of Hallow's End
+A{"unknown", 289, season="Hallow's End", trivia={module="seasonal_hallow", category="World Events/Hallow's End", name="The Savior of Hallow's End", description="Complete one of the quests to save a village from the Headless Horseman.", points=10, parent="World Events"}}
+
+-- World Events/Hallow's End: Check Your Head
+A{"unknown", 291, criterion=5776, season="Hallow's End", trivia={criteria="Dwarf", module="seasonal_hallow", category="World Events/Hallow's End", name="Check Your Head", description="Use Weighted Jack-o'-Lanterns to put pumpkin heads on each of the races listed below.", points=10, parent="World Events", type=110}}
+A{"unknown", 291, criterion=5772, season="Hallow's End", trivia={criteria="Gnome", module="seasonal_hallow", category="World Events/Hallow's End", name="Check Your Head", description="Use Weighted Jack-o'-Lanterns to put pumpkin heads on each of the races listed below.", points=10, parent="World Events", type=110}}
+A{"unknown", 291, criterion=5774, season="Hallow's End", trivia={criteria="Blood Elf", module="seasonal_hallow", category="World Events/Hallow's End", name="Check Your Head", description="Use Weighted Jack-o'-Lanterns to put pumpkin heads on each of the races listed below.", points=10, parent="World Events", type=110}}
+A{"unknown", 291, criterion=5775, season="Hallow's End", trivia={criteria="Draenei", module="seasonal_hallow", category="World Events/Hallow's End", name="Check Your Head", description="Use Weighted Jack-o'-Lanterns to put pumpkin heads on each of the races listed below.", points=10, parent="World Events", type=110}}
+A{"unknown", 291, criterion=5777, season="Hallow's End", trivia={criteria="Human", module="seasonal_hallow", category="World Events/Hallow's End", name="Check Your Head", description="Use Weighted Jack-o'-Lanterns to put pumpkin heads on each of the races listed below.", points=10, parent="World Events", type=110}}
+A{"unknown", 291, criterion=5778, season="Hallow's End", trivia={criteria="Night Elf", module="seasonal_hallow", category="World Events/Hallow's End", name="Check Your Head", description="Use Weighted Jack-o'-Lanterns to put pumpkin heads on each of the races listed below.", points=10, parent="World Events", type=110}}
+A{"unknown", 291, criterion=5779, season="Hallow's End", trivia={criteria="Orc", module="seasonal_hallow", category="World Events/Hallow's End", name="Check Your Head", description="Use Weighted Jack-o'-Lanterns to put pumpkin heads on each of the races listed below.", points=10, parent="World Events", type=110}}
+A{"unknown", 291, criterion=5780, season="Hallow's End", trivia={criteria="Tauren", module="seasonal_hallow", category="World Events/Hallow's End", name="Check Your Head", description="Use Weighted Jack-o'-Lanterns to put pumpkin heads on each of the races listed below.", points=10, parent="World Events", type=110}}
+A{"unknown", 291, criterion=5781, season="Hallow's End", trivia={criteria="Troll", module="seasonal_hallow", category="World Events/Hallow's End", name="Check Your Head", description="Use Weighted Jack-o'-Lanterns to put pumpkin heads on each of the races listed below.", points=10, parent="World Events", type=110}}
+A{"unknown", 291, criterion=5782, season="Hallow's End", trivia={criteria="Undead", module="seasonal_hallow", category="World Events/Hallow's End", name="Check Your Head", description="Use Weighted Jack-o'-Lanterns to put pumpkin heads on each of the races listed below.", points=10, parent="World Events", type=110}}
+A{"unknown", 291, criterion=17854, season="Hallow's End", trivia={criteria="Worgen", module="seasonal_hallow", category="World Events/Hallow's End", name="Check Your Head", description="Use Weighted Jack-o'-Lanterns to put pumpkin heads on each of the races listed below.", points=10, parent="World Events", type=110}}
+A{"unknown", 291, criterion=17855, season="Hallow's End", trivia={criteria="Goblin", module="seasonal_hallow", category="World Events/Hallow's End", name="Check Your Head", description="Use Weighted Jack-o'-Lanterns to put pumpkin heads on each of the races listed below.", points=10, parent="World Events", type=110}}
+
+-- World Events/Hallow's End: Sinister Calling
+A{"unknown", 292, criterion=5783, season="Hallow's End", trivia={criteria="Sinister Squashling", module="seasonal_hallow", category="World Events/Hallow's End", name="Sinister Calling", description="Obtain a Sinister Squashling pet and Hallowed Helm from the Hallow's end world events .", points=10, parent="World Events", type=41}}
+A{"unknown", 292, criterion=12908, season="Hallow's End", trivia={criteria="Hallowed Helm", module="seasonal_hallow", category="World Events/Hallow's End", name="Sinister Calling", description="Obtain a Sinister Squashling pet and Hallowed Helm from the Hallow's end world events .", points=10, parent="World Events", type=36}}
+
+-- World Events/Hallow's End: Trick or Treat!
+A{"unknown", 972, season="Hallow's End", trivia={module="seasonal_hallow", category="World Events/Hallow's End", name="Trick or Treat!", description="Receive a handful of treats from one of the Candy Buckets located in an inn.", points=10, parent="World Events"}}
+
+-- World Events/Hallow's End: The Mask Task
+A{"unknown", 979, season="Hallow's End", trivia={module="seasonal_hallow", category="World Events/Hallow's End", name="The Mask Task", description="Obtain a Mask during Hallow's End.", points=10, parent="World Events"}}
+
+-- World Events/Hallow's End: That Sparkling Smile
+A{"unknown", 981, season="Hallow's End", trivia={module="seasonal_hallow", category="World Events/Hallow's End", name="That Sparkling Smile", description="Show off your sparkling smile by using a Tooth Pick.", points=10, parent="World Events"}}
+
+-- World Events/Hallow's End: Rotten Hallow
+A{"unknown", 1040, criterion=3216, side="alliance", season="Hallow's End", trivia={criteria="Stink Bombs Away!", module="seasonal_hallow", category="World Events/Hallow's End", name="Rotten Hallow", description="Ruin Hallow's End for the Horde and foil their attempts to wreck the Alliance celebration by completing the following quests.", points=10, parent="World Events", type="quest"}}
+A{"unknown", 1040, criterion=17607, side="alliance", season="Hallow's End", trivia={criteria="A Time to Gain", module="seasonal_hallow", category="World Events/Hallow's End", name="Rotten Hallow", description="Ruin Hallow's End for the Horde and foil their attempts to wreck the Alliance celebration by completing the following quests.", points=10, parent="World Events", type="quest"}}
+A{"unknown", 1040, criterion=17606, side="alliance", season="Hallow's End", trivia={criteria="A Time to Lose", module="seasonal_hallow", category="World Events/Hallow's End", name="Rotten Hallow", description="Ruin Hallow's End for the Horde and foil their attempts to wreck the Alliance celebration by completing the following quests.", points=10, parent="World Events", type="quest"}}
+
+-- World Events/Hallow's End: Rotten Hallow
+A{"unknown", 1041, criterion=3218, side="horde", season="Hallow's End", trivia={criteria="Stink Bombs Away!", module="seasonal_hallow", category="World Events/Hallow's End", name="Rotten Hallow", description="Ruin Hallow's End for the Alliance and foil their attempts to wreck the Horde celebration by completing the following quests.", points=10, parent="World Events", type="quest"}}
+A{"unknown", 1041, criterion=17609, side="horde", season="Hallow's End", trivia={criteria="A Time to Break Down", module="seasonal_hallow", category="World Events/Hallow's End", name="Rotten Hallow", description="Ruin Hallow's End for the Alliance and foil their attempts to wreck the Horde celebration by completing the following quests.", points=10, parent="World Events", type="quest"}}
+A{"unknown", 1041, criterion=17608, side="horde", season="Hallow's End", trivia={criteria="A Time to Build Up", module="seasonal_hallow", category="World Events/Hallow's End", name="Rotten Hallow", description="Ruin Hallow's End for the Alliance and foil their attempts to wreck the Horde celebration by completing the following quests.", points=10, parent="World Events", type="quest"}}
+
+-- World Events/Hallow's End: G.N.E.R.D. Rage
+A{"unknown", 1261, criterion=3882, season="Hallow's End", trivia={criteria="10 Honorable Kills with the G.N.E.R.D. buff", module="seasonal_hallow", category="World Events/Hallow's End", name="G.N.E.R.D. Rage", description="Earn 10 honorable kills while under the influence of the G.N.E.R.D. buff. It's a slap in the face!", points=10, parent="World Events", type=35}}
+
+-- World Events: Hallowed Be Thy Name
+A{"unknown", 1656, criterion=5838, season="Hallow's End", trivia={criteria="G.N.E.R.D. Rage", module="seasonal_hallow", category="World Events", name="Hallowed Be Thy Name", description="Complete the Hallow's End achievements listed below.", points=10, type="achievement"}}
+A{"unknown", 1656, criterion=5832, season="Hallow's End", trivia={criteria="Out With It", module="seasonal_hallow", category="World Events", name="Hallowed Be Thy Name", description="Complete the Hallow's End achievements listed below.", points=10, type="achievement"}}
+A{"unknown", 1656, criterion=5834, season="Hallow's End", trivia={criteria="The Savior of Hallow's End", module="seasonal_hallow", category="World Events", name="Hallowed Be Thy Name", description="Complete the Hallow's End achievements listed below.", points=10, type="achievement"}}
+A{"unknown", 1656, criterion=5831, season="Hallow's End", trivia={criteria="Trick or Treat!", module="seasonal_hallow", category="World Events", name="Hallowed Be Thy Name", description="Complete the Hallow's End achievements listed below.", points=10, type="achievement"}}
+A{"unknown", 1656, criterion=5839, season="Hallow's End", trivia={criteria="Check Your Head", module="seasonal_hallow", category="World Events", name="Hallowed Be Thy Name", description="Complete the Hallow's End achievements listed below.", points=10, type="achievement"}}
+A{"unknown", 1656, criterion=5841, season="Hallow's End", trivia={criteria="Sinister Calling", module="seasonal_hallow", category="World Events", name="Hallowed Be Thy Name", description="Complete the Hallow's End achievements listed below.", points=10, type="achievement"}}
+A{"unknown", 1656, criterion=5842, season="Hallow's End", trivia={criteria="Tricks and Treats of Azeroth", module="seasonal_hallow", category="World Events", name="Hallowed Be Thy Name", description="Complete the Hallow's End achievements listed below.", points=10, type="achievement"}}
+A{"unknown", 1656, criterion=5836, season="Hallow's End", trivia={criteria="That Sparkling Smile", module="seasonal_hallow", category="World Events", name="Hallowed Be Thy Name", description="Complete the Hallow's End achievements listed below.", points=10, type="achievement"}}
+A{"unknown", 1656, criterion=5840, season="Hallow's End", trivia={criteria="The Masquerade", module="seasonal_hallow", category="World Events", name="Hallowed Be Thy Name", description="Complete the Hallow's End achievements listed below.", points=10, type="achievement"}}
+A{"unknown", 1656, criterion=5833, season="Hallow's End", trivia={criteria="Bring Me The Head of... Oh Wait", module="seasonal_hallow", category="World Events", name="Hallowed Be Thy Name", description="Complete the Hallow's End achievements listed below.", points=10, type="achievement"}}
+A{"unknown", 1656, criterion=5825, season="Hallow's End", trivia={criteria="Rotten Hallow", module="seasonal_hallow", category="World Events", name="Hallowed Be Thy Name", description="Complete the Hallow's End achievements listed below.", points=10, type="achievement"}}
+
+-- World Events: What a Long, Strange Trip It's Been
+A{"unknown", 2144, criterion=7558, season="Hallow's End", trivia={criteria="Hallowed Be Thy Name", module="seasonal_hallow", category="World Events", name="What a Long, Strange Trip It's Been", description="Complete the world events achievements listed below.", points=50, type="achievement"}}
+
+-- World Events/Hallow's End: A Frightening Friend
+A{"unknown", 10365, criterion=29032, season="Hallow's End", trivia={criteria="Scarecrow Pepe", module="seasonal_hallow", category="World Events/Hallow's End", name="A Frightening Friend", description="Find Pepe wearing his spooky scarecrow costume.", points=10, parent="World Events", type=29}}
 
 -- World Events/Hallow's End: Tricks and Treats of Pandaria
-A{"ValeOfEternalBlossomsScenario", 7601, criterion=21926, side="alliance", season="Hallow's End"} -- Vale of Eternal Blossoms, Shrine of Seven Stars
-A{"ValeOfEternalBlossomsScenario", 7601, criterion=21942, side="alliance", season="Hallow's End"} -- Vale of Eternal Blossoms, Mistfall Village
+A{"ValeOfEternalBlossomsScenario", 7601, criterion=21926, side="alliance", season="Hallow's End", trivia={criteria="Vale of Eternal Blossoms, Shrine of Seven Stars", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="ValeOfEternalBlossoms", uiMapID=390, points=10, parent="World Events", type="quest"}}
+A{"ValeOfEternalBlossomsScenario", 7601, criterion=21942, side="alliance", season="Hallow's End", trivia={criteria="Vale of Eternal Blossoms, Mistfall Village", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="ValeOfEternalBlossoms", uiMapID=390, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Pandaria
-A{"ValeOfEternalBlossomsScenario", 7602, criterion=21942, side="horde", season="Hallow's End"} -- Vale of Eternal Blossoms, Mistfall Village
-A{"ValeOfEternalBlossomsScenario", 7602, criterion=21950, side="horde", season="Hallow's End"} -- Vale of Eternal Blossoms, Shrine of Two Moons
+A{"ValeOfEternalBlossomsScenario", 7602, criterion=21942, side="horde", season="Hallow's End", trivia={criteria="Vale of Eternal Blossoms, Mistfall Village", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="ValeOfEternalBlossoms", uiMapID=390, points=10, parent="World Events", type="quest"}}
+A{"ValeOfEternalBlossomsScenario", 7602, criterion=21950, side="horde", season="Hallow's End", trivia={criteria="Vale of Eternal Blossoms, Shrine of Two Moons", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="ValeOfEternalBlossoms", uiMapID=390, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Pandaria
-A{"ValleyoftheFourWinds", 7601, criterion=21943, side="alliance", season="Hallow's End"} -- Valley of the Four Winds, Pang's Stead
-A{"ValleyoftheFourWinds", 7601, criterion=21945, side="alliance", season="Hallow's End"} -- Valley of the Four Winds, Stoneplow
+A{"ValleyoftheFourWinds", 7601, criterion=21943, side="alliance", season="Hallow's End", trivia={criteria="Valley of the Four Winds, Pang's Stead", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="ValleyOfTheFourWinds", uiMapID=376, points=10, parent="World Events", type="quest"}}
+A{"ValleyoftheFourWinds", 7601, criterion=21945, side="alliance", season="Hallow's End", trivia={criteria="Valley of the Four Winds, Stoneplow", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="ValleyOfTheFourWinds", uiMapID=376, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Pandaria
-A{"ValleyoftheFourWinds", 7602, criterion=21943, side="horde", season="Hallow's End"} -- Valley of the Four Winds, Pang's Stead
-A{"ValleyoftheFourWinds", 7602, criterion=21945, side="horde", season="Hallow's End"} -- Valley of the Four Winds, Stoneplow
+A{"ValleyoftheFourWinds", 7602, criterion=21943, side="horde", season="Hallow's End", trivia={criteria="Valley of the Four Winds, Pang's Stead", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="ValleyOfTheFourWinds", uiMapID=376, points=10, parent="World Events", type="quest"}}
+A{"ValleyoftheFourWinds", 7602, criterion=21945, side="horde", season="Hallow's End", trivia={criteria="Valley of the Four Winds, Stoneplow", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Pandaria", description="Visit the Candy Buckets in Pandaria.", mapID="ValleyOfTheFourWinds", uiMapID=376, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of the Cataclysm
-A{"Vashjir", 5837, criterion=17695, side="alliance", season="Hallow's End"} -- Vashj'ir, Tranquil Wash
-A{"Vashjir", 5837, criterion=17694, side="alliance", season="Hallow's End"} -- Vashj'ir, Silver Tide Hollow
-A{"Vashjir", 5837, criterion=17692, side="alliance", season="Hallow's End"} -- Vashj'ir, Darkbreak Cove
-A{"Vashjir", 5837, criterion=17693, side="alliance", season="Hallow's End"} -- Vashj'ir, Deepmist Grotto
+A{"Vashjir", 5837, criterion=17695, side="alliance", season="Hallow's End", trivia={criteria="Vashj'ir, Tranquil Wash", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="Vashjir", uiMapID=203, points=10, parent="World Events", type="quest"}}
+A{"Vashjir", 5837, criterion=17694, side="alliance", season="Hallow's End", trivia={criteria="Vashj'ir, Silver Tide Hollow", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="Vashjir", uiMapID=203, points=10, parent="World Events", type="quest"}}
+A{"Vashjir", 5837, criterion=17692, side="alliance", season="Hallow's End", trivia={criteria="Vashj'ir, Darkbreak Cove", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="Vashjir", uiMapID=203, points=10, parent="World Events", type="quest"}}
+A{"Vashjir", 5837, criterion=17693, side="alliance", season="Hallow's End", trivia={criteria="Vashj'ir, Deepmist Grotto", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="Vashjir", uiMapID=203, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of the Cataclysm
-A{"Vashjir", 5838, criterion=17714, side="horde", season="Hallow's End"} -- Vashj'ir, Legion's Rest
-A{"Vashjir", 5838, criterion=17693, side="horde", season="Hallow's End"} -- Vashj'ir, Deepmist Grotto
-A{"Vashjir", 5838, criterion=17694, side="horde", season="Hallow's End"} -- Vashj'ir, Silver Tide Hollow
-A{"Vashjir", 5838, criterion=17717, side="horde", season="Hallow's End"} -- Vashj'ir, Tenebrous Cavern
+A{"Vashjir", 5838, criterion=17714, side="horde", season="Hallow's End", trivia={criteria="Vashj'ir, Legion's Rest", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="Vashjir", uiMapID=203, points=10, parent="World Events", type="quest"}}
+A{"Vashjir", 5838, criterion=17693, side="horde", season="Hallow's End", trivia={criteria="Vashj'ir, Deepmist Grotto", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="Vashjir", uiMapID=203, points=10, parent="World Events", type="quest"}}
+A{"Vashjir", 5838, criterion=17694, side="horde", season="Hallow's End", trivia={criteria="Vashj'ir, Silver Tide Hollow", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="Vashjir", uiMapID=203, points=10, parent="World Events", type="quest"}}
+A{"Vashjir", 5838, criterion=17717, side="horde", season="Hallow's End", trivia={criteria="Vashj'ir, Tenebrous Cavern", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of the Cataclysm", description="Visit the Candy Buckets in Cataclysm zones.", mapID="Vashjir", uiMapID=203, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"WesternPlaguelands", 966, 0.433, 0.843, criterion=18426, side="alliance", season="Hallow's End"} -- Western Plaguelands, Chillwind Camp
+A{"WesternPlaguelands", 966, 0.4330, 0.8430, criterion=18426, side="alliance", season="Hallow's End", trivia={criteria="Western Plaguelands, Chillwind Camp", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="WesternPlaguelands", uiMapID=22, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"WesternPlaguelands", 967, 0.483, 0.636, criterion=17635, side="horde", season="Hallow's End"} -- Western Plaguelands, Andorhal
+A{"WesternPlaguelands", 967, 0.4830, 0.6360, criterion=17635, side="horde", season="Hallow's End", trivia={criteria="Western Plaguelands, Andorhal", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="WesternPlaguelands", uiMapID=22, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Eastern Kingdoms
-A{"Westfall", 966, 0.529, 0.537, criterion=2141, side="alliance", season="Hallow's End"} -- Westfall, Sentinel Hill
-A{"Wetlands", 966, 0.108, 0.609, criterion=2142, side="alliance", season="Hallow's End"} -- Wetlands, Menethil Harbor
-A{"Wetlands", 966, 0.582, 0.392, criterion=18427, side="alliance", season="Hallow's End"} -- Wetlands, Greenwarden's Grove
-A{"Wetlands", 966, 0.260, 0.259, criterion=18428, side="alliance", season="Hallow's End"} -- Wetlands, Swiftgear Station
+A{"Westfall", 966, 0.5290, 0.5370, criterion=2141, side="alliance", season="Hallow's End", trivia={criteria="Westfall, Sentinel Hill", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="Westfall", uiMapID=52, points=10, parent="World Events", type="quest"}}
+A{"Wetlands", 966, 0.1080, 0.6090, criterion=2142, side="alliance", season="Hallow's End", trivia={criteria="Wetlands, Menethil Harbor", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="Wetlands", uiMapID=56, points=10, parent="World Events", type="quest"}}
+A{"Wetlands", 966, 0.5820, 0.3920, criterion=18427, side="alliance", season="Hallow's End", trivia={criteria="Wetlands, Greenwarden's Grove", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="Wetlands", uiMapID=56, points=10, parent="World Events", type="quest"}}
+A{"Wetlands", 966, 0.2600, 0.2590, criterion=18428, side="alliance", season="Hallow's End", trivia={criteria="Wetlands, Swiftgear Station", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Eastern Kingdoms", description="Visit the Candy Buckets in Eastern Kingdoms.", mapID="Wetlands", uiMapID=56, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"Winterspring", 963, 0.598, 0.512, criterion=2087, side="alliance", season="Hallow's End"} -- Winterspring, Everlook
+A{"Winterspring", 963, 0.5980, 0.5120, criterion=2087, side="alliance", season="Hallow's End", trivia={criteria="Winterspring, Everlook", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Winterspring", uiMapID=83, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Kalimdor
-A{"Winterspring", 965, 0.598, 0.512, criterion=2087, side="horde", season="Hallow's End"} -- Winterspring, Everlook
+A{"Winterspring", 965, 0.5980, 0.5120, criterion=2087, side="horde", season="Hallow's End", trivia={criteria="Winterspring, Everlook", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Kalimdor", description="Visit the Candy Buckets in Kalimdor.", mapID="Winterspring", uiMapID=83, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Outland
-A{"Zangarmarsh", 968, 0.307, 0.509, criterion=2224, side="horde", season="Hallow's End"} -- Zangarmarsh, Zabra'jin
-A{"Zangarmarsh", 968, 0.785, 0.629, criterion=2209, side="horde", season="Hallow's End"} -- Zangarmarsh, Cenarion Refuge
+A{"Zangarmarsh", 968, 0.3070, 0.5090, criterion=2224, side="horde", season="Hallow's End", trivia={criteria="Zangarmarsh, Zabra'jin", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="Zangarmarsh", uiMapID=102, points=10, parent="World Events", type="quest"}}
+A{"Zangarmarsh", 968, 0.7850, 0.6290, criterion=2209, side="horde", season="Hallow's End", trivia={criteria="Zangarmarsh, Cenarion Refuge", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="Zangarmarsh", uiMapID=102, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Outland
-A{"Zangarmarsh", 969, 0.672, 0.489, criterion=2203, side="alliance", season="Hallow's End"} -- Zangarmarsh, Telredor
-A{"Zangarmarsh", 969, 0.784, 0.629, criterion=2209, side="alliance", season="Hallow's End"} -- Zangarmarsh, Cenarion Refuge
-A{"Zangarmarsh", 969, 0.419, 0.262, criterion=2202, side="alliance", season="Hallow's End"} -- Zangarmarsh, Orebor Harborage
+A{"Zangarmarsh", 969, 0.6720, 0.4890, criterion=2203, side="alliance", season="Hallow's End", trivia={criteria="Zangarmarsh, Telredor", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="Zangarmarsh", uiMapID=102, points=10, parent="World Events", type="quest"}}
+A{"Zangarmarsh", 969, 0.7840, 0.6290, criterion=2209, side="alliance", season="Hallow's End", trivia={criteria="Zangarmarsh, Cenarion Refuge", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="Zangarmarsh", uiMapID=102, points=10, parent="World Events", type="quest"}}
+A{"Zangarmarsh", 969, 0.4190, 0.2620, criterion=2202, side="alliance", season="Hallow's End", trivia={criteria="Zangarmarsh, Orebor Harborage", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Outland", description="Visit the Candy Buckets in Outland.", mapID="Zangarmarsh", uiMapID=102, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Northrend
-A{"ZulDrak", 5835, 0.593, 0.571, criterion=17680, side="horde", season="Hallow's End"} -- Zul'Drak, Zim'Torga
-A{"ZulDrak", 5835, 0.408, 0.660, criterion=17679, side="horde", season="Hallow's End"} -- Zul'Drak, The Argent Stand
+A{"ZulDrak", 5835, 0.5930, 0.5710, criterion=17680, side="horde", season="Hallow's End", trivia={criteria="Zul'Drak, Zim'Torga", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="ZulDrak", uiMapID=121, points=10, parent="World Events", type="quest"}}
+A{"ZulDrak", 5835, 0.4080, 0.6600, criterion=17679, side="horde", season="Hallow's End", trivia={criteria="Zul'Drak, The Argent Stand", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="ZulDrak", uiMapID=121, points=10, parent="World Events", type="quest"}}
 
 -- World Events/Hallow's End: Tricks and Treats of Northrend
-A{"ZulDrak", 5836, 0.593, 0.571, criterion=17680, side="alliance", season="Hallow's End"} -- Zul'Drak, Zim'Torga
-A{"ZulDrak", 5836, 0.408, 0.660, criterion=17679, side="alliance", season="Hallow's End"} -- Zul'Drak, The Argent Stand
+A{"ZulDrak", 5836, 0.5930, 0.5710, criterion=17680, side="alliance", season="Hallow's End", trivia={criteria="Zul'Drak, Zim'Torga", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="ZulDrak", uiMapID=121, points=10, parent="World Events", type="quest"}}
+A{"ZulDrak", 5836, 0.4080, 0.6600, criterion=17679, side="alliance", season="Hallow's End", trivia={criteria="Zul'Drak, The Argent Stand", module="seasonal_hallow", category="World Events/Hallow's End", name="Tricks and Treats of Northrend", description="Visit the Candy Buckets in Northrend.", mapID="ZulDrak", uiMapID=121, points=10, parent="World Events", type="quest"}}

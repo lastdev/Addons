@@ -2,7 +2,7 @@
 -- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 0e5dac9771e21852086c9ae73250c5d5d507c244 $")
+XPerl_SetModuleRevision("$Revision: 42efb275e5740b2e735b5ecdaac0f954d23f0583 $")
 
 ZPerl_MainTanks = {}
 local MainTankCount, blizzMTanks, ctraTanks = 0, 0, 0
@@ -17,6 +17,7 @@ local pendingTankListChange -- If in combat when tank list changes, then we'll d
 local conf
 
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
+local IsBCClassic = WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC
 
 local GetNumGroupMembers = GetNumGroupMembers
 
@@ -275,8 +276,13 @@ function XPerl_MTListUnit_OnEnter(self)
 				if (parentID) then
 					XPerl_BottomTip:SetOwner(GameTooltip, a2, 0, 10)
 					XPerl_BottomTip:SetUnit(parentID)
-					XPerl_BottomTip:OnBackdropLoaded()
-					XPerl_BottomTip:SetBackdropColor(0.1, 0.4, 0.1, 0.75)
+
+					if IsBCClassic then
+						XPerl_BottomTip:OnBackdropLoaded()
+						XPerl_BottomTip:SetBackdropColor(0.1, 0.4, 0.1, 0.75)
+					else
+						XPerl_BottomTip.NineSlice:SetCenterColor(0.1, 0.4, 0.1, 0.75)
+					end
 				end
 			end
 		else
@@ -290,8 +296,13 @@ function XPerl_MTListUnit_OnEnter(self)
 
 				GameTooltip:SetOwner(self, a1)
 				GameTooltip:SetUnit(partyid)
-				GameTooltip:OnBackdropLoaded()
-				GameTooltip:SetBackdropColor(0.1, 0.4, 0.1, 0.75)
+
+				if IsBCClassic then
+					GameTooltip:OnBackdropLoaded()
+					GameTooltip:SetBackdropColor(0.1, 0.4, 0.1, 0.75)
+				else
+					GameTooltip.NineSlice:SetCenterColor(0.1, 0.4, 0.1, 0.75)
+				end
 			end
 		end
 	end

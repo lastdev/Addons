@@ -42,6 +42,7 @@ do
     ---@field public RAID_DIFFICULTY table<number, RaidDifficulty> @Table of 1=normal, 2=heroic, 3=mythic difficulties and their names and colors
     ---@field public PREVIOUS_SEASON_SCORE_RELEVANCE_THRESHOLD number @Threshold that current season must surpass from previous season to be considered better and shown as primary in addon
     ---@field public PREVIOUS_SEASON_MAIN_SCORE_RELEVANCE_THRESHOLD number @Threshold that current season current character must surpass from previous season main to be considered better and shown as primary in addon
+    ---@field public CUSTOM_ICONS table<string, table<string, CustomIcon>> @Map over custom icons separated by file. Each icon supports a custom metatable for request handling
     ---@field public REGIONS_RESET_TIME table<string, number> @Maps each region string to their weekly reset timer
     ---@field public KEYSTONE_AFFIX_SCHEDULE number[] @Maps each weekly rotation, primarily for Tyrannical (`9`) and Fortified (`10`) tracking
     ---@field public KEYSTONE_AFFIX_INTERNAL table<number, string> @Maps each affix ID to a internal string version like `tyrannical` (`9`) and `fortified` (`10`)
@@ -75,8 +76,124 @@ do
 
     -- threshold for comparing current character's previous season score to current score
     -- meaning: once current score exceeds this fraction of previous season, then show current season
-    ns.PREVIOUS_SEASON_SCORE_RELEVANCE_THRESHOLD = 0.75
-    ns.PREVIOUS_SEASON_MAIN_SCORE_RELEVANCE_THRESHOLD = 0.75
+    ns.PREVIOUS_SEASON_SCORE_RELEVANCE_THRESHOLD = 0.9
+    ns.PREVIOUS_SEASON_MAIN_SCORE_RELEVANCE_THRESHOLD = 0.9
+
+    ---Use `ns.CUSTOM_ICONS.FILENAME.KEY` to get the raw icon table.
+    ---
+    ---Use `ns.CUSTOM_ICONS.FILENAME.KEY("Texture")` to retrieve the `CustomIconTexture` for the icon.
+    ---
+    ---Use `ns.CUSTOM_ICONS.FILENAME.KEY("TextureMarkup")` to retrieve the texture markup `string` for the icon.
+    ns.CUSTOM_ICONS = {
+        affixes = {
+            TYRANNICAL_OFF = { 32, 32, 0, 0, 16/32, 32/32, 16/32, 32/32, 0, 0 },
+            FORTIFIED_OFF = { 32, 32, 0, 0, 16/32, 32/32, 0/32, 16/32, 0, 0 },
+            TYRANNICAL_ON = { 32, 32, 0, 0, 0/32, 16/32, 16/32, 32/32, 0, 0 },
+            FORTIFIED_ON = { 32, 32, 0, 0, 0/32, 16/32, 0/32, 16/32, 0, 0 },
+        },
+        icons = {
+            RAIDERIO_COLOR_CIRCLE = { 256, 256, 0, 0, 0/256, 64/256, 0/256, 64/256, 0, 0 },
+            RAIDERIO_WHITE_CIRCLE = { 256, 256, 0, 0, 64/256, 128/256, 0/256, 64/256, 0, 0 },
+            RAIDERIO_BLACK_CIRCLE = { 256, 256, 0, 0, 128/256, 192/256, 0/256, 64/256, 0, 0 },
+            RAIDERIO_COLOR = { 256, 256, 0, 0, 0/256, 64/256, 64/256, 128/256, 0, 0 },
+            RAIDERIO_WHITE = { 256, 256, 0, 0, 64/256, 128/256, 64/256, 128/256, 0, 0 },
+            RAIDERIO_BLACK = { 256, 256, 0, 0, 128/256, 192/256, 64/256, 128/256, 0, 0 },
+        },
+    }
+
+    -- Finalize the `ns.CUSTOM_ICONS` table
+    do
+
+        ---@class CustomIcon
+        ---@field public filePath string
+
+        ---@class CustomIconTexture
+        ---@field public width number @The requested width that we should use for the texture.
+        ---@field public height number @The requested height that we should use for the texture.
+        ---@field public texture string @The texture filepath for use with `:SetTexture(...)`
+        ---@field public texCoord table @The texture coordinates for use with `:SetTexCoord(unpack(...))`
+        ---@field public textureWidth number @The real texture width.
+        ---@field public textureHeight number @The real texture height.
+
+        local Handlers = {
+            ---@param self CustomIcon
+            ---@param left number
+            ---@param right number
+            ---@param top number
+            ---@param bottom number
+            ---@return CustomIconTexture
+            Texture = function(self, _, _, width, height, left, right, top, bottom)
+                return {
+                    width = width,
+                    height = height,
+                    texture = self.filePath,
+                    texCoord = { left, right, top, bottom },
+                    textureWidth = self[3],
+                    textureHeight = self[4],
+                }
+            end,
+            ---@param self CustomIcon
+            TextureMarkup = function(self, ...)
+                return CreateTextureMarkup(self.filePath, ...)
+            end,
+        }
+
+        local Utils = {
+            GetSize = function(size, fallback)
+                if type(fallback) ~= "number" then
+                    fallback = 0
+                end
+                if type(size) ~= "number" or size <= 0 then
+                    return fallback
+                end
+                return size
+            end,
+            GetKey = function(key, size)
+                if size > 0 then
+                    return format("%s_%d", key, size)
+                end
+                return key
+            end,
+            GetKeySize = function(self, key, size)
+                size = self.GetSize(size, 0)
+                return self.GetKey(key, size), size
+            end,
+        }
+
+        local Metatable = {
+            __metatable = false,
+            __call = function(self, key, ...)
+                local handler = Handlers[key]
+                if not handler then
+                    return
+                end
+                local rawKey, size = Utils:GetKeySize(key, ...)
+                local rawVal = rawget(self, rawKey)
+                if rawVal ~= nil then
+                    return rawVal
+                end
+                local fileWidth, fileHeight, width, height, left, right, top, bottom, xOffset, yOffset = unpack(self)
+                local realWidth = (right * fileWidth) - (left * fileWidth)
+                local realHeight = (bottom * fileHeight) - (top * fileHeight)
+                if realWidth >= size or realHeight >= size then
+                    width, height = size, size
+                else
+                    rawKey = key
+                end
+                rawVal = handler(self, fileWidth, fileHeight, width, height, left, right, top, bottom, xOffset, yOffset)
+                rawset(self, rawKey, rawVal)
+                return rawVal
+            end,
+        }
+
+        for fileName, fileIcons in pairs(ns.CUSTOM_ICONS) do
+            for _, iconInfo in pairs(fileIcons) do
+                iconInfo.filePath = "Interface\\AddOns\\RaiderIO\\icons\\" .. fileName
+                setmetatable(iconInfo, Metatable)
+            end
+        end
+
+    end
 
     ns.REGIONS_RESET_TIME = {
         us = 1135695600,
@@ -97,10 +214,10 @@ do
     }
 
     ns.KEYSTONE_AFFIX_TEXTURE = {
-        [-9] = CreateTextureMarkup("Interface\\AddOns\\RaiderIO\\icons\\affixes", 32, 32, 0, 0, 0.5, 1, 0.5, 1, 0, 0),
-        [-10] = CreateTextureMarkup("Interface\\AddOns\\RaiderIO\\icons\\affixes", 32, 32, 0, 0, 0.5, 1, 0, 0.5, 0, 0),
-        [9] = CreateTextureMarkup("Interface\\AddOns\\RaiderIO\\icons\\affixes", 32, 32, 0, 0, 0, 0.5, 0.5, 1, 0, 0),
-        [10] = CreateTextureMarkup("Interface\\AddOns\\RaiderIO\\icons\\affixes", 32, 32, 0, 0, 0, 0.5, 0, 0.5, 0, 0),
+        [-9] = ns.CUSTOM_ICONS.affixes.TYRANNICAL_OFF("TextureMarkup"),
+        [-10] = ns.CUSTOM_ICONS.affixes.FORTIFIED_OFF("TextureMarkup"),
+        [9] = ns.CUSTOM_ICONS.affixes.TYRANNICAL_ON("TextureMarkup"),
+        [10] = ns.CUSTOM_ICONS.affixes.FORTIFIED_ON("TextureMarkup"),
     }
 
     ---@class RoleIcon
@@ -1167,12 +1284,12 @@ do
         local collectionIndex = 0
         for i = 1, C_BattleNet.GetFriendNumGameAccounts(index), 1 do
             local accountInfo = C_BattleNet.GetFriendGameAccountInfo(index, i)
-            if accountInfo and accountInfo.clientProgram == BNET_CLIENT_WOW and (not accountInfo.wowProjectID or accountInfo.wowProjectID ~= WOW_PROJECT_CLASSIC) then
+            if accountInfo and accountInfo.clientProgram == BNET_CLIENT_WOW and (not accountInfo.wowProjectID or accountInfo.wowProjectID == WOW_PROJECT_MAINLINE) then
                 if accountInfo.realmName then
                     accountInfo.characterName = accountInfo.characterName .. "-" .. accountInfo.realmName:gsub("%s+", "")
                 end
                 collectionIndex = collectionIndex + 1
-                collection[collectionIndex] = {accountInfo.characterName, ns.FACTION_TO_ID[accountInfo.factionName], tonumber(accountInfo.characterLevel)}
+                collection[collectionIndex] = { accountInfo.characterName, ns.FACTION_TO_ID[accountInfo.factionName], tonumber(accountInfo.characterLevel) }
             end
         end
         if not getAllChars then
@@ -1450,6 +1567,84 @@ do
             return ""
         end
         return format("|T982414:%d:%d:0:0:64:64:0:1:0:1|t", height or 1, width)
+    end
+
+    function util:GetRaiderIOProfileUrl(...)
+        local name, realm = util:GetNameRealm(...)
+        local realmSlug = util:GetRealmSlug(realm, true)
+        return format("https://raider.io/characters/%s/%s/%s?utm_source=addon", ns.PLAYER_REGION, realmSlug, name), name, realm, realmSlug
+    end
+
+    local COPY_PROFILE_URL_POPUP = {
+        id = "RAIDERIO_COPY_URL",
+        text = "%s",
+        button2 = CLOSE,
+        hasEditBox = true,
+        hasWideEditBox = true,
+        editBoxWidth = 350,
+        preferredIndex = 3,
+        timeout = 0,
+        whileDead = true,
+        hideOnEscape = true,
+        OnShow = function(self)
+            self:SetWidth(420)
+            local editBox = _G[self:GetName() .. "WideEditBox"] or _G[self:GetName() .. "EditBox"]
+            editBox:SetText(self.text.text_arg2)
+            editBox:SetFocus()
+            editBox:HighlightText(false)
+            local button = _G[self:GetName() .. "Button2"]
+            button:ClearAllPoints()
+            button:SetWidth(200)
+            button:SetPoint("CENTER", editBox, "CENTER", 0, -30)
+        end,
+        EditBoxOnEscapePressed = function(self)
+            self:GetParent():Hide()
+        end,
+        OnHide = nil,
+        OnAccept = nil,
+        OnCancel = nil
+    }
+
+    StaticPopupDialogs[COPY_PROFILE_URL_POPUP.id] = COPY_PROFILE_URL_POPUP
+
+    function util:ShowCopyRaiderIOProfilePopup(...)
+        local url, name, realm = util:GetRaiderIOProfileUrl(...)
+        if IsModifiedClick("CHATLINK") then
+            local editBox = ChatFrame_OpenChat(url, DEFAULT_CHAT_FRAME)
+            editBox:HighlightText()
+        else
+            StaticPopup_Show(COPY_PROFILE_URL_POPUP.id, format("%s (%s)", name, realm), url)
+        end
+    end
+
+    ---@param frame Frame
+    ---@param icon CustomIcon
+    function util:CreateTextureFromIcon(frame, icon)
+        local info = icon("Texture") ---@type CustomIconTexture
+        local texture = frame:CreateTexture()
+        texture:SetTexture(info.texture)
+        texture:SetTexCoord(info.texCoord[1], info.texCoord[2], info.texCoord[3], info.texCoord[4])
+        return texture, info
+    end
+
+    ---@param button Button
+    ---@param icon CustomIcon
+    function util:SetButtonTextureFromIcon(button, icon)
+        local info = icon("Texture") ---@type CustomIconTexture
+        if not button.normalTexture then
+            button.normalTexture = util:CreateTextureFromIcon(button, icon)
+        end
+        if not button.pushedTexture then
+            button.pushedTexture = util:CreateTextureFromIcon(button, icon)
+        end
+        if not button.disabledTexture then
+            button.disabledTexture = util:CreateTextureFromIcon(button, icon)
+            button.disabledTexture:SetDesaturation(true)
+        end
+        button:SetNormalTexture(button.normalTexture)
+        button:SetPushedTexture(button.pushedTexture)
+        button:SetDisabledTexture(button.disabledTexture)
+        return info
     end
 
 end
@@ -1773,199 +1968,6 @@ do
             return
         end
         StaticPopup_Hide(exportPopup.id)
-    end
-
-end
-
--- dropdown.lua
--- dependencies: module, config, util + LibDropDownExtension
-do
-
-    ---@class DropDownModule : Module
-    local dropdown = ns:NewModule("DropDown") ---@type DropDownModule
-    local config = ns:GetModule("Config") ---@type ConfigModule
-    local util = ns:GetModule("Util") ---@type UtilModule
-
-    local copyUrlPopup = {
-        id = "RAIDERIO_COPY_URL",
-        text = "%s",
-        button2 = CLOSE,
-        hasEditBox = true,
-        hasWideEditBox = true,
-        editBoxWidth = 350,
-        preferredIndex = 3,
-        timeout = 0,
-        whileDead = true,
-        hideOnEscape = true,
-        OnShow = function(self)
-            self:SetWidth(420)
-            local editBox = _G[self:GetName() .. "WideEditBox"] or _G[self:GetName() .. "EditBox"]
-            editBox:SetText(self.text.text_arg2)
-            editBox:SetFocus()
-            editBox:HighlightText(false)
-            local button = _G[self:GetName() .. "Button2"]
-            button:ClearAllPoints()
-            button:SetWidth(200)
-            button:SetPoint("CENTER", editBox, "CENTER", 0, -30)
-        end,
-        EditBoxOnEscapePressed = function(self)
-            self:GetParent():Hide()
-        end,
-        OnHide = nil,
-        OnAccept = nil,
-        OnCancel = nil
-    }
-
-    local validTypes = {
-        ARENAENEMY = true,
-        BN_FRIEND = true,
-        CHAT_ROSTER = true,
-        COMMUNITIES_GUILD_MEMBER = true,
-        COMMUNITIES_WOW_MEMBER = true,
-        FOCUS = true,
-        FRIEND = true,
-        GUILD = true,
-        GUILD_OFFLINE = true,
-        PARTY = true,
-        PLAYER = true,
-        RAID = true,
-        RAID_PLAYER = true,
-        SELF = true,
-        TARGET = true,
-        WORLD_STATE_SCORE = true
-    }
-
-    -- if the dropdown is a valid type of dropdown then we mark it as acceptable to check for a unit on it
-    local function IsValidDropDown(bdropdown)
-        return (bdropdown == LFGListFrameDropDown and config:Get("enableLFGDropdown")) or (type(bdropdown.which) == "string" and validTypes[bdropdown.which])
-    end
-
-    -- get name and realm from dropdown or nil if it's not applicable
-    local function GetNameRealmForDropDown(bdropdown)
-        local unit = bdropdown.unit
-        local bnetIDAccount = bdropdown.bnetIDAccount
-        local menuList = bdropdown.menuList
-        local quickJoinMember = bdropdown.quickJoinMember
-        local quickJoinButton = bdropdown.quickJoinButton
-        local clubMemberInfo = bdropdown.clubMemberInfo
-        local tempName, tempRealm = bdropdown.name, bdropdown.server
-        local name, realm, level
-        -- unit
-        if not name and UnitExists(unit) then
-            if UnitIsPlayer(unit) then
-                name, realm = util:GetNameRealm(unit)
-                level = UnitLevel(unit)
-            end
-            -- if it's not a player it's pointless to check further
-            return name, realm, level
-        end
-        -- bnet friend
-        if not name and bnetIDAccount then
-            local fullName, _, charLevel = util:GetNameRealmForBNetFriend(bnetIDAccount)
-            if fullName then
-                name, realm = util:GetNameRealm(fullName)
-                level = charLevel
-            end
-            -- if it's a bnet friend we assume if eligible the name and realm is set, otherwise we assume it's not eligible for a url
-            return name, realm, level
-        end
-        -- lfd
-        if not name and menuList then
-            for i = 1, #menuList do
-                local whisperButton = menuList[i]
-                if whisperButton and (whisperButton.text == _G.WHISPER_LEADER or whisperButton.text == _G.WHISPER) then
-                    name, realm = util:GetNameRealm(whisperButton.arg1)
-                    break
-                end
-            end
-        end
-        -- quick join
-        if not name and (quickJoinMember or quickJoinButton) then
-            local memberInfo = quickJoinMember or quickJoinButton.Members[1]
-            if memberInfo.playerLink then
-                name, realm, level = util:GetNameRealmFromPlayerLink(memberInfo.playerLink)
-            end
-        end
-        -- dropdown by name and realm
-        if not name and tempName then
-            name, realm = util:GetNameRealm(tempName, tempRealm)
-            if clubMemberInfo and clubMemberInfo.level and (clubMemberInfo.clubType == Enum.ClubType.Guild or clubMemberInfo.clubType == Enum.ClubType.Character) then
-                level = clubMemberInfo.level
-            end
-        end
-        -- if we don't got both we return nothing
-        if not name or not realm then
-            return
-        end
-        return name, realm, level
-    end
-
-    -- converts the name and realm into a copyable link
-    local function ShowCopyDialog(name, realm)
-        local realmSlug = util:GetRealmSlug(realm, true)
-        local url = format("https://raider.io/characters/%s/%s/%s?utm_source=addon", ns.PLAYER_REGION, realmSlug, name)
-        if IsModifiedClick("CHATLINK") then
-            local editBox = ChatFrame_OpenChat(url, DEFAULT_CHAT_FRAME)
-            editBox:HighlightText()
-        else
-            StaticPopup_Show(copyUrlPopup.id, format("%s (%s)", name, realm), url)
-        end
-    end
-
-    -- tracks the currently active dropdown name and realm for lookup
-    local selectedName, selectedRealm, selectedLevel
-
-    ---@type CustomDropDownOption[]
-    local unitOptions
-
-    ---@param options CustomDropDownOption[]
-    local function OnToggle(bdropdown, event, options, level, data)
-        if event == "OnShow" then
-            if not config:Get("showDropDownCopyURL") then
-                return
-            end
-            if not IsValidDropDown(bdropdown) then
-                return
-            end
-            selectedName, selectedRealm, selectedLevel = GetNameRealmForDropDown(bdropdown)
-            if not selectedName or not util:IsMaxLevel(selectedLevel, true) then
-                return
-            end
-            if not options[1] then
-                for i = 1, #unitOptions do
-                    options[i] = unitOptions[i]
-                end
-                return true
-            end
-        elseif event == "OnHide" then
-            if options[1] then
-                for i = #options, 1, -1 do
-                    options[i] = nil
-                end
-                return true
-            end
-        end
-    end
-
-    ---@type LibDropDownExtension
-    local LibDropDownExtension = LibStub and LibStub:GetLibrary("LibDropDownExtension-1.0", true)
-
-    function dropdown:CanLoad()
-        return LibDropDownExtension
-    end
-
-    function dropdown:OnLoad()
-        self:Enable()
-        unitOptions = {
-            {
-                text = L.COPY_RAIDERIO_PROFILE_URL,
-                func = function()
-                    ShowCopyDialog(selectedName, selectedRealm)
-                end
-            }
-        }
-        LibDropDownExtension:RegisterEvent("OnShow OnHide", OnToggle, 1, dropdown)
-        StaticPopupDialogs[copyUrlPopup.id] = copyUrlPopup
     end
 
 end
@@ -4222,6 +4224,10 @@ do
         if onEnter == _G.LFGListSearchEntry_OnEnter or (frame.resultID and parent == _G.LFGListSearchPanelScrollFrameScrollChild) then
             return false
         end
+        -- QuickJoinButtonMixin.OnEnter > .entry.ApplyToTooltip(GameTooltip) > LFGListUtil_SetSearchEntryTooltip > C_LFGList.GetPlaystyleString
+        if onEnter == _G.QuickJoinButtonMixin.OnEnter or (frame.entry and parent == _G.QuickJoinScrollFrameScrollChild) then
+            return false
+        end
         return true
     end
 
@@ -4760,8 +4766,14 @@ do
     ---@return SortedDungeon, DungeonDifference
     local function CompareDungeonUpgrades(run1, diff1, run2, diff2)
         if not run2 then
+            if not run1 or not run1.level then
+                return
+            end
             return run1, diff1
         elseif not run1 then
+            if not run2 or not run2.level then
+                return
+            end
             return run2, diff2
         end
         local side = CompareLevelAndFractionalTime(run1.level, run2.level, run1.fractionalTime, run2.fractionalTime)
@@ -4811,7 +4823,7 @@ do
         local cacheUpgrade = GetDungeonUpgrade(cacheRun, currentRun)
         local bestRun, bestUpgrade = CompareDungeonUpgrades(dbRun, dbRunUpgrade, cacheRun, cacheUpgrade)
         local bestIsCurrentRun
-        if not bestRun then
+        if not bestRun or not bestRun.level then
             bestIsCurrentRun = true
             bestRun = CopyTable(currentRun)
             bestUpgrade = {}
@@ -5066,7 +5078,7 @@ do
         end
         local fractionalTime = bannerData.time/timeLimit
         local members = GetGroupMembers()
-        local currentRun = GetCurrentRun(dungeon, bannerData.level, fractionalTime, bannerData.keystoneUpgradeLevels or 0)
+        local currentRun = GetCurrentRun(dungeon, bannerData.level, fractionalTime, bannerData.keystoneUpgradeLevels)
         local upgrades, hasAnyUpgrades = GetDungeonUpgrades(members, currentRun)
         if not frameHooks[frame] then
             frameHooks[frame] = true
@@ -5091,7 +5103,7 @@ do
         hooksecurefunc(frame, "PlayBanner", OnChallengeModeCompleteBannerPlay)
         local mapID, level, time, onTime, keystoneUpgradeLevels, practiceRun = C_ChallengeMode.GetCompletionInfo()
         if not practiceRun then
-            local bannerData = { mapID = mapID, level = level, time = time, onTime = onTime, keystoneUpgradeLevels = keystoneUpgradeLevels } ---@type ChallengeModeCompleteBannerData
+            local bannerData = { mapID = mapID, level = level, time = time, onTime = onTime, keystoneUpgradeLevels = keystoneUpgradeLevels or 0 } ---@type ChallengeModeCompleteBannerData
             OnChallengeModeCompleteBannerPlay(frame, bannerData)
         end
     end
@@ -5499,6 +5511,7 @@ do
     local hooked = {}
     local OnEnter
     local OnLeave
+    local cleanupPending
 
     local function SetSearchEntry(tooltip, resultID, autoAcceptOption)
         if not config:Get("enableLFGTooltips") then
@@ -5517,8 +5530,21 @@ do
         currentResult.activityID = entry.activityID
         currentResult.leaderName = entry.leaderName
         currentResult.keystoneLevel = util:GetKeystoneLevelFromText(entry.title) or util:GetKeystoneLevelFromText(entry.description) or 0
-        render:ShowProfile(tooltip, currentResult.leaderName, ns.PLAYER_FACTION, render.Preset.Unit(render.Flags.MOD_STICKY), currentResult)
-        profile:ShowProfile(tooltip, currentResult.leaderName, ns.PLAYER_FACTION, currentResult)
+        local success1 = render:ShowProfile(tooltip, currentResult.leaderName, ns.PLAYER_FACTION, render.Preset.Unit(render.Flags.MOD_STICKY), currentResult)
+        local success2 = profile:ShowProfile(tooltip, currentResult.leaderName, ns.PLAYER_FACTION, currentResult)
+        if success1 or success2 then
+            if not hooked[tooltip] then
+                hooked[tooltip] = true
+                tooltip:HookScript("OnHide", function()
+                    if not cleanupPending then
+                        return
+                    end
+                    cleanupPending = nil
+                    OnLeave()
+                end)
+            end
+            cleanupPending = true
+        end
     end
 
     local function HookApplicantButtons(buttons)
@@ -5562,16 +5588,21 @@ do
             HookApplicantButtons(self.Members)
         elseif self.memberIdx then
             local shown, fullName = ShowApplicantProfile(self, self:GetParent().applicantID, self.memberIdx)
+            local success
             if shown then
-                profile:ShowProfile(GameTooltip, fullName, ns.PLAYER_FACTION, currentResult)
+                success = profile:ShowProfile(GameTooltip, fullName, ns.PLAYER_FACTION, currentResult)
             else
-                profile:ShowProfile(false, "player", ns.PLAYER_FACTION, currentResult)
+                success = profile:ShowProfile(false, "player", ns.PLAYER_FACTION, currentResult)
+            end
+            if not success then
+                profile:HideProfile()
             end
         end
     end
 
     function OnLeave(self)
         GameTooltip:Hide()
+        profile:HideProfile()
         profile:ShowProfile(false, "player", ns.PLAYER_FACTION)
     end
 
@@ -6278,12 +6309,13 @@ do
 end
 
 -- search.lua
--- dependencies: module, config, provider, render, profile
+-- dependencies: module, config, util, provider, render, profile
 do
 
     ---@class SearchModule : Module
     local search = ns:NewModule("Search") ---@type SearchModule
     local config = ns:GetModule("Config") ---@type ConfigModule
+    local util = ns:GetModule("Util") ---@type UtilModule
     local provider = ns:GetModule("Provider") ---@type ProviderModule
     local render = ns:GetModule("Render") ---@type RenderModule
     local profile = ns:GetModule("Profile") ---@type ProfileModule
@@ -6499,6 +6531,15 @@ do
         f.texFocusMid:SetSize(0, 32)
         f.texFocusMid:SetPoint("TOPLEFT", f.texFocusLeft, "TOPRIGHT", 0, 0)
         f.texFocusMid:SetPoint("TOPRIGHT", f.texFocusRight, "TOPLEFT", 0, 0)
+        -- placeholder label
+        f.placeholder = f:CreateFontString(nil, "ARTWORK", "GameTooltipText")
+        f.placeholder:SetPoint("LEFT", f.texLeft, "LEFT", 16, 0)
+        f.placeholder:SetTextColor(0.5, 0.5, 0.5)
+        -- make placeholder invisible once field is populated (and highlight the label when in focus for clarity)
+        local function updateAlpha(self) self.placeholder:SetAlpha(self:GetText():len() > 0 and 0 or 1) end
+        f:HookScript("OnTextChanged", updateAlpha)
+        f:HookScript("OnEditFocusLost", function(self) self.placeholder:SetTextColor(0.5, 0.5, 0.5) updateAlpha(self) end)
+        f:HookScript("OnEditFocusGained", function(self) self.placeholder:SetTextColor(0.8, 0.8, 0.8) updateAlpha(self) end)
         return f
     end
 
@@ -6513,6 +6554,10 @@ do
         local realmBox = CreateEditBox()
         local nameBox = CreateEditBox()
         local t = CreateTooltip()
+
+        regionBox.placeholder:SetText(L.SEARCH_REGION_LABEL)
+        realmBox.placeholder:SetText(L.SEARCH_REALM_LABEL)
+        nameBox.placeholder:SetText(L.SEARCH_NAME_LABEL)
 
         regionBox.autoCompleteFunction = GetRegions
         regionBox:SetText(ns.PLAYER_REGION)
@@ -6543,6 +6588,18 @@ do
             Frame:SetScript("OnDragStop", function() Frame:StopMovingOrSizing() end)
             Frame:SetScript("OnShow", function() search:ShowProfile(regionBox:GetText(), nil, realmBox:GetText(), nameBox:GetText()) end)
             Frame:SetScript("OnHide", function() search:ShowProfile() end)
+            Frame.close = CreateFrame("Button", nil, Frame, "UIPanelCloseButtonNoScripts")
+            Frame.close:SetPoint("TOPRIGHT", -5, -3)
+            Frame.close:SetScript("OnClick", function() search:Hide() end)
+            Frame.copyUrl = CreateFrame("Button", nil, Frame, "UIPanelCloseButtonNoScripts")
+            Frame.copyUrl:SetScale(0.67)
+            util:SetButtonTextureFromIcon(Frame.copyUrl, ns.CUSTOM_ICONS.icons.RAIDERIO_COLOR_CIRCLE)
+            Frame.copyUrl:SetPoint("RIGHT", Frame.close, "LEFT", -5, 0)
+            Frame.copyUrl:SetScript("OnClick", function() util:ShowCopyRaiderIOProfilePopup(nameBox:GetText(), realmBox:GetText()) end)
+            Frame.copyUrl:SetScript("OnEnter", function(self) GameTooltip:SetOwner(self, "ANCHOR_RIGHT") GameTooltip:AddLine(L.COPY_RAIDERIO_PROFILE_URL) GameTooltip:Show() end)
+            Frame.copyUrl:SetScript("OnLeave", GameTooltip_Hide)
+            Frame.copyUrl:HookScript("OnEnable", function(self) self:GetDisabledTexture():SetDesaturated(false) end)
+            Frame.copyUrl:HookScript("OnDisable", function(self) self:GetDisabledTexture():SetDesaturated(true) end)
         end
 
         local activeBoxes = {}
@@ -6570,12 +6627,13 @@ do
                 return
             end
             self:ClearFocus()
+            local backwards = IsShiftKeyDown()
             for i = 1, #activeBoxes do
                 local box = activeBoxes[i]
                 if box == self then
-                    local nextBox = activeBoxes[i + 1]
+                    local nextBox = activeBoxes[i + (backwards and -1 or 1)]
                     if not nextBox then
-                        nextBox = activeBoxes[1]
+                        nextBox = activeBoxes[backwards and #activeBoxes or 1]
                     end
                     nextBox:SetFocus()
                     nextBox:HighlightText()
@@ -6611,7 +6669,18 @@ do
             self:ClearFocus()
         end
 
+        local function AreActiveBoxesPopulated()
+            for i = 1, #activeBoxes do
+                local box = activeBoxes[i]
+                if box:GetText():len() < 1 then
+                    return false
+                end
+            end
+            return true
+        end
+
         local function OnTextChanged(self, userInput)
+            Frame.copyUrl:SetEnabled(AreActiveBoxesPopulated())
             if not userInput then return end
             local text = self:GetText()
             if text:len() > 0 then
@@ -6681,6 +6750,7 @@ do
         else
             profile:HideProfile()
         end
+        return shown
     end
 
     function search:Search(query)
@@ -6733,6 +6803,172 @@ do
             return
         end
         searchFrame:Hide()
+    end
+
+    function search:IsShown()
+        return searchFrame:IsShown()
+    end
+
+end
+
+-- dropdown.lua
+-- dependencies: module, config, util + LibDropDownExtension, search
+do
+
+    ---@class DropDownModule : Module
+    local dropdown = ns:NewModule("DropDown") ---@type DropDownModule
+    local config = ns:GetModule("Config") ---@type ConfigModule
+    local util = ns:GetModule("Util") ---@type UtilModule
+    local search = ns:GetModule("Search") ---@type SearchModule
+
+    local validTypes = {
+        ARENAENEMY = true,
+        BN_FRIEND = true,
+        CHAT_ROSTER = true,
+        COMMUNITIES_GUILD_MEMBER = true,
+        COMMUNITIES_WOW_MEMBER = true,
+        FOCUS = true,
+        FRIEND = true,
+        GUILD = true,
+        GUILD_OFFLINE = true,
+        PARTY = true,
+        PLAYER = true,
+        RAID = true,
+        RAID_PLAYER = true,
+        SELF = true,
+        TARGET = true,
+        WORLD_STATE_SCORE = true
+    }
+
+    -- if the dropdown is a valid type of dropdown then we mark it as acceptable to check for a unit on it
+    local function IsValidDropDown(bdropdown)
+        return (bdropdown == LFGListFrameDropDown and config:Get("enableLFGDropdown")) or (type(bdropdown.which) == "string" and validTypes[bdropdown.which])
+    end
+
+    -- get name and realm from dropdown or nil if it's not applicable
+    local function GetNameRealmForDropDown(bdropdown)
+        local unit = bdropdown.unit
+        local bnetIDAccount = bdropdown.bnetIDAccount
+        local menuList = bdropdown.menuList
+        local quickJoinMember = bdropdown.quickJoinMember
+        local quickJoinButton = bdropdown.quickJoinButton
+        local clubMemberInfo = bdropdown.clubMemberInfo
+        local tempName, tempRealm = bdropdown.name, bdropdown.server
+        local name, realm, level
+        -- unit
+        if not name and UnitExists(unit) then
+            if UnitIsPlayer(unit) then
+                name, realm = util:GetNameRealm(unit)
+                level = UnitLevel(unit)
+            end
+            -- if it's not a player it's pointless to check further
+            return name, realm, level
+        end
+        -- bnet friend
+        if not name and bnetIDAccount then
+            local fullName, _, charLevel = util:GetNameRealmForBNetFriend(bnetIDAccount)
+            if fullName then
+                name, realm = util:GetNameRealm(fullName)
+                level = charLevel
+            end
+            -- if it's a bnet friend we assume if eligible the name and realm is set, otherwise we assume it's not eligible for a url
+            return name, realm, level
+        end
+        -- lfd
+        if not name and menuList then
+            for i = 1, #menuList do
+                local whisperButton = menuList[i]
+                if whisperButton and (whisperButton.text == _G.WHISPER_LEADER or whisperButton.text == _G.WHISPER) then
+                    name, realm = util:GetNameRealm(whisperButton.arg1)
+                    break
+                end
+            end
+        end
+        -- quick join
+        if not name and (quickJoinMember or quickJoinButton) then
+            local memberInfo = quickJoinMember or quickJoinButton.Members[1]
+            if memberInfo.playerLink then
+                name, realm, level = util:GetNameRealmFromPlayerLink(memberInfo.playerLink)
+            end
+        end
+        -- dropdown by name and realm
+        if not name and tempName then
+            name, realm = util:GetNameRealm(tempName, tempRealm)
+            if clubMemberInfo and clubMemberInfo.level and (clubMemberInfo.clubType == Enum.ClubType.Guild or clubMemberInfo.clubType == Enum.ClubType.Character) then
+                level = clubMemberInfo.level
+            end
+        end
+        -- if we don't got both we return nothing
+        if not name or not realm then
+            return
+        end
+        return name, realm, level
+    end
+
+    -- tracks the currently active dropdown name and realm for lookup
+    local selectedName, selectedRealm, selectedLevel
+
+    ---@type CustomDropDownOption[]
+    local unitOptions
+
+    ---@param options CustomDropDownOption[]
+    local function OnToggle(bdropdown, event, options, level, data)
+        if event == "OnShow" then
+            if not config:Get("showDropDownCopyURL") then
+                return
+            end
+            if not IsValidDropDown(bdropdown) then
+                return
+            end
+            selectedName, selectedRealm, selectedLevel = GetNameRealmForDropDown(bdropdown)
+            if not selectedName or not util:IsMaxLevel(selectedLevel, true) then
+                return
+            end
+            if not options[1] then
+                for i = 1, #unitOptions do
+                    options[i] = unitOptions[i]
+                end
+                return true
+            end
+        elseif event == "OnHide" then
+            if options[1] then
+                for i = #options, 1, -1 do
+                    options[i] = nil
+                end
+                return true
+            end
+        end
+    end
+
+    ---@type LibDropDownExtension
+    local LibDropDownExtension = LibStub and LibStub:GetLibrary("LibDropDownExtension-1.0", true)
+
+    function dropdown:CanLoad()
+        return LibDropDownExtension
+    end
+
+    function dropdown:OnLoad()
+        self:Enable()
+        unitOptions = {
+            {
+                text = L.COPY_RAIDERIO_PROFILE_URL,
+                func = function()
+                    if IsControlKeyDown() or IsAltKeyDown() then
+                        local shown = search:IsShown()
+                        if not shown then
+                            search:Show()
+                        end
+                        if search:Search(format("%s %s", selectedName, selectedRealm)) then
+                            return
+                        elseif not shown then
+                            search:Hide()
+                        end
+                    end
+                    util:ShowCopyRaiderIOProfilePopup(selectedName, selectedRealm)
+                end
+            }
+        }
+        LibDropDownExtension:RegisterEvent("OnShow OnHide", OnToggle, 1, dropdown)
     end
 
 end
@@ -8176,12 +8412,15 @@ do
         end
     end
 
-    local autoLogDifficultyIDs = {
+    local alwaysLogDifficultyIDs = {
         -- scenario
         [167] = true, -- Torghast
         -- party
         [23] = true, -- Mythic
         [8] = true, -- Mythic Keystone
+    }
+
+    local canLogDifficultyIDs = {
         -- raid
         [14] = true, -- Normal
         [15] = true, -- Heroic
@@ -8195,7 +8434,7 @@ do
         if not difficultyID or not instanceMapID then
             return
         end
-        local isActive = not not (instanceMapID >= autoLogFromMapID and autoLogDifficultyIDs[difficultyID])
+        local isActive = not not (alwaysLogDifficultyIDs[difficultyID] or (instanceMapID >= autoLogFromMapID and canLogDifficultyIDs[difficultyID]))
         if isActive == lastActive then
             return
         end

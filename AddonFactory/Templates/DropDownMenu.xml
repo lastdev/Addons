@@ -194,12 +194,12 @@
 	
 	<Button name="AddonFactory_DropDownListTemplate" hidden="true" frameStrata="DIALOG" enableMouse="true" virtual="true">
 		<Frames>
-			<Frame parentKey="Backdrop" setAllPoints="true" inherits="BackdropTemplate">
+			<Frame parentKey="Backdrop" setAllPoints="true" inherits="TooltipBackdropTemplate">
 				<KeyValues>
 					<KeyValue key="backdropInfo" value="BACKDROP_DIALOG_32_32" type="global"/>
 				</KeyValues>
 			</Frame>
-			<Frame parentKey="MenuBackdrop" setAllPoints="true" inherits="BackdropTemplate">
+			<Frame parentKey="MenuBackdrop" setAllPoints="true" inherits="TooltipBackdropTemplate">
 				<KeyValues>
 					<KeyValue key="backdropInfo" value="BACKDROP_TOOLTIP_16_16_5555" type="global"/>
 				</KeyValues>

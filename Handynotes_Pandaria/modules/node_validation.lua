@@ -1,14 +1,28 @@
 local _, shared = ...;
 
+local GetAchievementCriteriaInfo = _G.GetAchievementCriteriaInfo;
+local GetAchievementInfo = _G.GetAchievementInfo;
+local GetAchievementNumCriteria = _G.GetAchievementNumCriteria;
+local GetItemIcon = _G.GetItemIcon;
+local GetItemInfo = _G.GetItemInfo;
+local GetMountInfoByID = _G.C_MountJournal.GetMountInfoByID;
+local IsItemDataCachedByID = _G.C_Item.IsItemDataCachedByID;
 local IsQuestFlaggedCompleted = _G.C_QuestLog.IsQuestFlaggedCompleted;
+local Item = _G.Item;
+local PlayerHasToy = _G.PlayerHasToy;
+local wipe = _G.wipe;
 
 local addon = shared.addon;
 local rareData = shared.rareData;
 local treasureInfo = shared.treasureData;
 local nodes = shared.nodeData;
+local saved = shared.saved;
 local playerFaction;
-local dataCache;
-local settings = {};
+local dataCache = {
+  rares = {},
+  treasures = {},
+  nodes = {},
+};
 
 local nodeHider = addon.import('nodeHider');
 
@@ -30,12 +44,8 @@ local COLOR_MAP = {
   yellow = '|cFFFFFF00',
 };
 
-addon.listen('SETTINGS_LOADED', function (_settings)
-  settings = _settings;
-end);
-
 addon.on('PLAYER_LOGIN', function ()
-  playerFaction = UnitFactionGroup('player');
+  playerFaction = _G.UnitFactionGroup('player');
 end);
 
 local function setTextColor (text, color)
@@ -54,7 +64,7 @@ local function queryItem (itemId, info)
     info.name = data[1];
     info.icon = data[10];
 
-    addon.yell('DATA_READY', info);
+    addon.yell('DATA_READY', info, itemId);
   end);
 end
 
@@ -139,14 +149,12 @@ local function getToyInfo (rareData)
     };
 
     -- data is not cached yet
-    if (toyName == nil) then
-      toyName = 'waiting for data...';
-
-      queryItem(toy);
-
-      info.icon = GetItemIcon(toy) or ICON_MAP.skullGreen;
-    else
+    if (IsItemDataCachedByID(toy)) then
       info.icon = toyInfo[10] or ICON_MAP.skullGreen;
+    else
+      toyName = 'waiting for data...';
+      queryItem(toy, info);
+      info.icon = GetItemIcon(toy) or ICON_MAP.skullGreen;
     end
 
     info.name = toyName;
@@ -179,7 +187,7 @@ local function getMountInfo (rareData)
 
   for x = 1, #mountList, 1 do
     local mountId = mountList[x];
-    local mountInfo = {C_MountJournal.GetMountInfoByID(mountId)};
+    local mountInfo = {GetMountInfoByID(mountId)};
     local mountName = mountInfo[1];
     local info = {
       icon = mountInfo[3] or ICON_MAP.skullOrange,
@@ -268,6 +276,7 @@ end
 
 local function interpreteNodeInfo (nodeInfo)
   local rareInfo = nodeInfo.rareInfo;
+  local settings = saved.settings;
 
   if (settings.show_rares == true and rareInfo ~= nil) then
     if (rareInfo.questCompleted == true) then
@@ -370,18 +379,12 @@ local function getNodeInfo (zone, coords)
 end
 
 local function flush ()
-  dataCache = {
-    rares = {},
-    treasures = {},
-    nodes = {},
-  };
+  wipe(dataCache.rares);
+  wipe(dataCache.treasures);
+  wipe(dataCache.nodes);
 end
 
-flush();
-
-local module = {
+addon.export('infoProvider', {
   getNodeInfo = getNodeInfo,
   flush = flush,
-};
-
-addon.export('infoProvider', module);
+});

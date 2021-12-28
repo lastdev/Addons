@@ -1,3 +1,21 @@
+**r713:**
+
+Additions:
+> Attempts for Reins of the Infinite Timereaver should now also accumulate in Legion Timewalking dungeons
+<br>REVERTED: Added tracking for Illidari Doomhawk and Doomwalker Trophy Stand (17th anniversary)
+<br>Added tracking for the convenant-specific toys added in patch 9.1.5 (obtained from Callings)
+
+Fixes:
+> Fixed an error in the spell detection that caused attempts for custom items using Pick Pocket to not be detected
+
+Developer Notes:
+> Blizzard hotfixed the anniversary drops to be guaranteed. As such they've been removed from Rarity again.
+
+Contributors (in alphabetical order):
+> Tommy Godejord
+
+-----
+
 **r712:**
 
 Additions:
@@ -68,26 +86,6 @@ Fixes:
 
 Developer Notes:
 > There are a number of collectibles we don't currently have sufficient data on. These will be added as soon™ as possible, but it might still take a while.
-
-Contributors (in alphabetical order):
-> Tommy Godejord
-
------
-
-**r708:**
-
-Additions:
-> Added tracking for Gilded Water (pet)
-<br>Added tracking for Outrider's Bridle Chain (toy)
-<br>Added a holiday-style reminder for when Dunegorger Kraulok is available (experimental)
-
-Changes:
-> The /rarity verify slash command used for validating the item database is now available as /rarity validate
-
-Fixes:
-> Items obtainable from the Black Market auction house are now flagged as such
-<br>All items should now be assigned a zone, so that filtering by the current zone no longer incorrectly excludes them
-<br>Tracking for the Ascended Skymane mount should now be working on non-English client locales
 
 Contributors (in alphabetical order):
 > Tommy Godejord

@@ -1,21 +1,43 @@
-tag face63a8c7bc1adb3b7cfaaa61e8442bbae7bbd7 9.1.15
-Author:	Mike Battersby <mib@post.com>
-Date:	Tue Sep 28 09:26:46 2021 +1000
+tag 82bb01d5dac20d3df0483810dec29626b97386fd 9.1.22
+Author:	Mike "Xodiv" Battersby <mib@post.com>
+Date:	Wed Dec 22 22:35:50 2021 +1100
 
-LiteMount 9.1.15
+LiteMount 9.1.22
 
-- Remember again that the chauffeurs are slow
-- Add NONE to group filter menu for mounts with no groups
+ - Some preparation for WoW 9.2
+ - Fix error with Use action and equipment slots
+ - Prioritize mounting to save yourself from falling over other actions
 
-commit 7ab5a2b55e4cc900f328ee41abe7fed1f4dd43bd
+commit a48189839f0cc1b1dfd1bdedd7faa5a315167294
+Author: Mike "Xodiv" Battersby <mib@post.com>
+Date:   Wed Dec 8 20:48:18 2021 +1100
+
+    Fix bug with Use action bailing out after first slot
+
+commit 5d06613c326f1d5da7e7b1501b4812ce226f2960
 Author: Mike Battersby <mib@post.com>
-Date:   Mon Sep 27 11:54:09 2021 +1000
+Date:   Tue Dec 7 15:44:34 2021 +1100
 
-    Fix some leftover WALK flag use
+    More falling protection tweaks #78
 
-commit 6f7ec846112cc16041f9235acb5a8dad0896fbf3
+commit 92e52249fa095d3d6241ff8470508aa2d7b6d815
+Author: Mike "Xodiv" Battersby <mib@post.com>
+Date:   Mon Dec 6 22:08:49 2021 +1100
+
+    Try mounting before the falling protection
+    
+    (In the default action list)
+
+commit f12311f7e71e953c7ba6b3db573ff2d37e005a56
+Author: Mike "Xodiv" Battersby <mib@post.com>
+Date:   Sat Dec 4 17:34:40 2021 +1100
+
+    Add new mount types 407 and 408 from 9.2.
+    Add families for first cut of 9.2 PTR mounts
+
+commit 7928577989db876d286e60e0cf2ff18036a27a6a
 Author: Mike Battersby <mib@post.com>
-Date:   Mon Sep 27 11:34:15 2021 +1000
+Date:   Wed Dec 1 14:22:57 2021 +1100
 
-    Add NONE selection to groups filter
+    Add SV from issue #81
 

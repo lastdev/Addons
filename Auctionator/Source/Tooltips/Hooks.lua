@@ -213,9 +213,7 @@ hooksecurefunc("InboxFrameItem_OnEnter",
 
 -- This occurs when clicking on an item link (i.e. in chat)
 hooksecurefunc(ItemRefTooltip, "SetHyperlink",
-  function(tip, itemstring)
-    local _, itemLink = GetItemInfo(itemstring);
-
+  function(tip, itemLink)
     Auctionator.Tooltip.ShowTipWithPricing(tip, itemLink, 1)
   end
 );
@@ -244,6 +242,15 @@ hooksecurefunc (GameTooltip, "SetTradeTargetItem",
   end
 );
 
+if GameTooltip.SetAuctionItem then
+  hooksecurefunc (GameTooltip, "SetAuctionItem", function(tip, viewType, index)
+    local itemCount = select(3, GetAuctionItemInfo(viewType, index))
+    local itemLink = GetAuctionItemLink(viewType, index)
+
+    Auctionator.Tooltip.ShowTipWithPricing(tip, itemLink, itemCount)
+  end)
+end
+
 -- Occurs when mousing over items in the Refer-a-Friend frame, and a few other places
 hooksecurefunc (GameTooltip, "SetItemByID",
   function (tip, itemID)
@@ -259,17 +266,10 @@ hooksecurefunc (GameTooltip, "SetItemByID",
 
 -- Occurs mainly with addons (Blizzard and otherwise)
 hooksecurefunc (GameTooltip, "SetHyperlink",
-  function (tip, itemID)
-    if not itemID then
-      return
-    end
-
-    local itemLink = select(2, GetItemInfo(itemID))
-
+  function (tip, itemLink)
     Auctionator.Tooltip.ShowTipWithPricing(tip, itemLink, 1)
   end
 );
-
 function Auctionator.Tooltip.MainlineLateHooks()
   -- As AuctionHouseUtil doesn't exist until the AH is opened this cannot be
   -- called before the AH opens.
@@ -289,10 +289,10 @@ function Auctionator.Tooltip.MainlineLateHooks()
 
         if #itemInfo ~= 0 then
           local disenchantStatus = Auctionator.Enchant.DisenchantStatus(itemInfo)
-          local disenchantPrice = Auctionator.Enchant.GetDisenchantAuctionPrice(itemInfo[2])
+          local disenchantPrice = Auctionator.Enchant.GetDisenchantAuctionPrice(itemInfo[2], itemInfo)
 
           if disenchantStatus ~= nil then
-            Auctionator.Tooltip.AddDisenchantTip(GameTooltip, disenchantPrice, disenchantStatus)
+            Auctionator.Tooltip.AddDisenchantTip(GameTooltip, disenchantPrice, "", disenchantStatus)
             GameTooltip:Show()
           end
         end

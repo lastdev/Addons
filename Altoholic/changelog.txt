@@ -14,6 +14,11 @@ How to support Altoholic's development :
 
 If you like the addon, consider supporting it, this has been the long term effort and commitment of a single person. #ArmyOfOne
 
+9.1.008 (07/11/2021)
+
+- Fixed the tooltip backdrop issue introduced in 9.1.5.
+(for reference: changed 2x BackdropTemplate to TooltipBackdropTemplate in AddonFactory\Templates\DropDownMenu.xml)
+- Updated DataStore and some modules to work on all clients. Only Characters, Mails and Spells are done at this point, the others will follow.
 
 9.1.007 (26/09/2021)
 

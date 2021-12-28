@@ -8,8 +8,8 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: b9ae7160131a6798535cfb57538ca3cb013bb4c9 $")
-XPerl_SetModuleRevision("$Revision: b9ae7160131a6798535cfb57538ca3cb013bb4c9 $")
+end, "$Revision: dd55497a006f51aa1bd8254cba0642612210be9d $")
+XPerl_SetModuleRevision("$Revision: dd55497a006f51aa1bd8254cba0642612210be9d $")
 
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
@@ -1584,8 +1584,13 @@ function XPerl_SetManaBarType(self)
 	local m = self.statsFrame.manaBar
 	if (m and not self.statsFrame.greyMana) then
 		local unit = self.partyid -- SecureButton_GetUnit(self)
+		if not unit then
+			self.targetmanatype = 0
+			return
+		end
 		if (unit) then
 			local p = XPerl_GetDisplayedPowerType(unit)
+			self.targetmanatype = p
 			if (p) then
 				local c = conf.colour.bar[ManaColours[p]]
 				if (c) then

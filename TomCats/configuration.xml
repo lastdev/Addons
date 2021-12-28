@@ -24,7 +24,7 @@
 								<Anchor point="RIGHT" relativeKey="$parent.$parent" relativePoint="RIGHT" x="-4" />
 							</Anchors>
 						</FontString>
-						<FontString parentKey="VersionText" font="GameFontNormal" text="Version: 2.3.22">
+						<FontString parentKey="VersionText" font="GameFontNormal" text="Version: 2.3.24">
 							<Anchors>
 								<Anchor point="TOPLEFT" relativeKey="$parent.Text" relativePoint="BOTTOMLEFT" />
 								<Anchor point="TOPRIGHT" relativeKey="$parent.Text" relativePoint="BOTTOMRIGHT" />
@@ -239,7 +239,7 @@
 								<Anchor point="RIGHT" relativeKey="$parent.$parent" relativePoint="RIGHT" x="-4" />
 							</Anchors>
 						</FontString>
-						<FontString parentKey="VersionText" font="GameFontNormal" text="Version: 2.3.22">
+						<FontString parentKey="VersionText" font="GameFontNormal" text="Version: 2.3.24">
 							<Anchors>
 								<Anchor point="TOPLEFT" relativeKey="$parent.Text" relativePoint="BOTTOMLEFT" />
 								<Anchor point="TOPRIGHT" relativeKey="$parent.Text" relativePoint="BOTTOMRIGHT" />

@@ -122,6 +122,7 @@ ns.RegisterPoints(1961, { -- Korthia
 }, {
     label = "Spectral Key",
     minimap=true,
+    group="Spectral Keys",
 })
 
 -- Mawsworn cache
@@ -247,8 +248,8 @@ ns.RegisterPoints(1961, { -- Korthia
 local mawshroom = ns.nodeMaker{
     label="Invasive Mawshroom",
     loot={
-        187244, -- Questionable Mawshroom
         {187153, mount=1507}, -- Tasty Mawshroom
+        187244, -- Questionable Mawshroom
         {185963, questComplete=63892}, -- Diviner's Rune Chit
     },
     note="Multiple spawn points. Feed the {item:187153} to {npc:180063}.",
@@ -568,6 +569,7 @@ ns.RegisterPoints(1961, { -- Korthia
             187391, -- Yarxhov's Rib-Cage
             187399, -- Maw Construct's Shoulderguards
         },
+        note="Take the carriage that leaves from here, you'll fight the mob in the Maw",
     },
 
     [51154165] = { -- Consumption
@@ -724,7 +726,7 @@ ns.RegisterPoints(1961, { -- Korthia
         covenant=Enum.CovenantType.Venthyr,
         loot={
             184790, -- Archdruid Van-Yali's Greenthumbs
-            {186479, mount=nil, covenant=Enum.CovenantType.Venthyr}, -- Mastercraft Gravewing
+            {186479, mount=803, covenant=Enum.CovenantType.Venthyr}, -- Mastercraft Gravewing
             -- {187283,quest=64530,}, -- Gravewing Crystal
             187386, -- Stygian Crystal Studded Legguards
             {187428,quest=64553,}, -- Legend of the Animaswell
@@ -732,7 +734,7 @@ ns.RegisterPoints(1961, { -- Korthia
         note="Talk to {npc:179974}",
     },
 
-    [56853235] = { -- Wild Worldcracker (Popo's Potion Patrol)
+    [47003560] = { -- Wild Worldcracker (Popo's Potion Patrol)
         achievement=15107, criteria=52300,
         quest=64338,
         npc=180032,
@@ -740,7 +742,7 @@ ns.RegisterPoints(1961, { -- Korthia
         loot={
             {187176, toy=true}, -- Vesper of Harmony
             {186483, mount=1493, covenant=Enum.CovenantType.Kyrian}, -- Foresworn Aquilon
-            -- {187282,quest=64529,}, -- Intact Aquilon Core
+            -- {187282,quest=64529,covenant=Enum.CovenantType.Kyrian}, -- Intact Aquilon Core
             187380, -- Devourer Hide Belt
             {187426,quest=64552,}, -- Legend of the Animaswell
         },
@@ -852,6 +854,7 @@ ns.RegisterPoints(1961, {
         atlas="adventures-32x32", scale=1.2,
         active={quest=63665},
         minimap=true,
+        group="Transportation",
     },
 })
 -- Flayedwing
@@ -862,4 +865,5 @@ ns.RegisterPoints(1961, {
     label="{npc:180548}",
     atlas="flightmaster", scale=1.2,
     active={quest=63665},
+    group="Transportation",
 })

@@ -82,68 +82,12 @@ local AddonDB_Defaults = {
 	}
 }
 
-local function GetDBVersion()
-	return addon.db.global.Version or 0
-end
-
-local function SetDBVersion(version)
-	addon.db.global.Version = version
-end
-
-local DBUpdaters = {
-	-- Table of functions, each one updates to its index's version
-	--	ex: [3] = the function that upgrades from v2 to v3
-	[1] = function(self)
-	
-			local function CopyTable(src, dest)
-				for k, v in pairs (src) do
-					if type(v) == "table" then
-						dest[k] = {}
-						CopyTable(v, dest[k])
-					else
-						dest[k] = v
-					end
-				end
-			end
-		
-			-- This function moves guild bank tabs from the "Guilds/Guildkey" level to the "Guilds/Guildkey/Tabs" sub-table
-			for guildKey, guildTable in pairs(addon.db.global.Guilds) do
-				for tabID = 1, 8 do		-- convert the 8 tabs
-					if type(guildTable[tabID]) == "table" then
-						CopyTable(guildTable[tabID], guildTable.Tabs[tabID])
-						wipe(guildTable[tabID])
-						guildTable[tabID] = nil						
-					end
-				end
-				guildTable.money = 0
-			end
-		end,
-}
-
-local function UpdateDB()
-	local version = GetDBVersion()
-	
-	for i = (version+1), #DBUpdaters do		-- start from latest version +1 to the very last
-		DBUpdaters[i]()
-		SetDBVersion(i)
-	end
-	
-	DBUpdaters = nil
-	GetDBVersion = nil
-	SetDBVersion = nil
-end
-
 -- *** Utility functions ***
 local bAnd = bit.band
 local bOr = bit.bor
 local bXOr = bit.bxor
 
-local function TestBit(value, pos)
-   local mask = 2^pos
-   if bAnd(value, mask) == mask then
-      return true
-   end
-end
+local TestBit = DataStore.TestBit
 
 local function GetThisGuild()
 	local key = DataStore:GetThisGuildKey()
@@ -1023,8 +967,7 @@ local GuildCommCallbacks = {
 }
 
 function addon:OnInitialize()
-	addon.db = LibStub("AceDB-3.0"):New(addonName .. "DB", AddonDB_Defaults)
-	UpdateDB()
+	addon.db = LibStub("AceDB-3.0"):New(format("%sDB", addonName), AddonDB_Defaults)
 
 	DataStore:RegisterModule(addonName, addon, PublicMethods)
 	DataStore:SetGuildCommCallbacks(commPrefix, GuildCommCallbacks)
@@ -1069,19 +1012,30 @@ function addon:OnEnable()
 	for bagID = 0, NUM_BAG_SLOTS do
 		ScanBag(bagID)
 	end
+
+	-- Only for Classic & BC, scan the keyring
+	if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE and HasKey() then
+		ScanBag(-2)
+	end
 	
-	ScanReagentBank()
-	
-	addon:RegisterEvent("PLAYER_ALIVE", OnPlayerAlive)
 	addon:RegisterEvent("BAG_UPDATE", OnBagUpdate)
 	addon:RegisterEvent("BANKFRAME_OPENED", OnBankFrameOpened)
-	addon:RegisterEvent("GUILDBANKFRAME_OPENED", OnGuildBankFrameOpened)
-	addon:RegisterEvent("VOID_STORAGE_OPEN", OnVoidStorageOpened)
-	addon:RegisterEvent("PLAYERREAGENTBANKSLOTS_CHANGED", OnPlayerReagentBankSlotsChanged)
-	addon:RegisterEvent("WEEKLY_REWARDS_UPDATE", OnWeeklyRewardsUpdate)
 	
 	-- disable bag updates during multi sell at the AH
 	addon:RegisterEvent("AUCTION_HOUSE_SHOW", OnAuctionHouseShow)
+	
+	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+		ScanReagentBank()
+		
+		addon:RegisterEvent("PLAYER_ALIVE", OnPlayerAlive)
+		addon:RegisterEvent("VOID_STORAGE_OPEN", OnVoidStorageOpened)
+		addon:RegisterEvent("PLAYERREAGENTBANKSLOTS_CHANGED", OnPlayerReagentBankSlotsChanged)
+		addon:RegisterEvent("GUILDBANKFRAME_OPENED", OnGuildBankFrameOpened)
+		addon:RegisterEvent("WEEKLY_REWARDS_UPDATE", OnWeeklyRewardsUpdate)
+		
+	elseif WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC then
+		addon:RegisterEvent("GUILDBANKFRAME_OPENED", OnGuildBankFrameOpened)	 -- > bc
+	end
 end
 
 function addon:OnDisable()

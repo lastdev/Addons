@@ -1,8 +1,8 @@
-﻿HEALBOT_VERSION_SC = "9.1.0.12";
+﻿HEALBOT_VERSION_SC = "9.1.5.6.1";
 HEALBOT_VERSION    = GetAddOnMetadata("HealBot", "Version") or "9.x"
 HEALBOT_ABOUT_URL  = "healbot.dpm15.net"
 
-local vMajor         = string.split(".", HEALBOT_VERSION)
+local vMajor         = string.split(".", select(1, GetBuildInfo()))
 HEALBOT_GAME_VERSION = tonumber(vMajor)
 
 function HealBot_globalVars()
@@ -567,6 +567,7 @@ function HealBot_globalVars()
     HEALBOT_UNLEASHED_FURY                  = 117012 --GetSpellInfo(117012) or "--Unleashed Fury";
     HEALBOT_WATER_SHIELD                    = 52127 --GetSpellInfo(52127) or "--Water Shield";
     HEALBOT_WATER_WALKING                   = 546 --GetSpellInfo(546) or "--Water Walking";
+    HEALBOT_WATER_BREATHING                 = 131 --GetSpellInfo(131) or "--Water Breathing";
     
     --Monk
     HEALBOT_BREATH_OF_THE_SERPENT           = 157535 --GetSpellInfo(157535) or "--Breath of the Serpent"
@@ -607,7 +608,7 @@ function HealBot_globalVars()
     HEALBOT_UNENDING_BREATH                 = 5697 --GetSpellInfo(5697) or "--Unending Breath"
     HEALBOT_UNENDING_RESOLVE                = 104773 --GetSpellInfo(104773) or "--Unending Resolve"
     HEALBOT_SOUL_LEECH                      = 108366 --GetSpellInfo(108370) or "--Soul Leech"
-    HBC_PHASE_SHIFT                         = GetSpellInfo(4511) or "Phase Shift"
+    HBC_PHASE_SHIFT                         = 4511 --GetSpellInfo(4511) or "Phase Shift"
     HBC_DETECT_LESSER_INVISIBILITY          = 132
     HBC_DETECT_INVISIBILITY                 = 2970
     HBC_DETECT_GREATER_INVISIBILITY         = 11743

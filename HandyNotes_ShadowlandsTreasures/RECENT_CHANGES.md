@@ -1,6 +1,4 @@
-## Changed in v31
+## Changed in v33
 
-* Korthia: include Invasive Mawshrooms and Nests of Unusual Materials
-* Maldraxxus: say whether the arena mount has been attempted today
-* Listen to the CRITERIA_UPDATE event again, as it seems to no longer be spammed constantly, which should make things like the Spectral Key get removed from your minimap more promptly
+* Added a lot of nodes to groups for easier hiding of clutter: Fractured Faerie Tales, Playful Vulpin, Shard Labor, Wardrobe Makeover, Harvester of Sorrow, Spectral Keys, Stolen Anima Vessels, Rift Hidden Caches, and various transportation hints
 

@@ -14,7 +14,7 @@ end
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 26dd2f3e4984cffda76fcac1ddd39d0c29867f99 $")
+end, "$Revision: 102581258f484fb67e7d0745bdf77296453ad6fe $")
 
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
@@ -94,8 +94,12 @@ local function overrideToggle(value)
 				local CastbarEventHandler = function(event, ...)
 					return XPerl_ArcaneBar_OnEvent(CastingBarFrame, event, ...)
 				end
-				if LCC and strfind(event, "^UNIT_SPELLCAST") then
-					LCC.RegisterCallback(CastingBarFrame, event, CastbarEventHandler)
+				if LCC then
+					for i, event in pairs(events) do
+						if strfind(event, "^UNIT_SPELLCAST") and (IsClassic and event ~= "UNIT_SPELLCAST_INTERRUPTIBLE" and event ~= "UNIT_SPELLCAST_NOT_INTERRUPTIBLE") then
+							LCC.RegisterCallback(CastingBarFrame, event, CastbarEventHandler)
+						end
+					end
 				else
 					for i, event in pairs(events) do
 						CastingBarFrame:RegisterEvent(event)

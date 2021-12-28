@@ -23,7 +23,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_PetTarget) then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 0e5dac9771e21852086c9ae73250c5d5d507c244 $")
+end, "$Revision: c52d6da2c580f292231cbce24418a3ae3ca2b620 $")
 
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
@@ -831,8 +831,18 @@ end
 
 -- XPerl_Target_SetMana
 function XPerl_Target_SetMana(self)
+	local partyid = self.partyid
+	if not partyid then
+		self.targetmana = 0
+		self.targetmanamax = 0
+		return
+	end
+
 	local targetmana, targetmanamax = UnitPower(self.partyid), UnitPowerMax(self.partyid)
 	local mb = self.statsFrame.manaBar
+
+	self.targetmana = targetmana
+	self.targetmanamax = targetmanamax
 
 	--Begin 4.3 division by 0 work around to ensure we don't divide if max is 0
 	local pmanaPct
@@ -949,11 +959,19 @@ end
 -- XPerl_Target_UpdateHealth
 function XPerl_Target_UpdateHealth(self)
 	local partyid = self.partyid
+	if not partyid then
+		self.targethp = 0
+		self.targetmax = 0
+		self.afk = false
+		return
+	end
 
 	local hb = self.statsFrame.healthBar
 	local hbt = self.statsFrame.healthBar.text
 	local hp, hpMax, percent = XPerl_Target_GetHealth(self)
 
+	self.targethp = hp
+	self.targethpmax = hpMax
 	self.afk = UnitIsAFK(partyid) and conf.showAFK == 1
 
 	--[[if (self.targethp == 100) then

@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/ui/localization/ko-KR", 90112)
+local __exports = LibStub:NewLibrary("ovale/ui/localization/ko-KR", 90113)
 if not __exports then return end
 __exports.setKOKR = function(l)
     l.action_bar = [[Action bar]]

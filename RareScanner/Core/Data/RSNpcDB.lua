@@ -229,11 +229,18 @@ function RSNpcDB.GetInternalNpcInfo(npcID)
 	return nil
 end
 
-local function GetInternalNpcInfoByMapID(npcID, mapID)
+function RSNpcDB.GetInternalNpcInfoByMapID(npcID, mapID)
 	if (npcID and mapID) then
 		if (RSNpcDB.IsInternalNpcMultiZone(npcID)) then
-			for internalMapID, npcInfo in pairs (RSNpcDB.GetInternalNpcInfo(npcID).zoneID) do
-				if (internalMapID == mapID) then
+			for internalMapID, zoneInfo in pairs (RSNpcDB.GetInternalNpcInfo(npcID).zoneID) do
+				if (internalMapID == mapID or RSMapDB.IsMapInParentMap(mapID, internalMapID)) then
+					local npcInfo = {}
+					RSUtils.CloneTable(RSNpcDB.GetInternalNpcInfo(npcID), npcInfo)
+					npcInfo.zoneID = internalMapID
+					npcInfo.x = zoneInfo.x
+					npcInfo.y = zoneInfo.y
+					npcInfo.artID = zoneInfo.artID
+					npcInfo.overlay = zoneInfo.overlay
 					return npcInfo
 				end
 			end
@@ -248,7 +255,7 @@ end
 
 function RSNpcDB.GetInternalNpcArtID(npcID, mapID)
 	if (npcID and mapID) then
-		local npcInfo = GetInternalNpcInfoByMapID(npcID, mapID)
+		local npcInfo = RSNpcDB.GetInternalNpcInfoByMapID(npcID, mapID)
 		if (npcInfo) then
 			return npcInfo.artID
 		end
@@ -259,7 +266,7 @@ end
 
 function RSNpcDB.GetInternalNpcCoordinates(npcID, mapID)
 	if (npcID and mapID) then
-		local npcInfo = GetInternalNpcInfoByMapID(npcID, mapID)
+		local npcInfo = RSNpcDB.GetInternalNpcInfoByMapID(npcID, mapID)
 		if (npcInfo) then
 			return npcInfo.x, npcInfo.y
 		end
@@ -270,7 +277,7 @@ end
 
 function RSNpcDB.GetInternalNpcOverlay(npcID, mapID)
 	if (npcID and mapID) then
-		local npcInfo = GetInternalNpcInfoByMapID(npcID, mapID)
+		local npcInfo = RSNpcDB.GetInternalNpcInfoByMapID(npcID, mapID)
 		if (npcInfo) then
 			return npcInfo.overlay
 		end

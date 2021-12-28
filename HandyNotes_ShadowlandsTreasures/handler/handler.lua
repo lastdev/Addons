@@ -162,6 +162,11 @@ local function render_string(s)
             return CreateAtlasMarkup("questnormal") .. (completed and completeColor or incompleteColor):WrapTextInColorCode(name)
         elseif variant == "questid" then
             return CreateAtlasMarkup("questnormal") .. (C_QuestLog.IsQuestFlaggedCompleted(id) and completeColor or incompleteColor):WrapTextInColorCode(id)
+        elseif variant == "achievement" then
+            local _, name, _, completed = GetAchievementInfo(id)
+            if name and name ~= "" then
+                return CreateAtlasMarkup("storyheader-cheevoicon") .. (completed and completeColor or incompleteColor):WrapTextInColorCode(name)
+            end
         elseif variant == "npc" then
             local name = mob_name(id)
             if name then
@@ -211,6 +216,8 @@ do
         return render_string(string.join(", ", unpack(out)))
     end
 end
+ns.render_string = render_string
+ns.render_string_list = render_string_list
 
 local npc_texture, follower_texture, currency_texture, junk_texture
 local icon_cache = {}
@@ -370,6 +377,9 @@ ns.point_active = function(point)
         return false
     end
     if point.active.notquest and C_QuestLog.IsQuestFlaggedCompleted(point.active.notquest) then
+        return false
+    end
+    if point.active.achievement and not select(4, GetAchievementInfo(point.active.achievement)) then
         return false
     end
     if point.active.requires_buff and not ns.doTest(GetPlayerAuraBySpellID, point.active.requires_buff) then
@@ -775,7 +785,7 @@ do
             if point.group then
                 if not ns.hiddenConfig.groupsHiddenByZone then
                     local map = C_Map.GetMapInfo(currentZone)
-                    info.text = "Hide all " .. (ns.groups[point.group] or point.group) .. " in " .. (map and map.name or "this zone")
+                    info.text = "Hide all " .. render_string(ns.groups[point.group] or point.group) .. " in " .. (map and map.name or "this zone")
                     info.notCheckable = 1
                     info.func = hideGroupZone
                     info.arg1 = currentZone
@@ -784,7 +794,7 @@ do
                     wipe(info)
                 end
                 if not ns.hiddenConfig.groupsHidden then
-                    info.text = "Hide all " .. (ns.groups[point.group] or point.group) .. " in all zones"
+                    info.text = "Hide all " .. render_string(ns.groups[point.group] or point.group) .. " in all zones"
                     info.notCheckable = 1
                     info.func = hideGroup
                     info.arg1 = currentZone

@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/ui/DataBroker", 90112)
+local __exports = LibStub:NewLibrary("ovale/ui/DataBroker", 90113)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local __imports = {}
@@ -52,7 +52,7 @@ __exports.OvaleDataBrokerClass = __class(nil, {
             text = ""
         }
         self.handleTooltipShow = function(tooltip)
-            self.tooltipTitle = self.tooltipTitle or self.ovale:GetName() .. " " .. "90112"
+            self.tooltipTitle = self.tooltipTitle or self.ovale:GetName() .. " " .. "90113"
             tooltip:SetText(self.tooltipTitle, 1, 1, 1)
             tooltip:AddLine(l["script_tooltip"])
             tooltip:AddLine(l["middle_click_help"])

@@ -1690,4 +1690,5 @@ Change Log:
 * Updated ToCs using the new naming system
 * Added BC spells for Sunwell Plateau
 
-(Special CurseForge edition to try to fix their updater... - Retail only, will not work with other versions)
+4.65.2
+* Fixed BC spells for Serpentshrine Cavern

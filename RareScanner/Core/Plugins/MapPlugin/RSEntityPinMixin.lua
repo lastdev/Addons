@@ -33,7 +33,11 @@ function RSEntityPinMixin:OnAcquired(POI)
 	self.POI = POI
 	self.Texture:SetTexture(POI.Texture)
 	self.Texture:SetScale(RSConfigDB.GetIconsWorldMapScale())
-	self:SetPosition(POI.x, POI.y);
+	if (POI.x <= 1 and POI.y <= 1) then
+		self:SetPosition(POI.x, POI.y);
+	else
+		self:SetPosition(tonumber("0."..POI.x), tonumber("0."..POI.y));
+	end
 end
 
 function RSEntityPinMixin:OnMouseEnter()
@@ -84,14 +88,14 @@ function RSEntityPinMixin:OnMouseDown(button)
 		-- Toggle overlay
 		elseif (not IsShiftKeyDown() and not IsAltKeyDown()) then
 			-- If overlay showing then hide it
-			local overlayEntityID = RSGeneralDB.GetOverlayActive()
-			if (overlayEntityID) then
-				self:GetMap():RemoveAllPinsByTemplate("RSOverlayTemplate");
-				if (overlayEntityID ~= self.POI.entityID) then
-					self:ShowOverlay()
-				else
-					RSGeneralDB.RemoveOverlayActive()
+			local overlayInfo = RSGeneralDB.GetOverlayActive(self.POI.entityID)
+			if (overlayInfo) then
+				for pin in self:GetMap():EnumeratePinsByTemplate("RSOverlayTemplate") do
+					if (pin:GetEntityID() == self.POI.entityID) then
+						self:GetMap():RemovePin(pin)
+					end
 				end
+				RSGeneralDB.RemoveOverlayActive(self.POI.entityID)
 			else
 				self:ShowOverlay()
 			end
@@ -133,13 +137,22 @@ function RSEntityPinMixin:ShowOverlay()
 	end
 
 	if (overlay) then
+		local r, g, b, replacedEntityID = RSGeneralDB.AddOverlayActive(self.POI.entityID)
+
+		-- Cleans the replaced overlay
+		if (replacedEntityID) then
+			for pin in self:GetMap():EnumeratePinsByTemplate("RSOverlayTemplate") do
+				if (pin:GetEntityID() == replacedEntityID) then
+					self:GetMap():RemovePin(pin)
+				end
+			end
+		end
+		
+		-- Adds the new one
 		for _, coordinates in ipairs (overlay) do
 			local x, y = strsplit("-", coordinates)
-			self:GetMap():AcquirePin("RSOverlayTemplate", tonumber(x), tonumber(y), self);
+			self:GetMap():AcquirePin("RSOverlayTemplate", tonumber(x), tonumber(y), r, g, b, self);
 		end
-		RSGeneralDB.SetOverlayActive(self.POI.entityID)
-	else
-		RSGeneralDB.RemoveOverlayActive()
 	end
 end
 

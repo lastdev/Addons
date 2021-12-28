@@ -2,7 +2,7 @@
 -- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 919e0f8a150cee048b33cf8ae0873d63cbccab98 $")
+XPerl_SetModuleRevision("$Revision: cd469ddf009de44eb4c4cd248a7ab1a7cf618486 $")
 
 -- onEvent
 local function onEvent(self, event, a, b, c)
@@ -62,6 +62,7 @@ function XPerl_RosterText_Init(self)
 	self:OnBackdropLoaded()
 	self:SetBackdropColor(0, 0, 0, 0.7)
 	self:SetBackdropBorderColor(0.5, 0.5, 0.5, 1)
+
 	self:RegisterForDrag("LeftButton")
 
 	if (XPerl_SavePosition) then

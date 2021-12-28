@@ -1,4 +1,4 @@
-## Interface: 90100
+## Interface: 90105
 ## Title: DataStore_Stats
 ## Notes: Stores information about character statistics
 ## Author: Thaoky (EU-Marécages de Zangar)

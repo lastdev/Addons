@@ -39,17 +39,21 @@ groups is a table of group names, with mount spell IDs as members
 -- Don't use names here, it will break in other locales
 
 local DefaultButtonAction = [[
-# Slow Fall, Levitate, Zen Flight, Glide, Flap
-Spell [falling] 130, 1706, 125883, 131347, 164862
-# Hearty Dragon Plume, Rocfeather Skyhorn Kite
-Use [falling] 182729, 131811
 LeaveVehicle
-Dismount
+Dismount [nofalling]
 CopyTargetsMount
 ApplyRules
 Limit [mod:shift,nosubmerged,flyable] RUN,~FLY
 Limit [mod:shift,submerged] -SWIM
 SmartMount
+IF [falling]
+  # Slow Fall, Levitate, Zen Flight, Glide, Flap
+  Spell 130, 1706, 125883, 131347, 164862
+  # Hearty Dragon Plume, Rocfeather Skyhorn Kite
+  Use 182729, 131811
+  # Last resort dismount even if falling
+  Dismount
+END
 Macro
 ]]
 
@@ -133,7 +137,7 @@ function LM.Options:VersionUpgrade4()
         for n, p in pairs(self.db.profiles) do
             LM.Debug('   - into profile: ' .. n)
             p.flagChanges = p.flagChanges or {}
-            for spellID,changes in pairs(self.db.global.flagChanges) do
+            for spellID,changes in pairs(self.db.global.flagChanges or {}) do
                 p.flagChanges[spellID] = Mixin(p.flagChanges[spellID] or {}, changes)
             end
         end
@@ -799,7 +803,7 @@ end
     Debug settings
 ----------------------------------------------------------------------------]]--
 
-function LM.Options:GetDebug(v)
+function LM.Options:GetDebug()
     return self.db.char.debugEnabled
 end
 

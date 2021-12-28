@@ -25,3 +25,5 @@ L["Just Mine"] = true
 L["Show more map pins by including achievements completed only by other characters."] = true
 L["Season Warning"] = true
 L["Days in advance to show pins for seasonal holiday achievements."] = true
+L["Sort by tracked"] = true
+L["Sort achievements by tracked"] = true

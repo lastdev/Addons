@@ -1,4 +1,4 @@
-﻿## Interface: 90100
+﻿## Interface: 90105
 ## Title: Altoholic_Summary
 ## Notes: Altoholic's Summary Tab
 ## Author: Thaoky (EU-Marécages de Zangar)

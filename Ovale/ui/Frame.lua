@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/ui/Frame", 90112)
+local __exports = LibStub:NewLibrary("ovale/ui/Frame", 90113)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local __imports = {}
@@ -429,6 +429,9 @@ local OvaleFrame = __class(WidgetContainer, {
                     self.skinGroup:AddButton(icon.frame)
                 end
                 icon:Show()
+            end
+            for i = profile.apparence.numberOfIcons + 1, #action.icons do
+                action.icons[i]:Hide()
             end
         end
         self.content:SetAlpha(profile.apparence.optionsAlpha)

@@ -113,7 +113,7 @@ shared.achievementData = {
 }
 
 -- "I'm in your base, killing your dudes" has faction specific NPCs
-if (UnitFactionGroup('player') == 'Alliance') then
+if (_G.UnitFactionGroup('player') == 'Alliance') then
   shared.achievementData.rares.static[7932] = {
     {
       id = 68321,

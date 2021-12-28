@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/engine/debug", 90112)
+local __exports = LibStub:NewLibrary("ovale/engine/debug", 90113)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local __imports = {}

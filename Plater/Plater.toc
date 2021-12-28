@@ -3,7 +3,7 @@
 ## Notes: Nameplate addon designed for advanced users.
 ## SavedVariables: PlaterDB
 ## SavedVariablesPerCharacter: PlaterDBChr
-## Version: Plater-v342-Retail
+## Version: Plater-v343-Retail
 ## X-Curse-Project-ID: 100547
 ## X-Wago-ID: kRNLep6o
 
@@ -32,6 +32,7 @@ Plater_Comms.lua
 Plater_Auras.lua
 Plater_Resources.lua
 Plater_Resources_Frames.lua
+Plater_Resources_Options.lua
 Plater_OptionsPanel.lua
 Plater_ScriptingOptions.lua
 Plater_ScriptingPanels.lua

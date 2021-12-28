@@ -1,76 +1,103 @@
--- this file is machine generated.  do not edit.
-
 local AL = LibStub:GetLibrary("AchievementLocations-1.0")
 local function A(row) AL:AddLocation(row) end
 
 -- World Events/Brewfest: Direbrewfest
-A{"BlackrockDepths", 295, 0.466, 0.600, floor=2, season="Brewfest"}
+A{"BlackrockDepths", 295, 0.4660, 0.6000, floor=2, season="Brewfest", trivia={module="seasonal_brew", category="World Events/Brewfest", name="Direbrewfest", description="Kill Coren Direbrew.", mapID="BlackrockDepths_ShadowforgeCity", uiMapID=243, points=10, parent="World Events"}}
 
 -- World Events/Brewfest: Disturbing the Peace
-A{"Dalaran", 293, season="Brewfest"}
+A{"Dalaran", 293, season="Brewfest", trivia={module="seasonal_brew", category="World Events/Brewfest", name="Disturbing the Peace", description="While wearing 3 pieces of Brewfest clothing, get completely smashed and dance in Dalaran.", mapID="Dalaran_DalaranCity", uiMapID=125, points=10, parent="World Events"}}
 
 -- World Events/Brewfest: Strange Brew
-A{"DunMorogh", 1184, 0.495, 0.388, criterion=8879, side="alliance", season="Brewfest"} -- Thunder 45
-A{"DunMorogh", 1184, 0.489, 0.398, criterion=8883, side="alliance", season="Brewfest"} -- Barleybrew Light
-A{"DunMorogh", 1184, 0.484, 0.384, criterion=8878, side="alliance", season="Brewfest"} -- Gordok Grog
-A{"DunMorogh", 1184, 0.484, 0.384, criterion=9014, side="alliance", season="Brewfest"} -- Mudder's Milk
-A{"DunMorogh", 1184, 0.484, 0.384, criterion=8882, side="alliance", season="Brewfest"} -- Ogre Mead
-A{"DunMorogh", 1184, 0.495, 0.388, criterion=8880, side="alliance", season="Brewfest"} -- Thunderbrew Ale
-A{"DunMorogh", 1184, 0.495, 0.388, criterion=8881, side="alliance", season="Brewfest"} -- Thunderbrew Stout
-A{"DunMorogh", 1184, 0.489, 0.398, criterion=8885, side="alliance", season="Brewfest"} -- Barleybrew Clear
-A{"DunMorogh", 1184, 0.489, 0.398, criterion=8884, side="alliance", season="Brewfest"} -- Barleybrew Dark
+A{"DunMorogh", 1184, 0.4950, 0.3880, criterion=8879, side="alliance", season="Brewfest", trivia={criteria="Thunder 45", module="seasonal_brew", category="World Events/Brewfest", name="Strange Brew", description="Acquire the Brewfest beers listed below. Don't drink them all at once!", mapID="DunMorogh", uiMapID=27, points=10, parent="World Events", type=36}}
+A{"DunMorogh", 1184, 0.4890, 0.3980, criterion=8883, side="alliance", season="Brewfest", trivia={criteria="Barleybrew Light", module="seasonal_brew", category="World Events/Brewfest", name="Strange Brew", description="Acquire the Brewfest beers listed below. Don't drink them all at once!", mapID="DunMorogh", uiMapID=27, points=10, parent="World Events", type=36}}
+A{"DunMorogh", 1184, 0.4840, 0.3840, criterion=8878, side="alliance", season="Brewfest", trivia={criteria="Gordok Grog", module="seasonal_brew", category="World Events/Brewfest", name="Strange Brew", description="Acquire the Brewfest beers listed below. Don't drink them all at once!", mapID="DunMorogh", uiMapID=27, points=10, parent="World Events", type=36}}
+A{"DunMorogh", 1184, 0.4840, 0.3840, criterion=9014, side="alliance", season="Brewfest", trivia={criteria="Mudder's Milk", module="seasonal_brew", category="World Events/Brewfest", name="Strange Brew", description="Acquire the Brewfest beers listed below. Don't drink them all at once!", mapID="DunMorogh", uiMapID=27, points=10, parent="World Events", type=36}}
+A{"DunMorogh", 1184, 0.4840, 0.3840, criterion=8882, side="alliance", season="Brewfest", trivia={criteria="Ogre Mead", module="seasonal_brew", category="World Events/Brewfest", name="Strange Brew", description="Acquire the Brewfest beers listed below. Don't drink them all at once!", mapID="DunMorogh", uiMapID=27, points=10, parent="World Events", type=36}}
+A{"DunMorogh", 1184, 0.4950, 0.3880, criterion=8880, side="alliance", season="Brewfest", trivia={criteria="Thunderbrew Ale", module="seasonal_brew", category="World Events/Brewfest", name="Strange Brew", description="Acquire the Brewfest beers listed below. Don't drink them all at once!", mapID="DunMorogh", uiMapID=27, points=10, parent="World Events", type=36}}
+A{"DunMorogh", 1184, 0.4950, 0.3880, criterion=8881, side="alliance", season="Brewfest", trivia={criteria="Thunderbrew Stout", module="seasonal_brew", category="World Events/Brewfest", name="Strange Brew", description="Acquire the Brewfest beers listed below. Don't drink them all at once!", mapID="DunMorogh", uiMapID=27, points=10, parent="World Events", type=36}}
+A{"DunMorogh", 1184, 0.4890, 0.3980, criterion=8885, side="alliance", season="Brewfest", trivia={criteria="Barleybrew Clear", module="seasonal_brew", category="World Events/Brewfest", name="Strange Brew", description="Acquire the Brewfest beers listed below. Don't drink them all at once!", mapID="DunMorogh", uiMapID=27, points=10, parent="World Events", type=36}}
+A{"DunMorogh", 1184, 0.4890, 0.3980, criterion=8884, side="alliance", season="Brewfest", trivia={criteria="Barleybrew Dark", module="seasonal_brew", category="World Events/Brewfest", name="Strange Brew", description="Acquire the Brewfest beers listed below. Don't drink them all at once!", mapID="DunMorogh", uiMapID=27, points=10, parent="World Events", type=36}}
 
 -- World Events/Brewfest: The Brewfest Diet
-A{"DunMorogh", 1185, 0.489, 0.383, criterion=18620, side="alliance", season="Brewfest"} -- Succulent Sausage
-A{"DunMorogh", 1185, 0.489, 0.383, criterion=18619, side="alliance", season="Brewfest"} -- Dried Sausage
-A{"DunMorogh", 1185, 0.489, 0.383, criterion=18622, side="alliance", season="Brewfest"} -- Pickled Sausage
-A{"DunMorogh", 1185, 0.489, 0.383, criterion=3544, side="alliance", season="Brewfest"} -- Savory Sausage
-A{"DunMorogh", 1185, 0.493, 0.394, criterion=18621, side="alliance", season="Brewfest"} -- Spiced Onion Cheese
-A{"DunMorogh", 1185, 0.489, 0.383, criterion=18623, side="alliance", season="Brewfest"} -- Spicy Smoked Sausage
-A{"DunMorogh", 1185, 0.484, 0.399, criterion=7987, side="alliance", season="Brewfest"} -- The Essential Brewfest Pretzel
-A{"DunMorogh", 1185, 0.489, 0.383, criterion=18624, side="alliance", season="Brewfest"} -- The Golden Link
-A{"Durotar", 1185, 0.444, 0.167, criterion=18620, side="horde", season="Brewfest"} -- Succulent Sausage
-A{"Durotar", 1185, 0.444, 0.167, criterion=18619, side="horde", season="Brewfest"} -- Dried Sausage
-A{"Durotar", 1185, 0.444, 0.167, criterion=18622, side="horde", season="Brewfest"} -- Pickled Sausage
-A{"Durotar", 1185, 0.444, 0.167, criterion=3544, side="horde", season="Brewfest"} -- Savory Sausage
-A{"Durotar", 1185, 0.439, 0.179, criterion=18621, side="horde", season="Brewfest"} -- Spiced Onion Cheese
-A{"Durotar", 1185, 0.444, 0.167, criterion=18623, side="horde", season="Brewfest"} -- Spicy Smoked Sausage
-A{"Durotar", 1185, 0.337, 0.174, criterion=7987, side="horde", season="Brewfest"} -- The Essential Brewfest Pretzel
-A{"Durotar", 1185, 0.444, 0.167, criterion=18624, side="horde", season="Brewfest"} -- The Golden Link
+A{"DunMorogh", 1185, 0.4890, 0.3830, criterion=18620, side="alliance", season="Brewfest", trivia={criteria="Succulent Sausage", module="seasonal_brew", category="World Events/Brewfest", name="The Brewfest Diet", description="Eat 8 of the Brewfest foods listed below.", mapID="DunMorogh", uiMapID=27, points=10, parent="World Events", type=41}}
+A{"DunMorogh", 1185, 0.4890, 0.3830, criterion=18619, side="alliance", season="Brewfest", trivia={criteria="Dried Sausage", module="seasonal_brew", category="World Events/Brewfest", name="The Brewfest Diet", description="Eat 8 of the Brewfest foods listed below.", mapID="DunMorogh", uiMapID=27, points=10, parent="World Events", type=41}}
+A{"DunMorogh", 1185, 0.4890, 0.3830, criterion=18622, side="alliance", season="Brewfest", trivia={criteria="Pickled Sausage", module="seasonal_brew", category="World Events/Brewfest", name="The Brewfest Diet", description="Eat 8 of the Brewfest foods listed below.", mapID="DunMorogh", uiMapID=27, points=10, parent="World Events", type=41}}
+A{"DunMorogh", 1185, 0.4890, 0.3830, criterion=3544, side="alliance", season="Brewfest", trivia={criteria="Savory Sausage", module="seasonal_brew", category="World Events/Brewfest", name="The Brewfest Diet", description="Eat 8 of the Brewfest foods listed below.", mapID="DunMorogh", uiMapID=27, points=10, parent="World Events", type=41}}
+A{"DunMorogh", 1185, 0.4930, 0.3940, criterion=18621, side="alliance", season="Brewfest", trivia={criteria="Spiced Onion Cheese", module="seasonal_brew", category="World Events/Brewfest", name="The Brewfest Diet", description="Eat 8 of the Brewfest foods listed below.", mapID="DunMorogh", uiMapID=27, points=10, parent="World Events", type=41}}
+A{"DunMorogh", 1185, 0.4890, 0.3830, criterion=18623, side="alliance", season="Brewfest", trivia={criteria="Spicy Smoked Sausage", module="seasonal_brew", category="World Events/Brewfest", name="The Brewfest Diet", description="Eat 8 of the Brewfest foods listed below.", mapID="DunMorogh", uiMapID=27, points=10, parent="World Events", type=41}}
+A{"DunMorogh", 1185, 0.4840, 0.3990, criterion=7987, side="alliance", season="Brewfest", trivia={criteria="The Essential Brewfest Pretzel", module="seasonal_brew", category="World Events/Brewfest", name="The Brewfest Diet", description="Eat 8 of the Brewfest foods listed below.", mapID="DunMorogh", uiMapID=27, points=10, parent="World Events", type=41}}
+A{"DunMorogh", 1185, 0.4890, 0.3830, criterion=18624, side="alliance", season="Brewfest", trivia={criteria="The Golden Link", module="seasonal_brew", category="World Events/Brewfest", name="The Brewfest Diet", description="Eat 8 of the Brewfest foods listed below.", mapID="DunMorogh", uiMapID=27, points=10, parent="World Events", type=41}}
+A{"Durotar", 1185, 0.4440, 0.1670, criterion=18620, side="horde", season="Brewfest", trivia={criteria="Succulent Sausage", module="seasonal_brew", category="World Events/Brewfest", name="The Brewfest Diet", description="Eat 8 of the Brewfest foods listed below.", mapID="Durotar", uiMapID=1, points=10, parent="World Events", type=41}}
+A{"Durotar", 1185, 0.4440, 0.1670, criterion=18619, side="horde", season="Brewfest", trivia={criteria="Dried Sausage", module="seasonal_brew", category="World Events/Brewfest", name="The Brewfest Diet", description="Eat 8 of the Brewfest foods listed below.", mapID="Durotar", uiMapID=1, points=10, parent="World Events", type=41}}
+A{"Durotar", 1185, 0.4440, 0.1670, criterion=18622, side="horde", season="Brewfest", trivia={criteria="Pickled Sausage", module="seasonal_brew", category="World Events/Brewfest", name="The Brewfest Diet", description="Eat 8 of the Brewfest foods listed below.", mapID="Durotar", uiMapID=1, points=10, parent="World Events", type=41}}
+A{"Durotar", 1185, 0.4440, 0.1670, criterion=3544, side="horde", season="Brewfest", trivia={criteria="Savory Sausage", module="seasonal_brew", category="World Events/Brewfest", name="The Brewfest Diet", description="Eat 8 of the Brewfest foods listed below.", mapID="Durotar", uiMapID=1, points=10, parent="World Events", type=41}}
+A{"Durotar", 1185, 0.4390, 0.1790, criterion=18621, side="horde", season="Brewfest", trivia={criteria="Spiced Onion Cheese", module="seasonal_brew", category="World Events/Brewfest", name="The Brewfest Diet", description="Eat 8 of the Brewfest foods listed below.", mapID="Durotar", uiMapID=1, points=10, parent="World Events", type=41}}
+A{"Durotar", 1185, 0.4440, 0.1670, criterion=18623, side="horde", season="Brewfest", trivia={criteria="Spicy Smoked Sausage", module="seasonal_brew", category="World Events/Brewfest", name="The Brewfest Diet", description="Eat 8 of the Brewfest foods listed below.", mapID="Durotar", uiMapID=1, points=10, parent="World Events", type=41}}
+A{"Durotar", 1185, 0.3370, 0.1740, criterion=7987, side="horde", season="Brewfest", trivia={criteria="The Essential Brewfest Pretzel", module="seasonal_brew", category="World Events/Brewfest", name="The Brewfest Diet", description="Eat 8 of the Brewfest foods listed below.", mapID="Durotar", uiMapID=1, points=10, parent="World Events", type=41}}
+A{"Durotar", 1185, 0.4440, 0.1670, criterion=18624, side="horde", season="Brewfest", trivia={criteria="The Golden Link", module="seasonal_brew", category="World Events/Brewfest", name="The Brewfest Diet", description="Eat 8 of the Brewfest foods listed below.", mapID="Durotar", uiMapID=1, points=10, parent="World Events", type=41}}
 
 -- World Events/Brewfest: Strange Brew
-A{"Durotar", 1203, 0.402, 0.170, criterion=8889, side="horde", season="Brewfest"} -- Brewdoo Magic
-A{"Durotar", 1203, 0.408, 0.170, criterion=8878, side="horde", season="Brewfest"} -- Gordok Grog
-A{"Durotar", 1203, 0.402, 0.170, criterion=8888, side="horde", season="Brewfest"} -- Jungle River Water
-A{"Durotar", 1203, 0.406, 0.180, criterion=8886, side="horde", season="Brewfest"} -- Long Stride Brew
-A{"Durotar", 1203, 0.408, 0.170, criterion=8882, side="horde", season="Brewfest"} -- Ogre Mead
-A{"Durotar", 1203, 0.406, 0.180, criterion=8887, side="horde", season="Brewfest"} -- Path of Brew
-A{"Durotar", 1203, 0.406, 0.180, criterion=8891, side="horde", season="Brewfest"} -- Small Step Brew
-A{"Durotar", 1203, 0.402, 0.170, criterion=8890, side="horde", season="Brewfest"} -- Stout Shrunken Head
-A{"Durotar", 1203, 0.408, 0.170, criterion=9014, side="horde", season="Brewfest"} -- Mudder's Milk
+A{"Durotar", 1203, 0.4020, 0.1700, criterion=8889, side="horde", season="Brewfest", trivia={criteria="Brewdoo Magic", module="seasonal_brew", category="World Events/Brewfest", name="Strange Brew", description="Acquire the Brewfest beers listed below. Don't drink them all at once!", mapID="Durotar", uiMapID=1, points=10, parent="World Events", type=36}}
+A{"Durotar", 1203, 0.4080, 0.1700, criterion=8878, side="horde", season="Brewfest", trivia={criteria="Gordok Grog", module="seasonal_brew", category="World Events/Brewfest", name="Strange Brew", description="Acquire the Brewfest beers listed below. Don't drink them all at once!", mapID="Durotar", uiMapID=1, points=10, parent="World Events", type=36}}
+A{"Durotar", 1203, 0.4020, 0.1700, criterion=8888, side="horde", season="Brewfest", trivia={criteria="Jungle River Water", module="seasonal_brew", category="World Events/Brewfest", name="Strange Brew", description="Acquire the Brewfest beers listed below. Don't drink them all at once!", mapID="Durotar", uiMapID=1, points=10, parent="World Events", type=36}}
+A{"Durotar", 1203, 0.4060, 0.1800, criterion=8886, side="horde", season="Brewfest", trivia={criteria="Long Stride Brew", module="seasonal_brew", category="World Events/Brewfest", name="Strange Brew", description="Acquire the Brewfest beers listed below. Don't drink them all at once!", mapID="Durotar", uiMapID=1, points=10, parent="World Events", type=36}}
+A{"Durotar", 1203, 0.4080, 0.1700, criterion=8882, side="horde", season="Brewfest", trivia={criteria="Ogre Mead", module="seasonal_brew", category="World Events/Brewfest", name="Strange Brew", description="Acquire the Brewfest beers listed below. Don't drink them all at once!", mapID="Durotar", uiMapID=1, points=10, parent="World Events", type=36}}
+A{"Durotar", 1203, 0.4060, 0.1800, criterion=8887, side="horde", season="Brewfest", trivia={criteria="Path of Brew", module="seasonal_brew", category="World Events/Brewfest", name="Strange Brew", description="Acquire the Brewfest beers listed below. Don't drink them all at once!", mapID="Durotar", uiMapID=1, points=10, parent="World Events", type=36}}
+A{"Durotar", 1203, 0.4060, 0.1800, criterion=8891, side="horde", season="Brewfest", trivia={criteria="Small Step Brew", module="seasonal_brew", category="World Events/Brewfest", name="Strange Brew", description="Acquire the Brewfest beers listed below. Don't drink them all at once!", mapID="Durotar", uiMapID=1, points=10, parent="World Events", type=36}}
+A{"Durotar", 1203, 0.4020, 0.1700, criterion=8890, side="horde", season="Brewfest", trivia={criteria="Stout Shrunken Head", module="seasonal_brew", category="World Events/Brewfest", name="Strange Brew", description="Acquire the Brewfest beers listed below. Don't drink them all at once!", mapID="Durotar", uiMapID=1, points=10, parent="World Events", type=36}}
+A{"Durotar", 1203, 0.4080, 0.1700, criterion=9014, side="horde", season="Brewfest", trivia={criteria="Mudder's Milk", module="seasonal_brew", category="World Events/Brewfest", name="Strange Brew", description="Acquire the Brewfest beers listed below. Don't drink them all at once!", mapID="Durotar", uiMapID=1, points=10, parent="World Events", type=36}}
 
 -- World Events/Brewfest: Brew of the Year
-A{"Ironforge", 1183, 0.187, 0.521, criterion=3518, side="alliance"} -- Metok's Bubble Bock
-A{"Ironforge", 1183, 0.187, 0.521, criterion=3526, side="alliance"} -- Aromatic Honey Brew
-A{"Ironforge", 1183, 0.187, 0.521, criterion=3516, side="alliance"} -- Stranglethorn Brew
-A{"Ironforge", 1183, 0.187, 0.521, criterion=3517, side="alliance"} -- Springtime Stout
-A{"Ironforge", 1183, 0.187, 0.521, criterion=3520, side="alliance"} -- Izzard's Ever Flavor
-A{"Ironforge", 1183, 0.187, 0.521, criterion=3521, side="alliance"} -- Draenic Pale Ale
-A{"Ironforge", 1183, 0.187, 0.521, criterion=3522, side="alliance"} -- Blackrock Lager
-A{"Ironforge", 1183, 0.187, 0.521, criterion=3523, side="alliance"} -- Binary Brew
-A{"Ironforge", 1183, 0.187, 0.521, criterion=3525, side="alliance"} -- Autumnal Acorn Ale
-A{"Ironforge", 1183, 0.187, 0.521, criterion=3519, side="alliance"} -- Lord of Frost's Private Label
-A{"Ironforge", 1183, 0.187, 0.521, criterion=3524, side="alliance"} -- Bartlett's Bitter Brew
-A{"Ironforge", 1183, 0.187, 0.521, criterion=3515, side="alliance"} -- Wild Winter Pilsner
-A{"Orgrimmar", 1183, 0.506, 0.736, criterion=3518, side="horde"} -- Metok's Bubble Bock
-A{"Orgrimmar", 1183, 0.506, 0.736, criterion=3526, side="horde"} -- Aromatic Honey Brew
-A{"Orgrimmar", 1183, 0.506, 0.736, criterion=3516, side="horde"} -- Stranglethorn Brew
-A{"Orgrimmar", 1183, 0.506, 0.736, criterion=3517, side="horde"} -- Springtime Stout
-A{"Orgrimmar", 1183, 0.506, 0.736, criterion=3520, side="horde"} -- Izzard's Ever Flavor
-A{"Orgrimmar", 1183, 0.506, 0.736, criterion=3521, side="horde"} -- Draenic Pale Ale
-A{"Orgrimmar", 1183, 0.506, 0.736, criterion=3522, side="horde"} -- Blackrock Lager
-A{"Orgrimmar", 1183, 0.506, 0.736, criterion=3523, side="horde"} -- Binary Brew
-A{"Orgrimmar", 1183, 0.506, 0.736, criterion=3525, side="horde"} -- Autumnal Acorn Ale
-A{"Orgrimmar", 1183, 0.506, 0.736, criterion=3519, side="horde"} -- Lord of Frost's Private Label
-A{"Orgrimmar", 1183, 0.506, 0.736, criterion=3524, side="horde"} -- Bartlett's Bitter Brew
-A{"Orgrimmar", 1183, 0.506, 0.736, criterion=3515, side="horde"} -- Wild Winter Pilsner
+A{"Ironforge", 1183, 0.1870, 0.5210, criterion=3518, side="alliance", trivia={criteria="Metok's Bubble Bock", module="seasonal_brew", category="World Events/Brewfest", name="Brew of the Year", description="Sample 12 beers featured in the Brew of the Month club.", mapID="Ironforge", uiMapID=87, points=10, parent="World Events", type=28}}
+A{"Ironforge", 1183, 0.1870, 0.5210, criterion=3526, side="alliance", trivia={criteria="Aromatic Honey Brew", module="seasonal_brew", category="World Events/Brewfest", name="Brew of the Year", description="Sample 12 beers featured in the Brew of the Month club.", mapID="Ironforge", uiMapID=87, points=10, parent="World Events", type=28}}
+A{"Ironforge", 1183, 0.1870, 0.5210, criterion=3516, side="alliance", trivia={criteria="Stranglethorn Brew", module="seasonal_brew", category="World Events/Brewfest", name="Brew of the Year", description="Sample 12 beers featured in the Brew of the Month club.", mapID="Ironforge", uiMapID=87, points=10, parent="World Events", type=28}}
+A{"Ironforge", 1183, 0.1870, 0.5210, criterion=3517, side="alliance", trivia={criteria="Springtime Stout", module="seasonal_brew", category="World Events/Brewfest", name="Brew of the Year", description="Sample 12 beers featured in the Brew of the Month club.", mapID="Ironforge", uiMapID=87, points=10, parent="World Events", type=28}}
+A{"Ironforge", 1183, 0.1870, 0.5210, criterion=3520, side="alliance", trivia={criteria="Izzard's Ever Flavor", module="seasonal_brew", category="World Events/Brewfest", name="Brew of the Year", description="Sample 12 beers featured in the Brew of the Month club.", mapID="Ironforge", uiMapID=87, points=10, parent="World Events", type=28}}
+A{"Ironforge", 1183, 0.1870, 0.5210, criterion=3521, side="alliance", trivia={criteria="Draenic Pale Ale", module="seasonal_brew", category="World Events/Brewfest", name="Brew of the Year", description="Sample 12 beers featured in the Brew of the Month club.", mapID="Ironforge", uiMapID=87, points=10, parent="World Events", type=28}}
+A{"Ironforge", 1183, 0.1870, 0.5210, criterion=3522, side="alliance", trivia={criteria="Blackrock Lager", module="seasonal_brew", category="World Events/Brewfest", name="Brew of the Year", description="Sample 12 beers featured in the Brew of the Month club.", mapID="Ironforge", uiMapID=87, points=10, parent="World Events", type=28}}
+A{"Ironforge", 1183, 0.1870, 0.5210, criterion=3523, side="alliance", trivia={criteria="Binary Brew", module="seasonal_brew", category="World Events/Brewfest", name="Brew of the Year", description="Sample 12 beers featured in the Brew of the Month club.", mapID="Ironforge", uiMapID=87, points=10, parent="World Events", type=28}}
+A{"Ironforge", 1183, 0.1870, 0.5210, criterion=3525, side="alliance", trivia={criteria="Autumnal Acorn Ale", module="seasonal_brew", category="World Events/Brewfest", name="Brew of the Year", description="Sample 12 beers featured in the Brew of the Month club.", mapID="Ironforge", uiMapID=87, points=10, parent="World Events", type=28}}
+A{"Ironforge", 1183, 0.1870, 0.5210, criterion=3519, side="alliance", trivia={criteria="Lord of Frost's Private Label", module="seasonal_brew", category="World Events/Brewfest", name="Brew of the Year", description="Sample 12 beers featured in the Brew of the Month club.", mapID="Ironforge", uiMapID=87, points=10, parent="World Events", type=28}}
+A{"Ironforge", 1183, 0.1870, 0.5210, criterion=3524, side="alliance", trivia={criteria="Bartlett's Bitter Brew", module="seasonal_brew", category="World Events/Brewfest", name="Brew of the Year", description="Sample 12 beers featured in the Brew of the Month club.", mapID="Ironforge", uiMapID=87, points=10, parent="World Events", type=28}}
+A{"Ironforge", 1183, 0.1870, 0.5210, criterion=3515, side="alliance", trivia={criteria="Wild Winter Pilsner", module="seasonal_brew", category="World Events/Brewfest", name="Brew of the Year", description="Sample 12 beers featured in the Brew of the Month club.", mapID="Ironforge", uiMapID=87, points=10, parent="World Events", type=28}}
+A{"Orgrimmar", 1183, 0.5060, 0.7360, criterion=3518, side="horde", trivia={criteria="Metok's Bubble Bock", module="seasonal_brew", category="World Events/Brewfest", name="Brew of the Year", description="Sample 12 beers featured in the Brew of the Month club.", mapID="Orgrimmar", uiMapID=85, points=10, parent="World Events", type=28}}
+A{"Orgrimmar", 1183, 0.5060, 0.7360, criterion=3526, side="horde", trivia={criteria="Aromatic Honey Brew", module="seasonal_brew", category="World Events/Brewfest", name="Brew of the Year", description="Sample 12 beers featured in the Brew of the Month club.", mapID="Orgrimmar", uiMapID=85, points=10, parent="World Events", type=28}}
+A{"Orgrimmar", 1183, 0.5060, 0.7360, criterion=3516, side="horde", trivia={criteria="Stranglethorn Brew", module="seasonal_brew", category="World Events/Brewfest", name="Brew of the Year", description="Sample 12 beers featured in the Brew of the Month club.", mapID="Orgrimmar", uiMapID=85, points=10, parent="World Events", type=28}}
+A{"Orgrimmar", 1183, 0.5060, 0.7360, criterion=3517, side="horde", trivia={criteria="Springtime Stout", module="seasonal_brew", category="World Events/Brewfest", name="Brew of the Year", description="Sample 12 beers featured in the Brew of the Month club.", mapID="Orgrimmar", uiMapID=85, points=10, parent="World Events", type=28}}
+A{"Orgrimmar", 1183, 0.5060, 0.7360, criterion=3520, side="horde", trivia={criteria="Izzard's Ever Flavor", module="seasonal_brew", category="World Events/Brewfest", name="Brew of the Year", description="Sample 12 beers featured in the Brew of the Month club.", mapID="Orgrimmar", uiMapID=85, points=10, parent="World Events", type=28}}
+A{"Orgrimmar", 1183, 0.5060, 0.7360, criterion=3521, side="horde", trivia={criteria="Draenic Pale Ale", module="seasonal_brew", category="World Events/Brewfest", name="Brew of the Year", description="Sample 12 beers featured in the Brew of the Month club.", mapID="Orgrimmar", uiMapID=85, points=10, parent="World Events", type=28}}
+A{"Orgrimmar", 1183, 0.5060, 0.7360, criterion=3522, side="horde", trivia={criteria="Blackrock Lager", module="seasonal_brew", category="World Events/Brewfest", name="Brew of the Year", description="Sample 12 beers featured in the Brew of the Month club.", mapID="Orgrimmar", uiMapID=85, points=10, parent="World Events", type=28}}
+A{"Orgrimmar", 1183, 0.5060, 0.7360, criterion=3523, side="horde", trivia={criteria="Binary Brew", module="seasonal_brew", category="World Events/Brewfest", name="Brew of the Year", description="Sample 12 beers featured in the Brew of the Month club.", mapID="Orgrimmar", uiMapID=85, points=10, parent="World Events", type=28}}
+A{"Orgrimmar", 1183, 0.5060, 0.7360, criterion=3525, side="horde", trivia={criteria="Autumnal Acorn Ale", module="seasonal_brew", category="World Events/Brewfest", name="Brew of the Year", description="Sample 12 beers featured in the Brew of the Month club.", mapID="Orgrimmar", uiMapID=85, points=10, parent="World Events", type=28}}
+A{"Orgrimmar", 1183, 0.5060, 0.7360, criterion=3519, side="horde", trivia={criteria="Lord of Frost's Private Label", module="seasonal_brew", category="World Events/Brewfest", name="Brew of the Year", description="Sample 12 beers featured in the Brew of the Month club.", mapID="Orgrimmar", uiMapID=85, points=10, parent="World Events", type=28}}
+A{"Orgrimmar", 1183, 0.5060, 0.7360, criterion=3524, side="horde", trivia={criteria="Bartlett's Bitter Brew", module="seasonal_brew", category="World Events/Brewfest", name="Brew of the Year", description="Sample 12 beers featured in the Brew of the Month club.", mapID="Orgrimmar", uiMapID=85, points=10, parent="World Events", type=28}}
+A{"Orgrimmar", 1183, 0.5060, 0.7360, criterion=3515, side="horde", trivia={criteria="Wild Winter Pilsner", module="seasonal_brew", category="World Events/Brewfest", name="Brew of the Year", description="Sample 12 beers featured in the Brew of the Month club.", mapID="Orgrimmar", uiMapID=85, points=10, parent="World Events", type=28}}
+
+-- World Events/Brewfest: Have Keg, Will Travel
+A{"unknown", 303, season="Brewfest", trivia={module="seasonal_brew", category="World Events/Brewfest", name="Have Keg, Will Travel", description="Obtain a Brewfest mount, or transform yours into one using Brewfest Hops.", points=10, parent="World Events"}}
+
+-- World Events/Brewfest: Down With The Dark Iron
+A{"unknown", 1186, season="Brewfest", trivia={module="seasonal_brew", category="World Events/Brewfest", name="Down With The Dark Iron", description="Defend the Brewfest camp from the Dark Iron attack and complete the quest, \"This One Time, When I Was Drunk...\"", points=10, parent="World Events"}}
+
+-- World Events/Brewfest: Almost Blind Luck
+A{"unknown", 1260, season="Brewfest", trivia={module="seasonal_brew", category="World Events/Brewfest", name="Almost Blind Luck", description="Fall 65 yards without dying while wearing Synthebrew Goggles during the Brewfest Holiday.", points=10, parent="World Events"}}
+
+-- World Events: Brewmaster
+A{"unknown", 1683, criterion=8160, season="Brewfest", trivia={criteria="Have Keg, Will Travel", module="seasonal_brew", category="World Events", name="Brewmaster", description="Complete the Brewfest achievements listed below.", points=10, type="achievement"}}
+A{"unknown", 1683, criterion=7235, season="Brewfest", trivia={criteria="Does Your Wolpertinger Linger?", module="seasonal_brew", category="World Events", name="Brewmaster", description="Complete the Brewfest achievements listed below.", points=10, type="achievement"}}
+A{"unknown", 1683, criterion=6181, season="Brewfest", trivia={criteria="The Brewfest Diet", module="seasonal_brew", category="World Events", name="Brewmaster", description="Complete the Brewfest achievements listed below.", points=10, type="achievement"}}
+A{"unknown", 1683, criterion=6184, season="Brewfest", trivia={criteria="Direbrewfest", module="seasonal_brew", category="World Events", name="Brewmaster", description="Complete the Brewfest achievements listed below.", points=10, type="achievement"}}
+A{"unknown", 1683, criterion=6182, season="Brewfest", trivia={criteria="Brew of the Month", module="seasonal_brew", category="World Events", name="Brewmaster", description="Complete the Brewfest achievements listed below.", points=10, type="achievement"}}
+A{"unknown", 1683, criterion=6185, season="Brewfest", trivia={criteria="Down With The Dark Iron", module="seasonal_brew", category="World Events", name="Brewmaster", description="Complete the Brewfest achievements listed below.", points=10, type="achievement"}}
+
+-- World Events/Brewfest: Does Your Wolpertinger Linger?
+A{"unknown", 1936, season="Brewfest", trivia={module="seasonal_brew", category="World Events/Brewfest", name="Does Your Wolpertinger Linger?", description="Obtain a Wolpertinger pet from the Brewfest quest line.", points=10, parent="World Events"}}
+
+-- World Events: What a Long, Strange Trip It's Been
+A{"unknown", 2144, criterion=7564, season="Brewfest", trivia={criteria="Brewmaster", module="seasonal_brew", category="World Events", name="What a Long, Strange Trip It's Been", description="Complete the world events achievements listed below.", points=50, type="achievement"}}
+
+-- World Events/Brewfest: Brew of the Month
+A{"unknown", 2796, season="Brewfest", trivia={module="seasonal_brew", category="World Events/Brewfest", name="Brew of the Month", description="Join the Brew of the Month club.", points=10, parent="World Events"}}
+
+-- Feats of Strength: A Brew-FAST Mount
+A{"unknown", 3496, season="Brewfest", trivia={module="seasonal_brew", category="Feats of Strength", name="A Brew-FAST Mount", description="Obtain an epic Brewfest mount.", points=0}}

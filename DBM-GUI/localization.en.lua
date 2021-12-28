@@ -141,6 +141,7 @@ L.ButtonImportProfile		= "Import profile"
 L.ButtonExportProfile		= "Export profile"
 
 L.ImportErrorOn				= "Custom sounds missing for setting: %s"
+L.ImportVoiceMissing		= "Missing voice pack: %s"
 
 -- Tab: Alerts
 L.TabCategory_Alerts	 	= "Alerts"
@@ -272,6 +273,8 @@ L.Slider_BarOffSetX 		= "Offset X: %d"
 L.Slider_BarOffSetY 		= "Offset Y: %d"
 L.Slider_BarWidth 			= "Bar width: %d"
 L.Slider_BarScale 			= "Bar scale: %0.2f"
+L.BarSaturation				= "Bar saturation for small timers (When huge bars are disabled): %0.2f"
+
 --Types
 L.BarStartColorAdd			= "Start color (Add)"
 L.BarEndColorAdd			= "End color (Add)"

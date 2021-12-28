@@ -38,7 +38,7 @@ ns.RegisterPoints(1565, { -- Ardenweald
     [48964106] = ns.path{achievement=14313, criteria=50037, quest=61067,atlas="poi-door-arrow-up",note="Slow-fall feather to reach the treasure"},
     [63903750] = {
         achievement=14313, criteria=50039, -- Cache of the Moon
-        quest=61074, -- also 61126
+        quest=61074, -- also 61126 for having turned in the tools
         loot={
             {180731, mount=1397}, -- Wildseed Cradle
         },
@@ -46,11 +46,11 @@ ns.RegisterPoints(1565, { -- Ardenweald
         minimap=true,
         note="Locate 5 tools scattered around the Garden of Night (southeast of Root-Home), combine them into {item:180753:Twinklestar's Gardening Toolkit} and bring them to {npc:171360:Twinklestar} in Tirna Vaal.\nAfter this is done, talk to Twinklestar to receive the {spell:334353:Moonsight} buff",
     },
-    [38995696] = {quest=61074,achievement=14313, criteria=50039,label="{item:180759:Diary of the Night}",inbag=180759,atlas="DruidEclipse-LunarMoon",minimap=true},
-    [39755440] = {quest=61074,achievement=14313, criteria=50039,label="{item:180754:Gardener's Hammer}",inbag=180754,atlas="DruidEclipse-LunarMoon",minimap=true},
-    [40315262] = {quest=61074,achievement=14313, criteria=50039,label="{item:180758:Gardener's Basket}",inbag=180758,atlas="DruidEclipse-LunarMoon",minimap=true},
-    [38495808] = {quest=61074,achievement=14313, criteria=50039,label="{item:180756:Gardener's Flute}",inbag=180756,atlas="DruidEclipse-LunarMoon",minimap=true},
-    [38856010] = {quest=61074,achievement=14313, criteria=50039,label="{item:180757:Gardener's Wand}",inbag=180757,atlas="DruidEclipse-LunarMoon",minimap=true},
+    [38995696] = {quest=61074,achievement=14313, criteria=50039,label="{item:180759:Diary of the Night}",inbag={180759,180753,any=true},atlas="DruidEclipse-LunarMoon",minimap=true},
+    [39755440] = {quest=61074,achievement=14313, criteria=50039,label="{item:180754:Gardener's Hammer}",inbag={180754,180753,any=true},atlas="DruidEclipse-LunarMoon",minimap=true},
+    [40315262] = {quest=61074,achievement=14313, criteria=50039,label="{item:180758:Gardener's Basket}",inbag={180758,180753,any=true},atlas="DruidEclipse-LunarMoon",minimap=true},
+    [38495808] = {quest=61074,achievement=14313, criteria=50039,label="{item:180756:Gardener's Flute}",inbag={180756,180753,any=true},atlas="DruidEclipse-LunarMoon",minimap=true},
+    [38856010] = {quest=61074,achievement=14313, criteria=50039,label="{item:180757:Gardener's Wand}",inbag={180757,180753,any=true},atlas="DruidEclipse-LunarMoon",minimap=true},
     [37603710] = {
         achievement=14313, criteria=50041, -- Dreamsong Heart
         quest=61070,
@@ -150,6 +150,7 @@ local vulpin = {
     note="Find {npc:171206:Playful Vulpin} and play with them 5 times to obtain the treasure. Use emotes related to what they're doing",
     atlas="honorsystem-icon-bonus", scale=1,
     minimap=true,
+    group="Playful Vulpin",
 }
 ns.RegisterPoints(1565, {
     [31854363] = vulpin,
@@ -171,13 +172,19 @@ ns.RegisterPoints(1565, {
 -- Non-achievement treasures
 ns.RegisterPoints(1565, { -- Ardenweald
     [26285897] = {
-        quest=61192, -- failed:61208, passed: 61198
-        loot={
-            {180727, mount=1360}, -- Shimmermist Runner
-        },
+        quest=61192, -- failed:61208, passed: 61198; 58013 happened as well?
         note="Read the Tale of the Tangle, then follow blue lamps until you find {npc:171767:Shizgher}",
     },
-    [32515302] = {quest=61192,label="Tale of the Tangle",note="Read, then follow the blue lamps to find {npc:171767:Shizgher}",atlas="poi-workorders",minimap=true,},
+    [32515302] = {
+        label="Tale of the Tangle",note="Read, then follow the blue lamps to find {npc:171767:Shizgher}",
+        atlas="poi-workorders",
+        minimap=true,
+    },
+}, {
+    quest=61192,
+    loot={
+        {180727, mount=1360}, -- Shimmermist Runner
+    },
 })
 
 -- Fractured Fairy Tales
@@ -188,7 +195,7 @@ local escapist = {criteria=50014,onquest=62621,inbag=183879,loot={{183879,quest=
 local travel = {criteria=50015,onquest=62622,inbag=183880,loot={{183880,quest=62622}},}
 local naughty = {criteria=50016,onquest=62623,inbag=183881,loot={{183881,quest=62623}},}
 ns.RegisterPoints(1565, {
-    [63602275] = {atlas="Campaign-QuestLog-LoreBook-Back",label="{npc:165867}",note="Bring books to him"},
+    [63602275] = {atlas="Campaign-QuestLog-LoreBook-Back",label="{npc:165867}",note="Bring books to him",group="faerietales",},
     [54604300] = meandering,
     [30004480] = wandering,
     [35602680] = wandering,
@@ -212,6 +219,7 @@ ns.RegisterPoints(1565, {
     atlas="Campaign-QuestLog-LoreBook",
     minimap=true,
     level=60,
+    group="faerietales",
 })
 
 -- ns.RegisterPoints(1565, {

@@ -1,12 +1,22 @@
 local addonName, shared = ...;
 
+local CloseDropDownMenus = _G.CloseDropDownMenus;
+local GameTooltip = _G.GameTooltip;
+local IsAddOnLoaded = _G.IsAddOnLoaded;
+local ToggleDropDownMenu = _G.ToggleDropDownMenu;
+local TomTom = _G.TomTom;
+local UIDropDownMenu_AddButton = _G.UIDropDownMenu_AddButton;
+local UIParent = _G.UIParent;
+local WorldMapButton = _G.WorldMapButton;
+local WorldMapTooltip = _G.WorldMapTooltip;
+
 local addon = shared.addon;
 local HandyNotes = shared.HandyNotes;
 local nodes = shared.nodeData;
+local saved = shared.saved;
 local handler = {};
-local settings;
 local tooltip;
-local dropdown;
+local currentInfo;
 
 local infoProvider = addon.import('infoProvider');
 local nodeHider = addon.import('nodeHider');
@@ -16,6 +26,9 @@ local function makeIterator (zones, isMinimap)
   local coords;
 
   local function iterator ()
+    local scale = saved.settings.icon_scale;
+    local alpha = saved.settings.icon_alpha;
+
     while (zone) do
       local zoneNodes = nodes[zone];
 
@@ -33,7 +46,7 @@ local function makeIterator (zones, isMinimap)
             zoneNodes[remCoords] = nil;
           else
             if (info.display) then
-              return coords, zone, info.icon, settings.icon_scale, settings.icon_alpha;
+              return coords, zone, info.icon, scale, alpha;
             end
 
             coords= next(zoneNodes, coords);
@@ -48,9 +61,13 @@ local function makeIterator (zones, isMinimap)
   return iterator;
 end
 
+local function returnNil ()
+  return nil;
+end
+
 function handler:GetNodes2(uiMapId, isMinimap)
-  if (isMinimap == true and settings.minimap_icons ~= true) then
-    return function () return nil end
+  if (isMinimap == true and saved.settings.minimap_icons ~= true) then
+    return returnNil;
   end
 
   -- local zones = HandyNotes:GetContinentZoneList(uiMapId); -- Is this a continent?
@@ -78,8 +95,8 @@ local function addTooltipText (tooltip, info, header)
   end
 end
 
-function displayTooltip (nodeInfo)
-  nodeData = nodeInfo.rareInfo or nodeInfo.treasureInfo;
+local function displayTooltip (nodeInfo)
+  local nodeData = nodeInfo.rareInfo or nodeInfo.treasureInfo;
 
   tooltip:SetText(nodeData.name or nodeInfo.rare or nodeInfo.treasure);
   -- tooltip:SetText(nodeData.name .. ' ' .. (node.rare or node.treasure));
@@ -120,21 +137,12 @@ end
 
 addon.listen('DATA_READY', function (info, id)
   if (currentInfo == info) then
-    displayTooltip(nodeInfo);
+    displayTooltip(currentInfo);
   end
 end);
 
 local function updateNodes ()
   HandyNotes:SendMessage('HandyNotes_NotifyUpdate', addonName);
-end
-
-local function replaceTable (oldTable, newTable)
-  -- this clears the table without destroying old references
-  table.wipe(oldTable);
-
-  for key, value in pairs(newTable) do
-    oldTable[key] = value;
-  end
 end
 
 -- node menu handling
@@ -153,13 +161,13 @@ do
       TomTom:AddWaypoint(mapId, x, y, {
         title = info.name;
         persistent = nil,
-        minimap = settings.minimap_icons,
+        minimap = saved.settings.minimap_icons,
         world = true,
       });
     end
   end
 
-  local dropdown = CreateFrame('Frame', 'HandyNotes_Pandaria_DropdownMenu');
+  local dropdown = _G.CreateFrame('Frame', 'HandyNotes_Pandaria_DropdownMenu');
   local clickedMapId;
   local clickedCoord;
 
@@ -225,50 +233,8 @@ do
   end
 end
 
-local function validateSettings (config, defaults)
-  local new = {};
-
-  for param, defaultValue in pairs(defaults) do
-    local configValue = config[param];
-
-    if (type(configValue) ~= type(defaultValue)) then
-      new[param] = defaultValue;
-    else
-      new[param] = configValue;
-    end
-  end
-
-  -- we replace the old settings table to wipe removed settings
-  replaceTable(config, new);
-end
-
 local function registerWithHandyNotes ()
-  local defaults = {
-    icon_scale = 1,
-    icon_alpha = 1,
-    minimap_icons = true,
-    show_rares = true,
-    show_treasures = true,
-    always_show_rares = false,
-    show_mounts = true,
-    show_toys = true,
-    show_achievements = true,
-    show_special_rares = true,
-  };
-
-  if (storedData == nil) then
-    storedData = {
-      settings = {};
-    };
-  elseif (storedData.settings == nil) then
-    storedData.settings = {};
-  end
-
-  settings = storedData.settings;
-  validateSettings(settings, defaults);
-
-  addon.yell('SETTINGS_LOADED', settings);
-
+  local settings = saved.settings;
   local options = {
     type = "group",
     name = 'Pandaria',
@@ -392,9 +358,11 @@ local function registerWithHandyNotes ()
   HandyNotes:RegisterPluginDB(addonName, handler, options);
 end
 
-
-addon.on('PLAYER_LOGIN', function ()
+local function handleLogin ()
   registerWithHandyNotes();
-  addon.funnel({'CRITERIA_UPDATE'}, 2, updateNodes);
+  addon.funnel({'CRITERIA_UPDATE'}, updateNodes);
   addon.on({'NEW_TOY_ADDED', 'NEW_MOUNT_ADDED'}, updateNodes);
-end);
+  addon.off('PLAYER_LOGIN', handleLogin);
+end
+
+addon.on('PLAYER_LOGIN', handleLogin);

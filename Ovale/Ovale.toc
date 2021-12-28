@@ -2,7 +2,7 @@
 ## Title: Ovale Spell Priority
 ## Notes: Show the icon of the next spell to cast
 ## Author: Sidoine De Wispelaere
-## Version: 9.1.12
+## Version: 9.1.13
 ## OptionalDeps: LibStub, tsaddon, AceEvent-3.0, AceGUI-3.0, AceTimer-3.0, LibActionButton-1.0-ElvUI, LibButtonGlow-1.0, AceConfig-3.0, AceConfigDialog-3.0, AceDB-3.0, AceDBOptions-3.0, AceConsole-3.0, LibTextDump-1.0, AceSerializer-3.0, Masque, LibDataBroker-1.1, LibDBIcon-1.0, AceLocale-3.0, recount, AceComm-3.0, LibBabble-CreatureType-3.0, LibRangeCheck-2.0, LibStub, CallbackHandler-1.0, tslib
 ## SavedVariables: OvaleDB
 
