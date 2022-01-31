@@ -120,6 +120,15 @@ function RSUtils.StartsWith(string, start)
 	return string.sub(string,1,string.len(start)) == start
 end
 
+function RSUtils.Lpad(s, l, c)
+	if (type(s) ~= "string") then
+		s = tostring(s)
+	end
+	
+	local res = string.rep(c or ' ', l - #s) .. s
+	return res, res ~= s
+end
+
 ---============================================================================
 -- Arithmetic utils
 ---============================================================================
@@ -141,4 +150,16 @@ end
 ---
 function RSUtils.TextColor(text, color)
 	return string.format("|cff%s%s|r", color, text)
+end
+
+---============================================================================
+-- Adjust coordinates to the new format
+---============================================================================
+
+function RSUtils.FixCoord(coord)
+	if (tonumber(coord) <= 1) then
+		return tonumber(coord)
+	else
+		return tonumber("0."..coord);
+	end
 end

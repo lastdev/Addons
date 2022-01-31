@@ -21,15 +21,18 @@
 ## X-DBM-Mod-MapID: 2481
 ## X-DBM-Mod-MinCoreRevision: 17286
 ## X-DBM-Mod-MinExpansion: 8
+
 localization.en.lua
 localization.kr.lua
 localization.cn.lua
+localization.tw.lua
+
 VigilantGuardian.lua
-Dausegne.lua
+Skolex.lua
 ArtificerXymox.lua
+Dausegne.lua
 PrototypePantheon.lua
 Lihuvim.lua
-Skolex.lua
 Halondrus.lua
 AnduinWrynn.lua
 LordsofDread.lua

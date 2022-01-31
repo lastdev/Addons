@@ -1,6 +1,7 @@
 # <DBM> World Bosses (BfA)
 
-## [r6](https://github.com/DeadlyBossMods/DBM-BfA/tree/r6) (2021-11-02)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-BfA/compare/r5...r6) [Previous Releases](https://github.com/DeadlyBossMods/DBM-BfA/releases)
+## [r8](https://github.com/DeadlyBossMods/DBM-BfA/tree/r8) (2022-01-16)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-BfA/compare/r7...r8) [Previous Releases](https://github.com/DeadlyBossMods/DBM-BfA/releases)
 
-- bump tocs  
+- Fix ROOM\_EDGE -> EDGE  
+- Fix DBM\_CORE\_L -> DBM\_COMMON\_L  

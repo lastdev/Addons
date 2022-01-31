@@ -12,6 +12,9 @@ local RSGeneralDB = private.ImportLib("RareScannerGeneralDB")
 -- RareScanner service libraries
 local RSMinimap = private.ImportLib("RareScannerMinimap")
 
+-- RareScanner general libraries
+local RSUtils = private.ImportLib("RareScannerUtils")
+
 
 RSOverlayMixin = CreateFromMixins(MapCanvasPinMixin);
 
@@ -26,12 +29,7 @@ function RSOverlayMixin:OnAcquired(x, y, r, g, b, pin)
 	self.pin = pin
 	self.Texture:SetTexture(RSConstants.OVERLAY_SPOT_TEXTURE)
 	self.Texture:SetVertexColor(r, g, b, 0.9)
-	
-	if (x <= 1 and y <= 1) then
-		self:SetPosition(x, y);
-	else
-		self:SetPosition(tonumber("0."..x), tonumber("0."..y));
-	end
+	self:SetPosition(RSUtils.FixCoord(x), RSUtils.FixCoord(y));
 end
 
 function RSOverlayMixin:OnMouseEnter()

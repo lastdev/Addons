@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,timewalker"
 
-mod:SetRevision("20201013220821")
+mod:SetRevision("20220116042005")
 mod:SetCreatureID(40825, 40788)
 mod:SetMainBossID(40788)-- 40788 = Mindbender Ghur'sha
 mod:SetEncounterID(1046)
@@ -30,8 +30,8 @@ local specWarnLavaBolt		= mod:NewSpecialWarningInterrupt(76171, nil, nil, nil, 1
 local specWarnAbsorbMagic	= mod:NewSpecialWarningReflect(76307, "SpellCaster", nil, nil, 1, 2)
 local specWarnEarthShards	= mod:NewSpecialWarningMove(84931, nil, nil, nil, 1, 2)
 
-local timerMagmaSplash		= mod:NewBuffActiveTimer(10, 76170, nil, "Healer", nil, 5, nil, DBM_CORE_L.HEALER_ICON..DBM_CORE_L.MAGIC_ICON)
-local timerAbsorbMagic		= mod:NewBuffActiveTimer(3, 76307, nil, "SpellCaster", 2, 5, nil, DBM_CORE_L.DAMAGE_ICON)
+local timerMagmaSplash		= mod:NewBuffActiveTimer(10, 76170, nil, "Healer", nil, 5, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.MAGIC_ICON)
+local timerAbsorbMagic		= mod:NewBuffActiveTimer(3, 76307, nil, "SpellCaster", 2, 5, nil, DBM_COMMON_L.DAMAGE_ICON)
 local timerMindFog			= mod:NewBuffActiveTimer(20, 76234, nil, nil, nil, 3)
 
 local magmaTargets = {}

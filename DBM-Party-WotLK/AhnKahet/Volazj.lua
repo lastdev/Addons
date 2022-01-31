@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,timewalker"
 
-mod:SetRevision("20210614202848")
+mod:SetRevision("20220116042005")
 mod:SetCreatureID(29311)
 mod:SetEncounterID(1968)
 
@@ -36,7 +36,7 @@ end
 function mod:ShadowCrashTarget(targetname, uId)
 	if not targetname then
 		if DBM.Options.DebugMode then
-			warnShadowCrash:Show(DBM_CORE_L.UNKNOWN)
+			warnShadowCrash:Show(DBM_COMMON_L.UNKNOWN)
 		end
 		return
 	end

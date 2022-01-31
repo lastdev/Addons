@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,timewalker"
 
-mod:SetRevision("20210614202848")
+mod:SetRevision("20220116042005")
 mod:SetCreatureID(26687)
 mod:SetEncounterID(2027)
 
@@ -15,7 +15,7 @@ mod:RegisterEventsInCombat(
 
 local warningImpale		= mod:NewTargetNoFilterAnnounce(48261, 2, nil, "Healer")
 
-local timerImpale		= mod:NewTargetTimer(9, 48261, nil, "Healer", 2, 5, nil, DBM_CORE_L.HEALER_ICON)
+local timerImpale		= mod:NewTargetTimer(9, 48261, nil, "Healer", 2, 5, nil, DBM_COMMON_L.HEALER_ICON)
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(48261, 59268) then

@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,timewalker"
 
-mod:SetRevision("20210614202848")
+mod:SetRevision("20220116042005")
 mod:SetCreatureID(29305)
 mod:SetEncounterID(1980)
 --
@@ -16,7 +16,7 @@ mod:RegisterEventsInCombat(
 
 local specWarnTransform		= mod:NewSpecialWarningInterruptCount(55098, nil, nil, nil, 1, 2)
 
-local timerTransform		= mod:NewCDTimer(10, 55098, nil, nil, nil, 4, nil, DBM_CORE_L.INTERRUPT_ICON)--experimental
+local timerTransform		= mod:NewCDTimer(10, 55098, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--experimental
 
 mod.vb.lowHealth = false
 mod.vb.kickCount = 0

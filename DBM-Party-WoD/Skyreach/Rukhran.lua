@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
 
-mod:SetRevision("20201002195958")
+mod:SetRevision("20220116042005")
 mod:SetCreatureID(76143)
 mod:SetEncounterID(1700)
 
@@ -23,7 +23,7 @@ local specWarnQuills			= mod:NewSpecialWarningSpell(159382, nil, nil, nil, 2, 2)
 local specWarnQuillsEnd			= mod:NewSpecialWarningEnd(159382, nil, nil, nil, 1, 2)
 
 local timerSolarFlareCD			= mod:NewCDTimer(17, 153810, nil, nil, nil, 3)
-local timerQuills				= mod:NewBuffActiveTimer(17, 159382, nil, nil, nil, 2, nil, DBM_CORE_L.HEALER_ICON)
+local timerQuills				= mod:NewBuffActiveTimer(17, 159382, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)
 
 local skyTrashMod = DBM:GetModByName("SkyreachTrash")
 

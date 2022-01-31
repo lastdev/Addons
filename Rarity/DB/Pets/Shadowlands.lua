@@ -28,7 +28,7 @@ local shadowlandsPets = {
 		npcs = {158406},
 		spellId = 335979,
 		itemId = 181267,
-		chance = 33,
+		chance = 50,
 		creatureId = 172139,
 		questId = 58006,
 		coords = {
@@ -578,6 +578,8 @@ local shadowlandsPets = {
 		npcs = {156340},
 		questId = 61634,
 		chance = 25,
+		requiresCovenant = true,
+		requiredCovenantID = CONSTANTS.COVENANT_IDS.KYRIAN,
 		coords = {
 			{m = CONSTANTS.UIMAPIDS.BASTION, x = 22.6, y = 22.8, n = L["Larionrider Orstus"]}
 		}
@@ -994,7 +996,7 @@ local shadowlandsPets = {
 		spellId = 353644,
 		creatureId = 179228,
 		npcs = {177132},
-		chance = 100, -- Blind guess
+		chance = 500,
 		coords = {
 			{m = CONSTANTS.UIMAPIDS.THE_MAW, n = L["Helsworn Soulseeker"]}
 		}

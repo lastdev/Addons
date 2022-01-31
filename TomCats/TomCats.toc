@@ -3,13 +3,13 @@
 ## Notes: See license.txt for license and copyright information
 ## Author: TomCat
 ## X-Website: https://www.tomcatstours.com
-## Version: 2.3.24
+## Version: 2.3.29
 ## DefaultState: enabled
 ## SavedVariables: TomCats_Account
 ## SavedVariablesPerCharacter: TomCats_Character
 ## X-Category: Achievements, Map, Miscellaneous
 ## X-Localizations: enUS, enGB, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ptPT, ruRU, zhCN, zhTW
-## X-TomCats-Expiry: 1641177312
+## X-TomCats-Expiry: 1646146488
 
 constants.lua
 slashcommands.lua
@@ -45,8 +45,8 @@ ui_vignettes_section.lua
 ui_vignettes_section.xml
 ui_vignettes_pins.lua
 ui_vignettes_pins.xml
-#lunarfestival/Main.xml
-#loveisintheair/Main.xml
+lunarfestival/Main.xml
+loveisintheair/Main.xml
 configuration.xml
 configuration.lua
 minimap_icon.xml

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(422, "DBM-Party-Classic", 4, 231)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145746")
+mod:SetRevision("20220116042005")
 mod:SetCreatureID(7800)
 mod:SetEncounterID(382)
 
@@ -17,8 +17,8 @@ local warningPound				= mod:NewTargetAnnounce(32346, 2)
 
 local specWarnSteamBlast		= mod:NewSpecialWarningInterrupt(93655, "HasInterrupt", nil, nil, 1, 2)
 
-local timerSteamBlastCD			= mod:NewAITimer(180, 93655, nil, nil, nil, 4, nil, DBM_CORE_L.INTERRUPT_ICON)
-local timerPoundCD				= mod:NewAITimer(180, 74720, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_L.TANK_ICON)
+local timerSteamBlastCD			= mod:NewAITimer(180, 93655, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerPoundCD				= mod:NewAITimer(180, 74720, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
 function mod:OnCombatStart(delay)
 	timerSteamBlastCD:Start(1-delay)

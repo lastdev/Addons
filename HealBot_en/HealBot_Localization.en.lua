@@ -130,6 +130,7 @@ function HealBot_Lang_enALL()
     HEALBOT_SORTBY_CLASS                    = "Class"
     HEALBOT_SORTBY_GROUP                    = "Group"
     HEALBOT_SORTBY_MAXHEALTH                = "Max health"
+    HEALBOT_SORTBY_UNITID                   = "Unit ID"
     HEALBOT_OPTIONS_NEWDEBUFFTEXT           = "New Debuff"
     HEALBOT_OPTIONS_NEWHOTBUFFTEXT          = "New Buff"
     HEALBOT_OPTIONS_DELSKIN                 = "Delete"
@@ -286,6 +287,8 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_SHOWHEALTHONBAR         = "Show health on bar";
     HEALBOT_OPTIONS_SHOWTEXT                = "Show text";
     HEALBOT_OPTIONS_IGNOREINCOMINGONFULL    = "On full health ignore all incoming heals and "..HEALBOT_classicABSORBHOT.."s";
+    HEALBOT_OPTIONS_TEXTONLYTIP             = "Only show in tooltip";
+    HEALBOT_OPTIONS_TEXTSTATENAMEFONT       = "Use name font string";
     HEALBOT_OPTIONS_BARHEALTHINCHEALS       = "Include incoming heals";
     HEALBOT_OPTIONS_BARHEALTHSEPHEALS       = "Separate incoming heals";
     HEALBOT_OPTIONS_BARHEALTHINCABSORBS     = "Include "..HEALBOT_classicABSORBHOT.."s"
@@ -1393,6 +1396,9 @@ function HealBot_Lang_enALL()
     HEALBOT_ENEMY_EXISTS_SHOW               = "Show when exists"
     HEALBOT_CMD_TOGGLECUSTOMCURECASTBY      = "Toggle Custom Cures - Default Cast By"
     HEALBOT_CMD_TOGGLEMAINASSIST            = "Toggle include Main Assist with Tanks"
+    HEALBOT_CMD_RESETSKINGROUP              = "Recover Group skin"
+    HEALBOT_CMD_RESETSKINRAID25             = "Recover Raid 25 skin"
+    HEALBOT_CMD_RESETSKINRAID40             = "Recover Raid 40 skin"
     HEALBOT_OPTIONS_ENTERINGCOMBAT          = "When entering combat"
     HEALBOT_OPTIONS_ALWAYSINCOMBAT          = "Always show"
     HEALBOT_OPTIONS_OUTOFCOMBAT             = "When out of combat"

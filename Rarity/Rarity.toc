@@ -2,7 +2,7 @@
 ## Interface: 90105
 ## X-Min-Interface: 90105
 ## Title: Rarity
-## Version: 1.0 (r713-release-4)
+## Version: 1.0 (r714-release)
 
 ## Notes: Tracks rare drops, including companions and mounts
 ## Notes-ruRU: Примечания

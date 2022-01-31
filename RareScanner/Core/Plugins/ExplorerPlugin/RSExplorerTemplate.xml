@@ -430,7 +430,8 @@
         </Anchors>
 	    <Layers>
 	      <Layer level="OVERLAY">
-	        <FontString parentKey="ScanRequiredText" inherits="GameFontNormalHuge">
+	        <FontString parentKey="ScanRequiredText" maxLines="2" wordwrap="true" inherits="GameFontNormalHuge">
+	          <Size x="750" y="40" />
 	          <Anchors>
 	            <Anchor point="CENTER" x="0" y="10"/>
 	          </Anchors>

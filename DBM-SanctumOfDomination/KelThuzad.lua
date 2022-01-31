@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2440, "DBM-SanctumOfDomination", nil, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20211203195942")
+mod:SetRevision("20220127100358")
 mod:SetCreatureID(175559)
 mod:SetEncounterID(2422)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -66,7 +66,7 @@ local yellGlacialWrath								= mod:NewShortPosYell(353808)
 local yellGlacialWrathFades							= mod:NewIconFadesYell(353808)
 local specWarnOblivionsEcho							= mod:NewSpecialWarningMoveAway(347292, nil, nil, nil, 1, 2)
 local yellOblivionsEcho								= mod:NewShortYell(347292)
-local specWarnOblivionsEchoNear						= mod:NewSpecialWarningMove(347518, nil, nil, nil, 1, 2)
+local specWarnOblivionsEchoNear						= mod:NewSpecialWarningMove(347292, nil, nil, nil, 1, 2)
 local specWarnFrostBlast							= mod:NewSpecialWarningMoveTo(348756, nil, nil, nil, 1, 2)
 local yellFrostBlast								= mod:NewYell(348756, nil, nil, nil, "YELL")
 local yellFrostBlastFades							= mod:NewShortFadesYell(348756, nil, nil, nil, "YELL")
@@ -102,11 +102,14 @@ local timerOnslaughtoftheDamnedCD					= mod:NewNextTimer(40.2, 352348, nil, nil,
 mod:AddInfoFrameOption(354206, true)
 mod:AddSetIconOption("SetIconOnGlacialWrath", 353808, false, false, {1, 2, 3, 4})--Sets icons on players (can be used with spike marking)
 mod:AddSetIconOption("SetIconOnGlacialSpike", "ej23449", true, true, {1, 2, 3, 4})--Sets icons on spikes spawned by players (can be used with player market)
-mod:AddSetIconOption("SetIconOnEcho", 347291, false, false, {1, 2, 3, 4})--Off by default since it conflicts with wrath icons
+mod:AddSetIconOption("SetIconOnEcho", 347292, false, false, {1, 2, 3, 4})--Off by default since it conflicts with wrath icons
 mod:AddSetIconOption("SetIconOnReaper", "ej23423", true, true, {6, 7, 8})--Shares icons with Shards, but rarely at same time
 mod:AddSetIconOption("SetIconOnShards", "ej23224", true, true, {4, 5, 6, 7, 8})--5 shards mythic (shares icons with reaper but rarely at same time)
 mod:AddNamePlateOption("NPAuraOnNecroticEmpowerment", 355948)
 mod:AddNamePlateOption("NPAuraOnFixate", 355389)
+mod:GroupSpells(353808, "ej23449")--Spikes combined with wrath, spikes are after effect of wrath expiring
+mod:GroupSpells(355389, 355389)--Corpse detonation and associate fixate debuff
+mod:GroupSpells(348071, "ej23224")--Soul Fracture, as well as shards spawned by it
 
 mod.vb.echoIcon = 1
 mod.vb.wrathIcon = 1
@@ -348,7 +351,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		self.vb.wrathIcon = self.vb.wrathIcon + 1
 		if self.vb.wrathIcon > 8 then
 			self.vb.wrathIcon = 1
-			DBM:AddMsg("Cast event for Glacial Wrath is wrong, doing backup icon reset")
 		end
 	elseif spellId == 348760 then--and self:AntiSpam(5, args.destName)
 		if args:IsPlayer() then

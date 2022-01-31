@@ -56,7 +56,7 @@ XPerl_RequestConfig(function(new)
 	if XPerl_PetTarget then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: c52d6da2c580f292231cbce24418a3ae3ca2b620 $")
+end, "$Revision: 33d78e5ce33228a1cf8cb5f354abf0b5e577621f $")
 
 local buffSetup
 
@@ -428,7 +428,7 @@ function XPerl_TargetTarget_OnUpdate(self, elapsed)
 			--XPerl_TargetTarget_Buff_UpdateAll(self)
 			XPerl_SetUnitNameColor(self.nameFrame.text, partyid)
 			XPerl_UpdateSpellRange(self, partyid)
-			XPerl_Highlight:SetHighlight(self, UnitGUID(partyid))
+			--XPerl_Highlight:SetHighlight(self, UnitGUID(partyid))
 			self.time = 0
 		end
 	end
@@ -483,7 +483,7 @@ function XPerl_TargetTargetTarget_OnUpdate(self, elapsed)
 			--XPerl_TargetTarget_Buff_UpdateAll(self)
 			XPerl_SetUnitNameColor(self.nameFrame.text, partyid)
 			XPerl_UpdateSpellRange(self, partyid)
-			XPerl_Highlight:SetHighlight(self, UnitGUID(partyid))
+			--XPerl_Highlight:SetHighlight(self, UnitGUID(partyid))
 			self.time = 0
 		end
 	end

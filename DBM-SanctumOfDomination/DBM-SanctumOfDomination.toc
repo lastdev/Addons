@@ -13,6 +13,7 @@
 ## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: SHADOWLANDS
 ## X-DBM-StatTypes: lfr,normal,heroic,mythic
+## X-DBM-NewOptions: 1
 ## X-DBM-Mod-Sort: 307
 ## X-DBM-Mod-MapID: 2450
 ## X-DBM-Mod-MinCoreRevision: 17286
@@ -21,6 +22,7 @@ localization.en.lua
 localization.kr.lua
 localization.cn.lua
 localization.tw.lua
+localization.ru.lua
 TheTarragrue.lua
 TheEyeoftheJailer.lua
 TheNine.lua

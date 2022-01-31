@@ -1,46 +1,71 @@
 # <DBM> World Bosses (Shadowlands)
 
-## [9.1.23](https://github.com/DeadlyBossMods/DBM-Retail/tree/9.1.23) (2021-12-15)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Retail/compare/9.1.22...9.1.23) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Retail/releases)
+## [9.1.26](https://github.com/DeadlyBossMods/DBM-Retail/tree/9.1.26) (2022-01-27)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Retail/compare/9.1.25...9.1.26) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Retail/releases)
 
-- Prep new releases  
-- updates to 4 bosses being tested this week based on latest journal.  
-- Update and Fix zhCN (#30)  
-- Forgot GetStage api  
-- rename variable because it makes it clearier this way  
-- Internally track how many times SetStage has been called by any given mod and keep track of total, as well as include it in callback. This will allow niche weak aura creation that needs these specific totals to function versus journal phasing numbers.  
-- Painsmith intermissions are now assigned 1.5 and 2.5 for greater distinction via callbacks  
-- More import fixes;  
-    - If sound is a number, its a built in sound too, so skip check  
-    - Fixed missing locale for missing voice pack import  
-- Proper validation matching at start of string.  
-- Ignore built in sounds in DBM:ValidateSound  
-- Update localization.tw.lua (#29)  
-- Update koKR (#28)  
-- Update koKR (#701)  
-- FInish the Lihuvim mod, post testing.  
-- Fix warnDegenerate typo  
-- Fix warnDegenerate local typo  
-- Update localization.tw.lua (#27)  
-- Option locale somehow got duplicated?  
-- Add new desaturation option for bars;  
-    - This allows grayscaling non-huge bars, making them appear less important  
-    - Feature request ;p  
-- Minor timer adjustments. Closes #700  
-- Push finished Xymox  
-- Improve mod debugging/transcriptor logging by adding stage changes to logging  
-- quick fix to filter system shock on non tanks  
-- Fix bad copy paste  
-- Unify language and termonology on announce and special announce option descriptions  
-- Changed sylvanas and anduin mods to use by phase category sorting and headers for much cleaner option navigation for these long multi phase fights  
-- Added Lihuvin drycode that's iffy at best...Journal is a hot mess so no promises mod won't be same.  
-- Fix a line that got moved somehow (accidental drag?)  
-- Fixed bug with sepulcher trash mod being assigned to incorrect parent mod  
-    Improved jailer mod considerbly by making options panel for it a hell of a lot more readable and organized.  
-- In some cases, especially for end bosses, it may be preferred to disable the auto sorting of announce objects and instead manually sort it at mod level by boss stage. This adds support for core for a single mod to override behaviors easily  
-- Fix numpty  
-- More spacer shortcuts  
-- Fix error in last  
-- Some tweaks/updates to Xymox mod before testing  
-- Unify whispers to use chatPrefixShort  
-- bump alphas for next dev cycle  
+- - Make default voice pack options VEM instead of none. - Removed the reminder messages for having a voice pack installed but disabled (since it'll be expected that not everyone wants to use them and it's no longer something users install themselves) - Disabled the reminder message for having a voice pack selected in options that's disabled, if the selected pack is VEM. We want users who disable the module instead of the menu to also be viable path to disabling VEM. Likewise, if users re-enable vem, for the most part it'll just start working again since we didn't tell them to go into GUI and change it to none.  
+- Ignore DBM-VPVEM/README.md explicitically  
+- Move the VEM directory even more, it's nested.  
+- Move VEM into folder correctly.  
+- Add VEM external dependency  
+- Update localization.ru.lua (#49) Added and translated missing phrases.  
+- Typo fix  
+- Enable commented GroupSpells now that a NOOP exists, and add NewOptions flag if you're on the gui branch of unified  
+- fix two invalid voice sounds  
+- cleanup a comment  
+- missed that  
+- Chains of Domination update:  
+     - Fixed two mods that had invalid spellIds for options/warning text and caused completely wrong spell to be shown  
+     - Added user requested feature to Tarragrue to have cast bar for each of the 3 casts of Hungering Mists.  
+     - Tweaked spellIds for a few other objects to match across objects for better bundling.  
+     - Cleaned up some unused stuff  
+- Update koKR (#48)  
+- forgot to set defaults table.  
+- create a controller wrapper vibrate function and throttle it to once per 2 seconds to prevent multiple calls to api happening within a fixed period of time, hopefully avoid api breaking and blizzard vibrating forever.  
+- Maybe this will work  
+- Code review:  
+    Fixed two timer types on anduin not being correctly set off AI timers after they were completed  
+    Changed march of the damned from special announce to regular one since it's every 7.5 seconds on anduin  
+    Fixed inconsistent short name text for tears on xymox so they are all "wormhole" and not half "wormhole" and half "tear"  
+- Adjust two LFR timers on sylvanas, Closes #718  
+- Fix guardian for mythic and normal, at least to best of ability, it was bugged on mythic and never cast one of his abilities  
+- hal timer tweaks  
+- Fix glyph of relocation timer  
+- Updated anduin to support normal mode timers  
+    In addition, updated mythic and heroic timers through extrapolation  
+- oops  
+- actually this particular one should still be on for healers  
+- niche infoframes are now off by default in sepulcher. Niche being ones that give information only a handful need to know (like raid managers) or if they present something that's already fairly obvious like boss energy.  
+- Repair xymox so it now detects the undocumente stage 4 timer reset  
+- bump classic alpha cycle  
+- prep new classic release  
+- luacheck for last  
+- add search tags  
+- Update jailer to reflect that intermission was deleted from fight  
+- Update localization.ru.lua (#44)  
+- Fix Luacheck  
+- Update anduin and hal from mythic testing  
+- Wicked Star changes  
+     - Raid icon settingn for it removed.  
+     - Target announce now aggregates each set  
+     - Yells now assign star, circle, diamond to all people in each set for SAY messages  
+     - Target timer is now off by default.  
+- Create localization.tw.lua (#717)  
+- Update zhTW (#47)  
+- Update koKR (#46)  
+- Update koKR (#716)  
+- uniform some options text  
+    cleaned unused  
+- Add RL setting delay to anduin to match other mods and ensure it works better  
+    Also removed print message from pantheon, no one really wants to see that every pull. it should work seemlessly not noisily  
+- Ooh, forgot the getremaining call  
+- fixed bugs with crushing timer on Hal and added extended icon support for crushing debuffs  
+- Tweak icons used in say messages on mythic Hal to more cosely match the glyph symbols they represent  
+- clarify help message  
+- small tweak to march ai timer for. mythic testing on anduin  
+- Update Halondrus for mythic testing using latest journal spells  
+- Bar desaturating was turning bars white  
+- More robust checks for timer tables to ensure phase isn't nil, to prevent mid fight lua errors during timer recovery, if a user reloads ui in middle of fight.  
+- apparently fated conjunction timer has been spamming lua errors, sincce 9.1 launched, and no one reported it, until today. Turns out, another difficulty did use one of those ??? spellids and passed it off to table, which was expecting 350421 and only 350421, causing a lua error when it didn't match (and it doesn't, in LFR)  
+- Account for fact that M+ can now be in form of under leveled timewalking content...that isn't flagged as timewalking content (because it's index 8). Should no longer treat legion timewalking M+ as trivial content.  
+- prep next cycle  

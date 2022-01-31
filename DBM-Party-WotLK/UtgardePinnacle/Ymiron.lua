@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,timewalker"
 
-mod:SetRevision("20210907211345")
+mod:SetRevision("20220116042005")
 mod:SetCreatureID(26861)
 mod:SetEncounterID(2028)
 
@@ -18,7 +18,7 @@ mod:RegisterEventsInCombat(
 local warningBane		= mod:NewSpellAnnounce(48294, 3)
 local warningScreams	= mod:NewSpellAnnounce(51750, 2)
 
-local timerBane			= mod:NewBuffActiveTimer(5, 48294, nil, nil, nil, 5, nil, DBM_CORE_L.MAGIC_ICON)
+local timerBane			= mod:NewBuffActiveTimer(5, 48294, nil, nil, nil, 5, nil, DBM_COMMON_L.MAGIC_ICON)
 local timerScreams		= mod:NewBuffActiveTimer(8, 51750, nil, nil, nil, 2)
 
 function mod:SPELL_CAST_SUCCESS(args)

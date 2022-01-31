@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,timewalker"
 
-mod:SetRevision("20210922153837")
+mod:SetRevision("20220116042005")
 mod:SetCreatureID(36497)
 mod:SetEncounterID(2006)
 mod:SetModelID(30226)
@@ -41,7 +41,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 68839 then							-- Corrupt Soul
 		if args:IsPlayer() then
-			specwarnCorruptedSoul:Show(DBM_CORE_L.ROOM_EDGE)
+			specwarnCorruptedSoul:Show(DBM_COMMON_L.ROOM_EDGE)
 			specwarnCorruptedSoul:Play("runtoedge")
 		else
 			warnCorruptSoul:Show(args.destName)

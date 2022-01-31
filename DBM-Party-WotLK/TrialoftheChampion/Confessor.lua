@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(636, "DBM-Party-WotLK", 13, 284)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210614202848")
+mod:SetRevision("20220116042005")
 mod:SetCreatureID(34928)
 --mod:SetEncounterID(2023)--DO NOT ENABLE. Confessor and Eadric are both flagged as same encounterid ("Argent Champion")
 --
@@ -20,8 +20,8 @@ local specwarnRenew			= mod:NewSpecialWarningDispel(66537, "MagicDispeller", nil
 local specwarnHolyFire		= mod:NewSpecialWarningDispel(66538, "Healer", nil, nil, 1, 2)
 local specwarnShadows		= mod:NewSpecialWarningDispel(66619, "Healer", nil, nil, 1, 2)
 
-local timerHolyFire			= mod:NewTargetTimer(8, 66538, nil, "Healer", 2, 5, nil, DBM_CORE_L.MAGIC_ICON)
-local timerShadows          = mod:NewTargetTimer(5, 66619, nil, "Healer", 2, 5, nil, DBM_CORE_L.MAGIC_ICON)
+local timerHolyFire			= mod:NewTargetTimer(8, 66538, nil, "Healer", 2, 5, nil, DBM_COMMON_L.MAGIC_ICON)
+local timerShadows          = mod:NewTargetTimer(5, 66619, nil, "Healer", 2, 5, nil, DBM_COMMON_L.MAGIC_ICON)
 
 mod.vb.shielded = false
 

@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod(2465, "DBM-Sepulcher", nil, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20211204025910")
+mod:SetRevision("20220112010729")
 mod:SetCreatureID(181395)
 mod:SetEncounterID(2542)
 --mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
-mod:SetHotfixNoticeRev(20211203000000)
+mod:SetHotfixNoticeRev(20220106000000)
 mod:SetMinSyncRevision(20211203000000)
 --mod.respawnTime = 29
 
@@ -18,17 +18,12 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED_DOSE 359778 359976 359981",
 	"SPELL_AURA_REMOVED 359778",
 	"SPELL_AURA_REMOVED_DOSE 359778",
---	"SPELL_PERIODIC_DAMAGE",
---	"SPELL_PERIODIC_MISSED",
+	"SPELL_PERIODIC_DAMAGE 366070",
+	"SPELL_PERIODIC_MISSED 366070",
 --	"UNIT_DIED",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
---TODO, probably use https://ptr.wowhead.com/spell=359777/unending-hunger to resume timers at REMOVED, if it's in combat log
---TODO, do timers estart when raid triggers a hunger, or do they pause?
---TODO, maybe go all out with some ra-den level shit and calculate who's tank
---then calculate 3 furhtest targets from tank (which assumes they're also 3 furthest from boss
---which then enables showing them on infoframe, marking them, and even auto rangecheck opening if player is one of the 3, for Dust Blast mechanic
 --[[
 (ability.id = 359770 or ability.id = 359829 or ability.id = 359979 or ability.id = 359975 or ability.id = 364778 or ability.id = 360451) and type = "begincast"
  or ability.id = 364893 and type = "cast"
@@ -38,23 +33,23 @@ local warnRend									= mod:NewStackAnnounce(359979, 2, nil, "Tank|Healer")
 local warnRift									= mod:NewStackAnnounce(359976, 2, nil, "Tank|Healer")
 local warnDestroy								= mod:NewCastAnnounce(364778, 4)
 
-local specWarnUnendingHunger					= mod:NewSpecialWarningCount(359770, nil, nil, nil, 2, 2)
+local specWarnRaveningBurrow					= mod:NewSpecialWarningCount(359770, nil, nil, nil, 2, 2)
 local specWarnDustFlail							= mod:NewSpecialWarningCount(359829, "Healer", nil, nil, 2, 2)
 local specWarnRetch								= mod:NewSpecialWarningDodge(360448, nil, nil, nil, 2, 2)
 local specWarnDevouringBlood					= mod:NewSpecialWarningDispel(364522, false, nil, nil, 1, 2)--Opt in
 local specWarnRiftmaw							= mod:NewSpecialWarningTaunt(359976, nil, nil, nil, 1, 2)
 local specWarnRend								= mod:NewSpecialWarningTaunt(359979, nil, nil, nil, 1, 2)
---local specWarnGTFO							= mod:NewSpecialWarningGTFO(340324, nil, nil, nil, 1, 8)
+local specWarnGTFO								= mod:NewSpecialWarningGTFO(366070, nil, nil, nil, 1, 8)
 
 --mod:AddTimerLine(BOSS)
-local timerDustflailCD							= mod:NewCDTimer(17, 359829, nil, nil, nil, 2)
-local timerRetchCD								= mod:NewCDTimer(24.2, 360448, nil, nil, nil, 3)
-local timerDustBlastCD							= mod:NewCDTimer(24.2, 359904, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)--used for tank combo and blast, it's all together
+local timerDustflailCD							= mod:NewCDTimer(16.6, 359829, nil, nil, nil, 2)
+local timerRetchCD								= mod:NewCDTimer(33.2, 360448, nil, nil, nil, 3)--33-35
+local timerComboCD								= mod:NewTimer(33.2, "timerComboCD", 359976, nil, nil, 5, DBM_COMMON_L.TANK_ICON)
 
 local berserkTimer								= mod:NewBerserkTimer(360)--Final Consumption
 
 --mod:AddRangeFrameOption("8")
-mod:AddInfoFrameOption(359778, true)
+mod:AddInfoFrameOption(359778, true, nil, 5)
 --mod:AddNamePlateOption("NPAuraOnBurdenofDestiny", 353432, true)
 
 mod.vb.hungerCount = 0
@@ -68,12 +63,12 @@ function mod:OnCombatStart(delay)
 	self.vb.dustCount = 0
 	self.vb.comboCount = 0
 	timerDustflailCD:Start(2-delay)
-	timerDustBlastCD:Start(10.5-delay)
-	timerRetchCD:Start(25.1-delay)
+	timerComboCD:Start(7.6-delay)
+	timerRetchCD:Start(24.6-delay)
 	berserkTimer:Start(360-delay)
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(359778))
-		DBM.InfoFrame:Show(20, "table", EphemeraDustStacks, 1)
+		DBM.InfoFrame:Show(20, "table", EphemeraDustStacks, 5)
 	end
 --	if self.Options.NPAuraOnBurdenofDestiny then
 --		DBM:FireEvent("BossMod_EnableHostileNameplates")
@@ -99,8 +94,8 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 359770 then
 		self.vb.hungerCount = self.vb.hungerCount + 1
-		specWarnUnendingHunger:Show(self.vb.hungerCount)
-		specWarnUnendingHunger:Play("specialsoon")
+		specWarnRaveningBurrow:Show(self.vb.hungerCount)
+		specWarnRaveningBurrow:Play("specialsoon")
 		--Reset other spell counts
 		self.vb.dustCount = 0
 		--Boss energy doesn't reset, Timers continue but just get queued up and then unqueud after
@@ -117,7 +112,7 @@ function mod:SPELL_CAST_START(args)
 	elseif args:IsSpellID(359979, 359975) then--Rend, Riftmaw
 --		if self:AntiSpam(20, 1) then
 --			self.vb.comboCount = 0
---			timerDustBlastCD:Start()
+--			timerComboCD:Start()
 --		end
 		self.vb.comboCount = self.vb.comboCount + 1
 	elseif spellId == 364778 then
@@ -125,7 +120,7 @@ function mod:SPELL_CAST_START(args)
 		--This really shouldn't be a thing and I hope they fix it by next test
 --		timerDustflailCD:Pause()
 --		timerRetchCD:Pause()
---		timerDustBlastCD:Pause()
+--		timerComboCD:Pause()
 	elseif spellId == 360451 then
 		specWarnRetch:Show()
 		specWarnRetch:Play("shockwave")
@@ -139,7 +134,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 364893 then
 		timerDustflailCD:Resume()
 		timerRetchCD:Resume()
-		timerDustBlastCD:Resume()
+		timerComboCD:Resume()
 	end
 end
 --]]
@@ -150,7 +145,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		local amount = args.amount or 1
 		EphemeraDustStacks[args.destName] = amount
 		if self.Options.InfoFrame then
-			DBM.InfoFrame:UpdateTable(EphemeraDustStacks)
+			DBM.InfoFrame:UpdateTable(EphemeraDustStacks, 0.2)
 		end
 	elseif spellId == 364522 and args:IsDestTypePlayer() and self:CheckDispelFilter() then
 		specWarnDevouringBlood:CombinedShow(0.5, args.destName)
@@ -198,7 +193,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	if spellId == 359778 then
 		EphemeraDustStacks[args.destName] = nil
 		if self.Options.InfoFrame then
-			DBM.InfoFrame:UpdateTable(EphemeraDustStacks)
+			DBM.InfoFrame:UpdateTable(EphemeraDustStacks, 0.2)
 		end
 	end
 end
@@ -208,7 +203,7 @@ function mod:SPELL_AURA_REMOVED_DOSE(args)
 	if spellId == 359778 then
 		EphemeraDustStacks[args.destName] = args.amount or 1
 		if self.Options.InfoFrame then
-			DBM.InfoFrame:UpdateTable(EphemeraDustStacks)
+			DBM.InfoFrame:UpdateTable(EphemeraDustStacks, 0.2)
 		end
 	end
 end
@@ -222,19 +217,17 @@ function mod:UNIT_DIED(args)
 end
 -]]
 
---[[
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
-	if spellId == 340324 and destGUID == UnitGUID("player") and not playerDebuff and self:AntiSpam(2, 4) then
+	if spellId == 366070 and destGUID == UnitGUID("player") and self:AntiSpam(2, 2) then
 		specWarnGTFO:Show(spellName)
 		specWarnGTFO:Play("watchfeet")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
---]]
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 360079 then--[DNT] Tank Combo
 		self.vb.comboCount = 0
-		timerDustBlastCD:Start()
+		timerComboCD:Start()
 	end
 end

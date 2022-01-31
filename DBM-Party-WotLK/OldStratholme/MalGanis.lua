@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(614, "DBM-Party-WotLK", 3, 279)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210614202848")
+mod:SetRevision("20220116042005")
 mod:SetCreatureID(26533)
 mod:SetEncounterID(2005)
 
@@ -15,7 +15,7 @@ mod:RegisterEventsInCombat(
 
 local warningSleep	= mod:NewTargetNoFilterAnnounce(52721, 2)
 
-local timerSleep	= mod:NewTargetTimer(10, 52721, nil, nil, nil, 5, nil, DBM_CORE_L.MAGIC_ICON)
+local timerSleep	= mod:NewTargetTimer(10, 52721, nil, nil, nil, 5, nil, DBM_COMMON_L.MAGIC_ICON)
 local timerSleepCD	= mod:NewCDTimer(20, 52721, nil, nil, nil, 3)
 
 function mod:SPELL_AURA_APPLIED(args)

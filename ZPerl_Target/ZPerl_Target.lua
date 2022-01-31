@@ -23,7 +23,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_PetTarget) then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: c52d6da2c580f292231cbce24418a3ae3ca2b620 $")
+end, "$Revision: 33d78e5ce33228a1cf8cb5f354abf0b5e577621f $")
 
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
@@ -1257,7 +1257,7 @@ function XPerl_Target_OnUpdate(self, elapsed)
 				XPerl_Target_Update_Range(self)
 			end
 			if conf.rangeFinder.enabled then
-				XPerl_UpdateSpellRange(self)
+				XPerl_UpdateSpellRange(self, partyid)
 			end
 
 			if (self.deferring) then

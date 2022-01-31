@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
 
-mod:SetRevision("20210922153837")
+mod:SetRevision("20220116042005")
 mod:SetCreatureID(77803, 77816)
 mod:SetEncounterID(1715)
 mod:SetBossHPInfoToHighest()
@@ -24,8 +24,8 @@ local specWarnMadDashInterrupt	= mod:NewSpecialWarningMoveTo(161090, nil, nil, n
 local specWarnSlam				= mod:NewSpecialWarningCast(162617, "SpellCaster", nil, nil, 1, 2)
 
 local timerVX18BCD				= mod:NewCDTimer(33, 162500, nil, nil, nil, 3)
-local timerX2101AMissileCD		= mod:NewCDTimer(40, 162407, nil, nil, nil, 4, nil, DBM_CORE_L.INTERRUPT_ICON..DBM_CORE_L.TANK_ICON)
-local timerMadDashCD			= mod:NewCDTimer(40, 161090, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON)
+local timerX2101AMissileCD		= mod:NewCDTimer(40, 162407, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON..DBM_COMMON_L.TANK_ICON)
+local timerMadDashCD			= mod:NewCDTimer(40, 161090, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerSlamCD				= mod:NewCDTimer(15, 162617, nil, "SpellCaster", nil, 5)
 local timerSlam					= mod:NewCastTimer(1.5, 162617, nil, "SpellCaster", nil, 5)
 local timerRecovering			= mod:NewBuffActiveTimer(6, 163947, nil, nil, nil, 5)

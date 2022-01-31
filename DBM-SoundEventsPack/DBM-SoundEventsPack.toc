@@ -3,7 +3,7 @@
 ## DefaultState: enabled
 ## RequiredDeps: DBM-Core
 ## Author: MysticalOS, Pardua, Cigawoot
-## Version: 1.6.13
+## Version: 1.6.14
 ## X-DBM-VictoryPack: 1
 ## X-DBM-VictoryPack-GlobalName: DBMVPSoundEventsPack
 ## X-DBM-DefeatPack: 1

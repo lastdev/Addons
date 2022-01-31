@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(627, "DBM-Party-WotLK", 12, 283)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142123")
+mod:SetRevision("20220116042005")
 mod:SetCreatureID(29316)
 
 mod:RegisterCombat("combat")
@@ -12,7 +12,7 @@ mod:RegisterEventsInCombat(
 
 local warningLink 	= mod:NewTargetNoFilterAnnounce(54396, 2)
 
-local timerLink		= mod:NewTargetTimer(12, 54396, nil, nil, nil, 5, nil, DBM_CORE_L.HEALER_ICON)
+local timerLink		= mod:NewTargetTimer(12, 54396, nil, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON)
 local timerLinkCD	= mod:NewCDTimer(45, 54396, nil, nil, nil, 3)
 
 function mod:SPELL_AURA_APPLIED(args)

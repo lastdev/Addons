@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2457, "DBM-Sepulcher", nil, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20211202235652")
+mod:SetRevision("20220123071553")
 mod:SetCreatureID(181398, 181334)--Could be others
 mod:SetEncounterID(2543)
 mod:SetUsedIcons(1, 2, 6, 7, 8)
@@ -78,7 +78,7 @@ local timerManifestShadowsCD					= mod:NewAITimer(28.8, 361913, nil, nil, nil, 1
 local timerLeechingClawsCD						= mod:NewAITimer(28.8, 359960, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, 2, 4)
 --Kin'tessa
 local timerInfiltrationofDreadCD				= mod:NewAITimer(28.8, 360717, nil, nil, nil, 6)
-local timerParanoia								= mod:NewBuffFadesTimer(30, 360418, nil, nil, nil, 5)
+local timerParanoia								= mod:NewBuffFadesTimer(25, 360418, nil, nil, nil, 5)
 local timerFearfulTrepidationCD					= mod:NewAITimer(28.8, 360145, nil, nil, nil, 3)--DBM_COMMON_L.MAGIC_ICON
 local timerSlumberCloudCD						= mod:NewAITimer(28.8, 360229, nil, nil, nil, 3)
 local timerAnguishingStrikeCD					= mod:NewAITimer(28.8, 360284, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
@@ -86,7 +86,7 @@ local timerAnguishingStrikeCD					= mod:NewAITimer(28.8, 360284, nil, "Tank", ni
 --local berserkTimer							= mod:NewBerserkTimer(600)
 
 mod:AddRangeFrameOption("5/8/10")
-mod:AddInfoFrameOption(360319, true)
+mod:AddInfoFrameOption(360319, false)
 mod:AddSetIconOption("SetIconOnFearfulTrepidation", 360146, true, false, {1, 2})--On by default because max targets shows 2 debuffs can be out, and don't want both carrions running to same person. with icons the carrions can make split decisions to pick an icon each are going to
 mod:AddSetIconOption("SetIconOnManifestShadows", 361913, true, true, {6, 7, 8})--On by default since they'll be used by most interrupt helpers
 mod:AddNamePlateOption("NPAuraOnIncompleteForm", 362020, false)--Off by default so it doesn't cover up interrupt weak aura counters, which i suspect many will use

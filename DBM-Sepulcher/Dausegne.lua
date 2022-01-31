@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod(2459, "DBM-Sepulcher", nil, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20211204022129")
+mod:SetRevision("20220110111635")
 mod:SetCreatureID(181224)
 mod:SetEncounterID(2540)
 mod:SetUsedIcons(1, 2, 3)
-mod:SetHotfixNoticeRev(20211203000000)
+mod:SetHotfixNoticeRev(20220106000000)
 mod:SetMinSyncRevision(20211203000000)
 --mod.respawnTime = 29
 
@@ -18,12 +18,14 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED 361966 361018 361651",
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_PERIODIC_MISSED",
-	"CHAT_MSG_RAID_BOSS_EMOTE"
+	"CHAT_MSG_RAID_BOSS_EMOTE",
+	"RAID_BOSS_WHISPER"
 --	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
 --TODO, exact stack count optimal of tanks swaps of 361966, for now most warnings are silent or way overtuned
 --TODO, use https://ptr.wowhead.com/spell=359481/domination-core for auto marking domination ores maybe, if more than 1 to mark on mythic
+--TODO, rework the ring code to have timers for each ring, and smarter handling of soft enrage and other stuff. Waiting for CLEU event from next build first
 --[[
 (ability.id = 359483 or ability.id = 361513 or ability.id = 361630 or ability.id = 365418 or ability.id = 360960) and type = "begincast"
  or ability.id = 361651 and (type = "applybuff" or type = "removebuff")
@@ -52,6 +54,7 @@ local specWarnTotalDominion						= mod:NewSpecialWarningSpell(365418, nil, nil, 
 
 --mod:AddTimerLine(BOSS)
 --The Fallen Oracle
+local timerUnleashedInfusion					= mod:NewTargetTimer(20, 361967, nil, nil, nil, 2)
 local timerStaggeringBarrageCD					= mod:NewCDCountTimer(35, 361018, nil, nil, nil, 3)
 local timerDominationCoreCD						= mod:NewCDCountTimer(33.5, 359483, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)
 local timerObliterationArcCD					= mod:NewCDCountTimer(35, 361513, nil, nil, nil, 3)
@@ -177,7 +180,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		else
 			if amount % 3 == 0 then
-				if (amount >= 9) and not UnitIsDeadOrGhost("player") and not DBM:UnitDebuff("player", 362008) then
+				if (amount >= 9) and not UnitIsDeadOrGhost("player") and not DBM:UnitDebuff("player", spellId) then
 					specWarnInfusedStrikesTaunt:Show(args.destName)
 					specWarnInfusedStrikesTaunt:Play("tauntboss")
 				else
@@ -185,6 +188,8 @@ function mod:SPELL_AURA_APPLIED(args)
 				end
 			end
 		end
+		timerUnleashedInfusion:Stop(args.destName)
+		timerUnleashedInfusion:Start(20, args.destName)
 	elseif spellId == 361018 then
 		local icon = self.vb.DebuffIcon
 		if self.Options.SetIconOnStaggeringBarrage then
@@ -222,6 +227,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		if args:IsPlayer() then
 			yellInfusedStrikes:Cancel()
 		end
+		timerUnleashedInfusion:Stop(args.destName)
 	elseif spellId == 361018 then
 		if self.Options.SetIconOnStaggeringBarrage then
 			self:SetIcon(args.destName, 0)
@@ -233,7 +239,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:Hide()
 		end
-		timerDominationCoreCD:Start(7.6, timerDominationCoreCD+1)
+		timerDominationCoreCD:Start(7.6, self.vb.coreCount+1)
 		timerObliterationArcCD:Start(16.1, self.vb.arcCount+1)
 		timerStaggeringBarrageCD:Start(30, self.vb.barrageCount+1)
 		timerSiphonReservoirCD:Start(108, self.vb.ReservoirCount+1)--108-110, closer here than teleport to teleport.
@@ -253,6 +259,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 		end
 	end
 end
+mod.RAID_BOSS_WHISPER = mod.CHAT_MSG_RAID_BOSS_EMOTE--Dunno what this is about. You ok Blizz?
 
 --[[
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)

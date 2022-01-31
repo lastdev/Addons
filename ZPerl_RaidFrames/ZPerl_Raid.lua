@@ -22,7 +22,7 @@ local conf, rconf
 XPerl_RequestConfig(function(newConf)
 	conf = newConf
 	rconf = conf.raid
-end, "$Revision: 0e5dac9771e21852086c9ae73250c5d5d507c244 $")
+end, "$Revision: ad0a9dcecec9c0eb0bcfc614a2ff02481b87a78d $")
 
 --[[if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
@@ -223,7 +223,6 @@ function XPerl_Raid_OnLoad(self)
 		RegisterStateDriver(self.state, "groupupdate", "[petbattle] hide; show")
 	end
 
-	self.time = 0
 	self.Array = { }
 
 	--[[if (rconf.enable) then
@@ -1110,8 +1109,8 @@ function XPerl_Raid_OnUpdate(self, elapsed)
 					end
 				end]]--
 				if conf.rangeFinder.enabled then
-					self.time = self.time + elapsed
-					if (self.time > 0.2) then
+					self.time = elapsed + (self.time or 0)
+					if self.time > 0.2 then
 						self.time = 0
 						if (frame.partyid) then
 							XPerl_UpdateSpellRange(frame, frame.partyid, true)
@@ -2435,10 +2434,8 @@ local function SetMainHeaderAttributes(self)
 		self:SetAttribute("sortMethod", nil)
 	end
 
-	--self:SetAttribute("showSolo", true)
 	self:SetAttribute("showParty", rconf.inParty)
 	self:SetAttribute("showPlayer", rconf.inParty)
-
 	self:SetAttribute("showRaid", true)
 
 	if rconf.anchor ~= "BOTTOM" then

@@ -1164,6 +1164,8 @@ function RSExplorerMixin:OnShow()
 end
 
 function RSExplorerMixin:Refresh()
-	PopulateContinentDropDown(self, self.Filters.ContinentDropDown)
-	self.RareNPCList:UpdateRareList()
+	if (self.initialized) then
+		PopulateContinentDropDown(self, self.Filters.ContinentDropDown)
+		self.RareNPCList:UpdateRareList()
+	end
 end

@@ -1,5 +1,7 @@
-local AddOnName, AddOn = ...
 -- Handynotes Worldmap Button by fuba
+
+local AddOnName, AddOn = ...
+
 if not IsAddOnLoaded('HandyNotes') then return end
 local WorldMapTooltip = WorldMapTooltip or GameTooltip;
 local buildver = select(4,GetBuildInfo())

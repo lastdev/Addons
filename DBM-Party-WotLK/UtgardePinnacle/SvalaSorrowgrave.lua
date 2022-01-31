@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,timewalker"
 
-mod:SetRevision("20210614202848")
+mod:SetRevision("20220116042005")
 mod:SetCreatureID(26668)
 mod:SetEncounterID(2030)
 mod:DisableESCombatDetection()--TODO, why is it disabled?
@@ -21,7 +21,7 @@ mod:RegisterEventsInCombat(
 
 local warningSacrifice	= mod:NewTargetNoFilterAnnounce(48267, 4)
 
-local timerSacrifice	= mod:NewBuffActiveTimer(25, 48276, nil, nil, nil, 5, nil, DBM_CORE_L.DAMAGE_ICON)
+local timerSacrifice	= mod:NewBuffActiveTimer(25, 48276, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON)
 local timerRoleplay		= mod:NewTimer(67, "timerRoleplay", "237538")--roleplay for boss is active
 
 function mod:SPELL_AURA_APPLIED(args)

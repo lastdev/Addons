@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2375, "DBM-Nyalotha", nil, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20211011151021")
+mod:SetRevision("20220116032237")
 mod:SetCreatureID(158041)
 mod:SetEncounterID(2344)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -135,9 +135,9 @@ local berserkTimer							= mod:NewBerserkTimer(720)
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20957))
 ----Psychus
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(21455))
-local timerMindwrackCD						= mod:NewCDTimer(5.6, 316711, nil, "Tank", 2, 5, nil, DBM_CORE_L.TANK_ICON)--4.9-8.6
-local timerCreepingAnguishCD				= mod:NewNextTimer(26.6, 310184, nil, nil, 2, 5, nil, DBM_CORE_L.TANK_ICON)
-local timerSynampticShock					= mod:NewBuffActiveTimer(30, 313184, nil, nil, nil, 5, nil, DBM_CORE_L.DAMAGE_ICON)--, nil, 1, 4
+local timerMindwrackCD						= mod:NewCDTimer(5.6, 316711, nil, "Tank", 2, 5, nil, DBM_COMMON_L.TANK_ICON)--4.9-8.6
+local timerCreepingAnguishCD				= mod:NewNextTimer(26.6, 310184, nil, nil, 2, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerSynampticShock					= mod:NewBuffActiveTimer(30, 313184, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON)--, nil, 1, 4
 ----Mind's Eye
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20977))
 local timerVoidGazeCD						= mod:NewCDTimer(33, 310333, nil, nil, nil, 2)--33-34.3
@@ -150,11 +150,11 @@ local timerMindgraspCD						= mod:NewNextTimer(30.1, 315772, nil, nil, nil, 3)
 local timerParanoiaCD						= mod:NewNextCountTimer(30.1, 309980, nil, nil, nil, 3)
 local timerMindgateCD						= mod:NewNextTimer(30.1, 309046, nil, nil, nil, 1, nil, nil, nil, 1, 4)
 local timerShatteredEgo						= mod:NewBuffActiveTimer(30, 319015, nil, nil, nil, 6)
-local timerEternalTormentCD					= mod:NewNextCountTimer(56.1, 318449, 311383, nil, nil, 2, nil, DBM_CORE_L.HEALER_ICON)--"Torment" short name
+local timerEternalTormentCD					= mod:NewNextCountTimer(56.1, 318449, 311383, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)--"Torment" short name
 ----Basher Tentacle
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(21286))
-local timerBasherTentacleCD					= mod:NewNextCountTimer(60, "ej21286", nil, nil, nil, 1, "319441", DBM_CORE_L.DAMAGE_ICON)
-local timerVoidLashCD						= mod:NewCDTimer(22.9, 309698, nil, false, 2, 5, nil, DBM_CORE_L.TANK_ICON)
+local timerBasherTentacleCD					= mod:NewNextCountTimer(60, "ej21286", nil, nil, nil, 1, "319441", DBM_COMMON_L.DAMAGE_ICON)
+local timerVoidLashCD						= mod:NewCDTimer(22.9, 309698, nil, false, 2, 5, nil, DBM_COMMON_L.TANK_ICON)
 ----Through the MindGate
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20971))
 local timerCataclysmicFlamesCD				= mod:NewNextCountTimer(22.4, 312866, nil, nil, nil, 3)
@@ -163,14 +163,14 @@ local timerBlackVolleyCD					= mod:NewNextCountTimer(20, 313960, nil, nil, nil, 
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20767))
 ----N'Zoth
 local timerEvokeAnguishCD					= mod:NewNextCountTimer(30.5, 317102, nil, nil, nil, 3)--30.5-44.9, delayed by boss doing other stuff?
-local timerStupefyingGlareCD				= mod:NewNextCountTimer(22.9, 317874, 239918, nil, 2, 3, nil, DBM_CORE_L.DEADLY_ICON, nil, 1, 5)
+local timerStupefyingGlareCD				= mod:NewNextCountTimer(22.9, 317874, 239918, nil, 2, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5)
 ----Thought Harvester
 local timerThoughtHarvesterCD				= mod:NewCDCountTimer(30.1, "ej21308", nil, nil, nil, 1, 231298)
 local timerHarvestThoughtsCD				= mod:NewCDTimer(35.2, 317066, nil, nil, nil, 3)
 --Stage 3 Mythic
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(21435))
 local timerSummongateway					= mod:NewNextTimer(153.9, 318091, nil, nil, nil, 6)
-local timerEventHorizonCD					= mod:NewNextCountTimer(22.9, 318196, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON)--, nil, 2, 4
+local timerEventHorizonCD					= mod:NewNextCountTimer(22.9, 318196, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)--, nil, 2, 4
 local timerDarkMatterCD						= mod:NewNextCountTimer(16, 318971, nil, nil, nil, 3)
 local timerAnnihilateCD						= mod:NewNextCountTimer(22.9, 318460, nil, nil, nil, 3)
 local timerCleansingProtocolCD				= mod:NewNextCountTimer(16, 316970, nil, nil, nil, 5)
@@ -371,33 +371,33 @@ local function stupefyingGlareLoop(self)
 	if self:IsMythic() then
 		if self.vb.phase == 2 then
 			if self.vb.stupefyingGlareCount % 2 == 0 then
-				direction = DBM_CORE_L.RIGHT--ie counter clockwise
+				direction = DBM_COMMON_L.RIGHT--ie counter clockwise
 			else
-				direction = DBM_CORE_L.LEFT--ie Clockwise
+				direction = DBM_COMMON_L.LEFT--ie Clockwise
 			end
 		else--Phase 3
 			if self.vb.stupefyingGlareCount % 2 == 0 then
-				direction = DBM_CORE_L.LEFT--ie counter clockwise
+				direction = DBM_COMMON_L.LEFT--ie counter clockwise
 			else
-				direction = DBM_CORE_L.RIGHT--ie Clockwise
+				direction = DBM_COMMON_L.RIGHT--ie Clockwise
 			end
 		end
 	elseif self:IsLFR() then--LFR
 		--Right, Left, Left (for LFR at least), assumed rest same since timers are
 		--TODO, verify normal and heroic one day, or maybe users will at least report it if it's wrong
 		if self.vb.stupefyingGlareCount == 1 then
-			direction = DBM_CORE_L.RIGHT--ie counter clockwise
+			direction = DBM_COMMON_L.RIGHT--ie counter clockwise
 		elseif self.vb.stupefyingGlareCount == 2 or self.vb.stupefyingGlareCount == 3 then
-			direction = DBM_CORE_L.LEFT--ie Clockwise
+			direction = DBM_COMMON_L.LEFT--ie Clockwise
 		end
 	end
 	specWarnStupefyingGlare:Show(self.vb.stupefyingGlareCount .. direction)
 	specWarnStupefyingGlare:Play("farfromline")
 	if self.Options.ArrowOnGlare then
 		--Assuming facing boss
-		if direction == DBM_CORE_L.LEFT then
+		if direction == DBM_COMMON_L.LEFT then
 			DBM.Arrow:ShowStatic(90, 10)
-		elseif direction == DBM_CORE_L.RIGHT then
+		elseif direction == DBM_COMMON_L.RIGHT then
 			DBM.Arrow:ShowStatic(270, 10)
 		end
 	end
@@ -405,16 +405,16 @@ local function stupefyingGlareLoop(self)
 	if timer then
 		if self:IsMythic() then
 			--Flip direction for next timer
-			if direction == DBM_CORE_L.RIGHT then
-				direction = DBM_CORE_L.LEFT
-			elseif direction == DBM_CORE_L.LEFT then
-				direction = DBM_CORE_L.RIGHT
+			if direction == DBM_COMMON_L.RIGHT then
+				direction = DBM_COMMON_L.LEFT
+			elseif direction == DBM_COMMON_L.LEFT then
+				direction = DBM_COMMON_L.RIGHT
 			end
 		elseif self:IsLFR() then
 			--Right, Left, Left for LFR at least, assumed rest same since timers are
 			--TODO, verify normal and heroic one day, or maybe users will at least report it if it's wrong
 			if self.vb.stupefyingGlareCount == 1 or self.vb.stupefyingGlareCount == 2 then
-				direction = DBM_CORE_L.LEFT--ie counter clockwise for next one
+				direction = DBM_COMMON_L.LEFT--ie counter clockwise for next one
 			end
 		end
 		warnStupefyingGlareSoon:Countdown(timer, 5)
@@ -851,7 +851,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerSynampticShock:Stop()
 		timerSynampticShock:Start(spellId == 313184 and 30 or 15)--Non Mythic/Mythic
 		if spellId == 319309 then--Add deadly icon to this on mythic
-			timerSynampticShock:UpdateInline(DBM_CORE_L.DEADLY_ICON)
+			timerSynampticShock:UpdateInline(DBM_COMMON_L.DEADLY_ICON)
 		end
 	elseif spellId == 316541 or spellId == 316542 then
 		ParanoiaTargets[#ParanoiaTargets + 1] = args.destName

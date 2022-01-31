@@ -1,0 +1,17 @@
+## Interface: 90105
+## Title: Details!: Elitism (plugin)
+## Notes: Show avoidable damage and abilities taken by players.
+## RequiredDeps: Details
+## Author: Eduardo Speroni
+## Version: v2.4.0
+## X-License: MIT
+## X-Curse-Project-ID: 381128
+## SavedVariablesPerCharacter: ElitismLog
+
+Libs\Load_Libs.xml
+
+Locale.lua
+Core.lua
+Spells\Dungeons.lua
+Spells\Raids\CN.lua
+Spells\Raids\SoD.lua

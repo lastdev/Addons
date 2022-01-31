@@ -1,8 +1,6 @@
 # <DBM> Dungeons (BC)
 
-## [r29](https://github.com/DeadlyBossMods/DBM-Dungeons/tree/r29) (2021-11-02)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Dungeons/compare/r28...r29) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Dungeons/releases)
+## [r31](https://github.com/DeadlyBossMods/DBM-Dungeons/tree/r31) (2022-01-16)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Dungeons/compare/r30...r31) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Dungeons/releases)
 
-- tweak option default for mighty blow  
-- bump tocs  
-- Updated Scholomance with voice pack and better color bar by type support for timewalking in 9.1.5  
+- Fix DBM\_CORE\_L -> DBM\_COMMON\_L  

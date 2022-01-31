@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
 
-mod:SetRevision("20210922153837")
+mod:SetRevision("20220116042005")
 mod:SetCreatureID(80005)
 mod:SetEncounterID(1736)
 
@@ -28,7 +28,7 @@ local specWarnMark				= mod:NewSpecialWarningMoveAway(163447, nil, nil, nil, 1, 
 local yellMark					= mod:NewYell(163447)
 
 local timerFreezingSnareCD		= mod:NewNextTimer(20, 162066, nil, nil, nil, 3)
-local timerSpinningSpearCD		= mod:NewNextTimer(20, 162058, nil, "Tank", 2, 5, nil, DBM_CORE_L.TANK_ICON)
+local timerSpinningSpearCD		= mod:NewNextTimer(20, 162058, nil, "Tank", 2, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerMark					= mod:NewTargetTimer(5, 163447)
 local timerMarkCD				= mod:NewNextTimer(20, 163447, nil, nil, nil, 3)
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(95, "DBM-Party-Cataclysm", 2, 63)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142123")
+mod:SetRevision("20220116042005")
 mod:SetCreatureID(49541)
 mod:SetEncounterID(1081)
 
@@ -20,7 +20,7 @@ local warnDeadlyBlades	= mod:NewSpellAnnounce(92622, 3)
 
 local specWarnDeflection	= mod:NewSpecialWarningReflect(92614, "SpellCaster", nil, nil, 1, 2)
 
-local timerDeflection	= mod:NewBuffActiveTimer(10, 92614, nil, nil, nil, 5, nil, DBM_CORE_L.DAMAGE_ICON)
+local timerDeflection	= mod:NewBuffActiveTimer(10, 92614, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON)
 local timerDeadlyBlades	= mod:NewBuffActiveTimer(5, 92622, nil, nil, nil, 3)
 
 local timerGauntlet		= mod:NewAchievementTimer(300, 5371, "achievementGauntlet")

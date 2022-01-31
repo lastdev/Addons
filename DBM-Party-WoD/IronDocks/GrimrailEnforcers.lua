@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
 
-mod:SetRevision("20200912135206")
+mod:SetRevision("20220116042005")
 mod:SetCreatureID(80805, 80816, 80808)
 mod:SetEncounterID(1748)
 mod:SetBossHPInfoToHighest()
@@ -26,7 +26,7 @@ local specWarnFlamingSlash		= mod:NewSpecialWarningDodge(163665, nil, nil, nil, 
 local specWarnLavaSwipe			= mod:NewSpecialWarningSpell(165152, nil, nil, nil, 2, 2)
 local specWarnBigBoom			= mod:NewSpecialWarningSpell(163379, nil, nil, nil, 2, 2)--maybe use switch.
 
-local timerSanguineSphere		= mod:NewTargetTimer(15, 163689, nil, nil, nil, 5, nil, DBM_CORE_L.DAMAGE_ICON)
+local timerSanguineSphere		= mod:NewTargetTimer(15, 163689, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON)
 local timerFlamingSlashCD		= mod:NewNextTimer(29, 163665, nil, nil, nil, 3, nil, nil, nil, 1, 4)
 local timerLavaSwipeCD			= mod:NewNextTimer(29, 165152, nil, nil, nil, 3)
 local timerOgreTrapsCD			= mod:NewCDTimer(25, 163390, nil, nil, nil, 3)--25-30 variation.

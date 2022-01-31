@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
 
-mod:SetRevision("20200912135206")
+mod:SetRevision("20220116042005")
 mod:SetCreatureID(75839)--Soul Construct
 mod:SetEncounterID(1686)
 
@@ -22,7 +22,7 @@ local specWarnFate				= mod:NewSpecialWarningSpell(157465, nil, nil, nil, 2, 2)
 local specWarnSanctifiedGround	= mod:NewSpecialWarningMove(161457, nil, nil, nil, 1, 8)
 
 local timerHolyShieldCD			= mod:NewNextTimer(47, 153002, nil, nil, nil, 3, nil, nil, nil, 1, 4)
-local timerConsecratedLightCD	= mod:NewNextTimer(7, 153006, nil, nil, nil, 2, nil, DBM_CORE_L.DEADLY_ICON, nil, 2, 4)
+local timerConsecratedLightCD	= mod:NewNextTimer(7, 153006, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 2, 4)
 local timerConsecratedLight		= mod:NewBuffActiveTimer(8, 153006)
 local timerFateCD				= mod:NewCDTimer(37, 157465, nil, nil, nil, 3)--Need more logs to confirm
 

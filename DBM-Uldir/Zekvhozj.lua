@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2169, "DBM-Uldir", nil, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210616003223")
+mod:SetRevision("20220116190835")
 mod:SetCreatureID(134445)--Zek'vhozj, 134503/qiraji-warrior
 mod:SetEncounterID(2136)
 mod:SetUsedIcons(1, 2, 3, 6, 7, 8)
@@ -61,10 +61,10 @@ local specWarnWillofCorruptor			= mod:NewSpecialWarningSwitch(265646, "Dps", nil
 local specWarnEntropicBlast				= mod:NewSpecialWarningInterrupt(270620, "HasInterrupt", nil, nil, 1, 2)
 
 mod:AddTimerLine(GENERAL)
-local timerSurgingDarknessCD			= mod:NewCDTimer(82.8, 265451, nil, "Melee", nil, 2, nil, DBM_CORE_L.DEADLY_ICON, nil, 1, 3)--60 based on energy math
-local timerMightofVoidCD				= mod:NewCDTimer(37.6, 267312, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON, nil, 2, 3)
+local timerSurgingDarknessCD			= mod:NewCDTimer(82.8, 265451, nil, "Melee", nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 3)--60 based on energy math
+local timerMightofVoidCD				= mod:NewCDTimer(37.6, 267312, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, 2, 3)
 local timerTitanSparkCD					= mod:NewCDTimer(37.6, 264954, nil, "Healer", nil, 2)
-local timerAddsCD						= mod:NewAddsTimer(120, 31700, nil, nil, nil, 1, nil, DBM_CORE_L.DAMAGE_ICON)--Generic Timer only used on Mythic
+local timerAddsCD						= mod:NewAddsTimer(120, 31700, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)--Generic Timer only used on Mythic
 mod:AddTimerLine(SCENARIO_STAGE:format(1))
 local timerQirajiWarriorCD				= mod:NewCDTimer(60, "ej18071", nil, nil, nil, 1, 31700)--UNKNOWN, TODO
 local timerEyeBeamCD					= mod:NewCDTimer(40, 264382, nil, nil, nil, 3, nil, nil, nil, not mod:IsTank() and 3, 5)
@@ -106,7 +106,7 @@ end
 function mod:RollingTarget(targetname)
 	if not targetname then return end
 	if targetname == UnitName("player") and self:AntiSpam(5, 6) then
-		specWarnRoilingDeceit:Show(DBM_CORE_L.ROOM_EDGE)
+		specWarnRoilingDeceit:Show(DBM_COMMON_L.EDGE)
 		specWarnRoilingDeceit:Play("runtoedge")
 		yellRoilingDeceit:Yell(self.vb.roilingCount)
 		yellRoilingDeceitFades:Countdown(12)
@@ -248,7 +248,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 265360 then
 		if args:IsPlayer() and self:AntiSpam(5, 6) then
-			specWarnRoilingDeceit:Show(DBM_CORE_L.ROOM_EDGE)
+			specWarnRoilingDeceit:Show(DBM_COMMON_L.EDGE)
 			specWarnRoilingDeceit:Play("runtoedge")
 			yellRoilingDeceit:Yell(self.vb.roilingCount)
 			yellRoilingDeceitFades:Countdown(spellId)

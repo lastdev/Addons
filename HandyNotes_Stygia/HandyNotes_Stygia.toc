@@ -1,0 +1,16 @@
+## Interface: 90100
+## Title: HandyNotes: Stygia
+## Notes: Where are the Stygia gathering nodes in the Maw?
+## Author: Kemayo
+## Version: v90100.1
+## DefaultState: enabled
+## X-Category: Map
+## X-eMail: kemayo @ gmail DOT com
+## X-Curse-Project-ID: 456077
+## SavedVariables: HandyNotes_StygiaDB
+## RequiredDeps: HandyNotes
+
+handler\handler.lua
+handler\config.lua
+
+stygia.lua

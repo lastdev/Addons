@@ -77,7 +77,7 @@ L:SetTimerLocalization({
 	timerCallofCrawgCD		= "Tragadones (%s)",
 	timerCallofHexerCD 		= "Aojasangres (%s)",
 	timerCallofCrusherCD	= "Trituradora (%s)",
-	timerAddIncoming		= DBM_CORE_L.INCOMING
+	timerAddIncoming		= DBM_COMMON_L.INCOMMING
 })
 
 L:SetOptionLocalization({

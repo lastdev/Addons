@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2439, "DBM-SanctumOfDomination", nil, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20211212055914")
+mod:SetRevision("20220127073344")
 mod:SetCreatureID(175726)--Skyja (TODO, add other 2 and set health to highest?)
 mod:SetEncounterID(2429)
 mod:SetUsedIcons(8, 7, 6, 4, 3, 2, 1)
@@ -63,11 +63,11 @@ local specWarnSongofDissolution					= mod:NewSpecialWarningInterrupt(350286, "Ha
 local specWarnReverberatingRefrain				= mod:NewSpecialWarningMoveTo(350385, nil, nil, nil, 3, 2)
 ----Skyja, The First
 ------Call of the Val'kyr
-local specWarnAgathasEternalblade				= mod:NewSpecialWarningDodge(350031, nil, nil, nil, 2, 2)
+local specWarnAgathasEternalblade				= mod:NewSpecialWarningDodge(350012, nil, nil, nil, 2, 2)
 local specWarnDaschlasMightyAnvil				= mod:NewSpecialWarningMoveAway(350184, nil, nil, nil, 1, 2)
 local yellDaschlasMightyAnvil					= mod:NewShortYell(350184)
 local yellDaschlasMightyAnvilFades				= mod:NewShortFadesYell(350184)
-local specWarnAradnesFallingStrike				= mod:NewSpecialWarningSoak(350098, nil, nil, nil, 1, 2)
+local specWarnAradnesFallingStrike				= mod:NewSpecialWarningSoak(350078, nil, nil, nil, 1, 2)
 local specWarnBrynjasMournfulDirge				= mod:NewSpecialWarningMoveAway(350109, nil, nil, nil, 1, 2)
 local yellBrynjasMournfulDirge					= mod:NewShortYell(350109)
 local yellBrynjasMournfulDirgeFades				= mod:NewShortFadesYell(350109)
@@ -80,7 +80,7 @@ local yellFragmentsofDestiny					= mod:NewShortPosYell(350542)--TODO, probably c
 --Stage Two: The First of the Mawsworn
 local specWarnPierceSoul						= mod:NewSpecialWarningStack(350475, nil, 4, nil, nil, 1, 6)
 local specWarnPierceSoulTaunt					= mod:NewSpecialWarningTaunt(350475, nil, nil, nil, 1, 2)
-local specWarnLinkEssence						= mod:NewSpecialWarningDefensive(350482, nil, nil, nil, 1, 2, 3)
+local specWarnLinkEssence						= mod:NewSpecialWarningDefensive(350483, nil, nil, nil, 1, 2, 3)
 local specWarnWordofRecall						= mod:NewSpecialWarningSpell(350687, nil, nil, nil, 2, 2, 3)
 --local specWarnGTFO							= mod:NewSpecialWarningGTFO(340324, nil, nil, nil, 1, 8)
 
@@ -305,8 +305,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end
 		if self:IsMythic() then
 			--TODO, actually see what happens if they aren't dead by the time these timers expire
-			timerWingsofRageCD:Start(56.7)
-			timerReverberatingRefrainCD:Start(95.7)
+			timerWingsofRageCD:Start(56.7, self.vb.wingCount+1)
+			timerReverberatingRefrainCD:Start(95.7, self.vb.refrainCount+1)
 		end
 		berserkTimer:Cancel()--Tecnically not accurate, Phase 1 berserk stops when both valks die. TODO, separate object
 		berserkTimer:Start(602)--Phase 2

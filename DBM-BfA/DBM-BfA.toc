@@ -27,7 +27,7 @@
 ## X-Curse-Project-ID: 420275
 ## X-WoWI-ID: 25779
 ## X-Wago-ID: RXKqxj6y
-## Version: r6
+## Version: r8
 localization.en.lua
 localization.de.lua
 localization.kr.lua

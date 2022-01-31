@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,timewalker"
 
-mod:SetRevision("20210119194132")
+mod:SetRevision("20220116042005")
 mod:SetCreatureID(43438)
 mod:SetEncounterID(1056)
 
@@ -23,7 +23,7 @@ local warnEmerge					= mod:NewAnnounce("WarnEmerge", 2, "Interface\\AddOns\\DBM-
 local specWarnCrystalBarrage		= mod:NewSpecialWarningYou(81634, nil, nil, nil, 1, 2)
 local specWarnCrystalBarrageClose	= mod:NewSpecialWarningClose(81634, nil, nil, nil, 1, 2)
 
-local timerDampening				= mod:NewCDTimer(10, 82415, nil, nil, nil, 3, nil, DBM_CORE_L.MAGIC_ICON)
+local timerDampening				= mod:NewCDTimer(10, 82415, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
 local timerSubmerge					= mod:NewTimer(80, "TimerSubmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp", nil, nil, 6)
 local timerEmerge					= mod:NewTimer(30, "TimerEmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp", nil, nil, 6)
 

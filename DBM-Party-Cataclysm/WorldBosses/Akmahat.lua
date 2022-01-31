@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,timewalker"
 
-mod:SetRevision("20210721041639")
+mod:SetRevision("20220116042005")
 mod:SetCreatureID(50063)
 mod:SetModelID(34573)
 mod:EnableWBEngageSync()--Enable syncing engage in outdoors
@@ -24,9 +24,9 @@ local specWarnMantle		= mod:NewSpecialWarningSpell(93561, nil, nil, nil, 1, 2)
 
 local timerShockwaveCD		= mod:NewCDTimer(16, 94968, nil, nil, nil, 3)--Every 16 seconds shockwave and fury alternate unless mantle, is cast, then it's 18 seconds cause of the cast delay of mantle affecting both CDs
 local timerFuryofSandsCD	= mod:NewCDTimer(16, 94946, nil, nil, nil, 3)
-local timerSandsofTime		= mod:NewBuffFadesTimer(15, 93578, nil, "Healer", nil, 5, nil, DBM_CORE_L.HEALER_ICON..DBM_CORE_L.MAGIC_ICON)
-local timerSandsofTimeCD	= mod:NewCDTimer(25, 93578, nil, nil, nil, 3, nil, DBM_CORE_L.MAGIC_ICON)
-local timerMantleCD			= mod:NewCDTimer(43, 93561, nil, nil, nil, 5, nil, DBM_CORE_L.DAMAGE_ICON)--42.8-46.5 variations. a CD timer will suffice of 43
+local timerSandsofTime		= mod:NewBuffFadesTimer(15, 93578, nil, "Healer", nil, 5, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.MAGIC_ICON)
+local timerSandsofTimeCD	= mod:NewCDTimer(25, 93578, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
+local timerMantleCD			= mod:NewCDTimer(43, 93561, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON)--42.8-46.5 variations. a CD timer will suffice of 43
 
 local sandsTargets = {}
 mod.vb.sandsDebuffs = 0

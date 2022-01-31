@@ -120,7 +120,7 @@ local L = DBM_SpellsUsed_Translations
 local SpellBarIndex, SpellIDIndex, SpellNameIndex = {}, {}, {}
 
 local type, pairs = type, pairs
-local DBM, Bars = DBM, DBM.Bars
+local DBM, DBT = DBM, DBT
 
 local function rebuildSpellIDIndex()
 	SpellIDIndex = {}
@@ -332,7 +332,7 @@ do
 
 	local function clearAllSpellBars()
 		for k, _ in pairs(SpellBarIndex) do
-			Bars:CancelBar(k)
+			DBT:CancelBar(k)
 			SpellBarIndex[k] = nil
 		end
 	end

@@ -33,6 +33,8 @@ local Item = {
 		instanceDifficulties = false,
 		unique = false,
 		worldQuestId = false,
+		pickpocket = false,
+		requiresCompletedQuestId = false,
 		-- Populated fields (SavedVariables)
 		attempts = false,
 		lastAttempts = false,

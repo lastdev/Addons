@@ -93,7 +93,6 @@ function RSNpcDB.SetCustomNpcInfo(npcID, info)
 	local completedZonesCounter = 0
 	for zoneID, _ in pairs (info.zones) do
 		if (info.coordinates and info.coordinates[zoneID] and info.coordinates[zoneID] ~= "") then
-			string.format("Coordenadas %s", info.coordinates[zoneID]);
 			local mapID = tonumber(zoneID)
 			zones[mapID] = {}
 			zones[mapID].artID = { C_Map.GetMapArtID(mapID) }
@@ -103,11 +102,11 @@ function RSNpcDB.SetCustomNpcInfo(npcID, info)
 			for i, coordinatePair in ipairs(coordinatePairs) do
 				local coordx, coordy = 	strsplit("-", coordinatePair)
 				if (i == 1) then
-					zones[mapID].x = tonumber("0."..coordx)
-					zones[mapID].y = tonumber("0."..coordy)
+					zones[mapID].x = RSUtils.FixCoord(coordx)
+					zones[mapID].y = RSUtils.FixCoord(coordy)
 				end
 					
-				table.insert(zones[mapID].overlay, string.format("0.%s-0.%s", coordx, coordy))
+				table.insert(zones[mapID].overlay, string.format("%s-%s", coordx, coordy))
 			end
 			
 			completedZonesCounter = completedZonesCounter + 1
@@ -267,8 +266,8 @@ end
 function RSNpcDB.GetInternalNpcCoordinates(npcID, mapID)
 	if (npcID and mapID) then
 		local npcInfo = RSNpcDB.GetInternalNpcInfoByMapID(npcID, mapID)
-		if (npcInfo) then
-			return npcInfo.x, npcInfo.y
+		if (npcInfo and npcInfo.x and npcInfo.y) then
+			return RSUtils.Lpad(npcInfo.x, 4, '0'), RSUtils.Lpad(npcInfo.y, 4, '0')
 		end
 	end
 

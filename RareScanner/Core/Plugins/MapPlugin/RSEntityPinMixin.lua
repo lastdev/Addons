@@ -22,6 +22,9 @@ local RSGuidePOI = private.ImportLib("RareScannerGuidePOI")
 local RSTomtom = private.ImportLib("RareScannerTomtom")
 local RSWaypoints = private.ImportLib("RareScannerWaypoints")
 
+-- RareScanner general libraries
+local RSUtils = private.ImportLib("RareScannerUtils")
+
 RSEntityPinMixin = CreateFromMixins(MapCanvasPinMixin);
 
 function RSEntityPinMixin:OnLoad()
@@ -33,11 +36,7 @@ function RSEntityPinMixin:OnAcquired(POI)
 	self.POI = POI
 	self.Texture:SetTexture(POI.Texture)
 	self.Texture:SetScale(RSConfigDB.GetIconsWorldMapScale())
-	if (POI.x <= 1 and POI.y <= 1) then
-		self:SetPosition(POI.x, POI.y);
-	else
-		self:SetPosition(tonumber("0."..POI.x), tonumber("0."..POI.y));
-	end
+	self:SetPosition(RSUtils.FixCoord(POI.x), RSUtils.FixCoord(POI.y));
 end
 
 function RSEntityPinMixin:OnMouseEnter()
@@ -77,6 +76,7 @@ function RSEntityPinMixin:OnMouseDown(button)
 				end
 			end
 			self:GetMap():RefreshAllDataProviders();
+			RSMinimap.RefreshEntityState(self.POI.entityID)
 		-- Add waypoint
 		elseif (IsShiftKeyDown()) then
 			if (RSConfigDB.IsAddingWorldMapTomtomWaypoints()) then
@@ -96,13 +96,11 @@ function RSEntityPinMixin:OnMouseDown(button)
 					end
 				end
 				RSGeneralDB.RemoveOverlayActive(self.POI.entityID)
+				RSMinimap.RemoveOverlay(self.POI.entityID)
 			else
 				self:ShowOverlay()
 			end
 		end
-
-		-- Refresh minimap
-		RSMinimap.RefreshAllData(true)
 	elseif (button == "RightButton") then
 		-- If guide showing then hide it
 		local guideEntityID = RSGeneralDB.GetGuideActive()
@@ -112,13 +110,11 @@ function RSEntityPinMixin:OnMouseDown(button)
 				self:ShowGuide(true)
 			else
 				RSGeneralDB.RemoveGuideActive()
+				RSMinimap.RemoveGuide(self.POI.entityID)
 			end
 		else
 			self:ShowGuide(true)
 		end
-
-		-- Refresh minimap
-		RSMinimap.RefreshAllData(true)
 		
 		-- Hide the tooltip
 		if (RSTooltip.HideTooltip(self.tooltip)) then
@@ -146,13 +142,19 @@ function RSEntityPinMixin:ShowOverlay()
 					self:GetMap():RemovePin(pin)
 				end
 			end
+			
+			-- Cleans the replaced overly in the minimap
+			RSMinimap.RemoveOverlay(replacedEntityID)
 		end
 		
 		-- Adds the new one
 		for _, coordinates in ipairs (overlay) do
 			local x, y = strsplit("-", coordinates)
-			self:GetMap():AcquirePin("RSOverlayTemplate", tonumber(x), tonumber(y), r, g, b, self);
+			self:GetMap():AcquirePin("RSOverlayTemplate", RSUtils.FixCoord(x), RSUtils.FixCoord(y), r, g, b, self);
 		end
+		
+		-- Adds the new one to the minimap
+		RSMinimap.AddOverlay(self.POI.entityID)
 	end
 end
 
@@ -180,8 +182,10 @@ function RSEntityPinMixin:ShowGuide(onclick)
 			end
 		end
 		RSGeneralDB.SetGuideActive(self.POI.entityID)
+		RSMinimap.AddGuide(self.POI.entityID)
 	else
 		RSGeneralDB.RemoveGuideActive()
+		RSMinimap.RemoveGuide(self.POI.entityID)
 	end
 end
 

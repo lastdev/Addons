@@ -55,7 +55,7 @@ local shadowlandsToys = {
 		name = L["Smolderheart"],
 		itemId = 180873,
 		npcs = {160857},
-		chance = 25,
+		chance = 20,
 		questId = {58263},
 		coords = {
 			{m = CONSTANTS.UIMAPIDS.REVENDRETH, x = 34.08, y = 55.47, n = L["Sire Ladinas"]}
@@ -336,8 +336,9 @@ local shadowlandsToys = {
 		isToy = true,
 		itemId = 187139,
 		npcs = {179735},
-		chance = 100, -- Blind guess
+		chance = 8,
 		unique = true,
+		questId = {64232},
 		coords = {
 			{m = CONSTANTS.UIMAPIDS.THE_MAW, x = 28.5, y = 24.9, n = L["Torglluun"]}
 		}
@@ -477,6 +478,27 @@ local shadowlandsToys = {
 		chance = 100, -- Blind guess
 		coords = {
 			{m = CONSTANTS.UIMAPIDS.REVENDRETH}
+		}
+	},
+	["Shaded Judgment Stone"] = {
+		cat = CONSTANTS.ITEM_CATEGORIES.SHADOWLANDS,
+		type = CONSTANTS.ITEM_TYPES.ITEM,
+		method = CONSTANTS.DETECTION_METHODS.NPC,
+		name = L["Shaded Judgment Stone"],
+		isToy = true,
+		itemId = 187174,
+		npcs = {
+			179913,
+			179608,
+			179914,
+			179911,
+			179853
+		},
+		chance = 100, -- Blind guess
+		sourceText = L["This item can only drop in the rift phase of Korthia and The Maw."],
+		coords = {
+			{m = CONSTANTS.UIMAPIDS.KORTHIA},
+			{m = CONSTANTS.UIMAPIDS.THE_MAW}
 		}
 	},
 }
