@@ -1,0 +1,278 @@
+$Id: ChangeLog.txt 126 2022-02-14 17:06:08Z arithmandar $
+
+Revision History:
+=================
+
+* v1.43 (Feb. 15, 2022)
+-----------------------
+- Library update - LibUIDropDownMenu
+
+* v1.42 (Feb. 3, 2022)
+-----------------------
+- ToC update to support WoW 9.1.5
+- Library update - LibUIDropDownMenu
+
+* v1.41 (Jun. 30, 2021)
+-----------------------
+- ToC update to support WoW 9.1.0
+- Library update - LibUIDropDownMenu
+
+* v1.40 (Jun. 14, 2021)
+------------------------
+- Library update - LibUIDropDownMenu
+
+* v1.39 (May 19, 2021)
+------------------------
+- Toc update to support WoW 9.0.5
+
+* v1.38 (Nov. 22, 2020)
+------------------------
+- Toc update to support WoW 9.0.2
+- Disable no-lib release as the new CurseForge seems to bring-in more torubles for users to download addon
+- Library update - LibUIDropDownMenu
+
+* v1.37 (Oct. 26, 2020)
+------------------------
+- Re-added LibUIDropDownMenu
+- Library update: LibBabble-SubZone
+
+* v1.36 (Oct. 18, 2020)
+------------------------
+- Toc update to support WoW 9.0.1
+- Updated deprecated function call
+  - WorldMapTooltip
+
+* v1.35 (Jul. 26, 2020)
+------------------------
+- Library update: LibBabble-SubZone
+
+* v1.34 (Jan. 17, 2020)
+-----------------------
+- Toc update to support WoW 8.3.0
+- Lib Update: LibBabble-SubZone-3.0
+
+* v1.33 (Jan. 09, 2020)
+-----------------------
+- Fixed mapID of Antoran Wastes
+
+* v1.32 (Jan. 09, 2020)
+-----------------------
+- Toc update to support WoW 8.2.5
+- Lib Update: LibBabble-SubZone-3.0
+- Bug fix:
+  - icon not showing on Paladin's class hall has been fixed now
+
+* v1.31 (Sep. 03, 2019)
+-----------------------
+- Toc update to support WoW 8.2.0
+
+* v1.30 (Dec. 21, 2018)
+-----------------------
+- Toc update to support WoW 8.1.0
+
+* v1.29 (Aug. 06, 2018)
+-----------------------
+- Remove LibUIDropDown
+- Fixed TomTom waypoint's function call issue
+
+* v1.28 (Jul. 27, 2018)
+-----------------------
+- Fixed RequiredDeps issue
+
+* v1.27 (Jul. 26, 2018)
+-----------------------
+- Toc update to support WoW 8.0.1
+- Remove listening to CLOSE_WORLD_MAP event as no longer supported
+- Update ToC to revise the LibUIDropDown's name and move it with LibBabble-SubZone to RequiredDeps
+- Update codes to synch with latest HandyNotes and use MapID, GetNodes2
+- Convert map date to use MapID
+
+* v1.26 (Apr. 25, 2018)
+-----------------------
+- Lib update: LibUIDropDownMenu
+- Localization update:
+  - French: neotipiak971
+
+* v1.25 (Sep. 11, 2017)
+-----------------------
+- Added Mac'Aree
+
+* v1.24 (Sep. 10, 2017)
+-----------------------
+- Fixed ToC libraries loading
+
+* v1.23 (Sep. 10, 2017)
+-----------------------
+- Added the Vindicaar
+
+* v1.22 (Aug. 31, 2017)
+-----------------------
+- Lib Update: LibUIDropDownMenu
+
+* v1.21 (Aug. 29, 2017)
+-----------------------
+- ToC update to support WoW 7.3.0
+- Lib Update: LibUIDropDownMenu, LibBabble-SubZone-3.0
+
+* v1.20 (Jun. 22, 2017)
+-----------------------
+- Added Yushi <Seal of Broken Fate Shipment> to Monk's order hall
+- Localization update:
+  - German (pas06)
+
+* v1.19 (Jun. 19, 2017)
+-----------------------
+- Added Almenis <Seal of Broken Fate Shipment> to Druid's order hall
+- Added Researcher Tulius <Seal of Broken Fate Shipment> to Mage's order hall
+- Added Mal <Weapons Smuggler> (Champion Armaments) to Rogue's order hall
+- Added option to toggle show / hide un-researched order hall advancement's NPC
+- Localization update:
+  - German (pas06)
+  - Korean (yuk6196)
+
+* v1.18 (Jun. 13, 2017)
+-----------------------
+- Added Demonia Pickerin and Galen Foul to Warlock's order hall
+- Localization update:
+  - German (pas06)
+
+* v1.17 (Jun. 11, 2017)
+-----------------------
+- Added Druid's portal nodes to the following maps:
+  Northrend, Kalimdor, Eastern Kingdom, and the World maps
+- Added Mage's Teleportation Nexus nodes to Broken Isles map
+- Added Hunter's Great Eagle nodes to Broken Isles map
+- Added Warrior's jumping points to Broken Isles map
+- Localization update:
+  - German (pas06)
+
+* v1.16 (Jun. 08, 2017)
+-----------------------
+- Added Truth <Seal of Broken Fate Shipment> and High Priestess Mourn 
+  <Recruiter> to Priest' order hall
+- Added Scythe <Seal of Broken Fate Shipment> and Laura Stern <Recruiter> 
+  to Rogue's order hall
+- Added Marick Ven <Earthen Ring Protectors Recruiter>, Bath'rah the 
+  Windwatcher <Seal of Broken Fate Shipment>, and Alexor <The Ascended> 
+  to Shaman's order hall
+- Added Seer Aleis <Seal of Broken Fate Shipment> to Demon Hunter's order hall
+- Added Librarian Lightmorne <Seal of Broken Fate Shipment> to Paladin's 
+  order hall
+- Localization update:
+  - German (pas06)
+
+* v1.15 (Jun. 02, 2017)
+-----------------------
+- Added Conjurer Awlyn to Mage's order hall
+
+* v1.14 (May 30, 2017)
+-----------------------
+- Localization update:
+  - German (pas06)
+
+* v1.13 (May 26, 2017)
+-----------------------
+- Added Tu'Las the Gifted (Seal of Broken Fate vendor) to Hunter's order hall
+- Localization update:
+  - Russian (DogmatX)
+  - German (pas06)
+- Fixed issue that no-lib version was not able to locate LibBabble-SubZone-3.0
+
+* v1.12 (May 24, 2017)
+-----------------------
+- Added Treant Sapling to Druid's order hall
+- Added Master Swoo and Tianili to Monk's order hall
+- Added Winter Payne to Deathknight's order hall
+- Added Evelune Soulreaver to Demon Hunter's order hall
+- Lib update:
+  - Replace NoTaint_UIDropDownMenu with LibUIDropDownMenu
+- Enhanced dropdown menu's behavior when world map is changed or closed
+
+* v1.11 (May 20, 2017)
+-----------------------
+- Added Eran Droll to Deathknight's order hall
+- Added Tormented Shivarra to Demonhunter's order hall
+- Added Shalorn Star to Druid's order hall
+- Added Nighthuntress Silus to Hunter's order hall
+- Added Guardian Alar to Mage's order hall
+- Lib update:
+  - NoTaint_UIDropDownMenu
+
+* v1.10 (May 19, 2017)
+-----------------------
+- Added Charger Saddle, Crusader Kern and Terric the Illuminator in Paladin's order hall
+- Added Matilda Skoptidottir and Sharak Tor / Matthew Glensorrow in Warrior's order hall
+- Localization update:
+  - German (pas06)
+
+* v1.09 (May 12, 2017)
+-----------------------
+- Replaced UIDropDown with NoTaint_UIDropDown
+- Added dungeonLevel information
+- Revised iter function to return dungeonLevel value, should now well supported Carbonite
+- Fixed typo of "Class Hall Quartermaster"
+- Changed class hall's mission icon to green button
+
+* v1.08 (May 09, 2017)
+-----------------------
+- Re-organized config options
+- Standardize localization key style
+- Changed the registered name to HandyNotes
+- Localization update:
+  - Russian (BLizzatron)
+  - Simplified Chinese
+
+* v1.07 (Apr. 27, 2017)
+-----------------------
+- Fixed class hall researcher's data config
+- Added Light's Heart location to Hunter and Shaman's halls
+- Added option to toggle Light's Heart displaying
+- Localization update:
+  - Korean (yuk6196)
+
+* v1.06 (Apr. 25, 2017)
+-----------------------
+- Localization update:
+  - German (pas06)
+  - Russian (BLizzatron)
+
+* v1.05 (Apr. 24, 2017)
+-----------------------
+- Added more flexible displaying options
+
+* v1.04 (Apr. 22, 2017)
+-----------------------
+- Localization update:
+  - German (pas06)
+  - Korean (yuk6196)
+
+* v1.03 (Apr. 20, 2017)
+-----------------------
+- Corrected Amal'thazad and Calydus's NPC ID
+- Enhanced NPC name's looking-up
+- Added notes for Artifact Research, Class Hall Quartermaster
+
+* v1.02 (Apr. 19, 2017)
+-----------------------
+- Added Warrior's jumping points
+- Added Mage's Teleportation Nexus Portals
+- Added Druid's portals in Emerald Dreamway and also in the destination including below:
+  - Grizzly Hills
+  - Feralas
+  - Moonglade
+  - Duskwood
+  - The Hinterlands
+  - Mount Hyjal
+- Added Hunter's Great Eagle flight points
+- Localization update:
+  - German (pas06)
+
+* v1.01 (Apr. 17, 2017)
+-----------------------
+- Added Tianji in Monk's order hall
+- Added node's notes
+- Added more options' toggling
+
+* v1.00 (Apr. 17, 2017)
+-----------------------
+- Initial version which support WoW 7.2.0
