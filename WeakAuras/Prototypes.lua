@@ -979,6 +979,40 @@ function WeakAuras.ValidateNumeric(info, val)
   return true
 end
 
+function WeakAuras.ParseStringCheck(input)
+  if not input then return end
+  local matcher = {
+    zones = {},
+    Check = function(self, zone)
+      return self.zones[zone]
+    end,
+    Add = function(self, z)
+      self.zones[z] = true
+    end
+  }
+
+  local start = 1
+  local escaped = false
+  local partial = ""
+  for i = 1, #input do
+    local c = input:sub(i, i)
+    if escaped then
+      escaped = false
+    elseif c == '\\' then
+      partial = partial .. input:sub(start, i -1)
+      start = i + 1
+      escaped = true
+    elseif c == "," then
+      matcher:Add(partial .. input:sub(start, i -1):trim())
+      start = i + 1
+      partial = ""
+    end
+  end
+  matcher:Add(partial .. input:sub(start, #input):trim())
+
+  return matcher
+end
+
 function WeakAuras.ValidateNumericOrPercent(info, val)
   if val ~= nil and val ~= "" then
     local percent = string.match(val, "(%d+)%%")
@@ -1562,9 +1596,10 @@ Private.load_prototype = {
       display = L["Zone Name"],
       type = "string",
       init = "arg",
-      test = "WeakAuras.CheckString(%q, zone)",
+      preamble = "local checker = WeakAuras.ParseStringCheck(%q)",
+      test = "checker:Check(zone)",
       events = {"ZONE_CHANGED", "ZONE_CHANGED_INDOORS", "ZONE_CHANGED_NEW_AREA", "VEHICLE_UPDATE"},
-      desc = L["Supports multiple entries, separated by commas"]
+      desc = L["Supports multiple entries, separated by commas. Escape ',' with \\"]
     },
     {
       name = "zoneId",
@@ -2140,8 +2175,8 @@ Private.event_prototypes = {
         values = function()
           local ret = {}
           for i = 1, GetNumFactions() do
-            local name, _, _, _, _, _, _, _, isHeader, _, _, _, _, factionID = GetFactionInfo(i)
-            if not isHeader and factionID then
+            local name, _, _, _, _, _, _, _, isHeader, _, hasRep, _, _, factionID = GetFactionInfo(i)
+            if (hasRep or not isHeader) and factionID then
               ret[factionID] = name
             end
           end
@@ -2151,7 +2186,8 @@ Private.event_prototypes = {
         enable = function(trigger)
           return not trigger.use_watched
         end,
-        test = "true"
+        test = "true",
+        control = "WeakAurasSortedDropdown"
       },
       {
         name = "name",
@@ -4315,7 +4351,7 @@ Private.event_prototypes = {
         conditionEvents = {
           "SPELL_UPDATE_USABLE",
           "PLAYER_TARGET_CHANGED",
-          "UNIT_POWER_FREQUENT",
+          "UNIT_POWER_FREQUENT:player"
         },
       },
       {
@@ -4330,8 +4366,8 @@ Private.event_prototypes = {
         conditionEvents = {
           "SPELL_UPDATE_USABLE",
           "PLAYER_TARGET_CHANGED",
-          "UNIT_POWER_FREQUENT",
-        }
+          "UNIT_POWER_FREQUENT:player"
+        },
       },
       {
         name = "spellInRange",
@@ -4345,7 +4381,7 @@ Private.event_prototypes = {
         conditionEvents = {
           "PLAYER_TARGET_CHANGED",
           "WA_SPELL_RANGECHECK",
-        }
+        },
       },
       {
         hidden = true,
@@ -5448,6 +5484,7 @@ Private.event_prototypes = {
         display = L["Count"],
         desc = L["Only if BigWigs shows it on it's bar"],
         type = "string",
+        store = true,
         conditionType = "string",
       },
       {
@@ -8077,7 +8114,7 @@ Private.event_prototypes = {
         name = "hastepercent",
         display = L["Haste (%)"],
         type = "number",
-        init = "GetHaste()",
+        init = WeakAuras.IsClassic() and "GetHaste()" or "GetCombatRatingBonus(CR_HASTE_SPELL)",
         store = true,
         conditionType = "number"
       },

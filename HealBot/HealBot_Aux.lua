@@ -65,7 +65,7 @@ local function HealBot_Aux_setBar(button, id, value, isFluid, text, endTime, Cas
     if isFluid and HealBot_Aux_luVars["FluidInUse"] and not button.mana.init then
         button.aux[id]["FLUID"]=value-- or 0
         HealBot_AuxFluid_Buttons[button.id]=button
-        if not HealBot_Aux_luVars["AuxFluidBarInUse"] then HealBot_Aux_UpdateFluidBars(GetTime()-0.01) end
+        if not HealBot_Aux_luVars["AuxFluidBarInUse"] then HealBot_Aux_UpdateFluidBars() end
     elseif endTime then
         if CastIsChan then
             button.aux[id]["TIMEDH2L"]=value
@@ -664,6 +664,7 @@ function HealBot_Aux_setInHealsAssigned(aType, frame, id)
     end
 end
 
+local hbAuxHlth10=0
 function HealBot_Aux_UpdateAbsorbBar(button, value)
     for id in pairs(hbAuxAbsorbAssigned[button.frame]) do
         if button.status.current<HealBot_Unit_Status["DEAD"] then
@@ -672,18 +673,20 @@ function HealBot_Aux_UpdateAbsorbBar(button, value)
                 button.aux[id]["G"]=button.health.absorbg
                 button.aux[id]["B"]=button.health.absorbb
             end
+            hbAuxHlth10=floor(1000/((button.health.max/10)/value))
+            if hbAuxHlth10>1000 then hbAuxHlth10=1000 end
             if Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][id][button.frame]["TEXT"] and
                Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][id][button.frame]["ANCHOR"]<3 then
                 if Healbot_Config_Skins.AuxBarText[Healbot_Config_Skins.Current_Skin][id][button.frame]["COLTYPE"]==1 then
                     button.auxtxt[id]["R"],button.auxtxt[id]["G"],button.auxtxt[id]["B"]=(button.health.absorbr+0.2),(button.health.absorbg+0.2),(button.health.absorbb+0.2)
                 end
                 if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["HLTHTYPE"]==3 then
-                    HealBot_Aux_setBar(button, id, value, true, floor((button.health.absorbs/button.health.max)*100).."%")
+                    HealBot_Aux_setBar(button, id, hbAuxHlth10, true, floor((button.health.absorbs/button.health.max)*100).."%")
                 else
-                    HealBot_Aux_setBar(button, id, value, true, HealBot_Text_shortHealTxt(button.health.absorbs, button.frame))
+                    HealBot_Aux_setBar(button, id, hbAuxHlth10, true, HealBot_Text_shortHealTxt(button.health.absorbs, button.frame))
                 end
             else
-                HealBot_Aux_setBar(button, id, value, true)
+                HealBot_Aux_setBar(button, id, hbAuxHlth10, true)
             end
         else
             HealBot_Aux_clearBar(button, id)
@@ -705,18 +708,20 @@ function HealBot_Aux_UpdateHealInBar(button, value)
                 button.aux[id]["G"]=button.health.inhealg
                 button.aux[id]["B"]=button.health.inhealb
             end
+            hbAuxHlth10=floor(1000/((button.health.max/10)/value))
+            if hbAuxHlth10>1000 then hbAuxHlth10=1000 end
             if Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][id][button.frame]["TEXT"] and
                Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][id][button.frame]["ANCHOR"]<3 then
                 if Healbot_Config_Skins.AuxBarText[Healbot_Config_Skins.Current_Skin][id][button.frame]["COLTYPE"]==1 then
                     button.auxtxt[id]["R"],button.auxtxt[id]["G"],button.auxtxt[id]["B"]=(button.health.inhealr+0.2),(button.health.inhealg+0.2),(button.health.inhealb+0.2)
                 end
                 if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["HLTHTYPE"]==3 then
-                    HealBot_Aux_setBar(button, id, value, true, floor((button.health.incoming/button.health.max)*100).."%")
+                    HealBot_Aux_setBar(button, id, hbAuxHlth10, true, floor((button.health.incoming/button.health.max)*100).."%")
                 else
-                    HealBot_Aux_setBar(button, id, value, true, HealBot_Text_shortHealTxt(button.health.incoming, button.frame))
+                    HealBot_Aux_setBar(button, id, hbAuxHlth10, true, HealBot_Text_shortHealTxt(button.health.incoming, button.frame))
                 end
             else
-                HealBot_Aux_setBar(button, id, value, true)
+                HealBot_Aux_setBar(button, id, hbAuxHlth10, true)
             end
         else
             HealBot_Aux_clearBar(button, id)

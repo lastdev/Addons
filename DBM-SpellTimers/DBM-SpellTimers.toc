@@ -18,7 +18,7 @@
 ## URL: http://www.deadlybossmods.com
 ## SavedVariables: DBM_SpellTimers_Settings
 ## X-Curse-Project-ID: 18712
-## Version: r137
+## Version: r138
 
 localization.en.lua
 localization.de.lua
@@ -28,5 +28,6 @@ localization.kr.lua
 localization.es.lua
 localization.fr.lua
 localization.it.lua
+localization.ru.lua
 
 SpellTimers.lua

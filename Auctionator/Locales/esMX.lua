@@ -20,6 +20,8 @@ L["AUTHOR_HEADER"] = "Autor"
 L["BID_PRICE"] = "Precio de pujar"
 L["BIDDER"] = "Licitador"
 L["BIDDING_AUCTION_INFO"] = "%s Pujando en %s"
+--[[Translation missing --]]
+L["BRACKETS_X_EACH"] = "(%s each)"
 L["BUG_REPORT"] = "Reportar un error"
 L["BUG_TOOLTIP_HEADER"] = "Reportar un error en Github"
 L["BUG_TOOLTIP_TEXT"] = "Si encuentras un error mientras estás usando Auctionator, por favor reportarlo en Github. Por favor proporciona suficientes detalles así podremos reproducir el error! Usando los addons !BugGrabber and !BugSack también nos ayudaras"
@@ -39,6 +41,12 @@ L["CANCELLING_TAB"] = "Cancelado"
 L["CANCELLING_TAB_HEADER"] = "Auctionator - Cancelado"
 L["CANNOT_AUCTION"] = [=[No se puede subastar
 ]=]
+--[[Translation missing --]]
+L["CHAIN_BUY"] = "Chain buy"
+--[[Translation missing --]]
+L["CHAIN_BUY_TOOLTIP_HEADER"] = "Chain multiple purchases"
+--[[Translation missing --]]
+L["CHAIN_BUY_TOOLTIP_TEXT"] = "When finished purchasing at the current price and stack size select the next price and stack size."
 L["CLASSIC_SUPPORT_ERROR"] = "Esta versión de Auctionator NO es compatible con Classic. Las cosas pueden romperse y no funcionar."
 L["CLOSE"] = "Cerrar"
 L["CONFIG_ADVANCED_CATEGORY"] = "Avanzado"
@@ -97,6 +105,8 @@ L["CONFIG_PROFILE_TEXT"] = "Configura los ajustes por personaje."
 L["CONFIG_PROFILE_TOGGLE"] = "Solo aplica la configuración a este personaje"
 L["CONFIG_QUANTITIES_CATEGORY"] = "Venta: Cantidades"
 L["CONFIG_QUANTITIES_TEXT"] = "Elige la cantidad predeterminada utilizada para las diferentes categorías de objetos."
+--[[Translation missing --]]
+L["CONFIG_RESET_STACK_SIZE_MEMORY"] = "Reset stack size memory"
 L["CONFIG_SCAN_SETTINGS"] = "Configuración de escaneo"
 L["CONFIG_SCANNING"] = "Configuración de escaneo completo"
 --[[Translation missing --]]
@@ -168,7 +178,13 @@ L["CONFIG_UNDERCUT_SCAN_NOT_LIFO_TOOLTIP_TEXT"] = "Deje esto para incluir cualqu
 L["CONFIG_VENDOR_TOOLTIP"] = "Mostrar información sobre herramientas del vendedor."
 L["CONFIRM"] = "Confirmar"
 L["CONTRIBUTORS_HEADER"] = "Colaboradores"
+--[[Translation missing --]]
+L["COPY_ITEM_ADDED"] = "Copied %s to %s"
+--[[Translation missing --]]
+L["COPY_NO_LIST_SELECTED"] = "Can't copy item. No shopping list selected"
 L["COPY_TEXT_HEADER"] = "Copiar texto"
+--[[Translation missing --]]
+L["COPY_TO_LIST"] = "Copy item to active shopping list"
 L["CRAFTED_LEVEL"] = "Nivel de crafteo"
 L["CREATE"] = "Crear"
 L["CREATE_LIST_DIALOG"] = "Ingrese el nombre de la nueva lista de compras:"
@@ -266,6 +282,8 @@ L["MONTH_6"] = "Junio"
 L["MONTH_7"] = "Julio"
 L["MONTH_8"] = "Agosto"
 L["MONTH_9"] = "Septiembre"
+--[[Translation missing --]]
+L["MULTIPLE_STACKS_AUCTION_INFO"] = "%s %s, totalling %s"
 L["NAME"] = "Nombre"
 --[[Translation missing --]]
 L["NEW_SHOPPING_LIST"] = "+ New shopping list"

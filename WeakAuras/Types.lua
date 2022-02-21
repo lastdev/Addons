@@ -3229,6 +3229,12 @@ Private.noreset_swing_spells = {
   [35478] = true, -- Drums of Restoration
   [34120] = true, -- Steady Shot (rank 1)
   [19434] = true, -- Aimed Shot (rank 1)
+  [1464] = true, -- Slam (rank 1)
+  [8820] = true, -- Slam (rank 2)
+  [11604] = true, -- Slam (rank 3)
+  [11605] = true, -- Slam (rank 4)
+  [25241] = true, -- Slam (rank 5)
+  [25242] = true, -- Slam (rank 6)
   --35474 Drums of Panic DO reset the swing timer, do not add
 }
 
@@ -3442,6 +3448,10 @@ if WeakAuras.IsBCC() then
     2764, 3018, -- Shoots,
     19434, 20900, 20901, 20902, 20903, 20904, 27065, -- Aimed Shot
     20066, -- Repentance
+    11350, -- Fire Shield (Oil of Immolation)
+    50986, -- Sulfuron Slammer
+    439, 440, 441, 2024, 4042, 17534, 28495, -- Minor/Lesser/Greater/Superior/Major/Super Healing Potion
+    41619, 41620 -- Cenarion Healing Salve/Bottled Nethergon Vapor
   }
   for _, spellid in ipairs(reset_swing_spell_list) do
     Private.reset_swing_spells[spellid] = true

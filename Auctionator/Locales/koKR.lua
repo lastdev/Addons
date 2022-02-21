@@ -19,15 +19,15 @@ L["AUTHOR_HEADER"] = "만든사람"
 L["BID_PRICE"] = "입찰가"
 L["BIDDER"] = "입찰자"
 L["BIDDING_AUCTION_INFO"] = "%s를 %s에 입찰했습니다."
+--[[Translation missing --]]
+L["BRACKETS_X_EACH"] = "(%s each)"
 L["BUG_REPORT"] = "오류를 보고하기"
 L["BUG_TOOLTIP_HEADER"] = "깃허브에 오류를 보고하기"
 L["BUG_TOOLTIP_TEXT"] = "옥셔네이터 사용 도중 오류가 발생하면 깃허브에 어떤 상황에 오류가 났는지 알려주시기 바랍니다. !BugGrabber와 Bugssack 애드온 또한 사용 가능합니다."
 L["BUY"] = "구매"
 L["BUY_STACK"] = "묶음 구매"
---[[Translation missing --]]
-L["BUYING"] = "Buying"
---[[Translation missing --]]
-L["BUYING_X_FOR_X"] = "Buying %s for %s"
+L["BUYING"] = "구매"
+L["BUYING_X_FOR_X"] = "%s를 %s에 구매"
 L["BUYOUT_AUCTION_INFO"] = "%s를 %s에 즉시구매가로 올렸습니다."
 L["BUYOUT_PRICE"] = "즉시구매가"
 L["CANCEL"] = "취소"
@@ -35,6 +35,9 @@ L["CANCEL_UNDERCUT"] = "최저가 경매취소"
 L["CANCELLING_TAB"] = "취소하기"
 L["CANCELLING_TAB_HEADER"] = "옥셔네이터 - 취소하기"
 L["CANNOT_AUCTION"] = "경매 불가"
+L["CHAIN_BUY"] = "묶음 구매"
+L["CHAIN_BUY_TOOLTIP_HEADER"] = "여러 묶음 구매"
+L["CHAIN_BUY_TOOLTIP_TEXT"] = "현재 가격과 묶음 개수 구매가 완료되면 다음 가격과 묶음 갯수를 선택합니다."
 L["CLASSIC_SUPPORT_ERROR"] = "이 버전은 월드 오브 워크래프트 클래식을 지원하지 않습니다."
 L["CLOSE"] = "닫기"
 L["CONFIG_ADVANCED_CATEGORY"] = "추가 설정"
@@ -50,8 +53,7 @@ L["CONFIG_AUTOSCAN"] = "경매장을 열 때 자동으로 구매목록 검색"
 L["CONFIG_AUTOSCAN_INTERVAL"] = "자동으로 검색할 때 걸리는 시간(분) 설정하기"
 L["CONFIG_AUTOSCAN_INTERVAL_HEADER"] = "자동 검색 사이의 간격 설정 "
 L["CONFIG_AUTOSCAN_INTERVAL_TOOLTIP_HEADER"] = "자동 검색 사이의 간격 설정"
---[[Translation missing --]]
-L["CONFIG_AUTOSCAN_INTERVAL_TOOLTIP_TEXT"] = "By default an scan doesn't happen every time you open the Auction House. It waits until a fixed time has elapsed since the last scan."
+L["CONFIG_AUTOSCAN_INTERVAL_TOOLTIP_TEXT"] = "기본적으로 경매장을 열 때마다 검색되지 않습니다. 마지막 검색 이후 일정 시간이 경과할 때까지 기다립니다."
 L["CONFIG_AUTOSCAN_TOOLTIP_HEADER"] = "자동검색"
 L["CONFIG_AUTOSCAN_TOOLTIP_TEXT"] = "경매장을 열 때 자동으로 구매목록을 검색합니다. 선택하지 않았다면 '전체검색' 버튼으로 구매목록을 수동검색 할 수 있습니다."
 L["CONFIG_BAG"] = "아이템 패널 옵션"
@@ -63,27 +65,21 @@ L["CONFIG_BAG_SHOW_SELLING_BAG_TOOLTIP_HEADER"] = "아이템 패널 표시"
 L["CONFIG_BAG_SHOW_SELLING_BAG_TOOLTIP_TEXT"] = "이 설정을 끄면 판매하기 탭의 아이템 패널이 숨겨집니다."
 L["CONFIG_BASIC_OPTIONS_CATEGORY"] = "기본설정"
 L["CONFIG_BASIC_OPTIONS_TEXT"] = "옥셔네이터의 기본설정"
---[[Translation missing --]]
-L["CONFIG_CANCEL_UNDERCUT_SHORTCUT"] = "A shortcut to cancel the next undercut item found is"
---[[Translation missing --]]
-L["CONFIG_CANCEL_UNDERCUT_SHORTCUT_TOOLTIP_TEXT"] = "Click and then press the buttons that you wish to use as the shortcut. This shortcut will only be active in the Cancelling tab and won't affect any other shortcuts bound to the buttons."
+L["CONFIG_CANCEL_UNDERCUT_SHORTCUT"] = "아이템 최저가를 취소하는 단축키는 다음과 같습니다"
+L["CONFIG_CANCEL_UNDERCUT_SHORTCUT_TOOLTIP_TEXT"] = "클릭 한 뒤 단축키로 사용하려는 버튼을 누릅니다. 이 단축키는 취소 탭에서만 활성화되며 버튼에 연결된 다른 단축키에 영향을 주지 않습니다."
 L["CONFIG_CANCELLING_CATEGORY"] = "취소하기"
 L["CONFIG_CANCELLING_TEXT"] = "취소하기 탭의 설정을 변경합니다."
 L["CONFIG_CHAT_LOG"] = "경매를 시작할 때 채팅창에 표시"
 L["CONFIG_CHAT_LOG_TOOLTIP_HEADER"] = "채팅창 설정"
 L["CONFIG_CHAT_LOG_TOOLTIP_TEXT"] = "경매시작 시 채팅창에 표시합니다."
---[[Translation missing --]]
-L["CONFIG_CRAFTING_COST_SHOW_PROFIT"] = "Show profit instead of crafting cost"
---[[Translation missing --]]
-L["CONFIG_CRAFTING_COST_SHOW_PROFIT_TOOLTIP_HEADER"] = "Crafting Cost Show Profit"
---[[Translation missing --]]
-L["CONFIG_CRAFTING_COST_SHOW_PROFIT_TOOLTIP_TEXT"] = "When the Auction House is open the crafting screen will show the cost of crafting an item. Enable this option to show the profit instead."
+L["CONFIG_CRAFTING_COST_SHOW_PROFIT"] = "제작 비용 대신 수익 표시"
+L["CONFIG_CRAFTING_COST_SHOW_PROFIT_TOOLTIP_HEADER"] = "제작 비용 수익 표시"
+L["CONFIG_CRAFTING_COST_SHOW_PROFIT_TOOLTIP_TEXT"] = "경매장을 열면 제작 화면에 아이템 제작 비용이 표시됩니다. 대신 수익금을 표시하려면 이 옵션을 활성화하십시오."
 L["CONFIG_DEBUG"] = "디버그 모드"
 L["CONFIG_DEBUG_TOOLTIP_HEADER"] = "옥셔네이터 디버그"
 L["CONFIG_DEBUG_TOOLTIP_TEXT"] = "디버그 메시지를 채팅창에 출력합니다."
 L["CONFIG_DEVELOPER"] = "개발자 설정"
---[[Translation missing --]]
-L["CONFIG_ENCHANT_GENERIC_TOOLTIP"] = "Show enchant tooltips"
+L["CONFIG_ENCHANT_GENERIC_TOOLTIP"] = "마법부여 툴팁 표시"
 L["CONFIG_ENCHANT_TOOLTIP"] = "인챈트 툴팁을 표시합니다(드군, 군단, 격아, 어둠땅만 지원)"
 L["CONFIG_FULL_SCAN_STEP_SIZE"] = "애드온 설치 시 튕기는 현상이 발생하면 숫자를 줄이세요"
 L["CONFIG_LIFO_CATEGORY"] = "판매: 일반"
@@ -96,14 +92,12 @@ L["CONFIG_PRICE_HISTORY_TOOLTIP_TEXT"] = "체크 해제시 판매 탭 하단의 
 L["CONFIG_PROFILE_CATEGORY"] = "프로필"
 L["CONFIG_PROFILE_TEXT"] = "캐릭터 별 프로필 설정을 변경합니다."
 L["CONFIG_PROFILE_TOGGLE"] = "이 캐릭터만 적용"
---[[Translation missing --]]
-L["CONFIG_QUANTITIES_CATEGORY"] = "Selling: Quantities"
---[[Translation missing --]]
-L["CONFIG_QUANTITIES_TEXT"] = "Choose the default quantity used for the different item categories."
+L["CONFIG_QUANTITIES_CATEGORY"] = "판매: 수량"
+L["CONFIG_QUANTITIES_TEXT"] = "다른 아이템 범주에 사용되는 기본 수량을 선택합니다."
+L["CONFIG_RESET_STACK_SIZE_MEMORY"] = "묶음 갯수 기록 재설정"
 L["CONFIG_SCAN_SETTINGS"] = "검색설정"
 L["CONFIG_SCANNING"] = "검색설정"
---[[Translation missing --]]
-L["CONFIG_SELLING_ALL_ITEMS_CATEGORY"] = "Selling: All Items"
+L["CONFIG_SELLING_ALL_ITEMS_CATEGORY"] = "판매: 모든 아이템"
 L["CONFIG_SELLING_AUTO_SELECT_NEXT"] = "경매 시작시 다음 아이템을 선택"
 L["CONFIG_SELLING_AUTO_SELECT_NEXT_TOOLTIP_HEADER"] = "자동 아이템 선택"
 L["CONFIG_SELLING_AUTO_SELECT_NEXT_TOOLTIP_TEXT"] = "경매 시작시 가방에 있는 다음 아이템을 자동으로 선택합니다."
@@ -161,12 +155,9 @@ L["CONFIG_SELLING_TBC_SHOW_ALL_RESULTS_TOOLTIP_TEXT"] = "Enabling this setting c
 L["CONFIG_SELLING_TEXT"] = "판매하기 탭의 설정을 변경합니다."
 L["CONFIG_SHOPPING_CATEGORY"] = "구매목록"
 L["CONFIG_SHOPPING_LIST"] = "구매목록 설정"
---[[Translation missing --]]
-L["CONFIG_SHOPPING_LIST_MISSING_TERMS"] = "Show terms from a shopping list that have no results in the results."
---[[Translation missing --]]
-L["CONFIG_SHOPPING_LIST_MISSING_TERMS_TOOLTIP_HEADER"] = "Searches with no results"
---[[Translation missing --]]
-L["CONFIG_SHOPPING_LIST_MISSING_TERMS_TOOLTIP_TEXT"] = "When a search term has no results an entry with zero available will be added to the results to show this."
+L["CONFIG_SHOPPING_LIST_MISSING_TERMS"] = "결과에 결과 없음 구매 목록의 용어 표시"
+L["CONFIG_SHOPPING_LIST_MISSING_TERMS_TOOLTIP_HEADER"] = "결과가 없는 검색"
+L["CONFIG_SHOPPING_LIST_MISSING_TERMS_TOOLTIP_TEXT"] = "검색어에 결과가 없으면 사용 가능한 항목이 0인 항목이 결과에 추가해 이를 표시합니다."
 L["CONFIG_SHOPPING_TEXT"] = "구매목록의 설정을 변경합니다."
 L["CONFIG_SMALL_TABS"] = "경매장에 작은 탭을 사용합니다 (경매장을 다시 열면 적용)"
 L["CONFIG_SMALL_TABS_TOOLTIP_HEADER"] = "작은 탭"
@@ -180,14 +171,15 @@ L["CONFIG_UNDERCUT_SCAN_NOT_LIFO_TOOLTIP_TEXT"] = "장비/펫의 최저가도  �
 L["CONFIG_VENDOR_TOOLTIP"] = "상점가 툴팁에 표시"
 L["CONFIRM"] = "확인"
 L["CONTRIBUTORS_HEADER"] = "기증자"
+L["COPY_ITEM_ADDED"] = "%s 을 %s 로 복사"
+L["COPY_NO_LIST_SELECTED"] = "아이템을 복사할 수 없습니다. 선택한 구매 목록이 없습니다"
 L["COPY_TEXT_HEADER"] = "글 복사하기"
+L["COPY_TO_LIST"] = "활성화된 구매 목록을 아이템 복사"
 L["CRAFTED_LEVEL"] = "제작 레벨"
 L["CREATE"] = "목록 생성"
 L["CREATE_LIST_DIALOG"] = "새로운 목록을 생성합니다."
---[[Translation missing --]]
-L["CURRENT"] = "Current"
---[[Translation missing --]]
-L["CUSTOM_KEYBOARD_SHORTCUTS"] = "Custom keyboard shortcuts"
+L["CURRENT"] = "현재"
+L["CUSTOM_KEYBOARD_SHORTCUTS"] = "사용자 정의 키보드 단축키"
 L["DATE"] = "날짜"
 L["DAY_1"] = "일요일"
 L["DAY_2"] = "월요일"
@@ -199,8 +191,7 @@ L["DAY_7"] = "토요일"
 L["DEFAULT_AUCTION_DURATION"] = "기본 경매 시간"
 L["DEFAULT_LIST_HEADER"] = "기본 구매목록"
 L["DEFAULT_QUANTITY"] = "자동으로 경매장에 올리는 갯수를 설정"
---[[Translation missing --]]
-L["DEFAULT_STACK_SIZES"] = "Default Stack Sizes"
+L["DEFAULT_STACK_SIZES"] = "기본 묶음 갯수"
 L["DEFAULT_TAB"] = "기본 탭"
 L["DEFAULT_TAB_TEXT"] = "경매장을 열었을 때 나오는 기본 탭 설정"
 L["DELETE"] = "목록 삭제"
@@ -217,13 +208,11 @@ L["EDIT_ITEM"] = "내용편집"
 L["ENCHANT_TOOLTIP_TOOLTIP_HEADER"] = "마법부여 툴팁 정보"
 L["ENCHANT_TOOLTIP_TOOLTIP_TEXT"] = "마법부여 정보를 툴팁에 표시합니다."
 L["ENGAGE_HEADER"] = "옥셔네이터와 함께하기"
---[[Translation missing --]]
-L["ERROR_REOPEN_AUCTION_HOUSE"] = "Unable to complete action, please close and reopen the Auction House."
+L["ERROR_REOPEN_AUCTION_HOUSE"] = "작업을 완료할 수 없습니다. 경매장을 닫았다가 다시 여십시오."
 L["EXACT_SEARCH"] = "정확한 이름 검색"
 L["EXPORT"] = "내보내기"
 L["EXPORT_AS"] = "다음으로 내보내기"
---[[Translation missing --]]
-L["EXPORT_RESULTS"] = "Export Results"
+L["EXPORT_RESULTS"] = "결과 내보내기"
 L["EXPORT_STRING"] = "공유가능한 스트링"
 L["EXPORT_WHISPER"] = "귓말하기"
 L["FAVOURITES"] = "즐겨찾기"
@@ -232,17 +221,14 @@ L["FINISHED_PROCESSING"] = "불러오기 완료"
 L["FULL_SCAN_ALTERNATE_FAILED"] = "일반 검색 실패"
 L["FULL_SCAN_BUTTON"] = "전체 검색"
 L["FULL_SCAN_FAILED"] = "전체 검색 실패"
---[[Translation missing --]]
-L["FULL_SCAN_IN_PROGRESS"] = "Full scan in progress."
+L["FULL_SCAN_IN_PROGRESS"] = "전체 검색 진행 중."
 L["GEAR_VENDOR_PRICE_MULTIPLIER"] = "상점에 판매하는 가격의 배수로 장비를 판매"
 L["HIDE"] = "숨기기"
---[[Translation missing --]]
-L["HISTORY"] = "History"
+L["HISTORY"] = "거래 기록"
 L["IMPORT"] = "가져오기"
 L["INFO_TAB_HEADER"] = "옥셔네이터 - 정보"
---[[Translation missing --]]
-L["IS_TOP_COLUMN"] = "Top?"
-L["IS_UNDERCUT"] = "최저가아님?"
+L["IS_TOP_COLUMN"] = "최고가?"
+L["IS_UNDERCUT"] = "최저가 아님"
 L["ITEM_CLASS"] = "품목 분류"
 L["ITEM_LEVEL"] = "아이템 레벨"
 L["ITEM_LEVEL_COLUMN"] = "아이템 레벨"
@@ -255,16 +241,14 @@ L["LIST_ADD_ITEM_HEADER"] = "목록에 아이템 추가"
 L["LIST_DELETE_ERROR"] = "목록을 삭제하는 중 오류가 발생했습니다."
 L["LIST_EDIT_ITEM_HEADER"] = "목록의 아이템 편집"
 L["LIST_EXPORT_HEADER"] = "목록 내보내기"
---[[Translation missing --]]
-L["LIST_EXTENDED_SEARCH_HEADER"] = "Extended Search Options"
+L["LIST_EXTENDED_SEARCH_HEADER"] = "확장 검색 옵션"
 L["LIST_IMPORT_HEADER"] = "목록 가져오기"
 L["LIST_SEARCH_START"] = "검색중... (%s초)"
 L["LIST_SEARCH_STATUS"] = "검색완료 (%s초)"
 L["MAIL_TOOLTIP_TOOLTIP_HEADER"] = "우체통 툴팁"
 L["MAIL_TOOLTIP_TOOLTIP_TEXT"] = "우체통에 있는 아이템에 대한 경매 정보를 마우스를 올려 확인 할 수 있습니다."
 L["MAX"] = "최대"
---[[Translation missing --]]
-L["MAX_COLON_X"] = "Max: %s"
+L["MAX_COLON_X"] = "최대: %s"
 L["MIN"] = "최소"
 L["MONTH_1"] = "1월"
 L["MONTH_10"] = "10월"
@@ -278,18 +262,15 @@ L["MONTH_6"] = "6월"
 L["MONTH_7"] = "7월"
 L["MONTH_8"] = "8월"
 L["MONTH_9"] = "9월"
+L["MULTIPLE_STACKS_AUCTION_INFO"] = "%s %s, 총 합계 %s"
 L["NAME"] = "이름"
---[[Translation missing --]]
-L["NEW_SHOPPING_LIST"] = "+ New shopping list"
+L["NEW_SHOPPING_LIST"] = "+ 새로운 구매 목록"
 L["NEXT_SCAN_MESSAGE"] = "전체 검색은 %s분 %s초 후 시작됩니다."
---[[Translation missing --]]
-L["NO_ITEM_INFO_SPECIFIED"] = "No item info was specified."
---[[Translation missing --]]
-L["NO_LIST"] = "no list"
+L["NO_ITEM_INFO_SPECIFIED"] = "아이템 정보가 지정되지 않았습니다."
+L["NO_LIST"] = "목록 없음"
 L["NO_RESULTS"] = "결과가 없습니다."
 L["NONE"] = "없음"
---[[Translation missing --]]
-L["NONE_LEFT"] = "None Left"
+L["NONE_LEFT"] = "아무것도 없음"
 L["NUMBER_SEPARATOR"] = ","
 L["OPEN_ADDON_OPTIONS"] = "애드온 설정 열기"
 L["OWNED_COLUMN"] = "소유 여부"
@@ -303,64 +284,50 @@ L["POST"] = "경매 시작"
 L["PRICE"] = "가격"
 L["PROFILE_TOGGLE_TOOLTIP_HEADER"] = "캐릭터 별 설정"
 L["PROFILE_TOGGLE_TOOLTIP_TEXT"] = "캐릭터 별 옥셔네이터 설정을 적용합니다."
---[[Translation missing --]]
-L["PROFIT_COLON"] = "Profit:"
+L["PROFIT_COLON"] = "수익:"
 L["PURCHASED_X_XX"] = "%s x%s 구매함"
 L["QUANTITY"] = "수량"
 L["REAGENT_SEARCH"] = "재료 검색"
 L["REALM_HISTORY"] = "서버 내역"
---[[Translation missing --]]
-L["RECENT_SEARCHES"] = "Recent Searches"
+L["RECENT_SEARCHES"] = "최근 검색"
 L["REFRESH"] = "새로고침"
 L["REMOVE_FAVOURITE"] = "즐겨찾기 삭제"
 L["RENAME"] = "목록명 변경"
---[[Translation missing --]]
-L["RENAME_LIST_CONFIRM"] = "Enter the new name for '%s':"
+L["RENAME_LIST_CONFIRM"] = "'%s'의 새 이름 입력:"
 L["RENAME_LIST_DIALOG"] = "목록의 이름을 변경합니다."
 L["RESET_ALL"] = "모두 삭제"
 L["RESTORE_ALL"] = "모두 복원"
 L["RESULTS_AVAILABLE_COLUMN"] = "경매 수량"
 L["RESULTS_NAME_COLUMN"] = "이름"
 L["RESULTS_PRICE_COLUMN"] = "가격"
---[[Translation missing --]]
-L["RESULTS_STACK_PRICE_COLUMN"] = "Stack Price"
---[[Translation missing --]]
-L["RESULTS_STACK_SIZE_COLUMN"] = "Stack Size"
+L["RESULTS_STACK_PRICE_COLUMN"] = "묶음 가격"
+L["RESULTS_STACK_SIZE_COLUMN"] = "묶음 갯수"
 L["RIGHT_CLICK"] = "우클릭"
 L["ROADMAP"] = "기술 로드맵"
 L["ROADMAP_TOOLTIP_TEXT"] = "기술 로드맵은 다음 업데이트 때 적용 예정인 내용입니다."
 L["SALES_PREFERENCE"] = "판매 설정"
 L["SAVE_AS"] = "다음으로 저장"
---[[Translation missing --]]
-L["SAVE_THIS_LIST_AS"] = "Save this list as..."
---[[Translation missing --]]
-L["SCANNING_PAGE_X"] = "Scanning page %s..."
+L["SAVE_THIS_LIST_AS"] = "이 목록을 저장..."
+L["SCANNING_PAGE_X"] = "%s 페이지 검색중..."
 L["SEARCH"] = "검색"
---[[Translation missing --]]
-L["SEARCH_ALL"] = "Search All"
+L["SEARCH_ALL"] = "전체 검색"
 L["SEARCH_TERM"] = "이름 추가"
 L["SELECT_ALL"] = "모두 선택"
---[[Translation missing --]]
-L["SELECT_SHOPPING_LIST"] = "Select Shopping List..."
+L["SELECT_SHOPPING_LIST"] = "구매 목록 선택..."
 L["SELLERS_COLUMN"] = "판매자(들)"
---[[Translation missing --]]
-L["SELLERS_OVERFLOW_TEXT"] = "%s, and %s more"
+L["SELLERS_OVERFLOW_TEXT"] = "%s, %s 추가"
 L["SELLING_TAB"] = "판매하기"
 L["SELLING_TAB_HEADER"] = "옥셔네이터 - 판매하기"
---[[Translation missing --]]
-L["SERVER_TOOK_TOO_LONG"] = "The server took too long to respond. Your action may not have had an effect."
+L["SERVER_TOOK_TOO_LONG"] = "서버가 응답하는데 오래 걸렸습니다. 적용되지 않았을 수 있습니다."
 L["SET_VALUE"] = "가격별 설정"
 L["SET_VALUE_SUFFIX"] = "최저가"
 L["SHIFT_LEFT_CLICK"] = "쉬프트 + 클릭"
 L["SHIFT_RIGHT_CLICK"] = "쉬프트 + 우클릭"
---[[Translation missing --]]
-L["SHOPPING_LIST"] = "Shopping List"
+L["SHOPPING_LIST"] = "구매 목록"
 L["SHOPPING_TAB"] = "구매목록"
 L["SHOPPING_TAB_HEADER"] = "옥셔네이터 - 구매목록"
---[[Translation missing --]]
-L["SKIP"] = "Skip"
---[[Translation missing --]]
-L["SORT"] = "Sort"
+L["SKIP"] = "건너뛰기"
+L["SORT"] = "분류"
 L["SPLASH_830_BUGS_1"] = "옥셔네이터 디스코드 서버에 참가하세요. %s"
 L["SPLASH_830_BUGS_2"] = "오류가 발생하면 깃헙으로 알려주세요. %s"
 L["SPLASH_830_BUGS_3"] = "디스코드가 활성화되어 있으니 curseforge 혹은 옥셔네이터 포럼에 오류를 올리지 말아주세요."
@@ -414,10 +381,8 @@ L["SPLASH_834_SHOPPING_3"] = "구매목록을 편집할 수 있습니다."
 L["SPLASH_834_SHOPPING_HEADER"] = "구매목록 탭"
 --[[Translation missing --]]
 L["SPLASH_901_CHANGES_1"] = "Replaced the full scan with a different method to avoid getting disconnected on busy servers."
---[[Translation missing --]]
-L["SPLASH_901_CHANGES_2"] = "The autoscan option now defaults to off."
---[[Translation missing --]]
-L["SPLASH_901_CHANGES_HEADER"] = "Changes"
+L["SPLASH_901_CHANGES_2"] = "자동 검사 옵션은 이제 기본적으로 꺼짐으로 설정됩니다."
+L["SPLASH_901_CHANGES_HEADER"] = "변경 사항"
 --[[Translation missing --]]
 L["SPLASH_901_DESCRIPTION"] = "Biggest changes in this release are customisable columns for item listings and the changes to the full scan. As always there are various bugfixes."
 --[[Translation missing --]]
@@ -430,8 +395,7 @@ L["SPLASH_901_FEATURES_HEADER"] = "New Features"
 L["SPLASH_9010_DESCRIPTION"] = "Revamped selling quantity settings, if you have custom quantities set you'll likely need to set them again for this update."
 --[[Translation missing --]]
 L["SPLASH_9010_FEATURES_1"] = "The default quantities for use in the Selling tab are now set based on the item's type. Find them in the \"Selling: Quantities\" options"
---[[Translation missing --]]
-L["SPLASH_9010_FEATURES_HEADER"] = "Features"
+L["SPLASH_9010_FEATURES_HEADER"] = "기능"
 --[[Translation missing --]]
 L["SPLASH_9010_UNANNOUNCED_1"] = "A new \"Show bid price option when listing an item\" option, found in \"Selling\" options, to allow bid prices to be set from the Selling tab"
 --[[Translation missing --]]
@@ -440,8 +404,7 @@ L["SPLASH_9010_UNANNOUNCED_HEADER"] = "Unannounced features from 9.0.9"
 L["SPLASH_902_DESCRIPTION"] = "Along with the various bugfixes, there is one new feature."
 --[[Translation missing --]]
 L["SPLASH_902_FEATURES_1"] = "A new \"Your History\" section on the Selling tab to show the prices of past auctions you have created."
---[[Translation missing --]]
-L["SPLASH_902_FEATURES_HEADER"] = "New Features"
+L["SPLASH_902_FEATURES_HEADER"] = "새로운 기능"
 --[[Translation missing --]]
 L["SPLASH_903_DESCRIPTION"] = "One bugfix, and a couple of new features."
 --[[Translation missing --]]
@@ -454,8 +417,7 @@ L["SPLASH_903_FEATURES_HEADER"] = "Features"
 L["SPLASH_904_DESCRIPTION"] = "Bugfixes and a new history view"
 --[[Translation missing --]]
 L["SPLASH_904_FEATURES_1"] = "Right-clicking on a result in the Shopping tab will now open a dialog showing its price history."
---[[Translation missing --]]
-L["SPLASH_904_FEATURES_HEADER"] = "Features"
+L["SPLASH_904_FEATURES_HEADER"] = "기능"
 --[[Translation missing --]]
 L["SPLASH_905_DESCRIPTION"] = "Bugfixes and minor visual changes"
 --[[Translation missing --]]
@@ -495,8 +457,7 @@ L["SPLASH_9106_FEATURES_1"] = "Search box and recent searches panel in the Shopp
 L["SPLASH_9106_FEATURES_2"] = "Button to sort a shopping list's terms alphabetically."
 --[[Translation missing --]]
 L["SPLASH_9106_FEATURES_3"] = "Option to show not found search terms in a shopping list's results."
---[[Translation missing --]]
-L["SPLASH_9106_FEATURES_HEADER"] = "New Features"
+L["SPLASH_9106_FEATURES_HEADER"] = "새로운 기능"
 --[[Translation missing --]]
 L["SPLASH_9108_DESCRIPTION"] = "The main feature of this release is the newer Retail appearance now working on WoW classic (Burning Crusade and Vanilla). Almost all retail features work on classic. There are the usual bugfixes on all versions of Auctionator."
 --[[Translation missing --]]
@@ -526,24 +487,17 @@ L["SPLASH_9108_FEATURES_HEADER"] = "Features of the classic release"
 L["SPLASH_HIDE_MESSAGE"] = "다음 업데이트까지 보이지 않기"
 L["SPLASH_SCREEN_HEADER"] = "옥셔네이터에 오신걸 환영합니다!"
 L["STACK_AUCTION_INFO"] = "%s  (전체 %s, 각 %s)"
---[[Translation missing --]]
-L["STACK_BID_PRICE"] = "Stack Bid Price"
---[[Translation missing --]]
-L["STACK_OF"] = "stack of"
---[[Translation missing --]]
-L["STACK_PRICE"] = "Stack Price"
+L["STACK_BID_PRICE"] = "묶음 구매 가격"
+L["STACK_OF"] = "묶음 / 개"
+L["STACK_PRICE"] = "묶음 가격"
 L["STACK_TOOLTIP_TOOLTIP_HEADER"] = "가격 표시 설정"
 L["STACK_TOOLTIP_TOOLTIP_TEXT"] = "쉬프트를 누르고 있을 때 물건 전체의 경매가를 표시합니다. (ex. 20개짜리 영약 20개의 가격) 체크해제 시 1개의 가격만 표시됩니다."
 L["STARTING_FULL_SCAN"] = "전체 검색 시작"
 L["STARTING_FULL_SCAN_ALTERNATE"] = "일반 검색 시작"
---[[Translation missing --]]
-L["STARTING_PRICE_PERCENTAGE"] = "Starting Price"
---[[Translation missing --]]
-L["STARTING_PRICE_PERCENTAGE_SUFFIX"] = "% of the stack price"
---[[Translation missing --]]
-L["STARTING_PRICE_PERCENTAGE_TOOLTIP_HEADER"] = "Starting bidding price"
---[[Translation missing --]]
-L["STARTING_PRICE_PERCENTAGE_TOOLTIP_TEXT"] = "The starting price percentage will be used to set the default bid amount used for any auctions posted. For example setting this to 95 will, for a 10s stack price, set the bid price to 9s50c."
+L["STARTING_PRICE_PERCENTAGE"] = "시작 가격"
+L["STARTING_PRICE_PERCENTAGE_SUFFIX"] = "묶음 가격 %"
+L["STARTING_PRICE_PERCENTAGE_TOOLTIP_HEADER"] = "입찰 시작가"
+L["STARTING_PRICE_PERCENTAGE_TOOLTIP_TEXT"] = "시작 가격 비율은 게시된 경매에 사용되는 기본 입찰 금액을 설정하는 데 사용됩니다. 예를 들어 95실버로 설정한다면 10실버 묶음 가격의 경우 입찰 가격이 9실버 50코퍼로 설정됩니다."
 L["TEMPORARY_LOWER_CASE"] = "임시"
 L["TIME_LEFT"] = "남은 시간"
 L["TIME_LEFT_H"] = "남은 시간(시)"
@@ -552,8 +506,7 @@ L["TOO_BIG_PERCENTAGE"] = "%%는 100이거나 그 이하여야 합니다. (입�
 L["TOO_MANY_SEARCH_RESULTS"] = "검색 결과가 너무 많습니다. 제한된 결과만 표시됩니다."
 L["TOO_SMALL_PERCENTAGE"] = "%%는 0이거나 그 이상이여야 합니다. (입력값:%s)"
 L["TOTAL_ITEMS_COLORED"] = "전체 |cFFAAAAFF %s 개s|r"
---[[Translation missing --]]
-L["TOTAL_ON_SALE"] = "Total on sale: %s"
+L["TOTAL_ON_SALE"] = "총 판매량: %s"
 L["TOTAL_PRICE"] = "전체 판매가"
 L["TRANSLATORS_BRAZIL_PORTUGUEUSE"] = "브라질리언 포르투갈어"
 L["TRANSLATORS_FRENCH"] = "프랑스어"
@@ -568,38 +521,29 @@ L["TRANSLATORS_SIMPLIFIED_CHINESE"] = "중국어 간체"
 L["TRANSLATORS_SPANISH"] = "스페인어"
 L["TRANSLATORS_TRADITIONAL_CHINESE"] = "중국어 번체"
 L["UNDERCUT_NO"] = "X"
---[[Translation missing --]]
-L["UNDERCUT_PREFERENCE"] = "Undercut Preference"
+L["UNDERCUT_PREFERENCE"] = "최저가 선호"
 L["UNDERCUT_SCAN"] = "최저가 검색"
 L["UNDERCUT_TOOLTIP_HEADER"] = "최저가 설정"
 L["UNDERCUT_TOOLTIP_TEXT"] = "판매에 적합한 최저가를 설정합니다. (ex. 1골드를 입력하면 경매장에 등록할 물건의 최저가 -1골드가 됩니다.)"
 L["UNDERCUT_UNKNOWN"] = "?"
 L["UNDERCUT_YES"] = "O"
---[[Translation missing --]]
-L["UNHIDE"] = "Unhide"
---[[Translation missing --]]
-L["UNHIDE_ALL"] = "Unhide All"
+L["UNHIDE"] = "숨기기 해제"
+L["UNHIDE_ALL"] = "모두 숨기기 해제"
 L["UNHIDE_ALL_HIDDEN_ITEMS"] = "숨겨진 아이템 모두 보이기"
 L["UNIT_PRICE"] = "가격"
 L["UNKNOWN"] = "모름"
 L["UNSELECT_ALL"] = "모두선택 취소"
---[[Translation missing --]]
-L["UPPER_UNIT_PRICE"] = "Upper Unit Price"
+L["UPPER_UNIT_PRICE"] = "상한가"
 L["VENDOR"] = "상점가"
 L["VENDOR_TOOLTIP_TOOLTIP_HEADER"] = "상점가 툴팁"
 L["VENDOR_TOOLTIP_TOOLTIP_TEXT"] = "상점가를 툴팁에 표시합니다."
 L["VERSION_HEADER"] = "버전"
 L["VERSION_MESSAGE"] = "%s 버전"
---[[Translation missing --]]
-L["WAITING_AT_MOST_X_LONGER"] = "Waiting at most %ss longer..."
---[[Translation missing --]]
-L["X_PRICE_HISTORY"] = "%s Price History"
---[[Translation missing --]]
-L["X_STACK_OF_X"] = "%s stack of %s"
---[[Translation missing --]]
-L["X_STACKS_OF_X"] = "%s stacks of %s"
---[[Translation missing --]]
-L["YOU_COLUMN"] = "You?"
+L["WAITING_AT_MOST_X_LONGER"] = "최대 %ss 이상 대기 중..."
+L["X_PRICE_HISTORY"] = "%s 가격 기록"
+L["X_STACK_OF_X"] = "%s 묶음 %s 개"
+L["X_STACKS_OF_X"] = "%s 묶음 %s 개"
+L["YOU_COLUMN"] = "내 경매"
 L["YOUR_HISTORY"] = "올린 아이템 기록"
 
 

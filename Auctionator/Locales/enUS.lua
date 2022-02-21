@@ -173,6 +173,9 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["SELECT_SHOPPING_LIST"] = "Select Shopping List..."
   L["NEW_SHOPPING_LIST"] = "+ New shopping list"
   L["SAVE_THIS_LIST_AS"] = "Save this list as..."
+  L["COPY_NO_LIST_SELECTED"] = "Can't copy item. No shopping list selected"
+  L["COPY_ITEM_ADDED"] = "Copied %s to %s"
+  L["COPY_TO_LIST"] = "Copy item to active shopping list"
 
   L["SHOPPING_TAB"] = "Shopping"
   L["SHOPPING_TAB_HEADER"] = "Auctionator - Shopping Lists"
@@ -508,6 +511,9 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["HISTORY"] = "History"
   L["CURRENT"] = "Current"
   L["SERVER_TOOK_TOO_LONG"] = "The server took too long to respond. Your action may not have had an effect."
+  L["CONFIG_SHOPPING_LIST_FULL_REFRESH"] = "Refresh all pages when clicking the Refresh button"
+  L["CONFIG_SHOPPING_LIST_FULL_REFRESH_TOOLTIP_HEADER"] = "Refresh All Pages"
+  L["CONFIG_SHOPPING_LIST_FULL_REFRESH_TOOLTIP_TEXT"] = "Only the first page is needed to determine the cheapest price, if you are only interested in the cheapest price and don't need to see the rest of the results you can turn this option off for a speed boost."
 
   L["STARTING_PRICE_PERCENTAGE_SUFFIX"] = "% of the stack price"
   L["STARTING_PRICE_PERCENTAGE"] = "Starting Price"
@@ -518,6 +524,7 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["X_STACK_OF_X"] = "%s stack of %s"
   L["X_STACKS_OF_X"] = "%s stacks of %s"
   L["BUYING_X_FOR_X"] = "Buying %s for %s"
+  L["BRACKETS_X_EACH"] = "(%s each)"
   L["ALREADY_PURCHASED_X"] = "Already purchased %s"
   L["PURCHASED_X_XX"] = "Purchased %s x%s"
   L["DEFAULT_STACK_SIZES"] = "Default Stack Sizes"
@@ -525,6 +532,10 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["CONFIG_SELLING_TBC_SHOW_ALL_RESULTS"] = "Include auctions not needed to get the minimum price in results"
   L["CONFIG_SELLING_TBC_SHOW_ALL_RESULTS_TOOLTIP_HEADER"] = "Show All Results"
   L["CONFIG_SELLING_TBC_SHOW_ALL_RESULTS_TOOLTIP_TEXT"] = "Enabling this setting causes all pages of results to be searched and all the auctions found to be listed, even though only the first page is needed to determine the minimum price."
+  L["CONFIG_RESET_STACK_SIZE_MEMORY"] = "Reset stack size memory"
+  L["CHAIN_BUY"] = "Chain buy"
+  L["CHAIN_BUY_TOOLTIP_HEADER"] = "Chain multiple purchases"
+  L["CHAIN_BUY_TOOLTIP_TEXT"] = "When finished purchasing at the current price and stack size select the next price and stack size."
 
   return L
 end

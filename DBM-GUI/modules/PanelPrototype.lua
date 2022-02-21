@@ -6,8 +6,10 @@ local CL	= DBM_COMMON_L
 local setmetatable, select, type, tonumber, strsplit, mmax, tinsert = setmetatable, select, type, tonumber, strsplit, math.max, table.insert
 local CreateFrame, GetCursorPosition, UIParent, GameTooltip, NORMAL_FONT_COLOR, GameFontNormal = CreateFrame, GetCursorPosition, UIParent, GameTooltip, NORMAL_FONT_COLOR, GameFontNormal
 local DBM, DBM_GUI = DBM, DBM_GUI
+local CreateTextureMarkup = CreateTextureMarkup
 
-local function parseDescription(name)
+--TODO, not 100% sure which ones use html and which don't so some might need true added or removed for 2nd arg
+local function parseDescription(name, usesHTML)
 	if not name then
 		return
 	end
@@ -22,6 +24,10 @@ local function parseDescription(name)
 			if not spellName then
 				spellName = CL.UNKNOWN
 				DBM:Debug("Spell ID does not exist: " .. spellId)
+			end
+			--The HTML parser breaks if spell name has & in it if it's not encoded to html formating
+			if usesHTML and spellName:find("&") then
+				spellName = spellName:gsub("&", "&amp;")
 			end
 			return ("|cff71d5ff|Hspell:%d|h%s|h|r"):format(spellId, spellName)
 		end)
@@ -64,18 +70,52 @@ function PanelPrototype:CreateCreatureModelFrame(width, height, creatureid, scal
 	return model
 end
 
+function PanelPrototype:CreateSpellDesc(text)
+	local test = CreateFrame("Frame", "DBM_GUI_Option_" .. self:GetNewID(), self.frame)
+	local textblock = self.frame:CreateFontString(test:GetName() .. "Text", "ARTWORK")
+	textblock:SetFontObject(GameFontNormal)
+	textblock:SetJustifyH("LEFT")
+	textblock:SetPoint("TOPLEFT", test)
+	test:SetPoint("TOPLEFT", self.frame, "TOPLEFT", 15, -10)
+	test:SetSize(self.frame:GetWidth(), textblock:GetStringHeight())
+	test.mytype = "spelldesc"
+	test.autowidth = true
+	-- Description logic
+	if type(text) == "number" then
+		local spell = Spell:CreateFromSpellID(text)
+		spell:ContinueOnSpellLoad(function()
+			text = GetSpellDescription(spell:GetSpellID())
+			if text == "" then
+				text = L.NoDescription
+			end
+			textblock:SetText(text)
+		end)
+	else
+		if text == "" then
+			text = L.NoDescription
+		end
+		textblock:SetText(text)
+	end
+    --
+	self:SetLastObj(test)
+	return test
+end
+
 function PanelPrototype:CreateText(text, width, autoplaced, style, justify, myheight)
-	local textblock = self.frame:CreateFontString("DBM_GUI_Option_" .. self:GetNewID(), "ARTWORK")
-	textblock.mytype = "textblock"
-	textblock.myheight = myheight
+	local test = CreateFrame("Frame", "DBM_GUI_Option_" .. self:GetNewID(), self.frame)
+	local textblock = self.frame:CreateFontString(test:GetName() .. "Text", "ARTWORK")
 	textblock:SetFontObject(style or GameFontNormal)
 	textblock:SetText(parseDescription(text))
-	textblock:SetJustifyH(justify or "CENTER")
-	textblock.autowidth = not width
+	textblock:SetJustifyH(justify or "LEFT")
+	textblock:SetPoint("TOPLEFT", test)
 	textblock:SetWidth(width or self.frame:GetWidth())
 	if autoplaced then
-		textblock:SetPoint("TOPLEFT", self.frame, "TOPLEFT", 10, -5)
+		test:SetPoint("TOPLEFT", self.frame, "TOPLEFT", 15, -5)
 	end
+	test:SetSize(width or self.frame:GetWidth(), textblock:GetStringHeight())
+	test.mytype = "textblock"
+	test.autowidth = not width
+	test.myheight = myheight
 	self:SetLastObj(textblock)
 	return textblock
 end
@@ -84,7 +124,7 @@ function PanelPrototype:CreateButton(title, width, height, onclick, font)
 	local button = CreateFrame("Button", "DBM_GUI_Option_" .. self:GetNewID(), self.frame, "UIPanelButtonTemplate")
 	button.mytype = "button"
 	button:SetSize(width or 100, height or 20)
-	button:SetText(parseDescription(title))
+	button:SetText(parseDescription(title, true))
 	if onclick then
 		button:SetScript("OnClick", onclick)
 	end
@@ -136,7 +176,7 @@ function PanelPrototype:CreateSlider(text, low, high, step, width)
 	slider:SetValueStep(step)
 	slider:SetWidth(width or 180)
 	local sliderText = _G[slider:GetName() .. "Text"]
-	sliderText:SetText(parseDescription(text))
+	sliderText:SetText(parseDescription(text, true))
 	slider:SetScript("OnValueChanged", function(_, value)
 		sliderText:SetFormattedText(text, value)
 	end)
@@ -187,7 +227,11 @@ end
 function PanelPrototype:CreateLine(text)
 	local line = CreateFrame("Frame", "DBM_GUI_Option_" .. self:GetNewID(), self.frame)
 	line:SetSize(self.frame:GetWidth() - 20, 20)
-	line:SetPoint("TOPLEFT", 10, -12)
+	if select("#", self.frame:GetChildren()) == 2 then
+		line:SetPoint("TOPLEFT", self.frame, 10, -12)
+	else
+		line:SetPoint("TOPLEFT", select(-2, self.frame:GetChildren()) or self.frame, "BOTTOMLEFT", 0, -12)
+	end
 	line.myheight = 20
 	line.mytype = "line"
 	local linetext = line:CreateFontString(line:GetName() .. "Text", "ARTWORK", "GameFontNormal")
@@ -200,11 +244,6 @@ function PanelPrototype:CreateLine(text)
 	linebg:SetTexture(137056) -- "Interface\\Tooltips\\UI-Tooltip-Background"
 	linebg:SetSize(self.frame:GetWidth() - linetext:GetWidth() - 25, 2)
 	linebg:SetPoint("RIGHT", line, "RIGHT", 0, 0)
-	local x = self:GetLastObj()
-	if x.mytype == "checkbutton" or x.mytype == "line" then
-		line:ClearAllPoints()
-		line:SetPoint("TOPLEFT", x, "TOPLEFT", 0, -x.myheight)
-	end
 	self:SetLastObj(line)
 	return line
 end
@@ -295,7 +334,7 @@ do
 			button.myheight = 0
 			button.SetPointOld(...)
 		end
-		local desc, noteSpellName = parseDescription(name)
+		local desc, noteSpellName = parseDescription(name, true)
 		local frame, frame2, textPad
 		if modvar then -- Special warning, has modvar for sound and note
 			if isTimer then
@@ -447,12 +486,60 @@ function PanelPrototype:CreateArea(name)
 		area:SetPoint("TOPLEFT", select(-2, self.frame:GetChildren()) or self.frame, "BOTTOMLEFT", 0, -20)
 	end
 	self:SetLastObj(area)
-	self.areas = self.areas or {}
-	tinsert(self.areas, {
+	return setmetatable({
 		frame	= area,
 		parent	= self
+	}, {
+		__index = PanelPrototype
 	})
-	return setmetatable(self.areas[#self.areas], {
+end
+
+function PanelPrototype:CreateAbility(titleText, icon)
+	local area = CreateFrame("Frame", "DBM_GUI_Option_" .. self:GetNewID(), self.frame, "BackdropTemplate,OptionsBoxTemplate")
+	area.mytype = "ability"
+	area.hidden = not DBM.Options.AutoExpandSpellGroups
+	area:SetBackdropColor(0.15, 0.15, 0.15, 0.2)
+	area:SetBackdropBorderColor(0.4, 0.4, 0.4)
+	if select("#", self.frame:GetChildren()) == 1 then
+		area:SetPoint("TOPLEFT", self.frame, 5, -20)
+	else
+		area:SetPoint("TOPLEFT", select(-2, self.frame:GetChildren()) or self.frame, "BOTTOMLEFT", 0, -20)
+	end
+	local title = _G[area:GetName() .. "Title"]
+	if icon then
+		local markup = CreateTextureMarkup(icon, 0, 0, 16, 16, 0, 0, 0, 0, 0, 0)
+		title:SetText(markup .. titleText)
+	else
+		title:SetText(titleText)
+	end
+	title:ClearAllPoints()
+	title:SetPoint("BOTTOMLEFT", area, "TOPLEFT", 20, 0)
+	title:SetFontObject("GameFontWhite")
+	-- Button
+	local button = CreateFrame("Button", area:GetName() .. "Button", area, "OptionsListButtonTemplate")
+	button:ClearAllPoints()
+	button:SetPoint("LEFT", title, -15, 0)
+	button:Show()
+	button:SetSize(18, 18)
+	button:SetNormalFontObject(GameFontWhite)
+	button:SetHighlightFontObject(GameFontWhite)
+	button.toggle:SetNormalTexture(area.hidden and 130838 or 130821) -- "Interface\\Buttons\\UI-PlusButton-UP", "Interface\\Buttons\\UI-MinusButton-UP"
+	button.toggle:SetPushedTexture(area.hidden and 130836 or 130820) -- "Interface\\Buttons\\UI-PlusButton-DOWN", "Interface\\Buttons\\UI-MinusButton-DOWN"
+	button.toggle:Show()
+	button.highlight:Hide()
+	button.toggleFunc = function()
+		area.hidden = not area.hidden
+		button.toggle:SetNormalTexture(area.hidden and 130838 or 130821) -- "Interface\\Buttons\\UI-PlusButton-UP", "Interface\\Buttons\\UI-MinusButton-UP"
+		button.toggle:SetPushedTexture(area.hidden and 130836 or 130820) -- "Interface\\Buttons\\UI-PlusButton-DOWN", "Interface\\Buttons\\UI-MinusButton-DOWN"
+		_G["DBM_GUI_OptionsFrame"]:DisplayFrame(DBM_GUI.currentViewing)
+	end
+	button:RegisterForClicks(false)
+	--
+	self:SetLastObj(area)
+	return setmetatable({
+		frame	= area,
+		parent	= self
+	}, {
 		__index = PanelPrototype
 	})
 end

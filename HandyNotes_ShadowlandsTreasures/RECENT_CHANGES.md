@@ -1,4 +1,5 @@
-## Changed in v33
+## Changed in v34
 
-* Added a lot of nodes to groups for easier hiding of clutter: Fractured Faerie Tales, Playful Vulpin, Shard Labor, Wardrobe Makeover, Harvester of Sorrow, Spectral Keys, Stolen Anima Vessels, Rift Hidden Caches, and various transportation hints
+* Added a new Maelie location in Korthia
+* Fixed an issue for some people causing errors when viewing the map
 

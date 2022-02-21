@@ -1,43 +1,35 @@
-tag 82bb01d5dac20d3df0483810dec29626b97386fd 9.1.22
+tag 1b6f2c636e0ecc1728ccb289af14d65f5d9f2896 9.1.23
 Author:	Mike "Xodiv" Battersby <mib@post.com>
-Date:	Wed Dec 22 22:35:50 2021 +1100
+Date:	Sun Feb 6 11:12:35 2022 +1100
 
-LiteMount 9.1.22
+LiteMount 9.1.23
 
- - Some preparation for WoW 9.2
- - Fix error with Use action and equipment slots
- - Prioritize mounting to save yourself from falling over other actions
+- Add Wen Lo to Zodiac family
+- Fix error saving rules with advanced conditions
+- Fix bug editing rules with no conditions ("always" rules)
+- Some mount family updates from 9.2 PTR
 
-commit a48189839f0cc1b1dfd1bdedd7faa5a315167294
+commit 158e820512bda4985d22766737473977e46d6ff1
 Author: Mike "Xodiv" Battersby <mib@post.com>
-Date:   Wed Dec 8 20:48:18 2021 +1100
+Date:   Wed Jan 26 20:16:20 2022 +1100
 
-    Fix bug with Use action bailing out after first slot
+    Family updates for 9.2 PTR
 
-commit 5d06613c326f1d5da7e7b1501b4812ce226f2960
-Author: Mike Battersby <mib@post.com>
-Date:   Tue Dec 7 15:44:34 2021 +1100
-
-    More falling protection tweaks #78
-
-commit 92e52249fa095d3d6241ff8470508aa2d7b6d815
+commit 51b064215cd98d9d759e7e6fc5e37f5d3fc6f180
 Author: Mike "Xodiv" Battersby <mib@post.com>
-Date:   Mon Dec 6 22:08:49 2021 +1100
+Date:   Wed Jan 26 14:40:10 2022 +1100
 
-    Try mounting before the falling protection
-    
-    (In the default action list)
+    Add Wen Lo to Zodiac family
 
-commit f12311f7e71e953c7ba6b3db573ff2d37e005a56
+commit 25e89fd4e6c68de36abaa9e2f7b5992e4b719db0
 Author: Mike "Xodiv" Battersby <mib@post.com>
-Date:   Sat Dec 4 17:34:40 2021 +1100
+Date:   Wed Jan 26 14:18:15 2022 +1100
 
-    Add new mount types 407 and 408 from 9.2.
-    Add families for first cut of 9.2 PTR mounts
+    Fix error saving rules with advanced conditions
 
-commit 7928577989db876d286e60e0cf2ff18036a27a6a
-Author: Mike Battersby <mib@post.com>
-Date:   Wed Dec 1 14:22:57 2021 +1100
+commit 59028fcd3351b6103a9a00cfde849de13bd20d8d
+Author: Mike "Xodiv" Battersby <mib@post.com>
+Date:   Wed Jan 26 13:56:46 2022 +1100
 
-    Add SV from issue #81
+    Fix bug editing rules with no conditions ("always" rules)
 
