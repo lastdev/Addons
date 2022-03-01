@@ -1,0 +1,20 @@
+## Interface: 90200
+## Title: RareTrackerZerethMortis
+## Notes: Track and coordinate rare spawn timers in Zereth Mortis.
+## Author: Melroy
+## Version: 7.1.6
+## Dependencies: RareTrackerCore
+
+Locales\enUS.lua
+Locales\deDE.lua
+Locales\esES.lua
+Locales\esMX.lua
+Locales\frFR.lua
+Locales\itIT.lua
+Locales\koKR.lua
+Locales\ptBR.lua
+Locales\ptPT.lua
+Locales\ruRU.lua
+Locales\zhCN.lua
+
+RareTrackerZerethMortis.lua

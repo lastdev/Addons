@@ -1,0 +1,101 @@
+<Ui>
+    <Button name="SoulshapeListButtonTemplate" motionScriptsWhileDisabled="true" virtual="true">
+        <Size x="208" y="46"/>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture atlas="PetList-ButtonBackground" parentKey="background"/>
+            </Layer>
+            <Layer level="BORDER">
+                <Texture parentKey="icon">
+                    <Size x="38" y="38"/>
+                    <Anchors>
+                        <Anchor point="LEFT" x="-42" y="0"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="ARTWORK" textureSubLevel="-1">
+                <Texture parentKey="iconBorder" file="Interface\Common\WhiteIconFrame" hidden="true">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeKey="$parent.icon"/>
+                        <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" relativeKey="$parent.icon"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY" textureSubLevel="2">
+                <FontString parentKey="name" inherits="GameFontNormal" justifyH="LEFT">
+                    <Size x="208" y="25"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeKey="$parent.icon" x="10" y="-5"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+            <Layer level="OVERLAY" textureSubLevel="1">
+                <Texture parentKey="selectedTexture" atlas="PetList-ButtonSelect" hidden="true"/>
+            </Layer>
+            <Layer level="ARTWORK" textureSubLevel="0">
+                <Texture parentKey="critterIcon" file="Interface\PetBattles\PetIcon-Critter" hidden="true">
+                    <Anchors>
+                        <Anchor point="BOTTOMRIGHT" x="-1" y="1"/>
+                    </Anchors>
+                    <Size x="90" y="44"/>
+                    <TexCoords left="0.00781250" right="0.71093750" top="0.74609375" bottom="0.91796875"/>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Button parentKey="untrackableAddButton" motionScriptsWhileDisabled="true" hidden="true">
+                <Size x="24" y="24"/>
+                <NormalTexture atlas="Garr_Building-AddFollowerPlus" alpha="0.8">
+                    <Size x="24" y="24"/>
+                    <Anchors>
+                        <Anchor point="CENTER" relativeKey="$parent" x="0" y="0" />
+                    </Anchors>
+                </NormalTexture>
+                <Anchors>
+                    <Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" x="-2" y="-2" />
+                </Anchors>
+                <Scripts>
+                    <OnEnter>
+                        SoulshapeCollectionPanel:ShowUntrackableTooltip(self)
+                    </OnEnter>
+                    <OnClick>
+                        SoulshapeCollectionPanel:AddUntrackableToCollection(self)
+                    </OnClick>
+                    <OnLeave>
+                        GameTooltip:Hide()
+                    </OnLeave>
+                </Scripts>
+            </Button>
+        </Frames>
+        <HighlightTexture atlas="PetList-ButtonHighlight"/>
+        <Scripts>
+            <OnClick>
+                SoulshapeCollectionPanel:OnButtonClick(self, button);
+            </OnClick>
+        </Scripts>
+    </Button>
+
+    <Button name="SoulshapeJournalPinTemplate" hidden="true" enableMouse="true" mixin="SoulshapeJournalPinMixin" virtual="true">
+        <Size x="50" y="49"/>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture parentKey="Background">
+                    <Size x="36" y="36"/>
+                    <Anchors>
+                        <Anchor point="CENTER" x="0" y="0"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+        <NormalTexture file="Interface\EncounterJournal\UI-EncounterJournalTextures">
+            <TexCoords left="0.84960938" right="0.97070313" top="0.42871094" bottom="0.48828125"/>
+        </NormalTexture>
+        <PushedTexture file="Interface\EncounterJournal\UI-EncounterJournalTextures">
+            <TexCoords left="0.77734375" right="0.89843750" top="0.26953125" bottom="0.32910156"/>
+        </PushedTexture>
+        <HighlightTexture file="Interface\EncounterJournal\UI-EncounterJournalTextures">
+            <TexCoords left="0.68945313" right="0.81054688" top="0.33300781" bottom="0.39257813"/>
+        </HighlightTexture>
+    </Button>
+
+</Ui>
