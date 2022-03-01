@@ -489,6 +489,9 @@ local achievements = {
 		[179768] = 52285, -- Consumption (has multiple ids)
 		[179769] = 52285, -- Consumption (has multiple ids)
 	},
+	[15211] = {}, -- Completing the Code
+	[15391] = {}, -- Adventurer of Zereth Mortis
+	[15392] = {}, -- Dune Dominance
 }
 ns.achievements = achievements
 local mobs_to_achievement = {
@@ -536,7 +539,7 @@ do
 		return false
 	end
 	local function doTest(test, input, ...)
-		if type(input) == "table" then
+		if type(input) == "table" and not input.__parent then
 			if input.alliance then
 				return doTest(test, faction == "Alliance" and input.alliance or input.horde, ...)
 			end
@@ -553,9 +556,9 @@ do
 			return (override or doTest)(test, ...)
 		end
 	end
-
 	-- local itemInBags = testMaker(function(item) return GetItemCount(item, true) > 0 end)
 	allQuestsComplete = testMaker(function(quest) return C_QuestLog.IsQuestFlaggedCompleted(quest) end)
+	ns.doTest = doTest
 end
 
 -- return quest_complete, criteria_complete, achievement_completed_by_alt

@@ -241,7 +241,6 @@ function HealBot_Data_InitVars()
         PluginCombatProt=true,
         PluginTimeToLive=true,
         PluginPerformance=true,
-        PluginQuickSet=true,
         PluginEffectiveTanks=true,
         PluginEfficientHealers=true,
         NoRanks=false,

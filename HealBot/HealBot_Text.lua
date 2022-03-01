@@ -421,6 +421,12 @@ function HealBot_Text_setExtraCustomCols()
         vTextCustomCols["InHeal"][j]="|cff"..vHex
     end
 end
+for j=1,10 do
+    vHex=HealBot_Text_RGBPercToHex(1,1,1)
+    vTextCustomCols["OverHeal"][j]="|cff"..vHex
+    vHex=HealBot_Text_RGBPercToHex(1,1,1)
+    vTextCustomCols["InHeal"][j]="|cff"..vHex
+end
 
 local atscR, atscG, atscB=1,1,1
 function HealBot_Text_TextStateColours(button)

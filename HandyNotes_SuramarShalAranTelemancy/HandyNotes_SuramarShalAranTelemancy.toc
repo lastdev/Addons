@@ -1,4 +1,4 @@
-## Interface: 90105
+## Interface: 90200
 #@non-debug@
 ## Title: HandyNotes - Suramar and Shal'Aran Telemancy
 ## Title-deDE: HandyNotes - Suramar- und Shal'Aran-Telemantie
@@ -29,12 +29,12 @@
 # ## Notes-zhTW: 顯示在沙亞蘭與蘇拉瑪爾之間的各個傳送點位置
 #@end-debug@
 ## Author: arith
-## Version: v1.35
+## Version: v1.37
 ## RequiredDeps: HandyNotes
 ## OptionalDeps: LibBabble-SubZone-3.0, !LibUIDropDownMenu
 ## DefaultState: enabled
 ## SavedVariables: HandyNotes_SuramarShalAranTelemancyDB
-## X-Date: 2022-02-14T17:08:00Z
+## X-Date: 2022-02-23T15:49:21Z
 ## X-License: GPLv2
 ## X-Category: Map
 

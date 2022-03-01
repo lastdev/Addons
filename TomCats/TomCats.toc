@@ -1,15 +1,15 @@
-## Interface: 90105
+## Interface: 90200
 ## Title: TomCat's Tours
 ## Notes: See license.txt for license and copyright information
 ## Author: TomCat
 ## X-Website: https://www.tomcatstours.com
-## Version: 2.3.29
+## Version: 2.4.2
 ## DefaultState: enabled
 ## SavedVariables: TomCats_Account
 ## SavedVariablesPerCharacter: TomCats_Character
 ## X-Category: Achievements, Map, Miscellaneous
 ## X-Localizations: enUS, enGB, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ptPT, ruRU, zhCN, zhTW
-## X-TomCats-Expiry: 1646146488
+## X-TomCats-Expiry: 1646247107
 
 constants.lua
 slashcommands.lua
@@ -47,6 +47,7 @@ ui_vignettes_pins.lua
 ui_vignettes_pins.xml
 lunarfestival/Main.xml
 loveisintheair/Main.xml
+announcements.lua
 configuration.xml
 configuration.lua
 minimap_icon.xml

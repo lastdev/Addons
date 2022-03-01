@@ -1,5 +1,26 @@
 # Changelog
 
+## Changed in v90200.3
+
+* Don't error when announcing a completely-unknown rare
+
+## Changed in v90200.2
+
+* Gave myself the ability to much better flag mobs and treasures as having conditions that must be met before they'll be alerted
+* ...used this for some Zereth Mortis treasures. I still need to gather more vignette IDs for this, but the worst offenders should be gone.
+* Coincidentally, show the vignette ID if known on the tooltip for the mob/loot popup
+* Korthia: Xyraxz the Unknowable seems to not drop Gnashtooth after all
+
+## Changed in v90200.1
+
+* ...also, update the TOC version.
+
+## Changed in v90200.0
+
+* Data added for Zereth Mortis
+* If you manually-add a mob it'll still be announced if it's seen controlled by another player
+* Don't double add some mob's data to the tooltip for Blizzard's zone map POI announcements
+
 ## Changed in v90105.2
 
 * Add a new Maelie location

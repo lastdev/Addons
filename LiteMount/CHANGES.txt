@@ -1,35 +1,13 @@
-tag 1b6f2c636e0ecc1728ccb289af14d65f5d9f2896 9.1.23
+tag 374ae4cec15305357fa03beb86418d0ed3596b9f 9.2.1
 Author:	Mike "Xodiv" Battersby <mib@post.com>
-Date:	Sun Feb 6 11:12:35 2022 +1100
+Date:	Thu Feb 24 08:00:00 2022 +1100
 
-LiteMount 9.1.23
+LiteMount 9.2.1
+- Update ruRU translations
 
-- Add Wen Lo to Zodiac family
-- Fix error saving rules with advanced conditions
-- Fix bug editing rules with no conditions ("always" rules)
-- Some mount family updates from 9.2 PTR
-
-commit 158e820512bda4985d22766737473977e46d6ff1
+commit 856c1f25c87a2c6ff8dbd97a99dd25e864101461
 Author: Mike "Xodiv" Battersby <mib@post.com>
-Date:   Wed Jan 26 20:16:20 2022 +1100
+Date:   Thu Feb 24 07:53:00 2022 +1100
 
-    Family updates for 9.2 PTR
-
-commit 51b064215cd98d9d759e7e6fc5e37f5d3fc6f180
-Author: Mike "Xodiv" Battersby <mib@post.com>
-Date:   Wed Jan 26 14:40:10 2022 +1100
-
-    Add Wen Lo to Zodiac family
-
-commit 25e89fd4e6c68de36abaa9e2f7b5992e4b719db0
-Author: Mike "Xodiv" Battersby <mib@post.com>
-Date:   Wed Jan 26 14:18:15 2022 +1100
-
-    Fix error saving rules with advanced conditions
-
-commit 59028fcd3351b6103a9a00cfde849de13bd20d8d
-Author: Mike "Xodiv" Battersby <mib@post.com>
-Date:   Wed Jan 26 13:56:46 2022 +1100
-
-    Fix bug editing rules with no conditions ("always" rules)
+    Updated ruRU translations from Artur91425
 

@@ -498,6 +498,10 @@ L["Frame Selector"] = "Frame Selector"
 L["Frequency"] = "Frequency"
 L["Friendly"] = "우호적"
 L["Friendly Fire"] = "아군에게 준 피해"
+--[[Translation missing --]]
+L["Friendship Max Rank"] = "Friendship Max Rank"
+--[[Translation missing --]]
+L["Friendship Rank"] = "Friendship Rank"
 L["From"] = "출처"
 L["Frost Resistance"] = "냉기 저항"
 L["Full"] = "가득 찼을 때"

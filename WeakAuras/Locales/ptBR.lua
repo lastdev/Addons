@@ -622,6 +622,10 @@ L["Frequency"] = "Frequency"
 L["Friendly"] = "Amigável"
 L["Friendly Fire"] = "Fogo Amigo"
 --[[Translation missing --]]
+L["Friendship Max Rank"] = "Friendship Max Rank"
+--[[Translation missing --]]
+L["Friendship Rank"] = "Friendship Rank"
+--[[Translation missing --]]
 L["From"] = "From"
 --[[Translation missing --]]
 L["Frost Resistance"] = "Frost Resistance"

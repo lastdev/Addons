@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
 
-mod:SetRevision("20220116042005")
+mod:SetRevision("20220220013546")
 mod:SetCreatureID(81522)
 mod:SetEncounterID(1746)
 
@@ -28,6 +28,8 @@ local specWarnUncheckedGrowthAdd= mod:NewSpecialWarningSwitch("ej10098", "Tank",
 local specWarnParchedGrasp		= mod:NewSpecialWarningSpell(164357, "Tank", nil, nil, 1, 2)
 
 local timerParchedGrasp			= mod:NewCDTimer(12, 164357, nil, "Tank", 2, 5, nil, DBM_COMMON_L.TANK_ICON)
+
+mod:GroupSpells(164294, "ej10098")
 
 function mod:OnCombatStart(delay)
 	timerParchedGrasp:Start(7-delay)

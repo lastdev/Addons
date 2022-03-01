@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(674, "DBM-Party-MoP", 9, 316)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20220218034305")
 mod:SetCreatureID(60040, 99999)--3977 is High Inquisitor Whitemane and 60040 is Commander Durand, we don't really need to add her ID, because we don't ever engage her, and he true death is at same time as her.
 mod:SetEncounterID(1425)
 
@@ -18,13 +18,13 @@ local warnFlashofSteel			= mod:NewSpellAnnounce(115627, 3)
 local warnDashingStrike			= mod:NewSpellAnnounce(115676, 3)
 local warnDeepSleep				= mod:NewSpellAnnounce(9256, 2)
 
-local specWarnMassRes			= mod:NewSpecialWarningInterrupt(113134, true)
-local specWarnHeal				= mod:NewSpecialWarningInterrupt(12039, true)
-local specWarnMC				= mod:NewSpecialWarningInterrupt(130857, true)
+local specWarnMassRes			= mod:NewSpecialWarningInterrupt(113134, "HasInterrupt", nil, nil, 1, 2)
+local specWarnHeal				= mod:NewSpecialWarningInterrupt(12039, "HasInterrupt", nil, nil, 1, 2)
+local specWarnMC				= mod:NewSpecialWarningInterrupt(130857, "HasInterrupt", nil, nil, 1, 2)
 
-local timerFlashofSteel			= mod:NewCDTimer(26, 115627)--not confirmed.
-local timerDashingStrike		= mod:NewCDTimer(26, 115676)--not confirmed.
-local timerMassResCD			= mod:NewCDTimer(21, 113134, nil, nil, nil, 4)--21-24sec variation. Earlier if phase transitions
+local timerFlashofSteel			= mod:NewCDTimer(26, 115627, nil, nil, nil, 3)--not confirmed.
+local timerDashingStrike		= mod:NewCDTimer(26, 115676, nil, nil, nil, 3)--not confirmed.
+local timerMassResCD			= mod:NewCDTimer(21, 113134, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--21-24sec variation. Earlier if phase transitions
 local timerDeepSleep			= mod:NewBuffFadesTimer(10, 9256, nil, nil, nil, 6)
 local timerMCCD					= mod:NewCDTimer(19, 130857, nil, nil, nil, 3)
 
@@ -38,12 +38,17 @@ end
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 113134 then
-		specWarnMassRes:Show(args.sourceName)
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
+			specWarnMassRes:Show(args.sourceName)
+			specWarnMassRes:Play("kickcast")
+		end
 		timerMassResCD:Start()
-	elseif args.spellId == 12039 then
+	elseif args.spellId == 12039 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnHeal:Show(args.sourceName)
-	elseif args.spellId == 130857 then
+		specWarnHeal:Play("kickcast")
+	elseif args.spellId == 130857 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnMC:Show(args.sourceName)
+		specWarnMC:Play("kickcast")
 	end
 end
 

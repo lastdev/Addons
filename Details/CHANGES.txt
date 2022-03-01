@@ -1,10 +1,10 @@
-tag b98efe4dcfd7520fa27f4923ed6db3938f359342 DetailsRetail.v9.1.5.9693.146
+tag f23106a72f0cac0692cc3c51019cc83eb9c04ad7 DetailsRetail.9.2.0.9696.146
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Thu Feb 17 14:00:08 2022 -0300
+Date:	Thu Feb 24 13:19:48 2022 -0300
 
-commit 8594fbb85406dbf0113c15af39a34ee6efd45dd2
+commit e9b27b60de970065a71c1629ea9e84c9ac39261e
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Thu Feb 17 13:59:25 2022 -0300
+Date:   Thu Feb 24 13:19:17 2022 -0300
 
-    Fixing small issues
+    Fixes for the Aligned Text Column feature
 

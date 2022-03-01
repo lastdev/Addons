@@ -93,6 +93,7 @@ HealBot_RangeSpells["HEAL"]=""
 function HealBot_Action_SetrSpell()
     HealBot_RangeSpells["HEAL"]=nil
     HealBot_RangeSpells["HARM"]=nil
+    HealBot_RangeSpells["RANGE30"]=HEALBOT_WORDS_UNKNOWN
     local x=HealBot_GetBandageType() or HEALBOT_LINEN_BANDAGE
     local y=GetInventoryItemID("player", INVSLOT_MAINHAND) or HEALBOT_WORDS_UNKNOWN
     if y~=HEALBOT_WORDS_UNKNOWN then y=GetItemInfo(y) or y end
@@ -102,32 +103,62 @@ function HealBot_Action_SetrSpell()
         if sName then HealBot_RangeSpells["HARM"]=sName end
         sName=HealBot_KnownSpell(HEALBOT_REJUVENATION) or HealBot_KnownSpell(HEALBOT_HEALING_TOUCH)
         if sName then HealBot_RangeSpells["HEAL"]=sName end
+        if HEALBOT_GAME_VERSION<4 then
+            sName=HealBot_KnownSpell(HEALBOT_MARK_OF_THE_WILD)
+        else
+            sName=nil
+        end
+        if sName then HealBot_RangeSpells["RANGE30"]=sName end
     elseif HealBot_Data["PCLASSTRIM"]=="MAGE" then
         sName=HealBot_KnownSpell(HEALBOT_FROSTFIRE_BOLT) or HealBot_KnownSpell(HEALBOT_FIRE_BLAST)
         if sName then HealBot_RangeSpells["HARM"]=sName end
+        if HEALBOT_GAME_VERSION<4 then
+            sName=HealBot_KnownSpell(HEALBOT_ARCANE_BRILLIANCE)
+        else
+            sName=nil
+        end
+        if sName then HealBot_RangeSpells["RANGE30"]=sName end
     elseif HealBot_Data["PCLASSTRIM"]=="PALA" then
         sName=HealBot_KnownSpell(HEALBOT_HOLY_SHOCK) or HealBot_KnownSpell(HEALBOT_JUDGMENT)
         if sName then HealBot_RangeSpells["HARM"]=sName end
         sName=HealBot_KnownSpell(HEALBOT_FLASH_OF_LIGHT) or HealBot_KnownSpell(HEALBOT_HOLY_LIGHT) or HealBot_KnownSpell(HBC_HOLY_LIGHT)
         if sName then HealBot_RangeSpells["HEAL"]=sName end
+        if HEALBOT_GAME_VERSION<4 then
+            sName=HealBot_KnownSpell(HBC_BLESSING_OF_MIGHT)
+        else
+            sName=nil
+        end
+        if sName then HealBot_RangeSpells["RANGE30"]=sName end
     elseif HealBot_Data["PCLASSTRIM"]=="PRIE" then
         sName=HealBot_KnownSpell(HEALBOT_SMITE) or HealBot_KnownSpell(HEALBOT_SHADOW_WORD_PAIN) or HealBot_KnownSpell(HEALBOT_PENANCE)
         if sName then HealBot_RangeSpells["HARM"]=sName end
-        sName=HealBot_KnownSpell(HEALBOT_FLASH_HEAL) or HealBot_KnownSpell(HEALBOT_RENEW) or HealBot_KnownSpell(HEALBOT_PENANCE) or HealBot_KnownSpell(HEALBOT_HOLY_WORD_SERENITY)
+        sName=HealBot_KnownSpell(HEALBOT_FLASH_HEAL) or HealBot_KnownSpell(HEALBOT_RENEW) or HealBot_KnownSpell(HEALBOT_HEAL) or HealBot_KnownSpell(HEALBOT_PENANCE) or HealBot_KnownSpell(HEALBOT_HOLY_WORD_SERENITY)
         if sName then HealBot_RangeSpells["HEAL"]=sName end
+        if HEALBOT_GAME_VERSION<4 then
+            sName=HealBot_KnownSpell(HEALBOT_HOLY_WORD_SANCTIFY) or HealBot_KnownSpell(HEALBOT_LEVITATE)
+        else
+            sName=HealBot_KnownSpell(HEALBOT_LEVITATE)
+        end
+        if sName then HealBot_RangeSpells["RANGE30"]=sName end
     elseif HealBot_Data["PCLASSTRIM"]=="SHAM" then
         sName=HealBot_KnownSpell(HEALBOT_LIGHTNING_BOLT)
         if sName then HealBot_RangeSpells["HARM"]=sName end
         sName=HealBot_KnownSpell(HEALBOT_HEALING_WAVE) or HealBot_KnownSpell(HEALBOT_HEALING_SURGE) or HealBot_KnownSpell(HBC_HEALING_WAVE)
         if sName then HealBot_RangeSpells["HEAL"]=sName end
+        sName=HealBot_KnownSpell(HEALBOT_WATER_WALKING)
+        if sName then HealBot_RangeSpells["RANGE30"]=sName end
     elseif HealBot_Data["PCLASSTRIM"]=="MONK" then
         sName=HealBot_KnownSpell(HEALBOT_CRACKLING_JADE_LIGHTNING)
         if sName then HealBot_RangeSpells["HARM"]=sNameend end
         sName=HealBot_KnownSpell(HEALBOT_SOOTHING_MIST)
         if sName then HealBot_RangeSpells["HEAL"]=sName end
+        sName=nil
+        if sName then HealBot_RangeSpells["RANGE30"]=sName end
     elseif HealBot_Data["PCLASSTRIM"]=="WARL" then
         sName=HealBot_KnownSpell(HEALBOT_CORRUPTION) or HealBot_KnownSpell(HEALBOT_FEAR)
         if sName then HealBot_RangeSpells["HARM"]=sName end
+        sName=HealBot_KnownSpell(HEALBOT_UNENDING_BREATH)
+        if sName then HealBot_RangeSpells["RANGE30"]=sName end
     elseif HealBot_Data["PCLASSTRIM"]=="WARR" then
         sName=HealBot_KnownSpell(HEALBOT_TAUNT)
         if sName then HealBot_RangeSpells["HARM"]=sName end
@@ -148,6 +179,7 @@ function HealBot_Action_SetrSpell()
     end
     if (HealBot_RangeSpells["HEAL"] or HEALBOT_WORDS_UNKNOWN)==HEALBOT_WORDS_UNKNOWN then HealBot_RangeSpells["HEAL"]=x end
     if (HealBot_RangeSpells["HARM"] or HEALBOT_WORDS_UNKNOWN)==HEALBOT_WORDS_UNKNOWN then HealBot_RangeSpells["HARM"]=y end
+    if HealBot_RangeSpells["RANGE30"]~=HEALBOT_WORDS_UNKNOWN then HealBot_setRange30_Spell(HealBot_RangeSpells["RANGE30"]) end
 end
 
 function HealBot_GetBandageType()
@@ -894,8 +926,6 @@ function HealBot_Action_UpdateTheDeadButton(button, TimeNow)
             HealBot_PluginUpdate_TimeToLive[button.guid]=false
             HealBot_Plugin_TimeToLive_UnitUpdate(button, true)
         end
-        --if button.status.dccheck<TimeNow then
-        --    HealBot_CheckUnitStatus(button)
         if HealBot_Action_IsUnitDead(button) then
             if not UnitIsDeadOrGhost(button.unit) then
                 button.status.current=HealBot_Unit_Status["CHECK"]
@@ -999,7 +1029,7 @@ function HealBot_Action_UpdateTheDeadButton(button, TimeNow)
                 if HealBot_Action_luVars["pluginTimeToLive"] and button.status.plugin then HealBot_Plugin_TimeToLive_UnitUpdate(button) end
                 HealBot_Aux_UpdateResBar(button, HEALBOT_DEAD_LABEL)
                 if button.status.range<1 then
-                    HealBot_Aux_UpdateOORBar(button)
+                    HealBot_Update_OORBar(button)
                 end
             end
         elseif ripHasResEnd[button.id] then
@@ -2056,10 +2086,12 @@ function HealBot_Action_PrepButton(button)
     button.status.plugin=false
     button.status.current=HealBot_Unit_Status["CHECK"]
     button.status.range=1
+    button.status.range30=true
     button.status.rangespell=HealBot_RangeSpells["HEAL"]
     button.status.unittype=1
     button.status.enabled=false
     button.status.summons=false
+    button.status.playerlastheal=0
     button.status.r=0
     button.status.g=0
     button.status.b=0
@@ -2069,7 +2101,6 @@ function HealBot_Action_PrepButton(button)
     button.status.update=true
     button.status.change=true
     button.status.castend=-1
-    --button.status.dccheck=0
     button.aura.buffcol=false
     button.aura.debuffcol=false
     button.aura.buff.name=false
@@ -2087,6 +2118,7 @@ function HealBot_Action_PrepButton(button)
     button.aura.debuff.name=false
     button.aura.debuff.id=0
     button.icon.debuff.count=0
+    button.aura.debuff.priority=99
     button.icon.debuff.showcol=true
     button.aura.debuff.colbar=false
     button.aura.debuff.r=1
@@ -2096,7 +2128,6 @@ function HealBot_Action_PrepButton(button)
     button.icon.extra.classtexture=false
     button.icon.extra.readycheck=false
     button.icon.extra.oorarrow=false
-    button.aura.debuff.priority=99
     button.aggro.ind=-1
     button.aggro.status=-1
     button.aggro.threatpct=0
@@ -2155,6 +2186,7 @@ function HealBot_Action_PrepButton(button)
         button.aux[x]["FLUIDTEXT"]=-1
         button.aux[x]["FLASH"]=false
         button.aux[x]["STATIC"]=false
+        button.aux[x]["FIXED"]=true
         button.gref.aux[x]:SetStatusBarColor(0, 0, 0, 0)
     end
     erButton.state=0

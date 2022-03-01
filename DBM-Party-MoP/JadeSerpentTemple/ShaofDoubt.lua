@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,challenge,timewalker"
 
-mod:SetRevision("20220116042005")
+mod:SetRevision("20220218034305")
 mod:SetCreatureID(56439)
 mod:SetEncounterID(1439)
 
@@ -19,8 +19,8 @@ mod:RegisterEventsInCombat(
 local warnWitherWill			= mod:NewSpellAnnounce(106736, 3, nil, false, 2)
 local warnBoundsOfReality		= mod:NewSpellAnnounce(117665, 3)
 
-local specWarnTouchOfNothingness= mod:NewSpecialWarningDispel(106113, "Healer")
-local specWarnShadowsOfDoubt	= mod:NewSpecialWarningMove(110099)--Actually used by his trash, but in a speed run, you tend to pull it all together
+local specWarnTouchOfNothingness= mod:NewSpecialWarningDispel(106113, "RemoveMagic", nil, nil, 1, 2)
+local specWarnShadowsOfDoubt	= mod:NewSpecialWarningGTFO(110099, nil, nil, nil, 1, 8)--Actually used by his trash, but in a speed run, you tend to pull it all together
 
 local timerWitherWillCD			= mod:NewCDTimer(6, 106736, nil, false, 2)--6-10 second variations.
 local timerTouchofNothingnessCD	= mod:NewCDTimer(15.5, 106113, nil, "Heaker", 2, 5, nil, DBM_COMMON_L.MAGIC_ICON)--15.5~20 second variations.
@@ -51,10 +51,14 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerBoundsOfReality:Start()
 		timerBoundsOfRealityCD:Start()
 	elseif args.spellId == 106113 then
-		specWarnTouchOfNothingness:Show(args.destName)
+		if self:CheckDispelFilter() then
+			specWarnTouchOfNothingness:Show(args.destName)
+			specWarnTouchOfNothingness:Play("helpdispel")
+		end
 		timerTouchofNothingness:Start(args.destName)
 	elseif args.spellId == 110099 and args:IsPlayer() then
-		specWarnShadowsOfDoubt:Show()
+		specWarnShadowsOfDoubt:Show(args.spellName)
+		specWarnShadowsOfDoubt:Play("watchfeet")
 	end
 end
 

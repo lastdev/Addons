@@ -4,7 +4,7 @@
 ## Author: Vardex
 ## X-Category: Library
 ## X-License: BSD
-## Version: Plater-v343
+## Version: Plater-v344
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
 

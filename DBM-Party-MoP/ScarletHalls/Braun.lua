@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(660, "DBM-Party-MoP", 8, 311)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20220218034305")
 mod:SetCreatureID(59303)
 mod:SetEncounterID(1422)
 
@@ -17,8 +17,8 @@ local warnDeathBlossom			= mod:NewSpellAnnounce(114242, 3)
 local warnCallDog				= mod:NewSpellAnnounce(114259, 4)
 local warnBloodyRage			= mod:NewSpellAnnounce(116140, 4)
 
-local timerPiercingThrowCD		= mod:NewNextTimer(6, 114021)
-local timerDeathBlossomCD		= mod:NewNextTimer(6, 114242)
+local timerPiercingThrowCD		= mod:NewNextTimer(6, 114021, nil, nil, nil, 3)
+local timerDeathBlossomCD		= mod:NewNextTimer(6, 114242, nil, nil, nil, 3)
 
 function mod:OnCombatStart(delay)
 	timerPiercingThrowCD:Start(7-delay)

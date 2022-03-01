@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(622, "DBM-Party-WotLK", 9, 282)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20211127000514")
+mod:SetRevision("20220221000356")
 mod:SetCreatureID(27654)
 mod:SetEncounterID(2016)
 
@@ -11,7 +11,7 @@ mod:RegisterEventsInCombat(
 	"UNIT_DIED"
 )
 
-mod:AddBoolOption("MakeitCountTimer", true, "timer")
+mod:AddBoolOption("MakeitCountTimer", true, "timer", nil, nil, nil, "at1868")
 
 function mod:UNIT_DIED(args)
 	if not self:IsDifficulty("normal5") then

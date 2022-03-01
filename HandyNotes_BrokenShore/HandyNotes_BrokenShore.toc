@@ -1,4 +1,4 @@
-## Interface: 90105
+## Interface: 90200
 #@non-debug@
 ## Title: HandyNotes - Broken Shore
 ## Title-deDE: HandyNotes - Verheerte Küste
@@ -28,12 +28,12 @@
 # ## Notes-zhTW: 顯示破碎海岸的 POI 位置
 #@end-debug@
 ## Author: arith
-## Version: v1.44
+## Version: v1.46
 ## RequiredDeps: HandyNotes
 ## OptionalDeps: LibBabble-SubZone-3.0, !LibUIDropDownMenu
 ## DefaultState: enabled
 ## SavedVariables: HandyNotes_BrokenShoreDB
-## X-Date: 2022-02-14T17:05:16Z
+## X-Date: 2022-02-23T15:50:52Z
 ## X-License: GPLv2
 ## X-Category: Map
 

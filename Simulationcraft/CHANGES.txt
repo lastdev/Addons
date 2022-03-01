@@ -1,22 +1,10 @@
-lightweight tag e1104e64537152d495593db5c60a0ad7c690e4b0 v9.1.5-01
+lightweight tag c653865e924d3666b0bcd828f8b605709cc36e37 v9.2.0
 Author:	Dave Hendler <sollaires@gmail.com>
-Date:	Tue Nov 2 13:23:57 2021 -0700
+Date:	Tue Feb 22 10:58:35 2022 -0800
 
-commit e1104e64537152d495593db5c60a0ad7c690e4b0
+commit c653865e924d3666b0bcd828f8b605709cc36e37
 Author: Dave Hendler <sollaires@gmail.com>
-Date:   Tue Nov 2 13:23:57 2021 -0700
+Date:   Tue Feb 22 10:58:35 2022 -0800
 
-    Update TOC version for 9.1.5
-
-commit fd435e17eb1992d319693dbf23b24678cae697ad
-Author: Julien Rechaussat <Kutikuti@users.noreply.github.com>
-Date:   Wed Jun 30 21:24:42 2021 +0200
-
-    Ignore vscode files
-
-commit 98d93e89d8427c1aefd957ba1fd50d05bcc51b5a
-Author: Julien Rechaussat <Kutikuti@users.noreply.github.com>
-Date:   Wed Jun 30 21:24:30 2021 +0200
-
-    Some cleanup, variable declaration, lua checker pleasing
+    Update version for 9.2 release
 

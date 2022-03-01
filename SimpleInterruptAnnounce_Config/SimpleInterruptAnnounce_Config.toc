@@ -1,4 +1,4 @@
-## Interface: 90105
+## Interface: 90200
 ## Title: Simple Interrupt Announce Config
 ## Notes: Configuration panel for SIA
 ## Author: BeathsCurse (Bowmore - Silvermoon EU)

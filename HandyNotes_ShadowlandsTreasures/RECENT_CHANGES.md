@@ -1,5 +1,6 @@
-## Changed in v34
+## Changed in v37
 
-* Added a new Maelie location in Korthia
-* Fixed an issue for some people causing errors when viewing the map
+* A bunch of new loot on rares
+* Better labeling on caches
+* Split up the lore concordances
 

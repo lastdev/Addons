@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,timewalker"
 
-mod:SetRevision("20210614202848")
+mod:SetRevision("20220221001452")
 mod:SetCreatureID(29309)
 mod:SetEncounterID(1969)
 
@@ -14,7 +14,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED 56130 59467"
 )
 
-local warningPlague	= mod:NewTargetAnnounce(56130, 2, nil, "Healer")
+local warningPlague	= mod:NewTargetNoFilterAnnounce(56130, 2, nil, "Healer")
 
 local timerPlague	= mod:NewTargetTimer(30, 56130, nil, "Healer", nil, 3)
 

@@ -113,8 +113,7 @@ local update_wago_update_icons = function()
 	local scriptButton = mainFrame.AllButtons [6]
 	local modButton = mainFrame.AllButtons [7]
 	local profileButton = mainFrame.AllButtons [21]
-	local importButton = mainFrame.AllButtons [24]
-	--local importButton = mainFrame.AllButtons [25] -- with resource fame
+	local importButton = mainFrame.AllButtons [25]
 	
 	if countMods > 0 then
 		modButton.updateIcon:Show()
@@ -226,7 +225,7 @@ function Plater.OpenOptionsPanel()
 		{name = "Automation", title = L["OPTIONS_TABNAME_AUTO"]},
 		{name = "ProfileManagement", title = L["OPTIONS_TABNAME_PROFILES"]},
 		{name = "AdvancedConfig", title = L["OPTIONS_TABNAME_ADVANCED"]},
-		--{name = "resourceFrame", title = "Combo Points"}, --localize-me
+		{name = "resourceFrame", title = "Combo Points"}, --localize-me
 		{name = "SearchFrame", title = "Search"}, --localize-me
 		--{name = "WagoIo", title = "Wago Imports"}, --wago_imports --localize-me
 		
@@ -267,10 +266,9 @@ function Plater.OpenOptionsPanel()
 	local autoFrame = mainFrame.AllFrames [20]
 	local profilesFrame = mainFrame.AllFrames [21]
 	local advancedFrame = mainFrame.AllFrames [22]
-	--local resourceFrame = mainFrame.AllFrames [23]
-	--local searchFrame = mainFrame.AllFrames [24]
-	local searchFrame = mainFrame.AllFrames [23]
-	--local wagoIoFrame = mainFrame.AllFrames [26] --wago_imports
+	local resourceFrame = mainFrame.AllFrames [23]
+	local searchFrame = mainFrame.AllFrames [24]
+	--local wagoIoFrame = mainFrame.AllFrames [25] --wago_imports
 	
 	--
 	local colorNpcsButton = mainFrame.AllButtons [17]
@@ -279,7 +277,7 @@ function Plater.OpenOptionsPanel()
 	local profileButton = mainFrame.AllButtons [21]
 	local importButton = mainFrame.AllButtons [25]
 
-	--Plater.Resources.BuildResourceOptionsTab(resourceFrame)
+	Plater.Resources.BuildResourceOptionsTab(resourceFrame)
 	Plater.CreateCastColorOptionsFrame(castColorsFrame)
 	
 	local generalOptionsAnchor = CreateFrame ("frame", "$parentOptionsAnchor", frontPageFrame, BackdropTemplateMixin and "BackdropTemplate")
@@ -2670,8 +2668,8 @@ Plater.CreateAuraTesting()
 					
 						for i = 1, #data do
 							local npcID = data [i][1]
-							local npcName = data [i][2]
-							local zoneName = data [i][3]
+							local npcName = data [i][2] or "UNKNOWN"
+							local zoneName = data [i][3] or "UNKNOWN"
 							local color = DB_NPCID_COLORS [npcID] and DB_NPCID_COLORS [npcID][1] and DB_NPCID_COLORS [npcID][3] or "white" --has | is enabled | color
 						
 							if (npcName:lower():find (IsSearchingFor) or zoneName:lower():find (IsSearchingFor)) then
@@ -6390,12 +6388,15 @@ local relevance_options = {
 			get = function() return PlaterDBChr.resources_on_target end,
 			set = function (self, fixedparam, value) 
 				PlaterDBChr.resources_on_target = value
+				if value then
+					Plater.db.profile.resources_settings.global_settings.show = false
+				end
 				if (not InCombatLockdown()) then
 					SetCVar (CVAR_RESOURCEONTARGET, CVAR_DISABLED) -- reset this to false always, as it conflicts
 				end
 			end,
 			name = "Show Resources on Target",
-			desc = "Shows your resource such as combo points above your current target.\n\nCharacter specific setting!",
+			desc = "Shows your resource such as combo points above your current target.\nUses Blizzard default resources and disables Platers own resources.\n\nCharacter specific setting!",
 			nocombat = true,
 			hidden = IS_WOW_PROJECT_NOT_MAINLINE,
 		},
@@ -6496,10 +6497,10 @@ local relevance_options = {
 				end
 			end,
 			min = IS_WOW_PROJECT_MAINLINE and 60 or 20, --20y for tbc and classic
-			max = (IS_WOW_PROJECT_MAINLINE and 60) or (IS_WOW_PROJECT_CLASSIC_TBC and 41) or 20, --41y for tbc, 20y for classic era
+			max = (IS_WOW_PROJECT_MAINLINE and 60) or (IS_WOW_PROJECT_CLASSIC_TBC and 40) or 20, --40y for tbc, 20y for classic era
 			step = 1,
 			name = "View Distance" .. CVarIcon,
-			desc = "How far you can see nameplates (in yards).\n\n|cFFFFFFFFCurrent limitations: Retail = 60y, TBC = 20-41y, Classic = 20y|r" .. CVarDesc,
+			desc = "How far you can see nameplates (in yards).\n\n|cFFFFFFFFCurrent limitations: Retail = 60y, TBC = 20-40y, Classic = 20y|r" .. CVarDesc,
 			nocombat = true,
 		},
 	

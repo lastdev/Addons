@@ -1,5 +1,28 @@
 # Changelog
 
+## Changed in v37
+
+* A bunch of new loot on rares
+* Better labeling on caches
+* Split up the lore concordances
+
+## Changed in v36
+
+* This is the "I had to play a fresh character through Zereth Mortis with nothing unlocked yet" release
+* Rewrote my "is this point active?" system so it's a lot easier for me to set complicated conditions
+* Better flag conditions for Lore Concordances. (I'm not sure what the exact conditions are for some.)
+* Hide the Completing the Code rares before you've done Firim's quests
+* Hide the Patient Bufonid before it's available
+* Show the puzzle caches on the minimap, and color them by type
+* Added various questids, explained a few jumping routes, fixed some typos
+
+## Changed in v35
+
+* Updated for 9.2
+* New data for Zereth Mortis
+* Korthia: Xyraxz the Unknowable doesn't drop Gnashtooth after all
+* Bastion: some Collector Astorestes loot is shared with the Relic Hoarder
+
 ## Changed in v34
 
 * Added a new Maelie location in Korthia

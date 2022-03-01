@@ -139,8 +139,8 @@ local function quick_texture_markup(icon)
 end
 local completeColor = CreateColor(0, 1, 0, 1)
 local incompleteColor = CreateColor(1, 0, 0, 1)
-local function render_string(s)
-    if type(s) == "function" then s = s() end
+local function render_string(s, context)
+    if type(s) == "function" then s = s(context) end
     return s:gsub("{(%l+):(%d+):?([^}]*)}", function(variant, id, fallback)
         id = tonumber(id)
         if variant == "item" then
@@ -177,13 +177,21 @@ local function render_string(s)
             if info then
                 return quick_texture_markup(info.iconFileID) .. info.name
             end
+        elseif variant == "covenant" then
+            local data = C_Covenants.GetCovenantData(id)
+            return COVENANT_COLORS[id]:WrapTextInColorCode(data and data.name or ns.covenants[id])
+        elseif variant == "garrisontalent" then
+            local info = C_Garrison.GetTalentInfo(id)
+            if info then
+                return quick_texture_markup(info.icon) .. (info.researched and completeColor or incompleteColor):WrapTextInColorCode(info.name)
+            end
         end
         return fallback ~= "" and fallback or (variant .. ':' .. id)
     end)
 end
-local function cache_string(s)
+local function cache_string(s, context)
     if not s then return end
-    if type(s) == "function" then s = s() end
+    if type(s) == "function" then s = s(context) end
     for variant, id, fallback in s:gmatch("{(%l+):(%d+):?([^}]*)}") do
         id = tonumber(id)
         if variant == "item" then
@@ -206,14 +214,14 @@ end
 local render_string_list
 do
     local out = {}
-    function render_string_list(variant, ...)
+    function render_string_list(point, variant, ...)
         if not ... then return "" end
         if type(...) == "table" then return render_string_list(variant, unpack(...)) end
         wipe(out)
         for i=1,select("#", ...) do
             table.insert(out, ("{%s:%d}"):format(variant, (select(i, ...))))
         end
-        return render_string(string.join(", ", unpack(out)))
+        return render_string(string.join(", ", unpack(out)), point)
     end
 end
 ns.render_string = render_string
@@ -252,7 +260,7 @@ local default_textures = {
 local function work_out_label(point)
     local fallback
     if point.label then
-        return (render_string(point.label))
+        return (render_string(point.label, point))
     end
     if point.achievement then
         if point.criteria and type(point.criteria) ~= "table" then
@@ -373,31 +381,13 @@ ns.point_active = function(point)
     if not point.active then
         return true
     end
-    if point.active.quest and not C_QuestLog.IsQuestFlaggedCompleted(point.active.quest) then
-        return false
-    end
-    if point.active.notquest and C_QuestLog.IsQuestFlaggedCompleted(point.active.notquest) then
-        return false
-    end
-    if point.active.achievement and not select(4, GetAchievementInfo(point.active.achievement)) then
-        return false
-    end
-    if point.active.requires_buff and not ns.doTest(GetPlayerAuraBySpellID, point.active.requires_buff) then
-        return false
-    end
-    if point.active.requires_no_buff and ns.doTest(GetPlayerAuraBySpellID, point.active.requires_no_buff) then
-        return false
-    end
-    if point.active.covenant and point.active.covenant ~= C_Covenants.GetActiveCovenantID() then
-        return false
-    end
-    return true
+    return ns.conditions.check(point.active)
 end
 ns.point_upcoming = function(point)
     if point.level and UnitLevel("player") < point.level then
         return true
     end
-    if point.hide_before and not ns.allQuestsComplete(point.hide_before) then
+    if point.hide_before and not ns.conditions.check(point.hide_before) then
         return true
     end
     if point.covenant and point.covenant ~= C_Covenants.GetActiveCovenantID() then
@@ -447,9 +437,9 @@ local get_point_info = function(point, isMinimap)
             category = "junk"
         end
         if not isMinimap then
-            cache_string(point.label)
-            cache_string(point.note)
-            cache_loot(point.loot)
+            cache_string(point.label, point)
+            cache_string(point.note, point)
+            cache_loot(point.loot, point)
         end
         return label, icon, category, point.quest, point.faction, point.scale, point.alpha or 1
     end
@@ -537,12 +527,15 @@ local function handle_tooltip(tooltip, point)
                 end
             end
         end
-        if point.active and point.active.note then
+        if point.active then
             local isActive = ns.point_active(point)
-            tooltip:AddLine(render_string(point.active.note), isActive and 0 or 1, isActive and 1 or 0, 0, true)
+            tooltip:AddLine(
+                ns.render_string(point.active.note or ns.conditions.summarize(point.active), point),
+                isActive and 0 or 1, isActive and 1 or 0, 0, true
+            )
         end
         if point.note then
-            tooltip:AddLine(render_string(point.note), 1, 1, 1, true)
+            tooltip:AddLine(render_string(point.note, point), 1, 1, 1, true)
         end
         if point.loot then
             for _, item in ipairs(point.loot) do
@@ -586,12 +579,13 @@ local function handle_tooltip(tooltip, point)
         if point.level and point.level > UnitLevel("player") then
             tooltip:AddLine(ITEM_MIN_LEVEL:format(point.level), 1, 0, 0)
         end
-        if point.hide_before and not ns.allQuestsComplete(point.hide_before) then
+        if point.hide_before and not ns.conditions.check(point.hide_before) then
             tooltip:AddLine(COMMUNITY_TYPE_UNAVAILABLE, 1, 0, 0)
+            tooltip:AddLine(ns.render_string(ns.conditions.summarize(point.hide_before), point), 1, 0, 0, true)
         end
 
         if point.quest and ns.db.tooltip_questid then
-            tooltip:AddDoubleLine("QuestID", render_string_list("questid", point.quest), NORMAL_FONT_COLOR:GetRGB())
+            tooltip:AddDoubleLine("QuestID", render_string_list(point, "questid", point.quest), NORMAL_FONT_COLOR:GetRGB())
         end
         if point.progress then
             local fulfilled, required = get_point_progress(point)
@@ -785,7 +779,7 @@ do
             if point.group then
                 if not ns.hiddenConfig.groupsHiddenByZone then
                     local map = C_Map.GetMapInfo(currentZone)
-                    info.text = "Hide all " .. render_string(ns.groups[point.group] or point.group) .. " in " .. (map and map.name or "this zone")
+                    info.text = "Hide all " .. render_string(ns.groups[point.group] or point.group, point) .. " in " .. (map and map.name or "this zone")
                     info.notCheckable = 1
                     info.func = hideGroupZone
                     info.arg1 = currentZone
@@ -794,7 +788,7 @@ do
                     wipe(info)
                 end
                 if not ns.hiddenConfig.groupsHidden then
-                    info.text = "Hide all " .. render_string(ns.groups[point.group] or point.group) .. " in all zones"
+                    info.text = "Hide all " .. render_string(ns.groups[point.group] or point.group, point) .. " in all zones"
                     info.notCheckable = 1
                     info.func = hideGroup
                     info.arg1 = currentZone

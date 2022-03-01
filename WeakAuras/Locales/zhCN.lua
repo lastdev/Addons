@@ -426,6 +426,10 @@ L["Frame Selector"] = "选择框体"
 L["Frequency"] = "频率"
 L["Friendly"] = "友善"
 L["Friendly Fire"] = "友方伤害"
+--[[Translation missing --]]
+L["Friendship Max Rank"] = "Friendship Max Rank"
+--[[Translation missing --]]
+L["Friendship Rank"] = "Friendship Rank"
 L["From"] = "从"
 L["Frost Resistance"] = "冰霜抗性"
 L["Full"] = "满"

@@ -1,8 +1,8 @@
-## Interface: 90105
+## Interface: 90200
 ## Title: Simple Interrupt Announce
 ## Notes: A simple interrupt announcer
 ## Author: BeathsCurse (Bowmore - Silvermoon EU)
-## Version: 1.0.46
+## Version: 1.0.47
 ## SavedVariablesPerCharacter: SIACFG
 
 SimpleInterruptAnnounce.lua

@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,timewalker"
 
-mod:SetRevision("20210614202848")
+mod:SetRevision("20220221000356")
 mod:SetCreatureID(28546)
 mod:SetEncounterID(1984)
 mod:SetUsedIcons(8)
@@ -26,7 +26,7 @@ local specWarnOverload		= mod:NewSpecialWarningMoveAway(52658, nil, nil, nil, 1,
 local timerOverload			= mod:NewTargetTimer(10, 52658, nil, nil, nil, 3)
 
 mod:AddRangeFrameOption(10, 52658)
-mod:AddSetIconOption("SetIconOnOverloadTarget", 59795, true, false, {8})
+mod:AddSetIconOption("SetIconOnOverloadTarget", 52658, true, false, {8})
 
 local warnedDisperse = false
 

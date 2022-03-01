@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "heroic,timewalker"
 
-mod:SetRevision("20210120231816")
+mod:SetRevision("20220209180132")
 mod:SetCreatureID(54544)
 mod:SetEncounterID(1884)
 
@@ -20,7 +20,7 @@ local warnGuidanceStack	= mod:NewCountAnnounce(102472, 2, nil, false)
 
 local specwarnStardust	= mod:NewSpecialWarningInterrupt(102173, "HasInterrupt", nil, nil, 1, 2)
 
-local timerGuidance		= mod:NewCDTimer(9.7, 102472)--Iffy, and might be worth removing
+local timerGuidance		= mod:NewCDTimer(8.4, 102472)--Iffy, and might be worth removing
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 102472 then

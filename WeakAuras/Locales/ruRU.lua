@@ -441,6 +441,10 @@ L["Frame Selector"] = "Выбор кадра"
 L["Frequency"] = "Частота"
 L["Friendly"] = "Дружественный"
 L["Friendly Fire"] = "Урон по союзникам"
+--[[Translation missing --]]
+L["Friendship Max Rank"] = "Friendship Max Rank"
+--[[Translation missing --]]
+L["Friendship Rank"] = "Friendship Rank"
 L["From"] = "От"
 L["Frost Resistance"] = "Сопротивление магии льда"
 L["Full"] = "Полный"

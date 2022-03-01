@@ -1,6 +1,7 @@
 # SavedInstances
 
-## [9.1.5](https://github.com/SavedInstances/SavedInstances/tree/9.1.5) (2021-11-15)
-[Full Changelog](https://github.com/SavedInstances/SavedInstances/compare/9.1.4...9.1.5) [Previous Releases](https://github.com/SavedInstances/SavedInstances/releases)
+## [9.2.0](https://github.com/SavedInstances/SavedInstances/tree/9.2.0) (2022-02-11)
+[Full Changelog](https://github.com/SavedInstances/SavedInstances/commits/9.2.0) [Previous Releases](https://github.com/SavedInstances/SavedInstances/releases)
 
-- feat(Quest): Add Doomwalker  
+- fix: fix LFG SoO Downfall different name in deDE  
+    fixes #308  

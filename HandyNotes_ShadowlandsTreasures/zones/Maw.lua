@@ -4,7 +4,7 @@ local path = ns.path
 local CAVE = "Cave entrance"
 
 local rift_active = {
-    requires_buff={352795, 354870, any=true},
+    ns.conditions.AuraActive(352795), ns.conditions.AuraActive(354870), any=true,
     note="You need to be in the rift to see this",
 }
 
@@ -736,8 +736,8 @@ ns.RegisterPoints(1543, {
         note="Talk and get the {spell:353322} buff, then go find {npc:179083:Sly}",
     },
     [40705160] = {quest={64019,64024,any=true},},
-    [38053975] = {quest={64019,64022,any=true},hide_before=64024,},
-    [32904420] = {quest={64019,64023,any=true},hide_before=64022,},
+    [38053975] = {quest={64019,64022,any=true},hide_before=ns.conditions.QuestComplete(64024),},
+    [32904420] = {quest={64019,64023,any=true},hide_before=ns.conditions.QuestComplete(64022),},
 }, {
     achievement=15004,
     label="{npc:179083:Sly}",
@@ -960,7 +960,7 @@ ns.RegisterPoints(1543, {
 local riftstone = ns.nodeMaker{
     label="{npc:174962}",
     atlas="WarlockPortalHorde", scale=1.3,
-    active={quest=63177},
+    active=ns.conditions.QuestComplete(63177),
     note="Buy access from {npc:162804}",
     group="Transportation",
 }
@@ -983,11 +983,15 @@ ns.RegisterPoints(1543, {
     [34201475] = {}, -- Tremaculum
     [53406365] = {}, -- Beastwarrens (also gated behind Rule 6)
     [33955675] = {}, -- Perdition Hold
-    [68903680] = {active={quest=61600,achievement=15126,note="Requires the {achievement:15126} achievement"}}, -- Desmotaeron
+    [68903680] = { -- Desmotaeron
+        active={
+            ns.conditions.QuestComplete(61600), ns.conditions.Achievement(15126),
+        },
+    },
 }, {
     label="{npc:172925} " .. EXIT,
     atlas="MagePortalAlliance",
-    active={quest=61600},
+    active=ns.conditions.QuestComplete(61600),
     note="Buy access from {npc:162804}",
     scale = 1.2,
     group="Transportation",

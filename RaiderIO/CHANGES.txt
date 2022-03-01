@@ -1,21 +1,16 @@
-lightweight tag a4cf79cc2f5e0c2558bb2020815f14a1f67a265c v202202200600
+lightweight tag f9e3ab3ca387642eb31ac292a93f03625f69e743 v202202241408
 Author:	Jah Raphael <jahraphael@yahoo.com>
-Date:	Sun Feb 20 07:28:28 2022 +0000
+Date:	Thu Feb 24 15:50:59 2022 +0000
 
-commit a4cf79cc2f5e0c2558bb2020815f14a1f67a265c
+commit f9e3ab3ca387642eb31ac292a93f03625f69e743
 Author: Jah Raphael <jahraphael@yahoo.com>
-Date:   Sun Feb 20 07:28:28 2022 +0000
+Date:   Thu Feb 24 15:50:59 2022 +0000
 
     [Raider.IO] Database Refresh
 
-commit ab36fa43c1204cce899aa84f5099c1d81e1a59c7
-Author: WFrancois <wroblewski.francois@gmail.com>
-Date:   Sat Feb 19 16:47:47 2022 +0100
+commit aa1c48018ab616d1c57fb7aa6691b1d7ae4d6427
+Author: Vladinator89 <vladix@gmail.com>
+Date:   Tue Feb 22 18:45:03 2022 +0100
 
-    Add info in RWF Tracking
-    
-    - itemLevel
-    - who droped what
-    
-    Fixed timestamp generation, and fix codeeditor (codebase is with space right now)
+    Using name instead of unit as we have the data available at this point, the unit is extra and not really needed anymore.
 

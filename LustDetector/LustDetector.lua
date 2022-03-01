@@ -43,7 +43,7 @@ local function handler (msg)
 		print("Lust Detector is now set for announcing to |cffff0000"..LUSTDETECTOR.."|r.")
 		
 	elseif msg == 'TEST' then
-		LUSTDETECTORMSG("[Test message] ADDON: Lust Detector is working correctly!")
+		LUSTDETECTORMSG("[LD Test] ADDON: Lust Detector is working correctly!")
 		
 	else
 		print("Lust Detector Status: is |cff1cb619"..(LUSTDETECTOR and "On" or "Off").."|r and announcing to: |cff1cb619"..LUSTDETECTORMode.."|r.\nCommands: \n/ld on, /ld off, /ld test, /ld group, /ld say, /ld yell, /ld self")
@@ -107,7 +107,7 @@ frame:SetScript("OnEvent", function(self, event, ...)
 							end
 						end
 					end
-					SendChatMessage("Lust Detector: [HUNTER] "..sourceName.."\'s Pet Used "..GetSpellLink(spellID).."And increased +30% Haste on your party!")
+					SendChatMessage("Lust Detector: [HUNTER] "..sourceName.."\'s Pet Used "..GetSpellLink(spellID).."and increased +30% Haste on your party!!")
 			end
 		end
 	end

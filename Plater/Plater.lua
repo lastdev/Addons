@@ -1238,8 +1238,8 @@ local class_specs_coords = {
 				unitFrame.castBar:SetAlpha (1)
 			end
 			unitFrame.powerBar:SetAlpha (1)
-			unitFrame.BuffFrame:SetAlpha (1)
-			unitFrame.BuffFrame2:SetAlpha (1)
+			unitFrame.BuffFrame:SetAlpha (DB_AURA_ALPHA)
+			unitFrame.BuffFrame2:SetAlpha (DB_AURA_ALPHA)
 			
 			Plater.EndLogPerformanceCore("Plater-Core", "Update", "CheckRange")
 			return
@@ -1256,8 +1256,8 @@ local class_specs_coords = {
 				unitFrame.castBar:SetAlpha (1)
 			end
 			unitFrame.powerBar:SetAlpha (1)
-			unitFrame.BuffFrame:SetAlpha (1)
-			unitFrame.BuffFrame2:SetAlpha (1)
+			unitFrame.BuffFrame:SetAlpha (DB_AURA_ALPHA)
+			unitFrame.BuffFrame2:SetAlpha (DB_AURA_ALPHA)
 			
 			Plater.EndLogPerformanceCore("Plater-Core", "Update", "CheckRange")
 			return
@@ -1270,8 +1270,8 @@ local class_specs_coords = {
 				unitFrame.castBar:SetAlpha (1)
 			end
 			unitFrame.powerBar:SetAlpha (1)
-			unitFrame.BuffFrame:SetAlpha (1)
-			unitFrame.BuffFrame2:SetAlpha (1)
+			unitFrame.BuffFrame:SetAlpha (DB_AURA_ALPHA)
+			unitFrame.BuffFrame2:SetAlpha (DB_AURA_ALPHA)
 			
 			plateFrame [MEMBER_RANGE] = true
 			unitFrame [MEMBER_RANGE] = true
@@ -1455,8 +1455,8 @@ local class_specs_coords = {
 							castBar:SetAlpha (inRangeAlpha)
 						end
 						powerBar:SetAlpha (inRangeAlpha)
-						buffFrame1:SetAlpha (inRangeAlpha)
-						buffFrame2:SetAlpha (inRangeAlpha)
+						buffFrame1:SetAlpha (DB_AURA_ALPHA)
+						buffFrame2:SetAlpha (DB_AURA_ALPHA)
 					end
 					plateFrame.FadedIn = true
 
@@ -1483,8 +1483,8 @@ local class_specs_coords = {
 					castBar:SetAlpha (1)
 				end
 				powerBar:SetAlpha (1)
-				buffFrame1:SetAlpha (1)
-				buffFrame2:SetAlpha (1)
+				buffFrame1:SetAlpha (DB_AURA_ALPHA)
+				buffFrame2:SetAlpha (DB_AURA_ALPHA)
 			end
 		else
 			-- no alpha settings, so just go to default
@@ -1495,8 +1495,8 @@ local class_specs_coords = {
 				castBar:SetAlpha (1)
 			end
 			powerBar:SetAlpha (1)
-			buffFrame1:SetAlpha (1)
-			buffFrame2:SetAlpha (1)
+			buffFrame1:SetAlpha (DB_AURA_ALPHA)
+			buffFrame2:SetAlpha (DB_AURA_ALPHA)
 		end
 		
 		Plater.EndLogPerformanceCore("Plater-Core", "Update", "CheckRange")
@@ -2445,7 +2445,7 @@ local class_specs_coords = {
 		end,
 
 		PLAYER_SPECIALIZATION_CHANGED = function()
-			C_Timer.After (1.5, Plater.Resources.CanUsePlaterResourceFrame) --~resource
+			C_Timer.After (0.5, Plater.Resources.OnSpecChanged) --~resource
 			C_Timer.After (2, Plater.GetSpellForRangeCheck)
 			C_Timer.After (2, Plater.GetHealthCutoffValue)
 			C_Timer.After (1, Plater.DispatchTalentUpdateHookEvent)
@@ -3641,7 +3641,7 @@ local class_specs_coords = {
 							--add the npc in the npcid cache
 							if (not DB_NPCIDS_CACHE [plateFrame [MEMBER_NPCID]] and (Plater.ZoneInstanceType == "raid" or Plater.ZoneInstanceType == "party") and plateFrame [MEMBER_NPCID]) then
 								if (UNKNOWN ~= plateFrame [MEMBER_NAME]) then --UNKNOWN is the global string from blizzard
-									DB_NPCIDS_CACHE [plateFrame [MEMBER_NPCID]] = {plateFrame [MEMBER_NAME], Plater.ZoneName}
+									DB_NPCIDS_CACHE [plateFrame [MEMBER_NPCID]] = {plateFrame [MEMBER_NAME], Plater.ZoneName or "UNKNOWN"}
 								end
 							end
 							
@@ -3963,19 +3963,23 @@ function Plater.OnInit() --private --~oninit ~init
 	--range check spells
 		if IS_WOW_PROJECT_MAINLINE then
 			for specID, _ in pairs (Plater.SpecList [select (2, UnitClass ("player"))]) do
-				if (PlaterDBChr.spellRangeCheckRangeEnemy [specID] == nil or not LibRangeCheck:GetHarmMaxChecker (PlaterDBChr.spellRangeCheckRangeEnemy [specID])) then
+				--if (PlaterDBChr.spellRangeCheckRangeEnemy [specID] == nil or not LibRangeCheck:GetHarmMaxChecker (PlaterDBChr.spellRangeCheckRangeEnemy [specID])) then
+				if (PlaterDBChr.spellRangeCheckRangeEnemy [specID] == nil) then
 					PlaterDBChr.spellRangeCheckRangeEnemy [specID] = Plater.DefaultSpellRangeList [specID]
 				end
-				if (PlaterDBChr.spellRangeCheckRangeFriendly [specID] == nil or not LibRangeCheck:GetFriendMaxChecker(PlaterDBChr.spellRangeCheckRangeFriendly [specID])) then
+				--if (PlaterDBChr.spellRangeCheckRangeFriendly [specID] == nil or not LibRangeCheck:GetFriendMaxChecker(PlaterDBChr.spellRangeCheckRangeFriendly [specID])) then
+				if (PlaterDBChr.spellRangeCheckRangeFriendly [specID] == nil) then
 					PlaterDBChr.spellRangeCheckRangeFriendly [specID] = Plater.DefaultSpellRangeListF [specID]
 				end
 			end
 		else
 			local playerClass = select (3, UnitClass ("player"))
-			if (PlaterDBChr.spellRangeCheckRangeEnemy [playerClass] == nil or not LibRangeCheck:GetHarmMaxChecker (PlaterDBChr.spellRangeCheckRangeEnemy [playerClass])) then
+			--if (PlaterDBChr.spellRangeCheckRangeEnemy [playerClass] == nil or not LibRangeCheck:GetHarmMaxChecker (PlaterDBChr.spellRangeCheckRangeEnemy [playerClass])) then
+			if (PlaterDBChr.spellRangeCheckRangeEnemy [playerClass] == nil) then
 				PlaterDBChr.spellRangeCheckRangeEnemy [playerClass] = Plater.DefaultSpellRangeList [playerClass]
 			end
-			if (PlaterDBChr.spellRangeCheckRangeFriendly [playerClass] == nil or not LibRangeCheck:GetFriendMaxChecker(PlaterDBChr.spellRangeCheckRangeFriendly [playerClass])) then
+			--if (PlaterDBChr.spellRangeCheckRangeFriendly [playerClass] == nil or not LibRangeCheck:GetFriendMaxChecker(PlaterDBChr.spellRangeCheckRangeFriendly [playerClass])) then
+			if (PlaterDBChr.spellRangeCheckRangeFriendly [playerClass] == nil) then
 				PlaterDBChr.spellRangeCheckRangeFriendly [playerClass] = Plater.DefaultSpellRangeListF [playerClass]
 			end
 		end
@@ -4020,7 +4024,11 @@ function Plater.OnInit() --private --~oninit ~init
 		end
 	
 	--schedule data update
-		C_Timer.After (0.1, Plater.UpdatePlateClickSpace)
+		if IS_WOW_PROJECT_MAINLINE then
+			C_Timer.After (0.1, Plater.UpdatePlateClickSpace)
+		else
+			Plater.UpdatePlateClickSpace() -- try updating immediately for classic
+		end
 		--C_Timer.After (1, Plater.GetSpellForRangeCheck)
 		C_Timer.After (4, Plater.GetHealthCutoffValue)
 		C_Timer.After (4.2, Plater.ForceCVars)
@@ -4135,7 +4143,11 @@ function Plater.OnInit() --private --~oninit ~init
 			
 			C_Timer.After (0.2, Plater.ForceCVars)
 			--C_Timer.After (0.3, Plater.GetSpellForRangeCheck)
-			C_Timer.After (0.4, Plater.UpdatePlateClickSpace)
+			if IS_WOW_PROJECT_MAINLINE then
+				C_Timer.After (0.4, Plater.UpdatePlateClickSpace)
+			else
+				Plater.UpdatePlateClickSpace() -- update immediately for classic/tbc
+			end
 			
 			
 			-- ensure OmniCC settings are up to date
@@ -4203,7 +4215,7 @@ function Plater.OnInit() --private --~oninit ~init
 			
 			--check addons incompatibility
 			--> Plater has issues with ElvUI due to be using the same namespace for unitFrame and healthBar
-			C_Timer.After (5, function()
+			C_Timer.After (15, function()
 				if (IsAddOnLoaded ("ElvUI")) then
 					if (ElvUI[1] and ElvUI[1].private and ElvUI[1].private.nameplates and ElvUI[1].private.nameplates.enable) then
 						Plater:Msg ("'ElvUI Nameplates' and 'Plater Nameplates' are enabled and both nameplates won't work together.")
@@ -4211,6 +4223,9 @@ function Plater.OnInit() --private --~oninit ~init
 					end
 				end 
 			end)
+
+			-- ensure resources are up to date
+			C_Timer.After (3, Plater.Resources.OnSpecChanged)
 
 		end
 		Plater:RegisterEvent ("PLAYER_LOGIN")
@@ -4363,6 +4378,11 @@ function Plater.OnInit() --private --~oninit ~init
 			
 			local resourceFrame = NamePlateDriverFrame.classNamePlateMechanicFrame
 			if (not resourceFrame or resourceFrame:IsForbidden()) then
+				return
+			end
+			
+			if Plater.db.profile.resources_settings.global_settings.show then
+				resourceFrame:Hide()
 				return
 			end
 			
@@ -5724,8 +5744,8 @@ end
 					Plater.AlignAuraFrames (tickFrame.BuffFrame.BuffFrame2)
 				end
 				
-				tickFrame.BuffFrame:SetAlpha (DB_AURA_ALPHA)
-				tickFrame.BuffFrame2:SetAlpha (DB_AURA_ALPHA)
+				--tickFrame.BuffFrame:SetAlpha (DB_AURA_ALPHA)
+				--tickFrame.BuffFrame2:SetAlpha (DB_AURA_ALPHA)
 				
 				--Plater.EndLogPerformanceCore("Plater-Core", "Update", "UpdateAuras")
 			end
@@ -8497,7 +8517,7 @@ end
 				isPlayerPet = true
 				ownerName = playerName
 			else
-				ownerName = (string.match(text1, string.gsub(UNITNAME_TITLE_PET, "%%s", "(%.*)")) or string.match(text1, string.gsub(UNITNAME_TITLE_MINION, "%%s", "(%.*)")))
+				ownerName = (string.match(text1, string.gsub(UNITNAME_TITLE_PET, "%%s", "(%.*)")) or string.match(text1, string.gsub(UNITNAME_TITLE_MINION, "%%s", "(%.*)")) or string.match(text1, string.gsub(UNITNAME_TITLE_GUARDIAN, "%%s", "(%.*)")))
 				if ownerName then
 					isOtherPet = true
 				end
@@ -8514,7 +8534,7 @@ end
 					isPlayerPet = true
 					ownerName = playerName
 				else
-					ownerName = (string.match(text2, string.gsub(UNITNAME_TITLE_PET, "%%s", "(%.*)")) or string.match(text2, string.gsub(UNITNAME_TITLE_MINION, "%%s", "(%.*)")))
+					ownerName = (string.match(text2, string.gsub(UNITNAME_TITLE_PET, "%%s", "(%.*)")) or string.match(text2, string.gsub(UNITNAME_TITLE_MINION, "%%s", "(%.*)")) or string.match(text2, string.gsub(UNITNAME_TITLE_GUARDIAN, "%%s", "(%.*)")))
 					if ownerName then
 						isOtherPet = true
 					end
@@ -9252,12 +9272,12 @@ end
 		--update the buff layout and alpha
 		buffFrame.unit = self.unit
 		Plater.AlignAuraFrames (buffFrame)
-		buffFrame:SetAlpha (DB_AURA_ALPHA)
+		--buffFrame:SetAlpha (DB_AURA_ALPHA)
 		
 		if (DB_AURA_SEPARATE_BUFFS) then
 			buffFrame2.unit = self.unit
 			Plater.AlignAuraFrames (buffFrame2)
-			buffFrame2:SetAlpha (DB_AURA_ALPHA)
+			--buffFrame2:SetAlpha (DB_AURA_ALPHA)
 		end
 	end
 	
@@ -9514,15 +9534,15 @@ end
 	end
 
 	--creates a flash, call returnedValue:Play() to flash
-	function Plater.CreateFlash (frame, duration, amount, r, g, b)
+	function Plater.CreateFlash (frame, duration, amount, r, g, b, a)
 		--defaults
 		duration = duration or 0.25
 		amount = amount or 1
 		
 		if (not r) then
-			r, g, b = 1, 1, 1
+			r, g, b, a = 1, 1, 1, 1
 		else
-			r, g, b = DF:ParseColors (r, g, b)
+			r, g, b, a = DF:ParseColors (r, g, b, a)
 		end
 
 		--create the flash frame
@@ -9533,7 +9553,7 @@ end
 		
 		--create the flash texture
 		local t = f:CreateTexture ("PlaterFlashAnimationTexture".. math.random (1, 100000000), "artwork")
-		t:SetColorTexture (r, g, b)
+		t:SetColorTexture (r, g, b, a)
 		t:SetAllPoints()
 		t:SetBlendMode ("ADD")
 		t:Hide()
@@ -12015,7 +12035,7 @@ function SlashCmdList.PLATER (msg, editbox)
 			if (npcId) then
 				local colorDB = Plater.db.profile.npc_cache
 				if (not colorDB [npcId]) then
-					Plater.db.profile.npc_cache [npcId] = {plateFrame [MEMBER_NAME], Plater.ZoneName}
+					Plater.db.profile.npc_cache [npcId] = {plateFrame [MEMBER_NAME] or "UNKNOWN", Plater.ZoneName or "UNKNOWN"}
 					Plater:Msg ("Unit added.")
 					
 					if (PlaterOptionsPanelFrame and PlaterOptionsPanelFrame:IsShown()) then

@@ -1,7 +1,7 @@
-## Interface: 90105
+## Interface: 90200
 ## Title: SilverDragon: Range Extender
 ## Notes: Show map vignettes when they'd normally be out of your range
-## Version: v90105.2
+## Version: v90200.3
 ## Author: Kemayo
 ## eMail: kemayo at gmail dot com
 ## X-Category: Interface Enhancements

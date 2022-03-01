@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,timewalker"
 
-mod:SetRevision("20210922153837")
+mod:SetRevision("20220221001452")
 mod:SetCreatureID(23953)
 mod:SetEncounterID(2026)
 
@@ -15,7 +15,7 @@ mod:RegisterEventsInCombat(
 )
 
 local warningTomb	= mod:NewTargetNoFilterAnnounce(48400, 4)
-local timerTomb		= mod:NewTargetTimer(10, 48400)
+local timerTomb		= mod:NewTargetTimer(10, 48400, nil, nil, nil, 3)
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 48400 then

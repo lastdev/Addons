@@ -885,7 +885,7 @@ do
     [23] = true,
     [33] = true
   }
-  if WeakAuras.IsClassic() then
+  if WeakAuras.IsClassic() or WeakAuras.IsBCC() then
     unplayableRace[9] = true
   end
 
@@ -3245,7 +3245,7 @@ skippedWeaponTypes[11] = true -- Bear Claws
 skippedWeaponTypes[12] = true -- Cat Claws
 skippedWeaponTypes[14] = true -- Misc
 skippedWeaponTypes[17] = true -- Spears
-if WeakAuras.IsClassic() then
+if WeakAuras.IsClassic() or WeakAuras.IsBCC() then
   skippedWeaponTypes[9] = true -- Glaives
 else
   skippedWeaponTypes[16] = true -- Thrown
@@ -3424,8 +3424,6 @@ if WeakAuras.IsClassic() then
   for i, spellid in ipairs(reset_swing_spell_list) do
     Private.reset_swing_spells[spellid] = true
   end
-
-  Private.glow_types.ACShine = nil
 end
 
 if WeakAuras.IsBCC() then
@@ -3465,6 +3463,4 @@ if WeakAuras.IsBCC() then
   for _, spellid in ipairs(reset_ranged_swing_spell_list) do
     Private.reset_ranged_swing_spells[spellid] = true
   end
-
-  Private.glow_types.ACShine = nil
 end

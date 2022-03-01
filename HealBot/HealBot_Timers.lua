@@ -235,10 +235,12 @@ end
 
 function HealBot_Timers_SpellsLoaded()
     HealBot_Timers_Set("INIT","InitBuffList")
-    HealBot_Timers_Set("DELAYED","InitAuraData")
     HealBot_Timers_Set("INIT","SpellsTabText")
     HealBot_Timers_Set("INIT","FluidFlash")
-    HealBot_Timers_Set("DELAYED","BuffsReset")
+    HealBot_Timers_Set("INITSLOW","InitAuraData")
+    HealBot_Timers_Set("INITSLOW","BuffsReset")
+    HealBot_Timers_Set("PARTYSLOW","ResetAllButtons")
+    HealBot_Timers_Set("PARTYSLOW","RefreshPartyNextRecalcAll")
 end
 
 function HealBot_Timers_SpellsResetTabs()
@@ -257,14 +259,13 @@ function HealBot_Timers_BuffsReset()
 end
 
 function HealBot_Timers_LastLoad()
-    HealBot_Timers_Set("INIT","InitBuffList")
     HealBot_Timers_Set("AURA","ConfigClassHoT")
     HealBot_Timers_Set("INITSLOW","InitSpells")
     HealBot_Timers_Set("INITSLOW","InitPlugins")
+    HealBot_Timers_Set("INITSLOW","SpellsLoaded")
+    HealBot_Timers_Set("INITSLOW","PowerIndicator")
     HealBot_Timers_Set("PLAYERSLOW","CheckZone")
     HealBot_Timers_Set("PLAYERSLOW","InvChange")
-    HealBot_Timers_Set("DELAYED","SpellsLoaded")
-    HealBot_Timers_Set("DELAYED","PowerIndicator")
     HealBot_Timers_Set("DELAYED","PlayerCheckExtended")
     HealBot_Timers_Set("DELAYED","DeleteMarkedButtons")
 end
@@ -327,6 +328,11 @@ local hbTimerFuncs={["INIT"]={
                         ["RefreshPartyNextRecalcAll"]=HealBot_Timers_nextRecalcAll,
                         ["BuffReset"]=HealBot_Options_Buff_Reset,
                         ["DebuffReset"]=HealBot_Options_Debuff_Reset,
+                        ["InitAuraData"]=HealBot_Aura_InitData,
+                        ["ConfigClassHoT"]=HealBot_Aura_ConfigClassHoT,
+                        ["SeparateInHealsAbsorbs"]=HealBot_Text_setSeparateInHealsAbsorbs,
+                        ["WheelUpdate"]=HealBot_Timers_MouseWheelUpdate,
+                        ["RegEvents"]=HealBot_Register_Events,
                     },
                     ["RESET"]={
                         ["Full"]=HealBot_Reset_Full,

@@ -9,8 +9,17 @@ local exceptions = {
 	},
 	[4476] = {
 		["Atlas"] = "vignettekill"
+	},
+	[4950] = {
+		["Atlas"] = "vignettekill"
 	}
 }
+for i = 5024, 5031 do
+	exceptions[i] = {
+		["Atlas"] = "poi-workorders"
+	}
+end
+
 
 function addon.getVignettes(mapID)
 	local tbl = cache.get(mapID)
@@ -32,7 +41,7 @@ function addon.getVignettes(mapID)
 				keys[v] = k
 			end
 			tbl = { }
-			local v_rule, l_rule, t_rule = unpack(info[3])
+			local v_rule, l_rule, t_rule, cv_rule = unpack(info[3])
 			local metatable = {
 				__index = function(self, key)
 					local k = rawget(self,1)
@@ -50,6 +59,9 @@ function addon.getVignettes(mapID)
 						local visibility = addon.executeVisibilityRule(v_rule, self)
 						if (visibility == true or visibility == false) then return visibility end
 						return visibility == visibilityTypes.ALL or visibility == visibilityTypes.LIST
+					end
+					if (key == "isVisibleWhenCompleted") then
+						return addon.executeCompletedVisibilityRule(cv_rule, self)
 					end
 					if (key == "GetLocation") then
 						return GetLocation

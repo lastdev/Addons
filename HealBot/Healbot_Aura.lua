@@ -10,7 +10,6 @@ local HealBot_AuraDebuffIconCache={}
 local libCD=nil
 local TimeNow=GetTime()
 local HealBot_ExcludeBuffInCache={}
-local HealBot_ExcludeDebuffInCache={}
 local HealBot_ExcludeEnemyInCache={}
 local HealBot_Aura_WarningFilter={}
 local HealBot_iconUpdate={["DEBUFF"]={[1]=1,[2]=1,[3]=1,[4]=1,[5]=1,[6]=1,[7]=1,[8]=1,[9]=1,[10]=1,},
@@ -87,14 +86,7 @@ function HealBot_Aura_ResetDebuffCache()
         HealBot_AuraDebuffCache[spellId].always=false
         HealBot_AuraDebuffCache[spellId].reset=true
     end
-    HealBot_Aura_DeleteExcludeDebuffInCache()
     HealBot_Timers_Set("AURA","CustomDebuffFilterDisabled")
-end
-
-function HealBot_Aura_DeleteExcludeDebuffInCache()
-    for id,_ in pairs(HealBot_ExcludeDebuffInCache) do
-        HealBot_ExcludeDebuffInCache[id]=nil
-    end
     HealBot_Timers_Set("AURA","CheckUnits")
 end
 
@@ -1119,7 +1111,7 @@ end
 local cureSpellsOnCD={}
 local cureSpellCD, cureSpellName=0, ""
 local dNamePriority, dTypePriority=99,99
-local debuffIsCurrent, cDebuffPrio, debuffIsAlways, debuff_Type, debuffIsNever, debuffIsAuto=true, 15, false, debuffType, false, false
+local debuffIsCurrent, cDebuffPrio, debuffIsAlways, debuff_Type, debuffIsAuto=true, 15, false, debuffType, false
 local ccdbCasterID, ccdbUnitCasterID, ccdbCheckthis, ccdbAlways=0,1,false,false
 local ccdbWatchTarget={}
 function HealBot_Aura_CheckCurCustomDebuff(button, canBeAlways)
@@ -1167,12 +1159,11 @@ function HealBot_Aura_CacheDebuff(spellId, spellName, debuffIsAlways, debuffText
 end
 
 function HealBot_Aura_CheckCurDebuff(button)
-    debuffIsCurrent, cDebuffPrio, debuffIsAlways, debuff_Type, debuffIsNever, debuffIsAuto=true, 20, false, uaDebuffType, false, false
+    debuffIsCurrent, cDebuffPrio, debuffIsAlways, debuff_Type, debuffIsAuto=true, 20, false, uaDebuffType, false
     dNamePriority, dTypePriority=HealBot_Options_retDebuffPriority(uaSpellId, uaName, uaDebuffType)
     if (hbCustomDebuffsDisabled[uaSpellId] and (hbCustomDebuffsDisabled[uaSpellId][HealBot_Aura_luVars["hbInsName"]] or hbCustomDebuffsDisabled[uaSpellId]["ALL"])) or
        (hbCustomDebuffsDisabled[uaName] and (hbCustomDebuffsDisabled[uaName][HealBot_Aura_luVars["hbInsName"]] or hbCustomDebuffsDisabled[uaName]["ALL"])) then
         debuffIsCurrent=false
-        if not HealBot_Spell_Names[uaName] then debuffIsNever=true end
     elseif dTypePriority>dNamePriority and dNamePriority<21 then
         HealBot_Aura_CheckCurCustomDebuff(button, true)
     else
@@ -1232,9 +1223,6 @@ function HealBot_Aura_CheckCurDebuff(button)
             cDebuffPrio=20
         else
             debuffIsCurrent=false
-            if dTypePriority>20 and not HealBot_Spell_Names[uaName] and not HealBot_Panel_RaidUnitGUID(UnitGUID(uaUnitCaster)) then 
-                debuffIsNever=true
-            end
         end
     end
     if debuffIsCurrent then
@@ -1258,7 +1246,7 @@ function HealBot_Aura_CheckCurDebuff(button)
         end
     end
       --HealBot_setCall("HealBot_Aura_CheckCurDebuff")
-    return debuffIsCurrent, debuffIsNever
+    return debuffIsCurrent
 end
 
 function HealBot_Aura_SetCurDebuffIconCache(button)
@@ -1436,9 +1424,9 @@ function HealBot_Aura_CheckUnitDebuff(button)
     --end
     if not uaUnitCaster then uaUnitCaster="nil" end
     if not HealBot_AuraDebuffCache[uaSpellId] or not HealBot_AuraDebuffCache[uaSpellId].always then
-        uaIsCurrent, uaNever=HealBot_Aura_CheckCurDebuff(button)
+        uaIsCurrent=HealBot_Aura_CheckCurDebuff(button)
     else
-        uaIsCurrent, uaNever=true, false
+        uaIsCurrent=true
         if not HealBot_AuraDebuffIconCache[uaUnitCaster] then HealBot_AuraDebuffIconCache[uaUnitCaster]={} end
         if not HealBot_AuraDebuffIconCache[uaUnitCaster][uaSpellId] then
             HealBot_Aura_SetCurDebuffIconCache(button)
@@ -1446,21 +1434,8 @@ function HealBot_Aura_CheckUnitDebuff(button)
     end
     if uaIsCurrent then
         HealBot_Aura_SetDebuffIcon()
-    elseif uaNever then
-        HealBot_Aura_ExcludeDebuffInCache(button)
     end
 end
-
-function HealBot_Aura_ExcludeDebuffInCache(button)
-    HealBot_ExcludeDebuffInCache[uaSpellId]=true
-    if not HealBot_Spell_IDs[uaSpellId] or not HealBot_Spell_IDs[uaSpellId].known then
-        if HealBot_AuraDebuffCache[uaSpellId] then 
-            HealBot_AuraDebuffCache[uaSpellId]=nil 
-        end
-    end
-end
-
-local hbClassicAbsorbTotal=0
 
 function HealBot_Aura_GetBuffsV1(button)
     uaName, uaTexture, uaCount, uaDebuffType, uaDuration, uaExpirationTime, uaUnitCaster, _, _, uaSpellId = libCD:UnitAura(button.unit,uaZ,"HELPFUL")
@@ -1474,6 +1449,8 @@ local HealBot_Aura_GetBuffs=HealBot_Aura_GetBuffsV2
 if HEALBOT_GAME_VERSION<2 and libCD then
     HealBot_Aura_GetBuffs=HealBot_Aura_GetBuffsV1
 end
+
+local hbClassicAbsorbTotal=0
 function HealBot_Aura_CheckBuffsV1(button)
     uaZ=1
     hbClassicAbsorbTotal=0
@@ -1606,7 +1583,7 @@ function HealBot_Aura_CheckDebuffsV1(button)
         HealBot_Aura_GetDebuffs(button)
         if uaSpellId then
             uaZ=uaZ+1
-            if not HealBot_ExcludeDebuffInCache[uaSpellId] and uaExpirationTime then
+            if uaExpirationTime then
                 HealBot_Aura_CheckUnitDebuff(button)
             end
         else
@@ -1618,7 +1595,7 @@ end
 function HealBot_Aura_CheckDebuffsV9(button)
     AuraUtil.ForEachAura(button.unit, "HARMFUL", nil, function(...)
         uaName, uaTexture, uaCount, uaDebuffType, uaDuration, uaExpirationTime, uaUnitCaster, _, _, uaSpellId, _, uaIsBossDebuff = ...
-        if not HealBot_ExcludeDebuffInCache[uaSpellId] and uaExpirationTime then
+        if uaExpirationTime then
             if HealBot_Config_Cures.IgnoreOnCooldownDebuffs then
                 cureSpellCD, cureSpellName=HealBot_Options_retDebuffWatchTargetCD(uaDebuffType, TimeNow)
                 HealBot_Aura_luVars["cureOffCd"]=true

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(631, "DBM-Party-WotLK", 12, 283)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210716172620")
+mod:SetRevision("20220221001452")
 mod:SetCreatureID(29314)
 
 mod:RegisterCombat("combat")
@@ -16,7 +16,9 @@ local warningShroudofDarkness	= mod:NewTargetNoFilterAnnounce(59745, 3)
 local specWarnVoidShifted		= mod:NewSpecialWarningYou(54343, nil, nil, nil, 1, 2)
 local specWarnShroud			= mod:NewSpecialWarningDispel(59745, "MagicDispeller", nil, nil, 1, 2)
 
-local timerVoidShifted			= mod:NewTargetTimer(15, 54343)
+local timerVoidShifted			= mod:NewTargetTimer(15, 54343, nil, nil, nil, 5)
+
+mod:GroupSpells(59743, 54343)
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(59743, 54361) then			-- Void Shift            59743 (HC)  54361 (nonHC)

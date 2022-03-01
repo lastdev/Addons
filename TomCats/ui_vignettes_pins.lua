@@ -17,7 +17,9 @@ local TomCatsMapCanvasPinMixin = TomCatsMapCanvasPinMixin
 local TomCatsVignetteTooltip = TomCatsVignetteTooltip
 
 local maps = { }
-local atlasSizes = { }
+local atlasSizes = {
+	["poi-workorders"] = { 20, 20 }
+}
 local interval, minInterval, maxInterval = 1, 1/15, 1
 local imagePath = ("Interface\\AddOns\\%s\\images\\"):format(addonName)
 local timeSinceLastUpdate = 0
@@ -256,7 +258,11 @@ function TomCatsMapCanvasDataProviderMixin:RefreshAllData()
 			for vignetteID, vignette in pairs(vignetteInfo) do
 				if (vignette.isPinned) then
 					if (not mapData.pins[vignetteID]) then
-						ShowHide(mapFrame:AcquirePin("TomCatsMapPinTemplate", vignette), not self.hideAll)
+						local completed = vignette.isCompleted
+						ShowHide(
+								mapFrame:AcquirePin("TomCatsMapPinTemplate", vignette),
+								(not self.hideAll) and ((not completed) or (completed and vignette.isVisibleWhenCompleted))
+						)
 					end
 				end
 			end
@@ -324,8 +330,9 @@ for _, v in ipairs(addon.vignettes_known) do
 end
 
 --todo: Determine if this will create any performance issue when more rares are added to the overrides lookup (currently OK)
-local function Hook_Pin_Show(self)
-	if (self:IsShown() and self.vignetteID and vignettePinOverridesIDs[self.vignetteID]) then
+local function Hook_Pin_Show(self, setShown)
+	if (setShown == false) then return end
+	if (self.vignetteID and vignettePinOverridesIDs[self.vignetteID]) then
 		self:Hide()
 	end
 end
@@ -337,6 +344,7 @@ local function trackVignettePins(mapFrame)
 			if (not trackedVignettePins[pin]) then
 				trackedVignettePins[pin] = true
 				hooksecurefunc(pin, "Show", Hook_Pin_Show)
+				hooksecurefunc(pin, "SetShown", Hook_Pin_Show)
 				Hook_Pin_Show(pin)
 			end
 		end

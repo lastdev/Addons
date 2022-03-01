@@ -1,5 +1,4 @@
-## Changed in v90105.2
+## Changed in v90200.3
 
-* Add a new Maelie location
-* Fixed an issue for some people causing errors when viewing maps with routes
+* Don't error when announcing a completely-unknown rare
 

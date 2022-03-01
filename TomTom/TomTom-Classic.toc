@@ -1,7 +1,7 @@
-## Interface: 11307
+## Interface: 11402
 ## Title: TomTom
 ## Author: jnwhiteh, lortiz
-## Version: v3.0.3
+## Version: v3.0.4
 ## License: All Rights Reserved
 ## Notes: Acts as your portable navigation assistant
 ## Notes-frFR: Agit comme un assistant de navigation portable

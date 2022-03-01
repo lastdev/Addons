@@ -884,6 +884,8 @@ function HealBot_Options_setLists()
         HEALBOT_OPTIONS_CASTBAR,
         HEALBOT_OPTIONS_TARGETHEALS,
         HEALBOT_OUTOFRANGE_LABEL,
+        HEALBOT_RANGE30,
+        HEALBOT_RECENTHEALS,
         HEALBOT_WORD_RESURRECTION,
         HEALBOT_WORD_SUMMONS,
     }
@@ -995,7 +997,6 @@ function HealBot_Options_setLists()
     HEALBOT_PLUGIN_EXTRABUTTONS,
     HEALBOT_PLUGIN_COMBATPROT,
     HEALBOT_PLUGIN_PERFORMANCE,
-    --HEALBOT_PLUGIN_QUICKSET,
     --HEALBOT_PLUGIN_EFFECTIVETANKS,
     --HEALBOT_PLUGIN_EFFICIENTHEALERS,
     }
@@ -11483,12 +11484,16 @@ function HealBot_Options_Aux1Assign_GenList()
             list[j]=HealBot_Options_AuxAssign_List[j]
         end
         list[5]=HEALBOT_OPTIONS_CASTBAR
+        list[6]=HEALBOT_OUTOFRANGE_LABEL
+        list[7]=HEALBOT_RANGE30
     elseif HealBot_Options_luVars["FramesSelFrame"]>7 then
         for j=1, 10 do
             list[j]=HealBot_Options_AuxAssign_List[j]
         end
+        list[11]=HEALBOT_OUTOFRANGE_LABEL
+        list[12]=HEALBOT_RANGE30
     elseif HEALBOT_GAME_VERSION<4 then
-        for j=1, 14 do
+        for j=1, 16 do
             list[j]=HealBot_Options_AuxAssign_List[j]
         end
     else
@@ -11802,6 +11807,8 @@ function HealBot_Options_clearAuxBars()
     HealBot_Aux_clearHightlightAssigned()
     HealBot_Aux_clearTargetAssigned()
     HealBot_Aux_clearOORAssigned()
+    HealBot_Aux_clearRange30Assigned()
+    HealBot_Aux_clearRecentHealsAssigned()
     HealBot_Aux_clearResAssigned()
     HealBot_Aux_clearSummonsAssigned()
     HealBot_Aux_clearInHealsAssigned()
@@ -11836,19 +11843,33 @@ function HealBot_Options_setAuxBars()
                     HealBot_Aux_setAuraAssigned("BUFF", f, x)
                 elseif Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][x][f]["USE"]==10 then
                     HealBot_Aux_setAuraAssigned("DEBUFF", f, x)
+                elseif f<8 then
+                    if Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][x][f]["USE"]==11 then
+                        HealBot_Aux_setCastBarAssigned(f, x)
+                    elseif Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][x][f]["USE"]==12 then
+                        HealBot_Aux_setTargetAssigned(f, x)
+                    elseif Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][x][f]["USE"]==13 then
+                        HealBot_Aux_setOORAssigned(f, x)
+                    elseif Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][x][f]["USE"]==14 then
+                        HealBot_Aux_setRange30Assigned(f, x)
+                    elseif Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][x][f]["USE"]==15 then
+                        HealBot_Aux_setRecentHealsAssigned(f, x)
+                    elseif Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][x][f]["USE"]==16 then
+                        HealBot_Aux_setResAssigned(f, x)
+                    elseif Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][x][f]["USE"]==17 then
+                        HealBot_Aux_setSummonsAssigned(f, x)
+                    end
                 elseif Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][x][f]["USE"]==11 then
-                    HealBot_Aux_setCastBarAssigned(f, x)
-                elseif Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][x][f]["USE"]==12 then
-                    HealBot_Aux_setTargetAssigned(f, x)
-                elseif Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][x][f]["USE"]==13 then
                     HealBot_Aux_setOORAssigned(f, x)
-                elseif Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][x][f]["USE"]==14 then
-                    HealBot_Aux_setResAssigned(f, x)
-                elseif Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][x][f]["USE"]==15 then
-                    HealBot_Aux_setSummonsAssigned(f, x)
+                elseif Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][x][f]["USE"]==12 then
+                    HealBot_Aux_setRange30Assigned(f, x)
                 end
             elseif Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][x][f]["USE"]==5 then
                 HealBot_Aux_setCastBarAssigned(f, x)
+            elseif Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][x][f]["USE"]==6 then
+                HealBot_Aux_setOORAssigned(f, x)
+            elseif Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][x][f]["USE"]==7 then
+                HealBot_Aux_setRange30Assigned(f, x)
             end
         end
     end
@@ -12061,7 +12082,7 @@ function HealBot_Options_DoSet_Current_Skin(newSkin, ddRefresh, noCallback, optS
                     HealBot_Action_setLuVars("resetIcon", true)
                     HealBot_Action_setLuVars("resetSkin", true)
                     HealBot_Action_setLuVars("resetIndicator", true)
-                    --HealBot_Action_ResetSkinAllButtons()
+                   -- HealBot_Action_ResetSkinAllButtons()
                     HealBot_Action_ResetrCalls()
                     HealBot_Timers_Set("SKINS","TogglePartyFrames")
                     HealBot_Timers_Set("SKINS","ToggleMiniBossFrames")
@@ -12246,16 +12267,14 @@ local function HealBot_Options_Plugins_ShowFrame()
                     [4]="pluginExtraButtons",
                     [5]="pluginCombatProt",
                     [6]="pluginPerformance",
-                    [7]="pluginQuickSet",
-                    [8]="pluginEffectiveTanks",
-                    [9]="pluginEfficientHealers",}
+                    [7]="pluginEffectiveTanks",
+                    [8]="pluginEfficientHealers",}
     HealBot_Options_PluginThreatFrame:Hide()
     HealBot_Options_PluginTimeToDieFrame:Hide()
     HealBot_Options_PluginTimeToLiveFrame:Hide()
     HealBot_Options_PluginExtraButtonsFrame:Hide()
     HealBot_Options_PluginCombatProtFrame:Hide()
     HealBot_Options_PluginPerformanceFrame:Hide()
-    HealBot_Options_PluginQuickSetFrame:Hide()
     HealBot_Options_PluginEffectiveTanksFrame:Hide()
     HealBot_Options_PluginEfficientHealersFrame:Hide()
     if not HealBot_retLuVars(pluginId[HealBot_Options_luVars["curPlugin"]].."Loaded") then
@@ -12283,13 +12302,10 @@ local function HealBot_Options_Plugins_ShowFrame()
         elseif HealBot_Options_luVars["curPlugin"]==6 then
             HealBot_Plugin_Performance_Options()
             HealBot_Options_PluginPerformanceFrame:Show()
-        elseif HealBot_Options_luVars["curPlugin"]==7 then
-            HealBot_Plugin_QuickSet_Options()
-            HealBot_Options_PluginQuickSetFrame:Show()
-        --elseif HealBot_Options_luVars["curPlugin"]==8 then
+        --elseif HealBot_Options_luVars["curPlugin"]==7 then
         --    HealBot_Plugin_EffectiveTanks_Options()
         --    HealBot_Options_PluginEffectiveTanksFrame:Show()
-        --elseif HealBot_Options_luVars["curPlugin"]==9 then
+        --elseif HealBot_Options_luVars["curPlugin"]==8 then
         --    HealBot_Plugin_EfficientHealers_Options()
         --    HealBot_Options_PluginEfficientHealersFrame:Show()
         end
@@ -14263,7 +14279,6 @@ function HealBot_Options_NewCDebuffBtn_OnClick(NewCDebuffTxt)
     local useId=NewCDebuffTxt
     if spellId then 
         useId=spellId 
-        HealBot_Aura_DeleteExcludeDebuffInCache()
     end
     if not name then name=NewCDebuffTxt end
     local unique=true;
@@ -14281,6 +14296,7 @@ function HealBot_Options_NewCDebuffBtn_OnClick(NewCDebuffTxt)
   --  UIDropDownMenu_SetSelectedValue(HealBot_Options_CDebuffTxt1, useId);
     HealBot_Options_CDebuffResetList()
     HealBot_Timers_Set("AURA","DebuffPriority")
+    HealBot_Timers_Set("AURA","CheckUnits")
     HealBot_Globals.CatchAltDebuffIDs[name]=true
 end
 
@@ -21182,8 +21198,8 @@ function HealBot_Options_UnitFrameDisable(f)
     UnregisterUnitWatch(f)
     f:UnregisterAllEvents()
     f:Hide()
-    f:ClearAllPoints()
-    f:SetPoint("BOTTOMLEFT", UIParent, "TOPLEFT", -500, 500)
+    --f:ClearAllPoints()
+    --f:SetPoint("BOTTOMLEFT", UIParent, "TOPLEFT", -500, 500)
     local HealthBar = _G[f:GetName().."HealthBar"]
     if HealthBar then
         HealthBar:UnregisterAllEvents()
@@ -21196,8 +21212,8 @@ function HealBot_Options_UnitFrameDisable(f)
     if ToTFrame then
         ToTFrame:UnregisterAllEvents()
         ToTFrame:Hide()
-        ToTFrame:ClearAllPoints()
-        ToTFrame:SetPoint("BOTTOMLEFT", UIParent, "TOPLEFT", -500, 500)
+        --ToTFrame:ClearAllPoints()
+        --ToTFrame:SetPoint("BOTTOMLEFT", UIParent, "TOPLEFT", -500, 500)
     end
 end
 

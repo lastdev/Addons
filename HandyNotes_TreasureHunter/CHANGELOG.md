@@ -1,5 +1,9 @@
 # Changelog
 
+## Changed in v25
+
+* Updated for 9.2
+
 ## Changed in v24
 
 * Updated for 9.1

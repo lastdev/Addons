@@ -160,6 +160,12 @@ L["CONFIG_SELLING_TEXT"] = "Opções para alterar o comportamento da guia Venda"
 L["CONFIG_SHOPPING_CATEGORY"] = "Compras"
 L["CONFIG_SHOPPING_LIST"] = "Configurações de Lista de Compras"
 --[[Translation missing --]]
+L["CONFIG_SHOPPING_LIST_FULL_REFRESH"] = "Refresh all pages when clicking the Refresh button"
+--[[Translation missing --]]
+L["CONFIG_SHOPPING_LIST_FULL_REFRESH_TOOLTIP_HEADER"] = "Refresh All Pages"
+--[[Translation missing --]]
+L["CONFIG_SHOPPING_LIST_FULL_REFRESH_TOOLTIP_TEXT"] = "Only the first page is needed to determine the cheapest price, if you are only interested in the cheapest price and don't need to see the rest of the results you can turn this option off for a speed boost."
+--[[Translation missing --]]
 L["CONFIG_SHOPPING_LIST_MISSING_TERMS"] = "Show terms from a shopping list that have no results in the results."
 --[[Translation missing --]]
 L["CONFIG_SHOPPING_LIST_MISSING_TERMS_TOOLTIP_HEADER"] = "Searches with no results"

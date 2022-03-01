@@ -143,6 +143,7 @@ SI.defaultDB = {
   -- Artifact: string REMOVED
   -- Cloak: string REMOVED
   -- Covenant: number
+  -- MythicPlusScore: number
   -- Paragon: table
   -- oRace: string
   -- isResting: boolean
@@ -182,6 +183,14 @@ SI.defaultDB = {
   -- item: linkstring or nil
 
   -- MythicKey
+  -- name: string
+  -- ResetTime: expiry
+  -- mapID: int
+  -- level: int
+  -- color: string
+  -- link: string
+
+  -- TimewornMythicKey
   -- name: string
   -- ResetTime: expiry
   -- mapID: int
@@ -357,11 +366,13 @@ SI.defaultDB = {
     Currency1602 = true, -- Conquest
     Currency1792 = true, -- Honor
     Currency1822 = true, -- Renown
-    Currency1828 = true, -- Soul Ash
+    Currency1979 = true, -- Cyphers of the First Ones
+    Currency2009 = true, -- Cosmic Flux
     CurrencyMax = false,
     CurrencyEarned = true,
     CurrencySortName = false,
     MythicKey = true,
+    TimewornMythicKey = true,
     MythicKeyBest = true,
     Emissary6 = false, -- LEG Emissary
     Emissary7 = false, -- BfA Emissary
@@ -1152,6 +1163,10 @@ function SI:UpdateInstance(id)
     local _
     _, typeID, subtypeID, _, _, recLevel, _, _, expansionLevel, _,
       _,  difficulty, maxPlayers, _, isHoliday, _, _, _, name = GetLFGDungeonInfo(2004)
+  elseif id == 842 then -- Downfall (#308) different name for origin and solo LFG in deDE
+    if SI.locale == 'deDE' then
+      name = "Niedergang"
+    end
   end
   if subtypeID == LFG_SUBTYPEID_SCENARIO and typeID ~= TYPEID_RANDOM_DUNGEON then -- ignore non-random scenarios
     return nil, nil, true
@@ -1428,6 +1443,11 @@ function SI:UpdateToonData()
     end
   end
   for toon, ti in pairs(SI.db.Toons) do
+    if ti.TimewornMythicKey and (ti.TimewornMythicKey.ResetTime or 0) < time() then
+      ti.TimewornMythicKey = {}
+    end
+  end
+  for toon, ti in pairs(SI.db.Toons) do
     if ti.MythicKeyBest and (ti.MythicKeyBest.ResetTime or 0) < time() then
       ti.MythicKeyBest.rewardWaiting = ti.MythicKeyBest.lastCompletedIndex and ti.MythicKeyBest.lastCompletedIndex > 0
       ti.MythicKeyBest[1] = nil
@@ -1471,6 +1491,7 @@ function SI:UpdateToonData()
     end
     t.Warmode = C_PvP.IsWarModeDesired()
     t.Covenant = C_Covenants.GetActiveCovenantID()
+    t.MythicPlusScore = C_ChallengeMode.GetOverallDungeonScore()
   end
 
   t.LastSeen = time()
@@ -1609,6 +1630,9 @@ hoverTooltip.ShowToonTooltip = function (cell, arg, ...)
     if name then
       indicatortip:AddLine(L["Covenant"], name)
     end
+  end
+  if t.MythicPlusScore and t.MythicPlusScore > 0 then
+    indicatortip:AddLine(DUNGEON_SCORE, t.MythicPlusScore)
   end
   if t.Arena2v2rating and t.Arena2v2rating > 0 then
     indicatortip:AddLine(ARENA_2V2 .. ARENA_RATING, t.Arena2v2rating)
@@ -1908,6 +1932,8 @@ hoverTooltip.ShowMythicPlusTooltip = function (cell, arg, ...)
     local displayNumber = min(#t.MythicKeyBest.runHistory, maxThreshold or 10)
     indicatortip:AddLine()
     indicatortip:SetCell(2, 1, format(WEEKLY_REWARDS_MYTHIC_TOP_RUNS, displayNumber), "LEFT", 2)
+    indicatortip:AddLine()
+    indicatortip:SetCell(3, 1, format(TOTAL_STACKS, #t.MythicKeyBest.runHistory), "LEFT", 2)
     for i = 1, displayNumber do
       local runInfo = t.MythicKeyBest.runHistory[i]
       if runInfo.level and runInfo.name and runInfo.rewardLevel then
@@ -2479,7 +2505,7 @@ end
 function SI:OnInitialize()
   local versionString = GetAddOnMetadata("SavedInstances", "version")
   --[==[@debug@
-  if versionString == "9.1.5" then
+  if versionString == "9.2.0" then
     versionString = "Dev"
   end
   --@end-debug@]==]
@@ -2586,6 +2612,7 @@ function SI:OnEnable()
   self:RegisterEvent("PLAYER_UPDATE_RESTING", "UpdateToonData")
   self:RegisterEvent("PVP_RATED_STATS_UPDATE", "UpdateToonData")
   self:RegisterEvent("COVENANT_CHOSEN", "UpdateToonData")
+  self:RegisterEvent("MYTHIC_PLUS_NEW_WEEKLY_RECORD", "UpdateToonData")
   self:RegisterEvent("ZONE_CHANGED_NEW_AREA", RequestRatedInfo)
   self:RegisterEvent("PLAYER_ENTERING_WORLD", function()
     RequestRatedInfo()
@@ -3386,8 +3413,8 @@ local function OpenLFS(self, instanceid, button)
   end
 end
 
-local function ReportKeys(self, _, button)
-  SI:GetModule("MythicPlus"):Keys()
+local function ReportKeys(self, index, button)
+  SI:GetModule("MythicPlus"):Keys(index)
 end
 
 local function OpenCurrency(self, _, button)
@@ -3930,7 +3957,7 @@ function SI:ShowTooltip(anchorframe)
       show = tooltip:AddLine(YELLOWFONT .. L["Mythic Keystone"] .. FONTEND)
       tooltip:SetCellScript(show, 1, "OnEnter", hoverTooltip.ShowKeyReportTarget)
       tooltip:SetCellScript(show, 1, "OnLeave", CloseTooltips)
-      tooltip:SetCellScript(show, 1, "OnMouseDown", ReportKeys)
+      tooltip:SetCellScript(show, 1, "OnMouseDown", ReportKeys, 'MythicKey')
     end
     for toon, t in cpairs(SI.db.Toons, true) do
       if t.MythicKey and t.MythicKey.link then
@@ -3947,6 +3974,38 @@ function SI:ShowTooltip(anchorframe)
     end
   end
 
+  if SI.db.Tooltip.TimewornMythicKey or showall then
+    local show = false
+    for toon, t in cpairs(SI.db.Toons, true) do
+      if t.TimewornMythicKey and t.TimewornMythicKey.link then
+        show = true
+        addColumns(columns, toon, tooltip)
+      end
+    end
+    if show then
+      if SI.db.Tooltip.CategorySpaces and not (SI.db.Tooltip.MythicKey or showall) then
+        addsep()
+      end
+      show = tooltip:AddLine(YELLOWFONT .. L["Timeworn Mythic Keystone"] .. FONTEND)
+      tooltip:SetCellScript(show, 1, "OnEnter", hoverTooltip.ShowKeyReportTarget)
+      tooltip:SetCellScript(show, 1, "OnLeave", CloseTooltips)
+      tooltip:SetCellScript(show, 1, "OnMouseDown", ReportKeys, 'TimewornMythicKey')
+    end
+    for toon, t in cpairs(SI.db.Toons, true) do
+      if t.TimewornMythicKey and t.TimewornMythicKey.link then
+        local col = columns[toon..1]
+        local name
+        if SI.db.Tooltip.AbbreviateKeystone then
+          name = SI.KeystoneAbbrev[t.TimewornMythicKey.mapID] or t.TimewornMythicKey.name
+        else
+          name = t.TimewornMythicKey.name
+        end
+        tooltip:SetCell(show, col, "|c" .. t.TimewornMythicKey.color .. name .. " (" .. t.TimewornMythicKey.level .. ")" .. FONTEND, "CENTER", maxcol)
+        tooltip:SetCellScript(show, col, "OnMouseDown", ChatLink, t.TimewornMythicKey.link)
+      end
+    end
+  end
+
   if SI.db.Tooltip.MythicKeyBest or showall then
     local show = false
     for toon, t in cpairs(SI.db.Toons, true) do
@@ -3958,7 +4017,7 @@ function SI:ShowTooltip(anchorframe)
       end
     end
     if show then
-      if SI.db.Tooltip.CategorySpaces and not (SI.db.Tooltip.MythicKey or showall) then
+      if SI.db.Tooltip.CategorySpaces and not (SI.db.Tooltip.MythicKey or SI.db.Tooltip.TimewornMythicKey or showall) then
         addsep()
       end
       show = tooltip:AddLine(YELLOWFONT .. L["Mythic Key Best"] .. FONTEND)

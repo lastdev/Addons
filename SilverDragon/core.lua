@@ -12,7 +12,7 @@ local faction = UnitFactionGroup("player")
 local Debug
 do
 	local TextDump = LibStub("LibTextDump-1.0")
-	local debuggable = GetAddOnMetadata(myname, "Version") == 'v90105.2'
+	local debuggable = GetAddOnMetadata(myname, "Version") == 'v90200.3'
 	local _window
 	local function GetDebugWindow()
 		if not _window then
@@ -81,6 +81,7 @@ addon.datasources = {
 	}
 	--]]
 }
+addon.treasuresources = {}
 local mobdb = setmetatable({}, {
 	__index = function(t, id)
 		for source, data in pairs(addon.datasources) do
@@ -110,8 +111,14 @@ local vignetteMobLookup = {
 	-- [name] = { [mobid] = true, ... }
 }
 ns.vignetteMobLookup = vignetteMobLookup
+ns.vignetteTreasureLookup = {
+	-- [vignetteid] = { data },
+}
 function addon:RegisterMobData(source, data)
 	addon.datasources[source] = data
+end
+function addon:RegisterTreasureData(source, data)
+	addon.treasuresources[source] = data
 end
 do
 	local function addQuestMobLookup(mobid, quest)
@@ -171,6 +178,13 @@ do
 					mobdata.source = source
 
 					addMobToLookups(mobid, mobdata)
+				end
+			end
+		end
+		for source, data in pairs(addon.treasuresources) do
+			if addon.db.global.datasources[source] then
+				for vignetteid, vignettedata in pairs(data) do
+					ns.vignetteTreasureLookup[vignetteid] = vignettedata
 				end
 			end
 		end
