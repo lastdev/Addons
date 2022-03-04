@@ -3,8 +3,13 @@ local myname, ns = ...
 local path = ns.path
 
 ns.groups["puzzlecache"] = "Caches of Creation"
+ns.groups["lostovoid"] = "{item:190239}"
 
 -- Note to self: first Pocopoc costume unlock gets 65531
+-- gravid repose, interior locus arrangement 65330
+
+local MOUNT = "|A:StableMaster:15:15|a"
+local PET = "|A:WildBattlePetCapturable:15:15|a"
 
 -- Treasures of Zerith Mortis
 ns.RegisterPoints(1970, { -- Zereth Mortis
@@ -25,7 +30,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         -- achievement=15508, criteria=53286, -- Fashion of the First Ones
         loot={
             {190853, toy=true}, -- Bushel of Mysterious Fruit
-            {190059, quest=65524}, -- Chef Pocopoc
+            {189451, quest=65524}, -- Chef Pocopoc
         },
         note="Kill a {npc:182368} to the north with {spell:360945} to get {spell:360945} yourself. Kill more to get 5 stacks, then open the door.",
     },
@@ -50,6 +55,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         active=ns.conditions.Item(189704),
         loot={
             190638, -- Tormented Mawsteel Greatsword
+            189863, -- Spatial Opener
         },
         note="{item:189704} drops from {npc:181403} and {npc:182426} nearby",
     },
@@ -62,17 +68,23 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         loot={
             {190059, quest=65526}, -- Pirate Pocopoc
         },
-        note="Talk to {npc:181059}",
+        note="Have {npc:181059} use the {npc:185282} nearby",
     },
 
     [51550990] = { -- Fallen Vault
         quest=65487,
         achievement=15331, criteria=53016,
+        loot={
+            189863, -- Spatial Opener
+        }
     },
 
     [49758725] = { -- Filched Artifact
         quest=65503,
         achievement=15331, criteria=53052,
+        loot={
+            189863, -- Spatial Opener
+        },
         note="Jump up the spheres",
     },
 
@@ -81,7 +93,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         achievement=15331, criteria=52967,
         requires_worldquest=65089,
         loot={
-            {189469, quest=65393}, -- Schematic: Prototype Leaper
+            {189469, quest=65393, note=MOUNT}, -- Schematic: Prototype Leaper
         },
         note="Only reachable during the {quest:65089} world quest",
     },
@@ -96,7 +108,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         quest=65545,
         achievement=15331, criteria=53066,
         loot={
-            {189478, quest=65401}, -- Schematic: Adorned Vombata
+            {189478, quest=65401, note=MOUNT}, -- Schematic: Adorned Vombata
         },
         note="Needs flying or movement abilities to reach. Soothe 12 creatures nearby, {npc:185293} will give you the reward",
     },
@@ -105,7 +117,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         quest=65173,
         achievement=15331, criteria=52887,
         loot={
-            {189447, quest=65360}, -- Schematic: Viperid Menace
+            {189447, quest=65360, note=MOUNT}, -- Schematic: Viperid Menace
         },
         note="In cave. Use tablets to find the correct {spell:362062} buff to make the chest appear",
     },
@@ -115,28 +127,24 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         quest=65441,
         achievement=15331, criteria=52969,
         loot={
-            {189456, quest=65379},-- Schematic: Sundered Zerethsteed
+            {189456, quest=65379, note=MOUNT},-- Schematic: Sundered Zerethsteed
         },
-    },
-
-    [53557225] = { -- Mistaken Ovoid
-        quest=65522,
-        achievement=15331, criteria=53060,
-        active=ns.conditions.Item(190239, 5),
-        loot={
-            {189435, quest=65333}, -- Schematic: Multichicken
-        },
-        note="Inside the cave, under the {npc:185280}. Find {item:190239} near spheres around the zone.",
     },
 
     [34805605] = { -- Offering to the First Ones
         quest=65537,
         achievement=15331, criteria=53062,
+        loot={
+            190339, -- Enlightened Offering
+        },
     },
 
     [35254410] = { -- Overgrown Protofruit
         quest=65536,
         achievement=15331, criteria=53056,
+        loot={
+            190953, -- Protofruit Flesh
+        },
     },
 
     [60854295] = { -- Pilfered Curio
@@ -146,6 +154,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         loot={
             {190098, quest=65538}, -- Pepepec
         },
+        note="On top of the pillar, you'll need flying",
     },
 
     [52557145] = { -- Protoflora Harvester
@@ -174,6 +183,9 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     [34056765] = { -- Stolen Scroll
         quest=65543,
         achievement=15331, criteria=53065,
+        loot={
+            189863, -- Spatial Opener
+        },
         note="Climb the Slumbering Vault and jump over",
     },
 
@@ -183,6 +195,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         -- achievement=15508, criteria=53291, -- Fashion of the First Ones
         loot={
             {190061, quest=65529}, -- Admiral Pocopoc
+            189863, -- Spatial Opener
         },
         note="Use the Dangerous Orb of Power to the south then the Forgotten Pump to raise the treasure",
     },
@@ -197,16 +210,11 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     [52606295] = { -- Symphonic Vault
         quest=65270,
         achievement=15331, criteria=52968,
+        loot={
+            189863, -- Spatial Opener
+        },
         note="Interact with {npc:183998} to learn the order, then use the {npc:183952}s to play the sounds.\n"..
             "Order is probably: SW, NE, SW, NW, NE.",
-    },
-
-    [77555820] = { -- Syntactic Vault
-        quest=65565,
-        achievement=15331, criteria=53068,
-        loot={
-            {190457, toy=true}, -- Protopological Cube
-        },
     },
 
     [58704280] = { -- Template Archive
@@ -220,6 +228,87 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     },
 })
 
+ns.RegisterPoints(1970, {
+    [77555820] = { -- Syntactic Vault
+        quest=65565, -- 65670 is when you unlock it
+        achievement=15331, criteria=53068,
+        active=ns.conditions.QuestComplete(64844), -- The Pilgrimage Ends (campaign chapter 4)
+        loot={
+            {190457, toy=true}, -- Protopological Cube
+        },
+        note="In a cave. Find all six runic syllables before their {spell:367499} buff runs out to unlock the vault.",
+    },
+})
+ns.RegisterPoints(1970, {
+    [78065339] = {label="Runic Syllable", note="Under the platform between waterfalls"},
+    [76924667] = {label="Runic Syllable"},
+    [78214795] = path{label="Path to Runic Syllable",route={78214795,80904790,81265045,r=1,g=0,b=1}},
+    [81265045] = {label="Runic Syllable", note="Behind the Sepulcher's North side"},
+    [78255917] = path{label="Path to Runic Syllable",route={78255917,80005810,80935626,r=1,g=0,b=1}},
+    [80935626] = {label="Runic Syllable", note="Behind the Sepulcher's South side"},
+    [77056032] = {label="Runic Syllable"},
+    [76995879] = {label="Runic Syllable", note="In a cave"},
+    [76315959] = path{label="Cave Entrance",route={76315959,76995879,r=1,g=0,b=1}}, -- also to the vault
+}, {
+    quest=65565,
+    achievement=15331, criteria=53068,
+    hide_before=ns.conditions.QuestComplete(64844), -- The Pilgrimage Ends (campaign chapter 4)
+    atlas="Rune-09-light",
+    minimap=true,
+    note="Find all six runic syllables before their {spell:367499} buff runs out to unlock the Syntactic Vault."
+})
+
+-- Just the Ovoids...
+ns.RegisterPoints(1970, {
+    [53557225] = { -- Mistaken Ovoid
+        quest=65522, -- 65524 also trips for when you place the eggs
+        achievement=15331, criteria=53060,
+        active=ns.conditions.Item(190239, 5),
+        loot={
+            {189435, quest=65333, note=PET}, -- Schematic: Multichicken
+        },
+        note="Inside the cave, under the {npc:185280}.",
+    },
+})
+ns.RegisterPoints(1970, {
+    -- Lost Ovoids
+    -- https://ptr.wowhead.com/object=375411/mistaken-ovoid#comments:id=5299055
+    [34316656] = {quest=65522,achievement=15331,criteria=53060},
+    [33964576] = {quest=65522,achievement=15331,criteria=53060,note="In a cave."},
+    [34204869] = {quest=65522,achievement=15331,criteria=53060,note="In a cave."},
+    [34494976] = {quest=65522,achievement=15331,criteria=53060,note="In a cave."},
+    [35204889] = {quest=65522,achievement=15331,criteria=53060,note="In a cave."},
+    [34676925] = {quest=65522,achievement=15331,criteria=53060},
+    [35974620] = {quest=65522,achievement=15331,criteria=53060},
+    [36735967] = {quest=65522,achievement=15331,criteria=53060},
+    [39345098] = {quest=65522,achievement=15331,criteria=53060},
+    [41386931] = {quest=65522,achievement=15331,criteria=53060},
+    [41855715] = {quest=65522,achievement=15331,criteria=53060},
+    [43228490] = {quest=65522,achievement=15331,criteria=53060},
+    [44565985] = {quest=65522,achievement=15331,criteria=53060},
+    [44755183] = {quest=65522,achievement=15331,criteria=53060},
+    [46686301] = {quest=65522,achievement=15331,criteria=53060},
+    [48157357] = {quest=65522,achievement=15331,criteria=53060},
+    [49187153] = {quest=65522,achievement=15331,criteria=53060},
+    [50807081] = {quest=65522,achievement=15331,criteria=53060},
+    [52427364] = {quest=65522,achievement=15331,criteria=53060},
+    [53836486] = {quest=65522,achievement=15331,criteria=53060},
+    [55207685] = {quest=65522,achievement=15331,criteria=53060},
+    [55986879] = {quest=65522,achievement=15331,criteria=53060},
+    [58916831] = {quest=65522,achievement=15331,criteria=53060},
+    [60847592] = {quest=65522,achievement=15331,criteria=53060},
+    [61076515] = {quest=65522,achievement=15331,criteria=53060},
+}, {
+    quest=65522,
+    achievement=15331, criteria=53060,
+    label="{item:190239}",
+    texture=ns.atlas_texture("playerpartyblip", {r=0.6,g=0.6,b=0.1,a=1,scale=0.8}),
+    minimap=true,
+    found=ns.conditions.Item(190239, 5),
+    group="lostovoid",
+    note="Find 5x {item:190239} around the zone and take them to the {npc:185280}. There's a lot of spawn points and they vanish after someone loots them. You're looking for a small brown lump with no sparkles.",
+})
+
 ns.RegisterPoints(2027, { -- Blooming Foundry
     [65655025] = { -- Ripened Protopear
         quest=nil,
@@ -229,7 +318,7 @@ ns.RegisterPoints(2027, { -- Blooming Foundry
         loot={
             {190058, quest=65525}, -- Peaceful Pocopoc
         },
-        note="Bring 5x {spell:367180} to the {npc:185416}",
+        note="Bring 5x {spell:367180} to the {npc:185416} inside the Blooming Foundry",
     },
 })
 
@@ -257,7 +346,8 @@ ns.RegisterPoints(2066, { -- Catalyst Wards
         quest=65572,
         achievement=15331, criteria=53070,
         loot={
-            {190926, toy=true} -- Infested Automa Core
+            {190926, toy=true}, -- Infested Automa Core
+            189863, -- Spatial Opener
         },
         note="Activate the four {npc:185390} to activate the teleporter in the main room.",
     },
@@ -272,6 +362,20 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
 })
 
 -- Miscellaneous treasures
+
+ns.RegisterPoints(1970, { -- Zereth Mortis
+    [46003900] = {
+        quest=nil,
+        label="Torn Ethereal Drape",
+        active={ns.conditions.GarrisonTalent(1902),ns.conditions.QuestComplete(65328)},
+    },
+    [42005185] = {
+        quest=65183,
+        label="Provis Cache",
+        active=ns.conditions.Item(188231),
+        note="Use {item:187908} to get 15x {item:187728}, which will sometimes give you the {item:188231}",
+    },
+})
 
 ns.RegisterPoints(1970, { -- Zereth Mortis
     -- Prying Eye Discovery
@@ -290,14 +394,6 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
 })
 
 ns.RegisterPoints(1970, { -- Zereth Mortis
-    [46003900] = {
-        quest=nil,
-        label="Torn Ethereal Drape",
-        active={ns.conditions.GarrisonTalent(1902),ns.conditions.QuestComplete(65328)},
-    },
-})
-
-ns.RegisterPoints(1970, { -- Zereth Mortis
     -- Pulp-Covered Relic
     [41903400] = {},
     [50304120] = {},
@@ -309,7 +405,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     label="Pulp-Covered Relic",
     note="Multiple spawn points",
     loot={
-        {189474,quest=65397}, -- Schematic: Buzz
+        {189474, quest=65397, note=MOUNT}, -- Schematic: Buzz
     },
 })
 
@@ -329,6 +425,47 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         {190734, toy=true} -- Makaris's Satchel of Mines
     },
 })
+
+ns.RegisterPoints(1970, { -- Zereth Mortis
+    [61805895] = { -- Synthesis Forge
+        label="{npc:184172}",
+        texture=ns.atlas_texture("teleportationnetwork-32x32", {r=1,g=0.6,b=0.2,a=1,scale=1.2}),
+        minimap=true,
+        hide_before=ns.conditions.QuestComplete(65419), -- Protoform Synthesis
+    },
+    [61505370] = { -- Wellspring of the First Ones
+        label="Wellspring of the First Ones",
+        texture=ns.atlas_texture("teleportationnetwork-32x32", {r=0,g=0.8,b=0.8,a=1,scale=1}),
+        minimap=true,
+        hide_before=ns.conditions.QuestComplete(65448), -- A Return To Grace
+        note="Stand in the wellspring to receive {spell:368622}",
+    },
+})
+
+-- Schematics
+
+-- ns.RegisterPoints(1970, { -- Zereth Mortis
+--     [50553200] = { -- Schematic: Bronzewing Vespoid
+--         quest=65396, -- todo: quest for looting?
+--         label="{item:189473}",
+--         loot={
+--             {189473, quest=65396, note=MOUNT},
+--         },
+--         note="Inside the Gravid Repose",
+--     }
+-- }, {
+--     hide_before=ns.conditions.QuestComplete(65427), -- A New Architect
+-- })
+-- ns.RegisterPoints(2029, { -- Gravid Repose
+--     [49004060] = { -- Schematic: Bronzewing Vespoid
+--         quest=65396, -- todo: quest for looting?
+--         label="{item:189473}",
+--         loot={
+--             {189473, quest=65396, note=MOUNT},
+--         },
+--         hide_before=ns.conditions.QuestComplete(65427), -- A New Architect
+--     },
+-- })
 
 -- Puzzle caches
 
@@ -355,7 +492,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
 ns.RegisterPoints(1970, { -- Zereth Mortis
     [46056460] = {quest=65093},
     [47107720] = {quest=65093},
-    [57506575] = {quest=65093},
+    [57506575] = {quest={65093,65418,any=true}},
     [63103740] = {quest=65093},
     [44303095] = {quest=65317},
     [47603910] = {quest=65317},
@@ -365,7 +502,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     [42206880] = {quest=65322},
 }, puzzle{
     label="Fugueal Cache",
-    texture=ns.atlas_texture("VignetteLoot", {r=1,g=0,b=0,a=0.8,scale=0.8}),
+    texture=ns.atlas_texture("VignetteLoot", {r=1,g=0.5,b=0,a=0.8,scale=0.8}),
 })
 ns.RegisterPoints(1970, { -- Zereth Mortis
     [41853130] = {quest=65092},
@@ -380,7 +517,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     [51302575] = {quest=65412},
 }, puzzle{
     label="Glissandian Cache",
-    texture=ns.atlas_texture("VignetteLoot", {r=0,g=0.5,b=0.5,a=0.8,scale=0.8}),
+    texture=ns.atlas_texture("VignetteLoot", {r=1,g=1,b=0,a=0.8,scale=0.8}),
 })
 ns.RegisterPoints(1970, { -- Zereth Mortis
     [38357035] = {quest=65091},
@@ -398,16 +535,16 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     texture=ns.atlas_texture("VignetteLoot", {r=0,g=0.8,b=0,a=0.8,scale=0.8}),
 })
 ns.RegisterPoints(1970, { -- Zereth Mortis
-    [52455705] = {quest=65314},
-    [53258685] = {quest=65314},
-    [62807390] = {quest=65314},
-    [64306330] = {quest=65319},
-    [65604760] = {quest=65319},
-    [67802745] = {quest=65319},
     [32055260] = {quest=64972},
     [34606880] = {quest=64972},
     [37004645] = {quest=64972},
     [46806700] = {quest=64972},
+    [52455705] = {quest=65314},
+    [53258685] = {quest={65314,65418,any=true}},
+    [62807390] = {quest=65314},
+    [64306330] = {quest=65319},
+    [65604760] = {quest=65319},
+    [67802745] = {quest=65319},
 }, puzzle{
     label="Toccatian Cache",
     texture=ns.atlas_texture("VignetteLoot", {r=1,g=0,b=1,a=0.8,scale=0.8}),
@@ -430,23 +567,22 @@ local lore = ns.nodeMaker{
     minimap=true,
 }
 local metrial = ns.conditions.GarrisonTalent(1901)
-local dealic = {ns.conditions.GarrisonTalent(1932), note="Unsure of exact requirement"}
-local trebalim = {ns.conditions.GarrisonTalent(1907), note="Unsure of exact requirement"}
-local unsure = {ns.conditions.GarrisonTalent(1932), ns.conditions.GarrisonTalent(1907), any=true, note="Unsure of exact requirement"}
+local dealic = {ns.conditions.GarrisonTalent(1932)}
+local trebalim = {ns.conditions.GarrisonTalent(1907)}
 ns.RegisterPoints(1970, { -- Zereth Mortis
-    [31775466] = {quest_=65179, hide_before=unsure},
-    [38953127] = {quest_=65213, hide_before=unsure},
-    [50405096] = {quest_=65216, hide_before=unsure},
-    [64616035] = {quest_=nil, hide_before=unsure},
+    [31775466] = {quest_=65179, hide_before=dealic},
+    [38953127] = {quest_=65213, hide_before=dealic},
+    [50405096] = {quest_=65216, hide_before=dealic},
+    [64616035] = {quest_=65210, hide_before=dealic},
 }, lore{
     label="Excitable concordance",
     atlas="vehicle-templeofkotmogu-purpleball",
 })
 ns.RegisterPoints(1970, { -- Zereth Mortis
-    [35037144] = {quest_=nil, hide_before=unsure},
-    [39702572] = {quest_=nil, hide_before=unsure},
-    [51579134] = {quest_=nil, hide_before=unsure},
-    [64262397] = {quest_=nil, hide_before=unsure},
+    [35037144] = {quest_=nil, hide_before=trebalim},
+    [39702572] = {quest_=nil, hide_before=trebalim},
+    [51579134] = {quest_=nil, hide_before=trebalim},
+    [64262397] = {quest_=nil, hide_before=trebalim},
 }, lore{
     label="Mercurial concordance",
     atlas="vehicle-templeofkotmogu-orangeball",
@@ -455,7 +591,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     [32196281] = {quest_=64940, hide_before=metrial},
     [38844857] = {quest_=65212, hide_before=metrial},
     [49367149] = {quest_=65209, hide_before=metrial},
-    [60204707] = {quest_=65215, hide_before=unsure},
+    [60204707] = {quest_=65215, hide_before=dealic},
 }, lore{
     label="Tranquil concordance",
     atlas="vehicle-templeofkotmogu-greenball",
@@ -501,9 +637,17 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
                 q(65726, "Day 3") ..": 200x {item:173202}\n"..
                 q(65728, "Day 4") ..": 10x {item:173037}\n"..
                 q(65729, "Day 5") ..": 5x {item:187704}\n"..
-                q(65730, "Day 6") ..": 5x {item:190880} from {npc:185748} @ Pilgrim's Grace\n"..
+                q(65730, "Day 6") ..": 5x {item:190880} from {npc:185748} near Pilgrim's Grace\n"..
                 q(65731, "Day 7") ..": 1x {item:187171} from {npc:180114} in Tazavesh the Veiled Market\n"
         end,
+    },
+    [58554980] = {
+        label="{npc:185748}", -- Mai Toa
+        quest=65730,
+        hide_before=ns.conditions.QuestComplete(65729),
+        note="Buy 5x {item:190880} for day 6 of the Patient Bufonid",
+        atlas="food",
+        minimap=true,
     },
 })
 
@@ -512,7 +656,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
 ns.RegisterPoints(1970, { -- Zereth Mortis
     [64753370] = { -- Akkaris
         npc=179006,
-        quest=65549,
+        quest=65552,
         --vignette=4747,
         criteria=52977,
         loot={
@@ -521,6 +665,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             190053, -- Underground Circler's Crossbow
             190733, -- Circle of Akkaris
         },
+        note="This doesn't spawn every day",
     },
 
     [49556750] = { -- Chitali the Eldest
@@ -532,7 +677,9 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             189906, -- Mask of the Resolute Cervid
             189947, -- Majestic Watcher's Girdle
             189994, -- Chitali's Command
+            190729, -- Vigorous Sentinel's Seal
         },
+        note="This doesn't spawn every day",
     },
 
     [47506230] = { -- Corrupted Architect
@@ -554,11 +701,12 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         quest=64716,
         criteria=52974,
         loot={
-            187837, -- Schematic: Erratic Genesis Matrix
             189910, -- Adornment of Jingling Fractals
             189930, -- Restraints of Boundless Chaos
             189985, -- Curtain of Untold Realms
             189999, -- Dark Sky Gavel
+            189153, -- Unformed Lattice
+            187837, -- Schematic: Erratic Genesis Matrix (engineer only)
         },
     },
 
@@ -573,6 +721,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             189993, -- Twisted Judicator's Gavel
             190047, -- Converted Broker's Staff
         },
+        note="This doesn't spawn every day",
     },
 
     [61806060] = { -- Feasting
@@ -609,19 +758,14 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         criteria=53025,
         --vignette=4982,
         loot={
-            187832, -- Schematic: Pure-Air Sail Extensions
             189937, -- Garudeon's Blanket of Feathers
             189951, -- Sunbathed Avian Armor
             190602, -- Symbol of the Raptora
+            190057, -- Protective Raptora's Wing-Glaive
+            187832, -- Schematic: Pure-Air Sail Extensions (engineer only)
         },
         note="Gather {npc:183562} nearby, feed to {npc:183554}",
     },
-    -- Energizing Leporids:
-    -- [66353800] = {quest=64719, npc=183562, criteria=53025, note="Feed to {npc:183554}"},
-    -- [67553890] = {quest=64719, npc=183562, criteria=53025, note="Feed to {npc:183554}"},
-    -- [67554020] = {quest=64719, npc=183562, criteria=53025, note="Feed to {npc:183554}"},
-    -- [68153595] = {quest=64719, npc=183562, criteria=53025, note="Feed to {npc:183554}"},
-    -- [68353835] = {quest=64719, npc=183562, criteria=53025, note="Feed to {npc:183554}"},
 
     [59852110] = { -- General Zarathura
         npc=182318,
@@ -632,7 +776,9 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             189968, -- Dreadlord General's Tunic
             189948, -- Strangulating Chainlink Lasso
             190731, -- Deceiver's Illusionary Signet
+            190125, -- Kris of Intricate Secrets
         },
+        note="This doesn't spawn every day",
     },
 
     [53109305] = { -- Gluttonous Overgrowth
@@ -645,14 +791,8 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             190008, -- Enlightened Botanist's Machete
             190049, -- Perennial Punching Dagger
         },
-        note="Break nearby {npc:184048}",
+        note="Break nearby {npc:184048}. This is often bugged.",
     },
-    -- -- Bulging Roots:
-    -- [53209300] = {quest=65579, npc=184048, criteria=52971},
-    -- [54009120] = {quest=65579, npc=184048, criteria=52971},
-    -- [52009375] = {quest=65579, npc=184048, criteria=52971},
-    -- [52409280] = {quest=65579, npc=184048, criteria=52971},
-    -- [53459080] = {quest=65579, npc=184048, criteria=52971},
 
     [80404705] = { -- Gorkek
         npc=178963,
@@ -664,6 +804,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             189960, -- Crouching Legs of the Bufonid
             190001, -- Gorkek's Glistening Throatguard
         },
+        note="This doesn't spawn every day",
     },
 
     [52602505] = { -- Hadeon the Stonebreaker
@@ -676,6 +817,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             190000, -- Carapace of Gliding Sands
             190051, -- Elder's Opulent Stave
         },
+        note="This doesn't spawn every day",
     },
 
     [58206835] = { -- Helmix
@@ -688,11 +830,12 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             190054, -- Facet Sharpening Crossbow
             190056, -- Enlightened Explorer's Lantern
         },
+        note="This doesn't spawn every day. To spawn it, kill Annelid mobs nearby.",
     },
 
     [52307540] = { -- Hirukon
         npc=180978,
-        quest=65548,
+        quest=65548, -- 65785 for killing with the lure buff, 65039 for making the lure
         criteria=52990,
         active=ns.conditions.Item(187923),
         atlas="VignetteKillElite", scale=1.2,
@@ -700,16 +843,22 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             189905, -- Hirukon's Syrupy Squeezers
             189946, -- Jellied Aurelid Mantle
             190005, -- Hirukon's Radiant Reach
+            187636, -- Aurelid Lattice
             {187676, mount=1434}, -- Deepstar Aurelid
         },
         -- TODO: add notes on the other maps?
-        note="You have to make a {item:187923}:\n"..
-            "* Fish up {item:187662} nearby\n"..
-            "* Fish up {item:187915} from Coilfang Reservoir in Zangarmarsh\n"..
-            "* Fish up {item:187922} near Keyla's Grave in Nazjatar\n"..
-            "* Find {item:187916} in Nar'shola Terrace in the Shimmering Expanse (34.7, 75.0)\n"..
-            "* Ask {npc:182194} south of the Seat of the Primus in Maldraxxus to make your {item:187923}\n"..
-            "* Bring it back here, use it, and fish in the Aurelid Cluster you can now see.",
+        note=function()
+            local attempted = C_QuestLog.IsQuestFlaggedCompleted(65785)
+            return "You have to make a {item:187923}:\n"..
+                "* Fish up {item:187662} nearby\n"..
+                "* Fish up {item:187915} from Coilfang Reservoir in Zangarmarsh\n"..
+                "* Fish up {item:187922} near Keyla's Grave in Nazjatar\n"..
+                "* Find {item:187916} in Nar'shola Terrace in the Shimmering Expanse (34.7, 75.0)\n"..
+                "* Ask {npc:182194} south of the Seat of the Primus in Maldraxxus to make your {item:187923}\n"..
+                "* Bring it back here, use it, and fish in the Aurelid Cluster you can now see.\n"..
+                "The lure will be consumed on use, but you can ask {npc:182194} for a new one each week without having to do the fishing again.\n"..
+                "You " .. (attempted and GREEN_FONT_COLOR or RED_FONT_COLOR):WrapTextInColorCode(attempted and "have" or "have not") .. " used the lure this week."
+        end,
     },
 
     [58654040] = { -- Otaris the Provoked
@@ -757,6 +906,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             189925, -- Amphibian's Nimble Leggings
             190046, -- Broker's Stolen Cane
             189995, -- Builder's Alignment Hammer
+            187634, -- Ambystan Lattice
         },
     },
 
@@ -769,6 +919,8 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             189984, -- Drape of Idolized Symmetry
             190002, -- Bulwark of the Broken
             190390, -- Protector's Diffusion Implement
+            189176, -- Protoform Sentience Crown
+            189177, -- Revelation Key
         },
         note="Two people required to open the barrier",
     },
@@ -805,8 +957,10 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             189911, -- Sublime Fur Mantle
             189944, -- Immovable Stance of the Vombata
             189962, -- Sorranos' Gleaming Pauldrons
+            190582, -- Protector's Diffusion Implement
             187826, -- Formula: Cosmic Protoweave
         },
+        note="This doesn't spawn every day",
     },
 
     [49803915] = { -- Tahkwitz
@@ -818,7 +972,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             189933, -- Vigilant Raptora's Crest
             189954, -- Lustrous Sentinel's Sabatons
             190003, -- Skyward Savior's Talon
-            187832, -- Schematic: Pure-Air Sail Extensions
+            187832, -- Schematic: Pure-Air Sail Extensions (engineer only)
         },
     },
 
@@ -833,7 +987,9 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             189967, -- Hood of Star Topology
             190055, -- Coalescing Energy Implement
             187830, -- Design: Aealic Harmonizing Stone
+            189146, -- Geomental Lattice
         },
+        note="This doesn't spawn every day",
     },
 
     [43957530] = { -- The Engulfer
@@ -859,6 +1015,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             190048, -- Vexis' Wisest Fang
             190597, -- Symbol of the Lupine
         },
+        note="This doesn't spawn every day",
     },
 
     [47054700] = { -- Vitiane
@@ -870,6 +1027,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             189922, -- Cowl of Shameful Proliferation
             189935, -- Harrowing Hope Squashers
         },
+        note="This doesn't spawn every day",
     },
 
     [64054975] = { -- Xy'rath the Covetous
@@ -886,6 +1044,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             190389, -- Broker's Lucky Coin
             187828, -- Recipe: Infusion: Corpse Purification
         },
+        note="This doesn't spawn every day",
     },
 
     [43503295] = { -- Zatojin
@@ -984,7 +1143,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     [60756475] = { -- Gaiagantic
         npc=181223,
         criteria=52553,
-        -- note="Only available when {npc:177958} offers the {quest:64785} daily",
+        note="You'll get this during the {quest:64785} daily",
     },
 
     [36153850] = { -- Gorged Runefeaster
@@ -1025,6 +1184,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     [63205800] = { -- Over-charged Vespoid
         npc=181222,
         criteria=52606,
+        note="Spawns in this general area",
     },
 
     [39805205] = { -- Runefur
@@ -1060,7 +1220,29 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
 }, {
     achievement=15211,
     texture=ns.atlas_texture("VignetteKill", {r=1,g=0.5,b=0,a=1,scale=1}),
-    hide_before=ns.conditions.QuestComplete(64785),
+    minimap=true,
     active=ns.conditions.Item(187909),
+    note="You need to have completed the daily quest {quest:64785} to get the {item:187909}."
 })
 
+-- Transportation
+
+-- Ancient Translocator
+-- ns.RegisterPoints(1970, {
+--     [46122172] = {route=47301340,},
+--     [47301340] = {route={47301340,46122172,r=0,g=0.75,b=0},},
+-- }, {
+--     label="{npc:183968}",
+--     atlas="progenitorflightmaster-32x32", scale=1,
+--     group="Transportation",
+-- })
+-- -- Ancient Translocator
+-- ns.RegisterPoints(1970, {
+--     [64855355] = {route=73305340,},
+--     [73305340] = {route={73305340,64855355,r=0,g=0.75,b=0},},
+-- }, {
+--     label="{npc:183970}",
+--     atlas="progenitorflightmaster-32x32", scale=1,
+--     hide_before=ns.conditions.QuestComplete(64844), -- The Pilgrimage Ends
+--     group="Transportation",
+-- })

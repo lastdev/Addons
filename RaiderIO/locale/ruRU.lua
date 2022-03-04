@@ -5,7 +5,7 @@ if ns:IsSameLocale("ruRU") then
 
 	L.LOCALE_NAME = "ruRU"
 
-L["ALLOW_IN_LFD"] = "Разрешить в окне поиска группы"
+	L["ALLOW_IN_LFD"] = "Разрешить в окне поиска группы"
 L["ALLOW_IN_LFD_DESC"] = "Нажмите правой кнопкой мыши на группу или кандидатов в заранее собранных группах для копирования ссылки на профиль Raider.IO."
 L["ALLOW_ON_PLAYER_UNITS"] = "Разрешить в рамках персонажей"
 L["ALLOW_ON_PLAYER_UNITS_DESC"] = "Нажмите правой кнопкой мыши на рамку игрока для копирования ссылки на профиль Raider.IO."
@@ -25,18 +25,46 @@ L["CANCEL"] = "Отменить"
 L["CHANGES_REQUIRES_UI_RELOAD"] = [=[Изменения были сохранены, но необходимо перезагрузить интерфейс, чтобы они вступили в силу.
 
 Сделать это сейчас?]=]
+--[[Translation missing --]]
+--[[ L["CHARACTER_LF_GUILD_MPLUS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["CHARACTER_LF_GUILD_MPLUS_WITH_SCORE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["CHARACTER_LF_GUILD_PVP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["CHARACTER_LF_GUILD_RAID_DEFAULT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["CHARACTER_LF_GUILD_RAID_HEROIC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["CHARACTER_LF_GUILD_RAID_MYTHIC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["CHARACTER_LF_GUILD_RAID_NORMAL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["CHARACTER_LF_GUILD_SOCIAL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["CHARACTER_LF_TEAM_MPLUS_DEFAULT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["CHARACTER_LF_TEAM_MPLUS_WITH_SCORE"] = ""--]] 
 L["CHECKBOX_DISPLAY_WEEKLY"] = "Текущая неделя"
 L["CHOOSE_HEADLINE_HEADER"] = "Заголовок окна подсказки"
 L["CONFIG_SHOW_TOOLTIPS_HEADER"] = "Отображение информации по подземельям и рейдам"
 L["CONFIG_WHERE_TO_SHOW_TOOLTIPS"] = "Отображение очков подземелий и рейдового прогресса"
 L["CONFIRM"] = "Подтвердить"
 L["COPY_RAIDERIO_PROFILE_URL"] = "Копировать ссылку Raider.IO"
+--[[Translation missing --]]
+--[[ L["COPY_RAIDERIO_RECRUITMENT_URL"] = ""--]] 
 L["COPY_RAIDERIO_URL"] = "Копировать ссылку Raider.IO"
 L["CURRENT_MAINS_SCORE"] = "Текущий счет мейна"
 L["CURRENT_SCORE"] = "Текущие очки"
 L["DISABLE_DEBUG_MODE_RELOAD"] = [=[Вы отключаете режим отладки.
 
 Нажмите Подтвердить, чтобы перезагрузить интерфейс.]=]
+--[[Translation missing --]]
+--[[ L["DISABLE_RWF_MODE_BUTTON"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DISABLE_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DISABLE_RWF_MODE_RELOAD"] = ""--]] 
 L["DPS"] = "Боец"
 L["DPS_SCORE"] = "Очки бойца"
 L["DUNGEON_SHORT_NAME_AD"] = "Атал'Дазар"
@@ -84,6 +112,12 @@ L["ENABLE_NO_SCORE_COLORS"] = "Отключить цвета для очков"
 L["ENABLE_NO_SCORE_COLORS_DESC"] = "Отключает раскраску очков. Все очки будут отображены белым цветом."
 L["ENABLE_RAIDERIO_CLIENT_ENHANCEMENTS"] = "Расширенная информация из RaiderIO Client"
 L["ENABLE_RAIDERIO_CLIENT_ENHANCEMENTS_DESC"] = "Включает отображение расширенной информации по вашим персонажам, полученной с помощью RaiderIO Client."
+--[[Translation missing --]]
+--[[ L["ENABLE_RWF_MODE_BUTTON"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ENABLE_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ENABLE_RWF_MODE_RELOAD"] = ""--]] 
 L["ENABLE_SIMPLE_SCORE_COLORS"] = "Использовать упрощенную окраску очков"
 L["ENABLE_SIMPLE_SCORE_COLORS_DESC"] = "Показывает очки только цветами качества предметов. Это упрощает визуальную оценку очков при беглом осмотре кандидатов."
 L["EXPORTJSON_COPY_TEXT"] = "Скопируйте текст и вставьте его где угодно на странице |cff00C8FFhttps://raider.io|r для просмотра данных по всем игрокам."
@@ -91,6 +125,22 @@ L["GENERAL_TOOLTIP_OPTIONS"] = "Общие параметры подсказки
 L["GUILD_BEST_SEASON"] = "ГИ: Лучшие за сезон"
 L["GUILD_BEST_TITLE"] = "Рекорды Raider.IO"
 L["GUILD_BEST_WEEKLY"] = "ГИ: Лучшие за неделю"
+--[[Translation missing --]]
+--[[ L["GUILD_LF_MPLUS_DEFAULT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["GUILD_LF_MPLUS_WITH_SCORE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["GUILD_LF_PVP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["GUILD_LF_RAID_DEFAULT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["GUILD_LF_RAID_HEROIC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["GUILD_LF_RAID_MYTHIC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["GUILD_LF_RAID_NORMAL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["GUILD_LF_SOCIAL"] = ""--]] 
 L["HEALER"] = "Лекарь"
 L["HEALER_SCORE"] = "Очки лекаря"
 L["HIDE_OWN_PROFILE"] = "Скрыть подсказку для вашего персонажа"
@@ -183,6 +233,28 @@ L["RAID_BOSS_NYA_6"] = "Шад'хар Ненасытный"
 L["RAID_BOSS_NYA_7"] = "Дест'агат"
 L["RAID_BOSS_NYA_8"] = "Ил'гинот, Возрожденная Порча"
 L["RAID_BOSS_NYA_9"] = "Вексиона"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SFO_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SFO_10"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SFO_11"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SFO_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SFO_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SFO_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SFO_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SFO_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SFO_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SFO_8"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SFO_9"] = ""--]] 
 L["RAID_BOSS_SOD_1"] = "Таррагр"
 L["RAID_BOSS_SOD_10"] = "Сильвана Ветрокрылая"
 L["RAID_BOSS_SOD_2"] = "Око Тюремщика"
@@ -221,8 +293,26 @@ L["RAIDERIO_MP_SCORE_COLON"] = "Очки по версии Raider.IO: "
 L["RAIDERIO_MYTHIC_OPTIONS"] = "Настройки аддона Raider.IO "
 L["RAIDING_DATA_HEADER"] = "Рейдовый прогресс"
 L["RAIDING_DB_MODULES"] = "Модули баз данных для рейдов"
+--[[Translation missing --]]
+--[[ L["RECRUITMENT_DB_MODULES"] = ""--]] 
 L["RELOAD_LATER"] = "Перезагрузить позже"
 L["RELOAD_NOW"] = "Перезагрузить сейчас"
+--[[Translation missing --]]
+--[[ L["RELOAD_RWF_MODE_BUTTON"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RWF_SUBTITLE_LOGGING_FILTERED_LOOT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RWF_SUBTITLE_LOGGING_LOOT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RWF_TITLE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SEARCH_NAME_LABEL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SEARCH_REALM_LABEL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SEARCH_REGION_LABEL"] = ""--]] 
 L["SEASON_LABEL_1"] = "C1"
 L["SEASON_LABEL_2"] = "C2"
 L["SEASON_LABEL_3"] = "С3"
@@ -235,6 +325,10 @@ L["SHOW_BEST_RUN"] = "Показывать лучший Эпох+ проход �
 L["SHOW_BEST_RUN_DESC"] = "Показывает в заголовке подсказки лучший проход Эпох+ подземелья текущего сезона."
 L["SHOW_BEST_SEASON"] = "Показывать лучший Эпох+ счет сезона в заголовке"
 L["SHOW_BEST_SEASON_DESC"] = "Показывает в заголовке подсказки лучший Эпох+ счет сезона. Если этот счет из прошлого сезона, то этот сезон будет отображаться как часть подсказки в заголовке."
+--[[Translation missing --]]
+--[[ L["SHOW_CHESTS_AS_MEDALS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SHOW_CHESTS_AS_MEDALS_DESC"] = ""--]] 
 L["SHOW_CLIENT_GUILD_BEST"] = "Отображать лучшие проходы в окне Эпохальный ключ"
 L["SHOW_CLIENT_GUILD_BEST_DESC"] = "Включает отображение 5 лучших проходов вашей гильдии (за текущий сезон или неделю) на вкладке Эпохальный ключ в окне Подземелий и рейдов"
 L["SHOW_CURRENT_SEASON"] = "Показывать текущий Эпох+ счет сезона в заголовке"
@@ -271,6 +365,10 @@ L["SHOW_SCORE_WITH_MODIFIER"] = "Показывать очки при удерж
 L["SHOW_SCORE_WITH_MODIFIER_DESC"] = "Отключить отображение очков без удержания клавиши"
 L["TANK"] = "Танк"
 L["TANK_SCORE"] = "Очки танка"
+--[[Translation missing --]]
+--[[ L["TEAM_LF_MPLUS_DEFAULT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["TEAM_LF_MPLUS_WITH_SCORE"] = ""--]] 
 L["TIMED_10_RUNS"] = "Пройдено +10-14 вовремя"
 L["TIMED_15_RUNS"] = "Пройдено 15+ вовремя"
 L["TIMED_20_RUNS"] = "Пройдено 20+ вовремя"
@@ -288,6 +386,12 @@ L["USE_RAIDERIO_CLIENT_LIVE_TRACKING_SETTINGS"] = "Разрешить Raider.IO 
 L["USE_RAIDERIO_CLIENT_LIVE_TRACKING_SETTINGS_DESC"] = "Разрешить Raider.IO Client'у (если установлен) контролировать запись комбат логов автоматически"
 L["WARNING_DEBUG_MODE_ENABLE"] = "|cffFFFFFF%s|r Режим отладки включен. Вы можете отключить его, набрав |cffFFFFFF/raiderio debug|r."
 L["WARNING_LOCK_POSITION_FRAME_AUTO"] = "Raider.IO: Для начала вы должны отключить автоматическое позиционирование Raider.IO профиля."
+--[[Translation missing --]]
+--[[ L["WARNING_RWF_MODE_ENABLE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["WIPE_RWF_MODE_BUTTON"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["WIPE_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
 
 
 	ns.L = L

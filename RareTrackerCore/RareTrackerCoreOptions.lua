@@ -162,6 +162,34 @@ function RareTracker:InitializeOptionsMenu()
                                     self.db.global.communication.raid_communication = val
                                 end
                             },
+                            hide_killed_entities = {
+                                type = "toggle",
+                                name = L["Hide rares that have already been killed today"],
+                                desc = L["Do not display rares in the list that will no longer yield any loot due to having already been killed today."],
+                                width = "full",
+                                order = self:GetOrder(),
+                                get = function()
+                                    return self.db.global.window.hide_killed_entities
+                                end,
+                                set = function(_, val)
+                                    self.db.global.window.hide_killed_entities = val
+                                    self:UpdateEntityVisibility()
+                                end
+                            },
+                            force_display_in_english = {
+                                type = "toggle",
+                                name = L["Display and report all rare names in English"],
+                                desc = L["Ignore the localization and use the English rare names instead of the localized ones."],
+                                width = "full",
+                                order = self:GetOrder(),
+                                get = function()
+                                    return self.db.global.window.force_display_in_english
+                                end,
+                                set = function(_, val)
+                                    self.db.global.window.force_display_in_english = val
+                                    print("<RTC> Please /reload such that the rare names can be updated to the desired language.")
+                                end
+                            },
                             debug = {
                                 type = "toggle",
                                 name = L["Enable debug mode"],

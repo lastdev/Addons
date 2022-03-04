@@ -2,7 +2,7 @@
 ## Title: RareTrackerZerethMortis
 ## Notes: Track and coordinate rare spawn timers in Zereth Mortis.
 ## Author: Melroy
-## Version: 7.1.6
+## Version: 7.1.10
 ## Dependencies: RareTrackerCore
 
 Locales\enUS.lua

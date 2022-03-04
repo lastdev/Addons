@@ -12,7 +12,7 @@ local faction = UnitFactionGroup("player")
 local Debug
 do
 	local TextDump = LibStub("LibTextDump-1.0")
-	local debuggable = GetAddOnMetadata(myname, "Version") == 'v90200.3'
+	local debuggable = GetAddOnMetadata(myname, "Version") == 'v90200.5'
 	local _window
 	local function GetDebugWindow()
 		if not _window then

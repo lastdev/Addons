@@ -1711,3 +1711,11 @@ Change Log:
 * Added support for custom sounds by Blizzard Sound ID #
 * Added Shadowlands spells (world)
 * Added BC spells for Black Temple
+
+4.66.1
+* Added Shadowlands spells (world)
+* Added SL spells for Sepulcher of the First Ones
+
+4.66.2
+* Added Shadowlands spells (world)
+* Added SL spells for Sepulcher of the First Ones

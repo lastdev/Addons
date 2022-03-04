@@ -1,28 +1,19 @@
-# [3.7.11](https://github.com/WeakAuras/WeakAuras2/tree/3.7.11) (2022-02-22)
+# [3.7.13](https://github.com/WeakAuras/WeakAuras2/tree/3.7.13) (2022-03-03)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/3.7.10...3.7.11)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/3.7.12...3.7.13)
 
 ## Highlights
 
- - Bug fixes
-- Enable Autocast Glow for Classic/BCC 
+  
 
 ## Commits
 
-InfusOnWoW (3):
+asakawa (1):
 
-- BCC: Correctly disabled Glaives and enable Thrown Weapons
-- BCC: Correctly disable Goblins
-- Fix Order of Subelements in Dynamic Groups
+- Add a detailed tooltip to the Unit setting in bufftrigger2 (#3509)
 
-Stanzilla (1):
+mrbuds (2):
 
-- Update TOC for 9.2.0 and 1.14.2
-
-mrbuds (4):
-
-- enable autocast glow for bcc & som
-- clear scripts on import/export frame fixes #3496
-- restore hastepercent to previous state on retail
-- Faction Reputation trigger: support friendship standing
+- increase boss units up to boss10 "prototype pantheon" & "generals boss in nathria" has more than 5 boss units
+- fix iconPicker with spellCache change
 

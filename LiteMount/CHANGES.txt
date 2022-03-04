@@ -1,13 +1,13 @@
-tag 374ae4cec15305357fa03beb86418d0ed3596b9f 9.2.1
+tag 374760477f76ca7a571da23b388acbff62fb4903 9.2.3
 Author:	Mike "Xodiv" Battersby <mib@post.com>
-Date:	Thu Feb 24 08:00:00 2022 +1100
+Date:	Tue Mar 1 23:18:17 2022 +1100
 
-LiteMount 9.2.1
-- Update ruRU translations
+LiteMount 9.2.3
+- New aurelid mounts hotfixed to run fast
 
-commit 856c1f25c87a2c6ff8dbd97a99dd25e864101461
+commit 55b6a761cee0457c6301ae91d9ce83984397260f
 Author: Mike "Xodiv" Battersby <mib@post.com>
-Date:   Thu Feb 24 07:53:00 2022 +1100
+Date:   Tue Mar 1 23:17:26 2022 +1100
 
-    Updated ruRU translations from Artur91425
+    Aurelids aren't slow on land, it was a bug + hotfixed
 

@@ -5,7 +5,7 @@ if ns:IsSameLocale("frFR") then
 
 	L.LOCALE_NAME = "frFR"
 
-L["ALLOW_IN_LFD"] = "Autoriser pour la Recherche de Donjon"
+	L["ALLOW_IN_LFD"] = "Autoriser pour la Recherche de Donjon"
 L["ALLOW_IN_LFD_DESC"] = "Ajoute une option pour copier l'url du profil Raider.IO dans le menu du bouton droit d'un groupe ou d'un candidat"
 L["ALLOW_ON_PLAYER_UNITS"] = "Autoriser pour les cadres d'unité"
 L["ALLOW_ON_PLAYER_UNITS_DESC"] = "Ajoute une option pour copier l'url du profil Raider.IO dans le menu bouton droit d'un cadre d'unité."
@@ -27,12 +27,34 @@ L["CANCEL"] = "Annuler"
 L["CHANGES_REQUIRES_UI_RELOAD"] = [=[Vos changements ont été sauvegardé, mais il faut recharger l'interface pour qu'elles prennent effets.
 
 Voulez-vous faire cela maintenant ?]=]
+--[[Translation missing --]]
+--[[ L["CHARACTER_LF_GUILD_MPLUS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["CHARACTER_LF_GUILD_MPLUS_WITH_SCORE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["CHARACTER_LF_GUILD_PVP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["CHARACTER_LF_GUILD_RAID_DEFAULT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["CHARACTER_LF_GUILD_RAID_HEROIC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["CHARACTER_LF_GUILD_RAID_MYTHIC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["CHARACTER_LF_GUILD_RAID_NORMAL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["CHARACTER_LF_GUILD_SOCIAL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["CHARACTER_LF_TEAM_MPLUS_DEFAULT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["CHARACTER_LF_TEAM_MPLUS_WITH_SCORE"] = ""--]] 
 L["CHECKBOX_DISPLAY_WEEKLY"] = "Hebdomadaire"
 L["CHOOSE_HEADLINE_HEADER"] = "Titre de l'infobulle Mythique+"
 L["CONFIG_SHOW_TOOLTIPS_HEADER"] = "Info-bulles de Mythique+ et de Raiding "
 L["CONFIG_WHERE_TO_SHOW_TOOLTIPS"] = "Où afficher la progression Mythique+ et de Raid"
 L["CONFIRM"] = "Confirmer"
 L["COPY_RAIDERIO_PROFILE_URL"] = "Copier le profil Raider.IO"
+--[[Translation missing --]]
+--[[ L["COPY_RAIDERIO_RECRUITMENT_URL"] = ""--]] 
 L["COPY_RAIDERIO_URL"] = "Copier l'url Raider.IO"
 L["CURRENT_MAINS_SCORE"] = "Score M+ du personnage principal"
 L["CURRENT_SCORE"] = "Score Actuel M+"
@@ -40,6 +62,12 @@ L["DISABLE_DEBUG_MODE_RELOAD"] = [=[
 Vous désactivez le mode de débogage.
 
 Cliquez sur Confirmer pour recharger votre interface.]=]
+--[[Translation missing --]]
+--[[ L["DISABLE_RWF_MODE_BUTTON"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DISABLE_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DISABLE_RWF_MODE_RELOAD"] = ""--]] 
 L["DPS"] = "DPS"
 L["DPS_SCORE"] = "Score en DPS"
 L["DUNGEON_SHORT_NAME_AD"] = "AD"
@@ -87,6 +115,12 @@ L["ENABLE_NO_SCORE_COLORS"] = "Désactiver les couleurs de score"
 L["ENABLE_NO_SCORE_COLORS_DESC"] = "Tous les scores seront affichés en blanc."
 L["ENABLE_RAIDERIO_CLIENT_ENHANCEMENTS"] = "Autoriser les améliorations du client RaiderIO "
 L["ENABLE_RAIDERIO_CLIENT_ENHANCEMENTS_DESC"] = "Activer cette option vous permettra d’afficher les données détaillées du profil RaiderIO téléchargées à partir du client RaiderIO pour les personnages réclamés. "
+--[[Translation missing --]]
+--[[ L["ENABLE_RWF_MODE_BUTTON"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ENABLE_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ENABLE_RWF_MODE_RELOAD"] = ""--]] 
 L["ENABLE_SIMPLE_SCORE_COLORS"] = "Utiliser des couleurs simples pour le score"
 L["ENABLE_SIMPLE_SCORE_COLORS_DESC"] = "Utiliser les couleurs de raretés (rare, épique, etc ...) pour les scores. Cela peut aider pour distinguer les tiers de score."
 L["EXPORTJSON_COPY_TEXT"] = "Copiez le texte suivant et collez-le n'importe où sur | cff00C8FFhttps://raider.io|r pour rechercher tous les joueurs. "
@@ -94,6 +128,22 @@ L["GENERAL_TOOLTIP_OPTIONS"] = "Options générales de l'infobulle"
 L["GUILD_BEST_SEASON"] = "Guilde: Top Saison"
 L["GUILD_BEST_TITLE"] = "Record Raider.IO"
 L["GUILD_BEST_WEEKLY"] = "Guilde : Top Semaine"
+--[[Translation missing --]]
+--[[ L["GUILD_LF_MPLUS_DEFAULT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["GUILD_LF_MPLUS_WITH_SCORE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["GUILD_LF_PVP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["GUILD_LF_RAID_DEFAULT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["GUILD_LF_RAID_HEROIC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["GUILD_LF_RAID_MYTHIC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["GUILD_LF_RAID_NORMAL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["GUILD_LF_SOCIAL"] = ""--]] 
 L["HEALER"] = "Heal"
 L["HEALER_SCORE"] = "Score en heal"
 L["HIDE_OWN_PROFILE"] = "Masquer l'infobulle du profil RaiderIO personnel "
@@ -187,6 +237,28 @@ L["RAID_BOSS_NYA_7"] = "Drest'agath"
 L["RAID_BOSS_NYA_8"] = "Il'gynoth"
 L["RAID_BOSS_NYA_9"] = "Vexiona"
 --[[Translation missing --]]
+--[[ L["RAID_BOSS_SFO_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SFO_10"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SFO_11"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SFO_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SFO_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SFO_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SFO_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SFO_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SFO_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SFO_8"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SFO_9"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["RAID_BOSS_SOD_1"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_SOD_10"] = ""--]] 
@@ -233,8 +305,26 @@ L["RAIDERIO_MP_SCORE_COLON"] = "Score Raider.IO M+ :"
 L["RAIDERIO_MYTHIC_OPTIONS"] = "Options de l'addon Raider.IO"
 L["RAIDING_DATA_HEADER"] = "Progression de Raid Raider.io"
 L["RAIDING_DB_MODULES"] = "Base de données du module de Raid"
+--[[Translation missing --]]
+--[[ L["RECRUITMENT_DB_MODULES"] = ""--]] 
 L["RELOAD_LATER"] = "Je rechargerai l'interface plus tard"
 L["RELOAD_NOW"] = "Recharger l'interface maintenant"
+--[[Translation missing --]]
+--[[ L["RELOAD_RWF_MODE_BUTTON"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RWF_SUBTITLE_LOGGING_FILTERED_LOOT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RWF_SUBTITLE_LOGGING_LOOT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RWF_TITLE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SEARCH_NAME_LABEL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SEARCH_REALM_LABEL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SEARCH_REGION_LABEL"] = ""--]] 
 L["SEASON_LABEL_1"] = "S1-P"
 L["SEASON_LABEL_2"] = "S2"
 L["SEASON_LABEL_3"] = "S3"
@@ -249,6 +339,10 @@ L["SHOW_BEST_SEASON"] = [=[
 Afficher le meilleur score mythique+ de la saison en titre]=]
 L["SHOW_BEST_SEASON_DESC"] = [=[
 Affiche le meilleur score de la saison Mythique+ du joueur dans le titre de l'info-bulle. Si le score provient d'une saison précédente, la saison sera indiquée dans le titre de l'info-bulle.]=]
+--[[Translation missing --]]
+--[[ L["SHOW_CHESTS_AS_MEDALS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SHOW_CHESTS_AS_MEDALS_DESC"] = ""--]] 
 L["SHOW_CLIENT_GUILD_BEST"] = "Afficher les meilleurs records dans la recherche de groupes de Donjons Mythiques"
 L["SHOW_CLIENT_GUILD_BEST_DESC"] = "Si vous activez cette option, le Top 5 de votre guilde (par saison ou semaine) sera affiché dans l'onglet Donjons Mythiques de la fenêtre Recherche de groupe."
 L["SHOW_CURRENT_SEASON"] = "Afficher le score Mythique+ de la saison actuelle en titre"
@@ -285,6 +379,10 @@ L["SHOW_SCORE_WITH_MODIFIER"] = "Montre l'Info-bulle Raider.IO avec modificateur
 L["SHOW_SCORE_WITH_MODIFIER_DESC"] = "Désactive l'Affichage des Données lors du survol des joueurs, sauf si une touche de modification est maintenue."
 L["TANK"] = "Tank"
 L["TANK_SCORE"] = "Score en tank"
+--[[Translation missing --]]
+--[[ L["TEAM_LF_MPLUS_DEFAULT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["TEAM_LF_MPLUS_WITH_SCORE"] = ""--]] 
 L["TIMED_10_RUNS"] = "10-14+ dans les temps"
 L["TIMED_15_RUNS"] = "15+ dans les temps"
 L["TIMED_20_RUNS"] = "20+ dans les temps"
@@ -302,6 +400,12 @@ L["USE_RAIDERIO_CLIENT_LIVE_TRACKING_SETTINGS"] = "Autorise le client Raider.IO 
 L["USE_RAIDERIO_CLIENT_LIVE_TRACKING_SETTINGS_DESC"] = "Autorise le client Raider.IO (si présent) à contrôler automatiquement vos paramètres de Journal de Combat."
 L["WARNING_DEBUG_MODE_ENABLE"] = "|cffFFFFFF%s|r Le mode de débogage est activé. Vous pouvez le désactiver en tapant |cffFFFFFF/raiderio debug|r."
 L["WARNING_LOCK_POSITION_FRAME_AUTO"] = "RaiderIO: Vous devez d'abord désactiver le positionnement automatique pour le profil RaiderIO."
+--[[Translation missing --]]
+--[[ L["WARNING_RWF_MODE_ENABLE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["WIPE_RWF_MODE_BUTTON"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["WIPE_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
 
 
 	ns.L = L

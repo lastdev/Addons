@@ -96,7 +96,7 @@ ns.path = ns.nodeMaker{
     atlas = "poi-door", -- 'PortalPurple' / 'PortalRed'?
     path = true,
     minimap = true,
-    scale = 1.1,
+    scale = 0.95,
 }
 
 ns.lootitem = function(item)
@@ -146,12 +146,12 @@ local function render_string(s, context)
         if variant == "item" then
             local name, link, _, _, _, _, _, _, _, icon = GetItemInfo(id)
             if link and icon then
-                return quick_texture_markup(icon) .. link
+                return quick_texture_markup(icon) .. " " .. link:gsub("[%[%]]", "")
             end
         elseif variant == "spell" then
             local name, _, icon = GetSpellInfo(id)
             if name and icon then
-                return quick_texture_markup(icon) .. name
+                return quick_texture_markup(icon) .. " " .. name
             end
         elseif variant == "quest" then
             local name = C_QuestLog.GetTitleForQuestID(id)
@@ -165,7 +165,7 @@ local function render_string(s, context)
         elseif variant == "achievement" then
             local _, name, _, completed = GetAchievementInfo(id)
             if name and name ~= "" then
-                return CreateAtlasMarkup("storyheader-cheevoicon") .. (completed and completeColor or incompleteColor):WrapTextInColorCode(name)
+                return CreateAtlasMarkup("storyheader-cheevoicon") .. " " .. (completed and completeColor or incompleteColor):WrapTextInColorCode(name)
             end
         elseif variant == "npc" then
             local name = mob_name(id)
@@ -175,7 +175,7 @@ local function render_string(s, context)
         elseif variant == "currency" then
             local info = C_CurrencyInfo.GetCurrencyInfo(id)
             if info then
-                return quick_texture_markup(info.iconFileID) .. info.name
+                return quick_texture_markup(info.iconFileID) .. " " .. info.name
             end
         elseif variant == "covenant" then
             local data = C_Covenants.GetCovenantData(id)
@@ -183,7 +183,7 @@ local function render_string(s, context)
         elseif variant == "garrisontalent" then
             local info = C_Garrison.GetTalentInfo(id)
             if info then
-                return quick_texture_markup(info.icon) .. (info.researched and completeColor or incompleteColor):WrapTextInColorCode(info.name)
+                return quick_texture_markup(info.icon) .. " " .. (info.researched and completeColor or incompleteColor):WrapTextInColorCode(info.name)
             end
         end
         return fallback ~= "" and fallback or (variant .. ':' .. id)
@@ -216,7 +216,7 @@ do
     local out = {}
     function render_string_list(point, variant, ...)
         if not ... then return "" end
-        if type(...) == "table" then return render_string_list(variant, unpack(...)) end
+        if type(...) == "table" then return render_string_list(point, variant, unpack(...)) end
         wipe(out)
         for i=1,select("#", ...) do
             table.insert(out, ("{%s:%d}"):format(variant, (select(i, ...))))
@@ -542,6 +542,7 @@ local function handle_tooltip(tooltip, point)
                 local _, link, _, _, _, _, _, _, _, icon = GetItemInfo(ns.lootitem(item))
                 if link then
                     local label = ENCOUNTER_JOURNAL_ITEM
+                    link = link:gsub("[%[%]]", "")
                     if type(item) == "table" then
                         if item.mount then label = MOUNT
                         elseif item.toy then label = TOY
@@ -556,12 +557,15 @@ local function handle_tooltip(tooltip, point)
                         if item.class then
                             link = TEXT_MODE_A_STRING_VALUE_TYPE:format(link, RAID_CLASS_COLORS[item.class]:WrapTextInColorCode(LOCALIZED_CLASS_NAMES_FEMALE[item.class]))
                         end
+                        if item.note then
+                            link = TEXT_MODE_A_STRING_VALUE_TYPE:format(link, item.note)
+                        end
                     end
                     local known = ns.itemIsKnown(item)
                     if known ~= nil and (known == true or not ns.itemRestricted(item)) then
                         link = link .. CreateAtlasMarkup(known and "common-icon-checkmark" or "common-icon-redx")
                     end
-                    tooltip:AddDoubleLine(label, quick_texture_markup(icon) .. link)
+                    tooltip:AddDoubleLine(label, quick_texture_markup(icon) .. " " .. link)
                 else
                     tooltip:AddDoubleLine(ENCOUNTER_JOURNAL_ITEM, SEARCH_LOADING_TEXT,
                         NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b,

@@ -228,6 +228,7 @@ local node_ids = {
 		--[NL["Menacing Sinvyr Deposit"]]			= 286,
 		[NL["Progenium Deposit"]]				= 287,
 		[NL["Rich Progenium Deposit"]]			= 288,
+		[NL["Elusive Progenium Deposit"]]		= 289,
 	},
 	["Extract Gas"] = {
 		[NL["Windy Cloud"]] 					= 301,
@@ -346,6 +347,9 @@ local node_ids = {
 		[NL["Rising Glory"]]					= 497,
 		[NL["Widowbloom"]]						= 498,
 		[NL["First Flower"]]					= 499,
+		[NL["Lush Nightshade"]]					= 1401,
+		[NL["Elusive Nightshade"]]				= 1402,
+		[NL["Lush First Flower"]]				= 1403,
 	},
 	["Treasure"] = {
 		[NL["Giant Clam"]] 						= 501,
@@ -513,7 +517,12 @@ local rare_spawns = {
 	[283] = {[282]=true}, -- rich solenium deposit
 	[285] = {[284]=true}, -- rich sinvyr deposit
 	[494] = {[493]=true,[495]=true,[496]=true,[497]=true,[498]=true}, -- nightshade
+	[1401] = {[494]=true,[493]=true,[495]=true,[496]=true,[497]=true,[498]=true}, -- lush nightshade
+	[1402] = {[494]=true,[493]=true,[495]=true,[496]=true,[497]=true,[498]=true}, -- elusive nightshade
+	[1403] = {[499]=true}, -- lush first flower
 	[493] = {[495]=true,[496]=true,[497]=true,[498]=true}, -- death blossom shares spawn with zone-specific herbs
+	[288] = {[287]=true}, -- rich progenium
+	[289] = {[287]=true}, -- elusive progenium
 }
 GatherMate.rareNodes = rare_spawns
 Collector.rareNodes = rare_spawns
@@ -745,6 +754,7 @@ local node_textures = {
 		[286] = icon_path.."Mine\\sinvyr.tga",
 		[287] = icon_path.."Mine\\elethium.tga",
 		[288] = icon_path.."Mine\\elethium.tga",
+		[289] = icon_path.."Mine\\elethium.tga",
 	},
 	["Extract Gas"] = {
 		[301] = icon_path.."Gas\\windy_cloud.tga",
@@ -855,6 +865,9 @@ local node_textures = {
 		[497] = icon_path.."Herb\\risingglory.tga",
 		[498] = icon_path.."Herb\\widowbloom.tga",
 		[499] = icon_path.."Herb\\nightshade.tga",
+		[1401] = icon_path.."Herb\\nightshade.tga",
+		[1402] = icon_path.."Herb\\nightshade.tga",
+		[1403] = icon_path.."Herb\\nightshade.tga",
 	},
 	["Treasure"] = {
 		[501] = icon_path.."Treasure\\clam.tga",
@@ -1053,6 +1066,7 @@ local node_expansion = {
 		[286] = SL,
 		[287] = SL,
 		[288] = SL,
+		[289] = SL,
 	},
 	["Herb Gathering"] = {
 		[401] = CLASSIC,
@@ -1154,6 +1168,9 @@ local node_expansion = {
 		[497] = SL,
 		[498] = SL,
 		[499] = SL,
+		[1401] = SL,
+		[1402] = SL,
+		[1403] = SL,
 	},
 }
 GatherMate.nodeExpansion = node_expansion

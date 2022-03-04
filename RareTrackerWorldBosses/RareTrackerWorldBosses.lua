@@ -1,6 +1,15 @@
 -- Get an object we can use for the localization of the addon.
 local L = LibStub("AceLocale-3.0"):GetLocale("RareTracker", true)
 
+-- Overwrite the language of entities to english if enforced.
+if RareTracker.db.global.window.force_display_in_english then
+    L[60491] = "Sha of Anger"
+    L[62346] = "Galleon"
+    L[69099] = "Nalak"
+    L[69161] = "Oondasta"
+    L[83746] = "Rukhmar"
+end
+
 RareTracker.RegisterRaresForModule({
     -- Define the zone(s) in which the rares are present.
     ["target_zones"] = {379},

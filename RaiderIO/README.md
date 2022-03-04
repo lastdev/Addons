@@ -1,8 +1,8 @@
-# Raider.IO Mythic Plus & Raiding
+# Raider.IO Mythic Plus, Raiding, and Recruitment
+
+This is a companion addon to go along with the Raiding, Recruitment, and Mythic+ Rankings site, Raider.IO: https://raider.io. With this addon installed, you'll gain access to an easy way to view Mythic Keystone scores, Raid Progress, and Recruitment status for players-- all without leaving the game!
 
 ## Overview
-
-This is a companion addon to go along with the Raid and Mythic+ Rankings site, Raider.IO: https://raider.io. With this addon installed, you'll gain access to an easy way to view the Mythic Keystone scores and Raid Progress for players-- all without leaving the game!
 
 Simply hover over a player with your mouse, your guild roster, or even the Group Finder list where you see queued people; if they meet the minimum qualifications then you'll see their score and best run in the tooltip.
 
@@ -10,21 +10,40 @@ Simply hover over a player with your mouse, your guild roster, or even the Group
 
 Additionally, you can right-click players from the standard target unit frame to `Copy Raider.IO URL` and then easily look up their full profile on the site. With this functionality you can directly paste these URLs anywhere on Raider.IO to navigate to that player's profile page.
 
-If you have run into any problems, check out our FAQ at https://raider.io/faq, or join us on Discord at: https://discord.gg/raider #addon-discussions -- we always have people around willing to help.
+
+## Recruitment
+
+With the Raider.IO Recruitment features you can now also see whether a player is looking for a guild/team, or if they are recruiting for their own guild/team. This will show up as a line in the tooltip as follows:
+
+![Raider.IO Recruitment Example](https://cdnassets.raider.io/images/addon/tooltip_details_20220227.jpg?2 "Raider.IO Recruitment Tooltip Example")
+
+You can right click on any player that is recruiting and hit `Copy Recruitment URL` to copy a URL that you can paste into your browser to view more details of the recruitment profile.
+
+Because recruitment information can change regularly, we encourage people to use the [Raider.IO Desktop Client](https://raider.io/addon) to keep this data in sync.
+
+If you have run into any problems, check out our FAQ at [https://raider.io/faq](https://raider.io/faq), or join us on Discord at: [https://discord.gg/raider](https://discord.gg/raider) in `#addon-discussions` -- we always have people around willing to help.
 
 [![Become a Patron](https://cdnassets.raider.io/images/patreon/become_a_patron_button.png "Become a Patron")](https://www.patreon.com/bePatron?u=6788452)
 
 ## Getting Started
 
-The easiest way to get started is to use the RaiderIO Desktop App: https://raider.io/addon
+The easiest way to get started is to use the RaiderIO Desktop Client: [https://raider.io/addon](https://raider.io/addon)
 
-Once installed you can load into the game and you will start seeing Scores and Best Runs on players around you. This AddOn works by storing a snapshot of character data from Raider.IO and then using that to populate information on qualified players. To qualify for inclusion in a snapshot, players must meet this criteria:
+Once installed you can load into the game and you will start seeing Mythic+, Raiding, and Recruitment details  on players around you. This AddOn works by storing a snapshot of character data from Raider.IO and then using that to populate information on qualified players.
 
+To qualify for inclusion in a snapshot, players must meet specific criteria based on the type of data:
+
+**Mythic Plus**
 - Have earned at least 200 points in the current or previous season. _[Honored and higher patrons](https://www.patreon.com/bePatron?u=6788452) do not have a minimum score requirement in order to be shown in the addon._
-- Have logged in to the game within the past 21 days
+- Have logged in to the game within the past 14 days
 
+**Raiding**
+- Have defeated at least 30% of the bosses (rounded up) in either Normal, Heroic, or Mythic
 
-**Remember**: We update the addon with the latest scores and top runs **multiple times each day**. Update regularly to ensure you are seeing the freshest information. _Using the RaiderIO Client you can keep your addon updated automatically!_
+**Recruitment**
+- All active and public recruitment profiles are available in-game
+
+**Remember**: We update the addon with the latest scores and top runs **multiple times each day**. Update regularly to ensure you are seeing the freshest information. _Using the [RaiderIO Desktop Client](https://raider.io/addon) you can keep your addon updated automatically!_
 
 ## Detailed Addon Usage
 
@@ -43,6 +62,28 @@ Mythic+ tooltips have a lot of parts to them:
 - `Main's Best M+ Score` / `Main's Current M+ Score`: This indicates the best character score on this player's account, if they have [registered on Raider.IO](https://raider.io/register) and linked their Battle.Net account. This will only show if the Main's Score is greater than the current character's score. If someone has a good score on their main, then much of their prior experience will help them perform better in dungeons while on their alt.
 
 Role icons included on Mythic+ tooltips can be thought of as badges earned by accumulating certain amounts of score while playing as that role. Fully opaque icons indicate they've earned at least 80% of their overall score in that role. Semi-transparent role icons indicate they have earned at least 40% of their overall score in that role.
+
+### Recruitment Tooltips
+
+We currently determine the profile to show based on a priority order for the entity and activity type. Our overall rationale is that we want the most common organized activities to take precedence when choosing what to show in-game.
+
+1. Guild + Raiding (only recruiters)
+2. Guild + Guild Mythic+ (only recruiters)
+3. Team + Team Mythic+ (only recruiters)
+4. Character + Raiding
+5. Character + Guild Mythic+
+6. Character + Team Mythic+
+7. Guild + Guild PVP (only recruiters)
+8. Guild + Guild Social (only recruiters)
+9. Character + Guild PVP
+10. Character + Guild Social
+
+Note: Anyone in your guild who has access to the Recruitment information will show your group's recruitment profiles in-game. Meaning, it is based on the roles given to each rank. These ranks will show the tooltip in game, and will also be able to access recruitment information on the site:
+
+- GM / Captain
+- Officer
+- Recruiter
+
 
 ### Character Profile Tooltips
 
@@ -70,7 +111,7 @@ You can pull up detailed information for all the characters in your group at onc
 
 - Click the magnifying glass icon at the bottom of the Dungeon Finder
 - Copy the text in the window that pops up
-- Go to https://raider.io and hit Ctrl-V or Cmd-V to paste this while the site is in the foreground.
+- Go to [https://raider.io](https://raider.io) and hit Ctrl-V or Cmd-V to paste this while the site is in the foreground.
 
 This will then take you to the Raider.IO Advanced Search page for all the characters in your group.
 
@@ -78,7 +119,7 @@ This will then take you to the Raider.IO Advanced Search page for all the charac
 
 - Click the "Copy Raider.IO URL" button
 - Copy the text in the window that pops up
-- Go to https://raider.io and hit Ctrl-V or Cmd-V to paste this while the site is in the foreground.
+- Go to [https://raider.io](https://raider.io) and hit Ctrl-V or Cmd-V to paste this while the site is in the foreground.
 
 This will take you to that character's profile page.
 

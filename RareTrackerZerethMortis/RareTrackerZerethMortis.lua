@@ -1,6 +1,42 @@
 -- Get an object we can use for the localization of the addon.
 local L = LibStub("AceLocale-3.0"):GetLocale("RareTracker", true)
 
+-- Overwrite the language of entities to english if enforced.
+if RareTracker.db.global.window.force_display_in_english then
+    L[178778] = "Gluttonous Overgrowth"
+    L[178229] = "Feasting"
+    L[183927] = "Sand Matriarch Ileus"
+    L[179006] = "Akkaris"
+    L[183925] = "Tahkwitz"
+    L[179043] = "Orixal"
+    L[183747] = "Vitiane"
+    L[182318] = "General Zarathura"
+    L[181249] = "Tethos"
+    L[180746] = "Protector of the First Ones"
+    L[180924] = "Garudeon"
+    L[180978] = "Hirukon"
+    L[183814] = "Otaris the Provoked"
+    L[183748] = "Helmix"
+    L[183516] = "The Engulfer"
+    L[183746] = "Otiosen"
+    L[180917] = "Destabilized Core"
+    L[183737] = "Xy'rath the Covetous"
+    L[183596] = "Chitali the Eldest"
+    L[183722] = "Sorranos"
+    L[184409] = "Euv'ouk"
+    L[178563] = "Hadeon the Stonebreaker"
+    L[178963] = "Gorkek"
+    L[184413] = "Shifting Stargorger"
+    L[178508] = "Mother Phestis"
+    L[183646] = "Furidian"
+    L[183764] = "Zatojin"
+    L[183953] = "Corrupted Architect"
+    L[181360] = "Vexis"
+    L[182114] = "Iska, Outrider of Ruin"
+    L[182155] = "High Reaver Damaris"
+    L[182158] = "Reanimatrox Marzan"
+end
+
 -- Register the data for the target zones.
 RareTracker.RegisterRaresForModule({
     ["target_zones"] = {1970},
@@ -12,7 +48,7 @@ RareTracker.RegisterRaresForModule({
         [178778] = {L[178778], 65579, {53.1, 93.1}}, -- "Gluttonous Overgrowth"
         [178229] = {L[178229], 65557, {61.8, 60.6}}, -- "Feasting"
         [183927] = {L[183927], 65574, {53.4, 47.1}}, -- "Sand Matriarch Ileus"
-        [179006] = {L[179006], 65549, {64.7, 33.8}}, -- "Akkaris"
+        [179006] = {L[179006], 65552, {64.7, 33.8}}, -- "Akkaris"
         [183925] = {L[183925], 65272, {50.0, 40.0}}, -- "Tahkwitz"
         [179043] = {L[179043], 65582, {54.7, 68.8}}, -- "Orixal"
         [183747] = {L[183747], 65584, {47.1, 47.0}}, -- "Vitiane"
@@ -38,5 +74,9 @@ RareTracker.RegisterRaresForModule({
         [183764] = {L[183764], 65251, {43.1, 32.0}}, -- "Zatojin"
         [183953] = {L[183953], 65273, {47.5, 62.2}}, -- "Corrupted Architect"
         [181360] = {L[181360], 65239, {39.4, 56.1}}, -- "Vexis"
+        -- Dune rares.
+        [182114] = {L[182114], 65585, {63.1, 24.1}}, -- "Iska, Outrider of Ruin"
+        [182155] = {L[182155], 65586, {63.1, 24.1}}, -- "High Reaver Damaris"
+        [182158] = {L[182158], 65587, {63.1, 24.1}}, -- "Reanimatrox Marzan"
     },
 })

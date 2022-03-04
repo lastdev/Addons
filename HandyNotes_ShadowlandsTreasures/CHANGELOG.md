@@ -1,5 +1,42 @@
 # Changelog
 
+## Changed in v42
+
+* A hotfix on March 1st put the Ancient Translocators on the Zereth Mortis map (*so* on the map that they're the only thing you can see if you've got no map-completion at all 😁), so I'm removing mine
+* Added some notes to schematic loot drops indicating whether they're for a mount or a pet
+* Remove an item from Hirukon that was incorrectly flagged as being a pet -- it's just an ingredient for a pet
+* Prep-work for adding points for schematic-gathering, all hidden for now
+
+## Changed in v41
+
+* Explain the Syntactic Vault and add points for the runic syllables
+* Utility points:
+    * The Ancient Translocator to the Sepulchur
+    * The Wellspring of the First Ones
+* Changed the color of Glissandian caches to be more distinct
+* More questids and note tweaks
+
+## Changed in v40
+
+* Pulled in more loot from Wowhead
+* Now have the correct research levels for the lore concordances
+* Show the Synthesis Forge on the map once you've unlocked it
+
+## Changed in v39
+
+* Show Completing the Code mobs on the minimap
+* Show the transporter to the Antecedent Isle
+* Show a point for Mai Toa on day 6 of the Patient Bufonid
+* Show whether you've used the lure on Hirukon this week
+* Explain the Provis Cache
+
+## Changed in v38
+
+* Various quest and loot updates for Zereth Mortis
+* Show little dots for spawn points of the Lost Ovoids needed for the Mistaken Ovoid treasure
+* Minor improvements to the appearance of item names in text and loot tooltips
+* Points with multiple questids weren't displaying them correctly if you had that enabled
+
 ## Changed in v37
 
 * A bunch of new loot on rares

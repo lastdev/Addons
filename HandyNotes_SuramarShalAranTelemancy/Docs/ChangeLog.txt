@@ -1,7 +1,11 @@
-$Id: ChangeLog.txt 95 2022-02-23 15:49:21Z arithmandar $
+$Id: ChangeLog.txt 97 2022-02-27 16:16:17Z arithmandar $
 
 Revision History:
 =================
+
+* v1.38 (Feb. 28, 2022)
+-----------------------
+- Library update - LibUIDropDownMenu
 
 * v1.37 (Feb. 23, 2022)
 -----------------------

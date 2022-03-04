@@ -2,7 +2,7 @@
 ## Title: RareTrackerWorldBosses
 ## Notes: Track and coordinate rare spawn timers for world bosses that drop mounts.
 ## Author: Melroy
-## Version: 7.1.6
+## Version: 7.1.9
 ## Dependencies: RareTrackerCore
 
 Locales\enUS.lua

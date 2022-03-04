@@ -98,6 +98,7 @@ Ld["Full Clear + 4 Masks"] = "Full Clear + 4 Masks"
 Ld["Full Clear + 5 Masks"] = "Full Clear + 5 Masks"
 Ld["Full Clear No Masks"] = "Full Clear No Masks"
 Ld["General settings"] = "General settings"
+Ld["GMBT"] = "GMBT"
 Ld["Group"] = "Group"
 Ld["Guild"] = "Guild"
 Ld["HOA"] = "HOA"
@@ -141,6 +142,7 @@ Ld["Open config"] = "Open config"
 Ld["Order must be a number in [0 - 999]"] = "Order must be a number in [0 - 999]"
 Ld["Paragon Chests"] = "Paragon Chests"
 Ld["Party"] = "Party"
+Ld["Patterns Within Patterns"] = "Patterns Within Patterns"
 Ld["PF"] = "PF"
 Ld["Quest progresses"] = "Quest progresses"
 Ld["Raids before dungeons"] = "Raids before dungeons"
@@ -191,6 +193,7 @@ Ld["Sort categories by"] = "Sort categories by"
 Ld["Sort Order"] = "Sort Order"
 Ld["Sorting"] = "Sorting"
 Ld["Space between categories"] = "Space between categories"
+Ld["STRT"] = "STRT"
 Ld["Text"] = "Text"
 Ld["The Four Celestials"] = "The Four Celestials"
 Ld["The World Awaits"] = "The World Awaits"
@@ -209,8 +212,6 @@ Ld["Track Timeworn Mythic keystone acquisition"] = "Track Timeworn Mythic keysto
 Ld["Trade Skill Cooldowns"] = "Trade Skill Cooldowns"
 Ld["Trade skills"] = "Trade skills"
 Ld["Transmute"] = "Transmute"
-Ld["TSG"] = "TSG"
-Ld["TSW"] = "TSW"
 Ld["Type"] = "Type"
 Ld["Use class color"] = "Use class color"
 Ld["Vision Boss + 2 Bonus Objectives"] = "Vision Boss + 2 Bonus Objectives"
@@ -307,6 +308,8 @@ La["Full Clear + 4 Masks"] = "Full Clear + 4 Masque"
 La["Full Clear + 5 Masks"] = "Full Clear + 5 Masque"
 La["Full Clear No Masks"] = "Full Clear sans masques"
 La["General settings"] = "Options générales"
+--[[Translation missing --]]
+La["GMBT"] = "GMBT"
 La["Group"] = "Grouper "
 La["Guild"] = "Guilde"
 La["HOA"] = "HOA"
@@ -351,6 +354,8 @@ La["Open config"] = "Ouvrir la configuration"
 La["Order must be a number in [0 - 999]"] = "l'ordre doit être un nombre compris entre [0 - 999]"
 La["Paragon Chests"] = "Coffre Parangon"
 La["Party"] = "Groupe"
+--[[Translation missing --]]
+La["Patterns Within Patterns"] = "Patterns Within Patterns"
 La["PF"] = "PF"
 La["Quest progresses"] = "Progression des quêtes"
 La["Raids before dungeons"] = "Raids avant les donjons"
@@ -401,6 +406,8 @@ La["Sort categories by"] = "Trier les catégories par :"
 La["Sort Order"] = "Ordre de tri "
 La["Sorting"] = "Trier"
 La["Space between categories"] = "Espacer les catégories"
+--[[Translation missing --]]
+La["STRT"] = "STRT"
 La["Text"] = "Texte"
 La["The Four Celestials"] = "Les Quatre Astres"
 La["The World Awaits"] = "Le monde vous attend"
@@ -421,10 +428,6 @@ La["Track Timeworn Mythic keystone acquisition"] = "Track Timeworn Mythic keysto
 La["Trade Skill Cooldowns"] = "Échéances des métiers"
 La["Trade skills"] = "Échéances des métiers"
 La["Transmute"] = "Transmutation"
---[[Translation missing --]]
-La["TSG"] = "TSG"
---[[Translation missing --]]
-La["TSW"] = "TSW"
 La["Type"] = "Type"
 La["Use class color"] = "Colorer par classe"
 La["Vision Boss + 2 Bonus Objectives"] = "Boss de la vision + 2 objectifs bonus"
@@ -522,6 +525,8 @@ La["Full Clear + 4 Masks"] = "Full Clear + 4 Masken"
 La["Full Clear + 5 Masks"] = "Full Clear + 5 Masken"
 La["Full Clear No Masks"] = "Full Clear, keine Masken"
 La["General settings"] = "Allgemeine Einstellungen"
+--[[Translation missing --]]
+La["GMBT"] = "GMBT"
 La["Group"] = "Gruppieren"
 La["Guild"] = "Gilde"
 La["HOA"] = "HOA"
@@ -566,6 +571,8 @@ La["Open config"] = "Konfiguration öffnen"
 La["Order must be a number in [0 - 999]"] = "Auftrag muss eine Zahl mit [0 - 999] sein"
 La["Paragon Chests"] = "Paragonkiste"
 La["Party"] = "Gruppe"
+--[[Translation missing --]]
+La["Patterns Within Patterns"] = "Patterns Within Patterns"
 La["PF"] = "PF"
 La["Quest progresses"] = "Questfortschritte"
 La["Raids before dungeons"] = "Schlachtzüge vor Dungeons"
@@ -616,6 +623,8 @@ La["Sort categories by"] = "Kategorien sortieren nach"
 La["Sort Order"] = "Sortierung"
 La["Sorting"] = "Sortierung"
 La["Space between categories"] = "Freiraum zwischen Kategorien"
+--[[Translation missing --]]
+La["STRT"] = "STRT"
 La["Text"] = "Text"
 La["The Four Celestials"] = "Die Vier Erhabenen"
 La["The World Awaits"] = "Die Welt wartet"
@@ -636,10 +645,6 @@ La["Track Timeworn Mythic keystone acquisition"] = "Track Timeworn Mythic keysto
 La["Trade Skill Cooldowns"] = "Abklingzeiten der Berufsfertigkeiten"
 La["Trade skills"] = "Berufsfertigkeiten"
 La["Transmute"] = "Transmutieren"
---[[Translation missing --]]
-La["TSG"] = "TSG"
---[[Translation missing --]]
-La["TSW"] = "TSW"
 La["Type"] = "Wert"
 La["Use class color"] = "Klassenfarbe verwenden"
 La["Vision Boss + 2 Bonus Objectives"] = "Visions Boss + 2 Bonus Ziele"
@@ -740,6 +745,8 @@ La["Full Clear + 4 Masks"] = "4가면 5상"
 La["Full Clear + 5 Masks"] = "5가면 5상"
 La["Full Clear No Masks"] = "0가면 5상"
 La["General settings"] = "일반 설정"
+--[[Translation missing --]]
+La["GMBT"] = "GMBT"
 La["Group"] = "그룹"
 La["Guild"] = "길드"
 La["HOA"] = "속죄"
@@ -786,6 +793,7 @@ La["Open config"] = "설정 열기"
 La["Order must be a number in [0 - 999]"] = "순서는 숫자 0에서 999사이의 값을 입력하셔야 합니다."
 La["Paragon Chests"] = "평판 보상"
 La["Party"] = "파티"
+La["Patterns Within Patterns"] = "양식 속의 양식"
 La["PF"] = "역병"
 La["Quest progresses"] = "퀘스트 진행도"
 La["Raids before dungeons"] = "던전 앞에 공격대"
@@ -836,6 +844,8 @@ La["Sort categories by"] = "카테고리 정렬"
 La["Sort Order"] = "정렬 순서"
 La["Sorting"] = "정렬"
 La["Space between categories"] = "카테고리 사이에 공백"
+--[[Translation missing --]]
+La["STRT"] = "STRT"
 La["Text"] = "글자"
 La["The Four Celestials"] = "네 천신"
 La["The World Awaits"] = "세상이 기다린다"
@@ -856,10 +866,6 @@ La["Track Timeworn Mythic keystone acquisition"] = "Track Timeworn Mythic keysto
 La["Trade Skill Cooldowns"] = "전문 기술 재사용 대기시간"
 La["Trade skills"] = "전문 기술"
 La["Transmute"] = "변환"
---[[Translation missing --]]
-La["TSG"] = "TSG"
---[[Translation missing --]]
-La["TSW"] = "TSW"
 La["Type"] = "유형"
 La["Use class color"] = "직업 색상 사용"
 La["Vision Boss + 2 Bonus Objectives"] = "주 목표+추가 목표 2"
@@ -986,6 +992,8 @@ La["Full Clear + 5 Masks"] = "Full Clear + 5 Masks"
 --[[Translation missing --]]
 La["Full Clear No Masks"] = "Full Clear No Masks"
 La["General settings"] = "Opciones generales"
+--[[Translation missing --]]
+La["GMBT"] = "GMBT"
 La["Group"] = "Grupo"
 --[[Translation missing --]]
 La["Guild"] = "Guild"
@@ -1053,6 +1061,8 @@ La["Paragon Chests"] = "Paragon Chests"
 --[[Translation missing --]]
 La["Party"] = "Party"
 --[[Translation missing --]]
+La["Patterns Within Patterns"] = "Patterns Within Patterns"
+--[[Translation missing --]]
 La["PF"] = "PF"
 --[[Translation missing --]]
 La["Quest progresses"] = "Quest progresses"
@@ -1116,6 +1126,8 @@ La["Sort Order"] = "Establecer Orden"
 --[[Translation missing --]]
 La["Sorting"] = "Sorting"
 La["Space between categories"] = "Espacio entre categorías"
+--[[Translation missing --]]
+La["STRT"] = "STRT"
 La["Text"] = "Texto"
 La["The Four Celestials"] = "Los Cuatro Celestiales"
 --[[Translation missing --]]
@@ -1142,10 +1154,6 @@ La["Track Timeworn Mythic keystone acquisition"] = "Track Timeworn Mythic keysto
 La["Trade Skill Cooldowns"] = "Cooldowns de profesiones"
 La["Trade skills"] = "Seguir cooldowns de profesiones"
 La["Transmute"] = "Transmutar"
---[[Translation missing --]]
-La["TSG"] = "TSG"
---[[Translation missing --]]
-La["TSW"] = "TSW"
 La["Type"] = "Tipo"
 La["Use class color"] = "Usar color de clase"
 --[[Translation missing --]]
@@ -1249,6 +1257,8 @@ La["Full Clear + 4 Masks"] = "Полный проход + 4 Маски"
 La["Full Clear + 5 Masks"] = "Полный проход + 5 Масок"
 La["Full Clear No Masks"] = "Полный проход без масок"
 La["General settings"] = "Общие настройки"
+--[[Translation missing --]]
+La["GMBT"] = "GMBT"
 La["Group"] = "Группировать"
 La["Guild"] = "Гильдия"
 La["HOA"] = "ЧП"
@@ -1295,6 +1305,7 @@ La["Open config"] = "Открыть настройки"
 La["Order must be a number in [0 - 999]"] = "Заказ должен быть числом в диапазоне [0 - 999]"
 La["Paragon Chests"] = "Сундуки за Репутацию"
 La["Party"] = "Группа"
+La["Patterns Within Patterns"] = "Закономерности в закономерностях"
 La["PF"] = "ЧК"
 La["Quest progresses"] = "Прогресс квеста"
 La["Raids before dungeons"] = "Рейды перед подземельями"
@@ -1346,6 +1357,8 @@ La["Sort categories by"] = "Сорт. категории по"
 La["Sort Order"] = "Порядок сортировки"
 La["Sorting"] = "Сортировка"
 La["Space between categories"] = "Промежуток между категориями"
+--[[Translation missing --]]
+La["STRT"] = "STRT"
 La["Text"] = "Текст"
 La["The Four Celestials"] = "Четыре небожителя"
 La["The World Awaits"] = "Мир ждет"
@@ -1366,10 +1379,6 @@ La["Track Timeworn Mythic keystone acquisition"] = "Track Timeworn Mythic keysto
 La["Trade Skill Cooldowns"] = "Восстановление способностей профессий."
 La["Trade skills"] = "Отслеживать восстановление способностей профессий"
 La["Transmute"] = "Трансмутация (алхимия)"
---[[Translation missing --]]
-La["TSG"] = "TSG"
---[[Translation missing --]]
-La["TSW"] = "TSW"
 La["Type"] = "Тип"
 La["Use class color"] = "Цвет класса"
 La["Vision Boss + 2 Bonus Objectives"] = "Босс Видения + 2 Бонусных цели"
@@ -1460,6 +1469,7 @@ La["Full Clear + 4 Masks"] = "五箱四面具"
 La["Full Clear + 5 Masks"] = "五箱五面具"
 La["Full Clear No Masks"] = "五箱"
 La["General settings"] = "综合"
+La["GMBT"] = "宏图"
 La["Group"] = "组合"
 La["Guild"] = "公会"
 La["HOA"] = "赎罪"
@@ -1503,6 +1513,7 @@ La["Open config"] = "开启设置"
 La["Order must be a number in [0 - 999]"] = "序号必须为0到999的数"
 La["Paragon Chests"] = "巅峰声望宝箱"
 La["Party"] = "小队"
+La["Patterns Within Patterns"] = "法则中的法则"
 La["PF"] = "凋魂"
 La["Quest progresses"] = "任务进度"
 La["Raids before dungeons"] = "团队副本于地下城前"
@@ -1553,6 +1564,7 @@ La["Sort categories by"] = "排序分类按"
 La["Sort Order"] = "序号"
 La["Sorting"] = "排序"
 La["Space between categories"] = "显示分类间距"
+La["STRT"] = "天街"
 La["Text"] = "文本"
 La["The Four Celestials"] = "四大天神"
 La["The World Awaits"] = "世界在等待"
@@ -1571,10 +1583,6 @@ La["Track Timeworn Mythic keystone acquisition"] = "追踪时空漫游史诗钥�
 La["Trade Skill Cooldowns"] = "商业技能冷却"
 La["Trade skills"] = "商业技能"
 La["Transmute"] = "转化"
---[[Translation missing --]]
-La["TSG"] = "TSG"
---[[Translation missing --]]
-La["TSW"] = "TSW"
 La["Type"] = "类型"
 La["Use class color"] = "使用职业颜色"
 La["Vision Boss + 2 Bonus Objectives"] = "三箱"
@@ -1680,6 +1688,8 @@ La["Full Clear + 4 Masks"] = "Limpieza completa + 4 Máscaras"
 La["Full Clear + 5 Masks"] = "Limpieza completa + 5 Máscaras"
 La["Full Clear No Masks"] = "Limpieza completa sin Máscaras"
 La["General settings"] = "Opciones generales"
+--[[Translation missing --]]
+La["GMBT"] = "GMBT"
 La["Group"] = "Grupo"
 La["Guild"] = "Hermandad"
 La["HOA"] = "SdE (HOA)"
@@ -1732,6 +1742,8 @@ La["Order must be a number in [0 - 999]"] = "Orden debe ser un número en [0 - 9
 --[[Translation missing --]]
 La["Paragon Chests"] = "Paragon Chests"
 La["Party"] = "Grupo"
+--[[Translation missing --]]
+La["Patterns Within Patterns"] = "Patterns Within Patterns"
 La["PF"] = "BP (PF)"
 La["Quest progresses"] = "Progreso de misiones"
 La["Raids before dungeons"] = "Bandas antes que mazmorras"
@@ -1784,6 +1796,8 @@ La["Sort categories by"] = "Ordenar categorías por"
 La["Sort Order"] = "Establecer orden"
 La["Sorting"] = "Ordenar"
 La["Space between categories"] = "Espacio entre categorías"
+--[[Translation missing --]]
+La["STRT"] = "STRT"
 La["Text"] = "Texto"
 La["The Four Celestials"] = "Los Cuatro Celestiales"
 La["The World Awaits"] = "El mundo aguarda"
@@ -1804,10 +1818,6 @@ La["Track Timeworn Mythic keystone acquisition"] = "Track Timeworn Mythic keysto
 La["Trade Skill Cooldowns"] = "Tiempos de reutilización de Profesiones"
 La["Trade skills"] = "Profesiones"
 La["Transmute"] = "Transmutar"
---[[Translation missing --]]
-La["TSG"] = "TSG"
---[[Translation missing --]]
-La["TSW"] = "TSW"
 La["Type"] = "Tipo"
 La["Use class color"] = "Usar color de clase"
 La["Vision Boss + 2 Bonus Objectives"] = "Jefe de Vision + 2 objetivos extras"
@@ -1903,6 +1913,8 @@ La["Full Clear + 4 Masks"] = "全清 + 4面具"
 La["Full Clear + 5 Masks"] = "全清 + 5面具"
 La["Full Clear No Masks"] = "全清 無面具"
 La["General settings"] = "一般設定"
+--[[Translation missing --]]
+La["GMBT"] = "GMBT"
 La["Group"] = "群組"
 La["Guild"] = "公會"
 La["HOA"] = "贖罪"
@@ -1948,6 +1960,8 @@ La["Open config"] = "開啟設定選項"
 La["Order must be a number in [0 - 999]"] = "順序必須是 [0-999] 的數字"
 La["Paragon Chests"] = "巔峰獎勵箱"
 La["Party"] = "隊伍"
+--[[Translation missing --]]
+La["Patterns Within Patterns"] = "Patterns Within Patterns"
 La["PF"] = "瘟疫"
 La["Quest progresses"] = "任務進度"
 La["Raids before dungeons"] = "團隊在地城之前"
@@ -1998,6 +2012,8 @@ La["Sort categories by"] = "排序分類按"
 La["Sort Order"] = "排列順序"
 La["Sorting"] = "排序"
 La["Space between categories"] = "分類間距"
+--[[Translation missing --]]
+La["STRT"] = "STRT"
 La["Text"] = "文字"
 La["The Four Celestials"] = "四大天尊"
 La["The World Awaits"] = "世界在等著"
@@ -2016,10 +2032,6 @@ La["Track Timeworn Mythic keystone acquisition"] = "追蹤時光漫遊傳奇鑰�
 La["Trade Skill Cooldowns"] = "專業技能冷卻時間"
 La["Trade skills"] = "專業技能"
 La["Transmute"] = "轉化"
---[[Translation missing --]]
-La["TSG"] = "TSG"
---[[Translation missing --]]
-La["TSW"] = "TSW"
 La["Type"] = "類型"
 La["Use class color"] = "使用職業顏色"
 La["Vision Boss + 2 Bonus Objectives"] = "幻象首領 + 2個獎勵目標"
@@ -2132,6 +2144,8 @@ La["Full Clear + 4 Masks"] = "Completo +4 Máscaras"
 La["Full Clear + 5 Masks"] = "Completo +5 Máscaras"
 La["Full Clear No Masks"] = "Completo Sem Máscara"
 La["General settings"] = "Configurações Gerais"
+--[[Translation missing --]]
+La["GMBT"] = "GMBT"
 La["Group"] = "Grupo"
 La["Guild"] = "Guilda"
 --[[Translation missing --]]
@@ -2199,6 +2213,8 @@ La["Paragon Chests"] = "Paragon Chests"
 --[[Translation missing --]]
 La["Party"] = "Party"
 --[[Translation missing --]]
+La["Patterns Within Patterns"] = "Patterns Within Patterns"
+--[[Translation missing --]]
 La["PF"] = "PF"
 --[[Translation missing --]]
 La["Quest progresses"] = "Quest progresses"
@@ -2261,6 +2277,8 @@ La["Sort Order"] = "Organizar por"
 --[[Translation missing --]]
 La["Sorting"] = "Sorting"
 La["Space between categories"] = "Espaço entre as categorias"
+--[[Translation missing --]]
+La["STRT"] = "STRT"
 La["Text"] = "Texto"
 La["The Four Celestials"] = "Os Quatro Celestiais"
 --[[Translation missing --]]
@@ -2287,10 +2305,6 @@ La["Track Timeworn Mythic keystone acquisition"] = "Track Timeworn Mythic keysto
 La["Trade Skill Cooldowns"] = "Recarga de Habilidades"
 La["Trade skills"] = "Habilidades de profissão"
 La["Transmute"] = "Transmutação"
---[[Translation missing --]]
-La["TSG"] = "TSG"
---[[Translation missing --]]
-La["TSW"] = "TSW"
 La["Type"] = "Tipo"
 La["Use class color"] = "Usar cor das classes"
 --[[Translation missing --]]
@@ -2420,6 +2434,8 @@ La["Full Clear + 5 Masks"] = "Full Clear + 5 Masks"
 --[[Translation missing --]]
 La["Full Clear No Masks"] = "Full Clear No Masks"
 La["General settings"] = "Opzioni generali"
+--[[Translation missing --]]
+La["GMBT"] = "GMBT"
 La["Group"] = "Gruppo"
 --[[Translation missing --]]
 La["Guild"] = "Guild"
@@ -2486,6 +2502,8 @@ La["Paragon Chests"] = "Paragon Chests"
 --[[Translation missing --]]
 La["Party"] = "Party"
 --[[Translation missing --]]
+La["Patterns Within Patterns"] = "Patterns Within Patterns"
+--[[Translation missing --]]
 La["PF"] = "PF"
 --[[Translation missing --]]
 La["Quest progresses"] = "Quest progresses"
@@ -2547,6 +2565,8 @@ La["Sort Order"] = "Ordinamento"
 --[[Translation missing --]]
 La["Sorting"] = "Sorting"
 La["Space between categories"] = "Spazio tra le categorie"
+--[[Translation missing --]]
+La["STRT"] = "STRT"
 La["Text"] = "Testo"
 La["The Four Celestials"] = "I quattro Celestiali"
 --[[Translation missing --]]
@@ -2573,10 +2593,6 @@ La["Track Timeworn Mythic keystone acquisition"] = "Track Timeworn Mythic keysto
 La["Trade Skill Cooldowns"] = "Tempo di scadenza professioni"
 La["Trade skills"] = "Professioni"
 La["Transmute"] = "Trasmutazioni"
---[[Translation missing --]]
-La["TSG"] = "TSG"
---[[Translation missing --]]
-La["TSW"] = "TSW"
 La["Type"] = "Tipo"
 La["Use class color"] = "Usa colori delle classi"
 --[[Translation missing --]]

@@ -2,7 +2,7 @@
 ## Interface: 90200
 ## X-Min-Interface: 90200
 ## Title: Rarity
-## Version: 1.0 (r715-release-2)
+## Version: 1.0 (r715-release-4)
 ## X-Curse-Project-ID: 30801
 
 ## Notes: Tracks rare drops, including companions and mounts
