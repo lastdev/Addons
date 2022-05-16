@@ -1,10 +1,16 @@
-tag f23106a72f0cac0692cc3c51019cc83eb9c04ad7 DetailsRetail.9.2.0.9696.146
+tag 593aa772f9728dd2cd089309f937ea25b92066a9 DetailsRetail.9.2.0.9780.146
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Thu Feb 24 13:19:48 2022 -0300
+Date:	Thu Apr 28 19:09:38 2022 -0300
 
-commit e9b27b60de970065a71c1629ea9e84c9ac39261e
+commit dfd3fa84067a67dffb4f4d87b2def99dd8ee1b90
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Thu Feb 24 13:19:17 2022 -0300
+Date:   Thu Apr 28 16:44:04 2022 -0300
 
-    Fixes for the Aligned Text Column feature
+    Improvements on skin installation
+
+commit 1afb89790459faec706ca4c1c11c04c07d201ec8
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Thu Apr 28 15:52:11 2022 -0300
+
+    Open Raid Library update
 

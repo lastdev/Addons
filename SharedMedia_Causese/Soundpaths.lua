@@ -97,6 +97,7 @@ LSM:Register("sound", "|cFFFF0000Right|r", [[Interface\Addons\SharedMedia_Causes
 LSM:Register("sound", "|cFFFF0000Selfcd|r", [[Interface\Addons\SharedMedia_Causese\sound\Selfcd.ogg]])
 LSM:Register("sound", "|cFFFF0000Soak|r", [[Interface\Addons\SharedMedia_Causese\sound\Soak.ogg]])
 LSM:Register("sound", "|cFFFF0000Soon|r", [[Interface\Addons\SharedMedia_Causese\sound\Soon.ogg]])
+LSM:Register("sound", "|cFFFF0000Spawn|r", [[Interface\Addons\SharedMedia_Causese\sound\Spawn.ogg]])
 LSM:Register("sound", "|cFFFF0000Spellsteal|r", [[Interface\Addons\SharedMedia_Causese\sound\Spellsteal.ogg]])
 LSM:Register("sound", "|cFFFF0000Split|r", [[Interface\Addons\SharedMedia_Causese\sound\Split.ogg]])
 LSM:Register("sound", "|cFFFF0000Spread|r", [[Interface\Addons\SharedMedia_Causese\sound\Spread.ogg]])

@@ -23,6 +23,7 @@ local RSUtils = private.ImportLib("RareScannerUtils")
 -- RareScanner service libraries
 local RSMap = private.ImportLib("RareScannerMap")
 local RSNpcPOI = private.ImportLib("RareScannerNpcPOI")
+local RSLootTooltip = private.ImportLib("RareScannerLootTooltip")
 
 -- Thirdparty
 local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
@@ -89,6 +90,12 @@ local function PopulateContinentDropDown(mainFrame, continentDropDown)
 	if (RSUtils.GetTableLength(filters) > 0) then
 		for npcID, npcInfo in pairs (RSNpcDB.GetAllInternalNpcInfo()) do
 			local filtered = false
+			
+			-- Ignore if part of a disabled event
+			if (RSNpcDB.IsDisabledEvent(npcID)) then
+				filtered = true
+			end
+			
 			-- Ignore if dead
 			if (not filters[RSConstants.EXPLORER_FILTER_DEAD] and RSNpcDB.IsNpcKilled(npcID)) then
 				filtered = true
@@ -110,6 +117,8 @@ local function PopulateContinentDropDown(mainFrame, continentDropDown)
 				elseif (filters[RSConstants.EXPLORER_FILTER_DROP_APPEARANCES] and collectionsLoot and collectionsLoot[npcID] and RSUtils.GetTableLength(collectionsLoot[npcID][RSConstants.ITEM_TYPE.APPEARANCE]) > 0) then
 					AddContinentDropDownValue(npcID, npcInfo, continentDropDownValuesNotSorted)
 				elseif (filters[RSConstants.EXPLORER_FILTER_PART_ACHIEVEMENT] and RSAchievementDB.GetNotCompletedAchievementLink(npcID)) then
+					AddContinentDropDownValue(npcID, npcInfo, continentDropDownValuesNotSorted)
+				elseif (filters[RSConstants.EXPLORER_FILTER_WITHOUT_COLLECTIBLES] and (not collectionsLoot or not collectionsLoot[npcID])) then
 					AddContinentDropDownValue(npcID, npcInfo, continentDropDownValuesNotSorted)
 				end
 			end
@@ -155,6 +164,7 @@ local function PopulateContinentDropDown(mainFrame, continentDropDown)
 		mainFrame.ScanRequired.ScanRequiredText:SetText(AL["EXPLORER_NO_RESULTS"])
 		mainFrame.ScanRequired.StartScanningButton:Hide()
 		mainFrame.ScanRequired:Show()
+		mainFrame.Filters:Show()
    	end
 end
 
@@ -201,6 +211,8 @@ local function FilterDropDownMenu_Initialize(self)
   					RSConfigDB.SetShowDead(filtered)
   				elseif (filterID == RSConstants.EXPLORER_FILTER_FILTERED) then
   					RSConfigDB.SetShowFiltered(filtered)
+  				elseif (filterID == RSConstants.EXPLORER_FILTER_WITHOUT_COLLECTIBLES) then
+  					RSConfigDB.SetShowWithoutCollectibles(filtered)
   				end
 	    			
 				-- Refresh
@@ -260,6 +272,14 @@ local function FilterDropDownMenu_Initialize(self)
 	  			info.text = AL["EXPLORER_FILTER_FILTERED"]
 	  			info.arg1 = RSConstants.EXPLORER_FILTER_FILTERED
 	  			info.checked = filters[RSConstants.EXPLORER_FILTER_FILTERED]
+	  			info.func = refreshList
+	  			info.keepShownOnClick = true;
+	  			LibDD:UIDropDownMenu_AddButton(info, level)
+	  			
+	  			info = LibDD:UIDropDownMenu_CreateInfo()
+	  			info.text = AL["EXPLORER_FILTER_WITHOUT_COLLECTIBLES"]
+	  			info.arg1 = RSConstants.EXPLORER_FILTER_WITHOUT_COLLECTIBLES
+	  			info.checked = filters[RSConstants.EXPLORER_FILTER_WITHOUT_COLLECTIBLES]
 	  			info.func = refreshList
 	  			info.keepShownOnClick = true;
 	  			LibDD:UIDropDownMenu_AddButton(info, level)
@@ -523,6 +543,10 @@ function RSExplorerRareList:UpdateRareList()
 					end
 								
 					if (filters[RSConstants.EXPLORER_FILTER_PART_ACHIEVEMENT] and RSAchievementDB.GetNotCompletedAchievementLink(npcID, self.mapID)) then
+						self:AddFilteredRareToList(npcID, npcInfo, npcName)
+					end
+								
+					if (filters[RSConstants.EXPLORER_FILTER_WITHOUT_COLLECTIBLES] and ((not collectionsLoot or not collectionsLoot[npcID]) or (collectionsLoot[npcID][RSConstants.ITEM_TYPE.APPEARANCE] and RSUtils.GetTableLength(collectionsLoot[npcID][RSConstants.ITEM_TYPE.APPEARANCE][self.classIndex]) == 0))) then
 						self:AddFilteredRareToList(npcID, npcInfo, npcName)
 					end
 				end
@@ -838,15 +862,10 @@ function RSExplorerRareInfoLootItem_OnEnter(self)
 	item:ContinueOnItemLoad(function()
 		tooltip:SetOwner(itemIcon, "BOTTOM_LEFT")
 		tooltip:SetHyperlink(item:GetItemLink())
-		if (RSUtils.Contains(RSConstants.ITEMS_REQUIRE_NECROLORD, self.itemID)) then
-			tooltip:AddLine(string.format(AL["LOOT_COVENANT_REQUIREMENT"], AL["NOTE_NECROLORDS"]), 0.3,0.7,0.2)
-		elseif (RSUtils.Contains(RSConstants.ITEMS_REQUIRE_NIGHT_FAE, self.itemID)) then
-			tooltip:AddLine(string.format(AL["LOOT_COVENANT_REQUIREMENT"], AL["NOTE_NIGHT_FAE"]), 0.6,0.2,0.7)
-		elseif (RSUtils.Contains(RSConstants.ITEMS_REQUIRE_VENTHYR, self.itemID)) then
-			tooltip:AddLine(string.format(AL["LOOT_COVENANT_REQUIREMENT"], AL["NOTE_VENTHYR"]), 0.7,0,0)
-		elseif (RSUtils.Contains(RSConstants.ITEMS_REQUIRE_KYRIAN, self.itemID)) then
-			tooltip:AddLine(string.format(AL["LOOT_COVENANT_REQUIREMENT"], AL["NOTE_KYRIAN"]), 0,0.7,1)
-		end
+		
+		-- Adds extra information
+		RSLootTooltip.AddRareScannerInformation(tooltip, item:GetItemLink(), self.itemID)
+
 		tooltip:Show()
 	end)
 end
@@ -1068,13 +1087,16 @@ function RSExplorerControl:StartScanning(self, button)
 	if (self:IsShown()) then
 		self:Hide()
 		self:GetParent().ScanProcessText:Show()
+		
+		local manualScan = self:GetParent().ScanRequiredText:GetText() == AL["EXPLORER_SCAN_MANUAL"]
+		
 		RSCollectionsDB.ApplyCollectionsEntitiesFilters(function()
 			local mainFrame = self:GetParent():GetParent()
 	    	self:GetParent():Hide()
 			self:GetParent().ScanProcessText:Hide()
     		mainFrame.RareInfo:Show()
 			mainFrame:Initialize()
-	    end, self:GetParent().ScanProcessText)
+	    end, self:GetParent().ScanProcessText, manualScan)
 	end
 end
 
@@ -1141,6 +1163,7 @@ function RSExplorerMixin:Initialize()
 	filters[RSConstants.EXPLORER_FILTER_DROP_APPEARANCES] = RSConfigDB.IsSearchingAppearances()
 	filters[RSConstants.EXPLORER_FILTER_DEAD] = RSConfigDB.IsShowDead()
 	filters[RSConstants.EXPLORER_FILTER_FILTERED] = RSConfigDB.IsShowFiltered()
+	filters[RSConstants.EXPLORER_FILTER_WITHOUT_COLLECTIBLES] = RSConfigDB.IsShowWithoutCollectibles()
 	
 	self.Filters:Initialize(self);
 	self.RareNPCList:Initialize(self);

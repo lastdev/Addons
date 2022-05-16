@@ -144,5 +144,6 @@ lib:RegisterItems({
 	[171840] = SetReagent(8, e.Mining), -- Porous Stone
 	[171841] = SetReagent(8, e.Mining), -- Shaded Stone
 	[177061] = SetReagent(8, e.Mining), -- Twilight Bark
+	[187700] = SetReagent(8, e.Mining), -- Progenium Ore	
 	
 })

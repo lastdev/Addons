@@ -9,6 +9,8 @@ L["ALREADY_PURCHASED_X"] = "Already purchased %s"
 L["ALT_LEFT_CLICK"] = "Alt Clique Esquerdo"
 L["ALT_RIGHT_CLICK"] = "Alt Clique Direito"
 L["ANY_LOWER"] = "qualquer"
+--[[Translation missing --]]
+L["ANY_UPPER"] = "Any"
 L["AUCTION"] = "Leilão"
 L["AUCTION_DURATION_12"] = "12 Horas"
 L["AUCTION_DURATION_24"] = "24 Horas"
@@ -160,6 +162,12 @@ L["CONFIG_SELLING_TEXT"] = "Opções para alterar o comportamento da guia Venda"
 L["CONFIG_SHOPPING_CATEGORY"] = "Compras"
 L["CONFIG_SHOPPING_LIST"] = "Configurações de Lista de Compras"
 --[[Translation missing --]]
+L["CONFIG_SHOPPING_LIST_EXCLUDE_RESULTS_FOR_SPEED"] = "Ignore results that aren't on the first page of the current search"
+--[[Translation missing --]]
+L["CONFIG_SHOPPING_LIST_EXCLUDE_RESULTS_FOR_SPEED_TOOLTIP_HEADER"] = "Exclude Results for Speed"
+--[[Translation missing --]]
+L["CONFIG_SHOPPING_LIST_EXCLUDE_RESULTS_FOR_SPEED_TOOLTIP_TEXT"] = "Ignoring results that are not on the first page may cause some expensive items to not appear. Quantities in the price history and search results will be inaccurate."
+--[[Translation missing --]]
 L["CONFIG_SHOPPING_LIST_FULL_REFRESH"] = "Refresh all pages when clicking the Refresh button"
 --[[Translation missing --]]
 L["CONFIG_SHOPPING_LIST_FULL_REFRESH_TOOLTIP_HEADER"] = "Refresh All Pages"
@@ -309,6 +317,8 @@ L["PET_TOOLTIP_TOOLTIP_HEADER"] = "Caixa de Texto de Bichos de Estimação"
 L["PET_TOOLTIP_TOOLTIP_TEXT"] = "Mostrar informações do Auctionator para bichos de estimação em gaiolas."
 L["POST"] = "Postar"
 L["PRICE"] = "Preço"
+--[[Translation missing --]]
+L["PRICE_INCREASE_WARNING"] = "Price increased by %s, waiting %ss"
 L["PROFILE_TOGGLE_TOOLTIP_HEADER"] = "Ativar definições específicas para cada personagem"
 L["PROFILE_TOGGLE_TOOLTIP_TEXT"] = "Faz mudanças para as configurações do Auctionator afetar apenas este personagem."
 --[[Translation missing --]]
@@ -460,10 +470,6 @@ L["SPLASH_907_FEATURES_HEADER"] = "Recursos"
 L["SPLASH_907_UNANNOUNCED_1"] = "Uma coluna opcional de \"Vendedor(es)\" (para ver quem está vendendo) foi adicionada a aba de vendas. Para ativar, clique com o botão direito no topo de uma coluna (ex: \"Próprio?)."
 L["SPLASH_907_UNANNOUNCED_HEADER"] = "Recursos não anuncioados 9.0.6"
 --[[Translation missing --]]
-L["SPLASH_9105_DESCRIPTION"] = "Added a new search method for shopping lists that can scan and filter prices for thousands of items in 14s (around 42s on a full population realm) - previously this could take 20+ minutes! This is invaluable for sniping the perfect deal when combined with the gold price filters."
---[[Translation missing --]]
-L["SPLASH_9105_FEATURES_1"] = "Very fast shopping list search when searching for more than 50 items."
---[[Translation missing --]]
 L["SPLASH_9105_FEATURES_2"] = "Added a button to move the price history dialog in the \"Shopping\" tab to the right of the results listing (right click any result to see a price history)."
 --[[Translation missing --]]
 L["SPLASH_9105_FEATURES_3"] = "Option to show profit instead of crafting cost in the crafting window when the Auction House is open."
@@ -530,11 +536,15 @@ L["TEMPORARY_LOWER_CASE"] = "temporário"
 L["TIME_LEFT"] = "Tempo Restante"
 L["TIME_LEFT_H"] = "Tempo restante (h)"
 L["TO_CRAFT_COLON"] = "Para Criar:"
+--[[Translation missing --]]
+L["TODAY"] = "Today"
 L["TOO_BIG_PERCENTAGE"] = "%% tem que ser <= 100 (considerando %s)"
 L["TOO_MANY_SEARCH_RESULTS"] = "Esta pesquisa teve resultados demais. Limitando o número de resultados mostrados."
 L["TOO_SMALL_PERCENTAGE"] = "%% tem que ser >= 0 (considerando %s)"
 L["TOTAL_ITEMS_COLORED"] = "Todal de |cFFAAAAFF %s itens|r"
 L["TOTAL_ON_SALE"] = "Total vendendo: %s"
+--[[Translation missing --]]
+L["TOTAL_PENDING"] = "(%s pending)"
 L["TOTAL_PRICE"] = "Preço total:"
 L["TRANSLATORS_BRAZIL_PORTUGUEUSE"] = "Português Brasileiro"
 L["TRANSLATORS_FRENCH"] = "Francês"
@@ -576,6 +586,8 @@ L["X_PRICE_HISTORY"] = "%s Price History"
 L["X_STACK_OF_X"] = "%s stack of %s"
 --[[Translation missing --]]
 L["X_STACKS_OF_X"] = "%s stacks of %s"
+--[[Translation missing --]]
+L["YOU"] = "You"
 --[[Translation missing --]]
 L["YOU_COLUMN"] = "You?"
 L["YOUR_HISTORY"] = "Seu Histórico"

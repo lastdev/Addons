@@ -7,6 +7,7 @@ L["Equipment"] = "Equipaggiamento"
 -- L["Currencies"] = true
 L["Reputations"] = "Reputazioni"
 -- L["Daily Quests"] = true
+-- L["Weekly Quests"] = true
 L["Zone"] = "Zona"
 L["Characters"] = "Personaggi"
 -- L["Rest XP"] = true
@@ -22,7 +23,7 @@ L["Horde Forces"] = "Forze dell'Orda"
 L["All-in-one"] = "Tutto-in-uno"
 L["Up to %s"] = "Fino a %s"
 L["Shift+Left click to link"] = "Maiusc+clic sinistro per collegare"
-L["%s is %s with %s (%d/%d)"] = "%s è %s con %s (%d/%d)"
+L["%s is %s with %s (%d/%d)"] = "%s Ã¨ %s con %s (%d/%d)"
 
 -- ** Garrisons **
 -- L["Collected"] = true

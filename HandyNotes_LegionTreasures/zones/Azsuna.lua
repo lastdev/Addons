@@ -76,8 +76,8 @@ ns.RegisterPoints(630, { -- Azsuna
     [35305030] = {quest=38037, npc=90803, criteria=33264, loot={129083}, note="Cache of Infernals"}, -- Infernal Lord
     [37404320] = {quest=42280, npc=107113, criteria=33374, loot={141875}}, -- Vorthax
     [41054180] = {quest=37537, npc=89016, criteria=33377, loot={129080}}, -- Ravyn-Drath
-    [43152815] = {quest=38352, npc=91579, criteria=33402, loot={129056}}, -- Doomlord Kazrok
-    [43532458] = {quest=42069, npc=105938, criteria=33401, loot={129087}}, -- Felwing
+    [43152815] = {quest=38352, npc=91579, criteria=32402, loot={129056}}, -- Doomlord Kazrok
+    [43532458] = {quest=42069, npc=105938, criteria=32401, loot={129087}}, -- Felwing
     [45305780] = {quest=37824, npc=89884, criteria=33258, loot={129090}}, -- Flog the Captain-Eater
     [47203420] = {quest=37726, npc=89650, criteria=33248, loot={129082}}, -- Valiyaka the Stormbringer
     [49105520] = {quest=37909, npc=90164, criteria=33260, loot={129069}, note="Patrols the road"}, -- Warbringer Mox'na (seek and destroy squad)
@@ -89,7 +89,7 @@ ns.RegisterPoints(630, { -- Azsuna
     [56102905] = {quest=38061, npc=90901, criteria=33265, loot={138395}}, -- Pridelord Meowl
     [59304630] = {quest=38212, npc=91100, criteria=33403, loot={129068}, note="Top of the mountain"}, -- Brogozog
     [59601230] = {quest=37932, npc=90244, criteria=33262, loot={129085}, note="Unbound rift"}, -- Arcavellus
-    [59705520] = {quest=37822, npc=89850, criteria=33251, loot={129065}}, -- The Oracle
+    [59705520] = {quest=37822, npc=89850, criteria=33251, loot={129065,136833}}, -- The Oracle
     [61306200] = {quest=38217, npc=91113, criteria=33267, loot={129062}}, -- Tide Behemoth
     [65164000] = {quest=37820, npc=89816, criteria=33249, loot={129091}, note="Horn of the Siren"}, -- Golza the Iron Fin
     [65555680] = {quest=42221, npc=106990, criteria=33269, loot={129073}}, -- Chief Bitterbrine

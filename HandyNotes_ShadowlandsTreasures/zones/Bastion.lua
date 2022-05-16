@@ -2,6 +2,50 @@ local myname, ns = ...
 
 local path = ns.path
 
+-- Technically Gilded Wader ({180866, pet=2938}) drops from most of the
+-- calling treasures, but... it seems to be really really rare and
+-- shadowlands-wide, so I'm leaving it out.
+
+local bell = {
+    label=false, -- Broken/Skyward Bell
+    loot={
+        {184415, toy=true}, -- Soothing Vesper
+    },
+    _uiMapID=1533,
+    _coord=0,
+}
+ns.VignetteIDsToPoints[4239] = bell
+ns.VignetteIDsToPoints[4240] = bell
+ns.VignetteIDsToPoints[4241] = bell
+ns.VignetteIDsToPoints[4242] = bell
+ns.VignetteIDsToPoints[4243] = bell
+ns.VignetteIDsToPoints[4275] = bell
+
+local strongbox = {
+    label=false, -- Silver Strongbox
+    loot={
+        {184418, toy=true}, -- Acrobatic Steward
+    },
+    note="Bring a {item:178915:Ripe Purian} to open",
+    _uiMapID=1533,
+    _coord=0,
+}
+ns.VignetteIDsToPoints[4214] = ns.merge(CopyTable(strongbox), {note=false}) -- actually Gilded Chest
+ns.VignetteIDsToPoints[4263] = strongbox
+ns.VignetteIDsToPoints[4264] = strongbox
+ns.VignetteIDsToPoints[4265] = strongbox
+ns.VignetteIDsToPoints[4266] = strongbox
+ns.VignetteIDsToPoints[4267] = strongbox
+ns.VignetteIDsToPoints[4268] = strongbox
+ns.VignetteIDsToPoints[4269] = strongbox
+ns.VignetteIDsToPoints[4270] = strongbox
+ns.VignetteIDsToPoints[4271] = strongbox
+ns.VignetteIDsToPoints[4272] = strongbox
+ns.VignetteIDsToPoints[4273] = strongbox
+ns.VignetteIDsToPoints[4277] = strongbox
+
+-- choosing larion: 60294
+
 ns.RegisterPoints(1533, { -- Bastion
     [53508030] = {
         achievement=14311, criteria=50047, -- Scroll of Aeons
@@ -44,8 +88,8 @@ ns.RegisterPoints(1533, { -- Bastion
             183126, -- Kyrian Smith's Kit
         },
         note="Located at the end of the cavern",
+        path=55704290,
     },
-    [55704290] = path{quest=61049},
     [40404980] = {
         achievement=14311, criteria=50052, -- Stolen Equipment
         quest=61044,
@@ -60,8 +104,8 @@ ns.RegisterPoints(1533, { -- Bastion
         -- loot=Random Greens/Materials,
         note="Entrance is hidden behind some bushes",
         level=60,
+        path=46434657,
     },
-    [46434657] = path{achievement=14311, criteria=50053,minimap=true,level=60,},
     [51401790] = {
         achievement=14311, criteria=50054, -- Experimental Construct Part
         quest=61052,
@@ -87,12 +131,12 @@ ns.RegisterPoints(1533, { -- Bastion
         level=60,
         note="Purchase {item:180788:Memorial Wine} from {npc:171526:Kobri} and use it on the drink tray near the treasure to obtain the {item:180797:Memorial Offering Key} and unlock the treasure",
     },
-    [34006650] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, path=true, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Cliffs of Respite)
-    [43603225] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, path=true, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Sagehaven)
-    [47957400] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, path=true, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Aspirant's Rest)
-    [51804640] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, path=true, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Hero's Rest)
-    [52154710] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, path=true, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Hero's Rest)
-    [53508035] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, path=true, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Aspirant's Crucible)
+    [34006650] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Cliffs of Respite)
+    [43603225] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Sagehaven)
+    [47957400] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Aspirant's Rest)
+    [51804640] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Hero's Rest)
+    [52154710] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Hero's Rest)
+    [53508035] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Aspirant's Crucible)
     [35105800] = {
         achievement=14311, criteria=50058, -- Gift of Agthia
         quest=60893,
@@ -166,12 +210,12 @@ local shard = ns.nodeMaker{
     atlas="azeriteready",
     minimap=true,
     upcoming=false,
-    group="shardlabor",
 }
 ns.RegisterPoints(1533, {
     -- Shard Labor
     [36012652] = {
         quest=61183,
+        achievement=14339,
         label="Vesper of Silver Wind",
         loot={
             {180772, mount=1404}, -- Silverwind Larion
@@ -179,10 +223,10 @@ ns.RegisterPoints(1533, {
         level=60,
         atlas="VignetteLootElite", scale=1.2,
         note="Forge the {item:180858:Crystal Mallet of Heralds} and then ring the vesper",
-        group="shardlabor",
     },
     [59343144] = {
         quest=61229,
+        achievement=14339,
         loot={
             180858, -- Crystal Mallet of Heralds
         },
@@ -190,7 +234,6 @@ ns.RegisterPoints(1533, {
         atlas="vehicle-hammergold",
         note="Collect 50 Anima Shards and give them to {npc:171732:Forgelite Hephaesius}",
         upcoming = false,
-        group="shardlabor",
     },
     [39057704] = shard{quest=61225,note="Platform under the bridge"},
     [43637622] = shard{quest=61235,note="On the waterfall, go around and jump down"},
@@ -282,7 +325,6 @@ ns.RegisterPoints(1533, {
 
 -- Non-achievement treasures
 ns.RegisterPoints(1533, { -- Bastion
-    [58701630] = path{quest=61698, note="Bounce on the flowers",},
     [61041511] = {
         quest=61698, -- this one seems to be daily?
         label="Cloudwalker's Coffer",
@@ -291,6 +333,7 @@ ns.RegisterPoints(1533, { -- Bastion
             180783, -- Design: Crown of the Righteous
             {183756, quest=62472, covenant=Enum.CovenantType.Necrolord}, -- Halo of Purity (stitching)
         },
+        path=58701630,
     },
     -- [24531794] = {
     --     quest=60663,
@@ -305,6 +348,20 @@ ns.RegisterPoints(1533, { -- Bastion
     --     label="Silver Strongbox",
     --     note="Requires Ripe Purian",
     -- },
+})
+
+ns.RegisterPoints(1533, { -- Bastion
+    [49854685] = {
+        quest=64959,
+        loot={
+            {187818, quest=64959, covenant=Enum.CovenantType.NightFae}, -- Otter Soul
+        },
+        note="/hug the {npc:181682:Lost Soul} swimming in the pool. You might have to wait a while for it to spawn, and it'll only stick around for 5 minutes.",
+        covenant=Enum.CovenantType.NightFae,
+        atlas="sanctumupgrades-nightfae-32x32",
+        minimap=true,
+        group="soulshape",
+    },
 })
 
 -- rares
@@ -474,7 +531,7 @@ ns.RegisterPoints(1533, {
     },
     [30355515] = { -- Reekmonger
         achievement=14307, criteria=50616,
-        quest=61101,
+        quest=61108,
         npc=171327,
         --loot={},
         note="Kill enemies in the Temple of Courage to summon",
@@ -493,11 +550,13 @@ ns.RegisterPoints(1533, {
         achievement=14307, criteria=50618,
         quest=61634,
         npc=156339,
+        areaPoi=6894, -- Black Bell
         loot={
             184365, -- Aegis of Salvation
             {184401, pet=3063, covenant=Enum.CovenantType.Kyrian}, -- Larion Pouncer
         },
         note="Requires Kyrian player to summon",
+        nearby={22702290, label="Black Bell"},
     },
     [43502525] = { -- Unstable Memory
         achievement=14307, criteria=50606,
@@ -513,13 +572,16 @@ ns.RegisterPoints(1533, {
         achievement=14307, criteria=50600,
         quest=60314,-- 62197,
         npc=167078,
+        areaPoi=6896, -- Horn of Courage
         loot={
             182749, -- Regurgitated Kyrian Wings
         },
+        note="A Kyrian player must click the Horn of Courage",
+        nearby={41655455, label="Horn of Courage"},
     },
     [60109350] = { -- Sundancer
         achievement=14307, criteria=50601,
-        quest=60860,
+        quest=60862,
         npc=170548,
         note="Use the statue and a {item:180445:Skystrider Glider}",
         loot={

@@ -60,7 +60,7 @@ ns.RegisterPoints(942, { -- Stormsong Valley
     [46915393] = {quest=51949,},
 }, {
     label='Small Treasure Chest',
-    junk=true,
+    group="junk",
 })
 
 -- Rares
@@ -151,7 +151,7 @@ ns.RegisterPoints(942, {
     [72295224] = {},
 }, {
     npc=155069,
-    active={notquest=56414}, -- hourly
+    active={ns.conditions.QuestIncomplete(56414)}, -- hourly
     note="You can loot the Jelly hourly",
     atlas="bags-icon-scrappable",
     faction="Alliance",

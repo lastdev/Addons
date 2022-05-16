@@ -74,24 +74,24 @@ ns.dungeons = {
 		["name"] = "Mists of Tirna Scithe",
 		["shortName"] = "MISTS",
 	},
-	-- [9] = {
-	-- 	["id"] = 1013548,
-	-- 	["keystone_instance"] = 391,
-	-- 	["instance_map_id"] = 2441,
-	-- 	["lfd_activity_ids"] = { 746, 1016, 1017, 1018, 1019 },
-	-- 	["timers"] = { 1404, 1872, 2340 },
-	-- 	["name"] = "Tazavesh: Streets of Wonder",
-	-- 	["shortName"] = "STRT",
-	-- },
-	-- [10] = {
-	-- 	["id"] = 2013548,
-	-- 	["keystone_instance"] = 392,
-	-- 	["instance_map_id"] = 2441,
-	-- 	["lfd_activity_ids"] = { 746, 1016, 1017, 1018, 1019 },
-	-- 	["timers"] = { 1080, 1440, 1800 },
-	-- 	["name"] = "Tazavesh: So'leah's Gambit",
-	-- 	["shortName"] = "GMBT",
-	-- }
+	[9] = {
+		["id"] = 1013548,
+		["keystone_instance"] = 391,
+		["instance_map_id"] = 2441,
+		["lfd_activity_ids"] = { 1016, 1018 },
+		["timers"] = { 1404, 1872, 2340 },
+		["name"] = "Tazavesh: Streets of Wonder",
+		["shortName"] = "STRT",
+	},
+	[10] = {
+		["id"] = 2013548,
+		["keystone_instance"] = 392,
+		["instance_map_id"] = 2441,
+		["lfd_activity_ids"] = { 1017, 1019 },
+		["timers"] = { 1080, 1440, 1800 },
+		["name"] = "Tazavesh: So'leah's Gambit",
+		["shortName"] = "GMBT",
+	}
 }
 
 -- Raid listing sorted by id

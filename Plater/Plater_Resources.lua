@@ -182,6 +182,12 @@ local powerTypesFilter = {
     ["RUNES"] = true,
 }
 
+local eventsFilter = {
+	["UNIT_POWER_POINT_CHARGE"] = true,
+	["RUNE_POWER_UPDATE"] = true,
+	["UPDATE_SHAPESHIFT_FORM"] = true,
+}
+
 local CONST_ENUMNAME_COMBOPOINT = "ComboPoints"
 local CONST_ENUMNAME_HOLYPOWER = "HolyPower"
 local CONST_ENUMNAME_RUNES = "Runes"
@@ -442,7 +448,7 @@ end
                     local updateResourceFunc = currentResourceBar.updateResourceFunc
                     if (updateResourceFunc) then
                         --check if the power type passes the filter
-                        if (powerTypesFilter[powerType] or event == "RUNE_POWER_UPDATE") then
+                        if (powerTypesFilter[powerType] or eventsFilter[event]) then
                             lastComboPointGainedTime = GetTime()
                             Plater.StartLogPerformanceCore("Plater-Resources", "Events", event)
                             updateResourceFunc(self, currentResourceBar, false, event, unit, powerType)
@@ -763,11 +769,41 @@ end
 
         if (DB_PLATER_RESOURCE_SHOW_DEPLETED) then
             Plater.Resources.UpdateResourcesFor_ShowDepleted(mainResourceFrame, resourceBar)
+        else
+            Plater.Resources.UpdateResourcesFor_HideDepleted(mainResourceFrame, resourceBar)
         end
 
         Plater.EndLogPerformanceCore("Plater-Resources", "Update", "UpdateResourceBar")
     end
 
+--update the resources widgets when hiding the resources background for depleted
+--on this type, the location of each resource icon is depending on the amount shown
+    function Plater.Resources.UpdateResourcesFor_HideDepleted(mainResourceFrame, resourceBar)
+        Plater.StartLogPerformanceCore("Plater-Resources", "Update", "UpdateResourcesFor_HideDepleted")
+        
+        --get the table with the widgets created
+        local widgetTable = resourceBar.widgets
+		--fallback if it is not implemented/created
+		if (not widgetTable[1]) then
+            return
+        end
+        
+        --store the amount of widgets currently in use - as we are hiding before update: 0
+        resourceBar.widgetsInUseAmount = 0
+        --set the amount of resources the player has - 0 before update
+        resourceBar.lastResourceAmount = 0
+        
+        for i = 1, CONST_NUM_RESOURCES_WIDGETS do
+            local thisResourceWidget = widgetTable[i]
+            thisResourceWidget.inUse = false
+            thisResourceWidget:Hide()
+            resourceBar.widgetsBackground[i]:Hide()
+        end
+        
+        mainResourceFrame.currentResourceBarShown.updateResourceFunc(mainResourceFrame, mainResourceFrame.currentResourceBarShown, true)
+        
+        Plater.EndLogPerformanceCore("Plater-Resources", "Update", "UpdateResourcesFor_HideDepleted")
+    end
 
 --update the resources widgets when using the resources showing the background of depleted
 --on this type, the location of each resource icon is precomputed
@@ -889,6 +925,7 @@ end
         local widgetHeight = mainResourceFrame.widgetHeight or CONST_WIDGET_HEIGHT
         --sum of the width of all resources shown
         local totalWidth = 0
+		local now = GetTime()
 
         for i = 1, currentResources do
             local thisResourceWidget = widgetTable[i]
@@ -900,7 +937,7 @@ end
                 thisResouceBackground:Show()
 
                 thisResourceWidget.inUse = true
-                if (lastComboPointGainedTime == GetTime()) then
+                if (lastComboPointGainedTime == now) then
                     thisResourceWidget.ShowAnimation:Play()
                 end
                 thisResourceWidget:SetSize (widgetWidth, widgetHeight)
@@ -934,6 +971,8 @@ end
         resourceBar:SetWidth(totalWidth)
         resourceBar:SetPoint(DB_PLATER_RESOURCE_GROW_DIRECTON, mainResourceFrame, DB_PLATER_RESOURCE_GROW_DIRECTON, 0, 0)
 
+        --store current resources
+        resourceBar.widgetsInUseAmount = currentResources
         --save the amount of resources
         resourceBar.lastResourceAmount = currentResources
 
@@ -1015,12 +1054,14 @@ end
                 local widget = resourceBar.widgets[i]
                 local isCharged = chargedPowerPoints and tContains(chargedPowerPoints, i)
                 if (widget.isCharged ~= isCharged) then
+                    widget.isCharged = isCharged
                     if (isCharged) then
-                        widget.texture:SetAtlas("ClassOverlay-ComboPoint-Kyrian")
-                        widget.background:SetAtlas("ClassOverlay-ComboPoint-Off-Kyrian")
+                        widget.texture:SetAtlas("ComboPoints-ComboPoint-Kyrian")
+                        widget.background:SetAtlas("ComboPoints-PointBg-Kyrian")
+                        widget.ShowAnimation:Play()
                     else
-                        widget.texture:SetAtlas("ClassOverlay-ComboPoint")
-                        widget.background:SetAtlas("ClassOverlay-ComboPoint-Off")
+                        widget.texture:SetAtlas("ComboPoints-ComboPoint")
+                        widget.background:SetAtlas("ComboPoints-PointBg")
                     end
                 end
             end
@@ -1033,7 +1074,12 @@ end
         end
 
         --amount of resources the player has now
-        local currentResources = GetComboPoints("player", "target") --UnitPower("player", Plater.Resources.playerResourceId)
+        local currentResources
+		if Plater.PlayerHasTargetNonSelf then
+			currentResources = GetComboPoints("player", "target")
+		else
+			currentResources = UnitPower("player", Plater.Resources.playerResourceId)
+		end
 
         --resources amount got updated?
         if (currentResources == resourceBar.lastResourceAmount and not forcedRefresh) then
@@ -1080,6 +1126,9 @@ end
 				if start then
 					cooldown:SetCooldown(start, duration)
 				end
+				if not DB_PLATER_RESOURCE_SHOW_DEPLETED then
+					cooldown:SetAlpha(0)
+				end
 				runeButton.texture:SetAlpha(0)
 				--runeButton.energize:Stop()
 			else
@@ -1099,19 +1148,10 @@ end
 					runeButton.texture:SetAlpha(1)
 				end
 
+				cooldown:SetAlpha(1)
 				cooldown:Hide()
 			end
 		end
-		
-		
-
-        --which update method to use
-		-- can't use core updat here...
-        --[[if (DB_PLATER_RESOURCE_SHOW_DEPLETED) then
-            Plater.Resources.UpdateResources_WithDepleted(resourceBar, currentResources)
-        else
-            Plater.Resources.UpdateResources_NoDepleted(resourceBar, currentResources)
-        end]]--
     end
     
     --WL soul chards

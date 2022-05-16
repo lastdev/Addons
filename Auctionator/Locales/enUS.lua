@@ -300,9 +300,7 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["SPLASH_9010_FEATURES_1"] = "The default quantities for use in the Selling tab are now set based on the item's type. Find them in the \"Selling: Quantities\" options"
   L["SPLASH_9010_UNANNOUNCED_HEADER"] = "Unannounced features from 9.0.9"
   L["SPLASH_9010_UNANNOUNCED_1"] = "A new \"Show bid price option when listing an item\" option, found in \"Selling\" options, to allow bid prices to be set from the Selling tab"
-  L["SPLASH_9105_DESCRIPTION"] = "Added a new search method for shopping lists that can scan and filter prices for thousands of items in 14s (around 42s on a full population realm) - previously this could take 20+ minutes! This is invaluable for sniping the perfect deal when combined with the gold price filters."
   L["SPLASH_9105_FEATURES_HEADER"] = "Recent Features"
-  L["SPLASH_9105_FEATURES_1"] = "Very fast shopping list search when searching for more than 50 items."
   L["SPLASH_9105_FEATURES_2"] = "Added a button to move the price history dialog in the \"Shopping\" tab to the right of the results listing (right click any result to see a price history)."
   L["SPLASH_9105_FEATURES_3"] = "Option to show profit instead of crafting cost in the crafting window when the Auction House is open."
   L["SPLASH_9106_DESCRIPTION"] = "A new quick search box and search history in the reworked Shopping tab."
@@ -360,6 +358,7 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["REFRESH"] = "Refresh"
 
   L["ANY_LOWER"] = "any"
+  L["ANY_UPPER"] = "Any"
 
   L["NO_RESULTS"] = "No results found."
 
@@ -375,6 +374,7 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["UNDERCUT_YES"] ="Yes"
   L["UNDERCUT_NO"] = "No"
   L["UNDERCUT_UNKNOWN"] = "?"
+  L["YOU"] = "You"
 
   L["MONTH_1"] = "January"
   L["MONTH_2"] = "February"
@@ -396,6 +396,8 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["DAY_5"] = "Thursday"
   L["DAY_6"] = "Friday"
   L["DAY_7"] = "Saturday"
+
+  L["TODAY"] = "Today"
 
   L["TEMPORARY_LOWER_CASE"] = "temporary"
 
@@ -497,6 +499,7 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["REAGENT_SEARCH"] = "Reagent Search"
   L["NUMBER_SEPARATOR"] = ","
   L["TOTAL_ON_SALE"] = "Total on sale: %s"
+  L["TOTAL_PENDING"] = "(%s pending)"
   L["REALM_HISTORY"] = "Realm History"
   L["YOUR_HISTORY"] = "Your History"
   L["EXPORT_RESULTS"] = "Export Results"
@@ -514,6 +517,9 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["CONFIG_SHOPPING_LIST_FULL_REFRESH"] = "Refresh all pages when clicking the Refresh button"
   L["CONFIG_SHOPPING_LIST_FULL_REFRESH_TOOLTIP_HEADER"] = "Refresh All Pages"
   L["CONFIG_SHOPPING_LIST_FULL_REFRESH_TOOLTIP_TEXT"] = "Only the first page is needed to determine the cheapest price, if you are only interested in the cheapest price and don't need to see the rest of the results you can turn this option off for a speed boost."
+  L["CONFIG_SHOPPING_LIST_EXCLUDE_RESULTS_FOR_SPEED"] = "Ignore results that aren't on the first page of the current search"
+  L["CONFIG_SHOPPING_LIST_EXCLUDE_RESULTS_FOR_SPEED_TOOLTIP_HEADER"] = "Exclude Results for Speed"
+  L["CONFIG_SHOPPING_LIST_EXCLUDE_RESULTS_FOR_SPEED_TOOLTIP_TEXT"] = "Ignoring results that are not on the first page may cause some expensive items to not appear. Quantities in the price history and search results will be inaccurate."
 
   L["STARTING_PRICE_PERCENTAGE_SUFFIX"] = "% of the stack price"
   L["STARTING_PRICE_PERCENTAGE"] = "Starting Price"
@@ -526,6 +532,7 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["BUYING_X_FOR_X"] = "Buying %s for %s"
   L["BRACKETS_X_EACH"] = "(%s each)"
   L["ALREADY_PURCHASED_X"] = "Already purchased %s"
+  L["PRICE_INCREASE_WARNING"] = "Price increased by %s, waiting %ss"
   L["PURCHASED_X_XX"] = "Purchased %s x%s"
   L["DEFAULT_STACK_SIZES"] = "Default Stack Sizes"
   L["CONFIG_SELLING_TBC_ALL_ITEMS"] = "Options to set the default posting settings for all items."

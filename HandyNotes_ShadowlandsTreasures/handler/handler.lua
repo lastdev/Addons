@@ -5,6 +5,8 @@ local HL = LibStub("AceAddon-3.0"):NewAddon(myname, "AceEvent-3.0")
 -- local L = LibStub("AceLocale-3.0"):GetLocale(myname, true)
 ns.HL = HL
 
+ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v63'
+
 ---------------------------------------------------------
 -- Data model stuff:
 
@@ -55,6 +57,19 @@ ns.points = {
     },
     --]]
 }
+ns.POIsToPoints = {}
+ns.VignetteIDsToPoints = {}
+ns.WorldQuestsToPoints = {}
+local function intotable(dest, value_or_table, point)
+    if not value_or_table then return end
+    if type(value_or_table) == "table" then
+        for _, value in ipairs(value_or_table) do
+            dest[value] = point
+        end
+        return
+    end
+    dest[value_or_table] = point
+end
 function ns.RegisterPoints(zone, points, defaults)
     if not ns.points[zone] then
         ns.points[zone] = {}
@@ -66,6 +81,53 @@ function ns.RegisterPoints(zone, points, defaults)
         end
     end
     ns.merge(ns.points[zone], points)
+    for coord, point in pairs(points) do
+        point._coord = coord
+        point._uiMapID = zone
+        intotable(ns.POIsToPoints, point.areaPoi, point)
+        intotable(ns.VignetteIDsToPoints, point.vignette, point)
+        intotable(ns.WorldQuestsToPoints, point.worldquest, point)
+        if point.route and type(point.route) == "table" then
+            -- avoiding a data migration
+            point.routes = {point.route}
+            point.route = nil
+        end
+        local proxy_meta
+        if point.path or point.nearby then
+            proxy_meta = {__index=point}
+        end
+        if point.path then
+            local route = type(point.path) == "table" and point.path or {point.path}
+            table.insert(route, 1, coord)
+            ns.points[zone][route[#route]] = setmetatable({
+                label=route.label or (point.npc and "Path to NPC" or "Path to treasure"),
+                atlas=route.atlas or "poi-door", scale=route.scale or 0.95, minimap=true, texture=false,
+                note=route.note or false,
+                loot=route.loot,
+                routes={route},
+                _coord=route[#route],
+            }, proxy_meta)
+            -- highlight
+            point.route = point.route or route[#route]
+        end
+        if point.nearby then
+            local nearby = type(point.nearby) == "table" and point.nearby or {point.nearby}
+            for _, ncoord in ipairs(point.nearby) do
+                local npoint = setmetatable({
+                    label=nearby.label or (point.npc and "Related to nearby NPC" or "Related to nearby treasure"),
+                    atlas=nearby.atlas or "playerpartyblip",
+                    texture=nearby.texture or false,
+                    minimap=true, worldmap=false, scale=0.95,
+                    note=nearby.note or false,
+                    _coord=ncoord,
+                }, proxy_meta)
+                if nearby.color then
+                    npoint.texture = ns.atlas_texture(npoint.atlas, nearby.color)
+                end
+                ns.points[zone][ncoord] = npoint
+            end
+        end
+    end
 end
 
 ns.merge = function(t1, t2)
@@ -94,7 +156,6 @@ end
 ns.path = ns.nodeMaker{
     label = "Path to treasure",
     atlas = "poi-door", -- 'PortalPurple' / 'PortalRed'?
-    path = true,
     minimap = true,
     scale = 0.95,
 }
@@ -153,13 +214,14 @@ local function render_string(s, context)
             if name and icon then
                 return quick_texture_markup(icon) .. " " .. name
             end
-        elseif variant == "quest" then
+        elseif variant == "quest" or variant == "worldquest" then
             local name = C_QuestLog.GetTitleForQuestID(id)
             if not (name and name ~= "") then
                 name = tostring(id)
             end
             local completed = C_QuestLog.IsQuestFlaggedCompleted(id)
-            return CreateAtlasMarkup("questnormal") .. (completed and completeColor or incompleteColor):WrapTextInColorCode(name)
+            return CreateAtlasMarkup(variant == "worldquest" and "worldquest-tracker-questmarker" or "questnormal") ..
+                (completed and completeColor or incompleteColor):WrapTextInColorCode(name)
         elseif variant == "questid" then
             return CreateAtlasMarkup("questnormal") .. (C_QuestLog.IsQuestFlaggedCompleted(id) and completeColor or incompleteColor):WrapTextInColorCode(id)
         elseif variant == "achievement" then
@@ -176,6 +238,11 @@ local function render_string(s, context)
             local info = C_CurrencyInfo.GetCurrencyInfo(id)
             if info then
                 return quick_texture_markup(info.iconFileID) .. " " .. info.name
+            end
+        elseif variant == "currencyicon" then
+            local info = C_CurrencyInfo.GetCurrencyInfo(id)
+            if info then
+                return quick_texture_markup(info.iconFileID)
             end
         elseif variant == "covenant" then
             local data = C_Covenants.GetCovenantData(id)
@@ -198,7 +265,7 @@ local function cache_string(s, context)
             C_Item.RequestLoadItemDataByID(id)
         elseif variant == "spell" then
             C_Spell.RequestLoadSpellData(id)
-        elseif variant == "quest" then
+        elseif variant == "quest" or variant == "worldquest" then
             C_QuestLog.RequestLoadQuestByID(id)
         elseif variant == "npc" then
             mob_name(id)
@@ -253,8 +320,8 @@ local atlas_texture = function(atlas, extra)
 end
 ns.atlas_texture = atlas_texture
 local default_textures = {
-    VignetteLoot = atlas_texture("VignetteLoot", 1.2),
-    VignetteLootElite = atlas_texture("VignetteLootElite", 1.3),
+    VignetteLoot = atlas_texture("VignetteLoot", 1.1),
+    VignetteLootElite = atlas_texture("VignetteLootElite", 1.2),
     Garr_TreasureIcon = atlas_texture("Garr_TreasureIcon", 2.2),
 }
 local function work_out_label(point)
@@ -263,7 +330,7 @@ local function work_out_label(point)
         return (render_string(point.label, point))
     end
     if point.achievement then
-        if point.criteria and type(point.criteria) ~= "table" then
+        if point.criteria and type(point.criteria) ~= "table" and point.criteria ~= true then
             local criteria = (point.criteria < 40 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID)(point.achievement, point.criteria)
             if criteria then
                 return criteria
@@ -293,7 +360,7 @@ local function work_out_label(point)
         -- handle multiples?
         local _, link = GetItemInfo(ns.lootitem(point.loot[1]))
         if link then
-            return link
+            return link:gsub("[%[%]]", "")
         end
         fallback = 'item:'..ns.lootitem(point.loot[1])
     end
@@ -464,189 +531,203 @@ local get_point_progress = function(point)
     end
 end
 
-local function handle_tooltip(tooltip, point)
-    if point then
-        -- major:
-        tooltip:AddLine(work_out_label(point))
-        if point.follower then
-            local follower = C_Garrison.GetFollowerInfo(point.follower)
-            if follower then
-                local quality = BAG_ITEM_QUALITY_COLORS[follower.quality]
-                tooltip:AddDoubleLine(REWARD_FOLLOWER, follower.name,
-                    0, 1, 0,
-                    quality.r, quality.g, quality.b
-                )
-                tooltip:AddDoubleLine(follower.className, UNIT_LEVEL_TEMPLATE:format(follower.level))
-            end
-        end
-        if point.currency then
-            local name
-            if ns.currencies[point.currency] then
-                name = ns.currencies[point.currency].name
-            else
-                local info = C_CurrencyInfo.GetCurrencyInfo(point.currency)
-                name = info and info.name
-            end
-            tooltip:AddDoubleLine(CURRENCY, name or point.currency)
-        end
-        if point.achievement then
-            local _, name, _, complete = GetAchievementInfo(point.achievement)
-            tooltip:AddDoubleLine(BATTLE_PET_SOURCE_6, name or point.achievement,
-                nil, nil, nil,
-                complete and 0 or 1, complete and 1 or 0, 0
-            )
-            if point.criteria then
-                if type(point.criteria) == "table" then
-                    for _, criteria in ipairs(point.criteria) do
-                        local criteria, _, complete = (criteria < 40 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID)(point.achievement, criteria)
-                        tooltip:AddDoubleLine(" ", criteria,
-                            nil, nil, nil,
-                            complete and 0 or 1, complete and 1 or 0, 0
-                        )
-                    end
-                else
-                    local criteria, _, complete = (point.criteria < 40 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID)(point.achievement, point.criteria)
-                    tooltip:AddDoubleLine(" ", criteria,
-                        nil, nil, nil,
-                        complete and 0 or 1, complete and 1 or 0, 0
-                    )
-                end
-            elseif GetAchievementNumCriteria(point.achievement) == 1 then
-                local criteria, _, complete, _, _, _, _, _, quantityString = GetAchievementCriteriaInfo(point.achievement, 1)
-                if quantityString then
-                    tooltip:AddDoubleLine(
-                        (criteria and #criteria > 0) and criteria or PVP_PROGRESS_REWARDS_HEADER, quantityString,
-                        complete and 0 or 1, complete and 1 or 0, 0,
-                        complete and 0 or 1, complete and 1 or 0, 0
-                    )
-                else
-                    tooltip:AddDoubleLine(" ", criteria,
-                        nil, nil, nil,
-                        complete and 0 or 1, complete and 1 or 0, 0
-                    )
-                end
-            end
-        end
-        if point.active then
-            local isActive = ns.point_active(point)
-            tooltip:AddLine(
-                ns.render_string(point.active.note or ns.conditions.summarize(point.active), point),
-                isActive and 0 or 1, isActive and 1 or 0, 0, true
-            )
-        end
-        if point.note then
-            tooltip:AddLine(render_string(point.note, point), 1, 1, 1, true)
-        end
-        if point.loot then
-            for _, item in ipairs(point.loot) do
-                local _, link, _, _, _, _, _, _, _, icon = GetItemInfo(ns.lootitem(item))
-                if link then
-                    local label = ENCOUNTER_JOURNAL_ITEM
-                    link = link:gsub("[%[%]]", "")
-                    if type(item) == "table" then
-                        if item.mount then label = MOUNT
-                        elseif item.toy then label = TOY
-                        elseif item.pet then label = TOOLTIP_BATTLE_PET
-                        end
-                        -- todo: faction?
-                        if item.covenant then
-                            local data = C_Covenants.GetCovenantData(item.covenant)
-                            -- local active = item.covenant == C_Covenants.GetActiveCovenantID()
-                            link = TEXT_MODE_A_STRING_VALUE_TYPE:format(link, COVENANT_COLORS[item.covenant]:WrapTextInColorCode(data and data.name or ns.covenants[item.covenant]))
-                        end
-                        if item.class then
-                            link = TEXT_MODE_A_STRING_VALUE_TYPE:format(link, RAID_CLASS_COLORS[item.class]:WrapTextInColorCode(LOCALIZED_CLASS_NAMES_FEMALE[item.class]))
-                        end
-                        if item.note then
-                            link = TEXT_MODE_A_STRING_VALUE_TYPE:format(link, item.note)
-                        end
-                    end
-                    local known = ns.itemIsKnown(item)
-                    if known ~= nil and (known == true or not ns.itemRestricted(item)) then
-                        link = link .. CreateAtlasMarkup(known and "common-icon-checkmark" or "common-icon-redx")
-                    end
-                    tooltip:AddDoubleLine(label, quick_texture_markup(icon) .. " " .. link)
-                else
-                    tooltip:AddDoubleLine(ENCOUNTER_JOURNAL_ITEM, SEARCH_LOADING_TEXT,
-                        NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b,
-                        0, 1, 1
-                    )
-                end
-            end
-        end
-        if point.covenant then
-            local data = C_Covenants.GetCovenantData(point.covenant)
-            local active = point.covenant == C_Covenants.GetActiveCovenantID()
-            local cname = COVENANT_COLORS[point.covenant]:WrapTextInColorCode(data and data.name or ns.covenants[point.covenant])
-            tooltip:AddLine(ITEM_REQ_SKILL:format(cname), active and 0 or 1, active and 1 or 0, 0)
-        end
-        if point.level and point.level > UnitLevel("player") then
-            tooltip:AddLine(ITEM_MIN_LEVEL:format(point.level), 1, 0, 0)
-        end
-        if point.hide_before and not ns.conditions.check(point.hide_before) then
-            tooltip:AddLine(COMMUNITY_TYPE_UNAVAILABLE, 1, 0, 0)
-            tooltip:AddLine(ns.render_string(ns.conditions.summarize(point.hide_before), point), 1, 0, 0, true)
-        end
-
-        if point.quest and ns.db.tooltip_questid then
-            tooltip:AddDoubleLine("QuestID", render_string_list(point, "questid", point.quest), NORMAL_FONT_COLOR:GetRGB())
-        end
-        if point.progress then
-            local fulfilled, required = get_point_progress(point)
-            if fulfilled and required then
-                tooltip:AddDoubleLine(PVP_PROGRESS_REWARDS_HEADER, GENERIC_FRACTION_STRING:format(fulfilled, required))
-            end
-        end
-
-        if (ns.db.tooltip_item or IsShiftKeyDown()) and (point.loot or point.npc) then
-            local comparison = ShoppingTooltip1
-
-            do
-                local side
-                local leftPos = tooltip:GetLeft() or 0
-                local rightPos = tooltip:GetRight() or 0
-                local rightDist = GetScreenWidth() - rightPos
-
-                if (leftPos and (rightDist < leftPos)) then
-                    side = "left"
-                else
-                    side = "right"
-                end
-
-                -- see if we should slide the tooltip
-                if tooltip:GetAnchorType() and tooltip:GetAnchorType() ~= "ANCHOR_PRESERVE" then
-                    local totalWidth = 0
-                    if ( primaryItemShown  ) then
-                        totalWidth = totalWidth + comparison:GetWidth()
-                    end
-
-                    if ( (side == "left") and (totalWidth > leftPos) ) then
-                        tooltip:SetAnchorType(tooltip:GetAnchorType(), (totalWidth - leftPos), 0)
-                    elseif ( (side == "right") and (rightPos + totalWidth) >  GetScreenWidth() ) then
-                        tooltip:SetAnchorType(tooltip:GetAnchorType(), -((rightPos + totalWidth) - GetScreenWidth()), 0)
-                    end
-                end
-
-                comparison:SetOwner(tooltip, "ANCHOR_NONE")
-                comparison:ClearAllPoints()
-
-                if ( side and side == "left" ) then
-                    comparison:SetPoint("TOPRIGHT", tooltip, "TOPLEFT", 0, -10)
-                else
-                    comparison:SetPoint("TOPLEFT", tooltip, "TOPRIGHT", 0, -10)
-                end
-            end
-
-            if point.loot and #point.loot > 0 then
-                comparison:SetHyperlink(("item:%d"):format(ns.lootitem(point.loot[1])))
-            elseif point.npc then
-                comparison:SetHyperlink(("unit:Creature-0-0-0-0-%d"):format(point.npc))
-            end
-            comparison:Show()
-        end
+local function tooltip_criteria(tooltip, achievement, criteriaid, ignore_quantityString)
+    local getinfo = (criteriaid < 40 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID)
+    local criteria, _, complete, _, _, _, _, _, quantityString = getinfo(achievement, criteriaid)
+    if quantityString and not ignore_quantityString then
+        tooltip:AddDoubleLine(
+            (criteria and #criteria > 0) and criteria or PVP_PROGRESS_REWARDS_HEADER, quantityString,
+            complete and 0 or 1, complete and 1 or 0, 0,
+            complete and 0 or 1, complete and 1 or 0, 0
+        )
     else
-        tooltip:SetText(UNKNOWN)
+        tooltip:AddDoubleLine(" ", criteria,
+            nil, nil, nil,
+            complete and 0 or 1, complete and 1 or 0, 0
+        )
     end
+end
+local function handle_tooltip(tooltip, point)
+    if not point then
+        tooltip:SetText(UNKNOWN)
+        tooltip:Show()
+        return
+    end
+    -- major:
+    if point.label ~= false then
+        tooltip:AddLine(work_out_label(point))
+    end
+    if point.follower then
+        local follower = C_Garrison.GetFollowerInfo(point.follower)
+        if follower then
+            local quality = BAG_ITEM_QUALITY_COLORS[follower.quality]
+            tooltip:AddDoubleLine(REWARD_FOLLOWER, follower.name,
+                0, 1, 0,
+                quality.r, quality.g, quality.b
+            )
+            tooltip:AddDoubleLine(follower.className, UNIT_LEVEL_TEMPLATE:format(follower.level))
+        end
+    end
+    if point.currency then
+        local name
+        if ns.currencies[point.currency] then
+            name = ns.currencies[point.currency].name
+        else
+            local info = C_CurrencyInfo.GetCurrencyInfo(point.currency)
+            name = info and info.name
+        end
+        tooltip:AddDoubleLine(CURRENCY, name or point.currency)
+    end
+    if point.achievement then
+        local _, name, _, complete = GetAchievementInfo(point.achievement)
+        tooltip:AddDoubleLine(BATTLE_PET_SOURCE_6, name or point.achievement,
+            nil, nil, nil,
+            complete and 0 or 1, complete and 1 or 0, 0
+        )
+        if point.criteria then
+            if point.criteria == true then
+                for criteria=1, GetAchievementNumCriteria(point.achievement) do
+                    tooltip_criteria(tooltip, point.achievement, criteria, true)
+                end
+            elseif type(point.criteria) == "table" then
+                for _, criteria in ipairs(point.criteria) do
+                    tooltip_criteria(tooltip, point.achievement, criteria, true)
+                end
+            elseif type(point.criteria) == "number" then
+                tooltip_criteria(tooltip, point.achievement, point.criteria, true)
+            end
+        elseif GetAchievementNumCriteria(point.achievement) == 1 then
+            tooltip_criteria(tooltip, point.achievement, 1)
+        end
+    end
+    if point.progress then
+        local fulfilled, required = get_point_progress(point)
+        if fulfilled and required then
+            tooltip:AddDoubleLine(PVP_PROGRESS_REWARDS_HEADER, GENERIC_FRACTION_STRING:format(fulfilled, required))
+        end
+    end
+    if point.note then
+        tooltip:AddLine(render_string(point.note, point), 1, 1, 1, true)
+    end
+    if point.loot then
+        for _, item in ipairs(point.loot) do
+            local _, link, _, _, _, _, _, _, _, icon = GetItemInfo(ns.lootitem(item))
+            if link then
+                local label = ENCOUNTER_JOURNAL_ITEM
+                link = link:gsub("[%[%]]", "")
+                if type(item) == "table" then
+                    if item.mount then label = MOUNT
+                    elseif item.toy then label = TOY
+                    elseif item.pet then label = TOOLTIP_BATTLE_PET
+                    end
+                    -- todo: faction?
+                    if item.covenant then
+                        local data = C_Covenants.GetCovenantData(item.covenant)
+                        -- local active = item.covenant == C_Covenants.GetActiveCovenantID()
+                        link = TEXT_MODE_A_STRING_VALUE_TYPE:format(link, COVENANT_COLORS[item.covenant]:WrapTextInColorCode(data and data.name or ns.covenants[item.covenant]))
+                    end
+                    if item.class then
+                        link = TEXT_MODE_A_STRING_VALUE_TYPE:format(link, RAID_CLASS_COLORS[item.class]:WrapTextInColorCode(LOCALIZED_CLASS_NAMES_FEMALE[item.class]))
+                    end
+                    if item.note then
+                        link = TEXT_MODE_A_STRING_VALUE_TYPE:format(link, render_string(item.note))
+                    end
+                end
+                local known = ns.itemIsKnown(item)
+                if known ~= nil and (known == true or not ns.itemRestricted(item)) then
+                    link = link .. " " .. CreateAtlasMarkup(known and "common-icon-checkmark" or "common-icon-redx")
+                end
+                tooltip:AddDoubleLine(label, quick_texture_markup(icon) .. " " .. link)
+            else
+                tooltip:AddDoubleLine(ENCOUNTER_JOURNAL_ITEM, SEARCH_LOADING_TEXT,
+                    NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b,
+                    0, 1, 1
+                )
+            end
+        end
+    end
+    if point.covenant then
+        local data = C_Covenants.GetCovenantData(point.covenant)
+        local active = point.covenant == C_Covenants.GetActiveCovenantID()
+        local cname = COVENANT_COLORS[point.covenant]:WrapTextInColorCode(data and data.name or ns.covenants[point.covenant])
+        tooltip:AddLine(ITEM_REQ_SKILL:format(cname), active and 0 or 1, active and 1 or 0, 0)
+    end
+    if point.level and point.level > UnitLevel("player") then
+        tooltip:AddLine(ITEM_MIN_LEVEL:format(point.level), 1, 0, 0)
+    end
+    if point.hide_before and not ns.conditions.check(point.hide_before) then
+        tooltip:AddLine(COMMUNITY_TYPE_UNAVAILABLE, 1, 0, 0)
+        tooltip:AddLine(ns.render_string(ns.conditions.summarize(point.hide_before), point), 1, 0, 0, true)
+    end
+    if point.active then
+        local isActive = ns.point_active(point)
+        tooltip:AddLine(
+            ns.render_string(point.active.note or ns.conditions.summarize(point.active), point),
+            isActive and 0 or 1, isActive and 1 or 0, 0, true
+        )
+    end
+
+    if point.group then
+        tooltip:AddDoubleLine(GROUP, render_string(ns.groups[point.group] or point.group, point))
+    end
+
+    if point.quest and ns.db.tooltip_questid then
+        tooltip:AddDoubleLine("QuestID", render_string_list(point, "questid", point.quest), NORMAL_FONT_COLOR:GetRGB())
+    end
+
+    if ns.DEBUG then
+        tooltip:AddDoubleLine("Coord", point._coord)
+    end
+
+    if (ns.db.tooltip_item or IsShiftKeyDown()) and (point.loot or point.npc or point.spell) then
+        local comparison = ShoppingTooltip1
+
+        do
+            local side
+            local leftPos = tooltip:GetLeft() or 0
+            local rightPos = tooltip:GetRight() or 0
+            local rightDist = GetScreenWidth() - rightPos
+
+            if (leftPos and (rightDist < leftPos)) then
+                side = "left"
+            else
+                side = "right"
+            end
+
+            -- see if we should slide the tooltip
+            if tooltip:GetAnchorType() and tooltip:GetAnchorType() ~= "ANCHOR_PRESERVE" then
+                local totalWidth = 0
+                if ( primaryItemShown  ) then
+                    totalWidth = totalWidth + comparison:GetWidth()
+                end
+
+                if ( (side == "left") and (totalWidth > leftPos) ) then
+                    tooltip:SetAnchorType(tooltip:GetAnchorType(), (totalWidth - leftPos), 0)
+                elseif ( (side == "right") and (rightPos + totalWidth) >  GetScreenWidth() ) then
+                    tooltip:SetAnchorType(tooltip:GetAnchorType(), -((rightPos + totalWidth) - GetScreenWidth()), 0)
+                end
+            end
+
+            comparison:SetOwner(tooltip, "ANCHOR_NONE")
+            comparison:ClearAllPoints()
+
+            if ( side and side == "left" ) then
+                comparison:SetPoint("TOPRIGHT", tooltip, "TOPLEFT", 0, -10)
+            else
+                comparison:SetPoint("TOPLEFT", tooltip, "TOPRIGHT", 0, -10)
+            end
+        end
+
+        if point.loot and #point.loot > 0 then
+            comparison:SetItemByID(ns.lootitem(point.loot[1]))
+        elseif point.npc then
+            comparison:SetHyperlink(("unit:Creature-0-0-0-0-%d"):format(point.npc))
+        elseif point.spell then
+            comparison:SetSpellByID(point.spell)
+        end
+        comparison:Show()
+    end
+
     tooltip:Show()
 end
 local handle_tooltip_by_coord = function(tooltip, uiMapID, coord)
@@ -659,8 +740,8 @@ local HLHandler = {}
 
 function HLHandler:OnEnter(uiMapID, coord)
     local point = ns.points[uiMapID] and ns.points[uiMapID][coord]
-    if point and point.route then
-        if ns.points[uiMapID][point.route] then
+    if ns.RouteWorldMapDataProvider and (point.route or point.routes) then
+        if point.route and ns.points[uiMapID][point.route] then
             point = ns.points[uiMapID][point.route]
         end
         ns.RouteWorldMapDataProvider:HighlightRoute(point, uiMapID, coord)
@@ -684,6 +765,10 @@ function HLHandler:OnEnter(uiMapID, coord)
     handle_tooltip_by_coord(tooltip, uiMapID, coord)
 end
 
+local function showAchievement(button, achievement)
+    OpenAchievementFrameToAchievement(achievement)
+end
+
 local function createWaypoint(button, uiMapID, coord)
     if TomTom then
         local x, y = HandyNotes:getXY(coord)
@@ -698,6 +783,10 @@ end
 
 local function hideNode(button, uiMapID, coord)
     ns.hidden[uiMapID][coord] = true
+    HL:Refresh()
+end
+local function hideAchievement(button, achievement)
+    ns.db.achievementsHidden[achievement] = true
     HL:Refresh()
 end
 local function hideGroup(button, uiMapID, coord)
@@ -752,6 +841,16 @@ do
             UIDropDownMenu_AddButton(info, level)
             wipe(info)
 
+            if point.achievement then
+                -- Waypoint menu item
+                info.text = OBJECTIVES_VIEW_ACHIEVEMENT
+                info.notCheckable = 1
+                info.func = showAchievement
+                info.arg1 = point.achievement
+                UIDropDownMenu_AddButton(info, level)
+                wipe(info)
+            end
+
             if TomTom then
                 -- Waypoint menu item
                 info.text = "Create waypoint"
@@ -779,6 +878,16 @@ do
             info.arg2         = currentCoord
             UIDropDownMenu_AddButton(info, level)
             wipe(info)
+
+            if point.achievement then
+                -- Waypoint menu item
+                info.text = render_string("Hide all {achievement:" .. point.achievement .. "} in all zones")
+                info.notCheckable = 1
+                info.func = hideAchievement
+                info.arg1 = point.achievement
+                UIDropDownMenu_AddButton(info, level)
+                wipe(info)
+            end
 
             if point.group then
                 if not ns.hiddenConfig.groupsHiddenByZone then
@@ -836,8 +945,8 @@ function HLHandler:OnLeave(uiMapID, coord)
     ShoppingTooltip1:Hide()
 
     local point = ns.points[uiMapID] and ns.points[uiMapID][coord]
-    if point and point.route then
-        if ns.points[uiMapID][point.route] then
+    if ns.RouteWorldMapDataProvider and (point.route or point.routes) then
+        if point.route and ns.points[uiMapID][point.route] then
             point = ns.points[uiMapID][point.route]
         end
         ns.RouteWorldMapDataProvider:UnhighlightRoute(point, uiMapID, coord)
@@ -864,14 +973,6 @@ do
         -- Debug("GetNodes2", uiMapID, minimap)
         currentZone = uiMapID
         isMinimap = minimap
-        if minimap and ns.map_spellids[uiMapID] then
-            if ns.map_spellids[uiMapID] == true then
-                return iter
-            end
-            if GetPlayerAuraBySpellID(ns.map_spellids[uiMapID]) then
-                return iter
-            end
-        end
         return iter, ns.points[uiMapID], nil
     end
 end
@@ -881,7 +982,7 @@ end
 
 function HL:OnInitialize()
     -- Set up our database
-    if self.defaultsOverride then
+    if ns.defaultsOverride then
         ns.merge(ns.defaults.profile, ns.defaultsOverride)
     end
     self.db = LibStub("AceDB-3.0"):New(myname.."DB", ns.defaults)
@@ -931,3 +1032,28 @@ do
         bucket:Show()
     end
 end
+
+hooksecurefunc(AreaPOIPinMixin, "TryShowTooltip", function(self)
+    -- if not self.db.profile.show_on_world then return end
+    if not self.areaPoiID then return end
+    if not ns.POIsToPoints[self.areaPoiID] then return end
+    local point = ns.POIsToPoints[self.areaPoiID]
+    if not ns.should_show_point(point._coord, point, point._uiMapID, false) then return end
+    handle_tooltip(GameTooltip, point)
+end)
+
+hooksecurefunc(VignettePinMixin, "OnMouseEnter", function(self)
+    local vignetteInfo = self.vignetteInfo
+    if not (vignetteInfo.vignetteID and ns.VignetteIDsToPoints[vignetteInfo.vignetteID]) then return end
+    local point = ns.VignetteIDsToPoints[vignetteInfo.vignetteID]
+    if not ns.should_show_point(point._coord, point, point._uiMapID, false) then return end
+    handle_tooltip(GameTooltip, point)
+end)
+
+hooksecurefunc("TaskPOI_OnEnter", function(self)
+    if not self.questID then return end
+    if not ns.WorldQuestsToPoints[self.questID] then return end
+    local point = ns.WorldQuestsToPoints[self.questID]
+    if not ns.should_show_point(point._coord, point, point._uiMapID, false) then return end
+    handle_tooltip(GameTooltip, point)
+end)

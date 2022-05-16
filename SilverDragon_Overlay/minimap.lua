@@ -69,12 +69,6 @@ local function OnPinReleased(pinPool, pin)
     pin.pinTemplate = nil
     pin.provider = nil
 end
-function dataProvider:AcquirePin(template, ...)
-    local pin, newPin = self.pool:Acquire()
-
-    pin.pinTemplate = nil
-    pin.provider = nil
-end
 function dataProvider:AcquirePin(pinTemplate, ...)
     if not self.pinPools[pinTemplate] then
         self.pinPools[pinTemplate] = CreateFramePool("FRAME", Minimap, pinTemplate, OnPinReleased)
@@ -181,7 +175,7 @@ function SilverDragonOverlayMinimapPinMixin:OnLoad()
 end
 
 function SilverDragonOverlayMinimapPinMixin:UpdateEdge()
-    local alpha = (HBDPins:IsMinimapIconOnEdge(self) and 0.6 or 1) * self.config.icon_alpha
+    local alpha = (HBDPins:IsMinimapIconOnEdge(self) and 0.6 or 1) * self:Config().icon_alpha
     self:SetAlpha(alpha)
 end
 
@@ -194,7 +188,6 @@ function SilverDragonOverlayMinimapRoutePinMixin:OnLoad()
     self.texture:SetAtlas("_AnimaChannel-Channel-Line-horizontal")
 
     self.minimap = true
-    self.config = module.db.profile.minimap
 end
 
 function SilverDragonOverlayMinimapRoutePinMixin:OnAcquired(coord1, coord2, uiMapID, mobid, route)
@@ -218,7 +211,7 @@ function SilverDragonOverlayMinimapRoutePinMixin:OnAcquired(coord1, coord2, uiMa
     else
         r, g, b = module.id_to_color(mobid)
     end
-    self.texture:SetVertexColor(r, g, b, a * self.config.icon_alpha)
+    self.texture:SetVertexColor(r, g, b, a * self:Config().icon_alpha)
 
     local x, y = (x1+x2)/2, (y1+y2)/2
     HBDPins:AddMinimapIconMap(dataProvider, self, uiMapID, x, y)
@@ -239,6 +232,9 @@ function SilverDragonOverlayMinimapRoutePinMixin:UpdateRotation()
     if self.rotation == nil or self.provider.facing == nil then return end
     self.texture:SetRotation(self.rotation + math.pi*2 - self.provider.facing)
 end
+
+-- This isn't made from the mixin, but I want this method anyway:
+SilverDragonOverlayMinimapRoutePinMixin.Config = module.SilverDragonOverlayPinMixinBase.Config
 
 --
 

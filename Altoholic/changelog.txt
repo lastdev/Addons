@@ -14,6 +14,31 @@ How to support Altoholic's development :
 
 If you like the addon, consider supporting it, this has been the long term effort and commitment of a single person. #ArmyOfOne
 
+9.2.003b (27/04/2022)
+
+- Fixed .toc in DataStore_Quests.
+
+9.2.003 (24/04/2022)
+
+- Added support for weekly quests & weekly world bosses (Grids tab -> Quests).
+- Added tracking of the cypher console (Summary tab -> Expansion Features)
+- Updated LibItemInfo with zone-specific items (early implementation, it's working, but many items from older expansions are missing).
+
+9.2.002 (28/03/2022)
+
+- Updated LibItemInfo with 9.2 items.
+- Added support for the 9.2 campaign.
+
+9.2.001b (16/03/2022)
+
+- Fixed file encoding for Italian localization files.
+
+9.2.001 (14/03/2022)
+
+- Added support for 9.2 factions.
+- Added support for 9.2 currencies.
+- Added support for 9.2 achievements.
+
 9.1.008 (07/11/2021)
 
 - Fixed the tooltip backdrop issue introduced in 9.1.5.

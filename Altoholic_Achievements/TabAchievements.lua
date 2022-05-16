@@ -152,6 +152,8 @@ addon:Controller("AltoholicUI.TabAchievementsCategoriesList", {
 					{ id = cat.QuestsLegion },
 					{ id = cat.QuestsBfA },
 					{ id = cat.QuestsShadowlands },
+					-- Zereth Mortis
+					{ text = format("%s9.2|r %s%s", colors.green, colors.yellow, C_Map.GetAreaInfo(13536)), id = cat.QuestsShadowlands92 },
 				}},
 				{ text = TRACKER_FILTER_COMPLETED_QUESTS, id = cat.QuestsCompleted },
 				{ text = L["Daily Quests"], id = cat.QuestsDaily },
@@ -170,6 +172,8 @@ addon:Controller("AltoholicUI.TabAchievementsCategoriesList", {
 					{ id = cat.ExplorationLegion },
 					{ id = cat.ExplorationBfA },
 					{ id = cat.ExplorationShadowlands },
+					-- Zereth Mortis
+					{ text = format("%s9.2|r %s%s", colors.green, colors.yellow, C_Map.GetAreaInfo(13536)), id = cat.ExplorationShadowlands92 },
 				}},
 				{ text = L["Explorer"], id = cat.ExplorationExplorer },
 			}},
@@ -224,6 +228,8 @@ addon:Controller("AltoholicUI.TabAchievementsCategoriesList", {
 					{ text = EXPANSION_NAME6, id = cat.RaidsLegion },
 					{ text = EXPANSION_NAME7, id = cat.RaidsBfA },
 					{ text = EXPANSION_NAME8, id = cat.RaidsShadowlands },
+					-- Zereth Mortis
+					{ text = format("%s9.2|r %s%s", colors.green, colors.yellow, C_Map.GetAreaInfo(13742)), id = cat.RaidsShadowlands92 },
 				}},
 				{ text = "Raider's Glory", id = cat.DungeonGloryRaider },
 				-- by exp

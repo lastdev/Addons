@@ -8,6 +8,8 @@ L["ALREADY_PURCHASED_X"] = "%s 구매함"
 L["ALT_LEFT_CLICK"] = "클릭"
 L["ALT_RIGHT_CLICK"] = "우클릭"
 L["ANY_LOWER"] = "모두"
+--[[Translation missing --]]
+L["ANY_UPPER"] = "Any"
 L["AUCTION"] = "경매"
 L["AUCTION_DURATION_12"] = "12시간"
 L["AUCTION_DURATION_24"] = "24시간"
@@ -156,6 +158,12 @@ L["CONFIG_SELLING_TEXT"] = "판매하기 탭의 설정을 변경합니다."
 L["CONFIG_SHOPPING_CATEGORY"] = "구매목록"
 L["CONFIG_SHOPPING_LIST"] = "구매목록 설정"
 --[[Translation missing --]]
+L["CONFIG_SHOPPING_LIST_EXCLUDE_RESULTS_FOR_SPEED"] = "Ignore results that aren't on the first page of the current search"
+--[[Translation missing --]]
+L["CONFIG_SHOPPING_LIST_EXCLUDE_RESULTS_FOR_SPEED_TOOLTIP_HEADER"] = "Exclude Results for Speed"
+--[[Translation missing --]]
+L["CONFIG_SHOPPING_LIST_EXCLUDE_RESULTS_FOR_SPEED_TOOLTIP_TEXT"] = "Ignoring results that are not on the first page may cause some expensive items to not appear. Quantities in the price history and search results will be inaccurate."
+--[[Translation missing --]]
 L["CONFIG_SHOPPING_LIST_FULL_REFRESH"] = "Refresh all pages when clicking the Refresh button"
 --[[Translation missing --]]
 L["CONFIG_SHOPPING_LIST_FULL_REFRESH_TOOLTIP_HEADER"] = "Refresh All Pages"
@@ -288,6 +296,8 @@ L["PET_TOOLTIP_TOOLTIP_HEADER"] = "펫 툴팁"
 L["PET_TOOLTIP_TOOLTIP_TEXT"] = "우리에 담긴 펫의 경매장 가격을 표시합니다."
 L["POST"] = "경매 시작"
 L["PRICE"] = "가격"
+--[[Translation missing --]]
+L["PRICE_INCREASE_WARNING"] = "Price increased by %s, waiting %ss"
 L["PROFILE_TOGGLE_TOOLTIP_HEADER"] = "캐릭터 별 설정"
 L["PROFILE_TOGGLE_TOOLTIP_TEXT"] = "캐릭터 별 옥셔네이터 설정을 적용합니다."
 L["PROFIT_COLON"] = "수익:"
@@ -446,10 +456,6 @@ L["SPLASH_907_UNANNOUNCED_1"] = "An optional \"Seller(s)\" column (to see who is
 --[[Translation missing --]]
 L["SPLASH_907_UNANNOUNCED_HEADER"] = "Unannounced features from 9.0.6"
 --[[Translation missing --]]
-L["SPLASH_9105_DESCRIPTION"] = "Added a new search method for shopping lists that can scan and filter prices for thousands of items in 14s (around 42s on a full population realm) - previously this could take 20+ minutes! This is invaluable for sniping the perfect deal when combined with the gold price filters."
---[[Translation missing --]]
-L["SPLASH_9105_FEATURES_1"] = "Very fast shopping list search when searching for more than 50 items."
---[[Translation missing --]]
 L["SPLASH_9105_FEATURES_2"] = "Added a button to move the price history dialog in the \"Shopping\" tab to the right of the results listing (right click any result to see a price history)."
 --[[Translation missing --]]
 L["SPLASH_9105_FEATURES_3"] = "Option to show profit instead of crafting cost in the crafting window when the Auction House is open."
@@ -508,11 +514,15 @@ L["TEMPORARY_LOWER_CASE"] = "임시"
 L["TIME_LEFT"] = "남은 시간"
 L["TIME_LEFT_H"] = "남은 시간(시)"
 L["TO_CRAFT_COLON"] = "다음의 재료:"
+--[[Translation missing --]]
+L["TODAY"] = "Today"
 L["TOO_BIG_PERCENTAGE"] = "%%는 100이거나 그 이하여야 합니다. (입력값:%s)"
 L["TOO_MANY_SEARCH_RESULTS"] = "검색 결과가 너무 많습니다. 제한된 결과만 표시됩니다."
 L["TOO_SMALL_PERCENTAGE"] = "%%는 0이거나 그 이상이여야 합니다. (입력값:%s)"
 L["TOTAL_ITEMS_COLORED"] = "전체 |cFFAAAAFF %s 개s|r"
 L["TOTAL_ON_SALE"] = "총 판매량: %s"
+--[[Translation missing --]]
+L["TOTAL_PENDING"] = "(%s pending)"
 L["TOTAL_PRICE"] = "전체 판매가"
 L["TRANSLATORS_BRAZIL_PORTUGUEUSE"] = "브라질리언 포르투갈어"
 L["TRANSLATORS_FRENCH"] = "프랑스어"
@@ -549,6 +559,8 @@ L["WAITING_AT_MOST_X_LONGER"] = "최대 %ss 이상 대기 중..."
 L["X_PRICE_HISTORY"] = "%s 가격 기록"
 L["X_STACK_OF_X"] = "%s 묶음 %s 개"
 L["X_STACKS_OF_X"] = "%s 묶음 %s 개"
+--[[Translation missing --]]
+L["YOU"] = "You"
 L["YOU_COLUMN"] = "내 경매"
 L["YOUR_HISTORY"] = "올린 아이템 기록"
 

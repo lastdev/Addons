@@ -1,0 +1,12 @@
+## Interface: 90200
+## Title: Protoform Synthesis Field Journal
+## Notes: View the battle pets you can make at the Protoform Synthesis forge and how many reagents are on your person or reagent bank
+## Version: 1.2.3
+## Author: Gello
+## SavedVariables: ProtoformSynthesisFieldJournalSettings
+autoScrollFrame\autoScrollFrame.xml
+ProtoformSynthesisFieldJournal.xml
+
+
+
+

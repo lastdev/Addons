@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2468, "DBM-Shadowlands", nil, 1192)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220302114658")
+mod:SetRevision("20220407232307")
 mod:SetCreatureID(182466)
 mod:SetEncounterID(2550)
 mod:SetReCombatTime(20)
@@ -14,10 +14,9 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 361209 361387",
 	"SPELL_SUMMON 361341",
-	"SPELL_AURA_APPLIED 361201 361632 361390",
-	"SPELL_AURA_APPLIED_DOSE 361201 361390",
-	"SPELL_AURA_REMOVED 361201 361632",
-	"SPELL_AURA_REMOVED_DOSE 361201",
+	"SPELL_AURA_APPLIED 361632 361390",
+	"SPELL_AURA_APPLIED_DOSE 361390",
+	"SPELL_AURA_REMOVED 361632",
 	"SPELL_PERIODIC_DAMAGE 361335",
 	"SPELL_PERIODIC_MISSED 361335"
 )
@@ -31,7 +30,6 @@ local warnDarkDeterrence				= mod:NewStackAnnounce(361390, 2, nil, "Tank|Healer"
 local specWarnFuriousSlam				= mod:NewSpecialWarningDodge(361209, nil, nil, nil, 2, 2)
 local specWarnDestructionCores			= mod:NewSpecialWarningDodge(361341, nil, nil, nil, 2, 2)
 local specWarnBanishmentMark			= mod:NewSpecialWarningMoveAway(361632, nil, nil, nil, 1, 2)
-local yellBanishmentMark				= mod:NewYell(361632)
 local specWarnDarkDeterrence			= mod:NewSpecialWarningStack(361390, nil, 3, nil, nil, 1, 6)
 local specWarnDarkDeterrenceTaunt		= mod:NewSpecialWarningTaunt(361390, nil, nil, nil, 1, 2)
 local specWarnGTFO						= mod:NewSpecialWarningGTFO(361335, nil, nil, nil, 1, 8)
@@ -41,23 +39,15 @@ local timerDestructionCoresCD			= mod:NewCDTimer(35.5, 361341, nil, nil, nil, 3)
 local timerBanishmentMarkCD				= mod:NewCDTimer(30.6, 361632, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON)
 local timerDeterrentStrikeCD			= mod:NewCDTimer(9.7, 361387, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
-mod:AddInfoFrameOption(361201, true)
 mod:AddRangeFrameOption(5, 361632)
 
-local CalamityStacks = {}
-
 function mod:OnCombatStart(delay, yellTriggered)
-	table.wipe(CalamityStacks)
 --	if yellTriggered then
 --		timerFuriousSlamCD:Start(1-delay)
 --		timerDestructionCoresCD:Start(1-delay)
 --		timerBanishmentMarkCD:Start(1-delay)
 --		timerDeterrentStrikeCD:Start(1-delay)
 --	end
-	if self.Options.InfoFrame then
-		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(361201))
-		DBM.InfoFrame:Show(10, "table", CalamityStacks, 1)
-	end
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
@@ -91,13 +81,7 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 361201 then
-		local amount = args.amount or 1
-		CalamityStacks[args.destName] = amount
-		if self.Options.InfoFrame then
-			DBM.InfoFrame:UpdateTable(CalamityStacks, 0.4)
-		end
-	elseif spellId == 361632 then
+	if spellId == 361632 then
 		warnBanishmentMark:CombinedShow(0.5, args.destName)
 		if self:AntiSpam(5, 3) then
 			timerBanishmentMarkCD:Start()
@@ -105,7 +89,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnBanishmentMark:Show()
 			specWarnBanishmentMark:Play("range5")
-			yellBanishmentMark:Yell()
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Show(5)
 			end
@@ -138,26 +121,11 @@ mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 361201 then
-		CalamityStacks[args.destName] = nil
-		if self.Options.InfoFrame then
-			DBM.InfoFrame:UpdateTable(CalamityStacks, 0.4)
-		end
-	elseif spellId == 361632 then
+	if spellId == 361632 then
 		if args:IsPlayer() then
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Hide()
 			end
-		end
-	end
-end
-
-function mod:SPELL_AURA_REMOVED_DOSE(args)
-	local spellId = args.spellId
-	if spellId == 361201 then
-		CalamityStacks[args.destName] = args.amount or 1
-		if self.Options.InfoFrame then
-			DBM.InfoFrame:UpdateTable(CalamityStacks, 0.4)
 		end
 	end
 end

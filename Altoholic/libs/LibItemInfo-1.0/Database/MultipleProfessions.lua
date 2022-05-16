@@ -73,4 +73,15 @@ lib:RegisterItems({
 	[178759] = SetReagent(8, e.Multi), -- Relic of the Past IV
 	[178760] = SetReagent(8, e.Multi), -- Relic of the Past V
 	[186017] = SetReagent(8, e.Multi), -- Korthite Crystal
+	[187707] = SetReagent(8, e.Multi), -- Progenitor Essentia
+	[187742] = SetReagent(8, e.Multi), -- Crafter's Mark of the First Ones
+	[187784] = SetReagent(8, e.Multi), -- Vestige of the Eternal
+	
+	[187823] = SetReagent(8, e.Multi), -- Magically Regulated Automa Core
+	[187825] = SetReagent(8, e.Multi), -- Cosmic Protoweave
+	[187829] = SetReagent(8, e.Multi), -- Aealic Harmonizing Stone
+	[187831] = SetReagent(8, e.Multi), -- Pure-Air Sail Extensions
+	[187836] = SetReagent(8, e.Multi), -- Erratic Genesis Matrix
+	[187849] = SetReagent(8, e.Multi), -- Devourer Essence Stone
+	[187850] = SetReagent(8, e.Multi), -- Sustaining Armor Polish
 })

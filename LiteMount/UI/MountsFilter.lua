@@ -35,6 +35,7 @@ function LiteMountFilterMixin:Attach(parent, fromPoint, frame, toPoint, xOff, yO
     self:ClearAllPoints()
     self:SetPoint(fromPoint, frame, toPoint, xOff, yOff)
     self.Search:SetFocus()
+    self:Show()
 end
 
 --[[------------------------------------------------------------------------]]--
@@ -267,6 +268,6 @@ function LiteMountFilterButtonMixin:Initialize(level, menuList)
     end
 end
 
-function LiteMountFilterButtonMixin:OnLoad()
+function LiteMountFilterButtonMixin:OnShow()
     UIDropDownMenu_Initialize(self.FilterDropDown, self.Initialize, "MENU")
 end

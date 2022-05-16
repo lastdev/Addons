@@ -142,4 +142,5 @@ lib:RegisterItems({
 	[172094] = SetReagent(8, e.Skinning), -- Callous Hide
 	[172096] = SetReagent(8, e.Skinning), -- Heavy Desolate Leather
 	[172097] = SetReagent(8, e.Skinning), -- Heavy Callous Hide
+	[187701] = SetReagent(8, e.Skinning), -- Protogenic Pelt
 })

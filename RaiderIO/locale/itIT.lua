@@ -74,6 +74,8 @@ L["DUNGEON_SHORT_NAME_DHT"] = "BC"
 L["DUNGEON_SHORT_NAME_DOS"] = "DOS"
 L["DUNGEON_SHORT_NAME_EOA"] = "ODA"
 L["DUNGEON_SHORT_NAME_FH"] = "CDL"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_GMBT"] = ""--]] 
 L["DUNGEON_SHORT_NAME_HOA"] = "HOA"
 L["DUNGEON_SHORT_NAME_HOV"] = "SDV"
 L["DUNGEON_SHORT_NAME_KR"] = "RDR"
@@ -89,6 +91,8 @@ L["DUNGEON_SHORT_NAME_SEAT"] = "SDT"
 L["DUNGEON_SHORT_NAME_SIEGE"] = "ADB"
 L["DUNGEON_SHORT_NAME_SOA"] = "SOA"
 L["DUNGEON_SHORT_NAME_SOTS"] = "SDT"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_STRT"] = ""--]] 
 L["DUNGEON_SHORT_NAME_TD"] = "TD"
 L["DUNGEON_SHORT_NAME_TM"] = "VM"
 L["DUNGEON_SHORT_NAME_TOP"] = "TOP"
@@ -308,6 +312,8 @@ L["RELOAD_NOW"] = "Ricarica Ora"
 --[[ L["RELOAD_RWF_MODE_BUTTON"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RWF_MINIBUTTON_TOOLTIP"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RWF_SUBTITLE_LOGGING_FILTERED_LOOT"] = ""--]] 
 --[[Translation missing --]]

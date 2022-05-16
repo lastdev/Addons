@@ -6,15 +6,14 @@ do
 end
 
 do
-	BadBoyIgnoreConfigTitle:SetText("BadBoy_Ignore v9.1.0") --packager magic, replaced with tag version
-	local infoTbl = {}
+	BadBoyIgnoreConfigTitle:SetText("BadBoy_Ignore v9.2.2") --packager magic, replaced with tag version
 
 	local addIgnore = CreateFrame("Frame", "BadBoy_IgnoreAdd", BadBoyConfig, "UIDropDownMenuTemplate")
 	addIgnore:SetPoint("TOPLEFT", BadBoyIgnoreConfigTitle, "BOTTOMLEFT", -12, -5)
 	BadBoy_IgnoreAddMiddle:SetWidth(180)
 	BadBoy_IgnoreAddText:SetText(tbl.addPlayer)
 	addIgnore.initialize = function()
-		wipe(infoTbl)
+		local infoTbl = {}
 		infoTbl.func = function(obj)
 			BADBOY_IGNORE[obj.value] = true
 		end
@@ -29,7 +28,7 @@ do
 	BadBoy_IgnoreRemoveMiddle:SetWidth(180)
 	BadBoy_IgnoreRemoveText:SetText(tbl.removePlayer)
 	removeIgnore.initialize = function()
-		wipe(infoTbl)
+		local infoTbl = {}
 		infoTbl.func = function(obj)
 			BADBOY_IGNORE[obj.value] = nil
 		end

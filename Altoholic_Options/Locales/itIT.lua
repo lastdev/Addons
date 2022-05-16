@@ -139,7 +139,7 @@ L["Tooltip Options"] = true
 
 -- E.g. 
 
-    -- |cFF00FF00Odysseüs|r     |cFFFF7F0084|r |cFFFFFFFF(Guild Bank: |cFF00FF9A84|r)|r]]
+    -- |cFF00FF00OdysseÃ¼s|r     |cFFFF7F0084|r |cFFFFFFFF(Guild Bank: |cFF00FF9A84|r)|r]]
 -- L["TT_SHOW_GUILDBANKCOUNT_DISABLED"] = "No information is displayed."
 
 -- L["TT_INCLUDE_GUILDBANKCOUNT_TEXT"] = "Include guild bank count in the total count"
@@ -153,7 +153,7 @@ L["Tooltip Options"] = true
 
 -- E.g.
 
-    -- |cFF00FF00Odysseüs|r     |cFFFF7F0084|r |cFFFFFFFF(Consumables: |cFF00FF9A84|r)|r]]
+    -- |cFF00FF00OdysseÃ¼s|r     |cFFFF7F0084|r |cFFFFFFFF(Consumables: |cFF00FF9A84|r)|r]]
 -- L["TT_DETAILED_BANKCOUNT_DISABLED"] = [[Display 'Guild Bank' instead of the tab name.]]
 
 -- L["TT_SHOW_GUILDBANKREALM_TEXT"] = "Show guild bank realm"
@@ -162,7 +162,7 @@ L["Tooltip Options"] = true
 
 -- E.g. 
 
-    -- |cFF00FF00Odysseüs|r |cFFFFFF00(Marécages de Zangar)|r    |cFFFF7F0084|r |cFFFFFFFF(Guild Bank: |cFF00FF9A84|r)|r]]
+    -- |cFF00FF00OdysseÃ¼s|r |cFFFFFF00(MarÃ©cages de Zangar)|r    |cFFFF7F0084|r |cFFFFFFFF(Guild Bank: |cFF00FF9A84|r)|r]]
 -- L["TT_SHOW_GUILDBANKREALM_DISABLED"] = "Display only the guild name"
 
 -- L["TT_SHOW_ITEMID_TEXT"] = "Show item ID and item level"
@@ -224,7 +224,7 @@ L["Tooltip Options"] = true
 
 -- ** Settings / Altoholic / Calendar **
 -- L["Calendar Options"] = true
-L["Week starts on Monday"] = "La settimana inizia di Lunedì"
+L["Week starts on Monday"] = "La settimana inizia di LunedÃ¬"
 L["Display warnings in a dialog box"] = "Mostra avvertimenti in una finestra di dialogo"
 L["Disable warnings"] = "Disabilita avvertimenti"
 -- L["Profession Cooldowns"] = true
@@ -313,7 +313,7 @@ L["EXPIRY_CHECK_LABEL"] = "Avviso scadenza posta"
 -- L["REPORT_EXPIRED_MAILS_ENABLED"] = "During the mail expiry check, the list of characters with expired emails will also be displayed in the chat frame."
 -- L["REPORT_EXPIRED_MAILS_DISABLED"] = "Nothing will be displayed in the chat frame."
 
-L["SCAN_MAIL_BODY_LABEL"] = "Scansiona il contenuto della posta (la contrassegna come già letta)"
+L["SCAN_MAIL_BODY_LABEL"] = "Scansiona il contenuto della posta (la contrassegna come giÃ  letta)"
 -- L["SCAN_MAIL_BODY_TITLE"] = "Scan Mail Body"
 -- L["SCAN_MAIL_BODY_ENABLED"] = "The body of each mail will be read when the mailbox is scanned. All mails will be marked as read."
 -- L["SCAN_MAIL_BODY_DISABLED"] = "Only mail attachments will be read. Mails will keep their unread status."

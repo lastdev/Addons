@@ -12,6 +12,7 @@ L["Equipment"] = "Экипировка"
 -- L["Currencies"] = true
 L["Reputations"] = "Репутация"
 -- L["Daily Quests"] = true
+-- L["Weekly Quests"] = true
 L["Zone"] = "Зона"
 L["Characters"] = "Персонажи"
 L["Rest XP"] = "Опыт за отдых"

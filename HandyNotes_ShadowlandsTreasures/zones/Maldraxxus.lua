@@ -1,6 +1,26 @@
 local myname, ns = ...
 
-local path = ns.path
+local growth = {
+    label=false, -- Sp(r)outing Growth
+    loot={
+        {181173, pet=2949}, -- Skittering Venomspitter
+    },
+    _uiMapID=1536,
+    _coord=0,
+}
+ns.VignetteIDsToPoints[4202] = growth
+ns.VignetteIDsToPoints[4362] = growth
+ns.VignetteIDsToPoints[4363] = growth
+
+ns.VignetteIDsToPoints[4366] = {
+    label=false, -- Slime-Coated Crate
+    loot={
+        {181262, pet=2952}, -- Bubbling Pustule
+        {184447, toy=true}, -- Kevin's Party Supplies
+    },
+    _uiMapID=1536,
+    _coord=0,
+}
 
 ns.RegisterPoints(1536, { -- Maldraxxus
     [47206210] = {
@@ -88,19 +108,16 @@ ns.RegisterPoints(1536, { -- Maldraxxus
         },
         level=60,
         note="Kill {npc:170563:Runespeaker Phaeton} to obtain the {item:181777:Phaeton's Key} required to unlock the treasure",
-    },
-    [37907000] = {
-        label="{npc:170563}",
-        achievement=14312, criteria=50073, -- Runespeaker's Trove
-        quest=61491,
-        loot={
-            181777, -- Phaeton's Key
+        path={
+            37907000,
+            label="{npc:170563}",
+            loot={
+                181777, -- Phaeton's Key
+            },
+            inbag=181777,
+            atlas="Garr_LevelUpgradeLocked", scale=1.3,
+            note="Take the key to 31.7 70.0",
         },
-        atlas="Garr_LevelUpgradeLocked", scale=1.3,
-        inbag=181777,
-        minimap=true,
-        level=60, -- or at least quest-gated? 57619 is the tracker for confronting Vyraz...
-        note="Take the key to 31.7 70.0",
     },
     [57607580] = {
         achievement=14312, criteria=50074, -- Plaguefallen Chest
@@ -110,13 +127,11 @@ ns.RegisterPoints(1536, { -- Maldraxxus
         },
         level=60,
         note="Enter the tunnels at 62.4 76.5 to become {spell:330092:Plaguefallen} and unlock the treasure",
-    },
-    [62387655] = ns.path{
-        label="Tunnel entrance",
-        achievement=14312, criteria=50074, -- Plaguefallen Chest
-        quest=61474,
-        level=60,
-        note="Under the platform; stand in the goo to get 10 stacks of {spell:330069} and become become {spell:330092:Plaguefallen}, then go into the cave and you'll be able to get through the pipe",
+        path={
+            62387655,
+            label="Tunnel entrance",
+            note="Under the platform; stand in the goo to get 10 stacks of {spell:330069} and become become {spell:330092:Plaguefallen}, then go into the cave and you'll be able to get through the pipe",
+        },
     },
     [64602470] = {
         achievement=14312, criteria=50075, -- Ritualist's Cache
@@ -164,7 +179,6 @@ local sorrow = {
     quest={61127, 61128}, -- arm, sword
     level=60,
     atlas="animadiversion-icon",
-    group="sorrow",
 }
 ns.RegisterPoints(1536, {
     [51404840] = {
@@ -217,7 +231,7 @@ ns.RegisterPoints(1525, {
 
 -- Wardrobe Makeover
 
-local makeover = {achievement=14748, atlas="buildanabomination-32x32", minimap=true, covenant=Enum.CovenantType.Necrolord, group="wardrobemakeover",}
+local makeover = {achievement=14748, atlas="buildanabomination-32x32", minimap=true, covenant=Enum.CovenantType.Necrolord,}
 ns.RegisterPoints(1536, { -- Maldraxxus
     [47104900] = {criteria=50546, quest=62758, inbag=184036, note="Buy {item:184036} from {npc:164588}"}, -- Dundae's Hat
     [54203060] = {criteria=50546, quest=62758, inbag=184036, note="Buy {item:184036} from {npc:169698}"}, -- Dundae's Hat
@@ -326,13 +340,13 @@ ns.RegisterPoints(1536, { -- Maldraxxus
         note="Spawns in multiple places inside Sightless Hold",
     },
     -- the world map ones:
-    [36208145] = {
-        quest=60662,
-        label="Bonebound Chest",
-        loot={181723}, -- Meticulously pickled head (high sell value)
-        junk=true,
-        level=60,
-    },
+    -- [36208145] = {
+    --     quest=60662,
+    --     label="Bonebound Chest",
+    --     loot={181723}, -- Meticulously pickled head (high sell value)
+    --     junk=true,
+    --     level=60,
+    -- },
     -- [38036548] = {
     --     quest=61647, -- 61648, 61649, 61650
     --     label="Chosen Runecoffer",
@@ -404,6 +418,20 @@ ns.RegisterPoints(1536, { -- Maldraxxus
     --     quest=61093,
     --     label="Slime-Coated Crate",
     -- },
+})
+
+ns.RegisterPoints(1536, {
+    [44626554] = {
+        quest=64995,
+        loot={
+            {187878, quest=64995, covenant=Enum.CovenantType.NightFae}, -- Saurid Soul
+        },
+        note="/bow to the {npc:182105:Mysterious Trashpile}",
+        covenant=Enum.CovenantType.NightFae,
+        atlas="sanctumupgrades-nightfae-32x32",
+        minimap=true,
+        group="soulshape",
+    },
 })
 
 -- Rares
@@ -540,6 +568,7 @@ ns.RegisterPoints(1536, {
         achievement=14802, criteria=48874,
         quest=58784,
         npc=168147,
+        areaPoi=6905, -- Spoiling For A Fight
         loot={
             184291, -- Tempered Boneplate Waistguard
             {181815, mount=1370, covenant=Enum.CovenantType.Necrolord}, -- Armored Bonehoof Tauralus
@@ -643,6 +672,7 @@ ns.RegisterPoints(1536, {
     [31603540] = { -- Gieger
         quest=58872,
         npc=162741,
+        areaPoi=6901, -- Final Thread
         loot={
             {182080, mount=1411, covenant=Enum.CovenantType.Necrolord}, -- Predatory Plagueroc
             184298, -- Amalgamated Forsworn's Journal
@@ -729,7 +759,7 @@ ns.RegisterPoints(1536, {
             50397, -- Azmogal
             50398, -- Unbreakable Urtz
             50399, -- Xantuth the Blighted
-            50400, -- Mistress Dyrax (quest:62786)
+            50400, -- Mistress Dyrax
             50402, -- Devmorta
             50403, -- Ti'or
             48874  -- Sabriel the Bonecleaver

@@ -28,6 +28,7 @@ L["Activity"] = "Activités"
 L["Currencies"] = "Monnaies"
 L["PATCH_X.0"] = "Expansion Patch"
 L["PATCH_9.1"] = "Chains of Domination"
+L["PATCH_9.2"] = "Eternity's End"
 
 -- ** Filter Icons **
 L["FILTER_CLASSES"] = "Filtrer par classe"

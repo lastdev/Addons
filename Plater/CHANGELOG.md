@@ -1,17 +1,11 @@
-@Terciob:
-- Font path fixed for 'Nueva Std Cond'.
-
 @cont1nuity:
-- Additional work on resources.
-- 9.2 TOC update.
-- Fixing an issue with script icons breaking under some circumstances.
-- NPC Colors search should no longer break when the zone or name of an npc are unknown.
-- Small fixes for DK resource color.
-- Range check range setting should not reset when selecting a range which is not native to your class/spec spells.
-- Changing TBC max nameplate distance option to the correct value.
-- Updating TOC for classic/tbc versions.
-- Fixing aura frame alpha settings for target/range alpha.
-- Adding some missing functions to the scripting api list.
-- 'CreateFlash' API now handles color alpha values correctly.
-- Shaman elementals should now properly be recognized as pets.
+- Fix CVar store and restore for 'boolean' type CVars.
+- Hide Cast Target on interrupts.
+- Adding new option to invert swipe on Buff Special.
+- Adding Masque support to cast bar icons (experimental).
+- Fixing load times of Buff Special tab with larger spell lists.
+- Fixing CVar load behavior to ensure they are restored properly.
+- Adding some SotFO units to 'ForceInCombatUnits'.
+- Fixing an issue with spellID not being set properly on casts.
+- Fixing an issue 'Plater.SetNameplateScale' not working properly when Custom Strata Channels were disabled.
 

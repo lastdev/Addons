@@ -336,6 +336,7 @@ addon:Controller("AltoholicUI.TabGridsCategoriesList", {
 			{ text = L["Currencies"], subMenu = {} },
 			{ text = QUESTS_LABEL, subMenu = {
 				{ text = L["Daily Quests"], callback = categoriesList_OnClick, gridID = 4 },
+				{ text = L["Weekly Quests"], callback = categoriesList_OnClick, gridID = 14 },
 				-- Emissary quests
 				{ text = BOUNTY_BOARD_LOCKED_TITLE, subMenu = {
 					{ text = EXPANSION_NAME6, callback = emissary_OnClick, xPackID = 6 },

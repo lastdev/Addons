@@ -93,8 +93,8 @@ PLATER_DEFAULT_SETTINGS = {
 		npc_colors = {},
 
 		--store the cast colors customized by the user
-		cast_colors = {},
-		cast_color_settings = {
+		cast_colors = {}, --[spellId] = {[1] = color, [2] = enabled, [3] = custom spell name}
+		cast_color_settings = { --these are settings for the original cast color settings
 			enabled = true,
 			width = 12,
 			height_offset = 0,
@@ -770,6 +770,7 @@ PLATER_DEFAULT_SETTINGS = {
 		aura_custom = {},
 		
 		aura_timer = true,
+		aura_timer_decimals = false,
 		aura_timer_text_size = 15,
 		aura_timer_text_font = "Arial Narrow",
 		aura_timer_text_anchor = {side = 9, x = 0, y = 0},
@@ -788,6 +789,8 @@ PLATER_DEFAULT_SETTINGS = {
 		
 		extra_icon_anchor = {side = 6, x = -4, y = 0},
 		extra_icon_show_timer = true,
+		extra_icon_timer_decimals = false,
+		extra_icon_cooldown_reverse = false,
 		extra_icon_timer_font = "Arial Narrow",
 		extra_icon_timer_size = 12,
 		extra_icon_timer_outline = "NONE",
@@ -944,10 +947,100 @@ PLATER_DEFAULT_SETTINGS = {
 			["world"] =  true,
 			["cities"] = false,
 		},
-		
+
+		auto_inside_raid_dungeon = {
+			hide_enemy_player_pets = false,
+			hide_enemy_player_totems = false,
+		},
+
 		spell_animations = true,
 		spell_animations_scale = 1.25,
-		
+
+		--hold the npcs that has been rename on the Npcs tab, format: [npcId] = "new npc name"
+		npcs_renamed = {},
+
+		ghost_auras = {
+			enabled = false,
+			width = 0,
+			height = 0,
+			alpha = 0.5,
+			desaturated = true,
+			auras = {
+				["DEMONHUNTER"] = {
+					[0] = {},
+					[1] = {},
+					[2] = {},
+				},
+				["DEATHKNIGHT"] = {
+					[0] = {},
+					[1] = {},
+					[2] = {},
+					[3] = {},
+				},
+				["WARRIOR"] = {
+					[0] = {},
+					[1] = {},
+					[2] = {},
+					[3] = {},
+				},
+				["MAGE"] = {
+					[0] = {},
+					[1] = {},
+					[2] = {},
+					[3] = {},
+				},
+				["ROGUE"] = {
+					[0] = {},
+					[1] = {},
+					[2] = {},
+					[3] = {},
+				},
+				["DRUID"] = {
+					[0] = {},
+					[1] = {},
+					[2] = {},
+					[3] = {},
+					[4] = {},
+				},
+				["HUNTER"] = {
+					[0] = {},
+					[1] = {},
+					[2] = {},
+					[3] = {},
+				},
+				["SHAMAN"] = {
+					[0] = {},
+					[1] = {},
+					[2] = {},
+					[3] = {},
+				},
+				["PRIEST"] = {
+					[0] = {},
+					[1] = {},
+					[2] = {},
+					[3] = {},
+				},
+				["WARLOCK"] = {
+					[0] = {},
+					[1] = {},
+					[2] = {},
+					[3] = {},
+				},
+				["PALADIN"] = {
+					[0] = {},
+					[1] = {},
+					[2] = {},
+					[3] = {},
+				},
+				["MONK"] = {
+					[0] = {},
+					[1] = {},
+					[2] = {},
+					[3] = {},
+				},
+			},
+		},
+
 		spell_animation_list = {
 		
 			--chaos bolt
@@ -2564,6 +2657,7 @@ PLATER_DEFAULT_SETTINGS = {
 		indicator_friendlyclass = false,
 		indicator_anchor = {side = 2, x = -2, y = 0},
 		indicator_scale = 1,
+		indicator_shield = false,
 		
 		indicator_extra_raidmark = true,
 		indicator_raidmark_scale = 1,

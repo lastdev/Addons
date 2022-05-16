@@ -87,4 +87,5 @@ lib:RegisterItems({
 	[173202] = SetReagent(8, e.Tailoring), -- Shrouded Cloth
 	[173204] = SetReagent(8, e.Tailoring), -- Lightless Silk
 	[177062] = SetReagent(8, e.Tailoring), -- Penumbra Thread
+	[187703] = SetReagent(8, e.Tailoring), -- Silken Protofiber
 })

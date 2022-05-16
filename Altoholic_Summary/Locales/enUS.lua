@@ -27,6 +27,7 @@ L["Activity"] = true
 L["Currencies"] = true
 L["PATCH_X.0"] = "Expansion Patch"
 L["PATCH_9.1"] = "Chains of Domination"
+L["PATCH_9.2"] = "Eternity's End"
 
 -- ** Filter Icons **
 L["FILTER_REALMS"] = "Realms filter"

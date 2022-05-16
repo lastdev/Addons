@@ -61,9 +61,16 @@ L["OPTIONS_TABNAME_BUFF_LIST"] = "Buff-Liste"
 L["OPTIONS_TABNAME_BUFF_SETTINGS"] = "Buff Einstellungen"
 L["OPTIONS_TABNAME_BUFF_SPECIAL"] = "Spezielle Buffs"
 L["OPTIONS_TABNAME_BUFF_TRACKING"] = "Buff-Verfolgung"
-L["OPTIONS_TABNAME_COLORSNPC"] = "NPC-Farben"
+--[[Translation missing --]]
+L["OPTIONS_TABNAME_CASTBAR"] = "Cast Bar"
+--[[Translation missing --]]
+L["OPTIONS_TABNAME_CASTCOLORS"] = "\"Cast Colors and Names\""
+--[[Translation missing --]]
+L["OPTIONS_TABNAME_COMBOPOINTS"] = "Combo Points"
 L["OPTIONS_TABNAME_GENERALSETTINGS"] = "Allg. Einstellungen"
 L["OPTIONS_TABNAME_MODDING"] = "Modding"
+--[[Translation missing --]]
+L["OPTIONS_TABNAME_NPC_COLORNAME"] = "Npc Colors and Names"
 L["OPTIONS_TABNAME_NPCENEMY"] = "Feindliche NPCs"
 L["OPTIONS_TABNAME_NPCFRIENDLY"] = "Freundliche NPCs"
 L["OPTIONS_TABNAME_PERSONAL"] = "Pers. Ressourcen"
@@ -71,6 +78,8 @@ L["OPTIONS_TABNAME_PLAYERENEMY"] = "Feindliche Spieler"
 L["OPTIONS_TABNAME_PLAYERFRIENDLY"] = "Freundliche Spieler"
 L["OPTIONS_TABNAME_PROFILES"] = "Profile"
 L["OPTIONS_TABNAME_SCRIPTING"] = "Skripte"
+--[[Translation missing --]]
+L["OPTIONS_TABNAME_SEARCH"] = "Search"
 L["OPTIONS_TABNAME_STRATA"] = "Level & Strata"
 L["OPTIONS_TABNAME_TARGET"] = "Ziel"
 L["OPTIONS_TABNAME_THREAT"] = "Bedrohung / Aggro"

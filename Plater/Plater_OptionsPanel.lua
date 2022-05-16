@@ -36,6 +36,8 @@ local mainHeightSize = 800
 local IMPORT_EXPORT_EDIT_MAX_BYTES = 0 --1024000*4 -- 0 appears to be "no limit"
 local IMPORT_EXPORT_EDIT_MAX_LETTERS = 0 --128000*4 -- 0 appears to be "no limit"
 
+local highlightColorLastCombat = {1, 1, .2, .25}
+
  --cvars
 local CVAR_ENABLED = "1"
 local CVAR_DISABLED = "0"
@@ -110,10 +112,9 @@ Plater.RegisterRefreshDBCallback (on_refresh_db)
 local update_wago_update_icons = function()
 	local countMods, countScripts, hasProfileUpdate = Plater.CheckWagoUpdates(true)
 	local mainFrame = PlaterOptionsPanelContainer
-	local scriptButton = mainFrame.AllButtons [6]
-	local modButton = mainFrame.AllButtons [7]
-	local profileButton = mainFrame.AllButtons [21]
-	local importButton = mainFrame.AllButtons [25]
+	local scriptButton		= mainFrame.AllButtons [6]
+	local modButton			= mainFrame.AllButtons [7]
+	local profileButton		= mainFrame.AllButtons [22]
 	
 	if countMods > 0 then
 		modButton.updateIcon:Show()
@@ -132,13 +133,6 @@ local update_wago_update_icons = function()
 	else
 		profileButton.updateIcon:Hide()
 	end
-	
-	--wago_imports
-	if PlaterDB.wago_stash_data and next(PlaterDB.wago_stash_data) then
-		--importButton.updateIcon:Show()
-	else
-		--importButton.updateIcon:Hide()
-	end
 end
 Plater.UpdateOptionsTabUpdateState = update_wago_update_icons
 
@@ -152,8 +146,8 @@ function Plater.CheckOptionsTab()
 	update_wago_update_icons()
 end
 
-local TAB_INDEX_UIPARENTING = 4
-local TAB_INDEX_PROFILES = 21
+local TAB_INDEX_UIPARENTING = 5
+local TAB_INDEX_PROFILES = 22
 
 -- ~options �ptions
 function Plater.OpenOptionsPanel()
@@ -184,53 +178,72 @@ function Plater.OpenOptionsPanel()
 	--local CVarDesc = "\n\n|cFFFF7700[*]|r |cFFa0a0a0CVar, not saved within Plater profile and is a Per-Character setting.|r"
 	local CVarDesc = "\n\n|cFFFF7700[*]|r |cFFa0a0a0CVar, saved within Plater profile and restored when loading the profile.|r"
 	local CVarIcon = "|cFFFF7700*|r"
+	local CVarNeedReload = "\n\n|cFFFF2200[*]|r |cFFa0a0a0A /reload may be required to take effect.|r"
 	
 	local frame_options = {
 		y_offset = 0,
-		button_width = 102,
+		button_width = 101,
 		button_height = 20,
 		button_x = 210,
-		button_y = -7,
+		button_y = 1,
 		button_text_size = 10,
 		right_click_y = 5,
 		rightbutton_always_close = true,
 		close_text_alpha = 0.4,
+	}
+
+	local hookList = {
+		OnSelectIndex = function(mainFrame, tabButton)
+			if (not tabButton.leftSelectionIndicator) then
+				return
+			end
+
+			for index, frame in ipairs(mainFrame.AllFrames) do
+				local tabButton = mainFrame.AllButtons[index]
+				tabButton.leftSelectionIndicator:SetColorTexture(.4, .4, .4)
+			end
+
+			tabButton.leftSelectionIndicator:SetColorTexture(1, 1, 0)
+			tabButton.selectedUnderlineGlow:Hide()
+		end,
 	}
 	
 	-- mainFrame � um frame vazio para sustentrar todos os demais frames, este frame sempre ser� mostrado
 	local mainFrame = DF:CreateTabContainer (f, "Plater Options", "PlaterOptionsPanelContainer", 
 	{
 		--when chaging these indexes also need to change the function f.CopySettings
-		{name = "FrontPage", title = L["OPTIONS_TABNAME_GENERALSETTINGS"]},
-		{name = "ThreatConfig", title = L["OPTIONS_TABNAME_THREAT"]},
-		{name = "TargetConfig", title = L["OPTIONS_TABNAME_TARGET"]},
-		{name = "CastBarConfig", title = "Cast Bar"}, --localize-me
-		{name = "LevelStrataConfig", title = L["OPTIONS_TABNAME_STRATA"]},
-		{name = "Scripting", title = L["OPTIONS_TABNAME_SCRIPTING"]},
-		{name = "AutoRunCode", title = L["OPTIONS_TABNAME_MODDING"]},
-		{name = "PersonalBar", title = L["OPTIONS_TABNAME_PERSONAL"]},
+		{name = "FrontPage",				title = L["OPTIONS_TABNAME_GENERALSETTINGS"]},
+		{name = "ThreatConfig",				title = L["OPTIONS_TABNAME_THREAT"]},
+		{name = "TargetConfig",				title = L["OPTIONS_TABNAME_TARGET"]},
+		{name = "CastBarConfig",			title = L["OPTIONS_TABNAME_CASTBAR"]},
+		{name = "LevelStrataConfig",		title = L["OPTIONS_TABNAME_STRATA"]},
+		{name = "Scripting",				title = L["OPTIONS_TABNAME_SCRIPTING"]},
+		{name = "AutoRunCode",				title = L["OPTIONS_TABNAME_MODDING"]},
+		{name = "PersonalBar",				title = L["OPTIONS_TABNAME_PERSONAL"]},
 		
-		{name = "DebuffConfig", title = L["OPTIONS_TABNAME_BUFF_SETTINGS"]},
-		{name = "DebuffBlacklist", title = L["OPTIONS_TABNAME_BUFF_TRACKING"]},
-		{name = "DebuffSpecialContainer", title = L["OPTIONS_TABNAME_BUFF_SPECIAL"]},
-		{name = "DebuffLastEvent", title = L["OPTIONS_TABNAME_BUFF_LIST"]},
-		{name = "EnemyNpc", title = L["OPTIONS_TABNAME_NPCENEMY"]},
-		{name = "EnemyPlayer", title = L["OPTIONS_TABNAME_PLAYERENEMY"]},
-		{name = "FriendlyNpc", title = L["OPTIONS_TABNAME_NPCFRIENDLY"]},
-		{name = "FriendlyPlayer", title = L["OPTIONS_TABNAME_PLAYERFRIENDLY"]},
+		{name = "DebuffConfig",				title = L["OPTIONS_TABNAME_BUFF_SETTINGS"]},
+		{name = "DebuffBlacklist",			title = L["OPTIONS_TABNAME_BUFF_TRACKING"]},
+		{name = "DebuffSpecialContainer",	title = L["OPTIONS_TABNAME_BUFF_SPECIAL"]},
+		{name = "GhostAurasFrame",			title = "Ghost Auras"}, --localize-me
+		{name = "EnemyNpc",					title = L["OPTIONS_TABNAME_NPCENEMY"]},
+		{name = "EnemyPlayer",				title = L["OPTIONS_TABNAME_PLAYERENEMY"]},
+		{name = "FriendlyNpc",				title = L["OPTIONS_TABNAME_NPCFRIENDLY"]},
+		{name = "FriendlyPlayer",			title = L["OPTIONS_TABNAME_PLAYERFRIENDLY"]},
 
-		{name = "ColorManagement", title = L["OPTIONS_TABNAME_COLORSNPC"]},
-		{name = "CastColorManagement", title = "Cast Colors"}, --localize-me
-		{name = "AnimationPanel", title = L["OPTIONS_TABNAME_ANIMATIONS"]},
-		{name = "Automation", title = L["OPTIONS_TABNAME_AUTO"]},
-		{name = "ProfileManagement", title = L["OPTIONS_TABNAME_PROFILES"]},
-		{name = "AdvancedConfig", title = L["OPTIONS_TABNAME_ADVANCED"]},
-		{name = "resourceFrame", title = "Combo Points"}, --localize-me
-		{name = "SearchFrame", title = "Search"}, --localize-me
+		{name = "ColorManagement",			title = L["OPTIONS_TABNAME_NPC_COLORNAME"]},
+		{name = "CastColorManagement",		title = L["OPTIONS_TABNAME_CASTCOLORS"]},
+		{name = "DebuffLastEvent",			title = L["OPTIONS_TABNAME_BUFF_LIST"]},
+		{name = "AnimationPanel",			title = L["OPTIONS_TABNAME_ANIMATIONS"]},
+		{name = "Automation",				title = L["OPTIONS_TABNAME_AUTO"]},
+		{name = "ProfileManagement",		title = L["OPTIONS_TABNAME_PROFILES"]},
+		{name = "AdvancedConfig",			title = L["OPTIONS_TABNAME_ADVANCED"]},
+		{name = "resourceFrame",			title = L["OPTIONS_TABNAME_COMBOPOINTS"]},
+
+		{name = "SearchFrame", title = L["OPTIONS_TABNAME_SEARCH"]},
 		--{name = "WagoIo", title = "Wago Imports"}, --wago_imports --localize-me
 		
 	}, 
-	frame_options)
+	frame_options, hookList)
 
 	--> when any setting is changed, call this function
 	local globalCallback = function()
@@ -239,45 +252,108 @@ function Plater.OpenOptionsPanel()
 		Plater.UpdateAllPlates()
 	end
 
+	--make the tab button's text be aligned to left and fit the button's area
+	for index, frame in ipairs(mainFrame.AllFrames) do
+
+		--DF:ApplyStandardBackdrop(frame)
+		local frameBackgroundTexture = frame:CreateTexture(nil, "artwork")
+		frameBackgroundTexture:SetPoint("topleft", frame, "topleft", 1, -120)
+		frameBackgroundTexture:SetPoint("bottomright", frame, "bottomright", -1, 20)
+		frameBackgroundTexture:SetColorTexture (0.2317647, 0.2317647, 0.2317647)
+		frameBackgroundTexture:SetVertexColor (0.27, 0.27, 0.27)
+		frameBackgroundTexture:SetAlpha (0.5)
+
+		--divisor shown above the background (create above)
+		local frameBackgroundTextureTopLine = frame:CreateTexture(nil, "artwork")
+		frameBackgroundTextureTopLine:SetPoint("bottomleft", frameBackgroundTexture, "topleft", 0, 0)
+		frameBackgroundTextureTopLine:SetPoint("bottomright", frame, "topright", -1, 0)
+		frameBackgroundTextureTopLine:SetHeight(1)
+		frameBackgroundTextureTopLine:SetColorTexture (0.1317647, 0.1317647, 0.1317647)
+		frameBackgroundTextureTopLine:SetAlpha (0.3)
+
+		local tabButton = mainFrame.AllButtons[index]
+
+		local leftSelectionIndicator = tabButton:CreateTexture(nil, "overlay")
+
+		if (index == 1) then
+			leftSelectionIndicator:SetColorTexture(1, 1, 0)
+		else
+			leftSelectionIndicator:SetColorTexture(.4, .4, .4)
+		end
+		leftSelectionIndicator:SetPoint("left", tabButton.widget, "left", 2, 0)
+		leftSelectionIndicator:SetSize(4, tabButton:GetHeight()-4)
+		tabButton.leftSelectionIndicator = leftSelectionIndicator
+
+		local maxTextLength = tabButton:GetWidth() - 7
+
+		local fontString = _G[tabButton:GetName() .. "_Text"]
+		fontString:ClearAllPoints()
+		fontString:SetPoint("left", leftSelectionIndicator, "right", 2, 0)
+		fontString:SetJustifyH("left")
+		fontString:SetWidth(maxTextLength)
+		fontString:SetHeight(tabButton:GetHeight()+20)
+		fontString:SetWordWrap(true)
+		fontString:SetText(fontString:GetText())
+
+		local stringWidth = fontString:GetStringWidth()
+
+		--print(stringWidth, maxTextLength, fontString:GetText())
+
+		if (stringWidth > maxTextLength) then
+			local fontSize = DF:GetFontSize(fontString)
+			DF:SetFontSize(fontString, fontSize-0.5)
+		end
+	end
+
 	--1st row
-	local frontPageFrame = mainFrame.AllFrames [1]
-	local threatFrame = mainFrame.AllFrames [2]
-	local targetFrame = mainFrame.AllFrames [3]
-	local castBarFrame = mainFrame.AllFrames [4]
-	local uiParentFeatureFrame = mainFrame.AllFrames [5]
-	local scriptingFrame = mainFrame.AllFrames [6]
-	local runCodeFrame = mainFrame.AllFrames [7]
-	local personalPlayerFrame = mainFrame.AllFrames [8]
+	local frontPageFrame		= mainFrame.AllFrames [1]
+	local threatFrame			= mainFrame.AllFrames [2]
+	local targetFrame			= mainFrame.AllFrames [3]
+	local castBarFrame			= mainFrame.AllFrames [4]
+	local uiParentFeatureFrame	= mainFrame.AllFrames [5]
+	local scriptingFrame		= mainFrame.AllFrames [6]
+	local runCodeFrame			= mainFrame.AllFrames [7]
+	local personalPlayerFrame	= mainFrame.AllFrames [8]
 	
 	--2nd row
-	local auraOptionsFrame = mainFrame.AllFrames [9]
-	local auraFilterFrame = mainFrame.AllFrames [10]
-	local auraSpecialFrame = mainFrame.AllFrames [11]
-	local auraLastEventFrame = mainFrame.AllFrames [12]
-	local enemyNPCsFrame = mainFrame.AllFrames [13]
-	local enemyPCsFrame = mainFrame.AllFrames [14]
-	local friendlyNPCsFrame = mainFrame.AllFrames [15]
-	local friendlyPCsFrame = mainFrame.AllFrames [16]
+	local auraOptionsFrame		= mainFrame.AllFrames [9]
+	local auraFilterFrame		= mainFrame.AllFrames [10]
+	local auraSpecialFrame		= mainFrame.AllFrames [11]
+	local ghostAuras			= mainFrame.AllFrames [12]
+	local enemyNPCsFrame		= mainFrame.AllFrames [13]
+	local enemyPCsFrame			= mainFrame.AllFrames [14]
+	local friendlyNPCsFrame		= mainFrame.AllFrames [15]
+	local friendlyPCsFrame		= mainFrame.AllFrames [16]
 	
 	--3rd row
-	local colorsFrame = mainFrame.AllFrames [17]
-	local castColorsFrame = mainFrame.AllFrames [18]
-	local animationFrame = mainFrame.AllFrames [19]
-	local autoFrame = mainFrame.AllFrames [20]
-	local profilesFrame = mainFrame.AllFrames [21]
-	local advancedFrame = mainFrame.AllFrames [22]
-	local resourceFrame = mainFrame.AllFrames [23]
-	local searchFrame = mainFrame.AllFrames [24]
-	--local wagoIoFrame = mainFrame.AllFrames [25] --wago_imports
-	
-	--
-	local colorNpcsButton = mainFrame.AllButtons [17]
-	local scriptButton = mainFrame.AllButtons [6]
-	local modButton = mainFrame.AllButtons [7]
-	local profileButton = mainFrame.AllButtons [21]
-	local importButton = mainFrame.AllButtons [25]
+	local colorsFrame			= mainFrame.AllFrames [17]
+	local castColorsFrame		= mainFrame.AllFrames [18]
+	local auraLastEventFrame	= mainFrame.AllFrames [19]
+	local animationFrame		= mainFrame.AllFrames [20] --need to change the index on Plater_AnimationEditor.lua
+	local autoFrame				= mainFrame.AllFrames [21]
+	local profilesFrame			= mainFrame.AllFrames [22]
+	local advancedFrame			= mainFrame.AllFrames [23]
+	local resourceFrame			= mainFrame.AllFrames [24]
+
+	--4th row
+	local searchFrame			= mainFrame.AllFrames [25]
+	--local wagoIoFrame = mainFrame.AllFrames [26] --wago_imports
+
+	local scriptButton		= mainFrame.AllButtons [6] --also need update on line 115 and 13818
+	local modButton		 	= mainFrame.AllButtons [7]
+	local profileButton		= mainFrame.AllButtons [22]
+	local ghostAurasButton	= mainFrame.AllButtons [12]
+
+	if (time() + 60*60*24*15 > 1647542962) then
+		ghostAuras.newTexture = ghostAurasButton:CreateTexture(nil, "overlay", nil, 7)
+		ghostAuras.newTexture:SetTexture([[Interface\AddOns\Plater\images\new]])
+		ghostAuras.newTexture:SetPoint("right", ghostAurasButton.widget, "right", 4, -9)
+		ghostAuras.newTexture:SetSize(35, 35)
+		ghostAuras.newTexture:SetAlpha(0.88)
+	end
 
 	Plater.Resources.BuildResourceOptionsTab(resourceFrame)
+	Plater.Auras.BuildGhostAurasOptionsTab(ghostAuras)
 	Plater.CreateCastColorOptionsFrame(castColorsFrame)
 	
 	local generalOptionsAnchor = CreateFrame ("frame", "$parentOptionsAnchor", frontPageFrame, BackdropTemplateMixin and "BackdropTemplate")
@@ -325,14 +401,6 @@ function Plater.OpenOptionsPanel()
 	updateIconProfile:SetPoint("bottomright", profileButton.button, "bottomright", -2, 2)
 	updateIconProfile:Hide()
 	profileButton.updateIcon = updateIconProfile
-	
-	--wago_imports
-	--local updateIconImports = importButton.button:CreateTexture ("$parentIcon", "overlay")
-	--updateIconImports:SetSize (16, 10)
-	--updateIconImports:SetTexture([[Interface\AddOns\Plater\images\wagologo.tga]])
-	--updateIconImports:SetPoint("bottomright", importButton.button, "bottomright", -2, 2)
-	--updateIconImports:Hide()
-	--importButton.updateIcon = updateIconImports
 	
 	f.AllMenuFrames = {}
 	for _, frame in ipairs (mainFrame.AllFrames) do
@@ -444,6 +512,10 @@ function Plater.OpenOptionsPanel()
 					
 					--retain npc_cache for set npc_colors
 					for npcID, _ in pairs (Plater.db.profile.npc_colors) do
+						Plater.db.profile.npc_cache [npcID] = npc_cache [npcID]
+					end
+					--retain npc_cache for set npc_colors
+					for npcID, _ in pairs (Plater.db.profile.npcs_renamed) do
 						Plater.db.profile.npc_cache [npcID] = npc_cache [npcID]
 					end
 					
@@ -1853,6 +1925,18 @@ local debuff_options = {
 		name = L["OPTIONS_ENABLED"],
 		desc = "Time left on buff or debuff.",
 	},
+	
+	{
+		type = "toggle",
+		get = function() return Plater.db.profile.aura_timer_decimals end,
+		set = function (self, fixedparam, value) 
+			Plater.db.profile.aura_timer_decimals = value
+			Plater.RefreshAuras()
+			Plater.UpdateAllPlates()
+		end,
+		name = "Show Decimals",
+		desc = "Show decimals below 10s remaining time",
+	},
 
 	{
 		type = "toggle",
@@ -2307,7 +2391,7 @@ Plater.CreateAuraTesting()
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --> aura tracking
 
--- ~aura ~buff ~debuff
+-- ~aura ~bufftracking ~debuff ~tracking
 	
 	local aura_options = {
 		height = 330, 
@@ -2322,11 +2406,11 @@ Plater.CreateAuraTesting()
 	
 	local debuff_panel_texts = {
 		BUFFS_AVAILABLE = "Click to add buffs to blacklist",
-		BUFFS_IGNORED = "Buffs on the blacklist (filtered out)",
 		DEBUFFS_AVAILABLE = "Click to add debuffs to blacklist",
-		DEBUFFS_IGNORED = "Debuffs on the blacklist (filtered out)",
-		BUFFS_TRACKED = "Additional buffs to track",
-		DEBUFFS_TRACKED = "Additional debuffs to track",
+		BUFFS_IGNORED = "BUFFS on the BLACKLIST (filtered out)",
+		DEBUFFS_IGNORED = "DEBUFFS on the BLACKLIST (filtered out)",
+		BUFFS_TRACKED = "Additional BUFFS to TRACK",
+		DEBUFFS_TRACKED = "Additional DEBUFFS to TRACK",
 		MANUAL_DESC = "Auras are being tracked manually, the addon only check for auras you entered below.\nShow debuffs only casted by you, buffs from any source.\nYou may use the 'Buff Special' tab to add debuffs from any source.",
 	}
 	
@@ -2338,13 +2422,52 @@ Plater.CreateAuraTesting()
 	auraConfigPanel:Show()
 	auraFilterFrame.auraConfigPanel = auraConfigPanel
 	
+	--create bottom highlights
+	local debuffBackList = _G.PlaterOptionsPanelContainerDebuffBlacklistAuraConfig_AutomaticDebuffIgnored
+	debuffBackList.bottomTexture = debuffBackList:CreateTexture(nil, "artwork")
+	debuffBackList.bottomTexture:SetTexture([[Interface\AddOns\Plater\images\selection_indicator3]])
+	debuffBackList.bottomTexture:SetPoint("topleft", debuffBackList, "bottomleft", -12, 0)
+	debuffBackList.bottomTexture:SetPoint("topright", debuffBackList, "bottomright", 12, 0)
+	debuffBackList.bottomTexture:SetBlendMode("ADD")
+	debuffBackList.bottomTexture:SetTexCoord(0, 1, 1, 0)
+	debuffBackList.bottomTexture:SetVertexColor(1, .1, 0, 0.2)
+
+	local buffBackList = _G.PlaterOptionsPanelContainerDebuffBlacklistAuraConfig_AutomaticBuffIgnored
+	buffBackList.bottomTexture = buffBackList:CreateTexture(nil, "artwork")
+	buffBackList.bottomTexture:SetTexture([[Interface\AddOns\Plater\images\selection_indicator3]])
+	buffBackList.bottomTexture:SetPoint("topleft", buffBackList, "bottomleft", -12, 0)
+	buffBackList.bottomTexture:SetPoint("topright", buffBackList, "bottomright", 12, 0)
+	buffBackList.bottomTexture:SetBlendMode("ADD")
+	buffBackList.bottomTexture:SetTexCoord(0, 1, 1, 0)
+	buffBackList.bottomTexture:SetVertexColor(1, .1, 0, 0.2)
+
+	local debuffTrackList = _G.PlaterOptionsPanelContainerDebuffBlacklistAuraConfig_AutomaticDebuffTracked
+	debuffTrackList.bottomTexture = debuffTrackList:CreateTexture(nil, "artwork")
+	debuffTrackList.bottomTexture:SetTexture([[Interface\AddOns\Plater\images\selection_indicator3]])
+	debuffTrackList.bottomTexture:SetPoint("topleft", debuffTrackList, "bottomleft", -12, 0)
+	debuffTrackList.bottomTexture:SetPoint("topright", debuffTrackList, "bottomright", 12, 0)
+	debuffTrackList.bottomTexture:SetBlendMode("ADD")
+	debuffTrackList.bottomTexture:SetTexCoord(0, 1, 1, 0)
+	debuffTrackList.bottomTexture:SetVertexColor(0, .1, 1, 0.2)
+
+	local buffTrackList = _G.PlaterOptionsPanelContainerDebuffBlacklistAuraConfig_AutomaticBuffTracked
+	buffTrackList.bottomTexture = buffTrackList:CreateTexture(nil, "artwork")
+	buffTrackList.bottomTexture:SetTexture([[Interface\AddOns\Plater\images\selection_indicator3]])
+	buffTrackList.bottomTexture:SetPoint("topleft", buffTrackList, "bottomleft", -12, 0)
+	buffTrackList.bottomTexture:SetPoint("topright", buffTrackList, "bottomright", 12, 0)
+	buffTrackList.bottomTexture:SetBlendMode("ADD")
+	buffTrackList.bottomTexture:SetTexCoord(0, 1, 1, 0)
+	buffTrackList.bottomTexture:SetVertexColor(0, .1, 1, 0.2)
+
+	
+	
 	function auraFilterFrame.RefreshOptions()
 		auraConfigPanel:OnProfileChanged (Plater.db.profile)
 	end
 
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
---> unit color ~color �pccolor ~npccolor ~npc �pc
+--> unit color ~colors ñpccolor ~npccolor ~npc ñpc
 --for import and export functions see ~importcolor ~exportcolor
 
 	do
@@ -2366,9 +2489,10 @@ Plater.CreateAuraTesting()
 				{text = "Scripts Only", width = 80},
 				{text = "Npc ID", width = 64},
 				{text = "Npc Name", width = 162},
+				{text = "Rename To", width = 140},
 				{text = "Zone Name", width = 142},
-				{text = "Color", width = 110},
-				{text = "", width = 410}, --filler
+				{text = "", width = 110},
+				{text = "", width = 270}, --filler
 			}
 			local headerOptions = {
 				padding = 2,
@@ -2378,13 +2502,17 @@ Plater.CreateAuraTesting()
 			colorsFrame.Header:SetPoint ("topleft", colorsFrame, "topleft", 10, headerY)
 			
 			colorsFrame.ModelFrame = CreateFrame ("PlayerModel", nil, colorsFrame, "ModelWithControlsTemplate, BackdropTemplate")
-			colorsFrame.ModelFrame:SetSize (339, 440)
+			colorsFrame.ModelFrame:SetSize (199, 440)
 			colorsFrame.ModelFrame:EnableMouse (true)
-			colorsFrame.ModelFrame:SetPoint ("topleft", colorsFrame.Header, "topright", -342, -scroll_line_height - 1)
+			colorsFrame.ModelFrame:SetPoint ("topleft", colorsFrame.Header, "topright", -202, -scroll_line_height - 1)
 			colorsFrame.ModelFrame:SetBackdrop ({bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], tileSize = 64, tile = true})
 			colorsFrame.ModelFrame:SetBackdropColor (.4, .4, .4, 1)
 
 			colorsFrame.ModelFrame:SetScript ("OnEnter", nil)
+			--colorsFrame.ModelFrame:SetScript ("OnMouseWheel", nil)
+			colorsFrame.ModelFrame.zoomLevel = 0.1
+			colorsFrame.ModelFrame.minZoom = 0.01
+			colorsFrame.ModelFrame.maxZoom = 1
 			
 			--store npcID = checkbox object
 			--this is used when selecting the color from the dropdown, it'll automatically enable the color and need to set the checkbox to checked for feedback
@@ -2392,13 +2520,24 @@ Plater.CreateAuraTesting()
 			
 			--line scripts
 			local line_onenter = function (self)
-				self:SetBackdropColor (unpack (backdrop_color_on_enter))
+				if (self.hasHighlight) then
+					local r, g, b, a = unpack(highlightColorLastCombat)
+					self:SetBackdropColor(r, g, b, a+0.2)
+				else
+					self:SetBackdropColor (unpack (backdrop_color_on_enter))
+				end
+
 				if (self.npcID) then
 					colorsFrame.ModelFrame:SetCreature (self.npcID)
 				end
 			end
 			local line_onleave = function (self)
-				self:SetBackdropColor (unpack (self.backdrop_color))
+				if (self.hasHighlight) then
+					self:SetBackdropColor (unpack(highlightColorLastCombat))
+				else
+					self:SetBackdropColor (unpack (self.backdrop_color))
+				end
+
 				GameTooltip:Hide()
 				colorsFrame.ModelFrame:SetCreature (1)
 			end
@@ -2542,7 +2681,7 @@ Plater.CreateAuraTesting()
 							tinsert (colorsAddedT, {{r, g, b}, color, hex (r * 255) .. hex (g * 255) .. hex (b * 255)})
 						end
 					end
-					table.sort (colorsAddedT, sort_color)
+					--table.sort (colorsAddedT, sort_color)
 					
 					for index, colorTable in ipairs (colorsAddedT) do
 						local colortable = colorTable [1]
@@ -2561,7 +2700,7 @@ Plater.CreateAuraTesting()
 							tinsert (allColors, {colorTable, colorName, hex (colorTable[1]*255) .. hex (colorTable[2]*255) .. hex (colorTable[3]*255)})
 						end
 					end
-					table.sort (allColors, sort_color)
+					--table.sort (allColors, sort_color)
 					
 					for index, colorTable in ipairs (allColors) do
 						local colortable = colorTable [1]
@@ -2606,15 +2745,38 @@ Plater.CreateAuraTesting()
 				npcIDEntry:SetJustifyH("left")
 				
 				--npc Name
-				local npcNameEntry = DF:CreateTextEntry (line, function()end, headerTable[4].width, 20, "NpcNameEntry", nil, nil, DF:GetTemplate ("dropdown", "PLATER_DROPDOWN_OPTIONS"))
-				npcNameEntry:SetHook ("OnEditFocusGained", oneditfocusgained_spellid)
+				local npcNameEntry = DF:CreateTextEntry(line, function()end, headerTable[4].width, 20, "NpcNameEntry", nil, nil, DF:GetTemplate ("dropdown", "PLATER_DROPDOWN_OPTIONS"))
+				npcNameEntry:SetHook("OnEditFocusGained", oneditfocusgained_spellid)
 				npcNameEntry:SetJustifyH("left")
 				
+				--rename box
+				local npcRenameEntry = DF:CreateTextEntry(line, function()end, headerTable[5].width, 20, "NpcRenameEntry", nil, nil, DF:GetTemplate ("dropdown", "PLATER_DROPDOWN_OPTIONS"))
+				npcRenameEntry:SetHook("OnEditFocusGained", oneditfocusgained_spellid)
+				npcRenameEntry:SetJustifyH("left")
+
+				npcRenameEntry:SetHook("OnEditFocusLost", function(widget, capsule, text)
+					local npcsRenamed = Plater.db.profile.npcs_renamed
+					local npcID = capsule.npcID
+					capsule.text = npcsRenamed[npcID] or ""
+				end)
+
+				npcRenameEntry:SetHook("OnEnterPressed", function(widget, capsule, text)
+					local npcsRenamed = Plater.db.profile.npcs_renamed
+					local npcID = capsule.npcID
+					if (text == "") then
+						npcsRenamed[npcID] = nil
+					else
+						npcsRenamed[npcID] = text
+					end
+
+					Plater.UpdateAllPlates()
+				end)
+
 				--zone name
 				local zoneNameLabel = DF:CreateLabel (line, "", 10, "white", nil, "ZoneNameLabel")
 				
 				--color
-				local colorDropdown = DF:CreateDropDown (line, line_refresh_color_dropdown, 1, headerTable[6].width + 68, 20, "ColorDropdown", nil, DF:GetTemplate ("dropdown", "OPTIONS_DROPDOWN_TEMPLATE"))
+				local colorDropdown = DF:CreateDropDown (line, line_refresh_color_dropdown, 1, headerTable[7].width + 68, 20, "ColorDropdown", nil, DF:GetTemplate ("dropdown", "OPTIONS_DROPDOWN_TEMPLATE"))
 				
 				enabledCheckBox:SetHook ("OnEnter", widget_onenter)
 				enabledCheckBox:SetHook ("OnLeave", widget_onleave)
@@ -2624,6 +2786,8 @@ Plater.CreateAuraTesting()
 				npcIDEntry:SetHook ("OnLeave", widget_onleave)
 				npcNameEntry:SetHook ("OnEnter", widget_onenter)
 				npcNameEntry:SetHook ("OnLeave", widget_onleave)
+				npcRenameEntry:SetHook ("OnEnter", widget_onenter)
+				npcRenameEntry:SetHook ("OnLeave", widget_onleave)
 				colorDropdown:SetHook ("OnEnter", widget_onenter)
 				colorDropdown:SetHook ("OnLeave", widget_onleave)
 				
@@ -2631,6 +2795,7 @@ Plater.CreateAuraTesting()
 				line:AddFrameToHeaderAlignment (forScriptCheckBox)
 				line:AddFrameToHeaderAlignment (npcIDEntry)
 				line:AddFrameToHeaderAlignment (npcNameEntry)
+				line:AddFrameToHeaderAlignment (npcRenameEntry)
 				line:AddFrameToHeaderAlignment (zoneNameLabel)
 				line:AddFrameToHeaderAlignment (colorDropdown)
 				
@@ -2658,7 +2823,13 @@ Plater.CreateAuraTesting()
 				--data has all npcIDs from dungeons
 			
 				local dataInOrder = {}
-				
+
+				local canSortByLastCombat = false
+				local lastCombatNpcs = Plater.LastCombat.npcNames
+				if (next(lastCombatNpcs)) then
+					canSortByLastCombat = true
+				end
+
 				if (IsSearchingFor and IsSearchingFor ~= "") then
 					if (self.SearchCachedTable and IsSearchingFor == self.SearchCachedTable.SearchTerm) then
 						dataInOrder = self.SearchCachedTable
@@ -2694,6 +2865,7 @@ Plater.CreateAuraTesting()
 				else
 					if (not self.CachedTable) then
 						local enabledTable = {}
+						local lastCombatNpcsList = {}
 					
 						for i = 1, #data do
 							local npcID = data [i][1]
@@ -2701,8 +2873,12 @@ Plater.CreateAuraTesting()
 							local zoneName = data [i][3]
 							local color = DB_NPCID_COLORS [npcID] and DB_NPCID_COLORS [npcID][1] and DB_NPCID_COLORS [npcID][3] or "white" --has | is enabled | color
 							
-							if (DB_NPCID_COLORS [npcID] and DB_NPCID_COLORS [npcID][1]) then
+							if (canSortByLastCombat and lastCombatNpcs[npcName]) then
+								lastCombatNpcsList [#lastCombatNpcsList+1] = {2, color, npcName, zoneName, npcID}
+
+							elseif (DB_NPCID_COLORS [npcID] and DB_NPCID_COLORS [npcID][1]) then
 								enabledTable [#enabledTable+1] = {1, color, npcName, zoneName, npcID}
+
 							else
 								dataInOrder [#dataInOrder+1] = {0, color, npcName, zoneName, npcID}
 							end
@@ -2712,14 +2888,18 @@ Plater.CreateAuraTesting()
 						
 						table.sort (enabledTable, sort_enabled_colors)
 						table.sort (dataInOrder, DF.SortOrder3R) --npc name
-						
+
+						--add enabled
 						for i = #enabledTable, 1, -1 do
 							tinsert (dataInOrder, 1, enabledTable[i])
+						end
+						--add from last combat
+						for i = #lastCombatNpcsList, 1, -1 do
+							tinsert (dataInOrder, 1, lastCombatNpcsList[i])
 						end
 					end
 					
 					dataInOrder = self.CachedTable
-
 				end
 				
 				if (#dataInOrder > 6) then
@@ -2728,6 +2908,8 @@ Plater.CreateAuraTesting()
 				--
 				
 				data = dataInOrder
+
+				local npcsRenamed = Plater.db.profile.npcs_renamed
 
 				for i = 1, total_lines do
 					local index = i + offset
@@ -2738,6 +2920,7 @@ Plater.CreateAuraTesting()
 						local npcID = npcTable [5]
 						local npcName = npcTable [3]
 						local zoneName = npcTable [4]
+						local isFromLastCombat = npcTable[1] == 2
 						
 						line.value = npcTable
 						line.npcID = nil
@@ -2752,7 +2935,10 @@ Plater.CreateAuraTesting()
 						
 							line.NpcIDEntry:SetText (npcID)
 							line.NpcNameEntry:SetText (npcName)
+							line.NpcRenameEntry:SetText(npcsRenamed[npcID] or "")
+							line.NpcRenameEntry.npcID = npcID
 							line.ZoneNameLabel:SetText (zoneName)
+							line.hasHighlight = nil
 							
 							colorsFrame.CheckBoxCache [npcID] = line.EnabledCheckbox
 					
@@ -2774,6 +2960,11 @@ Plater.CreateAuraTesting()
 								line.ColorDropdown:Select ("white")
 								
 								line:RefreshColor()
+
+								if (isFromLastCombat) then
+									line.hasHighlight = true
+									line:SetBackdropColor(unpack(highlightColorLastCombat))
+								end
 							end
 							
 							line.EnabledCheckbox:SetFixedParameter (npcID)
@@ -2943,12 +3134,13 @@ Plater.CreateAuraTesting()
 							local dbColors = Plater.db.profile.npc_colors
 							--table storing all npcs already detected inside dungeons and raids
 							local allNpcsDetectedTable = Plater.db.profile.npc_cache
+							local allNpcsRenamed = Plater.db.profile.npcs_renamed
 
 							--the uncompressed table is a numeric table of tables
 							for i, colorTable in pairs (colorData) do
 								--check integrity
 								if (type (colorTable) == "table") then
-									local npcID, scriptOnly, colorID, npcName, zoneName = unpack (colorTable)
+									local npcID, scriptOnly, colorID, npcName, zoneName, renamedName = unpack (colorTable)
 									if (npcID and colorID and npcName and zoneName) then
 										if (type (colorID) == "string" and type (npcName) == "string" and type (zoneName) == "string") then
 											if (type (npcID) == "number" and type (scriptOnly) == "boolean") then
@@ -2961,6 +3153,8 @@ Plater.CreateAuraTesting()
 												allNpcsDetectedTable [npcID] = allNpcsDetectedTable [npcID] or {}
 												allNpcsDetectedTable [npcID] [1] = npcName
 												allNpcsDetectedTable [npcID] [2] = zoneName
+												
+												allNpcsRenamed [npcID] = renamedName
 											end
 										end
 									end
@@ -3031,8 +3225,9 @@ Plater.CreateAuraTesting()
 								--build a table to store one the npc and insert the table inside the main table which will be compressed
 								--only add the npc if it is enabled in the color panel
 								if (enabled1) then
-												       --number   | boolean     | string   | string      | string
-									tinsert (exportedTable, {npcID, enabled2, colorID, npcName, zoneName})
+									local renamedName = Plater.db.profile.npcs_renamed [npcID]
+															--number| boolean |string  |string  |string   |string
+									tinsert (exportedTable, {npcID, enabled2, colorID, npcName, zoneName, renamedName})
 								end
 							end
 						end
@@ -3053,8 +3248,9 @@ Plater.CreateAuraTesting()
 							--build a table to store one the npc and insert the table inside the main table which will be compressed
 							--only add the npc if it is enabled in the color panel
 							if (enabled1 and npcName and zoneName) then
-											       --number   | boolean     | string   | string      | string
-								tinsert (exportedTable, {npcID, enabled2, colorID, npcName, zoneName})
+								local renamedName = Plater.db.profile.npcs_renamed [npcID]
+															--number| boolean |string  |string  |string   |string
+									tinsert (exportedTable, {npcID, enabled2, colorID, npcName, zoneName, renamedName})
 							end
 						end
 					end
@@ -3133,11 +3329,9 @@ Plater.CreateAuraTesting()
 				empty_text:SetPoint ("center", spells_scroll, "center", -colorsFrame.ModelFrame:GetWidth() / 2, 0)
 				colorsFrame.EmptyText = empty_text
 			 
-			--create the title
+			--create the description
 			colorsFrame.TitleDescText = Plater:CreateLabel (colorsFrame, "For raid and dungeon npcs, they are added into the list after you see them for the first time", 10, "silver")
 			colorsFrame.TitleDescText:SetPoint ("bottomleft", spells_scroll, "topleft", 0, 26)
-			colorsFrame.TitleText = Plater:CreateLabel (colorsFrame, "Npc Color", 14, "orange")
-			colorsFrame.TitleText:SetPoint ("bottomleft", colorsFrame.TitleDescText, "topleft", 0, 2)
 			
 			colorsFrame:SetScript ("OnShow", function()
 				
@@ -3240,7 +3434,7 @@ Plater.CreateAuraTesting()
 									tinsert (colorsAddedT, {{r, g, b}, color, hex (r * 255) .. hex (g * 255) .. hex (b * 255)})
 								end
 							end
-							table.sort (colorsAddedT, sort_color)
+							--table.sort (colorsAddedT, sort_color)
 							
 							for index, colorTable in ipairs (colorsAddedT) do
 								local colortable = colorTable [1]
@@ -3259,7 +3453,7 @@ Plater.CreateAuraTesting()
 									tinsert (allColors, {colorTable, colorName, hex (colorTable[1]*255) .. hex (colorTable[2]*255) .. hex (colorTable[3]*255)})
 								end
 							end
-							table.sort (allColors, sort_color)
+							--table.sort (allColors, sort_color)
 							
 							for index, colorTable in ipairs (allColors) do
 								local colortable = colorTable [1]
@@ -3397,7 +3591,7 @@ Plater.CreateAuraTesting()
 	end	
 	
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
---> last event auras
+--> last event auras ~listbuff ~bufflist 
 
 	do
 		--options
@@ -3421,8 +3615,8 @@ Plater.CreateAuraTesting()
 			{text = "Add to Tracklist", width = 100},
 			{text = "Add to Blacklist", width = 100},
 			{text = "Add to Special Auras", width = 120},
-			{text = "Add to Script Trigger", width = 120},
-			{text = "Create WeakAura", width = 120, icon = _G.WeakAuras and [[Interface\AddOns\WeakAuras\Media\Textures\icon]] or ""},
+			{text = "Add to Script", width = 120},
+			{text = "From Last Combat", width = 120}, --, icon = _G.WeakAuras and [[Interface\AddOns\WeakAuras\Media\Textures\icon]] or ""
 		}
 		local headerOptions = {
 			padding = 2,
@@ -3430,10 +3624,16 @@ Plater.CreateAuraTesting()
 		
 		auraLastEventFrame.Header = DF:CreateHeader (auraLastEventFrame, headerTable, headerOptions)
 		auraLastEventFrame.Header:SetPoint ("topleft", auraLastEventFrame, "topleft", 10, headerY)
-	
+
 		--line scripts
 		local line_onenter = function (self)
-			self:SetBackdropColor (unpack (backdrop_color_on_enter))
+			if (self.hasHighlight) then
+				local r, g, b, a = unpack(highlightColorLastCombat)
+				self:SetBackdropColor(r, g, b, a+0.2)
+			else
+				self:SetBackdropColor (unpack (backdrop_color_on_enter))
+			end
+
 			if (self.SpellID) then
 				GameTooltip:SetOwner (self, "ANCHOR_TOPLEFT")
 				GameTooltip:SetSpellByID (self.SpellID)
@@ -3443,7 +3643,11 @@ Plater.CreateAuraTesting()
 		end
 		
 		local line_onleave = function (self)
-			self:SetBackdropColor (unpack (backdrop_color))
+			if (self.hasHighlight) then
+				self:SetBackdropColor(unpack(highlightColorLastCombat))
+			else
+				self:SetBackdropColor(unpack(backdrop_color))
+			end
 			GameTooltip:Hide()
 		end
 		
@@ -3614,6 +3818,8 @@ Plater.CreateAuraTesting()
 			
 			local create_aura = DF:CreateButton (line, line_create_aura, headerTable[10].width, 20, "Create", -1, nil, nil, nil, nil, nil, DF:GetTemplate ("button", "OPTIONS_BUTTON_TEMPLATE"), DF:GetTemplate ("font", "PLATER_BUTTON"))
 			
+			local fromLastCombat = DF:CreateLabel (line, "", DF:GetTemplate ("font", "PLATER_SCRIPTS_NAME"))
+
 			spell_id:SetHook ("OnEnter", widget_onenter)
 			spell_id:SetHook ("OnLeave", widget_onleave)
 			
@@ -3641,7 +3847,8 @@ Plater.CreateAuraTesting()
 			line:AddFrameToHeaderAlignment (add_ignorelist)
 			line:AddFrameToHeaderAlignment (add_special)
 			line:AddFrameToHeaderAlignment (add_script_trigger)
-			line:AddFrameToHeaderAlignment (create_aura)
+			line:AddFrameToHeaderAlignment (fromLastCombat)
+			--line:AddFrameToHeaderAlignment (create_aura)
 			
 			line:AlignWithHeader (auraLastEventFrame.Header, "left")
 			
@@ -3655,15 +3862,23 @@ Plater.CreateAuraTesting()
 			line.AddSpecial = add_special
 			line.AddTrigger = add_script_trigger
 			line.CreateAura = create_aura
+			line.FromLastCombat = fromLastCombat
 			
 			return line
 		end
 		
 		--refresh scroll
+
+		local sortOrder4 = function(t1, t2)
+			return t1[4] > t2[4]
+		end
+
 		local IsSearchingFor
 		local scroll_refresh = function (self, data, offset, total_lines)
 		
 			local dataInOrder = {}
+			--buff list tab
+			local lastCombatNpcs = Plater.LastCombat.npcNames or {}
 			
 			if (IsSearchingFor and IsSearchingFor ~= "") then
 				if (self.SearchCachedTable and IsSearchingFor == self.SearchCachedTable.SearchTerm) then
@@ -3672,9 +3887,10 @@ Plater.CreateAuraTesting()
 					for i = 1, #data do
 						local spellID = data[i] [1]
 						local spellName, _, spellIcon = GetSpellInfo (spellID)
+						local spellTable = data[i][2]
 						if (spellName) then
 							if (spellName:lower():find (IsSearchingFor)) then
-								dataInOrder [#dataInOrder+1] = {i, data[i], spellName}
+								dataInOrder [#dataInOrder+1] = {i, data[i], spellName, lastCombatNpcs[spellTable.source] and 2 or 0}
 							end
 						end
 					end
@@ -3687,8 +3903,9 @@ Plater.CreateAuraTesting()
 					for i = 1, #data do
 						local spellID = data[i] [1]
 						local spellName, _, spellIcon = GetSpellInfo (spellID)
+						local spellTable = data[i][2]
 						if (spellName) then
-							dataInOrder [#dataInOrder+1] = {i, data[i], spellName}
+							dataInOrder [#dataInOrder+1] = {i, data[i], spellName, lastCombatNpcs[spellTable.source] and 2 or 0}
 						end
 					end
 					self.CachedTable = dataInOrder
@@ -3698,6 +3915,8 @@ Plater.CreateAuraTesting()
 			end
 
 			table.sort (dataInOrder, DF.SortOrder3R)
+			table.sort (dataInOrder, sortOrder4)
+
 			data = dataInOrder
 		
 			for i = 1, total_lines do
@@ -3710,6 +3929,18 @@ Plater.CreateAuraTesting()
 					local spellData = spellTable [2]
 					
 					local spellName, _, spellIcon = GetSpellInfo (spellID)
+
+					local fullData = data[index]
+					local isFromLastSegment = fullData[4] == 2
+					line.hasHighlight = isFromLastSegment
+
+					if (line.hasHighlight) then
+						line:SetBackdropColor(unpack(highlightColorLastCombat))
+						line.FromLastCombat.text = "       YES"
+					else
+						line:SetBackdropColor(unpack(backdrop_color))
+						line.FromLastCombat.text = ""
+					end
 					
 					line.value = spellTable
 					
@@ -3862,16 +4093,14 @@ Plater.CreateAuraTesting()
 			local aura_search_label = DF:CreateLabel (auraLastEventFrame, "Search:", DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE"))
 			aura_search_label:SetPoint ("right", aura_search_textentry, "left", -2, 0)
 		
-		--create the title
+		--create the description
 		auraLastEventFrame.TitleDescText = Plater:CreateLabel (auraLastEventFrame, "Quick way to manage auras from a recent raid boss or dungeon run", 10, "silver")
 		auraLastEventFrame.TitleDescText:SetPoint ("bottomleft", spells_scroll, "topleft", 0, 26)
-		auraLastEventFrame.TitleText = Plater:CreateLabel (auraLastEventFrame, "Aura Ease", 14, "orange")
-		auraLastEventFrame.TitleText:SetPoint ("bottomleft", auraLastEventFrame.TitleDescText, "topleft", 0, 2)
 		
 	end
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---> special auras
+--> special auras ~special ~aura ~buffspecial
 --> special aura container
 	local especial_aura_settings
 	do 
@@ -3899,13 +4128,12 @@ Plater.CreateAuraTesting()
 		specialAuraFrame:SetPoint ("topright", auraSpecialFrame, "topright", -10, startY)
 		--DF:ApplyStandardBackdrop (specialAuraFrame, false, 0.6)
 		
-		specialAuraFrame.SpellHashTable = {}
-		specialAuraFrame.SpellIndexTable = {}
-		
+		local LoadGameSpellsCalled = false
 		function specialAuraFrame.LoadGameSpells()
-			if (not next (specialAuraFrame.SpellHashTable)) then
+			if (not next (Plater.SpellHashTable) and not LoadGameSpellsCalled) then
 				--load all spells in the game
-				DF:LoadAllSpells (specialAuraFrame.SpellHashTable, specialAuraFrame.SpellIndexTable)
+				DF:LoadAllSpells (Plater.SpellHashTable, Plater.SpellIndexTable)
+				LoadGameSpellsCalled = true
 				return true
 			end
 		end
@@ -3951,7 +4179,7 @@ Plater.CreateAuraTesting()
 			
 			if  not spellid then
 				-- if the player class does not know the spell, try checking the cache
-				spellid = specialAuraFrame.SpellHashTable[self.value]
+				spellid = Plater.SpellHashTable[self.value]
 			end
 			
 			if (spellid) then
@@ -4040,23 +4268,27 @@ Plater.CreateAuraTesting()
 				local aura = data [index]
 				if (aura) then
 					local line = self:GetLine (i)
-					local name, _, icon = GetSpellInfo (aura)
+					local spellName, _, spellIcon = GetSpellInfo (aura)
 					line.value = aura
 					
-					if not name then
+					if not spellName then
 						-- if the player class does not know the spell, try checking the cache
 						-- avoids "unknown spell" in this case
-						if (not next (specialAuraFrame.SpellHashTable)) then
-							specialAuraFrame.LoadGameSpells()
-							C_Timer.After (0.2, function() self:Refresh() end)
+
+						if (not next (Plater.SpellHashTable)) then
+							local loaded = specialAuraFrame.LoadGameSpells()
+							if loaded then
+								DF.LoadingAuraAlertFrame:HookScript("OnHide", function() self:Refresh() end)
+							end
+							--C_Timer.After (1, function() self:Refresh() end)
 						end
-						local id = specialAuraFrame.SpellHashTable[lower(aura)]
-						name, _, icon = GetSpellInfo (id)
+						local id = Plater.SpellHashTable[lower(aura)]
+						spellName, _, spellIcon = GetSpellInfo (id)
 					end
 					
-					if (name) then
-						line.name:SetText (name)
-						line.icon:SetTexture (icon)
+					if (spellName) then
+						line.name:SetText (spellName)
+						line.icon:SetTexture (spellIcon)
 						line.icon:SetTexCoord (.1, .9, .1, .9)
 						line.mineCheckbox:SetFixedParameter (aura)
 						line.mineCheckbox:SetValue (Plater.db.profile.extra_icon_auras_mine [aura] or false)
@@ -4100,7 +4332,7 @@ Plater.CreateAuraTesting()
 		
 		new_buff_entry:SetHook ("OnEditFocusGained", function (self, capsule)
 			specialAuraFrame.LoadGameSpells()
-			new_buff_entry.SpellAutoCompleteList = specialAuraFrame.SpellIndexTable
+			new_buff_entry.SpellAutoCompleteList = Plater.SpellIndexTable
 			new_buff_entry:SetAsAutoComplete ("SpellAutoCompleteList", nil, true)
 		end)
 		
@@ -4118,7 +4350,7 @@ Plater.CreateAuraTesting()
 			
 			--get the spell ID from the spell name
 			local lowertext = lower (text)
-			local spellID = specialAuraFrame.SpellHashTable [lowertext]
+			local spellID = Plater.SpellHashTable [lowertext]
 			if (not spellID) then
 				return
 			end
@@ -4288,6 +4520,16 @@ Plater.CreateAuraTesting()
 				name = "Default Border Color",
 				desc = "Default Border Color",
 			},
+			{
+				type = "toggle",
+				get = function() return Plater.db.profile.extra_icon_cooldown_reverse end,
+				set = function (self, fixedparam, value) 
+					Plater.db.profile.extra_icon_cooldown_reverse = value
+					Plater.UpdateAllPlates()
+				end,
+				name = "Swipe Closure Inverted",
+				desc = "If enabled the swipe closure texture is applied as the swipe moves instead.",
+			},
 			
 			{type = "breakline"},
 			--{type = "label", get = function() return "Text Settings:" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
@@ -4301,6 +4543,16 @@ Plater.CreateAuraTesting()
 				end,
 				name = "Show Timer",
 				desc = "Show Timer",
+			},
+			{
+				type = "toggle",
+				get = function() return Plater.db.profile.extra_icon_timer_decimals end,
+				set = function (self, fixedparam, value) 
+					Plater.db.profile.extra_icon_timer_decimals = value
+					Plater.UpdateAllPlates()
+				end,
+				name = "Show Decimals",
+				desc = "Show decimals below 10s remaining time",
 			},
 			{
 				type = "select",
@@ -4746,12 +4998,9 @@ Plater.CreateAuraTesting()
 			
 		end)
 		
-		--create the title
+		--create the description
 		auraSpecialFrame.TitleDescText = Plater:CreateLabel (auraSpecialFrame, "Track auras adding them to a special buff frame separated from the main buff line. Use it to emphasize important auras from raid bosses or mythic dungeons.", 10, "silver")
 		auraSpecialFrame.TitleDescText:SetPoint ("bottomleft", special_auras_added, "topleft", 0, 26)
-		auraSpecialFrame.TitleText = Plater:CreateLabel (auraSpecialFrame, "Aura Special", 14, "orange")
-		auraSpecialFrame.TitleText:SetPoint ("bottomleft", auraSpecialFrame.TitleDescText, "topleft", 0, 2)
-		
 	end
 
 
@@ -6497,10 +6746,10 @@ local relevance_options = {
 				end
 			end,
 			min = IS_WOW_PROJECT_MAINLINE and 60 or 20, --20y for tbc and classic
-			max = (IS_WOW_PROJECT_MAINLINE and 60) or (IS_WOW_PROJECT_CLASSIC_TBC and 40) or 20, --40y for tbc, 20y for classic era
+			max = (IS_WOW_PROJECT_MAINLINE and 60) or (IS_WOW_PROJECT_CLASSIC_TBC and 41) or 20, --41y for tbc, 20y for classic era
 			step = 1,
 			name = "View Distance" .. CVarIcon,
-			desc = "How far you can see nameplates (in yards).\n\n|cFFFFFFFFCurrent limitations: Retail = 60y, TBC = 20-40y, Classic = 20y|r" .. CVarDesc,
+			desc = "How far you can see nameplates (in yards).\n\n|cFFFFFFFFCurrent limitations: Retail = 60y, TBC = 20-41y, Classic = 20y|r" .. CVarDesc,
 			nocombat = true,
 		},
 	
@@ -6550,7 +6799,7 @@ local relevance_options = {
 				end
 			end,
 			name = "Hide Blizzard Health Bars" .. CVarIcon,
-			desc = "While in dungeons or raids, if friendly nameplates are enabled it'll show only the player name.\nIf any Plater module is disabled, this will affect these nameplates as well." .. CVarDesc,
+			desc = "While in dungeons or raids, if friendly nameplates are enabled it'll show only the player name.\nIf any Plater module is disabled, this will affect these nameplates as well." .. CVarDesc .. CVarNeedReload,
 			nocombat = true,
 		},
 
@@ -7239,6 +7488,17 @@ local relevance_options = {
 			end,
 			name = "Pet Icon",
 			desc = "Pet Icon",
+		},
+
+		{
+			type = "toggle",
+			get = function() return Plater.db.profile.indicator_shield end,
+			set = function (self, fixedparam, value) 
+				Plater.db.profile.indicator_shield = value
+				Plater.UpdateAllPlates()
+			end,
+			name = "Shield Bar",
+			desc = "Shield Bar",
 		},
 		
 		{
@@ -10529,7 +10789,7 @@ end
 				get = function() return Plater.db.profile.plate_config.enemynpc.big_actorname_text_size end,
 				set = function (self, fixedparam, value) 
 					Plater.db.profile.plate_config.enemynpc.big_actorname_text_size = value
-					Plater.db.profile.plate_config.enemynpc.big_actortitle_text_size = value
+					--Plater.db.profile.plate_config.enemynpc.big_actortitle_text_size = value --why? there's a separate setting.
 					Plater.UpdateAllPlates()
 				end,
 				min = 6,
@@ -11724,7 +11984,7 @@ end
 	end)
 	
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---> ~auto ~�uto
+--> ~auto ãuto
 
 	--autoFrame
 		
@@ -11864,7 +12124,30 @@ end
 			name = "In Open World",
 			desc = "Set stacking on when at any place not listed on the other options.",
 		},
-		
+
+		{type = "blank"},
+		{type = "label", get = function() return "Raid and Party:" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
+
+		{
+			type = "toggle",
+			get = function() return Plater.db.profile.auto_inside_raid_dungeon.hide_enemy_player_pets end,
+			set = function (self, fixedparam, value) 
+				Plater.db.profile.auto_inside_raid_dungeon.hide_enemy_player_pets = value
+				Plater.RefreshAutoToggle()
+			end,
+			name = "Hide Enemy Pets",
+			desc = "Disable show enemy pets within a raid or a dungeon.",
+		},
+		{
+			type = "toggle",
+			get = function() return Plater.db.profile.auto_inside_raid_dungeon.hide_enemy_player_totems end,
+			set = function (self, fixedparam, value) 
+				Plater.db.profile.auto_inside_raid_dungeon.hide_enemy_player_totems = value
+				Plater.RefreshAutoToggle()
+			end,
+			name = "Hide Enemy Totems",
+			desc = "Disable show enemy totems within a raid or a dungeon.",
+		},
 	}
 	
 	_G.C_Timer.After(1.2, function() --~delay
@@ -12362,7 +12645,8 @@ end
 	}
 
 	_G.C_Timer.After(0.800, function() --~delay
-		DF:BuildMenu (castBarFrame, castBar_options, startX, startY, heightSize, true, options_text_template, options_dropdown_template, options_switch_template, true, options_slider_template, options_button_template, globalCallback)	
+		--the -30 is to fix an annomaly where the options for castbars starts 30 pixels to the right, dunno why (tercio)
+		DF:BuildMenu (castBarFrame, castBar_options, startX - 30, startY, heightSize, true, options_text_template, options_dropdown_template, options_switch_template, true, options_slider_template, options_button_template, globalCallback)	
 	end)
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -12723,7 +13007,7 @@ end
 	
 	
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---> ~advanced �dvanced
+--> ~advanced ãdvanced
 	
 
 	local advanced_options = {
@@ -12907,6 +13191,21 @@ end
 			values = function() return nameplate_anchor_options end,
 			name = "Anchor Point" .. CVarIcon,
 			desc = "Where the nameplate is anchored to.\n\n|cFFFFFFFFDefault: Head|r" .. CVarDesc,
+			nocombat = true,
+		},
+		{
+			type = "toggle",
+			get = function() return GetCVarBool ("nameplateShowDebuffsOnFriendly") end,
+			set = function (self, fixedparam, value) 
+				if (not InCombatLockdown()) then
+					SetCVar ("nameplateShowDebuffsOnFriendly", value and "1" or "0")
+				else
+					Plater:Msg (L["OPTIONS_ERROR_CVARMODIFY"])
+					self:SetValue (GetCVarBool ("nameplateShowDebuffsOnFriendly"))
+				end
+			end,
+			name = "Show Debuffs on Blizzard Health Bars" .. CVarIcon,
+			desc = "While in dungeons or raids, if friendly nameplates are enabled it won't show debuffs on them.\nIf any Plater module is disabled, this will affect these nameplates as well." .. CVarDesc .. CVarNeedReload,
 			nocombat = true,
 		},
 		
@@ -13601,15 +13900,15 @@ end
 	local searchBox = DF:CreateTextEntry (searchFrame, function()end, 156, 20, "serachTextEntry", _, _, DF:GetTemplate ("dropdown", "PLATER_DROPDOWN_OPTIONS"))
 	searchBox:SetJustifyH("left")
 
-	searchLabel:SetPoint(10, -120)
-	searchBox:SetPoint(10, -130)
+	searchLabel:SetPoint(10, -130)
+	searchBox:SetPoint(10, -140)
 
 	local optionsWildCardFrame = CreateFrame("frame", "$parentWildCardOptionsFrame", searchFrame, BackdropTemplateMixin and "BackdropTemplate")
 	optionsWildCardFrame:SetAllPoints()
 	
 	--all settings tables
 	local allTabSettings = {
-		interface_options, -- general
+		--interface_options, -- general
 		options_table1, -- general
 		thread_options, -- threat & aggro
 		targetOptions, -- target
@@ -13618,16 +13917,18 @@ end
 		options_personal, -- personal bar
 		debuff_options, -- buff settings
 		especial_aura_settings, -- buff special
+		--ghost auras settings
 		options_table2, -- enemy npc
 		options_table4, -- enemy player
 		options_table3, -- friendly player
 		friendly_npc_options_table, -- friendly npc
+		--spell feedback (animations)
 		auto_options, -- auto
 		advanced_options, -- advanced
+		--resources
 	}
 	
 	local allTabHeaders = {
-		mainFrame.AllButtons [1].button.text:GetText(), -- general
 		mainFrame.AllButtons [1].button.text:GetText(), -- general
 		mainFrame.AllButtons [2].button.text:GetText(), -- threat & aggro
 		mainFrame.AllButtons [3].button.text:GetText(), -- target
@@ -13635,13 +13936,20 @@ end
 		mainFrame.AllButtons [5].button.text:GetText(), -- level & strata
 		mainFrame.AllButtons [8].button.text:GetText(), -- personal bar
 		mainFrame.AllButtons [9].button.text:GetText(), -- buff settings
+		--10 aura filter
 		mainFrame.AllButtons [11].button.text:GetText(), -- buff special
+		--mainFrame.AllButtons [12].button.text:GetText(), -- ghost auras
 		mainFrame.AllButtons [13].button.text:GetText(), -- enemy npc
 		mainFrame.AllButtons [14].button.text:GetText(), -- enemy player
 		mainFrame.AllButtons [15].button.text:GetText(), -- friendly npc
 		mainFrame.AllButtons [16].button.text:GetText(), -- friendly player
-		mainFrame.AllButtons [20].button.text:GetText(), -- auto
-		mainFrame.AllButtons [22].button.text:GetText(), -- advanced
+		--17 18 19 has no options (npc colors, cast colors, aura list)
+		--mainFrame.AllButtons [20].button.text:GetText(), -- spell feedback (animations)
+		mainFrame.AllButtons [21].button.text:GetText(), -- auto
+		--22 profiles
+		mainFrame.AllButtons [23].button.text:GetText(), -- advanced
+		--mainFrame.AllButtons [24].button.text:GetText(), -- resources
+		--25 search
 	}
 
 	--this table will hold all options

@@ -541,10 +541,10 @@ function RareTracker:AddDailyResetHandler()
                 _f.target_time = _f.target_time + 3600
                 
                 if self.gui.entities_frame ~= nil then
-                    self:UpdateAllDailyKillMarks()
-                    self:Debug("Updating daily kill marks.")
                     self:UpdateDisplayList()
                     self:Debug("Updating display list.")
+                    self:UpdateAllDailyKillMarks()
+                    self:Debug("Updating daily kill marks.")
                 end
             end
         end
@@ -561,19 +561,19 @@ end
 -- In such a situation, the order of the channels changes, which is undesirable.
 -- Thus, we block certain events until these chats have been loaded.
 local message_delay_frame = CreateFrame("Frame", "RT.message_delay_frame", UIParent)
-message_delay_frame.start_time = GetServerTime()
+message_delay_frame.start_time = GetServerTime() + 2
 message_delay_frame.num_of_retries = 0
 message_delay_frame:SetScript("OnUpdate",
 	function(self)
-		if GetServerTime() - self.start_time > 0 then
-			if #{GetChannelList()} == 0 and message_delay_frame.num_of_retries < 3 then
-                if #{EnumerateServerChannels()} > 0 then
-                    pcall(RareTracker.Debug, RareTracker, "Retry", self.num_of_retries)
-                    self.num_of_retries = self.num_of_retries + 1
-                end
+		if GetServerTime() - self.start_time > 2 then
+			if #{GetChannelList()} == 0 and message_delay_frame.num_of_retries < 5 then
+        if #{EnumerateServerChannels()} > 0 then
+            pcall(RareTracker.Debug, RareTracker, "Waiting to join channel. Attempt:", self.num_of_retries)
+            self.num_of_retries = self.num_of_retries + 1
+        end
 				self.start_time = GetServerTime()
-            else
-                pcall(RareTracker.Debug, RareTracker, "Chat frame is loaded.")
+      else
+        pcall(RareTracker.Debug, RareTracker, "Chat frame is loaded.")
 				chat_frame_loaded = true
 				self:SetScript("OnUpdate", nil)
 				self:Hide()

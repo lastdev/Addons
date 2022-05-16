@@ -77,6 +77,7 @@ L["DUNGEON_SHORT_NAME_DHT"] = "어숲"
 L["DUNGEON_SHORT_NAME_DOS"] = "저편"
 L["DUNGEON_SHORT_NAME_EOA"] = "아즈"
 L["DUNGEON_SHORT_NAME_FH"] = "자유"
+L["DUNGEON_SHORT_NAME_GMBT"] = "승부수"
 L["DUNGEON_SHORT_NAME_HOA"] = "속죄"
 L["DUNGEON_SHORT_NAME_HOV"] = "용맹"
 L["DUNGEON_SHORT_NAME_KR"] = "왕안"
@@ -92,6 +93,7 @@ L["DUNGEON_SHORT_NAME_SEAT"] = "삼두정"
 L["DUNGEON_SHORT_NAME_SIEGE"] = "보랄"
 L["DUNGEON_SHORT_NAME_SOA"] = "승천"
 L["DUNGEON_SHORT_NAME_SOTS"] = "폭사"
+L["DUNGEON_SHORT_NAME_STRT"] = "거리"
 L["DUNGEON_SHORT_NAME_TD"] = "톨다"
 L["DUNGEON_SHORT_NAME_TM"] = "왕노"
 L["DUNGEON_SHORT_NAME_TOP"] = "투기장"
@@ -234,28 +236,17 @@ L["RAID_BOSS_NYA_6"] = "만족할 줄 모르는 샤드하르"
 L["RAID_BOSS_NYA_7"] = "드레스타가스"
 L["RAID_BOSS_NYA_8"] = "다시 태어난 타락 일기노스"
 L["RAID_BOSS_NYA_9"] = "벡시오나"
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_10"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_11"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_9"] = ""--]] 
+L["RAID_BOSS_SFO_1"] = "경계하는 수호자"
+L["RAID_BOSS_SFO_10"] = "라이겔론"
+L["RAID_BOSS_SFO_11"] = "간수"
+L["RAID_BOSS_SFO_2"] = "만족을 모르는 강탈자 스콜렉스"
+L["RAID_BOSS_SFO_3"] = "기술자 자이목스"
+L["RAID_BOSS_SFO_4"] = "타락한 예언자 다우세그네"
+L["RAID_BOSS_SFO_5"] = "판테온의 원형"
+L["RAID_BOSS_SFO_6"] = "최고위 설계사 리후빔"
+L["RAID_BOSS_SFO_7"] = "되찾는 자 할론드루스"
+L["RAID_BOSS_SFO_8"] = "안두인 린"
+L["RAID_BOSS_SFO_9"] = "공포의 군주"
 L["RAID_BOSS_SOD_1"] = "대지공포"
 L["RAID_BOSS_SOD_10"] = "실바나스 윈드러너"
 L["RAID_BOSS_SOD_2"] = "간수의 눈"
@@ -302,6 +293,8 @@ L["RELOAD_NOW"] = "지금 다시 불러오기"
 --[[ L["RELOAD_RWF_MODE_BUTTON"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RWF_MINIBUTTON_TOOLTIP"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RWF_SUBTITLE_LOGGING_FILTERED_LOOT"] = ""--]] 
 --[[Translation missing --]]

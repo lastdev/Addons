@@ -717,3 +717,33 @@ Columns.RegisterColumn("Cur_SoulCinders", {
 	JustifyH = "CENTER",
 	GetText = function(character)	return GetCurrencyText(character, enum.SoulCinders) end,
 })
+
+-- ** Shadowlands / 9.2 Eternity's End **
+
+Columns.RegisterColumn("Cur_Cyphers", {
+	-- Header
+	headerWidth = 70,
+	headerLabel = format("   %s", Formatter.Texture18("Interface\\Icons\\inv_trinket_progenitorraid_02_blue")),
+	headerOnEnter = function(frame, tooltip) CurrencyHeader_OnEnter(frame, enum.CyphersOfTheFirstOnes)	end,
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("Cur_Cyphers") end,
+	headerSort = function(self, character) return GetTotals(character, enum.CyphersOfTheFirstOnes) end,
+	
+	-- Content
+	Width = 70,
+	JustifyH = "CENTER",
+	GetText = function(character)	return GetCurrencyText(character, enum.CyphersOfTheFirstOnes) end,
+})
+
+Columns.RegisterColumn("Cur_CosmicFlux", {
+	-- Header
+	headerWidth = 70,
+	headerLabel = format("   %s", Formatter.Texture18("Interface\\Icons\\inv_currency_cosmicflux")),
+	headerOnEnter = function(frame, tooltip) CurrencyHeader_OnEnter(frame, enum.CosmicFlux)	end,
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("Cur_CosmicFlux") end,
+	headerSort = function(self, character) return GetTotals(character, enum.CosmicFlux) end,
+	
+	-- Content
+	Width = 70,
+	JustifyH = "CENTER",
+	GetText = function(character)	return GetCurrencyText(character, enum.CosmicFlux) end,
+})

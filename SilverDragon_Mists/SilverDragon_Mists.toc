@@ -1,7 +1,7 @@
 ## Interface: 90200
 ## Title: SilverDragon (Mists)
 ## Notes: Mobs for Mists
-## Version: v90200.5
+## Version: v90200.11
 ## Author: Kemayo
 ## eMail: kemayo at gmail dot com
 ## X-Category: Interface Enhancements

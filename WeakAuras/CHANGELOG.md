@@ -1,19 +1,15 @@
-# [3.7.13](https://github.com/WeakAuras/WeakAuras2/tree/3.7.13) (2022-03-03)
+# [3.7.16](https://github.com/WeakAuras/WeakAuras2/tree/3.7.16) (2022-03-24)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/3.7.12...3.7.13)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/3.7.15...3.7.16)
 
 ## Highlights
 
-  
+ - bug fixes 
 
 ## Commits
 
-asakawa (1):
+Stanzilla (2):
 
-- Add a detailed tooltip to the Unit setting in bufftrigger2 (#3509)
-
-mrbuds (2):
-
-- increase boss units up to boss10 "prototype pantheon" & "generals boss in nathria" has more than 5 boss units
-- fix iconPicker with spellCache change
+- Disable new luacheck rules so we can get a release out
+- Adjust code for new luacheck rules
 

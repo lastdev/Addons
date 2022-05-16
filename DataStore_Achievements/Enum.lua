@@ -30,6 +30,7 @@ enum.AchievementCategories = {
 	QuestsLegion = 15252,
 	QuestsBfA = 15284,
 	QuestsShadowlands = 15422,
+	QuestsShadowlands92 = -98,
 	
 	Exploration = 97,
 	ExplorationExplorer = -8,
@@ -43,6 +44,7 @@ enum.AchievementCategories = {
 	ExplorationLegion = 15257,
 	ExplorationBfA = 15298,
 	ExplorationShadowlands = 15436,
+	ExplorationShadowlands92 = -99,
 	
 	PvP = 95,
 	PvPHonorableKills = -9,
@@ -91,6 +93,7 @@ enum.AchievementCategories = {
 	RaidsLegion = 15255,
 	RaidsBfA = 15286,
 	RaidsShadowlands = 15438,
+	RaidsShadowlands92 = -100,
 
 	Professions = 169,
 	ProfessionsCooking = 170,

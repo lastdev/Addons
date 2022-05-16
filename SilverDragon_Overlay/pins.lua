@@ -18,15 +18,14 @@ function SilverDragonOverlayPinMixinBase:OnAcquired(mobid, x, y, textureInfo, sc
     self.coord = originalCoord
     self.uiMapID = originalMapID
     self.minimap = minimap
-    self.config = minimap and module.db.profile.minimap or module.db.profile.worldmap
 
     if not minimap then
         self:SetPosition(x, y)
     end
 
     local size = 12
-    scale = scale * self.config.icon_scale
-    alpha = alpha * self.config.icon_alpha
+    scale = scale * self:Config().icon_scale
+    alpha = alpha * self:Config().icon_alpha
 
     size = size * scale
     self:SetSize(size, size)
@@ -60,7 +59,6 @@ function SilverDragonOverlayPinMixinBase:OnReleased()
     self.coord = nil
     self.uiMapID = nil
     self.minimap = nil
-    self.config = nil
 
     self.DriverAnimation:Stop()
     self.DriverAnimation:Finish()
@@ -135,6 +133,10 @@ function SilverDragonOverlayPinMixinBase:ApplyFocusState()
     end
 end
 
+function SilverDragonOverlayPinMixinBase:Config()
+    return self.minimap and module.db.profile.minimap or module.db.profile.worldmap
+end
+
 -- Animation mixin
 
 SilverDragonOverlayMapPinPingDriverAnimationMixin = {}
@@ -191,6 +193,20 @@ do
         end
     end
 
+    local function showAchievement(button, achievement)
+        OpenAchievementFrameToAchievement(achievement)
+    end
+
+    local function sendToChat(mobid, uiMapID, coord)
+        local targets = core:GetModule("ClickTarget", true)
+        if targets then
+            local x, y = core:GetXY(coord)
+            if x and y then
+                targets:SendLinkToMob(mobid, uiMapID, x, y)
+            end
+        end
+    end
+
     local dropdown = CreateFrame("Frame", nil, UIParent, "UIDropDownMenuTemplate")
     dropdown.displayMode = "MENU"
 
@@ -204,10 +220,22 @@ do
             info.notCheckable = 1
             UIDropDownMenu_AddButton(info, level)
 
+            local achievement = button.mobid and ns:AchievementMobStatus(button.mobid)
+            if achievement then
+                info.disabled     = nil
+                info.isTitle      = nil
+                info.notCheckable = true
+                info.text = OBJECTIVES_VIEW_ACHIEVEMENT
+                info.notCheckable = 1
+                info.func = showAchievement
+                info.arg1 = achievement
+                UIDropDownMenu_AddButton(info, level)
+            end
+
             -- Waypoint menu item
             info.disabled     = nil
             info.isTitle      = nil
-            info.notCheckable = nil
+            info.notCheckable = true
             info.text = "Create waypoint"
             info.icon = nil
             info.func = module.CreateWaypoint
@@ -217,7 +245,7 @@ do
 
             info.disabled = not TomTom
             info.isTitle = nil
-            info.notCheckable = nil
+            info.notCheckable = true
             info.text = "Create waypoint for all locations"
             info.icon = nil
             info.func = createWaypointForAll
@@ -225,10 +253,18 @@ do
             info.arg2 = button.mobid
             UIDropDownMenu_AddButton(info, level)
 
+            info.disabled = nil
+            info.isTitle = nil
+            info.notCheckable = true
+            info.text = COMMUNITIES_INVITE_MANAGER_LINK_TO_CHAT -- Link to chat
+            local mobid, uiMapID, coord = button.mobid, button.uiMapID, button.coord
+            info.func = function() sendToChat(mobid, uiMapID, coord) end
+            UIDropDownMenu_AddButton(info, level)
+
             -- Hide menu item
             info.disabled     = nil
             info.isTitle      = nil
-            info.notCheckable = nil
+            info.notCheckable = true
             info.text = "Hide mob"
             info.icon = "Interface\\Icons\\INV_Misc_Head_Dragon_01"
             info.func = hideMob

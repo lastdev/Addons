@@ -41,6 +41,7 @@ end
 
 local redirects = {
     [62352] = 62346, -- Chief Salyis => Galleon
+    [154342] = 151934, -- Arachnoid Harvester (time displaced) => Arachnoid Harvester
     [157726] = 160857, -- Scorched Scavenger => Sire Ladinas
     [157727] = 160857, -- Scorched Outcast => Sire Ladinas
     [157733] = 160857, -- Crazed Ash Ghoul => Sire Ladinas
@@ -88,7 +89,9 @@ function module:OnChatMessage(event, text, name, ...)
         return
     end
     -- Guess from the event whether we're anywhere near the mob
-    if event == "CHAT_MSG_MONSTER_SAY" or event == "CHAT_MSG_MONSTER_EMOTE" then
+    -- Used to trust CHAT_MSG_MONSTER_EMOTE here as well, but there's a lot of
+    -- zone-wide emotes these days
+    if event == "CHAT_MSG_MONSTER_SAY" then
         x, y = HBD:GetPlayerZonePosition()
     else
         x, y = 0, 0

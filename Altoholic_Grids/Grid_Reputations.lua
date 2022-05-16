@@ -294,6 +294,7 @@ local Factions = {
 			{ name = DataStore:GetFactionName(2432), icon = "inv_helm_cloth_oribosdungeon_c_01" },  -- Ve'nari
 			{ name = DataStore:GetFactionName(2470), icon = "inv_tabard_deathsadvance_b_01" },  	 -- 9.1 Death's Advance
 			{ name = DataStore:GetFactionName(2472), icon = "inv_inscription_80_scroll" },  			 -- 9.1 Archivist's Codex
+			{ name = DataStore:GetFactionName(2478), icon = "achievement_reputation_enlightenedbrokers" },  	 -- 9.2 The Enlightened
 		},
 	},
 	{	-- [10]

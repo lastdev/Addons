@@ -209,4 +209,6 @@ lib:RegisterItems({
 	[178786] = SetReagent(8, e.Cooking), -- Lusterwheat Flour
 	[179314] = SetReagent(8, e.Cooking), -- Creeping Crawler Meat
 	[179315] = SetReagent(8, e.Cooking), -- Shadowy Shank
+	[187704] = SetReagent(8, e.Cooking), -- Protoflesh
+	[187812] = SetReagent(8, e.Cooking), -- Empty Kettle
 })

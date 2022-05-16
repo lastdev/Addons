@@ -1,5 +1,5 @@
 
-local GetGameAccountInfoByGUID, IsFriend, find, tremove = C_BattleNet.GetGameAccountInfoByGUID, C_FriendList.IsFriend, string.find, table.remove
+local C_BattleNet, IsFriend, find, tremove = C_BattleNet, C_FriendList.IsFriend, string.find, table.remove
 local names = {}
 
 do
@@ -19,9 +19,17 @@ f:SetScript("OnEvent", function(frame, _, addon)
 	realm = "-".. realm
 
 	local filter = function(_,event,msg,player,_,_,_,flag,chanid,_,_,_,_,guid)
-		if event == "CHAT_MSG_CHANNEL" and (chanid == 0 or type(chanid) ~= "number") then return end --Only scan official custom channels (gen/trade)
+		if event == "CHAT_MSG_CHANNEL" and (chanid == 0 or type(chanid) ~= "number") then return end -- Only scan official custom channels (gen/trade)
 		if not guid then return end
-		local isBnetFriend = GetGameAccountInfoByGUID(guid)
+
+		local isBnetFriend
+		if C_BattleNet then -- Retail
+			isBnetFriend = C_BattleNet.GetGameAccountInfoByGUID(guid)
+		else -- XXX classic compat
+			local _, bNetFriend = BNGetGameAccountInfoByGUID(guid)
+			isBnetFriend = bNetFriend
+		end
+
 		if isBnetFriend or IsFriend(guid) or flag == "GM" or flag == "DEV" then return end
 		if not find(player, "-", nil, true) then
 			player = player..realm

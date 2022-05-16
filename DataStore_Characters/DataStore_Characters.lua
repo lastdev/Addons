@@ -26,6 +26,9 @@ local classColors = {
 	["DRUID"] = "|cffff7c0a",
 	["MONK"] = "|cff00ff96",
 	["ROGUE"] = "|cfffff468",
+	
+	-- ["EVOKER"] = "|cff33937f",
+	
 }
 
 local AddonDB_Defaults = {

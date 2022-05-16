@@ -154,4 +154,5 @@ lib:RegisterItems({
 	[173035] = SetReagent(8, e.Fishing), -- Pocked Bonefish
 	[173036] = SetReagent(8, e.Fishing), -- Spinefin Piranha
 	[173037] = SetReagent(8, e.Fishing), -- Elysian Thade
+	[187702] = SetReagent(8, e.Fishing), -- Precursor Placoderm
 })

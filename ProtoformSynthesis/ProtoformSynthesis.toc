@@ -1,0 +1,14 @@
+## Interface: 90200
+## Title: Protoform Synthesis
+## Notes: View the mounts you can make at the Protoform Synthesis
+## Version: 1.2.2
+## Author: OlWi (Original by gello3)
+##
+## OptionalDeps: autoScrollFrame, LibDBIcon-1.0
+## SavedVariables: ProtoformSynthesisDB
+
+embeds.xml
+
+autoScrollFrame\autoScrollFrame.xml
+ProtoformSynthesis.xml
+

@@ -1,5 +1,5 @@
 local MAJOR_VERSION = "LibGetFrame-1.0"
-local MINOR_VERSION = 32
+local MINOR_VERSION = 34
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
 local lib = LibStub:NewLibrary(MAJOR_VERSION, MINOR_VERSION)
 if not lib then return end
@@ -31,6 +31,7 @@ local defaultFramePriorities = {
     "^SUFHeaderraid", -- suf
     "^LUFHeaderraid", -- luf
     "^AshToAshUnit%d+Unit%d+", -- AshToAsh
+    "^Cell", -- Cell
     -- party frames
     "^AleaUI_GroupHeader", -- Alea
     "^SUFHeaderparty", --suf
@@ -101,6 +102,7 @@ local defaultRaidFrames = {
     "^ElvUF_Raid%d*Group",
     "^oUF_.-Raid",
     "^AshToAsh",
+    "^Cell",
     "^LimeGroup",
     "^SUFHeaderraid",
     "^LUFHeaderraid",
@@ -336,6 +338,9 @@ function lib.GetUnitNameplate(unit)
         elseif nameplate.TPFrame then
           -- tidyplates: threat plates
           return nameplate.TPFrame.visual.healthbar
+        elseif nameplate.unitFrame then
+          -- bdui nameplates
+          return nameplate.unitFrame.Health
         elseif nameplate.ouf then
           -- bdNameplates
           return nameplate.ouf.Health

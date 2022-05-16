@@ -77,7 +77,7 @@ options_button_template.backdropcolor = {.2, .2, .2, .8}
 Plater.APIList = {
 	{Name = "SetNameplateColor", 		Signature = "Plater.SetNameplateColor (unitFrame, color)", 				Desc = "Set the color of the nameplate.\n\nColor formats are:\n|cFFFFFF00Just Values|r: r, g, b\n|cFFFFFF00Index Table|r: {r, g, b}\n|cFFFFFF00Hash Table|r: {r = 1, g = 1, b = 1}\n|cFFFFFF00Hex|r: '#FFFF0000' or '#FF0000'\n|cFFFFFF00Name|r: 'yellow' 'white'\n\nCalling without passing width and height reset the color to default."},
 	{Name = "SetNameplateSize", 		Signature = "Plater.SetNameplateSize (unitFrame, width, height)",		Desc = "Adjust the nameplate size.\n\nCalling without passing width and height reset the size to default."},
-	{Name = "SetBorderColor", 			Signature = "Plater.SetBorderColor (self, r, g, b, a)",					Desc = "Set the border color.\n\nCalling without passing any color reset the color to default."},
+	{Name = "SetBorderColor", 			Signature = "Plater.SetBorderColor (unitFrame, r, g, b, a)",					Desc = "Set the border color.\n\nCalling without passing any color reset the color to default."},
 	
 	{Name = "SetCastBarColor", 			Signature = "Plater.SetCastBarColor (unitFrame, r, g, b)", 				Desc = "Set the cast bar color.\n\nColor formats are:\n|cFFFFFF00Just Values|r: r, g, b\n|cFFFFFF00Index Table|r: {r, g, b}\n|cFFFFFF00Hash Table|r: {r = 1, g = 1, b = 1}\n|cFFFFFF00Hex|r: '#FFFF0000' or '#FF0000'\n|cFFFFFF00Name|r: 'yellow' 'white'\n\nCalling without passing width and height reset the color to default."},
 	{Name = "SetCastBarSize", 			Signature = "Plater.SetCastBarSize (unitFrame, width, height)", 			Desc = "Adjust the cast bar size.\n\nCalling without passing width and height reset the size to default."},
@@ -119,6 +119,8 @@ Plater.APIList = {
 	
 	{Name = "SafeSetCVar", 			Signature = "Plater.SafeSetCVar (variableName, value)", 				Desc = "Change the value of a CVar, if called during combat, it'll be applied when the player leaves combat.\n\nOriginal value is stored until Plater.RestoreCVar (variableName) is called."},	
 	{Name = "RestoreCVar", 			Signature = "Plater.RestoreCVar (variableName)", 					Desc = "Restore the value a CVar had before Plater.SafeSetCVar() was called."},
+	
+	{Name = "SetAnchor", 			Signature = "Plater.SetAnchor (frame, config, attachTo, centered)", 					Desc = "Anchor the 'frame' to the 'attachTo' frame according to the given 'config' ('config = {x = 0, y = 0, side = 1}', where 'side' is one of the following:\nTOP_LEFT = 1, LEFT = 2, BOTTOM_LEFT = 3, BOTTOM = 4, BOTTOM_RIGHT = 5, RIGHT = 6, TOP_RIGHT = 7, TOP = 8, CENTER = 9, INNER_LEFT = 10, INNER_RIGHT = 11, INNER_TOP = 12, INNER_BOTTOM = 13)"},
 }
 
 Plater.FrameworkList = {
@@ -1880,10 +1882,10 @@ function Plater.CreateHookingPanel()
 	
 	--hot reload the script by compiling it and applying it to the nameplates
 	function hookFrame.ApplyScript()
-		Plater.WipeAndRecompileAllScripts ("hook")
+		Plater.WipeAndRecompileAllScripts("hook")
 	end
 	
-	function hookFrame.RemoveScript (scriptId)
+	function hookFrame.RemoveScript(scriptId)
 		local scriptObjectToBeRemoved = hookFrame.GetScriptObject (scriptId)
 		local currentScript = hookFrame.GetCurrentScriptObject()
 		
@@ -2203,7 +2205,7 @@ function Plater.CreateHookingPanel()
 		LinkBox:SetPoint ("center", f, "center", 0, -10)
 		
 		f:SetScript ("OnShow", function()
-			LinkBox:SetText ("https://wow.curseforge.com/projects/plater-nameplates/pages/scripts")
+			LinkBox:SetText ("https://www.curseforge.com/wow/addons/plater-nameplates/pages/scripts")
 			C_Timer.After (.1, function()
 				LinkBox:SetFocus (true)
 				LinkBox:HighlightText()
@@ -3030,7 +3032,7 @@ function Plater.CreateScriptingPanel()
 		scriptObject.Revision = scriptObject.Revision + 1
 		
 		--do a hot reload on the script
-		scriptingFrame.ApplyScript (true)
+		scriptingFrame.ApplyScript(true)
 		
 		--reload the script selection scrollbox in case the script got renamed
 		scriptingFrame.ScriptSelectionScrollBox:Refresh()
@@ -3049,31 +3051,30 @@ function Plater.CreateScriptingPanel()
 	end
 	
 	--hot reload the script by compiling it and applying it to the nameplates without saving
-	function scriptingFrame.ApplyScript (on_save)
+	function scriptingFrame.ApplyScript(onSave)
 		--get the text from the text fields, compile and apply the changes to the nameplate without saving the script
 
 		--doing this since the framework send 'self' in the first parameter of the button click
-		on_save = type (on_save) == "boolean" and on_save
+		onSave = type(onSave) == "boolean" and onSave
 		
 		local code = {}
 		--prebuild the code table with the code types (constructor/onupdate etc)
 		for i = 1, #Plater.CodeTypeNames do
-			local memberName = Plater.CodeTypeNames [i]
-			code [memberName] = ""
-		end		
+			local memberName = Plater.CodeTypeNames[i]
+			code[memberName] = ""
+		end
 
 		local scriptObject = scriptingFrame.GetCurrentScriptObject()
 
-		if (not on_save) then
+		if (not onSave) then
 			--is hot reload, get the code from the code editor
 			for i = 1, #Plater.CodeTypeNames do
 				local memberName = Plater.CodeTypeNames [i]
 				code [memberName] = scriptObject ["Temp_" .. memberName]
 			end
-			
 			code [Plater.CodeTypeNames [scriptingFrame.currentScriptType]] = scriptingFrame.CodeEditorLuaEntry:GetText()
 		else
-			--is a save, get the code from the object
+			--it's a save, get the code from the object
 			for i = 1, #Plater.CodeTypeNames do
 				local memberName = Plater.CodeTypeNames [i]
 				code [memberName] = scriptObject [memberName]
@@ -3081,19 +3082,21 @@ function Plater.CreateScriptingPanel()
 		end
 
 		do
-			local t = {}
-			--build a script table for the comppiler
+			--build a script table for the compiler
+			local allCodes = {}
+
 			for i = 1, #Plater.CodeTypeNames do
 				local memberName = Plater.CodeTypeNames [i]
-				tinsert (t, code [memberName])
+				tinsert (allCodes, code[memberName])
 			end
-			if on_save then
-				Plater.WipeAndRecompileAllScripts ("script")
+
+			if (onSave) then
+				Plater.WipeAndRecompileAllScripts("script")
 			else
-				Plater.CompileScript (scriptObject, false, unpack (t))
+				Plater.CompileScript(scriptObject, false, unpack(allCodes))
 			end
 		end
-		
+
 		--remove the focus so the user can cast spells etc
 		scriptingFrame.CodeEditorLuaEntry:ClearFocus()
 	end
@@ -3283,7 +3286,7 @@ function Plater.CreateScriptingPanel()
 		LinkBox:SetPoint ("center", f, "center", 0, -10)
 		
 		f:SetScript ("OnShow", function()
-			LinkBox:SetText ("https://wow.curseforge.com/projects/plater-nameplates/pages/scripts")
+			LinkBox:SetText ("https://www.curseforge.com/wow/addons/plater-nameplates/pages/scripts")
 			C_Timer.After (.1, function()
 				LinkBox:SetFocus (true)
 				LinkBox:HighlightText()

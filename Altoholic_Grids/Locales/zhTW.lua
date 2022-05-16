@@ -7,6 +7,7 @@ L["Equipment"] = "裝備"
 -- L["Currencies"] = true
 L["Reputations"] = "聲望"
 -- L["Daily Quests"] = true
+-- L["Weekly Quests"] = true
 L["Zone"] = "地區"
 L["Characters"] = "角色"
 L["Rest XP"] = "充份休息經驗值"

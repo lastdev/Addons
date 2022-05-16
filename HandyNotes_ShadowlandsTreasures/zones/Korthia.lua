@@ -90,10 +90,14 @@ ns.RegisterPoints(1961, { -- Korthia
 
     [62055550] = { -- Spectral Bound Chest
         quest=64247,
+        -- vignette=4801 locked, 4802 unlocked
         loot = {
-            -- 187020, -- Necrobinder's Shoulderpads (confirm? it's in the caches...)
             187026, -- Field Warden's Torture Kit
             187240, -- Field Warden's Watchful Eye
+            -- These are all incredibly low drop rate, but wowhead comments claim they drop:
+            187020, -- Necrobinder's Shoulderpads
+            187016, -- Eviscerator's Spiked Mantle
+            187023, -- Instructor's Mantle
         },
         label="Spectral Bound Chest",
         -- currency=1767, -- x40
@@ -129,9 +133,12 @@ ns.RegisterPoints(1961, { -- Korthia
 local mawcache = ns.nodeMaker{
     label="Mawsworn Cache",
     loot={
-        187020, -- Necrobinder's Shoulderpads
         187026, -- Field Warden's Torture Kit
         187240, -- Field Warden's Watchful Eye
+        -- These are all incredibly low drop rate, but wowhead comments claim they drop:
+        187020, -- Necrobinder's Shoulderpads
+        187016, -- Eviscerator's Spiked Mantle
+        187023, -- Instructor's Mantle
     },
     note="Multiple spawn points",
     group="mawsworncache",
@@ -311,7 +318,7 @@ ns.RegisterPoints(1961, {
 
 --Nests
 ns.RegisterPoints(1961, {
-    [42205600] = {quest=63459},
+    [42205600] = {quest=64359},
     [51904390] = {quest=64360},
     [63703150] = {quest=64361},
     [52407270] = {quest=64362},
@@ -335,10 +342,11 @@ local relic_traits = {
 }
 
 ns.RegisterPoints(1961, { -- Korthia
-    [27305670] = researched{ -- Book of Binding: The Mad Witch
+    [30205510] = researched{ -- Book of Binding: The Mad Witch
         achievement=15066, criteria=52131,
         quest=63899,
         research=2,
+        note="At the back of Gromit Hollow",
     },
 
     [45105610] = researched{ -- Celestial Shadowlands Chart
@@ -348,13 +356,13 @@ ns.RegisterPoints(1961, { -- Korthia
         minimap=false,
     },
 
-    [43505760] = researched{ -- Gorak Claw Fetish
-        -- actual chest is at 41156015
+    [41156015] = researched{ -- Gorak Claw Fetish
         achievement=15066, criteria=52268,
         quest=63924,
-        -- requires_item=186984,
+        -- requires_item=187614,
         research=2,
-        note="In cave. Buy {item:186984} from {npc:178257} to unlock",
+        path=43505741,
+        note="In cave. Buy {item:187614:Key of Many Thoughts} from {npc:178257} to unlock",
     },
 
     [41304330] = researched{ -- Guise of the Changeling
@@ -365,26 +373,27 @@ ns.RegisterPoints(1961, { -- Korthia
         loot={
             {187155, toy=true} -- Guise of the Changeling
         },
-        note="Buy {item:186984} from {npc:178257} to unlock",
+        path=42204101,
+        note="Buy {item:186984:Korthite Crystal Key} from {npc:178257} to unlock",
     },
 
     [33004190] = researched{ -- The Netherstar
         achievement=15066, criteria=52256,
         quest=63910,
-        -- requires_item=186984,
+        -- requires_item=187612,
         research=2,
-        note="Buy {item:186984} from {npc:178257} to unlock",
+        note="Buy {item:187612:Key of Flowing Waters} from {npc:178257} to unlock. On the lowest level.",
     },
 
     [43857690] = researched{ -- Ring of Self-Reflection
         achievement=15066, criteria=52265,
         quest=63921,
-        -- requires_item=186984,
+        -- requires_item=187613,
         research=2,
         loot={
             {187140, toy=true} -- Ring of Duplicity
         },
-        note="Buy {item:186984} from {npc:178257} to unlock",
+        note="Buy {item:187613:Key of the Inner Chambers} from {npc:178257} to unlock",
     },
 
     [62005680] = researched{ -- Singing Steel Ingot
@@ -614,6 +623,7 @@ ns.RegisterPoints(1961, { -- Korthia
         achievement=15107, criteria=52298,
         quest=64320,
         npc=180014,
+        vignette=4835,
         covenant=Enum.CovenantType.NightFae,
         loot={
             {186492, mount=1487, covenant=Enum.CovenantType.NightFae}, -- Summer Wilderling Harness
@@ -625,6 +635,7 @@ ns.RegisterPoints(1961, { -- Korthia
         achievement=15107, criteria=52299,
         quest=64349,
         npc=180042,
+        vignette=4854,
         -- covenant=Enum.CovenantType.Necrolord,
         loot={
             187372, -- Miasma Filtering Headpiece
@@ -680,6 +691,7 @@ ns.RegisterPoints(1961, { -- Korthia
         achievement=15107, criteria=52291,
         quest=64291,
         npc=179931,
+        vignette=4836,
         loot={
             187403, -- Relic Breaker's Drape
         },
@@ -700,6 +712,7 @@ ns.RegisterPoints(1961, { -- Korthia
         achievement=15107, criteria=52273,
         quest=64263,
         npc=179608,
+        vignette=4819,
         loot={
             187362, -- Stinging Shadow Screamer
             187400, -- Mantle of Screaming Shadows
@@ -724,11 +737,12 @@ ns.RegisterPoints(1961, { -- Korthia
         achievement=15107, criteria=52276,
         quest=64313,
         npc=179985,
+        vignette={4831, 4832}, -- 4831
         covenant=Enum.CovenantType.Venthyr,
         loot={
             184790, -- Archdruid Van-Yali's Greenthumbs
             {186479, mount=803, covenant=Enum.CovenantType.Venthyr}, -- Mastercraft Gravewing
-            -- {187283,quest=64530,}, -- Gravewing Crystal
+            -- {187283,quest=64530, covenant=Enum.CovenantType.Venthyr}, -- Gravewing Crystal
             187386, -- Stygian Crystal Studded Legguards
             {187428,quest=64553,}, -- Legend of the Animaswell
         },
@@ -739,6 +753,7 @@ ns.RegisterPoints(1961, { -- Korthia
         achievement=15107, criteria=52300,
         quest=64338,
         npc=180032,
+        vignette={4838, 4839}, -- 4838 for the patrol...
         covenant=Enum.CovenantType.Kyrian,
         loot={
             {187176, toy=true}, -- Vesper of Harmony
@@ -769,6 +784,7 @@ ns.RegisterPoints(1961, { -- Korthia
         achievement=15107, criteria=52295,
         quest=64257,
         npc=179802,
+        vignette=4859,
         -- requires_item=186718,
         loot={
             {187103, quest=63917}, -- Everliving Statuette
@@ -795,6 +811,7 @@ ns.RegisterPoints(1961, { -- Korthia
         achievement=15107, criteria=52303,
         quest=64246, -- 64280?
         npc=179472,
+        vignette={4800, 4885}, -- behind vignette=4885 "Devouring Tear"
         loot={
             {187183, mount=1514}, -- Rampaging Mauler
             187375, -- Bound Worldeater Tendrils
@@ -808,6 +825,7 @@ ns.RegisterPoints(1961, { -- Korthia
         achievement=15107, criteria=52302,
         quest=64245,
         npc=179760,
+        vignette={4798, 4886}, -- behind vignette=4886 "Mawsworn Portal"
         loot={
             187035, -- Cold Burden of the Damned
             187241, -- Watchful Eye of the Damned
@@ -823,6 +841,7 @@ ns.RegisterPoints(1961, { -- Korthia
         achievement=15107, criteria=52319,
         quest=64457,
         npc=180162,
+        vignette={4866, 4883}, -- behind vignette=4883 "Abandoned Veilstaff"
         loot={
             {187264, quest=64513}, -- Ve'rayn's Head
             187369, -- Ve'rayn's Formal Robes

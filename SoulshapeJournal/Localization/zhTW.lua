@@ -22,21 +22,22 @@ SOFTWARE.
 ]]
 
 local ADDON, _ = ...
-
 local L = LibStub("AceLocale-3.0"):NewLocale(ADDON, "zhTW", false)
 if not L then return end
 
 -- UI elements
 L["TAB_TITLE"] = "靈魂幻體"
 L["COUNT_LABEL"] = "總數"
-L["UNTRACKABLE_TOOLTIP_TITLE"] = "此靈魂幻體無法經由插件偵測"
-L["UNTRACKABLE_TOOLTIP_CLICK_ME"] = "如你已經擁有，點擊圖標 %s 來標記完成。"
-L["WARNING_NOT_NIGHT_FAE"] = "你並非暗夜妖精的成員，你現在不能收集新的靈魂幻體。"
+L["UNTRACKABLE_TOOLTIP_TITLE"] = "此靈魂幻體無法經由插件自動偵測"
+L["UNTRACKABLE_TOOLTIP_CLICK_ME"] = "如你已經擁有，點擊圖標 %s 來手動標記為已收藏。"
+L["WARNING_NOT_NIGHT_FAE"] = "你現在並非暗夜妖精的成員，不能收集新的靈魂幻體。"
 L["Available since"] = "新增於"
 L["Soulshape Journal"] = "靈魂幻體手冊" -- Addon title, you may translate it but it's not necessary
+L["BLIZZARD_MAP_PIN_TOOLTIP"] = "<按下Ctrl + 滑鼠左鍵可新增一個指向此座標的地圖標記>"
+L["TOMTOM_WAYPOINT_TOOLTIP"] = "<按下Shift + 滑鼠左鍵可新增一個指向此座標的 TomTom 路徑點>"
 
 -- Labels
-L["Loot"] = "拾取"
+L["Loot"] = "掉落"
 L["Quest"] = "任務"
 L["Campaign"] = "戰役"
 L["World Event"] = "世界事件"
@@ -46,7 +47,7 @@ L["Region"] = "區域"
 L["Cost"] = "費用"
 L["Faction"] = "陣營"
 L["Profession"] = "專業技能"
-L["Covenant Feature"] = "誓盟特色建築"
+L["Covenant Feature"] = "誓盟特色"
 L["Difficulty"] = "難度"
 L["Coordinates"] = "坐標"
 L["Renown"] = "名望"
@@ -87,6 +88,10 @@ L["Stygian Lockbox"] = "冥魄帶鎖箱"
 L["Riftbound Cache"] = "隙縛寶箱"
 L["Wildseed Root Grain"] = "野性種子根粒"
 L["Repaired Riftkey"] = "修復的裂隙鑰匙"
+L["Spectral Feed"] = "幽靈雞飼料"
+L["Lost Comb"] = "失落的蜂巢"
+L["Shrouded Cypher Cache"] = "隱蔽的暗語寶箱"
+L["Enlightened Broker Supplies"] = "受啟迪的仲介者物資"
 
 -- NPC Names (could be translated automatically through the API?)
 L["Lost Soul"] = "失落的靈魂"
@@ -107,6 +112,11 @@ L["Valfir the Unrelenting"] = "『冷酷』瓦菲爾"
 L["Spindlenose"] = "軸鼻"
 L["Shopkeeper"] = "店員"
 L["Mystic Rainbowhorn"] = "神秘虹角"
+L["Olea Manu"] = "歐利亞瑪努"
+L["Shifting Stargorger"] = "變異吞星者"
+L["Prototype Pantheon"] = "原型萬神殿"
+L["The Jailer"] = "閻獄之主"
+L["Taskmaster Xy'pro"] = "監工希普羅"
 
 -- Others
 L["Burning Crusade Timewalking"] = "燃燒的遠征時光漫遊"
@@ -122,11 +132,12 @@ L["Mythic+ dungeons"] = "傳奇鑰石地城"
 L["Night Fae dailies"] = "暗夜妖精每日任務"
 L["Mushroom Network"] = "蘑菇網路"
 L["Marasmius"] = "瑪拉茲莫斯"
-L["Paragon reward."] = "聲望巔峰獎勵"
+L["Paragon reward."] = "聲望巔峰獎勵。"
 L["Soulshape"] = "靈魂幻體"
 L["Crittershape"] = "小動物型態"
 L["Pilgrim's Bounty"] = "旅人豐年祭"
 L["Covenant Callings reward chests"] = "誓盟使命任務獎勵寶箱"
+L["High Value Cache"] = "高價值儲物箱"
 
 L["Normal"] = "普通"
 L["Heroic"] = "英雄"
@@ -181,7 +192,7 @@ L["Gulper Soul"] = "大嘴蟾靈魂"
 L["Gulper Soul Guide"] = "不羈魂靈 + 一個%s"
 
 L["Hippo Soul"] = "河馬靈魂"
-L["Hippo Soul Guide"] = "暗夜妖精進攻戰的獎勵"
+L["Hippo Soul Guide"] = "暗夜妖精進攻戰的獎勵。"
 
 L["Hippogryph Soul"] = "角鷹獸靈魂"
 
@@ -261,3 +272,46 @@ L["Wolfhawk Soul Guide"] = "使用靈魂幻體來穿過屏障。"
 
 L["Wyvern Soul"] = "雙足飛龍靈魂"
 L["Yak Soul"] = "氂牛靈魂"
+
+-- 9.2 Soulshapes
+
+L["Armadillo Soul"] = "犰狳靈魂"
+L["Bat Soul"] = "蝙蝠靈魂"
+
+L["Bee Soul"] = "蜜蜂靈魂"
+L["Bee Soul Guide"] = "靈魂型態的小蜂巢坐落於大蜂巢的頂端。需要解鎖飛行。"
+
+L["Brutosaur Soul"] = "雷龍靈魂"
+L["Cervid Soul"] = "原鹿靈魂"
+L["Dragonhawk Soul"] = "龍鷹靈魂"
+L["Elekk Soul"] = "伊萊克靈魂"
+
+L["Gromit Soul"] = "哥羅米靈魂"
+L["Gromit Soul Guide"] = "要想看到寶箱，你得穿上帶有|cFFFFFFFF尋寶者|r效果的暗語裝備，接著點擊波克波可要求它「留意值得注意的物體」，以獲得|T134442:0|t |cFFFFFFFF感知型波克波可|r的增益效果。"
+
+L["Penguin Soul"] = "企鵝靈魂"
+L["Penguin Soul Guide"] = "金屬巨球頂端。點擊企鵝樣貌的失落靈魂以獲取之。需要解鎖飛行。"
+
+L["Pig Soul"] = "豬靈魂"
+L["Ray Soul"] = "魟魚靈魂"
+L["Scorpid Soul"] = "毒蠍靈魂"
+
+L["Sheep Soul"] = "綿羊靈魂"
+L["Sheep Soul Guide"] = "多個重生點。點擊綿羊外貌的失落靈魂以獲取之。"
+
+L["Silithid Soul"] = "異種蠍靈魂"
+
+L["Snail Soul"] = "蝸牛靈魂"
+L["Snail Soul Guide"] = "同時拉住監工希莫斯與至少三隻其它小怪，直到監工身上出現|T465877:0|t |cFFFFFFFF防護撤銷|r的增益效果，將之擊殺，然後使用撿到的|T465877:0|t |cff14b200防護撤銷球體|r來解鎖寶箱。"
+
+L["Tallstrider Soul"] = "陸行鳥靈魂"
+
+L["Unknown Guide"] = "獲取管道目前未知。"
+L["Torghast 9.2 Soulshape Guide"] = "托迦司難度 12 或更高的區域，樓層內機率出現，援救後取得。"
+
+-- Tooltips on maps
+L["Spectral Feed Tooltip"] = "幽靈雞飼料是地上一袋散發藍光的穀物，每一到兩小時重生。點擊後會出現在背包裡，且持續十分鐘，使用後消耗。"
+L["Olea Manu Tooltip"] = "為了與歐利亞瑪努交易，你得研究完 |T4238929:0|t |cFFFFFFFF低音語理解|r 且完成|A:smallquestbang:16:16|a|cFFFFFFFF機諾化身英雄|r 的任務線。"
+L["Shrouded Cypher Cache Tooltip"] = "啟動波克波可的 |T134442:0|t |cFFFFFFFF感知型波克波可|r 功能並穿著帶有 |cFFFFFFFF尋寶者|r 效果的暗語裝備來看見隱藏的寶箱。"
+L["High Value Cache Tooltip"] = "儲物箱可經由拾獲了 |T465877:0|t |cff14b200防護撤銷球體|r 的玩家來解鎖，掉落自監工希普羅。|n|n 所有身處團隊副本的玩家，在儲物箱解鎖之後，均能拾取寶箱。"
+L["Taskmaster Xy'pro Tooltip"] = "於身上存在 |T465877:0|t |cFFFFFFFF防護撤銷|r 的增益效果時將掉落 |T465877:0|t |cff14b200防護撤銷球體|r 。|n|n 每有一隻小怪靠近他，希普羅便會獲得一層 |T135740:0|t |cFFFFFFFF協力|r 的增益效果。堆疊至少三層後他會追加 |T465877:0|t |cFFFFFFFF防護撤銷|r 的增益效果。"

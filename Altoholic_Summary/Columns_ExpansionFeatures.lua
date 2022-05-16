@@ -328,7 +328,7 @@ Columns.RegisterColumn("Renown", {
 	JustifyH = "CENTER",
 	GetText = function(character) 
 		local level = select(3, DataStore:GetCovenantInfo(character))
-		local color = (level == 40) and colors.gold or colors.white
+		local color = (level == 80) and colors.gold or colors.white
 	
 		return format("%s%s", color, level)
 	end,
@@ -358,11 +358,8 @@ Columns.RegisterColumn("Story90", {
 	GetText = function(character) 
 		local numCompleted = DataStore:GetCovenantCampaignProgress(character)
 		local numQuests = DataStore:GetCovenantCampaignLength(character)
-
-		local colorCompleted = (numCompleted == 0) and colors.grey or colors.white
-		local colorNumQuests = (numQuests == 0) and colors.grey or colors.yellow
 		
-		return format("%s%s%s/%s%s", colorCompleted, numCompleted, colors.white, colorNumQuests, numQuests)
+		return Formatter.Progress(numCompleted, numQuests)
 	end,
 	OnEnter = function(frame)
 			local character = frame:GetParent().character
@@ -412,11 +409,8 @@ Columns.RegisterColumn("Story91", {
 	GetText = function(character) 
 		local numCompleted = DataStore:GetChainsOfDominationStorylineProgress(character)
 		local numQuests = DataStore:GetChainsOfDominationStorylineLength(character)
-
-		local colorCompleted = (numCompleted == 0) and colors.grey or colors.white
-		local colorNumQuests = (numQuests == 0) and colors.grey or colors.yellow
 		
-		return format("%s%s%s/%s%s", colorCompleted, numCompleted, colors.white, colorNumQuests, numQuests)
+		return Formatter.Progress(numCompleted, numQuests)
 	end,
 	OnEnter = function(frame)
 			local character = frame:GetParent().character
@@ -433,6 +427,57 @@ Columns.RegisterColumn("Story91", {
 			tt:AddLine(format(CAMPAIGN_PROGRESS_CHAPTERS_TOOLTIP, numCompleted, numQuests))
 			
 			for _, info in pairs(DataStore:GetCampaignChaptersInfo(character, 138, "story91Progress")) do
+				local color
+				local icon = " - "
+				
+				if info.completed == nil then
+					color = colors.grey				-- grey for not started
+				elseif info.completed == false then
+					color = colors.white				-- white for ongoing
+				elseif info.completed == true then
+					color = colors.green				-- green for completed
+					icon = CRITERIA_COMPLETE_ICON
+				end
+				
+				tt:AddLine(format("%s%s%s", icon, color, info.name))
+			end
+			tt:Show()
+		end,
+})
+
+Columns.RegisterColumn("Story92", {
+	-- Header
+	headerWidth = 70,
+	headerLabel = format("%s %s9.2", L["COLUMN_CAMPAIGNPROGRESS_TITLE_SHORT"], colors.green),
+	tooltipTitle = L["COLUMN_CAMPAIGNPROGRESS_TITLE"],
+	tooltipSubTitle = C_CampaignInfo.GetCampaignInfo(158).name,
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("Story92") end,
+	headerSort = DataStore.GetSecretsOfTheFirstOnesStorylineProgress,
+	
+	-- Content
+	Width = 70,
+	JustifyH = "CENTER",
+	GetText = function(character) 
+		local numCompleted = DataStore:GetSecretsOfTheFirstOnesStorylineProgress(character)
+		local numQuests = DataStore:GetSecretsOfTheFirstOnesStorylineLength(character)
+		
+		return Formatter.Progress(numCompleted, numQuests)
+	end,
+	OnEnter = function(frame)
+			local character = frame:GetParent().character
+			if not character then return end
+			
+			local numCompleted = DataStore:GetSecretsOfTheFirstOnesStorylineProgress(character)
+			local numQuests = DataStore:GetSecretsOfTheFirstOnesStorylineLength(character)
+			
+			local tt = AddonFactory_Tooltip
+			tt:ClearLines()
+			tt:SetOwner(frame, "ANCHOR_RIGHT")
+			tt:AddDoubleLine(DataStore:GetColoredCharacterName(character), C_CampaignInfo.GetCampaignInfo(158).name)
+			tt:AddLine(" ")
+			tt:AddLine(format(CAMPAIGN_PROGRESS_CHAPTERS_TOOLTIP, numCompleted, numQuests))
+			
+			for _, info in pairs(DataStore:GetCampaignChaptersInfo(character, 158, "story92Progress")) do
 				local color
 				local icon = " - "
 				
@@ -575,3 +620,89 @@ Columns.RegisterColumn("SanctumUnique", {
 	OnClick = Reservoir_OnClick,
 })
 
+
+-- ** Cypher Research **
+Columns.RegisterColumn("CypherLvl", {
+	-- Header
+	headerWidth = 70,
+	headerLabel = CYPHER,
+	tooltipTitle = CYPHER_EQUIPMENT_LEVEL ,
+	-- tooltipSubTitle = ,
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("CypherLvl") end,
+	headerSort = DataStore.GetCypherLevel,
+	
+	-- Content
+	Width = 70,
+	JustifyH = "CENTER",
+	GetText = function(character) 
+		return Formatter.Progress(DataStore:GetCypherLevel(character))
+	end,
+})
+
+Columns.RegisterColumn("Metrial", {
+	-- Header
+	headerWidth = 70,
+	headerLabel = METRIAL,
+	tooltipTitle = METRIAL ,
+	-- tooltipSubTitle = ,
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("Metrial") end,
+	headerSort = DataStore.GetCypherMetrialLevel,
+	
+	-- Content
+	Width = 70,
+	JustifyH = "CENTER",
+	GetText = function(character)
+		return Formatter.Progress(DataStore:GetCypherMetrialLevel(character), 8)
+	end,
+})
+
+Columns.RegisterColumn("Aealic", {
+	-- Header
+	headerWidth = 70,
+	headerLabel = AEALIC,
+	tooltipTitle = AEALIC ,
+	-- tooltipSubTitle = ,
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("Aealic") end,
+	headerSort = DataStore.GetCypherAealicLevel,
+	
+	-- Content
+	Width = 70,
+	JustifyH = "CENTER",
+	GetText = function(character)
+		return Formatter.Progress(DataStore:GetCypherAealicLevel(character), 12)
+	end,
+})
+
+Columns.RegisterColumn("Dealic", {
+	-- Header
+	headerWidth = 70,
+	headerLabel = DEALIC,
+	tooltipTitle = DEALIC ,
+	-- tooltipSubTitle = ,
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("Dealic") end,
+	headerSort = DataStore.GetCypherDealicLevel,
+	
+	-- Content
+	Width = 70,
+	JustifyH = "CENTER",
+	GetText = function(character)
+		return Formatter.Progress(DataStore:GetCypherDealicLevel(character), 12)
+	end,
+})
+
+Columns.RegisterColumn("Trebalim", {
+	-- Header
+	headerWidth = 70,
+	headerLabel = TREBALIM,
+	tooltipTitle = TREBALIM ,
+	-- tooltipSubTitle = ,
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("Trebalim") end,
+	headerSort = DataStore.GetCypherTrebalimLevel,
+	
+	-- Content
+	Width = 70,
+	JustifyH = "CENTER",
+	GetText = function(character)
+		return Formatter.Progress(DataStore:GetCypherTrebalimLevel(character), 11)
+	end,
+})

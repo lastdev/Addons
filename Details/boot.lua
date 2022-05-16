@@ -6,9 +6,9 @@
 
 		local version, build, date, tocversion = GetBuildInfo()
 
-		_detalhes.build_counter = 9696
-		_detalhes.alpha_build_counter = 9696 --if this is higher than the regular counter, use it instead
-		_detalhes.bcc_counter = 31
+		_detalhes.build_counter = 9780
+		_detalhes.alpha_build_counter = 9780 --if this is higher than the regular counter, use it instead
+		_detalhes.bcc_counter = 33
 		_detalhes.dont_open_news = true
 		_detalhes.game_version = version
 		_detalhes.userversion = version .. _detalhes.build_counter
@@ -33,6 +33,34 @@ do
 	local Loc = _G.LibStub("AceLocale-3.0"):GetLocale( "Details" )
 
 	local news = {
+		{"v9.2.0.9778.146", "April 26th, 2022"},
+		--"A cooldown tracker experiment has been added, its options is visible at the Options Panel.",
+		"Added a search box in the '/details scroll' feature.",
+		"When using Details! Death Recap, a message is now printed to chat showing what killed you accordingly to Blizzard Death Recap.",
+		"Fixed some errors while using Mind Control on an arena match.",
+		"Fixed encounter phase detection while using voice packs for boss mods addons.",
+		"Fixed an error after killing a boss encounter on heroic dificulty for the first time.",
+		"Fixed the issue of skins installed after the window has been loaded and the skin was not found at that time.",
+		"API: added 'UNIT_SPEC' and 'UNIT_TALENTS' event to details! event listener.",
+		"API: added Details:GetUnitId(unitName) which return the unitId for a given player name.",
+
+		{"v9.2.0.9735.146", "April 8th, 2022"},
+		"Arena Enemy Player deaths has been greatly improved on this version.",
+		"Added M+ Score into the player info tooltip (hover over the spec icon).",
+		"Fixed windows ungrouping after a /reload (fix by Flamanis).",
+		"Opening a tooltip from a bar or a menu in the title bar will close the All Displays Panel (from right clicking the title bar).",
+		"[TBC] fixed an error given by users using old versions of Details! in the raid.",
+
+		{"v9.2.0.9715.146", "March 6th, 2022"},
+		"More Tiny Threat fixes and implementations (by Treeston)",
+		"Fixed Chinese and Taiwan 'Thousand' abbreviation letter (fix by github user Maioro).",
+
+		{"v9.2.0.9699.146", "March 4th, 2022"},
+		"Align Text Columns now have a warning at the bracket and separators option",
+		"Silence from interrupts shall be counted as a crowd control.",
+		"More phrases in the options panel has been added to translation.",
+		"A revamp has beed started on the erase data prompt.",
+
 		{"v9.2.0.9696.146", "February 24th, 2022"},
 		"Fixed DPS display when using Aligned Text Columns.",
 		"Fixed percent showing even it's disabled when using Aligned Text Columns.",
@@ -413,8 +441,11 @@ do
 			_detalhes.playerdetailwindow_skins = {}
 
 		_detalhes.BitfieldSwapDebuffsIDs = {265646, 272407, 269691, 273401, 269131, 260900, 260926, 284995, 292826, 311367, 310567, 308996, 307832, 327414, 337253,
-											36797, 37122}
-		
+											36797, 37122, 362397}
+		_detalhes.BitfieldSwapDebuffsSpellIDs = {
+			[360418] = true
+		}
+
 		--> auto run code
 		_detalhes.RunCodeTypes = {
 			{Name = "On Initialization", Desc = "Run code when Details! initialize or when a profile is changed.", Value = 1, ProfileKey = "on_init"},

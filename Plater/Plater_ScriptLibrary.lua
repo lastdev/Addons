@@ -180,6 +180,14 @@ do
 		OverrideTriggers = true,
 	}
 
+	PlaterScriptLibrary ["Relics 9.2 M Dungeons"] = {
+		Revision = 2,
+		ScriptType = "script",
+		String = "nJ1wVPnsu4)l9PeTbKVBCLYdPjButxfAuC2TVe56b7bS3ySrEgcn9b)BFpNz8fmGdxB1keGzgpNZ335UXt17jp3Sz84SugC5qXVF6TzuVHMEU)f9TQDv9C)hsYCQN71zjz5f(UuopoDcZZDizA1YvlEvAquwUN7DbzPWNPCA(ysa95Rcd)Ak75hsiWkphpLmHYEwQGVNqgrt8CVHYc8CVk8FNZ4f(8iAHFkOGz4rk8dKkFm(bLeev4pnBKh3BOwdWvlbEeHXPcyvHDbbVDGQJH9atnfdDvDDBDVX9mnqjCRTTTIJQTIIHIJIMLnUJP3qDVBnCmmv1CuGvv0g4ma3r3BObkqELj4ZOcl8lv5(W9a5rKCpskg5ACu9ltnPQUp714P0uWc5oJsNvR0L5PP5afhGIkAo62MM2n80WYXEGTMPPMHTMTPEjBqEAzblROPOzyAOAPuEMkEkSRtzhldNwJEMe91C1yD3yqy(giNLMQLTUULIUMTMMQEPRciNPYald1bgOd0wZYQKc6Ds72oXRZYscZwKw4)inCEac(J3Lgul08gHwtAZgsB1kPZSIZdvQG3xNjpS5(HMrjK0xQqdQtRUs0TQt0DJ)jD98CC1twAoIe7gKyu7eIiPtaLpSjZh1Bf0gvfAqsL3PCZ9YGaEKkuC3ySqtmRWhFherdEHgEX6fFycdI8EqTgc3sw5T9kcmyhGCzlqAnOHwAq(k5hW3kkvQKNXjjf(lId5qnSSXRQm4eXPGRboWT5eradY6YObvuqclGqa7hZtNpDenVYs)nHaa86SoEnwfUr04jr83bVA1Lcf3zdG1AZJdbVYA6s5YrBqxznoDN14CKznQD3FuPoV5tz5H0n0HuU(jn3rvRvYJapSOSfsvvHOpvHGhiXyr3QDp08LVfrbBjnLmkPjpPSZCDOXOsRWI4emYH8kTCdgaL6BNWwlscPLEx(wmqQlNlU3X5Dn607Qx7DhkG)Q(w8ZM1ooF6sTd0xEugPMkHXNVY9P)CLbpK)yFuoN(dElDB1s3VthXwG56BESPz9jaf2RBbMYAPX7DxAsiAZKqHNaRahR3f8knNHvRgctcILBjHHOeLcWZvvanoIrxwqE8m4uyul8feg(injoacTD6Rv4FFH)nZH2f4i2UWmkgAw6WizEUgYzzCvhyAnqm8I8sfHSfxQJc0gaxmNeML37QFMtsqCyH1OFHIZ)MtXzHzVj7gfgZWOW5XSiCAdjowed93aVwyjoGUyPLOBgHhaDqGyF3XZtl9UNXOjJHm75PX87clVakGpLEbM4)6tyQpCPK5IFDEXxk8LV61loLrZ5ywEifBBaqSE3QJ3)ASr7Fdc(Snj9LKxXxOPHaenBdXdq3cjb)eE556aZEao2byyVHTJJHbmxVlMQ)7Xq0cmyXRFxQT6Qg9Da(KYxXq9(ZQp(3hol4UBk8V8sOCSiu(Cr9901pydyLpVtN3qTWH6RI5WBbTpio9hoV7ZV(o0egDl4wFhW906kpmrLNdLbtzNC4BUdWFtptYHsbOS)EYH0WLRieUJHNBu7JYsNZWUfBcbRTsswaokBoCWj4HH3KlKZFSlhxy4R1O0KxhdUfBUqh(x2kTTp0NAC8K(1D47(4TGSqo3q5K4eMWqSil)Lp(ajNj)lpyN1LseBFybCRYBrK7rqAzt9FLmU8)Q40qxzu(rW3YPJ(vs4Q)TKZ3sox30xoHdMQv)03RNZ1cOD1wytWB5NyFR2Ynaf8CTqYguI4HI38wYNF8Wno96v(Cn7mJBECSTs319(5)HsFnC1YVhHFVl2lPgFh)2Xyc2CTYA1agzscp6tK8(4AOR7JaKEcMY(m8ONVsL)6PG61t28cNBzd9Mk3wbFAsXedLlOJdbVAR4T8cg4s9)Fd8U88GkY)vsV)7p",
+		Enabled = true,
+		OverrideTriggers = true,
+	}
+
 	-------------------------------------
 	--hooks
 	
@@ -729,10 +737,24 @@ do
 			end
 		end
 	})
+
+	--#19 9.2 add default ghost auras
+	tinsert (PlaterPatchLibrary, {
+		Notes = {
+			"- Added default ghost aura spells."
+		},
+		Func = function()
+			local auraTable = Plater.db.profile.ghost_auras.auras
+			auraTable["PRIEST"][3][589] = true --shadow word: pain
+			auraTable["PRIEST"][3][34914] = true --vampiric touch
+			auraTable["WARLOCK"][1][172] = true --corruption
+			auraTable["WARLOCK"][1][980] = true --agony
+		end
+	})
 end
 
 
---Patches to apply only when the profiling is running for the first time
+--Patches to apply only when the profile is running for the first time
 do
 	PlaterPatchLibraryForNewProfiles = {}
 

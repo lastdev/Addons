@@ -8,7 +8,6 @@ local ns = core.NAMESPACE
 local HBD = LibStub("HereBeDragons-2.0")
 local HBDPins = LibStub("HereBeDragons-Pins-2.0")
 
-local db
 local escapes = core.escapes
 
 module.const = {
@@ -50,9 +49,9 @@ function module:OnInitialize()
             hidden = {},
         },
     })
-    db = self.db.profile
 
     -- migration
+    local db = self.db.profile
     if type(db.enabled) == "boolean" or db.icon_scale or db.icon_scale_minimap or db.icon_alpha or db.icon_alpha_minimap then
         local function ifnotnil(t, key, val)
             if val ~= nil then
@@ -218,14 +217,14 @@ function module:ShowTooltip(pin)
     if id and ns.mobdb[id] then
         tooltip:AddLine(core:GetMobLabel(id))
         tooltip:AddDoubleLine("Last seen", core:FormatLastSeen(core.db.global.mob_seen[id]))
-        if pin.config.tooltip_completion then
+        if pin:Config().tooltip_completion then
             ns:UpdateTooltipWithCompletion(tooltip, id)
-            ns.Loot.Summary.UpdateTooltip(tooltip, id, not pin.config.tooltip_regularloot)
+            ns.Loot.Summary.UpdateTooltip(tooltip, id, not pin:Config().tooltip_regularloot)
         end
         if ns.mobdb[id].notes then
             tooltip:AddLine(core:RenderString(ns.mobdb[id].notes), 1, 1, 1, true)
         end
-        if pin.config.tooltip_lootwindow and pin.config.tooltip_regularloot and ns.Loot.HasRegularLoot(id) then
+        if pin:Config().tooltip_lootwindow and pin:Config().tooltip_regularloot and ns.Loot.HasRegularLoot(id) then
             self.lootwindow = ns.Loot.Window.ShowForMob(id)
             self.lootwindow:SetParent(tooltip)
             if pin:GetCenter() > UIParent:GetCenter() then
@@ -249,7 +248,7 @@ function module:ShowTooltip(pin)
         tooltip:AddDoubleLine(LOCATION_COLON, ("%s %s"):format(pin.uiMapID, pin.coord))
     end
 
-    if pin.config.tooltip_help then
+    if pin:Config().tooltip_help then
         tooltip:AddDoubleLine(ALT_KEY_TEXT .. " + " .. escapes.leftClick, MAP_PIN, 0, 1, 1, 0, 1, 1 )
         if C_Map.CanSetUserWaypointOnMap(pin.uiMapID) then
             tooltip:AddDoubleLine(SHIFT_KEY_TEXT .. " + " .. escapes.leftClick, TRADESKILL_POST, 0, 1, 1, 0, 1, 1 )
@@ -273,9 +272,9 @@ local function AddMobToTooltip(tooltip, mobid, name)
     if name then
         tooltip:AddLine(core:GetMobLabel(mobid))
     end
-    if db.worldmap.tooltip_completion then
+    if module.db.profile.worldmap.tooltip_completion then
         ns:UpdateTooltipWithCompletion(tooltip, mobid)
-        ns.Loot.Summary.UpdateTooltip(tooltip, mobid, not db.worldmap.tooltip_regularloot)
+        ns.Loot.Summary.UpdateTooltip(tooltip, mobid, not module.db.profile.worldmap.tooltip_regularloot)
     end
     if ns.mobdb[mobid].notes then
         tooltip:AddLine(core:RenderString(ns.mobdb[mobid].notes), 1, 1, 1, true)

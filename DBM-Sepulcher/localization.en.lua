@@ -52,11 +52,11 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(2465)
 
 L:SetTimerLocalization{
-	timerComboCD		= "~Tank Combo"
+	timerComboCD		= "~Tank Combo (%d)"
 }
 
 L:SetOptionLocalization({
-	timerComboCD		= "Show timer for tank combo cooldown"
+	timerComboCD		= "Show timer (with count) for tank combo cooldown"
 })
 
 ---------------------------
@@ -95,8 +95,28 @@ L:SetOptionLocalization({
 ---------------------------
 L= DBM:GetModLocalization(2464)
 
+L:SetWarningLocalization({
+	warnHealAzeroth		= "Heal Azeroth (%s)",
+	warnDispel			= "Dispel (%s)"
+})
+
+L:SetTimerLocalization{
+	timerPits			= "Pits Open",
+	timerHealAzeroth	= "Heal Azeroth (%s)",
+	timerDispels		= "Dispels (%s)"
+}
+
+L:SetOptionLocalization({
+	timerPits			= "Show timer for when the floor pits open up and expose holes you can fall into.",
+	warnHealAzeroth		= "Show warning for when you need to heal azeroth (via fight mechanics) on mythic difficulty, based on Echo's strategy",
+	warnDispel			= "Show warning for when you need to dispel Death Sentence on mythic difficulty, based on Echo's strategy",
+	timerHealAzeroth	= "Show timer for when you need to heal azeroth (via fight mechanics) on mythic difficulty, based on Echo's strategy",
+	timerDispels		= "Show timer for when you need to dispel Death Sentence on mythic difficulty, based on Echo's strategy"
+})
+
 L:SetMiscLocalization({
-	Pylon		= "Pylon"
+	Pylon				= "Pylon",
+	AzerothSoak			= "Azeroth Soak"--Short Text for Desolation
 })
 
 -------------

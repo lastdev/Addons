@@ -25,8 +25,8 @@ addon:Service("AltoholicUI.SharedTableOfContent", function()
 		AddRealm = function(realm)
 			table.insert(toc, format("1;%s", realm))
 		end,
-		AddGuild = function(guildName)
-			table.insert(toc, format("2;%s", guildName))
+		AddGuild = function(guildName, guildMoney)
+			table.insert(toc, format("2;%s;%s", guildName, guildMoney))
 		end,
 		AddGuildBankTab = function(tabName, tabID, size, lastUpdate)
 			table.insert(toc, format("3;%s;%s;%s;%s", tabName, tabID, size, lastUpdate or 0))
@@ -320,10 +320,11 @@ addon:Service("AltoholicUI.SharedContent", { "AltoholicUI.SharedContentView", "A
 				-- Add guilds
 				for guildName, guild in pairs(DataStore:GetGuilds(realm)) do
 					local index = format("%s.%s.%s", DataStore.ThisAccount, realm, guildName)
+					local guildMoney = DataStore:GetGuildBankMoney(guild)
 				
 					-- is guild shared ?
 					if content[index] then
-						SourceToC.AddGuild(guildName)
+						SourceToC.AddGuild(guildName, guildMoney)
 						
 						for tabID = 1, 8 do		-- add guild bank tabs
 							local tabName = DataStore:GetGuildBankTabName(guild, tabID)

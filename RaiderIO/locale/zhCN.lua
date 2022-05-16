@@ -74,11 +74,12 @@ L["DUNGEON_SHORT_NAME_DHT"] = "黑心林地 "
 L["DUNGEON_SHORT_NAME_DOS"] = "彼界"
 L["DUNGEON_SHORT_NAME_EOA"] = "艾萨拉之眼 "
 L["DUNGEON_SHORT_NAME_FH"] = "自由镇"
+L["DUNGEON_SHORT_NAME_GMBT"] = "集市（后三）"
 L["DUNGEON_SHORT_NAME_HOA"] = "赎罪大厅"
 L["DUNGEON_SHORT_NAME_HOV"] = "英灵殿"
 L["DUNGEON_SHORT_NAME_KR"] = "诸王之眠"
 L["DUNGEON_SHORT_NAME_LOWR"] = "卡拉赞下层 "
-L["DUNGEON_SHORT_NAME_MISTS"] = "仙林"
+L["DUNGEON_SHORT_NAME_MISTS"] = "仙林迷雾"
 L["DUNGEON_SHORT_NAME_ML"] = "暴富"
 L["DUNGEON_SHORT_NAME_MOS"] = "噬魂之喉 "
 L["DUNGEON_SHORT_NAME_NL"] = "奈萨里奥的巢穴 "
@@ -89,6 +90,7 @@ L["DUNGEON_SHORT_NAME_SEAT"] = "执政团之座 "
 L["DUNGEON_SHORT_NAME_SIEGE"] = "围攻伯拉勒斯"
 L["DUNGEON_SHORT_NAME_SOA"] = "晋升高塔"
 L["DUNGEON_SHORT_NAME_SOTS"] = "风暴神殿"
+L["DUNGEON_SHORT_NAME_STRT"] = "集市（前五）"
 L["DUNGEON_SHORT_NAME_TD"] = "托尔达戈"
 L["DUNGEON_SHORT_NAME_TM"] = "暴富矿区！ "
 L["DUNGEON_SHORT_NAME_TOP"] = "伤逝剧场"
@@ -229,28 +231,17 @@ L["RAID_BOSS_NYA_6"] = "无厌者夏德哈"
 L["RAID_BOSS_NYA_7"] = "德雷阿佳丝"
 L["RAID_BOSS_NYA_8"] = "伊格诺斯"
 L["RAID_BOSS_NYA_9"] = "维克修娜"
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_10"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_11"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_9"] = ""--]] 
+L["RAID_BOSS_SFO_1"] = "警戒卫士"
+L["RAID_BOSS_SFO_10"] = "莱葛隆"
+L["RAID_BOSS_SFO_11"] = "典狱长"
+L["RAID_BOSS_SFO_2"] = "司垢莱克斯，无穷噬灭者"
+L["RAID_BOSS_SFO_3"] = "圣物匠塞·墨克斯"
+L["RAID_BOSS_SFO_4"] = "道茜歌妮，堕落先知"
+L["RAID_BOSS_SFO_5"] = "死亡万神殿原型体"
+L["RAID_BOSS_SFO_6"] = "首席造物师利许威姆"
+L["RAID_BOSS_SFO_7"] = "回收者黑伦度斯"
+L["RAID_BOSS_SFO_8"] = "安度因·乌瑞恩"
+L["RAID_BOSS_SFO_9"] = "恐惧双王"
 L["RAID_BOSS_SOD_1"] = "塔拉格鲁"
 L["RAID_BOSS_SOD_10"] = "希尔瓦娜斯·风行者"
 L["RAID_BOSS_SOD_2"] = "典狱长之眼"
@@ -296,6 +287,8 @@ L["RELOAD_NOW"] = "现在重载界面（Reload）"
 --[[ L["RELOAD_RWF_MODE_BUTTON"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RWF_MINIBUTTON_TOOLTIP"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RWF_SUBTITLE_LOGGING_FILTERED_LOOT"] = ""--]] 
 --[[Translation missing --]]

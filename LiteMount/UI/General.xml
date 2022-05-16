@@ -12,6 +12,7 @@
 
     <Scripts>
         <OnLoad method="OnLoad" />
+        <OnShow method="OnShow" inherit="prepend" />
     </Scripts>
 
     <Frames>

@@ -89,5 +89,6 @@ lib:RegisterItems({
 	[172231] = SetReagent(8, e.Enchanting), -- Sacred Shard
 	[172232] = SetReagent(8, e.Enchanting), -- Eternal Crystal
 	[172438] = SetReagent(8, e.Enchanting, 0, bag.LeatherworkingBag), -- Enchanted Heavy Callous Hide
+	[183951] = SetReagent(8, e.Enchanting), -- Immortal Shard
 	
 })

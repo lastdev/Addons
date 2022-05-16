@@ -7,7 +7,48 @@ local _
 function Plater.GetChangelogTable()
 	if (not Plater.ChangeLogTable) then
 		Plater.ChangeLogTable = {
-
+		
+			{1652214160,  "Bug Fix", "May 10th, 2022", "Fix CVar store and restore for 'boolean' type CVars.", "cont1nuity"},
+			{1652214160,  "Bug Fix", "May 10th, 2022", "Hide Cast Target on interrupts.", "cont1nuity"},
+			{1652214160,  "Backend Change", "May 4th, 2022", "Adding new option to invert swipe on Buff Special.", "cont1nuity"},
+			{1652214160,  "Backend Change", "May 4th, 2022", "Adding Masque support to cast bar icons (experimental).", "cont1nuity"},
+			{1652214160,  "Bug Fix", "May 2nd, 2022", "Fixing load times of Buff Special tab with larger spell lists.", "cont1nuity"},
+			{1652214160,  "Backend Change", "May 2nd, 2022", "Fixing CVar load behavior to ensure they are restored properly.", "cont1nuity"},
+			{1652214160,  "Backend Change", "May 2nd, 2022", "Adding some SotFO units to 'ForceInCombatUnits'.", "cont1nuity"},
+			{1652214160,  "Bug Fix", "April 29th, 2022", "Fixing an issue with spellID not being set properly on casts.", "cont1nuity"},
+			{1652214160,  "Bug Fix", "April 27th, 2022", "Fixing an issue 'Plater.SetNameplateScale' not working properly when Custom Strata Channels were disabled.", "cont1nuity"},
+			
+			{1650994470,  "Bug Fix", "April 27th, 2022", "Fixing an issue with Auras not updating properly under certain conditions.", "cont1nuity"},
+			{1650994470,  "Bug Fix", "April 27th, 2022", "Fixing an issue with Buff Special usage without proper IDs.", "cont1nuity"},
+			{1650994470,  "New Feature", "April 26th, 2022", "Adding 'Decimal Timer' settings to Auras and Buff Special.", "cont1nuity"},
+			{1650994470,  "Bug Fix", "April 26th, 2022", "Fixing an issue with Script constructors containing empty 'envTable'.", "cont1nuity"},
+			{1650994470,  "Bug Fix", "April 26th, 2022", "Fixing an issue with Ghost Auras not updating properly and showing twice in some cases.", "cont1nuity"},
+			{1650994470,  "Bug Fix", "April 26th, 2022", "Fixing an issue with aura caches.", "cont1nuity"},
+			
+			{1650922959,  "Bug Fix", "April 21st, 2022", "Ensure NPC renaming is exported/imported properly.", "cont1nuity"},
+			{1650922959,  "Bug Fix", "April 21st, 2022", "Ghost Auras will now properly check for applied player spells.", "cont1nuity"},
+			{1650922959,  "Bug Fix", "April 21st, 2022", "NPC Colors export/import now covers renaming as well and renamed NPCs are kept in cache for exported profiles.", "cont1nuity"},
+			{1650922959,  "Bug Fix", "April 3rd, 2022", "Fixing Combo Points not showing properly on personal bar without any target.", "cont1nuity"},
+			{1650922959,  "Bug Fix", "April 3rd, 2022", "Fixing NPC Colors tab model viewer zoom functionality.", "cont1nuity"},
+			{1650922959,  "Bug Fix", "April 2nd, 2022", "Fixing Kyrian combo point charges and DK runes CDs showing if 'show background' was disabled.", "cont1nuity"},
+			{1650922959,  "Bug Fix", "March 29th, 2022", "Fixing an issue with cast colors exports.", "cont1nuity"},
+			{1650922959,  "Bug Fix", "March 28th, 2022", "Ensure npc renaming sticks through internal updates.", "cont1nuity"},
+			{1650922959,  "Bug Fix", "March 28th, 2022", "Fixing URL pointing towards the script/mod documentation.", "cont1nuity"},
+			{1650922959,  "New Feature", "March 26th, 2022", "Added new indicator: Shield Bar.", "Terciob"},
+			{1650922959,  "Backend Change", "March 25th, 2022", "Changing the aura tracking backend to update only when needed.", "cont1nuity"},
+			
+			{1648130735,  "New Feature", "March 24th, 2022", "Added into the 'Auto' section two options to hide Enemy Pets and Enemy Totems within raids and dungeons (default disabled).", "cont1nuity"},
+			{1648130735,  "Bug Fix", "March 23rd, 2022", "Don't show ghost auras on personal bar.", "cont1nuity"},
+			
+			{1647277035,  "Bug Fix", "March 21st, 2022", "Fixed an issue with the resources on the Plater resource bar not updating properly when disabling the 'Show Background' option.", "cont1nuity"},
+			{1647277035,  "New Feature", "March 18th, 2022", "Cast Colors options now actually changes the color of the cast bar, the old design now shows the original color of the cast.", "Terciob"},
+			{1647277035,  "New Feature", "March 17th, 2022", "Buff List and Npc Colors tab now show on the top entries from last segment, they are also highlight with yellow color.", "Terciob"},
+			{1647277035,  "New Feature", "March 17th, 2022", "Added 'Rename To' field on Npc Colors, use it to quick rename npcs.", "Terciob"},
+			{1647277035,  "New Feature", "March 14th, 2022", "Added Ghost Auras, ghost auras adds an extra icon to indicate a missing debuff on an enemy.", "Terciob"},
+			{1647277035,  "New Feature", "March 14th, 2022", "Added new script called 'Relics 9.2 M Dungeons' for the new Affix on Mythic+.", "Terciob"},
+			{1647277035,  "Bug Fix", "March 4th, 2022", "Ensure occlusion alpha is not overwritten by no combat alpha setting.", "cont1nuity"},
+			{1647277035,  "Backend Change", "February 25th, 2022", "NPC Colors list should be auto filled with Thorgast NPCs.", "cont1nuity"},
+			
 			{1645624151,  "Backend Change", "February 23rd, 2022", "Additional work on resources.", "cont1nuity"},
 			{1645624151,  "Backend Change", "February 23rd, 2022", "9.2 TOC update.", "cont1nuity"},
 			{1645624151,  "Bug Fix", "February 20th, 2022", "Fixing an issue with script icons breaking under some circumstances.", "cont1nuity"},

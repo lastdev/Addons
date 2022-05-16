@@ -25,7 +25,7 @@ L["%s|r has received a mail from %s"] = "%s|r ha ricevuto una lettera da %s"
 -- L["AUCTION_HOUSE_NOT_VISITED_WARNING"] = "Auctions have not been checked on %s|r since %d days, check the auction house and your mailbox !"
 
 L["Mail is about to expire on at least one character."] = "La posta sta per scadere su almeno un personaggio."
-L["Refer to the activity pane for more details."] = "Consultare il pannello attivit‡ per maggiori dettagli."
+L["Refer to the activity pane for more details."] = "Consultare il pannello attivit√† per maggiori dettagli."
 L["Do you want to view it now ?"] = "Visualizzarla ora?"
 
 
@@ -60,11 +60,11 @@ L["Reputations"] = "Reputazioni"
 
 -- ** Services / Events **
 
-L["%s is now ready (%s on %s)"] = "%s Ë ora pronto (%s su %s)"
-L["%s is now unlocked (%s on %s)"] = "%s Ë ora sbloccato (%s su %s)"
+L["%s is now ready (%s on %s)"] = "%s √® ora pronto (%s su %s)"
+L["%s is now unlocked (%s on %s)"] = "%s √® ora sbloccato (%s su %s)"
 L["%s starts in %d minutes (%s on %s)"] = "%s inizia fra %d minuti (%s su %s)"
-L["%s will be ready in %d minutes (%s on %s)"] = "%s sar‡ pronto fra %d minuti (%s su %s)"
-L["%s will be unlocked in %d minutes (%s on %s)"] = "%s sar‡ sbloccato in %d minuti (%s su %s)"
+L["%s will be ready in %d minutes (%s on %s)"] = "%s sar√† pronto fra %d minuti (%s su %s)"
+L["%s will be unlocked in %d minutes (%s on %s)"] = "%s sar√† sbloccato in %d minuti (%s su %s)"
 L["Do you want to open Altoholic's calendar for details ?"] = "Aprire il calendario di Altoholic per i dettagli?"
 
 
@@ -76,9 +76,9 @@ L["Bank"] = "Banca"
 L["AH"] = true
 L["Mail"] = "Posta"
 L["Equipped"] = "Equipaggiato"
-L["Already known by"] = "Gi‡ appreso da"
-L["Could be learned by"] = "PuÚ essere appreso da"
-L["Will be learnable by"] = "Potr‡ essere appreso da"
+L["Already known by"] = "Gi√† appreso da"
+L["Could be learned by"] = "Pu√≤ essere appreso da"
+L["Will be learnable by"] = "Potr√† essere appreso da"
 L["Total owned"] = "Totale posseduti"
 L["Source"] = "Fonte"
 -- L["Goes in"] = true

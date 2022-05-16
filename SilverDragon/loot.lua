@@ -64,7 +64,7 @@ local function CanLearnAppearance(itemLinkOrID)
 	end
 	-- First, is this a valid source at all?
 	local canBeChanged, noChangeReason, canBeSource, noSourceReason = C_Transmog.CanTransmogItem(itemID)
-	if canBeSource == nil then
+	if canBeSource == nil or noSourceReason == 'NO_ITEM' then
 		-- data loading, don't cache this
 		return
 	end
@@ -212,14 +212,18 @@ function ns.Loot.HasToys(id, only_knowable)
 	end
 	return false
 end
-function ns.Loot.HasMounts(id, only_knowable)
+function ns.Loot.HasMounts(id, only_knowable, only_boe)
 	if not (id and ns.mobdb[id] and ns.mobdb[id].loot) then return false end
 	for _, _, item in ns.Loot.IterMounts(id) do
-		if (not only_knowable) or (not itemRestricted(item)) then
+		if ((not only_knowable) or (not itemRestricted(item)) and ((not only_boe) or item.boe)) then
 			return true
 		end
 	end
 	return false
+end
+function ns.Loot.HasInterestingMounts(id)
+	-- This comes up a lot: mounts that you don't know, or which are BoE and so can be sold
+	return ns.Loot.Status.Mount(id) == false or ns.Loot.HasMounts(id, true, true)
 end
 function ns.Loot.HasPets(id, only_knowable)
 	if not (id and ns.mobdb[id] and ns.mobdb[id].loot) then return false end
@@ -290,6 +294,7 @@ local function statusChecker(iterator, test)
 		return ret
 	end
 end
+-- these all have mobid as the argument and return true/false/nil for known/unknown/none
 ns.Loot.Status.Toy = statusChecker(ns.Loot.IterToys, PlayerHasToy)
 ns.Loot.Status.Mount = statusChecker(ns.Loot.IterMounts, PlayerHasMount)
 ns.Loot.Status.Pet = statusChecker(ns.Loot.IterPets, PlayerHasPet)

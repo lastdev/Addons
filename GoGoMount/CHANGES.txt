@@ -1,18 +1,16 @@
-tag 98d8135001e05524366e1d4e9b05b676718d1ac0 3.0.0
+tag 26f661bcfa3b3359585c550f3af6e494aec393d8 3.2.0
 Author:	ghudavj <72996267+ghudavj@users.noreply.github.com>
-Date:	Wed Nov 3 15:34:41 2021 +0100
+Date:	Thu Mar 17 08:49:08 2022 +0100
 
-commit db17be309041d10e8bbb7936cd3f6a3349408907
+commit 8ec41c2b696b4cc760fabf7c6eb41b432d72c7de
 Author: ghudavj <72996267+ghudavj@users.noreply.github.com>
-Date:   Wed Nov 3 15:34:14 2021 +0100
+Date:   Thu Mar 17 08:48:55 2022 +0100
 
-    version 3.0.0 (for WoW 9.1.5)
+    Version 3.2.0
 
-commit 207da587a2f698c9dee6a95834dbf75778a71b0e
+commit 4ac2211d483bfde452fe37204aa5a2d5ce3c9af2
 Author: ghudavj <72996267+ghudavj@users.noreply.github.com>
-Date:   Fri Oct 8 09:36:45 2021 +0200
+Date:   Thu Mar 17 08:47:41 2022 +0100
 
-    Fixed issue in the Maw
-    
-    Fixed issue in the Maw during the campaign (quest The Hunt for the Baron and following ones)
+    Flying in Zereth Mothis
 

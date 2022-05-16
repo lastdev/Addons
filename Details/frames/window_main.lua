@@ -865,6 +865,7 @@ local function move_janela (baseframe, iniciando, instancia, just_updating)
 
 		if (instancia_alvo and not instancia.do_not_snap and not instancia_alvo.do_not_snap) then
 			instancia:AtualizaPontos()
+			instancia_alvo:AtualizaPontos()
 			
 			local esquerda, baixo, direita, cima
 			local meu_id = instancia.meu_id --> id da inst�ncia que esta sendo movida
@@ -2100,13 +2101,9 @@ local set_bar_value = function (self, value)
 end
 
 -- ~talent ~icon
+--code for when hovering over the class/spec icon in the player bar
 local icon_frame_on_enter = function (self)
 	local actor = self.row.minha_tabela
-	
-	if (self.row.icone_classe:GetTexture() ~= "") then
-		--self.row.icone_classe:SetSize (self.row.icone_classe:GetWidth()+1, self.row.icone_classe:GetWidth()+1)
-		--self.row.icone_classe:SetBlendMode ("ADD")
-	end
 	
 	if (actor) then
 		if (actor.frags) then
@@ -2211,7 +2208,7 @@ local icon_frame_on_enter = function (self)
 			local diff = combat:GetDifficulty()
 			local attribute, subattribute = instance:GetDisplay()
 			
-			--> check if is a raid encounter and if is heroic or mythic
+			--check if is a raid encounter and if is heroic or mythic
 			if (diff and (diff == 15 or diff == 16) and (attribute == 1 or attribute == 2)) then
 				local db = _detalhes.OpenStorage()
 				if (db) then
@@ -2239,7 +2236,68 @@ local icon_frame_on_enter = function (self)
 					end
 				end
 			end
-			
+
+			local actorName = actor:GetName()
+
+			local RaiderIO = _G.RaiderIO
+
+			if (RaiderIO) then
+				local addedInfo = false
+
+				local playerName, playerRealm = actorName:match("(%w+)%-(%w+)")
+				playerName = playerName or actorName
+				playerRealm = playerRealm or GetRealmName()
+				local faction = actor.enemy and Details.faction_against or UnitFactionGroup("player")
+				faction = faction == "Horde" and 2 or 1
+
+				local rioProfile = RaiderIO.GetProfile(playerName, playerRealm, faction)
+
+				if (rioProfile and rioProfile.mythicKeystoneProfile) then
+					rioProfile = rioProfile.mythicKeystoneProfile
+
+					local previousScore = rioProfile.previousScore or 0
+					local currentScore = rioProfile.currentScore or 0
+
+					if (previousScore > currentScore) then
+						GameCooltip:AddLine("M+ Score:", previousScore .. " (|cFFFFDD11" .. currentScore .. "|r)", 1, "white")
+						addedInfo = true
+					else
+						GameCooltip:AddLine("M+ Score:", currentScore, 1, "white")
+						addedInfo = true
+					end
+					
+				else
+					local dungeonPlayerInfo = C_PlayerInfo.GetPlayerMythicPlusRatingSummary(actorName)
+					if (dungeonPlayerInfo) then
+						local currentScore = dungeonPlayerInfo.currentSeasonScore or 0
+						if (currentScore > 0) then
+							GameCooltip:AddLine("M+ Score:", currentScore, 1, "white")
+							addedInfo = true
+						end
+					end
+				end
+
+				if (addedInfo) then
+					GameCooltip:AddIcon ([[]], 1, 1, 1, 20)
+					_detalhes:AddTooltipBackgroundStatusbar()
+					height = height + 19 --frame height
+				end
+
+			else
+				local dungeonPlayerInfo = C_PlayerInfo.GetPlayerMythicPlusRatingSummary(actorName)
+				if (dungeonPlayerInfo) then
+					local currentScore = dungeonPlayerInfo.currentSeasonScore or 0
+					if (currentScore > 0) then
+						GameCooltip:AddLine("M+ Score:", currentScore, 1, "white")
+						GameCooltip:AddIcon ([[]], 1, 1, 1, 20)
+						_detalhes:AddTooltipBackgroundStatusbar()
+						height = height + 19 --frame height
+					end
+				end				
+			end
+
+			--dps
+			--[=[
 			local attribute, subAttribute = instance:GetDisplay()
 			if (attribute == 1) then
 				local realDps = actor.total / instance:GetShowingCombat():GetCombatTime()
@@ -2253,17 +2311,8 @@ local icon_frame_on_enter = function (self)
 					height = height + 21
 				end
 			end
-			
-			--[=[
-			if (RaiderIO and RaiderIO.GetScore) then
-				local mythicPlusScore = RaiderIO.GetScore (name)
-				if (mythicPlusScore and mythicPlusScore.allScore) then
-					GameCooltip:AddLine ("Mythic+ Score:", mythicPlusScore.allScore, 1, "white", "white")
-					_detalhes:AddTooltipBackgroundStatusbar()
-				end
-			end
 			--]=]
-			
+		
 			GameCooltip:SetOption ("FixedHeight", height)
 			
 			GameCooltip:ShowCooltip()
@@ -5169,10 +5218,9 @@ function _detalhes:InstanceColor (red, green, blue, alpha, no_save, change_statu
 
 	local skin = _detalhes.skins [self.skin]
 	if (not skin) then --the skin isn't available any more
-		Details:Msg ("Skin " .. (self.skin or "?") .. " not found, changing to 'Dark Theme'.")
-		Details:Msg ("Recommended to change the skin in the option panel > Skin Selection.")
-		skin = _detalhes.skins ["Minimalistic"]
-		self.skin = "Minimalistic"
+		--put the skin into wait to install
+		local tempSkin = self:WaitForSkin()
+		skin = tempSkin
 	end
 	
 	self.baseframe.cabecalho.ball_r:SetVertexColor (red, green, blue)
@@ -6821,18 +6869,35 @@ function _detalhes:RefreshMicroDisplays()
 	_detalhes.StatusBar:UpdateOptions (self)
 end
 
-function _detalhes:ChangeSkin (skin_name)
+function Details:WaitForSkin()
+	local skinName = self.skin
+	local hasSkinInCache = Details.installed_skins_cache[skinName]
+	if (hasSkinInCache) then
+		Details:InstallSkin(skinName, hasSkinInCache)
+		local skin = Details.skins[skinName]
+		if (skin) then
+			return skin
+		end
+	end
 
+	Details.waitingForSkins = Details.waitingForSkins or {}
+	Details.waitingForSkins[self:GetId()] = skinName
+
+	local defaultSkin = _detalhes.default_skin_to_use
+	local skin = _detalhes.skins[defaultSkin]
+	self.skin = defaultSkin
+	return skin
+end
+
+function Details:ChangeSkin(skin_name)
 	if (not skin_name) then
 		skin_name = self.skin
 	end
 
-	local this_skin = _detalhes.skins [skin_name]
-
+	local this_skin = _detalhes.skins[skin_name]
 	if (not this_skin) then
-		Details:Msg("error 0x4546", skin_name)
-		skin_name = _detalhes.default_skin_to_use
-		this_skin = _detalhes.skins [skin_name]
+		local tempSkin = Details:WaitForSkin()
+		this_skin = tempSkin
 	end
 	
 	local just_updating = false

@@ -286,7 +286,10 @@ local vignetteIDExclusions = {
 		NPC.
 	]]
 	-- Zereth Mortis
+	[4991] = true, -- Requisites Originator
 	[5000] = true,
+	[5003] = true, -- Rondure Cache
+	[5013] = true, -- Prototype Schematic
 	[5019] = true, -- Torn Ethereal Drape
 	[5020] = true,
 }
@@ -305,7 +308,6 @@ do
 		["PortalRed"] = true, -- chaotic riftstone (maw)
 		["PortalBlue"] = true, -- animaflow teleporter (maw)
 		["poi-soulspiritghost"] = true, -- souls in the maw
-		-- ["VignetteKillElite"] = true,
 		["Profession"] = true, -- Soulsteel Anvil in the maw
 		["poi-graveyard-neutral"] = true, -- player's corpse location in the maw
 		["TeleportationNetwork-32x32"] = true, -- from discord dump
@@ -329,6 +331,28 @@ do
 		["EmberCourt-32x32"] = true, -- from discord dump
 		["Embercourt-Guest-PlagueDeviserMarileth"] = true, -- from discord dump
 		["Tormentors-Boss"] = true,
+
+		-- Discovered icons as of 3/7/2022
+		["mechagon-projects"] = true, -- Cypher Console mapID=1970 vignetteID=5000
+		["poi-scrapper"] = true, -- Enhancement Console mapID=1970 vignetteID=5020
+		["TeleportationNetwork-32x32"] = true, -- Gateway to Hero's Rest mapID=1533 vignetteID=4578
+		["QuestObjective"] = true, -- Duelmaster Rowyn mapID=1525 vignetteID=4159
+		["poi-workorders"] = true, -- Night Fae Enhancements Available mapID=1565 vignetteID=4469
+		["Object"] = true, -- Осадок стигии mapID=1543 vignetteID=4722
+		--["VignetteLootElite"] = true, -- Свиток веков mapID=1533 vignetteID=4003
+		--["poi-workorders"] = true, -- Venthyr Enhancements Available mapID=1525 vignetteID=4466
+		--["poi-workorders"] = true, -- Kyrian Enhancements Available mapID=1533 vignetteID=4468
+		--["poi-workorders"] = true, -- Améliorations des nécro-seigneurs disponibles mapID=1536 vignetteID=4467
+		--["VignetteLootElite"] = true, -- Black Empire Coffer mapID=1530 vignetteID=3851
+		--["TeleportationNetwork-32x32"] = true, -- Gateway to Hero's Rest mapID=1533 vignetteID=4583
+		["Warfronts-BaseMapIcons-Empty-Workshop-Minimap-small"] = true, -- Цепкий отросток mapID=1536 vignetteID=4581
+		["SmallQuestBang"] = true, -- The Accuser mapID=1525 vignetteID=4600
+		["Object"] = true, -- Hunt: Death Elementals mapID=1543 vignetteID=4555
+		["WarMode-Broker-32x32"] = true, -- Alascène mapID=1565 vignetteID=4628
+		["Embercourt-Guest-HuntCaptainKorayn"] = true, -- Hunt-Captain Korayn mapID=1525 vignetteID=4417
+		["EmberCourt-32x32"] = true, -- Altar of Accomplishment mapID=1525 vignetteID=4669
+		["Embercourt-Guest-GrandmasterVole"] = true, -- Grandmaster Vole mapID=1525 vignetteID=4420
+		["Embercourt-Guest-PlagueDeviserMarileth"] = true, -- Plague Deviser Marileth mapID=1525 vignetteID=4422
 	}
 	-- found in Zereth Mortis
 	tmp1 = {
@@ -547,11 +571,12 @@ local function OnEvent(event, arg1)
 	if (event == "ADDON_LOADED") then
 		if (addonName == arg1) then
 			TomCatsDiscoveryAlertSystem = AlertFrame:AddQueuedAlertFrameSubSystem("TomCatsDiscoveryAlertFrameTemplate", TomCatsDiscoveryAlertFrame_SetUp);
-			if (_G["TomCats_Account"].discoveriesVersion ~= "2.4.3") then
+			if (_G["TomCats_Account"].discoveriesVersion ~= "2.4.10") then
 				_G["TomCats_Account"].discoveries.vignettes = { }
 				_G["TomCats_Account"].discoveries.vignetteAtlases = { }
+				_G["TomCats_Account"].discoveries.version = "2.4.10"
 				_G["TomCats_Account"].discoveriesResetCount = 0
-				_G["TomCats_Account"].discoveriesVersion = "2.4.3"
+				_G["TomCats_Account"].discoveriesVersion = "2.4.10"
 			end
 			local discoveries = 0
 			discoveredVignettes = _G["TomCats_Account"].discoveries.vignettes

@@ -66,6 +66,11 @@ local AddonDB_Defaults = {
 				
 				-- ** Expansion Features / 9.0 - Shadowlands **
 				ReservoirTalents = {},		-- Info about the talent trees of the sanctum reservoir
+				
+				-- ** Expansion Features / 9.2 - Shadowlands Zereth Mortis**
+				currentCypherEquipmentLevel = 0,
+				maxCypherEquipmentLevel = 0,
+				CypherConsoleTalents = { 0, 0, 0, 0 },
 			}
 		}
 	}
@@ -710,6 +715,35 @@ talentInfo.researchGoldCost
 	end
 end
 
+local function ScanCypherLevel()
+	addon.ThisCharacter.currentCypherEquipmentLevel = C_Garrison.GetCurrentCypherEquipmentLevel()
+	addon.ThisCharacter.maxCypherEquipmentLevel = C_Garrison.GetMaxCypherEquipmentLevel()
+end
+
+local function ScanCypherConsoleTalents()
+	local treeID = C_Garrison.GetCurrentGarrTalentTreeID()
+	if not treeID or treeID ~= 474 then return end
+	
+	local talents = addon.ThisCharacter.CypherConsoleTalents
+	talents[1] = 0
+	talents[2] = 0
+	talents[3] = 0
+	talents[4] = 0
+	
+	local info = C_Garrison.GetTalentTreeInfo(treeID)
+	
+	-- Loop through the talents (28 => 4 columns, 7 tiers, empty positions on screen are also in here!)
+	for talentID, talent in pairs(info.talents) do
+		-- talent.tier = talent row on-screen (vertically)
+		-- talent.uiOrder = talent column on-screen (horizontally)
+		
+		-- Empty slots have an icon = 0
+		if talent.icon and talent.icon > 0 then
+			local index = talent.uiOrder + 1
+			talents[index] = talents[index] + talent.talentRank
+		end
+	end
+end
 
 -- *** Event Handlers ***
 local function OnShipmentsUpdated()
@@ -809,6 +843,21 @@ end
 
 local function OnCovenantSanctumInteractionStarted()
 	ScanReservoirTalents()
+end
+
+local function OnGarrisonTalentNPCOpened()
+	ScanCypherLevel()
+	ScanCypherConsoleTalents()
+end
+
+local function OnGarrisonTalentComplete()
+	ScanCypherLevel()
+	ScanCypherConsoleTalents()
+end
+
+local function OnGarrisonTalentUpdate()
+	ScanCypherLevel()
+	ScanCypherConsoleTalents()
 end
 
 
@@ -997,6 +1046,26 @@ local function _GetReservoirTalentTreeInfo(character, treeType)
 	return character.ReservoirTalents[treeType]
 end
 
+local function _GetCypherLevel(character)
+	return character.currentCypherEquipmentLevel, character.maxCypherEquipmentLevel
+end
+
+local function _GetCypherMetrialLevel(character)
+	return character.CypherConsoleTalents[1]
+end
+
+local function _GetCypherAealicLevel(character)
+	return character.CypherConsoleTalents[2]
+end
+
+local function _GetCypherDealicLevel(character)
+	return character.CypherConsoleTalents[3]
+end
+
+local function _GetCypherTrebalimLevel(character)
+	return character.CypherConsoleTalents[4]
+end
+
 
 local PublicMethods = {
 	GetFollowers = _GetFollowers,
@@ -1028,6 +1097,11 @@ local PublicMethods = {
 	GetLastResourceCollectionTime = _GetLastResourceCollectionTime,
 	GetArtifactResearchInfo = _GetArtifactResearchInfo,
 	GetReservoirTalentTreeInfo = _GetReservoirTalentTreeInfo,
+	GetCypherLevel = _GetCypherLevel,
+	GetCypherMetrialLevel = _GetCypherMetrialLevel,
+	GetCypherAealicLevel = _GetCypherAealicLevel,
+	GetCypherDealicLevel = _GetCypherDealicLevel,
+	GetCypherTrebalimLevel = _GetCypherTrebalimLevel,
 }
 
 function addon:OnInitialize()
@@ -1061,6 +1135,11 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetLastResourceCollectionTime")
 	DataStore:SetCharacterBasedMethod("GetArtifactResearchInfo")
 	DataStore:SetCharacterBasedMethod("GetReservoirTalentTreeInfo")
+	DataStore:SetCharacterBasedMethod("GetCypherLevel")
+	DataStore:SetCharacterBasedMethod("GetCypherMetrialLevel")
+	DataStore:SetCharacterBasedMethod("GetCypherAealicLevel")
+	DataStore:SetCharacterBasedMethod("GetCypherDealicLevel")
+	DataStore:SetCharacterBasedMethod("GetCypherTrebalimLevel")
 end
 
 function addon:OnEnable()
@@ -1100,6 +1179,11 @@ function addon:OnEnable()
 	-- 9.0 Sanctum Reservoir
 	addon:RegisterEvent("COVENANT_SANCTUM_INTERACTION_STARTED", OnCovenantSanctumInteractionStarted)
 	addon:RegisterEvent("GARRISON_TALENT_RESEARCH_STARTED", OnCovenantSanctumInteractionStarted)
+	
+	-- 9.2 Cypher Equipment
+	addon:RegisterEvent("GARRISON_TALENT_NPC_OPENED", OnGarrisonTalentNPCOpened)
+	addon:RegisterEvent("GARRISON_TALENT_COMPLETE", OnGarrisonTalentComplete)
+	addon:RegisterEvent("GARRISON_TALENT_UPDATE", OnGarrisonTalentUpdate)
 	
 
 	addon:SetupOptions()

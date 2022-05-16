@@ -1,5 +1,150 @@
 # Changelog
 
+## Changed in v63
+
+* Added Explorer achievements, via a map icon that shows a spot that'll definitely get you the map completion for the achievement
+* Improved paths to some points in several maps
+* Zereth Mortis: some schematics were shown as available too soon (before you'd unlocked protoform synthesis)
+* Group names in tooltips could sometimes be improperly formatted
+
+## Changed in v62
+
+* Show where some Automa Scraps are inside the Locrian Esper
+* Changes to how routes are drawn, which should be completely unnoticed
+* Bundle Taintless, which might(?) help with complaints about the upload dialog
+
+## Changed in v61
+
+* Show the Creation Catalyst on the Zereth Mortis map
+* Minor Zereth Mortis note/point tweaks
+* The last set of Lunarlight Buds was finally up in Ardenweald, so they're added with proper questids
+
+## Changed in v60
+
+* Add some new non-quest points to Zereth Mortis (hidden by default in the "Junk" group):
+    * Shrouded Cypher Caches (a Soulshape and some Pocopoc loot)
+    * Discarded Automa Scrap (Pocopoc cores)
+
+## Changed in v59
+
+* Pocopoc customization items are now available. The known ones in fixed locations have been added. (The ones that're in every random chest or on any rare, I've left out. Also, nobody knows where two of them are yet.)
+* Dominance Key has been hotfixed to drop from more mobs
+* A few Korthia improvements: include the really rare cache contents, and add some more vignettes
+
+## Changed in v58
+
+* Added the Mawsworn Supply Chest locations to Zereth Mortis because it (very rarely) contains the Spectral Mawrat's Tail
+* Fill in various vignette IDs from earlier zones in the expansion, e.g. the daily calling treasures now have notable loot shown, as do the anima calling rares
+* Spent perhaps too much time getting the Ardenweald Large Lunarlight Pod to have helpful nearby points on your minimap (I'm missing one set of options because it hasn't come up in the last few days so I can't narrow down which one ties to which quest...)
+
+## Changed in v57
+
+* Try to show point information on zone-map vignettes and POIs (this requires me to add the IDs for those to the points, so I need to gather more data before it's consistently available)
+* Added the loot to Sand, Sand Everywhere! now I'm confident it's consistent
+* ...Sand, Sand Everywhere! was accidentally being hidden by one of the Coreless Automa points
+* Library Vault in ZM was hotfixed to require Dealic Understanding, apparently
+* Cleaned up some points in Korthia
+* Night Mare in Ardenweald's instructions were cut off by a typo
+* Show the possible path for the Meandering Tale in Ardenweald
+
+## Changed in v56
+
+* Minor performance improvement: code checking whether you could learn an appearance from an item wasn't caching negative results and so was running more than it needed to
+* You can hide all points related to an achievement from the right-click menu
+* Cleaned up some duplication between point-groups and achievements
+* Coreless Automa locations in Zereth Mortis (disabled by default, there's a lot)
+* Missing Dormant Alcove Arrangement added, and explain the Requisites Originator it leads to
+* Better explain the branching jumping puzzle routes for the Rondue Cache / Omnipotential Core schematic
+* Show the Bulging Roots near Gluttonous Overgrowth, but only on your minimap
+* Chicken Soul crittershape: position very slightly fixed
+* Loyal Gorger and Dead Blancy: show progress like the newer mounts
+
+## Changed in v55
+
+* Add the locations of the Locus Alcove Arrangements for the optional rooms (Camber, Fulgore, Rondure, Dormant)
+* Add a point for the Sand Sand Everywhere achievement
+* Add a point for Olea Manu, the Jiro vendor after their questline, not at all because I'm bitter that I didn't notice them and so missed out on a week of +50% cyphers, no
+* Add various soulshapes / crittershapes across the Shadowlands (mostly this is the 9.1.5 ones)
+* Domination Cache: note that the key can also drop from the Dreadlord Infiltrators
+* Give the Pulp-Covered Relic its own icon so it's easier to pick out
+
+## Changed in v54
+
+* Show which group a point is assigned to in its tooltip
+* Made it easier for myself to add points that show the path to another point, and used that in a few places
+* Minor tweaks to earlier zones: Nilganihmaht's tooltip shows which rings you've already put on; the Playful Vulpin's tooltip shows the emotes you'll have to use
+* Removed the "show non-achievement" option, since it's been replaced with groups in-practice and I never flagged anything as junk this expansion (it made more sense back in Legion, which had a lot of boring non-achievement respawning treasures)
+
+## Changed in v53
+
+* Locus Shift treasures and schematics are filled out
+* Tweaked the flying requirements on a few treasures
+* Achieved-as-found fix went too far, interfered with quest completion sometimes (todo: rewrite this check more comprehensively...)
+
+## Changed in v52
+
+* Pull the point-groups in the current zone (groups and achievements) up to the top-level of the menu for easier access
+* "Count achieved as found" should only apply to points with quests, as its description claimed
+* Caches of Creation are not-visible by default
+* Put the Pulp-Covered Relic in the Schematics group
+* Note that one of the Crystallized Echo of the First Song locations requires flying
+* Show the locus shift on the minimap as well
+
+## Changed in v51
+
+* Show the Crystallized Echo of the First Song locations
+* Forgotten Proto-Vault: show as inactive if you don't have flying or the Frog'it WQ
+* Prying Eye Discovery: show as inactive if you don't have flying or the Portal Play quest item
+* Improve display if the tooltip's label is coming from the loot (remove the [] around it)
+* Maw: add the pickup quest to the Soulforger's Tools on Rhovus
+
+## Changed in v50
+
+* Fix an error if collectables weren't counting for completion
+* Explain Tahkwitz
+
+## Changed in v49
+
+* Add Protoform Synthesis pattern locations within the Sepulcher of the First Ones raid
+* Maw: add the Infused Etherwyrm pet to the Night Fae assault
+
+## Changed in v48
+
+* Add Protoform Synthesis pet pattern locations (still missing: the ones in the raid)
+* Minor tweaks to some points and notes
+
+## Changed in v47
+
+* Add Protoform Synthesis mount pattern locations (still to come: pet patterns)
+* Add a point for the Locus Shift in the Gravid Repose
+
+## Changed in v46
+
+* Fixed an error when mousing over Anima Shards in Bastion
+
+## Changed in v45
+
+* The right-click menu on points now shows an option to open the Achievements UI to the related achievement
+* Dune Dominance mobs: show individual status in the tooltip
+* Add the Protoform Repository to the map once it's unlocked
+* Hide the Architect's Reserve until the entire protoform chain is complete
+* The Protopear only needs to be ripened once now
+* Add other Moss-Choked Guardian spawns
+
+## Changed in v44
+
+* Dune Dominance mobs: more loot, show notes so you know which mob drops which items
+* Ripened Protopear: show icon on the main map for the entrance to the Blooming Foundry
+* Show spell tooltips on lore concordances and the wellspring so you know what buff you can get
+* Minor tweaks to map icon sizes
+
+## Changed in v43
+
+* March 3rd hotfix: Interrogator's Vicious Dirk now drops from all the Dune Domination mobs
+* Last lore concordance questids added
+* Orixal has moved
+* Assorted minor point tweaks
+
 ## Changed in v42
 
 * A hotfix on March 1st put the Ancient Translocators on the Zereth Mortis map (*so* on the map that they're the only thing you can see if you've got no map-completion at all 😁), so I'm removing mine

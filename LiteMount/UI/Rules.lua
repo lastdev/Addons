@@ -198,15 +198,17 @@ function LiteMountRulesPanelMixin:refresh(trigger)
     LiteMountOptionsPanel_Refresh(self, trigger)
 end
 
+function LiteMountRulesPanelMixin:OnShow()
+    UIDropDownMenu_Initialize(self.BindingDropDown, BindingDropDown_Initialize)
+    UIDropDownMenu_SetText(self.BindingDropDown, BindingText(self.Scroll.tab))
+end
+
 function LiteMountRulesPanelMixin:OnLoad()
     self.AddButton:SetScript('OnClick', function () self:AddRule() end)
     self.DeleteButton:SetScript('OnClick', function () self:DeleteRule() end)
     self.EditButton:SetScript('OnClick', function () self:EditRule() end)
 
     LiteMountOptionsPanel_RegisterControl(self.Scroll)
-
-    UIDropDownMenu_Initialize(self.BindingDropDown, BindingDropDown_Initialize)
-    UIDropDownMenu_SetText(self.BindingDropDown, BindingText(1))
 
     LiteMountOptionsPanel_OnLoad(self)
 end

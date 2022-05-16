@@ -183,6 +183,7 @@
 
     <Scripts>
         <OnLoad method="OnLoad" />
+        <OnShow method="OnShow" inherit="prepend" />
         <OnHide method="OnHide" />
         <OnSizeChanged method="OnSizeChanged" />
     </Scripts>

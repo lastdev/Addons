@@ -340,7 +340,8 @@ function GoGo_ChooseMount()
 		GoGo_TableAddUnique(GoGo_Variables.GroundSpeed, 138) -- Aspects
 	elseif (GoGo_Variables.Player.Class == "MONK") then
 		GoGo_TableAddUnique(GoGo_Variables.AirSpeed, 160)  -- Zen Flight
-	elseif (GoGo_Variables.Player.Covenant == GoGo_Variables.Localize.NightFae) then
+	end --if
+	if (GoGo_Variables.Player.Covenant == GoGo_Variables.Localize.NightFae) then
 		GoGo_TableAddUnique(GoGo_Variables.GroundSpeed, 150)  -- Soulshape
 	end --if
 

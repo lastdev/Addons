@@ -97,15 +97,13 @@ LiteMountAdvancedPanelMixin = {}
 
 function LiteMountAdvancedPanelMixin:OnLoad()
     self.name = ADVANCED_OPTIONS
-
     LiteMountOptionsPanel_RegisterControl(self.EditScroll.EditBox, self)
-
-    UIDropDownMenu_Initialize(self.BindingDropDown, BindingDropDown_Initialize)
-    UIDropDownMenu_SetText(self.BindingDropDown, BindingText(1))
-
     LiteMountOptionsPanel_OnLoad(self)
 end
 
 function LiteMountAdvancedPanelMixin:OnShow()
+    local text = BindingText(self.EditScroll.EditBox.tab)
+    UIDropDownMenu_Initialize(self.BindingDropDown, BindingDropDown_Initialize)
+    UIDropDownMenu_SetText(self.BindingDropDown, text)
     self.UnlockButton:Show()
 end

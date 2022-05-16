@@ -66,6 +66,18 @@ function module:OnInitialize()
 			flash_boss = false,
 			flash_texture_boss = "Blizzard Low Health",
 			flash_color_boss = {r=1,g=0,b=1,a=1,},
+			vibrate = true,
+			vibrate_type = "High",
+			vibrate_intensity = 1,
+			vibrate_mount = true,
+			vibrate_type_mount = "Low",
+			vibrate_intensity_mount = 1,
+			vibrate_boss = true,
+			vibrate_type_boss = "High",
+			vibrate_intensity_boss = 1,
+			vibrate_loot = true,
+			vibrate_type_loot = "High",
+			vibrate_intensity_loot = 0.8,
 			instances = false,
 			dead = true,
 			already = false,
@@ -77,6 +89,7 @@ function module:OnInitialize()
 			unmute = false,
 			background = false,
 			loot = true,
+			known_mounts = true,
 		},
 	})
 
@@ -153,9 +166,10 @@ function module:OnInitialize()
 				args = {
 					already = toggle("Already found", "Announce when we see rares we've already killed / achieved (if known)", 0),
 					already_drop = toggle("Got the loot", "Announce when we see rares which drop a mount / toy / pet you already have", 10),
-					already_transmog = toggle("...include transmog as loot", "Count transmog appearances as knowable loot for the previous option?", 11),
+					already_transmog = toggle("...include transmog as loot", "Count transmog appearances as knowable loot", 11),
 					already_alt = toggle("Completed by an alt", "Announce when we see rares for an achievement that the current character doesn't have, but an alt has completed already", 20),
-					dead = toggle("Dead rares", "Announce when we see dead rares, if known. Not all scanning methods know whether a rare is dead or not, so this isn't entirely reliable.", 30),
+					known_mounts = toggle("Known mounts are boring", "Treat mount-dropping rares whose mount you already know as if they're regular rares (unless the mount is BoE)", 25),
+					dead = toggle("Dead rares", "Announce when we see dead rares, if known. Not all scanning methods know whether a rare is dead or not", 30),
 					instances = toggle("Instances", "Show announcements while in an instance", 50),
 					loot = toggle("Treasures", "Show announcements when treasure appears on the minimap", 60),
 				},
@@ -191,6 +205,7 @@ function module:OnInitialize()
 					scrapking = faker(151625, "Scrap King (loot)", 1462, 0.5, 0.5),
 					kash = faker(159105, "Collector Kash (lots of loot)", 1536, 0.5, 0.5),
 					-- worldcracker = faker(180032, "Wild Worldcracker", 1961, 0.5, 0.5),
+					-- blanchy = faker(173468, "Dead Blanchy", 1525, 0.5, 0.5),
 					chest = {
 						type = "execute", name = "Waterlogged Chest",
 						desc = "Fake seeing a Waterlogged Chest",
@@ -330,11 +345,65 @@ function module:OnInitialize()
 						order = 24,
 					},
 				},
-			}
+			},
+			controller = {
+				type = "group", name = "Controller",
+				get = get, set = set,
+				disabled = function(info) return info[#info] ~= "controller" and not C_GamePad.IsEnabled() end,
+				order = 15,
+				args = {
+					about = config.desc("Vibrate a connected controller when a rare is seen. Only works if controller support is enabled. You can turn it on by typing `/console GamePadEnable 1` in the chat box.", 0),
+				},
+			},
 		}
+
+		local function vibrate_section(t, key, order, heading)
+			key = key and ("_"..key) or ""
+			if heading then
+				t["vibrate_heading" .. key] = {type="header", name="", order=order,}
+			end
+			t["vibrate" .. key] = toggle(heading or "Vibrate", "Vibrate the controller?", order + 1)
+			t["vibrate_type" .. key] = {
+				type = "select", name = "Type",
+				desc = "What type of vibration to use",
+				values = {
+					Low = "Low",
+					High = "High",
+					LTrigger = "LTrigger (PS5 only)",
+					RTrigger = "RTrigger (PS5 only)",
+				},
+				order = order + 2,
+			}
+			t["vibrate_intensity" .. key] = {
+				type = "range", name = "Intensity",
+				desc = "How strong the vibration should be",
+				min = 0, max = 1, step = 0.1,
+				order = order + 3,
+			}
+			t["preview" .. key] = {
+				type = "execute", name = PREVIEW,
+				func = function(info)
+					C_GamePad.SetVibration(self.db.profile["vibrate_type" .. key], self.db.profile["vibrate_intensity" .. key])
+				end,
+				order = order + 4,
+			}
+			return order + 5
+		end
+		local order = 1
+		order = vibrate_section(options.controller.args, nil, 1)
+		order = vibrate_section(options.controller.args, "mount", order, "Vibrate for mounts")
+		order = vibrate_section(options.controller.args, "boss", order, "Vibrate for bosses")
+		order = vibrate_section(options.controller.args, "loot", order, "Vibrate for loot")
 
 		config.options.args.outputs.plugins.announce = options
 	end
+end
+
+function module:HasInterestingMounts(id)
+	if not module.db.profile.known_mounts then
+		return ns.Loot.HasMounts(id)
+	end
+	return ns.Loot.HasInterestingMounts(id)
 end
 
 function module:Seen(callback, id, zone, x, y, is_dead, source, ...)
@@ -375,8 +444,8 @@ function module:ShouldAnnounce(id, zone, x, y, is_dead, source, ...)
 		Debug("ShouldAnnounce", true, "always")
 		return true
 	end
-	if not self.db.profile.already_drop and ns.Loot.Status(id, self.db.profile.already_transmog) == true then
-		-- hide mobs which have a mount/pet/toy which you already own
+	if not self.db.profile.already_drop and ns.Loot.Status(id, self.db.profile.already_transmog) == true and not ns.Loot.HasMounts(id, true, true) then
+		-- hide mobs which have a mount/pet/toy which you already own... apart from BoE mounts
 		-- this means there's knowable loot, and it's all known
 		Debug("ShouldAnnounce", false, "already got loot")
 		return false
@@ -393,7 +462,7 @@ function module:ShouldAnnounce(id, zone, x, y, is_dead, source, ...)
 			Debug("ShouldAnnounce", false, "alt got achievement")
 			return false
 		end
-		if source == "vignette" then
+		if source == "vignette" or source == "point-of-interest" then
 			-- The vignette's presence implies no quest completion
 			Debug("ShouldAnnounce", true, "vignette implies quest")
 			return true
@@ -426,15 +495,20 @@ core.RegisterCallback("SD Announce Sink", "Announce", function(callback, id, zon
 			source = "by " .. player .. " in your " .. strlower(channel) .. "; " .. localized_zone
 		end
 	end
+	local pin = ""
 	if x and y then
 		if x == 0 and y == 0 then
 			source = source .. " @ unknown location"
 		else
-			source = source .. " @ " .. core.round(x * 100, 1) .. "," .. core.round(y * 100, 1)
+			source = source .. (" @ %.1f, %.1f"):format(x * 100, y * 100)
+			if module.db.profile.sink_opts.sink20OutputSink == "ChatFrame" then
+				pin = (" |cffffff00|Hworldmap:%d:%d:%d|h[%s]|h|r"):format(
+					zone, x * 10000, y * 10000, MAP_PIN_HYPERLINK
+				)
+			end
 		end
 	end
-	local prefix = "Rare seen: "
-	module:Pour((prefix .. "%s%s (%s)"):format(core:GetMobLabel(id), dead and "... but it's dead" or '', source or ''))
+	module:Pour(("Rare seen: %s%s (%s)%s"):format(core:GetMobLabel(id), dead and "... but it's dead" or '', source or '', pin))
 end)
 core.RegisterCallback("SD AnnounceLoot Sink", "AnnounceLoot", function(callback, name, id, zone, x, y)
 	if not module.db.profile.sink then
@@ -442,12 +516,17 @@ core.RegisterCallback("SD AnnounceLoot Sink", "AnnounceLoot", function(callback,
 	end
 
 	Debug("Pouring")
+	local pin = ""
 	local location = UNKNOWN
 	if x and y and x > 0 and y > 0 then
-		location = core.round(x * 100, 1) .. "," .. core.round(y * 100, 1)
+		location = ("%.1f, %.1f"):format(x * 100, y * 100)
+		if module.db.profile.sink_opts.sink20OutputSink == "ChatFrame" then
+			pin = (" |cffffff00|Hworldmap:%d:%d:%d|h[%s]|h|r"):format(
+				zone, x * 10000, y * 10000, MAP_PIN_HYPERLINK
+			)
+		end
 	end
-	local prefix = "Treasure seen: "
-	module:Pour((prefix .. "%s (%s)"):format(name, location))
+	module:Pour(("Treasure seen: %s (%s)%s"):format(name, location, pin))
 end)
 
 local cvar_overrides
@@ -527,7 +606,7 @@ core.RegisterCallback("SD Announce Sound", "Announce", function(callback, id, zo
 		if channel == "GUILD" and not module.db.profile.soundguild or (channel == "PARTY" or channel == "RAID") and not module.db.profile.soundgroup then return end
 	end
 	local soundfile, loops
-	if ns.Loot.HasMounts(id, true) then
+	if module:HasInterestingMounts(id) then
 		if not module.db.profile.sound_mount then return end
 		soundfile = module.db.profile.soundfile_mount
 		loops = module.db.profile.sound_mount_loop
@@ -593,7 +672,7 @@ do
 				local background = module.db.profile.flash_texture
 				local color = module.db.profile.flash_color
 				if self.id and ns.mobdb[self.id] then
-					if ns.Loot.HasMounts(self.id) and module.db.profile.flash_mount then
+					if module.db.profile.flash_mount and module:HasInterestingMounts(id) then
 						background = module.db.profile.flash_texture_mount
 						color = module.db.profile.flash_color_mount
 					elseif ns.mobdb[self.id].boss and module.db.profile.flash_boss then
@@ -621,3 +700,28 @@ do
 		module:Flash(id)
 	end)
 end
+
+core.RegisterCallback("SD Announce Controller", "Announce", function(callback, id, zone, x, y, dead, source)
+	local vibrate_type, vibrate_intensity
+	if module:HasInterestingMounts(id) then
+		if not module.db.profile.vibrate_mount then return end
+		vibrate_type = module.db.profile.vibrate_type_mount
+		vibrate_intensity = module.db.profile.vibrate_intensity_mount
+	elseif ns.mobdb[id] and ns.mobdb[id].boss then
+		if not module.db.profile.vibrate_boss then return end
+		vibrate_type = module.db.profile.vibrate_type_boss
+		vibrate_intensity = module.db.profile.vibrate_intensity_boss
+	else
+		if not module.db.profile.vibrate then return end
+		vibrate_type = module.db.profile.vibrate_type
+		vibrate_intensity = module.db.profile.vibrate_intensity
+	end
+	C_GamePad.SetVibration(vibrate_type, vibrate_intensity)
+end)
+core.RegisterCallback("SD AnnounceLoot Controller", "AnnounceLoot", function(callback, id, zone, x, y, dead, source)
+	if not module.db.profile.vibrate_loot then
+		return
+	end
+	C_GamePad.SetVibration(module.db.profile.vibrate_type_loot, module.db.profile.vibrate_intensity_loot)
+end)
+

@@ -7,6 +7,7 @@ L["Equipment"] = "장비"
 -- L["Currencies"] = true
 L["Reputations"] = "평판"
 -- L["Daily Quests"] = true
+-- L["Weekly Quests"] = true
 L["Zone"] = "지역"
 L["Characters"] = "캐릭터"
 L["Rest XP"] = "휴식 경험치"

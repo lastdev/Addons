@@ -1,0 +1,8 @@
+## Interface: 90200
+## Title: Cypher Minimap Button
+## Notes: Minimap Button to view your Cypher Research Console
+## Author: MrGM
+## Version: 1.4
+
+libs\load_libs.xml
+CypherButton.lua

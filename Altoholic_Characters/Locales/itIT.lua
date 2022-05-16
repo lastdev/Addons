@@ -30,8 +30,8 @@ L["N/A"] = "N/D"
 L["Expiry:"] = "Scadenza:"
 L["Mails %s(%d)"] = "Posta %s(%d)"
 -- L["Attached Money"] = true
-L["Will be %sdeleted|r in"] = "Verr‡ %seliminato|r fra"
-L["Will be %sreturned|r in"] = "Verr‡ %srispedito|r fra"
+L["Will be %sdeleted|r in"] = "Verr√† %seliminato|r fra"
+L["Will be %sreturned|r in"] = "Verr√† %srispedito|r fra"
 
 -- ** Recipes **
 L["COLOR_GREEN"] = "Verde"

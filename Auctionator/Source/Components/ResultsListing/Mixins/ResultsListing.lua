@@ -105,6 +105,7 @@ function AuctionatorResultsListingMixin:OnShow()
     return
   end
 
+  self:UpdateForHiding()
   self:UpdateTable()
 end
 
@@ -139,6 +140,11 @@ function AuctionatorResultsListingMixin:InitializeTable()
 
         self.dataProvider:SetPresetSort(sortKey, sortDirection)
         self.dataProvider:Sort(sortKey, sortDirection)
+      end,
+      function()
+        self:ClearColumnSorts()
+
+        self.dataProvider:ClearSort()
       end,
       unpack((columnEntry.headerParameters or {}))
     )

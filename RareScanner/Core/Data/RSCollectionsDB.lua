@@ -26,7 +26,7 @@ local RSRoutines = private.ImportLib("RareScannerRoutines")
 -- Manage database
 ---============================================================================
 
-local function ResetEntitiesCollectionsLoot()
+local function ResetEntitiesCollectionsLoot(manualScan)
 	-- If the version didnt change, then there is no need to clear the whole database
 	if (not private.dbglobal.lastCollectionsScanVersion) then
 		private.dbglobal.lastCollectionsScanVersion = {}
@@ -42,6 +42,45 @@ local function ResetEntitiesCollectionsLoot()
 	local _, _, classIndex = UnitClass("player");
 	if (not private.dbglobal.lastCollectionsScanVersion[RSConstants.CURRENT_LOOT_DB_VERSION][classIndex]) then
 		private.dbglobal.lastCollectionsScanVersion[RSConstants.CURRENT_LOOT_DB_VERSION][classIndex] = true
+	end
+	
+	-- Resets common loot and its class missing appearances
+	if (manualScan) then
+		for i, source in pairs (RSConstants.ITEM_SOURCE) do
+			if (private.dbglobal.entity_collections_loot[source]) then
+				for entityID, itemTypes in pairs (private.dbglobal.entity_collections_loot[source]) do
+					for itemType, _ in pairs (private.dbglobal.entity_collections_loot[source][entityID]) do
+						if (itemType ~= RSConstants.ITEM_TYPE.APPEARANCE) then
+							private.dbglobal.entity_collections_loot[source][entityID][itemType] = nil
+						else
+							for classID, _ in pairs (private.dbglobal.entity_collections_loot[source][entityID][itemType]) do
+								if (classID == classIndex) then
+									private.dbglobal.entity_collections_loot[source][entityID][itemType][classIndex] = nil
+								end
+							end
+							
+							if (RSUtils.GetTableLength(private.dbglobal.entity_collections_loot[source][entityID][itemType][classIndex]) == 0) then
+								private.dbglobal.entity_collections_loot[source][entityID][itemType][classIndex] = nil
+							end
+						end
+						
+						if (RSUtils.GetTableLength(private.dbglobal.entity_collections_loot[source][entityID][itemType]) == 0) then
+								private.dbglobal.entity_collections_loot[source][entityID][itemType] = nil
+							end
+					end
+					
+					if (RSUtils.GetTableLength(private.dbglobal.entity_collections_loot[source][entityID]) == 0) then
+						private.dbglobal.entity_collections_loot[source][entityID] = nil
+					end
+				end
+				
+				if (RSUtils.GetTableLength(private.dbglobal.entity_collections_loot[source]) == 0) then
+					private.dbglobal.entity_collections_loot[source] = nil
+				end
+			end
+		end
+		
+	--RSConstants.ITEM_SOURCE.CONTAINER
 	end
 end
 
@@ -186,7 +225,7 @@ function RSCollectionsDB.RemoveNotCollectedToy(itemID, callback) --NEW_TOY_ADDED
 									elseif (source == RSConstants.ITEM_SOURCE.CONTAINER) then
 										RSConfigDB.SetContainerFiltered(entityID, false)
 										RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedToy[%s]: Filtrado Contenedor [%s] por no disponer de mas coleccionables.", itemID, entityID))
-										if (RSContainerDB.GetContainerNamee(entityID)) then
+										if (RSContainerDB.GetContainerName(entityID)) then
 											RSLogger:PrintMessage(AL["EXPLORER_AUTOFILTER"], RSContainerDB.GetContainerName(entityID))
 										end
 									end
@@ -345,7 +384,7 @@ function RSCollectionsDB.RemoveNotCollectedPet(petGUID, callback) --NEW_PET_ADDE
 									elseif (source == RSConstants.ITEM_SOURCE.CONTAINER) then
 										RSConfigDB.SetContainerFiltered(entityID, false)
 										RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedPet[%s]: Filtrado Contenedor [%s] por no disponer de mas coleccionables.", petGUID, entityID))
-										if (RSContainerDB.GetContainerNamee(entityID)) then
+										if (RSContainerDB.GetContainerName(entityID)) then
 											RSLogger:PrintMessage(AL["EXPLORER_AUTOFILTER"], RSContainerDB.GetContainerName(entityID))
 										end
 									end
@@ -471,7 +510,7 @@ function RSCollectionsDB.RemoveNotCollectedMount(mountID, callback) --NEW_MOUNT_
 				local lootList = RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID][RSConstants.ITEM_TYPE.MOUNT]
 				if (lootList) then
 					for i = #lootList, 1, -1 do
-						if (lootList[i] == GetMountItemID(mountID)) then
+						if (RSUtils.Contains(GetMountItemID(mountID), lootList[i])) then
 							if (table.getn(lootList) == 1) then
 								RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID][RSConstants.ITEM_TYPE.MOUNT] = nil
 							else
@@ -494,7 +533,7 @@ function RSCollectionsDB.RemoveNotCollectedMount(mountID, callback) --NEW_MOUNT_
 									elseif (source == RSConstants.ITEM_SOURCE.CONTAINER) then
 										RSConfigDB.SetContainerFiltered(entityID, false)
 										RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedMount[%s]: Filtrado Contenedor [%s] por no disponer de mas coleccionables.", mountID, entityID))
-										if (RSContainerDB.GetContainerNamee(entityID)) then
+										if (RSContainerDB.GetContainerName(entityID)) then
 											RSLogger:PrintMessage(AL["EXPLORER_AUTOFILTER"], RSContainerDB.GetContainerName(entityID))
 										end
 									end
@@ -577,8 +616,29 @@ local function UpdateNotCollectedAppearanceItemIDs(routines, routineTextOutput)
 	end
 end
 
-local function GetNotCollecteAppearanceItemIDs()
+local function GetNotCollectedAppearanceItemIDs()
 	return private.dbchar.not_colleted_appearances_item_ids
+end
+
+local function DropNotCollectedAppearance(appearanceID)
+	if (private.dbglobal.appearances_item_id and appearanceID and private.dbglobal.appearances_item_id[appearanceID]) then
+		if (GetNotCollectedAppearanceItemIDs()) then
+			local itemIDs = private.dbglobal.appearances_item_id[appearanceID]
+			for _, itemID in ipairs (itemIDs) do
+				if (GetNotCollectedAppearanceItemIDs()[itemID]) then
+					RSLogger:PrintDebugMessage(string.format("DropNotCollectedAppearance[%s]. Eliminado item [%s].", appearanceID, itemID))
+					GetNotCollectedAppearanceItemIDs()[itemID] = nil
+				end
+			end
+		end
+
+		private.dbglobal.appearances_item_id[appearanceID] = nil
+		RSLogger:PrintDebugMessage(string.format("DropNotCollectedAppearance[%s]. Eliminada apariencia.", appearanceID))
+		
+		return true
+	end
+	
+	return false
 end
 
 local function CheckUpdateAppearance(itemID, entityID, source, checkedItems)
@@ -589,7 +649,7 @@ local function CheckUpdateAppearance(itemID, entityID, source, checkedItems)
 		return true
 	-- Otherwise query
 	else				
-		if (GetNotCollecteAppearanceItemIDs()[itemID]) then
+		if (GetNotCollectedAppearanceItemIDs() and GetNotCollectedAppearanceItemIDs()[itemID]) then
 			UpdateEntityCollection(itemID, entityID, source, RSConstants.ITEM_TYPE.APPEARANCE)
 			
 			if (not checkedItems[RSConstants.ITEM_TYPE.APPEARANCE][itemID]) then
@@ -603,66 +663,88 @@ local function CheckUpdateAppearance(itemID, entityID, source, checkedItems)
 	end
 end
 
+function RSCollectionsDB.IsNotcollectedAppearance(itemID)
+	if (not GetNotCollectedAppearanceItemIDs()) then
+		return nil
+	end
+	
+	if (GetNotCollectedAppearanceItemIDs()[itemID]) then
+		return true
+	end
+	
+	return false
+end
+
 function RSCollectionsDB.RemoveNotCollectedAppearance(appearanceID, callback) --TRANSMOG_COLLECTION_UPDATED
 	if (appearanceID and GetAppearanceItemIDs(appearanceID) and table.getn(GetAppearanceItemIDs(appearanceID)) ~= nil) then	
 		RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedAppearance[%s]", appearanceID))
-			
+		
+		local routines = {}
+	
 		-- Update filters
 		for source, info in pairs (RSCollectionsDB.GetAllEntitiesCollectionsLoot()) do
-			for entityID, itemTypes in pairs (RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source]) do
-				local classIndexes = RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID][RSConstants.ITEM_TYPE.APPEARANCE]
-				if (classIndexes) then
-					for classIndex, lootList in pairs (classIndexes) do
-						for i = #lootList, 1, -1 do
-							if (RSUtils.Contains(GetAppearanceItemIDs(appearanceID), lootList[i])) then
-								if (table.getn(lootList) == 1) then
-									RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID][RSConstants.ITEM_TYPE.APPEARANCE][classIndex] = nil
-								else
-									RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedAppearance[%s]: Eliminado coleccionable de la lista de la entidad [%s].", appearanceID, entityID))
-									table.remove(lootList, i)
-								end
-								
-								-- Check if the entity doesn't have more collections for other classes
-								if (RSUtils.GetTableLength(RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID][RSConstants.ITEM_TYPE.APPEARANCE]) == 0) then
-									RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID][RSConstants.ITEM_TYPE.APPEARANCE] = nil
-								end
-								
-								-- Check if the entity doesn't have more collections
-								if (RSUtils.GetTableLength(RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID]) == 0) then
-									RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID] = nil
+			local removeNotCollectedAppearanceRoutine = RSRoutines.LoopRoutineNew()
+			removeNotCollectedAppearanceRoutine:Init(function() return RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source] end, 20,
+				function(context, entityID, _)
+					local classIndexes = RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID][RSConstants.ITEM_TYPE.APPEARANCE]
+					if (classIndexes) then
+						for classIndex, lootList in pairs (classIndexes) do
+							for i = #lootList, 1, -1 do
+								if (RSUtils.Contains(GetAppearanceItemIDs(appearanceID), lootList[i])) then
+									if (table.getn(lootList) == 1) then
+										RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID][RSConstants.ITEM_TYPE.APPEARANCE][classIndex] = nil
+									else
+										RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedAppearance[%s]: Eliminado coleccionable de la lista de la entidad [%s].", appearanceID, entityID))
+										table.remove(lootList, i)
+									end
 									
-									-- Filter
-									if (RSConfigDB.IsAutoFilteringOnCollect()) then
-										if (source == RSConstants.ITEM_SOURCE.NPC) then
-											RSConfigDB.SetNpcFiltered(entityID, false)
-											RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedAppearance[%s]: Filtrado NPC [%s] por no disponer de mas coleccionables.", appearanceID, entityID))
-											if (RSNpcDB.GetNpcName(entityID)) then
-												RSLogger:PrintMessage(AL["EXPLORER_AUTOFILTER"], RSNpcDB.GetNpcName(entityID))
-											end
-										elseif (source == RSConstants.ITEM_SOURCE.CONTAINER) then
-											RSConfigDB.SetContainerFiltered(entityID, false)
-											RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedAppearance[%s]: Filtrado Contenedor [%s] por no disponer de mas coleccionables.", appearanceID, entityID))
-											if (RSContainerDB.GetContainerNamee(entityID)) then
-												RSLogger:PrintMessage(AL["EXPLORER_AUTOFILTER"], RSContainerDB.GetContainerName(entityID))
+									-- Check if the entity doesn't have more collections for other classes
+									if (RSUtils.GetTableLength(RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID][RSConstants.ITEM_TYPE.APPEARANCE]) == 0) then
+										RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID][RSConstants.ITEM_TYPE.APPEARANCE] = nil
+									end
+									
+									-- Check if the entity doesn't have more collections
+									if (RSUtils.GetTableLength(RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID]) == 0) then
+										RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID] = nil
+										
+										-- Filter
+										if (RSConfigDB.IsAutoFilteringOnCollect()) then
+											if (source == RSConstants.ITEM_SOURCE.NPC) then
+												RSConfigDB.SetNpcFiltered(entityID, false)
+												RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedAppearance[%s]: Filtrado NPC [%s] por no disponer de mas coleccionables.", appearanceID, entityID))
+												if (RSNpcDB.GetNpcName(entityID)) then
+													RSLogger:PrintMessage(AL["EXPLORER_AUTOFILTER"], RSNpcDB.GetNpcName(entityID))
+												end
+											elseif (source == RSConstants.ITEM_SOURCE.CONTAINER) then
+												RSConfigDB.SetContainerFiltered(entityID, false)
+												RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedAppearance[%s]: Filtrado Contenedor [%s] por no disponer de mas coleccionables.", appearanceID, entityID))
+												if (RSContainerDB.GetContainerName(entityID)) then
+													RSLogger:PrintMessage(AL["EXPLORER_AUTOFILTER"], RSContainerDB.GetContainerName(entityID))
+												end
 											end
 										end
 									end
+									
+									break
 								end
-								
-								if (callback) then
-									callback()
-								end
-								
-								break
 							end
 						end
 					end
-				end
-			end
+				end,
+				function(context) end
+			)
+			tinsert(routines, removeNotCollectedAppearanceRoutine)
 		end
 		
-		-- Drop missing appearance
-		private.dbglobal.appearances_item_id[appearanceID] = nil
+		local chainRoutines = RSRoutines.ChainLoopRoutineNew()
+		chainRoutines:Init(routines)
+		chainRoutines:Run(function(context)
+			-- Drops not collected appearance
+			local dropped = DropNotCollectedAppearance(appearanceID)
+			if (dropped and callback) then
+				callback()
+			end
+		end)
     end
 end
 
@@ -717,9 +799,9 @@ local function CheckUpdateCollectibles(checkedItems, getter, source, routines, r
 	table.insert(routines, checkUpdateCollectiblesRoutine)
 end
 
-local function UpdateEntitiesCollections(callback, routineTextOutput)
+local function UpdateEntitiesCollections(callback, routineTextOutput, manualScan)
 	-- Reset outdated data
-	ResetEntitiesCollectionsLoot()
+	ResetEntitiesCollectionsLoot(manualScan)
 	
 	local checkedItems = {}
 	checkedItems[RSConstants.ITEM_TYPE.APPEARANCE] = {}
@@ -749,7 +831,7 @@ local function UpdateEntitiesCollections(callback, routineTextOutput)
 end
 
 local loaded = false
-local function LoadNotCollectedItems(callback, routineTextOutput)
+local function LoadNotCollectedItems(callback, routineTextOutput, manualScan)
 	RSLogger:PrintMessage(AL["LOG_FETCHING_COLLECTIONS"])
 	
 	-- Prepare not collected queries routines
@@ -766,7 +848,7 @@ local function LoadNotCollectedItems(callback, routineTextOutput)
 		loaded = true
 		RSLogger:PrintMessage(AL["LOG_DONE"])
 		RSLogger:PrintMessage(AL["LOG_FILTERING_ENTITIES"])
-		UpdateEntitiesCollections(callback, routineTextOutput)
+		UpdateEntitiesCollections(callback, routineTextOutput, manualScan)
 	end)
 end
 
@@ -781,12 +863,12 @@ local function FindProfile(name)
 	return false
 end
 
-function RSCollectionsDB.ApplyCollectionsEntitiesFilters(callback, routineTextOutput)	
+function RSCollectionsDB.ApplyCollectionsEntitiesFilters(callback, routineTextOutput, manualScan)	
 	-- Loads all not collected items if not done in this session --
 	if (not loaded) then
-		LoadNotCollectedItems(callback, routineTextOutput)
+		LoadNotCollectedItems(callback, routineTextOutput, manualScan)
 	else
-		UpdateEntitiesCollections(callback, routineTextOutput)
+		UpdateEntitiesCollections(callback, routineTextOutput, manualScan)
 	end
 end
 

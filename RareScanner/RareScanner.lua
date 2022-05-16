@@ -35,10 +35,12 @@ local RSRoutines = private.ImportLib("RareScannerRoutines")
 -- RareScanner services
 local RSRespawnTracker = private.ImportLib("RareScannerRespawnTracker")
 local RSNotificationTracker = private.ImportLib("RareScannerNotificationTracker")
+local RSRecentlySeenTracker = private.ImportLib("RareScannerRecentlySeenTracker")
 local RSMap = private.ImportLib("RareScannerMap")
 local RSMinimap = private.ImportLib("RareScannerMinimap")
 local RSWaypoints = private.ImportLib("RareScannerWaypoints")
 local RSLoot = private.ImportLib("RareScannerLoot")
+local RSAudioAlerts = private.ImportLib("RareScannerAudioAlerts")
 
 -- RareScanner other addons integration services
 local RSTomtom = private.ImportLib("RareScannerTomtom")
@@ -51,7 +53,14 @@ scanner_button:SetFrameStrata("MEDIUM")
 scanner_button:SetFrameLevel(200)
 scanner_button:SetSize(200, 50)
 scanner_button:SetScale(0.8)
-scanner_button:SetAttribute("type", "macro")
+scanner_button:RegisterForClicks("RightButtonUp", "LeftButtonUp")
+scanner_button:SetAttribute("*type1", "macro")
+scanner_button:SetAttribute("*type2", "closebutton")
+scanner_button.closebutton = function(self)
+	if (not InCombatLockdown()) then
+		self.CloseButton:Click()
+	end
+end
 scanner_button:SetNormalTexture([[Interface\AchievementFrame\UI-Achievement-Parchment-Horizontal-Desaturated]])
 scanner_button:SetBackdrop({ tile = true, edgeSize = 16, edgeFile = [[Interface\Tooltips\UI-Tooltip-Border]] })
 scanner_button:SetBackdropBorderColor(0, 0, 0)
@@ -561,22 +570,23 @@ scanner_button:SetScript("OnEvent", function(self, event, ...)
 
 				-- If the loot comes from a container that we support
 				if (npcType == "GameObject") then
-					RSLogger:PrintDebugMessage(string.format("Abierto [%s].", id or ""))
 					local containerID = id and tonumber(id) or nil
 
 					-- We support all the containers with vignette plus those ones that are part of achievements (without vignette)
 					if (RSGeneralDB.GetAlreadyFoundEntity(containerID) or RSContainerDB.GetInternalContainerInfo(containerID)) then
-						-- Check if we have the Container in our database but the addon didnt detect it
-						-- This will happend in the case where the container doesnt have a vignette
-						if (not RSGeneralDB.GetAlreadyFoundEntity(containerID)) then
-							RSGeneralDB.AddAlreadyFoundContainerWithoutVignette(containerID)
-						else
-							RSGeneralDB.UpdateAlreadyFoundEntityPlayerPosition(containerID)
-						end
-
 						-- Sets the container as opened
 						-- We are looping through all the items looted, we dont want to call this method with every item
 						if (not containerLooted) then
+							RSLogger:PrintDebugMessage(string.format("Abierto [%s].", containerID or ""))
+					
+							-- Check if we have the Container in our database but the addon didnt detect it
+							-- This will happend in the case where the container doesnt have a vignette
+							if (not RSGeneralDB.GetAlreadyFoundEntity(containerID)) then
+								RSGeneralDB.AddAlreadyFoundContainerWithoutVignette(containerID)
+							else
+								RSGeneralDB.UpdateAlreadyFoundEntityPlayerPosition(containerID)
+							end
+						
 							RareScanner:ProcessOpenContainer(containerID)
 							containerLooted = true
 						end
@@ -594,7 +604,7 @@ scanner_button:SetScript("OnEvent", function(self, event, ...)
 					-- If the loot comes from a creature that we support
 				elseif (npcType == "Creature") then
 					local npcID = id and tonumber(id) or nil
-
+					
 					-- If its a supported NPC
 					if (RSGeneralDB.GetAlreadyFoundEntity(npcID)) then
 						local itemLink = GetLootSlotLink(i)
@@ -849,7 +859,7 @@ function RareScanner:ProcessKillByZone(npcID, mapID, forzed)
 						if (C_QuestLog.IsQuestFlaggedCompleted(questID)) then
 							RSNpcDB.SetNpcKilled(internalNpcID, RSNpcDB.GetNpcKilledRespawnTime(npcID))
 							RSLogger:PrintDebugMessage(string.format("NPC [%s]. Deja de ser un rare NPC por compartir mision con otro rare NPC muerto [%s]", internalNpcID, npcID))
-							RSGeneralDB.DeleteRecentlySeen(internalNpcID)
+							RSRecentlySeenTracker.RemoveRecentlySeen(internalNpcID)
 						end
 					end
 				end
@@ -857,7 +867,7 @@ function RareScanner:ProcessKillByZone(npcID, mapID, forzed)
 		end)
 	end
 
-	RSGeneralDB.DeleteRecentlySeen(npcID)
+	RSRecentlySeenTracker.RemoveRecentlySeen(npcID)
 end
 
 function RareScanner:ProcessOpenContainer(containerID, forzed)
@@ -1002,7 +1012,7 @@ function RareScanner:ProcessOpenContainerByZone(containerID, mapID, forzed)
 						if (C_QuestLog.IsQuestFlaggedCompleted(questID)) then
 							RSContainerDB.SetContainerOpened(internalContainerID, RSContainerDB.GetContainerOpenedRespawnTime(containerID))
 							RSLogger:PrintDebugMessage(string.format("Contenedor [%s]. El contenedor ahora está cerrado por compartir questID con otro contenedor cerrado [%s]", internalContainerID, containerID))
-							RSGeneralDB.DeleteRecentlySeen(internalContainerID)
+							RSRecentlySeenTracker.RemoveRecentlySeen(internalContainerID)
 						end
 					end
 				end
@@ -1010,7 +1020,7 @@ function RareScanner:ProcessOpenContainerByZone(containerID, mapID, forzed)
 		end)
 	end
 
-	RSGeneralDB.DeleteRecentlySeen(containerID)
+	RSRecentlySeenTracker.RemoveRecentlySeen(containerID)
 end
 
 function RareScanner:ProcessCompletedEvent(eventID, forzed)
@@ -1075,7 +1085,7 @@ function RareScanner:ProcessCompletedEvent(eventID, forzed)
 		end
 	end
 
-	RSGeneralDB.DeleteRecentlySeen(eventID)
+	RSRecentlySeenTracker.RemoveRecentlySeen(eventID)
 
 	-- Refresh minimap
 	if (not forzed) then
@@ -1116,13 +1126,14 @@ function scanner_button:DetectedNewVignette(self, vignetteInfo, isNavigating)
 	if (RSConstants.CONTAINERS_WITH_PRE_EVENT[entityID]) then
 		local containerID = RSConstants.CONTAINERS_WITH_PRE_EVENT[entityID]
 		RSGeneralDB.RemoveAlreadyFoundEntity(entityID)
+		vignetteInfo.name = RSContainerDB.GetContainerName(entityID)
 		vignetteInfo.atlasName = RSConstants.CONTAINER_VIGNETTE
 		entityID = containerID
 		vignetteInfo.preEvent = true
 	end
 
 	-- Check it it is an entity that use a vignette but it isn't a rare, event or treasure
-	if (RSUtils.Contains(RSConstants.INGNORED_VIGNETTES, entityID)) then
+	if (RSUtils.Contains(RSConstants.IGNORED_VIGNETTES, entityID)) then
 		return
 	end
 
@@ -1268,7 +1279,7 @@ function scanner_button:DetectedNewVignette(self, vignetteInfo, isNavigating)
 
 		-- disable button alert for containers
 		if (not RSConfigDB.IsButtonDisplayingForContainers()) then
-			RSGeneralDB.SetRecentlySeen(entityID)
+			RSRecentlySeenTracker.AddRecentlySeen(entityID, vignetteInfo.atlasName, false)
 
 			-- If navigation disabled, control Tomtom waypoint externally
 			if (not RSConfigDB.IsDisplayingNavigationArrows()) then
@@ -1282,7 +1293,7 @@ function scanner_button:DetectedNewVignette(self, vignetteInfo, isNavigating)
 			else
 				RSNotificationTracker.AddNotification(vignetteInfo.id, false, entityID)
 				FlashClientIcon()
-				self:PlaySoundAlert(vignetteInfo.atlasName)
+				RSAudioAlerts.PlaySoundAlert(vignetteInfo.atlasName)
 				self:DisplayMessages(vignetteInfo.preEvent and string.format(AL["PRE_EVENT"], vignetteInfo.name) or vignetteInfo.name)
 				return
 			end
@@ -1304,7 +1315,7 @@ function scanner_button:DetectedNewVignette(self, vignetteInfo, isNavigating)
 	if (not isNavigating) then
 		FlashClientIcon()
 		self:DisplayMessages(vignetteInfo.preEvent and string.format(AL["PRE_EVENT"], vignetteInfo.name) or vignetteInfo.name)
-		self:PlaySoundAlert(vignetteInfo.atlasName)
+		RSAudioAlerts.PlaySoundAlert(vignetteInfo.atlasName)
 	end
 
 	------------------------
@@ -1361,9 +1372,8 @@ function scanner_button:DetectedNewVignette(self, vignetteInfo, isNavigating)
 		RSWaypoints.AddWaypointFromVignette(vignetteInfo)
 	end
 
-	if (not isNavigating) then
-		RSGeneralDB.SetRecentlySeen(entityID)
-	end
+	-- Add recently seen
+	RSRecentlySeenTracker.AddRecentlySeen(entityID, vignetteInfo.atlasName, isNavigating)
 
 	-- Refresh minimap
 	RSMinimap.RefreshAllData(true)
@@ -1440,22 +1450,6 @@ function RareScanner:UpdateRareFound(entityID, vignetteInfo, coordinates)
 		-- Adds if its the first time found
 	else
 		RSGeneralDB.AddAlreadyFoundEntity(entityID, mapID, vignettePosition.x, vignettePosition.y, artID, atlasName)
-	end
-end
-
-function scanner_button:PlaySoundAlert(atlasName)
-	if (not RSConfigDB.IsPlayingObjectsSound() and (RSConstants.IsContainerAtlas(atlasName) or RSConstants.IsEventAtlas(atlasName))) then
-		if (RSConfigDB.GetCustomSound(RSConfigDB.GetSoundPlayedWithObjects())) then
-			PlaySoundFile(string.format(RSConstants.EXTERNAL_SOUND_FOLDER, RSConfigDB.GetCustomSoundsFolder(), RSConfigDB.GetCustomSound(RSConfigDB.GetSoundPlayedWithObjects())), RSConfigDB.GetSoundChannel())
-		else
-			PlaySoundFile(string.gsub(RSConstants.DEFAULT_SOUNDS[RSConfigDB.GetSoundPlayedWithObjects()], "-4", "-"..RSConfigDB.GetSoundVolume()), RSConfigDB.GetSoundChannel())
-		end
-	elseif (not RSConfigDB.IsPlayingSound() and RSConstants.IsNpcAtlas(atlasName)) then
-		if (RSConfigDB.GetCustomSound(RSConfigDB.GetSoundPlayedWithNpcs())) then
-			PlaySoundFile(string.format(RSConstants.EXTERNAL_SOUND_FOLDER, RSConfigDB.GetCustomSoundsFolder(), RSConfigDB.GetCustomSound(RSConfigDB.GetSoundPlayedWithNpcs())), RSConfigDB.GetSoundChannel())
-		else
-			PlaySoundFile(string.gsub(RSConstants.DEFAULT_SOUNDS[RSConfigDB.GetSoundPlayedWithNpcs()], "-4", "-"..RSConfigDB.GetSoundVolume()), RSConfigDB.GetSoundChannel())
-		end
 	end
 end
 
@@ -1593,7 +1587,7 @@ function RareScanner:Test()
 	scanner_button.atlasName = RSConstants.NPC_VIGNETTE
 	scanner_button.Title:SetText(npcTestName)
 	scanner_button:DisplayMessages(npcTestName)
-	scanner_button:PlaySoundAlert(RSConstants.NPC_VIGNETTE)
+	RSAudioAlerts.PlaySoundAlert(RSConstants.NPC_VIGNETTE)
 	scanner_button.Description_text:SetText(AL["CLICK_TARGET"])
 
 	if (not InCombatLockdown()) then
@@ -1941,6 +1935,11 @@ local function UpdateRareNamesDB()
 			end
 			for preEntityID, _ in pairs (RSConstants.CONTAINERS_WITH_PRE_EVENT) do
 				RSGeneralDB.RemoveAlreadyFoundEntity(preEntityID)
+			end
+			
+			-- Remove ignored entities
+			for _, entityID in ipairs (RSConstants.IGNORED_VIGNETTES) do
+				RSGeneralDB.RemoveAlreadyFoundEntity(entityID)
 			end
 			
 			-- Continue refreshing the rest of the database

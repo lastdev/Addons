@@ -2,6 +2,33 @@ local myname, ns = ...
 
 local path = ns.path
 
+local husk = {
+    -- these are shared with Hunter Vivianna, but they're BoE high-AH items, so...
+    label=false, -- Decayed Husk
+    loot={
+        179593, -- Darkreach Mask
+        179594, -- Witherscorn Guise
+    },
+    _uiMapID=1565,
+    _coord=0,
+}
+ns.VignetteIDsToPoints[4217] = husk
+ns.VignetteIDsToPoints[4218] = husk
+ns.VignetteIDsToPoints[4219] = husk
+ns.VignetteIDsToPoints[4220] = husk
+ns.VignetteIDsToPoints[4221] = husk
+ns.VignetteIDsToPoints[4554] = husk -- actually Darkreach Supplies
+
+ns.RegisterPoints(1565, {
+    [54107640] = path{ -- Decayed Husk entrance
+        quest=60710,
+        requires=ns.conditions.Vignette(4221),
+        routes={{54107640, 53237843}},
+    },
+})
+
+-- Achievement treasures
+
 ns.RegisterPoints(1565, { -- Ardenweald
     [55902100] = {
         achievement=14313, criteria=50031, -- Aerto's Body
@@ -34,8 +61,8 @@ ns.RegisterPoints(1565, { -- Ardenweald
             {182729, toy=true}, -- Hearty Dragon Plume
         },
         note="Up in a tree; go to the slow-fall feather above the waterfall at 48.9 41.1",
+        path={48964106, atlas="poi-door-arrow-up", note="Slow-fall feather to reach the treasure"},
     },
-    [48964106] = ns.path{achievement=14313, criteria=50037, quest=61067,atlas="poi-door-arrow-up",note="Slow-fall feather to reach the treasure"},
     [63903750] = {
         achievement=14313, criteria=50039, -- Cache of the Moon
         quest=61074, -- also 61126 for having turned in the tools
@@ -77,9 +104,8 @@ ns.RegisterPoints(1565, { -- Ardenweald
             179594, -- Witherscorn Guise
         },
         note="Use the jumping mushroom on the cliff above at 37.7 61.5",
-        route={37706150, 36106520},
+        path=37706150,
     },
-    [37706150] = path{achievement=14313, criteria=50045, quest=61068, route=36106520,},
     [48202030] = {
         achievement=14313, criteria=50032, -- Lost Satchel
         quest=62187,
@@ -91,7 +117,8 @@ ns.RegisterPoints(1565, { -- Ardenweald
     },
     [76602970] = {
         achievement=14313, criteria=50034, -- Swollen Anima Seed
-        quest=58013,
+        quest=62186,
+        inbag=182730,
         loot={
             {182730, quest=62186}, -- Swollen Anima Seed
         },
@@ -142,12 +169,12 @@ ns.RegisterPoints(1565, { -- Ardenweald
 
 local vulpin = {
     achievement=14313, criteria=50038, -- Playful Vulpin Befriended
-    quest=61086, -- also 61080, 61081, 61084, 61085 for progress
+    quest=61086, -- also 61080, 61081, 61084, 61085 for progress (61078 also triggers)
     progress={61080, 61081, 61084, 61085, 61086},
     loot={
         {180645, pet=2905}, -- Dodger
     },
-    note="Find {npc:171206:Playful Vulpin} and play with them 5 times to obtain the treasure. Use emotes related to what they're doing",
+    note="Find {npc:171206:Playful Vulpin} and play with them 5 times to obtain the treasure. Use emotes related to what they're doing, in order: /curious, /sit, /sing, /dance, /pet.",
     atlas="honorsystem-icon-bonus", scale=1,
     minimap=true,
     group="Playful Vulpin",
@@ -169,6 +196,29 @@ ns.RegisterPoints(1565, {
     [72393146] = vulpin,
 })
 
+ns.RegisterPoints(1565, { -- Ardenweald
+    [51836923] = {},
+    [60005513] = {},
+    [65083646] = {},
+    [51213104] = {},
+    [37593625] = {},
+    [69852732] = {},
+}, {
+    quest=64961,
+    loot={
+        {187819, quest=64961, covenant=Enum.CovenantType.NightFae}, -- Cat Soul
+    },
+    note="/soothe the {npc:181694:Lost Soul}, at the very top of one of the great trees",
+    covenant=Enum.CovenantType.NightFae,
+    atlas="sanctumupgrades-nightfae-32x32",
+    minimap=true,
+    group="soulshape",
+})
+-- other soulshapes:
+-- In Heart of the Forest
+-- Corgi: /pet Sparkle (64938)
+-- Squirrel: Ask Choofa (64939)
+
 -- Non-achievement treasures
 ns.RegisterPoints(1565, { -- Ardenweald
     [26285897] = {
@@ -189,14 +239,26 @@ ns.RegisterPoints(1565, { -- Ardenweald
 
 -- Fractured Fairy Tales
 
-local meandering = {criteria=50012,onquest=62619,inbag=183877,loot={{183877,quest=62619}},}
+local meandering = ns.nodeMaker{
+    criteria=50012,onquest=62619,inbag=183877,loot={{183877,quest=62619}},
+}
 local wandering = {criteria=50013,onquest=62620,inbag=183878,loot={{183878,quest=62620}},}
 local escapist = {criteria=50014,onquest=62621,inbag=183879,loot={{183879,quest=62621}},}
 local travel = {criteria=50015,onquest=62622,inbag=183880,loot={{183880,quest=62622}},}
 local naughty = {criteria=50016,onquest=62623,inbag=183881,loot={{183881,quest=62623}},}
 ns.RegisterPoints(1565, {
-    [63602275] = {atlas="Campaign-QuestLog-LoreBook-Back",label="{npc:165867}",note="Bring books to him",group="faerietales",},
-    [54604300] = meandering,
+    [63602275] = {atlas="Campaign-QuestLog-LoreBook-Back",label="{npc:165867}",note="Bring books to him",criteria=true},
+    [54604300] = meandering{
+        routes={
+            {54604300, 53004450, 51604490, 51004580, 50004560},
+            {54604300, 53904260, 53504170, 52204080, 50903970, 50703860, 51503680},
+            {54604300, 55004100, 56503980, 57103960, 57803820, 59003720, 57603590, 56403400, 55603390},
+            {59003720, 59303700, 60303700, 60303630},
+        },
+    },
+    [51405040] = meandering{
+        route={51405040, 52405140, 53605100, 55005360, 56805240},
+    },
     [30004480] = wandering,
     [35602680] = wandering,
     [36104870] = wandering, -- (36404800 is more accurate, but overlaps Macabre)
@@ -219,7 +281,6 @@ ns.RegisterPoints(1565, {
     atlas="Campaign-QuestLog-LoreBook",
     minimap=true,
     level=60,
-    group="faerietales",
 })
 
 -- ns.RegisterPoints(1565, {
@@ -237,6 +298,51 @@ ns.RegisterPoints(1565, {
     --     note="Stand on the 5 nearby buds first",
     -- },
 -- })
+
+ns.RegisterPoints(1565, {
+    -- These wind up being in columns by set-of-points, but I don't have a
+    -- good way to trigger filtering it down after you complete one. I could
+    -- change this so that each set is a distinct color, rather than each
+    -- quest? Not sure which is more understandable to the user.
+    [-49943207] = {
+        quest=61696,
+        nearby={53093300, 52263243, 52513374, 52903321, 52463341,
+            color={r=1,g=0,b=0},
+            label="{npc:173005:Lunarlight Bud}"},
+    },
+    [-50593357] = {
+        quest=61695,
+        nearby={52333168, 51883147, 51803235, 52003200, 51983092,
+            color={r=0,g=1,b=0},
+            label="{npc:173006:Lunarlight Bud}"},
+    },
+    [-50593358] = {
+        quest=61693,
+        nearby={50593358, 50373296, 50863301, 50323272, 50043325,
+            color={r=0,g=0.5,b=1},
+            label="{npc:173009:Lunarlight Bud}"},
+            -- 50593358 was 173008, but the quest was this one
+    },
+    [-51813384] = {
+        quest=61694,
+        nearby={51813384, 51473408, 51433329, 51893337, 51003439,
+            color={r=1,g=1,b=0},
+            label="{npc:173008:Lunarlight Bud}"},
+            -- 51813384 was 173009, but the quest was this one
+    },
+    [-51023226] = {
+        quest=61692,
+        nearby={51023226, 50533181, 51183249, 49943207, 50253164,
+            color={r=0.5,g=0,b=1},
+            label="{npc:173010:Lunarlight Bud}"},
+    },
+}, {
+    quest=61691,
+    label="Large Lunarlight Pod",
+    poi={{1565, 6908}},
+    worldmap=false,
+    minimap=false,
+})
 
 -- Rares
 ns.RegisterPoints(1565, {
@@ -283,8 +389,8 @@ ns.RegisterPoints(1565, {
             180144, -- Faeflayer's Hatchet
         },
         note="Hidden behind the waterfall",
+        path=70403060,
     },
-    [70403060] = path{achievement=14309, criteria=48798, quest=61184,},
     [54057600] = { -- Gormbore
         achievement=14309, criteria=48795,
         quest=59006,
@@ -412,6 +518,7 @@ ns.RegisterPoints(1565, {
         achievement=14309, criteria=48796,
         quest=61632,
         npc=168647,
+        areaPoi=6910, -- Sparkling Animaseed
         loot={
             {180730, mount=1393, covenant=Enum.CovenantType.NightFae}, -- Wild Glimmerfur Prowler
             180154, -- Greataxe of Unrelenting Pursuit
@@ -422,6 +529,7 @@ ns.RegisterPoints(1565, {
         note="A Night Fae player channeling the Tirna Scithe must:\n"..
             "* Pick up a {spell:338045}\n"..
             "* Use {spell:338045} to remove {spell:338038}",
+        nearby={30455555, label="Sparkling Animaseed"},
     },
     [58306180] = { -- Wrigglemortis
         achievement=14309, criteria=48783,
@@ -434,16 +542,16 @@ ns.RegisterPoints(1565, {
     },
     -- Ardenweald's a Stage:
     [41254445] = {
-        achievement=14353, criteria={
-            48708, -- Argus (quest: 61202)
-            48709, -- Azshara (quest: 61201)
-            48706, -- Gul'dan (quest: 61204)
-            48704, -- Jaina
-            48707, -- Kil'jaeden (quest: 61203)
-            48710, -- N'Zoth
-            48705, -- Xavius
-        },
+        achievement=14353, criteria=true,
         quest=61633, -- this is the overall questid for the event, but each rare has its own quest as well
+        -- Argus (quest: 61202)
+        -- Azshara (quest: 61201)
+        -- Gul'dan (quest: 61204)
+        -- Jaina (quest:61205)
+        -- Kil'jaeden (quest: 61203)
+        -- N'Zoth (quest: 61206)
+        -- Xavius (quest: 61207)
+        areaPoi=6909, -- Dapperdew
         loot={
             179534, -- Mikai's Deathscythe (Argus)
             179518, -- Glimmerlight Staff (Azshara)
@@ -453,9 +561,10 @@ ns.RegisterPoints(1565, {
             182453, -- Twilight Bloom (N'Zoth)
             182455, -- Dreamers Mending (Xavius)
             -- the vendor sells:
-            {181304, covenant=Enum.CovenantType.NightFae}, -- Winterwoven Branches (night fae only)
-            {182175, covenant=Enum.CovenantType.NightFae}, -- Moose Soul (night fae only)
-            {180748, mount=1332}, -- Silky Shimmermoth
+            {181304, covenant=Enum.CovenantType.NightFae, note="Vendor"}, -- Winterwoven Branches
+            {182175, quest=62430, covenant=Enum.CovenantType.NightFae, note="Vendor"}, -- Moose Soul
+            {187873, quest=64992, covenant=Enum.CovenantType.NightFae, note="Vendor"}, -- Prairie Dog Soul
+            {180748, mount=1332, note="Vendor"}, -- Silky Shimmermoth
         },
         atlas="VignetteLootElite",scale=1.2,
         -- covenant=Enum.CovenantType.NightFae,
@@ -464,6 +573,14 @@ ns.RegisterPoints(1565, {
     [43204710] = {
         label="{npc:163714}",
         note="Buy items unlocked by the Ardenweald's a Stage rares",
+        loot={
+            -- the vendor sells:
+            {181304, covenant=Enum.CovenantType.NightFae}, -- Winterwoven Branches
+            {182175, quest=62430, covenant=Enum.CovenantType.NightFae}, -- Moose Soul
+            {187873, quest=64992, covenant=Enum.CovenantType.NightFae}, -- Prairie Dog Soul
+            {180748, mount=1332}, -- Silky Shimmermoth
+        },
+        active=ns.conditions.QuestComplete(61633),
         atlas="banker",
         minimap=true,
     },
@@ -492,9 +609,9 @@ ns.RegisterPoints(1565, {
         },
         -- requires_item=178675,
         note="* Loot {item:181243} at 19.7 63.5 (may need a glider)\n"..
-            "* Do Night Fae quests through {quest:57871}\n",
-            "* Ask {npc:165704} to repair {item:181243}\n",
-            "* Get {item:178675} from {npc:160262} (talk to the guards if you're not Night Fae)\n",
+            "* Do Night Fae quests through {quest:57871}\n"..
+            "* Ask {npc:165704} to repair {item:181243}\n"..
+            "* Get {item:178675} from {npc:160262} (talk to the guards if you're not Night Fae)\n"..
             "* Use {item:178675} here, and defeat the rare",
     },
     [18056200] = ns.path{

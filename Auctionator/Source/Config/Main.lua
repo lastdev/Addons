@@ -1,5 +1,6 @@
 Auctionator.Config.Options = {
   DEBUG = "debug",
+  NO_PRICE_DATABASE = "no_price_database",
   MAILBOX_TOOLTIPS = "mailbox_tooltips",
   VENDOR_TOOLTIPS = "vendor_tooltips",
   AUCTION_TOOLTIPS = "auction_tooltips",
@@ -36,7 +37,7 @@ Auctionator.Config.Options = {
 
   COLUMNS_SHOPPING = "columns_shopping",
   COLUMNS_SHOPPING_HISTORICAL_PRICES = "columns_shopping_historical_prices",
-  COLUMNS_SELLING_SEARCH = "columns_selling_search",
+  COLUMNS_SELLING_SEARCH = "columns_selling_search_3",
   COLUMNS_HISTORICAL_PRICES = "historical_prices",
   COLUMNS_POSTING_HISTORY = "columns_posting_history",
   COLUMNS_CANCELLING = "columns_cancelling",
@@ -63,6 +64,7 @@ Auctionator.Config.Shortcuts = {
 
 Auctionator.Config.Defaults = {
   [Auctionator.Config.Options.DEBUG] = false,
+  [Auctionator.Config.Options.NO_PRICE_DATABASE] = false,
   [Auctionator.Config.Options.MAILBOX_TOOLTIPS] = true,
   [Auctionator.Config.Options.VENDOR_TOOLTIPS] = true,
   [Auctionator.Config.Options.AUCTION_TOOLTIPS] = true,
@@ -166,7 +168,7 @@ function Auctionator.Config.Reset()
   end
 end
 
-function Auctionator.Config.Initialize()
+function Auctionator.Config.InitializeData()
   if AUCTIONATOR_CONFIG == nil then
     Auctionator.Config.Reset()
   else

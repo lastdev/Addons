@@ -247,6 +247,7 @@ function LiteMountProfileButtonMixin:Attach(parent)
 end
 
 function LiteMountProfileButtonMixin:OnShow()
+    UIDropDownMenu_Initialize(self.DropDown, DropDown_Initialize, "MENU")
     UpdateProfileCallback()
     LM.Options.db.RegisterCallback(self, "OnProfileCopied", UpdateProfileCallback)
     LM.Options.db.RegisterCallback(self, "OnProfileChanged", UpdateProfileCallback)
@@ -258,6 +259,5 @@ function LiteMountProfileButtonMixin:OnHide()
 end
 
 function LiteMountProfileButtonMixin:OnLoad()
-    UIDropDownMenu_Initialize(self.DropDown, DropDown_Initialize, "MENU")
 end
 

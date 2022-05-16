@@ -88,7 +88,6 @@ LM.MOUNTFAMILY["Bee"] = {
 }
 
 LM.MOUNTFAMILY["Bird"] = {
-    [347812] = true, -- Sapphire Skyblazer
     [231524] = true, -- Shadowblade's Baneful Omen
     [231525] = true, -- Shadowblade's Crimson Omen
     [231523] = true, -- Shadowblade's Lethal Omen
@@ -426,6 +425,7 @@ LM.MOUNTFAMILY["Fathom Dweller"] = {
     [223018] = true, -- Fathom Dweller
     [308814] = true, -- Ny'alotha Allseer
     [253711] = true, -- Pond Nettle
+    [359379] = true, -- Shimmering Aurelid
     [278979] = true, -- Surf Jelly
 }
 
@@ -1187,16 +1187,8 @@ LM.MOUNTFAMILY["Talbuk"] = {
     [171829] = true, -- Shadowmane Charger
     [ 39317] = true, -- Silver Riding Talbuk
     [ 34898] = true, -- Silver War Talbuk
+    [171830] = true, -- Swift Breezestrider
     [359277] = true, -- Sundered Zerethsteed
-    [253006] = true, -- Russet Ruinstrider
-    [242305] = true, -- Sable Ruinstrider
-    [171829] = true, -- Shadowmane Charger
-    [ 39317] = true, -- Silver Riding Talbuk
-    [ 34898] = true, -- Silver War Talbuk
-    [171830] = true, -- Swift Breezestrider
-    [ 39318] = true, -- Tan Riding Talbuk
-    [ 34899] = true, -- Tan War Talbuk
-    [171830] = true, -- Swift Breezestrider
     [ 39318] = true, -- Tan Riding Talbuk
     [ 34899] = true, -- Tan War Talbuk
     [165803] = true, -- Telaari Talbuk
@@ -1348,7 +1340,6 @@ LM.MOUNTFAMILY["Wolf"] = {
     [171841] = true, -- Trained Snarler
     [349823] = true, -- Vicious Warstalker (Alliance)
     [349824] = true, -- Vicious Warstalker (Horde)
-    [100333] = true, -- Vicious War Wolf
     [100333] = true, -- Vicious War Wolf
     [171837] = true, -- Warsong Direfang
     [   581] = true, -- Winter Wolf

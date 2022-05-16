@@ -903,6 +903,9 @@ do
         profilePoint = { point = nil, x = 0, y = 0 },
         debugMode = false,
         rwfMode = false, -- NEW in 9.1
+        rwfBackgroundMode = true, -- NEW in 9.2
+        rwfBackgroundRemindAt = 10, -- NEW in 9.2
+        rwfMiniPoint = { point = nil, x = 0, y = 0 }, -- NEW in 9.2
         showMedalsInsteadOfText = false,-- NEW in 9.1.5
     }
 
@@ -3445,6 +3448,7 @@ do
                 if needsMaxDungeonUpgrade then
                     mythicKeystoneProfile[weeklyAffixInternal .. "MaxDungeon"] = DUNGEONS[maxDungeonIndex]
                     mythicKeystoneProfile[weeklyAffixInternal .. "MaxDungeonLevel"] = maxDungeonLevel
+                    mythicKeystoneProfile[weeklyAffixInternal .. "MaxDungeonIndex"] = maxDungeonIndex
                     mythicKeystoneProfile[weeklyAffixInternal .. "MaxDungeonUpgrades"] = maxDungeonUpgrades
                 end
             end
@@ -4508,11 +4512,18 @@ do
         return true
     end
 
+    local function IsReady()
+        return ns.PLAYER_REGION ~= nil -- GetProfile will fail if called too early before the player info is properly loaded so we avoid doing that by safely checking if we're loaded ready
+    end
+
     local pristine = {
         AddProvider = function(...)
             return provider:AddProvider(...)
         end,
         GetProfile = function(arg1, arg2, arg3, ...)
+            if not IsReady() then
+                return
+            end
             local name, realm, faction = arg1, arg2, arg3
             local _, _, unitIsPlayer = util:IsUnit(arg1, arg2)
             if unitIsPlayer then
@@ -4530,6 +4541,9 @@ do
             return provider:GetProfile(name, realm, faction, ...)
         end,
         ShowProfile = function(tooltip, ...)
+            if not IsReady() then
+                return
+            end
             if type(tooltip) ~= "table" or type(tooltip.GetObjectType) ~= "function" or tooltip:GetObjectType() ~= "GameTooltip" then
                 return
             end
@@ -6011,35 +6025,33 @@ do
 end
 
 -- keystonetooltip.lua
--- dependencies: module, config, util, render
+-- dependencies: module, config, render
 do
 
     ---@class KeystoneTooltipModule : Module
     local tooltip = ns:NewModule("KeystoneTooltip") ---@type KeystoneTooltipModule
     local config = ns:GetModule("Config") ---@type ConfigModule
-    local util = ns:GetModule("Util") ---@type UtilModule
     local render = ns:GetModule("Render") ---@type RenderModule
 
-    -- TODO: the item pattern might not detect all the stuff, need to revise the pattern for it as it might have changed in 8.3.0. also any new API maybe to get info from a keystone link?
-    local KEYSTONE_PATTERNS = {
-        "keystone:(%d+):(.-):(.-):(.-):(.-):(.-)",
-        "item:(158923):.-:.-:.-:.-:.-:.-:.-:.-:.-:.-:.-:.-:(.-):(.-):(.-):(.-):(.-):(.-)"
-    }
+    local KEYSTONE_PATTERN = "keystone:(%d+):(.-):(.-):(.-):(.-):(.-):(.-)"
+    local KEYSTONE_ITEM_PATTERN_1 = "item:(187786):.-:.-:.-:.-:.-:.-:.-:.-:.-:.-:.-:.-:(%d+):(%d+):(%d+):(%d+):(%d+):(.-):(.-):(.-):(.-):(.-):(.-):(.-):(.-)"
+    local KEYSTONE_ITEM_PATTERN_2 = "item:(180653):.-:.-:.-:.-:.-:.-:.-:.-:.-:.-:.-:.-:(%d+):(%d+):(%d+):(%d+):(%d+):(.-):(.-):(.-):(.-):(.-):(.-):(.-):(.-)"
 
     ---@type table<table, KeystoneInfo>
     local currentKeystone = {}
 
     local function GetKeystoneInfo(link)
-        for i = 1, #KEYSTONE_PATTERNS do
-            local pattern = KEYSTONE_PATTERNS[i]
-            local item, instance, level, affix1, affix2, affix3, affix4 = link:match(pattern)
-            if item and instance and level then
-                item, instance, level, affix1, affix2, affix3, affix4 = tonumber(item), tonumber(instance), tonumber(level), tonumber(affix1), tonumber(affix2), tonumber(affix3), tonumber(affix4)
-                if item and instance and level then
-                    return item, instance, level, affix1, affix2, affix3, affix4
-                end
-            end
+        local item, instance, level, affix1, affix2, affix3, affix4, _ = link:match(KEYSTONE_PATTERN)
+        if not item then
+            item, _, _, instance, _, level, _, affix1, _, affix2, _, affix3, _, affix4 = link:match(KEYSTONE_ITEM_PATTERN_1)
         end
+        if not item then
+            item, _, _, instance, _, level, _, affix1, _, affix2, _, affix3, _, affix4 = link:match(KEYSTONE_ITEM_PATTERN_2)
+        end
+        if item then
+            item, instance, level, affix1, affix2, affix3, affix4 = tonumber(item), tonumber(instance), tonumber(level), tonumber(affix1), tonumber(affix2), tonumber(affix3), tonumber(affix4)
+        end
+        return item, instance, level, affix1, affix2, affix3, affix4
     end
 
     ---@param keystone KeystoneInfo
@@ -6089,7 +6101,7 @@ do
 end
 
 -- guildweekly.lua
--- dependencies: module, callback, config, util, render
+-- dependencies: module, callback, config, util
 do
 
     ---@class GuildWeeklyModule : Module
@@ -6097,7 +6109,6 @@ do
     local callback = ns:GetModule("Callback") ---@type CallbackModule
     local config = ns:GetModule("Config") ---@type ConfigModule
     local util = ns:GetModule("Util") ---@type UtilModule
-    local render = ns:GetModule("Render") ---@type RenderModule
 
     local CLASS_FILENAME_TO_ID = {
         WARRIOR = 1,
@@ -6967,6 +6978,13 @@ do
         return search:ShowProfile(arg3, nil, arg2, arg1)
     end
 
+    function search:SearchAndShowProfile(region, faction, realm, name)
+        searchRegionBox:SetText(region)
+        searchRealmBox:SetText(realm)
+        searchNameBox:SetText(name)
+        return search:ShowProfile(region, faction, realm, name)
+    end
+
     function search:Toggle()
         if not self:IsEnabled() then
             return
@@ -7151,7 +7169,7 @@ do
         if not shown then
             search:Show()
         end
-        if search:Search(format("%s %s", selectedName, selectedRealm)) then
+        if search:SearchAndShowProfile(ns.PLAYER_REGION, selectedFaction, selectedRealm, selectedName) then
             return true -- indicates we are showing the search dialog and we don't want to show the static popup
         elseif not shown then
             search:Hide()
@@ -7205,23 +7223,25 @@ do
 end
 
 -- rwf.lua (requires rwf mode)
--- dependencies: module, callback, config
+-- dependencies: module, callback, config, util
 do
 
     ---@class RaceWorldFirstModule : Module
     local rwf = ns:NewModule("RaceWorldFirst") ---@type RaceWorldFirstModule
     local callback = ns:GetModule("Callback") ---@type CallbackModule
     local config = ns:GetModule("Config") ---@type ConfigModule
+    local util = ns:GetModule("Util") ---@type UtilModule
 
     local LOCATION = {}
     local LOOT_FRAME
 
     local TRACKING_EVENTS = {
-        "LOOT_READY",
-        "LOOT_HISTORY_FULL_UPDATE",
-        "LOOT_HISTORY_ROLL_COMPLETE",
-        "CHAT_MSG_LOOT",
-        "CHAT_MSG_CURRENCY",
+        -- TODO: disable these loot related events since we currently only support the guild news related loot events
+        -- "LOOT_READY",
+        -- "LOOT_HISTORY_FULL_UPDATE",
+        -- "LOOT_HISTORY_ROLL_COMPLETE",
+        -- "CHAT_MSG_LOOT",
+        -- "CHAT_MSG_CURRENCY",
     }
 
     local HEX_COLOR_QUALITY = {
@@ -7254,7 +7274,7 @@ do
         return linkType, linkArg1, link, linkCount, HEX_COLOR_QUALITY[linkHexColor]
     end
 
-    -- Sanctum of Domination (Mythic)
+    -- Sepulcher of the First Ones
     local LOG_FILTER = {
         GUILD_NEWS = "item:.-:1:28:216[5678]:",
         ITEM_LEVEL = 252,
@@ -7310,7 +7330,31 @@ do
     end
 
     ---@class RWFLootEntry
+    ---@field public guildName string
+    ---@field public guildRealm string
+    ---@field public guildRegion string
+    ---@field public type number
+    ---@field public isNew boolean
+    ---@field public timestamp number
+    ---@field public isUpdated boolean
+    ---@field public itemLevel number
+    ---@field public id number
+    ---@field public itemType string
+    ---@field public itemSubType string
+    ---@field public itemEquipLoc string
+    ---@field public itemIcon number
+    ---@field public itemClassID number
+    ---@field public itemSubClassID number
+    ---@field public link string
+    ---@field public index number
+    ---@field public guid string
+    ---@field public count number
+    ---@field public who string
+    ---@field public sources table<number, number>
+    ---@field public hasNewSources boolean
+    ---@field public addLoot boolean
 
+    ---@return RWFLootEntry
     local function LogItemLink(logType, linkType, id, link, count, sources, useTimestamp, additionalInfo)
         local isLogging, instanceName, instanceDifficulty, instanceID = rwf:GetLocation()
         if logType == LOG_TYPE.News then
@@ -7325,9 +7369,7 @@ do
         if not success then
             return false
         end
-
         local guildName, _, _, guildRealmName = GetGuildInfo("player")
-
         tables[1].name = instanceName
         local lootEntry = tables[4] ---@type RWFLootEntry
         local timestamp = useTimestamp or GetServerTime()
@@ -7361,15 +7403,44 @@ do
             end
         end
         lootEntry.addLoot = lootEntry.isNew or lootEntry.hasNewSources -- lootEntry.isUpdated
-
         -- Additional info for dedup in backend
         if additionalInfo then
             for key, value in pairs(additionalInfo) do
                 lootEntry[key] = value
             end
         end
-
         return lootEntry
+    end
+
+    local LOG_ITEM_TRIM_IF_OLDER = 259200 -- 3 days
+    local LOG_ITEM_LOG_IF_NEWER = 172800 -- 2 days
+
+    local function TrimHistoryFromSV()
+        local now = time()
+        local remove
+        for instanceID, instanceData in pairs(_G.RaiderIO_RWF) do
+            for instanceDifficulty, instanceDifficultyData in pairs(instanceData) do
+                if type(instanceDifficultyData) == "table" then
+                    for logType, logTypeData in pairs(instanceDifficultyData) do
+                        ---@type RWFLootEntry
+                        for key, lootEntry in pairs(logTypeData) do
+                            if now - lootEntry.timestamp >= LOG_ITEM_TRIM_IF_OLDER then
+                                if not remove then
+                                    remove = {}
+                                end
+                                remove[key] = true
+                            end
+                        end
+                        if remove then
+                            for key, _ in pairs(remove) do
+                                logTypeData[key] = nil
+                            end
+                            remove = nil
+                        end
+                    end
+                end
+            end
+        end
     end
 
     local LOG_GUILD_NEWS_TYPES = {
@@ -7387,20 +7458,22 @@ do
         if itemLinkFilter and itemLink:find(itemLinkFilter) then
             return true
         end
-        local _, _, _, itemEquipLoc = GetItemInfoInstant(itemLink)
-        if itemEquipLoc and itemEquipLoc == "" then
-            return true
-        end
-        local effectiveILvl = GetDetailedItemLevelInfo(itemLink)
-        if effectiveILvl and effectiveILvl >= LOG_FILTER.ITEM_LEVEL then
-            return true
-        end
+        -- local _, _, _, itemEquipLoc = GetItemInfoInstant(itemLink)
+        -- if itemEquipLoc and itemEquipLoc == "" then
+        --     return true
+        -- end
+        -- local effectiveILvl = GetDetailedItemLevelInfo(itemLink)
+        -- if effectiveILvl and effectiveILvl >= LOG_FILTER.ITEM_LEVEL then
+        --     return true
+        -- end
     end
 
+    ---@param lootEntry RWFLootEntry
     local function PrepareLootEntryForSV(lootEntry)
         -- lootEntry.isNew, lootEntry.isUpdated, lootEntry.hasNewSources, lootEntry.addLoot = nil -- TODO: if we uncomment we'll keep adding old processed loot to the frame and we don't want that so let this be in the SV file we can afford that
     end
 
+    ---@param lootEntry RWFLootEntry
     local function HandleLootEntry(lootEntry)
         if not lootEntry then
             return
@@ -7410,6 +7483,97 @@ do
         else
             PrepareLootEntryForSV(lootEntry)
         end
+    end
+
+    local function GetGuildNewsItems()
+        local t = {} ---@type GuildNewsInfo[]
+        local i = 0
+        local n = 0
+        local newsInfo ---@type GuildNewsInfo
+        repeat
+            i = i + 1
+            newsInfo = C_GuildInfo.GetGuildNewsInfo(i)
+            if not newsInfo then
+                break
+            elseif LOG_GUILD_NEWS_TYPES[newsInfo.newsType] then
+                n = n + 1
+                t[n] = newsInfo
+            end
+        until false
+        return t, n
+    end
+
+    ---@class GuildNewsTicker : Ticker
+
+    local guildNewsTicker ---@type GuildNewsTicker
+    local guildNewsCount ---@type number
+
+    local function GetGuildNews()
+        local items, count = GetGuildNewsItems()
+        local diff = guildNewsCount and abs(count - guildNewsCount) or 0
+        return items, count, diff
+    end
+
+    ---@param newsInfo GuildNewsInfo
+    local function HandleGuildNewsInfo(newsInfo, now)
+        local itemType, itemID, itemLink, itemCount, itemQuality = GetItemFromText(newsInfo.whatText)
+        if itemType and CanLogItem(itemLink, itemType, itemQuality, LOG_FILTER.GUILD_NEWS) then
+            newsInfo.year = newsInfo.year + 2000
+            newsInfo.month = newsInfo.month + 1
+            newsInfo.day = newsInfo.day + 1
+            local timestamp = time(newsInfo)
+            if now - timestamp <= LOG_ITEM_LOG_IF_NEWER then
+                HandleLootEntry(LogItemLink(LOG_TYPE.News, itemType, itemID, itemLink, itemCount or 1, nil, timestamp, { who = newsInfo.whoText }))
+                return true
+            end
+            return false
+        end
+    end
+
+    local SCAN_NUM_ITEMS_PER_FRAME = 100
+    local SCAN_INTERVAL_BETWEEN_CYCLES = 0.05
+
+    local function ScanGuildNews()
+        if guildNewsTicker then
+            guildNewsTicker.CalledDuringScan = true
+            return
+        end
+        local co = coroutine.create(function()
+            local items, count, diff = GetGuildNews()
+            if guildNewsCount == count then
+                return
+            end
+            guildNewsCount = count
+            local now = time()
+            for i, newsInfo in ipairs(items) do
+                if HandleGuildNewsInfo(newsInfo, now) and i % SCAN_NUM_ITEMS_PER_FRAME == 0 then
+                    coroutine.yield()
+                end
+            end
+            if not guildNewsTicker.CalledDuringScan then
+                return
+            end
+            items, count, diff = GetGuildNews()
+            if guildNewsCount == count then
+                return
+            end
+            guildNewsCount = count
+            for i, newsInfo in ipairs(items) do
+                if i > diff then
+                    break
+                end
+                HandleGuildNewsInfo(newsInfo, now)
+            end
+        end)
+        LOOT_FRAME.MiniFrame:StartScanning()
+        guildNewsTicker = C_Timer.NewTicker(SCAN_INTERVAL_BETWEEN_CYCLES, function()
+            if not coroutine.resume(co) then
+                guildNewsTicker:Cancel()
+                guildNewsTicker = nil
+                LOOT_FRAME.MiniFrame:StopScanning()
+                return
+            end
+        end)
     end
 
     local function OnEvent(event, ...)
@@ -7446,21 +7610,7 @@ do
                 HandleLootEntry(LogItemLink(LOG_TYPE.Chat, itemType, itemID, itemLink, itemCount or 1))
             end
         elseif event == "GUILD_NEWS_UPDATE" then
-            for i = 1, GetNumGuildNews() do
-                local newsInfo = C_GuildInfo.GetGuildNewsInfo(i)
-                if newsInfo and newsInfo.newsType and LOG_GUILD_NEWS_TYPES[newsInfo.newsType] then
-                    local itemType, itemID, itemLink, itemCount, itemQuality = GetItemFromText(newsInfo.whatText)
-                    if itemType and CanLogItem(itemLink, itemType, itemQuality, LOG_FILTER.GUILD_NEWS) then
-                        newsInfo.year = newsInfo.year + 2000
-                        newsInfo.month = newsInfo.month + 1
-                        newsInfo.day = newsInfo.day + 1
-                        local timestamp = time(newsInfo)
-                        HandleLootEntry(LogItemLink(LOG_TYPE.News, itemType, itemID, itemLink, itemCount or 1, nil, timestamp, {
-                            who = newsInfo.whoText
-                        }))
-                    end
-                end
-            end
+            ScanGuildNews()
         end
         if LOOT_FRAME:IsShown() then
             LOOT_FRAME:OnShow()
@@ -7481,7 +7631,7 @@ do
             end
         end
 
-        local frame = CreateFrame("Frame", nil, UIParent, "ButtonFrameTemplate")
+        local frame = CreateFrame("Frame", addonName .. "_RWFFrame", UIParent, "ButtonFrameTemplate")
         frame:SetSize(400, 250)
         frame:SetPoint("CENTER")
         frame:SetFrameStrata("HIGH")
@@ -7550,7 +7700,7 @@ do
         frame.DisableModule = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
         frame.DisableModule:SetSize(80, 22)
         frame.DisableModule:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -5, 3)
-        frame.DisableModule:SetScript("OnClick", function() config:Set("rwfMode", false) ReloadUI() end)
+        frame.DisableModule:SetScript("OnClick", function() config:Set("rwfMode", false) _G.RaiderIO_RWF = {} ReloadUI() end)
         frame.DisableModule:SetText(L.DISABLE_RWF_MODE_BUTTON)
         frame.DisableModule.tooltip = L.DISABLE_RWF_MODE_BUTTON_TOOLTIP
         frame.DisableModule.GetAppropriateTooltip = UIButtonMixin.GetAppropriateTooltip
@@ -7577,6 +7727,202 @@ do
         frame.WipeLog:SetScript("OnEnter", UIButtonMixin.OnEnter)
         frame.WipeLog:SetScript("OnLeave", UIButtonMixin.OnLeave)
 
+        frame.MiniFrame = CreateFrame("Button", addonName .. "_RWFMiniFrame", UIParent, "UIPanelButtonTemplate")
+        frame.MiniFrame:SetFrameLevel(100)
+        frame.MiniFrame:SetClampedToScreen(true)
+        frame.MiniFrame:SetSize(32, 32)
+        frame.MiniFrame:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+        local miniPoint = config:Get("rwfMiniPoint") ---@type ConfigProfilePoint
+        frame.MiniFrame:SetPoint(miniPoint.point or "CENTER", miniPoint.point and _G.UIParent or frame, miniPoint.point or "CENTER", miniPoint.point and miniPoint.x or -10, miniPoint.point and miniPoint.y or 0)
+        frame.MiniFrame:EnableMouse(true)
+        frame.MiniFrame:SetMovable(true)
+        frame.MiniFrame:RegisterForDrag("LeftButton")
+        frame.MiniFrame:SetScript("OnDragStart", frame.MiniFrame.StartMoving)
+        frame.MiniFrame:SetScript("OnDragStop", function(self)
+            self:StopMovingOrSizing()
+            local point, _, _, x, y = self:GetPoint() -- TODO: improve this to store a corner so that when the tip is resized the corner is the anchor point and not the center as that makes it very wobbly and unpleasant to look at
+            local miniPoint = config:Get("rwfMiniPoint") ---@type ConfigProfilePoint
+            config:Set("rwfMiniPoint", miniPoint)
+            miniPoint.point, miniPoint.x, miniPoint.y = point, x, y
+            if self.arrow1 then
+                self:UpdateArrow()
+            end
+        end)
+        frame.MiniFrame.Text:SetPoint("TOP", frame.MiniFrame, "BOTTOM", 0, -5)
+        frame.MiniFrame:SetDisabledFontObject(_G.GameFontHighlightHuge)
+        frame.MiniFrame:SetHighlightFontObject(_G.GameFontHighlightHuge)
+        frame.MiniFrame:SetNormalFontObject(_G.GameFontHighlightHuge)
+        frame.MiniFrame.tooltip = L.RWF_MINIBUTTON_TOOLTIP
+        frame.MiniFrame.GetAppropriateTooltip = UIButtonMixin.GetAppropriateTooltip
+        frame.MiniFrame:SetScript("OnEnter", UIButtonMixin.OnEnter)
+        frame.MiniFrame:SetScript("OnLeave", UIButtonMixin.OnLeave)
+        frame.MiniFrame:SetMotionScriptsWhileDisabled(true)
+        frame.MiniFrame.Left:Hide()
+        frame.MiniFrame.Right:Hide()
+        frame.MiniFrame.Middle:Hide()
+        util:SetButtonTextureFromIcon(frame.MiniFrame, ns.CUSTOM_ICONS.icons.RAIDERIO_COLOR_CIRCLE)
+        frame.MiniFrame:Hide()
+
+        frame.MiniFrame.Spinner = CreateFrame("Button", nil, frame.MiniFrame)
+        frame.MiniFrame.Spinner:SetAllPoints()
+        util:SetButtonTextureFromIcon(frame.MiniFrame.Spinner, ns.CUSTOM_ICONS.icons.RAIDERIO_COLOR_CIRCLE)
+        frame.MiniFrame.Spinner:Hide()
+        frame.MiniFrame.Spinner.Anim = frame.MiniFrame.Spinner:CreateAnimationGroup()
+        frame.MiniFrame.Spinner.Anim.Rotation = frame.MiniFrame.Spinner.Anim:CreateAnimation("Rotation")
+        frame.MiniFrame.Spinner.Anim.Rotation:SetDuration(1)
+        frame.MiniFrame.Spinner.Anim.Rotation:SetOrder(1)
+        frame.MiniFrame.Spinner.Anim.Rotation:SetOrigin("CENTER", 0, 0)
+        frame.MiniFrame.Spinner.Anim.Rotation:SetRadians(math.pi * 2)
+        frame.MiniFrame.Spinner.Anim:SetScript("OnFinished", frame.MiniFrame.Spinner.Anim.Play)
+        frame.MiniFrame.Spinner:SetScript("OnShow", function(self) self.Anim:Play() end)
+        frame.MiniFrame.Spinner:SetScript("OnHide", function(self) self.Anim:Stop() end)
+
+        frame.MiniFrame:HookScript("OnShow", function(self)
+            self:UpdateState()
+        end)
+
+        frame.MiniFrame:SetScript("OnClick", function(self, button)
+            if button == "LeftButton" then
+                local numItems = frame:GetNumLootItems(LOG_TYPE.News)
+                if numItems > 0 then
+                    if not InCombatLockdown() then
+                        ReloadUI()
+                    end
+                else
+                    -- frame:Show()
+                end
+            else
+                frame:Show()
+            end
+        end)
+
+        if config:Get("rwfBackgroundMode") then
+            frame.MiniFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
+            frame.MiniFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+            frame.MiniFrame:SetScript("OnEvent", function(self, event)
+                self:UpdateState((event == "PLAYER_REGEN_DISABLED" and true) or (event == "PLAYER_REGEN_ENABLED" and false))
+            end)
+        end
+
+        local ARROW_CONFIG = {
+            LEFT = {
+                atlas = "NPE_ArrowLeft",
+                atlasGlow = "NPE_ArrowLeftGlow",
+                pointDir = "RIGHT",
+                pointX = 23,
+                pointY = 0,
+                transX = -50,
+                transY = 0,
+                size = 64,
+                offsetX = 64,
+                offsetY = 0,
+            },
+            RIGHT = {
+                atlas = "NPE_ArrowRight",
+                atlasGlow = "NPE_ArrowRightGlow",
+                pointDir = "LEFT",
+                pointX = -23,
+                pointY = 0,
+                transX = 50,
+                transY = 0,
+                size = 64,
+                offsetX = -64,
+                offsetY = 0,
+            },
+        }
+
+        local function SetArrowDir(self, arrow)
+            self:SetSize(arrow.size, arrow.size)
+            self:ClearAllPoints()
+            self:SetPoint(arrow.pointDir, arrow.pointX + arrow.offsetX, arrow.pointY + arrow.offsetY)
+            self.arrow:SetAtlas(arrow.atlas)
+            self.arrowGlow:SetAtlas(arrow.atlasGlow)
+            self.Anim.Translation:SetOffset(arrow.transX, arrow.transY)
+        end
+
+        local function CreateArrow(parent)
+            local arrow = CreateFrame("Frame", nil, parent)
+            arrow.SetArrowDir = SetArrowDir
+            arrow:Hide()
+            arrow:SetAlpha(0)
+            arrow.arrow = arrow:CreateTexture(nil, "BACKGROUND")
+            arrow.arrow:SetAllPoints()
+            arrow.arrowGlow = arrow:CreateTexture(nil, "OVERLAY")
+            arrow.arrowGlow:SetAllPoints()
+            arrow.arrowGlow:SetAlpha(0.75)
+            arrow.arrowGlow:SetBlendMode("ADD")
+            arrow.Anim = arrow:CreateAnimationGroup()
+            arrow.Anim.Translation = arrow.Anim:CreateAnimation("Translation")
+            arrow.Anim.Translation:SetDuration(1)
+            arrow.Anim.Translation:SetOrder(1)
+            arrow.Anim.Translation:SetSmoothing("OUT")
+            arrow.Anim.Alpha1 = arrow.Anim:CreateAnimation("Alpha")
+            arrow.Anim.Alpha1:SetFromAlpha(0)
+            arrow.Anim.Alpha1:SetToAlpha(1)
+            arrow.Anim.Alpha1:SetDuration(0.1)
+            arrow.Anim.Alpha1:SetOrder(1)
+            arrow.Anim.Alpha2 = arrow.Anim:CreateAnimation("Alpha")
+            arrow.Anim.Alpha2:SetFromAlpha(1)
+            arrow.Anim.Alpha2:SetToAlpha(0)
+            arrow.Anim.Alpha2:SetDuration(0.9)
+            arrow.Anim.Alpha2:SetStartDelay(0.1)
+            arrow.Anim.Alpha2:SetOrder(1)
+            arrow.Anim.Alpha2:SetSmoothing("IN")
+            arrow.Anim:SetScript("OnFinished", arrow.Anim.Play)
+            return arrow
+        end
+
+        function frame.MiniFrame:UpdateArrow()
+            local px = _G.UIParent:GetCenter()
+            local cx = self:GetCenter()
+            local arrow = cx >= px and ARROW_CONFIG.RIGHT or ARROW_CONFIG.LEFT
+            self.arrow1:SetArrowDir(arrow)
+            self.arrow2:SetArrowDir(arrow)
+        end
+
+        function frame.MiniFrame:UpdateState(isInCombat)
+            if type(isInCombat) ~= "boolean" then
+                isInCombat = not not InCombatLockdown()
+            end
+            if isInCombat == true then
+                self:Hide()
+            elseif isInCombat == false then
+                self:SetShown(not frame:IsShown())
+            end
+            local numItems = frame:GetNumLootItems(LOG_TYPE.News)
+            self:SetText(numItems > 0 and numItems)
+            -- self:SetEnabled(numItems > 0)
+            if not self.isGlowing and numItems >= config:Get("rwfBackgroundRemindAt") then
+                self.isGlowing = true
+                _G.ActionButton_ShowOverlayGlow(self)
+                if not self.arrow1 then
+                    self.arrow1 = CreateArrow(self)
+                    self.arrow2 = CreateArrow(self)
+                end
+                self:UpdateArrow()
+                self.arrow1:Show()
+                self.arrow1.Anim:Play()
+                C_Timer.NewTimer(0.5, function() self.arrow2:Show() self.arrow2.Anim:Play() end)
+            end
+        end
+
+        local scanningTicker
+
+        function frame.MiniFrame:StartScanning()
+            if scanningTicker then
+                return
+            end
+            scanningTicker = C_Timer.NewTicker(3, function() self.Spinner:Show() end, 1)
+        end
+
+        function frame.MiniFrame:StopScanning()
+            if scanningTicker then
+                scanningTicker:Cancel()
+                scanningTicker = nil
+            end
+            self.Spinner:Hide()
+        end
+
         function frame:OnShow()
             local isEnabled = config:Get("rwfMode")
             local isLogging, instanceName = rwf:GetLocation()
@@ -7593,13 +7939,20 @@ do
         end
 
         local NEWS_TICKER = {
-            Timer = 60,
+            Timer = 30,
             Tick = function()
+                if InCombatLockdown() then
+                    return
+                end
+                QueryGuildNews()
                 GuildNewsSort(0)
             end,
             Start = function(self)
-                self:Stop()
                 self:Tick()
+                if self.handle then
+                    return
+                end
+                self:Stop()
                 self.handle = C_Timer.NewTicker(self.Timer, self.Tick)
             end,
             Stop = function(self)
@@ -7613,11 +7966,19 @@ do
 
         frame:HookScript("OnShow", function()
             frame:OnShow()
-            NEWS_TICKER:Start()
+            if config:Get("rwfBackgroundMode") then
+                frame.MiniFrame:Hide()
+            else
+                NEWS_TICKER:Start()
+            end
         end)
 
         frame:HookScript("OnHide", function()
-            NEWS_TICKER:Stop()
+            if config:Get("rwfBackgroundMode") then
+                frame.MiniFrame:Show()
+            else
+                NEWS_TICKER:Stop()
+            end
         end)
 
         local function OnSettingsChanged()
@@ -7625,6 +7986,17 @@ do
                 return
             end
             frame:OnShow()
+            if config:Get("rwfBackgroundMode") then
+                frame.MiniFrame:SetShown(not frame:IsShown())
+                NEWS_TICKER:Start()
+            else
+                frame.MiniFrame:Hide()
+                if frame:IsShown() then
+                    NEWS_TICKER:Start()
+                else
+                    NEWS_TICKER:Stop()
+                end
+            end
         end
         callback:RegisterEvent(OnSettingsChanged, "RAIDERIO_CONFIG_READY")
         callback:RegisterEvent(OnSettingsChanged, "RAIDERIO_SETTINGS_SAVED")
@@ -7677,7 +8049,7 @@ do
             local typeText = lootEntry.type and LOG_TYPE_LABEL[lootEntry.type] or "Unknown"
             local linkText = lootEntry.count and lootEntry.count > 1 and format("%sx%d", lootEntry.link, lootEntry.count) or lootEntry.link
             local sourcesText = lootEntry.sources and CountSources(lootEntry.sources) or ""
-            return format("%s | %s | %s%s", timeText, typeText, linkText, sourcesText)
+            return format("%s | %s | %s%s%s", timeText, typeText, linkText, sourcesText, lootEntry.who and format(" (%s)", lootEntry.who) or "")
         end
 
         local function GetHyperlink(elementData)
@@ -7753,10 +8125,21 @@ do
             UpdateButtonText(button)
         end
 
-        function frame:GetNumLootItems()
-            return self.logDataProvider:GetSize()
+        function frame:GetNumLootItems(lootEntryType)
+            if not lootEntryType then
+                return self.logDataProvider:GetSize()
+            end
+            local count = 0
+            self.logDataProvider:ForEach(function(elementData)
+                local lootEntry = elementData.lootEntry ---@type RWFLootEntry
+                if lootEntry.type == lootEntryType then
+                    count = count + 1
+                end
+            end)
+            return count
         end
 
+        ---@param lootEntry RWFLootEntry
         function frame:AddLoot(lootEntry, showFrame)
             if showFrame then
                 self:Show()
@@ -7776,6 +8159,7 @@ do
             if preInsertAtScrollEnd or (not preInsertScrollable and self.Log.Events.ScrollBox:HasScrollableExtent()) then
                 self.Log.Events.ScrollBox:ScrollToEnd(ScrollBoxConstants.NoScrollInterpolation)
             end
+            frame.MiniFrame:UpdateState()
         end
 
         local function SetScrollBoxButtonAlternateState(scrollBox)
@@ -7798,6 +8182,7 @@ do
         frame.Log.Events.ScrollBox:SetDataProvider(frame.logDataProvider)
 
         frame:Hide()
+        OnSettingsChanged() -- jumpstart
         return frame
     end
 
@@ -7825,10 +8210,12 @@ do
     end
 
     function rwf:OnLoad()
+        -- if config:Get("debugMode") then LOG_FILTER.GUILD_NEWS, LOG_FILTER.ITEM_LEVEL = "item:", 0 end -- DEBUG: any kind of loot and ilvl
+        TrimHistoryFromSV()
         LOOT_FRAME = CreateLootFrame()
         self:CheckLocation()
-        callback:RegisterEvent(OnZoneEvent, "PLAYER_ENTERING_WORLD", "ZONE_CHANGED", "ZONE_CHANGED_NEW_AREA")
         callback:RegisterEvent(OnEvent, "GUILD_NEWS_UPDATE")
+        callback:RegisterEvent(OnZoneEvent, "PLAYER_ENTERING_WORLD", "ZONE_CHANGED", "ZONE_CHANGED_NEW_AREA")
     end
 
     function rwf:OnEnable()

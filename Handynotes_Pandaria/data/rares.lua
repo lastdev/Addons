@@ -56,15 +56,14 @@ shared.rareData = {
     faction = 'Horde',
   },
   -- special rares
-  [50356] = {
-    description = 'Can drop item that increases experience by 300% for 1 hour up to level 85.',
-    special = true,
-  },
   [50831] = {
     description = 'Can drop item that increases reputation with all Pandaria factions by 1000.',
     special = true,
   },
   -- rares with info
+  [50356] = {
+    description = 'Used to drop a bonus experience item which was removed from the game.',
+  },
   [50806] = {
     description = 'Roams in the old river between the location points.',
   },
@@ -102,4 +101,3 @@ shared.rareData = {
     description = 'Talk to Captain Zvezdan in the underwater shipwreck.'
   },
 };
-

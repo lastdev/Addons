@@ -21,6 +21,7 @@ ns.defaults = {
         tooltip_item = true,
         tooltip_questid = false,
         groupsHidden = {},
+        groupsHiddenByZone = {['*']={},},
         zonesHidden = {},
         achievementsHidden = {},
         worldmapoverlay = true,
@@ -41,9 +42,7 @@ ns.options = {
         ns.HL:Refresh()
     end,
     hidden = function(info)
-        if ns.hiddenConfig then
-            return ns.hiddenConfig[info[#info]]
-        end
+        return ns.hiddenConfig[info[#info]]
     end,
     args = {
         icon = {
@@ -238,8 +237,8 @@ ns.options = {
                 for uiMapID, points in pairs(ns.points) do
                     for coord, point in pairs(points) do
                         if point.achievement then
-                            info.option.hidden = false
-                            return false
+                            info.option.hidden = nil
+                            return ns.options.hidden(info)
                         end
                     end
                 end
@@ -300,8 +299,8 @@ ns.options = {
                 for uiMapID, points in pairs(ns.points) do
                     for coord, point in pairs(points) do
                         if point.group then
-                            info.option.hidden = false
-                            return false
+                            info.option.hidden = nil
+                            return ns.options.hidden(info)
                         end
                     end
                 end
@@ -330,7 +329,7 @@ local function doTestAny(test, input, ...)
     return false
 end
 local function doTest(test, input, ...)
-    if type(input) == "table" then
+    if type(input) == "table" and not input.__parent then
         if input.any then
             return doTestAny(test, input, ...)
         end
@@ -350,12 +349,22 @@ local itemInBags = testMaker(function(item) return GetItemCount(item, true) > 0 
 local allQuestsComplete = testMaker(function(quest) return C_QuestLog.IsQuestFlaggedCompleted(quest) end)
 ns.allQuestsComplete = allQuestsComplete
 
+local temp_criteria = {}
 local allCriteriaComplete = testMaker(function(criteria, achievement)
     local _, _, completed, _, _, completedBy = (criteria < 40 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID)(achievement, criteria)
     if not (completed and (not completedBy or completedBy == ns.playerName)) then
         return false
     end
     return true
+end, function(test, input, achievement, ...)
+    if input == true then
+        wipe(temp_criteria)
+        for i=1,GetAchievementNumCriteria(achievement) do
+            table.insert(temp_criteria, i)
+        end
+        input = temp_criteria
+    end
+    return doTest(test, input, achievement, ...)
 end)
 
 local brokenItems = {
@@ -468,6 +477,7 @@ ns.itemIsKnown = function(item)
         if item.mount then return PlayerHasMount(item.mount) end
         if item.pet then return PlayerHasPet(item.pet) end
         if item.quest then return C_QuestLog.IsQuestFlaggedCompleted(item.quest) or C_QuestLog.IsOnQuest(item.quest) end
+        if item.questComplete then return C_QuestLog.IsQuestFlaggedCompleted(item.questComplete) end
         if CanLearnAppearance(item[1]) then return HasAppearance(item[1]) end
     elseif CanLearnAppearance(item) then
         return HasAppearance(item)
@@ -576,7 +586,7 @@ ns.should_show_point = function(coord, point, currentZone, isMinimap)
     if ns.hidden[currentZone] and ns.hidden[currentZone][coord] then
         return false
     end
-    if point.group and ns.db.groupsHidden[point.group] then
+    if point.group and ns.db.groupsHidden[point.group] or ns.db.groupsHiddenByZone[currentZone][point.group] then
         return false
     end
     if point.ShouldShow and not point:ShouldShow() then
@@ -617,6 +627,9 @@ ns.should_show_point = function(coord, point, currentZone, isMinimap)
             -- hidden (Draenor treasure maps, so far):
             return false
         end
+        if point.found and ns.conditions.check(point.found) then
+            return false
+        end
     end
     if not point.follower then
         if point.npc then
@@ -640,9 +653,6 @@ ns.should_show_point = function(coord, point, currentZone, isMinimap)
         return false
     end
     if point.requires_worldquest and not C_TaskQuest.IsActive(point.requires_worldquest) then
-        return false
-    end
-    if point.covenant and point.covenant ~= C_Covenants.GetActiveCovenantID() then
         return false
     end
     if not ns.db.upcoming or point.upcoming == false then

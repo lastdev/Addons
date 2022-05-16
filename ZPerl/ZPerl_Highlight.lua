@@ -6,7 +6,7 @@ local playerClass, playerName, playerGUID
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 33d78e5ce33228a1cf8cb5f354abf0b5e577621f $")
+end, "$Revision: ba83e40f9d15e0884b12cfb141a24c54c2032260 $")
 
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
@@ -197,11 +197,11 @@ end
 
 -- XPerl_Highlight:Add
 function xpHigh:Add(guid, highlightType, duration, source)
-	if (not strfind(guid, "-")) then
-		guid = self.lookup and self.lookup[guid]
-	end
 	if (not guid) then
 		return
+	end
+	if (not strfind(guid, "-")) then
+		guid = self.lookup and self.lookup[guid]
 	end
 
 	local a = self.list[guid]
@@ -269,11 +269,11 @@ end
 
 -- xpHigh:Remove
 function xpHigh:Remove(guid, highlightType)
-	if (not strfind(guid, "-")) then
-		guid = self.lookup and self.lookup[guid]
-	end
 	if (not guid) then
 		return
+	end
+	if (not strfind(guid, "-")) then
+		guid = self.lookup and self.lookup[guid]
 	end
 
 	local a = self.list[guid]
@@ -285,11 +285,11 @@ end
 
 -- xpHigh:HasEffect
 function xpHigh:HasEffect(guid, effect)
-	if (not strfind(guid, "-")) then
-		guid = self.lookup and self.lookup[guid]
-	end
 	if (not guid) then
 		return
+	end
+	if (not strfind(guid, "-")) then
+		guid = self.lookup and self.lookup[guid]
 	end
 
 	local list = self.list[guid]

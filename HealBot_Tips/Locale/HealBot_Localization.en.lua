@@ -80,6 +80,7 @@ function HealBot_Lang_Options_enALL()
                                  ["HIDEBLIZPARTYFRAMES"]=HEALBOT_OPTIONS_HIDEPARTYFRAMES,
                                  ["HIDEBLIZBOSSFRAMES"]=HEALBOT_OPTIONS_HIDEMINIBOSSFRAMES,
                                  ["HIDEBLIZRAIDFRAMES"]=HEALBOT_OPTIONS_HIDERAIDFRAMES,
+                                 ["FADEWHENNOMOUSE"]=HEALBOT_OPTION_GLOBALDIMMING,
                         -- Skins Effects tab
                                  ["USEFLUIDBARS"]=HEALBOT_OPTION_USEFLUIDBARS,
                                  ["USEFOCUSGROUPS"]=HEALBOT_OPTION_USEFOCUSGROUPS,
@@ -116,7 +117,6 @@ function HealBot_Lang_Options_enALL()
                                  ["SFOFFSETV"]=HEALBOT_OPTIONS_STICKFRAMEOFFSETV,
                                  ["FRAMEBACKCOL"]="Frame Background",
                                  ["FRAMEBORDERCOL"]="Frame Border",
-                                 ["TOOLTIPPOSITION"]=HEALBOT_OPTIONS_SETTOOLTIP_POSITION,
                         -- Skins Frames Heal Groups tab
                                  ["SELECTFRAMEFORGROUP"]=HEALBOT_OPTIONS_FRAME,
                                  ["ENABLEHEALGROUP"]=HEALBOT_OPTIONS_FRAME,
@@ -608,6 +608,7 @@ function HealBot_Lang_Options_enALL()
                                ["USEFLUIDBARS"]="Bar updates due to health changes are done in a fluid motion.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: This option is only available at performance level 4+",
                                ["USEFOCUSGROUPS"]="Use if a raid leader requests the healer to focus on specific groups.\nThis option reduces the opacity on all groups not included.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: This only applies to the Raid Heal Group.",
                                ["UNITINCOMBAT"]="When a visible Group/Raid member enters combat and your out of combat, do the following:\n--\n* Do nothing - ".._G["GREEN_FONT_COLOR_CODE"].."Keep Healbot unlocked and do nothing.\n* Show enemy frame - ".._G["GREEN_FONT_COLOR_CODE"].."Show the enemy frame when used with HealBot out of combat mode.\n* Lockdown HealBot - ".._G["GREEN_FONT_COLOR_CODE"].."Lockdown HealBot in combat mode.", 
+                               ["FADEWHENNOMOUSE"]="Fades all frames when the mouse is not over any frame.",
                                ["FOCUSGROUPDIMMING"]="Set the intensity of the opacity reduction on unfocused groups.",
                                ["FLUIDBARSREFRESHSPEED"]="Controls how fast the bar updates.\n--\n".._G["GREEN_FONT_COLOR_CODE"].."The update frequency can be tweaked\n".._G["GREEN_FONT_COLOR_CODE"].."with the HealBot Performance Plugin.",
                                ["HEALBARSAGGROBARFLASHFREQ"]="Set the speed the aux bars flash.\n--\n".._G["GREEN_FONT_COLOR_CODE"].."The update frequency can be tweaked\n".._G["GREEN_FONT_COLOR_CODE"].."with the HealBot Performance Plugin.",
@@ -757,7 +758,7 @@ function HealBot_Lang_Options_enALL()
                                ["BARSAUXSIZE"]="The size of the auxiliary bar.\nThis is based on the health bar.",
                                ["BARSAUXDEPTH"]="The depth of the auxiliary bar.\n".._G["GREEN_FONT_COLOR_CODE"].."- When in vertical orientation this is the width.\n".._G["GREEN_FONT_COLOR_CODE"].."- When in horizontal orientation this is the height.",
                                ["BARSAUXOFFSET"]="The auxiliary bar offset, relative to the next\nauxiliary bar or health bar depending on configuration.",
-                               ["HEALBARSTXTSHOWAUXTEXT"]="Show text on the aux bars.\n".._G["GREEN_FONT_COLOR_CODE"].."For text format options, go to the Text>Aux tab.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."- Text is not available when in vertical orientation.\n".._G["YELLOW_FONT_COLOR_CODE"].."- Text is not available on assignments: Aggro, Highlight and Target.",
+                               ["HEALBARSTXTSHOWAUXTEXT"]="Show text on the aux bars.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."- Text is not available when the Aux bar is in vertical orientation.\n".._G["YELLOW_FONT_COLOR_CODE"].."- Text is only available on assignments that have names or values.",
                                ["BARSAUXCUSTOMOPACITY"]="Set the custom auxiliary bar Opacity",
                                ["BARSAUXMANAONLY"]="Only display mana bars, all other power types are hidden.\n--\n".."|cff77c8ff".."Tip: When using this option:\n".."|cff77c8ff".."If necessary increase the size of the health bar and\n".."|cff77c8ff".."offset the power bar so it's on top of the health bar.",
                         -- Skins Frames Text Name tab
@@ -1058,7 +1059,7 @@ function HealBot_Lang_Options_enALL()
                                ["INOUTEXPORTPRESETCOLS"]="Export populates the large text box with data of all preset col"..HEALBOT_enWORD_COLOUR_SUFFIX.."s.\nThis can then be copied and saved outside the game.",
                                ["INOUTIMPORTPRESETCOLS"]="Import loads in the data from the large text box.",
                         -- Plugin Tab
-                               ["SELECTPLUGIN"]="Select plugin.\n--\nInformation on plugins can be found at "..HEALBOT_ABOUT_URL.."\n--\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Threat: ".._G["FONT_COLOR_CODE_CLOSE"].."See threat for all players on multiple mobs.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot TimeToDie: ".._G["FONT_COLOR_CODE_CLOSE"].."Player damage tracker showing how soon players will die.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot TimeToLive: ".._G["FONT_COLOR_CODE_CLOSE"].."Resurrection monitor tracking incoming and pending resurrections.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot ExtraButtons: ".._G["FONT_COLOR_CODE_CLOSE"].."Set spells for use with an MMO mouse on buttons 6 - 15\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot CombatProt: ".._G["FONT_COLOR_CODE_CLOSE"].."Reserve bars for missing players, protects against missing bars in combat.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Performance: ".._G["FONT_COLOR_CODE_CLOSE"].."Tweak internal timers, queues and effects.",  
+                               ["SELECTPLUGIN"]="Select plugin.\n--\nInformation on plugins can be found at "..HEALBOT_ABOUT_URL.."\n--\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Threat: ".._G["FONT_COLOR_CODE_CLOSE"].."See threat for all players on multiple mobs.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot TimeToDie: ".._G["FONT_COLOR_CODE_CLOSE"].."Player damage tracker showing how soon players will die.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot TimeToLive: ".._G["FONT_COLOR_CODE_CLOSE"].."Resurrection monitor tracking incoming and pending resurrections.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot ExtraButtons: ".._G["FONT_COLOR_CODE_CLOSE"].."Set spells for use with an MMO mouse on buttons 6 - 15\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot CombatProt: ".._G["FONT_COLOR_CODE_CLOSE"].."Reserve bars for missing players, protects against missing bars in combat.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Performance: ".._G["FONT_COLOR_CODE_CLOSE"].."Tweak internal timers and effects.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot MyCooldowns: ".._G["FONT_COLOR_CODE_CLOSE"].."Track cooldowns for your spells and abilities.",  
                               }
 
     if HEALBOT_GAME_VERSION<4 then

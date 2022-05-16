@@ -79,6 +79,8 @@ L["DUNGEON_SHORT_NAME_DHT"] = "DHT"
 L["DUNGEON_SHORT_NAME_DOS"] = "DOS"
 L["DUNGEON_SHORT_NAME_EOA"] = "EOA"
 L["DUNGEON_SHORT_NAME_FH"] = "FH"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_GMBT"] = ""--]] 
 L["DUNGEON_SHORT_NAME_HOA"] = "HOA"
 L["DUNGEON_SHORT_NAME_HOV"] = "HOV"
 L["DUNGEON_SHORT_NAME_KR"] = "KR"
@@ -94,6 +96,8 @@ L["DUNGEON_SHORT_NAME_SEAT"] = "SEAT"
 L["DUNGEON_SHORT_NAME_SIEGE"] = "SIEGE"
 L["DUNGEON_SHORT_NAME_SOA"] = "SOA"
 L["DUNGEON_SHORT_NAME_SOTS"] = "SOTS"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_STRT"] = ""--]] 
 L["DUNGEON_SHORT_NAME_TD"] = "TD"
 L["DUNGEON_SHORT_NAME_TM"] = "ML"
 L["DUNGEON_SHORT_NAME_TOP"] = "TOP"
@@ -313,6 +317,8 @@ L["RELOAD_NOW"] = "Recharger l'interface maintenant"
 --[[ L["RELOAD_RWF_MODE_BUTTON"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RWF_MINIBUTTON_TOOLTIP"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RWF_SUBTITLE_LOGGING_FILTERED_LOOT"] = ""--]] 
 --[[Translation missing --]]

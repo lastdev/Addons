@@ -6,7 +6,7 @@
 		<Layers>
 			<Layer level="OVERLAY">
 				<FontString parentKey="Filters" inherits="GameFontNormal" justifyH="LEFT">
-					<Size x="350" y="24" />
+					<Size x="450" y="24" />
 					<Anchors>
 						<Anchor point="BOTTOMLEFT" x="200" y="4" />
 					</Anchors>

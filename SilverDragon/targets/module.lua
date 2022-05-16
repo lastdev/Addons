@@ -46,10 +46,8 @@ module.defaults = {
 	},
 }
 
-local db
 function module:OnInitialize()
 	self.db = core.db:RegisterNamespace("ClickTarget", self.defaults)
-	db = self.db.profile
 
 	core.RegisterCallback(self, "Announce")
 	core.RegisterCallback(self, "AnnounceLoot")
@@ -65,7 +63,7 @@ end
 
 local pending
 function module:Announce(callback, id, zone, x, y, dead, source, unit, _, vignetteGUID)
-	if not db.show then return end
+	if not self.db.profile.show then return end
 	if source:match("^sync") then
 		local channel, player = source:match("sync:(.+):(.+)")
 		if channel == "GUILD" then
@@ -74,7 +72,7 @@ function module:Announce(callback, id, zone, x, y, dead, source, unit, _, vignet
 			source = "groupsync"
 		end
 	end
-	if not db.sources[source] then
+	if not self.db.profile.sources[source] then
 		Debug("Not showing popup, source disabled", source)
 		return
 	end
@@ -100,7 +98,7 @@ function module:Announce(callback, id, zone, x, y, dead, source, unit, _, vignet
 	data.unit = nil -- can't be trusted to remain the same
 end
 function module:AnnounceLoot(_, name, id, zone, x, y, vignetteGUID)
-	if not db.loot then return end
+	if not self.db.profile.loot then return end
 	local data = {
 		type = "loot",
 		id = id,
@@ -116,38 +114,35 @@ function module:AnnounceLoot(_, name, id, zone, x, y, vignetteGUID)
 end
 function module:SeenVignette(_, name, vignetteID, atlasName, uiMapID, x, y, vignetteGUID, mobid)
 	if not mobid then return end
-	for popup in self:EnumerateActive() do
-		if popup.data and popup.data.type == "mob" and popup.data.id == mobid then
-			Debug("Updated mob from vignette", name, vignetteGUID)
-			popup.data.vignetteGUID = vignetteGUID
-			popup.data.vignetteID = vignetteID
-			popup.data.zone = uiMapID
-			popup.data.x = x
-			popup.data.y = y
-			popup.data.source = "vignette"
-			popup.source:SetText("vignette")
-		end
-	end
+	self:UpdateWithData({
+		type = "mob",
+		id = mobid,
+		vignetteGUID = vignetteGUID,
+		vignetteID = vignetteID,
+		zone = uiMapID,
+		x = x,
+		y = y,
+		source = "vignette",
+	})
 end
 function module:SeenLoot(_, name, vignetteID, uiMapID, x, y, vignetteGUID)
-	for popup in self:EnumerateActive() do
-		if popup.data and popup.data.type == "loot" and popup.data.id == vignetteID then
-			Debug("Updated loot from vignette", name, vignetteGUID)
-			popup.data.vignetteGUID = vignetteGUID
-			popup.data.vignetteID = vignetteID
-			popup.data.zone = uiMapID
-			popup.data.x = x
-			popup.data.y = y
-			popup.data.source = "vignette"
-			popup.source:SetText("vignette")
-		end
-	end
+	self:UpdateWithData({
+		type = "loot",
+		id = vignetteID,
+		vignetteGUID = vignetteGUID,
+		vignetteID = vignetteID,
+		zone = uiMapID,
+		x = x,
+		y = y,
+		source = "vignette",
+	})
 end
 
 function module:Point(data)
-	if data and data.zone and data.x and data.y then
+	local uiMapID, x, y = self:GetPositionFromData(data)
+	if uiMapID and x and y then
 		-- point to it, without a timeout, and ignoring whether it'll be replacing an existing waypoint
-		core:GetModule("TomTom"):PointTo(data.type == "mob" and data.id or data.name, data.zone, data.x, data.y, 0, true)
+		core:GetModule("TomTom"):PointTo(data.type == "mob" and data.id or data.name, uiMapID, x, y, 0, true)
 	end
 end
 
@@ -183,23 +178,23 @@ function module:SendLink(prefix, uiMapID, x, y)
 	-- if you have an open editbox, just paste to it
 	if not ChatEdit_InsertLink(message) then
 		-- then do whatever's configured
-		if db.announce == "OPENLAST" then
+		if self.db.profile.announce == "OPENLAST" then
 			ChatFrame_OpenChat(message)
-		elseif db.announce == "IMMEDIATELY" then
+		elseif self.db.profile.announce == "IMMEDIATELY" then
 			local generalID
-			if db.announceChannel == "CHANNEL" then
+			if self.db.profile.announceChannel == "CHANNEL" then
 				generalID = module:GetGeneralID()
 				if not generalID then
 					ChatFrame_OpenChat(message)
 					return
 				end
 			end
-			Debug("SendChatMessage", message, db.announceChannel, generalID)
+			Debug("SendChatMessage", message, self.db.profile.announceChannel, generalID)
 			SendChatMessage(
 				message,
-				db.announceChannel,
+				self.db.profile.announceChannel,
 				nil, -- use default language
-				db.announceChannel == "CHANNEL" and generalID or nil
+				self.db.profile.announceChannel == "CHANNEL" and generalID or nil
 			)
 		end
 	end
@@ -228,7 +223,7 @@ function module:SendLinkFromData(data)
 	end
 end
 
-function module:GetPositionFromData(data)
+function module:GetPositionFromData(data, allowFallback)
 	local x, y, uiMapID = data.x, data.y, data.zone
 	if uiMapID and data.vignetteGUID then
 		local position = C_VignetteInfo.GetVignettePosition(data.vignetteGUID, uiMapID)
@@ -236,7 +231,10 @@ function module:GetPositionFromData(data)
 			x, y = position:GetXY()
 		end
 	end
-	if not (x and y) then
+	if not (x and y and x > 0 and y > 0) and data.type == "mob" then
+		uiMapID, x, y = core:GetClosestLocationForMob(data.id)
+	end
+	if allowFallback and not (x and y and x > 0 and y > 0) then
 		-- fall back to sending a link to the current position
 		x, y, uiMapID = HBD:GetPlayerZonePosition()
 	end
@@ -284,7 +282,7 @@ function module:CreateAnchor()
 
 	anchor:SetHeight(text:GetStringHeight() + title:GetStringHeight() + 25)
 
-	LibWindow.RegisterConfig(anchor, db.anchor)
+	LibWindow.RegisterConfig(anchor, self.db.profile.anchor)
 	LibWindow.RestorePosition(anchor)
 	LibWindow.MakeDraggable(anchor)
 

@@ -205,6 +205,7 @@ GTFO.SpellID["363982"] = {
 
 GTFO.SpellID["368617"] = {
   --desc = "Devouring Helix (Akkaris)";
+  tankSound = 2;
   sound = 1;
 };
 
@@ -225,6 +226,16 @@ GTFO.SpellID["361335"] = {
 
 GTFO.SpellID["368476"] = {
   --desc = "Charged Ground (Protector of the First Ones)";
+  sound = 1;
+};
+
+GTFO.SpellID["336955"] = {
+  --desc = "Active Volcano";
+  sound = 1;
+};
+
+GTFO.SpellID["360677"] = {
+  --desc = "Fleeting Flames";
   sound = 1;
 };
 
@@ -884,6 +895,18 @@ GTFO.SpellID["356163"] = {
 
 -- TODO: Relic Collapse (Artificer Xy'mox) - Mythic only
 
+GTFO.SpellID["360412"] = {
+  --desc = "Exposed Core (Vigilant Guardian)";
+  negatingDebuffSpellID = 360403; -- Force Field
+  sound = 1;
+};
+
+GTFO.SpellID["360409"] = {
+  --desc = "Exposed Core (Vigilant Guardian)";
+  negatingDebuffSpellID = 360403; -- Force Field
+  sound = 1;
+};
+
 GTFO.SpellID["368582"] = {
   --desc = "Shocklight Blast";
   sound = 1;
@@ -925,6 +948,11 @@ GTFO.SpellID["365886"] = {
   sound = 1;
 };
 
+GTFO.SpellID["365719"] = {
+  --desc = "Reflective Bulwark (Ancient Sentinel)";
+  sound = 1;
+};
+
 GTFO.SpellID["360114"] = {
   --desc = "Ephemeral Fissure (Halondrus)";
   sound = 1;
@@ -932,6 +960,16 @@ GTFO.SpellID["360114"] = {
 
 GTFO.SpellID["367838"] = {
   --desc = "Ephemeral Fissure (Halondrus)";
+  sound = 1;
+};
+
+GTFO.SpellID["368363"] = {
+  --desc = "Shattered Prism (Halondrus)";
+  sound = 1;
+};
+
+GTFO.SpellID["369207"] = {
+  --desc = "Planetcracker Beam (Halondrus)";
   sound = 1;
 };
 
@@ -951,10 +989,21 @@ GTFO.SpellID["362798"] = {
   test = true;
 };
 
-GTFO.SpellID["360425"] = {
-  --desc = "Unholy Ground (Zovaal the Jailer)";
+GTFO.SpellID["365683"] = {
+  --desc = "Desecration (Overthrown Protector)";
   sound = 1;
-  test = true;
+};
+
+
+GTFO.SpellID["360425"] = {
+  --desc = "Unholy Ground (The Jailer)";
+  sound = 1;
+  tankSound = 0;
+};
+
+GTFO.SpellID["365174"] = {
+  --desc = "Defile (The Jailer)";
+  sound = 1;
 };
 
 end

@@ -266,6 +266,8 @@ function HealBot_Lang_enALL()
     HEALBOT_WORDS_SMALL                     = "Small"
     HEALBOT_WORDS_MEDIUM                    = "Medium"
     HEALBOT_WORDS_LARGE                     = "Large"
+    HEALBOT_WORDS_SHORT                     = "Short";
+    HEALBOT_WORDS_LONG                      = "Long";
     HEALBOT_WORDS_SEC                       = "sec";
     HEALBOT_WORDS_CAST                      = "Cast";
     HEALBOT_WORDS_UNKNOWN                   = "Unknown";
@@ -385,7 +387,6 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_MONITORDEBUFFS          = "Monitor for debuffs";
     HEALBOT_OPTIONS_DEBUFFTEXT1             = "Spell to remove debuffs";
     
-    
     HEALBOT_OPTIONS_POWER                   = "Power"
     HEALBOT_OPTIONS_CASTBAR                 = "Cast bar"
     
@@ -438,7 +439,6 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_IGNOREDEBUFFCOOLDOWN    = "When cure spell CoolDown > 2 seconds";
     HEALBOT_OPTIONS_IGNOREDEBUFFFRIEND      = "When caster is known as friend";
 
-
     HEALBOT_OPTIONS_OPTIONSOPACITY          = "Options opacity";
 
     HEALBOT_OPTIONS_HIDEPARTYFRAMES         = "Hide party frames";
@@ -454,6 +454,7 @@ function HealBot_Lang_enALL()
     HEALBOT_WORD_EXTREME                    = "Extreme"
     HEALBOT_WORD_CASTER                     = "Caster"
     HEALBOT_WORD_TYPE                       = "Type"
+    
 
     HEALBOT_ASSIST                          = "Assist";
     HEALBOT_FOCUS                           = "Focus";
@@ -499,6 +500,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTION_USEFLUIDBARS             = "Use fluid bars"
     HEALBOT_OPTION_USEFOCUSGROUPS           = "Use focus groups"
     HEALBOT_OPTION_FOCUSGROUPDIMMING        = "Unfocused groups - Opacity reduction"
+    HEALBOT_OPTION_GLOBALDIMMING            = "Mouse not over frames - Opacity reduction"
     HEALBOT_OPTION_FLUIDBARS                = "Fluid Bars"
     HEALBOT_OPTIONS_RELOADUIMSG             = "This option requires a UI Reload, Reload now?"
 
@@ -550,7 +552,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_BUFFSTEXTTIMER          = "Show buff before it expires";
     HEALBOT_OPTIONS_SHORTBUFFTIMER          = "Short buffs"
     HEALBOT_OPTIONS_LONGBUFFTIMER           = "Long buffs"
-
+    
     HEALBOT_OPTIONS_NOTIFY_MSG              = "Message"
     HEALBOT_OPTIONS_CASTNOTIFYTAGS          = " #s=spell name  -  #l=spell link  -  #n=players name "
     HEALBOT_WORDS_YOU                       = "you";
@@ -596,7 +598,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_MOBMAXCHARS             = "Max Characters - Mob Name"
     HEALBOT_VEHICLE                         = "Vehicle"
     HEALBOT_WORDS_ERROR                     = "Error"
-    HEALBOT_SPELL_NOT_FOUND                    = "Spell Not Found"
+    HEALBOT_SPELL_NOT_FOUND                 = "Spell Not Found"
     HEALBOT_OPTIONS_DISABLETOOLTIPINCOMBAT  = "Hide Tooltip in Combat"
 
     HEALBOT_OPTIONS_BUFFNAMED               = "Enter the player names to watch for\n\n"
@@ -630,9 +632,10 @@ function HealBot_Lang_enALL()
                     [6] = "[HealBot] /hb pcs <n> -- Adjust the size of the Holy power charge indicator by <n>, Default value is 7 ",
                     [7] = "[HealBot] /hb hrfm -- Toggle method for hiding Blizzard raid frames, disable completely or just hide",
                     [8] = "[HealBot] /hb ws -- Toggle Hide/Show the Weaken Soul icon instead of the PW:S with a -",
-                    [8] = "[HealBot] /hb rld <n> -- In seconds, how long the players name stays green after a res",
-                    [9] = "[HealBot] - Also see Commands on the General tab in Options",
+                    [9] = "[HealBot] /hb rld <n> -- In seconds, how long the players name stays green after a res",
+                    [10] = "[HealBot] - Also see Commands on the General tab in Options",
                   }
+                  
                   
     HEALBOT_OPTION_HIGHLIGHTACTIVEBAR       = "Highlight"
     HEALBOT_OPTION_HIGHLIGHTTARGETBAR       = "Highlight target"
@@ -823,9 +826,9 @@ function HealBot_Lang_enALL()
     HEALBOT_CMD_RESETSKINS                  = "Reset skins"
     HEALBOT_CMD_CLEARBLACKLIST              = "Clear BlackList"
     HEALBOT_CMD_TOGGLEDISLIKEMOUNT          = "Toggle Dislike Mount"
-    HEALBOT_OPTION_DISLIKEMOUNT_ON          = "Now Dislike Mount"
+    HEALBOT_OPTION_DISLIKEMOUNT_ON          = "Dislike Current Mount"
     HEALBOT_CMD_DISMOUNT                    = "Dismount"
-    HEALBOT_OPTION_DISLIKEMOUNT_OFF         = "No longer Dislike Mount"
+    HEALBOT_OPTION_DISLIKEMOUNT_OFF         = "No longer Dislike Current Mount"
     HEALBOT_CMD_COPYSPELLS                  = "Copy current spells to all specs"
     HEALBOT_CMD_RESETSPELLS                 = "Reset spells"
     HEALBOT_CMD_RESETCURES                  = "Reset debuffs"
@@ -847,13 +850,6 @@ function HealBot_Lang_enALL()
     HEALBOT_SUPPRESSSOUND                   = "Auto Trinket: Suppress sound"
     HEALBOT_SUPPRESSERROR                   = "Auto Trinket: Suppress errors"
     HEALBOT_PERFLEVEL                       = "Performance Level"
-    HEALBOT_OPTIONS_USEGENERALMACRO         = "Use general macro slots"
-    HEALBOT_CP_MACRO_LEN                    = "Macro name must be between 1 and 14 characters"
-    HEALBOT_CP_MACRO_BASE                   = "Base macro name"
-    HEALBOT_CP_MACRO_SAVE                   = "Last saved at: "
-    HEALBOT_CP_STARTTIME                    = "Protect duration on logon"
-    HEALBOT_COMBATPROT_PARTYNO              = "bars Reserved for Party"
-    HEALBOT_COMBATPROT_RAIDNO               = "bars Reserved for Raid"
     HEALBOT_SKIN_CHECK_DONE                 = "Integrity check of skins complete"
     HEALBOT_ENABLE_CUSTOM_BUFFS             = "All custom buffs have been enabled"
     HEALBOT_ENABLE_CUSTOM_DEBUFFS           = "All custom debuffs have been enabled"
@@ -1105,12 +1101,34 @@ function HealBot_Lang_enALL()
     HEALBOT_PLUGIN_EXTRABUTTONS             = "HealBot ExtraButtons"
     HEALBOT_PLUGIN_COMBATPROT               = "HealBot CombatProt"
     HEALBOT_PLUGIN_PERFORMANCE              = "HealBot Performance"
-    HEALBOT_PLUGIN_EFFECTIVETANKS           = "HealBot EffectiveTanks"
-    HEALBOT_PLUGIN_EFFICIENTHEALERS         = "HealBot EfficientHealers"
+    HEALBOT_PLUGIN_MYCOOLDOWNS              = "HealBot MyCooldowns"
     HEALBOT_PLUGIN_THREATPCT                = "Minimum threat"
     HEALBOT_PLUGIN_THREATMOBBARCOL          = "Mob bar colour"
     HEALBOT_PLUGIN_THREATMOBTEXTCOL         = "Mob text colour"
-    
+    HEALBOT_PLUGIN_COOLDOWNDURCOLS          = "Cooldown Duration Col"..HEALBOT_enWORD_COLOUR_SUFFIX.."s"
+    HEALBOT_PLUGIN_SHORTDUR                 = "Short duration threshold (Secs)"
+    HEALBOT_PLUGIN_MEDIUMDUR                = "Medium duration threshold (Secs)"
+    HEALBOT_PLUGIN_ICONPOS                  = "Icons right side of frame"
+    HEALBOT_PLUGIN_BARDIR                   = "Bars shrink from right to left"
+    HEALBOT_PLUGIN_SHOWNAME                 = "Show spell name"
+    HEALBOT_PLUGIN_SHOWTIME                 = "Show remaining time"
+    HEALBOT_PLUGIN_BLACKLISTSESSION         = "Add for session"
+    HEALBOT_PLUGIN_BLACKLISTPERM            = "Add permanently"
+    HEALBOT_PLUGIN_BLACKLISTREMOVE          = "Remove"
+    HEALBOT_PLUGIN_BLACKLISTED              = "Blacklisted"
+    HEALBOT_PLUGIN_BLACKLISTEDHELP          = "(*) = Permanently blacklisted"
+    HEALBOT_OPTIONS_USECP                   = "Use Crash and Combat Protection"
+    HEALBOT_OPTIONS_USECPGROUP              = "Use Combat Protection in groups"
+    HEALBOT_OPTIONS_USECPRAID               = "Use Combat Protection in raids"
+    HEALBOT_OPTIONS_CPLOGONDURATION         = "Crash Protection duration after logon"
+    HEALBOT_PLUGIN_EXTRABUTTONS_0610        = "Buttons 6 - 10"
+    HEALBOT_PLUGIN_EXTRABUTTONS_1115        = "Buttons 11 - 15"    
+    HEALBOT_PLUGIN_INTTIMER                 = "Internal timers and Range checks"
+    HEALBOT_PLUGIN_FLUIDFREQ                = "Effects - Fuild Updates"
+    HEALBOT_PLUGIN_FLASHFREQ                = "Effects - Flash Updates"
+    HEALBOT_PLUGIN_STATEFREQ                = "Effects - State Updates"
+    HEALBOT_PLUGIN_CPMACRO                  = "Macro name: "
+
     HEALBOT_CUSTOM_CASTBY_EVERYONE          = "Everyone"
     HEALBOT_CUSTOM_CASTBY_ENEMY             = "Enemy"
     HEALBOT_CUSTOM_CASTBY_FRIEND            = "Friend"
@@ -1277,8 +1295,8 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_LANG_DEDE               = "German (deDE)"
     HEALBOT_OPTIONS_LANG_GRGR               = "Greek (grGR)"
     HEALBOT_OPTIONS_LANG_HUHU               = "Hungarian (huHU)"
-    HEALBOT_OPTIONS_LANG_KRKR               = "Korean (krKR)"
     HEALBOT_OPTIONS_LANG_ITIT               = "Italian (itIT)"
+    HEALBOT_OPTIONS_LANG_KRKR               = "Korean (krKR)"
     HEALBOT_OPTIONS_LANG_PTBR               = "Portuguese (ptBR)"
     HEALBOT_OPTIONS_LANG_RURU               = "Russian (ruRU)"
     HEALBOT_OPTIONS_LANG_ESES               = "Spanish (esES)"
@@ -1296,7 +1314,6 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_IN_A_GROUP              = "Only when in a Group or Raid"
     HEALBOT_OPTIONS_ALSO_WHEN_MOUNTED       = "also when mounted"
     HEALBOT_OPTIONS_PALADIN_BLESSINGS       = "View all my blessings as same"
-    
     
     HEALBOT_OPTIONS_TAB_EFFECTS              = "Effects"
     HEALBOT_OPTIONS_TAB_EMERG                = "Emergency"
@@ -1371,6 +1388,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_SHARE_OPT               = "Share Options";
     HEALBOT_OPTIONS_CONTENT_SKINS_SHARE     = "    " .. "Share"
     HEALBOT_OPTIONS_CONTENT_SKINS_ENEMY     = "    " .. "Enemy"
+
     HEALBOT_ENEMY_NO_TARGET                 = "No target"
     HEALBOT_OPTIONS_ENEMYBARS               = "Health Bars - Harmful spells on hostile characters";
     HEALBOT_OPTIONS_HARMFUL_SPELLS          = "Harmful Spells"
@@ -1426,7 +1444,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_NOCHANGE                = "No Change"
     HEALBOT_OPTIONS_ALWAYSSHOW              = "Always Show"
     HEALBOT_OPTIONS_PAGE                    = "Page"
-    HEALBOT_OPTIONS_PREV                    = "<<"
+    HEALBOT_OPTIONS_PREV                    = "<<"    
     HEALBOT_OPTIONS_NEXT                    = ">>"
     HEALBOT_OPTIONS_PRESET_COLOUR           = HEALBOT_OPTIONS_PRESET.." Col"..HEALBOT_enWORD_COLOUR_SUFFIX
     

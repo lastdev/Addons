@@ -81,7 +81,7 @@ local factions = {
 	{ id = 470, name = BF["Ratchet"] },
 	{ id = 529, name = BF["Argent Dawn"] },
 	{ id = 87, name = BF["Bloodsail Buccaneers"] },
-	{ id = 910, name = BF["Brood of Nozdormu"] },
+	{ id = 910, name = GetFactionInfoByID(910) },	 -- Brood of Nozdormu
 	{ id = 609, name = BF["Cenarion Circle"] },
 	{ id = 909, name = BF["Darkmoon Faire"] },
 	{ id = 92, name = BF["Gelkis Clan Centaur"] },
@@ -107,11 +107,11 @@ local factions = {
 	{ id = 1038, name = BF["Ogri'la"] },
 	{ id = 970, name = BF["Sporeggar"] },
 	{ id = 947, name = BF["Thrallmar"] },
-	{ id = 1011, name = BF["Lower City"] },
+	{ id = 1011, name = GetFactionInfoByID(1011) }, -- Lower City
 	{ id = 1031, name = BF["Sha'tari Skyguard"] },
 	{ id = 1077, name = BF["Shattered Sun Offensive"] },
-	{ id = 932, name = BF["The Aldor"] },
-	{ id = 934, name = BF["The Scryers"] },
+	{ id = 932, name = GetFactionInfoByID(932) }, 	-- The Aldor
+	{ id = 934, name = GetFactionInfoByID(934) }, 	-- The Scryers
 	{ id = 935, name = BF["The Sha'tar"] },
 	{ id = 989, name = BF["Keepers of Time"] },
 	{ id = 990, name = BF["The Scale of the Sands"] },
@@ -252,6 +252,7 @@ local factions = {
 	
 	{ id = 2470, name = GetFactionInfoByID(2470) },     -- 9.1 Death's Advance
 	{ id = 2472, name = GetFactionInfoByID(2472) },     -- 9.1 Archivist's Codex
+	{ id = 2478, name = GetFactionInfoByID(2478) },     -- 9.2 The Enlightened
 }
 
 local FactionUIDsRev = {}

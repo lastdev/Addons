@@ -50,6 +50,10 @@ end
 
 LiteMountGeneralPanelMixin = {}
 
+function LiteMountGeneralPanelMixin:OnShow()
+    UIDropDownMenu_Initialize(self.RandomPersistDropDown, RandomPersistDropDown_Initialize)
+end
+
 function LiteMountGeneralPanelMixin:OnLoad()
 
     -- CopyTargetsMount --
@@ -120,7 +124,6 @@ function LiteMountGeneralPanelMixin:OnLoad()
 
     -- RandomPersistDropDown --
 
-    UIDropDownMenu_Initialize(self.RandomPersistDropDown, RandomPersistDropDown_Initialize)
     self.RandomPersistDropDown.GetOption =
         function () return LM.Options:GetRandomPersistence() end
     self.RandomPersistDropDown.GetOptionDefault =

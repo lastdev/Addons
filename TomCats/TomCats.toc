@@ -3,13 +3,13 @@
 ## Notes: See license.txt for license and copyright information
 ## Author: TomCat
 ## X-Website: https://www.tomcatstours.com
-## Version: 2.4.3
+## Version: 2.4.10
 ## DefaultState: enabled
 ## SavedVariables: TomCats_Account
 ## SavedVariablesPerCharacter: TomCats_Character
 ## X-Category: Achievements, Map, Miscellaneous
 ## X-Localizations: enUS, enGB, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ptPT, ruRU, zhCN, zhTW
-## X-TomCats-Expiry: 1646530177
+## X-TomCats-Expiry: 1654730960
 
 constants.lua
 slashcommands.lua
@@ -55,6 +55,6 @@ minimap_icon.lua
 discoveries.xml
 discoveries.lua
 beta.lua
-#noblegarden/Main.xml
+noblegarden/Main.xml
 beta/maelie.xml
 beta/maelie.lua

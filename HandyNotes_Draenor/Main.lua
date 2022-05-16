@@ -313,13 +313,12 @@ function HandyNotes_Draenor:OnEnter(MapUID, coord)
                     tooltip:AddLine(" ")
                     tooltip:AddLine("Reward")
                     tooltip:AddLine(Reward, 1, 1, 1, 1)
+                    tooltip:AddLine(" ")
 
                     if HandyNotes_Draenor.db.profile.Settings.General.DisplayRewardsInsteadDefaults == true then
-                        tooltip:AddLine(" ")
-                        tooltip:AddLine("Release Shift while hovering over the Node to display the Reward's tooltip")
+                        tooltip:AddLine("Release Shift to display the Reward")
                     else
-                        tooltip:AddLine(" ")
-                        tooltip:AddLine("Press Shift while hovering over the Node to display the Reward's tooltip")
+                        tooltip:AddLine("Press Shift to display the Reward")
                     end
                 end
             
@@ -366,13 +365,12 @@ function HandyNotes_Draenor:OnEnter(MapUID, coord)
                 tooltip:AddLine(" ")
                 tooltip:AddLine("Reward")
                 tooltip:AddLine(Reward, 1, 1, 1, 1)
+                tooltip:AddLine(" ")
 
                 if HandyNotes_Draenor.db.profile.Settings.General.DisplayRewardsInsteadDefaults == true then
-                    tooltip:AddLine(" ")
-                    tooltip:AddLine("Release Shift while hovering over the Node to display the Reward's tooltip")
+                    tooltip:AddLine("Release Shift to display the Reward")
                 else
-                    tooltip:AddLine(" ")
-                    tooltip:AddLine("Press Shift while hovering over the Node to display the Reward's tooltip")
+                    tooltip:AddLine("Press Shift to display the Reward")
                 end
             end
 
@@ -458,8 +456,6 @@ function HandyNotes_Draenor:RegisterWithHandyNotes()
 
                 local Zone = GetZoneByMapID(value[1])
                 local ID = value[2]
-                --local Name = value[3]
-                --local Note = value[4]
                 local Icon = value[5]
                 local Tag = value[6]
                 local ItemID = value[7]

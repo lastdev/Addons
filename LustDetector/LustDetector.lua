@@ -1,4 +1,5 @@
 -- By Viicksmille-Thrall - Horde 4ever
+-- Special thanks for: omsheal, KNARK1337, CommandoCat64 for reports and in special for omsheal
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 
@@ -46,7 +47,7 @@ local function handler (msg)
 		LUSTDETECTORMSG("[LD Test] ADDON: Lust Detector is working correctly!")
 		
 	else
-		print("Lust Detector Status: is |cff1cb619"..(LUSTDETECTOR and "On" or "Off").."|r and announcing to: |cff1cb619"..LUSTDETECTORMode.."|r.\nCommands: \n/ld on, /ld off, /ld test, /ld group, /ld say, /ld yell, /ld self")
+		print("Lust Detector Status: is |cff1cb619"..(LUSTDETECTOR and "On" or "Off").."|r and announcing to: |cff1cb619"..LUSTDETECTORMode.."|r.\nCommands: \n/ld on, /ld off, /ld test, /ld group, /ld self")
 	end
 end
 
@@ -77,7 +78,8 @@ local warpSpells = {
 
 frame:SetScript("OnEvent", function(self, event, ...)
 	local _, event, _, _, sourceName, _, _, _, _, _, _, spellID, _ = CombatLogGetCurrentEventInfo()
-		if event == "SPELL_CAST_SUCCESS" and GetNumGroupMembers() > 0 and (HasteItem[spellID] or warpSpells[spellID]) and (UnitInParty(sourceName)) then
+	local pNum=GetNumGroupMembers()
+		if LUSTDETECTOR == (event=="SPELL_CAST_SUCCESS") and pNum > 0 and (HasteItem[spellID] or warpSpells[spellID]) and (UnitInParty(sourceName)) then
 			local chatType = "PARTY"
 			local isInstance, instanceType = IsInInstance()
 			if isInstance and IsInGroup(LE_PARTY_CATEGORY_INSTANCE) or instanceType == "pvp" then
@@ -87,9 +89,9 @@ frame:SetScript("OnEvent", function(self, event, ...)
 			end
 
 			if HasteItem[spellID] then
-				SendChatMessage("Lust Detector: " .. UnitName(sourceName) .. " used " .. GetSpellLink(spellID) .. " and increased +15% haste on party", chatType)
-			elseif warpSpells[spellID] then
-				SendChatMessage("Lust Detector: " .. UnitName(sourceName) .. " cast " .. GetSpellLink(spellID) .. " and increased +30% haste on party", chatType)
+				LUSTDETECTORMSG("Lust Detector: " .. UnitName(sourceName) .. " used " .. GetSpellLink(spellID) .. " and increased +15% haste on party!!", chatType)
+				elseif warpSpells[spellID] then
+				LUSTDETECTORMSG("Lust Detector: " .. UnitName(sourceName) .. " cast " .. GetSpellLink(spellID) .. " and increased +30% haste on party!!", chatType)
 				if UnitIsUnit("pet", sourceName) then
 						sourceName = ("%s"):format(UnitName("player"))
 					elseif IsInRaid() then
@@ -107,7 +109,8 @@ frame:SetScript("OnEvent", function(self, event, ...)
 							end
 						end
 					end
-					SendChatMessage("Lust Detector: [HUNTER] "..sourceName.."\'s Pet Used "..GetSpellLink(spellID).."and increased +30% Haste on your party!!")
+					elseif warpSpells[spellID] then
+					LUSTDETECTORMSG("Lust Detector: [HUNTER] "..sourceName.."\'s Pet Used "..GetSpellLink(spellID).."and increased +30% haste on your party!!")
 			end
 		end
 	end

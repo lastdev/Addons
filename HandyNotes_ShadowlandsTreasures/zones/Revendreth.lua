@@ -2,6 +2,36 @@ local myname, ns = ...
 
 local path = ns.path
 
+local secret_treasure = {
+    label=false, -- Secret Treasure
+    loot={
+        {180589, pet=2894}, -- Soullocked Sinstone
+    },
+    _uiMapID=1525,
+    _coord=0,
+}
+ns.VignetteIDsToPoints[4173] = secret_treasure
+ns.VignetteIDsToPoints[4174] = secret_treasure
+ns.VignetteIDsToPoints[4175] = secret_treasure
+ns.VignetteIDsToPoints[4176] = secret_treasure
+ns.VignetteIDsToPoints[4177] = secret_treasure
+ns.VignetteIDsToPoints[4178] = secret_treasure
+ns.VignetteIDsToPoints[4179] = secret_treasure
+ns.VignetteIDsToPoints[4180] = secret_treasure
+ns.VignetteIDsToPoints[4181] = secret_treasure
+ns.VignetteIDsToPoints[4182] = secret_treasure
+
+ns.VignetteIDsToPoints[4212] = {
+    label=false, -- Bleakwood Chest
+    loot={
+        {180592, pet=2901}, -- Trapped Stonefiend
+    },
+    _uiMapID=1525,
+    _coord=0,
+}
+
+-- Pepe costume: A Tiny Sinstone, 186580, q 64132
+
 ns.RegisterPoints(1525, { -- Revendreth
     [37706920] = {
         achievement=14314, criteria=50076, -- Lost Quill
@@ -144,8 +174,8 @@ ns.RegisterPoints(1525, {
     -- Loyal Gorger
     [59305700] = {
         label="{npc:173499}",
-        icon=3601543,
-        quest={
+        quest={61843, 62046, any=true}, -- daily, final
+        progress={
             61839, -- Nipping at the Undergrowth
             61840, -- Vineroot on the Menu
             61842, -- Vineroot Will Not Do
@@ -154,11 +184,12 @@ ns.RegisterPoints(1525, {
             62045, -- Ready for More
             62046  -- A New Pack
         },
-        hide_before=ns.conditions.QuestComplete(58259), -- Worldedge Gorger
+        hide_before=ns.conditions.QuestComplete(61188), -- Worldedge Gorger
         loot={
             {182589, mount=1391}, -- Loyal Gorger
         },
-        note="Kill {npc:160821}, do 7 days of dailies for {npc:173499}, get a mount",
+        note="Kill {npc:160821} until {item:180583} drops, do 7 days of dailies for {npc:173499}, get a mount",
+        atlas="stablemaster", scale=1.2,
         group="Daily Mounts",
     },
     --
@@ -183,11 +214,32 @@ ns.RegisterPoints(1525, {
     -- },
 })
 
+ns.RegisterPoints(1525, { -- Revendreth
+    [63756169] = {
+        quest=64941, -- Chicken; go work out the well fed cat one, if it has a quest
+        loot={187811}, -- Spectral Feed
+    },
+    [63264285] = {
+        quest=64941,
+        loot={
+            {187813, quest=64941, covenant=Enum.CovenantType.NightFae}, -- Chicken Soul
+        },
+        active=ns.conditions.Item(187811),
+    }
+}, {
+    note="Bring the {item:187811:Spectral Feed} (63.7, 61.7) to the {npc:181660:Lost Soul} (63, 42), use /chicken at it, then give it the feed",
+    covenant=Enum.CovenantType.NightFae,
+    atlas="sanctumupgrades-nightfae-32x32",
+    minimap=true,
+    group="soulshape",
+})
+
 -- Dead Blanchy
 
 ns.RegisterPoints(1525, {
     [63134311] = { -- Dead Blanchy
-        quest={62050, 62107, any=true}, -- progress:62038, 62042, 62047, 62049, 62048; daily-done is 62107
+        quest={62050, 62107, any=true}, -- daily-done is 62107
+        progress={62038, 62042, 62047, 62049, 62048, 62050},
         loot={
             {182614, mount=1414}, -- Blanchy's Reins
         },
@@ -537,6 +589,7 @@ ns.RegisterPoints(1525, {
         npc=166576,
         loot={
             183731, -- Smolder-Tempered Legplates
+            180690, -- Bottled Ash Cloud
         },
     },
     [35003230] = { -- Bog Beast
@@ -590,10 +643,11 @@ ns.RegisterPoints(1525, {
     [32651545] = { -- Forgemaster Madalav
         quest=61618,
         npc=159496,
+        areaPoi=6913, -- Madlav's Hammer
         loot={
-            {180939,covenant=Enum.CovenantType.Venthyr}, -- Mantle of the Forgemaster's Dark Blades
-            180489,
-            180709,
+            {180939, covenant=Enum.CovenantType.Venthyr}, -- Mantle of the Forgemaster's Dark Blades
+            180489, -- Forgemaster's Many-Fold Rapier
+            180709, -- Tempered Armor Patch
         },
         -- covenant=Enum.CovenantType.Venthyr,
         note="A Venthyr player channeling Dominance Keep must click the hammer",
@@ -611,6 +665,7 @@ ns.RegisterPoints(1525, {
     [45857920] = { -- Harika the Horrid
         quest=59612,
         npc=165290,
+        areaPoi=6912, -- Dredterror Ballista
         loot={
             183720, -- Dredbatskin Jerkin
             {180461, mount=1310, covenant=Enum.CovenantType.Venthyr}, -- Horrid Brood Dredwing
@@ -742,7 +797,7 @@ ns.RegisterPoints(1525, {
     },
     [43007910] = { -- Tomb Burster
         achievement=14310, criteria=48802,
-        quest=61231, -- 56877?
+        quest=56877,
         npc=155779,
         loot={
             {180584, pet=2891}, -- Blushing Spiderling
@@ -754,9 +809,9 @@ ns.RegisterPoints(1525, {
         quest=58259,
         npc=160821,
         loot={
-            180583, -- Impressionable Gorger Spawn
+            {180583, quest=61188}, -- Impressionable Gorger Spawn
         },
-        note="Use {item:173939} from nearby mobs near braziers",
+        note="Use {item:173939} from nearby mobs near braziers. There's strong speculation that completing {quest:60480:The Endmire} @ 65 63 is needed for the drop.",
     },
 })
 

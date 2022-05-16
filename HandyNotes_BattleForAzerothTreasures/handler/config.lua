@@ -5,7 +5,6 @@ ns.defaults = {
         default_icon = "VignetteLoot",
         show_on_world = true,
         show_on_minimap = false,
-        show_junk = false,
         show_npcs = true,
         show_treasure = true,
         show_routes = true,
@@ -184,12 +183,6 @@ ns.options = {
                     disabled = function() return not ns.RouteWorldMapDataProvider end,
                     order = 31,
                 },
-                show_junk = {
-                    type = "toggle",
-                    name = "Show non-achievement",
-                    desc = "Show items which don't count for any achievement",
-                    order = 40,
-                },
                 tooltip_questid = {
                     type = "toggle",
                     name = "Show quest ids",
@@ -329,7 +322,7 @@ local function doTestAny(test, input, ...)
     return false
 end
 local function doTest(test, input, ...)
-    if type(input) == "table" then
+    if type(input) == "table" and not input.__parent then
         if input.any then
             return doTestAny(test, input, ...)
         end
@@ -349,12 +342,22 @@ local itemInBags = testMaker(function(item) return GetItemCount(item, true) > 0 
 local allQuestsComplete = testMaker(function(quest) return C_QuestLog.IsQuestFlaggedCompleted(quest) end)
 ns.allQuestsComplete = allQuestsComplete
 
+local temp_criteria = {}
 local allCriteriaComplete = testMaker(function(criteria, achievement)
     local _, _, completed, _, _, completedBy = (criteria < 40 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID)(achievement, criteria)
     if not (completed and (not completedBy or completedBy == ns.playerName)) then
         return false
     end
     return true
+end, function(test, input, achievement, ...)
+    if input == true then
+        wipe(temp_criteria)
+        for i=1,GetAchievementNumCriteria(achievement) do
+            table.insert(temp_criteria, i)
+        end
+        input = temp_criteria
+    end
+    return doTest(test, input, achievement, ...)
 end)
 
 local brokenItems = {
@@ -380,11 +383,15 @@ local canLearnCache = {}
 local function CanLearnAppearance(itemLinkOrID)
     local itemID = GetItemInfoInstant(itemLinkOrID)
     if not itemID then return end
-    if canLearnCache[itemID] then
+    if canLearnCache[itemID] ~= nil then
         return canLearnCache[itemID]
     end
     -- First, is this a valid source at all?
     local canBeChanged, noChangeReason, canBeSource, noSourceReason = C_Transmog.CanTransmogItem(itemID)
+    if canBeSource == nil or noSourceReason == 'NO_ITEM' then
+        -- data loading, don't cache this
+        return
+    end
     if not canBeSource then
         canLearnCache[itemID] = false
         return false
@@ -492,7 +499,7 @@ local function everythingFound(point)
         end
         ret = true
     end
-    if ns.db.achievedfound and point.achievement then
+    if (ns.db.achievedfound or not point.quest) and point.achievement then
         if point.criteria then
             if not allCriteriaComplete(point.criteria, point.achievement) then
                 return false
@@ -561,10 +568,19 @@ do
     end
 end
 
+local function showOnMapType(point, isMinimap)
+    -- nil means to respect the preferences, but points can override
+    if isMinimap then
+        if point.minimap ~= nil then return point.minimap end
+        return ns.db.show_on_minimap
+    end
+    if point.worldmap ~= nil then return point.worldmap end
+    return ns.db.show_on_world
+end
+
 ns.should_show_point = function(coord, point, currentZone, isMinimap)
-    if isMinimap and not ns.db.show_on_minimap and not point.minimap then
-        return false
-    elseif not isMinimap and not ns.db.show_on_world then
+    if not coord or coord < 0 then return false end
+    if not showOnMapType(point, isMinimap) then
         return false
     end
     if zoneHidden(currentZone) then
@@ -579,8 +595,11 @@ ns.should_show_point = function(coord, point, currentZone, isMinimap)
     if point.group and ns.db.groupsHidden[point.group] or ns.db.groupsHiddenByZone[currentZone][point.group] then
         return false
     end
-    if point.ShouldShow and not point:ShouldShow() then
-        return false
+    if point.ShouldShow then
+        local show = point:ShouldShow()
+        if show ~= nil then
+            return show
+        end
     end
     if point.outdoors_only and IsIndoors() then
         return false
@@ -589,9 +608,6 @@ ns.should_show_point = function(coord, point, currentZone, isMinimap)
         return false
     end
     if point.poi and not checkPois(point.poi) then
-        return false
-    end
-    if point.junk and not ns.db.show_junk then
         return false
     end
     if point.faction and point.faction ~= ns.playerFaction then
@@ -617,6 +633,9 @@ ns.should_show_point = function(coord, point, currentZone, isMinimap)
             -- hidden (Draenor treasure maps, so far):
             return false
         end
+        if point.found and ns.conditions.check(point.found) then
+            return false
+        end
     end
     if not point.follower then
         if point.npc then
@@ -640,6 +659,9 @@ ns.should_show_point = function(coord, point, currentZone, isMinimap)
         return false
     end
     if point.requires_worldquest and not C_TaskQuest.IsActive(point.requires_worldquest) then
+        return false
+    end
+    if point.requires and not ns.conditions.check(point.requires) then
         return false
     end
     if not ns.db.upcoming or point.upcoming == false then

@@ -93,4 +93,14 @@ addon:Service("AltoholicUI.Formatter",  function()
 			
 			return format("%s%s", color, text)
 		end,
+		Progress = function(numCompleted, numLevels)
+			-- Grey if 0, gold if max, white otherwise
+			local color = colors.grey
+		
+			if numCompleted > 0 then
+				color = (numCompleted == numLevels) and colors.gold or colors.white
+			end
+		
+			return format("%s%s%s/%s%s", color, numCompleted, colors.white, color, numLevels)
+		end,
 }end)

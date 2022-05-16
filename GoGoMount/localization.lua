@@ -42,5 +42,6 @@
 	GoGo_Variables.Localize.TheTrueMawWalkerQuest = 63663
 	GoGo_Variables.Localize.TravelForm = 783 -- Druid talent
 	GoGo_Variables.Localize.TravelForm2 = 33943 -- Druid talent
+	GoGo_Variables.Localize.UnlockingTheSecret = 15514 -- Flying in Zereth Morthis
 --	GoGo_Variables.Localize.WisdomOfTheFourWinds = 115913	-- Removed with patch 7.3.5
 	GoGo_Variables.Localize.ZenFlight = 125883  -- Spell in book appears for monks with glyph of zen flight

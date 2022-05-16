@@ -70,8 +70,10 @@ function module:RefreshMobData(popup)
 		popup.status:SetText("")
 	end
 
-	if ns.Loot.HasLoot(data.id) then
+	local loot = ns.Loot.HasLoot(data.id)
+	if loot then
 		popup.lootIcon:Show()
+		popup.lootIcon.count:SetText(#loot)
 		ns.Loot.Cache(data.id)
 	else
 		popup.lootIcon:Hide()
@@ -236,6 +238,8 @@ function module:CreatePopup(look)
 	lootIcon.complete:SetAllPoints(lootIcon)
 	lootIcon.complete:SetAtlas("pvpqueue-conquestbar-checkmark")
 	lootIcon.complete:Hide()
+	lootIcon.count = lootIcon:CreateFontString(nil, "OVERLAY", "GameFontHighlightOutline")
+	lootIcon.count:SetAllPoints(lootIcon)
 
 	local dead = model:CreateTexture(nil, "OVERLAY")
 	popup.dead = dead
@@ -433,11 +437,16 @@ PopupMixin.scripts = {
 		local anchor = (self:GetCenter() < (UIParent:GetWidth() / 2)) and "ANCHOR_RIGHT" or "ANCHOR_LEFT"
 		GameTooltip:SetOwner(self, anchor, 0, -60)
 		GameTooltip:AddDoubleLine(escapes.leftClick .. " " .. TARGET, escapes.rightClick .. " " .. CLOSE)
-		local uiMapID, x, y = module:GetPositionFromData(self.data)
-		if uiMapID then
+		local uiMapID, x, y = module:GetPositionFromData(self.data, false)
+		if uiMapID and x and y then
 			GameTooltip:AddDoubleLine(core.zone_names[uiMapID] or UNKNOWN, ("%.1f, %.1f"):format(x * 100, y * 100),
 				0, 1, 0,
 				0, 1, 0
+			)
+		else
+			GameTooltip:AddDoubleLine("Location", UNKNOWN,
+				0, 1, 0,
+				1, 0, 0
 			)
 		end
 		if self.data.vignetteID then
@@ -448,7 +457,9 @@ PopupMixin.scripts = {
 		if uiMapID and C_Map.CanSetUserWaypointOnMap(uiMapID) then
 			GameTooltip:AddDoubleLine(CTRL_KEY_TEXT .. " + " .. escapes.leftClick, MAP_PIN )
 		end
-		GameTooltip:AddDoubleLine(SHIFT_KEY_TEXT .. " + " .. escapes.leftClick, TRADESKILL_POST )
+		if uiMapID and x and y then
+			GameTooltip:AddDoubleLine(SHIFT_KEY_TEXT .. " + " .. escapes.leftClick, TRADESKILL_POST )
+		end
 		GameTooltip:Show()
 
 		self.glow.animIn:Stop() -- in case
@@ -577,10 +588,9 @@ PopupMixin.scripts = {
 		local anchor = (self:GetCenter() < (UIParent:GetWidth() / 2)) and "ANCHOR_RIGHT" or "ANCHOR_LEFT"
 		GameTooltip:SetOwner(self, anchor, 0, 0)
 		GameTooltip:SetFrameStrata("TOOLTIP")
-		ns.Loot.Details.UpdateTooltip(GameTooltip, id)
-		if ns.mobdb[id].loot and #ns.mobdb[id].loot > 1 then
-			GameTooltip:AddLine(CLICK_FOR_DETAILS, 0, 1, 1)
-		end
+		GameTooltip:AddDoubleLine(core:GetMobLabel(id), "Loot")
+		ns.Loot.Summary.UpdateTooltip(GameTooltip, id)
+		GameTooltip:AddLine(CLICK_FOR_DETAILS, 0, 1, 1)
 		GameTooltip:Show()
 	end,
 	LootOnLeave = function(self)

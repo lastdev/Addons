@@ -98,6 +98,8 @@ local TYPE_REAGENT = 1
 local TYPE_DUNGEON_LOOT = 2
 local TYPE_RAID_LOOT = 3
 local TYPE_PVP_LOOT = 4
+local TYPE_FACTION_ITEM = 5
+local TYPE_ZONE_ITEM = 6
 
 local reagentTypes = {
 	[1] = GetSpellInfo(2259),		-- Alchemy
@@ -155,6 +157,24 @@ function lib.SetPvPItem(expansion, season, classes)
 		+ ((classes or 0) * 2^15)							-- Bits 15+ : classes (1 bit per class)
 end
 
+function lib.SetFactionItem(expansion, factionID, instanceID)
+	return expansion											-- Bits 0-4 : expansion (classic = 0)
+		+ (TYPE_FACTION_ITEM * 32)							-- Bits 5-9 : type
+		+ (factionID * 2^10)									-- Bits 10-25 : faction ID
+		+ ((instanceID or 0) * 2^26)						-- Bits 26+ : instance ID
+end
+
+function lib.SetZoneItem(expansion, zoneID, locX, locY)
+	-- Note, pass the coordinates as integers (simply x10)
+	-- ex: 38.9 42.0 => 389, 420
+
+	return expansion											-- Bits 0-4 : expansion (classic = 0)
+		+ (TYPE_ZONE_ITEM * 32)								-- Bits 5-9 : type
+		+ (zoneID * 2^10)										-- Bits 10-25 : faction ID
+		+ ((locX or 0) * 2^26)								-- Bits 26-35 : locX = X coordinates on the map
+		+ ((locY or 0) * 2^36)								-- Bits 36-45 : locY = Y coordinates on the map
+end
+
 
 -- Returns the name of the profession that created the item
 function lib:GetItemSource(itemID)
@@ -185,5 +205,30 @@ function lib:GetItemSource(itemID)
 		local instanceName = GetRealZoneText(instanceID)
 	
 		return itemType, _G[format("EXPANSION_NAME%d", expansion)], expansion, instanceName, bossName
+		
+	elseif itemType == TYPE_FACTION_ITEM then
+		-- instance id's from https://wow.tools/dbc/?dbc=map or https://wowpedia.fandom.com/wiki/InstanceID
+		-- retrieved in-game with GetRealZoneText(zoneID)
+	
+		local factionID = bAnd(RightShift(attrib, 10), 65535)		-- Bits 10-25 : faction id
+		local instanceID = bAnd(RightShift(attrib, 26), 65535)	-- Bits 26+ : instance id
+		
+		local factionName = GetFactionInfoByID(factionID)
+		local instanceName = (instanceID ~= 0) and GetRealZoneText(instanceID) or nil
+		
+		return itemType, _G[format("EXPANSION_NAME%d", expansion)], expansion, factionName, instanceName
+	
+	elseif itemType == TYPE_ZONE_ITEM then
+		-- https://wowpedia.fandom.com/wiki/UiMapID
+		-- C_Map.GetMapInfo()  https://wowpedia.fandom.com/wiki/API_C_Map.GetMapInfo
+		-- ID's : https://wowpedia.fandom.com/wiki/UiMapID
+	
+		local UiMapID = bAnd(RightShift(attrib, 10), 65535)		-- Bits 10-25 : UiMapID
+		local locX = bAnd(RightShift(attrib, 26), 1023)				-- Bits 26-35 : locX = X coordinates on the map
+		local locY = bAnd(RightShift(attrib, 36), 1023)				-- Bits 36-45 : locY = Y coordinates on the map
+		local zoneInfo = C_Map.GetMapInfo(UiMapID)
+		local zoneName = (zoneInfo) and zoneInfo.name or ""
+	
+		return itemType, _G[format("EXPANSION_NAME%d", expansion)], expansion, zoneName, locX, locY
 	end
 end

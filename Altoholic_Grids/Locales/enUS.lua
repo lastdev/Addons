@@ -5,6 +5,7 @@ L["Equipment"] = true
 L["Currencies"] = true
 L["Reputations"] = true
 L["Daily Quests"] = true
+L["Weekly Quests"] = true
 L["Zone"] = true
 L["Characters"] = true
 L["Rest XP"] = true

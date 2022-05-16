@@ -71,4 +71,9 @@ enum.CurrencyIDs = {
 	StygianEmber = 1977,
 	SoulCinders = 1906,
 	
+	-- Shadowlands 9.2
+	CyphersOfTheFirstOnes = 1979,
+	CosmicFlux = 2009,
+	
+	
 }

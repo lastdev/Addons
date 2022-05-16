@@ -3,6 +3,10 @@ local function SearchItem(text)
     return false
   end
 
+  C_Timer.After(0, function()
+    StackSplitFrame:Hide()
+  end)
+
   local name = Auctionator.Utilities.GetNameFromLink(text)
 
   if name == nil then
@@ -15,8 +19,10 @@ local function SearchItem(text)
   return true
 end
 
-local prevChatEdit_InsertLink = ChatEdit_InsertLink
-
-ChatEdit_InsertLink = function(text)
-  return prevChatEdit_InsertLink(text) or SearchItem(text)
-end
+-- We would replace ChatEdit_InsertLink so that the return value is used, but
+-- that causes a taint error when attempting to buy vendor items with the stack
+-- selection dialog (to replicate, when ChatEdit_InsertLink is manually
+-- replaced, hold down "c" while pressing [Enter] with the stack dialog open)
+hooksecurefunc(_G, "ChatEdit_InsertLink", function(text)
+  SearchItem(text)
+end)

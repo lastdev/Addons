@@ -49,7 +49,7 @@ L["CONFIRM"] = "Confirmar"
 L["COPY_RAIDERIO_PROFILE_URL"] = "Copiar URL de Raider.IO"
 L["COPY_RAIDERIO_RECRUITMENT_URL"] = "Copiar URL de Recutramiento"
 L["COPY_RAIDERIO_URL"] = "Copiar la URL de Raider.IO"
-L["CURRENT_MAINS_SCORE"] = "Puntuación actual de M+ del Personaje Principal"
+L["CURRENT_MAINS_SCORE"] = "Puntuación actual de M+ del Main"
 L["CURRENT_SCORE"] = [=[Actual puntuación M+
 ]=]
 L["DISABLE_DEBUG_MODE_RELOAD"] = "Estás desactivando el modo Debug. Al hacer clic en Confirmar se cargará de nuevo su interfaz."
@@ -67,6 +67,7 @@ L["DUNGEON_SHORT_NAME_DHT"] = "Arboleda"
 L["DUNGEON_SHORT_NAME_DOS"] = "El Otro Lado - DOS"
 L["DUNGEON_SHORT_NAME_EOA"] = "Ojo"
 L["DUNGEON_SHORT_NAME_FH"] = "Fuerte Libre"
+L["DUNGEON_SHORT_NAME_GMBT"] = "Gambito de So'leah - GMBT"
 L["DUNGEON_SHORT_NAME_HOA"] = "Salas de la Expiación - HOA"
 L["DUNGEON_SHORT_NAME_HOV"] = "Valor"
 L["DUNGEON_SHORT_NAME_KR"] = "Reposo "
@@ -82,6 +83,7 @@ L["DUNGEON_SHORT_NAME_SEAT"] = "Trono"
 L["DUNGEON_SHORT_NAME_SIEGE"] = "Asedio"
 L["DUNGEON_SHORT_NAME_SOA"] = "Agujas de Ascensión - SOA"
 L["DUNGEON_SHORT_NAME_SOTS"] = "Altar "
+L["DUNGEON_SHORT_NAME_STRT"] = "Calles de las Maravillas - STRT"
 L["DUNGEON_SHORT_NAME_TD"] = "Tol Dagor"
 L["DUNGEON_SHORT_NAME_TM"] = "Veta Madre"
 L["DUNGEON_SHORT_NAME_TOP"] = "Teatro del Dolor - TOP"
@@ -132,7 +134,7 @@ L["KEYSTONE_COMPLETED_5"] = "+5-9 (en tiempo)"
 L["LEGION_MAIN_SCORE"] = "Puntuación de personaje principal en Legion"
 L["LEGION_SCORE"] = "Puntuación en Legion"
 L["LOCKING_PROFILE_FRAME"] = "RaiderIO: bloqueando el marco de perfil de M+."
-L["MAINS_BEST_SCORE_BEST_SEASON"] = "Mejor puntuación en M+ con el personaje principal (%s)"
+L["MAINS_BEST_SCORE_BEST_SEASON"] = "Mejor puntuación en M+ con el main (%s)"
 L["MAINS_RAID_PROGRESS"] = "Progreso de personaje principal"
 L["MAINS_SCORE"] = "Puntuación de personaje principal"
 L["MAINS_SCORE_COLON"] = "Puntuación de personaje principal:"
@@ -269,6 +271,8 @@ L["RELOAD_NOW"] = "Reiniciarla ahora"
 --[[ L["RELOAD_RWF_MODE_BUTTON"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RWF_MINIBUTTON_TOOLTIP"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RWF_SUBTITLE_LOGGING_FILTERED_LOOT"] = ""--]] 
 --[[Translation missing --]]

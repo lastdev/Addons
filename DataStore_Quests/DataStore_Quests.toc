@@ -1,8 +1,8 @@
-## Interface: 90105
+## Interface: 90200
 ## Title: DataStore_Quests
 ## Notes: Stores information about character quests
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: 9.1.003
+## Version: 9.2.003b
 ## Dependencies: DataStore
 ## OptionalDeps: Ace3
 ## SavedVariables: DataStore_QuestsDB

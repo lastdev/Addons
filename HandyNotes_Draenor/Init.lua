@@ -116,7 +116,7 @@ function HandyNotes_Draenor:OnInitialize()
         self:RegisterEvent("PLAYER_ENTERING_WORLD", "WorldEnter")
         self:RegisterEvent("PLAYER_LEAVING_WORLD", "WorldLeave")
     else
-        print("HandyNotes Draenor: Addon HandyNotes is not installed")
+        print("HandyNotes Draenor: HandyNotes is not installed")
         return
     end
 

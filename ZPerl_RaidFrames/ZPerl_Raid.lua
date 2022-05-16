@@ -22,7 +22,7 @@ local conf, rconf
 XPerl_RequestConfig(function(newConf)
 	conf = newConf
 	rconf = conf.raid
-end, "$Revision: ad0a9dcecec9c0eb0bcfc614a2ff02481b87a78d $")
+end, "$Revision: ba83e40f9d15e0884b12cfb141a24c54c2032260 $")
 
 --[[if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
@@ -42,6 +42,7 @@ local format = format
 local strsub = strsub
 
 local GetNumGroupMembers = GetNumGroupMembers
+local UnitGUID = UnitGUID
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 local UnitIsConnected = UnitIsConnected

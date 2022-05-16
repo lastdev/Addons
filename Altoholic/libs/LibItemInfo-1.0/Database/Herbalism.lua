@@ -163,5 +163,6 @@ lib:RegisterItems({
 	[169701] = SetReagent(8, e.Herbalism), -- Death Blossom
 	[170554] = SetReagent(8, e.Herbalism), -- Vigil's Torch
 	[171315] = SetReagent(8, e.Herbalism), -- Nightshade
+	[187699] = SetReagent(8, e.Herbalism), -- First Flower
 
 })

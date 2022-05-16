@@ -88,6 +88,7 @@ L.GroupOptionsBySpell		= "按照技能分組 (只支持有效的模組)"
 L.GroupOptionsExcludeIcon	= "按照技能分組排除“設置標記圖示”選項 (它們將像以前一樣在“圖示”類中顯示)"
 L.AutoExpandSpellGroups		= "按照技能分組自動擴展選項"
 --L.ShowSpellDescWhenExpanded	= "分組擴展時繼續顯示技能描述"
+L.NoDescription				= "此技能無描述說明"
 
 -- Panel: Extra Features
 L.Panel_ExtraFeatures		= "額外功能"
@@ -104,11 +105,25 @@ L.SKT_Enabled				= "顯示目前戰鬥的最佳紀錄勝利計時器"
 L.ShowRespawn				= "顯示下一次首領重生計時器"
 L.ShowQueuePop				= "顯示接受彈出佇列的剩餘時間(尋求組隊、戰場..等)"
 --
-L.Area_AutoLogging			= "自動記錄選項"
-L.AutologBosses				= "自動使用暴雪戰鬥日誌記錄地城/團隊戰鬥"
-L.AdvancedAutologBosses		= "自動使用Transcriptor紀錄地城/團隊戰鬥"
-L.RecordOnlyBosses			= "只記錄首領的戰鬥 (排除所有小怪。請於首領開打前使用 /dbm pull 以獲取數據)"
-L.LogOnlyNonTrivial			= "只記錄重要內容 (普通或更難的當前內容團隊副本 & 傳奇+ 地下城)"
+--Auto Logging: Logging toggles/types
+L.Area_AutoLogging			= "自動記錄切換"
+L.AutologBosses				= "自動使用暴雪戰鬥日誌記錄所選內容"
+L.AdvancedAutologBosses		= "自動使用Transcriptor紀錄所選內容"
+--Auto Logging: Global filter Options
+L.Area_AutoLoggingFilters	= "自動記錄過濾"
+L.RecordOnlyBosses			= "不記錄小怪的戰鬥 (只記錄首領。請於首領開打前使用 /dbm pull 以獲取數據)"
+
+L.DoNotLogLFG				= "不記錄地城搜尋器或團隊搜尋器 (佇列的內容)"
+--Auto Logging: Recorded Content types
+L.Area_AutoLoggingContent	= "自動記錄內容"
+L.LogCurrentMythicRaids		= "當前等級傳奇團隊副本"--Retail Only
+L.LogCurrentRaids			= "當前等級團隊"
+L.LogTWRaids				= "時光漫遊 或 克羅米時光團隊副本"--Retail Only
+L.LogTrivialRaids			= "低等團隊副本 (低於角色等級)"
+L.LogCurrentMPlus			= "當前等級傳奇+地下城"--Retail Only
+L.LogCurrentMythicZero		= "當前等級傳奇0層地下城"--Retail Only
+L.LogTWDungeons				= "時光漫遊 或 克羅米時光地下城"--Retail Only
+L.LogCurrentHeroic			= "當前等級英雄地下城 (注意：如果您通過地城搜尋器佇列英雄並想要記錄，請關閉地城搜尋器過濾)"
 --
 L.Area_3rdParty				= "協力插件選項"
 L.oRA3AnnounceConsumables	= "在戰鬥開始時通告oRA3消耗品檢查"
@@ -232,10 +247,10 @@ L.Area_VoiceSelection		= "語音選擇"
 L.CountdownVoice			= "設置主要倒數計時語音"
 L.CountdownVoice2			= "設置次要倒數計時語音"
 L.CountdownVoice3			= "設置第三倒數計時語音"
+L.PullVoice					= "設置開怪計時器的語音"
 L.VoicePackChoice			= "設置語音警告的語音包"
 L.MissingVoicePack			= "缺少語音包 (%s)"
 L.Area_CountdownOptions		= "倒數選項"
---NEW OPTIONS INCOMING USING THESE
 L.Area_VoicePackReplace		= "語音包替換選項 (選擇那些語音包要啟用、靜音以及替換)"
 L.VPReplaceNote				= "注意: 語音包永遠不會更改或刪除警告聲音。\n當替換語音包時，只是被簡單地靜音。"
 L.ReplacesAnnounce			= "替換提示聲音 (注意: 語音包除了階段轉換以及小怪外很少使用)"
@@ -340,6 +355,8 @@ L.BarSpark					= "計時條閃光"
 L.BarFlash					= "快結束時閃爍計時條"
 L.BarSort					= "依剩餘時間排序"
 L.BarColorByType			= "根據類型上色"
+L.Highest					= "頂部最高"
+L.Lowest					= "頂部最低"
 L.NoBarFade					= "使用開始/結束顏色作為小型/大型顏色，而不是逐漸改變顏色"
 L.BarInlineIcons			= "顯示嵌入圖示"
 L.ShortTimerText			= "使用較短的計時器文字(如果可用時)"
