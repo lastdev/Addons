@@ -40,8 +40,8 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(2330)
 
 L:SetMiscLocalization({
-	BwonsamdiWrath =	"Well, if ya so eager for death, ya shoulda come see me sooner!",
-	BwonsamdiWrath2 =	"Sooner or later... everybody serves me!",
+	BwonsamdiWrath =	"Ну, если ты так жаждешь смерти, ты должен прийти ко мне раньше!",
+	BwonsamdiWrath2 =	"Рано или поздно... все служат мне!",
 	Bird			 =	"Гнев Па'ку"
 })
 
@@ -71,7 +71,7 @@ L= DBM:GetModLocalization(2343)
 
 L:SetOptionLocalization({
 	ShowOnlySummary2	= "Скрывать имена игроков при проверке дистанции и показывать только сводную информацию (количество игроков, находящихся рядом)",
-	InterruptBehavior	= "Настройка ротации сбития каста элементалю (Переопределит настройки у всех, если вы рейд лидер)",
+	InterruptBehavior	= "Настройка ротации сбития каста элементалю (переопределит настройки у всех, если вы рейд лидер)",
 	Three				= "Ротация из 3 человек ",--Default
 	Four				= "Ротация из 4 человек ",
 	Five				= "Ротация из 5 человек ",
@@ -90,5 +90,5 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("ZuldazarRaidTrash")
 
 L:SetGeneralLocalization({
-	name =	"Dazar'alor Trash"
+	name =	"Трэш мобы Дазар'алор"
 })

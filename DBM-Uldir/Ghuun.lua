@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2147, "DBM-Uldir", nil, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116032237")
+mod:SetRevision("20220201235219")
 mod:SetCreatureID(132998)
 mod:SetEncounterID(2122)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -572,7 +572,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnBloodFeastTarget:Show(self.vb.bloodFeastCount, args.destName)
 			specWarnBloodFeastTarget:Play("bloodfeast")
 			local count = self.vb.bloodFeastCount
-			specWarnBloodFeastTarget:ScheduleVoice(1, nil, "Interface\\AddOns\\DBM-VP"..DBM.Options.ChosenVoicePack.."\\count\\"..count..".ogg")
+			specWarnBloodFeastTarget:ScheduleVoice(1, nil, "Interface\\AddOns\\DBM-VP"..DBM.Options.ChosenVoicePack2.."\\count\\"..count..".ogg")
 		end
 		self.vb.bloodFeastTarget = args.destName
 	elseif spellId == 270443 then--Bite

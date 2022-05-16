@@ -1,3 +1,17 @@
+05/15/2022 version 1.2.7
+- Added zhCN localization courtesy of siewia from curseforge
+
+05/15/2022 version 1.2.6
+- Added zhTW localization courtesy of BNS from wowinterface
+- Fix for "Settings" label at top of settings panel not being localized
+
+05/15/2022 version 1.2.5
+- Added new option: 'Use same window size and position across all characters'
+- Added support for localization. Anyone interested in providing a translation for your language, please fill in your language's file in the localizations folder and PM to Gello at wowinterface or Gello3 on curseforge.
+
+05/12/2022 version 1.2.4
+- Fix to make wowup recognize the wowinterface provider. (May require a rescan of folders in wowup)
+
 05/05/2022 version 1.2.3
 - Cost of Bronzewing Vespoid and Prototype Leaper changed to 350 each
 - Genesis Mote counts are greyed out when not enough are collected for known pets and mounts

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2195, "DBM-Uldir", nil, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116190835")
+mod:SetRevision("20220128073746")
 mod:SetCreatureID(138967)
 mod:SetEncounterID(2145)
 mod:DisableESCombatDetection()--ES fires moment you throw out CC, so it can't be trusted for combatstart
@@ -500,7 +500,7 @@ do
 					self.vb.activeDecay = nil
 					local icon = GetRaidTargetIndex(uId)
 					if not icon then
-						SetRaidTarget(uId.."target", 8)
+						self:SetIcon(uId.."target", 8)
 					end
 				end
 				if not (self.vb.activeDecay) then

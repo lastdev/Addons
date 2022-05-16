@@ -1,3 +1,6 @@
+local _,L = ...
+setmetatable(L,{__index=function(L,key) return key end})
+
 local psfj = ProtoformSynthesisFieldJournal
 local minimapButton = ProtoformSynthesisFieldJournalMinimapButton
 local settings
@@ -6,8 +9,8 @@ local DEBUG_MODE = false
 
 ProtoformSynthesisFieldJournalSettings = {} -- global settings (becomes settings)
 
-BINDING_HEADER_PROTOFORMSYNTHESISFIELDJOURNAL = "Protoform Synthesis Field Journal"
-BINDING_NAME_PROTOFORMSYNTHESISFIELDJOURNAL_TOGGLE = "Toggle Window"
+BINDING_HEADER_PROTOFORMSYNTHESISFIELDJOURNAL = L["Protoform Synthesis Field Journal"]
+BINDING_NAME_PROTOFORMSYNTHESISFIELDJOURNAL_TOGGLE = L["Toggle Window"]
 
 SLASH_PROTOFORMSYNTHESISFIELDJOURNAL1 = "/psfj"
 SlashCmdList["PROTOFORMSYNTHESISFIELDJOURNAL"] = function() psfj:Toggle() end
@@ -105,20 +108,21 @@ psfj.data = {
 }
 
 psfj.settingsList = {
-    {text="Settings",isHeader=true},
-    {var="lockWindowPosition",text="Prevent this window from being moved unless Shift is held"},
-    {var="lockWindowSize",text="Prevent this window from being resized"},
-    {var="showReagentTooltips",text="Show reagent tooltips when the mouse is over a reagent"},
-    {var="showMinimapButton",text="Show a minimap button to summon or dismiss this window"},
-    {var="hideCollectedPets",text="Hide pets that have been collected in the journal"},
-    {var="hideCollectedMounts",text="Hide mounts that have been collected in the journal"},
-    {var="hideUnknownPetSchematics",text="Hide pet schematics that aren't known on this character"},
-    {var="hideUnknownMountSchematics",text="Hide mount schematics that aren't known on this character"},
-    {text="Help",isHeader=true},
-    {text="To resize this window, drag the resize grip in the lower right corner of this window."},
-    {text="A \124TInterface\\AddOns\\ProtoformSynthesisFieldJournal\\textures\\owned-known:0\124t beside a pet or mount name means it's been collected in the journal."},
-    {text="A number like [1] beside a pet or mount name is how many of those you can make."},
-    {text="Version "..(GetAddOnMetadata("ProtoformSynthesisFieldJournal","Version") or "")},    
+    {text=L["Settings"],isHeader=true},
+    {var="lockWindowPosition",text=L["Prevent this window from being moved unless Shift is held"]},
+    {var="lockWindowSize",text=L["Prevent this window from being resized"]},
+    {var="showReagentTooltips",text=L["Show reagent tooltips when the mouse is over a reagent"]},
+    {var="showMinimapButton",text=L["Show a minimap button to summon or dismiss this window"]},
+    {var="hideCollectedPets",text=L["Hide pets that have been collected in the journal"]},
+    {var="hideCollectedMounts",text=L["Hide mounts that have been collected in the journal"]},
+    {var="hideUnknownPetSchematics",text=L["Hide pet schematics that aren't known on this character"]},
+    {var="hideUnknownMountSchematics",text=L["Hide mount schematics that aren't known on this character"]},
+    {var="shareWindowPosition",text=L["Use same window size and position across all characters"]},
+    {text=GAMEMENU_HELP,isHeader=true},
+    {text=L["To resize this window, drag the resize grip in the lower right corner of this window."]},
+    {text=L["A \124TInterface\\AddOns\\ProtoformSynthesisFieldJournal\\textures\\owned-known:0\124t beside a pet or mount name means it's been collected in the journal."]},
+    {text=L["A number like [1] beside a pet or mount name is how many of those you can make."]},
+    {text=GAME_VERSION_LABEL.." "..(GetAddOnMetadata("ProtoformSynthesisFieldJournal","Version") or "")},    
 }
 
 psfj.list = {} -- ordered list of itemIDs for display in the autoscrollframe
@@ -170,7 +174,7 @@ function psfj:PLAYER_LOGIN()
     settings = ProtoformSynthesisFieldJournalSettings
 
     -- adjust frame
-    self.TitleText:SetText("Protoform Synthesis Field Journal")
+    self.TitleText:SetText(L["Protoform Synthesis Field Journal"])
     self.TitleText:SetPoint("TOP",-6,-5)
     self:SetMinResize(330,196)
     self:SetMaxResize(1024,768)
@@ -206,15 +210,15 @@ function psfj:PLAYER_LOGIN()
         settings.activeTab = 1 -- start with pet tab if not defined
     end
     self.PanelTabs.Tabs[settings.activeTab].isActive = true
-    self.PanelTabs.PetTab.Text:SetText("Pets")
-    self.PanelTabs.MountTab.Text:SetText("Mounts")
-    self.PanelTabs.SettingsTab.Text:SetText("Settings")
+    self.PanelTabs.PetTab.Text:SetText(L["Pets"])
+    self.PanelTabs.MountTab.Text:SetText(L["Mounts"])
+    self.PanelTabs.SettingsTab.Text:SetText(L["Settings"])
     self:UpdateTabs()
 
     -- broker launcher plugin
     local ldb = LibStub and LibStub.GetLibrary and LibStub:GetLibrary("LibDataBroker-1.1",true)
     if ldb then
-        ldb:NewDataObject("ProtoformSynthesisFieldJournal",{type="launcher", icon="Interface\\Icons\\inv_progenitor_protoformsynthesis", tooltiptext="Protoform Synthesis Field Journal", OnClick=psfj.Toggle}) 
+        ldb:NewDataObject("ProtoformSynthesisFieldJournal",{type="launcher", icon="Interface\\Icons\\inv_progenitor_protoformsynthesis", tooltiptext=L["Protoform Synthesis Field Journal"], OnClick=psfj.Toggle}) 
     end
 
     minimapButton:Update()
@@ -598,6 +602,15 @@ function psfj:OnEvent(event,...)
 end
 
 function psfj:OnShow()
+    if settings.shareWindowPosition then
+        if settings.windowXPos and settings.windowYPos then
+            self:ClearAllPoints()
+            self:SetPoint("BOTTOMLEFT",settings.windowXPos,settings.windowYPos)
+        end
+        if settings.windowWidth and settings.windowHeight then
+            self:SetSize(settings.windowWidth,settings.windowHeight)
+        end
+    end
     self:Update(true)
     self:RegisterEvent("PLAYERREAGENTBANKSLOTS_CHANGED")
     self:RegisterEvent("QUEST_TURNED_IN")
@@ -644,7 +657,7 @@ end
 function psfj:ListButtonOnClick()
     if IsModifiedClick("DRESSUP") then
         if InCombatLockdown() then
-            UIErrorsFrame:AddMessage("You are in combat",1,0,0)
+            UIErrorsFrame:AddMessage(ERR_AFFECTING_COMBAT,1,0,0)
         elseif self.speciesID then
             local _,_,_,creatureID,_,_,_,_,_,_,_,displayID = C_PetJournal.GetPetInfoBySpeciesID(self.speciesID)
             DressUpBattlePet(creatureID,displayID,self.speciesID)
@@ -681,6 +694,10 @@ end
 
 function psfj:OnMouseUp()
     self:StopMovingOrSizing()
+    settings.windowXPos = self:GetLeft()
+    settings.windowYPos = self:GetBottom()
+    settings.windowWidth = self:GetWidth()
+    settings.windowHeight = self:GetHeight()
 end
 
 --[[ minimap button ]]
@@ -693,7 +710,7 @@ end
 
 function minimapButton:OnEnter()
     GameTooltip:SetOwner(self,"ANCHOR_LEFT")
-    GameTooltip:AddLine("Protoform Synthesis Field Journal")
+    GameTooltip:AddLine(L["Protoform Synthesis Field Journal"])
     GameTooltip:Show()
 end
 

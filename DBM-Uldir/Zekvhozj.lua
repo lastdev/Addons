@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2169, "DBM-Uldir", nil, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116190835")
+mod:SetRevision("20220128073746")
 mod:SetCreatureID(134445)--Zek'vhozj, 134503/qiraji-warrior
 mod:SetEncounterID(2136)
 mod:SetUsedIcons(1, 2, 3, 6, 7, 8)
@@ -54,7 +54,7 @@ local yellRoilingDeceit					= mod:NewCountYell(265360)
 local yellRoilingDeceitFades			= mod:NewFadesYell(265360)
 local specWarnVoidbolt					= mod:NewSpecialWarningInterrupt(267180, "HasInterrupt", nil, nil, 1, 2)
 --Stage Three: Corruption
-local specWarnOrbOfCorruption			= mod:NewSpecialWarningCount(267239, nil, nil, nil, 2, 7)
+local specWarnOrbOfCorruption			= mod:NewSpecialWarningCount(267239, nil, nil, nil, 2, 12)
 local yellCorruptorsPact				= mod:NewFadesYell(265662)
 local specWarnWillofCorruptorSoon		= mod:NewSpecialWarningSoon(265646, nil, nil, nil, 3, 2)
 local specWarnWillofCorruptor			= mod:NewSpecialWarningSwitch(265646, "Dps", nil, 2, 1, 2)
@@ -162,7 +162,7 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 267239 and self:AntiSpam(15, 4) then--Backup, in case emote doesn't fire for more than first one
 		specWarnOrbOfCorruption:Show(1)
-		specWarnOrbOfCorruption:Play("161612")--catch balls
+		specWarnOrbOfCorruption:Play("catchballs")--catch balls
 		timerOrbLands:Start(8, 1)
 	elseif spellId == 270620 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnEntropicBlast:Show(args.sourceName)
@@ -257,7 +257,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self:AntiSpam(5, 7) then
 			self.vb.corruptorsPactCount = self.vb.corruptorsPactCount + 1
 			specWarnOrbOfCorruption:Show(self.vb.corruptorsPactCount+1)--+1 cause this is pre warning for next orb
-			specWarnOrbOfCorruption:Play("161612")
+			specWarnOrbOfCorruption:Play("catchballs")
 			timerOrbLands:Start(15, self.vb.corruptorsPactCount+1)
 		end
 		warnCorruptorsPact:CombinedShow(0.5, self.vb.corruptorsPactCount, args.destName)--Combined in case more than one soaks same ball (will happen in lfr/normal for sure or farm content for dps increases)
@@ -333,7 +333,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	elseif spellId == 267191 then--Anub'ar Caster Summon Cosmetic Beam
 		if not GetRaidTargetIndex(uId) then--Not already marked
 			if self.Options.SetIconOnAdds then
-				SetRaidTarget(uId, self.vb.addIcon)
+				self:SetIcon(uId, self.vb.addIcon)
 			end
 			self.vb.addIcon = self.vb.addIcon + 1
 			if self.vb.addIcon == 4 then
