@@ -1,9 +1,6 @@
-## Changed in v90200.11
+## Changed in v90205.0
 
-* New announcement type: controller vibration, if you've enabled a controller via `/console GamePadEnable 1`
-* Option in Outputs for whether to treat known-mounts as uninteresting; you might want to uncheck this if you're e.g. helping someone else hunt for a specific mount that you've already obtained
-* Tweaks to what counts as "partially complete" for icons on the map, so non-achievement mobs with loot will be better represented
-* When sending messages to chat, include a map pin hyperlink if available
-* Add a missing mountid in Korthia
-* Some earlier-expansion loot in Cataclysm, Pandaria, and Battle for Azeroth
+* Updated for 9.2.5, fixing errors about C_TransmogCollection (in a rush, so there might be followup fixes)
+* Make scrolling inside long mob list tooltips much faster
+* Added missing vignette ID for the Sinstone Hoarder in Revendreth
 

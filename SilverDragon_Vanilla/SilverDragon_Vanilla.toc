@@ -1,7 +1,7 @@
-## Interface: 90200
+## Interface: 90205
 ## Title: SilverDragon (Vanilla)
 ## Notes: Mobs for Vanilla
-## Version: v90200.11
+## Version: v90205.0
 ## Author: Kemayo
 ## eMail: kemayo at gmail dot com
 ## X-Category: Interface Enhancements

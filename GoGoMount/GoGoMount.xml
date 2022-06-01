@@ -1,3 +1,115 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+	<Script file="GoGoMountData.lua"/>
+	<Script file="locale\enUS.lua"/>
+	<Script file="locale\deDE.lua"/>
+	<Script file="locale\esES.lua"/>
+	<Script file="locale\esMX.lua"/>
+	<Script file="locale\frFR.lua"/>
+	<Script file="locale\itIT.lua"/>
+	<Script file="locale\koKR.lua"/>
+	<Script file="locale\ptBR.lua"/>
+	<Script file="locale\ruRU.lua"/>
+	<Script file="locale\zhCN.lua"/>
+	<Script file="locale\zhTW.lua"/>
+	<Script file="localization.lua"/>
+	<Script file="GoGoZones.lua"/>
 	<Script file="GoGoMount.lua"/>
+	<Frame name="GoGoFrame">
+		<Scripts>
+			<OnLoad>
+				GoGo_OnLoad();
+			</OnLoad>
+			<OnEvent>
+				GoGo_OnEvent(self, event, ...);
+			</OnEvent>
+		</Scripts>
+	</Frame>
+	<Button name="GoGoButton" inherits="SecureActionButtonTemplate" parent="UIParent" frameStrata="LOW" hidden="false">
+		<Attributes>
+			<Attribute name="type" type="string" value="macro"/>
+		</Attributes>
+		<Scripts>
+			<PreClick>
+				if GoGo_Variables.Debug >= 10 then GoGo_Variables.DebugTimer = debugprofilestop() end --if
+				if GoGo_Variables.Debug >= 10 then GoGo_DebugAddLine("BUTTON: Button 1 pressed.") end --if
+				GoGo_Variables.SelectPassengerMount = false
+				GoGo_Variables.SelectSellerMount = false
+				GoGo_Variables.SelectHerbMount = false
+				GoGo_Variables.SkipFlyingMount = nil
+				GoGo_PreClick(self)
+			</PreClick>
+		</Scripts>    
+	</Button>
+	<Button name="GoGoButton2" inherits="SecureActionButtonTemplate" parent="UIParent" frameStrata="LOW" hidden="false">
+		<Attributes>
+			<Attribute name="type" type="string" value="macro"/>
+		</Attributes>
+		<Scripts>
+			<PreClick>
+				if GoGo_Variables.Debug >= 10 then GoGo_Variables.DebugTimer = debugprofilestop() end --if
+				if GoGo_Variables.Debug >= 10 then GoGo_DebugAddLine("BUTTON: Button 2 pressed.") end --if
+				GoGo_Variables.SelectPassengerMount = false
+				GoGo_Variables.SelectSellerMount = false
+				GoGo_Variables.SelectHerbMount = false
+				GoGo_Variables.SkipFlyingMount = true
+				GoGo_PreClick(self)
+			</PreClick>
+		</Scripts>    
+	</Button>
+	<Button name="GoGoButton3" inherits="SecureActionButtonTemplate" parent="UIParent" frameStrata="LOW" hidden="false">
+		<Attributes>
+			<Attribute name="type" type="string" value="macro"/>
+		</Attributes>
+		<Scripts>
+			<PreClick>
+				if GoGo_Variables.Debug >= 10 then GoGo_Variables.DebugTimer = debugprofilestop() end --if
+				if GoGo_Variables.Debug >= 10 then GoGo_DebugAddLine("BUTTON: Button 3 pressed.") end --if
+				GoGo_Variables.SelectPassengerMount = true
+				GoGo_Variables.SelectSellerMount = false
+				GoGo_Variables.SelectHerbMount = false
+				GoGo_Variables.SkipFlyingMount = false
+				GoGo_PreClick(self)
+			</PreClick>
+		</Scripts>    
+	</Button>
+	<Button name="GoGoButton4" inherits="SecureActionButtonTemplate" parent="UIParent" frameStrata="LOW" hidden="false">
+		<Attributes>
+			<Attribute name="type" type="string" value="macro"/>
+		</Attributes>
+		<Scripts>
+			<PreClick>
+				if GoGo_Variables.Debug >= 10 then GoGo_Variables.DebugTimer = debugprofilestop() end --if
+				if GoGo_Variables.Debug >= 10 then GoGo_DebugAddLine("BUTTON: Button 4 pressed.") end --if
+				GoGo_Variables.SelectPassengerMount = false
+				GoGo_Variables.SelectSellerMount = true
+				GoGo_Variables.SelectHerbMount = false
+				GoGo_Variables.SkipFlyingMount = false
+				GoGo_PreClick(self)
+			</PreClick>
+		</Scripts>    
+	</Button>
+	<Button name="GoGoButton5" inherits="SecureActionButtonTemplate" parent="UIParent" frameStrata="LOW" hidden="false">
+		<Attributes>
+			<Attribute name="type" type="string" value="macro"/>
+		</Attributes>
+		<Scripts>
+			<PreClick>
+				if GoGo_Variables.Debug >= 10 then GoGo_Variables.DebugTimer = debugprofilestop() end --if
+				if GoGo_Variables.Debug >= 10 then GoGo_DebugAddLine("BUTTON: Button 5 pressed.") end --if
+				GoGo_Variables.SelectPassengerMount = false
+				GoGo_Variables.SelectSellerMount = false
+				GoGo_Variables.SelectHerbMount = true
+				GoGo_Variables.SkipFlyingMount = false
+				GoGo_PreClick(self)
+			</PreClick>
+		</Scripts>    
+	</Button>
+
+	<Frame name="GoGo_Panel">
+		<Scripts>
+			<OnLoad>
+				GoGo_Panel_OnLoad(self);
+			</OnLoad>
+		</Scripts>
+	</Frame>
 </Ui>

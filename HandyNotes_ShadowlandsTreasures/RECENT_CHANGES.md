@@ -1,9 +1,5 @@
-## Changed in v64
+## Changed in v66
 
-* Various quality of life improvements for points related to other points (hovering them will show a link to the related point)
-* Show Apocopocolypse Now progress on coreless automa in Zereth Mortis
-* Show Synthe-supersized! progress on the protoform points
-* Add a missing vignette ID to the Protector of the First Ones
-* A typo was stopping mount-completion from being shown on the Fallen Charger
-* Stop always-showing the Sinrunners and Carriages in Revendreth; since flying has been available that's much less useful
+* Updated for 9.2.5, fixing errors about C_TransmogCollection (in a rush, so there might be followup fixes)
+* Always show loot info on vignettes, bypassing my normal "should I show this point?" check
 

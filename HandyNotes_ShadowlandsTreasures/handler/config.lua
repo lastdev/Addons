@@ -364,6 +364,40 @@ local brokenItems = {
     -- itemid : {appearanceid, sourceid}
     [153268] = {25124, 90807}, -- Enclave Aspirant's Axe
 }
+local itemSlots = {
+    INVTYPE_HEAD = "HEADSLOT",
+    INVTYPE_SHOULDER = "SHOULDERSLOT",
+    INVTYPE_CLOAK = "BACKSLOT",
+    INVTYPE_CHEST = "CHESTSLOT",
+    INVTYPE_ROBE = "CHESTSLOT",
+    INVTYPE_TABARD = "TABARDSLOT",
+    INVTYPE_BODY = "SHIRTSLOT",
+    INVTYPE_WRIST = "WRISTSLOT",
+    INVTYPE_HAND = "HANDSSLOT",
+    INVTYPE_WAIST = "WAISTSLOT",
+    INVTYPE_LEGS = "LEGSSLOT",
+    INVTYPE_FEET = "FEETSLOT",
+    INVTYPE_WEAPON = "MAINHANDSLOT",
+    INVTYPE_RANGED = "MAINHANDSLOT",
+    INVTYPE_RANGEDRIGHT = "MAINHANDSLOT",
+    INVTYPE_THROWN = "MAINHANDSLOT",
+    INVTYPE_SHIELD = "SECONDARYHANDSLOT",
+    INVTYPE_2HWEAPON = "MAINHANDSLOT",
+    INVTYPE_WEAPONMAINHAND = "MAINHANDSLOT",
+    INVTYPE_WEAPONOFFHAND = "SECONDARYHANDSLOT",
+    INVTYPE_HOLDABLE = "SECONDARYHANDSLOT",
+}
+local function GetItemSlot(itemLinkOrID)
+    local _, _, _, slot = GetItemInfoInstant(itemLinkOrID)
+    if not slot then return end
+    return itemSlots[slot]
+end
+local function GetItemCategory(appearanceID, sourceID)
+    return C_TransmogCollection.GetCategoryForItem(appearanceID) or C_TransmogCollection.GetCategoryForItem(sourceID)
+end
+local function GetTransmogLocation(itemLinkOrID)
+    return TransmogUtil.GetTransmogLocation(GetItemSlot(itemLinkOrID), Enum.TransmogType.Appearance, Enum.TransmogModification.Main)
+end
 local function GetAppearanceAndSource(itemLinkOrID)
     local itemID = GetItemInfoInstant(itemLinkOrID)
     if not itemID then return end
@@ -396,12 +430,12 @@ local function CanLearnAppearance(itemLinkOrID)
         canLearnCache[itemID] = false
         return false
     end
-    local appearanceID = GetAppearanceAndSource(itemLinkOrID)
+    local appearanceID, sourceID = GetAppearanceAndSource(itemLinkOrID)
     if not appearanceID then
         canLearnCache[itemID] = false
         return false
     end
-    if not C_TransmogCollection.GetAppearanceSources(appearanceID) then
+    if not C_TransmogCollection.GetAppearanceSources(appearanceID, GetItemCategory(appearanceID, sourceID), GetTransmogLocation(itemLinkOrID)) then
         -- This returns nil for inappropriate appearances
         canLearnCache[itemID] = false
         return false
@@ -428,7 +462,7 @@ local function HasAppearance(itemLinkOrID)
         hasAppearanceCache[itemID] = true
         return true
     end
-    local sources = C_TransmogCollection.GetAppearanceSources(appearanceID)
+    local sources = C_TransmogCollection.GetAppearanceSources(appearanceID, GetItemCategory(appearanceID, sourceID), GetTransmogLocation(itemLinkOrID))
     if not sources then
         hasAppearanceCache[itemID] = false
         return false
@@ -460,7 +494,16 @@ ns.itemRestricted = function(item)
 end
 ns.itemIsKnowable = function(item)
     if type(item) == "table" then
-        return (item.toy or item.mount or item.pet or item.quest or CanLearnAppearance(item[1])) and not ns.itemRestricted(item)
+        if ns.itemRestricted(item) then
+            return false
+        end
+        if item.set and ns.playerClassMask then
+            local info = C_TransmogSets.GetSetInfo(item.set)
+            if info and info.classMask then
+                return bit.band(info.classMask, ns.playerClassMask) == ns.playerClassMask
+            end
+        end
+        return (item.toy or item.mount or item.pet or item.quest or CanLearnAppearance(item[1]))
     end
     return CanLearnAppearance(item)
 end
@@ -475,6 +518,14 @@ ns.itemIsKnown = function(item)
         if item.pet then return PlayerHasPet(item.pet) end
         if item.quest then return C_QuestLog.IsQuestFlaggedCompleted(item.quest) or C_QuestLog.IsOnQuest(item.quest) end
         if item.questComplete then return C_QuestLog.IsQuestFlaggedCompleted(item.questComplete) end
+        if item.set then
+            local info = C_TransmogSets.GetSetInfo(item.set)
+            if info then
+                if info.collected then return true end
+                -- we want to return nil for sets the current class can't learn:
+                if info.classMask and bit.band(info.classMask, ns.playerClassMask) == ns.playerClassMask then return false end
+            end
+        end
         if CanLearnAppearance(item[1]) then return HasAppearance(item[1]) end
     elseif CanLearnAppearance(item) then
         return HasAppearance(item)
@@ -663,7 +714,7 @@ ns.should_show_point = function(coord, point, currentZone, isMinimap)
     if point.requires_item and not itemInBags(point.requires_item) then
         return false
     end
-    if point.requires_worldquest and not C_TaskQuest.IsActive(point.requires_worldquest) then
+    if point.requires_worldquest and not (C_TaskQuest.IsActive(point.requires_worldquest) or C_QuestLog.IsQuestFlaggedCompleted(point.requires_worldquest)) then
         return false
     end
     if point.requires and not ns.conditions.check(point.requires) then
