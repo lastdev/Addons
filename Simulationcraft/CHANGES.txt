@@ -1,10 +1,10 @@
-lightweight tag c653865e924d3666b0bcd828f8b605709cc36e37 v9.2.0
+lightweight tag 205bb81dc44acf97a30684d7232787445f71580e v9.2.5
 Author:	Dave Hendler <sollaires@gmail.com>
-Date:	Tue Feb 22 10:58:35 2022 -0800
+Date:	Mon May 30 13:00:33 2022 -0700
 
-commit c653865e924d3666b0bcd828f8b605709cc36e37
+commit 205bb81dc44acf97a30684d7232787445f71580e
 Author: Dave Hendler <sollaires@gmail.com>
-Date:   Tue Feb 22 10:58:35 2022 -0800
+Date:   Mon May 30 13:00:33 2022 -0700
 
-    Update version for 9.2 release
+    Update TOC for 9.2.5
 

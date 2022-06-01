@@ -1,0 +1,18 @@
+tag d126724b777f72fb42f56bf6b8105a9cc407ebfc v2.0
+Author:	David Mcanulty <github@hellspark.com>
+Date:	Tue May 31 21:43:22 2022 +0000
+
+Release 2.0
+
+commit a1aab3fe344cf0eb078641dfe6df9118b963ee49
+Author: David Mcanulty <github@hellspark.com>
+Date:   Tue May 31 21:42:58 2022 +0000
+
+    Bumped toc for 9.2.5
+
+commit d91f1e0cbd82ccaf92871563275108588279342e
+Author: David Mcanulty <github@hellspark.com>
+Date:   Tue Feb 22 20:41:18 2022 +0000
+
+    bumped toc for 9.2
+

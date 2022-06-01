@@ -1,4 +1,4 @@
-if not WeakAuras.IsCorrectVersion() then return end
+if not WeakAuras.IsCorrectVersion() or not WeakAuras.IsLibsOK() then return end
 local AddonName, Private = ...
 
 -- Legendaries based on https://wow.tools/dbc/?dbc=runeforgelegendaryability
@@ -280,7 +280,7 @@ WeakAuras.GetLegendariesBonusIds = function()
   local classId = select(3, UnitClass('player'))
   local specId = GetSpecializationInfo(GetSpecialization())
 
-  local powers = C_LegendaryCrafting.GetRuneforgePowersByClassAndSpec(classId, specId)
+  local powers = C_LegendaryCrafting.GetRuneforgePowersByClassSpecAndCovenant(classId, specId)
   local abilities = {}
   local names = {}
   for _, power in ipairs(powers) do

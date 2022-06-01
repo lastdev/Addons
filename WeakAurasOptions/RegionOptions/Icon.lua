@@ -1,4 +1,4 @@
-if not WeakAuras.IsCorrectVersion() then return end
+if not WeakAuras.IsCorrectVersion() or not WeakAuras.IsLibsOK() then return end
 local AddonName, OptionsPrivate = ...
 
 local Masque = LibStub("Masque", true)
@@ -232,6 +232,15 @@ local function createOptions(id, data)
       disabled = function() return not OptionsPrivate.Private.CanHaveDuration(data); end,
       hidden = function() return not data.cooldown end,
     },
+    useCooldownModRate = {
+      type = "toggle",
+      width = WeakAuras.normalWidth,
+      name = L["Blizzard Cooldown Reduction"],
+      order = 11.6,
+      desc = L["Cooldown Reduction changes the duration of seconds instead of showing the real time seconds."],
+      disabled = function() return not OptionsPrivate.Private.CanHaveDuration(data); end,
+      hidden = function() return not data.cooldown end,
+    },
     endHeader = {
       type = "header",
       order = 100,
@@ -246,7 +255,7 @@ local function createOptions(id, data)
 end
 
 local function createThumbnail()
-  local frame = CreateFrame("FRAME", nil, UIParent)
+  local frame = CreateFrame("Frame", nil, UIParent)
   local icon = frame:CreateTexture();
   icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark");
   icon:SetAllPoints(frame)

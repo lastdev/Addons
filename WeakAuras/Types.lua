@@ -1,4 +1,4 @@
-if not WeakAuras.IsCorrectVersion() then return end
+if not WeakAuras.IsCorrectVersion() or not WeakAuras.IsLibsOK() then return end
 local AddonName, Private = ...
 
 local WeakAuras = WeakAuras;
@@ -87,7 +87,7 @@ else
   Private.time_format_types = {
     [0] = L["WeakAuras Built-In (63:42 | 3:07 | 10 | 2.4)"],
     [1] = L["Old Blizzard (2h | 3m | 10s | 2.4)"],
-    [2] = L["Modern Blizzard (1h 3m | 3m 7s | 10s | 2.4)"]
+    [2] = L["Modern Blizzard (1h 3m | 3m 7s | 10s | 2.4)"],
   }
 end
 
@@ -187,8 +187,17 @@ local simpleFormatters = {
     -- Modern Blizzard
     [2] = WeakAuras.IsRetail() and function(value)
       return timeFormatter:Format(value)
-    end
-  }
+    end,
+    -- Fixed built-in formatter
+    [99] = function(value)
+      value = ceil(value)
+      if value > 60 then
+        return string.format("%i:", math.floor(value / 60)) .. string.format("%02i", value % 60)
+      else
+        return string.format("%d", value)
+      end
+    end,
+  },
 }
 
 Private.format_types = {
@@ -259,16 +268,39 @@ Private.format_types = {
         hidden = hidden,
         disabled = function() return get(symbol .. "_time_dynamic_threshold") == 0 end
       })
+
+      addOption(symbol .. "_time_mod_rate", {
+        type = "toggle",
+        name = L["Blizzard Cooldown Reduction"],
+        desc = L["Cooldown Reduction changes the duration of seconds instead of showing the real time seconds."],
+        width = WeakAuras.normalWidth,
+        hidden = hidden,
+      })
+
+      addOption(symbol .. "_time_legacy_floor", {
+        type = "toggle",
+        name = L["Use Legacy floor rounding"],
+        desc = L["Enables (incorrect) round down of seconds, which was the previous default behaviour."],
+        width = WeakAuras.normalWidth,
+        hidden = hidden,
+        disabled = function() return get(symbol .. "_time_format", 0) ~= 0 end
+      })
     end,
     CreateFormatter = function(symbol, get)
       local format = get(symbol .. "_time_format", 0)
       local threshold = get(symbol .. "_time_dynamic_threshold", 60)
       local precision = get(symbol .. "_time_precision", 1)
+      local modRate = get(symbol .. "_time_mod_rate", true)
+      local legacyRoundingMode = get(symbol .. "_time_legacy_floor", false)
 
-      local mainFormater = simpleFormatters.time[format]
-      if not mainFormater then
-        mainFormater = simpleFormatters.time[0]
+      if format == 0 and not legacyRoundingMode then
+        format = 99
       end
+      if not simpleFormatters.time[format] then
+        format = 99
+      end
+      local mainFormater = simpleFormatters.time[format]
+
       local formatter
       if threshold == 0 then
         formatter = function(value, state)
@@ -278,6 +310,11 @@ Private.format_types = {
           if value <= 0 then
             return ""
           end
+
+          if modRate then
+            value = value / (state.modRate or 1.0)
+          end
+
           return mainFormater(value)
         end
       else
@@ -289,10 +326,13 @@ Private.format_types = {
           if value <= 0 then
             return ""
           end
+          if modRate then
+            value = value / (state.modRate or 1.0)
+          end
           if value < threshold then
             return string.format(formatString, value)
           else
-            return mainFormater(value, state)
+            return mainFormater(value)
           end
         end
       end
@@ -858,10 +898,10 @@ Private.unit_types_range_check = {
 
 Private.unit_threat_situation_types = {
   [-1] = L["Not On Threat Table"],
-  [0] = "|cFFB0B0B0"..L["Lower Than Tank"],
-  [1] = "|cFFFFFF77"..L["Higher Than Tank"],
-  [2] = "|cFFFF9900"..L["Tanking But Not Highest"],
-  [3] = "|cFFFF0000"..L["Tanking And Highest"]
+  [0] = "|cFFB0B0B0"..L["Lower Than Tank"].."|r",
+  [1] = "|cFFFFFF77"..L["Higher Than Tank"].."|r",
+  [2] = "|cFFFF9900"..L["Tanking But Not Highest"].."|r",
+  [3] = "|cFFFF0000"..L["Tanking And Highest"].."|r"
 }
 
 WeakAuras.class_types = {}
@@ -932,7 +972,7 @@ local function update_forms()
     end
   end
 end
-local form_frame = CreateFrame("frame");
+local form_frame = CreateFrame("Frame");
 form_frame:RegisterEvent("UPDATE_SHAPESHIFT_FORMS")
 form_frame:RegisterEvent("PLAYER_LOGIN")
 form_frame:SetScript("OnEvent", update_forms);
@@ -1323,7 +1363,7 @@ end
 
 Private.talent_types = {}
 if WeakAuras.IsRetail() then
-  local spec_frame = CreateFrame("frame");
+  local spec_frame = CreateFrame("Frame");
   spec_frame:RegisterEvent("PLAYER_LOGIN")
   spec_frame:SetScript("OnEvent", update_specs);
   local numTalents, numTiers, numColumns = MAX_TALENT_TIERS * NUM_TALENT_COLUMNS, MAX_TALENT_TIERS, NUM_TALENT_COLUMNS
@@ -2181,7 +2221,7 @@ Private.instance_difficulty_types = {
 
 }
 
-if WeakAuras.IsRetail() then
+do
   -- Fill out instance_difficulty_types automatically.
   -- Unfourtunately the names BLizzard gives are not entirely unique,
   -- so try hard to disambiguate them via the type, and if nothing works by
@@ -2221,6 +2261,7 @@ if WeakAuras.IsRetail() then
     [40] = L["Island Expedition (Mythic)"],
     [45] = L["Island Expeditions (PvP)"],
     [147] = L["Warfront (Normal)"],
+    [148] = L["20 Player Raid"],
     [149] = L["Warfront (Heroic)"],
     [152] = L["Visions of N'Zoth"],
     [150] = unused, -- Normal Party
@@ -2232,6 +2273,10 @@ if WeakAuras.IsRetail() then
     [171] = L["Path of Ascension: Humility"],
     [170] = L["Path of Ascension: Wisdom"],
     [172] = unused, -- World Boss
+    [173] = L["Normal Party"],
+    [174] = L["Heroic Party"],
+    [175] = L["10 Player Raid"],
+    [176] = L["25 Player Raid"]
   }
 
   local names = {}
@@ -2250,14 +2295,24 @@ if WeakAuras.IsRetail() then
       end
     end
   end
-
-
 end
 
+Private.TocToExpansion = {
+   [1] = L["Classic"],
+   [2] = L["Burning Crusade"],
+   [3] = L["Wrath of the Lich King"],
+   [4] = L["Cataclysm"],
+   [5] = L["Mists of Pandaria"],
+   [6] = L["Warlords of Draenor"],
+   [7] = L["Legion"],
+   [8] = L["Battle for Azeroth"],
+   [9] = L["Shadowlands"],
+  [10] = L["Dragonflight"]
+}
 
 Private.group_types = {
   solo = L["Not in Group"],
-  group = L["In Group"],
+  group = L["In Party"],
   raid = L["In Raid"]
 }
 
@@ -2786,12 +2841,14 @@ Private.update_categories = {
     fields = {},
     default = true,
     label = L["Remove Obsolete Auras"],
+    skipInSummary = true
   },
   {
     name = "newchildren",
     fields = {},
     default = true,
     label = L["Add Missing Auras"],
+    skipInSummary = true
   },
   {
     name = "metadata",
@@ -2814,6 +2871,7 @@ Private.internal_fields = {
   tocversion = true,
   parent = true,
   controlledChildren = true,
+  source = true
 }
 
 -- fields that are not included in exported data

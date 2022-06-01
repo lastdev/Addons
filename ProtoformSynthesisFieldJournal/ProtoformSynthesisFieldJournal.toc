@@ -1,8 +1,10 @@
-## Interface: 90200
+## Interface: 90205
 ## Title: Protoform Synthesis Field Journal
 ## Notes: View the battle pets you can make at the Protoform Synthesis forge and how many reagents are on your person or reagent bank
-## Version: 1.2.7
+## Version: 1.2.9
 ## X-WoWI-ID: 26267
+## X-Wago-ID: xZKx2pNk
+## X-Curse-Project-ID: 596546
 ## Author: Gello
 ## SavedVariables: ProtoformSynthesisFieldJournalSettings
 localization\localization.xml

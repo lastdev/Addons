@@ -839,7 +839,7 @@ function HealBot_Aura_CheckGeneralBuff(button)
                     buffCheckThis=true;
                 elseif buffWatchTarget["Self"] and button.player then
                     buffCheckThis=true
-                elseif buffWatchTarget["Party"] and (UnitInParty(button.unit) or button.player) then 
+                elseif buffWatchTarget["Party"] and button.group==HealBot_Data["PLAYERGROUP"] then 
                     buffCheckThis=true
                 elseif buffWatchTarget["MainTanks"] and HealBot_Panel_IsTank(button.guid) then
                     buffCheckThis=true;
@@ -907,7 +907,7 @@ function HealBot_Aura_CheckGeneralBuff(button)
       --HealBot_setCall("HealBot_Aura_CheckGeneralBuff")
 end
 
-local buffCustomType,scbUnitClassEN,scbUnitClassTrim=false,"XXXX","XXXX"
+local buffCustomType,scbUnitClassEN=false,"XXXX"
 function HealBot_Aura_ShowCustomBuff()
     buffCustomType=HealBot_Watch_HoT[uaSpellId] or HealBot_Watch_HoT[uaName] or false
     if buffCustomType then
@@ -919,10 +919,8 @@ function HealBot_Aura_ShowCustomBuff()
             end
         elseif buffCustomType=="C" then
             _, scbUnitClassEN = UnitClass(uaUnitCaster)
-            if scbUnitClassTrim then
-                if HealBot_Data["PCLASSTRIM"]==strsub(scbUnitClassEN,1,4) then
-                    return true, false
-                end
+            if scbUnitClassEN and HealBot_Data["PCLASSTRIM"]==strsub(scbUnitClassEN,1,4) then
+                return true, false
             end
         end
     else
@@ -1179,7 +1177,7 @@ function HealBot_Aura_CheckCurDebuff(button)
                 if ccdbWatchTarget["Raid"] then
                     ccdbCheckthis=true;
                     if not HealBot_Config_Cures.IgnoreOnCooldownDebuffs then debuffIsAlways=true end
-                elseif ccdbWatchTarget["Party"] and (UnitInParty(button.unit) or button.player) then 
+                elseif ccdbWatchTarget["Party"] and button.group==HealBot_Data["PLAYERGROUP"] then 
                     ccdbCheckthis=true;
                 elseif ccdbWatchTarget["MainTanks"] and HealBot_Panel_IsTank(button.guid) then
                     ccdbCheckthis=true;

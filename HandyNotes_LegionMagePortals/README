@@ -1,0 +1,10 @@
+WoW Plugin - Plugin for the "HandyNotes" addon to show portal locations for the Mage's Teleportation Nexus (Legion expansion) on your map.
+
+
+
+
+
+# curse auto-build
+git tag -a v1.0 -m "Release 1.0"
+git push && git push --tags
+

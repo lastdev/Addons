@@ -1,15 +1,15 @@
-## Interface: 90200
+## Interface: 90205
 ## Title: TomCat's Tours
 ## Notes: See license.txt for license and copyright information
 ## Author: TomCat
 ## X-Website: https://www.tomcatstours.com
-## Version: 2.4.10
+## Version: 2.4.11
 ## DefaultState: enabled
 ## SavedVariables: TomCats_Account
 ## SavedVariablesPerCharacter: TomCats_Character
 ## X-Category: Achievements, Map, Miscellaneous
 ## X-Localizations: enUS, enGB, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ptPT, ruRU, zhCN, zhTW
-## X-TomCats-Expiry: 1654730960
+## X-TomCats-Expiry: 1656612192
 
 constants.lua
 slashcommands.lua

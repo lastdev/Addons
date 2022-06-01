@@ -33,7 +33,6 @@ local function IsValidItem(item)
     C_Item.DoesItemExist(item.location)
 end
 
-
 AuctionatorSaleItemMixin = {}
 
 function AuctionatorSaleItemMixin:OnLoad()
@@ -46,6 +45,7 @@ function AuctionatorSaleItemMixin:OnShow()
   Auctionator.EventBus:Register(self, {
     Auctionator.Selling.Events.BagItemClicked,
     Auctionator.Selling.Events.RequestPost,
+    Auctionator.Selling.Events.ConfirmPost,
     Auctionator.AH.Events.ThrottleUpdate,
     Auctionator.Selling.Events.PriceSelected,
     Auctionator.Selling.Events.RefreshSearch,
@@ -65,6 +65,7 @@ function AuctionatorSaleItemMixin:OnHide()
   Auctionator.EventBus:Unregister(self, {
     Auctionator.Selling.Events.BagItemClicked,
     Auctionator.Selling.Events.RequestPost,
+    Auctionator.Selling.Events.ConfirmPost,
     Auctionator.AH.Events.ThrottleUpdate,
     Auctionator.Selling.Events.PriceSelected,
     Auctionator.Selling.Events.RefreshSearch,
@@ -173,6 +174,9 @@ function AuctionatorSaleItemMixin:ReceiveEvent(event, ...)
 
   elseif event == Auctionator.Selling.Events.RequestPost then
     self:PostItem()
+
+  elseif event == Auctionator.Selling.Events.ConfirmPost then
+    self:PostItem(true)
 
   elseif event == Auctionator.Components.Events.EnterPressed then
     self:PostItem()
@@ -348,7 +352,7 @@ function AuctionatorSaleItemMixin:SetEquipmentMultiplier(itemLink)
   local item = Item:CreateFromItemLink(itemLink)
   item:ContinueOnItemLoad(function()
     local multiplier = Auctionator.Config.Get(Auctionator.Config.Options.GEAR_PRICE_MULTIPLIER)
-    local vendorPrice = select(11, GetItemInfo(itemLink))
+    local vendorPrice = select(Auctionator.Constants.ITEM_INFO.SELL_PRICE, GetItemInfo(itemLink))
     if multiplier ~= 0 and vendorPrice ~= 0 then
       -- Check for a vendor price multiplier being set (and a vendor price)
       self:UpdateSalesPrice(
@@ -381,12 +385,35 @@ function AuctionatorSaleItemMixin:OnEvent(eventName, ...)
 
 end
 
-function AuctionatorSaleItemMixin:GetCommodityResult(itemId)
-  if C_AuctionHouse.GetCommoditySearchResultsQuantity(itemId) > 0 then
-    return C_AuctionHouse.GetCommoditySearchResultInfo(itemId, 1)
+function AuctionatorSaleItemMixin:GetCommodityResult(itemID)
+  if C_AuctionHouse.GetCommoditySearchResultsQuantity(itemID) > 0 then
+    return C_AuctionHouse.GetCommoditySearchResultInfo(itemID, 1)
   else
     return nil
   end
+end
+
+-- Identifies when an auction is skewing the current price down and is probably
+-- not meant to be so low.
+function AuctionatorSaleItemMixin:GetCommodityThreshold(itemID)
+  local amount = 0
+  -- Scan half the auctions, of the first 500, whichever is fewer
+  local target = math.min(500, math.floor(C_AuctionHouse.GetCommoditySearchResultsQuantity(itemID) * 0.5))
+  for index = 1, C_AuctionHouse.GetNumCommoditySearchResults(itemID) do
+    local result = C_AuctionHouse.GetCommoditySearchResultInfo(itemID, index)
+
+    amount = amount + result.quantity
+
+    if amount >= target then
+      -- Scale the % of the price that counts as too little from 70% at 1g and
+      -- down to 30% at higher prices
+      local multiplier = 0.3 + 0.4 * math.min(1, 10000 / result.unitPrice)
+
+      return result.unitPrice * multiplier
+    end
+  end
+
+  return nil
 end
 
 function AuctionatorSaleItemMixin:ProcessCommodityResults(itemID, ...)
@@ -401,6 +428,8 @@ function AuctionatorSaleItemMixin:ProcessCommodityResults(itemID, ...)
       Auctionator.Database:SetPrice(key, result.unitPrice)
     end
   end
+
+  self.priceThreshold = self:GetCommodityThreshold(itemID)
 
   -- A few cases to process here:
   -- 1. If the entry containsOwnerItem=true, I should use this price as my
@@ -451,6 +480,8 @@ function AuctionatorSaleItemMixin:ProcessItemResults(itemKey)
       Auctionator.Database:SetPrice(key, result.buyoutAmount or result.bidAmount)
     end
   end
+
+  self.priceThreshold = nil
 
   local postingPrice = nil
 
@@ -503,6 +534,29 @@ function AuctionatorSaleItemMixin:GetPostButtonState()
     Auctionator.AH.IsNotThrottled()
 end
 
+function AuctionatorSaleItemMixin:GetConfirmationMessage()
+  -- Check if the item was underpriced compared to the currently on sale items
+  if self.priceThreshold ~= nil and self.priceThreshold >= self.Price:GetAmount() then
+    return AUCTIONATOR_L_CONFIRM_POST_LOW_PRICE:format(Auctionator.Utilities.CreateMoneyString(self.Price:GetAmount()))
+  end
+
+  -- Determine if the item is worth more to sell to a vendor than to post on the
+  -- AH.
+  local itemInfo = { GetItemInfo(self.itemInfo.itemLink) }
+  local vendorPrice = itemInfo[Auctionator.Constants.ITEM_INFO.SELL_PRICE]
+  if Auctionator.Utilities.IsVendorable(itemInfo) and
+     vendorPrice * self.Quantity:GetNumber() + self:GetDeposit()
+       > math.floor(self.Price:GetAmount() * self.Quantity:GetNumber() * Auctionator.Constants.AfterAHCut) then
+    return AUCTIONATOR_L_CONFIRM_POST_BELOW_VENDOR
+  end
+end
+
+function AuctionatorSaleItemMixin:RequiresConfirmationState()
+  return
+    Auctionator.Config.Get(Auctionator.Config.Options.SELLING_CONFIRM_LOW_PRICE) and
+    self:GetConfirmationMessage() ~= nil
+end
+
 function AuctionatorSaleItemMixin:UpdatePostButtonState()
   if self:GetPostButtonState() then
     self.PostButton:Enable()
@@ -525,9 +579,13 @@ function AuctionatorSaleItemMixin:GetDuration()
   return AUCTION_DURATIONS[self.Duration:GetValue()]
 end
 
-function AuctionatorSaleItemMixin:PostItem()
+function AuctionatorSaleItemMixin:PostItem(confirmed)
   if not self:GetPostButtonState() then
     Auctionator.Debug.Message("Trying to post when we can't. Returning")
+    return
+  elseif not confirmed and self:RequiresConfirmationState() then
+    StaticPopupDialogs[Auctionator.Constants.DialogNames.SellingConfirmPost].text = self:GetConfirmationMessage()
+    StaticPopup_Show(Auctionator.Constants.DialogNames.SellingConfirmPost)
     return
   end
 

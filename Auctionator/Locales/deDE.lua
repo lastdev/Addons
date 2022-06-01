@@ -105,6 +105,12 @@ L["CONFIG_SELLING_BAG_SELECT_SHORTCUT"] = "auf einen Gegenstand im Inventar, um 
 L["CONFIG_SELLING_BUY_SHORTCUT"] = "auf eine fremde Auktion, kauft diese"
 L["CONFIG_SELLING_CANCEL_SHORTCUT"] = "auf eine eigene Auktion, bricht diese ab"
 L["CONFIG_SELLING_CATEGORY"] = "Verkaufen"
+--[[Translation missing --]]
+L["CONFIG_SELLING_CONFIRM_LOW_PRICE"] = "Confirm posting items at an unusually low price"
+--[[Translation missing --]]
+L["CONFIG_SELLING_CONFIRM_LOW_PRICE_TOOLTIP_HEADER"] = "Confirm Posting Low Price"
+--[[Translation missing --]]
+L["CONFIG_SELLING_CONFIRM_LOW_PRICE_TOOLTIP_TEXT"] = "Lets you remove the confirmation dialog that appears when posting an item at an unusually low price."
 L["CONFIG_SELLING_DEFAULT_QUANTITY_SUFFIX"] = "Für die maximale Menge auf 0 setzen"
 L["CONFIG_SELLING_DEFAULT_QUANTITY_TOOLTIP_HEADER"] = "Standardmenge beim Erstellen von Auktionen"
 L["CONFIG_SELLING_DEFAULT_QUANTITY_TOOLTIP_TEXT"] = "Hier kann die Standardmenge der zu verkaufenden Gegenstände angepasst werden. Bei 0 wird die maximal verfügbare Menge genommen."
@@ -161,6 +167,9 @@ L["CONFIG_UNDERCUT_SCAN_NOT_LIFO_TOOLTIP_HEADER"] = "Unterboten-Scan für Ausrü
 L["CONFIG_UNDERCUT_SCAN_NOT_LIFO_TOOLTIP_TEXT"] = "Lasse diese Option aktiviert, um Auktionen für Haustiere und Ausrüstung einzuschließen, wenn der Unterboten-Scan verwenden wird. Schalten diese Option aus, um Haustiere und Ausrüstung auszuschließen."
 L["CONFIG_VENDOR_TOOLTIP"] = "Zeige Händlerinfos an."
 L["CONFIRM"] = "Bestätigen"
+--[[Translation missing --]]
+L["CONFIRM_POST_BELOW_VENDOR"] = "You can make more gold selling this to a vendor. Are you sure you want to post at that price?"
+L["CONFIRM_POST_LOW_PRICE"] = "Der Preis von %s sieht etwas niedrig aus. Bist du sicher, dass du zu diesem Preis aufstellen möchtest?"
 L["CONTRIBUTORS_HEADER"] = "Mitwirkende"
 L["COPY_ITEM_ADDED"] = "Kopierte %s in %s"
 L["COPY_NO_LIST_SELECTED"] = "Gegenstand kann nicht kopiert werden. Keine Einkaufsliste ausgewählt"

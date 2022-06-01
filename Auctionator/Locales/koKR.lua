@@ -107,6 +107,12 @@ L["CONFIG_SELLING_BAG_SELECT_SHORTCUT"] = "판매하기 탭으로 바로가기"
 L["CONFIG_SELLING_BUY_SHORTCUT"] = "본인것이 아닐 경우 즉시구매"
 L["CONFIG_SELLING_CANCEL_SHORTCUT"] = "본인것이면 경매 취소"
 L["CONFIG_SELLING_CATEGORY"] = "판매하기"
+--[[Translation missing --]]
+L["CONFIG_SELLING_CONFIRM_LOW_PRICE"] = "Confirm posting items at an unusually low price"
+--[[Translation missing --]]
+L["CONFIG_SELLING_CONFIRM_LOW_PRICE_TOOLTIP_HEADER"] = "Confirm Posting Low Price"
+--[[Translation missing --]]
+L["CONFIG_SELLING_CONFIRM_LOW_PRICE_TOOLTIP_TEXT"] = "Lets you remove the confirmation dialog that appears when posting an item at an unusually low price."
 L["CONFIG_SELLING_DEFAULT_QUANTITY_SUFFIX"] = "판매 갯수 설정"
 L["CONFIG_SELLING_DEFAULT_QUANTITY_TOOLTIP_HEADER"] = "판매 갯수 설정"
 L["CONFIG_SELLING_DEFAULT_QUANTITY_TOOLTIP_TEXT"] = "경매장에 물건을 판매할 때 기본 갯수를 설정합니다. (ex. 현재 가진 영약이 40개일 경우 4를 입력하면 경매장에 올릴 때 4개를 자동으로 올립니다, 0일 경우 40개 모두 판매합니다.)"
@@ -184,6 +190,10 @@ L["CONFIG_UNDERCUT_SCAN_NOT_LIFO_TOOLTIP_HEADER"] = "장비/펫의 최저가 검
 L["CONFIG_UNDERCUT_SCAN_NOT_LIFO_TOOLTIP_TEXT"] = "장비/펫의 최저가도  함께 검색합니다. 체크 해제시 장비와 펫의 최저가는 검색하지 않습니다."
 L["CONFIG_VENDOR_TOOLTIP"] = "상점가 툴팁에 표시"
 L["CONFIRM"] = "확인"
+--[[Translation missing --]]
+L["CONFIRM_POST_BELOW_VENDOR"] = "You can make more gold selling this to a vendor. Are you sure you want to post at that price?"
+--[[Translation missing --]]
+L["CONFIRM_POST_LOW_PRICE"] = "The price of %s looks a bit low. Are you sure you want to post at that price?"
 L["CONTRIBUTORS_HEADER"] = "기증자"
 L["COPY_ITEM_ADDED"] = "%s 을 %s 로 복사"
 L["COPY_NO_LIST_SELECTED"] = "아이템을 복사할 수 없습니다. 선택한 구매 목록이 없습니다"

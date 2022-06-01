@@ -1,9 +1,8 @@
-if not WeakAuras.IsCorrectVersion() then return end
+if not WeakAuras.IsCorrectVersion() or not WeakAuras.IsLibsOK() then return end
 local AddonName, Private = ...
 
-local SharedMedia = LibStub("LibSharedMedia-3.0");
 local L = WeakAuras.L
-local MSQ, MSQ_Version = LibStub("Masque", true);
+local MSQ = LibStub("Masque", true);
 if MSQ then
   MSQ:AddType("WA_Aura", {"Icon", "Cooldown"})
 end
@@ -30,7 +29,8 @@ local default = {
   cooldown = false,
   cooldownTextDisabled = false,
   cooldownSwipe = true,
-  cooldownEdge = false
+  cooldownEdge = false,
+  useCooldownModRate = true
 };
 
 WeakAuras.regionPrototype.AddAlphaToDefault(default);
@@ -145,7 +145,7 @@ local function AnchorSubRegion(self, subRegion, anchorType, selfPoint, anchorPoi
     local anchorRegion = self.icon
     if anchorPoint:sub(1, 6) == "INNER_" then
       if not self.inner then
-        self.inner = CreateFrame("FRAME", nil, self)
+        self.inner = CreateFrame("Frame", nil, self)
         self.inner:SetPoint("CENTER")
         self.UpdateInnerOuterSize()
       end
@@ -153,7 +153,7 @@ local function AnchorSubRegion(self, subRegion, anchorType, selfPoint, anchorPoi
       anchorPoint = anchorPoint:sub(7)
     elseif anchorPoint:sub(1, 6) == "OUTER_" then
       if not self.outer then
-        self.outer = CreateFrame("FRAME", nil, self)
+        self.outer = CreateFrame("Frame", nil, self)
         self.outer:SetPoint("CENTER")
         self.UpdateInnerOuterSize()
       end
@@ -178,7 +178,7 @@ end
 local function create(parent, data)
   local font = "GameFontHighlight";
 
-  local region = CreateFrame("FRAME", nil, parent);
+  local region = CreateFrame("Frame", nil, parent);
   region.regionType = "icon"
   region:SetMovable(true);
   region:SetResizable(true);
@@ -244,7 +244,7 @@ local function create(parent, data)
   end
   region.frameId = frameId;
 
-  local cooldown = CreateFrame("COOLDOWN", "WeakAurasCooldown"..frameId, region, "CooldownFrameTemplate");
+  local cooldown = CreateFrame("Cooldown", "WeakAurasCooldown"..frameId, region, "CooldownFrameTemplate");
   region.cooldown = cooldown;
   cooldown:SetAllPoints(icon);
   cooldown:SetDrawBling(false)
@@ -358,7 +358,7 @@ local function modify(parent, region, data)
   local tooltipType = Private.CanHaveTooltip(data);
   if(tooltipType and data.useTooltip) then
     if not region.tooltipFrame then
-      region.tooltipFrame = CreateFrame("frame", nil, region);
+      region.tooltipFrame = CreateFrame("Frame", nil, region);
       region.tooltipFrame:SetAllPoints(region);
       region.tooltipFrame:SetScript("OnEnter", function()
         Private.ShowMouseoverTooltip(region, region);
@@ -473,7 +473,9 @@ local function modify(parent, region, data)
     if (cooldown.expirationTime and cooldown.duration and cooldown:IsShown()) then
       -- WORKAROUND SetReverse not applying until next frame
       cooldown:SetCooldown(0, 0);
-      cooldown:SetCooldown(cooldown.expirationTime - cooldown.duration, cooldown.duration);
+      cooldown:SetCooldown(cooldown.expirationTime - cooldown.duration,
+                           cooldown.duration,
+                           cooldown.useCooldownModRate and cooldown.modRate);
     end
   end
 
@@ -497,11 +499,14 @@ local function modify(parent, region, data)
 
   cooldown.expirationTime = nil;
   cooldown.duration = nil;
+  cooldown.modRate = nil
+  cooldown.useCooldownModRate = data.useCooldownModRate
   cooldown:Hide()
   if(data.cooldown) then
     function region:SetValue(value, total)
       cooldown.value = value
       cooldown.total = total
+      cooldown.modRate = nil
       if (value >= 0 and value <= total) then
         cooldown:Show()
         cooldown:SetCooldown(GetTime() - (total - value), total)
@@ -510,15 +515,17 @@ local function modify(parent, region, data)
       end
     end
 
-    function region:SetTime(duration, expirationTime)
+    function region:SetTime(duration, expirationTime, modRate)
       if (duration > 0 and expirationTime > GetTime()) then
         cooldown:Show();
         cooldown.expirationTime = expirationTime;
         cooldown.duration = duration;
-        cooldown:SetCooldown(expirationTime - duration, duration);
+        cooldown.modRate = modRate;
+        cooldown:SetCooldown(expirationTime - duration, duration, cooldown.useCooldownModRate and modRate);
       else
         cooldown.expirationTime = expirationTime;
         cooldown.duration = duration;
+        cooldown.modRate = modRate;
         cooldown:Hide();
       end
     end
@@ -526,7 +533,7 @@ local function modify(parent, region, data)
     function region:PreShow()
       if (cooldown.duration and cooldown.duration > 0.01) then
         cooldown:Show();
-        cooldown:SetCooldown(cooldown.expirationTime - cooldown.duration, cooldown.duration);
+        cooldown:SetCooldown(cooldown.expirationTime - cooldown.duration, cooldown.duration, cooldown.useCooldownModRate and cooldown.modRate);
         cooldown:Resume()
       end
     end
@@ -567,7 +574,7 @@ local function modify(parent, region, data)
           max = duration
         end
 
-        region:SetTime(max - adjustMin, expirationTime - adjustMin, state.inverse);
+        region:SetTime(max - adjustMin, expirationTime - adjustMin, state.modRate);
       elseif state.progressType == "static" then
         local value = state.value or 0;
         local total = state.total or 0;

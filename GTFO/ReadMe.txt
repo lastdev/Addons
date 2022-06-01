@@ -1737,3 +1737,9 @@ Change Log:
 
 4.66.6
 * Fixed BC ToC
+
+4.67
+* Updated for patch 9.2.5
+* Added support for targeting specific Mythic+ key thresholds
+* Added Shadowlands spells (world)
+* Added SL spells for De Other Side

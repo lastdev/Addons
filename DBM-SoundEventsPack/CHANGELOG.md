@@ -1,6 +1,11 @@
 # <DBM> Sound Events Pack
 
-## [1.6.15](https://github.com/DeadlyBossMods/DBM-SoundEventsPack/tree/1.6.15) (2022-02-08)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-SoundEventsPack/compare/1.6.14...1.6.15) [Previous Releases](https://github.com/DeadlyBossMods/DBM-SoundEventsPack/releases)
+## [1.6.16](https://github.com/DeadlyBossMods/DBM-SoundEventsPack/tree/1.6.16) (2022-05-31)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-SoundEventsPack/compare/1.6.15...1.6.16) [Previous Releases](https://github.com/DeadlyBossMods/DBM-SoundEventsPack/releases)
 
-- Bump Classic interface version  
+- toc bump  
+- toc bumps for classic era  
+- bump BCC toc  
+- Update DBM-SoundEventsPack.toc (#3)  
+    Added  ## Title-ruRU  
+- bump toc file  

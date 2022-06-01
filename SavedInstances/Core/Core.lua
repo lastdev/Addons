@@ -61,7 +61,9 @@ local tooltip, indicatortip = nil, nil
 
 function SI:QuestInfo(questid)
   if not questid or questid == 0 then return nil end
+  SI.ScanTooltip:SetOwner(UIParent, 'ANCHOR_NONE')
   SI.ScanTooltip:SetHyperlink("\124cffffff00\124Hquest:"..questid..":90\124h[]\124h\124r")
+  SI.ScanTooltip:Show()
   local l = _G[SI.ScanTooltip:GetName().."TextLeft1"]
   l = l and l:GetText()
   if not l or #l == 0 then return nil end -- cache miss
@@ -814,8 +816,10 @@ function SI:instanceException(LFDID)
     local total = 0
     for idx, id in ipairs(exc) do
       if type(id) == "number" then
+        SI.ScanTooltip:SetOwner(UIParent, 'ANCHOR_NONE')
         SI.ScanTooltip:SetHyperlink(("unit:Creature-0-0-0-0-%d:0000000000"):format(id))
-        local line = SI.ScanTooltip:IsShown() and _G[SI.ScanTooltip:GetName().."TextLeft1"]
+        SI.ScanTooltip:Show()
+        local line = _G[SI.ScanTooltip:GetName().."TextLeft1"]
         line = line and line:GetText()
         if line and #line > 0 then
           exc[idx] = line
@@ -1237,7 +1241,9 @@ function SI:updateSpellTip(spellID)
     end
   end
   if slot then
+    SI.ScanTooltip:SetOwner(UIParent, 'ANCHOR_NONE')
     SI.ScanTooltip:SetUnitDebuff('player', slot)
+    SI.ScanTooltip:Show()
     for i = 1, SI.ScanTooltip:NumLines() - 1 do
       local textLeft = _G[SI.ScanTooltip:GetName() .. 'TextLeft' .. i]
       SI.db.spelltip[spellID][i] = textLeft:GetText()
@@ -2129,7 +2135,8 @@ hoverTooltip.ShowIndicatorTooltip = function (cell, arg, ...)
   local thisinstance = SI.db.Instances[instance]
   local worldboss = thisinstance and thisinstance.WorldBoss
   local info = thisinstance[toon][diff]
-  local id = info.ID
+  if not info then return end
+  local id = info.ID or 0
   local nameline = indicatortip:AddHeader()
   indicatortip:SetCell(nameline, 1, DifficultyString(instance, diff, toon), indicatortip:GetHeaderFont(), "LEFT", 1)
   indicatortip:SetCell(nameline, 2, GOLDFONT .. instance .. FONTEND, indicatortip:GetHeaderFont(), "RIGHT", 2)
@@ -2140,20 +2147,20 @@ hoverTooltip.ShowIndicatorTooltip = function (cell, arg, ...)
   local EMPH = " !!! "
   if info.Extended then
     indicatortip:SetCell(indicatortip:AddLine(),1,WHITEFONT .. EMPH .. L["Extended Lockout - Not yet saved"] .. EMPH .. FONTEND,"CENTER",3)
-  elseif info.Locked == false and info.ID > 0 then
+  elseif info.Locked == false and id > 0 then
     indicatortip:SetCell(indicatortip:AddLine(),1,WHITEFONT .. EMPH .. L["Expired Lockout - Can be extended"] .. EMPH .. FONTEND,"CENTER",3)
   end
   if info.Expires > 0 then
     indicatortip:AddLine(YELLOWFONT .. L["Time Left"] .. ":" .. FONTEND, nil, SecondsToTime(thisinstance[toon][diff].Expires - time()))
   end
-  if (info.ID or 0) > 0 and (
+  if id > 0 and (
     (thisinstance.Raid and (diff == 5 or diff == 6 or diff == 16)) -- raid: 10 heroic, 25 heroic or mythic
     or
     (diff == 23) -- mythic 5-man
     ) then
     local n = indicatortip:AddLine()
     indicatortip:SetCell(n, 1, YELLOWFONT .. ID .. ":" .. FONTEND, "LEFT", 1)
-    indicatortip:SetCell(n, 2, info.ID, "RIGHT", 2)
+    indicatortip:SetCell(n, 2, id, "RIGHT", 2)
   end
   if info.Link then
     local link = info.Link
@@ -2184,7 +2191,9 @@ hoverTooltip.ShowIndicatorTooltip = function (cell, arg, ...)
           .. diff .. ":" .. bits .. "\124h[Battle of Dazar'alor]\124h\124r"
       end
     end
+    SI.ScanTooltip:SetOwner(UIParent, 'ANCHOR_NONE')
     SI.ScanTooltip:SetHyperlink(link)
+    SI.ScanTooltip:Show()
     local name = SI.ScanTooltip:GetName()
     local gotbossinfo
     for i=2,SI.ScanTooltip:NumLines() do
@@ -2219,7 +2228,7 @@ hoverTooltip.ShowIndicatorTooltip = function (cell, arg, ...)
       end
     end
   end
-  if info.ID < 0 then
+  if id < 0 then
     local killed, total, base, remap = SI:instanceBosses(instance,toon,diff)
     for i=base,base+total-1 do
       local bossid = i
@@ -2480,36 +2489,6 @@ hoverTooltip.ShowCovenantAssaultTooltip = function (cell, arg, ...)
   finishIndicator()
 end
 
-hoverTooltip.ShowPatternsTooltip = function (cell, arg, ...)
-  -- Should be in Module Progress
-  local toon, index = unpack(arg)
-  local t = SI.db.Toons[toon]
-  if not t or not t.Progress or not t.Progress[index] then return end
-  openIndicator(2, "LEFT", "RIGHT")
-  indicatortip:AddHeader(ClassColorise(t.Class, toon), L["Patterns Within Patterns"])
-
-  local text
-  if t.Progress[index].isComplete then
-    text = "\124T" .. READY_CHECK_READY_TEXTURE .. ":0|t"
-  elseif not t.Progress[index].isOnQuest then
-    text = "\124cFFFFFF00!\124r"
-  elseif t.Progress[index].isFinish then
-    text = "\124T" .. READY_CHECK_WAITING_TEXTURE .. ":0|t"
-  else
-    text = floor(t.Progress[index].numFulfilled / t.Progress[index].numRequired * 100) .. "%"
-  end
-
-  local timeText = '?'
-  if t.Progress[index].expiredTime then
-    local timeLeft = max(t.Progress[index].expiredTime - time(), 0)
-    timeText = SecondsToTime(timeLeft)
-  end
-
-  indicatortip:AddLine(text, timeText)
-
-  finishIndicator()
-end
-
 hoverTooltip.ShowKeyReportTarget = function (cell, arg, ...)
   openIndicator(2, "LEFT", "RIGHT")
   indicatortip:AddHeader(GOLDFONT..L["Keystone report target"]..FONTEND, SI.db.Tooltip.KeystoneReportTarget)
@@ -2538,7 +2517,7 @@ end
 function SI:OnInitialize()
   local versionString = GetAddOnMetadata("SavedInstances", "version")
   --[==[@debug@
-  if versionString == "9.2.1" then
+  if versionString == "9.2.2" then
     versionString = "Dev"
   end
   --@end-debug@]==]

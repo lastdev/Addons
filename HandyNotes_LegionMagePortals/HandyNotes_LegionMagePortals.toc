@@ -1,0 +1,19 @@
+## Last updated 2022-05-31T21:42:58Z
+## Interface: 90205
+## Version: 2.0
+## Title: HandyNotes_LegionMagePortals
+## Notes: Shows Teleportation Nexus Portals
+## Author: Tsaavik Gnoballs @Greymane (based on work by Kemayo)
+## DefaultState: enabled
+## X-Category: Achievements
+## X-eMail: handynotes @ hellspark DOT com
+## SavedVariables: HandyNotes_LegionMagePortalsDB
+## RequiredDeps: HandyNotes
+## X-Curse-Packaged-Version: v2
+## X-Curse-Project-Name: HandyNotes_LegionMagePortals
+## X-Curse-Project-ID: HandyNotes_LegionMagePortals
+## X-Curse-Repository-ID: wow/HandyNotes_LegionMagePortals/mainline
+
+handler.lua
+config.lua
+nodes.lua

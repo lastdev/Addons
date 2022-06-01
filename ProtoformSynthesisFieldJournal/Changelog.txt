@@ -1,3 +1,9 @@
+05/31/2022 version 1.2.9
+- toc update for 9.2.5 patch
+
+05/22/2022 version 1.2.8
+- Added wago and curse project IDs to toc
+
 05/15/2022 version 1.2.7
 - Added zhCN localization courtesy of siewia from curseforge
 

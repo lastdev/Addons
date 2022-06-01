@@ -106,6 +106,12 @@ L["CONFIG_SELLING_BAG_SELECT_SHORTCUT"] = "sur un objet de votre inventaire le p
 L["CONFIG_SELLING_BUY_SHORTCUT"] = "sur une vente que vous ne possédez pas pour l'acheter."
 L["CONFIG_SELLING_CANCEL_SHORTCUT"] = "sur l'une de vos ventes pour l'annuler."
 L["CONFIG_SELLING_CATEGORY"] = "Vente"
+--[[Translation missing --]]
+L["CONFIG_SELLING_CONFIRM_LOW_PRICE"] = "Confirm posting items at an unusually low price"
+--[[Translation missing --]]
+L["CONFIG_SELLING_CONFIRM_LOW_PRICE_TOOLTIP_HEADER"] = "Confirm Posting Low Price"
+--[[Translation missing --]]
+L["CONFIG_SELLING_CONFIRM_LOW_PRICE_TOOLTIP_TEXT"] = "Lets you remove the confirmation dialog that appears when posting an item at an unusually low price."
 L["CONFIG_SELLING_DEFAULT_QUANTITY_SUFFIX"] = "Définir sur 0 pour le montant maximal"
 L["CONFIG_SELLING_DEFAULT_QUANTITY_TOOLTIP_HEADER"] = "Quantité à mettre en vente par défaut"
 L["CONFIG_SELLING_DEFAULT_QUANTITY_TOOLTIP_TEXT"] = "Définis le montant par défaut utilisé pour les piles d'un objet. Définir sur 0 pour utiliser le nombre maximal."
@@ -163,6 +169,10 @@ L["CONFIG_UNDERCUT_SCAN_NOT_LIFO_TOOLTIP_HEADER"] = "Vérification des prix de l
 L["CONFIG_UNDERCUT_SCAN_NOT_LIFO_TOOLTIP_TEXT"] = "Laissez cette option activée pour inclure toutes les enchères de mascottes et d'équipement lors de la vérification des prix. Désactivez cette option pour exclure les mascottes et l'équipement."
 L["CONFIG_VENDOR_TOOLTIP"] = "Afficher les prix au marchand"
 L["CONFIRM"] = "Confirmer"
+--[[Translation missing --]]
+L["CONFIRM_POST_BELOW_VENDOR"] = "You can make more gold selling this to a vendor. Are you sure you want to post at that price?"
+--[[Translation missing --]]
+L["CONFIRM_POST_LOW_PRICE"] = "The price of %s looks a bit low. Are you sure you want to post at that price?"
 L["CONTRIBUTORS_HEADER"] = "Contributeurs"
 L["COPY_ITEM_ADDED"] = "%s copié vers %s"
 L["COPY_NO_LIST_SELECTED"] = "Impossible de copier l'objet. Aucune liste d'achats sélectionnée."

@@ -1,4 +1,4 @@
-if not WeakAuras.IsCorrectVersion() then return end
+if not WeakAuras.IsCorrectVersion() or not WeakAuras.IsLibsOK() then return end
 local AddonName, OptionsPrivate = ...
 
 local L = WeakAuras.L;
@@ -451,7 +451,7 @@ local function createDistributeAlignOptions(id, data)
         end
         local spaced;
         local previousData;
-        for index, childId in pairs(data.controlledChildren) do
+        for _, childId in pairs(data.controlledChildren) do
           local childData = WeakAuras.GetData(childId);
           if(childData) then
             local _, bottom, _, top = getRect(childData);
@@ -624,7 +624,7 @@ end
 
 local function createThumbnail()
   -- frame
-  local thumbnail = CreateFrame("FRAME", nil, UIParent);
+  local thumbnail = CreateFrame("Frame", nil, UIParent);
   thumbnail:SetWidth(32);
   thumbnail:SetHeight(32);
 
@@ -643,7 +643,7 @@ end
 
 local function createDefaultIcon(parent)
   -- default Icon
-  local defaultIcon = CreateFrame("FRAME", nil, parent);
+  local defaultIcon = CreateFrame("Frame", nil, parent);
   parent.defaultIcon = defaultIcon;
 
   local t1 = defaultIcon:CreateTexture(nil, "ARTWORK");
@@ -667,9 +667,9 @@ end
 
 -- Modify preview thumbnail
 local function modifyThumbnail(parent, frame, data)
-  function frame:SetIcon(path)
+  function frame:SetIcon()
     if data.groupIcon then
-      local success = frame.icon:SetTexture(data.groupIcon)
+      local success = WeakAuras.SetTextureOrAtlas(frame.icon, data.groupIcon)
       if success then
         if frame.defaultIcon then
           frame.defaultIcon:Hide()
@@ -688,12 +688,12 @@ local function modifyThumbnail(parent, frame, data)
     frame.defaultIcon:Show()
   end
 
-  frame:SetIcon(nil)
+  frame:SetIcon()
 end
 
 -- Create "new region" preview
 local function createIcon()
-  local thumbnail = createThumbnail(UIParent)
+  local thumbnail = createThumbnail()
   thumbnail.defaultIcon = createDefaultIcon(thumbnail)
   return thumbnail
 end

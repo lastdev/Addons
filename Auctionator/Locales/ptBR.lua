@@ -123,6 +123,12 @@ L["CONFIG_SELLING_BAG_SELECT_SHORTCUT"] = "em um item no seu inventório coloca 
 L["CONFIG_SELLING_BUY_SHORTCUT"] = "em um leilão de outra pessoa compra o mesmo"
 L["CONFIG_SELLING_CANCEL_SHORTCUT"] = "em um leilão seu cancela o mesmo"
 L["CONFIG_SELLING_CATEGORY"] = "Venda"
+--[[Translation missing --]]
+L["CONFIG_SELLING_CONFIRM_LOW_PRICE"] = "Confirm posting items at an unusually low price"
+--[[Translation missing --]]
+L["CONFIG_SELLING_CONFIRM_LOW_PRICE_TOOLTIP_HEADER"] = "Confirm Posting Low Price"
+--[[Translation missing --]]
+L["CONFIG_SELLING_CONFIRM_LOW_PRICE_TOOLTIP_TEXT"] = "Lets you remove the confirmation dialog that appears when posting an item at an unusually low price."
 L["CONFIG_SELLING_DEFAULT_QUANTITY_SUFFIX"] = "Coloque 0 para a quantidade máxima"
 L["CONFIG_SELLING_DEFAULT_QUANTITY_TOOLTIP_HEADER"] = "Quantidade Padrão de Postagem"
 L["CONFIG_SELLING_DEFAULT_QUANTITY_TOOLTIP_TEXT"] = "Isto permite você alterar a quantidade padrão quando posta um item. Coloque 0 para usar a quantidade máxima."
@@ -191,6 +197,10 @@ L["CONFIG_UNDERCUT_SCAN_NOT_LIFO_TOOLTIP_HEADER"] = "Varreduras de Subcotação 
 L["CONFIG_UNDERCUT_SCAN_NOT_LIFO_TOOLTIP_TEXT"] = "Deixe isso ativado para incluir leilões de bichos de estimação e equipamentos quando utilizar a varredura de subcotação. Desative para excluir os mesmos."
 L["CONFIG_VENDOR_TOOLTIP"] = "Mostrar valor de venda (para NPCs) na caixa de texto."
 L["CONFIRM"] = "confirmar"
+--[[Translation missing --]]
+L["CONFIRM_POST_BELOW_VENDOR"] = "You can make more gold selling this to a vendor. Are you sure you want to post at that price?"
+--[[Translation missing --]]
+L["CONFIRM_POST_LOW_PRICE"] = "The price of %s looks a bit low. Are you sure you want to post at that price?"
 L["CONTRIBUTORS_HEADER"] = "Contribuidores"
 --[[Translation missing --]]
 L["COPY_ITEM_ADDED"] = "Copied %s to %s"
