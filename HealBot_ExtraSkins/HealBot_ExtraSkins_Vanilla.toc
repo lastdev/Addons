@@ -1,0 +1,10 @@
+## Interface: 11403
+## Title: HealBot Extra Skins
+## Author: Strife
+## Notes: Large store of extra skins for HealBot.
+## RequiredDeps: HealBot
+## LoadOnDemand: 1
+## Version: 1.14.3.1
+
+HealBot_ExtraSkins.lua
+

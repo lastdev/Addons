@@ -1,10 +1,10 @@
-lightweight tag 5fa1293c703dac3c459c48d4269adddac9c04d16 9.2.21
-Author:	Mike "Xodiv" Battersby <mib@post.com>
-Date:	Sun Jul 31 23:27:43 2022 +1000
+lightweight tag 6f686449c5db2138858ebd46ace7dc015cdbf6a0 9.2.22
+Author:	Mike Battersby <mib@post.com>
+Date:	Fri Aug 19 11:45:06 2022 +1000
 
-commit 5fa1293c703dac3c459c48d4269adddac9c04d16
-Author: Mike "Xodiv" Battersby <mib@post.com>
-Date:   Sun Jul 31 23:27:43 2022 +1000
+commit 6f686449c5db2138858ebd46ace7dc015cdbf6a0
+Author: Mike Battersby <mib@post.com>
+Date:   Fri Aug 19 11:45:06 2022 +1000
 
-    Add Jigglesworth Sr. to Cat
+    Update ToC for WoW 9.2.7 (Shadowlands S4)
 

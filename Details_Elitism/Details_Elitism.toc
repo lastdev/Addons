@@ -1,9 +1,9 @@
-## Interface: 90205
+## Interface: 90207
 ## Title: Details!: Elitism (plugin)
 ## Notes: Show avoidable damage and abilities taken by players.
 ## RequiredDeps: Details
 ## Author: Eduardo Speroni
-## Version: v2.6.1
+## Version: v2.7.0
 ## X-License: MIT
 ## X-Curse-Project-ID: 381128
 ## X-Wago-ID: nQN5VP6B

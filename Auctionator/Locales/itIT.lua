@@ -214,6 +214,10 @@ L["FINISHED_PROCESSING"] = "Elaborazione di %s oggetti terminata."
 L["FULL_SCAN_ALTERNATE_FAILED"] = "Sansione completa (metodo alternativo) non completata."
 L["FULL_SCAN_BUTTON"] = "Scansione Completa"
 L["FULL_SCAN_FAILED"] = "Scansione completa fallita."
+--[[Translation missing --]]
+L["FULL_SCAN_FAILED_REPLICATE"] = "Full scan (replicate mode) failed to complete."
+--[[Translation missing --]]
+L["FULL_SCAN_FAILED_SUMMARY"] = "Full scan (summary mode) failed to complete."
 L["FULL_SCAN_IN_PROGRESS"] = "Scansione completa in corso."
 L["GEAR_VENDOR_PRICE_MULTIPLIER"] = "Moltiplicatore prezzo vendita Equipaggiamento"
 L["HIDE"] = "Nascondi"
@@ -471,6 +475,10 @@ L["STACK_TOOLTIP_TOOLTIP_HEADER"] = "Prezzi Pila"
 L["STACK_TOOLTIP_TOOLTIP_TEXT"] = "Se selezionato, è necessario tenere premuto il tast shift per visualizzare il valore della pila. Se non selezionato, il valore della pila è visualizzato di default."
 L["STARTING_FULL_SCAN"] = "Avvio scansione completa"
 L["STARTING_FULL_SCAN_ALTERNATE"] = "Inizio scansione completa (metodo alternativo)"
+--[[Translation missing --]]
+L["STARTING_FULL_SCAN_REPLICATE"] = "Starting a full scan (replicate mode)."
+--[[Translation missing --]]
+L["STARTING_FULL_SCAN_SUMMARY"] = "Starting a full scan (summary mode)."
 L["STARTING_PRICE_PERCENTAGE"] = "Prezzo di Partenza"
 L["STARTING_PRICE_PERCENTAGE_SUFFIX"] = "% del prezzo pila"
 L["STARTING_PRICE_PERCENTAGE_TOOLTIP_HEADER"] = "Prezzo iniziale di offerta"

@@ -1,4 +1,4 @@
-if not WeakAuras.IsCorrectVersion() or not WeakAuras.IsLibsOK() then return end
+if not WeakAuras.IsLibsOK() then return end
 
 if GetLocale() ~= "ruRU" then
   return
@@ -115,6 +115,7 @@ Enable this setting if you want this timer to be hidden, or when using a WeakAur
 Например: party4, raid7, arena3, boss2, nameplate6, target, focus, pet и др.]=]
 	L["Actions"] = "Действия"
 	L["Active Aura Filters and Info"] = "Фильтры и информация об эффекте"
+	L["Actual Spec"] = "Текущая специализация"
 	L["Add"] = "Добавить"
 	L["Add %s"] = "%s"
 	L["Add a new display"] = "Добавить новую индикацию"
@@ -179,6 +180,7 @@ Off Screen]=] ] = [=[Индикация за
 	L["Aura received from: %s"] = "Индикация получена от: %s"
 	L["Aura Type"] = "Тип эффекта"
 	L["Aura(s)"] = "Эффекты"
+	L["Aura: '%s'"] = "Индикация: %s"
 	L["Author Options"] = "Параметры автора"
 	L["Auto-Clone (Show All Matches)"] = "Показать все совпадения (Автоклонирование)"
 	L["Auto-cloning enabled"] = "Автоклонирование включено"
@@ -233,6 +235,7 @@ Off Screen]=] ] = [=[Индикация за
 	L["Children:"] = "Индикации:"
 	L["Choose"] = "Выбрать"
 	L["Class"] = "Класс"
+	L["Clear Debug Logs"] = "Очистить записи"
 	L["Clip Overlays"] = "Обрезать наложения"
 	L["Clipped by Progress"] = "Ограничить прогрессом"
 	L["Close"] = "Закрыть"
@@ -299,6 +302,8 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["Custom Untrigger"] = "Свой детриггер"
 	L["Custom Variables"] = "Свои переменные"
 	L["Debuff Type"] = "Тип дебаффа"
+	L["Debug Console"] = "Консоль отладки"
+	L["Debug Log:"] = "Журнал отладки:"
 	L["Default"] = "По умолчанию"
 	L["Default Color"] = "Цвет по умолчанию"
 	L["Delete"] = "Удалить"
@@ -354,6 +359,8 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["Else If Trigger %s"] = "Иначе Если Триггер %s"
 	L["Enable \"Edge\" part of the overlay"] = "Включить эту часть наложения"
 	L["Enable \"swipe\" part of the overlay"] = "Включить эту часть наложения"
+	L["Enable Debug Log"] = "Журнал отладки"
+	L["Enable Debug Logging"] = "Включить ведение журнала отладки"
 	L["Enable Swipe"] = "Включить наложение"
 	L["Enable the \"Swipe\" radial overlay"] = "Включает отображение анимации восстановления"
 	L["Enabled"] = "Включен"
@@ -408,6 +415,7 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["Filter by Group Role"] = "Фильтр по выбранной роли"
 	L["Filter by Nameplate Type"] = "Тип индикатора здоровья"
 	L["Filter by Raid Role"] = "Фильтр по роли в рейде"
+	L["Filter by Specialization"] = "Фильтр по специализации"
 	L["Filter by Unit Name"] = "Фильтр по имени единицы"
 	L[ [=[Filter formats: 'Name', 'Name-Realm', '-Realm'.
 
@@ -508,6 +516,7 @@ Can use \ to escape -.]=] ] = [=[Формат записи: Имя, Имя-Иг�
 	L["Icon Source"] = "Источник иконки"
 	L["If"] = "Если"
 	L["If checked, then the user will see a multi line edit box. This is useful for inputting large amounts of text."] = "Если флажок установлен, то строка преобразуется в многострочное текстовое поле. Это удобная форма для ввода большого количества текста."
+	L["If checked, then this group will not merge with other group when selecting multiple auras."] = "Если флажок установлен, то группа не будет объединена с другой группой при выборе нескольких индикаций."
 	L["If checked, then this option group can be temporarily collapsed by the user."] = "Если флажок установлен, то пользователь может свернуть и развернуть эту группу параметров."
 	L["If checked, then this option group will start collapsed."] = "Если флажок установлен, то эта группа параметров отобразится в свёрнутом виде."
 	L["If checked, then this separator will include text. Otherwise, it will be just a horizontal line."] = "Если флажок установлен, то разделитель будет содержать текст, расположенный по центру. В противном случае, он представляет собой просто горизонтальную линию."
@@ -546,8 +555,7 @@ Can use \ to escape -.]=] ] = [=[Формат записи: Имя, Имя-Иг�
 	L["Invalid Item Name/ID/Link"] = "Неверное название, ссылка или ID"
 	L["Invalid Spell ID"] = "Неверный ID"
 	L["Invalid Spell Name/ID/Link"] = "Неверное название, ссылка или ID"
-	--[[Translation missing --]]
-	L["Invalid target aura"] = "Invalid target aura"
+	L["Invalid target aura"] = "Неверная целевая индикация"
 	L["Invalid type for '%s'. Expected 'bool', 'number', 'select', 'string', 'timer' or 'elapsedTimer'."] = "Неверный тип переменной %s. Требуется bool, number, select, string, timer или elapsedTimer."
 	L["Invalid type for property '%s' in '%s'. Expected '%s'"] = "Неверный тип свойства %s в переменной %s. Требуется %s."
 	L["Inverse"] = "Инверсия"
@@ -623,6 +631,7 @@ Can use \ to escape -.]=] ] = [=[Формат записи: Имя, Имя-Иг�
 	L["New Aura"] = "Новая индикация"
 	L["New Value"] = "Новое значение"
 	L["No Children"] = "Нет индикаций"
+	L["No Logs saved."] = "Нет записей"
 	L["None"] = "Нет"
 	L["Not a table"] = "Не таблица"
 	L["Not all children have the same value for this option"] = "Не все индикации имеют одинаковое значение для этого параметра"
@@ -691,6 +700,8 @@ Can use \ to escape -.]=] ] = [=[Формат записи: Имя, Имя-Иг�
 	L["Ready for Update"] = "Готово к обновлению"
 	L["Re-center X"] = "Рецентрировать по X"
 	L["Re-center Y"] = "Рецентрировать по Y"
+	--[[Translation missing --]]
+	L["Reciprocal TRIGGER:# requests will be ignored!"] = "Reciprocal TRIGGER:# requests will be ignored!"
 	L["Regions of type \"%s\" are not supported."] = "Регионы типа \"%s\" не поддерживаются."
 	L["Remaining Time"] = "Оставшееся время"
 	L["Remove"] = "Удалить"
@@ -702,6 +713,8 @@ Can use \ to escape -.]=] ] = [=[Формат записи: Имя, Имя-Иг�
 	L["Report bugs on our issue tracker."] = "Сообщите об ошибках на наш баг-трекер."
 	L["Require unit from trigger"] = "Требуется единица от триггера"
 	L["Required for Activation"] = "Необходимо для активации"
+	L["Requires LibSpecialization, that is e.g. a up-to date WeakAuras version"] = "Требуется LibSpecialization, т.е. актуальная версия WeakAuras"
+	L["Requires syncing the specialization via LibSpecialization."] = "Требуется синхронизация специализации через LibSpecialization."
 	L["Reset all options to their default values."] = "Возвращает всем параметрам значения по умолчанию, заданные автором."
 	L["Reset Entry"] = "Сбросить запись"
 	L["Reset to Defaults"] = "Сбросить настройки"
@@ -742,6 +755,7 @@ Can use \ to escape -.]=] ] = [=[Формат записи: Имя, Имя-Иг�
 	L["Show all matches (Auto-clone)"] = "Показать все совпадения (Автоклонирование)"
 	L["Show and Clone Settings"] = "Настройки появления и клонирования"
 	L["Show Border"] = "Показать границу"
+	L["Show Debug Logs"] = "Показать записи"
 	L["Show Glow"] = "Показать свечение"
 	L["Show Icon"] = "Показать иконку"
 	L["Show If Unit Does Not Exist"] = "Показать при отсутствии единицы"
@@ -841,6 +855,7 @@ It might not work correctly with your version!]=] ] = [=[Индикация бы
 В вашей версии она может работать неправильно!]=]
 	L["This display is currently loaded"] = "Эта индикация загружена"
 	L["This display is not currently loaded"] = "Эта индикация не загружена"
+	L["This enables the collection of debug logs. This requires custom coded auras that use DebugPrints."] = "Позволяет собирать записи отладки. Используйте DebugPrint в вашем коде для вывода значения переменной или выражения."
 	L["This is a modified version of your aura, |cff9900FF%s.|r"] = "Это изменённая версия вашей индикации |cFF9900FF%s|r"
 	L["This is a modified version of your group: |cff9900FF%s|r"] = "Это изменённая версия вашей группы индикаций |cFF9900FF%s|r"
 	L["This region of type \"%s\" is not supported."] = "Регион типа \"%s\" не поддерживается."
@@ -910,6 +925,7 @@ It might not work correctly with your version!]=] ] = [=[Индикация бы
 	L["View"] = "Вид"
 	L["View custom code"] = "Просмотреть код"
 	L["Voice"] = "Голос"
+	L["WeakAuras %s on WoW %s"] = "WeakAuras: %s. Интерфейс: %s"
 	L["What do you want to do?"] = "Что вы хотите сделать?"
 	L["Whole Area"] = "Вся область"
 	L["Width"] = "Ширина"

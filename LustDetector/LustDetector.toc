@@ -1,7 +1,7 @@
-## Interface: 90205
+## Interface: 90207
 ## Title: LUSTDETECTOR
 ## Author: Vicksmile - Thrall realm
-## Version: v4 Definitive version for SL Patch 9.2.5
+## Version: v4 Definitive version for SL Patch 9.2.7
 ## Notes: This addon will show on your chat when someone cast any Haste Spell. Ex: Bloodlust
 ## DefaultState: Enabled
 ## LoadOnDemand: 0

@@ -1,4 +1,4 @@
-if not WeakAuras.IsCorrectVersion() or not WeakAuras.IsLibsOK() then return end
+if not WeakAuras.IsLibsOK() then return end
 
 if GetLocale() ~= "koKR" then
   return
@@ -154,6 +154,8 @@ Enable this setting if you want this timer to be hidden, or when using a WeakAur
 	L["Actions"] = "동작"
 	--[[Translation missing --]]
 	L["Active Aura Filters and Info"] = "Active Aura Filters and Info"
+	--[[Translation missing --]]
+	L["Actual Spec"] = "Actual Spec"
 	L["Add"] = "추가"
 	L["Add %s"] = "%s 추가"
 	L["Add a new display"] = "새로운 디스플레이 추가"
@@ -221,6 +223,8 @@ Off Screen]=] ] = "Aura가 화면 밖에 있음"
 	L["Aura received from: %s"] = "Aura received from: %s"
 	L["Aura Type"] = "효과 유형"
 	L["Aura(s)"] = "효과"
+	--[[Translation missing --]]
+	L["Aura: '%s'"] = "Aura: '%s'"
 	L["Author Options"] = "작성자 옵션"
 	L["Auto-Clone (Show All Matches)"] = "자동 복제 (모든 일치 항목 표시)"
 	L["Auto-cloning enabled"] = "자동 복제 활성화"
@@ -283,6 +287,8 @@ Off Screen]=] ] = "Aura가 화면 밖에 있음"
 	L["Children:"] = "자식:"
 	L["Choose"] = "선택"
 	L["Class"] = "직업"
+	--[[Translation missing --]]
+	L["Clear Debug Logs"] = "Clear Debug Logs"
 	--[[Translation missing --]]
 	L["Clip Overlays"] = "Clip Overlays"
 	--[[Translation missing --]]
@@ -365,6 +371,10 @@ UNIT_POWER_UPDATE, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Custom Untrigger"] = "사용자 설정 비활성 조건"
 	L["Custom Variables"] = "사용자 설정 변수"
 	L["Debuff Type"] = "약화 효과 유형"
+	--[[Translation missing --]]
+	L["Debug Console"] = "Debug Console"
+	--[[Translation missing --]]
+	L["Debug Log:"] = "Debug Log:"
 	L["Default"] = "기본"
 	L["Default Color"] = "기본 색상"
 	L["Delete"] = "삭제"
@@ -428,6 +438,10 @@ UNIT_POWER_UPDATE, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Enable \"Edge\" part of the overlay"] = "Enable \"Edge\" part of the overlay"
 	--[[Translation missing --]]
 	L["Enable \"swipe\" part of the overlay"] = "Enable \"swipe\" part of the overlay"
+	--[[Translation missing --]]
+	L["Enable Debug Log"] = "Enable Debug Log"
+	--[[Translation missing --]]
+	L["Enable Debug Logging"] = "Enable Debug Logging"
 	--[[Translation missing --]]
 	L["Enable Swipe"] = "Enable Swipe"
 	--[[Translation missing --]]
@@ -502,6 +516,8 @@ UNIT_POWER_UPDATE, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Filter by Group Role"] = "그룹 역할별 필터"
 	L["Filter by Nameplate Type"] = "이름표 유형별 필터"
 	L["Filter by Raid Role"] = "공격대 역할별 필터"
+	--[[Translation missing --]]
+	L["Filter by Specialization"] = "Filter by Specialization"
 	--[[Translation missing --]]
 	L["Filter by Unit Name"] = "Filter by Unit Name"
 	--[[Translation missing --]]
@@ -620,6 +636,8 @@ Can use \ to escape -.]=]
 	--[[Translation missing --]]
 	L["If"] = "If"
 	L["If checked, then the user will see a multi line edit box. This is useful for inputting large amounts of text."] = "체크하면 넓은 편집툴이 표시됩니다. 많은 양의 텍스트를 입력 할 때 유용합니다."
+	--[[Translation missing --]]
+	L["If checked, then this group will not merge with other group when selecting multiple auras."] = "If checked, then this group will not merge with other group when selecting multiple auras."
 	--[[Translation missing --]]
 	L["If checked, then this option group can be temporarily collapsed by the user."] = "If checked, then this option group can be temporarily collapsed by the user."
 	--[[Translation missing --]]
@@ -767,6 +785,8 @@ Can use \ to escape -.]=]
 	L["New Aura"] = "새 Aura"
 	L["New Value"] = "새 값"
 	L["No Children"] = "자식 없음"
+	--[[Translation missing --]]
+	L["No Logs saved."] = "No Logs saved."
 	L["None"] = "없음"
 	--[[Translation missing --]]
 	L["Not a table"] = "Not a table"
@@ -843,6 +863,8 @@ Can use \ to escape -.]=]
 	L["Ready for Update"] = "Ready for Update"
 	L["Re-center X"] = "내부 X 좌표"
 	L["Re-center Y"] = "내부 Y 좌표"
+	--[[Translation missing --]]
+	L["Reciprocal TRIGGER:# requests will be ignored!"] = "Reciprocal TRIGGER:# requests will be ignored!"
 	L["Regions of type \"%s\" are not supported."] = "\"%s\" 유형의 영역은 지원하지 않습니다."
 	L["Remaining Time"] = "남은 시간"
 	L["Remove"] = "제거"
@@ -854,6 +876,10 @@ Can use \ to escape -.]=]
 	L["Report bugs on our issue tracker."] = "이슈 트래커에 버그를 알립니다."
 	L["Require unit from trigger"] = "활성 조건에서 유닛 필요"
 	L["Required for Activation"] = "활성화에 필요"
+	--[[Translation missing --]]
+	L["Requires LibSpecialization, that is e.g. a up-to date WeakAuras version"] = "Requires LibSpecialization, that is e.g. a up-to date WeakAuras version"
+	--[[Translation missing --]]
+	L["Requires syncing the specialization via LibSpecialization."] = "Requires syncing the specialization via LibSpecialization."
 	L["Reset all options to their default values."] = "모든 옵션을 기본값으로 재설정하십시오."
 	--[[Translation missing --]]
 	L["Reset Entry"] = "Reset Entry"
@@ -900,6 +926,8 @@ Can use \ to escape -.]=]
 	--[[Translation missing --]]
 	L["Show and Clone Settings"] = "Show and Clone Settings"
 	L["Show Border"] = "테두리 표시"
+	--[[Translation missing --]]
+	L["Show Debug Logs"] = "Show Debug Logs"
 	L["Show Glow"] = "반짝임 표시"
 	L["Show Icon"] = "아이콘 표시"
 	L["Show If Unit Does Not Exist"] = "유닛이 존재하지 않는 경우 표시"
@@ -1023,6 +1051,8 @@ It might not work correctly with your version!]=]
 	L["This display is currently loaded"] = "이 디스플레이는 불러온 상태입니다"
 	L["This display is not currently loaded"] = "이 디스플레이는 불러오지 않았습니다"
 	--[[Translation missing --]]
+	L["This enables the collection of debug logs. This requires custom coded auras that use DebugPrints."] = "This enables the collection of debug logs. This requires custom coded auras that use DebugPrints."
+	--[[Translation missing --]]
 	L["This is a modified version of your aura, |cff9900FF%s.|r"] = "This is a modified version of your aura, |cff9900FF%s.|r"
 	--[[Translation missing --]]
 	L["This is a modified version of your group: |cff9900FF%s|r"] = "This is a modified version of your group: |cff9900FF%s|r"
@@ -1102,6 +1132,8 @@ It might not work correctly with your version!]=]
 	L["View custom code"] = "View custom code"
 	--[[Translation missing --]]
 	L["Voice"] = "Voice"
+	--[[Translation missing --]]
+	L["WeakAuras %s on WoW %s"] = "WeakAuras %s on WoW %s"
 	--[[Translation missing --]]
 	L["What do you want to do?"] = "What do you want to do?"
 	L["Whole Area"] = "전체 영역"

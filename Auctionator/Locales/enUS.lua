@@ -76,7 +76,6 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["CONFIG_CANCEL_UNDERCUT_SHORTCUT"] = "A shortcut to cancel the next undercut item found is"
   L["CONFIG_CANCEL_UNDERCUT_SHORTCUT_TOOLTIP_TEXT"] = "Click and then press the buttons that you wish to use as the shortcut. This shortcut will only be active in the Cancelling tab and won't affect any other shortcuts bound to the buttons."
 
-  L["SALES_PREFERENCE"] = "Sales Preference"
   L["UNDERCUT_PREFERENCE"] = "Undercut Preference"
   L["PERCENTAGE"] = "Percentage"
   L["SET_VALUE"] = "Set Value"
@@ -129,12 +128,14 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["MULTIPLE_STACKS_AUCTION_INFO"] = "%s %s, totalling %s"
 
   L["STARTING_FULL_SCAN"] = "Starting a full scan."
+  L["STARTING_FULL_SCAN_REPLICATE"] = "Starting a full scan (replicate mode)."
+  L["STARTING_FULL_SCAN_SUMMARY"] = "Starting a full scan (summary mode)."
   L["FULL_SCAN_IN_PROGRESS"] = "Full scan in progress."
-  L["NEXT_SCAN_MESSAGE"] = "A full scan may be started in %s minutes and %s seconds."
   L["FULL_SCAN_FAILED"] = "Full scan failed to complete."
+  L["FULL_SCAN_FAILED_REPLICATE"] = "Full scan (replicate mode) failed to complete."
+  L["FULL_SCAN_FAILED_SUMMARY"] = "Full scan (summary mode) failed to complete."
+  L["NEXT_SCAN_MESSAGE"] = "A full scan may be started in %s minutes and %s seconds."
   L["FINISHED_PROCESSING"] = "Finished processing %s items."
-  L["STARTING_FULL_SCAN_ALTERNATE"] = "Starting a full scan (alternate mode)."
-  L["FULL_SCAN_ALTERNATE_FAILED"] = "Full scan (alternate mode) failed to complete."
 
   L["TOO_MANY_SEARCH_RESULTS"] = "Too many search results. Limiting results displayed."
   L["LIST_DELETE_ERROR"] = "An error occurred attempting to delete a list."

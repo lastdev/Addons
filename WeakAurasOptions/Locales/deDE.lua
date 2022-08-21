@@ -1,4 +1,4 @@
-if not WeakAuras.IsCorrectVersion() or not WeakAuras.IsLibsOK() then return end
+if not WeakAuras.IsLibsOK() then return end
 
 if GetLocale() ~= "deDE" then
   return
@@ -184,6 +184,8 @@ Enable this setting if you want this timer to be hidden, or when using a WeakAur
 	--[[Translation missing --]]
 	L["Active Aura Filters and Info"] = "Active Aura Filters and Info"
 	--[[Translation missing --]]
+	L["Actual Spec"] = "Actual Spec"
+	--[[Translation missing --]]
 	L["Add"] = "Add"
 	L["Add %s"] = "Füge %s hinzu"
 	L["Add a new display"] = "Neue Anzeige hinzufügen"
@@ -260,6 +262,8 @@ Off Screen]=]
 	L["Aura Type"] = "Auratyp"
 	L["Aura(s)"] = "Auren"
 	--[[Translation missing --]]
+	L["Aura: '%s'"] = "Aura: '%s'"
+	--[[Translation missing --]]
 	L["Author Options"] = "Author Options"
 	--[[Translation missing --]]
 	L["Auto-Clone (Show All Matches)"] = "Auto-Clone (Show All Matches)"
@@ -332,6 +336,8 @@ Off Screen]=]
 	L["Children:"] = "Kinder:"
 	L["Choose"] = "Auswählen"
 	L["Class"] = "Klasse"
+	--[[Translation missing --]]
+	L["Clear Debug Logs"] = "Clear Debug Logs"
 	--[[Translation missing --]]
 	L["Clip Overlays"] = "Clip Overlays"
 	--[[Translation missing --]]
@@ -427,6 +433,10 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	--[[Translation missing --]]
 	L["Custom Variables"] = "Custom Variables"
 	L["Debuff Type"] = "Debufftyp"
+	--[[Translation missing --]]
+	L["Debug Console"] = "Debug Console"
+	--[[Translation missing --]]
+	L["Debug Log:"] = "Debug Log:"
 	L["Default"] = "Standard"
 	L["Default Color"] = "Standardfarbe"
 	L["Delete"] = "Löschen"
@@ -490,6 +500,10 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Enable \"Edge\" part of the overlay"] = "Enable \"Edge\" part of the overlay"
 	--[[Translation missing --]]
 	L["Enable \"swipe\" part of the overlay"] = "Enable \"swipe\" part of the overlay"
+	--[[Translation missing --]]
+	L["Enable Debug Log"] = "Enable Debug Log"
+	--[[Translation missing --]]
+	L["Enable Debug Logging"] = "Enable Debug Logging"
 	--[[Translation missing --]]
 	L["Enable Swipe"] = "Enable Swipe"
 	--[[Translation missing --]]
@@ -566,6 +580,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Filter by Group Role"] = "Nach Gruppenrolle filtern"
 	L["Filter by Nameplate Type"] = "Filter nach Namensschildertypen"
 	L["Filter by Raid Role"] = "Filter nach Schlachtzugsrollen"
+	--[[Translation missing --]]
+	L["Filter by Specialization"] = "Filter by Specialization"
 	--[[Translation missing --]]
 	L["Filter by Unit Name"] = "Filter by Unit Name"
 	--[[Translation missing --]]
@@ -699,6 +715,8 @@ Falls die Zahl als Dezimalzahl (z.B. 0.5), Bruch (z.B. 1/2) oder Prozentsatz (z.
 	L["If"] = "Falls"
 	--[[Translation missing --]]
 	L["If checked, then the user will see a multi line edit box. This is useful for inputting large amounts of text."] = "If checked, then the user will see a multi line edit box. This is useful for inputting large amounts of text."
+	--[[Translation missing --]]
+	L["If checked, then this group will not merge with other group when selecting multiple auras."] = "If checked, then this group will not merge with other group when selecting multiple auras."
 	--[[Translation missing --]]
 	L["If checked, then this option group can be temporarily collapsed by the user."] = "If checked, then this option group can be temporarily collapsed by the user."
 	--[[Translation missing --]]
@@ -875,6 +893,8 @@ Nur ein Wert kann ausgewählt werden.]=]
 	L["New Aura"] = "Neue Aura"
 	L["New Value"] = "Neuer Wert"
 	L["No Children"] = "Keine Kinder"
+	--[[Translation missing --]]
+	L["No Logs saved."] = "No Logs saved."
 	L["None"] = "Keinen"
 	--[[Translation missing --]]
 	L["Not a table"] = "Not a table"
@@ -984,6 +1004,8 @@ Nur ein Wert kann ausgewählt werden.]=]
 	L["Re-center X"] = "Zentrum (X)"
 	L["Re-center Y"] = "Zentrum (Y)"
 	--[[Translation missing --]]
+	L["Reciprocal TRIGGER:# requests will be ignored!"] = "Reciprocal TRIGGER:# requests will be ignored!"
+	--[[Translation missing --]]
 	L["Regions of type \"%s\" are not supported."] = "Regions of type \"%s\" are not supported."
 	L["Remaining Time"] = "Verbleibende Zeit"
 	L["Remove"] = "Entfernen"
@@ -997,6 +1019,10 @@ Nur ein Wert kann ausgewählt werden.]=]
 	--[[Translation missing --]]
 	L["Require unit from trigger"] = "Require unit from trigger"
 	L["Required for Activation"] = "Benötigt zur Aktivierung"
+	--[[Translation missing --]]
+	L["Requires LibSpecialization, that is e.g. a up-to date WeakAuras version"] = "Requires LibSpecialization, that is e.g. a up-to date WeakAuras version"
+	--[[Translation missing --]]
+	L["Requires syncing the specialization via LibSpecialization."] = "Requires syncing the specialization via LibSpecialization."
 	--[[Translation missing --]]
 	L["Reset all options to their default values."] = "Reset all options to their default values."
 	L["Reset Entry"] = "Eintrag zurücksetzen"
@@ -1050,6 +1076,8 @@ Nur ein Wert kann ausgewählt werden.]=]
 	--[[Translation missing --]]
 	L["Show and Clone Settings"] = "Show and Clone Settings"
 	L["Show Border"] = "Rahmen anzeigen"
+	--[[Translation missing --]]
+	L["Show Debug Logs"] = "Show Debug Logs"
 	L["Show Glow"] = "Leuchten anzeigen"
 	L["Show Icon"] = "Symbol anzeigen"
 	--[[Translation missing --]]
@@ -1188,6 +1216,8 @@ It might not work correctly with your version!]=]
 	L["This display is currently loaded"] = "Diese Anzeige ist momentan geladen"
 	L["This display is not currently loaded"] = "Diese Anzeige ist momentan nicht geladen"
 	--[[Translation missing --]]
+	L["This enables the collection of debug logs. This requires custom coded auras that use DebugPrints."] = "This enables the collection of debug logs. This requires custom coded auras that use DebugPrints."
+	--[[Translation missing --]]
 	L["This is a modified version of your aura, |cff9900FF%s.|r"] = "This is a modified version of your aura, |cff9900FF%s.|r"
 	--[[Translation missing --]]
 	L["This is a modified version of your group: |cff9900FF%s|r"] = "This is a modified version of your group: |cff9900FF%s|r"
@@ -1292,6 +1322,8 @@ It might not work correctly with your version!]=]
 	L["View custom code"] = "View custom code"
 	--[[Translation missing --]]
 	L["Voice"] = "Voice"
+	--[[Translation missing --]]
+	L["WeakAuras %s on WoW %s"] = "WeakAuras %s on WoW %s"
 	--[[Translation missing --]]
 	L["What do you want to do?"] = "What do you want to do?"
 	--[[Translation missing --]]

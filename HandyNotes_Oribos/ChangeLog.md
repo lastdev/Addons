@@ -1,5 +1,10 @@
 ## Revision History:
 
+#### v18 (August 17, 2022)
+-------------------------------
+* Updated zhCN by [nanjuekaien1](https://github.com/Dathwada/handynotes-oribos/pull/7)
+* Bump .toc to 90207
+
 #### v17 (June 01, 2022)
 -------------------------------
 * Bump .toc to 90205

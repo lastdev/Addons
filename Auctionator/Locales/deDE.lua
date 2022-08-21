@@ -210,6 +210,10 @@ L["FINISHED_PROCESSING"] = "%s Gegenstände verarbeitet."
 L["FULL_SCAN_ALTERNATE_FAILED"] = "Vollständiger Scan (alternativer Modus) fehlgeschlagen."
 L["FULL_SCAN_BUTTON"] = "Vollständiger Scan"
 L["FULL_SCAN_FAILED"] = "Vollständiger Scan fehlgeschlagen."
+--[[Translation missing --]]
+L["FULL_SCAN_FAILED_REPLICATE"] = "Full scan (replicate mode) failed to complete."
+--[[Translation missing --]]
+L["FULL_SCAN_FAILED_SUMMARY"] = "Full scan (summary mode) failed to complete."
 L["FULL_SCAN_IN_PROGRESS"] = "Vollständiger Scan läuft."
 L["GEAR_VENDOR_PRICE_MULTIPLIER"] = "Händlerpreis-Multiplikator für Ausrüstung"
 L["HIDE"] = "Ausblenden"
@@ -450,6 +454,10 @@ L["STACK_TOOLTIP_TOOLTIP_HEADER"] = "Stapelpreise"
 L["STACK_TOOLTIP_TOOLTIP_TEXT"] = "Wenn ausgewählt, muss die Shift Taste gehalten werden, um den Stapelpreis anzuzeigen. Wenn nicht ausgewählt, werden immer die Stapelpreise angezeigt."
 L["STARTING_FULL_SCAN"] = "Starte vollständigen Scan."
 L["STARTING_FULL_SCAN_ALTERNATE"] = "Starte vollständigen Scan (alternativer Modus)."
+--[[Translation missing --]]
+L["STARTING_FULL_SCAN_REPLICATE"] = "Starting a full scan (replicate mode)."
+--[[Translation missing --]]
+L["STARTING_FULL_SCAN_SUMMARY"] = "Starting a full scan (summary mode)."
 L["STARTING_PRICE_PERCENTAGE"] = "Startpreis"
 L["STARTING_PRICE_PERCENTAGE_SUFFIX"] = "% des Stapelspreises"
 L["STARTING_PRICE_PERCENTAGE_TOOLTIP_HEADER"] = "Startgebotspreis"

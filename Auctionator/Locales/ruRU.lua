@@ -166,8 +166,7 @@ L["CRAFTED_LEVEL"] = "Ур. созданных предметов"
 L["CREATE"] = "Создать"
 L["CREATE_LIST_DIALOG"] = "Введите название нового списка покупок:"
 L["CURRENT"] = "Текущий"
---[[Translation missing --]]
-L["CURRENT_PRICES"] = "Current Prices"
+L["CURRENT_PRICES"] = "Текущие цены"
 L["CUSTOM_KEYBOARD_SHORTCUTS"] = "Пользовательские сочетания клавиш"
 L["DATE"] = "Дата"
 L["DAY_1"] = "Воскресенье"
@@ -210,6 +209,10 @@ L["FINISHED_PROCESSING"] = "Закончил обработку %s предме�
 L["FULL_SCAN_ALTERNATE_FAILED"] = "Полное сканирование (альтернативный режим) не удалось завершить."
 L["FULL_SCAN_BUTTON"] = "Полное Сканирование"
 L["FULL_SCAN_FAILED"] = "Полное сканирование не удалось завершить."
+--[[Translation missing --]]
+L["FULL_SCAN_FAILED_REPLICATE"] = "Full scan (replicate mode) failed to complete."
+--[[Translation missing --]]
+L["FULL_SCAN_FAILED_SUMMARY"] = "Full scan (summary mode) failed to complete."
 L["FULL_SCAN_IN_PROGRESS"] = "Выполняется полное сканирование."
 L["GEAR_VENDOR_PRICE_MULTIPLIER"] = "Множитель цены торговца"
 L["HIDE"] = "Скрыть"
@@ -450,6 +453,10 @@ L["STACK_TOOLTIP_TOOLTIP_HEADER"] = "Цена за стак"
 L["STACK_TOOLTIP_TOOLTIP_TEXT"] = "При выборе этого параметра необходимо удерживать клавишу shift, чтобы увидеть цены стака. Если этот параметр Не выбран, цены стака отображаются по умолчанию."
 L["STARTING_FULL_SCAN"] = "Начинаем полное сканирование."
 L["STARTING_FULL_SCAN_ALTERNATE"] = "Запуск полного сканирования (альтернативный режим)."
+--[[Translation missing --]]
+L["STARTING_FULL_SCAN_REPLICATE"] = "Starting a full scan (replicate mode)."
+--[[Translation missing --]]
+L["STARTING_FULL_SCAN_SUMMARY"] = "Starting a full scan (summary mode)."
 L["STARTING_PRICE_PERCENTAGE"] = "Стартовая цена"
 L["STARTING_PRICE_PERCENTAGE_SUFFIX"] = "% от цены стака"
 L["STARTING_PRICE_PERCENTAGE_TOOLTIP_HEADER"] = "Начальная цена торгов"

@@ -236,6 +236,10 @@ L["FINISHED_PROCESSING"] = "불러오기 완료"
 L["FULL_SCAN_ALTERNATE_FAILED"] = "일반 검색 실패"
 L["FULL_SCAN_BUTTON"] = "전체 검색"
 L["FULL_SCAN_FAILED"] = "전체 검색 실패"
+--[[Translation missing --]]
+L["FULL_SCAN_FAILED_REPLICATE"] = "Full scan (replicate mode) failed to complete."
+--[[Translation missing --]]
+L["FULL_SCAN_FAILED_SUMMARY"] = "Full scan (summary mode) failed to complete."
 L["FULL_SCAN_IN_PROGRESS"] = "전체 검색 진행 중."
 L["GEAR_VENDOR_PRICE_MULTIPLIER"] = "상점에 판매하는 가격의 배수로 장비를 판매"
 L["HIDE"] = "숨기기"
@@ -541,6 +545,10 @@ L["STACK_TOOLTIP_TOOLTIP_HEADER"] = "가격 표시 설정"
 L["STACK_TOOLTIP_TOOLTIP_TEXT"] = "쉬프트를 누르고 있을 때 물건 전체의 경매가를 표시합니다. (ex. 20개짜리 영약 20개의 가격) 체크해제 시 1개의 가격만 표시됩니다."
 L["STARTING_FULL_SCAN"] = "전체 검색 시작"
 L["STARTING_FULL_SCAN_ALTERNATE"] = "일반 검색 시작"
+--[[Translation missing --]]
+L["STARTING_FULL_SCAN_REPLICATE"] = "Starting a full scan (replicate mode)."
+--[[Translation missing --]]
+L["STARTING_FULL_SCAN_SUMMARY"] = "Starting a full scan (summary mode)."
 L["STARTING_PRICE_PERCENTAGE"] = "시작 가격"
 L["STARTING_PRICE_PERCENTAGE_SUFFIX"] = "묶음 가격 %"
 L["STARTING_PRICE_PERCENTAGE_TOOLTIP_HEADER"] = "입찰 시작가"

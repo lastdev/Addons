@@ -1,4 +1,4 @@
-if not WeakAuras.IsCorrectVersion() or not WeakAuras.IsLibsOK() then return end
+if not WeakAuras.IsLibsOK() then return end
 local AddonName, Private = ...
 
 local WeakAuras = WeakAuras;
@@ -775,8 +775,8 @@ function WeakAuras.regionPrototype.AddExpandFunction(data, region, cloneId, pare
       region.subRegionEvents:Notify("PreHide")
       if region:IsProtected() then
         if InCombatLockdown() then
-          Private.AuraWarnings.UpdateWarning(uid, "protected_frame", "error",
-            L["Cannot hide secure frame in combat lockdown. Find more information:\nhttps://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames"],
+          Private.AuraWarnings.UpdateWarning(uid, "protected_frame_error", "error",
+          L["Cannot change secure frame in combat lockdown. Find more information:\nhttps://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames"],
             true)
         else
           Private.AuraWarnings.UpdateWarning(uid, "protected_frame", "warning",
@@ -806,8 +806,8 @@ function WeakAuras.regionPrototype.AddExpandFunction(data, region, cloneId, pare
 
       if region:IsProtected() then
         if InCombatLockdown() then
-          Private.AuraWarnings.UpdateWarning(uid, "protected_frame", "error",
-            L["Cannot hide secure frame in combat lockdown. Find more information:\nhttps://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames"],
+          Private.AuraWarnings.UpdateWarning(uid, "protected_frame_error", "error",
+          L["Cannot change secure frame in combat lockdown. Find more information:\nhttps://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames"],
             true)
         else
           Private.AuraWarnings.UpdateWarning(uid, "protected_frame", "warning",
@@ -861,8 +861,8 @@ function WeakAuras.regionPrototype.AddExpandFunction(data, region, cloneId, pare
       Private.ApplyFrameLevel(region)
       if region:IsProtected() then
         if InCombatLockdown() then
-          Private.AuraWarnings.UpdateWarning(uid, "protected_frame", "error",
-            L["Cannot show secure frame in combat lockdown. Find more information:\nhttps://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames"],
+          Private.AuraWarnings.UpdateWarning(uid, "protected_frame_error", "error",
+            L["Cannot change secure frame in combat lockdown. Find more information:\nhttps://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames"],
             true)
         else
           Private.AuraWarnings.UpdateWarning(uid, "protected_frame", "warning",
@@ -930,8 +930,8 @@ function WeakAuras.regionPrototype.AddExpandFunction(data, region, cloneId, pare
 
       if region:IsProtected() then
         if InCombatLockdown() then
-          Private.AuraWarnings.UpdateWarning(uid, "protected_frame", "error",
-            L["Cannot show secure frame in combat lockdown. Find more information:\nhttps://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames"],
+          Private.AuraWarnings.UpdateWarning(uid, "protected_frame_error", "error",
+            L["Cannot change secure frame in combat lockdown. Find more information:\nhttps://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames"],
             true)
         else
           Private.AuraWarnings.UpdateWarning(uid, "protected_frame", "warning",
@@ -979,15 +979,12 @@ function WeakAuras.SetTextureOrAtlas(texture, path, wrapModeH, wrapModeV)
   if type(path) == "string" and GetAtlasInfo(path) then
     return texture:SetAtlas(path);
   else
-    local needToClear = true
     if (texture.wrapModeH and texture.wrapModeH ~= wrapModeH) or (texture.wrapModeV and texture.wrapModeV ~= wrapModeV) then
-      needToClear = true
+      -- WORKAROUND https://github.com/Stanzilla/WoWUIBugs/issues/250
+      texture:SetTexture(nil)
     end
     texture.wrapModeH = wrapModeH
     texture.wrapModeV = wrapModeV
-    if needToClear then
-      texture:SetTexture(nil)
-    end
     return texture:SetTexture(path, wrapModeH, wrapModeV);
   end
 end

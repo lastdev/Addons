@@ -209,6 +209,10 @@ L["FINISHED_PROCESSING"] = "已处理完成 %s 个物品。"
 L["FULL_SCAN_ALTERNATE_FAILED"] = "完整扫描 (替代模式) 失败，没有完成。"
 L["FULL_SCAN_BUTTON"] = "完整扫描"
 L["FULL_SCAN_FAILED"] = "完整扫描失败，没有完成。"
+--[[Translation missing --]]
+L["FULL_SCAN_FAILED_REPLICATE"] = "Full scan (replicate mode) failed to complete."
+--[[Translation missing --]]
+L["FULL_SCAN_FAILED_SUMMARY"] = "Full scan (summary mode) failed to complete."
 L["FULL_SCAN_IN_PROGRESS"] = "正在进行完整扫描。"
 L["GEAR_VENDOR_PRICE_MULTIPLIER"] = "装备商人售价倍数"
 L["HIDE"] = "隐藏"
@@ -450,6 +454,10 @@ L["STACK_TOOLTIP_TOOLTIP_HEADER"] = "堆叠总价"
 L["STACK_TOOLTIP_TOOLTIP_TEXT"] = "启用时，必须按住 Shift 键才能看到堆叠总价。停用时，预设就会显示堆叠总价。"
 L["STARTING_FULL_SCAN"] = "开始完整扫描。"
 L["STARTING_FULL_SCAN_ALTERNATE"] = "开始完整扫描 (替代模式)。"
+--[[Translation missing --]]
+L["STARTING_FULL_SCAN_REPLICATE"] = "Starting a full scan (replicate mode)."
+--[[Translation missing --]]
+L["STARTING_FULL_SCAN_SUMMARY"] = "Starting a full scan (summary mode)."
 L["STARTING_PRICE_PERCENTAGE"] = "起始价格"
 L["STARTING_PRICE_PERCENTAGE_SUFFIX"] = "% 堆叠价格"
 L["STARTING_PRICE_PERCENTAGE_TOOLTIP_HEADER"] = "起始竞标价格"

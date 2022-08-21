@@ -247,6 +247,10 @@ L["FINISHED_PROCESSING"] = "Terminado de processar %s itens."
 L["FULL_SCAN_ALTERNATE_FAILED"] = "Varredura completa (mode alternativo) não foi completada com sucesso."
 L["FULL_SCAN_BUTTON"] = "Varredura Completa"
 L["FULL_SCAN_FAILED"] = "Não foi possível completar a varredura completa."
+--[[Translation missing --]]
+L["FULL_SCAN_FAILED_REPLICATE"] = "Full scan (replicate mode) failed to complete."
+--[[Translation missing --]]
+L["FULL_SCAN_FAILED_SUMMARY"] = "Full scan (summary mode) failed to complete."
 L["FULL_SCAN_IN_PROGRESS"] = "Varredura completa em progresso."
 L["GEAR_VENDOR_PRICE_MULTIPLIER"] = "Multiplicador de preço de venda de equipamentos"
 L["HIDE"] = "Esconder"
@@ -557,6 +561,10 @@ L["STACK_TOOLTIP_TOOLTIP_HEADER"] = "Preços das Pilhas"
 L["STACK_TOOLTIP_TOOLTIP_TEXT"] = "Quando selecionado, a tecla SHIFT tem que ser pressionada para ver o preço da pilha. Quando não selecionada, o preço da pilha inteira é mostrado sempre."
 L["STARTING_FULL_SCAN"] = "Começando varredura completa."
 L["STARTING_FULL_SCAN_ALTERNATE"] = "Começando uma varredura completa (modo alternativo)."
+--[[Translation missing --]]
+L["STARTING_FULL_SCAN_REPLICATE"] = "Starting a full scan (replicate mode)."
+--[[Translation missing --]]
+L["STARTING_FULL_SCAN_SUMMARY"] = "Starting a full scan (summary mode)."
 --[[Translation missing --]]
 L["STARTING_PRICE_PERCENTAGE"] = "Starting Price"
 --[[Translation missing --]]

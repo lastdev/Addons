@@ -1749,3 +1749,9 @@ Change Log:
 * Added SL spells for Torghast
 * Added Legion spells for Return to Karazhan
 * Added WoD spells for Draenor (world)
+
+4.67.2
+* Added SL spells for Sepulcher of the First Ones
+* Added SL spells for Torghast
+* Added WoD spells for Iron Docks
+* Added WoD spells for Grimrail Depot
