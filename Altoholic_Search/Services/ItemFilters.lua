@@ -2,6 +2,8 @@ local addonName = "Altoholic"
 local addon = _G[addonName]
 local colors = addon.Colors
 
+local LII = LibStub("LibItemInfo-1.0")
+
 addon:Service("AltoholicUI.ItemFilters", { "AltoholicUI.Options", "AltoholicUI.Equipment", function(Options, Equipment)
 
 	local filters = {}
@@ -32,6 +34,13 @@ addon:Service("AltoholicUI.ItemFilters", { "AltoholicUI.Options", "AltoholicUI.E
 			
 			-- no filter, or searched item has higher rarity than filter, keep it
 			if not rarity or searchedItem["itemRarity"] >= rarity then return true end
+		end,
+		
+		["Expansion"] = function()
+			local expansion = filters["itemExpansion"]
+			
+			-- no filter, or searched item is the same expansion as filter, keep it
+			if not expansion or searchedItem["itemExpansion"] == expansion then return true end
 		end,
 		
 		["ItemLevel"] = function()
@@ -113,6 +122,12 @@ addon:Service("AltoholicUI.ItemFilters", { "AltoholicUI.Options", "AltoholicUI.E
 				table.insert(out, format("%s >= %s|r", RARITY, rarityLabel))
 			end
 			
+			if filters["itemExpansion"] then
+				local expansion = filters["itemExpansion"]
+			
+				table.insert(out, format("%s = %s%s|r", EXPANSION_FILTER_TEXT, color, _G["EXPANSION_NAME"..expansion]))
+			end
+			
 			local filtersString = table.concat(out, ", ")
 			
 			return (filtersString:len() > 0) and filtersString or "No active filter"
@@ -151,6 +166,8 @@ addon:Service("AltoholicUI.ItemFilters", { "AltoholicUI.Options", "AltoholicUI.E
 				s.itemName, s.itemLink, s.itemRarity, s.itemLevel,	s.itemMinLevel = GetItemInfo(itemLink or itemID)
 				s.itemType,	s.itemSubType, s.itemEquipLoc = select(2, GetItemInfoInstant(itemLink or itemID))
 			end
+			
+			s.itemExpansion = select(3, LII:GetItemSource(itemID))
 		end,
 
 		GetSearchedItemInfo = function(field) return searchedItem[field] end,

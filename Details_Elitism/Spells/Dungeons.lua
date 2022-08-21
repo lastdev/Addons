@@ -128,7 +128,6 @@ local Spells = {
     -- id ?[335882] = 20,        -- Clinging Infestation (Fen Hatchling)
     [330404] = 20, -- Wing Buffet (Plagueroc)
     -- id ?[320040] = 20,        -- Plagued Carrion (Decaying Flesh Giant)
-    [320072] = 20, -- Toxic Pool (Decaying Flesh Giant)
     [344001] = 20, -- Slime Trail (Environment)
     [318949] = 20, -- Festering Belch (Blighted Spinebreaker)
     [320576] = 20, -- Obliterating Ooze (Virulax Blightweaver)
@@ -147,6 +146,7 @@ local Spells = {
     [322475] = 20, -- Plague Crash (Environment Margrave Stradama)
 
     -- Theater of Pain
+    [342126] = 20, -- Brutal Leap (Dokigg the Brutalizer)
     [337037] = 20, -- Whirling Blade (Nekthara the Mangler) ?? TODO: Which one is correct?
     [336996] = 20, -- Whirling Blade (Nekthara the Mangler) ?? TODO: Which one is correct?
     [317605] = 20, -- Whirlwind (Nekthara the Mangler and Rek the Hardened)
@@ -168,6 +168,7 @@ local Spells = {
     [323406] = 20, -- Jagged Gash (Gorechop)
     -- id ?[323542] = 20,        -- Oozing (Gorechop)
     [317367] = 20, -- Necrotic Volley (Kul'tharok)
+    [319639] = 20, -- Grasping Hands (Kul'tharok)
     [323681] = 20, -- Dark Devastation (Mordretha)
     [339550] = 20, -- Echo of Battle (Mordretha)
     [323831] = 20, -- Death Grasp (Mordretha)
@@ -233,7 +234,6 @@ local Spells = {
     [355581] = 20, -- Crackle (Stormforged Guardian)
     [355584] = 20, -- Charged Pulse (Stormforged Guardian)
     [356260] = 20, -- Tidal Burst (Hourglass Tidesage)
-    [368661] = 20, -- Sword Toss (Corsair Officer)
     [357228] = 20, -- Drifting Star (Adorned Starseer)
 
     -- [346828] = 20,    -- Sanitizing Field (Hylbrande) - more like a wipe mechanic

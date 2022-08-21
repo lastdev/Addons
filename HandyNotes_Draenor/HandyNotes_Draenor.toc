@@ -1,6 +1,6 @@
-## Interface: 90200
+## Interface: 90205
 ## Title: HandyNotes: Draenor
-## Version: 2.5
+## Version: 2.6
 ## Notes: Draenor Rares and Treasures simplified
 ## Author: Lorade
 ## RequiredDeps: HandyNotes

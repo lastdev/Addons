@@ -1,4 +1,4 @@
-## Interface: 90200
+## Interface: 90205
 #@non-debug@
 ## Title: HandyNotes - Legion Class Order Halls
 ## Title-deDE: HandyNotes - Legion Klassenordenshallen
@@ -22,12 +22,12 @@
 # ## Notes-zhTW: 顯示各職業大廳裡 NPC 與主要的 POI 的位置
 #@end-debug@
 ## Author: arith
-## Version: v1.46
+## Version: v1.47
 ## RequiredDeps: HandyNotes
 ## OptionalDeps: LibBabble-SubZone-3.0, !LibUIDropDownMenu
 ## DefaultState: enabled
 ## SavedVariables: HandyNotes_LegionClassOrderHallsDB
-## X-Date: 2022-02-27T16:14:37Z
+## X-Date: 2022-07-23T3:19:19Z
 ## X-License: GPLv2
 ## X-Category: Map
 

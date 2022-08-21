@@ -22,7 +22,7 @@ ns.RegisterPoints(539, { -- ShadowmoonValleyDR
     [34204350]={quest=33866, loot={109124}, label="Veema's Herb Bag, underground"},
     [34404620]={quest=33891, loot={108901}, label="Giant Moonwillow Cone"},
     [35904090]={quest=33540, loot={113546}, label="Uzko's Knickknacks"},
-    [36704450]={quest=33573, loot={113378}},
+    [36704450]={quest=33573, loot={113378}, label="{item:113378:Rovo's Dagger}"},
     [36804140]={quest=33046, loot={113547}, label="Beloved's Offering", note="Offhand decoration"},
     [37202310]={quest=33613, loot={108945}, label="Bubbling Cauldron", note="In cave"},
     [37202610]={quest=35677, loot={110506}, label="Sunken Fishing Boat", note="fishy fun items"},
@@ -58,7 +58,7 @@ ns.RegisterPoints(540, { -- BloodthornCave
 })
 
 ns.RegisterPoints(539, { -- ShadowmoonValleyDR
-    [51803550]={ quest=33037, label="False-Bottomed Jar", note="Gold", junk=true, },
+    [51803550]={ quest=33037, label="False-Bottomed Jar", note="Gold", group="junk", },
     -- followers
     [42804040]={ quest=35614, follower=179, npc=74741, faction="Alliance", note="Do the crystal defense event here to get him", }, -- Artificer Romuul
 })
@@ -85,7 +85,7 @@ ns.RegisterPoints(539, { -- ShadowmoonValleyDR
     [43807740]={quest=33383, npc=81639, loot={117551}}, -- Brambleking Fili
     [44005760]={quest=33642, npc=75071, loot={119449}}, -- Mother Om'ra, hunter quest
     [44802080]={quest=35906, npc=77310, loot={113561}}, -- Mad King Sporeon
-    [46007160]={quest=37351, npc=84911, loot={{119431, pet=1601}}, currency=823}, -- Demidos
+    [46007160]={quest=37351, npc=84911, loot={{119431, pet=1601}}, currency=823, achievement=9437}, -- Demidos
     [48007760]={quest=37355, npc=85121, loot={119360}}, -- Lady Temptessa
     [48208100]={quest=37354, npc=85029, loot={119396}}, -- Shadowspeaker Niir
     [48602260]={quest=35553, npc=82374, loot={{113542, toy=true}}}, -- Rai'vosh, reusable slow-fall Item

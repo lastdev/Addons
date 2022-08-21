@@ -425,7 +425,13 @@ Columns.RegisterColumn("RestXP", {
 			return format("%s0%%", colors.white)	-- show 0% at max level
 		end
 
-		return GetRestedXP(character)
+		local text = GetRestedXP(character)
+		
+		if not DataStore:IsResting(character) then
+			text = format("%s %s!", text, colors.gold)
+		end
+		
+		return text
 	end,
 	OnEnter = function(frame)
 			local character = frame:GetParent().character
@@ -453,6 +459,11 @@ Columns.RegisterColumn("RestXP", {
 				tt:AddLine(format("%s", L["Fully rested"]),1,1,1)
 			else
 				tt:AddLine(format("%s%s: %s", colors.white, L["Fully rested in"], Formatter.TimeString(timeUntilFullyRested)))
+			end
+			
+			if not DataStore:IsResting(character) then
+				tt:AddLine(" ")
+				tt:AddLine(format("%s%s", colors.red, L["CHARACTER_NOT_IN_RESTING_AREA"]))
 			end
 			
 			tt:Show()

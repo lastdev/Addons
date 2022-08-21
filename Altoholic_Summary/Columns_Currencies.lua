@@ -731,7 +731,20 @@ Columns.RegisterColumn("Cur_Cyphers", {
 	-- Content
 	Width = 70,
 	JustifyH = "CENTER",
-	GetText = function(character)	return GetCurrencyText(character, enum.CyphersOfTheFirstOnes) end,
+	GetText = function(character)	
+		local text = GetCurrencyText(character, enum.CyphersOfTheFirstOnes) 
+		
+		-- has this character already used the "Improvised Cypher Analysis Tool" ? 
+		if DataStore:IsQuestCompletedBy(character, 65282) then
+			local icon = select(5, GetItemInfoInstant(188793))
+			
+			if icon then
+				return format("%s %s", text, Formatter.Texture18(icon))
+			end
+		end
+	
+		return text
+	end,
 })
 
 Columns.RegisterColumn("Cur_CosmicFlux", {

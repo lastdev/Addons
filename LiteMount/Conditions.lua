@@ -228,6 +228,14 @@ CONDITIONS["difficulty"] = {
         end
 }
 
+CONDITIONS["dragonriding"] = {
+    name = MOUNT_JOURNAL_FILTER_DRAGONRIDING,
+    handler =
+        function (cond, context)
+            return LM.Environment:CanDragonRide(context.mapPath)
+        end,
+}
+
 -- Persistent "deck of cards" draw randomness
 
 CONDITIONS["draw"] = {
@@ -367,8 +375,7 @@ CONDITIONS["floating"] = {
 }
 
 CONDITIONS["flyable"] = {
-    L.LM_FLYABLE_AREA,
-    name = L["Flyable area"],
+    name = L.LM_FLYABLE_AREA,
     handler =
         function (cond, context)
             return LM.Environment:CanFly()
@@ -428,8 +435,42 @@ CONDITIONS["gather"] = {
         end
 }
 
+local function IsInCrossFactionGroup()
+    local myFaction = UnitFactionGroup('player')
+    local unit, numMembers
+    if IsInRaid() then
+        unit, numMembers = 'raid', GetNumGroupMembers()
+    else
+        unit, numMembers = 'party', GetNumSubgroupMembers()
+    end
+    for i = 1, numMembers do
+        if UnitFactionGroup(unit..i) ~= myFaction then
+            return true
+        end
+    end
+end
+
 CONDITIONS["group"] = {
     name = L.LM_PARTY_OR_RAID_GROUP,
+    toDisplay =
+        function (v)
+            if v == "party" then
+                return PARTY
+            elseif v == "raid" then
+                return RAID
+            elseif v == "crossfaction" then
+                return CROSS_FACTION_CLUB_FINDER_SEARCH_OPTION
+            elseif not v then
+                return CLUB_FINDER_ANY_FLAG
+            end
+        end,
+    menu = {
+        nosort = true,
+        { val = "group" },
+        { val = "group:party" },
+        { val = "group:raid" },
+        { val = "group:crossfaction" },
+    },
     handler =
         function (cond, context, groupType)
             if not groupType then
@@ -438,6 +479,8 @@ CONDITIONS["group"] = {
                 return IsInRaid()
             elseif groupType == "party" then
                 return IsInGroup()
+            elseif groupType == "crossfaction" then
+                return IsInCrossFactionGroup()
             end
         end
 }
@@ -516,7 +559,7 @@ CONDITIONS["keybind"] = {
 
 -- GetMaxLevelForLatestExpansion()
 CONDITIONS["level"] = {
-    name = string.format(UNIT_LEVEL_TEMPLATE, GetMaxLevelForLatestExpansion()),
+    name = GUILD_RECRUITMENT_MAXLEVEL,
     args = true,
     handler =
         function (cond, context, l1, l2)
@@ -571,7 +614,7 @@ CONDITIONS["map"] = {
             if v:sub(1,1) == '*' then
                 return LM.Environment:IsOnMap(tonumber(v:sub(2)))
             else
-                return LM.Environment:IsMapInPath(tonumber(v))
+                return LM.Environment:IsMapInPath(tonumber(v), context.mapPath)
             end
         end,
 }
@@ -579,7 +622,7 @@ CONDITIONS["map"] = {
 CONDITIONS["maw"] = {
     handler =
         function (cond, context, v)
-            return LM.Environment:IsTheMaw()
+            return LM.Environment:IsTheMaw(context.mapPath)
         end
 }
 

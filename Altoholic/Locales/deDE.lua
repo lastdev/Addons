@@ -85,3 +85,4 @@ L["Total owned"] = "Summe aller im Besitz"
 L["Source"] = "Quelle"
 -- L["Goes in"] = true
 L["Are also on this quest:"] = "Sind auch in dieser Quest:"
+-- L["Could be stored on"] = true

@@ -41,6 +41,7 @@ addon:Controller("AltoholicUI.TabOptions.SettingsAltoholicTooltip", { "Altoholic
 			frame.ShowGuildBankCountPerTab:SetChecked(Options.Get("UI.Tooltip.ShowGuildBankCountPerTab"))
 			frame.ShowHearthstoneCount:SetChecked(Options.Get("UI.Tooltip.ShowHearthstoneCount"))
 			frame.ShowItemXPack:SetChecked(Options.Get("UI.Tooltip.ShowItemXPack"))
+			frame.ShowCouldBeStoredOn:SetChecked(Options.Get("UI.Tooltip.ShowCouldBeStoredOn"))
 			
 			frame:Show()
 		end,

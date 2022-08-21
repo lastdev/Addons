@@ -15,6 +15,7 @@ local searchType, searchSubType, searchedValue
 local OPTION_LOCATION = "UI.Tabs.Search.CurrentLocation"
 local OPTION_RARITY = "UI.Tabs.Search.CurrentRarity"
 local OPTION_EQUIPMENT = "UI.Tabs.Search.CurrentSlot"
+local OPTION_EXPANSION = "UI.Tabs.Search.CurrentExpansion"
 local OPTION_PROFESSION = "UI.Tabs.Search.CurrentProfession"
 local OPTION_NO_MIN_LEVEL = "UI.Tabs.Search.IncludeNoMinLevel"
 local OPTION_MAILBOXES = "UI.Tabs.Search.IncludeMailboxItems"
@@ -56,6 +57,15 @@ local function OnSearchEquipmentSlotChange(frame, itemType, itemSubType)
 		searchType = nil
 		searchSubType = nil
 	end
+	
+	if searchedValue then
+		tab:Find(searchedValue)
+		tab:Update()
+	end
+end
+
+local function OnSearchExpansionChange(frame)
+	Options.Set(OPTION_EXPANSION, frame.value)
 	
 	if searchedValue then
 		tab:Find(searchedValue)
@@ -139,6 +149,21 @@ local function EquipmentIcon_Initialize(frame, level)
 	frame:AddCloseMenu()
 end
 
+local function ExpansionsIcon_Initialize(frame, level)
+	local option = Options.Get(OPTION_EXPANSION)
+
+	frame:AddTitle(L["FILTER_SEARCH_EXPANSION"])
+	frame:AddButton(L["Any"], 0, OnSearchExpansionChange, nil, (option == 0))	
+	frame:AddTitle()
+	
+	for index, expansion in ipairs(DataStore.Enum.ExpansionPacks) do
+		frame:AddButton(expansion, index, OnSearchExpansionChange, nil, (option == index))
+	end
+	
+	frame:AddTitle()
+	frame:AddCloseMenu()
+end
+
 local function ProfessionsIcon_Initialize(frame, level)
 	local option = Options.Get(OPTION_PROFESSION)
 
@@ -167,6 +192,7 @@ local menuIconCallbacks = {
 	LocationIcon_Initialize,
 	RarityIcon_Initialize,
 	EquipmentIcon_Initialize,
+	ExpansionsIcon_Initialize,
 	ProfessionsIcon_Initialize,
 	SearchOptionsIcon_Initialize,
 }
@@ -196,6 +222,7 @@ addon:Controller("AltoholicUI.TabSearch", {
 			
 			Options.Set(OPTION_RARITY, 0)
 			Options.Set(OPTION_EQUIPMENT, 0)
+			Options.Set(OPTION_EXPANSION, 0)
 			
 			-- reset also min max
 			frame.MinLevel:SetText("")
@@ -310,6 +337,12 @@ addon:Controller("AltoholicUI.TabSearch", {
 			if itemRarity and itemRarity > 0 then	-- don't apply filter if = 0, it means we take them all
 				ItemFilters.SetFilterValue("itemRarity", itemRarity)
 				ItemFilters.EnableFilter("Rarity")
+			end
+			
+			local itemExpansion = Options.Get(OPTION_EXPANSION)
+			if itemExpansion and itemExpansion > 0 then	-- don't apply filter if = 0, it means we take them all
+				ItemFilters.SetFilterValue("itemExpansion", itemExpansion - 1)
+				ItemFilters.EnableFilter("Expansion")
 			end
 			
 			-- print(ItemFilters.GetFiltersString())

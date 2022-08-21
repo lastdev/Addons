@@ -90,3 +90,4 @@ L["Total owned"] = "Общее количество"
 L["Source"] = "Источник"
 -- L["Goes in"] = true
 L["Are also on this quest:"] = "Этот квест также выполняют:"
+-- L["Could be stored on"] = true

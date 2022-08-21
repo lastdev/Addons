@@ -80,7 +80,7 @@ ns.RegisterPoints(550, { -- NagrandDraenor
 --]]
 
 ns.RegisterPoints(550, { -- NagrandDraenor
-    [40406860]={quest=37435, currency=824, junk=true, label="Spirit Coffer"},
+    [40406860]={quest=37435, currency=824, group="junk", label="Spirit Coffer"},
     -- abu'gar
     [38404940]={quest=36711, loot={114245}, inbag=114245, label="Abu'Gar's Favorite Lure", note="Won't show complete until you get Abu'Gar"}, -- 36072
     [65906120]={quest=36711, loot={114242}, inbag=114242, label="Abu'gar's Vitality", note="Won't show complete until you get Abu'Gar"}, -- 35711
@@ -100,12 +100,12 @@ ns.RegisterPoints(550, { -- NagrandDraenor
     [40001600]={quest=37396, npc=87837, loot={119370}, achievement=9571}, -- Bonebreaker
     [42207860]={quest=34725, npc=80122, loot={116798}, currency=824, note="In a cave"}, -- Gaz'orda
     [42804920]={quest=35875, npc=83409, loot={116765}}, -- Ophiis
-    [43003640]={quest=37400, npc=87234, loot={119380}, achievement=9541}, -- Brutag Grimblade
+    [43003640]={quest=37400, npc=87234, loot={119380}, achievement=9541, label="{npc:87234:Brutag Grimblade}"}, -- Brutag Grimblade
     [42603620]={quest={37472, 37473}, achievement=9541, label="Secret Meeting", note="Find the {item:120290} and use {npc:87361}, which will summon {npc:87239} and {npc:87344}"}, -- Secret Meeting: Krahl Deadeye, Gortag Steelgrip
     -- [43803440]={quest=37473, npc=87239, achievement=9541}, -- Krahl Deadeye
     -- [45003640]={quest=37472, npc=87344, achievement=9541}, -- Gortag Steelgrip
     [45801520]={quest=36229, npc=84435, loot={118690}}, -- Mr. Pinchy Sr.
-    [45803480]={quest=37399, npc=86959, loot={119355}, achievement=9541}, -- Karosh Blackwind
+    [45803480]={quest=37399, npc=86959, loot={119355}, achievement=9541, label="{npc:86959:Karosh Blackwind}"}, -- Karosh Blackwind
     [47607080]={quest=35865, npc=83401, loot={{116815, pet=1524}}}, -- Netherspawn
     [52009000]={quest=37408, npc=80370, note="No loot"}, -- Lernaea
     [52205580]={quest=35715, npc=82764, loot={118246}}, -- Gar'lua

@@ -1,6 +1,5 @@
-## Changed in v90205.0
+## Changed in v90205.2
 
-* Updated for 9.2.5, fixing errors about C_TransmogCollection (in a rush, so there might be followup fixes)
-* Make scrolling inside long mob list tooltips much faster
-* Added missing vignette ID for the Sinstone Hoarder in Revendreth
+* New option to only consider transmogs obtained if you have that exact item (disabled by default)
+* Some cosmetic items were incorrectly saying they wouldn't drop for anyone, mostly Korthia back items it seemed
 

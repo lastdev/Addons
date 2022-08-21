@@ -5,6 +5,7 @@ if not L then return end
 -- L["FILTER_SEARCH_LOCATION"] = "Search location"
 -- L["FILTER_SEARCH_RARITY"] = "Rarity filter"
 -- L["FILTER_SEARCH_SLOT"] = "Equipment filter"
+-- L["FILTER_SEARCH_EXPANSION"] = "Expansion filter"
 -- L["FILTER_SEARCH_OPTIONS"] = "Search options"
 L["This character"] = "這角色"
 L["This realm"] = "搜索這伺服器"

@@ -183,10 +183,12 @@ local function BuildView()
 	
 	for i=1, GetNumGuildMembers(true) do		-- browse all players (online & offline)
 		local member = GetGuildRosterInfo(i)
-		member = Ambiguate(member, "none")		
-		if not onlineMembers[member] then
-			offlineMembers[ #offlineMembers + 1 ] = member
-		end		
+		if member then
+			member = Ambiguate(member, "none")		
+			if not onlineMembers[member] then
+				offlineMembers[ #offlineMembers + 1 ] = member
+			end
+		end
 	end
 	
 	table.sort(offlineMembers, sortByAlt[viewSortField])
@@ -264,10 +266,12 @@ addon:Controller("AltoholicUI.TabGuild.Members", { function()
 			
 			if not isResizing then
 				guild = DataStore:GetGuild()
-				local guildName = select(3, strsplit(".", guild))
-				
-				local parent = frame:GetParent()
-				parent:SetStatus(format("%s%s|r / %s%s", colors.white, L["GUILD_MEMBERS"], colors.green, guildName))
+				if guild then
+					local guildName = select(3, strsplit(".", guild))
+					
+					local parent = frame:GetParent()
+					parent:SetStatus(format("%s%s|r / %s%s", colors.white, L["GUILD_MEMBERS"], colors.green, guildName))
+				end
 			end
 			
 			if #view == 0 then

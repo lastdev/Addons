@@ -1,0 +1,11 @@
+<Ui xmlns='http://www.blizzard.com/wow/ui/' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd'>
+  <Script file='Arcatraz.lua'/>
+  <Script file='Auchenai_Crypts.lua'/>
+  <Script file='Magisters_Terrace.lua'/>
+  <Script file='Mechanar.lua'/>
+  <Script file='Sethekk_Halls.lua'/>
+  <Script file='Steamvault.lua'/>
+  <Script file='Black_Temple.lua'/>
+  <Script file='Karazhan.lua'/>
+  <Script file='Sunwell_Plateau.lua'/>
+</Ui>

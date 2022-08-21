@@ -108,6 +108,7 @@ L["COLUMN_RESTXP_DETAIL_3"] = "Il est atteint en 10 jours."
 L["COLUMN_RESTXP_DETAIL_4"] = "Mode %d%% : entièrement reposé est affiché comme '%d%%'"
 L["Fully rested"] = "Entièrement reposé"
 L["Fully rested in"] = "Entièrement reposé dans"
+L["CHARACTER_NOT_IN_RESTING_AREA"] = "Ce personnage n'est pas dans une zone de repos !"
 
 -- Column Money
 L["COLUMN_MONEY_TITLE"] = "Argent"

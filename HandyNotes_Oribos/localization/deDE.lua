@@ -139,6 +139,10 @@ L["To Ring of Transference"] = "Zum Ring der Übertragung"
 L["To Ring of Fates"] = "Zum Ring der Schicksale"
 L["Into the Maw"] = "In den Schlund"
 L["To Keeper's Respite"] = "Zur Zuflucht des Hüters"
+L["Portal to Zereth Mortis"] = "Portal nach Zereth Mortis"
+L["Portal to Karazhan"] = "Portal nach Karazhan"
+L["Portal to Mechagon"] = "Portal nach Mechagon"
+L["Portal to Gorgrond"] = "Portal nach Gorgrond"
 L["Mailbox"] = "Briefkasten"
 
 end

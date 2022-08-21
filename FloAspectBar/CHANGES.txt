@@ -1,24 +1,18 @@
-tag 30a6fa07ef75b1bad96bddc69b05a0659da10f50 9.1.28.5
+tag 205a047efab3415a82c433ec5fddaac6ad32953a 9.2.28.5
 Author:	Floraline <floraline@ophiuchus.org>
-Date:	Fri Nov 5 19:13:53 2021 +0100
+Date:	Thu Jul 28 19:46:52 2022 +0200
 
 Tagging for release
 
-commit 4dbd317a1b920c43dd5aeb81297241cdb2c23a75
+commit a752844b69e4d7f1a9348dc879061726ca560dd2
 Author: Floraline <floraline@ophiuchus.org>
-Date:   Fri Nov 5 19:13:37 2021 +0100
+Date:   Thu Jul 28 18:51:28 2022 +0200
 
-    the default toc file is still needed
+    minor mistake
 
-commit 7aaee7df1ee66f530af99c91dbd043089e2ff534
+commit e4c7374423b1133a427fe1ecac99b6a6fc0b8452
 Author: Floraline <floraline@ophiuchus.org>
-Date:   Fri Nov 5 19:03:43 2021 +0100
+Date:   Thu Jul 28 17:10:13 2022 +0200
 
-    Update toc version for 9.1.5 and 1.14
-
-commit 5faf69a4ce5f600ce0400a7f5def7b19287fa8ad
-Author: Floraline <floraline@ophiuchus.org>
-Date:   Wed Jun 30 14:20:13 2021 +0200
-
-    ?
+    Update toc version
 

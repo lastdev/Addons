@@ -34,7 +34,7 @@ end
 function LiteMountPriorityMixin:Get()
     local mount = self:GetParent().mount
     if mount then
-        return LM.Options:GetPriority(mount)
+        return mount:GetPriority()
     end
 end
 
@@ -91,7 +91,7 @@ function LiteMountAllPriorityMixin:Get()
     local allValue
 
     for _,mount in ipairs(mounts) do
-        local v = LM.Options:GetPriority(mount)
+        local v = mount:GetPriority()
         if (allValue or v) ~= v then
             allValue = nil
             break
@@ -285,6 +285,11 @@ function LiteMountMountScrollMixin:Update()
         end
     end
 
+    -- It's really not clear exactly what these should be, and as far as I can
+    -- tell even the Blizzard usages are not consistent. I think it should probably
+    -- include the inter-button gaps from HybridScrollFrame_CreateButtons, so in
+    -- the end it was easier not to have gaps so this was right either way.
+
     local totalHeight = #mounts * self.buttonHeight
     local shownHeight = self:GetHeight()
 
@@ -293,8 +298,8 @@ end
 
 function LiteMountMountScrollMixin:GetOption()
     return {
-        LM.Options:GetRawFlagChanges(),
-        LM.Options:GetRawMountPriorities()
+        LM.tCopyShallow(LM.Options:GetRawFlagChanges()),
+        LM.tCopyShallow(LM.Options:GetRawMountPriorities())
     }
 end
 
@@ -322,7 +327,7 @@ function LiteMountMountsPanelMixin:default()
     LM.UIDebug(self, 'Custom_Default')
     self.MountScroll.isDirty = true
     LM.Options:ResetAllMountFlags()
-    LM.Options:SetPriorities(LM.PlayerMounts.mounts, nil)
+    LM.Options:SetPriorities(LM.MountRegistry.mounts, nil)
 end
 
 function LiteMountMountsPanelMixin:OnLoad()
@@ -351,10 +356,10 @@ end
 function LiteMountMountsPanelMixin:OnShow()
     LiteMountFilter:Attach(self, 'BOTTOMLEFT', self.MountScroll, 'TOPLEFT', 0, 15)
     LM.UIFilter.RegisterCallback(self, "OnFilterChanged", "refresh")
-    LM.PlayerMounts:RefreshMounts()
+    LM.MountRegistry:RefreshMounts()
 
     -- Update the counts, Journal-only
-    local counts = LM.PlayerMounts:GetJournalTotals()
+    local counts = LM.MountRegistry:GetJournalTotals()
     self.Counts:SetText(
             string.format(
                 '%s: %s %s: %s %s: %s',

@@ -193,6 +193,8 @@ L['cat_figurine_09'] = 'En una cueva bajo el agua. La Figurila está en la parte
 L['cat_figurine_10'] = 'En una cueva justo debajo del camino. La Figurilla está entre los tres barriles.'
 L['figurines_found'] = 'Figurilla de Cristal Encontrada'
 
+L['fabious_desc'] = 'Hazte una foto "selfie" con {npc:65090} usando ya sea la {item:122637} o el juguete {item:122674}. Tiene un largo tiempo de reaparición y en ubicaciones aleatorias. Existe por poco tiempo.'
+
 L['mardivas_lab'] = 'Laboratorio de Mardivas'
 L['no_reagent'] = 'Sin ingredientes'
 L['swater'] = 'Agua Inferior'
@@ -222,6 +224,8 @@ L['options_icons_cats_nazj'] = '{achievement:13836}'
 L['options_icons_cats_nazj_desc'] = 'Muestra dónde están las figurillas de gato para el logro {achievement:13836}.'
 L['options_icons_misc_nazj'] = 'Miscelánea'
 L['options_icons_misc_nazj_desc'] = 'Muestra dónde está la cueva de Murloco y el Laboratorio de Mardivas.'
+L['options_icons_fabious'] = '{npc:65090}'
+L['options_icons_fabious_desc'] = 'Muestra dónde está {npc:65090} para su montura {item:169201}.'
 
 -------------------------------------------------------------------------------
 ------------------------------------ NAZMIR -----------------------------------
@@ -375,7 +379,6 @@ L['dunewalker'] = 'Para poder atacarle hay que quitarle el escudo de inmunidad. 
 L['friendly_alpaca'] = 'Alimenta a la alpaca con {item:174858} siete veces para aprenderla como montura. Aparece durante 10 minutos en un sitio, después tiene un largo tiempo de reaparición.'
 L['gaze_of_nzoth'] = 'Comparte lugar de reaparición con {npc:156890}.'
 L['gersahl_note'] = 'Alimenta a una {npc:162765} siete veces para una montura. No requiere Herboristería.'
-L['gersahl'] = 'Arbusto Gershal'
 L['hmiasma'] = 'Atrae {npc:158703} y {npc:160625} al círculo azul donde está {npc:160623} para alimentarle. Cuando haya crecido lo suficiente se activará.'
 L['kanebti'] = 'Recoge {item:168160} haciendo click en {npc:152427}, los cuales comparten lugar de aparición con los {npc:151859} normales. Inserta la Figurilla en el Altar del Escarabajo para invocar a {npc:152431}.'
 L['neferset_rare'] = 'Los seis raros comparten los tres lugares de aparición en Neferset. Tras completar un número de veces el evento del Ritual de Invocación, aparecerán tres raros aleatorios.'

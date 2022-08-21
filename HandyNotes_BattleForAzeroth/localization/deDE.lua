@@ -189,6 +189,8 @@ L['cat_figurine_09'] = 'In einer Unterwasserhöhle. Die Figur befindet sich auf 
 L['cat_figurine_10'] = 'In einer Höhle direkt unter dem Weg. Die Figur ist zwischen drei Fässern.'
 L['figurines_found'] = 'Kristallfiguren gefunden'
 
+L['fabious_desc'] = 'Mach ein "selfie" mit {npc:65090} entweder mit der {item:122637} oder dem {item:122674} Spielzeug. Erscheint zufällig nach längerer Zeit an einem der 5 Orte und bleibt nur kurz.'
+
 L['mardivas_lab'] = 'Mardivas\' Labor'
 L['no_reagent'] = 'Keine Reagenzien'
 L['swater'] = 'Kleines Wasser'
@@ -218,6 +220,8 @@ L['options_icons_cats_nazj'] = '{achievement:13836}'
 L['options_icons_cats_nazj_desc'] = 'Zeigt die Kristallkatzenstatuetten für den Erfolg {achievement:13836} an.'
 L['options_icons_misc_nazj'] = 'Sonstiges'
 L['options_icons_misc_nazj_desc'] = 'Zeigt die Position von {npc:152593s} Höhle und Mardivas\' Labor an.'
+L['options_icons_fabious'] = '{npc:65090}'
+L['options_icons_fabious_desc'] = 'Zeigt die möglichen Positionen von {npc:65090} für das Reittier {item:169201} an.'
 
 -------------------------------------------------------------------------------
 ------------------------------------ NAZMIR -----------------------------------
@@ -371,7 +375,6 @@ L['dunewalker'] = 'Klicke die Essenz der Sonne auf der Plattform an, um ihn frei
 L['friendly_alpaca'] = 'Füttere das Alpaka siebenmal mit {item:174858}, um es als Reittier zu erhalten. Erscheint 10 Minuten lang an einem Ort, danach ein längere Zeit nicht.'
 L['gaze_of_nzoth'] = 'Teilt sich den spawn mit {npc:156890}.'
 L['gersahl_note'] = 'Füttere siebenmal ein {npc:162765} damit, um es als Reittier zu erhalten. \n|cffff0000Benötigt KEIN Kräuterkunde.|r'
-L['gersahl'] = 'Gersahlstrauch'
 L['hmiasma'] = 'Töte Schleime in der Umgebung bis {npc:160623} aktiv wird.'
 L['kanebti'] = 'Sammle eine {item:168160} von einem Juwelenbesetzter Skarabäus, der sich einen spawn mit normalen Grabskarabäen teilt. Setze die Figur in den Skarabäusschrein ein, um {npc:152431} zu beschwören.'
 L['neferset_rare'] = 'Diese sechs Seltenen Gegner teilen sich die gleichen drei Spawnplätze in Neferset. Nachdem eine Reihe von Beschwörungsritual-Ereignissen abgeschlossen wurden, werden zufällig drei von ihnen erscheinen.'

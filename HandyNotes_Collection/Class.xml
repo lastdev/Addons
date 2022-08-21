@@ -1,0 +1,27 @@
+<Ui xmlns='http://www.blizzard.com/wow/ui/' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd'>
+  <Script file='Class\Translation.lua'/>
+  <Script file='Class\Icon.lua'/>
+  <Script file='Class\API.lua'/>
+  <Script file='Class\Status.lua'/>
+  <Script file='Class\Cache.lua'/>
+  <Script file='Class\Currency.lua'/>
+  <Script file='Class\Player.lua'/>
+  <Script file='Class\Profession.lua'/>
+  <Script file='Class\Item.lua'/>
+  <Script file='Class\Quest.lua'/>
+  <Script file='Class\Loot\Achievement.lua'/>
+  <Script file='Class\Loot\Mount.lua'/>
+  <Script file='Class\Loot\Pet.lua'/>
+  <Script file='Class\Loot\Toy.lua'/>
+  <Script file='Class\Loot\Transmog.lua'/>
+  <Script file='Class\Loot.lua'/>
+  <Script file='Class\Summary.lua'/>
+  <Script file='Class\Requirements.lua'/>
+  <Script file='Class\Point.lua'/>
+  <Script file='Class\Map.lua'/>
+  <Include file='Class\Map\DataProviderMixin.xml'/>
+  <Script file='Class\Map\DataProviderMixin.lua'/>
+  <Script file='Class\Map\PinMixin.lua'/>
+  <Script file='Class\Configuration.lua'/>
+  <Script file='Class\HandyNotes.lua'/>
+</Ui>

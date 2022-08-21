@@ -189,6 +189,15 @@ L["TT_SHOW_ITEMXPACK_DISABLED"] = [[No information is displayed.
 Note that this option is tied to 
 |cFFFF7F00Show item source|r]]
 
+L["TT_SHOW_COULDBESTORED_TEXT"] = "Show alternate storage location"
+L["TT_SHOW_COULDBESTORED_TITLE"] = "Show alternate storage location"
+L["TT_SHOW_COULDBESTORED_ENABLED"] = [[Display on which bank alts materials from previous expansions could be stored.
+
+E.g.
+
+ |cFFFFD700Could be stored on:|r |cFF69CCF0Thaoky|r]]
+L["TT_SHOW_COULDBESTORED_DISABLED"] = "No information is displayed."
+
 L["TT_SHOW_NODES_TEXT"] = "Show counters on gathering nodes"
 L["TT_SHOW_NODES_TITLE"] = "Show counters on gathering nodes"
 L["TT_SHOW_NODES_ENABLED"] = "When mousing over a gathering node (herbs, mines), display the amount of related items owned."

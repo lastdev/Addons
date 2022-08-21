@@ -1,5 +1,4 @@
-## Changed in v66
+## Changed in v68
 
-* Updated for 9.2.5, fixing errors about C_TransmogCollection (in a rush, so there might be followup fixes)
-* Always show loot info on vignettes, bypassing my normal "should I show this point?" check
+* Some cosmetic items were incorrectly saying they don't drop for the current character, so special-case cosmetics a bit
 

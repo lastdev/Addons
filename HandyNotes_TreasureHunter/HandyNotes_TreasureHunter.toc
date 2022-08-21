@@ -1,8 +1,8 @@
-## Interface: 90200
-## Title: HandyNotes_TreasureHunter (Draenor Treasures)
+## Interface: 90205
+## Title: HandyNotes: Treasure Hunter (Draenor Treasures)
 ## Notes: Where the Treasure Hunter objects are in Draenor
 ## Author: Kemayo
-## Version: v25
+## Version: v26
 ## DefaultState: enabled
 ## X-Category: Map
 ## X-eMail: kemayo @ gmail DOT com
@@ -11,8 +11,9 @@
 ## SavedVariables: HandyNotes_TreasureHunterDB
 ## RequiredDeps: HandyNotes
 
-handler.lua
-config.lua
+handler\handler.xml
+
+treasurehunter.lua
 
 zones\Draenor.lua
 zones\Ashran.lua

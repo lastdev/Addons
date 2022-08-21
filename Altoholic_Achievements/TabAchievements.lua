@@ -132,6 +132,10 @@ local function categoriesList_OnClick(categoryData)
 	tab:Update()
 end
 
+local function FormatRaid(patch, mapID)
+	return format("%s%s|r %s%s", colors.green, patch, colors.yellow, C_Map.GetAreaInfo(mapID))
+end
+
 addon:Controller("AltoholicUI.TabAchievementsCategoriesList", {
 	OnBind = function(frame)
 		local categories = {
@@ -152,8 +156,7 @@ addon:Controller("AltoholicUI.TabAchievementsCategoriesList", {
 					{ id = cat.QuestsLegion },
 					{ id = cat.QuestsBfA },
 					{ id = cat.QuestsShadowlands },
-					-- Zereth Mortis
-					{ text = format("%s9.2|r %s%s", colors.green, colors.yellow, C_Map.GetAreaInfo(13536)), id = cat.QuestsShadowlands92 },
+					{ text = FormatRaid("9.2", 13536), id = cat.QuestsShadowlands92 },		-- Zereth Mortis
 				}},
 				{ text = TRACKER_FILTER_COMPLETED_QUESTS, id = cat.QuestsCompleted },
 				{ text = L["Daily Quests"], id = cat.QuestsDaily },
@@ -218,20 +221,94 @@ addon:Controller("AltoholicUI.TabAchievementsCategoriesList", {
 				-- by exp
 			}},
 			{ text = L["Raids"], subMenu = {
-				{ text = format("%s%s", colors.cyan, "Expansions"), subMenu = {
-					{ text = EXPANSION_NAME0, id = cat.RaidsClassic },
-					{ text = EXPANSION_NAME1, id = cat.RaidsBurningCrusade },
-					{ text = EXPANSION_NAME2, id = cat.RaidsLichKing },
-					{ text = EXPANSION_NAME3, id = cat.RaidsCataclysm },
-					{ text = EXPANSION_NAME4, id = cat.RaidsPandaria },
-					{ text = EXPANSION_NAME5, id = cat.RaidsDraenor },
-					{ text = EXPANSION_NAME6, id = cat.RaidsLegion },
-					{ text = EXPANSION_NAME7, id = cat.RaidsBfA },
-					{ text = EXPANSION_NAME8, id = cat.RaidsShadowlands },
-					-- Zereth Mortis
-					{ text = format("%s9.2|r %s%s", colors.green, colors.yellow, C_Map.GetAreaInfo(13742)), id = cat.RaidsShadowlands92 },
+				-- Source for C_Map.GetAreaInfo id's : https://wow.tools/dbc/?dbc=areatable
+				{ text = EXPANSION_NAME0, id = cat.RaidsClassic },
+				{ text = EXPANSION_NAME1, id = cat.RaidsBurningCrusade },
+				{ text = EXPANSION_NAME2, subMenu = {
+					-- 3.0 Vault of Archavon
+					{ text = FormatRaid("3.0", 4603), id = cat.RaidsLichKingVaultOfArchavon },
+					-- 3.0 Naxxramas
+					{ text = FormatRaid("3.0", 4234), id = cat.RaidsLichKingNaxxramas },
+					-- 3.0 Obsidian Sanctum
+					{ text = FormatRaid("3.0", 4493), id = cat.RaidsLichKingObsidianSanctum },
+					-- 3.0 Eye of Eternity
+					{ text = FormatRaid("3.0", 4500), id = cat.RaidsLichKingEyeOfEternity },
+					-- 3.1 Ulduar
+					{ text = FormatRaid("3.1", 4273), id = cat.RaidsLichKingUlduar },
+					-- 3.2 Trial of the Crusader
+					{ text = FormatRaid("3.2", 4722), id = cat.RaidsLichKingTrialOfTheCrusader },
+					-- 3.2 Onyxia's Lair
+					{ text = FormatRaid("3.2", 2159), id = cat.RaidsLichKingOnyxiasLair },
+					-- 3.3 Icecrown Citadel
+					{ text = FormatRaid("3.3", 4522), id = cat.RaidsLichKingIcecrownCitadel },
+					-- 3.3 Ruby Sanctum
+					{ text = FormatRaid("3.3", 4987), id = cat.RaidsLichKingRubySanctum },
 				}},
-				{ text = "Raider's Glory", id = cat.DungeonGloryRaider },
+				{ text = EXPANSION_NAME3, subMenu = {
+					-- 4.0 Blackwing Descent
+					{ text = FormatRaid("4.0", 5094), id = cat.RaidsCataclysmBlackwingDescent },
+					-- 4.0 Bastion of Twilight
+					{ text = FormatRaid("4.0", 5334), id = cat.RaidsCataclysmBastionOfTwilight },
+					-- 4.0 Throne of the Four Winds
+					{ text = FormatRaid("4.0", 5638), id = cat.RaidsCataclysmThroneOfTheFourWinds },
+					-- 4.2 Firelands
+					{ text = FormatRaid("4.2", 5723), id = cat.RaidsCataclysmFirelands },
+					-- 4.3 Dragon Soul
+					{ text = FormatRaid("4.3", 5892), id = cat.RaidsCataclysmDragonSoul },
+				}},
+				{ text = EXPANSION_NAME4, id = cat.RaidsPandaria, subMenu = {
+					-- 5.0 Mogu'Shan Vaults
+					{ text = FormatRaid("5.0", 6125), id = cat.RaidsPandariaMoguShanVaults },
+					-- 5.0 Heart of Fear
+					{ text = FormatRaid("5.0", 6297), id = cat.RaidsPandariaHeartOfFear },
+					-- 5.0 Terrace of Endless Spring
+					{ text = FormatRaid("5.0", 6067), id = cat.RaidsPandariaTerraceOfEndlessSpring },
+					-- 5.2 Throne of Thunder
+					{ text = FormatRaid("5.2", 6622), id = cat.RaidsPandariaThroneOfThunder },
+					-- 5.4 Siege of Orgrimmar
+					{ text = FormatRaid("5.4", 6738), id = cat.RaidsPandariaSiegeOfOrgrimmar },
+				}},
+				{ text = EXPANSION_NAME5, id = cat.RaidsDraenor, subMenu = {
+					-- 6.0 Highmaul
+					{ text = FormatRaid("6.0", 6996), id = cat.RaidsDraenorHighmaul },
+					-- 6.0 Blackrock Foundry
+					{ text = FormatRaid("6.0", 6967), id = cat.RaidsDraenorBlackrockFoundry },
+					-- 6.2 Hellfire Citadel
+					{ text = FormatRaid("6.2", 7545), id = cat.RaidsDraenorHellfireCitadel },
+				}},
+				{ text = EXPANSION_NAME6, id = cat.RaidsLegion, subMenu = {
+					-- 7.0 Emerald Nightmare
+					{ text = FormatRaid("7.0", 8026), id = cat.RaidsLegionEmeraldNightmare },
+					-- 7.1 Trial of Valor
+					{ text = FormatRaid("7.1", 8440), id = cat.RaidsLegionTrialOfValor },
+					-- 7.1 The Nighthold
+					{ text = FormatRaid("7.1", 8025), id = cat.RaidsLegionNighthold },
+					-- 7.2 Tomb of Sargeras
+					{ text = FormatRaid("7.2", 8524), id = cat.RaidsLegionTombOfSargeras },
+					-- 7.3 Antorus, the Burning Throne
+					{ text = FormatRaid("7.3", 8638), id = cat.RaidsLegionAntorus },
+				}},
+				{ text = EXPANSION_NAME7, id = cat.RaidsBfA, subMenu = {
+					-- 8.0 Uldir
+					{ text = FormatRaid("8.0", 9389), id = cat.RaidsBfAUldir },
+					-- 8.1 Battle of Dazar'alor
+					{ text = FormatRaid("8.1", 10076), id = cat.RaidsBfABattleOfDazaralor },
+					-- 8.1 Crucible of Storms
+					{ text = FormatRaid("8.1", 10057), id = cat.RaidsBfACrucibleOfStorms },
+					-- 8.2 The Eternal Palace
+					{ text = FormatRaid("8.2", 10425), id = cat.RaidsBfAEternalPalace },
+					-- 8.3 Ny'alotha
+					{ text = FormatRaid("8.3", 10522), id = cat.RaidsBfANyalotha },
+				}},
+				{ text = EXPANSION_NAME8, id = cat.RaidsShadowlands, subMenu = {
+					-- 9.0 Castle Nathria
+					{ text = FormatRaid("9.0", 13224), id = cat.RaidsShadowlandsCastleNathria },
+					-- 9.1 Sanctum of Domination
+					{ text = FormatRaid("9.1", 13561), id = cat.RaidsShadowlandsSanctumOfDomination },
+					-- 9.2 Sepulcher of the First Ones
+					{ text = FormatRaid("9.2", 13742), id = cat.RaidsShadowlandsSepulcherOfTheFirstOnes },
+				}},
+				{ text = format("%s%s", colors.cyan, "Raider's Glory"), id = cat.DungeonGloryRaider },
 				-- by exp
 			}},
 			{ id = cat.Professions, subMenu = {

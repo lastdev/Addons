@@ -5,6 +5,7 @@ if not L then return end
 L["FILTER_SEARCH_LOCATION"] = "Lieu de recherche"
 L["FILTER_SEARCH_RARITY"] = "Filtre de rareté"
 L["FILTER_SEARCH_SLOT"] = "Filtre d'équipement"
+L["FILTER_SEARCH_EXPANSION"] = "Filtre par extension"
 L["FILTER_SEARCH_OPTIONS"] = "Options de recherche"
 L["This character"] = "Ce personnage"
 L["This realm"] = "Ce royaume"

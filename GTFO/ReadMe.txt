@@ -1743,3 +1743,9 @@ Change Log:
 * Added support for targeting specific Mythic+ key thresholds
 * Added Shadowlands spells (world)
 * Added SL spells for De Other Side
+
+4.67.1
+* Added Shadowlands spells (world)
+* Added SL spells for Torghast
+* Added Legion spells for Return to Karazhan
+* Added WoD spells for Draenor (world)

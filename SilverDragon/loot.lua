@@ -39,41 +39,8 @@ local covenants = {
 local brokenItems = {
 	-- itemid : {appearanceid, sourceid}
 	[153268] = {25124, 90807}, -- Enclave Aspirant's Axe
+	[153316] = {25123, 90885}, -- Praetor's Ornamental Edge
 }
-local itemSlots = {
-	INVTYPE_HEAD = "HEADSLOT",
-	INVTYPE_SHOULDER = "SHOULDERSLOT",
-	INVTYPE_CLOAK = "BACKSLOT",
-	INVTYPE_CHEST = "CHESTSLOT",
-	INVTYPE_ROBE = "CHESTSLOT",
-	INVTYPE_TABARD = "TABARDSLOT",
-	INVTYPE_BODY = "SHIRTSLOT",
-	INVTYPE_WRIST = "WRISTSLOT",
-	INVTYPE_HAND = "HANDSSLOT",
-	INVTYPE_WAIST = "WAISTSLOT",
-	INVTYPE_LEGS = "LEGSSLOT",
-	INVTYPE_FEET = "FEETSLOT",
-	INVTYPE_WEAPON = "MAINHANDSLOT",
-	INVTYPE_RANGED = "MAINHANDSLOT",
-	INVTYPE_RANGEDRIGHT = "MAINHANDSLOT",
-	INVTYPE_THROWN = "MAINHANDSLOT",
-	INVTYPE_SHIELD = "SECONDARYHANDSLOT",
-	INVTYPE_2HWEAPON = "MAINHANDSLOT",
-	INVTYPE_WEAPONMAINHAND = "MAINHANDSLOT",
-	INVTYPE_WEAPONOFFHAND = "SECONDARYHANDSLOT",
-	INVTYPE_HOLDABLE = "SECONDARYHANDSLOT",
-}
-local function GetItemSlot(itemLinkOrID)
-	local _, _, _, slot = GetItemInfoInstant(itemLinkOrID)
-	if not slot then return end
-	return itemSlots[slot]
-end
-local function GetItemCategory(appearanceID, sourceID)
-	return C_TransmogCollection.GetCategoryForItem(appearanceID) or C_TransmogCollection.GetCategoryForItem(sourceID)
-end
-local function GetTransmogLocation(itemLinkOrID)
-	return TransmogUtil.GetTransmogLocation(GetItemSlot(itemLinkOrID), Enum.TransmogType.Appearance, Enum.TransmogModification.Main)
-end
 local function GetAppearanceAndSource(itemLinkOrID)
 	local itemID = GetItemInfoInstant(itemLinkOrID)
 	if not itemID then return end
@@ -111,43 +78,41 @@ local function CanLearnAppearance(itemLinkOrID)
 		canLearnCache[itemID] = false
 		return false
 	end
-	if not C_TransmogCollection.GetAppearanceSources(appearanceID, GetItemCategory(appearanceID, sourceID), GetTransmogLocation(itemLinkOrID)) then
-		-- This returns nil for inappropriate appearances
-		canLearnCache[itemID] = false
-		return false
+	local hasData, canCollect = C_TransmogCollection.PlayerCanCollectSource(sourceID)
+	if hasData then
+		canLearnCache[itemID] = canCollect
 	end
-	canLearnCache[itemID] = true
-	return true
+	return canLearnCache[itemID]
 end
 local hasAppearanceCache = {}
 local function HasAppearance(itemLinkOrID)
-	-- 9.1.5 added PlayerHasTransmogByItemInfo, but I can't use (just) it
-	-- because it's specific to that item and won't say if you've learned the
-	-- appearance from other sources
 	local itemID = GetItemInfoInstant(itemLinkOrID)
-	if not itemID then
-		return
-	end
-	if hasAppearanceCache[itemID] ~= nil then
+	if not itemID then return end
+	if hasAppearanceCache[itemID] ~= nil and core.db.profile.lootappearances then
+		-- only use the cache if we need the more expensive checks below...
+		-- and so we don't need to care about clearing it when someone
+		-- changes their settings.
 		return hasAppearanceCache[itemID]
 	end
-	local appearanceID, sourceID = GetAppearanceAndSource(itemLinkOrID)
-	if not appearanceID then
-		hasAppearanceCache[itemID] = false
-		return false
-	end
-	local _, _, _, _, sourceKnown = C_TransmogCollection.GetAppearanceSourceInfo(sourceID)
-	if sourceKnown then
+	if C_TransmogCollection.PlayerHasTransmogByItemInfo(itemLinkOrID) then
+		-- short-circuit further checks because this specific item is known
 		hasAppearanceCache[itemID] = true
 		return true
 	end
-	local sources = C_TransmogCollection.GetAppearanceSources(appearanceID, GetItemCategory(appearanceID, sourceID), GetTransmogLocation(itemLinkOrID))
-	if not sources then
-		hasAppearanceCache[itemID] = false
+	if not core.db.profile.lootappearances then
+		-- No fallback checks, only whether the specific item is known counts
 		return false
 	end
-	for _, source in pairs(sources) do
-		if source.isCollected == true then
+	-- Although this isn't known, its appearance might be known from another item
+	local appearanceID = GetAppearanceAndSource(itemLinkOrID)
+	if not appearanceID then
+		hasAppearanceCache[itemID] = false
+		return
+	end
+	local sources = C_TransmogCollection.GetAllAppearanceSources(appearanceID)
+	if not sources then return end
+	for _, sourceID in ipairs(sources) do
+		if C_TransmogCollection.PlayerHasTransmogItemModifiedAppearance(sourceID) then
 			hasAppearanceCache[itemID] = true
 			return true
 		end
@@ -193,11 +158,36 @@ end
 ns.Loot = {}
 -- _G.SDLoot = ns.Loot
 
-function ns.Loot.HasLoot(id)
-	if not (id and ns.mobdb[id]) then
+local function suitable(item)
+	if not core.db.profile.charloot then
+		return true
+	end
+	local id = type(item) == "table" and item[1] or item
+	-- show loot for the current character only
+	-- can't pass in a reusable table for the second argument because it changes the no-data case
+	local specTable = GetItemSpecInfo(id)
+	-- Some cosmetic items seem to be flagged as not dropping for any spec. I
+	-- could only confirm this for some cosmetic back items but let's play it
+	-- safe and say that any cosmetic item can drop regardless of what the
+	-- spec info says...
+	if specTable and #specTable == 0 and not IsCosmeticItem(id) then
 		return false
 	end
-	return ns.mobdb[id].loot
+	-- then catch covenants / classes / etc
+	if itemRestricted(item) then return false end
+	return true
+end
+function ns.Loot.HasLoot(id)
+	if not (id and ns.mobdb[id] and ns.mobdb[id].loot) then
+		return false
+	end
+	local lootCount = 0
+	for _, item in ipairs(ns.mobdb[id].loot) do
+		if suitable(item) then
+			lootCount = lootCount + 1
+		end
+	end
+	return lootCount > 0, lootCount
 end
 do
 	local function make_iter(test)
@@ -205,7 +195,7 @@ do
 			local state, item = next(t, prestate)
 			while state do
 				local ret = test(item)
-				if ret then
+				if ret and suitable(item) then
 					return state, ret, item
 				end
 				state, item = next(t, state)
@@ -807,6 +797,7 @@ do
 					if item.count then
 						button:SetItemButtonCount(item.count)
 					end
+					-- TODO: show icon for spec if GetItemSpecInfo says it doesn't drop for the current spec
 					if item.covenant and covenants[item.covenant] then
 						button.RestrictionIcon:SetAtlas(("covenantchoice-panel-sigil-%s"):format(covenants[item.covenant]))
 						button.RestrictionIcon:SetSize(16, 20) -- these are 73x96 natively
@@ -833,7 +824,7 @@ do
 		AddLoot = function(self, loot)
 			for _, item in ipairs(loot) do
 				local itemid = type(item) == "table" and item[1] or item
-				if itemid then
+				if itemid and suitable(item) then
 					self:AddItem(itemid, item)
 				end
 			end

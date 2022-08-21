@@ -6,10 +6,10 @@
 -- Cast the most important buffs on you, tanks or party/raid members/pets.
 -------------------------------------------------------------------------------
 
-SMARTBUFF_DATE          = "060522";
+SMARTBUFF_DATE          = "040622";
 
-SMARTBUFF_VERSION       = "r5."..SMARTBUFF_DATE;
-SMARTBUFF_VERSIONNR     = 90200;
+SMARTBUFF_VERSION       = "r6."..SMARTBUFF_DATE;
+SMARTBUFF_VERSIONNR     = 90205;
 SMARTBUFF_TITLE         = "SmartBuff";
 SMARTBUFF_SUBTITLE      = "Supports you in casting buffs";
 SMARTBUFF_DESC          = "Cast the most important buffs on you, your tanks, party/raid members/pets";
@@ -22,7 +22,7 @@ local SmartbuffPrefix = "Smartbuff";
 local SmartbuffSession = true;
 local SmartbuffVerCheck = false;					-- for my use when checking guild users/testers versions  :)
 local buildInfo = select(4, GetBuildInfo())
-local SmartbuffRevision = 5;
+local SmartbuffRevision = 6;
 local SmartbuffVerNotifyList = {}
 
 local SG = SMARTBUFF_GLOBALS;

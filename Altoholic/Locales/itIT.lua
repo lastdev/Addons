@@ -83,3 +83,4 @@ L["Total owned"] = "Totale posseduti"
 L["Source"] = "Fonte"
 -- L["Goes in"] = true
 L["Are also on this quest:"] = "Altri su questa missione:"
+-- L["Could be stored on"] = true

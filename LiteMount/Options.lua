@@ -89,6 +89,10 @@ local defaults = {
         priorityWeights     = { 1, 2, 6, 1 },
         randomKeepSeconds   = 0,
         instantOnlyMoving   = false,
+        announceViaChat     = false,
+        announceViaUI       = false,
+        announceColors      = false,
+
         -- Paranoia, for now. Later delete these and let the cleanup work
         oldRules            = { },
         oldFlagChanges      = { },
@@ -334,7 +338,7 @@ function LM.Options:GetAllPriorities()
 end
 
 function LM.Options:GetRawMountPriorities()
-    return LM.tCopyShallow(self.db.profile.mountPriorities)
+    return self.db.profile.mountPriorities
 end
 
 function LM.Options:SetRawMountPriorities(v)
@@ -348,7 +352,7 @@ function LM.Options:GetPriority(m)
 end
 
 function LM.Options:InitializePriorities()
-    for _,m in ipairs(LM.PlayerMounts.mounts) do
+    for _,m in ipairs(LM.MountRegistry.mounts) do
         if not self.db.profile.mountPriorities[m.spellID] then
             self.db.profile.mountPriorities[m.spellID] = self.db.profile.defaultPriority
         end
@@ -403,7 +407,7 @@ local function FlagDiff(a, b)
 end
 
 function LM.Options:GetRawFlagChanges()
-    return LM.tCopyShallow(self.db.profile.flagChanges)
+    return self.db.profile.flagChanges
 end
 
 function LM.Options:SetRawFlagChanges(v)
@@ -428,7 +432,7 @@ function LM.Options:GetMountFlags(m)
         end
     end
 
-    return CopyTable(self.cachedMountFlags[m.spellID])
+    return self.cachedMountFlags[m.spellID]
 end
 
 function LM.Options:SetMountFlag(m, setFlag)
@@ -479,7 +483,14 @@ end
 
 -- These are pseudo-flags used in Mount:MatchesOneFilter and we don't
 -- let custom flags have the name.
-local PseudoFlags = { "CASTABLE", "SLOW", "FAVORITES", FAVORITES, "NONE", NONE }
+local PseudoFlags = {
+    "CASTABLE",
+    "SLOW",
+    "MAWUSABLE",
+    "DRAGONRIDING",
+    "FAVORITES", FAVORITES,
+    "NONE", NONE
+}
 
 function LM.Options:IsFlag(f)
     if tContains(PseudoFlags, f) then
@@ -501,7 +512,7 @@ end
 ----------------------------------------------------------------------------]]--
 
 function LM.Options:GetRawGroups()
-    return CopyTable(self.db.profile.groups), CopyTable(self.db.global.groups)
+    return self.db.profile.groups, self.db.global.groups
 end
 
 function LM.Options:SetRawGroups(profileGroups, globalGroups)
@@ -583,7 +594,7 @@ function LM.Options:GetMountGroups(m)
             end
         end
     end
-    return CopyTable(self.cachedMountGroups[m.spellID])
+    return self.cachedMountGroups[m.spellID]
 end
 
 function LM.Options:IsMountInGroup(m, g)
@@ -801,12 +812,43 @@ end
 
 
 --[[----------------------------------------------------------------------------
+    Announcing
+----------------------------------------------------------------------------]]--
+
+function LM.Options:GetAnnounce()
+    return
+        self.db.profile.announceViaChat,
+        self.db.profile.announceViaUI,
+        self.db.profile.announceColors
+end
+
+function LM.Options:SetAnnounce(viaChat, viaUI, colors)
+    local changed
+    if viaChat ~= nil then
+        self.db.profile.announceViaChat = (viaChat == true)
+        changed = true
+    end
+    if viaUI ~= nil then
+        self.db.profile.announceViaUI = (viaUI == true)
+        changed = true
+    end
+    if colors ~= nil then
+        self.db.profile.announceColors = (colors == true)
+        changed = true
+    end
+    if changed then
+        self.db.callbacks:Fire("OnOptionsModified")
+    end
+end
+
+--[[----------------------------------------------------------------------------
     Summon counts
 ----------------------------------------------------------------------------]]--
 
 function LM.Options:IncrementSummonCount(m)
     self.db.global.summonCounts[m.spellID] =
         (self.db.global.summonCounts[m.spellID] or 0) + 1
+    return self.db.global.summonCounts[m.spellID]
 end
 
 function LM.Options:GetSummonCount(m)
@@ -814,7 +856,7 @@ function LM.Options:GetSummonCount(m)
 end
 
 function LM.Options:ResetSummonCount(m)
-    self.db.global.summonCounts[m.spellID] = 0
+    self.db.global.summonCounts[m.spellID] = nil
 end
 
 

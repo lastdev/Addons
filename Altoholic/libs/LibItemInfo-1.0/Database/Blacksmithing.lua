@@ -46,7 +46,7 @@ lib:RegisterItems({
 
 	
 	-- 8.0 Battle for Azeroth
-
+	[160298] = SetReagent(7, e.Blacksmithing, 0, bag.EngineeringBag), -- Durable Flux
 	
 	-- 9.0 Shadowlands
 	[180733] = SetReagent(8, e.Blacksmithing, 0, bag.MiningBag), -- Luminous Flux

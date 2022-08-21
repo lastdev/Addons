@@ -8,9 +8,9 @@
 
 local VERSION
 if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-	VERSION = "9.1.45.5"
+	VERSION = "9.2.45.5"
 elseif WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
-	VERSION = "1.14.45"
+	VERSION = "1.14.45.3"
 end
 
 -------------------------------------------------------------------------------
@@ -57,7 +57,7 @@ function FloTotemBar_OnLoad(self)
 		[3] = FloTotemBar_CheckTrapLife,
 		[4] = function() end
 	};
-	
+
 	-- Class-based setup, abort if not supported
 	_, FLO_CLASS_NAME = UnitClass("player");
 	FLO_CLASS_NAME = strupper(FLO_CLASS_NAME);
@@ -67,7 +67,7 @@ function FloTotemBar_OnLoad(self)
 	if classSpells == nil then
 		return;
 	end
-	
+
 	if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
 		self.sharedCooldown = true;
 	end
@@ -96,7 +96,7 @@ function FloTotemBar_OnLoad(self)
 	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
 		ExtraActionBarFrame:EnableMouse(false);
 	end
-	
+
 	if SHOW_WELCOME then
 		DEFAULT_CHAT_FRAME:AddMessage( "FloTotemBar "..VERSION.." loaded." );
 		SHOW_WELCOME = nil;
@@ -117,7 +117,7 @@ function FloTotemBar_OnLoad(self)
 	self:RegisterEvent("SPELL_UPDATE_COOLDOWN");
 	self:RegisterEvent("ACTIONBAR_UPDATE_USABLE");
 	self:RegisterEvent("UPDATE_BINDINGS");
-	
+
 	if self.totemtype ~= "CALL" then
 		self:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player");
 		self:RegisterEvent("PLAYER_DEAD");
@@ -184,7 +184,7 @@ function FloTotemBar_OnEvent(self, event, arg1, ...)
 
 	elseif event == "COMBAT_LOG_EVENT_UNFILTERED" then
 		-- Events used for totem destruction detection
-		local i, pos;
+		local pos;
 		for i = 1, #self.spells do
 			if self.sharedCooldown then
 				pos = 1
@@ -197,7 +197,7 @@ function FloTotemBar_OnEvent(self, event, arg1, ...)
 		end
 	elseif event == "PLAYER_TOTEM_UPDATE" then
 		-- Events used for totem destruction detection
-		local i, pos;
+		local pos;
 		for i = 1, #self.spells do
 			if self.sharedCooldown then
 				pos = 1
@@ -213,7 +213,6 @@ end
 
 function FloTotemBar_SetFixupTrap(pos)
 
-	local i;
 	ACTIVE_OPTIONS.baseActionTrap = pos;
 	for i = 1, #FLO_TOTEM_SPELLS.HUNTER.TRAP do
 		local name = GetSpellInfo(FLO_TOTEM_SPELLS.HUNTER.TRAP[i].id);
@@ -261,7 +260,6 @@ end
 
 function FloTotemBar_TalentGroupChanged(grp)
 
-	local k, v;
 	-- Save old spec position
 	for k, v in pairs(ACTIVE_OPTIONS.barSettings) do
 		if v.position ~= "auto" then
@@ -289,7 +287,6 @@ end
 
 function FloTotemBar_CheckTalentGroup(grp)
 
-	local k, v;
 	changingSpec = false;
 
 	FLOTOTEMBAR_OPTIONS.active = grp;
@@ -318,7 +315,6 @@ end
 
 function FloTotemBar_ReadCmd(line)
 
-	local i, v;
 	local cmd, var = strsplit(' ', line or "");
 
 	if cmd == "scale" and tonumber(var) then
@@ -396,6 +392,7 @@ function FloTotemBar_CheckTrapLife(self, spellIdx, timestamp, event, hideCaster,
 
 	local spell = self.spells[spellIdx];
 	local name = string.upper(spell.name);
+	local spellTexture;
 
 	_, _, spellTexture = GetSpellInfo(spell.id);
 	-- bad french localisation
@@ -549,7 +546,6 @@ end
 
 function FloTotemBar_UpdatePositions()
 
-	local k, j;
 	-- Avoid tainting when in combat
 	if InCombatLockdown() then
 		return;
@@ -625,7 +621,6 @@ end
 
 function FloTotemBar_SetLayoutMenu()
 
-	local i;
 	-- Add the possible values to the menu
 	for i = 1, #FLO_TOTEM_LAYOUTS_ORDER do
 		local value = FLO_TOTEM_LAYOUTS_ORDER[i];
@@ -654,7 +649,6 @@ end
 
 function FloTotemBar_SetScale(scale)
 
-	local i, v;
 	scale = tonumber(scale);
 	if not scale or scale <= 0 then
 		DEFAULT_CHAT_FRAME:AddMessage( "FloTotemBar : scale must be >0 ("..scale..")" );
@@ -678,10 +672,9 @@ end
 
 function FloTotemBar_ResetTimers(self)
 
-        local i;
-        for i = 1, 10 do
-	        self["startTime"..i] = 0;
-        end
+	for i = 1, 10 do
+		self["startTime"..i] = 0;
+	end
 	FloLib_OnUpdate(self);
 end
 

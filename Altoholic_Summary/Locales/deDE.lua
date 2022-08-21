@@ -108,6 +108,7 @@ L["COLUMN_RESTXP_DETAIL_3"] = "Das dauert insgesamt 10 Tage"
 L["COLUMN_RESTXP_DETAIL_4"] = "%d%% Modus: Maximale Erholt-EP wird als '%d%%' angezeigt"
 L["Fully rested"] = "Komplett Erholt"
 L["Fully rested in"] = "Komplett erholt in"
+-- L["CHARACTER_NOT_IN_RESTING_AREA"] = "This character is not in a resting area !"
 
 -- Column Money
 L["COLUMN_MONEY_TITLE"] = "Geld"

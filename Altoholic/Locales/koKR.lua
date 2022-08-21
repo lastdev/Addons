@@ -86,3 +86,4 @@ L["Total owned"] = "총 소유"
 L["Source"] = "출처"
 -- L["Goes in"] = true
 L["Are also on this quest:"] = "이 퀘스트 진행 중:"
+-- L["Could be stored on"] = true

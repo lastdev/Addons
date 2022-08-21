@@ -1,6 +1,6 @@
 # <DBM> Pandaria
 
-## [r148](https://github.com/DeadlyBossMods/DBM-MoP/tree/r148) (2022-05-31)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-MoP/compare/r147...r148) [Previous Releases](https://github.com/DeadlyBossMods/DBM-MoP/releases)
+## [r149](https://github.com/DeadlyBossMods/DBM-MoP/tree/r149) (2022-08-16)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-MoP/compare/r148...r149) [Previous Releases](https://github.com/DeadlyBossMods/DBM-MoP/releases)
 
-- toc bump  
+- TOC bumps  

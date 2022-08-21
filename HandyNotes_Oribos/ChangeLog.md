@@ -1,5 +1,11 @@
 ## Revision History:
 
+#### v17 (June 01, 2022)
+-------------------------------
+* Bump .toc to 90205
+* Added new Portals in Oribos
+* Fixed nil value LUA error [Github #6](https://github.com/Dathwada/handynotes-oribos/issues/6)
+
 #### v16 (February 22, 2022)
 -------------------------------
 * Bump .toc to 90200

@@ -8,6 +8,19 @@ function Plater.GetChangelogTable()
 	if (not Plater.ChangeLogTable) then
 		Plater.ChangeLogTable = {
 		
+			{1657813887,  "Backend Change", "July 14th, 2022", "On Arena and Battleground, faction and spec icons are now hidden while in combat.", "Terciob"},
+			{1657813887,  "Backend Change", "July 14th, 2022", "Dispellable buffs won't show if its duration is bigger than 2 minutes.", "Terciob"},
+
+			{1654159795,  "Bug Fix", "June 4th, 2022", "Update Ghost Auras when adding or removing.", "cont1nuity"},
+			{1654159795,  "Backend Change", "June 2nd, 2022", "Adding separate color setting for 'channelled cast'.", "cont1nuity"},
+			
+			{1654070113,  "Backend Change", "June 1st, 2022", "Retail toc update.", "cont1nuity"},
+			{1654070113,  "Backend Change", "May 31st, 2022", "Casts which result in a channeled spell should now re-trigger scripts 'On Show' code when the chast is finished and channel starts.", "cont1nuity"},
+			{1654070113,  "Backend Change", "May 21st, 2022", "Library updates.", "Terciob"},
+			{1654070113,  "Backend Change", "May 19th, 2022", "Changing the way CVars are stored / restored to counter some restoring issues and adding '/plater cvars <cvar>' command for debug information.", "cont1nuity"},
+			{1654070113,  "Bug Fix", "May 19th, 2022", "Fixing an issue with plater resources (Combo Points) not showing the correct amount sometimes.", "cont1nuity"},
+			{1654070113,  "New Feature", "May 16th, 2022", "Adding 'Wago Imports' options tab to show companion app updates and imports.", "cont1nuity"},
+			
 			{1652214160,  "Bug Fix", "May 10th, 2022", "Fix CVar store and restore for 'boolean' type CVars.", "cont1nuity"},
 			{1652214160,  "Bug Fix", "May 10th, 2022", "Hide Cast Target on interrupts.", "cont1nuity"},
 			{1652214160,  "Backend Change", "May 4th, 2022", "Adding new option to invert swipe on Buff Special.", "cont1nuity"},

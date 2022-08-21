@@ -1,8 +1,8 @@
-## Interface: 90200
+## Interface: 90205
 ## Title: LUSTDETECTOR
 ## Author: Vicksmile - Thrall realm
-## Version: v3 Definitive version for SL Patch 9.2
-## Notes: This addon will show on your party raid chat when someone cast any Haste Spell. Ex: Bloodlust
+## Version: v4 Definitive version for SL Patch 9.2.5
+## Notes: This addon will show on your chat when someone cast any Haste Spell. Ex: Bloodlust
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
 ## SavedVariablesPerCharacter: LUSTDETECTOR, LUSTDETECTORMode

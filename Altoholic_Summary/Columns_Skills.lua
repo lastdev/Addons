@@ -137,7 +137,7 @@ local function Tradeskill_OnEnter(frame, skillName, showRecipeStats)
 			tt:AddLine(" ")
 			for i = 1, numCooldows do
 				local craftName, expiresIn = DataStore:GetCraftCooldownInfo(profession, i)
-				tt:AddDoubleLine(craftName, addon:GetTimeString(expiresIn))
+				tt:AddDoubleLine(craftName, Formatter.TimeString(expiresIn))
 			end
 		end
 	end

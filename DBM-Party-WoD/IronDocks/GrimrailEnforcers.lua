@@ -2,8 +2,9 @@ local mod	= DBM:NewMod(1236, "DBM-Party-WoD", 4, 558)
 local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
+mod.upgradedMPlus = true
 
-mod:SetRevision("20220220013546")
+mod:SetRevision("20220812202836")
 mod:SetCreatureID(80805, 80816, 80808)
 mod:SetEncounterID(1748)
 mod:SetBossHPInfoToHighest()
@@ -18,6 +19,9 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3"
 )
 
+--[[
+(ability.id = 163689 or ability.id = 163390 or ability.id = 163379) and type = "begincast"
+--]]
 --Ahri'ok Dugru
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(10449))
 local warnSphereEnd				= mod:NewEndAnnounce(163689, 1)
@@ -43,6 +47,7 @@ local timerOgreTrapsCD			= mod:NewCDTimer(25, 163390, nil, nil, nil, 3)--25-30 v
 function mod:OnCombatStart(delay)
 	timerFlamingSlashCD:Start(5-delay)
 	timerOgreTrapsCD:Start(19.5-delay)
+	timerLavaSwipeCD:Start(15 - delay)
 end
 
 function mod:SPELL_CAST_START(args)
@@ -106,8 +111,8 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 164956 and self:AntiSpam(5, 2) then
 		specWarnLavaSwipe:Show()
 		specWarnLavaSwipe:Play("shockwave")
-		if self:IsHeroic() then
-			timerLavaSwipeCD:Start()
+		if self:IsHard() then
+			timerLavaSwipeCD:Start()--29
 		else
 			timerLavaSwipeCD:Start(41.5)
 		end

@@ -16,6 +16,7 @@ ns.defaults = {
         icon_scale = 1.0,
         icon_alpha = 1.0,
         icon_item = false,
+        tooltip_charloot = true,
         tooltip_pointanchor = false,
         tooltip_item = true,
         tooltip_questid = false,
@@ -126,6 +127,12 @@ ns.options = {
                     name = "Use item tooltips",
                     desc = "Show the full tooltips for items",
                     order = 10,
+                },
+                tooltip_charloot = {
+                    type = "toggle",
+                    name = "Loot for this character only",
+                    desc = "Only show loot that should drop for the current character",
+                    order = 12,
                 },
                 tooltip_pointanchor = {
                     type = "toggle",
@@ -363,41 +370,8 @@ end)
 local brokenItems = {
     -- itemid : {appearanceid, sourceid}
     [153268] = {25124, 90807}, -- Enclave Aspirant's Axe
+    [153316] = {25123, 90885}, -- Praetor's Ornamental Edge
 }
-local itemSlots = {
-    INVTYPE_HEAD = "HEADSLOT",
-    INVTYPE_SHOULDER = "SHOULDERSLOT",
-    INVTYPE_CLOAK = "BACKSLOT",
-    INVTYPE_CHEST = "CHESTSLOT",
-    INVTYPE_ROBE = "CHESTSLOT",
-    INVTYPE_TABARD = "TABARDSLOT",
-    INVTYPE_BODY = "SHIRTSLOT",
-    INVTYPE_WRIST = "WRISTSLOT",
-    INVTYPE_HAND = "HANDSSLOT",
-    INVTYPE_WAIST = "WAISTSLOT",
-    INVTYPE_LEGS = "LEGSSLOT",
-    INVTYPE_FEET = "FEETSLOT",
-    INVTYPE_WEAPON = "MAINHANDSLOT",
-    INVTYPE_RANGED = "MAINHANDSLOT",
-    INVTYPE_RANGEDRIGHT = "MAINHANDSLOT",
-    INVTYPE_THROWN = "MAINHANDSLOT",
-    INVTYPE_SHIELD = "SECONDARYHANDSLOT",
-    INVTYPE_2HWEAPON = "MAINHANDSLOT",
-    INVTYPE_WEAPONMAINHAND = "MAINHANDSLOT",
-    INVTYPE_WEAPONOFFHAND = "SECONDARYHANDSLOT",
-    INVTYPE_HOLDABLE = "SECONDARYHANDSLOT",
-}
-local function GetItemSlot(itemLinkOrID)
-    local _, _, _, slot = GetItemInfoInstant(itemLinkOrID)
-    if not slot then return end
-    return itemSlots[slot]
-end
-local function GetItemCategory(appearanceID, sourceID)
-    return C_TransmogCollection.GetCategoryForItem(appearanceID) or C_TransmogCollection.GetCategoryForItem(sourceID)
-end
-local function GetTransmogLocation(itemLinkOrID)
-    return TransmogUtil.GetTransmogLocation(GetItemSlot(itemLinkOrID), Enum.TransmogType.Appearance, Enum.TransmogModification.Main)
-end
 local function GetAppearanceAndSource(itemLinkOrID)
     local itemID = GetItemInfoInstant(itemLinkOrID)
     if not itemID then return end
@@ -435,40 +409,34 @@ local function CanLearnAppearance(itemLinkOrID)
         canLearnCache[itemID] = false
         return false
     end
-    if not C_TransmogCollection.GetAppearanceSources(appearanceID, GetItemCategory(appearanceID, sourceID), GetTransmogLocation(itemLinkOrID)) then
-        -- This returns nil for inappropriate appearances
-        canLearnCache[itemID] = false
-        return false
+    local hasData, canCollect = C_TransmogCollection.PlayerCanCollectSource(sourceID)
+    if hasData then
+        canLearnCache[itemID] = canCollect
     end
-    canLearnCache[itemID] = true
-    return true
+    return canLearnCache[itemID]
 end
 local hasAppearanceCache = {}
 local function HasAppearance(itemLinkOrID)
     local itemID = GetItemInfoInstant(itemLinkOrID)
-    if not itemID then
-        return
-    end
+    if not itemID then return end
     if hasAppearanceCache[itemID] ~= nil then
         return hasAppearanceCache[itemID]
     end
-    local appearanceID, sourceID = GetAppearanceAndSource(itemLinkOrID)
-    if not appearanceID then
-        hasAppearanceCache[itemID] = false
-        return false
-    end
-    local _, _, _, _, sourceKnown = C_TransmogCollection.GetAppearanceSourceInfo(sourceID)
-    if sourceKnown then
+    if C_TransmogCollection.PlayerHasTransmogByItemInfo(itemLinkOrID) then
+        -- short-circuit further checks because this specific item is known
         hasAppearanceCache[itemID] = true
         return true
     end
-    local sources = C_TransmogCollection.GetAppearanceSources(appearanceID, GetItemCategory(appearanceID, sourceID), GetTransmogLocation(itemLinkOrID))
-    if not sources then
+    -- Although this isn't known, its appearance might be known from another item
+    local appearanceID = GetAppearanceAndSource(itemLinkOrID)
+    if not appearanceID then
         hasAppearanceCache[itemID] = false
-        return false
+        return
     end
-    for _, source in pairs(sources) do
-        if source.isCollected == true then
+    local sources = C_TransmogCollection.GetAllAppearanceSources(appearanceID)
+    if not sources then return end
+    for _, sourceID in ipairs(sources) do
+        if C_TransmogCollection.PlayerHasTransmogItemModifiedAppearance(sourceID) then
             hasAppearanceCache[itemID] = true
             return true
         end
@@ -490,6 +458,7 @@ ns.itemRestricted = function(item)
     if item.class and ns.playerClass ~= item.class then
         return true
     end
+    -- TODO: profession recipes
     return false
 end
 ns.itemIsKnowable = function(item)

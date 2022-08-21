@@ -194,7 +194,7 @@ function lib:GetItemSource(itemID)
 			profession = format("%s, %d", profession, level)
 		end
 		
-		return itemType, _G[format("EXPANSION_NAME%d", expansion)], expansion, profession, bagTypes[goesInBag]
+		return itemType, _G[format("EXPANSION_NAME%d", expansion)], expansion, profession, bagTypes[goesInBag], professionID
 	
 	elseif itemType == TYPE_DUNGEON_LOOT or itemType == TYPE_RAID_LOOT then
 		local instanceID = bAnd(RightShift(attrib, 10), 65535)	-- Bits 10-25 : instance id

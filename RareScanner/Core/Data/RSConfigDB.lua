@@ -719,18 +719,6 @@ function RSConfigDB.SetMaxSeenEventTimeFilter(value, clearBak)
 end
 
 ---============================================================================
--- WorldMap icons scale
----============================================================================
-
-function RSConfigDB.GetIconsWorldMapScale()
-	return private.db.map.scale
-end
-
-function RSConfigDB.SetIconsWorldMapScale(value)
-	private.db.map.scale = value
-end
-
----============================================================================
 -- Minimap
 ---============================================================================
 
@@ -1158,11 +1146,11 @@ function RSConfigDB.IsShowingWorldMapSearcher()
 end
 
 function RSConfigDB.SetClearingWorldMapSearcher(value)
-	private.db.map.cleanWorldMapSearcherOnHide = value
+	private.db.map.cleanWorldMapSearcherOnChange = value
 end
 
 function RSConfigDB.IsClearingWorldMapSearcher()
-	return private.db.map.cleanWorldMapSearcherOnHide
+	return private.db.map.cleanWorldMapSearcherOnChange
 end
 
 ---============================================================================
@@ -1183,6 +1171,18 @@ end
 
 function RSConfigDB.SetAddingWorldMapIngameWaypoints(value)
 	private.db.map.waypointIngame = value
+end
+
+---============================================================================
+-- WorldMap icons scale
+---============================================================================
+
+function RSConfigDB.GetIconsWorldMapScale()
+	return private.db.map.scale
+end
+
+function RSConfigDB.SetIconsWorldMapScale(value)
+	private.db.map.scale = value
 end
 
 ---============================================================================
@@ -1260,6 +1260,29 @@ end
 function RSConfigDB.SetShowingTooltipsCommands(value)
 	private.db.map.tooltipsCommands = value
 end
+
+---============================================================================
+-- Worldmap loot tooltips
+---============================================================================
+
+function RSConfigDB.GetWorldMapLootAchievTooltipsScale()
+	if (private.db.map.lootAchievTooltipsScale) then
+		return private.db.map.lootAchievTooltipsScale
+	end
+	return RSConfigDB.GetWorldMapTooltipsScale()
+end
+
+function RSConfigDB.SetWorldMapLootAchievTooltipsScale(value)
+	private.db.map.lootAchievTooltipsScale = value
+end
+
+function RSConfigDB.GetWorldMapLootAchievTooltipPosition()
+	return private.db.map.lootAchievementsPosition
+end 
+
+function RSConfigDB.SetWorldMapLootAchievTooltipPosition(value)
+	private.db.map.lootAchievementsPosition = value
+end 
 
 ---============================================================================
 -- Worldmap overlay

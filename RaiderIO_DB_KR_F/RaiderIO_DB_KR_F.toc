@@ -1,5 +1,5 @@
-## Interface: 90200
-## Title: Raider.IO |cffFFFFFFRecruitment|r (Korea - Alliance and Horde)
+## Interface: 90205
+## Title: Raider.IO |cffFFFFFFRecruitment|r (Korea)
 ## Author: Vladinator (Vladinator-TarrenMill), Aspyr (Aspyrox-Skullcrusher) and Isak (Isak-Sargeras)
 ## Dependencies: RaiderIO
 ## DefaultState: enabled
@@ -7,7 +7,5 @@
 ## X-Region: Korea
 ## X-Faction: Alliance and Horde
 ## X-Website: https://raider.io
-../RaiderIO/db/db_recruitment_kr_alliance_characters.lua
-../RaiderIO/db/db_recruitment_kr_alliance_lookup.lua
-../RaiderIO/db/db_recruitment_kr_horde_characters.lua
-../RaiderIO/db/db_recruitment_kr_horde_lookup.lua
+../RaiderIO/db/db_recruitment_kr_characters.lua
+../RaiderIO/db/db_recruitment_kr_lookup.lua

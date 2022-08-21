@@ -1,0 +1,16 @@
+<Ui xmlns='http://www.blizzard.com/wow/ui/' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd'>
+  <Script file='Blackfathom_Deeps.lua'/>
+  <Script file='Blackrock_Depths.lua'/>
+  <Script file='Deadmines.lua'/>
+  <Script file='Dire_Maul.lua'/>
+  <Script file='Gnomeregan.lua'/>
+  <Script file='Lower_Blackrock_Spire.lua'/>
+  <Script file='Maraudon.lua'/>
+  <Script file='Scarlet_Halls.lua'/>
+  <Script file='Scarlet_Monastery.lua'/>
+  <Script file='Scholomance.lua'/>
+  <Script file='Shadowfang_Keep.lua'/>
+  <Script file='Uldaman.lua'/>
+  <Script file='Blackwing_Lair.lua'/>
+  <Script file='Temple_of_AhnQiraj.lua'/>
+</Ui>

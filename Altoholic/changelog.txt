@@ -14,9 +14,33 @@ How to support Altoholic's development :
 
 If you like the addon, consider supporting it, this has been the long term effort and commitment of a single person. #ArmyOfOne
 
+9.2.006 (05/08/2022)
+
+- DataStore : Removed a check that caused a clean of the current alt's data.
+
+9.2.005 (03/08/2022)
+
+- Search Tab : Added a new icon to filter search results by expansion.
+This works particularly well with items that are known in LibItemInfo (thus most craft reagents, dungeon drops, etc..)
+Note that the game does not provide this info reliably, so your luck may vary.
+It remains quite helpful though for craft reagents. Need to find which herbs from Legion you still have ? now this is possible.
+- Achievements Tab : Reworked the "Raids" category to better group achievements by expansion/patch.
+- DataStore : fixed an issue where deleting an alt was not properly deleting all data.
+- DataStore : Added a sanity check in RegisterModule to clean orphan data in sub-modules.
+
+9.2.004 (05/06/2022)
+
+- Summary Tab : Added an icon in the "Cypher of the first ones" currency column, to display if the "Improvised Cypher Analysis Tool" has already been used on a given alt.
+- Summary Tab : Added an exclamation mark to the "Rest XP" column when an alt is not disconnected in a resting area.
+- Tooltip : created a new option that, when used in combination with bank alt marks, shows you on which alt trade goods could better be stored.
+Note: this applies only to crafting reagents from older expansions, and obviously does not apply to souldbound items.
+The option is disabled by default, be sure to enable it in the Options tab.
+- Guild Tab : fixed a Lua error in the guild members tab.
+
 9.2.003b (27/04/2022)
 
-- Fixed .toc in DataStore_Quests.
+- Fixed .toc in DataStore_Quests which caused confusion with some updaters.
+- DataStore_Quests: Fixed a Lua error in the quest expiry check.
 
 9.2.003 (24/04/2022)
 

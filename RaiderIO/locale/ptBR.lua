@@ -9,8 +9,6 @@ if ns:IsSameLocale("ptBR") then
 L["ALLOW_IN_LFD_DESC"] = "Clique-direito em grupos ou candidatos no localizador de masmorras para copiar o URL do perfil Raider.IO."
 L["ALLOW_ON_PLAYER_UNITS"] = "Permitir em retratos de jogador"
 L["ALLOW_ON_PLAYER_UNITS_DESC"] = "Clique-direito no retrato do jogador para copiar a URL do perfil Raider.IO."
-L["ALWAYS_SHOW_EXTENDED_INFO"] = "Sempre mostrar a Pontuação de Função"
-L["ALWAYS_SHOW_EXTENDED_INFO_DESC"] = "Mantenha pressionado um modificador (shift/ctrl/alt) para mostrar as Pontuações de Funções do jogador na dica de ferramenta. Se você habilitar essa opção, as dicas (tooltips) sempre incluirão as pontuações de função."
 L["API_DEPRECATED"] = "|cffFF0000Warning!|r O Addon |cffFFFFFF%s|r está chamando uma função descontinuada do RaiderIO.%s. Esta função será removida em versões futuras. Por favor, incentive o autor de %s a atualizar seu addon. Call stack: %s"
 L["API_DEPRECATED_UNKNOWN_ADDON"] = "<AddOn Desconhecido>"
 L["API_DEPRECATED_UNKNOWN_FILE"] = "<Arquivo de AddOn Desconhecido>"
@@ -35,7 +33,6 @@ L["CHARACTER_LF_TEAM_MPLUS_DEFAULT"] = "Procurando por um Grupo de Mítica+"
 L["CHARACTER_LF_TEAM_MPLUS_WITH_SCORE"] = "Procurando por %d+ Grupo de Mítica+"
 L["CHECKBOX_DISPLAY_WEEKLY"] = "Mostrar Semanalmente"
 L["CHOOSE_HEADLINE_HEADER"] = " Informação em destaque.de Mítica+"
-L["CONFIG_SHOW_TOOLTIPS_HEADER"] = "Tooltips de Mítica+ e Raids"
 L["CONFIG_WHERE_TO_SHOW_TOOLTIPS"] = "Onde Mostrar o Progresso em Mítica+ e Raide"
 L["CONFIRM"] = "Confirmar"
 L["COPY_RAIDERIO_PROFILE_URL"] = "Copiar URL do Raider.IO"
@@ -43,48 +40,41 @@ L["COPY_RAIDERIO_RECRUITMENT_URL"] = "Copiar URL de Recrutamento"
 L["COPY_RAIDERIO_URL"] = "Copiar URL do Raider.IO"
 L["CURRENT_MAINS_SCORE"] = "Pontuação de M+ Atual do Main"
 L["CURRENT_SCORE"] = "Pontuação Atual de M+"
+--[[Translation missing --]]
+--[[ L["DB_MODULES"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DB_MODULES_HEADER_MYTHIC_PLUS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DB_MODULES_HEADER_RAIDING"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DB_MODULES_HEADER_RECRUITMENT"] = ""--]] 
 L["DISABLE_DEBUG_MODE_RELOAD"] = "Você está desabilitando o Modo de Depuração. Clicar em Confirmar irá Recarregar sua Interface."
 L["DISABLE_RWF_MODE_BUTTON"] = "Desabilitar"
 L["DISABLE_RWF_MODE_BUTTON_TOOLTIP"] = "Clique para desativar o modo Race World First. Isso fará com que sua interface seja recarregada."
 L["DISABLE_RWF_MODE_RELOAD"] = "Você está desabilitando o modo Race World First. Clicar em Confirmar irá recarregar sua interface."
 L["DPS"] = "DPS"
-L["DPS_SCORE"] = "Pontuação como DPS"
-L["DUNGEON_SHORT_NAME_AD"] = "Atal'Dazar"
-L["DUNGEON_SHORT_NAME_ARC"] = "O Arcâneo"
-L["DUNGEON_SHORT_NAME_BRH"] = "Castelo CN"
-L["DUNGEON_SHORT_NAME_COEN"] = "Catedral DNE"
-L["DUNGEON_SHORT_NAME_COS"] = "Pátio das Estrelas"
-L["DUNGEON_SHORT_NAME_DHT"] = "Bosque Corenegro"
 L["DUNGEON_SHORT_NAME_DOS"] = "Outro Lado"
-L["DUNGEON_SHORT_NAME_EOA"] = "Olho de Azshara"
-L["DUNGEON_SHORT_NAME_FH"] = "Angra do Facão"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_GD"] = ""--]] 
 L["DUNGEON_SHORT_NAME_GMBT"] = "Gambito de So'leah"
 L["DUNGEON_SHORT_NAME_HOA"] = "Salões"
-L["DUNGEON_SHORT_NAME_HOV"] = "Salões da Bravura"
-L["DUNGEON_SHORT_NAME_KR"] = "Repouso"
-L["DUNGEON_SHORT_NAME_LOWR"] = "Karazhan Inf."
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_ID"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_LOWR"] = ""--]] 
 L["DUNGEON_SHORT_NAME_MISTS"] = "Brumas"
-L["DUNGEON_SHORT_NAME_ML"] = "MEGAMINA!!!"
-L["DUNGEON_SHORT_NAME_MOS"] = "Gorja das Almas"
-L["DUNGEON_SHORT_NAME_NL"] = "Covil de Neltharian"
 L["DUNGEON_SHORT_NAME_NW"] = "Chaga"
 L["DUNGEON_SHORT_NAME_PF"] = "Empéstia"
 L["DUNGEON_SHORT_NAME_SD"] = "Profundezas"
-L["DUNGEON_SHORT_NAME_SEAT"] = "Sede do Triunvirato"
-L["DUNGEON_SHORT_NAME_SIEGE"] = "Cerco de Boralus"
 L["DUNGEON_SHORT_NAME_SOA"] = "Torres"
-L["DUNGEON_SHORT_NAME_SOTS"] = "Santuário da Tempestade"
 L["DUNGEON_SHORT_NAME_STRT"] = "Ruas das Maravilhas"
-L["DUNGEON_SHORT_NAME_TD"] = "Tol'Dagor"
-L["DUNGEON_SHORT_NAME_TM"] = "MEGAMINA!!!"
 L["DUNGEON_SHORT_NAME_TOP"] = "Teatro"
-L["DUNGEON_SHORT_NAME_TOS"] = "Templo de Sethraliss"
-L["DUNGEON_SHORT_NAME_UNDR"] = "Terra Podre"
-L["DUNGEON_SHORT_NAME_UPPR"] = "Karazhan Sup."
-L["DUNGEON_SHORT_NAME_VOTW"] = "Câmara das Guardiãs"
-L["DUNGEON_SHORT_NAME_WM"] = "Mansão Capelo"
-L["DUNGEON_SHORT_NAME_WORK"] = "Gnomecan - Oficina"
-L["DUNGEON_SHORT_NAME_YARD"] = "Gnomecan - Ferro-velho"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_UPPR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_WORK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_YARD"] = ""--]] 
 L["ENABLE_AUTO_FRAME_POSITION"] = "Posicionar o Quadro de Perfil do Raider.IO Automaticamente."
 L["ENABLE_AUTO_FRAME_POSITION_DESC"] = "Ativar isso manterá o Quadro de perfil de M+ ao lado do \"Localizador de grupos\"."
 L["ENABLE_DEBUG_MODE_RELOAD"] = "Você está ativando o modo de depuração. Destina-se apenas a fins de teste e desenvolvimento e incorrerá em uso adicional de memória. Clicar em Confirmar recarregará sua interface."
@@ -113,34 +103,27 @@ L["GUILD_LF_RAID_MYTHIC"] = "Recrutando Raiders para Mítico"
 L["GUILD_LF_RAID_NORMAL"] = "Recrutando Raiders para Normal"
 L["GUILD_LF_SOCIAL"] = "Recrutando Jogadores Sociais"
 L["HEALER"] = "Curador"
-L["HEALER_SCORE"] = "Pontuação como Healer"
 L["HIDE_OWN_PROFILE"] = "Ocultar perfil pessoal no Raider.IO."
 L["HIDE_OWN_PROFILE_DESC"] = "Quando definido, isso não mostrará seu próprio perfil Raider.IO na dica (tooltip), mas poderá mostrar outros jogadores, se eles tiverem um."
 L["INVERSE_PROFILE_MODIFIER"] = "Inverter o Modificador da dica (tooltip) do Perfil do Raider.IO"
 L["INVERSE_PROFILE_MODIFIER_DESC"] = "Ativar isso inverte o comportamento do modificador da dica (tooltip) do Raider.IO (shift/ctrl/alt): mantenha pressionado para alternar a exibição entre o perfil Pessoal/Líder ou perfil Líder/Pessoal."
-L["KEYSTONE_COMPLETED_10"] = "+10-14 (KSC)"
-L["KEYSTONE_COMPLETED_15"] = "+15 (KSM)"
-L["KEYSTONE_COMPLETED_5"] = "+5-9 (KSR)"
-L["LEGION_MAIN_SCORE"] = "Pontuação Principal em Legion"
-L["LEGION_SCORE"] = "Pontuação em Legion"
 L["LOCKING_PROFILE_FRAME"] = "Raider.IO: Bloqueando o quadro de perfil M+."
 L["MAINS_BEST_SCORE_BEST_SEASON"] = "Melhor pontuação de M+ do Main (%s)"
 L["MAINS_RAID_PROGRESS"] = "Progresso do Main"
 L["MAINS_SCORE"] = "Pontuação de M+ do Main"
-L["MAINS_SCORE_COLON"] = "Pontuação do Main:"
 L["MODULE_AMERICAS"] = "Américas"
 L["MODULE_EUROPE"] = "Europa"
 L["MODULE_KOREA"] = "Coréia"
 L["MODULE_TAIWAN"] = "Taiwan"
 L["MY_PROFILE_TITLE"] = "Perfil do Raider.IO"
-L["MYTHIC_PLUS_DB_MODULES"] = "Mítica+ Módulos de Banco de Dados."
+--[[Translation missing --]]
+--[[ L["MYTHIC_PLUS_DB_MODULES"] = ""--]] 
 L["MYTHIC_PLUS_SCORES"] = "Tooltips de Mítica+"
 L["NO_GUILD_RECORD"] = "Sem registros da Guilda"
 L["OPEN_CONFIG"] = "Abrir Configuração"
 L["OUT_OF_SYNC_DATABASE_S"] = "|cffFFFFFF%s|r possui dados de facção da Horda/Aliança que não estão sincronizados. Atualize as configurações do cliente do Raider.IO para sincronizar as duas facções."
 L["OUTDATED_DATABASE"] = "As pontuações têm %d dias."
 L["OUTDATED_DATABASE_HOURS"] = "As pontuações têm %d horas."
-L["OUTDATED_DATABASE_S"] = "|cffFFFFFF%s|r está usando dados com |cffFF6666%d|r dias. Atualize o Addon para obter pontuações mais precisas do Míticas+."
 L["OUTDATED_DOWNLOAD_LINK"] = "Download: |cffffbd0a%s|r"
 L["OUTDATED_EXPIRED_ALERT"] = "|cffFFFFFF%s|r está usando dados expirados. Atualize agora para ver os dados mais precisos:  |cffFFFFFF%s|r."
 L["OUTDATED_EXPIRED_TITLE"] = "Os dados do Raider.IO expiraram."
@@ -149,32 +132,9 @@ L["OUTDATED_EXPIRES_IN_HOURS"] = "Dados do Raider.IO expiram em %d horas."
 L["OUTDATED_EXPIRES_IN_MINUTES"] = "Dados do Raider.IO expiram em %d Minutos"
 L["OUTDATED_PROFILE_TOOLTIP_MESSAGE"] = [=[Atualize seu Addon agora para ver os dados mais precisos. Os jogadores trabalham duro para melhorar seu progresso, e exibir dados muito antigos é um desserviço para eles. Você pode usar o Raider.IO Client para manter seus dados sincronizados automaticamente.
 ]=]
-L["PLAYER_PROFILE_TITLE"] = "Perfil do jogador de M+."
-L["PREV_SEASON_SUFFIX"] = "(*) "
 L["PREVIOUS_SCORE"] = "Pontuação anterior de M+ (%s)"
 L["PROFILE_BEST_RUNS"] = "Melhores Runs por Masmorra"
 L["PROVIDER_NOT_LOADED"] = "|cffFF0000Warning:|r |cffFFFFFF%s|r não pode encontrar dados para sua facção atual. Verifique suas configurações |cffFFFFFF/raiderio|r e ative os dados da ferramenta para |cffFFFFFF%s|r."
-L["RAID_ABBREVIATION_ULD"] = "ULD"
-L["RAID_BOSS_ABT_1"] = "Garothi"
-L["RAID_BOSS_ABT_10"] = "Aggramar"
-L["RAID_BOSS_ABT_11"] = "Argus"
-L["RAID_BOSS_ABT_2"] = "Canisvis"
-L["RAID_BOSS_ABT_3"] = "Guarda-portal Hasabel"
-L["RAID_BOSS_ABT_4"] = "Alto Comando Antorano"
-L["RAID_BOSS_ABT_5"] = "Eonar"
-L["RAID_BOSS_ABT_6"] = "Imonar"
-L["RAID_BOSS_ABT_7"] = "Kin'garoth"
-L["RAID_BOSS_ABT_8"] = "Varimatras"
-L["RAID_BOSS_ABT_9"] = "O Conciliábulo"
-L["RAID_BOSS_BOD_1"] = "Campeã da Luz"
-L["RAID_BOSS_BOD_2"] = "Grong, a Aparição"
-L["RAID_BOSS_BOD_3"] = "Mestres Flamejade"
-L["RAID_BOSS_BOD_4"] = "Opulência"
-L["RAID_BOSS_BOD_5"] = "Conclave dos Escolhidos"
-L["RAID_BOSS_BOD_6"] = "Rei Rastakhan"
-L["RAID_BOSS_BOD_7"] = "Grão-faz-tudo Mekkatorque"
-L["RAID_BOSS_BOD_8"] = "Bloqueio da Muralha de Tempestade"
-L["RAID_BOSS_BOD_9"] = "Grã-senhora Jaina Proudmore"
 L["RAID_BOSS_CN_1"] = "Guinchasa"
 L["RAID_BOSS_CN_10"] = "Sir Denathrius"
 L["RAID_BOSS_CN_2"] = "Guarda-caça Altimor"
@@ -185,26 +145,68 @@ L["RAID_BOSS_CN_6"] = "Lady Verva Venumbra"
 L["RAID_BOSS_CN_7"] = "O Conselho de Sangue"
 L["RAID_BOSS_CN_8"] = "Punholodo"
 L["RAID_BOSS_CN_9"] = "Generais da Legião de Pedra"
-L["RAID_BOSS_EP_1"] = "Comandante Abissal Sivara"
-L["RAID_BOSS_EP_2"] = "Beemote de Aguanegra"
-L["RAID_BOSS_EP_3"] = "Luz de Azshara"
-L["RAID_BOSS_EP_4"] = "Lady Grimpagris"
-L["RAID_BOSS_EP_5"] = "Orgozoa"
-L["RAID_BOSS_EP_6"] = "Corte da Rainha"
-L["RAID_BOSS_EP_7"] = "Za'qui"
-L["RAID_BOSS_EP_8"] = "Rainha Azshara"
-L["RAID_BOSS_NYA_1"] = "Wrathion"
-L["RAID_BOSS_NYA_10"] = "Ra-den"
-L["RAID_BOSS_NYA_11"] = "Carapaça"
-L["RAID_BOSS_NYA_12"] = "N'Zoth"
-L["RAID_BOSS_NYA_2"] = "Maut"
-L["RAID_BOSS_NYA_3"] = "Skitra"
-L["RAID_BOSS_NYA_4"] = "Zanesh"
-L["RAID_BOSS_NYA_5"] = "A Mente Coletiva"
-L["RAID_BOSS_NYA_6"] = "Shad'har"
-L["RAID_BOSS_NYA_7"] = "Drest'agath"
-L["RAID_BOSS_NYA_8"] = "Il'gynoth"
-L["RAID_BOSS_NYA_9"] = "Vexiona"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FCN_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FCN_10"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FCN_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FCN_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FCN_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FCN_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FCN_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FCN_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FCN_8"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FCN_9"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FSFO_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FSFO_10"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FSFO_11"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FSFO_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FSFO_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FSFO_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FSFO_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FSFO_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FSFO_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FSFO_8"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FSFO_9"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FSOD_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FSOD_10"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FSOD_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FSOD_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FSOD_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FSOD_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FSOD_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FSOD_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FSOD_8"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FSOD_9"] = ""--]] 
 L["RAID_BOSS_SFO_1"] = "Guardião Vigilante"
 L["RAID_BOSS_SFO_10"] = "Rygelon"
 L["RAID_BOSS_SFO_11"] = "O Carcereiro"
@@ -226,14 +228,6 @@ L["RAID_BOSS_SOD_6"] = "Artífice da Dor Raznal"
 L["RAID_BOSS_SOD_7"] = "Guardião dos Primogênitos"
 L["RAID_BOSS_SOD_8"] = "Escreve-sinas Roh-Kalo"
 L["RAID_BOSS_SOD_9"] = "Kel'Thuzad"
-L["RAID_BOSS_ULD_1"] = "Taloc"
-L["RAID_BOSS_ULD_2"] = "M.A.D.R.E"
-L["RAID_BOSS_ULD_3"] = "Devoradora Fétida"
-L["RAID_BOSS_ULD_4"] = "Zek'voz"
-L["RAID_BOSS_ULD_5"] = "Vectis"
-L["RAID_BOSS_ULD_6"] = "Zul, Renascido"
-L["RAID_BOSS_ULD_7"] = "Mythrax"
-L["RAID_BOSS_ULD_8"] = "G'huun"
 L["RAID_DIFFICULTY_NAME_HEROIC"] = "Heroico"
 L["RAID_DIFFICULTY_NAME_MYTHIC"] = "Mítico"
 L["RAID_DIFFICULTY_NAME_NORMAL"] = "Normal"
@@ -241,7 +235,6 @@ L["RAID_DIFFICULTY_SUFFIX_HEROIC"] = "H"
 L["RAID_DIFFICULTY_SUFFIX_MYTHIC"] = "M"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL"] = "N"
 L["RAID_ENCOUNTERS_DEFEATED_TITLE"] = "Encontros de Raide Derrotados"
-L["RAID_PROGRESS_TITLE"] = "Progresso de Raid"
 L["RAIDERIO_AVERAGE_PLAYER_SCORE"] = "Pontuações Médias para Runs Dentro do Tempo +%s"
 L["RAIDERIO_BEST_RUN"] = "Raider.IO Melhor Run M+"
 L["RAIDERIO_CLIENT_CUSTOMIZATION"] = "Personalização do cliente Raider.IO."
@@ -249,11 +242,12 @@ L["RAIDERIO_LIVE_TRACKING"] = "Rastreamento ao vivo do Raider.IO"
 L["RAIDERIO_MP_BASE_SCORE"] = "Raider.IO Pontuação Base de M+"
 L["RAIDERIO_MP_BEST_SCORE"] = "Raider.IO Pontuação de M+ (%s)"
 L["RAIDERIO_MP_SCORE"] = "Raider.IO Pontuação de M+"
-L["RAIDERIO_MP_SCORE_COLON"] = "Raider.IO Pontuação de M+:"
 L["RAIDERIO_MYTHIC_OPTIONS"] = "Opções do Addon do Raider.IO "
 L["RAIDING_DATA_HEADER"] = "Raider.IO Progresso de Raid"
-L["RAIDING_DB_MODULES"] = "Módulos de banco de dados de Raid"
-L["RECRUITMENT_DB_MODULES"] = "Módulos de banco de dados de recrutamento"
+--[[Translation missing --]]
+--[[ L["RAIDING_DB_MODULES"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RECRUITMENT_DB_MODULES"] = ""--]] 
 L["RELOAD_LATER"] = "Recarregarei depois."
 L["RELOAD_NOW"] = "Recarregar agora."
 L["RELOAD_RWF_MODE_BUTTON"] = "Salvar"
@@ -315,18 +309,13 @@ L["SHOW_SCORE_IN_COMBAT_DESC"] = "Desative isso para minimizar o impacto no dese
 L["SHOW_SCORE_WITH_MODIFIER"] = "Mostrar informações de dica (tooltip) do Raider.IO com modificador"
 L["SHOW_SCORE_WITH_MODIFIER_DESC"] = "Desative a exibição de dados ao passar o mouse sobre jogadores, a menos que uma tecla modificadora seja pressionada."
 L["TANK"] = "Tank"
-L["TANK_SCORE"] = "Pontuação como Tank"
 L["TEAM_LF_MPLUS_DEFAULT"] = "Recrutando Jogadores para Mítica+"
 L["TEAM_LF_MPLUS_WITH_SCORE"] = "Recrutando %d+ jogadores de Mítica+"
 L["TIMED_10_RUNS"] = "Runs +10-14 Dentro do Tempo"
 L["TIMED_15_RUNS"] = "Runs 15+ Dentro do Tempo"
 L["TIMED_20_RUNS"] = "Runs +20 Dentro do Tempo"
 L["TIMED_5_RUNS"] = "Runs +5-9 Dentro do Tempo"
-L["TOOLTIP_CUSTOMIZATION"] = "Personalização da dica (tooltip)"
 L["TOOLTIP_PROFILE"] = "Perfil de personalização da dica (tooltip) do Raider.IO"
-L["TOTAL_MP_SCORE"] = "Pontuação de Mítica+"
-L["TOTAL_RUNS"] = "Runs totais de BFA"
-L["UNKNOWN_SCORE"] = "Desconhecido"
 L["UNKNOWN_SERVER_FOUND"] = "|cffFFFFFF%s|r encontrou um novo servidor. Por favor, anote esta informação |cffFF9999{|r |cffFFFFFF%s|r |cffFF9999,|r |cffFFFFFF%s|r |cffFF9999}|r e informe aos desenvolvedores. Obrigado!"
 L["UNLOCKING_PROFILE_FRAME"] = "Raider.IO: Desbloqueando o quadro de perfil M+."
 L["USE_ENGLISH_ABBREVIATION"] = "Forçar Abreviações em Inglês para Masmorras"

@@ -85,16 +85,20 @@ function LM.Mount:FilterToDisplay(f)
 end
 
 function LM.Mount:MatchesOneFilter(flags, groups, f)
-    if f == "" then
+    if f == "" or f == self.name then
         return true
     elseif f == "NONE" then
         return false
     elseif f == "CASTABLE" then
         if self:IsCastable() then return true end
+    elseif f == "MAWUSABLE" then
+        if self:MawUsable() then return true end
     elseif f == "JOURNAL" then
         if self.mountType then return true end
     elseif f == "FAVORITES" then
         if self.isFavorite then return true end
+    elseif f == "DRAGONRIDING" then
+        if self.dragonRiding then return true end
     elseif f == "ZONEMATCH" then
         local zone = GetZoneText()
         if self:IsFromZone(zone) then return true end
@@ -117,37 +121,38 @@ function LM.Mount:MatchesOneFilter(flags, groups, f)
     end
 end
 
-function LM.Mount:MatchesFilter(flags, groups, filterStr)
-
-    if self.name == filterStr then
-        return true
-    end
-
-    local filters = { strsplit('/', filterStr) }
-
-    -- These are all ORed so return true as soon as one is true
-
-    for _, f in ipairs(filters) do
+function LM.Mount:MatchesFilterOr(flags, groups, ...)
+    local f
+    for i = 1, select('#', ...) do
+        f = select(i, ...)
         if self:MatchesOneFilter(flags, groups, f) then
             return true
         end
     end
-
     return false
+end
+
+function LM.Mount:MatchesFilterAnd(flags, groups, ...)
+    local f
+    for i = 1, select('#', ...) do
+        f = select(i, ...)
+        if type(f) == 'table' then
+            if not self:MatchesFilterOr(flags, groups, unpack(f)) then
+                return false
+            end
+        else
+            if not self:MatchesFilterOr(flags, groups, f) then
+                return false
+            end
+        end
+    end
+    return true
 end
 
 function LM.Mount:MatchesFilters(...)
     local currentFlags = self:GetFlags()
     local currentGroups = self:GetGroups()
-    local f
-
-    for i = 1, select('#', ...) do
-        f = select(i, ...)
-        if not self:MatchesFilter(currentFlags, currentGroups, f) then
-            return false
-        end
-    end
-    return true
+    return self:MatchesFilterAnd(currentFlags, currentGroups, ...)
 end
 
 function LM.Mount:FlagsSet(checkFlags)
@@ -168,9 +173,6 @@ function LM.Mount:IsCastable()
     elseif LM.Options:GetInstantOnlyMoving() then
         if castTime == 0 then return false end
     end
-    if LM.Environment:IsTheMaw() and not self:MawUsable() then
-        return false
-    end
     return true
 end
 
@@ -188,9 +190,9 @@ function LM.Mount:IsFromZone(zone)
     end
 end
 
--- These should probably not be making new identical objects all tha time.
+-- These should probably not be making new identical objects all the time.
 
-function LM.Mount:GetCastAction(context)
+function LM.Mount:GetCastAction()
     local spellName = GetSpellInfo(self.spellID)
     return LM.SecureAction:Spell(spellName)
 end
@@ -200,12 +202,21 @@ function LM.Mount:GetCancelAction()
     return LM.SecureAction:CancelAura(spellName)
 end
 
-function LM.Mount:IncrementSummonCount()
-    LM.Options:IncrementSummonCount(self)
+function LM.Mount:OnSummon()
+    local n = LM.Options:IncrementSummonCount(self)
+    if LM.Options:GetAnnounce() then
+        LM.Print(string.format(
+                    L.LM_SUMMON_CHAT_MESSAGE,
+                    self.name, self:GetPriority(), n))
+    end
 end
 
 function LM.Mount:GetSummonCount()
     return LM.Options:GetSummonCount(self)
+end
+
+function LM.Mount:GetPriority()
+    return LM.Options:GetPriority(self)
 end
 
 -- This is gross
@@ -255,9 +266,10 @@ function LM.Mount:Dump(prefix)
             )
     LM.Print(prefix .. " mountID: " .. tostring(self.mountID))
     LM.Print(prefix .. " family: " .. tostring(self.family))
+    LM.Print(prefix .. " dragonRiding: " .. tostring(self.dragonRiding))
     LM.Print(prefix .. " isCollected: " .. tostring(self.isCollected))
     LM.Print(prefix .. " isFavorite: " .. tostring(self.isFavorite))
     LM.Print(prefix .. " isFiltered: " .. tostring(self.isFiltered))
-    LM.Print(prefix .. " priority: " .. tostring(LM.Options:GetPriority(self)))
+    LM.Print(prefix .. " priority: " .. tostring(self:GetPriority()))
     LM.Print(prefix .. " castable: " .. tostring(self:IsCastable()) .. " (spell " .. tostring(IsUsableSpell(self.spellID)) .. ")")
 end

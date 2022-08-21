@@ -1,8 +1,8 @@
-## Interface: 90200
+## Interface: 90205
 ## Title: RareTrackerUldum
 ## Notes: Track and coordinate rare spawn timers in Uldum.
 ## Author: Melroy
-## Version: 7.1.9
+## Version: 7.1.11
 ## SavedVariables: RareTrackerUldumDB
 ## Dependencies: RareTrackerCore
 

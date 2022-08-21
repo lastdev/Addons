@@ -156,10 +156,21 @@
 					<KeyValue key="locDisabled" value="TT_SHOW_ITEMXPACK_DISABLED" />
 				</KeyValues>
 			</CheckButton>
-			
+			<CheckButton parentKey="ShowCouldBeStoredOn" inherits="AltoToggleableOptionTemplate">
+				<Anchors> 
+					<Anchor point="TOPLEFT" relativeKey="$parent.ShowItemXPack" relativePoint="BOTTOMLEFT" x="0" y="-10" />
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="option" value="UI.Tooltip.ShowCouldBeStoredOn" />
+					<KeyValue key="locLabel" value="TT_SHOW_COULDBESTORED_TEXT" />
+					<KeyValue key="locTitle" value="TT_SHOW_COULDBESTORED_TITLE" />
+					<KeyValue key="locEnabled" value="TT_SHOW_COULDBESTORED_ENABLED" />
+					<KeyValue key="locDisabled" value="TT_SHOW_COULDBESTORED_DISABLED" />
+				</KeyValues>
+			</CheckButton>
 			<CheckButton parentKey="ShowGatheringNodesCount" inherits="AltoToggleableOptionTemplate">
 				<Anchors> 
-					<Anchor point="TOPLEFT" relativeKey="$parent.ShowItemXPack" relativePoint="BOTTOMLEFT" x="0" y="-40" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.ShowCouldBeStoredOn" relativePoint="BOTTOMLEFT" x="0" y="-10" />
 				</Anchors>
 				<KeyValues>
 					<KeyValue key="option" value="UI.Tooltip.ShowGatheringNodesCount" />

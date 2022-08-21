@@ -4,8 +4,8 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 
 local addon = _G[addonName]
 
-addon.Version = "v9.2.003b"
-addon.VersionNum = 902003
+addon.Version = "v9.2.006"
+addon.VersionNum = 902006
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local commPrefix = addonName
@@ -164,6 +164,7 @@ local AddonDB_Defaults = {
 			["UI.Tooltip.ShowHearthstoneCount"] = true,			-- display hearthstone counters
 			["UI.Tooltip.IncludeGuildBankInTotal"] = true,		-- total count = alts + guildbank (1) or alts only (0)
 			["UI.Tooltip.ShowGuildBankCountPerTab"] = false,	-- guild count = guild:count or guild (tab 1: x, tab2: y ..)
+			["UI.Tooltip.ShowCouldBeStoredOn"] = false,			-- display "could be stored on" information
 			
 			-- ** Mail options **
 			["UI.Mail.GuildMailWarning"] = true,					-- be informed when a guildie sends a mail to one of my alts

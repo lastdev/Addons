@@ -85,3 +85,4 @@ L["Total owned"] = "總共擁有"
 L["Source"] = "來源"
 -- L["Goes in"] = true
 L["Are also on this quest:"] = "也有這個任務:"
+-- L["Could be stored on"] = true

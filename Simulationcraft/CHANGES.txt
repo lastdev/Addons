@@ -1,10 +1,10 @@
-lightweight tag 205bb81dc44acf97a30684d7232787445f71580e v9.2.5
+lightweight tag b747ea1222ee0403c5b4e5528ffe32791dfadcda 9.2.5-01
 Author:	Dave Hendler <sollaires@gmail.com>
-Date:	Mon May 30 13:00:33 2022 -0700
+Date:	Mon Jun 6 10:28:06 2022 -0700
 
-commit 205bb81dc44acf97a30684d7232787445f71580e
+commit b747ea1222ee0403c5b4e5528ffe32791dfadcda
 Author: Dave Hendler <sollaires@gmail.com>
-Date:   Mon May 30 13:00:33 2022 -0700
+Date:   Mon Jun 6 10:28:06 2022 -0700
 
-    Update TOC for 9.2.5
+    Use newer BigWigs packager
 

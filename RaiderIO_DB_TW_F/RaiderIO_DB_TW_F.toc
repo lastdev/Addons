@@ -1,13 +1,11 @@
-## Interface: 90200
-## Title: Raider.IO |cffFFFFFFRecruitment|r (Taiwan - Alliance and Horde)
+## Interface: 90205
+## Title: Raider.IO |cffFFFFFFRecruitment|r (Taiwan)
 ## Author: Vladinator (Vladinator-TarrenMill), Aspyr (Aspyrox-Skullcrusher) and Isak (Isak-Sargeras)
 ## Dependencies: RaiderIO
 ## DefaultState: enabled
 ## X-Type: Recruitment
 ## X-Region: Taiwan
-## X-Faction: Alliance and Horde
+## X-Faction: Both
 ## X-Website: https://raider.io
-../RaiderIO/db/db_recruitment_tw_alliance_characters.lua
-../RaiderIO/db/db_recruitment_tw_alliance_lookup.lua
-../RaiderIO/db/db_recruitment_tw_horde_characters.lua
-../RaiderIO/db/db_recruitment_tw_horde_lookup.lua
+../RaiderIO/db/db_recruitment_tw_characters.lua
+../RaiderIO/db/db_recruitment_tw_lookup.lua

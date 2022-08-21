@@ -26,9 +26,10 @@ LM.Journal.__index = LM.Journal
 --  [7] isFavorite,
 --  [8] isFactionSpecific,
 --  [9] faction,
--- [10] shouldHideOnChar,
+-- [10] isFiltered,
 -- [11] isCollected,
--- [12] mountID = C_MountJournal.GetMountInfoByID(mountID)
+-- [12] mountID,
+-- [13] isForDragonRiding = C_MountJournal.GetMountInfoByID(mountID)
 
 --  [1] creatureDisplayInfoID,
 --  [2] description,
@@ -38,7 +39,7 @@ LM.Journal.__index = LM.Journal
 --  [6] uiModelSceneID = C_MountJournal.GetMountInfoExtraByID(mountID)
 
 function LM.Journal:Get(id, isUsable)
-    local name, spellID, icon, _, _, sourceType, isFavorite, _, faction, isFiltered, isCollected, mountID = C_MountJournal.GetMountInfoByID(id)
+    local name, spellID, icon, _, _, sourceType, isFavorite, _, faction, isFiltered, isCollected, mountID, dragonRiding = C_MountJournal.GetMountInfoByID(id)
     local modelID, descriptionText, sourceText, isSelfMount, mountType, sceneID = C_MountJournal.GetMountInfoExtraByID(mountID)
 
     if not name then
@@ -63,6 +64,7 @@ function LM.Journal:Get(id, isUsable)
     m.isFiltered    = isFiltered
     m.isCollected   = isCollected
     m.isUsable      = isFiltered == false and isUsable == true
+    m.dragonRiding  = dragonRiding
     m.needsFaction  = PLAYER_FACTION_GROUP[faction]
     m.flags         = { }
 
@@ -98,7 +100,7 @@ function LM.Journal:Get(id, isUsable)
         m.flags['RUN'] = true
     elseif m.mountType == 408 then      -- Unsuccessful Prototype Fleetpod
         m.flags['RUN'] = true
-        -- m.flags['SLOW'] = true          -- irony?
+        m.flags['SLOW'] = true
 --[===[@debug@
     else
         LM.PrintError(string.format('Mount with unknown type number: %s = %d', m.name, m.mountType))
@@ -113,6 +115,7 @@ function LM.Journal:GetFlags()
 
     -- Dynamic Kua'fon flags
     if self.mountType == 398 then
+        flags = CopyTable(flags)
         -- It seems like Alliance don't show the achievement as done but
         -- do flag the quest as completed.
         if C_QuestLog.IsQuestFlaggedCompleted(56205) then

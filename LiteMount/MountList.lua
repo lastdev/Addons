@@ -160,14 +160,14 @@ function LM.MountList:PriorityRandom(r)
     local priorityCounts = { }
 
     for _,m in ipairs(self) do
-        local p = LM.Options:GetPriority(m)
+        local p = m:GetPriority()
         priorityCounts[p] = ( priorityCounts[p] or 0 ) + 1
     end
 
     local weights, totalWeight = {}, 0
 
     for i,m in ipairs(self) do
-        local p, w  = LM.Options:GetPriority(m)
+        local p, w  = m:GetPriority()
         -- Handle the "always" priority by setting all the others to weight 0
         if priorityCounts[LM.Options.ALWAYS_PRIORITY] and p ~= LM.Options.ALWAYS_PRIORITY then
             weights[i] = 0
@@ -194,8 +194,22 @@ local function filterMatch(m, ...)
     return m:MatchesFilters(...)
 end
 
+local function filterSplitOr(s)
+    local out = { strsplit('/', s) }
+    if #out == 1 then
+        return out[1]
+    else
+        return out
+    end
+end
+
 function LM.MountList:FilterSearch(...)
-    return self:Search(filterMatch, ...)
+    -- This looks like a terrible idea but it's actually way faster and memory
+    -- efficient to do all this here once rather than strsplit for every mount
+    -- in the list
+
+    local filters = LM.tMap({ ... }, filterSplitOr)
+    return self:Search(filterMatch, unpack(filters))
 end
 
 -- Limits can be filter (no prefix), set (=), reduce (-) or extend (+).

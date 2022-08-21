@@ -72,6 +72,7 @@ local warpSpells = {
 	[1626] = true, -- Primal Rage
 	[275200] = true, -- Primal Rage
 	[204276] = true, -- Primal Rage
+	[357650] = true, -- Primal Rage | Raiva Primeva(PTBR)
 	[272678] = true, 	-- Primal Rage
 	[293076] = true, -- Mallet of Thunderous Skins
 }
@@ -89,9 +90,9 @@ frame:SetScript("OnEvent", function(self, event, ...)
 			end
 
 			if HasteItem[spellID] then
-				LUSTDETECTORMSG("Lust Detector: " .. UnitName(sourceName) .. " used " .. GetSpellLink(spellID) .. " and increased +15% haste on party!!", chatType)
+				LUSTDETECTORMSG("{rt1} Lust Detector: " .. UnitName(sourceName) .. " used " .. GetSpellLink(spellID) .. " and increased +15% haste on party!! {rt1}", chatType)
 				elseif warpSpells[spellID] then
-				LUSTDETECTORMSG("Lust Detector: " .. UnitName(sourceName) .. " cast " .. GetSpellLink(spellID) .. " and increased +30% haste on party!!", chatType)
+				LUSTDETECTORMSG("{rt3} [Lust Detector]: " .. UnitName(sourceName) .. " cast " .. GetSpellLink(spellID) .. " and increased +30% haste on party!! {rt3}", chatType)
 				if UnitIsUnit("pet", sourceName) then
 						sourceName = ("%s"):format(UnitName("player"))
 					elseif IsInRaid() then
@@ -110,7 +111,7 @@ frame:SetScript("OnEvent", function(self, event, ...)
 						end
 					end
 					elseif warpSpells[spellID] then
-					LUSTDETECTORMSG("Lust Detector: [HUNTER] "..sourceName.."\'s Pet Used "..GetSpellLink(spellID).."and increased +30% haste on your party!!")
+					LUSTDETECTORMSG("{rt5} Lust Detector: [HUNTER] "..sourceName.."\'s Pet Used "..GetSpellLink(spellID).."and increased +30% haste on your party!! {rt5}")
 			end
 		end
 	end

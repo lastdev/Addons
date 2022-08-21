@@ -1,6 +1,6 @@
-## Interface: 90200
+## Interface: 90205
 ## Title: Auctionator
-## Version: 9.2.17
+## Version: 9.2.27
 ## Author: Borjamacare, plusmouse
 ## X-Website: http://mods.curse.com/addons/wow/auctionator
 ## X-Localizations: enUS, itIT, deDE, ruRU, koKR, frFR, esES, esMX, zhTW, ptBR, zhCN
@@ -19,5 +19,3 @@ Assets_Mainline.xml
 
 Source\Manifest.xml
 Source_Mainline\Manifest.xml
-
-Auctionator.xml

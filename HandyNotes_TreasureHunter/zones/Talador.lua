@@ -55,8 +55,8 @@ ns.RegisterPoints(537, { -- TombofSouls
 })
 
 ns.RegisterPoints(535, { -- Talador
-    [57207540]={quest=34134, loot={117563}, faction="Alliance", junk=true, note="Rescue 4 draenei trapped in spider webs, then Isaari's Cache will spawn here"},
-    [61107170]={quest=34116, loot={117563}, faction="Horde", junk=true, note="Rescue 4 adventurers trapped in spider webs, then Norana's Cache will spawn here"},
+    [57207540]={quest=34134, loot={117563}, faction="Alliance", group="junk", note="Rescue 4 draenei trapped in spider webs, then Isaari's Cache will spawn here"},
+    [61107170]={quest=34116, loot={117563}, faction="Horde", group="junk", note="Rescue 4 adventurers trapped in spider webs, then Norana's Cache will spawn here"},
     -- followers
     [45303700]={quest=34465, follower=190, label="Mysterious Hat", note="collect all the Mysterious items across Draenor"}, -- Archmage Vargoth
     [62755038]={quest=nil, follower=171, note="Complete the quests starting with Clear!"}, -- Pleasure-Bot 8000 (actually a different quest for alliance and horde)

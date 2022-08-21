@@ -1,6 +1,6 @@
 # <DBM> Dragon Soul
 
-## [r219](https://github.com/DeadlyBossMods/DBM-Cataclysm/tree/r219) (2022-05-31)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Cataclysm/compare/r218...r219) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Cataclysm/releases)
+## [r220](https://github.com/DeadlyBossMods/DBM-Cataclysm/tree/r220) (2022-08-16)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Cataclysm/compare/r219...r220) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Cataclysm/releases)
 
-- toc bump  
+- TOC bumps  

@@ -29,9 +29,13 @@ local SetZoneItem = lib.SetZoneItem
 
 local VALE_OF_ETERNAL_BLOSSOM = 390
 
+
 local AZSUNA = 630
 local DRAENOR_NAGRAND = 550
+local LUNARFALL = 582		-- Alliance WoD Garrison
+local FROSTWALL = 590		-- Horde WoD Garrison
 
+local BASTION = 1533
 local MALDRAXXUS = 1536
 local THE_MAW = 1960
 local KORTHIA = 1961
@@ -50,28 +54,65 @@ lib:RegisterItems({
 	-- 4.0 Cataclysm
 	
 	-- 5.0 Mists of Pandaria
+	[79104] = SetZoneItem(4, VALE_OF_ETERNAL_BLOSSOM, 524, 472), 		-- Rusty Watering Can
 	[87779] = SetZoneItem(4, VALE_OF_ETERNAL_BLOSSOM, 214, 169), 		-- Ancient Guo-Lai Cache Key
 	
 	-- 6.0 Warlords of Draenor
+	[122272] = SetZoneItem(5, LUNARFALL), 		-- Follower Ability Retraining Manual
+	[122273] = SetZoneItem(5, LUNARFALL), 		-- Follower Trait Retraining Guide
+	[122307] = SetZoneItem(5, LUNARFALL), 		-- Rush Order: Barn
+	[122490] = SetZoneItem(5, LUNARFALL), 		-- Rush Order: Dwarven Bunker
+	[122497] = SetZoneItem(5, LUNARFALL), 		-- Rush Order: Garden Shipment
+	[122487] = SetZoneItem(5, LUNARFALL), 		-- Rush Order: Gladiator's Sanctum
+	[122500] = SetZoneItem(5, LUNARFALL), 		-- Rush Order: Gnomish Gearworks
+	[122503] = SetZoneItem(5, LUNARFALL), 		-- Rush Order: Mine Shipment
+	[128373] = SetZoneItem(5, LUNARFALL), 		-- Rush Order: Shipyard
+	-- [122273] = SetZoneItem(5, LUNARFALL), 		-- scouting missives, to do   https://www.wowhead.com/npc=78564/sergeant-crowler#sells;0+1-2
+	
+	-- same for horde : https://www.wowhead.com/npc=79774/sergeant-grimjaw#sells;0+1-2
+	-- SEE BELOW !!
+	[122496] = SetZoneItem(5, FROSTWALL), 		-- Rush Order: Garden Shipment
+	[122501] = SetZoneItem(5, FROSTWALL), 		-- Rush Order: Goblin Workshop
+	[122502] = SetZoneItem(5, FROSTWALL), 		-- Rush Order: Mine Shipment
+	[122491] = SetZoneItem(5, FROSTWALL), 		-- Rush Order: War Mill
+	
+	
 	[118658] = SetZoneItem(5, DRAENOR_NAGRAND, 502, 412), 		-- Gagrog's Skull
-	[131744] = SetZoneItem(5, AZSUNA, 533, 394), 		-- Key to Nar'thalas Academy
 	
 	-- 7.0 Legion
+	[131744] = SetZoneItem(6, AZSUNA, 533, 394), 		-- Key to Nar'thalas Academy
 	
 	-- 8.0 Battle for Azeroth
 	
 	-- 9.0 Shadowlands
+	[178149] = SetZoneItem(8, BASTION), -- Centurion Anima Core
+	
 	[175757] = SetZoneItem(8, MALDRAXXUS, 389, 420), -- Construct Supply Key
 	[180277] = SetZoneItem(8, MALDRAXXUS, 379, 456), -- Battlefront Ration Key
+	[183987] = SetZoneItem(8, MALDRAXXUS), 	-- Prisoner Cage Key
 	
 	[186727] = SetZoneItem(8, THE_MAW), 		-- Seal Breaker Key
 	[186718] = SetZoneItem(8, KORTHIA), 		-- Teleporter Repair Kit
 	
+	-- 9.2 Shadowlands / Zereth Mortis
 	[188957] = SetZoneItem(8, ZERETH_MORTIS), -- Genesis Mote
 	[189863] = SetZoneItem(8, ZERETH_MORTIS), -- Spatial Opener
+	[189704] = SetZoneItem(8, ZERETH_MORTIS, 600, 178), -- Dominance Key
 	[190189] = SetZoneItem(8, ZERETH_MORTIS), -- Sandworn Relic
 	[190197] = SetZoneItem(8, ZERETH_MORTIS), -- Sandworn Chest Key
 	[190198] = SetZoneItem(8, ZERETH_MORTIS), -- Sandworn Chest Key Fragment
 	[190739] = SetZoneItem(8, ZERETH_MORTIS), -- Provis Wax
 	[190740] = SetZoneItem(8, ZERETH_MORTIS), -- Automa Integration
+	
+
 })
+
+
+-- If the player is playing horde, replace some id's by the horde equivalent location
+if UnitFactionGroup("player") == "Horde" then
+	lib:RegisterItems({
+		[122307] = SetZoneItem(5, FROSTWALL), 		-- Rush Order: Barn
+		[122487] = SetZoneItem(5, FROSTWALL), 		-- Rush Order: Gladiator's Sanctum
+		[128373] = SetZoneItem(5, FROSTWALL), 		-- Rush Order: Shipyard
+	})
+end

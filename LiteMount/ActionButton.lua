@@ -30,9 +30,11 @@ function LM.ActionButton:PreClick(mouseButton)
 
     if InCombatLockdown() then return end
 
+    local startTime = debugprofilestop()
+
     LM.Debug("PreClick handler called on " .. self:GetName())
 
-    LM.PlayerMounts:RefreshMounts()
+    LM.MountRegistry:RefreshMounts()
 
     -- Re-randomize if it's time
     local keepRandomForSeconds = LM.Options:GetRandomPersistence()
@@ -45,17 +47,22 @@ function LM.ActionButton:PreClick(mouseButton)
     local context = self.context:Clone()
     context.clickArg = mouseButton
 
+    -- This uses a crazy amount of memory so just save it once
+    context.mapPath = LM.Environment:GetMapPath()
+
     local ruleSet = LM.Options:GetCompiledButtonRuleSet(self.id)
 
     local act = ruleSet:Run(context)
     if act then
         act:SetupActionButton(self)
+        LM.Debug("PreClick ok time " .. (debugprofilestop() - startTime))
         return
     end
 
     local handler = LM.Actions:GetHandler('CantMount')
     local act = handler()
     act:SetupActionButton(self)
+    LM.Debug("PreClick fail time " .. (debugprofilestop() - startTime))
 end
 
 function LM.ActionButton:PostClick()

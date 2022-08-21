@@ -1,6 +1,7 @@
 # <DBM> World Bosses (Legion)
 
-## [r32](https://github.com/DeadlyBossMods/DBM-Legion/tree/r32) (2022-05-31)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Legion/compare/r31...r32) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Legion/releases)
+## [r33](https://github.com/DeadlyBossMods/DBM-Legion/tree/r33) (2022-08-16)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Legion/compare/r32...r33) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Legion/releases)
 
-- toc bump  
+- TOC bumps  
+- flag alpha icons with right option text  

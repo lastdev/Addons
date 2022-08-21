@@ -108,6 +108,7 @@ L["COLUMN_RESTXP_TITLE"] = "雙倍經驗"
 L["COLUMN_RESTXP_TITLE_SHORT"] = "雙倍經驗"
 -- L["Fully rested"] = true
 -- L["Fully rested in"] = true
+-- L["CHARACTER_NOT_IN_RESTING_AREA"] = "This character is not in a resting area !"
 
 -- Column Money
 L["COLUMN_MONEY_TITLE"] = "金錢"

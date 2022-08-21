@@ -1,8 +1,8 @@
-## Interface: 90200
+## Interface: 90205
 ## Title: RareTrackerZerethMortis
 ## Notes: Track and coordinate rare spawn timers in Zereth Mortis.
 ## Author: Melroy
-## Version: 7.1.10
+## Version: 7.1.11
 ## Dependencies: RareTrackerCore
 
 Locales\enUS.lua

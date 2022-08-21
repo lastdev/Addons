@@ -2,8 +2,9 @@ local mod	= DBM:NewMod(1237, "DBM-Party-WoD", 4, 558)
 local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
+mod.upgradedMPlus = true
 
-mod:SetRevision("20200912135206")
+mod:SetRevision("20220712012318")
 mod:SetCreatureID(79852)
 mod:SetEncounterID(1750)
 
@@ -27,7 +28,7 @@ local specWarnTimeToFeed		= mod:NewSpecialWarningYou(162415, nil, nil, nil, 1, 2
 local specWarnTimeToFeedOther	= mod:NewSpecialWarningTarget(162415, "Healer", nil, nil, 1, 2)
 local specWarnAcidSplash		= mod:NewSpecialWarningMove(178156, nil, nil, nil, 1, 8)
 
---local timerTimeToFeedCD		= mod:NewCDTimer(22, 162415)--22 to 30 second variation. In CM targets random players, not just tank, so timer for all.
+--local timerTimeToFeedCD		= mod:NewCDTimer(22, 162415, nil, nil, nil, 3)--22 to 30 second variation. In CM targets random players, not just tank, so timer for all.
 
 function mod:OnCombatStart(delay)
 --	timerTimeToFeedCD:Start(50-delay)

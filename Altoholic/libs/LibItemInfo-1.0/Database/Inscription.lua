@@ -13,6 +13,7 @@ lib:RegisterItems({
 	-- https://www.wowhead.com/items?filter=166:143:217;9:1:1;0:0:0
 	
 	-- 1.0 Classic
+	[39354] = SetReagent(0, e.Inscription), -- Light Parchment
 	[39151] = SetReagent(0, e.Inscription), -- Alabaster Pigment
 	[39334] = SetReagent(0, e.Inscription), -- Dusky Pigment
 	[39338] = SetReagent(0, e.Inscription), -- Golden Pigment
@@ -435,6 +436,7 @@ lib:RegisterItems({
 	[153634] = SetReagent(7, e.Inscription, 85), -- 8 of Blockades	
 	
 	-- 9.0 Shadowlands
+	[175886] = SetReagent(8, e.Inscription), -- Dark Parchment
 	[173056] = SetReagent(8, e.Inscription), -- Umbral Pigment
 	[173057] = SetReagent(8, e.Inscription), -- Luminous Pigment
 	[173058] = SetReagent(8, e.Inscription), -- Umbral Ink

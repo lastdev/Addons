@@ -56,7 +56,7 @@ COMMANDS['macro'] =
 
 COMMANDS['priority'] =
     function (argstr, priority)
-        local mount = LM.PlayerMounts:GetActiveMount()
+        local mount = LM.MountRegistry:GetActiveMount()
         priority = tonumber(priority)
         if mount and priority then
             LM.Options:SetPriority(mount, priority)
@@ -90,11 +90,11 @@ COMMANDS['continents'] =
 COMMANDS['mounts'] =
     function (argstr, ...)
         if select('#', ...) == 0 then
-            local m = LM.PlayerMounts:GetActiveMount()
+            local m = LM.MountRegistry:GetActiveMount()
             if m then m:Dump() end
         else
             local n = string.lower(table.concat({ ... }, ' '))
-            local mounts = LM.PlayerMounts.mounts:Search(function (m) return string.match(strlower(m.name), n) end)
+            local mounts = LM.MountRegistry.mounts:Search(function (m) return string.match(strlower(m.name), n) end)
             for _,m in ipairs(mounts) do
                 m:Dump()
             end
@@ -175,6 +175,30 @@ COMMANDS['forcefly'] =
         LM.Environment:ForceFlyable()
     end
 
+COMMANDS['mount'] =
+    function (argstr, ...)
+        local h = LM.Actions:GetHandler('Mount')
+        local ctx = LM.RuleContext:New()
+        local args = { ... }
+        table.insert(args, 1, 'JOURNAL')
+        local ca, m = h(args, ctx)
+        if m and m.mountID then
+            C_MountJournal.SummonByID(m.mountID)
+        end
+    end
+
+COMMANDS['smartmount'] =
+    function (argstr, ...)
+        local h = LM.Actions:GetHandler('SmartMount')
+        local ctx = LM.RuleContext:New()
+        local args = { ... }
+        table.insert(args, 1, 'JOURNAL')
+        local ca, m = h(args, ctx)
+        if m and m.mountID then
+            C_MountJournal.SummonByID(m.mountID)
+        end
+    end
+
 --[===[@debug@
 COMMANDS['usable'] =
     function ()
@@ -200,8 +224,10 @@ local function PrintUsage()
     LM.Print("  /litemount group del <name>")
     LM.Print("  /litemount group list")
     LM.Print("  /litemount group rename <oldname> <newname>")
+    LM.Print("  /litemount mount [<group>]")
     LM.Print("  /litemount playermodel")
     LM.Print("  /litemount profile <profilename>")
+    LM.Print("  /litemount smartmount [<group>]")
     LM.Print("  /litemount xmog <slotnumber>")
 end
 

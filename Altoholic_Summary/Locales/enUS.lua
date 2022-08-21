@@ -105,6 +105,7 @@ L["COLUMN_RESTXP_DETAIL_3"] = "It is achieved in 10 days."
 L["COLUMN_RESTXP_DETAIL_4"] = "%d%% mode : fully rested is displayed as '%d%%'"
 L["Fully rested"] = true
 L["Fully rested in"] = true
+L["CHARACTER_NOT_IN_RESTING_AREA"] = "This character is not in a resting area !"
 
 -- Column Money
 L["COLUMN_MONEY_TITLE"] = "Money"

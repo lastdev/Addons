@@ -1,7 +1,13 @@
-$Id: ChangeLog.txt 135 2022-02-27 16:13:44Z arithmandar $
+$Id: ChangeLog.txt 137 2022-07-23 03:16:26Z arithmandar $
 
 Revision History:
 =================
+
+* v1.48 (Jul. 23, 2022)
+-----------------------
+- Library update - LibUIDropDownMenu
+- Library update: LibBabble-SubZone
+- Toc update to support WoW 9.2.5
 
 * v1.47 (Feb. 28, 2022)
 -----------------------

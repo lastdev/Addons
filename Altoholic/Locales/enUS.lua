@@ -85,3 +85,4 @@ L["Total owned"] = true
 L["Source"] = true
 L["Goes in"] = true
 L["Are also on this quest:"] = true
+L["Could be stored on"] = true

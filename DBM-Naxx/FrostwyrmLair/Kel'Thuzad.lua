@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Kel'Thuzad", "DBM-Naxx", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220221015714")
+mod:SetRevision("20220807204941")
 mod:SetCreatureID(15990)
 mod:SetEncounterID(1114)
 --mod:SetModelID(15945)--Doesn't work at all, doesn't even render.
@@ -18,10 +18,11 @@ mod:RegisterEventsInCombat(
 	"UNIT_TARGETABLE_CHANGED"
 )
 
+--Check if UNIT_TARGETABLE_CHANGED exists in classic wrath. It was a tech they didn't really use until WoD
 local warnAddsSoon			= mod:NewAnnounce("warnAddsSoon", 1, "134321")
 local warnPhase2			= mod:NewPhaseAnnounce(2, 3)
 local warnBlastTargets		= mod:NewTargetAnnounce(27808, 2)
-local warnFissure			= mod:NewSpellAnnounce(27810, 4, nil, nil, nil, nil, nil, 2)
+local warnFissure			= mod:NewTargetNoFilterAnnounce(27810, 4, nil, nil, nil, nil, nil, 2)
 local warnMana				= mod:NewTargetAnnounce(27819, 2)
 local warnChainsTargets		= mod:NewTargetNoFilterAnnounce(28410, 4)
 
@@ -38,7 +39,7 @@ local timerManaBomb			= mod:NewCDTimer(20, 27819, nil, nil, nil, 3)--20-50
 local timerFrostBlast		= mod:NewCDTimer(40.1, 27808, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)--40-46 (might be 33-46)
 local timerMC				= mod:NewBuffActiveTimer(20, 28410, nil, nil, nil, 3)
 --local timerMCCD			= mod:NewCDTimer(90, 28410, nil, nil, nil, 3)--actually 60 second cdish but its easier to do it this way for the first one.
-local timerPhase2			= mod:NewTimer(218, "TimerPhase2", "136116", nil, nil, 6)
+local timerPhase2			= mod:NewTimer(225, "TimerPhase2", "136116", nil, nil, 6)
 
 mod:AddSetIconOption("SetIconOnMC", 28410, true, false, {1, 2, 3})
 mod:AddSetIconOption("SetIconOnManaBomb", 27819, false, false, {8})
@@ -49,6 +50,7 @@ mod.vb.warnedAdds = false
 mod.vb.MCIcon = 1
 local frostBlastTargets = {}
 local chainsTargets = {}
+local isRetail = WOW_PROJECT_ID == (WOW_PROJECT_MAINLINE or 1)
 
 local function AnnounceChainsTargets(self)
 	warnChainsTargets:Show(table.concat(chainsTargets, "< >"))
@@ -72,14 +74,29 @@ local function AnnounceBlastTargets(self)
 	end
 end
 
+local function RangeToggle(show)
+	if show then
+		DBM.RangeCheck:Show(10)
+	else
+		DBM.RangeCheck:Hide()
+	end
+end
+
 function mod:OnCombatStart(delay)
 	self:SetStage(1)
 	table.wipe(chainsTargets)
 	table.wipe(frostBlastTargets)
 	self.vb.warnedAdds = false
 	self.vb.MCIcon = 1
-	specwarnP2Soon:Schedule(208.1-delay)
+	specwarnP2Soon:Schedule(215-delay)
 	timerPhase2:Start()
+	--Redundancy below here isn't needed on retail but may be on wrath classic
+	if not isRetail then
+		warnPhase2:Schedule(225)
+		if self.Options.RangeFrame then
+			self:Schedule(225-delay, RangeToggle, true)
+		end
+	end
 end
 
 function mod:OnCombatEnd()
@@ -159,6 +176,8 @@ end
 
 function mod:UNIT_TARGETABLE_CHANGED()
 	if self.vb.phase == 1 then
+		self:Unschedule(RangeToggle)
+		warnPhase2:Cancel()
 		self:SetStage(2)
 		warnPhase2:Show()
 		warnPhase2:Play("ptwo")

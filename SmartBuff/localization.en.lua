@@ -7,10 +7,8 @@ SMARTBUFF_WHATSNEW = "\n\n|cffffffff        Whats new:|r\n\n"
   .."          |cffffffffRetail version by Codermik.\n\n"
   .."          Please report any issues on Curse or Discord.|r\n\n\n"
   .."          Retail release with several improvements and\n"
-  .."          fixes, these include:\n\n"
-  .."             * Added missing Augments as per\n"
-  .."                a request on CurseForge.\n\n"
-  .."                - Thanks Blyrmasia.\n"
+  .."          fixes, latest changes are:\n\n"
+  .."             * Updated TOC to 90205\n"
   .."\n\n"
 ;
 

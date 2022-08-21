@@ -11,7 +11,7 @@
 				<FontString parentKey="LevelRange" inherits="GameFontNormalSmall" text="LEVEL_RANGE">
 					<Size x="70" y="20" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="470" y="-26" />
+						<Anchor point="TOPLEFT" x="510" y="-26" />
 					</Anchors>
 					<Color r="255" g="255" b="255" />
 				</FontString>
@@ -88,9 +88,22 @@
 					</OnEnter>
 				</Scripts>
 			</Button>	
-			<Button parentKey="ProfessionsIcon" inherits="AddonFactory_ButtonTemplate" id="4" hidden="true">
+			<Button parentKey="ExpansionsIcon" inherits="AddonFactory_ButtonTemplate" id="4">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.EquipmentIcon" relativePoint="TOPRIGHT" x="5" y="0" />
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\achievement_zone_easternkingdoms_01" />
+				</KeyValues>
+				<Scripts>
+					<OnEnter>
+						self:GetParent():FilterIcon_OnEnter(self)
+					</OnEnter>
+				</Scripts>
+			</Button>
+			<Button parentKey="ProfessionsIcon" inherits="AddonFactory_ButtonTemplate" id="5" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.ExpansionsIcon" relativePoint="TOPRIGHT" x="5" y="0" />
 				</Anchors>
 				<KeyValues>
 					<KeyValue key="iconFile" value="Interface\Icons\Achievement_GuildPerk_WorkingOvertime" />
@@ -101,7 +114,7 @@
 					</OnEnter>
 				</Scripts>
 			</Button>
-			<Button parentKey="SearchOptionsIcon" inherits="AddonFactory_ButtonTemplate" id="5">
+			<Button parentKey="SearchOptionsIcon" inherits="AddonFactory_ButtonTemplate" id="6">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.ProfessionsIcon" relativePoint="TOPRIGHT" x="80" y="0" />
 				</Anchors>

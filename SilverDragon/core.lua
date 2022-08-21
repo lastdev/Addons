@@ -12,7 +12,7 @@ local faction = UnitFactionGroup("player")
 local Debug
 do
 	local TextDump = LibStub("LibTextDump-1.0")
-	local debuggable = GetAddOnMetadata(myname, "Version") == 'v90205.0'
+	local debuggable = GetAddOnMetadata(myname, "Version") == 'v90205.2'
 	local _window
 	local function GetDebugWindow()
 		if not _window then
@@ -230,6 +230,8 @@ function addon:OnInitialize()
 			delay = 1200, -- number of seconds to wait between recording the same mob
 			instances = false,
 			taxi = true,
+			charloot = false,
+			lootappearances = true,
 		},
 	}, true)
 	globaldb = self.db.global

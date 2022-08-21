@@ -1,5 +1,10 @@
 # Changelog
 
+## Changed in v26
+
+* Updated for 9.2.5, fixing transmog errors
+* Systems updates from [HandyNotes: Shadowlands Treasures](https://www.curseforge.com/wow/addons/handynotes-shadowlands-treasures)
+
 ## Changed in v25
 
 * Updated for 9.2

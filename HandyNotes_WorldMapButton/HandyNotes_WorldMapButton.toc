@@ -1,6 +1,6 @@
-## Interface: 90105
+## Interface: 90200
 ## Title: HandyNotes_WorldMapButton
-## Version: 90105.05-Retail
+## Version: 90200.01-Retail
 ## Notes: Adds a Button to the Worldmap to toggle HandyNotes
 ## Author: fuba
 ## OptionalDeps: Ace3

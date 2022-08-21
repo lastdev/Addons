@@ -26,6 +26,7 @@ lib:RegisterItems({
 	[7081] = SetReagent(0, e.Multi), -- Breath of Wind
 	[7972] = SetReagent(0, e.Multi), -- Ichor of Undeath
 	[10286] = SetReagent(0, e.Multi, 0, bag.HerbBag), -- Heart of the wild
+	[11291] = SetReagent(0, e.Multi), -- Star Wood
 	[12809] = SetReagent(0, e.Multi, 0), -- Guardian Stone
 	[13926] = SetReagent(0, e.Multi, 0, bag.GemBag), -- Golden Pearl
 	
@@ -64,7 +65,7 @@ lib:RegisterItems({
 	[162461] = SetReagent(7, e.Multi), -- Sanguicel
 	[165703] = SetReagent(7, e.Multi), -- Breath of Bwonsamdi
 	[165948] = SetReagent(7, e.Multi), -- Tidalcore
-	
+		
 	-- 9.0 Shadowlands
 	[178787] = SetReagent(8, e.Multi), -- Orboreal Shard
 	[180055] = SetReagent(8, e.Multi), -- Relic of the Past I

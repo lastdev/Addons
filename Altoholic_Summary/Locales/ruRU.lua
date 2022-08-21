@@ -113,6 +113,7 @@ L["COLUMN_RESTXP_TITLE"] = "Отдых"
 L["COLUMN_RESTXP_TITLE_SHORT"] = "Отдых"
 L["Fully rested"] = "Полностью отдохнувший"
 L["Fully rested in"] = "Полностью отдохнёт в"
+-- L["CHARACTER_NOT_IN_RESTING_AREA"] = "This character is not in a resting area !"
 
 -- Column Money
 L["COLUMN_MONEY_SUBTITLE_1"] = "Твоя прелесть"

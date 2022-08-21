@@ -1,11 +1,8 @@
 # <DBM> Spell Timers
 
-## [r139](https://github.com/DeadlyBossMods/DBM-SpellTimers/tree/r139) (2022-05-31)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-SpellTimers/compare/r138...r139) [Previous Releases](https://github.com/DeadlyBossMods/DBM-SpellTimers/releases)
+## [r140](https://github.com/DeadlyBossMods/DBM-SpellTimers/tree/r140) (2022-08-16)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-SpellTimers/compare/r139...r140) [Previous Releases](https://github.com/DeadlyBossMods/DBM-SpellTimers/releases)
 
-- toc bump  
-- toc bumps for classic era  
-- bump BCC toc  
-- Update DBM-SpellTimers.toc (#12)  
-    Added  ## Notes-ruRU and fix minor typo in ## Title-ruRU  
-- bump toc file  
+- TOC bumps  
+- Wago dissapeared on us there for a second.  
+- Multi-toc packager support.  

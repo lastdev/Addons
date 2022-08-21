@@ -1,0 +1,60 @@
+## Interface: 90205
+## Title: TomCat's Tours
+## Notes: See license.txt for license and copyright information
+## Author: TomCat
+## X-Website: https://www.tomcatstours.com
+## Version: 2.4.12
+## DefaultState: enabled
+## SavedVariables: TomCats_Account
+## SavedVariablesPerCharacter: TomCats_Character
+## X-Category: Achievements, Map, Miscellaneous
+## X-Localizations: enUS, enGB, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ptPT, ruRU, zhCN, zhTW
+## X-TomCats-Expiry: 1659212081
+
+constants.lua
+slashcommands.lua
+event.lua
+popup.xml
+default_saved_variables.lua
+saved_variables.lua
+update.lua
+version_info.lua
+legacy.lua
+constants.lua
+maps.lua
+playerposition.lua
+arrows.lua
+cache.lua
+rules.lua
+bit32.lua
+base64.lua
+compression.lua
+vignette_descriptions.lua
+db_vignette_names.lua
+db_vignette_info.lua
+db_item_companion.lua
+db_vignettes_known.lua
+dao_vignettes.lua
+dao_loot.lua
+proxy.lua
+proxy_mapcanvas.lua
+proxy_mapcanvaspinmixin.lua
+ui_vignettes_tooltip.lua
+ui_vignettes_tooltip.xml
+ui_vignettes_section.lua
+ui_vignettes_section.xml
+ui_vignettes_pins.lua
+ui_vignettes_pins.xml
+lunarfestival/Main.xml
+loveisintheair/Main.xml
+announcements.lua
+configuration.xml
+configuration.lua
+minimap_icon.xml
+minimap_icon.lua
+discoveries.xml
+discoveries.lua
+beta.lua
+noblegarden/Main.xml
+beta/maelie.xml
+beta/maelie.lua

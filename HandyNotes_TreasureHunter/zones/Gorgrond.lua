@@ -32,7 +32,7 @@ ns.RegisterPoints(543, { -- Gorgrond
 })
 
 ns.RegisterPoints(543, { -- Gorgrond
-    [57006530]={quest=37249, loot={{118106, pet=1537}}, junk=true, label="Strange Spore", note="on mushrooms on the cliff"},
+    [57006530]={quest=37249, loot={{118106, pet=1537}}, group="junk", label="Strange Spore", note="on mushrooms on the cliff"},
     -- followers
     [39703990]={quest=34463, follower=190, label="Mysterious Ring", note="collect all the Mysterious items across Draenor"}, -- Archmage Vargoth
     [44908690]={quest=36037, npc=83820, follower=193, note="He'll look hostile; fight the things that are attacking him"}, -- Tormmok
@@ -40,7 +40,7 @@ ns.RegisterPoints(543, { -- Gorgrond
 })
 
 ns.RegisterPoints(597, { -- Blackrock Foundry
-    [59305720] = {quest=34405, loot={109118}, junk=true, label="Iron Horde Chest"},
+    [59305720] = {quest=34405, loot={109118}, group="junk", label="Iron Horde Chest"},
 })
 
 -- Rares
