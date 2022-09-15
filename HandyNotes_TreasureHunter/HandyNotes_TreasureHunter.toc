@@ -1,8 +1,8 @@
-## Interface: 90205
-## Title: HandyNotes: Treasure Hunter (Draenor Treasures)
-## Notes: Where the Treasure Hunter objects are in Draenor
+## Interface: 90207
+## Title: HandyNotes: Warlords of Draenor (Treasure Hunter + Rares)
+## Notes: Where the Treasure Hunter objects and rares are in Draenor
 ## Author: Kemayo
-## Version: v26
+## Version: v27
 ## DefaultState: enabled
 ## X-Category: Map
 ## X-eMail: kemayo @ gmail DOT com

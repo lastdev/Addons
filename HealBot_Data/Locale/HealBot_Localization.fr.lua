@@ -43,33 +43,24 @@ function HealBot_Lang_frFR()
     HEALBOT_DISEASE            = "Maladie";
     HEALBOT_MAGIC              = "Magie";
     HEALBOT_CURSE              = "Mal\195\169diction";
-    HEALBOT_POISON             = "Poison";
 
     HB_TOOLTIP_OFFLINE         = "Hors ligne";
     HB_OFFLINE                 = "hors ligne"; -- has gone offline msg
     HB_ONLINE                  = "en ligne"; -- has come online msg
 
-    HEALBOT_HEALBOT            = "HealBot";
-    HEALBOT_ADDON              = HEALBOT_HEALBOT .. " " .. HEALBOT_VERSION;
     HEALBOT_LOADED             = " charg\195\169.";
 
     HEALBOT_RANK   = {[1]="(Rang 1)", [2]="(Rang 2)", [3]="(Rang 3)", [4]="(Rang 4)", [5]="(Rang 5)", [6]="(Rang 6)", [7]="(Rang 7)",
                       [8]="(Rang 8)", [9]="(Rang 9)", [10]="(Rang 10)", [11]="(Rang 11)", [12]="(Rang 12)", [13]="(Rang 13)"}
 
-HEALBOT_ACTION_OPTIONS     = "Options";
 
     HEALBOT_OPTIONS_TITLE         = HEALBOT_ADDON;
     HEALBOT_OPTIONS_DEFAULTS      = "D\195\169faut";
     HEALBOT_OPTIONS_CLOSE         = "Fermer";
-HEALBOT_OPTIONS_HARDRESET     = "ReloadUI";
-HEALBOT_OPTIONS_SOFTRESET     = "ResetHB";
     HEALBOT_OPTIONS_TAB_GENERAL   = "G\195\169n\195\169ral";
     HEALBOT_OPTIONS_TAB_SPELLS    = "Sorts";
     HEALBOT_OPTIONS_TAB_HEALING   = "Soins";
-    HEALBOT_OPTIONS_TAB_CDC       = "Gu\195\169rison";
-    HEALBOT_OPTIONS_TAB_SKIN      = "Skin";
     HEALBOT_OPTIONS_TAB_TIPS      = "Bulle d\'information";
-    HEALBOT_OPTIONS_TAB_BUFFS     = "Buffs"
 
     HEALBOT_OPTIONS_BARALPHA      = "Opacit\195\169 vie";
     HEALBOT_OPTIONS_BARALPHAINHEAL= "Opacit\195\169 Sorts entrants";
@@ -83,9 +74,6 @@ HEALBOT_OPTIONS_SOFTRESET     = "ResetHB";
     HEALBOT_OPTIONS_HEAL_CHATOPT  = "Options de chat";
 
     HEALBOT_OPTIONS_FRAMESCALE    = "Echelle du cadre"
-    HEALBOT_OPTIONS_SKINTEXT      = "Skin"
-    HEALBOT_SKINS_STD             = "Standard"
-    HEALBOT_OPTIONS_SKINTEXTURE   = "Texture"
     HEALBOT_OPTIONS_SKINHEIGHT    = "Hauteur"
     HEALBOT_OPTIONS_SKINWIDTH     = "Largeur"
     HEALBOT_OPTIONS_SKINNUMCOLS   = "Nb de colonnes"
@@ -187,9 +175,6 @@ HEALBOT_OPTIONS_SOFTRESET     = "ResetHB";
     HEALBOT_TOOLTIP_RECOMMENDTEXT   = "Soin HoT recommand\195\169";
     HEALBOT_TOOLTIP_NONE            = "Non disponible";
     HEALBOT_TOOLTIP_CORPSE          = "Cadavre de ";
-    HEALBOT_TOOLTIP_CD              = " (CD ";
-    HEALBOT_TOOLTIP_SECS            = "s)";
-    HEALBOT_WORDS_SEC               = "sec";
     HEALBOT_WORDS_CAST              = "lancer";
     HEALBOT_WORDS_UNKNOWN           = "inconnu";
     HEALBOT_WORDS_YES               = "Oui";
@@ -198,7 +183,6 @@ HEALBOT_OPTIONS_SOFTRESET     = "ResetHB";
     HEALBOT_WORDS_THICK             = "Epais";
 
     HEALBOT_WORDS_NONE                  = "Aucun(e)";
-    HEALBOT_OPTIONS_ALT                 = "Alt";
     HEALBOT_DISABLED_TARGET             = "Cible"
     HEALBOT_OPTIONS_SHOWCLASSONBAR      = "Afficher la classe";
     HEALBOT_OPTIONS_SHOWHEALTHONBAR     = "Afficher la vie";
@@ -209,19 +193,9 @@ HEALBOT_OPTIONS_SOFTRESET     = "ResetHB";
     HEALBOT_OPTIONS_BARHEALTH1          = "en \195\169cart";
     HEALBOT_OPTIONS_BARHEALTH2          = "en pourcentage";
     HEALBOT_OPTIONS_TIPTEXT             = "Bulle d\'information";
-    HEALBOT_OPTIONS_POSTOOLTIP          = "Position";
     HEALBOT_OPTIONS_SHOWNAMEONBAR       = "Afficher le nom";
     HEALBOT_OPTIONS_BARTEXTCLASSCOLOUR1 = "Coul. des noms par classe";
     HEALBOT_OPTIONS_EMERGFILTERGROUPS   = "Inclure groupes";
-
-    HEALBOT_ONE                             = "1";
-    HEALBOT_TWO                             = "2";
-    HEALBOT_THREE                           = "3";
-    HEALBOT_FOUR                            = "4";
-    HEALBOT_FIVE                            = "5";
-    HEALBOT_SIX                             = "6";
-    HEALBOT_SEVEN                           = "7";
-    HEALBOT_EIGHT                           = "8";
 
     HEALBOT_OPTIONS_SETDEFAULTS      = "R\195\169g. par d\195\169faut";
     HEALBOT_OPTIONS_SETDEFAULTSMSG   = "R\195\169-initialise toutes les options par d\195\169faut";
@@ -234,7 +208,6 @@ HEALBOT_OPTIONS_SOFTRESET     = "ResetHB";
     HEALBOT_OPTIONS_BUFFSTEXT1       = "Type de buff";
     HEALBOT_OPTIONS_BUFFSTEXT2       = "V\195\169rifier membres";
     HEALBOT_OPTIONS_BUFFSTEXT3       = "Couleur";
-    HEALBOT_OPTIONS_BUFF             = "Buff ";
     HEALBOT_OPTIONS_BUFFSELF         = "sur soi";
     HEALBOT_OPTIONS_BUFFPARTY        = "sur le groupe";
     HEALBOT_OPTIONS_BUFFRAID         = "sur le raid";
@@ -266,12 +239,6 @@ HEALBOT_OPTIONS_SOFTRESET     = "ResetHB";
     HEALBOT_OPTIONS_HIDEPLAYERTARGET     = "Y compris joueur & Cible";
     HEALBOT_OPTIONS_DISABLEHEALBOT       = "D\195\169sactiver HealBot";
 
-HEALBOT_ASSIST                       = "Assist";
-HEALBOT_FOCUS                        = "Focus";
-HEALBOT_MENU                         = "Menu";
-HEALBOT_MAINTANK                     = "MainTank";
-HEALBOT_MAINASSIST                   = "MainAssist";
-HEALBOT_STOP                         = "Stop";
     HEALBOT_TELL                         = "Dire";
 
     HEALBOT_OPTIONS_SHOWMINIMAPBUTTON    = "Aff. le bouton sur la minicarte";
@@ -297,8 +264,6 @@ HEALBOT_STOP                         = "Stop";
     HEALBOT_OPTION_CPUPROFILE     = "Aff. utilisation CPU des addons (intensif pour le CPU !)"
     HEALBOT_OPTIONS_RELOADUIMSG   = "Requiert un re-chargement de l\'UI, charger maintenant ?"
 
-    HEALBOT_BUFF_PVP              = "PvP"
-    HEALBOT_BUFF_PVE              = "PvE"
     HEALBOT_OPTIONS_ANCHOR        = "Ancre du cadre"
     HEALBOT_OPTIONS_BARSANCHOR    = "Ancre des barres"
     HEALBOT_OPTIONS_TOPLEFT       = "Haut \195\160 gauche"
@@ -308,7 +273,6 @@ HEALBOT_STOP                         = "Stop";
     HEALBOT_OPTIONS_TOP           = "Haut"
     HEALBOT_OPTIONS_BOTTOM        = "Bas"
 
-    HEALBOT_PANEL_BLACKLIST       = "BlackList"
 
     HEALBOT_WORDS_REMOVEFROM      = "Retirer de";
     HEALBOT_WORDS_ADDTO           = "Ajouter \195\160";
@@ -318,14 +282,12 @@ HEALBOT_STOP                         = "Stop";
     HEALBOT_TOOLTIP_TARGETBAR     = "Barre de cible"
     HEALBOT_OPTIONS_MYTARGET      = "Mes cibles"
 
-    HEALBOT_DISCONNECTED_TEXT                   = "<DC>"
     HEALBOT_OPTIONS_SHOWUNITBUFFTIME    = "y compris mes buffs";
     HEALBOT_OPTIONS_TOOLTIPUPDATE       = "M\195\160J permanente";
     HEALBOT_OPTIONS_BUFFSTEXTTIMER      = "Pr\195\169venir de la fin des buffs avant expiration";
     HEALBOT_OPTIONS_SHORTBUFFTIMER      = "Buffs courts"
     HEALBOT_OPTIONS_LONGBUFFTIMER       = "Buffs longs"
 
-HEALBOT_OPTIONS_NOTIFY_MSG      = "Message"
     HEALBOT_WORDS_YOU                = "vous";
     HEALBOT_NOTIFYOTHERMSG           = "Incante #s sur #n";
 
@@ -386,11 +348,7 @@ HEALBOT_HELP2={ [1] = "[HealBot] /hb d -- R\195\160Z des options",
     HEALBOT_OPTION_NUMTANKS             = "Nombre de tanks"
     HEALBOT_OPTION_NUMMYTARGETS         = "Nombre de cibles"
     HEALBOT_OPTION_NUMPETS              = "Nombre de familiers"
-HEALBOT_WORD_TEST                   = "Test";
-HEALBOT_WORD_OFF                    = "Off";
-HEALBOT_WORD_ON                     = "On";
 
-    HEALBOT_OPTIONS_TAB_PROTECTION          = "Protection"
     HEALBOT_OPTIONS_TAB_CHAT            = "Chat"
     HEALBOT_OPTIONS_TAB_HEADERS         = "En-t\195\170tes"
     HEALBOT_OPTIONS_TAB_BARS            = "Barres"
@@ -414,18 +372,8 @@ HEALBOT_WORD_ON                     = "On";
     HEALBOT_OPTIONS_BUTTONCASTPRESSED   = "press\195\169"
     HEALBOT_OPTIONS_BUTTONCASTRELEASED  = "relach\195\169"
 
-    HEALBOT_INFO_ADDONCPUUSAGE          = "== Utilisation CPU en sec. =="
-    HEALBOT_INFO_ADDONCOMMUSAGE         = "== Comm. des addons =="
     HEALBOT_WORD_HEALER                     = "Soigneur"
-HEALBOT_WORD_DAMAGER                    = "DPS"
-HEALBOT_WORD_TANK                       = "Tank"
     HEALBOT_WORD_LEADER                     = "Chef"
-HEALBOT_WORD_VERSION                    = "Version"
-HEALBOT_WORD_CLIENT                     = "Client"
-HEALBOT_WORD_ADDON                  = "Addon"
-HEALBOT_INFO_CPUSECS                = "CPU Sec."
-    HEALBOT_INFO_MEMORYKB               = "M\195\169moire Ko"
-    HEALBOT_INFO_COMMS                  = "Comm. Ko"
 
     HEALBOT_WORD_STAR                   = "\195\169toile"
     HEALBOT_WORD_CIRCLE                 = "cercle"
@@ -440,7 +388,6 @@ HEALBOT_INFO_CPUSECS                = "CPU Sec."
     HEALBOT_OPTIONS_ACCEPTSKINMSGFROM   = " de "
     HEALBOT_OPTIONS_BUTTONSHARESKIN     = "Partager avec"
 
-    HEALBOT_CHAT_ADDONID                = "[HealBot]  "
     HEALBOT_CHAT_NEWVERSION1            = "Une version plus r\195\169cente est disponible"
     HEALBOT_CHAT_NEWVERSION2            = "sur "..HEALBOT_ABOUT_URL
     HEALBOT_CHAT_SHARESKINERR1          = " Skin pas trouv\195\169e pour le partage"
@@ -476,14 +423,12 @@ HEALBOT_INFO_CPUSECS                = "CPU Sec."
     HEALBOT_OPTIONS_DOUBLEROW           = "Sur deux lignes"
     HEALBOT_OPTIONS_HOTBELOWBAR         = "Sous la barre"
     HEALBOT_OPTIONS_OTHERSPELLS         = "Autres sorts"
-    HEALBOT_WORD_MACROS                 = "Macros"
     HEALBOT_WORD_SELECT                 = "S\195\169lection"
     HEALBOT_OPTIONS_QUESTION            = "?"
     HEALBOT_WORD_CANCEL                 = "Annuler"
     HEALBOT_WORD_COMMANDS               = "Commandes"
     HEALBOT_OPTIONS_BARHEALTH3          = "vie actuelle";
     HEALBOT_SORTBY_ROLE                 = "R\195\180le"
-    HEALBOT_WORD_DPS                    = "DPS"
     HEALBOT_CHAT_TOPROLEERR             = " r\195\180le non valide - utiliser 'TANK', 'DPS' ou 'HEALER'"
     HEALBOT_CHAT_NEWTOPROLE             = "Le r\195\180le prioritaire est "
     HEALBOT_CHAT_SUBSORTPLAYER1         = "Joueur en premier dans le sous-tri"
@@ -496,19 +441,15 @@ HEALBOT_INFO_CPUSECS                = "CPU Sec."
     HEALBOT_OPTION_AGGROPCTTRACK        = "Suivre pourcent."
     HEALBOT_OPTIONS_ALERTAGGROLEVEL1    = "1 - Menace basse"
     HEALBOT_OPTIONS_ALERTAGGROLEVEL2    = "2 - Menace haute"
-    HEALBOT_OPTIONS_ALERTAGGROLEVEL3    = "3 - Tanking"
     HEALBOT_OPTIONS_AGGROALERT          = "Barre : niveau d\'alerte"
     HEALBOT_OPTIONS_AGGROINDALERT           = "Indicateur de niveau d\'alerte"
     HEALBOT_OPTIONS_TOOLTIPSHOWHOT      = "Montrer les d\195\169tails des HoT suivis"
-    HEALBOT_WORDS_MIN                   = "min"
-    HEALBOT_WORDS_MAX                   = "max"
     HEALBOT_CHAT_SELFPETSON             = "Auto Pet activ\195\169"
     HEALBOT_CHAT_SELFPETSOFF            = "Auto Pet d\195\169sactiv\195\169"
     HEALBOT_WORD_PRIORITY               = "Priorit\195\169"
     HEALBOT_VISIBLE_RANGE               = "Dans les 100m"
     HEALBOT_SPELL_RANGE                 = "A port\195\169e de sorts"
     HEALBOT_WORD_RESET                  = "R\195\160Z"
-    HEALBOT_HBMENU                      = "menuHB"
     HEALBOT_ACTION_HBFOCUS              = "Bouton gauche\npour focus la cible"
     HEALBOT_WORD_CLEAR                  = "Effacer"
     HEALBOT_WORD_SET                    = "D\195\169terminer"
@@ -518,7 +459,6 @@ HEALBOT_INFO_CPUSECS                = "CPU Sec."
     HEALBOT_OPTIONS_TAB_ALERT           = "Alerte"
     HEALBOT_OPTIONS_TAB_SORT            = "Tri"
     HEALBOT_OPTIONS_TAB_HIDE            = "Masquer"
-    HEALBOT_OPTIONS_TAB_AGGRO           = "Aggro"
     HEALBOT_OPTIONS_TAB_ICONTEXT        = "Aff. ic\195\180nes"
     HEALBOT_OPTIONS_TAB_TEXT            = "Aff. barres"
     HEALBOT_OPTIONS_AGGRO3COL           = "Barre d\'Aggro\ncouleur"
@@ -621,11 +561,6 @@ HEALBOT_INFO_CPUSECS                = "CPU Sec."
     HEALBOT_OPTIONS_QUERYTALENTS            = "Requ\195\170te infos talent"        
     HEALBOT_OPTIONS_LOWMANAINDICATOR        = "Indicateur de Mana faible"
     HEALBOT_OPTIONS_LOWMANAINDICATOR1       = "Ne pas afficher"
-    HEALBOT_OPTIONS_LOWMANAINDICATOR2       = "*10% / **20% / ***30%"
-    HEALBOT_OPTIONS_LOWMANAINDICATOR3       = "*15% / **30% / ***45%"
-    HEALBOT_OPTIONS_LOWMANAINDICATOR4       = "*20% / **40% / ***60%"
-    HEALBOT_OPTIONS_LOWMANAINDICATOR5       = "*25% / **50% / ***75%"
-    HEALBOT_OPTIONS_LOWMANAINDICATOR6       = "*30% / **60% / ***90%"
 
     HEALBOT_OPTION_IGNORE_AURA_RESTED       = "Ignorer les  Buffs/D\195\169buffs... pendant le repos"
     HEALBOT_OPTION_ADJUST_MAX_HEALTH        = "Ajuster les PV max du personnage"
@@ -640,45 +575,24 @@ HEALBOT_OPTIONS_CONTENT_ABOUT           = "        A Propos"
     HEALBOT_OPTIONS_CONTENT_GENERAL         = "        " .. HEALBOT_OPTIONS_TAB_GENERAL
     HEALBOT_OPTIONS_CONTENT_SPELLS          = "        " .. HEALBOT_OPTIONS_TAB_SPELLS
     HEALBOT_OPTIONS_CONTENT_SKINS           = "        " .. HEALBOT_OPTIONS_TAB_SKIN
-    HEALBOT_OPTIONS_CONTENT_CURE            = "        " .. HEALBOT_OPTIONS_TAB_CDC
     HEALBOT_OPTIONS_CONTENT_BUFFS           = "        " .. HEALBOT_OPTIONS_TAB_BUFFS
     HEALBOT_OPTIONS_CONTENT_TIPS            = "        " .. HEALBOT_OPTIONS_TAB_TIPS
     HEALBOT_OPTIONS_CONTENT_MOUSEWHEEL      = "        Roue de souris"
-HEALBOT_OPTIONS_CONTENT_TEST            = "        Test"
-    HEALBOT_OPTIONS_CONTENT_USAGE           = "        Utilisation CPU"
     HEALBOT_OPTIONS_REFRESH                 = "Rafraichir"
 
     HEALBOT_CUSTOM_CATEGORY                 = "Cat\195\169gorie"
     HEALBOT_CUSTOM_CAT_CUSTOM               = "Personnalis\195\169"
-HEALBOT_CUSTOM_CAT_02                   = "A - B"   -- ****************************************************
-HEALBOT_CUSTOM_CAT_03                   = "C - D"   -- Custom Debuff Categories can be translated
-HEALBOT_CUSTOM_CAT_04                   = "E - F"   -- 
-HEALBOT_CUSTOM_CAT_05                   = "G - H"   -- If translating into a language with a completely different alphabet,
-HEALBOT_CUSTOM_CAT_06                   = "I - J"   -- the descriptions of HEALBOT_CUSTOM_CAT_02 - HEALBOT_CUSTOM_CAT_14 can be changed.
-HEALBOT_CUSTOM_CAT_07                   = "K - L"   -- Just ensure all 13 variables are used
-HEALBOT_CUSTOM_CAT_08                   = "M - N"   -- 
-HEALBOT_CUSTOM_CAT_09                   = "O - P"   -- Setting debuffs in HEALBOT_CUSTOM_DEBUFF_CATS,
-HEALBOT_CUSTOM_CAT_10                   = "Q - R"   -- The only rule is the category number needs to match the last digits of the variable names, for example:
-HEALBOT_CUSTOM_CAT_11                   = "S - T"   -- If HEALBOT_DEBUFF_AGONIZING_FLAMES starts with an T in a different region
-HEALBOT_CUSTOM_CAT_12                   = "U - V"   -- the category would be 11, simply change the 2 to 11.
-HEALBOT_CUSTOM_CAT_13                   = "W - X"   --
-HEALBOT_CUSTOM_CAT_14                   = "Y - Z"   -- ****************************************************
 
     HEALBOT_CUSTOM_CASTBY_EVERYONE          = "Tous"
     HEALBOT_CUSTOM_CASTBY_ENEMY             = "Ennemi"
     HEALBOT_CUSTOM_CASTBY_FRIEND            = "Ami"
 
     HEALBOT_ABOUT_DESC1                    = "Ajoute un panneau param\195\169trable de barres pour soigner, buff, debuff, rez et suivi d\'aggro"
-    HEALBOT_ABOUT_WEBSITE                  = "Site Web :"
     HEALBOT_ABOUT_AUTHORH                  = "Auteur :"
-    HEALBOT_ABOUT_AUTHORD                  = "Strife"
     HEALBOT_ABOUT_CATH                     = "Cat\195\169gorie :"
     HEALBOT_ABOUT_CATD                     = "Unit Frames, Buffs and Debuffs, Combat:Healer"
     HEALBOT_ABOUT_CREDITH                  = "Cr\195\169dits :"
-    HEALBOT_ABOUT_CREDITD                  = "Acirac, Kubik, Von, Aldetal, Brezza, CT, Moonlight Han Xing"  -- Anyone taking on translations (if required), feel free to add yourself here.
     HEALBOT_ABOUT_LOCALH                   = "Traductions :"
-    HEALBOT_ABOUT_LOCALD                   = "deDE, enUK, esES, frFR, huHU, itIT, koKR, ruRU, poBR, zhCN, zhTW"
-    HEALBOT_ABOUT_FAQH                     = "FAQ"
 HEALBOT_ABOUT_FAQ_QUESTION             = "Question"
 HEALBOT_ABOUT_FAQ_ANSWER               = "R\195\169ponse"
 
@@ -867,7 +781,6 @@ HEALBOT_ABOUT_FAQ_ANSWERS = {     [1]   = "Vous surveillez les buffs manquants \
     HEALBOT_OPTIONS_CONTENT_SKINS_BARS      = "        " .. HEALBOT_OPTIONS_TAB_BARS
     HEALBOT_OPTIONS_CONTENT_SKINS_ICONS     = "        " .. HEALBOT_OPTIONS_TAB_ICONS
     HEALBOT_OPTIONS_CONTENT_SKINS_AGGRO     = "    " .. HEALBOT_OPTIONS_TAB_AGGRO
-    HEALBOT_OPTIONS_CONTENT_SKINS_PROT      = "    " .. HEALBOT_OPTIONS_TAB_PROTECTION
     HEALBOT_OPTIONS_CONTENT_SKINS_CHAT      = "    " .. HEALBOT_OPTIONS_TAB_CHAT
     HEALBOT_OPTIONS_CONTENT_SKINS_TEXT      = "        " .. HEALBOT_OPTIONS_TAB_TEXT
     HEALBOT_OPTIONS_CONTENT_SKINS_ICONTEXT  = "        " .. HEALBOT_OPTIONS_TAB_ICONTEXT
@@ -883,13 +796,10 @@ HEALBOT_ABOUT_FAQ_ANSWERS = {     [1]   = "Vous surveillez les buffs manquants \
     HEALBOT_OPTION_NUMHEALERS               = "Nombre de soigneurs"
     HEALBOT_OPTIONS_CONTENT_SKINS_FRAMES    = "    " .. "Cadres"
     HEALBOT_OPTIONS_FRAMESOPTTEXT           = "Options  de cadres"
-    HEALBOT_OPTIONS_SETTOOLTIP_POSITION     = "Position tooltip"
     HEALBOT_OPTIONS_FRAME_TITLE             = "Titre du cadre"
     HEALBOT_OPTIONS_FRAME_TITLE_SHOW        = "Afficher le titre"
     HEALBOT_OPTIONS_GROW_DIRECTION          = "Sens d\'accroissement"
     HEALBOT_OPTIONS_BARSORIENTATION         = "Orientation de la barre"
-    HEALBOT_OPTIONS_GROW_HORIZONTAL         = "Horizontal"
-    HEALBOT_OPTIONS_GROW_VERTICAL           = "Vertical"
     HEALBOT_OPTIONS_FONT_OFFSET             = "Offset police"
     HEALBOT_OPTIONS_SET_FRAME_HEALGROUPS    = "Assigner les groupes de soins"
     HEALBOT_OPTION_EXCLUDEMOUNT_ON          = "Exclure le monture maintenant"
@@ -930,7 +840,6 @@ HEALBOT_ABOUT_FAQ_ANSWERS = {     [1]   = "Vous surveillez les buffs manquants \
     HEALBOT_OPTIONS_INCOMBATALERTLEVEL      = "Niveau d\'alerte - En combat";
     HEALBOT_OPTIONS_OUTCOMBATALERTLEVEL     = "Niveau d\'alerte - Hors combat";
     HEALBOT_OPTION_NUMENEMYS                = "Nombre d\'ennemis"
-    HEALBOT_WORD_AUTO                       = "Auto"
 	HEALBOT_OPTIONS_ENABLEAUTOCOMBAT        = "Activer autoCombat HealBot"
     HEALBOT_WORDS_CUSTOMNAME                = "Nom personnalis\195\169"
     HEALBOT_WORDS_REMOVETEMPCUSTOMNAME      = "Enlever le nom perso. temporaire"

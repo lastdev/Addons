@@ -1,10 +1,10 @@
 ## Interface: 90207
 ## Title: TL;DR Missions
-## Version: 9.2-125
+## Version: 9.2-131
 ## Notes: Automates sending out Covenant Missions
 ## Author: Teelo
 ## Dependencies: Blizzard_GarrisonUI
-## SavedVariablesPerCharacter: TLDRMissionsOptions, TLDRMissionsLogging
+## SavedVariablesPerCharacter: TLDRMissionsLogging
 ## SavedVariables: TLDRMissionsProfiles, TLDRMissionsCache
 ## X-Curse-Project-ID: 602487
 

@@ -2,7 +2,7 @@
 -- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 42efb275e5740b2e735b5ecdaac0f954d23f0583 $")
+XPerl_SetModuleRevision("$Revision: 52b9ddfe6f4ee24803f90c3bad34a3009df5a616 $")
 
 ZPerl_MainTanks = {}
 local MainTankCount, blizzMTanks, ctraTanks = 0, 0, 0
@@ -17,6 +17,7 @@ local pendingTankListChange -- If in combat when tank list changes, then we'll d
 local conf
 
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
+local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 local IsBCClassic = WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC
 
 local GetNumGroupMembers = GetNumGroupMembers
@@ -432,7 +433,7 @@ function XPerl_MTRosterChanged()
 		-- Scan roster, adding any new ones, and removing found ones from old tanks list
 		for i = 1, GetNumGroupMembers() do
 			local unitid = "raid"..i
-			if ((not IsClassic and UnitGroupRolesAssigned(unitid) == "TANK") or GetPartyAssignment("maintank", unitid)) then
+			if ((not IsVanillaClassic and UnitGroupRolesAssigned(unitid) == "TANK") or GetPartyAssignment("maintank", unitid)) then
 				local name = GetUnitName(unitid, true)
 				local name2, realm = UnitName(unitid)
 				if (name ~= name2) then

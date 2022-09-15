@@ -1,11 +1,17 @@
 # Astral Keys
 
-## [3.58](https://github.com/astralguild/AstralKeys/tree/3.58) (2022-08-16)
-[Full Changelog](https://github.com/astralguild/AstralKeys/compare/3.57...3.58) [Previous Releases](https://github.com/astralguild/AstralKeys/releases)
+## [3.59](https://github.com/astralguild/AstralKeys/tree/3.59) (2022-08-21)
+[Full Changelog](https://github.com/astralguild/AstralKeys/compare/3.58...3.59) [Previous Releases](https://github.com/astralguild/AstralKeys/releases)
 
 - Update AstralKeys.toc  
-- Update AstralKeys.toc  
-- Merge pull request #49 from SirDester/patch-2  
-    Fixed localization-hyperlink for italian client  
-- Fixed localization-hyperlink for italian client  
-    I localized missing strings in itIT.lua but mainly I changed the L['KEYSTONE'] string so the hyperlink is correctly recognized and rendered on italian clients.  
+- Merge pull request #51 from SirDester/patch-3  
+    Update Communications.lua  
+- Merge pull request #52 from SirDester/patch-5  
+    Update itIT.lua  
+- Merge pull request #50 from mcc1/patch-2  
+    Update zhTW.lua  
+- Update itIT.lua  
+- Update Communications.lua  
+    Fixed TimeWalkingLink error, break bags cycle when key is found.  
+- Update zhTW.lua  
+    add s4 dugeon name add missing options  

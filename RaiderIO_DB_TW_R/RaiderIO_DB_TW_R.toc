@@ -1,4 +1,4 @@
-## Interface: 90205
+## Interface: 90207
 ## Title: Raider.IO |cffFFFFFFRaiding|r (Taiwan)
 ## Author: Vladinator (Vladinator-TarrenMill), Aspyr (Aspyrox-Skullcrusher) and Isak (Isak-Sargeras)
 ## Dependencies: RaiderIO

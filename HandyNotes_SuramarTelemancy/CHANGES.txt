@@ -1,0 +1,24 @@
+tag bdf315800b37ab1f27d3665cc68f5ad8963ccd8e v10
+Author:	David Lynch <kemayo@gmail.com>
+Date:	Sun Sep 4 13:59:19 2022 -0500
+
+Tagging v10
+
+commit e8a3acf8d73f7f80df5ec5b897af397b479f35b8
+Author: David Lynch <kemayo@gmail.com>
+Date:   Sun Sep 4 13:57:16 2022 -0500
+
+    TOC for 9.2.7
+
+commit 3a56aba0f704721fcaf2645fa49cbe5b94291a69
+Author: David Lynch <kemayo@gmail.com>
+Date:   Wed Nov 3 21:01:22 2021 -0500
+
+    TOC for 9.1.5
+
+commit bcc6afb224c777a598803667f11c0e3ef75bd7b1
+Author: David Lynch <kemayo@gmail.com>
+Date:   Tue Jun 29 15:26:44 2021 -0500
+
+    Update for 9.1
+

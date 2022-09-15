@@ -26,6 +26,7 @@ local backBarsSize={[1]={["HEIGHT"]=0, ["WIDTH"]=0, ["RMARGIN"]=0, ["CMARGIN"]=0
 local HealBot_MyHealTargets={}
 local HealBot_MyPrivateTanks={}
 local HealBot_MyPrivateHealers={}
+local HealBot_MyPrivateDamagers={}
 local HealBot_MainTanks={};
 local HealBot_MainHealers={};
 local HealBot_UnitGroups={}
@@ -96,6 +97,7 @@ HealBot_Panel_luVars["cpMacro"]="hb-CrashProt"
 HealBot_Panel_luVars["cpCrash"]=false
 HealBot_Panel_luVars["resetAuxText"]=false
 
+local tClass={["WARR"]=true,["PALA"]=true,["DRUI"]=true,["DEAT"]=true}
 function HealBot_Panel_retLuVars(vName)
     return HealBot_Panel_luVars[vName]
 end
@@ -177,6 +179,8 @@ function HealBot_Panel_addDataStore(unit, nRaidID, isPlayer)
                 hbPanel_dataRoles[unit]="TANK"
             elseif HealBot_MyPrivateHealers[dsGUID] or HealBot_Globals.HealBot_PermPrivateHealers[dsGUID] then
                 hbPanel_dataRoles[unit]="HEALER"
+            elseif HealBot_MyPrivateDamagers[dsGUID] or  HealBot_Globals.HealBot_PermPrivateDamagers[dsGUID] then
+                hbPanel_dataRoles[unit]="DAMAGER"
             end
             if nRaidID>0 then
                 local hbFRole=false
@@ -184,10 +188,18 @@ function HealBot_Panel_addDataStore(unit, nRaidID, isPlayer)
                 HealBot_UnitGroups[unit]=hbSubgroup
                 if isPlayer then
                     if hbPanel_dataRoles[unit]==HEALBOT_WORDS_UNKNOWN then
-                        if hbCombatRole and (hbCombatRole=="HEALER" or hbCombatRole=="TANK") then
-                            hbFRole = hbCombatRole
-                        elseif hbRRole and (string.lower(hbRRole)=="maintank" or (HealBot_Globals.IncMainAssist and string.lower(hbRRole)=="mainassist")) then
+                        if hbRRole and (string.lower(hbRRole)=="maintank" or (HealBot_Globals.IncMainAssist and string.lower(hbRRole)=="mainassist")) then
                             hbFRole="TANK"
+                        elseif hbCombatRole and (hbCombatRole=="HEALER" or hbCombatRole=="TANK") then
+                            if HEALBOT_GAME_VERSION>3 then
+                                hbFRole = hbCombatRole
+                            elseif HealBot_Globals.AllowPlayerRoles then
+                                if hbCombatRole=="HEALER" then
+                                    hbFRole = "HEALER"
+                                else
+                                    hbFRole=HealBot_Panel_CheckRole(unit)
+                                end
+                            end
                         end
                     end
                 end
@@ -318,6 +330,7 @@ function HealBot_Panel_SethbTopRole(Role)
     if HealBot_Globals.TopRole~=Role then
         HealBot_Globals.TopRole=Role
         HealBot_AddChat(HEALBOT_CHAT_ADDONID..HEALBOT_CHAT_NEWTOPROLE..Role)
+        HealBot_Timers_Set("INIT","RefreshPartyNextRecalcAll")
     end
 end
 
@@ -338,6 +351,12 @@ end
 
 function HealBot_Panel_ClearHealTargets()
     HealBot_MyHealTargets = {}
+end
+
+function HealBot_Panel_PrivateListUpdate()
+    HealBot_Timers_Set("INIT","RefreshPartyNextRecalcPlayers")
+    HealBot_Timers_Set("INIT","RefreshPartyNextRecalcPets")
+    HealBot_Timers_Set("AURA","CheckUnits")
 end
 
 function HealBot_Panel_ToggelHealTarget(unit, perm)
@@ -363,8 +382,7 @@ function HealBot_Panel_ToggelHealTarget(unit, perm)
             table.insert(HealBot_MyHealTargets,xGUID)
         end
     end
-    HealBot_Timers_Set("INIT","RefreshPartyNextRecalcPlayers")
-    HealBot_Timers_Set("INIT","RefreshPartyNextRecalcPets")
+    HealBot_Panel_PrivateListUpdate()
     --HealBot_Timers_Set("INIT","RefreshPartyNextRecalcAll")
 end
 
@@ -384,9 +402,7 @@ function HealBot_Panel_ToggelPrivateTanks(unit, perm)
             HealBot_MyPrivateTanks[xGUID]=true
         end
     end
-    --HealBot_Panel_buildDataStore(true, true)
-    HealBot_Timers_Set("INIT","RefreshPartyNextRecalcPlayers")
-    HealBot_Timers_Set("INIT","RefreshPartyNextRecalcPets")
+    HealBot_Panel_PrivateListUpdate()
     --HealBot_Timers_Set("INIT","RefreshPartyNextRecalcAll")
 end
 
@@ -406,9 +422,27 @@ function HealBot_Panel_ToggelPrivateHealers(unit, perm)
             HealBot_MyPrivateHealers[xGUID]=true
         end
     end
-    --HealBot_Panel_buildDataStore(true, true)
-    HealBot_Timers_Set("INIT","RefreshPartyNextRecalcPlayers")
-    HealBot_Timers_Set("INIT","RefreshPartyNextRecalcPets")
+    HealBot_Panel_PrivateListUpdate()
+    --HealBot_Timers_Set("INIT","RefreshPartyNextRecalcAll")
+end
+
+function HealBot_Panel_ToggelPrivateDamagers(unit, perm)
+    if unit=="target" then return end
+    local xGUID=UnitGUID(unit)
+    if perm then
+        if HealBot_Globals.HealBot_PermPrivateDamagers[xGUID] then
+            HealBot_Globals.HealBot_PermPrivateDamagers[xGUID]=nil
+        else
+            HealBot_Globals.HealBot_PermPrivateDamagers[xGUID]=UnitName(unit) or "unKnown"
+        end
+    else
+        if HealBot_MyPrivateDamagers[xGUID] then
+            HealBot_MyPrivateDamagers[xGUID]=nil
+        else
+            HealBot_MyPrivateDamagers[xGUID]=true
+        end
+    end
+    HealBot_Panel_PrivateListUpdate()
     --HealBot_Timers_Set("INIT","RefreshPartyNextRecalcAll")
 end
 
@@ -449,6 +483,15 @@ function HealBot_Panel_RetPrivateHealers(unit, perm)
         return HealBot_Globals.HealBot_PermPrivateHealers[xGUID]
     else
         return HealBot_MyPrivateHealers[xGUID]
+    end
+end
+
+function HealBot_Panel_RetPrivateDamagers(unit, perm)
+    local xGUID=UnitGUID(unit) or unit
+    if perm then
+        return HealBot_Globals.HealBot_PermPrivateDamagers[xGUID]
+    else
+        return HealBot_MyPrivateDamagers[xGUID]
     end
 end
 
@@ -496,11 +539,26 @@ function HealBot_Panel_classEN(unit)
     end
 end
 
+function HealBot_Panel_CheckRole(unit)
+    local _,classEN = UnitClass(unit)
+    if classEN and not tClass[strsub(classEN,1,4)] then
+        return "DAMAGER"
+    end
+    return "TANK"
+end
+
 function HealBot_Panel_UnitRole(unit)
     local role = hbPanel_dataRoles[unit]
     if role==HEALBOT_WORDS_UNKNOWN then 
-        if HEALBOT_GAME_VERSION>2 then 
+        if HEALBOT_GAME_VERSION>2 then
             role=UnitGroupRolesAssigned(unit) or "DAMAGER"
+            if HEALBOT_GAME_VERSION==3 and not HealBot_Globals.AllowPlayerRoles then
+                if GetPartyAssignment('MAINTANK', unit) then 
+                    role=HealBot_Panel_CheckRole(unit)
+                else
+                    role="DAMAGER"
+                end
+            end
         else
             role="DAMAGER" 
         end
@@ -802,6 +860,7 @@ function HealBot_Panel_ToggleTestBars()
         HealBot_Skins_isTestBars(false)
         HealBot_Aura_ClearAllBuffs()
         HealBot_Aura_ClearAllDebuffs()
+        HealBot_SetResetFlag("SOFT")
         HealBot_setTestCols={}
     else
         HealBot_Action_setLuVars("TestBarsOn", true)

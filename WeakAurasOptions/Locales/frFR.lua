@@ -552,7 +552,6 @@ Can use \ to escape -.]=]
 	--[[Translation missing --]]
 	L["Frame Width"] = "Frame Width"
 	L["Frequency"] = "Fréquence"
-	L["From Template"] = "D'après un modèle"
 	L["Full Circle"] = "Cercle Complet"
 	L["Get Help"] = "Obtenir de l'aide"
 	L["Global Conditions"] = "Conditions globales"
@@ -840,6 +839,8 @@ Seule une unique valeur peut être choisie]=]
 	--[[Translation missing --]]
 	L["Preferred Match"] = "Preferred Match"
 	--[[Translation missing --]]
+	L["Premade Auras"] = "Premade Auras"
+	--[[Translation missing --]]
 	L["Premade Snippets"] = "Premade Snippets"
 	L["Preset"] = "Préréglé"
 	L["Press Ctrl+C to copy"] = "Appuyer sur Ctrl+C pour copier"
@@ -904,6 +905,8 @@ Seule une unique valeur peut être choisie]=]
 	L["Same texture as Foreground"] = "Same texture as Foreground"
 	L["Scale"] = "Échelle"
 	L["Search"] = "Chercher"
+	--[[Translation missing --]]
+	L["Select Talent"] = "Select Talent"
 	L["Select the auras you always want to be listed first"] = "Choisissez les auras que vous voulez toujours voir apparaître en premier dans la liste"
 	--[[Translation missing --]]
 	L["Selected Frame"] = "Selected Frame"

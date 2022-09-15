@@ -61,6 +61,7 @@ function HealBot_Lang_Options_enALL()
                                  ["SPELLSSELECTMACRO"]=HEALBOT_WORD_MACROS,
                                  ["SPELLSSELECTITEMS"]=HEALBOT_OPTIONS_ITEMS,
                                  ["SPELLSSELECTCMDS"]=HEALBOT_WORD_COMMANDS,
+                                 ["SPELLSSELECTEMOTES"]=HEALBOT_EMOTES,
                                  ["SPELLSSELECTCANCEL"]=HEALBOT_WORD_CANCEL,
                                  ["SMARTCAST"]=HEALBOT_OPTIONS_ENABLESMARTCAST,
                                  ["SMARTCASTAVOIDPVP"]=HEALBOT_OPTIONS_PROTECTPVP,
@@ -471,6 +472,8 @@ function HealBot_Lang_Options_enALL()
                                  ["BUFFSWEAPONENCHANT2"]=HEALBOT_OPTIONS_BUFFSTEXTWE,
                                  ["BUFFSMEMBERS"]=HEALBOT_OPTIONS_BUFFSTEXT2,
                                  ["BUFFSCHECKWELLFED"]=HEALBOT_OPTIONS_CHECKWELLFED,
+                                 ["BUFFSCHECKMANADRINK"]=HEALBOT_OPTIONS_CHECKLOWMANA,
+                                 ["BUFFSCHECKMANATHRESHOLD"]=HEALBOT_OPTIONS_CHECKLOWMANA,
                                  ["BUFFSCHECKEXTRA"]=HEALBOT_OPTIONS_BUFFEXTRA,
                                  ["BUFFSWELLFEDITEM"]=HEALBOT_OPTIONS_ITEMNAME,
                                  ["BUFFSEXTRABUFF"]=HEALBOT_OPTIONS_BUFFNAME,
@@ -520,10 +523,8 @@ function HealBot_Lang_Options_enALL()
                                  ["TOOLTIPPOSITIONLINK"]=HEALBOT_OPTIONS_SETTOOLTIP_POSITION,
                                  ["TOOLTIPCUSTOMANCHOR"]=HEALBOT_OPTIONS_SETTOOLTIP_CUSTOMANCHOR,
                                  ["TOOLTIPALPHA"]=HEALBOT_OPTIONS_TTALPHA,
-                        -- Mouse Wheel tab
-                                 ["BUFFSMOUSEWHEELUSE"]=HEALBOT_OPTIONS_MOUSEWHEEL,
-                                 ["BUFFSMOUSEWHEELCMD"]="Mouse Wheel Commands",
-                                 ["BUFFSMOUSEWHEELEMOTE"]="Mouse Wheel Emotes",
+                        -- Binds tab
+                                 ["BINDTOCLICK"]=HEALBOT_OPTIONS_BINDTOCLICK,
                         -- Test tab
                                  ["TESTUSE"]=HEALBOT_OPTIONS_TESTBARS,
                                  ["TESTPROFILE"]=HEALBOT_WORDS_PROFILE,
@@ -599,21 +600,22 @@ function HealBot_Lang_Options_enALL()
                         -- Spells tab
                                ["SETSPELLSFOR"]="Set spells that can be used on Friendly and Hostile characters:\n--\n".._G["GREEN_FONT_COLOR_CODE"].."* Health Bars - Spells that can be cast on the health bars.\n".._G["GREEN_FONT_COLOR_CODE"].."* Emergency Bars - Spells that can be cast on the emergency bars.\n".._G["GREEN_FONT_COLOR_CODE"].."* Icons - Commands that can be used on icons.",
                                ["SPELLSUSEICONCMDS"]="Turn On/Off the use of Icon Commands set on this tab.\n--\n".._G["GREEN_FONT_COLOR_CODE"].."On: Click on buff/debuff icons to run commands with icon tooltips.\n".._G["GREEN_FONT_COLOR_CODE"].."Off: Click through icons to cast spells on the health/emergancy bar with normal tooltips.",
-                               ["SPELLSBUTTON"]="Modifier key held when casting.",
+                               ["SPELLSBUTTON"]="Modifier key held when casting.\n--\n".."|cff77c8ff".."TIP: Set spells with the same range on the same modifier keys combination.",
                                ["SPELLSBUTTONCAST"]="Timing of the spell cast\n".._G["GREEN_FONT_COLOR_CODE"].."Cast when the button is Pressed or Released.",
                                ["SPELLSAVOIDBLUE"]="Cast an invalid spell and ended up with\na blue cursor? this option is your friend.",
                                ["SPELLSAUTOTARGET"]="Set the healers target to the character\nreceiving the current spell cast.",
                                ["SPELLSAUTOTRINKET"]="Attempt to use trinkets automatically when casting spells.\n".._G["ORANGE_FONT_COLOR_CODE"].."-------------\n".._G["ORANGE_FONT_COLOR_CODE"].."WARNING\n".._G["ORANGE_FONT_COLOR_CODE"].."-------------\n".._G["ORANGE_FONT_COLOR_CODE"].."Some trinkets break the cast using this method\n".._G["ORANGE_FONT_COLOR_CODE"].."ensure the trinket works with the spell selected.",
-                               ["SPELLSBUTTONCLICK"]="Spell to cast on the Left Button.\n--\n".._G["GREEN_FONT_COLOR_CODE"].."NOTE: The spell can be typed directly into the textbox.\n--\n".."|cff77c8ff".."TIP: When typed correctly the text will change col"..HEALBOT_enWORD_COLOUR_SUFFIX.."\n".."|cff77c8ff".."and show up in Healbot's tooltip.\n--\n".."|cffffffff".."White: Spells\n".."|cff51ff7f".."Green: Macros\n".."|cff517fff".."Blue: Items\n".."|cffffff00".."Yellow: Commands",
-                               ["SPELLSBUTTONSHIFTCLICK"]="Spell to cast on the Middle Button.\n--\n".._G["GREEN_FONT_COLOR_CODE"].."NOTE: The spell can be typed directly into the textbox.\n--\n".."|cff77c8ff".."TIP: When typed correctly the text will change col"..HEALBOT_enWORD_COLOUR_SUFFIX.."\n".."|cff77c8ff".."and show up in Healbot's tooltip.\n--\n".."|cffffffff".."White: Spells\n".."|cff51ff7f".."Green: Macros\n".."|cff517fff".."Blue: Items\n".."|cffffff00".."Yellow: Commands",
-                               ["SPELLSBUTTONCTRLCLICK"]="Spell to cast on the Right Button.\n--\n".._G["GREEN_FONT_COLOR_CODE"].."NOTE: The spell can be typed directly into the textbox.\n--\n".."|cff77c8ff".."TIP: When typed correctly the text will change col"..HEALBOT_enWORD_COLOUR_SUFFIX.."\n".."|cff77c8ff".."and show up in Healbot's tooltip.\n--\n".."|cffffffff".."White: Spells\n".."|cff51ff7f".."Green: Macros\n".."|cff517fff".."Blue: Items\n".."|cffffff00".."Yellow: Commands",
-                               ["SPELLSBUTTONALTCLICK"]="Spell to cast on Button 4.\n--\n".._G["GREEN_FONT_COLOR_CODE"].."NOTE: The spell can be typed directly into the textbox.\n--\n".."|cff77c8ff".."TIP: When typed correctly the text will change col"..HEALBOT_enWORD_COLOUR_SUFFIX.."\n".."|cff77c8ff".."and show up in Healbot's tooltip.\n--\n".."|cffffffff".."White: Spells\n".."|cff51ff7f".."Green: Macros\n".."|cff517fff".."Blue: Items\n".."|cffffff00".."Yellow: Commands",
-                               ["SPELLSBUTTONSHIFTCTRLCLICK"]="Spell to cast on Button 5.\n--\n".._G["GREEN_FONT_COLOR_CODE"].."NOTE: The spell can be typed directly into the textbox.\n--\n".."|cff77c8ff".."TIP: When typed correctly the text will change col"..HEALBOT_enWORD_COLOUR_SUFFIX.."\n".."|cff77c8ff".."and show up in Healbot's tooltip.\n--\n".."|cffffffff".."White: Spells\n".."|cff51ff7f".."Green: Macros\n".."|cff517fff".."Blue: Items\n".."|cffffff00".."Yellow: Commands",
+                               ["SPELLSBUTTONCLICK"]="Spell to cast on the Left Button.\n--\n".._G["GREEN_FONT_COLOR_CODE"].."NOTE: The spell can be typed directly into the textbox.\n--\n".."|cff77c8ff".."TIP: When typed correctly the text will change col"..HEALBOT_enWORD_COLOUR_SUFFIX.."\n".."|cff77c8ff".."and show up in Healbot's tooltip.\n--\n".."|cffffffff".."White: Spells\n".."|cff51ff7f".."Green: Macros\n".."|cff517fff".."Blue: Items\n".."|cffffff00".."Yellow: Commands\n".."|cffff8800".."Orange: Emotes\n--\n".._G["GREEN_FONT_COLOR_CODE"].."NOTE: For each modifier key combination, range checking is done on the Left click.\n".._G["GREEN_FONT_COLOR_CODE"].."NOTE: On the Left click, range checking is only done when a spell is set.\n".."|cff77c8ff".."TIP: Do not set a macro, item or command on the Left click.\n".."|cff77c8ff".."TIP: Set spells with the same range on the same modifier keys combination.",
+                               ["SPELLSBUTTONSHIFTCLICK"]="Spell to cast on the Middle Button.\n--\n".._G["GREEN_FONT_COLOR_CODE"].."NOTE: The spell can be typed directly into the textbox.\n--\n".."|cff77c8ff".."TIP: When typed correctly the text will change col"..HEALBOT_enWORD_COLOUR_SUFFIX.."\n".."|cff77c8ff".."and show up in Healbot's tooltip.\n--\n".."|cffffffff".."White: Spells\n".."|cff51ff7f".."Green: Macros\n".."|cff517fff".."Blue: Items\n".."|cffffff00".."Yellow: Commands\n".."|cffff8800".."Orange: Emotes\n--\n".."|cff77c8ff".."TIP: Set spells with the same range on the same modifier keys combination.",
+                               ["SPELLSBUTTONCTRLCLICK"]="Spell to cast on the Right Button.\n--\n".._G["GREEN_FONT_COLOR_CODE"].."NOTE: The spell can be typed directly into the textbox.\n--\n".."|cff77c8ff".."TIP: When typed correctly the text will change col"..HEALBOT_enWORD_COLOUR_SUFFIX.."\n".."|cff77c8ff".."and show up in Healbot's tooltip.\n--\n".."|cffffffff".."White: Spells\n".."|cff51ff7f".."Green: Macros\n".."|cff517fff".."Blue: Items\n".."|cffffff00".."Yellow: Commands\n".."|cffff8800".."Orange: Emotes\n--\n".."|cff77c8ff".."TIP: Set spells with the same range on the same modifier keys combination.",
+                               ["SPELLSBUTTONALTCLICK"]="Spell to cast on Button 4.\n--\n".._G["GREEN_FONT_COLOR_CODE"].."NOTE: The spell can be typed directly into the textbox.\n--\n".."|cff77c8ff".."TIP: When typed correctly the text will change col"..HEALBOT_enWORD_COLOUR_SUFFIX.."\n".."|cff77c8ff".."and show up in Healbot's tooltip.\n--\n".."|cffffffff".."White: Spells\n".."|cff51ff7f".."Green: Macros\n".."|cff517fff".."Blue: Items\n".."|cffffff00".."Yellow: Commands\n".."|cffff8800".."Orange: Emotes\n--\n".."|cff77c8ff".."TIP: Set spells with the same range on the same modifier keys combination.",
+                               ["SPELLSBUTTONSHIFTCTRLCLICK"]="Spell to cast on Button 5.\n--\n".._G["GREEN_FONT_COLOR_CODE"].."NOTE: The spell can be typed directly into the textbox.\n--\n".."|cff77c8ff".."TIP: When typed correctly the text will change col"..HEALBOT_enWORD_COLOUR_SUFFIX.."\n".."|cff77c8ff".."and show up in Healbot's tooltip.\n--\n".."|cffffffff".."White: Spells\n".."|cff51ff7f".."Green: Macros\n".."|cff517fff".."Blue: Items\n".."|cffffff00".."Yellow: Commands\n".."|cffff8800".."Orange: Emotes\n--\n".."|cff77c8ff".."TIP: Set spells with the same range on the same modifier keys combination.",
                                ["SPELLSHELPSELECT"]="Displays dropdowns for selecting various\nspells, macros and other commands.",
                                ["SPELLSSELECTSPELL"]="Select a spell for the spells tab.",
                                ["SPELLSSELECTMACRO"]="Select a macro for the spells tab.",
                                ["SPELLSSELECTITEMS"]="Select an item for the spells tab.",
                                ["SPELLSSELECTCMDS"]="Select a command for the spells tab.",
+                               ["SPELLSSELECTEMOTES"]="Select an emote for the spells tab.",
                                ["SPELLSSELECTCANCEL"]="Do not select anything and\nreturn to the spells tab.",
                                ["SMARTCAST"]="Select and cast an appropriate spell for the situation.\nThis only works out of combat.",
                                ["SMARTCASTAVOIDPVP"]="Do not use SmartCast\non PVP flagged players.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."Note: This will also block all spells when out of combat.",
@@ -1023,13 +1025,15 @@ function HealBot_Lang_Options_enALL()
                                ["BUFFSWEAPONENCHANT1"]="Select the spell or item to enchant your weapon\n--\n.".._G["YELLOW_FONT_COLOR_CODE"].."Use this slot for Main Hand and 2H Weapons.",
                                ["BUFFSWEAPONENCHANT2"]="Select the spell or item to enchant your weapon\n--\n.".._G["YELLOW_FONT_COLOR_CODE"].."Use this slot for Off Hand Weapons.",
                                ["BUFFSMEMBERS"]="The members to monitor.",
-                               ["BUFFSCHECKWELLFED"]="Check for missing well fed",
-                               ["BUFFSWELLFEDITEM"]="Type the food item to buff.\n--\n".."|cff517fff".."The text will turn blue for\n".."|cff517fff".."valid usable items in your bags.\n--\n.".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: This is currently only on En clients\n".._G["YELLOW_FONT_COLOR_CODE"].."Non En clients can use the below Extras to track Well Fed.",
+                               ["BUFFSCHECKWELLFED"]="Check for missing well fed.",
+                               ["BUFFSCHECKMANADRINK"]="Check for low mana.",
+                               ["BUFFSCHECKMANATHRESHOLD"]="Warn when mana is below the threshold.",
+                               ["BUFFSWELLFEDITEM"]="Type the food item to buff.\n--\n".."|cff517fff".."The text will turn blue for\n".."|cff517fff".."valid usable items in your bags.\n--\n.".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: This is currently only on En clients.",
                                ["BUFFSEXTRABUFF"]="Type the buff name to track.\n".._G["ORANGE_FONT_COLOR_CODE"].."-------------\n".._G["ORANGE_FONT_COLOR_CODE"].."WARNING\n".._G["ORANGE_FONT_COLOR_CODE"].."-------------\n".._G["ORANGE_FONT_COLOR_CODE"].."There is no validation on the Buff Name, ensure it is correct.",
                                ["BUFFSEXTRAITEM"]="Type the item name to buff.\n--\n".."|cff517fff".."The text will turn blue for\n".."|cff517fff".."valid usable items in your bags.",
                                ["BUFFSWELLFEDITEMSELECTOR"]="Toggle between the item text and the item selector.",
                                ["BUFFSCHECKEXTRA"]="Check for missing extra buffs",
-                               ["BUFFSWELLFEDITEMS"]="Items found in your bad may show in this list.\nSelect an item to update or None to do nothing.",
+                               ["BUFFSWELLFEDITEMS"]="Items found in your bag may show in this list.\nSelect an item to update or None to do nothing.",
                                ["BUFFSBARS"]="Click to change.\n--\nBars are changed to the defined col"..HEALBOT_enWORD_COLOUR_SUFFIX.." when the player is\nmissing a buff and settings on the Buff Warning tab apply.",
                                ["BUFFSTIMER"]="Alert when a buff is required n mins/secs before it expires.\n".._G["GREEN_FONT_COLOR_CODE"].."- Show buffs - These are buffs with a duration of a few minutes or less.\n".._G["GREEN_FONT_COLOR_CODE"].."- Long buffs - These are buffs with a duration usually in the 10's of minutes or more.",
                         -- Buffs Custom tab
@@ -1072,10 +1076,8 @@ function HealBot_Lang_Options_enALL()
                                ["TOOLTIPPOSITIONLINK"]="Links to the Skins Frame General tab,\nallowing for different positions per frame.",
                                ["TOOLTIPCUSTOMANCHOR"]="Show the Set custom anchor frame.\nA single custom anchor can be set per Skin.",
                                ["TOOLTIPALPHA"]="Set the transparency of the tooltip.",
-                        -- Mouse Wheel tab
-                               ["BUFFSMOUSEWHEELUSE"]="Turn On/Off usage of the mouse wheel.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: When this is on mouse over macros will not work on HealBot bars",
-                               ["BUFFSMOUSEWHEELCMD"]="Set a command to run with an optional key press\nand mouse wheel up or down combination.",
-                               ["BUFFSMOUSEWHEELEMOTE"]="Select the emote to be used on mouse wheel scroll.",
+                        -- Binds tab
+                               ["BINDTOCLICK"]="Select a key to bind to a button click.",
                         -- Test tab
                                ["TESTUSE"]="Click to Turn On/Turn Off the test bars.\n--\n".."|cff77c8ff".."Tip: Turn on the test bars to easily move frames.",
                                ["TESTPROFILE"]="Profile limits the total number of bars for Groups or Raids.",
@@ -1117,11 +1119,9 @@ function HealBot_Lang_Options_enALL()
                                ["INOUTEXPORTPRESETCOLS"]="Export populates the large text box with data of all preset col"..HEALBOT_enWORD_COLOUR_SUFFIX.."s.\nThis can then be copied and saved outside the game.",
                                ["INOUTIMPORTPRESETCOLS"]="Import loads in the data from the large text box.",
                         -- Plugin Tab
-                               ["SELECTPLUGIN"]="Select plugin.\n--\nInformation on plugins can be found at "..HEALBOT_ABOUT_URL.."\n--\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Threat: ".._G["FONT_COLOR_CODE_CLOSE"].."See threat for all players on multiple mobs.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot TimeToDie: ".._G["FONT_COLOR_CODE_CLOSE"].."Player damage tracker showing how soon players will die.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot TimeToLive: ".._G["FONT_COLOR_CODE_CLOSE"].."Resurrection monitor tracking incoming and pending resurrections.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot ExtraButtons: ".._G["FONT_COLOR_CODE_CLOSE"].."Set spells for use with an MMO mouse on buttons 6 - 15\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot CombatProt: ".._G["FONT_COLOR_CODE_CLOSE"].."Reserve bars for missing players, protects against missing bars in combat.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Performance: ".._G["FONT_COLOR_CODE_CLOSE"].."Tweak internal timers and effects.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot MyCooldowns: ".._G["FONT_COLOR_CODE_CLOSE"].."Track cooldowns for your spells and abilities.",  
+                               ["SELECTPLUGIN"]="Select plugin.\n--\nInformation on plugins can be found at "..HEALBOT_ABOUT_URL.."\n--\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Threat: ".._G["FONT_COLOR_CODE_CLOSE"].."See threat for all players on multiple mobs.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot TimeToDie: ".._G["FONT_COLOR_CODE_CLOSE"].."Player damage tracker showing how soon players will die.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot TimeToLive: ".._G["FONT_COLOR_CODE_CLOSE"].."Resurrection monitor tracking incoming and pending resurrections.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot ExtraButtons: ".._G["FONT_COLOR_CODE_CLOSE"].."Set spells for use with an MMO mouse on buttons 6 - 20\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot CombatProt: ".._G["FONT_COLOR_CODE_CLOSE"].."Reserve bars for missing players, protects against missing bars in combat.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Performance: ".._G["FONT_COLOR_CODE_CLOSE"].."Tweak internal timers and effects.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot MyCooldowns: ".._G["FONT_COLOR_CODE_CLOSE"].."Track cooldowns for your spells and abilities.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Tweaks: ".._G["FONT_COLOR_CODE_CLOSE"].."Tweak internal settings.",  
                               }
 
 end
 
-if HealBot_Version_Target() then
-    HealBot_Lang_Options_enALL()
-end
+HealBot_Lang_Options_enALL()

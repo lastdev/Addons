@@ -2591,11 +2591,11 @@ function BuffTrigger.Add(data)
 
       local groupTrigger = trigger.unit == "group" or trigger.unit == "raid" or trigger.unit == "party"
       local effectiveIgnoreSelf = (groupTrigger or trigger.unit == "nameplate") and trigger.ignoreSelf
-      local effectiveGroupRole = groupTrigger and trigger.useGroupRole and trigger.group_role
-      local effectiveRaidRole = groupTrigger and trigger.useRaidRole and trigger.raid_role
+      local effectiveGroupRole = WeakAuras.IsWrathOrRetail() and (groupTrigger and trigger.useGroupRole and trigger.group_role) or nil
+      local effectiveRaidRole = WeakAuras.IsClassicOrBCCOrWrath() and (groupTrigger and trigger.useRaidRole and trigger.raid_role) or nil
       local effectiveClass = groupTrigger and trigger.useClass and trigger.class
-      local effectiveSpecId = groupTrigger and trigger.useActualSpec and trigger.actualSpec
-      local effectiveArenaSpec = trigger.unit == "arena" and trigger.useArenaSpec and trigger.arena_spec
+      local effectiveSpecId = WeakAuras.IsRetail() and (groupTrigger and trigger.useActualSpec and trigger.actualSpec) or nil
+      local effectiveArenaSpec = WeakAuras.IsRetail() and (trigger.unit == "arena" and trigger.useArenaSpec and trigger.arena_spec) or nil
       local effectiveHostility = trigger.unit == "nameplate" and trigger.useHostility and trigger.hostility
       local effectiveIgnoreDead = groupTrigger and trigger.ignoreDead
       local effectiveIgnoreDisconnected = groupTrigger and trigger.ignoreDisconnected
@@ -3569,7 +3569,7 @@ end
 
 function BuffTrigger.GetTriggerDescription(data, triggernum, namestable)
   local trigger = data.triggers[triggernum].trigger
-  if trigger.auranames then
+  if trigger.useName and trigger.auranames then
     for index, name in pairs(trigger.auranames) do
       local left = " "
       if(index == 1) then
@@ -3593,7 +3593,7 @@ function BuffTrigger.GetTriggerDescription(data, triggernum, namestable)
     end
   end
 
-  if trigger.auraspellids then
+  if trigger.useExactSpellId and  trigger.auraspellids then
     for index, spellId in pairs(trigger.auraspellids) do
       local left = " "
       if index == 1 then

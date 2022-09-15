@@ -154,8 +154,7 @@ function MDH:MDHShowToolTip()
 			self.tiptacstyled = true
 		end
 	else
-		tooltip:SetFont(self.fonts[theme.linefont].font)
-		tooltip:SetHeaderFont(self.fonts[theme.headerfont].font)
+		
 	end
 	tooltip:Clear()
 

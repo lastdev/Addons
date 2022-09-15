@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2480, "DBM-VaultoftheIncarnates", nil, 1200)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220816052410")
+mod:SetRevision("20220820203945")
 mod:SetCreatureID(184972)
 mod:SetEncounterID(2587)
 mod:SetUsedIcons(1, 2, 3)
@@ -67,7 +67,7 @@ function mod:OnCombatStart(delay)
 	timerPrimalFlowCD:Start(1-delay)
 	timerPrimalForcesCD:Start(1-delay)
 	timerBlazingBrandCD:Start(1-delay)
-	if self.Options.NPAuraOnBurdenofDestiny or self.Options.NPAuraOnFixate or self.Options.NPAuraOnRampage then
+	if self.Options.NPAuraOnMoltenBarrier or self.Options.NPAuraOnFixate or self.Options.NPAuraOnRampage then
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
 	end
 end
@@ -79,7 +79,7 @@ function mod:OnCombatEnd()
 --	if self.Options.InfoFrame then
 --		DBM.InfoFrame:Hide()
 --	end
-	if self.Options.NPAuraOnBurdenofDestiny or self.Options.NPAuraOnFixate or self.Options.NPAuraOnRampage then
+	if self.Options.NPAuraOnMoltenBarrier or self.Options.NPAuraOnFixate or self.Options.NPAuraOnRampage then
 		DBM.Nameplate:Hide(true, nil, nil, nil, true, true)
 	end
 end

@@ -6,10 +6,10 @@
 -- Cast the most important buffs on you, tanks or party/raid members/pets.
 -------------------------------------------------------------------------------
 
-SMARTBUFF_DATE          = "040622";
+SMARTBUFF_DATE          = "010922";
 
-SMARTBUFF_VERSION       = "r6."..SMARTBUFF_DATE;
-SMARTBUFF_VERSIONNR     = 90205;
+SMARTBUFF_VERSION       = "r8."..SMARTBUFF_DATE;
+SMARTBUFF_VERSIONNR     = 90207;
 SMARTBUFF_TITLE         = "SmartBuff";
 SMARTBUFF_SUBTITLE      = "Supports you in casting buffs";
 SMARTBUFF_DESC          = "Cast the most important buffs on you, your tanks, party/raid members/pets";
@@ -22,7 +22,7 @@ local SmartbuffPrefix = "Smartbuff";
 local SmartbuffSession = true;
 local SmartbuffVerCheck = false;					-- for my use when checking guild users/testers versions  :)
 local buildInfo = select(4, GetBuildInfo())
-local SmartbuffRevision = 6;
+local SmartbuffRevision = 8;
 local SmartbuffVerNotifyList = {}
 
 local SG = SMARTBUFF_GLOBALS;
@@ -819,7 +819,9 @@ function SMARTBUFF_SetUnits()
           end
         end
         -- attempt to announce the addon version (if they have it)
-		if online then SendSmartbuffVersion(name, sRUnit) end
+        -- seems to be an issue with cross-realm, need to look at this later
+        -- but in the meantime I am disabling it...  CM
+--		if online then SendSmartbuffVersion(name, sRUnit) end
       end
     end --end for
     
@@ -2956,6 +2958,8 @@ function SMARTBUFF_Options_Init(self)
   B = SMARTBUFF_Buffs;
   if (not SMARTBUFF_Options) then SMARTBUFF_Options = { }; end
   O = SMARTBUFF_Options;
+  
+  SMARTBUFF_BROKER_SetIcon();
   
   if (O.Toggle == nil) then O.Toggle = true; end  
   if (O.ToggleAuto == nil) then O.ToggleAuto = true; end

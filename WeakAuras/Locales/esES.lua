@@ -102,6 +102,8 @@ L["Alert Type"] = "Tipo de alerta"
 L["Algalon the Observer"] = "Algalon the Observer"
 L["Alive"] = "Vivo"
 L["All"] = "Todo"
+--[[Translation missing --]]
+L["All States table contains a non table at key: '%s'."] = "All States table contains a non table at key: '%s'."
 L["All Triggers"] = "Todos los Disparadores"
 L["Alliance"] = "Alianza"
 L["Allow partial matches"] = "Permitir coincidencias parciales"
@@ -113,6 +115,8 @@ L["Always include realm"] = "Incluir siempre el reino"
 --[[Translation missing --]]
 L["Always True"] = "Always True"
 L["Amount"] = "Cantidad"
+--[[Translation missing --]]
+L["Anchoring"] = "Anchoring"
 --[[Translation missing --]]
 L["And Talent"] = "And Talent"
 --[[Translation missing --]]
@@ -190,6 +194,8 @@ L["Aura Removed"] = "Aura Eliminada"
 L["Aura Removed Dose"] = "Aura Eliminada Dosis"
 L["Aura Stack"] = "Acumulación de Auras"
 L["Aura Type"] = "Tipo de Aura"
+--[[Translation missing --]]
+L["Aura Version: %s"] = "Aura Version: %s"
 --[[Translation missing --]]
 L["Aura(s) Found"] = "Aura(s) Found"
 --[[Translation missing --]]
@@ -391,7 +397,11 @@ L["Clone per Match"] = "Clone per Match"
 L["Coilfang: Serpentshrine Cavern"] = "Coilfang: Serpentshrine Cavern"
 --[[Translation missing --]]
 L["Color"] = "Color"
+--[[Translation missing --]]
+L["Color Animation"] = "Color Animation"
 L["Combat Log"] = "Registro de Combate"
+--[[Translation missing --]]
+L["Condition Custom Text"] = "Condition Custom Text"
 L["Conditions"] = "Condiciones"
 L["Contains"] = "Contiene"
 --[[Translation missing --]]
@@ -442,12 +452,24 @@ L[ [=[Current Zone
 L["Curse"] = "Maldición"
 L["Custom"] = "Personalizado"
 --[[Translation missing --]]
+L["Custom Action"] = "Custom Action"
+--[[Translation missing --]]
+L["Custom Anchor"] = "Custom Anchor"
+--[[Translation missing --]]
 L["Custom Check"] = "Custom Check"
 --[[Translation missing --]]
 L["Custom Color"] = "Custom Color"
 --[[Translation missing --]]
+L["Custom Condition Code"] = "Custom Condition Code"
+--[[Translation missing --]]
 L["Custom Configuration"] = "Custom Configuration"
 L["Custom Function"] = "Función Personalizada"
+--[[Translation missing --]]
+L["Custom Sort"] = "Custom Sort"
+--[[Translation missing --]]
+L["Custom Text Function"] = "Custom Text Function"
+--[[Translation missing --]]
+L["Custom Trigger Combination"] = "Custom Trigger Combination"
 --[[Translation missing --]]
 L["Daakara"] = "Daakara"
 L["Damage"] = "Daño"
@@ -500,6 +522,10 @@ L["Destination Object Type"] = "Destination Object Type"
 L["Destination Reaction"] = "Destination Reaction"
 L["Destination Unit"] = "Unidad de Destino"
 --[[Translation missing --]]
+L["Destination unit's raid mark index"] = "Destination unit's raid mark index"
+--[[Translation missing --]]
+L["Destination unit's raid mark texture"] = "Destination unit's raid mark texture"
+--[[Translation missing --]]
 L["Disable Spell Known Check"] = "Disable Spell Known Check"
 --[[Translation missing --]]
 L["Disabled Spell Known Check"] = "Disabled Spell Known Check"
@@ -541,6 +567,10 @@ L["Dungeon (Timewalking)"] = "Dungeon (Timewalking)"
 L["Dungeons"] = "Dungeons"
 L["Durability Damage"] = "Daño a la Durabilidad"
 L["Durability Damage All"] = "Daño a la Durabilidad Total"
+--[[Translation missing --]]
+L["Duration Function"] = "Duration Function"
+--[[Translation missing --]]
+L["Duration Function (fallback state)"] = "Duration Function (fallback state)"
 --[[Translation missing --]]
 L["Dynamic Information"] = "Dynamic Information"
 --[[Translation missing --]]
@@ -613,13 +643,7 @@ L["Error Frame"] = "Error Frame"
 --[[Translation missing --]]
 L["ERROR in '%s' unknown or incompatible sub element type '%s'"] = "ERROR in '%s' unknown or incompatible sub element type '%s'"
 --[[Translation missing --]]
-L["Error in aura '%s' in %s. trigger. All States table contains a non table at key: '%s'."] = "Error in aura '%s' in %s. trigger. All States table contains a non table at key: '%s'."
---[[Translation missing --]]
 L["Error not receiving display information from %s"] = "Error not receiving display information from %s"
---[[Translation missing --]]
-L[ [=['ERROR: Anchoring %s': 
-]=] ] = [=['ERROR: Anchoring %s': 
-]=]
 L["Evade"] = "Evadir"
 L["Event"] = "Evento"
 L["Event(s)"] = "Evento(s)"
@@ -641,6 +665,8 @@ L["Faction Champions"] = "Faction Champions"
 L["Faction Name"] = "Faction Name"
 --[[Translation missing --]]
 L["Faction Reputation"] = "Faction Reputation"
+--[[Translation missing --]]
+L["Fade Animation"] = "Fade Animation"
 L["Fade In"] = "Aparecer"
 L["Fade Out"] = "Desaparecer"
 L["Fail Alert"] = "Alerta de Fallo"
@@ -861,6 +887,10 @@ L["Icecrown Citadel"] = "Icecrown Citadel"
 --[[Translation missing --]]
 L["Icon"] = "Icon"
 --[[Translation missing --]]
+L["Icon Function"] = "Icon Function"
+--[[Translation missing --]]
+L["Icon Function (fallback state)"] = "Icon Function (fallback state)"
+--[[Translation missing --]]
 L["If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/weakauras!"] = "If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/weakauras!"
 --[[Translation missing --]]
 L["Ignis the Furnace Master"] = "Ignis the Furnace Master"
@@ -907,6 +937,8 @@ L["Increases by one per stage or intermission."] = "Increases by one per stage o
 L["Information"] = "Information"
 L["Inherited"] = "Heredado"
 L["Instakill"] = "Muerte Instantanea"
+--[[Translation missing --]]
+L["Install the addons BugSack and BugGrabber for detailed error logs."] = "Install the addons BugSack and BugGrabber for detailed error logs."
 --[[Translation missing --]]
 L["Instance"] = "Instance"
 --[[Translation missing --]]
@@ -1061,6 +1093,10 @@ L["Lost"] = "Lost"
 L["Low Damage"] = "Bajo Daño"
 L["Lower Than Tank"] = "Menor Que el Tanque"
 --[[Translation missing --]]
+L["Lua error"] = "Lua error"
+--[[Translation missing --]]
+L["Lua error in aura '%s': %s"] = "Lua error in aura '%s': %s"
+--[[Translation missing --]]
 L["Lucifron"] = "Lucifron"
 --[[Translation missing --]]
 L["Maexxna"] = "Maexxna"
@@ -1180,6 +1216,10 @@ L["Mythic+ Affix"] = "Mythic+ Affix"
 L["Nalorakk"] = "Nalorakk"
 L["Name"] = "Nombre"
 --[[Translation missing --]]
+L["Name Function"] = "Name Function"
+--[[Translation missing --]]
+L["Name Function (fallback state)"] = "Name Function (fallback state)"
+--[[Translation missing --]]
 L["Name of Caster's Target"] = "Name of Caster's Target"
 --[[Translation missing --]]
 L["Name/Realm of Caster's Target"] = "Name/Realm of Caster's Target"
@@ -1284,6 +1324,8 @@ L["Options could not be loaded, the addon is %s"] = "Options could not be loaded
 L["Options will finish loading after combat ends."] = "Options will finish loading after combat ends."
 --[[Translation missing --]]
 L["Options will open after the login process has completed."] = "Options will open after the login process has completed."
+--[[Translation missing --]]
+L["Or Talent"] = "Or Talent"
 L["Orbit"] = "Orbitar"
 --[[Translation missing --]]
 L["Orientation"] = "Orientation"
@@ -1507,6 +1549,8 @@ L["Right, then Down"] = "Right, then Down"
 L["Right, then Up"] = "Right, then Up"
 --[[Translation missing --]]
 L["Role"] = "Role"
+--[[Translation missing --]]
+L["Rotate Animation"] = "Rotate Animation"
 L["Rotate Left"] = "Rotar a la Izquierda"
 L["Rotate Right"] = "Rotar a la Derecha"
 --[[Translation missing --]]
@@ -1643,6 +1687,8 @@ L["Since Stack Lost"] = "Since Stack Lost"
 L["Sindragosa"] = "Sindragosa"
 --[[Translation missing --]]
 L["Size & Position"] = "Size & Position"
+--[[Translation missing --]]
+L["Slide Animation"] = "Slide Animation"
 L["Slide from Bottom"] = "Arrastrar Desde Abajo"
 L["Slide from Left"] = "Arrastrar Desde la Izquierda"
 L["Slide from Right"] = "Arrastrar Desde la Derecha"
@@ -1680,10 +1726,16 @@ L["Source Unit"] = "Unidad Origen"
 --[[Translation missing --]]
 L["Source Unit Name/Realm"] = "Source Unit Name/Realm"
 --[[Translation missing --]]
+L["Source unit's raid mark index"] = "Source unit's raid mark index"
+--[[Translation missing --]]
+L["Source unit's raid mark texture"] = "Source unit's raid mark texture"
+--[[Translation missing --]]
 L["Space"] = "Space"
 L["Spacing"] = "Espaciado"
 --[[Translation missing --]]
 L["Spark"] = "Spark"
+--[[Translation missing --]]
+L["Spec Role"] = "Spec Role"
 --[[Translation missing --]]
 L["Specialization"] = "Specialization"
 --[[Translation missing --]]
@@ -1724,6 +1776,10 @@ L["Spirit"] = "Spirit"
 --[[Translation missing --]]
 L["Stack Count"] = "Stack Count"
 L["Stacks"] = "Acumulaciones"
+--[[Translation missing --]]
+L["Stacks Function"] = "Stacks Function"
+--[[Translation missing --]]
+L["Stacks Function (fallback state)"] = "Stacks Function (fallback state)"
 --[[Translation missing --]]
 L["Stage"] = "Stage"
 --[[Translation missing --]]
@@ -1806,6 +1862,10 @@ L["Text"] = "Text"
 --[[Translation missing --]]
 L["Text-to-speech"] = "Text-to-speech"
 --[[Translation missing --]]
+L["Texture Function"] = "Texture Function"
+--[[Translation missing --]]
+L["Texture Function (fallback state)"] = "Texture Function (fallback state)"
+--[[Translation missing --]]
 L["Thaddius"] = "Thaddius"
 --[[Translation missing --]]
 L["The aura has overwritten the global '%s', this might affect other auras."] = "The aura has overwritten the global '%s', this might affect other auras."
@@ -1844,6 +1904,8 @@ L["Thickness"] = "Thickness"
 L["Third"] = "Third"
 --[[Translation missing --]]
 L["Third Value of Tooltip Text"] = "Third Value of Tooltip Text"
+--[[Translation missing --]]
+L["This aura has caused a Lua error."] = "This aura has caused a Lua error."
 --[[Translation missing --]]
 L["This aura has legacy aura trigger(s), which are no longer supported."] = "This aura has legacy aura trigger(s), which are no longer supported."
 --[[Translation missing --]]
@@ -1930,6 +1992,8 @@ L["Trigger"] = "Trigger"
 --[[Translation missing --]]
 L["Trigger %i"] = "Trigger %i"
 --[[Translation missing --]]
+L["Trigger %s"] = "Trigger %s"
+--[[Translation missing --]]
 L["Trigger 1"] = "Trigger 1"
 --[[Translation missing --]]
 L["Trigger State Updater (Advanced)"] = "Trigger State Updater (Advanced)"
@@ -1973,12 +2037,16 @@ L["Unit Name/Realm"] = "Unit Name/Realm"
 --[[Translation missing --]]
 L["Units Affected"] = "Units Affected"
 --[[Translation missing --]]
+L["unknown location"] = "unknown location"
+--[[Translation missing --]]
 L["Unlimited"] = "Unlimited"
 L["Up"] = "Arriba"
 --[[Translation missing --]]
 L["Up, then Left"] = "Up, then Left"
 --[[Translation missing --]]
 L["Up, then Right"] = "Up, then Right"
+--[[Translation missing --]]
+L["Update Position"] = "Update Position"
 --[[Translation missing --]]
 L["Usage:"] = "Usage:"
 --[[Translation missing --]]
@@ -2051,6 +2119,8 @@ L["WeakAuras has encountered an error during the login process. Please report th
 L["WeakAuras Profiling"] = "WeakAuras Profiling"
 --[[Translation missing --]]
 L["WeakAuras Profiling Report"] = "WeakAuras Profiling Report"
+--[[Translation missing --]]
+L["WeakAuras Version: %s"] = "WeakAuras Version: %s"
 L["Weapon"] = "Arma"
 --[[Translation missing --]]
 L["Weapon Enchant"] = "Weapon Enchant"
@@ -2099,6 +2169,8 @@ L["Zone ID(s)"] = "Zone ID(s)"
 L["Zone Name"] = "Zone Name"
 --[[Translation missing --]]
 L["Zoom"] = "Zoom"
+--[[Translation missing --]]
+L["Zoom Animation"] = "Zoom Animation"
 --[[Translation missing --]]
 L["Zul'Aman"] = "Zul'Aman"
 --[[Translation missing --]]

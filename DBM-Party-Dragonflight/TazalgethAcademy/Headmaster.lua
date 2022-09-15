@@ -1,7 +1,7 @@
-local mod	= DBM:NewMod(2513, "DBM-Party-Dragonflight", 5, 1201)
+local mod	= DBM:NewMod(2514, "DBM-Party-Dragonflight", 5, 1201)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220803233609")
+mod:SetRevision("20220823030631")
 mod:SetCreatureID(189670)
 mod:SetEncounterID(2565)
 --mod:SetUsedIcons(1, 2, 3)
@@ -31,7 +31,7 @@ mod:RegisterEventsInCombat(
 --local specWarnDominationBolt					= mod:NewSpecialWarningInterrupt(363607, "HasInterrupt", nil, nil, 1, 2)
 --local specWarnGTFO							= mod:NewSpecialWarningGTFO(340324, nil, nil, nil, 1, 8)
 
---mod:AddTimerLine(BOSS)
+--mod:AddTimerLine(DBM:EJ_GetSectionInfo(24883))
 --local timerStaggeringBarrageCD					= mod:NewAITimer(35, 361018, nil, nil, nil, 3)
 --local timerDecaySprayCD							= mod:NewAITimer(35, 376811, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
@@ -45,14 +45,14 @@ function mod:OnCombatStart(delay)
 
 end
 
-function mod:OnCombatEnd()
+--function mod:OnCombatEnd()
 --	if self.Options.RangeFrame then
 --		DBM.RangeCheck:Hide()
 --	end
 --	if self.Options.InfoFrame then
 --		DBM.InfoFrame:Hide()
 --	end
-end
+--end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId

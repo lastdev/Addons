@@ -97,6 +97,12 @@ L["CONFIG_PROFILE_TOGGLE"] = "Solo aplica la configuración a este personaje"
 L["CONFIG_QUANTITIES_CATEGORY"] = "Venta: Cantidades"
 L["CONFIG_QUANTITIES_TEXT"] = "Elige la cantidad predeterminada utilizada para las diferentes categorías de objetos."
 L["CONFIG_RESET_STACK_SIZE_MEMORY"] = "Restablecer memoria de tamaño de pila"
+--[[Translation missing --]]
+L["CONFIG_SAVE_LAST_DURATION_AS_DEFAULT"] = "Save the last used auction duration as the default"
+--[[Translation missing --]]
+L["CONFIG_SAVE_LAST_DURATION_AS_DEFAULT_TOOLTIP_HEADER"] = "Overwrite default duration with last used"
+--[[Translation missing --]]
+L["CONFIG_SAVE_LAST_DURATION_AS_DEFAULT_TOOLTIP_TEXT"] = "Overwrite default duration with last used"
 L["CONFIG_SCAN_SETTINGS"] = "Configuración de escaneo"
 L["CONFIG_SCANNING"] = "Configuración de escaneo completo"
 L["CONFIG_SELLING_ALL_ITEMS_CATEGORY"] = "Venta: Todos los objetos"
@@ -142,6 +148,12 @@ L["CONFIG_SELLING_SHOW_BID_PRICE"] = "Mostrar la opción de precio de puja al pu
 L["CONFIG_SELLING_SHOW_BID_PRICE_TOOLTIP_HEADER"] = "Opciones de puja"
 L["CONFIG_SELLING_SHOW_BID_PRICE_TOOLTIP_TEXT"] = "Controla si la opción de precio de puja aparece al publicar un objeto."
 L["CONFIG_SELLING_SKIP_SHORTCUT"] = "Un atajo para omitir la publicación del objeto seleccionado actualmente es"
+--[[Translation missing --]]
+L["CONFIG_SELLING_SPLIT_PANELS"] = "Show split panel view between current prices and historical prices"
+--[[Translation missing --]]
+L["CONFIG_SELLING_SPLIT_PANELS_TOOLTIP_HEADER"] = "Split Panels View"
+--[[Translation missing --]]
+L["CONFIG_SELLING_SPLIT_PANELS_TOOLTIP_TEXT"] = "Normally the historical prices are on a tab inside the Selling tab, instead this makes the current prices always visible, but the historical prices show as a panel below them."
 L["CONFIG_SELLING_TBC_ALL_ITEMS"] = "Opciones para establecer la configuración de publicación predeterminada para todos los objetos."
 L["CONFIG_SELLING_TEXT"] = "Opciones para cambiar el comportamiento de la pestaña Venta"
 --[[Translation missing --]]
@@ -172,6 +184,8 @@ L["CONFIRM"] = "Confirmar"
 L["CONFIRM_POST_BELOW_VENDOR"] = "You can make more gold selling this to a vendor. Are you sure you want to post at that price?"
 --[[Translation missing --]]
 L["CONFIRM_POST_LOW_PRICE"] = "The price of %s looks a bit low. Are you sure you want to post at that price?"
+--[[Translation missing --]]
+L["CONFIRM_POST_PRICE_DROP"] = "The unit price of %s is a large price drop. Are you sure you want to post at that price?"
 L["CONTRIBUTORS_HEADER"] = "Colaboradores"
 L["COPY_ITEM_ADDED"] = "Copiado %s a %s"
 L["COPY_NO_LIST_SELECTED"] = "No se puede copiar el objeto. No se ha seleccionado ninguna lista de la compra"
@@ -290,6 +304,8 @@ L["NONE"] = "Ninguno"
 L["NONE_LEFT"] = "Nadie"
 L["NUMBER_SEPARATOR"] = "."
 L["OPEN_ADDON_OPTIONS"] = "Abrir las opciones del addon"
+--[[Translation missing --]]
+L["OPEN_IN_SHOPPING_TAB"] = "Open in Shopping Tab"
 L["OWNED_COLUMN"] = "¿Propiedad?"
 L["PERCENTAGE"] = "Porcentaje"
 L["PERCENTAGE_SUFFIX"] = "% Socavado"
@@ -531,6 +547,8 @@ L["TRANSLATORS_RUSSIAN"] = "Ruso"
 L["TRANSLATORS_SIMPLIFIED_CHINESE"] = "Chino simplificado"
 L["TRANSLATORS_SPANISH"] = "Español"
 L["TRANSLATORS_TRADITIONAL_CHINESE"] = "Chino tradicional"
+--[[Translation missing --]]
+L["TRANSLATORS_TURKISH_INFO"] = "Turkish (available separately)"
 --[[Translation missing --]]
 L["UNDERCUT_BID"] = "Bid"
 L["UNDERCUT_NO"] = "No"

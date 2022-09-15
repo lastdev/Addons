@@ -98,6 +98,12 @@ L["CONFIG_PROFILE_TOGGLE"] = "이 캐릭터만 적용"
 L["CONFIG_QUANTITIES_CATEGORY"] = "판매: 수량"
 L["CONFIG_QUANTITIES_TEXT"] = "다른 아이템 범주에 사용되는 기본 수량을 선택합니다."
 L["CONFIG_RESET_STACK_SIZE_MEMORY"] = "묶음 갯수 기록 재설정"
+--[[Translation missing --]]
+L["CONFIG_SAVE_LAST_DURATION_AS_DEFAULT"] = "Save the last used auction duration as the default"
+--[[Translation missing --]]
+L["CONFIG_SAVE_LAST_DURATION_AS_DEFAULT_TOOLTIP_HEADER"] = "Overwrite default duration with last used"
+--[[Translation missing --]]
+L["CONFIG_SAVE_LAST_DURATION_AS_DEFAULT_TOOLTIP_TEXT"] = "Overwrite default duration with last used"
 L["CONFIG_SCAN_SETTINGS"] = "검색설정"
 L["CONFIG_SCANNING"] = "검색설정"
 L["CONFIG_SELLING_ALL_ITEMS_CATEGORY"] = "판매: 모든 아이템"
@@ -154,6 +160,12 @@ L["CONFIG_SELLING_SHOW_BID_PRICE_TOOLTIP_TEXT"] = "Controls whether the bid pric
 --[[Translation missing --]]
 L["CONFIG_SELLING_SKIP_SHORTCUT"] = "A shortcut to skip posting the currently selected item is"
 --[[Translation missing --]]
+L["CONFIG_SELLING_SPLIT_PANELS"] = "Show split panel view between current prices and historical prices"
+--[[Translation missing --]]
+L["CONFIG_SELLING_SPLIT_PANELS_TOOLTIP_HEADER"] = "Split Panels View"
+--[[Translation missing --]]
+L["CONFIG_SELLING_SPLIT_PANELS_TOOLTIP_TEXT"] = "Normally the historical prices are on a tab inside the Selling tab, instead this makes the current prices always visible, but the historical prices show as a panel below them."
+--[[Translation missing --]]
 L["CONFIG_SELLING_TBC_ALL_ITEMS"] = "Options to set the default posting settings for all items."
 L["CONFIG_SELLING_TEXT"] = "판매하기 탭의 설정을 변경합니다."
 --[[Translation missing --]]
@@ -183,6 +195,8 @@ L["CONFIRM"] = "확인"
 L["CONFIRM_POST_BELOW_VENDOR"] = "You can make more gold selling this to a vendor. Are you sure you want to post at that price?"
 --[[Translation missing --]]
 L["CONFIRM_POST_LOW_PRICE"] = "The price of %s looks a bit low. Are you sure you want to post at that price?"
+--[[Translation missing --]]
+L["CONFIRM_POST_PRICE_DROP"] = "The unit price of %s is a large price drop. Are you sure you want to post at that price?"
 L["CONTRIBUTORS_HEADER"] = "기증자"
 L["COPY_ITEM_ADDED"] = "%s 을 %s 로 복사"
 L["COPY_NO_LIST_SELECTED"] = "아이템을 복사할 수 없습니다. 선택한 구매 목록이 없습니다"
@@ -296,6 +310,8 @@ L["NONE"] = "없음"
 L["NONE_LEFT"] = "아무것도 없음"
 L["NUMBER_SEPARATOR"] = ","
 L["OPEN_ADDON_OPTIONS"] = "애드온 설정 열기"
+--[[Translation missing --]]
+L["OPEN_IN_SHOPPING_TAB"] = "Open in Shopping Tab"
 L["OWNED_COLUMN"] = "소유 여부"
 L["PERCENTAGE"] = "퍼센티지"
 L["PERCENTAGE_SUFFIX"] = "% 최저가"
@@ -579,6 +595,8 @@ L["TRANSLATORS_RUSSIAN"] = "러시아어"
 L["TRANSLATORS_SIMPLIFIED_CHINESE"] = "중국어 간체"
 L["TRANSLATORS_SPANISH"] = "스페인어"
 L["TRANSLATORS_TRADITIONAL_CHINESE"] = "중국어 번체"
+--[[Translation missing --]]
+L["TRANSLATORS_TURKISH_INFO"] = "Turkish (available separately)"
 --[[Translation missing --]]
 L["UNDERCUT_BID"] = "Bid"
 L["UNDERCUT_NO"] = "X"

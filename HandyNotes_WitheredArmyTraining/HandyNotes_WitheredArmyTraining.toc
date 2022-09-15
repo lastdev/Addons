@@ -1,4 +1,4 @@
-## Interface: 90001
+## Interface: 90207
 ## Title: HandyNotes: Withered Army Training
 ## Notes: Where are all the chests in the Withered Army Training scenario?
 ## Author: Kemayo

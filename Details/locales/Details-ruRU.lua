@@ -169,8 +169,7 @@ L["STRING_CUSTOM_TARGET_DESC"] = [=[Эта цель источник.
 
 Кнопка справа показывает список нипов из сражений в рейде.]=]
 L["STRING_CUSTOM_TEMPORARILY"] = "(|cFFFFC000временно|r)"
---[[Translation missing --]]
---[[ L["STRING_CUSTOM_TEXTURE_GUIDE"] = ""--]] 
+L["STRING_CUSTOM_TEXTURE_GUIDE"] = "Чтобы загрузить файл текстуры в клиент World of Warcraft, вам нужен файл в формате .TGA, а также его ширина и высота должны быть кратны 8. Поместите текстуру в папку /место установленного клиента WoW/retail/Interface/"
 L["STRING_DAMAGE"] = "Урон"
 L["STRING_DAMAGE_DPS_IN"] = "Урон, полученный от "
 L["STRING_DAMAGE_FROM"] = "Получил урон от"
@@ -416,18 +415,14 @@ L["STRING_OPTIONS_3D_UANCHOR"] = "Верхняя 3D модель:"
 L["STRING_OPTIONS_3D_UENABLED_DESC"] = "Включено или отключено, использование 3D модели рамки над полосами."
 L["STRING_OPTIONS_3D_USELECT_DESC"] = "Выберите модель, которая будет использоваться на верхней панели полос."
 L["STRING_OPTIONS_ADVANCED"] = "Дополнительно"
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN_DESC"] = ""--]] 
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = "Выравненные текстовых столбцов"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN"] = "Автоматическое выравнивание"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN_DESC"] = "Выравнивание выполняется автоматически в зависимости от длины каждого текста."
 --[[Translation missing --]]
 --[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_DESC"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET_DESC"] = ""--]] 
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET_DESC"] = "Смещение от правой границы"
 --[[Translation missing --]]
 --[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_WARNING"] = ""--]] 
 L["STRING_OPTIONS_ALPHAMOD_ANCHOR"] = "Авто-скрытие:"
@@ -708,8 +703,7 @@ L["STRING_OPTIONS_ED_DESC"] = [=[|cFFFFFF00Вручную|r: пользоват�
 L["STRING_OPTIONS_ED1"] = "Вручную"
 L["STRING_OPTIONS_ED2"] = "Уточнять"
 L["STRING_OPTIONS_ED3"] = "Авто"
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_EDIT_CUSTOM_TEXT"] = ""--]] 
+L["STRING_OPTIONS_EDIT_CUSTOM_TEXT"] = "Редактировать пользовательский текст"
 L["STRING_OPTIONS_EDITIMAGE"] = "Редактировать изображение"
 L["STRING_OPTIONS_EDITINSTANCE"] = "Редактирование окна:"
 L["STRING_OPTIONS_ERASECHARTDATA"] = "Стереть диаграммы"
@@ -748,8 +742,7 @@ L["STRING_OPTIONS_ILVL_TRACKER_DESC"] = [=[Когда включено, и вы�
 L["STRING_OPTIONS_ILVL_TRACKER_TEXT"] = "Включить"
 L["STRING_OPTIONS_IMPORT_PROFILE"] = "Импорт профиля"
 L["STRING_OPTIONS_IMPORT_PROFILE_NAME"] = "Введите имя для нового профиля"
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_IMPORT_PROFILE_PASTE"] = ""--]] 
+L["STRING_OPTIONS_IMPORT_PROFILE_PASTE"] = "Details! Импортировать профиль (вставить строку)"
 L["STRING_OPTIONS_INSTANCE_BACKDROP"] = "Фоновая текстура"
 L["STRING_OPTIONS_INSTANCE_BACKDROP_DESC"] = [=[Выберите фоновую текстуру, используемую этим окном.
 
@@ -1220,8 +1213,7 @@ L["STRING_OPTIONS_TIMEMEASURE"] = "Мера времени"
 L["STRING_OPTIONS_TIMEMEASURE_DESC"] = [=[|cFFFFFF00Активный|r: таймер каждого участника рейда ставится на удержание, если их активность прекращается, и снова подсчитывается при возобновлении, общий способ измерения УВС и ИВС.
 
 |cFFFFFF00Эффективный|r: используется в рейтинге, этот метод использует прошедшее боевое время для измерения УВС и ИВС - всех участников рейда.]=]
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_TITLEBAR_MENUBUTTONS_HEADER"] = ""--]] 
+L["STRING_OPTIONS_TITLEBAR_MENUBUTTONS_HEADER"] = "Настройки кнопок и меню"
 L["STRING_OPTIONS_TOOLBAR_SETTINGS"] = "Настройки кнопки заголовка полос"
 L["STRING_OPTIONS_TOOLBAR_SETTINGS_DESC"] = "Эти параметры меняют главное меню в верхней части окна."
 L["STRING_OPTIONS_TOOLBARSIDE"] = "Полоса заголовка сверху"
@@ -1346,16 +1338,14 @@ L["STRING_OPTIONS_WINDOW_IGNOREMASSTOGGLE"] = "Игнорировать масс
 L["STRING_OPTIONS_WINDOW_IGNOREMASSTOGGLE_DESC"] = "При включении этого окна не влияет на скрытие, отображении или переключении всех окон."
 --[[Translation missing --]]
 --[[ L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR_DESC"] = ""--]] 
+L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR_DESC"] = "Установите цвет фона области, когда отображаются строки."
 L["STRING_OPTIONS_WINDOW_SCALE"] = "Масштаб"
 L["STRING_OPTIONS_WINDOW_SCALE_DESC"] = [=[Отрегулируйте масштаб окна.
 
 |cFFFFFF00Совет|r: правый щелчок, чтобы ввести значение.
 
 |cFFFFFF00Текущий|r: %s]=]
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_WINDOW_SKIN_COLOR"] = ""--]] 
+L["STRING_OPTIONS_WINDOW_SKIN_COLOR"] = "Цвет оболочки"
 --[[Translation missing --]]
 --[[ L["STRING_OPTIONS_WINDOW_SKIN_COLOR_DESC"] = ""--]] 
 L["STRING_OPTIONS_WINDOW_TITLE"] = "Общие настройки окна"

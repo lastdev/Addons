@@ -89,6 +89,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["y"] = -263.45446927374;
         ["g"] = 2;
         ["sublevel"] = 1;
+        ["disguised"] = true;
       };
       [4] = {
         ["x"] = 658.49915762309;
@@ -115,6 +116,18 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["g"] = 8;
         ["sublevel"] = 1;
       };
+      [8] = {
+        ["x"] = 651.30434548228;
+        ["y"] = -249.7936835447;
+        ["g"] = 5;
+        ["sublevel"] = 1;
+      };
+      [9] = {
+        ["x"] = 634.16590860288;
+        ["y"] = -268.27103925741;
+        ["g"] = 4;
+        ["sublevel"] = 1;
+      };
     };
   };
   [2] = {
@@ -126,6 +139,9 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["displayId"] = 101505;
     ["creatureType"] = "Humanoid";
     ["level"] = 61;
+    ["characteristics"] = {
+      ["Taunt"] = true;
+    };
     ["spells"] = {
       [352796] = {
       };
@@ -216,7 +232,9 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["characteristics"] = {
       ["Taunt"] = true;
       ["Incapacitate"] = true;
+      ["Silence"] = true;
       ["Root"] = true;
+      ["Fear"] = true;
       ["Disorient"] = true;
       ["Stun"] = true;
       ["Slow"] = true;
@@ -239,31 +257,19 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["sublevel"] = 1;
       };
       [2] = {
-        ["x"] = 650.81789169338;
-        ["y"] = -251.65995660277;
-        ["g"] = 5;
-        ["sublevel"] = 1;
-      };
-      [3] = {
         ["x"] = 645.76793200298;
         ["y"] = -253.24857233171;
         ["g"] = 5;
         ["sublevel"] = 1;
         ["inspiring"] = true;
       };
-      [4] = {
-        ["x"] = 635.58349672715;
-        ["y"] = -268.5472335312;
-        ["g"] = 4;
-        ["sublevel"] = 1;
-      };
-      [5] = {
+      [3] = {
         ["x"] = 612.82502893816;
         ["y"] = -250.29177889249;
         ["g"] = 6;
         ["sublevel"] = 1;
       };
-      [6] = {
+      [4] = {
         ["x"] = 600.73443144677;
         ["y"] = -266.18690526278;
         ["g"] = 7;
@@ -509,8 +515,10 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["level"] = 60;
     ["characteristics"] = {
       ["Taunt"] = true;
+      ["Root"] = true;
       ["Disorient"] = true;
       ["Stun"] = true;
+      ["Slow"] = true;
     };
     ["spells"] = {
       [357827] = {
@@ -1048,6 +1056,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["y"] = -214.56012860493;
         ["g"] = 12;
         ["sublevel"] = 1;
+        ["disguised"] = true;
       };
       [6] = {
         ["x"] = 475.1225357883;
@@ -1299,6 +1308,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true;
       ["Incapacitate"] = true;
       ["Silence"] = true;
+      ["Fear"] = true;
       ["Disorient"] = true;
       ["Imprison"] = true;
       ["Stun"] = true;
@@ -1381,6 +1391,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true;
       ["Incapacitate"] = true;
       ["Silence"] = true;
+      ["Root"] = true;
       ["Disorient"] = true;
       ["Stun"] = true;
       ["Slow"] = true;
@@ -1561,6 +1572,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true;
       ["Incapacitate"] = true;
       ["Silence"] = true;
+      ["Root"] = true;
       ["Fear"] = true;
       ["Disorient"] = true;
       ["Stun"] = true;
@@ -2241,6 +2253,22 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["scale"] = 0.7;
         ["shrouded"] = true;
       };
+      [16] = {
+        ["x"] = 664.99849565238;
+        ["y"] = -263.45446927374;
+        ["g"] = 2;
+        ["sublevel"] = 1;
+        ["scale"] = 0.8;
+        ["shrouded"] = true;
+      };
+      [17] = {
+        ["x"] = 462.69098074878;
+        ["y"] = -214.56012860493;
+        ["g"] = 12;
+        ["sublevel"] = 1;
+        ["scale"] = 0.8;
+        ["shrouded"] = true;
+      };
     };
   };
   [37] = {
@@ -2277,72 +2305,6 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["sublevel"] = 1;
         ["scale"] = 0.6;
         ["shrouded"] = true;
-      };
-    };
-  };
-  [38] = {
-    ["name"] = "Shady Dealer";
-    ["id"] = 180315;
-    ["count"] = 0;
-    ["health"] = 999999;
-    ["scale"] = 1;
-    ["displayId"] = 93594;
-    ["creatureType"] = "Humanoid";
-    ["level"] = 60;
-    ["characteristics"] = {
-      ["Taunt"] = true;
-    };
-    ["spells"] = {
-    };
-    ["clones"] = {
-      [1] = {
-        ["x"] = 426.10033900562;
-        ["y"] = -324.79442694978;
-        ["g"] = 28;
-        ["sublevel"] = 1;
-        ["disguised"] = true;
-      };
-      [2] = {
-        ["x"] = 376.99295745706;
-        ["y"] = -358.16337155465;
-        ["sublevel"] = 1;
-        ["disguised"] = true;
-      };
-      [3] = {
-        ["x"] = 363.33146150204;
-        ["y"] = -172.88177293298;
-        ["sublevel"] = 1;
-        ["disguised"] = true;
-      };
-      [4] = {
-        ["x"] = 334.85501178455;
-        ["y"] = -150.4005367927;
-        ["sublevel"] = 1;
-        ["disguised"] = true;
-      };
-      [5] = {
-        ["x"] = 478.0580361773;
-        ["y"] = -304.56370562997;
-        ["sublevel"] = 1;
-        ["disguised"] = true;
-      };
-      [6] = {
-        ["x"] = 446.75995518067;
-        ["y"] = -315.23678576772;
-        ["sublevel"] = 1;
-        ["disguised"] = true;
-      };
-      [7] = {
-        ["x"] = 232.48843058711;
-        ["y"] = -178.94424691233;
-        ["sublevel"] = 1;
-        ["disguised"] = true;
-      };
-      [8] = {
-        ["x"] = 422.04037868945;
-        ["y"] = -131.60883050281;
-        ["sublevel"] = 1;
-        ["disguised"] = true;
       };
     };
   };

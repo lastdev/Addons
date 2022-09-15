@@ -1,7 +1,6 @@
 # BadBoy
 
-## [v9.2.3](https://github.com/funkydude/BadBoy/tree/v9.2.3) (2022-06-01)
-[Full Changelog](https://github.com/funkydude/BadBoy/compare/v9.2.2...v9.2.3) [Previous Releases](https://github.com/funkydude/BadBoy/releases)
+## [v9.2.5](https://github.com/funkydude/BadBoy/tree/v9.2.5) (2022-09-11)
+[Full Changelog](https://github.com/funkydude/BadBoy/compare/v9.2.4...v9.2.5) [Previous Releases](https://github.com/funkydude/BadBoy/releases)
 
-- bump toc  
-- Workflow: move to checkout@v3  
+- SetFromScale renamed to SetScaleFrom in Dragonflight  

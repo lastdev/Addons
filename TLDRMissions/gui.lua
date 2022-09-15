@@ -25,10 +25,24 @@ gui:SetMovable(true)
 gui:SetClampedToScreen(true)
 gui:RegisterForDrag("LeftButton")
 gui:SetScript("OnDragStart", function(self)
+    self:SetUserPlaced(true)
     self:StartMoving()
   end)
 gui:SetScript("OnDragStop", function(self)
     self:StopMovingOrSizing()
+    local tldrRight = gui:GetRight()
+    local tldrTop = gui:GetTop()
+    local covLeft = CovenantMissionFrame:GetLeft()
+    local covTop = CovenantMissionFrame:GetTop()
+    
+    -- accomodate other addons that can make the mission frame movable - allow clamping the GUI back to the left side of the mission frame
+    if CovenantMissionFrame and CovenantMissionFrame:IsMovable() then
+        if (((covLeft - 20) < tldrRight) and ((covLeft + 20) > tldrRight)) and (((covTop - 25) < tldrTop) and ((covTop + 5) > tldrTop)) then
+            self:SetUserPlaced(false)
+            self:ClearAllPoints()
+            self:SetPoint("RIGHT", CovenantMissionFrame, "LEFT")
+        end
+    end
   end)
 
 gui.CloseButton = CreateFrame("Button", "TLDRMissionsFrameCloseButton", gui, "UIPanelCloseButton")

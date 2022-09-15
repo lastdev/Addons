@@ -1,10 +1,22 @@
-tag ac314744089c122a3c852fe6209b7b6ae646dc91 DetailsRetail.9.2.5.9824.146
+tag 4da0b460463e4b40fa12a222ffe4df409d61dc41 DetailsRetail.v9.2.7.10018.146
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Thu Jun 9 10:04:25 2022 -0300
+Date:	Wed Aug 31 19:15:29 2022 -0300
 
-commit 419999fb097ed9c700515e934483a5ad29eb4c3c
+commit 27ca0d6df73caa348f61ca1e3b95c7e33a050e31
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Thu Jun 9 09:59:35 2022 -0300
+Date:   Wed Aug 31 19:15:06 2022 -0300
 
-    Check if the left text has a valid text string before sending it to Truncate
+    Version Bump
+
+commit 57bc1895a68c20dec674bee86c0f882eb4d50076
+Author: Colton Schlosser <1498529+cltnschlosser@users.noreply.github.com>
+Date:   Wed Aug 31 17:10:58 2022 -0500
+
+    Fix IsWotLKWow typo
+
+commit 57bc1895a68c20dec674bee86c0f882eb4d50076
+Author: Colton Schlosser <1498529+cltnschlosser@users.noreply.github.com>
+Date:   Wed Aug 31 17:10:58 2022 -0500
+
+    Fix IsWotLKWow typo
 

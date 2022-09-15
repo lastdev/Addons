@@ -1,10 +1,10 @@
-## Interface: 90200
+## Interface: 90205
 ## Title: NugComboBar
 ## Notes: Combopoints counter
 ## Author: d87
 ## SavedVariablesPerCharacter: NugComboBarDB_Character
 ## SavedVariables: NugComboBarDB_Global
-## Version: 9.2.0
+## Version: 9.2.2
 
 ## X-WoWI-ID: 6308
 ## X-Curse-Project-ID: 2538

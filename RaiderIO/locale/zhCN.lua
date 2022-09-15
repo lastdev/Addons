@@ -175,48 +175,27 @@ L["RAID_BOSS_FCN_6"] = "伊涅瓦·暗脉女勋爵（宿命）"
 L["RAID_BOSS_FCN_7"] = "猩红议会（宿命）"
 L["RAID_BOSS_FCN_8"] = "泥拳（宿命）"
 L["RAID_BOSS_FCN_9"] = "顽石军团干将（宿命）"
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_10"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_11"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_9"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_10"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_9"] = ""--]] 
+L["RAID_BOSS_FSFO_1"] = "警戒卫士（宿命）"
+L["RAID_BOSS_FSFO_10"] = "莱葛隆（宿命）"
+L["RAID_BOSS_FSFO_11"] = "典狱长（宿命）"
+L["RAID_BOSS_FSFO_2"] = "司垢莱克斯，无穷噬灭者（宿命）"
+L["RAID_BOSS_FSFO_3"] = "圣物匠塞·墨克斯（宿命）"
+L["RAID_BOSS_FSFO_4"] = "道茜歌妮，堕落先知（宿命）"
+L["RAID_BOSS_FSFO_5"] = "死亡万神殿原型体（宿命）"
+L["RAID_BOSS_FSFO_6"] = "首席造物师利许威姆（宿命）"
+L["RAID_BOSS_FSFO_7"] = "回收者黑伦度斯（宿命）"
+L["RAID_BOSS_FSFO_8"] = "安度因·乌瑞恩（宿命）"
+L["RAID_BOSS_FSFO_9"] = "恐惧双王（宿命）"
+L["RAID_BOSS_FSOD_1"] = "塔拉格鲁（宿命）"
+L["RAID_BOSS_FSOD_10"] = "希尔瓦娜斯·风行者（宿命）"
+L["RAID_BOSS_FSOD_2"] = "典狱长之眼（宿命）"
+L["RAID_BOSS_FSOD_3"] = "九武神（宿命）"
+L["RAID_BOSS_FSOD_4"] = "耐奥祖的残迹（宿命）"
+L["RAID_BOSS_FSOD_5"] = "裂魂者多尔玛赞（宿命）"
+L["RAID_BOSS_FSOD_6"] = "痛楚工匠莱兹纳尔（宿命）"
+L["RAID_BOSS_FSOD_7"] = "初诞者的卫士（宿命）"
+L["RAID_BOSS_FSOD_8"] = "命运撰写师罗-卡洛（宿命）"
+L["RAID_BOSS_FSOD_9"] = "克尔苏加德（宿命）"
 L["RAID_BOSS_SFO_1"] = "警戒卫士"
 L["RAID_BOSS_SFO_10"] = "莱葛隆"
 L["RAID_BOSS_SFO_11"] = "典狱长"

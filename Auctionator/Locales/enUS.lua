@@ -59,12 +59,6 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["STACK_TOOLTIP_TOOLTIP_HEADER"] = "Stack Prices"
   L["STACK_TOOLTIP_TOOLTIP_TEXT"] = "When selected, the shift key must be held to see stack prices. When not selected, stack prices show by default."
 
-  L["CONFIG_LIFO_CATEGORY"] = "Selling: Items"
-  L["CONFIG_NOT_LIFO_CATEGORY"] = "Selling: Gear/Pets"
-  L["CONFIG_SELLING_LIFO_HEADER"] = "Selling: Items"
-  L["CONFIG_SELLING_NOT_LIFO_HEADER"] = "Selling: Gear/Pets"
-  L["CONFIG_SELLING_LIFO_TEXT"] = "Options to set undercutting percent or values and duration of most items. Without an undercut, these item categories group up with the last item added being the first to sell. Undercutting may not be necessary."
-  L["CONFIG_SELLING_NOT_LIFO_TEXT"] = "Options to set undercutting percent or values and duration of gear and caged pets. These item categories are listed individually and a buyer can choose which one they want. Undercutting may be useful."
   L["DEFAULT_AUCTION_DURATION"] = "Default Auction Duration"
   L["AUCTION_DURATION_12"] = "12 Hours"
   L["AUCTION_DURATION_24"] = "24 Hours"
@@ -121,6 +115,7 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["TRANSLATORS_ITALIAN"] = "Italian"
   L["TRANSLATORS_KOREAN"] = "Korean"
   L["TRANSLATORS_RUSSIAN"] = "Russian"
+  L["TRANSLATORS_TURKISH_INFO"] = "Turkish (available separately)"
 
   L["STACK_AUCTION_INFO"] = "%s for %s (at %s each)"
   L["BIDDING_AUCTION_INFO"] = "%s bidding at %s"
@@ -183,6 +178,8 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["SHOPPING_TAB_HEADER"] = "Auctionator - Shopping Lists"
   L["INFO_TAB_HEADER"] = "Auctionator - Info"
 
+  L["OPEN_IN_SHOPPING_TAB"] = "Open in Shopping Tab"
+
   L["SELLING_TAB"] = "Selling"
   L["SELLING_TAB_HEADER"] = "Auctionator - Selling"
 
@@ -201,6 +198,7 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["SELLERS_COLUMN"] = "Seller(s)"
   L["SELLERS_OVERFLOW_TEXT"] = "%s, and %s more"
   L["OWNED_COLUMN"] = "Owned?"
+  L["IS_TOP_COLUMN"] = "Top?"
   L["YOU_COLUMN"] = "You?"
 
   L["FULL_SCAN_BUTTON"] = "Full Scan"
@@ -435,6 +433,7 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["TOTAL_PRICE"] = "Total Price:"
   L["CONFIRM_POST_LOW_PRICE"] = "The price of %s looks a bit low. Are you sure you want to post at that price?"
   L["CONFIRM_POST_BELOW_VENDOR"] = "You can make more gold selling this to a vendor. Are you sure you want to post at that price?"
+  L["CONFIRM_POST_PRICE_DROP"] = "The unit price of %s is a large price drop. Are you sure you want to post at that price?"
 
   L["DEFAULT_TAB"] = "Default Tab"
   L["DEFAULT_TAB_TEXT"] = "shows as the default tab"
@@ -461,6 +460,9 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["CONFIG_SELLING_CONFIRM_LOW_PRICE"] = "Confirm posting items at an unusually low price"
   L["CONFIG_SELLING_CONFIRM_LOW_PRICE_TOOLTIP_HEADER"] = "Confirm Posting Low Price"
   L["CONFIG_SELLING_CONFIRM_LOW_PRICE_TOOLTIP_TEXT"] = "Lets you remove the confirmation dialog that appears when posting an item at an unusually low price."
+  L["CONFIG_SELLING_SPLIT_PANELS"] = "Show split panel view between current prices and historical prices"
+  L["CONFIG_SELLING_SPLIT_PANELS_TOOLTIP_HEADER"] = "Split Panels View"
+  L["CONFIG_SELLING_SPLIT_PANELS_TOOLTIP_TEXT"] = "Normally the historical prices are on a tab inside the Selling tab, instead this makes the current prices always visible, but the historical prices show as a panel below them."
   L["CONFIG_BAG_COLLAPSED"] = "Bag sections start collapsed (reload required)"
   L["CONFIG_BAG_COLLAPSED_TOOLTIP_HEADER"] = "Bag collapsing on start"
   L["CONFIG_BAG_COLLAPSED_TOOLTIP_TEXT"] = "If this option is on the bag sections will start closed, instead of open."
@@ -483,6 +485,9 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["CUSTOM_KEYBOARD_SHORTCUTS"] = "Custom keyboard shortcuts"
   L["CONFIG_SELLING_POST_SHORTCUT_TOOLTIP_TEXT"] = "Click and then press the buttons that you wish to use as the shortcut. This shortcut will only be active in the Selling tab and won't affect any other shortcuts bound to the buttons."
   L["CONFIG_SELLING_SKIP_SHORTCUT"] = "A shortcut to skip posting the currently selected item is"
+  L["CONFIG_SAVE_LAST_DURATION_AS_DEFAULT"] = "Save the last used auction duration as the default"
+  L["CONFIG_SAVE_LAST_DURATION_AS_DEFAULT_TOOLTIP_HEADER"] = "Overwrite default duration with last used"
+  L["CONFIG_SAVE_LAST_DURATION_AS_DEFAULT_TOOLTIP_TEXT"] = "Overwrite default duration with last used"
   L["CONFIG_BAG"] = "Bag"
 
   L["HIDE"] = "Hide"

@@ -1,8 +1,6 @@
 # NugComboBar
 
-## [9.2.0](https://github.com/rgd87/NugComboBar/tree/9.2.0) (2022-02-21)
-[Full Changelog](https://github.com/rgd87/NugComboBar/compare/9.1.0...9.2.0) 
+## [9.2.2](https://github.com/rgd87/NugComboBar/tree/9.2.2) (2022-09-08)
+[Full Changelog](https://github.com/rgd87/NugComboBar/compare/9.2.1...9.2.2) 
 
-- Updated for 9.2, Wago project ID  
-- Split toc for Options module  
-- Fixed nameplate attach option conflict with hide w/o target  
+- Fixed showing uninitialized bar for Druid at login  

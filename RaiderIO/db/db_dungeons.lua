@@ -7,7 +7,7 @@ ns.dungeons = {
         ["keystone_instance"] = 169, -- map_challenge_mode_id
         ["instance_map_id"] = 1195, -- wow_instance_id
         ["lfd_activity_ids"] = { 22, 30, 180, 402 }, -- https://wow.tools/dbc/?dbc=groupfinderactivity
-        ["timers"] = { 1152, 1536, 1920 }, -- keystone_timer_seconds * 0.6 , keystone_timer_seconds * 0.8, keystone_timer_seconds
+        ["timers"] = { 1080, 1440, 1800 }, -- keystone_timer_seconds * 0.6 , keystone_timer_seconds * 0.8, keystone_timer_seconds
         ["name"] = "Iron Docks",
         ["shortName"] = "ID",
     },
@@ -43,7 +43,7 @@ ns.dungeons = {
         ["keystone_instance"] = 227, -- map_challenge_mode_id
         ["instance_map_id"] = 1651, -- wow_instance_id
         ["lfd_activity_ids"] = { 470, 471 }, -- https://wow.tools/dbc/?dbc=groupfinderactivity
-        ["timers"] = { 1404, 1872, 2340 }, -- keystone_timer_seconds * 0.6 , keystone_timer_seconds * 0.8, keystone_timer_seconds
+        ["timers"] = { 1512, 2016, 2520 }, -- keystone_timer_seconds * 0.6 , keystone_timer_seconds * 0.8, keystone_timer_seconds
         ["name"] = "Return to Karazhan: Lower",
         ["shortName"] = "LOWR",
     },

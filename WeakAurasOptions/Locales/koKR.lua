@@ -555,7 +555,6 @@ Can use \ to escape -.]=]
 	L["Frame Width"] = "Frame Width"
 	--[[Translation missing --]]
 	L["Frequency"] = "Frequency"
-	L["From Template"] = "견본으로부터"
 	--[[Translation missing --]]
 	L["Full Circle"] = "Full Circle"
 	L["Get Help"] = "도움 받기"
@@ -841,6 +840,8 @@ Can use \ to escape -.]=]
 	L["Position Settings"] = "위치 설정"
 	--[[Translation missing --]]
 	L["Preferred Match"] = "Preferred Match"
+	--[[Translation missing --]]
+	L["Premade Auras"] = "Premade Auras"
 	L["Premade Snippets"] = "미리 만들어진 스니핏"
 	L["Preset"] = "프리셋"
 	L["Press Ctrl+C to copy"] = "복사하려면 Ctrl+C를 누르세요"
@@ -902,6 +903,8 @@ Can use \ to escape -.]=]
 	L["Same texture as Foreground"] = "Same texture as Foreground"
 	L["Scale"] = "크기 비율"
 	L["Search"] = "검색"
+	--[[Translation missing --]]
+	L["Select Talent"] = "Select Talent"
 	L["Select the auras you always want to be listed first"] = "목록에서 첫번째로 표시할 오라를 선택하세요"
 	--[[Translation missing --]]
 	L["Selected Frame"] = "Selected Frame"

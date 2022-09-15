@@ -8,7 +8,8 @@ SMARTBUFF_WHATSNEW = "\n\n|cffffffff        Whats new:|r\n\n"
   .."          Please report any issues on Curse or Discord.|r\n\n\n"
   .."          Retail release with several improvements and\n"
   .."          fixes, latest changes are:\n\n"
-  .."             * Updated TOC to 90205\n"
+  .."             * Temporarily disabled addon version checks as\n"
+  .."               there seems to be an issue with cross-realm.\n"
   .."\n\n"
 ;
 

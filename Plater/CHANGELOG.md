@@ -1,4 +1,7 @@
-@Terciob:
-- On Arena and Battleground, faction and spec icons are now hidden while in combat.
-- Dispellable buffs won't show if its duration is bigger than 2 minutes.
+@cont1nuity:
+- Adding options for swipe texture on Buff Special.
+- Fixing mod Load Conditions.
+- Support for aura modRate.
+- Fixing tank/spec detection in WotLK. Using your selected talent role now.
+- Update on default 'Performance Units'.
 

@@ -23,7 +23,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_PetTarget) then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 33d78e5ce33228a1cf8cb5f354abf0b5e577621f $")
+end, "$Revision: 52b9ddfe6f4ee24803f90c3bad34a3009df5a616 $")
 
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
@@ -42,6 +42,7 @@ local bit_band = bit.band
 local format = format
 local max = max
 local pairs = pairs
+local select = select
 local string = string
 local tonumber = tonumber
 local tostring = tostring
@@ -63,6 +64,7 @@ local InCombatLockdown = InCombatLockdown
 local NotifyInspect = NotifyInspect
 local PlaySound = PlaySound
 local RegisterUnitWatch = RegisterUnitWatch
+local UnitAffectingCombat = UnitAffectingCombat
 local UnitBattlePetType = UnitBattlePetType
 local UnitCanAssist = UnitCanAssist
 local UnitCanAttack = UnitCanAttack
@@ -86,7 +88,9 @@ local UnitIsDeadOrGhost = UnitIsDeadOrGhost
 local UnitIsEnemy = UnitIsEnemy
 local UnitIsFriend = UnitIsFriend
 local UnitIsGhost = UnitIsGhost
+local UnitIsGroupAssistant = UnitIsGroupAssistant
 local UnitIsGroupLeader = UnitIsGroupLeader
+local UnitIsMercenary = UnitIsMercenary
 local UnitIsPlayer = UnitIsPlayer
 local UnitIsPVP = UnitIsPVP
 local UnitIsPVPFreeForAll = UnitIsPVPFreeForAll
@@ -1105,40 +1109,22 @@ local function XPerl_Target_UpdateLeader(self)
 		end
 	end
 
+	local masterLooter = false
+	local method, partyID, raidID = GetLootMethod()
 
-
-
-	-- We can't determine who is master looter in raid if not in current party... :(
-	--Don't think this is the case anymore.... -- Cexikitin
-	local ml
-	--if (UnitInParty("party1") or UnitInRaid("player")) then
-
-		local method, pindex, rindex = GetLootMethod()
-		--[[local method, index = GetLootMethod()
-
-		if (method == "master" and index) then
-			if (index == 0 and UnitIsUnit("player", partyid)) then
-				ml = true
-			elseif (index >= 1 and index <= 4) then
-				ml = UnitIsUnit(partyid, "party"..index)
+	if method and method == "master" then
+		if raidID then
+			if UnitIsUnit("raid"..raidID, partyid) then
+				masterLooter = true
 			end
-		end]]--
-
-		if (method == "master") then
-			if (rindex ~= nil) then
-				if (UnitIsUnit("raid"..rindex, partyid)) then
-					ml = true
-				end
-			else
-				if (UnitIsUnit("party"..pindex, partyid) or (pindex == 0 and UnitIsUnit("player", partyid))) then
-					ml = true
-				end
+		else
+			if UnitIsUnit("party"..partyID, partyid) or (partyID == 0 and UnitIsUnit("player", partyid)) then
+				masterLooter = true
 			end
 		end
+	end
 
-	--end
-
-	if (ml) then
+	if masterLooter then
 		self.nameFrame.masterIcon:Show()
 	else
 		self.nameFrame.masterIcon:Hide()

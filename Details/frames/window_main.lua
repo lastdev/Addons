@@ -12,6 +12,7 @@ local segmentos = _detalhes.segmentos
 --lua locals
 local _math_ceil = math.ceil
 local _math_floor = math.floor
+local floor = _math_floor
 local _math_max = math.max
 local _ipairs = ipairs
 local _pairs = pairs
@@ -2165,7 +2166,7 @@ local icon_frame_on_enter = function (self)
 			_detalhes:AddTooltipHeaderStatusbar()
 			
 			local talent_string = ""
-			if (talents and not DetailsFramework.IsTBCWow()) then
+			if (talents and not (DetailsFramework.IsTBCWow() or DetailsFramework.IsWotLKWow())) then
 				for i = 1, #talents do
 					local talentID, name, texture, selected, available = GetTalentInfoByID(talents [i])
 					if (texture) then
@@ -4053,6 +4054,10 @@ end
 
 _detalhes.barras_criadas = 0
 
+local getActor = function(self)
+	return self.minha_tabela
+end
+
 --> search key: ~row ~barra  ~newbar ~createbar ~createrow
 function gump:CreateNewLine (instancia, index)
 
@@ -4067,6 +4072,8 @@ function gump:CreateNewLine (instancia, index)
 	newLine.instance_id = instancia.meu_id
 	newLine.animacao_fim = 0
 	newLine.animacao_fim2 = 0
+
+	newLine.GetActor = getActor
 	
 	--> set point, almost irrelevant here, it recalc this on SetBarGrowDirection()
 	local y = instancia.row_height * (index-1)
@@ -4087,37 +4094,19 @@ function gump:CreateNewLine (instancia, index)
 	newLine:EnableMouse (true)
 	newLine:RegisterForClicks ("LeftButtonDown", "RightButtonDown")
 	
-	--> statusbar
+	--statusbar
 	newLine.statusbar = CreateFrame ("StatusBar", "DetailsBarra_Statusbar_"..instancia.meu_id.."_"..index, newLine)
 	newLine.statusbar.value = 0
-	--[[ Deprecation of right_to_left_texture in favor of StatusBar:SetReverseFill 5/2/2022 - Flamanis
-	--> right to left texture
-	newLine.statusbar.right_to_left_texture = newLine.statusbar:CreateTexture (nil, "overlay")
-	newLine.statusbar.right_to_left_texture:SetPoint ("topright", newLine.statusbar, "topright")
-	newLine.statusbar.right_to_left_texture:SetPoint ("bottomright", newLine.statusbar, "bottomright")
-	newLine.statusbar.right_to_left_texture:SetWidth (0.000000001)
-	newLine.statusbar.right_to_left_texture:Hide()
-	newLine.right_to_left_texture = newLine.statusbar.right_to_left_texture
-	]]
-	--> frame for hold the backdrop border
-	newLine.border = CreateFrame ("Frame", "DetailsBarra_Border_" .. instancia.meu_id .. "_" .. index, newLine.statusbar,"BackdropTemplate")
+
+	--frame for hold the backdrop border
+	newLine.border = CreateFrame ("Frame", "DetailsBarra_Border_" .. instancia.meu_id .. "_" .. index, newLine.statusbar, "BackdropTemplate")
 	newLine.border:SetFrameLevel (newLine.statusbar:GetFrameLevel()+2)
 	newLine.border:SetAllPoints (newLine)
-	
+
 	--border
 	newLine.lineBorder = DetailsFramework:CreateFullBorder(newLine:GetName() .. "Border", newLine.border)
-	--[=[
-	if (DetailsFramework.IsTBCWow()) then
-		lineBorder = DetailsFramework:CreateFullBorder(nil, newLine)
-		--lineBorder = CreateFrame("frame", nil, newLine, "DFNamePlateFullBorderTemplate, BackdropTemplate")
-	else
-		lineBorder = CreateFrame("frame", nil, newLine, "NamePlateFullBorderTemplate, BackdropTemplate")
-	end
-	newLine.lineBorder = lineBorder
-	--]=]
-	-- search key: ~model
-	
-	--low 3d bar
+
+	--low 3d bar --search key: ~model
 	newLine.modelbox_low = CreateFrame ("playermodel", "DetailsBarra_ModelBarLow_" .. instancia.meu_id .. "_" .. index, newLine) --rowframe
 	newLine.modelbox_low:SetFrameLevel (newLine.statusbar:GetFrameLevel()-1)
 	newLine.modelbox_low:SetPoint ("topleft", newLine, "topleft")
@@ -4154,13 +4143,13 @@ function gump:CreateNewLine (instancia, index)
 	icone_classe:SetTexCoord (.75, 1, .75, 1)
 	newLine.icone_classe = icone_classe
 	
-	local icon_frame = CreateFrame ("frame", "DetailsBarra_IconFrame_" .. instancia.meu_id .. "_" .. index, newLine.statusbar)
-	icon_frame:SetPoint ("topleft", icone_classe, "topleft")
-	icon_frame:SetPoint ("bottomright", icone_classe, "bottomright")
-	icon_frame:SetFrameLevel (newLine.statusbar:GetFrameLevel()+1)
-	icon_frame.instance_id = instancia.meu_id
-	icon_frame.row = newLine
-	newLine.icon_frame = icon_frame
+	local iconFrame = CreateFrame ("frame", "DetailsBarra_IconFrame_" .. instancia.meu_id .. "_" .. index, newLine.statusbar)
+	iconFrame:SetPoint ("topleft", icone_classe, "topleft")
+	iconFrame:SetPoint ("bottomright", icone_classe, "bottomright")
+	iconFrame:SetFrameLevel (newLine.statusbar:GetFrameLevel()+1)
+	iconFrame.instance_id = instancia.meu_id
+	iconFrame.row = newLine
+	newLine.icon_frame = iconFrame
 	
 	icone_classe:SetPoint ("left", newLine, "left")
 	newLine.statusbar:SetPoint ("topleft", icone_classe, "topright")
@@ -4349,10 +4338,23 @@ function Details:RefreshTitleBar()
 
 	local texturePath = SharedMedia:Fetch("statusbar", texture)
 
-	self.baseframe.titleBar:SetShown(shown)
-	self.baseframe.titleBar:SetHeight(height)
-	self.baseframe.titleBar.texture:SetTexture(texturePath)
-	self.baseframe.titleBar.texture:SetVertexColor(DetailsFramework:ParseColors(color))
+	local titleBar = self.baseframe.titleBar
+	titleBar:SetShown(shown)
+
+	--menu_attribute_string is nil in tbc (20 jun 2022)
+	if (not self.menu_attribute_string) then
+		return
+	end
+
+	if (shown) then
+		titleBar:SetHeight(height)
+		titleBar.texture:SetTexture(texturePath)
+		titleBar.texture:SetVertexColor(DetailsFramework:ParseColors(color))
+
+		self.menu_attribute_string:SetParent(titleBar)
+	else
+		self.menu_attribute_string:SetParent(self.baseframe)
+	end
 end
 
 function _detalhes:SetBarModel (upper_enabled, upper_model, upper_alpha, lower_enabled, lower_model, lower_alpha)
@@ -4424,7 +4426,41 @@ function _detalhes:SetBarSpecIconSettings (enabled, iconfile, fulltrack)
 	self:ReajustaGump()
 end
 
-function _detalhes:SetBarSettings (height, texture, colorclass, fixedcolor, backgroundtexture, backgroundcolorclass, backgroundfixedcolor, alpha, iconfile, barstart, spacement, texture_custom)
+function Details:SetBarArenaRoleIconSettings(show_icon, icon_size_offset)
+	if (type(show_icon) ~= "boolean") then
+		show_icon = self.row_info.show_arena_role_icon
+	end
+
+	if (not icon_size_offset or type(icon_size_offset) ~= "number") then
+		icon_size_offset = self.row_info.arena_role_icon_size_offset
+	end
+
+	self.row_info.show_arena_role_icon = show_icon
+	self.row_info.arena_role_icon_size_offset = icon_size_offset
+
+	self:InstanceReset()
+	self:InstanceRefreshRows()
+	self:ReajustaGump()
+end
+
+function Details:SetBarFactionIconSettings(show_faction_icon, faction_icon_size_offset)
+	if (type(show_faction_icon) ~= "boolean") then
+		show_faction_icon = self.row_info.show_faction_icon
+	end
+
+	if (not faction_icon_size_offset or type(faction_icon_size_offset) ~= "number") then
+		faction_icon_size_offset = self.row_info.faction_icon_size_offset
+	end
+
+	self.row_info.show_faction_icon = show_faction_icon
+	self.row_info.faction_icon_size_offset = faction_icon_size_offset
+
+	self:InstanceReset()
+	self:InstanceRefreshRows()
+	self:ReajustaGump()
+end
+
+function _detalhes:SetBarSettings (height, texture, colorclass, fixedcolor, backgroundtexture, backgroundcolorclass, backgroundfixedcolor, alpha, iconfile, barstart, spacement, texture_custom, icon_size_offset)
 	
 	--> bar start
 	if (type (barstart) == "boolean") then
@@ -4499,6 +4535,10 @@ function _detalhes:SetBarSettings (height, texture, colorclass, fixedcolor, back
 		c [1], c [2], c [3], c [4] = red, green, blue, alpha
 	end
 
+	if (icon_size_offset and type(icon_size_offset) == "number") then
+		self.row_info.icon_size_offset = icon_size_offset
+	end
+
 	self:InstanceReset()
 	self:InstanceRefreshRows()
 	self:ReajustaGump()
@@ -4558,7 +4598,7 @@ end
 
 --/script _detalhes:InstanceRefreshRows (_detalhes.tabela_instancias[1])
 
---> on update function
+--onupdate function for 'Fast Updates' feature
 local fast_ps_func = function (self)
 	local instance = self.instance
 	
@@ -4566,8 +4606,16 @@ local fast_ps_func = function (self)
 		return
 	end
 	
-	local combat_time = instance.showing:GetCombatTime()
-	local ps_type = _detalhes.ps_abbreviation
+	local combatTime = instance.showing:GetCombatTime()
+	local abbreviationType = _detalhes.ps_abbreviation
+	local abbreviationFunc = tok_functions[abbreviationType]
+
+	local isInLineTextEnabled = instance.use_multi_fontstrings
+	local instanceShowDataSettings = instance.row_info.textR_show_data
+
+	local showingAllData = instanceShowDataSettings[3] and instanceShowDataSettings[2] and instanceShowDataSettings[1]
+	local showingTotalAndPS = not instanceShowDataSettings[3] and instanceShowDataSettings[2] and instanceShowDataSettings[1]
+	local showingOnlyPS = not instanceShowDataSettings[3] and instanceShowDataSettings[2] and not instanceShowDataSettings[1]
 
 	if (instance.rows_fit_in_window) then
 		for i = 1, instance.rows_fit_in_window do --instance:GetNumRows()
@@ -4575,14 +4623,21 @@ local fast_ps_func = function (self)
 			if (row and row:IsShown()) then
 				local actor = row.minha_tabela
 				if (actor) then
-					local dps_text = row.ps_text
-					if (dps_text) then
-						local new_dps = _math_floor (actor.total / combat_time)
-						local formated_dps = tok_functions [ps_type] (_, new_dps)
 
-						--row.lineText4:SetText (row.lineText4:GetText():gsub (dps_text, formated_dps))
-						row.lineText4:SetText (( row.lineText4:GetText() or "" ):gsub (dps_text, formated_dps))
-						row.ps_text = formated_dps
+					local currentDps = floor(actor.total / combatTime) --can also be hps
+					if (isInLineTextEnabled) then
+						if (showingAllData) then
+							row.lineText3:SetText(abbreviationFunc(nil, currentDps))
+						elseif (showingTotalAndPS or showingOnlyPS) then
+							row.lineText4:SetText(abbreviationFunc(nil, currentDps))
+						end
+					else
+						local dpsText = row.ps_text
+						if (dpsText) then
+							local formatedDps = abbreviationFunc(nil, currentDps)
+							row.lineText4:SetText((row.lineText4:GetText() or ""):gsub(dpsText, formatedDps))
+							row.ps_text = formatedDps
+						end
 					end
 				end
 			end
@@ -4997,6 +5052,35 @@ function Details:SetBarOverlaySettings(overlayTexture, overlayColor)
 	self.row_info.overlay_color[3] = overlayColor[3]
 	self.row_info.overlay_color[4] = overlayColor[4]
 	self:InstanceRefreshRows()
+end
+
+--adjust to which frame the wallpaper texture is parented to
+--dependind on the frame it can be shown above or below background textures
+function Details:SetInstanceWallpaperLevel(wallpaperLevel)
+	if (type(wallpaperLevel) ~= "number") then
+		wallpaperLevel = self.wallpaper.level
+	end
+
+	self.wallpaper.level = wallpaperLevel
+
+	--refresh the wallpaper parent
+	local wallpaperTexture = self.baseframe.wallpaper
+
+	if (wallpaperLevel == 0) then
+		wallpaperTexture:SetParent(self.baseframe.titleBar) --framelevel +0 (parented to titleBar)
+
+	elseif (wallpaperLevel == 1) then
+		wallpaperTexture:SetParent(self.baseframe) --framelevel +0
+
+	elseif (wallpaperLevel == 2) then
+		wallpaperTexture:SetParent(self.rowframe) --framelevel +3
+
+	elseif (wallpaperLevel == 3) then
+		wallpaperTexture:SetParent(self.windowSwitchButton) --framelevel +4
+	end
+
+	--debug
+	--/run Details:GetWindow(1):SetInstanceWallpaperLevel(0)
 end
 
 -- search key: ~wallpaper
@@ -7300,6 +7384,9 @@ function Details:ChangeSkin(skin_name)
 	--> update title bar
 		self:RefreshTitleBar()
 	
+	--> update the wallpaper level
+		self:SetInstanceWallpaperLevel()
+
 	--> clear any control sscript running in this instance
 	self.bgframe:SetScript ("OnUpdate", nil)
 	self.bgframe.skin_script = nil
@@ -7829,41 +7916,42 @@ function _detalhes:RefreshAttributeTextSize()
 end
 
 -- ~encounter ~timer
-function _detalhes:CheckForTextTimeCounter (combat_start)
-	if (combat_start) then
-		if (_detalhes.tabela_vigente.is_boss) then
-			local lower = _detalhes:GetLowerInstanceNumber()
-			if (lower) then
-				local instance = _detalhes:GetInstance (lower)
+function Details:CheckForTextTimeCounter(combatStart) --called from combat start function
+	if (combatStart) then
+		--if (Details.tabela_vigente.is_boss) then --is an encounter
+			local instanceId = Details:GetLowerInstanceNumber()
+			if (instanceId) then
+				local instance = Details:GetInstance(instanceId)
 				if (instance.baseframe and instance:IsEnabled()) then
-					if (instance.attribute_text.show_timer) then
-						if (_detalhes.instance_title_text_timer [instance:GetId()]) then
-							Details.Schedules.Cancel(_detalhes.instance_title_text_timer [instance:GetId()])
+					if (instance.attribute_text.show_timer) then --can show the timer
+						--start a new ticker of 1 second
+						if (Details.instance_title_text_timer[instance:GetId()]) then
+							Details.Schedules.Cancel(Details.instance_title_text_timer[instance:GetId()])
 						end
-						_detalhes.instance_title_text_timer[instance:GetId()] = Details.Schedules.NewTicker(1, Details.TitleTextTickTimer, Details, instance)
+						Details.instance_title_text_timer[instance:GetId()] = Details.Schedules.NewTicker(1, Details.TitleTextTickTimer, Details, instance)
 					end
 				end
 			else
-				return
+				return --there's no open window
 			end
-		else
-			if (_detalhes.in_combat and _detalhes.zone_type == "raid") then
-				Details.Schedules.NewTimer(3, Details.CheckForTextTimeCounter, Details, true)
-			end
-		end
+		--else --boss encounter not found
+		--	if (Details.in_combat and Details.zone_type == "raid") then
+		--		Details.Schedules.NewTimer(3, Details.CheckForTextTimeCounter, Details, true)
+		--	end
+		--end
 	else
-		for _, instance in ipairs (_detalhes.tabela_instancias) do
-			if (_detalhes.instance_title_text_timer [instance:GetId()] and instance.baseframe and instance:IsEnabled() and instance.menu_attribute_string) then
-				Details.Schedules.Cancel(_detalhes.instance_title_text_timer[instance:GetId()])
-				local current_text = instance:GetTitleBarText()
-				current_text = current_text:gsub ("%[.*%] ", "")
-				instance:SetTitleBarText(current_text)
+		for instanceId, instance in Details:ListInstances() do
+			if (Details.instance_title_text_timer[instance:GetId()] and instance.baseframe and instance:IsEnabled() and instance.menu_attribute_string) then --check if the instance is initialized
+				Details.Schedules.Cancel(Details.instance_title_text_timer[instance:GetId()])
+				local currentText = instance:GetTitleBarText()
+				currentText = currentText:gsub("%[.*%] ", "")
+				instance:SetTitleBarText(currentText)
 			end
 		end
 	end
 end
 
-local format_timer = function (t)
+local formatTime = function (t)
 	local m, s = _math_floor (t/60), _math_floor (t%60)
 	if (m < 1) then
 		m = "00"
@@ -7876,32 +7964,67 @@ local format_timer = function (t)
 	return "[" .. m .. ":" .. s .. "]"
 end
 
-function _detalhes:TitleTextTickTimer (instance)
+function _detalhes:TitleTextTickTimer (instance) --called on each 1 second tick
 	if (instance.attribute_text.enabled) then
+		--tick only during encounter
+		if (not Details.titletext_showtimer_always) then
+			if (IsEncounterInProgress) then
+				if (not IsEncounterInProgress()) then
+					return
+				end
+			else
+				if (not Details.tabela_vigente.is_boss) then
+					return
+				end
+			end
+		end
+
 		local currentText = instance.menu_attribute_string.originalText
 		if (currentText) then
-			local timer = format_timer (_detalhes.tabela_vigente:GetCombatTime())
+			local timer = formatTime(_detalhes.tabela_vigente:GetCombatTime())
 			instance:SetTitleBarText(timer .. " " .. currentText)
 		else
 			local current_text = instance:GetTitleBarText()
-			if (not current_text:find ("%[.*%]")) then
+			if (not current_text:find("%[.*%]")) then
 				instance:SetTitleBarText("[00:01] " .. current_text)
 			else
-				local timer = format_timer (_detalhes.tabela_vigente:GetCombatTime())
-				current_text = current_text:gsub ("%[.*%]", timer)
+				local timer = formatTime(_detalhes.tabela_vigente:GetCombatTime())
+				current_text = current_text:gsub("%[.*%]", timer)
 				instance:SetTitleBarText(current_text)
 			end
 		end
 	end
 end
 
-function _detalhes:SetTitleBarText(text)
-	if (self.attribute_text.enabled and self.menu_attribute_string) then
+function Details:RefreshTitleBarText()
+	local titleBarText = self.menu_attribute_string
+
+	if (titleBarText and self == titleBarText.owner_instance) then
+		local sName = self:GetInstanceAttributeText()
+		local instanceMode = self:GetMode()
+
+		if (instanceMode == DETAILS_MODE_GROUP or instanceMode == DETAILS_MODE_ALL) then
+			local segment = self:GetSegment()
+			if (segment == DETAILS_SEGMENTID_OVERALL) then
+				sName = sName .. " " .. Loc ["STRING_OVERALL"]
+
+			elseif (segment >= 2) then
+				sName = sName .. " [" .. segment .. "]"
+			end
+		end
+
+		titleBarText:SetText(sName)
+		titleBarText.originalText = sName
+	end
+end
+
+function Details:SetTitleBarText(text)
+	if (self.menu_attribute_string) then
 		self.menu_attribute_string:SetText(text)
 	end
 end
 
-function _detalhes:GetTitleBarText()
+function Details:GetTitleBarText()
 	if (self.menu_attribute_string) then
 		return self.menu_attribute_string:GetText()
 	end
@@ -7971,34 +8094,16 @@ function _detalhes:AttributeMenu (enabled, pos_x, pos_y, font, size, color, side
 	end
 	
 	if (not self.menu_attribute_string) then 
-
 		--local label = gump:NewLabel (self.floatingframe, nil, "DetailsAttributeStringInstance" .. self.meu_id, nil, "", "GameFontHighlightSmall")
 		local label = gump:NewLabel (self.baseframe, nil, "DetailsAttributeStringInstance" .. self.meu_id, nil, "", "GameFontHighlightSmall")
 		self.menu_attribute_string = label
-		self.menu_attribute_string.text = _detalhes:GetSubAttributeName (self.atributo, self.sub_atributo)
+		self:RefreshTitleBarText()
 		self.menu_attribute_string.owner_instance = self
-		
 		self.menu_attribute_string.Enabled = true
 		self.menu_attribute_string.__enabled = true
 		
-		function self.menu_attribute_string:OnEvent (instance, attribute, subAttribute)
-			if (instance == label.owner_instance) then
-				local sName = instance:GetInstanceAttributeText()
-				local instanceMode = instance:GetMode()
-
-				if (instanceMode == DETAILS_MODE_GROUP or instanceMode == DETAILS_MODE_ALL) then
-					local segment = instance:GetSegment()
-					if (segment == DETAILS_SEGMENTID_OVERALL) then
-						sName = sName .. " " .. Loc ["STRING_OVERALL"]
-
-					elseif (segment >= 2) then
-						sName = sName .. " [" .. segment .. "]"
-					end
-				end
-
-				label.text = sName
-				label.originalText = sName
-			end
+		function self.menu_attribute_string:OnEvent(instance, attribute, subAttribute)
+			instance:RefreshTitleBarText()
 		end
 		
 		_detalhes:RegisterEvent (self.menu_attribute_string, "DETAILS_INSTANCE_CHANGEATTRIBUTE", self.menu_attribute_string.OnEvent)

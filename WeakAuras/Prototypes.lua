@@ -136,6 +136,10 @@ function WeakAuras.TestSchool(spellSchool, test)
   return spellSchool == test
 end
 
+function WeakAuras.RaidFlagToIndex(flag)
+  return Private.combatlog_raidFlags[flag] or 0
+end
+
 local function get_zoneId_list()
   if WeakAuras.IsClassic() then return "" end
   local currentmap_id = C_Map.GetBestMapForUnit("player")
@@ -638,14 +642,28 @@ if WeakAuras.IsClassicOrBCCOrWrath() then
   function WeakAuras.CheckTalentByIndex(index, extraOption)
     local tab = ceil(index / MAX_NUM_TALENTS)
     local num_talent = (index - 1) % MAX_NUM_TALENTS + 1
-    local _, _, _, _, rank  = GetTalentInfo(tab, num_talent)
-    return rank and rank > 0;
+    local name, _, _, _, rank  = GetTalentInfo(tab, num_talent)
+    if name == nil then
+      return nil
+    end
+    local result = rank and rank > 0
+    if extraOption == 4 then
+      return result
+    elseif extraOption == 5 then
+      return not result
+    end
+    return result;
   end
 else
   function WeakAuras.CheckTalentByIndex(index, extraOption)
     local tier = ceil(index / 3)
     local column = (index - 1) % 3 + 1
     local _, _, _, selected, _, _, _, _, _, _, known  = GetTalentInfo(tier, column, 1)
+    if extraOption == 4 then
+      return selected or known
+    elseif extraOption == 5 then
+      return not (selected or known)
+    end
     if extraOption == 0 or extraOption == 2 then
       return selected or known
     else
@@ -954,15 +972,84 @@ local function valuesForTalentFunction(trigger)
       end
     end
 
+    local single_class_and_spec
+    if WeakAuras.IsRetail() and trigger.use_spec == nil and trigger.use_class == nil then
+      if trigger.use_class_and_spec then
+        single_class_and_spec = trigger.class_and_spec.single
+      elseif trigger.use_class_and_spec == false then
+        local num_specs = 0;
+        for class_and_spec in pairs(trigger.class_and_spec.multi) do
+          single_class_and_spec = class_and_spec;
+          num_specs = num_specs + 1;
+        end
+        if (num_specs ~= 1) then
+          single_class_and_spec = nil;
+        end
+      end
+    end
     -- If a single specific class was found, load the specific list for it
-    if(single_class and Private.talent_types_specific[single_class]
-      and single_spec and Private.talent_types_specific[single_class][single_spec]) then
-      return Private.talent_types_specific[single_class][single_spec];
-    elseif(WeakAuras.IsClassicOrBCCOrWrath() and single_class and Private.talent_types_specific[single_class]
-      and Private.talent_types_specific[single_class]) then
-      return Private.talent_types_specific[single_class];
-    else
-      return Private.talent_types;
+    if false then -- placeholder for dragonflight
+      --[[
+      if single_class_and_spec and Private.talentInfo[specId] then
+        return Private.talentInfo[specId]
+      elseif single_class and single_spec then
+        local classId
+        for i = 1, GetNumClasses() do
+          if select(2, GetClassInfo(i)) == single_class then
+            classId = i
+            break
+          end
+        end
+        local specId = GetSpecializationInfoForClassID(classId, single_spec)
+        return Private.talentInfo[specId]
+      else
+        local classId = select(3, UnitClass("player"))
+        local specIndex = GetSpecialization()
+        local specId = GetSpecializationInfoForClassID(classId, specIndex)
+        return Private.talent_types
+      end
+      ]]
+    elseif WeakAuras.IsRetail() then
+      if single_class_and_spec then
+        local class = select(6, GetSpecializationInfoByID(single_class_and_spec))
+        if class then
+          for classID = 1, GetNumClasses() do -- we have classFile, we need classID
+            local _, classFile = GetClassInfo(classID)
+            if classFile == class then
+              for specIndex = 1, 4 do -- search specIndex
+                if GetSpecializationInfoForClassID(classID, specIndex) == single_class_and_spec then
+                  if Private.talent_types_specific[classFile] and Private.talent_types_specific[classFile][specIndex] then
+                    return Private.talent_types_specific[classFile][specIndex]
+                  end
+                  break
+                end
+              end
+              break
+            end
+          end
+        end
+      end
+      if single_class and single_spec
+      and Private.talent_types_specific[single_class]
+      and Private.talent_types_specific[single_class][single_spec]
+      then
+        return Private.talent_types_specific[single_class][single_spec]
+      else
+        return Private.talent_types
+      end
+    elseif WeakAuras.IsWrathClassic() then
+      if single_class then
+        return Private.talentInfo[single_class]
+      else
+        local class = select(2, UnitClass("player"))
+        return Private.talentInfo[class]
+      end
+    else -- classic & tbc
+      if single_class and Private.talent_types_specific[single_class] then
+        return Private.talent_types_specific[single_class]
+      else
+        return Private.talent_types
+      end
     end
   end
 end
@@ -1158,26 +1245,38 @@ Private.load_prototype = {
       type = "multiselect",
       values = valuesForTalentFunction,
       test = "WeakAuras.CheckTalentByIndex(%d, %d)",
+      enableTest = function(...)
+        return WeakAuras.CheckTalentByIndex(...) ~= nil
+      end,
       events = (WeakAuras.IsClassicOrBCC() and {"CHARACTER_POINTS_CHANGED"})
         or (WeakAuras.IsWrathClassic() and {"CHARACTER_POINTS_CHANGED", "PLAYER_TALENT_UPDATE"})
         or {"PLAYER_TALENT_UPDATE"},
       inverse = function(load)
         -- Check for multi select!
-        return load.talent_extraOption == 2 or load.talent_extraOption == 3
+        return (WeakAuras.IsClassicOrBCC() or WeakAuras.IsRetail()) and (load.talent_extraOption == 2 or load.talent_extraOption == 3)
       end,
-      extraOption = {
+      extraOption = (WeakAuras.IsClassicOrBCC() or WeakAuras.IsRetail()) and {
         display = "",
         values = function()
           return Private.talent_extra_option_types
         end
       },
+      control = WeakAuras.IsWrathClassic() and "WeakAurasMiniTalent" or nil,
+      multiNoSingle = WeakAuras.IsWrathClassic(), -- no single mode
+      multiTristate = WeakAuras.IsWrathClassic(), -- values can be true/false/nil
+      multiAll = WeakAuras.IsWrathClassic(), -- require all tests
+      orConjunctionGroup  = WeakAuras.IsWrathClassic() and "talent",
+      multiUseControlWhenFalse = WeakAuras.IsWrathClassic()
     },
     {
       name = "talent2",
-      display = L["And Talent"],
+      display = WeakAuras.IsWrathClassic() and L["Or Talent"] or L["And Talent"],
       type = "multiselect",
       values = valuesForTalentFunction,
       test = "WeakAuras.CheckTalentByIndex(%d, %d)",
+      enableTest = function(...)
+        return WeakAuras.CheckTalentByIndex(...) ~= nil
+      end,
       enable = function(trigger)
         return trigger.use_talent ~= nil or trigger.use_talent2 ~= nil;
       end,
@@ -1185,21 +1284,30 @@ Private.load_prototype = {
         or (WeakAuras.IsWrathClassic() and {"CHARACTER_POINTS_CHANGED", "PLAYER_TALENT_UPDATE"})
         or {"PLAYER_TALENT_UPDATE"},
       inverse = function(load)
-        return load.talent2_extraOption == 2 or load.talent2_extraOption == 3
+        return (WeakAuras.IsClassicOrBCC() or WeakAuras.IsRetail()) and (load.talent2_extraOption == 2 or load.talent2_extraOption == 3)
       end,
-      extraOption = {
+      extraOption = (WeakAuras.IsClassicOrBCC() or WeakAuras.IsRetail()) and {
         display = "",
         values = function()
           return Private.talent_extra_option_types
         end,
-      }
+      },
+      control = WeakAuras.IsWrathClassic() and "WeakAurasMiniTalent" or nil,
+      multiNoSingle = WeakAuras.IsWrathClassic(),
+      multiTristate = WeakAuras.IsWrathClassic(),
+      multiAll = WeakAuras.IsWrathClassic(),
+      orConjunctionGroup  = WeakAuras.IsWrathClassic() and "talent",
+      multiUseControlWhenFalse = WeakAuras.IsWrathClassic()
     },
     {
       name = "talent3",
-      display = L["And Talent"],
+      display = WeakAuras.IsWrathClassic() and L["Or Talent"] or L["And Talent"],
       type = "multiselect",
       values = valuesForTalentFunction,
       test = "WeakAuras.CheckTalentByIndex(%d, %d)",
+      enableTest = function(...)
+        return WeakAuras.CheckTalentByIndex(...) ~= nil
+      end,
       enable = function(trigger)
         return (trigger.use_talent ~= nil and trigger.use_talent2 ~= nil) or trigger.use_talent3 ~= nil;
       end,
@@ -1207,14 +1315,20 @@ Private.load_prototype = {
         or (WeakAuras.IsWrathClassic() and {"CHARACTER_POINTS_CHANGED", "PLAYER_TALENT_UPDATE"})
         or {"PLAYER_TALENT_UPDATE"},
       inverse = function(load)
-        return load.talent3_extraOption == 2 or load.talent3_extraOption == 3
+        return (WeakAuras.IsClassicOrBCC() or WeakAuras.IsRetail()) and (load.talent3_extraOption == 2 or load.talent3_extraOption == 3)
       end,
-      extraOption = {
+      extraOption = (WeakAuras.IsClassicOrBCC() or WeakAuras.IsRetail()) and {
         display = "",
         values = function()
           return Private.talent_extra_option_types
         end,
       },
+      control = WeakAuras.IsWrathClassic() and "WeakAurasMiniTalent" or nil,
+      multiNoSingle = WeakAuras.IsWrathClassic(),
+      multiTristate = WeakAuras.IsWrathClassic(),
+      multiAll = WeakAuras.IsWrathClassic(),
+      orConjunctionGroup  = WeakAuras.IsWrathClassic() and "talent",
+      multiUseControlWhenFalse = WeakAuras.IsWrathClassic()
     },
     {
       name = "pvptalent",
@@ -1402,7 +1516,7 @@ Private.load_prototype = {
     },
     {
       name = "role",
-      display = L["Assigned Role"],
+      display = WeakAuras.IsWrathClassic() and L["Assigned Role"] or L["Spec Role"],
       type = "multiselect",
       values = "role_types",
       init = "arg",
@@ -3455,6 +3569,22 @@ Private.event_prototypes = {
         end
       },
       {
+        name = "sourceRaidMarkIndex",
+        display = WeakAuras.newFeatureString .. L["Source unit's raid mark index"],
+        init = "WeakAuras.RaidFlagToIndex(sourceRaidFlags)",
+        test = "true",
+        store = true,
+        hidden = true,
+      },
+      {
+        name = "sourceRaidMark",
+        display = WeakAuras.newFeatureString .. L["Source unit's raid mark texture"],
+        test = "true",
+        init = "sourceRaidMarkIndex > 0 and '{rt'..sourceRaidMarkIndex..'}' or ''",
+        store = true,
+        hidden = true,
+      },
+      {
         name = "destGUID",
         init = "arg",
         hidden = "true",
@@ -3571,6 +3701,28 @@ Private.event_prototypes = {
         enable = function(trigger)
           return (trigger.subeventPrefix == "SPELL" and trigger.subeventSuffix == "_CAST_START");
         end
+      },
+      {
+        name = "destRaidMarkIndex",
+        display = WeakAuras.newFeatureString .. L["Destination unit's raid mark index"],
+        init = "WeakAuras.RaidFlagToIndex(destRaidFlags)",
+        test = "true",
+        store = true,
+        hidden = true,
+        enable = function(trigger)
+          return not (trigger.subeventPrefix == "SPELL" and trigger.subeventSuffix == "_CAST_START");
+        end,
+      },
+      {
+        name = "destRaidMark",
+        display = WeakAuras.newFeatureString .. L["Destination unit's raid mark texture"],
+        test = "true",
+        init = "destRaidMarkIndex > 0 and '{rt'..destRaidMarkIndex..'}' or ''",
+        store = true,
+        hidden = true,
+        enable = function(trigger)
+          return not (trigger.subeventPrefix == "SPELL" and trigger.subeventSuffix == "_CAST_START");
+        end,
       },
       {
         name = "spellId",
@@ -7055,10 +7207,12 @@ Private.event_prototypes = {
 
       local ret = [[
         local inverse = %s;
-        local equipped = IsEquippedItem(GetItemInfo(%s));
+        local itemName = GetItemInfo(%s);
+        local itemSlot = %s;
+        local equipped = WeakAuras.CheckForItemEquipped(itemName, itemSlot);
       ]];
 
-      return ret:format(trigger.use_inverse and "true" or "false", itemName);
+      return ret:format(trigger.use_inverse and "true" or "false", itemName, trigger.use_itemSlot and trigger.itemSlot or "nil");
     end,
     args = {
       {
@@ -7067,6 +7221,13 @@ Private.event_prototypes = {
         type = "item",
         required = true,
         test = "true"
+      },
+      {
+        name = "itemSlot",
+        display = WeakAuras.newFeatureString .. L["Item Slot"],
+        type = "select",
+        values = "item_slot_types",
+        test = "true",
       },
       {
         name = "inverse",
@@ -7765,10 +7926,10 @@ Private.event_prototypes = {
         name = "interruptible",
         display = L["Interruptible"],
         type = "tristate",
-        enable = function(trigger) return not WeakAuras.IsBCCOrWrath() and not trigger.use_inverse end,
+        enable = function(trigger) return not WeakAuras.IsBCC() and not trigger.use_inverse end,
         store = true,
         conditionType = "bool",
-        hidden = WeakAuras.IsBCCOrWrath()
+        hidden = WeakAuras.IsBCC()
       },
       {
         name = "remaining",

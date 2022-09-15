@@ -1,0 +1,18 @@
+## Interface: 90207
+## Title: HandyNotes_LongForgottenHippogryph
+## Notes: Find those Ephemeral Crystals!
+## Author: Kemayo
+## Version: 1
+## DefaultState: enabled
+## X-Category: Achievements
+## X-eMail: kemayo @ gmail DOT com
+## X-Curse-Project-ID: 102309
+## SavedVariables: HandyNotes_LongForgottenHippogryphDB
+## RequiredDeps: HandyNotes
+
+handler\class.lua
+handler\conditions.lua
+handler\handler.lua
+handler\config.lua
+
+nodes.lua

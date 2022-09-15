@@ -1,5 +1,5 @@
 ## Interface: 11403
-## Version: v9.2.3
+## Version: v9.2.4
 ## Title: BadBoy_Levels
 ## Notes: Filter whispers by level, minimally.
 ## Notes-frFR: Filtre les chuchotements par niveau, au minimum.
@@ -21,6 +21,7 @@
 ## X-License: All Rights Reserved: You are free to fork and modify on GitHub, please ask us about anything else.
 ## X-Curse-Project-ID: 18879
 ## X-WoWI-ID: 13270
+## X-Wago-ID: lQNlVxKe
 
 SimpleOptions.lua
 BadBoy_Levels.lua

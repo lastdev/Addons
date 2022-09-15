@@ -791,7 +791,9 @@ PLATER_DEFAULT_SETTINGS = {
 		extra_icon_anchor = {side = 6, x = -4, y = 0},
 		extra_icon_show_timer = true,
 		extra_icon_timer_decimals = false,
-		extra_icon_cooldown_reverse = false,
+		extra_icon_show_swipe = true,
+		extra_icon_cooldown_reverse = true,
+		extra_icon_cooldown_edge_texture = "Interface\\Cooldown\\edge",
 		extra_icon_timer_font = "Arial Narrow",
 		extra_icon_timer_size = 12,
 		extra_icon_timer_outline = "NONE",
@@ -833,6 +835,7 @@ PLATER_DEFAULT_SETTINGS = {
 		
 		aura_show_important = true,
 		aura_show_dispellable = true,
+		aura_show_only_short_dispellable_on_players = false,
 		aura_show_enrage = false,
 		aura_show_magic = false,
 		aura_show_aura_by_the_player = true,

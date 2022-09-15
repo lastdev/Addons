@@ -78,6 +78,48 @@ function WeakAuras.InternalVersion()
   return internalVersion;
 end
 
+do
+  local currentErrorHandlerId
+  local currentErrorHandlerUid
+  local currentErrorHandlerContext
+  local function waErrorHandler(errorMessage)
+    local prefix = ""
+    local data
+    if currentErrorHandlerId then
+      data = WeakAuras.GetData(currentErrorHandlerId)
+    elseif currentErrorHandlerUid then
+      data = Private.GetDataByUID(currentErrorHandlerUid)
+    end
+    if data then
+      Private.AuraWarnings.UpdateWarning(data.uid, "LuaError", "error",
+        L["This aura has caused a Lua error."] .. "\n" .. L["Install the addons BugSack and BugGrabber for detailed error logs."], true)
+      prefix = L["Lua error in aura '%s': %s"]:format(data.id, currentErrorHandlerContext or L["unknown location"]) .. "\n"
+    else
+      prefix = L["Lua error"] .. "\n"
+    end
+    prefix = prefix .. L["WeakAuras Version: %s"]:format(WeakAuras.versionString) .. "\n"
+    local version = data and (data.semver or data.version)
+    if version then
+      prefix = prefix .. L["Aura Version: %s"]:format(version) .. "\n"
+    end
+
+    geterrorhandler()(prefix .. errorMessage)
+  end
+
+  function Private.GetErrorHandlerId(id, context)
+    currentErrorHandlerUid = nil
+    currentErrorHandlerId = id
+    currentErrorHandlerContext = context
+    return waErrorHandler
+  end
+  function Private.GetErrorHandlerUid(uid, context)
+    currentErrorHandlerUid = uid
+    currentErrorHandlerId = nil
+    currentErrorHandlerContext = context
+    return waErrorHandler
+  end
+end
+
 function Private.LoadOptions(msg)
   if not(IsAddOnLoaded("WeakAurasOptions")) then
     if not WeakAuras.IsLoginFinished() then
@@ -557,6 +599,7 @@ local function ConstructFunction(prototype, trigger, skipOptional)
   local events = {}
   local init;
   local preambles = ""
+  local orConjunctionGroups = {}
   if(prototype.init) then
     init = prototype.init(trigger);
   else
@@ -604,24 +647,52 @@ local function ConstructFunction(prototype, trigger, skipOptional)
               test = "("..name.. "==".. (number or string.format("%s", Private.QuotedString(trigger[name] or ""))) .. ")"
             end
           elseif(arg.type == "multiselect") then
+            if arg.multiNoSingle then
+              -- convert single to multi
+              -- this is a lazy migration because multiNoSingle is not set for all game versions
+              if trigger["use_"..name] == true then
+                trigger["use_"..name] = false
+                trigger[name] = trigger[name] or {}
+                trigger[name].multi = trigger[name].multi or {};
+                if trigger[name].single ~= nil then
+                  trigger[name].multi[trigger[name].single] = true;
+                  trigger[name].single = nil
+                end
+              end
+            end
             if(trigger["use_"..name] == false) then -- multi selection
               local any = false;
               if (trigger[name] and trigger[name].multi) then
                 test = "(";
-                for value, _ in pairs(trigger[name].multi) do
-                  if not arg.test then
-                    test = test..name.."=="..(tonumber(value) or ("[["..value.."]]")).." or ";
-                  else
-                    if arg.extraOption then
-                      test = test..arg.test:format(tonumber(value) or ("[["..value.."]]"), trigger[name .. "_extraOption"] or 0).." or ";
-                    else
-                      test = test..arg.test:format(tonumber(value) or ("[["..value.."]]")).." or ";
-                    end
+                for value, positive in pairs(trigger[name].multi) do
+                  local arg1 = tonumber(value) or ("[["..value.."]]")
+                  local arg2
+                  if arg.extraOption then
+                    arg2 = trigger[name .. "_extraOption"] or 0
+                  elseif arg.multiTristate then
+                    arg2 = positive and 4 or 5
                   end
-                  any = true;
+                  local testEnabled = true
+                  if type(arg.enableTest) == "function" then
+                    testEnabled = arg.enableTest(arg1, arg2)
+                  end
+                  if testEnabled then
+                    local check
+                    if not arg.test then
+                      check = name.."=="..arg1
+                    else
+                      check = arg.test:format(arg1, arg2)
+                    end
+                    if arg.multiAll then
+                      test = test..check.." and "
+                    else
+                      test = test..check.." or  "
+                    end
+                    any = true;
+                  end
                 end
                 if(any) then
-                  test = test:sub(1, -5);
+                  test = test:sub(1, -6);
                 else
                   test = "(false";
                 end
@@ -683,8 +754,13 @@ local function ConstructFunction(prototype, trigger, skipOptional)
           if test ~= "(test)" then
             if(arg.required) then
               tinsert(required, test);
-            else
-              tinsert(tests, test);
+            elseif test ~= nil then
+              if arg.orConjunctionGroup  then
+                orConjunctionGroups[arg.orConjunctionGroup ] = orConjunctionGroups[arg.orConjunctionGroup ] or {}
+                tinsert(orConjunctionGroups[arg.orConjunctionGroup ], "("..test..")")
+              else
+                tinsert(tests, test);
+              end
             end
           end
 
@@ -702,6 +778,9 @@ local function ConstructFunction(prototype, trigger, skipOptional)
     end
   end
 
+  for _, orConjunctionGroup  in pairs(orConjunctionGroups) do
+    tinsert(tests, "("..table.concat(orConjunctionGroup , " or ")..")")
+  end
   local ret = preambles .. "return function("..table.concat(input, ", ")..")\n";
   ret = ret..(init or "");
   ret = ret..(#debug > 0 and table.concat(debug, "\n") or "");
@@ -728,30 +807,30 @@ local function LoadCustomActionFunctions(data)
 
   if (data.actions) then
     if (data.actions.init and data.actions.init.do_custom and data.actions.init.custom) then
-      local func = WeakAuras.LoadFunction("return function() "..(data.actions.init.custom).."\n end", id, "initialization");
+      local func = WeakAuras.LoadFunction("return function() "..(data.actions.init.custom).."\n end");
       Private.customActionsFunctions[id]["init"] = func;
     end
 
     if (data.actions.start) then
       if (data.actions.start.do_custom and data.actions.start.custom) then
-        local func = WeakAuras.LoadFunction("return function() "..(data.actions.start.custom).."\n end", id, "show action");
+        local func = WeakAuras.LoadFunction("return function() "..(data.actions.start.custom).."\n end");
         Private.customActionsFunctions[id]["start"] = func;
       end
 
       if (data.actions.start.do_message and data.actions.start.message_custom) then
-        local func = WeakAuras.LoadFunction("return "..(data.actions.start.message_custom), id, "show message");
+        local func = WeakAuras.LoadFunction("return "..(data.actions.start.message_custom));
         Private.customActionsFunctions[id]["start_message"] = func;
       end
     end
 
     if (data.actions.finish) then
       if (data.actions.finish.do_custom and data.actions.finish.custom) then
-        local func = WeakAuras.LoadFunction("return function() "..(data.actions.finish.custom).."\n end", id, "hide action");
+        local func = WeakAuras.LoadFunction("return function() "..(data.actions.finish.custom).."\n end");
         Private.customActionsFunctions[id]["finish"] = func;
       end
 
       if (data.actions.finish.do_message and data.actions.finish.message_custom) then
-        local func = WeakAuras.LoadFunction("return "..(data.actions.finish.message_custom), id, "hide message");
+        local func = WeakAuras.LoadFunction("return "..(data.actions.finish.message_custom));
         Private.customActionsFunctions[id]["finish_message"] = func;
       end
     end
@@ -1474,6 +1553,9 @@ local function scanForLoadsImpl(toCheck, event, arg1, ...)
     role = "none"
     if WeakAuras.IsWrathClassic() then
       role = UnitGroupRolesAssigned("player")
+      if role == "NONE" then
+        role = GetTalentGroupRole(GetActiveTalentGroup()) or "NONE"
+      end
       vehicle = UnitInVehicle('player') or UnitOnTaxi('player')
       vehicleUi = UnitHasVehicleUI('player') or HasOverrideActionBar() or HasVehicleActionBar()
     else
@@ -2752,11 +2834,11 @@ local function pAdd(data, simpleChange)
       loadEvents["SCAN_ALL"][id] = true
 
       local loadForOptionsFuncStr = ConstructFunction(load_prototype, data.load, true);
-      local loadFunc = WeakAuras.LoadFunction(loadFuncStr, id, "load");
-      local loadForOptionsFunc = WeakAuras.LoadFunction(loadForOptionsFuncStr, id, "options load");
+      local loadFunc = WeakAuras.LoadFunction(loadFuncStr);
+      local loadForOptionsFunc = WeakAuras.LoadFunction(loadForOptionsFuncStr);
       local triggerLogicFunc;
       if data.triggers.disjunctive == "custom" then
-        triggerLogicFunc = WeakAuras.LoadFunction("return "..(data.triggers.customTriggerLogic or ""), id, "trigger combination");
+        triggerLogicFunc = WeakAuras.LoadFunction("return "..(data.triggers.customTriggerLogic or ""));
       end
 
       LoadCustomActionFunctions(data);
@@ -2813,7 +2895,7 @@ function WeakAuras.Add(data, takeSnapshot, simpleChange)
   if takeSnapshot then
     Private.SetMigrationSnapshot(data.uid, snapshot)
   end
-  local ok = xpcall(WeakAuras.PreAdd, geterrorhandler(), data)
+  local ok = xpcall(WeakAuras.PreAdd, Private.GetErrorHandlerUid(data.uid, "PreAdd"), data)
   if ok then
     pAdd(data, simpleChange)
   end
@@ -3124,12 +3206,15 @@ do
           if new_frame and new_frame ~= data.frame then
             local id = region.id .. (region.cloneId or "")
             -- remove previous glow
-            actionGlowStop(data.actions, data.frame, id)
+            if data.frame then
+              actionGlowStop(data.actions, data.frame, id)
+            end
             -- apply the glow to new_frame
             data.frame = new_frame
             actionGlowStart(data.actions, data.frame, id)
             -- update hidefunc
             local region = region
+            region.active_glows_hidefunc = region.active_glows_hidefunc or {}
             region.active_glows_hidefunc[data.frame] = function()
               actionGlowStop(data.actions, data.frame, id)
               glow_frame_monitor[region] = nil
@@ -3185,51 +3270,60 @@ function Private.HandleGlowAction(actions, region)
     or (actions.glow_frame_type == "FRAMESELECTOR" and actions.glow_frame)
   )
   then
-    local glow_frame
+    local glow_frame, should_glow_frame
     if actions.glow_frame_type == "FRAMESELECTOR" then
       if actions.glow_frame:sub(1, 10) == "WeakAuras:" then
         local frame_name = actions.glow_frame:sub(11)
         if regions[frame_name] then
           glow_frame = regions[frame_name].region
+          should_glow_frame = true
         end
       else
         glow_frame = Private.GetSanitizedGlobal(actions.glow_frame)
+        should_glow_frame = true
       end
     elseif actions.glow_frame_type == "UNITFRAME" and region.state.unit then
       glow_frame = WeakAuras.GetUnitFrame(region.state.unit)
+      should_glow_frame = true
     elseif actions.glow_frame_type == "NAMEPLATE" and region.state.unit then
       glow_frame = WeakAuras.GetUnitNameplate(region.state.unit)
+      should_glow_frame = true
     end
 
-    if glow_frame then
+    if should_glow_frame then
       local id = region.id .. (region.cloneId or "")
       if actions.glow_action == "show" then
         -- remove previous glow
-        if region.active_glows_hidefunc
-        and region.active_glows_hidefunc[glow_frame]
-        then
-          region.active_glows_hidefunc[glow_frame]()
+        if glow_frame then
+          if region.active_glows_hidefunc
+          and region.active_glows_hidefunc[glow_frame]
+          then
+            region.active_glows_hidefunc[glow_frame]()
+          end
+          -- start glow
+          actionGlowStart(actions, glow_frame, id)
+          -- make unglow function & monitor unitframe changes
+          region.active_glows_hidefunc = region.active_glows_hidefunc or {}
+          if actions.glow_frame_type == "UNITFRAME" then
+            region.active_glows_hidefunc[glow_frame] = function()
+              actionGlowStop(actions, glow_frame, id)
+              glow_frame_monitor[region] = nil
+            end
+          else
+            region.active_glows_hidefunc[glow_frame] = function()
+              actionGlowStop(actions, glow_frame, id)
+            end
+          end
         end
-        -- start glow
-        actionGlowStart(actions, glow_frame, id)
-        -- make unglow function & monitor unitframe changes
-        region.active_glows_hidefunc = region.active_glows_hidefunc or {}
         if actions.glow_frame_type == "UNITFRAME" then
           glow_frame_monitor = glow_frame_monitor or {}
           glow_frame_monitor[region] = {
             actions = actions,
             frame = glow_frame
           }
-          region.active_glows_hidefunc[glow_frame] = function()
-            actionGlowStop(actions, glow_frame, id)
-            glow_frame_monitor[region] = nil
-          end
-        else
-          region.active_glows_hidefunc[glow_frame] = function()
-            actionGlowStop(actions, glow_frame, id)
-          end
         end
       elseif actions.glow_action == "hide"
+      and glow_frame
       and region.active_glows_hidefunc
       and region.active_glows_hidefunc[glow_frame]
       then
@@ -3277,7 +3371,7 @@ function Private.PerformActions(data, when, region)
     local func = Private.customActionsFunctions[data.id][when]
     if func then
       Private.ActivateAuraEnvironment(region.id, region.cloneId, region.state, region.states);
-      xpcall(func, geterrorhandler());
+      xpcall(func, Private.GetErrorHandlerId(data.id, L["Custom Action"]));
       Private.ActivateAuraEnvironment(nil);
     end
   end
@@ -3960,7 +4054,7 @@ local function evaluateTriggerStateTriggers(id)
     result = true;
   else
     if (triggerState[id].disjunctive == "custom" and triggerState[id].triggerLogicFunc) then
-      local ok, returnValue = xpcall(triggerState[id].triggerLogicFunc, geterrorhandler(), triggerState[id].triggers);
+      local ok, returnValue = xpcall(triggerState[id].triggerLogicFunc, Private.GetErrorHandlerId(id, L["Custom Trigger Combination"]), triggerState[id].triggers);
       result = ok and returnValue;
     end
   end
@@ -4170,7 +4264,7 @@ function Private.RunCustomTextFunc(region, customFunc)
     end
   end
 
-  local custom = {select(2, xpcall(customFunc, geterrorhandler(), expirationTime or math.huge, duration or 0, progress, dur, name, icon, stacks))}
+  local custom = {select(2, xpcall(customFunc, Private.GetErrorHandlerId(region.id, L["Custom Text Function"]), expirationTime or math.huge, duration or 0, progress, dur, name, icon, stacks))}
   Private.ActivateAuraEnvironment(nil)
 
   return custom
@@ -5051,7 +5145,7 @@ local function GetAnchorFrame(data, region, parent)
     Private.StartProfileSystem("custom region anchor")
     Private.StartProfileAura(region.id)
     Private.ActivateAuraEnvironment(region.id, region.cloneId, region.state)
-    local ok, frame = xpcall(region.customAnchorFunc, geterrorhandler())
+    local ok, frame = xpcall(region.customAnchorFunc, Private.GetErrorHandlerId(region.id, L["Custom Anchor"]))
     Private.ActivateAuraEnvironment()
     Private.StopProfileSystem("custom region anchor")
     Private.StopProfileAura(region.id)
@@ -5082,10 +5176,7 @@ function Private.AnchorFrame(data, region, parent)
     if not anchorParent then return end
     if (data.anchorFrameParent or data.anchorFrameParent == nil
         or data.anchorFrameType == "SCREEN" or data.anchorFrameType == "MOUSE") then
-      local errorhandler = function(text)
-        geterrorhandler()(L["'ERROR: Anchoring %s': \n"]:format(data.id) .. text)
-      end
-      xpcall(region.SetParent, errorhandler, region, anchorParent);
+      xpcall(region.SetParent, Private.GetErrorHandlerId(data.id, L["Anchoring"]), region, anchorParent);
     else
       region:SetParent(parent or WeakAurasFrame);
     end

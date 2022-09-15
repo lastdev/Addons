@@ -81,7 +81,8 @@ function addon:getCleaveEnemies(follower, field, taunter)
         -- Kleia affected by taunt: options 5+7+8+10+11, taunted by 11, targetted 5+7+11
         -- Lost Sybille: options 8+12 cleaved both
         [3] = {{6, 7}, {7}, {5, 9, 10, 11}, {9, 10, 11}, {10, 11}, {11, 7, 5}, {8, 12}, {12}},
-        [4] = {{7, 8}, {8}, {6, 10, 11, 12}, {10, 11, 12}, {11}, {12}, {5}, {9}},
+        -- options 9+11+12 targetted 11+12
+        [4] = {{7, 8}, {8}, {6, 10, 11, 12}, {10, 11, 12}, {11, 12}, {12}, {5}, {9}},
         -- with nothing in slot 2, cleaved both 0 and 3            
         [5] = {{2}, {0, 3}, {3}, {1, 4}, {4}},
         [6] = {{2, 3}, {3}, {0}, {1}, {4}},
@@ -233,8 +234,9 @@ function addon:getLineEnemies(follower, field, taunter)
         -- Forest's Touch; options 8+11, targetted 11
         [2] = {{5, 9}, {6, 10}, {9}, {10}, {7, 11}, {11}, {8, 12}, {12}},
         -- options 8+10+11 targetted only 10
-        -- options 8+11 targetted only 11  
-        [3] = {{6, 10}, {5, 9}, {7, 11}, {10}, {11}, {8, 12}, {9}, {12}},
+        -- options 8+11 targetted only 11
+        -- options 5+7+10 targetted only 7  
+        [3] = {{6, 10}, {7, 11}, {5, 9}, {10}, {11}, {8, 12}, {9}, {12}},
         -- options 5+9+10+11 targetted only 11
         -- options 5+9+10 targetted only 10
         [4] = {{7, 11}, {8, 12}, {6, 10}, {11}, {10}, {5, 9}, {12}, {9}},
@@ -820,6 +822,7 @@ function addon:getPseudorandomRitualFervor(follower, field)
         {alive = {6, 10}, target = 10},
         {alive = {5, 6, 7, 10}, target = 10},
         {alive = {5, 9, 10}, target = 9},
+        {alive = {5, 7, 9, 10}, target = 10},
         
         -- observed in 2259 [Environment Effect]
         {alive = {7, 8, 10}, target = 8},
@@ -973,6 +976,8 @@ function addon:getPseudorandomLashOut(follower, field)
         {alive = {1, 2, 6, 7, 8, 10}, target = 2},
         {alive = {0, 2, 8}, target = 2},
         {alive = {0, 4, 8}, target = 4},
+        {alive = {0, 3, 5, 6, 7, 10}, target = 3},
+        {alive = {0, 1, 2, 3, 5, 10}, target = 1},
 
         -- observed in 2224 (Panic Attack)
         -- see https://github.com/TLDRMissions/TLDRMissions/issues/120
@@ -1055,6 +1060,23 @@ function addon:getPseudorandomLashOut(follower, field)
         {alive = {0, 2, 3, 4, 6, 7, 10, 11, 12}, target = 6},
         {alive = {0, 4, 10, 11, 12}, target = 4},
         {alive = {0, 10, 11, 12}, target = 12},
+        {alive = {0, 1, 2, 11, 12}, target = 1},
+        {alive = {0, 1, 2, 3, 6, 7, 10, 11}, target = 11},
+        {alive = {0, 1, 3, 6, 7, 10, 11}, target = 11},
+        {alive = {0, 4, 12}, target = 4},
+        {alive = {0, 1, 10}, target = 1},
+        {alive = {0, 1, 3, 4, 11, 12}, target = 1},
+        {alive = {0, 1, 4, 11, 12}, target = 1},
+        {alive = {1, 4, 9, 10}, target = 10},
+        {alive = {0, 1, 4, 10, 11}, target = 1},
+        {alive = {0, 1, 2, 4, 10, 11, 12}, target = 12},
+        {alive = {0, 1, 2, 4, 7, 11}, target = 1},
+        {alive = {0, 1, 3, 4, 9, 11, 12}, target = 12},
+        {alive = {0, 1, 2, 3, 7, 10, 11}, target = 11},
+        {alive = {0, 1, 2, 3, 4, 9, 10, 11, 12}, target = 4},
+        {alive = {0, 1, 3, 4, 9, 11}, target = 1},
+        {alive = {0, 2, 3, 7, 10, 11, 12}, target = 12},
+        {alive = {0, 1, 4, 7, 11}, target = 1},
     }
     
     local aliveMinions = {}

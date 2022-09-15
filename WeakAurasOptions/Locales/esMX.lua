@@ -637,7 +637,6 @@ Can use \ to escape -.]=]
 	L["Frame Width"] = "Frame Width"
 	--[[Translation missing --]]
 	L["Frequency"] = "Frequency"
-	L["From Template"] = "Desde la plantilla"
 	--[[Translation missing --]]
 	L["Full Circle"] = "Full Circle"
 	--[[Translation missing --]]
@@ -1017,6 +1016,8 @@ Sólo un valor coincidente puede ser escogido.]=]
 	--[[Translation missing --]]
 	L["Preferred Match"] = "Preferred Match"
 	--[[Translation missing --]]
+	L["Premade Auras"] = "Premade Auras"
+	--[[Translation missing --]]
 	L["Premade Snippets"] = "Premade Snippets"
 	L["Preset"] = "Predefinido"
 	--[[Translation missing --]]
@@ -1096,6 +1097,8 @@ Sólo un valor coincidente puede ser escogido.]=]
 	L["Same texture as Foreground"] = "Same texture as Foreground"
 	L["Scale"] = "Ajustar tamaño"
 	L["Search"] = "Buscar"
+	--[[Translation missing --]]
+	L["Select Talent"] = "Select Talent"
 	L["Select the auras you always want to be listed first"] = "Selecciona las auras que quieras que sean listadas primero"
 	--[[Translation missing --]]
 	L["Selected Frame"] = "Selected Frame"

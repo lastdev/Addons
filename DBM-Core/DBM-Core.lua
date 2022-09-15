@@ -29,8 +29,8 @@ local wowVersionString, wowBuild, _, wowTOC = GetBuildInfo()
 local testBuild = IsTestBuild()
 local isRetail = WOW_PROJECT_ID == (WOW_PROJECT_MAINLINE or 1)
 local isClassic = WOW_PROJECT_ID == (WOW_PROJECT_CLASSIC or 2)
-local isBCC = WOW_PROJECT_ID == (WOW_PROJECT_BURNING_CRUSADE_CLASSIC or 5) and wowTOC < 30000
-local isWrath = WOW_PROJECT_ID == 5 and wowTOC >= 30000
+local isBCC = WOW_PROJECT_ID == (WOW_PROJECT_BURNING_CRUSADE_CLASSIC or 5)
+local isWrath = WOW_PROJECT_ID == (WOW_PROJECT_WRATH_CLASSIC or 11)
 
 local DBMPrefix = isRetail and "D4" or isClassic and "D4C" or isBCC and "D4BC" or isWrath and "D4WC"
 private.DBMPrefix = DBMPrefix
@@ -69,27 +69,27 @@ local function showRealDate(curseDate)
 end
 
 DBM = {
-	Revision = parseCurseDate("20220816161347"),
+	Revision = parseCurseDate("20220907235432"),
 }
 
 local fakeBWVersion, fakeBWHash
 local bwVersionResponseString = "V^%d^%s"
 -- The string that is shown as version
 if isRetail then
-	DBM.DisplayVersion = "9.2.30"
-	DBM.ReleaseRevision = releaseDate(2022, 8, 16) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	DBM.DisplayVersion = "9.2.33"
+	DBM.ReleaseRevision = releaseDate(2022, 9, 7) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	fakeBWVersion, fakeBWHash = 243, "d58ab26"
 elseif isClassic then
 	DBM.DisplayVersion = "1.14.27 alpha"
 	DBM.ReleaseRevision = releaseDate(2022, 8, 1) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	fakeBWVersion, fakeBWHash = 41, "287b8dd"
 elseif isBCC then
-	DBM.DisplayVersion = "2.5.43 alpha"
+	DBM.DisplayVersion = "2.6.0 alpha"--When TBC returns (and it will one day). It'll probably be game version 2.6
 	DBM.ReleaseRevision = releaseDate(2022, 8, 1) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	fakeBWVersion, fakeBWHash = 41, "287b8dd"
 elseif isWrath then
-	DBM.DisplayVersion = "3.4.7 alpha"
-	DBM.ReleaseRevision = releaseDate(2022, 8, 1) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	DBM.DisplayVersion = "3.4.9"
+	DBM.ReleaseRevision = releaseDate(2022, 9, 7) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	fakeBWVersion, fakeBWHash = 41, "287b8dd"
 end
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
@@ -201,7 +201,6 @@ DBM.DefaultOptions = {
 	FilterDispel = true,
 	FilterTrashWarnings2 = true,
 	FilterVoidFormSay = true,
-	--FilterSelfHud = true,
 	AutologBosses = false,
 	AdvancedAutologBosses = false,
 	RecordOnlyBosses = false,
@@ -505,14 +504,16 @@ end
 local LibStub = _G["LibStub"]
 local LibSpec
 do
-	if isRetail then
-		LibSpec = LibStub("LibSpecialization")
-		local function update(specID, _, _, playerName)
-			if raid[playerName] then
-				raid[playerName].specID = specID
+	if isRetail and LibStub then
+		LibSpec = LibStub("LibSpecialization", true)
+		if LibSpec then
+			local function update(specID, _, _, playerName)
+				if raid[playerName] then
+					raid[playerName].specID = specID
+				end
 			end
+			LibSpec:Register(DBM, update)
 		end
-		LibSpec:Register(DBM, update)
 	end
 end
 
@@ -1473,7 +1474,7 @@ do
 			if type(DBM_MinimapIcon) ~= "table" then
 				DBM_MinimapIcon = {}
 			end
-			if LibStub("LibDBIcon-1.0", true) then
+			if LibStub and LibStub("LibDBIcon-1.0", true) then
 				LibStub("LibDBIcon-1.0"):Register("DBM", private.dataBroker, DBM_MinimapIcon)
 			end
 			local soundChannels = tonumber(GetCVar("Sound_NumChannels")) or 24--if set to 24, may return nil, Defaults usually do
@@ -1697,7 +1698,13 @@ do
 					"PLAYER_SPECIALIZATION_CHANGED",
 					"SCENARIO_COMPLETED"
 				)
-			else -- WoTLKC, BCC and Classic
+			elseif isWrath then -- WoTLKC
+				self:RegisterEvents(
+					"UNIT_HEALTH_FREQUENT mouseover target focus player",--Still exists in classic and non frequent is slow and less reliable
+					"CHARACTER_POINTS_CHANGED",
+					"PLAYER_TALENT_UPDATE"
+				)
+			else -- BCC and Classic
 				self:RegisterEvents(
 					"UNIT_HEALTH_FREQUENT mouseover target focus player",--Still exists in classic and non frequent is slow and less reliable
 					"CHARACTER_POINTS_CHANGED"
@@ -2164,7 +2171,6 @@ do
 					raid[name].guid = UnitGUID(id) or ""
 					raid[name].updated = true
 					raidGuids[UnitGUID(id) or ""] = name
-					--RequestSpecialization(nil, name)
 				end
 			end
 			private.enableIcons = false
@@ -3185,8 +3191,8 @@ function DBM:PLAYER_SPECIALIZATION_CHANGED()
 		end
 	end
 end
-
 DBM.CHARACTER_POINTS_CHANGED = DBM.PLAYER_SPECIALIZATION_CHANGED -- Classic/BCC support
+DBM.PLAYER_TALENT_UPDATE = DBM.PLAYER_SPECIALIZATION_CHANGED -- Wrath support
 
 do
 	local function AcceptPartyInvite()
@@ -3352,7 +3358,7 @@ do
 		-- This Bypasses Same ID check because we still need to recheck this on keystone difficulty check
 		if not self.Options.RecordOnlyBosses then
 			if LastInstanceType == "raid" or LastInstanceType == "party" then
-				self:StartLogging(0, nil)
+				self:StartLogging(0)
 			else
 				self:StopLogging()
 			end
@@ -4833,9 +4839,6 @@ do
 			local name = mod.combatInfo.name
 			local modId = mod.id
 			if isRetail then
-				--Build current SpecID info on combat start.
-				--Inefficient since very mew mods actually use it, but currently no way to request individual specID info, just everyones all at once
-				LibSpec:RequestSpecialization()
 				if mod.addon.type == "SCENARIO" and C_Scenario.IsInScenario() and not mod.soloChallenge then
 					mod.inScenario = true
 				end
@@ -4892,7 +4895,7 @@ do
 			--process global options
 			self:HideBlizzardEvents(1)
 			if self.Options.RecordOnlyBosses then
-				self:StartLogging(0, nil)
+				self:StartLogging(0)
 			end
 			if self.Options.HideObjectivesFrame and mod.addon.type ~= "SCENARIO" and (not isRetail or GetNumTrackedAchievements() == 0) and difficultyIndex ~= 8 and not InCombatLockdown() then
 				if isRetail then
@@ -4988,7 +4991,7 @@ do
 					end
 				end
 				if self.Options.oRA3AnnounceConsumables and _G["oRA3Frame"] then
-					local oRA3 = LibStub("AceAddon-3.0"):GetAddon("oRA3", true)
+					local oRA3 = LibStub and LibStub("AceAddon-3.0"):GetAddon("oRA3", true)
 					if oRA3 then
 						local consumables = oRA3:GetModule("Consumables", true)
 						if consumables then
@@ -5432,7 +5435,7 @@ do
 	local autoLog = false
 	local autoTLog = false
 
-	local function isLogableContent(self)
+	local function isLogableContent(self, force)
 		--1: Check for any broad global filters like LFG/LFR filter
 		--2: Check for what content specifically selected for logging
 		--3: Boss Only filter is handled somewhere else (where StartLogging is called)
@@ -5443,10 +5446,10 @@ do
 
 		--First checks are manual index checks versus table because even old content can be scaled up using M+ or TW scaling tech
 		--Current player level Mythic+
-		if self.Options.LogCurrentMPlus and (difficultyIndex or 0) == 8 then
+		if self.Options.LogCurrentMPlus and (force or (difficultyIndex or 0) == 8) then
 			return true
 		end
-		--Timewalking or Chromie Time Raid
+		--Timewalking or Chromie Time raid
 		if self.Options.LogTWRaids and (C_PlayerInfo.IsPlayerInChromieTime and C_PlayerInfo.IsPlayerInChromieTime() or difficultyIndex == 24 or difficultyIndex == 33) and (instanceDifficultyBylevel[LastInstanceMapID] and instanceDifficultyBylevel[LastInstanceMapID][2] == 3) then
 			return true
 		end
@@ -5456,10 +5459,11 @@ do
 		end
 
 		--Now we do checks relying on pre coded trivial check table
+		--Current level Mythic raid
 		if self.Options.LogCurrentMythicRaids and instanceDifficultyBylevel[LastInstanceMapID] and (instanceDifficultyBylevel[LastInstanceMapID][1] >= playerLevel) and (instanceDifficultyBylevel[LastInstanceMapID] and instanceDifficultyBylevel[LastInstanceMapID][2] == 3) and difficultyIndex == 16 then
 			return true
 		end
-		--Current player level non mythic raid
+		--Current player level non Mythic raid
 		if self.Options.LogCurrentRaids and instanceDifficultyBylevel[LastInstanceMapID] and (instanceDifficultyBylevel[LastInstanceMapID][1] >= playerLevel) and (instanceDifficultyBylevel[LastInstanceMapID][2] == 3) and difficultyIndex ~= 16 then
 			return true
 		end
@@ -5467,11 +5471,11 @@ do
 		if self.Options.LogTrivialRaids and instanceDifficultyBylevel[LastInstanceMapID] and (instanceDifficultyBylevel[LastInstanceMapID][1] < playerLevel) and (instanceDifficultyBylevel[LastInstanceMapID][2] == 3) then
 			return true
 		end
-		--Current level mythic dungeon
+		--Current level Mythic dungeon
 		if self.Options.LogCurrentMythicZero and instanceDifficultyBylevel[LastInstanceMapID] and (instanceDifficultyBylevel[LastInstanceMapID][1] >= playerLevel) and (instanceDifficultyBylevel[LastInstanceMapID][2] == 2) and difficultyIndex == 23 then
 			return true
 		end
-		--Current level heroic dungeon
+		--Current level Heroic dungeon
 		if self.Options.LogCurrentHeroic and instanceDifficultyBylevel[LastInstanceMapID] and (instanceDifficultyBylevel[LastInstanceMapID][1] >= playerLevel) and (instanceDifficultyBylevel[LastInstanceMapID][2] == 2) and (difficultyIndex == 2 or difficultyIndex == 174) then
 			return true
 		end
@@ -5481,25 +5485,26 @@ do
 
 	function DBM:StartLogging(timer, checkFunc, force)
 		self:Unschedule(DBM.StopLogging)
-		if not force and not isLogableContent(self) then return end
-		if self.Options.AutologBosses then
-			if not LoggingCombat() then
-				autoLog = true
-				self:AddMsg("|cffffff00"..COMBATLOGENABLED.."|r")
-				LoggingCombat(true)
+		if isLogableContent(self, force) then
+			if self.Options.AutologBosses then
+				if not LoggingCombat() then
+					autoLog = true
+					self:AddMsg("|cffffff00"..COMBATLOGENABLED.."|r")
+					LoggingCombat(true)
+				end
 			end
-		end
-		local transcriptor = _G["Transcriptor"]
-		if self.Options.AdvancedAutologBosses and transcriptor then
-			if not transcriptor:IsLogging() then
-				autoTLog = true
-				self:AddMsg("|cffffff00"..L.TRANSCRIPTOR_LOG_START.."|r")
-				transcriptor:StartLog(1)
+			local transcriptor = _G["Transcriptor"]
+			if self.Options.AdvancedAutologBosses and transcriptor then
+				if not transcriptor:IsLogging() then
+					autoTLog = true
+					self:AddMsg("|cffffff00"..L.TRANSCRIPTOR_LOG_START.."|r")
+					transcriptor:StartLog(1)
+				end
 			end
-		end
-		if checkFunc and (autoLog or autoTLog) then
-			self:Unschedule(checkFunc)
-			self:Schedule(timer+10, checkFunc)--But if pull was canceled and we don't have a boss engaged within 10 seconds of pull timer ending, abort log
+			if checkFunc and (autoLog or autoTLog) then
+				self:Unschedule(checkFunc)
+				self:Schedule(timer+10, checkFunc)--But if pull was canceled and we don't have a boss engaged within 10 seconds of pull timer ending, abort log
+			end
 		end
 	end
 
@@ -5690,15 +5695,18 @@ do
 	local LSMMediaCacheBuilt, sharedMediaFileCache, validateCache = false, {}, {}
 
 	local function buildLSMFileCache()
-		local hashtable = LibStub("LibSharedMedia-3.0", true):HashTable("sound")
-		local keytable = {}
-		for k in next, hashtable do
-			tinsert(keytable, k)
+		local LSM = LibStub and LibStub("LibSharedMedia-3.0", true)
+		if LSM then
+			local hashtable = LSM:HashTable("sound")
+			local keytable = {}
+			for k in next, hashtable do
+				tinsert(keytable, k)
+			end
+			for i = 1, #keytable do
+				sharedMediaFileCache[hashtable[keytable[i]]] = true
+			end
+			LSMMediaCacheBuilt = true
 		end
-		for i = 1, #keytable do
-			sharedMediaFileCache[hashtable[keytable[i]]] = true
-		end
-		LSMMediaCacheBuilt = true
 	end
 
 	function DBM:ValidateSound(path, log, ignoreCustom)
@@ -6822,6 +6830,11 @@ end
 function bossModPrototype:IsMythic()
 	local diff = savedDifficulty or DBM:GetCurrentInstanceDifficulty()
 	return diff == "mythic" or diff == "challenge5" or diff == "mythicisland"
+end
+
+function bossModPrototype:IsMythicPlus()
+	local diff = savedDifficulty or DBM:GetCurrentInstanceDifficulty()
+	return diff == "challenge5"
 end
 
 function bossModPrototype:IsEvent()

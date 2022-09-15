@@ -22,7 +22,7 @@ local conf, rconf
 XPerl_RequestConfig(function(newConf)
 	conf = newConf
 	rconf = conf.raid
-end, "$Revision: ba83e40f9d15e0884b12cfb141a24c54c2032260 $")
+end, "$Revision: 52b9ddfe6f4ee24803f90c3bad34a3009df5a616 $")
 
 --[[if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
@@ -37,6 +37,8 @@ end
 --local new, del, copy = XPerl_GetReusableTable, XPerl_FreeTable, XPerl_CopyTable
 
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
+local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
 
 local format = format
 local strsub = strsub
@@ -1227,7 +1229,7 @@ function XPerl_Raid_UpdateDisplay(self)
 		XPerl_Raid_UpdateManaType(self)
 		XPerl_Raid_UpdateMana(self)
 	end
-	if not IsClassic then
+	if not IsVanillaClassic then
 		XPerl_Raid_RoleUpdate(self, UnitGroupRolesAssigned(self.partyid))
 	end
 	XPerl_Raid_UpdatePlayerFlags(self)
@@ -1482,7 +1484,7 @@ function XPerl_Raid_Events:GROUP_ROSTER_UPDATE()
 	BuildGuidMap()
 	if (IsInRaid() or (IsInGroup() and rconf.inParty)) then
 		XPerl_Raid_Frame:Show()
-		if not IsClassic then
+		if not IsVanillaClassic then
 			if (rconf.raid_role) then
 				for i, frame in pairs(FrameArray) do
 					if (frame.partyid) then
@@ -2466,10 +2468,25 @@ local function SetMainHeaderAttributes(self)
 end
 
 local function DefaultRaidClasses()
-	if IsClassic then
+	if IsVanillaClassic then
 		return {
 			{enable = true, name = "WARRIOR"},
 			--{enable = true, name = "DEATHKNIGHT"},
+			{enable = true, name = "ROGUE"},
+			{enable = true, name = "HUNTER"},
+			{enable = true, name = "MAGE"},
+			{enable = true, name = "WARLOCK"},
+			{enable = true, name = "PRIEST"},
+			{enable = true, name = "DRUID"},
+			{enable = true, name = "SHAMAN"},
+			{enable = true, name = "PALADIN"},
+			--{enable = true, name = "MONK"},
+			--{enable = true, name = "DEMONHUNTER"},
+		}
+	elseif IsWrathClassic then
+		return {
+			{enable = true, name = "WARRIOR"},
+			{enable = true, name = "DEATHKNIGHT"},
 			{enable = true, name = "ROGUE"},
 			{enable = true, name = "HUNTER"},
 			{enable = true, name = "MAGE"},
@@ -2546,7 +2563,7 @@ function XPerl_Raid_ChangeAttributes()
 
 	rconf.anchor = (rconf and rconf.anchor) or "TOP"
 
-	for i = 1, rconf.sortByClass and WoWclassCount or (IsClassic and 9 or 12) do
+	for i = 1, rconf.sortByClass and WoWclassCount or (IsVanillaClassic and 9 or (IsWrathClassic and 10 or 12)) do
 		local groupHeader = raidHeaders[i]
 
 		-- Hide this when we change attributes, so the whole re-calc is only done once, instead of for every attribute change

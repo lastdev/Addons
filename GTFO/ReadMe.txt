@@ -1755,3 +1755,8 @@ Change Log:
 * Added SL spells for Torghast
 * Added WoD spells for Iron Docks
 * Added WoD spells for Grimrail Depot
+
+4.68
+* Wrath Classic support
+* Dragonflight support (initial)
+

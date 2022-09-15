@@ -1,7 +1,7 @@
-## Interface: 90205
+## Interface: 90207
 ## Title: SilverDragon (BurningCrusade)
 ## Notes: Mobs for BurningCrusade
-## Version: v90205.2
+## Version: v90207.0
 ## Author: Kemayo
 ## eMail: kemayo at gmail dot com
 ## X-Category: Interface Enhancements

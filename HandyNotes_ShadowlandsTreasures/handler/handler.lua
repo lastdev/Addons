@@ -5,7 +5,7 @@ local HL = LibStub("AceAddon-3.0"):NewAddon(myname, "AceEvent-3.0")
 -- local L = LibStub("AceLocale-3.0"):GetLocale(myname, true)
 ns.HL = HL
 
-ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v68'
+ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v69'
 
 ---------------------------------------------------------
 -- Data model stuff:

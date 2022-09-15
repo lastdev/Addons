@@ -4,7 +4,7 @@
   <Script file="HealBot_Aggro.lua" />
   <Script file="HealBot_Skins.lua" />
   <Script file="HealBot_Text.lua" />
-  <Script file="HealBot_Wheel.lua" />
+  <Script file="HealBot_Mounts.lua" />
   <Script file="HealBot_Action.lua" />
   <Script file="HealBot_Timers.lua" />
  
@@ -14,8 +14,6 @@
     </Size>
     <Scripts>
       <OnLoad>HealBot_Action_OnLoad(self)</OnLoad>
-      <OnEnter>HealBot_Action_HealUnit_OnEnter(self);</OnEnter>
-      <OnLeave>HealBot_Action_HealUnit_OnLeave(self);</OnLeave>
     </Scripts>
     <Frames>
       <StatusBar name="$parentBar" inherits="HealBot_StatusBar">
@@ -1188,14 +1186,12 @@
     </Anchors>
   </Button>  
   
-   <Button name="HealingButtonTemplateEmerg" virtual="true" inherits="SecureUnitButtonTemplate">
+   <Button name="HealingButtonTemplateEmerg" virtual="true" inherits="SecureUnitButtonTemplate,SecureHandlerEnterLeaveTemplate,SecureHandlerShowHideTemplate">
     <Size>
       <AbsDimension x="128" y="18" />
     </Size>
     <Scripts>
       <OnLoad>HealBot_Action_EmergOnLoad(self)</OnLoad>
-      <OnEnter>HealBot_Action_EmergUnit_OnEnter(self);</OnEnter>
-      <OnLeave>HealBot_Action_EmergUnit_OnLeave(self);</OnLeave>
     </Scripts>
     <Frames>
       <StatusBar name="$parentBar" inherits="HealBot_StatusBar">

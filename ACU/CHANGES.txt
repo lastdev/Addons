@@ -1,0 +1,10 @@
+tag a70d6ef2211cb003c63ec1ffae9c689b35396924 v9.2.7.005
+Author:	Tercio Jose <terciob19@hotmail.com>
+Date:	Tue Aug 30 19:25:17 2022 -0300
+
+commit faed5ea7f6f81ca7d0f31d741c1192b25c2ff8e9
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Tue Aug 30 19:24:56 2022 -0300
+
+    Load all Ace3 libraries, so Ace cpu usage don't count towards other addons
+

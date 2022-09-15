@@ -689,8 +689,6 @@ Can use \ to escape -.]=]
 	--[[Translation missing --]]
 	L["Frequency"] = "Frequency"
 	--[[Translation missing --]]
-	L["From Template"] = "From Template"
-	--[[Translation missing --]]
 	L["Full Circle"] = "Full Circle"
 	--[[Translation missing --]]
 	L["Get Help"] = "Get Help"
@@ -1123,6 +1121,8 @@ Can use \ to escape -.]=]
 	--[[Translation missing --]]
 	L["Preferred Match"] = "Preferred Match"
 	--[[Translation missing --]]
+	L["Premade Auras"] = "Premade Auras"
+	--[[Translation missing --]]
 	L["Premade Snippets"] = "Premade Snippets"
 	--[[Translation missing --]]
 	L["Preset"] = "Preset"
@@ -1226,6 +1226,8 @@ Can use \ to escape -.]=]
 	L["Scale"] = "Scale"
 	--[[Translation missing --]]
 	L["Search"] = "Search"
+	--[[Translation missing --]]
+	L["Select Talent"] = "Select Talent"
 	--[[Translation missing --]]
 	L["Select the auras you always want to be listed first"] = "Select the auras you always want to be listed first"
 	--[[Translation missing --]]

@@ -1,5 +1,5 @@
 ## Interface: 11403
-## Version: v9.2.3
+## Version: v9.2.4
 ## Title: BadBoy_Ignore
 ## Notes: A simple and infinite ignore list to block chat from players.
 ## Notes-frFR: A simple and infinite ignore list to block chat from players.
@@ -19,6 +19,7 @@
 ## X-License: All Rights Reserved: You are free to fork and modify on GitHub, please ask us about anything else.
 ## X-Curse-Project-ID: 103223
 ## X-WoWI-ID: 24293
+## X-Wago-ID: xZKxnvNk
 
 Locale.lua
 SimpleOptions.lua

@@ -36,8 +36,6 @@ HB_TOOLTIP_OFFLINE = "离线";
 HB_OFFLINE        = "离线";
 HB_ONLINE         = "在线";
 
-HEALBOT_HEALBOT     = "HealBot";
-HEALBOT_ADDON       = HEALBOT_HEALBOT .. " " .. HEALBOT_VERSION;
 HEALBOT_LOADED      = " 已载入.";
 
 HEALBOT_RANK   = {[1]="(等级 1)", [2]="(等级 2)", [3]="(等级 3)", [4]="(等级 4)", [5]="(等级 5)", [6]="(等级 6)", [7]="(等级 7)",
@@ -53,7 +51,6 @@ HEALBOT_OPTIONS_SOFTRESET     = "重载HB"
 HEALBOT_OPTIONS_TAB_GENERAL   = "综合";
 HEALBOT_OPTIONS_TAB_SPELLS    = "法术";
 HEALBOT_OPTIONS_TAB_HEALING   = "治疗";
-HEALBOT_OPTIONS_TAB_CDC       = "驱散";
 HEALBOT_OPTIONS_TAB_SKIN      = "样式";
 HEALBOT_OPTIONS_TAB_TIPS      = "提示";
 HEALBOT_OPTIONS_TAB_BUFFS     = "增益"
@@ -189,7 +186,6 @@ HEALBOT_WORDS_THIN              = "细";
 HEALBOT_WORDS_THICK             = "粗";
 
 HEALBOT_WORDS_NONE              = "空";
-HEALBOT_OPTIONS_ALT             = "Alt";
 HEALBOT_DISABLED_TARGET         = "目标";
 HEALBOT_OPTIONS_SHOWCLASSONBAR  = "显示职业名称";
 HEALBOT_OPTIONS_SHOWHEALTHONBAR = "显示生命值";
@@ -202,15 +198,6 @@ HEALBOT_OPTIONS_POSTOOLTIP      = "职责提示";
 HEALBOT_OPTIONS_SHOWNAMEONBAR   = "显示玩家名";
 HEALBOT_OPTIONS_BARTEXTCLASSCOLOUR1 = "玩家名着色";
 HEALBOT_OPTIONS_EMERGFILTERGROUPS   = "包含团队小队";
-
-HEALBOT_ONE   = "1";
-HEALBOT_TWO   = "2";
-HEALBOT_THREE = "3";
-HEALBOT_FOUR  = "4";
-HEALBOT_FIVE  = "5";
-HEALBOT_SIX   = "6";
-HEALBOT_SEVEN = "7";
-HEALBOT_EIGHT = "8";
 
 HEALBOT_OPTIONS_SETDEFAULTS    = "设置默认";
 HEALBOT_OPTIONS_SETDEFAULTSMSG = "恢复所有设置为默认值";
@@ -380,7 +367,6 @@ HEALBOT_WORD_TEST                   = "测试";
 HEALBOT_WORD_OFF                    = "关";
 HEALBOT_WORD_ON                     = "开";
 
-HEALBOT_OPTIONS_TAB_PROTECTION      = "保护"
 HEALBOT_OPTIONS_TAB_CHAT            = "聊天"
 HEALBOT_OPTIONS_TAB_HEADERS         = "标题"
 HEALBOT_OPTIONS_TAB_BARS            = "样式条"
@@ -404,8 +390,6 @@ HEALBOT_OPTIONS_BUTTONCASTMETHOD    = "按键触发"
 HEALBOT_OPTIONS_BUTTONCASTPRESSED   = "按下"
 HEALBOT_OPTIONS_BUTTONCASTRELEASED  = "释放"
 
-HEALBOT_INFO_ADDONCPUUSAGE          = "== 插件每秒 CPU 占用率 =="
-HEALBOT_INFO_ADDONCOMMUSAGE         = "== 插件通信使用 =="
 HEALBOT_WORD_HEALER                 = "治疗"
 HEALBOT_WORD_DAMAGER                = "输出"
 HEALBOT_WORD_TANK                   = "坦克"
@@ -413,9 +397,6 @@ HEALBOT_WORD_LEADER                 = "领队"
 HEALBOT_WORD_VERSION                = "插件版本"
 HEALBOT_WORD_CLIENT                 = "客户端"
 HEALBOT_WORD_ADDON                  = "插件"
-HEALBOT_INFO_CPUSECS                = "CPU 每秒"
-HEALBOT_INFO_MEMORYKB               = "内存 KB"
-HEALBOT_INFO_COMMS                  = "通信 KB"
 
 HEALBOT_WORD_STAR                   = "星星"
 HEALBOT_WORD_CIRCLE                 = "圆形"
@@ -430,9 +411,8 @@ HEALBOT_OPTIONS_ACCEPTSKINMSG       = "接受 [HealBot] 皮肤: "
 HEALBOT_OPTIONS_ACCEPTSKINMSGFROM   = " 从 "
 HEALBOT_OPTIONS_BUTTONSHARESKIN     = "共享"
 
-HEALBOT_CHAT_ADDONID                = "[HealBot]"
 HEALBOT_CHAT_NEWVERSION1            = "有新的可用版本"
-HEALBOT_CHAT_NEWVERSION2            = "在 http://healbot.alturl.com"
+HEALBOT_CHAT_NEWVERSION2            = "在 "..HEALBOT_ABOUT_URL
 HEALBOT_CHAT_SHARESKINERR1          = " 共享中没有发现皮肤"
 HEALBOT_CHAT_SHARESKINERR3          = " 没有发现共享皮肤"
 HEALBOT_CHAT_SHARESKINACPT          = "接受共享皮肤 "
@@ -610,14 +590,8 @@ HEALBOT_AGGRO_ERROR_MSG                 = "无效的仇恨等级 - 使用 2 或 
 HEALBOT_OPTIONS_QUERYTALENTS            = "查询天赋数据"       
 HEALBOT_OPTIONS_LOWMANAINDICATOR        = "低法力指示器"
 HEALBOT_OPTIONS_LOWMANAINDICATOR1       = "不显示"
-HEALBOT_OPTIONS_LOWMANAINDICATOR2       = "*10% / **20% / ***30%"
-HEALBOT_OPTIONS_LOWMANAINDICATOR3       = "*15% / **30% / ***45%"
-HEALBOT_OPTIONS_LOWMANAINDICATOR4       = "*20% / **40% / ***60%"
-HEALBOT_OPTIONS_LOWMANAINDICATOR5       = "*25% / **50% / ***75%"
-HEALBOT_OPTIONS_LOWMANAINDICATOR6       = "*30% / **60% / ***90%"
 
 HEALBOT_OPTION_IGNORE_AURA_RESTED       = "休息时忽略光环效果"
-HEALBOT_OPTION_ADJUST_MAX_HEALTH        = "Adjust unit max health"
 
 HEALBOT_WORD_ENABLE                     = "开启"
 HEALBOT_WORD_DISABLE                    = "禁用"
@@ -628,7 +602,6 @@ HEALBOT_OPTIONS_CONTENT_ABOUT           = "        关于"
 HEALBOT_OPTIONS_CONTENT_GENERAL         = "        " .. HEALBOT_OPTIONS_TAB_GENERAL
 HEALBOT_OPTIONS_CONTENT_SPELLS          = "        " .. HEALBOT_OPTIONS_TAB_SPELLS
 HEALBOT_OPTIONS_CONTENT_SKINS           = "        " .. HEALBOT_OPTIONS_TAB_SKIN
-HEALBOT_OPTIONS_CONTENT_CURE            = "        " .. HEALBOT_OPTIONS_TAB_CDC
 HEALBOT_OPTIONS_CONTENT_BUFFS           = "        " .. HEALBOT_OPTIONS_TAB_BUFFS
 HEALBOT_OPTIONS_CONTENT_TIPS            = "        " .. HEALBOT_OPTIONS_TAB_TIPS
 HEALBOT_OPTIONS_CONTENT_MOUSEWHEEL      = "        鼠标滚轮"
@@ -638,19 +611,6 @@ HEALBOT_OPTIONS_REFRESH                 = "刷新"
 
 HEALBOT_CUSTOM_CATEGORY                 = "类别"
 HEALBOT_CUSTOM_CAT_CUSTOM               = "定制"
-HEALBOT_CUSTOM_CAT_02                   = "A - B" 
-HEALBOT_CUSTOM_CAT_03                   = "C - D"
-HEALBOT_CUSTOM_CAT_04                   = "E - F"
-HEALBOT_CUSTOM_CAT_05                   = "G - H"
-HEALBOT_CUSTOM_CAT_06                   = "I - J"
-HEALBOT_CUSTOM_CAT_07                   = "K - L"
-HEALBOT_CUSTOM_CAT_08                   = "M - N"
-HEALBOT_CUSTOM_CAT_09                   = "O - P"
-HEALBOT_CUSTOM_CAT_10                   = "Q - R"
-HEALBOT_CUSTOM_CAT_11                   = "S - T"
-HEALBOT_CUSTOM_CAT_12                   = "U - V"
-HEALBOT_CUSTOM_CAT_13                   = "W - X"
-HEALBOT_CUSTOM_CAT_14                   = "Y - Z"
 
 HEALBOT_CUSTOM_CASTBY_EVERYONE          = "任何人"
 HEALBOT_CUSTOM_CASTBY_ENEMY             = "敌方"
@@ -822,18 +782,6 @@ HEALBOT_OPTIONS_AVOIDBLUECURSOR         = "防止蓝\n色鼠标"
 HEALBOT_PLAYER_OF_REALM                  = "的"
     
     HEALBOT_OPTIONS_LANG                    = "语言"
-    HEALBOT_OPTIONS_LANG_ZHCN               = "Chinese (zhCN)"
-    HEALBOT_OPTIONS_LANG_ENUK               = "English (enUK)"
-    HEALBOT_OPTIONS_LANG_ENUS               = "English (enUS)"
-    HEALBOT_OPTIONS_LANG_FRFR               = "French (frFR)"
-    HEALBOT_OPTIONS_LANG_DEDE               = "Deutsch (deDE)"
-    HEALBOT_OPTIONS_LANG_HUHU               = "Hungarian (huHU)"
-    HEALBOT_OPTIONS_LANG_ITIT               = "Italian (itIT)"
-    HEALBOT_OPTIONS_LANG_KRKR               = "Korean (krKR)"
-    HEALBOT_OPTIONS_LANG_PTBR               = "Portuguese (ptBR)"
-    HEALBOT_OPTIONS_LANG_RURU               = "Russian (ruRU)"
-    HEALBOT_OPTIONS_LANG_ESES               = "Spanish (esES)"
-    HEALBOT_OPTIONS_LANG_TWTW               = "Taiwanese (twTW)"
     
     HEALBOT_OPTIONS_LANG_ADDON_FAIL1        = "无法加载本地化语言."
     HEALBOT_OPTIONS_LANG_ADDON_FAIL2        = "失败原因是:"
@@ -849,7 +797,6 @@ HEALBOT_PLAYER_OF_REALM                  = "的"
     HEALBOT_OPTIONS_CONTENT_SKINS_BARS      = "        " .. HEALBOT_OPTIONS_TAB_BARS
     HEALBOT_OPTIONS_CONTENT_SKINS_ICONS     = "        " .. HEALBOT_OPTIONS_TAB_ICONS
     HEALBOT_OPTIONS_CONTENT_SKINS_AGGRO     = "        " .. HEALBOT_OPTIONS_TAB_AGGRO
-    HEALBOT_OPTIONS_CONTENT_SKINS_PROT      = "        " .. HEALBOT_OPTIONS_TAB_PROTECTION
     HEALBOT_OPTIONS_CONTENT_SKINS_CHAT      = "        " .. HEALBOT_OPTIONS_TAB_CHAT
     HEALBOT_OPTIONS_CONTENT_SKINS_TEXT      = "        " .. HEALBOT_OPTIONS_TAB_TEXT
     HEALBOT_OPTIONS_CONTENT_SKINS_ICONTEXT  = "        " .. HEALBOT_OPTIONS_TAB_ICONTEXT
@@ -909,14 +856,4 @@ HEALBOT_PLAYER_OF_REALM                  = "的"
     HEALBOT_OPTIONS_PROFILE_CLASS           = "类别"
     HEALBOT_OPTIONS_INCOMBATALERTLEVEL      = "警报级别 - 在战斗中";
     HEALBOT_OPTIONS_OUTCOMBATALERTLEVEL     = "警报级别 - 脱离战斗";
-    HEALBOT_OPTION_NUMENEMYS                = "Number of Enemies"
-    HEALBOT_WORD_AUTO                       = "Auto"
-	HEALBOT_OPTIONS_ENABLEAUTOCOMBAT        = "Enable HealBot autoCombat"
-    HEALBOT_WORDS_REMOVETEMPCUSTOMNAME      = "Remove temporary custom name"
-    HEALBOT_WORDS_REMOVEPERMCUSTOMNAME      = "Remove permanent custom name"
-    HEALBOT_WORDS_ADDTEMPCUSTOMNAME         = "Add temporary custom name"
-    HEALBOT_WORDS_ADDPERMCUSTOMNAME         = "Add permanent custom name"
-    HEALBOT_OPTIONS_ENABLELIBUTF8           = "Enable UTF8 library"
-    HEALBOT_OPTIONS_SHOWDIRECTION           = "Show Out of Range Direction"
-    HEALBOT_OPTIONS_SHOWDIRECTIONMOUSE      = "Only on Mouse Over"
 end

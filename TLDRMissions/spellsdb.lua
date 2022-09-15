@@ -1997,7 +1997,6 @@ addon.spellsDB = {
             changeDamageTakenPercent = 25,
             duration = 2,
             buffName = "Viscous Sweep",
-        
         }
     },
     [253] = { -- Claws at the front rank of enemies, dealing $s1 Shadow damage.
@@ -2011,7 +2010,6 @@ addon.spellsDB = {
         target = addon.Enums.TargetType.other_allies,
         duration = 3,
         thorns = 100,
-
         buffName = "Drust Thorns",
     },
     [255] = { -- Shields an adjacent friendly target, reducing their damage taken by $s1% for one turn.
@@ -2289,7 +2287,7 @@ addon.spellsDB = {
             duration = 2,
             changeDamageTakenPercent = 50,
             buffName = "Master's Surprise",
-            roundFirst = true,
+            --roundFirst = true,
         },
         [2] = {
             target = addon.Enums.TargetType.closest_enemy,
@@ -2444,12 +2442,12 @@ addon.spellsDB = {
     },
     [311] = { -- Heals the closest ally for $s1 and increases their maximum health for $s2 for 2 rounds.
         [1] = {
-            target = addon.Enums.TargetType.closest_ally,
+            target = addon.Enums.TargetType.nearby_ally_or_self,
             type = addon.Enums.spellType.heal,
             healPercent = 120,
         },
         [2] = {
-            target = addon.Enums.TargetType.closest_ally,
+            target = addon.Enums.TargetType.nearby_ally_or_self,
             type = addon.Enums.spellType.buff,
             changeMaxHPUsingAttack = 40,
             duration = 2,
@@ -2677,6 +2675,7 @@ addon.spellsDB = {
             attackPercent = 200,
             target = addon.Enums.TargetType.furthest_enemy,
             type = addon.Enums.spellType.attack,
+            continueIfCasterDies = true,
         },
         [2] = {
             type = addon.Enums.spellType.buff,

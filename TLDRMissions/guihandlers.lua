@@ -840,10 +840,12 @@ gui.CalculateButton:SetScript("OnClick", function (self, button)
                     useSpecialTreatment = true
                 else
                     local rewards = C_Garrison.GetMissionRewardInfo(nextMission.missionID)
-                    for _, reward in pairs(rewards) do
-                        if reward.followerXP then
-                            useSpecialTreatment = true
-                            break
+                    if rewards then
+                        for _, reward in pairs(rewards) do
+                            if reward.followerXP then
+                                useSpecialTreatment = true
+                                break
+                            end
                         end
                     end
                 end
@@ -1023,6 +1025,7 @@ gui.StartMissionButton:SetScript("OnClick", function(self, button)
 		clearReportText()
         gui.shortcutButton:SetText(FAILED)
         gui.FailedCalcLabel:SetText(L["NotEnoughAnimaError"])
+        gui.SkipMissionButton:SetEnabled(true)
         self:SetEnabled(true)
         AceEvent:SendMessage("TLDRMISSIONS_NOT_ENOUGH_ANIMA")
         if WeakAuras then

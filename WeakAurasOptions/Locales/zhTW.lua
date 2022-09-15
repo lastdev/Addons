@@ -103,8 +103,7 @@ Enable this setting if you want this timer to be hidden, or when using a WeakAur
 	L["A Unit ID (e.g., party1)."] = "單位 ID (例如 party1)。"
 	L["Actions"] = "動作"
 	L["Active Aura Filters and Info"] = "啟用光環過濾以及訊息"
-	--[[Translation missing --]]
-	L["Actual Spec"] = "Actual Spec"
+	L["Actual Spec"] = "現實專精"
 	L["Add"] = "新增"
 	L["Add %s"] = "新增%s"
 	L["Add a new display"] = "新增提醒效果"
@@ -396,8 +395,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Filter by Group Role"] = "依角色職責過濾"
 	L["Filter by Nameplate Type"] = "依名條類型過濾"
 	L["Filter by Raid Role"] = "依團隊角色職責過濾"
-	--[[Translation missing --]]
-	L["Filter by Specialization"] = "Filter by Specialization"
+	L["Filter by Specialization"] = "根據專精過濾"
 	L["Filter by Unit Name"] = "根據單位名稱過濾"
 	L[ [=[Filter formats: 'Name', 'Name-Realm', '-Realm'.
 
@@ -423,7 +421,6 @@ Can use \ to escape -.]=] ] = "過濾器格式：'名字'，'名字-伺服器'�
 	L["Frame Strata"] = "框架層級"
 	L["Frame Width"] = "框架寬度"
 	L["Frequency"] = "頻率"
-	L["From Template"] = "從範本建立 (**推薦**)"
 	L["Full Circle"] = "完整循環"
 	L["Get Help"] = "取得說明"
 	L["Global Conditions"] = "整體條件"
@@ -653,6 +650,7 @@ Can use \ to escape -.]=] ] = "過濾器格式：'名字'，'名字-伺服器'�
 	L["Portrait Zoom"] = "人像變焦"
 	L["Position Settings"] = "位置設定"
 	L["Preferred Match"] = "優先選擇符合"
+	L["Premade Auras"] = "預置光環"
 	L["Premade Snippets"] = "預先寫好的程式碼片段"
 	L["Preset"] = "預設配置"
 	L["Press Ctrl+C to copy"] = "按下 Ctrl+C 複製"
@@ -683,10 +681,8 @@ Can use \ to escape -.]=] ] = "過濾器格式：'名字'，'名字-伺服器'�
 	L["Report bugs on our issue tracker."] = "請在我們的問題追蹤網頁回報 bug。"
 	L["Require unit from trigger"] = "需要來自觸發的單位"
 	L["Required for Activation"] = "啟用需要"
-	--[[Translation missing --]]
-	L["Requires LibSpecialization, that is e.g. a up-to date WeakAuras version"] = "Requires LibSpecialization, that is e.g. a up-to date WeakAuras version"
-	--[[Translation missing --]]
-	L["Requires syncing the specialization via LibSpecialization."] = "Requires syncing the specialization via LibSpecialization."
+	L["Requires LibSpecialization, that is e.g. a up-to date WeakAuras version"] = "需要LibSpecialization，那是例如更新到最新的WA版本"
+	L["Requires syncing the specialization via LibSpecialization."] = "需要透由LibSpecialization同步專精。"
 	L["Reset all options to their default values."] = "重置所有選項，恢復成預設值。"
 	L["Reset Entry"] = "重置項目"
 	L["Reset to Defaults"] = "重置為預設值"
@@ -707,6 +703,7 @@ Can use \ to escape -.]=] ] = "過濾器格式：'名字'，'名字-伺服器'�
 	L["Same texture as Foreground"] = "與前景相同的材質"
 	L["Scale"] = "縮放大小"
 	L["Search"] = "搜尋"
+	L["Select Talent"] = "選擇天賦"
 	L["Select the auras you always want to be listed first"] = "選擇永遠要列在前面的特效"
 	L["Selected Frame"] = "已選框架"
 	L["Send To"] = "發送到"

@@ -316,38 +316,41 @@ function HealBot_Aura_RemoveExtraIcons(index)
     end
 end
 
-local retAlpha, nextDebuffUpdate, nextBuffUpdate=0,1,1
+local retAlpha, fadeDiff, nextDebuffUpdate, nextBuffUpdate=0,0,1,1
 function HealBot_Aura_DebuffIcon_AlphaValue(secLeft, button)
     nextDebuffUpdate=999
     if secLeft>-2 then
-        if Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["FADE"] and 
-            secLeft<=Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["FADESECS"] then
-            if secLeft<1 then
-                if secLeft>-1 then
-                    secLeft=0.75
-                else
-                    secLeft=0.5
+        if Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["FADE"] then 
+            if secLeft<Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["FADESECS"] then
+                if secLeft<1 then
+                    if secLeft>-1 then
+                        secLeft=0.75
+                    else
+                        secLeft=0.5
+                    end
                 end
-            end
-            retAlpha=(secLeft/Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["FADESECS"])+.08
-            nextDebuffUpdate=0.2
-            if Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["I15EN"] then
-                if retAlpha>HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.frame]["HA"], 1) then
+                fadeDiff=secLeft/Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["FADESECS"]
+                retAlpha=fadeDiff+((1-fadeDiff)/3)
+                nextDebuffUpdate=0.2
+                if Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["I15EN"] then
+                    if retAlpha>HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.frame]["HA"], 1) then
+                        retAlpha=HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.frame]["HA"], 1)
+                    end
+                elseif retAlpha>button.status.alpha then
+                    retAlpha=button.status.alpha
+                end
+            else
+                nextDebuffUpdate=secLeft-Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["FADESECS"]
+                if Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["I15EN"] then
                     retAlpha=HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.frame]["HA"], 1)
+                else
+                    retAlpha=button.status.alpha
                 end
-            elseif retAlpha>button.status.alpha then
-                retAlpha=button.status.alpha
             end
         elseif Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["I15EN"] then
             retAlpha=HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.frame]["HA"], 1)
-            if Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["FADE"] then
-                nextDebuffUpdate=secLeft-Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["FADESECS"]
-            end
         else
             retAlpha=button.status.alpha
-            if Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["FADE"] then
-                nextDebuffUpdate=secLeft-Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["FADESECS"]
-            end
         end
     else
         HealBot_Check_UnitDebuff(button)
@@ -359,34 +362,37 @@ end
 function HealBot_Aura_BuffIcon_AlphaValue(secLeft, button)
     nextBuffUpdate=999
     if secLeft>-2 then
-        if Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["BUFFFADE"] and 
-           secLeft<=Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["BUFFFADESECS"] then
-            if secLeft<1 then
-                if secLeft>-1 then
-                    secLeft=0.75
-                else
-                    secLeft=0.5
+        if Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["BUFFFADE"] then
+            if secLeft<Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["BUFFFADESECS"] then
+                if secLeft<1 then
+                    if secLeft>-1 then
+                        secLeft=0.75
+                    else
+                        secLeft=0.5
+                    end
                 end
-            end
-            retAlpha=(secLeft/Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["BUFFFADESECS"])+.08
-            nextBuffUpdate=0.2
-            if Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["BUFFI15EN"] then
-                if retAlpha>HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.frame]["HA"], 1) then
+                fadeDiff=secLeft/Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["BUFFFADESECS"]
+                retAlpha=fadeDiff+((1-fadeDiff)/3)
+                nextBuffUpdate=0.2
+                if Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["BUFFI15EN"] then
+                    if retAlpha>HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.frame]["HA"], 1) then
+                        retAlpha=HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.frame]["HA"], 1)
+                    end
+                elseif retAlpha>button.status.alpha then
+                    retAlpha=button.status.alpha
+                end
+            else
+                nextBuffUpdate=secLeft-Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["BUFFFADESECS"]
+                if Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["BUFFI15EN"] then
                     retAlpha=HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.frame]["HA"], 1)
+                else
+                    retAlpha=button.status.alpha
                 end
-            elseif retAlpha>button.status.alpha then
-                retAlpha=button.status.alpha
             end
         elseif Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["BUFFI15EN"] then
             retAlpha=HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.frame]["HA"], 1)
-            if Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["BUFFFADE"] then
-                nextBuffUpdate=secLeft-Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["BUFFFADESECS"]
-            end
         else
             retAlpha=button.status.alpha
-            if Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["BUFFFADE"] then
-                nextBuffUpdate=secLeft-Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["BUFFFADESECS"]
-            end
         end
     else
         HealBot_Check_UnitBuff(button)
@@ -621,29 +627,19 @@ function HealBot_Aura_ClassUpdate(button, texture)
         --HealBot_setCall("HealBot_Aura_ClassUpdate")
 end
 
-function HealBot_Aura_RCUpdate(button, texture)
-    button.icon.extra.readycheck=texture
-    HealBot_UnitExtraIcons[button.id][93]["texture"]=button.icon.extra.readycheck
-    HealBot_UnitExtraIcons[button.id][93].current=true
-    HealBot_Aura_AddExtraIcon(button, 93)
-    if HealBot_Panel_RaidUnitGUID(button.guid) then
-        HealBot_Action_setGuidData(button, "READYCHECK", texture)
-    end
-        --HealBot_setCall("HealBot_Aura_RCUpdate")
-end
-
-function HealBot_Aura_UpdateState(button, texture)
+function HealBot_Aura_UpdateState(button)
     if HealBot_UnitExtraIcons[button.id] then
-        if button.status.hostile then
-            HealBot_UnitExtraIcons[button.id][93]["texture"]="Interface\\Addons\\HealBot\\Images\\hostile.tga"
+        if button.status.hostile or button.status.incombat or button.icon.extra.readycheck then
+            if button.status.hostile then
+                HealBot_UnitExtraIcons[button.id][93]["texture"]="Interface\\Addons\\HealBot\\Images\\hostile.tga"
+            elseif button.status.incombat then
+                HealBot_UnitExtraIcons[button.id][93]["texture"]="Interface\\Addons\\HealBot\\Images\\incombat.tga"
+            else
+                HealBot_UnitExtraIcons[button.id][93]["texture"]=button.icon.extra.readycheck
+                if HealBot_Panel_RaidUnitGUID(button.guid) then HealBot_Action_setGuidData(button, "READYCHECK", button.icon.extra.readycheck) end
+            end
             HealBot_UnitExtraIcons[button.id][93].current=true
             HealBot_Aura_AddExtraIcon(button, 93)
-        elseif button.status.incombat then
-            HealBot_UnitExtraIcons[button.id][93]["texture"]="Interface\\Addons\\HealBot\\Images\\incombat.tga"
-            HealBot_UnitExtraIcons[button.id][93].current=true
-            HealBot_Aura_AddExtraIcon(button, 93)
-        elseif button.isplayer and texture then
-            HealBot_Aura_RCUpdate(button, texture)
         elseif button.player and Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["SHOWRESTING"] and IsResting() then 
             HealBot_UnitExtraIcons[button.id][93]["texture"]="Interface\\Addons\\HealBot\\Images\\rested.tga"
             HealBot_UnitExtraIcons[button.id][93].current=true
@@ -856,12 +852,12 @@ local curBuffName,curBuffxTime=false,0
 local buffCheckThis, buffWatchTarget, buffSpellStart, buffSpellDur=false,false,0,0
 function HealBot_Aura_SetGeneralBuff(button, bName)
     curBuffName=bName
-    button.aura.buff.missingbuff=true
+    button.aura.buff.missingbuff=bName
     button.aura.buff.colbar=2
     button.aura.buff.priority=45
 end
 
-local buffWatchName=""
+local buffWatchName,manaDrinkItem="",""
 function HealBot_Aura_CheckGeneralBuff(button)  
     PlayerBuffsList=button.aura.buff.recheck
     for bName,nexttime in pairs (PlayerBuffsList) do
@@ -892,7 +888,9 @@ function HealBot_Aura_CheckGeneralBuff(button)
                 if buffWatchTarget["Raid"] then
                     buffCheckThis=true;
                 elseif buffWatchTarget["Self"] and button.player then
-                    buffCheckThis=true
+                    if manaDrinkItem~=buffWatchName or button.mana.pct<HealBot_Config_Buffs.ManaDrinkThreshold then
+                        buffCheckThis=true
+                    end
                 elseif buffWatchTarget["Party"] and button.group==HealBot_Data["PLAYERGROUP"] then 
                     buffCheckThis=true
                 elseif buffWatchTarget["MainTanks"] and HealBot_Panel_IsTank(button.guid) then
@@ -905,6 +903,10 @@ function HealBot_Aura_CheckGeneralBuff(button)
                     buffCheckThis=true
                 elseif buffWatchTarget["Focus"] and UnitIsUnit(button.unit, "focus") then
                     buffCheckThis=true
+                elseif buffWatchTarget["PvP"] and UnitIsPVP(button.unit) then
+                    buffCheckThis=true
+                elseif buffWatchTarget["PvE"] and not UnitIsPVP(button.unit) then
+                    buffCheckThis=true
                 elseif buffWatchTarget["MyTargets"] then
                     local myhTargets=HealBot_GetMyHealTargets();
                     for i=1, #myhTargets do
@@ -913,10 +915,6 @@ function HealBot_Aura_CheckGeneralBuff(button)
                             break;
                         end
                     end
-                elseif buffWatchTarget["PvP"] and UnitIsPVP(button.unit) then
-                    buffCheckThis=true
-                elseif buffWatchTarget["PvE"] and not UnitIsPVP(button.unit) then
-                    buffCheckThis=true
                 end
                 if buffCheckThis then
                     HealBot_Aura_SetGeneralBuff(button, buffWatchName)
@@ -1246,6 +1244,10 @@ function HealBot_Aura_CheckCurDebuff(button)
                     ccdbCheckthis=true
                 elseif ccdbWatchTarget["Focus"] and UnitIsUnit(button.unit, "focus") then
                     ccdbCheckthis=true;
+                elseif ccdbWatchTarget["PvP"] and UnitIsPVP(button.unit) then
+                    ccdbCheckthis=true
+                elseif ccdbWatchTarget["PvE"] and not UnitIsPVP(button.unit) then
+                    ccdbCheckthis=true
                 elseif ccdbWatchTarget["MyTargets"] then
                     local myhTargets=HealBot_GetMyHealTargets();
                     for i=1, #myhTargets do
@@ -1254,16 +1256,12 @@ function HealBot_Aura_CheckCurDebuff(button)
                             break
                         end
                     end
-                elseif ccdbWatchTarget["PvP"] and UnitIsPVP(button.unit) then
-                    ccdbCheckthis=true
-                elseif ccdbWatchTarget["PvE"] and not UnitIsPVP(button.unit) then
-                    ccdbCheckthis=true
                 end
             end
         end
         if ccdbCheckthis then
             cDebuffPrio=dTypePriority
-        elseif (UnitIsEnemy("player",uaUnitCaster) and uaIsBossDebuff and HealBot_Config_Cures.AlwaysShowBoss and UnitExists("boss1")) or 
+        elseif (not UnitIsFriend("player",uaUnitCaster) and uaIsBossDebuff and HealBot_Config_Cures.AlwaysShowBoss and UnitExists("boss1")) or 
                (HealBot_Config_Cures.AlwaysShowTimed and uaDuration>0 and uaDuration<HealBot_Config_Cures.ShowTimeMaxDuration) or 
                (HealBot_Config_Cures.HealBot_Custom_Defuffs_All[uaDebuffType]) then
             debuff_Type=HEALBOT_CUSTOM_en
@@ -1400,7 +1398,8 @@ function HealBot_Aura_DebuffWarnings(button, debuffName, force)
         button.aura.debuff.name=debuffName
         HealBot_Emerg_Button[button.id].debuffupdate=true
         button.aura.debuff.r,button.aura.debuff.g,button.aura.debuff.b=HealBot_Options_RetDebuffRGB(button)
-        curDebuffSpell=HealBot_Options_retDebuffCureSpell(button.aura.debuff.type) or button.status.rangespell
+        button.aura.debuff.curespell=HealBot_Options_retDebuffCureSpell(button.aura.debuff.type)
+        curDebuffSpell=button.aura.debuff.curespell or button.status.rangespell
         if button.status.rangespell~=curDebuffSpell then
             curDebuffRange=HealBot_UnitInRangeExc30(button, curDebuffSpell)
         else
@@ -1853,8 +1852,14 @@ function HealBot_Aura_SetAuraCheckFlags(debuffMounted, buffMounted, onTaxi, rest
            (HealBot_Config_Buffs.BuffWatchInCombat or not HealBot_Data["UILOCK"]) and
             not buffMounted and not UnitIsDeadOrGhost("player") then
             generalBuffs=true
+            if HealBot_Config_Buffs.CheckManaDrink then
+                HealBot_Action_setLuVars("CheckManaDrink", true)
+            else
+                HealBot_Action_setLuVars("CheckManaDrink", false)
+            end
         else
             generalBuffs=false
+            HealBot_Action_setLuVars("CheckManaDrink", false)
         end
     end
     
@@ -1890,6 +1895,7 @@ function HealBot_Aura_ClearDebuff(button)
     if button.aura.debuff.name then
         button.aura.debuff.type = false;
         button.aura.debuff.name = false;
+        button.aura.debuff.curespell = false
         button.aura.debuff.colbar=0
         button.aura.debuff.id=0
         button.aura.debuff.priority = 99;
@@ -2405,6 +2411,8 @@ local hbWeaponEnchants={}
 function HealBot_Aura_WeaponEnchants(spell, x)
     if hbWeaponEnchants[spell] and GetSpellInfo(spell) then
         HealBot_Weapon_Enchant[x]=GetSpellInfo(spell)
+    elseif hbWeaponEnchants[spell] and GetItemInfo(spell) then
+        HealBot_Weapon_Enchant[x]=GetItemInfo(spell)
     else
         HealBot_Weapon_Enchant[x]=false
     end
@@ -2414,10 +2422,8 @@ function HealBot_Aura_UpdateItemData(iName, id)
     if iName then
         if HealBot_IsItemInBag(id) then 
             hbWeaponEnchants[iName]=true
-        --    HealBot_AddDebug("Item "..iName.." in bag","Buff",true)
         else
             hbWeaponEnchants[iName]=false 
-        --    HealBot_AddDebug("Item "..iName.." NOT in bag","Buff",true)
         end
         HealBot_Aura_WeaponEnchants(iName, 1)
     end
@@ -2438,8 +2444,23 @@ function HealBot_Aura_InitItemsDataReady()
     for x,_ in pairs(HealBot_Buff_Aura2Item) do
         HealBot_Buff_Aura2Item[x]=nil;
     end
+    
+    manaDrinkItem=""
+    if HealBot_Config_Buffs.CheckManaDrink and HealBot_Config_Buffs.ManaDrinkItem then
+        hbCustomItemID=GetItemInfoInstant(HealBot_Config_Buffs.ManaDrinkItem) or 0
+        if hbCustomItemID>0 and HealBot_IsItemInBag(hbCustomItemID) and (IsInInstance() or not HealBot_Config_Buffs.ExtraBuffsOnlyInInstance) then
+            HealBot_Buff_Aura2Item[HEALBOT_MANA_DRINK] = hbCustomItemID
+            manaDrinkItem=HealBot_Config_Buffs.ManaDrinkItem
+            if not HealBot_BuffWatch[HealBot_Config_Buffs.ManaDrinkItem] then
+                HealBot_Aura_SetBuffWatch(HealBot_Config_Buffs.ManaDrinkItem)
+                HealBot_Aura_DeleteExcludeBuffInCache()
+            end
+        elseif HealBot_BuffWatch[HealBot_Config_Buffs.ManaDrinkItem] then
+            HealBot_Aura_ClearBuffWatch(HealBot_Config_Buffs.ManaDrinkItem)
+        end
+    end
 
-    if HealBot_Config_Buffs.CheckWellFed then
+    if HealBot_Config_Buffs.CheckWellFed and HealBot_Config_Buffs.WellFedItem then
         hbCustomItemID=GetItemInfoInstant(HealBot_Config_Buffs.WellFedItem) or 0
         if hbCustomItemID>0 and HealBot_IsItemInBag(hbCustomItemID) and (IsInInstance() or not HealBot_Config_Buffs.ExtraBuffsOnlyInInstance) then
             HealBot_Buff_Aura2Item[HEALBOT_WELL_FED] = hbCustomItemID
@@ -2502,8 +2523,10 @@ function HealBot_Aura_InitData()
         if sName then HealBot_ShortBuffs[sName]=true end
         sName=GetSpellInfo(HEALBOT_FEAR_WARD)
         if sName then HealBot_ShortBuffs[sName]=true end
-        sName=GetSpellInfo(HBC_INNER_FIRE)
-        if sName then HealBot_ShortBuffs[sName]=true end
+        if HEALBOT_GAME_VERSION<3 then
+            sName=GetSpellInfo(HBC_INNER_FIRE)
+            if sName then HealBot_ShortBuffs[sName]=true end
+        end
     elseif HealBot_Data["PCLASSTRIM"]==HealBot_Class_En[HEALBOT_DRUID] then
         sName=GetSpellInfo(HBC_THORNS)
         if sName then HealBot_ShortBuffs[sName]=true end
@@ -2550,6 +2573,8 @@ function HealBot_Aura_InitData()
         sName=GetSpellInfo(HEALBOT_WINDFURY_SPELL)
         if sName then hbWeaponEnchants[sName]=true end
         sName=GetSpellInfo(HBC_ROCKBITER_WEAPON)
+        if sName then hbWeaponEnchants[sName]=true end
+        sName=GetSpellInfo(HBC_EARTHLIVING_WEAPON)
         if sName then hbWeaponEnchants[sName]=true end
         sName=GetSpellInfo(HBC_FLAMETONGUE_WEAPON)
         if sName then hbWeaponEnchants[sName]=true end

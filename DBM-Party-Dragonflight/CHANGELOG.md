@@ -1,28 +1,18 @@
 # <DBM> Dungeons (Dragonflight)
 
-## [r39](https://github.com/DeadlyBossMods/DBM-Dungeons/tree/r39) (2022-08-16)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Dungeons/compare/r38...r39) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Dungeons/releases)
+## [r40](https://github.com/DeadlyBossMods/DBM-Dungeons/tree/r40) (2022-08-23)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Dungeons/compare/r39...r40) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Dungeons/releases)
 
-- TOC bumps  
 - Fix last  
-- Finished drycode for azurevault.  
-    Not even going to bother even looking at logs from heroic, since undertuned 20-30 second boss fights don't tell me a damn thing.  
-- Add Leymor drycode  
-- fixed Lava Sweep timer (#61)  
-- Update koKR (#57)  
-- switch isheroic calls to IsHard so that it covers M+, if Skyriss is ever made into a M+ boss one day.  
-- Fixed a bug that caused Lava swipe to use normal mode timer instead of hard mode timer in M+  
-- Update localization.ru.lua (#55)  
-    General translation of phrases and clean up.  
-- Update localization.ru.lua (#54)  
-    Clean up.  
-- Update localization.ru.lua (#53)  
-    Clean up.  
-- Update localization.ru.lua (#52)  
-    General translation of phrases.  
-- Update localization.ru.lua (#51)  
-    General translation of phrases.  
-- Update localization.ru.lua (#50)  
-    Set the right values now so you don't forget later.  
-- Update localization.ru.lua (#49)  
-    General translation of phrases.  
+- lastly,, downgrade end warning to non special announce, doesn't need to be accessive for a positive announce  
+- also extend canceling to all 3 boss Ids in off chance skulloc isn't boss1  
+- re-enable gron smash timer, since people complain about it enough. Just hope they don't complain it's wrong 1/4th of time (which is why it was disabled)  
+- missed a line  
+- Intangible presence is now even less tangible  
+- While I intended to avoid something that was clearly not intended, I can't let DBM users feel disadvantaged over people other mods/WAs for this....so  
+    Added the hacky detection of intangible presence detection to Huntsman.  
+- Finish Nokhud drycode  
+- Raging Tempest mod  
+- Update boss arrangements and fix one boss journal Id  
+- fix bad copy/paste  
+- Granyth drycode  

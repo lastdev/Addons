@@ -2,7 +2,8 @@
 -- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
+local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
 
 XPerlLocked = 1
 local conf
@@ -232,7 +233,7 @@ function XPerl_SetModuleRevision(rev)
 end
 local AddRevision = XPerl_SetModuleRevision
 
-XPerl_SetModuleRevision("$Revision: 8add5e2a4c89b26ff90f48a2e6618bb51dd712dd $")
+XPerl_SetModuleRevision("$Revision: 52b9ddfe6f4ee24803f90c3bad34a3009df5a616 $")
 
 function XPerl_Notice(...)
 	if (DEFAULT_CHAT_FRAME) then
@@ -699,10 +700,25 @@ end
 
 -- DefaultRaidClasses
 local function DefaultRaidClasses()
-	if IsClassic then
+	if IsVanillaClassic then
 		return {
 			{enable = true, name = "WARRIOR"},
 			--{enable = true, name = "DEATHKNIGHT"},
+			{enable = true, name = "ROGUE"},
+			{enable = true, name = "HUNTER"},
+			{enable = true, name = "MAGE"},
+			{enable = true, name = "WARLOCK"},
+			{enable = true, name = "PRIEST"},
+			{enable = true, name = "DRUID"},
+			{enable = true, name = "SHAMAN"},
+			{enable = true, name = "PALADIN"},
+			--{enable = true, name = "MONK"},
+			--{enable = true, name = "DEMONHUNTER"},
+		}
+	elseif IsWrathClassic then
+		return {
+			{enable = true, name = "WARRIOR"},
+			{enable = true, name = "DEATHKNIGHT"},
 			{enable = true, name = "ROGUE"},
 			{enable = true, name = "HUNTER"},
 			{enable = true, name = "MAGE"},
@@ -740,8 +756,10 @@ local function ValidateClassNames(part)
 	-- This should never happen, but I'm sure someone will find a way to break it
 
 	local list
-	if IsClassic then
+	if IsVanillaClassic then
 		list = {WARRIOR = false, MAGE = false, ROGUE = false, DRUID = false, HUNTER = false, SHAMAN = false, PRIEST = false, WARLOCK = false, PALADIN = false}
+	elseif IsWrathClassic then
+		list = {WARRIOR = false, MAGE = false, ROGUE = false, DRUID = false, HUNTER = false, SHAMAN = false, PRIEST = false, WARLOCK = false, PALADIN = false, DEATHKNIGHT = false}
 	else
 		list = {WARRIOR = false, MAGE = false, ROGUE = false, DRUID = false, HUNTER = false, SHAMAN = false, PRIEST = false, WARLOCK = false, PALADIN = false, DEATHKNIGHT = false, MONK = false, DEMONHUNTER = false}
 	end

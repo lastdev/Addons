@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2472, "DBM-Party-Dragonflight", 1, 1196)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220813015201")
+mod:SetRevision("20220823030631")
 mod:SetCreatureID(186116)--194745 for Rotfang Hyena
 mod:SetEncounterID(2567)
 --mod:SetUsedIcons(1, 2, 3)
@@ -39,7 +39,7 @@ local specWarnMastersCall						= mod:NewSpecialWarningInterrupt(384638, "HasInte
 local specWarnGutShot							= mod:NewSpecialWarningDefensive(384343, nil, nil, nil, 1, 2)--Trap going out
 --local specWarnGTFO							= mod:NewSpecialWarningGTFO(340324, nil, nil, nil, 1, 8)
 
---mod:AddTimerLine(BOSS)
+--mod:AddTimerLine(DBM:EJ_GetSectionInfo(24883))
 local timerEnsnaringTrapCD						= mod:NewAITimer(35, 384148, nil, nil, nil, 3)--Trap going out
 local timerMeatTossCD							= mod:NewAITimer(35, 384416, nil, nil, nil, 3)
 local timerCallHyenasCD							= mod:NewAITimer(35, 384827, nil, nil, nil, 1)

@@ -10,6 +10,7 @@ local IS_WOW_PROJECT_MAINLINE = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local IS_WOW_PROJECT_NOT_MAINLINE = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE
 local IS_WOW_PROJECT_CLASSIC_ERA = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 local IS_WOW_PROJECT_CLASSIC_TBC = WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC
+local IS_WOW_PROJECT_CLASSIC_WRATH = IS_WOW_PROJECT_NOT_MAINLINE and ClassicExpansionAtLeast and LE_EXPANSION_WRATH_OF_THE_LICH_KING and ClassicExpansionAtLeast(LE_EXPANSION_WRATH_OF_THE_LICH_KING)
 
 local PixelUtil = PixelUtil or DFPixelUtil
 
@@ -169,7 +170,7 @@ function Plater.OpenOptionsPanel()
 	PixelUtil.SetPoint (f, "center", UIParent, "center", 2, 2, 1, 1)
 	
 	-- version text
-	local versionText = DF:CreateLabel (f, Plater.versionString, 11, "white")
+	local versionText = DF:CreateLabel (f, Plater.fullVersionInfo, 11, "white")
 	versionText:SetPoint ("topright", f, "topright", -25, -7)
 	versionText:SetAlpha(0.75)
 
@@ -572,7 +573,7 @@ function Plater.OpenOptionsPanel()
 						local paste = strtrim(table.concat(pasteBuffer))
 						
 						local wagoProfile = Plater.DecompressData (paste, "print")
-						if (wagoProfile and type (wagoProfile == "table")) then
+						if (wagoProfile and type (wagoProfile) == "table") then
 							if  (wagoProfile.plate_config) then
 								local existingProfileName = nil
 								local wagoInfoText = "Import data verified.\n\n"
@@ -676,7 +677,7 @@ function Plater.OpenOptionsPanel()
 				local text = profilesFrame.ImportStringField.importDataText
 				local profile = Plater.DecompressData (text, "print")
 				
-				if (profile and type (profile == "table")) then
+				if (profile and type (profile) == "table") then
 				
 					--decompress success, need to see if this is a real profile and not a script
 					if (not profile.plate_config) then
@@ -990,7 +991,7 @@ function Plater.OpenOptionsPanel()
 					local update = Plater.CompanionDataSlugs[id]
 					
 					local wagoProfile = Plater.DecompressData (update.encoded, "print")				
-					if (wagoProfile and type (wagoProfile == "table") and wagoProfile.plate_config) then
+					if (wagoProfile and type(wagoProfile) == "table" and wagoProfile.plate_config) then
 				
 						local wagoInfoText = ""
 						wagoInfoText = wagoInfoText .. "Name: " .. update.name .. "\n\n"
@@ -1234,6 +1235,16 @@ function Plater.OpenOptionsPanel()
 	local cooldown_edge_texture_selected_options = {}
 	for index, texturePath in ipairs (Plater.CooldownEdgeTextures) do
 		cooldown_edge_texture_selected_options [#cooldown_edge_texture_selected_options + 1] = {value = texturePath, label = "Texture " .. index, statusbar = texturePath, onclick = cooldown_edge_texture_selected}
+	end
+	--
+	local extra_icon_cooldown_edge_texture_selected = function (self, capsule, value)
+		Plater.db.profile.extra_icon_cooldown_edge_texture = value
+		Plater.IncreaseRefreshID()
+		Plater.UpdateAllPlates()
+	end
+	local extra_icon_cooldown_edge_texture_selected_options = {}
+	for index, texturePath in ipairs (Plater.CooldownEdgeTextures) do
+		extra_icon_cooldown_edge_texture_selected_options [#extra_icon_cooldown_edge_texture_selected_options + 1] = {value = texturePath, label = "Texture " .. index, statusbar = texturePath, onclick = extra_icon_cooldown_edge_texture_selected}
 	end
 	--
 	local cast_spark_texture_selected = function (self, capsule, value)
@@ -2137,6 +2148,18 @@ local debuff_options = {
 		end,
 		name = "Show Dispellable Buffs",
 		desc = "Show auras which can be dispelled or stolen.",
+	},
+	
+	{
+		type = "toggle",
+		get = function() return Plater.db.profile.aura_show_only_short_dispellable_on_players end,
+		set = function (self, fixedparam, value) 
+			Plater.db.profile.aura_show_only_short_dispellable_on_players = value
+			Plater.RefreshDBUpvalues()
+			Plater.UpdateAllPlates()
+		end,
+		name = "Only short Dispellable Buffs on Players",
+		desc = "Show auras which can be dispelled or stolen on players if they are below 120sec duration (only applicable when 'Show Dispellable Buffs' is enabled).",
 	},
 	
 	{
@@ -4418,8 +4441,6 @@ Plater.CreateAuraTesting()
 			{type = "blank"},
 			{type = "blank"},
 			{type = "blank"},
-			{type = "blank"},
-			{type = "blank"},
 			{type = "label", get = function() return "Icon Settings:" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
 			--anchor
 			{
@@ -4523,6 +4544,23 @@ Plater.CreateAuraTesting()
 				end,
 				name = "Default Border Color",
 				desc = "Default Border Color",
+			},
+			{
+				type = "select",
+				get = function() return Plater.db.profile.extra_icon_cooldown_edge_texture end,
+				values = function() return extra_icon_cooldown_edge_texture_selected_options end,
+				name = "Swipe Texture",
+				desc = "Texture in the form of a line which rotates within the aura icon following the aura remaining time.",
+			},
+			{
+				type = "toggle",
+				get = function() return Plater.db.profile.extra_icon_show_swipe end,
+				set = function (self, fixedparam, value) 
+					Plater.db.profile.extra_icon_show_swipe = value
+					Plater.UpdateAllPlates()
+				end,
+				name = "Show Swipe Closure Texture",
+				desc = "If enabled the swipe closure texture is applied as the swipe moves instead.",
 			},
 			{
 				type = "toggle",
@@ -4941,9 +4979,9 @@ Plater.CreateAuraTesting()
 		}
 		
 		auraSpecialFrame.ExampleImageDesc = DF:CreateLabel (auraSpecialFrame, "Special auras look like this:", 14)
-		auraSpecialFrame.ExampleImageDesc:SetPoint (330, -220)
+		auraSpecialFrame.ExampleImageDesc:SetPoint (330, -215)
 		auraSpecialFrame.ExampleImage = DF:CreateImage (auraSpecialFrame, [[Interface\AddOns\Plater\images\extra_icon_example]], 256*0.8, 128*0.8)
-		auraSpecialFrame.ExampleImage:SetPoint (330, -234)
+		auraSpecialFrame.ExampleImage:SetPoint (330, -229)
 		auraSpecialFrame.ExampleImage:SetAlpha (.834)
 		
 		local fff = CreateFrame ("frame", "$parentExtraIconsSettings", auraSpecialFrame, BackdropTemplateMixin and "BackdropTemplate")
@@ -6750,7 +6788,7 @@ local relevance_options = {
 				end
 			end,
 			min = IS_WOW_PROJECT_MAINLINE and 60 or 20, --20y for tbc and classic
-			max = (IS_WOW_PROJECT_MAINLINE and 60) or (IS_WOW_PROJECT_CLASSIC_TBC and 41) or 20, --41y for tbc, 20y for classic era
+			max = (IS_WOW_PROJECT_MAINLINE and 60) or ((IS_WOW_PROJECT_CLASSIC_TBC or IS_WOW_PROJECT_CLASSIC_WRATH) and 41) or 20, --41y for tbc, 20y for classic era
 			step = 1,
 			name = "View Distance" .. CVarIcon,
 			desc = "How far you can see nameplates (in yards).\n\n|cFFFFFFFFCurrent limitations: Retail = 60y, TBC = 20-41y, Classic = 20y|r" .. CVarDesc,
@@ -12665,7 +12703,7 @@ end
 
 	_G.C_Timer.After(0.800, function() --~delay
 		--the -30 is to fix an annomaly where the options for castbars starts 30 pixels to the right, dunno why (tercio)
-		DF:BuildMenu (castBarFrame, castBar_options, startX - 30, startY, heightSize, true, options_text_template, options_dropdown_template, options_switch_template, true, options_slider_template, options_button_template, globalCallback)	
+		DF:BuildMenu (castBarFrame, castBar_options, startX-20, startY, heightSize, true, options_text_template, options_dropdown_template, options_switch_template, true, options_slider_template, options_button_template, globalCallback)	
 	end)
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -12909,7 +12947,7 @@ end
 	}
 	
 	
-	if IS_WOW_PROJECT_NOT_MAINLINE then
+	if IS_WOW_PROJECT_NOT_MAINLINE and not IS_WOW_PROJECT_CLASSIC_WRATH then
 		local thread_options_tank = {
 			{type = "label", get = function() return "Tank or DPS Colors:" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
 			
@@ -13201,6 +13239,26 @@ end
 			usedecimals = true,
 			name = "Min Scale" .. CVarIcon,
 			desc = "Scale applied when the nameplate is far away from the camera.\n\n" .. ImportantText .. "is the distance from the camera and |cFFFF4444not|r the distance from your character.\n\n|cFFFFFFFFDefault: 0.8|r" .. CVarDesc,
+			nocombat = true,
+		},
+		
+		{
+			type = "range",
+			get = function() return tonumber (GetCVar ("nameplateLargerScale")) end,
+			set = function (self, fixedparam, value) 
+				if (not InCombatLockdown()) then
+					SetCVar ("nameplateLargerScale", value)
+				else
+					Plater:Msg (L["OPTIONS_ERROR_CVARMODIFY"])
+				end
+			end,
+			min = 0.3,
+			max = 2,
+			step = 0.1,
+			thumbscale = 1.7,
+			usedecimals = true,
+			name = "Larger Scale" .. CVarIcon,
+			desc = "Scale applied to important monsters (such as bosses).\n\n|cFFFFFFFFDefault: 1.2|r" .. CVarDesc,
 			nocombat = true,
 		},
 
