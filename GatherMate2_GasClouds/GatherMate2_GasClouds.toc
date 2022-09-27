@@ -1,0 +1,11 @@
+## Interface: 30400
+## Title: GatherMate2 |cd0ff7d0a<Gas Clouds>|r
+## Notes: GatherMate2 Gas Clouds Data for Burning Crusade Classic
+## Author: MiCHaelSP
+## X-Curse-Project-ID: 530769
+## X-Wago-ID: 7x61nEK1
+## Version: 1.3
+## Dependencies: GatherMate2
+
+GasData.lua
+GatherMate2_GasClouds.lua

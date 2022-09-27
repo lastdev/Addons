@@ -24072,7 +24072,7 @@
                     <Anchors>
                       <Anchor point="TOPLEFT" relativeTo="HealBot_Options_ShowTooltip" relativePoint="TOPRIGHT">
                         <Offset>
-                          <AbsDimension x="170" y="-5"/>
+                          <AbsDimension x="170" y="-9"/>
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -24100,7 +24100,7 @@
                     <Anchors>
                       <Anchor point="TOPLEFT" relativeTo="HealBot_Options_ShowTooltipTarget" relativePoint="TOPRIGHT">
                         <Offset>
-                          <AbsDimension x="170" y="-5"/>
+                          <AbsDimension x="170" y="6"/>
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -24108,6 +24108,48 @@
                       <OnClick>HealBot_Options_ShowTooltipMyBuffs_OnClick(self)</OnClick>
                       <OnEnter>HealBot_Options_Show_Help("TOOLTIPMYBUFFS",true)</OnEnter>
                       <OnLeave>HealBot_Options_Show_Help("TOOLTIPMYBUFFS",false)</OnLeave>
+                    </Scripts>
+                  </CheckButton>
+                  <CheckButton name="HealBot_Options_ShowTooltipRanks" inherits="SendMailRadioButtonTemplate" id="1">
+                    <Anchors>
+                      <Anchor point="TOPLEFT" relativeTo="HealBot_Options_ShowTooltipTarget" relativePoint="TOPRIGHT">
+                        <Offset>
+                          <AbsDimension x="170" y="-9"/>
+                        </Offset>
+                      </Anchor>
+                    </Anchors>
+                    <Scripts>
+                      <OnClick>HealBot_Options_ShowTooltipRanks_OnClick(self)</OnClick>
+                      <OnEnter>HealBot_Options_Show_Help("TOOLTIPRANKS",true)</OnEnter>
+                      <OnLeave>HealBot_Options_Show_Help("TOOLTIPRANKS",false)</OnLeave>
+                    </Scripts>
+                  </CheckButton>
+                  <CheckButton name="HealBot_Options_ShowTooltipRoles" inherits="SendMailRadioButtonTemplate" id="1">
+                    <Anchors>
+                      <Anchor point="TOPLEFT" relativeTo="HealBot_Options_ShowTooltipTarget" relativePoint="TOPRIGHT">
+                        <Offset>
+                          <AbsDimension x="170" y="-24"/>
+                        </Offset>
+                      </Anchor>
+                    </Anchors>
+                    <Scripts>
+                      <OnClick>HealBot_Options_ShowTooltipRoles_OnClick(self)</OnClick>
+                      <OnEnter>HealBot_Options_Show_Help("TOOLTIPROLES",true)</OnEnter>
+                      <OnLeave>HealBot_Options_Show_Help("TOOLTIPROLES",false)</OnLeave>
+                    </Scripts>
+                  </CheckButton>
+                  <CheckButton name="HealBot_Options_ShowTooltipHideRoleWhenRank" inherits="SendMailRadioButtonTemplate" id="1">
+                    <Anchors>
+                      <Anchor point="TOPLEFT" relativeTo="HealBot_Options_ShowTooltipTarget" relativePoint="TOPRIGHT">
+                        <Offset>
+                          <AbsDimension x="188" y="-39"/>
+                        </Offset>
+                      </Anchor>
+                    </Anchors>
+                    <Scripts>
+                      <OnClick>HealBot_Options_ShowTooltipHideRoleWhenRank_OnClick(self)</OnClick>
+                      <OnEnter>HealBot_Options_Show_Help("TOOLTIPHIDEROLEWHENRANK",true)</OnEnter>
+                      <OnLeave>HealBot_Options_Show_Help("TOOLTIPHIDEROLEWHENRANK",false)</OnLeave>
                     </Scripts>
                   </CheckButton>
                   <CheckButton name="HealBot_Options_ShowTooltipSpellCoolDown" inherits="UICheckButtonTemplate">
@@ -24156,7 +24198,7 @@
                     <Anchors>
                       <Anchor point="TOPLEFT" relativeTo="HealBot_Options_ShowTooltipUseGameTip" relativePoint="TOPRIGHT">
                         <Offset>
-                          <AbsDimension x="170" y="-5"/>
+                          <AbsDimension x="170" y="-9"/>
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -24180,11 +24222,28 @@
                       <OnLeave>HealBot_Options_Show_Help("TOOLTIPMONBUFFS",false)</OnLeave>
                     </Scripts>
                   </CheckButton>
-                  <Frame name="HealBot_Options_TooltipTextSize" inherits="UIDropDownMenuTemplate">
+                  <Slider name="HealBot_Options_TipMaxButtons" inherits="HealBot_Options_SliderTemplate">
+                    <Size>
+                      <AbsDimension x="270" y="16" />
+                    </Size>
                     <Anchors>
                       <Anchor point="TOPLEFT" relativeTo="HealBot_Options_ShowTooltipShowHoT" relativePoint="TOPLEFT">
                         <Offset>
-                          <AbsDimension x="20" y="-70" />
+                          <AbsDimension x="0" y="-70" />
+                        </Offset>
+                      </Anchor>
+                    </Anchors>
+                    <Scripts>
+                      <OnValueChanged>HealBot_Options_TipMaxButtons_OnValueChanged(self)</OnValueChanged>
+                      <OnEnter>HealBot_Options_Show_Help("TOOLTIPMAXBUTTONS",true)</OnEnter>
+                      <OnLeave>HealBot_Options_Show_Help("TOOLTIPMAXBUTTONS",false)</OnLeave>
+                    </Scripts>
+                  </Slider>
+                  <Frame name="HealBot_Options_TooltipTextSize" inherits="UIDropDownMenuTemplate">
+                    <Anchors>
+                      <Anchor point="TOP" relativeTo="HealBot_Options_TipMaxButtons" relativePoint="BOTTOM">
+                        <Offset>
+                          <AbsDimension x="0" y="-40" />
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -24214,7 +24273,7 @@
                     <Anchors>
                       <Anchor point="BOTTOM">
                         <Offset>
-                          <AbsDimension x="-125" y="120" />
+                          <AbsDimension x="-125" y="90" />
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -24231,7 +24290,7 @@
                     <Anchors>
                       <Anchor point="BOTTOM">
                         <Offset>
-                          <AbsDimension x="125" y="120" />
+                          <AbsDimension x="125" y="90" />
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -24248,7 +24307,7 @@
                     <Anchors>
                       <Anchor point="BOTTOM">
                         <Offset>
-                          <AbsDimension x="0" y="50" />
+                          <AbsDimension x="0" y="30" />
                         </Offset>
                       </Anchor>
                     </Anchors>

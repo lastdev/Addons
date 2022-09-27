@@ -1,5 +1,9 @@
 local myname, ns = ...
 
+if not WorldMapFrame.AddOverlayFrame then
+    return
+end
+
 local function hideTextureWithAtlas(atlas, ...)
     for i=1, select("#", ...) do
         local region = select(i, ...)

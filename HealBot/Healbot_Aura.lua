@@ -716,32 +716,27 @@ function HealBot_Aura_setUnitIcons(unit)
 end
 
 function HealBot_Aura_AutoUpdateCustomDebuff(button, name, spellId)
-    HealBot_Globals.CatchAltDebuffIDs[name]=nil
     for dID, x in pairs(HealBot_Globals.HealBot_Custom_Debuffs) do
-        if (GetSpellInfo(dID) and GetSpellInfo(dID)==dName) or (not GetSpellInfo(dID) and dID==name) then
-            local oldId=dID
-            if dID==name then oldId=name end
-            HealBot_Globals.Custom_Debuff_Categories[spellId]=HealBot_Globals.Custom_Debuff_Categories[oldId]
+        if not GetSpellInfo(dID) and dID==name then
+            HealBot_Globals.Custom_Debuff_Categories[spellId]=HealBot_Globals.Custom_Debuff_Categories[name]
             HealBot_Globals.HealBot_Custom_Debuffs[spellId]=x
-            if HealBot_Globals.FilterCustomDebuff[oldId] then 
-                HealBot_Globals.FilterCustomDebuff[spellId]=HealBot_Globals.FilterCustomDebuff[oldId]
+            if HealBot_Globals.FilterCustomDebuff[name] then 
+                HealBot_Globals.FilterCustomDebuff[spellId]=HealBot_Globals.FilterCustomDebuff[name]
             end
-            if HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[oldId] then
-                HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[spellId]=HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[oldId]
+            if HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[name] then
+                HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[spellId]=HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[name]
             end
-            if HealBot_Globals.CDCBarColour[oldId] then
-                HealBot_Globals.CDCBarColour[spellId]=HealBot_Options_copyTable(HealBot_Globals.CDCBarColour[oldId])
+            if HealBot_Globals.CDCBarColour[name] then
+                HealBot_Globals.CDCBarColour[spellId]=HealBot_Options_copyTable(HealBot_Globals.CDCBarColour[name])
             end
-            if HealBot_Globals.IgnoreCustomDebuff[oldId] then
-                HealBot_Globals.IgnoreCustomDebuff[spellId]=HealBot_Options_copyTable(HealBot_Globals.IgnoreCustomDebuff[oldId])
+            if HealBot_Globals.IgnoreCustomDebuff[name] then
+                HealBot_Globals.IgnoreCustomDebuff[spellId]=HealBot_Options_copyTable(HealBot_Globals.IgnoreCustomDebuff[name])
             end
-            if dID~=name then 
-                HealBot_Options_ResetUpdate()
-                HealBot_Check_UnitDebuff(button)
-            end
+            HealBot_Options_DeleteCDebuff(name, name)
             break
         end
     end
+    HealBot_Timers_Set("AURA","CustomDebuffList")
 end
 
 local nextDebuffIconUpdate, debuffIconRunTimer=0, false
@@ -1006,11 +1001,6 @@ function HealBot_Aura_CheckCurBuff()
         if ciCustomBuff then
             if not HealBot_AuraBuffIconCache[uaUnitCaster] then HealBot_AuraBuffIconCache[uaUnitCaster]={} end
             if not HealBot_AuraBuffIconCache[uaUnitCaster][uaSpellId] or HealBot_AuraBuffCache[uaSpellId].reset then 
-                if HealBot_AuraBuffIconCache[uaUnitCaster][uaSpellId] and
-                   HealBot_AuraBuffIconCache[uaUnitCaster][uaSpellId]["prioIndex"] and
-                   buffAuraCache[HealBot_AuraBuffIconCache[uaUnitCaster][uaSpellId]["prioIndex"]] then
-                    buffAuraCache[HealBot_AuraBuffIconCache[uaUnitCaster][uaSpellId]["prioIndex"]]=nil
-                end
                 HealBot_AuraBuffIconCache[uaUnitCaster][uaSpellId]={}
                 if HealBot_AuraBuffCache[uaSpellId]["priority"]<10 then
                     HealBot_AuraBuffIconCache[uaUnitCaster][uaSpellId]["prioIndex"]="0"..HealBot_AuraBuffCache[uaSpellId]["priority"]..uaSpellId..uaUnitCaster
@@ -1019,8 +1009,8 @@ function HealBot_Aura_CheckCurBuff()
                 end
                 if not buffAuraCache[HealBot_AuraBuffIconCache[uaUnitCaster][uaSpellId]["prioIndex"]] then
                     buffAuraCache[HealBot_AuraBuffIconCache[uaUnitCaster][uaSpellId]["prioIndex"]]={}
-                    buffAuraCache[HealBot_AuraBuffIconCache[uaUnitCaster][uaSpellId]["prioIndex"]]["spellId"]=uaSpellId
                 end
+                buffAuraCache[HealBot_AuraBuffIconCache[uaUnitCaster][uaSpellId]["prioIndex"]]["spellId"]=uaSpellId
                 HealBot_AuraBuffCache[uaSpellId].reset=false
             end
         elseif HealBot_AuraBuffCache[uaSpellId].reset then 
@@ -1168,7 +1158,7 @@ local dNamePriority, dTypePriority=99,99
 local debuffIsCurrent, cDebuffPrio, debuffIsAlways, debuff_Type, debuffIsAuto=true, 15, false, debuffType, false
 local ccdbCasterID, ccdbUnitCasterID, ccdbCheckthis, ccdbAlways=0,1,false,false
 local ccdbWatchTarget={}
-function HealBot_Aura_CheckCurCustomDebuff(button, canBeAlways)
+function HealBot_Aura_CheckCurCustomDebuff(canBeAlways)
     ccdbCasterID=hbCustomDebuffsCastBy[uaSpellId] or hbCustomDebuffsCastBy[uaName] or HealBot_Globals.CureCustomDefaultCastBy
     if ccdbCasterID~=castByListIndexed[HEALBOT_CUSTOM_CASTBY_EVERYONE] then
         if UnitIsUnit(uaUnitCaster,"player") then
@@ -1196,6 +1186,11 @@ function HealBot_Aura_CheckCurCustomDebuff(button, canBeAlways)
     end
 end
 
+local hbUpCustomDebuffsDone={}
+function HealBot_Aura_ClearCustomDebuffsDone()
+    hbUpCustomDebuffsDone={}
+end
+
 function HealBot_Aura_CacheDebuff(spellId, spellName, debuffIsAlways, debuffTexture, debuffType)
     if not HealBot_AuraDebuffCache[spellId] then HealBot_AuraDebuffCache[spellId]={} end
     HealBot_AuraDebuffCache[spellId].always=debuffIsAlways
@@ -1203,12 +1198,9 @@ function HealBot_Aura_CacheDebuff(spellId, spellName, debuffIsAlways, debuffText
     HealBot_AuraDebuffCache[spellId]["name"]=spellName
     HealBot_AuraDebuffCache[spellId]["type"]=debuffType
     HealBot_AuraDebuffCache[spellId].reset=false
-    if HealBot_Globals.CatchAltDebuffIDs[name] then
-        if not HealBot_Globals.HealBot_Custom_Debuffs[spellId] then
-            HealBot_Aura_AutoUpdateCustomDebuff(button, name, spellId)
-        else
-            HealBot_Globals.CatchAltDebuffIDs[name]=nil
-        end
+    if not HealBot_Globals.HealBot_Custom_Debuffs[spellId] and not hbUpCustomDebuffsDone[spellName] then
+        hbUpCustomDebuffsDone[spellName]=true
+        HealBot_Aura_AutoUpdateCustomDebuff(button, spellName, spellId)
     end
 end
 
@@ -1219,7 +1211,7 @@ function HealBot_Aura_CheckCurDebuff(button)
        (hbCustomDebuffsDisabled[uaName] and (hbCustomDebuffsDisabled[uaName][HealBot_Aura_luVars["mapName"]] or hbCustomDebuffsDisabled[uaName]["ALL"])) then
         debuffIsCurrent=false
     elseif dTypePriority>dNamePriority and dNamePriority<21 then
-        HealBot_Aura_CheckCurCustomDebuff(button, true)
+        HealBot_Aura_CheckCurCustomDebuff(true)
     else
         ccdbCheckthis=false
         if dTypePriority<21 and HealBot_Aura_luVars["cureOffCd"] and 
@@ -1271,7 +1263,7 @@ function HealBot_Aura_CheckCurDebuff(button)
                 debuffIsAlways=true 
             end
         elseif dNamePriority<21 then
-            HealBot_Aura_CheckCurCustomDebuff(button, false)
+            HealBot_Aura_CheckCurCustomDebuff(false)
         elseif uaUnitCaster=="player" and not UnitIsFriend("player",button.unit) then
             debuff_Type=HEALBOT_CUSTOM_en
             cDebuffPrio=20
@@ -1289,13 +1281,6 @@ function HealBot_Aura_CheckCurDebuff(button)
         if not HealBot_AuraDebuffIconCache[uaUnitCaster] then HealBot_AuraDebuffIconCache[uaUnitCaster]={} end
         if not HealBot_AuraDebuffIconCache[uaUnitCaster][uaSpellId] or HealBot_AuraDebuffCache[uaSpellId]["priority"]~=cDebuffPrio then
             HealBot_AuraDebuffCache[uaSpellId]["priority"]=cDebuffPrio
-            if HealBot_AuraDebuffIconCache[uaUnitCaster][uaSpellId] then
-                if HealBot_AuraDebuffIconCache[uaUnitCaster][uaSpellId]["prioIndex"] and
-                   debuffAuraCache[HealBot_AuraDebuffIconCache[uaUnitCaster][uaSpellId]["prioIndex"]] then
-                    debuffAuraCache[HealBot_AuraDebuffIconCache[uaUnitCaster][uaSpellId]["prioIndex"]]=nil
-                end
-                HealBot_AuraDebuffIconCache[uaUnitCaster][uaSpellId]=nil
-            end
             HealBot_Aura_SetCurDebuffIconCache(button)
         end
     end
@@ -1304,13 +1289,17 @@ function HealBot_Aura_CheckCurDebuff(button)
 end
 
 function HealBot_Aura_SetCurDebuffIconCache(button)
-    HealBot_AuraDebuffIconCache[uaUnitCaster][uaSpellId]={}
+    if not HealBot_AuraDebuffIconCache[uaUnitCaster][uaSpellId] then
+        HealBot_AuraDebuffIconCache[uaUnitCaster][uaSpellId]={}
+    end
     if HealBot_AuraDebuffCache[uaSpellId]["priority"]<10 then
         HealBot_AuraDebuffIconCache[uaUnitCaster][uaSpellId]["prioIndex"]="0"..HealBot_AuraDebuffCache[uaSpellId]["priority"]..uaSpellId..uaUnitCaster
     else
         HealBot_AuraDebuffIconCache[uaUnitCaster][uaSpellId]["prioIndex"]=HealBot_AuraDebuffCache[uaSpellId]["priority"]..uaSpellId..uaUnitCaster
     end
-    debuffAuraCache[HealBot_AuraDebuffIconCache[uaUnitCaster][uaSpellId]["prioIndex"]]={}
+    if not debuffAuraCache[HealBot_AuraDebuffIconCache[uaUnitCaster][uaSpellId]["prioIndex"]]then
+        debuffAuraCache[HealBot_AuraDebuffIconCache[uaUnitCaster][uaSpellId]["prioIndex"]]={}
+    end
     debuffAuraCache[HealBot_AuraDebuffIconCache[uaUnitCaster][uaSpellId]["prioIndex"]]["spellId"]=uaSpellId
 end
 
@@ -1513,9 +1502,6 @@ function HealBot_Aura_CheckUnitBuff(button)
             HealBot_ExcludeBuffInCache[uaSpellId]=true
         end
     end
-    if button.player and (uaExpirationTime or 1)==0 then
-        HealBot_ReadyPlayerCheck()
-    end
 end
 
 function HealBot_Aura_CheckUnitDebuff(button)
@@ -1531,9 +1517,7 @@ function HealBot_Aura_CheckUnitDebuff(button)
     else
         uaIsCurrent=true
         if not HealBot_AuraDebuffIconCache[uaUnitCaster] then HealBot_AuraDebuffIconCache[uaUnitCaster]={} end
-        if not HealBot_AuraDebuffIconCache[uaUnitCaster][uaSpellId] then
-            HealBot_Aura_SetCurDebuffIconCache(button)
-        end
+        HealBot_Aura_SetCurDebuffIconCache(button)
     end
     if uaIsCurrent then
         HealBot_Aura_SetDebuffIcon()
@@ -1843,7 +1827,8 @@ function HealBot_Aura_SetAuraCheckFlags(debuffMounted, buffMounted, onTaxi, rest
     tmpBCheck=buffCheck
     tmpGBuffs=generalBuffs
     tmpDCheck=debuffCheck
-    
+
+    if not HealBot_Config_Buffs.NoAuraWhenRested then resting=false end
     if resting or onTaxi or not HealBot_Config_Buffs.BuffWatch then 
         buffCheck=false 
     else
@@ -1887,7 +1872,7 @@ function HealBot_Aura_SetAuraCheckFlags(debuffMounted, buffMounted, onTaxi, rest
             end
             HealBot_AuraCheck()
         end
-        HealBot_Timers_Set("PLAYER","SetRestingState")
+        --HealBot_Timers_Set("PLAYER","SetRestingState")
     end
 end
 
@@ -2358,23 +2343,6 @@ function HealBot_Aura_ConfigClassHoT()
       --HealBot_setCall("HealBot_configClassHoT")
 end
 
-function HealBot_Aura_DebuffIdLookup()
-    local excDebuffs={}
-    for dName, x in pairs(HealBot_Globals.HealBot_Custom_Debuffs) do
-        if type(dName)=="number" then
-            local name, _, _, _, _, _, spellId = GetSpellInfo(dName)
-            if name then
-                excDebuffs[name]=true
-            end
-        end
-    end
-    for dName, x in pairs(HealBot_Globals.HealBot_Custom_Debuffs) do
-        if type(dName)=="string" and not excDebuffs[dName] and dName~=HEALBOT_CUSTOM_CAT_CUSTOM_AUTOMATIC then
-            HealBot_Globals.CatchAltDebuffIDs[dName]=true
-        end
-    end
-end
-
 function HealBot_Aura_BuffIdLookup()
     if HealBot_SpellID_LookupIdx[1] then
         local sName=HealBot_SpellID_LookupIdx[1]
@@ -2548,6 +2516,8 @@ function HealBot_Aura_InitData()
         sName=GetSpellInfo(HBC_BLESSING_OF_LIGHT)
         if sName then HealBot_ShortBuffs[sName]=true end
         sName=GetSpellInfo(HBC_BLESSING_OF_SANCTUARY)
+        if sName then HealBot_ShortBuffs[sName]=true end
+        sName=GetSpellInfo(HBC_SACRED_SHIELD)
         if sName then HealBot_ShortBuffs[sName]=true end
     elseif HealBot_Data["PCLASSTRIM"]==HealBot_Class_En[HEALBOT_MONK] then
         -- Class buffs

@@ -17,6 +17,7 @@ L["AUCTION_TOOLTIP_TOOLTIP_HEADER"] = "Auktion Tooltip Infos"
 L["AUCTION_TOOLTIP_TOOLTIP_TEXT"] = "Zeigt den Auktionspreis im Tooltip an."
 L["AUCTIONATOR"] = "Auctionator"
 L["AUTHOR_HEADER"] = "Author"
+L["BID_ONLY_AVAILABLE"] = "nur bieten verfügbar"
 L["BID_PRICE"] = "Gebotspreis"
 L["BIDDER"] = "Bieter"
 L["BIDDING_AUCTION_INFO"] = "%s Gebotspreis: %s"
@@ -90,6 +91,8 @@ L["CONFIG_PET_TOOLTIP"] = "Zeige Haustier Infos an."
 L["CONFIG_PROFILE_CATEGORY"] = "Profile"
 L["CONFIG_PROFILE_TEXT"] = "Speichere Einstellungen pro Charakter."
 L["CONFIG_PROFILE_TOGGLE"] = "Einstellungen nur für diesen Charakter anwenden."
+--[[Translation missing --]]
+L["CONFIG_PROSPECT_TOOLTIP"] = "Show prospect value for ore from jewelcrafting in tooltips"
 L["CONFIG_QUANTITIES_CATEGORY"] = "Verkaufen: Mengen"
 L["CONFIG_QUANTITIES_TEXT"] = "Wähle die Standardmenge, die für die verschiedenen Gegenstandskategorien verwendet wird."
 L["CONFIG_RESET_STACK_SIZE_MEMORY"] = "Stapelgrößenspeicher zurücksetzen"
@@ -118,6 +121,12 @@ L["CONFIG_SELLING_GEAR_USE_ILVL_VARIANTS_TOOLTIP_TEXT"] = "Normalerweise wird di
 L["CONFIG_SELLING_GEAR_VENDOR_PRICE_MULTIPLIER_SUFFIX"] = "0 für kein Preis"
 L["CONFIG_SELLING_GEAR_VENDOR_PRICE_MULTIPLIER_TOOLTIP_HEADER"] = "Ausrüstungs-Standardpreis"
 L["CONFIG_SELLING_GEAR_VENDOR_PRICE_MULTIPLIER_TOOLTIP_TEXT"] = "Hiermit kann der Standardpreis für Ausrüstung als ein Vielfaches des Händlerpreises festgelegt werden. Dies wird für jede Ausrüstung verwendet, für die Auctionator keinen Preis hat. Auf 0 einstellen, um keinen Preis festzulegen."
+--[[Translation missing --]]
+L["CONFIG_SELLING_GREY_POST_BUTTON"] = "Grey (disable) the post button when a post may fail"
+--[[Translation missing --]]
+L["CONFIG_SELLING_GREY_POST_BUTTON_TOOLTIP_HEADER"] = "Grey post button"
+--[[Translation missing --]]
+L["CONFIG_SELLING_GREY_POST_BUTTON_TOOLTIP_TEXT"] = "When a post may fail the post button will be greyed out (disabled). Turn this option off to avoid waiting for the button to enable so you can attempt to post sooner."
 L["CONFIG_SELLING_ICON_SIZE"] = "Symbolgröße (benötigt reload)"
 L["CONFIG_SELLING_ICON_SIZE_TOOLTIP_HEADER"] = "Größe der Symbole"
 L["CONFIG_SELLING_ICON_SIZE_TOOLTIP_TEXT"] = "Dies ermöglicht die Größe der Gegenstandsymbole im Verkaufen-Reiter von 10 bis 50 einzustellen. Die Standardgröße ist 42."
@@ -285,11 +294,19 @@ L["PERCENTAGE_TOOLTIP_TEXT"] = "Der zu unterbietende Prozentsatz wird zur Berech
 L["PET_TOOLTIP_TOOLTIP_HEADER"] = "Haustier Tooltip Infos"
 L["PET_TOOLTIP_TOOLTIP_TEXT"] = "Zeigt den Auktionspreis für Haustierkäfige im Tooltip an."
 L["POST"] = "Auktion erstellen"
+--[[Translation missing --]]
+L["POST_ATTEMPT_FAILED"] = "Your last post attempt didn't work. Try again."
 L["PRICE"] = "Preis"
 L["PRICE_INCREASE_WARNING"] = "Preis um %s erhöht, warte auf %ss"
 L["PROFILE_TOGGLE_TOOLTIP_HEADER"] = "Aktiviere Einstellungen pro Charakter"
 L["PROFILE_TOGGLE_TOOLTIP_TEXT"] = "Änderungen an den Auktionatoreinstellungen wirken sich nur auf diesen Charakter aus."
 L["PROFIT_COLON"] = "Gewinn:"
+--[[Translation missing --]]
+L["PROSPECT"] = "Prospect"
+--[[Translation missing --]]
+L["PROSPECT_TOOLTIP_TOOLTIP_HEADER"] = "Prospect Tooltip Information"
+--[[Translation missing --]]
+L["PROSPECT_TOOLTIP_TOOLTIP_TEXT"] = "Show jewelcrafting prospecting estimated value in tooltip on mouseover."
 L["PURCHASED_X_XX"] = "Gekauft %s x%s"
 L["QUANTITY"] = "Menge"
 L["REAGENT_SEARCH"] = "Reagenzien-Suche"

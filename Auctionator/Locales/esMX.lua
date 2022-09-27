@@ -18,6 +18,8 @@ L["AUCTION_TOOLTIP_TOOLTIP_HEADER"] = "Información sobre herramientas de subast
 L["AUCTION_TOOLTIP_TOOLTIP_TEXT"] = "Mostrar información sobre herramientas de la subasta al pasar el ratón."
 L["AUCTIONATOR"] = "Auctionator"
 L["AUTHOR_HEADER"] = "Autor"
+--[[Translation missing --]]
+L["BID_ONLY_AVAILABLE"] = "bid only available"
 L["BID_PRICE"] = "Precio de pujar"
 L["BIDDER"] = "Licitador"
 L["BIDDING_AUCTION_INFO"] = "%s Pujando en %s"
@@ -37,8 +39,7 @@ L["CANCEL_SEARCH"] = "Cancel Search"
 L["CANCEL_UNDERCUT"] = "Cancelar descuento"
 L["CANCELLING_TAB"] = "Cancelado"
 L["CANCELLING_TAB_HEADER"] = "Auctionator - Cancelado"
-L["CANNOT_AUCTION"] = [=[No se puede subastar
-]=]
+L["CANNOT_AUCTION"] = "No subastable"
 L["CHAIN_BUY"] = "Compra en cadena"
 L["CHAIN_BUY_TOOLTIP_HEADER"] = "Cadena de compras múltiples"
 L["CHAIN_BUY_TOOLTIP_TEXT"] = "Cuando termine de comprar con el precio actual y el tamaño de pila, selecciona el siguiente precio y tamaño de pila."
@@ -94,6 +95,8 @@ L["CONFIG_PET_TOOLTIP"] = "Mostrar información sobre herramientas de mascotas"
 L["CONFIG_PROFILE_CATEGORY"] = "Perfil"
 L["CONFIG_PROFILE_TEXT"] = "Configura los ajustes por personaje."
 L["CONFIG_PROFILE_TOGGLE"] = "Solo aplica la configuración a este personaje"
+--[[Translation missing --]]
+L["CONFIG_PROSPECT_TOOLTIP"] = "Show prospect value for ore from jewelcrafting in tooltips"
 L["CONFIG_QUANTITIES_CATEGORY"] = "Venta: Cantidades"
 L["CONFIG_QUANTITIES_TEXT"] = "Elige la cantidad predeterminada utilizada para las diferentes categorías de objetos."
 L["CONFIG_RESET_STACK_SIZE_MEMORY"] = "Restablecer memoria de tamaño de pila"
@@ -128,6 +131,12 @@ L["CONFIG_SELLING_GEAR_USE_ILVL_VARIANTS_TOOLTIP_TEXT"] = "Normalmente, el equip
 L["CONFIG_SELLING_GEAR_VENDOR_PRICE_MULTIPLIER_SUFFIX"] = "Establecer en 0 sin precio"
 L["CONFIG_SELLING_GEAR_VENDOR_PRICE_MULTIPLIER_TOOLTIP_HEADER"] = "Precio predeterminado del vendedor de equipo"
 L["CONFIG_SELLING_GEAR_VENDOR_PRICE_MULTIPLIER_TOOLTIP_TEXT"] = "Esto le permite establecer un precio predeterminado para el equipo como un múltiplo del precio del vendedor. Esto se utiliza para cualquier equipo por el que Auctionator no tenga precio. Configure esto en 0 para no establecer un precio."
+--[[Translation missing --]]
+L["CONFIG_SELLING_GREY_POST_BUTTON"] = "Grey (disable) the post button when a post may fail"
+--[[Translation missing --]]
+L["CONFIG_SELLING_GREY_POST_BUTTON_TOOLTIP_HEADER"] = "Grey post button"
+--[[Translation missing --]]
+L["CONFIG_SELLING_GREY_POST_BUTTON_TOOLTIP_TEXT"] = "When a post may fail the post button will be greyed out (disabled). Turn this option off to avoid waiting for the button to enable so you can attempt to post sooner."
 L["CONFIG_SELLING_ICON_SIZE"] = "Tamaño del icono de la bolsa (se requiere recarga)"
 L["CONFIG_SELLING_ICON_SIZE_TOOLTIP_HEADER"] = "Tamaño de iconos"
 L["CONFIG_SELLING_ICON_SIZE_TOOLTIP_TEXT"] = "Esto le permite hacer que los iconos de los objetos de la bolsa en la pestaña de venta sean más grandes (hasta 50) o más pequeños (hasta 10). El tamaño predeterminado es 42."
@@ -316,11 +325,19 @@ L["PERCENTAGE_TOOLTIP_TEXT"] = [=[La hoja de ruta técnica definió el trabajo q
 L["PET_TOOLTIP_TOOLTIP_HEADER"] = "Información sobre herramientas de mascotas"
 L["PET_TOOLTIP_TOOLTIP_TEXT"] = "Muestra información para mascotas enjauladas."
 L["POST"] = "Publicar"
+--[[Translation missing --]]
+L["POST_ATTEMPT_FAILED"] = "Your last post attempt didn't work. Try again."
 L["PRICE"] = "Precio"
 L["PRICE_INCREASE_WARNING"] = "Precio aumentado en %s, esperando %ss"
 L["PROFILE_TOGGLE_TOOLTIP_HEADER"] = "Habilitar la configuración por personaje"
 L["PROFILE_TOGGLE_TOOLTIP_TEXT"] = "Los cambios en la configuración de Auctionator solo afectan a este personaje."
 L["PROFIT_COLON"] = "Ganancia:"
+--[[Translation missing --]]
+L["PROSPECT"] = "Prospect"
+--[[Translation missing --]]
+L["PROSPECT_TOOLTIP_TOOLTIP_HEADER"] = "Prospect Tooltip Information"
+--[[Translation missing --]]
+L["PROSPECT_TOOLTIP_TOOLTIP_TEXT"] = "Show jewelcrafting prospecting estimated value in tooltip on mouseover."
 L["PURCHASED_X_XX"] = "Compró %s x%s"
 L["QUANTITY"] = "Cantidad"
 L["REAGENT_SEARCH"] = "Búsqueda de componentes"

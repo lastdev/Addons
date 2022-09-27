@@ -457,14 +457,13 @@ do
     ---@field public lfd_activity_ids number[]
     ---@field public name string
     ---@field public shortName string
+    ---@field public shortNameLocale string @Assigned dynamically based on the user preference regarding the short dungeon names.
+    ---@field public index number @Assigned dynamically based on the index of the dungeon/raid in the table.
 
     ---@class Dungeon : DungeonInstance
     ---@field public keystone_instance number
-    ---@field public shortNameLocale string @Assigned dynamically based on the user preference regarding the short dungeon names.
-    ---@field public index number @Assigned dynamically based on the index of the dungeon in the table.
 
     ---@class DungeonRaid : DungeonInstance
-    ---@field public index number @Assigned dynamically based on the index of the raid in the table.
 
     ---@type Dungeon[]
     local DUNGEONS = ns.DUNGEONS or ns.dungeons -- DEPRECATED: ns.dungeons
@@ -556,7 +555,7 @@ end
 -- dependencies: none
 do
 
-    ---@type Module<string, Module>
+    ---@type table<string, Module>
     local modules = {}
     local moduleIndex = 0
 
@@ -969,10 +968,19 @@ do
     local config = ns:GetModule("Config") ---@type ConfigModule
 
     local DUNGEONS = ns:GetDungeonData()
+    local RAIDS = ns:GetDungeonRaidData()
+
     local SORTED_DUNGEONS = {} ---@type Dungeon[]
     do
         for i = 1, #DUNGEONS do
             SORTED_DUNGEONS[i] = DUNGEONS[i]
+        end
+    end
+
+    local SORTED_RAIDS = {} ---@type DungeonRaid[]
+    do
+        for i = 1, #RAIDS do
+            SORTED_RAIDS[i] = RAIDS[i]
         end
     end
 
@@ -990,9 +998,21 @@ do
                 dungeon.shortNameLocale = L["DUNGEON_SHORT_NAME_" .. dungeon.shortName] or dungeon.shortName
             end
         end
-        table.sort(SORTED_DUNGEONS, function(a, b)
+        for i = 1, #RAIDS do
+            local raid = RAIDS[i]
+            if useEnglishAbbreviations then
+                raid.shortNameLocale = raid.shortName
+            else
+                raid.shortNameLocale = raid.shortName -- TODO: L["RAID_SHORT_NAME_" .. raid.shortName]
+            end
+        end
+        ---@param a Dungeon|DungeonRaid
+        ---@param b Dungeon|DungeonRaid
+        local function SortByLocaleName(a, b)
             return a.shortNameLocale < b.shortNameLocale
-        end)
+        end
+        table.sort(SORTED_DUNGEONS, SortByLocaleName)
+        table.sort(SORTED_RAIDS, SortByLocaleName)
     end
     callback:RegisterEvent(OnSettingsChanged, "RAIDERIO_CONFIG_READY")
     callback:RegisterEvent(OnSettingsChanged, "RAIDERIO_SETTINGS_SAVED")
@@ -1055,6 +1075,59 @@ do
         return util:GetDungeonByKeyValue("shortName", name) or util:GetDungeonByKeyValue("shortNameLocale", name)
     end
 
+    ---@return DungeonRaid[]
+    function util:GetSortedRaids()
+        return SORTED_RAIDS
+    end
+
+    ---@return DungeonRaid|nil
+    function util:GetRaidByIndex(index)
+        return RAIDS[index]
+    end
+
+    ---@return DungeonRaid|nil
+    function util:GetRaidByLFDActivityID(id)
+        for i = 1, #RAIDS do
+            local raid = RAIDS[i]
+            for j = 1, #raid.lfd_activity_ids do
+                local activityID = raid.lfd_activity_ids[j]
+                if activityID == id then
+                    return raid
+                end
+            end
+        end
+    end
+
+    ---@return DungeonRaid|nil
+    function util:GetRaidByKeyValue(key, value)
+        for i = 1, #RAIDS do
+            local raid = RAIDS[i]
+            if raid[key] == value then
+                return raid
+            end
+        end
+    end
+
+    ---@return DungeonRaid|nil
+    function util:GetRaidByID(id)
+        return util:GetRaidByKeyValue("id", id)
+    end
+
+    ---@return DungeonRaid|nil
+    function util:GetRaidByInstanceMapID(id)
+        return util:GetRaidByKeyValue("instance_map_id", id)
+    end
+
+    ---@return DungeonRaid|nil
+    function util:GetRaidByName(name)
+        return util:GetRaidByKeyValue("name", name)
+    end
+
+    ---@return DungeonRaid|nil
+    function util:GetRaidByShortName(name)
+        return util:GetRaidByKeyValue("shortName", name) or util:GetRaidByKeyValue("shortNameLocale", name)
+    end
+
     ---@param object Region @Any interface widget object that supports the methods GetScript.
     ---@param handler string @The script handler like OnEnter, OnClick, etc.
     ---@return boolean|nil @If successfully executed returns true, otherwise false if nothing has been called. nil if the widget had no handler to execute.
@@ -1077,7 +1150,7 @@ do
     ---@param anchor string @`ANCHOR_TOPLEFT`, `ANCHOR_NONE`, `ANCHOR_CURSOR`, etc.
     ---@param offsetX? number @Optional offset X for some of the anchors.
     ---@param offsetY? number @Optional offset Y for some of the anchors.
-    ---@return boolean, boolean, boolean @If owner was set arg1 is true. If owner was updated arg2 is true. Otherwise both will be set to face to indicate we did not update the Owner of the widget. If the owner is set to the preferred owner arg3 is true.
+    ---@return boolean|nil, boolean|nil, boolean|nil @If owner was set arg1 is true. If owner was updated arg2 is true. Otherwise both will be set to face to indicate we did not update the Owner of the widget. If the owner is set to the preferred owner arg3 is true.
     function util:SetOwnerSafely(object, owner, anchor, offsetX, offsetY)
         if type(object) ~= "table" or type(object.GetOwner) ~= "function" then
             return
@@ -1098,7 +1171,7 @@ do
     end
 
     ---@param text string @The format string like "Greetings %s! How are you?"
-    ---@return string @Returns a pattern like "Greetings (.-)%! How are you%?"
+    ---@return string|nil @Returns a pattern like "Greetings (.-)%! How are you%?"
     function util:FormatToPattern(text)
         if type(text) ~= "string" then
             return
@@ -1124,7 +1197,7 @@ do
         local utc = date("!*t", ts)
         local loc = date("*t", ts)
         loc.isdst = false
-        return difftime(time(loc), time(utc))
+        return difftime(time(loc), time(utc)) ---@diagnostic disable-line: param-type-mismatch
     end
 
     ---@param dateString string @A date like "2017-06-03T00:41:07Z"
@@ -1136,7 +1209,7 @@ do
 
     local REGION = ns:GetRegionData()
 
-    ---@return any, number @arg1 can be nil (no data), false (server is unknown), string (the ltd). arg2 can be nil (no data), or region ID.
+    ---@return boolean|string|nil, number|nil @arg1 can be nil (no data), false (server is unknown), string (the ltd). arg2 can be nil (no data), or region ID.
     function util:GetRegion()
         local guid = UnitGUID("player")
         if not guid then
@@ -1160,7 +1233,7 @@ do
         return ltd, regionId
     end
 
-    ---@return any, number @arg1 can be nil (no data), false (server is unknown), string (the ltd). arg2 can be nil (no data), or region ID.
+    ---@return boolean|string|nil, number|nil @arg1 can be nil (no data), false (server is unknown), string (the ltd). arg2 can be nil (no data), or region ID.
     function util:GetRegionForServerId(serverId)
         if not serverId then
             return
@@ -1176,7 +1249,7 @@ do
         return ltd, regionId
     end
 
-    ---@return number, string @arg1 is the faction ID or nil if no faction is appropriate. arg2 is the faction localized text for display purposes.
+    ---@return number|nil, string|nil @arg1 is the faction ID or nil if no faction is appropriate. arg2 is the faction localized text for display purposes.
     function util:GetFaction(unit)
         if not unit or not UnitExists(unit) or not UnitIsPlayer(unit) then
             return
@@ -1202,7 +1275,9 @@ do
         end
     end
 
-    ---@return number, string @arg1 is the faction ID or nil if no faction is appropriate
+    ---@param race string
+    ---@param fallback? any
+    ---@return number|any @arg1 is the faction ID or nil if no faction is appropriate
     function util:GetFactionFromRace(race, fallback)
         return CLIENT_RACE_TO_FACTION_ID[race] or fallback
     end
@@ -1260,7 +1335,7 @@ do
     end
 
     ---@param arg1 string @"unit", "name", or "name-realm"
-    ---@param arg2 string @"realm" or nil
+    ---@param arg2 string|any @"realm" or nil
     ---@return boolean, boolean, boolean @If the args used in the call makes it out to be a proper unit, arg1 is true and only then is arg2 true if unit exists and arg3 is true if unit is a player.
     function util:IsUnit(arg1, arg2)
         if not arg2 and type(arg1) == "string" and arg1:find("-", nil, true) then
@@ -1282,7 +1357,7 @@ do
                 name, realm = UnitNameUnmodified(arg1)
                 realm = realm and realm ~= "" and realm or GetNormalizedRealmName()
             end
-            return name, realm, unit
+            return name, realm, unit ---@diagnostic disable-line: return-type-mismatch
         end
         if type(arg1) == "string" then
             if arg1:find("-", nil, true) then
@@ -1298,7 +1373,7 @@ do
                 end
             end
         end
-        return name, realm, unit
+        return name, realm, unit ---@diagnostic disable-line: return-type-mismatch
     end
 
     ---@param level number @The level to test
@@ -1330,7 +1405,7 @@ do
 
     ---@param bnetIDAccount number @BNet Account ID
     ---@param getAllChars? boolean @true = table, false = character as varargs
-    ---@return any @Returns either a table with all characters, or the specific character varargs with name, faction and level.
+    ---@return table|string|nil, string?, number? @Returns either a table with all characters, or the specific character varargs with name, faction and level.
     function util:GetNameRealmForBNetFriend(bnetIDAccount, getAllChars)
         local index = BNGetFriendIndex(bnetIDAccount)
         if not index then
@@ -1362,20 +1437,21 @@ do
     end
 
     ---@param playerLink string @The player link can be any valid clickable chat link for messaging
-    ---@return string, string @Returns the name and realm, or nil for both if invalid
+    ---@return string?, string?, number? @Returns the name and realm, or nil for both if invalid
     function util:GetNameRealmFromPlayerLink(playerLink)
         local linkString, linkText = LinkUtil.SplitLink(playerLink)
         local linkType, linkData = ExtractLinkData(linkString)
         if linkType == "player" then
-            return util:GetNameRealm(linkData)
+            local name, realm, unit = util:GetNameRealm(linkData) ---@diagnostic disable-line: param-type-mismatch
+            return name, realm
         elseif linkType == "BNplayer" then
-            local _, bnetIDAccount = strsplit(":", linkData)
+            local _, bnetIDAccount = strsplit(":", linkData) ---@diagnostic disable-line: param-type-mismatch
             if bnetIDAccount then
                 bnetIDAccount = tonumber(bnetIDAccount)
             end
             if bnetIDAccount then
                 local fullName, _, level = util:GetNameRealmForBNetFriend(bnetIDAccount)
-                local name, realm = util:GetNameRealm(fullName)
+                local name, realm = util:GetNameRealm(fullName) ---@diagnostic disable-line: param-type-mismatch
                 return name, realm, level
             end
         end
@@ -1416,12 +1492,12 @@ do
     ---@field resultID number
 
     ---@class LFDStatus
-    ---@field dungeon Dungeon
+    ---@field dungeon? Dungeon|DungeonRaid
     ---@field hosting boolean
     ---@field queued boolean
     ---@field self LFDStatusResult[] @The LFDStatus itself is also a iterable table with the LFDStatusResult entries.
 
-    ---@return LFDStatus
+    ---@return LFDStatus?
     function util:GetLFDStatus()
         ---@type LFDStatus
         local temp = {
@@ -1432,14 +1508,14 @@ do
         local index = 0
         local activityInfo = C_LFGList.GetActiveEntryInfo()
         if activityInfo and activityInfo.activityID then
-            temp.dungeon = util:GetDungeonByLFDActivityID(activityInfo.activityID)
+            temp.dungeon = util:GetDungeonByLFDActivityID(activityInfo.activityID) or util:GetRaidByLFDActivityID(activityInfo.activityID)
             temp.hosting = true
         end
         local applications = C_LFGList.GetApplications()
         for _, resultID in ipairs(applications) do
             local searchResultInfo = C_LFGList.GetSearchResultInfo(resultID)
             if searchResultInfo and searchResultInfo.activityID and not searchResultInfo.isDelisted then
-                local dungeon = util:GetDungeonByLFDActivityID(searchResultInfo.activityID)
+                local dungeon = util:GetDungeonByLFDActivityID(searchResultInfo.activityID) or util:GetRaidByLFDActivityID(searchResultInfo.activityID)
                 if dungeon then
                     local _, appStatus, pendingStatus = C_LFGList.GetApplicationInfo(resultID)
                     if not pendingStatus and (appStatus == "applied" or appStatus == "invited") then
@@ -1459,21 +1535,20 @@ do
         end
     end
 
-    ---@return Dungeon
+    ---@return Dungeon|DungeonRaid|nil
     function util:GetInstanceStatus()
         local _, instanceType, _, _, _, _, _, instanceMapID = GetInstanceInfo()
         if instanceType ~= "party" then
             return
         end
-        return util:GetDungeonByInstanceMapID(instanceMapID)
+        return util:GetDungeonByInstanceMapID(instanceMapID) or util:GetRaidByInstanceMapID(instanceMapID)
     end
 
     function util:GetLFDStatusForCurrentActivity(activityID)
-        ---@type Dungeon
+        ---@type Dungeon|DungeonRaid|nil
         local focusDungeon
-        local activityDungeon = activityID and util:GetDungeonByLFDActivityID(activityID)
-        if activityDungeon then
-            focusDungeon = activityDungeon
+        if activityID then
+            focusDungeon = util:GetDungeonByLFDActivityID(activityID) or util:GetRaidByLFDActivityID(activityID)
         end
         if not focusDungeon then
             local lfd = util:GetLFDStatus()
@@ -1488,6 +1563,45 @@ do
             end
         end
         return focusDungeon
+    end
+
+    ---@param raid DungeonRaid
+    local function IsRaidFated(raid)
+        if not raid then
+            return
+        end
+        local modInfo = C_ModifiedInstance.GetModifiedInstanceInfoFromMapID(raid.instance_map_id)
+        if not modInfo then
+            return
+        end
+        if modInfo.uiTextureKit ~= "ui-ej-icon-empoweredraid" then
+            return
+        end
+        return modInfo.uiTextureKit
+    end
+
+    ---@param raid DungeonRaid
+    function util:IsRaidFated(raid)
+        return IsRaidFated(raid)
+    end
+
+    ---@param asMap? boolean
+    function util:GetFatedRaids(asMap)
+        local raids = {} ---@type DungeonRaid[]
+        local index = 0
+        for i = 1, #RAIDS do
+            local raid = RAIDS[i]
+            local fated = IsRaidFated(raid)
+            if fated then
+                if asMap then
+                    raids[raid] = fated or ""
+                else
+                    index = index + 1
+                    raids[index] = raid
+                end
+            end
+        end
+        return raids
     end
 
     local SCORE_TIER = ns:GetScoreTiersData()
@@ -1531,7 +1645,7 @@ do
         return 0.62, 0.62, 0.62
     end
 
-    ---@type table<string, string>
+    ---@type table<string, string|number>
     local MEDAL_TEXTURE = {
         none = 982414,
         none2 = 982414,
@@ -1625,7 +1739,7 @@ do
         TOOLTIP_TEXT_FONTSTRING:Show()
         local width = TOOLTIP_TEXT_FONTSTRING:GetUnboundedStringWidth()
         TOOLTIP_TEXT_FONTSTRING:Hide()
-        return width
+        return width or 0
     end
 
     ---@param width number @The width of the transparent texture.
@@ -1641,7 +1755,9 @@ do
     function util:GetRaiderIOProfileUrl(...)
         local name, realm = util:GetNameRealm(...)
         local realmSlug = util:GetRealmSlug(realm, true)
-        return format("https://raider.io/characters/%s/%s/%s?utm_source=addon", ns.PLAYER_REGION, realmSlug, name), name, realm, realmSlug
+        local region = select(3, ...)
+        region = region and type(region) == "string" and region:len() > 0 and region or ns.PLAYER_REGION
+        return format("https://raider.io/characters/%s/%s/%s?utm_source=addon", region, realmSlug, name), name, realm, realmSlug
     end
 
     function util:GetRaiderIORecruitmentProfileUrl(urlSuffix, ...)
@@ -1774,7 +1890,7 @@ do
         if t == "nil" then
             s = "null"
         elseif t == "number" then
-            s = o
+            s = tostring(o)
         elseif t == "boolean" then
             s = o and "true" or "false"
         elseif t == "table" then
@@ -1924,7 +2040,7 @@ do
         }
         local unitPrefix
         local startIndex = 1
-        local endIndex = GetNumGroupMembers()
+        local endIndex = GetNumGroupMembers() ---@type number
         if IsInRaid() then
             unitPrefix = "raid"
         elseif IsInGroup() then
@@ -1975,7 +2091,7 @@ do
 
     local function CreateExportButton()
         local button = CreateFrame("Button", addonName .. "_ExportButton", _G.LFGListFrame)
-        button:SetPoint("BOTTOMRIGHT", button:GetParent(), "BOTTOM", -12, 7)
+        button:SetPoint("BOTTOMRIGHT", button:GetParent(), "BOTTOM", -12, 7) ---@diagnostic disable-line: param-type-mismatch
         button:SetSize(16, 16)
         -- script handlers
         button:SetScript("OnEnter", function() button.Border:SetVertexColor(1, 1, 1) end)
@@ -2068,10 +2184,14 @@ do
     local config = ns:GetModule("Config") ---@type ConfigModule
     local util = ns:GetModule("Util") ---@type UtilModule
 
-    ---@class Raid
+    ---@class DatabaseRaid
+    ---@field public id number
+    ---@field public mapId number
+    ---@field public ordinal number
     ---@field public name string
     ---@field public shortName string
     ---@field public bossCount number
+    ---@field public dungeon? DungeonRaid
 
     ---@class DataProviderMythicKeystone
     ---@field public currentSeasonId number
@@ -2081,8 +2201,10 @@ do
 
     -- hack to implement both keystone and raid classes on the dataprovider below so we do this weird inheritance
     ---@class DataProviderRaid : DataProviderMythicKeystone
-    ---@field public currentRaid Raid
-    ---@field public previousRaid Raid
+    ---@field public currentRaid DatabaseRaid
+    ---@field public previousRaid DatabaseRaid
+    ---@field public currentRaids DatabaseRaid[]
+    ---@field public previousRaids DatabaseRaid[]
 
     ---@class DataProvider : DataProviderRaid
     ---@field public name string
@@ -2248,7 +2370,7 @@ do
     end
 
     ---@param dateString string @The date string from the provider
-    ---@return number, boolean @arg1 is seconds difference between now and the date in the provider. arg2 is true if we should block from showing data from this provider
+    ---@return number?, boolean? @arg1 is seconds difference between now and the date in the provider. arg2 is true if we should block from showing data from this provider
     local function GetOutdatedAndBlockState(dateString)
         local dateAsTime = util:GetTimeFromDateString(dateString)
         local tzOffset = util:GetTimeZoneOffset(dateAsTime)
@@ -2292,6 +2414,25 @@ do
                 provider[k] = provider[k] or v
             end
             table.wipe(data)
+            if provider.data == ns.PROVIDER_DATA_TYPE.Raid then
+                ---@param raid DatabaseRaid
+                local function PopulateRaidWithDungeon(raid)
+                    if not raid or not raid.id or raid.dungeon then
+                        return
+                    end
+                    raid.dungeon = util:GetRaidByID(raid.id)
+                end
+                for _, raid in ipairs({ provider.currentRaid, provider.previousRaid }) do
+                    PopulateRaidWithDungeon(raid)
+                end
+                for _, raids in ipairs({ provider.currentRaids, provider.previousRaids }) do
+                    if raids then
+                        for _, raid in ipairs(raids) do
+                            PopulateRaidWithDungeon(raid)
+                        end
+                    end
+                end
+            end
         else
             table.insert(providers, data)
         end
@@ -2346,8 +2487,16 @@ do
         tank = 4,
     }
 
+    -- TODO: can this be part of the provider? we can see if we can make a more dynamic system
+    local ENCODER_RAIDING_FIELDS = {
+        CURRENT_FULL_PROGRESS = 1,
+        PREVIOUS_FULL_PROGRESS = 2,
+        PREVIOUS_SUMMARY_PROGRESS = 3,
+        MAINS_CURRENT_SUMMARY_PROGRESS = 4,
+    }
+
     ---@param provider DataProvider
-    ---@return table, number, string
+    ---@return table?, number?, string?, string?, string?
     local function SearchForBucketByName(provider, lookup, data, name, realm)
         local internalRealm = realm
         local realmData = data[realm]
@@ -2374,12 +2523,9 @@ do
             baseOffset = 1 + realmData[1] + (nameIndex - 2) * provider.recordSizeInBytes
             guid = provider.data .. ":" .. provider.region .. ":" .. bucketID .. ":" .. baseOffset
         elseif provider.data == ns.PROVIDER_DATA_TYPE.Raid then
-            local numFieldsPerCharacter = 2
-            local lookupMaxSize = floor(ns.LOOKUP_MAX_SIZE / numFieldsPerCharacter) * numFieldsPerCharacter
-            local bucketOffset = realmData[1] + (nameIndex - 2) * numFieldsPerCharacter
-            local bucketID = 1 + floor(bucketOffset / lookupMaxSize)
+            local bucketID = 1
             bucket = lookup[bucketID]
-            baseOffset = 1 + bucketOffset - (bucketID - 1) * lookupMaxSize
+            baseOffset = 1 + realmData[1] + (nameIndex - 2) * provider.recordSizeInBytes
             guid = provider.data .. ":" .. provider.region .. ":" .. bucketID .. ":" .. baseOffset
         elseif provider.data == ns.PROVIDER_DATA_TYPE.Recruitment then
             local bucketID = 1
@@ -2443,25 +2589,6 @@ do
             return value
         end
         return 200 + (value - 200) * 2
-    end
-
-    local function Split64BitNumber(dword)
-        local lo = band(dword, 0xfffffffff)
-        return lo, (dword - lo) / 0x100000000
-    end
-
-    local function ReadBits(lo, hi, offset, bits)
-        if offset < 32 and (offset + bits) > 32 then
-            local mask = lshift(1, (offset + bits) - 32) - 1
-            local p1 = rshift(lo, offset)
-            local p2 = lshift(band(hi, mask), 32 - offset)
-            return p1 + p2, offset + bits
-        end
-        local mask = lshift(1, bits) - 1
-        if offset < 32 then
-            return band(rshift(lo, offset), mask), offset + bits
-        end
-        return band(rshift(hi, offset - 32), mask), offset + bits
     end
 
     local DECODE_BITS_2_TABLE = { 0, 1, 2, 5 }
@@ -2597,10 +2724,10 @@ do
     ---@field public dungeonTimes number[] @Proxy table that looks up the correct weekly affix table if used. Use `fortifiedDungeonTimes` and `tyrannicalDungeonTimes` when possible.
     ---@field public fortifiedMaxDungeonIndex number
     ---@field public fortifiedMaxDungeonLevel number
-    ---@field public fortifiedMaxDungeon Dungeon
+    ---@field public fortifiedMaxDungeon? Dungeon
     ---@field public tyrannicalMaxDungeonIndex number
     ---@field public tyrannicalMaxDungeonLevel number
-    ---@field public tyrannicalMaxDungeon Dungeon
+    ---@field public tyrannicalMaxDungeon? Dungeon
     ---@field public maxDungeonIndex number @Proxy table that looks up the correct weekly affix table if used. Use `fortifiedMaxDungeonIndex` and `tyrannicalMaxDungeonIndex` when possible.
     ---@field public maxDungeonLevel number @Proxy table that looks up the correct weekly affix table if used. Use `fortifiedMaxDungeonLevel` and `tyrannicalMaxDungeonLevel` when possible.
     ---@field public maxDungeon Dungeon @Proxy table that looks up the correct weekly affix table if used. Use `fortifiedMaxDungeon` and `tyrannicalMaxDungeon` when possible.
@@ -2883,6 +3010,14 @@ do
         end
     end
 
+    ---@param bucket table
+    ---@param baseOffset number
+    ---@param encodingOrder number[]
+    ---@param providerOutdated number
+    ---@param providerBlocked number
+    ---@param name? string
+    ---@param realm? string
+    ---@param region? string
     local function UnpackMythicKeystoneData(bucket, baseOffset, encodingOrder, providerOutdated, providerBlocked, name, realm, region)
         ---@type DataProviderMythicKeystoneProfile
         local results = { outdated = providerOutdated, hasRenderableData = false }
@@ -2954,15 +3089,16 @@ do
     ---@field public progressCount number
     ---@field public difficulty number
     ---@field public killsPerBoss number[]
-    ---@field public raid Raid
+    ---@field public raid DatabaseRaid
 
     ---@class DataProviderRaidProfile
     ---@field public outdated number|nil @number or nil
     ---@field public hasRenderableData boolean @True if we have any actual data to render in the tooltip without the profile appearing incomplete or empty.
     ---@field public progress DataProviderRaidProgress[]
-    ---@field public mainProgress DataProviderRaidProgress[]
-    ---@field public previousProgress DataProviderRaidProgress[]
+    ---@field public mainProgress? DataProviderRaidProgress[]
+    ---@field public previousProgress? DataProviderRaidProgress[]
     ---@field public sortedProgress SortedRaidProgress[]
+    ---@field public raidProgress RaidProgress[]
 
     ---@class SortedRaidProgress
     ---@field public obsolete boolean If this evaluates truthy we hide it unless tooltip is expanded on purpose.
@@ -2971,6 +3107,31 @@ do
     ---@field public isProgressPrev boolean
     ---@field public isMainProgress boolean
     ---@field public progress DataProviderRaidProgress
+
+    ---@class RaidProgress
+    ---@field public current boolean
+    ---@field public raid DatabaseRaid
+    ---@field public progress RaidProgressGroup[]
+    ---@field public isMainProgress boolean
+
+    ---@class RaidProgressGroup
+    ---@field public difficulty number
+    ---@field public progress RaidProgressBossInfo[]
+    ---@field public kills number
+    ---@field public cleared boolean
+    ---@field public obsolete boolean
+
+    ---@class RaidProgressBossInfo
+    ---@field public difficulty number
+    ---@field public index number
+    ---@field public count number
+    ---@field public killed boolean
+
+    ---@class RaidProgressExtended
+    ---@field public progress RaidProgress
+    ---@field public focused boolean @`true` if the raid is focused due to LFD status or instance location, otherwise `false`.
+    ---@field public fated? string @The fated `texture` if the raid is fated, otherwise `nil` if it's not. Requires to append `-small` or `-large` at the end of the atlas string for it to resolve into a proper texture.
+    ---@field public show boolean @Dynamically assigned based on the situation. It's set to `true` to display the line in the tooltip, otherwise `false` to hide.
 
     ---@param a SortedRaidProgress
     ---@param b SortedRaidProgress
@@ -2987,10 +3148,165 @@ do
         return not a.isMainProgress and b.isMainProgress
     end
 
+    ---@param a RaidProgress
+    ---@param b RaidProgress
+    local function SortRaidProgressByOrdinal(a, b)
+        return a.raid.ordinal < b.raid.ordinal
+    end
+
+    ---@param a RaidProgressGroup
+    ---@param b RaidProgressGroup
+    local function SortRaidProgressGroupByDifficulty(a, b)
+        return a.difficulty < b.difficulty
+    end
+
+    ---@param results DataProviderRaidProfile
+    ---@param provider DataProvider
+    local function SummarizeRaidProgress(results, provider)
+        local sortedProgress = results.sortedProgress
+        local raidProgress = results.raidProgress
+        ---@param isMainProgress boolean
+        local function populateRaidProgress(isMainProgress)
+            for raidsIndex, raids in ipairs({ provider.currentRaids, provider.previousRaids }) do
+                local isCurrentRaid = raidsIndex == 1
+                for i = 1, #raids do
+                    local raid = raids[i]
+                    ---@type RaidProgress
+                    local raidProg = {
+                        current = isCurrentRaid,
+                        raid = raid,
+                        progress = {},
+                        isMainProgress = false,
+                    }
+                    local diffToIndexMap = {} ---@type number[]
+                    local diffNextIndex = 1
+                    ---@param difficulty number
+                    ---@param index number
+                    ---@param count number
+                    local function appendBossInfo(difficulty, index, count)
+                        ---@type RaidProgressBossInfo
+                        local bossInfo = {
+                            difficulty = difficulty,
+                            index = index,
+                            count = count,
+                            killed = count > 0,
+                        }
+                        local diffIndex = diffToIndexMap[bossInfo.difficulty]
+                        if not diffIndex then
+                            diffIndex = diffNextIndex
+                            diffNextIndex = diffNextIndex + 1
+                            diffToIndexMap[bossInfo.difficulty] = diffIndex
+                        end
+                        local diffGroup = raidProg.progress[diffIndex]
+                        if not diffGroup then
+                            ---@type RaidProgressGroup
+                            diffGroup = {
+                                difficulty = difficulty,
+                                progress = {},
+                            }
+                            raidProg.progress[diffIndex] = diffGroup
+                        end
+                        diffGroup.progress[#diffGroup.progress + 1] = bossInfo
+                    end
+                    for j = 1, #sortedProgress do
+                        local prog = sortedProgress[j]
+                        local progProgress = prog.progress
+                        if progProgress.raid == raid and (not not isMainProgress == not not prog.isMainProgress) and (isMainProgress or ((isCurrentRaid and prog.isProgress) or (not isCurrentRaid and prog.isProgressPrev))) then
+                            if prog.isMainProgress then
+                                raidProg.isMainProgress = true
+                            end
+                            if progProgress.killsPerBoss then
+                                for k = 1, #progProgress.killsPerBoss do
+                                    local killsPerBoss = progProgress.killsPerBoss[k]
+                                    appendBossInfo(progProgress.difficulty, k, killsPerBoss)
+                                end
+                            else
+                                for k = 1, progProgress.raid.bossCount do
+                                    local killsPerBoss = progProgress.progressCount >= k and 1 or 0
+                                    appendBossInfo(progProgress.difficulty, k, killsPerBoss)
+                                end
+                            end
+                        end
+                    end
+                    if raidProg.progress[2] then
+                        table.sort(raidProg.progress, SortRaidProgressGroupByDifficulty)
+                    end
+                    for j = #raidProg.progress, 1, -1 do
+                        local group = raidProg.progress[j]
+                        local bossKills = 0
+                        for _, bossInfo in ipairs(group.progress) do
+                            if bossInfo.killed then
+                                bossKills = bossKills + 1
+                            end
+                        end
+                        group.kills = bossKills
+                        group.cleared = bossKills == raidProg.raid.bossCount
+                        local nextGroup = raidProg.progress[j + 1]
+                        group.obsolete = not not (nextGroup and (nextGroup.obsolete or nextGroup.cleared))
+                    end
+                    if raidProg.progress[1] then
+                        raidProgress[#raidProgress + 1] = raidProg
+                    end
+                end
+            end
+        end
+        populateRaidProgress(false)
+        populateRaidProgress(true)
+        if raidProgress[2] then
+            table.sort(raidProgress, SortRaidProgressByOrdinal)
+        end
+    end
+
+    ---@param bucket table
+    ---@param raid DatabaseRaid
+    ---@param offset number
+    ---@param results DataProviderRaidProfile
+    ---@param field "mainProgress"|"previousProgress"|"progress"
+    local function UnpackSummaryRaidProgress(bucket, raid, offset, results, field)
+        local prog = { raid = raid } ---@type DataProviderRaidProgress
+        local bitOffset = offset
+        prog.difficulty, bitOffset = ReadBitsFromString(bucket, bitOffset, 2)
+        prog.progressCount, bitOffset = ReadBitsFromString(bucket, bitOffset, 4)
+        if prog.progressCount > 0 then
+            local temp = results[field]
+            if not temp then
+                temp = {}
+                results[field] = temp
+            end
+            temp[#temp + 1] = prog
+        end
+        return bitOffset
+    end
+
+    ---@param bucket table
+    ---@param raid DatabaseRaid
+    ---@param offset number
+    ---@param results DataProviderRaidProfile
+    local function UnpackFullRaidProgress(bucket, raid, offset, results)
+        local prog = { raid = raid, progressCount = 0 } ---@type DataProviderRaidProgress
+        local bitOffset = offset
+        local value
+        prog.difficulty, bitOffset = ReadBitsFromString(bucket, bitOffset, 2)
+        prog.killsPerBoss = {}
+        for i = 1, raid.bossCount do
+            value, bitOffset = ReadBitsFromString(bucket, bitOffset, 2)
+            prog.killsPerBoss[i] = DecodeBits2(value)
+            if prog.killsPerBoss[i] > 0 then
+                prog.progressCount = prog.progressCount + 1
+            end
+        end
+        if prog.progressCount > 0 then
+            results.progress[#results.progress + 1] = prog
+        end
+        return bitOffset
+    end
+
+    ---@param bucket table
+    ---@param baseOffset number
     ---@param provider DataProvider
     local function UnpackRaidData(bucket, baseOffset, provider)
-        local data1 = bucket[baseOffset]
-        local data2 = bucket[baseOffset + 1]
+        local encodingOrder = provider.encodingOrder
+        local bitOffset = (baseOffset - 1) * 8
         ---@type DataProviderRaidProfile
         local results = {
             outdated = provider.outdated,
@@ -2998,70 +3314,37 @@ do
             previousProgress = nil,
             mainProgress = nil,
             sortedProgress = {},
+            raidProgress = {},
             hasRenderableData = false
         }
         local value
-        do
-            local lo, hi = Split64BitNumber(data1)
-            local offset = 0
-            ---@type DataProviderRaidProgress
-            local prog
-            for bucketIndex = 1, 2 do
-                prog = { raid = provider.currentRaid, progressCount = 0 }
-                prog.difficulty, offset = ReadBits(lo, hi, offset, 2)
-                prog.killsPerBoss = {}
-                for i = 1, provider.currentRaid.bossCount do
-                    value, offset = ReadBits(lo, hi, offset, 2)
-                    prog.killsPerBoss[i] = DecodeBits2(value)
-                    if prog.killsPerBoss[i] > 0 then
-                        prog.progressCount = prog.progressCount + 1
+        local numCurrentRaids = #provider.currentRaids
+        local numPreviousRaids = #provider.previousRaids
+        for encoderIndex = 1, #encodingOrder do
+            local field = encodingOrder[encoderIndex]
+            if field == ENCODER_RAIDING_FIELDS.CURRENT_FULL_PROGRESS then
+                for raidIndex = 1, numCurrentRaids do
+                    for i = 1, 2 do
+                        bitOffset = UnpackFullRaidProgress(bucket, provider.currentRaids[raidIndex], bitOffset, results)
                     end
                 end
-                if prog.progressCount > 0 then
-                    results.progress[#results.progress + 1] = prog
+            elseif field == ENCODER_RAIDING_FIELDS.PREVIOUS_FULL_PROGRESS then
+                for raidIndex = 1, numPreviousRaids do
+                    bitOffset = UnpackFullRaidProgress(bucket, provider.previousRaids[raidIndex], bitOffset, results)
                 end
-            end
-        end
-        do
-            local lo, hi = Split64BitNumber(data2)
-            local offset = 0
-            ---@type DataProviderRaidProgress
-            local prog
-            do
-                prog = { raid = provider.currentRaid, progressCount = 0 }
-                prog.difficulty, offset = ReadBits(lo, hi, offset, 2)
-                prog.killsPerBoss = {}
-                for i = 1, provider.currentRaid.bossCount do
-                    value, offset = ReadBits(lo, hi, offset, 2)
-                    prog.killsPerBoss[i] = DecodeBits2(value)
-                    if prog.killsPerBoss[i] > 0 then
-                        prog.progressCount = prog.progressCount + 1
+            elseif field == ENCODER_RAIDING_FIELDS.PREVIOUS_SUMMARY_PROGRESS then
+                for raidIndex = 1, numPreviousRaids do
+                    local previousRaid = provider.previousRaids[raidIndex]
+                    for i = 1, 2 do
+                        bitOffset = UnpackSummaryRaidProgress(bucket, previousRaid, bitOffset, results, "previousProgress")
                     end
                 end
-                if prog.difficulty ~= 0 and prog.progressCount > 0 then
-                    results.progress[#results.progress + 1] = prog
-                end
-            end
-            for i = 1, 2 do
-                prog = { raid = provider.previousRaid }
-                prog.difficulty, offset = ReadBits(lo, hi, offset, 2)
-                prog.progressCount, offset = ReadBits(lo, hi, offset, 4)
-                if prog.progressCount > 0 then
-                    if not results.previousProgress then
-                        results.previousProgress = {}
+            elseif field == ENCODER_RAIDING_FIELDS.MAINS_CURRENT_SUMMARY_PROGRESS then
+                for raidIndex = 1, numCurrentRaids do
+                    local currentRaid = provider.currentRaids[raidIndex]
+                    for i = 1, 2 do
+                        bitOffset = UnpackSummaryRaidProgress(bucket, currentRaid, bitOffset, results, "mainProgress")
                     end
-                    results.previousProgress[#results.previousProgress + 1] = prog
-                end
-            end
-            for i = 1, 2 do
-                prog = { raid = provider.currentRaid }
-                prog.difficulty, offset = ReadBits(lo, hi, offset, 2)
-                prog.progressCount, offset = ReadBits(lo, hi, offset, 4)
-                if prog.progressCount > 0 then
-                    if not results.mainProgress then
-                        results.mainProgress = {}
-                    end
-                    results.mainProgress[#results.mainProgress + 1] = prog
                 end
             end
         end
@@ -3069,7 +3352,7 @@ do
             for i = 1, #results.progress do
                 local prog = results.progress[i]
                 results.sortedProgress[#results.sortedProgress + 1] = {
-                    tier = 1000 +  (3 - prog.difficulty) * 100 + (99 - prog.progressCount),
+                    tier = 1000000 + prog.raid.ordinal * 10000 + (3 - prog.difficulty) * 100 + (99 - prog.progressCount),
                     progress = prog,
                     isProgress = true
                 }
@@ -3079,7 +3362,7 @@ do
             for i = 1, #results.mainProgress do
                 local prog = results.mainProgress[i]
                 results.sortedProgress[#results.sortedProgress + 1] = {
-                    tier = 1000 + (3 - prog.difficulty) * 100 + (99 - prog.progressCount),
+                    tier = 1000000 + prog.raid.ordinal * 10000 + (3 - prog.difficulty) * 100 + (99 - prog.progressCount),
                     progress = prog,
                     isMainProgress = true
                 }
@@ -3089,7 +3372,7 @@ do
             for i = 1, #results.previousProgress do
                 local prog = results.previousProgress[i]
                 results.sortedProgress[#results.sortedProgress + 1] = {
-                    tier = 2000 + (3 - prog.difficulty) * 100 + (99 - prog.progressCount),
+                    tier = 2000000 + prog.raid.ordinal * 10000 + (3 - prog.difficulty) * 100 + (99 - prog.progressCount),
                     progress = prog,
                     isProgressPrev = true
                 }
@@ -3122,6 +3405,7 @@ do
                 break
             end
         end
+        SummarizeRaidProgress(results, provider)
         return results
     end
 
@@ -3217,13 +3501,13 @@ do
             if cache then
                 return cache
             end
-            local profile = UnpackMythicKeystoneData(nil, nil, nil, true, true, name, realm, provider.region)
+            local profile = UnpackMythicKeystoneData(nil, nil, nil, true, true, name, realm, provider.region) ---@diagnostic disable-line: param-type-mismatch
             profile.blockedPurged = true
             mythicKeystoneProfileCache[guid] = profile
             return profile
         end
         local bucket, baseOffset, guid, name, realm = SearchForBucketByName(provider, ...)
-        if not bucket then
+        if not bucket or not baseOffset or not guid then
             return
         end
         local cache = mythicKeystoneProfileCache[guid]
@@ -3238,7 +3522,7 @@ do
     ---@param provider DataProvider
     local function GetRaidProfile(provider, ...)
         local bucket, baseOffset, guid = SearchForBucketByName(provider, ...)
-        if not bucket then
+        if not bucket or not baseOffset or not guid then
             return
         end
         local cache = raidProfileCache[guid]
@@ -3253,7 +3537,7 @@ do
     ---@param provider DataProvider
     local function GetRecruitmentProfile(provider, ...)
         local bucket, baseOffset, guid = SearchForBucketByName(provider, ...)
-        if not bucket then
+        if not bucket or not baseOffset or not guid then
             return
         end
         local cache = recruitmentProfileCache[guid]
@@ -3268,7 +3552,7 @@ do
     ---@param provider DataProvider
     local function GetPvpProfile(provider, ...)
         local bucket, baseOffset, guid = SearchForBucketByName(provider, ...)
-        if not bucket then
+        if not bucket or not baseOffset or not guid then
             return
         end
         local cache = pvpProfileCache[guid]
@@ -3305,14 +3589,14 @@ do
             fortifiedDungeonTimes = {},
             fortifiedMaxDungeonIndex = 1,
             fortifiedMaxDungeonLevel = 0,
-            fortifiedMaxDungeon = 0,
+            fortifiedMaxDungeon = nil,
             fortifiedMaxDungeonUpgrades = 0,
             tyrannicalDungeons = {},
             tyrannicalDungeonUpgrades = {},
             tyrannicalDungeonTimes = {},
             tyrannicalMaxDungeonIndex = 1,
             tyrannicalMaxDungeonLevel = 0,
-            tyrannicalMaxDungeon = 0,
+            tyrannicalMaxDungeon = nil,
             tyrannicalMaxDungeonUpgrades = 0,
             sortedMilestones = {}
         }
@@ -3356,7 +3640,7 @@ do
         end
         local region = ns.PLAYER_REGION
         local guid = region .. " " .. realm .. " " .. name
-        local cache = provider:GetProfile(name, realm, region) ---@type DataProviderCharacterProfile
+        local cache = provider:GetProfile(name, realm, region)
         local mythicKeystoneProfile
         if cache and cache.success and cache.mythicKeystoneProfile and not cache.mythicKeystoneProfile.blocked and cache.mythicKeystoneProfile.hasRenderableData then
             mythicKeystoneProfile = cache.mythicKeystoneProfile
@@ -3419,7 +3703,7 @@ do
                             mythicKeystoneProfile.hasOverrideDungeonRuns = true
                             local _, _, dungeonTimeLimit = C_ChallengeMode.GetMapUIInfo(run.challengeModeID)
                             local goldTimeLimit, silverTimeLimit, bronzeTimeLimit = -1, -1, dungeonTimeLimit
-                            if dungeon.timers then
+                            if dungeon and dungeon.timers then
                                 goldTimeLimit, silverTimeLimit, bronzeTimeLimit = dungeon.timers[1], dungeon.timers[2], dungeonTimeLimit or dungeon.timers[3] -- TODO: always prefer the game data time limit for bronze or the addons time limit?
                             end
                             local runSeconds = runBestRunDurationMS / 1000
@@ -3483,7 +3767,7 @@ do
     ---@param name string
     ---@param realm string
     ---@param region? string @Optional, will use players own region if ommited. Include to avoid ambiguity during debug mode.
-    ---@return DataProviderCharacterProfile @Return value is nil if not found
+    ---@return DataProviderCharacterProfile? @Return value is nil if not found
     function provider:GetProfile(name, realm, region)
         if type(name) ~= "string" or type(realm) ~= "string" then
             return
@@ -3497,10 +3781,10 @@ do
             end
             return cache
         end
-        local mythicKeystoneProfile ---@type DataProviderMythicKeystoneProfile
-        local raidProfile ---@type DataProviderRaidProfile
-        local recruitmentProfile ---@type DataProviderRecruitmentProfile
-        local pvpProfile ---@type DataProviderPvpProfile
+        local mythicKeystoneProfile ---@type DataProviderMythicKeystoneProfile|nil
+        local raidProfile ---@type DataProviderRaidProfile|nil
+        local recruitmentProfile ---@type DataProviderRecruitmentProfile|nil
+        local pvpProfile ---@type DataProviderPvpProfile|nil
         for i = 1, #providers do
             local provider = providers[i]
             if provider.region == region then
@@ -3557,11 +3841,7 @@ do
         return cache
     end
 
-    ---@class BlizzardKeystoneSummary
-    ---@field public currentSeasonScore number @The current season keystone score.
-    ---@field public runs BlizzardKeystoneRun[] @Table over each keystone dungeon.
-
-    ---@param bioSummary BlizzardKeystoneSummary
+    ---@param bioSummary MythicPlusRatingSummary
     local function ExpandSummaryWithChallengeModeMapData(bioSummary)
         local mapIDs = C_ChallengeMode.GetMapTable()
         for _, mapID in ipairs(mapIDs) do
@@ -3587,7 +3867,7 @@ do
     end
 
     local function OverridePlayerData()
-        local bioSummary = C_PlayerInfo.GetPlayerMythicPlusRatingSummary("player") ---@type BlizzardKeystoneSummary
+        local bioSummary = C_PlayerInfo.GetPlayerMythicPlusRatingSummary("player") ---@type MythicPlusRatingSummary
         if bioSummary and bioSummary.currentSeasonScore then
             ExpandSummaryWithChallengeModeMapData(bioSummary)
             provider:OverrideProfile(ns.PLAYER_NAME, ns.PLAYER_REALM, bioSummary.currentSeasonScore, bioSummary.runs)
@@ -3645,8 +3925,8 @@ do
     end
 
     local function OnPlayerLogin()
-        ns.PLAYER_REGION, ns.PLAYER_REGION_ID = util:GetRegion()
-        ns.PLAYER_FACTION, ns.PLAYER_FACTION_TEXT = util:GetFaction("player")
+        ns.PLAYER_REGION, ns.PLAYER_REGION_ID = util:GetRegion() ---@diagnostic disable-line: assign-type-mismatch
+        ns.PLAYER_FACTION, ns.PLAYER_FACTION_TEXT = util:GetFaction("player") ---@diagnostic disable-line: assign-type-mismatch
         ns.PLAYER_NAME, ns.PLAYER_REALM = util:GetNameRealm("player")
         ns.PLAYER_REALM_SLUG = util:GetRealmSlug(ns.PLAYER_REALM)
         _G.RaiderIO_LastCharacter = format("%s-%s-%s", ns.PLAYER_REGION, ns.PLAYER_NAME, ns.PLAYER_REALM_SLUG or ns.PLAYER_REALM)
@@ -3693,7 +3973,7 @@ do
     local util = ns:GetModule("Util") ---@type UtilModule
     local provider = ns:GetModule("Provider") ---@type ProviderModule
 
-    ---@return string, string, string, number, number @Always call as `render.GetQuery(...)`. Returns the following args: unit, name, realm, faction, options, args
+    ---@return string, string, string, number, number, table, string @Always call as `render.GetQuery(...)`. Returns the following args: unit, name, realm, faction, options, args
     function render.GetQuery(...)
         local arg1, arg2, arg3, arg4, arg5, arg6 = ...
         local name, realm, unit = util:GetNameRealm(arg1, arg2)
@@ -3785,7 +4065,7 @@ do
         Keystone = bor(render.Flags.MYTHIC_KEYSTONE, render.Flags.KEYSTONE_TOOLTIP, render.Flags.SHOW_PADDING, render.Flags.SHOW_HEADER, render.Flags.SHOW_LFD),
     }
 
-    render.Preset.UnitNoPadding = bxor(render.Preset.Unit, render.Flags.SHOW_PADDING)
+    render.Preset.UnitNoPadding = bxor(render.Preset.Unit, render.Flags.SHOW_PADDING) ---@diagnostic disable-line: param-type-mismatch
 
     local function IsModifierKeyDownOrAlwaysExtend()
         return IsModifierKeyDown() or config:Get("alwaysExtendTooltip")
@@ -3817,7 +4097,7 @@ do
     }
 
     ---@class TooltipState
-    ---@field public type table<string, number>
+    ---@field public type number
     ---@field public unit string
     ---@field public name string
     ---@field public realm string
@@ -3830,6 +4110,7 @@ do
     ---@type TooltipStates<table, TooltipState>
     local tooltipStates = {}
 
+    ---@param tooltip GameTooltip
     function render:GetTooltipState(tooltip)
         ---@type TooltipState
         local state = tooltipStates[tooltip]
@@ -3840,6 +4121,7 @@ do
         return state
     end
 
+    ---@param tooltip GameTooltip
     ---@return boolean @Returns true if the tooltip was successfully updated with data, otherwise false if we couldn't.
     function render:ShowProfile(tooltip, ...)
         local state = render:GetTooltipState(tooltip)
@@ -3865,6 +4147,7 @@ do
     ---@field public affix3 number @optional affix ID
     ---@field public affix4 number @optional affix ID
 
+    ---@param tooltip GameTooltip
     ---@param keystone KeystoneInfo
     ---@return boolean @Returns true if the tooltip was successfully updated with data, otherwise false if we couldn't.
     function render:ShowKeystone(tooltip, keystone)
@@ -3878,11 +4161,13 @@ do
         return state.success
     end
 
+    ---@param tooltip GameTooltip
     function render:ClearTooltip(tooltip)
         local state = render:GetTooltipState(tooltip)
         table.wipe(state)
     end
 
+    ---@param tooltip GameTooltip
     function render:HideTooltip(tooltip)
         render:ClearTooltip(tooltip)
         tooltip:Hide()
@@ -3940,17 +4225,17 @@ do
     end
 
     ---Takes tripples of `Dungeon, Level, Chests` args, returns the best run back.
-    ---@return Dungeon, number, number @`arg1`= the Dungeon, `arg2` = keystone level, `arg3` = chests
+    ---@return Dungeon?, number, number @`arg1`= the Dungeon, `arg2` = keystone level, `arg3` = chests
     local function GetBestRunOfDungeons(...)
         local bestDungeon ---@type Dungeon|nil
         local bestLevel = 0 ---@type number
         local bestChests = 0 ---@type number
         local args = {...}
         for i = 1, #args, 3 do
-            local dungeon = args[i]
-            local level = args[i + 1]
-            local chests = args[i + 2]
-            if dungeon and (level > bestLevel or (level >= bestLevel and chests > bestChests)) then
+            local dungeon = args[i] ---@type Dungeon|nil
+            local level = args[i + 1] ---@type number
+            local chests = args[i + 2] ---@type number
+            if dungeon and dungeon.keystone_instance and (level > bestLevel or (level >= bestLevel and chests > bestChests)) then
                 bestDungeon, bestLevel, bestChests = dungeon, level, chests
             end
         end
@@ -4010,7 +4295,7 @@ do
         end
         if best.dungeon and best.level > 0 then
             local label, r, g, b = L.BEST_FOR_DUNGEON, 1, 1, 1
-            hasHeaderData = isHeader
+            hasHeaderData = isHeader ---@diagnostic disable-line: cast-local-type
             if best.dungeon == keystoneProfile.maxDungeon then
                 if isHeader then
                     label, r, g, b = L.RAIDERIO_BEST_RUN, 1, 0.85, 0
@@ -4058,7 +4343,12 @@ do
                 local level = profile.mythicKeystoneProfile.dungeons[dungeon.index]
                 if level > 0 then
                     index = index + 1
-                    members[index] = { unit = unit, level = level, name = UnitNameUnmodified(unit), chests = profile.mythicKeystoneProfile.dungeonUpgrades[dungeon.index] }
+                    members[index] = {
+                        unit = unit,
+                        level = level,
+                        name = UnitNameUnmodified(unit), ---@diagnostic disable-line: assign-type-mismatch
+                        chests = profile.mythicKeystoneProfile.dungeonUpgrades[dungeon.index]
+                    }
                 end
             end
         end
@@ -4089,7 +4379,7 @@ do
                 level > 0 and level or "-",
                 "|r",
             }
-            text = table.concat(text)
+            text = table.concat(text) ---@diagnostic disable-line: cast-local-type
             lines[i] = text
             local width = util:GetTooltipTextWidth(text)
             lineWidth[i] = width
@@ -4100,6 +4390,192 @@ do
         return lines, lineWidth, maxWidth
     end
 
+    ---@type table<DungeonRaid, string>|nil
+    local CACHED_FATED_RAIDS_MAP
+
+    ---@return table<DungeonRaid, string>|nil
+    local function InitCachedFatedRaidsMap()
+        local cache = CACHED_FATED_RAIDS_MAP
+        if cache then
+            return cache
+        end
+        CACHED_FATED_RAIDS_MAP = util:GetFatedRaids(true)
+        cache = CACHED_FATED_RAIDS_MAP
+        if not next(cache) then
+            return
+        end
+        return cache
+    end
+
+    ---@param raids any[]
+    local function CanSortRaids(raids)
+        if not raids or type(raids) ~= "table" then
+            return false
+        end
+        return #raids > 1
+    end
+
+    ---@param raids DatabaseRaid[]
+    local function ProcessFatedRaidsProfile(raids)
+        if not CanSortRaids(raids) then
+            return
+        end
+        local cache = InitCachedFatedRaidsMap()
+        if not cache then
+            return
+        end
+        table.sort(raids, function(a, b)
+            local f1 = a.id ~= a.mapId and cache[a.dungeon] and 1 or 0
+            local f2 = b.id ~= b.mapId and cache[b.dungeon] and 1 or 0
+            if f1 == f2 then
+                return a.ordinal < b.ordinal
+            end
+            return f1 > f2
+        end)
+    end
+
+    ---@param tooltip GameTooltip
+    ---@param raids DatabaseRaid[]
+    ---@param raidProfile DataProviderRaidProfile
+    ---@param state TooltipState
+    ---@param showHeader boolean
+    ---@param showLFD boolean
+    local function AppendRaidProfileToTooltip(tooltip, raids, raidProfile, state, showHeader, showLFD)
+        if not raids then
+            return
+        end
+        local numRaids = #raids
+        if numRaids < 1 then
+            return
+        end
+        local sortedRaids = {} ---@type DatabaseRaid[]
+        for i = 1, numRaids do
+            sortedRaids[i] = raids[i]
+        end
+        ProcessFatedRaidsProfile(sortedRaids)
+        if showHeader and numRaids == 1 then
+            tooltip:AddLine(L.RAID_ENCOUNTERS_DEFEATED_TITLE, 1, 0.85, 0)
+        end
+        local focusDungeon = false ---@type Dungeon|DungeonRaid|nil|false
+        for i = 1, numRaids do
+            local raid = sortedRaids[i]
+            if showHeader and numRaids > 1 then
+                if showLFD and focusDungeon == false then
+                    focusDungeon = util:GetLFDStatusForCurrentActivity(state.args and state.args.activityID)
+                end
+                local focused = focusDungeon and focusDungeon == raid.dungeon
+                local fated = raid.id and raid.id ~= raid.mapId and util:IsRaidFated(raid.dungeon)
+                local r, g, b = 1, 0.85, 0
+                if focused then
+                    r, g, b = 0, 1, 0
+                end
+                local fatedTexture = fated and format("|A:%s-small:0:0:0:1|a", fated) or ""
+                tooltip:AddLine(format("%s %s", raid.name, fatedTexture), r, g, b) -- TODO: raid.dungeon?.nameLocale
+            end
+            for j = 1, raid.bossCount do
+                local progressFound = false
+                for k = 1, #raidProfile.progress do
+                    local progress = raidProfile.progress[k]
+                    if raid == progress.raid then
+                        local bossKills = progress.killsPerBoss[j]
+                        if bossKills > 0 then
+                            progressFound = true
+                            local difficulty = ns.RAID_DIFFICULTY[progress.difficulty]
+                            tooltip:AddDoubleLine(format("|cff%s%s|r %s", difficulty.color.hex, difficulty.suffix, L[format("RAID_BOSS_%s_%d", raid.shortName, j)]), bossKills, 1, 1, 1, 1, 1, 1)
+                        end
+                        if progressFound then
+                            break
+                        end
+                    end
+                end
+                if not progressFound then
+                    tooltip:AddDoubleLine(L[format("RAID_BOSS_%s_%d", raid.shortName, j)], "-", 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)
+                end
+            end
+        end
+    end
+
+    ---@param raidProgress RaidProgress[]
+    local function ProcessFatedRaids(raidProgress)
+        if not CanSortRaids(raidProgress) then
+            return
+        end
+        local cache = InitCachedFatedRaidsMap()
+        if not cache then
+            return
+        end
+        table.sort(raidProgress, function(a, b)
+            if not a.isMainProgress ~= not b.isMainProgress then
+                return not a.isMainProgress and b.isMainProgress
+            end
+            local r1 = a.raid
+            local r2 = b.raid
+            local f1 = a.current and cache[r1.dungeon] and 1 or 0
+            local f2 = b.current and cache[r2.dungeon] and 1 or 0
+            if f1 == f2 then
+                return r1.ordinal < r2.ordinal
+            end
+            return f1 > f2
+        end)
+    end
+
+    ---@param tooltip GameTooltip
+    ---@param raidProfile DataProviderRaidProfile
+    ---@param state TooltipState
+    ---@param hasModOrSticky boolean
+    ---@param showLFD boolean
+    local function AppendRaidProgressToTooltip(tooltip, raidProfile, state, hasModOrSticky, showLFD)
+        local raidProgress = raidProfile.raidProgress
+        ProcessFatedRaids(raidProgress)
+        local focusDungeon = showLFD and util:GetLFDStatusForCurrentActivity(state.args and state.args.activityID)
+        local raidGroups = {} ---@type RaidProgressExtended[]
+        local hasShown = false ---@type boolean|nil
+        for i = 1, #raidProgress do
+            local progress = raidProgress[i]
+            ---@type RaidProgressExtended
+            local raidGroup = {
+                progress = progress,
+            }
+            raidGroups[i] = raidGroup
+            local groupProgress = raidGroup.progress
+            raidGroup.focused = focusDungeon and focusDungeon == groupProgress.raid.dungeon
+            if groupProgress.current then
+                raidGroup.fated = util:IsRaidFated(groupProgress.raid.dungeon)
+            else
+                raidGroup.fated = nil
+            end
+            raidGroup.show = not not (hasModOrSticky or (groupProgress.progress[1] and (raidGroup.focused or raidGroup.fated)))
+            hasShown = hasShown or raidGroup.show
+        end
+        for i = 1, #raidGroups do
+            local raidGroup = raidGroups[i]
+            if raidGroup.show or hasShown == false then
+                local groupProgress = raidGroup.progress
+                local tempIndex = 0
+                local temp = {}
+                for j = 1, #groupProgress.progress do
+                    local group = groupProgress.progress[j]
+                    if not group.obsolete then
+                        hasShown = nil
+                        local raidDiff = ns.RAID_DIFFICULTY[group.difficulty]
+                        tempIndex = tempIndex + 1
+                        temp[tempIndex] = format("|cff%s%s|r %d/%d", raidDiff.color.hex, raidDiff.suffix, group.kills, groupProgress.raid.bossCount)
+                    end
+                end
+                if tempIndex > 0 then
+                    local r, g, b = 1, 1, 1
+                    if raidGroup.focused then
+                        r, g, b = 0, 1, 0
+                    end
+                    local prefixText = groupProgress.isMainProgress and format("%s ", L.MAINS_RAID_PROGRESS) or ""
+                    local fatedTexture = raidGroup.fated and format("|A:%s-small:0:0:0:1|a", raidGroup.fated) or ""
+                    tooltip:AddDoubleLine(format("%s%s %s", prefixText, groupProgress.raid.shortName, fatedTexture), table.concat(temp, " "), r, g, b, 1, 1, 1) -- TODO: groupProgress.raid.dungeon?.shortNameLocale
+                end
+            end
+        end
+    end
+
+    ---@param tooltip GameTooltip
     ---@param state TooltipState
     function render:UpdateTooltip(tooltip, state)
         -- we will in most cases always pass the state but if we don't we will retrieve it
@@ -4255,50 +4731,18 @@ do
                     if showPadding and isKeystoneBlockShown then
                         tooltip:AddLine(" ")
                     end
-                    if showHeader then
-                        if isExtendedProfile then
-                            if showRaidEncounters then
-                                tooltip:AddLine(L.RAID_ENCOUNTERS_DEFEATED_TITLE, 1, 0.85, 0)
-                            end
-                        else
-                            tooltip:AddLine(L.RAIDING_DATA_HEADER, 1, 0.85, 0)
-                        end
+                    if showHeader and not isExtendedProfile then
+                        tooltip:AddLine(L.RAIDING_DATA_HEADER, 1, 0.85, 0)
                     end
                     if isExtendedProfile then
                         if showRaidEncounters then
                             local raidProvider = provider:GetProviderByType(ns.PROVIDER_DATA_TYPE.Raid, state.region)
-                            for i = 1, raidProvider.currentRaid.bossCount do
-                                local progressFound = false
-                                for j = 1, #raidProfile.progress do
-                                    local progress = raidProfile.progress[j]
-                                    local bossKills = progress.killsPerBoss[i]
-                                    if bossKills > 0 then
-                                        progressFound = true
-                                        local difficulty = ns.RAID_DIFFICULTY[progress.difficulty]
-                                        tooltip:AddDoubleLine(format("|cff%s%s|r %s", difficulty.color.hex, difficulty.suffix, L[format("RAID_BOSS_%s_%d", raidProvider.currentRaid.shortName, i)]), bossKills, 1, 1, 1, 1, 1, 1)
-                                    end
-                                    if progressFound then
-                                        break
-                                    end
-                                end
-                                if not progressFound then
-                                    tooltip:AddDoubleLine(L[format("RAID_BOSS_%s_%d", raidProvider.currentRaid.shortName, i)], "-", 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)
-                                end
+                            if raidProvider then
+                                AppendRaidProfileToTooltip(tooltip, raidProvider.currentRaids, raidProfile, state, showHeader, showLFD)
                             end
                         end
                     else
-                        for i = 1, #raidProfile.sortedProgress do
-                            local sortedProgress = raidProfile.sortedProgress[i]
-                            local prog = sortedProgress.progress
-                            if ((showRaidEncounters and (hasMod or hasModSticky)) or not sortedProgress.obsolete) and (not sortedProgress.isMainProgress or config:Get("showMainsScore")) then
-                                local raidDiff = ns.RAID_DIFFICULTY[prog.difficulty]
-                                if sortedProgress.isMainProgress then
-                                    tooltip:AddDoubleLine(L.MAINS_RAID_PROGRESS, format("|cff%s%s|r %d/%d", raidDiff.color.hex, raidDiff.suffix, prog.progressCount, prog.raid.bossCount), 1, 1, 1, 1, 1, 1)
-                                else
-                                    tooltip:AddDoubleLine(format("%s %s", prog.raid.shortName, raidDiff.name), format("|cff%s%s|r %d/%d", raidDiff.color.hex, raidDiff.suffix, prog.progressCount, prog.raid.bossCount), 1, 1, 1, 1, 1, 1)
-                                end
-                            end
-                        end
+                        AppendRaidProgressToTooltip(tooltip, raidProfile, state, hasMod or hasModSticky, showLFD)
                     end
                 end
                 if isRecruitmentBlockShown then
@@ -4324,7 +4768,7 @@ do
                     if easterEgg then
                         easterEgg = easterEgg[profile.realm]
                         if easterEgg then
-                            easterEgg = easterEgg[profile.name]
+                            easterEgg = easterEgg[profile.name] ---@diagnostic disable-line: cast-local-type
                         end
                     end
                     if showPadding and (not showTopLinePadding or isAnyBlockShown) and (isBlocked or isOutdated or easterEgg) then
@@ -4410,6 +4854,7 @@ do
         return true
     end
 
+    ---@param tooltip GameTooltip
     ---@param state TooltipState
     local function UpdateTooltip(tooltip, state)
         -- if unit simply refresh the unit and the original hook will force update the tooltip with the desired behavior
@@ -4450,12 +4895,12 @@ do
         if o1 then
             o2 = a1
             if p4 then
-                o3 = p4
+                o3 = p4 ---@diagnostic disable-line: cast-local-type
             end
             if p5 then
-                o4 = p5
+                o4 = p5 ---@diagnostic disable-line: cast-local-type
             end
-            tooltip:SetOwner(o1, o2, o3, o4)
+            tooltip:SetOwner(o1, o2, o3, o4) ---@diagnostic disable-line: param-type-mismatch
         end
         if p1 then
             tooltip:SetPoint(p1, p2, p3, p4, p5)
@@ -4714,7 +5159,7 @@ do
                 faction = ns.PLAYER_FACTION
             end
         end
-        if not fullName or not util:IsMaxLevel(level) then
+        if not fullName or not util:IsMaxLevel(level) then ---@diagnostic disable-line: param-type-mismatch
             return
         end
         local ownerSet, ownerExisted, ownerSetSame = util:SetOwnerSafely(GameTooltip, FriendsTooltip, "ANCHOR_BOTTOMRIGHT", -FriendsTooltip:GetWidth(), -4)
@@ -4846,7 +5291,7 @@ do
             guild = nil
             nameLink, name, level, race, class, zone = text:match(FORMAT)
         end
-        if not nameLink or not level or not util:IsMaxLevel(tonumber(level)) then
+        if not nameLink or not level or not util:IsMaxLevel(tonumber(level)) then ---@diagnostic disable-line: param-type-mismatch
             return false
         end
         local name, realm = util:GetNameRealm(nameLink)
@@ -4895,7 +5340,7 @@ do
                 local name, realm = util:GetNameRealm(unit)
                 if name then
                     index = index + 1
-                    profiles[index] = provider:GetProfile(name, realm) or false
+                    profiles[index] = provider:GetProfile(name, realm) or false ---@diagnostic disable-line: assign-type-mismatch
                 end
             end
         end
@@ -4925,8 +5370,8 @@ do
         return 2, level2, fractionalTime2, level1 == level2 and 1 or 2
     end
 
-    ---@param run SortedDungeon
-    ---@param currentRun SortedDungeon
+    ---@param run? SortedDungeon
+    ---@param currentRun? SortedDungeon
     local function GetDungeonUpgrade(run, currentRun)
         if not run or not currentRun then
             return
@@ -4945,11 +5390,11 @@ do
         return diff
     end
 
-    ---@param run1 SortedDungeon
-    ---@param diff1 DungeonDifference
-    ---@param run2 SortedDungeon
-    ---@param diff2 DungeonDifference
-    ---@return SortedDungeon, DungeonDifference
+    ---@param run1? SortedDungeon
+    ---@param diff1? DungeonDifference
+    ---@param run2? SortedDungeon
+    ---@param diff2? DungeonDifference
+    ---@return SortedDungeon?, DungeonDifference?
     local function CompareDungeonUpgrades(run1, diff1, run2, diff2)
         if not run2 then
             if not run1 or not run1.level then
@@ -5024,7 +5469,7 @@ do
             bestRun = CopyRun(currentRun)
             bestUpgrade = {}
         elseif bestRun == dbRun then
-            bestRun = CopyRun(dbRun)
+            bestRun = CopyRun(dbRun) ---@diagnostic disable-line: param-type-mismatch
         end
         memberCachedRuns[currentRun.dungeon.index] = bestRun
         local side = CompareLevelAndFractionalTime(bestRun.level, currentRun.level, bestRun.fractionalTime, currentRun.fractionalTime)
@@ -5037,12 +5482,12 @@ do
                 bestUpgrade.levelDiff = currentRun.level - bestRun.level
                 bestUpgrade.fractionalTimeDiff = currentRun.fractionalTime - bestRun.fractionalTime
             end
-            bestUpgrade.isUpgrade = bestIsCurrentRun or bestUpgrade.levelDiff > 0 or (bestUpgrade.levelDiff == 0 and bestUpgrade.fractionalTimeDiff < 0)
+            bestUpgrade.isUpgrade = bestIsCurrentRun or bestUpgrade.levelDiff > 0 or (bestUpgrade.levelDiff == 0 and bestUpgrade.fractionalTimeDiff < 0) ---@diagnostic disable-line: need-check-nil
             bestRun.chests = currentRun.chests
             bestRun.level = currentRun.level
             bestRun.fractionalTime = currentRun.fractionalTime
         end
-        return bestRun, bestUpgrade
+        return bestRun, bestUpgrade ---@diagnostic disable-line: return-type-mismatch
     end
 
     ---@param members DataProviderCharacterProfile[] @Table of group member profiles
@@ -5154,7 +5599,7 @@ do
             frame.Texture = frame:CreateTexture(nil, "ARTWORK")
             frame.Texture:SetPoint("CENTER")
             frame.Texture:SetSize(32, 32)
-            frame.Texture:SetTexture(nil)
+            frame.Texture:SetTexture(nil) ---@diagnostic disable-line: param-type-mismatch
         end
         do
             frame.Text = frame:CreateFontString(nil, "ARTWORK", "ChatFontNormal")
@@ -5478,6 +5923,7 @@ do
                 end
             end
         end
+        return ---@diagnostic disable-line: missing-return-value
     end
 
     ---@class ConfigProfilePoint
@@ -5628,7 +6074,7 @@ do
         callback:RegisterEvent(OnModifierStateChanged, "MODIFIER_STATE_CHANGED")
     end
 
-    ---@return boolean, boolean @arg1 is true if the toggle was successfull, otherwise false if we can't toggle right now. arg2 is set to true if the frame is now draggable, otherwise false for locked.
+    ---@return boolean, boolean? @arg1 is true if the toggle was successfull, otherwise false if we can't toggle right now. arg2 is set to true if the frame is now draggable, otherwise false for locked.
     function profile:ToggleDrag()
         if not profile:IsEnabled() then
             return false
@@ -5657,7 +6103,7 @@ do
     ---@return boolean
     function profile:ShowProfile(anchor, ...)
         if not profile:IsEnabled() or not config:Get("showRaiderIOProfile") then
-            return
+            return ---@diagnostic disable-line: missing-return-value
         end
         showProfileArgs = { anchor, ... }
         tooltipAnchorPriority[1].name = anchor
@@ -5668,7 +6114,7 @@ do
         local isPlayer = IsPlayer(unit, name, realm, region)
         if not isPlayer and config:Get("enableProfileModifier") and band(options, render.Flags.IGNORE_MOD) ~= render.Flags.IGNORE_MOD then
             if config:Get("inverseProfileModifier") == (config:Get("alwaysExtendTooltip") or band(options, render.Flags.MOD) == render.Flags.MOD) then
-                unit, name, realm = "player", nil, nil
+                unit, name, realm = "player", nil, nil ---@diagnostic disable-line: cast-local-type
             end
         end
         tooltip:SetOwner(tooltipAnchor, "ANCHOR_NONE")
@@ -5863,7 +6309,7 @@ do
             return
         end
         local fullName, _, _, level = GetGuildRosterInfo(self.guildIndex)
-        if not fullName or not util:IsMaxLevel(level) then
+        if not fullName or not util:IsMaxLevel(level) then ---@diagnostic disable-line: param-type-mismatch
             return
         end
         local ownerSet, ownerExisted, ownerSetSame = util:SetOwnerSafely(GameTooltip, self, "ANCHOR_TOPLEFT", 0, 0)
@@ -6211,7 +6657,7 @@ do
     local GuildWeeklyRunMixin = {}
 
     ---@param runInfo GuildMythicKeystoneRun
-    ---@return boolean @true if successfull, otherwise false if we can't display this run
+    ---@return boolean? @true if successfull, otherwise false if we can't display this run
     function GuildWeeklyRunMixin:SetUp(runInfo)
         self.runInfo = runInfo
         if not runInfo then
@@ -6433,7 +6879,7 @@ do
         end
         -- no runs available overlay
         do
-            frame.GuildBestNoRun = CreateFrame("Frame", nil, frame)
+            frame.GuildBestNoRun = CreateFrame("Frame", nil, frame) ---@diagnostic disable-line: param-type-mismatch
             frame.GuildBestNoRun:SetSize(95, 13)
             frame.GuildBestNoRun:SetPoint("TOPLEFT", frame.Title, "BOTTOMLEFT", 0, -14)
             frame.GuildBestNoRun.Text = frame.GuildBestNoRun:CreateFontString(nil, "ARTWORK", "GameFontNormalTiny2")
@@ -6444,9 +6890,9 @@ do
         end
         -- toggle between weekly and season best
         do
-            frame.SwitchGuildBest = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate")
+            frame.SwitchGuildBest = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate") ---@diagnostic disable-line: param-type-mismatch
             frame.SwitchGuildBest:SetSize(15, 15)
-            frame.SwitchGuildBest:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 8, 5)
+            frame.SwitchGuildBest:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 8, 5) ---@diagnostic disable-line: param-type-mismatch
             frame.SwitchGuildBest:SetScript("OnShow", GuildWeeklyFrameSwitch_OnShow)
             frame.SwitchGuildBest:SetScript("OnClick", GuildWeeklyFrameSwitch_OnClick)
             frame.SwitchGuildBest.text:SetFontObject("GameFontNormalTiny2")
@@ -6791,14 +7237,14 @@ do
             Frame:SetScript("OnDragStop", function() Frame:StopMovingOrSizing() end)
             Frame:SetScript("OnShow", function() search:ShowProfile(regionBox:GetText(), realmBox:GetText(), nameBox:GetText()) end)
             Frame:SetScript("OnHide", function() search:ShowProfile() end)
-            Frame.close = CreateFrame("Button", nil, Frame, "UIPanelCloseButtonNoScripts")
+            Frame.close = CreateFrame("Button", nil, Frame, "UIPanelCloseButtonNoScripts") ---@diagnostic disable-line: param-type-mismatch
             Frame.close:SetPoint("TOPRIGHT", -5, -3)
             Frame.close:SetScript("OnClick", function() search:Hide() end)
-            Frame.copyUrl = CreateFrame("Button", nil, Frame, "UIPanelCloseButtonNoScripts")
+            Frame.copyUrl = CreateFrame("Button", nil, Frame, "UIPanelCloseButtonNoScripts") ---@diagnostic disable-line: param-type-mismatch
             Frame.copyUrl:SetScale(0.67)
-            util:SetButtonTextureFromIcon(Frame.copyUrl, ns.CUSTOM_ICONS.icons.RAIDERIO_COLOR_CIRCLE)
-            Frame.copyUrl:SetPoint("RIGHT", Frame.close, "LEFT", -5, 0)
-            Frame.copyUrl:SetScript("OnClick", function() util:ShowCopyRaiderIOProfilePopup(nameBox:GetText(), realmBox:GetText()) end)
+            util:SetButtonTextureFromIcon(Frame.copyUrl, ns.CUSTOM_ICONS.icons.RAIDERIO_COLOR_CIRCLE) ---@diagnostic disable-line: param-type-mismatch
+            Frame.copyUrl:SetPoint("RIGHT", Frame.close, "LEFT", -5, 0) ---@diagnostic disable-line: param-type-mismatch
+            Frame.copyUrl:SetScript("OnClick", function() util:ShowCopyRaiderIOProfilePopup(nameBox:GetText(), realmBox:GetText(), regionBox:GetText()) end)
             Frame.copyUrl:SetScript("OnEnter", function(self) GameTooltip:SetOwner(self, "ANCHOR_RIGHT") GameTooltip:AddLine(L.COPY_RAIDERIO_PROFILE_URL) GameTooltip:Show() end)
             Frame.copyUrl:SetScript("OnLeave", GameTooltip_Hide)
             Frame.copyUrl:HookScript("OnEnable", function(self) self:GetDisabledTexture():SetDesaturated(false) end)
@@ -6807,11 +7253,11 @@ do
 
         local activeBoxes = {}
         if config:Get("debugMode") then
-            regionBox:SetParent(Frame)
+            regionBox:SetParent(Frame) ---@diagnostic disable-line: param-type-mismatch
             table.insert(activeBoxes, regionBox)
         end
-        realmBox:SetParent(Frame)
-        nameBox:SetParent(Frame)
+        realmBox:SetParent(Frame) ---@diagnostic disable-line: param-type-mismatch
+        nameBox:SetParent(Frame) ---@diagnostic disable-line: param-type-mismatch
         table.insert(activeBoxes, realmBox)
         table.insert(activeBoxes, nameBox)
 
@@ -7068,7 +7514,7 @@ do
         if not name and bnetIDAccount then
             local fullName, charFaction, charLevel = util:GetNameRealmForBNetFriend(bnetIDAccount)
             if fullName then
-                name, realm = util:GetNameRealm(fullName)
+                name, realm = util:GetNameRealm(fullName) ---@diagnostic disable-line: param-type-mismatch
                 level = charLevel
                 faction = charFaction
             end
@@ -7130,7 +7576,7 @@ do
                 return
             end
             selectedName, selectedRealm, selectedLevel, selectedUnit, selectedFaction = GetNameRealmForDropDown(bdropdown)
-            if not selectedName or not util:IsMaxLevel(selectedLevel, true) then
+            if not selectedName or not util:IsMaxLevel(selectedLevel, true) then ---@diagnostic disable-line: param-type-mismatch
                 return
             end
             if not options[1] then
@@ -7203,7 +7649,9 @@ do
                         return
                     end
                     local profile = GetRecruitmentProfileForDropDown()
-                    util:ShowCopyRaiderIORecruitmentProfilePopup(profile.recruitmentProfile.entityType, selectedName, selectedRealm)
+                    if profile then
+                        util:ShowCopyRaiderIORecruitmentProfilePopup(profile.recruitmentProfile.entityType, selectedName, selectedRealm)
+                    end
                 end,
                 show = function()
                     return GetRecruitmentProfileForDropDown()
@@ -7347,7 +7795,7 @@ do
     ---@field public hasNewSources boolean
     ---@field public addLoot boolean
 
-    ---@return RWFLootEntry
+    ---@return RWFLootEntry|boolean|nil
     local function LogItemLink(logType, linkType, id, link, count, sources, useTimestamp, additionalInfo)
         local isLogging, instanceName, instanceDifficulty, instanceID = rwf:GetLocation()
         if logType == LOG_TYPE.News then
@@ -7359,7 +7807,7 @@ do
         end
         local linkAsKey = link:gsub("%[[^%]]*%]", "")
         local success, tables = GetNestedTable(_G.RaiderIO_RWF, instanceID, instanceDifficulty, logType, linkAsKey)
-        if not success then
+        if not success or not tables then
             return false
         end
         local guildName, _, _, guildRealmName = GetGuildInfo("player")
@@ -7373,7 +7821,7 @@ do
         lootEntry.isNew = not lootEntry.timestamp
         lootEntry.timestamp = lootEntry.timestamp or timestamp
         lootEntry.isUpdated = timestamp - lootEntry.timestamp > 60
-        lootEntry.itemLevel = GetDetailedItemLevelInfo(link)
+        lootEntry.itemLevel = GetDetailedItemLevelInfo(link) ---@diagnostic disable-line: assign-type-mismatch
         lootEntry.id, lootEntry.itemType, lootEntry.itemSubType, lootEntry.itemEquipLoc, lootEntry.itemIcon, lootEntry.itemClassID, lootEntry.itemSubClassID = GetItemInfoInstant(link)
         lootEntry.link = link
         lootEntry.index = lootEntry.index or CountItems(tables[3]) -- keep same index or count (our item is already included in the count)
@@ -7466,7 +7914,7 @@ do
         -- lootEntry.isNew, lootEntry.isUpdated, lootEntry.hasNewSources, lootEntry.addLoot = nil -- TODO: if we uncomment we'll keep adding old processed loot to the frame and we don't want that so let this be in the SV file we can afford that
     end
 
-    ---@param lootEntry RWFLootEntry
+    ---@param lootEntry RWFLootEntry|false|nil
     local function HandleLootEntry(lootEntry)
         if not lootEntry then
             return
@@ -7496,9 +7944,7 @@ do
         return t, n
     end
 
-    ---@class GuildNewsTicker : Ticker
-
-    local guildNewsTicker ---@type GuildNewsTicker
+    local guildNewsTicker ---@type Ticker?
     local guildNewsCount ---@type number
 
     local function GetGuildNews()
@@ -7514,7 +7960,7 @@ do
             newsInfo.year = newsInfo.year + 2000
             newsInfo.month = newsInfo.month + 1
             newsInfo.day = newsInfo.day + 1
-            local timestamp = time(newsInfo)
+            local timestamp = time(newsInfo) ---@diagnostic disable-line: param-type-mismatch
             if now - timestamp <= LOG_ITEM_LOG_IF_NEWER then
                 HandleLootEntry(LogItemLink(LOG_TYPE.News, itemType, itemID, itemLink, itemCount or 1, nil, timestamp, { who = newsInfo.whoText }))
                 return true
@@ -7543,7 +7989,7 @@ do
                     coroutine.yield()
                 end
             end
-            if not guildNewsTicker.CalledDuringScan then
+            if not guildNewsTicker or not guildNewsTicker.CalledDuringScan then
                 return
             end
             items, count, diff = GetGuildNews()
@@ -7561,7 +8007,9 @@ do
         LOOT_FRAME.MiniFrame:StartScanning()
         guildNewsTicker = C_Timer.NewTicker(SCAN_INTERVAL_BETWEEN_CYCLES, function()
             if not coroutine.resume(co) then
-                guildNewsTicker:Cancel()
+                if guildNewsTicker then
+                    guildNewsTicker:Cancel()
+                end
                 guildNewsTicker = nil
                 LOOT_FRAME.MiniFrame:StopScanning()
                 return
@@ -7641,15 +8089,15 @@ do
         frame.frameCounter = 0
         frame.TitleText:SetText(L.RWF_TITLE)
 
-        frame.TitleBar = CreateFrame("Frame", nil, frame, "PanelDragBarTemplate")
+        frame.TitleBar = CreateFrame("Frame", nil, frame, "PanelDragBarTemplate") ---@diagnostic disable-line: param-type-mismatch
         frame.TitleBar:OnLoad()
         frame.TitleBar:SetHeight(24)
         frame.TitleBar:SetPoint("TOPLEFT", 0, 0)
         frame.TitleBar:SetPoint("TOPRIGHT", 0, 0)
         frame.TitleBar:Init(frame)
 
-        frame.Log = CreateFrame("Frame", nil, frame)
-        frame.Log:SetPoint("TOPLEFT", frame.TitleBar, "BOTTOMLEFT", 8, -32 + 24)
+        frame.Log = CreateFrame("Frame", nil, frame) ---@diagnostic disable-line: param-type-mismatch
+        frame.Log:SetPoint("TOPLEFT", frame.TitleBar, "BOTTOMLEFT", 8, -32 + 24) ---@diagnostic disable-line: param-type-mismatch
         frame.Log:SetPoint("BOTTOMRIGHT", -9, 28)
 
         frame.Log.Bar = CreateFrame("Frame", nil, frame.Log)
@@ -7677,12 +8125,12 @@ do
         frame.SubTitle:SetWordWrap(false)
         frame.SubTitle:SetJustifyH("CENTER")
         frame.SubTitle:SetJustifyV("MIDDLE")
-        frame.SubTitle:SetPoint("TOPLEFT", frame.TitleBar, "BOTTOMLEFT", 0, 0)
+        frame.SubTitle:SetPoint("TOPLEFT", frame.TitleBar, "BOTTOMLEFT", 0, 0) ---@diagnostic disable-line: param-type-mismatch
         frame.SubTitle:SetPoint("BOTTOMRIGHT", frame.Log.Events, "TOPRIGHT", 0, 0)
 
-        frame.EnableModule = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+        frame.EnableModule = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate") ---@diagnostic disable-line: param-type-mismatch
         frame.EnableModule:SetSize(80, 22)
-        frame.EnableModule:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -5, 3)
+        frame.EnableModule:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -5, 3) ---@diagnostic disable-line: param-type-mismatch
         frame.EnableModule:SetScript("OnClick", function() config:Set("rwfMode", true) ReloadUI() end)
         frame.EnableModule:SetText(L.ENABLE_RWF_MODE_BUTTON)
         frame.EnableModule.tooltip = L.ENABLE_RWF_MODE_BUTTON_TOOLTIP
@@ -7690,9 +8138,9 @@ do
         frame.EnableModule:SetScript("OnEnter", UIButtonMixin.OnEnter)
         frame.EnableModule:SetScript("OnLeave", UIButtonMixin.OnLeave)
 
-        frame.DisableModule = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+        frame.DisableModule = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate") ---@diagnostic disable-line: param-type-mismatch
         frame.DisableModule:SetSize(80, 22)
-        frame.DisableModule:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -5, 3)
+        frame.DisableModule:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -5, 3) ---@diagnostic disable-line: param-type-mismatch
         frame.DisableModule:SetScript("OnClick", function() config:Set("rwfMode", false) _G.RaiderIO_RWF = {} ReloadUI() end)
         frame.DisableModule:SetText(L.DISABLE_RWF_MODE_BUTTON)
         frame.DisableModule.tooltip = L.DISABLE_RWF_MODE_BUTTON_TOOLTIP
@@ -7700,9 +8148,9 @@ do
         frame.DisableModule:SetScript("OnEnter", UIButtonMixin.OnEnter)
         frame.DisableModule:SetScript("OnLeave", UIButtonMixin.OnLeave)
 
-        frame.ReloadUI = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+        frame.ReloadUI = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate") ---@diagnostic disable-line: param-type-mismatch
         frame.ReloadUI:SetSize(80, 22)
-        frame.ReloadUI:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 5, 3)
+        frame.ReloadUI:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 5, 3) ---@diagnostic disable-line: param-type-mismatch
         frame.ReloadUI:SetScript("OnClick", ReloadUI)
         frame.ReloadUI:SetText(L.RELOAD_RWF_MODE_BUTTON)
         frame.ReloadUI.tooltip = L.RELOAD_RWF_MODE_BUTTON_TOOLTIP
@@ -7710,9 +8158,9 @@ do
         frame.ReloadUI:SetScript("OnEnter", UIButtonMixin.OnEnter)
         frame.ReloadUI:SetScript("OnLeave", UIButtonMixin.OnLeave)
 
-        frame.WipeLog = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+        frame.WipeLog = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate") ---@diagnostic disable-line: param-type-mismatch
         frame.WipeLog:SetSize(80, 22)
-        frame.WipeLog:SetPoint("RIGHT", frame.DisableModule, "LEFT", 2, 0)
+        frame.WipeLog:SetPoint("RIGHT", frame.DisableModule, "LEFT", 2, 0) ---@diagnostic disable-line: param-type-mismatch
         frame.WipeLog:SetScript("OnClick", function() _G.RaiderIO_RWF = {} ReloadUI() end)
         frame.WipeLog:SetText(L.WIPE_RWF_MODE_BUTTON)
         frame.WipeLog.tooltip = L.WIPE_RWF_MODE_BUTTON_TOOLTIP
@@ -7726,7 +8174,7 @@ do
         frame.MiniFrame:SetSize(32, 32)
         frame.MiniFrame:RegisterForClicks("LeftButtonUp", "RightButtonUp")
         local miniPoint = config:Get("rwfMiniPoint") ---@type ConfigProfilePoint
-        frame.MiniFrame:SetPoint(miniPoint.point or "CENTER", miniPoint.point and _G.UIParent or frame, miniPoint.point or "CENTER", miniPoint.point and miniPoint.x or -10, miniPoint.point and miniPoint.y or 0)
+        frame.MiniFrame:SetPoint(miniPoint.point or "CENTER", miniPoint.point and _G.UIParent or frame, miniPoint.point or "CENTER", miniPoint.point and miniPoint.x or -10, miniPoint.point and miniPoint.y or 0) ---@diagnostic disable-line: param-type-mismatch
         frame.MiniFrame:EnableMouse(true)
         frame.MiniFrame:SetMovable(true)
         frame.MiniFrame:RegisterForDrag("LeftButton")
@@ -7753,10 +8201,10 @@ do
         frame.MiniFrame.Left:Hide()
         frame.MiniFrame.Right:Hide()
         frame.MiniFrame.Middle:Hide()
-        util:SetButtonTextureFromIcon(frame.MiniFrame, ns.CUSTOM_ICONS.icons.RAIDERIO_COLOR_CIRCLE)
+        util:SetButtonTextureFromIcon(frame.MiniFrame, ns.CUSTOM_ICONS.icons.RAIDERIO_COLOR_CIRCLE) ---@diagnostic disable-line: param-type-mismatch
         frame.MiniFrame:Hide()
 
-        frame.MiniFrame.Spinner = CreateFrame("Button", nil, frame.MiniFrame)
+        frame.MiniFrame.Spinner = CreateFrame("Button", nil, frame.MiniFrame) ---@diagnostic disable-line: param-type-mismatch
         frame.MiniFrame.Spinner:SetAllPoints()
         util:SetButtonTextureFromIcon(frame.MiniFrame.Spinner, ns.CUSTOM_ICONS.icons.RAIDERIO_COLOR_CIRCLE)
         frame.MiniFrame.Spinner:Hide()
@@ -8319,12 +8767,12 @@ do
         configParentFrame:SetSize(400, 600)
         configParentFrame:SetPoint("CENTER")
 
-        local configHeaderFrame = CreateFrame("Frame", nil, configParentFrame)
+        local configHeaderFrame = CreateFrame("Frame", nil, configParentFrame) ---@diagnostic disable-line: param-type-mismatch
         configHeaderFrame:SetPoint("TOPLEFT", 00, -30)
         configHeaderFrame:SetPoint("TOPRIGHT", 00, 30)
         configHeaderFrame:SetHeight(40)
 
-        local configScrollFrame = CreateFrame("ScrollFrame", nil, configParentFrame)
+        local configScrollFrame = CreateFrame("ScrollFrame", nil, configParentFrame) ---@diagnostic disable-line: param-type-mismatch
         configScrollFrame:SetPoint("TOPLEFT", configHeaderFrame, "BOTTOMLEFT")
         configScrollFrame:SetPoint("TOPRIGHT", configHeaderFrame, "BOTTOMRIGHT")
         configScrollFrame:SetHeight(475)
@@ -8332,7 +8780,7 @@ do
         configScrollFrame:SetClampedToScreen(true)
         configScrollFrame:SetClipsChildren(true)
 
-        local configButtonFrame = CreateFrame("Frame", nil, configParentFrame)
+        local configButtonFrame = CreateFrame("Frame", nil, configParentFrame) ---@diagnostic disable-line: param-type-mismatch
         configButtonFrame:SetPoint("TOPLEFT", configScrollFrame, "BOTTOMLEFT", 0, -10)
         configButtonFrame:SetPoint("TOPRIGHT", configScrollFrame, "BOTTOMRIGHT")
         configButtonFrame:SetHeight(50)
@@ -8551,17 +8999,17 @@ do
             widget.text:SetPoint("RIGHT", -8, 0)
             widget.text:SetJustifyH("LEFT")
 
-            widget.checkButton = CreateFrame("CheckButton", nil, widget, "UICheckButtonTemplate")
+            widget.checkButton = CreateFrame("CheckButton", nil, widget, "UICheckButtonTemplate") ---@diagnostic disable-line: param-type-mismatch
             widget.checkButton:Hide()
             widget.checkButton:SetPoint("RIGHT", -4, 0)
             widget.checkButton:SetScale(0.7)
 
-            widget.checkButton2 = CreateFrame("CheckButton", nil, widget, "UICheckButtonTemplate")
+            widget.checkButton2 = CreateFrame("CheckButton", nil, widget, "UICheckButtonTemplate") ---@diagnostic disable-line: param-type-mismatch
             widget.checkButton2:Hide()
             widget.checkButton2:SetPoint("RIGHT", widget.checkButton, "LEFT", -4, 0)
             widget.checkButton2:SetScale(0.7)
 
-            widget.checkButton3 = CreateFrame("CheckButton", nil, widget, "UICheckButtonTemplate")
+            widget.checkButton3 = CreateFrame("CheckButton", nil, widget, "UICheckButtonTemplate") ---@diagnostic disable-line: param-type-mismatch
             widget.checkButton3:Hide()
             widget.checkButton3:SetPoint("RIGHT", widget.checkButton2, "LEFT", -4, 0)
             widget.checkButton3:SetScale(0.7)
@@ -8571,7 +9019,7 @@ do
             widget.checkButton.fakeCheck:SetTexture("Interface\\Buttons\\UI-CheckBox-Check")
             widget.checkButton.fakeCheck:SetAllPoints()
 
-            widget.help = CreateFrame("Frame", nil, widget)
+            widget.help = CreateFrame("Frame", nil, widget) ---@diagnostic disable-line: param-type-mismatch
             widget.help:Hide()
             widget.help:SetPoint("LEFT", widget.checkButton, "LEFT", -20, 0)
             widget.help:SetSize(16, 16)
@@ -9060,7 +9508,7 @@ do
             enableCombatLogTracking = config:Get("enableCombatLogTracking")
         end
         if enableCombatLogTracking then
-            C_CVar.SetCVar("advancedCombatLogging", 1)
+            C_CVar.SetCVar("advancedCombatLogging", "1")
             combatlog:Enable()
         else
             combatlog:Disable()
@@ -9304,7 +9752,9 @@ do
     ---@field private status boolean @Set internally to `true` if the test passed, otherwise `false` if something went wrong.
     ---@field private explanation string @Set internally to describe what went wrong, or what went right depending on the test.
 
-    ---@return boolean @If the GUID strings match (strcmputf8i) we return `true` otherwise `false`, if `nil` it means one GUID is missing from the call.
+    ---@param guid1 any
+    ---@param guid2 any
+    ---@return boolean? @If the GUID strings match (strcmputf8i) we return `true` otherwise `false`, if `nil` it means one GUID is missing from the call.
     local function CompareProfileGUIDs(guid1, guid2)
         if type(guid1) ~= "string" or type(guid2) ~= "string" then
             return
@@ -9312,9 +9762,9 @@ do
         return guid1 == guid2 or strcmputf8i(guid1, guid2) == 0
     end
 
-    ---@param profile1 DataProviderCharacterProfile
-    ---@param profile2 DataProviderCharacterProfile
-    ---@return boolean @If the profiles reference the same person we return `true` otherwise `false` for different people, `nil` if one profile is missing from the call.
+    ---@param profile1 DataProviderCharacterProfile?
+    ---@param profile2 DataProviderCharacterProfile?
+    ---@return boolean? @If the profiles reference the same person we return `true` otherwise `false` for different people, `nil` if one profile is missing from the call.
     local function CompareProfiles(profile1, profile2)
         if type(profile1) ~= "table" or type(profile2) ~= "table" then
             return

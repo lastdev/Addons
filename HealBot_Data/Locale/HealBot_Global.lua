@@ -405,11 +405,12 @@ function HealBot_globalVars()
     HBC_BLESSING_OF_SALVATION               = 1038
     HEALBOT_BLESSING_OF_MIGHT               = 203528 --GetSpellInfo(203528) or "--Greater Blessing of Might";
     HBC_BLESSING_OF_MIGHT                   = 19740 --GetSpellInfo(19740) or "--Greater Blessing of Might";
-    HBC_BLESSING_OF_SANCTUARY               = 20912
+    HBC_BLESSING_OF_SANCTUARY               = 20911
     HEALBOT_BLESSING_OF_WISDOM              = 203539 --GetSpellInfo(203539) or "--Greater Blessing of Wisdom";
     HBC_BLESSING_OF_WISDOM                  = 19742
     HEALBOT_DAY_BREAK                       = 88821 --GetSpellInfo(88821) or "--Daybreak";
     HEALBOT_DEVOTION_AURA                   = 465 --GetSpellInfo(465) or "--Devotion Aura";
+    HEALBOT_CONCENTRATION_AURA              = 19746
     HBC_DIVINE_FAVOR                        = 20216
     HBC_DIVINE_INTERVENTION                 = 19752
     HEALBOT_DIVINE_PROTECTION               = 498 --GetSpellInfo(498) or "--Divine Protection";
@@ -431,7 +432,6 @@ function HealBot_globalVars()
     HEALBOT_HAND_OF_PURITY                  = 114039 --GetSpellInfo(114039) or "--Hand of Purity";
    -- HEALBOT_HAND_OF_SACRIFICE               = 6940 --GetSpellInfo(6940) or "--Hand of Sacrifice";
     HEALBOT_HAND_OF_SALVATION               = 1038 --GetSpellInfo(1038) or "--Hand of Salvation";
-    HEALBOT_HOLY_SHIELD                     = 20925 --GetSpellInfo(20925) or "--Holy Shield"
     HEALBOT_HOLY_SHOCK                      = 20473 --GetSpellInfo(20473) or "--Holy Shock";
     HEALBOT_ILLUMINATED_HEALING             = 86273 --GetSpellInfo(86273) or "--Illuminated Healing";
     HEALBOT_INFUSION_OF_LIGHT               = 54149 --GetSpellInfo(53576) or "--Infusion of Light";
@@ -443,7 +443,8 @@ function HealBot_globalVars()
     HBC_SHADOW_RESISTANCE_AURA              = 19876
     HEALBOT_RIGHTEOUS_FURY                  = 25780 --GetSpellInfo(25780) or "--Righteous Fury";
     HBC_RIGHTEOUS_DEFENSE                   = 31789
-    HEALBOT_SACRED_SHIELD                   = 20925 --GetSpellInfo(20925) or "--Sacred Shield";
+    HEALBOT_SACRED_SHIELD                   = 20925 --GetSpellInfo(20925) or "--Sacred Shield - Holy Shield in Classic";
+    HBC_SACRED_SHIELD                       = 53601
     HEALBOT_SANCTITY_AURA                   = 167187 --GetSpellInfo(167187) or "--Sanctity Aura";
     HEALBOT_SEAL_OF_COMMAND                 = 105361 --GetSpellInfo(105361) or "--Seal of Command";
     HBC_SEAL_OF_COMMAND                     = 20375
@@ -451,6 +452,7 @@ function HealBot_globalVars()
     HEALBOT_SEAL_OF_INSIGHT                 = 20165 --GetSpellInfo(20165) or "--Seal of Insight";
     HEALBOT_SEAL_OF_RIGHTEOUSNESS           = 20154 --GetSpellInfo(20154) or "--Seal of Righteousness";
     HBC_SEAL_OF_THE_CRUSADER                = 21082
+    HBC_SEAL_WISDOM                         = 20166
     HEALBOT_SEAL_OF_TRUTH                   = 31801 --GetSpellInfo(31801) or "--Seal of Truth";
     HEALBOT_SPEED_OF_LIGHT                  = 85499 --GetSpellInfo(85499) or "--Speed of Light";
     --Legion Added

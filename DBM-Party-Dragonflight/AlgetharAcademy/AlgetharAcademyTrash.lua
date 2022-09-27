@@ -1,7 +1,7 @@
-local mod	= DBM:NewMod("TazalgethAcademyTrash", "DBM-Party-Dragonflight", 5)
+local mod	= DBM:NewMod("AlgetharAcademyTrash", "DBM-Party-Dragonflight", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220803233609")
+mod:SetRevision("20220904205606")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 

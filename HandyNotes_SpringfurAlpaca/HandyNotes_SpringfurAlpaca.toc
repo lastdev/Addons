@@ -1,0 +1,35 @@
+## Interface: 90207
+## Version: 1.05
+## Title: Springfur Alpaca
+## Title-deDE: Frühlingsfellalpaka
+## Title-esES: Alpaca de pelaje primaveral
+## Title-esMX: Alpaca de pelaje primaveral
+## Title-frFR: Alpaga toison-vernale
+## Title-itIT: Alpaca Primopelo
+## Title-koKR: 봄털 알파카
+## Title-ptBR: Alpaca Lã de Primavera
+## Title-ptPT: Alpaca Lã de Primavera
+## Title-ruRU: Курчавая альпака
+## Title-zhCN: 春裘羊驼
+## Title-zhTW: 春裘羊駝
+## Author: Taraezor
+## Notes: Helps you find the |cFF0070DEFrühlingsfellalpaka|r in Uldum
+## Notes-deDE: Hilft Ihnen, die |cFF0070DEDunkle Erde|r im Uldum zu finden
+## Notes-esES: Te ayuda a encontrar la |cFF0070DEAlpaca de pelaje primaveral|r en el Uldum
+## Notes-esMX: Te ayuda a encontrar la |cFF0070DEAlpaca de pelaje primaveral|r en el Uldum
+## Notes-frFR: Vous aide à trouver la |cFF0070DEAlpaga toison-vernale|r dans la Uldum
+## Notes-itIT: Ti aiuta a trovare la |cFF0070DEAlpaca Primopelo|r nella Uldum
+## Notes-koKR: 울둠에서 |cFF0070DE봄털 알파카|r 찾을 수 있도록 도와줍니다.
+## Notes-ptBR: Ajude a encontrar o |cFF0070DEAlpaca Lã de Primavera|r no Uldum
+## Notes-ptPT: Ajude a encontrar o |cFF0070DEAlpaca Lã de Primavera|r no Uldum
+## Notes-ruRU: Помогите найти |cFF0070DEКурчавая альпака|r в Ульдум
+## Notes-zhCN: 帮助寻奥丹姆|cFF0070DE春裘羊驼
+## Notes-zhTW: 幫助尋奧丹姆|cFF0070DE春裘羊駝
+## X-Category: Map & Minimap
+## X-Curse-Project-ID: 502415
+## X-WoWI-ID: 26113
+## RequiredDeps: HandyNotes
+## SavedVariables: HandyNotes_AlpacaDB
+
+Core.lua
+Data.lua

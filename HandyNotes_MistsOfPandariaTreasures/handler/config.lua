@@ -389,6 +389,7 @@ local function GetAppearanceAndSource(itemLinkOrID)
 end
 local canLearnCache = {}
 local function CanLearnAppearance(itemLinkOrID)
+    if not _G.C_Transmog then return false end
     local itemID = GetItemInfoInstant(itemLinkOrID)
     if not itemID then return end
     if canLearnCache[itemID] ~= nil then
@@ -445,6 +446,7 @@ local function HasAppearance(itemLinkOrID)
 end
 
 local function PlayerHasMount(mountid)
+    if not _G.C_MountJournal then return false end
     return (select(11, C_MountJournal.GetMountInfoByID(mountid)))
 end
 local function PlayerHasPet(petid)

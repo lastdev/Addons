@@ -154,6 +154,8 @@ L["OUTDATED_EXPIRES_IN_MINUTES"] = "Raider.IO数据将在 %d 分钟后到期。"
 L["OUTDATED_PROFILE_TOOLTIP_MESSAGE"] = "请更新你的插件来查看最准确的数据。每个玩家为了提升自己都非常的努力，只显示他们很久以前的数据对他们而言是不公平的。你可以使用Raider.IO的客户端来自动同步你的数据。"
 L["PREVIOUS_SCORE"] = "之前的大秘境分数 (%s)"
 L["PROFILE_BEST_RUNS"] = "按地下城显示最佳记录"
+--[[Translation missing --]]
+--[[ L["PROFILE_TOOLTIP_ANCHOR_TOOLTIP"] = ""--]] 
 L["PROVIDER_NOT_LOADED"] = "|cffFF0000警告:|r |cffFFFFFF%s|r无法找到你目前阵营的数据。请检查你|cffFFFFFF/raiderio|r 的设置 并且开启鼠标提示数据 |cffFFFFFF%s|r."
 L["RAID_BOSS_CN_1"] = "啸翼"
 L["RAID_BOSS_CN_10"] = "德纳修斯大帝"

@@ -169,6 +169,8 @@ L["OUTDATED_EXPIRES_IN_MINUTES"] = "Les données de Raider.IO Expirent dans %d M
 L["OUTDATED_PROFILE_TOOLTIP_MESSAGE"] = "Veuillez mettre à jour maintenant votre addon pour avoir des données les plus précises. Les joueurs travaillent dur pour améliorer leurs progression, et l'affichage de données très anciennes ne leur rend pas service. Vous pouvez utiliser le client Raider.IO pour synchroniser automatiquement vos données."
 L["PREVIOUS_SCORE"] = "Score M+ Précédent (%s)"
 L["PROFILE_BEST_RUNS"] = "Meilleurs Donjons"
+--[[Translation missing --]]
+--[[ L["PROFILE_TOOLTIP_ANCHOR_TOOLTIP"] = ""--]] 
 L["PROVIDER_NOT_LOADED"] = "|cffFF0000Attention:|r |cffFFFFFF%s|r Aucune donnée trouvée pour votre faction actuelle . Veuillez vérifier vos paramètres |cffFFFFFF/raiderio|r et activer les données d'info-bulle pour |cffFFFFFF%s|r."
 L["RAID_BOSS_CN_1"] = "Hurlaile"
 L["RAID_BOSS_CN_10"] = "Sire Denathrius"

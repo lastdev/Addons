@@ -164,6 +164,8 @@ L["OUTDATED_EXPIRES_IN_MINUTES"] = "I Dati di Raider.IO Scadranno in %d Minuti"
 L["OUTDATED_PROFILE_TOOLTIP_MESSAGE"] = "Aggiorna subito il tuo addon per visualizzare i dati più accurati. I giocatori lavorano duramente per migliorare i loro progressi e la visualizzazione di dati molto vecchi è un disservizio per loro. Puoi utilizzare il client Raider.IO per mantenere i tuoi dati sincronizzati automaticamente."
 L["PREVIOUS_SCORE"] = "Punteggio M+ Precedente (%s)"
 L["PROFILE_BEST_RUNS"] = "Miglior Corsa per Spedizione"
+--[[Translation missing --]]
+--[[ L["PROFILE_TOOLTIP_ANCHOR_TOOLTIP"] = ""--]] 
 L["PROVIDER_NOT_LOADED"] = "| cffFF0000Warning: | r | cffFFFFFF% s | r non riesce a trovare i dati per la fazione corrente. Controllare le impostazioni | cffFFFFFF / raiderio | r e abilitare i dati del tooltip per | cffFFFFFF% s | r."
 L["RAID_BOSS_CN_1"] = "Alagrigia"
 L["RAID_BOSS_CN_10"] = "Sire Denathrius"

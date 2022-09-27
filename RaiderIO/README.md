@@ -186,14 +186,15 @@ __Exalted:__
 
 We love our fellow developers! We wanted to provide anyone in the community a simple way to tap into the scores that are a part of this addon. Addon developers can do this by utilizing the ``RaiderIO`` table to access certain APIs we provide.
 
+If the documentation is out-of-date you can also get a lot of information straight from the source code. A lot of the functionality is annotated for the sake of the lua language server extension in vscode.
+
 ### RaiderIO.GetProfile
 
 These functions return ``nil`` or a ``RaiderIOProfile`` table.
 
 ```
 RaiderIO.GetProfile("target")
-RaiderIO.GetProfile("Name-Realm", faction[, region])
-RaiderIO.GetProfile("Name", "Realm", faction[, region])
+RaiderIO.GetProfile("Name", "Realm"[, region])
 ```
 
 #### RaiderIOProfile
@@ -209,6 +210,7 @@ This table contains data depending on what providers are loaded. This documentat
   realm = "Realm"
   mythicKeystoneProfile = RaiderIOMythicKeystoneProfile | nil
   raidProfile = RaiderIORaidProfile | nil
+  recruitmentProfile = RaiderIORecruitmentProfile | nil
 }
 ```
 
@@ -217,16 +219,45 @@ This table contains data depending on what providers are loaded. This documentat
 ```
 {
   hasRenderableData = boolean - if false pretend the table was nil instead (the database is outdated so we don't want to show inaccurate data)
+  currentRoleOrdinalIndex = number
   currentScore = number
-  previousScore = number
-  mainCurrentScore = number | nil
-  mainPreviousScore = number | nil
-  keystoneTwentyPlus = number
+  fortifiedDungeons = number[]
+  fortifiedDungeonTimes = number[]
+  fortifiedDungeonUpgrades = number[]
+  fortifiedMaxDungeon = RaiderIOMythicKeystoneDungeon
+  fortifiedMaxDungeonIndex = number
+  fortifiedMaxDungeonLevel = number
   keystoneFifteenPlus = number
-  keystoneTenPlus = number
   keystoneFivePlus = number
-  maxDungeonLevel = number
+  keystoneTenPlus = number
+  keystoneTwentyPlus = number
+  mainCurrentRoleOrdinalIndex = number
+  mainCurrentScore = number | nil
+  mainPreviousRoleOrdinalIndex = number
+  mainPreviousScore = number | nil
+  mainPreviousScoreSeason = number
+  mplusCurrent = RaiderIOMythicKeystoneRoleInfo
+  mplusMainCurrent = RaiderIOMythicKeystoneRoleInfo
+  mplusMainPrevious = RaiderIOMythicKeystoneRoleInfo
+  mplusPrevious = RaiderIOMythicKeystoneRoleInfo
+  previousRoleOrdinalIndex = number
+  previousScore = number
+  previousScoreSeason = number
   sortedDungeons = RaiderIOMythicKeystoneDungeonProfile[]
+  sortedMilestones = Milestone[]
+  tyrannicalDungeons = number[]
+  tyrannicalDungeonTimes = number[]
+  tyrannicalDungeonUpgrades = number[]
+  tyrannicalMaxDungeon = RaiderIOMythicKeystoneDungeon
+  tyrannicalMaxDungeonIndex = number
+  tyrannicalMaxDungeonLevel = number
+  -- metatable data dynamically assigned depending on the weekly affix
+  dungeons = number[]
+  dungeonTimes = number[]
+  dungeonUpgrades = number[]
+  maxDungeon = RaiderIOMythicKeystoneDungeon
+  maxDungeonIndex = number
+  maxDungeonLevel = number
 }
 ```
 
@@ -253,6 +284,26 @@ This table contains data depending on what providers are loaded. This documentat
   name = string
   shortName = string
   shortNameLocale = string
+  timers = number[]
+}
+```
+
+##### RaiderIOMythicKeystoneRole
+
+```
+{
+  [1] = "tank" | "healer" | "dps
+  [2] = "full" | "partial"
+}
+```
+
+##### RaiderIOMythicKeystoneRoleInfo
+
+```
+{
+  roles = RaiderIOMythicKeystoneRole[]
+  score = number
+  season = number | nil
 }
 ```
 
@@ -262,6 +313,9 @@ This table contains data depending on what providers are loaded. This documentat
 {
   hasRenderableData = boolean - if false pretend the table was nil instead (the database is outdated so we don't want to show inaccurate data)
   progress = RaiderIORaidProfileProgress[]
+  previousProgress = RaiderIORaidProfileProgress[]
+  sortedProgress = RaiderIORaidProfileSortedProgress[]
+  raidProgress = RaiderIORaidProfileRaidProgress[]
 }
 ```
 
@@ -276,13 +330,81 @@ This table contains data depending on what providers are loaded. This documentat
 }
 ```
 
+##### RaiderIORaidProfileSortedProgress
+
+```
+{
+  isMainProgress = boolean
+  isProgress = boolean
+  isProgressPrev = boolean
+  obsolete = boolean
+  progress = RaiderIORaidProfileProgress[]
+  tier = number
+}
+```
+
+##### RaiderIORaidProfileRaidProgressInfo
+
+```
+{
+  count = number
+  difficulty = number
+  killed = boolean
+}
+```
+
+##### RaiderIORaidProfileRaidProgress
+
+```
+{
+  current = boolean
+  fated = string
+  progress = RaiderIORaidProfileRaidProgressInfo
+  progressCount = number
+  raid = RaiderIORaidProfileRaid
+  show = boolean
+}
+```
+
+##### RaiderIORaidProfileRaidDungeon
+
+```
+{
+  index = number
+  id = number
+  instance_map_id = number
+  lfd_activity_ids = number[]
+  name = string
+  shortName = string
+  shortNameLocale = string
+}
+```
+
 ##### RaiderIORaidProfileRaid
 
 ```
 {
+  dungeon = RaiderIORaidProfileRaidDungeon
+  id = number
+  mapId = number
   name = string
   shortName = string
   bossCount = number
+  ordinal = number
+}
+```
+
+##### RaiderIORecruitmentProfile
+
+```
+{
+  hasRenderableData = boolean - if false pretend the table was nil instead (the database is outdated so we don't want to show inaccurate data)
+  entityType = number
+  title = string[] - this locale key will yield the actual label from the locale table
+  titleIndex = number
+  tank = boolean
+  healer = boolean
+  dps = boolean
 }
 ```
 

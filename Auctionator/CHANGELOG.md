@@ -1,12 +1,15 @@
 # Auctionator
 
-## [9.2.36](https://github.com/Auctionator/Auctionator/tree/9.2.36) (2022-09-01)
-[Full Changelog](https://github.com/Auctionator/Auctionator/compare/9.2.35...9.2.36) 
+## [9.2.39](https://github.com/Auctionator/Auctionator/tree/9.2.39) (2022-09-20)
+[Full Changelog](https://github.com/Auctionator/Auctionator/compare/9.2.38...9.2.39) 
 
-- Add Turkish translator credit  
-- XML compliance fixes  
-- Shopping: Shift click on "Add to List" now adds current search to list  
-- Fix highlights in shopping list pane to be same as old-style Auctionator  
-- [Fixes #1201] Shopping: Autofocus search box  
-- [Fixes #1200] Unintentional extra scans when posting auctions  
-- ResultsListing: Remove PopulateOverride (found a way to not need it)  
+- Classic: Buy: Move onto next auction when purchasing one fails  
+- Classic: AH: Reduce frequency of throttle timeout events  
+- Use Auctionator translation strings instead of SEARCH and CANCEL  
+- Classic: Add optional Prospect values from Jewelcrafting  
+- Translations update  
+- Settings: Remove subcategory open calls in Dragonflight code  
+- Fix open config button for Dragonflight  
+- Fixes so Auctionator works (mostly) in Dragonflight (#1211)  
+- Mainline: ReagentSearch: Always show craft cost for enchants (no profit)  
+- [Fixes #1209] Classic: Error when viewing enchants and "Show profit" is enabled  

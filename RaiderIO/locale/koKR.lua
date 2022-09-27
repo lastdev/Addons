@@ -159,6 +159,8 @@ L["OUTDATED_EXPIRES_IN_MINUTES"] = "Raider.IO 데이터는 %d분후에 만료됩
 L["OUTDATED_PROFILE_TOOLTIP_MESSAGE"] = "가장 정확한 데이터를 보려면 지금 애드온을 업데이트하십시오. 플레이어의 진행 상황을 개선하기 위해 열심히 노력하며 아주 오래된 데이터를 표시하는 것은 장애가됩니다. Raider.IO 클라이언트를 사용하여 데이터를 자동으로 동기화 할 수 있습니다"
 L["PREVIOUS_SCORE"] = "이전 시즌 쐐기 점수 (%s)"
 L["PROFILE_BEST_RUNS"] = "던전별 최고 기록"
+--[[Translation missing --]]
+--[[ L["PROFILE_TOOLTIP_ANCHOR_TOOLTIP"] = ""--]] 
 L["PROVIDER_NOT_LOADED"] = "|cffFF0000경고:|r |cffFFFFFF%s|r은(는) 현재 진영에 대한 데이터를 찾을 수 없습니다. |cffFFFFFF/raiderio|r 설정을 확인하고 |cffFFFFFF%s|r에 대한 툴팁 데이터를 활성화하십시오."
 L["RAID_BOSS_CN_1"] = "절규날개"
 L["RAID_BOSS_CN_10"] = "대영주 데나트리우스"

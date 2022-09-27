@@ -134,6 +134,8 @@ L["OUTDATED_PROFILE_TOOLTIP_MESSAGE"] = [=[Atualize seu Addon agora para ver os 
 ]=]
 L["PREVIOUS_SCORE"] = "Pontuação anterior de M+ (%s)"
 L["PROFILE_BEST_RUNS"] = "Melhores Runs por Masmorra"
+--[[Translation missing --]]
+--[[ L["PROFILE_TOOLTIP_ANCHOR_TOOLTIP"] = ""--]] 
 L["PROVIDER_NOT_LOADED"] = "|cffFF0000Warning:|r |cffFFFFFF%s|r não pode encontrar dados para sua facção atual. Verifique suas configurações |cffFFFFFF/raiderio|r e ative os dados da ferramenta para |cffFFFFFF%s|r."
 L["RAID_BOSS_CN_1"] = "Guinchasa"
 L["RAID_BOSS_CN_10"] = "Sir Denathrius"

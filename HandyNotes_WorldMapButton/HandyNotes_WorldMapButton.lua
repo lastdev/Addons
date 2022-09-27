@@ -7,6 +7,7 @@ local WorldMapTooltip = WorldMapTooltip or GameTooltip;
 local buildver = select(4,GetBuildInfo())
 local isClassicWow = buildver < 20000
 local isTBCC = (buildver > 20000) and (buildver < 30000)
+local isWOTLKC = (buildver > 30000) and (buildver < 40000)
 
 local L = LibStub("AceLocale-3.0"):GetLocale("HandyNotes_WorldMapButton", false);
 
@@ -97,6 +98,9 @@ WorldMapFrame:HookScript("OnShow", function(self)
 	elseif isTBCC then
 		alignmentFrame = _G.WorldMapFrameCloseButton;
 		parent = alignmentFrame:GetParent();
+	elseif isWOTLKC then
+		alignmentFrame = _G.WorldMapFrameCloseButton;
+		parent = alignmentFrame:GetParent();		
 	else
 		alignmentFrame = _G.WorldMapFrame.BorderFrame.MaximizeMinimizeFrame or _G.WorldMapFrame;
 		parent = alignmentFrame:GetParent();

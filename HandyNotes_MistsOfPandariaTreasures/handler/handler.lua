@@ -5,7 +5,7 @@ local HL = LibStub("AceAddon-3.0"):NewAddon(myname, "AceEvent-3.0")
 -- local L = LibStub("AceLocale-3.0"):GetLocale(myname, true)
 ns.HL = HL
 
-ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v19'
+ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v21'
 
 ---------------------------------------------------------
 -- Data model stuff:
@@ -403,7 +403,7 @@ local function work_out_label(point)
         end
         fallback = 'item:'..ns.lootitem(point.loot[1])
     end
-    if point.achievement and not point.criteria then
+    if point.achievement and not point.criteria or point.criteria == true then
         local _, achievement = GetAchievementInfo(point.achievement)
         if achievement then
             return achievement
@@ -606,7 +606,7 @@ local function tooltip_loot(tooltip, item)
         -- could only confirm this for some cosmetic back items but let's play it
         -- safe and say that any cosmetic item can drop regardless of what the
         -- spec info says...
-        if specTable and #specTable == 0 and not IsCosmeticItem(id) then
+        if specTable and #specTable == 0 and not (_G.IsCosmeticItem and IsCosmeticItem(id)) then
             return true
         end
         -- then catch covenants / classes / etc
@@ -975,13 +975,15 @@ do
                 wipe(info)
             end
 
-            info.text = COMMUNITIES_INVITE_MANAGER_LINK_TO_CHAT -- Link to chat
-            info.notCheckable = 1
-            info.func = sendToChat
-            info.arg1 = currentZone
-            info.arg2 = currentCoord
-            UIDropDownMenu_AddButton(info, level)
-            wipe(info)
+            if _G.MAP_PIN_HYPERLINK then
+                info.text = COMMUNITIES_INVITE_MANAGER_LINK_TO_CHAT -- Link to chat
+                info.notCheckable = 1
+                info.func = sendToChat
+                info.arg1 = currentZone
+                info.arg2 = currentCoord
+                UIDropDownMenu_AddButton(info, level)
+                wipe(info)
+            end
 
             -- Hide menu item
             info.text         = "Hide node"
@@ -1046,7 +1048,7 @@ do
             if button == "RightButton" then
                 ToggleDropDownMenu(1, nil, HL_Dropdown, self, 0, 0)
             end
-            if button == "LeftButton" and IsShiftKeyDown() then
+            if button == "LeftButton" and IsShiftKeyDown() and _G.MAP_PIN_HYPERLINK then
                 sendToChat(button, uiMapID, coord)
             end
         end
@@ -1110,8 +1112,10 @@ function HL:OnInitialize()
     self:RegisterEvent("CRITERIA_EARNED", "RefreshOnEvent")
     self:RegisterEvent("BAG_UPDATE", "RefreshOnEvent")
     self:RegisterEvent("QUEST_TURNED_IN", "RefreshOnEvent")
-    self:RegisterEvent("SHOW_LOOT_TOAST", "RefreshOnEvent")
-    self:RegisterEvent("GARRISON_FOLLOWER_ADDED", "RefreshOnEvent")
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+        self:RegisterEvent("SHOW_LOOT_TOAST", "RefreshOnEvent")
+        self:RegisterEvent("GARRISON_FOLLOWER_ADDED", "RefreshOnEvent")
+    end
     -- This is sometimes spammy, but is the only thing that tends to get us casts:
     self:RegisterEvent("CRITERIA_UPDATE", "RefreshOnEvent")
 
@@ -1163,10 +1167,12 @@ hooksecurefunc(VignettePinMixin, "OnMouseEnter", function(self)
     handle_tooltip(GameTooltip, point, true)
 end)
 
-hooksecurefunc("TaskPOI_OnEnter", function(self)
-    if not self.questID then return end
-    if not ns.WorldQuestsToPoints[self.questID] then return end
-    local point = ns.WorldQuestsToPoints[self.questID]
-    -- if not ns.should_show_point(point._coord, point, point._uiMapID, false) then return end
-    handle_tooltip(GameTooltip, point, true)
-end)
+if _G.TaskPoi_OnEnter then
+    hooksecurefunc("TaskPOI_OnEnter", function(self)
+        if not self.questID then return end
+        if not ns.WorldQuestsToPoints[self.questID] then return end
+        local point = ns.WorldQuestsToPoints[self.questID]
+        -- if not ns.should_show_point(point._coord, point, point._uiMapID, false) then return end
+        handle_tooltip(GameTooltip, point, true)
+    end)
+end
