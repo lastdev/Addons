@@ -1,6 +1,6 @@
 
 
-local dversion = 335
+local dversion = 367
 local major, minor = "DetailsFramework-1.0", dversion
 local DF, oldminor = LibStub:NewLibrary (major, minor)
 
@@ -51,32 +51,43 @@ if (not PixelUtil) then
 	end
 end
 
+function DF.IsDragonflight()
+	return select(4, GetBuildInfo()) >= 100000
+end
+
 function DF.IsTimewalkWoW()
-	return DF.IsClassicWow() or DF.IsTBCWow() or DF.IsWotLKWow()
+    local _, _, _, buildInfo = GetBuildInfo()
+    if (buildInfo < 40000) then
+        return true
+    end
 end
 
 function DF.IsClassicWow()
-	local gameVersion = GetBuildInfo()
-	if (gameVersion:match ("%d") == "1") then
-		return true
-	end
-	return false
+    local _, _, _, buildInfo = GetBuildInfo()
+    if (buildInfo < 20000) then
+        return true
+    end
 end
 
 function DF.IsTBCWow()
-	local gameVersion = GetBuildInfo()
-	if (gameVersion:match ("%d") == "2") then
-		return true
-	end
-	return false
+    local _, _, _, buildInfo = GetBuildInfo()
+    if (buildInfo < 30000 and buildInfo >= 20000) then
+        return true
+    end
 end
 
 function DF.IsWotLKWow()
-	local gameVersion = GetBuildInfo()
-	if (gameVersion:match ("%d") == "3") then
-		return true
-	end
-	return false
+    local _, _, _, buildInfo = GetBuildInfo()
+    if (buildInfo < 40000 and buildInfo >= 30000) then
+        return true
+    end
+end
+
+function DF.IsShadowlandsWow()
+    local _, _, _, buildInfo = GetBuildInfo()
+    if (buildInfo < 100000 and buildInfo >= 90000) then
+        return true
+    end
 end
 
 local roleBySpecTextureName = {
@@ -275,8 +286,6 @@ DF.FrameWorkVersion = tostring (dversion)
 function DF:PrintVersion()
 	print ("Details! Framework Version:", DF.FrameWorkVersion)
 end
-
-LibStub:GetLibrary("AceTimer-3.0"):Embed (DF)
 
 --> get the working folder
 do
@@ -727,7 +736,7 @@ function DF:SetFontRotation(fontString, degrees)
 		if (not fontString.__rotationAnimation) then
 			fontString.__rotationAnimation = DF:CreateAnimationHub(fontString)
 			fontString.__rotationAnimation.rotator = DF:CreateAnimation(fontString.__rotationAnimation, "rotation", 1, 0, 0)
-			fontString.__rotationAnimation.rotator:SetEndDelay(math.huge)
+			fontString.__rotationAnimation.rotator:SetEndDelay(10^8)
 			fontString.__rotationAnimation.rotator:SetSmoothProgress(1)
 		end
 		fontString.__rotationAnimation.rotator:SetDegrees(degrees)
@@ -1062,47 +1071,45 @@ end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --> points
 
-	function DF:CheckPoints (v1, v2, v3, v4, v5, object)
-
+	function DF:CheckPoints(v1, v2, v3, v4, v5, object)
 		if (not v1 and not v2) then
 			return "topleft", object.widget:GetParent(), "topleft", 0, 0
 		end
-		
-		if (_type (v1) == "string") then
-			local frameGlobal = _G [v1]
-			if (frameGlobal and type (frameGlobal) == "table" and frameGlobal.GetObjectType) then
-				return DF:CheckPoints (frameGlobal, v2, v3, v4, v5, object)
+
+		if (type(v1) == "string") then
+			local frameGlobal = _G[v1]
+			if (frameGlobal and type(frameGlobal) == "table" and frameGlobal.GetObjectType) then
+				return DF:CheckPoints(frameGlobal, v2, v3, v4, v5, object)
 			end
-			
-		elseif (_type (v2) == "string") then
-			local frameGlobal = _G [v2]
-			if (frameGlobal and type (frameGlobal) == "table" and frameGlobal.GetObjectType) then
-				return DF:CheckPoints (v1, frameGlobal, v3, v4, v5, object)
+
+		elseif (type(v2) == "string") then
+			local frameGlobal = _G[v2]
+			if (frameGlobal and type(frameGlobal) == "table" and frameGlobal.GetObjectType) then
+				return DF:CheckPoints(v1, frameGlobal, v3, v4, v5, object)
 			end
 		end
-		
-		if (_type (v1) == "string" and _type (v2) == "table") then --> :setpoint ("left", frame, _, _, _)
-			if (not v3 or _type (v3) == "number") then --> :setpoint ("left", frame, 10, 10)
+
+		if (type(v1) == "string" and type(v2) == "table") then --setpoint("left", frame, _, _, _)
+			if (not v3 or type(v3) == "number") then --setpoint("left", frame, 10, 10)
 				v1, v2, v3, v4, v5 = v1, v2, v1, v3, v4
 			end
-			
-		elseif (_type (v1) == "string" and _type (v2) == "number") then --> :setpoint ("topleft", x, y)
+
+		elseif (type(v1) == "string" and type(v2) == "number") then --setpoint("topleft", x, y)
 			v1, v2, v3, v4, v5 = v1, object.widget:GetParent(), v1, v2, v3
-			
-		elseif (_type (v1) == "number") then --> :setpoint (x, y) 
+
+		elseif (type(v1) == "number") then --setpoint(x, y) 
 			v1, v2, v3, v4, v5 = "topleft", object.widget:GetParent(), "topleft", v1, v2
 
-		elseif (_type (v1) == "table") then --> :setpoint (frame, x, y)
+		elseif (type(v1) == "table") then --setpoint(frame, x, y)
 			v1, v2, v3, v4, v5 = "topleft", v1, "topleft", v2, v3
-			
 		end
-		
+
 		if (not v2) then
 			v2 = object.widget:GetParent()
 		elseif (v2.dframework) then
 			v2 = v2.widget
 		end
-		
+
 		return v1 or "topleft", v2, v3 or "topleft", v4 or 0, v5 or 0
 	end
 	
@@ -1238,7 +1245,7 @@ end
 			return {r, g, b, a}
 
 		elseif (newFormat == "tablemembers") then
-			return {["r"] = r, ["g"] = g, ["b"] = b, ["a"] = 1}
+			return {["r"] = r, ["g"] = g, ["b"] = b, ["a"] = a}
 
 		elseif (newFormat == "numbers") then
 			return r, g, b, a
@@ -1477,6 +1484,24 @@ end
 		height = abs ((height or parent:GetHeight()) - abs (y_offset) + 20)
 		height = height*-1
 
+		--normalize format types
+		for index, widgetTable in ipairs(menu) do
+			if (widgetTable.type == "space") then
+				widgetTable.type = "blank"
+			elseif (widgetTable.type == "dropdown") then
+				widgetTable.type = "select"
+			elseif (widgetTable.type == "switch") then
+				widgetTable.type = "toggle"
+			elseif (widgetTable.type == "slider") then
+				widgetTable.type = "range"
+			elseif (widgetTable.type == "button") then
+				widgetTable.type = "execute"
+			end
+		end
+
+		--catch some options added in the hash part of the menu table
+		local useBoxFirstOnAllWidgets = menu.always_boxfirst
+
 		for index, widget_table in ipairs(menu) do
 			if (not widget_table.hidden) then
 
@@ -1604,7 +1629,7 @@ end
 						switch:ClearAllPoints()
 						switch.hasLabel:ClearAllPoints()
 
-						if (widget_table.boxfirst) then
+						if (widget_table.boxfirst or useBoxFirstOnAllWidgets) then
 							switch:SetPoint (cur_x, cur_y)
 							switch.hasLabel:SetPoint ("left", switch, "right", 2)
 						else
@@ -1713,7 +1738,7 @@ end
 						label.text = widget_table.name .. (use_two_points and ": " or "")
 						label:SetTemplate(widget_table.text_template or text_template)
 
-						if (widget_table.boxfirst) then
+						if (widget_table.boxfirst or useBoxFirstOnAllWidgets) then
 							label:SetPoint("left", colorpick, "right", 2)
 							colorpick:SetPoint(cur_x, cur_y)
 							extraPaddingY = 1
@@ -1888,6 +1913,9 @@ end
 			end
 		end
 
+		--catch some options added in the hash part of the menu table
+		local useBoxFirstOnAllWidgets = menu.always_boxfirst
+
 		for index, widget_table in ipairs (menu) do
 			if (not widget_table.hidden) then
 
@@ -1989,7 +2017,7 @@ end
 					end
 
 					local label = DF:NewLabel (parent, nil, "$parentLabel" .. index, nil, widget_table.name .. (use_two_points and ": " or ""), "GameFontNormal", widget_table.text_template or text_template or 12)
-					if (widget_table.boxfirst) then
+					if (widget_table.boxfirst or useBoxFirstOnAllWidgets) then
 						switch:SetPoint (cur_x, cur_y)
 						label:SetPoint ("left", switch, "right", 2)
 
@@ -2093,7 +2121,7 @@ end
 					end
 					
 					local label = DF:NewLabel (parent, nil, "$parentLabel" .. index, nil, widget_table.name .. (use_two_points and ": " or ""), "GameFontNormal", widget_table.text_template or text_template or 12)
-					if (widget_table.boxfirst) then
+					if (widget_table.boxfirst or useBoxFirstOnAllWidgets) then
 						label:SetPoint("left", colorpick, "right", 2)
 						colorpick:SetPoint(cur_x, cur_y)
 						extraPaddingY = 1
@@ -2446,8 +2474,8 @@ end
 			options_frame:Hide()
 			
 			options_frame:SetPoint ("center", UIParent, "center")
-			options_frame.TitleText:SetText (title)
-			options_frame.portrait:SetTexture ([[Interface\CHARACTERFRAME\TEMPORARYPORTRAIT-FEMALE-BLOODELF]])
+			options_frame.TitleText:SetText (title) --10.0 fuck
+			--options_frame.portrait:SetTexture ([[Interface\CHARACTERFRAME\TEMPORARYPORTRAIT-FEMALE-BLOODELF]])
 			
 			return options_frame
 	
@@ -2829,11 +2857,29 @@ end
 function DF:OpenInterfaceProfile()
 	-- OptionsFrame1/2 should be registered if created with DF:CreateAddOn, so open to them directly
 	if self.OptionsFrame1 then
-		InterfaceOptionsFrame_OpenToCategory (self.OptionsFrame1)
-		if self.OptionsFrame2 then
-			InterfaceOptionsFrame_OpenToCategory (self.OptionsFrame2)
+		if SettingsPanel then
+			--SettingsPanel:OpenToCategory(self.OptionsFrame1.name)
+			local category = SettingsPanel:GetCategoryList():GetCategory(self.OptionsFrame1.name)
+			if category then
+				SettingsPanel:Open()
+				SettingsPanel:SelectCategory(category)
+				if self.OptionsFrame2 and category:HasSubcategories() then
+					for _, subcategory in pairs(category:GetSubcategories()) do
+						if subcategory:GetName() == self.OptionsFrame2.name then
+							SettingsPanel:SelectCategory(subcategory)
+							break
+						end
+					end
+				end
+			end
+			return
+		elseif InterfaceOptionsFrame_OpenToCategory then
+			InterfaceOptionsFrame_OpenToCategory (self.OptionsFrame1)
+			if self.OptionsFrame2 then
+				InterfaceOptionsFrame_OpenToCategory (self.OptionsFrame2)
+			end
+			return
 		end
-		return
 	end
 	
 	-- fallback (broken as of ElvUI Skins in version 12.18+... maybe fix/change will come)
@@ -2905,8 +2951,14 @@ function DF:CreateAnimation (animation, type, order, duration, arg1, arg2, arg3,
 		anim:SetToAlpha (arg2)
 	
 	elseif (type == "SCALE") then
-		anim:SetFromScale (arg1, arg2)
-		anim:SetToScale (arg3, arg4)
+		if (DF.IsDragonflight()) then
+			anim:SetScaleFrom (arg1, arg2)
+			anim:SetScaleTo (arg3, arg4)
+		else
+			anim:SetFromScale (arg1, arg2)
+			anim:SetToScale (arg3, arg4)
+		end
+
 		anim:SetOrigin (arg5 or "center", arg6 or 0, arg7 or 0) --point, x, y
 	
 	elseif (type == "ROTATION") then
@@ -3503,6 +3555,12 @@ function DFNamePlateBorderTemplateMixin:SetVertexColor(r, g, b, a)
 	end
 end
 
+function DFNamePlateBorderTemplateMixin:GetVertexColor()
+	for i, texture in ipairs(self.Textures) do
+		return texture:GetVertexColor();
+	end
+end
+
 function DFNamePlateBorderTemplateMixin:SetBorderSizes(borderSize, borderSizeMinPixels, upwardExtendHeightPixels, upwardExtendHeightMinPixels)
 	self.borderSize = borderSize;
 	self.borderSizeMinPixels = borderSizeMinPixels;
@@ -3867,6 +3925,7 @@ local specs_per_class = {
 	["WARLOCK"] = {265, 266, 267},
 	["PALADIN"] = {65, 66, 70},
 	["MONK"] = {268, 269, 270},
+	["EVOKER"] = {1467, 1468},
 }
 
 function DF:GetClassSpecIDs (class)
@@ -3966,6 +4025,7 @@ DF.ClassIndexToFileName = {
 	[11] = "DRUID",
 	[10] = "MONK",
 	[2] = "PALADIN",
+	[13] = "EVOKER",
 }
 
 
@@ -3982,6 +4042,7 @@ DF.ClassFileNameToIndex = {
 	["DRUID"] = 11,
 	["MONK"] = 10,
 	["PALADIN"] = 2,
+	["EVOKER"] = 13,
 }
 DF.ClassCache = {}
 
@@ -4303,6 +4364,10 @@ DF.ClassSpecs = {
 		[269] = true, 
 		[270] = true, 
 	},
+	["EVOKER"] = {
+		[1467] = true,
+		[1468] = true,
+	},
 }
 
 DF.SpecListByClass = {
@@ -4365,6 +4430,10 @@ DF.SpecListByClass = {
 		268, 
 		269, 
 		270, 
+	},
+	["EVOKER"] = {
+		1467,
+		1468,
 	},
 }
 
@@ -4524,9 +4593,9 @@ end
 --DetailsFramework:RegisterScriptComm (ID, function(sourcePlayerName, ...) end)
 --DetailsFramework:SendScriptComm (ID, ...)
 
-	local aceComm = LibStub:GetLibrary ("AceComm-3.0")
-	local LibAceSerializer = LibStub:GetLibrary ("AceSerializer-3.0")
-	local LibDeflate = LibStub:GetLibrary ("LibDeflate")
+	local aceComm = LibStub:GetLibrary ("AceComm-3.0", true)
+	local LibAceSerializer = LibStub:GetLibrary ("AceSerializer-3.0", true)
+	local LibDeflate = LibStub:GetLibrary ("LibDeflate", true)
 	
 	DF.RegisteredScriptsComm = DF.RegisteredScriptsComm or {}
 	

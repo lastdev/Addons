@@ -7,6 +7,7 @@ local HealBot_RangeSpellsKeysFriendly={}
 local HealBot_RangeSpellsKeysEnemy={}
 local HealBot_AlwaysEnabled={}
 local HealBot_pcClass={[1]=false,[2]=false,[3]=false,[4]=false,[5]=false,[6]=false,[7]=false,[8]=false,[9]=false,[10]=false}
+local HealBot_AutoCloseFrame={[1]=1,[2]=1,[3]=1,[4]=1,[5]=1,[6]=1,[7]=1,[8]=1,[9]=1,[10]=1}
 local LSM = HealBot_Libs_LSM() --LibStub("LibSharedMedia-3.0") 
 local HealBot_Action_rCalls={}
 local HealBot_PluginUpdate_TimeToLive={}
@@ -1932,7 +1933,7 @@ function HealBot_Action_ShowPanel(frame)
     if HealBot_Config.DisabledNow==0 then
         if not grpFrame[frame]:IsVisible() then 
             ShowUIPanel(grpFrame[frame])
-            if Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame]["AUTOCLOSE"]==3 then
+            if HealBot_AutoCloseFrame[frame]==3 then
                 PlaySound(SOUNDKIT.IG_ABILITY_OPEN)
             end
         end
@@ -1951,7 +1952,7 @@ end
 function HealBot_Action_HidePanel(frame)
     if grpFrame[frame]:IsVisible() then 
         HideUIPanel(grpFrame[frame])
-        if Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame]["AUTOCLOSE"]==3 then
+        if HealBot_AutoCloseFrame[frame]==3 then
             PlaySound(SOUNDKIT.IG_ABILITY_CLOSE)
         end
     end
@@ -2520,7 +2521,7 @@ function HealBot_Action_PrepButton(button)
     button.text.healthupdate=true
     button.text.aggroupdate=true
     button.spec=" "
-    button.specupdate=true
+    button.specupdate=false
     button.gref["Bar"]:SetStatusBarColor(0, 0, 0, 0)
     button.gref["Bar"]:SetValue(1000)
     button.gref["InHeal"]:SetStatusBarColor(0, 0, 0, 0)
@@ -4441,7 +4442,7 @@ function HealBot_Action_MarkDeleteButton(button)
 end
 
 function HealBot_Action_Reset()
-    HealBot_Timers_TurboOn(3,1)
+    HealBot_Timers_TurboOn(1,1)
     if HealBot_Config.DisabledNow==1 then
         HealBot_Options_DisableHealBotOpt:SetChecked(false)
         HealBot_Options_DisableHealBot(false)
@@ -4451,6 +4452,7 @@ function HealBot_Action_Reset()
             Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][i]["X"]=(49+(i*2))
             Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][i]["Y"]=(49+(i*2))
             Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][i]["AUTOCLOSE"]=1
+            HealBot_AutoCloseFrame[i]=1
             if HealBot_Action_FrameIsVisible(i) then
                 HealBot_Action_FrameSetPoint(i, grpFrame[i])
                 HealBot_Action_ShowPanel(i)
@@ -4685,19 +4687,19 @@ function HealBot_Action_CheckHideFrames()
         end
     end
     for i=1, 10 do
-        if Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][i]["AUTOCLOSE"]>1 and hideFrame[i] and HealBot_Action_FrameIsVisible(i) then
+        if HealBot_AutoCloseFrame[i]>1 and hideFrame[i] and HealBot_Action_FrameIsVisible(i) then
             HealBot_Action_HidePanel(i)
         end
     end
 end
 
 function HealBot_Action_ShowHideFrames(button)
-    if not HealBot_Data["UILOCK"] and Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][button.frame]["AUTOCLOSE"]>1 then 
-        if not HealBot_Action_FrameIsVisible(button.frame) and HealBot_Config.DisabledNow==0 then
-            if button.status.enabled and button:IsVisible() then
+    if not HealBot_Data["UILOCK"] and HealBot_AutoCloseFrame[button.frame]>1 then 
+        if not HealBot_Action_FrameIsVisible(button.frame) then 
+            if button.status.enabled and HealBot_Config.DisabledNow==0  then
                 HealBot_Action_ShowPanel(button.frame)
             end
-        elseif  HealBot_Action_FrameIsVisible(button.frame) and not button.status.enabled and not HealBot_Action_ShouldHealSome(button.frame) then
+        elseif not HealBot_Action_ShouldHealSome(button.frame) then
             HealBot_Action_HidePanel(button.frame)
         end
     end
@@ -4717,6 +4719,21 @@ function HealBot_Action_ShowHideFrameOption(frame)
             end
         else
             HealBot_Timers_Set("INIT","RefreshPartyNextRecalcPlayers")
+        end
+    end
+end
+
+function HealBot_Action_setAutoClose(reset)
+    local cVal=1
+    for x=1,10 do
+        if not reset then cVal=Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][x]["AUTOCLOSE"] end
+        if cVal~=HealBot_AutoCloseFrame[x] then
+            HealBot_AutoCloseFrame[x]=cVal
+            HealBot_Panel_setAutoClose(x)
+            HealBot_Action_ShowHideFrameOption(x)
+            HealBot_Timers_Set("LAST","CheckFramesOnCombat")
+            HealBot_Timers_Set("LAST","CheckHideFrames")
+            HealBot_AddDebug("Auto Hide for frame "..x.." = "..HealBot_AutoCloseFrame[x],"AutoClose",true)
         end
     end
 end

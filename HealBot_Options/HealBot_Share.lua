@@ -971,6 +971,7 @@ function HealBot_Share_SkinLoad(sIn, internal)
     HealBot_Skins_Check_Skin(hbOptGetSkinName, true)
     if not internal then
         HealBot_Options_Set_Current_Skin(hbOptGetSkinName, nil, nil, true)
+        HealBot_SetResetFlag("SOFT")
         HealBot_Options_NewSkin:SetText("")
         hbWarnSharedMedia=false
         HealBot_AddChat(HEALBOT_CHAT_ADDONID..hbOptGetSkinName..HEALBOT_CHAT_SKINREC)

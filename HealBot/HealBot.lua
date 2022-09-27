@@ -197,7 +197,7 @@ end
 
 function HealBot_SetResetFlag(mode)
     HealBot_Update_Skins(true)
-    HealBot_Timers_TurboOn(3,2)
+    HealBot_Timers_TurboOn(2,2)
     if mode=="HARD" then
         ReloadUI()
     elseif mode=="SOFT" and not HealBot_luVars["TestBarsOn"] then
@@ -1989,7 +1989,7 @@ end
 
 function HealBot_Load()
     if not HealBot_luVars["Loaded"] then
-        HealBot_Timers_TurboOn(5,8)
+        HealBot_Timers_TurboOn(7,5)
         HealBot_Init_Spells_Defaults()
         HealBot_InitNewChar()
         HealBot_luVars["CurrentSpec"]=HealBot_Config.CurrentSpec
@@ -2832,6 +2832,7 @@ function HealBot_OnEvent_AddOnLoaded(addonName, reset)
                 HealBot_luVars["FPS"][x][z]=HealBot_Globals.FPS
             end
         end
+        HealBot_Timers_Set("LAST","SetAutoClose", 12)
         HealBot_luVars["FPS"][0]=HealBot_Globals.FPS
         HealBot_Options_setClassEn()
         HealBot_Options_setLists()
@@ -3805,7 +3806,7 @@ function HealBot_AfterCombatCleanup()
         HealBot_Timers_Set("LAST","ResetUnitStatus")
         HealBot_Timers_Set("SKINS","TextUpdateNames")
         HealBot_Timers_Set("LAST","EndAggro")
-        if HealBot_luVars["CheckFramesOnCombat"] then HealBot_Timers_Set("SKINS","CheckHideFrames") end
+        if HealBot_luVars["CheckFramesOnCombat"] then HealBot_Timers_Set("LAST","CheckHideFrames") end
         HealBot_Timers_Set("LAST","CheckLowMana")
         HealBot_Timers_Set("PLAYER","PlayerTargetChanged")
         HealBot_Timers_Set("LAST","TargetFocusUpdate")
@@ -4025,7 +4026,7 @@ end
 function HealBot_QueueSpecUpdate(button)
     if button.frame<10 and HEALBOT_GAME_VERSION>2 and UnitLevel(button.unit)>10 and button.isplayer and not button.specupdate and not HealBot_SpecQueueList[button.id] then
         HealBot_SpecQueueList[button.id]=true
-        HealBot_SpecQueue[1]=button.id
+        table.insert(HealBot_SpecQueue, button.id)
     end
 end
 

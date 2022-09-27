@@ -262,7 +262,7 @@ optionsText:SetPoint("TOPLEFT", optionsTitle, "BOTTOMLEFT", 0, -8)
 optionsText:SetText(HEALBOT_ABOUT_DESC1)
 local optionsButton = CreateFrame("Button", nil, optionsPanel, "UIPanelButtonTemplate")
 
-HealBot_Options_luVars["InitFontsRuns"]=0
+HealBot_Options_luVars["InitFontsRerun"]=false
 function HealBot_Options_InitFonts(id)
     if id<=#fonts then
         if id==0 then
@@ -272,12 +272,12 @@ function HealBot_Options_InitFonts(id)
             g:SetText("i"..id)
             g:SetFont(LSM:Fetch('font',fonts[id]),10)
         end
-        C_Timer.After(0.01+(HealBot_Options_luVars["InitFontsRuns"]/250), function() HealBot_Options_InitFonts(id+1) end)
-    elseif HealBot_Options_luVars["InitFontsRuns"]<10 then
-        if HealBot_Options_luVars["InitFontsRuns"]==1 then HealBot_Timers_UpdateUsedIndex("Fonts") end
-        HealBot_Options_luVars["InitFontsRuns"]=HealBot_Options_luVars["InitFontsRuns"]+1
-        HealBot_AddDebug("InitFontsRuns="..HealBot_Options_luVars["InitFontsRuns"],"Load",true)
-        C_Timer.After((0.1+(HealBot_Options_luVars["InitFontsRuns"]/10)), function() HealBot_Options_InitFonts(0) end)
+        C_Timer.After(0.05, function() HealBot_Options_InitFonts(id+1) end)
+    elseif not HealBot_Options_luVars["InitFontsRerun"] then
+        HealBot_Timers_UpdateUsedIndex("Fonts")
+        HealBot_Options_luVars["InitFontsRerun"]=true
+        HealBot_AddDebug("InitFontsRuns Rerun","Load",true)
+        C_Timer.After(0.1, function() HealBot_Options_InitFonts(0) end)
     else
         HealBot_AddDebug("InitFontsRuns Complete","Load",true)
         HealBot_Timers_UpdateUsedIndex("Fonts")
@@ -10114,8 +10114,7 @@ function HealBot_Options_AutoShow_DropDown()
                         if Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][HealBot_Options_luVars["FramesSelFrame"]]["AUTOCLOSE"] ~= self:GetID() then
                             Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][HealBot_Options_luVars["FramesSelFrame"]]["AUTOCLOSE"] = self:GetID()
                             UIDropDownMenu_SetText(HealBot_Options_AutoShow,HealBot_Options_AutoShow_List[Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][HealBot_Options_luVars["FramesSelFrame"]]["AUTOCLOSE"]]) 
-                            HealBot_Action_ShowHideFrameOption(HealBot_Options_luVars["FramesSelFrame"])
-                            HealBot_Timers_Set("LAST","CheckFramesOnCombat")
+                            HealBot_Timers_Set("LAST","SetAutoClose")
                         end
                     end
         info.checked = false;
@@ -12030,17 +12029,15 @@ function HealBot_Options_DoSet_Current_Skin(newSkin, ddRefresh, noCallback, optS
         HealBot_Panel_resetInitFrames()
         local hbFoundSkin=nil
         local hbValidSkins=nil
-        HealBot_Options_luVars["skinChange"]=false
         for j=1, getn(Healbot_Config_Skins.Skins), 1 do
             if newSkin==Healbot_Config_Skins.Skins[j] then
-                if Healbot_Config_Skins.Current_Skin~=Healbot_Config_Skins.Skins[j] then
-                    HealBot_Options_luVars["skinChange"]=true
-                end
                 hbFoundSkin=true
                 Healbot_Config_Skins.Skin_ID = j
-                Healbot_Config_Skins.Current_Skin = Healbot_Config_Skins.Skins[j]
-                if HealBot_Options_luVars["skinChange"] then
-                    HealBot_Timers_TurboOn(2,2)
+                if Healbot_Config_Skins.Current_Skin~=Healbot_Config_Skins.Skins[j] then
+                    Healbot_Config_Skins.Current_Skin = Healbot_Config_Skins.Skins[j]
+                    HealBot_Action_setAutoClose(true)
+                    HealBot_Timers_Set("LAST","SetAutoClose", 3)
+                    HealBot_Timers_TurboOn(1,2)
                     HealBot_Config.LastAutoSkinChangeTime=GetTime()+300
                     optSetSkins=true
                     HealBot_setLuVars("showReloadMsg", true)
@@ -12071,10 +12068,8 @@ function HealBot_Options_DoSet_Current_Skin(newSkin, ddRefresh, noCallback, optS
             end
         end
         if not hbFoundSkin then
-            if newSkin~="_-none-_" then
-                HealBot_AddChat(HEALBOT_CHAT_ADDONID..HEALBOT_CHAT_CHANGESKINERR1..newSkin)
-                if hbValidSkins then HealBot_AddChat(HEALBOT_CHAT_ADDONID..HEALBOT_CHAT_CHANGESKINERR2..hbValidSkins) end
-            end
+            HealBot_AddChat(HEALBOT_CHAT_ADDONID..HEALBOT_CHAT_CHANGESKINERR1..newSkin)
+            if hbValidSkins then HealBot_AddChat(HEALBOT_CHAT_ADDONID..HEALBOT_CHAT_CHANGESKINERR2..hbValidSkins) end
             if not Healbot_Config_Skins.Author[Healbot_Config_Skins.Current_Skin] then 
                 local retryWithSkin = HealBot_getDefaultSkin()
                 if not noCallback then
@@ -15887,8 +15882,6 @@ function HealBot_Options_Reset_OnClick(self,mode)
 end
 
 function HealBot_Options_SetDefaults(global)
-    HealBot_Globals.LastVersionSkinUpdate=HEALBOT_VERSION_SC
-    HealBot_Config.LastVersionUpdate=HEALBOT_VERSION_SC
     if global then
         HealBot_Config = HealBot_Options_copyTable(HealBot_ConfigDefaults)
         HealBot_Globals = HealBot_Options_copyTable(HealBot_GlobalsDefaults)
@@ -15920,6 +15913,8 @@ function HealBot_Options_SetDefaults(global)
     DoneInitTab={}
     HealBot_Timers_InitExtraOptions()
     HealBot_Timers_Set("AURA","CheckPlayer")
+    HealBot_Globals.LastVersionSkinUpdate=HEALBOT_VERSION_SC
+    HealBot_Config.LastVersionUpdate=HEALBOT_VERSION_SC
     HealBot_Options_OnLoad(nil, "Defaults")
 end
 
@@ -16817,7 +16812,6 @@ function HealBot_Options_AboutTab(tab)
         HealBot_Timers_Lang()
         local g=_G["UsedToInitFonts"]
         g:SetTextColor(0,0,0,0)
-        HealBot_Options_luVars["InitFontsRuns"]=0
         C_Timer.After(0.1, function() HealBot_Options_InitFonts(0) end)
         HealBot_Options_luVars["OnLoad"]=false
     end
@@ -19139,7 +19133,6 @@ function HealBot_Options_SkinsFramesInit()
     end
     HealBot_setLuVars("TargetNeedReset", true)
     HealBot_setLuVars("FocusNeedReset", true)
-    HealBot_SetSkinColours()
     HealBot_Options_luVars["cSkin"]=Healbot_Config_Skins.Current_Skin
     HealBot_Options_luVars["SelectSpellsFrame"]=false
     HealBot_Options_SetLabel("HealBot_Options_FramesSelFrameFontStr",HEALBOT_OPTIONS_FRAME)
@@ -19358,22 +19351,23 @@ end
 
 local HealBot_Options_ExtraTabFuncs={
                                      [1]=HealBot_Options_ResetUpdate,
-                                     [2]=HealBot_Options_SkinsFramesInit,
-                                     [3]=HealBot_Options_CopyFrameTab,
-                                     [4]=HealBot_Options_CustomColoursFrameTab,
-                                     [5]=HealBot_Options_DebuffsTab,
-                                     [6]=HealBot_Options_BuffsTab,
-                                     [7]=HealBot_Options_EnemyTab,
-                                     [8]=HealBot_Options_IndicatorsTab,
-                                     [9]=HealBot_Options_MediaUpdateFonts,
-                                    [10]=HealBot_Options_MediaUpdateTextures,
-                                    [11]=HealBot_Options_MediaUpdateSounds,
+                                     [2]=HealBot_SetSkinColours,
+                                     [3]=HealBot_Options_SkinsFramesInit,
+                                     [4]=HealBot_Options_CopyFrameTab,
+                                     [5]=HealBot_Options_CustomColoursFrameTab,
+                                     [6]=HealBot_Options_DebuffsTab,
+                                     [7]=HealBot_Options_BuffsTab,
+                                     [8]=HealBot_Options_EnemyTab,
+                                     [9]=HealBot_Options_IndicatorsTab,
+                                    [10]=HealBot_Options_MediaUpdateFonts,
+                                    [11]=HealBot_Options_MediaUpdateTextures,
+                                    [12]=HealBot_Options_MediaUpdateSounds,
                                     }
 
 function HealBot_Options_DoInitExtras(tab)
     if HealBot_Options_ExtraTabFuncs[tab] then
         HealBot_Options_ExtraTabFuncs[tab]()
-        C_Timer.After(0.025, function() HealBot_Options_DoInitExtras(tab+1) end)
+        C_Timer.After(0.05, function() HealBot_Options_DoInitExtras(tab+1) end)
     else
         HealBot_Options_luVars["RunInitExtras"]=false
     end
@@ -19384,7 +19378,7 @@ function HealBot_Options_InitExtras()
         HealBot_Options_luVars["RunInitExtras"]=true
         HealBot_Options_DoInitExtras(1)
     else
-        HealBot_Timers_Set("LAST","OptionsInitExtraTabs",0.5)
+        HealBot_Timers_Set("LAST","OptionsInitExtraTabs",1)
     end
 end
 
@@ -19877,7 +19871,7 @@ function HealBot_Options_ShowPanel(tabNo, subTabNo)
                         OptionThemes[HealBot_Globals.OptionsTheme]["A"])
     g=_G["HealBot_Contents_ButtonT"..tabNo.."Txt"]
     g:SetTextColor(1,1,1,1)
-    
+
     if tabNo==3 and HealBot_Options_luVars["subTabNo3"]>308 and HealBot_Options_luVars["subTabNo3"]<399 then
         g=_G["HealBot_Contents_ButtonT308Txt"]
         g:SetTextColor(1,1,1,1)

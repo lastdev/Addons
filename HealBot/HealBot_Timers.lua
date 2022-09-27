@@ -502,7 +502,6 @@ local hbTimerFuncs={["INIT"]={
                         ["EmergHealthCol"]=HealBot_Action_EmergHealthCol,
                         ["ResetFrameAlias"]=HealBot_Action_ResetFrameAlias,
                         ["FramesSetPoint"]=HealBot_Timers_FramesSetPoint,
-                        ["CheckHideFrames"]=HealBot_Action_CheckHideFrames,
                         ["UpdateAggroText"]=HealBot_Aggro_UpdateAggroText,
                         ["UpdateTextButtons"]=HealBot_Text_UpdateButtons,
                         ["UpdateEmergBars"]=HealBot_UpdateAllEmergBars,
@@ -628,6 +627,8 @@ local hbTimerFuncs={["INIT"]={
                         ["AuxFramesChanged"]=HealBot_Timers_AuxFramesChanged,
                         ["TextFramesChanged"]=HealBot_Timers_TextFramesChanged,
                         ["InitLoadSpells"]=HealBot_Timers_InitSpells,
+                        ["SetAutoClose"]=HealBot_Action_setAutoClose,
+                        ["CheckHideFrames"]=HealBot_Action_CheckHideFrames,
                     },
                    }
                    

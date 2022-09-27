@@ -8,6 +8,17 @@ function Plater.GetChangelogTable()
 	if (not Plater.ChangeLogTable) then
 		Plater.ChangeLogTable = {
 			
+			{1662995032,  "Bug Fix", "September 21st, 2022", "Ghost Auras should be shown on the debuff frame.", "cont1nuity"},
+			{1662995032,  "Bug Fix", "September 21st, 2022", "WotLK tank recognition in raids is again based on raid roles instead of party role assignments.", "cont1nuity"},
+			{1662995032,  "Bug Fix", "September 20th, 2022", "WotLK DK death runes should now show properly.", "cont1nuity"},
+			{1662995032,  "Backend Change", "September 19th, 2022", "Throttling 'UPDATE_SHAPESHIFT_FORM' event to prevent unnecessary updates.", "cont1nuity"},
+			{1662995032,  "Backend Change", "September 13th, 2022", "Support for Druid combo points in WotLK.", "cont1nuity"},
+			{1662995032,  "Bug Fix", "September 13th, 2022", "Fixing a data leak on mod re-compile when changing mod options.", "cont1nuity"},
+			{1662995032,  "Backend Change", "September 12th, 2022", "Adding support for Dragonflight: Evoker resources, new UNIT_AURA event data, bugfixes.", "cont1nuity"},
+			{1662995032,  "Bug Fix", "September 7th, 2022", "Adding 'Decimation' talent to execute detection for Warlocks in WotLK.", "cont1nuity"},
+			{1662054080,  "New Feature", "September 7th, 2022", "Adding 'Decimation' talent to Warlock execute for WotLK.", "cont1nuity"},
+			{1662995032,  "Bug Fix", "September 4th, 2022", "Fixing tank spec detection for WotLK.", "cont1nuity"},
+			
 			{1662054080,  "New Feature", "September 1st, 2022", "Adding options for swipe texture on Buff Special.", "cont1nuity"},
 			{1662054080,  "Bug Fix", "August 29th, 2022", "Fixing mod Load Conditions.", "cont1nuity"},
 			{1662054080,  "Backend Change", "August 28th, 2022", "Support for aura modRate.", "cont1nuity"},

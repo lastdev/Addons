@@ -9,6 +9,7 @@ local subunits = {};
 local MyGroup={["GROUP"]=0,["FRAME"]=1}
 local HeaderPos={[1]={},[2]={},[3]={},[4]={},[5]={},[6]={},[7]={},[8]={},[9]={},[10]={}}
 local HealBot_ActiveHeaders={[0]=1}
+local HealBot_AutoCloseFrame={[1]=1,[2]=1,[3]=1,[4]=1,[5]=1,[6]=1,[7]=1,[8]=1,[9]=1,[10]=1}
 local HealBot_TrackUnit={}
 local HealBot_SpecialUnit={}
 local HealBot_TrackPrivateUnit={}
@@ -115,6 +116,10 @@ end
 
 function HealBot_Panel_retHeadersCols(frame)
     return ceil(hbPanelNoRows[frame]/5)
+end
+
+function HealBot_Panel_setAutoClose(frame)
+    HealBot_AutoCloseFrame[frame]=Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame]["AUTOCLOSE"]
 end
 
 function HealBot_Panel_setCP(cpType, useCP)
@@ -1064,14 +1069,14 @@ function HealBot_Panel_SetupExtraBars(frame, preCombat)
         end
         if HealBot_Config.DisabledNow==0 then
             HealBot_Action_SetHeightWidth(maxRows[frame],maxCols[frame],maxHeaders[frame],frame)
-            if HealBot_setTestBars or (Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame]["AUTOCLOSE"]==1 or preCombat) then
+            if HealBot_setTestBars or (HealBot_AutoCloseFrame[frame]==1 or preCombat) then
                 HealBot_Action_ShowPanel(frame)
             end
             HealBot_Action_setFrameHeader(frame)
         else
             HealBot_Action_HidePanel(frame)
         end
-        if Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame]["AUTOCLOSE"]>1 then
+        if HealBot_AutoCloseFrame[frame]>1 then
             HealBot_CheckActiveFrames(frame, true)
         else
             HealBot_CheckActiveFrames(frame, false)
@@ -1139,7 +1144,7 @@ function HealBot_Panel_SetupBars(preCombat)
             if vSetupBarsFrame==0 then 
                 vSetupBarsFrame=j
             end
-            if Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][j]["AUTOCLOSE"]>1 then
+            if HealBot_AutoCloseFrame[j]>1 then
                 HealBot_CheckActiveFrames(j, true)
             else
                 HealBot_CheckActiveFrames(j, false)
@@ -1161,7 +1166,9 @@ function HealBot_Panel_SetupBars(preCombat)
             vSetupBarsOptionsFrame:Hide()
             vSetupBarsOptionsFrame:SetParent(vSetupBarsOptionsParent)
             vSetupBarsOptionsFrame.frame=vSetupBarsFrame
-            vSetupBarsOptionsFrame:SetWidth(ceil(backBarsSize[vSetupBarsFrame]["WIDTH"]*0.95))
+            local oWidth=ceil(backBarsSize[vSetupBarsFrame]["WIDTH"]*0.95)
+            if oWidth>70 then oWidth=70 end
+            vSetupBarsOptionsFrame:SetWidth(oWidth)
             vSetupBarsOptionsFrame:SetHeight(25)
         end
         if Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][vSetupBarsFrame]["BARS"]==2 or Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][vSetupBarsFrame]["BARS"]==4 then
@@ -1188,7 +1195,7 @@ function HealBot_Panel_SetupBars(preCombat)
         if hbBarsPerFrame[j]>0 then
             if HealBot_Config.DisabledNow==0 then
                 HealBot_Text_setTextLen(j)
-                if HealBot_setTestBars or (Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][j]["AUTOCLOSE"]==1 or preCombat) then
+                if HealBot_setTestBars or (HealBot_AutoCloseFrame[j]==1 or preCombat) then
                     HealBot_Action_ShowPanel(j)
                 end
                 HealBot_Action_SetHeightWidth(maxRows[j],maxCols[j],maxHeaders[j],j)
@@ -1958,9 +1965,15 @@ function HealBot_Panel_enemyTargets(preCombat)
     HeaderPos[hbCurrentFrame][i[hbCurrentFrame]+1] = HEALBOT_OPTIONS_TARGETHEALS
     vEnemyIndex=i[hbCurrentFrame]
     if Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["INCSELF"] then
-        HealBot_Panel_checkEnemyBar("playertarget", "player", preCombat, 
-                                    Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["EXISTSHOWPTAR"],
-                                    Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["INCOMBATSHOWSELF"])
+        if HEALBOT_GAME_VERSION>9 then
+            HealBot_Panel_checkEnemyBar("anyenemy", "player", preCombat, 
+                                        Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["EXISTSHOWPTAR"],
+                                        Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["INCOMBATSHOWSELF"])
+        else
+            HealBot_Panel_checkEnemyBar("playertarget", "player", preCombat, 
+                                        Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["EXISTSHOWPTAR"],
+                                        Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["INCOMBATSHOWSELF"])
+        end
     end
     if HEALBOT_GAME_VERSION>1 and Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["INCFOCUS"] then
         HealBot_Panel_checkEnemyBar("focus", "player", preCombat, 
