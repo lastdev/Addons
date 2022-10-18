@@ -82,14 +82,15 @@ Beeinflusst nur die Lehrer und Händler der Hauptberufe.
 
 L["config_fmaster_waypoint"] = "Flugmeister Wegpunkt"
 L["config_fmaster_waypoint_desc"] = "Setzt automatisch einen Wegpunkt zum Flugmeister, wenn der Ring der Übertragung betreten wird."
-L["config_fmaster_waypoint_dropdown"] = "Wähle aus"
-L["config_fmaster_waypoint_dropdown_desc"] = "Wähle aus, wie der Wegpunkt erstellt werden soll."
-L["Blizzard"] = true
-L["TomTom"] = true
-L["Both"] = "Beide"
 
 L["config_easy_waypoints"] = "Vereinfachte Wegpunkte"
 L["config_easy_waypoints_desc"] = "Aktiviert die vereinfachte Wegpunkterstellung. \nErlaubt es per Rechtsklick einen Wegpunkt zu setzen und per STRG + Rechtsklick mehr Optionen aufzurufen."
+
+L["config_waypoint_dropdown"] = "Wähle aus"
+L["config_waypoint_dropdown_desc"] = "Wähle aus, wie der Wegpunkt erstellt werden soll."
+L["Blizzard"] = true
+L["TomTom"] = true
+L["Both"] = "Beide"
 
 L["config_picons"] = "Zeige Berufssymbole für:"
 L["config_picons_vendor_desc"] = "Zeigt anstelle der normalen Händlersymbole die berufsbezogenen Symbole für die Händler an."
@@ -119,6 +120,7 @@ L["dev_config_show_prints_desc"] = "Zeigt print() Nachrichten im Chatfenster an.
 
 L["handler_context_menu_addon_name"] = "HandyNotes: Oribos"
 L["handler_context_menu_add_tomtom"] = "Zu TomTom hinzufügen"
+L["handler_context_menu_add_map_pin"] = "Kartenmarkierung setzen"
 L["handler_context_menu_hide_node"] = "Verstecke diesen Punkt"
 
 --============================================TOOLTIPS============================================--

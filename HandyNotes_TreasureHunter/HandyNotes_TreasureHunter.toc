@@ -2,7 +2,7 @@
 ## Title: HandyNotes: Warlords of Draenor (Treasure Hunter + Rares)
 ## Notes: Where the Treasure Hunter objects and rares are in Draenor
 ## Author: Kemayo
-## Version: v27
+## Version: v28
 ## DefaultState: enabled
 ## X-Category: Map
 ## X-eMail: kemayo @ gmail DOT com
@@ -10,6 +10,9 @@
 ## X-Wago-ID: WqKQrEGx
 ## SavedVariables: HandyNotes_TreasureHunterDB
 ## RequiredDeps: HandyNotes
+## OptionalDeps: !LibUIDropDownMenu
+
+lib\LibUIDropDownMenu\LibUIDropDownMenu.xml
 
 handler\handler.xml
 

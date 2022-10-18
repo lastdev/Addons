@@ -854,6 +854,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_SHOWREADYCHECK          = "Show Ready Check";
     HEALBOT_OPTIONS_SHOWCOMBATSTATE         = "Show Combat State";
     HEALBOT_OPTIONS_SHOWHOSTILE             = "Show Hostile";
+    HEALBOT_OPTIONS_SHOWLEADER              = "Show Leader";
     HEALBOT_OPTIONS_SHOWRESTING             = "Show Resting (Player only)";
     HEALBOT_OPTIONS_SHOWCLASSICON           = "Show Class";
     HEALBOT_OPTIONS_SUBSORTSELFFIRST        = "Sub Sort - Self First"
@@ -871,6 +872,8 @@ function HealBot_Lang_enALL()
     HEALBOT_CHAT_SELFPETSOFF                = "Self Pet switched off"
     HEALBOT_CHAT_PLAYERROLESON              = "Allow player roles switched on"
     HEALBOT_CHAT_PLAYERROLESOFF             = "Allow player roles switched off"
+    HEALBOT_ALLOWTALENTQUERYON              = "Allow querying player talents On"
+    HEALBOT_ALLOWTALENTQUERYOFF             = "Allow querying player talents Off"
     HEALBOT_WORD_PRIORITY                   = "Priority"
     HEALBOT_VISIBLE_RANGE                   = "Within 100 yards"
     HEALBOT_SPELL_RANGE                     = "Within spell range"
@@ -883,6 +886,7 @@ function HealBot_Lang_enALL()
     HEALBOT_WORD_HBFOCUS                    = "HealBot Focus"
     HEALBOT_WORD_OUTSIDE                    = "Outside"
     HEALBOT_WORD_ALLZONE                    = "All zones"
+    HEALBOT_WORD_ZONE                       = "Zone"
     HEALBOT_OPTIONS_TAB_ALERT               = "Alert"
     HEALBOT_OPTIONS_TAB_SORT                = "Sort"
     HEALBOT_OPTIONS_TAB_HIDE                = "Hide"
@@ -1226,6 +1230,7 @@ function HealBot_Lang_enALL()
     HEALBOT_PLUGIN_CPMACRO                  = "Macro name: "
     HEALBOT_PLUGIN_AGGRO2THRESHOLD          = "Aggro level 2 threshold"
     HEALBOT_PLUGIN_AGGRO3THRESHOLD          = "Aggro level 3 threshold"
+    HEALBOT_PLUGIN_INHEALHOTTIME            = "Incoming heals HoT time"
     HEALBOT_PLUGIN_AUTOTIMEDDURATION        = "Custom debuff - auto All Timed duration less than"
     HEALBOT_PLUGIN_ENABLEDALLBUFFS          = "Enable all custom buffs"
     HEALBOT_PLUGIN_DISABLEALLBUFFS          = "Disable all custom buffs"

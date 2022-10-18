@@ -15,14 +15,14 @@ function HealBot_MountsPets_Dismount()
 end
 
 function HealBot_MountsPets_FavMount()
-    if not InCombatLockdown() then
+    if not HealBot_Data["UILOCK"] then
         if IsMounted() then
             Dismount()
         elseif HEALBOT_GAME_VERSION>2 and CanExitVehicle() then    
             VehicleExit()
         elseif HEALBOT_GAME_VERSION>3 then 
             C_MountJournal.SummonByID(0)
-        elseif IsFlyableArea() and HealBot_Config.FavMount and HealBot_MountIndex[HealBot_Config.FavMount] then
+        elseif HealBot_mountData["incFlying"] and HealBot_Config.FavMount and HealBot_MountIndex[HealBot_Config.FavMount] then
             CallCompanion("MOUNT", HealBot_MountIndex[HealBot_Config.FavMount])
         elseif HealBot_Config.FavGroundMount and HealBot_MountIndex[HealBot_Config.FavGroundMount] then
             CallCompanion("MOUNT", HealBot_MountIndex[HealBot_Config.FavGroundMount])
@@ -31,14 +31,14 @@ function HealBot_MountsPets_FavMount()
 end
 
 function HealBot_MountsPets_RandomPet(isFav)
-    if not InCombatLockdown() then
+    if not HealBot_Data["UILOCK"] then
         C_PetJournal.SummonRandomPet(isFav)
     end
 end
 
 function HealBot_MountsPets_Mount(mount)
     if HealBot_MountIndex[mount] then 
-        if not InCombatLockdown() then
+        if not HealBot_Data["UILOCK"] then
             if HEALBOT_GAME_VERSION>3 then
                 C_MountJournal.SummonByID(HealBot_MountIndex[mount]) 
             else
@@ -53,7 +53,7 @@ end
 
 local vToggleMountIndex=0
 function HealBot_MountsPets_ToggelMount(mountType)
-    if not InCombatLockdown() then
+    if not HealBot_Data["UILOCK"] then
         if IsMounted() then
             Dismount()
         elseif HEALBOT_GAME_VERSION>2 and CanExitVehicle() then    
@@ -61,7 +61,7 @@ function HealBot_MountsPets_ToggelMount(mountType)
         elseif HealBot_mountData["ValidUse"] and IsOutdoors() then
             local mount = nil
             vToggleMountIndex=0
-            if mountType=="all" and not IsSwimming() and IsFlyableArea() and #HealBot_FMount>0 then
+            if mountType=="all" and not IsSwimming() and HealBot_mountData["incFlying"] and #HealBot_FMount>0 then
                 for x=1,20 do
                     vToggleMountIndex = math.random(1, #HealBot_FMount);
                     mount = HealBot_FMount[vToggleMountIndex];
@@ -122,8 +122,53 @@ function HealBot_MountsPets_InitUse()
     end
 end
 
+function HealBot_MountsPets_ClassicDalaranCheck()
+    local mapPos = C_Map.GetPlayerMapPosition(125, "player")
+    local x, y = mapPos:GetXY()
+    if x>0.6 and y<0.5 then
+        HealBot_mountData["incFlying"]=true
+    else
+        HealBot_mountData["incFlying"]=false
+    end
+    --HealBot_AddDebug("Zone x="..x.." y="..y,"Mount",true)
+end
+
+function HealBot_MountsPets_ZoneChange()
+    if IsFlyableArea() then
+        if HEALBOT_GAME_VERSION>3 then
+            HealBot_mountData["incFlying"]=true
+            --HealBot_AddDebug("Zone Is Flyable","Mount",true)
+        else    
+            local mapAreaID = C_Map.GetBestMapForUnit("player") or 0
+            if mapAreaID>112 and mapAreaID<124 and not IsSpellKnown(54197) then
+                HealBot_mountData["incFlying"]=false
+                --HealBot_AddDebug("In Northrend no Cold Weather Flying")
+            elseif mapAreaID>99 and mapAreaID<112 and not IsSpellKnown(34092) then
+                HealBot_mountData["incFlying"]=false
+                --HealBot_AddDebug("In Outlands no Expert Flying")
+            elseif mapAreaID>0 then
+                if mapAreaID==125 then
+                    HealBot_Timers_Set("LAST","MountsPetsDalaran",1)
+                else
+                    HealBot_mountData["incFlying"]=true
+                end
+            end
+            --if HealBot_mountData["incFlying"] then
+            --    HealBot_AddDebug("Zone mapAreaID="..mapAreaID.." Is Flyable","Mount",true)
+            --else
+            --    HealBot_AddDebug("Zone mapAreaID="..mapAreaID.." Not Flyable","Mount",true)
+            --end
+        end
+    else
+        HealBot_mountData["incFlying"]=false
+        --HealBot_AddDebug("Zone Not Flyable","Mount",true)
+    end
+end
+
 function HealBot_MountsPets_InitMount()
     --SetMapToCurrentZone()
+    local HealBot_SlowMount={}
+    local HealBot_SlowFMount={}
     for z,_ in pairs(HealBot_GMount) do
         HealBot_GMount[z]=nil;
     end
@@ -157,7 +202,7 @@ function HealBot_MountsPets_InitMount()
     local mount, sID, isUsable, faction, isCollected, mountType
     if HEALBOT_GAME_VERSION>3 then
         x = C_MountJournal.GetNumMounts()
-    else
+    else    
         x = GetNumCompanions("MOUNT")
         isUsable=true
         faction=false
@@ -179,22 +224,33 @@ function HealBot_MountsPets_InitMount()
 
         if isUsable and isCollected and not HealBot_Globals.excludeMount[mount] then
             if HEALBOT_GAME_VERSION<4 then
+                --HealBot_AddDebug("mountType="..(mountType or "nil"),"Mount",true)
                 if not mountType then
-                    if sID<30000 or sID==34896 or sID==43688 then
-                        table.insert(HealBot_GMount, mount);
+                    if sID<25900 or sID==34896 or sID==43688 or sID==348459 then
+                        if sID<10000 then
+                            table.insert(HealBot_SlowMount, mount);
+                            HealBot_AddDebug("Slow Ground Mount id="..sID.." Name="..mount,"Mount",true)
+                        else
+                            table.insert(HealBot_GMount, mount);
+                            HealBot_Config.FavGroundMount=HealBot_Config.FavGroundMount or mount
+                            HealBot_AddDebug("Fast Ground Mount id="..sID.." Name="..mount,"Mount",true)
+                        end
                         HealBot_MountIndex[mount]=z
-                        HealBot_Config.FavGroundMount=HealBot_Config.FavGroundMount or mount
-                    elseif IsFlyableArea() then
-                        table.insert(HealBot_FMount, mount);
+                    elseif sID>26100 then
+                        if sID>32200 and sID<32250 then
+                            table.insert(HealBot_SlowFMount, mount);
+                            HealBot_AddDebug("Slow Flying Mount id="..sID.." Name="..mount,"Mount",true)
+                        else
+                            table.insert(HealBot_FMount, mount);
+                            HealBot_Config.FavMount=HealBot_Config.FavMount or mount
+                            HealBot_AddDebug("Fast  Flying Mount id="..sID.." Name="..mount,"Mount",true)
+                        end
                         HealBot_MountIndex[mount]=z
-                        HealBot_Config.FavMount=HealBot_Config.FavMount or mount
                     end
                 elseif (mountType==15 or mountType==31) then
-                    if IsFlyableArea() then
-                        table.insert(HealBot_FMount, mount);
-                        HealBot_MountIndex[mount]=z
-                        HealBot_Config.FavMount=HealBot_Config.FavMount or mount
-                    end
+                    table.insert(HealBot_FMount, mount);
+                    HealBot_MountIndex[mount]=z
+                    HealBot_Config.FavMount=HealBot_Config.FavMount or mount
                 elseif (mountType==12) then
                     table.insert(HealBot_SMount, mount);
                     HealBot_MountIndex[mount]=z
@@ -206,10 +262,8 @@ function HealBot_MountsPets_InitMount()
                 --HealBot_AddDebug("mount "..mount.."="..sID.." mountType="..(mountType or "nil"),"Wheel",true)
             else
                 if (mountType==248 or mountType==247 or mountType==242) then
-                    if IsFlyableArea() then
-                        table.insert(HealBot_FMount, mount);
-                        HealBot_MountIndex[mount]=z
-                    end
+                    table.insert(HealBot_FMount, mount);
+                    HealBot_MountIndex[mount]=z
                 elseif (mountType==232 or mountType==254) then
                     table.insert(HealBot_SMount, mount);
                     HealBot_MountIndex[mount]=z
@@ -221,6 +275,16 @@ function HealBot_MountsPets_InitMount()
         end
     end   
     
+    if #HealBot_GMount==0 and #HealBot_SlowMount>0 then
+        for z,_ in pairs(HealBot_SlowMount) do
+            HealBot_GMount[z]=HealBot_SlowMount[z]
+        end
+    end
+    if #HealBot_FMount==0 and #HealBot_SlowFMount>0 then
+        for z,_ in pairs(HealBot_SlowFMount) do
+            HealBot_FMount[z]=HealBot_SlowFMount[z]
+        end
+    end
     if #HealBot_FMount<4 then
         HealBot_mountData["PrevFlying#"]=0
     else
@@ -231,19 +295,13 @@ function HealBot_MountsPets_InitMount()
     else
         HealBot_mountData["PrevGround#"]=ceil(#HealBot_GMount/3) 
     end
-
+    
     if #HealBot_GMount==0 and #HealBot_FMount==0 then
         HealBot_mountData["ValidUse"]=false
     else
         HealBot_mountData["ValidUse"]=true
     end
-    HealBot_AddDebug("Ground Mounts="..#HealBot_GMount,"Wheel",true)
-    HealBot_AddDebug("Flying Mounts="..#HealBot_FMount,"Wheel",true)
-    if IsFlyableArea() then
-        HealBot_AddDebug("IncFlying = TRUE","Wheel",true)
-    else
-        HealBot_AddDebug("IncFlying = FALSE","Wheel",true)
-    end
+    HealBot_Timers_Set("LAST","MountsPetsZone")
 end
 
 function HealBot_MountsPets_FavClassicMount()
@@ -253,7 +311,7 @@ function HealBot_MountsPets_FavClassicMount()
         local z = GetNumCompanions("MOUNT")
         local mount=false
         for i=1,z do
-            local _, creatureName, sID, icon, active, mountType = GetCompanionInfo("MOUNT", i)
+            local _, creatureName, _, _, active = GetCompanionInfo("MOUNT", i)
             if active then
                 mount=creatureName
                 break
@@ -270,8 +328,28 @@ function HealBot_MountsPets_FavClassicMount()
             end
         end
         if mount then
+            for z,_ in pairs(HealBot_PrevFMounts) do
+                if HealBot_PrevFMounts[z]==mount then
+                    HealBot_Config.FavMount=mount
+                    HealBot_AddChat(HEALBOT_CHAT_ADDONID..mount.." set as Favourite flying mount")
+                    mount=nil
+                    break
+                end
+            end
+        end
+        if mount then
             for z,_ in pairs(HealBot_GMount) do
                 if HealBot_GMount[z]==mount then
+                    HealBot_Config.FavGroundMount=mount
+                    HealBot_AddChat(HEALBOT_CHAT_ADDONID..mount.." set as Favourite ground mount")
+                    mount=nil
+                    break
+                end
+            end
+        end
+        if mount then
+            for z,_ in pairs(HealBot_PrevGMounts) do
+                if HealBot_PrevGMounts[z]==mount then
                     HealBot_Config.FavGroundMount=mount
                     HealBot_AddChat(HEALBOT_CHAT_ADDONID..mount.." set as Favourite ground mount")
                     break
@@ -282,41 +360,45 @@ function HealBot_MountsPets_FavClassicMount()
 end
 
 function HealBot_MountsPets_DislikeMount(action)
-    local z = 0
-    local mount=nil
-    if HEALBOT_GAME_VERSION>3 then
-        z = C_MountJournal.GetNumMounts()
+    if not IsMounted() then
+        HealBot_AddChat(HEALBOT_CHAT_ADDONID.."ERROR: Not Mounted\nMount first before toggling exclude mount")
     else
-        z = GetNumCompanions("MOUNT")
-    end
-    for i=1,z do
+        local z = 0
+        local mount,creatureName,active=nil,nil,nil
         if HEALBOT_GAME_VERSION>3 then
-            local creatureName, sID, _, active, isUsable, _, _, _, _, _, isCollected = C_MountJournal.GetMountInfoByID(i)
+            z = C_MountJournal.GetNumMounts()
         else
-            local _, creatureName, sID, _, active, mountType = GetCompanionInfo("mount", z)
+            z = GetNumCompanions("MOUNT")
         end
-        if active then
-            mount=creatureName
-            break
-        end
-    end
-    if mount then
-        if action=="Exclude" then
-            if HealBot_Globals.excludeMount[mount] then
-                HealBot_AddChat(HEALBOT_OPTION_EXCLUDEMOUNT_OFF.." "..mount)
-                HealBot_Globals.excludeMount[mount]=nil
+        for i=1,z do
+            if HEALBOT_GAME_VERSION>3 then
+                creatureName, _, _, active = C_MountJournal.GetMountInfoByID(i)
             else
-                HealBot_AddChat(HEALBOT_OPTION_EXCLUDEMOUNT_ON.." "..mount)
-                HealBot_Globals.excludeMount[mount]=true
+                _, creatureName, _, _, active = GetCompanionInfo("MOUNT", i)
             end
-            HealBot_Timers_Set("LAST","MountsPetsUse")
-        else
-            if HealBot_Globals.dislikeMount[mount] then
-                HealBot_AddChat(HEALBOT_OPTION_DISLIKEMOUNT_OFF.." "..mount)
-                HealBot_Globals.dislikeMount[mount]=nil
+            if active then
+                mount=creatureName
+                break
+            end
+        end
+        if mount then
+            if action=="Exclude" then
+                if HealBot_Globals.excludeMount[mount] then
+                    HealBot_AddChat(HEALBOT_OPTION_EXCLUDEMOUNT_OFF.." "..mount)
+                    HealBot_Globals.excludeMount[mount]=nil
+                else
+                    HealBot_AddChat(HEALBOT_OPTION_EXCLUDEMOUNT_ON.." "..mount)
+                    HealBot_Globals.excludeMount[mount]=true
+                end
+                HealBot_Timers_Set("LAST","MountsPetsUse")
             else
-                HealBot_AddChat(HEALBOT_OPTION_DISLIKEMOUNT_ON.." "..mount)
-                HealBot_Globals.dislikeMount[mount]=275
+                if HealBot_Globals.dislikeMount[mount] then
+                    HealBot_AddChat(HEALBOT_OPTION_DISLIKEMOUNT_OFF.." "..mount)
+                    HealBot_Globals.dislikeMount[mount]=nil
+                else
+                    HealBot_AddChat(HEALBOT_OPTION_DISLIKEMOUNT_ON.." "..mount)
+                    HealBot_Globals.dislikeMount[mount]=275
+                end
             end
         end
     end

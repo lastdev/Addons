@@ -239,6 +239,7 @@ HealBot_Options_luVars["cSkin"]=""
 HealBot_Options_luVars["HeaderSwitchNumColsHdrOn"]=0
 HealBot_Options_luVars["HeaderSwitchNumColsHdrOff"]=0
 HealBot_Options_luVars["TestBarsOn"]=false
+HealBot_Options_luVars["mapName"]=""
 
 function HealBot_Options_setLuVars(vName, vValue)
     HealBot_Options_luVars[vName]=vValue
@@ -365,19 +366,6 @@ function HealBot_Options_cacheNames(list)
     end
 end
 
-function HealBot_Options_ItemsInBagInitScan(bag)
-    local itemId,itemName=0,""
-    for slot = 1,GetContainerNumSlots(bag) do
-        itemId=GetContainerItemID(bag,slot) or 0
-        if itemId>0 then
-            itemName=GetItemInfo(itemId)
-        end
-    end
-    if bag<NUM_BAG_SLOTS then
-        C_Timer.After(0.01, function() HealBot_Options_ItemsInBagInitScan(bag+1) end)
-    end
-end
-
 function HealBot_Options_setLists()
     HealBot_Options_BuffTxt_List = {
         HEALBOT_WORDS_NONE,
@@ -395,6 +383,7 @@ function HealBot_Options_setLists()
         HEALBOT_FOCUS,
         HEALBOT_OPTIONS_MYFRIEND,
         HEALBOT_OPTIONS_SINGLETANK,
+        HEALBOT_WORD_SOLO,
     }
     
     if HEALBOT_GAME_VERSION>3 then 
@@ -1438,6 +1427,7 @@ function HealBot_Options_InitBuffSpellsClassList(tClass)
             HEALBOT_ARCANE_POWER,
             HEALBOT_SLOW_FALL,
             HEALBOT_FOCUS_MAGIC,
+            HBC_FOCUS_MAGIC,
             HEALBOT_ICE_WARD,
             HEALBOT_ICE_BARRIER,
             HBC_DAMPEN_MAGIC,
@@ -1489,6 +1479,7 @@ function HealBot_Options_InitBuffSpellsClassList(tClass)
             HEALBOT_SEAL_OF_COMMAND,
             HBC_SEAL_OF_COMMAND,
             HEALBOT_SEAL_OF_TRUTH,
+            HBC_SEAL_OF_CORRUPTION,
             HBC_SEAL_OF_THE_CRUSADER,
             HBC_SEAL_WISDOM,
             HEALBOT_SACRED_SHIELD,
@@ -3931,7 +3922,6 @@ function HealBot_Options_TipMaxButtons_OnValueChanged(self)
         HealBot_Globals.Tooltip_MaxButtons = val;
         local g=_G[self:GetName().."Text"]
         g:SetText(self.text .. ": " .. val);
-        if HealBot_Data["TIPUSE"] then HealBot_Tooltip_setAllMaxButtons() end
     end
 end
 
@@ -5432,6 +5422,33 @@ function HealBot_Options_SkinDefault_OnClick(self, gType)
     end
 end
 
+function HealBot_Options_SkinDefaultZone_SetText()
+    HealBot_Options_SetText(HealBot_Options_SkinDefaultZone,HEALBOT_WORD_ZONE..": "..HealBot_Options_luVars["mapName"])
+    if HealBot_Config.SkinZoneEnabled[HealBot_Options_luVars["mapName"]] and HealBot_Config.SkinZoneEnabled[HealBot_Options_luVars["mapName"]]==Healbot_Config_Skins.Current_Skin then
+        HealBot_Options_SkinDefaultZone:SetChecked(true)
+    else
+        HealBot_Options_SkinDefaultZone:SetChecked(false)
+    end
+end
+
+function HealBot_Options_SkinDefaultZone_OnClick(self)
+    if HealBot_Config_Buffs.PalaBlessingsAsOne~=self:GetChecked() then
+        HealBot_Config_Buffs.PalaBlessingsAsOne = self:GetChecked()
+        HealBot_Timers_Set("AURA","BuffReset")
+    end
+    if self:GetChecked() then
+        if not HealBot_Config.SkinZoneEnabled[HealBot_Options_luVars["mapName"]] or HealBot_Config.SkinZoneEnabled[HealBot_Options_luVars["mapName"]]~=Healbot_Config_Skins.Current_Skin then
+            HealBot_Config.SkinZoneEnabled[HealBot_Options_luVars["mapName"]]=Healbot_Config_Skins.Current_Skin
+            HealBot_Options_SkinDefaultZone_SetText()
+            HealBot_Timers_Set("SKINS","PartyUpdateCheckSkin")
+        end
+    elseif HealBot_Config.SkinZoneEnabled[HealBot_Options_luVars["mapName"]] and HealBot_Config.SkinZoneEnabled[HealBot_Options_luVars["mapName"]]==Healbot_Config_Skins.Current_Skin then
+        HealBot_Config.SkinZoneEnabled[HealBot_Options_luVars["mapName"]]=nil
+        HealBot_Options_SkinDefaultZone_SetText()
+        HealBot_Timers_Set("SKINS","PartyUpdateCheckSkin")
+    end
+end
+
 function HealBot_Options_ManaIndicatorInCombat_OnClick(self)
     Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["LOWMANACOMBAT"] = self:GetChecked()
 end
@@ -5647,6 +5664,13 @@ end
 function HealBot_Options_TargetOnlyFriend_OnClick(self)
     if Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["TONLYFRIEND"]~=self:GetChecked() then
         Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["TONLYFRIEND"] = self:GetChecked()
+        HealBot_Timers_Set("SKINS","QuickFramesChanged")
+    end
+end
+
+function HealBot_Options_VehicleInCombat_OnClick(self)
+    if Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["VEHICLEINCOMBAT"]~=self:GetChecked() then
+        Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["VEHICLEINCOMBAT"] = self:GetChecked()
         HealBot_Timers_Set("SKINS","QuickFramesChanged")
     end
 end
@@ -6279,6 +6303,15 @@ function HealBot_Options_ShowResting_OnClick(self)
     end
 end
 
+function HealBot_Options_ShowLeader_OnClick(self)
+    if Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][HealBot_Options_luVars["FramesSelFrame"]]["SHOWRANK"]~=self:GetChecked() then
+        Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][HealBot_Options_luVars["FramesSelFrame"]]["SHOWRANK"] = self:GetChecked()
+        if HealBot_Options_luVars["TestBarsOn"] then 
+            HealBot_Timers_Set("SKINS","IconsFramesChanged") 
+        end
+    end
+end
+
 function HealBot_Options_ShowClassIcon_OnClick(self)
     if Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][HealBot_Options_luVars["FramesSelFrame"]]["SHOWCLASS"]~=self:GetChecked() then
         Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][HealBot_Options_luVars["FramesSelFrame"]]["SHOWCLASS"] = self:GetChecked()
@@ -6673,41 +6706,31 @@ end
 
 function HealBot_Options_TargetInCombat_DropDown()
     local info = UIDropDownMenu_CreateInfo()
-    if HealBot_Options_luVars["FramesSelFrame"]~=8 then
-        info.text = " "
+    for j=1, getn(HealBot_Options_TargetFocusInCombat_List), 1 do
+        info.text = HealBot_Options_TargetFocusInCombat_List[j];
+        info.func = function(self)
+                        Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["TARGETINCOMBAT"] = self:GetID()
+                        UIDropDownMenu_SetText(HealBot_Options_TargetInCombat,HealBot_Options_TargetFocusInCombat_List[Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["TARGETINCOMBAT"]]) 
+                        HealBot_Timers_Set("SKINS","QuickFramesChanged")
+                    end
+        info.checked = false;
+        if Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["TARGETINCOMBAT"]==j then info.checked = true end
         UIDropDownMenu_AddButton(info);
-    else
-        for j=1, getn(HealBot_Options_TargetFocusInCombat_List), 1 do
-            info.text = HealBot_Options_TargetFocusInCombat_List[j];
-            info.func = function(self)
-                            Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["TARGETINCOMBAT"] = self:GetID()
-                            UIDropDownMenu_SetText(HealBot_Options_TargetInCombat,HealBot_Options_TargetFocusInCombat_List[Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["TARGETINCOMBAT"]]) 
-                            HealBot_Timers_Set("SKINS","QuickFramesChanged")
-                        end
-            info.checked = false;
-            if Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["TARGETINCOMBAT"]==j then info.checked = true end
-            UIDropDownMenu_AddButton(info);
-        end
     end
 end
 
 function HealBot_Options_FocusInCombat_DropDown()
     local info = UIDropDownMenu_CreateInfo()
-    if HealBot_Options_luVars["FramesSelFrame"]~=9 then
-        info.text = " "
+    for j=1, getn(HealBot_Options_TargetFocusInCombat_List), 1 do
+        info.text = HealBot_Options_TargetFocusInCombat_List[j];
+        info.func = function(self)
+                        Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["FOCUSINCOMBAT"] = self:GetID()
+                        UIDropDownMenu_SetText(HealBot_Options_FocusInCombat,HealBot_Options_TargetFocusInCombat_List[Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["FOCUSINCOMBAT"]]) 
+                        HealBot_Timers_Set("SKINS","QuickFramesChanged")
+                    end
+        info.checked = false;
+        if Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["FOCUSINCOMBAT"]==j then info.checked = true end
         UIDropDownMenu_AddButton(info);
-    else
-        for j=1, getn(HealBot_Options_TargetFocusInCombat_List), 1 do
-            info.text = HealBot_Options_TargetFocusInCombat_List[j];
-            info.func = function(self)
-                            Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["FOCUSINCOMBAT"] = self:GetID()
-                            UIDropDownMenu_SetText(HealBot_Options_FocusInCombat,HealBot_Options_TargetFocusInCombat_List[Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["FOCUSINCOMBAT"]]) 
-                            HealBot_Timers_Set("SKINS","QuickFramesChanged")
-                        end
-            info.checked = false;
-            if Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["FOCUSINCOMBAT"]==j then info.checked = true end
-            UIDropDownMenu_AddButton(info);
-        end
     end
 end
 
@@ -8216,9 +8239,7 @@ function HealBot_Options_hbProfile_DropDown()
 end
 
 function HealBot_Options_hbProfile_OnClick(self)
-    if HealBot_Config.Profile>1 then
-        HealBot_Options_hbProfile_setClass()
-    end
+    HealBot_Options_LoadProfile()
 end
 
 function HealBot_Options_ProfileSpellCheck(sName,cType)
@@ -8262,53 +8283,55 @@ function HealBot_Options_hbProfile_setGlobalSpells(combo, globalcombo, maxButton
     end
 end
 
-function HealBot_Options_hbProfile_setClass()
-    if not HealBot_Data["PCLASSTRIM"] then HealBot_SetPlayerData() end
-    local saveSpells=false
-    if HealBot_Data["PCLASSTRIM"] then
-        if HealBot_Class_Spells[HealBot_Data["PCLASSTRIM"]] then
-            HealBot_Config_Spells=HealBot_Options_copyTable(HealBot_Class_Spells[HealBot_Data["PCLASSTRIM"]])
-            table.foreach(HealBot_Config_SpellsDefaults, function (key,val)
-                if HealBot_Config_Spells[key]==nil then
-                    HealBot_Config_Spells[key] = val;
-                end
-            end);
-        else
-            saveSpells=true
-        end
-        if HealBot_Class_Buffs[HealBot_Data["PCLASSTRIM"]] then
-            HealBot_Config_Buffs=HealBot_Options_copyTable(HealBot_Class_Buffs[HealBot_Data["PCLASSTRIM"]])
-            table.foreach(HealBot_Config_BuffsDefaults, function (key,val)
-                if HealBot_Config_Buffs[key]==nil then
-                    HealBot_Config_Buffs[key] = val;
-                end
-            end);        
-        else
-            HealBot_Options_hbProfile_saveClass("BUFFS")
-        end
-        if HealBot_Class_Cures[HealBot_Data["PCLASSTRIM"]] then
-            HealBot_Config_Cures=HealBot_Options_copyTable(HealBot_Class_Cures[HealBot_Data["PCLASSTRIM"]])
-            table.foreach(HealBot_Config_CuresDefaults, function (key,val)
-                if HealBot_Config_Cures[key]==nil then
-                    HealBot_Config_Cures[key] = val;
-                end
-            end);
-        else
-            HealBot_Options_hbProfile_saveClass("CURES")
-        end
-        if HealBot_Config.Profile==3 and HealBot_Class_Spells["GLOBAL"] then
-            HealBot_Options_hbProfile_setGlobalSpells(HealBot_Config_Spells.EnabledKeyCombo, HealBot_Class_Spells["GLOBAL"].EnabledKeyCombo, 20, "ENABLED")
-            HealBot_Options_hbProfile_setGlobalSpells(HealBot_Config_Spells.EnemyKeyCombo, HealBot_Class_Spells["GLOBAL"].EnemyKeyCombo, 20, "ENEMY")
-            HealBot_Options_hbProfile_setGlobalSpells(HealBot_Config_Spells.EmergKeyCombo, HealBot_Class_Spells["GLOBAL"].EmergKeyCombo, 5, "EMERG")
-            for x=1,20 do 
-                HealBot_Config_Spells.Binds[x]=HealBot_Class_Spells["GLOBAL"].Binds[x]
+function HealBot_Options_LoadProfile()
+    if HealBot_Config.Profile>1 then
+        if not HealBot_Data["PCLASSTRIM"] then HealBot_SetPlayerData() end
+        local saveSpells=false
+        if HealBot_Data["PCLASSTRIM"] then
+            if HealBot_Class_Spells[HealBot_Data["PCLASSTRIM"]] then
+                HealBot_Config_Spells=HealBot_Options_copyTable(HealBot_Class_Spells[HealBot_Data["PCLASSTRIM"]])
+                table.foreach(HealBot_Config_SpellsDefaults, function (key,val)
+                    if HealBot_Config_Spells[key]==nil then
+                        HealBot_Config_Spells[key] = val;
+                    end
+                end);
+            else
+                saveSpells=true
             end
+            if HealBot_Class_Buffs[HealBot_Data["PCLASSTRIM"]] then
+                HealBot_Config_Buffs=HealBot_Options_copyTable(HealBot_Class_Buffs[HealBot_Data["PCLASSTRIM"]])
+                table.foreach(HealBot_Config_BuffsDefaults, function (key,val)
+                    if HealBot_Config_Buffs[key]==nil then
+                        HealBot_Config_Buffs[key] = val;
+                    end
+                end);        
+            else
+                HealBot_Options_SaveProfile("BUFFS")
+            end
+            if HealBot_Class_Cures[HealBot_Data["PCLASSTRIM"]] then
+                HealBot_Config_Cures=HealBot_Options_copyTable(HealBot_Class_Cures[HealBot_Data["PCLASSTRIM"]])
+                table.foreach(HealBot_Config_CuresDefaults, function (key,val)
+                    if HealBot_Config_Cures[key]==nil then
+                        HealBot_Config_Cures[key] = val;
+                    end
+                end);
+            else
+                HealBot_Options_SaveProfile("CURES")
+            end
+            if HealBot_Config.Profile==3 and HealBot_Class_Spells["GLOBAL"] then
+                HealBot_Options_hbProfile_setGlobalSpells(HealBot_Config_Spells.EnabledKeyCombo, HealBot_Class_Spells["GLOBAL"].EnabledKeyCombo, 20, "ENABLED")
+                HealBot_Options_hbProfile_setGlobalSpells(HealBot_Config_Spells.EnemyKeyCombo, HealBot_Class_Spells["GLOBAL"].EnemyKeyCombo, 20, "ENEMY")
+                HealBot_Options_hbProfile_setGlobalSpells(HealBot_Config_Spells.EmergKeyCombo, HealBot_Class_Spells["GLOBAL"].EmergKeyCombo, 5, "EMERG")
+                for x=1,20 do 
+                    HealBot_Config_Spells.Binds[x]=HealBot_Class_Spells["GLOBAL"].Binds[x]
+                end
+            end
+            if saveSpells then HealBot_Options_SaveProfile("SPELLS") end
+            HealBot_Timers_InitExtraOptions()
+            HealBot_Timers_Set("INIT","PrepSetAllAttribs")
+        else
+            HealBot_Timers_Set("PLAYER","LoadProfile",1)
         end
-        if saveSpells then HealBot_Options_hbProfile_saveClass("SPELLS") end
-        HealBot_Timers_InitExtraOptions()
-        HealBot_Timers_Set("INIT","PrepSetAllAttribs")
-    else
-        HealBot_Timers_Set("PLAYER","SetProfile",1)
     end
 end
 
@@ -8338,31 +8361,33 @@ function HealBot_Options_hbProfile_saveGlobalCombo(combo, globalcombo, maxButton
     end
 end
 
-function HealBot_Options_hbProfile_saveClass(cType)
-    if not HealBot_Data["PCLASSTRIM"] or not HealBot_Data["PLEVEL"] then HealBot_SetPlayerData() end
-    if not HealBot_Data["PCLASSTRIM"] or not HealBot_Data["PLEVEL"] then return end
-    local sType=cType or "ALL"
-    if sType=="SPELLS" or sType=="ALL" then 
-        HealBot_Class_Spells[HealBot_Data["PCLASSTRIM"]]=HealBot_Options_copyTable(HealBot_Config_Spells) 
-        if HealBot_Config.Profile==3 then 
-            if not HealBot_Class_Spells["GLOBAL"] then 
-                HealBot_Class_Spells["GLOBAL"]={} 
-                HealBot_Class_Spells["GLOBAL"].EnabledKeyCombo={}
-                HealBot_Class_Spells["GLOBAL"].EnemyKeyCombo={}
-                HealBot_Class_Spells["GLOBAL"].EmergKeyCombo={}
-                HealBot_Class_Spells["GLOBAL"].Binds={}
-            end
-            HealBot_Options_hbProfile_saveGlobalCombo(HealBot_Config_Spells.EnabledKeyCombo, HealBot_Class_Spells["GLOBAL"].EnabledKeyCombo, 20)
-            HealBot_Options_hbProfile_saveGlobalCombo(HealBot_Config_Spells.EnemyKeyCombo, HealBot_Class_Spells["GLOBAL"].EnemyKeyCombo, 20)
-            HealBot_Options_hbProfile_saveGlobalCombo(HealBot_Config_Spells.EmergKeyCombo, HealBot_Class_Spells["GLOBAL"].EmergKeyCombo, 5)
-            for x=1,20 do 
-                HealBot_Class_Spells["GLOBAL"].Binds[x]=HealBot_Config_Spells.Binds[x]
-            end
+function HealBot_Options_SaveProfile(cType)
+    if HealBot_Config.Profile>1 then
+        if not HealBot_Data["PCLASSTRIM"] or not HealBot_Data["PLEVEL"] then HealBot_SetPlayerData() end
+        if not HealBot_Data["PCLASSTRIM"] or not HealBot_Data["PLEVEL"] then return end
+        local sType=cType or "ALL"
+        if sType=="SPELLS" or sType=="ALL" then 
+            HealBot_Class_Spells[HealBot_Data["PCLASSTRIM"]]=HealBot_Options_copyTable(HealBot_Config_Spells) 
+            if HealBot_Config.Profile==3 then 
+                if not HealBot_Class_Spells["GLOBAL"] then 
+                    HealBot_Class_Spells["GLOBAL"]={} 
+                    HealBot_Class_Spells["GLOBAL"].EnabledKeyCombo={}
+                    HealBot_Class_Spells["GLOBAL"].EnemyKeyCombo={}
+                    HealBot_Class_Spells["GLOBAL"].EmergKeyCombo={}
+                    HealBot_Class_Spells["GLOBAL"].Binds={}
+                end
+                HealBot_Options_hbProfile_saveGlobalCombo(HealBot_Config_Spells.EnabledKeyCombo, HealBot_Class_Spells["GLOBAL"].EnabledKeyCombo, 20)
+                HealBot_Options_hbProfile_saveGlobalCombo(HealBot_Config_Spells.EnemyKeyCombo, HealBot_Class_Spells["GLOBAL"].EnemyKeyCombo, 20)
+                HealBot_Options_hbProfile_saveGlobalCombo(HealBot_Config_Spells.EmergKeyCombo, HealBot_Class_Spells["GLOBAL"].EmergKeyCombo, 5)
+                for x=1,20 do 
+                    HealBot_Class_Spells["GLOBAL"].Binds[x]=HealBot_Config_Spells.Binds[x]
+                end
 
+            end
         end
+        if sType=="BUFFS" or sType=="ALL" then HealBot_Class_Buffs[HealBot_Data["PCLASSTRIM"]]=HealBot_Options_copyTable(HealBot_Config_Buffs) end
+        if sType=="CURES" or sType=="ALL" then HealBot_Class_Cures[HealBot_Data["PCLASSTRIM"]]=HealBot_Options_copyTable(HealBot_Config_Cures) end
     end
-    if sType=="BUFFS" or sType=="ALL" then HealBot_Class_Buffs[HealBot_Data["PCLASSTRIM"]]=HealBot_Options_copyTable(HealBot_Config_Buffs) end
-    if sType=="CURES" or sType=="ALL" then HealBot_Class_Cures[HealBot_Data["PCLASSTRIM"]]=HealBot_Options_copyTable(HealBot_Config_Cures) end
 end
 
 --------------------------------------------------------------------------------
@@ -9077,6 +9102,7 @@ function HealBot_Options_FullHealSpellsCombo_list(sType)
             HEALBOT_DOWNPOUR,
             HEALBOT_REGROWTH,
             HEALBOT_NOURISH,
+            HBC_NOURISH,
             HEALBOT_RENEW,
             HEALBOT_DIVINE_HYMN,
             HEALBOT_HEALING_RAIN,
@@ -9697,6 +9723,8 @@ function HealBot_Options_SelectCmds_List(cType)
                 HEALBOT_STOP,
                 HEALBOT_MOUNTSPETS,
                 HEALBOT_FAVMOUNT,
+                HEALBOT_RANDOMMOUNT,
+                HEALBOT_RANDOMGOUNDMOUNT,
                 HEALBOT_FAVPET,
             }
     elseif HEALBOT_GAME_VERSION>2 then
@@ -9709,6 +9737,8 @@ function HealBot_Options_SelectCmds_List(cType)
                 HEALBOT_STOP,
                 HEALBOT_MOUNTS,
                 HEALBOT_FAVMOUNT,
+                HEALBOT_RANDOMMOUNT,
+                HEALBOT_RANDOMGOUNDMOUNT,
             }
     else
         HealBot_Options_SelectCmdsCombo_List = {
@@ -10155,26 +10185,6 @@ end
 
 --------------------------------------------------------------------------------
 
-function HealBot_Options_ShowBarsPanelVisibilityFocus(oShow)
-    HealBot_Options_ObjectsEnableDisable("HealBot_Options_FocusOnlyFriend",oShow)
-    HealBot_Options_ObjectsEnableDisable("HealBot_Options_FocusExcludeRaid",oShow)
-    if oShow then
-        HealBot_Options_FocusInCombat:SetAlpha(1)
-    else
-        HealBot_Options_FocusInCombat:SetAlpha(0.4)
-    end
-end
-
-function HealBot_Options_ShowBarsPanelVisibilityTargets(oShow)
-    HealBot_Options_ObjectsEnableDisable("HealBot_Options_TargetOnlyFriend",oShow)
-    HealBot_Options_ObjectsEnableDisable("HealBot_Options_TargetExcludeRaid",oShow)
-    if oShow then
-        HealBot_Options_TargetInCombat:SetAlpha(1)
-    else
-        HealBot_Options_TargetInCombat:SetAlpha(0.4)
-    end
-end
-
 function HealBot_Options_FramesSelFrame_DropDown()
     local info = UIDropDownMenu_CreateInfo()
     for j=1,10, 1 do
@@ -10182,7 +10192,7 @@ function HealBot_Options_FramesSelFrame_DropDown()
         info.func = function(self)
                         if HealBot_Options_luVars["FramesSelFrame"]~=self:GetID() then
                             HealBot_Options_luVars["FramesSelFrame"]=self:GetID()
-                            if HEALBOT_GAME_VERSION<4 then 
+                            if HEALBOT_GAME_VERSION<3 then 
                                 if HealBot_Options_luVars["FramesSelFrame"]==6 then HealBot_Options_luVars["FramesSelFrame"]=7 end
                                 if HEALBOT_GAME_VERSION<2 then 
                                     if HealBot_Options_luVars["FramesSelFrame"]==9 then HealBot_Options_luVars["FramesSelFrame"]=10 end
@@ -10210,7 +10220,6 @@ function HealBot_Options_FramesSelFrame_DropDown()
                                 HealBot_Options_ObjectsEnableDisable("HealBot_FrameStickyOffsetHorizontal",false)
                                 HealBot_Options_ObjectsEnableDisable("HealBot_FrameStickyOffsetVertical",false)
                             end
-                            HealBot_Options_DoVisibility_DropDowns()
                             HealBot_Options_DoEffects_DropDowns()
                             if HealBot_Options_luVars["FramesSelFrame"]>5 then
                                 HealBot_Options_ObjectsEnableDisable("HealBot_Options_SubSortPlayerFirst",false)
@@ -10225,16 +10234,6 @@ function HealBot_Options_FramesSelFrame_DropDown()
                                 HealBot_Options_ObjectsEnableDisable("HealBot_Options_SubSortPlayerFirst",true)
                                 HealBot_Options_ObjectsEnableDisable("HealBot_Options_GroupPetsByFive",false)
                                 HealBot_Options_ObjectsEnableDisable("HealBot_Options_SelfPet",false)
-                            end
-                            if HealBot_Options_luVars["FramesSelFrame"]==9 then  -- Focus Frame
-                                HealBot_Options_ShowBarsPanelVisibilityTargets(false)
-                                HealBot_Options_ShowBarsPanelVisibilityFocus(true)
-                            elseif HealBot_Options_luVars["FramesSelFrame"]==8 then  -- Target Frame
-                                HealBot_Options_ShowBarsPanelVisibilityFocus(false)
-                                HealBot_Options_ShowBarsPanelVisibilityTargets(true)
-                            else
-                                HealBot_Options_ShowBarsPanelVisibilityFocus(false)
-                                HealBot_Options_ShowBarsPanelVisibilityTargets(false)
                             end
                             HealBot_Timers_InitExtraOptions()
                         end
@@ -11988,25 +11987,6 @@ function HealBot_Options_DoEffects_DropDowns()
     end
 end
 
-function HealBot_Options_DoVisibility_DropDowns()     
-    HealBot_Options_FocusInCombat.initialize = HealBot_Options_FocusInCombat_DropDown
-    HealBot_Options_TargetInCombat.initialize = HealBot_Options_TargetInCombat_DropDown
-    if HealBot_Options_luVars["FramesSelFrame"]>7 then
-        if HealBot_Options_luVars["FramesSelFrame"]==8 then
-            UIDropDownMenu_SetText(HealBot_Options_TargetInCombat,HealBot_Options_TargetFocusInCombat_List[Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["TARGETINCOMBAT"]]) 
-        else
-            UIDropDownMenu_SetText(HealBot_Options_TargetInCombat," ")
-        end
-        if HealBot_Options_luVars["FramesSelFrame"]==9 then
-            UIDropDownMenu_SetText(HealBot_Options_FocusInCombat,HealBot_Options_TargetFocusInCombat_List[Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["FOCUSINCOMBAT"]]) 
-        else
-            UIDropDownMenu_SetText(HealBot_Options_FocusInCombat," ")
-        end
-    else
-        UIDropDownMenu_SetText(HealBot_Options_TargetInCombat," ")
-        UIDropDownMenu_SetText(HealBot_Options_FocusInCombat," ")
-    end
-end
 --------------------------------------------------------------------------------
 
 function HealBot_Options_Skins_DropDown()
@@ -12037,7 +12017,7 @@ function HealBot_Options_DoSet_Current_Skin(newSkin, ddRefresh, noCallback, optS
                     Healbot_Config_Skins.Current_Skin = Healbot_Config_Skins.Skins[j]
                     HealBot_Action_setAutoClose(true)
                     HealBot_Timers_Set("LAST","SetAutoClose", 3)
-                    HealBot_Timers_TurboOn(1,2)
+                    HealBot_Timers_TurboOn(1)
                     HealBot_Config.LastAutoSkinChangeTime=GetTime()+300
                     optSetSkins=true
                     HealBot_setLuVars("showReloadMsg", true)
@@ -12092,7 +12072,7 @@ function HealBot_Options_DoSet_Current_Skin(newSkin, ddRefresh, noCallback, optS
 end
 
 function HealBot_Options_Set_Current_Skin(newSkin, ddRefresh, noCallback, optSetSkins)
-    if not InCombatLockdown() then
+    if not HealBot_Data["UILOCK"] then
         local initCurFrame=HealBot_Options_DoSet_Current_Skin(newSkin, ddRefresh, noCallback, optSetSkins)
         if initCurFrame then HealBot_Options_SetSkins(true) end
     else
@@ -14118,6 +14098,10 @@ function HealBot_Options_Debuff_Reset()
                         HealBot_DebuffWatchTargetSpell["Focus"]=true
                     elseif dropdownID==14 then
                         HealBot_DebuffWatchTargetSpell["Name"]=true
+                    elseif dropdownID==15 then
+                        HealBot_DebuffWatchTargetSpell["SingleTank"]=true
+                    elseif dropdownID==16 then
+                        HealBot_DebuffWatchTargetSpell["Solo"]=true;
                     end        
                 end)
             end
@@ -14340,6 +14324,8 @@ function HealBot_Options_Buff_Reset()
                     HealBot_BuffWatchTargetSpell["Name"]=true
                 elseif dropdownID==15 then
                     HealBot_BuffWatchTargetSpell["SingleTank"]=true
+                elseif dropdownID==16 then
+                    HealBot_BuffWatchTargetSpell["Solo"]=true;
                 end
                 HealBot_buffbarcolr[sName]=buffbarcolrClass[k];
                 HealBot_buffbarcolg[sName]=buffbarcolgClass[k];
@@ -15698,6 +15684,7 @@ function HealBot_Options_CheckBindsOnChange(newBind, index)
         end
     end
     HealBot_Timers_Set("INIT","PrepSetAllAttribs",0.2)
+    HealBot_Timers_Set("PLAYER","SaveProfile",15)
 end
 
 function HealBot_Options_DoSpellsOnTextChanged(self, cType, bNo, key, spellText)
@@ -15725,6 +15712,7 @@ function HealBot_Options_SpellsOnTextChanged(self, bNo)
     spellText = strtrim(self:GetText())
     HealBot_Options_DoSpellsOnTextChanged(self, cType, bNo, key, spellText)
     if bNo==1 then HealBot_Timers_Set("PLAYER","SetRangeSpells",1) end
+    HealBot_Timers_Set("PLAYER","SaveProfile",15)
 end
 
 function HealBot_Options_SetBuffExtraItemTextColour(object, item)
@@ -17194,6 +17182,7 @@ function HealBot_Options_SkinsGeneralTab(tab)
         g=_G["HealBot_GeneralSkinBlizz_FontStr"]
         g:SetText(HEALBOT_OPTIONS_BLIZZARD_FRAMES)
         HealBot_Options_SetLabel("HealBot_GeneralDefaultSkin_FontStr",HEALBOT_OPTIONS_SKINDEFAULTFOR)
+        HealBot_Options_SkinDefaultZone_SetText()
         HealBot_Options_TabRunOnce[tab]=true
     end
 end
@@ -17614,7 +17603,10 @@ end
 HealBot_Options_luVars["OnLoadBarsVisibility"]=true
 function HealBot_Options_SkinsFramesBarsVisibilityTab(tab)
     if not HealBot_Options_TabRunOnce[tab] then
-        HealBot_Options_DoVisibility_DropDowns()
+        HealBot_Options_FocusInCombat.initialize = HealBot_Options_FocusInCombat_DropDown
+        HealBot_Options_TargetInCombat.initialize = HealBot_Options_TargetInCombat_DropDown
+        UIDropDownMenu_SetText(HealBot_Options_TargetInCombat,HealBot_Options_TargetFocusInCombat_List[Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["TARGETINCOMBAT"]]) 
+        UIDropDownMenu_SetText(HealBot_Options_FocusInCombat,HealBot_Options_TargetFocusInCombat_List[Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["FOCUSINCOMBAT"]]) 
         HealBot_Options_Pct_OnLoad(HealBot_Options_AlertLevelIC,HEALBOT_OPTIONS_INCOMBATALERTLEVEL)
         HealBot_Options_AlertLevelIC:SetValue(Healbot_Config_Skins.BarVisibility[Healbot_Config_Skins.Current_Skin][HealBot_Options_luVars["FramesSelFrame"]]["ALERTIC"])
         HealBot_Options_Pct_OnValueChanged(HealBot_Options_AlertLevelIC)
@@ -17625,6 +17617,8 @@ function HealBot_Options_SkinsFramesBarsVisibilityTab(tab)
         HealBot_Options_SetText(HealBot_Options_HideBars,HEALBOT_HIDE_BARS)            
         HealBot_Options_TargetOnlyFriend:SetChecked(Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["TONLYFRIEND"])
         HealBot_Options_SetText(HealBot_Options_TargetOnlyFriend,HEALBOT_OPTIONS_SHOW_ONLY_FRIEND)
+        HealBot_Options_VehicleInCombat:SetChecked(Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["VEHICLEINCOMBAT"])
+        HealBot_Options_SetText(HealBot_Options_VehicleInCombat,HEALBOT_OPTIONS_ALWAYSINCOMBAT.." "..HEALBOT_VEHICLE.." "..HEALBOT_OPTIONS_ENTERINGCOMBAT)
         HealBot_Options_TargetExcludeRaid:SetChecked(Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["TEXRAID"])
         HealBot_Options_SetText(HealBot_Options_TargetExcludeRaid,HEALBOT_OPTIONS_EXCLUDE_RAID)
         HealBot_Options_FocusOnlyFriend:SetChecked(Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["FONLYFRIEND"])
@@ -18318,6 +18312,8 @@ function HealBot_Options_SkinsFramesIconsExtrasReadyCheckTab(tab)
         HealBot_Options_SetText(HealBot_Options_ShowHostile,HEALBOT_OPTIONS_SHOWHOSTILE)
         HealBot_Options_ShowResting:SetChecked(Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][HealBot_Options_luVars["FramesSelFrame"]]["SHOWRESTING"])
         HealBot_Options_SetText(HealBot_Options_ShowResting,HEALBOT_OPTIONS_SHOWRESTING)
+        HealBot_Options_ShowLeader:SetChecked(Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][HealBot_Options_luVars["FramesSelFrame"]]["SHOWRANK"])
+        HealBot_Options_SetText(HealBot_Options_ShowLeader,HEALBOT_OPTIONS_SHOWLEADER)
         HealBot_Options_IconRCPosition.initialize = HealBot_Options_IconRCPosition_DropDown
         UIDropDownMenu_SetText(HealBot_Options_IconRCPosition, HealBot_Options_Lists["IconPosition"][Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][HealBot_Options_luVars["FramesSelFrame"]]["RCONBAR"]])
         local list=HealBot_Options_AnchorList(Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][HealBot_Options_luVars["FramesSelFrame"]]["RCONBAR"], true)
@@ -19296,10 +19292,11 @@ end
 function HealBot_Options_IndicatorsTab()
     local showPowerTab=false
     if HEALBOT_GAME_VERSION>3 then
-        if HealBot_Data["PCLASSTRIM"]==HealBot_Class_En[HEALBOT_PALADIN] or
-           HealBot_Data["PCLASSTRIM"]==HealBot_Class_En[HEALBOT_ROGUE] or
+        if HealBot_Data["PCLASSTRIM"]==HealBot_Class_En[HEALBOT_ROGUE] or
+           HealBot_Data["PCLASSTRIM"]==HealBot_Class_En[HEALBOT_PALADIN] or
            HealBot_Data["PCLASSTRIM"]==HealBot_Class_En[HEALBOT_WARLOCK] or
-           HealBot_Data["PCLASSTRIM"]==HealBot_Class_En[HEALBOT_MONK] then
+           HealBot_Data["PCLASSTRIM"]==HealBot_Class_En[HEALBOT_MONK] or
+           HealBot_Data["PCLASSTRIM"]==HealBot_Class_En[HEALBOT_DRUID] then
             showPowerTab=true
         end
     end

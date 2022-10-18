@@ -2,7 +2,7 @@
 ## Title: HandyNotes: Mists of Pandaria (Treasures and Rares)
 ## Notes: Where everything is in Pandaria
 ## Author: Kemayo
-## Version: v21
+## Version: v22
 ## DefaultState: enabled
 ## X-Category: Map
 ## X-eMail: kemayo @ gmail DOT com
@@ -10,6 +10,9 @@
 ## X-Wago-ID: RBKp1vGE
 ## SavedVariables: HandyNotes_MistsOfPandariaTreasuresDB
 ## RequiredDeps: HandyNotes
+## OptionalDeps: !LibUIDropDownMenu
+
+lib\LibUIDropDownMenu\LibUIDropDownMenu.xml
 
 handler\handler.xml
 

@@ -1,6 +1,9 @@
 # <DBM> World Bosses (BfA)
 
-## [r12](https://github.com/DeadlyBossMods/DBM-BfA/tree/r12) (2022-08-16)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-BfA/compare/r11...r12) [Previous Releases](https://github.com/DeadlyBossMods/DBM-BfA/releases)
+## [r13](https://github.com/DeadlyBossMods/DBM-BfA/tree/r13) (2022-10-07)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-BfA/compare/r12...r13) [Previous Releases](https://github.com/DeadlyBossMods/DBM-BfA/releases)
 
-- TOC bumps  
+- Map to new standardized function name  
+- Revert "Apparently arc counting is hard. Every single phase change announce ever put in DBM core, is using wrong arg for sound version"  
+- Apparently arc counting is hard. Every single phase change announce ever put in DBM core, is using wrong arg for sound version  
+- cleanup  

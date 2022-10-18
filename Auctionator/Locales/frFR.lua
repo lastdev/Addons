@@ -78,6 +78,12 @@ L["CONFIG_CRAFTING_COST_SHOW_PROFIT"] = "Profit au lieu du coût de production"
 L["CONFIG_CRAFTING_COST_SHOW_PROFIT_TOOLTIP_HEADER"] = "Profit au lieu du coût de production"
 L["CONFIG_CRAFTING_COST_SHOW_PROFIT_TOOLTIP_TEXT"] = [=[Lorsque l'hôtel des ventes est ouvert, la fenêtre d'artisanat indique le coût de production des objets.
 Cette option affiche le profit réalisable à la place.]=]
+--[[Translation missing --]]
+L["CONFIG_CRAFTING_INFO_SHOW"] = "Show crafting costs in the crafting view"
+--[[Translation missing --]]
+L["CONFIG_CRAFTING_INFO_SHOW_TOOLTIP_HEADER"] = "Crafting screen extra info"
+--[[Translation missing --]]
+L["CONFIG_CRAFTING_INFO_SHOW_TOOLTIP_TEXT"] = "The crafting screen will show the cost of crafting an item. Disable this option to not show the crafting costs."
 L["CONFIG_DEBUG"] = "Afficher le rendu du débogage"
 L["CONFIG_DEBUG_TOOLTIP_HEADER"] = "Auctionator Debug"
 L["CONFIG_DEBUG_TOOLTIP_TEXT"] = "Ceci est utilisé par les responsables de la maintenance pour envoyer des messages de débogage dans la fenêtrede discussion."
@@ -92,8 +98,7 @@ L["CONFIG_PET_TOOLTIP"] = "Afficher les prix des mascottes"
 L["CONFIG_PROFILE_CATEGORY"] = "Profils"
 L["CONFIG_PROFILE_TEXT"] = "Configuration par personnage."
 L["CONFIG_PROFILE_TOGGLE"] = "N'appliquer les paramètres qu'à ce personnage"
---[[Translation missing --]]
-L["CONFIG_PROSPECT_TOOLTIP"] = "Show prospect value for ore from jewelcrafting in tooltips"
+L["CONFIG_PROSPECT_TOOLTIP"] = "Affiche la valeur potentielle du minerai provenant de la joaillerie dans les infobulles"
 L["CONFIG_QUANTITIES_CATEGORY"] = "Vente : Quantités"
 L["CONFIG_QUANTITIES_TEXT"] = "Choisissez la quantité par défaut utilisée pour les différentes catégories d'objets."
 L["CONFIG_RESET_STACK_SIZE_MEMORY"] = "Réinitialiser les données de taille des piles"
@@ -178,6 +183,8 @@ L["COPY_NO_LIST_SELECTED"] = "Impossible de copier l'objet. Aucune liste d'achat
 L["COPY_TEXT_HEADER"] = "Copier le texte"
 L["COPY_TO_LIST"] = "Copier l'objet vers la liste d'achats active"
 L["CRAFTED_LEVEL"] = "Niveau de profession"
+--[[Translation missing --]]
+L["CRAFTING_INFO"] = "Crafting Info"
 L["CREATE"] = "Créer"
 L["CREATE_LIST_DIALOG"] = "Entrer le nom de la nouvelle liste d'achats :"
 L["CURRENT"] = "Actuel"
@@ -295,12 +302,9 @@ L["PRICE_INCREASE_WARNING"] = "Prix augmenté de %s, attente de %ss"
 L["PROFILE_TOGGLE_TOOLTIP_HEADER"] = "Activer les paramètres par personnage"
 L["PROFILE_TOGGLE_TOOLTIP_TEXT"] = "Les modifications apportées aux paramètres d'Auctionator n'affecteront que ce personnage."
 L["PROFIT_COLON"] = "Gains :"
---[[Translation missing --]]
-L["PROSPECT"] = "Prospect"
---[[Translation missing --]]
-L["PROSPECT_TOOLTIP_TOOLTIP_HEADER"] = "Prospect Tooltip Information"
---[[Translation missing --]]
-L["PROSPECT_TOOLTIP_TOOLTIP_TEXT"] = "Show jewelcrafting prospecting estimated value in tooltip on mouseover."
+L["PROSPECT"] = "Prospection"
+L["PROSPECT_TOOLTIP_TOOLTIP_HEADER"] = "Info-bulle de la prospection"
+L["PROSPECT_TOOLTIP_TOOLTIP_TEXT"] = "Afficher la valeur estimée de la prospection de la joaillerie dans l'info-bulle au passage de la souris."
 L["PURCHASED_X_XX"] = "Acheté %s x%s"
 L["QUANTITY"] = "Quantité"
 L["REAGENT_SEARCH"] = "Composants"
@@ -341,7 +345,7 @@ L["SHIFT_LEFT_CLICK"] = "Maj+Clic gauche"
 L["SHIFT_RIGHT_CLICK"] = "Maj+Clic droit"
 L["SHOPPING_LIST"] = "Liste d'achats"
 L["SHOPPING_TAB"] = "Achat"
-L["SHOPPING_TAB_HEADER"] = "Auctionator - Listes d'achats"
+L["SHOPPING_TAB_HEADER_2"] = "Auctionator - Achats"
 L["SKIP"] = "Passer"
 L["SORT"] = "Trier"
 L["SPLASH_830_BUGS_1"] = "Veuillez nous rejoindre sur le serveur Discord d'Auctionator %s"

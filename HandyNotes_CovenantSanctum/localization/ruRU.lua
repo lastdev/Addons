@@ -3,6 +3,8 @@ local L = LibStub("AceLocale-3.0"):NewLocale("HandyNotes_CovenantSanctum", "ruRU
 if not L then return end
 -- Russian localization by dadec666 ( https://www.curseforge.com/members/dadec666 )
 if L then
+L["Blizzard"] = true
+L["Both"] = "Оба"
 L["config_easy_waypoints"] = "Легкие путевые точки"
 L["config_easy_waypoints_desc"] = "Активирует упрощенное создание путевой точки. Позволяет установить маршрутную точку, щелкнув правой кнопкой мыши, и получить доступ к дополнительным параметрам, нажав CTRL + щелчок правой кнопкой мыши."
 L["config_icon_alpha"] = "Прозрачность иконок"
@@ -32,6 +34,8 @@ L["config_tab_general"] = "Общий"
 L["config_travelguide_note"] = "| cFFFF0000 * Уже активен через HandyNotes: TravelGuide. | r"
 L["config_vendor"] = "Торговец"
 L["config_vendor_desc"] = "Показать местоположение торговца."
+L["config_waypoint_dropdown"] = "Выбор"
+L["config_waypoint_dropdown_desc"] = "Выберите способ создания путевой точки."
 L["config_weaponsmith"] = "Оружейник"
 L["config_weaponsmith_desc"] = "Показать местонахождение оружейника."
 L["config_what_to_display"] = "Что отображать?"
@@ -44,4 +48,5 @@ L["handler_tooltip_sanctum_feature"] = "Улучшение святилища"
 L["handler_tooltip_TNTIER"] = "Уровень %s сети путешествий."
 L["Mailbox"] = "Почтовый ящик"
 L["Portal to Oribos"] = "Портал в Орибос"
+L["TomTom"] = true
 end

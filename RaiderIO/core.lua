@@ -2774,7 +2774,7 @@ do
         local dungeonUpgrades = {}
         local dungeonTimes = {}
         for i = 1, #DUNGEONS do
-            dungeons[i], bitOffset = ReadBitsFromString(bucket, bitOffset, 5)
+            dungeons[i], bitOffset = ReadBitsFromString(bucket, bitOffset, 6)
             dungeonUpgrades[i], bitOffset = ReadBitsFromString(bucket, bitOffset, 2)
             dungeonTimes[i] = 3 - dungeonUpgrades[i]
             results.hasRenderableData = results.hasRenderableData or dungeons[i] > 0

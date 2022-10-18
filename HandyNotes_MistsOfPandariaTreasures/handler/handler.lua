@@ -1,11 +1,21 @@
 local myname, ns = ...
+local _, myfullname = GetAddOnInfo(myname)
 
 local HandyNotes = LibStub("AceAddon-3.0"):GetAddon("HandyNotes")
 local HL = LibStub("AceAddon-3.0"):NewAddon(myname, "AceEvent-3.0")
 -- local L = LibStub("AceLocale-3.0"):GetLocale(myname, true)
 ns.HL = HL
 
-ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v21'
+local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
+
+ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v22'
+
+ns.CLASSIC = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE
+
+local ATLAS_CHECK, ATLAS_CROSS = "common-icon-checkmark", "common-icon-redx"
+if ns.CLASSIC then
+    ATLAS_CHECK, ATLAS_CROSS = "Tracker-Check", "Objective-Fail"
+end
 
 ---------------------------------------------------------
 -- Data model stuff:
@@ -666,7 +676,7 @@ local function tooltip_loot(tooltip, item)
         if knownText then
             link = link .. " " .. knownText
         else
-            link = link .. " " .. CreateAtlasMarkup(known and "common-icon-checkmark" or "common-icon-redx")
+            link = link .. " " .. CreateAtlasMarkup(known and ATLAS_CHECK or ATLAS_CROSS)
         end
     end
     tooltip:AddDoubleLine(label, quick_texture_markup(icon) .. " " .. link,
@@ -879,7 +889,18 @@ function HLHandler:OnEnter(uiMapID, coord)
 end
 
 local function showAchievement(button, achievement)
-    OpenAchievementFrameToAchievement(achievement)
+    if OpenAchievementFrameToAchievement then
+        OpenAchievementFrameToAchievement(achievement)
+    else
+        -- probably classic
+        if ( not AchievementFrame ) then
+            AchievementFrame_LoadUI()
+        end
+        if ( not AchievementFrame:IsShown() ) then
+            AchievementFrame_ToggleAchievementFrame()
+        end
+        AchievementFrame_SelectAchievement(achievement)
+    end
 end
 
 local function createWaypoint(button, uiMapID, coord)
@@ -937,7 +958,7 @@ local function sendToChat(button, uiMapID, coord)
 end
 
 local function closeAllDropdowns()
-    CloseDropDownMenus(1)
+    LibDD:CloseDropDownMenus(1)
 end
 
 do
@@ -945,13 +966,13 @@ do
     local function generateMenu(button, level)
         local point = ns.points[currentZone] and ns.points[currentZone][currentCoord]
         if not (level and point) then return end
-        local info = UIDropDownMenu_CreateInfo()
+        local info = LibDD:UIDropDownMenu_CreateInfo()
         if (level == 1) then
             -- Create the title of the menu
-            info.isTitle      = 1
-            info.text         = "HandyNotes - " .. myname:gsub("HandyNotes_", "")
+            info.isTitle = 1
+            info.text = myfullname
             info.notCheckable = 1
-            UIDropDownMenu_AddButton(info, level)
+            LibDD:UIDropDownMenu_AddButton(info, level)
             wipe(info)
 
             if point.achievement then
@@ -960,7 +981,7 @@ do
                 info.notCheckable = 1
                 info.func = showAchievement
                 info.arg1 = point.achievement
-                UIDropDownMenu_AddButton(info, level)
+                LibDD:UIDropDownMenu_AddButton(info, level)
                 wipe(info)
             end
 
@@ -971,7 +992,7 @@ do
                 info.func = createWaypoint
                 info.arg1 = currentZone
                 info.arg2 = currentCoord
-                UIDropDownMenu_AddButton(info, level)
+                LibDD:UIDropDownMenu_AddButton(info, level)
                 wipe(info)
             end
 
@@ -981,7 +1002,7 @@ do
                 info.func = sendToChat
                 info.arg1 = currentZone
                 info.arg2 = currentCoord
-                UIDropDownMenu_AddButton(info, level)
+                LibDD:UIDropDownMenu_AddButton(info, level)
                 wipe(info)
             end
 
@@ -991,7 +1012,7 @@ do
             info.func         = hideNode
             info.arg1         = currentZone
             info.arg2         = currentCoord
-            UIDropDownMenu_AddButton(info, level)
+            LibDD:UIDropDownMenu_AddButton(info, level)
             wipe(info)
 
             if point.achievement then
@@ -1000,7 +1021,7 @@ do
                 info.notCheckable = 1
                 info.func = hideAchievement
                 info.arg1 = point.achievement
-                UIDropDownMenu_AddButton(info, level)
+                LibDD:UIDropDownMenu_AddButton(info, level)
                 wipe(info)
             end
 
@@ -1012,7 +1033,7 @@ do
                     info.func = hideGroupZone
                     info.arg1 = currentZone
                     info.arg2 = currentCoord
-                    UIDropDownMenu_AddButton(info, level)
+                    LibDD:UIDropDownMenu_AddButton(info, level)
                     wipe(info)
                 end
                 if not ns.hiddenConfig.groupsHidden then
@@ -1021,7 +1042,7 @@ do
                     info.func = hideGroup
                     info.arg1 = currentZone
                     info.arg2 = currentCoord
-                    UIDropDownMenu_AddButton(info, level)
+                    LibDD:UIDropDownMenu_AddButton(info, level)
                     wipe(info)
                 end
             end
@@ -1030,14 +1051,12 @@ do
             info.text         = "Close"
             info.func         = closeAllDropdowns
             info.notCheckable = 1
-            UIDropDownMenu_AddButton(info, level)
+            LibDD:UIDropDownMenu_AddButton(info, level)
             wipe(info)
         end
     end
-    local HL_Dropdown = CreateFrame("Frame", myname.."DropdownMenu")
-    HL_Dropdown.displayMode = "MENU"
-    HL_Dropdown.initialize = generateMenu
 
+    local HL_Dropdown
     function HLHandler:OnClick(button, down, uiMapID, coord)
         if down then return end
         currentZone = uiMapID
@@ -1046,7 +1065,12 @@ do
         local point = ns.points[currentZone] and ns.points[currentZone][currentCoord]
         if point then
             if button == "RightButton" then
-                ToggleDropDownMenu(1, nil, HL_Dropdown, self, 0, 0)
+                if not HL_Dropdown then
+                    HL_Dropdown = LibDD:Create_UIDropDownMenu(myname .. "PointDropdown")
+                    LibDD:UIDropDownMenu_SetInitializeFunction(HL_Dropdown, generateMenu)
+                    LibDD:UIDropDownMenu_SetDisplayMode(HL_Dropdown, "MENU")
+                end
+                LibDD:ToggleDropDownMenu(1, nil, HL_Dropdown, self, 0, 0)
             end
             if button == "LeftButton" and IsShiftKeyDown() and _G.MAP_PIN_HYPERLINK then
                 sendToChat(button, uiMapID, coord)

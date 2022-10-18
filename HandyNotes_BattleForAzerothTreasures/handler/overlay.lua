@@ -1,4 +1,7 @@
 local myname, ns = ...
+local _, myfullname = GetAddOnInfo(myname)
+
+local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 
 local function hideTextureWithAtlas(atlas, ...)
     for i=1, select("#", ...) do
@@ -137,14 +140,39 @@ function ns.SetupMapOverlay()
     local Krowi = LibStub("Krowi_WorldMapButtons-1.3", true)
     if Krowi then
         frame = Krowi:Add("WorldMapTrackingOptionsButtonTemplate", "DROPDOWNTOGGLEBUTTON")
-    else
+    elseif WorldMapFrame.AddOverlayFrame then
         frame = WorldMapFrame:AddOverlayFrame("WorldMapTrackingOptionsButtonTemplate", "DROPDOWNTOGGLEBUTTON", "TOPRIGHT", WorldMapFrame:GetCanvasContainer(), "TOPRIGHT", -68, -2)
+    else
+        -- classic!
+        frame = CreateFrame("Button", nil, WorldMapFrame:GetCanvasContainer())
+        frame:SetPoint("TOPRIGHT", -68, -2)
+        frame:SetSize(31, 31)
+        frame:RegisterForClicks("anyUp")
+        frame:SetHighlightTexture(136477) --"Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight"
+        local overlay = frame:CreateTexture(nil, "OVERLAY")
+        overlay:SetSize(53, 53)
+        overlay:SetTexture(136430) --"Interface\\Minimap\\MiniMap-TrackingBorder"
+        overlay:SetPoint("TOPLEFT")
+        frame.IconOverlay = overlay
+        local background = frame:CreateTexture(nil, "BACKGROUND")
+        background:SetSize(20, 20)
+        background:SetTexture(136467) --"Interface\\Minimap\\UI-Minimap-Background"
+        background:SetPoint("TOPLEFT", 7, -5)
+        local icon = frame:CreateTexture(nil, "ARTWORK")
+        icon:SetSize(17, 17)
+        icon:SetPoint("TOPLEFT", 7, -6)
+        frame.Icon = icon
+        frame.isMouseDown = false
+        hooksecurefunc(WorldMapFrame, "OnMapChanged", function()
+            frame:Refresh()
+        end)
     end
+    frame.DropDown = LibDD:Create_UIDropDownMenu(myname .. "OptionsDropdown", frame) -- replace the template
     frame.Icon:SetAtlas("VignetteLootElite")
     frame.Icon:SetPoint("TOPLEFT", 6, -5)
     hideTextureWithAtlas("MapCornerShadow-Right", frame:GetRegions())
     frame.Refresh = function(self)
-        local uiMapID = self:GetParent():GetMapID()
+        local uiMapID = WorldMapFrame.mapID
         local info = C_Map.GetMapInfo(uiMapID)
         local parentMapID = info and info.parentMapID or 0
         if ns.db.worldmapoverlay and (ns.points[uiMapID] or ns.points[parentMapID]) then
@@ -153,19 +181,41 @@ function ns.SetupMapOverlay()
             self:Hide()
         end
     end
+    frame.OnMouseDown = function(self, button)
+        self.Icon:SetPoint("TOPLEFT", 8, -8);
+        self.IconOverlay:Show()
+
+        local mapID = self:GetParent():GetMapID()
+        if not mapID then
+            return
+        end
+        self.DropDown.mapID = mapID
+        LibDD:ToggleDropDownMenu(1, nil, self.DropDown, self, 0, -5)
+        PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
+    end
     frame.OnMouseUp = function(self)
         self.Icon:SetPoint("TOPLEFT", 6, -5)
         self.IconOverlay:Hide()
     end
+    frame.OnMouseEnter = function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip_SetTitle(GameTooltip, myfullname)
+        GameTooltip_AddNormalLine(GameTooltip, "Adjust display settings")
+        GameTooltip:Show()
+    end
+    frame:SetScript("OnMouseUp", frame.OnMouseUp)
+    frame:SetScript("OnMouseDown", frame.OnMouseDown)
+    frame:SetScript("OnEnter", frame.OnMouseEnter)
+    frame:SetScript("OnLeave", GameTooltip_Hide)
     frame.InitializeDropDown = function(self, level, menuList)
         local uiMapID = WorldMapFrame.mapID
-        local info = UIDropDownMenu_CreateInfo()
+        local info = LibDD:UIDropDownMenu_CreateInfo()
         level = level or 1
         if level == 1 then
             info.isTitle = true
             info.notCheckable = true
-            info.text = "HandyNotes - " .. myname:gsub("HandyNotes_", "")
-            UIDropDownMenu_AddButton(info, level)
+            info.text = DISPLAY_OPTIONS
+            LibDD:UIDropDownMenu_AddButton(info, level)
 
             info.isTitle = nil
             info.disabled = nil
@@ -215,10 +265,10 @@ function ns.SetupMapOverlay()
                 else
                     info.disabled = nil
                 end
-                UIDropDownMenu_AddButton(info, level)
+                LibDD:UIDropDownMenu_AddButton(info, level)
             end
 
-            UIDropDownMenu_AddSeparator(level)
+            LibDD:UIDropDownMenu_AddSeparator(level)
 
             if not (ns.hiddenConfig.groupsHiddenByZone and OptionsDropdown.isHidden(ns.options, "groupsHidden")) and zoneHasGroups(uiMapID) then
                 local global = ns.hiddenConfig.groupsHiddenByZone
@@ -243,7 +293,7 @@ function ns.SetupMapOverlay()
                     else
                         info.checked = not ns.db.groupsHiddenByZone[uiMapID][group]
                     end
-                    UIDropDownMenu_AddButton(info, level)
+                    LibDD:UIDropDownMenu_AddButton(info, level)
                 end
             end
             if not OptionsDropdown.isHidden(ns.options, "achievementsHidden") and zoneHasAchievements(uiMapID) then
@@ -260,7 +310,7 @@ function ns.SetupMapOverlay()
                     info.text = ns.render_string(("{achievement:%d}"):format(achievementid))
                     info.arg1 = achievementid
                     info.checked = not ns.db.achievementsHidden[achievementid]
-                    UIDropDownMenu_AddButton(info, level)
+                    LibDD:UIDropDownMenu_AddButton(info, level)
                 end
             end
 
@@ -273,26 +323,26 @@ function ns.SetupMapOverlay()
             if not OptionsDropdown.isHidden(ns.options, "achievementsHidden") then
                 info.text = ACHIEVEMENTS
                 info.value = "achievementsHidden"
-                UIDropDownMenu_AddButton(info, level)
+                LibDD:UIDropDownMenu_AddButton(info, level)
                 displayed = true
             end
 
             if not OptionsDropdown.isHidden(ns.options, "zonesHidden") then
                 info.text = ZONE
                 info.value = "zonesHidden"
-                UIDropDownMenu_AddButton(info, level)
+                LibDD:UIDropDownMenu_AddButton(info, level)
                 displayed = true
             end
 
             if not OptionsDropdown.isHidden(ns.options, "groupsHidden") and hasGroups() then
                 info.text = GROUP
                 info.value = "groupsHidden"
-                UIDropDownMenu_AddButton(info, level)
+                LibDD:UIDropDownMenu_AddButton(info, level)
                 displayed = true
             end
 
             if displayed then
-                UIDropDownMenu_AddSeparator(level)
+                LibDD:UIDropDownMenu_AddSeparator(level)
             end
 
             info.text = "Open HandyNotes options"
@@ -303,10 +353,10 @@ function ns.SetupMapOverlay()
                 InterfaceOptionsFrame_OpenToCategory('HandyNotes')
                 LibStub('AceConfigDialog-3.0'):SelectGroup('HandyNotes', 'plugins', myname:gsub("HandyNotes_", ""))
             end
-            UIDropDownMenu_AddButton(info, level)
+            LibDD:UIDropDownMenu_AddButton(info, level)
 
         elseif level == 2 or level == 3 then
-            local parent = UIDROPDOWNMENU_MENU_VALUE
+            local parent = L_UIDROPDOWNMENU_MENU_VALUE
             local currentZone = WorldMapFrame.mapID
             info.arg1 = parent
             info.isTitle = nil
@@ -339,7 +389,7 @@ function ns.SetupMapOverlay()
                     if relevant[achievementid] then
                         info.text = BRIGHTBLUE_FONT_COLOR:WrapTextInColorCode(info.text) .. " " .. CreateAtlasMarkup("VignetteKill", 0)
                     end
-                    UIDropDownMenu_AddButton(info, level)
+                    LibDD:UIDropDownMenu_AddButton(info, level)
                 end
             elseif parent == "zonesHidden" then
                 for _, uiMapID in iterKeysByValue(values) do
@@ -356,7 +406,7 @@ function ns.SetupMapOverlay()
                         info.hasArrow = nil
                         info.menuList = nil
                     end
-                    UIDropDownMenu_AddButton(info, level)
+                    LibDD:UIDropDownMenu_AddButton(info, level)
                 end
             elseif parent == "groupsHidden" then
                 info.arg1 = "groupsHidden"
@@ -366,7 +416,7 @@ function ns.SetupMapOverlay()
                     info.text = ns.render_string(ns.groups[group] or group)
                     info.value = group
                     info.checked = not ns.db.groupsHidden[group]
-                    UIDropDownMenu_AddButton(info, level)
+                    LibDD:UIDropDownMenu_AddButton(info, level)
                 end
             elseif menuList == "groupsHiddenByZone" then
                 local uiMapID = parent
@@ -378,11 +428,12 @@ function ns.SetupMapOverlay()
                     info.text = ns.render_string(ns.groups[group] or group)
                     info.value = group
                     info.checked = not ns.db.groupsHiddenByZone[uiMapID][group]
-                    UIDropDownMenu_AddButton(info, level)
+                    LibDD:UIDropDownMenu_AddButton(info, level)
                 end
             end
         end
     end
     frame.OnSelection = function(self, value, checked, arg1, arg2) end
-    UIDropDownMenu_SetInitializeFunction(frame.DropDown, function(self, ...) frame:InitializeDropDown(...) end)
+    LibDD:UIDropDownMenu_SetInitializeFunction(frame.DropDown, function(self, ...) frame:InitializeDropDown(...) end)
+    LibDD:UIDropDownMenu_SetDisplayMode(frame.DropDown, "MENU")
 end

@@ -1,6 +1,3 @@
-HealBot_lastVerSkinUpdate="9.2.7.0"
-HealBot_lastVerUpdate="9.2.7.0"
-
 HealBot_Default_Textures={
     [1]= {name="HealBot 01", file=[[Interface\Addons\HealBot\Images\bar1.tga]]},
     [2]= {name="Waves", file=[[Interface\Addons\HealBot\Images\bar2.tga]]},
@@ -54,7 +51,7 @@ HealBot_Font_Outline={
 };
 
 HealBot_ConfigDefaults = {
-  LastVersionUpdate=HealBot_lastVerUpdate,
+  LastVersionUpdate=HEALBOT_VERSION_SC,
   MyFriend="x",
   CurrentSpec=9,
   Skin_ID = -1,
@@ -105,6 +102,7 @@ HealBot_ConfigDefaults = {
                                                  [HEALBOT_WORD_BG40]=false, 
                                                  [HEALBOT_WORD_PETBATTLE]=false},
                 },
+  SkinZoneEnabled={},
   EnableHealthy = true,
   Profile=1,
   BuffReset="6.0.0",
@@ -248,7 +246,7 @@ HealBot_GlobalsDefaults = {}
 
 function HealBot_Data_InitVars()
     HealBot_GlobalsDefaults = {
-        LastVersionSkinUpdate=HealBot_lastVerSkinUpdate,
+        LastVersionSkinUpdate=HEALBOT_VERSION_SC,
         FirstLoad = true,
         PluginThreat=true,
         PluginTimeToDie=true,
@@ -261,6 +259,7 @@ function HealBot_Data_InitVars()
         AllowPlayerRoles=false,
         CrashProtTime=0,
         NoRanks=false,
+        ClassicHoTTime=6,
         CPUUsage=5,
         OptionsTheme=1,
         OptionsOpacityAdj=35,

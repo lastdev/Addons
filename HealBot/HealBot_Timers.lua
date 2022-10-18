@@ -38,11 +38,11 @@ HealBot_Timers_luVars["nCalls"]=0
 HealBot_Timers_luVars["nProcs"]=9
 HealBot_Timers_luVars["turboEndTimer"]=0
 
-function HealBot_Timers_TurboOn(duration,x)
-    if HealBot_Timers_luVars["nProcs"]<(HealBot_Globals.CPUUsage*x) then
-        HealBot_Timers_luVars["nProcs"]=HealBot_Globals.CPUUsage*x
-        if HealBot_Timers_luVars["nProcs"]<4 then
-            HealBot_Timers_luVars["nProcs"]=4
+function HealBot_Timers_TurboOn(duration)
+    if HealBot_Timers_luVars["nProcs"]<ceil(HealBot_Globals.CPUUsage/2) then
+        HealBot_Timers_luVars["nProcs"]=ceil(HealBot_Globals.CPUUsage/2)
+        if HealBot_Timers_luVars["nProcs"]<2 then
+            HealBot_Timers_luVars["nProcs"]=2
         end
         HealBot_AddDebug("nProcs="..HealBot_Timers_luVars["nProcs"], "Perf", true)
     end
@@ -55,10 +55,10 @@ end
 function HealBot_Timers_TurboOff()
     if GetTime()<HealBot_Timers_luVars["turboEndTimer"] then
         HealBot_Timers_Set("LAST","TimerTurboOff",1)
-    elseif HealBot_Timers_luVars["nProcs"]~=floor(HealBot_Globals.CPUUsage/2) then
-        HealBot_Timers_luVars["nProcs"]=floor(HealBot_Globals.CPUUsage/2)
-        if HealBot_Timers_luVars["nProcs"]<2 then
-            HealBot_Timers_luVars["nProcs"]=2
+    elseif HealBot_Timers_luVars["nProcs"]~=floor(HealBot_Globals.CPUUsage/3) then
+        HealBot_Timers_luVars["nProcs"]=floor(HealBot_Globals.CPUUsage/3)
+        if HealBot_Timers_luVars["nProcs"]<1 then
+            HealBot_Timers_luVars["nProcs"]=1
         end
         HealBot_AddDebug("nProcs="..HealBot_Timers_luVars["nProcs"], "Perf", true)
     end
@@ -305,14 +305,15 @@ function HealBot_Timers_InitSpells()
 end
 
 function HealBot_Timers_LastLoad()
+    HealBot_Timers_Set("LAST","MountsPetsUse")
     HealBot_Timers_Set("SKINS","PartyUpdateCheckSkin",0.1)
     HealBot_Timers_Set("SKINS","EmergHealthCol",0.15)
     HealBot_Timers_Set("AURA","ConfigClassHoT",0.2)
     HealBot_Timers_Set("LAST","InitLoadSpells",0.25)
     HealBot_Timers_Set("LAST","CheckZone",0.4)
     HealBot_Timers_Set("PLAYER","InvChange",0.5)
-    HealBot_Timers_Set("LAST","LastUpdate",1)
-    HealBot_Timers_Set("LAST","InitLoadSpells",5)
+    HealBot_Timers_Set("LAST","ConfigClassHoT",5)
+    HealBot_Timers_Set("LAST","LastUpdate",1) 
     C_Timer.After(2, HealBot_Timers_UpdateMediaIndex)
 end
 
@@ -377,7 +378,7 @@ function HealBot_Timers_SkinsFramesChanged()
 end
 
 function HealBot_Timers_IconsFramesChanged()
-    HealBot_Options_framesChanged(false, true)
+    HealBot_Options_framesChanged(true, true)
 end
 
 function HealBot_Timers_IndicatorFramesChanged()
@@ -473,7 +474,8 @@ local hbTimerFuncs={["INIT"]={
                         ["EmoteOOM"]=HealBot_Timer_EmoteOOM,
                         ["SpecUpdate"]=HealBot_ResetOnSpecChange,
                         ["PlayerCheck"]=HealBot_PlayerCheck,
-                        ["SetProfile"]=HealBot_Options_hbProfile_setClass
+                        ["LoadProfile"]=HealBot_Options_LoadProfile,
+                        ["SaveProfile"]=HealBot_Options_SaveProfile,
                     },
                     ["SKINS"]={
                         ["PartyUpdateCheckSkin"]=HealBot_PartyUpdate_CheckSkin,
@@ -576,6 +578,7 @@ local hbTimerFuncs={["INIT"]={
                     },
                     ["LAST"]={
                         ["MountsPetsUse"]=HealBot_MountsPets_InitUse,
+                        ["MountsPetsZone"]=HealBot_MountsPets_ZoneChange,
                         ["MountsPetsInit"]=HealBot_MountsPets_InitMount,
                         ["HealBotLoaded"]=HealBot_Timers_Loaded,
                         ["OptionsMainPanel"]=HealBot_Options_MainPanel,
@@ -629,6 +632,8 @@ local hbTimerFuncs={["INIT"]={
                         ["InitLoadSpells"]=HealBot_Timers_InitSpells,
                         ["SetAutoClose"]=HealBot_Action_setAutoClose,
                         ["CheckHideFrames"]=HealBot_Action_CheckHideFrames,
+                        ["MountsPetsDalaran"]=HealBot_MountsPets_ClassicDalaranCheck,
+                        ["ConfigClassHoT"]=HealBot_Aura_ConfigClassHoT,
                     },
                    }
                    

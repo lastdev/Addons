@@ -1,11 +1,21 @@
 local myname, ns = ...
+local _, myfullname = GetAddOnInfo(myname)
 
 local HandyNotes = LibStub("AceAddon-3.0"):GetAddon("HandyNotes")
 local HL = LibStub("AceAddon-3.0"):NewAddon(myname, "AceEvent-3.0")
 -- local L = LibStub("AceLocale-3.0"):GetLocale(myname, true)
 ns.HL = HL
 
-ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v27'
+local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
+
+ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v28'
+
+ns.CLASSIC = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE
+
+local ATLAS_CHECK, ATLAS_CROSS = "common-icon-checkmark", "common-icon-redx"
+if ns.CLASSIC then
+    ATLAS_CHECK, ATLAS_CROSS = "Tracker-Check", "Objective-Fail"
+end
 
 ---------------------------------------------------------
 -- Data model stuff:
@@ -229,7 +239,9 @@ local completeColor = CreateColor(0, 1, 0, 1)
 local incompleteColor = CreateColor(1, 0, 0, 1)
 local function render_string(s, context)
     if type(s) == "function" then s = s(context) end
-    return s:gsub("{(%l+):(%d+):?([^}]*)}", function(variant, id, fallback)
+    return s:gsub("{(%l+):([^:}]+):?([^}]*)}", function(variant, id, fallback)
+        local mainid, subid = id:match("(%d+)%.(%d+)")
+        mainid, subid = mainid and tonumber(mainid), subid and tonumber(subid)
         id = tonumber(id)
         if variant == "item" then
             local name, link, _, _, _, _, _, _, _, icon = GetItemInfo(id)
@@ -252,9 +264,17 @@ local function render_string(s, context)
         elseif variant == "questid" then
             return CreateAtlasMarkup("questnormal") .. (C_QuestLog.IsQuestFlaggedCompleted(id) and completeColor or incompleteColor):WrapTextInColorCode(id)
         elseif variant == "achievement" then
-            local _, name, _, completed = GetAchievementInfo(id)
-            if name and name ~= "" then
-                return CreateAtlasMarkup("storyheader-cheevoicon") .. " " .. (completed and completeColor or incompleteColor):WrapTextInColorCode(name)
+            if mainid and subid then
+                local criteria = (subid < 40 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID)(mainid, subid)
+                if criteria then
+                    return criteria
+                end
+                id = 'achievement:'..mainid..'.'..subid
+            else
+                local _, name, _, completed = GetAchievementInfo(id)
+                if name and name ~= "" then
+                    return CreateAtlasMarkup("storyheader-cheevoicon") .. " " .. (completed and completeColor or incompleteColor):WrapTextInColorCode(name)
+                end
             end
         elseif variant == "npc" then
             local name = mob_name(id)
@@ -335,10 +355,18 @@ local trimmed_icon = function(texture)
     end
     return icon_cache[texture]
 end
-local atlas_texture = function(atlas, extra)
+local atlas_texture = function(atlas, extra, crop)
     atlas = C_Texture.GetAtlasInfo(atlas)
     if type(extra) == "number" then
         extra = {scale=extra}
+    end
+    if crop then
+        local xcrop = (atlas.rightTexCoord - atlas.leftTexCoord) * crop
+        local ycrop = (atlas.bottomTexCoord - atlas.topTexCoord) * crop
+        atlas.rightTexCoord = atlas.rightTexCoord - xcrop
+        atlas.leftTexCoord = atlas.leftTexCoord + xcrop
+        atlas.bottomTexCoord = atlas.bottomTexCoord - ycrop
+        atlas.topTexCoord = atlas.topTexCoord + xcrop
     end
     return ns.merge({
         icon = atlas.file,
@@ -356,18 +384,12 @@ local function work_out_label(point)
     if point.label then
         return (render_string(point.label, point))
     end
-    if point.achievement then
-        if point.criteria and type(point.criteria) ~= "table" and point.criteria ~= true then
-            local criteria = (point.criteria < 40 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID)(point.achievement, point.criteria)
-            if criteria then
-                return criteria
-            end
+    if point.achievement and point.criteria and type(point.criteria) ~= "table" and point.criteria ~= true then
+        local criteria = (point.criteria < 40 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID)(point.achievement, point.criteria)
+        if criteria then
+            return criteria
         end
-        local _, achievement = GetAchievementInfo(point.achievement)
-        if achievement then
-            return achievement
-        end
-        fallback = 'achievement:'..point.achievement
+        fallback = 'achievement:'..point.achievement..'.'..point.criteria
     end
     if point.follower then
         local follower = C_Garrison.GetFollowerInfo(point.follower)
@@ -390,6 +412,13 @@ local function work_out_label(point)
             return link:gsub("[%[%]]", "")
         end
         fallback = 'item:'..ns.lootitem(point.loot[1])
+    end
+    if point.achievement and not point.criteria or point.criteria == true then
+        local _, achievement = GetAchievementInfo(point.achievement)
+        if achievement then
+            return achievement
+        end
+        fallback = 'achievement:'..point.achievement
     end
     if point.currency then
         if ns.currencies[point.currency] then
@@ -577,12 +606,19 @@ end
 local function tooltip_loot(tooltip, item)
     local knownText
     local r, g, b = NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b
-    local _, itemType, itemSubtype, equipLoc, icon, classID, subclassID = GetItemInfoInstant(ns.lootitem(item))
+    local id = ns.lootitem(item)
+    local _, itemType, itemSubtype, equipLoc, icon, classID, subclassID = GetItemInfoInstant(id)
     if ns.db.tooltip_charloot and not IsShiftKeyDown() then
         -- show loot for the current character only
         -- can't pass in a reusable table for the second argument because it changes the no-data case
-        local specTable = GetItemSpecInfo(ns.lootitem(item))
-        if specTable and #specTable == 0 then return true end
+        local specTable = GetItemSpecInfo(id)
+        -- Some cosmetic items seem to be flagged as not dropping for any spec. I
+        -- could only confirm this for some cosmetic back items but let's play it
+        -- safe and say that any cosmetic item can drop regardless of what the
+        -- spec info says...
+        if specTable and #specTable == 0 and not (_G.IsCosmeticItem and IsCosmeticItem(id)) then
+            return true
+        end
         -- then catch covenants / classes / etc
         if ns.itemRestricted(item) then return true end
     end
@@ -640,7 +676,7 @@ local function tooltip_loot(tooltip, item)
         if knownText then
             link = link .. " " .. knownText
         else
-            link = link .. " " .. CreateAtlasMarkup(known and "common-icon-checkmark" or "common-icon-redx")
+            link = link .. " " .. CreateAtlasMarkup(known and ATLAS_CHECK or ATLAS_CROSS)
         end
     end
     tooltip:AddDoubleLine(label, quick_texture_markup(icon) .. " " .. link,
@@ -853,7 +889,18 @@ function HLHandler:OnEnter(uiMapID, coord)
 end
 
 local function showAchievement(button, achievement)
-    OpenAchievementFrameToAchievement(achievement)
+    if OpenAchievementFrameToAchievement then
+        OpenAchievementFrameToAchievement(achievement)
+    else
+        -- probably classic
+        if ( not AchievementFrame ) then
+            AchievementFrame_LoadUI()
+        end
+        if ( not AchievementFrame:IsShown() ) then
+            AchievementFrame_ToggleAchievementFrame()
+        end
+        AchievementFrame_SelectAchievement(achievement)
+    end
 end
 
 local function createWaypoint(button, uiMapID, coord)
@@ -911,7 +958,7 @@ local function sendToChat(button, uiMapID, coord)
 end
 
 local function closeAllDropdowns()
-    CloseDropDownMenus(1)
+    LibDD:CloseDropDownMenus(1)
 end
 
 do
@@ -919,13 +966,13 @@ do
     local function generateMenu(button, level)
         local point = ns.points[currentZone] and ns.points[currentZone][currentCoord]
         if not (level and point) then return end
-        local info = UIDropDownMenu_CreateInfo()
+        local info = LibDD:UIDropDownMenu_CreateInfo()
         if (level == 1) then
             -- Create the title of the menu
-            info.isTitle      = 1
-            info.text         = "HandyNotes - " .. myname:gsub("HandyNotes_", "")
+            info.isTitle = 1
+            info.text = myfullname
             info.notCheckable = 1
-            UIDropDownMenu_AddButton(info, level)
+            LibDD:UIDropDownMenu_AddButton(info, level)
             wipe(info)
 
             if point.achievement then
@@ -934,7 +981,7 @@ do
                 info.notCheckable = 1
                 info.func = showAchievement
                 info.arg1 = point.achievement
-                UIDropDownMenu_AddButton(info, level)
+                LibDD:UIDropDownMenu_AddButton(info, level)
                 wipe(info)
             end
 
@@ -945,17 +992,19 @@ do
                 info.func = createWaypoint
                 info.arg1 = currentZone
                 info.arg2 = currentCoord
-                UIDropDownMenu_AddButton(info, level)
+                LibDD:UIDropDownMenu_AddButton(info, level)
                 wipe(info)
             end
 
-            info.text = COMMUNITIES_INVITE_MANAGER_LINK_TO_CHAT -- Link to chat
-            info.notCheckable = 1
-            info.func = sendToChat
-            info.arg1 = currentZone
-            info.arg2 = currentCoord
-            UIDropDownMenu_AddButton(info, level)
-            wipe(info)
+            if _G.MAP_PIN_HYPERLINK then
+                info.text = COMMUNITIES_INVITE_MANAGER_LINK_TO_CHAT -- Link to chat
+                info.notCheckable = 1
+                info.func = sendToChat
+                info.arg1 = currentZone
+                info.arg2 = currentCoord
+                LibDD:UIDropDownMenu_AddButton(info, level)
+                wipe(info)
+            end
 
             -- Hide menu item
             info.text         = "Hide node"
@@ -963,7 +1012,7 @@ do
             info.func         = hideNode
             info.arg1         = currentZone
             info.arg2         = currentCoord
-            UIDropDownMenu_AddButton(info, level)
+            LibDD:UIDropDownMenu_AddButton(info, level)
             wipe(info)
 
             if point.achievement then
@@ -972,7 +1021,7 @@ do
                 info.notCheckable = 1
                 info.func = hideAchievement
                 info.arg1 = point.achievement
-                UIDropDownMenu_AddButton(info, level)
+                LibDD:UIDropDownMenu_AddButton(info, level)
                 wipe(info)
             end
 
@@ -984,7 +1033,7 @@ do
                     info.func = hideGroupZone
                     info.arg1 = currentZone
                     info.arg2 = currentCoord
-                    UIDropDownMenu_AddButton(info, level)
+                    LibDD:UIDropDownMenu_AddButton(info, level)
                     wipe(info)
                 end
                 if not ns.hiddenConfig.groupsHidden then
@@ -993,7 +1042,7 @@ do
                     info.func = hideGroup
                     info.arg1 = currentZone
                     info.arg2 = currentCoord
-                    UIDropDownMenu_AddButton(info, level)
+                    LibDD:UIDropDownMenu_AddButton(info, level)
                     wipe(info)
                 end
             end
@@ -1002,14 +1051,12 @@ do
             info.text         = "Close"
             info.func         = closeAllDropdowns
             info.notCheckable = 1
-            UIDropDownMenu_AddButton(info, level)
+            LibDD:UIDropDownMenu_AddButton(info, level)
             wipe(info)
         end
     end
-    local HL_Dropdown = CreateFrame("Frame", myname.."DropdownMenu")
-    HL_Dropdown.displayMode = "MENU"
-    HL_Dropdown.initialize = generateMenu
 
+    local HL_Dropdown
     function HLHandler:OnClick(button, down, uiMapID, coord)
         if down then return end
         currentZone = uiMapID
@@ -1018,9 +1065,14 @@ do
         local point = ns.points[currentZone] and ns.points[currentZone][currentCoord]
         if point then
             if button == "RightButton" then
-                ToggleDropDownMenu(1, nil, HL_Dropdown, self, 0, 0)
+                if not HL_Dropdown then
+                    HL_Dropdown = LibDD:Create_UIDropDownMenu(myname .. "PointDropdown")
+                    LibDD:UIDropDownMenu_SetInitializeFunction(HL_Dropdown, generateMenu)
+                    LibDD:UIDropDownMenu_SetDisplayMode(HL_Dropdown, "MENU")
+                end
+                LibDD:ToggleDropDownMenu(1, nil, HL_Dropdown, self, 0, 0)
             end
-            if button == "LeftButton" and IsShiftKeyDown() then
+            if button == "LeftButton" and IsShiftKeyDown() and _G.MAP_PIN_HYPERLINK then
                 sendToChat(button, uiMapID, coord)
             end
         end
@@ -1084,8 +1136,10 @@ function HL:OnInitialize()
     self:RegisterEvent("CRITERIA_EARNED", "RefreshOnEvent")
     self:RegisterEvent("BAG_UPDATE", "RefreshOnEvent")
     self:RegisterEvent("QUEST_TURNED_IN", "RefreshOnEvent")
-    self:RegisterEvent("SHOW_LOOT_TOAST", "RefreshOnEvent")
-    self:RegisterEvent("GARRISON_FOLLOWER_ADDED", "RefreshOnEvent")
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+        self:RegisterEvent("SHOW_LOOT_TOAST", "RefreshOnEvent")
+        self:RegisterEvent("GARRISON_FOLLOWER_ADDED", "RefreshOnEvent")
+    end
     -- This is sometimes spammy, but is the only thing that tends to get us casts:
     self:RegisterEvent("CRITERIA_UPDATE", "RefreshOnEvent")
 
@@ -1137,10 +1191,12 @@ hooksecurefunc(VignettePinMixin, "OnMouseEnter", function(self)
     handle_tooltip(GameTooltip, point, true)
 end)
 
-hooksecurefunc("TaskPOI_OnEnter", function(self)
-    if not self.questID then return end
-    if not ns.WorldQuestsToPoints[self.questID] then return end
-    local point = ns.WorldQuestsToPoints[self.questID]
-    -- if not ns.should_show_point(point._coord, point, point._uiMapID, false) then return end
-    handle_tooltip(GameTooltip, point, true)
-end)
+if _G.TaskPoi_OnEnter then
+    hooksecurefunc("TaskPOI_OnEnter", function(self)
+        if not self.questID then return end
+        if not ns.WorldQuestsToPoints[self.questID] then return end
+        local point = ns.WorldQuestsToPoints[self.questID]
+        -- if not ns.should_show_point(point._coord, point, point._uiMapID, false) then return end
+        handle_tooltip(GameTooltip, point, true)
+    end)
+end

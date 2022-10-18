@@ -88,7 +88,9 @@ LSM:Register("sound", "|cFFFF0000Overlap|r", [[Interface\Addons\SharedMedia_Caus
 LSM:Register("sound", "|cFFFF0000Phase2|r", [[Interface\Addons\SharedMedia_Causese\sound\Phase2.ogg]])
 LSM:Register("sound", "|cFFFF0000Phase3|r", [[Interface\Addons\SharedMedia_Causese\sound\Phase3.ogg]])
 LSM:Register("sound", "|cFFFF0000Pots|r", [[Interface\Addons\SharedMedia_Causese\sound\Pots.ogg]])
+LSM:Register("sound", "|cFFFF0000Pull|r", [[Interface\Addons\SharedMedia_Causese\sound\Pull.ogg]])
 LSM:Register("sound", "|cFFFF0000Purple|r", [[Interface\Addons\SharedMedia_Causese\sound\Purple.ogg]])
+LSM:Register("sound", "|cFFFF0000Push|r", [[Interface\Addons\SharedMedia_Causese\sound\Push.ogg]])
 LSM:Register("sound", "|cFFFF0000Range|r", [[Interface\Addons\SharedMedia_Causese\sound\Range.ogg]])
 LSM:Register("sound", "|cFFFF0000Ready|r", [[Interface\Addons\SharedMedia_Causese\sound\Ready.ogg]])
 LSM:Register("sound", "|cFFFF0000Red|r", [[Interface\Addons\SharedMedia_Causese\sound\Red.ogg]])
@@ -110,6 +112,7 @@ LSM:Register("sound", "|cFFFF0000Taunt|r", [[Interface\Addons\SharedMedia_Causes
 LSM:Register("sound", "|cFFFF0000Transition|r", [[Interface\Addons\SharedMedia_Causese\sound\Transition.ogg]])
 LSM:Register("sound", "|cFFFF0000Trap|r", [[Interface\Addons\SharedMedia_Causese\sound\Trap.ogg]])
 LSM:Register("sound", "|cFFFF0000Turn|r", [[Interface\Addons\SharedMedia_Causese\sound\Turn.ogg]])
+LSM:Register("sound", "|cFFFF0000Winds|r", [[Interface\Addons\SharedMedia_Causese\sound\Winds.ogg]])
 LSM:Register("sound", "|cFFFF0000Yellow|r", [[Interface\Addons\SharedMedia_Causese\sound\Yellow.ogg]])
 
 -- -----

@@ -405,9 +405,7 @@ function HealBot_Share_LoadSpells(sIn)
             end
         end
     end
-    if HealBot_Config.Profile>1 then 
-        HealBot_Options_hbProfile_saveClass()
-    end
+    HealBot_Options_SaveProfile()
     HealBot_Timers_InitExtraOptions()
     HealBot_Options_ComboClass_Text()
     HealBot_Timers_Set("INIT","PrepSetAllAttribs")

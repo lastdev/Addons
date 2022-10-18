@@ -48,6 +48,11 @@ L["config_weaponsmith_desc"] = "Zeigt die Positionen von Waffenschmieden an."
 
 L["config_easy_waypoints"] = "Vereinfachte Wegpunkte"
 L["config_easy_waypoints_desc"] = "Aktiviert die vereinfachte Wegpunkterstellung. \nErlaubt es per Rechtsklick einen Wegpunkt zu setzen und per STRG + Rechtsklick mehr Optionen aufzurufen."
+L["config_waypoint_dropdown"] = "Wähle aus"
+L["config_waypoint_dropdown_desc"] = "Wähle aus, wie der Wegpunkt erstellt werden soll."
+L["Blizzard"] = true
+L["TomTom"] = true
+L["Both"] = "Beide"
 
 L["config_others"] = "Anderes"
 L["config_others_desc"] = "Zeige alle anderen POIs."
@@ -76,6 +81,7 @@ L["dev_config_show_prints_desc"] = "Zeigt print() Nachrichten im Chatfenster an.
 
 L["handler_context_menu_addon_name"] = "HandyNotes: Covenant Sanctum"
 L["handler_context_menu_add_tomtom"] = "Zu TomTom hinzufügen"
+L["handler_context_menu_add_map_pin"] = "Kartenmarkierung setzen"
 L["handler_context_menu_hide_node"] = "Verstecke diesen Punkt"
 
 --============================================TOOLTIPS============================================--

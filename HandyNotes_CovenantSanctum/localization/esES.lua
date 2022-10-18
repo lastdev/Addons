@@ -3,6 +3,8 @@ local L = LibStub("AceLocale-3.0"):NewLocale("HandyNotes_CovenantSanctum", "esES
 if not L then return end
 -- Spanish localization by Irakua ( https://www.curseforge.com/members/irakua )
 if L then
+L["Blizzard"] = true
+L["Both"] = "Ambos"
 L["config_easy_waypoints"] = "Puntos de ruta fáciles"
 L["config_easy_waypoints_desc"] = "Activa la creación de puntos de ruta simplificada. Permite establecer un punto de ruta haciendo clic con el botón derecho y acceder a más opciones con CTRL + clic derecho."
 L["config_icon_alpha"] = "Opacidad"
@@ -32,6 +34,8 @@ L["config_tab_general"] = "General"
 L["config_travelguide_note"] = "|cFFFF0000*Ya activo a través de HandyNotes: TravelGuide.|r"
 L["config_vendor"] = "Vendedor"
 L["config_vendor_desc"] = "Mostrar la ubicación de los vendedores."
+L["config_waypoint_dropdown"] = "Elige"
+L["config_waypoint_dropdown_desc"] = "Elije cómo se debe crear el punto de ruta."
 L["config_weaponsmith"] = "Armero"
 L["config_weaponsmith_desc"] = "Mostrar la ubicación de los armeros."
 L["config_what_to_display"] = "¿Qué mostrar?"
@@ -44,4 +48,5 @@ L["handler_tooltip_sanctum_feature"] = "una Mejora de Santuario"
 L["handler_tooltip_TNTIER"] = "Nivel %s de la red de transporte."
 L["Mailbox"] = "Correo"
 L["Portal to Oribos"] = "Portal a Oribos"
+L["TomTom"] = true
 end

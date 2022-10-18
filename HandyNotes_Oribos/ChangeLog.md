@@ -1,5 +1,11 @@
 ## Revision History:
 
+#### v19 (September 29, 2022)
+-------------------------------
+* Added an option to create a Blizzard waypoint
+    * Easy waypoints now sets Blizzard waypoints by default.
+    * Please check the options to change it to TomTom (if installed)
+
 #### v18 (August 17, 2022)
 -------------------------------
 * Updated zhCN by [nanjuekaien1](https://github.com/Dathwada/handynotes-oribos/pull/7)

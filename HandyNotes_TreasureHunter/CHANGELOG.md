@@ -1,5 +1,18 @@
 # Changelog
 
+## Changed in v28
+
+* Use LibUIDropDownMenu-4.0 to avoid the taint mess of UIDropDownMenu
+* Just use the TOC title for the tooltips
+* Show a tooltip on the map icon
+* Don't create the point dropdown until it's needed
+* Label for criteria=true case should show achievement name
+* Some cosmetic items were incorrectly saying they don't drop
+
+## Changed in v27
+
+* Updated for 9.2.7
+
 ## Changed in v26
 
 * Updated for 9.2.5, fixing transmog errors

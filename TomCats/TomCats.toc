@@ -3,13 +3,13 @@
 ## Notes: See license.txt for license and copyright information
 ## Author: TomCat
 ## X-Website: https://www.tomcatstours.com
-## Version: 2.4.14
+## Version: 2.4.15
 ## DefaultState: enabled
 ## SavedVariables: TomCats_Account
 ## SavedVariablesPerCharacter: TomCats_Character
 ## X-Category: Achievements, Map, Miscellaneous
 ## X-Localizations: enUS, enGB, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ptPT, ruRU, zhCN, zhTW
-## X-TomCats-Expiry: 1664643082
+## X-TomCats-Expiry: 1667240414
 
 constants.lua
 slashcommands.lua

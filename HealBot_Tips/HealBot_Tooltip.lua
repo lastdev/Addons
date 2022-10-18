@@ -20,11 +20,15 @@ local hbPlayerCommands = {}
 if HEALBOT_GAME_VERSION>3 then
     hbPlayerCommands = { [strlower(HEALBOT_MOUNTSPETS)]=true,
                          [strlower(HEALBOT_FAVMOUNT)]=true,
+                         [strlower(HEALBOT_RANDOMMOUNT)]=true,
+                         [strlower(HEALBOT_RANDOMGOUNDMOUNT)]=true,
                          [strlower(HEALBOT_FAVPET)]=true,
                        }
 elseif HEALBOT_GAME_VERSION>2 then
     hbPlayerCommands = { [strlower(HEALBOT_MOUNTS)]=true,
                          [strlower(HEALBOT_FAVMOUNT)]=true,
+                         [strlower(HEALBOT_RANDOMMOUNT)]=true,
+                         [strlower(HEALBOT_RANDOMGOUNDMOUNT)]=true,
                        }
 end
 
@@ -34,37 +38,10 @@ local hbCustomTipAnchorObjects={}
 local HealBot_Tooltip_luVars={}
 HealBot_Tooltip_luVars["uGroup"]=false
 HealBot_Tooltip_luVars["doInit"]=true
-local hbTipsMaxButtons={["Enemy"]=20,["Enabled"]=20,["Emerg"]=5}
 
 function HealBot_Tooltip_setLuVars(vName, vValue)
     HealBot_Tooltip_luVars[vName]=vValue
       --HealBot_setCall("HealBot_Tooltip_setLuVars - "..vName)
-end
-
-function HealBot_Tooltip_setMaxButtons(maxButton, cType)
-    if maxButton<HealBot_Globals.Tooltip_MaxButtons then
-        hbTipsMaxButtons[cType]=maxButton
-    else
-        hbTipsMaxButtons[cType]=HealBot_Globals.Tooltip_MaxButtons
-    end
-end
-
-function HealBot_Tooltip_setAllMaxButtons()
-    if HealBot_Action_GetMaxButtons("Enemy")>HealBot_Globals.Tooltip_MaxButtons then 
-        hbTipsMaxButtons["Enemy"]=HealBot_Globals.Tooltip_MaxButtons 
-    else
-        hbTipsMaxButtons["Enemy"]=HealBot_Action_GetMaxButtons("Enemy")
-    end
-    if HealBot_Action_GetMaxButtons("Enabled")>HealBot_Globals.Tooltip_MaxButtons then 
-        hbTipsMaxButtons["Enabled"]=HealBot_Globals.Tooltip_MaxButtons 
-    else
-        hbTipsMaxButtons["Enabled"]=HealBot_Action_GetMaxButtons("Enabled")
-    end
-    if HealBot_Action_GetMaxButtons("Emerg")>HealBot_Globals.Tooltip_MaxButtons then 
-        hbTipsMaxButtons["Emerg"]=HealBot_Globals.Tooltip_MaxButtons
-    else
-        hbTipsMaxButtons["Emerg"]=HealBot_Action_GetMaxButtons("Emerg")
-    end
 end
 
 function HealBot_Tooltip_Clear_CheckBuffs()
@@ -452,7 +429,7 @@ end
 
 function HealBot_Action_GetTimeOffline(button)
     local timeOffline=nil
-    local offlineStart=HealBot_Action_getGuidData(button, "OFFLINE")
+    local offlineStart=HealBot_Action_getGuidData(button.guid, "OFFLINE")
     if offlineStart then
         timeOffline = GetTime() - offlineStart;
         local seconds = math.floor(timeOffline % 60)
@@ -612,12 +589,12 @@ function HealBot_Action_DoRefreshTooltip()
                 end
                 local uSpec=" "
                 if HealBot_Panel_RaidUnitGUID(xButton.guid) then
-                    uSpec=HealBot_Action_getGuidData(xButton, "SPEC")
+                    uSpec=HealBot_Action_getGuidData(xButton.guid, "SPEC")
                 else
                     uSpec=xButton.spec
                 end
                 if HEALBOT_GAME_VERSION>2 and uSpec==" " then
-                    HealBot_QueueSpecUpdate(xButton)
+                    HealBot_QueueSpecSlowUpdate(xButton)
                 end
                 HealBot_Tooltip_luVars["uGroup"]=0
                 if IsInRaid() then 
@@ -810,10 +787,10 @@ function HealBot_Action_DoRefreshTooltip()
         end
         
         local bId, bName, sName, bR, bG, bB
-        for x=1,hbTipsMaxButtons[HealBot_Data["TIPTYPE"]] do
+        for x=1,HealBot_Globals.Tooltip_MaxButtons do
             bId, bName=HealBot_Options_ComboClass_Button(x)
             sName = HealBot_Action_SpellPattern(bId, string.upper(HealBot_Data["TIPTYPE"]))
-            if x==1 and not IsModifierKeyDown() and not InCombatLockdown() and HealBot_Globals.SmartCast and xButton.status.current<HealBot_Unit_Status["DC"] and UnitIsFriend("player",xButton.unit) then 
+            if x==1 and not HealBot_Data["UILOCK"] and HealBot_Globals.SmartCast and xButton.status.current<HealBot_Unit_Status["DC"] and not IsModifierKeyDown() and UnitIsFriend("player",xButton.unit) then 
                 sName=HealBot_Action_SmartCast(xButton) or sName
             end
             sName, bR, bG, bB=HealBot_Tooltip_setspellName(xButton, sName)
