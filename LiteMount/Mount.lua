@@ -12,9 +12,9 @@ local _, LM = ...
 
 local L = LM.Localize
 
---[===[@debug@
+--[==[@debug@
 if LibDebug then LibDebug() end
---@end-debug@]===]
+--@end-debug@]==]
 
 LM.Mount = { }
 LM.Mount.__index = LM.Mount
@@ -38,9 +38,9 @@ function LM.Mount:Get(className, ...)
     if not m.family then
         m.family = UNKNOWN
         LM.MOUNTFAMILY["Unknown"][m.spellID] = true
---[===[@debug@
+--[==[@debug@
         LM.PrintError(format('No family: %s (%d)', m.name, m.spellID))
---@end-debug@]===]
+--@end-debug@]==]
     end
 
     return m

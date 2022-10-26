@@ -1,6 +1,6 @@
 # NugComboBar
 
-## [9.2.2](https://github.com/rgd87/NugComboBar/tree/9.2.2) (2022-09-08)
-[Full Changelog](https://github.com/rgd87/NugComboBar/compare/9.2.1...9.2.2) 
+## [10.0.1](https://github.com/rgd87/NugComboBar/tree/10.0.1) (2022-10-26)
+[Full Changelog](https://github.com/rgd87/NugComboBar/compare/10.0.0...10.0.1) 
 
-- Fixed showing uninitialized bar for Druid at login  
+- Wrath fix for 10.0  

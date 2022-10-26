@@ -327,14 +327,14 @@ local ReappearFunc = function(self, animLevel, func, arg, speed)
     self.rag:Play()
 end
 
-local SR1 = 9
-local SR2 = 10
-local SR3 = 11
-local SR4 = 12
-local SR5 = 13
-local SR6 = 14
-local SR7 = 15
-local SR8 = 16
+local SR1 = 10
+local SR2 = 11
+local SR3 = 12
+local SR4 = 13
+local SR5 = 14
+local SR6 = 15
+local SR7 = 16
+local SR8 = 17
 
 local pointtex = {
     [1] = {
@@ -405,6 +405,15 @@ local pointtex = {
         width = 35, height = 32,
         psize = 50,
         poffset_x = 16, poffset_y = -14,
+    },
+
+    [9] = {
+        texture = "Interface\\Addons\\NugComboBar\\tex\\ncbc_bg5",
+        coords = {50/256, 74/256, 0, 1},
+        role = "NORMAL",
+        width = 24, height = 32,
+        psize = 50,
+        poffset_x = 17, poffset_y = -14,
     },
 
 
@@ -505,6 +514,7 @@ local mappings = {
     [4] = { 1, 2, 3, 6 },
     [5] = { 1, 2, 3, 4, 6 },
     [6] = { 1, 2, 3, 4, 5, 6 },
+    [7] = { 1, 2, 3, 4, 5, 9, 6 },
     -- ["SHAMAN7"] = { 1, 2, 3, 4, 6, 7, 8 },
     -- ["SHAMAN5"] = { 1, 2, 3, 6, 7 },
     -- ["SHAMANDOUBLE"] = { 1, 2, 3, 4, 6, SR1, SR2, SR3, SR4, SR6},
@@ -862,15 +872,34 @@ NugComboBar.Redraw = Redraw
 NugComboBar.ResetTransformations = ResetTransformations
 
 local SetColor3DFunc = function(self, r,g,b, force)
-    local enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB
+    local lightValues = {
+        omnidirectional = false,
+        point = CreateVector3D(0, 1, 0),
+        ambientIntensity = 1,
+        ambientColor = CreateColor(0.69999, 0.69999, 0.69999),
+        diffuseIntensity = 1,
+        diffuseColor = CreateColor(0.8, 0.8, 0.63999)
+    };
     if NugComboBar.db.profile.colors3d or force then
-        enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB = true, false, 0, 1, 0, 1, r,g,b, 1, r,g,b
-    else
-        enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB = true, false, 0, 1, 0, 1, 0.69999, 0.69999, 0.69999, 1, 0.8, 0.8, 0.63999
+        lightValues.ambientColor = CreateColor(r,g,b)
+        lightValues.diffuseColor = CreateColor(r,g,b)
     end
     -- self.model:SetLight(enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB )
-    self.playermodel:SetLight(enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB )
-    self.bgmodel:SetLight(enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB )
+    self.playermodel:SetLight(true, lightValues )
+    self.bgmodel:SetLight(true, lightValues )
+end
+if APILevel < 10 then
+    SetColor3DFunc = function(self, r,g,b, force)
+        local enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB
+        if NugComboBar.db.profile.colors3d or force then
+            enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB = true, false, 0, 1, 0, 1, r,g,b, 1, r,g,b
+        else
+            enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB = true, false, 0, 1, 0, 1, 0.69999, 0.69999, 0.69999, 1, 0.8, 0.8, 0.63999
+        end
+        -- self.model:SetLight(enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB )
+        self.playermodel:SetLight(enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB )
+        self.bgmodel:SetLight(enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB )
+    end
 end
 
 
@@ -878,13 +907,6 @@ function NugComboBar.Create3DPoint(self, id, opts)
     local size = 64
     local f = CreateFrame("Frame","NugComboBarPoint"..id,self)
     f:SetHeight(size); f:SetWidth(size);
-
-    -- :SetLight( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 );
-    local enabled, omni, dirX, dirY, dirZ,
-          ambIntensity, ambR, ambG, ambB,
-          dirIntensity, dirR, dirG, dirB = true, false, 0, 1, 0, 1, 0.69999, 0.69999, 0.69999, 1, 0.8, 0.8, 0.63999
-          -- dirIntensity, dirR, dirG, dirB = 1, 0, 0, 1, 0, 1, 1.0, 0.0, 0.0, 1, 1.0, 1.0, 1.0
-
 
     local pm = CreateFrame("PlayerModel","NugComboBarPointPlayerModel"..id,f)
     pm:SetFrameLevel(2)
@@ -895,13 +917,12 @@ function NugComboBar.Create3DPoint(self, id, opts)
     pm:SetModelScale(1)
     pm:SetPosition(0,0,0)
     -- pm:SetScript("OnUpdateModel", function() print("PM model update")     end)
-    pm:SetLight(enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB )
 
     local m = CreateFrame("Model","NugComboBarPointModel"..id,f)
     m:SetFrameLevel(2)
     -- pm:SetScript("OnUpdateModel", function() print("M model update") end)
     m:SetAllPoints(f)
-    m:SetLight(enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB )
+
 
     f.playermodel = pm
     f.model = m
@@ -927,7 +948,7 @@ function NugComboBar.Create3DPoint(self, id, opts)
         bgm:SetHeight(size)
         bgm:SetScale(2)
         bgm:SetPoint("CENTER", f, "CENTER", 0, 0)
-        bgm:SetLight(enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB )
+
         f.bgmodel = bgm
 
         f.bgmodel:SetScript("OnHide", ResetTransformations)
@@ -935,6 +956,28 @@ function NugComboBar.Create3DPoint(self, id, opts)
         f.bgmodel.Redraw = Redraw
         f.bgmodel.ResetTransformations = ResetTransformations
     -- end
+
+
+    if APILevel >= 10 then
+        local lightValues = {
+            omnidirectional = false,
+            point = CreateVector3D(0, 1, 0),
+            ambientIntensity = 1,
+            ambientColor = CreateColor(0.69999, 0.69999, 0.69999),
+            diffuseIntensity = 1,
+            diffuseColor = CreateColor(0.8, 0.8, 0.63999)
+        };
+        pm:SetLight(true, lightValues )
+        m:SetLight(true, lightValues )
+        bgm:SetLight(true, lightValues )
+    else
+        local enabled, omni, dirX, dirY, dirZ,
+            ambIntensity, ambR, ambG, ambB,
+            dirIntensity, dirR, dirG, dirB = true, false, 0, 1, 0, 1, 0.69999, 0.69999, 0.69999, 1, 0.8, 0.8, 0.63999
+        pm:SetLight(enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB )
+        m:SetLight(enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB )
+        bgm:SetLight(enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB )
+    end
 
     f.CreateBGTexture = CreateBGTexture
 
@@ -1053,6 +1096,16 @@ NugComboBar.CreatePixelBar = CreatePixelBar
 --     end
 -- end
 
+local function MakeCompatibleAnimation(anim)
+    if anim:GetObjectType() == "Scale" and anim.SetScaleFrom then
+        return anim
+    else
+        anim.SetScaleFrom = anim.SetFromScale
+        anim.SetScaleTo = anim.SetToScale
+    end
+    return anim
+end
+
 NugComboBar.Create = function(self)
     NugComboBar:IsDefaultSkin(true)
 
@@ -1169,8 +1222,8 @@ NugComboBar.Create = function(self)
             d1:SetOrder(1)
 
             -- local sh1 = dag:CreateAnimation("Scale")
-            -- sh1:SetFromScale(1,1)
-            -- sh1:SetToScale(0.05, 0.05)
+            -- sh1:SetScaleFrom(1,1)
+            -- sh1:SetScaleTo(0.05, 0.05)
             -- sh1:SetOrder(1)
             -- sh1:SetDuration(0.1)
 
@@ -1222,9 +1275,9 @@ NugComboBar.Create = function(self)
             g1a1:SetToAlpha(0.8)
             g1a1:SetDuration(0.3)
             g1a1:SetOrder(1)
-            local g1a2 = g1ag:CreateAnimation("Scale")
-            g1a2:SetFromScale(1,1)
-            g1a2:SetToScale(0.47, 0.47)
+            local g1a2 = MakeCompatibleAnimation(g1ag:CreateAnimation("Scale"))
+            g1a2:SetScaleFrom(1,1)
+            g1a2:SetScaleTo(0.47, 0.47)
             g1a2:SetDuration(0.3)
             g1a2:SetOrder(1)
             local g1a3 = g1ag:CreateAnimation("Alpha")

@@ -1,16 +1,12 @@
 --[[ See license.txt for license and copyright information ]]
 local addonName, addon = ...
 
+local _, _, _, tocversion = GetBuildInfo()
+
 local AlertFrame = AlertFrame
-local BlizzardOptionsPanel_OnLoad = BlizzardOptionsPanel_OnLoad
 local C_Map = C_Map
 local C_VignetteInfo = C_VignetteInfo
 local CreateFrame = CreateFrame
-local InterfaceAddOnsList_Update = InterfaceAddOnsList_Update
-local InterfaceOptions_AddCategory = InterfaceOptions_AddCategory
-local InterfaceOptionsPanel_Cancel = InterfaceOptionsPanel_Cancel
-local InterfaceOptionsPanel_Default = InterfaceOptionsPanel_Default
-local InterfaceOptionsPanel_Refresh = InterfaceOptionsPanel_Refresh
 local PlaySound = PlaySound
 local SOUNDKIT = SOUNDKIT
 
@@ -375,23 +371,13 @@ do
 	for k in pairs(tmp2) do
 		atlasNameInclusions[string.lower(k)] = true
 	end
+
 	TomCats_ConfigDiscoveries.name = "Discoveries"
 	TomCats_ConfigDiscoveries.parent = "TomCat's Tours"
 	TomCats_ConfigDiscoveries.controls = { }
 	TomCats_ConfigDiscoveries.Header.Text:SetFont(TomCats_ConfigDiscoveries.Header.Text:GetFont(), 64)
-	BlizzardOptionsPanel_OnLoad(
-			TomCats_ConfigDiscoveries,
-			function(self)
-				for _, v in ipairs(self.controls) do
-					if (v.okay) then v:okay() end
-				end
-			end,
-			InterfaceOptionsPanel_Cancel,
-			InterfaceOptionsPanel_Default,
-			InterfaceOptionsPanel_Refresh
-	)
-	InterfaceOptions_AddCategory(TomCats_ConfigDiscoveries)
-	InterfaceAddOnsList_Update()
+	local subcategory = Settings.RegisterCanvasLayoutSubcategory(TomCats_Config.category, TomCats_ConfigDiscoveries, TomCats_ConfigDiscoveries.name);
+	TomCats_ConfigDiscoveries.category = subcategory
 end
 
 local function serializeTable(val, key)
@@ -571,12 +557,12 @@ local function OnEvent(event, arg1)
 	if (event == "ADDON_LOADED") then
 		if (addonName == arg1) then
 			TomCatsDiscoveryAlertSystem = AlertFrame:AddQueuedAlertFrameSubSystem("TomCatsDiscoveryAlertFrameTemplate", TomCatsDiscoveryAlertFrame_SetUp);
-			if (_G["TomCats_Account"].discoveriesVersion ~= "2.4.15") then
+			if (_G["TomCats_Account"].discoveriesVersion ~= "2.4.20") then
 				_G["TomCats_Account"].discoveries.vignettes = { }
 				_G["TomCats_Account"].discoveries.vignetteAtlases = { }
-				_G["TomCats_Account"].discoveries.version = "2.4.15"
+				_G["TomCats_Account"].discoveries.version = "2.4.20"
 				_G["TomCats_Account"].discoveriesResetCount = 0
-				_G["TomCats_Account"].discoveriesVersion = "2.4.15"
+				_G["TomCats_Account"].discoveriesVersion = "2.4.20"
 			end
 			local discoveries = 0
 			discoveredVignettes = _G["TomCats_Account"].discoveries.vignettes

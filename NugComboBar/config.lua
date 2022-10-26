@@ -103,7 +103,8 @@ local makeRCP = function(anticipation, subtlety, maxFill, maxCP)
 end
 
 NugComboBar:RegisterConfig("ComboPointsRogue", {
-    triggers = { GetSpecialization, GetSpell(193531) }, -- Deeper Stratagem,
+    -- Deeper Stratagem, Devious Stratagem(Outlaw), Secret Stratagem(Sub)
+    triggers = { GetSpecialization, GetSpell(193531), GetSpell(394321), GetSpell(394320) },
     setup = function(self, spec)
         self.eventProxy:RegisterUnitEvent("UNIT_POWER_UPDATE", "player")
         self.eventProxy.UNIT_POWER_UPDATE = COMBO_POINTS_UNIT_POWER_UPDATE
@@ -118,7 +119,10 @@ NugComboBar:RegisterConfig("ComboPointsRogue", {
             self.eventProxy.PLAYER_TARGET_CHANGED = GENERAL_UPDATE
         end
 
-        local maxCP = IsPlayerSpell(193531) and 6 or 5 -- Deeper Stratagem
+        local DeeperStratagem = IsPlayerSpell(193531) and 1 or 0 -- Deeper Stratagem
+        local DeviousStratagem = IsPlayerSpell(394321) and 1 or 0 -- Deeper Stratagem
+        local SecretStratagem = IsPlayerSpell(394320) and 1 or 0 -- Secret Stratagem
+        local maxCP = 5 + DeeperStratagem + DeviousStratagem + SecretStratagem
 
         self:SetMaxPoints(maxCP)
         self:SetPointGetter(RogueGetComboPoints)
@@ -478,6 +482,85 @@ NugComboBar:RegisterConfig("SoulShards", {
 }, "WARLOCK")
 
 ---------------------
+-- EVOKER
+---------------------
+
+local Enum_PowerType_Essence = Enum.PowerType.Essence
+
+local essencePointsPrev = -1
+local essenceRegenStart = GetTime()
+local essenceRegenDuration = 5
+local essenceRegenOn = false
+
+local function GetEssenceOnUpdate(_, elapsed)
+    local self = NugComboBar
+    local now = GetTime()
+    if now > essenceRegenStart + essenceRegenDuration then
+        essenceRegenStart = essenceRegenStart + essenceRegenDuration
+        self.UNIT_COMBO_POINTS(self, nil, "player", "ESSENCE")
+    end
+end
+
+local GetEssence = function(unit)
+    local points = UnitPower("player", Enum_PowerType_Essence)
+    local pointsMax = UnitPowerMax("player", Enum_PowerType_Essence)
+
+    if points ~= essencePointsPrev then
+        local essenceRegenOnNow = points ~= pointsMax
+        local now = GetTime()
+
+        if essenceRegenOnNow ~= essenceRegenOn then
+            essenceRegenOn = essenceRegenOnNow
+            essenceRegenStart = now
+        end
+
+        if points > essencePointsPrev then
+            essenceRegenStart = now
+        end
+        essencePointsPrev = points
+    end
+
+    local isAtMaxPoints = points == pointsMax
+    if not isAtMaxPoints then
+        local peace, interrupted = GetPowerRegenForPowerType(Enum_PowerType_Essence)
+        if (peace == nil or peace == 0) then
+            peace = 0.2;
+        end
+        essenceRegenDuration = 1 / peace
+        return points, essenceRegenStart, essenceRegenDuration
+    else
+        return points, nil, nil
+    end
+end
+
+local ESSENCE_UNIT_POWER_UPDATE = function(self,event,unit,ptype)
+    if ptype ~= "ESSENCE" or unit ~= "player" then return end
+    self.UNIT_COMBO_POINTS(self,event,unit,ptype)
+end
+
+NugComboBar:RegisterConfig("Essence", {
+    triggers = { GetSpecialization, GetSpell(369908) },
+    setup = function(self, spec)
+        self.eventProxy:RegisterUnitEvent("UNIT_POWER_UPDATE", "player")
+        self.eventProxy.UNIT_POWER_UPDATE = ESSENCE_UNIT_POWER_UPDATE
+
+        self.eventProxy:SetScript("OnUpdate", GetEssenceOnUpdate)
+
+        -- local max = UnitPowerMax( "player", Enum_PowerType_Essence ) -- not updated quick enough on talent change
+        local max = 5
+        if IsPlayerSpell(369908) then max = max + 1 end
+        self:SetMaxPoints(max)
+        self:SetDefaultValue(max)
+        -- self.flags.soundFullEnabled = true
+        self.flags.shouldBeFull = true
+        self.flags.showEmpty = true
+
+        self:SetPointGetter(GetEssence)
+        self:EnableBar(0, 10, "Small", "Timer")
+    end
+}, "EVOKER")
+
+---------------------
 -- DEMON HUNTER
 ---------------------
 
@@ -748,7 +831,7 @@ NugComboBar:RegisterConfig("Undulation", {
             if (bit_band(srcFlags, COMBATLOG_OBJECT_AFFILIATION_MINE) == COMBATLOG_OBJECT_AFFILIATION_MINE) then -- isSrcPlayer
                 if eventType == "SPELL_CAST_SUCCESS" then
                     if spellID == 77472 or spellID == 8004 then
-                        if GetPlayerAuraBySpellID(216251) then -- Undulation buff
+                        if FindAura("player", 216251, "HELPFUL") then -- Undulation buff
                             undulationConsumed = true
                             undulationCharge = 1
                         else
@@ -761,7 +844,7 @@ NugComboBar:RegisterConfig("Undulation", {
                 elseif spellID == 216251 then -- Undulation buff
 
                     if eventType == "SPELL_AURA_APPLIED" then
-                        local name, icon, count, debuffType, duration, expirationTime = GetPlayerAuraBySpellID(216251)
+                        local name, icon, count, debuffType, duration, expirationTime = FindAura("player", 216251, "HELPFUL")
                         if name then
                             undulationStartTime = expirationTime - duration
                             undulationDuration = duration
@@ -806,7 +889,7 @@ NugComboBar:RegisterConfig("Icefury", {
 
 
 local function GetMaelstromWaapon()
-    local name, icon, count, debuffType, duration, expirationTime, caster = GetPlayerAuraBySpellID(344179) -- new API function
+    local name, icon, count, debuffType, duration, expirationTime, caster = FindAura("player", 344179, "HELPFUL") -- new API function
     if not name then return 0 end
     local c1 = math.min(count, 5)
     local c2 = math.max(count - 5, 0)

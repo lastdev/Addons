@@ -500,6 +500,7 @@ addon.spellsDB = {
             type = addon.Enums.spellType.attack,
             target = addon.Enums.TargetType.furthest_enemy,
             attackPercent = 120,
+            continueIfCasterDies = true,
         },
         [2] = {
             type = addon.Enums.spellType.buff,

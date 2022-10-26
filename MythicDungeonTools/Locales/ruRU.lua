@@ -48,12 +48,10 @@ L["Alcruux"] = "Алькруукс"
 --[[ L["Algeth'ar Nurse"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Algeth'ar Security"] = ""--]] 
---[[Translation missing --]]
---[[ L["AlgetharAcademy"] = ""--]] 
+L["AlgetharAcademy"] = "Академия Алгет'ар"
 --[[Translation missing --]]
 --[[ L["Alpha Eagle"] = ""--]] 
---[[Translation missing --]]
---[[ L["AltarOfShadow"] = ""--]] 
+L["AltarOfShadow"] = "Альтарь тени"
 L["Amalgam of Souls"] = "Слияние душ"
 L["Amarth"] = "Амарт"
 L["Ancient Captain"] = "Древний капитан"
@@ -284,14 +282,12 @@ L["Create"] = "Создать"
 L["Create a new preset"] = "Создать новый маршрут"
 L["Creepy Crawler"] = "Мерзкий ползун"
 L["Critter"] = "Зверек"
---[[Translation missing --]]
---[[ L["CryptOfTheAncients"] = ""--]] 
+L["CryptOfTheAncients"] = "Склеп Древних"
 --[[Translation missing --]]
 --[[ L["Crystal Fury"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Crystal Thrasher"] = ""--]] 
---[[Translation missing --]]
---[[ L["CrystalChamber"] = ""--]] 
+L["CrystalChamber"] = "Кристальные чертоги"
 L["Cursed Falke"] = "Проклятый сокол"
 L["Cursed Spire of Ny'alotha"] = "Проклятый шпиль Ни'алоты"
 L["Custom"] = "Пользовательский"
@@ -373,10 +369,8 @@ L["Domina Venomblade"] = "Домина Отравленный Клинок"
 --[[Translation missing --]]
 --[[ L["Draconic Image"] = ""--]] 
 L["Drag the bottom right edge to resize MDT."] = "Потяните за нижний правый угол, чтобы изменить размер MDT"
---[[Translation missing --]]
---[[ L["Dragonflight Season 1"] = ""--]] 
---[[Translation missing --]]
---[[ L["Dragonflight Season 2"] = ""--]] 
+L["Dragonflight Season 1"] = "Драконы 1 сезон"
+L["Dragonflight Season 2"] = "Драконы 2 сезон"
 L["Dragonkin"] = "Драконид"
 --[[Translation missing --]]
 --[[ L["Drakonid Breaker"] = ""--]] 
@@ -419,8 +413,7 @@ L["Ebonclaw Worg"] = "Эбеновый ворг"
 L["Echelon"] = "Эшелон"
 --[[Translation missing --]]
 --[[ L["Echo of Doragosa"] = ""--]] 
---[[Translation missing --]]
---[[ L["EdgeOfReality"] = ""--]] 
+L["EdgeOfReality"] = "Грань реальности"
 L["Edit"] = "Изменить"
 --[[Translation missing --]]
 --[[ L["Efficiency Score"] = ""--]] 
@@ -726,8 +719,7 @@ L["Infused Quill-feather"] = "Зачарованное перо"
 --[[ L["InfusersRotunda"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Infusion Chambers"] = ""--]] 
---[[Translation missing --]]
---[[ L["InfusionChamber"] = ""--]] 
+L["InfusionChamber"] = "Залы насыщения"
 L["Ingra Maloch"] = "Ингра Малох"
 L["Inquisitor Sigar"] = "Инквизитор Зигар"
 L["Inquisitor Tormentorum"] = "Инквизитор Истязарий"
@@ -836,8 +828,7 @@ L["Lord Stormsong"] = "Лорд Штормсонг"
 L["Lord Waycrest"] = "Лорд Уэйкрест"
 L["Lost Soul"] = "Заблудшая душа"
 L["Lower Broken Stair"] = "Низ разрушенной лестницы"
---[[Translation missing --]]
---[[ L["LowerChamber"] = ""--]] 
+L["LowerChamber"] = "Нижний зал"
 L["Loyal Creation"] = "Верное создание"
 L["Loyal Stoneborn"] = "Верный камнерожденный"
 L["Lubricator"] = "Смазчик"
@@ -867,8 +858,7 @@ L["Master's Terrace"] = "Терраса Медива"
 L["Matron Alma"] = "Матрона Альма"
 L["Matron Bryndle"] = "Матрона Бриндл"
 L["Mature Krolusk"] = "Взрослый кролуск"
---[[Translation missing --]]
---[[ L["MausoleumOfLegends"] = ""--]] 
+L["MausoleumOfLegends"] = "Мавзолей Легенд"
 L["Maw of Souls"] = "Утесы Адской Пасти"
 L["Mchimba the Embalmer"] = "Мчимба Бальзамировщик"
 L["MDI Mode"] = "Режим MDI"
@@ -980,6 +970,8 @@ L["Olmyr the Enlightened"] = "Олмир Просвещенный"
 L["Omega Buster"] = ""
 L["Oozing Leftovers"] = "Сочащиеся ошметки"
 L["Open MDI override options"] = "Открыть опции MDI поверх"
+--[[Translation missing --]]
+--[[ L["openSettingsTooltip"] = ""--]] 
 L["Opera Hall Balcony"] = "Балкон в опере"
 L["Opera Hall: Wikket"] = "Оперный зал: Сцена"
 L["Oppressive Banner"] = "Подавляющее знамя"
@@ -1153,10 +1145,8 @@ L["Rotspew"] = "Тошногнил"
 L["Rotspew Leftovers"] = "Останки Тошногнила"
 L["Rotting Slimeclaw"] = "Гниющий слизнекоготь"
 L["Rowdy Reveler"] = "Буйная гуляка"
---[[Translation missing --]]
---[[ L["Ruby Overlook"] = ""--]] 
---[[Translation missing --]]
---[[ L["RubyLifePools"] = ""--]] 
+L["Ruby Overlook"] = "Рубиновый дозор"
+L["RubyLifePools"] = "Рубиновые Омуты Жизни"
 L["Ruin's Descent"] = "Спуск скорби"
 --[[Translation missing --]]
 --[[ L["Rune Seal Keeper"] = ""--]] 
@@ -1238,8 +1228,7 @@ L["Shadowguard Trickster"] = "Ловкач из Темной Стражи"
 L["Shadowguard Voidbender"] = "Заклинатель Бездны из Темной Стражи"
 L["Shadowlands"] = "Темные земли"
 L["Shadowlands Season 4"] = "Темные земли 4 сезон"
---[[Translation missing --]]
---[[ L["ShadowmoonBurialGrounds"] = ""--]] 
+L["ShadowmoonBurialGrounds"] = "Некрополь Призрачной Луны"
 L["Shady Dealer"] = "Сомнительный делец"
 L["Shalebiter"] = "Сланцеед"
 L["Shambling Arbalest"] = "Шаркающий арбалетчик"
@@ -1414,8 +1403,7 @@ L["Temple of Sethraliss Sublevel"] = "Храм Сетралисс"
 L["templeEyeNote"] = "Глаз Сетралисс%sПринесите оба глаза к Черепу Сетралисс%sКаждый глаз, который был вставлен в череп дает, 12 очков сил врага"
 L["templeGraveyardNote1"] = "Открывается после победы над Меректой"
 L["templeGraveyardNote2"] = "Открывается после завершения события 'Череп Сетралисс'"
---[[Translation missing --]]
---[[ L["TempleOfTheJadeSerpent"] = ""--]] 
+L["TempleOfTheJadeSerpent"] = "Храм Нефритовой Змеи"
 L["Territorial Bladebeak"] = "Агрессивный мечеклюв"
 --[[Translation missing --]]
 --[[ L["Territorial Eagle"] = ""--]] 
@@ -1459,8 +1447,7 @@ L["The Under Junk"] = "Барахлимб"
 L["The Underrot"] = "Подгнилье"
 L["The Underrot Sublevel"] = "Подгнилье"
 L["The Warden's Court"] = "Суд Стражей"
---[[Translation missing --]]
---[[ L["TheArcaneConservatory"] = ""--]] 
+L["TheArcaneConservatory"] = "Магический консерваторий"
 L["Theater of Pain"] = "Театр Боли"
 L["theaterOfPain_miniBossNote"] = "В живых останется только один дуэлянт."
 L["TheaterOfPainFloor1"] = "Театр Боли"
@@ -1468,8 +1455,7 @@ L["TheaterOfPainFloor2"] = "Зал Победы"
 L["TheaterOfPainFloor3"] = "Алтари Агонии"
 L["TheaterOfPainFloor4"] = "Верхний уровень кургана Резни"
 L["TheaterOfPainFloor5"] = "Нижний уровень кургана Резни"
---[[Translation missing --]]
---[[ L["TheAzureVault"] = ""--]] 
+L["TheAzureVault"] = "Лазурное хранилище"
 --[[Translation missing --]]
 --[[ L["TheBurningCauldron"] = ""--]] 
 --[[Translation missing --]]
@@ -1477,12 +1463,9 @@ L["TheaterOfPainFloor5"] = "Нижний уровень кургана Резн�
 L["TheNecroticWakeFloor1"] = "Смертельная тризна"
 L["TheNecroticWakeFloor2"] = "Трупосшивальня"
 L["TheNecroticWakeFloor3"] = "\"Золрамус\""
---[[Translation missing --]]
---[[ L["TheNokhudOffensive"] = ""--]] 
---[[Translation missing --]]
---[[ L["ThePitch"] = ""--]] 
---[[Translation missing --]]
---[[ L["TheScrollkeepersSanctum"] = ""--]] 
+L["TheNokhudOffensive"] = "Наступление клана Нокхуд"
+L["ThePitch"] = "Площадка"
+L["TheScrollkeepersSanctum"] = "Хранилище Хранителя свитков"
 --[[Translation missing --]]
 --[[ L["TheVaultOfTyr"] = ""--]] 
 L["Thistle Acolyte"] = "Ведьма-послушница"
@@ -1551,8 +1534,7 @@ L["Update"] = "Обновить"
 L["Upper Broken Stair"] = "Верх разрушенной лестницы"
 L["Upper Library"] = "Верхний ярус библиотеки"
 L["Upper Livery Stables"] = "Стойла"
---[[Translation missing --]]
---[[ L["UpperChamber"] = ""--]] 
+L["UpperChamber"] = "Верхний зал"
 L["Upstairs"] = "Верхний уровень"
 L["Urg'roth, Breaker of Heroes"] = "Ург'рот Сокрушитель Героев"
 L["Urh Relic"] = "Реликвия Урт"

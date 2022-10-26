@@ -1089,6 +1089,8 @@ local _ohFirst = {
 function setTalents(setup)
 
 	if setup.Talents and not Amr.db.profile.options.disableTal then
+		--[[
+		-- TODO: get this working again with Dragonflight
 		local currentSpec = GetSpecialization()
 		local talents = {}
 		for tier, col in ipairs(setup.Talents) do
@@ -1100,11 +1102,14 @@ function setTalents(setup)
 		if #talents then
 			pcall(function() LearnTalents(unpack(talents)) end)
 		end
+		]]
 	end
 
+	--[[
 	if setup.SoulbindId and C_Soulbinds.CanActivateSoulbind(setup.SoulbindId) and not Amr.db.profile.options.disableTal then
 		C_Soulbinds.ActivateSoulbind(setup.SoulbindId)
 	end
+	]]
 end
 
 function beginEquipGearSet(setupId, passes, firstCall)
@@ -1116,7 +1121,7 @@ function beginEquipGearSet(setupId, passes, firstCall)
 		return
 	end
 
-	-- set talents and soulbind first
+	-- set talents first
 	if firstCall then
 		setTalents(setup)
 	end

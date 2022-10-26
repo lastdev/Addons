@@ -1,6 +1,6 @@
 -- AskMrRobot-Serializer will serialize and communicate character data between users.
 
-local MAJOR, MINOR = "AskMrRobot-Serializer", 113
+local MAJOR, MINOR = "AskMrRobot-Serializer", 114
 local Amr, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not Amr then return end -- already loaded by something else
@@ -57,33 +57,35 @@ Amr.SpecIds = {
     [103] = 7, -- DruidFeral
     [104] = 8, -- DruidGuardian
     [105] = 9, -- DruidRestoration
-    [253] = 10, -- HunterBeastMastery
-    [254] = 11, -- HunterMarksmanship
-    [255] = 12, -- HunterSurvival
-    [62] = 13, -- MageArcane
-    [63] = 14, -- MageFire
-    [64] = 15, -- MageFrost
-    [268] = 16, -- MonkBrewmaster
-    [270] = 17, -- MonkMistweaver
-    [269] = 18, -- MonkWindwalker
-    [65] = 19, -- PaladinHoly
-    [66] = 20, -- PaladinProtection
-    [70] = 21, -- PaladinRetribution
-    [256] = 22, -- PriestDiscipline
-    [257] = 23, -- PriestHoly
-    [258] = 24, -- PriestShadow
-    [259] = 25, -- RogueAssassination
-    [260] = 26, -- RogueOutlaw
-    [261] = 27, -- RogueSubtlety
-    [262] = 28, -- ShamanElemental
-    [263] = 29, -- ShamanEnhancement
-    [264] = 30, -- ShamanRestoration
-    [265] = 31, -- WarlockAffliction
-    [266] = 32, -- WarlockDemonology
-    [267] = 33, -- WarlockDestruction
-    [71] = 34, -- WarriorArms
-    [72] = 35, -- WarriorFury
-    [73] = 36 -- WarriorProtection
+	[1467] = 10, -- EvokerDevastation
+	[1468] = 11, -- EvokerPreservation
+    [253] = 12, -- HunterBeastMastery
+    [254] = 13, -- HunterMarksmanship
+    [255] = 14, -- HunterSurvival
+    [62] = 15, -- MageArcane
+    [63] = 16, -- MageFire
+    [64] = 17, -- MageFrost
+    [268] = 18, -- MonkBrewmaster
+    [270] = 19, -- MonkMistweaver
+    [269] = 20, -- MonkWindwalker
+    [65] = 21, -- PaladinHoly
+    [66] = 22, -- PaladinProtection
+    [70] = 23, -- PaladinRetribution
+    [256] = 24, -- PriestDiscipline
+    [257] = 25, -- PriestHoly
+    [258] = 26, -- PriestShadow
+    [259] = 27, -- RogueAssassination
+    [260] = 28, -- RogueOutlaw
+    [261] = 29, -- RogueSubtlety
+    [262] = 30, -- ShamanElemental
+    [263] = 31, -- ShamanEnhancement
+    [264] = 32, -- ShamanRestoration
+    [265] = 33, -- WarlockAffliction
+    [266] = 34, -- WarlockDemonology
+    [267] = 35, -- WarlockDestruction
+    [71] = 36, -- WarriorArms
+    [72] = 37, -- WarriorFury
+    [73] = 38 -- WarriorProtection
 }
 
 Amr.ClassIds = {
@@ -100,6 +102,7 @@ Amr.ClassIds = {
     ["SHAMAN"] = 10,
     ["WARLOCK"] = 11,
     ["WARRIOR"] = 12,
+	["EVOKER"] = 13,
 }
 
 Amr.ProfessionIds = {
@@ -146,7 +149,8 @@ Amr.RaceIds = {
 	["ZandalariTroll"] = 20,
 	["KulTiran"] = 21,
 	["Vulpera"] = 22,
-	["Mechagnome"] = 23
+	["Mechagnome"] = 23,
+	["Dracthyr"] = 24
 }
 
 Amr.FactionIds = {
@@ -156,22 +160,42 @@ Amr.FactionIds = {
 }
 
 Amr.InstanceIds = {
-	Nathria = 2296,
-	Sanctum = 2450,
-	Sepulcher = 2481
+	Incarnates = 2522
 }
 
 -- instances that AskMrRobot currently supports logging for
 Amr.SupportedInstanceIds = {
-	[2296] = true,
-	[2450] = true,
-	[2481] = true
+	[2522] = true
 }
 
 
 ----------------------------------------------------------------------------------------
 -- Public Utility Methods
 ----------------------------------------------------------------------------------------
+
+-- helper to iterate over a table in order by its keys
+local function spairs(t, order)
+    -- collect the keys
+    local keys = {}
+    for k in pairs(t) do keys[#keys+1] = k end
+
+    -- if order function given, sort by it by passing the table and keys a, b,
+    -- otherwise just sort the keys 
+    if order then
+        table.sort(keys, function(a,b) return order(t, a, b) end)
+    else
+        table.sort(keys)
+    end
+
+    -- return the iterator function
+    local i = 0
+    return function()
+        i = i + 1
+        if keys[i] then
+            return keys[i], t[keys[i]]
+        end
+    end
+end
 
 local function readBonusIdList(parts, first, last)
 	local ret = {}	
@@ -532,7 +556,8 @@ function Amr:GetPlayerData()
 	readProfessionInfo(firstAid, ret)
 	
 	ret.Specs = {}
-    ret.Talents = {}
+	ret.SavedTalentConfigs = {}
+    ret.LastTalentConfig = {}
 	readSpecs(ret)
 
 	-- these get updated later, since need to cache info for inactive specs
@@ -744,11 +769,15 @@ function Amr:SerializePlayerData(data, complete)
     table.insert(fields, data.ActiveSpec)
     for spec = 1, 4 do
         if data.Specs[spec] and (complete or spec == data.ActiveSpec) then
+			local specTals = nil
+			if data.LastTalentConfig[spec] then
+				specTals = data.LastTalentConfig[spec].tals
+			end
             table.insert(fields, ".s" .. spec) -- indicates the start of a spec block
 			table.insert(fields, data.Specs[spec])
-			table.insert(fields, data.Talents[spec] or "")
-			table.insert(fields, data.ActiveSoulbinds and data.ActiveSoulbinds[spec] or "0")
-			table.insert(fields, data.CovenantRenownLevel or "0") -- will be same for each spec, but easier to just add it here
+			table.insert(fields, specTals or "")
+			--table.insert(fields, data.ActiveSoulbinds and data.ActiveSoulbinds[spec] or "0")
+			--table.insert(fields, data.CovenantRenownLevel or "0") -- will be same for each spec, but easier to just add it here
 
 			--[[
 			local essences = {}
@@ -779,6 +808,31 @@ function Amr:SerializePlayerData(data, complete)
         end
 	end
 
+	-- export all saved talent configs too
+	if data.SavedTalentConfigs then
+		table.insert(fields, ".tal")
+		for specId, configs in spairs(data.SavedTalentConfigs) do
+			for i, config in ipairs(configs) do
+				local configName = config.name
+				if not configName then
+					configName = ""
+				else
+					configName = configName:gsub(";", "")
+					configName = configName:gsub("~", "")
+				end
+
+				local configStr = {
+					specId,
+					config.id,
+					configName,
+					config.tals
+				}				
+				table.insert(fields, table.concat(configStr, "~"))
+			end
+		end
+	end
+	
+	--[[
 	-- export soulbind tree info
 	if data.Soulbinds then
 		table.insert(fields, ".sol")
@@ -797,6 +851,7 @@ function Amr:SerializePlayerData(data, complete)
 			table.insert(fields, table.concat(conduit, "."))
 		end
 	end
+	]]
 
 	--[[
 	-- export unlocked essences
@@ -841,64 +896,7 @@ function Amr:SerializePlayerData(data, complete)
 			appendItemsToExport(fields, itemObjects)
 		end
     end
-
+	
     return "$" .. table.concat(fields, ";") .. "$"
 
 end
-
---[[
--- Shortcut for the common use case: serialize the player's currently active setup with no extras.
-function Amr:SerializePlayer()
-	local data = self:GetPlayerData()
-	return self:SerializePlayerData(data)
-end
-]]
-
---[[
-----------------------------------------------------------------------------------------------------------------------
--- Character Snapshots
--- This feature snapshots a player's gear/talents/artifact when entering combat.  It is enabled by default.  Consumers
--- of this library can create a setting to enable/disable it as desired per a user setting.
---
--- You should register for the AMR_SNAPSHOT_STATE_CHANGED message (sent via AceEvent-3.0 messaging) to ensure that
--- your addon settings stay in sync with any other addon that may also be trying to control the enabled state.
---
--- Note that if a user has the main AMR addon installed, it will always enable snapshotting, and override any attempt
--- to disable it by immediately re-enabling it and thus re-triggering AMR_SNAPSHOT_STATE_CHANGED.
-----------------------------------------------------------------------------------------------------------------------
-Amr._snapshotEnabled = true
-
--- Enable snapshotting of character data when entering combat.  Sends this player's character data to anyone logging with the AskMrRobot addon.
-function Amr:EnableSnapshots()
-	self._snapshotEnabled = true
-	self:SendMessage("AMR_SNAPSHOT_STATE_CHANGED", self._snapshotEnabled)
-end
-
--- Disable snapshotting of character data when entering combat.
-function Amr:DisableSnapshots()
-	self._snapshotEnabled = false
-	self:SendMessage("AMR_SNAPSHOT_STATE_CHANGED", self._snapshotEnabled)
-end
-
-function Amr:IsSnapshotEnabled()
-	return self._snapshotEnabled
-end
-
-
-function Amr:PLAYER_REGEN_DISABLED()
---function Amr:GARRISON_MISSION_NPC_OPENED()
-
-	-- send data about this character when a player enters combat in a supported zone
-	if self._snapshotEnabled and Amr.IsSupportedInstance() then
-		local t = time()
-		local player = self:GetPlayerData()
-		local msg = self:SerializePlayerData(player)
-		msg = string.format("%s\r%s\n%s\n%s\n%s\n%s", MINOR, t, player.Region, player.Realm, player.Name, msg)
-		
-		self:SendCommMessage(Amr.ChatPrefix, msg, "RAID")
-	end
-end
-
-Amr:RegisterEvent("PLAYER_REGEN_DISABLED")
---Amr:RegisterEvent("GARRISON_MISSION_NPC_OPENED") -- for debugging, fire this event when open mission table
-]]

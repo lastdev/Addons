@@ -1,5 +1,19 @@
 ## Revision History:
 
+#### v20 (Oktober 25, 2022)
+-------------------------------
+* Added portal icons
+    * same icons as before, but now they are included in the addon folder
+* Added missing defaults
+* Added new Profession icons (Dragonflight)
+* Added a feature to use the old Profession icons (Dragonflight)
+* Fixed opening the settings panel (Dragonflight)
+* Updated config layout (Dragonflight)
+* Update localization
+* Bump .toc to 100000
+
+##### NOTE: If you liked this addon, you might want to check out my new addon for the Dragonflight's capital city [Valdrakken](https://www.curseforge.com/wow/addons/handynotes-valdrakken)
+
 #### v19 (September 29, 2022)
 -------------------------------
 * Added an option to create a Blizzard waypoint

@@ -516,14 +516,14 @@ end
 
 local function FindRuneAura()
     for spellId, index in pairs(auras) do
-        if GetPlayerAuraBySpellID(spellId) then
+        if C_UnitAuras.GetPlayerAuraBySpellID(spellId) then
             return index;
         end
     end
 end
 
 local function FindShowAura()
-    if GetPlayerAuraBySpellID(SHOW_AURA_ID) then
+    if C_UnitAuras.GetPlayerAuraBySpellID(SHOW_AURA_ID) then
         return true;
     end
 end

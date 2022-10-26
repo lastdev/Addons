@@ -10,9 +10,9 @@
 
 local _, LM = ...
 
---[===[@debug@
+--[==[@debug@
 if LibDebug then LibDebug() end
---@end-debug@]===]
+--@end-debug@]==]
 
 local L = LM.Localize
 
@@ -199,7 +199,7 @@ COMMANDS['smartmount'] =
         end
     end
 
---[===[@debug@
+--[==[@debug@
 COMMANDS['usable'] =
     function ()
         LM.Developer:Initialize()
@@ -210,7 +210,7 @@ COMMANDS['pi'] =
     function ()
         LiteMountProfileInspect:Show()
     end
---@end-debug@]===]
+--@end-debug@]==]
 
 local function PrintUsage()
     LM.Print(GAMEMENU_HELP .. ":")

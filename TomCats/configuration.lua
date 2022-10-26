@@ -1,17 +1,21 @@
 --[[ See license.txt for license and copyright information ]]
 local _, addon = ...
 
+local _, _, _, tocversion = GetBuildInfo()
+
 local BackdropTemplateMixin = BackdropTemplateMixin
-local BlizzardOptionsPanel_RegisterControl = BlizzardOptionsPanel_RegisterControl
+
 local CONTROLTYPE_CHECKBOX = CONTROLTYPE_CHECKBOX
 local CONTROLTYPE_SLIDER = CONTROLTYPE_SLIDER
-local InterfaceAddOnsList_Update = InterfaceAddOnsList_Update
-local InterfaceOptionsPanel_OnLoad = InterfaceOptionsPanel_OnLoad
 
 local TomCats_Config = TomCats_Config
 local TomCats_ConfigIconSizeSlider = TomCats_ConfigIconSizeSlider
 local TomCats_ConfigIconSizeSliderLow = TomCats_ConfigIconSizeSliderLow
 local TomCats_ConfigIconSizeSliderHigh = TomCats_ConfigIconSizeSliderHigh
+
+local TomCats_ConfigHEIconSizeSlider = TomCats_ConfigHEIconSizeSlider
+local TomCats_ConfigHEIconSizeSliderLow = TomCats_ConfigHEIconSizeSliderLow
+local TomCats_ConfigHEIconSizeSliderHigh = TomCats_ConfigHEIconSizeSliderHigh
 
 local function OnHyperlinkClick(self, link)
 	link = "https://" .. link
@@ -54,8 +58,18 @@ local function OnHyperlinkLeave(self)
 end
 
 do
+	local controls = { }
 	TomCats_Config.name = "TomCat's Tours"
-	TomCats_Config.controls = { }
+	local category = Settings.RegisterCanvasLayoutCategory(TomCats_Config, TomCats_Config.name);
+	TomCats_Config.category = category
+	Settings.RegisterAddOnCategory(category);
+	TomCats_Config.OnCommit = nop
+	TomCats_Config.nDefault = nop
+	function TomCats_Config:OnRefresh(...)
+		for _, control in ipairs(controls) do
+			control:SetValue(control:GetValue())
+		end
+	end
 	TomCats_Config.Header.Text:SetFont(TomCats_Config.Header.Text:GetFont(), 64)
 	local function Setup_CheckBox(checkBoxInfo)
 		local checkBox = checkBoxInfo.component
@@ -63,7 +77,7 @@ do
 		checkBox.Text:SetText(checkBoxInfo.label)
 		checkBox.tooltipText = checkBoxInfo.tooltip
 		checkBox.defaultValue = checkBoxInfo.defaultValue
-		checkBox.GetValue = function()
+		checkBox.GetValue = function(self)
 			local prefsBase = _G["TomCats_Account"].preferences
 			local preferenceTable = checkBoxInfo.preferenceTable and prefsBase[checkBoxInfo.preferenceTable] or prefsBase
 			local currentValue
@@ -75,7 +89,16 @@ do
 			return currentValue
 		end
 		checkBox.SetValue = checkBoxInfo.SetValue
-		BlizzardOptionsPanel_RegisterControl(checkBox, TomCats_Config)
+		if (tocversion >= 100000) then
+			checkBox.SetValue = function(self, value)
+				checkBox:SetChecked(value == "1")
+				checkBoxInfo.SetValue(self, value)
+			end
+			checkBox:SetScript("OnClick", function()
+				checkBox:SetValue(checkBox:GetChecked() and "1" or "0")
+			end)
+		end
+		table.insert(controls, checkBox)
 	end
 	Setup_CheckBox({
 		component = TomCats_Config.checkBox_minimapButton,
@@ -110,24 +133,49 @@ do
 			addon.SetIconAnimationEnabled(value == "1")
 		end
 	})
-	local slider = TomCats_ConfigIconSizeSlider
-	slider.type = CONTROLTYPE_SLIDER
-	slider.tooltipText = "Sets the size of the encounter icons which are displayed on the world map and battlefield map"
-	TomCats_ConfigIconSizeSliderLow:SetText("-")
-	TomCats_ConfigIconSizeSliderHigh:SetText("+")
-	TomCats_Config.IconSizeSliderLabel.Text:SetText("Map Icon Size");
-	slider.SetDisplayValue = slider.SetValue;
-	slider.GetValue = function()
-		return _G["TomCats_Account"].preferences.MapOptions.iconScale
+	do
+		local slider = TomCats_ConfigIconSizeSlider
+		slider.type = CONTROLTYPE_SLIDER
+		slider.tooltipText = "Sets the size of the encounter icons which are displayed on the world map and battlefield map"
+		TomCats_ConfigIconSizeSliderLow:SetText("-")
+		TomCats_ConfigIconSizeSliderHigh:SetText("+")
+		TomCats_Config.IconSizeSliderLabel.Text:SetText("Map Icon Size");
+		slider.SetDisplayValue = slider.SetValue;
+		slider.GetValue = function()
+			return _G["TomCats_Account"].preferences.MapOptions.iconScale
+		end
+		slider.GetCurrentValue = slider.GetValue
+		slider.SetValue = function (self, value)
+			self:SetDisplayValue(value);
+			self.value = value;
+			_G["TomCats_Account"].preferences.MapOptions.iconScale = value
+			addon.SetIconScale(value)
+		end
+		table.insert(controls, slider);
+		BackdropTemplateMixin.OnBackdropLoaded(slider);
 	end
-	slider.GetCurrentValue = slider.GetValue
-	slider.SetValue = function (self, value)
-		self:SetDisplayValue(value);
-		self.value = value;
-		_G["TomCats_Account"].preferences.MapOptions.iconScale = value
-		addon.SetIconScale(value)
+	if (addon.hallowsend.IsEventActive()) then
+		local slider = TomCats_ConfigHEIconSizeSlider
+		TomCats_Config.HEIconSizeSliderLabel:Show()
+		TomCats_ConfigHEIconSizeSlider:Show()
+		slider.type = CONTROLTYPE_SLIDER
+		slider.tooltipText = "Sets the size of the pumpkin icons"
+		TomCats_ConfigHEIconSizeSliderLow:SetText("-")
+		TomCats_ConfigHEIconSizeSliderHigh:SetText("+")
+		TomCats_Config.HEIconSizeSliderLabel.Text:SetText("Pumpkin Icon Size");
+		slider.SetDisplayValue = slider.SetValue;
+		slider.GetValue = function()
+			return _G["TomCats_Account"].hallowsend.iconScale
+		end
+		slider.GetCurrentValue = slider.GetValue
+		slider.SetValue = function (self, value)
+			self:SetDisplayValue(value);
+			self.value = value;
+			_G["TomCats_Account"].hallowsend.iconScale = value
+			addon.hallowsend.SetIconScale(value)
+		end
+		table.insert(controls, slider);
 	end
-	BlizzardOptionsPanel_RegisterControl(slider, TomCats_Config);
 	Setup_CheckBox({
 		component = TomCats_Config.checkBox_lunarFestivalMinimapButton,
 		label = "Lunar Festival Minimap Button",
@@ -156,10 +204,21 @@ do
 			end
 		end
 	})
-	BackdropTemplateMixin.OnBackdropLoaded(slider);
+	Setup_CheckBox({
+		component = TomCats_Config.checkBox_hallowsEndMinimapButton,
+		label = "Hallow's End Minimap Button",
+		tooltip = "Displays the Hallow's End minimap button",
+		defaultValue = "1",
+		preferenceTable = "TomCats-HallowsEndMinimapButton",
+		preferenceKey = "hidden",
+		inverseValue = true,
+		SetValue = function(_, value)
+			if (addon.hallowsend:IsEventActive()) then
+				addon.hallowsend.charm:SetEnabled(value == "1")
+			end
+		end
+	})
 	TomCats_Config.html1:SetScript("OnHyperlinkClick", OnHyperlinkClick)
 	TomCats_Config.html1:SetScript("OnHyperlinkEnter", OnHyperlinkEnter)
 	TomCats_Config.html1:SetScript("OnHyperlinkLeave", OnHyperlinkLeave)
-	InterfaceOptionsPanel_OnLoad(TomCats_Config)
-	InterfaceAddOnsList_Update()
 end

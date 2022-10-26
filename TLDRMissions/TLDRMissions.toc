@@ -1,6 +1,6 @@
-## Interface: 90207
+## Interface: 100000
 ## Title: TL;DR Missions
-## Version: 9.2-131
+## Version: 10.0-001
 ## Notes: Automates sending out Covenant Missions
 ## Author: Teelo
 ## Dependencies: Blizzard_GarrisonUI
@@ -25,6 +25,7 @@ libs\AceLocale-3.0\AceLocale-3.0.xml
 locales\dede.lua
 locales\enus.lua
 locales\frfr.lua
+locales\kokr.lua
 locales\ruru.lua
 locales\zhtw.lua
 locales\zhcn.lua

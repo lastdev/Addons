@@ -10,9 +10,9 @@
 
 local _, LM = ...
 
---[===[@debug@
+--[==[@debug@
 if LibDebug then LibDebug() end
---@end-debug@]===]
+--@end-debug@]==]
 
 LM.Spell = setmetatable({ }, LM.Mount)
 LM.Spell.__index = LM.Spell

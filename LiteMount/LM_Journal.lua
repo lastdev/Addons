@@ -10,9 +10,9 @@
 
 local _, LM = ...
 
---[===[@debug@
+--[==[@debug@
 if LibDebug then LibDebug() end
---@end-debug@]===]
+--@end-debug@]==]
 
 LM.Journal = setmetatable({ }, LM.Mount)
 LM.Journal.__index = LM.Journal
@@ -94,6 +94,8 @@ function LM.Journal:Get(id, isUsable)
         m.flags['SLOW'] = true
     elseif m.mountType == 398 then      -- Kua'fon
         -- Kua'fon can fly if achievement 13573 is completed, otherwise run
+    elseif m.mountType == 402 then      -- Dragonriding
+        m.flags['DRAGONRIDING'] = true
     elseif m.mountType == 407 then      -- Aurelid
         m.flags['FLY'] = true
         m.flags['SWIM'] = true
@@ -101,10 +103,10 @@ function LM.Journal:Get(id, isUsable)
     elseif m.mountType == 408 then      -- Unsuccessful Prototype Fleetpod
         m.flags['RUN'] = true
         m.flags['SLOW'] = true
---[===[@debug@
+--[==[@debug@
     else
         LM.PrintError(string.format('Mount with unknown type number: %s = %d', m.name, m.mountType))
---@end-debug@]===]
+--@end-debug@]==]
     end
 
     return m

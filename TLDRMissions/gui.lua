@@ -66,7 +66,7 @@ gui.TitleBarLabel:SetText(addonName.." "..GetAddOnMetadata(addonName, "Version")
 -- Tab one: main frame
 --
 
-gui.MainTabButton = CreateFrame("Button", "TLDRMissionsFrameTab1", gui, "CharacterFrameTabButtonTemplate")
+gui.MainTabButton = CreateFrame("Button", "TLDRMissionsFrameTab1", gui, "PanelTabButtonTemplate")
 gui.MainTabButton:SetPoint("TOPLEFT", gui, "BOTTOMLEFT", 0, 5)
 gui.MainTabButton:SetText(GARRISON_MISSIONS)
 gui.MainTabButton:SetScript("OnClick", function()
@@ -290,7 +290,7 @@ gui.AdvancedTabPanel = CreateFrame("Frame", "TLDRMissionsFrameAdvancedPanel", gu
 gui.AdvancedTabPanel:SetPoint("TOPLEFT", gui, "TOPLEFT")
 gui.AdvancedTabPanel:Hide()
 
-gui.AdvancedTabButton = CreateFrame("Button", "TLDRMissionsFrameTab2", gui, "CharacterFrameTabButtonTemplate")
+gui.AdvancedTabButton = CreateFrame("Button", "TLDRMissionsFrameTab2", gui, "PanelTabButtonTemplate")
 gui.AdvancedTabButton:SetPoint("TOPLEFT", gui.MainTabButton, "TOPRIGHT", 0, 0)
 gui.AdvancedTabButton:SetText(ADVANCED_LABEL)
 gui.AdvancedTabButton:SetScript("OnClick", function()
@@ -580,7 +580,7 @@ end)
 -- Tab 3
 --
 
-gui.ProfileTabButton = CreateFrame("Button", "TLDRMissionsFrameTab3", gui, "CharacterFrameTabButtonTemplate")
+gui.ProfileTabButton = CreateFrame("Button", "TLDRMissionsFrameTab3", gui, "PanelTabButtonTemplate")
 gui.ProfileTabButton:SetPoint("TOPLEFT", gui.AdvancedTabButton, "TOPRIGHT", 0, 0)
 gui.ProfileTabButton:SetText(L["Profiles"])
 gui.ProfileTabButton:SetScript("OnClick", function()

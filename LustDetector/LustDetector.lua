@@ -69,6 +69,7 @@ local warpSpells = {
 	[32182] = true, 	-- Heroism 
 	[80353] = true, 	-- Time Warp
     [264667] = true, -- Primal Rage
+	[390386] = true, -- Fury of the Aspects(Dracthyr Evoker DF)
 	[1626] = true, -- Primal Rage
 	[275200] = true, -- Primal Rage
 	[204276] = true, -- Primal Rage

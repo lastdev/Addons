@@ -1,7 +1,7 @@
-## Interface: 90005
+## Interface: 90207
 ## Title: SharedMedia Additional Fonts
 ## Notes: Inserts additionnal fonts into SharedMediaLib's storage.
-## Version: 9.0.5
+## Version: 9.2.7
 ## Author: Lots of people, maintained by AllInOneMighty.
 ## X-Category: Miscellaneous
 ## X-Credits: elsia

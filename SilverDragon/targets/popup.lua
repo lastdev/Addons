@@ -194,12 +194,10 @@ function module:CreatePopup(look)
 	popup:SetScale(self.db.profile.anchor.scale)
 	popup:SetMovable(true)
 	popup:SetClampedToScreen(true)
-	popup:RegisterForClicks("AnyUp")
+	popup:RegisterForClicks("AnyDown", "AnyUp") -- dragonflight: anydown+anyup required to function
 
 	popup:SetAttribute("type", "macro")
-	-- popup:SetAttribute("_onshow", "self:Enable()")
-	-- popup:SetAttribute("_onhide", "self:Disable()")
-	-- Can't do type=click + clickbutton=close because then it'd be right-clicking the close button which also ignores the mob
+	-- macrotext is set elsewhere
 	popup:SetAttribute("macrotext2", "/click " .. popup:GetName() .. "CloseButton")
 
 	popup:Hide()
@@ -436,7 +434,11 @@ PopupMixin.scripts = {
 
 		local anchor = (self:GetCenter() < (UIParent:GetWidth() / 2)) and "ANCHOR_RIGHT" or "ANCHOR_LEFT"
 		GameTooltip:SetOwner(self, anchor, 0, -60)
-		GameTooltip:AddDoubleLine(escapes.leftClick .. " " .. TARGET, escapes.rightClick .. " " .. CLOSE)
+		if self.data.type == "mob" then
+			GameTooltip:AddDoubleLine(escapes.leftClick .. " " .. TARGET, escapes.rightClick .. " " .. CLOSE)
+		else
+			GameTooltip:AddDoubleLine(" ", escapes.rightClick .. " " .. CLOSE)
+		end
 		local uiMapID, x, y = module:GetPositionFromData(self.data, false)
 		if uiMapID and x and y then
 			GameTooltip:AddDoubleLine(core.zone_names[uiMapID] or UNKNOWN, ("%.1f, %.1f"):format(x * 100, y * 100),
@@ -454,7 +456,7 @@ PopupMixin.scripts = {
 		end
 
 		GameTooltip:AddDoubleLine(ALT_KEY_TEXT .. " + " .. escapes.leftClick .. " + " .. DRAG_MODEL, MOVE_FRAME)
-		if uiMapID and C_Map.CanSetUserWaypointOnMap(uiMapID) then
+		if module:CanPoint(uiMapID) then
 			GameTooltip:AddDoubleLine(CTRL_KEY_TEXT .. " + " .. escapes.leftClick, MAP_PIN )
 		end
 		if uiMapID and x and y then

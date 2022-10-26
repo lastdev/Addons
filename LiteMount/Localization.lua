@@ -10,9 +10,9 @@
 
 local _, LM = ...
 
---[===[@debug@
+--[==[@debug@
 if LibDebug then LibDebug() end
---@end-debug@]===]
+--@end-debug@]==]
 
 -- Vim reformatter from curseforge "Global Strings" export.
 -- %s/^\(L\..*\) = \(.*\)/\=printf('%-24s= %s', submatch(1), submatch(2))/

@@ -45,11 +45,12 @@ local function initializeDb()
 		char = {
 			LastVersion = 0,           -- used to clean out old stuff	
 			FirstUse = true,           -- true if this is first time use, gets cleared after seeing the export help splash window
-			Talents = {},              -- for each spec, selected talents
-			Soulbinds = {},            -- selected nodes in each soulbind tree for this character
-			ActiveSoulbinds = {},      -- for each spec, active soulbind
-			UnlockedConduits = {},     -- unlocked conduits for this character
-			CovenantRenownLevel = 0,   -- current covenant renown level
+			--Talents = {},              -- for each spec, selected talents
+			--Soulbinds = {},            -- selected nodes in each soulbind tree for this character
+			--ActiveSoulbinds = {},      -- for each spec, active soulbind
+			--UnlockedConduits = {},     -- unlocked conduits for this character
+			--CovenantRenownLevel = 0,   -- current covenant renown level
+			TalentConfigs = {},        -- new talent configs since dragonflight
 			Equipped = {},             -- for each spec, slot id to item info
 			BagItems = {},             -- list of item info for bags
 			BankItems = {},            -- list of item info for bank
@@ -141,10 +142,19 @@ local function initializeDb()
 		Amr.db.char.GearSetups = {}
 	end
 
+	-- upgrade old talent info to new format
+	if Amr.db.char.Talents then
+		Amr.db.char.Talents = nil
+	end
+
+	if not Amr.db.char.TalentConfigs then
+		Amr.db.char.TalentConfigs = {}
+	end
+	
 	if Amr.db.global.Shopping then
 		Amr.db.global.Shopping = nil
 	end
-	
+
 	Amr.db.RegisterCallback(Amr, "OnProfileChanged", "RefreshConfig")
 	Amr.db.RegisterCallback(Amr, "OnProfileCopied", "RefreshConfig")
 	Amr.db.RegisterCallback(Amr, "OnProfileReset", "RefreshConfig")
@@ -711,6 +721,7 @@ function Amr:dump(o)
 	end
 end
 
-function Amr:Test()
-	
+
+function Amr:Test()	
+
 end

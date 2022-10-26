@@ -10,9 +10,9 @@
 
 local _, LM = ...
 
---[===[@debug@
+--[==[@debug@
 if LibDebug then LibDebug() end
---@end-debug@]===]
+--@end-debug@]==]
 
 local CallbackHandler = LibStub:GetLibrary("CallbackHandler-1.0", true)
 

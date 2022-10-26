@@ -7,6 +7,7 @@ local addon = _G[addonName]
 
 local knownErrors = {
   {input = {175, -60}, output = -105.5},
+  {input = {195, -60}, output = -117.5, restrictTo = {"Bone Shield (shield)"}},
   {input = {180, 130}, output = 233},
   {input = {360, 70}, output = 251},
   {input = {350, 130}, output = 454},
@@ -33,7 +34,7 @@ local knownErrors = {
   {input = {135, 40}, output = 53, restrictTo = {"Shield of Tomorrow (Main)"}},
   {input = {220, 40}, output = 87, restrictTo = {"Shield of Tomorrow (Main)"}},
   {input = {140, 40}, output = 55, restrictTo = {"Shield of Tomorrow (Main)"}},
-  {input = {37, 90}, output = 32},
+  {input = {37, 90}, output = 32, restrictTo = {"Shield of Tomorrow (Main)", "Shield of Tomorrow (Alt)"}},
   {input = {37, 140}, output = 50},
   {input = {330, 40}, output = 131, restrictTo = {"Shield of Tomorrow (Alt)"}},
   {input = {360, 80}, output = 287, restrictTo = {"Shield of Tomorrow (Alt)"}},

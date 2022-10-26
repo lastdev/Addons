@@ -13,6 +13,120 @@ local lshift = bit.lshift
 local mod = bit.mod
 local rshift = bit.rshift
 
+local ScrollBoxUtil do
+
+    ScrollBoxUtil = {}
+
+    ---@class CallbackRegistryMixin
+    ---@field public RegisterCallback fun(event: string, callback: fun())
+
+    ---@class ScrollBoxBaseMixin : CallbackRegistryMixin
+    ---@field public GetFrames fun(): Frame[]
+    ---@field public Update fun()
+
+    ---@param scrollBox ScrollBoxBaseMixin
+    ---@param callback fun(frames: Button[], scrollBox: ScrollBoxBaseMixin)
+    function ScrollBoxUtil:OnViewFramesChanged(scrollBox, callback)
+        if not scrollBox then
+            return
+        end
+        if scrollBox.buttons then -- TODO: legacy 9.X support
+            callback(scrollBox.buttons, scrollBox)
+            return 1
+        end
+        if scrollBox.RegisterCallback then
+            local frames = scrollBox:GetFrames()
+            if frames and frames[1] then
+                callback(frames, scrollBox)
+            end
+            scrollBox:RegisterCallback(ScrollBoxListMixin.Event.OnUpdate, function()
+                frames = scrollBox:GetFrames()
+                callback(frames, scrollBox)
+            end)
+            return true
+        end
+        return false
+    end
+
+    ---@param scrollBox ScrollBoxBaseMixin
+    ---@param callback fun(self: ScrollBoxBaseMixin)
+    function ScrollBoxUtil:OnViewScrollChanged(scrollBox, callback)
+        if not scrollBox then
+            return
+        end
+        local function wrappedCallback()
+            callback(scrollBox)
+        end
+        if scrollBox.update then -- TODO: legacy 9.X support
+            hooksecurefunc(scrollBox, "update", wrappedCallback)
+            return 1
+        end
+        if scrollBox.RegisterCallback then
+            scrollBox:RegisterCallback(ScrollBoxListMixin.Event.OnScroll, wrappedCallback)
+            return true
+        end
+        return false
+    end
+
+end
+
+local HookUtil do
+
+    HookUtil = {}
+
+    local hooked = {}
+
+    ---@param frame Frame
+    ---@param callback fun(self: Frame, ...)
+    ---@param ... string
+    function HookUtil:On(frame, callback, ...)
+        local hook = hooked[frame]
+        if not hook then
+            hook = {}
+            hooked[frame] = hook
+        end
+        for _, key in ipairs({...}) do
+            local keyHook = hook[key]
+            if not keyHook then
+                keyHook = {}
+                hook[key] = keyHook
+            end
+            if not keyHook[callback] then
+                keyHook[callback] = true
+                frame:HookScript(key, callback)
+            end
+        end
+    end
+
+    ---@param frames Frame[]
+    ---@param callback fun(self: Frame, ...)
+    ---@param ... string
+    function HookUtil:OnAll(frames, callback, ...)
+        for _, frame in ipairs(frames) do
+            HookUtil:On(frame, callback, ...)
+        end
+    end
+
+    ---@param object Frame[]|Frame
+    ---@param map table<string, fun()>
+    function HookUtil:MapOn(object, map)
+        if type(object) ~= "table" then
+            return
+        end
+        if type(object.GetObjectType) == "function" then
+            for key, callback in pairs(map) do
+                HookUtil:On(object, callback, key)
+            end
+            return 1
+        end
+        for key, callback in pairs(map) do
+            HookUtil:OnAll(object, callback, key)
+        end
+        return true
+    end
+
+end
+
 -- constants.lua (ns)
 -- dependencies: none
 do
@@ -1782,7 +1896,7 @@ do
             local editBox = _G[self:GetName() .. "WideEditBox"] or _G[self:GetName() .. "EditBox"]
             editBox:SetText(self.text.text_arg2)
             editBox:SetFocus()
-            editBox:HighlightText(false)
+            editBox:HighlightText()
             local button = _G[self:GetName() .. "Button2"]
             button:ClearAllPoints()
             button:SetWidth(200)
@@ -1841,7 +1955,7 @@ do
         end
         if not button.disabledTexture then
             button.disabledTexture = util:CreateTextureFromIcon(button, icon)
-            button.disabledTexture:SetDesaturation(true)
+            button.disabledTexture:SetDesaturation(1)
         end
         button:SetNormalTexture(button.normalTexture)
         button:SetPushedTexture(button.pushedTexture)
@@ -2081,7 +2195,7 @@ do
         frame:SetWidth(420)
         editBox:SetText(canShow and GetJSON() or "")
         editBox:SetFocus()
-        editBox:HighlightText(false)
+        editBox:HighlightText()
         local button = _G[frameName .. "Button2"]
         button:ClearAllPoints()
         button:SetWidth(200)
@@ -2099,16 +2213,16 @@ do
         button:SetScript("OnClick", function() json:ToggleCopyDialog() end)
         -- icon
         do
-            button.Icon = button:CreateTexture(nil, "ARTWORK")
+            button.Icon = button:CreateTexture(nil, "BACKGROUND")
             button.Icon:SetAllPoints()
             button.Icon:SetMask("Interface\\Minimap\\UI-Minimap-Background")
             button.Icon:SetTexture("Interface\\Minimap\\Tracking\\None")
         end
         -- border
         do
-            button.Border = button:CreateTexture(nil, "BACKGROUND")
+            button.Border = button:CreateTexture(nil, "BORDER")
             button.Border:SetPoint("TOPLEFT", -2, 2)
-            button.Border:SetSize(36, 36)
+            button.Border:SetSize(32, 32)
             button.Border:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
             button.Border:SetVertexColor(.8, .8, .8)
         end
@@ -2319,11 +2433,17 @@ do
         end
     end
 
+    local function RequestMythicPlusData()
+        C_MythicPlus.RequestCurrentAffixes()
+        C_MythicPlus.RequestMapInfo()
+    end
+
     local function OnPlayerLogin()
         if IsTestBuild() and config:Get("debugMode") then
             InjectTestBuildData()
         end
         CheckQueuedProviders()
+        RequestMythicPlusData()
         provider:Enable()
     end
 
@@ -3666,9 +3786,9 @@ do
                 weeklyAffixInternals[2] = "tyrannical"
             end
             for _, weeklyAffixInternal in pairs(weeklyAffixInternals) do
-                local weekDungeons = mythicKeystoneProfile[weeklyAffixInternal .. "Dungeons"]
-                local weekDungeonUpgrades = mythicKeystoneProfile[weeklyAffixInternal .. "DungeonUpgrades"]
-                local weekDungeonTimes = mythicKeystoneProfile[weeklyAffixInternal .. "DungeonTimes"]
+                local weekDungeons = mythicKeystoneProfile[weeklyAffixInternal .. "Dungeons"] ---@type number[]
+                local weekDungeonUpgrades = mythicKeystoneProfile[weeklyAffixInternal .. "DungeonUpgrades"] ---@type number[]
+                local weekDungeonTimes = mythicKeystoneProfile[weeklyAffixInternal .. "DungeonTimes"] ---@type number[]
                 local maxDungeonIndex = 0
                 -- local maxDungeonTime = 999
                 -- local maxDungeonScore = 0
@@ -3679,8 +3799,8 @@ do
                 for i = 1, #keystoneRuns do
                     local run = keystoneRuns[i]
                     local runAffixData = run[weeklyAffixInternal] ---@type BlizzardKeystoneAffixInfo
-                    local dungeonIndex
-                    local dungeon
+                    local dungeonIndex ---@type number|nil
+                    local dungeon ---@type Dungeon|nil
                     for j = 1, #DUNGEONS do
                         dungeon = DUNGEONS[j]
                         if dungeon.keystone_instance == run.challengeModeID then
@@ -3846,7 +3966,7 @@ do
         local mapIDs = C_ChallengeMode.GetMapTable()
         for _, mapID in ipairs(mapIDs) do
             local affixScores, bestOverAllScore
-            local mapRun
+            local mapRun ---@type MythicPlusRatingMapSummary
             for _, run in ipairs(bioSummary.runs) do
                 if mapID == run.challengeModeID then
                     affixScores, bestOverAllScore = C_MythicPlus.GetSeasonBestAffixScoreInfoForMap(mapID)
@@ -3883,6 +4003,7 @@ do
     end
 
     callback:RegisterEvent(OnPlayerEnteringWorld, "PLAYER_ENTERING_WORLD")
+    callback:RegisterEvent(OverridePlayerData, "CHALLENGE_MODE_MAPS_UPDATE", "MYTHIC_PLUS_CURRENT_AFFIX_UPDATE")
 
     function provider:WipeCache()
         OnPlayerEnteringWorld()
@@ -5090,7 +5211,7 @@ do
     local render = ns:GetModule("Render") ---@type RenderModule
 
     local function OnTooltipSetUnit(self)
-        if not tooltip:IsEnabled() or not config:Get("enableUnitTooltips") then
+        if self ~= GameTooltip or not tooltip:IsEnabled() or not config:Get("enableUnitTooltips") then
             return
         end
         if (config:Get("showScoreModifier") and not IsModifierKeyDown()) or (not config:Get("showScoreModifier") and not config:Get("showScoreInCombat") and InCombatLockdown()) then
@@ -5124,7 +5245,11 @@ do
 
     function tooltip:OnLoad()
         self:Enable()
-        GameTooltip:HookScript("OnTooltipSetUnit", OnTooltipSetUnit)
+        if TooltipDataProcessor then -- TODO: DF
+            TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, OnTooltipSetUnit)
+        else
+            GameTooltip:HookScript("OnTooltipSetUnit", OnTooltipSetUnit)
+        end
         GameTooltip:HookScript("OnTooltipCleared", OnTooltipCleared)
         GameTooltip:HookScript("OnHide", OnHide)
     end
@@ -5237,11 +5362,9 @@ do
 
     function tooltip:OnLoad()
         self:Enable()
-        for _, button in pairs(WhoListScrollFrame.buttons) do
-            button:HookScript("OnEnter", OnEnter)
-            button:HookScript("OnLeave", OnLeave)
-        end
-        hooksecurefunc(WhoListScrollFrame, "update", OnScroll)
+        local hookMap = { OnEnter = OnEnter, OnLeave = OnLeave }
+        ScrollBoxUtil:OnViewFramesChanged(WhoListScrollFrame or WhoFrame.ScrollBox, function(buttons) HookUtil:MapOn(buttons, hookMap) end)
+        ScrollBoxUtil:OnViewScrollChanged(WhoListScrollFrame or WhoFrame.ScrollBox, OnScroll)
     end
 
 end
@@ -6342,12 +6465,9 @@ do
 
     function tooltip:OnLoad()
         self:Enable()
-        for i = 1, #GuildRosterContainer.buttons do
-            local button = GuildRosterContainer.buttons[i]
-            button:HookScript("OnEnter", OnEnter)
-            button:HookScript("OnLeave", OnLeave)
-        end
-        hooksecurefunc(GuildRosterContainer, "update", OnScroll)
+        local hookMap = { OnEnter = OnEnter, OnLeave = OnLeave }
+        ScrollBoxUtil:OnViewFramesChanged(_G.GuildRosterContainer, function(buttons) HookUtil:MapOn(buttons, hookMap) end)
+        ScrollBoxUtil:OnViewScrollChanged(_G.GuildRosterContainer, OnScroll)
     end
 
 end
@@ -6379,12 +6499,14 @@ do
             if not info then
                 return
             end
-
             clubType = info.clubType
             nameAndRealm = info.name
             level = info.level
         elseif type(self.cardInfo) == "table" then
             nameAndRealm = util:GetNameRealm(self.cardInfo.guildLeader)
+            if self.cardInfo.isCrossFaction then
+                -- TODO: NYI
+            end
         else
             return
         end
@@ -6429,6 +6551,7 @@ do
                 button:HookScript("OnLeave", OnLeave)
                 if type(button.OnEnter) == "function" then hooksecurefunc(button, "OnEnter", OnEnter) end
                 if type(button.OnLeave) == "function" then hooksecurefunc(button, "OnLeave", OnLeave) end
+                -- TODO: NYI button.RequestJoin
             end
         end
         return numButtons > 0
@@ -6438,13 +6561,8 @@ do
         if completed then
             return
         end
-        SmartHookButtons(_G.CommunitiesFrame.MemberList.ListScrollFrame.buttons)
-        SmartHookButtons(_G.ClubFinderGuildFinderFrame.CommunityCards.ListScrollFrame.buttons)
-        SmartHookButtons(_G.ClubFinderGuildFinderFrame.PendingCommunityCards.ListScrollFrame.buttons)
         SmartHookButtons(_G.ClubFinderGuildFinderFrame.GuildCards.Cards)
         SmartHookButtons(_G.ClubFinderGuildFinderFrame.PendingGuildCards.Cards)
-        SmartHookButtons(_G.ClubFinderCommunityAndGuildFinderFrame.CommunityCards.ListScrollFrame.buttons)
-        SmartHookButtons(_G.ClubFinderCommunityAndGuildFinderFrame.PendingCommunityCards.ListScrollFrame.buttons)
         SmartHookButtons(_G.ClubFinderCommunityAndGuildFinderFrame.GuildCards.Cards)
         SmartHookButtons(_G.ClubFinderCommunityAndGuildFinderFrame.PendingGuildCards.Cards)
         return true
@@ -6464,18 +6582,18 @@ do
 
     function tooltip:OnLoad()
         self:Enable()
-        hooksecurefunc(_G.CommunitiesFrame.MemberList, "RefreshLayout", OnRefreshApplyHooks)
-        hooksecurefunc(_G.CommunitiesFrame.MemberList, "Update", OnScroll)
-        hooksecurefunc(_G.ClubFinderGuildFinderFrame.CommunityCards, "RefreshLayout", OnRefreshApplyHooks)
-        hooksecurefunc(_G.ClubFinderGuildFinderFrame.CommunityCards.ListScrollFrame, "update", OnScroll)
-        hooksecurefunc(_G.ClubFinderGuildFinderFrame.PendingCommunityCards, "RefreshLayout", OnRefreshApplyHooks)
-        hooksecurefunc(_G.ClubFinderGuildFinderFrame.PendingCommunityCards.ListScrollFrame, "update", OnScroll)
+        ScrollBoxUtil:OnViewFramesChanged(_G.CommunitiesFrame.MemberList.ListScrollFrame or _G.CommunitiesFrame.MemberList.ScrollBox, SmartHookButtons) -- TODO: DF
+        ScrollBoxUtil:OnViewScrollChanged(_G.CommunitiesFrame.MemberList.ListScrollFrame or _G.CommunitiesFrame.MemberList.ScrollBox, OnScroll) -- TODO: DF
+        ScrollBoxUtil:OnViewFramesChanged(_G.ClubFinderGuildFinderFrame.CommunityCards.ListScrollFrame or _G.ClubFinderGuildFinderFrame.CommunityCards.ScrollBox, SmartHookButtons) -- TODO: DF
+        ScrollBoxUtil:OnViewScrollChanged(_G.ClubFinderGuildFinderFrame.CommunityCards.ListScrollFrame or _G.ClubFinderGuildFinderFrame.CommunityCards.ScrollBox, OnScroll) -- TODO: DF
+        ScrollBoxUtil:OnViewFramesChanged(_G.ClubFinderGuildFinderFrame.PendingCommunityCards.ListScrollFrame or _G.ClubFinderGuildFinderFrame.PendingCommunityCards.ScrollBox, SmartHookButtons) -- TODO: DF
+        ScrollBoxUtil:OnViewScrollChanged(_G.ClubFinderGuildFinderFrame.PendingCommunityCards.ListScrollFrame or _G.ClubFinderGuildFinderFrame.PendingCommunityCards.ScrollBox, OnScroll) -- TODO: DF
+        ScrollBoxUtil:OnViewFramesChanged(_G.ClubFinderCommunityAndGuildFinderFrame.CommunityCards.ListScrollFrame or _G.ClubFinderCommunityAndGuildFinderFrame.CommunityCards.ScrollBox, SmartHookButtons) -- TODO: DF
+        ScrollBoxUtil:OnViewScrollChanged(_G.ClubFinderCommunityAndGuildFinderFrame.CommunityCards.ListScrollFrame or _G.ClubFinderCommunityAndGuildFinderFrame.CommunityCards.ScrollBox, OnScroll) -- TODO: DF
+        ScrollBoxUtil:OnViewFramesChanged(_G.ClubFinderCommunityAndGuildFinderFrame.PendingCommunityCards.ListScrollFrame or _G.ClubFinderCommunityAndGuildFinderFrame.PendingCommunityCards.ScrollBox, SmartHookButtons) -- TODO: DF
+        ScrollBoxUtil:OnViewScrollChanged(_G.ClubFinderCommunityAndGuildFinderFrame.PendingCommunityCards.ListScrollFrame or _G.ClubFinderCommunityAndGuildFinderFrame.PendingCommunityCards.ScrollBox, OnScroll) -- TODO: DF
         hooksecurefunc(_G.ClubFinderGuildFinderFrame.GuildCards, "RefreshLayout", OnRefreshApplyHooks)
         hooksecurefunc(_G.ClubFinderGuildFinderFrame.PendingGuildCards, "RefreshLayout", OnRefreshApplyHooks)
-        hooksecurefunc(_G.ClubFinderCommunityAndGuildFinderFrame.CommunityCards, "RefreshLayout", OnRefreshApplyHooks)
-        hooksecurefunc(_G.ClubFinderCommunityAndGuildFinderFrame.CommunityCards.ListScrollFrame, "update", OnScroll)
-        hooksecurefunc(_G.ClubFinderCommunityAndGuildFinderFrame.PendingCommunityCards, "RefreshLayout", OnRefreshApplyHooks)
-        hooksecurefunc(_G.ClubFinderCommunityAndGuildFinderFrame.PendingCommunityCards.ListScrollFrame, "update", OnScroll)
         hooksecurefunc(_G.ClubFinderCommunityAndGuildFinderFrame.GuildCards, "RefreshLayout", OnRefreshApplyHooks)
         hooksecurefunc(_G.ClubFinderCommunityAndGuildFinderFrame.PendingGuildCards, "RefreshLayout", OnRefreshApplyHooks)
     end
@@ -6520,6 +6638,9 @@ do
     end
 
     local function OnTooltipSetItem(self)
+        if self ~= GameTooltip and self ~= ItemRefTooltip then
+            return
+        end
         if not config:Get("enableKeystoneTooltips") then
             return
         end
@@ -6548,10 +6669,14 @@ do
 
     function tooltip:OnLoad()
         self:Enable()
-        GameTooltip:HookScript("OnTooltipSetItem", OnTooltipSetItem)
+        if TooltipDataProcessor then -- TODO: DF
+            TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, OnTooltipSetItem)
+        else
+            GameTooltip:HookScript("OnTooltipSetItem", OnTooltipSetItem)
+            ItemRefTooltip:HookScript("OnTooltipSetItem", OnTooltipSetItem)
+        end
         GameTooltip:HookScript("OnTooltipCleared", OnTooltipCleared)
         GameTooltip:HookScript("OnHide", OnHide)
-        ItemRefTooltip:HookScript("OnTooltipSetItem", OnTooltipSetItem)
         ItemRefTooltip:HookScript("OnTooltipCleared", OnTooltipCleared)
         ItemRefTooltip:HookScript("OnHide", OnHide)
     end
@@ -8087,7 +8212,13 @@ do
         frame.idCounter = CreateCounter()
         frame.logDataProvider = CreateDataProvider()
         frame.frameCounter = 0
-        frame.TitleText:SetText(L.RWF_TITLE)
+
+        -- TODO: DF
+        if frame.TitleText then
+            frame.TitleText:SetText(L.RWF_TITLE)
+        else
+            frame:SetTitle(L.RWF_TITLE)
+        end
 
         frame.TitleBar = CreateFrame("Frame", nil, frame, "PanelDragBarTemplate") ---@diagnostic disable-line: param-type-mismatch
         frame.TitleBar:OnLoad()
@@ -8331,7 +8462,7 @@ do
                 self:SetShown(not frame:IsShown())
             end
             local numItems = frame:GetNumLootItems(LOG_TYPE.News)
-            self:SetText(numItems > 0 and numItems)
+            self:SetText(numItems > 0 and numItems or "")
             -- self:SetEnabled(numItems > 0)
             if not self.isGlowing and numItems >= config:Get("rwfBackgroundRemindAt") then
                 self.isGlowing = true
@@ -9163,12 +9294,15 @@ do
             return frame
         end
 
+        local _InterfaceOptionsFrame = InterfaceOptionsFrame or SettingsPanel -- TODO: DF support
+        local _InterfaceOptionsFrame_Show = InterfaceOptionsFrame_Show or function() SettingsPanel:Open() end -- TODO: DF support
+
         -- customize the look and feel
         do
             local function ConfigFrame_OnShow(self)
                 if not InCombatLockdown() then
-                    if InterfaceOptionsFrame:IsShown() then
-                        InterfaceOptionsFrame_Show()
+                    if _InterfaceOptionsFrame:IsShown() then
+                        _InterfaceOptionsFrame_Show()
                     end
                     HideUIPanel(GameMenuFrame)
                 end

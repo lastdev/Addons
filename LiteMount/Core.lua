@@ -23,9 +23,9 @@
 
 local _, LM = ...
 
---[===[@debug@
+--[==[@debug@
 if LibDebug then LibDebug() end
---@end-debug@]===]
+--@end-debug@]==]
 
 -- This is still a SecureActionButton for backwards compatibility with
 -- people's macros with /click LiteMount in them.
@@ -97,6 +97,6 @@ function LiteMount:PLAYER_REGEN_ENABLED()
     self:Initialize()
 end
 
---[===[@debug@
+--[==[@debug@
 _G.LM = LM
---@end-debug@]===]
+--@end-debug@]==]

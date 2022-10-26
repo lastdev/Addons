@@ -8,9 +8,9 @@
 
 local _, LM = ...
 
---[===[@debug@
+--[==[@debug@
 if LibDebug then LibDebug() end
---@end-debug@]===]
+--@end-debug@]==]
 
 LM.RunningWild = setmetatable({ }, LM.Spell)
 LM.RunningWild.__index = LM.RunningWild

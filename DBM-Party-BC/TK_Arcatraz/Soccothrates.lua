@@ -3,7 +3,7 @@ local L = mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,timewalker"
 
-mod:SetRevision("20220909231726")
+mod:SetRevision("20220920232426")
 
 mod:SetCreatureID(20886)
 mod:SetEncounterID(1915)
@@ -26,7 +26,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(35759, 39006) and self:CheckDispelFilter() then
+	if args:IsSpellID(35759, 39006) and self:CheckDispelFilter("magic") then
 		specwarnFelFireShock:Show(args.destName)
 		specwarnFelFireShock:Play("dispelnow")
 	end

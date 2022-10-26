@@ -1,7 +1,6 @@
 # oRA3
 
-## [v9.2.3](https://github.com/BigWigsMods/oRA3/tree/v9.2.3) (2022-09-11)
-[Full Changelog](https://github.com/BigWigsMods/oRA3/compare/v9.2.2...v9.2.3) [Previous Releases](https://github.com/BigWigsMods/oRA3/releases)
+## [v10.0.1](https://github.com/BigWigsMods/oRA3/tree/v10.0.1) (2022-10-26)
+[Full Changelog](https://github.com/BigWigsMods/oRA3/compare/v10.0.0...v10.0.1) [Previous Releases](https://github.com/BigWigsMods/oRA3/releases)
 
-- Fixes for Dragonflight  
-- Add Sepulcher vantus runes (#112)  
+- Update TOC for 10.0.0  

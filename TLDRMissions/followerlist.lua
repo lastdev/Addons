@@ -1,3 +1,5 @@
+if true then return end
+
 local addonName = ...
 local addon = _G[addonName]
 addon.followerList = {}

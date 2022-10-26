@@ -18,9 +18,9 @@
 
 local _, LM = ...
 
---[===[@debug@
+--[==[@debug@
 if LibDebug then LibDebug() end
---@end-debug@]===]
+--@end-debug@]==]
 
 LM.Nagrand = setmetatable({ }, LM.Spell)
 LM.Nagrand.__index = LM.Nagrand

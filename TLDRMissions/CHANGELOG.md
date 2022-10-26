@@ -1,16 +1,15 @@
 # TL;DR Missions
 
-##  (2022-09-09)
+##  (2022-10-17)
  
 
-- Update TLDRMissions.toc  
-- Kiaranyka targetting issue  
-    Closes https://github.com/TLDRMissions/TLDRMissions/issues/566  
-- 2238 + Line targetting issue  
-    Closes https://github.com/TLDRMissions/TLDRMissions/issues/565  
-- Allow skip button if out of anima.  
-    Closes https://github.com/TLDRMissions/TLDRMissions/issues/567  
-- 2280  
-    Internal combat log.  
-- Rencissa targetting issue - 2226  
-    Internal combat log.  
+- Internal  
+- Merge pull request #3 from TLDRMissions/PTR  
+    Ptr 10.0.0  
+- Merge branch 'main' into PTR  
+- Interface version update for 10.0.0  
+- CharacterFrameTabButtonTemplate renamed to PanelTabButtonTemplate in 10.0.0  
+- Merge pull request #2 from TLDRMissions/main  
+    PTR  
+- ptr 1  
+- Update mklink.bat  

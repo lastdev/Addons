@@ -1,10 +1,10 @@
-lightweight tag b747ea1222ee0403c5b4e5528ffe32791dfadcda 9.2.5-01
+lightweight tag ee225e528af60c8b48054af7b1e40e89f997211a v10.0.0
 Author:	Dave Hendler <sollaires@gmail.com>
-Date:	Mon Jun 6 10:28:06 2022 -0700
+Date:	Sat Oct 22 22:08:52 2022 -0700
 
-commit b747ea1222ee0403c5b4e5528ffe32791dfadcda
+commit ee225e528af60c8b48054af7b1e40e89f997211a
 Author: Dave Hendler <sollaires@gmail.com>
-Date:   Mon Jun 6 10:28:06 2022 -0700
+Date:   Sat Oct 22 22:08:52 2022 -0700
 
-    Use newer BigWigs packager
+    Tag for release, handle very low level characters without crash
 

@@ -2,10 +2,10 @@ local Amr = LibStub("AceAddon-3.0"):GetAddon("AskMrRobot")
 local L = LibStub("AceLocale-3.0"):GetLocale("AskMrRobot", true)
 
 -- min import version that we will read from the website
-Amr.MIN_IMPORT_VERSION = 77
+Amr.MIN_IMPORT_VERSION = 114
 
 -- min addon version that we will support for inter-addon communication
-Amr.MIN_ADDON_VERSION = 65
+Amr.MIN_ADDON_VERSION = 114
 
 -- import some constants from the serializer for convenience
 Amr.ChatPrefix = Amr.Serializer.ChatPrefix
@@ -77,37 +77,39 @@ Amr.SpecIcons = {
     [7] = "ability_druid_catform", -- DruidFeral
     [8] = "ability_racial_bearform", -- DruidGuardian
     [9] = "spell_nature_healingtouch", -- DruidRestoration
-    [10] = "ability_hunter_bestialdiscipline", -- HunterBeastMastery
-    [11] = "ability_hunter_focusedaim", -- HunterMarksmanship
-    [12] = "ability_hunter_camouflage", -- HunterSurvival
-    [13] = "spell_holy_magicalsentry", -- MageArcane
-    [14] = "spell_fire_firebolt02", -- MageFire
-    [15] = "spell_frost_frostbolt02", -- MageFrost
-    [16] = "spell_monk_brewmaster_spec", -- MonkBrewmaster
-    [17] = "spell_monk_mistweaver_spec", -- MonkMistweaver
-    [18] = "spell_monk_windwalker_spec", -- MonkWindwalker
-    [19] = "spell_holy_holybolt", -- PaladinHoly
-    [20] = "ability_paladin_shieldofthetemplar", -- PaladinProtection
-    [21] = "spell_holy_auraoflight", -- PaladinRetribution
-    [22] = "spell_holy_powerwordshield", -- PriestDiscipline
-    [23] = "spell_holy_guardianspirit", -- PriestHoly
-    [24] = "spell_shadow_shadowwordpain", -- PriestShadow
-    [25] = "ability_rogue_eviscerate", -- RogueAssassination
-    [26] = "inv_sword_30", -- RogueOutlaw
-    [27] = "ability_stealth", -- RogueSubtlety
-    [28] = "spell_nature_lightning", -- ShamanElemental
-    [29] = "spell_nature_lightningshield", -- ShamanEnhancement
-    [30] = "spell_nature_magicimmunity", -- ShamanRestoration
-    [31] = "spell_shadow_deathcoil", -- WarlockAffliction
-    [32] = "spell_shadow_metamorphosis", -- WarlockDemonology
-    [33] = "spell_shadow_rainoffire", -- WarlockDestruction
-    [34] = "ability_warrior_savageblow", -- WarriorArms
-    [35] = "ability_warrior_innerrage", -- WarriorFury
-    [36] = "ability_warrior_defensivestance", -- WarriorProtection
+    [10] = "classicon_evoker_devastation", -- EvokerDevastation
+    [11] = "classicon_evoker_preservation", -- EvokerPreservation
+    [12] = "ability_hunter_bestialdiscipline", -- HunterBeastMastery
+    [13] = "ability_hunter_focusedaim", -- HunterMarksmanship
+    [14] = "ability_hunter_camouflage", -- HunterSurvival
+    [15] = "spell_holy_magicalsentry", -- MageArcane
+    [16] = "spell_fire_firebolt02", -- MageFire
+    [17] = "spell_frost_frostbolt02", -- MageFrost
+    [18] = "spell_monk_brewmaster_spec", -- MonkBrewmaster
+    [19] = "spell_monk_mistweaver_spec", -- MonkMistweaver
+    [20] = "spell_monk_windwalker_spec", -- MonkWindwalker
+    [21] = "spell_holy_holybolt", -- PaladinHoly
+    [22] = "ability_paladin_shieldofthetemplar", -- PaladinProtection
+    [23] = "spell_holy_auraoflight", -- PaladinRetribution
+    [24] = "spell_holy_powerwordshield", -- PriestDiscipline
+    [25] = "spell_holy_guardianspirit", -- PriestHoly
+    [26] = "spell_shadow_shadowwordpain", -- PriestShadow
+    [27] = "ability_rogue_eviscerate", -- RogueAssassination
+    [28] = "inv_sword_30", -- RogueOutlaw
+    [29] = "ability_stealth", -- RogueSubtlety
+    [30] = "spell_nature_lightning", -- ShamanElemental
+    [31] = "spell_nature_lightningshield", -- ShamanEnhancement
+    [32] = "spell_nature_magicimmunity", -- ShamanRestoration
+    [33] = "spell_shadow_deathcoil", -- WarlockAffliction
+    [34] = "spell_shadow_metamorphosis", -- WarlockDemonology
+    [35] = "spell_shadow_rainoffire", -- WarlockDestruction
+    [36] = "ability_warrior_savageblow", -- WarriorArms
+    [37] = "ability_warrior_innerrage", -- WarriorFury
+    [38] = "ability_warrior_defensivestance", -- WarriorProtection
 }
 
 -- instance IDs ordered in preferred display order
-Amr.InstanceIdsOrdered = { 2296, 2450, 2481 }
+Amr.InstanceIdsOrdered = { 2522 }
 
 Amr.Difficulties = {
 	Lfr = 17,

@@ -233,7 +233,7 @@ do
             end
 
             -- Waypoint menu item
-            info.disabled     = nil
+            info.disabled     = not core:GetModule("TomTom"):CanPointTo(button.uiMapID)
             info.isTitle      = nil
             info.notCheckable = true
             info.text = "Create waypoint"

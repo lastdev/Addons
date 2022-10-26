@@ -1,5 +1,12 @@
 local myname, ns = ...
 
+ns.groups = {
+    spirithealer = "{npc:6491:Spirit Healer}",
+}
+
+-- Northrend
+ns.RegisterPoints(113, {})
+
 -- Borean Tundra
 ns.RegisterPoints(114, {
     [21002840] = {
@@ -367,4 +374,116 @@ ns.RegisterPoints(125, { -- Dalaran
     note="Books spawn occasionally, and despawn shortly after someone reads them",
     texture=ns.atlas_texture("profession", {r=0.5, g=1, b=1}),
     minimap=true,
+})
+
+-- Spirit healers
+local spirit = {
+    label="{npc:6491:Spirit Healer}",
+    texture=ns.atlas_texture("poi-graveyard-neutral", {r=0.5, g=1, b=1}),
+    IsActive=function(point) return UnitIsDead("player") end,
+    group="spirithealer",
+}
+ns.RegisterPoints(114, { -- Borean Tundra
+    [30603360] = spirit,
+    [33205340] = spirit,
+    [45005340] = spirit,
+    [45607520] = spirit,
+    [47603480] = spirit,
+    [50601000] = spirit,
+    [56001760] = spirit,
+    [56806280] = spirit,
+    [73604820] = spirit,
+    [77603440] = spirit,
+    [82004820] = spirit,
+})
+-- Howling Fjord
+ns.RegisterPoints(117, {
+    [26205900] = spirit,
+    [37802860] = spirit,
+    [38007460] = spirit,
+    [44804760] = spirit,
+    [53802220] = spirit,
+    [56004380] = spirit,
+    [58406060] = spirit,
+    [59204980] = spirit,
+    [69603240] = spirit,
+    [74005940] = spirit,
+    [75207200] = spirit,
+    [75802960] = spirit,
+})
+-- Dragonblight
+ns.RegisterPoints(115, {
+    [13805280] = spirit,
+    [27205540] = spirit,
+    [27804740] = spirit,
+    [39204620] = spirit,
+    [42202960] = spirit,
+    [46007500] = spirit,
+    [46402020] = spirit,
+    [59805420] = spirit,
+    [63802380] = spirit,
+    [77206300] = spirit,
+    [82002580] = spirit,
+    [83205100] = spirit,
+    [87405760] = spirit,
+})
+-- Grizzly Hills
+ns.RegisterPoints(116, {
+    [16406920] = spirit,
+    [16603140] = spirit,
+    [22804420] = spirit,
+    [32807340] = spirit,
+    [33805660] = spirit,
+    [47403420] = spirit,
+    [59803320] = spirit,
+    [70404020] = spirit,
+})
+-- Zul'drak
+ns.RegisterPoints(121, {
+    [20206340] = spirit,
+    [30607280] = spirit,
+    [37405900] = spirit,
+    [53805620] = spirit,
+    [70006460] = spirit,
+    [84003160] = spirit,
+})
+-- Sholazar Basin
+ns.RegisterPoints(119, {
+    [24805720] = spirit,
+    [33608500] = spirit,
+    [40403580] = spirit,
+    [47606000] = spirit,
+    [55807760] = spirit,
+    [57803480] = spirit,
+    [76606080] = spirit,
+})
+-- Icecrown
+ns.RegisterPoints(118, {
+    [27805440] = spirit,
+    [41202960] = spirit,
+    [52405240] = spirit,
+    [53807120] = spirit,
+    [75203680] = spirit,
+    [79602300] = spirit,
+    [85408020] = spirit,
+})
+-- Storm Peaks
+ns.RegisterPoints(120, {
+    [27806560] = spirit,
+    [28803820] = spirit,
+    [33606860] = spirit,
+    [39804420] = spirit,
+    [42202480] = spirit,
+    [42407960] = spirit,
+    [42607960] = spirit,
+    [46206540] = spirit,
+    [54205000] = spirit,
+    [60404800] = spirit,
+    [72605760] = spirit,
+})
+ns.RegisterPoints(125, { -- Dalaran
+    [46602180] = spirit,
+})
+ns.RegisterPoints(123, { -- Wintergrasp
+    [50001260] = spirit,
 })

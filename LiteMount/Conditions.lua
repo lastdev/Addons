@@ -10,9 +10,9 @@
 
 local _, LM = ...
 
---[===[@debug@
+--[==[@debug@
 if LibDebug then LibDebug() end
---@end-debug@]===]
+--@end-debug@]==]
 
 local L = LM.Localize
 
@@ -228,7 +228,7 @@ CONDITIONS["difficulty"] = {
         end
 }
 
-CONDITIONS["dragonriding"] = {
+CONDITIONS["dragonridable"] = {
     name = MOUNT_JOURNAL_FILTER_DRAGONRIDING,
     handler =
         function (cond, context)

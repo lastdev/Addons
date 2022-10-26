@@ -11,9 +11,9 @@
 
 local _, LM = ...
 
---[===[@debug@
+--[==[@debug@
 if LibDebug then LibDebug() end
---@end-debug@]===]
+--@end-debug@]==]
 
 local function MethodDispatch(self, event, ...)
     if self[event] then

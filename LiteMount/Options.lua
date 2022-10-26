@@ -13,9 +13,9 @@ local _, LM = ...
 local Serializer = LibStub("AceSerializer-3.0")
 local LibDeflate = LibStub("LibDeflate")
 
---[===[@debug@
+--[==[@debug@
 if LibDebug then LibDebug() end
---@end-debug@]===]
+--@end-debug@]==]
 
 --[[----------------------------------------------------------------------------
 
@@ -44,6 +44,7 @@ Dismount [nofalling]
 CopyTargetsMount
 ApplyRules
 Limit [mod:shift,nosubmerged,flyable] RUN,~FLY
+Limit [mod:shift,nosubmerged,dragonridable] RUN,~DRAGONRIDING
 Limit [mod:shift,submerged] -SWIM
 SmartMount
 IF [falling]

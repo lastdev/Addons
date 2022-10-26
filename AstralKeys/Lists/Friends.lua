@@ -637,7 +637,7 @@ do
 		FriendsTooltipAstralKeysInfo1:Hide()
 	end
 
-	local buttons = FriendsListFrameScrollFrame.buttons
+	local buttons = FriendsListFrame.ScrollBox
 	for i = 1, #buttons do
 		local button = buttons[i]
 		local oldOnEnter = button.OnEnter
@@ -672,8 +672,8 @@ local function TooltipHook(self)
     end
 end
 
+-- enable for 10.0.2 TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, TooltipHook)
 GameTooltip:HookScript('OnTooltipSetUnit', TooltipHook)
-
 local function FriendUnitFunction(self, unit, class, mapID, keyLevel, weekly_best, faction, btag)
 	self.unitID = addon.UnitID(unit)
 	self.levelString:SetText(keyLevel)

@@ -47,6 +47,7 @@ LSM:Register("sound", "|cFFFF0000Blue|r", [[Interface\Addons\SharedMedia_Causese
 LSM:Register("sound", "|cFFFF0000Break|r", [[Interface\Addons\SharedMedia_Causese\sound\Break.ogg]])
 LSM:Register("sound", "|cFFFF0000Buff|r", [[Interface\Addons\SharedMedia_Causese\sound\Buff.ogg]])
 LSM:Register("sound", "|cFFFF0000CC|r", [[Interface\Addons\SharedMedia_Causese\sound\CC.ogg]])
+LSM:Register("sound", "|cFFFF0000CD|r", [[Interface\Addons\SharedMedia_Causese\sound\CD.ogg]])
 LSM:Register("sound", "|cFFFF0000Center|r", [[Interface\Addons\SharedMedia_Causese\sound\Center.ogg]])
 LSM:Register("sound", "|cFFFF0000Chain|r", [[Interface\Addons\SharedMedia_Causese\sound\Chain.ogg]])
 LSM:Register("sound", "|cFFFF0000Clear|r", [[Interface\Addons\SharedMedia_Causese\sound\Clear.ogg]])

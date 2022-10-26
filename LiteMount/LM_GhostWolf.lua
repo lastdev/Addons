@@ -8,9 +8,9 @@
 
 local _, LM = ...
 
---[===[@debug@
+--[==[@debug@
 if LibDebug then LibDebug() end
---@end-debug@]===]
+--@end-debug@]==]
 
 local TABLET_OF_GHOST_WOLF_AURA = GetSpellInfo(168799)
 

@@ -1013,6 +1013,8 @@ L["Olmyr the Enlightened"] = "Olmyr el Iluminado"
 L["Omega Buster"] = "Destrozador omega"
 L["Oozing Leftovers"] = "Sobras rezumantes"
 L["Open MDI override options"] = "Abrir las opciones de anulación de MDI"
+--[[Translation missing --]]
+--[[ L["openSettingsTooltip"] = ""--]] 
 L["Opera Hall Balcony"] = "Balcón de la Sala de la Ópera"
 --[[Translation missing --]]
 --[[ L["Opera Hall: Wikket"] = ""--]] 

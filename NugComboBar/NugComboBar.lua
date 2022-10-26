@@ -22,6 +22,8 @@ local UnitPower = UnitPower
 local UnitPowerMax = UnitPowerMax
 local GetRuneCooldown = GetRuneCooldown
 local tsort = table.sort
+local math_max = math.max
+local math_min = math.min
 local dummy = function() return 0 end
 local GetComboPoints = dummy
 
@@ -96,9 +98,10 @@ local defaults = {
             DEATHKNIGHT = { "Runes", "Runes", "Runes" },
             MAGE = { "ArcaneCharges", "Fireblast", "Icicles" },
             WARRIOR = { "Disabled", "Meatcleaver", "ShieldBlock" },
-            SHAMAN = { "Icefury", "MaelstromWeapon", "Undulation" },
+            SHAMAN = { "Icefury", "MaelstromWeapon", "Disabled" },
             HUNTER = { "Disabled", "Disabled", "Disabled" },
             PRIEST = { "Disabled", "Disabled", "Disabled" },
+            EVOKER = { "Essence", "Essence" },
         },
         specProfiles = {
             ROGUE = { "Default", "Default", "Default" },
@@ -113,6 +116,7 @@ local defaults = {
             SHAMAN = { "Default", "Default", "Default" },
             HUNTER = { "Default", "Default", "Default" },
             PRIEST = { "Default", "Default", "Default" },
+            EVOKER = { "Default", "Default" },
         }
     },
     profile = {
@@ -277,7 +281,7 @@ do
             -- self:RegisterEvent("PLAYER_LOGOUT")
 
             if self.db.global.disableBlizz then NugComboBar.disableBlizzFrames() end
-            if self.db.global.disableBlizzNP then NugComboBar.disableBlizzNameplates() end
+            -- if self.db.global.disableBlizzNP then NugComboBar.disableBlizzNameplates() end
 
             local f = CreateFrame('Frame', nil, InterfaceOptionsFrame) -- helper frame to load GUI and to watch specialization changes
             f:SetScript('OnShow', function(self)
@@ -452,7 +456,7 @@ local HideTimer = function(self, time)
     if self.OnUpdateCounter < fadeAfter then return end
 
     local ncb = NugComboBar
-    local a = 1-((self.OnUpdateCounter - fadeAfter) / fadeTime)
+    local a = math_max(0, 1-((self.OnUpdateCounter - fadeAfter) / fadeTime))
     ncb:SetAlpha(NugComboBar.db.profile.alpha*a)
     if self.OnUpdateCounter >= fadeAfter + fadeTime then
         self:SetScript("OnUpdate",nil)
@@ -653,7 +657,11 @@ function NugComboBar:Update(unit, ...)
                     point:Activate(animationLevel)
                     if flags.secondLayer then
                         if point.isSelected then
-                            AnticipationIn(point, i)
+                            if comboPoints == i then
+                                AnticipationIn(point, i)
+                            else
+                                AnticipationOut(point, i)
+                            end
                         end
                     end
     	        end
@@ -1307,7 +1315,7 @@ local function RuneChargeOnUpdate(self, time)
     if progress > 1 then progress = 1 end
 
     if enablePrettyRunes then
-        local pmp = progress*progress*progress+0.1
+        local pmp = math_min(math_max( progress*progress*progress+0.1, 0), 1)
         self.playermodel:SetAlpha(pmp)--progress*0.8)
         self:SetAlpha(progress ~= 0 and 0.9 or 0)
         self.bgmodel:SetAlpha(progress)
@@ -1504,6 +1512,7 @@ end
 function NugComboBar:ResetConfig()
     table.wipe(self.flags)
     self.eventProxy:UnregisterAllEvents()
+    self.eventProxy:SetScript("OnUpdate", nil)
     self:DisableBar()
 end
 

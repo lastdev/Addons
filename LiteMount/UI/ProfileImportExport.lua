@@ -90,7 +90,7 @@ end
 
 --[[ Inspect ---------------------------------------------------------------]]--
 
---[===[@debug@
+--[==[@debug@
 
 local Serializer = LibStub("AceSerializer-3.0")
 local LibDeflate = LibStub("LibDeflate")
@@ -113,4 +113,4 @@ function LiteMountProfileInspectMixin:Apply()
     self.Scroll.EditBox:SetText(LM.TableToString({ LiteMountDB = data }))
 end
 
---@end-debug@]===]
+--@end-debug@]==]

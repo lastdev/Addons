@@ -1,14 +1,18 @@
-local Katy = CreateFrame("Frame")
+local Katy = CreateFrame("Frame");
 
-function Katy:OnEvent()
-    local unit = UnitGUID('target')
-    if unit then
-        local id = select(6,strsplit("-", unit))
-        if id == "132969" then
-            C_GossipInfo.SelectOption(1)
+function Katy:OnEvent(type)
+    if type ~= Enum.PlayerInteractionType.Gossip then return end;
+    local guid = UnitGUID('target');
+    if guid then
+        local unitType, _, _, _, _, unitID = strsplit("-", guid);
+        if unitID and (unitID == "132969") and (unitType == "Creature") then
+            local options = C_GossipInfo.GetOptions();
+            if options and options[1] then
+                C_GossipInfo.SelectOption(options[1].gossipOptionID);
+            end
         end
     end
 end
 
-Katy:SetScript("OnEvent", Katy.OnEvent)
-Katy:RegisterEvent("GOSSIP_SHOW")
+Katy:SetScript("OnEvent", Katy.OnEvent);
+Katy:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW");

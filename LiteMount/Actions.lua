@@ -12,9 +12,9 @@ local _, LM = ...
 
 local L = LM.Localize
 
---[===[@debug@
+--[==[@debug@
 if LibDebug then LibDebug() end
---@end-debug@]===]
+--@end-debug@]==]
 
 local function ReplaceVars(list)
     local out = {}
@@ -324,7 +324,7 @@ ACTIONS['SmartMount'] = {
                 m = swim:PriorityRandom(context.random)
             end
 
-            if not m and LM.Conditions:Check("[dragonriding]", context) then
+            if not m and LM.Conditions:Check("[dragonridable]", context) then
                 LM.Debug(" - trying Dragon Riding Mount")
                 local fly = filteredList:FilterSearch('DRAGONRIDING')
                 LM.Debug(" - found " .. #fly .. " mounts.")

@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "heroic,timewalker"
 
-mod:SetRevision("20220909231726")
+mod:SetRevision("20220920232426")
 mod:SetCreatureID(54123)
 mod:SetEncounterID(1882)
 
@@ -27,7 +27,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 101412 and self:CheckDispelFilter() then
+	if args.spellId == 101412 and self:CheckDispelFilter("magic") then
 		specWarnShriek:Show(args.destName)
 		specWarnShriek:Play("helpdispel")
 	end

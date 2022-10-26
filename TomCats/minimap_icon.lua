@@ -4,7 +4,6 @@ local addonName, addon = ...
 local CreateFrame = CreateFrame
 local GameTooltip = GameTooltip
 local GetCursorPosition = GetCursorPosition
-local InterfaceOptionsFrame_OpenToCategory = InterfaceOptionsFrame_OpenToCategory
 local Minimap = Minimap
 local MinimapCluster = MinimapCluster
 local MinimapZoneTextButton = MinimapZoneTextButton
@@ -234,7 +233,7 @@ end
 
 local function OpenControlPanel()
 	if (not _G["TomCats_Config"]:IsVisible()) then
-		InterfaceOptionsFrame_OpenToCategory(_G["TomCats_Config"])
+		Settings.OpenToCategory((_G["TomCats_Config"]).category:GetID())
 	end
 end
 

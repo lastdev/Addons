@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2477, "DBM-Party-Dragonflight", 3, 1198)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220820005632")
+mod:SetRevision("20220920232426")
 mod:SetCreatureID(186151)
 mod:SetEncounterID(2580)
 --mod:SetUsedIcons(1, 2, 3)
@@ -165,7 +165,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			warnStaticSpear:Show(args.destName)
 		end
-	elseif spellId == 376827 and self:CheckDispelFilter() then
+	elseif spellId == 376827 and self:CheckDispelFilter("magic") then
 		specWarnConductiveStrikeDispel:Show(args.destName)
 		specWarnConductiveStrikeDispel:Play("helpdispel")
 	end

@@ -1045,6 +1045,8 @@ L["Olmyr the Enlightened"] = "깨달은 자 올미르"
 L["Omega Buster"] = "오메가 섬멸로봇"
 L["Oozing Leftovers"] = "진물 찌꺼기"
 L["Open MDI override options"] = "MDI 옵션을 재정의 열기"
+--[[Translation missing --]]
+--[[ L["openSettingsTooltip"] = ""--]] 
 L["Opera Hall Balcony"] = "오페라 극장 발코니"
 --[[Translation missing --]]
 --[[ L["Opera Hall: Wikket"] = ""--]] 

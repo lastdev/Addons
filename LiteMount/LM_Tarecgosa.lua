@@ -12,9 +12,9 @@
 
 local _, LM = ...
 
---[===[@debug@
+--[==[@debug@
 if LibDebug then LibDebug() end
---@end-debug@]===]
+--@end-debug@]==]
 
 LM.Tarecgosa = setmetatable({ }, LM.Mount)
 LM.Tarecgosa.__index = LM.Tarecgosa

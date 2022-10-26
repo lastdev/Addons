@@ -14,9 +14,9 @@
 
 local _, LM = ...
 
---[===[@debug@
+--[==[@debug@
 if LibDebug then LibDebug() end
---@end-debug@]===]
+--@end-debug@]==]
 
 -- This wrapper class is so that LM.ActionButton can treat all of the returns
 -- from action functions as if they were a Mount class.

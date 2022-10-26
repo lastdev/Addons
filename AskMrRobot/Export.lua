@@ -293,6 +293,7 @@ local function scanGreatVault()
 	Amr.db.char.GreatVaultItems = vaultItems
 end
 
+--[[
 local function scanSoulbinds()
 	if not C_Soulbinds then return end
 
@@ -356,6 +357,7 @@ local function scanSoulbinds()
 	end	
 
 end
+]]
 
 --[[
 local function scanEssences()
@@ -401,10 +403,100 @@ local function scanEssences()
 end
 ]]
 
+local function readTalentConfig(configId)
+
+	local talMap = {}
+
+	local config = C_Traits.GetConfigInfo(configId);
+	if not config or config.type ~= Enum.TraitConfigType.Combat then return nil end
+	
+	local treeIds = config["treeIDs"];
+  	for i = 1, #treeIds do
+    	for _, nodeId in pairs(C_Traits.GetTreeNodes(treeIds[i])) do
+      		local node = C_Traits.GetNodeInfo(configId, nodeId);
+			if node.ID and node.isVisible and node.maxRanks > 0 then
+				if #node.entryIDs > 1 then
+					talMap[node.ID] = {}
+					for e = 1, #node.entryIDs do
+						if node.activeEntry and node.entryIDs[e] == node.activeEntry.entryID then
+							table.insert(talMap[node.ID], node.activeRank)
+						else
+							table.insert(talMap[node.ID], 0)
+						end
+					end
+				else
+					if node.activeEntry and node.activeRank then
+						talMap[node.ID] = { node.activeRank }
+					else
+						talMap[node.ID] = { 0 }
+					end
+				end
+			end
+
+			-- for reference if ever need it
+			--[[
+			if node.activeEntry and node.activeRank > 0 then
+				print(Amr:dump(node))
+			end
+      		local activeEntry = node.activeEntry;
+      		local activeRank = node.activeRank;
+      		if activeEntry and activeRank > 0 then
+        		local activeEntryId = activeEntry.entryID;
+        		local entry = C_Traits.GetEntryInfo(configId, activeEntryId);
+          		local defnId = entry["definitionID"];
+          		local defn = C_Traits.GetDefinitionInfo(defnId);
+          		local spellId = defn["spellID"];
+          		local spellName = GetSpellInfo(spellId);
+			end
+			]]
+
+		end
+	end
+
+	local tals = {}
+
+	-- sort by node ID
+	for nodeId, ranks in Amr.spairs(talMap) do
+		for i, rank in ipairs(ranks) do
+			table.insert(tals, rank)
+		end
+	end
+
+	return {
+		id = configId,
+		name = config.name,
+		tals = table.concat(tals, "")
+	}
+end
+
+local function scanActiveTalents()
+
+	local specPos = GetSpecialization()	
+	if not specPos or specPos < 1 or specPos > 4 then return end
+
+	if not Amr.db.char.TalentConfigs.LastConfig then
+		Amr.db.char.TalentConfigs.LastConfig = {}
+	end
+
+	-- grab the currently active config for this spec and save it
+	local configId = C_ClassTalents.GetActiveConfigID()
+	if configId then
+		parsedConfig = readTalentConfig(configId)
+		if parsedConfig then
+			Amr.db.char.TalentConfigs.LastConfig[specPos] = parsedConfig
+		end
+	end
+
+end
+
 local function scanTalents()	
+	
+	-- pre-dragonflight
+
 	local specPos = GetSpecialization()	
 	if not specPos or specPos < 1 or specPos > 4 then return end
 	
+	--[[	
 	local talentInfo = {}
     local maxTiers = 7
     for tier = 1, maxTiers do
@@ -426,6 +518,50 @@ local function scanTalents()
     end
 	
 	Amr.db.char.Talents[specPos] = str
+	]]
+
+	if not Amr.db.char.TalentConfigs.ConfigList then
+		Amr.db.char.TalentConfigs.ConfigList = {}
+	end
+
+	--local allConfigs = {}
+	local parsedConfig
+
+	--for specPos = 1, 4 do
+	local specId = GetSpecializationInfo(specPos)
+	if specId then
+		local specList = {}
+		Amr.db.char.TalentConfigs.ConfigList[Amr.SpecIds[specId]] = specList
+		--allConfigs[Amr.SpecIds[specId]] = specList
+		for i, configId in ipairs(C_ClassTalents.GetConfigIDsBySpecID(specId)) do	
+			parsedConfig = readTalentConfig(configId)
+			if parsedConfig then
+				table.insert(specList, parsedConfig)
+			end
+		end
+	end
+	--end
+
+	-- refresh entire list of configs each time we scan
+	--Amr.db.char.TalentConfigs.ConfigList = allConfigs
+
+	-- also get currently active talents
+	scanActiveTalents()
+
+	--[[
+	if not Amr.db.char.TalentConfigs.LastConfig then
+		Amr.db.char.TalentConfigs.LastConfig = {}
+	end
+
+	-- grab the currently active config for this spec and save it too
+	local configId = C_ClassTalents.GetActiveConfigID()
+	if configId then
+		parsedConfig = readTalentConfig(configId)
+		if parsedConfig then
+			Amr.db.char.TalentConfigs.LastConfig[specPos] = parsedConfig
+		end
+	end
+	]]
 end
 
 -- Returns a data object containing all information about the current player needed for an export:
@@ -446,7 +582,7 @@ function Amr:ExportCharacter()
 	scanTalents()
 
 	-- scan all soulbinds just before exporting
-	scanSoulbinds()
+	--scanSoulbinds()
 
 	-- scan current spec's essences just before exporting
 	--scanEssences()
@@ -454,11 +590,14 @@ function Amr:ExportCharacter()
 	-- scan the great vault for potential rewards this week
 	scanGreatVault()
 
-	data.Talents = Amr.db.char.Talents	
-	data.CovenantRenownLevel = Amr.db.char.CovenantRenownLevel
-	data.UnlockedConduits = Amr.db.char.UnlockedConduits
-	data.ActiveSoulbinds = Amr.db.char.ActiveSoulbinds
-	data.Soulbinds = Amr.db.char.Soulbinds
+	data.SavedTalentConfigs = Amr.db.char.TalentConfigs.ConfigList
+	data.LastTalentConfig = Amr.db.char.TalentConfigs.LastConfig
+
+	--data.Talents = Amr.db.char.Talents
+	--data.CovenantRenownLevel = Amr.db.char.CovenantRenownLevel
+	--data.UnlockedConduits = Amr.db.char.UnlockedConduits
+	--data.ActiveSoulbinds = Amr.db.char.ActiveSoulbinds
+	--data.Soulbinds = Amr.db.char.Soulbinds
 	--data.UnlockedEssences = Amr.db.char.UnlockedEssences
 	--data.Essences = Amr.db.char.Essences
 	data.Equipped = Amr.db.char.Equipped	
@@ -494,12 +633,15 @@ Amr:AddEventHandler("BAG_UPDATE", onBankUpdated)
 --Amr:AddEventHandler("VOID_STORAGE_DEPOSIT_UPDATE", scanVoid)
 --Amr:AddEventHandler("VOID_STORAGE_UPDATE", scanVoid)
 
-Amr:AddEventHandler("PLAYER_TALENT_UPDATE", scanTalents)
+--Amr:AddEventHandler("PLAYER_TALENT_UPDATE", scanTalents)
+Amr:AddEventHandler("TRAIT_CONFIG_UPDATED", scanTalents)
 
 --if C_AzeriteEssence then
 --	Amr:AddEventHandler("AZERITE_ESSENCE_UPDATE", scanEssences)
 --end
 
+--[[
 if C_Soulbinds then
 	Amr:AddEventHandler("SOULBIND_ACTIVATED", scanSoulbinds)
 end
+]]

@@ -654,6 +654,7 @@ function Amr:RefreshJunkUi()
     end
 end
 
+--[[
 Amr:AddEventHandler("SCRAPPING_MACHINE_SHOW", function() 
 	_isScrapOpen = true
 	if Amr.db.profile.options.junkVendor and Amr.db.char.JunkData and Amr.db.char.JunkData.Junk and #Amr.db.char.JunkData.Junk > 0 then
@@ -671,6 +672,7 @@ Amr:AddEventHandler("SCRAPPING_MACHINE_CLOSE", function()
         Amr:SetJunkUiState()
 	end
 end)
+]]
 
 Amr:AddEventHandler("MERCHANT_SHOW", function() 
 	_isMerchantOpen = true

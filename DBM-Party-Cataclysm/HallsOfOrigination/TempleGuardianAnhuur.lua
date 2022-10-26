@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(124, "DBM-Party-Cataclysm", 4, 70)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220909231726")
+mod:SetRevision("20220920232426")
 mod:SetCreatureID(39425)
 mod:SetEncounterID(1080)
 
@@ -33,7 +33,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 74938 then
 		warnShield:Show()
 	elseif args.spellId == 75592 then
-		if self.Options.SpecWarn75592dispel and self:CheckDispelFilter() then
+		if self.Options.SpecWarn75592dispel and self:CheckDispelFilter("magic") then
 			specWarnDivineReckoning:Show(args.destName)
 			specWarnDivineReckoning:Play("helpdispel")
 		else

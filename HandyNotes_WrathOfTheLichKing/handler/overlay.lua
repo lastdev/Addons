@@ -1,4 +1,5 @@
 local myname, ns = ...
+local _, myfullname = GetAddOnInfo(myname)
 
 local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 
@@ -136,36 +137,42 @@ do
 end
 function ns.SetupMapOverlay()
     local frame
-    local Krowi = LibStub("Krowi_WorldMapButtons-1.3", true)
+    local Krowi = LibStub("Krowi_WorldMapButtons-1.4", true) or LibStub("Krowi_WorldMapButtons-1.3", true)
     if Krowi then
         frame = Krowi:Add("WorldMapTrackingOptionsButtonTemplate", "DROPDOWNTOGGLEBUTTON")
     elseif WorldMapFrame.AddOverlayFrame then
         frame = WorldMapFrame:AddOverlayFrame("WorldMapTrackingOptionsButtonTemplate", "DROPDOWNTOGGLEBUTTON", "TOPRIGHT", WorldMapFrame:GetCanvasContainer(), "TOPRIGHT", -68, -2)
     else
         -- classic!
-        frame = CreateFrame("Button", nil, WorldMapFrame:GetCanvasContainer())
+        -- (this is a close translation of WorldMapTrackingOptionsButtonTemplate)
+        frame = CreateFrame("DropDownToggleButton", nil, WorldMapFrame:GetCanvasContainer())
+        frame:SetFrameStrata("HIGH")
+        frame:SetSize(32, 32)
+        frame.Background = frame:CreateTexture(nil, "BACKGROUND")
+        frame.Background:SetPoint("TOPLEFT", 2, -4)
+        frame.Background:SetSize(25, 25)
+        frame.Background:SetTexture([[Interface\Minimap\UI-Minimap-Background]])
+        frame.Icon = frame:CreateTexture(nil, "ARTWORK")
+        frame.Icon:SetTexture([[Interface\Minimap\Tracking\None]])
+        frame.Icon:SetSize(20, 20)
+        frame.Icon:SetPoint("TOPLEFT", 6, -6)
+        frame.IconOverlay = frame:CreateTexture(nil, "OVERLAY")
+        frame.IconOverlay:Hide()
+        frame.IconOverlay:SetPoint("TOPLEFT", frame.Icon)
+        frame.IconOverlay:SetPoint("BOTTOMRIGHT", frame.Icon)
+        frame.IconOverlay:SetColorTexture(0, 0, 0, 0.5)
+        frame.Border = frame:CreateTexture(nil, "OVERLAY", nil, -1)
+        frame.Border:SetTexture([[Interface\Minimap\MiniMap-TrackingBorder]])
+        frame.Border:SetSize(54, 54)
+        frame.Border:SetPoint("TOPLEFT")
+        frame:SetHighlightTexture([[Interface\Minimap\UI-Minimap-ZoomButton-Highlight]], "ADD")
         frame:SetPoint("TOPRIGHT", -68, -2)
-        frame:SetSize(31, 31)
-        frame:RegisterForClicks("anyUp")
-        frame:SetHighlightTexture(136477) --"Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight"
-        local overlay = frame:CreateTexture(nil, "OVERLAY")
-        overlay:SetSize(53, 53)
-        overlay:SetTexture(136430) --"Interface\\Minimap\\MiniMap-TrackingBorder"
-        overlay:SetPoint("TOPLEFT")
-        frame.IconOverlay = overlay
-        local background = frame:CreateTexture(nil, "BACKGROUND")
-        background:SetSize(20, 20)
-        background:SetTexture(136467) --"Interface\\Minimap\\UI-Minimap-Background"
-        background:SetPoint("TOPLEFT", 7, -5)
-        local icon = frame:CreateTexture(nil, "ARTWORK")
-        icon:SetSize(17, 17)
-        icon:SetPoint("TOPLEFT", 7, -6)
-        frame.Icon = icon
-        frame.isMouseDown = false
+
         hooksecurefunc(WorldMapFrame, "OnMapChanged", function()
             frame:Refresh()
         end)
     end
+    -- replace the default dropdown:
     frame.DropDown = LibDD:Create_UIDropDownMenu(myname .. "OptionsDropdown", frame) -- replace the template
     frame.Icon:SetAtlas("VignetteLootElite")
     frame.Icon:SetPoint("TOPLEFT", 6, -5)
@@ -184,11 +191,10 @@ function ns.SetupMapOverlay()
         self.Icon:SetPoint("TOPLEFT", 8, -8);
         self.IconOverlay:Show()
 
-        local mapID = self:GetParent():GetMapID()
-        if not mapID then
+        local uiMapID = WorldMapFrame.mapID
+        if not uiMapID then
             return
         end
-        self.DropDown.mapID = mapID
         LibDD:ToggleDropDownMenu(1, nil, self.DropDown, self, 0, -5)
         PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
     end
@@ -196,8 +202,16 @@ function ns.SetupMapOverlay()
         self.Icon:SetPoint("TOPLEFT", 6, -5)
         self.IconOverlay:Hide()
     end
+    frame.OnMouseEnter = function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip_SetTitle(GameTooltip, myfullname)
+        GameTooltip_AddNormalLine(GameTooltip, "Adjust display settings")
+        GameTooltip:Show()
+    end
     frame:SetScript("OnMouseUp", frame.OnMouseUp)
     frame:SetScript("OnMouseDown", frame.OnMouseDown)
+    frame:SetScript("OnEnter", frame.OnMouseEnter)
+    frame:SetScript("OnLeave", GameTooltip_Hide)
     frame.InitializeDropDown = function(self, level, menuList)
         local uiMapID = WorldMapFrame.mapID
         local info = LibDD:UIDropDownMenu_CreateInfo()
@@ -205,7 +219,7 @@ function ns.SetupMapOverlay()
         if level == 1 then
             info.isTitle = true
             info.notCheckable = true
-            info.text = "HandyNotes - " .. myname:gsub("HandyNotes_", "")
+            info.text = DISPLAY_OPTIONS
             LibDD:UIDropDownMenu_AddButton(info, level)
 
             info.isTitle = nil
@@ -340,8 +354,12 @@ function ns.SetupMapOverlay()
             info.hasArrow = nil
             info.keepShownOnClick = nil
             info.func = function(button)
-                InterfaceOptionsFrame_Show()
-                InterfaceOptionsFrame_OpenToCategory('HandyNotes')
+                if InterfaceOptionsFrame_Show then
+                    InterfaceOptionsFrame_Show()
+                    InterfaceOptionsFrame_OpenToCategory('HandyNotes')
+                else
+                    Settings.OpenToCategory('HandyNotes')
+                end
                 LibStub('AceConfigDialog-3.0'):SelectGroup('HandyNotes', 'plugins', myname:gsub("HandyNotes_", ""))
             end
             LibDD:UIDropDownMenu_AddButton(info, level)

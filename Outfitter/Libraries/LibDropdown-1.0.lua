@@ -4,7 +4,7 @@
 -- * Added support for items with an icon
 
 local MAJOR = "LibDropdownMC-1.0"
-local MINOR = 2
+local MINOR = 3
 
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
@@ -62,8 +62,7 @@ local openMenu
 
 local noop = lib.noop or function() end
 lib.noop = noop
-
-local new, newHash, newSet, del
+local new, del = lib.new, lib.del
 if not lib.new then
 	local list = setmetatable({}, {__mode='k'})
 	function new(...)
@@ -90,38 +89,28 @@ if not lib.new then
 	end
 	lib.new, lib.del = new, del
 end
+new, del = lib.new, lib.del
 
 -- Make the frame match the tooltip
-
 local function InitializeFrame(frame)
-	local backdrop = NineSliceUtil.GetLayout("TooltipDefaultLayout")
-		--
-	--frame:SetBackdrop(backdrop)
-	frame:SetBackdrop({
-		bgFile = [[Interface\Buttons\UI-SliderBar-Background]],
-		edgeFile = [[Interface\DialogFrame\UI-DialogBox-Border]],
-	tile     = true,
-	tileSize = 32,
-	edgeSize = 32,
-	insets   = { left = 12, right = 12, top = 12, bottom = 12 }	})
-	
---	if backdrop then
---		frame:SetBackdropColor(1, 1, 1, 0.8)
---		frame:SetBackdropBorderColor(0.1,0.1,0.1,0.5)
---	end
-frame:SetBackdropColor(0, 0, 0, 1)
-frame:EnableMouse(true)
-frame:EnableMouseWheel(true)
+	if TooltipBackdropTemplateMixin then
+		frame.layoutType = GameTooltip.layoutType
+		if GameTooltip.layoutType then
+			frame.NineSlice:SetCenterColor(GameTooltip.NineSlice:GetCenterColor())
+			frame.NineSlice:SetBorderColor(GameTooltip.NineSlice:GetBorderColor())
+		end
+	else
+		local backdrop = GameTooltip:GetBackdrop()
 
--- Make movable/resizable
-frame:SetMovable(true)
---frame:SetResizable(enable)
---frame:SetMinResize(100, 100)
-frame:RegisterForDrag("LeftButton")
-frame:SetScript("OnDragStart", frame.StartMoving)
-frame:SetScript("OnDragStop", frame.StopMovingOrSizing)
+		frame:SetBackdrop(backdrop)
+
+		if backdrop then
+			frame:SetBackdropColor(GameTooltip:GetBackdropColor())
+			frame:SetBackdropBorderColor(GameTooltip:GetBackdropBorderColor())
+		end
+	end
+	frame:SetScale(GameTooltip:GetScale())
 end
-
 
 local editBoxCount = 1
 local function AcquireInput()
@@ -156,7 +145,7 @@ local function AcquireSlider()
 		return frame
 	end
 
-	local frame = CreateFrame("Slider", nil, UIParent)
+	local frame = CreateFrame("Slider", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate")
 	frame:SetWidth(10)
 	frame:SetHeight(150)
 	frame:SetOrientation("VERTICAL")
@@ -335,7 +324,9 @@ end
 -- Pool methods
 local frameCount = 0
 function NewDropdownFrame()
-	local frame = CreateFrame("Frame", "LibDropdownFrame" .. frameCount, UIParent, "BackdropTemplate")
+	local template = (TooltipBackdropTemplateMixin and "TooltipBackdropTemplate") or (BackdropTemplateMixin and "BackdropTemplate")
+
+	local frame = CreateFrame("Frame", "LibDropdownFrame" .. frameCount, UIParent, template)
 	frameCount = frameCount + 1
 	frame:SetPoint("CENTER", UIParent, "CENTER")
 	frame:SetWidth(10)
@@ -909,7 +900,7 @@ do
 			local b = setup(k, v, parent)
 			b.swatch:Show()
 			b.clickable = false
-			 b.refresh = refresh
+			b.refresh = refresh
 			b.OnClick = function(self, r, g, b, a)
 				runHandler(self, "set", r, g, b, a)
 				self:GetRoot():Refresh()
@@ -1030,12 +1021,12 @@ do
 
 	do
 		local sortOptions = function(a, b)
-		if (b.order or 100) > (a.order or 100) then return true
-		elseif (b.order or 100) < (a.order or 100) then return false
-		elseif b.name:lower() > a.name:lower() then return true
-		else return false
+			if (b.order or 100) > (a.order or 100) then return true
+			elseif (b.order or 100) < (a.order or 100) then return false
+			elseif b.name:lower() > a.name:lower() then return true
+			else return false
+			end
 		end
-	end
 
 		function lib:OpenAce3Menu(t, parent)
 			assert(t and type(t) == "table", "Expected table, got "..type(t))

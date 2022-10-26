@@ -11,9 +11,9 @@
 
 local _, LM = ...
 
---[===[@debug@
+--[==[@debug@
 if LibDebug then LibDebug() end
---@end-debug@]===]
+--@end-debug@]==]
 
 LM.Environment = LM.CreateAutoEventFrame("Frame")
 LM.Environment:RegisterEvent("PLAYER_LOGIN")
@@ -310,7 +310,11 @@ function LM.Environment:ForceFlyable(instanceID)
 end
 
 function LM.Environment:CanDragonRide(mapPath)
-    return false
+    if IsSpellKnown(376777) then
+        return select(8, GetInstanceInfo()) == 2444
+    else
+        return false
+    end
 end
 
 -- Can't fly if you haven't learned a flying skill. Various expansion

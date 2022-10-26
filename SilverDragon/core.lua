@@ -7,12 +7,15 @@ SilverDragon = addon
 SilverDragon.NAMESPACE = ns -- for separate addons
 addon.events = LibStub("CallbackHandler-1.0"):New(addon)
 
+ns.CLASSIC = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE
+ns.CLASSICERA = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC -- forever vanilla
+
 local faction = UnitFactionGroup("player")
 
 local Debug
 do
 	local TextDump = LibStub("LibTextDump-1.0")
-	local debuggable = GetAddOnMetadata(myname, "Version") == 'v90207.0'
+	local debuggable = GetAddOnMetadata(myname, "Version") == 'v2022.21'
 	local _window
 	local function GetDebugWindow()
 		if not _window then
@@ -51,14 +54,16 @@ _G["BINDING_NAME_CLICK SilverDragonMacroButton:LeftButton"] = "Scan for nearby m
 addon.escapes = {
 	-- |TTexturePath:size1:size2:xoffset:yoffset:dimx:dimy:coordx1:coordx2:coordy1:coordy2|t
 	-- |A:atlas:height:width[:offsetX:offsetY]|a
-	-- leftClick = [[|TInterface\TUTORIALFRAME\UI-TUTORIAL-FRAME:19:11:-1:0:512:512:9:67:227:306|t]],
-	-- rightClick = [[|TInterface\TUTORIALFRAME\UI-TUTORIAL-FRAME:20:12:0:-1:512:512:9:66:332:411|t]],
 	leftClick = CreateAtlasMarkup("newplayertutorial-icon-mouse-leftbutton", 12, 15),
 	rightClick = CreateAtlasMarkup("newplayertutorial-icon-mouse-rightbutton", 12, 15),
 	keyDown = [[|TInterface\TUTORIALFRAME\UI-TUTORIAL-FRAME:0:0:0:-1:512:512:9:66:437:490|t]],
 	green = _G.GREEN_FONT_COLOR_CODE,
 	red = _G.RED_FONT_COLOR_CODE,
 }
+if ns.CLASSIC then
+	addon.escapes.leftClick = [[|TInterface\TUTORIALFRAME\UI-TUTORIAL-FRAME:19:11:-1:0:512:512:9:67:227:306|t]]
+	addon.escapes.rightClick = [[|TInterface\TUTORIALFRAME\UI-TUTORIAL-FRAME:20:12:0:-1:512:512:9:66:332:411|t]]
+end
 
 
 addon.datasources = {
@@ -114,10 +119,18 @@ ns.vignetteMobLookup = vignetteMobLookup
 ns.vignetteTreasureLookup = {
 	-- [vignetteid] = { data },
 }
-function addon:RegisterMobData(source, data)
+function addon:RegisterMobData(source, data, updated)
+	if not updated then
+		if not self.HASWARNEDABOUTOLDDATA then
+			self.HASWARNEDABOUTOLDDATA = true
+			return self:Print("You have an old SilverDragon_[expansion] folder, which can be removed")
+		end
+		return
+	end
 	addon.datasources[source] = data
 end
-function addon:RegisterTreasureData(source, data)
+function addon:RegisterTreasureData(source, data, updated)
+	if not updated then return end
 	addon.treasuresources[source] = data
 end
 do

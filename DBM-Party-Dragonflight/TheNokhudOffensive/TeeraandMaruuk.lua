@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2478, "DBM-Party-Dragonflight", 3, 1198)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220820005632")
+mod:SetRevision("20221015205747")
 mod:SetCreatureID(186339, 186338)
 mod:SetEncounterID(2581)
 --mod:SetUsedIcons(1, 2, 3)
@@ -108,7 +108,7 @@ function mod:SPELL_CAST_START(args)
 		warnSpiritLeap:Show()
 		timerSpiritLeapCD:Start()
 	elseif spellId == 382836 then
-		if self:IsTanking("player", nil, nil, nil, args.sourceGUID) then
+		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
 			specWarnBrutalize:Show()
 			specWarnBrutalize:Play("defensive")
 		end

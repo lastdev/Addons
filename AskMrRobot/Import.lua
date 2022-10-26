@@ -274,6 +274,7 @@ local function parseEssenceList(essenceString)
 end
 ]]
 
+--[[
 local function parseSoulbinds(soulbindString)
     local ret = {}
 
@@ -285,6 +286,7 @@ local function parseSoulbinds(soulbindString)
 
     return ret
 end
+]]
 
 --
 -- Import a character, returning nil on success, otherwise an error message, import result stored in the db.
@@ -390,11 +392,11 @@ function Amr:ImportCharacter(data, isTest, isChild)
         table.insert(talents, talCol)
     end
 
-    local soulbindId = tonumber(parts[14])
-    local soulbindNodes = parseSoulbinds(parts[15])
+    --local soulbindId = tonumber(parts[14])
+    --local soulbindNodes = parseSoulbinds(parts[15])
     --local essences = parseEssenceList(parts[15])
 
-    local importData = parseItemList(parts, 17, "n/a", true)
+    local importData = parseItemList(parts, 15, "n/a", true)
     
     -- extra information contains setup id, display label, then extra enchant info        
     parts = { strsplit("@", data1[3]) }

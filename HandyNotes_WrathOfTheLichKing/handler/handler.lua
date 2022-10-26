@@ -1,4 +1,5 @@
 local myname, ns = ...
+local _, myfullname = GetAddOnInfo(myname)
 
 local HandyNotes = LibStub("AceAddon-3.0"):GetAddon("HandyNotes")
 local HL = LibStub("AceAddon-3.0"):NewAddon(myname, "AceEvent-3.0")
@@ -7,7 +8,7 @@ ns.HL = HL
 
 local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 
-ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v5'
+ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v7'
 
 ns.CLASSIC = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE
 
@@ -968,8 +969,8 @@ do
         local info = LibDD:UIDropDownMenu_CreateInfo()
         if (level == 1) then
             -- Create the title of the menu
-            info.isTitle      = 1
-            info.text         = "HandyNotes - " .. myname:gsub("HandyNotes_", "")
+            info.isTitle = 1
+            info.text = myfullname
             info.notCheckable = 1
             LibDD:UIDropDownMenu_AddButton(info, level)
             wipe(info)
@@ -1054,10 +1055,8 @@ do
             wipe(info)
         end
     end
-    local HL_Dropdown = LibDD:Create_UIDropDownMenu(myname .. "PointDropdown")
-    LibDD:UIDropDownMenu_SetInitializeFunction(HL_Dropdown, generateMenu)
-    LibDD:UIDropDownMenu_SetDisplayMode(HL_Dropdown, "MENU")
 
+    local HL_Dropdown
     function HLHandler:OnClick(button, down, uiMapID, coord)
         if down then return end
         currentZone = uiMapID
@@ -1066,6 +1065,11 @@ do
         local point = ns.points[currentZone] and ns.points[currentZone][currentCoord]
         if point then
             if button == "RightButton" then
+                if not HL_Dropdown then
+                    HL_Dropdown = LibDD:Create_UIDropDownMenu(myname .. "PointDropdown")
+                    LibDD:UIDropDownMenu_SetInitializeFunction(HL_Dropdown, generateMenu)
+                    LibDD:UIDropDownMenu_SetDisplayMode(HL_Dropdown, "MENU")
+                end
                 LibDD:ToggleDropDownMenu(1, nil, HL_Dropdown, self, 0, 0)
             end
             if button == "LeftButton" and IsShiftKeyDown() and _G.MAP_PIN_HYPERLINK then

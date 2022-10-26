@@ -99,8 +99,6 @@ local function ResetEntitiesCollectionsLoot(manualScan)
 				end
 			end
 		end
-		
-	--RSConstants.ITEM_SOURCE.CONTAINER
 	end
 end
 
@@ -927,6 +925,7 @@ function RSCollectionsDB.ApplyFilters(filters, callback)
 	
 	-- Filter all NPCs
 	RSConfigDB.FilterAllNPCs(routines)
+	RSConfigDB.FilterAllContainers(routines)
 	
 	-- Remove filters for NPCs with collections
 	if (RSCollectionsDB.GetAllEntitiesCollectionsLoot() and RSCollectionsDB.GetAllEntitiesCollectionsLoot()[RSConstants.ITEM_SOURCE.NPC]) then
@@ -966,7 +965,35 @@ function RSCollectionsDB.ApplyFilters(filters, callback)
 		table.insert(routines, removeNPCFilterByCollectionRoutine)
 	end
 	
-	--RSConfigDB.FilterAllContainers(routines)
+	-- Remove filters for Containers with collections
+	if (RSCollectionsDB.GetAllEntitiesCollectionsLoot() and RSCollectionsDB.GetAllEntitiesCollectionsLoot()[RSConstants.ITEM_SOURCE.CONTAINER]) then
+		local collectionsLoot = RSCollectionsDB.GetAllEntitiesCollectionsLoot()[RSConstants.ITEM_SOURCE.CONTAINER]
+		local _, _, classIndex = UnitClass("player");
+		
+		local removeContainerFilterByCollectionRoutine = RSRoutines.LoopRoutineNew()
+		removeContainerFilterByCollectionRoutine:Init(RSContainerDB.GetAllInternalContainerInfo, 500, 
+			function(context, containerID, _)
+				local removeFilter = false
+				if (filters[RSConstants.EXPLORER_FILTER_DROP_MOUNTS] and collectionsLoot[containerID] and RSUtils.GetTableLength(collectionsLoot[containerID][RSConstants.ITEM_TYPE.MOUNT]) > 0) then
+					removeFilter = true
+				elseif (filters[RSConstants.EXPLORER_FILTER_DROP_PETS] and collectionsLoot[containerID] and RSUtils.GetTableLength(collectionsLoot[containerID][RSConstants.ITEM_TYPE.PET]) > 0) then
+					removeFilter = true
+				elseif (filters[RSConstants.EXPLORER_FILTER_DROP_TOYS] and collectionsLoot[containerID] and RSUtils.GetTableLength(collectionsLoot[containerID][RSConstants.ITEM_TYPE.TOY]) > 0) then
+					removeFilter = true
+				elseif (filters[RSConstants.EXPLORER_FILTER_DROP_APPEARANCES] and collectionsLoot[containerID] and collectionsLoot[containerID][RSConstants.ITEM_TYPE.APPEARANCE] and RSUtils.GetTableLength(collectionsLoot[containerID][RSConstants.ITEM_TYPE.APPEARANCE][classIndex]) > 0) then
+					removeFilter = true
+				end
+				
+				if (removeFilter) then
+					RSConfigDB.SetContainerFiltered(containerID, true)
+				end
+			end,
+			function(context)
+				RSLogger:PrintDebugMessage("ApplyFilters. Eliminados filtros de Contenedores con coleccionables aun no conseguidos")
+			end
+		)
+		table.insert(routines, removeContainerFilterByCollectionRoutine)
+	end
 			
 	-- Launch all the routines in order
 	local chainRoutines = RSRoutines.ChainLoopRoutineNew()

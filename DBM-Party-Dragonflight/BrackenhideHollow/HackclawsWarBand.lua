@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2471, "DBM-Party-Dragonflight", 1, 1196)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220813225945")
+mod:SetRevision("20220920232426")
 mod:SetCreatureID(186122, 186124, 186125)
 mod:SetEncounterID(2570)
 --mod:SetUsedIcons(1, 2, 3)
@@ -127,7 +127,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerBladestormCD:Start()
 	elseif args:IsSpellID(381835, 377844) then--381835 initial, 377844 target swaps
 		warnBladestorm:Show(args.destName)
-	elseif args:IsSpellID(381387, 381379) and self:CheckDispelFilter() then
+	elseif args:IsSpellID(381387, 381379) and self:CheckDispelFilter("magic") then
 		specWarnDecayedSenses:Show(args.destName)
 		specWarnDecayedSenses:Play("helpdispel")
 	elseif spellId == 378229 then

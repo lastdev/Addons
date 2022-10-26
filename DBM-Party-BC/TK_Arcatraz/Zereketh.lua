@@ -3,7 +3,7 @@ local L = mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,timewalker"
 
-mod:SetRevision("20220909231726")
+mod:SetRevision("20220920232426")
 
 mod:SetCreatureID(20870)
 mod:SetEncounterID(1916)
@@ -64,7 +64,7 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(39367, 32863) then
-		if self:CheckDispelFilter() then
+		if self:CheckDispelFilter("magic") then
 			specwarnSoC:Show(args.destName)
 			specwarnSoC:Play("dispelnow")
 		end

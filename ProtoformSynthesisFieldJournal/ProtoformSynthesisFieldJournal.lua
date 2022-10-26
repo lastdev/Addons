@@ -10,7 +10,7 @@ local DEBUG_MODE = false
 ProtoformSynthesisFieldJournalSettings = {} -- global settings (becomes settings)
 
 BINDING_HEADER_PROTOFORMSYNTHESISFIELDJOURNAL = L["Protoform Synthesis Field Journal"]
-BINDING_NAME_PROTOFORMSYNTHESISFIELDJOURNAL_TOGGLE = L["Toggle Window"]
+BINDING_NAME_PROTOFORMSYNTHESISFIELDJOURNAL_TOGGLE = L["Toggle Protoform Synthesis Field Journal"]
 
 SLASH_PROTOFORMSYNTHESISFIELDJOURNAL1 = "/psfj"
 SlashCmdList["PROTOFORMSYNTHESISFIELDJOURNAL"] = function() psfj:Toggle() end
@@ -176,8 +176,7 @@ function psfj:PLAYER_LOGIN()
     -- adjust frame
     self.TitleText:SetText(L["Protoform Synthesis Field Journal"])
     self.TitleText:SetPoint("TOP",-6,-5)
-    self:SetMinResize(330,196)
-    self:SetMaxResize(1024,768)
+    self:SetResizeBounds(330,196,1024,768)
     if self:GetWidth()<330 then
         self:SetWidth(330)
     end

@@ -1,6 +1,6 @@
-## Interface: 90207
+## Interface: 100000
 ## Title: LiteMount
-## Version: 9.2.24
+## Version: 10.0.0
 ## Author: Xodiv-Nagrand
 ## Email: mib@post.com
 ## OptionalDependencies: LibDebug
@@ -16,9 +16,6 @@ AutoEventFrame.lua
 TableUtil.lua
 Print.lua
 
-#@debug@
-# Developer.lua
-#@end-debug@
 
 SpellInfo.lua
 FamilyInfo.lua
