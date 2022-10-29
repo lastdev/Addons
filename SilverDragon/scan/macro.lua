@@ -64,10 +64,14 @@ function module:Update()
 		return
 	end
 	if not self.db.profile.enabled then
-		self:GetMacroButton(1):SetAttribute("macrotext", "/print \"Scanning macro disabled\"")
+		self:GetMacroButton(1):SetAttribute("macrotext", "/script print(\"Scanning macro disabled\")")
 		return
 	end
 	Debug("Updating Macro")
+	-- Make sure the core macro is up to date
+	if GetMacroIndexByName("SilverDragon") then
+		EditMacro(GetMacroIndexByName("SilverDragon"), nil, self:GetMacroArguments())
+	end
 	-- first, create the macro text on the button:
 	local zone = HBD:GetPlayerZone()
 	local mobs = zone and ns.mobsByZone[zone]
@@ -86,22 +90,24 @@ function module:Update()
 		end
 	end
 	if count == 0 then
-		table.insert(macro, "/print \"No mobs known to scan for\"")
+		table.insert(macro, "/script print(\"No mobs known to scan for\")")
 	elseif self.db.profile.verbose then
-		table.insert(macro, 1, ("/print \"Scanning for %d nearby mobs...\""):format(count))
+		table.insert(macro, 1, ("/script print(\"Scanning for %d nearby mobs...\")"):format(count))
 	end
+	local MAX_MACRO_LENGTH = 1023 -- this goes through RunMacroText, rather than actual-macros limit of 255
 	local len = 0
 	local n = 1
 	local start = 1
+	local BUFFER_FOR_CLICK = #"\n/click SilverDragonMacroButton2 LeftButton" --update if changing below
 	for i, text in ipairs(macro) do
-		len = len + #text + 1 -- for the newline
+		len = len + #text + 2 -- for the newline
 		local next_statement = macro[next(macro, i)]
-		if len > (255 - (math.max(31, #(next_statement or "")))) or not next_statement then -- for the length of the /click
+		if len > (MAX_MACRO_LENGTH - (math.max(BUFFER_FOR_CLICK, #(next_statement or "")))) or not next_statement then
 			local button = self:GetMacroButton(n)
 			n = n + 1
 			local mtext = ("\n"):join(unpack(macro, start, i))
 			if next_statement then
-				mtext = mtext .. "\n/click SilverDragonMacroButton"..n
+				mtext = mtext .. "\n/click SilverDragonMacroButton"..n.." LeftButton"
 			end
 			button:SetAttribute("macrotext", mtext)
 			len = 0
@@ -120,8 +126,7 @@ function module:CreateMacro()
 	if macroIndex == 0 then
 		local numglobal,numperchar = GetNumMacros()
 		if numglobal < MAX_ACCOUNT_MACROS then
-			--/script for i=1,GetNumMacroIcons() do if GetMacroIconInfo(i):match("SniperTraining$") then DEFAULT_CHAT_FRAME:AddMessage(i) end end
-			CreateMacro("SilverDragon", 132222, "/click SilverDragonMacroButton", nil, nil)
+			CreateMacro("SilverDragon", self:GetMacroArguments())
 			self:Print("Created the SilverDragon macro. Open the macro editor with /macro and drag it onto your actionbar to use it.")
 		else
 			self:Print("|cffff0000Couldn't create rare-scanning macro, too many macros already created.|r")
@@ -129,6 +134,10 @@ function module:CreateMacro()
 	else
 		self:Print("|cffff0000A macro named SilverDragon already exists.|r")
 	end
+end
+function module:GetMacroArguments()
+	--/script for i=1,GetNumMacroIcons() do if GetMacroIconInfo(i):match("SniperTraining$") then DEFAULT_CHAT_FRAME:AddMessage(i) end end
+	return 132222, "/click SilverDragonMacroButton LeftButton"
 end
 
 function module:PLAYER_REGEN_ENABLED()
@@ -147,7 +156,7 @@ function module:GetMacroButton(i)
 	if _G[name] then
 		return _G[name]
 	end
-	local button = CreateFrame("Button", name, nil, "SecureActionButtonTemplate")
+	local button = CreateFrame("Button", name, UIParent, "SecureActionButtonTemplate")
 	button:SetAttribute("type", "macro")
 	button:SetAttribute("macrotext", "/script DEFAULT_CHAT_FRAME:AddMessage('SilverDragon Macro: Not initialized yet.', 1, 0, 0)")
 	return button

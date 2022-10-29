@@ -18,12 +18,15 @@ Hekili.AllowSimCImports = true
 Hekili.IsRetail = function()
     return Hekili.Flavor == "Retail"
 end
+
 Hekili.IsWrath = function()
     return Hekili.Flavor == "Wrath"
 end
+
 Hekili.IsClassic = function()
     return Hekili.IsWrath()
 end
+
 Hekili.IsDragonflight = function()
     return select( 4, GetBuildInfo() ) >= 100000
 end
@@ -31,8 +34,17 @@ end
 ns.PTR = false
 
 
-ns.Patrons = "Abom, Abra, Abuna, Aern, Aggronaught, akh270, Alasha, alcaras, Amera, ApexPlatypus, aphoenix, Archxlock, Aristocles, aro725, Artoo, Ash, av8ordoc, Battle Hermit VIA, Belatar, Borelia, Brangeddon, Bsirk/Kris, Cele, Chimmi, Coan, Cortland, Daz, DB, Der Baron, Dez, Drako, Enemy, Eryx, fuon, Garumako, Graemec, Grayscale, guhbjs, Hambrick, Hexel, Himea, Hollaputt, Hungrypilot, Ifor, Ingrathis, intheyear, Jacii, jawj, Jenkz, Katurn, Kingreboot, Kittykiller, Lagertha, Leorus, Loraniden, Lord Corn, Lovien, Manni, Mirando, mr. jing0, Mr_Hunter, MrBean73, mrminus, Muffin, Mumrikk, Nelix, neurolawl, Nighteyez, nomiss, nqrse, Orcodamus, Parameshvar, Rage, Ramen, Ramirez (Jon), Rebdull, Ridikulus0510, rockschtar, Roodie, Rusah, Samuraiwillz501, sarrge, Sarthol, Scerick, Sebstar, Seniroth, seriallos, Shakeykev, Shuck, Skeletor, Slem, Spaten, Spy, Srata, Stevi, Strozzy, Tekfire, Tevka, Theda99, Thordros, Tic[Ã ]sentence, Tobi, todd, Torsti, tsukari, Tyazrael, Ulti.DTY, Val (Valdrath), Vaxum, Vsmit, Wargus (Shagus), Weedwalker, WhoaIsJustin, Wonder, zab, Zarggg, and zarrin-zuljin"
-
+ns.Patrons = "|cFFFFD100Current Dragonflight Status|r\n\n"
+    .. "|cFF00FF00Up to Date|r\n"
+    .. "- Death Knights, Demon Hunters, Balance and Feral Druids, Beast Mastery and Marksmanship Hunters, Retribution Paladin, Enhancement Shaman\n\n"
+    .. "|cFFFFAE42Beta|r\n"
+    .. "- Guardian Druid, Warriors\n\n"
+    .. "|cFFBB3F3FNot Yet Implemented|r\n"
+    .. "- All Other Classes/Specializations\n\n"
+    .. "|cFF00FF00Up to Date|r means it is working and using priorities written for Dragonflight.\n"
+    .. "|cFFFFAE42Beta|r means it is playable, but may be using priorities from Shadowlands.\n"
+    .. "|cFFBB3F3FNot Yet Implemented|r means the class is not yet playable in the addon.\n\n"
+    .. "Do not report issues for any classes that are |cBB3F3FNot Yet Implemented|r.  For |cFFFFAE42Beta|r or |cFF00FF00Up to Date|r classes, report issues using the links below.  I am working to update every class as quickly as possible.  Thanks!"
 
 do
     local cpuProfileDB = {}
@@ -76,6 +88,7 @@ Hekili.Class = {
     num = 0,
 
     file = "NONE",
+    initialized = false,
 
 	resources = {},
 	resourceAuras = {},

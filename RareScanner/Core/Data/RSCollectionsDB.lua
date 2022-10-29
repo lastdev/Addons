@@ -238,13 +238,13 @@ function RSCollectionsDB.RemoveNotCollectedToy(itemID, callback) --NEW_TOY_ADDED
 										RSConfigDB.SetNpcFiltered(entityID, false)
 										RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedToy[%s]: Filtrado NPC [%s] por no disponer de mas coleccionables.", itemID, entityID))
 										if (RSNpcDB.GetNpcName(entityID)) then
-											RSLogger:PrintMessage(AL["EXPLORER_AUTOFILTER"], RSNpcDB.GetNpcName(entityID))
+											RSLogger:PrintMessage(string.format(AL["EXPLORER_AUTOFILTER"], RSNpcDB.GetNpcName(entityID)))
 										end
 									elseif (source == RSConstants.ITEM_SOURCE.CONTAINER) then
 										RSConfigDB.SetContainerFiltered(entityID, false)
 										RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedToy[%s]: Filtrado Contenedor [%s] por no disponer de mas coleccionables.", itemID, entityID))
 										if (RSContainerDB.GetContainerName(entityID)) then
-											RSLogger:PrintMessage(AL["EXPLORER_AUTOFILTER"], RSContainerDB.GetContainerName(entityID))
+											RSLogger:PrintMessage(string.format(AL["EXPLORER_AUTOFILTER"], RSContainerDB.GetContainerName(entityID)))
 										end
 									end
 								end
@@ -398,13 +398,13 @@ function RSCollectionsDB.RemoveNotCollectedPet(petGUID, callback) --NEW_PET_ADDE
 										RSConfigDB.SetNpcFiltered(entityID, false)
 										RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedPet[%s]: Filtrado NPC [%s] por no disponer de mas coleccionables.", petGUID, entityID))
 										if (RSNpcDB.GetNpcName(entityID)) then
-											RSLogger:PrintMessage(AL["EXPLORER_AUTOFILTER"], RSNpcDB.GetNpcName(entityID))
+											RSLogger:PrintMessage(string.format(AL["EXPLORER_AUTOFILTER"], RSNpcDB.GetNpcName(entityID)))
 										end
 									elseif (source == RSConstants.ITEM_SOURCE.CONTAINER) then
 										RSConfigDB.SetContainerFiltered(entityID, false)
 										RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedPet[%s]: Filtrado Contenedor [%s] por no disponer de mas coleccionables.", petGUID, entityID))
 										if (RSContainerDB.GetContainerName(entityID)) then
-											RSLogger:PrintMessage(AL["EXPLORER_AUTOFILTER"], RSContainerDB.GetContainerName(entityID))
+											RSLogger:PrintMessage(string.format(AL["EXPLORER_AUTOFILTER"], RSContainerDB.GetContainerName(entityID)))
 										end
 									end
 								end
@@ -547,13 +547,13 @@ function RSCollectionsDB.RemoveNotCollectedMount(mountID, callback) --NEW_MOUNT_
 										RSConfigDB.SetNpcFiltered(entityID, false)
 										RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedMount[%s]: Filtrado NPC [%s] por no disponer de mas coleccionables.", mountID, entityID))
 										if (RSNpcDB.GetNpcName(entityID)) then
-											RSLogger:PrintMessage(AL["EXPLORER_AUTOFILTER"], RSNpcDB.GetNpcName(entityID))
+											RSLogger:PrintMessage(string.format(AL["EXPLORER_AUTOFILTER"], RSNpcDB.GetNpcName(entityID)))
 										end
 									elseif (source == RSConstants.ITEM_SOURCE.CONTAINER) then
 										RSConfigDB.SetContainerFiltered(entityID, false)
 										RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedMount[%s]: Filtrado Contenedor [%s] por no disponer de mas coleccionables.", mountID, entityID))
 										if (RSContainerDB.GetContainerName(entityID)) then
-											RSLogger:PrintMessage(AL["EXPLORER_AUTOFILTER"], RSContainerDB.GetContainerName(entityID))
+											RSLogger:PrintMessage(string.format(AL["EXPLORER_AUTOFILTER"], RSContainerDB.GetContainerName(entityID)))
 										end
 									end
 								end
@@ -742,13 +742,13 @@ function RSCollectionsDB.RemoveNotCollectedAppearance(appearanceID, callback) --
 												RSConfigDB.SetNpcFiltered(entityID, false)
 												RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedAppearance[%s]: Filtrado NPC [%s] por no disponer de mas coleccionables.", appearanceID, entityID))
 												if (RSNpcDB.GetNpcName(entityID)) then
-													RSLogger:PrintMessage(AL["EXPLORER_AUTOFILTER"], RSNpcDB.GetNpcName(entityID))
+													RSLogger:PrintMessage(string.format(AL["EXPLORER_AUTOFILTER"], RSNpcDB.GetNpcName(entityID)))
 												end
 											elseif (source == RSConstants.ITEM_SOURCE.CONTAINER) then
 												RSConfigDB.SetContainerFiltered(entityID, false)
 												RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedAppearance[%s]: Filtrado Contenedor [%s] por no disponer de mas coleccionables.", appearanceID, entityID))
 												if (RSContainerDB.GetContainerName(entityID)) then
-													RSLogger:PrintMessage(AL["EXPLORER_AUTOFILTER"], RSContainerDB.GetContainerName(entityID))
+													RSLogger:PrintMessage(string.format(AL["EXPLORER_AUTOFILTER"], RSContainerDB.GetContainerName(entityID)))
 												end
 											end
 										end

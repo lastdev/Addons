@@ -1,7 +1,16 @@
 # Hekili
 
-## [v9.2.7-1.0.0b](https://github.com/Hekili/hekili/tree/v9.2.7-1.0.0b) (2022-09-15)
-[Full Changelog](https://github.com/Hekili/hekili/compare/v9.2.7-1.0.0a...v9.2.7-1.0.0b) [Previous Releases](https://github.com/Hekili/hekili/releases)
+## [v10.0.0-04](https://github.com/Hekili/hekili/tree/v10.0.0-04) (2022-10-29)
+[Full Changelog](https://github.com/Hekili/hekili/compare/v10.0.0-03...v10.0.0-04) [Previous Releases](https://github.com/Hekili/hekili/releases)
 
-- Fix some equipment checks not showing debug values in snapshots.  Weird.  
-- Support some simc key variants for trinket cooldowns.  
+- Another Enhancement adjustment.  
+- Add stress test.  
+- Unbreak Doom Winds runeforge.  
+- Siegebreaker.  
+- Beast Mastery fixes.  
+- Balance:  Elune's Guidance.  
+- Balance fixes.  
+- Balance Druid syzysyszysysgysaygy.  
+- Babybroof Demon Hunters.  Remove Tier 28.  
+- Fix Totemic Recall for Enhancement.  Remove Tier 28.  
+- Babyproof Retribution functions.  

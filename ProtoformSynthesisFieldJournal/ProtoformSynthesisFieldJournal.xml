@@ -3,9 +3,6 @@
     <!-- minimap button -->
     <Button name="ProtoformSynthesisFieldJournalMinimapButton" parent="Minimap" toplevel="true" hidden="true">
         <Size x="31" y="31"/>
-        <Anchors>
-            <Anchor point="CENTER"/>
-        </Anchors>
         <Layers>
             <Layer level="BACKGROUND">
                 <Texture parentKey="Icon" file="Interface\Icons\inv_progenitorwombatmount">

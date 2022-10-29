@@ -404,6 +404,8 @@ RSConstants.NPCS_WITH_PRE_EVENT = {
 	[379234] = 194270;
 	-- Ohn'ahran Plains
 	[193166] = 187559;
+	-- The Azure Span
+	[192747] = 192749;
 }
 
 -- Contains that spawn after completing an event

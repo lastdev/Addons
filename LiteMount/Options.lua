@@ -262,7 +262,7 @@ end
 -- Version 9 changes excludeNewMounts (true/false) to defaultPriority
 
 function LM.Options:VersionUpgrade9()
-    LM.Debug('VersionUpgrade: 8')
+    LM.Debug('VersionUpgrade: 9')
 
     for n, p in pairs(self.db.profiles) do
         LM.Debug(' - checking profile: ' .. n)
@@ -328,6 +328,10 @@ function LM.Options:Initialize()
     self.db.RegisterCallback(self, "OnProfileChanged", "OnProfile")
     self.db.RegisterCallback(self, "OnProfileCopied", "OnProfile")
     self.db.RegisterCallback(self, "OnProfileReset", "OnProfile")
+
+    --[==[@debug@
+    LiteMountDB.data = nil
+    --@end-debug@]==]
 end
 
 --[[----------------------------------------------------------------------------

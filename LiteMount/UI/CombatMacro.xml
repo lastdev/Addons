@@ -6,10 +6,6 @@
 
 <Frame name="LiteMountCombatMacroPanel" hidden="true" inherits="LiteMountOptionsPanelTemplate" mixin="LiteMountCombatMacroPanelMixin">
 
-    <KeyValues>
-        <KeyValue key="hideProfileButton" value="true" type="boolean" />
-    </KeyValues>
-
     <Scripts>
         <OnLoad method="OnLoad" />
     </Scripts>
@@ -54,27 +50,15 @@
                 <Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" relativeKey="$parent.EditBoxContainer" x="-8" y="-3" />
             </Anchors>
         </Button>
-        <Button parentKey="DefaultButton" inherits="UIPanelButtonTemplate" text="DEFAULT">
-            <Size x="96" y="22" />
-            <Scripts>
-                <OnClick>
-                    LiteMountOptionsControl_Default(self:GetParent().EditBox)
-                </OnClick>
-            </Scripts>
-            <Anchors>
-                <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" relativeKey="$parent.EditBoxContainer" x="-8" y="3" />
-            </Anchors>
-        </Button>
     </Frames>
 
     <Layers>
         <Layer level="ARTWORK">
             <FontString inherits="GameFontNormal" justifyV="TOP" justifyH="LEFT" text="LM_COMBAT_MACRO_EXP">
                 <Anchors>
-                    <Anchor point="TOP" y="-48" />
-                    <Anchor point="LEFT" relativePoint="LEFT" relativeKey="$parent.EditBoxContainer" x="-50" />
-                    <Anchor point="RIGHT" relativePoint="RIGHT" relativeKey="$parent.EditBoxContainer" x="50" />
-                    <Anchor point="BOTTOM" relativePoint="RIGHT" relativeKey="$parent.EditBoxContainer" />
+                    <Anchor point="TOP" y="-60" />
+                    <Anchor point="LEFT" x="24" />
+                    <Anchor point="RIGHT" x="-24" />
                 </Anchors>
             </FontString>
 

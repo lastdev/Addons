@@ -4,7 +4,7 @@ do
 	
 	--import potion list from the framework
 	_detalhes.PotionList = {}
-	for spellID, _ in pairs (DetailsFramework.PotionIDs) do
+	for spellID, _ in pairs(DetailsFramework.PotionIDs) do
 		_detalhes.PotionList [spellID] = true
 	end
 
@@ -428,10 +428,13 @@ do
 
 			--Devastation Evoker:
 			[368847] = 1467, --Firestorm
+			[369374] = 1467, --Firestorm
 			[370452] = 1467, --Shattering Star
 			[375087] = 1467, --Dragonrage
 			[359073] = 1467, --Eternity Surge
+			[359077] = 1467, --Eternity Surge
 			[357211] = 1467, --Pyre
+			[357212] = 1467, --Pyre
 
 			--Preservation Evoker:
 			[370960] = 1468, --Emerald Communion
@@ -2960,8 +2963,34 @@ do
 		[20243]	=	"WARRIOR", --devastate
 		[115767]	=	"WARRIOR", --deep wounds
 		[109128]	=	"WARRIOR", --charge
-		[109128]	=	"WARRIOR", --charge
 		[12880]	=	"WARRIOR", --enrage
+
+	--evoker:
+		[368847] = "EVOKER", --Firestorm
+		[370452] = "EVOKER", --Shattering Star
+		[375087] = "EVOKER", --Dragonrage
+		[359073] = "EVOKER", --Eternity Surge
+		[369374] = "EVOKER", --Firestorm
+		[357211] = "EVOKER", --Pyre
+		[357212] = "EVOKER", --Pyre
+		[370960] = "EVOKER", --Emerald Communion
+		[370537] = "EVOKER", --Stasis
+		[367226] = "EVOKER", --Spiritbloom
+		[361178] = "EVOKER", --Mass Return
+		[359816] = "EVOKER", --Dream Flight
+		[355936] = "EVOKER", --Dream Breath
+		[357170] = "EVOKER", --Time Dilation
+		[363534] = "EVOKER", --Rewind
+		[360823] = "EVOKER", --Naturalize
+		[373861] = "EVOKER", --Temporal Anomaly
+		[366155] = "EVOKER", --Reversion
+		[364343] = "EVOKER", --Echo	
+		[356995] = "EVOKER", --Desintegrate
+		[357209] = "EVOKER", --Fire Breath
+		[359077] = "EVOKER", --Eternity Surge
+		[361500] = "EVOKER", --Living Flame
+		[353759] = "EVOKER", --Deep Breath
+		[387036] = "EVOKER", --Burning Embers
 	}
 
 	_detalhes.AbsorbSpells = {
@@ -3021,7 +3050,7 @@ do
 
 	local getCooldownsForClass = function(class)
 		local result = {}
-		for spellId, spellInfo in pairs (_G.DetailsFramework.CooldownsInfo) do
+		for spellId, spellInfo in pairs(_G.DetailsFramework.CooldownsInfo) do
 			if (class == spellInfo.class) then
 				result[#result+1] = spellId
 			end
@@ -3900,9 +3929,9 @@ do
 	}
 	
 
-	local Loc = LibStub ("AceLocale-3.0"):GetLocale ( "Details" )
+	local Loc = LibStub("AceLocale-3.0"):GetLocale ( "Details" )
 	_detalhes.SpellOverwrite = {
-		--[124464] = {name = GetSpellInfo (124464) .. " (" .. Loc ["STRING_MASTERY"] .. ")"}, --> shadow word: pain mastery proc (priest)
+		--[124464] = {name = GetSpellInfo(124464) .. " (" .. Loc ["STRING_MASTERY"] .. ")"}, --shadow word: pain mastery proc (priest)
 	}
 
 	_detalhes.spells_school = {
@@ -3949,18 +3978,18 @@ do
 		return _detalhes.spells_school [school] and _detalhes.spells_school [school].formated or ""
 	end
 	local default_school_color = {145/255, 180/255, 228/255}
-	function _detalhes:GetSpellSchoolColor (school)
-		return unpack (_detalhes.spells_school [school] and _detalhes.spells_school [school].decimals or default_school_color)
+	function _detalhes:GetSpellSchoolColor(school)
+		return unpack(_detalhes.spells_school [school] and _detalhes.spells_school [school].decimals or default_school_color)
 	end
 	function _detalhes:GetCooldownList (class)
-		class = class or select (2, UnitClass ("player"))
+		class = class or select(2, UnitClass("player"))
 		return _detalhes.DefensiveCooldownSpells [class]
 	end
 end
 
 
 --save spells of a segment
-local SplitLoadFrame = CreateFrame ("frame")
+local SplitLoadFrame = CreateFrame("frame")
 local MiscContainerNames = {
     "dispell_spells",
     "cooldowns_defensive_spells",
@@ -3971,15 +4000,15 @@ local MiscContainerNames = {
     "cc_break_spells",
     "ress_spells",
 }
-local SplitLoadFunc = function (self, deltaTime)
+local SplitLoadFunc = function(self, deltaTime)
     --which container it will iterate on this tick
     local container = Details.tabela_vigente and Details.tabela_vigente [SplitLoadFrame.NextActorContainer] and Details.tabela_vigente [SplitLoadFrame.NextActorContainer]._ActorTable
 
     if (not container) then
         if (Details.debug) then
-            Details:Msg ("(debug) finished index spells.")
+            Details:Msg("(debug) finished index spells.")
         end
-        SplitLoadFrame:SetScript ("OnUpdate", nil)
+        SplitLoadFrame:SetScript("OnUpdate", nil)
         return
     end
     
@@ -3997,9 +4026,9 @@ local SplitLoadFunc = function (self, deltaTime)
         
         --finished all the 4 container? kill the process
         if (SplitLoadFrame.NextActorContainer == 5) then
-            SplitLoadFrame:SetScript ("OnUpdate", nil)
+            SplitLoadFrame:SetScript("OnUpdate", nil)
             if (Details.debug) then
-                Details:Msg ("(debug) finished index spells.")
+                Details:Msg("(debug) finished index spells.")
             end
             return
         end
@@ -4026,7 +4055,7 @@ local SplitLoadFunc = function (self, deltaTime)
                     local SpellPool = Details.spell_pool
                     local EncounterSpellPool = Details.encounter_spell_pool
                     
-                    for spellID, _ in pairs (spellList) do
+                    for spellID, _ in pairs(spellList) do
                         if (not SpellPool [spellID]) then
                             SpellPool [spellID] = source
                         end
@@ -4040,7 +4069,7 @@ local SplitLoadFunc = function (self, deltaTime)
             
             --if is a misc container
             elseif (SplitLoadFrame.NextActorContainer == 4) then
-                for _, containerName in ipairs (MiscContainerNames) do 
+                for _, containerName in ipairs(MiscContainerNames) do 
                     --check if the actor have this container
                     if (actorToIndex [containerName]) then
                         local spellList = actorToIndex [containerName]._ActorTable
@@ -4049,7 +4078,7 @@ local SplitLoadFunc = function (self, deltaTime)
                             local SpellPool = Details.spell_pool
                             local EncounterSpellPool = Details.encounter_spell_pool
                             
-                            for spellID, _ in pairs (spellList) do
+                            for spellID, _ in pairs(spellList) do
                                 if (not SpellPool [spellID]) then
                                     SpellPool [spellID] = source
                                 end
@@ -4068,7 +4097,7 @@ local SplitLoadFunc = function (self, deltaTime)
                     local SpellPool = Details.spell_pool
                     local EncounterSpellPool = Details.encounter_spell_pool
                     
-                    for spellID, _ in pairs (actorToIndex.spell_cast) do
+                    for spellID, _ in pairs(actorToIndex.spell_cast) do
                         if (not SpellPool [spellID]) then
                             SpellPool [spellID] = source
                         end
@@ -4086,9 +4115,9 @@ end
 
 function Details.StoreSpells()
     if (Details.debug) then
-        Details:Msg ("(debug) started to index spells.")
+        Details:Msg("(debug) started to index spells.")
     end
-    SplitLoadFrame:SetScript ("OnUpdate", SplitLoadFunc)
+    SplitLoadFrame:SetScript("OnUpdate", SplitLoadFunc)
     SplitLoadFrame.NextActorContainer = 1
     SplitLoadFrame.NextActorIndex = 1
 end

@@ -3097,7 +3097,7 @@ function RareScanner:SetupOptions()
 	RSAC:RegisterOptionsTable("RareScanner Map", GetMapOptions)
 	RSAC:RegisterOptionsTable("RareScanner Profiles", RareScanner:GetOptionsTable())
 
-	local RSACD = LibStub("AceConfigDialog-3.0-RSmod")
+	local RSACD = LibStub("AceConfigDialogRSmod-3.0")
 	RSACD:AddToBlizOptions("RareScanner General", _G.GENERAL_LABEL, "RareScanner")
 	RSACD:AddToBlizOptions("RareScanner Sound", AL["SOUND"], "RareScanner")
 	RSACD:AddToBlizOptions("RareScanner Display", AL["DISPLAY"], "RareScanner")

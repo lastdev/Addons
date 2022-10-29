@@ -1,5 +1,5 @@
-## Interface: 90207
-## Version: v9.2.7-1.0.0b
+## Interface: 100000
+## Version: v10.0.0-04
 ## Title: Hekili
 ## Author: Hekili
 ## Notes: Priority helper for many DPS and tanking specializations, based on SimulationCraft action lists.
@@ -30,39 +30,43 @@ Shadowlands\SoulbindConduits.lua
 Shadowlands\Trinkets.lua
 Shadowlands\Legendaries.lua
 
-Classes\DeathKnightBlood.lua
-Classes\DeathKnightFrost.lua
-Classes\DeathKnightUnholy.lua
-Classes\DemonHunterHavoc.lua
-Classes\DemonHunterVengeance.lua
-Classes\DruidBalance.lua
-Classes\DruidFeral.lua
-Classes\DruidGuardian.lua
-Classes\HunterBeastMastery.lua
-Classes\HunterMarksmanship.lua
-Classes\HunterSurvival.lua
-Classes\MageArcane.lua
-Classes\MageFire.lua
-Classes\MageFrost.lua
-Classes\MonkBrewmaster.lua
-# Classes\MonkMistweaver.lua
-Classes\MonkWindwalker.lua
-# Classes\PaladinHoly.lua
-Classes\PaladinProtection.lua
-Classes\PaladinRetribution.lua
-# Classes\PriestDiscipline.lua
-Classes\PriestShadow.lua
-Classes\RogueAssassination.lua
-Classes\RogueOutlaw.lua
-Classes\RogueSubtlety.lua
-Classes\ShamanElemental.lua
-Classes\ShamanEnhancement.lua
-Classes\WarlockAffliction.lua
-Classes\WarlockDemonology.lua
-Classes\WarlockDestruction.lua
-Classes\WarriorArms.lua
-Classes\WarriorFury.lua
-Classes\WarriorProtection.lua
+Dragonflight\Classes.lua
+Dragonflight\DeathKnightBlood.lua
+Dragonflight\DeathKnightFrost.lua
+Dragonflight\DeathKnightUnholy.lua
+Dragonflight\DemonHunterHavoc.lua
+Dragonflight\DemonHunterVengeance.lua
+Dragonflight\DruidBalance.lua
+Dragonflight\DruidFeral.lua
+Dragonflight\DruidGuardian.lua
+# Dragonflight\DruidRestoration.lua
+# Dragonflight\EvokerDevastation.lua
+# Dragonflight\EvokerPreservation.lua
+Dragonflight\HunterBeastMastery.lua
+Dragonflight\HunterMarksmanship.lua
+# Dragonflight\HunterSurvival.lua
+# Dragonflight\MageArcane.lua
+# Dragonflight\MageFire.lua
+# Dragonflight\MageFrost.lua
+# Dragonflight\MonkBrewmaster.lua
+# Dragonflight\MonkMistweaver.lua
+# Dragonflight\MonkWindwalker.lua
+Dragonflight\PaladinRetribution.lua
+# Dragonflight\PriestDiscipline.lua
+# Dragonflight\PriestHoly.lua
+# Dragonflight\PriestShadow.lua
+# Dragonflight\RogueAssassination.lua
+# Dragonflight\RogueOutlaw.lua
+# Dragonflight\RogueSubtlety.lua
+# Dragonflight\ShamanElemental.lua
+Dragonflight\ShamanEnhancement.lua
+# Dragonflight\ShamanRestoration.lua
+# Dragonflight\WarlockAffliction.lua
+# Dragonflight\WarlockDemonology.lua
+# Dragonflight\WarlockDestruction.lua
+Dragonflight\WarriorArms.lua
+Dragonflight\WarriorFury.lua
+Dragonflight\WarriorProtection.lua
 
 Targets.lua
 Options.lua

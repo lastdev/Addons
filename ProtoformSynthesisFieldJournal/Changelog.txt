@@ -1,3 +1,6 @@
+10/29/2022 version 1.3.1
+- Fix for minimap button path
+
 10/25/2022 version 1.3.0
 - Update for Dragonflight clients
 

@@ -24,10 +24,13 @@ local GetItemInfo = ns.CachedGetItemInfo
 -- Atlas/Textures
 local AtlasToString, GetAtlasFile, GetAtlasCoords = ns.AtlasToString, ns.GetAtlasFile, ns.GetAtlasCoords
 
+-- Options Functions
+local TableToString, StringToTable, SerializeActionPack, DeserializeActionPack, SerializeDisplay, DeserializeDisplay, SerializeStyle, DeserializeStyle
 
 local ACD = LibStub( "AceConfigDialog-3.0" )
 local LDBIcon = LibStub( "LibDBIcon-1.0", true )
-
+local LSM = LibStub( "LibSharedMedia-3.0" )
+local SF = SpellFlashCore
 
 local NewFeature = "|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0|t"
 local GreenPlus = "Interface\\AddOns\\Hekili\\Textures\\GreenPlus"
@@ -36,165 +39,8 @@ local BlizzBlue = "|cFF00B4FF"
 local ClassColor = C_ClassColor.GetClassColor( class.file )
 
 
--- Interrupts
-do
-    local db = {}
-
-    -- Generate encounter DB.
-    local function GenerateEncounterDB()
-        local active = EJ_GetCurrentTier()
-        wipe( db )
-
-        for t = 1, EJ_GetNumTiers() do
-            EJ_SelectTier( t )
-
-            local i = 1
-            while EJ_GetInstanceByIndex( i, true ) do
-                local instanceID, name = EJ_GetInstanceByIndex( i, true )
-                i = i + 1
-
-                local j = 1
-                while EJ_GetEncounterInfoByIndex( j, instanceID ) do
-                    local name, _, encounterID = EJ_GetEncounterInfoByIndex( j, instanceID )
-                    db[ encounterID ] = name
-                    j = j + 1
-                end
-            end
-        end
-    end
-
-    GenerateEncounterDB()
-
-    function Hekili:GetEncounterList()
-        return db
-    end
-end
-
-
 -- One Time Fixes
 local oneTimeFixes = {
-    --[[ refreshForBfA_II = function( p )
-        for k, v in pairs( p.displays ) do
-            if type( k ) == 'number' then
-                p.displays[ k ] = nil
-            end
-        end
-
-        p.runOnce.refreshForBfA_II = nil
-        p.actionLists = nil
-    end, ]]
-
-    --[[ reviseDisplayModes_20180709 = function( p )
-        if p.toggles.mode.type ~= "AutoDual" and p.toggles.mode.type ~= "AutoSingle" and p.toggles.mode.type ~= "SingleAOE" then
-            p.toggles.mode.type = "AutoDual"
-        end
-
-        if p.toggles.mode.value ~= "automatic" and p.toggles.mode.value ~= "single" and p.toggles.mode.value ~= "aoe" and p.toggles.mode.value ~= "dual" then
-            p.toggles.mode.value = "automatic"
-        end
-    end, ]]
-
-    --[[ reviseDisplayQueueAnchors_20180718 = function( p )
-        for name, display in pairs( p.displays ) do
-            if display.queue.offset then
-                if display.queue.anchor:sub( 1, 3 ) == "TOP" or display.queue.anchor:sub( 1, 6 ) == "BOTTOM" then
-                    display.queue.offsetY = display.queue.offset
-                    display.queue.offsetX = 0
-                else
-                    display.queue.offsetX = display.queue.offset
-                    display.queue.offsetY = 0
-                end
-                display.queue.offset = nil
-            end
-        end
-
-        p.runOnce.reviseDisplayQueueAnchors_20180718 = nil
-    end,
-
-    enableAllOfTheThings_20180820 = function( p )
-        for name, spec in pairs( p.specs ) do
-            spec.enabled = true
-        end
-    end,
-
-    wipeSpecPotions_20180910_1 = function( p )
-        local latestVersion = 20180919.1
-
-        for id, spec in pairs( class.specs ) do
-            if id > 0 and ( not p.specs[ id ].potionsReset or type( p.specs[ id ].potionsReset ) ~= 'number' or p.specs[ id ].potionsReset < latestVersion ) then
-                p.specs[ id ].potion = spec.potion
-                p.specs[ id ].potionsReset = latestVersion
-            end
-        end
-        p.runOnce.wipeSpecPotions_20180910_1 = nil
-    end,
-
-    enabledArcaneMageOnce_20190309 = function( p )
-        local arcane = class.specs[ 62 ]
-
-        if arcane and not arcane.enabled then
-            arcane.enabled = true
-            return
-        end
-
-        -- Clears the flag if Arcane wasn't actually enabled.
-        p.runOnce.enabledArcaneMageOnce_20190309 = nil
-    end,
-
-    autoconvertGlowsForCustomGlow_20190326 = function( p )
-        for k, v in pairs( p.displays ) do
-            if v.glow and v.glow.shine ~= nil then
-                if v.glow.shine then
-                    v.glow.mode = "autocast"
-                else
-                    v.glow.mode = "standard"
-                end
-                v.glow.shine = nil
-            end
-        end
-    end,
-
-    autoconvertDisplayToggle_20190621_1 = function( p )
-        local m = p.toggles.mode
-        local types = m.type
-
-        if types then
-            m.automatic = nil
-            m.single = nil
-            m.aoe = nil
-            m.dual = nil
-            m.reactive = nil
-            m.type = nil
-
-            if types == "AutoSingle" then
-                m.automatic = true
-                m.single = true
-            elseif types == "SingleAOE" then
-                m.single = true
-                m.aoe = true
-            elseif types == "AutoDual" then
-                m.automatic = true
-                m.dual = true
-            elseif types == "ReactiveDual" then
-                m.reactive = true
-            end
-
-            if not m[ m.value ] then
-                if     m.automatic then m.value = "automatic"
-                elseif m.single    then m.value = "single"
-                elseif m.aoe       then m.value = "aoe"
-                elseif m.dual      then m.value = "dual"
-                elseif m.reactive  then m.value = "reactive" end
-            end
-        end
-    end,
-
-    resetPotionsToDefaults_20190717 = function( p )
-        for _, v in pairs( p.specs ) do
-            v.potion = nil
-        end
-    end, ]]
-
     resetAberrantPackageDates_20190728_1 = function( p )
         for _, v in pairs( p.packs ) do
             if type( v.date ) == 'string' then v.date = tonumber( v.date ) or 0 end
@@ -203,57 +49,6 @@ local oneTimeFixes = {
             if v.version then while( v.version > 21000000 ) do v.version = v.version / 10 end end
         end
     end,
-
-    --[[ autoconvertDelaySweepToExtend_20190729 = function( p )
-        for k, v in pairs( p.displays ) do
-            if v.delays.type == "CDSW" then
-                v.delays.type = "__NA"
-            end
-        end
-    end,
-
-    autoconvertPSCDsToCBs_20190805 = function( p )
-        for _, pack in pairs( p.packs ) do
-            for _, list in pairs( pack.lists ) do
-                for i, entry in ipairs( list ) do
-                    if entry.action == "pocketsized_computation_device" then
-                        entry.action = "cyclotronic_blast"
-                    end
-                end
-            end
-        end
-
-        p.runOnce.autoconvertPSCDsToCBs_20190805 = nil -- repeat as needed.
-    end,
-
-    cleanupAnyPriorityVersionTypoes_20200124 = function ( p )
-        for _, pack in pairs( p.packs ) do
-            if pack.date    and pack.date    > 99999999 then pack.date    = 0 end
-            if pack.version and pack.version > 99999999 then pack.version = 0 end
-        end
-
-        p.runOnce.cleanupAnyPriorityVersionTypoes_20200124 = nil -- repeat as needed.
-    end,
-
-    resetRogueMfDOption_20200226 = function( p )
-        if class.file == "ROGUE" then
-            p.specs[ 259 ].settings.mfd_waste = nil
-            p.specs[ 260 ].settings.mfd_waste = nil
-            p.specs[ 261 ].settings.mfd_waste = nil
-        end
-    end,
-
-    resetAllPotions_20201209 = function( p )
-        for id in pairs( p.specs ) do
-            p.specs[ id ].potion = nil
-        end
-    end,
-
-    resetGlobalCooldownSync_20210403 = function( p )
-        for id, spec in pairs( p.specs ) do
-            spec.gcdSync = nil
-        end
-    end, ]]
 
     forceEnableEnhancedRecheckBoomkin_20210712 = function( p )
         local s = rawget( p.specs, 102 )
@@ -1029,9 +824,6 @@ do
         conf[ option ] = val
         QueueRebuildUI()
     end
-
-    local LSM = LibStub( "LibSharedMedia-3.0" )
-    local SF = SpellFlashCore
 
     local fontStyles = {
         ["MONOCHROME"] = "Monochrome",
@@ -2916,7 +2708,7 @@ do
                 header = {
                     type = "description",
                     name = "Hekili has up to five built-in displays (identified in blue) that can display " ..
-                        "different kinds of recommendations.  The addons recommendations are based upon the " ..
+                        "different kinds of recommendations.  The addon's recommendations are based upon the " ..
                         "Priorities that are generally (but not exclusively) based on SimulationCraft profiles " ..
                         "so that you can compare your performance to the results of your simulations.",
                     fontSize = "medium",
@@ -3252,7 +3044,7 @@ do
                                             name = "Import Style",
                                             order = 5,
                                             func = function ()
-                                                shareDB.imported, shareDB.error = self:DeserializeStyle( shareDB.import )
+                                                shareDB.imported, shareDB.error = DeserializeStyle( shareDB.import )
 
                                                 if shareDB.error then
                                                     shareDB.import = "The Import String provided could not be decompressed.\n" .. shareDB.error
@@ -3428,7 +3220,7 @@ do
                                                     if share then insert( disps, key ) end
                                                 end
 
-                                                shareDB.export = self:SerializeStyle( unpack( disps ) )
+                                                shareDB.export = SerializeStyle( unpack( disps ) )
                                                 shareDB.exportStage = 1
                                             end,
                                             disabled = function ()
@@ -3584,338 +3376,7 @@ do
 
         section.plugins[ "Multi" ] = newDisplayOption( db, "Multi", self.DB.profile.displays[ "Primary" ], 0 )
         MakeMultiDisplayOption( section.plugins, section.plugins.Multi.Multi.args )
-
     end
-end
-
-
-ns.ClassSettings = function ()
-
-    local option = {
-        type = 'group',
-        name = "Class/Specialization",
-        order = 20,
-        args = {},
-        childGroups = "select",
-        hidden = function()
-            return #class.toggles == 0 and #class.settings == 0
-        end
-    }
-
-    option.args.toggles = {
-        type = 'group',
-        name = 'Toggles',
-        order = 10,
-        inline = true,
-        args = {
-        },
-        hidden = function()
-            return #class.toggles == 0
-        end
-    }
-
-    for i = 1, #class.toggles do
-        option.args.toggles.args[ 'Bind: ' .. class.toggles[i].name ] = {
-            type = 'keybinding',
-            name = class.toggles[i].option,
-            desc = class.toggles[i].oDesc,
-            order = ( i - 1 ) * 2
-        }
-        option.args.toggles.args[ 'State: ' .. class.toggles[i].name ] = {
-            type = 'toggle',
-            name = class.toggles[i].option,
-            desc = class.toggles[i].oDesc,
-            width = 'double',
-            order = 1 + ( i - 1 ) * 2
-        }
-    end
-
-    option.args.settings = {
-        type = 'group',
-        name = 'Settings',
-        order = 20,
-        inline = true,
-        args = {},
-        hidden = function()
-            return #class.settings == 0
-        end
-    }
-
-    for i, setting in ipairs(class.settings) do
-        option.args.settings.args[ setting.name ] = setting.option
-        option.args.settings.args[ setting.name ].order = i
-    end
-
-    return option
-
-end
-
-
-local abilityToggles = {}
-
-ns.AbilitySettings = function ()
-
-    local option = {
-        type = 'group',
-        name = "Abilities and Items",
-        order = 65,
-        childGroups = 'select',
-        args = {
-            heading = {
-                type = 'description',
-                name = "These settings allow you to make minor changes to abilities that can impact how this addon makes its recommendations.  Read the " ..
-                    "tooltips carefully, as some options can result in odd or undesirable behavior if misused.\n",
-                order = 1,
-                width = "full",
-            }
-        }
-    }
-
-    local abilities = {}
-    for k, v in pairs( class.abilities ) do
-        if not v.unlisted and v.name and not abilities[ v.name ] and ( v.id > 0 or v.id < -99 ) then
-            abilities[ v.name ] = v.key
-        end
-    end
-
-    for k, v in pairs( abilities ) do
-        local ability = class.abilities[ k ]
-
-        local abOption = {
-            type = 'group',
-            name = ability.name or k or v,
-            order = 2,
-            -- childGroups = "inline",
-            args = {
-                exclude = {
-                    type = 'toggle',
-                    name = function () return 'Disable ' .. ( ability.item and ability.link or k ) end,
-                    desc = function () return "If checked, this ability will |cFFFF0000NEVER|r be recommended by the addon.  This can cause issues for some classes or " ..
-                        "specializations, if other abilities depend on you using " .. ( ability.item and ability.link or k ) .. "." end,
-                    width = 'full',
-                    order = 1
-                },
-                toggle = {
-                    type = 'select',
-                    name = 'Require Active Toggle',
-                    desc = "Specify a required toggle for this action to be used in the addon action list.  When toggled off, abilities are treated " ..
-                        "as unusable and the addon will pretend they are on cooldown (unless specified otherwise).",
-                    width = 'full',
-                    order = 2,
-                    values = function ()
-                        wipe( abilityToggles )
-
-                        abilityToggles[ 'none' ] = 'None'
-                        abilityToggles[ 'default' ] = 'Default' .. ( ability.toggle and ( ' |cFFFFD100(' .. ability.toggle .. ')|r' ) or ' |cFFFFD100(none)|r' )
-                        abilityToggles[ 'cooldowns' ] = 'Cooldowns'
-                        abilityToggles[ 'defensives' ] = 'Defensives'
-                        abilityToggles[ 'interrupts' ] = 'Interrupts'
-                        abilityToggles[ 'potions' ] = 'Potions'
-
-                        return abilityToggles
-                    end,
-                },
-                clash = {
-                    type = 'range',
-                    name = 'Clash Value',
-                    desc = "If set above zero, the addon will pretend " .. k .. " has come off cooldown this much sooner than it actually has.  " ..
-                        "This can be helpful when an ability is very high priority and you want the addon to consider it a bit earlier than it would actually be ready.",
-                    width = "full",
-                    min = -1.5,
-                    max = 1.5,
-                    step = 0.05,
-                    order = 3
-                },
-
-                spacer01 = {
-                    type = "description",
-                    name = " ",
-                    width = "full",
-                    order = 19,
-                    hidden = function() return ability.item == nil end,
-                },
-
-                itemHeader = {
-                    type = "description",
-                    name = "|cFFFFD100Usable Items|r",
-                    order = 20,
-                    fontSize = "medium",
-                    width = "full",
-                    hidden = function() return ability.item == nil end,
-                },
-
-                itemDescription = {
-                    type = "description",
-                    name = function () return "This ability requires that " .. ( ability.link or ability.name ) .. " is equipped.  This item can be recommended via |cFF00CCFF[Use Items]|r in your " ..
-                        "action lists.  If you do not want the addon to recommend this ability via |cff00ccff[Use Items]|r, you can disable it here.  " ..
-                        "You can also specify a minimum or maximum number of targets for the item to be used.\n" end,
-                    order = 21,
-                    width = "full",
-                    hidden = function() return ability.item == nil end,
-                },
-
-                spacer02 = {
-                    type = "description",
-                    name = " ",
-                    width = "full",
-                    order = 49
-                },
-            }
-        }
-
-        if ability and ability.item then
-            if class.itemSettings[ ability.item ] then
-                for setting, config in pairs( class.itemSettings[ ability.item ].options ) do
-                    abOption.args[ setting ] = config
-                end
-            end
-        end
-
-        abOption.hidden = function( info )
-            -- Hijack this function to build toggle list for action list entries.
-
-            abOption.args.listHeader = abOption.args.listHeader or {
-                type = "description",
-                name = "|cFFFFD100Action Lists|r",
-                order = 50,
-                fontSize = "medium",
-                width = "full",
-            }
-            abOption.args.listHeader.hidden = true
-
-            abOption.args.listDescription = abOption.args.listDescription or {
-                type = "description",
-                name = "This ability is listed in the action list(s) below.  You can disable any entries here, if desired.",
-                order = 51,
-                width = "full",
-            }
-            abOption.args.listDescription.hidden = true
-
-            for key, opt in pairs( abOption.args ) do
-                if key:match( "^(%d+):(%d+)" ) then
-                    opt.hidden = true
-                end
-            end
-
-            local entries = 51
-
-            for i, list in ipairs( Hekili.DB.profile.actionLists ) do
-                if list.Name ~= "Usable Items" then
-                    for a, action in ipairs( list.Actions ) do
-                        if action.Ability == v then
-                            entries = entries + 1
-
-                            local toggle = option.args[ v ].args[ i .. ':' .. a ] or {}
-
-                            toggle.type = "toggle"
-                            toggle.name = "Disable " .. ( ability.item and ability.link or k ) .. " (#|cFFFFD100" .. a .. "|r) in |cFFFFD100" .. ( list.Name or "Unnamed List" ) .. "|r"
-                            toggle.desc = "This ability is used in entry #" .. a .. " of the |cFFFFD100" .. list.Name .. "|r action list."
-                            toggle.order = entries
-                            toggle.width = "full"
-                            toggle.hidden = false
-
-                            abOption.args[ i .. ':' .. a ] = toggle
-                        end
-                    end
-                end
-            end
-
-            if entries > 51 then
-                abOption.args.listHeader.hidden = false
-                abOption.args.listDescription.hidden = false
-            end
-
-            return false
-        end
-
-        option.args[ v ] = abOption
-    end
-
-    return option
-
-end
-
-
-ns.TrinketSettings = function ()
-
-    local option = {
-        type = 'group',
-        name = "Trinkets/Gear",
-        order = 22,
-        args = {
-            heading = {
-                type = 'description',
-                name = "These settings apply to trinkets/gear that are used via the [Use Items] action in your action lists.  Instead of " ..
-                    "manually editing your action lists, you can enable/disable specific trinkets or require a minimum or maximum number of " ..
-                    "enemies before allowing the trinket to be used.\n\n" ..
-                    "|cFFFFD100If your action list has a specific entry for a certain trinket with specific criteria, you will likely want to disable " ..
-                    "the trinket here.|r",
-                order = 1,
-                width = "full",
-            }
-        },
-        childGroups = 'select'
-    }
-
-    local trinkets = Hekili.DB.profile.trinkets
-
-    for i, setting in pairs( class.itemSettings ) do
-        option.args[ setting.key ] = {
-            type = "group",
-            name = setting.name,
-            order = 10 + i,
-            -- inline = true,
-            args = setting.options
-        }
-
-        option.args[ setting.key ].hidden = function( info )
-
-            -- Hide toggles in case they're outdated.
-            for k, v in pairs( setting.options ) do
-                if k:match( "^(%d+):(%d+)$") then
-                    v.hidden = true
-                end
-            end
-
-            for i, list in ipairs( Hekili.DB.profile.actionLists ) do
-                local entries = 100
-
-                if list.Name ~= 'Usable Items' then
-                    for a, action in ipairs( list.Actions ) do
-                        if action.Ability == setting.key then
-                            entries = entries + 1
-                            local toggle = option.args[ setting.key ].args[ i .. ':' .. a ] or {}
-
-                            local name = type( setting.name ) == 'function' and setting.name() or setting.name
-
-                            toggle.type = "toggle"
-                            toggle.name = "Disable " .. name .. " in |cFFFFD100" .. ( list.Name or "(no list name)" ) .. " (#" .. a .. ")|r"
-                            toggle.desc = "This item is used in entry #" .. a .. " of the |cFFFFD100" .. list.Name .. "|r action list.\n\n" ..
-                                "This usually means that there is class- or spec-specific criteria for using this item.  If you do not want this item " ..
-                                "to be recommended via this action list, check this box."
-                            toggle.order = entries
-                            toggle.width = "full"
-                            toggle.hidden = false
-
-                            option.args[ setting.key ].args[ i .. ':' .. a ] = toggle
-                        end
-                    end
-                end
-            end
-
-            return false
-        end
-
-        trinkets[ setting.key ] = trinkets[ setting.key ] or {
-            disabled = false,
-            minimum = 1,
-            maximum = 0
-        }
-
-    end
-
-    return option
-
 end
 
 
@@ -4062,79 +3523,12 @@ do
 end
 
 
-local optionBuffer = {}
-
-local buffer = function( msg )
-    optionBuffer[ #optionBuffer + 1 ] = msg
-end
-
-local getBuffer = function()
-    local output = table.concat( optionBuffer )
-    wipe( optionBuffer )
-    return output
-end
-
-local getColoredName = function( tab )
-    if not tab then return '(none)'
-    elseif tab.Default then return '|cFF00C0FF' .. tab.Name .. '|r'
-else return '|cFFFFC000' .. tab.Name .. '|r' end
-end
-
-
 local snapshots = {
     snaps = {},
     empty = {},
 
     selected = 0
 }
-
-
-local config = {
-    qsDisplay = 99999,
-
-    qsShowTypeGroup = false,
-    qsDisplayType = 99999,
-    qsTargetsAOE = 3,
-
-    displays = {}, -- auto-populated and recycled.
-    displayTypes = {
-        [1] = "Primary",
-        [2] = "AOE",
-        [3] = "Automatic",
-        [99999] = " "
-    },
-
-    expanded = {
-        cooldowns = true
-    },
-    adding = {},
-}
-
-
-function Hekili:NewGetOption( info )
-
-    local depth = #info
-    local option = depth and info[depth] or nil
-
-    if not option then return end
-
-    if config[ option ] then return config[ option ] end
-end
-
-
-function Hekili:NewSetOption( info, value )
-
-    local depth = #info
-    local option = depth and info[depth] or nil
-
-    if not option then return end
-
-    local nValue = tonumber( value )
-    local sValue = tostring( value )
-
-    if option == 'qsShowTypeGroup' then config[option] = value
-    else config[option] = nValue end
-end
 
 
 local specs = {}
@@ -4159,8 +3553,6 @@ do
 
     local specNameByID = {}
     local specIDByName = {}
-
-    local ACD = LibStub( "AceConfigDialog-3.0" )
 
     local shareDB = {
         actionPack = "",
@@ -4190,7 +3582,7 @@ do
         shareDB[ option ] = val
 
         if option == "actionPack" and rawget( self.DB.profile.packs, shareDB.actionPack ) then
-            shareDB.export = self:SerializeActionPack( shareDB.actionPack )
+            shareDB.export = SerializeActionPack( shareDB.actionPack )
         else
             shareDB.export = ""
         end
@@ -4309,7 +3701,7 @@ do
         local option = db.args.abilities.plugins.actions[ v ] or {}
 
         option.type = "group"
-        option.name = function () return ( state:IsDisabled( v, true ) and "|cFFFF0000" or "" ) .. useName .. "|r" end
+        option.name = function () return useName .. ( state:IsDisabled( v, true ) and "|cFFFF0000*|r" or "" ) end
         option.order = 1
         option.set = "SetAbilityOption"
         option.get = "GetAbilityOption"
@@ -4440,7 +3832,7 @@ do
 
             local option = {
                 type = "group",
-                name = function () return ( state:IsDisabled( v, true ) and "|cFFFF0000" or "" ) .. useName .. "|r" end,
+                name = function () return useName .. ( state:IsDisabled( v, true ) and "|cFFFF0000*|r" or "" ) end,
                 order = 1,
                 set = "SetAbilityOption",
                 get = "GetAbilityOption",
@@ -4651,7 +4043,7 @@ do
         local option = db.args.items.plugins.equipment[ v ] or {}
 
         option.type = "group"
-        option.name = function () return ( state:IsDisabled( v, true ) and "|cFFFF0000" or "" ) .. ability.name .. "|r" end
+        option.name = function () return ability.name .. ( state:IsDisabled( v, true ) and "|cFFFF0000*|r" or "" ) end
         option.order = 1
         option.set = "SetItemOption"
         option.get = "GetItemOption"
@@ -4768,7 +4160,7 @@ do
             local ability = class.abilities[ v ]
             local option = {
                 type = "group",
-                name = function () return ( state:IsDisabled( v, true ) and "|cFFFF0000" or "" ) .. ability.name .. "|r" end,
+                name = function () return ability.name .. ( state:IsDisabled( v, true ) and "|cFFFF0000*|r" or "" ) end,
                 order = 1,
                 set = "SetItemOption",
                 get = "GetItemOption",
@@ -4776,16 +4168,7 @@ do
                     multiItem = {
                         type = "description",
                         name = function ()
-                            local output = "These settings will apply to |cFF00FF00ALL|r of the following similar PvP trinkets:\n\n"
-
-                            if ability.items then
-                                for i, itemID in ipairs( ability.items ) do
-                                    output = output .. "     " .. class.itemList[ itemID ] .. "\n"
-                                end
-                                output = output .. "\n"
-                            end
-
-                            return output
+                            return "These settings will apply to |cFF00FF00ALL|r of the " .. ability.name .. " PvP trinkets."
                         end,
                         fontSize = "medium",
                         width = "full",
@@ -5117,6 +4500,23 @@ do
 
             return list
         end
+        e.sorting = function()
+            local list = {}
+
+            for k, v in pairs( class.abilityList ) do
+                insert( list, {
+                    k, class.abilities[ k ].name or v or k
+                } )
+            end
+
+            sort( list, function( a, b ) return a[2] < b[2] end )
+
+            for i = 1, #list do
+                list[ i ] = list[ i ][ 1 ]
+            end
+
+            return list
+        end
         e.order = nToggles + 0.997
         e.width = 1.35
         e.get = function () end
@@ -5200,6 +4600,7 @@ do
             local id, name, description, texture, role = GetSpecializationInfo( i )
 
             if not id then break end
+            if description then description = description:match( "^(.-)\n" ) end
 
             local spec = class.specs[ id ]
 
@@ -5489,11 +4890,23 @@ do
                                     order = 5.1
                                 },
 
+                                damageOnScreen = {
+                                    type = "toggle",
+                                    name = NewFeature .. "On Screen Enemies Only",
+                                    desc = function()
+                                        return "If checked, the damage-based target system will only count enemies that are on screen.  If unchecked, offscreen targets can be included in target counts.\n\n"
+                                            .. ( GetCVar( "nameplateShowEnemies" ) == "0" and "|cFFFF0000Requires Enemy Nameplates|r" or "|cFF00FF00Requires Enemy Nameplates|r" )
+                                    end,
+                                    width = 1.49,
+                                    hidden = function () return self.DB.profile.specs[ id ].damage == false end,
+                                    order = 5.15,
+                                },
+
                                 damageRange = {
                                     type = "range",
                                     name = "Filter Damaged Enemies by Range",
                                     desc = "If set above 0, the addon will attempt to avoid counting targets that were out of range when last seen.  This is based on cached data and may be inaccurate.",
-                                    width = "full",
+                                    width = 1.49,
                                     hidden = function () return self.DB.profile.specs[ id ].damage == false end,
                                     min = 0,
                                     max = 100,
@@ -6130,7 +5543,7 @@ do
                                             name = "Import Priority",
                                             order = 5,
                                             func = function ()
-                                                shareDB.imported, shareDB.error = self:DeserializeActionPack( shareDB.import )
+                                                shareDB.imported, shareDB.error = DeserializeActionPack( shareDB.import )
 
                                                 if shareDB.error then
                                                     shareDB.import = "The Import String provided could not be decompressed.\n" .. shareDB.error
@@ -6331,7 +5744,7 @@ do
                                     order = 3,
                                     get = function ()
                                         if rawget( Hekili.DB.profile.packs, shareDB.actionPack ) then
-                                            shareDB.export = self:SerializeActionPack( shareDB.actionPack )
+                                            shareDB.export = SerializeActionPack( shareDB.actionPack )
                                         else
                                             shareDB.export = ""
                                         end
@@ -7075,6 +6488,23 @@ do
                                                     name = "Action",
                                                     desc = "Select the action that will be recommended when this entry's criteria are met.",
                                                     values = class.abilityList,
+                                                    sorting = function()
+                                                        local list = {}
+
+                                                        for k, v in pairs( class.abilityList ) do
+                                                            insert( list, {
+                                                                k, class.abilities[ k ].name or v or k
+                                                            } )
+                                                        end
+
+                                                        sort( list, function( a, b ) return a[2] < b[2] end )
+
+                                                        for i = 1, #list do
+                                                            list[ i ] = list[ i ][ 1 ]
+                                                        end
+
+                                                        return list
+                                                    end,
                                                     order = 3.1,
                                                     width = 1.5,
                                                 },
@@ -7085,7 +6515,7 @@ do
                                                     desc = "Captions are |cFFFF0000very|r short descriptions that can appear on the icon of a recommended ability.\n\n" ..
                                                         "This can be useful for understanding why an ability was recommended at a particular time.\n\n" ..
                                                         "Requires Captions to be Enabled on each display.",
-                                                    order = 3.2,
+                                                    order = 3.201,
                                                     width = 1.5,
                                                     validate = function( info, val )
                                                         val = val:trim()
@@ -7175,6 +6605,28 @@ do
                                                     hidden = function ()
                                                         local e = GetListEntry( pack )
                                                         return e.action ~= "ferocious_bite"
+                                                    end,
+                                                },
+
+                                                empower_to = {
+                                                    type = "select",
+                                                    name = "Empower To",
+                                                    order = 3.2,
+                                                    width = 1.2,
+                                                    desc = "For Empowered spells, specify the empowerment level for this usage (default is max).",
+                                                    values = {
+                                                        [1] = "I",
+                                                        [2] = "II",
+                                                        [3] = "III",
+                                                        [4] = "IV",
+                                                        maximum = "Max",
+                                                        minimum = "Min"
+                                                    },
+                                                    hidden = function ()
+                                                        local e = GetListEntry( pack )
+                                                        local action = e.action
+                                                        local ability = action and class.abilities[ action ]
+                                                        return not ( ability and ability.empowered )
                                                     end,
                                                 },
 
@@ -7733,7 +7185,7 @@ do
                                     type = "input",
                                     name = "Priority Export String\n|cFFFFFFFFPress CTRL+A to select, then CTRL+C to copy.|r",
                                     get = function( info )
-                                        return self:SerializeActionPack( pack )
+                                        return SerializeActionPack( pack )
                                     end,
                                     set = function () end,
                                     order = 1,
@@ -8366,8 +7818,8 @@ do
 
     local run = 0
 
-    local function EmbedSpellData( spellID, token, talent )
-        local name, _, texture, castTime, minRange, maxRange, spellID = GetSpellInfo( spellID )
+    local function EmbedSpellData( spellID, token, talent, pvp )
+        local name, _, texture, castTime, minRange, maxRange = GetSpellInfo( spellID )
 
         local haste = UnitSpellHaste( "player" )
         haste = 1 + ( haste / 100 )
@@ -8375,11 +7827,12 @@ do
         if name then
             token = token or key( name )
 
-            if castTime % 10 > 0 then
-                -- We can catch hasted cast times 90% of the time...
-                castTime = castTime * haste
+            if castTime % 10 ~= 0 then
+                castTime = castTime * haste * 0.001
+                castTime = tonumber( format( "%.2f", castTime ) )
+            else
+                castTime = castTime * 0.001
             end
-            castTime = castTime / 1000
 
             local cost, min_cost, max_cost, spendPerSec, cost_percent, resource
 
@@ -8397,19 +7850,32 @@ do
             end
 
             local passive = IsPassiveSpell( spellID )
-            local harmful = IsHarmfulSpell( spellID )
-            local helpful = IsHelpfulSpell( spellID )
+            local harmful = IsHarmfulSpell( name )
+            local helpful = IsHelpfulSpell( name )
 
             local _, charges, _, recharge = GetSpellCharges( spellID )
-            local cooldown
-            if recharge then cooldown = recharge
-            else
-                cooldown = GetSpellBaseCooldown( spellID )
+            local cooldown, gcd, icd
+                cooldown, gcd = GetSpellBaseCooldown( spellID )
                 if cooldown then cooldown = cooldown / 1000 end
+
+            if gcd == 1000 then gcd = "totem"
+            elseif gcd == 1500 then gcd = "spell"
+            elseif gcd == 0 then gcd = "off"
+            else
+                icd = gcd / 1000
+                gcd = "off"
+            end
+
+            if recharge and recharge > cooldown then
+                if ( recharge * 1000 ) % 10 ~= 0 then
+                    recharge = recharge * haste
+                    recharge = tonumber( format( "%.2f", recharge ) )
+                end
+                cooldown = recharge
             end
 
             local selfbuff = SpellIsSelfBuff( spellID )
-            local talent = talent or IsTalentSpell( spellID )
+            talent = talent or IsTalentSpell( spellID )
 
             if selfbuff or passive then
                 auras[ token ] = auras[ token ] or {}
@@ -8431,13 +7897,15 @@ do
                 a.spendPerSec = spendPerSec
                 a.cast = castTime
                 a.empowered = empowered
-                a.gcd = "spell"
+                a.gcd = gcd or "spell"
+                a.icd = icd
 
                 a.texture = texture
 
                 if talent then a.talent = token end
+                if pvp then a.pvptalent = token end
 
-                a.startsCombat = harmful or not helpful
+                a.startsCombat = harmful == true or helpful == false
 
                 a.cooldown = cooldown
                 a.charges = charges
@@ -8506,37 +7974,34 @@ do
             end
 
             wipe( talents )
-            if Hekili.IsDragonflight() then
-                local configID = C_ClassTalents.GetActiveConfigID()
-                local configInfo = C_Traits.GetConfigInfo( configID )
-                for _, treeID in ipairs( configInfo.treeIDs ) do
-                    local nodes = C_Traits.GetTreeNodes( treeID )
-                    for _, nodeID in ipairs( nodes ) do
-                        local node = C_Traits.GetNodeInfo( configID, nodeID )
-                        if node.maxRanks > 0 then
-                            for _, entryID in ipairs( node.entryIDs ) do
-                                local entryInfo = C_Traits.GetEntryInfo( configID, entryID )
-                                local definitionInfo = C_Traits.GetDefinitionInfo( entryInfo.definitionID )
+            local configID = C_ClassTalents.GetActiveConfigID() or -1
+            local configInfo = C_Traits.GetConfigInfo( configID )
+            for _, treeID in ipairs( configInfo.treeIDs ) do
+                local nodes = C_Traits.GetTreeNodes( treeID )
+                for _, nodeID in ipairs( nodes ) do
+                    local node = C_Traits.GetNodeInfo( configID, nodeID )
+                    if node.maxRanks > 0 then
+                        for _, entryID in ipairs( node.entryIDs ) do
+                            local entryInfo = C_Traits.GetEntryInfo( configID, entryID )
+                            local definitionInfo = C_Traits.GetDefinitionInfo( entryInfo.definitionID )
 
-                                local spellID = definitionInfo.spellID
-                                local name = GetSpellInfo( spellID )
-                                local key = key( name )
+                            local spellID = definitionInfo.spellID
+                            local name = definitionInfo.overrideName or GetSpellInfo( spellID )
+                            local subtext = GetSpellSubtext( spellID )
 
-                                insert( talents, { name = key, talent = entryID, definition = entryInfo.definitionID, spell = spellID } )
+                            if subtext then
+                                local rank = subtext:match( "^Rank (%d+)$" )
+                                if rank then name = name .. "_" .. rank end
+                            end
 
-                                if not IsPassiveSpell( spellID ) then
-                                    EmbedSpellData( spellID, key, true )
-                                end
+                            local token = key( name )
+
+                            insert( talents, { name = token, talent = nodeID, definition = entryInfo.definitionID, spell = spellID, ranks = node.maxRanks } )
+
+                            if not IsPassiveSpell( spellID ) then
+                                EmbedSpellData( spellID, token, true )
                             end
                         end
-                    end
-                end
-            else
-                for j = 1, 7 do
-                    for k = 1, 3 do
-                        local tID, name, _, _, _, sID = GetTalentInfoBySpecialization( GetSpecialization(), j, k )
-                        name = key( name )
-                        insert( talents, { name = name, talent = tID, spell = sID } )
                     end
                 end
             end
@@ -8548,30 +8013,30 @@ do
                 local _, name, _, _, _, sID = GetPvpTalentInfoByID( tID )
                 name = key( name )
                 insert( pvptalents, { name = name, talent = tID, spell = sID } )
+
+                if not IsPassiveSpell( sID ) then
+                    EmbedSpellData( sID, name, nil, true )
+                end
             end
 
-            local haste = UnitSpellHaste( "player" )
-            haste = 1 + ( haste / 100 )
+            sort( pvptalents, function( a, b ) return a.name < b.name end )
 
             for i = 1, GetNumSpellTabs() do
                 local tab, _, offset, n = GetSpellTabInfo( i )
 
                 if i == 2 or tab == spec then
-                    for j = offset, offset + n do
+                    for j = offset + 1, offset + n do
                         local name, _, texture, castTime, minRange, maxRange, spellID = GetSpellInfo( j, "spell" )
                         if name then EmbedSpellData( spellID, key( name ) ) end
                     end
                 end
             end
         elseif event == "SPELLS_CHANGED" then
-            local haste = UnitSpellHaste( "player" )
-            haste = 1 + ( haste / 100 )
-
             for i = 1, GetNumSpellTabs() do
                 local tab, _, offset, n = GetSpellTabInfo( i )
 
                 if i == 2 or tab == spec then
-                    for j = offset, offset + n do
+                    for j = offset + 1, offset + n do
                         local name, _, texture, castTime, minRange, maxRange, spellID = GetSpellInfo( j, "spell" )
                         if name then EmbedSpellData( spellID, key( name ) ) end
                     end
@@ -8658,8 +8123,7 @@ do
     end
 
     function Hekili:StartListeningForSkeleton()
-        listener:SetScript( "OnEvent", skeletonHandler )
-
+        -- listener:SetScript( "OnEvent", skeletonHandler )
         skeletonHandler( listener, "PLAYER_SPECIALIZATION_CHANGED", "player" )
         skeletonHandler( listener, "SPELLS_CHANGED" )
     end
@@ -8690,14 +8154,22 @@ do
                     name = "Generate Skeleton",
                     order = 2,
                     func = function()
+                        skeletonHandler( listener, "PLAYER_SPECIALIZATION_CHANGED", "player" )
+                        skeletonHandler( listener, "SPELLS_CHANGED" )
+
                         run = run + 1
 
                         indent = ""
                         wipe( output )
 
-                        if not Hekili.IsDragonflight() or run % 2 > 0 then
-                            append( "if UnitClassBase( 'player' ) == '" .. UnitClassBase( "player" ) .. "' then" )
-                            increaseIndent()
+                        local playerClass = UnitClass( "player" ):gsub( " ", "" )
+                        local playerSpec = select( 2, GetSpecializationInfo( GetSpecialization() ) ):gsub( " ", "" )
+
+                        if run % 2 > 0 then
+                            append( "-- " .. playerClass .. playerSpec .. ".lua\n-- " .. date( "%B %Y" ) .. "\n" )
+                            append( [[if UnitClassBase( "player" ) ~= "]] .. UnitClassBase( "player" ) .. [[" then return end]] )
+
+                            append( "\nlocal addon, ns = ...\nlocal Hekili = _G[ addon ]\nlocal class, state = Hekili.Class, Hekili.State\n" )
 
                             append( "local spec = Hekili:NewSpecialization( " .. specID .. " )\n" )
 
@@ -8710,17 +8182,21 @@ do
                             append( "spec:RegisterTalents( {" )
                             increaseIndent()
 
-                            if Hekili.IsDragonflight() then
-                                table.sort( talents, function( a, b ) return a.name < b.name end )
-                                for i, tal in ipairs( talents ) do
-                                    append( tal.name .. " = { " .. ( tal.talent or "nil" ) .. ", " .. ( tal.spell or "nil" ) .. " }," )
-                                end
-                            else
-                                for i, tal in ipairs( talents ) do
-                                    append( tal.name .. " = " .. ( tal.talent or "nil" ) .. ", -- " .. ( tal.spell or "nil" ) .. ( i % 3 == 0 and "\n" or "" ) )
-                                end
+                            table.sort( talents, function( a, b ) return a.name < b.name end )
+
+                            local max_talent_length = 10
+
+                            for i, tal in ipairs( talents ) do
+                                local chars = tal.name:len()
+                                if chars > max_talent_length then max_talent_length = chars end
                             end
 
+                            local formatStr = "%-" .. max_talent_length .. "s = { %5d, %-6d, %d }, -- %s"
+
+                            for i, tal in ipairs( talents ) do
+                                local line = format( formatStr, tal.name, tal.talent, tal.spell, tal.ranks or 0, GetSpellDescription( tal.spell ):gsub( "\n", " " ):gsub( "\r", " " ):gsub( "%s+", " " ) )
+                                append( line )
+                            end
 
                             decreaseIndent()
                             append( "} )\n\n" )
@@ -8729,8 +8205,16 @@ do
                             append( "spec:RegisterPvpTalents( { " )
                             increaseIndent()
 
+                            local max_pvptalent_length = 10
                             for i, tal in ipairs( pvptalents ) do
-                                append( tal.name .. " = " .. ( tal.talent or "nil" ) .. ", -- " .. ( tal.spell or "nil" ) )
+                                local chars = tal.name:len()
+                                if chars > max_pvptalent_length then max_pvptalent_length = chars end
+                            end
+
+                            local formatPvp = "%-" .. max_pvptalent_length .. "s = %-4d, -- (%d) %s"
+
+                            for i, tal in ipairs( pvptalents ) do
+                                append( format( formatPvp, tal.name, tal.talent, tal.spell, GetSpellDescription( tal.spell ):gsub( "\n", " " ):gsub( "\r", " " ):gsub( "%s+", " " ) ) )
                             end
                             decreaseIndent()
                             append( "} )\n\n" )
@@ -8740,6 +8224,11 @@ do
                             increaseIndent()
 
                             for k, aura in orderedPairs( auras ) do
+                                local desc = aura.id and GetSpellDescription( aura.id )
+                                if desc then
+                                    desc = desc:gsub( "\n", " " ):gsub( "\r", " " ):gsub( "%s+", " " )
+                                    append( "-- " .. desc )
+                                end
                                 append( k .. " = {" )
                                 increaseIndent()
                                 append( "id = " .. aura.id .. "," )
@@ -8778,6 +8267,7 @@ do
                                 appendAttr( a, "cooldown" )
                                 appendAttr( a, "recharge" )
                                 appendAttr( a, "gcd" )
+                                if a.icd ~= nil then appendAttr( a, "icd" ) end
                                 append( "" )
                                 appendAttr( a, "spend" )
                                 appendAttr( a, "spendPerSec" )
@@ -8786,6 +8276,7 @@ do
                                     append( "" )
                                 end
                                 appendAttr( a, "talent" )
+                                appendAttr( a, "pvptalent" )
                                 appendAttr( a, "startsCombat" )
                                 appendAttr( a, "texture" )
                                 append( "" )
@@ -8813,8 +8304,12 @@ do
 
                             decreaseIndent()
                             append( "} )" )
-                            decreaseIndent()
-                            append( "end" )
+
+                            append( "\nspec:RegisterPriority( \"" .. playerSpec .. "\", " .. date( "%Y%m%d" ) .. ",\n-- Notes\n" ..
+                                "[[\n\n" ..
+                                "]],\n-- Priority\n" ..
+                                "[[\n\n" ..
+                                "]] )" )
                         else
                             local aggregate = {}
 
@@ -8836,8 +8331,19 @@ do
                                 aggregate[v.name].talent = true
                             end
 
+                            for k,v in pairs( pvptalents ) do
+                                if not aggregate[v.name] then aggregate[v.name] = {} end
+                                aggregate[v.name].id = v.spell
+                                aggregate[v.name].pvptalent = true
+                                print( k, v.spell, v.name, v.talent )
+                                for x,y in pairs( v ) do print( x, y ) end
+                            end
+
+                            -- append( select( 2, GetSpecializationInfo(GetSpecialization())) .. "\nKey\tID\tIs Aura\tIs Ability\tIs Talent\tIs PvP" )
                             for k,v in orderedPairs( aggregate ) do
-                                append( k .. "\t" .. v.id .. "\t" .. ( v.aura and "Yes" or "No" ) .. "\t" .. ( v.ability and "Yes" or "No" ) .. "\t" .. ( v.talent and "Yes" or "No" ) )
+                                if v.id then
+                                    append( k .. "\t" .. v.id .. "\t" .. ( v.aura and "Yes" or "No" ) .. "\t" .. ( v.ability and "Yes" or "No" ) .. "\t" .. ( v.talent and "Yes" or "No" ) .. "\t" .. ( v.pvptalent and "Yes" or "No" ) )
+                                end
                             end
                         end
 
@@ -8916,6 +8422,17 @@ function Hekili:GenerateProfile()
     local spec = s.spec.key
 
     local talents
+    --[[ if not IsAddOnLoaded( "Blizzard_ClassTalents" ) then
+        LoadAddOn( "Blizzard_ClassTalents" )
+        local isConfig = self.Config
+        ToggleTalentFrame( 2 )
+        ToggleTalentFrame()
+        if isConfig then ns.StartConfiguration() end
+    end
+    if ClassTalentFrame and ClassTalentFrame.TalentsTab and ClassTalentFrame.TalentsTab.GetLoadoutExportString then
+        talents = ClassTalentFrame.TalentsTab:GetLoadoutExportString()
+    end ]]
+
     for k, v in orderedPairs( s.talent ) do
         if v.enabled then
             if talents then talents = format( "%s\n    %s", talents, k )
@@ -9004,10 +8521,11 @@ function Hekili:GenerateProfile()
         end
     end
 
-    local toggles = ""
+    local toggles
     for k, v in orderedPairs( self.DB.profile.toggles ) do
         if type( v ) == "table" and rawget( v, "value" ) ~= nil then
-            toggles = format( "%s%s    %s = %s %s", toggles, toggles:len() > 0 and "\n" or "", k, tostring( v.value ), ( v.separate and "[separate]" or ( k ~= "cooldowns" and v.override and self.DB.profile.toggles.cooldowns.value and "[overridden]" ) or "" ) )
+            if toggles then toggles = format( "%s\n    %s = %s %s", toggles, k, tostring( v.value ), ( v.separate and "[separate]" or ( k ~= "cooldowns" and v.override and self.DB.profile.toggles.cooldowns.value and "[overridden]" ) or "" ) )
+            else toggles = format( "%s = %s %s", k, tostring( v.value ), ( v.separate and "[separate]" or ( k ~= "cooldowns" and v.override and self.DB.profile.toggles.cooldowns.value and "[overridden]" ) or "" ) ) end
         end
     end
 
@@ -9035,6 +8553,14 @@ function Hekili:GenerateProfile()
     end
 
 
+    local warnings
+
+    for i, err in ipairs( Hekili.ErrorKeys ) do
+        if warnings then warnings = format( "%s\n[#%d] %s", warnings, i, err:gsub( "\n\n", "\n" ) )
+        else warnings = format( "[#%d] %s", i, err:gsub( "\n\n", "\n" ) ) end
+    end
+
+
     return format( "build: %s\n" ..
         "level: %d (%d)\n" ..
         "class: %s\n" ..
@@ -9050,7 +8576,8 @@ function Hekili:GenerateProfile()
         "itemIDs: %s\n\n" ..
         "settings: %s\n\n" ..
         "toggles: %s\n\n" ..
-        "keybinds: %s\n\n",
+        "keybinds: %s\n\n" ..
+        "warnings: %s\n\n",
         Hekili.Version or "no info",
         UnitLevel( 'player' ) or 0, UnitEffectiveLevel( 'player' ) or 0,
         class.file or "NONE",
@@ -9066,9 +8593,9 @@ function Hekili:GenerateProfile()
         items or "none",
         settings or "none",
         toggles or "none",
-        keybinds or "none" )
+        keybinds or "none",
+        warnings or "none" )
 end
-
 
 
 do
@@ -9102,7 +8629,7 @@ do
 
                     monitorPerformance = {
                         type = "toggle",
-                        name = "Monitor Performance",
+                        name = BlizzBlue .. "Monitor Performance|r",
                         desc = "If checked, the addon will track processing time and volume of events.",
                         order = 3,
                         hidden = function()
@@ -9115,8 +8642,8 @@ do
                         name = "",
                         fontSize = "medium",
                         image = "Interface\\Addons\\Hekili\\Textures\\Taco256",
-                        imageWidth = 192,
-                        imageHeight = 192,
+                        imageWidth = 96,
+                        imageHeight = 96,
                         order = 5,
                         width = "full"
                     },
@@ -9477,8 +9004,6 @@ function Hekili:TotalRefresh( noOptions )
 
     self:OverrideBinds()
 
-    -- LibStub("LibDBIcon-1.0"):Refresh( "Hekili", self.DB.profile.iconStore )
-
     if WeakAuras and WeakAuras.ScanEvents then
         for name, toggle in pairs( Hekili.DB.profile.toggles ) do
             WeakAuras.ScanEvents( "HEKILI_TOGGLE", name, toggle.value )
@@ -9642,269 +9167,27 @@ function Hekili:SetOption( info, input, ... )
         profile[ option ] = input
 
         if option == 'enabled' then
-            for i, buttons in ipairs( ns.UI.Buttons ) do
-                for j, _ in ipairs( buttons ) do
-                    if input == false then
-                        buttons[j]:Hide()
-                    else
-                        buttons[j]:Show()
-                    end
-                end
-            end
-
-            if input == true then self:Enable()
+            if input then
+                self:Enable()
+                ACD:SelectGroup( "Hekili", "general" )
             else self:Disable() end
+
+            self:UpdateDisplayVisibility()
 
             return
 
         elseif option == 'minimapIcon' then
             profile.iconStore.hide = input
-
-            if LDBIcon then
-                if input then
-                    LDBIcon:Hide( "Hekili" )
-                else
-                    LDBIcon:Show( "Hekili" )
-                end
+            if input then
+                LDBIcon:Hide( "Hekili" )
+            else
+                LDBIcon:Show( "Hekili" )
             end
-
-        elseif option == 'Audit Targets' then
-            return
-
         end
 
         -- General options do not need add'l handling.
         return
 
-    elseif category == 'bindings' then
-
-        local revert = profile[ option ]
-        profile[ option ] = input
-
-        if option:match( "TOGGLE" ) or option == "HEKILI_SNAPSHOT" then
-            if GetBindingKey( option ) then
-                SetBinding( GetBindingKey( option ) )
-            end
-            SetBinding( input, option )
-            SaveBindings( GetCurrentBindingSet() )
-
-        elseif option == 'Mode' then
-            profile[option] = revert
-            self:ToggleMode()
-
-        elseif option == 'Pause' then
-            profile[option] = revert
-            self:TogglePause()
-            return
-
-        elseif option == 'Cooldowns' then
-            profile[option] = revert
-            self:ToggleCooldowns()
-            return
-
-        elseif option == 'Artifact' then
-            profile[option] = revert
-            self:ToggleArtifact()
-            return
-
-        elseif option == 'Potions' then
-            profile[option] = revert
-            self:TogglePotions()
-            return
-
-        elseif option == 'Hardcasts' then
-            profile[option] = revert
-            self:ToggleHardcasts()
-            return
-
-        elseif option == 'Interrupts' then
-            profile[option] = revert
-            self:ToggleInterrupts()
-            return
-
-        elseif option == 'Switch Type' then
-            if input == 0 then
-                if profile['Mode Status'] == 1 or profile['Mode Status'] == 2 then
-                    -- Check that the current mode is supported.
-                    profile['Mode Status'] = 0
-                    self:Print("Switch type updated; reverting to single-target.")
-                end
-            elseif input == 1 then
-                if profile['Mode Status'] == 1 or profile['Mode Status'] == 3 then
-                    profile['Mode Status'] = 0
-                    self:Print("Switch type updated; reverting to single-target.")
-                end
-            end
-
-        elseif option == 'Mode Status' or option:match("Toggle_") or option == 'BloodlustCooldowns' or option == 'CooldownArtifact' then
-            -- do nothing, we're good.
-
-        else -- Toggle Names.
-            if input:trim() == "" then
-                profile[ option ] = nil
-            end
-
-        end
-
-        -- Bindings do not need add'l handling.
-        return
-
-
-
-    elseif category == 'actionLists' then
-
-        if depth == 2 then
-
-            if option == 'New Action List' then
-                local key = ns.newActionList( input )
-                if key then
-                    RebuildOptions, RebuildCache = true, true
-                end
-
-            elseif option == 'Import Action List' then
-                local import = ns.deserializeActionList( input )
-
-                if not import or type( import ) == 'string' then
-                    Hekili:Print("Unable to import from given input string.")
-                    return
-                end
-
-                import.Name = getUniqueName( profile.actionLists, import.Name )
-                profile.actionLists[ #profile.actionLists + 1 ] = import
-                Rebuild = true
-
-            end
-
-        else
-            local listKey, listID = info[2], info[2] and tonumber( match( info[2], "^L(%d+)" ) )
-            local actKey, actID = info[3], info[3] and tonumber( match( info[3], "^A(%d+)" ) )
-            local list = profile.actionLists[ listID ]
-
-            if depth == 3 or not actID then
-
-                local revert = list[ option ]
-                list[option] = input
-
-                if option == 'Name' then
-                    Hekili.Options.args.actionLists.args[ listKey ].name = input
-                    if input ~= revert and list.Default then list.Default = false end
-
-                elseif option == 'Enabled' or option == 'Specialization' then
-                    RebuildCache = true
-
-                elseif option == 'Script' then
-                    list[ option ] = input:trim()
-                    RebuildScripts = true
-
-                    -- Import/Exports
-                elseif option == 'Copy To' then
-                    list[option] = nil
-
-                    local index = #profile.actionLists + 1
-
-                    profile.actionLists[ index ] = tableCopy( list )
-                    profile.actionLists[ index ].Name = input
-                    profile.actionLists[ index ].Default = false
-
-                    Rebuild = true
-
-                elseif option == 'Import Action List' then
-                    list[option] = nil
-
-                    local import = ns.deserializeActionList( input )
-
-                    if not import or type( import ) == 'string' then
-                        Hekili:Print("Unable to import from given import string.")
-                        return
-                    end
-
-                    import.Name = list.Name
-                    remove( profile.actionLists, listID )
-                    insert( profile.actionLists, listID, import )
-                    -- profile.actionLists[ listID ] = import
-                    Rebuild = true
-
-                elseif option == 'SimulationCraft' then
-                    list[option] = nil
-
-                    local import, warnings = self:ImportSimulationCraftActionList( input )
-
-                    if warnings then
-                        Hekili:Print( "|cFFFF0000WARNING:|r\nThe following issues were noted during actionlist import." )
-                        for i = 1, #warnings do
-                            Hekili:Print( warnings[i] )
-                        end
-                    end
-
-                    if not import then
-                        Hekili:Print( "No actions were successfully imported." )
-                        return
-                    end
-
-                    wipe( list.Actions )
-
-                    for i, entry in ipairs( import ) do
-
-                        local key = ns.newAction( listID, class.abilities[ entry.Ability ].name )
-
-                        local action = list.Actions[ i ]
-
-                        action.Ability = entry.Ability
-                        action.Args = entry.Args
-
-                        action.CycleTargets = entry.CycleTargets
-                        action.MaximumTargets = entry.MaximumTargets
-                        action.CheckMovement = entry.CheckMovement or false
-                        action.Movement = entry.Movement
-                        action.ModName = entry.ModName or ''
-                        action.ModVarName = entry.ModVarName or ''
-
-                        action.Indicator = 'none'
-
-                        action.Script = entry.Script
-                        action.Enabled = true
-                    end
-
-                    Rebuild = true
-
-                end
-
-                -- This is a specific action.
-            else
-                local list = profile.actionLists[ listID ]
-                local action = list.Actions[ actID ]
-
-                action[ option ] = input
-
-                if option == 'Name' then
-                    Hekili.Options.args.actionLists.args[ listKey ].args[ actKey ].name = '|cFFFFD100' .. actID .. '.|r ' .. input
-
-                elseif option == 'Enabled' then
-                    RebuildCache = true
-
-                elseif option == 'Move' then
-                    action[ option ] = nil
-                    local placeholder = remove( list.Actions, actID )
-                    insert( list.Actions, input, placeholder )
-                    Rebuild, Select = true, 'A'..input
-
-                elseif option == 'Script' or option == 'Args' then
-                    input = input:trim()
-                    RebuildScripts = true
-
-                elseif option == 'ReadyTime' then
-                    list[ option ] = input:trim()
-                    RebuildScripts = true
-
-                elseif option == 'ConsumableArgs' then
-                    action[ option ] = nil
-                    action.Args = input
-                    RebuildScripts = true
-
-                end
-
-            end
-        end
     elseif category == "snapshots" then
         profile[ option ] = input
     end
@@ -9916,18 +9199,16 @@ function Hekili:SetOption( info, input, ... )
     else
         if RebuildOptions then ns.refreshOptions() end
         if RebuildScripts then ns.loadScripts() end
-        if RebuildCache and not RebuildUI then Hekili:UpdateDisplayVisibility() end
+        if RebuildCache and not RebuildUI then self:UpdateDisplayVisibility() end
         if RebuildUI then QueueRebuildUI() end
     end
 
     if ns.UI.Minimap then ns.UI.Minimap:RefreshDataText() end
 
     if Select then
-        LibStub( "AceConfigDialog-3.0" ):SelectGroup( "Hekili", category, info[2], Select )
+        ACD:SelectGroup( "Hekili", category, info[2], Select )
     end
-
 end
-
 
 
 do
@@ -10381,6 +9662,96 @@ do
                 elseif ( "move" ):match( "^" .. args[1] ) and Hekili.Config then
                     ns.StopConfiguration()
                 end
+
+            elseif ("stress" ):match( "^" .. args[1] ) then
+                if InCombatLockdown() then
+                    Hekili:Print( "Unable to stress test abilities and auras while in combat." )
+                    return
+                end
+
+                local precount = 0
+                for k, v in pairs( self.ErrorDB ) do
+                    precount = precount + v.n
+                end
+
+                local results, count, specs = "", 0, {}
+                for i in ipairs( class.specs ) do
+                    if i ~= 0 then insert( specs, i ) end
+                end
+                sort( specs )
+
+                for i, specID in ipairs( specs ) do
+                    local spec = class.specs[ specID ]
+                    results = format( "%sSpecialization: %s\n", results, spec.name )
+
+                    for key, aura in ipairs( spec.auras ) do
+                        local keyNamed = false
+                        -- Avoid duplicates.
+                        if aura.key == key then
+                            for k, v in pairs( aura ) do
+                                if type( v ) == "function" then
+                                    local ok, val = pcall( v )
+                                    if not ok then
+                                        if not keyNamed then results = format( "%s - Aura: %s\n", results, k ); keyNamed = true end
+                                        results = format( "%s    - %s = %s\n", results, tostring( val ) )
+                                        count = count + 1
+                                    end
+                                end
+                            end
+                            for k, v in pairs( aura.funcs ) do
+                                if type( v ) == "function" then
+                                    local ok, val = pcall( v )
+                                    if not ok then
+                                        if not keyNamed then results = format( "%s - Aura: %s\n", results, k ); keyNamed = true end
+                                        results = format( "%s    - %s = %s\n", results, tostring( val ) )
+                                        count = count + 1
+                                    end
+                                end
+                            end
+                        end
+                    end
+
+                    for key, ability in ipairs( spec.abilities ) do
+                        local keyNamed = false
+                        -- Avoid duplicates.
+                        if ability.key == key then
+                            for k, v in pairs( ability ) do
+                                if type( v ) == "function" then
+                                    local ok, val = pcall( v )
+                                    if not ok then
+                                        if not keyNamed then results = format( "%s - Ability: %s\n", results, k ); keyNamed = true end
+                                        results = format( "%s    - %s = %s\n", results, tostring( val ) )
+                                        count = count + 1
+                                    end
+                                end
+                            end
+                            for k, v in pairs( ability.funcs ) do
+                                if type( v ) == "function" then
+                                    local ok, val = pcall( v )
+                                    if not ok then
+                                        if not keyNamed then results = format( "%s - Ability: %s\n", results, k ); keyNamed = true end
+                                        results = format( "%s    - %s = %s\n", results, tostring( val ) )
+                                        count = count + 1
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+
+                local postcount = 0
+                for k, v in pairs( self.ErrorDB ) do
+                    postcount = postcount + v.n
+                end
+
+                if count > 0 then
+                    Hekili:Print( results )
+                    Hekili:Error( results )
+                end
+
+                if postcount > precount then Hekili:Print( "New warnings were loaded in /hekili > Warnings." ) end
+                if count == 0 and postcount == precount then Hekili:Print( "Stress test completed; no issues found." ) end
+
             elseif ( "lock" ):match( "^" .. args[1] ) then
                 if Hekili.Config then
                     ns.StopConfiguration()
@@ -10484,6 +9855,7 @@ local function decodeB64(str)
 end
 
 
+-- Import/Export Strings
 local Compresser = LibStub:GetLibrary("LibCompress")
 local Encoder = Compresser:GetChatEncodeTable()
 
@@ -10493,8 +9865,7 @@ local ldConfig = { level = 5 }
 local Serializer = LibStub:GetLibrary("AceSerializer-3.0")
 
 
-
-local function TableToString(inTable, forChat)
+TableToString = function( inTable, forChat )
     local serialized = Serializer:Serialize( inTable )
     local compressed = LibDeflate:CompressDeflate( serialized, ldConfig )
 
@@ -10502,7 +9873,7 @@ local function TableToString(inTable, forChat)
 end
 
 
-local function StringToTable(inString, fromChat)
+StringToTable = function( inString, fromChat )
     local modern = false
     if inString:sub( 1, 7 ) == "Hekili:" then
         modern = true
@@ -10532,53 +9903,22 @@ local function StringToTable(inString, fromChat)
 end
 
 
-function ns.serializeDisplay( display )
-    if not rawget( Hekili.DB.profile.displays, display ) then return nil end
-    local serial = tableCopy( Hekili.DB.profile.displays[ display ] )
+SerializeDisplay = function( display )
+    local serial = rawget( Hekili.DB.profile.displays, display )
+    if not serial then return end
 
     return TableToString( serial, true )
 end
 
-Hekili.SerializeDisplay = ns.serializeDisplay
 
-
-function ns.deserializeDisplay( str )
+DeserializeDisplay = function( str )
     local display = StringToTable( str, true )
-
-    if type( display.precombatAPL ) == 'string' then
-        for i, list in ipairs( Hekili.DB.profile.actionLists ) do
-            if display.precombatAPL == list.Name then
-                display.precombatAPL = i
-                break
-            end
-        end
-
-        if type( display.precombatAPL ) == 'string' then
-            display.precombatAPL = 0
-        end
-    end
-
-    if type( display.defaultAPL ) == 'string' then
-        for i, list in ipairs( Hekili.DB.profile.actionLists ) do
-            if display.defaultAPL == list.Name then
-                display.defaultAPL = i
-                break
-            end
-        end
-
-        if type( display.defaultAPL ) == 'string' then
-            display.defaultAPL = 0
-        end
-    end
-
     return display
 end
 
-Hekili.DeserializeDisplay = ns.deserializeDisplay
 
-
-function Hekili:SerializeActionPack( name )
-    local pack = rawget( self.DB.profile.packs, name )
+SerializeActionPack = function( name )
+    local pack = rawget( Hekili.DB.profile.packs, name )
     if not pack then return end
 
     local serial = {
@@ -10594,7 +9934,7 @@ function Hekili:SerializeActionPack( name )
 end
 
 
-function Hekili:DeserializeActionPack( str )
+DeserializeActionPack = function( str )
     local serial = StringToTable( str, true )
 
     if not serial or type( serial ) == "string" or serial.type ~= "package" then
@@ -10605,9 +9945,10 @@ function Hekili:DeserializeActionPack( str )
 
     return serial
 end
+Hekili.DeserializeActionPack = DeserializeActionPack
 
 
-function Hekili:SerializeStyle( ... )
+SerializeStyle = function( ... )
     local serial = {
         type = "style",
         date = tonumber( date("%Y%m%d.%H%M%S") ),
@@ -10618,7 +9959,7 @@ function Hekili:SerializeStyle( ... )
 
     for i = 1, select( "#", ... ) do
         local dispName = select( i, ... )
-        local display = rawget( self.DB.profile.displays, dispName )
+        local display = rawget( Hekili.DB.profile.displays, dispName )
 
         if not display then return "Attempted to serialize an invalid display (" .. dispName .. ")" end
 
@@ -10631,7 +9972,7 @@ function Hekili:SerializeStyle( ... )
 end
 
 
-function Hekili:DeserializeStyle( str )
+DeserializeStyle = function( str )
     local serial = StringToTable( str, true )
 
     if not serial or type( serial ) == 'string' or not serial.type == "style" then
@@ -10641,107 +9982,17 @@ function Hekili:DeserializeStyle( str )
     return serial.payload
 end
 
-
-function ns.serializeActionList( num )
-    if not Hekili.DB.profile.actionLists[ num ] then return nil end
-    local serial = tableCopy( Hekili.DB.profile.actionLists[ num ] )
-    return TableToString( serial, true )
-end
+-- End Import/Export Strings
 
 
-function ns.deserializeActionList( str )
-    return StringToTable( str, true )
-end
-
-
+-- Begin APL Parsing
 
 local ignore_actions = {
-    -- call_action_list = 1,
-    -- run_action_list = 1,
     snapshot_stats = 1,
-    -- auto_attack = 1,
-    -- use_item = 1,
     flask = 1,
     food = 1,
     augmentation = 1
 }
-
-
-local function make_substitutions( i, swaps, prefixes, postfixes )
-    if not i then return nil end
-
-    for k,v in pairs( swaps ) do
-
-        for token in i:gmatch( k ) do
-
-            local times = 0
-            while (i:find(token)) do
-                local strpos, strend = i:find(token)
-
-                local pre = i:sub( strpos - 1, strpos - 1 )
-                local j = 2
-
-                while ( pre == '(' and strpos - j > 0 ) do
-                    pre = i:sub( strpos - j, strpos - j )
-                    j = j + 1
-                end
-
-                local post = i:sub( strend + 1, strend + 1 )
-                j = 2
-
-                while ( post == ')' and strend + j < i:len() ) do
-                    post = i:sub( strend + j, strend + j )
-                    j = j + 1
-                end
-
-                local start = strpos > 1 and i:sub( 1, strpos - 1 ) or ''
-                local finish = strend < i:len() and i:sub( strend + 1 ) or ''
-
-                if not ( prefixes and prefixes[ pre ] ) and pre ~= '.' and pre ~= '_' and not pre:match('%a') and not ( postfixes and postfixes[ post ] ) and post ~= '.' and post ~= '_' and not post:match('%a') then
-                    i = start .. '\a' .. finish
-                else
-                    i = start .. '\v' .. finish
-                end
-
-            end
-
-            i = i:gsub( '\v', token )
-            i = i:gsub( '\a', v )
-
-        end
-
-    end
-
-    return i
-
-end
-
-
-local function accommodate_targets( targets, ability, i, line, warnings )
-    local insert_targets = targets
-    local insert_ability = ability
-
-    if ability == 'storm_earth_and_fire' then
-        insert_targets = type( targets ) == 'number' and min( 2, ( targets - 1 ) ) or 2
-        insert_ability = 'storm_earth_and_fire_target'
-    elseif ability == 'windstrike' then
-        insert_ability = 'stormstrike'
-    end
-
-    local swaps = {}
-
-    swaps["d?e?buff%."..insert_ability.."%.up"] = "active_dot."..insert_ability.. ">=" ..insert_targets
-    swaps["d?e?buff%."..insert_ability.."%.down"] = "active_dot."..insert_ability.. "<" ..insert_targets
-    swaps["dot%."..insert_ability.."%.up"] = "active_dot."..insert_ability..'>=' ..insert_targets
-    swaps["dot%."..insert_ability.."%.ticking"] = "active_dot."..insert_ability..'>=' ..insert_targets
-    swaps["dot%."..insert_ability.."%.down"] = "active_dot."..insert_ability..'<' ..insert_targets
-    swaps["up"] = "active_dot."..insert_ability..">=" ..insert_targets
-    swaps["ticking"] = "active_dot."..insert_ability..">=" ..insert_targets
-    swaps["down"] = "active_dot."..insert_ability.."<" ..insert_targets
-
-    return make_substitutions( i, swaps )
-end
-ns.accomm = accommodate_targets
 
 
 local function Sanitize( segment, i, line, warnings )
@@ -11074,59 +10325,6 @@ local function strsplit( str, delimiter )
 end
 
 
---[[ local function StoreModifier( entry, key, value )
-
-    if key ~= 'if' and key ~= 'ability' then
-        if not entry.Args then entry.Args = key .. '=' .. value
-        else entry.Args = entry.Args .. "," .. key .. "=" .. value end
-    end
-
-    if key == 'if' then
-        entry.Script = value
-
-    elseif key == 'cycle_targets' then
-        entry.CycleTargets = tonumber( value ) == 1 and true or false
-
-    elseif key == 'max_cycle_targets' then
-        entry.MaximumTargets = value
-
-    elseif key == 'moving' then
-        entry.CheckMovement = true
-        entry.Moving = tonumber( value )
-
-    elseif key == 'name' then
-        local v = value:match( '"(.*)"'' ) or value
-        entry.ModName = v
-        entry.ModVarName = v
-
-    elseif key == 'value' then -- for 'variable' type, overwrites Script
-        entry.Script = value
-
-    elseif key == 'target_if' then
-        entry.TargetIf = value
-
-    elseif key == 'pct_health' then
-        entry.PctHealth = value
-
-    elseif key == 'interval' then
-        entry.Interval = value
-
-    elseif key == 'for_next' then
-        entry.PoolForNext = tonumber( value ) ~= 0
-
-    elseif key == 'wait' then
-        entry.PoolTime = tonumber( value ) or 0
-
-    elseif key == 'extra_amount' then
-        entry.PoolExtra = tonumber( value ) or 0
-
-    elseif key == 'sec' then
-        entry.WaitSeconds = value
-
-    end
-
-end ]]
-
 do
     local parseData = {
         warnings = {},
@@ -11344,11 +10542,12 @@ do
     end
 end
 
+-- End APL Parsing
 
 
 local warnOnce = false
 
--- Key Bindings
+-- Begin Toggles
 function Hekili:TogglePause( ... )
 
     Hekili.btns = ns.UI.Buttons
@@ -11527,3 +10726,5 @@ do
         return t and t.value
     end
 end
+
+-- End Toggles

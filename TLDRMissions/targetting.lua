@@ -776,6 +776,7 @@ function addon:getPseudorandomRitualFervor(follower, field)
         {alive = {5, 8, 11}, target = 8},
         {alive = {5, 7, 8, 11}, target = 11},
         {alive = {6, 7, 8, 11, 12}, target = 7},
+        {alive = {7, 8, 9, 10, 11}, target = 8},
         
         -- observed in 2281
         -- see https://github.com/teelolws/TLDRMissions/issues/98
@@ -1089,6 +1090,7 @@ function addon:getPseudorandomLashOut(follower, field)
         {alive = {1, 10}, target = 10},
         {alive = {0, 1, 6, 7, 11}, target = 1},
         {alive = {1, 7}, target = 7},
+        {alive = {0, 1, 9, 12}, target = 12},
     }
     
     local aliveMinions = {}

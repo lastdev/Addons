@@ -8,7 +8,7 @@ ns.HL = HL
 
 local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 
-ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v28'
+ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v28.1'
 
 ns.CLASSIC = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE
 

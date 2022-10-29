@@ -11,7 +11,7 @@ Description: Allows for easy creation of graphs
 --Thanks to Nelson Minar for catching several errors where width was being used instead of height (damn copy and paste >_>)
 
 local major = "LibGraph-2.0"
-local minor = 90000 + tonumber(("$Revision: 57 $"):match("(%d+)"))
+local minor = 90000 + tonumber(("$Revision: 58 $"):match("(%d+)"))
 
 
 --Search for just Addon\\ at the front since the interface part often gets trimmed
@@ -30,6 +30,8 @@ do
 		end
 	end
 end
+
+TextureDirectory = "Interface\\Addons\\Details\\Libs\\LibGraph-2.0"
 
 
 if not LibStub then error(major .. " requires LibStub") end
@@ -685,7 +687,7 @@ function GraphFunctions:AddDataSeries(points, color, n2, linetexture)
 	end
 
 	if linetexture then
-		if not linetexture:find ("\\") and not linetexture:find ("//") then 
+		if not linetexture:find("\\") and not linetexture:find("//") then 
 			linetexture = TextureDirectory..linetexture
 		end
 	end
@@ -1292,24 +1294,24 @@ function GraphFunctions:SetYLabels(Left, Right)
 end
 
 function GraphFunctions:SetLineTexture(texture)
-	if (type (texture) ~= "string") then
-		return assert (false, "Parameter 1 for SetLineTexture must be a string")
+	if (type(texture) ~= "string") then
+		return assert(false, "Parameter 1 for SetLineTexture must be a string")
 	end
 
-	--> full path
-	if (texture:find ("\\") or texture:find ("//")) then 
+	--full path
+	if (texture:find("\\") or texture:find("//")) then 
 		self.CustomLine = texture
-	--> using an image inside lib-graph folder
+	--using an image inside lib-graph folder
 	else 
 		self.CustomLine = TextureDirectory..texture
 	end
 end
 
 function GraphFunctions:SetBorderSize(border, size)
-	border = string.lower (border)
+	border = string.lower(border)
 	
-	if (type (size) ~= "number") then
-		return assert (false, "Parameter 2 for SetBorderSize must be a number")
+	if (type(size) ~= "number") then
+		return assert(false, "Parameter 2 for SetBorderSize must be a number")
 	end
 	
 	if (border == "left") then
@@ -1326,7 +1328,7 @@ function GraphFunctions:SetBorderSize(border, size)
 		return true
 	end
 	
-	return assert (false, "Usage: GraphObject:SetBorderSize (LEFT RIGHT TOP BOTTOM, SIZE)")
+	return assert(false, "Usage: GraphObject:SetBorderSize (LEFT RIGHT TOP BOTTOM, SIZE)")
 end
 
 function GraphFunctions:CreateGridlines()
@@ -1711,7 +1713,7 @@ function GraphFunctions:RefreshLineGraph()
 
 		if not self.LockOnXMin then
 			if (self.CustomLeftBorder) then
-				self.XMin = MinX + self.CustomLeftBorder --> custom size of left border
+				self.XMin = MinX + self.CustomLeftBorder --custom size of left border
 			else
 				self.XMin = MinX - XBorder
 			end
@@ -1719,7 +1721,7 @@ function GraphFunctions:RefreshLineGraph()
 		
 		if not self.LockOnXMax then
 			if (self.CustomRightBorder) then
-				self.XMax = MaxX + self.CustomRightBorder --> custom size of right border
+				self.XMax = MaxX + self.CustomRightBorder --custom size of right border
 			else
 				self.XMax = MaxX + XBorder
 			end
@@ -1727,7 +1729,7 @@ function GraphFunctions:RefreshLineGraph()
 		
 		if not self.LockOnYMin then
 			if (self.CustomBottomBorder) then
-				self.YMin = MinY + self.CustomBottomBorder --> custom size of bottom border
+				self.YMin = MinY + self.CustomBottomBorder --custom size of bottom border
 			else
 				self.YMin = MinY - YBorder
 			end
@@ -1735,7 +1737,7 @@ function GraphFunctions:RefreshLineGraph()
 		
 		if not self.LockOnYMax then
 			if (self.CustomTopBorder) then
-				self.YMax = MaxY + self.CustomTopBorder --> custom size of top border
+				self.YMax = MaxY + self.CustomTopBorder --custom size of top border
 			else
 				self.YMax = MaxY + YBorder
 			end
@@ -1905,11 +1907,11 @@ function lib:DrawLine(C, sx, sy, ex, ey, w, color, layer, linetexture)
 
 	local T = tremove(C.GraphLib_Lines) or C:CreateTexture(nil, "ARTWORK")
 	
-	if linetexture then --> this data series texture
+	if linetexture then --this data series texture
 		T:SetTexture(linetexture)
-	elseif C.CustomLine then --> overall chart texture
+	elseif C.CustomLine then --overall chart texture
 		T:SetTexture(C.CustomLine)
-	else --> no texture assigned, use default
+	else --no texture assigned, use default
 		T:SetTexture(TextureDirectory.."line")
 	end
 	

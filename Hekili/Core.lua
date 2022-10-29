@@ -44,9 +44,6 @@ local function EmbedBlizOptions()
     open:SetText( "Open Hekili Options Panel" )
 
     open:SetScript( "OnClick", function ()
-        InterfaceOptionsFrameOkay:Click()
-        GameMenuButtonContinue:Click()
-
         ns.StartConfiguration()
     end )
 
@@ -77,8 +74,7 @@ function Hekili:OnInitialize()
     AceConfig:RegisterOptionsTable( "Hekili", self.Options )
 
     local AceConfigDialog = LibStub( "AceConfigDialog-3.0" )
-    -- self.optionsFrame = AceConfigDialog:AddToBlizOptions( "Hekili", "Hekili" )
-    EmbedBlizOptions()
+    -- EmbedBlizOptions()
 
     self:RegisterChatCommand( "hekili", "CmdLine" )
     self:RegisterChatCommand( "hek", "CmdLine" )
@@ -183,7 +179,10 @@ function Hekili:OnEnable()
     self:TotalRefresh( true )
 
     ns.ReadKeybindings()
+    self:UpdateDisplayVisibility()
     self:ForceUpdate( "ADDON_ENABLED" )
+
+    self:Print( "Dragonflight is a work-in-progress.  See |cFFFFD100/hekili|r for class/specialization status." )
     ns.Audit()
 end
 
@@ -747,7 +746,7 @@ function Hekili:GetPredictionFromAPL( dispName, packName, listName, slot, action
 
                 if not ability then
                     if not invalidActionWarnings[ scriptID ] then
-                        Hekili:Error( "Priority '%s' uses action '%s' ( %s - %d ) that is not found in the abilities table.", packName, action, listName, actID )
+                        Hekili:Error( "Priority '%s' uses action '%s' ( %s - %d ) that is not found in the abilities table.", packName, action or "unknown", listName, actID )
                         invalidActionWarnings[ scriptID ] = true
                     end
 
@@ -1209,7 +1208,7 @@ function Hekili:GetPredictionFromAPL( dispName, packName, listName, slot, action
 
                                                             local next_known  = next_action and state:IsKnown( next_action )
                                                             local next_usable, next_why = next_action and state:IsUsable( next_action )
-                                                            local next_cost   = next_action and state.action[ next_action ].cost or 0
+                                                            local next_cost   = next_action and state.action[ next_action ] and state.action[ next_action ].cost or 0
                                                             local next_res    = next_action and state.GetResourceType( next_action ) or class.primaryResource
 
                                                             if not next_entry then
@@ -1451,10 +1450,10 @@ end
 
 
 local displayRules = {
-    { "Interrupts", function( p ) return p.toggles.interrupts.value and p.toggles.interrupts.separate end },
-    { "Defensives", function( p ) return p.toggles.defensives.value and p.toggles.defensives.separate end },
-    { "Cooldowns",  function( p ) return p.toggles.cooldowns.value  and p.toggles.cooldowns.separate  end },
-    { "Primary", function() return true end },
+    { "Interrupts", function( p ) return p.toggles.interrupts.value and p.toggles.interrupts.separate end, true },
+    { "Defensives", function( p ) return p.toggles.defensives.value and p.toggles.defensives.separate end, false },
+    { "Cooldowns",  function( p ) return p.toggles.cooldowns.value  and p.toggles.cooldowns.separate  end, false },
+    { "Primary", function() return true end, true },
     { "AOE", function( p )
         local spec = rawget( p.specs, state.spec.id )
         if not spec or not class.specs[ state.spec.id ] then return false end
@@ -1468,7 +1467,7 @@ local displayRules = {
         end
 
         return true
-    end },
+    end, true },
 }
 
 
@@ -1506,7 +1505,7 @@ function Hekili.Update()
     local snaps = nil
 
     for i, info in ipairs( displayRules ) do
-        local dispName, rule = unpack( info )
+        local dispName, rule, fullReset = unpack( info )
         local display = rawget( profile.displays, dispName )
 
         if debug then
@@ -1537,7 +1536,7 @@ function Hekili.Update()
 
             -- Hekili:Yield( "Pre-Reset for " .. dispName .. " (from " .. state.display .. ")" )
 
-            state.reset( dispName )
+            state.reset( dispName, fullReset )
 
             Hekili:Yield( "Post-Reset for " .. dispName )
 

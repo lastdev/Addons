@@ -1,7 +1,7 @@
 local addonName = ...
 local addon = _G[addonName]
 local LibStub = addon.LibStub
---[[ $Id: AceGUIWidget-DropDown.lua 1262 2022-04-07 23:00:32Z funkehdude $ ]]--
+--[[ $Id: AceGUIWidget-DropDown.lua 1284 2022-09-25 09:15:30Z nevcairiel $ ]]--
 local AceGUI = LibStub("AceGUI-3.0")
 
 -- Lua APIs
@@ -13,10 +13,6 @@ local tsort = table.sort
 local PlaySound = PlaySound
 local UIParent, CreateFrame = UIParent, CreateFrame
 local _G = _G
-
--- Global vars/functions that we don't upvalue since they might get hooked, or upgraded
--- List them here for Mikk's FindGlobals script
--- GLOBALS: CLOSE
 
 local function fixlevels(parent,...)
 	local i = 1

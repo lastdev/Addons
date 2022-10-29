@@ -703,7 +703,7 @@ end
 
 function minimapButton:Update()
     local angle = settings.minimapPosition or 160
-    self:SetPoint("TOPLEFT",Minimap,"TOPLEFT",52-(80*cos(angle)),(80*sin(angle))-52)
+    self:SetPoint("CENTER",Minimap,"CENTER",(105*cos(angle)),(105*sin(angle)))
     self:SetShown(settings.showMinimapButton and true)
 end
 
@@ -742,8 +742,8 @@ end
 
 function minimapButton:OnDragUpdate(elapsed)
 	local x,y = GetCursorPosition()
-	local minX,minY = Minimap:GetLeft(), Minimap:GetBottom()
 	local scale = Minimap:GetEffectiveScale()
-    settings.minimapPosition = math.deg(math.atan2(y/scale-minY-70,minX-x/scale+70))
+	local minX,minY = Minimap:GetCenter()
+    settings.minimapPosition = math.deg(math.atan2(y/scale-minY,x/scale-minX))
     self:Update()
 end

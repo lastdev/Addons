@@ -20,7 +20,7 @@ local MacroName = "LiteMount"
 local MacroText = [[
 # Auto-created by LiteMount addon, it is safe to delete or edit this macro.
 # To re-create it run "/litemount macro"
-/click LM_B1
+/click LM_B1 LeftButton
 ]]
 
 local function CreateOrUpdateMacro()
@@ -210,6 +210,13 @@ COMMANDS['pi'] =
     function ()
         LiteMountProfileInspect:Show()
     end
+
+COMMANDS['mockdata'] =
+    function ()
+        LM.Developer:ExportMockData()
+        ReloadUI()
+    end
+
 --@end-debug@]==]
 
 local function PrintUsage()

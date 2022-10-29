@@ -541,6 +541,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTION_AGGROTXT                 = ">> Text <<"
     HEALBOT_OPTION_AGGROIND                 = "Show indicator"
     HEALBOT_OPTION_MANAONLY                 = "Show mana only"
+    HEALBOT_OPTION_HEALERSMANAONLY          = "Healers only"
     HEALBOT_OPTION_BARUPDFREQ               = "Refresh Speed"
     HEALBOT_OPTION_USEFLUIDBARS             = "Use fluid bars"
     HEALBOT_OPTION_FLUIDBARSINCALPHA        = "Include col"..HEALBOT_enWORD_COLOUR_SUFFIX.." and alpha"
@@ -672,7 +673,7 @@ function HealBot_Lang_enALL()
 
     HEALBOT_SHOW_INCHEALS                   = "Show incoming heals";
     
-    HEALBOT_FORHELP    = "For help use: "
+    HEALBOT_FORHELP    = "For options use: "
     HEALBOT_HELP={ [1] = "[HealBot] /hb h -- Display help",
                    [2] = "[HealBot] /hb o -- Toggles options",
                    [3] = "[HealBot] /hb t -- Toggle Healbot between disabled and enabled",
@@ -690,11 +691,7 @@ function HealBot_Lang_enALL()
                     [3] = "[HealBot] /hb aggro 3 <n> -- Set aggro level 3 on threat percentage <n>",
                     [4] = "[HealBot] /hb tr <Role> -- Set highest role priority for SubSort by Role. Valid Roles are 'TANK', 'HEALER' or 'DPS'",
                     [5] = "[HealBot] /hb use10 -- Automatically use Engineering slot 10",
-                    [6] = "[HealBot] /hb pcs <n> -- Adjust the size of the Holy power charge indicator by <n>, Default value is 7 ",
-                    [7] = "[HealBot] /hb hrfm -- Toggle method for hiding Blizzard raid frames, disable completely or just hide",
-                    [8] = "[HealBot] /hb ws -- Toggle Hide/Show the Weaken Soul icon instead of the PW:S with a -",
-                    [9] = "[HealBot] /hb rld <n> -- In seconds, how long the players name stays green after a res",
-                    [10] = "[HealBot] - Also see Commands on the General tab in Options",
+                    [6] = "[HealBot] - Also see Commands on the General tab in Options",
                   }
                   
                   
@@ -1285,8 +1282,7 @@ function HealBot_Lang_enALL()
 
     HEALBOT_ABOUT_FAQ_SPELLS_ANSWER01       = "This is due to options set on the Spells tab \n" ..
                                               "try changing the following and testing: \n\n" ..
-                                              "1: On the Spells tab: Turn off Unset spells on disabled bars \n" ..
-                                              "2: On the Spells tab: Turn off SmartCast \n\n" ..
+                                              "On the Spells tab: Turn off SmartCast \n\n" ..
                                               "Note: It is expected that most users will want to \n" ..
                                               "turn SmartCast back on"
                                               
@@ -1303,8 +1299,7 @@ function HealBot_Lang_enALL()
                                               "Visit "..HEALBOT_ABOUT_URL.." for examples",
                                       [4]   = "Yes \n\n"..
                                               "Visit "..HEALBOT_ABOUT_URL.." for examples",
-                                      [5]   = "1: On the Mouse Wheel tab: Turn off Use Mouse Wheel \n" ..
-                                              "2: Create a macro using [@mouseover] \n\n\n" ..
+                                      [5]   = "Create a macro using [@mouseover] \n\n\n" ..
                                               "Eample macro: \n\n" ..
                                               "#showtooltip Flash Heal \n" ..
                                               "/cast [@mouseover] Flash Heal \n",
@@ -1326,7 +1321,7 @@ function HealBot_Lang_enALL()
                                               "6: On the Debuff tabs, Turn on debuff monitoring",
                                       [8]   = "Yes \n\n"..
                                               "1: On the Skins>Frame>Bars>Col"..HEALBOT_enWORD_COLOUR_SUFFIX.." tab, \nset Incoming Heals to Don't Show\n" ..
-                                              "2: On the Skins>Frame>Bar Text>Extras tab, \n" ..
+                                              "2: On the Skins>Frame>Bar Text>Health>Incoming Heals tab, \n" ..
                                               "Turn off Incoming Heals",
                                       [9]   = "This has been present since a change in WoW 3.2, \n" ..
                                               "it can affects characters with weird letters in their name \n\n" ..
@@ -1347,15 +1342,15 @@ function HealBot_Lang_enALL()
                                               "want to group separately from others, similar to the\nTank group \n\n" ..
                                               "The following options are available to \n" .. 
                                               "add/remove players to/from the Private List \n\n" ..
-                                              "- The Healbot Menu, enter 'hbmenu' on the Spells tab \n" ..
-                                              "- The Mouse Wheel, set on the Mouse Wheel tab",
+                                              "- The Healbot Menu, enter 'HealBot Menu' on the Spells tab \n" ..
+                                              "- Create a macro with text '/hb tpl hbtarget'",
                                       [14]  = "Private Tanks can be added to the Main Tanks list, \n" ..
                                               "the Private tanks are only visible in your Healbot \n" ..
                                               "and do not affect other players or addons \n\n" ..
                                               "The following options are available to \n" ..
                                               "add/remove players to/from the Tanks list \n\n" ..
-                                              "- The Healbot Menu, enter 'hbmenu' on the Spells tab \n" ..
-                                              "- The Mouse Wheel, set on the Mouse Wheel tab",                                     
+                                              "- The Healbot Menu, enter 'HealBot Menu' on the Spells tab \n" ..
+                                              "- Create a macro with text '/hb tpt hbtarget'",                                     
                                       [15]  = "Yes \n\n"..
                                               "1: On the Skins>Frames>Heal Group tab, turn on Focus \n" ..
                                               "2: Set your focus on the NPC \n" ..
@@ -1367,9 +1362,8 @@ function HealBot_Lang_enALL()
                                               "Note: The HealBot Menu has the option\n'Set HealBot Focus' \n" ..
                                               "This can make setting focus easy on NPC's and \n" ..
                                               "serves as a reminder to set focus. \n\n" ..
-                                              "Enter 'hbmenu' on the Spells tab to use HealBot Menu \n" ..
-                                              "or use the Mouse Wheel tab and set HealBot Menu",
-                                      [16]  = "1: On the Skins>Frame>Bars>Col"..HEALBOT_enWORD_COLOUR_SUFFIX.." tab, \nadjust the disabled bar opacity \n" ..
+                                              "Enter 'HealBot Menu' on the Spells tab to use HealBot Menu",
+                                      [16]  = "1: On the Skins>Frame>Bars>Col"..HEALBOT_enWORD_COLOUR_SUFFIX.." tab, \nadjust the out of range bar opacity \n" ..
                                               "2: On the Skins>Frame>Bars Text tabs, \nadjust the disabled text opacity\n\n" ..
                                               "Also check out setting the Alert Levels to 100 \n" ..
                                               "on the Skins>Frame>Bars>Visibility tab",

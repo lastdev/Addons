@@ -5754,14 +5754,14 @@ do
             scale:SetOrder(1)
             scale:SetStartDelay(0.2)
             scale:SetDuration(0.25)
-            scale:SetFromScale(5, 5)
-            scale:SetToScale(1, 1)
+            scale:SetScaleFrom(5, 5)
+            scale:SetScaleTo(1, 1)
             local sparks = frame.AnimIn:CreateAnimation("Scale")
             sparks:SetOrder(1)
             sparks:SetStartDelay(0)
             sparks:SetDuration(LEVEL_UP_EFFECT.duration)
-            sparks:SetFromScale(1, 1)
-            sparks:SetToScale(1, 1)
+            sparks:SetScaleFrom(1, 1)
+            sparks:SetScaleTo(1, 1)
             sparks.frame = frame
             sparks:SetScript("OnFinished", DecorationFrame_AnimIn_Sparks_OnFinished)
         end
@@ -6020,7 +6020,7 @@ do
             Eval(anchor.strata, fallbackStrata, anchor, frame)
     end
 
-    ---@return table, string @Returns the used frame and strata after logical checks have been performed on the provided frame and strata values.
+    ---@return Frame? frame, string? strata Returns the used frame and strata after logical checks have been performed on the provided frame and strata values.
     local function SetAnchor()
         for _, anchor in ipairs(tooltipAnchorPriority) do
             local frame = anchor.name
@@ -6046,7 +6046,6 @@ do
                 end
             end
         end
-        return ---@diagnostic disable-line: missing-return-value
     end
 
     ---@class ConfigProfilePoint
@@ -6054,7 +6053,7 @@ do
     ---@field public x number|nil
     ---@field public y number|nil
 
-    ---@return table, string @Returns the used frame and strata after logical checks have been performed on the provided frame and strata values.
+    ---@return Frame frame, string strata Returns the used frame and strata after logical checks have been performed on the provided frame and strata values.
     local function SetUserAnchor()
         local profilePoint = config:Get("profilePoint") ---@type ConfigProfilePoint
         local p = profilePoint.point or "CENTER"
@@ -6078,7 +6077,7 @@ do
         return isDraggable
     end
 
-    ---@return boolean, table, string @arg1 returns true if position is automatic, otherwise false. `arg2+` are the same as returned from `SetAnchor` or `SetUserAnchor`.
+    ---@return boolean isAutoPosition, Frame? frame, string? strata @arg1 returns true if position is automatic, otherwise false. `arg2+` are the same as returned from `SetAnchor` or `SetUserAnchor`.
     local function UpdatePosition(anchor, frame)
         if anchor and frame then
             if frame:IsShown() and anchor.show and type(anchor.show) == "function" then
@@ -6100,15 +6099,11 @@ do
             local frame = anchor.name
             if frame then
                 frame = IsFrame(frame) or IsFrame(_G[frame])
-                if frame then
-                    local function updatePosition()
-                        return UpdatePosition(anchor, frame)
-                    end
-                    if not hookedFrames[frame] then
-                        hookedFrames[frame] = true
-                        frame:HookScript("OnShow", updatePosition)
-                        frame:HookScript("OnHide", updatePosition)
-                    end
+                if frame and not hookedFrames[frame] then
+                    hookedFrames[frame] = true
+                    local function updatePosition() return UpdatePosition(anchor, frame) end
+                    frame:HookScript("OnShow", updatePosition)
+                    frame:HookScript("OnHide", updatePosition)
                     if anchor.hook and type(anchor.hook) == "function" then
                         anchor.hook(anchor, frame, updatePosition)
                     end
@@ -6358,6 +6353,11 @@ do
         return false
     end
 
+    local function OnScroll()
+        GameTooltip:Hide()
+        util:ExecuteWidgetHandler(GetMouseFocus(), "OnEnter")
+    end
+
     function OnEnter(self)
         local entry = C_LFGList.GetActiveEntryInfo()
         if entry then
@@ -6389,23 +6389,19 @@ do
     end
 
     function tooltip:CanLoad()
-        return profile:IsEnabled() and _G.LFGListSearchPanelScrollFrameButton1 and _G.LFGListApplicationViewerScrollFrameButton1
+        return profile:IsEnabled() and _G.LFGListFrame and _G.LFGListFrame.SearchPanel and _G.LFGListFrame.ApplicationViewer
     end
 
     function tooltip:OnLoad()
         self:Enable()
         -- the player looking at groups
         hooksecurefunc("LFGListUtil_SetSearchEntryTooltip", SetSearchEntry)
-        for i = 1, 10 do
-            local button = _G["LFGListSearchPanelScrollFrameButton" .. i]
-            button:HookScript("OnLeave", OnLeave)
-        end
+        local hookMap = { OnEnter = OnEnter, OnLeave = OnLeave }
+        ScrollBoxUtil:OnViewFramesChanged(_G.LFGListFrame.SearchPanel.ScrollBox, function(buttons) HookUtil:MapOn(buttons, hookMap) end)
+        ScrollBoxUtil:OnViewScrollChanged(_G.LFGListFrame.SearchPanel.ScrollBox, OnScroll)
         -- the player hosting a group looking at applicants
-        for i = 1, 14 do
-            local button = _G["LFGListApplicationViewerScrollFrameButton" .. i]
-            button:HookScript("OnEnter", OnEnter)
-            button:HookScript("OnLeave", OnLeave)
-        end
+        ScrollBoxUtil:OnViewFramesChanged(_G.LFGListFrame.ApplicationViewer.ScrollBox, function(buttons) HookUtil:MapOn(buttons, hookMap) end)
+        ScrollBoxUtil:OnViewScrollChanged(_G.LFGListFrame.ApplicationViewer.ScrollBox, OnScroll)
         -- remove the shroud and allow hovering over people even when not the group leader
         do
             local f = _G.LFGListFrame.ApplicationViewer.UnempoweredCover

@@ -168,10 +168,7 @@ private.NPC_INFO = {
 	[180090] = { zoneID = 0, displayID = 101357 }; --Blacksmith Bob
 	[180974] = { zoneID = 0 }; --Protoform Lattice
 	[181265] = { zoneID = 0, displayID = 97275 }; --Observer Gast
-	[181427] = { zoneID = 0, displayID = 108009 }; --Stormspine
 	[181656] = { zoneID = 0, displayID = 34547 }; --Atramedes [DNT]
-	[181833] = { zoneID = 0, displayID = 102561 }; --Shimmermaw
-	[182280] = { zoneID = 0, displayID = 106940 }; --Tazenrath <Brood of the Incarnate>
 	[183204] = { zoneID = 0, displayID = 99068 }; --Annihilan Hopebreaker
 	[183984] = { zoneID = 0, displayID = 64922 }; --The Weeping Vilomah
 	[184043] = { zoneID = 0, displayID = 101970 }; --Excavation Leader
@@ -219,7 +216,6 @@ private.NPC_INFO = {
 	[185897] = { zoneID = 0, displayID = 55139 }; --Nomadic Vinyeti <Vignette Placeholder>
 	[185918] = { zoneID = 0, displayID = 40954 }; --Bugchewer
 	[186168] = { zoneID = 0, displayID = 102031 }; --[DNT] Sootscale the Indomitable (5/1)
-	[186355] = { zoneID = 0, displayID = 103889 }; --Tripletath the Lost
 	[186463] = { zoneID = 0, displayID = 101247 }; --Frostmaul
 	[186466] = { zoneID = 0, displayID = 103373 }; --Gur Grikpaw
 	[186837] = { zoneID = 0, displayID = 103279 }; --Eggkidu
@@ -233,18 +229,13 @@ private.NPC_INFO = {
 	[187612] = { zoneID = 0, displayID = 105340 }; --Balak the Breaker
 	[187614] = { zoneID = 0, displayID = 105353 }; --Hamiir of the Winds
 	[187619] = { zoneID = 0, displayID = 100207 }; --Kol Marsiik
-	[187781] = { zoneID = 0, displayID = 105443 }; --Hamett <Rockfang Matriarch>
 	[188024] = { zoneID = 0, displayID = 1293 }; --Creature Name
 	[188025] = { zoneID = 0, displayID = 1293 }; --Creature Name
 	[188033] = { zoneID = 0, displayID = 98797 }; --Automaton Rare
 	[188065] = { zoneID = 0, displayID = 106230 }; --Dragon Shrine Spirit
-	[188095] = { zoneID = 0, displayID = 103430 }; --Hunter of Deep
-	[188124] = { zoneID = 0, displayID = 104874 }; --Irontree
+	[188095] = { zoneID = 0, displayID = 103430 }; --Hunter of the Deep
 	[188387] = { zoneID = 0, displayID = 102552 }; --[DNT] Unstable Fumerole <(RARE ELITE) FIGHTER:LAVA>
 	[188388] = { zoneID = 0, displayID = 103250 }; --Terramaw <(T3 ELITE) FIGHTER:EARTH>
-	[188451] = { zoneID = 0, displayID = 106436 }; --Zerimek <The Darkened Cloud>
-	[189652] = { zoneID = 0, displayID = 108096 }; --Deadwaker Ghendish
-	[189822] = { zoneID = 0, displayID = 26776 }; --Shas'ith
 	[189861] = { zoneID = 0, displayID = 105897 }; --Soulspeaker Han
 	[189871] = { zoneID = 0, displayID = 105337 }; --Weaponmaster Hasi
 	[189872] = { zoneID = 0, displayID = 107019 }; --Nakiin the Shatterer
@@ -280,45 +271,27 @@ private.NPC_INFO = {
 	[191649] = { zoneID = 0, displayID = 104743 }; --Apex Mammoth
 	[191650] = { zoneID = 0, displayID = 106316 }; --Apex Sabertooth
 	[191651] = { zoneID = 0, displayID = 107581 }; --Apex Stomphoof
-	[191713] = { zoneID = 0, displayID = 105190 }; --Scytherin
-	[191729] = { zoneID = 0, displayID = 104703 }; --Deathrip
-	[191746] = { zoneID = 0, displayID = 107479 }; --Ketess the Pillager
 	[191842] = { zoneID = 0, displayID = 82266 }; --Sulfurion
 	[191950] = { zoneID = 0, displayID = 106291 }; --Porta the Overgrown
-	[192045] = { zoneID = 0, displayID = 105359 }; --Windseeker Avash
-	[192362] = { zoneID = 0, displayID = 103585 }; --Possessive Hornswog
-	[192364] = { zoneID = 0, displayID = 107650 }; --Windscale the Stormborn
 	[192453] = { zoneID = 0, displayID = 101440 }; --Vaniik the Stormtouched <Corrupted Child of Ohn'ahra>
 	[192519] = { zoneID = 0, displayID = 102555 }; --Ensorcelled Muck
-	[192557] = { zoneID = 0, displayID = 107222 }; --Quackers the Terrible
-	[192983] = { zoneID = 0, displayID = 108030 }; --Web-Queen Ashkaz
+	[192557] = { zoneID = 0, displayID = 110389 }; --Quackers the Terrible
 	[193124] = { zoneID = 0, displayID = 24835 }; --[DNT]
 	[193125] = { zoneID = 0, displayID = 105553 }; --Goremaul the Gluttonous
-	[193126] = { zoneID = 0, displayID = 108093 }; --Innumerable Ruination
-	[193128] = { zoneID = 0, displayID = 108120 }; --Blightpaw the Depraved
 	[193140] = { zoneID = 0, displayID = 104144 }; --Zarizz
 	[193142] = { zoneID = 0, displayID = 102564 }; --Enraged Sapphire
 	[193143] = { zoneID = 0, displayID = 104007 }; --Razk'vex the Untamed
 	[193146] = { zoneID = 0, displayID = 108084 }; --Treasure-Mad Trambladd
 	[193149] = { zoneID = 0, displayID = 104874 }; --Skag the Thrower
-	[193157] = { zoneID = 0, displayID = 107559 }; --Dragonhunter Gorund
 	[193161] = { zoneID = 0, displayID = 108094 }; --Woolfang
 	[193165] = { zoneID = 0, displayID = 108098 }; --Sparkspitter Vrak
 	[193167] = { zoneID = 0, displayID = 103563 }; --Swagraal the Swollen
-	[193168] = { zoneID = 0, displayID = 108100 }; --Biryuk
-	[193170] = { zoneID = 0, displayID = 100698 }; --Fulgurb
-	[193177] = { zoneID = 0, displayID = 108103 }; --Beakers
 	[193178] = { zoneID = 0, displayID = 105638 }; --Blightfur
-	[193181] = { zoneID = 0, displayID = 101622 }; --Skewersnout <Raypier of the Deep>
 	[193188] = { zoneID = 0, displayID = 108106 }; --Seeker Teryx
 	[193201] = { zoneID = 0, displayID = 108113 }; --Mucka the Raker
 	[193209] = { zoneID = 0, displayID = 101441 }; --Zenet Avis <The Hard Wind>
-	[193210] = { zoneID = 0, displayID = 6914 }; --Phleep <Time-Lost, Mind-Lost>
 	[193215] = { zoneID = 0, displayID = 108109 }; --Scaleseeker Mezeri
-	[193217] = { zoneID = 0, displayID = 103923 }; --Drakewing
 	[193225] = { zoneID = 0, displayID = 103446 }; --Notfar the Unbearable
-	[193231] = { zoneID = 0, displayID = 104750 }; --Ancient Tundrafur
-	[193232] = { zoneID = 0, displayID = 110319 }; --Rasnar the War Ender
 	[193234] = { zoneID = 0, displayID = 100334 }; --Eldoren the Reborn <Jewel of the Skies>
 	[193251] = { zoneID = 0, displayID = 106545 }; --Gruffy
 	[193256] = { zoneID = 0, displayID = 108127 }; --Nulltheria the Void Gazer
@@ -333,12 +306,10 @@ private.NPC_INFO = {
 	[193412] = { zoneID = 0, displayID = 108274 }; --Ara'rotan the Corrupted
 	[193629] = { zoneID = 0, displayID = 9491 }; --PH [DNT]
 	[193632] = { zoneID = 0, displayID = 102545, questID = { 69948 } }; --Wilrive
-	[193634] = { zoneID = 0, displayID = 103584 }; --Swog'ranka
+	[193634] = { zoneID = 0, displayID = 103584 }; --Swog'ranka <Lunker>
 	[193664] = { zoneID = 0, displayID = 6089 }; --Ancient Protector
-	[193666] = { zoneID = 0, displayID = 106316 }; --Rokmur
 	[193674] = { zoneID = 0, displayID = 106471 }; --Voraazka
 	[193678] = { zoneID = 0, displayID = 108255 }; --Fieraan <Second Iceblade>
-	[193679] = { zoneID = 0, displayID = 108256 }; --Leerain <Third Iceblade>
 	[193681] = { zoneID = 0, displayID = 108258 }; --Animated Earthen Core
 	[193687] = { zoneID = 0, displayID = 108263 }; --Mawgor
 	[193689] = { zoneID = 0, displayID = 108265 }; --Jareeza <<Passage Stalker>>
@@ -346,14 +317,12 @@ private.NPC_INFO = {
 	[193691] = { zoneID = 0, displayID = 108266 }; --Fisherman Tinnak
 	[193692] = { zoneID = 0, displayID = 103911 }; --Spined Terror
 	[193693] = { zoneID = 0, displayID = 103198 }; --Rusthide
-	[193698] = { zoneID = 0, displayID = 100223 }; --Frigidpelt Den Mother
 	[193704] = { zoneID = 0, displayID = 100214 }; --Honmor
-	[193706] = { zoneID = 0, displayID = 101244 }; --Snufflegust
-	[193708] = { zoneID = 0, displayID = 107557 }; --Skald the Impaler
-	[193710] = { zoneID = 0, displayID = 102545 }; --Seereel, the Spring
+	[193706] = { zoneID = 0, displayID = 101244 }; --Snufflegust <Lunker>
+	[193710] = { zoneID = 0, displayID = 102545 }; --Seereel, the Spring <Lunker>
 	[193722] = { zoneID = 0, displayID = 104140 }; --Tomnu
 	[193724] = { zoneID = 0, displayID = 102372 }; --Uurtus
-	[193735] = { zoneID = 0, displayID = 55833 }; --Moth'go Deeploom
+	[193735] = { zoneID = 0, displayID = 55833 }; --Moth'go Deeploom <Lunker>
 	[193836] = { zoneID = 0, displayID = 102872 }; --Windmancer Navati
 	[193853] = { zoneID = 0, displayID = 38391 }; --Galnmor
 	[193885] = { zoneID = 0, displayID = 103585 }; --Salkii
@@ -379,7 +348,6 @@ private.NPC_INFO = {
 	[195283] = { zoneID = 0, displayID = 106545 }; --Yamakh
 	[195286] = { zoneID = 0, displayID = 102548 }; --Mantai
 	[195300] = { zoneID = 0, displayID = 74166 }; --Arkhuu
-	[195409] = { zoneID = 0, displayID = 108890 }; --Makhra the Ashtouched <Corrupted Child of Ohn'ahra>
 	[195417] = { zoneID = 0, displayID = 105560 }; --Tsokorg
 	[195430] = { zoneID = 0, displayID = 103588 }; --Molkeej
 	[195431] = { zoneID = 0, displayID = 107658 }; --Diluu
@@ -398,11 +366,8 @@ private.NPC_INFO = {
 	[196334] = { zoneID = 0, displayID = 103920 }; --The Great Enla <Scourge of the Plains>
 	[196350] = { zoneID = 0, displayID = 103920 }; --Old Stormhide
 	[196535] = { zoneID = 0, displayID = 109225 }; --Nezascar the Sightless
-	[197009] = { zoneID = 0, displayID = 104005 }; --Liskheszaera
-	[197397] = { zoneID = 0, displayID = 109532 }; --Overloaded Frost
 	[197409] = { zoneID = 0, displayID = 109531 }; --Rhuzast the Tempest
 	[197501] = { zoneID = 0, displayID = 109554 }; --Krolkoth the Mountain
-	[198004] = { zoneID = 0, displayID = 109796 }; --Mange the Outcast
 	[198571] = { zoneID = 0, displayID = 104693 }; --Enraged Sprout
 	[5809] = { zoneID = 1, artID = { 2 }, x = 5920, y = 5820, overlay = { "5920-5820" }, friendly = { "A" }, displayID = 33165 }; --Sergeant Curtis
 	[5823] = { zoneID = 1, artID = { 2 }, x = 3900, y = 4596, overlay = { "3440-4460","3480-4340","3540-4600","3640-4440","3720-4580","3720-4760","3800-4460","3840-4340","3840-4680","3880-4860","3960-4520","3980-4400" }, displayID = 2491 }; --Death Flayer

@@ -140,6 +140,20 @@ local requestSent = openRaidLib.RequestKeystoneDataFromParty()
 local requestSent = openRaidLib.RequestKeystoneDataFromRaid()
 
 
+FLASK and FOOD buffs
+--@spellId: a regular spellId
+local flaskInfo = openRaidLib.GetFlaskInfoBySpellId(spellId)
+
+--@auraInfo: UnitAuraInfo -> https://wowpedia.fandom.com/wiki/Struct_UnitAuraInfo see C_UnitAuras.GetAuraDataBySlot()
+local flaskTier = openRaidLib.GetFlaskTierFromAura(auraInfo)
+
+--@spellId: a regular spellId
+local foodInfo = openRaidLib.GetFoodInfoBySpellId(spellId)
+
+--@auraInfo: UnitAuraInfo -> https://wowpedia.fandom.com/wiki/Struct_UnitAuraInfo see C_UnitAuras.GetAuraDataBySlot()
+local foodTier = openRaidLib.GetFoodTierFromAura(auraInfo)
+
+
 Callbacks:
 
 ===================================================================================================================================
@@ -267,7 +281,7 @@ openRaidLib.RegisterCallback(MyAddonObject, "CooldownRemoved", "OnUnitLostCooldo
 ===================================================================================================================================
 
 function MyAddonObject.OnCooldownListWipe(allUnitsCooldowns)
-    --print ("is nil:", next(allUnitsCooldowns))
+    --print("is nil:", next(allUnitsCooldowns))
 end
 
 --registering the callback:
@@ -289,10 +303,10 @@ function MyAddonObject.OnGearUpdate(unitId, unitGear, allUnitsGear)
     local noEnchantTable = unitGear.noEnchants
     local noGemsTable = unitGear.noGems
 
-    for index, slotIdWithoutEnchant in ipairs (noEnchantTable) do
+    for index, slotIdWithoutEnchant in ipairs(noEnchantTable) do
     end
 
-    for index, slotIdWithEmptyGemSocket in ipairs (noGemsTable) do
+    for index, slotIdWithEmptyGemSocket in ipairs(noGemsTable) do
     end
 end
 
@@ -315,7 +329,7 @@ openRaidLib.RegisterCallback(MyAddonObject, "GearDurabilityUpdate", "OnGearDurab
 ===================================================================================================================================
 
 function MyAddonObject.OnGearListWiped(allUnitsGear)
-    --print ("is nil:", next(allUnitsGear))
+    --print("is nil:", next(allUnitsGear))
 end
 
 --registering the callback:

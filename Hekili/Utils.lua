@@ -10,6 +10,7 @@ local insert, remove = table.insert, table.remove
 local class = Hekili.Class
 local state = Hekili.State
 
+local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID
 
 local errors = {}
 local eIndex = {}
@@ -510,9 +511,18 @@ function ns.FindRaidBuffLowestRemainsByID(id)
     return buffRemainsReturn == nil and 0 or buffRemainsReturn
 end
 
+local function FindPlayerAuraByID( id )
+    local aura = GetPlayerAuraBySpellID( id )
+
+    if aura then
+        return aura.name, aura.icon, aura.applications, aura.dispelName, aura.expirationTime, aura.sourceUnit, aura.isStealable, aura.nameplateShowPersonal, aura.spellId, aura.canApplyAura, aura.isBossAura, aura.nameplateShowAll, aura.timeMod, unpack( aura.points )
+    end
+end
+ns.FindPlayerAuraByID = FindPlayerAuraByID
+
 -- Duplicate spell info lookup.
 function ns.FindUnitBuffByID( unit, id, filter )
-    if unit == "player" then return GetPlayerAuraBySpellID( id ) end
+    if unit == "player" then return FindPlayerAuraByID( id ) end
 
     local playerOrPet = false
 
@@ -535,7 +545,7 @@ end
 
 
 function ns.FindUnitDebuffByID( unit, id, filter )
-    if unit == "player" then return GetPlayerAuraBySpellID( id ) end
+    if unit == "player" then return FindPlayerAuraByID( id ) end
 
     local playerOrPet = false
 
@@ -556,7 +566,6 @@ function ns.FindUnitDebuffByID( unit, id, filter )
     return name, icon, count, debuffType, duration, expirationTime, caster, stealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, nameplateShowAll, timeMod, value1, value2, value3
 end
 
-
 function ns.IsActiveSpell( id )
     local slot = FindSpellBookSlotBySpellID( id )
     if not slot then return false end
@@ -565,6 +574,75 @@ function ns.IsActiveSpell( id )
     return id == spellID
 end
 
+do
+    -- Check Covenant spells to disable them.
+
+    local CovenantSpells = {
+        [300728] = 1,
+        [304971] = 1,
+        [306830] = 1,
+        [307443] = 1,
+        [307865] = 1,
+        [308491] = 1,
+        [310454] = 1,
+        [311648] = 1,
+        [312202] = 1,
+        [312321] = 1,
+        [314791] = 1,
+        [314793] = 1,
+        [315443] = 1,
+        [316958] = 1,
+        [317009] = 1,
+        [317485] = 1,
+        [320674] = 1,
+        [321792] = 1,
+        [323546] = 1,
+        [323547] = 1,
+        [323639] = 1,
+        [323654] = 1,
+        [323673] = 1,
+        [323764] = 1,
+        [324128] = 1,
+        [324143] = 1,
+        [324149] = 1,
+        [324220] = 1,
+        [324386] = 1,
+        [324631] = 1,
+        [324724] = 1,
+        [325013] = 1,
+        [325020] = 1,
+        [325028] = 1,
+        [325216] = 1,
+        [325283] = 1,
+        [325289] = 1,
+        [325640] = 1,
+        [325886] = 1,
+        [326059] = 1,
+        [326434] = 1,
+        [326647] = 1,
+        [326860] = 1,
+        [327104] = 1,
+        [327661] = 1,
+        [328204] = 1,
+        [328231] = 1,
+        [328281] = 1,
+        [328282] = 1,
+        [328305] = 1,
+        [328547] = 1,
+        [328620] = 1,
+        [328622] = 1,
+        [328923] = 1,
+        [328930] = 1,
+        [330325] = 1,
+        [355589] = 1,
+        [356532] = 1,
+    }
+
+    local IsCovenantSpell = function( spellID )
+        return CovenantSpells[ spellID ] == 1
+    end
+    ns.IsCovenantSpell = IsCovenantSpell
+end
 
 
 do

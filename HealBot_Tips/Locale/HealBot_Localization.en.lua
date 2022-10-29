@@ -257,6 +257,7 @@ function HealBot_Lang_Options_enALL()
                                  ["HEALBARSTXTSHOWAUXTEXT"]=HEALBOT_OPTIONS_SHOWTEXT,
                                  ["BARSAUXCUSTOMOPACITY"]="Custom Opacity",
                                  ["BARSAUXMANAONLY"]=HEALBOT_OPTION_MANAONLY,
+                                 ["BARSAUXHEALERMANAONLY"]=HEALBOT_OPTION_HEALERSMANAONLY,
                                  ["BARSAUXOVERLAYCOLS"]=HEALBOT_SKIN_OVERLAYCOL_TEXT,
                         -- Skins Frames Text Name tab
                                  ["TEXTSTATE"]="State Text",
@@ -819,6 +820,7 @@ function HealBot_Lang_Options_enALL()
                                ["HEALBARSTXTSHOWAUXTEXT"]="Show text on the aux bars.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."- Text is not available when the Aux bar is in vertical orientation.\n".._G["YELLOW_FONT_COLOR_CODE"].."- Text is only available on assignments that have names or values.",
                                ["BARSAUXCUSTOMOPACITY"]="Set the custom auxiliary bar Opacity",
                                ["BARSAUXMANAONLY"]="Only display mana bars, all other power types are hidden.\n--\n".."|cff77c8ff".."Tip: When using this option:\n".."|cff77c8ff".."If necessary increase the size of the health bar and\n".."|cff77c8ff".."offset the power bar so it's on top of the health bar.",
+                               ["BARSAUXHEALERMANAONLY"]="Only display healers mana bars, all other players power bars are hidden.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Show mana only needs to be enabled for this option to take effect.",
                                ["BARSAUXOVERLAYCOLS"]="Overlay a col"..HEALBOT_enWORD_COLOUR_SUFFIX.." when the checked condition exists.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: With the exception of buff and debuff, the default col"..HEALBOT_enWORD_COLOUR_SUFFIX.." is used.",
                         -- Skins Frames Text Name tab
                                ["TEXTSTATE"]="Show the Skins Frames Text State tab.",

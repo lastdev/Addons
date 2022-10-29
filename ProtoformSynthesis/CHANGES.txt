@@ -1,3 +1,11 @@
+V1.2.4
+------
+Update: for 10.0.0 pre-patch
+
+V1.2.3
+------
+Update: for 9.2.5 patch
+
 V1.2.2
 ------
 Feature: Shows the current number of collected Genesis Mote in the tooltip and change the (min/max) window resolution.

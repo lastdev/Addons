@@ -17,8 +17,7 @@ L["AUCTION_TOOLTIP_TOOLTIP_HEADER"] = "Prix à la vente dans les infobulles"
 L["AUCTION_TOOLTIP_TOOLTIP_TEXT"] = "Inclus les prix à la vente dans les infobulles"
 L["AUCTIONATOR"] = "Auctionator"
 L["AUTHOR_HEADER"] = "Auteur"
---[[Translation missing --]]
-L["BID_EXISTING_ON_OWNED_AUCTION"] = "Someone has bid on this auction so cancelling will cost you your deposit and:"
+L["BID_EXISTING_ON_OWNED_AUCTION"] = "Quelqu'un a déjà fait une offre sur cette enchère. Si vous annulez, vous perdrez votre dépôt et votre argent :"
 L["BID_ONLY_AVAILABLE"] = "offre uniquement disponible"
 L["BID_PRICE"] = "Prix de l'enchère"
 L["BIDDER"] = "Encherisseur"
@@ -92,8 +91,7 @@ L["CONFIG_ENCHANT_TOOLTIP"] = "Afficher les prix du désenchantement (WoD, Legio
 L["CONFIG_FULL_SCAN_STEP_SIZE"] = "Taille de l'étape du scan complet"
 L["CONFIG_LIFO_CATEGORY"] = "Vente"
 L["CONFIG_MAIL_TOOLTIP"] = "Afficher les prix à la consultation du courrier"
---[[Translation missing --]]
-L["CONFIG_MILL_TOOLTIP"] = "Show mill value for herbs from inscription in tooltips"
+L["CONFIG_MILL_TOOLTIP"] = "Afficher la valeur du broyage pour les herbes de la calligraphie dans les infobulles"
 L["CONFIG_NOT_LIFO_CATEGORY"] = "Vente : Équipement / Mascottes"
 L["CONFIG_PET_TOOLTIP"] = "Afficher les prix des mascottes"
 L["CONFIG_PROFILE_CATEGORY"] = "Profils"
@@ -263,12 +261,10 @@ L["MAIL_TOOLTIP_TOOLTIP_HEADER"] = "Prix dans les info-bulles du courrier"
 L["MAIL_TOOLTIP_TOOLTIP_TEXT"] = "Inclu les prix à la vente dans les info-bulles du courrier."
 L["MAX"] = "Max"
 L["MAX_COLON_X"] = "Max : %s"
---[[Translation missing --]]
-L["MILL"] = "Mill"
---[[Translation missing --]]
-L["MILL_TOOLTIP_TOOLTIP_HEADER"] = "Mill Tooltip Information"
---[[Translation missing --]]
-L["MILL_TOOLTIP_TOOLTIP_TEXT"] = "Show inscription milling estimated value in tooltip on mouseover."
+L["MILL"] = "Calligraphie"
+L["MILL_TOOLTIP_TOOLTIP_HEADER"] = " Informations dans l'info-bulle pour la calligraphie"
+L["MILL_TOOLTIP_TOOLTIP_TEXT"] = [=[Afficher la valeur estimée du broyage pour la calligraphie dans l'infobulle au passage de la souris.
+]=]
 L["MIN"] = "Min"
 L["MONTH_1"] = "Janvier"
 L["MONTH_10"] = "Octobre"

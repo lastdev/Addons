@@ -425,6 +425,10 @@ do
                         end
                     end
 
+                    if not excluded and spec.damageOnScreen and showNps and not npUnits[ guid ] then
+                        excluded = true
+                    end
+
                     if not excluded and ( spec.damageRange == 0 or ( not guidRanges[ guid ] or guidRanges[ guid ] <= spec.damageRange ) ) then
                         count = count + 1
                         counted[ guid ] = true
@@ -467,7 +471,7 @@ do
             lastCount = count
             lastStationary = stationary
             if Hekili:GetToggleState( "mode" ) == "reactive" then HekiliDisplayAOE:UpdateAlpha() end
-            Hekili:ForceUpdate( "TARGET_COUNT_CHANGED" )
+            -- Hekili:ForceUpdate( "TARGET_COUNT_CHANGED" )
         end
 
         return count, stationary

@@ -1,6 +1,6 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
 
-	<Frame name="ChartViewerWindowFrame" frameStrata="HIGH" movable="true" hidden="true" parent="UIParent">
+	<Frame name="ChartViewerWindowFrame" frameStrata="HIGH" movable="true" hidden="true" parent="UIParent" inherits="BackdropTemplate">
 		<Size>
 			<AbsDimension x="838" y="414"/>
 		</Size>
@@ -45,9 +45,7 @@
 	
 	<!-- tab frame is now deprecated, tab buttons has been move to details framework -->
 	<Frame name="ChartViewerTabFrameTemplate" frameStrata="HIGH" parent="ChartViewerWindowFrame" virtual="true" inherits="ChatTabTemplate">
-		<Size>
-			<Size x="96" y="32"/>
-		</Size>
+		<Size x="96" y="32"/>
 		<Scripts>
 			<OnMouseDown>
 				if (button == "RightButton") then

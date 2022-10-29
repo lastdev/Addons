@@ -968,7 +968,18 @@ local function nextTurn(rngTargets)
             processedDeadFollowers = true
             for _, minion in pairs(deadMinions) do
                 if minion.boardIndex < 5 then
+                    local buffIDs = {}
+                    local buffIndexes = {}
                     for _, buff in pairs(minion.buffs) do
+                        table.insert(buffIDs, buff.ID)
+                        buffIndexes[buff.ID] = buff
+                    end
+                    table.sort(buffIDs, function(a, b)
+                        return a < b
+                    end)
+
+                    for _, id in ipairs(buffIDs) do
+                        local buff = buffIndexes[id]
                         if buff.event == "beforeAttack" then
                             processBuff(minion, buff)
                         end
@@ -1237,284 +1248,13 @@ local function doSimulation(missionID, callback)
     nextThornsID = 1
     thornsKillingBlow = false
     
---	   local function setupRNG()
---	       local turnRNG = {}
---	       
---	       local followers = getAttackOrder()
---	   
---	       for _, follower in pairs(followers) do
---	           for _, spell in pairs(follower.spells) do
---	               if not (spell.onCooldown and spell.onCooldown > 0) then
---	                   local effect = spell.effects
---	                   if effect[1] then effect = effect[1] end
---	   
---	                   if (follower.boardIndex < 5) and (effect.target == "random_enemy") and (not turnRNG["followers_random_enemy"]) then
---	                       turnRNG["followers_random_enemy"] = {}
---	                       
---	                       for _, minion in pairs(field) do
---	                           if (minion.HP > 0) and (minion.boardIndex > 4) then
---	                               table.insert(turnRNG["followers_random_enemy"], minion.boardIndex)
---	                           end
---	                       end
---	                   elseif (follower.boardIndex < 5) and (effect.target == "random_ally") and (not turnRNG["followers_random_ally"]) then
---	                       turnRNG["followers_random_ally"] = {}
---	                       
---	                       for _, minion in pairs(field) do
---	                           if (minion.HP > 0) and (minion.boardIndex < 4) then
---	                               table.insert(turnRNG["followers_random_enemy"], minion.boardIndex)
---	                           end
---	                       end
---	                   elseif (follower.boardIndex > 4) and (effect.target == "random_enemy") and (not turnRNG["enemies_random_enemy"]) then
---	                       turnRNG["enemies_random_enemy"] = {}
---	                       
---	                       for _, minion in pairs(field) do
---	                           if (minion.HP > 0) and (minion.boardIndex < 5) then
---	                               table.insert(turnRNG["enemies_random_enemy"], minion.boardIndex)
---	                           end
---	                       end
---	                   elseif (follower.boardIndex > 4) and (effect.target == "random_ally") and (not turnRNG["enemies_random_ally"]) then
---	                       turnRNG["enemies_random_ally"] = {}
---	                       
---	                       for _, minion in pairs(field) do
---	                           if (minion.HP > 0) and (minion.boardIndex > 4) then
---	                               table.insert(turnRNG["enemies_random_ally"], minion.boardIndex)
---	                           end
---	                       end
---	                   end 
---	               end                
---	           end
---	       end
---	       
---	       if environmentEffect and (environmentEffect.effects.target == "random_ally") and (not turnRNG["enemies_random_ally"]) and (environmentEffect.onCooldown < 1) then
---	           turnRNG["enemies_random_ally"] = {}
---	           for _, minion in pairs(field) do
---	               if (minion.HP > 0) and (minion.boardIndex > 4) then
---	                   table.insert(turnRNG["enemies_random_ally"], minion.boardIndex)
---	               end
---	           end
---	       end
---	       
---	       return turnRNG
---	   end
---	   
---	   -- CopyTable didn't work out due to stack overflow issues, so applying manual override...
---	   local function backupBoardState()
---	       local boardState = {}
---	       boardState.turn = currentTurn
---	       for i, minion in pairs(field) do
---	           boardState[i] = {}
---	           boardState[i].maxHP = minion.maxHP
---	           boardState[i].HP = minion.HP
---	           boardState[i].thorns = {}
---	           for j, thorns in pairs(minion.thorns) do
---	               boardState[i].thorns[j] = {}
---	               boardState[i].thorns[j].ID = thorns.ID
---	               boardState[i].thorns[j].damage = thorns.damage
---	               boardState[i].thorns[j].source = thorns.source
---	               boardState[i].thorns[j].removeAfterDeath = thorns.removeAfterDeath
---	           end
---	           boardState[i].spells = {}
---	           for j, spell in pairs(minion.spells) do
---	               boardState[i].spells[j] = {}
---	               boardState[i].spells[j].onCooldown = spell.onCooldown
---	           end
---	           boardState[i].buffs = {}
---	           for j, buff in pairs(minion.buffs) do
---	               boardState[i].buffs[j] = {}
---	               boardState[i].buffs[j].target = buff.target
---	               boardState[i].buffs[j].duration = buff.duration
---	               boardState[i].buffs[j].stacks = buff.stacks
---	               boardState[i].buffs[j].stackLimit = buff.stackLimit
---	               boardState[i].buffs[j].damageTargetHPPercent = buff.damageTargetHPPercent
---	               boardState[i].buffs[j].healTargetHPPercent = buff.healTargetHPPercent
---	               boardState[i].buffs[j].event = buff.event
---	               boardState[i].buffs[j].name = buff.name
---	               boardState[i].buffs[j].onUnregister = buff.onUnregister
---	               boardState[i].buffs[j].source = buff.source
---	               boardState[i].buffs[j].attackPercent = buff.attackPercent
---	               boardState[i].buffs[j].alternateTurns = buff.alternateTurns
---	               boardState[i].buffs[j].removeAfterDeath = buff.removeAfterDeath
---	               boardState[i].buffs[j].type = buff.type
---	               boardState[i].buffs[j].changeDamageDealtPercent = buff.changeDamageDealtPercent
---	               boardState[i].buffs[j].changeDamageTakenPercent = buff.changeDamageTakenPercent
---	               boardState[i].buffs[j].changeDamageDealtRaw = buff.changeDamageDealtRaw
---	               boardState[i].buffs[j].changeDamageTakenRaw = buff.changeDamageTakenRaw
---	           end
---	           boardState[i].autoAttackOnCooldown = minion.autoAttack.onCooldown
---	           boardState[i].isDead = minion.isDead
---	           boardState[i].shroud = minion.shroud
---	       end
---	       if environmentEffect then
---	           boardState.environmentEffect = {}
---	           boardState.environmentEffect.onCooldown = environmentEffect.onCooldown
---	           boardState.environmentEffect.buffs = {}
---	           for j, buff in pairs(environmentEffectFollower.buffs) do
---	               boardState.environmentEffect.buffs[j] = {}
---	               boardState.environmentEffect.buffs[j].target = buff.target
---	               boardState.environmentEffect.buffs[j].duration = buff.duration
---	               boardState.environmentEffect.buffs[j].stacks = buff.stacks
---	               boardState.environmentEffect.buffs[j].stackLimit = buff.stackLimit
---	               boardState.environmentEffect.buffs[j].damageTargetHPPercent = buff.damageTargetHPPercent
---	               boardState.environmentEffect.buffs[j].healTargetHPPercent = buff.healTargetHPPercent
---	               boardState.environmentEffect.buffs[j].event = buff.event
---	               boardState.environmentEffect.buffs[j].name = buff.name
---	               boardState.environmentEffect.buffs[j].onUnregister = buff.onUnregister
---	               boardState.environmentEffect.buffs[j].source = buff.source
---	               boardState.environmentEffect.buffs[j].attackPercent = buff.attackPercent
---	               boardState.environmentEffect.buffs[j].alternateTurns = buff.alternateTurns
---	               boardState.environmentEffect.buffs[j].removeAfterDeath = buff.removeAfterDeath
---	               boardState.environmentEffect.buffs[j].type = buff.type
---	               boardState.environmentEffect.buffs[j].changeDamageDealtPercent = buff.changeDamageDealtPercent
---	               boardState.environmentEffect.buffs[j].changeDamageTakenPercent = buff.changeDamageTakenPercent
---	               boardState.environmentEffect.buffs[j].changeDamageDealtRaw = buff.changeDamageDealtRaw
---	               boardState.environmentEffect.buffs[j].changeDamageTakenRaw = buff.changeDamageTakenRaw
---	           end
---	       end
---	       return boardState
---	   end
-
---	   local function restoreBoardState(boardState)
---	       currentTurn = boardState.turn
---	       for i, minion in pairs(boardState) do
---	           if (i ~= "turn") and (i ~= "environmentEffect") then
---	               field[i].maxHP = minion.maxHP
---	               field[i].HP = minion.HP
---	               wipe(field[i].thorns)
---	               for j, thorns in pairs(minion.thorns) do                         
---	                   field[i].thorns[j] = {}
---	                   field[i].thorns[j].ID = thorns.ID
---	                   field[i].thorns[j].damage = thorns.damage
---	                   field[i].thorns[j].source = thorns.source
---	                   field[i].thorns[j].removeAfterDeath = thorns.removeAfterDeath
---	               end
---	               for j, spell in pairs(minion.spells) do
---	                   field[i].spells[j].onCooldown = spell.onCooldown
---	               end
---	               wipe(field[i].buffs)
---	               for j, buff in pairs(minion.buffs) do
---	                   field[i].buffs[j] = {}
---	                   field[i].buffs[j].target = buff.target
---	                   field[i].buffs[j].duration = buff.duration
---	                   field[i].buffs[j].stacks = buff.stacks
---	                   field[i].buffs[j].stackLimit = buff.stackLimit
---	                   field[i].buffs[j].damageTargetHPPercent = buff.damageTargetHPPercent
---	                   field[i].buffs[j].healTargetHPPercent = buff.healTargetHPPercent
---	                   field[i].buffs[j].event = buff.event
---	                   field[i].buffs[j].name = buff.name
---	                   field[i].buffs[j].onUnregister = buff.onUnregister
---	                   field[i].buffs[j].source = buff.source
---	                   field[i].buffs[j].attackPercent = buff.attackPercent
---	                   field[i].buffs[j].alternateTurns = buff.alternateTurns
---	                   field[i].buffs[j].removeAfterDeath = buff.removeAfterDeath
---	                   field[i].buffs[j].type = buff.type
---	                   field[i].buffs[j].changeDamageDealtPercent = buff.changeDamageDealtPercent
---	                   field[i].buffs[j].changeDamageTakenPercent = buff.changeDamageTakenPercent
---	                   field[i].buffs[j].changeDamageDealtRaw = buff.changeDamageDealtRaw
---	                   field[i].buffs[j].changeDamageTakenRaw = buff.changeDamageTakenRaw 
---	               end
---	               field[i].autoAttack.onCooldown = minion.autoAttackOnCooldown
---	               field[i].isDead = minion.isDead
---	               field[i].shroud = minion.shroud
---	           end
---	       end
---	       if environmentEffect then
---	           environmentEffect.onCooldown = boardState.environmentEffect.onCooldown
---	           wipe(environmentEffectFollower.buffs)
---	           for j, buff in pairs(boardState.environmentEffect.buffs) do
---	               environmentEffectFollower.buffs[j] = {}
---	               environmentEffectFollower.buffs[j].target = buff.target
---	               environmentEffectFollower.buffs[j].duration = buff.duration
---	               environmentEffectFollower.buffs[j].stacks = buff.stacks
---	               environmentEffectFollower.buffs[j].stackLimit = buff.stackLimit
---	               environmentEffectFollower.buffs[j].damageTargetHPPercent = buff.damageTargetHPPercent
---	               environmentEffectFollower.buffs[j].healTargetHPPercent = buff.healTargetHPPercent
---	               environmentEffectFollower.buffs[j].event = buff.event
---	               environmentEffectFollower.buffs[j].name = buff.name
---	               environmentEffectFollower.buffs[j].onUnregister = buff.onUnregister
---	               environmentEffectFollower.buffs[j].source = buff.source
---	               environmentEffectFollower.buffs[j].attackPercent = buff.attackPercent
---	               environmentEffectFollower.buffs[j].alternateTurns = buff.alternateTurns
---	               environmentEffectFollower.buffs[j].removeAfterDeath = buff.removeAfterDeath
---	               environmentEffectFollower.buffs[j].type = buff.type
---	               environmentEffectFollower.buffs[j].changeDamageDealtPercent = buff.changeDamageDealtPercent
---	               environmentEffectFollower.buffs[j].changeDamageTakenPercent = buff.changeDamageTakenPercent
---	               environmentEffectFollower.buffs[j].changeDamageDealtRaw = buff.changeDamageDealtRaw
---	               environmentEffectFollower.buffs[j].changeDamageTakenRaw = buff.changeDamageTakenRaw
---	           end
---	       end
---	   end
-    
     local followerVictories = 0
     local enemyVictories = 0
     local turnLimitExceeded = 0
     
---    local batch = addon:createWorkBatch(1)
-    
     local function turnRecursion()
         if enemyVictories > 0 then return end -- if a single combination loses then we don't need the rest to be simulated anymore. Comment this out for testing only.
 
-        --local rng = setupRNG()
-        
---	       if rng["followers_random_enemy"] or rng["followers_random_ally"] or rng["enemies_random_enemy"] or rng["enemies_random_ally"] then
---	           print("rng detected, beginning branching")
---	           print(rng)
---	           local followersRandomEnemy = rng["followers_random_enemy"] or {-1}
---	           local followersRandomAlly = rng["followers_random_ally"] or {-1}
---	           local enemiesRandomEnemy = rng["enemies_random_enemy"] or {-1}
---	           local enemiesRandomAlly = rng["enemies_random_ally"] or {-1}
---	           
---	           for _, a in pairs(followersRandomEnemy) do
---	               for _, b in pairs(followersRandomAlly) do
---	                   for _, c in pairs(enemiesRandomEnemy) do
---	                       for _, d in pairs(enemiesRandomAlly) do
---	                           local turnRNG = {
---	                               ["followers_random_enemy"] = a,
---	                               ["followers_random_ally"] = b,
---	                               ["enemies_random_enemy"] = c,
---	                               ["enemies_random_ally"] = d,
---	                           }
---	                           
---	                           local currentBoardState = backupBoardState()
---	                           
---	                           local work = function()
---	                               restoreBoardState(currentBoardState)
---	                               
---	                               nextTurn(turnRNG)
-
---	                               if boardStateDefeat() then
---	                                   if boardStateDefeat() == "your team" then
---	                                       followerVictories = followerVictories + 1
---	                                   else
---	                                       enemyVictories = enemyVictories + 1
---	                                   end
---	                                   print("This branch won by: "..boardStateDefeat())
---	                               else
---	                                   print("starting next turn inside branch")
---	                                   turnRecursion()
---	                               end
---	                               
---	                               if (enemyVictories > 0) or (table.getn(batch) == 0) then
---	                                   local finalHealth = {}
---	                                   for _, minion in pairs(field) do
---	                                       if minion.boardIndex < 5 then
---	                                           finalHealth[minion.boardIndex] = minion.HP
---	                                       end
---	                                   end
---	                                   print({["victories"] = followerVictories, ["defeats"] = enemyVictories, ["incompletes"] = turnLimitExceeded, ["finalHealth"] = finalHealth})
---	                                   callback({["victories"] = followerVictories, ["defeats"] = enemyVictories, ["incompletes"] = turnLimitExceeded, ["finalHealth"] = finalHealth})
---	                                   wipe(batch)
---	                                   return
---	                               end
---	                               
---	                               restoreBoardState(currentBoardState)
---	                           end
---	                           
---	                           addon:addWork(batch, work)
---	                       end
---	                   end
---	               end
---            end
---        else
         nextTurn()
 
         if boardStateDefeat() then
@@ -1527,14 +1267,12 @@ local function doSimulation(missionID, callback)
         else
             turnRecursion()
         end
---        end
     end
     
     setupPassives()
     registerSpellsStartOnCooldown()
     turnRecursion()
     
---    if table.getn(batch) == 0 then
     print("total combinations: "..(followerVictories + enemyVictories)..", your team wins: "..followerVictories..", enemies win: "..enemyVictories..", turn limits exceeded: "..turnLimitExceeded)
     local finalHealth = {}
     for _, minion in pairs(field) do
@@ -1543,7 +1281,6 @@ local function doSimulation(missionID, callback)
         end
     end
     callback({["victories"] = followerVictories, ["defeats"] = enemyVictories, ["incompletes"] = turnLimitExceeded, ["finalHealth"] = finalHealth})
---    end
 end
 
 function addon:Simulate(frontLeftFollowerID, frontMiddleFollowerID, frontRightFollowerID, backLeftFollowerID, backRightFollowerID, missionID, callback)

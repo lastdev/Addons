@@ -12,4 +12,3 @@ L["STRING_PLUGIN_DESC"] = [=[Daten anzeigen, die durch Details erfasst wurden, a
 L["STRING_PLUGIN_NAME"] = "Chart Viewer"
 L["STRING_TOOLTIP"] = "Öffne Chart Viewer"
 L["STRING_TOOSHORTNAME"] = "Der Name ist zu kurz."
-

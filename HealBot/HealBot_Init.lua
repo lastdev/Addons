@@ -342,7 +342,7 @@ function HealBot_Init_SmartCast()
     elseif HealBot_Data["PCLASSTRIM"]=="SHAM" then
         rName=GetSpellInfo(HEALBOT_ANCESTRAL_VISION)
         if rName and HealBot_Spell_Names[rName] then SmartCast_MassRes=rName end
-        rName=GetSpellInfo(HEALBOT_REDEMPTION)
+        rName=GetSpellInfo(HEALBOT_ANCESTRALSPIRIT)
         if rName and HealBot_Spell_Names[rName] then SmartCast_Res=rName end
     end
 end

@@ -25,6 +25,7 @@ local insert, wipe = table.insert, table.wipe
 local mt_resource = ns.metatables.mt_resource
 
 local GetItemCooldown = _G.GetItemCooldown
+local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID
 local GetSpellDescription, GetSpellTexture = _G.GetSpellDescription, _G.GetSpellTexture
 local GetSpecialization, GetSpecializationInfo = _G.GetSpecialization, _G.GetSpecializationInfo
 
@@ -53,6 +54,7 @@ local specTemplate = {
     damage = true,
     damageExpiration = 8,
     damageDots = false,
+    damageOnScreen = true,
     damageRange = 0,
     damagePets = false,
 
@@ -161,8 +163,11 @@ local HekiliSpecMixin = {
             times = {},
             values = {},
 
-            active_regen = 0,
-            inactive_regen = 0,
+            actual = 0,
+            max = 1,
+
+            active_regen = 0.001,
+            inactive_regen = 0.001,
             last_tick = 0,
 
             swingGen = false,
@@ -260,9 +265,9 @@ local HekiliSpecMixin = {
         data.max_stack = data.max_stack or 1
 
         -- This is a shared buff that can come from anyone, give it a special generator.
-        if data.shared then
+        --[[ if data.shared then
             a.generate = Aura_DetectSharedAura
-        end
+        end ]]
 
         for element, value in pairs( data ) do
             if type( value ) == 'function' then
@@ -603,24 +608,6 @@ local HekiliSpecMixin = {
             local actionItem = Item:CreateFromItemID( item )
             if not actionItem:IsItemEmpty() then
                 actionItem:ContinueOnItemLoad( function( success )
-                    --[[ if not success then
-                        Hekili:Error( "Unable to load " .. item .. " (" .. ability .. ")." )
-
-                        -- Assume the item is not presently in-game.
-                        for key, entry in pairs( class.abilities ) do
-                            if a == entry then
-                                class.abilities[ key ] = nil
-                                class.abilityList[ key ] = nil
-                                class.abilityByName[ key ] = nil
-                                class.itemList[ key ] = nil
-
-                                self.abilities[ key ] = nil
-                            end
-                        end
-
-                        return
-                    end ]]
-
                     local name = actionItem:GetItemName()
                     local link = actionItem:GetItemLink()
                     local texture = actionItem:GetItemIcon()
@@ -679,9 +666,8 @@ local HekiliSpecMixin = {
                         end
 
                         if not a.unlisted then
-                            class.abilityList[ ability ] = "|T" .. ( a.texture or texture ) .. ":0|t " .. link
-                            class.itemList[ item ] = "|T" .. a.texture .. ":0|t " .. link
-
+                            class.abilityList[ ability ] = a.listName or ( "|T" .. ( a.texture or texture ) .. ":0|t " .. link )
+                            class.itemList[ item ] = a.listName or ( "|T" .. a.texture .. ":0|t " .. link )
                             class.abilityByName[ a.name ] = a
                         end
 
@@ -712,7 +698,7 @@ local HekiliSpecMixin = {
                                             self.abilities[ name ]  = a
 
                                             if not class.itemList[ id ] then
-                                                class.itemList[ id ] = "|T" .. ( a.texture or texture ) .. ":0|t " .. link
+                                                class.itemList[ id ] = a.listName or ( "|T" .. ( a.texture or texture ) .. ":0|t " .. link )
                                                 addedToItemList = true
                                             end
                                         end
@@ -832,6 +818,9 @@ local HekiliSpecMixin = {
         }
     end,
 
+    RegisterPriority = function( self, name, version, notes, priority )
+    end,
+
     RegisterOptions = function( self, options )
         self.options = options
     end,
@@ -936,7 +925,7 @@ function Hekili:RestoreDefaults()
         local existing = rawget( p.packs, k )
 
         if not existing or not existing.version or existing.version < v.version then
-            local data = self:DeserializeActionPack( v.import )
+            local data = self.DeserializeActionPack( v.import )
 
             if data and type( data ) == 'table' then
                 p.packs[ k ] = data.payload
@@ -998,7 +987,7 @@ function Hekili:RestoreDefault( name )
     local default = class.packs[ name ]
 
     if default then
-        local data = self:DeserializeActionPack( default.import )
+        local data = self.DeserializeActionPack( default.import )
 
         if data and type( data ) == 'table' then
             p.packs[ name ] = data.payload
@@ -1048,6 +1037,10 @@ function Hekili:NewSpecialization( specID, isRanged, icon )
     if not id then
         Hekili:Error( "Unable to generate specialization DB for spec ID #" .. specID .. "." )
         return nil
+    end
+
+    if specID ~= 0 then
+        class.initialized = true
     end
 
     local token = getSpecializationKey( id )
@@ -1214,121 +1207,67 @@ all:RegisterAuras( {
     },
 
     bloodlust = {
+        alias = { "ancient_hysteria", "bloodlust_actual", "drums_of_deathly_ferocity", "fury_of_the_aspects", "heroism", "netherwinds", "primal_rage", "time_warp" },
+        aliasMode = "first",
+        aliasType = "buff",
+        duration = 3600,
+    },
+
+    bloodlust_actual = {
         id = 2825,
         duration = 40,
-        generate = function ( t )
-            local bloodlusts = {
-                [90355] = 'ancient_hysteria',
-                [32182] = 'heroism',
-                [80353] = 'time_warp',
-                [160452] = 'netherwinds',
-                [264667] = 'primal_rage',
-                [309658] = 'drums_of_deathly_ferocity',
-            }
-
-            if Hekili.IsDragonflight() then
-                bloodlusts[390386] = "fury_of_the_aspects"
-            end
-
-            for id, key in pairs( bloodlusts ) do
-                local aura = buff[ key ]
-                if aura.up then
-                    t.count = aura.count
-                    t.expires = aura.expires
-                    t.applied = aura.applied
-                    t.caster = aura.caster
-                    return
-                end
-            end
-
-            local name, _, count, _, duration, expires, caster, _, _, spellID = GetPlayerAuraBySpellID( 2825 )
-
-            if name then
-                t.count = max( 1, count )
-                t.expires = expires
-                t.applied = expires - duration
-                t.caster = caster
-                return
-            end
-
-            t.count = 0
-            t.expires = 0
-            t.applied = 0
-            t.caster = 'nobody'
-        end,
+        shared = "player",
+        max_stack = 1,
     },
 
     exhaustion = {
         id = 57723,
-        shared = "player",
         duration = 600,
+        shared = "player",
         max_stack = 1,
         copy = 390435
     },
 
     insanity = {
         id = 95809,
-        shared = "player",
         duration = 600,
+        shared = "player",
         max_stack = 1
     },
 
     temporal_displacement = {
         id = 80354,
-        shared = "player",
         duration = 600,
+        shared = "player",
         max_stack = 1
+    },
+
+    fury_of_the_aspects = {
+        id = 390386,
+        duration = 40,
+        max_stack = 1,
+        shared = "player",
     },
 
     fatigued = {
         id = 264689,
-        shared = "player",
         duration = 600,
+        shared = "player",
         max_stack = 1
     },
 
     sated = {
+        alias = { "exhaustion", "fatigued", "insanity", "sated_actual", "temporal_displacement" },
+        aliasMode = "first",
+        aliasType = "debuff",
+        duration = 3600,
+    },
+
+    sated_actual = {
         id = 57724,
         duration = 600,
+        shared = "player",
         max_stack = 1,
-        generate = function ( t )
-            local sateds = {
-                [57723] = 'exhaustion',
-                [95809] = 'insanity',
-                [80354] = 'temporal_displacement',
-                [264689] = 'fatigued',
-            }
-
-            if Hekili.IsDragonflight() then
-                sateds[390435] = "exhaustion"
-            end
-
-            for id, key in pairs( sateds ) do
-                local aura = debuff[ key ]
-                if aura.up then
-                    t.count = aura.count
-                    t.expires = aura.expires
-                    t.applied = aura.applied
-                    t.caster = aura.caster
-                    return
-                end
-            end
-
-            local name, _, count, _, duration, expires, caster, _, _, spellID = GetPlayerAuraBySpellID( 57724 )
-
-            if name then
-                t.count = max( 1, count )
-                t.expires = expires
-                t.applied = expires - duration
-                t.caster = caster
-                return
-            end
-
-            t.count = 0
-            t.expires = 0
-            t.applied = 0
-            t.caster = 'nobody'
-        end,
     },
 
     power_infusion = {
@@ -2449,7 +2388,8 @@ all:RegisterAbilities( {
 
     -- INTERNAL HANDLERS
     call_action_list = {
-        name = '|cff00ccff[Call Action List]|r',
+        name = "Call Action List",
+        listName = '|T136243:0|t |cff00ccff[Call Action List]|r',
         cast = 0,
         cooldown = 0,
         gcd = 'off',
@@ -2457,7 +2397,8 @@ all:RegisterAbilities( {
     },
 
     run_action_list = {
-        name = '|cff00ccff[Run Action List]|r',
+        name = "Run Action List",
+        listName = '|T136243:0|t |cff00ccff[Run Action List]|r',
         cast = 0,
         cooldown = 0,
         gcd = 'off',
@@ -2465,7 +2406,8 @@ all:RegisterAbilities( {
     },
 
     wait = {
-        name = '|cff00ccff[Wait]|r',
+        name = "Wait",
+        listName = '|T136243:0|t |cff00ccff[Wait]|r',
         cast = 0,
         cooldown = 0,
         gcd = 'off',
@@ -2473,21 +2415,24 @@ all:RegisterAbilities( {
     },
 
     pool_resource = {
-        name = '|cff00ccff[Pool Resource]|r',
+        name = "Pool Resource",
+        listName = "|T136243:0|t |cff00ccff[Pool Resource]|r",
         cast = 0,
         cooldown = 0,
         gcd = 'off',
     },
 
     cancel_action = {
-        name = "|cff00ccff[Cancel Action]|r",
+        name = "Cancel Action",
+        listName = "|T136243:0|t |cff00ccff[Cancel Action]|r",
         cast = 0,
         cooldown = 0,
         gcd = "off",
     },
 
     variable = {
-        name = '|cff00ccff[Variable]|r',
+        name = "Variable",
+        listName = '|T136243:0|t |cff00ccff[Variable]|r',
         cast = 0,
         cooldown = 0,
         gcd = 'off',
@@ -2495,7 +2440,8 @@ all:RegisterAbilities( {
     },
 
     potion = {
-        name = '|cff00ccff[Potion]|r',
+        name = "Potion",
+        listName = '|T136243:0|t |cff00ccff[Potion]|r',
         cast = 0,
         cooldown = function () return time > 0 and 3600 or 60 end,
         gcd = 'off',
@@ -2547,7 +2493,12 @@ all:RegisterAbilities( {
     },
 
     healthstone = {
-        name = "|cff00ccff[Healthstone]|r",
+        name = function () return ( GetItemInfo( 5512 ) ) or "Healthstone" end,
+        listName = function ()
+            local _, link, _, _, _, _, _, _, _, tex = GetItemInfo( 5512 )
+            if link and tex then return "|T" .. tex .. ":0|t " .. link end
+            return "|cff00ccff[Healthstone]|r"
+        end,
         cast = 0,
         cooldown = function () return time > 0 and 3600 or 60 end,
         gcd = "off",
@@ -2576,7 +2527,8 @@ all:RegisterAbilities( {
     },
 
     cancel_buff = {
-        name = '|cff00ccff[Cancel Buff]|r',
+        name = "Cancel Buff",
+        listName = '|T136243:0|t |cff00ccff[Cancel Buff]|r',
         cast = 0,
         gcd = 'off',
 
@@ -2601,6 +2553,8 @@ all:RegisterAbilities( {
         usable = function () return args.buff_name ~= nil, "no buff name detected" end,
         timeToReady = function () return gcd.remains end,
         handler = function ()
+            if not args.buff_name then return end
+
             local cancel = args.buff_name and buff[ args.buff_name ]
             cancel = cancel and rawget( cancel, "onCancel" )
 
@@ -2614,7 +2568,8 @@ all:RegisterAbilities( {
     },
 
     null_cooldown = {
-        name = "|cff00ccff[Null Cooldown]|r",
+        name = "Null Cooldown",
+        listName = "|T136243:0|t |cff00ccff[Null Cooldown]|r",
         cast = 0,
         gcd = "off",
 
@@ -2624,13 +2579,15 @@ all:RegisterAbilities( {
     },
 
     trinket1 = {
-        name = "|cff00ccff[Trinket #1]",
+        name = "Trinket #1",
+        listName = "|T136243:0|t |cff00ccff[Trinket #1]",
         cast = 0,
         gcd = "off",
     },
 
     trinket2 = {
-        name = "|cff00ccff[Trinket #2]",
+        name = "Trinket #2",
+        listName = "|T136243:0|t |cff00ccff[Trinket #2]",
         cast = 0,
         gcd = "off",
     },
@@ -2644,7 +2601,8 @@ do
     -- 2.  Respect item preferences registered in spec options.
 
     all:RegisterAbility( "use_items", {
-        name = "|cff00ccff[Use Items]|r",
+        name = "Use Items",
+        listName = "|T136243:0|t |cff00ccff[Use Items]|r",
         cast = 0,
         cooldown = 120,
         gcd = 'off',
@@ -2652,7 +2610,12 @@ do
 
 
     all:RegisterAbility( "heart_essence", {
-        name = "|cff00ccff[Heart Essence]|r",
+        name = function () return ( GetItemInfo( 158075 ) ) or "Heart Essence" end,
+        listName = function ()
+            local _, link, _, _, _, _, _, _, _, tex = GetItemInfo( 158075 )
+            if link and tex then return "|T" .. tex .. ":0|t " .. link end
+            return "|cff00ccff[Heart Essence]|r"
+        end,
         cast = 0,
         cooldown = 0,
         gcd = 'off',
@@ -4476,8 +4439,12 @@ do
     end
 
     all:RegisterAbility( "gladiators_medallion", {
-        name = function () return "\"" .. ( ( GetSpellInfo( 277179 ) ) or "Gladiator's Medallion" ) .. "\"" end,
-        link = function () return "|cff00ccff[" .. ( ( GetSpellInfo( 277179 ) ) or "Gladiator's Medallion" ) .. "]|r" end,
+        name = function () return ( GetSpellInfo( 277179 ) ) end,
+        listName = function ()
+            local _, _, tex = GetSpellInfo( 277179 )
+            if tex then return "|T" .. tex .. ":0|t " .. ( GetSpellLink( 277179 ) ) end
+        end,
+        link = function () return ( GetSpellLink( 277179 ) ) end,
         cast = 0,
         cooldown = 120,
         gcd = "off",
@@ -4539,8 +4506,12 @@ do
     end
 
     all:RegisterAbility( "gladiators_badge", {
-        name = function () return "\"" .. ( ( GetSpellInfo( 277185 ) ) or "Gladiator's Badge" ) .. "\"" end,
-        link = function () return "|cff00ccff[" .. ( ( GetSpellInfo( 277185 ) ) or "Gladiator's Badge" ) .. "]|r" end,
+        name = function () return ( GetSpellInfo( 277185 ) ) end,
+        listName = function ()
+            local _, _, tex = GetSpellInfo( 277185 )
+            if tex then return "|T" .. tex .. ":0|t " .. ( GetSpellLink( 277185 ) ) end
+        end,
+        link = function () return ( GetSpellLink( 277185 ) ) end,
         cast = 0,
         cooldown = 120,
         gcd = "off",
@@ -4626,8 +4597,12 @@ do
 
 
     all:RegisterAbility( "gladiators_emblem", {
-        name = function () return "\"" .. ( ( GetSpellInfo( 277187 ) ) or "Gladiator's Emblem" ) .. "\"" end,
-        link = function () return "|cff00ccff[" .. ( ( GetSpellInfo( 277187 ) ) or "Gladiator's Emblem" ) .. "]|r" end,
+        name = function () return ( GetSpellInfo( 277187 ) ) end,
+        listName = function ()
+            local _, _, tex = GetSpellInfo( 277187 )
+            if tex then return "|T" .. tex .. ":0|t " .. ( GetSpellLink( 277187 ) ) end
+        end,
+        link = function () return ( GetSpellLink( 277187 ) ) end,
         cast = 0,
         cooldown = 90,
         gcd = "off",
@@ -5839,9 +5814,11 @@ function Hekili:SpecializationChanged()
     local currentID = GetSpecializationInfo( currentSpec )
 
     if currentID == nil then
-        C_Timer.After( 0.5, function () Hekili:SpecializationChanged() end )
+        Hekili.PendingSpecializationChange = true
         return
     end
+
+    Hekili.PendingSpecializationChange = false
 
     insert( self.SpecChangeHistory, {
         spec = currentID,
@@ -5878,7 +5855,7 @@ function Hekili:SpecializationChanged()
 
     class.potion = nil
 
-    local specs = { 0 }
+    local specs = {}
 
     for i = 1, 4 do
         local id, name, _, _, role = GetSpecializationInfo( i )
@@ -5886,7 +5863,7 @@ function Hekili:SpecializationChanged()
         if not id then break end
 
         if i == currentSpec then
-            table.insert( specs, 1, id )
+            insert( specs, 1, id )
 
             state.spec.id = id
             state.spec.name = name
@@ -5906,9 +5883,11 @@ function Hekili:SpecializationChanged()
 
             state.spec[ state.spec.key ] = true
         else
-            table.insert( specs, id )
+            insert( specs, id )
         end
     end
+
+    insert( specs, 0 )
 
 
     for key in pairs( GetResourceInfo() ) do

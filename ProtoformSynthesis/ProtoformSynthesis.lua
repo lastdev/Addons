@@ -1,5 +1,5 @@
 local pfs = ProtoformSynthesis
-local version = "V1.2.2"
+local version = "V1.2.4"
 local db = {
 	["minimapPos"] = 242.1856774393399,
 }
@@ -151,10 +151,14 @@ function pfs:PLAYER_LOGIN()
 				        	
 										if info.itemName~=nil and not pfs:MountExists(info.mountID) then
 								        if not isUnknown and info.moteCount >= info.moteCost and info.glimmerCount > 0 and info.latticeCount > 0 then
-						            	  tt:AddDoubleLine("- "..info.itemName, "|cff32cd32YES|r", 0.9, 0.9, 0.9);  --herstellbar = green
+						            	  --tt:AddDoubleLine("- "..info.itemName, "|cff32cd32YES|r", 0.9, 0.9, 0.9);  --herstellbar = green
+						            	  matsText = format("|cffffffff(%3d/%2d/%2d) -|r |cff32cd32YES|r", info.moteCost, info.glimmerCount, info.latticeCount)
+						            	  tt:AddDoubleLine("- "..info.itemName, matsText, 0.9, 0.9, 0.9);  --herstellbar = green
 								        else
-						            	  tt:AddDoubleLine("- "..info.itemName, "|cffff0000NO |r", 0.5, 0.5, 0.5);  --fehlende Matterialien = red
-										    end
+						            	  --tt:AddDoubleLine("- "..info.itemName, "|cffff0000NO |r", 0.5, 0.5, 0.5);  --fehlende Matterialien = red
+						            	  matsText = format("|cffffffff(%3d/%2d/%2d) -|r |cffff0000NO|r", info.moteCost, info.glimmerCount, info.latticeCount)
+						            	  tt:AddDoubleLine("- "..info.itemName, matsText, 0.5, 0.5, 0.5);  --fehlende Matterialien = red
+										end
 	    			        end
 				        end
 				        

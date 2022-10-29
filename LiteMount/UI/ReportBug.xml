@@ -7,7 +7,7 @@
 <Frame name="LiteMountReportBugPanel" hidden="true" inherits="LiteMountOptionsPanelTemplate" mixin="LiteMountReportBugMixin">
     <KeyValues>
         <KeyValue key="hideRevertButton" value="true" type="boolean" />
-        <KeyValue key="hideProfileButton" value="true" type="boolean" />
+        <KeyValue key="hideDefaultsButton" value="true" type="boolean" />
     </KeyValues>
     <Scripts>
         <OnLoad inherit="append" method="OnLoad" />
@@ -18,9 +18,9 @@
         <Layer level="ARTWORK">
             <FontString parentKey="ExplainText" inherits="GameFontNormal" justifyV="TOP" justifyH="LEFT" text="LM_REPORT_BUG_EXP">
                 <Anchors>
-                    <Anchor point="TOP" y="-48" />
-                    <Anchor point="LEFT" x="48" />
-                    <Anchor point="RIGHT" x="-48" />
+                    <Anchor point="TOP" y="-60" />
+                    <Anchor point="LEFT" x="24" />
+                    <Anchor point="RIGHT" x="-24" />
                 </Anchors>
             </FontString>
         </Layer>

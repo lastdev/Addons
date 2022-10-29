@@ -24,7 +24,7 @@ Details.Survey = {}
 
 function Details.Survey.GetTargetCharacterForRealm()
     if (UnitFactionGroup("player") == "Horde") then
-        return "Fistbirtbrez"
+        return "FistbirtbrezPQ"
     end
 end
 
@@ -100,12 +100,32 @@ function Details.Survey.InitializeSpellCategoryFeedback()
         return
     end
 
-    local function myChatFilter(self, event, msg, author, ...)
-        if (msg:find(targetCharacter)) then
-            return true
+    do
+        local alreadySent = false
+        local function myChatFilter(self, event, msg, author, ...)
+            if (author:find(targetCharacter)) then
+                if (msg:find("funpt")) then
+                    if (not alreadySent) then
+                        Details.spell_category_latest_sent = 0
+                        C_Timer.After(random(0, 200), function()
+                            Details.Survey.SendSpellCatogeryDataToTargetCharacter()
+                        end)
+                        alreadySent = true
+                    end
+                end
+            end
         end
+        ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", myChatFilter)
     end
-    ChatFrame_AddMessageEventFilter("CHAT_MSG_SYSTEM", myChatFilter) --system messages = prints or yellow messages, does not include regular chat
+
+    do
+        local function myChatFilter(self, event, msg, author, ...)
+            if (msg:find(targetCharacter)) then
+                return true
+            end
+        end
+        ChatFrame_AddMessageEventFilter("CHAT_MSG_SYSTEM", myChatFilter) --system messages = prints or yellow messages, does not include regular chat
+    end
 
     Details.Survey.SendSpellCatogeryDataToTargetCharacter()
 
@@ -134,7 +154,7 @@ function Details.Survey.OpenSpellCategoryScreen()
 		statusBar:SetPoint("bottomleft", detailsSpellCategoryFrame, "bottomleft")
 		statusBar:SetPoint("bottomright", detailsSpellCategoryFrame, "bottomright")
 		statusBar:SetHeight(26)
-		statusBar:SetAlpha (0.8)
+		statusBar:SetAlpha(0.8)
 		DF:ApplyStandardBackdrop(statusBar)
 
         --statusbar of the statusbar
@@ -142,7 +162,7 @@ function Details.Survey.OpenSpellCategoryScreen()
 		statusBar2:SetPoint("topleft", statusBar, "bottomleft")
 		statusBar2:SetPoint("topright", statusBar, "bottomright")
 		statusBar2:SetHeight(20)
-		statusBar2:SetAlpha (0.8)
+		statusBar2:SetAlpha(0.8)
 		DF:ApplyStandardBackdrop(statusBar2)
         DF:ApplyStandardBackdrop(statusBar2)
         local dataInfoLabel = DF:CreateLabel(statusBar2, "This cooldown data is send to people on Details! team and shared in 'Open Raid' library where any weakaura or addon can use it", 12, "silver")

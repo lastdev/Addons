@@ -29,6 +29,10 @@ L.FAVORITES             = FAVORITES
 L.LM_PRIORITY_DESC0     = DISABLE
 L.LM_PRIORITY_DESC4     = ALWAYS
 L.Unknown               = UNKNOWN
+L.DRAGONRIDING          = MOUNT_JOURNAL_FILTER_DRAGONRIDING
+L.FLY                   = MOUNT_JOURNAL_FILTER_FLYING
+L.RUN                   = MOUNT_JOURNAL_FILTER_GROUND
+L.SWIM                  = MOUNT_JOURNAL_FILTER_AQUATIC
 
 
 -- :r! sh Tools/fetchlocale.sh -------------------------------------------------
@@ -36,11 +40,11 @@ L.Unknown               = UNKNOWN
 -- enUS / enGB / Default -------------------------------------------------------
 
     L = L or {}
-    L["FLY"] = "Fly"
     L["LM_ACTION"] = "Action"
     L["LM_ADVANCED_EXP"] = "These settings allow you to customize the actions run by each of the LiteMount key bindings. Please read the documentation at the URL below before changing anything."
     L["LM_ANNOUNCE_MOUNTS"] = "Announce summoned mounts in:"
     L["LM_AUTHOR"] = "Author"
+    L["LM_CHANGE_PROFILE"] = "Change Profile"
     L["LM_COLOR_BY_PRIORITY"] = "Color by priority"
     L["LM_COMBAT_MACRO_EXP"] = "If enabled, this macro will be run instead of the default combat actions if LiteMount is activated while you are combat."
     L["LM_CONDITIONS"] = "Conditions"
@@ -48,6 +52,7 @@ L.Unknown               = UNKNOWN
     L["LM_COVENANT"] = "Covenant"
     L["LM_CREATE_GLOBAL_GROUP"] = "Global"
     L["LM_CREATE_PROFILE_GROUP"] = "Profile"
+    L["LM_CURRENT_PROFILE"] = "Current Profile"
     L["LM_CURRENT_SETTINGS"] = "Current Settings"
     L["LM_DEBUGGING_DISABLED"] = "Debugging disabled."
     L["LM_DEBUGGING_ENABLED"] = "Debugging enabled."
@@ -101,6 +106,7 @@ L.Unknown               = UNKNOWN
     L["LM_PRIORITY_DESC2"] = "More often"
     L["LM_PRIORITY_DESC3"] = "A lot more often"
     L["LM_PROFILES"] = "Profiles"
+    L["LM_PROFILES_EXP"] = "Profiles are different configurations that you can switch between. Each of your characters has its own selected profile. All settings except the Combat and Unvailable macros are saved in the profile and change when switching profiles."
     L["LM_RANDOM_PERSISTENCE"] = "How often to select a new random mount"
     L["LM_RENAME_FLAG"] = "Rename Flag"
     L["LM_RENAME_GROUP"] = "Rename Group"
@@ -118,9 +124,6 @@ L.Unknown               = UNKNOWN
     L["LM_TRANSLATORS"] = "Translators"
     L["LM_USABLE"] = "Usable"
     L["LM_WARN_REPLACE_COND"] = "The [%s] action list condition has been replaced by [%s] due to Blizzard changes."
-    L["RUN"] = "Run"
-    L["SWIM"] = "Swim"
-    L["WALK"] = "Walk"
 
     -- Family
     L["Alpaca"] = "Alpaca"
@@ -264,7 +267,6 @@ L.Unknown               = UNKNOWN
 
 if locale == "deDE" then
     L = L or {}
-    L["FLY"] = "Fliegen"
     L["LM_ACTION"] = "Aktion"
     L["LM_ADVANCED_EXP"] = "Mit diesen Einstellungen können Sie die Aktionen anpassen, die von den einzelnen LiteMount-Tastenbindungen ausgeführt werden. Bitte lesen Sie die Dokumentation unter der folgenden URL, bevor Sie etwas ändern."
     L["LM_ANNOUNCE_MOUNTS"] = "Kündigen Sie beschworene Reittiere an:"
@@ -276,6 +278,7 @@ if locale == "deDE" then
     L["LM_COVENANT"] = "Pakt"
     L["LM_CREATE_GLOBAL_GROUP"] = "Global"
     L["LM_CREATE_PROFILE_GROUP"] = "Profil"
+    L["LM_CURRENT_PROFILE"] = "Aktuelles Profil"
     L["LM_CURRENT_SETTINGS"] = "Aktuelle Einstellungen"
     L["LM_DEBUGGING_DISABLED"] = "Fehlersuche aus"
     L["LM_DEBUGGING_ENABLED"] = "Fehlersuche ein"
@@ -346,9 +349,6 @@ if locale == "deDE" then
     L["LM_TRANSLATORS"] = "Übersetzer"
     L["LM_USABLE"] = "Benutzbare"
     L["LM_WARN_REPLACE_COND"] = "Die Bedingung der [%s] -Aktionsliste wurde aufgrund von Blizzard-Änderungen durch [%s] ersetzt."
-    L["RUN"] = "Rennen"
-    L["SWIM"] = "Schwimmen"
-    L["WALK"] = "Laufen"
 
     -- Family
     L["Alpaca"] = "Alpaka"
@@ -493,7 +493,6 @@ end
 
 if locale == "esES" or locale == "esMX" then
     L = L or {}
-    L["FLY"] = "Volar"
     L["LM_ACTION"] = "Acción"
     L["LM_ADVANCED_EXP"] = "Estas configuraciones le permiten personalizar las acciones ejecutadas por cada uno de los acciones clave de LiteMount. Lea la documentación en la URL a continuación antes de cambiar cualquier cosa."
     L["LM_ANNOUNCE_MOUNTS"] = "Anuncia las monturas convocadas a:"
@@ -505,6 +504,7 @@ if locale == "esES" or locale == "esMX" then
     L["LM_COVENANT"] = "Curia"
     L["LM_CREATE_GLOBAL_GROUP"] = "Global"
     L["LM_CREATE_PROFILE_GROUP"] = "Perfil"
+    L["LM_CURRENT_PROFILE"] = "Perfil actual"
     L["LM_CURRENT_SETTINGS"] = "Configuraciones actuales"
     L["LM_DEBUGGING_DISABLED"] = "Depuración desactivada."
     L["LM_DEBUGGING_ENABLED"] = "Depuración activada."
@@ -575,9 +575,6 @@ if locale == "esES" or locale == "esMX" then
     L["LM_TRANSLATORS"] = "Traductores"
     L["LM_USABLE"] = "Utilizable"
     L["LM_WARN_REPLACE_COND"] = "La condición de la lista de acciones [%s] ha sido reemplazada por [%s] debido a los cambios de Blizzard."
-    L["RUN"] = "Correr"
-    L["SWIM"] = "Nadar"
-    L["WALK"] = "Caminar"
 
     -- Family
     L["Alpaca"] = "Alpaca"
@@ -722,7 +719,6 @@ end
 
 if locale == "frFR" then
     L = L or {}
-    L["FLY"] = "Vol"
     L["LM_ACTION"] = "Action"
     L["LM_ADVANCED_EXP"] = "Ces paramètres vous permettent de customiser les actions lancées par chacun des raccourcis de LiteMount. Veillez à lire la documentation jointe à l’URL ci-dessous avant de changer quoique ce soit."
     L["LM_ANNOUNCE_MOUNTS"] = "Annoncez les montures invoquées à :"
@@ -734,6 +730,7 @@ if locale == "frFR" then
     L["LM_COVENANT"] = "Congrégation"
     L["LM_CREATE_GLOBAL_GROUP"] = "Global"
     L["LM_CREATE_PROFILE_GROUP"] = "Profil"
+    L["LM_CURRENT_PROFILE"] = "Profil actuel"
     L["LM_CURRENT_SETTINGS"] = "Réglages actuels"
     L["LM_DEBUGGING_DISABLED"] = "Débogage désactivé."
     L["LM_DEBUGGING_ENABLED"] = "Débogage activé."
@@ -804,9 +801,6 @@ if locale == "frFR" then
     L["LM_TRANSLATORS"] = "Traducteurs"
     L["LM_USABLE"] = "Utilisable"
     L["LM_WARN_REPLACE_COND"] = "La condition de la liste d'actions [%s] a été remplacée par [%s] en raison de changements de Blizzard."
-    L["RUN"] = "Cours"
-    L["SWIM"] = "Nage"
-    L["WALK"] = "Marche"
 
     -- Family
     L["Alpaca"] = "Alpaga"
@@ -951,7 +945,6 @@ end
 
 if locale == "itIT" then
     L = L or {}
-    L["FLY"] = "Volante"
     L["LM_ACTION"] = "Azione"
     L["LM_ADVANCED_EXP"] = "Queste impostazioni consentono di personalizzare le azioni di ciascun binding dei tasti di LiteMount.\" Leggere la documentazione all'URL sottostante prima di modificare qualsiasi cosa."
     L["LM_ANNOUNCE_MOUNTS"] = "Annunciare le cavalcature evocate in:"
@@ -963,6 +956,7 @@ if locale == "itIT" then
     L["LM_COVENANT"] = "Congrega"
     L["LM_CREATE_GLOBAL_GROUP"] = "Globale"
     L["LM_CREATE_PROFILE_GROUP"] = "Profilo"
+    L["LM_CURRENT_PROFILE"] = "Profilo Attivo"
     L["LM_CURRENT_SETTINGS"] = "Impostazioni attuali"
     L["LM_DEBUGGING_DISABLED"] = "Debug disabilitato."
     L["LM_DEBUGGING_ENABLED"] = "Debug abilitato."
@@ -1033,9 +1027,6 @@ if locale == "itIT" then
     L["LM_TRANSLATORS"] = "Traduttori"
     L["LM_USABLE"] = "Utilizzabile"
     L["LM_WARN_REPLACE_COND"] = "La condizione [s%] della lista di azioni è stata sostituita da [%s] a causa dei cambiamenti apportati da Blizzard."
-    L["RUN"] = "Terrestre"
-    L["SWIM"] = "Acquatica"
-    L["WALK"] = "Cammina"
 
     -- Family
     L["Alpaca"] = "Alpaca"
@@ -1180,7 +1171,6 @@ end
 
 if locale == "koKR" then
     L = L or {}
-    L["FLY"] = "비행"
     L["LM_ACTION"] = "동작"
     L["LM_ADVANCED_EXP"] = "이 설정을 통해 각각의 LiteMount 단축키마다 실행할 행동을 개별 설정할 수 있습니다. 변경 전 아래 URL의 설명서를 읽어보세요."
     L["LM_ANNOUNCE_MOUNTS"] = "소환된 탈것 발표"
@@ -1192,6 +1182,7 @@ if locale == "koKR" then
     L["LM_COVENANT"] = "성약의"
     L["LM_CREATE_GLOBAL_GROUP"] = "글로벌 그룹 생성"
     L["LM_CREATE_PROFILE_GROUP"] = "프로필 그룹 만들기"
+    L["LM_CURRENT_PROFILE"] = "현재 프로필"
     L["LM_CURRENT_SETTINGS"] = "현재 설정"
     L["LM_DEBUGGING_DISABLED"] = "디버깅이 비활성화되었습니다."
     L["LM_DEBUGGING_ENABLED"] = "디버깅이 활성화되었습니다."
@@ -1261,9 +1252,6 @@ if locale == "koKR" then
     L["LM_TRANSLATORS"] = "번역"
     L["LM_USABLE"] = "사용 가능한"
     L["LM_WARN_REPLACE_COND"] = "블리자드의 변경으로 인해 실행조건 [%s] 은(는) [%s] (으)로 대체되었습니다."
-    L["RUN"] = "지상"
-    L["SWIM"] = "수중"
-    L["WALK"] = "보행"
 
     -- Family
     L["Alpaca"] = "알파카"
@@ -1408,7 +1396,6 @@ end
 
 if locale == "ptBR" then
     L = L or {}
-    L["FLY"] = "Voar"
     L["LM_ACTION"] = "Açao"
     L["LM_ADVANCED_EXP"] = "Essas configurações permitem personalizar as ações executadas por cada uma das teclas de atalho do LiteMount. Por favor, leia a documentação no URL abaixo antes de alterar qualquer coisa."
     L["LM_ANNOUNCE_MOUNTS"] = "Anuncie montarias convocadas para:"
@@ -1420,6 +1407,7 @@ if locale == "ptBR" then
     L["LM_COVENANT"] = "Pacto"
     L["LM_CREATE_GLOBAL_GROUP"] = "Global"
     L["LM_CREATE_PROFILE_GROUP"] = "Perfil"
+    L["LM_CURRENT_PROFILE"] = "Perfil Autal"
     L["LM_CURRENT_SETTINGS"] = "Configuração Atual"
     L["LM_DEBUGGING_DISABLED"] = "Depuração desativada."
     L["LM_DEBUGGING_ENABLED"] = "Depuração ativada."
@@ -1489,9 +1477,6 @@ if locale == "ptBR" then
     L["LM_TRANSLATORS"] = "Tradutores"
     L["LM_USABLE"] = "Utilizável"
     L["LM_WARN_REPLACE_COND"] = "A condição da lista de ações [%s] foi substituída por [%s] devido a alterações da Blizzard."
-    L["RUN"] = "Correr"
-    L["SWIM"] = "Nadar"
-    L["WALK"] = "Andar"
 
     -- Family
     L["Alpaca"] = "Alpaca"
@@ -1636,7 +1621,6 @@ end
 
 if locale == "ruRU" then
     L = L or {}
-    L["FLY"] = "Летающий"
     L["LM_ACTION"] = "Действие"
     L["LM_ADVANCED_EXP"] = "Эти настройки позволяют настраивать действия, выполняемые назначенными клавишами LiteMount. Прочтите документацию по URL-адресу ниже, прежде чем что-либо менять."
     L["LM_ANNOUNCE_MOUNTS"] = "Анонсировать призываемых маунтов в:"
@@ -1648,6 +1632,7 @@ if locale == "ruRU" then
     L["LM_COVENANT"] = "Ковенант"
     L["LM_CREATE_GLOBAL_GROUP"] = "Глобально"
     L["LM_CREATE_PROFILE_GROUP"] = "Профиль"
+    L["LM_CURRENT_PROFILE"] = "Текущий профиль"
     L["LM_CURRENT_SETTINGS"] = "Текущие настройки"
     L["LM_DEBUGGING_DISABLED"] = "Отладка отключена."
     L["LM_DEBUGGING_ENABLED"] = "Отладка включена."
@@ -1718,9 +1703,6 @@ if locale == "ruRU" then
     L["LM_TRANSLATORS"] = "Переводчики"
     L["LM_USABLE"] = "Доступно"
     L["LM_WARN_REPLACE_COND"] = "Условие списка [% s] заменено на [% s] из-за изменений Blizzard."
-    L["RUN"] = "Наземный"
-    L["SWIM"] = "Плавающий"
-    L["WALK"] = "Наземный"
 
     -- Family
     L["Alpaca"] = "Aльпака"
@@ -1865,7 +1847,6 @@ end
 
 if locale == "zhCN" then
     L = L or {}
-    L["FLY"] = "飞"
     L["LM_ACTION"] = "行动"
     L["LM_ADVANCED_EXP"] = "这些设置允许您自定义每个LiteMount键绑定运行的操作。在更改任何内容之前，请阅读以下URL中的文档。"
     L["LM_ANNOUNCE_MOUNTS"] = "宣布召唤的坐骑"
@@ -1877,6 +1858,7 @@ if locale == "zhCN" then
     L["LM_COVENANT"] = "盟约"
     L["LM_CREATE_GLOBAL_GROUP"] = "创建全局组"
     L["LM_CREATE_PROFILE_GROUP"] = "创建配置文件组"
+    L["LM_CURRENT_PROFILE"] = "当前配置文件"
     L["LM_CURRENT_SETTINGS"] = "当前的设置"
     L["LM_DEBUGGING_DISABLED"] = "调试已禁用"
     L["LM_DEBUGGING_ENABLED"] = "调试已启用"
@@ -1946,9 +1928,6 @@ if locale == "zhCN" then
     L["LM_TRANSLATORS"] = "译者"
     L["LM_USABLE"] = "可用"
     L["LM_WARN_REPLACE_COND"] = "由于暴雪的变化，[％s]动作列表条件已被[％s]取代。"
-    L["RUN"] = "跑"
-    L["SWIM"] = "游"
-    L["WALK"] = "步行"
 
     -- Family
     L["Alpaca"] = "羊驼"
@@ -2093,7 +2072,6 @@ end
 
 if locale == "zhTW" then
     L = L or {}
-    L["FLY"] = "飛行"
     L["LM_ACTION"] = "行動"
     L["LM_ADVANCED_EXP"] = "這些設定允許你為每一個LiteMount的按鍵綁定自定義行動。請在更改任何內容之前閱讀以下URL中的文件資料。"
     L["LM_ANNOUNCE_MOUNTS"] = "宣布召喚的坐騎"
@@ -2105,6 +2083,7 @@ if locale == "zhTW" then
     L["LM_COVENANT"] = "誓盟"
     L["LM_CREATE_GLOBAL_GROUP"] = "創建全局組 "
     L["LM_CREATE_PROFILE_GROUP"] = "創建配置文件組"
+    L["LM_CURRENT_PROFILE"] = "目前設定檔"
     L["LM_CURRENT_SETTINGS"] = "目前的設定"
     L["LM_DEBUGGING_DISABLED"] = "禁用除錯模式。"
     L["LM_DEBUGGING_ENABLED"] = "啟用除錯模式。"
@@ -2174,9 +2153,6 @@ if locale == "zhTW" then
     L["LM_TRANSLATORS"] = "譯者"
     L["LM_USABLE"] = "可用"
     L["LM_WARN_REPLACE_COND"] = "基於暴雪的改動，[%s]動作列表狀態已被[%s]取代。"
-    L["RUN"] = "陸地"
-    L["SWIM"] = "水中"
-    L["WALK"] = "走路"
 
     -- Family
     L["Alpaca"] = "羊駝"

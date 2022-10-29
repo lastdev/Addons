@@ -1,10 +1,10 @@
-lightweight tag ee225e528af60c8b48054af7b1e40e89f997211a v10.0.0
+lightweight tag 91b2a62921905030c29a38c9caaa4ac33934ec70 v10.0.0-1
 Author:	Dave Hendler <sollaires@gmail.com>
-Date:	Sat Oct 22 22:08:52 2022 -0700
+Date:	Fri Oct 28 09:19:26 2022 -0700
 
-commit ee225e528af60c8b48054af7b1e40e89f997211a
+commit 91b2a62921905030c29a38c9caaa4ac33934ec70
 Author: Dave Hendler <sollaires@gmail.com>
-Date:   Sat Oct 22 22:08:52 2022 -0700
+Date:   Fri Oct 28 09:19:26 2022 -0700
 
-    Tag for release, handle very low level characters without crash
+    Set TOC version to match prepatch, not beta
 

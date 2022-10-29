@@ -1,16 +1,16 @@
 # See license.txt for license and copyright information
 ## Interface: 100000
 ## Title: TomCat's Tours
-## Notes: Version: 2.4.20
+## Notes: Version: 2.4.22
 ## Author: TomCat
 ## X-Website: https://www.tomcatstours.com
-## Version: 2.4.20
+## Version: 2.4.22
 ## DefaultState: enabled
 ## SavedVariables: TomCats_Account
 ## SavedVariablesPerCharacter: TomCats_Character
 ## X-Category: Achievements, Map, Miscellaneous
 ## X-Localizations: enUS, enGB, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ptPT, ruRU, zhCN, zhTW
-## X-TomCats-Expiry: 1667946365
+## X-TomCats-Expiry: 1668136027
 
 constants.lua
 slashcommands.lua
@@ -58,5 +58,3 @@ discoveries.xml
 discoveries.lua
 beta.lua
 noblegarden/Main.xml
-beta/maelie.xml
-beta/maelie.lua

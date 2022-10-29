@@ -1,10 +1,8 @@
-## Changed in v2022.21
+## Changed in v2022.22
 
-* Updated for 10.0.0 (but no data for Dragonflight rares is included yet)
-* Merged my classic and retail versions together... changing my version-number scheme because I can't base it off the TOC any more
-* Separate data-addons are no longer being used; you should delete them if your addon manager doesn't clean them up for you
-* Missing Wrath loot was added, and routes added to many Wrath rares
-* Various Pandaria locations were improved
-* A few bugs around waypoint-setting were fixed
-* Loot popups will no longer show a hint implying they can be clicked to target anything
+* Macro fixes:
+    * In Wrath the lines with `/print` were apparently causing issues
+    * In Retail, `/click` now absolutely requires that you specify the fake mouse button you want to use rather than assuming left-click
+    * As such, I've added some automatic regeneration of the macro so it can be updated to the new version without you needing to manually touch it
+    * Turns out macros on secure action buttons can be much longer than real macros, so I've reduced the number of fake passthrough macro buttons I create
 

@@ -7,6 +7,7 @@ local Hekili = _G[ addon ]
 local class, state = Hekili.Class, Hekili.State
 local all = Hekili.Class.specs[ 0 ]
 
+local FindPlayerAuraByID = ns.FindPlayerAuraByID
 local RegisterEvent = ns.RegisterEvent
 
 
@@ -890,7 +891,7 @@ do
                 }
             },
 
-            copy = { "soul_infusion", "soulletting_ruby_345801" }
+            copy = "soul_infusion"
         },
 
         spare_meat_hook = {
@@ -1136,8 +1137,6 @@ do
                     max_stack = 1,
                 },
             },
-
-            copy = "tormented_insight_355321"
         },
 
         relic_of_the_frozen_wastes = {
@@ -1587,7 +1586,7 @@ do
             auras = {
                 heart_of_the_swarm = {
                     -- id = ???,
-                    -- May need to use GetPlayerAuraBySpellID.
+                    -- May need to use FindPlayerAuraByID.
                     duration = 3,
                     max_stack = 1,
                 },
@@ -1632,9 +1631,7 @@ do
                     duration = 20,
                     max_stack = 1,
                 }
-            },
-
-            copy = "the_first_sigil_367241"
+            }
         },
         the_lions_roar = {
             cast = 3,
@@ -1976,7 +1973,7 @@ do
         local id = class.auras[ key ] and class.auras[ key ].id
 
         if id then
-            local name, _, count, _, _, _, caster = GetPlayerAuraBySpellID( id )
+            local name, _, count, _, _, _, caster = FindPlayerAuraByID( id )
 
             if name then
                 local applied = treasure_applied[ key ]

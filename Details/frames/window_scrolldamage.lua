@@ -7,11 +7,11 @@ local _
 function Details:ScrollDamage()
 	if (not DetailsScrollDamage) then
 		DetailsScrollDamage = DetailsFramework:CreateSimplePanel(UIParent)
-		DetailsScrollDamage:SetSize (427 - 40 - 20 - 20, 505 - 150 + 20 + 40)
-		DetailsScrollDamage:SetTitle ("Details! Scroll Damage (/details scroll)")
+		DetailsScrollDamage:SetSize(427 - 40 - 20 - 20, 505 - 150 + 20 + 40)
+		DetailsScrollDamage:SetTitle("Details! Scroll Damage (/details scroll)")
 		DetailsScrollDamage.Data = {}
 		DetailsScrollDamage:ClearAllPoints()
-		DetailsScrollDamage:SetPoint ("left", UIParent, "left", 10, 0)
+		DetailsScrollDamage:SetPoint("left", UIParent, "left", 10, 0)
 		DetailsScrollDamage:Hide()
 
 		local scroll_width = 395 - 40 - 20 - 20
@@ -69,7 +69,7 @@ function Details:ScrollDamage()
 
 				if (spellTable) then
 					local line = self:GetLine(i)
-					local time, token, hidding, sourceSerial, sourceName, sourceFlag, sourceFlag2, targetSerial, targetName, targetFlag, targetFlag2, spellID, spellName, spellType, amount, overKill, school, resisted, blocked, absorbed, isCritical = unpack (spellTable)
+					local time, token, hidding, sourceSerial, sourceName, sourceFlag, sourceFlag2, targetSerial, targetName, targetFlag, targetFlag2, spellID, spellName, spellType, amount, overKill, school, resisted, blocked, absorbed, isCritical = unpack(spellTable)
 
 					local spellName, _, spellIcon
 
@@ -103,7 +103,7 @@ function Details:ScrollDamage()
 			end
 		end
 
-		local lineOnEnter = function (self)
+		local lineOnEnter = function(self)
 			if (self.IsCritical) then
 				self:SetBackdropColor(unpack(backdrop_color_is_critical_on_enter))
 			else
@@ -119,7 +119,7 @@ function Details:ScrollDamage()
 			end
 		end
 
-		local lineOnLeave = function (self)
+		local lineOnLeave = function(self)
 			if (self.IsCritical) then
 				self:SetBackdropColor(unpack(backdrop_color_is_critical))
 			else
@@ -136,7 +136,7 @@ function Details:ScrollDamage()
 			line:SetSize(scroll_width - 2, scroll_line_height)
 
 			line:SetBackdrop({bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], tileSize = 64, tile = true})
-			line:SetBackdropColor(unpack (backdrop_color))
+			line:SetBackdropColor(unpack(backdrop_color))
 
 			DF:Mixin(line, DF.HeaderFunctions)
 
@@ -207,7 +207,7 @@ function Details:ScrollDamage()
 		local combatLogReader = CreateFrame("frame")
 		local playerSerial = UnitGUID("player")
 
-		combatLogReader:SetScript("OnEvent", function (self)
+		combatLogReader:SetScript("OnEvent", function(self)
 			local timew, token, hidding, sourceSerial, sourceName, sourceFlag, sourceFlag2, targetSerial, targetName, targetFlag, targetFlag2, spellID, spellName, spellType, amount, overKill, school, resisted, blocked, absorbed, isCritical = CombatLogGetCurrentEventInfo()
 			if (sourceSerial == playerSerial) then
 				if (token == "SPELL_DAMAGE" or token == "SPELL_PERIODIC_DAMAGE" or token == "RANGE_DAMAGE" or token == "DAMAGE_SHIELD") then
@@ -220,7 +220,7 @@ function Details:ScrollDamage()
 
 				elseif (token == "SWING_DAMAGE") then
 				--	amount, overkill, school, resisted, blocked, absorbed, critical, glacing, crushing, isoffhand = spellID, spellName, spellType, amount, overKill, school, resisted, blocked, absorbed, isCritical
-				--	tinsert (DetailsScrollDamage.Data, 1, {timew, token, hidding, sourceSerial, sourceName, sourceFlag, sourceFlag2, targetSerial, targetName, targetFlag, targetFlag2, spellID, spellName, spellType, amount, overKill, school, resisted, blocked, absorbed, isCritical})
+				--	tinsert(DetailsScrollDamage.Data, 1, {timew, token, hidding, sourceSerial, sourceName, sourceFlag, sourceFlag2, targetSerial, targetName, targetFlag, targetFlag2, spellID, spellName, spellType, amount, overKill, school, resisted, blocked, absorbed, isCritical})
 				--	damageScroll:RefreshScroll()
 				end
 			end

@@ -363,6 +363,7 @@ end
 
 function HealBot_Timers_SendVersion()
     HealBot_Comms_SendAddonMsg("S:"..HEALBOT_VERSION, 1)
+    HealBot_Timers_Set("LAST","SendClassicAuraData",15)
 end
 
 function HealBot_Timers_SendGuildVersion()
@@ -423,7 +424,7 @@ function HealBot_Timers_InitExtraOptions()
 end
 
 function HealBot_Timers_Loaded()
-    HealBot_AddChat(HEALBOT_HEALBOT .. " " .. _G["GREEN_FONT_COLOR_CODE"]..HEALBOT_VERSION.._G["FONT_COLOR_CODE_CLOSE"] .. HEALBOT_LOADED .. " " .. HEALBOT_FORHELP .. _G["YELLOW_FONT_COLOR_CODE"].." /hb h".._G["FONT_COLOR_CODE_CLOSE"]);
+    HealBot_AddChat("["..HEALBOT_HEALBOT .. "] " .. _G["GREEN_FONT_COLOR_CODE"]..HEALBOT_VERSION.._G["FONT_COLOR_CODE_CLOSE"] .. HEALBOT_LOADED .. " " .. HEALBOT_FORHELP .. _G["YELLOW_FONT_COLOR_CODE"].." /hb o".._G["FONT_COLOR_CODE_CLOSE"]);
 end
 
 local hbTimerFuncs={["INIT"]={
@@ -632,11 +633,14 @@ local hbTimerFuncs={["INIT"]={
                         ["InitLoadSpells"]=HealBot_Timers_InitSpells,
                         ["SetAutoClose"]=HealBot_Action_setAutoClose,
                         ["CheckHideFrames"]=HealBot_Action_CheckHideFrames,
+                        ["CheckHideUnusedFrames"]=HealBot_Action_CheckHideUnusedFrames,
+                        ["ShowFramesOnSkinChange"]=HealBot_Action_ShowFramesOnSkinChange,
                         ["MountsPetsDalaran"]=HealBot_MountsPets_ClassicDalaranCheck,
                         ["ConfigClassHoT"]=HealBot_Aura_ConfigClassHoT,
+                        ["SendClassicAuraData"]=HealBot_Aura_SendClassicData,
                     },
                    }
-                   
+
 function HealBot_Timers_DoSet(cat,timer)
     HealBot_Timers_LastRun[cat][timer]=GetTime()
     table.insert(HealBot_Timers[cat],timer)

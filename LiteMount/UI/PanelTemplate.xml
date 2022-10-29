@@ -6,26 +6,45 @@
 
 <Frame name="LiteMountContainerStyleTemplate" virtual="true" inherits="BackdropTemplate">
     <KeyValues>
-        <KeyValue key="backdropInfo" value="LM_TOOLTIP_BACKDROP_INFO" type="global"/>
-        <KeyValue key="backdropColor" value="BLACK_FONT_COLOR" type="global"/>
+        <KeyValue key="backdropInfo" value="LM_CONTAINER_BACKDROP_INFO" type="global"/>
         <KeyValue key="backdropBorderColor" value="DARKGRAY_COLOR" type="global"/>
+        <KeyValue key="backdropColor" value="VERY_DARK_GRAY_COLOR" type="global"/>
     </KeyValues>
 </Frame>
 
 <Button name="LiteMountListButtonStyleTemplate" virtual="true" inherits="BackdropTemplate">
     <KeyValues>
         <KeyValue key="backdropInfo" value="LM_LISTBUTTON_BACKDROP_INFO" type="global" />
-        <KeyValue key="backdropColor" value="GRAY_FONT_COLOR" type="global"/>
-        <KeyValue key="backdropColorAlpha" value="0.5" type="number"/>
+        <KeyValue key="backdropBorderColor" value="BLACK_FONT_COLOR" type="global"/>
     </KeyValues>
 </Button>
 
 <Button name="LiteMountButtonStyleTemplate" virtual="true" inherits="BackdropTemplate">
     <KeyValues>
-        <KeyValue key="backdropInfo" value="LM_TOOLTIP_BACKDROP_INFO" type="global"/>
-        <KeyValue key="backdropColor" value="BLACK_FONT_COLOR" type="global"/>
+        <KeyValue key="backdropInfo" value="LM_BUTTON_BACKDROP_INFO" type="global"/>
+        <KeyValue key="backdropColor" value="VERY_DARK_GRAY_COLOR" type="global"/>
         <KeyValue key="backdropBorderColor" value="DARKGRAY_COLOR" type="global"/>
     </KeyValues>
+</Button>
+
+<Button name="LiteMountUIButtonTemplate" virtual="true">
+    <Size x="192" y="36" />
+    <NormalTexture parentKey="NormalTexture" atlas="charactercreate-customize-dropdownbox" />
+    <HighlightTexture parentKey="HighlightTexture" atlas="charactercreate-customize-dropdownbox-open" alphaMode="ADD" alpha="0.2" />
+    <ButtonText inherits="GameFontNormal" parentKey="Text" />
+</Button>
+
+<Button name="LiteMountUISelectButtonTemplate" inherits="LiteMountUIButtonTemplate" virtual="true">
+    <Scripts>
+        <OnEnter>
+            self.HighlightTexture:SetAlpha(0)
+            self.NormalTexture:SetAtlas("charactercreate-customize-dropdownbox-hover");
+        </OnEnter>
+        <OnLeave>
+            self.HighlightTexture:SetAlpha(0.2)
+            self.NormalTexture:SetAtlas("charactercreate-customize-dropdownbox");
+        </OnLeave>
+    </Scripts>
 </Button>
 
 <CheckButton name="LiteMountOptionsCheckButtonTemplate" virtual="true">
@@ -54,18 +73,34 @@
     </Scripts>
     <Layers>
         <Layer level="ARTWORK">
-            <FontString inherits="GameFontNormalLarge" parentKey="Title">
+            <FontString parentKey="Title" inherits="GameFontHighlightHuge" justifyH="LEFT">
                 <Anchors>
-                    <Anchor point="TOPLEFT" x="16" y="-16" />
+                    <Anchor point="TOPLEFT" x="7" y="-22" />
                 </Anchors>
             </FontString>
+            <Texture atlas="Options_HorizontalDivider" useAtlasSize="true">
+                <Anchors>
+                    <Anchor point="TOP" y="-50"/>
+                </Anchors>
+            </Texture>
         </Layer>
     </Layers>
     <Frames>
+        <Button parentKey="DefaultsButton" inherits="UIPanelButtonTemplate" text="SETTINGS_DEFAULTS">
+            <Size x="96" y="22"/>
+            <Anchors>
+                <Anchor point="TOPRIGHT" x="-36" y="-16"/>
+            </Anchors>
+            <Scripts>
+                <OnClick>
+                    LiteMountOptionsPanel_OnDefault(self:GetParent())
+                </OnClick>
+            </Scripts>
+        </Button>
         <Button parentKey="RevertButton" inherits="UIPanelButtonTemplate" text="REVERT">
             <Size x="96" y="22" />
             <Anchors>
-                <Anchor point="BOTTOMLEFT" x="16" y="16" />
+                <Anchor point="RIGHT" relativePoint="LEFT" relativeKey="$parent.DefaultsButton" x="-8" />
             </Anchors>
             <Scripts>
                 <OnClick>
@@ -102,7 +137,7 @@
     </Scripts>
     <Layers>
         <Layer level="ARTWORK">
-            <FontString inherits="GameFontNormalLarge" parentKey="Title" text="LM_EDIT_RULE">
+            <FontString inherits="GameFontHighlightLarge" parentKey="Title">
                 <Anchors>
                     <Anchor point="TOP" y="-16" />
                 </Anchors>

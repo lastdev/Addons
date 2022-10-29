@@ -170,7 +170,7 @@ function HealBot_Tooltip_SetLineLeft(Text,R,G,B,lNo,a)
         hbtTxtL = _G["HealBot_TooltipTextL" .. lNo]
         hbGameTooltip:AddFontStrings(
             hbGameTooltip:CreateFontString( "$parentTextLeft" .. lNo, nil, "GameTooltipText" ),
-            hbGameTooltip:CreateFontString( "$parentTextRight" .. lNo, nil, "GameTooltipText" ) );
+            hbGameTooltip:CreateFontString( "$parentTextRight" .. lNo, nil, "GameTooltipText" ));
         hbtTxtL:SetTextColor(R,G,B,a)
         hbtTxtL:SetText(Text)
         hbtTxtL:Show()
@@ -178,6 +178,22 @@ function HealBot_Tooltip_SetLineLeft(Text,R,G,B,lNo,a)
 end
 
 local hbtTxtR=""
+function HealBot_Tooltip_SetLineBoth(lNo,lText,lR,lG,lB,la,rText,rR,rG,rB,ra)
+    if lNo<41 then
+        hbGameTooltip:AddFontStrings(
+            hbGameTooltip:CreateFontString( "$parentTextLeft" .. lNo, nil, "GameTooltipText" ),
+            hbGameTooltip:CreateFontString( "$parentTextRight" .. lNo, nil, "GameTooltipText" ));
+        hbtTxtL = _G["HealBot_TooltipTextL" .. lNo]
+        hbtTxtR = _G["HealBot_TooltipTextR" .. lNo]
+        hbtTxtR:SetTextColor(rR,rG,rB,ra)
+        hbtTxtL:SetTextColor(lR,lG,lB,la)
+        hbtTxtL:SetText(lText)
+        hbtTxtR:SetText(rText)
+        hbtTxtL:Show()
+        hbtTxtR:Show()
+    end
+end
+
 function HealBot_Tooltip_SetLineRight(Text,R,G,B,lNo,a)
     if lNo<41 then
         hbtTxtR = _G["HealBot_TooltipTextR" .. lNo]
@@ -226,8 +242,7 @@ function HealBot_Tooltip_SetLine(lNo,lText,lR,lG,lB,la,rText,rR,rG,rB,ra)
         if HealBot_Globals.UseGameTooltip then
             GameTooltip:AddDoubleLine(lText,rText,lR,lG,lB,rR,rG,rB)
         else
-            HealBot_Tooltip_SetLineLeft(lText,lR,lG,lB,lNo,la)
-            HealBot_Tooltip_SetLineRight(rText,rR,rG,rB,lNo,ra)
+            HealBot_Tooltip_SetLineBoth(lNo,lText,lR,lG,lB,la,rText,rR,rG,rB,ra)
         end
     else
         if HealBot_Globals.UseGameTooltip then
@@ -551,7 +566,7 @@ function HealBot_Action_DoRefreshTooltip()
         if HealBot_Globals.Tooltip_ShowTarget then
             if uName then
                 local r,g,b=xButton.text.r,xButton.text.g,xButton.text.b
-                local uLvl=UnitLevel(xButton.unit)
+                local uLvl=xButton.level
                 if uLvl<1 then 
                     uLvl=nil
                 else
@@ -594,7 +609,7 @@ function HealBot_Action_DoRefreshTooltip()
                     uSpec=xButton.spec
                 end
                 if HEALBOT_GAME_VERSION>2 and uSpec==" " then
-                    HealBot_QueueSpecSlowUpdate(xButton)
+                    HealBot_OnEvent_SpecChange(xButton)
                 end
                 HealBot_Tooltip_luVars["uGroup"]=0
                 if IsInRaid() then 
@@ -813,7 +828,7 @@ function HealBot_Action_DoRefreshTargetTooltip(button)
     local r,g,b=button.text.r,button.text.g,button.text.b
 
     if UnitClass(button.unit) then
-        HealBot_Tooltip_SetLine(linenum,button.text.nameonly,r,g,b,1,"Level "..UnitLevel(button.unit)..button.spec..UnitClass(button.unit),r,g,b,1)    
+        HealBot_Tooltip_SetLine(linenum,button.text.nameonly,r,g,b,1,"Level "..button.level..button.spec..UnitClass(button.unit),r,g,b,1)    
     else
         HealBot_Tooltip_SetLine(linenum,button.text.nameonly,r,g,b,1,rText,rR,rG,rB,ra)
     end

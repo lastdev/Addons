@@ -234,7 +234,7 @@ function RSTooltip.ShowGroupTooltip(pin)
 end
 
 local function AddLastTimeSeenTooltip(tooltip, pin)
-	if (not RSConfigDB.IsShowingTooltipsSeen()) then
+	if (not RSConfigDB.IsShowingTooltipsSeen() or pin.POI.isDragonGlyph) then
 		return
 	end
 	

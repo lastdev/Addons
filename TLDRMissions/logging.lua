@@ -248,7 +248,9 @@ function addon:logCompletedMission(missionID, canComplete, success, overmaxSucce
                         end
                         
                         print("DEVTESTING: Discrepancy for mission " ..missionID)
-                        WeakAuras.ScanEvents("TLDRMISSIONS_DEVTESTING")
+                        if WeakAuras then
+                            WeakAuras.ScanEvents("TLDRMISSIONS_DEVTESTING")
+                        end
                         addon.GUI.CompleteMissionsButton.usedShortcut = false
                         return
                     end

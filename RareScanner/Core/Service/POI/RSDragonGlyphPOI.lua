@@ -28,6 +28,7 @@ local RSUtils = private.ImportLib("RareScannerUtils")
 function RSDragonGlyphPOI.GetDragonGlyphPOI(glyphID, mapID, glyphInfo)
 	local POI = {}
 	POI.entityID = glyphID
+	POI.isDragonGlyph = true
 	POI.grouping = false
 	POI.name = RSDragonGlyphDB.GetDragonGlyphName(glyphID) or AL["DRAGON_GLYPH"]
 	POI.mapID = mapID

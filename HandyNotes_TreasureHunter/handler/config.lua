@@ -1,5 +1,8 @@
 local myname, ns = ...
 
+-- compatibility between 10.0.0 and classic
+local GetPlayerAuraBySpellID = _G.GetPlayerAuraBySpellID or C_UnitAuras.GetPlayerAuraBySpellID
+
 ns.defaults = {
     profile = {
         default_icon = "VignetteLoot",

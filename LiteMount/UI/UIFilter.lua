@@ -19,7 +19,7 @@ local DefaultFilterList = {
     other = { HIDDEN=true, UNUSABLE=true },
     priority = { },
     source = { },
-    type = { },
+    typeid = { },
 }
 
 LM.UIFilter = {
@@ -64,6 +64,8 @@ end
 local function FilterSort(a, b)
     if a.isCollected and not b.isCollected then return true end
     if not a.isCollected and b.isCollected then return false end
+    if a.dragonRiding and not b.dragonRiding then return true end
+    if not a.dragonRiding and b.dragonRiding then return false end
     return a.name < b.name
 end
 
@@ -199,47 +201,47 @@ function LM.UIFilter.GetFamilyText(i)
 end
 
 
--- Types -----------------------------------------------------------------------
+-- TypeIDs ---------------------------------------------------------------------
 
-function LM.UIFilter.IsTypeChecked(t)
-    return not LM.UIFilter.filterList.type[t]
+function LM.UIFilter.IsTypeIDChecked(t)
+    return not LM.UIFilter.filterList.typeid[t]
 end
 
-function LM.UIFilter.SetTypeFilter(t, v)
+function LM.UIFilter.SetTypeIDFilter(t, v)
     LM.UIFilter.ClearCache()
     if v then
-        LM.UIFilter.filterList.type[t] = nil
+        LM.UIFilter.filterList.typeid[t] = nil
     else
-        LM.UIFilter.filterList.type[t] = true
+        LM.UIFilter.filterList.typeid[t] = true
     end
     callbacks:Fire('OnFilterChanged')
 end
 
-function LM.UIFilter.SetAllTypeFilters(v)
+function LM.UIFilter.SetAllTypeIDFilters(v)
     LM.UIFilter.ClearCache()
     for n in pairs(LM.MOUNT_TYPES) do
         if v then
-            LM.UIFilter.filterList.type[n] = nil
+            LM.UIFilter.filterList.typeid[n] = nil
         else
-            LM.UIFilter.filterList.type[n] = true
+            LM.UIFilter.filterList.typeid[n] = true
         end
     end
     callbacks:Fire('OnFilterChanged')
 end
 
-function LM.UIFilter.GetTypes()
+function LM.UIFilter.GetTypeIDs()
     local out = {}
     for t in pairs(LM.MOUNT_TYPES) do table.insert(out, t) end
     sort(out, function (a,b) return LM.MOUNT_TYPES[a] < LM.MOUNT_TYPES[b] end)
     return out
 end
 
-function LM.UIFilter.GetTypeText(t)
+function LM.UIFilter.GetTypeIDText(t)
     return LM.MOUNT_TYPES[t]
 end
 
 
--- Flags -----------------------------------------------------------------------
+-- Flags ("Type" now) ----------------------------------------------------------
 
 function LM.UIFilter.IsFlagChecked(f)
     return not LM.UIFilter.filterList.flag[f]
@@ -411,8 +413,8 @@ function LM.UIFilter.IsFilteredMount(m)
         return true
     end
 
-    -- Type filters
-    if LM.UIFilter.filterList.type[m.mountType or 0] == true then
+    -- TypeID filters
+    if LM.UIFilter.filterList.typeid[m.mountTypeID or 0] == true then
         return true
     end
 
@@ -469,7 +471,7 @@ function LM.UIFilter.IsFilteredMount(m)
     if next(LM.UIFilter.filterList.flag) then
         local isFiltered = true
         for f in pairs(m:GetFlags()) do
-            if LM.Options:IsFlag(f) and not LM.UIFilter.filterList.flag[f] then
+            if LM.FLAG[f] ~= nil and not LM.UIFilter.filterList.flag[f] then
                 isFiltered = false
                 break
             end

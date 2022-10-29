@@ -11,9 +11,9 @@
         <Layer level="ARTWORK">
             <FontString parentKey="ExplainText" inherits="GameFontNormal" justifyV="TOP" justifyH="LEFT" text="LM_ADVANCED_EXP">
                 <Anchors>
-                    <Anchor point="TOP" y="-48" />
-                    <Anchor point="LEFT" x="48" />
-                    <Anchor point="RIGHT" x="-48" />
+                    <Anchor point="TOP" y="-60" />
+                    <Anchor point="LEFT" x="24" />
+                    <Anchor point="RIGHT" x="-24" />
                 </Anchors>
             </FontString>
         </Layer>
@@ -57,19 +57,6 @@
             </ScrollChild>
         </ScrollFrame>
 
-        <Button parentKey="DefaultButton" inherits="UIPanelButtonTemplate" text="DEFAULT">
-            <Size x="96" y="22" />
-            <Anchors>
-                <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" relativeKey="$parent.EditBoxContainer" x="-8" y="3" />
-            </Anchors>
-            <Scripts>
-                <OnClick>
-                    local parent = self:GetParent()
-                    LiteMountOptionsControl_Default(parent.EditScroll.EditBox, true)
-                </OnClick>
-            </Scripts>
-        </Button>
-
         <Button parentKey="UnlockButton" inherits="UIPanelButtonTemplate" mixin="LiteMountAdvancedUnlockButtonMixin" text="UNLOCK">
             <Size x="96" y="22" />
             <Anchors>
@@ -95,7 +82,7 @@
         </Button>
 -->
 
-        <Frame parentkey="BindingDropDown" inherits="UIDropDownMenuTemplate">
+        <Frame parentkey="BindingDropDown">
             <Size x="93" y="22" />
             <Anchors>
                 <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" relativeKey="$parent.EditBoxContainer" x="-8" />
@@ -120,6 +107,9 @@
                     self:SetText(self.url)
                     self:HighlightText()
                 </OnTextChanged>
+                <OnEditFocusLost>
+                    self:HighlightText()
+                </OnEditFocusLost>
                 <OnEditFocusGained>
                     self:HighlightText()
                 </OnEditFocusGained>

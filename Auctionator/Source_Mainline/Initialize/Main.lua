@@ -1,6 +1,5 @@
 local AUCTIONATOR_EVENTS = {
-  -- AH Window Initialization Events
-  "AUCTION_HOUSE_SHOW",
+  "PLAYER_INTERACTION_MANAGER_FRAME_SHOW",
 }
 
 AuctionatorInitializeMainlineMixin = {}
@@ -10,8 +9,15 @@ function AuctionatorInitializeMainlineMixin:OnLoad()
 end
 
 function AuctionatorInitializeMainlineMixin:OnEvent(event, ...)
-  if event == "AUCTION_HOUSE_SHOW" then
-    self:AuctionHouseShown()
+  if event == "PLAYER_INTERACTION_MANAGER_FRAME_SHOW" then
+    local showType = ...
+    -- Cache vendor prices events
+    if showType == Enum.PlayerInteractionType.Merchant then
+      Auctionator.CraftingInfo.CacheVendorPrices()
+     -- AH Window Initialization Events
+    elseif showType == Enum.PlayerInteractionType.Auctioneer then
+      self:AuctionHouseShown()
+    end
   end
 end
 
@@ -28,6 +34,4 @@ function AuctionatorInitializeMainlineMixin:AuctionHouseShown()
   if Auctionator.State.AuctionatorFrame == nil then
     Auctionator.State.AuctionatorFrame = CreateFrame("FRAME", "AuctionatorAHFrame", AuctionHouseFrame, "AuctionatorAHFrameTemplate")
   end
-
-  FrameUtil.RegisterFrameForEvents(Auctionator.State.AuctionatorFrame, { "AUCTION_HOUSE_SHOW", "AUCTION_HOUSE_CLOSED" })
 end
