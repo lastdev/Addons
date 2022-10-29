@@ -1062,8 +1062,14 @@ function SMARTBUFF_SetBuff(buff, i, ia)
   else
     if (cBuffs[i].Type == SMARTBUFF_CONST_TRACK) then
       local b = false;
-      for n = 1, GetNumTrackingTypes() do 
-	      local trackN, trackT, trackA, trackC = GetTrackingInfo(n);
+      
+	DEFAULT_CHAT_FRAME:AddMessage("count here");
+      local count = C_Minimap.GetNumTrackingTypes()
+	DEFAULT_CHAT_FRAME:AddMessage(count);
+
+
+      for n = 1, C_Minimap.GetNumTrackingTypes() do 
+	      local trackN, trackT, trackA, trackC = C_Minimap.GetTrackingInfo(n);
 	      if (trackN ~= nil) then
 	        --SMARTBUFF_AddMsgD(n..". "..trackN.." ("..trackC..")");
 	        if (trackN == cBuffs[i].BuffS) then
@@ -1816,9 +1822,9 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
               -- Tracking ability ------------------------------------------------------------------------
               if (cBuff.Type == SMARTBUFF_CONST_TRACK) then
                 --print("Check tracking: "..buffnS)
-                local count = GetNumTrackingTypes();
-                for n = 1, GetNumTrackingTypes() do 
-	                local trackN, trackT, trackA, trackC = GetTrackingInfo(n);
+                local count = C_Minimap.GetNumTrackingTypes()
+                for n = 1, C_Minimap.GetNumTrackingTypes() do 
+	                local trackN, trackT, trackA, trackC = C_Minimap.GetTrackingInfo(n);
 	                if (trackN ~= nil and not trackA) then
 	                  --SMARTBUFF_AddMsgD(n..". "..trackN.." ("..trackC..")");
 	                  if (trackN == buffnS) then

@@ -73,7 +73,8 @@ local GetPointInfo = function(point)
     local icon
     if point then
         local label = getCreatureNamebyID(point.npc) or point.label or UNKNOWN
-        local MagePortalHorde = private.constants.icon["MagePortalHorde"]
+        private.constants.icon = private.constants.icon OR []
+        local MagePortalHorde = "Interface\\AddOns\\"..FOLDER_NAME.."\\icons\\portal_red"
 
         if (point.icon == "portal" and point.sanctumtalent) then
             local TALENT = C_Garrison.GetTalentInfo(point.sanctumtalent)
