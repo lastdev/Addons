@@ -755,7 +755,12 @@ addon:Controller("AltoholicUI.TabSummaryCategoriesList", {
 					-- { text = GetCategoryInfo(15440), profile = 23 },
 				}},
 			}},
-			{ text = CHALLENGES, profile = 22 },
+			{ text = CHALLENGES, subMenu = {
+				-- Weekly Best
+				{ text = CHALLENGE_MODE_WEEKLY_BEST, profile = 22 },
+				-- Weekly Rewards
+				{ text = REWARDS, profile = 26 },
+			}},
 		}
 	
 		-- Initialize categories (auto-fill the on-click callback)

@@ -4,8 +4,9 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 
 local addon = _G[addonName]
 
-addon.Version = "v9.2.006"
-addon.VersionNum = 902006
+addon.Version = "v10.0.001"
+-- addon.VersionNum = 902006
+addon.VersionNum = 1000001
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local commPrefix = addonName
@@ -82,7 +83,7 @@ local AddonDB_Defaults = {
 			["UI.Tabs.Summary.CurrentFactions"] = 3,							-- 1 = Alliance, 2 = Horde, 3 = Both
 			["UI.Tabs.Summary.CurrentLevels"] = 1,								-- 1 = All
 			["UI.Tabs.Summary.CurrentLevelsMin"] = 1,							
-			["UI.Tabs.Summary.CurrentLevelsMax"] = 60,					
+			["UI.Tabs.Summary.CurrentLevelsMax"] = 70,					
 			["UI.Tabs.Summary.CurrentBankType"] = 0,							-- 0 = All
 			["UI.Tabs.Summary.CurrentClasses"] = 0,							-- 0 = All
 			["UI.Tabs.Summary.CurrentTradeSkill"] = 0,						-- 0 = All
@@ -176,7 +177,7 @@ local AddonDB_Defaults = {
 			-- ** Minimap options **
 			["UI.Minimap.ShowIcon"] = true,
 			["UI.Minimap.IconAngle"] = 180,
-			["UI.Minimap.IconRadius"] = 78,
+			["UI.Minimap.IconRadius"] = 102,
 			
 			-- ** Calendar options **
 			["UI.Calendar.WarningsEnabled"] = true,

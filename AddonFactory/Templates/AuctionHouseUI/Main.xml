@@ -14,6 +14,8 @@
 		<Anchors>
 			<Anchor point="CENTER"/>
 		</Anchors>
+		<!-- Deprecated in 10.0 -->
+		<!--  
 		<Layers>
 			<Layer level="OVERLAY">
 				<FontString parentKey="Title" inherits="GameFontNormal" justifyH="CENTER">
@@ -25,6 +27,7 @@
 				</FontString>
 			</Layer>
 		</Layers>
+		-->
 		<Frames>
 			<!-- Isolated loader, to prevent from being superseded by the inherited frame's OnLoad -->
 			<Frame>

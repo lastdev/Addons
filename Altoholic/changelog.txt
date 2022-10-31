@@ -14,6 +14,22 @@ How to support Altoholic's development :
 
 If you like the addon, consider supporting it, this has been the long term effort and commitment of a single person. #ArmyOfOne
 
+
+10.0.001 (30/10/2022)
+
+- Fixed the minimap icon.
+- Fixed tab buttons not being properly attached to the addon's UI.
+- DataStore_Containers : fixed the Void Storage events.
+- DataStore_Currencies : fixed the Covenant Sanctum events.
+- DataStore_Garrisons : fixed the Covenant Sanctum events.
+- DataStore_Auctions : fixed an issue with auctions not being properly scanned.
+- DataStore_Crafts : fixed scanning errors caused by Dragonflight API changes.
+- Characters tab : Fixed multiple errors.
+- Characters tab : The old talent UI is still showing if you have data in your database. 
+The new talent UI is not ready, it's not even started since I did not get Dragonflight beta access. 
+- Summary tab : added one more view under M+ dungeons, to list the weekly rewards.
+
+
 9.2.006 (05/08/2022)
 
 - DataStore : Removed a check that caused a clean of the current alt's data.

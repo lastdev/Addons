@@ -52,6 +52,7 @@ lib:RegisterItems({
 	[20861] = SetFactionItem(0, NOZDORMU), -- Bronze Scarab
 	[20862] = SetFactionItem(0, NOZDORMU), -- Crystal Scarab
 	[20863] = SetFactionItem(0, NOZDORMU), -- Clay Scarab
+	[20864] = SetFactionItem(0, NOZDORMU), -- Bone Scarab
 	[20865] = SetFactionItem(0, NOZDORMU), -- Ivory Scarab
 	
 	[20866] = SetFactionItem(0, NOZDORMU, AQ_RUINS), -- Azure Idol

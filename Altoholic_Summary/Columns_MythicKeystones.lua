@@ -12,7 +12,7 @@ local Formatter = MVC:GetService("AltoholicUI.Formatter")
 -- ** Keystones **
 Columns.RegisterColumn("KeyName", {
 	-- Header
-	headerWidth = 100,
+	headerWidth = 180,
 	headerLabel = format("%s  %s", Formatter.Texture18("Interface\\Icons\\inv_relics_hourglass"), L["COLUMN_KEYNAME_TITLE_SHORT"]),
 	tooltipTitle = L["COLUMN_KEYNAME_TITLE"],
 	tooltipSubTitle = L["COLUMN_KEYNAME_SUBTITLE"],
@@ -20,7 +20,7 @@ Columns.RegisterColumn("KeyName", {
 	headerSort = DataStore.GetKeystoneName,
 	
 	-- Content
-	Width = 100,
+	Width = 180,
 	JustifyH = "CENTER",
 	GetText = function(character) 
 		return Formatter.GreyIfEmpty(DataStore:GetKeystoneName(character))
@@ -174,4 +174,64 @@ Columns.RegisterColumn("WeeklyBestKeyTime", {
 
 			tt:Show()
 		end,	
+})
+
+
+-- ** Weekly Rewards **
+
+Columns.RegisterColumn("RewardMythic", {
+	-- Header
+	headerWidth = 120,
+	headerLabel = CHALLENGES,
+	tooltipTitle = CHALLENGES,
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("RewardMythic") end,
+	headerSort = DataStore.GetWeeklyMythicPlusReward,
+	
+	-- Content
+	Width = 120,
+	JustifyH = "CENTER",
+	GetText = function(character) 
+		local level = DataStore:GetWeeklyMythicPlusReward(character) or 0
+		local color = (level == 0) and colors.grey or colors.white
+		
+		return format("%s%s%s/%s%s", color, level, colors.white, colors.yellow, 8)
+	end,
+})
+
+Columns.RegisterColumn("RewardRaid", {
+	-- Header
+	headerWidth = 80,
+	headerLabel = RAIDS,
+	tooltipTitle = RAIDS,
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("RewardRaid") end,
+	headerSort = DataStore.GetWeeklyRaidReward,
+	
+	-- Content
+	Width = 80,
+	JustifyH = "CENTER",
+	GetText = function(character) 
+		local level = DataStore:GetWeeklyRaidReward(character) or 0
+		local color = (level == 0) and colors.grey or colors.white
+		
+		return format("%s%s%s/%s%s", color, level, colors.white, colors.yellow, 8)
+	end,
+})
+
+Columns.RegisterColumn("RewardPvP", {
+	-- Header
+	headerWidth = 120,
+	headerLabel = PLAYER_V_PLAYER,
+	tooltipTitle = PLAYER_V_PLAYER,
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("RewardPvP") end,
+	headerSort = DataStore.GetWeeklyRankedPvPReward,
+	
+	-- Content
+	Width = 120,
+	JustifyH = "CENTER",
+	GetText = function(character) 
+		local level = DataStore:GetWeeklyRankedPvPReward(character) or 0
+		local color = (level == 0) and colors.grey or colors.white
+		
+		return format("%s%s%s/%s%s", color, level, colors.white, colors.yellow, 5500)
+	end,
 })

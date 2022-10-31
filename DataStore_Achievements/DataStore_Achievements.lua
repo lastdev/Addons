@@ -214,7 +214,10 @@ local function OnPlayerAlive()
 
 	ScanAllAchievements()
 	ScanProgress()
-	ScanTabards()
+	
+	if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
+		ScanTabards()
+	end
 
 	addon.ThisCharacter.guid = UnitGUID("player") -- Get the GUID for achievement links
 end

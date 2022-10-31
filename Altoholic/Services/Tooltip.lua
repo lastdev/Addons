@@ -640,7 +640,14 @@ addon:Service("AltoholicUI.Tooltip", { function()
 			end)
 			InstallHook(GameTooltip, "SetRecipeReagentItem", function(self, recipeID, reagentIndex)
 				if recipeID and reagentIndex then
-					storedLink = C_TradeSkillUI.GetRecipeReagentItemLink(recipeID, reagentIndex)
+					local schematic = C_TradeSkillUI.GetRecipeSchematic(recipeID, false)
+					local reagent = schematic.reagentSlotSchematics[reagentIndex]
+					local itemID = reagent.reagents[1].itemID
+					
+					storedLink = select(2, GetItemInfo(itemID))
+					
+					-- print(recipeID, reagentIndex)
+					-- storedLink = C_TradeSkillUI.GetRecipeReagentItemLink(recipeID, reagentIndex)
 				end
 			end)
 			

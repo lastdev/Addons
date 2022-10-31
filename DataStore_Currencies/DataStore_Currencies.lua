@@ -233,8 +233,11 @@ local function OnArtifactHistoryReady()
 	ScanArcheology()
 end
 
-local function OnCovenantSanctumInteractionStarted()
-	ScanReservoirCurrencies()
+local function OnCovenantSanctumInteractionStarted(event, interactionType)
+
+	if interactionType == Enum.PlayerInteractionType.CovenantSanctum then
+		ScanReservoirCurrencies()
+	end
 end
 
 -- ** Mixins **
@@ -441,7 +444,7 @@ function addon:OnEnable()
 	addon:RegisterEvent("PLAYER_ALIVE", OnPlayerAlive)
 	addon:RegisterEvent("CURRENCY_DISPLAY_UPDATE", OnCurrencyDisplayUpdate)
 	addon:RegisterEvent("CHAT_MSG_SYSTEM", OnChatMsgSystem)
-	addon:RegisterEvent("COVENANT_SANCTUM_INTERACTION_STARTED", OnCovenantSanctumInteractionStarted)
+	addon:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", OnCovenantSanctumInteractionStarted)
 	
 	local _, _, arch = GetProfessions()
 
@@ -456,5 +459,5 @@ function addon:OnDisable()
 	addon:UnregisterEvent("PLAYER_ALIVE")
 	addon:UnregisterEvent("CURRENCY_DISPLAY_UPDATE")
 	addon:UnregisterEvent("CHAT_MSG_SYSTEM")
-	addon:UnregisterEvent("COVENANT_SANCTUM_INTERACTION_STARTED")
+	addon:UnregisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW")
 end

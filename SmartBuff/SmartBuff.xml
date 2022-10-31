@@ -8,7 +8,7 @@
 	<Script file="localization.cn.lua" />
 	<Script file="SmartBuff.buffs.lua" />
 	<Script file="SmartBuff.lua" />
-	<Button name="SmartBuff_ActionButtonTemplate" inherits="SecureActionButtonTemplate" virtual="true" hidden="true">
+	<Button name="SmartBuff_ActionButtonTemplate" inherits="SecureActionButtonTemplate,SecureHandlerBaseTemplate" virtual="true" hidden="true">
 		<Size>
 			<AbsDimension x="32" y="32" />
 		</Size>
@@ -55,7 +55,7 @@
 			<AbsDimension x="420" y="100" />
 		</Size>
 		<Anchors>
-			<Anchor point="TOPLEFT">
+			<Anchor point="CENTER">
 				<AbsDimension x="0" y="0" />
 			</Anchor>
 		</Anchors>
@@ -113,9 +113,8 @@
 				</Offset>
 			</Anchor>
 		</Anchors>
-		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" />
 		<Frames>
-			<Button name="$parent_btnFontStyle" parentKey="fontstyle" inherits="OptionsButtonTemplate" text="SMARTBUFF_OFT_FONTSTYLE">
+			<Button name="$parent_btnFontStyle" parentKey="fontstyle" inherits="UIPanelButtonTemplate" text="SMARTBUFF_OFT_FONTSTYLE">
 				<Size>
 					<AbsDimension x="72" y="21" />
 				</Size>
@@ -212,7 +211,7 @@
 					</OnValueChanged>
 				</Scripts>
 			</Slider>
-			<CheckButton name="$parent_cbIcon" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="$parent_cbIcon" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -244,7 +243,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="$parent_cbMsgShort" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="$parent_cbMsgShort" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -439,18 +438,10 @@
 		<Scripts>
 			<OnLoad>
 				self:EnableMouse(true);
-				self:EnableKeyboard(false);
 				self:RegisterForDrag("LeftButton");
-				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
-
+				self:RegisterForClicks("AnyUp", "AnyDown");
 				self:SetScript("PreClick", SMARTBUFF_OnPreClick);
 				self:SetScript("PostClick", SMARTBUFF_OnPostClick);
-
-				self.title = self:CreateFontString(nil, "OVERLAY");
-				self.title:SetFontObject("GameFontNormal");
-				self.title:SetAllPoints(self);
-				self.title:SetText("SB");
-
 				self:SetAttribute("type", "spell");
 				self:SetAttribute("unit", nil);
 				self:SetAttribute("spell", nil);
@@ -471,22 +462,11 @@
 	</Button>
 	<Frame name="SmartBuffOptionsFrame" hidden="true" parent="UIParent" toplevel="true" movable="true" frameStrata="DIALOG" enableMouse="true">
 		<Size>
-			<AbsDimension x="500" y="630" />
+			<AbsDimension x="560" y="630" />
 		</Size>
 		<Anchors>
-			<Anchor point="CENTER"/>
+			<Anchor point="CENTER" x="30" y="0" />
 		</Anchors>
-		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
-			<BackgroundInsets>
-				<AbsInset left="11" right="12" top="12" bottom="11" />
-			</BackgroundInsets>
-			<TileSize>
-				<AbsValue val="32" />
-			</TileSize>
-			<EdgeSize>
-				<AbsValue val="32" />
-			</EdgeSize>
-		</Backdrop>
 		<Layers>
 			<Layer>
 				<Texture name="SmartBuffOptionsFrameHeader" file="Interface\DialogFrame\UI-DialogBox-Header">
@@ -522,7 +502,7 @@
 					</Anchor>
 				</Anchors>
 			</Button>
-			<CheckButton name="SmartBuffOptionsFrame_cbSB" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuffOptionsFrame_cbSB" inherits="UICheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT">
 						<Offset>
@@ -550,7 +530,7 @@
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuffOptionsFrame_cbAuto" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuffOptionsFrame_cbAuto" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="24" y="24" />
 				</Size>
@@ -620,7 +600,7 @@
 					</OnLeave>
 				</Scripts>
 			</Slider>
-			<CheckButton name="SmartBuffOptionsFrame_cbAutoCombat" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuffOptionsFrame_cbAutoCombat" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -651,7 +631,7 @@
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuffOptionsFrame_cbAutoChat" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuffOptionsFrame_cbAutoChat" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -682,7 +662,7 @@
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuffOptionsFrame_cbAutoSplash" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuffOptionsFrame_cbAutoSplash" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -713,7 +693,7 @@
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuffOptionsFrame_cbAutoSound" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuffOptionsFrame_cbAutoSound" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -866,7 +846,7 @@
 					</OnLeave>
 				</Scripts>
 			</Slider>
-			<CheckButton name="SmartBuffOptionsFrame_cbAutoSwitchTmp" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuffOptionsFrame_cbAutoSwitchTmp" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="24" y="24" />
 				</Size>
@@ -897,7 +877,7 @@
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuffOptionsFrame_cbAutoSwitchTmpInst" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuffOptionsFrame_cbAutoSwitchTmpInst" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="24" y="24" />
 				</Size>
@@ -928,7 +908,7 @@
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuffOptionsFrame_cbLinkGrpBuffCheck" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuffOptionsFrame_cbLinkGrpBuffCheck" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="24" y="24" />
 				</Size>
@@ -959,7 +939,7 @@
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuffOptionsFrame_cbAntiDaze" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuffOptionsFrame_cbAntiDaze" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="24" y="24" />
 				</Size>
@@ -990,7 +970,7 @@
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuffOptionsFrame_cbLinkSelfBuffCheck" inherits="OptionsCheckButtonTemplate" hidden="true">
+			<CheckButton name="SmartBuffOptionsFrame_cbLinkSelfBuffCheck" inherits="UICheckButtonTemplate" hidden="true">
 				<Size>
 					<AbsDimension x="24" y="24" />
 				</Size>
@@ -1021,7 +1001,7 @@
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuffOptionsFrame_cbBuffPvP" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuffOptionsFrame_cbBuffPvP" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="24" y="24" />
 				</Size>
@@ -1052,7 +1032,7 @@
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuffOptionsFrame_cbBuffTarget" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuffOptionsFrame_cbBuffTarget" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="24" y="24" />
 				</Size>
@@ -1083,7 +1063,7 @@
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuffOptionsFrame_cbScrollWheelUp" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuffOptionsFrame_cbScrollWheelUp" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="24" y="24" />
 				</Size>
@@ -1114,7 +1094,7 @@
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuffOptionsFrame_cbScrollWheelDown" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuffOptionsFrame_cbScrollWheelDown" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="24" y="24" />
 				</Size>
@@ -1145,7 +1125,7 @@
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuffOptionsFrame_cbBuffInCities" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuffOptionsFrame_cbBuffInCities" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="24" y="24" />
 				</Size>
@@ -1176,7 +1156,7 @@
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuffOptionsFrame_cbInShapeshift" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuffOptionsFrame_cbInShapeshift" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="24" y="24" />
 				</Size>
@@ -1205,7 +1185,7 @@
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuffOptionsFrame_cbInCombat" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuffOptionsFrame_cbInCombat" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="24" y="24" />
 				</Size>
@@ -1269,7 +1249,7 @@
 					</OnLeave>
 				</Scripts>
 			</Slider>
-			<CheckButton name="SmartBuffOptionsFrame_cbMsgNormal" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuffOptionsFrame_cbMsgNormal" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -1306,7 +1286,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuffOptionsFrame_cbMsgError" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuffOptionsFrame_cbMsgError" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -1330,7 +1310,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuffOptionsFrame_cbMsgWarning" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuffOptionsFrame_cbMsgWarning" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -1354,7 +1334,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuffOptionsFrame_cbHideMmButton" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuffOptionsFrame_cbHideMmButton" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -1385,7 +1365,7 @@
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuffOptionsFrame_cbHideSAButton" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuffOptionsFrame_cbHideSAButton" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -1448,7 +1428,7 @@
 			</Button>
 			<ScrollFrame name="SmartBuffOptionsFrame_ScrollFrameBuffs" inherits="FauxScrollFrameTemplate">
 				<Size>
-					<AbsDimension x="164" y="504" />
+					<AbsDimension x="240" y="424" />
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT">
@@ -1477,7 +1457,7 @@
 					</OnShow>
 				</Scripts>
 			</ScrollFrame>
-			<CheckButton name="SmartBuffOptionsFrame_cbSelfFirst" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuffOptionsFrame_cbSelfFirst" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -1508,7 +1488,10 @@
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-			<Button name="SmartBuffOptionsFrameRBT" inherits="OptionsButtonTemplate" text="SMARTBUFF_OFT_RBT">
+			<Button name="SmartBuffOptionsFrameRBT" inherits="UIPanelButtonTemplate" text="SMARTBUFF_OFT_RBT">
+				<Size>
+					<AbsDimension x="88" y="33" />
+				</Size>
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeTo="$parent" relativePoint="BOTTOMLEFT">
 						<Offset x="20" y="27" />
@@ -1520,7 +1503,10 @@
 					</OnClick>
 				</Scripts>
 			</Button>
-			<Button name="SmartBuffOptionsFrameResetAll" inherits="OptionsButtonTemplate" text="SMARTBUFF_OFT_RESETALL">
+			<Button name="SmartBuffOptionsFrameResetAll" inherits="UIPanelButtonTemplate" text="SMARTBUFF_OFT_RESETALL">
+				<Size>
+					<AbsDimension x="88" y="33" />
+				</Size>
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeTo="$parent" relativePoint="BOTTOMLEFT">
 						<Offset x="116" y="27" />
@@ -1533,7 +1519,10 @@
 					</OnClick>
 				</Scripts>
 			</Button>
-			<Button name="SmartBuffOptionsFrameResetOrder" inherits="OptionsButtonTemplate" text="SMARTBUFF_OFT_RESETLIST">
+			<Button name="SmartBuffOptionsFrameResetOrder" inherits="UIPanelButtonTemplate" text="SMARTBUFF_OFT_RESETLIST">
+				<Size>
+					<AbsDimension x="88" y="33" />
+				</Size>
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeTo="$parent" relativePoint="BOTTOMLEFT">
 						<Offset x="212" y="27" />
@@ -1545,7 +1534,10 @@
 					</OnClick>
 				</Scripts>
 			</Button>
-			<Button name="SmartBuffOptionsFrameDone" inherits="OptionsButtonTemplate" text="SMARTBUFF_OFT_DONE">
+			<Button name="SmartBuffOptionsFrameDone" inherits="UIPanelButtonTemplate" text="SMARTBUFF_OFT_DONE">
+				<Size>
+					<AbsDimension x="88" y="33" />
+				</Size>
 				<Anchors>
 					<Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT">
 						<Offset x="-20" y="27" />
@@ -1557,7 +1549,7 @@
 					</OnClick>
 				</Scripts>
 			</Button>
-			<CheckButton name="SmartBuffOptionsFrame_cbIncludeToys" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuffOptionsFrame_cbIncludeToys" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="24" y="24" />
 				</Size>
@@ -1634,17 +1626,6 @@
 				</Offset>
 			</Anchor>
 		</Anchors>
-		<Backdrop name="SmartBuff_BuffSetup_Backdrop" bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
-			<BackgroundInsets>
-				<AbsInset left="11" right="12" top="12" bottom="11" />
-			</BackgroundInsets>
-			<TileSize>
-				<AbsValue val="32" />
-			</TileSize>
-			<EdgeSize>
-				<AbsValue val="32" />
-			</EdgeSize>
-		</Backdrop>
 		<Frames>
 			<EditBox name="SmartBuff_BuffSetup_BuffText" letters="200" multiLine="true" autoFocus="false">
 				<Size>
@@ -1709,7 +1690,7 @@
 				</Scripts>
 				<NormalTexture file="Interface\\Icons\\INV_Misc_PocketWatch_01" />
 			</Button>
-			<CheckButton justifyH="LEFT" name="SmartBuff_BuffSetup_cbSelf" inherits="OptionsCheckButtonTemplate">
+			<CheckButton justifyH="LEFT" name="SmartBuff_BuffSetup_cbSelf" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -1740,7 +1721,7 @@
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-			<CheckButton justifyH="LEFT" name="SmartBuff_BuffSetup_cbSelfNot" inherits="OptionsCheckButtonTemplate">
+			<CheckButton justifyH="LEFT" name="SmartBuff_BuffSetup_cbSelfNot" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -1771,7 +1752,7 @@
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-			<CheckButton justifyH="LEFT" name="SmartBuff_BuffSetup_cbCombatIn" inherits="OptionsCheckButtonTemplate">
+			<CheckButton justifyH="LEFT" name="SmartBuff_BuffSetup_cbCombatIn" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -1802,7 +1783,7 @@
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-			<CheckButton justifyH="LEFT" name="SmartBuff_BuffSetup_cbCombatOut" inherits="OptionsCheckButtonTemplate">
+			<CheckButton justifyH="LEFT" name="SmartBuff_BuffSetup_cbCombatOut" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -1881,7 +1862,7 @@
 					</OnLeave>
 				</Scripts>
 			</EditBox>
-			<CheckButton justifyH="LEFT" name="SmartBuff_BuffSetup_cbMH" inherits="OptionsCheckButtonTemplate">
+			<CheckButton justifyH="LEFT" name="SmartBuff_BuffSetup_cbMH" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -1912,7 +1893,7 @@
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-			<CheckButton justifyH="LEFT" name="SmartBuff_BuffSetup_cbOH" inherits="OptionsCheckButtonTemplate">
+			<CheckButton justifyH="LEFT" name="SmartBuff_BuffSetup_cbOH" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -1943,7 +1924,7 @@
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-			<CheckButton justifyH="LEFT" name="SmartBuff_BuffSetup_cbRH" inherits="OptionsCheckButtonTemplate">
+			<CheckButton justifyH="LEFT" name="SmartBuff_BuffSetup_cbRH" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -1974,7 +1955,7 @@
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-			<CheckButton justifyH="LEFT" name="SmartBuff_BuffSetup_cbReminder" inherits="OptionsCheckButtonTemplate">
+			<CheckButton justifyH="LEFT" name="SmartBuff_BuffSetup_cbReminder" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2005,7 +1986,7 @@
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
-			<Button name="SmartBuff_BuffSetup_btnPriorityList" inherits="OptionsButtonTemplate" text="A">
+			<Button name="SmartBuff_BuffSetup_btnPriorityList" inherits="UIPanelButtonTemplate" text="A">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2022,7 +2003,7 @@
 					</OnClick>
 				</Scripts>
 			</Button>
-			<Button name="SmartBuff_BuffSetup_btnIgnoreList" inherits="OptionsButtonTemplate" text="I">
+			<Button name="SmartBuff_BuffSetup_btnIgnoreList" inherits="UIPanelButtonTemplate" text="I">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2447,7 +2428,7 @@
 				</Scripts>
 				<NormalTexture file="Interface\AddOns\SmartBuff\Icons\DeathknightPet" />
 			</Button>
-			<CheckButton name="SmartBuff_BuffSetup_cbClass1" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuff_BuffSetup_cbClass1" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2467,7 +2448,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuff_BuffSetup_cbClass2" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuff_BuffSetup_cbClass2" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2487,7 +2468,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuff_BuffSetup_cbClass3" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuff_BuffSetup_cbClass3" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2507,7 +2488,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuff_BuffSetup_cbClass4" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuff_BuffSetup_cbClass4" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2527,7 +2508,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuff_BuffSetup_cbClass5" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuff_BuffSetup_cbClass5" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2547,7 +2528,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuff_BuffSetup_cbClass6" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuff_BuffSetup_cbClass6" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2567,7 +2548,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuff_BuffSetup_cbClass7" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuff_BuffSetup_cbClass7" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2587,7 +2568,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuff_BuffSetup_cbClass8" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuff_BuffSetup_cbClass8" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2607,7 +2588,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuff_BuffSetup_cbClass9" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuff_BuffSetup_cbClass9" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2627,7 +2608,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuff_BuffSetup_cbClass10" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuff_BuffSetup_cbClass10" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2647,7 +2628,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuff_BuffSetup_cbClass11" inherits="OptionsCheckButtonTemplate" hidden="true">
+			<CheckButton name="SmartBuff_BuffSetup_cbClass11" inherits="UICheckButtonTemplate" hidden="true">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2667,7 +2648,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuff_BuffSetup_cbClass12" inherits="OptionsCheckButtonTemplate" hidden="true">
+			<CheckButton name="SmartBuff_BuffSetup_cbClass12" inherits="UICheckButtonTemplate" hidden="true">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2687,7 +2668,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuff_BuffSetup_cbClass13" inherits="OptionsCheckButtonTemplate" hidden="true">
+			<CheckButton name="SmartBuff_BuffSetup_cbClass13" inherits="UICheckButtonTemplate" hidden="true">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2707,7 +2688,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuff_BuffSetup_cbClass14" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuff_BuffSetup_cbClass14" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2727,7 +2708,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuff_BuffSetup_cbClass15" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuff_BuffSetup_cbClass15" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2747,7 +2728,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuff_BuffSetup_cbClass16" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuff_BuffSetup_cbClass16" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2767,7 +2748,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuff_BuffSetup_cbClass17" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuff_BuffSetup_cbClass17" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2787,7 +2768,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuff_BuffSetup_cbClass18" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="SmartBuff_BuffSetup_cbClass18" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2853,17 +2834,6 @@
 				</Offset>
 			</Anchor>
 		</Anchors>
-		<Backdrop name="SmartBuff_PlayerSetup_Backdrop" bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
-			<BackgroundInsets>
-				<AbsInset left="11" right="12" top="12" bottom="11" />
-			</BackgroundInsets>
-			<TileSize>
-				<AbsValue val="32" />
-			</TileSize>
-			<EdgeSize>
-				<AbsValue val="32" />
-			</EdgeSize>
-		</Backdrop>
 		<Frames>
 			<EditBox name="SmartBuff_PlayerSetup_Title" letters="200" multiLine="true" autoFocus="false">
 				<Size>
@@ -2884,7 +2854,7 @@
 				</Scripts>
 				<FontString inherits="GameFontHighlightSmall" />
 			</EditBox>
-			<Button name="SmartBuff_PlayerSetup_Add" inherits="OptionsButtonTemplate" text="+">
+			<Button name="SmartBuff_PlayerSetup_Add" inherits="UIPanelButtonTemplate" text="+">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2901,7 +2871,7 @@
 					</OnClick>
 				</Scripts>
 			</Button>
-			<Button name="SmartBuff_PlayerSetup_Remove" inherits="OptionsButtonTemplate" text="-">
+			<Button name="SmartBuff_PlayerSetup_Remove" inherits="UIPanelButtonTemplate" text="-">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2918,7 +2888,7 @@
 					</OnClick>
 				</Scripts>
 			</Button>
-			<Button name="SmartBuff_PlayerSetup_Up" inherits="OptionsButtonTemplate" text="^">
+			<Button name="SmartBuff_PlayerSetup_Up" inherits="UIPanelButtonTemplate" text="^">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2935,7 +2905,7 @@
 					</OnClick>
 				</Scripts>
 			</Button>
-			<Button name="SmartBuff_PlayerSetup_Down" inherits="OptionsButtonTemplate" text="v">
+			<Button name="SmartBuff_PlayerSetup_Down" inherits="UIPanelButtonTemplate" text="v">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2952,7 +2922,7 @@
 					</OnClick>
 				</Scripts>
 			</Button>
-			<Button name="SmartBuff_PlayerSetup_Resize" inherits="OptionsButtonTemplate" text="m">
+			<Button name="SmartBuff_PlayerSetup_Resize" inherits="UIPanelButtonTemplate" text="m">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -3034,7 +3004,7 @@
 	</Frame>
 	<Frame name="SmartBuffWNF" hidden="true" parent="UIParent" toplevel="true" movable="true" frameStrata="DIALOG" enableMouse="true">
 		<Size>
-			<AbsDimension x="300" y="630" />
+			<AbsDimension x="360" y="630" />
 		</Size>
 		<Anchors>
 			<Anchor point="TOPLEFT" relativeTo="SmartBuffOptionsFrame" relativePoint="TOPRIGHT">
@@ -3043,21 +3013,10 @@
 				</Offset>
 			</Anchor>
 		</Anchors>
-		<Backdrop name="$parent_Backdrop" bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
-			<BackgroundInsets>
-				<AbsInset left="11" right="12" top="12" bottom="11" />
-			</BackgroundInsets>
-			<TileSize>
-				<AbsValue val="32" />
-			</TileSize>
-			<EdgeSize>
-				<AbsValue val="32" />
-			</EdgeSize>
-		</Backdrop>
 		<Frames>
 			<EditBox name="$parent_lblText" letters="2000" multiLine="true" autoFocus="false">
 				<Size>
-					<AbsDimension x="256" y="572" />
+					<AbsDimension x="313" y="572" />
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">

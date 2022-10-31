@@ -4,17 +4,20 @@
 
 -- Whats new info
 SMARTBUFF_WHATSNEW = "\n\n|cffffffff        Whats new:|r\n\n"
-  .."          |cffffffffRetail version by Codermik.\n\n"
+  .."          |cffffffffDragonflight version by Codermik.\n\n"
   .."          Please report any issues on Curse or Discord.|r\n\n\n"
   .."          Retail release with several improvements and\n"
   .."          fixes, latest changes are:\n\n"
-  .."             * Temporarily disabled addon version checks as\n"
-  .."               there seems to be an issue with cross-realm.\n"
+  .."             * IMPORTANT: Please do a Reset All from the\n"
+  .."                options screen before using.\n\n"
+  .."             * First Dragonflight version, please report any\n"
+  .."                bugs as there was a ton of code changes due to\n"
+  .."                Blizzards recent pre-patch.\n\n"
   .."\n\n"
 ;
 
 SMARTBUFF_CREDITS = "|cffffffff"
-  .."Shadowlands version by Codermik.  Please report any issues on CurseForge or my discord at:\n\n"
+  .."Dragonflight version by Codermik.  Please report any issues on CurseForge or my discord at:\n\n"
   .."|cff00e0ffhttps://discord.gg/R6EkZ94TKK\n\n"
   .."|cffffffffIf you appreciate the amount of work involved and the time taken to bring you these various addons please consider supporting me by:\n\n"
   .."|cffffffffPatreon: |cff00e0ffhttps://www.patreon.com/codermik\n"

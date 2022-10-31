@@ -1,4 +1,4 @@
-## Interface: 90205
+## Interface: 100000
 ## Title: AddonFactory by |cFF69CCF0Thaoky|r
 ## Notes: AddonFactory is a collection of templates for rapid UI development.
 ## Author: Thaoky (EU-Marécages de Zangar)

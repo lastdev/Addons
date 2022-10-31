@@ -508,8 +508,11 @@ local function OnAuctionHouseShow()
 	addon:RegisterEvent("AUCTION_HOUSE_CLOSED", OnAuctionHouseClosed)
 end
 
-local function OnVoidStorageClosed()
-	addon:UnregisterEvent("VOID_STORAGE_CLOSE")
+local function OnVoidStorageClosed(event, interactionType)
+	if interactionType ~= Enum.PlayerInteractionType.VoidStorageBanker then return end
+
+	print("on hide")
+	addon:UnregisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE")
 	addon:UnregisterEvent("VOID_STORAGE_UPDATE")
 	addon:UnregisterEvent("VOID_STORAGE_CONTENTS_UPDATE")
 	addon:UnregisterEvent("VOID_TRANSFER_DONE")
@@ -519,9 +522,13 @@ local function OnVoidStorageTransferDone()
 	ScanVoidStorage()
 end
 
-local function OnVoidStorageOpened()
+local function OnVoidStorageOpened(event, interactionType)
+
+	if interactionType ~= Enum.PlayerInteractionType.VoidStorageBanker then return end
+	
+	print("on show")
 	ScanVoidStorage()
-	addon:RegisterEvent("VOID_STORAGE_CLOSE", OnVoidStorageClosed)
+	addon:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE", OnVoidStorageClosed)
 	addon:RegisterEvent("VOID_STORAGE_UPDATE", ScanVoidStorage)
 	addon:RegisterEvent("VOID_STORAGE_CONTENTS_UPDATE", ScanVoidStorage)
 	addon:RegisterEvent("VOID_TRANSFER_DONE", OnVoidStorageTransferDone)
@@ -1028,7 +1035,7 @@ function addon:OnEnable()
 		ScanReagentBank()
 		
 		addon:RegisterEvent("PLAYER_ALIVE", OnPlayerAlive)
-		addon:RegisterEvent("VOID_STORAGE_OPEN", OnVoidStorageOpened)
+		addon:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", OnVoidStorageOpened)
 		addon:RegisterEvent("PLAYERREAGENTBANKSLOTS_CHANGED", OnPlayerReagentBankSlotsChanged)
 		addon:RegisterEvent("GUILDBANKFRAME_OPENED", OnGuildBankFrameOpened)
 		addon:RegisterEvent("WEEKLY_REWARDS_UPDATE", OnWeeklyRewardsUpdate)
@@ -1044,7 +1051,7 @@ function addon:OnDisable()
 	addon:UnregisterEvent("BANKFRAME_OPENED")
 	addon:UnregisterEvent("GUILDBANKFRAME_OPENED")
 	addon:UnregisterEvent("AUCTION_HOUSE_SHOW")
-	addon:UnregisterEvent("VOID_STORAGE_OPEN")
+	addon:UnregisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW")
 	addon:UnregisterEvent("PLAYERREAGENTBANKSLOTS_CHANGED")
 	addon:UnregisterEvent("WEEKLY_REWARDS_UPDATE")
 end

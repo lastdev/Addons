@@ -198,8 +198,6 @@ end
 addon:Controller("AltoholicUI.MainFrame", { 
 	OnBind = function(frame)
 		frame:SetTitle(format("Altoholic %s%s by %sThaoky", colors.white, addon.Version, colors.classMage))
-		
-
 	end,
 })
 

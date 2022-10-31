@@ -76,9 +76,10 @@ MVC:Controller("AddonFactory.AuctionHouseMainFrame", {
 			table.insert(UISpecialFrames, frame:GetName())
 		end
 	end,
-	SetTitle = function(frame, title)
-		frame.Title:SetText(title)
-	end,
+	-- deprecated in 10.0
+	-- SetTitle = function(frame, title)
+		-- frame.Title:SetText(title)
+	-- end,
 	ToggleUI = function(frame)
 		if frame:IsVisible() then
 			frame:Hide()
@@ -96,14 +97,15 @@ MVC:Controller("AddonFactory.AuctionHouseMainFrame", {
 		--]]
 		
 		-- Note 1 : frame.Tabs must exist, it is expected by Blizzard's functions
-		frame.Tabs = {}
+		frame.Tabs = frame.Tabs or {}
 		frame.TabInfo = tabs
 	
 		for i, tabData in ipairs(tabs) do
 			-- Create the tab button
 			-- Note 2 : tab buttons must have a name, also expected.
-			local tab = CreateFrame("Button", format("%sTab%d", parent, i), frame, "CharacterFrameTabButtonTemplate")
-			table.insert(frame.Tabs, tab)
+			local tab = CreateFrame("Button", format("%sTab%d", parent, i), frame, "CharacterFrameTabTemplate")
+			-- manual insert not needed anymore in 10.0
+			-- table.insert(frame.Tabs, tab)
 			
 			-- Set ID & Name
 			tab:SetID(i)
@@ -118,7 +120,7 @@ MVC:Controller("AddonFactory.AuctionHouseMainFrame", {
 			if i == 1 then
 				tab:SetPoint("BOTTOMLEFT", 20, -28)
 			else
-				tab:SetPoint("LEFT", frame.Tabs[i-1], "RIGHT", -15, 0)
+				tab:SetPoint("TOPLEFT", frame.Tabs[i-1], "TOPRIGHT", 30, 0)
 			end
 		end
 

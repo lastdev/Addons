@@ -20,6 +20,7 @@ local AddonDB_Defaults = {
 				SeasonBestMapsOvertime = {},
 				WeeklyBestMaps = {},
 				WeeklyBestKeystone = {},
+				WeeklyActivities = { 0, 0, 0 },			-- [1] = MythicPlus, [2] = RankedPvP, [3] = Raid
 				
 				dungeonScore = 0,					-- Mythic+ dungeon score
 			}
@@ -188,6 +189,22 @@ local function ScanMythicPlusBestForMapInfo()
 	char.dungeonScore = C_ChallengeMode.GetOverallDungeonScore()
 end
 
+local function ScanRewardType(rewardType)
+	local char = addon.ThisCharacter
+	--wipe(char.WeeklyActivities)
+	
+	-- https://wowpedia.fandom.com/wiki/API_C_WeeklyRewards.GetActivities
+	local activities = C_WeeklyRewards.GetActivities(rewardType)
+	
+	for _, activity in pairs(activities) do
+		
+		-- Ex: for M+, index 1 = 0/1,  index 2 = 0/4, index 3 = 0/8 .. we only care about index 3
+		if activity.index == 3 then
+			char.WeeklyActivities[activity.type] = activity.progress
+		end
+	end
+end
+
 -- *** Event Handlers ***
 local function OnPlayerAlive()
 	ScanStats()
@@ -205,6 +222,14 @@ end
 
 local function OnChallengeModeMapsUpdate()
 	ScanMythicPlusBestForMapInfo()
+end
+
+local function OnWeeklyRewardsFrameOpened(event, interactionType)
+	if interactionType == Enum.PlayerInteractionType.WeeklyRewards then
+		ScanRewardType(Enum.WeeklyRewardChestThresholdType.Raid)
+		ScanRewardType(Enum.WeeklyRewardChestThresholdType.MythicPlus)
+		ScanRewardType(Enum.WeeklyRewardChestThresholdType.RankedPvP)
+	end
 end
 
 -- ** Mixins **
@@ -247,6 +272,18 @@ local function _GetDungeonScore(character)
 	return character.dungeonScore
 end
 
+local function _GetWeeklyMythicPlusReward(character)
+	return character.WeeklyActivities[1]
+end
+
+local function _GetWeeklyRankedPvPReward(character)
+	return character.WeeklyActivities[2]
+end
+
+local function _GetWeeklyRaidReward(character)
+	return character.WeeklyActivities[3]
+end
+
 local PublicMethods = {
 	GetStats = _GetStats,
 	GetWeeklyBestKeystoneName = _GetWeeklyBestKeystoneName,
@@ -256,6 +293,9 @@ local PublicMethods = {
 	GetSeasonBestMaps = _GetSeasonBestMaps,
 	GetSeasonBestMapsOvertime = _GetSeasonBestMapsOvertime,
 	GetDungeonScore = _GetDungeonScore,
+	GetWeeklyMythicPlusReward = _GetWeeklyMythicPlusReward,
+	GetWeeklyRankedPvPReward = _GetWeeklyRankedPvPReward,
+	GetWeeklyRaidReward = _GetWeeklyRaidReward,
 }
 
 function addon:OnInitialize()
@@ -270,6 +310,9 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetSeasonBestMaps")
 	DataStore:SetCharacterBasedMethod("GetSeasonBestMapsOvertime")
 	DataStore:SetCharacterBasedMethod("GetDungeonScore")
+	DataStore:SetCharacterBasedMethod("GetWeeklyMythicPlusReward")
+	DataStore:SetCharacterBasedMethod("GetWeeklyRankedPvPReward")
+	DataStore:SetCharacterBasedMethod("GetWeeklyRaidReward")
 end
 
 function addon:OnEnable()
@@ -277,6 +320,8 @@ function addon:OnEnable()
 	addon:RegisterEvent("UNIT_INVENTORY_CHANGED", ScanStats)
 	addon:RegisterEvent("WEEKLY_REWARDS_UPDATE", OnWeeklyRewardsUpdate)
 	addon:RegisterEvent("CHALLENGE_MODE_MAPS_UPDATE", OnChallengeModeMapsUpdate)
+	
+	addon:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", OnWeeklyRewardsFrameOpened)
 end
 
 function addon:OnDisable()

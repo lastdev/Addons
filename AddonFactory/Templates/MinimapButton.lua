@@ -46,7 +46,7 @@ MVC:Controller("AddonFactory.MinimapButton", { "AddonFactory.Options", function(
 			local angle = Options.Get(addon, info.iconAngleOption)
 			local radius = Options.Get(addon, info.iconRadiusOption)
 			
-			frame:SetPoint( "TOPLEFT", "Minimap", "TOPLEFT", 54 - (radius * cos(angle)), (radius * sin(angle)) - 55 )
+			frame:SetPoint( "TOPLEFT", "Minimap", "TOPLEFT", 79 - (radius * cos(angle)), (radius * sin(angle)) - 83)
 		end,
 		Update = function(frame)
 			

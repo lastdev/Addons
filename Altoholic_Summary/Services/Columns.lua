@@ -77,6 +77,10 @@ addon:Service("AltoholicUI.TabSummaryColumnProfiles",  function()
 		[24] = { "Name", "Level", "Story90", "Story91", "Story92" },
 		-- Expansion Features / Shadowlands / Cypher Research
 		[25] = { "Name", "Level", "CypherLvl", "Metrial", "Aealic", "Dealic", "Trebalim", "Cur_Cyphers" },
+		
+		-- Weekly Rewards
+		[26] = { "Name", "Level", "RewardMythic", "RewardRaid", "RewardPvP" },	
+
 	}
 
 	return {

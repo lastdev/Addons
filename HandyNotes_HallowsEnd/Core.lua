@@ -3,7 +3,7 @@
 
                                             Hallow's End
 
-                                      v1.05 - 25th October 2022
+                                      v2.00 - 30th October 2022
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -24,6 +24,7 @@ ns.colour.highlight = "\124cFFFFA500" -- Orange W3C
 ns.colour.plaintext = "\124cFFFDD017" -- Bright Gold
 
 local defaults = { profile = { icon_scale = 1.7, icon_alpha = 1, showCoords = true,
+								removeDailies = true, removeSeasonal = true, removeEver = false,
 								icon_tricksTreat = 11, icon_dailies = 10, icon_special = 15 } }
 local continents = {}
 local pluginHandler = {}
@@ -33,6 +34,7 @@ local GameTooltip = _G.GameTooltip
 local GetAchievementCriteriaInfo = GetAchievementCriteriaInfo
 local GetAchievementInfo = GetAchievementInfo
 local GetMapInfo = C_Map.GetMapInfo
+local IsQuestFlaggedCompleted = C_QuestLog.IsQuestFlaggedCompleted
 local LibStub = _G.LibStub
 local UIParent = _G.UIParent
 local format = _G.format
@@ -42,12 +44,19 @@ local HandyNotes = _G.HandyNotes
 
 local _, _, _, version = GetBuildInfo()
 ns.faction = UnitFactionGroup( "player" )
+ns.name = UnitName( "player" ) or "Character"
 
 continents[ 12 ] = true -- Kalimdor
 continents[ 13 ] = true -- Eastern Kingdoms
 continents[ 101 ] = true -- Outland
 continents[ 113 ] = true -- Northrend
+continents[ 203 ] = true -- Vashj'ir
 continents[ 424 ] = true -- Pandaria
+continents[ 572 ] = true -- Draenor
+continents[ 619 ] = true -- Broken Isles
+continents[ 875 ] = true -- Zandalar
+continents[ 876 ] = true -- Kul Tiras
+continents[ 947 ] = true -- Azeroth
 
 -- Localisation
 ns.locale = GetLocale()
@@ -385,7 +394,7 @@ end
 
 local function printPC( message )
 	if message then
-		DEFAULT_CHAT_FRAME:AddMessage( ns.colour.prefix .."NobleGarden" ..": " ..ns.colour.plaintext
+		DEFAULT_CHAT_FRAME:AddMessage( ns.colour.prefix .."Hallow'sEnd" ..": " ..ns.colour.plaintext
 			..message.. "\124r" )
 	end
 end
@@ -403,18 +412,24 @@ function pluginHandler:OnEnter(mapFile, coord)
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 	end
 
-	local aID, aIndex, aTitle, tip = infoFromCoord(mapFile, coord)
+	local aID, aIndex, aQuest, tip = infoFromCoord(mapFile, coord)
 	local completed, aName, completedMe;
-	local pName = UnitName( "player" )
-
-	if aID < 0 then
-		completed = C_QuestLog.IsQuestFlaggedCompleted( aIndex )
-		GameTooltip:AddDoubleLine( ns.colour.prefix ..aTitle,
-					( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
-										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
-	elseif aID == 0 then
-		-- Unused at present
-	elseif aIndex == 0 then
+	local pName = UnitName( "player" ) or "Character"
+	
+	if ( aID == "A" ) or ( aID == "N" ) or ( aID == "H" ) then
+		GameTooltip:SetText( ns.colour.prefix ..aIndex )
+		completed = C_QuestLog.IsQuestFlaggedCompleted( math.abs( aQuest ) )
+		if ( aQuest < 0 ) then
+			GameTooltip:AddDoubleLine( "\124cFF1F45FC".. "Daily Quest",
+						( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
+											or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
+		else
+			GameTooltip:AddDoubleLine( "\124cFF1F45FC".. "This Season",
+						( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
+											or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
+		end
+			
+	elseif ( aQuest == 0 ) then
 		_, aName, _, completed, _, _, _, _, _, _, _, _, completedMe = GetAchievementInfo( aID )
 		GameTooltip:AddDoubleLine( ns.colour.prefix ..aName ..ns.colour.highlight .." (" ..ns.faction ..")",
 					( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..L["Account"] ..")" ) 
@@ -422,6 +437,7 @@ function pluginHandler:OnEnter(mapFile, coord)
 		GameTooltip:AddDoubleLine( " ",
 					( completedMe == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
 										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )										
+	
 	else
 		_, aName, _, completed = GetAchievementInfo( aID )
 		GameTooltip:AddDoubleLine( ns.colour.prefix ..aName ..ns.colour.highlight .." (" ..ns.faction ..")",
@@ -429,15 +445,26 @@ function pluginHandler:OnEnter(mapFile, coord)
 										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..L["Account"] ..")" ) )
 		aName, _, completed = GetAchievementCriteriaInfo( aID, aIndex )
 		GameTooltip:AddDoubleLine( ns.colour.highlight.. aName,
-					( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
-										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
-	
-		if ( aID == 1040 ) or ( aID == 1041 ) then -- Rotten Hallow daily quests and associated achievement
-			completed = C_QuestLog.IsQuestFlaggedCompleted( aTitle )
+					( completed == true ) and ( "\124cFF00FF00" ..L["Ever Completed"] .." (" ..pName ..")" ) 
+										or ( "\124cFFFF0000" ..L["Not Ever Completed"] .." (" ..pName ..")" ) )
+		completed = C_QuestLog.IsQuestFlaggedCompleted( math.abs( aQuest ) )
+		if ( aQuest < 0 ) then
 			GameTooltip:AddDoubleLine( "\124cFF1F45FC".. "Daily Quest",
 						( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
 											or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
+		else
+			GameTooltip:AddDoubleLine( "\124cFF1F45FC".. "This Season",
+						( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
+											or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
 		end
+	end
+
+ 	if ( ( mapFile == 17 ) and ( C_Map.GetMapArtID( mapFile ) ~= 18 ) ) or -- Blasted Lands Testing was 18 or 628 
+		( ( mapFile == 18 ) and ( C_Map.GetMapArtID( mapFile ) ~= 19 ) ) or -- Tirisfal Glades Testing was 19 or 628 
+		( ( mapFile == 81 ) and ( C_Map.GetMapArtID( mapFile ) ~= 86 ) ) or -- Silithus Testing was 86 or 962 
+		( ( mapFile == 62 ) and ( C_Map.GetMapArtID( mapFile ) ~= 67 ) ) then -- Darkshore Testing was 67 or 1176
+		-- Theramore gave the same mapArtID
+		GameTooltip:AddLine( "\124cFFFF0000Wrong map/quest phase. Speak to Zidormi" )
 	end
 	if ( tip ~= "" ) then
 		GameTooltip:AddLine( ns.colour.plaintext ..tip )
@@ -455,50 +482,105 @@ function pluginHandler:OnLeave()
 	GameTooltip:Hide()
 end
 
+local function ShowConditionallyC( v1, v2, v3 )
+	local completed;
+	if ( ns.db.removeSeasonal == true ) then
+		completed = IsQuestFlaggedCompleted( v3 )
+		if ( completed == true ) then
+			return false
+		end
+	elseif ( ns.db.removeEver == true ) then
+		_, _, completed = GetAchievementCriteriaInfo( v1, v2 )
+		if ( completed == true ) then
+			return false
+		end
+	end
+	return true
+end
+
+local function ShowConditionallyA( v1 )
+	local completedMe;
+	if ( ns.db.removeSeasonal == true ) then
+		_, _, _, _, _, _, _, _, _, _, _, _, completedMe = GetAchievementInfo( v1 )
+		if ( completedMe == true ) then
+			return false
+		end
+	end
+	return true
+end
+
+local function ShowConditionallyS( v2 )
+	local completed;
+	if ( ns.db.removeSeasonal == true ) then
+		completed = IsQuestFlaggedCompleted( v2 )
+		if ( completed == true ) then
+			return false
+		end
+	end
+	return true
+end
+
+local function ShowConditionallyD( v3 )
+	local completed;
+	if ( ns.db.removeDailies == true ) then
+		completed = IsQuestFlaggedCompleted( v3 )
+		if ( completed == true ) then
+			return false
+		end
+	end
+	return true
+end
+
 do	
 	local function iterator(t, prev)
 		if not t then return end
 		local coord, v = next(t, prev)
 		while coord do
 			if v then
-				if ( v[1] < 0 ) then
-					if ( v[1] <= -2 ) then
-						if ns.faction == "Horde" then
-							return coord, nil, ns.texturesS[ns.db.icon_special],
+				if ( v[1] == "A" ) or ( v[1] == "N" ) or ( v[1] == "H" ) then
+					if ( ( ns.faction == "Horde" ) and ( ( v[1] == "N" ) or ( v[1] == "H" ) ) ) or
+					   ( ( ns.faction == "Alliance" ) and ( ( v[1] == "N" ) or ( v[1] == "A" ) ) ) then
+						if ( v[3] > 0 ) then
+							if ShowConditionallyS( v[3] ) == true then
+								return coord, nil, ns.texturesS[ns.db.icon_special],
 									ns.db.icon_scale * ns.scalingS[ns.db.icon_special], ns.db.icon_alpha
+							end
+						else
+							if ShowConditionallyD( -1*v[3] ) == true then
+								return coord, nil, ns.texturesS[ns.db.icon_dailies],
+									ns.db.icon_scale * ns.scalingS[ns.db.icon_dailies], ns.db.icon_alpha
+							end
 						end
 					end
-					if ( v[1] >= -2 ) then
-						if ns.faction == "Alliance" then
-							return coord, nil, ns.texturesS[ns.db.icon_special],
-									ns.db.icon_scale * ns.scalingS[ns.db.icon_special], ns.db.icon_alpha
-						end
-					end
-				elseif ( v[1] == 1040 ) then
-					if ns.faction == "Alliance" then
-						return coord, nil, ns.texturesS[ns.db.icon_dailies],
-								ns.db.icon_scale * ns.scalingS[ns.db.icon_dailies], ns.db.icon_alpha
-					end
-				elseif ( v[1] == 1041 ) then
-					if ns.faction == "Horde" then
-						return coord, nil, ns.texturesS[ns.db.icon_dailies],
-								ns.db.icon_scale * ns.scalingS[ns.db.icon_dailies], ns.db.icon_alpha
-					end
-				elseif ( v[1] == 963 ) or ( v[1] == 966 ) or ( v[1] == 969 ) or
-						( v[1] == 5836 ) or ( v[1] == 5837 ) or ( v[1] == 7601 ) then -- Tricks & Treats Alliance
-					if ns.faction == "Alliance" then
-						return coord, nil, ns.texturesL[ns.db.icon_tricksTreat], 
-								ns.db.icon_scale * ns.scalingL[ns.db.icon_tricksTreat], ns.db.icon_alpha
-					end
-				elseif ( v[1] == 965 ) or ( v[1] == 967 ) or ( v[1] == 968 ) or
-						( v[1] == 5835 ) or ( v[1] == 5838 ) or ( v[1] == 7602 ) then -- Tricks & Treats Horde
-					if ns.faction == "Horde" then
-						return coord, nil, ns.texturesL[ns.db.icon_tricksTreat],
-								ns.db.icon_scale * ns.scalingL[ns.db.icon_tricksTreat], ns.db.icon_alpha
-					end
-				elseif ( v[1] == 291 ) then
-					return coord, nil, ns.texturesS[ns.db.icon_special],
+				elseif ( v[3] == 0 ) then -- Achievement with no relevant criteria to be bothered with
+					if ShowConditionallyA( v[1] ) == true then
+						return coord, nil, ns.texturesS[ns.db.icon_special],
 							ns.db.icon_scale * ns.scalingS[ns.db.icon_special], ns.db.icon_alpha
+					end
+				elseif ( v[3] > 0 ) then -- Achievement with seasonal criteria
+					if ( v[1] == 963 ) or ( v[1] == 966 ) or ( v[1] == 969 ) or
+						( v[1] == 5836 ) or ( v[1] == 5837 ) or ( v[1] == 7601 ) then -- Tricks & Treats Alliance
+						if ns.faction == "Alliance" then
+							if ShowConditionallyC( v[1], v[2], v[3] ) == true then
+								return coord, nil, ns.texturesL[ns.db.icon_tricksTreat], 
+									ns.db.icon_scale * ns.scalingL[ns.db.icon_tricksTreat], ns.db.icon_alpha
+							end
+						end
+					elseif ( v[1] == 965 ) or ( v[1] == 967 ) or ( v[1] == 968 ) or
+							( v[1] == 5835 ) or ( v[1] == 5838 ) or ( v[1] == 7602 ) then -- Tricks & Treats Horde
+						if ns.faction == "Horde" then
+							if ShowConditionallyC( v[1], v[2], v[3] ) == true then
+								return coord, nil, ns.texturesL[ns.db.icon_tricksTreat], 
+									ns.db.icon_scale * ns.scalingL[ns.db.icon_tricksTreat], ns.db.icon_alpha
+							end
+						end
+					end
+				elseif ( ( v[1] == 1040 ) and ( ns.faction == "Alliance" ) ) or
+						( ( v[1] == 1041 ) and ( ns.faction == "Horde" ) ) then
+					if ShowConditionallyD( -1*v[3] ) == true then
+						return coord, nil, ns.texturesS[ns.db.icon_dailies],
+								ns.db.icon_scale * ns.scalingS[ns.db.icon_dailies], ns.db.icon_alpha
+					end
 				end
 			end
 			coord, v = next(t, coord)
@@ -552,6 +634,34 @@ ns.options = {
 					arg = "showCoords",
 					order = 4,
 				},
+				removeDailies = {
+					name = "Remove dailies if completed today by " ..ns.name,
+					desc = "The map marker will not appear if you\nhave completed the daily quest today",
+					type = "toggle",
+					width = "full",
+					arg = "removeDailies",
+					order = 5,
+				},
+				removeSeasonal = {
+					name = "Remove T&T marker if completed this season by " ..ns.name,
+					desc = "Achievement Candy Buckets are repeatable each season.\n"
+							.."Note that there are miscellaneous buckets and quests\n"
+							.."which are also seasonal and they are included here.",
+					type = "toggle",
+					width = "full",
+					arg = "removeSeasonal",
+					order = 6,
+				},
+				removeEver = {
+					name = "Remove T&T marker if ever completed on this account",
+					desc = "Achievement Candy Buckets are repeatable each season.\n"
+							.."Note that there are miscellaneous buckets and quests\n"
+							.."which are also seasonal and they are included here.",
+					type = "toggle",
+					width = "full",
+					arg = "removeEver",
+					order = 7,
+				},
 			},
 		},
 		icon = {
@@ -570,7 +680,7 @@ ns.options = {
 							.."\n17 = " ..L["Witch"], 
 					min = 1, max = 17, step = 1,
 					arg = "icon_tricksTreat",
-					order = 5,
+					order = 8,
 				},
 				icon_dailies = {
 					type = "range",
@@ -584,7 +694,7 @@ ns.options = {
 							.."\n15 = " ..L["Witch"], 
 					min = 1, max = 15, step = 1,
 					arg = "icon_dailies",
-					order = 6,
+					order = 9,
 				},
 				icon_special = {
 					type = "range",
@@ -598,7 +708,7 @@ ns.options = {
 							.."\n15 = " ..L["Witch"], 
 					min = 1, max = 15, step = 1,
 					arg = "icon_special",
-					order = 7,
+					order = 10,
 				},
 			},
 		},
@@ -616,15 +726,19 @@ function pluginHandler:OnEnable()
 		local children = C_Map.GetMapChildrenInfo(continentMapID, nil, true)
 		for _, map in next, children do
 			local coords = ns.points[map.mapID]
-			if ( map.mapID == 110 ) or -- Silvermoon City
-				( map.mapID == 224 ) or -- Stranglethron Vale
-				( map.mapID == 203 ) or -- Vashj'ir
-				( map.mapID == 127 ) or -- Crystalsong Forest
-				( map.mapID == 90 ) or -- Undercity
-				( map.mapID == 97 ) or -- Azuremyst Isle
+			-- Maps here will not propagate upwards. Mostly for cities as I used lots of
+			-- extra helpful markers which would unnecessarily clutter a continent map
+			if ( map.mapID == 84 ) or -- Stormwind City
+				( map.mapID == 85 ) or -- Orgrimmar
 				( map.mapID == 87 ) or -- Ironforge
 				( map.mapID == 89 ) or -- Darnassus
-				( map.mapID == 84 ) or -- Stormwind City
+				( map.mapID == 90 ) or -- Undercity
+				( map.mapID == 110 ) or -- Silvermoon City
+				-- I wanted a set of Dalaran pins to appear in Crystalsong thus I need to
+				-- avoid duplication on the Northrend map
+				( map.mapID == 127 ) or -- Crystalsong Forest
+				-- Necessary as they seem to be special cases
+				( map.mapID == 97 ) or -- Azuremyst Isle
 				( map.mapID == 57 ) then -- Teldrassil
 			elseif (version < 40000) and ( map.mapID < 1400 ) then
 			elseif (version >= 40000) and ( map.mapID >= 1400 ) then

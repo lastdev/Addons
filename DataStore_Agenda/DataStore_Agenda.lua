@@ -27,7 +27,7 @@ local AddonDB_Defaults = {
 				ItemCooldowns = {},	-- mysterious egg, disgusting jar, etc..
 				LFGDungeons = {},		-- info about LFG dungeons/raids
 				ChallengeMode = {},	-- info about mythic+
-								
+
 				Notes = {},
 				Tasks = {},
 				Mail = {},			-- This is for intenal mail only, unrelated to wow's

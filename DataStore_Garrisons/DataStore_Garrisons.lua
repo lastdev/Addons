@@ -841,8 +841,10 @@ local function OnAddonLoaded(event, addonName)
 	end
 end
 
-local function OnCovenantSanctumInteractionStarted()
-	ScanReservoirTalents()
+local function OnCovenantSanctumInteractionStarted(event, interactionType)
+	if interactionType == Enum.PlayerInteractionType.CovenantSanctum then
+		ScanReservoirTalents()
+	end
 end
 
 local function OnGarrisonTalentNPCOpened()
@@ -1177,7 +1179,7 @@ function addon:OnEnable()
 	addon:RegisterEvent("GARRISON_UPDATE", OnGarrisonUpdate)
 	
 	-- 9.0 Sanctum Reservoir
-	addon:RegisterEvent("COVENANT_SANCTUM_INTERACTION_STARTED", OnCovenantSanctumInteractionStarted)
+	addon:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", OnCovenantSanctumInteractionStarted)
 	addon:RegisterEvent("GARRISON_TALENT_RESEARCH_STARTED", OnCovenantSanctumInteractionStarted)
 	
 	-- 9.2 Cypher Equipment

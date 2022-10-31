@@ -228,13 +228,6 @@ local function ScanProfessionLinks()
 	addon.ThisCharacter.lastUpdate = time()
 end
 
-local SkillTypeToColor = {
-	["trivial"] = 0,		-- grey
-	["easy"] = 1,			-- green
-	["medium"] = 2,		-- yellow
-	["optimal"] = 3,		-- orange
-}
-
 local function ScanRecipeCategories(profession)
 	-- clear storage
 	profession.Categories = profession.Categories or {}
@@ -274,7 +267,9 @@ end
 
 local function ScanRecipes()
 	
-	local tradeskillName = select(7, C_TradeSkillUI.GetTradeSkillLine())
+	local info = C_TradeSkillUI.GetBaseProfessionInfo()
+	local tradeskillName = info.professionName
+
 	if not tradeskillName or tradeskillName == "UNKNOWN" then return end	-- may happen after a patch, or under extreme lag, so do not save anything to the db !
 
 	local char = addon.ThisCharacter
@@ -307,32 +302,29 @@ local function ScanRecipes()
 		
 		-- scan reagents for all recipes (even unlearned)
 		wipe(reagentsInfo)
-		
-		local numReagents = C_TradeSkillUI.GetRecipeNumReagents(recipeID)
+
+		local schematic = C_TradeSkillUI.GetRecipeSchematic(recipeID, false)
+		local numReagents = #schematic.reagentSlotSchematics
+				
 		for reagentIndex = 1, numReagents do
-			local _, _, count = C_TradeSkillUI.GetRecipeReagentInfo(recipeID, reagentIndex)
-			local link = C_TradeSkillUI.GetRecipeReagentItemLink(recipeID, reagentIndex)
+			local reagent = schematic.reagentSlotSchematics[reagentIndex]
 			
-			if link and count then
-				local itemID = tonumber(link:match("item:(%d+)"))
-				if itemID then
-					table.insert(reagentsInfo, format("%s,%s", itemID, count))
-				end
+			local count = reagent.quantityRequired
+			local itemID = reagent.reagents[1].itemID
+
+			if itemID and count then
+				table.insert(reagentsInfo, format("%s,%s", itemID, count))
 			end
 		end
 		
 		reagentsDB[recipeID] = table.concat(reagentsInfo, "|")
 
 		-- Resulting item ID
-		local itemLink = C_TradeSkillUI.GetRecipeItemLink(recipeID)
-		if itemLink then
-			local _, maxMade = C_TradeSkillUI.GetRecipeNumItemsProduced(recipeID)
-			if maxMade > 255 then maxMade = 255 end
-			
-			local itemID = tonumber(itemLink:match("item:(%d+)"))
-			if itemID then
-				resultItems[recipeID] = maxMade + LShift(itemID, 8) 	-- bits 0-7 = maxMade, bits 8+ = item id
-			end
+		local maxMade = schematic.quantityMax
+		if maxMade > 255 then maxMade = 255 end
+		
+		if schematic.outputItemID then
+			resultItems[recipeID] = maxMade + LShift(schematic.outputItemID, 8) 	-- bits 0-7 = maxMade, bits 8+ = item id
 		end
 		
 		-- Get recipe info
@@ -345,7 +337,7 @@ local function ScanRecipes()
 			-- save the recipe
 			crafts[info.categoryID] = crafts[info.categoryID] or {}
 			table.insert(crafts[info.categoryID], 
-				SkillTypeToColor[info.difficulty] 
+				info.relativeDifficulty 
 				+ LShift((info.learned == true) and 1 or 0, 2) 	-- bit 2 => 1 = learned, 0 = not learned
 				+ LShift(recipeRank, 3)		-- bits 3-4 = recipe rank
 				+ LShift(totalRanks, 5)		-- bits 5-6 = max rank

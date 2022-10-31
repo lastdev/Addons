@@ -51,10 +51,10 @@ local function _GetAuctionHouseItemInfo(character, list, index)
 	local item = character[list][index]
 	if not item then return end
 	
-	local isGoblin, itemID, count, name, price1, price2, timeLeft = strsplit("|", item)
+	local isGoblin, itemID, count, name, price1, price2, timeLeft, auctionID = strsplit("|", item)
 	isGoblin = (tonumber(isGoblin) == 1) and true or nil
 	
-	return isGoblin, tonumber(itemID), tonumber(count), name, tonumber(price1), tonumber(price2), tonumber(timeLeft)
+	return isGoblin, tonumber(itemID), tonumber(count), name, tonumber(price1), tonumber(price2), tonumber(timeLeft), tonumber(auctionID or 0)
 end
 
 local function _GetAuctionHouseLastVisit(character)
@@ -195,9 +195,10 @@ local function ScanAuctions()
 			saleStatus = false
 		end
 			
-		if info.itemLink and itemID and not saleStatus then
-			table.insert(character.Auctions, format("%s|%s|%s|%s|%s|%s|%s", 
-				AHZone, itemID, info.quantity or 1, info.bidder or "", info.bidAmount or 0, info.buyoutAmount, info.timeLeftSeconds))
+		-- if info.itemLink and itemID and not saleStatus then
+		if itemID and not saleStatus then
+			table.insert(character.Auctions, format("%s|%s|%s|%s|%s|%s|%s|%s", 
+				AHZone, itemID, info.quantity or 1, info.bidder or "", info.bidAmount or 0, info.buyoutAmount, info.timeLeftSeconds, info.auctionID))
 		end
 	end
 	

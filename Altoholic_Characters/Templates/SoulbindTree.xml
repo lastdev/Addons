@@ -17,8 +17,8 @@
 							<Anchors>
 								<Anchor point="TOPLEFT" x="0" y="0" />
 							</Anchors>
+							<Color r="0.984375" g="0.828125" b="0" />
 						</FontString>
-						<Color r="0.984375" g="0.828125" b="0" />
 					</Layer>
 				</Layers>
 			</Button>

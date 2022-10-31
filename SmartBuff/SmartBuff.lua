@@ -6,10 +6,10 @@
 -- Cast the most important buffs on you, tanks or party/raid members/pets.
 -------------------------------------------------------------------------------
 
-SMARTBUFF_DATE          = "010922";
+SMARTBUFF_DATE          = "301022";
 
-SMARTBUFF_VERSION       = "r8."..SMARTBUFF_DATE;
-SMARTBUFF_VERSIONNR     = 90207;
+SMARTBUFF_VERSION       = "r9."..SMARTBUFF_DATE;
+SMARTBUFF_VERSIONNR     = 10000;
 SMARTBUFF_TITLE         = "SmartBuff";
 SMARTBUFF_SUBTITLE      = "Supports you in casting buffs";
 SMARTBUFF_DESC          = "Cast the most important buffs on you, your tanks, party/raid members/pets";
@@ -22,7 +22,7 @@ local SmartbuffPrefix = "Smartbuff";
 local SmartbuffSession = true;
 local SmartbuffVerCheck = false;					-- for my use when checking guild users/testers versions  :)
 local buildInfo = select(4, GetBuildInfo())
-local SmartbuffRevision = 8;
+local SmartbuffRevision = 9;
 local SmartbuffVerNotifyList = {}
 
 local SG = SMARTBUFF_GLOBALS;
@@ -436,6 +436,9 @@ function SMARTBUFF_OnEvent(self, event, ...)
     if  (event == "PLAYER_ENTERING_WORLD" and isInit and O.Toggle) then
       isSetZone = true;
       tStartZone = GetTime();
+
+--    elseif (event == "PLAYER_ENTERING_WORLD" and isLoaded and isPlayer and not isInit and not InCombatLockdown()) then
+--        SMARTBUFF_Options_Init(self);
     end
 
   elseif(event == "ADDON_LOADED" and arg1 == SMARTBUFF_TITLE) then
@@ -650,8 +653,8 @@ function SMARTBUFF_OnUpdate(self, elapsed)
   if (not isInit) then
     if (isLoaded and GetTime() > tAutoBuff + 0.5) then
       tAutoBuff = GetTime();
-      _, tName = GetTalentInfoBySpecialization(1, 1, 1);
-      if (tName) then
+      local specID = GetSpecialization()
+      if (specID) then
         SMARTBUFF_OnEvent(self, "SMARTBUFF_UPDATE");
       end
     end    
@@ -1062,12 +1065,6 @@ function SMARTBUFF_SetBuff(buff, i, ia)
   else
     if (cBuffs[i].Type == SMARTBUFF_CONST_TRACK) then
       local b = false;
-      
-	DEFAULT_CHAT_FRAME:AddMessage("count here");
-      local count = C_Minimap.GetNumTrackingTypes()
-	DEFAULT_CHAT_FRAME:AddMessage(count);
-
-
       for n = 1, C_Minimap.GetNumTrackingTypes() do 
 	      local trackN, trackT, trackA, trackC = C_Minimap.GetTrackingInfo(n);
 	      if (trackN ~= nil) then
@@ -1821,8 +1818,9 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
                             
               -- Tracking ability ------------------------------------------------------------------------
               if (cBuff.Type == SMARTBUFF_CONST_TRACK) then
+
                 --print("Check tracking: "..buffnS)
-                local count = C_Minimap.GetNumTrackingTypes()
+                local count = C_Minimap.GetNumTrackingTypes();
                 for n = 1, C_Minimap.GetNumTrackingTypes() do 
 	                local trackN, trackT, trackA, trackC = C_Minimap.GetTrackingInfo(n);
 	                if (trackN ~= nil and not trackA) then
@@ -1835,7 +1833,7 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
                         end
                       else
                         buff = buffnS;
-                        SetTracking(n, 1);
+                        C_Minimap.SetTracking(n, 1);
                         --print("SetTracking: "..n)
                       end
                       if (buff ~= nil) then
@@ -2500,11 +2498,11 @@ function SMARTBUFF_CheckUnitBuffs(unit, buffN, buffT, buffL, buffC)
           buff, icon, count, _, duration, timeleft, caster = UnitBuffByBuffName(unit, v);
           if (buff) then
             timeleft = timeleft - GetTime();
-  if (timeleft > 0) then
-	timeleft = timeleft;
-  else
-    timeleft = time;
-  end
+            if (timeleft > 0) then
+	            timeleft = timeleft;
+            else
+                timeleft = time;
+            end
             SMARTBUFF_AddMsgD("Linked buff found: "..buff..", "..timeleft..", "..icon);
             return nil, n, defBuff, timeleft, count;
           end
@@ -2944,6 +2942,7 @@ end
 
 -- Init the SmartBuff variables ---------------------------------------------------------------------------------------
 function SMARTBUFF_Options_Init(self)
+   
   if (isInit) then return; end
   
   self:UnregisterEvent("CHAT_MSG_CHANNEL");
@@ -2966,6 +2965,7 @@ function SMARTBUFF_Options_Init(self)
   O = SMARTBUFF_Options;
   
   SMARTBUFF_BROKER_SetIcon();
+  
   
   if (O.Toggle == nil) then O.Toggle = true; end  
   if (O.ToggleAuto == nil) then O.ToggleAuto = true; end
@@ -4156,6 +4156,7 @@ end
 
 
 -- Secure button functions, NEW TBC ---------------------------------------------------------------------------------------
+
 function SMARTBUFF_ShowSAButton()
   if (not InCombatLockdown()) then
     if (O.HideSAButton) then
@@ -4174,8 +4175,7 @@ end
 
 local lastBuffType = "";
 function SMARTBUFF_OnPreClick(self, button, down)
-  if (not isInit) then return end
-  
+  if (not isInit) then return end  
   local mode = 0;
   if (button) then
     if (button == "MOUSEWHEELUP" or button == "MOUSEWHEELDOWN") then
@@ -4230,7 +4230,7 @@ function SMARTBUFF_OnPreClick(self, button, down)
           self:SetAttribute("type", "macro");
           self:SetAttribute("macrotext", string.format("/use %s\n/use %i\n/click StaticPopup1Button1", spellName, slot));
           --self:SetAttribute("target-item", slot);
-          SMARTBUFF_AddMsgD("Waepon buff "..spellName..", "..slot);
+          SMARTBUFF_AddMsgD("Weapon buff "..spellName..", "..slot);
         else
           self:SetAttribute("spell", spellName);
         end
@@ -4259,8 +4259,7 @@ function SMARTBUFF_OnPreClick(self, button, down)
 end
 
 function SMARTBUFF_OnPostClick(self, button, down)
-  if (not isInit) then return end
-    
+  if (not isInit) then return end      
   if (button) then
     if (button == "MOUSEWHEELUP") then
       CameraZoomIn(1);
@@ -4391,6 +4390,7 @@ end
 
 
 -- Scroll frame functions ---------------------------------------------------------------------------------------
+
 local ScrBtnSize = 20;
 local ScrLineHeight = 18;
 local function SetPosScrollButtons(parent, cBtn)
@@ -4405,7 +4405,7 @@ end
 
 local StartY, EndY;
 local function CreateScrollButton(name, parent, cBtn, onClick, onDragStop)
-	local btn = CreateFrame("CheckButton", name, parent, "OptionsCheckButtonTemplate");
+	local btn = CreateFrame("CheckButton", name, parent, "UICheckButtonTemplate");
 	btn:SetWidth(ScrBtnSize);
 	btn:SetHeight(ScrBtnSize);
   --btn:RegisterForClicks("LeftButtonUp");
