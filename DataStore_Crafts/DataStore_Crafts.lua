@@ -226,6 +226,8 @@ local function ScanProfessionLinks()
 	ScanProfessionInfo(prof2, 2)
 	
 	addon.ThisCharacter.lastUpdate = time()
+	
+	addon:SendMessage("DATASTORE_PROFESSION_LINKS_UPDATED")
 end
 
 local function ScanRecipeCategories(profession)
@@ -460,7 +462,9 @@ skillUpMsg = gsub(skillUpMsg, arg2pattern, "(%%d+)")
 local function OnChatMsgSkill(self, msg)
 	if msg and addon.isOpen then	-- point gained while ts window is open ? rescan
 		local skill = msg:match(skillUpMsg)
-		if skill and skill == C_TradeSkillUI.GetTradeSkillLine() then	-- if we gained a skill point in the currently opened profession pane, rescan
+		local info = C_TradeSkillUI.GetChildProfessionInfo()
+		
+		if skill and skill == info.professionName then	-- if we gained a skill point in the currently opened profession pane, rescan
 			ScanTradeSkills()
 		end
 	end

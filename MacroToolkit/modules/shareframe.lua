@@ -5,7 +5,7 @@ local StaticPopup_Show = StaticPopup_Show
 local CreateFrame = CreateFrame
 
 function MT:CreateSharePopup()
-	local frame = CreateFrame("Frame", "MacroToolkitSharePopup", UIParent, "BackdropTemplate")
+	local frame = CreateFrame("Frame", "MacroToolkitSharePopup", UIParent, BackdropTemplateMixin and "BackdropTemplate")
 	frame:SetFrameStrata("DIALOG")
 	frame:EnableKeyboard(true)
 	frame:EnableMouse(true)
@@ -67,7 +67,7 @@ function MT:CreateSharePopup()
 	party:SetHitRectInsets(0, -100, 0, 0)
 	party:Hide()
 	
-	local playerframe = CreateFrame("Frame", nil, frame)
+	local playerframe = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")
 	playerframe:SetSize(280, 16)
 	playerframe:SetPoint("LEFT", 60, -40)
 	playerframe:Hide()
@@ -145,7 +145,7 @@ function MT:CreateSharePopup()
 	raid:SetScript("OnClick", channelonclick)
 	party:SetScript("OnClick", channelonclick)
 	
-	local buttons = CreateFrame("Frame", nil, frame)
+	local buttons = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")
 	buttons:SetSize(170, 22)
 	buttons:SetPoint("BOTTOM", 0, 16)
 	

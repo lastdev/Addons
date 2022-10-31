@@ -400,6 +400,7 @@ addon:Controller("AltoholicUI.TabGridsCategoriesList", {
 				{ text = EXPANSION_NAME6, callback = sets_OnClick, xPackID = 7 },
 				{ text = EXPANSION_NAME7, callback = sets_OnClick, xPackID = 8 },
 				{ text = EXPANSION_NAME8, callback = sets_OnClick, xPackID = 9 },
+				{ text = EXPANSION_NAME9, callback = sets_OnClick, xPackID = 10 },
 			}},
 		}
 

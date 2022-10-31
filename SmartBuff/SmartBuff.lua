@@ -6,9 +6,9 @@
 -- Cast the most important buffs on you, tanks or party/raid members/pets.
 -------------------------------------------------------------------------------
 
-SMARTBUFF_DATE          = "301022";
+SMARTBUFF_DATE          = "311022";
 
-SMARTBUFF_VERSION       = "r9."..SMARTBUFF_DATE;
+SMARTBUFF_VERSION       = "r10."..SMARTBUFF_DATE;
 SMARTBUFF_VERSIONNR     = 10000;
 SMARTBUFF_TITLE         = "SmartBuff";
 SMARTBUFF_SUBTITLE      = "Supports you in casting buffs";
@@ -22,7 +22,7 @@ local SmartbuffPrefix = "Smartbuff";
 local SmartbuffSession = true;
 local SmartbuffVerCheck = false;					-- for my use when checking guild users/testers versions  :)
 local buildInfo = select(4, GetBuildInfo())
-local SmartbuffRevision = 9;
+local SmartbuffRevision = 10;
 local SmartbuffVerNotifyList = {}
 
 local SG = SMARTBUFF_GLOBALS;
@@ -2979,7 +2979,7 @@ function SMARTBUFF_Options_Init(self)
   --if (O.ToggleAutoRest == nil) then  O.ToggleAutoRest = true; end
   if (O.RebuffTimer == nil) then O.RebuffTimer = 20; end
   if (O.SplashDuration == nil) then O.SplashDuration = 2; end
-  if (O.SplashIconSize == nil) then O.SplashIconSize = 12; end
+  if (O.SplashIconSize == nil) then O.SplashIconSize = 16; end
   
   if (O.BuffTarget == nil) then O.BuffTarget = false; end
   if (O.BuffPvP == nil) then O.BuffPvP = false; end
@@ -3001,7 +3001,7 @@ function SMARTBUFF_Options_Init(self)
 
   O.ToggleGrp = {true, true, true, true, true, true, true, true};
   
-  if (O.ToggleMsgNormal == nil) then  O.ToggleMsgNormal = true; end
+  if (O.ToggleMsgNormal == nil) then  O.ToggleMsgNormal = false; end
   if (O.ToggleMsgWarning == nil) then  O.ToggleMsgWarning = false; end
   if (O.ToggleMsgError == nil) then  O.ToggleMsgError = false; end
   

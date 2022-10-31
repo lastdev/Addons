@@ -55,7 +55,7 @@ function MT:Execute(command, parse)
     local slash = strmatch(command, format("^(%s[^%%s]+)", MT.slash))
     if slash and MT:IsSecureCmd(slash, strsub(command, slash:len() + 2)) then return false, "secure" end
 	if not parse then
-		if not runbox then runbox = CreateFrame("EditBox", "MacroToolkit_EditBox", UIParent, "MacroToolkit_EditBoxTemplate") end
+		if not runbox then runbox = CreateFrame("EditBox", "MacroToolkit_EditBox", UIParent, "BackdropTemplate,MacroToolkit_EditBoxTemplate") end
 		runbox.chatFrame.UnrecognizedCmd = nil
 		runbox.chatFrame.ShowMessages = not not showHelp  -- "not not" to make sure it's a boolean
 		runbox:SetAttribute("chatType", editbox:GetAttribute("chatType"))

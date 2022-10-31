@@ -7,8 +7,8 @@ local Media = LibStub("LibSharedMedia-3.0")
 local AGSMW = LibStub("AceGUISharedMediaWidgets-1.0")
 
 do
-	local widgetType = "LSM30_Background"
-	local widgetVersion = 11
+	local widgetType = "LSM30_Sound"
+	local widgetVersion = 13
 
 	local contentFrameCache = {}
 	local function ReturnSelf(self)
@@ -26,11 +26,10 @@ do
 		end
 	end
 
-	local function ContentOnEnter(this, button)
-		local self = this.obj
-		local text = this.text:GetText()
-		local background = self.list[text] ~= text and self.list[text] or Media:Fetch('background',text)
-		self.dropdown.bgTex:SetTexture(background)
+	local function ContentSpeakerOnClick(this, button)
+		local self = this.frame.obj
+		local sound = this.frame.text:GetText()
+		PlaySoundFile(self.list[sound] ~= sound and self.list[sound] or Media:Fetch('sound',sound), "Master")
 	end
 
 	local function GetContentLine()
@@ -43,8 +42,6 @@ do
 				frame:SetHeight(18)
 				frame:SetHighlightTexture([[Interface\QuestFrame\UI-QuestTitleHighlight]], "ADD")
 				frame:SetScript("OnClick", ContentOnClick)
-				frame:SetScript("OnEnter", ContentOnEnter)
-
 			local check = frame:CreateTexture("OVERLAY")
 				check:SetWidth(16)
 				check:SetHeight(16)
@@ -53,16 +50,29 @@ do
 				check:Hide()
 			frame.check = check
 
-			local text = frame:CreateFontString(nil,"OVERLAY","GameFontWhite")
-				local font, size = text:GetFont()
-				text:SetFont(font,size,"OUTLINE")
+			local soundbutton = CreateFrame("Button", nil, frame)
+				soundbutton:SetWidth(16)
+				soundbutton:SetHeight(16)
+				soundbutton:SetPoint("RIGHT",frame,"RIGHT",-1,0)
+				soundbutton.frame = frame
+				soundbutton:SetScript("OnClick", ContentSpeakerOnClick)
+			frame.soundbutton = soundbutton
 
+			local speaker = soundbutton:CreateTexture(nil, "BACKGROUND")
+				speaker:SetTexture("Interface\\Common\\VoiceChat-Speaker")
+				speaker:SetAllPoints(soundbutton)
+			frame.speaker = speaker
+			local speakeron = soundbutton:CreateTexture(nil, "HIGHLIGHT")
+				speakeron:SetTexture("Interface\\Common\\VoiceChat-On")
+				speakeron:SetAllPoints(soundbutton)
+			frame.speakeron = speakeron
+
+			local text = frame:CreateFontString(nil,"OVERLAY","GameFontWhite")
 				text:SetPoint("TOPLEFT", check, "TOPRIGHT", 1, 0)
-				text:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -2, 0)
+				text:SetPoint("BOTTOMRIGHT", soundbutton, "BOTTOMLEFT", -2, 0)
 				text:SetJustifyH("LEFT")
 				text:SetText("Test Test Test Test Test Test Test")
 			frame.text = text
-
 			frame.ReturnSelf = ReturnSelf
 		end
 		frame:Show()
@@ -100,18 +110,11 @@ do
 	end
 
 	local function SetList(self, list) -- Set the list of values for the dropdown (key => value pairs)
-		self.list = list or Media:HashTable("background")
+		self.list = list or Media:HashTable("sound")
 	end
-
 
 	local function SetText(self, text) -- Set the text displayed in the box.
 		self.frame.text:SetText(text or "")
-		local background = self.list[text] ~= text and self.list[text] or Media:Fetch('background',text)
-
-		self.frame.displayButton:SetBackdrop({bgFile = background,
-			edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
-			edgeSize = 16,
-			insets = { left = 4, right = 4, top = 4, bottom = 4 }})
 	end
 
 	local function SetLabel(self, text) -- Set the text for the label.
@@ -132,10 +135,12 @@ do
 		self.disabled = disabled
 		if disabled then
 			self.frame:Disable()
-			self.frame.displayButton:SetBackdropColor(.2,.2,.2,1)
+			self.speaker:SetDesaturated(true)
+			self.speakeron:SetDesaturated(true)
 		else
 			self.frame:Enable()
-			self.frame.displayButton:SetBackdropColor(1,1,1,1)
+			self.speaker:SetDesaturated(false)
+			self.speakeron:SetDesaturated(false)
 		end
 	end
 
@@ -162,12 +167,10 @@ do
 			for i, k in ipairs(sortedlist) do
 				local f = GetContentLine()
 				f.text:SetText(k)
-				--print(k)
 				if k == self.value then
 					f.check:Show()
 				end
 				f.obj = self
-				f.dropdown = self.dropdown
 				self.dropdown:AddFrame(f)
 			end
 			wipe(sortedlist)
@@ -195,8 +198,14 @@ do
 		this.obj:Fire("OnLeave")
 	end
 
+	local function WidgetPlaySound(this)
+		local self = this.obj
+		local sound = self.frame.text:GetText()
+		PlaySoundFile(self.list[sound] ~= sound and self.list[sound] or Media:Fetch('sound',sound), "Master")
+	end
+
 	local function Constructor()
-		local frame = AGSMW:GetBaseFrameWithWindow()
+		local frame = AGSMW:GetBaseFrame()
 		local self = {}
 
 		self.type = widgetType
@@ -207,6 +216,26 @@ do
 		frame.dropButton:SetScript("OnLeave", Drop_OnLeave)
 		frame.dropButton:SetScript("OnClick",ToggleDrop)
 		frame:SetScript("OnHide", OnHide)
+
+
+		local soundbutton = CreateFrame("Button", nil, frame)
+			soundbutton:SetWidth(16)
+			soundbutton:SetHeight(16)
+			soundbutton:SetPoint("LEFT",frame.DLeft,"LEFT",26,1)
+			soundbutton:SetScript("OnClick", WidgetPlaySound)
+			soundbutton.obj = self
+		self.soundbutton = soundbutton
+		frame.text:SetPoint("LEFT",soundbutton,"RIGHT",2,0)
+
+
+		local speaker = soundbutton:CreateTexture(nil, "BACKGROUND")
+			speaker:SetTexture("Interface\\Common\\VoiceChat-Speaker")
+			speaker:SetAllPoints(soundbutton)
+		self.speaker = speaker
+		local speakeron = soundbutton:CreateTexture(nil, "HIGHLIGHT")
+			speakeron:SetTexture("Interface\\Common\\VoiceChat-On")
+			speakeron:SetAllPoints(soundbutton)
+		self.speakeron = speakeron
 
 		self.alignoffset = 31
 

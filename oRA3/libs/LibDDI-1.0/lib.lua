@@ -1,3 +1,4 @@
+--@curseforge-project-slug: libddi-1-0@
 -----------------------------------------------------------------------
 --- Provides several dropdown item types that can be used with AceGUI-3.0's
 -- AceGUIWidget-DropDown in order to style font, statusbar and sound-dropdowns

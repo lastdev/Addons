@@ -10,7 +10,8 @@ Format
 ======
 A	I	Q	Tip		Achievement A with criteria I and seasonal quest Q
 A	I	-Q	Tip		Achievement but the quest is a daily too
-A	-	-	Tip		Achievement with no relevant criteria
+A	-	0	Tip		Achievement with no relevant criteria
+A/N/H	Title	0	Tip		Something not achievement or quest related but which needs to be on a map
 A/N/H	Title	Q	Tip		Seasonal quest with Title and whether Neutral/Alliance/Horde
 A/N/H	Title	-Q	Tip		Daily quest
 
@@ -44,10 +45,13 @@ points[ 76 ] = { -- Azshara
 									.."that rested bonus for as long as possible!", "Bilgewater Harbor" },
 }
 points[ 62 ] = { -- Darkshore
-	[50791890] = { 963, 4, 28951, "", "Lor'danel" },
+	[50791890] = { 963, 4, 28951, "Exclusive Taraezor tip! Pause to check your map while you are\n"
+                                    .."inside the inn next to the candy bucket. You want to stretch\n"
+									.."that rested bonus for as long as possible!", "Lor'danel" },
 }
+local teldrassil = "Speak to Zidormi in Darkshore if Teldrassil seems somewhat destroyed!"
 points[ 89 ] = { -- Darnassus
-	[62283315] = { 963, 5, 12334, "You may need to speak to Zidormi.", "Craftsmen's Terrace" },
+	[62283315] = { 963, 5, 12334, teldrassil, "Craftsmen's Terrace" },
 }
 points[ 66 ] = { -- Desolace
 	[56725010] = { 963, 6, 28993, "", "Karnum's Glade" },
@@ -60,9 +64,12 @@ points[ 1 ] = { -- Durotar
 	[46940672] = { 965, 20, 12366, "", "Valley of Strength" },
 }
 points[ 70 ] = { -- Dustwallow Marsh
-	[41847407] = { 963, 8, 12398, "Upstairs, inside the main hut", "Mudsprocket" },
+		-- Due to the more extreme scaling of the map the Alliance Mudsprocket will be overwritten
+		-- by the Horde version of this data with regards to the continent map. Rather than
+		-- compromise the coordinate integrity I'll just hack an Alliance version onto the continent
+	[41857408] = { 963, 8, 12398, "Upstairs, inside the main hut", "Mudsprocket" },
 	[36783244] = { 965, 9, 12383, "", "Brackenwall Village" },
-	[41887411] = { 965, 10, 12398, "Upstairs, inside the main hut", "Mudsprocket" },
+	[41867409] = { 965, 10, 12398, "Upstairs, inside the main hut", "Mudsprocket" }, -- Best coords
 	[66604528] = { "A", "Theramore (Old)", 12349, "Inside the inn. You may need to speak to Zidormi.\n"
 								.."Note: Zidormi is automatically marked on your map if\n"
 								.."you have completed the \"Theramore's Fall\" scenario.\n"
@@ -93,7 +100,8 @@ points[ 7 ] = { -- Mulgore
 	[39703118] = { 965, 28, 12367, "Inside \"The Cat and the Shaman\" inn.", "Lower Rise" },
 }
 points[ 10 ] = { -- Northern Barrens
-	[67347465] = { 963, 14, 12396, "", "Ratchet" },
+	[67347465] = { 963, 14, 12396, "Grab a Leaping Hatchling pet from nearby... oh yeah, did I mention that I\n"
+									.."have an AddOn for that too? Collect all four of the adorable raptor pets!", "Ratchet" },
 	[49515791] = { 965, 16, 12374, "Main building. It's the inn. De rigueur", "The Crossroads" },
 	[56214003] = { 965, 17, 29002, "", "Grol'dom Farm" },
 	[62511660] = { 965, 18, 29003, "Grab a Leaping Hatchling pet from nearby... oh yeah, did I mention that I\n"
@@ -101,14 +109,13 @@ points[ 10 ] = { -- Northern Barrens
 	[67347467] = { 965, 19, 12396, "", "Ratchet" },
 }
 points[ 85 ] = { -- Orgrimmar
-	[53937894] = { 965, 20, 12366, "Don't forget to make a quick macro as follows:\n"
-					.."#showtooltip Handful of Treats\n/use Handful of Treats", "Valley of Strength" },
+	[53937894] = { 965, 20, 12366, "", "Valley of Strength" },
 	[50843631] = { 5838, 1, 29019, "Through this portal for the Deepholm candy bucket.\n"
 									.."A Vashj'ir portal is closeby too!", "Temple of Earth" },
 }
 points[ 81 ] = { -- Silithus
 	[55473678] = { 963, 15, 12401, "In the Oasis inn, below the Flight Masters." },
-	[55473680] = { 965, 21, 12401, "In the Oasis inn, below the Flight Masters." },
+	[55473679] = { 965, 21, 12401, "In the Oasis inn, below the Flight Masters." }, -- Best coords
 }
 points[ 199 ] = { -- Southern Barrens
 	[49046851] = { 963, 16, 29008, "Another candy bucket that's not in a building. Hooray!", "Fort Triumph" },
@@ -134,12 +141,12 @@ points[ 71 ] = { -- Tanaris
 	[52562709] = { 963, 24, 12399, "Did you stock up on Noggenfogger while you are here?\n"
 								.."Oh yeah, the candy bucket is inside \"The Road Warrior\" inn", "Gadgetzan" },
 	[55706097] = { 965, 26, 29014, "", "Bootlegger Outpost" },
-	[52562711] = { 965, 27, 12399, "Did you stock up on Noggenfogger while you are here?\n"
+	[52562710] = { 965, 27, 12399, "Did you stock up on Noggenfogger while you are here?\n" -- Best coords
 								.."Oh yeah, the candy bucket is inside \"The Road Warrior\" inn", "Gadgetzan" },
 }
 points[ 57 ] = { -- Teldrassil
-	[55365229] = { 963, 25, 12331, "Inside the inn. You can fly right in.\nYou may need to speak to Zidormi.", "Dolanaar" },
-	[34164401] = { 963, 5, 12334, "You may need to speak to Zidormi.", "Craftsmen's Terrace" },
+	[55365229] = { 963, 25, 12331, teldrassil, "Dolanaar" },
+	[34164401] = { 963, 5, 12334, teldrassil, "Craftsmen's Terrace" },
 }
 points[ 88 ] = { -- Thunder Bluff
 	[45626493] = { 965, 28, 12367, "Inside \"The Cat and the Shaman\" inn.", "Lower Rise" },
@@ -156,21 +163,6 @@ points[ 83 ] = { -- Winterspring
 	[59835123] = { 965, 30, 12400, "Grab a Winterspring Cub pet from Michelle De Rum who is\n"
                                     .."standing near the candy bucket. Awwww... so cute!\n"
 									.."Don't forget the Mount Hyjal locations too!", "Everlook" },
-}
-points[ 12 ] = { -- Kalimdor continent map hacks
-	-- Azuremyst Isle
-	[32402650] = { 963, 2, 12333, "", "Azure Watch" },
-	-- Silithus
-	[44397818] = { 963, 15, 12401, "In the Oasis inn, below the Flight Masters.", "Cenarion Hold" },
-	-- Tanaris
-	[56857900] = { 963, 24, 12399, "Did you stock up on Noggenfogger while you are here?\n"
-								.."Oh yeah, the candy bucket is inside \"The Road Warrior\" inn", "Gadgetzan" },
-	-- Teldrassil
-	[43711023] = { 963, 25, 12331, "Inside the inn. You can fly right in.\nYou may need to speak to Zidormi.", "Dolanaar" },
-	[40320891] = { 963, 5, 12334, "You may need to speak to Zidormi.", "Craftsmen's Terrace" },
-
-	-- Theramore (Old)
-	[58536492] = { "A", "Theramore (Old)", 12349, "Inside the inn. You may need to speak to Zidormi." },
 }
 
 -- ==============================
@@ -198,7 +190,7 @@ points[ 14 ] = { -- Arathi Highlands
 	[40064909] = { 966, 1, 28954, "If you cannot see the candy bucket then you'll\n"
 									.."need to visit Zidormi. I marked her on the map.", "Refuge Point" },
 	[38259009] = { 966, 1, 28954, "Zidormi is at this location. You'll probably\n"
-									.."need her for the Refuge Pointe candy bucket.", "Refuge Point" },
+									.."need her for the Refuge Point candy bucket.", "Refuge Point" },
 	[69023327] = { 967, 1, 12380, "Well if it's not outside then it must be...", "Hammerfall" },
 }
 points[ 15 ] = { -- Badlands
@@ -229,6 +221,9 @@ points[ 27 ] = { -- Dun Morogh
 points[ 47 ] = { -- Duskwood
 	[73804425] = { 966, 8, 12344, "" },
 }
+points[ 1431 ] = { -- Duskwood
+	[73804425] = { 966, 8, 12344, "" },
+}
 points[ 23 ] = { -- Eastern Plaguelands
 	[75575230] = { 966, 9, 12402, "" },
 	[75575232] = { 967, 7, 12402, "Use a taxi between Light's Hope Chapel and Tranquillien." },
@@ -238,9 +233,8 @@ points[ 24 ] = { -- Light's Hope Chapel - Sanctum of Light
 	[40709037] = { 967, 7, 12402, "" },
 }
 points[ 37 ] = { -- Elwynn Forest
-	[43746589] = { 966, 10, 12286, "" },
-	[24894013] = { 966, 19, 12336, "Don't forget to make a quick macro as follows:\n"
-					.."#showtooltip Handful of Treats\n/use Handful of Treats", "" },
+	[43746589] = { 966, 10, 12286, "", "Elwynn Forest" },
+	[24894013] = { 966, 19, 12336, "", "" },
 	[32355088] = { 1040, 1, -29054, "Pickup the quest here from Gretchen Fenlow and\n"
 									.."then your broomstick taxi from Gertrude Fenlow,\n"
 									.."who is nearby. Soon after completion you could\n"
@@ -268,6 +262,9 @@ points[ 37 ] = { -- Elwynn Forest
 									.."to fly straight up.", "" },
 	[31241227] = { 5837, 1, 29020, "Through this portal for the Deepholm candy bucket.\n"
 									.."A Vashj'ir portal is closeby too!", "Temple of Earth" },
+}
+points[ 1229 ] = { -- Elwynn Forest
+	[43746589] = { 966, 10, 12286, "" },
 }
 points[ 94 ] = { -- Eversong Woods
 	[43707103] = { 967, 8, 12365, "Use a taxi between Fairbreeze Village and Tranquillien.", "Fairbreeze Village" },
@@ -303,6 +300,12 @@ points[ 50 ] = { -- Northern Stranglethorn
 points[ 49 ] = { -- Redridge Mountains
 	[26464150] = { 966, 17, 12342, "", "Lakeshire" },
 }
+points[ 49 ] = { -- Redridge Mountains
+	[26464150] = { 966, 17, 12342, "", "Lakeshire" },
+}
+points[ 1433 ] = { -- Redridge Mountains
+	[27094492] = { 966, 17, 12342, "", "Lakeshire" },
+}
 points[ 32 ] = { -- Searing Gorge
 	[39486601] = { 966, 18, 28965, "Outside, high up on a perimiter ledge", "Iron Summit" },
 	[39486603] = { 967, 16, 28965, "Outside, high up on a perimiter ledge", "Iron Summit" },
@@ -318,16 +321,15 @@ points[ 21 ] = { -- Silverpine Forest
 	[44302029] = { 967, 19, 28966, "", "Forsaken Rear Guard" },
 	[46454290] = { 967, 20, 12371, "In the largest building", "The Sepulcher" },
 }
---[[points[ 224 ] = { -- Stranglethorn Vale
+points[ 224 ] = { -- Stranglethorn Vale
 	[52094310] = { 966, 16, 28964, "", "Fort Livingston" },
 	[37897992] = { 966, 6, 12397, "It's in the Salty Sailor Tavern", "Booty Bay" },
 	[42213359] = { 967, 15, 12382, "At the base of the zeppelin tower", "Grom'gol Base Camp" },
 	[37897994] = { 967, 5, 12397, "It's in the Salty Sailor Tavern", "Booty Bay" },
 	[34365192] = { 967, 6, 28969, "It's in the building next to the apple bobbing tub", "Hardwrench Hideaway" },
-}]]
+}
 points[ 84 ] = { -- Stormwind City
-	[60517534] = { 966, 19, 12336, "Don't forget to make a quick macro as follows:\n"
-					.."#showtooltip Handful of Treats\n/use Handful of Treats", "" },
+	[60517534] = { 966, 19, 12336, "", "Stormwind City" },
 	[75419681] = { 1040, 1, -29054, "Pickup the quest here from Gretchen Fenlow and\n"
 									.."then your broomstick taxi from Gertrude Fenlow,\n"
 									.."who is nearby. Soon after completion you could\n"
@@ -424,21 +426,6 @@ points[ 56 ] = { -- Wetlands
 									.."Steal it from her mother's nest you heartless pet collector!\n"
 									.."Oh, did I say that I have an AddOn to help you collect four?", "Greenwarden's Grove" },
 }
-points[ 13 ] = { -- Eastern Kingdoms continent map hacks
-	-- Searing Gorge does not display pins automatically on the continent for Alliance
-	[47576726] = { 966, 18, 28965, "Outside, high up on a perimiter ledge", "Iron Summit" },
-	-- Same for the Eastern Plaguelands
-	[57603260] = { 966, 9, 12402, "", "Light's Hope Chapel" },
-	-- Bogpaddle refuses to be shown. Whatever!
-	[54127715] = { 966, 20, 28967, "", "Bogpaddle" },
---	[54127717] = { 967, 21, 28967, "", "Bogpaddle" },
-	-- The Cape of Stranglethorn
-	[43409290] = { 966, 6, 12397, "It's in the Salty Sailor Tavern", "Booty Bay" },
-	-- Vashj'ir
-	[34346363] = { 5837, 13, 28982, "Inside Silver Tide Hollow. Dive straight down. The icon marks the entrance", "Silver Tide Hollow" },
-	[36336030] = { 5837, 12, 28981, "Inside Deepmist Grotto. Dive straight down. The icon marks the entrance", "Deepmist Grotto" },
-	[34346364] = { 5838, 12, 28982, "Inside Silver Tide Hollow. Dive straight down. The icon marks the entrance", "Silver Tide Hollow" },
-}
 
 -- ============================
 -- Tricks and Treats of Outland
@@ -497,6 +484,9 @@ points[ 102 ] = { -- Zangarmarsh
 	[30625087] = { 968, 13, 12390, "The ground level of the inn with no name :(", "Zabra'jin" },
 	[78456290] = { 968, 14, 12403, "Inside the main building", "Cenarion Refuge" },
 }
+points[ 101 ] = { -- Outland
+	[80603200] = { "N", "Candy Bucket Macro", 0, "#showtooltip Handful of Treats\n/use Handful of Treats" },
+}
 
 -- ==============================
 -- Tricks and Treats of Northrend
@@ -523,8 +513,7 @@ points[ 127 ] = { -- Crystalsong Forest
 	[27304169] = { 5836, 6, 13472, "Cantrips & Crows", "The Underbelly" },
 	[29003241] = { 5835, 5, 13463, "Hey, did you download my \X and Y\" AddOn for cool minimap coordinates!\n"
 									.."(Shameless self promotion)", "The Legerdemain Lounge" },
-	[30703770] = { 5835, 6, 13474, "The Filthy Animal\nDon't forget to make a quick macro as follows:\n"
-					.."#showtooltip Handful of Treats\n/use Handful of Treats", "Sunreaver's Sanctuary" },
+	[30703770] = { 5835, 6, 13474, "The Filthy Animal", "Sunreaver's Sanctuary" },
 	[27304171] = { 5835, 7, 13472, "Cantrips & Crows", "The Underbelly" },
 }
 points[ 125 ] = { -- Dalaran
@@ -544,12 +533,10 @@ points[ 126 ] = { -- The Underbelly
 }
 points[ 115 ] = { -- Dragonblight
 	[48117465] = { 5836, 7, 13459, "", "Moa'ki Harbor" },
-	[28955622] = { 5836, 8, 13438, "Don't forget to make a quick macro as follows:\n"
-					.."#showtooltip Handful of Treats\n/use Handful of Treats", "Stars' Rest" },
+	[28955622] = { 5836, 8, 13438, "", "Stars' Rest" },
 	[77285099] = { 5836, 9, 13439, "Icon marks the entrance to the inn. It's the closest building to the Flight Master", "Wintergarde Keep" },
 	[60155343] = { 5836, 10, 13456, "The ground floor. Use the nearest entrance to the Gryphon Master", "Wyrmrest Temple" },
-	[37834647] = { 5835, 8, 13469, "Don't forget to make a quick macro as follows:\n"
-					.."#showtooltip Handful of Treats\n/use Handful of Treats", "Agmar's Hammer" },
+	[37834647] = { 5835, 8, 13469, "", "Agmar's Hammer" },
 	[48117466] = { 5835, 9, 13459, "", "Moa'ki Harbor" },
 	[76826328] = { 5835, 10, 13470, "", "Venomspite" },
 	[60155347] = { 5835, 11, 13456, "The ground floor. Use the nearest entrance to the Flight Master", "Wyrmrest Temple" },
@@ -561,7 +548,7 @@ points[ 116 ] = { -- Grizzly Hills
 	[20896477] = { 5835, 13, 12946, "", "Conquest Hold" },
 }
 points[ 117 ] = { -- Howling Fjord
-	[60481591] = { 5836, 13, 13435, "My macro:\n#showtooltip Handful of Treats\n/use Handful of Treats", "Fort Wildervar" },
+	[60481591] = { 5836, 13, 13435, "", "Fort Wildervar" },
 	[25315912] = { 5836, 14, 13452, "Icon marks the entrance to the subterranean Inn", "Kamagua" },
 	[58676316] = { 5836, 15, 13433, "The Inn entrance is at the side....\nThe Penny Pouch is awesome!\nNot :/", "Valgarde" },
 	[30834205] = { 5836, 16, 13434, "The usual :). Icon marks the inn entrance", "Westguard Keep" },
@@ -602,12 +589,16 @@ points[ 207 ] = { -- Deepholm
 	[47365171] = { 5837, 1, 29020, "", "Temple of Earth" },
 	[51194990] = { 5838, 1, 29019, "", "Temple of Earth" },
 }
+local experiment = "The lake area behind the Nordrassil inn is the perfect place to\n"
+					.."experiment with your advanced graphics settings. Particle Density,\n"
+					.."Ground Clutter, and Liquid Detail in particular are worth trying.\n"
+					.."So divinely serene and gorgeous!"
 points[ 198 ] = { -- Mount Hyjal
 	[18633731] = { 5837, 2, 29000, "Just this once max out \"Ground Clutter\" in your settings. You're welcome!", "Grove of Aessina" },
-	[63052414] = { 5837, 3, 28999, "", "Nordrassil" },
+	[63052414] = { 5837, 3, 28999, experiment, "Nordrassil" },
 	[42684571] = { 5837, 4, 29001, "", "Shrine of Aviana" },
 	[18633733] = { 5838, 2, 29000, "Just this once max out \"Ground Clutter\" in your settings. You're welcome!", "Grove of Aessina" },
-	[63052416] = { 5838, 3, 28999, "", "Nordrassil" },
+	[63052416] = { 5838, 3, 28999, experiment, "Nordrassil" },
 	[42684573] = { 5838, 4, 29001, "", "Shrine of Aviana" },
 }
 points[ 241 ] = { -- Twilight Highlands
@@ -627,10 +618,10 @@ points[ 241 ] = { -- Twilight Highlands
 									.."becomes available then too." },
 }
 points[ 249 ] = { -- Uldum
-	[26580722] = { 5837, 9, 29016, "Why not grab the cool Springfur Alpaca mount while you're here!\n"
+	[26600725] = { 5837, 9, 29016, "Why not grab the cool Springfur Alpaca mount while you're here!\n"
 									.."You guessed it, sigh. I've an AddOn for that too! :)", "Oasis of Vir'sar" },
 	[54682999] = { 5837, 10, 29017, "", "Ramkahen" },
-	[26600726] = { 5838, 8, 29016, "Why not grab the cool Springfur Alpaca mount while you're here!\n"
+	[26600727] = { 5838, 8, 29016, "Why not grab the cool Springfur Alpaca mount while you're here!\n"
 									.."You guessed it, sigh. I've an AddOn for that too! :)", "Oasis of Vir'sar" },
 	[54683301] = { 5838, 9, 29017, "", "Ramkahen" },
 }
@@ -731,10 +722,8 @@ points[ 433 ] = { -- The Veiled Stair, Tavern in the Mists
 	[55117225] = { 7602, 19, 32026, "Taraezor has lots of handy \"HandyNotes\" AddOns!", "" },
 }
 points[ 388 ] = { -- Townlong Steppes, Longying Outpost
-	[71135777] = { 7601, 18, 32043, "Don't forget to make a quick macro as follows:\n"
-					.."#showtooltip Handful of Treats\n/use Handful of Treats", "" },
-	[71145779] = { 7602, 20, 32043, "Don't forget to make a quick macro as follows:\n"
-					.."#showtooltip Handful of Treats\n/use Handful of Treats", "" },
+	[71135777] = { 7601, 18, 32043, "", "" },
+	[71145779] = { 7602, 20, 32043, "", "" },
 }
 points[ 390 ] = { -- Vale of Eternal Blossoms
 	[35147776] = { 7601, 19, 32044, "In The Golden Rose inn", "Mistfall Village" },
@@ -779,18 +768,22 @@ local draenorD = "Orukan has four dailies and Izzy Hollyfizzle\n"
 points[ 582 ] = { -- Lunarfall Garrison in Draenor
 	[43515151] = { "A", "Draenor / Lunarfall Garrison", 39657, draenorS },
 	[44405180] = { "A", "Draenor / Lunarfall Garrison", -39719, draenorD },
+	[29003440] = { "A", "Get Spooky - Garrison Mission", 0, "Rarely and randomly occurs. Rewards 15 candy!" },
 }
 points[ 539 ] = { -- Shadowmoon Valley in Draenor
 	[30011780] = { "A", "Draenor / Lunarfall Garrison", 39657, draenorS },
 	[30251805] = { "A", "Draenor / Lunarfall Garrison", -39719, draenorD },
+	[28701600] = { "A", "Get Spooky - Garrison Mission", 0, "Rarely and randomly occurs. Rewards 15 candy!" },
 }
 points[ 590 ] = { -- Frostwall Garrison in Draenor
 	[46993759] = { "H", "Draenor / Frostwall Garrison", 39657, draenorS },
 	[47903790] = { "H", "Draenor / Frostwall Garrison", -39719, draenorD },
+	[41005300] = { "H", "Get Spooky - Garrison Mission", 0, "Rarely and randomly occurs. Rewards 15 candy!" },
 }
 points[ 525 ] = { -- Frostfire Ridge in Draenor
 	[48256435] = { "H", "Draenor / Frostwall Garrison", 39657, draenorS },
 	[48506460] = { "H", "Draenor / Frostwall Garrison", -39719, draenorD },
+	[46006800] = { "H", "Get Spooky - Garrison Mission", 0, "Rarely and randomly occurs. Rewards 15 candy!" },
 }
 
 points[ 1163 ] = { -- Dazar'alor - The Great Seal
@@ -824,7 +817,19 @@ points[ 627 ] = { -- Dalaran Broken Isles
 	[59174564] = { 291, 0, 0, "Just stand here with a cuppa and wait. Couldn't be easier." },
 }
 
+-- ===========================
+-- Continents & Sub-Continents
+-- ===========================
+
+points[ 12 ] = { -- Kalimdor
+	-- Azuremyst Isle
+	[32402650] = { 963, 2, 12333, "", "Azure Watch" },
+	-- Teldrassil
+	[43711023] = { 963, 25, 12331, teldrassil, "Dolanaar" },
+	[40320891] = { 963, 5, 12334, teldrassil, "Craftsmen's Terrace" },
+}
 points[ 947 ] = { -- Azeroth
+	[70007500] = { "N", "Candy Bucket Macro", 0, "#showtooltip Handful of Treats\n/use Handful of Treats" },
 	[45194849] = { 5837, 1, 29020, "Access via the Cataclysm portal cluster in Stormwind.", "Temple of Earth" },
 	[45194851] = { 5838, 1, 29019, "Access via the Cataclysm portal cluster in Orgrimmar.", "Temple of Earth" },
 }

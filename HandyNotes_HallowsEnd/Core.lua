@@ -3,7 +3,7 @@
 
                                             Hallow's End
 
-                                      v2.00 - 30th October 2022
+                                      v2.01 - 31st October 2022
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -33,8 +33,7 @@ local pluginHandler = {}
 local GameTooltip = _G.GameTooltip
 local GetAchievementCriteriaInfo = GetAchievementCriteriaInfo
 local GetAchievementInfo = GetAchievementInfo
-local GetMapInfo = C_Map.GetMapInfo
-local IsQuestFlaggedCompleted = C_QuestLog.IsQuestFlaggedCompleted
+--local GetMapInfo = C_Map.GetMapInfo -- phase checking during testing
 local LibStub = _G.LibStub
 local UIParent = _G.UIParent
 local format = _G.format
@@ -415,20 +414,24 @@ function pluginHandler:OnEnter(mapFile, coord)
 	local aID, aIndex, aQuest, tip = infoFromCoord(mapFile, coord)
 	local completed, aName, completedMe;
 	local pName = UnitName( "player" ) or "Character"
+	local bypassCoords = false
 	
 	if ( aID == "A" ) or ( aID == "N" ) or ( aID == "H" ) then
 		GameTooltip:SetText( ns.colour.prefix ..aIndex )
-		completed = C_QuestLog.IsQuestFlaggedCompleted( math.abs( aQuest ) )
-		if ( aQuest < 0 ) then
-			GameTooltip:AddDoubleLine( "\124cFF1F45FC".. "Daily Quest",
-						( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
-											or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
+		if ( aQuest == 0 ) then
+			bypassCoords = true
 		else
-			GameTooltip:AddDoubleLine( "\124cFF1F45FC".. "This Season",
-						( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
-											or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
-		end
-			
+			completed = C_QuestLog.IsQuestFlaggedCompleted( math.abs( aQuest ) )
+			if ( aQuest < 0 ) then
+				GameTooltip:AddDoubleLine( "\124cFF1F45FC".. "Daily Quest",
+							( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
+												or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
+			else
+				GameTooltip:AddDoubleLine( "\124cFF1F45FC".. "This Season",
+							( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
+												or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
+			end
+		end	
 	elseif ( aQuest == 0 ) then
 		_, aName, _, completed, _, _, _, _, _, _, _, _, completedMe = GetAchievementInfo( aID )
 		GameTooltip:AddDoubleLine( ns.colour.prefix ..aName ..ns.colour.highlight .." (" ..ns.faction ..")",
@@ -437,7 +440,6 @@ function pluginHandler:OnEnter(mapFile, coord)
 		GameTooltip:AddDoubleLine( " ",
 					( completedMe == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
 										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )										
-	
 	else
 		_, aName, _, completed = GetAchievementInfo( aID )
 		GameTooltip:AddDoubleLine( ns.colour.prefix ..aName ..ns.colour.highlight .." (" ..ns.faction ..")",
@@ -469,7 +471,7 @@ function pluginHandler:OnEnter(mapFile, coord)
 	if ( tip ~= "" ) then
 		GameTooltip:AddLine( ns.colour.plaintext ..tip )
 	end	
-	if ns.db.showCoords == true then
+	if ( ns.db.showCoords == true ) and ( bypassCoords == false ) then
 		local mX, mY = HandyNotes:getXY(coord)
 		mX, mY = mX*100, mY*100
 		GameTooltip:AddLine( ns.colour.highlight .."(" ..format( "%.02f", mX ) .."," ..format( "%.02f", mY ) ..")" )
@@ -485,7 +487,7 @@ end
 local function ShowConditionallyC( v1, v2, v3 )
 	local completed;
 	if ( ns.db.removeSeasonal == true ) then
-		completed = IsQuestFlaggedCompleted( v3 )
+		completed = C_QuestLog.IsQuestFlaggedCompleted( v3 )
 		if ( completed == true ) then
 			return false
 		end
@@ -512,7 +514,7 @@ end
 local function ShowConditionallyS( v2 )
 	local completed;
 	if ( ns.db.removeSeasonal == true ) then
-		completed = IsQuestFlaggedCompleted( v2 )
+		completed = C_QuestLog.IsQuestFlaggedCompleted( v2 )
 		if ( completed == true ) then
 			return false
 		end
@@ -523,7 +525,7 @@ end
 local function ShowConditionallyD( v3 )
 	local completed;
 	if ( ns.db.removeDailies == true ) then
-		completed = IsQuestFlaggedCompleted( v3 )
+		completed = C_QuestLog.IsQuestFlaggedCompleted( v3 )
 		if ( completed == true ) then
 			return false
 		end
@@ -540,7 +542,11 @@ do
 				if ( v[1] == "A" ) or ( v[1] == "N" ) or ( v[1] == "H" ) then
 					if ( ( ns.faction == "Horde" ) and ( ( v[1] == "N" ) or ( v[1] == "H" ) ) ) or
 					   ( ( ns.faction == "Alliance" ) and ( ( v[1] == "N" ) or ( v[1] == "A" ) ) ) then
-						if ( v[3] > 0 ) then
+						if ( v[3] == 0 ) then
+							-- Permanent map marker with no related quest or achievement
+							return coord, nil, ns.texturesS[ns.db.icon_special],
+								ns.db.icon_scale * ns.scalingS[ns.db.icon_special], ns.db.icon_alpha
+						elseif ( v[3] > 0 ) then
 							if ShowConditionallyS( v[3] ) == true then
 								return coord, nil, ns.texturesS[ns.db.icon_special],
 									ns.db.icon_scale * ns.scalingS[ns.db.icon_special], ns.db.icon_alpha
@@ -742,13 +748,56 @@ function pluginHandler:OnEnable()
 				( map.mapID == 57 ) then -- Teldrassil
 			elseif (version < 40000) and ( map.mapID < 1400 ) then
 			elseif (version >= 40000) and ( map.mapID >= 1400 ) then
-			elseif coords then			
-				for coord, criteria in next, coords do
-					local mx, my = HandyNotes:getXY(coord)
-					local cx, cy = HereBeDragons:TranslateZoneCoordinates(mx, my, map.mapID, continentMapID)
-					if cx and cy then
-						ns.points[continentMapID] = ns.points[continentMapID] or {}
-						ns.points[continentMapID][HandyNotes:getCoord(cx, cy)] = criteria
+			elseif coords then
+				for coord, v in next, coords do
+					local function AddToContinent()
+						local mx, my = HandyNotes:getXY(coord)
+						local cx, cy = HereBeDragons:TranslateZoneCoordinates(mx, my, map.mapID, continentMapID)
+						if cx and cy then
+							ns.points[continentMapID] = ns.points[continentMapID] or {}
+							ns.points[continentMapID][HandyNotes:getCoord(cx, cy)] = v
+						end
+					end
+					if ( v[1] == "A" ) or ( v[1] == "N" ) or ( v[1] == "H" ) then
+						if ( ( ns.faction == "Horde" ) and ( ( v[1] == "N" ) or ( v[1] == "H" ) ) ) or
+						   ( ( ns.faction == "Alliance" ) and ( ( v[1] == "N" ) or ( v[1] == "A" ) ) ) then
+							if ( v[3] == 0 ) then
+								AddToContinent()
+							elseif ( v[3] > 0 ) then
+								if ShowConditionallyS( v[3] ) == true then
+									AddToContinent()
+								end
+							else
+								if ShowConditionallyD( -1*v[3] ) == true then
+									AddToContinent()
+								end
+							end
+						end
+					elseif ( v[3] == 0 ) then -- Achievement with no relevant criteria to be bothered with
+						if ShowConditionallyA( v[1] ) == true then
+							AddToContinent()
+						end
+					elseif ( v[3] > 0 ) then -- Achievement with seasonal criteria
+						if ( v[1] == 963 ) or ( v[1] == 966 ) or ( v[1] == 969 ) or
+							( v[1] == 5836 ) or ( v[1] == 5837 ) or ( v[1] == 7601 ) then -- Tricks & Treats Alliance
+							if ns.faction == "Alliance" then
+								if ShowConditionallyC( v[1], v[2], v[3] ) == true then
+									AddToContinent()
+								end
+							end
+						elseif ( v[1] == 965 ) or ( v[1] == 967 ) or ( v[1] == 968 ) or
+								( v[1] == 5835 ) or ( v[1] == 5838 ) or ( v[1] == 7602 ) then -- Tricks & Treats Horde
+							if ns.faction == "Horde" then
+								if ShowConditionallyC( v[1], v[2], v[3] ) == true then
+									AddToContinent()
+								end
+							end
+						end
+					elseif ( ( v[1] == 1040 ) and ( ns.faction == "Alliance" ) ) or
+							( ( v[1] == 1041 ) and ( ns.faction == "Horde" ) ) then
+						if ShowConditionallyD( -1*v[3] ) == true then
+							AddToContinent()
+						end
 					end
 				end
 			end

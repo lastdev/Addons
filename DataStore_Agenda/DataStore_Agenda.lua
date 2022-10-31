@@ -101,7 +101,7 @@ local function ScanDungeonIDs()
 				instanceName = format("%s %s", instanceName, difficultyName)
 			end
 
-			local key = format("%s|%d", instanceName, instanceID)
+			local key = format("%s|%s", instanceName, instanceID)
 			dungeons[key] = format("%s|%s|%s|%s", instanceReset, time(), extended, isRaid )
 		end
 	end

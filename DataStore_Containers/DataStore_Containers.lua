@@ -456,8 +456,9 @@ local function OnBankFrameOpened()
 end
 
 local function OnGuildBankFrameClosed()
-	addon:UnregisterEvent("GUILDBANKFRAME_CLOSED")
-	addon:UnregisterEvent("GUILDBANKBAGSLOTS_CHANGED")
+	if WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC or WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC then
+		addon:UnregisterEvent("GUILDBANKFRAME_CLOSED")
+	end
 	addon:UnregisterEvent("GUILDBANKBAGSLOTS_CHANGED")
 	
 	local guildName = GetGuildInfo("player")
@@ -472,7 +473,11 @@ local function OnGuildBankBagSlotsChanged()
 end
 
 local function OnGuildBankFrameOpened()
-	addon:RegisterEvent("GUILDBANKFRAME_CLOSED", OnGuildBankFrameClosed)
+	
+	if WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC or WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC then
+		addon:RegisterEvent("GUILDBANKFRAME_CLOSED", OnGuildBankFrameClosed)
+	end
+	
 	addon:RegisterEvent("GUILDBANKBAGSLOTS_CHANGED", OnGuildBankBagSlotsChanged)
 	
 	local thisGuild = GetThisGuild()
@@ -508,30 +513,42 @@ local function OnAuctionHouseShow()
 	addon:RegisterEvent("AUCTION_HOUSE_CLOSED", OnAuctionHouseClosed)
 end
 
-local function OnVoidStorageClosed(event, interactionType)
-	if interactionType ~= Enum.PlayerInteractionType.VoidStorageBanker then return end
-
-	print("on hide")
-	addon:UnregisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE")
-	addon:UnregisterEvent("VOID_STORAGE_UPDATE")
-	addon:UnregisterEvent("VOID_STORAGE_CONTENTS_UPDATE")
-	addon:UnregisterEvent("VOID_TRANSFER_DONE")
-end
-
 local function OnVoidStorageTransferDone()
 	ScanVoidStorage()
 end
 
-local function OnVoidStorageOpened(event, interactionType)
-
+local function OnPlayerInteractionManagerFrameHide(event, interactionType)
 	if interactionType ~= Enum.PlayerInteractionType.VoidStorageBanker then return end
+
+	-- Void storage specific
+	if interactionType == Enum.PlayerInteractionType.VoidStorageBanker then 
+		addon:UnregisterEvent("VOID_STORAGE_UPDATE")
+		addon:UnregisterEvent("VOID_STORAGE_CONTENTS_UPDATE")
+		addon:UnregisterEvent("VOID_TRANSFER_DONE")
+
+	-- Guild bank specific
+	elseif interactionType == Enum.PlayerInteractionType.GuildBanker then 
+		OnGuildBankFrameClosed()
+	end
+end
+
+local function OnPlayerInteractionManagerFrameShow(event, interactionType)
+
+	-- Void storage specific
+	if interactionType == Enum.PlayerInteractionType.VoidStorageBanker then 
+		ScanVoidStorage()
+		addon:RegisterEvent("VOID_STORAGE_UPDATE", ScanVoidStorage)
+		addon:RegisterEvent("VOID_STORAGE_CONTENTS_UPDATE", ScanVoidStorage)
+		addon:RegisterEvent("VOID_TRANSFER_DONE", OnVoidStorageTransferDone)
 	
-	print("on show")
-	ScanVoidStorage()
-	addon:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE", OnVoidStorageClosed)
-	addon:RegisterEvent("VOID_STORAGE_UPDATE", ScanVoidStorage)
-	addon:RegisterEvent("VOID_STORAGE_CONTENTS_UPDATE", ScanVoidStorage)
-	addon:RegisterEvent("VOID_TRANSFER_DONE", OnVoidStorageTransferDone)
+	-- Bank / Reagent bank
+	elseif interactionType == Enum.PlayerInteractionType.Banker then 
+		ScanReagentBank()
+	
+	-- Guild bank specific
+	elseif interactionType == Enum.PlayerInteractionType.GuildBanker then 
+		OnGuildBankFrameOpened()
+	end
 end
 
 
@@ -1035,13 +1052,13 @@ function addon:OnEnable()
 		ScanReagentBank()
 		
 		addon:RegisterEvent("PLAYER_ALIVE", OnPlayerAlive)
-		addon:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", OnVoidStorageOpened)
+		addon:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", OnPlayerInteractionManagerFrameShow)
+		addon:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE", OnPlayerInteractionManagerFrameHide)
 		addon:RegisterEvent("PLAYERREAGENTBANKSLOTS_CHANGED", OnPlayerReagentBankSlotsChanged)
-		addon:RegisterEvent("GUILDBANKFRAME_OPENED", OnGuildBankFrameOpened)
 		addon:RegisterEvent("WEEKLY_REWARDS_UPDATE", OnWeeklyRewardsUpdate)
 		
-	elseif WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC then
-		addon:RegisterEvent("GUILDBANKFRAME_OPENED", OnGuildBankFrameOpened)	 -- > bc
+	elseif WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC or WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC then
+		addon:RegisterEvent("GUILDBANKFRAME_OPENED", OnGuildBankFrameOpened)	 -- > BC/LK
 	end
 end
 
@@ -1049,9 +1066,13 @@ function addon:OnDisable()
 	addon:UnregisterEvent("PLAYER_ALIVE")
 	addon:UnregisterEvent("BAG_UPDATE")
 	addon:UnregisterEvent("BANKFRAME_OPENED")
-	addon:UnregisterEvent("GUILDBANKFRAME_OPENED")
 	addon:UnregisterEvent("AUCTION_HOUSE_SHOW")
 	addon:UnregisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW")
+	addon:UnregisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE")
 	addon:UnregisterEvent("PLAYERREAGENTBANKSLOTS_CHANGED")
 	addon:UnregisterEvent("WEEKLY_REWARDS_UPDATE")
+	
+	if WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC or WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC then
+		addon:UnregisterEvent("GUILDBANKFRAME_OPENED")
+	end
 end

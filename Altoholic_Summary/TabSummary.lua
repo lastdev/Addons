@@ -471,6 +471,9 @@ addon:Controller("AltoholicUI.TabSummary", {
 			addon:RegisterMessage("DATASTORE_GUILD_LEFT", function() 
 				frame:Update()
 			end)
+			addon:RegisterMessage("DATASTORE_PROFESSION_LINKS_UPDATED", function() 
+				frame:Update()
+			end)
 			
 		end,
 		FilterIcon_OnEnter = function(frame, icon)

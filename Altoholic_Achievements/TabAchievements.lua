@@ -157,6 +157,7 @@ addon:Controller("AltoholicUI.TabAchievementsCategoriesList", {
 					{ id = cat.QuestsBfA },
 					{ id = cat.QuestsShadowlands },
 					{ text = FormatRaid("9.2", 13536), id = cat.QuestsShadowlands92 },		-- Zereth Mortis
+					{ id = cat.QuestsDragonflight },
 				}},
 				{ text = TRACKER_FILTER_COMPLETED_QUESTS, id = cat.QuestsCompleted },
 				{ text = L["Daily Quests"], id = cat.QuestsDaily },
@@ -177,6 +178,7 @@ addon:Controller("AltoholicUI.TabAchievementsCategoriesList", {
 					{ id = cat.ExplorationShadowlands },
 					-- Zereth Mortis
 					{ text = format("%s9.2|r %s%s", colors.green, colors.yellow, C_Map.GetAreaInfo(13536)), id = cat.ExplorationShadowlands92 },
+					{ id = cat.ExplorationDragonflight },
 				}},
 				{ text = L["Explorer"], id = cat.ExplorationExplorer },
 			}},
@@ -214,6 +216,7 @@ addon:Controller("AltoholicUI.TabAchievementsCategoriesList", {
 					{ text = EXPANSION_NAME6, id = cat.DungeonsLegion },
 					{ text = EXPANSION_NAME7, id = cat.DungeonsBfA },
 					{ text = EXPANSION_NAME8, id = cat.DungeonsShadowlands },
+					{ text = EXPANSION_NAME9, id = cat.DungeonsDragonflight },
 				}},
 				{ text = "Dungeon Hero", id = cat.DungeonHero },
 				{ text = "Hero's Glory", id = cat.DungeonGloryHero },
@@ -308,6 +311,10 @@ addon:Controller("AltoholicUI.TabAchievementsCategoriesList", {
 					-- 9.2 Sepulcher of the First Ones
 					{ text = FormatRaid("9.2", 13742), id = cat.RaidsShadowlandsSepulcherOfTheFirstOnes },
 				}},
+				{ text = EXPANSION_NAME9, id = cat.RaidsDragonflight, subMenu = {
+					-- 10.0 Vault of the Incarnates
+					{ text = FormatRaid("10.0", 14030), id = cat.RaidsDragonflightVaultOfTheIncarnates },
+				}},
 				{ text = format("%s%s", colors.cyan, "Raider's Glory"), id = cat.DungeonGloryRaider },
 				-- by exp
 			}},
@@ -349,6 +356,7 @@ addon:Controller("AltoholicUI.TabAchievementsCategoriesList", {
 					{ text = EXPANSION_NAME6, id = cat.ReputationsLegion },
 					{ text = EXPANSION_NAME7, id = cat.ReputationsBfA },
 					{ text = EXPANSION_NAME8, id = cat.ReputationsShadowlands },
+					{ text = EXPANSION_NAME9, id = cat.ReputationsDragonflight },
 				}},
 			}},
 			{ id = cat.WorldEvents, subMenu = {
@@ -386,6 +394,7 @@ addon:Controller("AltoholicUI.TabAchievementsCategoriesList", {
 					{ text = format("%s  %s", colors.yellow, GetRealZoneText(1669)), id = cat.PetBattlesBattleArgus },
 					{ text = EXPANSION_NAME7, id = cat.PetBattlesBattleBfA },
 					{ text = EXPANSION_NAME8, id = cat.PetBattlesBattleShadowlands },
+					{ text = EXPANSION_NAME9, id = cat.PetBattlesBattleDragonflight },
 				}},
 				{ id = cat.PetBattlesLevel },
 			}},
@@ -434,6 +443,7 @@ addon:Controller("AltoholicUI.TabAchievementsCategoriesList", {
 					{ text = CHALLENGE_MODE, id = cat.FeatsOfStrengthDungeonsChallenge },
 					{ text = EXPANSION_NAME7, id = cat.FeatsOfStrengthDungeonsBfA },
 					{ text = EXPANSION_NAME8, id = cat.FeatsOfStrengthDungeonsShadowlands },
+					{ text = EXPANSION_NAME9, id = cat.FeatsOfStrengthDungeonsDragonflight },
 				}},
 				{ id = cat.FeatsOfStrengthRaids, subMenu = {
 					{ text = L["Ahead of the Curve"], id = cat.FeatsOfStrengthRaidsAhead },
@@ -444,6 +454,7 @@ addon:Controller("AltoholicUI.TabAchievementsCategoriesList", {
 					{ text = EXPANSION_NAME6, id = cat.FeatsOfStrengthPvPLegion },
 					{ text = EXPANSION_NAME7, id = cat.FeatsOfStrengthPvPBfA },
 					{ text = EXPANSION_NAME8, id = cat.FeatsOfStrengthPvPShadowlands },
+					{ text = EXPANSION_NAME9, id = cat.FeatsOfStrengthPvPDragonflight },
 					{ text = GetCategoryInfo(cat.PvPRatedBattleground), id = cat.FeatsOfStrengthPvPRatedBG },
 					
 					-- Unchained Combatant / Vicious Saddle

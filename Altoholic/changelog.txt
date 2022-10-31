@@ -15,6 +15,19 @@ How to support Altoholic's development :
 If you like the addon, consider supporting it, this has been the long term effort and commitment of a single person. #ArmyOfOne
 
 
+10.0.002 (31/10/2022)
+
+- Updated ACE libraries in Altoholic & DataStore.
+- DataStore_Agenda : fixed an integer overflow when saving instance information.
+- DataStore_Containers : fixed an issue where the guild bank content was not being updated.
+- DataStore_Containers : fixed an issue where the reagent bank content was not being updated.
+- DataStore_Crafts : fixed a Lua error when crafting an item.
+- Summary tab : fixed a refresh issue when crafting an item.
+- Grids tab : Added Dragonflight dungeons (Thanks Feral !)
+- DataStore_Achievements : Added Dragonflight categories in enum.lua. (Thanks Feral !)
+- Achievements tab : Added Dragonflight achievements for the categories Character, Quests, Exploration (Thanks Feral !)
+
+
 10.0.001 (30/10/2022)
 
 - Fixed the minimap icon.

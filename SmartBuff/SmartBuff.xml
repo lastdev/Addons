@@ -471,13 +471,11 @@
 			<Layer>
 				<Texture name="SmartBuffOptionsFrameHeader" file="Interface\DialogFrame\UI-DialogBox-Header">
 					<Size>
-						<AbsDimension x="420" y="64" />
+						<AbsDimension x="480" y="64" />
 					</Size>
 					<Anchors>
 						<Anchor point="TOP">
-							<Offset>
-								<AbsDimension x="0" y="12" />
-							</Offset>
+							<Offset y="12" />
 						</Anchor>
 					</Anchors>
 				</Texture>
@@ -1222,9 +1220,7 @@
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="SmartBuffOptionsFrame_cbInCombat" relativePoint="TOPLEFT">
-						<Offset>
-							<AbsDimension x="160" y="-18" />
-						</Offset>
+						<Offset x="160" y="-39" />
 					</Anchor>
 				</Anchors>
 				<Scripts>

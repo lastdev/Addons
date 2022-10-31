@@ -76,6 +76,7 @@ LSM:Register("sound", "|cFFFF0000In|r", [[Interface\Addons\SharedMedia_Causese\s
 LSM:Register("sound", "|cFFFF0000Interrupt|r", [[Interface\Addons\SharedMedia_Causese\sound\Interrupt.ogg]])
 LSM:Register("sound", "|cFFFF0000Intermission|r", [[Interface\Addons\SharedMedia_Causese\sound\Intermission.ogg]])
 LSM:Register("sound", "|cFFFF0000Invisibility|r", [[Interface\Addons\SharedMedia_Causese\sound\Invisibility.ogg]])
+LSM:Register("sound", "|cFFFF0000Jump|r", [[Interface\Addons\SharedMedia_Causese\sound\Jump.ogg]])
 LSM:Register("sound", "|cFFFF0000Knock|r", [[Interface\Addons\SharedMedia_Causese\sound\Knock.ogg]])
 LSM:Register("sound", "|cFFFF0000Left|r", [[Interface\Addons\SharedMedia_Causese\sound\Left.ogg]])
 LSM:Register("sound", "|cFFFF0000Linked|r", [[Interface\Addons\SharedMedia_Causese\sound\Linked.ogg]])
@@ -115,6 +116,7 @@ LSM:Register("sound", "|cFFFF0000Trap|r", [[Interface\Addons\SharedMedia_Causese
 LSM:Register("sound", "|cFFFF0000Turn|r", [[Interface\Addons\SharedMedia_Causese\sound\Turn.ogg]])
 LSM:Register("sound", "|cFFFF0000Winds|r", [[Interface\Addons\SharedMedia_Causese\sound\Winds.ogg]])
 LSM:Register("sound", "|cFFFF0000Yellow|r", [[Interface\Addons\SharedMedia_Causese\sound\Yellow.ogg]])
+LSM:Register("sound", "|cFFFF0000Zone|r", [[Interface\Addons\SharedMedia_Causese\sound\Zone.ogg]])
 
 -- -----
 --   STATUSBAR

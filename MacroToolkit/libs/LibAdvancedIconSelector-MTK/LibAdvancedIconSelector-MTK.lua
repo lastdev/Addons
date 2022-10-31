@@ -1,20 +1,20 @@
 --[[========================================================================================
       LibAdvancedIconSelector provides a searchable icon selection GUI to World
       of Warcraft addons.
-      
+
       Copyright (c) 2011 - 2012 David Forrester  (Darthyl of Bronzebeard-US)
         Email: darthyl@hotmail.com
-      
+
       Permission is hereby granted, free of charge, to any person obtaining a copy
       of this software and associated documentation files (the "Software"), to deal
       in the Software without restriction, including without limitation the rights
       to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
       copies of the Software, and to permit persons to whom the Software is
       furnished to do so, subject to the following conditions:
-      
+
       The above copyright notice and this permission notice shall be included in
       all copies or substantial portions of the Software.
-      
+
       THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
       IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
       FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -227,7 +227,7 @@ function lib:LoadKeywords(addonName)
 	if addonRevision and (not currentRevision or addonRevision > currentRevision) and (not defaultRevision or addonRevision >= defaultRevision) then
 		LoadAddOn(addonName)
 		source = addonName
-	
+
 	-- Otherwise, load the default library if it's newer than the current library.
 	elseif defaultRevision and (not currentRevision or defaultRevision > currentRevision) then
 		LoadAddOn("AdvancedIconSelector-KeywordData")
@@ -236,7 +236,7 @@ function lib:LoadKeywords(addonName)
 
 	-- Whatever happens, update keywordLibrary to point to the currently loaded instance.
 	keywordLibrary = LibStub("LibAdvancedIconSelector-KeywordData-1.0", true)
-	
+
 	if source then
 		lib:Debug("Loaded keyword library revision:", keywordLibrary and keywordLibrary:GetRevision(), "source:", source)
 	end
@@ -258,7 +258,7 @@ function IconSelectorWindow:Create(name, parent, options)
 	if not parent then parent = UIParent end
 	options = Helpers.ApplyDefaults(options, defaults)
 
-	self = self:MixInto(CreateFrame("Frame", name, parent, "BackdropTemplate"))
+	self = self:MixInto(CreateFrame("Frame", name, parent, BackdropTemplateMixin and "BackdropTemplate"))
 	self:Hide()
 	self:SetFrameStrata("MEDIUM")
 	self:SetSize(options.width, options.height)
@@ -289,7 +289,7 @@ function IconSelectorWindow:Create(name, parent, options)
 	end
 
 	if not options.noCloseButton then
-		self.closeButton = CreateFrame("Button", nil, self, "UIPanelCloseButton")
+		self.closeButton = CreateFrame("Button", nil, self, "UIPanelCloseButton", BackdropTemplateMixin and "BackdropTemplate")
 		self.closeButton:SetPoint("TOPRIGHT", 0, 0)
 
 		self.closeButton:SetScript("OnClick", function(...)
@@ -327,7 +327,7 @@ function IconSelectorWindow:Create(name, parent, options)
 			end
 		end
 	end)
-	
+
 	self:SetScript("OnDragStop", function(self, button)
 		self:StopMovingOrSizing()
 	end)
@@ -351,7 +351,7 @@ function IconSelectorWindow:Create(name, parent, options)
 	self.searchLabel:SetText(L["Search:"])
 	self.searchLabel:SetHeight(22)
 
-	self.searchBox = CreateFrame("EditBox", name .. "_SearchBox", self, "InputBoxTemplate")
+	self.searchBox = CreateFrame("EditBox", name .. "_SearchBox", self, "BackdropTemplate,InputBoxTemplate")
 	self.searchBox:SetAutoFocus(false)
 	self.searchBox:SetHeight(22)
 	self.searchBox:SetScript("OnTextChanged", function(editBox, userInput)
@@ -360,7 +360,7 @@ function IconSelectorWindow:Create(name, parent, options)
 		end
 	end)
 
-	self.cancelButton = CreateFrame("Button", name .. "_Cancel", self, "UIPanelButtonTemplate")
+	self.cancelButton = CreateFrame("Button", name .. "_Cancel", self, "BackdropTemplate,UIPanelButtonTemplate")
 	if options.okayCancel then
 		self.cancelButton:SetText(L["Cancel"])
 	else
@@ -376,7 +376,7 @@ function IconSelectorWindow:Create(name, parent, options)
 	end)
 
 	if options.okayCancel then
-		self.okButton = CreateFrame("Button", name .. "_OK", self, "UIPanelButtonTemplate")
+		self.okButton = CreateFrame("Button", name .. "_OK", self, "BackdropTemplate,UIPanelButtonTemplate")
 		self.okButton:SetText(L["Okay"])
 		self.okButton:SetSize(78, 22)
 		self.okButton:SetScript("OnClick", function(...)
@@ -391,7 +391,7 @@ function IconSelectorWindow:Create(name, parent, options)
 		for _, buttonInfo in ipairs(options.visibilityButtons) do
 			local sectionName, buttonText = unpack(buttonInfo)
 			local buttonName = name .. "_" .. sectionName .. "_Visibility"
-			local button = CreateFrame("CheckButton", buttonName, self, "UICheckButtonTemplate")
+			local button = CreateFrame("CheckButton", buttonName, self, "BackdropTemplate,UICheckButtonTemplate")
 			_G[buttonName .. "Text"]:SetText(buttonText)
 			button:SetChecked(self.iconsFrame:GetSectionVisibility(sectionName))
 			button:SetSize(24, 24)
@@ -482,7 +482,7 @@ function IconSelectorFrame:Create(name, parent, options)
 	assert(name, "The icon selector frame must have a name")
 	options = Helpers.ApplyDefaults(options, defaults)
 
-	self = self:MixInto(CreateFrame("Frame", name, parent))
+	self = self:MixInto(CreateFrame("Frame", name, parent, BackdropTemplateMixin and "BackdropTemplate"))
 	self.scrollOffset = 0
 	self.iconsX = 1
 	self.iconsY = 1
@@ -502,14 +502,14 @@ function IconSelectorFrame:Create(name, parent, options)
 	end)
 
 	-- Create the scroll bar
-	self.scrollFrame = CreateFrame("ScrollFrame", name .. "_ScrollFrame", self, "FauxScrollFrameTemplate")
+	self.scrollFrame = CreateFrame("ScrollFrame", name .. "_ScrollFrame", self, "BackdropTemplate,FauxScrollFrameTemplate")
 	self.scrollFrame:SetScript("OnVerticalScroll", function(scrollFrame, offset)
 		if offset == 0 then self.fauxResults = 0 end	-- Remove all faux results when the top of the list is hit.
 		FauxScrollFrame_OnVerticalScroll(self.scrollFrame, offset, ICON_HEIGHT + ICON_SPACING, function() self:private_UpdateScrollFrame() end)
 	end)
 
 	-- Create the internal frame to display the icons
-	self.internalFrame = CreateFrame("Frame", name .. "_Internal", self)
+	self.internalFrame = CreateFrame("Frame", name .. "_Internal", self, BackdropTemplateMixin and "BackdropTemplate")
 	self.internalFrame.parent = self
 	self.internalFrame:SetScript("OnSizeChanged", self.private_OnInternalFrameSizeChanged)
 
@@ -522,7 +522,7 @@ function IconSelectorFrame:Create(name, parent, options)
 			local button = self.icons[i]
 			if button then
 				--button:SetNormalTexture(nil)
-				button.icon:SetTexture(nil)
+				button.Icon:SetTexture(nil)
 			end
 		end
 	end)
@@ -544,7 +544,7 @@ function IconSelectorFrame:Create(name, parent, options)
 
 	-- NOTE: Do not start the search until the frame is shown!  Some addons may choose to create
 	-- the frame early and not display it until later, and we don't want to load the keyword library early!
-	
+
 	return self
 end
 
@@ -596,10 +596,10 @@ function IconSelectorFrame.private_OnIconScanned(search, texture, globalID, loca
 	if self.initialSelection then
 
 		assert(self.selectedID == nil)	-- (user selection should have cleared the initial selection)
-			
+
 		-- If we find the texture we're looking for...
 		if texture and strupper(texture) == strupper(self.initialSelection) then
-			
+
 			-- Set the selection.
 			lib:Debug("Found selected texture at global index", globalID)
 			self:SetSelectedIcon(globalID)
@@ -737,29 +737,29 @@ function IconSelectorFrame.private_OnInternalFrameSizeChanged(internalFrame, wid
 			-- Create the button if it doesn't exist (but don't set its normal texture yet)
 			local button = self.icons[i]
 			if not button then
-				button = CreateFrame("CheckButton", format("MTAISButton%d", i), self.internalFrame, "PopupButtonTemplate")
-				button.icon = _G[format("MTAISButton%dIcon", i)]
+				button = CreateFrame("Button", format("MTAISButton%d", i), self.internalFrame, "BackdropTemplate,SelectorButtonTemplate")
+				button.icon = button.Icon -- _G[format("MTAISButton%dIcon", i)]
 				self.icons[i] = button
 				button:SetSize(36, 36)
-				button:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square")
-				button:SetCheckedTexture("Interface\\Buttons\\CheckButtonHilight")
+				--button:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square")
+				--button:SetCheckedTexture("Interface\\Buttons\\CheckButtonHilight")
 
 				button:SetScript("OnClick", function(button, mouseButton, down)
 					if button.textureKind and button.textureID then
 						if self.selectedButton then
-							self.selectedButton:SetChecked(false)
+							self.selectedButton.SelectedTexture:Hide()
 						end
-						button:SetChecked(true)
+						button.SelectedTexture:Show()
 						self.selectedButton = button
 						self:SetSelectedIcon(button.globalID)
 					else
-						button:SetChecked(false)
+						button.SelectedTexture:Hide()
 					end
 					--print(button.textureKind)
 					--print(button.textureID)
 					--print(button.globalID)
 				end)
-				
+
 				button:SetScript("OnEnter", function(button, motion)
 					if button.texture then
 						local tex = button.texture
@@ -829,7 +829,7 @@ function IconSelectorFrame.private_OnInternalFrameSizeChanged(internalFrame, wid
 			else
 				button:SetPoint("TOPLEFT", lastIconX, "TOPRIGHT", ICON_SPACING, 0)
 			end
-			
+
 			lastIconX = button
 		end
 	end
@@ -839,11 +839,11 @@ function IconSelectorFrame.private_OnInternalFrameSizeChanged(internalFrame, wid
 		local button = self.icons[i]
 		if button then
 			--button:SetNormalTexture(nil)
-			button.icon:SetTexture(nil)
+			button.Icon:SetTexture(nil)
 			button:Hide()
 		end
 	end
-	
+
 	-- Add padding at the top to make the old and new first icon constant
 	local newFirstIcon = 1 + self.scrollOffset * self.iconsX - self.fauxResults
 	self.fauxResults = self.fauxResults + newFirstIcon - oldFirstIcon
@@ -856,7 +856,7 @@ function IconSelectorFrame.private_OnInternalFrameSizeChanged(internalFrame, wid
 		local newOffset = max(FauxScrollFrame_GetOffset(self.scrollFrame) + scrollDown, 0)
 		FauxScrollFrame_SetOffset(self.scrollFrame, newOffset)
 	end
-	
+
 	-- Decrease faux results if above iconsX
 	if self.fauxResults > self.iconsX and self.iconsX > 0 then
 		local scrollUp = floor(self.fauxResults / self.iconsX)
@@ -874,9 +874,9 @@ function IconSelectorFrame:private_UpdateIcons()
 	if self:IsShown() then
 		local firstIcon = 1 + self.scrollOffset * self.iconsX - self.fauxResults
 		local last = self.iconsX * self.iconsY
-	
+
 		if self.selectedButton then
-			self.selectedButton:SetChecked(false)
+			self.selectedButton.SelectedTexture:Hide()
 			self.selectedButton = nil
 		end
 
@@ -888,7 +888,7 @@ function IconSelectorFrame:private_UpdateIcons()
 					button.globalID = self.searchResults[resultIndex]
 					button.textureID, button.textureKind, button.texture = self:GetIconInfo(button.globalID)
 					if button.globalID == self.selectedID then
-						button:SetChecked(true)
+						button.SelectedTexture:Show()
 						self.selectedButton = button
 					end
 
@@ -910,20 +910,20 @@ function IconSelectorFrame:private_UpdateIcons()
 					button.textureID = nil
 					button.texture = nil
 					button.textureKind = nil
-					button:SetChecked(false)
+					button.SelectedTexture:Hide()
 					if button.dynamicText then button.dynamicText:Hide() end
 				end
 
 				if button.texture then
 					if type(button.texture) == "number" then
-						button.icon:SetTexture(button.texture)
+						button.Icon:SetTexture(button.texture)
 					else
 						--button:SetNormalTexture("Interface\\Icons\\" .. button.texture)
-						button.icon:SetTexture("Interface\\Icons\\" .. button.texture)
+						button.Icon:SetTexture("Interface\\Icons\\" .. button.texture)
 					end
 				else
 					--button:SetNormalTexture(nil)
-					button.icon:SetTexture(nil)
+					button.Icon:SetTexture(nil)
 				end
 
 				-- Hook for the icon keyword editor (IKE) overlay
@@ -950,7 +950,7 @@ end
 -- a few dynamic defaults as well.
 function Helpers.ApplyDefaults(options, defaults)
 	if not options then options = { } end	-- (yes, some addons pass no options)
-	
+
 	local result = { }
 	setmetatable(result, {
 		__index = function(t, k)	-- (note: do NOT index t from __index or it may loop)
@@ -1064,7 +1064,7 @@ function SearchObject:Create(options)
 	search.sectionOrder = options.sectionOrder
 	search.firstSearch = true
 	search.shouldSkip = { }
-	
+
 	return search
 end
 
@@ -1223,7 +1223,7 @@ end
 -- Returns the given global ID after skipping the designated categories, or nil if past the max global id.
 function SearchObject:private_Skip(id)
 	local origID = id
-	
+
 	if not id or id < 1 then
 		return nil
 	end
@@ -1239,7 +1239,7 @@ function SearchObject:private_Skip(id)
 					return sectionStart + (id - 1)
 				end
 			end
-			
+
 			id = id - section.count
 			sectionStart = sectionStart + section.count
 		end
@@ -1322,7 +1322,7 @@ function SearchObject:private_Matches(texture, keywords, parameter)
 	for i = 1, #parameter do		-- OR parameters
 		local p_i = parameter[i]
 		local termFailed = false
-		
+
 		for j = 1, #p_i do			-- AND parameters
 			local s = p_i[j]
 			if #s > 0 then

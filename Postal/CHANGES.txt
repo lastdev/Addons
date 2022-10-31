@@ -1,16 +1,8 @@
 ------------------------------------------------------------------------
-r529 | Zimzarina | 2022-09-09 17:24:21 +0000 (Fri, 09 Sep 2022) | 1 line
+r536 | Zimzarina | 2022-10-31 15:27:07 +0000 (Mon, 31 Oct 2022) | 1 line
 Changed paths:
-   M /trunk/Modules/QuickAttach.lua
-   M /trunk/Postal.lua
+   M /trunk/Modules/Express.lua
 
-Updated to support WotLK.
-------------------------------------------------------------------------
-r528 | Zimzarina | 2022-09-09 05:17:22 +0000 (Fri, 09 Sep 2022) | 1 line
-Changed paths:
-   M /trunk/Postal.toc
-   A /trunk/Postal_Wrath.toc
-
-TOC Update for Retail.  Added new TOC file for Wrath Of The Lich King.
+Fixed an issue where attempt to index local 'itemLocation' (a nil value) could occur in Express.lua when clicking on items other then in bags.
 ------------------------------------------------------------------------
 

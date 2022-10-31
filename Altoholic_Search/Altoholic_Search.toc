@@ -2,7 +2,7 @@
 ## Title: Altoholic_Search
 ## Notes: Altoholic's Search UI
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: 9.2.006
+## Version: 10.0.002
 ## Dependencies: Altoholic, DataStore, DataStore_Characters
 ## LoadOnDemand: 1
 ## X-Category: Interface Enhancements

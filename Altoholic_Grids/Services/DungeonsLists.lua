@@ -298,6 +298,15 @@ local dungeons = {
 			{ id = 2224, achID = 15125, bosses = 1 },	--	Sanctum of Domination 4 : The Reckoning
 		},
 	},
+	{ -- [10]
+		name = EXPANSION_NAME9, -- "Dragonflight"
+		{ -- [1] LFR Raids
+			name = format("%s - %s", RAIDS, RAID_LFR),
+			-- { id = 9997, achID = 16343, bosses = 3 }, --	Vault of the Incarnates 1 : UNKNOWN NAME
+			-- { id = 9998, achID = 16343, bosses = 3 }, --	Vault of the Incarnates 2 : UNKNOWN NAME
+			-- { id = 9999, achID = 16343, bosses = 2 }, --	Vault of the Incarnates 3 : UNKNOWN NAME
+		},
+	},
 }
 
 addon:Service("AltoholicUI.DungeonsLists",  function() 

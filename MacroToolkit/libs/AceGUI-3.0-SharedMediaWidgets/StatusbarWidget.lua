@@ -7,8 +7,8 @@ local Media = LibStub("LibSharedMedia-3.0")
 local AGSMW = LibStub("AceGUISharedMediaWidgets-1.0")
 
 do
-	local widgetType = "LSM30_Border"
-	local widgetVersion = 11
+	local widgetType = "LSM30_Statusbar"
+	local widgetVersion = 13
 
 	local contentFrameCache = {}
 	local function ReturnSelf(self)
@@ -26,16 +26,6 @@ do
 		end
 	end
 
-	local function ContentOnEnter(this, button)
-		local self = this.obj
-		local text = this.text:GetText()
-		local border = self.list[text] ~= text and self.list[text] or Media:Fetch('border',text)
-		this.dropdown:SetBackdrop({edgeFile = border,
-			bgFile=[[Interface\DialogFrame\UI-DialogBox-Background-Dark]],
-			tile = true, tileSize = 16, edgeSize = 16,
-			insets = { left = 4, right = 4, top = 4, bottom = 4 }})
-	end
-
 	local function GetContentLine()
 		local frame
 		if next(contentFrameCache) then
@@ -46,7 +36,6 @@ do
 				frame:SetHeight(18)
 				frame:SetHighlightTexture([[Interface\QuestFrame\UI-QuestTitleHighlight]], "ADD")
 				frame:SetScript("OnClick", ContentOnClick)
-				frame:SetScript("OnEnter", ContentOnEnter)
 			local check = frame:CreateTexture("OVERLAY")
 				check:SetWidth(16)
 				check:SetHeight(16)
@@ -54,8 +43,17 @@ do
 				check:SetTexture("Interface\\Buttons\\UI-CheckBox-Check")
 				check:Hide()
 			frame.check = check
+			local bar = frame:CreateTexture("ARTWORK")
+				bar:SetHeight(16)
+				bar:SetPoint("LEFT",check,"RIGHT",1,0)
+				bar:SetPoint("RIGHT",frame,"RIGHT",-1,0)
+			frame.bar = bar
 			local text = frame:CreateFontString(nil,"OVERLAY","GameFontWhite")
-				text:SetPoint("TOPLEFT", check, "TOPRIGHT", 1, 0)
+
+				local font, size = text:GetFont()
+				text:SetFont(font,size,"OUTLINE")
+
+				text:SetPoint("TOPLEFT", check, "TOPRIGHT", 3, 0)
 				text:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -2, 0)
 				text:SetJustifyH("LEFT")
 				text:SetText("Test Test Test Test Test Test Test")
@@ -97,18 +95,14 @@ do
 	end
 
 	local function SetList(self, list) -- Set the list of values for the dropdown (key => value pairs)
-		self.list = list or Media:HashTable("border")
+		self.list = list or Media:HashTable("statusbar")
 	end
 
 
 	local function SetText(self, text) -- Set the text displayed in the box.
 		self.frame.text:SetText(text or "")
-		local border = self.list[text] ~= text and self.list[text] or Media:Fetch('border',text)
-
-		self.frame.displayButton:SetBackdrop({edgeFile = border,
-			bgFile=[[Interface\DialogFrame\UI-DialogBox-Background-Dark]],
-			tile = true, tileSize = 16, edgeSize = 16,
-			insets = { left = 4, right = 4, top = 4, bottom = 4 }})
+		local statusbar = self.list[text] ~= text and self.list[text] or Media:Fetch('statusbar',text)
+		self.bar:SetTexture(statusbar)
 	end
 
 	local function SetLabel(self, text) -- Set the text for the label.
@@ -161,6 +155,9 @@ do
 				if k == self.value then
 					f.check:Show()
 				end
+
+				local statusbar = self.list[k] ~= k and self.list[k] or Media:Fetch('statusbar',k)
+				f.bar:SetTexture(statusbar)
 				f.obj = self
 				f.dropdown = self.dropdown
 				self.dropdown:AddFrame(f)
@@ -191,7 +188,7 @@ do
 	end
 
 	local function Constructor()
-		local frame = AGSMW:GetBaseFrameWithWindow()
+		local frame = AGSMW:GetBaseFrame()
 		local self = {}
 
 		self.type = widgetType
@@ -202,6 +199,12 @@ do
 		frame.dropButton:SetScript("OnLeave", Drop_OnLeave)
 		frame.dropButton:SetScript("OnClick",ToggleDrop)
 		frame:SetScript("OnHide", OnHide)
+
+		local bar = frame:CreateTexture(nil, "OVERLAY")
+			bar:SetPoint("TOPLEFT", frame,"TOPLEFT",6,-25)
+			bar:SetPoint("BOTTOMRIGHT", frame,"BOTTOMRIGHT", -21, 5)
+			bar:SetAlpha(0.5)
+		self.bar = bar
 
 		self.alignoffset = 31
 

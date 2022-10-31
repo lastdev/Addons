@@ -14,7 +14,7 @@ local function updatepreview()
 end
 
 function MT:CreateBuilderFrame()
-	local mtbf = CreateFrame("Frame", "MacroToolkitBuilderFrame", UIParent, "ButtonFrameTemplate,BackdropTemplate")
+	local mtbf = CreateFrame("Frame", "MacroToolkitBuilderFrame", UIParent, "BackdropTemplate,ButtonFrameTemplate")
 
 	local function frameMouseUp()
 		mtbf:StopMovingOrSizing()
@@ -372,13 +372,13 @@ function MT:CreateBuilderFrame()
 	mtbpreview:SetTextColor(1, 1, 1, 0.7)
 	mtbpreview:SetPoint("TOPLEFT", mtbfadd5.frame, "BOTTOMLEFT", 5, -20)
 
-	local mtbcancel = CreateFrame("Button", "MacroToolkitBuilderCancel", mtbf, "UIPanelButtonTemplate")
+	local mtbcancel = CreateFrame("Button", "MacroToolkitBuilderCancel", mtbf, "BackdropTemplate,UIPanelButtonTemplate")
 	mtbcancel:SetText(_G.CANCEL)
 	mtbcancel:SetSize(80, 22)
 	mtbcancel:SetPoint("BOTTOMRIGHT", -5, 4)
 	mtbcancel:SetScript("OnClick", HideParentPanel)
 
-	local mtbinsert = CreateFrame("Button", "MacroToolkitBuilderInsert", mtbf, "UIPanelButtonTemplate")
+	local mtbinsert = CreateFrame("Button", "MacroToolkitBuilderInsert", mtbf, "BackdropTemplate,UIPanelButtonTemplate")
 	mtbinsert:SetText(_G.KEY_INSERT)
 	mtbinsert:SetSize(80, 22)
 	mtbinsert:SetPoint("RIGHT", mtbcancel, "LEFT")
