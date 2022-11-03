@@ -1,0 +1,16 @@
+## Title: MaxDps_Rogue
+## Version: 10.0.0
+## Author: Kaminaris
+## Interface: 100000
+## Dependencies: MaxDps
+## LoadOnDemand: 1
+## SavedVariables: MaxDpsRogueOptions
+## X-Curse-Project-ID: 256432
+## X-WoWI-ID: 24649
+## X-Wago-ID: 2jK8bqNy
+
+Main.lua
+Config.lua
+Specialization\Assassination.lua
+Specialization\Outlaw.lua
+Specialization\Subtlety.lua

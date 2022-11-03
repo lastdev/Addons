@@ -2,6 +2,10 @@ DataStore Changelog (dates in dd/mm/yyyy)
 ===================
 
 
+Version 2022.11.02 (02/11/2022)
+
+- Added more Dragonflight categories to Enum.lua (Thanks Feral !)
+
 Version 2022.10.31 (31/10/2022)
 
 - Added Dragonflight categories to Enum.lua (Thanks Feral !)

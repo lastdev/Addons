@@ -143,13 +143,13 @@ Columns.RegisterColumn("BankSlots", {
 			
 			return format("%s/%s|r/%s|r/%s|r/%s|r/%s|r/%s|r/%s",
 				DataStore:GetContainerSize(character, 100),
-				DataStore:GetColoredContainerSize(character, 5),
 				DataStore:GetColoredContainerSize(character, 6),
 				DataStore:GetColoredContainerSize(character, 7),
 				DataStore:GetColoredContainerSize(character, 8),
 				DataStore:GetColoredContainerSize(character, 9),
 				DataStore:GetColoredContainerSize(character, 10),
-				DataStore:GetColoredContainerSize(character, 11)
+				DataStore:GetColoredContainerSize(character, 11),
+				DataStore:GetColoredContainerSize(character, 12)
 			)
 		end,
 	OnEnter = function(frame)
@@ -173,7 +173,7 @@ Columns.RegisterColumn("BankSlots", {
 			local _, link, size, free, bagType = DataStore:GetContainerInfo(character, 100)
 			tt:AddDoubleLine(format("%s[%s]", colors.white, L["Bank"]), FormatBagSlots(size, free))
 				
-			for i = 5, 11 do
+			for i = 6, 12 do
 				_, link, size, free, bagType = DataStore:GetContainerInfo(character, i)
 				
 				if size ~= 0 then

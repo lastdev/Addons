@@ -321,12 +321,12 @@ if baseClass == "DEATHKNIGHT" then
             id = 324128,
             cast = 0,
             charges = function ()
-                if not pvptalent.deaths_echo.enabled then return end
+                if not talent.deaths_echo.enabled then return end
                 return 2
             end,
             cooldown = 15,
             recharge = function ()
-                if not pvptalent.deaths_echo.enabled then return end
+                if not talent.deaths_echo.enabled then return end
                 return 15
             end,
             gcd = "spell",
@@ -1560,7 +1560,7 @@ elseif baseClass == "PRIEST" then
             known = 325013,
             cast = 0,
             cooldown = 0,
-            gcd = "spell", -- actually 1s and not 1.5s...
+            gcd = "totem", -- actually 1s and not 1.5s...
 
             startsCombat = true,
             texture = 3528287,
@@ -1578,7 +1578,7 @@ elseif baseClass == "PRIEST" then
             cast = 0,
             cooldown = 3,
             hasteCD = true,
-            gcd = "totem", -- actually 1s and not 1.5s...
+            gcd = "totem",
 
             startsCombat = true,
             texture = 3528286,

@@ -151,6 +151,7 @@ enum.AchievementCategories = {
 	ProfessionsCookingCook = 24,
 	ProfessionsCookingDailyQuests = 25,
 	ProfessionsFishing = 171,
+	ProfessionsFishingDragonflight = -139,
 	ProfessionsFishingLevel = 26,
 	ProfessionsFishingFishUp = 27,
 	ProfessionsFishingCatch = 28,
@@ -245,6 +246,8 @@ enum.AchievementCategories = {
 	ExpansionFeaturesCovenantSanctumsNightFae = -71,
 	ExpansionFeaturesCovenantSanctumsNecrolords = -72,
 	ExpansionFeaturesCovenantSanctumsAdventures = -73,
+	ExpansionFeaturesDragonriderRacing = 15462,
+	ExpansionFeaturesPrimalStorms = 15474,
 
 	FeatsOfStrength = 81,
 	FeatsOfStrengthMounts = 15269,

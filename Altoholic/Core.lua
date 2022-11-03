@@ -4,16 +4,16 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 
 local addon = _G[addonName]
 
-addon.Version = "v10.0.002"
+addon.Version = "v10.0.004"
 -- addon.VersionNum = 902006
-addon.VersionNum = 1000002
+addon.VersionNum = 1000004
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local commPrefix = addonName
 
 -- Reminder: binding is done in bindings.xml
 BINDING_HEADER_ALTOHOLIC = addonName
-BINDING_NAME_ALTOHOLIC_TOGGLE = "Toggle UI"
+BINDING_NAME_ALTOHOLIC_TOGGLE = "Altoholic - Toggle UI"
 
 local options = { 
 	type = "group",

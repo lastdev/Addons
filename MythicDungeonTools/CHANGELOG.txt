@@ -1,3 +1,9 @@
+v4.0.1.4
+- datacollection on beta realm
+v4.0.1.3
+- fixed an issue that would cause shrouded enemies to not properly display and count for enemy forces
+v4.0.1.2
+- added mapping for Shadowmoon Burial Grounds, Court of Stars and Nokhud Offensive
 v4.0.1.1
 - fix toc
 v4.0.1.0

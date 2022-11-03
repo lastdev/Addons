@@ -33,10 +33,11 @@ addon:Controller("AltoholicUI.RenownLevel", {
 			frame.HighlightTexture:SetAtlas("CovenantSanctum-Renown-Icon-Hover", TextureKitConstants.UseAtlasSize)
 		end
 
-		local maskTexture = frame:GetParent().Mask
-		for i, texture in ipairs(frame.Textures) do
-			texture:AddMaskTexture(maskTexture)
-		end
+		-- 10.0 texture is now nil ?
+		-- local maskTexture = frame:GetParent().Mask
+		-- for i, texture in ipairs(frame.Textures) do
+			-- texture:AddMaskTexture(maskTexture)
+		-- end
 
 		local rewards = C_CovenantSanctumUI.GetRenownRewardsForLevel(currentCovenantID, frame:GetLevel())
 		
@@ -81,7 +82,7 @@ addon:Controller("AltoholicUI.RenownLevel", {
 	SetIcon = function(frame)
 		if not frame.rewardInfo then return end
 	
-		local icon = CovenantUtil.GetRenownRewardInfo(frame.rewardInfo, GenerateClosure(frame.SetIcon, frame))
+		local icon = RenownRewardUtil.GetRenownRewardInfo(frame.rewardInfo, GenerateClosure(frame.SetIcon, frame))
 		frame.Icon:SetTexture(icon)
 	end,
 	OnEnter = function(frame)
@@ -104,7 +105,7 @@ addon:Controller("AltoholicUI.RenownLevel", {
 			GameTooltip_AddHighlightLine(GameTooltip, RENOWN_REWARD_CAPSTONE_TOOLTIP_DESC2)
 		else
 			if #rewards == 1 then
-				local icon, name, description = CovenantUtil.GetRenownRewardInfo(rewards[1], onItemUpdateCallback)
+				local icon, name, description = RenownRewardUtil.GetRenownRewardInfo(rewards[1], onItemUpdateCallback)
 				GameTooltip_SetTitle(GameTooltip, name)
 				GameTooltip_AddNormalLine(GameTooltip, description)
 				addRewards = false
@@ -115,7 +116,7 @@ addon:Controller("AltoholicUI.RenownLevel", {
 		
 		if addRewards then
 			for i, rewardInfo in ipairs(rewards) do
-				local icon, name, description = CovenantUtil.GetRenownRewardInfo(rewardInfo, onItemUpdateCallback)
+				local icon, name, description = RenownRewardUtil.GetRenownRewardInfo(rewardInfo, onItemUpdateCallback)
 				if name then
 					GameTooltip_AddNormalLine(GameTooltip, string.format(RENOWN_REWARD_TOOLTIP_REWARD_LINE, name))
 				end

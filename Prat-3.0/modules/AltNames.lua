@@ -38,7 +38,7 @@ Prat:AddModuleToLoad(function()
 
   local PL = module.PL
 
-  --[===[@debug@
+  --[==[@debug@
   PL:AddLocale(PRAT_MODULE, "enUS", {
     ["Start"] = true,
     ["AltNames"] = true,
@@ -68,7 +68,7 @@ Prat:AddModuleToLoad(function()
     ["no matches found"] = true,
     ["List all"] = true,
     ["List all links between alts and their main names."] = true,
-    ["Imports data from LOKWhoIsWho, if present (drop your SavedVariables\LOKWhoIsWho.lua in the Prat directory to be able to use this)."] = true,
+    ["Imports data from LOKWhoIsWho, if present (drop your SavedVariables\\LOKWhoIsWho.lua in the Prat directory to be able to use this)."] = true,
     ["LOKWhoIsWho import"] = true,
     ["Clear all"] = true,
     ["Clear all links between alts and main names."] = true,
@@ -135,7 +135,7 @@ Prat:AddModuleToLoad(function()
     ["autoguildalts_name"] = "Auto Import Guild Alts",
     ["autoguildalts_desc"] = "Automatically run the import from guild roster command silently",
   })
-  --@end-debug@]===]
+  --@end-debug@]==]
 
   -- These Localizations are auto-generated. To help with localization
   -- please go to http://www.wowace.com/projects/prat-3-0/localization
@@ -192,7 +192,7 @@ L = {
 		["Import options"] = true,
 		["Imports alt names from a Guild Greet database, if present"] = true,
 		["Imports alt names from the guild roster by checking for members with the rank \"alt\" or \"alts\", or guild / officer notes like \"<name>'s alt\""] = true,
-		["Imports data from LOKWhoIsWho, if present (drop your SavedVariablesLOKWhoIsWho.lua in the Prat directory to be able to use this)."] = true,
+		["Imports data from LOKWhoIsWho, if present (drop your SavedVariables\\LOKWhoIsWho.lua in the Prat directory to be able to use this)."] = "Imports data from LOKWhoIsWho, if present (drop your SavedVariablesLOKWhoIsWho.lua in the Prat directory to be able to use this).",
 		["Left"] = true,
 		["link <alt name> <main name> (eg, /altnames link Fin Finjathealtoffin)"] = true,
 		["Link alt"] = true,
@@ -318,7 +318,7 @@ L = {
 		--[[Translation missing --]]
 		["Imports alt names from the guild roster by checking for members with the rank \"alt\" or \"alts\", or guild / officer notes like \"<name>'s alt\""] = "Imports alt names from the guild roster by checking for members with the rank \"alt\" or \"alts\", or guild / officer notes like \"<name>'s alt\"",
 		--[[Translation missing --]]
-		["Imports data from LOKWhoIsWho, if present (drop your SavedVariablesLOKWhoIsWho.lua in the Prat directory to be able to use this)."] = "Imports data from LOKWhoIsWho, if present (drop your SavedVariablesLOKWhoIsWho.lua in the Prat directory to be able to use this).",
+		["Imports data from LOKWhoIsWho, if present (drop your SavedVariables\\LOKWhoIsWho.lua in the Prat directory to be able to use this)."] = "Imports data from LOKWhoIsWho, if present (drop your SavedVariablesLOKWhoIsWho.lua in the Prat directory to be able to use this).",
 		--[[Translation missing --]]
 		["Left"] = "Left",
 		--[[Translation missing --]]
@@ -467,7 +467,7 @@ L = {
 		["Import options"] = "Import-Optionen",
 		["Imports alt names from a Guild Greet database, if present"] = "Importiert Alt-Namen von einer Gilden-Begrüßungs-Datenbank, wenn vorhanden.",
 		["Imports alt names from the guild roster by checking for members with the rank \"alt\" or \"alts\", or guild / officer notes like \"<name>'s alt\""] = "Importiert Alt-Namen von der Gildenliste, indem Mitglieder mit dem Rang \"alt\" oder \"alts\", oder Gilden- und Gildenoffiziersnotizen wie \"<name>s alt\" geprüft werden.",
-		["Imports data from LOKWhoIsWho, if present (drop your SavedVariablesLOKWhoIsWho.lua in the Prat directory to be able to use this)."] = "Importiert Daten von LOKWhoIsWho, wenn vorhanden (um diese Funktion verwenden zu können, kopiere deine Datei SavedVariablesLOKWhoIsWho.lua in den Prat-Ordner!).",
+		["Imports data from LOKWhoIsWho, if present (drop your SavedVariables\\LOKWhoIsWho.lua in the Prat directory to be able to use this)."] = "Importiert Daten von LOKWhoIsWho, wenn vorhanden (um diese Funktion verwenden zu können, kopiere deine Datei SavedVariablesLOKWhoIsWho.lua in den Prat-Ordner!).",
 		["Left"] = "Links",
 		["link <alt name> <main name> (eg, /altnames link Fin Finjathealtoffin)"] = "Verknüpfe <alt-name> <hauptcharname> (z.B. /altnames link Fin Finjaderaltvonfin)",
 		["Link alt"] = "Alt verknüpfen",
@@ -527,8 +527,8 @@ L = {
 		["%d alts found for %s: %s"] = "%2$s의 부 캐릭터 %1$d개 찾음: %3$s",
 		["%s alts imported from LOKWhoIsWho"] = "LOKWhoIsWho에서 %s 부 캐릭터를 가져왔습니다",
 		["%s total alts linked to mains"] = "총 %s개의 부 캐릭터가 주 캐릭터와 연결되었습니다",
-		["(.-)'s? [Aa]lt"] = "%f[%a\\192-\\255]([%a\\192-\\255]+)%f[^%a\\128-\\255]의 부캐릭터",
-		["([^%s%p%d%c%z]+)'s alt"] = "%f[%a\\192-\\255]([%a\\192-\\255]+)%f[^%a\\128-\\255]의 부 캐릭터",
+		["(.-)'s? [Aa]lt"] = "%f[%aÀ-ÿ]([%aÀ-ÿ]+)%f[^%a-ÿ]의 부캐릭터",
+		["([^%s%p%d%c%z]+)'s alt"] = "%f[%aÀ-ÿ]([%aÀ-ÿ]+)%f[^%a-ÿ]의 부 캐릭터",
 		[".*[Aa]lts?$"] = ".*부캐릭터?$",
 		[".*[Tt]wink.*$"] = ".*렙업.*$",
 		["<alt name> (eg, /altnames del Personyouthoughtwassomeonesaltbutreallyisnt)"] = "<부 캐릭터 이름> (예, /altnames del Personyouthoughtwassomeonesaltbutreallyisnt)",
@@ -537,7 +537,7 @@ L = {
 		["Alt"] = "부 캐릭터",
 		["alt"] = "부 캐릭터",
 		["alt name exists: %s -> %s; not overwriting as set in preferences"] = "부 캐릭터 이름 존재: %s -> %s; 우선권 설정으로 덮어쓰지 않았습니다",
-		["AltNames"] = "부 캐릭터 이름",
+		["AltNames"] = "부 캐릭터 이름 [AltNames]",
 		["Alts:"] = "부 캐릭터:",
 		["autoguildalts_desc"] = "자동으로 길드 명단에서 가져오기 명령을 실행합니다",
 		["autoguildalts_name"] = "자동 길드 부 캐릭터 가져오기",
@@ -569,7 +569,7 @@ L = {
 		["Import options"] = "옵션 가져오기",
 		["Imports alt names from a Guild Greet database, if present"] = "길드 쪽지 데이터베이스에서 부 캐릭터 이름이 있으면 가져옵니다",
 		["Imports alt names from the guild roster by checking for members with the rank \"alt\" or \"alts\", or guild / officer notes like \"<name>'s alt\""] = "\"부캐\"나 \"부캐릭터\" 등급, 또는 \"<이름>의 부캐\"같은 길드 / 관리자 쪽지를 확인하여 길드 명단에서 부 캐릭터 이름을 가져옵니다",
-		["Imports data from LOKWhoIsWho, if present (drop your SavedVariablesLOKWhoIsWho.lua in the Prat directory to be able to use this)."] = "존재한다면 LOKWhoIsWho에서 데이터를 가져옵니다 (SavedVariablesLOKWhoIsWho.lua 파일을 Prat 디렉토리에 복사해야 사용 가능함).",
+		["Imports data from LOKWhoIsWho, if present (drop your SavedVariables\\LOKWhoIsWho.lua in the Prat directory to be able to use this)."] = "존재한다면 LOKWhoIsWho에서 데이터를 가져옵니다 (SavedVariablesLOKWhoIsWho.lua 파일을 Prat 디렉토리에 복사해야 사용 가능함).",
 		["Left"] = "왼쪽",
 		["link <alt name> <main name> (eg, /altnames link Fin Finjathealtoffin)"] = "link <부 캐릭터 이름> <주 캐릭터 이름> (예, /altnames link Fin Finjathealtoffin)",
 		["Link alt"] = "부 캐릭터 연결하기",
@@ -717,7 +717,7 @@ L = {
 		--[[Translation missing --]]
 		["Imports alt names from the guild roster by checking for members with the rank \"alt\" or \"alts\", or guild / officer notes like \"<name>'s alt\""] = "Imports alt names from the guild roster by checking for members with the rank \"alt\" or \"alts\", or guild / officer notes like \"<name>'s alt\"",
 		--[[Translation missing --]]
-		["Imports data from LOKWhoIsWho, if present (drop your SavedVariablesLOKWhoIsWho.lua in the Prat directory to be able to use this)."] = "Imports data from LOKWhoIsWho, if present (drop your SavedVariablesLOKWhoIsWho.lua in the Prat directory to be able to use this).",
+		["Imports data from LOKWhoIsWho, if present (drop your SavedVariables\\LOKWhoIsWho.lua in the Prat directory to be able to use this)."] = "Imports data from LOKWhoIsWho, if present (drop your SavedVariablesLOKWhoIsWho.lua in the Prat directory to be able to use this).",
 		--[[Translation missing --]]
 		["Left"] = "Left",
 		--[[Translation missing --]]
@@ -867,7 +867,7 @@ L = {
 		["Import options"] = "Настройки импорта",
 		["Imports alt names from a Guild Greet database, if present"] = "Импорт альтов из базы данных Guild Greet, если есть",
 		["Imports alt names from the guild roster by checking for members with the rank \"alt\" or \"alts\", or guild / officer notes like \"<name>'s alt\""] = "Импорт имен альтов из списка гильдии определяя участника по званию \"alt\" или \"alts\", или общие / офицерские заметки типо \"<name> alt\"",
-		["Imports data from LOKWhoIsWho, if present (drop your SavedVariablesLOKWhoIsWho.lua in the Prat directory to be able to use this)."] = "Импортировать данные из LOKWhoIsWho, если есть (перекиньте ваш SavedVariables/LOKWhoIsWho.lua в папку Pratа для использования).",
+		["Imports data from LOKWhoIsWho, if present (drop your SavedVariables\\LOKWhoIsWho.lua in the Prat directory to be able to use this)."] = "Импортировать данные из LOKWhoIsWho, если есть (перекиньте ваш SavedVariables/LOKWhoIsWho.lua в папку Pratа для использования).",
 		["Left"] = "Слева",
 		["link <alt name> <main name> (eg, /altnames link Fin Finjathealtoffin)"] = "link <имя альта> <имя основного> (пример, /altnames link Загзаг Загзаговичюс)",
 		["Link alt"] = "Связать альта",
@@ -971,7 +971,7 @@ L = {
 		["Import options"] = "导入选项",
 		["Imports alt names from a Guild Greet database, if present"] = "导入马甲名称从公会欢迎数据库,如果可以",
 		["Imports alt names from the guild roster by checking for members with the rank \"alt\" or \"alts\", or guild / officer notes like \"<name>'s alt\""] = "导入马甲名称从公会名单中检查到的成员头衔为“马甲”或“马甲们”的,或者公会官员备注为\"<某某>的马甲\"",
-		["Imports data from LOKWhoIsWho, if present (drop your SavedVariablesLOKWhoIsWho.lua in the Prat directory to be able to use this)."] = "从LOKWhoIsWho导入数据,如果可以(你的Prat目录丢失SavedVariablesLOKWhoIsWho.lua可以使用这个).",
+		["Imports data from LOKWhoIsWho, if present (drop your SavedVariables\\LOKWhoIsWho.lua in the Prat directory to be able to use this)."] = "从LOKWhoIsWho导入数据,如果可以(你的Prat目录丢失SavedVariablesLOKWhoIsWho.lua可以使用这个).",
 		["Left"] = "左边",
 		["link <alt name> <main name> (eg, /altnames link Fin Finjathealtoffin)"] = "联结 <马甲名称> <本尊名称>(例,/altnames link 顶尖战士 苍天哥)",
 		["Link alt"] = "联结马甲",
@@ -1081,7 +1081,7 @@ L = {
 		["Imports alt names from a Guild Greet database, if present"] = "Imports alt names from a Guild Greet database, if present",
 		--[[Translation missing --]]
 		["Imports alt names from the guild roster by checking for members with the rank \"alt\" or \"alts\", or guild / officer notes like \"<name>'s alt\""] = "Imports alt names from the guild roster by checking for members with the rank \"alt\" or \"alts\", or guild / officer notes like \"<name>'s alt\"",
-		["Imports data from LOKWhoIsWho, if present (drop your SavedVariablesLOKWhoIsWho.lua in the Prat directory to be able to use this)."] = "Importa datos de LOKWhoIsWho, si está presente (colocar su SavedVariablesLOKWhoIsWho.lua en el directorio Prat para poder usar este).",
+		["Imports data from LOKWhoIsWho, if present (drop your SavedVariables\\LOKWhoIsWho.lua in the Prat directory to be able to use this)."] = "Importa datos de LOKWhoIsWho, si está presente (colocar su SavedVariablesLOKWhoIsWho.lua en el directorio Prat para poder usar este).",
 		["Left"] = "Izquierda",
 		["link <alt name> <main name> (eg, /altnames link Fin Finjathealtoffin)"] = "enlace <nombre alt> <nombre principal> (ej, /nombrealt enlace Fin Finjathealtoffin)",
 		--[[Translation missing --]]
@@ -1205,7 +1205,7 @@ L = {
 		--[[Translation missing --]]
 		["Imports alt names from the guild roster by checking for members with the rank \"alt\" or \"alts\", or guild / officer notes like \"<name>'s alt\""] = "Imports alt names from the guild roster by checking for members with the rank \"alt\" or \"alts\", or guild / officer notes like \"<name>'s alt\"",
 		--[[Translation missing --]]
-		["Imports data from LOKWhoIsWho, if present (drop your SavedVariablesLOKWhoIsWho.lua in the Prat directory to be able to use this)."] = "Imports data from LOKWhoIsWho, if present (drop your SavedVariablesLOKWhoIsWho.lua in the Prat directory to be able to use this).",
+		["Imports data from LOKWhoIsWho, if present (drop your SavedVariables\\LOKWhoIsWho.lua in the Prat directory to be able to use this)."] = "Imports data from LOKWhoIsWho, if present (drop your SavedVariablesLOKWhoIsWho.lua in the Prat directory to be able to use this).",
 		["Left"] = "左方",
 		["link <alt name> <main name> (eg, /altnames link Fin Finjathealtoffin)"] = "link <alt name> <main name> (例如, /altnames link Fin Finjathealtoffin)",
 		["Link alt"] = "連結分身",
@@ -1286,7 +1286,7 @@ L = {
       pncol = 'no',
       altidx = {},
       mainpos = 'RIGHT',
-      colour = {},
+      colour = {r = 0, g = 0, b = 0},
       maincolour = '97ff4c', -- fairly light bright green
       altcolour = 'ff6df2', -- fairly bright light purpley pinkish
       noclobber = false,
@@ -1526,7 +1526,7 @@ L = {
       -- imports: LOKWhoIsWho - SavedVariables
       importfromlok = {
         name = PL["LOKWhoIsWho import"],
-        desc = PL["Imports data from LOKWhoIsWho, if present (drop your SavedVariables\LOKWhoIsWho.lua in the Prat directory to be able to use this)."],
+        desc = PL["Imports data from LOKWhoIsWho, if present (drop your SavedVariables\\LOKWhoIsWho.lua in the Prat directory to be able to use this)."],
         type = "execute",
         func = "importFromLOK",
         confirm = true,
@@ -2059,7 +2059,10 @@ L = {
 
   function module:getColour(r, g, b, a)
     local col = self.db.profile.colour
-    if not col then return false end
+    -- We check every component as old profiles from before 10.0 with a default
+    -- colour had them all nil. In 10.0 SetVertexColor requires non-nil colour
+    -- components, so we return a black.
+    if not col or col.r == nil or col.g == nil or col.b == nil then return 0, 0, 0 end
     return col.r, col.g, col.b, nil
   end
 

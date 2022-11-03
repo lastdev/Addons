@@ -72,109 +72,109 @@ spec:RegisterResource( Enum.PowerType.Rage, {
 
 -- Talents
 spec:RegisterTalents( {
-    anger_management                = { 90311, 152278, 1 }, --
-    armored_to_the_teeth            = { 90259, 394855, 2 }, --
-    avatar                          = { 90365, 107574, 1 }, --
-    barbaric_training               = { 90377, 390675, 1 }, --
-    battering_ram                   = { 90262, 394312, 1 }, --
-    battle_stance                   = { 90261, 386164, 1 }, --
-    battlescarred_veteran           = { 90435, 386394, 1 }, --
-    berserker_rage                  = { 90372, 18499 , 1 }, --
-    berserker_shout                 = { 90348, 384100, 1 }, --
-    best_served_cold                = { 90304, 202560, 1 }, --
-    bitter_immunity                 = { 90356, 383762, 1 }, --
-    blood_and_thunder               = { 90342, 384277, 1 }, --
-    bloodborne                      = { 90448, 385704, 2 }, --
-    bloodsurge                      = { 90300, 384361, 1 }, --
-    bolster                         = { 90264, 280001, 1 }, --
-    booming_voice                   = { 90314, 202743, 1 }, --
-    bounding_stride                 = { 90355, 202163, 1 }, --
-    brace_for_impact                = { 90296, 386030, 1 }, --
-    brutal_vitality                 = { 90451, 384036, 1 }, --
-    cacophonous_roar                = { 90383, 382954, 1 }, --
-    challenging_shout               = { 90309, 1161  , 1 }, --
-    champions_bulwark               = { 90316, 386328, 1 }, --
-    concussive_blows                = { 90334, 383115, 1 }, --
-    crackling_thunder               = { 90342, 203201, 1 }, --
-    cruel_strikes                   = { 90381, 392777, 2 }, --
-    crushing_force                  = { 90369, 390642, 2 }, --
-    dance_of_death                  = { 90260, 393965, 1 }, --
-    defensive_stance                = { 90330, 386208, 1 }, --
-    demoralizing_shout              = { 90305, 1160  , 1 }, --
-    devastator                      = { 90299, 236279, 1 }, --
-    disrupting_shout                = { 90307, 386071, 1 }, --
-    double_time                     = { 90382, 103827, 1 }, --
-    elysian_might                   = { 90323, 386285, 1 }, --
-    endurance_training              = { 90339, 382940, 1 }, --
-    enduring_alacrity               = { 90433, 384063, 1 }, --
-    enduring_defenses               = { 90313, 386027, 1 }, --
-    fast_footwork                   = { 90371, 382260, 1 }, --
-    focused_vigor                   = { 90318, 384067, 1 }, --
-    frothing_berserker              = { 90370, 392790, 1 }, --
-    fueled_by_violence              = { 90451, 383103, 1 }, --
-    furious_blows                   = { 90336, 390354, 1 }, --
-    heavy_repercussions             = { 90319, 203177, 1 }, --
-    heroic_leap                     = { 90346, 6544  , 1 }, --
-    honed_reflexes                  = { 90361, 391271, 1 }, --
-    ignore_pain                     = { 90295, 190456, 1 }, --
-    immovable_object                = { 90364, 394307, 1 }, --
-    impending_victory               = { 90326, 202168, 1 }, --
-    impenetrable_wall               = { 90310, 384072, 1 }, --
-    improved_heroic_throw           = { 90306, 386034, 1 }, --
-    indomitable                     = { 90434, 202095, 1 }, --
-    inspiring_presence              = { 90332, 382310, 1 }, --
-    instigate                       = { 90301, 394311, 1 }, --
-    intervene                       = { 90329, 3411  , 1 }, --
-    intimidating_shout              = { 90384, 5246  , 1 }, --
-    into_the_fray                   = { 90319, 202603, 1 }, --
-    juggernaut                      = { 90449, 393967, 1 }, --
-    last_stand                      = { 90297, 12975 , 1 }, --
-    leeching_strikes                = { 90344, 382258, 1 }, --
-    massacre                        = { 90313, 281001, 1 }, --
-    menace                          = { 90383, 275338, 1 }, --
-    onehanded_weapon_specialization = { 90324, 382895, 1 }, --
-    overwhelming_rage               = { 90378, 382767, 2 }, --
-    pain_and_gain                   = { 90353, 382549, 1 }, --
-    piercing_howl                   = { 90348, 12323 , 1 }, --
-    piercing_verdict                = { 90379, 382948, 1 }, --
-    punish                          = { 90449, 275334, 1 }, --
-    rallying_cry                    = { 90331, 97462 , 1 }, --
-    ravager                         = { 90432, 228920, 1 }, --
-    reinforced_plates               = { 90368, 382939, 1 }, --
-    rend                            = { 90302, 394062, 1 }, --
-    revenge                         = { 90298, 6572  , 1 }, --
-    rumbling_earth                  = { 90374, 275339, 1 }, --
-    second_wind                     = { 90332, 29838 , 1 }, --
-    seismic_reverberation           = { 90340, 382956, 1 }, --
-    shattering_throw                = { 90351, 64382 , 1 }, --
-    shield_charge                   = { 90317, 385952, 1 }, --
-    shield_specialization           = { 90315, 386011, 2 }, --
-    shield_wall                     = { 90312, 871   , 1 }, --
-    shockwave                       = { 90375, 46968 , 1 }, --
-    show_of_force                   = { 90320, 385843, 1 }, --
-    sidearm                         = { 90334, 384404, 1 }, --
-    sonic_boom                      = { 90321, 390725, 1 }, --
-    spear_of_bastion                = { 90380, 376079, 1 }, --
-    spell_block                     = { 90450, 392966, 1 }, --
-    spell_reflection                = { 90385, 23920 , 1 }, --
-    storm_bolt                      = { 90337, 107570, 1 }, --
-    storm_of_steel                  = { 90431, 382953, 1 }, --
-    strategist                      = { 90303, 384041, 1 }, --
-    sudden_death                    = { 90320, 29725 , 1 }, --
-    thunder_clap                    = { 90343, 6343  , 1 }, --
-    thunderlord                     = { 90308, 385840, 1 }, --
-    thunderous_roar                 = { 90359, 384318, 1 }, --
-    thunderous_words                = { 90358, 384969, 1 }, --
-    titanic_throw                   = { 90341, 384090, 1 }, --
-    tough_as_nails                  = { 90450, 385888, 1 }, --
-    unbreakable_will                = { 90310, 384074, 1 }, --
-    unnerving_focus                 = { 90452, 384042, 1 }, --
-    unstoppable_force               = { 90364, 275336, 1 }, --
-    uproar                          = { 90357, 391572, 1 }, --
-    violent_outburst                = { 90265, 386477, 1 }, --
-    war_machine                     = { 90345, 316733, 1 }, --
-    wild_strikes                    = { 90360, 382946, 2 }, --
-    wrecking_throw                  = { 90351, 384110, 1 }, --
+    anger_management                = { 90311, 152278, 1 }, -- Every 10 Rage you spend reduces the remaining cooldown on Avatar and Shield Wall by 1 sec.
+    armored_to_the_teeth            = { 90259, 394855, 2 }, -- Gain Strength equal to 2% of your Armor.
+    avatar                          = { 90365, 107574, 1 }, -- Transform into a colossus for 20 sec, causing you to deal 20% increased damage and removing all roots and snares. Generates 10 Rage.
+    barbaric_training               = { 90334, 390675, 1 }, -- Revenge deals 25% increased damage but now costs 10 more rage.
+    battering_ram                   = { 90262, 394312, 1 }, -- Shield Charge critical strike chance and critical strike damage increased by 15%, and Shield Charge increases your auto-attack speed by 20% for 20 sec.
+    battle_stance                   = { 90261, 386164, 1 }, -- A balanced combat state that increases the critical strike chance of your abilities by 3% and reduces the duration of movement impairing effects by 10%. Lasts until canceled.
+    battlescarred_veteran           = { 90435, 386394, 1 }, -- When your health is brought below 30%, you take 80% less damage for 8 sec and healing you receive is increased by 100%. Cannot occur more than once every 180 sec.
+    berserker_rage                  = { 90372, 18499 , 1 }, -- Go berserk, removing and granting immunity to Fear, Sap, and Incapacitate effects for 6 sec.
+    berserker_shout                 = { 90348, 384100, 1 }, -- Go berserk, removing and granting immunity to Fear, Sap, and Incapacitate effects for 6 sec. Also remove fear effects from group members within 12 yards.
+    best_served_cold                = { 90304, 202560, 1 }, -- Revenge deals 10% more damage, or 20% more damage when your successful dodges or parries have made it cost no Rage.
+    bitter_immunity                 = { 90356, 383762, 1 }, -- Restores 20% health instantly and removes all diseases, poisons and curses affecting you.
+    blood_and_thunder               = { 90342, 384277, 1 }, -- Thunderclap deals 10% increased damage and if you have Rend, Thunder Clap affects 5 nearby targets with Rend.
+    bloodborne                      = { 90448, 385704, 2 }, -- Deep Wounds, Rend and Thunderous Roar's Bleed effects deal 10% increased damage.
+    bloodsurge                      = { 90300, 384361, 1 }, -- Your Bleed effects have a chance to grant you 5 Rage.
+    bolster                         = { 90264, 280001, 1 }, -- Last Stand's cooldown is reduced by 60 sec, and it grants you the Shield Block effect for its duration.
+    booming_voice                   = { 90314, 202743, 1 }, -- Demoralizing Shout also generates 30 Rage, and increases damage you deal to affected targets by 20%.
+    bounding_stride                 = { 90355, 202163, 1 }, -- Reduces the cooldown of Heroic Leap by 15 sec, and Heroic Leap now also increases your run speed by 70% for 3 sec.
+    brace_for_impact                = { 90296, 386030, 1 }, -- Using Shield Slam increases the damage of Shield Slam by 5% for 16 sec, and it increases the amount of damage you block by 5%. Stacking up to 5 times.
+    brutal_vitality                 = { 90451, 384036, 1 }, -- 30% of damage you deal adds to your active Ignore Pain.
+    cacophonous_roar                = { 90383, 382954, 1 }, -- Intimidating Shout can withstand 200% more damage before breaking.
+    challenging_shout               = { 90309, 1161  , 1 }, -- Taunts all enemies within 10 yds to attack you for 6 sec.
+    champions_bulwark               = { 90316, 386328, 1 }, -- Shield Charge deals 20% increased damage, grants you Shield Block, Revenge!, and generates an additional 20 Rage.
+    concussive_blows                = { 90334, 383115, 1 }, -- Cooldown of Pummel reduced by 1.0 sec. Successfully interrupting an enemy increases the damage you deal to them by 5% for 10 sec.
+    crackling_thunder               = { 90342, 203201, 1 }, -- Thunder Clap's radius is increased by 50%, and it reduces movement speed by an additional 20%.
+    cruel_strikes                   = { 90381, 392777, 2 }, -- Critical strike chance increased by 1% and critical strike damage of Execute increased by 5%.
+    crushing_force                  = { 90369, 390642, 2 }, -- Shield Slam deals an additional 5% damage and deals 5% increased critical strike damage.
+    dance_of_death                  = { 90260, 393965, 1 }, -- If your Ravager helps kill an enemy, it lasts 2.0 sec longer and deals 20% increased damage. This effect also applies to future Ravagers for the next 2 min.
+    defensive_stance                = { 90330, 386208, 1 }, -- A defensive combat state that reduces all damage you take by 20%, and all damage you deal by 10%. Lasts until canceled.
+    demoralizing_shout              = { 90305, 1160  , 1 }, -- Demoralizes all enemies within 15 yards, reducing the damage they deal to you by 25% for 8 sec. Generates 30 Rage.
+    devastator                      = { 90299, 236279, 1 }, -- Your auto attacks deal an additional 328 Physical damage and have a 20% chance to reset the remaining cooldown on Shield Slam.
+    disrupting_shout                = { 90307, 386071, 1 }, -- Taunts all enemies within 14 yds to attack you for 6 sec, interrupts all spellcasting within 14 yds and prevents any spell in that school from being cast for 6 sec.
+    double_time                     = { 90382, 103827, 1 }, -- Increases the maximum number of charges on Charge by 1, and reduces its cooldown by 3 sec.
+    elysian_might                   = { 90323, 386285, 1 }, -- Spear of Bastion's duration is increased by 2 sec. While you remain within Spear of Bastion's area your critical strike damage is increased by 25%.
+    endurance_training              = { 90339, 382940, 1 }, -- Stamina increased by 5% and the duration of Fear, Sap and Incapacitate effects on you is reduced by 10.0%.
+    enduring_alacrity               = { 90433, 384063, 1 }, -- Increases Stamina and Armor by 5% and your Haste by 1%.
+    enduring_defenses               = { 90313, 386027, 1 }, -- Shield Block lasts 2 sec longer.
+    fast_footwork                   = { 90371, 382260, 1 }, -- Movement speed increased by 5%.
+    focused_vigor                   = { 90318, 384067, 1 }, -- Increases Strength and Armor by 5% and your critical strike chance by 1%.
+    frothing_berserker              = { 90370, 392790, 1 }, -- Revenge has a 20% chance to immediately refund 50% of the Rage spent.
+    fueled_by_violence              = { 90451, 383103, 1 }, -- You are healed for 50% of the damage dealt by Deep Wounds.
+    furious_blows                   = { 90336, 390354, 1 }, -- Auto-attack speed increased by 5%.
+    heavy_repercussions             = { 90319, 203177, 1 }, -- Shield Slam generates 2 more Rage and extends the duration of Shield Block by 1.0 sec.
+    heroic_leap                     = { 90346, 6544  , 1 }, -- Leap through the air toward a target location, slamming down with destructive force to deal 349 Physical damage to all enemies within 8 yards, and resetting the remaining cooldown on Taunt.
+    honed_reflexes                  = { 90361, 391271, 1 }, -- Cooldown of Shield Slam and Pummel reduced by 1.0 sec.
+    ignore_pain                     = { 90295, 190456, 1 }, -- Fight through the pain, ignoring 55% of damage taken, up to 5,202 total damage prevented.
+    immovable_object                = { 90364, 394307, 1 }, -- Activating Avatar or Shield Wall casts the other at reduced effectiveness.
+    impending_victory               = { 90326, 202168, 1 }, -- Instantly attack the target, causing 743 damage and healing you for 30% of your maximum health. Killing an enemy that yields experience or honor resets the cooldown of Impending Victory and makes it cost no Rage.
+    impenetrable_wall               = { 90310, 384072, 1 }, -- Shield Slam generates an additional 3 Rage and reduces the remaining cooldown of Shield Wall by 5 sec.
+    improved_heroic_throw           = { 90306, 386034, 1 }, -- Heroic Throw deals 100% increased damage and inflicts Deep Wounds.
+    indomitable                     = { 90434, 202095, 1 }, -- Your maximum health is increased by 10%, and every 10 Rage you spend heals you for 1% of your maximum health.
+    inspiring_presence              = { 90332, 382310, 1 }, -- Rallying Cry's duration is increased by 3 sec and it grants a further 5% maximum health.
+    instigate                       = { 90301, 394311, 1 }, -- Devastate deals 20% increased damage and generates 2 Rage. Devastator deals 10% increased damage and generates 1 Rage.
+    intervene                       = { 90329, 3411  , 1 }, -- Run at high speed toward an ally, intercepting all melee and ranged attacks against them for 6 sec while they remain within 10 yds.
+    intimidating_shout              = { 90384, 5246  , 1 }, -- Causes the targeted enemy to cower in fear, and up to 5 additional enemies within 8 yards to flee. Targets are disoriented for 8 sec.
+    into_the_fray                   = { 90319, 202603, 1 }, -- You gain 2% Haste for each enemy or ally within 10 yards, up to 10% Haste.
+    juggernaut                      = { 90449, 393967, 1 }, -- Execute increases Execute's damage dealt by 3% for 20 sec, stacking up to 15 times.
+    last_stand                      = { 90297, 12975 , 1 }, -- Increases maximum health by 30% for 15 sec, and instantly heals you for that amount.
+    leeching_strikes                = { 90344, 382258, 1 }, -- Leech increased by 5%.
+    massacre                        = { 90313, 281001, 1 }, -- Condemn is now usable on targets below 35% health.
+    menace                          = { 90383, 275338, 1 }, -- Intimidating Shout will knock back all nearby enemies except your primary target, and cause them all to cower in fear for 15 sec instead of fleeing.
+    onehanded_weapon_specialization = { 90324, 382895, 1 }, -- Damage with one-handed weapons and Leech increased by 5%.
+    overwhelming_rage               = { 90378, 382767, 2 }, -- Maximum Rage increased by 15.
+    pain_and_gain                   = { 90353, 382549, 1 }, -- When you take any damage, heal for 4.50% of your maximum health. This can only occur once every 10 sec.
+    piercing_howl                   = { 90348, 12323 , 1 }, -- Snares all enemies within 12 yards, reducing their movement speed by 70% for 8 sec.
+    piercing_verdict                = { 90379, 382948, 1 }, -- Spear of Bastion's instant damage increased by 50% and its Rage generation is increased by 100%.
+    punish                          = { 90449, 275334, 1 }, -- Shield Slam deals 10% increased damage, and reduces enemies' damage against you by 3% for 9 sec. Multiple punishments may overlap.
+    rallying_cry                    = { 90331, 97462 , 1 }, -- Lets loose a rallying cry, granting all party or raid members within 40 yards 19% temporary and maximum health for 13.2 sec.
+    ravager                         = { 90432, 228920, 1 }, -- Throws a whirling weapon at the target location that chases nearby enemies, inflicting 7,563 Physical damage to all enemies over 9.8 sec. Deals reduced damage beyond 8 targets. Generates 10 Rage each time it deals damage.
+    reinforced_plates               = { 90368, 382939, 1 }, -- Armor increased by 20%.
+    rend                            = { 90302, 394062, 1 }, -- Wounds the target, causing 477 Physical damage instantly and an additional 1,575 Bleed damage over 15 sec.
+    revenge                         = { 90298, 6572  , 1 }, -- Swing in a wide arc, dealing 919 Physical damage to all enemies in front of you. Deals reduced damage beyond 5 targets. Your successful dodges and parries have a chance to make your next Revenge cost no Rage.
+    rumbling_earth                  = { 90374, 275339, 1 }, -- Shockwave's range increased by 6 yards and when Shockwave strikes at least 3 targets, its cooldown is reduced by 15 sec.
+    second_wind                     = { 90332, 29838 , 1 }, -- Restores 6% health every 1 sec when you have not taken damage for 5 sec.
+    seismic_reverberation           = { 90340, 382956, 1 }, -- If Whirlwind or Revenge hits 3 or more enemies, it hits them 1 additional time for 30% damage.
+    shattering_throw                = { 90351, 64382 , 1 }, -- Hurl your weapon at the enemy, causing 1,486 Physical damage, ignoring armor, and removing any magical immunities. Deals up to 500% increased damage to absorb shields.
+    shield_charge                   = { 90317, 385952, 1 }, -- Charge to an enemy with your shield, dealing 4,087 Physical damage to it and 1,635 Physical damage to all enemies within 10 yards. Also stuns the primary target for 4 sec. Generates 20 Rage.
+    shield_specialization           = { 90315, 386011, 2 }, -- Increases Block chance by 6% and your Block value by 15%.
+    shield_wall                     = { 90312, 871   , 1 }, -- Reduces all damage you take by 40% for 8 sec.
+    shockwave                       = { 90375, 46968 , 1 }, -- Sends a wave of force in a frontal cone, causing 446 damage and stunning all enemies within 16 yards for 2 sec. Generates 10 Rage.
+    show_of_force                   = { 90320, 385843, 1 }, -- Revenge damage increased by 10% and Revenge increases the damage of your next Thunder Clap by 20%.
+    sidearm                         = { 90377, 384404, 1 }, -- Your auto-attacks have a 20% chance to hurl weapons at your target and 3 other enemies in front of you, dealing an additional 297 Physical damage.
+    sonic_boom                      = { 90321, 390725, 1 }, -- Shockwave deals 350% increased damage and will always critical strike.
+    spear_of_bastion                = { 90380, 376079, 1 }, -- Throw a spear at the target location, dealing 2,452 Physical damage instantly and an additional 2,739 damage over 4 sec. Deals reduced damage beyond 5 targets. Enemies hit are chained to the spear's location for the duration. Generates 20 Rage.
+    spell_block                     = { 90450, 392966, 1 }, -- You are able to block spells for 20 sec.
+    spell_reflection                = { 90385, 23920 , 1 }, -- Raise your shield, reflecting the first spell cast on you, and reduce magic damage you take by 20% for 5 sec.
+    storm_bolt                      = { 90337, 107570, 1 }, -- Hurls your weapon at an enemy, causing 424 Physical damage and stunning for 4 sec.
+    storm_of_steel                  = { 90431, 382953, 1 }, -- Ravager's damage is reduced by 40% but it now has 2 charges and generates 15 Rage each time it deals damage.
+    strategist                      = { 90303, 384041, 1 }, -- Devastate, Thunder Clap, Revenge, and Execute have a 30% chance to reset the remaining cooldown on Shield Slam.
+    sudden_death                    = { 90320, 29725 , 1 }, -- Your attacks have a chance to make your next Condemn cost no Rage, be usable on any target regardless of their health, and deal damage as if you spent 40 Rage.
+    thunder_clap                    = { 90343, 6343  , 1 }, -- Blasts all enemies within 8 yards for 755 Physical damage. and reduces their movement speed by 20% for 10 sec. Deals reduced damage beyond 5 targets. Generates 5 Rage.
+    thunderlord                     = { 90308, 385840, 1 }, -- Increases the radius of Demoralizing Shout by 5 yards. Each enemy hit by Thunder Clap reduces the remaining cooldown on Demoralizing Shout by 1.0 sec, up to 3.0 sec.
+    thunderous_roar                 = { 90359, 384318, 1 }, -- Roar explosively, dealing 2,378 Physical damage to enemies within 12 yds and cause them to bleed for 2,378 physical damage over 8 sec. Generates 10 Rage.
+    thunderous_words                = { 90358, 384969, 1 }, -- Increases the duration of Thunderous Roar's Bleed effect by 2.0 sec and increases the damage of your bleed effects by 15% at all times.
+    titanic_throw                   = { 90341, 384090, 1 }, -- Throws your weapon at the enemy, causing 1,040 Physical damage to it and 5 nearby enemies. Generates high threat.
+    tough_as_nails                  = { 90450, 385888, 1 }, -- Blocking an attack deals 445 Physical damage to the attacker, ignoring armor. Generates high threat.
+    unbreakable_will                = { 90310, 384074, 1 }, -- Shield Wall gains 1 additional charge, and grants 50% of its effect to all party members.
+    unnerving_focus                 = { 90452, 384042, 1 }, -- Last Stand increases your Rage generation by 50%.
+    unstoppable_force               = { 90364, 275336, 1 }, -- Avatar increases the damage of Thunder Clap and Shockwave by 50%, and reduces the cooldown of Thunder Clap by 50%.
+    uproar                          = { 90357, 391572, 1 }, -- Thunderous Roar's cooldown reduced by 30 sec.
+    violent_outburst                = { 90265, 386477, 1 }, -- Consuming 30 rage grants a stack of Seeing Red, which transforms at 8 stacks into Violent Outburst, causing your next Shield Slam or Thunder Clap to deal 200% increased damage, generate 100% more Rage and grant Ignore Pain.
+    war_machine                     = { 90345, 316733, 1 }, -- Your auto attacks generate 50% more Rage. Killing an enemy instantly generates 10 Rage, and increases your movement speed by 30% for 8 sec.
+    wild_strikes                    = { 90360, 382946, 2 }, -- Haste increased by 1% and your auto-attack critical strikes increase your auto-attack speed by 10% for 10 sec sec.
+    wrecking_throw                  = { 90351, 384110, 1 }, -- Hurl your weapon at the enemy, causing 1,486 Physical damage, ignoring armor. Deals up to 500% increased damage to absorb shields.
 } )
 
 -- PvP Talents
@@ -1109,7 +1109,11 @@ spec:RegisterAbilities( {
         toggle = "cooldowns",
 
         usable = function()
-            return incoming_damage_3s > 0.3 * health.max, "requires 30% health incoming damage in 3s"
+            if settings.last_stand_offensively and talent.unnerving_focus.enabled then
+                return true
+            else
+                return incoming_damage_3s > 0.3 * health.max, "requires 30% health incoming damage in 3s"
+            end
         end,
 
         handler = function ()
@@ -1735,6 +1739,17 @@ spec:RegisterSetting( "stack_shield_block", false, {
     width = "full"
 } )
 
+spec:RegisterSetting( "last_stand_offensively", false, {
+    name = "Use |T135871:0|t Last Stand Offensively",
+    desc = function()
+        return "If checked, the addon will recommend using |T135871:0|t Last Stand to generate rage.\n\n"
+            .. "If unchecked, the addon will only recommend |T135871:0|t Last Stand defensively after taking significant damage.\n\n"
+            .. ( state.talent.unnerving_focus.enabled and "|cFF00FF00" or "|cFFFF0000" ) .. "Requires |T571316:0|t Unnerving Focus|r"
+    end,
+    type = "toggle",
+    width = "full"
+} )
+
 
 spec:RegisterOptions( {
     enabled = true,
@@ -1747,10 +1762,10 @@ spec:RegisterOptions( {
     damage = true,
     damageExpiration = 8,
 
-    potion = "potion_of_phantom_fire",
+    potion = "potion_of_spectral_strength",
 
     package = "Protection Warrior",
 } )
 
 
-spec:RegisterPack( "Protection Warrior", 20221026, [[Hekili:1M1EVTTTw8plRfWXg3cfzNy7KI4a0BxXwlcslQhW2FjjAjkBDJSOVuuPldg6Z(ohs9GuVCsxhkQJm55878GhEEy5m153CwhqeuN7NzpB2u7zlSME1u7lx4Sw80bQZ6de)hiBHhsi7Hp)cNjO(IiwsU3Vt48ighP5PygjaXkLLX9b62jehsF75NVnsSlBJLpB)5Pr7ZIjiR(CsOa)U)5oR3Kffl(yIZMUvK5aMhO(o3V8ca1OGaQIuAQFNAt(NMTi37Z(c2gkp3dbl3B80WGnxn76j5Fk)tFmjserIZ9(zozlljmoA7orUx0(dmUWcSgolmkgSHx)6CVoLaUXPKcsZWscPIiHo16aNcUOneX)z15HX00DsxKeNCVp8Nu)mbni3J(iL)uUNiApf(Ch8baaOrErPWJpsIIjBIPwv4cO5VJW3sFtu4kKRv267DiB)EAS(kGRoo2LtbDqz0O8)zAijlgu839L7ode0R(vkNf5N79Ej2VQq85ELRFhLCi3lKfhZ(gQ2BEQKwqRz5EbW)tzOneq2tWvjjazBPjuoecK79vyrdRyNez3yay0usPcruY2uRI1vg5iEwcnKbpzXPh4rPK4r(mwCa7BjwksGn2tIssVzRFq3EPNp0Wz2JwtT0unDeJseu(JGfHGUjlmeye(kaaQoJgdre0BUY(4r5dlxosstmjv4Mka3Hv2HjDivDrKLsDJe09POiQmuimqq4vg6kWspEucEXozg65MyglWnmJ)uLI2nDuEkL)a4AgMUWiovI5WKrs8PPcoj21NehpmTqgKKak31pwD6lPKLj2KXtfaTJgpwUukLcQhe9gybUq)hUDr9XF6UiACGBAmzFPR52ztMyOssz3wai)g3Ay4tTv5JhfyOIWcVO5kyUbr0BMnVX1lc3Lf6UboNLxVQ3Ri8Ov4cAFfaVJsIf7So4lUDge5OUSQ2l1s3lD7ftg00ncu3MW4u3dW6YSeTe1Qz2DPbRUYE0p5ZaLKKiSG)i29eFIkWg2CEFkaj4jvSEXYqWI)ds3NIZf21Cgq3ZGyKO)cpxt3bhjfaiiXGaT2Wy7XTEeUbsTanbY(fuc0snGQUuamxU)L)tfuhxzlXE(8UL9aSuMlWK5E8D6r)d5mVW(LdLH21j6tEdM6Hfg6cjxwn1icxJsmCACB(rLPiJKX6LzSgkWDYOUUkORa1AFprZxBxDrTE5BwzIs74bfAdemiZJVWUdNbAaDM3sYcCCBKgilXv9n34OuXBW2UwryQAtdCH3OAgKsTniYYRq5z9K6KTy2ibS8dgjfiCFscMeJZblgLDr9kdxn2otQ7)lly7EGk9(zafg44rGhUXI155AUSU10Cpn)OUqkmO2cQydGtQQ1PU2Ya02BpCrhJAcAC1Y4Q3kG(ieAID4Ug6Ilf2v1QR91tHEC)gHNGTD4S(3F3xV)J3)lVn3l373Ww8uTlI9tbn6DwGQzSZY940)FguSnOSxksMGTNi7teAAb0IuOfQ7IsGTUeq79SeqUYTpRUVI)4mvlz6lvgsFg2s7FoPcL5)qqzX3lkeWh8HpFxfCqN8spdIYLYoHXkQEyapA5oRLpHdLarrWFUxoSJImN1fbnoRleGZ)1rahigKOomBqYf6KOhL0GUl1PtlyZKmHZ6IqKVhnSi8EinSxjRuW6vw7ZHMj5reCKSMX69yXakZpThBHojAxdA4hkISR8dAQwjZQMXvt)XJoOw8fpEKUPQODvUNDlNRA6Ob9TnMw6eo4s20MyOHP0CslZbT(xAolD3r3t)K7ncs30AwKY7MYT7zqRCVBab6hufQ0za33VyBpewROLYiW(d11NmtI6yqUs)fO8qnpVJh1wy5sjnT7vk3BYju5ADRA8qu9w2R61ZuDGESs6wvQM5Ci1cPAaruixnSpOd2Rhne5)6xo)vJmI8p1(fdq1SKs(BMu408BoKPeKzpZKE4PPkqyCH)T50L5E3cfZmJ97AulKSzYqJj9NfD6fpt9YmzSYMLaCIS51dwlJyApPQm0E2CT0FYXCLypVrspJzyBK0B6Z8UwTdUvZ4kxwX1U(75vs2fLx6g6mODbkurBERR6Qz9aXgvk6qnxP0Z(TJvQ8hab)eQIMdlxQ6vzBKKpFiZbMARo5tJPY0ttHiTW2eP(MXvs1qJ20e4LnawFa3M0E5poLONCUMYB(8H0TNfeMj87c0botAMa55CqDH9)m4Byn9k1jQkcfZTJDzHxd6VUW4UasvJSQQtxtWltLmCoXjfN3DFZVv3Rs4LAB)vH656312gz803(MvMcR2pk7fS)6vNmoTQxHf26D(2m0xkMtuwR5jEb0YOYU7YhbT)YCNkFQwUsZFjc18uUQxdeorfkNMLTQA9QXVaHbZLd8GaymLKXphrZ5E6V7rTw10knA8lyirWyoKg)4fTMgP6nY40CUS63pttMGfGHW3HVsS1vVSR3lPe)NZFd]] )
+spec:RegisterPack( "Protection Warrior", 20221028, [[Hekili:9QvBVTnos4FlTfWXE3ufjN4e3I4a02T9UeKnTOU469jlrlrBZlsIA1ljnhm0V9DgskjkkzNKU7Dy32gtoCMHpZlCMXzHZIVTyEajNU4MX2Jh7ypEQLZBCCCoBX88hsOlMNq8VLSg(Hyse83ZV(lP8CC5hc5Ka84z8IuFyRn55jzV9OJwZY3uS0YNhDuglQiKKZ4X(PKv54N9pAX8LfSW8lJxSux22NyFgi7JNobyzc1FXnNDmWuwqavsjnZFXCu6uFKJLEFNKMY4PLEVU0735bSvmFHSYk9Iib0sVv4M)2Nk9wsYObLE4HMFn8Nl)9p8R46jP0esU)gRYR(SFoFjfOF808nhc)dOsLxvE1h2qIxtZEB5vV(DGQaC59S8CKWlJIkIz5pu6DuP3xPXbIF4BBkIdOP8cql(kNKkweUg0qyFGzPRPaR(e7hiR(nAeV0lBdViV0lLcqweWhI86DpGJG048iw86sV)fN5d3PC4aXCGC(D0uFscCoW8yHQ6na0iu0pgtwgI0Ub(Rd2qjHahoO0JOaUqwgWag8tb0vKIq4ddFLZKrWARk9EGxacNeNlfwgfyczjlKLZOz4HVfw4ogGxPWDpTiBJ4oYIsaDxOQ1BclJspFtwopgV3FhUK3kO5BBs53lrmwoimMVCnsUyX)jaHvlbKbyaa6bwGJxkFfleC3E1Rk96ZB4kCJ3LKYcl9otZqIlRmMYpaEnGffCDGl2AfMhYxJsvaYuqUZzrFai7lxBvFMRzR3KtJBmQVpK7FlarOdWLRJ5Pa88fIaDjrGTbr6CccAP0)OGLsbBCEwdd)k4eChUlpxOfeqXlYehKdMJRjOXAoGrb6NbdrG1F5Nsr7ZxP3rHB2lrZvEUaGf6tQI3CWvif)ywEktayAkWNiHHymcElewC48H0xNJ(Q5yqcaRc)C07q4t9Up)rtVPnKmHJ5gHWr2eWfELGm(4pO(f5Od)s6kb(aE6lrl9s6AgQkEVZ3NMKlyr8RHOKOvfHvIidJCdFa4M6ZwjIyfGdZG)KhsDLHqD3)xND0QqA2gr6N(33Nh)hfG3wAM7ssCmat9swcxCBnVqaUJo65SOQ4nc67dyfO1K7iSqmuSr1N5Rsb8km6xf8b(xhaK)YkNEzAIxQystWW1umEFfpmKFVanFOoLIcXbJhh1KkppHtWAkCRG8SGBImvHsxGB1gbNDdbgFiB1mLZtMLADPYoiTigTBWzH8LPSms4aFopmGFFSLKeyJiWLp781(b68xU7ZJ1aQFNLJLMQPZXKcihzO(kGT3)27j3jetaDzXQvw(qqdinRIKbVq6hBXa7lplt)Kfzuxwonkdpz9ncSAWrQVrZGR02TcUQ2POLcTmKZdCxvaUb6RstZOPIuDARsGm2XuxWbjfYbOVtiMvjZ9)ueSoYyRvqkdHqAXPyFmwMe66JrV6sMS2LVYfJZVT1TvQ9TWsHpnE5BF9GRlGudwH6KBfomEsldlivx5hDXeahILhmlQov6HYenZCqUZI9fpI5kDlDNKDHDlMzgcIhQXZyDiVn429MaWbdGnxikhaE0HOLhscLKIGYs0TaJI3JSB7AHP4DxIz4RHj9fTqpMEorwijQ(aqQPLfPz5gooWfSlcs40wqhO6aqlDHZSYLfx46hssUy2XpUbre6dPoUQjPgiHzPacUwpthSiWJaOuc44PCsNT0LS5EPYhFmxwdk0LVsL6QdQn2LE0SDFyClJIWd2a5hGLjD(Sjt6JJGtqankUVTOYu9pIE0326q2JykD2UTo9JgxRYbnO9LPLpNMav2brWdCzVy2P2duj)KvHzL4NFXyBf4OihXMouD(SX2keZz6G9PBpbMbI8PGppRlzFBPk70vusAp7xxHQBvbQ957rVdssGVwQ5Z2KxBgtuHNBcC3Rb6j2slK2Ec9)q8bg(QvUWtiZC6JDOw1MHDrp0umSNLNAp4f(q1DXq1ZwW)KV5H0rdgkn9tNSlRgj4HTBR9pQjc8)5WZjS)lIpIYPK0cMZqG3wlL9H4Eh2gIfv0HrqfJotJr1pFQjOt(Rkij(gcwg3mrLWyiUK3tM0VS3ZrMA33H7atdmZHuDQJTFoNQhfz0tYZW81NHVOgIcZG35AScVOhrmyOSeRm3vPs2tcVWXA62TDFoE0o0GU2QdHwjPUGsFQqJuULyRQSyhawr2Ch1fcNIGUfVWbuJH998VLZKFr5mhr(X2TAPEo2E02TA31D63HN81IKuNypAxxHgqPVkroo7cPK18HIzreSyHakb0O6YahVFR09W7V7OwhPeADhhBVyo05qgWIUt)4EsAmwQ8I5F)DF9MlV5F82spStyQOjBEAUAYghO6E)G6oldQQ)NuKZJiIou8L98cL9Fny6G(HbU9bEmiDX2h0uN1)(azBe6lvH4WwdD(XOAUC8FlCX5SFw2Gnp(XpFDn)kV6sb0GCzs7EtXR(I5aISHNUy(86rs9bSNWfZfKGZXs9ga8J34u9xW(kzU49apeCfhfLzyXI5(qlYWXjlMBeuaAZ2TsnQjWO07IzW1V0BuP3aW6EvL)SOH8urVBifhBJMEKcV9fpa65nJ105kfv5BkteOFva6pgVZveQkgZGKt0jjVEWwIcZmiDcsApqLQYkD8bj)0DqUQAltYpRF7rdr1zlenJbb7Uk1TcHeG4qCGxQYvGKKIsmegh9vvb8LENx6DYinic2e1LPgQUMMAI74Jc4rEZopIqS3X4OY72Q2NoaVOojKBo2MSJKiPuNZn(qNAlU8DQGa2fNoMebmkIBxN48zYJmOYjfxWzQyH9vL4Zsic1sh4fhqC1DA50Q2OTNOZyDAQlNRnv54oIKNvEw6akoQ5uMcuF2Z6rZ5xg3PcoRxwocJ(ch71hPZine42lQHo1Gn09(udePogUx(UJbEiTP4CCASz1tgOri1ZoPo6VANMbIyCfpTfv1diXGQZ0PQ9atmOCQoLgdqXG03OtA9avm9CSBj6wtyXK0woITg5YEDhLaPjj722Bm2jPfbNIf6c0A(mI8vJNO5LjgUJG)72hOB1kIWpi6toecm2OXD2yedY3oDLFXqn1eje5KEYyVuxYTYQa5qSTFIcs91ziKYPpo2EMHn1ymrMK3YNYCUrMe3YRQZGKmOECN021yXUNmGmd(4EnhgZpQfir4Y0oMz2EsiCvHqI0K1Za)zKO8V0u(1dRAMTFNKOnJ1VtMDnxXE0zToVAbNA9H3Z7OqvLYN96Tr)AT7Nxo99oyZJTd7)HsGGP2vphyolGQIlhQxq50j77TAO9vzoMovp8OTVREmF31OAY4ZmySEV7M0EYFFkrLjSvZYMYBYK9PBpjwm1(XyApqFfN1NySbxo2(NJl7qPhT)ApgQk0OVXoi1SxSd(w561DieIOjhRPYZ33lqJwywjTygi9votfD91sMAuflMF6oQrUjQQAag7OxnTw1gk()D9UPf2U3Vu9TElBOd5OXRDOrCKChdeEVbo7ObXrkZOzpy7(z(JLQRuRmC17D8hQk)1k3Q2Cxxz3tsYtAl5EWg9s)1MTsvPH7PTCJUDB94KXVbgEfIFHqWVZ6qX3VEkntmyfCKdIV1BJVD)IeRo1L19lcsl9dOfrj4ZAUllcVNKEBRuqnnpnSEswJThvvv7EUKlf)2N4Yu)YN0tJcbmr9e4jD9H4FADwKEiiHZY4X7Jc4NPebtKVUwv)vppTUJQ7ej71Ea0Cm8vVEUNBT(O93NCMAxLp7Ndc7NFNSF(P9R4IzjrcIXMfXweB9lxJemX60()08M(FW4MAkfT3XhPBg2rmAl6pPh6FctDQo1E3JjNzsNQ5oV555HMDy1ebxedM0KerqaupBZ1FKHw0Qle9r)0MSwDI07SlQ(Vf)5p]] )

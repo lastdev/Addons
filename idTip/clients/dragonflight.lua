@@ -17,6 +17,11 @@ if IDTip.Helpers.IsDragonflight() or IDTip.Helpers.IsPTR() then
 					IDTip:addLine(self, outputItemInfo.itemID, IDTip.kinds.item)
 				end
 			end)
+		else
+			GameTooltip:HookScript("OnTooltipSetSpell", function(self)
+				local id = select(2, self:GetSpell())
+				IDTip:addLine(self, id, IDTip.kinds.spell)
+			end)
 		end
 
 		hooksecurefunc(NameplateBuffButtonTemplateMixin, "OnEnter", function(self)
@@ -51,39 +56,10 @@ if IDTip.Helpers.IsDragonflight() or IDTip.Helpers.IsPTR() then
 					local overrideSpellID = C_SpellBook.GetOverrideSpell(spellID)
 
 					IDTip:addLine(GameTooltip, overrideSpellID, IDTip.kinds.spell)
-					if self.GetBaseButton then
-						local baseButton = self:GetBaseButton()
-						if baseButton then
-							local nid = baseButton:GetNodeID()
-							local cid = C_ClassTalents.GetActiveConfigID()
-							local info = C_Traits.GetNodeInfo(cid, nid)
-							if info.activeEntry then
-								local eid = info.activeEntry.entryID
-								local entry = C_Traits.GetEntryInfo(cid, eid)
-								local did = entry.definitionID
-								IDTip:addLine(GameTooltip, eid, IDTip.kinds.traitentry)
-								IDTip:addLine(GameTooltip, did, IDTip.kinds.traitdef)
-							end
-
-							IDTip:addLine(GameTooltip, cid, IDTip.kinds.traitconfig)
-							IDTip:addLine(GameTooltip, baseButton:GetNodeID(), IDTip.kinds.ctrait)
-						end
-					end
-					if self.GetNodeID then
-						local nid = self:GetNodeID()
-						local cid = C_ClassTalents.GetActiveConfigID()
-						local info = C_Traits.GetNodeInfo(cid, nid)
-						if info.activeEntry then
-							local eid = info.activeEntry.entryID
-							local entry = C_Traits.GetEntryInfo(cid, eid)
-							local did = entry.definitionID
-							IDTip:addLine(GameTooltip, eid, IDTip.kinds.traitentry)
-							IDTip:addLine(GameTooltip, did, IDTip.kinds.traitdef)
-						end
-
-						IDTip:addLine(GameTooltip, cid, IDTip.kinds.traitconfig)
-						IDTip:addLine(GameTooltip, self:GetNodeID(), IDTip.kinds.ctrait)
-					end
+					IDTip:addLine(GameTooltip, self.entryID, IDTip.kinds.traitentry)
+					IDTip:addLine(GameTooltip, self.definitionID, IDTip.kinds.traitdef)
+					IDTip:addLine(GameTooltip, C_ClassTalents.GetActiveConfigID(), IDTip.kinds.traitconfig)
+					IDTip:addLine(GameTooltip, self:GetNodeInfo().ID, IDTip.kinds.ctrait)
 				end
 			end
 		end)
@@ -156,7 +132,6 @@ if IDTip.Helpers.IsDragonflight() or IDTip.Helpers.IsPTR() then
 			local nid = self:GetNodeID()
 			local cid = self:GetConfigID()
 			-- local eid = C_ProfSpecs.GetUnlockEntryForPath(self:GetNodeID());
-
 			local info = C_Traits.GetNodeInfo(cid, nid)
 			if info.activeEntry then
 				local eid = info.activeEntry.entryID

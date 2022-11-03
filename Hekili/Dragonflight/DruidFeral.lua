@@ -283,11 +283,12 @@ spec:RegisterAuras( {
     },
     -- Heals $w1 damage every $t1 seconds.
     -- https://wowhead.com/beta/spell=102352
-    cenarion_ward = {
+    cenarion_ward_hot = {
         id = 102352,
         duration = 8,
         type = "Magic",
-        max_stack = 1
+        max_stack = 1,
+        dot = "buff"
     },
     -- Your next Shred, Thrash, or $?s202028[Brutal Slash][Swipe] costs no Energy$?s236068[ and deals $s3% increased damage][].
     -- https://wowhead.com/beta/spell=135700
@@ -415,7 +416,6 @@ spec:RegisterAuras( {
     infected_wounds = {
         id = 58180,
         duration = 12,
-        max_stack = 1,
         type = "Disease",
         max_stack = function () return pvptalent.wicked_claws.enabled and 2 or 1 end,
     },
@@ -439,14 +439,6 @@ spec:RegisterAuras( {
         id = 22570,
         duration = function() return 1 + combo_points.current end,
         max_stack = 1,
-    },
-    -- Versatility increased by $w1%.
-    -- https://wowhead.com/beta/spell=1126
-    mark_of_the_wild = {
-        id = 1126,
-        duration = 3600,
-        type = "Magic",
-        max_stack = 1
     },
     -- Talent: Rooted.
     -- https://wowhead.com/beta/spell=102359
@@ -790,12 +782,6 @@ spec:RegisterAuras( {
     leader_of_the_pack = {
         id = 202636,
         duration = 3600,
-        max_stack = 1,
-    },
-    thorns = {
-        id = 305497,
-        duration = 12,
-        type = "Magic",
         max_stack = 1,
     },
 
@@ -1462,24 +1448,6 @@ spec:RegisterAbilities( {
         end,
     },
 
-    -- Roots the target in place for $d. Damage may cancel the effect.$?s33891[    |C0033AA11Tree of Life: Instant cast.|R][]
-    entangling_roots = {
-        id = 339,
-        cast = 1.7,
-        cooldown = 0,
-        gcd = "spell",
-        school = "nature",
-
-        spend = 0.06,
-        spendType = "mana",
-
-        startsCombat = false,
-
-        handler = function ()
-            applyDebuff( "target", "entangling_roots" )
-        end,
-    },
-
 
     enraged_maul = {
         id = 236716,
@@ -1771,24 +1739,6 @@ spec:RegisterAbilities( {
         end,
     },
 
-    -- Infuse a friendly target with the power of the wild, increasing their Versatility by $s1% for 60 minutes.    If target is in your party or raid, all party and raid members will be affected.
-    mark_of_the_wild = {
-        id = 1126,
-        cast = 0,
-        cooldown = 0,
-        gcd = "spell",
-        school = "nature",
-
-        spend = 0.2,
-        spendType = "mana",
-
-        startsCombat = false,
-
-        handler = function ()
-            applyBuff( "mark_of_the_wild" )
-        end,
-    },
-
     -- Talent: Roots the target and all enemies within $A1 yards in place for $d. Damage may interrupt the effect. Usable in all shapeshift forms.
     mass_entanglement = {
         id = 102359,
@@ -2039,6 +1989,8 @@ spec:RegisterAbilities( {
         handler = function ()
             applyDebuff( "target", "rake" )
             debuff.rake.pmultiplier = persistent_multiplier
+            removeBuff( "sudden_ambush" )
+
             if talent.doubleclawed_rake.enabled and active_dot.rake < true_active_enemies then active_dot.rake = active_dot.rake + 1 end
             if talent.infected_wounds.enabled then applyDebuff( "target", "infected_wounds" ) end
 
@@ -2567,4 +2519,4 @@ spec:RegisterOptions( {
 } )
 
 
-spec:RegisterPack( "Feral", 20221027, [[Hekili:nR1wVnoUv4FlglGHDwpk2k2ZMPiYfykqb28WIf1lW(MOPLOTjIUbjQ4jfg63(EiLOePe1L2Mh6ltYqDUXdpx(oKXDJ7F4EWhZiU)M9AB7nRT)fRnFB7tp9K7b2hje3djyV3WxGFjchc)7)KKId4R(rqm2NZDwCEQh8LRmws2F7XhpHdWrEKVKrd9SUqzxZpzrJF87vlFGg(pEm036klm4VFMgqCQyWI9dM7Ht50a2Vg5EYSzz7EaNZUgN6EGliqRuFFsj5Kmp3dUhcOzSmUHDkio2NHdIJ4)3FtSvjr4tbeF3VdYXJrJJCpKIFdSEVp8ciigo9cb4gi(GxkLrsPy3dlkooR4iJ69gn6sXX73loclTXYU44dfhtiPzGkjrmuyEaJMeqjPfh37uC0pMzXfVvI6xwwlcUj8obDIHyP0lxabvCeydK78IJPKZPKSRC7vWZsXQNYpF2cyqiw)4BrLB8uAs5UPCxLzfFl4gb)oyW)SZJHXXrNPPKvb0icYZ3z7dx88DzG3TLtPztRPEfflLvLYLEXG8iCkIgLLqtXILaP)upUC21uC2vKhMnfnwsDL(6CobQzBVBcPioLMdbcOSGgbjTf1pXf2Urfw2nAs7TVynXgceXxhxextj(TfbFno7)Y4SpMf88OIqZPA4CbeY3gvi1bHIZlV4WtXOKyAedIJ3xCCBRKmUupCMgrZUsshkLmjLgcNj3GiPRTIV)JR8yK4aFi7HvC82vQ3vi3mU4ywcoS44V)NQgAwcjiqgTyPkwHb(ogOcuUvYn07OZNmLry2MgQCr744rmInT2H)(FwC8CmuNaNKe8HOIZ)IMmu6eWAp6FA5lG2qreO6lFFuVFJJdqGCkRUpyIXmzUAguaWZkpPrkNjPXE048m0jGA3dH4FGirK0lFuzl9NRSOTufotixfQ0AbMvak(megtqG5tYywvcbku2R6fbGG)aN6HZyGRDOGWrlsz252Ffv94G68v9iXYLFVScrpz3I4a9YgkAuEaBSaNgDvTB9jPiXoXK3OvsVQZZkLa6qjmmpcv(7iEp4YoXOsydAo9bYYQAgBoxI31uyfz58M(iC4PCOggpEZ0jrFPlDBv9FY57NtYZ)JbzFDAhWd0k5tly85rcgHnwdwK6iSAgalilpLJVuZW7l(ilxa(GhBjqY4EqcLHXlJEgd4S6OKKuWcmPGAP(wo4mo11)PNPfhdLBmLQz0dxwMZcmkQhT0XUDTsqSHQLmkhdi6CE6htRIlCgWl)fkRowQtHU2TUrUsYmvWTHgWf0B6leplGkyiMskaSporaNn7gguLEL8si0C8W6KH8XHW0fwAGR7NSusigsClo(IaLCjK4fdXbeG59MG(NkfUzZ4kbhiPL3twk7zLG0JJmYancDoGE5kByARmLPrTkzlRA5Xtsbxuiugig5tjLhWL7hUqaEHt(qkPe3LTubtWFRe0W9r7guJMlgncytCc5hOeOUaMfdb3EPIkbdHsyqSN6Om5XbAYbkec1oJ(3IeOnRNOyCeBUjLkuJFLl)r6wQmbAlK2dQc1bx5APFifDCg7KzeTHo1078kgmLqsGV(6IIKILwovZeQvrsFdvHHO0wB30DiBDQ6rdJcxjJnWx52UEWeLa8NxprLQ0ZQeOu7n743OW0BN))bygzkf5B3)SAVpuhuWFJtJeOPq43XGbZrNdnuHYnrT7z2FmI44tPlOSVwNyNQI5N51jrQDfudQIJEp(nIygbowpklZTd44YTg)yw3gh5AamyJgd96y4BBOvhfBnlMV0Ox4x40xB3KNdOGZsAo1VKjEH9m0fWFq8rWHrvSNG6EdMEq0Z4lYoh9x(VjasweXeKcZPJYQnDpZKbEskR)MzYT3Pc0w8tjSe5Y5zeeydHzDcYHgr8ZemZucCm0tkJOmsJmfJ)Bb5WpSfRvvJqpVZqECL8ONnlrPCK3(GIJRAmxgHNiLarj3IZJ8ZAgYTzuyy6FeoYhXPv(9k7frcYa5VT28x3Puqn0qdWARDYDXpl8LVZV5tGG67O19aGXicsMa)(VgMeNY4M63KiDkokUBwRIxfYKF5VsLWVxKQdMF25rPtAf3)4O5Mxj2jo2fVooJv(1vXjoItHkExVcQm4t5C7mIFE(a(4vnUyNTMnhPZ18xfU1IxR)yZsnl0mzI2QIjruxrPE0k6zh9zp2VD997Tsfv4vALCgN1ESI5LIA)U1fV(t)K8KKZgohQnGzCmZnCkrrmFMbWgA6uV3B5bMSqGkL64xxP1(0zdxZlwmBuGU3Vp6qfVyVC(IrgK4LNUF3KYAgFy)MLZNvA9dpYqFu1EyHEORHGLZ7wVE)U735S1myWE75J7LQoSF5PDgLP6XIoKD(XWWG9BXBnmDoNQnjFXE8Weje8286SBCEvWwxB0THPpbP0cnyNDXU5l0t4Qsa1siQwtMZSCc6vfkCxLoUaAG12S7BGSip)FETszjR2BwhoqdtjIQxwxVCZlFjrEWzQhqj7nJUDy5wsbuOQUo1uEhmfz2ei07MCXS6skl2yz)GXN)BVJjuClbwQYkvEYph75koULlN391vmzGW2PZfz26qOwsAVzxFsR5Qih5SDUH3qQpHQE3KnrCgEqU(eGwSIK7M3)Qx2eyfuzP(f3(K1KIBtHVj4AebykSuFCpxnPE)wTur18FNwx4EvpuLBAVw8DV2(EKP0UgocqwmR11W3VmLbGti6QFHODP6RK37UZM(5yYH09lc1a1(P6ZPIwBHklNjjq9u05)I9Mk)FwgDBzo4x1DMkKvH7t2xT7xaMvUIbJF3W4(1X)6JRRLGXH0PnJPsBuvX3Ctbg)CtJ9(uANMTAwX259CNaZn1j5LnwFvImF765Jp))(EoFFW(l2dJ1tDtwoTDBKdCGm6EWEgOVnz2M1s9W7vTYh)j)BeJeAOJ6ZS3n(w9R7B)xbGqPMFf(UkI7vuv1iTohWm2yu4WKNto)w1MgTwPcXTWY38g9L6AwpJooGi44K05A(OpC)s1kcnW2CQFIqtFLN5LB6VTj(nN6XFbGNe3vH7F9d]] )
+spec:RegisterPack( "Feral", 20221101, [[Hekili:nRX2UnoU1VLGcyepRxfBh7PzkICbMcuGjpSDX6TyEtY0s02er3GUepPWqF79qsrjsksj1UbO9LDYsDUF)qAVvE)U3(quj27xwVC96vRwUYz5tBwT1BF57zyV9zOGxrNH)ibfd)3)oohfrp99Ouuif5I0Q8a4lxklZk(lp8Wruekja)ZfK4aNZKYlvhDiPp81MJ3tI)Bpeh6CPmo6VEIeHDBqWP8hLE7pwrIk)wI3rJs1MV4ThvvEjn3BpLqaxjHHyo44IaV9E7JifLfub7yuAAyjkknH()(lmnfNGogHd9(kqNGssAI3(C0RG0h8Eqe2VeLFgdydaVpiNuIZjiV93xF4U6dLKGxjjNRpC7w9b4OvoRRp8P6dz48cGL4Ks)4QOsswebNxFyNB9HW0shk5DYK)Y8wsqfH3W(hl9lZjNpdeQ(aGgq3z1hYXNYXfxOYldN5StpwD6KdGaJSHPxt4kEojJRnCTQWj9A0vm6nqG)j3hItttorYXlIijy)Gq3nF6CqOxjyD1mkDkTc7LySGwnmxyfJQsq5(KKImsoIDeq9hTyYlVKJkU4hGkNch5q3WVE(jGnBSQecsCmVcce8lI6iKqwK)eLyBhLyfxjz6Qp7mMcbK4ZJtIl54qDsqpJI(FEC0htcEAusOyun4xaI8LrjsBqiZFfKgFm1plLKucXX7QpSrljJs19NijKIl48HsjZYjXGp5kejDrl((Fwabh)k771h(ofG6dxj0)7VrYGmQKW6d)ogbPz)K4p(hzyqa)EAvsyHJSAuKHJIeXsoYmLj(VHaOarZj7Q)B(NoAkFXSepuXe9O8reIvA6)V(96dNsbTcLLf9oREeO4odLTb4AraMw6eWo)emuCMQiTkCAAKpqhEXFd5nXOF4JtW5NFxbVt480asAvH)rqGmla65pwXvlGSaQ)e4uLXSRqsnus2beWi)0tq8o2hueCrPJGYM4nTGuee1eGkkbJ7qbPJweZSYzVIRAKqB(SASi)434vqSK9ZceulRiXrHh2ybqf4AAhhIZ9zAIjRHMpq245KJbEifhwL4Z)BFApAENAF(yfkg9bYZAAwBoBI2vLjffv0Hc8rXhRGACvzM9e2Yx63k7)e)7ht2ZFWGSppnh8aTA(WcgFAKGrqX6MvPncRfbqckQYPZFQi42IpkQydNqJTyt64TxmQtjTq6jemhwpMKLdsGjg0s1xRaJXX(2p1mT0uOkJPunJwyEXrhqOibeUHDZsPG42Yzsrde6mI(NQYFFOGgEss)2M)gCo09ipnM2cf05MwjHOyycFGTPjvflQpuLeHlGw4xHZcqqVZVcCfN)6dFljaLNWYjAqfuyOfgKc3GD9bsCmy6tkJExPxBaeXtNuqOw54yeKIXu7LSc233O3mVbRkEx(8feGBmokKD(Ctnj6y1DnybbG0s(XIocCdoJJBx2zTeGzkFOdgW)BT2vJQ5zyWlbbqHOm2S(fxraRuxUGVFbDzbvW85oghLnpSdwRj9z2keZfwv7yazxbVYG)roXnlgxWOibS0rse0(o(gmPjgrGK4FkIC(s5WW2iktdAzWM30MNwHcmrXqnWu)qcM7G56dLiaUGNpMG5bBRfmyc2BPGgQnA7GC0CL4rgIgLH)HFguuevMcz2b5SYGkj9At9qBKS0krvNbNhi0VIIHX1FMU3PctHwgqxMK)fRuZk799vPJlZsmP8M2nbO03(yrndYjTnVycoPTeL(O6kndkbY3qavi0Niya76wLAwswwBfTApVR(28PkM8YV(ndJXLv7nw6lRtLpkd7rzYyldZv72naLswEA5ezQuZF(eN6k74xDZ0Nl6)dg(UuQHH(Gin6(qJIq6Ab7JEdbcmD7gyYeO0vI(Wh2JNzUpPXjSuuOTXWjAnxF5omYbvPjVL(kMTJfDOzszHxVTm4Qg1nRkJJeIzqgng61tW30bR66aTOy(25EMEZEFwFGHn8zucZRiHCKOnjk8pd2dCOp4mAI9yqBny6tScY)SOlK9wjDbqIIidpZJPQq99zwhcZm4R3kVXc7FhCNH70QW1HDvb2hGkUGNaan8O(luPPKBnLItm1I6XiOarZs9xjrH9YsmnrVsIz7qFdpTEkOdfyPDyfLcO)vuf8pRzN1ultT(GHG7g6rozMIc6iUWP(DblX0e(miA(k)(SKBf2adm0Vpkj0NcB3LDWKxFCubq)nTI)sMdbuW3O3Inip87BF5JlDG1vHHIsGm2cV9FlolnVKYNVignR(a7M2DQFHzVPxLVqRO3JvJhME7ZAERfKtUAU26xmHi77M)KW)z(RcB6cQ50vXRSGP4URNcInUHfPzUmNwdUlxaf8cjuSDhXTmBaxYIopI7M6xAfOEkoCq3cOkNYw4u(ePQLuRS6kM72S82nTcfV8NQp8)KDdLLAA9uQ4AP80ULZUxPUsJwOmG1CzckIoOe9o9DbNXTk72Uuff1zu4racjsgs1DgwOmMH7kklV)(7gD5IB3gDrUNxpF29JS82ZpE7MjM1TY2UvZNDhx6hEnnBqPVGMf46ay(S(912T92nkADlJTB9SXTsn(QNFCRrAk7wuxtQTgJ1fS0WTDBhEGy3WepVwpPzMYNLkLynmsSPJoTD3ooUs7Oqr3(2qZmUj0eyG2a39maBBs)AnaMY)AotKIoFc8vEBJ(mDCc0T5qR3wAQqrOZtlLQT6ORSUSApgYHLVyzRytRblgUJIKL5(2zEbIHPlhcwbAbyt4nDLOzxGGvL8(7ARgD)kN1FY4tzVZ10GYZbuAsOLE(A31ZKmCZN3etk)sHMeqqD6DP7AoHwkP8(Z2Ow31MpIVTLSsVhQnIkFp6DrCgECzBeqjwrGD3B5Afn2ClYO0(6XFWCsYSjH3emnIo49C3k1k3Trjvuo)3v7XHAA)k9QqTKV)tmzHMc5A4iarXmTNmYonfbGti6YoruEaOfI3iYDLDmMCiTDsihOAhQpMkA6evuotaGSx09)cDtg)pkHwNMd(vvJPeynJmk6R2)laYs3IJXVB4gvAJ)vVre1HrGPbvwJxQnQm57UmgJFURXUnM2RzRIuSzMLRDzMPojpVY5ZIzY3SC24xXYol(3pT(Nxp8yIYkj)cn0NCGoiJQf0Ysj6GT2mxAV4JUvrAV)3x62(6pWpOLo2kMY0v(hrs)8b5VUt)34ctKS8BmPpNOMrzEnsV2bKJvgjoS28KliiltJwCvcyT9g6(zRa8sJ3tbFdIR22dJ(dtrUAs3iFUTpfUPVsZARm9B8JEX2b0Nm6r29849V)d]] )

@@ -13,6 +13,12 @@ local OPTION_VIEW_BAGS_ALLINONE = "UI.Tabs.Characters.ViewBagsAllInOne"
 
 addon:Controller("AltoholicUI.TabCharacters.Containers", { "AltoholicUI.Options", function(Options)
 
+	-- https://wowpedia.fandom.com/wiki/BagID
+	local FIRST_BAG = 0
+	local LAST_BAG = 4
+	local FIRST_BANK_BAG = 6
+	local LAST_BANK_BAG = 12
+	
 	local item_OnEnter
 	
 	local function bag_OnEnter(self)
@@ -33,7 +39,7 @@ addon:Controller("AltoholicUI.TabCharacters.Containers", { "AltoholicUI.Options"
 			local character = AltoholicFrame.TabCharacters:GetCharacter()
 			local _, link = DataStore:GetContainerInfo(character, id)
 			GameTooltip:SetHyperlink(link)
-			if (id >= 5) and (id <= 11) then
+			if (id >= FIRST_BANK_BAG) and (id <= LAST_BANK_BAG) then
 				GameTooltip:AddLine(L["Bank bag"], 0, 1, 0)
 			end
 		end
@@ -237,13 +243,13 @@ addon:Controller("AltoholicUI.TabCharacters.Containers", { "AltoholicUI.Options"
 			wipe(containerList)
 
 			if Options.Get(OPTION_VIEW_BAGS) then
-				for i = 0, 4 do
+				for i = FIRST_BAG, LAST_BAG do
 					table.insert(containerList, i)
 				end
 			end
 			
 			if Options.Get(OPTION_VIEW_BANK) then
-				for i = 5, 11 do
+				for i = FIRST_BANK_BAG, LAST_BANK_BAG do
 					table.insert(containerList, i)
 				end
 				table.insert(containerList, 100)
@@ -356,13 +362,13 @@ addon:Controller("AltoholicUI.TabCharacters.Containers", { "AltoholicUI.Options"
 			local containerList = {}
 
 			if Options.Get(OPTION_VIEW_BAGS) then
-				for i = 0, 4 do
+				for i = FIRST_BAG, LAST_BAG do
 					table.insert(containerList, i)
 				end
 			end
 			
 			if Options.Get(OPTION_VIEW_BANK) then
-				for i = 5, 11 do
+				for i = FIRST_BANK_BAG, LAST_BANK_BAG do
 					table.insert(containerList, i)
 				end
 				table.insert(containerList, 100)
@@ -458,7 +464,7 @@ addon:Controller("AltoholicUI.TabCharacters.Containers", { "AltoholicUI.Options"
 			local character = frame:GetParent():GetCharacter()
 			
 			if Options.Get(OPTION_VIEW_BAGS) then
-				for bagID = 0, 4 do
+				for bagID = FIRST_BAG, LAST_BAG do
 					if DataStore:GetContainer(character, bagID) then
 						local _, _, size = DataStore:GetContainerInfo(character, bagID)
 						UpdateBagIndices(bagID, size)
@@ -467,7 +473,7 @@ addon:Controller("AltoholicUI.TabCharacters.Containers", { "AltoholicUI.Options"
 			end
 			
 			if Options.Get(OPTION_VIEW_BANK) then
-				for bagID = 5, 11 do
+				for bagID = FIRST_BANK_BAG, LAST_BANK_BAG do
 					if DataStore:GetContainer(character, bagID) then
 						local _, _, size = DataStore:GetContainerInfo(character, bagID)
 						UpdateBagIndices(bagID, size)

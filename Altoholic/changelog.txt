@@ -15,6 +15,22 @@ How to support Altoholic's development :
 If you like the addon, consider supporting it, this has been the long term effort and commitment of a single person. #ArmyOfOne
 
 
+10.0.004 (02/11/2022)
+
+- Summary tab : fixed a missing bag in the tooltip, overlooked in previous release. (Thanks Snufkin !)
+- DataStore_Containers : fixed one last issue where one of the guild bank bags was not being updated when bags are swapped). (Thanks Snufkin !)
+- Fixed the missing 'Toggle UI' entry in the keybindings.
+- Achievements tab : Added Dragonflight achievements for the categories Fishing, Dragon riding, Primal Storms (Thanks Feral !)
+
+10.0.003 (01/11/2022)
+
+- DataStore_Containers : fixed an issue where one of the guild bank bags was not being updated.
+- Summary tab : adjusted the "bag usage" view to properly display the bank bags (indexes were changed to make room for the new DF reagent bag).
+- Characters tab : fixed the same issue where one of the bank bags was missing due to the index change.
+- Characters tab : fixed an issue in the Covenant => Renown page.
+- DataStore_Garrisons : fixed a Lua error when scanning a mission list. (Thanks Feral !)
+- DataStore_Containers : removed an improper scan of the reagent banks that caused its content to be emptied in the DB.
+
 10.0.002 (31/10/2022)
 
 - Updated ACE libraries in Altoholic & DataStore.

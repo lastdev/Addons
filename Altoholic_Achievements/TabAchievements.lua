@@ -330,6 +330,7 @@ addon:Controller("AltoholicUI.TabAchievementsCategoriesList", {
 					{ text = L["Fish up"], id = cat.ProfessionsFishingFishUp },
 					{ text = L["Catch"], id = cat.ProfessionsFishingCatch },
 					{ text = L["Daily Quests"], id = cat.ProfessionsFishingDailyQuests },
+					{ text = EXPANSION_NAME9, id = cat.ProfessionsFishingDragonflight },
 				}},
 				{ id = cat.ProfessionsArchaeology, subMenu = {
 					{ text = LEVEL, id = cat.ProfessionsArchaeologyLevel },
@@ -433,6 +434,8 @@ addon:Controller("AltoholicUI.TabAchievementsCategoriesList", {
 					{ text = C_Covenants.GetCovenantData(4).name, id = cat.ExpansionFeaturesCovenantSanctumsNecrolords },
 					{ text = COVENANT_MISSIONS_TITLE, id = cat.ExpansionFeaturesCovenantSanctumsAdventures },
 				}},
+				{ text = "Dragonrider Racing", id = cat.ExpansionFeaturesDragonriderRacing },
+				{ text = "Primal Storms", id = cat.ExpansionFeaturesPrimalStorms },
 			}},
 			{ id = cat.FeatsOfStrength, subMenu = {
 				{ id = cat.FeatsOfStrengthMounts, subMenu = {

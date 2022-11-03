@@ -1,5 +1,5 @@
 ## Interface: 100000
-## Version: v10.0.0-04
+## Version: v10.0.0-06.3
 ## Title: Hekili
 ## Author: Hekili
 ## Notes: Priority helper for many DPS and tanking specializations, based on SimulationCraft action lists.
@@ -44,21 +44,21 @@ Dragonflight\DruidGuardian.lua
 # Dragonflight\EvokerPreservation.lua
 Dragonflight\HunterBeastMastery.lua
 Dragonflight\HunterMarksmanship.lua
-# Dragonflight\HunterSurvival.lua
+Dragonflight\HunterSurvival.lua
 # Dragonflight\MageArcane.lua
 # Dragonflight\MageFire.lua
 # Dragonflight\MageFrost.lua
 # Dragonflight\MonkBrewmaster.lua
 # Dragonflight\MonkMistweaver.lua
-# Dragonflight\MonkWindwalker.lua
+Dragonflight\MonkWindwalker.lua
 Dragonflight\PaladinRetribution.lua
 # Dragonflight\PriestDiscipline.lua
 # Dragonflight\PriestHoly.lua
-# Dragonflight\PriestShadow.lua
+Dragonflight\PriestShadow.lua
 # Dragonflight\RogueAssassination.lua
 # Dragonflight\RogueOutlaw.lua
 # Dragonflight\RogueSubtlety.lua
-# Dragonflight\ShamanElemental.lua
+Dragonflight\ShamanElemental.lua
 Dragonflight\ShamanEnhancement.lua
 # Dragonflight\ShamanRestoration.lua
 # Dragonflight\WarlockAffliction.lua

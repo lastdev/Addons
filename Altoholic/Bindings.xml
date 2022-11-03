@@ -1,5 +1,5 @@
 <Bindings>
-	<Binding name="ALTOHOLIC_TOGGLE" description="Altoholic Desc" header="ALTOHOLIC">
+	<Binding category="ADDONS" name="ALTOHOLIC_TOGGLE" header="ALTOHOLIC">
 		AltoholicFrame:ToggleUI()
 	</Binding>
 </Bindings>

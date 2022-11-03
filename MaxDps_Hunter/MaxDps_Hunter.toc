@@ -1,0 +1,15 @@
+## Title: MaxDps_Hunter
+## Version: 10.0.0
+## Author: Kaminaris
+## Interface: 100000
+## Dependencies: MaxDps
+## LoadOnDemand: 1
+## SavedVariables: MaxDpsHunterOptions
+## X-Curse-Project-ID: 98966
+## X-WoWI-ID: 24642
+
+Main.lua
+Specialization\Beastmastery.lua
+Specialization\Survival.lua
+Specialization\Marksmanship.lua
+Config.lua

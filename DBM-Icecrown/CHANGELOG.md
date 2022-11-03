@@ -1,68 +1,26 @@
 # <DBM> Icecrown Citadel
 
-## [r308](https://github.com/DeadlyBossMods/DBM-WotLK/tree/r308) (2022-08-16)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-WotLK/compare/r307...r308) [Previous Releases](https://github.com/DeadlyBossMods/DBM-WotLK/releases)
+## [r309](https://github.com/DeadlyBossMods/DBM-WotLK/tree/r309) (2022-10-25)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-WotLK/compare/r308...r309) [Previous Releases](https://github.com/DeadlyBossMods/DBM-WotLK/releases)
 
-- TOC bumps  
-- adjust KT active timer  
-- Fix sapheron GTFO  
-- kill off roar completely, it's not in wrath naxx.  
-- slighty adjust spore timers  
-- Add polarity shift yell to thaddius  
-- kill gluths fear timer, it's not useful  
-- Prevent shadron, Tenebron, and Vesperon from engaging if sartharian is already engaged  
-- Try drakes a diff way  
-- also check string and Id for good measure, cover all bases. Classic likes using old or different tech  
-- Fix thaddius again, this time considering that classic decided to put count somewhere else instead of using retail placement. Same issue as black temple (which is handled by core infoframe)  
-- Remove the bad classic synced code for a mechanic that doesn't exist in wrath version. restore original wrath code  
-- Actually thaddius still won't work that way, have to just not use cores wrapper for this  
-- Fixed bug taht caused sarth drake detection not to work with modern unitdebuff checking in core  
-    Fixed bug taht caused thaddius charge detection not to work because the code wasn't using up to date UnitDebuff code (that requires spell name or Id, not index)  
-    Remove decimate timer on gluth  
-    Fixed fissure warning on KT to actually have target name  
-- Fix missing target scan object on anub when features were synced over from classic  
-- Revert "Remove unnessesary check. it's an oncombatstart function, which means it only fires on boss engage, which is only possible in right zone"  
-- Remove unnessesary check. it's an oncombatstart function, which means it only fires on boss engage, which is only possible in right zone  
-- Set wrath classic stats type on ulduar  
-- Trigger WOTLKC builds on commit  
-- Fixed a bug where malygos syncs would be recieved by players in group (but not in raid)  
-    Updated Malygos, Noth, and Faerlina mods to account for fact boss unitIds don't exist in wrath classic  
-    Fixed a bug on Faerlina where frenzy message would show twice  
-- Uniforn tocs to all use same format instead of some being one way and some being another.  
-- Support wrath interfaces  
-- fixed bad option spellid  
-- Fixed bad option default on Sartharion  
-    Fixed bad spell grouping on Halion  
-    Updated some objects in Vault of Archivon to use latest objects  
-    Fixed some groupings in Vault of Archavon  
-- fix tab spacing from some code pulled out of archive  
-- Significnt pass on Ulduar Resolving following:  
-     - Fixed several spells not grouped up correctly  
-     - Fixed several spells having wrong spellid assigned to them (messing up timers, alerts and option text)  
-     - Tweaked some No Filter rules for some target warnings  
-     - Re-introduced 10 man timers for certain encounters on classic difficulty that have different timings versus retail (which uses 25 man timers across the board)  
-     - Rolled achievement timer options back to original Ids when mods are not loading on retail  
-     - Made Options for Iron council look neater  
-     - Fixed bug where combat detection on mimiron was busted do to bad overwrite of RegisterCombat  
-     - Added distance filtering to Thorim using modern prototype so that alerts for tunnel or arena group aren't shown to the alternate group  
-- Fix #16  
-- Second ToC pass, clarifying some option text and improving group by spell slightly  
-- Another pass on ICC with improvement to option groupings and text descriptions  
-- update lua check to make wrath happy  
-- Classic wrath Naxx bugfixes/improvements  
-- minor code tweaks to naxx and malygos  
-- missed a line deletion  
-- ICC Update  
-     - Modernized a lot of code and api usage  
-     - Fixed a few bugs spotted  
-     - Updated several things to use more modern features  
-     - Changed several icons used to prefer lower index over higher index. Modern mods favor lower index so skull and X aren't used if they don't have to be (thus allowing raid leaders to actually use them for marking kill targets). legacy mods tended to favor using those icons and it just doesn't align with current mod design.  
-     - Changed a few target warnings to be non filtered target warnings if warning was deemed important and if it didn't have a special announce (ie it was the only warning for that spell).  
-- Fix option type  
-- Fix option  
-- Change bool -> icon option  
-- Malygos touchup  
-- Did a pass on Trial of Crusader raid modules, modernizing the code and features  
-- Modernize Obsidian and ruby sanctum mods with newest objects and features and code cleanup  
-- Fixed a bug where the sarth fail feature would attempt to announce to group if you were not in one.  
-    Also fixed a bug where it'd try to announce to raid if you were in a small party insteead.  
+- fix missed line  
+- Bump TOC files  
+- You know what's nice when "teleport in 10 seconds" actually occurs 10 seconds before and not 20.  
+- Show spore count in announce  
+- Fix bad option spellId  
+- turn off frost blast timer by default since it has an extreme timer variance.  
+- Fix fissure on KT so it has voice pack support again  
+- Fixed a bug with iron council, horseman, and faction champinos were wipe HP would report lowest HP instead of highest  
+- Bump hotfix and minsync on drakes to todays date  
+- more work around for blizzard bugs, this time further throttling on void zones on sarth. It appears that the drakes are not only firing ENCOUNTER\_START when they land on sarth, but also  running their solo encounter scripts too, resulting in extra extra void zones. It's basically sarth+3drakes+drake+drake+drake  
+- Fix a bug wehre yell or warning may show multiple times on thaddius  
+- Fix initial 25 man doom timer on loatheb  
+- Adjustments to account for fact SUCCESS still doesn't have target in classic so more features had to be turned off there.  
+    Update minsync for shadron, tenabron and vesperon so they don't sync bad combat starts and require an up to date core/module  
+    Fixed count not being on the doom timer on Loatheb  
+    adjusted KT phase 2 timer to be 1 second faster  
+- Update README.md  
+- Update README.md  
+- Update README.md  
+- Update koKR (Wrath) (#18)  
+    Co-authored-by: Adam <MysticalOS@users.noreply.github.com>  

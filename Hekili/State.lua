@@ -16,7 +16,7 @@ local round, roundUp, roundDown = ns.round, ns.roundUp, ns.roundDown
 local safeMin, safeMax = ns.safeMin, ns.safeMax
 
 local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID
-local FindPlayerAuraByID, IsCovenantSpell = ns.FindPlayerAuraByID, ns.IsCovenantSpell
+local FindPlayerAuraByID, IsDisabledCovenantSpell = ns.FindPlayerAuraByID, ns.IsDisabledCovenantSpell
 
 -- Clean up table_x later.
 local insert, remove, sort, tcopy, unpack, wipe = table.insert, table.remove, table.sort, ns.tableCopy, table.unpack, table.wipe
@@ -373,7 +373,7 @@ local mt_trinket = {
         elseif k == "has_use_buff" or k == "use_buff" then
             return isEnabled and t.__has_use_buff or false
         elseif k == "use_buff_duration" or k == "buff_duration" then
-            return isEnabled and t.__has_use_buff and t.__use_buff.duration or 0
+            return isEnabled and t.__has_use_buff and t.__use_buff_duration or 0.01
         elseif k == "has_proc" or k == "proc" then
             return isEnabled and t.__proc or false
         end
@@ -2156,7 +2156,7 @@ do
 
             local aura_name = ability and ability.aura or t.this_action
             local aura = aura_name and class.auras[ aura_name ]
-            local app = aura and ( ( t.buff[ aura_name ].up and t.buff[ aura_name ] ) or ( t.debuff[ aura_name ].up and t.debuff[ aura_name ] ) )
+            local app = aura and ( ( t.buff[ aura_name ].up and t.buff[ aura_name ] ) or ( t.debuff[ aura_name ].up and t.debuff[ aura_name ] ) or t.buff[ aura_name ] )
 
             if not app then
                 if ability and ability.startsCombat then
@@ -2870,10 +2870,6 @@ do
 
                     end
 
-                elseif not state:IsKnown( t.id ) then
-                    start = state.now
-                    duration = 0
-
                 end
 
                 t.duration = max( duration or 0, ability.cooldown or 0, ability.recharge or 0 )
@@ -2917,11 +2913,8 @@ do
 
             elseif k == "charges" then
                 if not raw then
-                    if not state:IsKnown( t.key ) then
-                        return ability.charges or 1
-                    elseif ( state:IsDisabled( t.key ) or ability.disabled ) then
-                        return 0
-                    end
+                    if ( state:IsDisabled( t.key ) or ability.disabled ) then return 0 end
+                    if not state:IsKnown( t.key ) then return ability.charges or 1 end
                 end
 
                 return floor( t.charges_fractional )
@@ -2934,11 +2927,8 @@ do
 
             elseif k == "time_to_max_charges" or k == "full_recharge_time" then
                 if not raw then
-                    if not state:IsKnown( t.key ) then
-                        return 0
-                    elseif ( state:IsDisabled( t.key ) or ability.disabled ) then
-                        return ( ability.charges or 1 ) * t.duration
-                    end
+                    if ( state:IsDisabled( t.key ) or ability.disabled ) then return ( ability.charges or 1 ) * t.duration end
+                    if not state:IsKnown( t.key ) then return 0 end
                 end
 
                 return ( ( ability.charges or 1 ) - ( raw and t.true_charges_fractional or t.charges_fractional ) ) * max( ability.cooldown, t.true_duration )
@@ -2951,8 +2941,8 @@ do
                 -- If the ability is toggled off in the profile, we may want to fake its CD.
                 -- Revisit this if I add base_cooldown to the ability tables.
                 if not raw then
-                    if not state:IsKnown( t.key ) then return 0
-                    elseif ( state:IsDisabled( t.key ) or ability.disabled ) then return ability.cooldown end
+                    if ( state:IsDisabled( t.key ) or ability.disabled ) then return ability.cooldown end
+                    if not state:IsKnown( t.key ) then return 0 end
                 end
 
                 local bonus_cdr = 0
@@ -2962,8 +2952,8 @@ do
 
             elseif k == "charges_fractional" then
                 if not raw then
-                    if not state:IsKnown( t.key ) then return ability.charges or 1
-                    elseif state:IsDisabled( t.key ) or ability.disabled then return 0 end
+                    if state:IsDisabled( t.key ) or ability.disabled then return 0 end
+                    if not state:IsKnown( t.key ) then return ability.charges or 1 end
                 end
 
                 if ability.charges and ability.charges > 1 then
@@ -3047,7 +3037,7 @@ do
                     class.abilities[ k ] = class.abilities[ shortkey ]
                     entry = class.abilities[ k ]
                 else
-                    if not rawget( t, "null_cooldown" ) then t.null_cooldown = { key = "null_cooldown" } end
+                    if not rawget( t, "null_cooldown" ) then t.null_cooldown = { key = "null_cooldown", duration = 1 } end
                     return t.null_cooldown
                 end
             end
@@ -3250,7 +3240,7 @@ function state:TimeToResource( t, amount )
     if not amount or amount > t.max then return 3600
     elseif t.current >= amount then return 0 end
 
-    local pad, lastTick = 0
+    local pad, lastTick = 0, nil
     if t.resource == "energy" or t.resource == "focus" then
         -- Round any result requiring ticks to the next tick.
         lastTick = t.last_tick
@@ -6669,7 +6659,7 @@ do
 end
 
 
-function state:IsKnown( sID, notoggle )
+function state:IsKnown( sID )
     local original = sID
     if type(sID) ~= "number" then sID = class.abilities[ sID ] and class.abilities[ sID ].id or nil end
 
@@ -6703,7 +6693,7 @@ function state:IsKnown( sID, notoggle )
         return true
     end
 
-    if IsCovenantSpell( sID ) and not IsUsableSpell( sID ) then return false, "covenant spells require shadowlands" end
+    if IsDisabledCovenantSpell( sID ) then return false, "covenant spells are disabled" end
 
     local profile = Hekili.DB.profile
 

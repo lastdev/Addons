@@ -183,6 +183,7 @@ local buildingTypes = {
 	[145] = BUILDING_TRADING_POST,
 }
 
+-- https://wowpedia.fandom.com/wiki/Enum.GarrisonFollowerType
 local availableMissionsStorage = {
 	[Enum.GarrisonFollowerType.FollowerType_6_0] = GARRISON_MISSIONS_STORAGE,
 	[Enum.GarrisonFollowerType.FollowerType_7_0] = ORDERHALL_MISSIONS_STORAGE,
@@ -790,8 +791,11 @@ local function OnShowLootToast(event, lootType, link, quantity, specID, sex, isP
 end
 
 local function OnGarrisonMissionListUpdate(event, followerType)
-	ScanAvailableMissions(followerType, availableMissionsStorage[followerType])
-	ScanActiveMissions(followerType)
+	-- 10.0 : guard followerType 
+	if followerType and availableMissionsStorage[followerType] then
+		ScanAvailableMissions(followerType, availableMissionsStorage[followerType])
+		ScanActiveMissions(followerType)
+	end
 end
 
 local missionNPCType

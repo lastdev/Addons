@@ -5,6 +5,7 @@ local _, IDTip = ...
 -- The kinds of IDs you can apply to Tooltips
 IDTip.kinds = {
 	spell = "SpellID",
+	itemspell = "ItemSpellID",
 	item = "ItemID",
 	unit = "NPC ID",
 	quest = "QuestID",
@@ -36,9 +37,9 @@ IDTip.kinds = {
 	traitconfig = "TraitConfigID",
 	traitentry = "TraitEntryID",
 	traitdef = "TraitDefinitionID",
-  profspecnode = "ProfessionNodeID",
-  rootprofspecnode = "RootProfNodeID",
-  profspectreeid = "ProfessionTreeID",
+	profspecnode = "ProfessionNodeID",
+	rootprofspecnode = "RootProfNodeID",
+	profspectreeid = "ProfessionTreeID",
 }
 
 local function table_invert(t)
@@ -134,8 +135,7 @@ function IDTipLib:addLine(tooltip, id, kind)
 
 				local spellname, spellId = GetItemSpell(id)
 				if spellId then
-					self:addGenericLine(tooltip, "=== Item Spell ===")
-					self:addLine(tooltip, spellId, IDTip.kinds.spell)
+					self:addLine(tooltip, spellId, IDTip.kinds.itemspell)
 				end
 			end
 		else
@@ -145,8 +145,7 @@ function IDTipLib:addLine(tooltip, id, kind)
 
 				local spellname, spellId = GetItemSpell(id)
 				if spellId then
-					self:addGenericLine(tooltip, "=== Item Spell ===")
-					self:addLine(tooltip, spellId, IDTip.kinds.spell)
+					self:addLine(tooltip, spellId, IDTip.kinds.itemspell)
 				end
 			end
 		end
@@ -228,6 +227,6 @@ function IDTipLib:Log(...)
 	print("|cffFF8000[IDTip]|r ", ...)
 end
 
-IDTipLib:Log("Library Loaded", "11.0.12")
+IDTipLib:Log("Library Loaded", "11.0.15")
 
 setmetatable(IDTip, { __index = setmetatable(IDTipLib, getmetatable(IDTip)) })

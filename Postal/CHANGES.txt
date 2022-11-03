@@ -1,8 +1,8 @@
 ------------------------------------------------------------------------
-r536 | Zimzarina | 2022-10-31 15:27:07 +0000 (Mon, 31 Oct 2022) | 1 line
+r538 | Zimzarina | 2022-11-02 05:04:43 +0000 (Wed, 02 Nov 2022) | 1 line
 Changed paths:
-   M /trunk/Modules/Express.lua
+   M /trunk/Postal.lua
 
-Fixed an issue where attempt to index local 'itemLocation' (a nil value) could occur in Express.lua when clicking on items other then in bags.
+Fixed issue where Postal main menu was not visible in WoW 10.0 release.  This appears to bug on the Blizzard side as I had to raise frame level of the button 500 layers for it to show.
 ------------------------------------------------------------------------
 

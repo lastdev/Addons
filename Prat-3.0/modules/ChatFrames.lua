@@ -17,8 +17,8 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program; if not, write to:
 --
--- Free Software Foundation, Inc., 
--- 51 Franklin Street, Fifth Floor, 
+-- Free Software Foundation, Inc.,
+-- 51 Franklin Street, Fifth Floor,
 -- Boston, MA  02110-1301, USA.
 --
 --
@@ -42,7 +42,7 @@ Prat:AddModuleToLoad(function()
 
   local PL = mod.PL
 
-  --[===[@debug@
+  --[==[@debug@
   PL:AddLocale(PRAT_MODULE, "enUS", {
     ["Frames"] = true,
     ["Chat window frame parameter options"] = true,
@@ -63,7 +63,7 @@ Prat:AddModuleToLoad(function()
     ["rememberframepositions_name"] = "Remember Positions",
     ["rememberframepositions_desc"] = "Remember the chatframe positions, and restore them on load"
   })
-  --@end-debug@]===]
+  --@end-debug@]==]
 
   -- These Localizations are auto-generated. To help with localization
   -- please go to http://www.wowace.com/projects/prat-3-0/localization/
@@ -244,7 +244,7 @@ L = {
 		["Chat window frame parameter options"] = "대화창 프레임 한도 옵션",
 		["framealpha_desc"] = "마우스를 올렸을 때 대화창의 투명도를 조절합니다.",
 		["framealpha_name"] = "대화창 투명도 설정",
-		["Frames"] = "대화창",
+		["Frames"] = "대화창 [Frames]",
 		["mainchatonload_desc"] = "첫번째 대화창을 자동으로 선택하고 로드 시에 활성화 시킵니다.",
 		["mainchatonload_name"] = "로드 시 주 대화창 강제 설정",
 		["maxchatheight_desc"] = "모든 대화창의 최대 높이를 설정합니다.",
@@ -524,7 +524,6 @@ end
     self:SecureHook("FCF_UnDockFrame")
     self:SecureHook("FloatingChatFrame_UpdateBackgroundAnchors")
 
-
     if (self.db.profile.rememberframepositions) then
       self:RawHook('SetChatWindowSavedPosition', true)
       self:RawHook('GetChatWindowSavedPosition', true)
@@ -532,6 +531,15 @@ end
       self:RawHook('GetChatWindowSavedDimensions', true)
 
       self:UpdateFrameMetrics()
+    end
+
+    if not Prat.IsClassic then
+      local prevClamp = ChatFrame1.SetClampRectInsets
+      self:SecureHook(ChatFrame1, "SetClampRectInsets", function(frame, ...)
+        if self.db.profile.on and self.db.profile.removeclamp then
+          prevClamp(frame, 0, 0, 0, 0)
+        end
+      end)
     end
   end
 
@@ -598,8 +606,6 @@ end
     for _, v in pairs(Prat.Frames) do
       self:SetParameters(v, enabled)
     end
-
-    DEFAULT_CHATFRAME_ALPHA = self.db.profile.framealpha
   end
 
   -- get the defaults for chat frame1 max/min width/height for use when disabling the module
@@ -607,8 +613,13 @@ end
     local cf = _G["ChatFrame1"]
     local prof = self.db.profile
 
-    local minwidthdefault, minheightdefault = cf:GetMinResize()
-    local maxwidthdefault, maxheightdefault = cf:GetMaxResize()
+    local minwidthdefault, minheightdefault, maxwidthdefault, maxheightdefault
+    if cf.GetResizeBounds then
+      minwidthdefault, minheightdefault, maxwidthdefault, maxheightdefault = cf:GetResizeBounds()
+    else
+      minwidthdefault, minheightdefault = cf:GetMinResize()
+      maxwidthdefault, maxheightdefault = cf:GetMaxResize()
+    end
 
     prof.minchatwidthdefault = minwidthdefault
     prof.maxchatwidthdefault = maxwidthdefault
@@ -621,16 +632,25 @@ end
   -- set the max/min width/height for a chatframe
   function mod:SetParameters(cf, enabled)
     local prof = self.db.profile
+    FCF_SetWindowAlpha(cf, prof.framealpha)
+    local minWidth, minHeight, maxWidth, maxHeight
     if enabled then
-      cf:SetMinResize(prof.minchatwidth, prof.minchatheight)
-      cf:SetMaxResize(prof.maxchatwidth, prof.maxchatheight)
+      minWidth, minHeight = prof.minchatwidth, prof.minchatheight
+      maxWidth, maxHeight = prof.maxchatwidth, prof.maxchatheight
 
       if prof.removeclamp then
         cf:SetClampRectInsets(0, 0, 0, 0)
       end
     else
-      cf:SetMinResize(prof.minchatwidthdefault, prof.minchatheightdefault)
-      cf:SetMaxResize(prof.maxchatwidthdefault, prof.maxchatheightdefault)
+      minWidth, minHeight = prof.minchatwidthdefault, prof.minchatheightdefault
+      maxWidth, maxHeight = prof.maxchatwidthdefault, prof.maxchatheightdefault
+    end
+
+    if cf.SetResizeBounds then
+      cf:SetResizeBounds(minWidth, minHeight, maxWidth, maxHeight)
+    else
+      cf:SetMinResize(minWidth, minHeight)
+      cf:SetMaxResize(maxWidth, maxHeight)
     end
   end
 

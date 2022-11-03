@@ -1,4 +1,4 @@
-## Interface: 90001
+## Interface: 100000
 
 ## X-Curse-Project-ID: 7473
 ## X-WoWI-ID: 10783
@@ -13,11 +13,11 @@
 ## Notes-deDE: Ein Grundaddon für Chatfenstermodule.
 ## Notes-koKR: 대화창에 대한 다양한 기능을 제공하는 애드온입니다.
 ## Notes-ruRU: Фреймворк для чата. Это БЕТА-версия, а значит возможны баги и глюки.
-## Version: 3.9.1
+## Version: 3.9.4
 ## Author: Sylvanaar (Sylvaann - Proudmoore/US-Alliance)
 ## eMail: sylvanaar@mindspring.com
 
-## X-Category: Chat/Communication 
+## X-Category: Chat/Communication
 ## X-Website: http://www.wowace.com/wiki/Prat
 
 ## X-Credits: Prat Dev Team (Sylvanaar, Fin, Curney, Krtek), Industrial, Ammo, Cirk, Yrys (ChatLink), Leuchtturm, AnduinLothar, Satrina, <CWDG>昏睡墨鱼&月色狼影, Zurazzi(Jubei’Thos), Cybeloras
@@ -26,20 +26,13 @@
 
 ## OptionalDeps: Prat-3.0_Libraries, LibSink-2.0, LibSharedMedia-3.0, AceGUI-3.0-SharedMediaWidgets, LibDataBroker-1.1, LibDBIcon-1.0, LibAlts-1.0, LibChatAnims
 
-## SavedVariables: Prat3DB 
+## SavedVariables: Prat3DB
 ## SavedVariablesPerCharacter: Prat3CharDB, Prat3HighCPUPerCharDB
 
 #libraries\includes.xml
 
 fonts\includes.xml
-
 addon\includes.xml
-
 services\includes.xml
-
 modules\includes.xml
-
 modules\highcpu2.xml
-
-
-

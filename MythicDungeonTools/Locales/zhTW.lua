@@ -48,12 +48,10 @@ L["Alcruux"] = "阿尔克鲁克斯"
 --[[ L["Algeth'ar Nurse"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Algeth'ar Security"] = ""--]] 
---[[Translation missing --]]
---[[ L["AlgetharAcademy"] = ""--]] 
+L["AlgetharAcademy"] = "阿爾蓋薩學院"
 --[[Translation missing --]]
 --[[ L["Alpha Eagle"] = ""--]] 
---[[Translation missing --]]
---[[ L["AltarOfShadow"] = ""--]] 
+L["AltarOfShadow"] = "暗影祭壇"
 L["Amalgam of Souls"] = "融合之魂"
 L["Amarth"] = "阿玛厄斯"
 L["Ancient Captain"] = "上古队长"
@@ -291,14 +289,12 @@ L["Create a new preset"] = "建立新的路線"
 --[[Translation missing --]]
 --[[ L["Creepy Crawler"] = ""--]] 
 L["Critter"] = "小動物"
---[[Translation missing --]]
---[[ L["CryptOfTheAncients"] = ""--]] 
+L["CryptOfTheAncients"] = "先祖墓穴"
 --[[Translation missing --]]
 --[[ L["Crystal Fury"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Crystal Thrasher"] = ""--]] 
---[[Translation missing --]]
---[[ L["CrystalChamber"] = ""--]] 
+L["CrystalChamber"] = "水晶之廳"
 L["Cursed Falke"] = "被诅咒的飞鹰"
 L["Cursed Spire of Ny'alotha"] = "受诅之尼奥罗萨尖塔"
 L["Custom"] = "自訂"
@@ -380,10 +376,8 @@ L["Domina Venomblade"] = "多米娜·毒刃"
 --[[Translation missing --]]
 --[[ L["Draconic Image"] = ""--]] 
 L["Drag the bottom right edge to resize MDT."] = "拖曳右下角邊緣來調整 MDT 的大小。"
---[[Translation missing --]]
---[[ L["Dragonflight Season 1"] = ""--]] 
---[[Translation missing --]]
---[[ L["Dragonflight Season 2"] = ""--]] 
+L["Dragonflight Season 1"] = "巨龍崛起第1季"
+L["Dragonflight Season 2"] = "巨龍崛起第2季"
 L["Dragonkin"] = "龍類"
 --[[Translation missing --]]
 --[[ L["Drakonid Breaker"] = ""--]] 
@@ -426,8 +420,7 @@ L["Ebonclaw Worg"] = "黑爪座狼"
 L["Echelon"] = "艾谢朗"
 --[[Translation missing --]]
 --[[ L["Echo of Doragosa"] = ""--]] 
---[[Translation missing --]]
---[[ L["EdgeOfReality"] = ""--]] 
+L["EdgeOfReality"] = "真實之緣"
 L["Edit"] = "編輯"
 L["Efficiency Score"] = "效率分數"
 L["EfficiencyScoreTip"] = "效率分數表示 NPC 的小怪%與其血量相比的得分。"
@@ -734,10 +727,8 @@ L["Infused Quill-feather"] = "注能的羽翎"
 --[[ L["Infused Whelp"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["InfusersRotunda"] = ""--]] 
---[[Translation missing --]]
---[[ L["Infusion Chambers"] = ""--]] 
---[[Translation missing --]]
---[[ L["InfusionChamber"] = ""--]] 
+L["Infusion Chambers"] = "注入之廳"
+L["InfusionChamber"] = "注入之廳"
 L["Ingra Maloch"] = "英格拉·马洛克"
 L["Inquisitor Sigar"] = "审判官西加尔"
 L["Inquisitor Tormentorum"] = "审判官托蒙托鲁姆"
@@ -848,8 +839,7 @@ L["Lord Stormsong"] = "斯托颂勋爵"
 L["Lord Waycrest"] = "维克雷斯勋爵"
 L["Lost Soul"] = "失落的灵魂"
 L["Lower Broken Stair"] = "破碎樓梯下層"
---[[Translation missing --]]
---[[ L["LowerChamber"] = ""--]] 
+L["LowerChamber"] = "下層大廳"
 L["Loyal Creation"] = "忠诚的造物"
 L["Loyal Stoneborn"] = "忠诚的石裔魔"
 L["Lubricator"] = "润滑器"
@@ -881,8 +871,7 @@ L["Master's Terrace"] = "塔主露臺"
 L["Matron Alma"] = "主母阿尔玛"
 L["Matron Bryndle"] = "主母布琳德尔"
 L["Mature Krolusk"] = "成年三叶虫"
---[[Translation missing --]]
---[[ L["MausoleumOfLegends"] = ""--]] 
+L["MausoleumOfLegends"] = "傳說陵墓"
 L["Maw of Souls"] = "靈魂之喉"
 L["Mchimba the Embalmer"] = "殓尸者姆沁巴"
 L["MDI Mode"] = "MDI 模式"
@@ -1180,10 +1169,8 @@ L["Rotspew"] = "烂吐"
 L["Rotspew Leftovers"] = "烂吐残渣"
 L["Rotting Slimeclaw"] = "腐烂的粘液之爪"
 L["Rowdy Reveler"] = "吵闹的狂欢者"
---[[Translation missing --]]
---[[ L["Ruby Overlook"] = ""--]] 
---[[Translation missing --]]
---[[ L["RubyLifePools"] = ""--]] 
+L["Ruby Overlook"] = "晶紅瞰臺"
+L["RubyLifePools"] = "晶紅生命之池"
 L["Ruin's Descent"] = "荒滅之淪"
 --[[Translation missing --]]
 --[[ L["Rune Seal Keeper"] = ""--]] 
@@ -1265,8 +1252,7 @@ L["Shadowguard Trickster"] = "影卫欺诈者"
 L["Shadowguard Voidbender"] = "影卫缚灵师"
 L["Shadowlands"] = "暗影之境"
 L["Shadowlands Season 4"] = "暗影之境第4季"
---[[Translation missing --]]
---[[ L["ShadowmoonBurialGrounds"] = ""--]] 
+L["ShadowmoonBurialGrounds"] = "影月墓地"
 L["Shady Dealer"] = "神秘卖家"
 L["Shalebiter"] = "页岩啃噬者"
 L["Shambling Arbalest"] = "蹒跚的弩手"
@@ -1448,8 +1434,7 @@ L["Temple of Sethraliss Sublevel"] = "瑟沙利斯神廟"
 L["templeEyeNote"] = "瑟沙利斯之眼%s將兩個眼球帶到瑟沙利斯的骸骨%s每放入一個眼球都會給予 12 敵方部隊的獎勵"
 L["templeGraveyardNote1"] = "擊敗莫芮克莎後開放"
 L["templeGraveyardNote2"] = "完成瑟沙利斯的骸骨事件後開放"
---[[Translation missing --]]
---[[ L["TempleOfTheJadeSerpent"] = ""--]] 
+L["TempleOfTheJadeSerpent"] = "玉蛟寺"
 L["Territorial Bladebeak"] = "领地刃喙鹤"
 --[[Translation missing --]]
 --[[ L["Territorial Eagle"] = ""--]] 
@@ -1493,8 +1478,7 @@ L["The Under Junk"] = "廢料底層"
 L["The Underrot"] = "幽腐深窟"
 L["The Underrot Sublevel"] = "幽腐深窟"
 L["The Warden's Court"] = "看守者之廷"
---[[Translation missing --]]
---[[ L["TheArcaneConservatory"] = ""--]] 
+L["TheArcaneConservatory"] = "祕法存護所"
 L["Theater of Pain"] = "苦痛劇場"
 L["theaterOfPain_miniBossNote"] = "只有一位決鬥者會存活。"
 L["TheaterOfPainFloor1"] = "苦痛劇場"
@@ -1502,8 +1486,7 @@ L["TheaterOfPainFloor2"] = "征戰之聽"
 L["TheaterOfPainFloor3"] = "痛苦祭壇"
 L["TheaterOfPainFloor4"] = "血肉戮穴上層"
 L["TheaterOfPainFloor5"] = "血肉戮穴下層"
---[[Translation missing --]]
---[[ L["TheAzureVault"] = ""--]] 
+L["TheAzureVault"] = "蒼藍密庫"
 --[[Translation missing --]]
 --[[ L["TheBurningCauldron"] = ""--]] 
 --[[Translation missing --]]
@@ -1511,12 +1494,9 @@ L["TheaterOfPainFloor5"] = "血肉戮穴下層"
 L["TheNecroticWakeFloor1"] = "死靈戰地"
 L["TheNecroticWakeFloor2"] = "縫合作坊"
 L["TheNecroticWakeFloor3"] = "佐拉慕斯"
---[[Translation missing --]]
---[[ L["TheNokhudOffensive"] = ""--]] 
---[[Translation missing --]]
---[[ L["ThePitch"] = ""--]] 
---[[Translation missing --]]
---[[ L["TheScrollkeepersSanctum"] = ""--]] 
+L["TheNokhudOffensive"] = "諾庫德進攻據點"
+L["ThePitch"] = "運動場"
+L["TheScrollkeepersSanctum"] = "藏卷閣"
 --[[Translation missing --]]
 --[[ L["TheVaultOfTyr"] = ""--]] 
 L["Thistle Acolyte"] = "棘刺助祭"
@@ -1587,8 +1567,7 @@ L["Update"] = "更新"
 L["Upper Broken Stair"] = "破碎樓梯上層"
 L["Upper Library"] = "圖書館上層"
 L["Upper Livery Stables"] = "獸欄上層"
---[[Translation missing --]]
---[[ L["UpperChamber"] = ""--]] 
+L["UpperChamber"] = "上層大廳"
 L["Upstairs"] = "上層"
 L["Urg'roth, Breaker of Heroes"] = "乌尔格斯，勇士噬灭者"
 L["Urh Relic"] = "尤型圣物"

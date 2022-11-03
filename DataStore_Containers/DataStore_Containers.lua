@@ -153,7 +153,7 @@ local function IsEnchanted(link)
 	end
 end
 
-local BAGS			= 1		-- All bags, 0 to 11, and keyring ( id -2 )
+local BAGS			= 1		-- All bags, 0 to 12, and keyring ( id -2 )
 local BANK			= 2		-- 28 main slots
 local GUILDBANK	= 3		-- 98 main slots
 
@@ -307,7 +307,7 @@ local function ScanBankSlotsInfo()
 	local numBankSlots = NUM_BANKGENERIC_SLOTS
 	local numFreeBankSlots = char.Containers["Bag"..MAIN_BANK_SLOTS].freeslots
 
-	for bagID = NUM_BAG_SLOTS + 1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS do		-- 5 to 11
+	for bagID = NUM_BAG_SLOTS + 1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS + 1 do		-- 5 to 12
 		local bag = char.Containers["Bag" .. bagID]
 		
 		numBankSlots = numBankSlots + bag.size
@@ -416,7 +416,7 @@ local function OnBagUpdate(event, bag)
 		return
 	end
 	
-	if (bag >= 5) and (bag <= 11) and not addon.isBankOpen then
+	if (bag >= 5) and (bag <= 12) and not addon.isBankOpen then
 		return
 	end
 
@@ -431,9 +431,9 @@ local function OnBankFrameClosed()
 end
 
 local function OnPlayerBankSlotsChanged(event, slotID)
-	-- from top left to bottom right, slotID = 1 to 28for main slots, and 29 to 35 for the additional bags
+	-- from top left to bottom right, slotID = 1 to 28 for main slots, and 29 to 35 for the additional bags
 	if (slotID >= 29) and (slotID <= 35) then
-		ScanBag(slotID - 24)		-- bagID for bank bags goes from 5 to 11, so slotID - 24
+		ScanBag(slotID - 23)		-- bagID for bank bags goes from 6 to 12, so slotID - 23
 	else
 		ScanContainer(MAIN_BANK_SLOTS, BANK)
 		ScanBankSlotsInfo()
@@ -446,7 +446,7 @@ end
 
 local function OnBankFrameOpened()
 	addon.isBankOpen = true
-	for bagID = NUM_BAG_SLOTS + 1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS do		-- 5 to 11
+	for bagID = NUM_BAG_SLOTS + 1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS + 1 do		-- 5 to 12
 		ScanBag(bagID)
 	end
 	ScanContainer(MAIN_BANK_SLOTS, BANK)
@@ -1049,8 +1049,6 @@ function addon:OnEnable()
 	addon:RegisterEvent("AUCTION_HOUSE_SHOW", OnAuctionHouseShow)
 	
 	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-		ScanReagentBank()
-		
 		addon:RegisterEvent("PLAYER_ALIVE", OnPlayerAlive)
 		addon:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", OnPlayerInteractionManagerFrameShow)
 		addon:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE", OnPlayerInteractionManagerFrameHide)
