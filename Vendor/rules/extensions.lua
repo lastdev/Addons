@@ -200,11 +200,11 @@ local function addOnRuleUpdateCallback(ext, cbdef)
     local function fn()
         Addon:Debug("extensions", "Executing callback from (%s)...", ext.Source)
         local result, msg = xpcall(cbdef, CallErrorHandler);
-        --[==[@debug@
+        --[===[@debug@
         if (not result) then
             Addon:Debug("extensions", "%sFailed to invoke extenion callback %s: %s|r", RED_FONT_COLOR_CODE, cb.Source, msg);
         end
-        --@end-debug@]==]
+        --@end-debug@]===]
     end
 
     table.insert(ExtensionCallbacks, fn);

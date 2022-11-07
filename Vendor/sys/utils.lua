@@ -8,9 +8,9 @@ end
 -- Gets the version of the addon
 function Addon:GetVersion()
     local version = GetAddOnMetadata(AddonName, "version")
-    --[==[@debug@
-    if version == "5.2.0" then version = "Debug" end
-    --@end-debug@]==]
+    --[===[@debug@
+    if version == "5.3.1" then version = "Debug" end
+    --@end-debug@]===]
     return version
 end
 
@@ -67,24 +67,16 @@ function Addon.object(typeName, instance, API, events)
             if (type(value) == "function") then
                 fullApi[name] = value;
             else
-                --[==[@debug@
+                --[===[@debug@
                 error(string.format("Type '%s' API contains member '%s' which is not a function", fullName, name));
-                --@end-debug@]==]                    
+                --@end-debug@]===]                    
             end
         end
 
         --[[
         -- If the object has events then mixin the callback registry
         if (type(events) == "table") then
-            table.forEach(CallbackRegistryMixin, 
-                function(name, value) 
-                    if (type(value) == "function") then 
-                        fullApi[name] = value
-                    end
-                end)
-            --fullApi.RegisterCallback = CallbackRegistryMixin.RegisterCallback;
-            --fullApi.TriggerEvent = CallbackRegistryMixin.TriggerEvent;
-            --fullApi.UnregisterCallback = CallbackRegistryMixin.UnregisterCallback;
+            fullApi = Mixin(fullApi, CallbackRegistryMixin)
         end
         ]]--
 
@@ -99,7 +91,7 @@ function Addon.object(typeName, instance, API, events)
     end
     
     if (Addon.Debug) then
-        --[==[@debug@
+        --[===[@debug@
         local thunk = {};
         return setmetatable(thunk, {
             __metatable = fullName,
@@ -129,7 +121,7 @@ function Addon.object(typeName, instance, API, events)
                 end
             end,
         })
-        --@end-debug@]==]
+        --@end-debug@]===]
     end
 
     return setmetatable(instance, {

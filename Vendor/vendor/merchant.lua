@@ -3,8 +3,12 @@ local AddonName, Addon = ...
 local L = Addon:GetLocale()
 
 local threadName = Addon.c_ItemSellerThreadName
+local AUTO_SELL_START = Addon.Events.AUTO_SELL_START
+local AUTO_SELL_COMPLETE = Addon.Events.AUTO_SELL_COMPLETE
+local AUTO_SELL_ITEM = Addon.Events.AUTO_SELL_ITEM
 
 local isMerchantOpen = false
+local isAutoSelling = false
 
 -- When the merchant window is opened, we will attempt to auto repair and sell.
 function Addon:OnMerchantShow()
@@ -58,6 +62,25 @@ function Addon:IsAutoSelling()
     return not not self:GetThread(threadName)
 end
 
+-- If this merchant has no items it is not a sellable merchant (such as an autohammer).
+function Addon:CanSellAtMerchant()
+    return GetMerchantNumItems() > 0
+end
+
+local function setIsAutoSelling(isSelling, limit)
+    if (isSelling ~= isAutoSelling) then
+        isAutoSelling = isSelling
+        if (isAutoSelling) then
+            Addon:Debug("autosell", "firing starting event")
+            Addon:RaiseEvent(AUTO_SELL_START, limit)
+        else
+            Addon:Debug("autosell", "firing ending event")
+            Addon:ClearResultCache()
+            Addon:RaiseEvent(AUTO_SELL_COMPLETE)
+        end
+    end
+end
+
 local function printSellSummary(num, value)
     if num > 0 then
         Addon:Print(L["MERCHANT_SOLD_ITEMS"], tostring(num), Addon:GetPriceString(value))
@@ -90,6 +113,19 @@ function Addon:AutoSell()
         local sellLimitMaxItems = Addon.c_BuybackLimit
         local sellThrottle = profile:GetValue(Addon.c_Config_SellThrottle)
 
+        if (sellLimitEnabled) then
+            setIsAutoSelling(true, sellLimitMaxItems)
+        else
+            setIsAutoSelling(true, 0)
+        end
+
+        -- If this merchant has no items it is not a sellable merchant (such as an autohammer), so terminate.
+        if not Addon:CanSellAtMerchant() then
+            Addon:Debug("autosell", "Cannot sell at merchant, aborting autosell.")
+            setIsAutoSelling(false)
+            return
+        end
+
         -- Loop through every bag slot once.
         for bag=0, NUM_BAG_SLOTS do
             for slot=1, GetContainerNumSlots(bag) do                
@@ -121,20 +157,24 @@ function Addon:AutoSell()
                     -- So before we do this, make sure the Merchant frame is still open. If not, terminate the coroutine.
                     if not self:IsMerchantOpen() then
                         printSellSummary(numSold, totalValue)
+                        setIsAutoSelling(false)
                         return
                     end
-
-                    local netValue = item.UnitValue * itemCount
-                    self:Print(L["MERCHANT_SELLING_ITEM"], tostring(item.Link), self:GetPriceString(netValue), tostring(rule))
-                    numSold = numSold + 1
-                    totalValue = totalValue + netValue
 
                     -- Still open, so OK to sell it.
                     if not Addon.IsDebug or not Addon:GetDebugSetting("simulate") then
                         UseContainerItem(bag, slot)
+                        Addon:RaiseEvent(AUTO_SELL_ITEM, item.Link, numSold, sellLimitMaxItems)
                     else
                         self:Print("Simulating selling of: %s", tostring(item.Link))
+                        Addon:RaiseEvent(AUTO_SELL_ITEM, item.Link, numSold, sellLimitMaxItems)
                     end
+
+                    -- Record sell data
+                    local netValue = item.UnitValue * itemCount
+                    self:Print(L["MERCHANT_SELLING_ITEM"], tostring(item.Link), self:GetPriceString(netValue), tostring(rule))
+                    numSold = numSold + 1
+                    totalValue = totalValue + netValue
 
                     -- Add to history
                     Addon:AddEntryToHistory(item.Link, Addon.ActionType.SELL, rule, ruleid, itemCount, netValue)
@@ -143,6 +183,7 @@ function Addon:AutoSell()
                     if sellLimitEnabled and sellLimitMaxItems <= numSold then
                         self:Print(L["MERCHANT_SELL_LIMIT_REACHED"], sellLimitMaxItems)
                         printSellSummary(numSold, totalValue)
+                        setIsAutoSelling(false)
                         return
                     end
 
@@ -155,6 +196,7 @@ function Addon:AutoSell()
         end
 
         printSellSummary(numSold, totalValue)
+        setIsAutoSelling(false)
     end  -- Coroutine end
 
     -- Add thread to the thread queue and start it.

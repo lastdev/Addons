@@ -53,12 +53,16 @@ MERCHANT_SOLD_ITEMS = "Sold %s items for %s",
 MERCHANT_WITHDRAWN_ITEMS = "Withdrew %s items.",
 MERCHANT_SELL_LIMIT_REACHED = "Reached the sell limit (%s), stopping auto-sell.",
 MERCHANT_AUTO_CONFIRM_SELL_TRADE_REMOVAL = "Auto-accepted confirmation of making %s non-tradeable.",
+MERCHANT_SELL_ITEMS = "Sell [%d]",
+MERCHANT_DESTROY_ITEMS = "Destroy [%d]",
 
 -- Destroy
 ITEM_DESTROY_SUMMARY = "Destroyed %s items.",
 ITEM_DESTROY_CURRENT = "Destroying %s (%s)",
 ITEM_DESTROY_CANCELLED_CURSORITEM = "Cancelling item destroy due to an item being held.",
 ITEM_DESTROY_STARTED = "Starting destruction of items matching Destroy rules or list...",
+ITEM_DESTROY_MORE_ITEMS = "There are %s more items remaining for destruction.",
+ITEM_DESTROY_NONE_REMAIN = "There are no items identified for destruction.",
 
 -- Tooltip
 TOOLTIP_ADDITEM_ERROR_NOITEM = "Failed to add item to %s-sell list. The game tooltip is not over an item.",
@@ -75,6 +79,7 @@ TOOLTIP_RULEMATCH_DESTROY = "Destroy: %s",
 OPTIONS_TITLE_ADDON = "These settings are for configuring Vendor behavior.\n\n",
 OPTIONS_SHOW_BINDINGS = "Key Bindings",
 OPTIONS_OPEN_RULES = "Open Rules",
+OPTIONS_OPEN_SETTINGS = "Open Settings",
 
 OPTIONS_AUDIT_INTRO_TEXT = "Records of all recent actions Vendor has taken for this character up to the last 30 days.",
 OPTIONS_AUDIT_SEARCH_LABEL = "Search:",
@@ -96,20 +101,30 @@ OPTIONS_AUDIT_TT_RULE = "Rule:",
 OPTIONS_AUDIT_TT_SOLD = "Sold:",
 OPTIONS_AUDIT_TT_DESTROYED = "Destroyed:",
 
-OPTIONS_HEADER_REPAIR = "Repair",
-OPTIONS_DESC_REPAIR = "Whether to auto-repair, and how to pay for it.\n",
-OPTIONS_SETTINGNAME_AUTOREPAIR = "Auto-Repair",
-OPTIONS_SETTINGDESC_AUTOREPAIR = "Automatically repair when visiting a repair-capable vendor.",
-OPTIONS_SETTINGNAME_GUILDREPAIR = "Use Guild Bank",
-OPTIONS_SETTINGDESC_GUILDREPAIR = "Uses guild bank for repairs if possible.",
+RULES_DIALOG_CONFIG_TAB = "Settings",
+SETTINGS_CATEGORY_LABEL = "Category",
 
--- Main Config Panel (aka Selling)
-OPTIONS_HEADER_SELLING = "General",
-OPTIONS_DESC_SELLING = "What to sell at a vendor automatically. Keep rules are always processed first, then Sell rules run on items that remain. By default we have several safeguard Keep rules enabled so you don't accidentally sell something you want. Before disabling any Keep rules, you should definitely take a look at the sell rules that are enabled first.\n",
+-- Setting categories and descriptions.
+OPTIONS_CATEGORY_GENERAL = "Common",
+OPTIONS_DESC_GENERAL = "These are the quick high-level set of common settings to govern overall Vendor behavior. Use the drop-down menu for more refined setting adjustment.",
+OPTIONS_CATEGORY_SELLING = "Selling",
+OPTIONS_DESC_SELLING = "Controls what Vendor does when you are selling at a merchant. ",
+OPTIONS_CATEGORY_REPAIR = "Repairing",
+OPTIONS_DESC_REPAIR = "Whether to auto-repair, and how to pay for it.\n",
+OPTIONS_CATEGORY_TOOLTIP = "Tooltips",
+OPTIONS_DESC_TOOLTIP = "Tooltip settings when mousing over your items.",
+OPTIONS_CATEGORY_DEBUG = "Debug",
+OPTIONS_DESC_DEBUG = "Debug settings.",
+OPTIONS_CATEGORY_ADVANCED = "Advanced",
+OPTIONS_DESC_ADVANCED = "Advanced settings. Changing these is not recommended unless you have a problem.",
+OPTIONS_CATEGORY_PERFORMANCE = "Performance",
+OPTIONS_DESC_PERFORMANCE = "Vendor makes use of throttling and coroutines to avoid unresponsiveness in the interface and client disconnects. These settings control that behavior.\n\n",
+
+-- Individual settings
 OPTIONS_SETTINGNAME_AUTOSELL = "Auto-Sell",
-OPTIONS_SETTINGDESC_AUTOSELL = "Automatically sell items when interacting with a merchant. If this is disabled you can still manually sell by setting a hotkey.",
+OPTIONS_SETTINGDESC_AUTOSELL = "Automatically sell items when interacting with a merchant. If this is disabled you can still manually sell by setting a hotkey or by adding a button.",
 OPTIONS_SETTINGNAME_BUYBACK = "Limit number sold to 12",
-OPTIONS_SETTINGDESC_BUYBACK = "Limits the number of items sold each time an autosell is triggered to 12, which is the buyback limit. This allows you to always buy back any items that were sold.",
+OPTIONS_SETTINGDESC_BUYBACK = "Limits the number of items sold each time an autosell is triggered to 12, which is the buyback limit. This allows you to always buy back any items that were sold. It is recommended to disable this setting once you are comfortable with Vendor rules and lists and trust that it is doing what you want.",
 OPTIONS_SETTINGNAME_CONFIG = "Open Rule Config",
 OPTIONS_SETTINGDESC_CONFIG = "Shows the Rule Configuration Dialog, allowing you to toggle rules and create your own rules.",
 OPTIONS_SETTINGNAME_TOOLTIP = "Enable ToolTip",
@@ -118,21 +133,20 @@ OPTIONS_SETTINGNAME_EXTRARULEINFO = "Extra rule information",
 OPTIONS_SETTINGDESC_EXTRARULEINFO = "Include information about the rule that causes the item to be sold or kept. An item may match multiple rules; this will only display the first one that matches.",
 OPTIONS_SETTINGNAME_MAXITEMS = "Limit number of items to sell",
 OPTIONS_SETTINGDESC_MAXITEMS = "Controls the maximum number items vendor will auto-sell at each visit. If you want to be able to buy-back all items sold, set this to 12.",
-
--- Performance Settings tab
-OPTIONS_CATEGORY_PERFORMANCE = "Performance",
-OPTIONS_TITLE_PERFORMANCE = "Vendor makes use of throttling and coroutines to avoid unresponsiveness in the interface and client disconnects. These settings control that behavior.\n\n",
-
-OPTIONS_HEADER_THROTTLES = "Throttles",
-OPTIONS_DESC_THROTTLES = "These values all set how many actions are taken per throttle cycle.",
+OPTIONS_SETTINGNAME_AUTOREPAIR = "Auto-Repair",
+OPTIONS_SETTINGDESC_AUTOREPAIR = "Automatically repair when visiting a repair-capable vendor.",
+OPTIONS_SETTINGNAME_GUILDREPAIR = "Use Guild Bank",
+OPTIONS_SETTINGDESC_GUILDREPAIR = "Uses guild bank for repairs if possible.",
 OPTIONS_SETTINGNAME_SELL_THROTTLE = "Items Vendored Per Cycle",
 OPTIONS_SETTINGDESC_SELL_THROTTLE = "This is the number of items vendored per sell cycle. Increase this if you want to sell items more in bulk, but lower this to lower the risk Blizzard will throttle you.",
-
-OPTIONS_HEADER_FREQUENCY = "Frequency",
-OPTIONS_DESC_FREQUENCY = "Sets how frequently a throttled task executes per second. Changing this affects all throttles.",
 OPTIONS_SETTINGNAME_CYCLE_RATE = "Cycle Rate",
 OPTIONS_SETTINGDESC_CYCLE_RATE = "Interval in seconds between attempts to sell the throttled number of items specified above. Lower is faster. Increase this to slow down sell rate if you notice throttling from Blizzard.",
+OPTIONS_SETTINGNAME_MINIMAP = "Show Minimap Button",
+OPTIONS_SETTINGDESC_MINIMAP = "Vendor will show a minimap button for quickly accessing rules and lists, and mousing over it shows a summary of matching items.",
+OPTIONS_SETTINGNAME_SELLBUTTON = "Show Auto-Sell Button on Merchant Window",
+OPTIONS_SETTINGDESC_SELLBUTTON = "Add an 'Auto-Sell' button to the merchant's sell window to run the Vendor Auto-sell.",
 
+-- Profiles Page
 OPTIONS_PROFILE_TITLE = "Profiles",
 OPTIONS_PROFILE_HELPTEXT = "All rules settings, addon settings, and Sell / Keep / Destroy list contents are stored per-profile. "..
     "Profiles are stored globally across all servers and characters, and selected per-character.",
@@ -296,6 +310,8 @@ SYSRULE_KEEP_COMMON = "Common Items",
 SYSRULE_KEEP_COMMON_DESC = "Matches any "..ITEM_QUALITY_COLORS[1].hex.."Common"..FONT_COLOR_CODE_CLOSE.." quality item. These are typically valuable consumables or crafting materials.",
 SYSRULE_KEEP_UNKNOWNAPPEARANCE = "Uncollected Appearances",
 SYSRULE_KEEP_UNKNOWNAPPEARANCE_DESC = "Matches any gear that is an Uncollected Appearance so you don't have to worry about missing a transmog.",
+SYSRULE_KEEP_COSMETIC = "Cosmetic Gear",
+SYSRULE_KEEP_COSMETIC_DESC = "Any gear which is considered cosmetic, for example: |cff1eff00|Hitem:21525:::::::2010962816:110:66::::::|h[Green Winter Hat]|h|r",
 SYSRULE_KEEP_LEGENDARYANDUP = "Legendary or Better Items",
 SYSRULE_KEEP_LEGENDARYANDUP_DESC = "Always keeps any items of "..ITEM_QUALITY_COLORS[5].hex.."Legendary"..FONT_COLOR_CODE_CLOSE.." quality or higher. This includes "..ITEM_QUALITY_COLORS[5].hex.."Legendaries"..FONT_COLOR_CODE_CLOSE..", "..ITEM_QUALITY_COLORS[6].hex.."Artifacts"..FONT_COLOR_CODE_CLOSE..", "..ITEM_QUALITY_COLORS[7].hex.."Heirlooms"..FONT_COLOR_CODE_CLOSE..", and "..ITEM_QUALITY_COLORS[8].hex.."Blizzard"..FONT_COLOR_CODE_CLOSE.." items (WoW Tokens).",
 SYSRULE_KEEP_UNCOMMONGEAR = "Uncommon Gear|r",
@@ -318,6 +334,8 @@ TOOLTIP_SCAN_ARTIFACTPOWER = _G["ARTIFACT_POWER"],
 TOOLTIP_SCAN_TOY = _G["TOY"],
 TOOLTIP_SCAN_ALREADYKNOWN = _G["ITEM_SPELL_KNOWN"],
 TOOLTIP_SCAN_CRAFTINGREAGENT = _G["PROFESSIONS_USED_IN_COOKING"],
+TOOLTIP_SCAN_BLIZZARDACCOUNTBOUND = _G["ITEM_BNETACCOUNTBOUND"],
+TOOLTIP_SCAN_COSMETIC = _G["ITEM_COSMETIC"],
 
 -- Data Migration
 DATA_MIGRATION_SL_NOTICE = YELLOW_FONT_COLOR_CODE.. "Detected migration to Shadowlands! The settings for Vendor have been reset and custom rules require verification before they will be active!" ..FONT_COLOR_CODE_CLOSE,
@@ -373,6 +391,7 @@ RULEHELP_NOTES = "Notes:",
 RULEHELP_MAP = "Possible Values:",
 RULEHELP_EXAMPLES = "Examples:",
 
+RULEITEM_UNHEALTHY_WARNING = "This rule has an invalid script and must be fixed before it will work.",
 RULEITEM_MIGRATE_WARNING = "This rule was created before an expansion itemlevel squish. For safety this rule has been disabled until it is reviewed by you. Right-click to open the context menu and select \"Edit\" to review.",
 RULEITEM_SOURCE = HIGHLIGHT_FONT_COLOR_CODE .. "Source: |r",
 
@@ -393,6 +412,23 @@ ITEMLIST_EMPTY_SELL_LIST = "Your always sell list is current empty you can drag 
 ITEMLIST_EMPTY_KEEP_LIST = "Your never sell list is current empty you can drag and drop items into this list to add them.",
 ITEMLIST_REMOVE_TOOLTIP = "Remove from list",
 ITEMLIST_UNSELLABLE = "%s is unsellable, adding to Destroy list instead.",
+
+-- LDB Object
+LDB_BUTTON_BUTTON_LABEL = "Vendor: ",
+LDB_BUTTON_MENU_TEXT = "Vendor",
+LDB_BUTTON_TOOLTIP_TITLE = "Vendor",
+LDB_BUTTON_TOOLTIP_TOSELL = "To Sell",
+LDB_BUTTON_TOOLTIP_TODESTROY = "To Destroy",
+LDB_BUTTON_TOOLTIP_VALUE = "Value",
+LDB_BUTTON_MENU_NEW_RULE = "New Rule",
+LDB_BUTTON_MENU_SETTINGS = "Settings",
+LDB_BUTTON_MENU_KEYBINDINGS = "Keybindings",
+LDB_BUTTON_MENU_SHOWVALUETEXT = "Show Value Text",
+LDB_BUTTON_MENU_HIDE = "Hide",
+LDB_BUTTON_MENU_CHANGE_PROFILES = "Set Profile",
+LDB_BUTTON_MENU_PROFILES = "Profiles",
+LDB_BUTTON_MENU_RUNDESTROY = "Run Destroy",
+
 
 -- ITEM PROPERTIES HELP
 
@@ -488,6 +524,9 @@ HELP_ISALREADYKNOWN_TEXT = [[True if the item is "Already known", such as a Toy 
 HELP_ISUSABLE_TEXT = [[True if the item can be used, such as if it has a "Use:" effect described in its tooltip."]],
 HELP_ISUNSELLABLE_TEXT = [[True if the item has 0 value.]],
 HELP_ISUNSELLABLE_NOTES = [[There are a few very rare exceptions where items may have value but are unsellable and so you may get an occasional false negative here. This appears to be an item data error on Blizzard's end.]],
+HELP_ISBAGANDSLOT_TEXT = [[True if the item has a defined bag and slot.]],
+HELP_BAG_TEXT = [[The bag ID of the item, or -1 if it is not in a bag and slot.]],
+HELP_SLOT_TEXT = [[The slot ID of the item, or -1 if it is not in a bag and slot.]],
 
 -- FUNCTION HELP
 

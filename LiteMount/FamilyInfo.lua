@@ -47,6 +47,10 @@ LM.MOUNTFAMILY["Aquilon"] = {
     [353877] = true, -- Foresworn Aquilon
 }
 
+LM.MOUNTFAMILY["Armoredon"] = {
+    [387231] = true, -- Hailstorm Armoredon
+}
+
 LM.MOUNTFAMILY["Basilisk"] = {
     [230844] = true, -- Brawler's Burly Basilisk
     [289639] = true, -- Bruce
@@ -169,6 +173,8 @@ LM.MOUNTFAMILY["Cat"] = {
     [288503] = true, -- Umber Nightsaber
     [281887] = true, -- Vicious Black Warsaber
     [146615] = true, -- Vicious Kaldorei Warsaber
+    [394737] = true, -- Vicious Sabertooth
+    [394738] = true, -- Vicious Sabertooth
     [229512] = true, -- Vicious War Lion
     [281888] = true, -- Vicious White Warsaber
     [ 17229] = true, -- Winterspring Frostsaber
@@ -337,10 +343,12 @@ LM.MOUNTFAMILY["Drake"] = {
     [ 59568] = true, -- Blue Drake
     [ 59569] = true, -- Bronze Drake
     [124550] = true, -- Cataclysmic Gladiator's Twilight Drake
+    [377071] = true, -- Crimson Gladiator's Drake
     [229387] = true, -- Deathlord's Vilebrood Vanquisher
     [175700] = true, -- Emerald Drake
     [110039] = true, -- Experiment 12-B
     [113120] = true, -- Feldrake
+    [360954] = true, -- Highland Drake
     [201098] = true, -- Infinite Timereaver
     [107845] = true, -- Life-Binder's Handmaiden
     [ 93623] = true, -- Mottled Drake
@@ -375,6 +383,10 @@ LM.MOUNTFAMILY["Dreadsteed"] = {
     [238454] = true, -- Netherlord's Accursed Wrathsteed
     [238452] = true, -- Netherlord's Brimstone Wrathsteed
     [232412] = true, -- Netherlord's Chaotic Wrathsteed
+}
+
+LM.MOUNTFAMILY["Eagle"] = {
+    [395644] = true, -- Divine Kiss of Ohn'ahra
 }
 
 LM.MOUNTFAMILY["Elderhorn"] = {
@@ -572,6 +584,7 @@ LM.MOUNTFAMILY["Hawkstrider"] = {
 
 LM.MOUNTFAMILY["Helicid"] = {
     [359376] = true, -- Bronze Helicid
+    [350219] = true, -- Magmashell
     [346719] = true, -- Serenade
     [359378] = true, -- Scarlet Helicid
     [359377] = true, -- Unsuccessful Prototype Fleetpod
@@ -737,6 +750,8 @@ LM.MOUNTFAMILY["Mammoth"] = {
     [ 61470] = true, -- Grand Ice Mammoth
     [ 59797] = true, -- Ice Mammoth
     [ 59799] = true, -- Ice Mammoth
+    [373859] = true, -- Loyal Magmammoth
+    [374196] = true, -- Plainswalker Bearer
     [ 61447] = true, -- Traveler's Tundra Mammoth
     [ 61425] = true, -- Traveler's Tundra Mammoth
     [ 59791] = true, -- Wooly Mammoth
@@ -826,6 +841,10 @@ LM.MOUNTFAMILY["Moth"] = {
     [342667] = true, -- Vibrant Flutterwing
 }
 
+LM.MOUNTFAMILY["Murloc"] = {
+    [315132] = true, -- Gargantuan Grrloc
+}
+
 LM.MOUNTFAMILY["Mushan Beast"] = {
     [148428] = true, -- Ashhide Mushan Beast
     [142641] = true, -- Brawler's Burly Mushan Beast
@@ -842,6 +861,7 @@ LM.MOUNTFAMILY["Nether Drake"] = {
     [ 41513] = true, -- Onyx Netherwing Drake
     [ 41516] = true, -- Purple Netherwing Drake
     [ 37015] = true, -- Swift Nether Drake
+    [372995] = true, -- Swift Spectral Drake
     [ 49193] = true, -- Vengeful Nether Drake
     [ 41517] = true, -- Veridian Netherwing Drake
     [ 41518] = true, -- Violet Netherwing Drake
@@ -853,6 +873,14 @@ LM.MOUNTFAMILY["Nether Ray"] = {
     [ 39801] = true, -- Purple Riding Nether Ray
     [ 39800] = true, -- Red Riding Nether Ray
     [ 39802] = true, -- Silver Riding Nether Ray
+}
+
+LM.MOUNTFAMILY["Ottuk"] = {
+    [359409] = true, -- Iskaara Trader's Ottuk
+    [376879] = true, -- Ivory Trader's Ottuk
+    [376875] = true, -- Brown Ottuk
+    [376912] = true, -- Otherworldly Ottuk Carrier
+    [376873] = true, -- Otto
 }
 
 LM.MOUNTFAMILY["Pandaren Kite"] = {
@@ -902,6 +930,7 @@ LM.MOUNTFAMILY["Proto-Drake"] = {
     [262024] = true, -- Notorious Gladiator's Proto-Drake
     [ 60021] = true, -- Plagued Proto-Drake
     [ 59961] = true, -- Red Proto-Drake
+    [368896] = true, -- Renewed Proto-Drake
     [ 63963] = true, -- Rusted Proto-Drake
     [262023] = true, -- Sinister Gladiator's Proto-Drake
     [148392] = true, -- Spawn of Galakras
@@ -918,6 +947,7 @@ LM.MOUNTFAMILY["Pterrordax"] = {
     [244712] = true, -- Spectral Pterrorwing
     [302797] = true, -- Swift Spectral Pterrordax
     [275840] = true, -- Voldunai Dunescraper
+    [368899] = true, -- Windborn Velocidrake
 }
 
 LM.MOUNTFAMILY["Ram"] = {
@@ -1023,6 +1053,7 @@ LM.MOUNTFAMILY["Rooster"] = {
     [ 66123] = true, -- Magic Rooster
     [ 66122] = true, -- Magic Rooster
     [ 65917] = true, -- Magic Rooster
+    [385266] = true, -- Zenet Hatchling
 }
 
 LM.MOUNTFAMILY["Runedeer"] = {
@@ -1045,6 +1076,10 @@ LM.MOUNTFAMILY["Rylak"] = {
     [336036] = true, -- Marrowfang
     [191633] = true, -- Soaring Skyterror
     [194046] = true, -- Swift Spectral Rylak
+}
+
+LM.MOUNTFAMILY["Salamanther"] = {
+    [374098] = true, -- Stormhide Salamanther
 }
 
 LM.MOUNTFAMILY["Scorpid"] = {
@@ -1115,11 +1150,21 @@ LM.MOUNTFAMILY["Skeletal Horse"] = {
     [ 65645] = true, -- White Skeletal Warhorse
 }
 
+LM.MOUNTFAMILY["Skitterfly"] = {
+    [374034] = true, -- Azure Skitterfly
+    [374032] = true, -- Tamed Skitterfly
+    [374048] = true, -- Verdant Skitterfly
+}
+
 LM.MOUNTFAMILY["Skullboar"] = {
     [332482] = true, -- Bonecleaver's Skullboar
     [332480] = true, -- Gorespine
     [332484] = true, -- Lurid Bloodtusk
     [332478] = true, -- Umbral Bloodtusk
+}
+
+LM.MOUNTFAMILY["Sylvern"] = {
+    [359622] = true, -- Liberated Slyvern
 }
 
 LM.MOUNTFAMILY["Snapdragon"] = {
@@ -1224,6 +1269,10 @@ LM.MOUNTFAMILY["Tallstrider"] = {
     [102349] = true, -- Swift Springstrider
 }
 
+LM.MOUNTFAMILY["Thunderspine"] = {
+    [374247] = true, -- Lizi, Thunderspine Tramper
+}
+
 LM.MOUNTFAMILY["Toad"] = {
     [339632] = true, -- Arboreal Gulper
     [288587] = true, -- Blue Marsh Hopper
@@ -1268,6 +1317,16 @@ LM.MOUNTFAMILY["Vombata"] = {
     [359230] = true, -- Curious Crystalsniffer
     [359231] = true, -- Darkened Vombata
     [359229] = true, -- Heartlight Vombata
+}
+
+LM.MOUNTFAMILY["Vorquin"] = {
+    [385131] = true, -- Armored Vorquin Leystrider
+    [394219] = true, -- Bronze Vorquin
+    [394216] = true, -- Crimson Vorquin
+    [385115] = true, -- Majestic Armored Vorquin
+    [394220] = true, -- Obsidian Vorquin
+    [394218] = true, -- Sapphire Vorquin
+    [385134] = true, -- Swift Armored Vorquin
 }
 
 LM.MOUNTFAMILY["Warp Stalker"] = {
@@ -1357,6 +1416,10 @@ LM.MOUNTFAMILY["Wolfhawk"] = {
     [229439] = true, -- Huntmaster's Dire Wolfhawk
     [229438] = true, -- Huntmaster's Fierce Wolfhawk
     [229386] = true, -- Huntmaster's Loyal Wolfhawk
+}
+
+LM.MOUNTFAMILY["Wylderdrake"] = {
+    [368901] = true, -- Cliffside Wylderdrake
 }
 
 LM.MOUNTFAMILY["Wyrm"] = {

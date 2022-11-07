@@ -130,7 +130,13 @@ local characterName = nil
 function Addon:GetCharacterFullName()
     if not characterName then
         local name, server = UnitFullName("player")
-        characterName = string.format("%s - %s", name, server)
+        -- Sometimes the server or name fails to load, rather than fail in lua,
+        -- return empty string and handle it.
+        if name and server then
+            characterName = string.format("%s - %s", name, server)
+        else
+            characterName = ""
+        end
     end
     return characterName
 end
@@ -140,7 +146,10 @@ end
 -- invokes the function and wraps it.
 function Addon.Invoke(object, method, ...)
     if (type(object) == "table") then
-        local fn = object[method];
+        local fn = method
+        if (type(fn) == "string") then
+            fn = object[method];
+        end
         if (type(fn) == "function") then
             local results = { xpcall(fn, CallErrorHandler, object, ...) };
             if (results[1]) then

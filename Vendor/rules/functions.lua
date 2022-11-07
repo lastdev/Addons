@@ -193,6 +193,7 @@ function Addon.RuleFunctions.IsInEquipmentSet(...)
 end
 
 
+
 --*****************************************************************************
 -- This function allows testing the tooltip text for string values
 --*****************************************************************************

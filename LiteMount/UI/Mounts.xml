@@ -8,7 +8,7 @@
     See OptionsBaseCheckButtonTemplate in FrameXML/OptionsPanelTemplates.xml
     We don't use it directly because of the hitrect crap we don't want.
  -->
-<CheckButton name="LiteMountFlagBitTemplate" virtual="true" mixin="LiteMountFlagBitMixin">
+<CheckButton name="LiteMountFlagBitTemplate" virtual="true" mixin="LiteMountFlagBitMixin" motionScriptsWhileDisabled="true">
     <Size x="26" y="26" />
     <Scripts>
         <OnClick method="OnClick" />
@@ -115,20 +115,21 @@
             </Anchors>
         </Button>
 
+        <CheckButton inherits="LiteMountFlagBitTemplate" parentKey="Bit4" id="4">
+            <Anchors> <Anchor point="CENTER" relativePoint="RIGHT" x="-35" /> </Anchors>
+        </CheckButton>
         <CheckButton inherits="LiteMountFlagBitTemplate" parentKey="Bit3" id="3">
-            <Anchors> <Anchor point="RIGHT" x="-22" /> </Anchors>
+            <Anchors> <Anchor point="CENTER" relativeKey="$parent.Bit4" x="-53" /> </Anchors>
         </CheckButton>
         <CheckButton inherits="LiteMountFlagBitTemplate" parentKey="Bit2" id="2">
-            <Anchors> <Anchor point="CENTER" relativeKey="$parent.Bit3" x="-63" /> </Anchors>
+            <Anchors> <Anchor point="CENTER" relativeKey="$parent.Bit3" x="-53" /> </Anchors>
         </CheckButton>
         <CheckButton inherits="LiteMountFlagBitTemplate" parentKey="Bit1" id="1">
-            <Anchors> <Anchor point="CENTER" relativeKey="$parent.Bit2" x="-63" /> </Anchors>
+            <Anchors> <Anchor point="CENTER" relativeKey="$parent.Bit2" x="-53" /> </Anchors>
         </CheckButton>
 
         <Frame parentKey="Priority" inherits="LiteMountPriorityTemplate">
-            <Anchors>
-                <Anchor point="RIGHT" relativePoint="LEFT" relativeKey="$parent.Bit1" x="-30" />
-            </Anchors>
+            <Anchors> <Anchor point="CENTER" relativePoint="RIGHT" x="-276" /> </Anchors>
         </Frame>
     </Frames>
 
@@ -137,8 +138,13 @@
             <FontString inherits="GameFontNormal" justifyH="LEFT" parentKey="Name">
                 <Anchors>
                     <Anchor point="LEFT" relativeKey="$parent.Icon" relativePoint="RIGHT" x="8" />
-                    <Anchor point="TOP" y="-2" />
-                    <Anchor point="BOTTOMRIGHT" x="-2" y="2" />
+                    <Anchor point="BOTTOM" relativePoint="CENTER" y="2" />
+                </Anchors>
+            </FontString>
+            <FontString inherits="GameFontWhiteTiny" justifyH="LEFT" parentKey="Types">
+                <Anchors>
+                    <Anchor point="LEFT" relativeKey="$parent.Icon" relativePoint="RIGHT" x="8" />
+                    <Anchor point="TOP" relativePoint="CENTER" y="-2" />
                 </Anchors>
             </FontString>
         </Layer>
@@ -166,19 +172,23 @@
 
     <Layers>
         <Layer level="ARTWORK">
-            <FontString parentKey="BitLabel3" inherits="GameFontWhiteSmall" justifyH="CENTER">
+            <FontString parentKey="BitLabel4" inherits="GameFontWhiteSmall" justifyH="CENTER">
                 <Size x="50" y="26" />
                 <Anchors>
-                    <Anchor point="BOTTOMRIGHT" relativeKey="$parent.MountScroll" relativePoint="TOPRIGHT" x="-10" y="10" />
+                    <Anchor point="CENTER" relativeKey="$parent.MountScroll" relativePoint="TOPRIGHT" x="-35" y="22" />
                 </Anchors>
+            </FontString>
+            <FontString parentKey="BitLabel3" inherits="GameFontWhiteSmall" justifyH="CENTER">
+                <Size x="50" y="26" />
+                <Anchors> <Anchor point="CENTER" relativeKey="$parent.BitLabel4" x="-53" /> </Anchors>
             </FontString>
             <FontString parentKey="BitLabel2" inherits="GameFontWhiteSmall" justifyH="CENTER">
                 <Size x="50" y="26" />
-                <Anchors> <Anchor point="CENTER" relativeKey="$parent.BitLabel3" x="-63" /> </Anchors>
+                <Anchors> <Anchor point="CENTER" relativeKey="$parent.BitLabel3" x="-53" /> </Anchors>
             </FontString>
             <FontString parentKey="BitLabel1" inherits="GameFontWhiteSmall" justifyH="CENTER">
                 <Size x="50" y="26" />
-                <Anchors> <Anchor point="CENTER" relativeKey="$parent.BitLabel2" x="-63" /> </Anchors>
+                <Anchors> <Anchor point="CENTER" relativeKey="$parent.BitLabel2" x="-53" /> </Anchors>
             </FontString>
         </Layer>
     </Layers>
@@ -186,7 +196,7 @@
     <Frames>
         <Frame parentKey="AllPriority" inherits="LiteMountPriorityTemplate" mixin="LiteMountAllPriorityMixin">
             <Anchors>
-                <Anchor point="RIGHT" relativePoint="LEFT" relativeKey="$parent.BitLabel1" x="-17" />
+                <Anchor point="CENTER" relativeKey="$parent.MountScroll" relativePoint="TOPRIGHT" x="-276" y="22" />
             </Anchors>
         </Frame>
 

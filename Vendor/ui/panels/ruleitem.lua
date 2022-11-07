@@ -323,9 +323,9 @@ function RuleItem:OnEnter()
         GameTooltip:AddLine(string.format(L.RULE_TOOLTIP_SOURCE, Addon.RARE_BLUE_COLOR:WrapTextInColorCode(L.RULE_TOOLTIP_CUSTOM_RULE)));
     end
 
-    --[==[@debug@--
+    --[===[@debug@--
     GameTooltip:AddLine("Id: " .. Addon.EPIC_PURPLE_COLOR:WrapTextInColorCode(rule.Id));
-    --@end-debug@]==]
+    --@end-debug@]===]
 
     GameTooltip:Show();
 end

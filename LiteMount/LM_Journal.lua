@@ -99,13 +99,15 @@ function LM.Journal:Get(id, isUsable)
         -- Kua'fon can fly if achievement 13573 is completed, otherwise run
     elseif m.mountTypeID == 402 then      -- Dragonriding
         m.flags['DRAGONRIDING'] = true
-    elseif m.mountTypeID == 407 then      -- Aurelid
+    elseif m.mountTypeID == 407 then      -- Flying + Aquatic (Aurelid etc.)
         m.flags['FLY'] = true
         m.flags['SWIM'] = true
-        m.flags['RUN'] = true
     elseif m.mountTypeID == 408 then      -- Unsuccessful Prototype Fleetpod
         m.flags['RUN'] = true
         m.flags['SLOW'] = true
+    elseif m.mountTypeID == 412 then      -- Ground + Aquatic (Ottuk etc.)
+        m.flags['RUN'] = true
+        m.flags['SWIM'] = true
 --[==[@debug@
     else
         LM.PrintError(string.format('Mount with unknown type number: %s = %d', m.name, m.mountTypeID))

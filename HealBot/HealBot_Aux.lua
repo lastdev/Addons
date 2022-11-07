@@ -48,7 +48,7 @@ local function HealBot_Aux_clearBar(button, id)
     button.aux[id]["FLUIDTEXT"]=-1
     button.auxtxt[id]["TEXT"]=false
     button.gref.auxtxt[id]:SetText("")
-    if HealBot_Aux_luVars["FluidAlphaInUse"] then
+    if HealBot_Aux_luVars["FluidAlphaInUse"] and button.aux[id]["FLUIDSTATE"]>-1 then
         button.aux[id]["FLUIDSTATE"]=0
         button.aux[id]["ISFLUID"]=true
         HealBot_AuxFluid_ButtonsAlpha[button.id]=button

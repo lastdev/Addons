@@ -1,6 +1,6 @@
 ## Interface: 100000
 ## Title: LiteMount
-## Version: 10.0.5
+## Version: 10.0.6
 ## Author: Xodiv-Nagrand
 ## Email: mib@post.com
 ## OptionalDependencies: LibDebug

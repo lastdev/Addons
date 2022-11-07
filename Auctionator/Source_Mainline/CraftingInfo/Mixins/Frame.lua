@@ -24,7 +24,7 @@ end
 function AuctionatorCraftingInfoFrameMixin:ShowIfRelevant()
   self:SetShown(Auctionator.Config.Get(Auctionator.Config.Options.CRAFTING_INFO_SHOW) and ProfessionsFrame.CraftingPage.SchematicForm:GetRecipeInfo() ~= nil)
 
-  if self:IsShown() then
+  if self:IsVisible() then
     self:ClearAllPoints()
 
     local reagents = ProfessionsFrame.CraftingPage.SchematicForm.Reagents
@@ -56,7 +56,9 @@ function AuctionatorCraftingInfoFrameMixin:IsAnyReagents()
 end
 
 function AuctionatorCraftingInfoFrameMixin:UpdateTotal()
-  self.Total:SetText(Auctionator.CraftingInfo.GetInfoText())
+  local text, lines = Auctionator.CraftingInfo.GetInfoText()
+  self.Total:SetText(text)
+  self:SetHeight(16 * lines)
 end
 
 function AuctionatorCraftingInfoFrameMixin:SearchButtonClicked()

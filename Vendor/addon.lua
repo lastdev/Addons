@@ -21,33 +21,34 @@ BINDING_DESC_VENDORRULES = L["BINDING_DESC_VENDORRULES"]
 -- This is the first event fired after Addon is completely ready to be loaded.
 -- This is one-time initialization and setup.
 function Addon:OnInitialize()
+    self:GeneratesEvents(self.Events)
 
     -- Setup Console Commands
     self:SetupConsoleCommands()
-    --[==[@debug@
+    --[===[@debug@
     if self.SetupDebugConsoleCommands then
         self:SetupDebugConsoleCommands()
     end
-    --@end-debug@]==]
+    --@end-debug@]===]
+    
 
     -- Set up events
     self:RegisterEvent("MERCHANT_SHOW", "OnMerchantShow")
     self:RegisterEvent("MERCHANT_CLOSED", "OnMerchantClosed")
     self:RegisterEvent("ITEM_LOCK_CHANGED", "OnItemLockChanged")
-    --self:RegisterEvent("BAG_UPDATE", "OnBagUpdate")
     self:RegisterEvent("MERCHANT_CONFIRM_TRADE_TIMER_REMOVAL", "AutoConfirmSellTradeRemoval")
     --self:RegisterEvent("USE_NO_REFUND_CONFIRM", function() Addon:Debug("events", "Handling USE_NO_REFUND_CONFIRM") end)
     --self:RegisterEvent("DELETE_ITEM_CONFIRM", function() Addon:Debug("events", "Handling DELETE_ITEM_CONFIRM") end)
 
     -- Tooltip hooks
     self:PreHookWidget(GameTooltip, "OnTooltipSetItem", "OnTooltipSetItem")
-    self:PreHookWidget(ItemRefTooltip, "OnTooltipSetItem", "OnTooltipSetItem")
+    --self:PreHookWidget(ItemRefTooltip, "OnTooltipSetItem", "OnTooltipSetItem")
     self:PreHookFunction(GameTooltip, "SetBagItem", "OnGameTooltipSetBagItem")
     self:PreHookFunction(GameTooltip, "SetInventoryItem", "OnGameTooltipSetInventoryItem")
     self:SecureHookWidget(GameTooltip, "OnHide", "OnGameTooltipHide")
 
     -- Publish our LDB Data Objects
-    self:SetupLDBPlugins()
+    self:SetupLDBPlugin()
 
     -- Do Pruning of History across all characters.
     -- TODO: Make this a setting

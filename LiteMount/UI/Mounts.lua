@@ -135,21 +135,31 @@ end
 function LiteMountFlagBitMixin:Update(flag, mount)
     self.flag = flag
 
-    if not flag then
-        self:Hide()
-        return
-    else
-        self:Show()
-    end
-
     local cur = mount:GetFlags()
 
     self:SetChecked(cur[flag] or false)
 
     -- If we changed this from the default then color the background
     self.Modified:SetShown(mount.flags[flag] ~= cur[flag])
-    self.Modified:SetDesaturated(false)
-    self:Enable()
+
+    -- You can turn off any flag, but the only ones you can turn on when they
+    -- were originally off are RUN for flying and dragonriding mounts and
+    -- SWIM for any mount.
+
+    if cur[flag] or mount.flags[flag] then
+        self:Enable()
+        self:Show()
+    elseif flag == "SWIM" then
+        self:Enable()
+        self:Show()
+    elseif flag == "RUN" and ( mount.flags.FLY or mount.flags.DRAGONRIDING ) then
+        self:Enable()
+        self:Show()
+    else
+        self:Hide()
+        self:Disable()
+    end
+
 end
 
 --[[------------------------------------------------------------------------]]--
@@ -215,6 +225,15 @@ function LiteMountMountButtonMixin:Update(bitFlags, mount)
     while self["Bit"..i] do
         self["Bit"..i]:Update(bitFlags[i], mount)
         i = i + 1
+    end
+
+    local flagTexts = { }
+
+    for _, flag in ipairs(LM.Options:GetFlags()) do
+        if mount.flags[flag] then
+            table.insert(flagTexts, L[flag])
+        end
+        self.Types:SetText(strjoin(' ', unpack(flagTexts)))
     end
 
     if not mount.isCollected then
@@ -340,12 +359,13 @@ function LiteMountMountsPanelMixin:OnLoad()
 
     self.allFlags = LM.Options:GetFlags()
 
-    for i = 1, 3 do
+    for i = 1, 4 do
         local label = self["BitLabel"..i]
         if self.allFlags[i] then
             label:SetText(L[self.allFlags[i]])
         end
     end
+
     -- We are using the MountScroll SetControl to do ALL the updating.
 
     LiteMountOptionsPanel_RegisterControl(self.MountScroll)

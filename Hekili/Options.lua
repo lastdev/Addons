@@ -243,7 +243,10 @@ local displayTemplate = {
 
         size = 240,
         brightness = 100,
-        speed = 0.4
+        speed = 0.4,
+
+        fixedSize = false,
+        fixedBrightness = false
     },
 
     captions = {
@@ -7970,8 +7973,7 @@ do
                 local a = abilities[ token ] or {}
 
                 -- a.key = token
-                a.desc = GetSpellDescription( spellID )
-                if a.desc then a.desc = a.desc:gsub( "\n", " " ):gsub( "\r", " " ):gsub( " ", " " ) end
+                a.desc = GetSpellDescription( spellID ):gsub( "\r", " " ):gsub( "\n", " " ):gsub( "%s%s+", " " )
                 a.id = spellID
                 a.spend = cost
                 a.spendType = resource
@@ -8061,6 +8063,13 @@ do
                 local nodes = C_Traits.GetTreeNodes( treeID )
                 for _, nodeID in ipairs( nodes ) do
                     local node = C_Traits.GetNodeInfo( configID, nodeID )
+
+                    local isSpec = false
+                    for _, cond in ipairs( node.conditionIDs ) do
+                        local c = C_Traits.GetConditionInfo( configID, cond )
+                        if c.specSetID then isSpec = true; break end
+                    end
+
                     if node.maxRanks > 0 then
                         for _, entryID in ipairs( node.entryIDs ) do
                             local entryInfo = C_Traits.GetEntryInfo( configID, entryID )
@@ -8077,7 +8086,7 @@ do
 
                             local token = key( name )
 
-                            insert( talents, { name = token, talent = nodeID, definition = entryInfo.definitionID, spell = spellID, ranks = node.maxRanks } )
+                            insert( talents, { name = token, talent = nodeID, specialization = isSpec, definition = entryInfo.definitionID, spell = spellID, ranks = node.maxRanks } )
 
                             if not IsPassiveSpell( spellID ) then
                                 EmbedSpellData( spellID, token, true )
@@ -8262,8 +8271,12 @@ do
                             append( "-- Talents" )
                             append( "spec:RegisterTalents( {" )
                             increaseIndent()
+                            append( "-- " .. playerClass )
 
-                            table.sort( talents, function( a, b ) return a.name < b.name end )
+                            table.sort( talents, function( a, b )
+                                if a.specialization ~= b.specialization then return b.specialization end
+                                return a.name < b.name
+                            end )
 
                             local max_talent_length = 10
 
@@ -8274,8 +8287,15 @@ do
 
                             local formatStr = "%-" .. max_talent_length .. "s = { %5d, %-6d, %d }, -- %s"
 
+                            local classes = true
+
                             for i, tal in ipairs( talents ) do
-                                local line = format( formatStr, tal.name, tal.talent, tal.spell, tal.ranks or 0, GetSpellDescription( tal.spell ):gsub( "\n", " " ):gsub( "\r", " " ):gsub( "%s+", " " ) )
+                                if classes and tal.specialization then
+                                    classes = false
+                                    append( "" )
+                                    append( "-- " .. playerSpec )
+                                end
+                                local line = format( formatStr, tal.name, tal.talent, tal.spell, tal.ranks or 0, GetSpellDescription( tal.spell ):gsub( "\n", " " ):gsub( "\r", " " ):gsub( "%s%s+", " " ) )
                                 append( line )
                             end
 
@@ -8295,7 +8315,7 @@ do
                             local formatPvp = "%-" .. max_pvptalent_length .. "s = %-4d, -- (%d) %s"
 
                             for i, tal in ipairs( pvptalents ) do
-                                append( format( formatPvp, tal.name, tal.talent, tal.spell, GetSpellDescription( tal.spell ):gsub( "\n", " " ):gsub( "\r", " " ):gsub( "%s+", " " ) ) )
+                                append( format( formatPvp, tal.name, tal.talent, tal.spell, GetSpellDescription( tal.spell ):gsub( "\n", " " ):gsub( "\r", " " ):gsub( "%s%s+", " " ) ) )
                             end
                             decreaseIndent()
                             append( "} )\n\n" )
@@ -8305,11 +8325,7 @@ do
                             increaseIndent()
 
                             for k, aura in orderedPairs( auras ) do
-                                local desc = aura.id and GetSpellDescription( aura.id )
-                                if desc then
-                                    desc = desc:gsub( "\n", " " ):gsub( "\r", " " ):gsub( "%s+", " " )
-                                    append( "-- " .. desc )
-                                end
+                                if aura.desc then append( "-- " .. aura.desc ) end
                                 append( k .. " = {" )
                                 increaseIndent()
                                 append( "id = " .. aura.id .. "," )
@@ -8338,8 +8354,8 @@ do
 
                             local count = 1
                             for k, a in orderedPairs( abilities ) do
-                                if count > 1 then append( "\n" ) end
                                 count = count + 1
+                                if a.desc then append( "-- " .. a.desc ) end
                                 append( k .. " = {" )
                                 increaseIndent()
                                 appendAttr( a, "id" )
@@ -8421,7 +8437,7 @@ do
                             -- append( select( 2, GetSpecializationInfo(GetSpecialization())) .. "\nKey\tID\tIs Aura\tIs Ability\tIs Talent\tIs PvP" )
                             for k,v in orderedPairs( aggregate ) do
                                 if v.id then
-                                    append( k .. "\t" .. v.id .. "\t" .. ( v.aura and "Yes" or "No" ) .. "\t" .. ( v.ability and "Yes" or "No" ) .. "\t" .. ( v.talent and "Yes" or "No" ) .. "\t" .. ( v.pvptalent and "Yes" or "No" ) .. "\t" .. ( v.desc or GetSpellDescription( v.id ) or "" ):gsub( "\r", "" ):gsub( "\n", "" ) )
+                                    append( k .. "\t" .. v.id .. "\t" .. ( v.aura and "Yes" or "No" ) .. "\t" .. ( v.ability and "Yes" or "No" ) .. "\t" .. ( v.talent and "Yes" or "No" ) .. "\t" .. ( v.pvptalent and "Yes" or "No" ) .. "\t" .. ( v.desc or GetSpellDescription( v.id ) or "" ):gsub( "\r", " " ):gsub( "\n", " " ):gsub( "%s%s+", " " ) )
                                 end
                             end
                         end
@@ -10076,13 +10092,12 @@ do
         { "rune_word%.([%w_]+)%.enabled"                , "buff.rune_word_%1.up"            },
         { "conduit%.([%w_]+)"                           , "conduit.%1.enabled"              },
         { "soulbind%.([%w_]+)"                          , "soulbind.%1.enabled"             },
-        { "pet.([%w_]+)%.([%w_]+)%.([%w%._]+)"          , "%3"                              },
+        { "pet.[%w_]+%.([%w_]+)%.([%w%._]+)"            , "%1.%2"                           },
         { "essence%.([%w_]+).rank(%d)"                  , "essence.%1.rank>=%2"             },
         { "target%.1%.time_to_die"                      , "time_to_die"                     },
         { "time_to_pct_(%d+)%.remains"                  , "time_to_pct_%1"                  },
         { "trinket%.(%d)%.([%w%._]+)"                   , "trinket.t%1.%2"                  },
         { "trinket%.([%w_]+)%.cooldown"                 , "trinket.%1.cooldown.duration"    },
-        { "trinket%.([%w_]+)%.cooldown.([%w_]+)"        , "trinket.%1.cooldown.%2"          },
         { "trinket%.([%w_]+)%.proc%.([%w_]+)%.duration" , "trinket.%1.buff_duration"        },
         { "trinket%.([%w_]+)%.proc%.([%w_]+)%.[%w_]+"   , "trinket.%1.has_use_buff"         },
         { "trinket%.([%w_]+)%.has_buff%.([%w_]+)"       , "trinket.%1.has_use_buff"         },
@@ -10107,6 +10122,15 @@ do
 
             return "equipped[" .. item .. "]"
         end },
+
+        { "trinket%.([%w_]+)%.cooldown%.([%w_]+)", nil, function( trinket, token )
+            if class.abilities[ trinket ] then
+                return "cooldown." .. trinket .. "." .. token
+            end
+
+            return "trinket." .. trinket .. ".cooldown." .. token
+        end,  },
+
     }
 
     local operations = {
@@ -10180,9 +10204,9 @@ do
                             end
                         end
                     elseif subs[3] then
-                        local val = token:match( "^" .. subs[1] .. "$" )
+                        local val, v2, v3, v4, v5 = token:match( "^" .. subs[1] .. "$" )
                         if val ~= nil then
-                            token = subs[3]( val )
+                            token = subs[3]( val, v2, v3, v4, v5 )
                             insert( warnings, "Line " .. line .. ": Converted '" .. pre .. "' to '" .. token .. "'." )
                         end
                     end

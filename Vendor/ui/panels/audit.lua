@@ -115,20 +115,20 @@ function AuditItem:OnEnter()
 		GameTooltip:AddDoubleLine("  " .. L.OPTIONS_AUDIT_TT_PROFILE, profile, 
 			labelColor.r, labelColor.g, labelColor.b,
 			HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
-		--[==[@debug@
+		--[===[@debug@
 		GameTooltip:AddDoubleLine("  ProfileId:", profileId, 
 			labelColor.r, labelColor.g, labelColor.b,
 			HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
-		--@end-debug@]==]
+		--@end-debug@]===]
 		GameTooltip:AddDoubleLine("  " .. L.OPTIONS_AUDIT_TT_RULE, model.RuleName, 
 			labelColor.r, labelColor.g, labelColor.b,
 			ruleColor.r, ruleColor.g, ruleColor.b)
-		--[==[@debug@
+		--[===[@debug@
 		GameTooltip:AddDoubleLine("  RuleId:", model.RuleId, 
 			labelColor.r, labelColor.g, labelColor.b,
 			ruleColor.r, ruleColor.g, ruleColor.b)
 
-		--@end-debug@]==]
+		--@end-debug@]===]
 		GameTooltip:Show()
 	end	
 end

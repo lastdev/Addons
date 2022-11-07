@@ -17,7 +17,7 @@ local PROFILE_KEEP_RULES = "rules:keep";
 local PROFILE_DESTROY_RULES = "rules:destroy";
 local PROFILE_HIDDEN_RULES = "rules:hidden"
 local PROFILE_VERSION = "profile:version";
-local CURRENT_VERSION = 1;
+local CURRENT_VERSION = 2;
 local PROFILE_INTERFACEVERSION = "profile:interface";
 local INTERFACE_VERSION = select(4, GetBuildInfo());
 
@@ -51,9 +51,9 @@ function Profile:GetRules(ruleType)
 		return self:GetValue(key) or {};
 	end
 
-	--[==[@debug@
+	--[===[@debug@
 	error(string.format("Unable to retrieve rules '%s' as it is invalid.", ruleType));
-	--@end-debug@]==]
+	--@end-debug@]===]
 	return {};
 end
 
@@ -72,9 +72,9 @@ function Profile:SetRules(ruleType, config)
 		return;
 	end
 
-	--[==[@debug@
+	--[===[@debug@
 	error(string.format("There is not a rule type '%s'", ruleType));
-	--@end-debug@]==]
+	--@end-debug@]===]
 end 
 
 --[[===========================================================================
@@ -101,9 +101,9 @@ function Profile:GetList(listType)
 		return self:GetValue(key) or {};
 	end
 
-	--[==[@debug@
+	--[===[@debug@
 	error(string.format("There is no '%s' list", listType));
-	--@end-debug@]==]
+	--@end-debug@]===]
 
 	return {};
 end
@@ -120,9 +120,9 @@ function Profile:SetList(listType, list)
 		return;
 	end
 
-	--[==[@debug@
+	--[===[@debug@
 	error(string.format("There is no '%s' list", listType));
-	--@end-debug@]==]
+	--@end-debug@]===]
 end
 
 --[[===========================================================================
@@ -259,7 +259,43 @@ end
 
 
 function Addon:OnCheckProfileMigration(profile)
-	-- Current a no-op
+	Addon:Debug("profile", "In CheckMigration for Profile: " .. profile:GetName());
+	local version = profile:GetValue(PROFILE_VERSION)
+	Addon:Debug("profile", "Profile Version: " .. tostring(version));
+
+	-- No-op for current version.
+	if version == CURRENT_VERSION then
+		Addon:Debug("profile", "Profile is current, skipping migration.");
+		return
+	end
+
+	-- Migrate new cosmetic sys rule to be on by default. 
+	if version < 2 then
+		Addon:Debug("profile", "Migrating cosmetic sys rule...");
+		local keeprules = profile:GetValue(PROFILE_KEEP_RULES)
+
+		-- Remove old cosmetic rule from the rulepack.
+		local index = nil
+		for k,v in pairs(keeprules) do
+			if v == "e[rulepack.cosmetic]" then
+				index = k
+				break
+			end
+		end
+		table.remove(keeprules, index)
+
+		-- Add new keep rule replacement.
+		table.insert(keeprules, "keep.cosmetic")
+
+		-- Update the keeprules.
+		profile:SetValue(PROFILE_KEEP_RULES, keeprules)
+		profile:SetValue(Addon.c_Config_MerchantButton, true)
+		profile:SetValue(Addon.c_Config_Minimap, true)
+	end
+
+	-- Profile version is now migrated, update to current.
+	profile:SetValue(PROFILE_VERSION, CURRENT_VERSION)
+	Addon:Debug("profile", "Profile Migration Complete.");
 end
 
 Addon.Profile = Profile;

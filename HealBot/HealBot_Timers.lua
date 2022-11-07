@@ -669,6 +669,10 @@ function HealBot_Timers_PluginsSet(tId)
         HealBot_Timers_Set("INIT","PrepSetAllAttribs",0.5)
     elseif tId==4 then
         HealBot_Timers_Set("LAST","InitBinds",0.1)
+    elseif tId==5 then
+        HealBot_Timers_Set("AURA","ResetBuffCache",0.1)
+    elseif tId==6 then
+        HealBot_Timers_Set("AURA","ResetDebuffCache",0.1)
     end
 end
 

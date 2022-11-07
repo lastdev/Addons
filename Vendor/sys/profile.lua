@@ -1,6 +1,7 @@
 local AddonName, Addon = ...;
 local profilesVariable = Addon.SavedVariable:new("Profiles");
 local Profile = {};
+local PROFILE_CHANGED = Addon.Events.PROFILE_CHANGED
 
 --[[===========================================================================
    | Retrieves the ID for this profile.
@@ -24,6 +25,10 @@ function Profile:SetActive(active)
 	self.active = (active == true);
 end
 
+function Profile:SetDefaultValueSource(source)
+	self.defaults = source
+end
+
 --[[===========================================================================
    | Called to raise the "OnChanged" event for this profile, gated to handle
    | collesing duplictes.
@@ -39,6 +44,7 @@ function Profile:RaiseOnChanged()
 			function() 
 				self.timer = false;
 				self:TriggerEvent("OnChanged", self);
+				Addon:RaiseEvent(PROFILE_CHANGED, self)
 			end);
 	end	
 end
@@ -48,11 +54,11 @@ end
    ==========================================================================]]
 function Profile:SetValue(key, value)
 	local var = profilesVariable:Get(self.profileId) or {};
-	--[==[@debug@
+	--[===[@debug@
 	assert(type(key) == "string", "The profile key must be a string value: " .. tostring(key));
-	--@end-debug@]==]
+	--@end-debug@]===]
 
-	if (var[key] ~= value) then
+	if ((var[key] ~= value) or (type(value) ~= type(var[key]))) then
 		if (type(value) ~= "table") then		
 			var[key] = value;
 		else
@@ -72,13 +78,19 @@ end
 function Profile:GetValue(key, value)
 	local var = profilesVariable:Get(self.profileId) or {};
 
-	--[==[@debug@--
+	--[===[@debug@--
 	assert(type(key) == "string", "The profile key must be a string value");
-	--@end-debug@]==]
+	--@end-debug@]===]
 
 	local value = var[key];
 	if (value == nil) then
-		return default;
+		if (type(self.defaults) == "table" and table.hasKey(key)) then
+			Addon:Debug("Value '%s' was requested but is not present but there is a default value", key)
+			local default = self.default[key]
+			self:SetValue(key, default)
+		end
+
+		return nil;
 	end
 	
 	if (type(value) == "table") then
@@ -114,6 +126,7 @@ local function CreateProfile(id)
 		profileId = id or string.format("%s:%d%04d", AddonName, time(), math.floor(math.random() * 1000)),
 		active = false,
 		timer = false,
+		defaults = nil,
 	};
 	
 	-- Create our object and return it

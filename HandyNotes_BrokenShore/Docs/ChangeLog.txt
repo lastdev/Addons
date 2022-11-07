@@ -1,7 +1,11 @@
-$Id: ChangeLog.txt 139 2022-08-17 15:03:33Z arithmandar $
+$Id: ChangeLog.txt 141 2022-11-03 15:44:47Z arithmandar $
 
 Revision History:
 =================
+
+* v1.50 (Nov. 03, 2022)
+-----------------------
+- Toc update to support WoW 10.0.0
 
 * v1.49 (Aug. 17, 2022)
 -----------------------

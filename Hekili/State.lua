@@ -772,8 +772,18 @@ do
             return
         end
 
-        if cDebuff.up then
+        if cDebuff.up and not ability.cycle_to then
+            -- We want to target enemies with this debuff.
             cycle.expires = cDebuff.expires
+            cycle.minTTD  = max( state.settings.cycle_min, ability.min_ttd or 0, cDebuff.duration / 2 )
+            cycle.maxTTD  = ability.max_ttd
+
+            cycle.aura = aura
+
+            if not quiet then
+                debug( " - we will use the ability on a different target, if available, until %s expires at %.2f [+%.2f].", cycle.aura, cycle.expires, cycle.expires - state.query_time )
+            end
+        elseif cDebuff.down and ability.cycle_to and active_dot[ aura ] > 0 then
             cycle.minTTD  = max( state.settings.cycle_min, ability.min_ttd or 0, cDebuff.duration / 2 )
             cycle.maxTTD  = ability.max_ttd
 
@@ -1157,9 +1167,9 @@ function state.channelSpell( name, start, duration, id )
             duration = duration or ability.cast
         end
 
-        if not duration then return end
+        if not duration or duration == 0 then return end
 
-        applyBuff( "casting", duration, nil, id or ( ability and ability.id ) or 0, nil, true, start )
+        applyBuff( "casting", duration, nil, id or ( ability and ability.id ) or 0, nil, 1, start )
     end
 end
 
@@ -1308,8 +1318,6 @@ do
                     ( not v.swing     or state.swings[ v.swing .. "_speed" ] and state.swings[ v.swing .. "_speed" ] > 0 ) and
                     ( not v.channel   or state.buff.casting.up and state.buff.casting.v3 == 1 and state.buff.casting.v1 == class.abilities[ v.channel ].id ) then
 
-                    local r = state[ v.resource ]
-
                     local l = v.last()
                     local i = type( v.interval ) == "number" and v.interval or ( type( v.interval ) == "function" and v.interval( now, r.actual ) or ( type( v.interval ) == "string" and state[ v.interval ] or 0 ) )
                     -- local i = roundDown( type( v.interval ) == "number" and v.interval or ( type( v.interval ) == "function" and v.interval( now, r.actual ) or ( type( v.interval ) == "string" and state[ v.interval ] or 0 ) ), 2 )
@@ -1330,10 +1338,11 @@ do
 
         local prev = now
         local iter = 0
+        local regen = r.regen > 0.001 and r.regen or 0
 
         while( #events > 0 and now <= finish and iter < 20 ) do
             local e = events[1]
-            local r = state[ e.resource ]
+
             iter = iter + 1
 
             if e.next > finish or not r or not r.actual then
@@ -1342,7 +1351,7 @@ do
             else
                 now = e.next
 
-                local bonus = r.regen * ( now - prev )
+                local bonus = regen * ( now - prev )
 
                 local stop = e.stop and e.stop( r.forecast[ r.fcount ].v )
                 local aura = e.aura and state[ e.debuff and "debuff" or "buff" ][ e.aura ].expires < now
@@ -1404,15 +1413,14 @@ do
             if #events > 1 then sort( events, resourceModelSort ) end
         end
 
-        if r.regen > 0 and r.forecast[ r.fcount ].v < r.max then
+        if regen > 0 and r.forecast[ r.fcount ].v < r.max then
             for k, v in pairs( remains ) do
-                local r = state[ k ]
                 local val = r.fcount > 0 and r.forecast[ r.fcount ].v or r.actual
                 local idx = r.fcount + 1
 
                 r.forecast[ idx ] = r.forecast[ idx ] or {}
                 r.forecast[ idx ].t = finish
-                r.forecast[ idx ].v = min( r.max, val + ( v * r.regen ) )
+                r.forecast[ idx ].v = min( r.max, val + ( v * regen ) )
                 r.fcount = idx
             end
         end
@@ -2108,8 +2116,12 @@ do
             if k == "action_cooldown" then return ability and ability.cooldown or 0
             elseif k == "cast_delay" then return 0
             elseif k == "cast_regen" then
-                if not ability then return t.gcd.execute * t[ ability.spendType or class.primaryResource ].regen end
-                return ( max( t.gcd.execute, ability.cast or 0 ) * t[ ability.spendType or class.primaryResource ].regen ) - ( ability.spend or 0 )
+                local regen = t[ ability and ability.spendType or class.primaryResource ].regen
+                if regen == 0.001 then regen = 0 end
+                if not ability then
+                    return t.gcd.execute * regen
+                end
+                return ( max( t.gcd.execute, ability.cast or 0 ) * regen ) - ( ability.spend or 0 )
 
             elseif k == "cast_time" then return ability and ability.cast or 0
             elseif k == "charges" then return cooldown.charges
@@ -3213,11 +3225,12 @@ end
 
 function state:CombinedResourceRegen( t )
     local regen = t.regen
+    if regen == 0.001 then regen = 0 end
 
     local model = t.regenModel
     if not model then return regen end
 
-    for name, source in pairs( model ) do
+    for _, source in pairs( model ) do
         local value = type( source.value ) == "function" and source.value() or source.value
         local interval = type( source.interval ) == "function" and source.interval() or source.interval
 
@@ -3246,13 +3259,15 @@ function state:TimeToResource( t, amount )
         lastTick = t.last_tick
     end
 
-    local index, slice
+    local regen, slice = t.regen, nil
+    if regen == 0.001 then regen = 0 end
+
     if t.forecast and t.fcount > 0 then
         local q = state.query_time
 
         if t.times[ amount ] then return t.times[ amount ] - q end
 
-        if t.regen == 0 then
+        if regen == 0 then
             for i = 1, t.fcount do
                 local v = t.forecast[ i ]
                 if v.v >= amount then
@@ -3282,7 +3297,7 @@ function state:TimeToResource( t, amount )
                 -- Our next slice will have enough resources.  Check to see if we'd regen enough in-between.
                 local time_diff = after.t - slice.t
                 local deficit = amount - slice.v
-                local regen_time = deficit / t.regen
+                local regen_time = deficit / regen
 
                 if lastTick then
                     pad = ( slice.t - lastTick ) % 0.1
@@ -3308,8 +3323,8 @@ function state:TimeToResource( t, amount )
         pad = 0.1 - pad
     end
 
-    if t.regen <= 0 then return 3600 end
-    return max( 0, pad + ( ( amount - t.current ) / t.regen ) )
+    if regen <= 0 then return 3600 end
+    return max( 0, pad + ( ( amount - t.current ) / regen ) )
 end
 
 
@@ -3333,6 +3348,9 @@ local mt_resource = {
             return 100 - t.pct
 
         elseif k == "current" then
+            local regen = t.regen
+            if regen == 0.001 then regen = 0 end
+
             -- If this is a modeled resource, use our lookup system.
             if t.forecast and t.fcount > 0 then
                 local q = state.query_time
@@ -3352,14 +3370,14 @@ local mt_resource = {
 
                 -- We have a slice.
                 if index and slice and slice.v then
-                    t.values[ q ] = max( 0, min( t.max, slice.v + ( ( state.query_time - slice.t ) * t.regen ) ) )
+                    t.values[ q ] = max( 0, min( t.max, slice.v + ( ( state.query_time - slice.t ) * regen ) ) )
                     return t.values[ q ]
                 end
             end
 
             -- No forecast.
-            if t.regen ~= 0 then
-                return max( 0, min( t.max, t.actual + ( t.regen * state.delay ) ) )
+            if regen ~= 0 then
+                return max( 0, min( t.max, t.actual + ( regen * state.delay ) ) )
             end
 
             return t.actual
@@ -3392,7 +3410,9 @@ local mt_resource = {
             return ( state.time > 0 and t.active_regen or t.inactive_regen ) or 0
 
         elseif k == "regen_combined" then
-            return max( t.regen, state:CombinedResourceRegen( t ) )
+            local regen = t.regen
+            if regen == 0.001 then regen = 0 end
+            return max( regen, state:CombinedResourceRegen( t ) )
 
         elseif k == "modmax" then
             return t.max
@@ -4923,7 +4943,10 @@ local mt_default_action = {
             return 0
 
         elseif k == "cast_regen" then
-            return floor( max( state.gcd.execute, t.cast_time ) * state[ class.primaryResource ].regen ) - t.cost
+            local regen = t.regen
+            if regen == 0.001 then regen = 0 end
+
+            return floor( max( state.gcd.execute, t.cast_time ) * regen ) - t.cost
 
         elseif k == "cost" then
             if ability then
@@ -6200,7 +6223,7 @@ do
         state.health.current = nil
         state.health.actual = UnitHealth( "player" ) or 10000
         state.health.max = max( 1, UnitHealthMax( "player" ) or 10000 )
-        state.health.regen = 0
+        state.health.regen = 0.001
 
         -- TODO: All of this stuff for swings is terrible.
         state.swings.mh_speed, state.swings.oh_speed = UnitAttackSpeed( "player" )
@@ -6443,8 +6466,11 @@ function state.advance( time )
         if not resource.regenModel then
             local override = ns.callHook( "advance_resource_regen", false, k, time )
 
-            if not override and resource.regen and resource.regen ~= 0 then
-                resource.actual = min( resource.max, max( 0, resource.actual + ( resource.regen * time ) ) )
+            local regen = resource.regen
+            if regen == 0.001 then regen = 0 end
+
+            if not override and resource.regen and regen ~= 0 then
+                resource.actual = min( resource.max, max( 0, resource.actual + ( regen * time ) ) )
             end
         else
             -- revisit this, may want to forecastResources( k ) instead.
@@ -6509,19 +6535,6 @@ function state.GetResourceType( ability )
 end
 
 
-local hysteria_resources = {
-    mana            = true,
-    rage            = true,
-    focus           = true,
-    energy          = true,
-    runic_power     = true,
-    astral_power    = true,
-    maelstrom       = true,
-    insanity        = true,
-    fury            = true,
-    pain            = true
-}
-
 ns.spendResources = function( ability )
     local action = class.abilities[ ability ]
 
@@ -6544,10 +6557,6 @@ ns.spendResources = function( ability )
 
         if cost > 0 and cost < 1 then
             cost = ( cost * state[ resource ].modmax )
-        end
-
-        if state.debuff.hysteria.up and hysteria_resources[ resource ] then
-            cost = cost + ( .03 * state.debuff.hysteria.stack * cost )
         end
 
         if cost ~= 0 then
@@ -7006,25 +7015,8 @@ local function profilestop( name, reset )
 end ]]
 
 
-local ttrCache = {}
-local ttrPoolCache = {}
-local ttrCacheTime = 0
-
 function state:TimeToReady( action, pool )
     local now = self.now + self.offset
-
-    if now ~= ttrCacheTime then
-        table.wipe( ttrCache )
-        table.wipe( ttrPoolCache )
-        ttrCacheTime = now
-    else
-        if pool and ttrPoolCache[ action ] then
-            return max( ttrPoolCache[ action ] - self.query_time, self.delayMin )
-        elseif ttrCache[ action ] then
-            return max( ttrCache[ action ] - self.query_time, self.delayMin )
-        end
-    end
-
     action = action or self.this_action
 
     local delay = state.delay
@@ -7033,8 +7025,6 @@ function state:TimeToReady( action, pool )
     -- Need to ignore the wait for this part.
     local wait = self.cooldown[ action ].remains
     local ability = class.abilities[ action ]
-
-    local lastCast = ability.lastCast
 
     -- Working variable.
     local z = ability.id
@@ -7053,23 +7043,6 @@ function state:TimeToReady( action, pool )
         end
     end
 
-    local line_cd = state.args.line_cd
-    if ( line_cd and type( line_cd ) == "number" ) then
-        if lastCast > self.combat then
-            if Hekili.Debug then Hekili:Debug( "Line CD is " .. line_cd .. ", last cast was " .. lastCast .. ", remaining CD: " .. max( 0, lastCast + line_cd - now ) ) end
-            wait = max( wait, lastCast + line_cd - now )
-        end
-    end
-
-    local sync = state.args.sync
-    local synced = sync and class.abilities[ sync ]
-
-    if synced and sync ~= action and state:IsKnown( sync ) then
-        wait = max( wait, state:TimeToReady( sync ) )
-    end
-
-    wait = ns.callHook( "TimeToReady", wait, action )
-
     local spend, resource = ability.spend
     if spend then
         if type( spend ) == "number" then
@@ -7080,10 +7053,6 @@ function state:TimeToReady( action, pool )
         end
 
         spend = spend or 0
-
-        --[[ if state.debuff.hysteria.up and resource and hysteria_resources[ resource ] then
-            spend = spend * ( 1 + 0.03 * state.debuff.hysteria.stack )
-        end ]]
     end
 
     if spend and resource and spend > 0 and spend < 1 then
@@ -7105,7 +7074,7 @@ function state:TimeToReady( action, pool )
     -- Okay, so we don't have enough of the resource.
     z = resource and self[ resource ]
     z = z and z[ "time_to_" .. spend ]
-    if spend and z then
+    if spend and z and z > wait then
         wait = max( wait, ceil( z * 100 ) / 100 )
     end
 
@@ -7128,11 +7097,6 @@ function state:TimeToReady( action, pool )
     end
     profilestop( "post-repeat" ) ]]
 
-    z = ability.icd
-    z = z and z + lastCast - now
-    if z and z > wait then
-        wait = z
-    end
 
     -- If ready is a function, it returns time.
     -- Ignore this if we are just checking pool_resources.
@@ -7147,11 +7111,30 @@ function state:TimeToReady( action, pool )
         wait = z
     end
 
-    if pool then
-        ttrPoolCache[ action ] = now + wait
-    else
-        ttrCache[ action ] = now + wait
+    local lastCast = ability.lastCast
+
+    z = ability.icd
+    z = z and z + lastCast - now
+    if z and z > wait then
+        wait = z
     end
+
+    local line_cd = state.args.line_cd
+    if ( line_cd and type( line_cd ) == "number" ) then
+        if lastCast > self.combat then
+            if Hekili.Debug then Hekili:Debug( "Line CD is " .. line_cd .. ", last cast was " .. lastCast .. ", remaining CD: " .. max( 0, lastCast + line_cd - now ) ) end
+            wait = max( wait, lastCast + line_cd - now )
+        end
+    end
+
+    local sync = state.args.sync
+    local synced = sync and class.abilities[ sync ]
+
+    if synced and sync ~= action and state:IsKnown( sync ) then
+        wait = max( wait, state:TimeToReady( sync ) )
+    end
+
+    wait = ns.callHook( "TimeToReady", wait, action )
 
     state.delay = delay
     return max( wait, self.delayMin )

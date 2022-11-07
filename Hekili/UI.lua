@@ -750,6 +750,8 @@ do
 
     if LSF then
         hooksecurefunc( LSF, "FlashFrame", function( frame )
+            local flash = frame and frame.SpellFlashCoreAddonFlashFrame
+
             -- We need to know what flashed so we can force it to stop flashing when the recommendation changes.
             if catchFlash and flash then
                 lastFramesFlashed[ flash ] = 1
@@ -842,18 +844,8 @@ do
         d:SetScale( UIParent:GetScale() ) ]]
         d:ClearAllPoints()
 
-        local frame
-
-        --[[ if conf.relativeTo == "CUSTOM" then
-            frame = _G[ conf.customFrame ]
-        elseif conf.relativeTo == "PERSONAL" then
-            frame = C_NamePlate.GetNamePlateForUnit( "player" )
-        end ]]
-
-        if not frame then frame = UIParent end
-
-        d:SetPoint( "CENTER", frame, "CENTER", conf.x or 0, conf.y or -225 )
-        d:SetParent( frame )
+        d:SetPoint( "CENTER", UIParent, "CENTER", conf.x or 0, conf.y or -225 )
+        d:SetParent( UIParent )
 
         d:SetFrameStrata( conf.frameStrata or "MEDIUM" )
         d:SetFrameLevel( conf.frameLevel or ( 10 * d.index ) )
@@ -1223,7 +1215,7 @@ do
                         if ability.item then
                             local iname = LSF.ItemName( ability.item )
                             if LSF.Flashable( iname ) then
-                                LSF.FlashItem( iname, self.flashColor, conf.flash.size, conf.flash.brightness, conf.flash.blink, nil, conf.flash.texture, conf.flash.fixedSize, conf.flash.fixedBrightness )
+                                LSF.FlashItem( iname, self.flashColor, conf.flash.size, conf.flash.brightness, conf.flash.blink, nil, profile.flashTexture, conf.flash.fixedSize, conf.flash.fixedBrightness )
                             elseif conf.flash.suppress and not self.flashWarnings[ iname ] then
                                 self.flashWarnings[ iname ] = true
                                 -- Hekili:Error( "|cffff0000WARNING|r - Could not flash recommended item '" .. iname .. "' (" .. self.id .. ")." )
@@ -1248,7 +1240,7 @@ do
                                 end
 
                                 if flashable then
-                                    LSF.FlashAction( aFlash, self.flashColor, conf.flash.size, conf.flash.brightness, conf.flash.blink, nil, conf.flash.texture, conf.flash.fixedSize, conf.flash.fixedBrightness )
+                                    LSF.FlashAction( aFlash, self.flashColor, conf.flash.size, conf.flash.brightness, conf.flash.blink, nil, profile.flashTexture, conf.flash.fixedSize, conf.flash.fixedBrightness )
                                 elseif conf.flash.suppress and not self.flashWarnings[ aFlash ] then
                                     self.flashWarnings[ aFlash ] = true
                                     -- Hekili:Error( "|cffff0000WARNING|r - Could not flash recommended action '" .. aFlash .. "' (" .. self.id .. ")." )
@@ -1264,7 +1256,7 @@ do
 
                                 if sname then
                                     if LSF.Flashable( sname ) then
-                                        LSF.FlashAction( sname, self.flashColor, conf.flash.size, conf.flash.brightness, conf.flash.blink, nil, conf.flash.texture, conf.flash.fixedSize, conf.flash.fixedBrightness )
+                                        LSF.FlashAction( sname, self.flashColor, conf.flash.size, conf.flash.brightness, conf.flash.blink, nil, profile.flashTexture, conf.flash.fixedSize, conf.flash.fixedBrightness )
                                     elseif not self.flashWarnings[ sname ] then
                                         self.flashWarnings[ sname ] = true
                                         -- Hekili:Error( "|cffff0000WARNING|r - Could not flash recommended ability '" .. sname .. "' (" .. self.id .. ")." )
@@ -2150,7 +2142,7 @@ do
                 if coroutine.status( thread ) == "dead" or err then
 
                     if Hekili.ActiveDebug then
-                        Hekili:Debug( format( "Recommendation thread for %s terminated due to error: %s", self.id, err and err:gsub( "%%", "%%%%" ) or "Unknown" ) )
+                        Hekili:Debug( format( "Recommendation thread terminated due to error: %s", err and err:gsub( "%%", "%%%%" ) or "Unknown" ) )
                         Hekili:SaveDebugSnapshot( self.id )
                         Hekili.ActiveDebug = nil
                     end

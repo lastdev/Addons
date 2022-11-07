@@ -1091,6 +1091,7 @@ function addon:getPseudorandomLashOut(follower, field)
         {alive = {0, 1, 6, 7, 11}, target = 1},
         {alive = {1, 7}, target = 7},
         {alive = {0, 1, 9, 12}, target = 12},
+        {alive = {0, 1, 4, 9, 11}, target = 1},
     }
     
     local aliveMinions = {}

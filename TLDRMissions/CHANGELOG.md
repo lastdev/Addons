@@ -1,11 +1,10 @@
 # TL;DR Missions
 
-##  (2022-10-27)
+##  (2022-11-03)
  
 
 - Update TLDRMissions.toc  
-- Buff dispel sorting issue  
-    Closes https://github.com/TLDRMissions/TLDRMissions/issues/592  
-- Error check for testing code  
-- Cleanup  
 - 2224  
+    https://github.com/TLDRMissions/TLDRMissions/issues/120#issuecomment-1301699687  
+- Update zhcn.lua  
+    https://github.com/TLDRMissions/TLDRMissions/pull/596  

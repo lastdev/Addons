@@ -2,6 +2,6 @@
 ## Title: |cffEEE4AEKaty Stampwhistle|r
 ## Notes: |cff58C6FAOpen the Mailbox when interacting with Katy Stampwhistle.|r
 ## Author: Yuyuli
-## Version: 1.1.4
+## Version: 1.1.5
 
 KatyStampwhistle.lua

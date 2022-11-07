@@ -263,9 +263,18 @@ Rules.SystemRules =
         Type = KEEP_RULE,
         Name = L["SYSRULE_KEEP_UNKNOWNAPPEARANCE"],
         Description = L["SYSRULE_KEEP_UNKNOWNAPPEARANCE_DESC"],
-        ScriptText = "IsUnknownAppearance",
-        Script = function() return IsUnknownAppearance end,
+        ScriptText = "IsCollectable",
+        Script = function() return IsCollectable end,
         Order = 1200,
+    },
+    {
+        Id = "keep.cosmetic",
+        Type = KEEP_RULE,
+        Name = L["SYSRULE_KEEP_COSMETIC"],
+        Description = L["SYSRULE_KEEP_COSMETIC_DESC"],
+        ScriptText = "IsCosmetic and (IsBindOnEquip or IsBindOnAccount)",
+        Script = function() return IsCosmetic and (IsBindOnEquip or IsAccountBound) end,
+        Order = 1250,
     },
     --@end-retail@
 
@@ -275,8 +284,8 @@ Rules.SystemRules =
         Type = KEEP_RULE,
         Name = L["SYSRULE_KEEP_POTENTIALUPGRADES"],
         Description = L["SYSRULE_KEEP_POTENTIALUPGRADES_DESC"],
-        ScriptText = "IsEquipment and (Level >= math.min(PlayerItemLevel() * .95, PlayerItemLevel() - 5))",
-        Script = function() return IsEquipment and (Level >= math.min(PlayerItemLevel() * .95, PlayerItemLevel() - 5)) end,
+        ScriptText = "IsEquippable and (Level >= math.min(PlayerItemLevel() * .95, PlayerItemLevel() - 5))",
+        Script = function() return IsEquippable and (Level >= math.min(PlayerItemLevel() * .95, PlayerItemLevel() - 5)) end,
         Order = 1275,
     },
 

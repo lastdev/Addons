@@ -25,6 +25,15 @@ Addon.c_Config_SellThrottle = "sell_throttle"
 Addon.c_Config_ThrottleTime = "throttle_time"
 Addon.c_Config_AutoRepair = "autorepair"
 Addon.c_Config_GuildRepair = "guildrepair"
+Addon.c_Config_Minimap = "showminimap"
+Addon.c_Config_MerchantButton = "merchantbutton"
+
+-- Merchant button
+Addon.MerchantButton = {
+    NEVER = 0,
+    ALWAYS = 1,
+    AUTO = 2
+}
 
 -- Rule Types
 Addon.RuleType = {
@@ -52,6 +61,13 @@ Addon.SystemListId = {
     NEVER = "system:never-sell",
     ALWAYS = "system:always-sell",
     DESTROY = "system:always-destroy",
+}
+
+Addon.Events = {
+    AUTO_SELL_START = "auto-sell-start",
+    AUTO_SELL_COMPLETE = "auto-sell-end",
+    AUTO_SELL_ITEM = "auto-sell-item",
+    PROFILE_CHANGED = "profile-changed",
 }
 
 -- Blizzard Color Codes that are not in all versions

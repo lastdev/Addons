@@ -1836,18 +1836,12 @@ elseif baseClass == "ROGUE" then
 
             cycle = "serrated_bone_spike",
 
-            cp_gain = function () return ( buff.broadside.up and 1 or 0 ) + active_dot.serrated_bone_spike end,
+            cp_gain = function () return debuff.dreadblades.up and combo_points.max or ( ( buff.broadside.up and 1 or 0 ) + active_dot.serrated_bone_spike ) end,
 
             handler = function ()
                 applyDebuff( "target", "serrated_bone_spike" )
                 debuff.serrated_bone_spike.exsanguinated_rate = 1
-
-                if set_bonus.tier28_4pc > 0 and debuff.vendetta.up then
-                    debuff.serrated_bone_spike.exsanguinated_rate = 2
-                    debuff.serrated_bone_spike.vendetta_exsg = true
-                end
-
-                gain( ( buff.broadside.up and 1 or 0 ) + active_dot.serrated_bone_spike, "combo_points" )
+                gain( action.serrated_bone_spike.cp_gain, "combo_points" )
                 if soulbind.kevins_oozeling.enabled then applyBuff( "kevins_oozeling" ) end
             end,
 
@@ -1881,32 +1875,7 @@ elseif baseClass == "ROGUE" then
             handler = function ()
                 applyDebuff( "target", "sepsis" )
                 debuff.sepsis.exsanguinated_rate = 1
-
-                if set_bonus.tier28_4pc > 0 and debuff.vendetta.up then
-                    debuff.sepsis.exsanguinated_rate = 2
-                    debuff.sepsis.vendetta_exsg = true
-                end
             end,
-
-            auras = {
-                sepsis = {
-                    id = 328305,
-                    duration = function () return ( set_bonus.tier28_4pc > 0 and debuff.vendetta.up and 0.5 or 1 ) * 10 end,
-                    max_stack = 1,
-                    exsanguinated = false,
-                    meta = {
-                        vendetta_exsg = function( t ) return t.up and tracked_bleeds.sepsis.vendetta[ target.unit ] or false end,
-                        exsanguinated_rate = function( t ) return t.up and tracked_bleeds.sepsis.rate[ target.unit ] or 1 end,
-                        last_tick = function( t ) return t.up and ( tracked_bleeds.sepsis.last_tick[ target.unit ] or t.applied ) or 0 end,
-                        tick_time = function( t ) return t.up and ( haste * 2 / t.exsanguinated_rate ) or ( haste * 2 ) end,
-                    },
-                },
-                sepsis_buff = {
-                    id = 347037,
-                    duration = 5,
-                    max_stack = 1
-                }
-            }
         },
         flagellation = {
             id = 323654,
@@ -1935,7 +1904,7 @@ elseif baseClass == "ROGUE" then
 
             auras = {
                 flagellation = {
-                    id = 323654,
+                    id = 384631,
                     duration = 12,
                     max_stack = 30,
                     generate = function( t, aType )
@@ -1964,7 +1933,7 @@ elseif baseClass == "ROGUE" then
                         t.applied = 0
                         t.caster = "nobody"
                     end,
-                    copy = "flagellation_buff"
+                    copy = { "flagellation_buff", 323654 }
                 },
             },
         },

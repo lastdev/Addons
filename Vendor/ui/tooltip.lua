@@ -95,10 +95,8 @@ function Addon:AddItemTooltipLines(tooltip)
         blocklist = self:GetBlocklistForItem(item.Link)
 
         -- This is for suppressing every other call due to recipe items calling this for the embedded tooltip item also.
-        -- Some items in classic are considered this item type and do not have the recipe fly-out.
-        -- So far these items are all SubTypeId == 0, meaning "Book". There may be more.
         callCount = 0
-        if item and item.TypeId == 9 and item.SubTypeId ~= 0 then
+        if item and item.TypeId == 9 then
             recipe = true
         else
             recipe = false
@@ -156,12 +154,12 @@ function Addon:AddItemTooltipLines(tooltip)
     end
 
 
-    --[==[@debug@
+    --[===[@debug@
     if (ruleId) then
         -- If we had a rule match (make a choice) then add it to the tooltip, if we didn't get a match then
         -- no line means we didn't match anything.
         tooltip:AddLine(string.format("%s RuleId: %s[%s] %s%s",L["ADDON_NAME"], ACHIEVEMENT_COLOR_CODE, ruleType, ruleId, FONT_COLOR_CODE_CLOSE))
     end
-    --@end-debug@]==]
+    --@end-debug@]===]
 end
 

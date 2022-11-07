@@ -181,18 +181,17 @@ local HekiliSpecMixin = {
             timeTo = function( x )
                 return state:TimeToResource( r.state, x )
             end,
+
+            --[[ reset = function()
+                wipe( r.state.times )
+                wipe( r.state.values )
+            end ]]
         }, mt_resource )
         r.state.regenModel = regen
         r.state.meta = meta or {}
 
         for _, func in pairs( r.state.meta ) do
             setfenv( func, state )
-        end
-
-        if model and not model.timeTo then
-            model.timeTo = function( x )
-                return state:TimeToResource( r.state, x )
-            end
         end
 
         if r.state.regenModel then
@@ -1266,6 +1265,101 @@ all:RegisterAuras( {
         duration = 600,
         shared = "player",
         max_stack = 1,
+    },
+
+    blessing_of_the_bronze = {
+        alias = {
+            "blessing_of_the_bronze_evoker",
+            "blessing_of_the_bronze_deathknight",
+            "blessing_of_the_bronze_demonhunter",
+            "blessing_of_the_bronze_druid",
+            "blessing_of_the_bronze_hunter",
+            "blessing_of_the_bronze_mage",
+            "blessing_of_the_bronze_monk",
+            "blessing_of_the_bronze_paladin",
+            "blessing_of_the_bronze_",
+            "blessing_of_the_bronze_",
+            "blessing_of_the_bronze_",
+        },
+        aliasType = "first",
+    },
+    blessing_of_the_bronze_deathknight = {
+        id = 381732,
+        duration = 3600,
+        max_stack = 1,
+        shared = "player"
+    },
+    blessing_of_the_bronze_demonhunter = {
+        id = 381741,
+        duration = 3600,
+        max_stack = 1,
+        shared = "player"
+    },
+    blessing_of_the_bronze_druid = {
+        id = 381746,
+        duration = 3600,
+        max_stack = 1,
+        shared = "player"
+    },
+    blessing_of_the_bronze_evoker = {
+        id = 381748,
+        duration = 3600,
+        max_stack = 1,
+        shared = "player"
+    },
+    blessing_of_the_bronze_hunter = {
+        id = 364342,
+        duration = 3600,
+        max_stack = 1,
+        shared = "player"
+    },
+    blessing_of_the_bronze_mage = {
+        id = 381750,
+        duration = 3600,
+        max_stack = 1,
+        shared = "player"
+    },
+    blessing_of_the_bronze_monk = {
+        id = 381751,
+        duration = 3600,
+        max_stack = 1,
+        shared = "player"
+    },
+    blessing_of_the_bronze_paladin = {
+        id = 381752,
+        duration = 3600,
+        max_stack = 1,
+        shared = "player"
+    },
+    blessing_of_the_bronze_priest = {
+        id = 381753,
+        duration = 3600,
+        max_stack = 1,
+        shared = "player"
+    },
+    blessing_of_the_bronze_rogue = {
+        id = 381754,
+        duration = 3600,
+        max_stack = 1,
+        shared = "player"
+    },
+    blessing_of_the_bronze_shaman = {
+        id = 381756,
+        duration = 3600,
+        max_stack = 1,
+        shared = "player"
+    },
+    blessing_of_the_bronze_warlock = {
+        id = 381757,
+        duration = 3600,
+        max_stack = 1,
+        shared = "player"
+    },
+    blessing_of_the_bronze_warrior = {
+        id = 381758,
+        duration = 3600,
+        max_stack = 1,
+        shared = "player"
     },
 
     power_infusion = {

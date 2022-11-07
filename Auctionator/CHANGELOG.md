@@ -1,8 +1,9 @@
 # Auctionator
 
-## [10.0.3](https://github.com/Auctionator/Auctionator/tree/10.0.3) (2022-10-29)
-[Full Changelog](https://github.com/Auctionator/Auctionator/compare/10.0.2...10.0.3) 
+## [10.0.7](https://github.com/Auctionator/Auctionator/tree/10.0.7) (2022-11-04)
+[Full Changelog](https://github.com/Auctionator/Auctionator/compare/10.0.6...10.0.7) 
 
-- Mainline: Use PLAYER\_INTERACTION\_MANAGER\_FRAME\_SHOW/HIDE events  
-- Remove extra whitespace  
-- [Fixes #1250] Mainline: Selling: Purchase shortcut for commodity has wrong price  
+- Classic: Buy: Abort load all results when changing tabs  
+- Classic: Cancelling: Cancel undercut scan when changing tabs  
+- Crafting Info: Remove unneeded extra visibility checks  
+- Fix error caused by TSM hiding the crafting window  

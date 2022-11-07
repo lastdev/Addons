@@ -68,6 +68,18 @@ function HealBot_Init_FindSpellRangeCast(id, spellName, spellBookId)
         if HEALBOT_GAME_VERSION<4 then 
             local _, rank = GetSpellBookItemName(spellBookId, BOOKTYPE_SPELL)
             cRank = rank
+        elseif spellName==HEALBOT_PURIFY and HealBot_Data["PCLASSTRIM"]=="PRIE" then
+            ttText = getglobal("HealBot_ScanTooltipTextLeft4")
+            if (ttText:GetText()) then
+                local line = ttText:GetText()
+                if line then 
+                    if string.find(line,HEALBOT_DISEASE) then
+                        HealBot_Options_setLuVars("HEALBOT_IMPROVED_PURIFY", true)
+                    else
+                        HealBot_Options_setLuVars("HEALBOT_IMPROVED_PURIFY", false)
+                    end
+                end
+            end
         end
     end
 

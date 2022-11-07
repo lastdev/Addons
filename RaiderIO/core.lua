@@ -1259,6 +1259,70 @@ do
         return true
     end
 
+    ---@param frame Region
+    ---@param parent Region
+    local function IsParentedBy(frame, parent)
+        if type(frame) ~= "table" or type(parent) ~= "table" or type(frame.GetParent) ~= "function" or type(parent.GetParent) ~= "function" then
+            return
+        end
+        local current = frame ---@type Region?
+        while current do
+            ---@diagnostic disable-next-line: need-check-nil
+            current = current:GetParent() ---@type Region?
+            if not current then
+                return false
+            elseif current == parent then
+                return true
+            end
+        end
+    end
+
+    ---@param frame Region @Any interface widget object that supports the methods GetScript.
+    ---@param onEnter fun() @Any function originating from the OnEnter handler.
+    ---@return boolean|nil @If the provided object is not a region or has no function we return `nil`, otherwise `true` that it is safe to call, and `false` that it is unsafe to call its function.
+    local function IsOnEnterSafe(frame, onEnter)
+        if type(frame) ~= "table" or type(frame.GetScript) ~= "function" or type(onEnter) ~= "function" then
+            return
+        end
+        -- the tooltip anchor frame has a helping tooltip that we don't wish to display in any circumstance in this context
+        if frame == _G.RaiderIO_ProfileTooltipAnchor then return end
+        -- LFGListSearchEntry_OnEnter > LFGListUtil_SetSearchEntryTooltip > C_LFGList.GetPlaystyleString
+        if onEnter == _G.LFGListSearchEntry_OnEnter or (frame.resultID and IsParentedBy(frame, _G.LFGListFrame.SearchPanel.ScrollBox)) then return false end
+        -- QuickJoinButtonMixin.OnEnter > .entry.ApplyToTooltip(GameTooltip) > SocialQueueUtil_SetTooltip > LFGListUtil_SetSearchEntryTooltip > C_LFGList.GetPlaystyleString
+        if onEnter == _G.QuickJoinButtonMixin.OnEnter or onEnter == _G.SocialQueueUtil_SetTooltip or (frame.entry and IsParentedBy(frame, _G.QuickJoinFrame.ScrollBox)) then return false end
+        -- anything else is assumed safe (otherwise if not, then we need to expand/adjust the above checklist)
+        return true
+    end
+
+    ---@alias ExecuteWidgetOnEnterSafelyStatus
+    ---| 0 #Region is invalid or doesn't have a script handler.
+    ---| 1 #Script handler ignored due to safety concerns.
+    ---| 2 #Script handler executed successfully.
+    ---| 3 #Script handler executed but silently errored.
+
+    ---@param object Region @Any interface widget object that supports the methods GetScript.
+    ---@param before? fun() @Optional function to run right before the OnEnter script executes.
+    ---@return ExecuteWidgetOnEnterSafelyStatus @Returns a status enum to indicate the outcome of the call.
+    function util:ExecuteWidgetOnEnterSafely(object, before)
+        if type(object) ~= "table" or type(object.GetScript) ~= "function" then
+            return 0
+        end
+        local func = object:GetScript("OnEnter")
+        if type(func) ~= "function" then
+            return 0
+        end
+        if not IsOnEnterSafe(object, func) then
+            return 1
+        end
+        if type(before) == "function" then
+            before()
+        end
+        if not pcall(func, object) then
+            return 3
+        end
+        return 2
+    end
+
     ---@param object Region @Any interface widget object that supports the methods GetOwner.
     ---@param owner Region @Any interface widget object.
     ---@param anchor string @`ANCHOR_TOPLEFT`, `ANCHOR_NONE`, `ANCHOR_CURSOR`, etc.
@@ -4956,25 +5020,6 @@ do
         return false
     end
 
-    ---@param frame Frame @The frame to inspect. Its safe if there are no protected APIs called when the handler is executed.
-    ---@param onEnter function @Optional function, the OnEnter handler that we can also compare against for matches.
-    local function IsSafeFrame(frame, onEnter)
-        local parent = frame:GetParent()
-        -- the tooltip anchor frame doesn't have a OnEnter we can use to re-render the tooltip
-        if frame == _G.RaiderIO_ProfileTooltipAnchor then
-            return false
-        end
-        -- LFGListSearchEntry_OnEnter > LFGListUtil_SetSearchEntryTooltip > C_LFGList.GetPlaystyleString
-        if onEnter == _G.LFGListSearchEntry_OnEnter or (frame.resultID and parent == _G.LFGListSearchPanelScrollFrameScrollChild) then
-            return false
-        end
-        -- QuickJoinButtonMixin.OnEnter > .entry.ApplyToTooltip(GameTooltip) > LFGListUtil_SetSearchEntryTooltip > C_LFGList.GetPlaystyleString
-        if onEnter == _G.QuickJoinButtonMixin.OnEnter or (frame.entry and parent == _G.QuickJoinScrollFrameScrollChild) then
-            return false
-        end
-        return true
-    end
-
     ---@param tooltip GameTooltip
     ---@param state TooltipState
     local function UpdateTooltip(tooltip, state)
@@ -4997,14 +5042,11 @@ do
         local a1, a2, a3 = tooltip:GetAnchorType()
         -- if the owner exists, and has a OnEnter function we simply call that again to force the tooltip to reload and our original hook will update the tooltip with the desired behavior
         if o1 then
-            local oe = o1:GetScript("OnEnter")
-            if oe then
-                if IsSafeFrame(o1, oe) then
-                    tooltip:Hide()
-                    pcall(oe, o1)
-                    return
-                end
+            local status = util:ExecuteWidgetOnEnterSafely(o1, function() tooltip:Hide() end)
+            if status == 1 then
                 return false
+            elseif status == 2 or status == 3 then
+                return
             end
         end
         -- if the owner is the UIParent we must beware as it might be the fading out unit tooltips that linger, we do not wish to update these as we do not have a valid unit anymore for reference so we just don't do anything instead
@@ -5357,7 +5399,7 @@ do
             return
         end
         GameTooltip:Hide()
-        util:ExecuteWidgetHandler(GetMouseFocus(), "OnEnter")
+        util:ExecuteWidgetOnEnterSafely(GetMouseFocus())
     end
 
     function tooltip:OnLoad()
@@ -6355,7 +6397,7 @@ do
 
     local function OnScroll()
         GameTooltip:Hide()
-        util:ExecuteWidgetHandler(GetMouseFocus(), "OnEnter")
+        util:ExecuteWidgetOnEnterSafely(GetMouseFocus())
     end
 
     function OnEnter(self)
@@ -6452,7 +6494,7 @@ do
             return
         end
         GameTooltip:Hide()
-        util:ExecuteWidgetHandler(GetMouseFocus(), "OnEnter")
+        util:ExecuteWidgetOnEnterSafely(GetMouseFocus())
     end
 
     function tooltip:CanLoad()
@@ -6569,7 +6611,7 @@ do
             return
         end
         GameTooltip:Hide()
-        util:ExecuteWidgetHandler(GetMouseFocus(), "OnEnter")
+        util:ExecuteWidgetOnEnterSafely(GetMouseFocus())
     end
 
     function tooltip:CanLoad()
@@ -6932,7 +6974,7 @@ do
         if self:IsMouseOver() then
             local focus = GetMouseFocus()
             if focus and focus ~= GameTooltip:GetOwner() then
-                util:ExecuteWidgetHandler(focus, "OnEnter")
+                util:ExecuteWidgetOnEnterSafely(focus)
             end
         end
 

@@ -107,6 +107,7 @@ function Addon:GetExtensionManger()
 	end
 
 	--[[
+	Extension list testing.
 	if (not mgr:GetList("test.list")) then
 	mgr:RegisterList({ 
 		Name = 'Non-extension'
@@ -117,7 +118,7 @@ function Addon:GetExtensionManger()
 		Id = "test.list",
 	})
 	end
-	]]
+	]]--
 
 	return mgr
 end
