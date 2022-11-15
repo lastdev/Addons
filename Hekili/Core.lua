@@ -809,6 +809,8 @@ function Hekili:GetPredictionFromAPL( dispName, packName, listName, slot, action
                             d = d .. format( "\n%-4s %s ( %s - %d )", rDepth .. ".", ( action .. ":" .. ( state.args.list_name or "unknown" ) ), listName, actID )
                         elseif action == "cancel_buff" then
                             d = d .. format( "\n%-4s %s ( %s - %d )", rDepth .. ".", ( action .. ":" .. ( state.args.buff_name or "unknown" ) ), listName, actID )
+                        elseif action == "cancel_action" then
+                            d = d .. format( "\n%-4s %s ( %s - %d )", rDepth .. ".", ( action .. ":" .. ( state.args.action_name or "unknown" ) ), listName, actID )
                         else
                             d = d .. format( "\n%-4s %s ( %s - %d )", rDepth .. ".", action, listName, actID )
                         end
@@ -1197,7 +1199,7 @@ function Hekili:GetPredictionFromAPL( dispName, packName, listName, slot, action
                                                         end
 
                                                     elseif action == "cancel_action" then
-                                                        if state:IsChanneling() then state.channel_breakable = true end
+                                                        if state.args.action_name and state:IsChanneling( state.args.action_name ) then state.channel_breakable = true end
 
                                                     elseif action == "pool_resource" then
                                                         if state.args.for_next == 1 then
@@ -1308,6 +1310,8 @@ function Hekili:GetPredictionFromAPL( dispName, packName, listName, slot, action
                                                         state.selection_time = state.delay
                                                         state.selected_action = rAction
 
+                                                        slot.empower_to = ability.empowered and ( state.args.empower_to or state.max_empower ) or nil
+
                                                         if debug then
                                                             -- scripts:ImplantDebugData( slot )
                                                             self:Debug( "Action chosen:  %s at %.2f!", rAction, state.delay )
@@ -1318,7 +1322,7 @@ function Hekili:GetPredictionFromAPL( dispName, packName, listName, slot, action
                                                         elseif module and module.cycle then
                                                             slot.indicator = module.cycle()
                                                         end
-                                                        Timer:Track("Action Stored")
+                                                        Timer:Track( "Action Stored" )
                                                     end
                                                 end
 
@@ -1327,8 +1331,9 @@ function Hekili:GetPredictionFromAPL( dispName, packName, listName, slot, action
                                         end
                                     end
 
-                                    if rWait == 0 or force_channel then break end
-
+                                    if rWait == 0 or
+                                        force_channel or
+                                        state.empowerment.active and state.empowerment.spell == rAction then break end
                                 end
                             end
                         end

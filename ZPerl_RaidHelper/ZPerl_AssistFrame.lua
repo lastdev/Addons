@@ -5,7 +5,7 @@
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 919e0f8a150cee048b33cf8ae0873d63cbccab98 $")
+end, "$Revision: 50e769c4305c42360c08e4eba003ac2f06dc3d9a $")
 
 local myClass
 local playerAggro, petAggro
@@ -20,8 +20,12 @@ local GetNumSubgroupMembers = GetNumSubgroupMembers
 
 -- XPerl_Assists_OnLoad(self)
 function XPerl_Assists_OnLoad(self)
-	self:SetMinResize(170, 40)
-	self:SetMaxResize(1000, 600)
+	if self.SetResizeBounds then
+		self:SetResizeBounds(170, 40, 1000, 600)
+	else
+		self:SetMinResize(170, 40)
+		self:SetMaxResize(1000, 600)
+	end
 
 	self:RegisterEvent("VARIABLES_LOADED")
 	self:RegisterEvent("UNIT_TARGET")

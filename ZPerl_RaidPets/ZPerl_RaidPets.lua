@@ -9,10 +9,11 @@ XPerl_RequestConfig(function(New)
 	conf = New
 	raidconf = New.raid
 	rconf = New.raidpet
-end, "$Revision: ba83e40f9d15e0884b12cfb141a24c54c2032260 $")
+end, "$Revision: 50e769c4305c42360c08e4eba003ac2f06dc3d9a $")
 
 --local new, del, copy = XPerl_GetReusableTable, XPerl_FreeTable, XPerl_CopyTable
 
+local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 
 local pairs = pairs
@@ -41,10 +42,12 @@ local UnitName = UnitName
 
 local SecureButton_GetUnit = SecureButton_GetUnit
 
-local localGroups = LOCALIZED_CLASS_NAMES_MALE
-local WoWclassCount = 0
-for k, v in pairs(localGroups) do
-	WoWclassCount = WoWclassCount + 1
+local LOCALIZED_CLASS_NAMES_MALE = LOCALIZED_CLASS_NAMES_MALE
+local CLASS_COUNT = 0
+for k, v in pairs(LOCALIZED_CLASS_NAMES_MALE) do
+	if k ~= "Adventurer" then
+		CLASS_COUNT = CLASS_COUNT + 1
+	end
 end
 
 --local taintFrames = {}
@@ -693,7 +696,7 @@ function XPerl_RaidPets_Align()
 		local counts = XPerl_RaidGroupCounts()
 		local lastUsed = 0
 		if (counts) then
-			for i = 1, WoWclassCount do
+			for i = 1, CLASS_COUNT do
 				if (counts[i] > 0) then
 					lastUsed = i
 				end

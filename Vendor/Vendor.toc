@@ -1,7 +1,7 @@
 ## Interface: 100000
 ## Title: Vendor
 ## Notes: Vendors junk you don't want and auto-repairs.
-## Version: 5.3.2
+## Version: 5.3.3
 ## SavedVariables: Vendor_CustomRuleDefinitions, Vendor_Settings, Vendor_debug, Vendor_Profiles, Vendor_CustomLists, Vendor_History
 ## SavedVariablesPerCharacter: Vendor_RulesConfig Vendor_ActiveProfile
 ## Author: Thoekh of Sargeras & Buskin of Lightbringer

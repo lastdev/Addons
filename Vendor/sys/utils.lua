@@ -9,7 +9,7 @@ end
 function Addon:GetVersion()
     local version = GetAddOnMetadata(AddonName, "version")
     --[===[@debug@
-    if version == "5.3.1" then version = "Debug" end
+    if version == "5.3.3" then version = "Debug" end
     --@end-debug@]===]
     return version
 end

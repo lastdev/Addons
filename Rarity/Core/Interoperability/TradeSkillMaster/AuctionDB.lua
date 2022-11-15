@@ -27,7 +27,8 @@ function AuctionDB:IsLoaded()
 
 	if not (GetCustomPriceValue and FormatMoneyString and ToItemString and GetPriceSourceKeys) then
 		Rarity:Print(
-				"Failed to load one or more of the required TSM_APIs. TSM integration will not work until this is fixed, so please report the error :)")
+			"Failed to load one or more of the required TSM_APIs. TSM integration will not work until this is fixed, so please report the error :)"
+		)
 		Rarity:Print("In the meantime, you can disable the feature to hide all messages pertaining to it")
 		return
 	end
@@ -39,7 +40,7 @@ end
 -- @param priceSource A string representing the price source
 -- @return True if TSM recognized the price source; false (nil) otherwise
 function AuctionDB:IsValidPriceSource(priceSource)
-	if not type(priceSource) == "string" then
+	if type(priceSource) ~= "string" then
 		return
 	end
 
@@ -79,7 +80,9 @@ function AuctionDB:GetMarketPrice(itemID, priceSource, formatAsString)
 	end
 
 	if not self:IsValidPriceSource(priceSource) then
-		Rarity:Debug(format("Failed to GetMarketPrice for item %d and priceSource %s (not recognized)", itemID, priceSource))
+		Rarity:Debug(
+			format("Failed to GetMarketPrice for item %d and priceSource %s (not recognized)", itemID, priceSource)
+		)
 		return
 	end
 

@@ -1,5 +1,5 @@
 ## Interface: 100000
-## Version: 2.00
+## Version: 2.02
 ## Author: Taraezor
 ## Title: Hallow's End
 ## Title-deDE: Schlotternächte
@@ -13,18 +13,18 @@
 ## Title-ruRU: Тыквовин
 ## Title-zhCN: 万圣节
 ## Title-zhTW: 萬聖節
-## Notes: Helps you with the |cFFCA64EFNoble Garden|r world event
-## Notes-deDE: Hilft bei der |cFFCA64EFSchlotternächte|r-Weltereignis 
-## Notes-esES: Ayuda con el suceso mundial |cFFCA64EFHalloween|r
-## Notes-esMX: Ayuda con el suceso mundial |cFFCA64EFHalloween|r
-## Notes-frFR: Aide à l'événement mondial |cFFCA64EFSanssaint|r
-## Notes-itIT: Assiste con l'evento mondiale |cFFCA64EFVeglia delle Ombre|r
-## Notes-koKR: |cFFCA64EF할로윈 축제|r 대규모 이벤트 지원
-## Notes-ptBR: Auxilia no evento mundial |cFFCA64EFNoturnália|r
-## Notes-ptPT: Auxilia no evento mundial |cFFCA64EFNoturnália|r
-## Notes-ruRU: Помогает с игровое событие |cFFCA64EFТыквовин|r
-## Notes-zhCN: 协助 |cFFCA64EF万圣节|r 活动
-## Notes-zhTW: 協助 |cFFCA64EF萬聖節|r 活動
+## Notes: Help for |cFFCA64EFHallow's End|r achievements and quests
+## Notes-deDE: Hilfe für Erfolge und Quests in |cFFCA64EFSchlotternächte|r
+## Notes-esES: Ayuda para logros y misiones en |cFFCA64EFHalloween|r
+## Notes-esMX: Ayuda para logros y misiones en |cFFCA64EFHalloween|r
+## Notes-frFR: Aide pour les réalisations et les quêtes dans |cFFCA64EFSanssaint|r
+## Notes-itIT: Aiuto per obiettivi e missioni in |cFFCA64EFVeglia delle Ombre|r
+## Notes-koKR: |cFFCA64EF할로윈 축제|r의 업적 및 퀘스트에 대한 도움말
+## Notes-ptBR: Ajuda para conquistas e missões em |cFFCA64EFNoturnália|r
+## Notes-ptPT: Ajuda para conquistas e missões em |cFFCA64EFNoturnália|r
+## Notes-ruRU: Справка по достижениям и квестам в |cFFCA64EFТыквовине|r
+## Notes-zhCN: 帮助|cFFCA64EF万圣节|r的成就和任务
+## Notes-zhTW: 幫助|cFFCA64EF萬聖節|r的成就和任務
 ## X-Category: Map & Minimap
 ## X-Curse-Project-ID: 689428
 ## X-WoWI-ID: 00000

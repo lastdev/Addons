@@ -1,4 +1,4 @@
-## Interface: 100000
+## Interface: 100002
 ## X-Min-Interface: 70100
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff0055FFArchaeology|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff0055FFАрхеология|r
@@ -11,7 +11,7 @@
 ## X-Website: http://www.deadlybossmods.com
 ## SavedVariables: DBM_Archaeology_Settings
 ## X-Curse-Project-ID: 29493
-## Version: r47
+## Version: r48
 
 localization.en.lua
 localization.cn.lua

@@ -2,7 +2,7 @@
 -- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 26dd2f3e4984cffda76fcac1ddd39d0c29867f99 $")
+XPerl_SetModuleRevision("$Revision: 50e769c4305c42360c08e4eba003ac2f06dc3d9a $")
 
 if type(C_ChatInfo.RegisterAddonMessagePrefix) == "function" then
 	C_ChatInfo.RegisterAddonMessagePrefix("CTRA")
@@ -181,7 +181,7 @@ function XPerl_Check_Setup()
 	XPerl_CheckTitleBarPin:SetButtonTex()
 	XPerl_CheckTitleBarLockOpen:SetButtonTex()
 
-	XPerl_CheckListPlayersTotals:SetHighlightTexture(nil)
+	XPerl_CheckListPlayersTotals:SetHighlightTexture("")
 	XPerl_CheckListPlayersTotals:SetScript("OnClick", nil)
 
 	XPerl_Check_ItemsChanged()
@@ -415,9 +415,11 @@ end
 
 -- XPerl_PickupContainerItem
 local PickupBag, PickupSlot
-hooksecurefunc("PickupContainerItem", function(bagID, slot)
-	PickupBag, PickupSlot = bagID, slot
-end)
+if PickupContainerItem then
+	hooksecurefunc("PickupContainerItem", function(bagID, slot)
+		PickupBag, PickupSlot = bagID, slot
+	end)
+end
 
 -- sortItems
 -- Fixed entries at top, followed by last current queried, followed by rest. Alphabetical within this.

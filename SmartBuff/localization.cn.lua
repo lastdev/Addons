@@ -279,6 +279,11 @@ BINDING_NAME_SMARTBUFF_BIND_OPTIONS = "设置窗口";
 BINDING_NAME_SMARTBUFF_BIND_RESETBUFFTIMERS = "重新设定BUFF定时器";
 
 -- 设置窗口
+
+-- experimental feature - for testing.
+SMARTBUFF_OFT_FIXBUFF		 = "修复 铸造"
+SMARTBUFF_OFTT_FIXBUFF		 = "如果施放 buff 失败，请勾选此选项。"
+
 SMARTBUFF_OFT                = "启用SmartBuff";
 SMARTBUFF_OFT_MENU           = "显示/隐藏配置菜单";
 SMARTBUFF_OFT_AUTO           = "提醒";
@@ -368,6 +373,8 @@ SMARTBUFF_OFTT_HIDESABUTTON  = "隐藏SmartBuff动作按钮。";
 SMARTBUFF_OFTT_INCOMBAT      = "目前只能用于你自己身上。\n你设定的第一个战斗中可释放的BUFF将在战斗前放置到动作按钮上，\n因此你可以在战斗中施放这个法术。\n警告：战斗中所有逻辑判断都将不可用！";
 SMARTBUFF_OFTT_SMARTDEBUFF   = "显示SmartDebuff窗口。";
 SMARTBUFF_OFTT_SPLASHDURATION= "设定多少秒后提示信息消失。";
+SMARTBUFF_OFTT_SOUNDSELECT	 = "选择所需的飞溅声.";
+
 
 -- BUFF设置内容
 SMARTBUFF_BST_SELFONLY       = "仅对自身施法";
@@ -418,6 +425,7 @@ SMARTBUFF_MSG_REBUFF         = "你的BUFF：";
 SMARTBUFF_MSG_LEFT           = "以后消失！";
 SMARTBUFF_MSG_CLASS          = "职业";
 SMARTBUFF_MSG_CHARGES        = "次数";
+SMARTBUFF_MSG_SOUNDS		 = "飞溅声音选择: "
 
 -- Support
 SMARTBUFF_MINIMAP_TT         = "左键：选项菜单\n右键：开/关\nAlt+左键：SmartDebuff\n按Shift拖拽：移动按钮";

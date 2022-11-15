@@ -1,6 +1,6 @@
 # <DBM> Archaeology
 
-## [r47](https://github.com/DeadlyBossMods/DBM-Archaeology/tree/r47) (2022-10-25)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Archaeology/compare/r46...r47) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Archaeology/releases)
+## [r48](https://github.com/DeadlyBossMods/DBM-Archaeology/tree/r48) (2022-11-15)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Archaeology/compare/r47...r48) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Archaeology/releases)
 
-- Bump toc file  
+- Bump TOC files  

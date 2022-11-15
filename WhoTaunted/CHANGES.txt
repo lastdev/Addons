@@ -1,0 +1,12 @@
+lightweight tag 568873bda2e13b75ca33e3c64b7b83e1b19bcb7c v2.0.5
+Author:	GitHub <noreply@github.com>
+Date:	Mon Nov 14 23:28:13 2022 -0800
+
+commit 480abaeb87da33d0c8e9c15fd4a79340e2b2edde
+Author: Davie3 <Davie3@users.noreply.github.com>
+Date:   Mon Nov 14 23:21:05 2022 -0800
+
+    Toc bump for 10.0.2.
+    Switching from using UnitInParty and UnitInRaid to the IsInGroup and IsInRaid counterparts for the initial taunt detection.
+    Updated changelog for v2.0.5.
+

@@ -21,7 +21,7 @@ local GetNumGroupMembers = GetNumGroupMembers
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 
 
-XPerl_SetModuleRevision("$Revision: 0e5dac9771e21852086c9ae73250c5d5d507c244 $")
+XPerl_SetModuleRevision("$Revision: 50e769c4305c42360c08e4eba003ac2f06dc3d9a $")
 
 XPERL_RAIDMON_UNIT_WIDTH_MIN = 50
 XPERL_RAIDMON_UNIT_WIDTH_MAX = 150
@@ -606,7 +606,7 @@ function XPerl_RaidMonitor_Init(self)
 		self.area:SetAttribute("sortMethod", "NAME")
 		self.area:SetAttribute("sortDir", "ASC")
 		self.area:SetAttribute("groupBy", "CLASS")		-- For API version 20003
-		self.area:SetAttribute("groupingOrder", "PRIEST,DRUID,SHAMAN,PALADIN,MAGE,WARLOCK,HUNTER,ROGUE,WARRIOR,DEATHKNIGHT,MONK,DEMONHUNTER")
+		self.area:SetAttribute("groupingOrder", "PRIEST,DRUID,SHAMAN,PALADIN,MAGE,WARLOCK,HUNTER,ROGUE,WARRIOR,DEATHKNIGHT,MONK,DEMONHUNTER,EVOKER")
 
 		self:SetAttribute("type", "target")
 		self:SetAttribute("initial-height", config.UnitHeight)

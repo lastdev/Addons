@@ -143,6 +143,7 @@ function HealBot_Panel_TankRole(unit,guid)
         HealBot_Panel_luVars["TankHealth"]=UnitHealth(unit)
         HealBot_setLuVars("TankUnit", unit)
         HealBot_Aura_setLuVars("TankUnit", unit)
+        HealBot_Panel_luVars["MainTankGUID"]=guid
     end
     if hbPanel_dataPlayerRoles[unit]==0 or hbPanel_dataPlayerRoles[unit]>5 then hbPanel_dataPlayerRoles[unit]=2 end
 end
@@ -273,6 +274,7 @@ function HealBot_Panel_buildDataStore(doPlayers, doPets)
         HealBot_setLuVars("TankUnit", "x")
         HealBot_Aura_setLuVars("TankUnit", "x")
         HealBot_Panel_luVars["TankHealth"]=0
+        HealBot_Panel_luVars["MainTankGUID"]=""
         if HealBot_Config.DisabledNow==0 then
             local nGroupMembers=GetNumGroupMembers()
             if nGroupMembers>0 then
@@ -2590,7 +2592,7 @@ function HealBot_Panel_TargetChangedCheckFocus()
                 HealBot_Action_OnLoad(vFocusFrame) 
                 vFocusFrame:RegisterForClicks("LeftButtonUp", "RightButtonUp")
             end
-            if not HealBot_Data["UILOCK"] and UnitExists("target") and HealBot_Globals.FocusMonitor[UnitName("target")] then
+            if not InCombatLockdown() and UnitExists("target") and HealBot_Globals.FocusMonitor[UnitName("target")] then
                 if UnitExists("focus") and HealBot_Globals.FocusMonitor[UnitName("focus")] then
                     vFocusFrame:Hide()
                 else
@@ -2915,6 +2917,16 @@ end
 
 function HealBot_Panel_RaidUnitName(uName)
     return hbPanel_dataNames[uName] or hbPanel_dataPetNames[uName]
+end
+
+function HealBot_Panel_RaidUnitNameGetPlayerGUID(uName)
+    if uName==HEALBOT_WORD_MAINTANK then
+        return HealBot_Panel_luVars["MainTankGUID"]
+    elseif hbPanel_dataNames[uName] then
+        return UnitGUID(hbPanel_dataNames[uName])
+    else
+        return ""
+    end
 end
 
 function HealBot_Panel_resetCrashProt()

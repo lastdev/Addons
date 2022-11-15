@@ -1,0 +1,10 @@
+## Interface: 100000
+
+## Title: TooltipID
+## Notes: Shows id's on the tooltip
+
+## Version: 10.0.0-Alpha-1
+## Author: VeepZy
+
+# Add-On
+Core.lua

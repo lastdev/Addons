@@ -235,8 +235,9 @@ function module:ShowTooltip(pin)
             self.lootwindow:SetAutoHideDelay(0.25, {pin, tooltip}, function()
                 self:CleanupTooltip()
             end)
-
-            core.events:Fire("LootWindowOpened", self.lootwindow)
+        end
+        if ns.mobdb[id].requires then
+            tooltip:AddLine(core:RenderString(ns.conditions.summarize(ns.mobdb[id].requires), ns.mobdb[id]), 0, 1, 0, true)
         end
     else
         tooltip:AddLine(UNKNOWN)

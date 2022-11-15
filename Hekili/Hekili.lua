@@ -9,8 +9,12 @@ Hekili.Flavor = GetAddOnMetadata( "Hekili", "X-Flavor" ) or "Retail"
 local format = string.format
 local insert, concat = table.insert, table.concat
 
+local buildStr, _, _, buildNum = GetBuildInfo()
+
+Hekili.CurrentBuild = buildNum
+
 if Hekili.Version == ( "@" .. "project-version" .. "@" ) then
-    Hekili.Version = format( "Dev-%s (%s)", GetBuildInfo(), date( "%Y%m%d" ) )
+    Hekili.Version = format( "Dev-%s (%s)", buildStr, date( "%Y%m%d" ) )
 end
 
 Hekili.AllowSimCImports = true
@@ -28,7 +32,7 @@ Hekili.IsClassic = function()
 end
 
 Hekili.IsDragonflight = function()
-    return select( 4, GetBuildInfo() ) >= 100000
+    return buildNum >= 100000
 end
 
 ns.PTR = false
@@ -36,15 +40,19 @@ ns.PTR = false
 
 ns.Patrons = "|cFFFFD100Current Dragonflight Status|r\n\n"
     .. "|cFF00FF00Up to Date|r\n"
-    .. "- Death Knights, Demon Hunters, Balance and Feral Druids, Hunters, Windwalker Monk, Retribution Paladin, Shadow Priest, Outlaw Rogue, Elemental and Enhancement Shamans, Warriors\n\n"
+    .. "- |c" .. RAID_CLASS_COLORS.DEATHKNIGHT.colorStr .. "Death Knights|r, |c" .. RAID_CLASS_COLORS.DEMONHUNTER.colorStr .. "Demon Hunters|r, |c"
+    .. RAID_CLASS_COLORS.DRUID.colorStr .. "Balance and Feral Druids|r, |c" .. RAID_CLASS_COLORS.HUNTER.colorStr .. "Hunters|r, |c" .. RAID_CLASS_COLORS.MONK.colorStr .. "Windwalker Monk|r, |c"
+    .. RAID_CLASS_COLORS.PALADIN.colorStr .. "Retribution Paladin|r, |c" .. RAID_CLASS_COLORS.PRIEST.colorStr .. "Shadow Priest|r, |c" .. RAID_CLASS_COLORS.ROGUE.colorStr .. "Rogues|r, |c"
+    .. RAID_CLASS_COLORS.SHAMAN.colorStr .. "Elemental and Enhancement Shamans|r, |c" .. RAID_CLASS_COLORS.WARRIOR.colorStr .. "Warriors|r\n\n"
     .. "|cFFFFAE42Beta|r\n"
-    .. "- Guardian Druid, Demonology and Destruction Warlocks\n\n"
+    .. "- |c" .. RAID_CLASS_COLORS.DRUID.colorStr .. "Guardian Druid|r, |c" .. RAID_CLASS_COLORS.EVOKER.colorStr .. "Devastation Evoker|r, |c" .. RAID_CLASS_COLORS.MAGE.colorStr .. "Fire Mage|r, |c"
+    .. RAID_CLASS_COLORS.WARLOCK.colorStr .. "Warlocks|r\n\n"
     .. "|cFFBB3F3FNot Yet Implemented|r\n"
     .. "- All Other Classes/Specializations\n\n"
     .. "|cFF00FF00Up to Date|r means it is working and using priorities written for Dragonflight.\n"
     .. "|cFFFFAE42Beta|r means it is playable, but may be using priorities from Shadowlands.\n"
     .. "|cFFBB3F3FNot Yet Implemented|r means the class is not yet playable in the addon.\n\n"
-    .. "Do not report issues for any classes that are |cBB3F3FNot Yet Implemented|r.  For |cFFFFAE42Beta|r or |cFF00FF00Up to Date|r classes, report issues using the links below.  I am working to update every class as quickly as possible.  Thanks!"
+    .. "Do not report issues for any classes that are |cFFBB3F3FNot Yet Implemented|r.  For |cFFFFAE42Beta|r or |cFF00FF00Up to Date|r classes, report issues using the links below.  I am working to update every class as quickly as possible.  Thanks!"
 
 do
     local cpuProfileDB = {}

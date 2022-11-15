@@ -1,9 +1,9 @@
 ## Interface: 11403
 ## Title: Postal
-## Version: v3.8.5
-## X-Build: 538
-## X-ReleaseDate: 2022-11-02T5:04:43Z
-## X-Revision: 538
+## Version: v3.8.7
+## X-Build: 545
+## X-ReleaseDate: 2022-11-07T21:25:44Z
+## X-Revision: 545
 ## Author: Xinhuan
 ## X-Credits: Ammo, Rabbit, Grennon, Mikk, oscarucb, Jonny aka The_Original_Manbot
 ## X-Category: Mail

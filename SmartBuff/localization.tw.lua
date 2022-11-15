@@ -50,6 +50,11 @@ BINDING_NAME_SMARTBUFF_BIND_OPTIONS = "選項視窗";
 BINDING_NAME_SMARTBUFF_BIND_RESETBUFFTIMERS = "重置 Buff 時間";
 
 -- Options Frame Text
+
+-- experimental feature - for testing.
+SMARTBUFF_OFT_FIXBUFF		 = "修復演員表"
+SMARTBUFF_OFTT_FIXBUFF		 = "如果施放增益失败，请勾选。"
+
 SMARTBUFF_OFT                = "SmartBuff 開/關";
 SMARTBUFF_OFT_MENU           = "選項視窗 顯示/隱藏";
 SMARTBUFF_OFT_AUTO           = "啟用提示";
@@ -148,6 +153,8 @@ SMARTBUFF_OFTT_SPLASHDURATION= "閃爍訊息持續秒數.";
 SMARTBUFF_OFTT_INSHAPESHIFT  = "在變身型態下是否也施放buff.";
 SMARTBUFF_OFTT_LINKGRPBUFFCHECK  = "檢查其他職業\n是否已經施放\n相同類型的buff.";
 SMARTBUFF_OFTT_LINKSELFBUFFCHECK = "檢查自己身上\n是否有只能\n單一存在的Buff.";
+SMARTBUFF_OFTT_SOUNDSELECT	 = "選擇所需的飛濺聲。";
+
 
 -- Buffsetup Frame Text
 SMARTBUFF_BST_SELFONLY       = "僅對自己施法";
@@ -200,6 +207,7 @@ SMARTBUFF_MSG_REBUFF         = "Rebuff:";
 SMARTBUFF_MSG_LEFT           = "剩餘";
 SMARTBUFF_MSG_CLASS          = "職業";
 SMARTBUFF_MSG_CHARGES        = "次";
+SMARTBUFF_MSG_SOUNDS		 = "飛濺聲音選擇: "
 SMARTBUFF_MSG_SPECCHANGED    = "天賦已更改(%s), 重設buff模組...";
 
 -- Support

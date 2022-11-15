@@ -140,13 +140,15 @@ function ns.SetupMapOverlay()
     local Krowi = LibStub("Krowi_WorldMapButtons-1.4", true) or LibStub("Krowi_WorldMapButtons-1.3", true)
     if Krowi then
         frame = Krowi:Add("WorldMapTrackingOptionsButtonTemplate", "DROPDOWNTOGGLEBUTTON")
-    elseif WorldMapFrame.AddOverlayFrame then
+    elseif false and WorldMapFrame.AddOverlayFrame then
+        -- retail
+        -- This is super-tainted on retail, so is currently disabled
         frame = WorldMapFrame:AddOverlayFrame("WorldMapTrackingOptionsButtonTemplate", "DROPDOWNTOGGLEBUTTON", "TOPRIGHT", WorldMapFrame:GetCanvasContainer(), "TOPRIGHT", -68, -2)
     else
         -- classic!
         -- (this is a close translation of WorldMapTrackingOptionsButtonTemplate)
-        frame = CreateFrame("DropDownToggleButton", nil, WorldMapFrame:GetCanvasContainer())
-        frame:SetFrameStrata("HIGH")
+        frame = CreateFrame("DropDownToggleButton", WorldMapFrame, WorldMapFrame:GetCanvasContainer())
+        frame:SetFrameStrata(WorldMapFrame:GetFrameStrata() or "HIGH")
         frame:SetSize(32, 32)
         frame.Background = frame:CreateTexture(nil, "BACKGROUND")
         frame.Background:SetPoint("TOPLEFT", 2, -4)
@@ -166,6 +168,7 @@ function ns.SetupMapOverlay()
         frame.Border:SetSize(54, 54)
         frame.Border:SetPoint("TOPLEFT")
         frame:SetHighlightTexture([[Interface\Minimap\UI-Minimap-ZoomButton-Highlight]], "ADD")
+        
         frame:SetPoint("TOPRIGHT", -68, -2)
 
         hooksecurefunc(WorldMapFrame, "OnMapChanged", function()

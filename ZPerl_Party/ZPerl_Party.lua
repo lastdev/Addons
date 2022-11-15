@@ -13,10 +13,11 @@ XPerl_RequestConfig(function(new)
 	for k, v in pairs(PartyFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 52b9ddfe6f4ee24803f90c3bad34a3009df5a616 $")
+end, "$Revision: 9f6c75eeab82c0b47de6b403dca2b68407247c11 $")
 
 local percD = "%d"..PERCENT_SYMBOL
 
+local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 
@@ -132,8 +133,12 @@ function XPerl_Party_Events_OnLoad(self)
 
 	UIParent:UnregisterEvent("GROUP_ROSTER_UPDATE") -- IMPORTANT! Stops raid framerate lagging when members join/leave/zone
 
-	for i = 1, 4 do
-		XPerl_BlizzFrameDisable(_G["PartyMemberFrame"..i])
+	if IsRetail then
+		XPerl_BlizzFrameDisable(PartyFrame)
+	else
+		for i = 1, 4 do
+			XPerl_BlizzFrameDisable(_G["PartyMemberFrame"..i])
+		end
 	end
 
 	self:SetScript("OnEvent", XPerl_Party_OnEvent)

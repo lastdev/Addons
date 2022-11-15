@@ -211,7 +211,7 @@ function DeathKnight:UnholyMultiTargetRotation()
 		return UH.SummonGargoyle;
 	end
 	--if runic power >= 30 or sudden doom or gargoyle up cast epidemic
-	if fd.runicPower >= 30 or fd.buff[UH.SuddenDoom].up then
+	if talents[UH.Epidemic] and (fd.runicPower >= 30 or fd.buff[UH.SuddenDoom].up) then
 		return UH.Epidemic;
 	end
 	

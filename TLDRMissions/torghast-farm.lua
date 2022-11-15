@@ -93,7 +93,18 @@ function addon:Init(layer)
             local arg1 = ...
             if not arg1 then return end
             if not torghastWings[arg1] then return end
-            C_GossipInfo.SelectOption(layer or 5)
+            --C_GossipInfo.SelectOption(layer or 5)
+            
+            for l in TorghastLevelPickerFrame.gossipOptionsPool:EnumerateActive() do 
+        		if (l.index == (layer or 5)) then 
+        			TorghastLevelPickerFrame:SelectLevel(l);
+        			l:SetState(TorghastLevelPickerFrame.gossipOptions[layer or 5].status); 
+                    break
+        		end 
+        	end
+            
+            C_GossipInfo.SelectOption(TorghastLevelPickerFrame.currentSelectedButton.optionInfo.gossipOptionID)
+            
         elseif event == "CHAT_MSG_MONSTER_SAY" then
             local text, monsterName = ...
             if (monsterName ~= "Runecarver") and (monsterName ~= "Резчик Рун") then return end

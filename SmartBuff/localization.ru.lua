@@ -46,6 +46,11 @@ BINDING_NAME_SMARTBUFF_BIND_OPTIONS = "Меню опций";
 BINDING_NAME_SMARTBUFF_BIND_RESETBUFFTIMERS = "Сбросить таймеры баффов";
 
 -- Options Frame Text
+
+-- experimental feature - for testing.
+SMARTBUFF_OFT_FIXBUFF		 = "Исправить кастинг"
+SMARTBUFF_OFTT_FIXBUFF		 = "Отметьте, если применение баффа не удается."
+
 SMARTBUFF_OFT                = "Вкл/Выкл";
 SMARTBUFF_OFT_MENU           = "Меню опций";
 SMARTBUFF_OFT_AUTO           = "Напоминалка";
@@ -141,6 +146,8 @@ SMARTBUFF_OFTT_SPLASHDURATION= "Сколько секунд будут отоб�
 SMARTBUFF_OFTT_INSHAPESHIFT  = "Cast buffs also if you\nare shapeshifted.";
 SMARTBUFF_OFTT_LINKGRPBUFFCHECK  = "Checks if a buff of an other\nclass with similar effect\nis already active.";
 SMARTBUFF_OFTT_LINKSELFBUFFCHECK = "Checks if a self buff is active,\nwhose only one can be\nactive at a time.";
+SMARTBUFF_OFTT_SOUNDSELECT	 = "Выберите звук всплеска.";
+
 
 -- Buffsetup Frame Text
 SMARTBUFF_BST_SELFONLY       = "Только себя";
@@ -192,6 +199,7 @@ SMARTBUFF_MSG_REBUFF         = "Реббафф";
 SMARTBUFF_MSG_LEFT           = "осталось";
 SMARTBUFF_MSG_CLASS          = "Класс";
 SMARTBUFF_MSG_CHARGES        = "зарядов";
+SMARTBUFF_MSG_SOUNDS		 = "Выбранный звук всплеска: "
 SMARTBUFF_MSG_SPECCHANGED    = "Spec changed (%s), loading buff templates...";
 
 -- Support

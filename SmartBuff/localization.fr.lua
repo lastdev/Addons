@@ -48,6 +48,11 @@ BINDING_NAME_SMARTBUFF_BIND_OPTIONS = "Menu d\'Options";
 BINDING_NAME_SMARTBUFF_BIND_RESETBUFFTIMERS = "Reset buff timers";
 
 -- Options Frame Text
+
+-- experimental feature - for testing.
+SMARTBUFF_OFT_FIXBUFF		 = "buff Correctif "
+SMARTBUFF_OFTT_FIXBUFF		 = "Cochez si Smartbuff ne parvient pas à lancer des buffs."
+
 SMARTBUFF_OFT                = "ON/OFF SmartBuff";
 SMARTBUFF_OFT_MENU           = "Afficher/Cacher le menu d\'options";
 SMARTBUFF_OFT_AUTO           = "Rappel";
@@ -143,6 +148,8 @@ SMARTBUFF_OFTT_SPLASHDURATION= "How many seconds the splash\nmessage will displa
 SMARTBUFF_OFTT_INSHAPESHIFT  = "Cast buffs also if you\nare shapeshifted.";
 SMARTBUFF_OFTT_LINKGRPBUFFCHECK  = "Checks if a buff of an other\nclass with similar effect\nis already active.";
 SMARTBUFF_OFTT_LINKSELFBUFFCHECK = "Checks if a self buff is active,\nwhose only one can be\nactive at a time.";
+SMARTBUFF_OFTT_SOUNDSELECT	 = "Sélectionnez le son d'éclaboussure requis.";
+
 
 -- Buffsetup Frame Text
 SMARTBUFF_BST_SELFONLY       = "Sur Soi";
@@ -195,6 +202,7 @@ SMARTBUFF_MSG_REBUFF         = "Rebuff";
 SMARTBUFF_MSG_LEFT           = "temps restant";
 SMARTBUFF_MSG_CLASS          = "Classe";
 SMARTBUFF_MSG_CHARGES        = "charges";
+SMARTBUFF_MSG_SOUNDS		 = "Son Splash sélectionné: "
 SMARTBUFF_MSG_SPECCHANGED    = "Spec changed (%s), loading buff templates...";
 
 -- Support

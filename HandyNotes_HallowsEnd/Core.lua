@@ -3,7 +3,7 @@
 
                                             Hallow's End
 
-                                      v2.01 - 31st October 2022
+                                     v2.02 - 10th November 2022
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -72,7 +72,7 @@ end
 
 if ns.locale == "deDE" then
 	L["Hallow's End"] = "Schlotternächte"
-	L["AddOn Description"] = "Hilft bei der Schlotternächte-Weltereignis"	
+	L["AddOn Description"] = "Hilfe für Erfolge und Quests in Schlotternächte"	
 	L["Character"] = "Charakter"
 	L["Account"] = "Accountweiter"
 	L["Completed"] = "Abgeschlossen"
@@ -106,7 +106,7 @@ if ns.locale == "deDE" then
 
 elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Hallow's End"] = "Halloween"
-	L["AddOn Description"] = "Ayuda para los logros del Halloween"
+	L["AddOn Description"] = "Ayuda para logros y misiones en Halloween"
 	L["Character"] = "Personaje"
 	L["Account"] = "la Cuenta"
 	L["Completed"] = "Completado"
@@ -142,7 +142,7 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 
 elseif ns.locale == "frFR" then
 	L["Hallow's End"] = "Sanssaint"
-	L["AddOn Description"] = "Aide à l'événement mondial Sanssaint"
+	L["AddOn Description"] = "Aide pour les réalisations et les quêtes dans Sanssaint"
 	L["Character"] = "Personnage"
 	L["Account"] = "le Compte"
 	L["Completed"] = "Achevé"
@@ -178,7 +178,7 @@ elseif ns.locale == "frFR" then
 
 elseif ns.locale == "itIT" then
 	L["Hallow's End"] = "Veglia delle Ombre"
-	L["AddOn Description"] = "Assiste con l'evento mondiale Veglia delle Ombre"
+	L["AddOn Description"] = "Aiuto per obiettivi e missioni in Veglia delle Ombre"
 	L["Character"] = "Personaggio"
 	L["Completed"] = "Completo"
 	L["Not Completed"] = "Non Compiuto"
@@ -213,7 +213,7 @@ elseif ns.locale == "itIT" then
 
 elseif ns.locale == "koKR" then
 	L["Hallow's End"] = "할로윈 축제"
-	L["AddOn Description"] = "할로윈 축제 대규모 이벤트 지원"	
+	L["AddOn Description"] = "할로윈 축제의 업적 및 퀘스트에 대한 도움말"	
 	L["Character"] = "캐릭터"
 	L["Account"] = "계정"
 	L["Completed"] = "완료"
@@ -247,7 +247,7 @@ elseif ns.locale == "koKR" then
 		
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Hallow's End"] = "Noturnália"
-	L["AddOn Description"] = "Auxilia no evento mundial Noturnália"
+	L["AddOn Description"] = "Ajuda para conquistas e missões em Noturnália"
 	L["Character"] = "Personagem"
 	L["Account"] = "à Conta"
 	L["Completed"] = "Concluído"
@@ -283,7 +283,7 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 
 elseif ns.locale == "ruRU" then
 	L["Hallow's End"] = "Тыквовин"
-	L["AddOn Description"] = "Помогает с игровое событие Тыквовин"
+	L["AddOn Description"] = "Справка по достижениям и квестам в Тыквовине"
 	L["Character"] = "Персонажа"
 	L["Account"] = "Счет"
 	L["Completed"] = "Выполнено"
@@ -318,7 +318,7 @@ elseif ns.locale == "ruRU" then
 
 elseif ns.locale == "zhCN" then
 	L["Hallow's End"] = "万圣节"
-	L["AddOn Description"] = "协助万圣节活动"
+	L["AddOn Description"] = "帮助万圣节的成就和任务"
 	L["Character"] = "角色"
 	L["Account"] = "账号"
 	L["Completed"] = "已完成"
@@ -352,7 +352,7 @@ elseif ns.locale == "zhCN" then
 
 elseif ns.locale == "zhTW" then
 	L["Hallow's End"] = "萬聖節"
-	L["AddOn Description"] = "協助萬聖節活動"
+	L["AddOn Description"] = "幫助萬聖節的成就和任務"
 	L["Character"] = "角色"
 	L["Account"] = "賬號"
 	L["Completed"] = "完成"
@@ -387,7 +387,7 @@ else
 	if ns.locale == "enUS" then
 		L["Grey"] = "Gray"
 	end
-	L["AddOn Description"] = "Help for the Noble Garden achievements"
+	L["AddOn Description"] = "Help for Hallow's End achievements and quests"
 	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
 end
 
@@ -598,7 +598,7 @@ do
 	end
 end
 
--- Interface -> Addons -> Handy Notes -> Plugins -> Noble Garden options
+-- Interface -> Addons -> Handy Notes -> Plugins -> Hallow's End options
 ns.options = {
 	type = "group",
 	name = L["Hallow's End"],

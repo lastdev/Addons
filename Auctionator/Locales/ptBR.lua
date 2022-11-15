@@ -268,6 +268,8 @@ L["EXPORT_AS"] = "Exportar como"
 L["EXPORT_RESULTS"] = "Exportar os Resultados"
 L["EXPORT_STRING"] = "String compartilhável"
 L["EXPORT_WHISPER"] = "Sussurrar para"
+--[[Translation missing --]]
+L["EXTENDED_SEARCH_ACTIVE_TEXT"] = "%extended search active%"
 L["FAVOURITES"] = "Favoritos"
 L["FETCHING_ITEM_INFO"] = "Obtendo informações sobre o item..."
 L["FINISHED_PROCESSING"] = "Terminado de processar %s itens."
@@ -360,6 +362,8 @@ L["PET_TOOLTIP_TOOLTIP_TEXT"] = "Mostrar informações do Auctionator para bicho
 L["POST"] = "Postar"
 L["POST_ATTEMPT_FAILED"] = "Sua última tentativa de postagem não funcionou. Tente novamente."
 L["PRICE"] = "Preço"
+--[[Translation missing --]]
+L["PRICE_HISTORY"] = "Price History"
 L["PRICE_INCREASE_WARNING"] = [=[Preço aumentado em %s, aguardando %ss
 ]=]
 L["PROFILE_TOGGLE_TOOLTIP_HEADER"] = "Ativar definições específicas para cada personagem"
@@ -630,6 +634,8 @@ L["TRANSLATORS_HELP"] = "Por favor, ajude a traduzir!"
 L["TRANSLATORS_ITALIAN"] = "Italiano"
 L["TRANSLATORS_KOREAN"] = "Koreano"
 L["TRANSLATORS_LATIN_SPANISH"] = "Espanhol Latino Americano"
+--[[Translation missing --]]
+L["TRANSLATORS_ROMANIAN_INFO"] = "Romanian (available separately)"
 L["TRANSLATORS_RUSSIAN"] = "Russo"
 L["TRANSLATORS_SIMPLIFIED_CHINESE"] = "Chinês Simplificado"
 L["TRANSLATORS_SPANISH"] = "Espanhol"

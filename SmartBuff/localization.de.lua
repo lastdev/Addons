@@ -49,6 +49,11 @@ BINDING_NAME_SMARTBUFF_BIND_OPTIONS = "Optionen";
 BINDING_NAME_SMARTBUFF_BIND_RESETBUFFTIMERS = "Buff Timer löschen";
 
 -- Options Frame Text
+
+-- experimental feature - for testing.
+SMARTBUFF_OFT_FIXBUFF		 = "Gießen reparieren"
+SMARTBUFF_OFTT_FIXBUFF		 = "Ankreuzen, wenn Smartbuff keine Buffs wirkt."
+
 SMARTBUFF_OFT                = "SmartBuff An/Aus";
 SMARTBUFF_OFT_MENU           = "Zeige/verberge Optionen Menü";
 SMARTBUFF_OFT_AUTO           = "Erinnerung";
@@ -146,6 +151,7 @@ SMARTBUFF_OFTT_SPLASHDURATION= "Wieviele Sekunden die Splash Meldung angezeigt w
 SMARTBUFF_OFTT_INSHAPESHIFT  = "Bufft auch wenn du\nverwandelt bist.";
 SMARTBUFF_OFTT_LINKGRPBUFFCHECK  = "Prüft ob schon ein Buff\nmit gleichem Effekt von einer\nanderen Klasse aktiv ist.";
 SMARTBUFF_OFTT_LINKSELFBUFFCHECK = "Prüft ob ein Eigen-Buff\naktiv ist, von welchen jeweils\nnur einer aktiv sein kann.";
+SMARTBUFF_OFTT_SOUNDSELECT	 = "Wählen Sie den gewünschten Splash.";
 
 -- Buffsetup Frame Text
 SMARTBUFF_BST_SELFONLY       = "Nur mich";
@@ -198,6 +204,7 @@ SMARTBUFF_MSG_REBUFF         = "ReBuff";
 SMARTBUFF_MSG_LEFT           = "übrig";
 SMARTBUFF_MSG_CLASS          = "Klasse";
 SMARTBUFF_MSG_CHARGES        = "Aufladungen";
+SMARTBUFF_MSG_SOUNDS		 = "Splash-Sound-Auswahl: "
 SMARTBUFF_MSG_SPECCHANGED    = "Spec gewechselt (%s), lade Buff-Vorlagen...";
 
 -- Support

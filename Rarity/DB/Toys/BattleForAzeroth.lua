@@ -409,8 +409,18 @@ local bfaToys = {
 		chance = 10,
 		questId = { 54309, 54252 },
 		coords = {
-			{ m = CONSTANTS.UIMAPIDS.DARKSHORE, x = 45.7, y = 86.9, n = L["Commander Drald"] .. " - " .. L["Alliance only"] },
-			{ m = CONSTANTS.UIMAPIDS.DARKSHORE, x = 62.0, y = 16.2, n = L["Thelar Moonstrike"] .. " - " .. L["Horde only"] },
+			{
+				m = CONSTANTS.UIMAPIDS.DARKSHORE,
+				x = 45.7,
+				y = 86.9,
+				n = L["Commander Drald"] .. " - " .. L["Alliance only"],
+			},
+			{
+				m = CONSTANTS.UIMAPIDS.DARKSHORE,
+				x = 62.0,
+				y = 16.2,
+				n = L["Thelar Moonstrike"] .. " - " .. L["Horde only"],
+			},
 		},
 	},
 	["Narassin's Soul Gem"] = {
@@ -448,7 +458,12 @@ local bfaToys = {
 		chance = 10,
 		questId = { 54452, 54768 },
 		coords = {
-			{ m = CONSTANTS.UIMAPIDS.DARKSHORE, x = 42.0, y = 77.6, n = L["Burninator Mark V"] .. " - " .. L["Alliance only"] },
+			{
+				m = CONSTANTS.UIMAPIDS.DARKSHORE,
+				x = 42.0,
+				y = 77.6,
+				n = L["Burninator Mark V"] .. " - " .. L["Alliance only"],
+			},
 			{ m = CONSTANTS.UIMAPIDS.DARKSHORE, x = 32.9, y = 84, n = L["Sapper Odette"] .. " - " .. L["Horde only"] },
 		},
 	},
@@ -601,7 +616,7 @@ local bfaToys = {
 		name = L["Hell-Bent Bracers"],
 		itemId = 169303,
 		npcs = { 158636 },
-		chance = 20, -- Blind guess (no data)
+		chance = 33,
 		questId = { 57688 },
 		coords = { { m = CONSTANTS.UIMAPIDS.ULDUM, x = 49.35, y = 82.29, n = L["The Grand Executor"] } },
 	},
@@ -613,7 +628,7 @@ local bfaToys = {
 		name = L["Budget K'thir Disguise"],
 		itemId = 174874,
 		npcs = { 157473 },
-		chance = 20, -- Blind guess (no data)
+		chance = 10,
 		questId = { 57438 },
 		coords = {
 			{ m = CONSTANTS.UIMAPIDS.ULDUM, x = 50, y = 88, n = L["Yiphrim the Will Ravager"] },
@@ -629,7 +644,7 @@ local bfaToys = {
 		name = L["Trans-mogu-rifier"],
 		itemId = 174873,
 		npcs = { 155958 },
-		chance = 20, -- Blind guess (no data)
+		chance = 33,
 		questId = { 58507 },
 		coords = { { m = CONSTANTS.UIMAPIDS.VALE_OF_ETERNAL_BLOSSOMS, x = 29.13, y = 22.07, n = L["Tashara"] } },
 	},
@@ -747,8 +762,10 @@ local bfaToys = {
 		npcs = { 154495 },
 		itemId = 175141,
 		questId = { 56303 },
-		chance = 75,
-		coords = { { m = CONSTANTS.UIMAPIDS.VALE_OF_ETERNAL_BLOSSOMS, x = 52.51, y = 62.14, n = L["Will of N'zoth"] } },
+		chance = 50,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.VALE_OF_ETERNAL_BLOSSOMS, x = 52.51, y = 62.14, n = L["Will of N'zoth"] },
+		},
 	},
 
 	["Viable Cobra Egg"] = {
@@ -762,7 +779,10 @@ local bfaToys = {
 		instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_DUNGEON] = true },
 		lockoutDetails = {
 			mode = CONSTANTS.DEFEAT_DETECTION.MODE_AND,
-			{ encounterName = "Merektha", instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_DUNGEON] = true } },
+			{
+				encounterName = "Merektha",
+				instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_DUNGEON] = true },
+			},
 		},
 		sourceText = L["Dropped by Merektha in Temple of Sethraliss. Will hatch into Spawn of Merektha pet after three days."],
 		coords = { { m = CONSTANTS.UIMAPIDS.TEMPLE_OF_SETHRALISS, i = true } },
@@ -777,7 +797,12 @@ local bfaToys = {
 		chance = 7,
 		questId = { 54891, 54889 },
 		coords = {
-			{ m = CONSTANTS.UIMAPIDS.DARKSHORE, x = 39.5, y = 34.4, n = L["Orwell Stevenson"] .. " - " .. L["Alliance only"] },
+			{
+				m = CONSTANTS.UIMAPIDS.DARKSHORE,
+				x = 39.5,
+				y = 34.4,
+				n = L["Orwell Stevenson"] .. " - " .. L["Alliance only"],
+			},
 			{ m = CONSTANTS.UIMAPIDS.DARKSHORE, x = 50.6, y = 32.6, n = L["Grimhorn"] .. " - " .. L["Horde only"] },
 		},
 		sourceText = L["Will hatch into Nightwreathed Watcher pet after five days."],

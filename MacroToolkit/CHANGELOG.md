@@ -1,6 +1,7 @@
 # Macro Toolkit
 
-## [v10.0.0-6](https://github.com/Numynum/MacroToolkit/tree/v10.0.0-6) (2022-11-03)
-[Full Changelog](https://github.com/Numynum/MacroToolkit/compare/v10.0.0-5...v10.0.0-6) [Previous Releases](https://github.com/Numynum/MacroToolkit/releases)
+## [v10.0.0-7](https://github.com/Numynum/MacroToolkit/tree/v10.0.0-7) (2022-11-10)
+[Full Changelog](https://github.com/Numynum/MacroToolkit/compare/v10.0.0-6...v10.0.0-7) [Previous Releases](https://github.com/Numynum/MacroToolkit/releases)
 
-- Fix extended macros to also work with ActionButtonUseKeyDown=1 (#4)  
+- add support for new [known:spellNameOrID] conditional, including shortening to spellID if spell is known  
+- support mod:alt:shift style in both the validator and the shortener  

@@ -47,6 +47,11 @@ BINDING_NAME_SMARTBUFF_BIND_OPTIONS = "Men\195\186 de opciones";
 BINDING_NAME_SMARTBUFF_BIND_RESETBUFFTIMERS = "Restaurar temporizador de buffs";
 
 -- Options Frame Text
+
+-- experimental feature - for testing.
+SMARTBUFF_OFT_FIXBUFF		 = "Corregir fundición"
+SMARTBUFF_OFTT_FIXBUFF		 = "Marque si Smartbuff falla al lanzar beneficios."
+
 SMARTBUFF_OFT                = "SmartBuff On/Off";
 SMARTBUFF_OFT_MENU           = "Mostrar/Ocultar men\195\186 de opciones";
 SMARTBUFF_OFT_AUTO           = "Recordatorio";
@@ -142,6 +147,8 @@ SMARTBUFF_OFTT_SPLASHDURATION= "Cu\195\161ntos segundos estar\195\161 en pantall
 SMARTBUFF_OFTT_INSHAPESHIFT  = "Cast buffs also if you\nare shapeshifted.";
 SMARTBUFF_OFTT_LINKGRPBUFFCHECK  = "Checks if a buff of an other\nclass with similar effect\nis already active.";
 SMARTBUFF_OFTT_LINKSELFBUFFCHECK = "Checks if a self buff is active,\nwhose only one can be\nactive at a time.";
+SMARTBUFF_OFTT_SOUNDSELECT	 = "Seleccione el sonido de advertencia.";
+
 
 -- Buffsetup Frame Text
 SMARTBUFF_BST_SELFONLY       = "Uno mismo s\195\179lo";
@@ -194,6 +201,7 @@ SMARTBUFF_MSG_REBUFF         = "Rebuff";
 SMARTBUFF_MSG_LEFT           = "tiempo restante";
 SMARTBUFF_MSG_CLASS          = "Clase";
 SMARTBUFF_MSG_CHARGES        = "cargas";
+SMARTBUFF_MSG_SOUNDS		 = "Selección de sonido: "
 SMARTBUFF_MSG_SPECCHANGED    = "Spec changed (%s), loading buff templates...";
 
 -- Support

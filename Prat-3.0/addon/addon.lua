@@ -74,7 +74,7 @@ Version = "Prat |cff8080ff3.0|r (|cff8080ff" .. "DEBUG" .. "|r)"
 --@end-debug@]==]
 
 --@non-debug@
-Version = "Prat |cff8080ff3.0|r (|cff8080ff".."3.9.8".."|r)"
+Version = "Prat |cff8080ff3.0|r (|cff8080ff".."3.9.12".."|r)"
 --@end-non-debug@
 
 
@@ -88,7 +88,7 @@ setmetatable(Prat, am)
 
 
 Prat.Prat3 = true
-Prat.IsClassic = (_G.WOW_PROJECT_ID == _G.WOW_PROJECT_CLASSIC) or (_G.WOW_PROJECT_ID  == _G.WOW_PROJECT_BURNING_CRUSADE_CLASSIC)
+Prat.IsClassic = (_G.WOW_PROJECT_ID == _G.WOW_PROJECT_CLASSIC) or (_G.WOW_PROJECT_ID  == _G.WOW_PROJECT_BURNING_CRUSADE_CLASSIC) or (_G.WOW_PROJECT_ID  == _G.WOW_PROJECT_WRATH_CLASSIC)
 Prat.IsRetail =  (_G.WOW_PROJECT_ID == _G.WOW_PROJECT_MAINLINE)
 
 
@@ -98,7 +98,6 @@ local function dbg(...) end
 function dbg(...) Prat:PrintLiteral(...) end
 
 --@end-debug@]==]
-
 
 
 Localizations = GetLocalizer({})
@@ -816,3 +815,10 @@ RegisterChatCommand("pratdebugmsg",
     local cc = addon:GetModule("CopyChat", true)
     if cc then cc:ScrapeFullChatFrame(printFrame or _G.DEFAULT_CHAT_FRAME, true) end
   end)
+
+RegisterChatCommand("pratdebug", function(name)
+  local dm = addon:GetModule("DebugModules", true)
+  if dm then
+    dm:ShowCopyDialog()
+  end
+end)

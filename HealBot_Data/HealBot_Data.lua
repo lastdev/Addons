@@ -50,8 +50,9 @@ HealBot_Font_Outline={
     [3]= "THICKOUTLINE",
 };
 
+local Version=HealBot_Global_Version()
 HealBot_ConfigDefaults = {
-  LastVersionUpdate=HEALBOT_VERSION_SC,
+  LastVersionUpdate=Version,
   MyFriend="x",
   CurrentSpec=9,
   Skin_ID = -1,
@@ -134,7 +135,7 @@ HealBot_Config_BuffsDefaults = {
   PalaBlessingsAsOne=false,
   ShortBuffTimer=10,
   LongBuffTimer=120,
-  AutoBuff=2,
+  AutoBuff=1,
   AutoBuffCastBy=1,
   AutoBuffExpireTime=31,
   BuffWatchWhenGrouped=false,
@@ -253,8 +254,9 @@ HealBot_HealGroupsTrans = { [HEALBOT_OPTIONS_SELFHEALS_en] = HEALBOT_OPTIONS_SEL
 HealBot_GlobalsDefaults = {}
 
 function HealBot_Data_InitVars()
+    local Version=HealBot_Global_Version()
     HealBot_GlobalsDefaults = {
-        LastVersionSkinUpdate=HEALBOT_VERSION_SC,
+        LastVersionSkinUpdate=Version,
         FirstLoad = true,
         PluginThreat=true,
         PluginTimeToDie=true,
@@ -263,6 +265,7 @@ function HealBot_Data_InitVars()
         PluginTimeToLive=true,
         PluginPerformance=true,
         PluginMyCooldowns=true,
+        PluginBuffWatch=true,
         PluginTweaks=true,
         PluginRequests=true,
         AllowPlayerRoles=false,
@@ -290,10 +293,12 @@ function HealBot_Data_InitVars()
         Tooltip_ShowCD=false,
         Tooltip_MaxButtons=5,
         Tooltip_IgnoreGCD=false,
-        Tooltip_SetScale=false,
         Tooltip_Scale=1,
-        Tooltip_SetAlpha=false,
-        Tooltip_SetAlphaValue=1,
+        Tooltip_Alpha=1,
+        Tooltip_HeaderFont=HealBot_Default_Fonts[14].name,
+        Tooltip_HeaderFontSize=14,
+        Tooltip_DetailFont=HealBot_Default_Fonts[15].name,
+        Tooltip_DetailFontSize=12,
         DisableToolTipInCombat=false,
         HideOptions = false,
         ProtectPvP = false,
@@ -706,6 +711,7 @@ HealBot_Unit_Status={   ["DISABLED"]=0,
                         ["BUFFBARCOL"]=6,
                         ["DEBUFFNOCOL"]=7,
                         ["DEBUFFBARCOL"]=8,
+                        ["REQUESTBARCOL"]=15,
                         ["DEAD"]=18,
                         ["RES"]=19,
                         ["DC"]=20,

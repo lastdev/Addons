@@ -2,7 +2,7 @@
 ## Dependencies: Vendor, AdiBags
 ## Title: Vendor_AdiBags
 ## Notes: AdiBags extension. Requires both Vendor and AdiBags
-## Version: 5.3.1
+## Version: 5.3.3
 ## Author: Thoekh of Sargeras & Buskin of Lightbringer
 loc\locale.lua
 loc\enUS.lua

@@ -1,0 +1,73 @@
+--[[
+	English Locale.
+]]
+
+local L = LibStub("AceLocale-3.0"):NewLocale("WhoTaunted", "enUS", true);
+if not L then return end
+
+L["<WhoTaunted>"] = true
+L["A new Who Taunted? version is available!"] = true
+L["against"] = true
+L["Announcements"] = true
+L["Anounce AOE Taunts"] = true
+L["Anounce AOE Taunts Output:"] = true
+L["Anounce AOE Taunts."] = true
+L["Anounce Fails"] = true
+L["Anounce Fails Output:"] = true
+L["Anounce Taunts"] = true
+L["Anounce Taunts Output:"] = true
+L["Anounce taunts that fail."] = true
+L["Anounce taunts."] = true
+L["AOE"] = true
+L["AOE taunted using"] = true
+L["Chat Window"] = true
+L["Default the output to Self if any of the below outputs are unavailable. For example, if you are not in a party or raid."] = true
+L["Default to Self"] = true
+L["Disable Who Taunted?"] = true
+L["Disable Who Taunted? in Battlegrounds"] = true
+L["Disable Who Taunted? in PvP Zones"] = true
+L["Disables Who Taunted? while you are in a battleground."] = true
+L["Disables Who Taunted? while you are in PvP Zones such as Ashran."] = true
+L["Disables Who Taunted?."] = true
+L["Display Ability"] = true
+L["Display the ability that was used to taunt."] = true
+L["Don't show your own failed taunts."] = true
+L["Don't show your own taunts."] = true
+L["etc"] = true
+L["Failed:"] = true
+L["FAQ"] = true
+L["Frequently Asked Questions"] = true
+L["General"] = true
+L["has loaded! Please report any issues on GitHub"] = true
+L["Help localize on Curseforge!"] = true
+L["Hide Own Failed Taunts"] = true
+L["Hide Own Taunts"] = true
+L["How can I help with Localization?"] = true
+L["Immune"] = true
+L["Include Prefix"] = true
+L["Include the"] = true
+L["Issues can be reported on the Who Taunted? GitHub page"] = true
+L["off of"] = true
+L["on Black Ox Statue"] = true
+L["Party"] = true
+L["prefix when a message's output is"] = true
+L["Raid"] = true
+L["Raid Warning"] = true
+L["'s"] = true
+L["Say"] = true
+L["Self"] = true
+L["Show"] = true
+L["Target"] = true
+L["taunt"] = true
+L["taunted"] = true
+L["taunts"] = true
+L["The chat window taunts will be announced in when the output is set to"] = true
+L["This Addon was written and is still maintained by Davie3. Follow me on Twitch!"] = true
+L["using"] = true
+L["Where AOE Taunts will be announced."] = true
+L["Where can I report issues?"] = true
+L["Where taunts will be announced."] = true
+L["Where the taunt fails will be announced."] = true
+L["Who Taunted?"] = true
+L["Who wrote this Addon?"] = true
+L["Yell"] = true

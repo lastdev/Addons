@@ -1,6 +1,8 @@
 local myname, ns = ...
 local Class = ns.Class
 
+local GetPlayerAuraBySpellID = C_UnitAuras and C_UnitAuras.GetPlayerAuraBySpellID or _G.GetPlayerAuraBySpellID
+
 ns.conditions = {}
 
 --[[
@@ -30,7 +32,7 @@ ns.conditions.Achievement = Class{
 ns.conditions.AuraActive = Class{
     __parent = Condition,
     type = 'spell',
-    Matched = function(self) return (_G.GetPlayerAuraBySpellID or C_UnitAuras.GetPlayerAuraBySpellID)(self.id) end,
+    Matched = function(self) return GetPlayerAuraBySpellID(self.id) end,
 }
 ns.conditions.AuraInactive = Class(Negated(ns.conditions.AuraActive))
 

@@ -493,6 +493,7 @@ function SMARTBUFF_InitSpellIDs()
   SMARTBUFF_DEFSTANCE       = GetSpellInfo(197690); --"Defensive Stance"
   SMARTBUFF_GLADSTANCE      = GetSpellInfo(156291); --"Gladiator Stance"
   SMARTBUFF_SHIELDBLOCK     = GetSpellInfo(2565);   --"Shield Block"
+
   -- Warrior buff links
   S.ChainWarriorStance = { SMARTBUFF_BATSTANCE, SMARTBUFF_DEFSTANCE, SMARTBUFF_GLADSTANCE };
   S.ChainWarriorShout  = { SMARTBUFF_BATTLESHOUT, SMARTBUFF_COMMANDINGSHOUT };

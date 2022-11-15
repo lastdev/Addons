@@ -30,10 +30,8 @@ local internal = {
 	exportText = "",
 }
 
--- Cache these so the hook does not trigger internally.
-local SetCVar = C_CVar.SetCVar
-local GetCVar = C_CVar.GetCVar
 hooksecurefunc(C_CVar, "SetCVar", function(cvar, value)
+	if CS:IsMapUldum() then return end
 	if cvar == "nameplateShowFriends" then
 		internal.cacheShowFriends = value
 	elseif cvar == "nameplateShowAll" then
@@ -159,9 +157,9 @@ function AlertFrame:SetColors(bgcolor, bordercolor)
 end
 
 function CS:ResetCVars()
-	SetCVar("nameplateShowFriends", internal.cacheShowFriends)
-	SetCVar("nameplateShowAll", internal.cacheShowAll)
-	SetCVar("nameplateShowFriendlyNPCs", internal.cacheShowFriendlyNPCs)
+	C_CVar.SetCVar("nameplateShowFriends", internal.cacheShowFriends)
+	C_CVar.SetCVar("nameplateShowAll", internal.cacheShowAll)
+	C_CVar.SetCVar("nameplateShowFriendlyNPCs", internal.cacheShowFriendlyNPCs)
 end
 
 function CS:SetCVars()
@@ -173,10 +171,9 @@ function CS:SetCVars()
 		end
 		C_Timer.After(60, function() internal.recentlyDisplayedEntry = false end)
 	end
-
-	SetCVar("nameplateShowAll", "1")
-	SetCVar("nameplateShowFriends", "1")
-	SetCVar("nameplateShowFriendlyNPCs", "1")
+	C_CVar.SetCVar("nameplateShowAll", "1")
+	C_CVar.SetCVar("nameplateShowFriends", "1")
+	C_CVar.SetCVar("nameplateShowFriendlyNPCs", "1")
 end
 
 function CS:DBMigration()
@@ -419,9 +416,9 @@ function CS:OnZoneChanged()
 end
 
 function CS:OnPlayerLogin()
-	internal.cacheShowFriends = GetCVar("nameplateShowFriends")
-	internal.cacheShowAll = GetCVar("nameplateShowAll")
-	internal.cacheShowFriendlyNPCs = GetCVar("nameplateShowFriendlyNPCs")
+	internal.cacheShowFriends = C_CVar.GetCVar("nameplateShowFriends")
+	internal.cacheShowAll = C_CVar.GetCVar("nameplateShowAll")
+	internal.cacheShowFriendlyNPCs = C_CVar.GetCVar("nameplateShowFriendlyNPCs")
 	if not internal.nameplateEventsRegistered and self:IsMapUldum() then
 		AlertFrame:Create()
 		self:SetCVars()
@@ -499,7 +496,7 @@ function CS:CreateExportDialog()
 	frame.background = frame:CreateTexture()
 	frame.background:SetAllPoints()
 	frame.background:SetColorTexture(0.05,0.05,0.05,0.9)
-	frame.Text = frame:CreateFontString(frame, nil, "GameFontNormalMed1")
+	frame.Text = frame:CreateFontString(nil, nil, "GameFontNormalMed1")
 	frame.Text:SetPoint("CENTER", frame, "TOP", 0, -20)
 	frame.Text:SetText("Export as CSV, CTRL+C to copy")
 	frame:EnableMouse(true)
@@ -565,8 +562,8 @@ function CS:AddAnimation(frame, addHighlight)
 		alpha:SetToAlpha(0.9)
 		alpha:SetDuration(0.30)
 		alpha:SetSmoothing("IN_OUT")
-		scale:SetFromScale(0,0)
-		scale:SetToScale(1,1)
+		scale:SetScaleFrom(0,0)
+		scale:SetScaleTo(1,1)
 		scale:SetDuration(0.10)
 		translation:SetDuration(0.18)
 		translation:SetOffset(0,10)

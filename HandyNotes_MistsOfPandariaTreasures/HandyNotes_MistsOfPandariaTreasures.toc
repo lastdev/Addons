@@ -2,7 +2,7 @@
 ## Title: HandyNotes: Mists of Pandaria (Treasures and Rares)
 ## Notes: Where everything is in Pandaria
 ## Author: Kemayo
-## Version: v23.1
+## Version: v23.2
 ## DefaultState: enabled
 ## X-Category: Map
 ## X-eMail: kemayo @ gmail DOT com

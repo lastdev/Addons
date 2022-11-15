@@ -6,9 +6,9 @@
 -- Cast the most important buffs on you, tanks or party/raid members/pets.
 -------------------------------------------------------------------------------
 
-SMARTBUFF_DATE          = "311022";
+SMARTBUFF_DATE          = "091122";
 
-SMARTBUFF_VERSION       = "r10."..SMARTBUFF_DATE;
+SMARTBUFF_VERSION       = "r11."..SMARTBUFF_DATE;
 SMARTBUFF_VERSIONNR     = 10000;
 SMARTBUFF_TITLE         = "SmartBuff";
 SMARTBUFF_SUBTITLE      = "Supports you in casting buffs";
@@ -22,7 +22,7 @@ local SmartbuffPrefix = "Smartbuff";
 local SmartbuffSession = true;
 local SmartbuffVerCheck = false;					-- for my use when checking guild users/testers versions  :)
 local buildInfo = select(4, GetBuildInfo())
-local SmartbuffRevision = 10;
+local SmartbuffRevision = 11;
 local SmartbuffVerNotifyList = {}
 
 local SG = SMARTBUFF_GLOBALS;
@@ -141,6 +141,9 @@ local Icons = {
   ["NONE"]        = { IconPaths.Roles, 20/64, 39/64, 22/64, 41/64 },
 };
 
+-- available sounds (25)
+local Sounds = { 1141, 3784, 4574, 17318, 15262, 13830, 15273, 10042, 10720, 17316, 3337, 7894, 7914, 10033, 416, 57207, 78626, 49432, 10571, 58194, 21970, 17339, 84261, 43765}
+
 local DebugChatFrame = DEFAULT_CHAT_FRAME;
 
 -- Popup
@@ -184,6 +187,11 @@ local ORD = BCC(0.7, 0.5, 0);
 local ORL = BCC(1, 0.6, 0.3);
 local WH  = BCC(1, 1, 1);
 local CY  = BCC(0.5, 1, 1);
+
+-- function to preview selected warning sound in options screen
+function SMARTBUFF_PlaySpashSound()
+  PlaySound(Sounds[O.AutoSoundSelection]);
+end
 
 -- Reorders values in the table
 local function treorder(t, i, n)
@@ -419,6 +427,7 @@ function SMARTBUFF_OnLoad(self)
   SLASH_SmartReloadUI1 = "/rui";
   
   SMARTBUFF_InitSpellIDs();
+
   --DEFAULT_CHAT_FRAME:AddMessage("SB OnLoad");
 end
 -- END SMARTBUFF_OnLoad
@@ -469,6 +478,7 @@ function SMARTBUFF_OnEvent(self, event, ...)
   
   if (event == "SMARTBUFF_UPDATE" and isLoaded and isPlayer and not isInit and not InCombatLockdown()) then
     SMARTBUFF_Options_Init(self);
+--    print(buildInfo)
   end
   
   if (not isInit or O == nil) then
@@ -1097,10 +1107,15 @@ function SMARTBUFF_SetBuff(buff, i, ia)
       end
       
       local _, _, count, texture = SMARTBUFF_FindItem(cBuffs[i].BuffS, cBuffs[i].Chain);
-      if (count <= 0) then
+      if count then
+	      if (count <= 0) then
+            cBuffs[i] = nil;
+            return i;
+          end
+      else
         cBuffs[i] = nil;
         return i;
-      end    
+      end 
       cBuffs[i].IconS = texture;
     end
   end
@@ -1677,7 +1692,7 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
   local cBuff = nil;
   local iId = nil;
   local iSlot = -1;
-  
+    
   if (UnitIsPVP("player")) then isPvP = true end
   
   SMARTBUFF_CheckUnitBuffTimers(unit);  
@@ -1699,7 +1714,7 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
     if (uct == nil) then uct = ""; end
     if (ucf == nil) then ucf = ""; end
           
-    --if (un) then SMARTBUFF_AddMsgD("Grp "..subgroup.." checking "..un.." ("..unit.."/"..uc.."/"..ur.."/"..uct.."/"..ucf..")", 0, 1, 0.5); end
+--    if (un) then print("Grp "..subgroup.." checking "..un.." ("..unit.."/"..uc.."/"..ur.."/"..uct.."/"..ucf..")", 0, 1, 0.5); end
 
     isShapeshifted, sShapename = SMARTBUFF_IsShapeshifted();
     --while (cBuffs[i] and cBuffs[i].BuffS) do
@@ -1716,9 +1731,8 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
       iId = nil;
       iSlot = -1;
       
-      if (not cBuff or not bs) then bUsable = false end
       if (cBuff and bs) then bUsable = bs.EnableS end
-      
+ 
       if (bUsable and spell and spell ~= buffnS) then
         bUsable = false;
         --SMARTBUFF_AddMsgD("Exclusive check on " .. spell .. ", current spell = " .. buffnS);
@@ -1728,19 +1742,7 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
       if (bUsable and not cBuff.Type == SMARTBUFF_CONST_TRACK and not SMARTBUFF_IsItem(cBuff.Type) and not IsUsableSpell(buffnS)) then bUsable = false end
       if (bUsable and bs.SelfNot and SMARTBUFF_IsPlayer(unit)) then bUsable = false end
       if (bUsable and cBuff.Params == SG.CheckFishingPole and SMARTBUFF_IsFishingPoleEquiped()) then bUsable = false end
-      
-      -- Check for power threshold
-      if (bUsable and bs.ManaLimit and bs.ManaLimit > 0) then
-        --print(UnitPowerType("player"));
-        if (cBuff.Params ~= SG.NIL and tonumber(cBuff.Params) and UnitPower("player", cBuff.Params) < bs.ManaLimit) then
-          bUsable = false;
-          --print(cBuff.BuffS.." is below the power threshold!");
-        elseif (UnitPower("player") < bs.ManaLimit) then
-          bUsable = false;
-          --print(cBuff.BuffS.." is below the power threshold!");
-        end
-      end
-      
+            
       -- Check for buffs which depends on a pet
       if (bUsable and cBuff.Params == SG.CheckPet and UnitExists("pet")) then bUsable = false end
       if (bUsable and cBuff.Params == SG.CheckPetNeeded and not UnitExists("pet")) then bUsable = false end
@@ -1815,7 +1817,8 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
               or (cBuff.Type ~= SMARTBUFF_CONST_GROUP and SMARTBUFF_IsPlayer(unit))
               or SMARTBUFF_IsInList(unit, un, bs.AddList))) then
               buff = nil;
-                            
+
+                           
               -- Tracking ability ------------------------------------------------------------------------
               if (cBuff.Type == SMARTBUFF_CONST_TRACK) then
 
@@ -1848,37 +1851,38 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
               elseif (cBuff.Type == SMARTBUFF_CONST_FOOD or cBuff.Type == SMARTBUFF_CONST_SCROLL or cBuff.Type == SMARTBUFF_CONST_POTION or 
                       cBuff.Type == SMARTBUFF_CONST_ITEM or cBuff.Type == SMARTBUFF_CONST_ITEMGROUP) then
               
-				        if (cBuff.Type == SMARTBUFF_CONST_ITEM) then
-				          bt = nil;
-				          buff = nil;
-				          if (cBuff.Params ~= SG.NIL) then
-				            local cr = SMARTBUFF_CountReagent(cBuff.Params, cBuff.Chain);
-				            --SMARTBUFF_AddMsgD(cr.." "..cBuff.Params.." found");
-				            if (cr == 0) then
-				              buff = cBuff.Params;
-				            end
-				          end				        
+				if (cBuff.Type == SMARTBUFF_CONST_ITEM) then
+				    bt = nil;
+				    buff = nil;
+				    if (cBuff.Params ~= SG.NIL) then
+				        local cr = SMARTBUFF_CountReagent(cBuff.Params, cBuff.Chain);
+				        --SMARTBUFF_AddMsgD(cr.." "..cBuff.Params.." found");
+				        if (cr == 0) then
+				            buff = cBuff.Params;
+				        end
+				    end	
+			        
                 -- dont attempt to use food while moving or we will waste them.
                 elseif (cBuff.Type == SMARTBUFF_CONST_FOOD and isPlayerMoving == false) then
                   if (not SMARTBUFF_IsPicnic(unit)) then
                     buff, index, buffname, bt, charges = SMARTBUFF_CheckUnitBuffs(unit, SMARTBUFF_FOOD_AURA, cBuff.Type, cBuff.Links, cBuff.Chain);
                   end
                 else
-				          if (cBuff.Params ~= SG.NIL) then
-				            if (cBuff.Links and cBuff.Links == SG.CheckFishingPole) then
-                      if (SMARTBUFF_IsFishingPoleEquiped()) then
-                        buff, index, buffname, bt, charges = SMARTBUFF_CheckUnitBuffs(unit, cBuff.Params, cBuff.Type);
-                      else
-                        buff = nil;
-                      end
-				            else
-					            buff, index, buffname, bt, charges = SMARTBUFF_CheckUnitBuffs(unit, cBuff.Params, cBuff.Type, cBuff.Links, cBuff.Chain);
-					          end
+				    if (cBuff.Params ~= SG.NIL) then
+				        if (cBuff.Links and cBuff.Links == SG.CheckFishingPole) then
+                            if (SMARTBUFF_IsFishingPoleEquiped()) then
+                                buff, index, buffname, bt, charges = SMARTBUFF_CheckUnitBuffs(unit, cBuff.Params, cBuff.Type);
+                            else
+                                buff = nil;
+                            end
+				        else
+					        buff, index, buffname, bt, charges = SMARTBUFF_CheckUnitBuffs(unit, cBuff.Params, cBuff.Type, cBuff.Links, cBuff.Chain);
+					    end
   			            --SMARTBUFF_AddMsgD("Buff time ("..cBuff.Params..") = "..tostring(bt));
-					        else
-					          buff = nil;
-				          end
-				        end
+					else
+					    buff = nil;
+				    end
+			    end
                 
                 if (buff == nil and cBuff.DurationS >= 1 and rbTime > 0) then
                   if (charges == nil) then charges = -1; end
@@ -2065,6 +2069,17 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
               end
               
               if (buff) then
+
+                -- we have a buff, set the cvar - this will be reverted back
+                -- once smartbuff has finished its work.  If we are in combat
+                -- lockdown then keep it at 0
+                
+                if not InCombatLockdown() and O.SBButtonFix then
+                    SetCVar("ActionButtonUseKeyDown",1 );
+				elseif O.SBButtonFix then
+                    SetCVar("ActionButtonUseKeyDown", O.SBButtonDownVal );
+                end
+
                 --if (cBuff.IDS) then
                   --SMARTBUFF_AddMsgD("Checking " ..i .. " - " .. cBuff.IDS .. " " .. buffnS);
                 --end
@@ -2213,12 +2228,12 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
                   if (mode == 0) then SMARTBUFF_AddMsgD(SMARTBUFF_MSG_CHAT); end
                 end
               else
-                -- finished
-                if (mode == 0) then SMARTBUFF_AddMsgD(un .. " nothing to buff"); end
+                -- finished                
+                if O.SBButtonFix then SetCVar("ActionButtonUseKeyDown", O.SBButtonDownVal ); end
               end
             else
               -- target does not need this buff
-              if (mode == 0) then SMARTBUFF_AddMsgD(un .. " does not need " .. buffnS); end            
+              if O.SBButtonFix then SetCVar("ActionButtonUseKeyDown", O.SBButtonDownVal ); end
             end
           else
             -- cooldown
@@ -2308,7 +2323,7 @@ function SMARTBUFF_SetMissingBuffMessage(target, buff, icon, bCanCharge, nCharge
   
   -- play sound
   if (O.ToggleAutoSound) then
-    PlaySound(1141);
+    PlaySound(Sounds[O.AutoSoundSelection]);
   end
 end
 
@@ -2817,7 +2832,7 @@ function SMARTBUFF_FindItem(reagent, chain)
         for i = 1, #chain, 1 do
           --print(chain[i]);
           if (chain[i] and string.find(tmpItem, "["..chain[i].."]", 1, true)) then
-            --print("Item found: "..chain[i]);
+--            print("Item found: "..chain[i]);
             texture, count = GetContainerItemInfo(bag, slot);
             return bag, slot, count, texture;
           end
@@ -2975,6 +2990,7 @@ function SMARTBUFF_Options_Init(self)
   if (O.ToggleAutoChat == nil) then O.ToggleAutoChat = false; end
   if (O.ToggleAutoSplash == nil) then O.ToggleAutoSplash = true; end
   if (O.ToggleAutoSound == nil) then O.ToggleAutoSound = true; end
+  if (O.AutoSoundSelection == nil) then O.AutoSoundSelection = 4; end;
   if (O.CheckCharges == nil) then O.CheckCharges = true; end
   --if (O.ToggleAutoRest == nil) then  O.ToggleAutoRest = true; end
   if (O.RebuffTimer == nil) then O.RebuffTimer = 20; end
@@ -3007,6 +3023,9 @@ function SMARTBUFF_Options_Init(self)
   
   if (O.HideMmButton == nil) then  O.HideMmButton = false; end
   if (O.HideSAButton == nil) then  O.HideSAButton = false; end
+  
+  if (O.SBButtonFix == nil) then O.SBButtonFix = false; end
+  if (O.SBButtonDownVal == nil) then O.SBButtonDownVal = GetCVarBool("ActionButtonUseKeyDown"); end
   
   if (O.MinCharges == nil) then  
     if (sPlayerClass == "SHAMAN" or sPlayerClass == "PRIEST") then
@@ -3115,7 +3134,7 @@ function SMARTBUFF_Options_Init(self)
     O.VersionNr = SMARTBUFF_VERSIONNR;
     SMARTBUFF_SetBuffs();
     InitBuffOrder(true);
-    print("Upgrade SmartBuff to "..SMARTBUFF_VERSION);
+    print("Upgraded SmartBuff to "..SMARTBUFF_VERSION);
   end
   
   if (SMARTBUFF_OptionsGlobal == nil) then SMARTBUFF_OptionsGlobal = { }; end
@@ -3455,6 +3474,11 @@ function SMARTBUFF_OToggleDebug()
   O.Debug = not O.Debug;
 end
 
+function SMARTBUFF_ToggleFixBuffing()
+    O.SBButtonFix = not O.SBButtonFix;
+	if not O.SBButtonFix then SetCVar("ActionButtonUseKeyDown", O.SBButtonDownVal ); end
+end
+
 function SMARTBUFF_OptionsFrame_Toggle()
   if (not isInit) then return; end
   
@@ -3724,6 +3748,7 @@ function SMARTBUFF_Options_OnShow()
   SmartBuffOptionsFrame_cbAutoChat:SetChecked(O.ToggleAutoChat);
   SmartBuffOptionsFrame_cbAutoSplash:SetChecked(O.ToggleAutoSplash);
   SmartBuffOptionsFrame_cbAutoSound:SetChecked(O.ToggleAutoSound);
+  
   --SmartBuffOptionsFrame_cbCheckCharges:SetChecked(O.ToggleCheckCharges);
   --SmartBuffOptionsFrame_cbAutoRest:SetChecked(O.ToggleAutoRest);
   SmartBuffOptionsFrame_cbAutoSwitchTmp:SetChecked(O.AutoSwitchTemplate);
@@ -3732,6 +3757,7 @@ function SMARTBUFF_Options_OnShow()
   SmartBuffOptionsFrame_cbBuffTarget:SetChecked(O.BuffTarget);
   SmartBuffOptionsFrame_cbBuffInCities:SetChecked(O.BuffInCities);
   SmartBuffOptionsFrame_cbInShapeshift:SetChecked(O.InShapeshift);  
+  SmartBuffOptionsFrame_cbFixBuffIssue:SetChecked(O.SBButtonFix);
   
   SmartBuffOptionsFrame_cbAntiDaze:SetChecked(O.AntiDaze);
   SmartBuffOptionsFrame_cbLinkGrpBuffCheck:SetChecked(O.LinkGrpBuffCheck);
@@ -4184,6 +4210,7 @@ function SMARTBUFF_OnPreClick(self, button, down)
   end
     
   if (not InCombatLockdown()) then
+    	
     self:SetAttribute("type", nil);
     self:SetAttribute("unit", nil);
     self:SetAttribute("spell", nil);
@@ -4192,6 +4219,7 @@ function SMARTBUFF_OnPreClick(self, button, down)
     self:SetAttribute("target-slot", nil); 
     self:SetAttribute("target-item", nil);
     self:SetAttribute("action", nil);
+	
   end
   
   --sScript = self:GetScript("OnClick");
@@ -4280,6 +4308,7 @@ function SMARTBUFF_OnPostClick(self, button, down)
   self:SetAttribute("action", nil);
   
   SMARTBUFF_SetButtonTexture(SmartBuff_KeyButton, imgSB);
+    
   --SMARTBUFF_AddMsgD("Button reseted, " .. button);
   --self:SetScript("OnClick", sScript);
 end

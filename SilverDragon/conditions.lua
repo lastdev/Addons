@@ -48,6 +48,21 @@ local Condition = Class{
 	Label = function(self) return ('{%s:%d}'):format(self.type, self.id) end,
 	Matched = function() return false end,
 }
+local RankedCondition = Class{
+    __parent = Condition,
+    Initialize = function(self, id, rank)
+        self.id = id
+        self.rank = rank
+    end,
+    Label = function(self)
+        -- this relies greatly on render_string working for self.type
+        local label = Condition.Label(self)
+        if self.rank then
+            return AZERITE_ESSENCE_TOOLTIP_NAME_RANK:format(label, self.rank)
+        end
+        return label
+    end
+}
 local Negated = function(parent) return {
 	__parent = parent,
 	Matched = function(self) return not self.__parent.Matched(self) end,
@@ -67,9 +82,42 @@ ns.conditions.AuraActive = Class{
 ns.conditions.AuraInactive = Class(Negated(ns.conditions.AuraActive))
 
 ns.conditions.Covenant = Class{
-	__parent = Condition,
-	type = 'covenant',
-	Matched = function(self) return self.id == C_Covenants.GetActiveCovenantID() end,
+    __parent = RankedCondition,
+    type = 'covenant',
+    Matched = function(self)
+        if self.id ~= C_Covenants.GetActiveCovenantID() then
+            return false
+        end
+        if self.rank then
+            return self.rank <= C_CovenantSanctumUI.GetRenownLevel()
+        end
+        return true
+    end,
+}
+
+ns.conditions.Faction = Class{
+    __parent = RankedCondition,
+    type = 'faction',
+    Matched = function(self)
+        local name, _, standingid = GetFactionInfoByID(self.id)
+        if name and standingid then
+            return self.rank <= standingid
+        end
+    end,
+}
+
+ns.conditions.MajorFaction = Class{
+    __parent = RankedCondition,
+    type = 'majorfaction',
+    Matched = function(self)
+        local info = C_MajorFactions.GetMajorFactionData(self.id)
+        if info then
+            if self.rank then
+                return self.rank <= info.renownLevel
+            end
+            return info.isUnlocked
+        end
+    end,
 }
 
 ns.conditions.GarrisonTalent = Class{
@@ -123,12 +171,75 @@ ns.conditions.WorldQuestActive = Class{
 	Matched = function(self) return C_TaskQuest.IsActive(self.id) end,
 }
 
+ns.conditions.CalendarEvent = Class{
+	__parent = Condition,
+	type = 'calendarevent',
+	Label = function(self)
+		local event = self:getEvent()
+		if event and event.title then
+			return event.title
+		end
+		return Condition.Label(self)
+	end,
+	Matched = function(self)
+		if self:getEvent() then
+			return true
+		end
+	end,
+	getEvent = function(self)
+		local offset, day = self:getOffsets()
+		for i=1, C_Calendar.GetNumDayEvents(offset, day) do
+			local event = C_Calendar.GetDayEvent(offset, day, i)
+			if event.eventID == self.id then
+				return true
+			end
+		end
+	end,
+	getOffsets = function(self, current)
+		-- we could call C_Calendar.SetMonth, but that'd jump the calendar around if it's open... so instead, work out the actual offset
+		current = current or C_DateAndTime.GetCurrentCalendarTime()
+		local selected = C_Calendar.GetMonthInfo()
+		local offset = (selected.month - current.month) + ((selected.year - current.year) * 12)
+		if offset >= 1 or offset <= -1 then
+			-- calendar APIs only return information on events within the next month either way
+			if not (_G.CalendarFrame and _G.CalendarFrame:IsVisible()) then
+				-- calendar's not visible, so it's fine to move it around
+				-- SetAbsMonth because when the calendar hasn't been opened yet just SetMonth can jump to an incorrect year...
+				C_Calendar.SetAbsMonth(current.month, current.year)
+				offset = 0
+			end
+		end
+		return offset, current.monthDay
+	end,
+}
+ns.conditions.CalendarEventStartTexture = Class{
+	__parent = ns.conditions.CalendarEvent,
+	type = 'calendareventtexture',
+	getEvent = function(self)
+		local offset, day = self:getOffsets()
+		for i=1, C_Calendar.GetNumDayEvents(offset, day) do
+			local event = C_Calendar.GetDayEvent(offset, day, i)
+			if event.startTime then
+				local startoffset, startday = self:getOffsets(event.startTime)
+				for ii=1, C_Calendar.GetNumDayEvents(startoffset, startday) do
+					local startEvent = C_Calendar.GetDayEvent(startoffset, startday, ii)
+					if startEvent and startEvent.iconTexture == self.id then
+						return event
+					end
+				end
+			end
+		end
+	end
+}
+
 -- Helpers:
 
 do
 	local function check(cond) return cond:Matched() end
 	ns.conditions.check = function(conditions)
-		return ns.doTest(check, conditions)
+		if conditions then
+			return ns.doTest(check, conditions)
+		end
 	end
 
 	local t = {}

@@ -6,7 +6,7 @@ do
 end
 
 do
-	BadBoyIgnoreConfigTitle:SetText("BadBoy_Ignore v10.0.0") --packager magic, replaced with tag version
+	BadBoyIgnoreConfigTitle:SetText("BadBoy_Ignore v10.0.1") --packager magic, replaced with tag version
 
 	local addIgnore = CreateFrame("Frame", "BadBoy_IgnoreAdd", BadBoyConfig, "UIDropDownMenuTemplate")
 	addIgnore:SetPoint("TOPLEFT", BadBoyIgnoreConfigTitle, "BOTTOMLEFT", -12, -5)

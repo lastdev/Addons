@@ -8,26 +8,6 @@
 	<Script file="localization.cn.lua" />
 	<Script file="SmartBuff.buffs.lua" />
 	<Script file="SmartBuff.lua" />
-	<Button name="SmartBuff_ActionButtonTemplate" inherits="SecureActionButtonTemplate,SecureHandlerBaseTemplate" virtual="true" hidden="true">
-		<Size>
-			<AbsDimension x="32" y="32" />
-		</Size>
-		<Layers>
-			<Layer level="BACKGROUND">
-				<Texture setAllPoints="true">
-					<Color r="0.2" g="0" b="0" a="0.3" />
-				</Texture>
-			</Layer>
-		</Layers>
-		<Scripts>
-			<OnLoad>
-				self.title = self:CreateFontString(nil, "OVERLAY");
-				self.title:SetFontObject("GameFontNormal");
-				self.title:SetAllPoints(self);
-				self.title:SetText("");
-			</OnLoad>
-		</Scripts>
-	</Button>
 	<Frame name="SmartBuffFrame">
 		<Scripts>
 			<OnLoad>
@@ -55,7 +35,7 @@
 			<AbsDimension x="420" y="100" />
 		</Size>
 		<Anchors>
-			<Anchor point="CENTER">
+			<Anchor point="CENTER" x="0" y="0">
 				<AbsDimension x="0" y="0" />
 			</Anchor>
 		</Anchors>
@@ -439,7 +419,7 @@
 			<OnLoad>
 				self:EnableMouse(true);
 				self:RegisterForDrag("LeftButton");
-				self:RegisterForClicks("AnyUp", "AnyDown");
+				self:RegisterForClicks("AnyDown");
 				self:SetScript("PreClick", SMARTBUFF_OnPreClick);
 				self:SetScript("PostClick", SMARTBUFF_OnPostClick);
 				self:SetAttribute("type", "spell");
@@ -462,10 +442,10 @@
 	</Button>
 	<Frame name="SmartBuffOptionsFrame" hidden="true" parent="UIParent" toplevel="true" movable="true" frameStrata="DIALOG" enableMouse="true">
 		<Size>
-			<AbsDimension x="560" y="630" />
+			<AbsDimension x="560" y="720" />
 		</Size>
 		<Anchors>
-			<Anchor point="CENTER" x="30" y="0" />
+			<Anchor point="CENTER" x="30" y="-42" />
 		</Anchors>
 		<Layers>
 			<Layer>
@@ -728,9 +708,7 @@
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="SmartBuffOptionsFrame_cbAutoChat" relativePoint="TOPLEFT">
-						<Offset>
-							<AbsDimension x="10" y="-32" />
-						</Offset>
+						<Offset x="-10" y="-47" />
 					</Anchor>
 				</Anchors>
 				<Scripts>
@@ -850,9 +828,7 @@
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="SmartBuffOptionsFrameRebuffTimer" relativePoint="TOPLEFT">
-						<Offset>
-							<AbsDimension x="-20" y="-28" />
-						</Offset>
+						<Offset y="-73" />
 					</Anchor>
 				</Anchors>
 				<HitRectInsets>
@@ -1220,7 +1196,7 @@
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="SmartBuffOptionsFrame_cbInCombat" relativePoint="TOPLEFT">
-						<Offset x="160" y="-39" />
+						<Offset x="10" y="-42" />
 					</Anchor>
 				</Anchors>
 				<Scripts>
@@ -1251,9 +1227,7 @@
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="SmartBuffOptionsFrame_cbInCombat" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="-36" />
-						</Offset>
+						<Offset y="-56" />
 					</Anchor>
 				</Anchors>
 				<HitRectInsets>
@@ -1428,7 +1402,7 @@
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT">
-						<Offset x="280" y="-72" />
+						<Offset x="280" y="-82" />
 					</Anchor>
 				</Anchors>
 				<Layers>
@@ -1580,11 +1554,85 @@
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">
-						<Offset x="30" y="-415" />
+						<Offset x="30" y="-489" />
 					</Anchor>
 				</Anchors>
 				<FontString inherits="GameFontNormalSmall" justifyH="LEFT" />
 			</EditBox>
+			<Button name="SmartBuffOptionsFrame_btnPlaySound" inherits="UIPanelButtonTemplate" text="&gt;">
+				<Size x="27" y="16" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="207" y="-203" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						SMARTBUFF_PlaySpashSound();
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Slider name="SmartBuffOptionsFrame_sldSounds" inherits="OptionsSliderTemplate" minValue="1" maxValue="25" defaultValue="1">
+				<Size>
+					<AbsDimension x="172" y="16" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="SmartBuffOptionsFrame_cbAutoChat" relativePoint="TOPLEFT">
+						<Offset x="-10" y="-116" />
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnValueChanged>
+						local o = SMARTBUFF_Options;
+						local n = self:GetValue();
+						if (o and o.AutoSoundSelection ~= n) then
+							SmartBuff_SetSliderText(self, SMARTBUFF_MSG_SOUNDS, n, "%d");
+							o.AutoSoundSelection = n;
+						end
+					</OnValueChanged>
+					<OnShow>
+						local o = SMARTBUFF_Options;
+						if (o and o.AutoSoundSelection) then
+							SmartBuff_SetSliderText(self, SMARTBUFF_MSG_SOUNDS, o.AutoSoundSelection, "%d", true);
+						end
+					</OnShow>
+					<OnLoad>
+						SmartBuffOptionsFrameSlider_OnLoad(self, 1, 24, 1);
+						BackdropTemplateMixin.OnBackdropLoaded(self);
+					</OnLoad>
+					<OnEnter>
+						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+						GameTooltip:SetText(SMARTBUFF_OFTT_SOUNDSELECT, SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
+					</OnEnter>
+				</Scripts>
+			</Slider>
+			<CheckButton name="SmartBuffOptionsFrame_cbFixBuffIssue" inherits="UICheckButtonTemplate">
+				<Size>
+					<AbsDimension x="24" y="24" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="SmartBuffOptionsFrame_cbBuffInCities" relativePoint="TOPLEFT">
+						<Offset x="104" y="-58" />
+					</Anchor>
+				</Anchors>
+				<HitRectInsets>
+					<AbsInset left="0" right="0" top="0" bottom="0" />
+				</HitRectInsets>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+						GameTooltip:SetText(SMARTBUFF_OFTT_FIXBUFF, SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
+					</OnEnter>
+					<OnClick>
+						SMARTBUFF_ToggleFixBuffing();
+					</OnClick>
+					<OnLoad>
+						getglobal(self:GetName().."Text"):SetText(SMARTBUFF_OFT_FIXBUFF);
+						getglobal(self:GetName().."Text"):SetFontObject(GameFontNormalSmall);
+					</OnLoad>
+					<OnLeave>
+						GameTooltip:Hide();
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
 		</Frames>
 		<Scripts>
 			<OnLoad>

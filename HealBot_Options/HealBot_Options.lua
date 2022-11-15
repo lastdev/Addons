@@ -14,7 +14,6 @@ local fonts=nil
 local fontsIndex={}
 local sounds=nil
 local soundsIndex={}
-local updatingMedia=false
 local ClickedBuffGroupDD=nil
 local hbCurSkin=""
 local hbCurSkinSubFrameID=1001
@@ -1063,6 +1062,7 @@ function HealBot_Options_setLists()
     HEALBOT_PLUGIN_MYCOOLDOWNS,
     HEALBOT_PLUGIN_TWEAKS,
     HEALBOT_PLUGIN_REQUESTS,
+    HEALBOT_PLUGIN_BUFFWATCH,
     --HEALBOT_PLUGIN_EFFECTIVETANKS,
     --HEALBOT_PLUGIN_EFFICIENTHEALERS,
     }
@@ -2382,12 +2382,21 @@ function HealBot_Options_TooltipScale_OnValueChanged(self)
         local g=_G[self:GetName().."Text"]
         g:SetText(self.text .. ": " .. val);
         HealBot_Globals.Tooltip_Scale = val;
+        if HealBot_Options_luVars["TIPLOADED"] and HealBot_Options_luVars["OPTIONSTIPVISIBLE"] then
+            HealBot_Tooltip_Hide()
+            HealBot_Tooltip_SetScale()
+            HealBot_Options_Show_Help("TOOLTIPSCALE",true)
+        end
     end
 end
 
 function HealBot_Options_TooltipAlpha_OnValueChanged(self)
-    if HealBot_Globals.Tooltip_SetAlphaValue~=HealBot_Comm_round(HealBot_Options_Pct_OnValueChanged(self),2) then
-        HealBot_Globals.Tooltip_SetAlphaValue = HealBot_Comm_round(HealBot_Options_Pct_OnValueChanged(self),2);
+    if HealBot_Globals.Tooltip_Alpha~=HealBot_Comm_round(HealBot_Options_Pct_OnValueChanged(self),2) then
+        HealBot_Globals.Tooltip_Alpha = HealBot_Comm_round(HealBot_Options_Pct_OnValueChanged(self),2);
+        if HealBot_Options_luVars["TIPLOADED"] and HealBot_Options_luVars["OPTIONSTIPVISIBLE"] then
+            HealBot_Tooltip_Hide()
+            HealBot_Options_Show_Help("TOOLTIPALPHA",true)
+        end
     end
 end
 
@@ -2628,15 +2637,11 @@ function HealBot_Options_WarningSound_OnValueChanged(self)
                 HealBot_Config_Cures.SoundDebuffPlay = sounds[v];
                 g=_G[self:GetName().."Text"]
                 g:SetText(self.text .. " ".. v..": " ..sounds[v]);
-                if not DoneInitTab[4] and not updatingMedia then
-                    PlaySoundFile(LSM:Fetch('sound',HealBot_Config_Cures.SoundDebuffPlay));
-                end
             end
         else
             g=_G[self:GetName().."Text"]
             g:SetText(self.text);
         end
-        updatingMedia=false;
     end
 end
 
@@ -2651,15 +2656,11 @@ function HealBot_Options_BuffWarningSound_OnValueChanged(self)
                 HealBot_Config_Buffs.SoundBuffPlay = sounds[v];
                 g=_G[self:GetName().."Text"]
                 g:SetText(self.text .. " ".. v..": " ..sounds[v]);
-                if not DoneInitTab[5] and not updatingMedia then
-                    PlaySoundFile(LSM:Fetch('sound',HealBot_Config_Buffs.SoundBuffPlay));
-                end
             end
         else
             g=_G[self:GetName().."Text"]
             g:SetText(self.text);
         end
-        updatingMedia=false;
     end
 end
 
@@ -2680,9 +2681,6 @@ function HealBot_Options_BarTextureS_OnValueChanged(self)
         else
             g=_G[self:GetName().."Text"]
             g:SetText(self.text);
-        end    
-        if v>0 then
-            updatingMedia=false;
         end
     end
 end
@@ -2704,9 +2702,6 @@ function HealBot_EmergBarTexture_OnValueChanged(self)
         else
             g=_G[self:GetName().."Text"]
             g:SetText(self.text);
-        end    
-        if v>0 then
-            updatingMedia=false;
         end
     end
 end
@@ -3102,9 +3097,6 @@ function HealBot_Options_HeadTextureS_OnValueChanged(self)
         else
             g=_G[self:GetName().."Text"]
             g:SetText(self.text);
-        end  
-        if val>0 then
-            updatingMedia=false;
         end
     end
 end
@@ -3127,9 +3119,6 @@ function HealBot_Options_SkinFrameAliasTextureS_OnValueChanged(self)
         else
             g=_G[self:GetName().."Text"]
             g:SetText(self.text);
-        end  
-        if val>0 then
-            updatingMedia=false;
         end
     end
 end
@@ -3151,9 +3140,6 @@ function HealBot_Options_HeadFontNameS_OnValueChanged(self)
         else
             g=_G[self:GetName().."Text"]
             g:SetText(self.text);
-        end   
-        if val>0 then
-            updatingMedia=false;
         end
     end
 end
@@ -3176,9 +3162,6 @@ function HealBot_BarButtonIconFont_OnValueChanged(self)
         else
             g=_G[self:GetName().."Text"]
             g:SetText(self.text);
-        end   
-        if val>0 then
-            updatingMedia=false;
         end
     end
 end
@@ -3201,9 +3184,6 @@ function HealBot_BarButtonIconBuffFont_OnValueChanged(self)
         else
             g=_G[self:GetName().."Text"]
             g:SetText(self.text);
-        end   
-        if val>0 then
-            updatingMedia=false;
         end
     end
 end
@@ -3398,9 +3378,6 @@ function HealBot_Options_FontName_OnValueChanged(self)
         else
             g=_G[self:GetName().."Text"]
             g:SetText(self.text);
-        end       
-        if val>0 then
-            updatingMedia=false;
         end
     end
 end
@@ -3422,9 +3399,6 @@ function HealBot_Options_StateFontName_OnValueChanged(self)
         else
             g=_G[self:GetName().."Text"]
             g:SetText(self.text);
-        end       
-        if val>0 then
-            updatingMedia=false;
         end
     end
 end
@@ -3446,9 +3420,6 @@ function HealBot_Options_AuxFontName_OnValueChanged(self)
         else
             g=_G[self:GetName().."Text"]
             g:SetText(self.text);
-        end       
-        if val>0 then
-            updatingMedia=false;
         end
     end
 end
@@ -3470,9 +3441,46 @@ function HealBot_Options_HealthFontName_OnValueChanged(self)
         else
             g=_G[self:GetName().."Text"]
             g:SetText(self.text);
-        end       
-        if val>0 then
-            updatingMedia=false;
+        end
+    end
+end
+
+function HealBot_Options_TooltipHeaderFont_OnValueChanged(self)
+    local g=nil
+    local val=floor(self:GetValue()+0.5)
+    if val~=self:GetValue() then
+        self:SetValue(val) 
+    else
+        if val > 0 then
+            if fonts and HealBot_Globals.Tooltip_HeaderFont~=fonts[val] then
+                HealBot_Globals.Tooltip_HeaderFont = fonts[val];
+                g=_G[self:GetName().."Text"]
+                g:SetText(self.text .. " ".. val..": " ..fonts[val]);
+                HealBot_Timers_Set("LAST","LoadTips")
+            end
+        else
+            g=_G[self:GetName().."Text"]
+            g:SetText(self.text);
+        end
+    end
+end
+
+function HealBot_Options_TooltipDetailFont_OnValueChanged(self)
+    local g=nil
+    local val=floor(self:GetValue()+0.5)
+    if val~=self:GetValue() then
+        self:SetValue(val) 
+    else
+        if val > 0 then
+            if fonts and HealBot_Globals.Tooltip_DetailFont~=fonts[val] then
+                HealBot_Globals.Tooltip_DetailFont = fonts[val];
+                g=_G[self:GetName().."Text"]
+                g:SetText(self.text .. " ".. val..": " ..fonts[val]);
+                HealBot_Timers_Set("LAST","LoadTips")
+            end
+        else
+            g=_G[self:GetName().."Text"]
+            g:SetText(self.text);
         end
     end
 end
@@ -3494,9 +3502,6 @@ function HealBot_Options_AggroFontName_OnValueChanged(self)
         else
             g=_G[self:GetName().."Text"]
             g:SetText(self.text);
-        end       
-        if val>0 then
-            updatingMedia=false;
         end
     end
 end
@@ -4007,6 +4012,30 @@ function HealBot_Options_TipMaxButtons_OnValueChanged(self)
         HealBot_Globals.Tooltip_MaxButtons = val;
         local g=_G[self:GetName().."Text"]
         g:SetText(self.text .. ": " .. val);
+    end
+end
+
+function HealBot_Options_TooltipHeaderFontSize_OnValueChanged(self)
+    local val=floor(self:GetValue()+0.5)
+    if val~=self:GetValue() then
+        self:SetValue(val) 
+    else
+        HealBot_Globals.Tooltip_HeaderFontSize = val;
+        local g=_G[self:GetName().."Text"]
+        g:SetText(self.text .. ": " .. val)
+        HealBot_Timers_Set("LAST","LoadTips")
+    end
+end
+
+function HealBot_Options_TooltipDetailFontSize_OnValueChanged(self)
+    local val=floor(self:GetValue()+0.5)
+    if val~=self:GetValue() then
+        self:SetValue(val) 
+    else
+        HealBot_Globals.Tooltip_DetailFontSize = val;
+        local g=_G[self:GetName().."Text"]
+        g:SetText(self.text .. ": " .. val)
+        HealBot_Timers_Set("LAST","LoadTips")
     end
 end
 
@@ -4640,7 +4669,7 @@ function HealBot_Options_BarFreq_setVars()
         flashFreqUpd=0.05+(Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["OFREQ"]*0.4)
         fluidFreq=HealBot_Comm_round(HealBot_Options_luVars["FluidFreqAdj"]-(Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["FLUIDFREQ"]/1500),4)
         smoothAdj=9-ceil(Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["FLUIDFREQ"]/2)
-        hotBarHlth=Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HOTBARHLTH"]
+        hotBarHlth=Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HOTBARHLTH"]*10
         hotBarDebuff=Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HOTBARDEBUFF"]-1
         hotBarDimming=Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HBDIMMING"]
         hazardFreq=Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HAZARDFREQ"] or 0.3
@@ -4651,7 +4680,7 @@ function HealBot_Options_BarFreq_setVars()
         flashFreqUpd=0.05+(HealBot_Globals.OverrideEffects["OFREQ"]*0.4)
         fluidFreq=HealBot_Comm_round(HealBot_Options_luVars["FluidFreqAdj"]-(HealBot_Globals.OverrideEffects["FLUIDFREQ"]/1500),4)
         smoothAdj=9-ceil(HealBot_Globals.OverrideEffects["FLUIDFREQ"]/2)
-        hotBarHlth=HealBot_Globals.OverrideEffects["HOTBARHLTH"]
+        hotBarHlth=HealBot_Globals.OverrideEffects["HOTBARHLTH"]*10
         hotBarDebuff=HealBot_Globals.OverrideEffects["HOTBARDEBUFF"]-1
         hotBarDimming=HealBot_Globals.OverrideEffects["HBDIMMING"]
         hazardFreq=HealBot_Globals.OverrideEffects["HAZARDFREQ"] or 0.3
@@ -4716,7 +4745,7 @@ function HealBot_Options_OverrideHotBarHealthThres_OnValueChanged(self)
         self:SetValue(val) 
     elseif HealBot_Globals.OverrideEffects["HOTBARHLTH"]~=val then
         HealBot_Globals.OverrideEffects["HOTBARHLTH"] = val;
-        HealBot_Options_SetText(HealBot_Options_OverrideHotBarHealthThres, HEALBOT_OPTION_HEALTHDROPPCT..val.."%")
+        HealBot_Options_SetText(HealBot_Options_OverrideHotBarHealthThres, HEALBOT_OPTION_HOTBARHEALTHPCT..val.."%")
         HealBot_Timers_Set("LAST","BarFreqVars")
     end
 end
@@ -4926,10 +4955,25 @@ end
 
 function HealBot_Options_ShowTooltipRanks_OnClick(self)
     HealBot_Globals.Tooltip_ShowRank = self:GetChecked()
+    HealBot_Timers_Set("LAST","LoadTips")
+end
+
+function HealBot_Options_UseGameTooltip_OnClick(self)
+    if HealBot_Globals.Tooltip_UseGameTooltip~=self:GetChecked() then
+        HealBot_Globals.Tooltip_UseGameTooltip = self:GetChecked()
+        HealBot_Globals.Tooltip_UseGameTooltip = self:GetChecked()
+        HealBot_Options_SetTooltipState()
+        if HealBot_Options_luVars["TIPLOADED"] and HealBot_Options_luVars["OPTIONSTIPVISIBLE"] then
+            HealBot_Tooltip_Hide()
+            HealBot_Tooltip_Init()
+            HealBot_Options_Show_Help("TOOLTIPUSEGAME",true)
+        end
+    end
 end
 
 function HealBot_Options_ShowTooltipRoles_OnClick(self)
     HealBot_Globals.Tooltip_ShowRole = self:GetChecked()
+    HealBot_Timers_Set("LAST","LoadTips")
 end
 
 function HealBot_Options_ShowTooltipHideRoleWhenRank_OnClick(self)
@@ -6134,7 +6178,7 @@ end
 function HealBot_Options_ShowTooltip_OnClick(self)
     if HealBot_Globals.ShowTooltip~=self:GetChecked() then
         HealBot_Globals.ShowTooltip = self:GetChecked()
-        if self:GetChecked() then HealBot_Options_LoadTips() end
+        if self:GetChecked() then HealBot_Timers_Set("LAST","LoadTips") end
         HealBot_Options_SetTooltipState()
     end
 end
@@ -6151,7 +6195,8 @@ function HealBot_Options_AddonFail(reason, addon)
 end
 
 function HealBot_Options_LoadTips()
-    local loaded, reason = LoadAddOn("HealBot_Tips")
+    local loaded, reason=HealBot_Options_luVars["TIPLOADED"],""
+    if not loaded then loaded, reason = LoadAddOn("HealBot_Tips") end
     if loaded then
         if HealBot_Globals.ShowTooltip then
             HealBot_Data["TIPUSE"]=true
@@ -6213,18 +6258,6 @@ end
 function HealBot_Options_ShowTooltipShowHoT_OnClick(self)
     if HealBot_Globals.Tooltip_ShowHoT~=self:GetChecked() then
         HealBot_Globals.Tooltip_ShowHoT = self:GetChecked()
-    end
-end
-
-function HealBot_Options_TooltipSetScale_OnClick(self)
-    if HealBot_Globals.Tooltip_SetScale~=self:GetChecked() then
-        HealBot_Globals.Tooltip_SetScale = self:GetChecked()
-    end
-end
-
-function HealBot_Options_TooltipSetAlpha_OnClick(self)
-    if HealBot_Globals.Tooltip_SetAlpha~=self:GetChecked() then
-        HealBot_Globals.Tooltip_SetAlpha = self:GetChecked()
     end
 end
 
@@ -12231,7 +12264,7 @@ function HealBot_Options_DoSet_Current_Skin(newSkin, ddRefresh, noCallback, optS
 end
 
 function HealBot_Options_Set_Current_Skin(newSkin, ddRefresh, noCallback, optSetSkins)
-    if not HealBot_Data["UILOCK"] then
+    if not InCombatLockdown() then
         local initCurFrame=HealBot_Options_DoSet_Current_Skin(newSkin, ddRefresh, noCallback, optSetSkins)
         if initCurFrame then HealBot_Options_SetSkins(true) end
     else
@@ -12373,7 +12406,8 @@ local function HealBot_Options_Plugins_ShowFrame()
                     [6]="pluginPerformance",
                     [7]="pluginMyCooldowns",
                     [8]="pluginTweaks",
-                    [9]="pluginRequests",}
+                    [9]="pluginRequests",
+                   [10]="pluginBuffWatch",}
     HealBot_Options_PluginThreatFrame:Hide()
     HealBot_Options_PluginTimeToDieFrame:Hide()
     HealBot_Options_PluginTimeToLiveFrame:Hide()
@@ -12382,6 +12416,7 @@ local function HealBot_Options_Plugins_ShowFrame()
     HealBot_Options_PluginPerformanceFrame:Hide()
     HealBot_Options_PluginTweaksFrame:Hide()
     HealBot_Options_PluginRequestsFrame:Hide()
+    HealBot_Options_PluginBuffWatchFrame:Hide()
     HealBot_Options_PluginMyCooldownsFrame:Hide()
     if not HealBot_retLuVars(pluginId[HealBot_Options_luVars["curPlugin"]].."Loaded") then
         HealBot_Options_PluginNATxt:Show()
@@ -12417,6 +12452,9 @@ local function HealBot_Options_Plugins_ShowFrame()
         elseif HealBot_Options_luVars["curPlugin"]==9 then
             HealBot_Plugin_Requests_Options()
             HealBot_Options_PluginRequestsFrame:Show()
+        elseif HealBot_Options_luVars["curPlugin"]==10 then
+            HealBot_Plugin_BuffWatch_Options()
+            HealBot_Options_PluginBuffWatchFrame:Show()
         end
     end
 end
@@ -13224,10 +13262,10 @@ end
 function HealBot_Options_CDebuffGetId(cdText)
     local rText=cdText
     if cdText then
-        local s=string.find(cdText, "%(")
-        local e=string.find(cdText, "%)")
+        local s=string.find(cdText, "%(%d")
+        local e=string.find(cdText, "%d%)")
         if s and e then
-            rText=tonumber(string.sub(cdText,s+1,e-1))
+            rText=tonumber(string.sub(cdText,s+1,e))
         elseif HealBot_Spell_Names[cdText] then
             rText=HealBot_Spell_Names[cdText]
         elseif GetSpellInfo(cdText) then
@@ -14426,6 +14464,66 @@ function HealBot_Options_Debuff_Reset()
     FirstDebuffLoad=nil
 end
 
+function HealBot_Options_ExtraBuff_Reset()
+    local buffbarcolrClass = HealBot_Config_Buffs.HealBotBuffColR or 1
+    local buffbarcolgClass = HealBot_Config_Buffs.HealBotBuffColG or 1
+    local buffbarcolbClass = HealBot_Config_Buffs.HealBotBuffColB or 1
+    if HealBot_Config_Buffs.CheckWellFed then
+        local wellFedItem=HealBot_Config_Buffs.WellFedItem
+        local hbCustomItemID=GetItemInfoInstant(wellFedItem) or 0
+        if hbCustomItemID>0 and HealBot_IsItemInBag(hbCustomItemID) then
+            HealBot_buffbarcolr[wellFedItem]=buffbarcolrClass[11] or 1
+            HealBot_buffbarcolg[wellFedItem]=buffbarcolgClass[11] or 1
+            HealBot_buffbarcolb[wellFedItem]=buffbarcolbClass[11] or 1
+            HealBot_BuffWatchTarget[wellFedItem] = {};
+            HealBot_BuffWatchTarget[wellFedItem]["Self"]=true
+        else
+            wellFedItem=HealBot_Config_Buffs.BackupWellFedItem
+            hbCustomItemID=GetItemInfoInstant(wellFedItem) or 0
+            if hbCustomItemID>0 and HealBot_IsItemInBag(hbCustomItemID) then
+                HealBot_buffbarcolr[wellFedItem]=buffbarcolrClass[11] or 1
+                HealBot_buffbarcolg[wellFedItem]=buffbarcolgClass[11] or 1
+                HealBot_buffbarcolb[wellFedItem]=buffbarcolbClass[11] or 1
+                HealBot_BuffWatchTarget[wellFedItem] = {};
+                HealBot_BuffWatchTarget[wellFedItem]["Self"]=true
+            end
+        end
+    end
+    if HealBot_Config_Buffs.CheckManaDrink then
+        local manaDrinkItem=HealBot_Config_Buffs.ManaDrinkItem
+        local hbCustomItemID=GetItemInfoInstant(manaDrinkItem) or 0
+        if hbCustomItemID>0 and HealBot_IsItemInBag(hbCustomItemID) then
+            HealBot_buffbarcolr[manaDrinkItem]=buffbarcolrClass[15] or 1
+            HealBot_buffbarcolg[manaDrinkItem]=buffbarcolgClass[15] or 1
+            HealBot_buffbarcolb[manaDrinkItem]=buffbarcolbClass[15] or 1
+            HealBot_BuffWatchTarget[manaDrinkItem] = {};
+            HealBot_BuffWatchTarget[manaDrinkItem]["Self"]=true
+        else
+            manaDrinkItem=HealBot_Config_Buffs.BackupManaDrinkItem
+            local hbCustomItemID=GetItemInfoInstant(manaDrinkItem) or 0
+            if hbCustomItemID>0 and HealBot_IsItemInBag(hbCustomItemID) then
+                HealBot_buffbarcolr[manaDrinkItem]=buffbarcolrClass[15] or 1
+                HealBot_buffbarcolg[manaDrinkItem]=buffbarcolgClass[15] or 1
+                HealBot_buffbarcolb[manaDrinkItem]=buffbarcolbClass[15] or 1
+                HealBot_BuffWatchTarget[manaDrinkItem] = {};
+                HealBot_BuffWatchTarget[manaDrinkItem]["Self"]=true
+            end
+        end
+    end
+    for x=1,3 do
+        if HealBot_Config_Buffs.CustomBuffCheck[x] and string.len(HealBot_Config_Buffs.CustomBuffName[x])>0 then
+            local extraItem=HealBot_Config_Buffs.CustomItemName[x]
+            local hbCustomItemID=GetItemInfoInstant(extraItem) or 0
+            if hbCustomItemID>0 and HealBot_IsItemInBag(hbCustomItemID) then
+                HealBot_buffbarcolr[extraItem]=buffbarcolrClass[11+x] or 1
+                HealBot_buffbarcolg[extraItem]=buffbarcolgClass[11+x] or 1
+                HealBot_buffbarcolb[extraItem]=buffbarcolbClass[11+x] or 1
+                HealBot_BuffWatchTarget[extraItem] = {};
+                HealBot_BuffWatchTarget[extraItem]["Self"]=true
+            end
+        end
+    end
+end
 
 local spells={}
 function HealBot_Options_Buff_Reset()
@@ -14655,61 +14753,7 @@ function HealBot_Options_Buff_Reset()
             HealBot_buffbarcolb[HealBot_Buff_WeaponEnchant_List[k-8][BuffDropDownClass[HealBot_Options_getDropDownId_bySpec(k)]]]=buffbarcolbClass[k];
         end
     end
-    if HealBot_Config_Buffs.CheckWellFed then
-        local wellFedItem=HealBot_Config_Buffs.WellFedItem
-        local hbCustomItemID=GetItemInfoInstant(wellFedItem) or 0
-        if hbCustomItemID>0 then
-            HealBot_buffbarcolr[wellFedItem]=buffbarcolrClass[11] or 1
-            HealBot_buffbarcolg[wellFedItem]=buffbarcolgClass[11] or 1
-            HealBot_buffbarcolb[wellFedItem]=buffbarcolbClass[11] or 1
-            HealBot_BuffWatchTarget[wellFedItem] = {};
-            HealBot_BuffWatchTarget[wellFedItem]["Self"]=true
-        else
-            wellFedItem=HealBot_Config_Buffs.BackupWellFedItem
-            hbCustomItemID=GetItemInfoInstant(wellFedItem) or 0
-            if hbCustomItemID>0 then
-                HealBot_buffbarcolr[wellFedItem]=buffbarcolrClass[11] or 1
-                HealBot_buffbarcolg[wellFedItem]=buffbarcolgClass[11] or 1
-                HealBot_buffbarcolb[wellFedItem]=buffbarcolbClass[11] or 1
-                HealBot_BuffWatchTarget[wellFedItem] = {};
-                HealBot_BuffWatchTarget[wellFedItem]["Self"]=true
-            end
-        end
-    end
-    if HealBot_Config_Buffs.CheckManaDrink then
-        local manaDrinkItem=HealBot_Config_Buffs.ManaDrinkItem
-        local hbCustomItemID=GetItemInfoInstant(manaDrinkItem) or 0
-        if hbCustomItemID>0 then
-            HealBot_buffbarcolr[manaDrinkItem]=buffbarcolrClass[15] or 1
-            HealBot_buffbarcolg[manaDrinkItem]=buffbarcolgClass[15] or 1
-            HealBot_buffbarcolb[manaDrinkItem]=buffbarcolbClass[15] or 1
-            HealBot_BuffWatchTarget[manaDrinkItem] = {};
-            HealBot_BuffWatchTarget[manaDrinkItem]["Self"]=true
-        else
-            manaDrinkItem=HealBot_Config_Buffs.BackupManaDrinkItem
-            local hbCustomItemID=GetItemInfoInstant(manaDrinkItem) or 0
-            if hbCustomItemID>0 then
-                HealBot_buffbarcolr[manaDrinkItem]=buffbarcolrClass[15] or 1
-                HealBot_buffbarcolg[manaDrinkItem]=buffbarcolgClass[15] or 1
-                HealBot_buffbarcolb[manaDrinkItem]=buffbarcolbClass[15] or 1
-                HealBot_BuffWatchTarget[manaDrinkItem] = {};
-                HealBot_BuffWatchTarget[manaDrinkItem]["Self"]=true
-            end
-        end
-    end
-    for x=1,3 do
-        if HealBot_Config_Buffs.CustomBuffCheck[x] and string.len(HealBot_Config_Buffs.CustomBuffName[x])>0 then
-            local extraItem=HealBot_Config_Buffs.CustomItemName[x]
-            local hbCustomItemID=GetItemInfoInstant(extraItem) or 0
-            if hbCustomItemID>0 then
-                HealBot_buffbarcolr[extraItem]=buffbarcolrClass[11+x] or 1
-                HealBot_buffbarcolg[extraItem]=buffbarcolgClass[11+x] or 1
-                HealBot_buffbarcolb[extraItem]=buffbarcolbClass[11+x] or 1
-                HealBot_BuffWatchTarget[extraItem] = {};
-                HealBot_BuffWatchTarget[extraItem]["Self"]=true
-            end
-        end
-    end
+    HealBot_Options_ExtraBuff_Reset()
     HealBot_Timers_Set("AURA","ResetBuffCache")
     HealBot_Timers_Set("PLAYER","InvChange")
 end
@@ -16231,6 +16275,8 @@ function HealBot_Options_Reset_OnClick(self,mode)
 end
 
 function HealBot_Options_SetDefaults(global)
+    HealBot_Globals.LastVersionSkinUpdate=HealBot_Global_Version()
+    HealBot_Config.LastVersionUpdate=HealBot_Global_Version()
     if global then
         HealBot_Config = HealBot_Options_copyTable(HealBot_ConfigDefaults)
         HealBot_Globals = HealBot_Options_copyTable(HealBot_GlobalsDefaults)
@@ -16262,8 +16308,6 @@ function HealBot_Options_SetDefaults(global)
     DoneInitTab={}
     HealBot_Timers_InitExtraOptions()
     HealBot_Timers_Set("AURA","CheckPlayer")
-    HealBot_Globals.LastVersionSkinUpdate=HEALBOT_VERSION_SC
-    HealBot_Config.LastVersionUpdate=HEALBOT_VERSION_SC
     HealBot_Options_OnLoad(nil, "Defaults")
 end
 
@@ -17630,7 +17674,7 @@ function HealBot_Options_SkinsEnemyTab(tab)
         HealBot_Options_SetText(HealBot_Options_ShowEnemyIncArenaPets,HEALBOT_ENEMY_INCLUDE_ARENAPETS)
         HealBot_Options_ShowEnemyIncMyTargets:SetChecked(Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["INCMYTAR"])
         HealBot_Options_SetText(HealBot_Options_ShowEnemyIncMyTargets,HEALBOT_ENEMY_INCLUDE_MYTARGETS)
-        HealBot_Options_val_OnLoad(HealBot_Options_ShowEnemyNumBoss,HEALBOT_ENEMY_NUMBER_BOSSES,0,4,1,1)
+        HealBot_Options_val_OnLoad(HealBot_Options_ShowEnemyNumBoss,HEALBOT_ENEMY_NUMBER_BOSSES,0,8,1,1)
         HealBot_Options_ShowEnemyNumBoss:SetValue(Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["NUMBOSS"])
         HealBot_Options_SetText(HealBot_Options_ShowEnemyNumBoss,HEALBOT_ENEMY_NUMBER_BOSSES..": "..Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["NUMBOSS"])
         HealBot_Options_val_OnLoad(HealBot_Options_EnemyTargetSize,HEALBOT_ENEMY_TARGET_SIZE,20,80,1,5)
@@ -19226,7 +19270,7 @@ function HealBot_Options_BuffsWarningTab(tab)
         HealBot_Options_SetText(HealBot_Options_SoundBuffWarning,HEALBOT_OPTIONS_SOUNDBUFFWARNING)
         HealBot_Options_BuffWarnRange4.initialize = HealBot_Options_BuffWarnRange4_DropDown
         UIDropDownMenu_SetText(HealBot_Options_BuffWarnRange4, HealBot_Options_Lists["RangeWarning"][HealBot_Config_Buffs.HealBot_CBWarnRange_Sound])
-        HealBot_Options_SetSliderValue(HealBot_Options_BuffWarningSound,soundsIndex[HealBot_Config_Buffs.SoundBuffPlay],true)
+        HealBot_Options_SetSliderValue(HealBot_Options_BuffWarningSound,soundsIndex[HealBot_Config_Buffs.SoundBuffPlay])
         HealBot_Options_SetWarnBuffGroups()
         HealBot_Options_SetLabel("HealBot_Options_BuffWarnGroupTxt", HEALBOT_OPTIONS_RAIDGROUPWARN)
         HealBot_Options_TabRunOnce[tab]=true
@@ -19245,6 +19289,8 @@ function HealBot_Options_TipsTab(tab)
         HealBot_Options_SetText(HealBot_Options_ShowTooltipMyBuffs,HEALBOT_OPTIONS_SHOWUNITBUFFTIME)
         HealBot_Options_ShowTooltipRanks:SetChecked(HealBot_Globals.Tooltip_ShowRank)
         HealBot_Options_SetText(HealBot_Options_ShowTooltipRanks,HEALBOT_SHOW_RAIDRANK)
+        HealBot_Options_UseGameTooltip:SetChecked(HealBot_Globals.Tooltip_UseGameTooltip)
+        HealBot_Options_SetText(HealBot_Options_UseGameTooltip,HEALBOT_OPTIONS_USEGAMETOOLTIP)
         HealBot_Options_ShowTooltipRoles:SetChecked(HealBot_Globals.Tooltip_ShowRole)
         HealBot_Options_SetText(HealBot_Options_ShowTooltipRoles,HEALBOT_SHOW_PLAYERROLE)
         HealBot_Options_ShowTooltipHideRoleWhenRank:SetChecked(HealBot_Globals.Tooltip_HideRoleWhenRank)
@@ -19260,16 +19306,20 @@ function HealBot_Options_TipsTab(tab)
         HealBot_Options_val_OnLoad(HealBot_Options_TipMaxButtons,HEALBOT_OPTIONS_TTMAXBUTTONS,3,20,1,2)
         HealBot_Options_TipMaxButtons:SetValue(HealBot_Globals.Tooltip_MaxButtons)
         HealBot_Options_SetText(HealBot_Options_TipMaxButtons,HEALBOT_OPTIONS_TTMAXBUTTONS..": "..HealBot_Globals.Tooltip_MaxButtons)
-        HealBot_Options_TooltipSetScale:SetChecked(HealBot_Globals.Tooltip_SetScale)
-        HealBot_Options_SetText(HealBot_Options_TooltipSetScale,HEALBOT_OPTIONS_TOOLTIPSETSCALE)
         HealBot_Options_sliderlabels_Init(HealBot_Options_TooltipScale,HEALBOT_OPTION_TOOLTIPSCALE,50,200,5,2,0.5,2)
         HealBot_Options_TooltipScale:SetValue(HealBot_Globals.Tooltip_Scale*100)
         HealBot_Options_SetText(HealBot_Options_TooltipScale, HEALBOT_OPTION_TOOLTIPSCALE..": "..HealBot_Globals.Tooltip_Scale) 
-        HealBot_Options_TooltipSetAlpha:SetChecked(HealBot_Globals.Tooltip_SetAlpha)
-        HealBot_Options_SetText(HealBot_Options_TooltipSetAlpha,HEALBOT_OPTIONS_SETALPHA)
-        HealBot_Options_Pct_OnLoad_MinMax(HealBot_Options_TooltipAlpha,HEALBOT_OPTIONS_ALPHA,0.1,1,0.01,5)
-        HealBot_Options_TooltipAlpha:SetValue(HealBot_Globals.Tooltip_SetAlphaValue);
+        HealBot_Options_Pct_OnLoad_MinMax(HealBot_Options_TooltipAlpha,HEALBOT_OPTIONS_ALPHA,0.25,1,0.01,5)
+        HealBot_Options_TooltipAlpha:SetValue(HealBot_Globals.Tooltip_Alpha);
         HealBot_Options_Pct_OnValueChanged(HealBot_Options_TooltipAlpha)
+        HealBot_Options_val_OnLoad(HealBot_Options_TooltipHeaderFontSize,HEALBOT_TOOLTIP_HEADERFONTSIZE,4,28,1,2)
+        HealBot_Options_TooltipHeaderFontSize:SetValue(HealBot_Globals.Tooltip_HeaderFontSize or 14)
+        HealBot_Options_SetText(HealBot_Options_TooltipHeaderFontSize,HEALBOT_TOOLTIP_HEADERFONTSIZE..": "..HealBot_Globals.Tooltip_HeaderFontSize)
+        HealBot_Options_val_OnLoad(HealBot_Options_TooltipDetailFontSize,HEALBOT_TOOLTIP_DETAILFONTSIZE,4,28,1,2)
+        HealBot_Options_TooltipDetailFontSize:SetValue(HealBot_Globals.Tooltip_DetailFontSize or 12)
+        HealBot_Options_SetText(HealBot_Options_TooltipDetailFontSize,HEALBOT_TOOLTIP_DETAILFONTSIZE..": "..HealBot_Globals.Tooltip_DetailFontSize)
+        HealBot_Options_UpdateMediaFont(HealBot_Options_TooltipHeaderFont,fontsIndex[HealBot_Globals.Tooltip_HeaderFont],HEALBOT_TOOLTIP_HEADERFONT)
+        HealBot_Options_UpdateMediaFont(HealBot_Options_TooltipDetailFont,fontsIndex[HealBot_Globals.Tooltip_DetailFont],HEALBOT_TOOLTIP_DETAILFONT)
         HealBot_Options_SetTooltipState()
         HealBot_Options_TabRunOnce[tab]=true
     end
@@ -19784,11 +19834,23 @@ function HealBot_Options_SetTooltipState()
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_HideTooltipInCombat",true)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipPosSettings",true)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipCustomAnchor",true)
-        HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipSetScale",true)
-        HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipScale",true)
-        HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipSetAlpha",true)
-        HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipAlpha",true)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_ShowTooltipShowUnitTip",true)
+        HealBot_Options_ObjectsEnableDisable("HealBot_Options_UseGameTooltip",true)
+        if HealBot_Globals.Tooltip_UseGameTooltip then
+            HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipHeaderFont",false)
+            HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipHeaderFontSize",false)
+            HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipDetailFont",false)
+            HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipDetailFontSize",false)
+            HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipScale",false)
+            HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipAlpha",false)
+        else
+            HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipHeaderFont",true)
+            HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipHeaderFontSize",true)
+            HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipDetailFont",true)
+            HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipDetailFontSize",true)
+            HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipScale",true)
+            HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipAlpha",true)
+        end
         if HealBot_Globals.ShowGameUnitInfo then
             HealBot_Options_ObjectsEnableDisable("HealBot_Options_ShowTooltipTarget",false)
             HealBot_Options_ObjectsEnableDisable("HealBot_Options_ShowTooltipSpellCoolDown",false)
@@ -19822,6 +19884,7 @@ function HealBot_Options_SetTooltipState()
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_ShowTooltipTarget",false)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_ShowTooltipMyBuffs",false)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_ShowTooltipRanks",false)
+        HealBot_Options_ObjectsEnableDisable("HealBot_Options_UseGameTooltip",false)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_ShowTooltipRoles",false)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_ShowTooltipHideRoleWhenRank",false)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_ShowTooltipSpellCoolDown",false)
@@ -19831,10 +19894,12 @@ function HealBot_Options_SetTooltipState()
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipPosSettings",false)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipCustomAnchor",false)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_TipMaxButtons",false)
-        HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipSetScale",false)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipScale",false)
-        HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipSetAlpha",false)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipAlpha",false)
+        HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipHeaderFont",false)
+        HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipHeaderFontSize",false)
+        HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipDetailFont",false)
+        HealBot_Options_ObjectsEnableDisable("HealBot_Options_TooltipDetailFontSize",false)
     end
 end
 
@@ -21056,29 +21121,32 @@ function HealBot_Options_UnitFrameEnable(f, u)
     end
 end
 
-function HealBot_Options_SetSliderValue(slider,value,updating)
+function HealBot_Options_SetSliderValue(slider,value)
     if value then
-        updatingMedia = updating
-        slider:SetValue(-1) -- Pre change value so that text gets updated if value does not change but media does
-        updatingMedia = updating
+        if value>1 then
+            slider:SetValue(1)
+        else
+            slider:SetValue(2)
+        end
         slider:SetValue(value)
     end
 end
 
-function HealBot_Options_UpdateMediaFont(object, index)
+function HealBot_Options_UpdateMediaFont(object, index, label)
     if not index then index=fontsIndex[HealBot_Default_Font] or 1 end
-    HealBot_Options_val_OnLoad(object,HEALBOT_OPTIONS_SKINFONT,1,#fonts,1,5)
-    HealBot_Options_SetText(object,HEALBOT_OPTIONS_SKINFONT)
-    HealBot_Options_SetSliderValue(object,index,true)
+    label=label or HEALBOT_OPTIONS_SKINFONT
+    HealBot_Options_val_OnLoad(object,label,1,#fonts,1,5)
+    HealBot_Options_SetText(object,label)
+    HealBot_Options_SetSliderValue(object,index)
     local g=_G[object:GetName().."Text"]
-    g:SetText((object.text or HEALBOT_OPTIONS_SKINFONT) .. " ".. index..": " ..fonts[index]);
+    g:SetText((object.text or label) .. " ".. index..": " ..fonts[index]);
 end
 
 function HealBot_Options_UpdateMediaTexture(object, index)
     if not index then index=texturesIndex[HealBot_Default_Textures[20].name] or 1 end
     HealBot_Options_val_OnLoad(object,HEALBOT_OPTIONS_SKINTEXTURE,1,#hb_textures,1,5)
     HealBot_Options_SetText(object,HEALBOT_OPTIONS_SKINTEXTURE)
-    HealBot_Options_SetSliderValue(object,index,true)
+    HealBot_Options_SetSliderValue(object,index)
     local g=_G[object:GetName().."Text"]
     g:SetText(object.text .. " ".. index..": " ..hb_textures[index]);            
 end
@@ -21127,10 +21195,10 @@ function HealBot_Options_UpdateMedia(mType)
     else
         HealBot_Options_val_OnLoad(HealBot_Options_WarningSound,HEALBOT_OPTIONS_SOUND,1,#sounds,1,2)
         HealBot_Options_SetText(HealBot_Options_WarningSound,HEALBOT_OPTIONS_SOUND)
-        HealBot_Options_SetSliderValue(HealBot_Options_WarningSound,soundsIndex[HealBot_Config_Cures.SoundDebuffPlay],true)
+        HealBot_Options_SetSliderValue(HealBot_Options_WarningSound,soundsIndex[HealBot_Config_Cures.SoundDebuffPlay])
         HealBot_Options_val_OnLoad(HealBot_Options_BuffWarningSound,HEALBOT_OPTIONS_SOUND,1,#sounds,1,2)
         HealBot_Options_SetText(HealBot_Options_BuffWarningSound,HEALBOT_OPTIONS_SOUND)
-        HealBot_Options_SetSliderValue(HealBot_Options_BuffWarningSound,soundsIndex[HealBot_Config_Buffs.SoundBuffPlay],true)
+        HealBot_Options_SetSliderValue(HealBot_Options_BuffWarningSound,soundsIndex[HealBot_Config_Buffs.SoundBuffPlay])
     end
 end
 
@@ -21274,8 +21342,10 @@ function HealBot_Options_Show_Help(index,show)
     if HealBot_Options_luVars["TIPLOADED"] then
         if show then
             HealBot_Tooltip_OptionsHelp(HEALBOT_OPTIONS_HELP_TITLES[index],HEALBOT_OPTIONS_HELP_TEXT[index])
+            HealBot_Options_luVars["OPTIONSTIPVISIBLE"]=true
         else
             HealBot_Tooltip_Hide()
+            HealBot_Options_luVars["OPTIONSTIPVISIBLE"]=false
         end
     end
 end

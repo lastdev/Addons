@@ -3,22 +3,24 @@
 -------------------------------------------------------------------------------
 
 -- Whats new info
-SMARTBUFF_WHATSNEW = "\n\n|cffffffff        Whats new:|r\n\n"
-  .."          |cffffffffDragonflight version by Codermik.\n\n"
-  .."          Please report any issues on Curse or Discord.|r\n\n\n"
-  .."          Retail release with several improvements and\n"
-  .."          fixes, latest changes are:\n\n"
-  .."             * Added Druid: Mark of the Wild, The Shamans new\n"
-  .."                Earthliving Weapon, Rogues Amplifying Poison\n"
-  .."                and several others.\n\n"
-  .."             * More bug fixes, UI corrections.\n\n\n\n"
+SMARTBUFF_WHATSNEW = "\n\n|cffffffff         Whats new:|r\n\n"
+  .."          |cffffffffDragonflight version by Codermik.|cff00e0ff\n\n\n"
+  .."          Changes in r10.091122:\n\n"
+  .."             * Added 'Correct Casting' option for those \n"
+  .."                players that have an issue with the addon.\n"
+  .."                not casting buffs on scroll/action button,\n"
+  .."                this is experimental so please test.\n\n"
+  .."             * Added sound selection to match the classic\n"
+  .."                version of the addon. \n\n"
+  .."             * Various other bug fixes. \n\n"
+  .."\n\n"
   .."          |c0000FF96Many thanks to Chris S. and Samantha R. for\n"
   .."          their very kind donations - thanks a lot.\n\n"
  .."\n\n"
 ;
 
 SMARTBUFF_CREDITS = "|cffffffff"
-  .."Dragonflight version by Codermik.  Please report any issues on CurseForge or my discord at:\n\n"
+  .."Dragonflight version by Codermik.  Please join and report any issues on discord at:\n\n"
   .."|cff00e0ffhttps://discord.gg/R6EkZ94TKK\n\n"
   .."|cffffffffIf you appreciate the amount of work involved and the time taken to bring you these various addons please consider supporting me by:\n\n"
   .."|cffffffffPatreon: |cff00e0ffhttps://www.patreon.com/codermik\n"
@@ -61,6 +63,11 @@ BINDING_NAME_SMARTBUFF_BIND_OPTIONS = "Option menu";
 BINDING_NAME_SMARTBUFF_BIND_RESETBUFFTIMERS = "Reset buff timers";
 
 -- Options Frame Text
+
+-- experimental feature - for testing.
+SMARTBUFF_OFT_FIXBUFF		 = "Correct Casting"
+SMARTBUFF_OFTT_FIXBUFF		 = "Only tick this option if Smartbuff is failing to cast buffs using the\nscroll mouse, action button or by macro - this is experimental so\nplease report any issues."
+
 SMARTBUFF_OFT                = "SmartBuff On/Off";
 SMARTBUFF_OFT_MENU           = "Show/hide options menu";
 SMARTBUFF_OFT_AUTO           = "Reminder";
@@ -151,6 +158,7 @@ SMARTBUFF_OFTT_SPLASHDURATION= "How many seconds the splash\nmessage will displa
 SMARTBUFF_OFTT_INSHAPESHIFT  = "Cast buffs also if you\nare shapeshifted.";
 SMARTBUFF_OFTT_LINKGRPBUFFCHECK  = "Checks if a buff of an other\nclass with similar effect\nis already active.";
 SMARTBUFF_OFTT_LINKSELFBUFFCHECK = "Checks if a self buff is active,\nwhose only one can be\nactive at a time.";
+SMARTBUFF_OFTT_SOUNDSELECT	 = "Select the required splash sound.";
 
 -- Buffsetup Frame Text
 SMARTBUFF_BST_SELFONLY       = "Myself only";
@@ -203,6 +211,7 @@ SMARTBUFF_MSG_REBUFF         = "Rebuff";
 SMARTBUFF_MSG_LEFT           = "left";
 SMARTBUFF_MSG_CLASS          = "Class";
 SMARTBUFF_MSG_CHARGES        = "charges";
+SMARTBUFF_MSG_SOUNDS		 = "Splash Sound Selection: "
 SMARTBUFF_MSG_SPECCHANGED    = "Spec changed (%s), loading buff templates...";
 
 -- Support

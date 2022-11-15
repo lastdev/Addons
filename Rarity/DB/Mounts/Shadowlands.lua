@@ -439,14 +439,17 @@ local shadowlandsMounts = {
 		spellId = 353263,
 		itemId = 186638,
 		npcs = { 180863 },
-		chance = 100,
+		chance = 50,
 		groupSize = 5,
 		equalOdds = true,
 		statisticId = { 15168 },
 		instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_DUNGEON] = true },
 		lockoutDetails = {
 			mode = CONSTANTS.DEFEAT_DETECTION.MODE_AND,
-			{ encounterName = "So'leah", instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_DUNGEON] = true } },
+			{
+				encounterName = "So'leah",
+				instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_DUNGEON] = true },
+			},
 		},
 		coords = { { m = CONSTANTS.UIMAPIDS.TAZAVESH_THE_VEILED_MARKET, i = true } },
 	},
@@ -465,9 +468,18 @@ local shadowlandsMounts = {
 		statisticId = { 15145, 15144, 15147, 15146 },
 		lockoutDetails = {
 			mode = CONSTANTS.DEFEAT_DETECTION.MODE_AND,
-			{ encounterName = "The Nine", instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.NORMAL_RAID] = true } },
-			{ encounterName = "The Nine", instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.HEROIC_RAID] = true } },
-			{ encounterName = "The Nine", instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_RAID] = true } },
+			{
+				encounterName = "The Nine",
+				instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.NORMAL_RAID] = true },
+			},
+			{
+				encounterName = "The Nine",
+				instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.HEROIC_RAID] = true },
+			},
+			{
+				encounterName = "The Nine",
+				instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_RAID] = true },
+			},
 			{ encounterName = "The Nine", instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.LFR] = true } },
 		},
 		instanceDifficulties = {
@@ -556,7 +568,7 @@ local shadowlandsMounts = {
 		name = L["Spectral Mawrat's Tail"],
 		itemId = 190766,
 		spellId = 368128,
-		chance = 100, -- Blind guess
+		chance = 200,
 		coords = { { m = CONSTANTS.UIMAPIDS.ZERETH_MORTIS } },
 	},
 	["Sturdy Silver Mawrat Harness"] = {
@@ -566,7 +578,33 @@ local shadowlandsMounts = {
 		name = L["Sturdy Silver Mawrat Harness"],
 		itemId = 188700,
 		spellId = 363178,
-		npcs = { 171422, 179526, 185026, 176578, 185027, 179433, 185028, 159755, 151331, 169859 },
+		npcs = {
+			-- Based on wowhead data
+			179526,
+			179433,
+			176578,
+			169859,
+			159755,
+			153165,
+			171422,
+			153451,
+			159190,
+			151329,
+			151331,
+			155945,
+			170418,
+			156239,
+			155250,
+			155251,
+			157122,
+			153174,
+			156015,
+			-- Based on user feedback (not listed on wowhead as of 01/05/2022)
+			185026,
+			185027,
+			185028,
+			153011,
+		},
 		chance = 100, -- Blind guess
 		coords = { { m = CONSTANTS.UIMAPIDS.TORGHAST } },
 	},
@@ -579,7 +617,10 @@ local shadowlandsMounts = {
 		spellId = 342680,
 		npcs = { 180978 },
 		chance = 100, -- Blind guess
-		sourceText = format(L["This item appears to be a guaranteed drop for the player who summoned %s"], L["Hirukon"]),
+		sourceText = format(
+			L["This item appears to be a guaranteed drop for the player who summoned %s"],
+			L["Hirukon"]
+		),
 		coords = { { x = 52, 2, y = 75, 3, m = CONSTANTS.UIMAPIDS.ZERETH_MORTIS, n = L["Hirukon"] } },
 	},
 }

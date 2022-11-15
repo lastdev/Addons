@@ -448,7 +448,8 @@ do
         { "^!?(d?e?buff%.[a-z0-9_]+)%.remains$", "%1.remains"      },
         { "^!ticking"                          , "remains"         },
         { "^!?remains$"                        , "remains"         },
-        { "^refreshable"                       , "time_to_refresh" },
+        { "^refreshable$"                      , "time_to_refresh" },
+        { "^time>=?(.-)$"                      , "0.01+%1-time"    },
 
         { "^gcd.remains$"            , "gcd.remains"      },
         { "^gcd.remains<?=(.+)$"     , "gcd.remains-%1"   },
@@ -494,6 +495,7 @@ do
         { "^!?stealthed.mantle$"                    , "stealthed.mantle_remains"                                       },
         { "^!?stealthed.sepsis$"                    , "stealthed.sepsis_remains"                                       },
         { "^!?stealthed.rogue$"                     , "stealthed.rogue_remains"                                        },
+        { "^!?stealthed.basic$"                     , "stealthed.basic_remains"                                        },
 
         { "^!?time_to_hpg$"           , "time_to_hpg"          }, -- Retribution Paladin
         { "^!?time_to_hpg[<=]=?(.-)$" , "time_to_hpg-%1"       }, -- Retribution Paladin
@@ -510,13 +512,13 @@ do
         { "^!?action%.([a-z0-9_]+)%.in_flight_remains<=?(.-)$", "action.%1.in_flight_remains-%2" }, -- Fire Mage, but others too, potentially.
 
         { "^!?variable%.([a-z0-9_]+)$", "safenum(variable.%1)"                        },
-        { "^!?variable%.([a-z0-9_]+)<=?(.-)$", "safenum(variable.%1)-%2"              },
+        { "^!?variable%.([a-z0-9_]+)<=?(.-)$", "0.01+%2-safenum(variable.%1)"         },
         { "^raid_events%.([a-z0-9_]+)%.remains$", "raid_events.%1.remains"            },
         { "^raid_events%.([a-z0-9_]+)%.remains$<=?(.-)$", "raid_events.%1.remains-%2" },
         { "^!?raid_events%.([a-z0-9_]+)%.up$", "raid_events.%1.up"                    },
         { "^!?(pet%.[a-z0-9_]+)%.up$", "%1.remains"                                   },
         { "^!?(pet%.[a-z0-9_]+)%.active$", "%1.remains"                               },
-                                                                                      }
+    }
 
 
     -- Things that tick down.
@@ -593,7 +595,7 @@ do
             for key in pairs( increases ) do
                 if lhs:match( key ) then
                     if comp == ">" then
-                        return true, "(" .. rhs .. " + 0.01) - (" .. rhs .. ")"
+                        return true, "(" .. rhs .. " + 0.01) - (" .. lhs .. ")"
                     elseif moreOrEqual[ comp ] then
                         return true, rhs .. " - " .. lhs
                     end
@@ -612,7 +614,7 @@ do
 
                 if rhs == key then
                     if comp == "<" then
-                        return true, "0.01 + " .. rhs .. ".timeTo( " .. rhs .. " )"
+                        return true, "0.01 + " .. rhs .. ".timeTo( " .. lhs .. " )"
                     elseif lessOrEqual[ comp ] then
                         return true, rhs .. ".timeTo( " .. lhs .. " )"
                     end
@@ -699,7 +701,7 @@ do
         ["@"] = true
      }
 
-     local math_ops = {
+    local math_ops = {
         ["+"] = true,
         ["-"] = true,
         ["*"] = true,
@@ -714,38 +716,38 @@ do
         [">="] = true,
         [">?"] = true,
         ["<?"] = true,
-     }
+    }
 
-     local equality = {
-         ["="] = true,
-         ["!="] = true,
-         ["~="] = true,
-     }
+    local equality = {
+        ["="] = true,
+        ["!="] = true,
+        ["~="] = true,
+    }
 
-     local comp_ops = {
+    local comp_ops = {
         ["<"] = true,
         [">"] = true,
         ["?"] = true,
-     }
+    }
 
-     local bool_ops = {
-         ["|"] = true,
-         ["&"] = true,
-         ["!"] = true,
-     }
+    local bool_ops = {
+        ["|"] = true,
+        ["&"] = true,
+        ["!"] = true,
+    }
 
-     local funcs = {
-         ["floor"] = true,
-         ["ceil"] = true
-     }
+    local funcs = {
+        ["floor"] = true,
+        ["ceil"] = true
+    }
 
 
-     -- This is hideous.
+    -- This is hideous.
 
-     local esDepth = 0
-     local esString
+    local esDepth = 0
+    local esString
 
-     function scripts:EmulateSyntax( p, numeric )
+    function scripts:EmulateSyntax( p, numeric )
         if not p or type( p ) ~= "string" then return p end
 
         if esDepth == 0 then
@@ -779,67 +781,67 @@ do
         local orig = p
 
         while ( i <= maxlen ) do
-           local c = p:sub( i, i )
+            local c = p:sub( i, i )
 
-           if c == " " or c == "," then -- do nothing
-           elseif c == "(" then depth = depth + 1
-           elseif c == ")" and depth > 0 then
-              depth = depth - 1
+            if c == " " or c == "," then -- do nothing
+            elseif c == "(" then depth = depth + 1
+            elseif c == ")" and depth > 0 then
+                depth = depth - 1
 
-              if depth == 0 then
-                 local expr = p:sub( 1, i )
+                if depth == 0 then
+                    local expr = p:sub( 1, i )
 
-                 table.insert( results, {
-                       s = expr:trim(),
-                       t = "expr"
-                 } )
+                    table.insert( results, {
+                        s = expr:trim(),
+                        t = "expr"
+                    } )
 
-                 if expr:find( "[&%|%-%+/%%%*]" ) ~= nil then results[#results].r = true end
+                    if expr:find( "[&%|%-%+/%%%*]" ) ~= nil then results[#results].r = true end
 
-                 p = p:sub( i + 1 )
-                 i = 0
-                 depth = 0
-                 maxlen = p:len()
-              end
-           elseif depth == 0 and ops[c] then
-              if i > 1 then
-                 local expr = p:sub( 1, i - 1 )
+                    p = p:sub( i + 1 )
+                    i = 0
+                    depth = 0
+                    maxlen = p:len()
+                end
+            elseif depth == 0 and ops[c] then
+                if i > 1 then
+                    local expr = p:sub( 1, i - 1 )
 
-                 table.insert( results, {
-                       s = expr:trim(),
-                       t = "expr"
-                 } )
+                    table.insert( results, {
+                        s = expr:trim(),
+                        t = "expr"
+                    } )
 
-                 if expr:find( "[&$|$-$+/$%%*]" ) ~= nil then results[#results].r = true end
-              end
+                    if expr:find( "[&$|$-$+/$%%*]" ) ~= nil then results[#results].r = true end
+                end
 
-              c = p:sub( i ):match( "^([&%|%-%+*%%/><!%?=%~@][&%|%-%+*/><%?=%~]?)" )
+                c = p:sub( i ):match( "^([&%|%-%+*%%/><!%?=%~@][&%|%-%+*/><%?=%~]?)" )
 
-              table.insert( results, {
+                table.insert( results, {
                     s = c,
                     t = "op",
                     a = c:trim() --sub(1,1)
-              } )
+                } )
 
-              p = p:sub( i + c:len() )
-              i = 0
-              depth = 0
-              maxlen = p:len()
-           end
+                p = p:sub( i + c:len() )
+                i = 0
+                depth = 0
+                maxlen = p:len()
+            end
 
-           i = i + 1
+            i = i + 1
         end
 
         p = p:trim()
 
         if p:len() > 0 then
-           table.insert( results, {
-                 s = p:trim(),
-                 t = "expr",
-                 l = true
-           } )
+            table.insert( results, {
+                    s = p:trim(),
+                    t = "expr",
+                    l = true
+            } )
 
-           if p:find( "[!&%|%-%+/%%%*@]" ) ~= nil then results[#results].r = true end
+            if p:find( "[!&%|%-%+/%%%*@]" ) ~= nil then results[#results].r = true end
         end
 
         local output = ""
@@ -850,8 +852,6 @@ do
         while( i <= #results ) do
             local prev, piece, next = i > 1 and results[i-1] or nil, results[i], i < #results and results[i+1] or nil
             local trimmed_prefix
-
-            local hasMath = prev and prev.t == "op" and math_ops[ prev.a ] or next and next.t == "op" and math_ops[ next.a ]
 
             -- If we get a math op (*) followed by a not (!) followed by an expression, we want to safely wrap up the !expr in safenum().
             if prev and prev.t == "op" and math_ops[ prev.a ] and piece.t == "op" and piece.a == "!" and next and next.t == "expr" then
@@ -876,10 +876,10 @@ do
                         esDepth = esDepth - 1
                         return orig
                     end
-                    piece.s = scripts:EmulateSyntax( piece.s, numeric or hasMath )
+                    piece.s = scripts:EmulateSyntax( piece.s, numeric )
                 end
 
-                if hasMath then
+                if ( prev and prev.t == "op" and math_ops[ prev.a ] and not equality[ prev.a ] ) or ( next and next.t == "op" and math_ops[ next.a ] and not equality[ next.a ] ) then
                     -- This expression is getting mathed.
                     -- Lets see what it returns and wrap it in btoi if it is a boolean expr.
                     if piece.s:find("^variable%.") then
@@ -960,7 +960,7 @@ do
 
         esDepth = esDepth - 1
         return output
-     end
+    end
 end
 
 
@@ -1126,9 +1126,7 @@ scripts.GetScriptElements = GetScriptElements
 -- newModifiers, key is the name of the element, value is whether to babyproof it or not.
 local newModifiers = {
     chain = 'bool',
-    cycle_targets = 'bool',
     early_chain_if = 'bool',
-    for_next = 'bool',
     interrupt = 'bool',
     interrupt_global = 'bool',
     interrupt_if = 'bool',
@@ -1143,7 +1141,10 @@ local newModifiers = {
     wait = 'bool',
 
     -- Not necessarily a number, but not baby-proofed.
+    cycle_targets = 'raw',
     default = 'raw',
+    empower_to = 'raw',
+    for_next = 'raw',
     line_cd = 'raw',
     max_cycle_targets = 'raw',
     sec = 'raw',
@@ -1151,6 +1152,7 @@ local newModifiers = {
     value_else = 'raw',
 
     sync = 'string', -- should be an ability's name.
+    action_name = 'string',
     buff_name = 'string',
     list_name = 'string',
     op = 'string',
@@ -1164,7 +1166,8 @@ local valueModifiers = {
     value = true,
     value_else = true,
     line_cd = true,
-    max_cycle_targets = true
+    max_cycle_targets = true,
+    empower_to = true,
 }
 
 
@@ -1280,14 +1283,19 @@ local function ConvertScript( node, hasModifiers, header )
 
                 local sf, e
 
-                if value == 'string' then
+                if value == 'bool' then
+                    emulated = SimToLua( scripts:EmulateSyntax( node[ m ] ) )
+
+                elseif value == 'raw' then
+                    emulated = SimToLua( scripts:EmulateSyntax( node[ m ], true ) )
+
+                else -- string
                     o = "'" .. o .. "'"
                     emulated = o
-                else
-                    emulated = SimToLua( scripts:EmulateSyntax( node[ m ] ) )
+
                 end
 
-                if node.action == "variable" and value ~= "string" then
+                if node.action == "variable" then
                     --[[ local var_val, var_recheck, var_err
                     var_val = scripts:BuildRecheck( node[m] )
                     if var_val then
@@ -1309,7 +1317,7 @@ local function ConvertScript( node, hasModifiers, header )
                         output.VarRecheckError = var_err
                     end ]]
                     local rs, rc, erc
-                    rs = scripts:BuildRecheck( node[ m ] )
+                    rs = scripts:BuildRecheck( node[m] )
 
                     if rs then
                         local orig = rs
@@ -1330,11 +1338,7 @@ local function ConvertScript( node, hasModifiers, header )
                     end
                 end
 
-                if value == "bool" then
-                    sf, e = Hekili:Loadstring( "return safebool(" .. emulated .. ")" )
-                else
-                    sf, e = Hekili:Loadstring( "return " .. emulated )
-                end
+                sf, e = Hekili:Loadstring( "return " .. emulated )
 
                 if sf then
                     setfenv( sf, state )

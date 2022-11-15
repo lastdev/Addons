@@ -7,11 +7,11 @@ local Hekili = _G[ addon ]
 local class = Hekili.Class
 local state = Hekili.State
 
-
 local CommitKey = ns.commitKey
 local FindUnitBuffByID, FindUnitDebuffByID = ns.FindUnitBuffByID, ns.FindUnitDebuffByID
 local GetItemInfo = ns.CachedGetItemInfo
 local GetResourceInfo, GetResourceKey = ns.GetResourceInfo, ns.GetResourceKey
+local IsSpellDisabled = ns.IsSpellDisabled
 local RegisterEvent = ns.RegisterEvent
 local RegisterUnitEvent = ns.RegisterUnitEvent
 
@@ -25,11 +25,10 @@ local insert, wipe = table.insert, table.wipe
 local mt_resource = ns.metatables.mt_resource
 
 local GetItemCooldown = _G.GetItemCooldown
-local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID
 local GetSpellDescription, GetSpellTexture = _G.GetSpellDescription, _G.GetSpellTexture
 local GetSpecialization, GetSpecializationInfo = _G.GetSpecialization, _G.GetSpecializationInfo
 
-local Casting = _G.SPELL_CASTING or "Casting"
+local FlagDisabledSpells
 
 
 local specTemplate = {
@@ -547,6 +546,13 @@ local HekiliSpecMixin = {
             end
         end
 
+        if data.id and type( data.id ) == "function" then
+            if not data.copy or type( data.copy ) == "table" and #data.copy == 0 then
+                Hekili:Error( "RegisterAbility for %s (Specialization %d) will fail; ability has an ID function but needs to have 'copy' entries for the abilities table.", ability, self.id )
+            end
+        end
+
+
         local item = data.item
         if item and type( item ) == "function" then
             setfenv( item, state )
@@ -799,6 +805,10 @@ local HekiliSpecMixin = {
         if a.dual_cast or a.funcs.dual_cast then
             self.can_dual_cast = true
             self.dual_cast[ a.key ] = true
+        end
+
+        if a.empowered or a.funcs.empowered then
+            self.can_empower = true
         end
 
         if a.auras then
@@ -1930,7 +1940,32 @@ all:RegisterAuras( {
             t.applied = 0
             t.caster = "nobody"
         end,
-    }
+    },
+
+    all_absorbs = {
+        duration = 15,
+        max_stack = 1,
+        -- TODO: Check if function works.
+        generate = function( t, auraType )
+            local unit = auraType == "debuff" and "target" or "player"
+            local amount = UnitGetTotalAbsorbs( unit )
+
+            if amount > 0 then
+                t.name = ABSORB
+                t.count = 1
+                t.expires = now + 10
+                t.applied = now - 5
+                t.caster = unit
+                return
+            end
+
+            t.count = 0
+            t.expires = 0
+            t.applied = 0
+            t.caster = "nobody"
+        end,
+        copy = "unravel_absorb"
+    },
 } )
 
 
@@ -2398,6 +2433,8 @@ all:RegisterAbilities( {
 
             removeBuff( "dispellable_magic" )
         end,
+
+        copy = { 155145, 129597, 50613, 69179, 25046, 80483, 202719, 232633 }
     },
 
     will_to_survive = {
@@ -2520,6 +2557,16 @@ all:RegisterAbilities( {
         cast = 0,
         cooldown = 0,
         gcd = "off",
+
+        usable = function ()
+            local a = args.action_name
+            local ability = class.abilities[ a ]
+            if not a or not ability then return false, "no action identified" end
+            if buff.casting.down or buff.casting.v3 ~= 1 then return false, "not channeling" end
+            if buff.casting.v1 ~= ability.id then return false, "not channeling " .. a end
+            return true
+        end,
+        timeToReady = function () return gcd.remains end,
     },
 
     variable = {
@@ -5897,7 +5944,22 @@ function Hekili:GetActivePack()
 end
 
 
-local seen = {}
+do
+    local seen = {}
+
+    FlagDisabledSpells = function()
+        wipe( seen )
+
+        for _, v in pairs( class.abilities ) do
+            if not seen[ v ] then
+                if v.id > 0 then v.disabled = IsSpellDisabled( v.id ) end
+                seen[ v ] = true
+            end
+        end
+    end
+    ns.FlagDisabledSpells = FlagDisabledSpells
+end
+
 
 Hekili.SpecChangeHistory = {}
 
@@ -6179,43 +6241,9 @@ function Hekili:SpecializationChanged()
     state.swings.mh_speed, state.swings.oh_speed = UnitAttackSpeed( "player" )
 
     self:UpdateDisplayVisibility()
+    self:UpdateDamageDetectionForCLEU()
 
-    -- if not self:ScriptsLoaded() then self:LoadScripts() end
-
-    Hekili:UpdateDamageDetectionForCLEU()
-
-    -- Use tooltip to detect Mage Tower.
-    local tooltip = ns.Tooltip
-    tooltip:SetOwner( UIParent, "ANCHOR_NONE" )
-
-    wipe( seen )
-
-    for k, v in pairs( class.abilities ) do
-        if not seen[ v ] then
-            if v.id > 0 then
-                local disable
-                tooltip:SetSpellByID( v.id )
-
-                for i = tooltip:NumLines(), 5, -1 do
-                    local label = tooltip:GetName() .. "TextLeft" .. i
-                    local line = _G[ label ]
-                    if line then
-                        local text = line:GetText()
-                        if text == _G.TOOLTIP_NOT_IN_MAGE_TOWER then
-                            disable = true
-                            break
-                        end
-                    end
-                end
-
-                v.disabled = disable
-            end
-
-            seen[ v ] = true
-        end
-    end
-
-    tooltip:Hide()
+    FlagDisabledSpells()
 end
 
 
@@ -6230,6 +6258,30 @@ do
             end
         end
     end )
+
+    local SpellDisableEvents = {
+        CHALLENGE_MODE_START = 1,
+        CHALLENGE_MODE_RESET = 1,
+        CHALLENGE_MODE_COMPLETED = 1,
+        PLAYER_ENTERING_WORLD = 1,
+        PLAYER_ALIVE = 1,
+        ZONE_CHANGED_NEW_AREA = 1
+    }
+
+    local WipeCovenantCache = ns.WipeCovenantCache
+
+
+    local function CheckSpellsAndGear()
+        WipeCovenantCache()
+        FlagDisabledSpells()
+        ns.updateGear()
+    end
+
+    for k in pairs( SpellDisableEvents ) do
+        RegisterEvent( k, function( event )
+            C_Timer.After( 1, CheckSpellsAndGear )
+        end )
+    end
 end
 
 

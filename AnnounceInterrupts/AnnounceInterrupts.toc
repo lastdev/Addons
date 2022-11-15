@@ -1,0 +1,19 @@
+## Interface: 100000
+## Title: AnnounceInterrupts
+## Notes: Announces whenever you interrupt a spell.
+## Version: 1.8g
+## SavedVariablesPerCharacter: AnnounceInterruptsDB
+## Author: Sildor
+
+libs/!LibUIDropDownMenu/LibStub/LibStub.lua
+libs/!LibUIDropDownMenu/LibUIDropDownMenu/LibUIDropDownMenu.xml
+
+Locales/enUS.lua
+Locales/frFR.lua
+Locales/deDE.lua
+Locales/ruRU.lua
+Locales/zhTW.lua
+Locales/zhCN.lua
+Locales/koKR.lua
+
+ai.lua

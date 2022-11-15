@@ -1,6 +1,6 @@
 # BadBoy_CCleaner
 
-## [v10.0.0](https://github.com/funkydude/BadBoy_CCleaner/tree/v10.0.0) (2022-10-26)
-[Full Changelog](https://github.com/funkydude/BadBoy_CCleaner/compare/v9.2.4...v10.0.0) [Previous Releases](https://github.com/funkydude/BadBoy_CCleaner/releases)
+## [v10.0.1](https://github.com/funkydude/BadBoy_CCleaner/tree/v10.0.1) (2022-11-15)
+[Full Changelog](https://github.com/funkydude/BadBoy_CCleaner/compare/v10.0.0...v10.0.1) [Previous Releases](https://github.com/funkydude/BadBoy_CCleaner/releases)
 
 - bump toc  

@@ -1,7 +1,6 @@
 local myname, ns = ...
 
--- compatibility between 10.0.0 and classic
-local GetPlayerAuraBySpellID = _G.GetPlayerAuraBySpellID or C_UnitAuras.GetPlayerAuraBySpellID
+local GetPlayerAuraBySpellID = C_UnitAuras and C_UnitAuras.GetPlayerAuraBySpellID or _G.GetPlayerAuraBySpellID
 
 ns.defaults = {
     profile = {

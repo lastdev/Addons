@@ -10,6 +10,7 @@ local class = Hekili.Class
 local all = Hekili.Class.specs[ 0 ]
 
 local GetItemCooldown = _G.GetItemCooldown
+local AreCovenantsDisabled = ns.AreCovenantsDisabled
 
 -- Covenants
 do
@@ -31,7 +32,14 @@ do
     -- v1, no caching.
     state.covenant = setmetatable( {}, {
         __index = function( t, k )
+            if AreCovenantsDisabled() then
+                if type( k ) == "string" and k == "none" then return true end
+                return false
+            end
+
             if type( k ) == "number" then
+                if disabled then return false end
+
                 if GetActiveCovenantID() == k then return true end
                 if CovenantSignatures[ k ] then
                     for _, spell in ipairs( CovenantSignatures[ k ] ) do
@@ -45,6 +53,8 @@ do
             local myCovenant = GetActiveCovenantID()
 
             if k == "none" then
+                if disabled then return true end
+
                 -- thanks glue
                 if myCovenant > 0 then return false end
 
@@ -57,6 +67,8 @@ do
 
                 return true
             end
+
+            if disabled then return false end
 
             if myCovenant > 0 then
                 if k == CovenantKeys[ myCovenant ] then return true end
@@ -1852,7 +1864,6 @@ elseif baseClass == "ROGUE" then
                     max_stack = 1,
                     exsanguinated = false,
                     meta = {
-                        vendetta_exsg = function( t ) return t.up and tracked_bleeds.serrated_bone_spike.vendetta[ target.unit ] or false end,
                         exsanguinated_rate = function( t ) return t.up and tracked_bleeds.serrated_bone_spike.rate[ target.unit ] or 1 end,
                         last_tick = function( t ) return t.up and ( tracked_bleeds.serrated_bone_spike.last_tick[ target.unit ] or t.applied ) or 0 end,
                         tick_time = function( t ) return t.up and ( haste * 2 / t.exsanguinated_rate ) or ( haste * 2 ) end,
