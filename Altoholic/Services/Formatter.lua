@@ -25,6 +25,38 @@ addon:Service("AltoholicUI.Formatter",  function()
 			
 			return format("%s %s %s", gold, silver, copper)
 		end,
+		
+		MoneyStringShort = function(copper)
+			copper = copper or 0
+			local color = colors.gold
+			
+			-- exactly 0 copper
+			if copper == 0 then
+				return format("%s%s", color, format(COPPER_AMOUNT_TEXTURE, 0, 13, 13))
+			end
+			
+			local gold = floor(copper / 10000)
+			copper = mod(copper, 10000)
+			local silver = floor(copper / 100)
+			copper = mod(copper, 100)
+			
+			local text = ""
+			
+			-- Print only non-zero values
+			if gold > 0 then
+				text = format("%s%s%s", text, color, format(GOLD_AMOUNT_TEXTURE_STRING, BreakUpLargeNumbers(gold), 13, 13))
+			end
+			
+			if silver > 0 then
+				text = format(" %s%s%s", text, color, format(SILVER_AMOUNT_TEXTURE, silver, 13, 13))
+			end
+			
+			if copper > 0 then
+				text = format(" %s%s%s", text, color, format(COPPER_AMOUNT_TEXTURE, copper, 13, 13))
+			end
+			
+			return text
+		end,
 
 		TimeString = function(seconds)
 			seconds = seconds or 0      -- TotalTime is expressed in seconds

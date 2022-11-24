@@ -98,7 +98,7 @@ ns.RegisterPoints(1543, {
     [50007460] = { note="Grapple", },
     [50037306] = { note="On cage use grapple", },
     [51437820] = { note="Grapple", },
-    [51478384] = { note="Inside cave", },
+    [51478384] = { note="Inside cave", path=48678429, },
     [51567853] = {},
     [51867087] = {},
     [52038191] = { note="On the ground", },

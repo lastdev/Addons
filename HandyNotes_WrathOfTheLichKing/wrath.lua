@@ -1,5 +1,9 @@
 local myname, ns = ...
 
+ns.defaultsOverride = {
+    show_on_minimap = true,
+}
+
 ns.groups = {
     spirithealer = "{npc:6491:Spirit Healer}",
 }

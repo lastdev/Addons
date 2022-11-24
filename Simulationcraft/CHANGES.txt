@@ -1,16 +1,10 @@
-lightweight tag 79f4a809669f6d9f67b99128a64053bb423bdc12 v10.0.0-3
+lightweight tag f3442e5aef26736199a7ec017c9190d074236245 v10.0.2-01
 Author:	Dave Hendler <sollaires@gmail.com>
-Date:	Mon Nov 7 13:24:37 2022 -0800
+Date:	Tue Nov 15 15:17:02 2022 -0800
 
-commit 79f4a809669f6d9f67b99128a64053bb423bdc12
+commit f3442e5aef26736199a7ec017c9190d074236245
 Author: Dave Hendler <sollaires@gmail.com>
-Date:   Mon Nov 7 13:24:37 2022 -0800
+Date:   Tue Nov 15 15:17:02 2022 -0800
 
-    Rearrange debug output to work better
-
-commit f14fe3e7803e5d3faa36a681646a4d43d4728ac2
-Author: Dave Hendler <sollaires@gmail.com>
-Date:   Mon Nov 7 12:10:39 2022 -0800
-
-    Bump version
+    Proper version
 

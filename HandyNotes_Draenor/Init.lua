@@ -1,4 +1,4 @@
-HandyNotes_Draenor = LibStub("AceAddon-3.0"):NewAddon("HandyNotes_Draenor", "AceEvent-3.0", "AceBucket-3.0")
+HandyNotes_Draenor = LibStub("AceAddon-3.0"):NewAddon("HandyNotes_Draenor", "AceEvent-3.0", "AceTimer-3.0", "AceBucket-3.0")
 
 HandyNotes_Draenor.nodes = {}
 

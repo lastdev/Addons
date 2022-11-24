@@ -67,7 +67,7 @@ function Profile:SetRules(ruleType, config)
 
 	local key = RuleTypeToRuleKey(ruleType);
 	if (key) then
-		Addon:Debug("profile", "Profile '%s', %s rule changed", self:GetName(), ruleType);
+
 		self:SetValue(key, config or {});
 		return;
 	end
@@ -116,7 +116,7 @@ function Profile:SetList(listType, list)
 
 	if (key) then
 		self:SetValue(key, list);
-		Addon:Debug("profile", "Profile '%s', %s list changed", self:GetName(), listType);
+
 		return;
 	end
 
@@ -182,7 +182,7 @@ function Addon:OnCreateDefaultProfile(profile)
 		if (Vendor_Settings) then
 			for setting, value in pairs(Vendor_Settings) do
 				if ((setting ~= "version") and (setting ~= "interfaceversion")) then
-					if (table.hasKey(Addon.DefaultConfig.Settings, setting)) then
+					if (Addon.TableHasKey(Addon.DefaultConfig.Settings, setting)) then
 						defaultProfile:SetValue(setting, value);
 					end
 				end
@@ -196,12 +196,12 @@ function Addon:OnCreateDefaultProfile(profile)
             -- Remove the old now-migrated settings.
             Vendor_Settings = nil
         end
-        Addon:Debug("profile", "Created new default profile.");
+
     end
 
     -- If no per-user settings then the default profile is all that is needed.
     if not Vendor_RulesConfig then
-        Addon:Debug("profile", "Found existing Vendor Default Profile");
+
         return defaultProfile
     end
 
@@ -219,7 +219,7 @@ function Addon:OnCreateDefaultProfile(profile)
     -- Remove old data now that we've migrated it to a profile.
     Vendor_RulesConfig = nil
 
-    Addon:Debug("profile", "Used default profile settings with per-user rules config");
+
     return defaultProfileCopy
 end
 
@@ -243,7 +243,7 @@ function Addon:OnInitializeProfile(profile)
 	profile:SetValue(PROFILE_DESTROY_RULES, Addon.DefaultConfig.Rules.destroy or {});
 
 	-- Copy the default settings into the new profile.
-	table.forEach(Addon.DefaultConfig.Settings, 
+	Addon.TableForEach(Addon.DefaultConfig.Settings, 
 		function(value, name)
 			profile:SetValue(name, value);
 		end);
@@ -259,19 +259,19 @@ end
 
 
 function Addon:OnCheckProfileMigration(profile)
-	Addon:Debug("profile", "In CheckMigration for Profile: " .. profile:GetName());
+
 	local version = profile:GetValue(PROFILE_VERSION)
-	Addon:Debug("profile", "Profile Version: " .. tostring(version));
+
 
 	-- No-op for current version.
 	if version == CURRENT_VERSION then
-		Addon:Debug("profile", "Profile is current, skipping migration.");
+
 		return
 	end
 
 	-- Migrate new cosmetic sys rule to be on by default. 
 	if version < 2 then
-		Addon:Debug("profile", "Migrating cosmetic sys rule...");
+
 		local keeprules = profile:GetValue(PROFILE_KEEP_RULES)
 
 		-- Remove old cosmetic rule from the rulepack.
@@ -289,13 +289,11 @@ function Addon:OnCheckProfileMigration(profile)
 
 		-- Update the keeprules.
 		profile:SetValue(PROFILE_KEEP_RULES, keeprules)
-		profile:SetValue(Addon.c_Config_MerchantButton, true)
-		profile:SetValue(Addon.c_Config_Minimap, true)
 	end
 
 	-- Profile version is now migrated, update to current.
 	profile:SetValue(PROFILE_VERSION, CURRENT_VERSION)
-	Addon:Debug("profile", "Profile Migration Complete.");
+
 end
 
 Addon.Profile = Profile;

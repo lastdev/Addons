@@ -3,6 +3,8 @@ local _, myfullname = GetAddOnInfo(myname)
 
 local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 
+ns.suppressoverlay = {}
+
 local function hideTextureWithAtlas(atlas, ...)
     for i=1, select("#", ...) do
         local region = select(i, ...)
@@ -85,7 +87,7 @@ do
             for _, points in pairs(ns.points) do
                 for _, point in pairs(points) do
                     if point.group then
-                        gcache[point.group] = true
+                        gcache[point.group] = point.group
                     end
                 end
             end
@@ -147,8 +149,8 @@ function ns.SetupMapOverlay()
     else
         -- classic!
         -- (this is a close translation of WorldMapTrackingOptionsButtonTemplate)
-        frame = CreateFrame("DropDownToggleButton", nil, WorldMapFrame:GetCanvasContainer())
-        frame:SetFrameStrata("HIGH")
+        frame = CreateFrame("DropDownToggleButton", WorldMapFrame, WorldMapFrame:GetCanvasContainer())
+        frame:SetFrameStrata(WorldMapFrame:GetFrameStrata() or "HIGH")
         frame:SetSize(32, 32)
         frame.Background = frame:CreateTexture(nil, "BACKGROUND")
         frame.Background:SetPoint("TOPLEFT", 2, -4)
@@ -184,7 +186,10 @@ function ns.SetupMapOverlay()
         local uiMapID = WorldMapFrame.mapID
         local info = C_Map.GetMapInfo(uiMapID)
         local parentMapID = info and info.parentMapID or 0
-        if ns.db.worldmapoverlay and (ns.points[uiMapID] or ns.points[parentMapID]) then
+        if ns.db.worldmapoverlay and (
+            (ns.points[uiMapID] and not ns.suppressoverlay[uiMapID]) or
+            (ns.points[parentMapID] and not ns.suppressoverlay[parentMapID])
+        ) then
             self:Show()
         else
             self:Hide()

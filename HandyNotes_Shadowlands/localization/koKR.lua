@@ -17,6 +17,8 @@ L['squirrels_note'] = nil
 L['options_icons_squirrels'] = '{achievement:14731}'
 L['options_icons_squirrels_desc'] = nil
 
+L['prepatch_vendor_note'] = nil
+
 -------------------------------------------------------------------------------
 --------------------------------- ARDENWEALD ----------------------------------
 -------------------------------------------------------------------------------
@@ -644,6 +646,7 @@ L['options_icons_covenant_assaults_desc'] = 'Rewards for covenant assaults'
 L['assault_sublabel_US'] = nil
 L['assault_sublabel_EU'] = nil
 L['assault_sublabel_CN'] = nil
+L['assault_sublabel_AS'] = nil
 
 L['necrolord_assault'] = '{quest:63543}'
 L['necrolord_assault_note'] = nil

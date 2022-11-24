@@ -149,8 +149,9 @@ ns.RegisterEvent = function( event, handler )
     local key = event .. "_" .. #handlers[event]
     Hekili:ProfileCPU( key, handler )
 
-    local file, line = debugstack(2):match([[Hekili\(.-)"%]:(%d+): in main chunk]])
-    Hekili.EventSources[ key ] = ( file or "Unknown" ) .. ":" .. ( line or 0 )
+    local stack = debugstack(2)
+    local file, line = stack:match([[Hekili/(.-)"%]:(%d+)]])
+    Hekili.EventSources[ key ] = file and ( file .. ":" .. ( line or 0 ) ) or stack:match( "^(.*)\n" )
 end
 local RegisterEvent = ns.RegisterEvent
 
@@ -187,8 +188,9 @@ ns.RegisterUnitEvent = function( event, unit1, unit2, handler )
     unitFrame.events[ event ] = unitFrame.events[ event ] or {}
     insert( unitFrame.events[ event ], handler )
 
-    local file, line = debugstack(2):match([[Hekili\(.-)"%]:(%d+): in main chunk]])
-    Hekili.EventSources[ event .. "_" .. unit1 .. "_" .. #unitFrame.events[ event ] ] = ( file or "Unknown" ) .. ":" .. ( line or 0 )
+    local stack = debugstack(2)
+    local file, line = stack:match([[Hekili/(.-)"%]:(%d+)]])
+    Hekili.EventSources[ event .. "_" .. unit1 .. "_" .. #unitFrame.events[ event ] ] = file and ( file .. ":" .. ( line or 0 ) ) or stack:match( "^(.*)\n" )
 
     unitFrame:RegisterUnitEvent( event, unit1 )
     Hekili:ProfileCPU( event .. "_" .. unit1 .. "_" .. #unitFrame.events[ event ], handler )
@@ -206,7 +208,7 @@ ns.RegisterUnitEvent = function( event, unit1, unit2, handler )
         unitFrame.events[ event ] = unitFrame.events[ event ] or {}
         insert( unitFrame.events[ event ], handler )
 
-        Hekili.EventSources[ event .. "_" .. unit2 .. "_" .. #unitFrame.events[ event ] ] = ( file or "Unknown" ) .. ":" .. ( line or 0 )
+        Hekili.EventSources[ event .. "_" .. unit2 .. "_" .. #unitFrame.events[ event ] ] = file and ( file .. ":" .. ( line or 0 ) ) or stack:match( "^(.*)\n" )
 
         unitFrame:RegisterUnitEvent( event, unit2 )
         Hekili:ProfileCPU( event .. "_" .. unit2 .. "_" .. #unitFrame.events[ event ], handler )
@@ -1178,6 +1180,7 @@ do
 
     RegisterUnitEvent( "UNIT_SPELLCAST_EMPOWER_START", "player", nil, function( event, unit, cast, spellID )
         local ability = class.abilities[ spellID ]
+        if not ability then return end
 
         wipe( stages )
         local start = GetTime()
@@ -2091,27 +2094,23 @@ do
             wipe( v.lower )
         end
 
-        --[[ Bartender4 support (Original from tanichan, rewritten for action bar paging by konstantinkoeppe).
+        -- Bartender4 support; if BT4 bindings are set, use them, otherwise fall back on default UI bindings below.
+        -- This will still get viewed as misleading...
         if _G["Bartender4"] then
-            for actionBarNumber = 1, 15 do
-                local bar = _G["BT4Bar" .. actionBarNumber]
-                for keyNumber = 1, 12 do
-                    local actionBarButtonId = (actionBarNumber - 1) * 12 + keyNumber
-                    local bindingKeyName = "ACTIONBUTTON" .. keyNumber
+            table.wipe( slotsUsed )
 
-                    -- If bar is disabled assume paging / stance switching on bar 1
-                    if actionBarNumber > 1 and bar and not bar.disabled then
-                        bindingKeyName = "CLICK BT4Button" .. actionBarButtonId .. ":Click"
-                    end
+            for i = 1, 180 do
+                local keybind = "CLICK BT4Button" .. i .. ":Keybind"
+                local bar = ceil( i / 12 )
 
-                    StoreKeybindInfo( actionBarNumber, GetBindingKey( bindingKeyName ), GetActionInfo( actionBarButtonId ) )
+                if GetBindingKey( keybind ) then
+                    StoreKeybindInfo( bar, GetBindingKey( keybind ), GetActionInfo( i ) )
+                    slotsUsed[ i ] = true
                 end
             end
 
-            done = true ]]
-
         -- Use ElvUI's actionbars only if they are actually enabled.
-        if _G["ElvUI"] and _G[ "ElvUI_Bar1Button1" ] then
+        elseif _G["ElvUI"] and _G[ "ElvUI_Bar1Button1" ] then
             table.wipe( slotsUsed )
 
             for i = 1, 15 do

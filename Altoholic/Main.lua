@@ -136,7 +136,7 @@ local function MerchantFrame_UpdateMerchantInfoHook()
 					if IsBOPItemKnown(itemID) then		-- recipe is bop and already known, useless to alts : red.
 						r, g, b = 1, 0, 0
 						
-					elseif classID == LE_ITEM_CLASS_RECIPE and subclassID ~= LE_ITEM_RECIPE_BOOK then		-- is it a recipe ?
+					elseif classID == Enum.ItemClass.Recipe and subclassID ~= Enum.ItemRecipeSubclass.Book then -- is it a recipe ?
 						local _, couldLearn, willLearn = addon:GetRecipeOwners(itemSubType, link, addon:GetRecipeLevel(link))
 						
 						if #couldLearn == 0 and #willLearn == 0 then		-- nobody could learn the recipe, neither now nor later : red

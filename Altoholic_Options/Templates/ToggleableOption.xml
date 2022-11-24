@@ -7,6 +7,20 @@
 			<OnLoad>
 				Altoholic:BindViewToController(self, "AltoholicUI.ToggleableOption")
 			</OnLoad>
+			<OnEnter>
+				if self.tooltipText then
+					GetAppropriateTooltip():SetOwner(self, self.tooltipOwnerPoint or "ANCHOR_RIGHT")
+					GetAppropriateTooltip():SetText(self.tooltipText, nil, nil, nil, nil, true)
+				end
+				
+				if self.tooltipRequirement then
+					GetAppropriateTooltip():AddLine(self.tooltipRequirement, 1.0, 1.0, 1.0, true)
+					GetAppropriateTooltip():Show()
+				end
+			</OnEnter>
+			<OnLeave>
+				GetAppropriateTooltip():Hide()
+			</OnLeave>
 			<OnClick>
 				self:Button_OnClick()
 			</OnClick>

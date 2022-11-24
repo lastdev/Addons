@@ -20,7 +20,7 @@ local MerchantButton =
    | Called when this panel is loaded 
    ==========================================================================]]
 function MerchantButton:OnLoad()
-	Addon:Debug("merchantbutton", "OnLoad of merchant button")
+
 end
 
 --[[===========================================================================
@@ -48,12 +48,12 @@ function MerchantButton:UpdateSellState(inProgress)
 
 		local left = math.max(0, self.limit - self.sold)
 		if (left > 0) then
-			Addon:Debug("merchantbutton", "Updating button to reflect sold item: %d left", left)
+
 			self:SetButtonState(sell, MERCHANT_SELL_ITEMS, left)
 		end
 	else		
 		local _, _, toSell, toDestroy = Addon:GetEvaluationStatus()
-		Addon:Debug("merchantbutton", "Updating state items to sell %d, destory %d", toSell, toDestroy)
+
 
 		self.total = toSell
 		self:SetButtonState(sell, MERCHANT_SELL_ITEMS, toSell)
@@ -65,7 +65,7 @@ end
    | Called when this page is shown
    ==========================================================================]]
 function MerchantButton:OnShow()
-	Addon:Debug("merchantbutton", "Merchant button OnShow")
+
 	Addon:RegisterCallback(AUTO_SELL_START, self, self.OnAutoSellStarted)
 	Addon:RegisterCallback(AUTO_SELL_COMPLETE, self, self.OnAutoSellComplete)
 
@@ -78,7 +78,7 @@ end
    | Called when this page is shown
    ==========================================================================]]
 function MerchantButton:OnHide()
-	Addon:Debug("merchantbutton", "Merchant button onHide")
+
 	Addon:UnregisterCallback(AUTO_SELL_START, self)
 	Addon:UnregisterCallback(AUTO_SELL_COMPLETE, self)
 end
@@ -87,7 +87,7 @@ end
    | Called when the sell button is clicked, run auto-sell
    ==========================================================================]]
 function MerchantButton:OnSellClicked()
-	Addon:Debug("merchantbutton", "auto-sell was clicked")
+
 	if (not Addon:IsAutoSelling()) then
 		Addon:AutoSell()
 	end
@@ -97,7 +97,7 @@ end
    | Called when the destory button is clicked, destroys one item
    ==========================================================================]]
 function MerchantButton:OnDestroyClicked()
-	Addon:Debug("merchantbutton", "destroy was clicked")
+
 	if (not Addon:IsAutoSelling()) then
 		Addon:DestroyItems()
 	end
@@ -106,7 +106,7 @@ end
 function MerchantButton.SetupButton()
 	local state = Addon:GetProfile():GetValue(MERCHANT)
 
-	Addon:Debug("merchantbutton", "Upadding button state: %s", state)
+
 	if (state) then
 		if (not MerchantButton.frame) then
 			local frame = CreateFrame("Frame", "VendorMerchantButton", MerchantFrame, "Vendor_Merchant_Button")
@@ -126,7 +126,7 @@ end
    | Called when this page is shown
    ==========================================================================]]
 function MerchantButton.OnMerchantOpened()
-	Addon:Debug("merchantbutton", "merchant open")
+
 	Addon:RegisterCallback(PROFILE_CHANGED, MerchantButton, MerchantButton.SetupButton)
 	MerchantButton.SetupButton()
 end
@@ -135,7 +135,7 @@ end
    | Called when this page is shown
    ==========================================================================]]
 function MerchantButton.OnMerchantClosed()
-	Addon:Debug("merchantbutton", "merchant closed")
+
 	Addon:UnregisterCallback(PROFILE_CHANGED, MerchantButton)
 	if (MerchantButton.frame) then
 		MerchantButton.frame:Hide()
@@ -146,7 +146,7 @@ end
    | Called when this page is shown
    ==========================================================================]]
 function MerchantButton:OnAutoSellStarted(limit)
-	Addon:Debug("merchantbutton", "Merchant button auto-sell started (limit: %d) [%d]", limit, self.total or 0)
+
 	self.inProgress = true
 
 	if (limit == 0) then
@@ -164,7 +164,7 @@ end
    | Called when this page is shown
    ==========================================================================]]
 function MerchantButton:OnAutoSellComplete()
-	Addon:Debug("merchantbutton", "Merchant buton auto-sell completed")
+
 	Addon:UnregisterCallback(AUTO_SELL_ITEM, self)
 
 	self.inProgress = false
@@ -176,7 +176,7 @@ end
 
 function MerchantButton:OnAutoSellItem(link, sold, limit)
 	if (self.inProgress) then
-		Addon:Debug("merchantbutton", "Auto-sold item updating button status %d / %d [%d]", sold, limit, self.total)
+
 		self.itemLimit = math.min(limit, self.total)
 		self.sold = sold
 		self:UpdateSellState(true)
@@ -188,7 +188,7 @@ end
    ==========================================================================]]
 function MerchantButton:BAG_UPDATE(bag)
 	if (self:IsShown()) then
-		Addon:Debug("merchantbutton", "Merchant buton bag %d updated", bag)
+
 		self:UpdateSellState(self.inProgress)
 	end
 end
@@ -197,7 +197,7 @@ end
    | Called when this page is shown
    ==========================================================================]]
 function MerchantButton.Initialize()
-	Addon:Debug("merchantbutton", "Initializing merchant button")
+
 
     Addon:PreHookWidget(MerchantFrame, "OnShow", MerchantButton.OnMerchantOpened)
     Addon:PreHookWidget(MerchantFrame, "OnHide", MerchantButton.OnMerchantClosed)

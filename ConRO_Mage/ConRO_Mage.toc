@@ -1,7 +1,7 @@
 ## Title:-|cffFFFFFFConRO|r- |cff69CCF0Mage|r
-## Version: 9.1.5
+## Version: 10.0.0
 ## Author: Vae
-## Interface: 90005
+## Interface: 100002
 ## Dependencies: ConRO
 ## LoadOnDemand: 1
 

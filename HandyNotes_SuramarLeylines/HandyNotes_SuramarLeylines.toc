@@ -1,8 +1,8 @@
-## Interface: 90207
+## Interface: 100002
 ## Title: HandyNotes: Suramar Leylines
 ## Notes: Leyline feeds in Suramar? Sure, why not?
 ## Author: Kemayo
-## Version: v5
+## Version: v6
 ## DefaultState: enabled
 ## X-Category: Achievements
 ## X-eMail: kemayo @ gmail DOT com

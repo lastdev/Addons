@@ -3,8 +3,11 @@ local L = Addon:GetLocale()
 local debugp = function (...) Addon:Debug("history", ...) end
 
 local VERSION = 1
-local historyVariable = Addon.SavedVariable:new("History")
 Addon.OnHistoryChanged = Addon.CreateEvent("History.OnChanged")
+
+local function getHistoryVariable()
+    return Addon:CreateSavedVariable("History")
+end
 
 -- Called whenever a history entry is added, or history is pruned / cleared.
 function Addon:HistoryUpdated()
@@ -14,9 +17,9 @@ end
 -- Root history variable tracks Version, Rules, and Profiles
 -- Rules and Profiles are lookup tables to save space for each entry.
 function Addon:ClearAllHistory()
-    debugp("Clearing Entire History")
-    historyVariable:Replace({})
-    local history = historyVariable:GetOrCreate()
+
+    getHistoryVariable():Replace({})
+    local history = getHistoryVariable():GetOrCreate()
     history.Characters = {}
     history.Version = VERSION
     history.Rules = {}
@@ -25,8 +28,8 @@ function Addon:ClearAllHistory()
 end
 
 function Addon:ClearCharacterHistory()
-    debugp("Clearing History for character %s", Addon:GetCharacterFullName())
-    local history = historyVariable:GetOrCreate()
+
+    local history = getHistoryVariable():GetOrCreate()
     if history.Characters then
         history.Characters[Addon:GetCharacterFullName()] = nil
     end
@@ -34,7 +37,7 @@ function Addon:ClearCharacterHistory()
 end
 
 local function getOrCreateCharacterHistory()
-    local history = historyVariable:GetOrCreate()
+    local history = getHistoryVariable():GetOrCreate()
     local key = Addon:GetCharacterFullName()
     if (not key) then
         return {}
@@ -58,7 +61,7 @@ function Addon:GetCharacterHistory()
 end
 
 function Addon:GetHistoryVersion()
-    local history = historyVariable:GetOrCreate()
+    local history = getHistoryVariable():GetOrCreate()
     if not history.Version then history.Version = VERSION end
     return history.Version
 end
@@ -69,7 +72,7 @@ end
 -- size will be small and the lookup will be fast
 local function getOrCreateRuleId(ruleid, rule)
     -- Create the table and data if doesn't exist.
-    local history = historyVariable:GetOrCreate()
+    local history = getHistoryVariable():GetOrCreate()
     if not history.Rules then history.Rules = {} end
 
     -- find our ruleid in the list - these should be unique (with close enough certainty for us to not care)
@@ -97,7 +100,7 @@ end
 -- As above, optimized for storage and lookup, not insert.
 local function getOrCreateProfileId()
     -- Create the table and data if doesn't exist.
-    local history = historyVariable:GetOrCreate()
+    local history = getHistoryVariable():GetOrCreate()
     if not history.Profiles then history.Profiles = {} end
 
     -- find our ruleid in the list - these should be unique (with close enough certainty for us to not care)
@@ -132,7 +135,7 @@ function Addon:AddEntryToHistory(link, action, rule, ruleid, count, value)
     entry.Profile = getOrCreateProfileId()
     entry.Rule = getOrCreateRuleId(ruleid, rule)
 
-    debugp("Adding entry: [%s] %s (%s)", action, link, rule)
+
     local charHistory = getOrCreateCharacterHistory()
     table.insert(charHistory.Entries, entry)
     Addon.Invoke(Addon, "HistoryUpdated")
@@ -146,17 +149,17 @@ function Addon:PruneHistory(hours, character)
     if not currentChar then
         currentChar = Addon:GetCharacterFullName()
         if currentChar == "" then
-            debugp("Error getting Character Full Name, skipping pruning of this character.")
+
             return 0
         end
     end
     if character and currentChar ~= character then
-        history = historyVariable:GetOrCreate().Characters[character]
+        history = getHistoryVariable():GetOrCreate().Characters[character]
     else
         character = currentChar
         history = getOrCreateCharacterHistory()
     end
-    assert(history, "Error loading history for character "..tostring(character))
+
     
     -- Find entries to remove that are older than seconds
     local toremove = {}
@@ -169,19 +172,19 @@ function Addon:PruneHistory(hours, character)
     -- Remove the old entries
     local count = 0
     for _, v in pairs(toremove) do
-        debugp("Pruning %s history: removing entry %s: [%s] %s", character, v, history.Entries[v].TimeStamp, history.Entries[v].Id)
+
         history.Entries[v] = nil
         count = count + 1
     end
 
     -- Set the new history window to this set of hours
     history.Window = time() - seconds
-    Addon:Debug("historystats", "Pruned %s history entries from %s", count, character)
+
     return count
 end
 
 function Addon:PruneAllHistory(hours)
-    local history = historyVariable:GetOrCreate()
+    local history = getHistoryVariable():GetOrCreate()
     local total = 0
     if history.Characters then
         for char, _ in pairs(history.Characters) do
@@ -193,13 +196,18 @@ function Addon:PruneAllHistory(hours)
     -- Prune the lookup tables when we are done.
     Addon:PruneHistoryLookupTables()
 
-    Addon:Debug("historystats", "Pruned %s history entries across all characters.", total)
+
     Addon.Invoke(Addon, "HistoryUpdated")
     return total
 end
 
+function Addon:PostInitializePruneHistory()
+    C_Timer.After(Addon.c_PruneHistoryDelay, function() Addon:PruneAllHistory(Addon.c_HoursToKeepHistory) end)
+end
+
+
 local function isLookupIdInUse(index, name)
-    local history = historyVariable:GetOrCreate()
+    local history = getHistoryVariable():GetOrCreate()
     local total = 0
     if history.Characters then
         for char, _ in pairs(history.Characters) do
@@ -218,7 +226,7 @@ end
 -- Loops through all lookup tables and sees if any are in use
 -- anywhere in the history
 function Addon:PruneHistoryLookupTables()
-    local history = historyVariable:GetOrCreate()
+    local history = getHistoryVariable():GetOrCreate()
     if history.Rules then
         local toremove = {}
         for k, _ in pairs(history.Rules) do
@@ -228,7 +236,7 @@ function Addon:PruneHistoryLookupTables()
             end
         end
         for _, v in pairs(toremove) do
-            debugp("Removing unused Rule lookup %s - %s", v, history.Rules[v].Id)
+
             history.Rules[v] = nil
         end
     end
@@ -242,7 +250,7 @@ function Addon:PruneHistoryLookupTables()
             end
         end
         for _, v in pairs(toremove) do
-            debugp("Removing unused Profile lookup %s - %s", v, history.Profiles[v].Id)
+
             history.Profiles[v] = nil
         end
     end
@@ -258,7 +266,7 @@ function Addon:GetActionTypeFromId(id)
 end
 
 function Addon:GetRuleInfoFromHistoryId(id)
-    local history = historyVariable:GetOrCreate()
+    local history = getHistoryVariable():GetOrCreate()
     if history.Rules and history.Rules[id] then
         return history.Rules[id].Id, history.Rules[id].Name
     end
@@ -266,7 +274,7 @@ function Addon:GetRuleInfoFromHistoryId(id)
 end
 
 function Addon:GetProfileInfoFromHistoryId(id)
-    local history = historyVariable:GetOrCreate()
+    local history = getHistoryVariable():GetOrCreate()
     if history.Profiles and history.Profiles[id] then
         return history.Profiles[id].Id, history.Profiles[id].Name
     end
@@ -340,7 +348,7 @@ function Addon:History_Cmd(arg1, arg2, arg3)
     end
 
     local charsToPrint = {}
-    local history = historyVariable:GetOrCreate()
+    local history = getHistoryVariable():GetOrCreate()
     local totalsummary = false
     if arg1 == "all" then
         -- Add all characters to print list.

@@ -44,6 +44,8 @@ L["Aka'ali the Conqueror"] = "Aka'ali la Conquistadora"
 L["Alarm-o-Bot"] = "Roboalarma"
 L["Alcruux"] = "Alcruux"
 --[[Translation missing --]]
+--[[ L["Algeth'ar Echoknight"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["Algeth'ar Educator"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Algeth'ar Enforcer"] = ""--]] 
@@ -505,6 +507,8 @@ L["Eredar Chaosbringer"] = "Portador de caos eredar"
 --[[ L["Erkhart Stormvein"] = ""--]] 
 L["Erudite Slayer"] = "Asesina erudita"
 L["Etherdiver"] = "Colimbo de éter"
+--[[Translation missing --]]
+--[[ L["Ethereal Restorer"] = ""--]] 
 L["Executioner Varruth"] = "Verdugo Varruth"
 L["Executor Tarvold"] = "Ejecutor Tarvold"
 --[[Translation missing --]]
@@ -1500,6 +1504,8 @@ L["Spectral Brute"] = "Bruto espectral"
 L["Spectral Charger"] = "Destrero espectral"
 L["Spectral Headhunter"] = "Rebanacabezas espectral"
 L["Spectral Hex Priest"] = "Sacerdote de maleficio espectral"
+--[[Translation missing --]]
+--[[ L["Spectral Invoker"] = ""--]] 
 L["Spectral Journeyman"] = "Oficial espectral"
 L["Spectral Patron"] = "Parroquiano espectral"
 L["Spectral Retainer"] = "Criado espectral"

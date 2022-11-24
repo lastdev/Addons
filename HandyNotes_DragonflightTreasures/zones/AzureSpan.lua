@@ -49,6 +49,17 @@ ns.RegisterPoints(MAPID, {
     },
 }, {
     achievement=16300, -- Treasures
+    minimap=true,
+})
+
+ns.RegisterPoints(MAPID, {
+    [45635482] = {
+        achievement=16679, criteria=56155,
+        quest=72121,
+        loot={200949}, -- Case of Fresh Gleamfish
+        note="Quickly take this to {npc:191305} in Thaldraszus @ 38.4, 68.2",
+        route={45635482, 52550000, highlightOnly=true},
+    },
 })
 
 -- Rares
@@ -233,10 +244,14 @@ ns.RegisterPoints(MAPID, {
     },
     --]]
     [13604860] = { -- Bisquius
+        -- also get achievement 16444, Leftovers' Revenge
         criteria=55381,
         quest=nil,
         npc=197557,
-        loot={},
+        loot={
+            200882,
+        },
+        note="Complete {spell:388961:Community Feasts}",
     },
     --[[
     [] = { -- Blightfur
@@ -308,4 +323,38 @@ ns.RegisterPoints(MAPID, {
     },
 }, {
     achievement=16678, -- Adventurer
+})
+ns.RegisterPoints(MAPID, {
+    [23443327] = { -- Cascade
+        npc=186962,
+        quest=72836,
+        loot={
+            {197098, quest=69299}, -- Highland Drake: Finned Back
+            200135, -- Corroded Greatsword
+        },
+        vignette=5050,
+    },
+    [38185903] = { -- Forgotten Creation
+        npc=193214,
+        quest=72840,
+        loot={
+            200210, -- Amnesia
+            200758, -- Breastplate of Storied Antiquity
+        },
+        vignette=5191,
+    },
+})
+
+-- Ley Line in the Span
+-- https://www.wowhead.com/achievement=16638/ley-line-in-the-span
+ns.RegisterPoints(MAPID, {
+    [43786190] = {criteria=55972, quest=72138,}, -- Azure Archives
+    [26303631] = {criteria=55973, quest=72139,}, -- Ancient Outlook
+    [65402835] = {criteria=55976, quest=72140,}, -- Slyvern Plunge
+    [66075111] = {criteria=55974, quest=72136,}, -- Rustpine Den
+    [66725958] = {criteria=55975, quest=72141,}, -- Ruins of Karnthar
+}, {
+    achievement=16638,
+    atlas="AzeriteReady",
+    note="Interact with the {npc:198260}; sometimes a Miner will need to break a rock wall before you can get in",
 })

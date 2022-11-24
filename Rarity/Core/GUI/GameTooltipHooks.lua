@@ -24,14 +24,25 @@ local gray = Rarity.Enum.Colors.Gray
 local white = Rarity.Enum.Colors.White
 
 -- Game Tooltip hijacking stuff
-_G.GameTooltip:HookScript("OnTooltipSetUnit", function(self)
-	-- If debug mode is on, find NPCID from mouseover target and append it to the tooltip
-	if R.db.profile.debugMode then
-		GameTooltip:AddLine("NPCID: " .. R:GetNPCIDFromGUID(UnitGUID("mouseover")), 255, 255, 255)
+local function onTooltipSetUnit(tooltip, data)
+	if tooltip ~= _G.GameTooltip then
+		return -- Probably a tooltip created by another addon, that does use the new GameTooltipDataMixin (triggers post-hooks globally...)
 	end
+
+	local self = tooltip -- For backwards compatibility with the legacy code below (should be refactored eventually...)
 
 	if not R.db or R.db.profile.enableTooltipAdditions == false then
 		return
+	end
+
+	if not self.GetUnit then
+		-- Probably a tooltip created by another addon, that hasn't been updated to use GameTooltipDataMixin (risky assumption)
+		return
+	end
+
+	-- If debug mode is on, find NPCID from mouseover target and append it to the tooltip
+	if R.db.profile.debugMode then
+		GameTooltip:AddLine("NPCID: " .. R:GetNPCIDFromGUID(UnitGUID("mouseover")), 255, 255, 255)
 	end
 
 	local name, unit = self:GetUnit()
@@ -354,7 +365,9 @@ _G.GameTooltip:HookScript("OnTooltipSetUnit", function(self)
 			end
 		end
 	end
-end)
+end
+
+_G.TooltipDataProcessor.AddTooltipPostCall(_G.Enum.TooltipDataType.Unit, onTooltipSetUnit)
 
 local function processItem(id)
 	local blankAdded = false
@@ -501,6 +514,7 @@ local function processItemString(itemString)
 end
 
 -- TOOLTIP: ITEMS IN INVENTORY
+local GetContainerItemID = _G.C_Container.GetContainerItemID
 
 hooksecurefunc(GameTooltip, "SetBagItem", function(self, bag, slot)
 	local id = GetContainerItemID(bag, slot)

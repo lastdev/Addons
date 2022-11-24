@@ -91,7 +91,7 @@ end
     =========================================================================]]
 local function set_AddRule(self, ruleDef, params)
     Package.validateRuleDefinition(ruleDef, 3);
-    assert(ruleDef and type(ruleDef) == "table", "Invalid rule definition was provided");
+
     if (params and (type(params) ~= "table")) then
         error("The rule parameters must be a table, providing the parameters as key-value pairs", 2);
     end
@@ -132,7 +132,7 @@ end
     |   rule definition.  These can be null.
     =========================================================================]]
 local function set_SetRules(self, rules, options)
-    assert(rules and type(rules) == "table", "The rules to set must be a table");
+
     self.engine.log:StartBlock("Set[%d] settings rules (%s)", self.id, options or "");
 
     -- Set the rules
@@ -205,8 +205,8 @@ local ruleset_API =
     |    which indicates why we couldn't parse it.
     ========================================================================--]]
 local function new_Ruleset(engine, id, name)
-    assert(id ~= nil and string.len(id) ~= 0, "The rule id is an invalid string, it must be valid and non-empty.")
-    assert(name ~= nil and string.len(name) ~= 0, "The name of the rule must be non-empty and valid.");
+
+
 
     local instance =
     {

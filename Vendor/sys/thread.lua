@@ -15,96 +15,69 @@
     |
     =======================================================================--]]
 local AddonName, Addon = ...
+local debugp = function (...) Addon:Debug("threads", ...) end
 
 local threads = {} 
-
-
 
 -- This allows adding a callback function whenever a thread of the specified name is completed.
 local threadCallbacks = {}
 function Addon:AddThreadCompletionCallback(name, func)
-    assert(type(name) == "string" and type(func) == "function")
+
     if not threadCallbacks[name] then
         threadCallbacks[name] = {}
     end
     table.insert(threadCallbacks[name], func)
 end
 
+-- Accessor for adding a thread to the processor. Duplicate names are allowed.
+function Addon:AddThread(func, name, throttle)
 
--- This is a listener frame used for waking up processing threads.
--- Threads go into a queue and the throttler processes them one at a time, FIFO
--- This frame is hidden/shown to turn off/on the listener, so it only checks for work when you want it to.
-local counter = 0
-local processingFrame = CreateFrame("Frame")
-processingFrame:Hide()
 
-local function hasWorkToDo()
-    if #threads > 0 then
-        return true
-    else
-        return false
+    if not throttle then throttle = Addon.c_ThrottleTime end
+
+
+    if Addon:GetThread(name) then
+
+        return
     end
-end
 
--- Wake up the next thread in the queue and do processing.
--- Assumes the threads will yield on their own so this doesn't hang the UI or cause a disconnect.
--- If the coroutine needs to stop, it should be baked into the coroutine itself.
-local function doSomeWork()
+    local obj = {}
+    obj.thread = coroutine.create(func)
+    obj.name = name
 
-    -- Go through the thread queue.
-    while hasWorkToDo() do
+    local function doWorkOnThread()
+
         -- check if thread is dead
         -- if yes, clean it up
-        if coroutine.status(threads[1].thread) == "dead" then
-            local name = threads[1].name
-            Addon:Debug("threads", "Thread %s is complete.", name)
-            table.remove(threads, 1)
+        if coroutine.status(obj.thread) == "dead" then
+
+            Addon:RemoveThread(name)
+
             -- execute all callbacks for this thread
-            if threadCallbacks[name] then
+            if threadCallbacks[obj.name] then
                 for _, cb in pairs(threadCallbacks[name]) do
-                    Addon:Debug("threads", "Executing callback for thread %s", name)
+
                     cb()
                 end
             end
         else
             -- if not, resume it
-            Addon:Debug("threads", "Resuming thread %s", threads[1].name)
-            coroutine.resume(threads[1].thread)
+            --debugp("Resuming thread %s", obj.name)
+            coroutine.resume(obj.thread)
             return
+        end
+
+        -- Jobs done!
+        -- Stop the timer
+        if obj.timer and obj.timer.Cancel and type(obj.timer.Cancel) == "function" then
+
+            obj.timer:Cancel()
         end
     end
 
-    -- If we get here it means there is no work to do so stop listening for it.
-    processingFrame:Hide()
-end
-
-processingFrame:SetScript("OnUpdate", function(self, elapsed)
-    counter = counter + elapsed
-    -- Set a reasonable throttle time to start with, addon can override in a constant.
-    local throttletime = 0.10
-    if Addon.c_ThrottleTime and type(Addon.c_ThrottleTime) == "number" then
-        throttletime = Addon.c_ThrottleTime
-    end
-    if counter >= throttletime then
-        counter = counter - throttletime
-
-        -- Do some processing on the next thread.
-        doSomeWork()
-    end
-end)
-
--- Accessor for adding a thread to the processor. Duplicate names are allowed.
-function Addon:AddThread(func, name)
-    assert(type(func) == "function", "First argument to AddThread must be a function.")
-    assert(type(name) == "string", "Second argument to AddThread must be a string.")
-    local obj = {}
-    obj.thread = coroutine.create(func)
-    obj.name = name
+    obj.timer = C_Timer.NewTicker(throttle or 0.1, doWorkOnThread)
     table.insert(threads, obj)
-    self:Debug("threads", "Added thread: %s",tostring(name))
 
-    -- "wake up" the listener
-    processingFrame:Show()
 end
 
 -- Accessor for getting a thread from the processor
@@ -120,18 +93,31 @@ function Addon:GetThread(name)
     return nil
 end
 
+
+
 -- Accessor for removing a thread from the processor.
 -- Will remove all that match the name.
 -- When a coroutine has no references it is killed after its last yield.
 -- LUA is not really multi-threaded so we don't need to worry about synchronization.
 function Addon:RemoveThread(name)
-    -- search thread list
+    thread = Addon:GetThread(name)
+
+    -- Stop the ticker for this thread.
+    if thread.timer and thread.timer.Cancel and type(thread.timer.Cancel) == "function" then
+
+        thread.timer:Cancel()
+    end
+
+    -- Clear callbacks for this thread
+    threadCallbacks[name] = {}
+
+    -- Remove table entry for this thread
     for k, v in pairs(threads) do
         if v.name == name then
             table.remove(threads, k)
-            self:Debug("threads", "Removed thread: %s", tostring(name))
         end
     end
-end
 
+
+end
 

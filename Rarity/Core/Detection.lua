@@ -6,9 +6,9 @@ local table = table
 
 -- WOW API
 local C_Calendar = C_Calendar
-local GetContainerNumSlots = GetContainerNumSlots
-local GetContainerItemID = GetContainerItemID
-local GetContainerItemInfo = GetContainerItemInfo
+local GetContainerNumSlots = _G.C_Container.GetContainerNumSlots
+local GetContainerItemID = _G.C_Container.GetContainerItemID
+local GetContainerItemInfo = _G.C_Container.GetContainerItemInfo
 local GetNumSavedInstances = GetNumSavedInstances
 local GetSavedInstanceInfo = GetSavedInstanceInfo
 local GetNumRandomDungeons = GetNumRandomDungeons
@@ -40,7 +40,8 @@ function R:ScanBags()
 			for ii = 1, numSlots do
 				local id = GetContainerItemID(i, ii)
 				if id then
-					local qty = select(2, GetContainerItemInfo(i, ii))
+					local containerItemInfo = GetContainerItemInfo(i, ii)
+					local qty = containerItemInfo.stackCount
 					if qty and qty > 0 then
 						if not Rarity.bagitems[id] then
 							Rarity.bagitems[id] = 0

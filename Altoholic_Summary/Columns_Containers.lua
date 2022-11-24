@@ -25,11 +25,12 @@ local function FormatBagSlots(size, free)
 	return format(L["NUM_SLOTS_AND_FREE"], colors.cyan, size, colors.white, colors.green, free, colors.white)
 end
 
+local bankSlotPrices = { 1000, 10000, 100000, 250000, 250000, 250000, 250000 }
 
 -- ** Bags & Banks **
 Columns.RegisterColumn("BagSlots", {
 	-- Header
-	headerWidth = 100,
+	headerWidth = 120,
 	headerLabel = format("%s  %s", Formatter.Texture18("Interface\\Icons\\inv_misc_bag_08"), L["COLUMN_BAGS_TITLE_SHORT"]),
 	tooltipTitle = L["COLUMN_BAGS_TITLE"],
 	tooltipSubTitle = L[format("COLUMN_BAGS_SUBTITLE_%d", random(2))],
@@ -37,21 +38,22 @@ Columns.RegisterColumn("BagSlots", {
 	headerSort = DataStore.GetNumBagSlots,
 	
 	-- Content
-	Width = 100,
+	Width = 120,
 	JustifyH = "LEFT",
 	GetText = function(character)
-				if not DataStore:GetModuleLastUpdateByKey("DataStore_Containers", character) then
-					return UNKNOWN
-				end
-				
-				return format("%s/%s|r/%s|r/%s|r/%s",
+			if not DataStore:GetModuleLastUpdateByKey("DataStore_Containers", character) then
+				return UNKNOWN
+			end
+			
+			return format("%s/%s|r/%s|r/%s|r/%s|r/%s",
 					DataStore:GetContainerSize(character, 0),
 					DataStore:GetColoredContainerSize(character, 1),
 					DataStore:GetColoredContainerSize(character, 2),
 					DataStore:GetColoredContainerSize(character, 3),
-					DataStore:GetColoredContainerSize(character, 4)
-				)
-			end,
+					DataStore:GetColoredContainerSize(character, 4),
+					DataStore:GetColoredContainerSize(character, 5)
+			)
+		end,
 	OnEnter = function(frame)
 			local character = frame:GetParent().character
 			if not character or not DataStore:GetModuleLastUpdateByKey("DataStore_Containers", character) then
@@ -67,7 +69,7 @@ Columns.RegisterColumn("BagSlots", {
 			local _, link, size, free, bagType = DataStore:GetContainerInfo(character, 0)
 			tt:AddDoubleLine(format("%s[%s]", colors.white, BACKPACK_TOOLTIP), FormatBagSlots(size, free))
 			
-			for i = 1, 4 do
+			for i = 1, 5 do
 				_, link, size, free, bagType = DataStore:GetContainerInfo(character, i)
 
 				if size ~= 0 then
@@ -140,7 +142,7 @@ Columns.RegisterColumn("BankSlots", {
 			if DataStore:GetNumBankSlots(character) == 0 then
 				return L["Bank not visited yet"]
 			end
-			
+
 			return format("%s/%s|r/%s|r/%s|r/%s|r/%s|r/%s|r/%s",
 				DataStore:GetContainerSize(character, 100),
 				DataStore:GetColoredContainerSize(character, 6),
@@ -172,11 +174,18 @@ Columns.RegisterColumn("BankSlots", {
 			
 			local _, link, size, free, bagType = DataStore:GetContainerInfo(character, 100)
 			tt:AddDoubleLine(format("%s[%s]", colors.white, L["Bank"]), FormatBagSlots(size, free))
-				
+
+			
+			local numPurchasedSlots = DataStore:GetNumPurchasedBankSlots(character)
+			
 			for i = 6, 12 do
+				local slotIndex = i - 5		-- ie: id 6 = first bag, 7 = 2nd bag ...
 				_, link, size, free, bagType = DataStore:GetContainerInfo(character, i)
-				
-				if size ~= 0 then
+
+				-- if this slot was not purchased yet..
+				if numPurchasedSlots and numPurchasedSlots < slotIndex then
+					tt:AddDoubleLine(L["Not purchased yet"], Formatter.MoneyStringShort(bankSlotPrices[slotIndex]))
+				elseif size ~= 0 then
 					tt:AddDoubleLine(FormatBagType(link, bagType), FormatBagSlots(size, free))
 				end
 			end

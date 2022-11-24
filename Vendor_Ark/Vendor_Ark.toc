@@ -1,7 +1,7 @@
-## Interface: 100000
+## Interface: 100002
 ## Dependencies: Vendor, ArkInventoryRules
 ## Title: Vendor_ArkInventory
 ## Notes: ArkInventory extension. Requires both Vendor and ArkInventory
-## Version: 5.3.3
+## Version: 6.0.4
 ## Author: Thoekh of Sargeras & Buskin of Lightbringer
 vendorark.lua

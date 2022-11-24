@@ -1,16 +1,10 @@
 ------------------------------------------------------------------------
-r545 | Zimzarina | 2022-11-07 21:25:44 +0000 (Mon, 07 Nov 2022) | 2 lines
+r557 | Zimzarina | 2022-11-21 08:36:04 +0000 (Mon, 21 Nov 2022) | 1 line
 Changed paths:
-   M /trunk/Modules/TradeBlock.lua
-
-Updated TradeBlock.lua to fully use the new event system for WoW 10.0 release. This will fix issue #307 and #308.
-
-------------------------------------------------------------------------
-r544 | Zimzarina | 2022-11-07 19:29:09 +0000 (Mon, 07 Nov 2022) | 2 lines
-Changed paths:
+   M /trunk/Modules/Express.lua
+   M /trunk/Modules/QuickAttach.lua
    M /trunk/Postal.lua
 
-Updated Postal.lua to fully use the new event system for WoW 10.0 release.
-
+Added support for reagent bag in 10.0.2 release to Express.lua and QuickAttach.lua.
 ------------------------------------------------------------------------
 

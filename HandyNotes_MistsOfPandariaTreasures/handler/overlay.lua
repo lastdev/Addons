@@ -147,8 +147,8 @@ function ns.SetupMapOverlay()
     else
         -- classic!
         -- (this is a close translation of WorldMapTrackingOptionsButtonTemplate)
-        frame = CreateFrame("DropDownToggleButton", nil, WorldMapFrame:GetCanvasContainer())
-        frame:SetFrameStrata("HIGH")
+        frame = CreateFrame("DropDownToggleButton", WorldMapFrame, WorldMapFrame:GetCanvasContainer())
+        frame:SetFrameStrata(WorldMapFrame:GetFrameStrata() or "HIGH")
         frame:SetSize(32, 32)
         frame.Background = frame:CreateTexture(nil, "BACKGROUND")
         frame.Background:SetPoint("TOPLEFT", 2, -4)

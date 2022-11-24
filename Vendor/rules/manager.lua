@@ -34,6 +34,9 @@ local ITEM_CONSTANTS =
     "INVSLOT_LAST_EQUIPPED",
 };
 
+local ruleFunctions = {}
+local ruleDocumenation = {}
+
 --[[===========================================================================
     | CreateRulesEngine:
     |   Create and initialize a RulesEngine object.
@@ -43,6 +46,9 @@ function Addon:CreateRulesEngine(verbose)
 
     -- Import constants
     rulesEngine:ImportGlobals(unpack(ITEM_CONSTANTS));
+
+    -- Add the functions
+    rulesEngine:AddFunctions(Addon:GetRuleFunctions())
 
     -- Check for extension functions
     if (Package.Extensions) then
@@ -155,30 +161,30 @@ function RuleManager:ApplyConfig(categoryId, ruleType)
                 local ruleDef = Addon.Rules.GetDefinition(entry, ruleType);
                 if (ruleDef) then
                     if (ruleDef.needsMigration) then
-                        Addon:Debug("rules", "Marking rule '%s [%s]' as outdated", ruleDef.Id, ruleType)
+
                         self:SetRuleOutdatedState(ruleDef.Id, true);
                     else
-                        Addon:Debug("rules", "Adding rule '%s' [%s]", ruleDef.Id, ruleType);
+
                         rulesEngine:AddRule(categoryId, ruleDef);
                     end
                 else
-                    Addon:Debug("rules", "Rule '%s' [%s] was not found", entry, ruleType);
+
                 end
             elseif ((type(entry) == "table") and (entry.rule)) then
                 local ruleDef = Addon.Rules.GetDefinition(entry.rule, ruleType);
                 if (ruleDef) then
                     if (ruleDef.needsMigration) then
-                        Addon:Debug("rules", "Marking rule '%s [%s]' as outdated", ruleDef.Id, ruleType)
+
                         self:SetRuleOutdatedState(ruleDef.Id, true);
                     else
-                        Addon:Debug("rules", "Adding rule '%s' [%s]", ruleDef.Id, ruleType);
+
                         rulesEngine:AddRule(categoryId, ruleDef, entry);
                     end
                 else
-                    Addon:Debug("rules", "Rule '%s' [%s] was not found", entry.rule, ruleType);
+
                 end
             else
-                Addon:Debug("rules", "Unknown configuration entry found (%s)", type(entry));
+
             end
         end
     end
@@ -199,7 +205,7 @@ function RuleManager:Update()
     -- Step 1: We want to add all of the locked rules into the
     --         engine as those are always added independent of the config.
     for _, ruleDef in ipairs(Addon.Rules.GetLockedRules()) do
-        Addon:Debug("rules", "Adding LOCKED rule '%s' [%s]", ruleDef.Id, ruleDef.Type);
+
         if (ruleDef.Type == RuleType.SELL) then
             rulesEngine:AddRule(RULE_TYPE_LOCKED_SELL, ruleDef);
         elseif (ruleDef.Type == RuleType.KEEP) then
@@ -207,7 +213,7 @@ function RuleManager:Update()
         elseif (ruleDef.Type == RuleType.DESTROY) then
             rulesEngine:AddRule(RULE_TYPE_LOCKED_DESTROY, ruleDef);
         else
-            assert(false, "An unknown rule type was encountered: " .. ruleDef.Type);
+
         end
     end
 
@@ -220,8 +226,8 @@ function RuleManager:Update()
     -- Step 4: Add the sell rules from our configuration
     self:ApplyConfig(RULE_TYPE_SELL, RuleType.SELL);
 
-    -- Clear the result cache
-    Addon:ClearResultCache();
+    -- Clear the item cache and schedule a refresh.
+    Addon:ClearItemResultCache()
 end
 
 --*****************************************************************************
@@ -232,7 +238,7 @@ end
 --*****************************************************************************
 function RuleManager:Run(object, ...)
     local result, ran, categoryId, ruleId, name = self.rulesEngine:Evaluate(object, ...);
-    Addon:Debug("rules", "Evaluated \"%s\" [ran=%s, result=%s, ruleId=%s]", (object.Name or "<unknown>"), ran, result, (ruleId or "<none>"));
+
     if (result) then
         if ((categoryId == RULE_TYPE_KEEP) or (categoryId == RULE_TYPE_LOCKED_KEEP)) then
             return false, ruleId, name, RuleType.KEEP;
@@ -253,4 +259,27 @@ end
 function RuleManager.CreateCustomRuleId()
     local player, realm = UnitFullName("player");
     return string.format("cr.%s.%s.%d", player, realm, time());
+end
+
+function RuleManager:RegisterFunctions(functions)
+
+
+    for _, func in ipairs(functions) do
+        --[===[@debug@
+
+
+
+        --@end-debug@]===]
+
+        ruleFunctions[func.Name] = func.Function
+
+        if (type(func.Documentation) == "string") then
+            ruleDocumenation[func.Name] = func.Documentation
+        end
+    end
+
+    self.rulesEngine:AddFunctions(ruleFunctions)
+end
+
+function RuleManager:UnregisterFunctions(functions)
 end

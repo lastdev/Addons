@@ -134,7 +134,7 @@ local function addFunctionDefinition(ext, fdef)
         f.Help.Extension = ext;
     end
 
-    Addon:Debug("extensions", "Added function '%s' from:", f.Name, ext.Name);
+
     table.insert(Extensions._functions, f);
 end
 
@@ -177,9 +177,10 @@ local function addRuleDefinition(ext, rdef)
         Extension = ext,
         Params = rdef.Params,
         Order = tonumber(rdef.Order) or nil,
+        ExtensionName = ext.Source,
     };
 
-    Addon:Debug("extensions", "Added rule '%s' from: %s", r.Name, ext.Name);
+
     table.insert(Extensions._rules, r);
 end
 
@@ -193,16 +194,16 @@ local function addOnRuleUpdateCallback(ext, cbdef)
     };
 
     -- Add callback to our list of callbacks in case we want to call them later.
-    Addon:Debug("extensions", "Added OnRuleUpdate callback from %s", cb.Source);
+
     table.insert(Extensions._onruleupdate, cb);
 
     -- Add the callback to the config table.concat, this is the primary invocation point.
     local function fn()
-        Addon:Debug("extensions", "Executing callback from (%s)...", ext.Source)
+
         local result, msg = xpcall(cbdef, CallErrorHandler);
         --[===[@debug@
         if (not result) then
-            Addon:Debug("extensions", "%sFailed to invoke extenion callback %s: %s|r", RED_FONT_COLOR_CODE, cb.Source, msg);
+
         end
         --@end-debug@]===]
     end
@@ -419,11 +420,11 @@ function Extensions:Register(extension)
 
     -- Validate all of the function definitions are valid.
     if (validateTable(extension.Functions)) then
-        Addon:Debug("extensions", "Validating %s function definition(s) for: %s (%s)", table.getn(extension.Functions), extension.Source, name);
+
         for i,fdef in ipairs(extension.Functions) do
             local valid, message = validateFunction(fdef);
             if (not valid) then
-                Addon:Debug("extensions", "Failed to validate function definition %s: %s (%s): %s", i, extension.Source, name, message);
+
                 return false;
             end
         end
@@ -431,11 +432,11 @@ function Extensions:Register(extension)
 
     -- Validate all of the rules for this extension.
     if (validateTable(extension.Rules)) then
-        Addon:Debug("extensions", "Validating %s rule definition(s) for: %s (%s)", table.getn(extension.Rules), extension.Source, name);
+
         for i,rdef in ipairs(extension.Rules) do
             local valid, message = validateRule(rdef);
             if (not valid) then
-                Addon:Debug("extensions", "Failed to validate rule definition %s: %s (%s): %s", i, extension.Source, name, message);
+
                 return false;
             end
         end
@@ -443,9 +444,9 @@ function Extensions:Register(extension)
     
     -- Validate the OnUpdate function
     if (extension.OnRuleUpdate) then
-        Addon:Debug("extensions", "Validating OnRuleUpdate callback for: %s (%s)", extension.Source, name)
+
         if not isValidFunction(extension.OnRuleUpdate) then
-            Addon:Debug("extensions", "Failed validating OnRuleUpdate callback for %s (%s).", extension.Source, name)
+
             return false
         end
     end
@@ -471,7 +472,7 @@ function Extensions:Register(extension)
     end
 
     self.OnChanged("ADDED", ext);
-    Addon:Debug("extensions", "Completed registration of %s (%s) with %s function(s), %s rule(s) and %s OnRuleUpdate functions.", ext.Source, ext.Name, ext.Functions or 0, ext.Rules or 0, ext.OnRuleUpdate or 0);
+
     Addon:GetExtensionManger():TriggerEvent("OnFunctionsChanged")
     return true;
 end
@@ -513,7 +514,7 @@ function Addon:RegisterExtension(extension)
                     Extensions:ChangeCallback();
                 end);
         end
-        Addon.Panels.RuleHelp:CreateModels()
+        --Addon.Panels.RuleHelp:CreateModels()
     end
     return result;
 end

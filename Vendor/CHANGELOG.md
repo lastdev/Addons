@@ -1,6 +1,6 @@
 # Vendor
 
-## [5.3.3](https://github.com/typicalzergling/vendor/tree/5.3.3) (2022-11-08)
-[Full Changelog](https://github.com/typicalzergling/vendor/compare/5.3.1...5.3.3) 
+## [6.0.4](https://github.com/typicalzergling/vendor/tree/6.0.4) (2022-11-19)
+[Full Changelog](https://github.com/typicalzergling/vendor/compare/6.0.3...6.0.4) 
 
-- Fix two taint sources  
+- Fix for keystones in tooltip  

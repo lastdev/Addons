@@ -133,15 +133,15 @@ local function EquipmentIcon_Initialize(frame, level)
 	frame:AddTitle(MISCELLANEOUS)
 	
 	frame:AddButton(INVTYPE_NECK, e.IndexNeckType, OnSearchEquipmentSlotChange, nil, (option == e.IndexNeckType))
-	frame:AddButtonWithArgs(INVTYPE_CLOAK, e.IndexCloakType, OnSearchEquipmentSlotChange,LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_CLOTH, (option == e.IndexCloakType))
+	frame:AddButtonWithArgs(INVTYPE_CLOAK, e.IndexCloakType, OnSearchEquipmentSlotChange, Enum.ItemClass.Armor, Enum.ItemArmorSubclass.Cloth, (option == e.IndexCloakType))
 	frame:AddButton(INVTYPE_FINGER, e.IndexFingerType, OnSearchEquipmentSlotChange, nil, (option == e.IndexFingerType))
 	frame:AddButton(INVTYPE_TRINKET, e.IndexTrinketType, OnSearchEquipmentSlotChange, nil, (option == e.IndexTrinketType))
 	
 	-- Note, use negative values for special cases, to avoid filtering on item slot (for shields, only type & subtype are needed)
-	frame:AddButtonWithArgs(GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_SHIELD), -1, 
-		OnSearchEquipmentSlotChange, LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_SHIELD, (option == -1))
-	frame:AddButtonWithArgs(INVTYPE_HOLDABLE, "INVTYPE_HOLDABLE", 
-		OnSearchEquipmentSlotChange, LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_GENERIC, (option == "INVTYPE_HOLDABLE"))
+	frame:AddButtonWithArgs(GetItemSubClassInfo(Enum.ItemClass.Armor, Enum.ItemArmorSubclass.Shield), -1,
+		OnSearchEquipmentSlotChange, Enum.ItemClass.Armor, Enum.ItemArmorSubclass.Shield, (option == -1))
+	frame:AddButtonWithArgs(INVTYPE_HOLDABLE, "INVTYPE_HOLDABLE",
+		OnSearchEquipmentSlotChange, Enum.ItemClass.Armor, Enum.ItemArmorSubclass.Generic, (option == "INVTYPE_HOLDABLE"))
 	
 	frame:AddTitle()
 	-- frame:AddTitle(AUCTION_CATEGORY_WEAPONS)
@@ -374,14 +374,14 @@ end
 addon:Controller("AltoholicUI.TabSearchCategoriesList", {
 	OnBind = function(frame)
 		local classIDs = {
-			LE_ITEM_CLASS_CONTAINER,
-			LE_ITEM_CLASS_GEM,
-			LE_ITEM_CLASS_ITEM_ENHANCEMENT,
-			LE_ITEM_CLASS_CONSUMABLE,
-			LE_ITEM_CLASS_GLYPH,
-			LE_ITEM_CLASS_TRADEGOODS,
-			LE_ITEM_CLASS_RECIPE,
-			-- LE_ITEM_CLASS_BATTLEPET,
+			Enum.ItemClass.Container,
+			Enum.ItemClass.Gem,
+			Enum.ItemClass.ItemEnhancement,
+			Enum.ItemClass.Consumable,
+			Enum.ItemClass.Glyph,
+			Enum.ItemClass.Tradegoods,
+			Enum.ItemClass.Recipe,
+			--Enum.ItemClass.Battlepet,
 		}
 	
 		-- info : https://wowpedia.fandom.com/wiki/ItemType
@@ -389,85 +389,95 @@ addon:Controller("AltoholicUI.TabSearchCategoriesList", {
 		local categories = {
 			{ text = GetCategoryName(AUCTION_CATEGORY_WEAPONS), subMenu = {
 				{ text = AUCTION_SUBCATEGORY_ONE_HANDED, subMenu = {
-					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_AXE1H },
-					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_MACE1H },
-					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_SWORD1H },
-					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_WARGLAIVE },
-					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_DAGGER },
-					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_UNARMED },
-					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_WAND },
-				}},
+					{ itemType = Enum.ItemClass.Weapon, subType = Enum.ItemWeaponSubclass.Axe1H },
+					{ itemType = Enum.ItemClass.Weapon, subType = Enum.ItemWeaponSubclass.Mace1H },
+					{ itemType = Enum.ItemClass.Weapon, subType = Enum.ItemWeaponSubclass.Sword1H },
+					{ itemType = Enum.ItemClass.Weapon, subType = Enum.ItemWeaponSubclass.Warglaive },
+					{ itemType = Enum.ItemClass.Weapon, subType = Enum.ItemWeaponSubclass.Dagger },
+					{ itemType = Enum.ItemClass.Weapon, subType = Enum.ItemWeaponSubclass.Unarmed },
+					{ itemType = Enum.ItemClass.Weapon, subType = Enum.ItemWeaponSubclass.Wand },
+				} },
 				{ text = AUCTION_SUBCATEGORY_TWO_HANDED, subMenu = {
-					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_AXE2H },
-					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_MACE2H },
-					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_SWORD2H },
-					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_POLEARM },
-					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_STAFF },
-				}},
+					{ itemType = Enum.ItemClass.Weapon, subType = Enum.ItemWeaponSubclass.Axe2H },
+					{ itemType = Enum.ItemClass.Weapon, subType = Enum.ItemWeaponSubclass.Mace2H },
+					{ itemType = Enum.ItemClass.Weapon, subType = Enum.ItemWeaponSubclass.Sword2H },
+					{ itemType = Enum.ItemClass.Weapon, subType = Enum.ItemWeaponSubclass.Polearm },
+					{ itemType = Enum.ItemClass.Weapon, subType = Enum.ItemWeaponSubclass.Staff },
+				} },
 				{ text = AUCTION_SUBCATEGORY_RANGED, subMenu = {
-					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_BOWS },
-					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_CROSSBOW },
-					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_GUNS },
-					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_THROWN },
-				}},
+					{ itemType = Enum.ItemClass.Weapon, subType = Enum.ItemWeaponSubclass.Bows },
+					{ itemType = Enum.ItemClass.Weapon, subType = Enum.ItemWeaponSubclass.Crossbow },
+					{ itemType = Enum.ItemClass.Weapon, subType = Enum.ItemWeaponSubclass.Guns },
+					{ itemType = Enum.ItemClass.Weapon, subType = Enum.ItemWeaponSubclass.Thrown },
+				} },
 				{ text = AUCTION_SUBCATEGORY_MISCELLANEOUS, subMenu = {
-					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_FISHINGPOLE },
-					{ itemType = LE_ITEM_CLASS_WEAPON, subType = LE_ITEM_WEAPON_GENERIC },
-				}},
-			}},
+					{ itemType = Enum.ItemClass.Weapon, subType = Enum.ItemWeaponSubclass.Fishingpole },
+					{ itemType = Enum.ItemClass.Weapon, subType = Enum.ItemWeaponSubclass.Generic },
+				} },
+			} },
 			{ text = GetCategoryName(AUCTION_CATEGORY_ARMOR), subMenu = {
-				{ text = GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_PLATE), subMenu = {
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_PLATE, slot = Enum.InventoryType.IndexHeadType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_PLATE, slot = Enum.InventoryType.IndexShoulderType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_PLATE, slot = Enum.InventoryType.IndexChestType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_PLATE, slot = Enum.InventoryType.IndexWaistType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_PLATE, slot = Enum.InventoryType.IndexLegsType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_PLATE, slot = Enum.InventoryType.IndexFeetType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_PLATE, slot = Enum.InventoryType.IndexWristType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_PLATE, slot = Enum.InventoryType.IndexHandType },
-				}},
-				{ text = GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_MAIL), subMenu = {
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_MAIL, slot = Enum.InventoryType.IndexHeadType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_MAIL, slot = Enum.InventoryType.IndexShoulderType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_MAIL, slot = Enum.InventoryType.IndexChestType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_MAIL, slot = Enum.InventoryType.IndexWaistType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_MAIL, slot = Enum.InventoryType.IndexLegsType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_MAIL, slot = Enum.InventoryType.IndexFeetType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_MAIL, slot = Enum.InventoryType.IndexWristType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_MAIL, slot = Enum.InventoryType.IndexHandType },
-				}},
-				{ text = GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_LEATHER), subMenu = {
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_LEATHER, slot = Enum.InventoryType.IndexHeadType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_LEATHER, slot = Enum.InventoryType.IndexShoulderType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_LEATHER, slot = Enum.InventoryType.IndexChestType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_LEATHER, slot = Enum.InventoryType.IndexWaistType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_LEATHER, slot = Enum.InventoryType.IndexLegsType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_LEATHER, slot = Enum.InventoryType.IndexFeetType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_LEATHER, slot = Enum.InventoryType.IndexWristType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_LEATHER, slot = Enum.InventoryType.IndexHandType },
-				}},
-				{ text = GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_CLOTH), subMenu = {
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_CLOTH, slot = Enum.InventoryType.IndexHeadType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_CLOTH, slot = Enum.InventoryType.IndexShoulderType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_CLOTH, slot = Enum.InventoryType.IndexChestType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_CLOTH, slot = Enum.InventoryType.IndexWaistType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_CLOTH, slot = Enum.InventoryType.IndexLegsType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_CLOTH, slot = Enum.InventoryType.IndexFeetType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_CLOTH, slot = Enum.InventoryType.IndexWristType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_CLOTH, slot = Enum.InventoryType.IndexHandType },
-				}},
-				{ text = GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_GENERIC), subMenu = {
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_GENERIC, slot = Enum.InventoryType.IndexNeckType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_CLOTH, slot = Enum.InventoryType.IndexCloakType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_GENERIC, slot = Enum.InventoryType.IndexFingerType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_GENERIC, slot = Enum.InventoryType.IndexTrinketType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_GENERIC, slot = "INVTYPE_HOLDABLE" },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_SHIELD },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_GENERIC, slot = Enum.InventoryType.IndexBodyType },
-					{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_GENERIC, slot = Enum.InventoryType.IndexHeadType },
-				}},
-				{ itemType = LE_ITEM_CLASS_ARMOR, subType = LE_ITEM_ARMOR_COSMETIC },
-			}},
+				{ text = GetItemSubClassInfo(Enum.ItemClass.Armor, Enum.ItemArmorSubclass.Plate), subMenu = {
+
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Plate, slot = Enum.InventoryType.IndexHeadType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Plate,
+						slot = Enum.InventoryType.IndexShoulderType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Plate, slot = Enum.InventoryType.IndexChestType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Plate, slot = Enum.InventoryType.IndexWaistType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Plate, slot = Enum.InventoryType.IndexLegsType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Plate, slot = Enum.InventoryType.IndexFeetType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Plate, slot = Enum.InventoryType.IndexWristType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Plate, slot = Enum.InventoryType.IndexHandType },
+				} },
+				{ text = GetItemSubClassInfo(Enum.ItemClass.Armor, Enum.ItemArmorSubclass.Mail), subMenu = {
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Mail, slot = Enum.InventoryType.IndexHeadType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Mail,
+						slot = Enum.InventoryType.IndexShoulderType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Mail, slot = Enum.InventoryType.IndexChestType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Mail, slot = Enum.InventoryType.IndexWaistType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Mail, slot = Enum.InventoryType.IndexLegsType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Mail, slot = Enum.InventoryType.IndexFeetType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Mail, slot = Enum.InventoryType.IndexWristType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Mail, slot = Enum.InventoryType.IndexHandType },
+				} },
+				{ text = GetItemSubClassInfo(Enum.ItemClass.Armor, Enum.ItemArmorSubclass.Leather), subMenu = {
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Leather, slot = Enum.InventoryType.IndexHeadType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Leather,
+						slot = Enum.InventoryType.IndexShoulderType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Leather,
+						slot = Enum.InventoryType.IndexChestType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Leather,
+						slot = Enum.InventoryType.IndexWaistType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Leather, slot = Enum.InventoryType.IndexLegsType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Leather, slot = Enum.InventoryType.IndexFeetType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Leather,
+						slot = Enum.InventoryType.IndexWristType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Leather, slot = Enum.InventoryType.IndexHandType },
+				} },
+				{ text = GetItemSubClassInfo(Enum.ItemClass.Armor, Enum.ItemArmorSubclass.Cloth), subMenu = {
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Cloth, slot = Enum.InventoryType.IndexHeadType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Cloth,
+						slot = Enum.InventoryType.IndexShoulderType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Cloth, slot = Enum.InventoryType.IndexChestType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Cloth, slot = Enum.InventoryType.IndexWaistType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Cloth, slot = Enum.InventoryType.IndexLegsType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Cloth, slot = Enum.InventoryType.IndexFeetType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Cloth, slot = Enum.InventoryType.IndexWristType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Cloth, slot = Enum.InventoryType.IndexHandType },
+				} },
+				{ text = GetItemSubClassInfo(Enum.ItemClass.Armor, Enum.ItemArmorSubclass.Generic), subMenu = {
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Generic, slot = Enum.InventoryType.IndexNeckType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Cloth, slot = Enum.InventoryType.IndexCloakType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Generic,
+						slot = Enum.InventoryType.IndexFingerType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Generic,
+						slot = Enum.InventoryType.IndexTrinketType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Generic, slot = "INVTYPE_HOLDABLE" },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Shield },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Generic, slot = Enum.InventoryType.IndexBodyType },
+					{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Generic, slot = Enum.InventoryType.IndexHeadType },
+				} },
+				{ itemType = Enum.ItemClass.Armor, subType = Enum.ItemArmorSubclass.Cosmetic },
+			} },
 			{ text = GetCategoryName(AUCTION_CATEGORY_CONTAINERS), subMenu = {} },
 			{ text = GetCategoryName(AUCTION_CATEGORY_GEMS), subMenu = {} },
 			{ text = GetCategoryName(AUCTION_CATEGORY_ITEM_ENHANCEMENT), subMenu = {} },
@@ -475,17 +485,17 @@ addon:Controller("AltoholicUI.TabSearchCategoriesList", {
 			{ text = GetCategoryName(AUCTION_CATEGORY_GLYPHS), subMenu = {} },
 			{ text = GetCategoryName(AUCTION_CATEGORY_TRADE_GOODS), subMenu = {} },
 			{ text = GetCategoryName(AUCTION_CATEGORY_RECIPES), subMenu = {} },
-			-- { text = GetCategoryName(AUCTION_CATEGORY_BATTLE_PETS), subMenu = {} },
-			{ itemType = LE_ITEM_CLASS_QUESTITEM, subType = 0 },
+			--{ text = GetCategoryName(AUCTION_CATEGORY_BATTLE_PETS), subMenu = {} },
+			{ itemType = Enum.ItemClass.Questitem, subType = 0 },
 			{ text = GetCategoryName(AUCTION_CATEGORY_MISCELLANEOUS), subMenu = {
-				{ itemType = LE_ITEM_CLASS_MISCELLANEOUS, subType = LE_ITEM_MISCELLANEOUS_JUNK },
-				{ itemType = LE_ITEM_CLASS_MISCELLANEOUS, subType = LE_ITEM_MISCELLANEOUS_REAGENT },
-				{ itemType = LE_ITEM_CLASS_MISCELLANEOUS, subType = LE_ITEM_MISCELLANEOUS_COMPANION_PET },
-				{ itemType = LE_ITEM_CLASS_MISCELLANEOUS, subType = LE_ITEM_MISCELLANEOUS_HOLIDAY },
-				{ itemType = LE_ITEM_CLASS_MISCELLANEOUS, subType = LE_ITEM_MISCELLANEOUS_OTHER },
-				{ itemType = LE_ITEM_CLASS_MISCELLANEOUS, subType = LE_ITEM_MISCELLANEOUS_MOUNT },
-				{ itemType = LE_ITEM_CLASS_MISCELLANEOUS, subType = LE_ITEM_MISCELLANEOUS_MOUNT_EQUIPMENT },
-			}},
+				{ itemType = Enum.ItemClass.Miscellaneous, subType = Enum.ItemMiscellaneousSubclass.Junk },
+				{ itemType = Enum.ItemClass.Miscellaneous, subType = Enum.ItemMiscellaneousSubclass.Reagent },
+				{ itemType = Enum.ItemClass.Miscellaneous, subType = Enum.ItemMiscellaneousSubclass.CompanionPet },
+				{ itemType = Enum.ItemClass.Miscellaneous, subType = Enum.ItemMiscellaneousSubclass.Holiday },
+				{ itemType = Enum.ItemClass.Miscellaneous, subType = Enum.ItemMiscellaneousSubclass.Other },
+				{ itemType = Enum.ItemClass.Miscellaneous, subType = Enum.ItemMiscellaneousSubclass.Mount },
+				{ itemType = Enum.ItemClass.Miscellaneous, subType = Enum.ItemMiscellaneousSubclass.MountEquipment },
+			} },
 		}
 
 		-- Dynamically fill these categories

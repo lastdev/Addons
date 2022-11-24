@@ -39,6 +39,19 @@ local ITEM_LEVEL_PARAMS =
         Name=L["RULEUI_LABEL_ITEMLEVEL"],
         Key="ITEMLEVEL",
     },
+    {
+        Type="boolean",
+        Name="i am a boolean param",
+        Key="bbITEMLEVEL",
+    },    {
+        Type="numeric",
+        Name=L["RULEUI_LABEL_ITEMLEVEL"],
+        Key="ITEMLEVEL",
+    },    {
+        Type="numeric",
+        Name=L["RULEUI_LABEL_ITEMLEVEL"],
+        Key="ITEMLEVEL",
+    },    
 };
 
 Rules.SystemRules =
@@ -77,11 +90,28 @@ Rules.SystemRules =
         Type = SELL_RULE,
         Name = L["SYSRULE_SELL_OLDFOOD"],
         Description = L["SYSRULE_SELL_OLDFOOD_DESC"],
-        ScriptText = "TypeId == 0 and SubTypeId == 5 and Level ~= 1 and Level <= (PlayerLevel() - 10)",
+        ScriptText = "TypeId == 0 and SubTypeId == 5 and (not NO_LEVEL_ONE or Level ~= 1) and Level <= (PlayerLevel() - FOOD_LEVEL)",
         Script = function()
-            return (TypeId == 0) and (SubTypeId == 5) and (Level ~= 1) and (Level <= (PlayerLevel() - 10));
+            return (TypeId == 0) and 
+                    (SubTypeId == 5) and 
+                    (not NO_LEVEL_ONE or (Level ~= 1)) and
+                    (Level <= (PlayerLevel() - FOOD_LEVEL));
         end,
         Order = 1100,
+        Params = {
+            {
+                Type = "number",
+                Name = "Level",
+                Key = "FOOD_LEVEL",
+                Default = 10,
+            },
+            {
+                Type ="boolean",
+                Name = "Exclude level 1",
+                Key = "NO_LEVEL_ONE",
+                Default = true,
+            },
+        }
     },
 
     --@retail@
@@ -102,9 +132,9 @@ Rules.SystemRules =
         Type = SELL_RULE,
         Name = L["SYSRULE_SELL_UNCOMMONGEAR"],
         Description = L["SYSRULE_SELL_UNCOMMONGEAR_DESC"],
-        ScriptText = "(not IsInEquipmentSet()) and IsEquipment and Quality == UNCOMMON and (not IsUnsellable) and Level < {itemlevel}",
+        ScriptText = "(not IsInEquipmentSet()) and IsEquipment and Quality == UNCOMMON and (not IsUnsellable) and Level < ITEMLEVEL",
         Script = function()
-                return (not IsInEquipmentSet()) and IsEquipment and (Quality == UNCOMMON) and (not IsUnsellable) and (Level < RULE_PARAMS.ITEMLEVEL);
+                return (not IsInEquipmentSet()) and IsEquipment and (Quality == UNCOMMON) and (not IsUnsellable) and (Level < ITEMLEVEL);
             end,
         Params = 
         {
@@ -123,9 +153,9 @@ Rules.SystemRules =
         Type = SELL_RULE,
         Name = L["SYSRULE_SELL_RAREGEAR"],
         Description = L["SYSRULE_SELL_RAREGEAR_DESC"],
-        ScriptText = "(not IsInEquipmentSet()) and IsEquipment and Quality == RARE and (not IsUnsellable) and Level < {itemlevel}",
+        ScriptText = "(not IsInEquipmentSet()) and IsEquipment and Quality == RARE and (not IsUnsellable) and Level < ITEMLEVEL",
         Script = function()
-                return (not IsInEquipmentSet()) and IsEquipment and (Quality == RARE) and (not IsUnsellable) and (Level < RULE_PARAMS.ITEMLEVEL);
+                return (not IsInEquipmentSet()) and IsEquipment and (Quality == RARE) and (not IsUnsellable) and (Level < ITEMLEVEL);
             end,
         Params = 
         {
@@ -144,9 +174,9 @@ Rules.SystemRules =
         Type = SELL_RULE,
         Name = L["SYSRULE_SELL_EPICGEAR"],
         Description = L["SYSRULE_SELL_EPICGEAR_DESC"],
-        ScriptText = "(not IsInEquipmentSet()) and IsEquipment and IsSoulbound and Quality == EPIC and (not IsUnsellable) and Level < {itemlevel}",
+        ScriptText = "(not IsInEquipmentSet()) and IsEquipment and IsSoulbound and Quality == EPIC and (not IsUnsellable) and Level < ITEMLEVEL",
         Script = function()
-                return (not IsInEquipmentSet()) and IsEquipment and IsSoulbound and (Quality == EPIC) and (not IsUnsellable) and (Level < RULE_PARAMS.ITEMLEVEL);
+                return (not IsInEquipmentSet()) and IsEquipment and IsSoulbound and (Quality == EPIC) and (not IsUnsellable) and (Level < ITEMLEVEL);
             end,
         Params = 
         {
@@ -166,9 +196,9 @@ Rules.SystemRules =
         Type = SELL_RULE,
         Name = L["SYSRULE_SELL_UNCOMMONGEAR"],
         Description = L["SYSRULE_SELL_UNCOMMONGEAR_DESC"],
-        ScriptText = "IsEquipment and Quality == UNCOMMON and Level < {itemlevel}",
+        ScriptText = "IsEquipment and Quality == UNCOMMON and Level < ITEMLEVEL",
         Script = function()
-                return IsEquipment and (Quality == UNCOMMON) and (Level < RULE_PARAMS.ITEMLEVEL);
+                return IsEquipment and (Quality == UNCOMMON) and (Level < ITEMLEVEL);
             end,
         Params = ITEM_LEVEL_PARAMS,
         Order = 1401,
@@ -179,9 +209,9 @@ Rules.SystemRules =
         Type = SELL_RULE,
         Name = L["SYSRULE_SELL_RAREGEAR"],
         Description = L["SYSRULE_SELL_RAREGEAR_DESC"],
-        ScriptText = "IsEquipment and Quality == RARE and Level < {itemlevel}",
+        ScriptText = "IsEquipment and Quality == RARE and Level < ITEMLEVEL",
         Script = function()
-                return IsEquipment and (Quality == RARE) and (Level < RULE_PARAMS.ITEMLEVEL);
+                return IsEquipment and (Quality == RARE) and (Level < ITEMLEVEL);
             end,
         Params = ITEM_LEVEL_PARAMS,
         Order = 1501,
@@ -192,9 +222,9 @@ Rules.SystemRules =
         Type = SELL_RULE,
         Name = L["SYSRULE_SELL_EPICGEAR"],
         Description = L["SYSRULE_SELL_EPICGEAR_DESC"],
-        ScriptText = "IsEquipment and IsSoulbound and Quality == EPIC and Level < {itemlevel}",
+        ScriptText = "IsEquipment and IsSoulbound and Quality == EPIC and Level < ITEMLEVEL",
         Script = function()
-                return IsEquipment and IsSoulbound and (Quality == EPIC) and (Level < RULE_PARAMS.ITEMLEVEL);
+                return IsEquipment and IsSoulbound and (Quality == EPIC) and (Level < ITEMLEVEL);
             end,
         Params = ITEM_LEVEL_PARAMS,
         Order = 1601,
@@ -236,7 +266,7 @@ Rules.SystemRules =
         Type = KEEP_RULE,
         Name = L["SYSRULE_KEEP_SOULBOUNDGEAR"],
         Description = L["SYSRULE_KEEP_SOULBOUNDGEAR_DESC"],
-        ScriptText = "IsEquipment and Soulbound",
+        ScriptText = "IsEquipment and IsSoulbound",
         Script = function()
                 return IsEquipment and IsSoulbound;
             end,
@@ -306,9 +336,9 @@ Rules.SystemRules =
         Type = KEEP_RULE,
         Name = L["SYSRULE_KEEP_UNCOMMONGEAR"],
         Description = L["SYSRULE_KEEP_UNCOMMONGEAR_DESC"],
-        ScriptText = "IsEquipment and Quality == 2 and (Level >= {itemlevel})",
+        ScriptText = "IsEquipment and Quality == 2 and (Level >= ITEMLEVEL)",
         Script = function()
-                return IsEquipment and (Quality == 2) and (Level >= RULE_PARAMS.ITEMLEVEL);
+                return IsEquipment and (Quality == 2) and (Level >= ITEMLEVEL);
             end,
         Params = 
             {
@@ -328,9 +358,9 @@ Rules.SystemRules =
         Type = KEEP_RULE,
         Name = L["SYSRULE_KEEP_RAREGEAR"],
         Description = L["SYSRULE_KEEP_RAREGEAR_DESC"],
-        ScriptText = "IsEquipment and Quality == 3 and (Level >= {itemlevel})",
+        ScriptText = "IsEquipment and Quality == 3 and (Level >= ITEMLEVEL)",
         Script = function()
-                return IsEquipment and (Quality == 3) and (Level >= RULE_PARAMS.ITEMLEVEL);
+                return IsEquipment and (Quality == 3) and (Level >= ITEMLEVEL);
             end,
         Params = 
             {
@@ -350,9 +380,9 @@ Rules.SystemRules =
         Type = KEEP_RULE,
         Name = L["SYSRULE_KEEP_EPICGEAR"],
         Description = L["SYSRULE_KEEP_EPICGEAR_DESC"],
-        ScriptText = "IsEquipment and Quality == 4 and (Level >= {itemlevel})",
+        ScriptText = "IsEquipment and Quality == 4 and (Level >= ITEMLEVEL)",
         Script = function()
-                return IsEquipment and (Quality == 4) and (Level >= RULE_PARAMS.ITEMLEVEL);
+                return IsEquipment and (Quality == 4) and (Level >= ITEMLEVEL);
             end,
         Params = 
             {
@@ -415,8 +445,8 @@ Rules.SystemRules =
 -- Having to do it each time we traverse the list.
 table.sort(Rules.SystemRules,
     function (ruleA, ruleB)
-        assert(tonumber(ruleA.Order), "All system rules must have an order field: " .. ruleA.Id);
-        assert(tonumber(ruleB.Order), "All system rules must have an order field: " .. ruleB.Id);
+
+
         return (ruleA.Order < ruleB.Order);
     end);
 
@@ -460,7 +490,7 @@ function Rules.DeleteDefinition(ruleId)
             if (string.lower(ruleDef.Id) == id) then
                 table.remove(Vendor_CustomRuleDefinitions, i);
                 Rules.OnDefinitionsChanged("DELETE", ruleDef.Id);
-                break;
+                return ruleDef
             end
         end
     end
@@ -508,20 +538,20 @@ end
     | CheckMigration:
     ========================================================================--]]
 function Rules.CheckMigration()
-    Addon:Debug("rules", "%s+|r Checking for rule definition migration", YELLOW_FONT_COLOR_CODE);
+
     if (Vendor_CustomRuleDefinitions) then
         for _, ruleDef in ipairs(Vendor_CustomRuleDefinitions) do
             ruleDef.Locked = false;
             if (not ruleDef.needsMigration) then
                 local riv = ruleDef.interfaceversion or 0;
                 if ((INTERFACE_VERSION >=SHADOWLANDS_VERSION) and (riv < SHADOWLANDS_VERSION)) then
-                    Addon:Debug("rules", "%s| |rrule '%s' needs migration (iv=%s)", GREEN_FONT_COLOR_CODE, ruleDef.Id, riv or "<none>");
+
                     ruleDef.needsMigration = true;
                 end
             end
         end
     end
-    Addon:Debug("rules", "+ Completed rule defintion migration");
+
 end
 
 --[[===========================================================================
@@ -600,7 +630,7 @@ function Rules.GetDefinition(ruleId, ruleType, includeLocked)
         if (not ruleDef.Locked or includeLocked) then
             if (string.lower(ruleDef.Id) == id) then
                 if ((not ruleType) or (ruleType == ruleDef.Type)) then
-                    return ruleDef;
+                    return ruleDef, "SYSTEM";
                 end
             end
         end
@@ -618,7 +648,7 @@ function Rules.GetDefinition(ruleId, ruleType, includeLocked)
     if (Package.Extensions) then
         local ext = Package.Extensions:GetRule(id, ruleType);
         if (ext) then
-            return ext;
+            return ext, "EXT";
         end
     end
 

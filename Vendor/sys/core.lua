@@ -37,7 +37,7 @@ _G[AddonName] = Addon.Public
     | Constants can define the color. Prints to DEFAULT_CHAT_FRAME.
     =======================================================================--]]
 local color = Addon.c_PrintColorCode or ORANGE_FONT_COLOR_CODE
-assert(type(color) == "string", "Addon print color code must be a string.")
+
 local printPrefix = string.format("%s[%s%s%s]%s%s%s", HIGHLIGHT_FONT_COLOR_CODE, color, AddonName, HIGHLIGHT_FONT_COLOR_CODE, FONT_COLOR_CODE_CLOSE, FONT_COLOR_CODE_CLOSE, " ")
 function Addon:Print(msg, ...)
     -- Make sure all arguments are strings. This will catch nil and boolean values and allow you
@@ -73,6 +73,19 @@ end
 local addonLifetimeFrame = CreateFrame("Frame")
 local onInitializeActions = {}
 local onTerminateActions = {}
+local isInitialized = false
+local isInitializedLate = false
+local isTerminated = false
+
+local function invokeActions(what, actions)
+
+    for _, closure in ipairs(actions) do 
+        local status = xpcall(closure, CallErrorHandler)
+        if (not status) then
+            Addon:Print("An error occured while executing an '%s' action")
+        end
+    end
+end
 
 local function lifetimeEventHandler(frame, event, ...)
     -- On player login, the addon is completely loaded and all saved variables are expected to be present.
@@ -80,20 +93,20 @@ local function lifetimeEventHandler(frame, event, ...)
     if event == "PLAYER_LOGIN" then
 
         -- Safe call all initialization functions.
-        for i, h in ipairs(onInitializeActions) do
-            local status, err = xpcall(h, CallErrorHandler, ...)
-            if not status then
-                Addon:Print("Error executing initialize function: %s", tostring(err))
-            end
-        end
+        local initActions = Addon.DeepTableCopy(onInitializeActions)
+        onInitializeActions = {}
+        isInitialized = true
+
+        invokeActions("Initialize", initActions);
+        C_Timer.After(5, function () isInitializedLate = true invokeActions("Initialize (late)", onInitializeActions) end)
 
         -- Call the default OnInitialize function, if defined.
         -- If it is defined it must be a function or this is a programmer error.
         if Addon.c_InitializeName then
-            assert(type(Addon[Addon.c_InitializeName]) == "function", "Initialize function expected but not found.")
+
             Addon[Addon.c_InitializeName](Addon, ...)
         elseif Addon.OnInitialize then
-            assert(type(Addon.OnInitialize) == "function", "OnInitialize must be a function.")
+
             Addon:OnInitialize(...)
         end
 
@@ -103,11 +116,10 @@ local function lifetimeEventHandler(frame, event, ...)
     -- On player logout we get an opportunity to do cleanup and save variables.
     -- This happens on client exit, disconnect, and logout.
     elseif event == "PLAYER_LOGOUT" then
-        for i, h in ipairs(onTerminateActions) do
-            xpcall(h, CallErrorHandler, ...)
-            -- We don't bother printing errors becuase nobody is here to see them.
-            -- We could try to add them to saved vars, perhaps, but who will bother looking there?
-        end
+        isTerminated = true
+        onInitializeActions = {}
+
+        invokeActions("Terminate", onTerminateActions)
         addonLifetimeFrame:UnregisterEvent("PLAYER_LOGOUT")
     else
         -- We should never have any other events here. See "event.lua" for that.
@@ -129,21 +141,17 @@ addonLifetimeFrame:RegisterEvent("PLAYER_LOGOUT")
     | function for addon setup. These are intended for Skeleton framework use.
     =======================================================================--]]
 function Addon:AddInitializeAction(action, ...)
-    assert(type(action) == "function", "Initialize Action must be a function.")
-    if (select("#", ...) > 0) then
-        table.insert(onInitializeActions, GenerateClosure(action, ...));
-    else
-        table.insert(onInitializeActions, action)
-    end
+
+
+
+    table.insert(onInitializeActions, GenerateClosure(action, ...))
 end
 
 function Addon:AddTerminateAction(action, ...)
-    assert(type(action) == "function", "Terminate Action must be a function.")
-    if (select("#", ...) > 0) then
-        table.insert(onTerminateActions, GenerateClosure(action, ...));
-    else
-        table.insert(onTerminateActions, action)
-    end
+
+
+
+    table.insert(onTerminateActions, GenerateClosure(action, ...))
 end
 
 -- Useful for any Addon to know.

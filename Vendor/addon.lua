@@ -3,6 +3,9 @@ local _, Addon = ...
 local L = Addon:GetLocale()
 
 -- Strings for the binding XML. This must be loaded after all the locales have been initialized.
+--[[
+    Commenting all this out because Blizzard broke keybindings. Any attempt to localize them
+    with a variable results in taint. Rip.
 BINDING_CATEGORY_VENDOR = L["ADDON_NAME"]
 BINDING_HEADER_VENDORQUICKLIST = L["BINDING_HEADER_VENDORQUICKLIST"]
 BINDING_NAME_VENDORALWAYSSELL = L["BINDING_NAME_VENDORALWAYSSELL"]
@@ -17,11 +20,11 @@ BINDING_NAME_VENDORRUNDESTROY = L["BINDING_NAME_VENDORRUNDESTROY"]
 BINDING_DESC_VENDORRUNDESTROY = L["BINDING_DESC_VENDORRUNDESTROY"]
 BINDING_NAME_VENDORRULES = L["BINDING_NAME_VENDORRULES"]
 BINDING_DESC_VENDORRULES = L["BINDING_DESC_VENDORRULES"]
-
+]]
 -- This is the first event fired after Addon is completely ready to be loaded.
 -- This is one-time initialization and setup.
 function Addon:OnInitialize()
-    self:GeneratesEvents(self.Events)
+    self:GenerateEvents(self.Events)
 
     -- Setup Console Commands
     self:SetupConsoleCommands()
@@ -33,27 +36,22 @@ function Addon:OnInitialize()
     
 
     -- Set up events
+    -- TODO: Move each of these to their own file's initialize call for modularity.
     self:RegisterEvent("MERCHANT_SHOW", "OnMerchantShow")
     self:RegisterEvent("MERCHANT_CLOSED", "OnMerchantClosed")
-    self:RegisterEvent("ITEM_LOCK_CHANGED", "OnItemLockChanged")
     self:RegisterEvent("MERCHANT_CONFIRM_TRADE_TIMER_REMOVAL", "AutoConfirmSellTradeRemoval")
-    --self:RegisterEvent("USE_NO_REFUND_CONFIRM", function() Addon:Debug("events", "Handling USE_NO_REFUND_CONFIRM") end)
-    --self:RegisterEvent("DELETE_ITEM_CONFIRM", function() Addon:Debug("events", "Handling DELETE_ITEM_CONFIRM") end)
+    self:RegisterEvent("BAG_UPDATE_DELAYED", "OnBagUpdate")
+    self:RegisterEvent("PLAYER_EQUIPMENT_CHANGED", "OnPlayerEquipmentChanged")
+    self:RegisterEvent("PROFESSION_EQUIPMENT_CHANGED", "OnPlayerEquipmentChanged")
+    self:RegisterEvent("PLAYER_REGEN_ENABLED", "OnPlayerLeavingCombat")
 
-    -- Tooltip hooks
-    self:PreHookWidget(GameTooltip, "OnTooltipSetItem", "OnTooltipSetItem")
-    --self:PreHookWidget(ItemRefTooltip, "OnTooltipSetItem", "OnTooltipSetItem")
-    self:PreHookFunction(GameTooltip, "SetBagItem", "OnGameTooltipSetBagItem")
-    self:PreHookFunction(GameTooltip, "SetInventoryItem", "OnGameTooltipSetInventoryItem")
-    self:SecureHookWidget(GameTooltip, "OnHide", "OnGameTooltipHide")
+    -- Merchant Button
+    --self.MerchantButton.Initialize()
 
-    -- Publish our LDB Data Objects
-    self:SetupLDBPlugin()
-
-    -- Do Pruning of History across all characters.
-    -- TODO: Make this a setting
-    -- Consider dynamic history pruning when it gets to a certain size, auto-prune it.
-    -- Setting this on a timer so it doesn't cause lag during resource intensive addon loading.
-    C_Timer.After(Addon.c_PruneHistoryDelay, function() Addon:PruneAllHistory(Addon.c_HoursToKeepHistory) end)
+    Addon:InitializeItemResultRefresh()
+    Addon:InitializeEvaluationStatus()
+    Addon:InitializeItemTooltips()
+    
+    -- Do a delayed pruning of history across all characters.
+    Addon:PostInitializePruneHistory()
 end
-

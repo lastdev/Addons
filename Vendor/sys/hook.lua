@@ -7,9 +7,9 @@ local AddonName, Addon = ...
 -- This does a secure hook on a widget function, which is a post-hook.
 function Addon:SecureHookWidget(widget, method, func)
     -- Fail fast if bad arguments so developers can find this error quickly and easily, and we dont have to worry about it later.
-    assert(widget, "Invalid argument to SecureHookWidget: Widget cannot be nil.")
-    assert(method and type(method) == "string", "Invalid argument to SecureHookWidget: Method must be a string.")
-    assert(func and (type(func) == "function" or type(func) == "string"), "Invalid argument to SecureHookWidget: Function must be a function or string.")
+
+
+
 
     -- Func can be an actual function or a name of one in our Addon
     if type(func) == "function" then
@@ -28,10 +28,10 @@ end
 -- If you want to alter the function, you should a) know what you're doing, and b) do that manually.
 function Addon:PreHookWidget(widget, method, func)
     -- Fail fast if bad arguments so developers can find this error quickly and easily, and we dont have to worry about it later.
-    assert(widget, "Invalid argument to SecureHookWidget: Widget cannot be nil.")
-    assert(method and type(method) == "string", "Invalid argument to SecureHookWidget: Method must be a string.")
-    assert(func and (type(func) == "function" or type(func) == "string"), "Invalid argument to SecureHookWidget: Function must be a function or string.")
-    assert(not widget.IsProtected or not widget:IsProtected(), "Cannot insecurely hook "..widget:GetName()..":"..method.." because it is tainted secure method.")
+
+
+
+
     
     -- Func can be an actual function or a name of one in our Addon
     local hookedFunc = nil
@@ -65,9 +65,9 @@ end
 -- This wrapper intentionally does not alter the behavior of the original.
 function Addon:PreHookFunction(funcTable, functionName, hookFunction)
     -- Fail fast if bad arguments so developers can find this error quickly and easily, and we dont have to worry about it later.
-    assert(not funcTable or type(funcTable) == "table", "funcTable must be a table")
-    assert(functionName and type(functionName) == "string", "Invalid argument to PreHookFunction: functionName cannot be nil.")
-    assert(hookFunction and (type(hookFunction) == "function" or type(hookFunction) == "string"), "Invalid argument to PreHookFunction: Function must be a function or string.")
+
+
+
 
     -- Func can be an actual function or a name of one in our Addon
     local hookedFunc = nil
@@ -107,9 +107,9 @@ end
 -- This wraps the Blizzard hooksecurefunc in the same syntactic sugar as above.
 function Addon:SecureHookFunction(funcTable, functionName, hookFunction)
     -- Fail fast if bad arguments so developers can find this error quickly and easily, and we dont have to worry about it later.
-    assert(not funcTable or type(funcTable) == "table", "funcTable must be a table")
-    assert(functionName and type(functionName) == "string", "Invalid argument to SecureHookFunction: functionName cannot be nil.")
-    assert(hookFunction and (type(hookFunction) == "function" or type(hookFunction) == "string"), "Invalid argument to SecureHookFunction: Function must be a function or string.")
+
+
+
 
     -- Func can be an actual function or a name of one in our Addon
     if type(hookFunction) == "function" then

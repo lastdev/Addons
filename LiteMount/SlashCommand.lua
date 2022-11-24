@@ -20,7 +20,8 @@ local MacroName = "LiteMount"
 local MacroText = [[
 # Auto-created by LiteMount addon, it is safe to delete or edit this macro.
 # To re-create it run "/litemount macro"
-/click LM_B1 LeftButton
+/click LM_B1 LeftButton 1
+/click LM_B1 LeftButton 0
 ]]
 
 local function CreateOrUpdateMacro()
@@ -175,30 +176,6 @@ COMMANDS['forcefly'] =
         LM.Environment:ForceFlyable()
     end
 
-COMMANDS['mount'] =
-    function (argstr, ...)
-        local h = LM.Actions:GetHandler('Mount')
-        local ctx = LM.RuleContext:New()
-        local args = { ... }
-        table.insert(args, 1, 'JOURNAL')
-        local ca, m = h(args, ctx)
-        if m and m.mountID then
-            C_MountJournal.SummonByID(m.mountID)
-        end
-    end
-
-COMMANDS['smartmount'] =
-    function (argstr, ...)
-        local h = LM.Actions:GetHandler('SmartMount')
-        local ctx = LM.RuleContext:New()
-        local args = { ... }
-        table.insert(args, 1, 'JOURNAL')
-        local ca, m = h(args, ctx)
-        if m and m.mountID then
-            C_MountJournal.SummonByID(m.mountID)
-        end
-    end
-
 --[==[@debug@
 COMMANDS['usable'] =
     function ()
@@ -231,10 +208,8 @@ local function PrintUsage()
     LM.Print("  /litemount group del <name>")
     LM.Print("  /litemount group list")
     LM.Print("  /litemount group rename <oldname> <newname>")
-    LM.Print("  /litemount mount [<group>]")
     LM.Print("  /litemount playermodel")
     LM.Print("  /litemount profile <profilename>")
-    LM.Print("  /litemount smartmount [<group>]")
     LM.Print("  /litemount xmog <slotnumber>")
 end
 

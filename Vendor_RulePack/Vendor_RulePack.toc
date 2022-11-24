@@ -1,7 +1,7 @@
-## Interface: 100000
+## Interface: 100002
 ## Title: Vendor_RulesPack
 ## Notes: Pawn extension for Vendor. Requires both Pawn and Vendor.
-## Version: 5.3.3
+## Version: 6.0.4
 ## Author: Thoekh of Sargeras & Buskin of Lightbringer
 ## Dependencies: Vendor
 

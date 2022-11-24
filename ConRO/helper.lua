@@ -14,14 +14,27 @@ end
 
 function ConRO:CheckTalents()
 	self.PlayerTalents = {};
-	for talentRow = 1, 7 do
-		for talentCol = 1, 3 do
-			local _, name, _, sel, _, id = GetTalentInfo(talentRow, talentCol, 1);
-			if sel then
-				self.PlayerTalents[id] = name;
+	wipe(self.PlayerTalents)
+	local specID = PlayerUtil.GetCurrentSpecID();
+  local configID = C_ClassTalents.GetLastSelectedSavedConfigID(specID) or C_ClassTalents.GetActiveConfigID();
+  local configInfo = C_Traits.GetConfigInfo(configID);
+  local treeID = configInfo.treeIDs[1];
+  local nodes = C_Traits.GetTreeNodes(treeID);
+
+  for _, nodeID in ipairs(nodes) do
+    local nodeInfo = C_Traits.GetNodeInfo(configID, nodeID);
+		if nodeInfo.currentRank and nodeInfo.currentRank > 0 then
+			local entryID = nodeInfo.activeEntry and nodeInfo.activeEntry.entryID and nodeInfo.activeEntry.entryID;
+			local entryInfo = entryID and C_Traits.GetEntryInfo(configID, entryID)
+			local definitionInfo = entryInfo and entryInfo.definitionID and C_Traits.GetDefinitionInfo(entryInfo.definitionID)
+			if definitionInfo ~= nil then
+				local name = TalentUtil.GetTalentName(definitionInfo.overrideName, definitionInfo.spellID)
+				tinsert(self.PlayerTalents, entryID);
+				self.PlayerTalents[entryID] = {};
+				tinsert(self.PlayerTalents[entryID], {["talentName"] = name, ["rank"] = nodeInfo.currentRank})
 			end
 		end
-	end
+  end
 end
 
 function ConRO:IsPvP()
@@ -31,7 +44,6 @@ function ConRO:IsPvP()
 		if _is_PvP or _is_Arena then
 			_Flagged = true;
 		end
-	
 	return _Flagged;
 end
 
@@ -41,12 +53,15 @@ function ConRO:CheckPvPTalents()
 	for k,v in ipairs(talents) do
 		local _, name, _, _, _, id = GetPvpTalentInfoByID(v or 0);
 		self.PvPTalents[id] = name;
---		self:Print(self.Colors.Info .. k .. v .. ' ' .. id .. ' ' .. name);
-	end	
+	end
 end
 
-function ConRO:TalentChosen(talent)
-	return self.PlayerTalents[talent];
+function ConRO:TalentChosen(entryCheck, rankCheck)
+	if rankCheck ~= nil and self.PlayerTalents.entryCheck[rank] >= rankCheck then
+		return true;
+	else
+		return self.PlayerTalents[entryCheck];
+	end
 end
 
 function ConRO:PvPTalentChosen(talent)
@@ -74,14 +89,14 @@ function ConRO:FullMode(_Spell_ID, timeShift)
 	local _Burst_Threshold = ConRO.db.profile._Burst_Threshold;
 	local _, _, baseCooldown = ConRO:Cooldown(_Spell_ID, timeShift);
 	local _Full_Mode = false;
-	
+
 	if _Burst and baseCooldown < _Burst_Threshold then
 		_Full_Mode = true;
 	elseif _Full then
 		_Full_Mode = true;
 	end
-	
-	return _Full_Mode; 
+
+	return _Full_Mode;
 end
 
 function ConRO:Warnings(_Message, _Condition)
@@ -91,98 +106,13 @@ function ConRO:Warnings(_Message, _Condition)
 	if _Condition then
 		self.WarningFlags[_Message] = self.WarningFlags[_Message] + 1;
 		if self.WarningFlags[_Message] == 1 then
-			UIErrorsFrame:AddMessage(_Message, 1.0, 0.0, 0.0, 53, 5);
+			UIErrorsFrame:AddMessage(_Message, 1.0, 1.0, 0.0, 1.0);
 		elseif self.WarningFlags[_Message] == 15 then
 			self.WarningFlags[_Message] = 0;
 		end
 	else
 		self.WarningFlags[_Message] = 0;
 	end
-end
-
---[[ids.Covenant = {
-		None = 0,
-		Kyrian = 1,
-		Venthyr = 2,
-		NightFae = 3,
-		Necrolord = 4,
-	}
-
-	ids.Soulbinds = {
-		Niya = 1,
-		Dreamweaver = 2,
-		GeneralDraven = 3,
-		PlagueDeviserMarileth = 4,
-		Emeni = 5,
-		Korayn = 6,
-		Pelagos = 7,
-		NadjiatheMistblade = 8,
-		TheotartheMadDuke = 9,
-		BonesmithHeirmir = 10,
-		Kleia = 13,
-		ForgelitePrimeMikanikos = 18,
-	}
-]]
-
-function ConRO:CovenantChosen(_Covenant_ID)
-	local _Covenant_Chosen = C_Covenants.GetActiveCovenantID();
-	local _is_Covenant = false;
-		if _Covenant_Chosen == _Covenant_ID then
-			_is_Covenant = true;
-		end
-	return _is_Covenant;
-end
-
-function ConRO:SoulbindChosen(_Soulbind_ID)
-	local _Soulbind_Chosen = C_Soulbinds.GetActiveSoulbindID();
-	local _is_Soulbind = false;
-		if _Soulbind_Chosen == _Soulbind_ID then
-			_is_Soulbind = true;
-		end
-	return _is_Soulbind;
-end
-
-function ConRO:ConduitChosen(_Conduit_ID)
-	local _Soulbind_ID = C_Soulbinds.GetActiveSoulbindID();
-		local _Soulbind_DATA = C_Soulbinds.GetSoulbindData(_Soulbind_ID);
-			local _Soulbind_TREE = _Soulbind_DATA["tree"];
-				local _Soulbind_NODES = _Soulbind_TREE["nodes"];
-				local _has_Conduit = false;
-					for _, ve in pairs(_Soulbind_NODES) do
-						local _Soulbind_Node_ID = ve["ID"];
-						local _Soulbind_Node_SPELLID = ve.spellID;
-						local _Soulbind_Node_CONDUITID = ve.conduitID;
-						local _Soulbind_Node_CONDUITRANK = ve.conduitRank;
-						local _Soulbind_Node_STATE = ve.state;
-						
-						if _Soulbind_Node_STATE == 3 then
-							if _Soulbind_Node_SPELLID ~= 0 or _Soulbind_Node_SPELLID ~= nil then
-								if _Conduit_ID == _Soulbind_Node_SPELLID then
-									_has_Conduit = true;
-									break
-								elseif _Soulbind_Node_CONDUITID ~= 0 then
-									local _Soulbind_Node_SPELLID = C_Soulbinds.GetConduitSpellID(_Soulbind_Node_CONDUITID, _Soulbind_Node_CONDUITRANK);
-									if _Conduit_ID == _Soulbind_Node_SPELLID then
-										_has_Conduit = true;
-										break
-									end
-								end
-							end
-						end
-					end
-	return _has_Conduit;
-end
-
-function ConRO:AnimaPowerChosen(_Spell_ID)
-	local _Has_Power = false;
-	for i=1, 44 do
-		local _, _, _, _, _, _, _, _, _, spellID = UnitAura("player", i, "MAW")
-		if spellID == _Spell_ID then
-			_Has_Power = true;
-			break
-		end
-	end
-return _Has_Power;
 end
 
 ConRO.ItemSlotList = {
@@ -205,9 +135,9 @@ ConRO.ItemSlotList = {
 }
 
 function ConRO:ItemEquipped(_item_string)
-	local _match_item_NAME = false;	
+	local _match_item_NAME = false;
 	local _, _item_LINK = GetItemInfo(_item_string);
-	
+
 	if _item_LINK ~= nil then
 		local _item_NAME = GetItemInfo(_item_LINK);
 
@@ -233,7 +163,7 @@ function ConRO:PlayerSpeed()
 			moving = true;
 		else
 			moving = false;
-		end	
+		end
 	return moving;
 end
 
@@ -253,7 +183,7 @@ ConRO.EnergyList = {
 	[16] = 'ArcaneCharges',
 	[17] = 'Fury',
 }
-	
+
 function ConRO:PlayerPower(_EnergyType)
 	for k, v in pairs(ConRO.EnergyList) do
 		if v == _EnergyType then
@@ -261,7 +191,7 @@ function ConRO:PlayerPower(_EnergyType)
 			break
 		end
 	end
-	
+
 	local _Resource = UnitPower('player', resource);
 	local _Resource_Max	= UnitPowerMax('player', resource);
 	local _Resource_Percent = math.max(0, _Resource) / math.max(1, _Resource_Max) * 100;
@@ -276,7 +206,7 @@ function ConRO:Targets(spellID)
 			if IsItemInRange(37727, "target") then
 				target_in_range = true;
 			end
-			
+
 			for i = 1, 15 do
 				if not UnitIsFriend("player", 'nameplate' .. i) then
 					if UnitExists('nameplate' .. i) and IsItemInRange(37727, "nameplate"..i) == true then
@@ -288,7 +218,7 @@ function ConRO:Targets(spellID)
 			if ConRO:IsSpellInRange(spellID, "target") then
 				target_in_range = true;
 			end
-			
+
 			for i = 1, 15 do
 				if UnitExists('nameplate' .. i) and ConRO:IsSpellInRange(spellID, 'nameplate' .. i) then
 					number_in_range = number_in_range + 1
@@ -329,9 +259,9 @@ function ConRO:UnitAura(spellID, timeShift, unit, filter, isWeapon)
 end
 
 function ConRO:Form(spellID)
-	for i=1,40 do 
+	for i=1,40 do
 		local _, _, count, _, _, _, _, _, _, spell = UnitAura("player", i);
-			if spell == spellID then 
+			if spell == spellID then
 				return true, count;
 			end
 	end
@@ -339,12 +269,12 @@ function ConRO:Form(spellID)
 end
 
 function ConRO:PersistentDebuff(spellID)
-	for i=1,40 do 
+	for i=1,40 do
 		local _, _, count, _, _, _, _, _, _, spell = UnitAura("target", i, 'PLAYER|HARMFUL');
-			if spell == spellID then 
+			if spell == spellID then
 				return true, count;
-			end 
-		 
+			end
+
 	end
 	return false, 0;
 end
@@ -359,12 +289,12 @@ end
 
 function ConRO:Purgable()
 	local purgable = false;
-	for i=1,40 do 
+	for i=1,40 do
 	local _, _, _, _, _, _, _, isStealable = UnitAura('target', i, 'HELPFUL');
-		if isStealable == true then 
+		if isStealable == true then
 			purgable = true;
-		end 
-	end 
+		end
+	end
 	return purgable;
 end
 
@@ -384,10 +314,10 @@ function ConRO:Heroism()
 	local _TemporalDisplacement = 80354;
 	local _Insanity = 95809;
 	local _Fatigued = 160455;
-	
+
 	local buffed = false;
 	local sated = false;
-	
+
 		local hasteBuff = {
 			bl = ConRO:Aura(_Bloodlust, timeShift);
 			tw = ConRO:Aura(_TimeWarp, timeShift);
@@ -410,22 +340,22 @@ function ConRO:Heroism()
 					hasteCount = hasteCount + 1;
 				end
 			end
-				
+
 		if hasteCount > 0 then
 			buffed = true;
 		end
-		
+
 		local satedCount = 0;
 			for k, v in pairs(satedDebuff) do
 				if v then
 					satedCount = satedCount + 1;
 				end
 			end
-				
+
 		if satedCount > 0 then
 			sated = true;
 		end
-			
+
 	return buffed, sated;
 end
 
@@ -467,7 +397,7 @@ function ConRO:RaidBuff(spellID)
 			for i = 1, numGroupMembers do -- For each raid member
 				local unit = "raid" .. i;
 				if UnitExists(unit) then
-					if not UnitIsDeadOrGhost(unit) and UnitInRange(unit) then					
+					if not UnitIsDeadOrGhost(unit) and UnitInRange(unit) then
 						for x=1, 40 do
 							local spell = select(10, UnitAura(unit, x, 'HELPFUL'));
 							if spell == spellID then
@@ -479,7 +409,7 @@ function ConRO:RaidBuff(spellID)
 							break;
 						end
 					else
-						haveBuff = true;						
+						haveBuff = true;
 					end
 				end
 			end
@@ -487,7 +417,7 @@ function ConRO:RaidBuff(spellID)
 			for i = 1, 4 do -- For each party member
 				local unit = "party" .. i;
 				if UnitExists(unit) then
-					if not UnitIsDeadOrGhost(unit) and UnitInRange(unit) then				
+					if not UnitIsDeadOrGhost(unit) and UnitInRange(unit) then
 						for x=1, 40 do
 							local spell = select(10, UnitAura(unit, x, 'HELPFUL'));
 							if spell == spellID then
@@ -499,20 +429,20 @@ function ConRO:RaidBuff(spellID)
 							break;
 						end
 					else
-						haveBuff = true;						
+						haveBuff = true;
 					end
 				end
 			end
 			for x=1, 40 do
-				local spell = select(10, UnitAura('player', x, 'HELPFUL')); 
+				local spell = select(10, UnitAura('player', x, 'HELPFUL'));
 				if spell == spellID then
 					selfhasBuff = true;
 					break;
 				end
-			end			
+			end
 		elseif numGroupMembers <= 1 then
 			for x=1, 40 do
-				local spell = select(10, UnitAura('player', x, 'HELPFUL')); 
+				local spell = select(10, UnitAura('player', x, 'HELPFUL'));
 				if spell == spellID then
 					selfhasBuff = true;
 					haveBuff = true;
@@ -523,7 +453,7 @@ function ConRO:RaidBuff(spellID)
 		if selfhasBuff and haveBuff then
 			buffedRaid = true;
 		end
---	self:Print(self.Colors.Info .. numGroupMembers);	
+--	self:Print(self.Colors.Info .. numGroupMembers);
 	return buffedRaid;
 end
 
@@ -551,7 +481,7 @@ function ConRO:OneBuff(spellID)
 			end
 		elseif numGroupMembers >= 2 and numGroupMembers <= 5 then
 			for x=1, 40 do
-				local spell = select(10, UnitAura('player', x, 'PLAYER|HELPFUL')); 
+				local spell = select(10, UnitAura('player', x, 'PLAYER|HELPFUL'));
 				if spell == spellID then
 					selfhasBuff = true;
 					break;
@@ -570,13 +500,13 @@ function ConRO:OneBuff(spellID)
 						end
 						if haveBuff then
 							break;
-						end					
+						end
 					end
 				end
 			end
 		elseif numGroupMembers <= 1 then
 			for x=1, 40 do
-				local spell = select(10, UnitAura('player', x, 'PLAYER|HELPFUL')); 
+				local spell = select(10, UnitAura('player', x, 'PLAYER|HELPFUL'));
 				if spell == spellID then
 					selfhasBuff = true;
 					break;
@@ -586,7 +516,7 @@ function ConRO:OneBuff(spellID)
 		if selfhasBuff or haveBuff then
 			someoneHas = true;
 		end
---	self:Print(self.Colors.Info .. numGroupMembers);		
+--	self:Print(self.Colors.Info .. numGroupMembers);
 	return someoneHas;
 end
 
@@ -619,21 +549,21 @@ function ConRO:GroupBuffCount(spellID)
 				end
 			end
 			for x=1, 40 do
-				local spell = select(10, UnitAura('player', x, 'HELPFUL')); 
+				local spell = select(10, UnitAura('player', x, 'HELPFUL'));
 				if spell == spellID then
 					buffCount = buffCount + 1;
 				end
 			end
 		elseif numGroupMembers <= 1 then
 			for x=1, 40 do
-				local spell = select(10, UnitAura('player', x, 'HELPFUL')); 
+				local spell = select(10, UnitAura('player', x, 'HELPFUL'));
 				if spell == spellID then
 					buffCount = buffCount + 1;
 				end
 			end
 		end
 
---	self:Print(self.Colors.Info .. numGroupMembers);	
+--	self:Print(self.Colors.Info .. numGroupMembers);
 	return buffCount;
 end
 
@@ -760,7 +690,7 @@ function ConRO:FindSpellInSpellbook(spellID)
 			return index;
 		end
 	end
-	
+
 	return nil;
 end
 
@@ -786,70 +716,72 @@ function ConRO:FindCurrentSpell(spellID)
 			hasSpell = true;
 		end
 	end
-	
+
 	return hasSpell;
 end
 
-function ConRO:IsSpellInRange(spellid, unit)
+function ConRO:IsSpellInRange(spellCheck, unit)
 	local unit = unit or 'target';
 	local range = false;
+	local spellid = spellCheck.spellID;
+	local talentID = spellCheck.talentID;
 	local spell = GetSpellInfo(spellid);
-
-	local have = ConRO:TalentChosen(spellid);
+	local have = ConRO:TalentChosen(talentID);
 	local known = IsPlayerSpell(spellid);
 
-		if have then
-			known = true;
-		end
-	
-		if known and ConRO:TarHostile() then
-			local inRange = IsSpellInRange(spell, unit);	
-			if inRange == nil then
---			print(spell);
-				local myIndex = nil; 
-				local name, texture, offset, numSpells, isGuild = GetSpellTabInfo(2); 
-				local booktype = "spell"; 
-				for index = offset + 1, numSpells + offset do 
-					local spellID = select(2, GetSpellBookItemInfo(index, booktype)); 
-					if spellID and spell == GetSpellBookItemName(index, booktype) then 
-						myIndex = index; 
-						break;
-					end 
-				end 
+	if have then
+		known = true;
+	end
 
-				local numPetSpells = HasPetSpells(); 
-				if myIndex == 0 and numPetSpells then 
-					booktype = "pet"; 
-					for index = 1, numPetSpells do 
-						local spellID = select(2, GetSpellBookItemInfo(index, booktype)); 
-						if spellID and spell == GetSpellBookItemName(index, booktype) then 
-							myIndex = index; 
-							break;
-						end 
-					end 
-				end 
-
-				if myIndex then
-					inRange = IsSpellInRange(myIndex, booktype, unit); 
-				end 
-				
-				if inRange == 1 then
-					range = true;
+	if known and ConRO:TarHostile() then
+		local inRange = IsSpellInRange(spell, unit);
+		if inRange == nil then
+			local myIndex = nil;
+			local name, texture, offset, numSpells, isGuild = GetSpellTabInfo(2);
+			local booktype = "spell";
+			for index = offset + 1, numSpells + offset do
+				local spellID = select(2, GetSpellBookItemInfo(index, booktype));
+				if spellID and spell == GetSpellBookItemName(index, booktype) then
+					myIndex = index;
+					break;
 				end
-			
-				return range; 
 			end
-			
+
+			local numPetSpells = HasPetSpells();
+			if myIndex == 0 and numPetSpells then
+				booktype = "pet";
+				for index = 1, numPetSpells do
+					local spellID = select(2, GetSpellBookItemInfo(index, booktype));
+					if spellID and spell == GetSpellBookItemName(index, booktype) then
+						myIndex = index;
+						break;
+					end
+				end
+			end
+
+			if myIndex then
+				inRange = IsSpellInRange(myIndex, booktype, unit);
+			end
+
 			if inRange == 1 then
-				range = true;	
+				range = true;
 			end
+
+			return range;
 		end
-    return range;
+
+		if inRange == 1 then
+			range = true;
+		end
+	end
+  return range;
 end
 
-function ConRO:AbilityReady(spellid, timeShift, spelltype)
+function ConRO:AbilityReady(spellCheck, timeShift, spelltype)
+	local spellid = spellCheck.spellID;
+	local entryID = spellCheck.talentID;
 	local _CD, _MaxCD = ConRO:Cooldown(spellid, timeShift);
-	local have = ConRO:TalentChosen(spellid);
+	local have = ConRO:TalentChosen(entryID);
 	local known = IsPlayerSpell(spellid);
 	local usable, notEnough = IsUsableSpell(spellid);
 	local castTimeMilli = select(4, GetSpellInfo(spellid));
@@ -898,7 +830,7 @@ function ConRO:Raidmob()
 	local strong = false;
 		if tlvl == -1 or tlvl > plvl then
 			strong = true;
-		end	
+		end
 	return strong;
 end
 
@@ -911,11 +843,11 @@ function ConRO:ExtractTooltipDamage(_Spell_ID)
 	local _My_HP = tonumber("1560");
 	local _Will_Kill = "false";
 	local _Damage_Number = _Damage;
-	
+
 --	if _Damage_Number >= _My_HP then
 --		_Will_Kill = "true";
 --	end
-	
+
 	print(_Damage_Number .. " - " .. _My_HP .. " -- " .. _Will_Kill);
 end
 
@@ -954,9 +886,9 @@ function ConRO:Cooldown(spellid, timeShift)
 	local baseCooldownMS, gcdMS = GetSpellBaseCooldown(spellid);
 
 	if baseCooldownMS ~= nil then
-		baseCooldown = (baseCooldownMS/1000) + timeShift;
+		baseCooldown = (baseCooldownMS/1000) + (timeShift or 0);
 	end
-	
+
 	if enabled and maxCooldown == 0 and start == 0 then
 		return 0, maxCooldown, baseCooldown;
 	elseif enabled then
@@ -969,11 +901,11 @@ end
 function ConRO:ItemCooldown(itemid, timeShift)
 	local start, maxCooldown, enabled = GetItemCooldown(itemid);
 	local baseCooldownMS, gcdMS = GetSpellBaseCooldown(itemid);
-	
+
 	if baseCooldownMS ~= nil then
 		baseCooldown = baseCooldownMS/1000;
 	end
-	
+
 	if enabled and maxCooldown == 0 and start == 0 then
 		return 0, maxCooldown, baseCooldown;
 	elseif enabled then
@@ -987,7 +919,7 @@ function ConRO:Interrupt()
 	if UnitCanAttack ('player', 'target') then
 		local tarchan, _, _, _, _, _, cnotInterruptible = UnitChannelInfo("target");
 		local tarcast, _, _, _, _, _, _, notInterruptible = UnitCastingInfo("target");
-		
+
 		if tarcast and not notInterruptible then
 			return true;
 		elseif tarchan and not cnotInterruptible then
@@ -996,13 +928,13 @@ function ConRO:Interrupt()
 			return false;
 		end
 	end
-end 
+end
 
 function ConRO:BossCast()
 	if UnitCanAttack ('player', 'target') then
 		local tarchan, _, _, _, _, _, cnotInterruptible = UnitChannelInfo("target");
 		local tarcast, _, _, _, _, _, _, notInterruptible = UnitCastingInfo("target");
-		
+
 		if tarcast and notInterruptible then
 			return true;
 		elseif tarchan and cnotInterruptible then
@@ -1011,7 +943,7 @@ function ConRO:BossCast()
 			return false;
 		end
 	end
-end 
+end
 
 function ConRO:CallPet()
 	local petout = IsPetActive();
@@ -1043,6 +975,13 @@ function ConRO:PetAssist()
 			attackstate = false;
 		end
 	return attackstate, petspell;
+end
+
+function ConRO:Totem(slot)
+	local havetotem, totemName, startTime, duration = GetTotemInfo(slot);
+	local est_dur = startTime + duration - GetTime()
+
+	return havetotem, est_dur;
 end
 
 function ConRO:FormatTime(left)

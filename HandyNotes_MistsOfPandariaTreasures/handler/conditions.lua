@@ -18,6 +18,21 @@ local Condition = Class{
     Label = function(self) return ('{%s:%d}'):format(self.type, self.id) end,
     Matched = function() return false end,
 }
+local RankedCondition = Class{
+    __parent = Condition,
+    Initialize = function(self, id, rank)
+        self.id = id
+        self.rank = rank
+    end,
+    Label = function(self)
+        -- this relies greatly on render_string working for self.type
+        local label = Condition.Label(self)
+        if self.rank then
+            return AZERITE_ESSENCE_TOOLTIP_NAME_RANK:format(label, self.rank)
+        end
+        return label
+    end
+}
 local Negated = function(parent) return {
     __parent = parent,
     Matched = function(self) return not self.__parent.Matched(self) end,
@@ -36,10 +51,49 @@ ns.conditions.AuraActive = Class{
 }
 ns.conditions.AuraInactive = Class(Negated(ns.conditions.AuraActive))
 
-ns.conditions.Covenant = Class{
+ns.conditions.SpellKnown = Class{
     __parent = Condition,
+    type = 'spell',
+    Matched = function(self) return IsSpellKnown(self.id) end,
+}
+
+ns.conditions.Covenant = Class{
+    __parent = RankedCondition,
     type = 'covenant',
-    Matched = function(self) return self.id == C_Covenants.GetActiveCovenantID() end,
+    Matched = function(self)
+        if self.id ~= C_Covenants.GetActiveCovenantID() then
+            return false
+        end
+        if self.rank then
+            return self.rank <= C_CovenantSanctumUI.GetRenownLevel()
+        end
+        return true
+    end,
+}
+
+ns.conditions.Faction = Class{
+    __parent = RankedCondition,
+    type = 'faction',
+    Matched = function(self)
+        local name, _, standingid = GetFactionInfoByID(self.id)
+        if name and standingid then
+            return self.rank <= standingid
+        end
+    end,
+}
+
+ns.conditions.MajorFaction = Class{
+    __parent = RankedCondition,
+    type = 'majorfaction',
+    Matched = function(self)
+        local info = C_MajorFactions.GetMajorFactionData(self.id)
+        if info then
+            if self.rank then
+                return self.rank <= info.renownLevel 
+            end
+            return info.isUnlocked
+        end
+    end,
 }
 
 ns.conditions.GarrisonTalent = Class{
@@ -54,9 +108,8 @@ ns.conditions.GarrisonTalent = Class{
         local name = info and info.name and ("{garrisontalent:%d}"):format(self.id) or UNKNOWN
         if self.rank then
             return AZERITE_ESSENCE_TOOLTIP_NAME_RANK:format(name, self.rank)
-        else
-            return name
         end
+        return name
     end,
     Matched = function(self)
         local info = C_Garrison.GetTalentInfo(self.id)
@@ -114,6 +167,12 @@ ns.conditions.Vignette = Class{
         end
         return self.__parent.Label(self)
     end,
+}
+
+ns.conditions.Level = Class{
+    __parent = Condition,
+    type = 'level',
+    Matched = function() return UnitLevel('player') >= self.id end,
 }
 
 -- Helpers:

@@ -355,7 +355,8 @@ ns.allQuestsComplete = allQuestsComplete
 
 local temp_criteria = {}
 local allCriteriaComplete = testMaker(function(criteria, achievement)
-    local _, _, completed, _, _, completedBy = (criteria < 100 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID)(achievement, criteria, true)
+    local retOK, _, _, completed, _, _, completedBy = pcall(criteria < 100 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID, achievement, criteria, true)
+    if not retOK then return false end
     if not (completed and (not completedBy or completedBy == ns.playerName)) then
         return false
     end

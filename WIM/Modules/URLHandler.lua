@@ -133,32 +133,41 @@ local function decodeColors(theMsg)
 end
 
 local function convertURLtoLinks(text)
-        -- clean text first
-        local theMsg = text;
-        local results;
-        theMsg = decodeURI(theMsg)
-        theMsg = encodeColors(theMsg);
-        repeat
-            theMsg, results = string.gsub(theMsg, "(|H[^|]+|h[^|]+|h)", function(theLink)
-                table.insert(LinkRepository, theLink);
-                return "\001\004"..#LinkRepository;
-            end, 1);
-        until results == 0;
+	_G.test = text
 
-        -- create urls
-        for i=1, table.getn(patterns) do
-            theMsg = string.gsub(theMsg, patterns[i], formatRawURL);
-        end
+	-- clean text first
+	local theMsg = text;
+	local results;
 
-        --restore links
-        for i=1, #LinkRepository do
-            theMsg = string.gsub(theMsg, "\001\004"..i.."", LinkRepository[i]);
-        end
+	-- sanitize string of any % characters
+	theMsg = string.gsub(theMsg, "%%", "%%%%");
 
-        -- clear table to be recycled by next process
-        for key, _ in pairs(LinkRepository) do
-            LinkRepository[key] = nil;
-        end
+	theMsg = decodeURI(theMsg)
+	theMsg = encodeColors(theMsg);
+	repeat
+		theMsg, results = string.gsub(theMsg, "(|H[^|]+|h[^|]+|h)", function(theLink)
+			table.insert(LinkRepository, theLink);
+			return "\001\004"..#LinkRepository;
+		end, 1);
+	until results == 0;
+
+	-- create urls
+	for i=1, table.getn(patterns) do
+		theMsg = string.gsub(theMsg, patterns[i], formatRawURL);
+	end
+
+	--restore links
+	for i=1, #LinkRepository do
+		theMsg = string.gsub(theMsg, "\001\004"..i.."", LinkRepository[i]);
+	end
+
+	-- clear table to be recycled by next process
+	for key, _ in pairs(LinkRepository) do
+		LinkRepository[key] = nil;
+	end
+
+	-- desanitize string of any % characters
+	theMsg = string.gsub(theMsg, "%%%%", "%%");
 
 	return decodeColors(theMsg);
 end
@@ -262,7 +271,7 @@ end
 
 -- this menu is not available for private servers.. der..
 if(not isPrivateServer) then
-    local info = _G.UIDropDownMenu_CreateInfo();
+    local info = {};
     info.text = "MENU_ARMORY";
     local armoryMenu = AddContextMenu(info.text, info);
         info.text = L["Profile Links"];
@@ -270,7 +279,7 @@ if(not isPrivateServer) then
         info.isTitle = true;
         armoryMenu:AddSubItem(AddContextMenu("MENU_ARMORY_TITLE", info));
         for i=1, #armoryLinks do
-            info = _G.UIDropDownMenu_CreateInfo();
+            info = {};
             info.text = armoryLinks[i].title;
             info.value = armoryLinks[i].url;
             info.notCheckable = true;

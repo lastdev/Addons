@@ -12,4 +12,10 @@ Updated to patch 9.2.7
 Updated to PTR 10.0 DF
 
 10/14/22
-Updated to latest patch 10.02 DF
+Updated to latest build 10.0.2
+
+11/18/22
+Updated libs
+
+11/19/22
+Fixed API version to correct number. Also included GNU GENERAL PUBLIC LICENSE

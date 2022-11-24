@@ -15,7 +15,7 @@ addon:Controller("AltoholicUI.TabCharacters.Containers", { "AltoholicUI.Options"
 
 	-- https://wowpedia.fandom.com/wiki/BagID
 	local FIRST_BAG = 0
-	local LAST_BAG = 4
+	local LAST_BAG = 5
 	local FIRST_BANK_BAG = 6
 	local LAST_BANK_BAG = 12
 	
@@ -27,7 +27,6 @@ addon:Controller("AltoholicUI.TabCharacters.Containers", { "AltoholicUI.Options"
 		if id == 0 then
 			GameTooltip:AddLine(BACKPACK_TOOLTIP, 1, 1, 1)
 			GameTooltip:AddLine(format(CONTAINER_SLOTS, 16, BAGSLOT), 1, 1, 1)
-			
 		elseif id == 100 then
 			GameTooltip:AddLine(L["Bank"], 0.5, 0.5, 1)
 			GameTooltip:AddLine(format("%d %s", 28, L["slots"]), 1, 1, 1)

@@ -6,9 +6,10 @@ local HL = LibStub("AceAddon-3.0"):NewAddon(myname, "AceEvent-3.0")
 -- local L = LibStub("AceLocale-3.0"):GetLocale(myname, true)
 ns.HL = HL
 
+local HBD = LibStub("HereBeDragons-2.0")
 local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 
-ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v1'
+ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v8'
 
 ns.CLASSIC = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE
 
@@ -159,6 +160,21 @@ function ns.RegisterPoints(zone, points, defaults)
                 ns.points[zone][rcoord] = rpoint
             end 
         end
+        if point.parent then
+            local x, y = HandyNotes:getXY(coord)
+            local mapinfo = C_Map.GetMapInfo(zone)
+            if mapinfo and mapinfo.parentMapID and mapinfo.parentMapID ~= 0 then
+                local pzone = mapinfo.parentMapID
+                local px, py = HBD:TranslateZoneCoordinates(x, y, zone, pzone)
+                if px and py then
+                    if not ns.points[pzone] then
+                        ns.points[pzone] = {}
+                    end
+                    local pcoord = HandyNotes:getCoord(px, py)
+                    ns.points[pzone][pcoord] = point
+                end
+            end
+        end
     end
 end
 function ns.RegisterVignettes(zone, vignettes, defaults)
@@ -216,6 +232,7 @@ ns.playerClassColor = RAID_CLASS_COLORS[playerClass]
 ns.playerName = UnitName("player")
 ns.playerFaction = UnitFactionGroup("player")
 ns.playerClassMask = ({
+    -- this is 2^(classID - 1)
     WARRIOR = 0x1,
     PALADIN = 0x2,
     HUNTER = 0x4,
@@ -228,10 +245,16 @@ ns.playerClassMask = ({
     MONK = 0x200,
     DRUID = 0x400,
     DEMONHUNTER = 0x800,
+    EVOKER = 0x1000,
 })[playerClass] or 0
 
 ---------------------------------------------------------
 -- All the utility code
+
+function ns.GetCriteria(achievement, criteriaid)
+    local retOK, criteriaString, criteriaType, completed, quantity, reqQuantity, charName, flags, assetID, quantityString, criteriaID, eligible = pcall(criteriaid < 100 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID, achievement, criteriaid, true)
+    return criteriaString, criteriaType, completed, quantity, reqQuantity, charName, flags, assetID, quantityString, criteriaID, eligible
+end
 
 local mob_name
 if _G.C_TooltipInfo then
@@ -306,7 +329,7 @@ local function render_string(s, context)
             return CreateAtlasMarkup("questnormal") .. (C_QuestLog.IsQuestFlaggedCompleted(id) and completeColor or incompleteColor):WrapTextInColorCode(id)
         elseif variant == "achievement" then
             if mainid and subid then
-                local criteria = (subid < 40 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID)(mainid, subid)
+                local criteria = ns.GetCriteria(mainid, subid)
                 if criteria then
                     return criteria
                 end
@@ -436,7 +459,7 @@ local function work_out_label(point)
         return (render_string(point.label, point))
     end
     if point.achievement and point.criteria and type(point.criteria) ~= "table" and point.criteria ~= true then
-        local criteria = (point.criteria < 40 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID)(point.achievement, point.criteria)
+        local criteria = ns.GetCriteria(point.achievement, point.criteria)
         if criteria then
             return criteria
         end
@@ -642,8 +665,7 @@ local get_point_progress = function(point)
 end
 
 local function tooltip_criteria(tooltip, achievement, criteriaid, ignore_quantityString)
-    local getinfo = (criteriaid < 40 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID)
-    local criteria, _, complete, _, _, _, flags, _, quantityString = getinfo(achievement, criteriaid, true) -- include hidden
+    local criteria, _, complete, _, _, _, flags, _, quantityString = ns.GetCriteria(achievement, criteriaid) -- include hidden
     if quantityString and not ignore_quantityString then
         local is_progressbar = bit.band(flags, EVALUATION_TREE_FLAG_PROGRESS_BAR) == EVALUATION_TREE_FLAG_PROGRESS_BAR
         local label = (criteria and #criteria > 0 and not is_progressbar) and criteria or PVP_PROGRESS_REWARDS_HEADER
@@ -965,14 +987,18 @@ local function showAchievement(button, achievement)
 end
 
 local function createWaypoint(button, uiMapID, coord)
+    local x, y = HandyNotes:getXY(coord)
     if TomTom then
-        local x, y = HandyNotes:getXY(coord)
         TomTom:AddWaypoint(uiMapID, x, y, {
             title = get_point_info_by_coord(uiMapID, coord),
             persistent = nil,
             minimap = true,
             world = true
         })
+    elseif C_Map and C_Map.CanSetUserWaypointOnMap and C_Map.CanSetUserWaypointOnMap(uiMapID) then
+        local uiMapPoint = UiMapPoint.CreateFromCoordinates(uiMapID, x, y)
+        C_Map.SetUserWaypoint(uiMapPoint)
+        C_SuperTrack.SetSuperTrackedUserWaypoint(true)
     end
 end
 
@@ -1046,7 +1072,7 @@ do
                 wipe(info)
             end
 
-            if TomTom then
+            if TomTom or (C_Map and C_Map.CanSetUserWaypointOnMap and C_Map.CanSetUserWaypointOnMap(currentZone)) then
                 -- Waypoint menu item
                 info.text = "Create waypoint"
                 info.notCheckable = 1
@@ -1132,9 +1158,14 @@ do
                     LibDD:UIDropDownMenu_SetDisplayMode(HL_Dropdown, "MENU")
                 end
                 LibDD:ToggleDropDownMenu(1, nil, HL_Dropdown, self, 0, 0)
+                return
             end
             if button == "LeftButton" and IsShiftKeyDown() and _G.MAP_PIN_HYPERLINK then
                 sendToChat(button, uiMapID, coord)
+                return
+            end
+            if point.OnClick then
+                point:OnClick(button, uiMapID, coord)
             end
         end
     end
@@ -1258,13 +1289,13 @@ hooksecurefunc(VignettePinMixin, "OnMouseLeave", function(self)
     if _G[myname.."ComparisonTooltip"] then _G[myname.."ComparisonTooltip"]:Hide() end
 end)
 
-if _G.TaskPoi_OnEnter then
+if _G.TaskPOI_OnEnter then
     hooksecurefunc("TaskPOI_OnEnter", function(self)
         if not self.questID then return end
         if not ns.WorldQuestsToPoints[self.questID] then return end
         local point = ns.WorldQuestsToPoints[self.questID]
         -- if not ns.should_show_point(point._coord, point, point._uiMapID, false) then return end
-        handle_tooltip(GameTooltip, point, true)
+        handle_tooltip(GameTooltip, point, false)
     end)
     hooksecurefunc("TaskPOI_OnLeave", function(self)
         -- 10.0.2 doesn't hide this by default any more

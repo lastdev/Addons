@@ -14,6 +14,7 @@ local function insertCategory(self, category)
     while (categories[index] and categories[index]:GetId() < category:GetId()) do
         index = (index + 1);
     end
+
     table.insert(categories, index, category);
     return index;
 end
@@ -43,15 +44,17 @@ end
     | engine_CreateCategory
     |   Creates a new category in the engine with the specified ID, if the
     |   category alreay exists this raises an error.
+    |
+    | Note: categoryWeight is optional
     =======================================================================--]]
-local function engine_CreateCategory(self, categoryId, categoryName)
-    assert(type(categoryName) == "string" and string.len(categoryName) ~= 0, "A category name must be a valid string");
-    assert(tonumber(categoryId), "Category IDs must be numeric");
-    assert(not findCategory(self, categoryId), "A category with id='" .. tostring(categoryId) .. "' already exists");
+local function engine_CreateCategory(self, categoryId, categoryName, categoryWeight)
 
-    local category = Package.CreateCategory(categoryId, categoryName);
+
+
+
+    local category = Package.CreateCategory(categoryId, categoryName, categoryWeight);
     insertCategory(self, category);
-    self.log:Write("Created category(%d, %s)", categoryId, categoryName);
+    self.log:Write("Created category(%d, %s, %d)", categoryId, categoryName, categoryWeight or 0);
 end
 
 --[[===========================================================================
@@ -60,7 +63,7 @@ end
     |   engine, removing an non-existing category is a no-op.
     =========================================================================]]
 local function engine_RemoveCategory(self, categoryId)
-    assert(tonumber(categoryId), "Category IDs must be numeric");
+
 
     for i, category in ipairs(self.categories) do
         if (category:GetId() == categoryId) then
@@ -93,8 +96,8 @@ end
     |   Adds a function to environment which is presented to the rule scripts.
     =======================================================================--]]
 local function engine_AddFunction(self, functionName, targetFunction)
-    assert(type(functionName) == "string", "function name must be a string")
-    assert(type(targetFunction) == "function", "type of targetFunction must be a function")
+
+
 
     self.log:Write("Adding function '%s'", functionName);
     rawset(self.environment, functionName, targetFunction);
@@ -105,7 +108,7 @@ end
     |   Adds a table of functions to the environment used by the rules
     =======================================================================--]]
 local function engine_AddFunctions(self, functions)
-    assert(type(functions) == "table", "A table of functions must be provided")
+
 
     self.log:StartBlock("Start AddFunctions");
     for name, func in pairs(functions) do
@@ -121,9 +124,9 @@ end
     |   Adds a constant to the enviornment which is present the rule functions
     =======================================================================--]]
 local function engine_AddConstant(self, constantName, constantValue)
-    assert(type(constantName) == "string", "constant name must be a string")
-    assert(constantValue, "The constant must have a value")
-    assert(type(constantValue) ~= "function" and type(constantValue) ~= "table", "the constant must be a simple type");
+
+
+
 
     self.log:Write("Adding constant '%s'", constantName);
     rawset(self.environment, constantName, constantValue);
@@ -134,7 +137,7 @@ end
     |   Adds a table of constants to the rule enviornment
     =======================================================================--]]
 local function engine_AddConstants(self, constants)
-    assert(type(constants) == "table", "A table of constants must be provided")
+
 
     self.log:StartBlock("Begin AddConstants");
     for name, value in pairs(constants) do
@@ -178,6 +181,24 @@ function Package.validateRuleDefinition(rule, skip)
     return true;
 end
 
+--[[ Retrieves the default value of the parameter ]]
+local function _getParamDefault(param)
+    local default = param.Default
+    if (type(default) == "function") then
+        return default()
+    elseif (type(default) == "nil") then
+        if (type(param.Type) == "boolean") then
+            return false
+        elseif (param.type == "string") then
+            return ""
+        else
+            return 0
+        end
+    end
+
+    return default
+end
+
 --[[===========================================================================
     | engine_AddRule
     |   Adds creates and adds a rule with the specified definition to the
@@ -190,15 +211,28 @@ end
     |   In addtion, you can pass a table of parameters available to the
     |   rule when it's evaluated.
     =======================================================================--]]
-function engine_AddRule(self, categoryId, ruleDef, params)
-    assert(type(categoryId) == "number", "The category id must be numeric identifier");
+local function engine_AddRule(self, categoryId, ruleDef, params)
+
     Package.validateRuleDefinition(ruleDef, 3);
     if (params and type(params) ~= "table") then
         error("The rule parameters must be a table, providing the parameters as key-value pairs", 2);
     end
 
+    -- Apply the default values into the rule parameters if it's not
+    -- already there.
+    if (type(ruleDef.Params) == "table") then
+        local ruleParams = {}
+        for _, param in ipairs(ruleDef.Params) do
+            if (not params or type(params[param.Key]) == "nil") then
+                ruleParams[string.upper(param.Key)] = _getParamDefault(param)
+            else
+                ruleParams[string.upper(param.Key)] = params[param.Key]
+            end
+        end
+    end
+
     local category = assert(findCategory(self, categoryId), "The specified categoryId (" .. tostring(categoryId) .. ") is invalid, remember to call AddCategory first");
-    local rule, message = Package.CreateRule(ruleDef.Id, ruleDef.Name, ruleDef.Script, params);
+    local rule, message = Package.CreateRule(ruleDef.Id, ruleDef.Name, ruleDef.Script, params, ruleDef.Weight or 0);
     if (not rule) then
         self.log:Write("Failed to add '%s' to category=%d due to error: %s", ruleDef.Id, categoryId, message);
         return false, message;
@@ -219,11 +253,12 @@ local function evaluateRules(self, log, categories, ruleEnv, ...)
     local result = false;
     local rule;
     local category;
+    local weight = -1
 
     for _, cat in ipairs(categories) do
 
         log:StartBlock("Category(%d, '%s')", cat:GetId(), cat:GetName());
-        local r, ran, message = cat:Evaluate(self, log, ruleEnv, ...);
+        local r, ran, message, w = cat:Evaluate(self, log, ruleEnv, ...);
         rulesRun = (rulesRun + ran);
         log:EndBlock(" End [ran=%d]", ran);
 
@@ -231,11 +266,12 @@ local function evaluateRules(self, log, categories, ruleEnv, ...)
             rule = r;
             category = cat;
             result = true;
+            weight = w
             break;
         end
     end
 
-    return result, rule, category, rulesRun;
+    return result, rule, category, rulesRun, weight;
 end
 
 --[[===========================================================================
@@ -331,7 +367,7 @@ local function engine_Evaluate(self, object, ...)
     local categoryId = nil;
 
     self.log:StartBlock("Evaluating \"%s\"", object.Name or "<unknown>")
-    local result, rule, category, rulesRun = evaluateRules(self, self.log, self.categories, ruleEnv, ...)
+    local result, rule, category, rulesRun, weight = evaluateRules(self, self.log, self.categories, ruleEnv, ...)
     if (result and rule and category) then
         matchedRuleId = rule:GetId();
         matchedRuleName = rule:GetName();
@@ -339,8 +375,35 @@ local function engine_Evaluate(self, object, ...)
         categoryId = category:GetId();
     end
 
-    self.log:EndBlock("result=%d, id=%s [%s], ran=%d", result, matchedRuleId, matchedCategory, rulesRun)
-    return result, rulesRun, categoryId, matchedRuleId, matchedRuleName, matchedCategory
+    self.log:EndBlock("result=%s, id=%s [%s], ran=%d, weight=%d", tostring(result), matchedRuleId, matchedCategory, rulesRun, weight or 0)
+    return result, rulesRun, categoryId, matchedRuleId, matchedRuleName, matchedCategory, weight or 0
+end
+
+--[[===========================================================================
+    | engine_EvaluateEx
+    |   This is the same as evaluate except it puts the result inot a table
+    |   with named keys
+
+    |   returns as tabke with keys:
+    |       result (true or false)
+    |       categoryId - the category the match belongs to
+    |       categoryName - the name of the category which contained the matched rule
+    |       ruleId- the identifier of the matched rule
+    |       ruleName - the name of the matched rule
+    |       run - the n umber rules excecuted
+    =======================================================================--]]
+local function engine_EvaluateEx(self, object, ...)
+    local result, num, category, matched, name, matchedCat, weight = engine_Evaluate(self, object, ...)
+
+    return {
+            result = result or false,
+            categoryId = category or false,
+            ruleId = matched or false,
+            ruleName = name or false,
+            run = num or 0,
+            categoryName = matchedCat or false,
+            weight = weight
+        }
 end
 
 --[[===========================================================================
@@ -349,8 +412,8 @@ end
     |   and time so it should be very unique.
     =======================================================================--]]
 local function engine_CreateRuleId(self, categoryId, uniqueName)
-    assert(type(categoryId) == "number", "Invalid category ID");
-    assert(type(uniqueName) == "string" and string.len(uniqueName) ~= 0, "The unique portion of the ruleId must be valid");
+
+
 
     local category = assert(findCategory(self, categoryId), "The categoryID '" .. tostring(categoryId) .. "' is invalid");
     return string.format("%d.%s", tostring(categoryId), uniqueName);
@@ -403,8 +466,8 @@ end
     |   we are unable to validate the script.
     =======================================================================--]]
 local function engine_ValidateScript(self, object, script, params)
-    assert(object and (type(object) == "table"), "A valid object must be provided to evaluate against.");
-    assert(script and (type(script) == "string") and (string.len(script) ~= 0), "A valid script must be provided to validate.");
+
+
 
     -- Step 1 - Create the rule
     local id =  string.format("vr_%s", time());
@@ -432,8 +495,8 @@ end
     |   and rules can be added to it. If we fail to create the object
     |   the returns "nil".
     =========================================================================]]
-function engine_AddRuleset(self, categoryId, id, name)
-    assert(type(categoryId) == "number", "The category identifier must be numeric.");
+local function engine_AddRuleset(self, categoryId, id, name)
+
 
     local category = assert(findCategory(self, categoryId), "The specified categoryId (" .. tostring(categoryId) .. ") is invalid, remember to call AddCategory first");
     local ruleset = Package.CreateRuleset(self, id, name);
@@ -452,9 +515,11 @@ local engine_API =
 {
     CreateRuleId = engine_CreateRuleId,
     Evaluate = engine_Evaluate,
+    EvaluateEx = engine_EvaluateEx,
     AddRule = engine_AddRule,
     ImportGlobals = engine_ImportGlobals,
     AddFunctions = engine_AddFunctions,
+    AddFunction = engine_AddFunction,
     AddConstants = engine_AddConstants,
     CreateCategory = engine_CreateCategory,
     RemoveCategory = engine_RemoveCategory,

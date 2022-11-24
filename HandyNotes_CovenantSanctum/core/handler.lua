@@ -31,7 +31,9 @@ local TNRank            = L["handler_tooltip_TNTIER"]
 ----------------------------------------------------------------------------------------------------
 
 local NPClinkSanctum = CreateFrame("GameTooltip", "NPClinkSanctum", UIParent, "GameTooltipTemplate")
-local function getCreatureNamebyID(id)
+local function GetCreatureNameByID(id)
+    if (not id) then return end
+
 	NPClinkSanctum:SetOwner(UIParent, "ANCHOR_NONE")
 	NPClinkSanctum:SetHyperlink(("unit:Creature-0-0-0-0-%d"):format(id))
     local name      = _G["NPClinkSanctumTextLeft1"]:GetText()
@@ -72,13 +74,12 @@ end
 local GetPointInfo = function(point)
     local icon
     if point then
-        local label = getCreatureNamebyID(point.npc) or point.label or UNKNOWN
-        private.constants.icon = private.constants.icon OR []
-        local MagePortalHorde = "Interface\\AddOns\\"..FOLDER_NAME.."\\icons\\portal_red"
+        local label = GetCreatureNameByID(point.npc) or point.label or UNKNOWN
+        local portal_red = private.constants.icon["portal_red"]
 
         if (point.icon == "portal" and point.sanctumtalent) then
             local TALENT = C_Garrison.GetTalentInfo(point.sanctumtalent)
-            icon = TALENT["researched"] and SetIcon(point) or MagePortalHorde
+            icon = TALENT["researched"] and SetIcon(point) or portal_red
         else
             icon = SetIcon(point)
         end
@@ -86,7 +87,7 @@ local GetPointInfo = function(point)
     end
 end
 
-local GetPoinInfoByCoord = function(uMapID, coord)
+local GetPointInfoByCoord = function(uMapID, coord)
     return GetPointInfo(private.DB.points[uMapID] and private.DB.points[uMapID][coord])
 end
 
@@ -98,7 +99,7 @@ local function SetTooltip(tooltip, point)
 
     if point then
         if point.npc then
-            local name, sublabel = getCreatureNamebyID(point.npc)
+            local name, sublabel = GetCreatureNameByID(point.npc)
             if name then
                 tooltip:AddLine(name)
             end
@@ -166,7 +167,8 @@ local function addTomTomWaypoint(button, uMapID, coord)
     if TomTom then
         local x, y = HandyNotes:getXY(coord)
         TomTom:AddWaypoint(uMapID, x, y, {
-            title = GetPoinInfoByCoord(uMapID, coord),
+            title = GetPointInfoByCoord(uMapID, coord),
+            from = L["handler_context_menu_addon_name"],
             persistent = nil,
             minimap = true,
             world = true

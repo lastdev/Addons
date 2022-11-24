@@ -15,6 +15,39 @@ How to support Altoholic's development :
 If you like the addon, consider supporting it, this has been the long term effort and commitment of a single person. #ArmyOfOne
 
 
+10.0.007 (20/11/2022)
+
+- DataStore_Containers : added support for the reagent bag (Thanks Feral !)
+- DataStore_Containers : fixed a bug when scanning battle pets stored in the main bank.
+- Tooltip : added support for the reagent bag (Thanks Feral !)
+- Summary tab / Bag usage : added an indication in the tooltip that a bank slot has not been purchased yet.
+- Summary tab / Bag usage : added support for the reagent tab.
+Important note about this panel !
+Blizzard changed the bank bags id's from 5-11 to 6-12, and gave the reagent bag the id 5.
+For alts which you have not logged in in a while, their bags will be "shifted left" when you look at the bank bags.
+There is nothing I can do about this !! 
+Just log them on, visit the bank, and it will be fixed.
+
+10.0.006 (17/11/2022)
+
+- Tooltip : fixed a Lua error when mousing over an item while holding the shift key.
+- DataStore_Containers : fixed an error returning proper bag counts.
+- DataStore_Containers : fixed an error returning proper bank bag counts.
+- DataStore_Containers : fixed scanning battle pets.
+
+10.0.005 (16/11/2022)
+
+- Options tab : fixed the tooltip of options no longer being displayed due to a deprecated template.
+- DataStore_Containers : Changed API calls to use C_Container (Thanks Feral !)
+- DataStore_Talents : Added support for the Evoker (Thanks Feral !)
+- Fixed item enums everywhere (Thanks Feral !)
+- Fixed the tooltip hooks. Counters should be working as usual.
+	There are however still some issues with tooltips when mousing over the minimap, or over a gathering node.
+- Summary tab : added more filtering options under the level filter.
+- DataStore_Inventory : fixed scanning of item sets (Thanks Feral !)
+
+Note: I will have limited availability in the next 3 weeks (2 weeks of business trips), so hopefully this version will be stable enough for the release of Dragonflight !
+
 10.0.004 (02/11/2022)
 
 - Summary tab : fixed a missing bag in the tooltip, overlooked in previous release. (Thanks Snufkin !)

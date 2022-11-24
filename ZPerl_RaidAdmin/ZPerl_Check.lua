@@ -592,7 +592,7 @@ function XPerl_Check_OnClickItem(button)
 				ClearCursor()
 
 				if (PickupBag and PickupSlot) then
-					local itemLink = GetContainerItemLink(PickupBag, PickupSlot)
+					local itemLink = C_Container.GetContainerItemLink(PickupBag, PickupSlot)
 
 					if (itemLink) then
 						InsertItemLink(itemLink)

@@ -1,8 +1,9 @@
+---@diagnostic disable: missing-parameter
 local AceGUI = LibStub('AceGUI-3.0');
 local lsm = LibStub('AceGUISharedMediaWidgets-1.0');
 local media = LibStub('LibSharedMedia-3.0');
-local ADDON_NAME, ADDON_TABLE = ...;
-local version = GetAddOnMetadata(ADDON_NAME, "Version");
+local addonName, addon = ...;
+local version = GetAddOnMetadata(addonName, "Version");
 local addoninfo = 'Main Version: ' .. version;
 
 BINDING_HEADER_ConRO = "ConRO Hotkeys"
@@ -22,7 +23,7 @@ ConRO.Textures = {
 	['MagicCircle'] = 'Interface\\AddOns\\ConRO\\images\\magiccircle',
 	['Plus'] = 'Interface\\AddOns\\ConRO\\images\\plus',
 	['DoubleArrow'] = 'Interface\\AddOns\\ConRO\\images\\arrow',
-	
+
 	['KozNicSquare'] = 'Interface\\AddOns\\ConRO\\images\\KozNic_square',
 	['Circle'] = 'Interface\\AddOns\\ConRO\\images\\Circle',
 };
@@ -44,6 +45,7 @@ ConRO.Colors = {
 	[10] = '|cFF00FF96',
 	[11] = '|cFFFF7D0A',
 	[12] = '|cFFA330C9',
+	[13] = '|cFF33937F',
 }
 
 ConRO.ClassRGB = {
@@ -59,6 +61,7 @@ ConRO.ClassRGB = {
 	[10] = {r = 0.00,g = 1.00,b = 0.60, a = 1.00},
 	[11] = {r = 1.00,g = 0.49,b = 0.04, a = 1.00},
 	[12] = {r = 0.64,g = 0.19,b = 0.79, a = 1.00},
+	[13] = {r = 0.16,g = 0.45,b = 0.39, a = 1.00},
 }
 
 ConRO.Classes = {
@@ -74,6 +77,7 @@ ConRO.Classes = {
 	[10] = 'Monk',
 	[11] = 'Druid',
 	[12] = 'DemonHunter',
+	[13] = 'Evoker'
 }
 
 local defaultOptions = {
@@ -86,7 +90,7 @@ local defaultOptions = {
 		_Spec_2_Enabled = true,
 		_Spec_3_Enabled = true,
 		_Spec_4_Enabled = true,
-		
+
 		_Damage_Overlay_Alpha = true,
 		_Damage_Overlay_Color = {r = 0.8,g = 0.8,b = 0.8,a = 1},
 		_Damage_Overlay_Size = 1,
@@ -100,7 +104,7 @@ local defaultOptions = {
 
 		_Defense_Overlay_Alpha = true,
 		_Defense_Overlay_Color = {r = 0,g = 0.7,b = 1,a = 1},
-		_Defense_Overlay_Size = 1,		
+		_Defense_Overlay_Size = 1,
 		_Defense_Icon_Style = 3,
 		_Defense_Alpha_Mode = 2,
 		_Taunt_Overlay_Color = {r = 0.8,g = 0,b = 0, a = 1},
@@ -117,7 +121,7 @@ local defaultOptions = {
 		_Purge_Overlay_Size = 1,
 		_Purge_Icon_Style = 6,
 		_Purge_Alpha_Mode = 1,
-		_RaidBuffs_Overlay_Color = {r = 0,g = 0.6,b = 0, a = 1},		
+		_RaidBuffs_Overlay_Color = {r = 0,g = 0.6,b = 0, a = 1},
 		_RaidBuffs_Overlay_Size = 1,
 		_RaidBuffs_Icon_Style = 7,
 		_RaidBuffs_Alpha_Mode = 1,
@@ -125,10 +129,10 @@ local defaultOptions = {
 		_Movement_Overlay_Size = 1,
 		_Movement_Icon_Style = 8,
 		_Movement_Alpha_Mode = 1,
-		
+
 		enableWindow = true,
 		combatWindow = false,
-		enableWindowCooldown = true,		
+		enableWindowCooldown = true,
 		enableDefenseWindow = true,
 		enableWindowSpellName = true,
 		enableWindowKeybinds = true,
@@ -137,13 +141,13 @@ local defaultOptions = {
 		flashIconSize = 50,
 		enableInterruptWindow = true,
 		enablePurgeWindow = true,
-		
+
 		_Hide_Toggle = false,
 		toggleButtonSize = 1.2,
 		toggleButtonOrientation = 2,
 		_Burst_Threshold = 90,
 	}
-}	
+}
 
 local orientations = {
 		"Vertical",
@@ -195,7 +199,7 @@ local options = {
 			type = "description",
 			width = "normal",
 			name = "\n\n",
-		},		
+		},
 		authorPull = {
 			order = 3,
 			type = "description",
@@ -231,7 +235,7 @@ local options = {
 			type = "description",
 			width = "normal",
 			name = "\n\n",
-		},		
+		},
 		_Intervals = {
 			name = "Interval in seconds",
 			desc = "Sets how frequent rotation updates will be. Low value will result in fps drops.",
@@ -253,19 +257,21 @@ local options = {
 			set = function(info, val)
 				ConRO.db.profile._Unlock_ConRO = val;
 				ConROWindow:EnableMouse(ConRO.db.profile._Unlock_ConRO);
+				ConRONextWindow:EnableMouse(ConRO.db.profile._Unlock_ConRO);
+				ConRONext2Window:EnableMouse(ConRO.db.profile._Unlock_ConRO);
 				ConRODefenseWindow:EnableMouse(ConRO.db.profile._Unlock_ConRO);
 				ConROInterruptWindow:EnableMouse(ConRO.db.profile._Unlock_ConRO);
-				ConROPurgeWindow:EnableMouse(ConRO.db.profile._Unlock_ConRO);		
+				ConROPurgeWindow:EnableMouse(ConRO.db.profile._Unlock_ConRO);
 				if val == true and ConRO.db.profile.enableInterruptWindow == true then
-					ConROInterruptWindow:Show();				
+					ConROInterruptWindow:Show();
 				else
-					ConROInterruptWindow:Hide();				
-				end	
+					ConROInterruptWindow:Hide();
+				end
 				if val == true and ConRO.db.profile.enablePurgeWindow == true then
-					ConROPurgeWindow:Show();					
+					ConROPurgeWindow:Show();
 				else
-					ConROPurgeWindow:Hide();					
-				end			
+					ConROPurgeWindow:Hide();
+				end
 			end,
 			get = function(info) return ConRO.db.profile._Unlock_ConRO end
 		},
@@ -284,19 +290,25 @@ local options = {
 					order = 1,
 					set = function(info, val)
 						ConRO.db.profile._Spec_1_Enabled = val;
-						
+
 						ConRO:DisableRotation();
 						ConRO:DisableDefense();
 						ConRO:LoadModule();
 						ConRO:EnableRotation();
 						ConRO:EnableDefense();
-						
+
 						if ConRO:HealSpec() then
 							ConROWindow:Hide();
+							ConRONextWindow:Hide();
+							ConRONext2Window:Hide();
 						elseif ConRO.db.profile.enableWindow and not ConRO.db.profile.combatWindow then
 							ConROWindow:Show();
+							ConRONextWindow:Show();
+							ConRONext2Window:Show();
 						else
-							ConROWindow:Hide();	
+							ConROWindow:Hide();
+							ConRONextWindow:Hide();
+							ConRONext2Window:Hide();
 						end
 					end,
 					get = function(info) return ConRO.db.profile._Spec_1_Enabled end
@@ -309,19 +321,25 @@ local options = {
 					order = 2,
 					set = function(info, val)
 						ConRO.db.profile._Spec_2_Enabled = val;
-						
+
 						ConRO:DisableRotation();
 						ConRO:DisableDefense();
 						ConRO:LoadModule();
 						ConRO:EnableRotation();
 						ConRO:EnableDefense();
-						
+
 						if ConRO:HealSpec() then
 							ConROWindow:Hide();
+							ConRONextWindow:Hide();
+							ConRONext2Window:Hide();
 						elseif ConRO.db.profile.enableWindow and not ConRO.db.profile.combatWindow then
 							ConROWindow:Show();
+							ConRONextWindow:Show();
+							ConRONext2Window:Show();
 						else
-							ConROWindow:Hide();	
+							ConROWindow:Hide();
+							ConRONextWindow:Hide();
+							ConRONext2Window:Hide();
 						end
 					end,
 					get = function(info) return ConRO.db.profile._Spec_2_Enabled end
@@ -335,19 +353,25 @@ local options = {
 					hidden = function() if GetNumSpecializations() >= 3 then return false; else return true; end end,
 					set = function(info, val)
 						ConRO.db.profile._Spec_3_Enabled = val;
-						
+
 						ConRO:DisableRotation();
 						ConRO:DisableDefense();
 						ConRO:LoadModule();
 						ConRO:EnableRotation();
 						ConRO:EnableDefense();
-						
+
 						if ConRO:HealSpec() then
 							ConROWindow:Hide();
+							ConRONextWindow:Hide();
+							ConRONext2Window:Hide();
 						elseif ConRO.db.profile.enableWindow and not ConRO.db.profile.combatWindow then
 							ConROWindow:Show();
+							ConRONextWindow:Show();
+							ConRONext2Window:Show();
 						else
-							ConROWindow:Hide();	
+							ConROWindow:Hide();
+							ConRONextWindow:Hide();
+							ConRONext2Window:Hide();
 						end
 					end,
 					get = function(info) return ConRO.db.profile._Spec_3_Enabled end
@@ -361,19 +385,25 @@ local options = {
 					hidden = function() if GetNumSpecializations() >= 4 then return false; else return true; end end,
 					set = function(info, val)
 						ConRO.db.profile._Spec_4_Enabled = val;
-						
+
 						ConRO:DisableRotation();
 						ConRO:DisableDefense();
 						ConRO:LoadModule();
 						ConRO:EnableRotation();
 						ConRO:EnableDefense();
-						
+
 						if ConRO:HealSpec() then
 							ConROWindow:Hide();
+							ConRONextWindow:Hide();
+							ConRONext2Window:Hide();
 						elseif ConRO.db.profile.enableWindow and not ConRO.db.profile.combatWindow then
 							ConROWindow:Show();
+							ConRONextWindow:Show();
+							ConRONext2Window:Show();
 						else
-							ConROWindow:Hide();	
+							ConROWindow:Hide();
+							ConRONextWindow:Hide();
+							ConRONext2Window:Hide();
 						end
 					end,
 					get = function(info) return ConRO.db.profile._Spec_4_Enabled end
@@ -482,7 +512,7 @@ local options = {
 					width = "full",
 					name = "\n\n",
 					order = 10,
-				},			
+				},
 				_Damage_Overlays = {
 					type = "header",
 					name = "Damage Overlays",
@@ -561,7 +591,7 @@ local options = {
 					set = function(info,val)
 						ConRO.db.profile._Damage_Icon_Style = val;
 						for k, overlay in pairs(ConRO.DamageFrames) do
-							if overlay ~= nil then						
+							if overlay ~= nil then
 								if ConRO.db.profile._Damage_Icon_Style == 1 then
 									overlay.texture:SetTexture(ConRO.Textures.Skull);
 									overlay.texture:SetBlendMode('BLEND');
@@ -616,7 +646,7 @@ local options = {
 					set = function(info,val)
 						ConRO.db.profile._Damage_Alpha_Mode = val;
 						for k, overlay in pairs(ConRO.DamageFrames) do
-							if overlay ~= nil then						
+							if overlay ~= nil then
 								if ConRO.db.profile._Damage_Alpha_Mode == 1 then
 									overlay.texture:SetBlendMode('BLEND');
 								elseif ConRO.db.profile._Damage_Alpha_Mode == 2 then
@@ -723,7 +753,7 @@ local options = {
 						end
 					end,
 					get = function(info) return ConRO.db.profile._Cooldown_Overlay_Size end
-				},				
+				},
 				_Cooldown_Icon_Style = {
 					name = "Style",
 					desc = "Sets the style of the cooldown overlay texture.",
@@ -742,7 +772,7 @@ local options = {
 					set = function(info,val)
 						ConRO.db.profile._Cooldown_Icon_Style = val;
 						for k, overlay in pairs(ConRO.CoolDownFrames) do
-							if overlay ~= nil then						
+							if overlay ~= nil then
 								if ConRO.db.profile._Cooldown_Icon_Style == 1 then
 									overlay.texture:SetTexture(ConRO.Textures.Skull);
 								elseif ConRO.db.profile._Cooldown_Icon_Style == 2 then
@@ -787,7 +817,7 @@ local options = {
 					set = function(info,val)
 						ConRO.db.profile._Cooldown_Alpha_Mode = val;
 						for k, overlay in pairs(ConRO.CoolDownFrames) do
-							if overlay ~= nil then						
+							if overlay ~= nil then
 								if ConRO.db.profile._Cooldown_Alpha_Mode == 1 then
 									overlay.texture:SetBlendMode('BLEND');
 								elseif ConRO.db.profile._Cooldown_Alpha_Mode == 2 then
@@ -888,7 +918,7 @@ local options = {
 					set = function(info,val)
 						ConRO.db.profile._Defense_Icon_Style = val
 						for k, overlay in pairs(ConRO.DefenseFrames) do
-							if overlay ~= nil then						
+							if overlay ~= nil then
 								if ConRO.db.profile._Defense_Icon_Style == 1 then
 									overlay.texture:SetTexture(ConRO.Textures.Skull);
 								elseif ConRO.db.profile._Defense_Icon_Style == 2 then
@@ -933,7 +963,7 @@ local options = {
 					set = function(info,val)
 						ConRO.db.profile._Defense_Alpha_Mode = val;
 						for k, overlay in pairs(ConRO.DefenseFrames) do
-							if overlay ~= nil then						
+							if overlay ~= nil then
 								if ConRO.db.profile._Defense_Alpha_Mode == 1 then
 									overlay.texture:SetBlendMode('BLEND');
 								elseif ConRO.db.profile._Defense_Alpha_Mode == 2 then
@@ -1023,7 +1053,7 @@ local options = {
 					set = function(info,val)
 						ConRO.db.profile._Taunt_Icon_Style = val
 						for k, overlay in pairs(ConRO.TauntFrames) do
-							if overlay ~= nil then						
+							if overlay ~= nil then
 								if ConRO.db.profile._Taunt_Icon_Style == 1 then
 									overlay.texture:SetTexture(ConRO.Textures.Skull);
 								elseif ConRO.db.profile._Taunt_Icon_Style == 2 then
@@ -1068,7 +1098,7 @@ local options = {
 					set = function(info,val)
 						ConRO.db.profile._Taunt_Alpha_Mode = val;
 						for k, overlay in pairs(ConRO.TauntFrames) do
-							if overlay ~= nil then						
+							if overlay ~= nil then
 								if ConRO.db.profile._Taunt_Alpha_Mode == 1 then
 									overlay.texture:SetBlendMode('BLEND');
 								elseif ConRO.db.profile._Taunt_Alpha_Mode == 2 then
@@ -1214,7 +1244,7 @@ local options = {
 					set = function(info,val)
 						ConRO.db.profile._Interrupt_Alpha_Mode = val;
 						for k, overlay in pairs(ConRO.InterruptFrames) do
-							if overlay ~= nil then						
+							if overlay ~= nil then
 								if ConRO.db.profile._Interrupt_Alpha_Mode == 1 then
 									overlay.texture:SetBlendMode('BLEND');
 								elseif ConRO.db.profile._Interrupt_Alpha_Mode == 2 then
@@ -1304,7 +1334,7 @@ local options = {
 					set = function(info,val)
 						ConRO.db.profile._Purge_Icon_Style = val;
 						for k, overlay in pairs(ConRO.PurgeFrames) do
-							if overlay ~= nil then						
+							if overlay ~= nil then
 								if ConRO.db.profile._Purge_Icon_Style == 1 then
 									overlay.texture:SetTexture(ConRO.Textures.Skull);
 								elseif ConRO.db.profile._Purge_Icon_Style == 2 then
@@ -1349,7 +1379,7 @@ local options = {
 					set = function(info,val)
 						ConRO.db.profile._Purge_Alpha_Mode = val;
 						for k, overlay in pairs(ConRO.PurgableFrames) do
-							if overlay ~= nil then						
+							if overlay ~= nil then
 								if ConRO.db.profile._Purge_Alpha_Mode == 1 then
 									overlay.texture:SetBlendMode('BLEND');
 								elseif ConRO.db.profile._Purge_Alpha_Mode == 2 then
@@ -1439,7 +1469,7 @@ local options = {
 					set = function(info,val)
 						ConRO.db.profile._RaidBuffs_Icon_Style = val;
 						for k, overlay in pairs(ConRO.RaidBuffsFrames) do
-							if overlay ~= nil then						
+							if overlay ~= nil then
 								if ConRO.db.profile._RaidBuffs_Icon_Style == 1 then
 									overlay.texture:SetTexture(ConRO.Textures.Skull);
 								elseif ConRO.db.profile._RaidBuffs_Icon_Style == 2 then
@@ -1484,7 +1514,7 @@ local options = {
 					set = function(info,val)
 						ConRO.db.profile._RaidBuffs_Alpha_Mode = val;
 						for k, overlay in pairs(ConRO.TauntFrames) do
-							if overlay ~= nil then						
+							if overlay ~= nil then
 								if ConRO.db.profile._RaidBuffs_Alpha_Mode == 1 then
 									overlay.texture:SetBlendMode('BLEND');
 								elseif ConRO.db.profile._RaidBuffs_Alpha_Mode == 2 then
@@ -1574,7 +1604,7 @@ local options = {
 					set = function(info,val)
 						ConRO.db.profile._Movement_Icon_Style = val;
 						for k, overlay in pairs(ConRO.MovementFrames) do
-							if overlay ~= nil then						
+							if overlay ~= nil then
 								if ConRO.db.profile._Movement_Icon_Style == 1 then
 									overlay.texture:SetTexture(ConRO.Textures.Skull);
 								elseif ConRO.db.profile._Movement_Icon_Style == 2 then
@@ -1619,7 +1649,7 @@ local options = {
 					set = function(info,val)
 						ConRO.db.profile._Movement_Alpha_Mode = val;
 						for k, overlay in pairs(ConRO.MovementFrames) do
-							if overlay ~= nil then						
+							if overlay ~= nil then
 								if ConRO.db.profile._Movement_Alpha_Mode == 1 then
 									overlay.texture:SetBlendMode('BLEND');
 								elseif ConRO.db.profile._Movement_Alpha_Mode == 2 then
@@ -1655,8 +1685,12 @@ local options = {
 						ConRO.db.profile.enableWindow = val;
 						if val == true and not ConRO:HealSpec() then
 							ConROWindow:Show();
+							ConRONextWindow:Show();
+							ConRONext2Window:Show();
 						else
 							ConROWindow:Hide();
+							ConRONextWindow:Hide();
+							ConRONext2Window:Hide();
 						end
 					end,
 					get = function(info) return ConRO.db.profile.enableWindow end
@@ -1671,10 +1705,14 @@ local options = {
 						ConRO.db.profile.combatWindow = val;
 						if val == true then
 							ConROWindow:Hide();
+							ConRONextWindow:Hide();
+							ConRONext2Window:Hide();
 							ConRODefenseWindow:Hide();
 						else
 							ConROWindow:Show();
-							ConRODefenseWindow:Show();				
+							ConRONextWindow:Show();
+							ConRONext2Window:Show();
+							ConRODefenseWindow:Show();
 						end
 					end,
 					get = function(info) return ConRO.db.profile.combatWindow end
@@ -1686,7 +1724,7 @@ local options = {
 					width = 'normal',
 					order = 75,
 					set = function(info, val)
-						ConRO.db.profile.enableWindowCooldown = val;		
+						ConRO.db.profile.enableWindowCooldown = val;
 					end,
 					get = function(info) return ConRO.db.profile.enableWindowCooldown end
 				},
@@ -1702,10 +1740,10 @@ local options = {
 							ConRODefenseWindow:Show();
 						else
 							ConRODefenseWindow:Hide();
-						end				
+						end
 					end,
 					get = function(info) return ConRO.db.profile.enableDefenseWindow end
-				},		
+				},
 				enableWindowSpellName = {
 					name = 'Show Spellname',
 					desc = 'Show spellname above Display Windows.',
@@ -1717,7 +1755,7 @@ local options = {
 						if val == true then
 							ConROWindow.font:Show();
 							ConRODefenseWindow.font:Show();
-						else 
+						else
 							ConROWindow.font:Hide();
 							ConRODefenseWindow.font:Hide();
 						end
@@ -1735,7 +1773,7 @@ local options = {
 						if val == true then
 							ConROWindow.fontkey:Show();
 							ConRODefenseWindow.fontkey:Show();
-						else 
+						else
 							ConROWindow.fontkey:Hide();
 							ConRODefenseWindow.fontkey:Hide();
 						end
@@ -1755,7 +1793,7 @@ local options = {
 						ConRO.db.profile.transparencyWindow = val;
 					end,
 					get = function(info) return ConRO.db.profile.transparencyWindow end
-				},	
+				},
 				windowIconSize = {
 					name = 'Display windows Icon size.',
 					desc = 'Sets the size of the icon in your display windows. REQUIRES RELOAD',
@@ -1791,14 +1829,14 @@ local options = {
 					desc = 'Show movable interrupt icon.',
 					type = 'toggle',
 					width = 'default',
-					order = 82,			
+					order = 82,
 					set = function(info, val)
-						ConRO.db.profile.enableInterruptWindow = val;			
+						ConRO.db.profile.enableInterruptWindow = val;
 						if val == true and ConRO.db.profile._Unlock_ConRO == true then
-							ConROInterruptWindow:Show();				
+							ConROInterruptWindow:Show();
 						else
 							ConROInterruptWindow:Hide();
-						end	
+						end
 					end,
 					get = function(info) return ConRO.db.profile.enableInterruptWindow end
 				},
@@ -1807,14 +1845,14 @@ local options = {
 					desc = 'Show movable purge icon.',
 					type = 'toggle',
 					width = 'default',
-					order = 83,		
+					order = 83,
 					set = function(info, val)
-						ConRO.db.profile.enablePurgeWindow = val;			
+						ConRO.db.profile.enablePurgeWindow = val;
 						if val == true and ConRO.db.profile._Unlock_ConRO == true then
 							ConROPurgeWindow:Show();
 						else
 							ConROPurgeWindow:Hide();
-						end	
+						end
 					end,
 					get = function(info) return ConRO.db.profile.enablePurgeWindow end
 				},
@@ -1827,7 +1865,7 @@ local options = {
 			},
 		},
 
---Toggle Button Settings		
+--Toggle Button Settings
 		toggleButtonSettings = {
 			type = "group",
 			name = "Toggle Buttons",
@@ -1884,7 +1922,7 @@ local options = {
 								hori = 2;
 							end
 						ConROButtonFrame:SetSize((40 * hori) + 14, (15 * vert) + 14)
-							
+
 					end,
 					get = function(info) return ConRO.db.profile.toggleButtonOrientation end
 				},
@@ -1897,7 +1935,7 @@ local options = {
 				_Burst_Settings = {
 					type = "header",
 					name = "Burst Settings",
-					order = 21,					
+					order = 21,
 				},
 				_Burst_Threshold = {
 					name = "Burst Threshold",
@@ -1914,7 +1952,7 @@ local options = {
 					get = function(info) return ConRO.db.profile._Burst_Threshold end
 				},
 			},
-		},				
+		},
 
 --Reset Buttons
 		reloadButton = {
@@ -1933,10 +1971,12 @@ local options = {
 			type = "execute",
 			width = "normal",
 			order = 32,
-			confirm = true,			
+			confirm = true,
 			func = function(info)
 				ConROButtonFrame:SetUserPlaced(false);
 				ConROWindow:SetUserPlaced(false);
+				ConRONextWindow:SetUserPlaced(false);
+				ConRONext2Window:SetUserPlaced(false);
 				ConRODefenseWindow:SetUserPlaced(false);
 				ConROInterruptWindow:SetUserPlaced(false);
 				ConROPurgeWindow:SetUserPlaced(false);
@@ -1955,7 +1995,7 @@ local options = {
 				ReloadUI();
 			end
 		},
-	},	
+	},
 }
 
 function ConRO:GetTexture()
@@ -1977,6 +2017,8 @@ function ConRO:OnInitialize()
 	self.db = LibStub('AceDB-3.0'):New('ConROPreferences', defaultOptions);
 	self.optionsFrame = LibStub('AceConfigDialog-3.0'):AddToBlizOptions('Conflict Rotation Optimizer', 'ConRO');
 	self.DisplayWindowFrame();
+	self.DisplayNextWindowFrame();
+	self.DisplayNext2WindowFrame();
 	self.DefenseWindowFrame();
 	self.InterruptWindowFrame();
 	self.PurgeWindowFrame();
@@ -2003,11 +2045,11 @@ function ConRO:EnableRotation()
 		self:Print(self.Colors.Error .. 'Failed to enable addon!');
 		return;
 	end
-	
+
 	self.Fetch();
 	self:CheckTalents();
 	self:CheckPvPTalents();
-	
+
 	if self.ModuleOnEnable then
 		self.ModuleOnEnable();
 	end
@@ -2021,9 +2063,9 @@ function ConRO:EnableDefense()
 		self:Print(self.Colors.Error .. 'Failed to enable defense module!');
 		return;
 	end
-	
+
 	self.FetchDef();
-	
+
 	if self.ModuleOnEnable then
 		self.ModuleOnEnable();
 	end
@@ -2052,9 +2094,9 @@ function ConRO:DisableRotation()
 	self:DestroyCoolDownOverlays();
 	self:DestroyPurgableOverlays();
 	self:DestroyRaidBuffsOverlays();
-	self:DestroyMovementOverlays();	
+	self:DestroyMovementOverlays();
 	self:DestroyTauntOverlays();
-	
+
 	self.Spell = nil;
 	self.rotationEnabled = false;
 end
@@ -2067,7 +2109,7 @@ function ConRO:DisableDefense()
 	self:DisableDefenseTimer();
 
 	self:DestroyDefenseOverlays();
-	
+
 	self.Def = nil;
 	self.defenseEnabled = false;
 end
@@ -2087,13 +2129,14 @@ end
 function ConRO:OnEnable()
 	self:RegisterEvent('PLAYER_TARGET_CHANGED');
 	self:RegisterEvent('PLAYER_TALENT_UPDATE');
+	self:RegisterEvent('TRAIT_CONFIG_UPDATED');
 	self:RegisterEvent('ACTIONBAR_SLOT_CHANGED');
 	self:RegisterEvent('PLAYER_REGEN_DISABLED');
-	self:RegisterEvent('PLAYER_REGEN_ENABLED');	
+	self:RegisterEvent('PLAYER_REGEN_ENABLED');
 	self:RegisterEvent('PLAYER_ENTERING_WORLD');
 	self:RegisterEvent('UPDATE_SHAPESHIFT_FORM');
 	self:RegisterEvent('UPDATE_STEALTH');
-	
+
 	self:RegisterEvent('ACTIONBAR_HIDEGRID');
 	self:RegisterEvent('ACTIONBAR_PAGE_CHANGED');
 	self:RegisterEvent('LEARNED_SPELL_IN_TAB');
@@ -2106,7 +2149,7 @@ function ConRO:OnEnable()
 	self:RegisterEvent('UNIT_ENTERED_VEHICLE');
 	self:RegisterEvent('UNIT_EXITED_VEHICLE');
 	self:RegisterEvent('PLAYER_CONTROL_LOST');
-	self:RegisterEvent('PLAYER_CONTROL_GAINED');	
+	self:RegisterEvent('PLAYER_CONTROL_GAINED');
 
 	self:RegisterEvent('PET_BATTLE_OPENING_START');
 	self:RegisterEvent('PET_BATTLE_OVER');
@@ -2121,13 +2164,42 @@ function ConRO:PLAYER_TALENT_UPDATE()
 	self:LoadModule();
 	self:EnableRotation();
 	self:EnableDefense();
-	
+
 	if ConRO:HealSpec() then
 		ConROWindow:Hide();
+		ConRONextWindow:Hide();
+		ConRONext2Window:Hide();
 	elseif ConRO.db.profile.enableWindow and not ConRO.db.profile.combatWindow then
 		ConROWindow:Show();
+		ConRONextWindow:Show();
+		ConRONext2Window:Show();
 	else
-		ConROWindow:Hide();	
+		ConROWindow:Hide();
+		ConRONextWindow:Hide();
+		ConRONext2Window:Hide();
+	end
+end
+
+function ConRO:TRAIT_CONFIG_UPDATED()
+--self:Print(self.Colors.Success .. 'Talent');
+	self:DisableRotation();
+	self:DisableDefense();
+	self:LoadModule();
+	self:EnableRotation();
+	self:EnableDefense();
+
+	if ConRO:HealSpec() then
+		ConROWindow:Hide();
+		ConRONextWindow:Hide();
+		ConRONext2Window:Hide();
+	elseif ConRO.db.profile.enableWindow and not ConRO.db.profile.combatWindow then
+		ConROWindow:Show();
+		ConRONextWindow:Show();
+		ConRONext2Window:Show();
+	else
+		ConROWindow:Hide();
+		ConRONextWindow:Hide();
+		ConRONext2Window:Hide();
 	end
 end
 
@@ -2173,6 +2245,8 @@ function ConRO:PET_BATTLE_OPENING_START()
 	self:DisableRotation();
 	self:DisableDefense();
 	ConROWindow:Hide();
+	ConRONextWindow:Hide();
+	ConRONext2Window:Hide();
 	ConRODefenseWindow:Hide();
 end
 
@@ -2185,19 +2259,25 @@ function ConRO:PET_BATTLE_OVER()
 	self:EnableDefense();
 
 	if ConRO.db.profile.enableWindow and (ConRO.db.profile.combatWindow or ConRO:HealSpec()) and ConRO:TarHostile() then
-		ConROWindow:Show();	
+		ConROWindow:Show();
+		ConRONextWindow:Show();
+		ConRONext2Window:Show();
 	elseif ConRO.db.profile.enableWindow and not (ConRO.db.profile.combatWindow or ConRO:HealSpec()) then
-		ConROWindow:Show();		
+		ConROWindow:Show();
+		ConRONextWindow:Show();
+		ConRONext2Window:Show();
 	else
-		ConROWindow:Hide();			
+		ConROWindow:Hide();
+		ConRONextWindow:Hide();
+		ConRONext2Window:Hide();
 	end
-	
+
 	if ConRO.db.profile.enableDefenseWindow and ConRO.db.profile.combatWindow and ConRO:TarHostile() then
-		ConRODefenseWindow:Show();			
+		ConRODefenseWindow:Show();
 	elseif ConRO.db.profile.enableDefenseWindow and not ConRO.db.profile.combatWindow then
-		ConRODefenseWindow:Show();			
+		ConRODefenseWindow:Show();
 	else
-		ConRODefenseWindow:Hide();			
+		ConRODefenseWindow:Hide();
 	end
 end
 
@@ -2231,7 +2311,7 @@ end
 
 function ConRO:PLAYER_TARGET_CHANGED()
 --	self:Print(self.Colors.Success .. 'Target Changed!');
-	
+
 	if self.rotationEnabled then
 		if (UnitIsFriend('player', 'target')) then
 			return;
@@ -2242,19 +2322,25 @@ function ConRO:PLAYER_TARGET_CHANGED()
 		end
 
 		if ConRO.db.profile.enableWindow and (ConRO.db.profile.combatWindow or ConRO:HealSpec()) and ConRO:TarHostile() then
-			ConROWindow:Show();	
+			ConROWindow:Show();
+			ConRONextWindow:Show();
+			ConRONext2Window:Show();
 		elseif ConRO.db.profile.enableWindow and not (ConRO.db.profile.combatWindow or ConRO:HealSpec()) then
-			ConROWindow:Show();		
+			ConROWindow:Show();
+			ConRONextWindow:Show();
+			ConRONext2Window:Show();
 		else
-			ConROWindow:Hide();			
+			ConROWindow:Hide();
+			ConRONextWindow:Hide();
+			ConRONext2Window:Hide();
 		end
-		
+
 		if ConRO.db.profile.enableDefenseWindow and ConRO.db.profile.combatWindow and ConRO:TarHostile() then
-			ConRODefenseWindow:Show();			
+			ConRODefenseWindow:Show();
 		elseif ConRO.db.profile.enableDefenseWindow and not ConRO.db.profile.combatWindow then
-			ConRODefenseWindow:Show();			
+			ConRODefenseWindow:Show();
 		else
-			ConRODefenseWindow:Hide();			
+			ConRODefenseWindow:Hide();
 		end
 	end
 end
@@ -2296,11 +2382,14 @@ function ConRO:InvokeNextSpell()
 	local oldSkill = self.Spell;
 
 	local timeShift, currentSpell, gcd = ConRO:EndCast();
-	
-	self.Spell = self:NextSpell(timeShift, currentSpell, gcd, self.PlayerTalents, self.PvPTalents);
+	local iterate = self:NextSpell(timeShift, currentSpell, gcd, self.PlayerTalents, self.PvPTalents);
+	self.Spell = self.SuggestedSpells[1];
+
 --	ConRO:UpdateRotation();
 --	ConRO:UpdateButtonGlow();
 	local spellName, _, spellTexture = GetSpellInfo(self.Spell);
+	local _, _, nextspellTexture = GetSpellInfo(self.SuggestedSpells[2]);
+	local _, _, next2spellTexture = GetSpellInfo(self.SuggestedSpells[3]);
 
 	if (oldSkill ~= self.Spell or oldSkill == nil) and self.Spell ~= nil then
 		self:GlowNextSpell(self.Spell);
@@ -2308,18 +2397,26 @@ function ConRO:InvokeNextSpell()
 		if spellName ~= nil then
 			ConROWindow.texture:SetTexture(spellTexture);
 			ConROWindow.font:SetText(spellName);
+			ConRONextWindow.texture:SetTexture(nextspellTexture);
+			ConRONext2Window.texture:SetTexture(next2spellTexture);
 		else
 			local itemName, _, _, _, _, _, _, _, _, itemTexture = GetItemInfo(self.Spell);
+			local _, _, _, _, _, _, _, _, _, nextitemTexture = GetItemInfo(self.Spell);
+			local _, _, _, _, _, _, _, _, _, next2itemTexture = GetItemInfo(self.Spell);
 			ConROWindow.texture:SetTexture(itemTexture);
 			ConROWindow.font:SetText(itemName);
+			ConRONextWindow.texture:SetTexture(nextitemTexture);
+			ConRONext2Window.texture:SetTexture(next2itemTexture);
 		end
 	end
-	
+
 	if self.Spell == nil and oldSkill ~= nil then
 		self:GlowClear();
 		ConROWindow.texture:SetTexture('Interface\\AddOns\\ConRO\\images\\Bigskull');
 		ConROWindow.font:SetText(" ");
 		ConROWindow.fontkey:SetText(" ");
+		ConRONextWindow.texture:SetTexture('Interface\\AddOns\\ConRO\\images\\Bigskull');
+		ConRONext2Window.texture:SetTexture('Interface\\AddOns\\ConRO\\images\\Bigskull');
 	end
 end
 
@@ -2327,11 +2424,13 @@ function ConRO:InvokeNextDef()
 	local oldSkill = self.Def;
 
 	local timeShift, currentSpell, gcd = ConRO:EndCast();
-	
-	self.Def = self:NextDef(timeShift, currentSpell, gcd, self.PlayerTalents, self.PvPTalents);
+
+	local iterateDef = self:NextDef(timeShift, currentSpell, gcd, self.PlayerTalents, self.PvPTalents);
+	self.Def = self.SuggestedDefSpells[1];
+
 	local spellName, _, spellTexture = GetSpellInfo(self.Def);
 	local color = ConRO.db.profile._Defense_Overlay_Color;
-	
+
 	if (oldSkill ~= self.Def or oldSkill == nil) and self.Def ~= nil then
 		self:GlowNextDef(self.Def);
 		ConRODefenseWindow.texture:SetVertexColor(1, 1, 1);
@@ -2342,10 +2441,10 @@ function ConRO:InvokeNextDef()
 		else
 			local itemName, _, _, _, _, _, _, _, _, itemTexture = GetItemInfo(self.Def);
 			ConRODefenseWindow.texture:SetTexture(itemTexture);
-			ConRODefenseWindow.font:SetText(itemName);	
+			ConRODefenseWindow.font:SetText(itemName);
 		end
 	end
-	
+
 	if self.Def == nil and oldSkill ~= nil then
 		self:GlowClearDef();
 		ConRODefenseWindow.texture:SetTexture('Interface\\AddOns\\ConRO\\images\\shield2');
@@ -2357,7 +2456,7 @@ end
 
 function ConRO:LoadModule()
 	local _, _, classId = UnitClass('player');
-	
+
 	if self.Classes[classId] == nil then
 		self:Print(self.Colors.Error, 'Invalid player class, please contact author of addon.');
 		return;
@@ -2365,10 +2464,10 @@ function ConRO:LoadModule()
 
 	local module = 'ConRO_' .. self.Classes[classId];
 	local _, _, _, loadable, reason = GetAddOnInfo(module);
-	
+
 	if IsAddOnLoaded(module) then
 		local mode = ConRO:CheckSpecialization();
-		
+
 		self:EnableRotationModule(mode);
 		self:EnableDefenseModule(mode);
 		return;
@@ -2398,11 +2497,11 @@ function ConRO:CheckSpecialization()
 			mode = 0;
 		end
 		if mode == nil then
-			mode = 0;		
+			mode = 0;
 		elseif mode >= 5 then
-			mode = 0;		
+			mode = 0;
 		end
-		
+
 	return mode;
 end
 
@@ -2420,13 +2519,15 @@ function ConRO:HealSpec()
 		[9] = 'Warlock',
 		[10] = 'Monk',
 		[11] = 'Druid',
-		[12] = 'DemonHunter',]]
-		
+		[12] = 'DemonHunter',
+		[13] = 'Evoker']]
+
 	if (classId == 2 and specId == 1) or
 	(classId == 5 and specId == 2) or
 	(classId == 7 and specId == 3) or
 	(classId == 10 and specId == 2) or
-	(classId == 11 and specId == 4)	then
+	(classId == 11 and specId == 4)	or
+	(classId == 13 and specId == 2) then
 		return true;
 	end
 	return false;
@@ -2447,7 +2548,7 @@ function ConRO:MeleeSpec()
 		[10] = 'Monk',
 		[11] = 'Druid',
 		[12] = 'DemonHunter',]]
-		
+
 	if classId == 1 or classId == 2 or (classId == 3 and specId == 3) or classId == 4 or classId == 6 or (classId == 7 and specId == 2) or classId == 10 or (classId == 11 and (specId == 2 or specId == 3)) or classId == 12 then
 		return true;
 	end

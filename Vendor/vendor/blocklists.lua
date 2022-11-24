@@ -2,8 +2,13 @@ local AddonName, Addon = ...
 local L = Addon:GetLocale()
 local ListType = Addon.ListType
 local SystemListId = Addon.SystemListId
-local customListDefintions = Addon.SavedVariable:new("CustomLists")
 local EMPTY = {}
+
+-- TODO: Clear result cache anytime any block list changes
+-- Since that can alter the result of one or more rules.
+-- Addon:ClearItemResultCache()
+-- Since block lists are part of the profile, we can simplify this further to...
+-- Anytime the active profile changes or the profile changes, clear the result cache.
 
 local function isValidListType(listType)
     return (listType == ListType.CUSTOM) or
@@ -33,13 +38,13 @@ local function mapListIdToListType(listId)
 end
 
 local function getListFromProfile(listType)
-    assert(isSystemListType(listType), "Only system lists are kept in the profile")
+
     local profile = Addon:GetProfileManager():GetProfile()
     return profile:GetList(listType)
 end
 
 local function commitListToProfile(listType, list)
-    assert(isSystemListType(listType), "Only system lists are kept in the profile")
+
     local profile = Addon:GetProfileManager():GetProfile()
     profile:SetList(listType, list or EMPTY)
 end
@@ -48,15 +53,15 @@ local function getExtensionList(listId)
 end
 
 local function getCustomList(listId)
-    assert(string.len(listId) ~= 0, "The list must have an ID")
+
     local listMgr = Addon:GetListManager()
     local items, exists =  listMgr:GetListContents(listId)
-    assert(exists)
+
     return items or EMPTY
 end
 
 local function commitCustomList(listId, list)
-    assert(string.len(listId) ~= 0, "The list must have an ID") 
+
     local listMgr = Addon:GetListManager()
     listMgr:UpdateListContents(listId, list)
 end
@@ -75,7 +80,7 @@ local function removeFromList(list, itemId)
 end
 
 local function addToList(list, itemId)
-    assert(type(list) == "table", "the list should already be defined")
+
     if (not list[itemId]) then
         list[itemId] = true
         return true
@@ -96,29 +101,34 @@ function BlockList:Create(_listType, _profile)
 end
 
 function BlockList:Add(itemId)
-    Addon:Debug("test", "BlockList:Add(%s, %s)", self, itemId)
+
     -- Validate ItemId
     if not C_Item.DoesItemExistByID(itemId) then
-        Addon:Debug("blocklists", "Invalid Item ID: %s", itemId)
+
         return false
     end
 
     local list = self.get()
     if (addToList(list, itemId)) then
-        Addon:Debug("blocklists", "Added %s to '%s' list [%s]", itemId, self.listType, self.listId);
+
         self.commit(list)
     end
 
+    -- Remove cached items with this id so they refresh.
+    Addon:ClearItemResultCacheByItemId(itemId)
     return false;
 end
 
 function BlockList:Remove(itemId)
     local list = self.get()
     if (removeFromList(list, itemId)) then
-        Addon:Debug("blocklists", "Removed %s from '%s' list [%s]", itemId, self.listType, self.listId)
+
         self.commit(list)
         return true
     end
+
+    -- Remove cached items with this id so they refresh.
+    Addon:ClearItemResultCacheByItemId(itemId)
     return false;
 end
 
@@ -156,7 +166,7 @@ function BlockList:GetId()
 end
 
 function BlockList:Clear()
-    Addon:Debug("blocklists", "Cleared list '%s' [%s]", self.listType, self.listId)
+
     self:commit(EMPTY)
 end
 
@@ -170,7 +180,7 @@ function BlockList:RemoveInvalid()
     end
     
     if (table.getn(prune)) then
-        Addon:Debug("blocklists", "Pruining %d invalid items from the list '%s' [%s]", table.getn(prune), self.listType, self.listId)
+
         for _, id in ipairs(prune) do
             list[id] = nil
         end
@@ -203,13 +213,13 @@ end
 function SystemBlockList:Add(itemId)
     -- Validate ItemId
     if not Addon:IsItemIdValid(itemId) then
-        Addon:Debug("blocklists", "Invalid Item ID: %s", tostring(itemId))
+
         return false
     end
 
     local list = self.get()
     if (addToList(list, itemId)) then
-        Addon:Debug("blocklists", "Added %d to '%s' list [%s]", itemId, self.listType, self.listId);
+
         self.commit(list)
     end
 
@@ -221,7 +231,7 @@ function SystemBlockList:Add(itemId)
 end
 
 --[[static]] function SystemBlockList:New(listType)
-    assert(isSystemListType(listType), "The list type must be a system list")
+
 
     -- Determine the list id
     if (listType == ListType.SELL) then
@@ -245,7 +255,7 @@ end
         end,
     }
 
-    return Addon.object("SystemBlockList", instance, table.merge(BlockList, SystemBlockList))
+    return Addon.object("SystemBlockList", instance, Addon.TableMerge(BlockList, SystemBlockList))
 end
 
 local CustomBlockList = {}
@@ -255,8 +265,8 @@ function CustomBlockList:GetName()
 end
 
 --[[static]] function CustomBlockList:New(id, name)
-    assert(string.len(id) ~= 0, "A custom block list must have a name")
-    assert(string.len(name) ~= 0, "A custom block list must have a name")
+
+
 
     local instance = 
     {
@@ -271,7 +281,7 @@ end
         end
     }
 
-    return Addon.object("CustomBlockList", instance, table.merge(BlockList, CustomBlockList))
+    return Addon.object("CustomBlockList", instance, Addon.TableMerge(BlockList, CustomBlockList))
 end
 
 local ExtensionList = {}
@@ -313,11 +323,11 @@ end
             end
         end,
         commit = function()
-            assert(false, "Extension lists are read-only and should never be modified.")
+
         end
     }
 
-    return Addon.object("ExtensionList", instance, table.merge(BlockList, ExtensionList))
+    return Addon.object("ExtensionList", instance, Addon.TableMerge(BlockList, ExtensionList))
 end
 
 
@@ -331,26 +341,36 @@ function Addon:ToggleItemInBlocklist(list, item)
     local id = self:GetItemIdFromString(item)
     if not id then return nil end
 
-    -- Get existing blocklist id
-    local existinglist = Addon:GetBlocklistForItem(id)
+    local systemLists = Addon:GetSystemLists()
+
+    -- Find the list the item is in
+    local existingList
+    for listId, list in pairs(systemLists) do
+        if (list:Contains(id)) then
+            existingList = listId
+            break
+        end
+    end
 
     -- Check if the list is Sell and the item is Unsellable
     -- If so, change the list type to Destroy
-    if list == Addon.ListType.SELL then
+    if list == Addon.SystemListId.ALWAYS then
         local isUnsellable = select(11, GetItemInfo(id)) == 0
         if isUnsellable then
             self:Print(L.CMD_LISTTOGGLE_UNSELLABLE, link)
-            list = Addon.ListType.DESTROY
+            list = Addon.SystemListId.DESTROY
         end
     end
 
     -- Add it to the specified list.
     -- If it already existed, remove it from that list.
-    if list == existinglist then
-        Addon:GetList(list):Remove(id)
+    if existingList and list == existingList then
+        systemLists[list]:Remove(id)
+        Addon:ClearItemResultCacheByItemId(id)
         return 2
     else
-        Addon:GetList(list):Add(id)
+        systemLists[list]:Add(id)
+        Addon:ClearItemResultCacheByItemId(id)
         return 1
     end
 end
@@ -402,14 +422,15 @@ end
 function Addon:ClearBlocklist(list)
     if (isSystemListType(list)) then
         SystemBlockList:New(listType):Clear()
-        self:ClearTooltipResultCache()
+        -- Clear the entire cache in this case.
+        Addon:ClearItemResultCache()
         return
     end
 
     error(string.format("There is not '%s' list", list));
 end
 
--- Retrieve the specified list
+--[[
 function Addon:GetList(listType)
     -- Check for system list
     if (isSystemListType(listType)) then
@@ -442,14 +463,14 @@ function Addon:GetList(listType)
         end
     end
 
-    Addon:Debug("lists", "There is no '%s' list", listType or "");
+
     return nil
 end
 
 function Addon:RemoveInvalidEntriesFromBlocklist(listType)
     local list = self:GetList(listType)
     list:RemoveInvalid()
-end
+en]]
 
 function Addon:RemoveInvalidEntriesFromAllBlocklists()
     self:RemoveInvalidEntriesFromBlocklist(ListType.SELL)

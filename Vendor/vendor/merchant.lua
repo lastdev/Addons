@@ -1,6 +1,7 @@
 -- Merchant event handling.
 local AddonName, Addon = ...
 local L = Addon:GetLocale()
+local debugp = function (...) Addon:Debug("autosell", ...) end
 
 local threadName = Addon.c_ItemSellerThreadName
 local AUTO_SELL_START = Addon.Events.AUTO_SELL_START
@@ -12,7 +13,7 @@ local isAutoSelling = false
 
 -- When the merchant window is opened, we will attempt to auto repair and sell.
 function Addon:OnMerchantShow()
-    self:Debug("autosell", "Merchant opened.")
+
     isMerchantOpen = true
     local profile = self:GetProfile();
 
@@ -28,7 +29,7 @@ function Addon:OnMerchantShow()
 end
 
 function Addon:OnMerchantClosed()
-    self:Debug("autosell", "Merchant closed.")
+
     isMerchantOpen = false
 end
 
@@ -71,11 +72,10 @@ local function setIsAutoSelling(isSelling, limit)
     if (isSelling ~= isAutoSelling) then
         isAutoSelling = isSelling
         if (isAutoSelling) then
-            Addon:Debug("autosell", "firing starting event")
+
             Addon:RaiseEvent(AUTO_SELL_START, limit)
         else
-            Addon:Debug("autosell", "firing ending event")
-            Addon:ClearResultCache()
+
             Addon:RaiseEvent(AUTO_SELL_COMPLETE)
         end
     end
@@ -111,7 +111,7 @@ function Addon:AutoSell()
         local profile = Addon:GetProfile();
         local sellLimitEnabled = profile:GetValue(Addon.c_Config_SellLimit)
         local sellLimitMaxItems = Addon.c_BuybackLimit
-        local sellThrottle = profile:GetValue(Addon.c_Config_SellThrottle)
+        local sellThrottle = profile:GetValue(Addon.c_Config_SellThrottle) or 1
 
         if (sellLimitEnabled) then
             setIsAutoSelling(true, sellLimitMaxItems)
@@ -121,15 +121,15 @@ function Addon:AutoSell()
 
         -- If this merchant has no items it is not a sellable merchant (such as an autohammer), so terminate.
         if not Addon:CanSellAtMerchant() then
-            Addon:Debug("autosell", "Cannot sell at merchant, aborting autosell.")
+
             setIsAutoSelling(false)
             return
         end
 
         -- Loop through every bag slot once.
-        for bag=0, NUM_BAG_SLOTS do
-            for slot=1, GetContainerNumSlots(bag) do                
 
+        for bag=0, NUM_TOTAL_EQUIPPED_BAG_SLOTS do
+            for slot=1, C_Container.GetContainerNumSlots(bag) do                
 
                 -- If the cursor is holding anything then we cant' sell. Yield and check again next cycle.
                 -- We must do this before we get the item info, since the user may have changed what item is in this slot.
@@ -141,18 +141,18 @@ function Addon:AutoSell()
                         return
                     end
 
-                    self:Debug("autosell", "Cursor is holding something; waiting to sell..")
+
                     coroutine.yield()
                 end
 
-                -- Get Item properties and evaluate
-                local item, itemCount = Addon:GetItemPropertiesFromBag(bag, slot)                
-                local result, ruleid, rule = Addon:EvaluateItem(item)
+                -- Refresh and get the data entry for this slot.
+                local _, entry =  xpcall(Addon.GetItemResultForBagAndSlot, CallErrorHandler, Addon, bag, slot, true)
 
                 -- Determine if it is to be sold
                 -- Result of 0 is no action, 1 is sell, 2 is delete.
                 -- We will attempt to sell to-delete items if they are sellable.
-                if result >= 1 and not item.IsUnsellable then
+                if entry and entry.Result.Action ~= Addon.ActionType.NONE and not entry.Item.IsUnsellable then
+
                     -- UseContainerItem is really just a limited auto-right click, and it will equip/use the item if we are not in a merchant window!
                     -- So before we do this, make sure the Merchant frame is still open. If not, terminate the coroutine.
                     if not self:IsMerchantOpen() then
@@ -163,21 +163,21 @@ function Addon:AutoSell()
 
                     -- Still open, so OK to sell it.
                     if not Addon.IsDebug or not Addon:GetDebugSetting("simulate") then
-                        UseContainerItem(bag, slot)
-                        Addon:RaiseEvent(AUTO_SELL_ITEM, item.Link, numSold, sellLimitMaxItems)
+                        C_Container.UseContainerItem(bag, slot)
+                        Addon:RaiseEvent(AUTO_SELL_ITEM, entry.Item.Link, numSold, sellLimitMaxItems)
                     else
                         self:Print("Simulating selling of: %s", tostring(item.Link))
-                        Addon:RaiseEvent(AUTO_SELL_ITEM, item.Link, numSold, sellLimitMaxItems)
+                        Addon:RaiseEvent(AUTO_SELL_ITEM, entry.Item.Link, numSold, sellLimitMaxItems)
                     end
 
                     -- Record sell data
-                    local netValue = item.UnitValue * itemCount
-                    self:Print(L["MERCHANT_SELLING_ITEM"], tostring(item.Link), self:GetPriceString(netValue), tostring(rule))
+                    local netValue = entry.Item.TotalValue
+                    self:Print(L["MERCHANT_SELLING_ITEM"], tostring(entry.Item.Link), self:GetPriceString(netValue), tostring(entry.Result.Rule))
                     numSold = numSold + 1
                     totalValue = totalValue + netValue
 
                     -- Add to history
-                    Addon:AddEntryToHistory(item.Link, Addon.ActionType.SELL, rule, ruleid, itemCount, netValue)
+                    Addon:AddEntryToHistory(entry.Item.Link, Addon.ActionType.SELL, entry.Result.Rule, entry.Result.RuleID, entry.Item.Count, netValue)
 
                     -- Check for sell limit
                     if sellLimitEnabled and sellLimitMaxItems <= numSold then

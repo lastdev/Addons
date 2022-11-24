@@ -1,6 +1,12 @@
 local addonName, addon = ...
 
+local L = addon.PrimalStorms.L
+
 local Elements, ZoneEncounters
+
+local GetMapName = addon.PrimalStorms.Names.GetMapName
+local GetItemName = addon.PrimalStorms.Names.GetItemName
+local deferredEnableMouse = { }
 
 local FORMAT_GT_1HOUR = (HOUR_ONELETTER_ABBR .. MINUTE_ONELETTER_ABBR):gsub("%s+", "")
 local FORMAT_GT_1MIN =  MINUTE_ONELETTER_ABBR:gsub("%s+", "")
@@ -22,13 +28,17 @@ end
 function addon.PrimalStorms.CreateUI()
 	Elements = addon.PrimalStorms.Elements
 	ZoneEncounters = addon.PrimalStorms.ZoneEncounters
-	local ENCOUNTER_NONE = { element = { label = "None" }}
-	local interval, timeSinceLastUpdate = 1, 0
+	local ENCOUNTER_NONE = { element = { label = L["None"] }}
+	local interval, timeSinceLastUpdate = 1, 1
 	local dataRefreshInterval, timeSinceLastDataRefresh = 30, 0
 	local isDirty = true
 	local function OnUpdate(self, elapsed)
 		timeSinceLastDataRefresh = timeSinceLastDataRefresh + elapsed
 		if (isDirty or timeSinceLastDataRefresh > dataRefreshInterval) then
+			if (UnitLevel("player") >= 60) then
+				local _, _, classIndex = UnitClass("player")
+				TomCats_Account.primalstorms.preferences.eligibleClasses[classIndex] = true
+			end
 			initialized = true
 			timeSinceLastDataRefresh = 0
 			isDirty = nil
@@ -58,11 +68,37 @@ function addon.PrimalStorms.CreateUI()
 					zone.encounter = ENCOUNTER_NONE
 				end
 			end
+			local playerName = UnitName("player")
+			local realmName = GetRealmName()
+			local currencyAmount = GetItemCount(199211, true)
+			local playerKey = ("%s-%s"):format(playerName, realmName)
+			TomCats_Account.primalstorms.preferences.currency[playerKey] = currencyAmount
+			local totalAmount = 0
+			for _, amount in pairs(TomCats_Account.primalstorms.preferences.currency) do
+				totalAmount = totalAmount + amount
+			end
+			self.currency:SetText(("%d (%d)"):format(currencyAmount, totalAmount))
+			TomCats_Account.primalstorms.preferences.dimmedItems[playerKey] = TomCats_Account.primalstorms.preferences.dimmedItems[playerKey] or { }
+			for k, v in pairs(addon.PrimalStorms.Elements) do
+				local dimmedAmount = GetItemCount(v.dimmedItem, true)
+				if (dimmedAmount > 0) then
+					TomCats_Account.primalstorms.preferences.dimmedItems[playerKey][k] = dimmedAmount
+				else
+					TomCats_Account.primalstorms.preferences.dimmedItems[playerKey][k] = 0
+				end
+			end
+			if (#deferredEnableMouse > 0) then
+				for _, v in ipairs(deferredEnableMouse) do
+					v:EnableMouse(true)
+				end
+				deferredEnableMouse = { }
+			end
 		end
 		timeSinceLastUpdate = timeSinceLastUpdate + elapsed
-		if (timeSinceLastUpdate > interval) then
+		if (timeSinceLastUpdate >= interval) then
 			timeSinceLastUpdate = 0
 			local now = GetServerTime()
+			local maxZoneNameSize = 0
 			for idx, zone in ipairs(ZoneEncounters) do
 				local timeRemaining
 				if (zone.ends and zone.ends - now > 0 ) then
@@ -72,14 +108,19 @@ function addon.PrimalStorms.CreateUI()
 				for elementType, icon in pairs(encounter.icons) do
 					icon:SetShown(elementType == zone.encounter.element.label)
 				end
+				encounter.zone = zone
+				encounter.zoneName:SetText(GetMapName(zone.mapID))
+				maxZoneNameSize = math.max(maxZoneNameSize, encounter.zoneName:GetStringWidth())
 				encounter.timeRemaining:SetText(timeRemaining or "---")
 				encounter.timeRemaining:Show()
 				encounter.zoneName:SetAlpha(timeRemaining and 1.0 or 0.5)
 				encounter.timeRemaining:SetAlpha(timeRemaining and 1.0 or 0.5)
 			end
+			maxZoneNameSize = math.max(maxZoneNameSize, self.collectionsTitle:GetStringWidth() + 50)
+			self:SetWidth(maxZoneNameSize + 145)
 		end
 	end
-	local function OnEvent()
+	local function OnEvent(_, event)
 		isDirty = true
 	end
 	local BACKDROP_GLUE_TOOLTIP_16_16 = {
@@ -130,7 +171,7 @@ function addon.PrimalStorms.CreateUI()
 		local encounter = frame.encounters[idx]
 		encounter.zoneName = frame:CreateFontString(nil, "ARTWORK", "GameFontWhite")
 		encounter.zoneName:SetJustifyH("LEFT")
-		encounter.zoneName:SetText(zone.name)
+		encounter.zoneName:SetText(GetMapName(zone.mapID))
 		encounter.zoneName:SetAlpha(0.5)
 		maxZoneNameSize = math.max(maxZoneNameSize, encounter.zoneName:GetStringWidth())
 		if (idx == 1) then
@@ -147,25 +188,256 @@ function addon.PrimalStorms.CreateUI()
 		encounter.timeRemaining:SetPoint("RIGHT", frame, "RIGHT", -14, 0)
 		encounter.timeRemaining:SetAlpha(0.5)
 		encounter.icons = { }
+		table.insert(deferredEnableMouse, encounter.zoneName)
+		encounter.zoneName:SetScript("OnEnter", function(self)
+			GameTooltip:ClearLines()
+			GameTooltip:SetOwner(self, "ANCHOR_LEFT")
+			GameTooltip:SetText(("%s:"):format(encounter.zoneName:GetText()), 1, 1, 1)
+			GameTooltip:AddLine(("%s"):format(encounter.zone.encounter.element.label))
+			if (encounter.zone.mapID == 18 and encounter.zone.encounter.element.label == L["None"]) then
+				GameTooltip:AddLine(" ")
+				GameTooltip:AddLine("We don't know if Tirisfal Glades will ever become active for the Primal Storms, but will continue to watch for it just in case!", 1, 1, 1, true)
+			end
+			GameTooltip:Show()
+		end)
+		encounter.zoneName:SetScript("OnLeave", function(self)
+			GameTooltip:Hide()
+		end)
+
 		for _, v in pairs(Elements) do
 			encounter.icons[v.label] = frame:CreateTexture(nil, "ARTWORK")
 			encounter.icons[v.label]:SetSize(16, 16)
 			encounter.icons[v.label]:SetAtlas(v.icon)
 			encounter.icons[v.label]:SetPoint("RIGHT", encounter.zoneName, "LEFT", -2, 0)
 			encounter.icons[v.label]:Hide()
+			encounter.icons[v.label]:SetScript("OnEnter", encounter.zoneName:GetScript("OnEnter"))
+			encounter.icons[v.label]:SetScript("OnLeave", encounter.zoneName:GetScript("OnLeave"))
+			table.insert(deferredEnableMouse, encounter.icons[v.label])
 		end
+		encounter.timeRemaining:SetScript("OnEnter", encounter.zoneName:GetScript("OnEnter"))
+		encounter.timeRemaining:SetScript("OnLeave", encounter.zoneName:GetScript("OnLeave"))
+		table.insert(deferredEnableMouse, encounter.timeRemaining)
 	end
-	frame.topEdge = frame:CreateTexture(nil, "BACKGROUND")
-	frame.topEdge:SetDrawLayer("BACKGROUND", 2)
-	frame.topEdge:SetColorTexture(0.25,0.25,0.25,1)
-	frame.topEdge:SetHeight(18)
-	frame.topEdge:SetPoint("TOPLEFT", frame, "TOPLEFT", 10, -5)
-	frame.topEdge:SetPoint("RIGHT", frame, "RIGHT", -5, 0)
-	frame.topEdge:SetAlpha(0.8)
-	frame.topEdge:Show()
+	frame.headerBar = frame:CreateTexture(nil, "BACKGROUND")
+	frame.headerBar:SetDrawLayer("BACKGROUND", 2)
+	frame.headerBar:SetColorTexture(0.25,0.25,0.25,1)
+	frame.headerBar:SetHeight(18)
+	frame.headerBar:SetPoint("TOPLEFT", frame, "TOPLEFT", 10, -5)
+	frame.headerBar:SetPoint("RIGHT", frame, "RIGHT", -5, 0)
+	frame.headerBar:SetAlpha(0.8)
+	frame.headerBar:Show()
+	frame.footerBar = frame:CreateTexture(nil, "BACKGROUND")
+	frame.footerBar:SetDrawLayer("BACKGROUND", 2)
+	frame.footerBar:SetColorTexture(0.25,0.25,0.25,1)
+	frame.footerBar:SetHeight(17)
+	frame.footerBar:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 10, 10)
+	frame.footerBar:SetPoint("RIGHT", frame, "RIGHT", -5, 0)
+	frame.footerBar:SetAlpha(0.3)
+	frame.footerBar:Show()
+	frame.currencyIcon = frame:CreateTexture(nil, "ARTWORK")
+	frame.currencyIcon:SetSize(16, 16)
+	frame.currencyIcon:SetTexture("Interface/icons/inv_enchant_essencecosmicgreater")
+	frame.currencyIcon:SetPoint("LEFT", frame.footerBar, "LEFT", 2, 0)
+	local currencyMask = frame:CreateMaskTexture()
+	currencyMask:SetSize(14, 14)
+	currencyMask:SetTexture("Interface/Masks/CircleMask","CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
+	currencyMask:SetPoint("CENTER", frame.currencyIcon, "CENTER", 0, 0)
+	frame.currencyIcon:AddMaskTexture(currencyMask)
+	frame.currencyIcon:Show()
+	frame.currency = frame:CreateFontString(nil, "ARTWORK", "GameFontWhite")
+	frame.currency:SetJustifyH("LEFT")
+	frame.currency:SetText("---")
+	frame.currency:SetPoint("LEFT", frame.footerBar, "LEFT", 20, 0)
+	table.insert(deferredEnableMouse, frame.currency)
+	frame.currency:SetScript("OnEnter", function(self)
+		GameTooltip:ClearLines()
+		GameTooltip:SetOwner(self, "ANCHOR_LEFT")
+		GameTooltip:SetText(GetItemName(199211) .. ":", 1, 1, 1)
+
+		local playerName = UnitName("player")
+		local realmName = GetRealmName()
+		local currencyAmount = GetItemCount(199211, true)
+		local playerKey = ("%s-%s"):format(playerName, realmName)
+		GameTooltip:AddLine(" ")
+		GameTooltip:AddLine(L["Current Character"] .. ":",1,1,1)
+		GameTooltip:AddLine(("%s: %d"):format(playerKey, currencyAmount))
+		local owners = { }
+		for player, amount in pairs(TomCats_Account.primalstorms.preferences.currency) do
+			if (player ~= playerKey) then
+				table.insert(owners, { player, amount })
+			end
+		end
+		table.sort(owners, function(a, b) return a[2] > b[2] end)
+		if (#owners > 0) then
+			GameTooltip:AddLine(" ")
+			GameTooltip:AddLine(L["Other Characters"] .. ":",1,1,1)
+		end
+		for i = 1, math.min(#owners, 9) do
+			GameTooltip:AddLine(("%s: %d"):format(owners[i][1], owners[i][2]))
+		end
+		if (#owners > 9) then
+			GameTooltip:AddLine(("... %d %s"):format(#owners - 9, L["more"]))
+		end
+		GameTooltip:Show()
+	end)
+	frame.currency:SetScript("OnLeave", function(self)
+		GameTooltip:Hide()
+	end)
+	table.insert(deferredEnableMouse, frame.currencyIcon)
+	frame.currencyIcon:SetScript("OnEnter", frame.currency:GetScript("OnEnter"))
+	frame.currencyIcon:SetScript("OnLeave", frame.currency:GetScript("OnLeave"))
+
+	frame.trinketIcon = frame:CreateTexture(nil, "ARTWORK")
+	table.insert(deferredEnableMouse, frame.trinketIcon)
+	frame.trinketIcon:SetSize(16, 16)
+	frame.trinketIcon:SetTexture("Interface/Icons/inv_misc_enggizmos_19")
+	frame.trinketIcon:SetPoint("RIGHT", frame.footerBar, "RIGHT", -2, 0)
+	local trinketMask = frame:CreateMaskTexture()
+	trinketMask:SetSize(14, 14)
+	trinketMask:SetTexture("Interface/Masks/CircleMask","CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
+	trinketMask:SetPoint("CENTER", frame.trinketIcon, "CENTER", 0, 0)
+	frame.trinketIcon:AddMaskTexture(trinketMask)
+	frame.trinketIcon:Show()
+	frame.trinketIcon:SetScript("OnEnter", function(self)
+		GameTooltip:ClearLines()
+		GameTooltip:SetOwner(self, "ANCHOR_LEFT")
+		GameTooltip:SetText(("|TInterface/icons/inv_10_enchanting2_elementalswirl_color1:16:16|t %s:"):format(GetItemName(199686)), 1, 1, 1)
+		if (C_Heirloom.PlayerHasHeirloom(199686)) then
+			GameTooltip:AddLine("You have this")
+		else
+			GameTooltip:AddLine(" ")
+			GameTooltip:AddLine(L["Unstable Elemental Confluence Source"],1,1,1,true)
+			GameTooltip:AddLine(" ")
+			local playerName = UnitName("player")
+			local realmName = GetRealmName()
+			local playerKey = ("%s-%s"):format(playerName, realmName)
+			for elementKey, element in pairs(addon.PrimalStorms.Elements) do
+				GameTooltip:AddLine(" ")
+				GameTooltip:AddLine(("|T%s:16:16|t %s:"):format(element.dimmedIcon, GetItemName(element.dimmedItem)), 1, 1, 1)
+				local owned = false
+				local ownedBy = { }
+				for player, dimmedItems_ in pairs(TomCats_Account.primalstorms.preferences.dimmedItems) do
+					if (not owned) then
+						owned = (dimmedItems_[elementKey] and dimmedItems_[elementKey] > 0)
+						if (owned) then
+							GameTooltip:AddLine(L["Owned by"] .. ":",1,1,1)
+						end
+					end
+					if (dimmedItems_[elementKey] and dimmedItems_[elementKey] > 0) then
+						if (player == playerKey) then
+							table.insert(ownedBy, 1, player)
+						else
+							table.insert(ownedBy, player)
+						end
+					end
+				end
+				for i = 1, math.min(#ownedBy, 10) do
+					GameTooltip:AddLine(ownedBy[i])
+				end
+				if (#ownedBy > 10) then
+					GameTooltip:AddLine(("... %d %s"):format(#ownedBy - 10, L["more"]))
+				end
+				if (not owned) then
+					GameTooltip:AddLine(L["You don't own any"])
+				end
+			end
+		end
+		GameTooltip:Show()
+	end)
+	frame.trinketIcon:SetScript("OnLeave", function(self)
+		GameTooltip:Hide()
+	end)
+
+	frame.battlePetIcon = frame:CreateTexture(nil, "ARTWORK")
+	table.insert(deferredEnableMouse, frame.battlePetIcon)
+	frame.battlePetIcon:SetSize(16, 16)
+	frame.battlePetIcon:SetAtlas("WildBattlePetCapturable")
+	frame.battlePetIcon:SetPoint("RIGHT", frame.trinketIcon, "LEFT", -4, 0)
+	frame.battlePetIcon:Show()
+	frame.battlePetIcon:SetScript("OnEnter", function(self)
+		EmbeddedItemTooltip:SetOwner(self, "ANCHOR_CURSOR_RIGHT", 30, 30)
+		EmbeddedItemTooltip:SetItemByID(199109)
+		EmbeddedItemTooltip:Show()
+	end)
+	frame.battlePetIcon:SetScript("OnLeave", function(self)
+		EmbeddedItemTooltip:Hide()
+	end)
+
+	frame.toyIcon = frame:CreateTexture(nil, "ARTWORK")
+	table.insert(deferredEnableMouse, frame.toyIcon)
+	frame.toyIcon:SetSize(16, 16)
+	frame.toyIcon:SetTexture(237429)
+	frame.toyIcon:SetPoint("RIGHT", frame.battlePetIcon, "LEFT", -4, 0)
+	local toyMask = frame:CreateMaskTexture()
+	toyMask:SetSize(14, 14)
+	toyMask:SetTexture("Interface/Masks/CircleMask","CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
+	toyMask:SetPoint("CENTER", frame.toyIcon, "CENTER", 0, 0)
+	frame.toyIcon:AddMaskTexture(toyMask)
+	frame.toyIcon:Show()
+	frame.toyIcon:SetScript("OnEnter", function(self)
+		EmbeddedItemTooltip:SetOwner(self, "ANCHOR_CURSOR_RIGHT", 30, 30)
+		EmbeddedItemTooltip:SetItemByID(199337)
+		EmbeddedItemTooltip:Show()
+	end)
+	frame.toyIcon:SetScript("OnLeave", function(self)
+		EmbeddedItemTooltip:Hide()
+	end)
+
+	frame.transmogIcon = frame:CreateTexture(nil, "ARTWORK")
+	table.insert(deferredEnableMouse, frame.transmogIcon)
+	frame.transmogIcon:SetSize(16, 16)
+	frame.transmogIcon:SetTexture("Interface/Icons/inv_chest_cloth_17")
+	frame.transmogIcon:SetPoint("RIGHT", frame.toyIcon, "LEFT", -4, 0)
+	local transmogMask = frame:CreateMaskTexture()
+	transmogMask:SetSize(14, 14)
+	transmogMask:SetTexture("Interface/Masks/CircleMask","CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
+	transmogMask:SetPoint("CENTER", frame.transmogIcon, "CENTER", 0, 0)
+	frame.transmogIcon:AddMaskTexture(transmogMask)
+	frame.transmogIcon:Show()
+	frame.transmogIcon:SetScript("OnEnter", function(self)
+		GameTooltip:SetOwner(self, "ANCHOR_CURSOR_RIGHT", 30, 30)
+		local appearances = { }
+		for i = 1, 13 do
+			local className, classType = GetClassInfo(i)
+			appearances[classType] = { className, 0, 0 }
+		end
+		local acquired = 0
+		local costToComplete = 0
+		for _, transmogItem in ipairs(addon.PrimalStorms.TransmogItems) do
+			local hasTransmog = addon.PrimalStorms.PlayerHasTransmog(transmogItem[1])
+			if (hasTransmog) then
+				acquired = acquired + 1
+			else
+				costToComplete = costToComplete + transmogItem[3]
+			end
+			for classType, appearance in pairs(appearances) do
+				if (addon.PrimalStorms.PlayerClassItemTypes[classType][transmogItem[2]]) then
+					if (hasTransmog) then appearance[2] = appearance[2] + 1 end
+					appearance[3] = appearance[3] + 1
+				end
+			end
+		end
+		GameTooltip:SetText(("%s: %d/%d"):format(WARDROBE, acquired, #addon.PrimalStorms.TransmogItems), 1, 1, 1)
+		GameTooltip:AddLine(("%s: %d |TInterface/icons/Inv_enchant_essencecosmicgreater:12:12:0:-1:64:64:4:60:4:60|t"):format(L["Cost to complete"], costToComplete))
+		GameTooltip:AddLine(" ")
+		for classType, appearance in pairs(appearances) do
+			GameTooltip:AddLine(("|c%s%s|r: %d/%d"):format(RAID_CLASS_COLORS[classType].colorStr, unpack(appearance)))
+		end
+		GameTooltip:Show()
+	end)
+	frame.transmogIcon:SetScript("OnLeave", function(self)
+		GameTooltip:Hide()
+	end)
+
+	frame.collectionsTitle = frame:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+	frame.collectionsTitle:SetText(("%s:"):format(COLLECTIONS))
+	frame.collectionsTitle:SetPoint("RIGHT", frame.transmogIcon, "LEFT", -4, 0)
+
+	maxZoneNameSize = math.max(maxZoneNameSize, frame.collectionsTitle:GetStringWidth())
+
 	frame.title = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 	frame.title:SetPoint("TOP", frame, "TOP", 0, -8)
-	frame.title:SetText("Primal Storms")
+	frame.title:SetText(L["Primal Storms"])
 	frame.icon = CreateFrame("Frame", nil, frame)
 	frame.icon:SetSize(32, 32)
 	frame.icon:SetPoint("TOPLEFT", frame, "TOPLEFT", -1, 3)
@@ -179,17 +451,20 @@ function addon.PrimalStorms.CreateUI()
 	frame.icon.logo:SetDrawLayer("ARTWORK", 2)
 	frame.icon.logo:SetTexture("Interface/AddOns/TomCats/images/tomcats_logo")
 	frame.icon.logo:SetSize(20, 20)
-	frame.icon.logo:SetPoint("TOPLEFT", 6, -6)
+	frame.icon.logo:SetPoint("TOPLEFT", 7, -6)
 	frame.icon.logo:Show()
 	frame.icon.Border = frame.icon:CreateTexture(nil, "OVERLAY")
 	frame.icon.Border:SetSize(54, 54)
 	frame.icon.Border:SetTexture("Interface/Minimap/MiniMap-TrackingBorder")
 	frame.icon.Border:SetPoint("TOPLEFT")
 	frame.icon.Border:SetDesaturated(1)
-	frame:SetSize(maxZoneNameSize + 110, frameHeight + 22 + 20)
+	frame:SetSize(maxZoneNameSize + 145, frameHeight + 42 + 20)
 	frame:SetShown(TomCats_Account.primalstorms.preferences.enabled ~= false)
 	frame:RegisterEvent("AREA_POIS_UPDATED")
 	frame:RegisterEvent("BAG_UPDATE")
+	frame:RegisterEvent("PLAYER_LEVEL_UP")
+	frame:RegisterEvent("HEIRLOOMS_UPDATED");
+	frame:RegisterEvent("HEIRLOOM_UPGRADE_TARGETING_CHANGED");
 	-- event for learning or unlearning transmog
 	-- event for when a toy is learned / collection updated?
 	-- event for when adding an heirloom

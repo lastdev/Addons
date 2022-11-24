@@ -1,0 +1,12 @@
+## Interface: 11403
+## Title: idTip_CommunityFork
+## Version: 11.0.29
+## Notes: Adds IDs to the ingame tooltips
+## Author: silverwind, ItsJustMeChris
+## SavedVariables: IDTIP_CONFIG
+libs/LibStub.lua
+core/shared.lua
+core/settings.lua
+core/helpers.lua
+clients/shared.lua
+clients/classic.lua

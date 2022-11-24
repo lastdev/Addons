@@ -3,7 +3,7 @@
 if not L then return end
 
 L["TAB_SUMMARY"] = "Zusammenfassung"
-L["TAB_CHARACTERS"] = "Charaktäre"
+L["TAB_CHARACTERS"] = "Charaktere"
 L["TAB_AGENDA"] = "Agenda"
 L["TAB_GRIDS"] = "Gitter"
  

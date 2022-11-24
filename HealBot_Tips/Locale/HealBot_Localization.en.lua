@@ -211,6 +211,7 @@ function HealBot_Lang_Options_enALL()
                                  ["HEALBARSVISALERTIC"]=HEALBOT_OPTIONS_INCOMBATALERTLEVEL,
                                  ["HEALBARSVISALERTOC"]=HEALBOT_OPTIONS_OUTCOMBATALERTLEVEL,
                                  ["HEALBARSVISVEHICLEIC"]=HEALBOT_VEHICLE.." "..HEALBOT_OPTIONS_ENTERINGCOMBAT,
+                                 ["HEALBARSVISPLISTPETSIC"]=HEALBOT_OPTIONS_MYTARGET.." "..HEALBOT_OPTIONS_PETHEALS.." "..HEALBOT_OPTIONS_ENTERINGCOMBAT,
                                  ["HEALBARSVISHIDE100"]=HEALBOT_HIDE_BARS,
                                  ["HEALBARSVISTARGETIC"]=HEALBOT_DISABLED_TARGET.." "..HEALBOT_OPTIONS_ENTERINGCOMBAT,
                                  ["HEALBARSVISFOCUSIC"]=HEALBOT_FOCUS.." "..HEALBOT_OPTIONS_ENTERINGCOMBAT,
@@ -320,6 +321,7 @@ function HealBot_Lang_Options_enALL()
                                  ["HEALBARSAGGROTEXTCOLALPHA"]=HEALBOT_OPTIONS_BARALPHA,
                                  ["HEALBARSAGGROTEXTDISCOLALPHA"]=HEALBOT_OPTIONS_BARALPHADIS,
                                  ["HEALBARSTXTSHOWHEALTH"]=HEALBOT_OPTIONS_SHOWHEALTHONBAR,
+                                 ["HEALBARSTXTINCPTC"]=HEALBOT_OPTIONS_HEALTHINCPERCENT,
                                  ["HEALBARSTXTHEALTHICOPTION"]="Incoming Heals Options",
                                  ["HEALBARSTXTHEALTHICAOPTION"]="Incoming "..HEALBOT_classicABSORBHOT.."s Options",
                                  ["HEALBARSTXTHEALTHSOHEALS"]="Overhealing Options",
@@ -393,6 +395,7 @@ function HealBot_Lang_Options_enALL()
                                  ["ICONSHOWCOMBAT"]=HEALBOT_OPTIONS_SHOWCOMBATSTATE,
                                  ["ICONSHOWHOSTILE"]=HEALBOT_OPTIONS_SHOWHOSTILE,
                                  ["ICONSHOWLEADER"]=HEALBOT_OPTIONS_SHOWLEADER,
+                                 ["ICONSHOWAFK"]=HEALBOT_OPTIONS_SHOWAFK,
                                  ["ICONSHOWRESTING"]=HEALBOT_OPTIONS_SHOWRESTING,
                                  ["ICONSHOWCLASS"]=HEALBOT_OPTIONS_SHOWCLASSICON,
                                  ["ICONSHOWRT"]=HEALBOT_OPTIONS_BARBUTTONSHOWRAIDICON,
@@ -498,7 +501,7 @@ function HealBot_Lang_Options_enALL()
                                  ["BUFFSTIMER"]=HEALBOT_OPTIONS_BUFFSTEXTTIMER,
                         -- Buffs Custom tab
                                  ["BUFFSCUSTOMBARCOLOUR"]=HEALBOT_SKIN_HEADERBARCOL,
-                                 ["BUFFSCUSTOMCAT"]=HEALBOT_CUSTOM_CATEGORY,
+                                 ["BUFFSCUSTOMCAT"]=HEALBOT_SORTBY_CLASS,
                                  ["BUFFSCUSTOMBUFF"]=HEALBOT_OPTIONS_ALLSPELLS,
                                  ["BUFFSCUSTOMIDMETHOD"]=HEALBOT_OPTIONS_CUSTOM_IDMETHOD,
                                  ["BUFFSCUSTOMCASTBY"]=HEALBOT_OPTIONS_CUSTOM_CASTBY,
@@ -776,7 +779,7 @@ function HealBot_Lang_Options_enALL()
                                ["BARCOLCUSTOMDONE"]="Settings complete.\nReturn to the bars col"..HEALBOT_enWORD_COLOUR_SUFFIX.." tab.",
                         -- Skins Frames Bars Sort tab
                                ["BARSSORT"]="Show the Skins Frames Bars Sort tab.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Some options are dependant on the frame selected.\n".._G["YELLOW_FONT_COLOR_CODE"].."- Sub sort - self first is only available when one of the User frames is selected.\n".._G["YELLOW_FONT_COLOR_CODE"].."- Own pet: with self and Pets: Groups of five are only available when the Pets frame is selected.",
-                               ["HEALBARSSORTSELF"]="Sub sort self to the top of the list.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: also applies to Main sort when sorting by Name or Max health.",
+                               ["HEALBARSSORTSELF"]="Sub sort self to the top of the list.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Also applies to Main sort when sorting by Name or Max health.",
                                ["HEALBARSSORTOOR"]="This option is good for raids that split players, by sorting the out of range last.",
                                ["HEALBARSSORTMAIN"]="Organise how bars are sorted in the Heal Groups.",
                                ["HEALBARSSORTSUB"]="Organise how bars are sub sorted in the Main Sort.",
@@ -787,7 +790,8 @@ function HealBot_Lang_Options_enALL()
                                ["HEALBARSVISALERTIC"]="While in combat and when health is at or\nbelow this setting, the bar will become enabled.",
                                ["HEALBARSVISALERTOC"]="While out of combat and when health is at or\nbelow this setting, the bar will become enabled.",
                                ["HEALBARSVISHIDE100"]="Hide bars for players who are over 100 yards\ngenerally when the player is not visible.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: No updates are possible while in combat.",
-                               ["HEALBARSVISVEHICLEIC"]="Always Show the vehicle frames when entering combat.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: ensure vehicle is selected on the Heals Group tab.",
+                               ["HEALBARSVISVEHICLEIC"]="Always Show the vehicle frames when entering combat.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Ensure vehicle is selected on the Heals Group tab.",
+                               ["HEALBARSVISPLISTPETSIC"]="Always show the pets of players on your private list when entering combat.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Ensure players have been added to your private lists.\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Ensure pets is selected on the Heals Group tab\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: The private list Heal Group is not required.",
                                ["HEALBARSVISTARGETIC"]="Always Show/No Change/Always Hide\nthe target frame when entering combat.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: ensure target is selected on the Heals Group tab.",
                                ["HEALBARSVISFOCUSIC"]="Always Show/No Change/Always Hide\nthe focus frame when entering combat.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: ensure focus is selected on the Heals Group tab.",
                                ["HEALBARSVISTARGETFRIEND"]="Do not show hostile targets when out of combat.",
@@ -896,6 +900,7 @@ function HealBot_Lang_Options_enALL()
                                ["HEALBARSAGGROTEXTCOLALPHA"]="Set the transparency of the\naggro text when in an enabled state.",
                                ["HEALBARSAGGROTEXTDISCOLALPHA"]="Set the transparency of the\naggro text when in a disabled state.",
                                ["HEALBARSTXTSHOWHEALTH"]="Show the players health on the bar.",
+                               ["HEALBARSTXTINCPTC"]="Display health as a percentage next to the health text.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: This additional text never includes incoming heals or absorbs.",
                                ["HEALBARSTXTHEALTHICOPTION"]=_G["YELLOW_FONT_COLOR_CODE"].."NOTE: Incoming heals text is only shown on enabled bars.\n--\n".._G["GREEN_FONT_COLOR_CODE"].."- No Incoming Heals - Never show incoming heals.\n".._G["GREEN_FONT_COLOR_CODE"].."- Include incoming heals - Include incoming heals in the health text.\n".._G["GREEN_FONT_COLOR_CODE"].."- Separate incoming heals - Show incoming heals next to the health text.",
                                ["HEALBARSTXTHEALTHICAOPTION"]=_G["YELLOW_FONT_COLOR_CODE"].."NOTE: "..HEALBOT_classicABSORBHOT.."s text is only shown on enabled bars.\n--\n".._G["GREEN_FONT_COLOR_CODE"].."- No Incoming "..HEALBOT_classicABSORBHOT.."s - Never show "..HEALBOT_classicABSORBHOT.."s.\n".._G["GREEN_FONT_COLOR_CODE"].."- Include "..HEALBOT_classicABSORBHOT.."s - Include "..HEALBOT_classicABSORBHOT.."s in the health text.\n".._G["GREEN_FONT_COLOR_CODE"].."- Separate "..HEALBOT_classicABSORBHOT.."s - Show "..HEALBOT_classicABSORBHOT.."s next to the health text.",
                                ["HEALBARSTXTHEALTHSOHEALS"]=_G["YELLOW_FONT_COLOR_CODE"].."NOTE: Overhealing text is only shown on\n".._G["YELLOW_FONT_COLOR_CODE"].."enabled bars and always separate from other heals.\n--\n".._G["GREEN_FONT_COLOR_CODE"].."- No Overheals - Never show Overheals.\n".._G["GREEN_FONT_COLOR_CODE"].."- Show my overheals - Show your overhealing next to the health text.\n".._G["GREEN_FONT_COLOR_CODE"].."- Show all overheals - Show all overhealing next to the health text.",
@@ -967,6 +972,7 @@ function HealBot_Lang_Options_enALL()
                                ["ICONSHOWCOMBAT"]="Shows when a player is in combat.",
                                ["ICONSHOWHOSTILE"]="Shows when a unit is the enemy.",
                                ["ICONSHOWLEADER"]="Shows group leader or raid leader, assistant and master looter.",
+                               ["ICONSHOWAFK"]="Shows when the player is AFK.",
                                ["ICONSHOWRESTING"]="Shows when you are resting.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: This only applies to you.",
                                ["ICONSHOWRT"]="Show the raid target when assigned to a player.\nThe target types can be individually filtered.",
                                ["ICONSHOWDIR"]="Show a direction arrow pointing at players out of range.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: This only works outside.",
@@ -1073,7 +1079,7 @@ function HealBot_Lang_Options_enALL()
                                ["BUFFSTIMER"]="Alert when a buff is required n mins/secs before it expires.\n".._G["GREEN_FONT_COLOR_CODE"].."- Show buffs - These are buffs with a duration of a few minutes or less.\n".._G["GREEN_FONT_COLOR_CODE"].."- Long buffs - These are buffs with a duration usually in the 10's of minutes or more.",
                         -- Buffs Custom tab
                                ["BUFFSCUSTOMBARCOLOUR"]="Set how the custom buff col"..HEALBOT_enWORD_COLOUR_SUFFIX.." is used.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Adaptive applies to the following:\n".._G["YELLOW_FONT_COLOR_CODE"].."- Name Aux bar\n".._G["YELLOW_FONT_COLOR_CODE"].."- Health Aux bar\n".._G["YELLOW_FONT_COLOR_CODE"].."- Background Bar\n".._G["YELLOW_FONT_COLOR_CODE"].."- Background Border",
-                               ["BUFFSCUSTOMCAT"]="Custom class categories can be selected using the category dropdown.",
+                               ["BUFFSCUSTOMCAT"]="Custom class categories can be selected using the class dropdown.",
                                ["BUFFSCUSTOMBUFF"]="Lists custom buffs depending on the Category selected.",
                                ["BUFFSCUSTOMIDMETHOD"]="Check buffs using Spell ID, Spell Name or Both.",
                                ["BUFFSCUSTOMCASTBY"]="Sets a filter on buffs displayed\nby checking the caster of the buff.",
@@ -1164,7 +1170,7 @@ function HealBot_Lang_Options_enALL()
                                ["INOUTEXPORTPRESETCOLS"]="Export populates the large text box with data of all preset col"..HEALBOT_enWORD_COLOUR_SUFFIX.."s.\nThis can then be copied and saved outside the game.",
                                ["INOUTIMPORTPRESETCOLS"]="Import loads in the data from the large text box.",
                         -- Plugin Tab
-                               ["SELECTPLUGIN"]="Select plugin.\n--\nInformation on plugins can be found at "..HEALBOT_ABOUT_URL.."\n--\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Threat: ".._G["FONT_COLOR_CODE_CLOSE"].."See threat for all players on multiple mobs.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot TimeToDie: ".._G["FONT_COLOR_CODE_CLOSE"].."Player damage tracker showing how soon players will die.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot TimeToLive: ".._G["FONT_COLOR_CODE_CLOSE"].."Resurrection monitor tracking incoming and pending resurrections.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot ExtraButtons: ".._G["FONT_COLOR_CODE_CLOSE"].."Set spells for use with an MMO mouse on buttons 6 - 20\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot CombatProt: ".._G["FONT_COLOR_CODE_CLOSE"].."Reserve bars for missing players, protects against missing bars in combat.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Performance: ".._G["FONT_COLOR_CODE_CLOSE"].."Tweak internal timers and effects.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot MyCooldowns: ".._G["FONT_COLOR_CODE_CLOSE"].."Track cooldowns for your spells and abilities.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Tweaks: ".._G["FONT_COLOR_CODE_CLOSE"].."Tweak internal settings.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Requests: ".._G["FONT_COLOR_CODE_CLOSE"].."Players can whisper you to request a buff or ability.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot BuffWatch: ".._G["FONT_COLOR_CODE_CLOSE"].."Target a player for your buffs coming off cooldown and optionally when the player buffs expire.",  
+                               ["SELECTPLUGIN"]="Select plugin.\n--\nInformation on plugins can be found at "..HEALBOT_ABOUT_URL.."\n--\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Threat: ".._G["FONT_COLOR_CODE_CLOSE"].."See threat for all players on multiple mobs.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot TimeToDie: ".._G["FONT_COLOR_CODE_CLOSE"].."Player damage tracker showing how soon players will die.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot TimeToLive: ".._G["FONT_COLOR_CODE_CLOSE"].."Resurrection monitor tracking incoming and pending resurrections.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot ExtraButtons: ".._G["FONT_COLOR_CODE_CLOSE"].."Set spells for use with an MMO mouse on buttons 6 - 20\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot CombatProt: ".._G["FONT_COLOR_CODE_CLOSE"].."Reserve bars for missing players, protects against missing bars in combat.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Performance: ".._G["FONT_COLOR_CODE_CLOSE"].."Tweak internal timers and effects.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot MyCooldowns: ".._G["FONT_COLOR_CODE_CLOSE"].."Track cooldowns for your spells and abilities.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Tweaks: ".._G["FONT_COLOR_CODE_CLOSE"].."Tweak internal settings.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Requests: ".._G["FONT_COLOR_CODE_CLOSE"].."Players can whisper you to request a buff or ability.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot BuffWatch: ".._G["FONT_COLOR_CODE_CLOSE"].."Monitor your cooldowns and optionally other player buffs to run alerts.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot HealthWatch: ".._G["FONT_COLOR_CODE_CLOSE"].."Monitor players and alert on low health.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot ManaWatch: ".._G["FONT_COLOR_CODE_CLOSE"].."Monitor players and alert on low mana.",  
                               }
 
 end

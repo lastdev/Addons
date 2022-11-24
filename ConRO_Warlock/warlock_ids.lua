@@ -2,272 +2,27 @@ local ConRO_Warlock, ids = ...;
 
 --Generic
 	ids.Racial = {
-		AncestralCall = 274738,
-		ArcanePulse = 260364,
-		ArcaneTorrent = 50613,
-		Berserking = 26297,
-		Cannibalize = 20577,
-		GiftoftheNaaru = 59548,
-		Shadowmeld = 58984,
-	}
-	ids.Covenant = {
-		None = 0,
-		Kyrian = 1,
-		Venthyr = 2,
-		NightFae = 3,
-		Necrolord = 4,
-	}
-	ids.Soulbinds = {
-		Niya = 1,
-		Dreamweaver = 2,
-		GeneralDraven = 3,
-		PlagueDeviserMarileth = 4,
-		Emeni = 5,
-		Korayn = 6,
-		Pelagos = 7,
-		NadjiatheMistblade = 8,
-		TheotartheMadDuke = 9,
-		BonesmithHeirmir = 10,
-		Kleia = 13,
-		ForgelitePrimeMikanikos = 18,
-	}
-	ids.Covenant_Ability = {
-		DecimatingBolt = 325289,
-		Fleshcraft = 324631,
-		ImpendingCatastrophe = 321792,
-		PhialofSerenity = 177278,
-		ScouringTithe = 312321,
-		SoulRot = 325640,
-		Soulshape = 310143,
-		SummonSteward = 324739,
-	}
-	ids.Covenant_Conduit = {
-	--Kyrian
-		--Pelagos
-			CombatMeditation = 328266,
-			FocusingMantra = 328261,
-			RoadofTrials = 329786,
-			PhialofPatience = 329777,
-			BondofFriendship = 328265,
-			CleansedVestments = 328263,
-			LetGoofthePast = 328257,
-		--Kleia
-			ValiantStrikes = 329791,
-			Mentorship = 334066,
-			AscendantPhial = 329776,
-			CleansingRites = 329784,
-			EverForward = 328258,
-			BearersPursuit = 329779,
-			PointedCourage = 329778,
-			ResonantAccolades = 329781,
-		--Forgelite Prime Mikanikos
-			BronsCalltoAction = 333950,
-			ForgeliteFilter = 331609,
-			ChargedAdditive = 331610,
-			RegeneratingMaterials = 331726,
-			ResilientPlumage = 331725,
-			SoulsteelClamps = 331611,
-			HammerofGenesis = 333935,
-			SparklingDriftglobeCore = 331612,
-	--Necrolord
-		--Plague Deviser Marileth
-			VolatileSolvent = 323074,
-			OozsFrictionlessCoating = 323091,
-			TravelwithBloop = 323089,
-			PlagueysPreemptiveStrike = 323090,
-			KevinsKeyring = 323079,
-			PlaguebornCleansingSlime = 323081,
-			UltimateForm = 323095,
-		--Emeni
-			LeadbyExample = 342156,
-			EmenisMagnificentSkin = 323921,
-			EmenisAmbulatoryFlesh = 341650,
-			CartilaginousLegs = 324440,
-			HearthKidneystone = 324441,
-			GristledToes = 323918,
-			GnashingChompers = 323919,
-			SulfuricEmission = 323916,
-		--Bonesmith Heirmir
-			ForgeborneReveries = 326514,
-			ResourcefulFleshcrafting = 326507,
-			SerratedSpaulders = 326504,
-			RuneforgedSpurs = 326512,
-			BonesmithsSatchel = 326513,
-			HeirmirsArsenalGorestompers = 326511,
-			HeirmirsArsenalMarrowedGemstone = 326572,
-			HeirmirsArsenalRavenousPendant = 326509,
-	--NightFae
-		--Niya
-			GroveInvigoration = 322721,
-			RunWithoutTiring = 342270,
-			StayontheMove = 320658,
-			NaturesSplendor = 320668,
-			SwiftPatrol = 320687,
-			NiyasToolsBurrs = 320659,
-			NiyasToolsPoison = 320660,
-			NiyasToolsHerbs = 320662,
-		--Dreamweaver
-			Podtender = 319217,
-			SoothingVoice = 319211,
-			SocialButterfly = 319210,
-			EmpoweredChrysalis = 319213,
-			FaerieDust = 319214,
-			Somnambulist = 319216,
-			FieldofBlossoms = 319191,
-		--Korayn
-			WildHuntTactics = 325066,
-			HornoftheWildHunt = 325067,
-			WildHuntsCharge = 325065,
-			VorkaiSharpeningTechniques = 325072,
-			GetInFormation = 325073,
-			FaceYourFoes = 325068,
-			FirstStrike = 325069,
-			HoldtheLine = 325601,
-	--Venthyr
-		--Nadjia the Mistblade
-			ThrillSeeker = 331586,
-			AgentofChaos = 331576,
-			FancyFootwork = 331577,
-			FriendsinLowPlaces = 331579,
-			FamiliarPredicaments = 331582,
-			ExactingPreparation = 331580,
-			DauntlessDuelist = 331584,
-		--Theotar the Mad Duke
-			SoothingShade = 336239,
-			WatchtheShoes = 336140,
-			LeisurelyGait = 336147,
-			LifeoftheParty = 336247,
-			ExquisiteIngredients = 336184,
-			TokenofAppreciation = 336245,
-			RefinedPalate = 336243,
-			WastelandPropriety = 319983,
-		--General Draven
-			ServiceInStone = 340159,
-			MoveAsOne = 319982,
-			EnduringGloom = 319978,
-			UnbreakableBody = 332755,
-			ExpeditionLeader = 332756,
-			HoldYourGround = 332754,
-			SuperiorTactics = 332753,
-			BuiltforWar = 319973,
-	--Endurance
-		AccruedVitality = 339282,
-		DiabolicBloodstone = 340562,
-		ResoluteBarrier = 339272,
-	--Finesse
-		DemonicMomentum = 339411,
-		FelCelerity = 339130,
-		KilroggsCunning = 58081,
-		ShadeofTerror = 339379,
-	--Potency
-		AshenRemains = 339892,
-		BorneofBlood = 339578,
-		CarnivorousStalkers = 339656,
-		CatastrophicOrigin = 340316,
-		ColdEmbrace = 339576,
-		CombustingEngine = 339896,
-		CorruptingLeer = 339455,
-		DuplicitousHavoc = 339890,
-		FatalDecimation = 340268,
-		FelCommando = 339845,
-		FocusedMalignancy = 339500,
-		InfernalBrand = 340041,
-		RollingAgony = 339481,
-		SoulEater = 340348,
-		SoulTithe = 340229,
-		TyrantsSoul = 339766,
-	}
-	ids.Covenant_Buff = {
-		DecimatingBolt = 325299,
-	}
-	ids.Covenant_Debuff = {	
-		ScouringTithe = 312321,
-		SoulRot = 325640,
-	}
-	ids.Legendary = {
-	--Neutral
-		EchoofEonar_Finger = "item:178926::::::::::::1:7100",
-		EchoofEonar_Waist = "item:173248::::::::::::1:7100",
-		EchoofEonar_Wrist = "item:173249::::::::::::1:7100",
-		JudgementoftheArbiter_Finger = "item:178926::::::::::::1:7101",
-		JudgementoftheArbiter_Hands = "item:173244::::::::::::1:7101",
-		JudgementoftheArbiter_Wrist = "item:173249::::::::::::1:7101",
-		MawRattle_Feet = "item:173243::::::::::::1:7159",
-		MawRattle_Hands = "item:173244::::::::::::1:7159",
-		MawRattle_Legs = "item:173246::::::::::::1:7159",
-		NorgannonsSagacity_Back = "item:173242::::::::::::1:7102",
-		NorgannonsSagacity_Feet = "item:173243::::::::::::1:7102",
-		NorgannonsSagacity_Legs = "item:173246::::::::::::1:7102",
-		SephuzsProclamation_Chest = "item:173241::::::::::::1:7103",
-		SephuzsProclamation_Neck = "item:178927::::::::::::1:7103",
-		SephuzsProclamation_Shoulder = "item:173247::::::::::::1:7103",
-		StablePhantasmaLure_Back = "item:173242::::::::::::1:7104",
-		StablePhantasmaLure_Neck = "item:178927::::::::::::1:7104",
-		StablePhantasmaLure_Wrist = "item:173249::::::::::::1:7104",
-		ThirdEyeoftheJailer_Head = "item:173245::::::::::::1:7105",
-		ThirdEyeoftheJailer_Shoulder = "item:173247::::::::::::1:7105",
-		ThirdEyeoftheJailer_Waist = "item:173248::::::::::::1:7105",
-		VitalitySacrifice_Chest = "item:173241::::::::::::1:7106",
-		VitalitySacrifice_Head = "item:173245::::::::::::1:7106",
-		VitalitySacrifice_Shoulder = "item:173247::::::::::::1:7106",
-	--Warlock
-		ClawofEndereth_Feet = "item:173243::::::::::::1:7026",
-		ClawofEndereth_Waist = "item:173248::::::::::::1:7026",
-		PillarsoftheDarkPortal_Chest = "item:173241::::::::::::1:7028",
-		PillarsoftheDarkPortal_Neck = "item:178927::::::::::::1:7028",
-		RelicofDemonicSynergy_Head = "item:173245::::::::::::1:7027",
-		RelicofDemonicSynergy_Shoulder = "item:173247::::::::::::1:7027",
-		WilfredsSigilofSuperiorSummoning_Finger = "item:178926::::::::::::1:7025",
-		WilfredsSigilofSuperiorSummoning_Wrist = "item:173249::::::::::::1:7025",
-	--Affliction
-		MaleficWrath_Hands = "item:173244::::::::::::1:7031", -- Flag for Rotation
-		MaleficWrath_Shoulder = "item:173247::::::::::::1:7031",
-		PerpetualAgonyofAzjAqir_Chest = "item:173241::::::::::::1:7029",
-		PerpetualAgonyofAzjAqir_Finger = "item:178926::::::::::::1:7029",
-		SacrolashsDarkStrike_Feet = "item:173243::::::::::::1:7030",
-		SacrolashsDarkStrike_Legs = "item:173246::::::::::::1:7030",
-		WrathofConsumption_Back = "item:173242::::::::::::1:7032",
-		WrathofConsumption_Feet = "item:173243::::::::::::1:7032",
-	--Demonology
-		BalespidersBurningCore_Hands = "item:173244::::::::::::1:7036",
-		BalespidersBurningCore_Wrist = "item:173249::::::::::::1:7036",
-		ForcesoftheHornedNightmare_Finger = "item:178926::::::::::::1:7035",
-		ForcesoftheHornedNightmare_Shoulder = "item:173247::::::::::::1:7035",
-		GrimInquisitorsDreadCalling_Neck = "item:178927::::::::::::1:7034",
-		GrimInquisitorsDreadCalling_Wrist = "item:173249::::::::::::1:7034",
-		ImplosivePotential_Head = "item:173245::::::::::::1:7033",
-		ImplosivePotential_Waist = "item:173248::::::::::::1:7033",
-	--Destruction
-		CindersoftheAzjAqir_Back = "item:173242::::::::::::1:7038",
-		CindersoftheAzjAqir_Legs = "item:173246::::::::::::1:7038",
-		EmbersoftheDiabolicRaiment_Back = "item:173242::::::::::::1:7040",
-		EmbersoftheDiabolicRaiment_Chest = "item:173241::::::::::::1:7040",
-		MadnessoftheAzjAqir_Hands = "item:173244::::::::::::1:7039",
-		MadnessoftheAzjAqir_Head = "item:173245::::::::::::1:7039",
-		OdrShawloftheYmirjar_Legs = "item:173246::::::::::::1:7037",
-		OdrShawloftheYmirjar_Waist = "item:173248::::::::::::1:7037",
-	}
-	ids.Legendary_Buff = {
-
-	}
-	ids.Legendary_Debuff = {	
-
+		AncestralCall = {spellID = 274738},
+		ArcanePulse = {spellID = 260364},
+		ArcaneTorrent = {spellID = 50613},
+		Berserking = {spellID = 26297},
+		Cannibalize = {spellID = 20577},
 	}
 
 --Warlock
 	ids.Warlock_Ability = {
-		DrainLife = 234153,
-		Corruption = 172,
-		CreateHealthstone = 6201,
+		DrainLife = {spellID = 234153},
+		Corruption = {spellID = 172},
+		CreateHealthstone = {spellID = 6201},
 			Healthstone = 5512,
-		CurseofWeakness = 702,
-		Fear = 5782,
-		HealthFunnel = 755,
-		ShadowBolt = 686,
-		SummonDemon = 10,
-			SummonImp = 688,
-			SummonVoidwalker = 697,
-		UnendingResolve = 104773,
+		CurseofWeakness = {spellID = 702},
+		Fear = {spellID = 5782},
+		HealthFunnel = {spellID = 755},
+		ShadowBolt = {spellID = 686},
+		SummonDemon = {spellID = 10},
+			SummonImp = {spellID = 688},
+			SummonVoidwalker = {spellID = 697},
+		UnendingResolve = {spellID = 104773},
 	}
 	ids.Warlock_Passive = {
 		SoulShards = 246985,
@@ -279,90 +34,139 @@ local ConRO_Warlock, ids = ...;
 --Affliction
 	ids.Aff_Ability = {
 	--Warlock
-		Banish = 710,
+		AmplifyCurse = {spellID = 328774, talentID = 91442},
+		Banish = {spellID = 710, talentID = 91454},
+		BurningRush = {spellID = 111400, talentID = 91460},
 		CommandDemon = {
-			CauterizeMaster = 119905, --Imp
-			Suffering = 119907, --Voidwalker
-			Whiplash = 119909, --Succubus
-			SpellLock = 119910, --Felhunter
-			ShadowLock = 171140, --Doomguard
-			MeteorStrike = 171152, --Infernal
+			CauterizeMaster = {spellID = 119905}, --Imp
+			Suffering = {spellID = 119907}, --Voidwalker
+			Whiplash = {spellID = 119909}, --Succubus
+			SpellLock = {spellID = 119910}, --Felhunter
+			ShadowLock = {spellID = 171140}, --Doomguard
+			MeteorStrike = {spellID = 171152}, --Infernal
 		},
-		Corruption = 172,
-		CreateHealthstone = 6201,
-			Healthstone = 5512,
-		CreateSoulwell = 29893,
-		CurseofExhaustion = 334275,
-		CurseofTongues = 1714,
-		CurseofWeakness = 702,
-		DemonicCircleSummon = 48018,
-			DemonicCircleTeleport = 48020,
-		DemonicGateway = 111771,
-		DrainLife = 234153,
-		EyeofKilrogg = 126,
-		Fear = 5782,
-		FelDomination = 333889,
-		HealthFunnel = 755,
-		RitualofDoom = 342601,
-		RitualofSummoning = 698,
-		ShadowBolt = 686,
-		Shadowfury = 30283,
-		Soulstone = 20707,
-		SubjugateDemon = 1098,
-		SummonDemon = 10,
-			SummonImp = 688,
-			SummonVoidwalker = 697,
-			SummonFelhunter = 691,
-			SummonSuccubus = 712,
-			SummonFelguard = 30146,
-		UnendingBreath = 5697,
-		UnendingResolve = 104773,
+		Corruption = {spellID = 172},
+		CurseofExhaustion = {spellID = 334275, talentID = 91462},
+		CurseofTongues = {spellID = 1714, talentID = 91462},
+		CurseofWeakness = {spellID = 702},
+		DarkPact = {spellID = 108416, talentID = 91444},
+		DemonicCircle = {
+			Summon = {spellID = 48018, talentID = 91441},
+			Teleport = {spellID = 48020, talentID = 91441},
+		},
+		DemonicGateway = {spellID = 111771, talentID = 91466},
+		DrainLife = {spellID = 234153},
+		EyeofKilrogg = {spellID = 126},
+		Fear = {spellID = 5782},
+		FelDomination = {spellID = 333889, talentID = 91439},
+		HealthFunnel = {spellID = 755},
+		Healthstone = {
+			Create = {spellID = 6201},
+			CreateSoulwell = {spellID = 29893},
+			Use = 5512,
+		},
+		HowlofTerror = {spellID = 5484, talentID = 91458},
+		InquisitorsGaze = {spellID = 386344, talentID = 91427},
+		MortalCoil = {spellID = 6789, talentID = 91457},
+		RitualofDoom = {spellID = 342601},
+		RitualofSummoning = {spellID = 698},
+		ShadowBolt = {spellID = 686},
+		Shadowflame = {spellID = 384069, talentID = 91450},
+		Shadowfury = {spellID = 30283, talentID = 91452},
+		Soulburn = {spellID = 385899, talentID = 91469},
+		Soulstone = {spellID = 20707},
+		SubjugateDemon = {spellID = 1098},
+		SummonDemon = {
+			Imp = {spellID = 688},
+			Voidwalker = {spellID = 697},
+			Felhunter = {spellID = 691},
+			Succubus = {spellID = 712},
+			Felguard = {spellID = 30146},
+		},
+		SummonSoulkeeper = {spellID = 386256, talentID = 91448},
+		UnendingBreath = {spellID = 5697},
+		UnendingResolve = {spellID = 104773},
 	--Affliction
-		Agony = 980,
-		MaleficRapture = 324536,
-		SeedofCorruption = 27243,
-		SummonDarkglare = 205180,
-		UnstableAffliction = 316099,
+		Agony = {spellID = 980},
+		DrainSoul = {spellID = 198590, talentID = 91566},
+		GrimoireofSacrifice = {spellID = 108503, talentID = 91576},
+		Haunt = {spellID = 48181, talentID = 91552},
+		MaleficRapture = {spellID = 324536, talentID = 91570},
+		SeedofCorruption = {spellID = 27243, talentID = 91571},
+		SiphonLife = {spellID = 63106, talentID = 91574},
+		SoulRot = {spellID = 386997, talentID = 91578},
+		SoulTap = {spellID = 387073, talentID = 91563},
+		SoulSwap = {spellID = 386951, talentID = 91558},
+		SummonDarkglare = {spellID = 205180, talentID = 91554},
+		PhantomSingularity = {spellID = 205179, talentID = 91557},
+		UnstableAffliction = {spellID = 316099, talentID = 91569},
+		VileTaint = {spellID = 278350, talentID = 91556},
 	}
 	ids.Aff_Passive = {
 	--Warlock
-		DemonicEmbrace = 288843,
-		ShadowEmbrace = 32388,
-		SoulLeech = 108370,
-		SoulShards = 246985,
+		AbyssWalker = {spellID = 389609, talentID = 91465},
+		AccruedVitality = {spellID = 386613, talentID = 91464},
+		DarkAccord = {spellID = 386659, talentID = 91467},
+		Darkfury = {spellID = 264874, talentID = 91451},
+		DemonSkin = {spellID = 219272, talentID = 91463},
+		DemonicEmbrace = {spellID = 288843, talentID = 91438},
+		DemonicFortitude = {spellID = 386617, talentID = 91430},
+		DemonicInspiration = {spellID = 386858, talentID = 91436},
+		DemonicResilience = {spellID = 389590, talentID = 91424},
+		DesperatePact = {spellID = 386619, talentID = 91437},
+		FelArmor = {spellID = 386124, talentID = 91461},
+		FelPact = {spellID = 386113, talentID = 91440},
+		FelSynergy = {spellID = 389367, talentID = 91425},
+		FiendishStride = {spellID = 386110, talentID = 91459},
+		FrequentDonor = {spellID = 386686, talentID = 91445},
+		GrimFeast = {spellID = 386689, talentID = 91434},
+		GrimoireofSynergy = {spellID = 171975, talentID = 91432},
+		GorefiendsResolve = {spellID = 389623, talentID = 91422},
+		GreaterBanish = {spellID = 386651, talentID = 91453},
+		IchorofDevils = {spellID = 386664, talentID = 91446},
+		Lifeblood = {spellID = 386646, talentID = 91449},
+		Nightmare = {spellID = 386648, talentID = 91455},
+		ProfaneBargain = {spellID = 389576, talentID = 91426},
+		ResoluteBarrier = {spellID = 389359, talentID = 91421},
+		SoulConduit = {spellID = 215941, talentID = 91431},
+		SoulLeech = {spellID = 108370},
+		SoulLink = {spellID = 108415, talentID = 91433},
+		SoulShards = {spellID = 246985},
+		StrengthofWill = {spellID = 317138, talentID = 91468},
+		SweetSouls = {spellID = 386620, talentID = 91435},
+		TeachingsoftheBlackHarvest = {spellID = 385881, talentID = 91447},
+		TeachingsoftheSatyr = {spellID = 387972, talentID = 91443},
+		WrathfulMinion = {spellID = 386864, talentID = 91456},
 	--Affliction	
+		AbsoluteCorruption = {spellID = 196103, talentID = 91575},
+		AgonizingCorruption = {spellID = 386922, talentID = 91559},
+		CreepingDeath = {spellID = 264000, talentID = 91580},
+		DarkHarvest = {spellID = 387016, talentID = 91579},
+		DoomBlossom = {spellID = 389764, talentID = 91503},
+		DreadTouch = {spellID = 389775, talentID = 91420},
+		InevitableDemise = {spellID = 334319, talentID = 91567},
+		GrandWarlocksDesign = {spellID = 387084, talentID = 91505},
+		GrimReach = {spellID = 389992, talentID = 91419},
+		HarvesterofSouls = {spellID = 201424, talentID = 91564},
+		HauntedSoul = {spellID = 387301, talentID = 91506},
+		Nightfall = {spellID = 108558, talentID = 91568},
+		MaleficAffliction = {spellID = 389761, talentID = 91429},
+		MalevolentVisionary = {spellID = 387273, talentID = 91504},
 		MasteryPotentAfflictions = 77215,
+		PandemicInvocation = {spellID = 386759, talentID = 91573},
+		SacrolashsDarkStrike = {spellID = 386986, talentID = 91555},
+		SeizedVitality = {spellID = 387250, talentID = 91507},
+		ShadowEmbrace = {spellID = 32388, talentID = 91565},
+		SoulEatersGluttony = {spellID = 389630, talentID = 91428},
+		SoulFlame = {spellID = 199471, talentID = 91562},
+		SowtheSeeds = {spellID = 196226, talentID = 91560},
+		TormentedCrescendo = {spellID = 387075, talentID = 91551},
+		WitheringBolt = {spellID = 386976, talentID = 91577},
+		WrathofConsumption = {spellID = 387065, talentID = 91553},
+		WritheinAgony = {spellID = 196102, talentID = 91561},
+		XavianTeachings = {spellID = 317031, talentID = 91572},
 	}
-	ids.Aff_Talent = {
-		--15
-		Nightfall = 108558,
-		InevitableDemise = 334319,
-		DrainSoul = 198590,
-		--25
-		WritheinAgony = 196102,
-		AbsoluteCorruption = 196103,
-		SiphonLife = 63106,
-		--30
-		DemonSkin = 219272,
-		BurningRush = 111400,
-		DarkPact = 108416,
-		--35
-		SowtheSeeds = 196226,
-		PhantomSingularity = 205179,
-		VileTaint = 278350,
-		--40
-		Darkfury = 264874,
-		MortalCoil = 6789,
-		HowlofTerror = 5484,
-		--45
-		DarkCaller = 334183,
-		Haunt = 48181,
-		GrimoireofSacrifice = 108503,
-		--50
-		SoulConduit = 215941,
-		CreepingDeath = 264000,
-		DarkSoulMisery = 113860,
-	}
+
 	ids.Aff_PvPTalent = {
 		BaneofFragility = 199954,
 		Deathbolt = 264106,
@@ -375,7 +179,7 @@ local ConRO_Warlock, ids = ...;
 		DemonArmor = 285933,
 		AmplifyCurse = 328774,
 		RampantAfflictions = 335052,
-			UnstableAffliction_RampantAfflictions = 342938, 
+			UnstableAffliction_RampantAfflictions = 342938,
 	}
 	ids.Aff_Form = {
 	
@@ -400,103 +204,156 @@ local ConRO_Warlock, ids = ...;
 		VileTaint = 278350,
 	}
 	ids.Aff_PetAbility = {
-		CauterizeMaster = 119899, --Imp
-		Suffering = 17735, --Voidwalker
-		Whiplash = 6360, --Succubus
-		SpellLock = 19647, --Felhunter
-		DevourMagic = 19505, --Felhunter
-		MeteorStrike = 171017, --Infernal	
-		ThreateningPresence = 112042, -- Voidwalker
-		Felstorm = 89751, -- Felguard
-		AxeToss = 89766,
+		CauterizeMaster = {spellID = 119899}, --Imp
+		Suffering = {spellID = 17735}, --Voidwalker
+		Whiplash = {spellID = 6360}, --Succubus
+		SpellLock = {spellID = 19647}, --Felhunter
+		DevourMagic = {spellID = 19505}, --Felhunter
+		MeteorStrike = {spellID = 171017}, --Infernal	
+		ThreateningPresence = {spellID = 112042}, -- Voidwalker
+		Felstorm = {spellID = 89751}, -- Felguard
+		AxeToss = {spellID = 89766},
 	}
 		
 --Demonology
 	ids.Demo_Ability = {
 	--Warlock
-		Banish = 710,
-		CommandDemon = 119898,
-			CauterizeMaster = 119905, --Imp
-			Suffering = 119907, --Voidwalker
-			Whiplash = 119909, --Succubus
-			SpellLock = 119910, --Felhunter
-			ShadowLock = 171140, --Doomguard
-			MeteorStrike = 171152, --Infernal
-		Corruption = 172,
-		CreateHealthstone = 6201,
-			Healthstone = 5512,
-		CreateSoulwell = 29893,
-		CurseofExhaustion = 334275,
-		CurseofTongues = 1714,
-		CurseofWeakness = 702,
-		DemonicCircleSummon = 48018,
-			DemonicCircleTeleport = 48020,
-		DemonicGateway = 111771,
-		DrainLife = 234153,
-		EyeofKilrogg = 126,
-		Fear = 5782,
-		FelDomination = 333889,
-		HealthFunnel = 755,
-		RitualofDoom = 342601,
-		RitualofSummoning = 698,
-		ShadowBolt = 686,
-		Shadowfury = 30283,
-		Soulstone = 20707,
-		SubjugateDemon = 1098,
-		SummonDemon = 10,
-			SummonImp = 688,
-			SummonVoidwalker = 697,
-			SummonFelhunter = 691,
-			SummonSuccubus = 712,
-			SummonFelguard = 30146,
-		UnendingBreath = 5697,
-		UnendingResolve = 104773,
+		AmplifyCurse = {spellID = 328774, talentID = 91442},
+		Banish = {spellID = 710, talentID = 91454},
+		BurningRush = {spellID = 111400, talentID = 91460},
+		CommandDemon = {
+			SingeMagic = {spellID = 119905}, --Imp
+			Suffering = {spellID = 119907}, --Voidwalker
+			Whiplash = {spellID = 119909}, --Succubus
+			SpellLock = {spellID = 119910}, --Felhunter
+			ShadowLock = {spellID = 171140}, --Doomguard
+			MeteorStrike = {spellID = 171152}, --Infernal
+		},
+		Corruption = {spellID = 172},
+		CurseofExhaustion = {spellID = 334275, talentID = 91462},
+		CurseofTongues = {spellID = 1714, talentID = 91462},
+		CurseofWeakness = {spellID = 702},
+		DarkPact = {spellID = 108416, talentID = 91444},
+		DemonicCircle = {
+			Summon = {spellID = 48018, talentID = 91441},
+			Teleport = {spellID = 48020, talentID = 91441},
+		},
+		DemonicGateway = {spellID = 111771, talentID = 91466},
+		DrainLife = {spellID = 234153},
+		EyeofKilrogg = {spellID = 126},
+		Fear = {spellID = 5782},
+		FelDomination = {spellID = 333889, talentID = 91439},
+		HealthFunnel = {spellID = 755},
+		Healthstone = {
+			Create = {spellID = 6201},
+			CreateSoulwell = {spellID = 29893},
+			Use = 5512,
+		},
+		HowlofTerror = {spellID = 5484, talentID = 91458},
+		InquisitorsGaze = {spellID = 386344, talentID = 91427},
+		MortalCoil = {spellID = 6789, talentID = 91457},
+		RitualofDoom = {spellID = 342601},
+		RitualofSummoning = {spellID = 698},
+		ShadowBolt = {spellID = 686},
+		Shadowflame = {spellID = 384069, talentID = 91450},
+		Shadowfury = {spellID = 30283, talentID = 91452},
+		Soulburn = {spellID = 385899, talentID = 91469},
+		Soulstone = {spellID = 20707},
+		SubjugateDemon = {spellID = 1098},
+		SummonDemon = {
+			Imp = {spellID = 688},
+			Voidwalker = {spellID = 697},
+			Felhunter = {spellID = 691},
+			Succubus = {spellID = 712},
+			Felguard = {spellID = 30146},
+		},
+		SummonSoulkeeper = {spellID = 386256, talentID = 91448},
+		UnendingBreath = {spellID = 5697},
+		UnendingResolve = {spellID = 104773},
 	--Demonology
-		CallDreadstalkers = 104316,
-		Demonbolt = 264178,
-		HandofGuldan = 105174,
-		Implosion = 196277,
-		SummonDemonicTyrant = 265187,
+		BilescourgeBombers = {spellID = 267211, talentID = 91541},
+		CallDreadstalkers = {spellID = 104316, talentID = 91543},
+		Demonbolt = {spellID = 264178, talentID = 91544},
+		DemonicStrength = {spellID = 267171, talentID = 91540},
+		Doom = {spellID = 603, talentID = 91548},
+		GrimoireFelguard = {spellID = 111898, talentID = 91531},
+		Guillotine = {spellID = 386833, talentID = 91523},
+		HandofGuldan = {spellID = 105174},
+		Implosion = {spellID = 196277, talentID = 91520},
+		NetherPortal = {spellID = 267217, talentID = 91515},
+		PowerSiphon = {spellID = 264130, talentID = 91521},
+		SoulStrike = {spellID = 264057, talentID = 91537},
+		SummonDemonicTyrant = {spellID = 265187, talentID = 91550},
+		SummonVilefiend = {spellID = 264119, talentID = 91538},
 	}
 	ids.Demo_Passive = {
 	--Warlock
-		DemonicEmbrace = 288843,
-		SoulLeech = 108370,
-		SoulShards = 246985,
+		AbyssWalker = {spellID = 389609, talentID = 91465},
+		AccruedVitality = {spellID = 386613, talentID = 91464},
+		DarkAccord = {spellID = 386659, talentID = 91467},
+		Darkfury = {spellID = 264874, talentID = 91451},
+		DemonSkin = {spellID = 219272, talentID = 91463},
+		DemonicEmbrace = {spellID = 288843, talentID = 91438},
+		DemonicFortitude = {spellID = 386617, talentID = 91430},
+		DemonicInspiration = {spellID = 386858, talentID = 91436},
+		DemonicResilience = {spellID = 389590, talentID = 91424},
+		DesperatePact = {spellID = 386619, talentID = 91437},
+		FelArmor = {spellID = 386124, talentID = 91461},
+		FelPact = {spellID = 386113, talentID = 91440},
+		FelSynergy = {spellID = 389367, talentID = 91425},
+		FiendishStride = {spellID = 386110, talentID = 91459},
+		FrequentDonor = {spellID = 386686, talentID = 91445},
+		GrimFeast = {spellID = 386689, talentID = 91434},
+		GrimoireofSynergy = {spellID = 171975, talentID = 91432},
+		GorefiendsResolve = {spellID = 389623, talentID = 91422},
+		GreaterBanish = {spellID = 386651, talentID = 91453},
+		IchorofDevils = {spellID = 386664, talentID = 91446},
+		Lifeblood = {spellID = 386646, talentID = 91449},
+		Nightmare = {spellID = 386648, talentID = 91455},
+		ProfaneBargain = {spellID = 389576, talentID = 91426},
+		ResoluteBarrier = {spellID = 389359, talentID = 91421},
+		SoulConduit = {spellID = 215941, talentID = 91431},
+		SoulLeech = {spellID = 108370},
+		SoulLink = {spellID = 108415, talentID = 91433},
+		SoulShards = {spellID = 246985},
+		StrengthofWill = {spellID = 317138, talentID = 91468},
+		SweetSouls = {spellID = 386620, talentID = 91435},
+		TeachingsoftheBlackHarvest = {spellID = 385881, talentID = 91447},
+		TeachingsoftheSatyr = {spellID = 387972, talentID = 91443},
+		WrathfulMinion = {spellID = 386864, talentID = 91456},
 	--Demonology	
+		AnnihilanTraining = {spellID = 386174, talentID = 91542},
+		AntoranArmaments = {spellID = 387494, talentID = 91526},
+		BloodboundImps = {spellID = 387349, talentID = 91519},
+		CarnivorousStalkers = {spellID = 386194, talentID = 91536},
+		DemonicCalling = {spellID = 205145, talentID = 91535},
 		DemonicCore = 267102,
+		DemonicKnowledge = {spellID = 386185, talentID = 91546},
+		DemonicMeteor = {spellID = 387396, talentID = 91530},
+		DreadCalling = {spellID = 387391, talentID = 91517},
+		Dreadlash = {spellID = 264078, talentID = 91539},
+		FelandSteel = {spellID = 386200, talentID = 91534},
+		FelCovenant = {spellID = 387432, talentID = 91518},
+		FelMight = {spellID = 387338, talentID = 91532},
+		FelSunder = {spellID = 387399, talentID = 91528},
+		FromtheShadows = {spellID = 267170, talentID = 91533},
+		GrandWarlocksDesign = {spellID = 387084, talentID = 91508},
+		GuldansAmbition = {spellID = 387578, talentID = 91513},
+		HoundsofWar = {spellID = 387488, talentID = 91529},
+		ImpGangBoss = {spellID = 387445, talentID = 91516},
+		InfernalCommand = {spellID = 387549, talentID = 91524},
+		InnerDemons = {spellID = 267216, talentID = 96549},
+		KazaaksFinalCurse = {spellID = 387483, talentID = 91549},
 		MasteryMasterDemonologist = 77219,
-		SoulLink = 108415,
-	}
-	ids.Demo_Talent = {
-		--15
-		Dreadlash = 264078,
-		BilescourgeBombers = 267211,
-		DemonicStrength = 267171,
-		--25
-		DemonicCalling = 205145,
-		PowerSiphon = 264130,
-		Doom = 603,
-		--30
-		DemonSkin = 219272,
-		BurningRush = 111400,
-		DarkPact = 108416,
-		--35
-		FromtheShadows = 267170,
-		SoulStrike = 264057,
-		SummonVilefiend = 264119,
-		--40
-		Darkfury = 264874,		
-		MortalCoil = 6789,		
-		HowlofTerror = 5484,
-		--45
-		SoulConduit = 215941,
-		InnerDemons = 267216,
-		GrimoireFelguard = 111898,
-		--50
-		SacrificedSouls = 267214,
-		DemonicConsumption = 267215,
-		NetherPortal = 267217,
+		NerzhulsVolition = {spellID = 387526, talentID = 91514},
+		PactoftheImpMother = {spellID = 387541, talentID = 91522},
+		ReignofTyranny = {spellID = 390173, talentID = 91509},
+		RippedthroughthePortal = {spellID = 387485, talentID = 91527},
+		SacrificedSouls = {spellID = 267214, talentID = 91511},
+		ShadowsBite = {spellID = 387322, talentID = 91545},
+		SoulboundTyrant = {spellID = 334585, talentID = 91510},
+		StolenPower = {spellID = 387602, talentID = 91525},
+		TheExpendables = {spellID = 387600, talentID = 91512},
 	}
 	ids.Demo_PvPTalent = {
 		SingeMagic = 212623,
@@ -527,105 +384,162 @@ local ConRO_Warlock, ids = ...;
 		Doom = 603,
 	}
 	ids.Demo_PetAbility = {
-		CauterizeMaster = 119899, --Imp
-		Suffering = 17735, --Voidwalker
-		Whiplash = 6360, --Succubus
-		ShadowBite = 54049,
-		SpellLock = 19647, --Felhunter
-		DevourMagic = 19505, --Felhunter
-		MeteorStrike = 171017, --Infernal	
-		ThreateningPresence = 112042, -- Voidwalker
-		Felstorm = 89751, -- Felguard
-		AxeToss = 89766,
+		CauterizeMaster = {spellID = 119899}, --Imp
+		Suffering = {spellID = 17735}, --Voidwalker
+		Whiplash = {spellID = 6360}, --Succubus
+		ShadowBite = {spellID = 54049},
+		SpellLock = {spellID = 19647}, --Felhunter
+		DevourMagic = {spellID = 19505}, --Felhunter
+		MeteorStrike = {spellID = 171017}, --Infernal	
+		ThreateningPresence = {spellID = 112042}, -- Voidwalker
+		Felstorm = {spellID = 89751}, -- Felguard
+		AxeToss = {spellID = 89766},
 	}
 	
 --Destruction
 	ids.Dest_Ability = {
 	--Warlock
-		Banish = 710,
-		CommandDemon = 119898,
-			CauterizeMaster = 119905, --Imp
-			Suffering = 119907, --Voidwalker
-			Whiplash = 119909, --Succubus
-			SpellLock = 119910, --Felhunter
-			ShadowLock = 171140, --Doomguard
-			MeteorStrike = 171152, --Infernal
-		Corruption = 172,
-		CreateHealthstone = 6201,
-			Healthstone = 5512,
-		CreateSoulwell = 29893,
-		CurseofExhaustion = 334275,
-		CurseofTongues = 1714,
-		CurseofWeakness = 702,
-		DemonicCircleSummon = 48018,
-			DemonicCircleTeleport = 48020,
-		DemonicGateway = 111771,
-		DrainLife = 234153,
-		EyeofKilrogg = 126,
-		Fear = 5782,
-		FelDomination = 333889,
-		HealthFunnel = 755,
-		RitualofDoom = 342601,
-		RitualofSummoning = 698,
-		Shadowfury = 30283,
-		Soulstone = 20707,
-		SubjugateDemon = 1098,
-		SummonDemon = 10,
-			SummonImp = 688,
-			SummonVoidwalker = 697,
-			SummonFelhunter = 691,
-			SummonSuccubus = 712,
-			SummonFelguard = 30146,
-		UnendingBreath = 5697,
-		UnendingResolve = 104773,
+		AmplifyCurse = {spellID = 328774, talentID = 91442},
+		Banish = {spellID = 710, talentID = 91454},
+		BurningRush = {spellID = 111400, talentID = 91460},
+		CommandDemon = {
+			CauterizeMaster = {spellID = 119905}, --Imp
+			Suffering = {spellID = 119907}, --Voidwalker
+			Whiplash = {spellID = 119909}, --Succubus
+			SpellLock = {spellID = 119910}, --Felhunter
+			ShadowLock = {spellID = 171140}, --Doomguard
+			MeteorStrike = {spellID = 171152}, --Infernal
+		},
+		Corruption = {spellID = 172},
+		CurseofExhaustion = {spellID = 334275, talentID = 91462},
+		CurseofTongues = {spellID = 1714, talentID = 91462},
+		CurseofWeakness = {spellID = 702},
+		DarkPact = {spellID = 108416, talentID = 91444},
+		DemonicCircle = {
+			Summon = {spellID = 48018, talentID = 91441},
+			Teleport = {spellID = 48020, talentID = 91441},
+		},
+		DemonicGateway = {spellID = 111771, talentID = 91466},
+		DrainLife = {spellID = 234153},
+		EyeofKilrogg = {spellID = 126},
+		Fear = {spellID = 5782},
+		FelDomination = {spellID = 333889, talentID = 91439},
+		HealthFunnel = {spellID = 755},
+		Healthstone = {
+			Create = {spellID = 6201},
+			CreateSoulwell = {spellID = 29893},
+			Use = 5512,
+		},
+		HowlofTerror = {spellID = 5484, talentID = 91458},
+		InquisitorsGaze = {spellID = 386344, talentID = 91427},
+		MortalCoil = {spellID = 6789, talentID = 91457},
+		RitualofDoom = {spellID = 342601},
+		RitualofSummoning = {spellID = 698},
+		ShadowBolt = {spellID = 686},
+		Shadowflame = {spellID = 384069, talentID = 91450},
+		Shadowfury = {spellID = 30283, talentID = 91452},
+		Soulburn = {spellID = 385899, talentID = 91469},
+		Soulstone = {spellID = 20707},
+		SubjugateDemon = {spellID = 1098},
+		SummonDemon = {
+			Imp = {spellID = 688},
+			Voidwalker = {spellID = 697},
+			Felhunter = {spellID = 691},
+			Succubus = {spellID = 712},
+			Felguard = {spellID = 30146},
+		},
+		SummonSoulkeeper = {spellID = 386256, talentID = 91448},
+		UnendingBreath = {spellID = 5697},
+		UnendingResolve = {spellID = 104773},
 	--Destruction
-		ChaosBolt = 116858,
-		Conflagrate = 17962,
-		Havoc = 80240,
-		Immolate = 348,
-		Incinerate = 29722,
-		RainofFire = 5740,
-		SummonInfernal = 1122,
+		Cataclysm = {spellID = 152108, talentID = 91487},
+		ChannelDemonfire = {spellID = 196447, talentID = 91586},
+		ChaosBolt = {spellID = 116858, talentID = 91591},
+		Conflagrate = {spellID = 17962, talentID = 91590},
+		DimensionalRift = {spellID = 387976, talentID = 91423},
+		GrimoireofSacrifice = {spellID = 108503, talentID = 91484},
+		Havoc = {spellID = 80240, talentID = 91493},
+		Immolate = {spellID = 348},
+		Incinerate = {spellID = 29722},
+		RainofFire = {spellID = 5740, talentID = 91592},
+		Shadowburn = {spellID = 17877, talentID = 91582},
+		SoulFire = {spellID = 6353, talentID = 91492},
+		SummonInfernal = {spellID = 1122, talentID = 91502},
 	}
 	ids.Dest_Passive = {
 	--Warlock
-		DemonicEmbrace = 288843,
-		SoulLeech = 108370,
-		SoulShards = 246985,
+		AbyssWalker = {spellID = 389609, talentID = 91465},
+		AccruedVitality = {spellID = 386613, talentID = 91464},
+		DarkAccord = {spellID = 386659, talentID = 91467},
+		Darkfury = {spellID = 264874, talentID = 91451},
+		DemonSkin = {spellID = 219272, talentID = 91463},
+		DemonicEmbrace = {spellID = 288843, talentID = 91438},
+		DemonicFortitude = {spellID = 386617, talentID = 91430},
+		DemonicInspiration = {spellID = 386858, talentID = 91436},
+		DemonicResilience = {spellID = 389590, talentID = 91424},
+		DesperatePact = {spellID = 386619, talentID = 91437},
+		FelArmor = {spellID = 386124, talentID = 91461},
+		FelPact = {spellID = 386113, talentID = 91440},
+		FelSynergy = {spellID = 389367, talentID = 91425},
+		FiendishStride = {spellID = 386110, talentID = 91459},
+		FrequentDonor = {spellID = 386686, talentID = 91445},
+		GrimFeast = {spellID = 386689, talentID = 91434},
+		GrimoireofSynergy = {spellID = 171975, talentID = 91432},
+		GorefiendsResolve = {spellID = 389623, talentID = 91422},
+		GreaterBanish = {spellID = 386651, talentID = 91453},
+		IchorofDevils = {spellID = 386664, talentID = 91446},
+		Lifeblood = {spellID = 386646, talentID = 91449},
+		Nightmare = {spellID = 386648, talentID = 91455},
+		ProfaneBargain = {spellID = 389576, talentID = 91426},
+		ResoluteBarrier = {spellID = 389359, talentID = 91421},
+		SoulConduit = {spellID = 215941, talentID = 91431},
+		SoulLeech = {spellID = 108370},
+		SoulLink = {spellID = 108415, talentID = 91433},
+		SoulShards = {spellID = 246985},
+		StrengthofWill = {spellID = 317138, talentID = 91468},
+		SweetSouls = {spellID = 386620, talentID = 91435},
+		TeachingsoftheBlackHarvest = {spellID = 385881, talentID = 91447},
+		TeachingsoftheSatyr = {spellID = 387972, talentID = 91443},
+		WrathfulMinion = {spellID = 386864, talentID = 91456},
 	--Destruction	
-		Backdraft = 196406,
-		MasteryChaoticEnergies = 77220,
+		AshenRemains = {spellID = 387252, talentID = 91482},
+		AvatarofDestruction = {spellID = 387159, talentID = 91476},
+		Backdraft = {spellID = 196406, talentID = 91589},
+		Backlash = {spellID = 387384, talentID = 91500},
+		BurntoAshes = {spellID = 387153, talentID = 91477},
+		ChaosIncarnate = {spellID = 387275, talentID = 91479},
+		ConflagrationofChaos = {spellID = 387108, talentID = 91583},
+		CrashingChaos = {spellID = 387355, talentID = 91473},
+		CryHavoc = {spellID = 387522, talentID = 91497},
+		Decimation = {spellID = 387176, talentID = 91491},
+		DiabolicEmbers = {spellID = 387173, talentID = 91481},
+		Eradication = {spellID = 196412, talentID = 91501},
+		ExplosivePotential = {spellID = 388827, talentID = 91581},
+		FireandBrimstone = {spellID = 196408, talentID = 91499},
+		Flashpoint = {spellID = 387259, talentID = 91485},
+		GrandWarlocksDesign = {spellID = 387084, talentID = 91471},
+		ImprovedConflagrate = {spellID = 231793, talentID = 91587},
+		ImprovedImmolate = {spellID = 387093, talentID = 91490},
+		InfernalBrand = {spellID = 387475, talentID = 91470},
+		Inferno = {spellID = 270545, talentID = 91488},
+		InternalCombustion = {spellID = 266134, talentID = 91495},
+		MadnessoftheAzjAqir = {spellID = 387400, talentID = 91480},
+		MasterRitualist = {spellID = 387165, talentID = 91475},
+		MasteryChaoticEnergies = {spellID = 77220},
+		Mayhem = {spellID = 387506, talentID = 91494},
+		Pandemonium = {spellID = 387509, talentID = 91498},
+		PowerOverwhelming = {spellID = 387279, talentID = 91478},
+		Pyrogenics = {spellID = 387095, talentID = 91489},
+		RainofChaos = {spellID = 266086, talentID = 91472},
+		RagingDemonfire = {spellID = 387166, talentID = 91585},
+		ReverseEntropy = {spellID = 205148, talentID = 91496},
+		RitualofRuin = {spellID = 387156, talentID = 91483},
+		RoaringBlaze = {spellID = 205184, talentID = 91588},
+		RollingHavoc = {spellID = 387569, talentID = 91474},
+		Ruin = {spellID = 387103, talentID = 91584},
+		ScaldingFlames = {spellID = 388832, talentID = 91486},
 	}
-	ids.Dest_Talent = {
-		--15
-		Flashover = 267115,
-		Eradication = 196412,
-		SoulFire = 6353,
-		--25
-		ReverseEntropy = 205148,
-		InternalCombustion = 266134,
-		Shadowburn = 17877,
-		--30
-		DemonSkin = 219272,
-		BurningRush = 111400,
-		DarkPact = 108416,
-		--35
-		Inferno = 270545,
-		FireandBrimstone = 196408,		
-		Cataclysm = 152108,
-		--40
-		Darkfury = 264874,
-		MortalCoil = 6789,
-		HowlofTerror = 5484,
-		--45
-		RoaringBlaze = 205184,
-		RainofChaos = 266086,
-		GrimoireofSacrifice = 108503,
-		--50
-		SoulConduit = 215941,
-		ChannelDemonfire = 196447,
-		DarkSoulInstability = 113858,
-	}
+
 	ids.Dest_Form = {
 	
 	}
@@ -644,13 +558,14 @@ local ConRO_Warlock, ids = ...;
 		Immolate = 157736,
 	}
 	ids.Dest_PetAbility = {
-		CauterizeMaster = 119899, --Imp
-		Suffering = 17735, --Voidwalker
-		Whiplash = 6360, --Succubus
-		SpellLock = 19647, --Felhunter
-		DevourMagic = 19505, --Felhunter
-		MeteorStrike = 171017, --Infernal	
-		ThreateningPresence = 112042, -- Voidwalker
-		Felstorm = 89751, -- Felguard
-		AxeToss = 89766,
+		CauterizeMaster = {spellID = 119899}, --Imp
+		Suffering = {spellID = 17735}, --Voidwalker
+		Whiplash = {spellID = 6360}, --Succubus
+		ShadowBite = {spellID = 54049},
+		SpellLock = {spellID = 19647}, --Felhunter
+		DevourMagic = {spellID = 19505}, --Felhunter
+		MeteorStrike = {spellID = 171017}, --Infernal	
+		ThreateningPresence = {spellID = 112042}, -- Voidwalker
+		Felstorm = {spellID = 89751}, -- Felguard
+		AxeToss = {spellID = 89766},
 	}

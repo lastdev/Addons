@@ -31,7 +31,7 @@ local internal = {
 }
 
 hooksecurefunc(C_CVar, "SetCVar", function(cvar, value)
-	if CS:IsMapUldum() then return end
+	if internal.cvarsChanged then return end
 	if cvar == "nameplateShowFriends" then
 		internal.cacheShowFriends = value
 	elseif cvar == "nameplateShowAll" then
@@ -157,9 +157,11 @@ function AlertFrame:SetColors(bgcolor, bordercolor)
 end
 
 function CS:ResetCVars()
+	internal.cvarsChanged = true
 	C_CVar.SetCVar("nameplateShowFriends", internal.cacheShowFriends)
 	C_CVar.SetCVar("nameplateShowAll", internal.cacheShowAll)
 	C_CVar.SetCVar("nameplateShowFriendlyNPCs", internal.cacheShowFriendlyNPCs)
+	C_Timer.After(1, function() internal.cvarsChanged = false end)
 end
 
 function CS:SetCVars()
@@ -171,9 +173,11 @@ function CS:SetCVars()
 		end
 		C_Timer.After(60, function() internal.recentlyDisplayedEntry = false end)
 	end
+	internal.cvarsChanged = true
 	C_CVar.SetCVar("nameplateShowAll", "1")
 	C_CVar.SetCVar("nameplateShowFriends", "1")
 	C_CVar.SetCVar("nameplateShowFriendlyNPCs", "1")
+	C_Timer.After(1, function() internal.cvarsChanged = false end)
 end
 
 function CS:DBMigration()

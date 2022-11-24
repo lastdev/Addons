@@ -2,9 +2,7 @@ local _, Addon = ...;
 local RuleConfigObject = {}
 
 -- Helper for debugging
-local function debug(...)
-	Addon:Debug("ruleconfig", ...);
-end
+
 
 -- Validates if the rule type is valid
 local function IsValidRuleType(ruleType)
@@ -27,7 +25,7 @@ local function ValidateRuleConfig(config)
 	if (t == "string") then	
 		local def = Addon.Rules.GetDefinition(config);
 		if (not def) then
-			Addon:Debug("ruleconfig", "Failed validation because there was no rule '%s'", config);
+
 			return false;
 		end
 
@@ -35,14 +33,14 @@ local function ValidateRuleConfig(config)
 	elseif (t == "table") then
 		local def = Addon.Rules.GetDefinition(config.rule);
 		if (not def) then
-			Addon:Debug("ruleconfig", "Failed validation because there was no rule '%s'", config.rule);
+
 			return false;
 		end
 
 		return true;
 	end
 	
-	Addon:Debug("ruleconfig", "Unknown type of a rule config '%s'", t);
+
 	return false;
 end
 
@@ -59,7 +57,7 @@ end
 
 -- Returns the index (if any) of the rule in the list.
 local function GetIndexOf(rules, ruleId)
-	assert(type(rules) == "table");
+
 	ruleId = string.lower(ruleId);
 	for index, rule in ipairs(rules) do 
 		if (IsRule(rule, ruleId)) then
@@ -70,14 +68,14 @@ end
 
 -- Loads / Populates this object with the contentes of the saved variable.
 function RuleConfigObject:Load(saved)
-	debug("Loading rule configuration");
-	self.rules = table.copy(saved or {});
+
+	self.rules = Addon.DeepTableCopy(saved or {});
 end
 
 -- Saves our current configuration
 function RuleConfigObject:Save()
-	debug("Saving rule configuration");
-	return table.copy(self.rules or  {});
+
+	return Addon.DeepTableCopy(self.rules or  {});
 end
 
 local function CreateConfig(rule)
@@ -85,7 +83,7 @@ local function CreateConfig(rule)
 	if (t == "string") then
 		return t;
 	elseif (t == "table") then
-		return table.copy(rule);
+		return Addon.DeepTableCopy(rule);
 	end
 
 	error("Unknown rule configuration option");
@@ -95,18 +93,18 @@ end
 function RuleConfigObject:Set(ruleId, parameters)
 	local rule = ruleId; 
 	if (type(parameters) == "table") then
-		rule = table.copy(parameters);
+		rule = Addon.DeepTableCopy(parameters);
 		rule.rule = ruleId;
 	end
 
-	assert(ValidateRuleConfig(rule), "The rule configuration appears to be invalid");
+
 	local index = GetIndexOf(self.rules, ruleId);
 	if (not index) then
-		debug("Adding new rule '%s' to the config", ruleId);
+
 		table.insert(self.rules, rule);
 		index = table.getn(self.rules);
 	else
-		debug("Updated rule '%s' in the configration", ruleId);
+
 		self.rules[index] = rule;
 	end
 
@@ -118,7 +116,7 @@ end
 function RuleConfigObject:Remove(ruleId)
 	local index = GetIndexOf(self.rules, ruleId);
 	if (index) then
-		debug("Removed rule '%s'", ruleId);
+
 		table.remove(self.rules, index);
 		self:TriggerEvent("OnChanged", self);
 		return true
@@ -146,7 +144,7 @@ end
 function RuleConfigObject:Commit()
 	local profile = assert(Addon:GetProfileManager():GetProfile(), "Expected a valid active profile");
 	profile:SetRules(self.type, self.rules);
-	debug("Commited rules '%s' to the profile", self.type)
+
 end
 
 Addon.RuleConfig = {
@@ -164,7 +162,7 @@ Addon.RuleConfig = {
 	-- Create instance of the rules config object from the sepcified 
 	-- cofiguration variable.
 	LoadFrom = function(self, saved)
-		assert(not saved or (type(saved) == "table"), "The saved rule configuration must be a table");
+
 		local obj = Addon.RuleConfig.Create();
 		RuleConfigObject.Load(obj, saved or {});
 		return obj;

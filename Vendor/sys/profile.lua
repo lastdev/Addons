@@ -1,5 +1,4 @@
 local AddonName, Addon = ...;
-local profilesVariable = Addon.SavedVariable:new("Profiles");
 local Profile = {};
 local PROFILE_CHANGED = Addon.Events.PROFILE_CHANGED
 
@@ -7,7 +6,7 @@ local PROFILE_CHANGED = Addon.Events.PROFILE_CHANGED
    | Retrieves the ID for this profile.
    ==========================================================================]]
 function Profile:GetId()
-	assert(self.profileId and (string.len(self.profileId) ~= 0));
+
 	return self.profileId;
 end
 
@@ -16,6 +15,14 @@ end
    ==========================================================================]]
 function Profile:IsActive()
 	return (self.active == true);
+end
+
+--[[ Check equallity ]]
+function Profile:Equals(other)
+	if (other) then
+		return self.profileId == other:GetId()
+	end
+	return false
 end
 
 --[[===========================================================================
@@ -34,7 +41,7 @@ end
    | collesing duplictes.
    ==========================================================================]]
 function Profile:RaiseOnChanged()
-	if (self.active) then
+	--if (self.active) then
 		if (self.timer) then
 			self.timer:Cancel();
 			self.timer = false;
@@ -43,31 +50,31 @@ function Profile:RaiseOnChanged()
 		self.timer = C_Timer.NewTimer(0.15, 
 			function() 
 				self.timer = false;
+
 				self:TriggerEvent("OnChanged", self);
-				Addon:RaiseEvent(PROFILE_CHANGED, self)
 			end);
-	end	
+	--end	
 end
 
 --[[===========================================================================
    | Retrieves the specified value from the profile.
    ==========================================================================]]
 function Profile:SetValue(key, value)
-	local var = profilesVariable:Get(self.profileId) or {};
+	local var = self.profilesVariable:Get(self.profileId) or {};
 	--[===[@debug@
-	assert(type(key) == "string", "The profile key must be a string value: " .. tostring(key));
+
 	--@end-debug@]===]
 
 	if ((var[key] ~= value) or (type(value) ~= type(var[key]))) then
 		if (type(value) ~= "table") then		
 			var[key] = value;
 		else
-			var[key] = table.copy(value);
+			var[key] = Addon.DeepTableCopy(value);
 		end
 
-		Addon:Debug("profile", "Profile[%s] has had '%s' changed", self.profileId, key);
+
 		var["profile:timestamp"] = time();
-		profilesVariable:Set(self.profileId, var);
+		self.profilesVariable:Set(self.profileId, var);
 		self:RaiseOnChanged();
 	end	
 end
@@ -75,29 +82,28 @@ end
 --[[===========================================================================
    | Sets the sepcified value ini the profile.
    ==========================================================================]]
-function Profile:GetValue(key, value)
-	local var = profilesVariable:Get(self.profileId) or {};
+function Profile:GetValue(key)
+	local var = self.profilesVariable:Get(self.profileId) or {};
 
 	--[===[@debug@--
-	assert(type(key) == "string", "The profile key must be a string value");
+
 	--@end-debug@]===]
 
-	local value = var[key];
+	local value = var[key];	
 	if (value == nil) then
-		if (type(self.defaults) == "table" and table.hasKey(key)) then
-			Addon:Debug("Value '%s' was requested but is not present but there is a default value", key)
+		if (type(self.defaults) == "table" and Addon.TableHasKey(key)) then
+
 			local default = self.default[key]
 			self:SetValue(key, default)
+			value = default
 		end
-
-		return nil;
 	end
 	
 	if (type(value) == "table") then
-		return table.copy(value);
+		return Addon.DeepTableCopy(value);
 	end
 
-	return value;	
+	return value
 end
 
 --[[===========================================================================
@@ -126,12 +132,12 @@ local function CreateProfile(id)
 		profileId = id or string.format("%s:%d%04d", AddonName, time(), math.floor(math.random() * 1000)),
 		active = false,
 		timer = false,
-		defaults = nil,
+		defaults = false,
+		profilesVariable = Addon:CreateSavedVariable("Profiles")
 	};
 	
 	-- Create our object and return it
-	return Addon.object("Profile", instance, table.merge(Addon.Profile or {}, Profile), { "OnChanged" });
+	return Addon.object("Profile", instance, Addon.TableMerge(Addon.Profile or {}, Profile), { "OnChanged" });
 end
 
 Addon.CreateProfile = CreateProfile;
-Addon.ProfilesVariable = profilesVariable;

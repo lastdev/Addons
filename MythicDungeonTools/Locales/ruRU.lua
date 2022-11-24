@@ -41,6 +41,8 @@ L["Aka'ali the Conqueror"] = "Ака'али Завоевательница"
 L["Alarm-o-Bot"] = "Тревогобот"
 L["Alcruux"] = "Алькруукс"
 --[[Translation missing --]]
+--[[ L["Algeth'ar Echoknight"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["Algeth'ar Educator"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Algeth'ar Enforcer"] = ""--]] 
@@ -482,6 +484,8 @@ L["Eredar Chaosbringer"] = "Эредарский вестник хаоса"
 --[[ L["Erkhart Stormvein"] = ""--]] 
 L["Erudite Slayer"] = "Убийца эрудитов"
 L["Etherdiver"] = "Эфирный Ныряльщик"
+--[[Translation missing --]]
+--[[ L["Ethereal Restorer"] = ""--]] 
 L["Executioner Varruth"] = "Палач Варрут"
 L["Executor Tarvold"] = "Вершитель Тарвольд"
 --[[Translation missing --]]
@@ -1448,6 +1452,8 @@ L["Spectral Brute"] = "Призрачный громила"
 L["Spectral Charger"] = "Призрачный конь"
 L["Spectral Headhunter"] = "Призрачный охотник за головами"
 L["Spectral Hex Priest"] = "Призрачный жрец-проклинатель"
+--[[Translation missing --]]
+--[[ L["Spectral Invoker"] = ""--]] 
 L["Spectral Journeyman"] = "Призрачный работник"
 L["Spectral Patron"] = "Призрачный зритель"
 L["Spectral Retainer"] = "Призрачный эконом"

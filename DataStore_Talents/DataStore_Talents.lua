@@ -127,6 +127,10 @@ local statPriority = {
 		{ SPELL_STAT2_NAME, SPELL_HASTE, STAT_CRITICAL_STRIKE, STAT_VERSATILITY, STAT_MASTERY }, -- Enhancement
 		{ SPELL_STAT4_NAME, STAT_VERSATILITY, SPELL_HASTE, STAT_CRITICAL_STRIKE, STAT_MASTERY }, -- Restoration
 	},	
+	["EVOKER"] = {
+		{ SPELL_STAT4_NAME, STAT_MASTERY, STAT_HASTE, STAT_CRITICAL_STRIKE, STAT_VERSATILITY }, -- Devastation
+		{ SPELL_STAT4_NAME, STAT_CRITICAL_STRIKE, STAT_VERSATILITY, STAT_HASTE, STAT_MASTERY }, -- Preservation (M+)
+	},
 	
 	-- Plate
 	["DEATHKNIGHT"] = {
@@ -207,6 +211,10 @@ local recommendedCovenant = {
 		{ main = cov.Venthyr }, -- Enhancement
 		{ raid = cov.Necrolord, mythic = cov.Venthyr, torghast = cov.Kyrian }, -- Restoration
 	},	
+	["EVOKER"] = {
+		{ main = cov.NightFae }, -- Devastation
+		{ main = cov.NightFae }, -- Preservation
+	},
 	
 	-- Plate
 	["DEATHKNIGHT"] = {

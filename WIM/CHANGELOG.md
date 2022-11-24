@@ -1,7 +1,7 @@
 # WIM
 
-## [3.9.10](https://github.com/Legacy-of-Sylvanaar/wow-instant-messenger/tree/3.9.10) (2022-11-07)
-[Full Changelog](https://github.com/Legacy-of-Sylvanaar/wow-instant-messenger/compare/3.9.9...3.9.10) [Previous Releases](https://github.com/Legacy-of-Sylvanaar/wow-instant-messenger/releases)
+## [3.9.13](https://github.com/Legacy-of-Sylvanaar/wow-instant-messenger/tree/3.9.13) (2022-11-21)
+[Full Changelog](https://github.com/Legacy-of-Sylvanaar/wow-instant-messenger/compare/3.9.12...3.9.13) [Previous Releases](https://github.com/Legacy-of-Sylvanaar/wow-instant-messenger/releases)
 
-- fix(History): reference correct table in OnDisable  
-- fix(ClickControl): refactor behavior so module doesn't need to be unregistered if WIM is disabled.  
+- fix some missing connections to libDropDownMenu  
+- Fix: Whispers were not always being grouped with chat windows correctly.  

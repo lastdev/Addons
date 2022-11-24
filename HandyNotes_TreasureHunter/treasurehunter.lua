@@ -10,3 +10,4 @@ ns.defaultsOverride = {
 }
 
 ns.groups["junk"] = "Junk"
+ns.groups["evershiftingmirror"] = "{item:129929}"

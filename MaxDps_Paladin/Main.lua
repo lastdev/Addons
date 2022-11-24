@@ -3,7 +3,7 @@ _G[addonName] = addonTable;
 
 if not MaxDps then return end
 
---- @type MaxDps
+--- @type  MaxDps
 local MaxDps = MaxDps;
 local Paladin = MaxDps:NewModule('Paladin');
 addonTable.Paladin = Paladin;
@@ -14,6 +14,7 @@ Paladin.spellMeta = {
 	end
 }
 
+-- additional comment
 function Paladin:Enable()
 	if MaxDps.Spec == 1 then
 		MaxDps.NextSpell = Paladin.Holy;

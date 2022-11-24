@@ -4,9 +4,9 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 
 local addon = _G[addonName]
 
-addon.Version = "v10.0.004"
+addon.Version = "v10.0.007"
 -- addon.VersionNum = 902006
-addon.VersionNum = 1000004
+addon.VersionNum = 1000007
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local commPrefix = addonName
@@ -251,10 +251,10 @@ addon.Icons = {
 -- Place Enums in a separate file when there are enough to justify it
 addon.Enum = {
 	ArmorTypes = {
-		[1] = GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_CLOTH),			-- "Cloth"
-		[2] = GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_LEATHER),		-- "Leather"
-		[3] = GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_MAIL),			-- "Mail"
-		[4] = GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_PLATE)			-- "Plate"
+		[1] = GetItemSubClassInfo(Enum.ItemClass.Armor, Enum.ItemArmorSubclass.Cloth), -- "Cloth"
+		[2] = GetItemSubClassInfo(Enum.ItemClass.Armor, Enum.ItemArmorSubclass.Leather), -- "Leather"
+		[3] = GetItemSubClassInfo(Enum.ItemClass.Armor, Enum.ItemArmorSubclass.Mail), -- "Mail"
+		[4] = GetItemSubClassInfo(Enum.ItemClass.Armor, Enum.ItemArmorSubclass.Plate) -- "Plate"
 	},
 }
 

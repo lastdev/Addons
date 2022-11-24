@@ -5,14 +5,14 @@
 -- Whats new info
 SMARTBUFF_WHATSNEW = "\n\n|cffffffff         Whats new:|r\n\n"
   .."          |cffffffffDragonflight version by Codermik.|cff00e0ff\n\n\n"
-  .."          Changes in r10.091122:\n\n"
-  .."             * Added 'Correct Casting' option for those \n"
-  .."                players that have an issue with the addon.\n"
-  .."                not casting buffs on scroll/action button,\n"
-  .."                this is experimental so please test.\n\n"
-  .."             * Added sound selection to match the classic\n"
-  .."                version of the addon. \n\n"
-  .."             * Various other bug fixes. \n\n"
+  .."          Changes in r13.191122:\n\n"
+  .."             * Fixed reagent checks throwing a LUA error \n"
+  .."                when checking contents of your bags.\n\n"
+  .."             * Added support for the new Evoker class in \n"
+  .."                the buffing assignments.\n\n"
+  .."             * Fixed a LUA error when using the addon while \n"
+  .."                playing a Evoker class.\n\n"
+  .."             * Other bug fixes. \n\n"
   .."\n\n"
   .."          |c0000FF96Many thanks to Chris S. and Samantha R. for\n"
   .."          their very kind donations - thanks a lot.\n\n"
@@ -44,7 +44,7 @@ SMARTBUFF_DEMONTYPE = "Imp";
 SMARTBUFF_UNDEAD    = "Undead";
 
 -- Classes
-SMARTBUFF_CLASSES = {"Druid", "Hunter", "Mage", "Paladin", "Priest", "Rogue", "Shaman", "Warlock", "Warrior", "Death Knight", "Monk", "Demon Hunter", "Hunter Pet", "Warlock Pet", "Death Knight Pet", "Tank", "Healer", "Damage Dealer"};
+SMARTBUFF_CLASSES = {"Druid", "Hunter", "Mage", "Paladin", "Priest", "Rogue", "Shaman", "Warlock", "Warrior", "Death Knight", "Monk", "Demon Hunter", "Evoker", "Hunter Pet", "Warlock Pet", "Death Knight Pet", "Tank", "Healer", "Damage Dealer"};
 
 -- Templates and Instances
 SMARTBUFF_TEMPLATES = {"Solo", "Party", "Raid", "Battleground", "Arena", "ICC", "TOC", "Ulduar", "MC", "Ony", "BWL", "Naxx", "AQ", "ZG", "Custom 1", "Custom 2", "Custom 3", "Custom 4", "Custom 5"};
@@ -65,8 +65,8 @@ BINDING_NAME_SMARTBUFF_BIND_RESETBUFFTIMERS = "Reset buff timers";
 -- Options Frame Text
 
 -- experimental feature - for testing.
-SMARTBUFF_OFT_FIXBUFF		 = "Correct Casting"
-SMARTBUFF_OFTT_FIXBUFF		 = "Only tick this option if Smartbuff is failing to cast buffs using the\nscroll mouse, action button or by macro - this is experimental so\nplease report any issues."
+SMARTBUFF_OFT_FIXBUFF		 = "Fix Casting"
+SMARTBUFF_OFTT_FIXBUFF		 = "Only tick this option if Smartbuff is failing to cast buffs while using the\nscroll mouse, action button or macro. Combat buffing will not work with\nthis setting active but you will be notified its missing for manual buffing."
 
 SMARTBUFF_OFT                = "SmartBuff On/Off";
 SMARTBUFF_OFT_MENU           = "Show/hide options menu";

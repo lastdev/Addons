@@ -6,9 +6,10 @@ local HL = LibStub("AceAddon-3.0"):NewAddon(myname, "AceEvent-3.0")
 -- local L = LibStub("AceLocale-3.0"):GetLocale(myname, true)
 ns.HL = HL
 
+local HBD = LibStub("HereBeDragons-2.0")
 local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 
-ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v7.3'
+ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v9'
 
 ns.CLASSIC = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE
 
@@ -103,7 +104,7 @@ function ns.RegisterPoints(zone, points, defaults)
             point.route = nil
         end
         local proxy_meta
-        if point.path or point.nearby then
+        if point.path or point.nearby or point.related then
             proxy_meta = {__index=point}
         end
         if point.path then
@@ -129,12 +130,49 @@ function ns.RegisterPoints(zone, points, defaults)
                     texture=nearby.texture or false,
                     minimap=true, worldmap=false, scale=0.95,
                     note=nearby.note or false,
+                    loot=nearby.loot, active=nearby.active,
                     _coord=ncoord,
                 }, proxy_meta)
                 if nearby.color then
                     npoint.texture = ns.atlas_texture(npoint.atlas, nearby.color)
                 end
                 ns.points[zone][ncoord] = npoint
+            end
+        end
+        if point.related then
+            -- like
+            for rcoord, related in pairs(point.related) do
+                local rpoint = setmetatable({
+                    label=related.label or (point.npc and "Related to nearby NPC" or "Related to nearby treasure"),
+                    atlas=related.atlas or "playerpartyblip",
+                    texture=related.texture or false,
+                    minimap=related.minimap ~= nil and related.minimap or true, worldmap=true, scale=0.95,
+                    note=related.note or false,
+                    loot=related.loot, active=related.active,
+                    route=coord,
+                    _coord=rcoord,
+                }, proxy_meta)
+                if related.color then
+                    rpoint.texture = ns.atlas_texture(rpoint.atlas, related.color)
+                end
+                if not point.routes then point.routes = {} end
+                table.insert(point.routes, {coord, rcoord, highlightOnly=true})
+                ns.points[zone][rcoord] = rpoint
+            end 
+        end
+        if point.parent then
+            local x, y = HandyNotes:getXY(coord)
+            local mapinfo = C_Map.GetMapInfo(zone)
+            if mapinfo and mapinfo.parentMapID and mapinfo.parentMapID ~= 0 then
+                local pzone = mapinfo.parentMapID
+                local px, py = HBD:TranslateZoneCoordinates(x, y, zone, pzone)
+                if px and py then
+                    if not ns.points[pzone] then
+                        ns.points[pzone] = {}
+                    end
+                    local pcoord = HandyNotes:getCoord(px, py)
+                    ns.points[pzone][pcoord] = point
+                end
             end
         end
     end
@@ -194,6 +232,7 @@ ns.playerClassColor = RAID_CLASS_COLORS[playerClass]
 ns.playerName = UnitName("player")
 ns.playerFaction = UnitFactionGroup("player")
 ns.playerClassMask = ({
+    -- this is 2^(classID - 1)
     WARRIOR = 0x1,
     PALADIN = 0x2,
     HUNTER = 0x4,
@@ -206,30 +245,55 @@ ns.playerClassMask = ({
     MONK = 0x200,
     DRUID = 0x400,
     DEMONHUNTER = 0x800,
+    EVOKER = 0x1000,
 })[playerClass] or 0
 
 ---------------------------------------------------------
 -- All the utility code
 
-local cache_tooltip = _G["HNTreasuresCacheScanningTooltip"]
-if not cache_tooltip then
-    cache_tooltip = CreateFrame("GameTooltip", "HNTreasuresCacheScanningTooltip")
-    cache_tooltip:AddFontStrings(
-        cache_tooltip:CreateFontString("$parentTextLeft1", nil, "GameTooltipText"),
-        cache_tooltip:CreateFontString("$parentTextRight1", nil, "GameTooltipText")
-    )
+function ns.GetCriteria(achievement, criteriaid)
+    local retOK, criteriaString, criteriaType, completed, quantity, reqQuantity, charName, flags, assetID, quantityString, criteriaID, eligible = pcall(criteriaid < 100 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID, achievement, criteriaid, true)
+    return criteriaString, criteriaType, completed, quantity, reqQuantity, charName, flags, assetID, quantityString, criteriaID, eligible
 end
-local name_cache = {}
-local function mob_name(id)
-    if not name_cache[id] then
-        -- this doesn't work with just clearlines and the setowner outside of this, and I'm not sure why
-        cache_tooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
-        cache_tooltip:SetHyperlink(("unit:Creature-0-0-0-0-%d"):format(id))
-        if cache_tooltip:IsShown() then
-            name_cache[id] = HNTreasuresCacheScanningTooltipTextLeft1:GetText()
+
+local mob_name
+if _G.C_TooltipInfo then
+    local name_cache = {}
+    mob_name = function(id)
+        if not name_cache[id] then
+            local info = C_TooltipInfo.GetHyperlink(("unit:Creature-0-0-0-0-%d"):format(id))
+            -- TooltipUtil.SurfaceArgs(info)
+            if info and info.lines and info.lines[1] then
+                TooltipUtil.SurfaceArgs(info.lines[1])
+                if info.lines[1].type == Enum.TooltipDataType.Unit then
+                    name_cache[id] = info.lines[1].leftText
+                end
+            end
         end
+        return name_cache[id]
     end
-    return name_cache[id]
+else
+    -- pre-10.0.2
+    local cache_tooltip = _G["HNTreasuresCacheScanningTooltip"]
+    if not cache_tooltip then
+        cache_tooltip = CreateFrame("GameTooltip", "HNTreasuresCacheScanningTooltip")
+        cache_tooltip:AddFontStrings(
+            cache_tooltip:CreateFontString("$parentTextLeft1", nil, "GameTooltipText"),
+            cache_tooltip:CreateFontString("$parentTextRight1", nil, "GameTooltipText")
+        )
+    end
+    local name_cache = {}
+    mob_name = function(id)
+        if not name_cache[id] then
+            -- this doesn't work with just clearlines and the setowner outside of this, and I'm not sure why
+            cache_tooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
+            cache_tooltip:SetHyperlink(("unit:Creature-0-0-0-0-%d"):format(id))
+            if cache_tooltip:IsShown() then
+                name_cache[id] = HNTreasuresCacheScanningTooltipTextLeft1:GetText()
+            end
+        end
+        return name_cache[id]
+    end
 end
 local function quick_texture_markup(icon)
     -- needs less than CreateTextureMarkup
@@ -265,7 +329,7 @@ local function render_string(s, context)
             return CreateAtlasMarkup("questnormal") .. (C_QuestLog.IsQuestFlaggedCompleted(id) and completeColor or incompleteColor):WrapTextInColorCode(id)
         elseif variant == "achievement" then
             if mainid and subid then
-                local criteria = (subid < 40 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID)(mainid, subid)
+                local criteria = ns.GetCriteria(mainid, subid)
                 if criteria then
                     return criteria
                 end
@@ -294,6 +358,16 @@ local function render_string(s, context)
         elseif variant == "covenant" then
             local data = C_Covenants.GetCovenantData(id)
             return COVENANT_COLORS[id]:WrapTextInColorCode(data and data.name or ns.covenants[id])
+        elseif variant == "majorfaction" then
+            local info = C_MajorFactions.GetMajorFactionData(id)
+            if info and info.name then
+                return CreateAtlasMarkup(("majorFactions_icons_%s512"):format(info.textureKit)) .. " " .. info.name
+            end
+        elseif variant == "faction" then
+            local name = GetFactionInfoByID(id)
+            if name then
+                return name
+            end
         elseif variant == "garrisontalent" then
             local info = C_Garrison.GetTalentInfo(id)
             if info then
@@ -385,7 +459,7 @@ local function work_out_label(point)
         return (render_string(point.label, point))
     end
     if point.achievement and point.criteria and type(point.criteria) ~= "table" and point.criteria ~= true then
-        local criteria = (point.criteria < 40 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID)(point.achievement, point.criteria)
+        local criteria = ns.GetCriteria(point.achievement, point.criteria)
         if criteria then
             return criteria
         end
@@ -442,6 +516,9 @@ local function work_out_texture(point)
         return icon_cache[point.atlas]
     end
     if ns.db.icon_item or point.icon then
+        if point.icon then
+            return trimmed_icon(point.icon)
+        end
         if point.loot and #point.loot > 0 then
             local texture = select(10, GetItemInfo(ns.lootitem(point.loot[1])))
             if texture then
@@ -588,11 +665,12 @@ local get_point_progress = function(point)
 end
 
 local function tooltip_criteria(tooltip, achievement, criteriaid, ignore_quantityString)
-    local getinfo = (criteriaid < 40 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID)
-    local criteria, _, complete, _, _, _, _, _, quantityString = getinfo(achievement, criteriaid, true) -- include hidden
+    local criteria, _, complete, _, _, _, flags, _, quantityString = ns.GetCriteria(achievement, criteriaid) -- include hidden
     if quantityString and not ignore_quantityString then
+        local is_progressbar = bit.band(flags, EVALUATION_TREE_FLAG_PROGRESS_BAR) == EVALUATION_TREE_FLAG_PROGRESS_BAR
+        local label = (criteria and #criteria > 0 and not is_progressbar) and criteria or PVP_PROGRESS_REWARDS_HEADER
         tooltip:AddDoubleLine(
-            (criteria and #criteria > 0) and criteria or PVP_PROGRESS_REWARDS_HEADER, quantityString,
+            label, quantityString,
             complete and 0 or 1, complete and 1 or 0, 0,
             complete and 0 or 1, complete and 1 or 0, 0
         )
@@ -803,7 +881,12 @@ local function handle_tooltip(tooltip, point, skip_label)
     end
 
     if (ns.db.tooltip_item or IsShiftKeyDown()) and (point.loot or point.npc or point.spell) then
-        local comparison = ShoppingTooltip1
+        local comparison = _G[myname.."ComparisonTooltip"]
+        if not comparison then
+            comparison = CreateFrame("GameTooltip", myname.."ComparisonTooltip", UIParent, "ShoppingTooltipTemplate")
+            comparison:SetFrameStrata("TOOLTIP")
+            comparison:SetClampedToScreen(true)
+        end
 
         do
             local side
@@ -1071,9 +1154,14 @@ do
                     LibDD:UIDropDownMenu_SetDisplayMode(HL_Dropdown, "MENU")
                 end
                 LibDD:ToggleDropDownMenu(1, nil, HL_Dropdown, self, 0, 0)
+                return
             end
             if button == "LeftButton" and IsShiftKeyDown() and _G.MAP_PIN_HYPERLINK then
                 sendToChat(button, uiMapID, coord)
+                return
+            end
+            if point.OnClick then
+                point:OnClick(button, uiMapID, coord)
             end
         end
     end
@@ -1081,7 +1169,7 @@ end
 
 function HLHandler:OnLeave(uiMapID, coord)
     GameTooltip:Hide()
-    ShoppingTooltip1:Hide()
+    if _G[myname.."ComparisonTooltip"] then _G[myname.."ComparisonTooltip"]:Hide() end
 
     local point = ns.points[uiMapID] and ns.points[uiMapID][coord]
     if ns.RouteWorldMapDataProvider and (point.route or point.routes) then
@@ -1182,6 +1270,9 @@ hooksecurefunc(AreaPOIPinMixin, "TryShowTooltip", function(self)
     -- if not ns.should_show_point(point._coord, point, point._uiMapID, false) then return end
     handle_tooltip(GameTooltip, point, true)
 end)
+hooksecurefunc(AreaPOIPinMixin, "OnMouseLeave", function(self)
+    if _G[myname.."ComparisonTooltip"] then _G[myname.."ComparisonTooltip"]:Hide() end
+end)
 
 hooksecurefunc(VignettePinMixin, "OnMouseEnter", function(self)
     local vignetteInfo = self.vignetteInfo
@@ -1190,13 +1281,20 @@ hooksecurefunc(VignettePinMixin, "OnMouseEnter", function(self)
     -- if not ns.should_show_point(point._coord, point, point._uiMapID, false) then return end
     handle_tooltip(GameTooltip, point, true)
 end)
+hooksecurefunc(VignettePinMixin, "OnMouseLeave", function(self)
+    if _G[myname.."ComparisonTooltip"] then _G[myname.."ComparisonTooltip"]:Hide() end
+end)
 
-if _G.TaskPoi_OnEnter then
+if _G.TaskPOI_OnEnter then
     hooksecurefunc("TaskPOI_OnEnter", function(self)
         if not self.questID then return end
         if not ns.WorldQuestsToPoints[self.questID] then return end
         local point = ns.WorldQuestsToPoints[self.questID]
         -- if not ns.should_show_point(point._coord, point, point._uiMapID, false) then return end
-        handle_tooltip(GameTooltip, point, true)
+        handle_tooltip(GameTooltip, point, false)
+    end)
+    hooksecurefunc("TaskPOI_OnLeave", function(self)
+        -- 10.0.2 doesn't hide this by default any more
+        if _G[myname.."ComparisonTooltip"] then _G[myname.."ComparisonTooltip"]:Hide() end
     end)
 end

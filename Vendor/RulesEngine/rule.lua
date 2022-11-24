@@ -15,9 +15,22 @@ local function rule_Execute(self, environment)
         self.executed = (self.executed + 1);
         -- Adjust the environment to for the rule
         rawset(environment, RULE_PARAMS_KEY, self.params);
+
+        if (type(self.params) == "table") then
+            for key, value in pairs(self.params) do
+                rawset(environment, key, value)
+            end
+        end
+
         setfenv(self.script, environment)
         local status, result = pcall(self.script)
         rawset(environment, RULE_PARAMS_KEY, nil);
+
+        if (type(self.params) == "table") then
+            for key, value in pairs(self.params) do
+                rawset(environment, string.upper(key), nil)
+            end
+        end
 
         if status then
             self.healthy = true;
@@ -60,6 +73,7 @@ local rule_API =
     GetId = function(self) return self.id end,
     IsHealthy = function(self) return self.healthy end,
     GetName = function(self) return self.name end,
+    GetWeight = function(self) return self.weight or 0 end,
     GetExecuteCount = function(self) return self.executed end,
     GetError = function(self) return self.error end,
 };
@@ -70,10 +84,10 @@ local rule_API =
     |    is the newly initialized rule object or nil and the error message
     |    which indicates why we couldn't parse it.
     ========================================================================--]]
-local function rule_new(id, name, script, params)
-    assert(id ~= nil and string.len(id) ~= 0, "The rule id is an invalid string, it must be valid and non-empty.")
-    assert(name ~= nil and string.len(name) ~= 0, "The name of the rule must be non-empty and valid.");
-    assert(script ~= nil and (type(script) == "function" or type(script) == "string"), "All rules must be provide a valid script function or text.")
+local function rule_new(id, name, script, params, weight)
+
+
+
 
     local instance =
     {
@@ -81,6 +95,7 @@ local function rule_new(id, name, script, params)
         name = name,
         healthy = true,
         executed = 0,
+        weight = weight or 0
     };
 
     -- We also need to wrap the rule script text in return.

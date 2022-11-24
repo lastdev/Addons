@@ -76,18 +76,12 @@ L["CONFIG_CHAT_LOG"] = "Afficher vos mises en vente dans la fenêtre de discussi
 L["CONFIG_CHAT_LOG_TOOLTIP_HEADER"] = "Notification de mise en vente dans la fenêtre de discussion"
 L["CONFIG_CHAT_LOG_TOOLTIP_TEXT"] = "Un message résumant les informations de vos mises en vente sera ajouté dans la fenêtre de discussion."
 L["CONFIG_CRAFTING_INFO_SHOW"] = "Afficher les coûts de fabrication dans la vue de fabrication"
---[[Translation missing --]]
-L["CONFIG_CRAFTING_INFO_SHOW_COST"] = "Show reagent costs from auction house and vendors"
---[[Translation missing --]]
-L["CONFIG_CRAFTING_INFO_SHOW_COST_TOOLTIP_HEADER"] = "Crafting Info Show Cost"
---[[Translation missing --]]
-L["CONFIG_CRAFTING_INFO_SHOW_COST_TOOLTIP_TEXT"] = "Enable this option to see the cost of crafting a specific recipe when viewing it."
---[[Translation missing --]]
-L["CONFIG_CRAFTING_INFO_SHOW_PROFIT"] = "Show profit from crafting with auction house and vendor reagents"
---[[Translation missing --]]
-L["CONFIG_CRAFTING_INFO_SHOW_PROFIT_TOOLTIP_HEADER"] = "Crafting Info Show Profit"
---[[Translation missing --]]
-L["CONFIG_CRAFTING_INFO_SHOW_PROFIT_TOOLTIP_TEXT"] = "Enable this option to see the profit of crafting a specific recipe when viewing it."
+L["CONFIG_CRAFTING_INFO_SHOW_COST"] = "Affiche les coûts des réactifs de l'hôtel des ventes et des vendeurs"
+L["CONFIG_CRAFTING_INFO_SHOW_COST_TOOLTIP_HEADER"] = "Affiche les Informations sur les dépenses de l'artisanat"
+L["CONFIG_CRAFTING_INFO_SHOW_COST_TOOLTIP_TEXT"] = "Activez cette option pour voir le coût de fabrication d'une recette spécifique lorsque vous la visualisez."
+L["CONFIG_CRAFTING_INFO_SHOW_PROFIT"] = "Affiche les bénéfices de l'artisanat avec les réactifs de l'hôtel des ventes et des vendeurs."
+L["CONFIG_CRAFTING_INFO_SHOW_PROFIT_TOOLTIP_HEADER"] = "Affiche les informations sur le bénéfice de l'artisanat"
+L["CONFIG_CRAFTING_INFO_SHOW_PROFIT_TOOLTIP_TEXT"] = "Activez cette option pour voir le bénéfice de la création d'une recette spécifique lors de sa visualisation."
 L["CONFIG_CRAFTING_INFO_SHOW_TOOLTIP_HEADER"] = "Informations supplémentaires sur l'écran de fabrication"
 L["CONFIG_CRAFTING_INFO_SHOW_TOOLTIP_TEXT"] = "L'écran de fabrication affichera le coût de confection d'un objet. Désactivez cette option pour ne pas afficher les coûts de confection.."
 L["CONFIG_DEBUG"] = "Afficher le rendu du débogage"
@@ -232,8 +226,7 @@ L["EXPORT_AS"] = "Exporter en tant que :"
 L["EXPORT_RESULTS"] = "Exporter les résultats"
 L["EXPORT_STRING"] = "Entrée partageable"
 L["EXPORT_WHISPER"] = "Chuchoter à"
---[[Translation missing --]]
-L["EXTENDED_SEARCH_ACTIVE_TEXT"] = "%extended search active%"
+L["EXTENDED_SEARCH_ACTIVE_TEXT"] = "%Recherche étendue active%"
 L["FAVOURITES"] = "Favoris"
 L["FETCHING_ITEM_INFO"] = "Recherche des prix des objets..."
 L["FINISHED_PROCESSING"] = "Traitement terminé avec %s objets."
@@ -312,8 +305,7 @@ L["PET_TOOLTIP_TOOLTIP_TEXT"] = "Inclus les prix des mascottes dans les info-bul
 L["POST"] = "Mettre en vente"
 L["POST_ATTEMPT_FAILED"] = "Votre dernière tentative de post n'a pas fonctionné. Essayez à nouveau."
 L["PRICE"] = "Prix"
---[[Translation missing --]]
-L["PRICE_HISTORY"] = "Price History"
+L["PRICE_HISTORY"] = "Historique des prix"
 L["PRICE_INCREASE_WARNING"] = "Prix augmenté de %s, attente de %ss"
 L["PROFILE_TOGGLE_TOOLTIP_HEADER"] = "Activer les paramètres par personnage"
 L["PROFILE_TOGGLE_TOOLTIP_TEXT"] = "Les modifications apportées aux paramètres d'Auctionator n'affecteront que ce personnage."
@@ -522,8 +514,7 @@ L["TRANSLATORS_HELP"] = "Aidez-nous à traduire !"
 L["TRANSLATORS_ITALIAN"] = "Italien"
 L["TRANSLATORS_KOREAN"] = "Coreéen"
 L["TRANSLATORS_LATIN_SPANISH"] = "Espagnol d'Amérique latine"
---[[Translation missing --]]
-L["TRANSLATORS_ROMANIAN_INFO"] = "Romanian (available separately)"
+L["TRANSLATORS_ROMANIAN_INFO"] = "Roumain (disponible séparément)"
 L["TRANSLATORS_RUSSIAN"] = "Russe"
 L["TRANSLATORS_SIMPLIFIED_CHINESE"] = "Chinois simplifié"
 L["TRANSLATORS_SPANISH"] = "Espagnol"

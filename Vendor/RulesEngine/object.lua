@@ -36,7 +36,7 @@ local function event_Call(self, ...)
         end
         local status, msg = xpcall(handler.fn, CallErrorHandler, unpack(args));
         if (not status) then
-            print(string.format("Failed to invoke handler for '%s': %s", rawget(self, EVENT_NAME_KEY), msg));
+
         end
     end
 end
@@ -60,7 +60,7 @@ end
     |   it is not already in the list.
     =======================================================================--]]
 local function event_Add(self, handler, ...)
-    assert(type(handler) == "function", "You can only register functions as event handlers");
+
 
     local handlers = rawget(self, EVENT_DATA_KEY);
     if (not event_findHandler(handlers, handler)) then
@@ -110,7 +110,7 @@ end
     |   error messages.
     =======================================================================--]]
 local function create_event(name)
-    assert(type(name) == "string", "They name of the event must be a string");
+
     local object = 
     {
         [EVENT_DATA_KEY] = {},

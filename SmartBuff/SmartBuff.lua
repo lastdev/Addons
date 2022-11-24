@@ -6,10 +6,10 @@
 -- Cast the most important buffs on you, tanks or party/raid members/pets.
 -------------------------------------------------------------------------------
 
-SMARTBUFF_DATE          = "091122";
+SMARTBUFF_DATE          = "191122";
 
-SMARTBUFF_VERSION       = "r11."..SMARTBUFF_DATE;
-SMARTBUFF_VERSIONNR     = 10000;
+SMARTBUFF_VERSION       = "r13."..SMARTBUFF_DATE;
+SMARTBUFF_VERSIONNR     = 100002;
 SMARTBUFF_TITLE         = "SmartBuff";
 SMARTBUFF_SUBTITLE      = "Supports you in casting buffs";
 SMARTBUFF_DESC          = "Cast the most important buffs on you, your tanks, party/raid members/pets";
@@ -22,7 +22,7 @@ local SmartbuffPrefix = "Smartbuff";
 local SmartbuffSession = true;
 local SmartbuffVerCheck = false;					-- for my use when checking guild users/testers versions  :)
 local buildInfo = select(4, GetBuildInfo())
-local SmartbuffRevision = 11;
+local SmartbuffRevision = 13;
 local SmartbuffVerNotifyList = {}
 
 local SG = SMARTBUFF_GLOBALS;
@@ -102,8 +102,8 @@ local cScrBtnBO = nil;
 local cAddUnitList = { };
 local cIgnoreUnitList = { };
 
-local cClasses       = {"DRUID", "HUNTER", "MAGE", "PALADIN", "PRIEST", "ROGUE", "SHAMAN", "WARLOCK", "WARRIOR", "DEATHKNIGHT", "MONK", "DEMONHUNTER", "HPET", "WPET", "DKPET", "TANK", "HEALER", "DAMAGER"};
-local cOrderGrp      = {0, 1, 2 , 3, 4 , 5 , 6, 7, 8, 9, 10};
+local cClasses       = {"DRUID", "HUNTER", "MAGE", "PALADIN", "PRIEST", "ROGUE", "SHAMAN", "WARLOCK", "WARRIOR", "DEATHKNIGHT", "MONK", "DEMONHUNTER", "EVOKER", "HPET", "WPET", "DKPET", "TANK", "HEALER", "DAMAGER"};
+local cOrderGrp      = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 local cFonts         = {"NumberFontNormal", "NumberFontNormalLarge", "NumberFontNormalHuge", "GameFontNormal", "GameFontNormalLarge", "GameFontNormalHuge", "ChatFontNormal", "QuestFont", "MailTextFontNormal", "QuestTitleFont"};
 
 local currentUnit = nil;
@@ -134,6 +134,7 @@ local Icons = {
   ["DEATHKNIGHT"] = { IconPaths.Classes, 0.25, 0.50, 0.50, 0.75 },
   ["MONK"]        = { IconPaths.Classes, 0.50, 0.75, 0.50, 0.75 },
   ["DEMONHUNTER"] = { IconPaths.Classes, 0.75, 1.00, 0.50, 0.75 },
+  ["EVOKER"]      = { IconPaths.Classes, 0.75, 1.00, 0.50, 0.75 },
   ["PET"]         = { IconPaths.Pet, 0.08, 0.92, 0.08, 0.92},
   ["TANK"]        = { IconPaths.Roles, 0.0, 19/64, 22/64, 41/64 },
   ["HEALER"]      = { IconPaths.Roles, 20/64, 39/64, 1/64, 20/64 },
@@ -288,7 +289,7 @@ local function InitBuffSettings(cBI, reset)
     cBuff.ManaLimit = 0;    
     if (cBI.Type == SMARTBUFF_CONST_GROUP or cBI.Type == SMARTBUFF_CONST_ITEMGROUP) then
       for n in pairs(cClasses) do
-        if (cBI.Type == SMARTBUFF_CONST_GROUP and n <= 11 and not string.find(cBI.Params, cClasses[n])) then
+        if (cBI.Type == SMARTBUFF_CONST_GROUP and n <= 13 and not string.find(cBI.Params, cClasses[n])) then
           cBuff[cClasses[n]] = true;
         else
           cBuff[cClasses[n]] = false;
@@ -2789,15 +2790,17 @@ function SMARTBUFF_CountReagent(reagent, chain)
   local tmpItem, itemName, count;
   if (chain == nil) then chain = { reagent }; end
   for bag = 0, NUM_BAG_FRAMES do
-    for slot = 1, GetContainerNumSlots(bag) do
-      tmpItem = GetContainerItemLink(bag, slot);      
+    for slot = 1, C_Container.GetContainerNumSlots(bag) do
+      tmpItem = C_Container.GetContainerItemLink(bag, slot);      
+--	  if tmpItem then print(tmpItem) end
       if (tmpItem ~= nil) then
         for i = 1, #chain, 1 do
           --print(chain[i]);
           if (chain[i] and string.find(tmpItem, "["..chain[i].."]", 1, true)) then
-            --print("Item found: "..chain[i]);
-            _, count = GetContainerItemInfo(bag, slot);
-            id = GetContainerItemID(bag, slot);
+--            print("Item found: "..chain[i]);
+            containerInfo = C_Container.GetContainerItemInfo(bag, slot);
+			count = containerInfo.stackCount;
+            id = C_Container.GetContainerItemID(bag, slot);
             n = n + count;
           end
         end
@@ -2825,16 +2828,17 @@ function SMARTBUFF_FindItem(reagent, chain)
   local tmpItem, itemName, texture, count;
   if (chain == nil) then chain = { reagent }; end
   for bag = 0, NUM_BAG_FRAMES do
-    for slot = 1, GetContainerNumSlots(bag) do
-      tmpItem = GetContainerItemLink(bag, slot);
+    for slot = 1, C_Container.GetContainerNumSlots(bag) do
+      tmpItem = C_Container.GetContainerItemLink(bag, slot);
       if (tmpItem ~= nil) then
         --SMARTBUFF_AddMsgD("Reagent found: " .. tmpItem);
         for i = 1, #chain, 1 do
           --print(chain[i]);
+--          if (chain[i] and string.find(itemName, chain[i], 1, true)) then
           if (chain[i] and string.find(tmpItem, "["..chain[i].."]", 1, true)) then
 --            print("Item found: "..chain[i]);
-            texture, count = GetContainerItemInfo(bag, slot);
-            return bag, slot, count, texture;
+              containerInfo = C_Container.GetContainerItemInfo(bag, slot);			  
+              return bag, slot, containerInfo.stackCount, containerInfo.iconFileID;
           end
         end
       end

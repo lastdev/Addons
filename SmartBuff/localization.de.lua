@@ -30,7 +30,7 @@ SMARTBUFF_DEMONTYPE = "Wichtel";
 SMARTBUFF_UNDEAD    = "Untot";
 
 -- Classes
-SMARTBUFF_CLASSES = {"Druide", "Jäger", "Magier", "Paladin", "Priester", "Schurke", "Schamane", "Hexenmeister", "Krieger", "Todesritter", "Mönch", "Dämonenjäger", "Jäger Pet", "Hexer Pet", "Todesritter Pet", "Tank", "Heiler", "Schadensverursacher"};
+SMARTBUFF_CLASSES = {"Druide", "Jäger", "Magier", "Paladin", "Priester", "Schurke", "Schamane", "Hexenmeister", "Krieger", "Todesritter", "Mönch", "Dämonenjäger", "Evoker", "Jäger Pet", "Hexer Pet", "Todesritter Pet", "Tank", "Heiler", "Schadensverursacher"};
 
 -- Templates and Instances
 SMARTBUFF_TEMPLATES = {"Solo", "Gruppe", "Raid", "Schlachtfeld", "Arena", "ICC", "PDK", "Ulduar", "MC", "Ony", "BWL", "Naxx", "AQ", "ZG", "Custom 1", "Custom 2", "Custom 3", "Custom 4", "Custom 5"};

@@ -216,15 +216,14 @@ local classMasks = {
 	[256] = "WARLOCK",
 	[512] = "MONK",
 	[1024] = "DRUID",
-	[2048] = "DEMONHUNTER"
+	[2048] = "DEMONHUNTER",
+	[4096] = "EVOKER"
 }
 
 local classArmorMask = {
 	["WARRIOR"] = 35, -- Warrior (1) + Paladin (2) + DeathKnight (32)
 	["PALADIN"] = 35, -- Warrior (1) + Paladin (2) + DeathKnight (32)
 	["DEATHKNIGHT"] = 35, -- Warrior (1) + Paladin (2) + DeathKnight (32)
-	["HUNTER"] = 68, -- Hunter (4) + Shaman (64)
-	["SHAMAN"] = 68, -- Hunter (4) + Shaman (64)
 	["PRIEST"] = 400, -- Priest (16) + Mage (128) + Warlock (256)
 	["MAGE"] = 400, -- Priest (16) + Mage (128) + Warlock (256)
 	["WARLOCK"] = 400, -- Priest (16) + Mage (128) + Warlock (256)
@@ -232,6 +231,9 @@ local classArmorMask = {
 	["MONK"] = 3592, -- Rogue (8) + Monk (512) + Druid (1024) + DemonHunter (2048)
 	["DRUID"] = 3592, -- Rogue (8) + Monk (512) + Druid (1024) + DemonHunter (2048)
 	["DEMONHUNTER"] = 3592, -- Rogue (8) + Monk (512) + Druid (1024) + DemonHunter (2048)
+	["HUNTER"] = 4164, -- Hunter (4) + Shaman (64) + Evoker (4096)
+	["SHAMAN"] = 4164, -- Hunter (4) + Shaman (64) + Evoker (4096)
+	["EVOKER"] = 4164, -- Hunter (4) + Shaman (64) + Evoker (4096)
 }
 
 local function ScanTransmogSets()
@@ -251,22 +253,22 @@ local function ScanTransmogSets()
 		if class == englishClass then
 			local setID = set.setID
 
-			local sources = C_TransmogSets.GetSetSources(set.setID)
+			local appearances = C_TransmogSets.GetSetPrimaryAppearances(set.setID)
 			local numTotal = 0
 			local numCollected = 0
 
-			for sourceID, collected in pairs(sources) do
+			for _, appearance in pairs(appearances) do
 				numTotal = numTotal + 1
-				if collected then
+				if appearance.collected then
 					numCollected = numCollected + 1
 
 					collectedSets[setID] = collectedSets[setID] or {}
-					collectedSets[setID][sourceID] = true
+					collectedSets[setID][appearance.appearanceID] = true
 				end
 			end
 
 			if numTotal == numCollected then
-				collectedSets[setID] = nil	-- if set is complete, kill the table, the counters will tell it
+				collectedSets[set.setID] = nil	-- if set is complete, kill the table, the counters will tell it
 			end
 
 			addon.db.global.Reference.SetNumItems[setID] = numTotal
@@ -394,10 +396,10 @@ local function _GetSetIcon(setID)
 		-- coming from Blizzard_Wardrobe.lua:
 		-- WardrobeSetsDataProviderMixin:GetSetSourceData
 		-- WardrobeSetsDataProviderMixin:GetSortedSetSources
-		local sources = C_TransmogSets.GetSetSources(setID)
+		local apppearances = C_TransmogSets.GetSetPrimaryAppearances(setID)
 		
-		for sourceID, _ in pairs(sources) do
-			local info = C_TransmogCollection.GetSourceInfo(sourceID)
+		for _, appearance in pairs(apppearances) do
+			local info = C_TransmogCollection.GetSourceInfo(appearance.appearanceID)
 			
 			-- 2 = head slot, couldn't find the constant for that :(
 			if info and info.invType == 2 then	

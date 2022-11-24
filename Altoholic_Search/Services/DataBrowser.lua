@@ -53,11 +53,15 @@ addon:Service("AltoholicUI.DataBrowser", {
 				location = L["Bank"]
 			elseif (containerName == "Bag-2") then
 				location = KEYRING
+			elseif containerName == "Bag5" then
+				location = L["Reagent Bag"]
 			else
 				local bagNum = tonumber(string.sub(containerName, 4))
 				
 				if (bagNum >= 0) and (bagNum <= 4) then
 					location = L["Bags"]
+				elseif bagNum == 5 then
+					location = L["Reagent Bag"]
 				else
 					location = L["Bank"]
 				end			

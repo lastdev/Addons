@@ -5,10 +5,10 @@ local Package = select(2, ...);
 
 -- Simple helper function which handles enumerating bags and running the function.
 local function withEachBagAndItem(func, startBag, endBag)
-    assert(type(func) == "function");
+
     for bag=startBag, endBag do
         for slot=1, ContainerFrame_GetContainerNumSlots(bag) do
-            local item = Addon:GetItemPropertiesFromBag(bag, slot);
+            local item = Addon:GetItemPropertiesFromBagAndSlot(bag, slot);
             if (item) then
                 if not func(item, bag, slot) then
                     return false;
@@ -27,7 +27,7 @@ end
     |   what we're evaluating.
     =============================================================================]]
 function Addon:GetMatchesForRule(engine, ruleId, ruleScript, parameters)
-    Addon:Debug("rules", "Evaluating '%s' against bags (no-cache)", ruleId);
+
     local rulesEngine = engine or self:CreateRulesEngine();
     local results = {};
 
@@ -41,15 +41,19 @@ function Addon:GetMatchesForRule(engine, ruleId, ruleScript, parameters)
             function(item, bag, slot)
                 local result = rulesEngine:Evaluate(item);
                 if (result) then
-                    table.insert(results, ItemLocation:CreateFromBagAndSlot(bag, slot));
+                    -- TODO: Change this to use item GUID for results and populate making item from GUID
+                    -- Can also set tooltip by GUID now.
+                    -- Do deep copy so that location doesn't potentially get tainted.
+                    local locationCopy = Addon.DeepTableCopy(ItemLocation:CreateFromBagAndSlot(bag, slot))
+                    table.insert(results, locationCopy);
                 end
                 return true;
-           end, 0, NUM_BAG_SLOTS);
+           end, 0, NUM_TOTAL_EQUIPPED_BAG_SLOTS );
     else
-        Addon:Debug("rules", "The rule '%s' failed to parse: %s", ruleId, message);
+
     end
 
-    Addon:Debug("rules", "Complete evaluation of rule '%s' with %s matches", ruleId, #results);
+
     return results;
 end
 
@@ -60,7 +64,7 @@ end
     |   inside of their bags.
     ===========================================================================--]]
 function Addon:ValidateRuleAgainstBags(engine, script)
-    Addon:Debug("rules", "Validating script against bags (no-cache)");
+
     local rulesEngine = engine or self:CreateRulesEngine();
     local message = "";
     local valid = withEachBagAndItem(
@@ -68,7 +72,7 @@ function Addon:ValidateRuleAgainstBags(engine, script)
             local r, m = engine:ValidateScript(item, script);
             if (not r) then message = m end;
             return r;
-        end, 0, NUM_BAG_SLOTS);
+        end, 0, NUM_TOTAL_EQUIPPED_BAG_SLOTS );
 
     return valid, message;
 end
@@ -107,7 +111,7 @@ function Addon:LookForItemsInBank()
             end
             return true;
         end,
-        (NUM_BAG_SLOTS + 1),  (NUM_BAG_SLOTS + GetNumBankSlots()));
+        (NUM_TOTAL_EQUIPPED_BAG_SLOTS  + 1),  (NUM_TOTAL_EQUIPPED_BAG_SLOTS  + GetNumBankSlots()));
     return items;
 end
 

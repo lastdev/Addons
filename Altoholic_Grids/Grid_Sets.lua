@@ -183,19 +183,19 @@ tab:RegisterGrid(13, {
 				format("%s%s/%s", colors.green, numCollected, numTotal))
 			tt:AddLine(" ",1,1,1)
 
-			local sources = C_TransmogSets.GetSetSources(setID)
+			local apppearances = C_TransmogSets.GetSetPrimaryAppearances(setID)
 			local isComplete = DataStore:IsSetCollected(setID)
-			
+
 			local itemsMissing = false
 
-			for sourceID, _ in pairs(sources) do
+			for _, appearance in pairs(apppearances) do
 				local icon = icons.notReady
 				
-				if isComplete or DataStore:IsSetItemCollected(setID, sourceID) then
+				if isComplete or DataStore:IsSetItemCollected(setID, appearance.appearanceID) then
 					icon = icons.ready
 				end
 
-				local info = C_TransmogCollection.GetSourceInfo(sourceID)
+				local info = C_TransmogCollection.GetSourceInfo(appearance.appearanceID)
 
 				-- GetItemInfo may not be able to return all info immediately
 				-- so alleviate the impact on the UI by warning the user

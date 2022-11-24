@@ -75,6 +75,7 @@ L["Do you want to open Altoholic's calendar for details ?"] = true
 L["Transmute"] = true
 L["Bags"] = true
 L["Bank"] = true
+L["Reagent Bag"] = true
 L["AH"] = true
 L["Mail"] = true
 L["Equipped"] = true

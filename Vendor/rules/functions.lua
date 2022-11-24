@@ -58,78 +58,6 @@ local function checkMap(map, expectedValue, values)
 end
 
 --*****************************************************************************
--- Matches the item quality (or item qualities) this accepts multiple arguments
--- which can be either strings or numbers.
---*****************************************************************************
-function Addon.RuleFunctions.ItemQuality(...)
-    return checkMap(Addon.Maps.Quality, Quality, {...})
-end
-
---*****************************************************************************
--- Rule function which match the item type against the list of arguments
--- which can either be numeric or strings which are mapped with the table
--- above.
---*****************************************************************************
-function Addon.RuleFunctions.ItemType(...)
-    return checkMap(Addon.Maps.ItemType, TypeId, {...})
-end
-
---*****************************************************************************
--- Rule function which matches of the item is from a particular expansion
--- these can either be numeric or you can use a value from the table above
--- NOTE: If the expansion pack id is zero, it can belong to any or none,
---       this will always evaluate to false.
---*****************************************************************************
-function Addon.RuleFunctions.IsFromExpansion(...)
-    local xpackId = ExpansionPackId;
-    if (xpackId ~= 0) then
-        return checkMap(Addon.Maps.Expansion, xpackId, {...})
-    end
-end
-
---*****************************************************************************
--- Rule function which checks if the specified item is present in the
--- list of items which should never be sold.
---*****************************************************************************
-function Addon.RuleFunctions.IsNeverSellItem()
-    if Addon:IsItemIdInNeverSellList(Id) then
-        return true
-    end
-end
-
---*****************************************************************************
--- Rule function which chceks if the item is in the list of items which
--- should always be sold.
---*****************************************************************************
-function Addon.RuleFunctions.IsAlwaysSellItem()
-    if Addon:IsItemIdInAlwaysSellList(Id) then
-        return true
-    end
-end
-
---*****************************************************************************
--- Rule function which checks if the item is in the list of items which
--- should always be destroyed.
-function Addon.RuleFunctions.IsDestroyItem()
-    if Addon:IsItemIdInAlwaysDestroyList(Id) then
-        return true
-    end
-end
-
---*****************************************************************************
--- Rule function which checks if the item is in a particular list.
---*****************************************************************************
-function Addon.RuleFunctions.IsInList(list)
-    local list = Addon:GetList(list)
-    if (not list) then
-        Addon:Debug("rules", "Unable to locate list '%s' for IsInList check")
-        return false
-    end
-
-    return list:Contains(Id)
-end
-
---*****************************************************************************
 -- Rule function which returns the level of the player.
 --*****************************************************************************
 function Addon.RuleFunctions.PlayerLevel()
@@ -151,7 +79,7 @@ end
 	| divides it by the number of item of equipped.
     ==========================================================================]]
 function Addon.RuleFunctions.PlayerItemLevel()
-    assert(not Addon.IsClassic);
+
     local itemLevel = GetAverageItemLevel();
 	return floor(itemLevel);
 end
@@ -199,23 +127,18 @@ end
 --*****************************************************************************
 function Addon.RuleFunctions.TooltipContains(...)
     local str, side, line = ...
-    assert(str and type(str) == "string", "Text must be specified.")
-    assert(not side or (side == "left" or side == "right"), "Side must be 'left' or 'right' if present.")
-    assert(not line or type(line) == "number", "Line must be a number if present.")
 
-    local function checkSide(textSide, textTable)
-        if not side or side == textSide then
-            for lineNumber, text in ipairs(textTable) do
-                if not line or line == lineNumber then
-                    if text and string.find(text, str) then
-                        return true
-                    end
-                end
-            end
+
+
+    if side then
+        if side == "left" then
+            return Addon:IsStringInTooltipLeftText(OBJECT.TooltipData, str)
+        else
+            return Addon:IsStringInTooltipRightText(OBJECT.TooltipData, str)
         end
+    else
+        return Addon:IsStringInTooltip(OBJECT.TooltipData, str)
     end
-
-    return checkSide("left", OBJECT.TooltipLeft) or checkSide("right", OBJECT.TooltipRight)
 end
 
 --*****************************************************************************
@@ -257,7 +180,7 @@ end
 function Addon.RuleFunctions.NumKeep()
     -- Get Evaluation stats so far for this item id.
     local numKeep = Addon:GetResultCountsForItemId(Id)
-    Addon:Debug("items", "NumKeep = %s", numKeep)
+
     return numKeep
 end
 
@@ -267,7 +190,7 @@ end
 function Addon.RuleFunctions.NumSellOrDestroy()
     -- Get Evaluation stats so far for this item id.
     local _, numSell, numDestroy = Addon:GetResultCountsForItemId(Id)
-    Addon:Debug("items", "NumSellOrDestroy = %s", numSell + numDestroy)
+
     return (numSell + numDestroy)
 end
 ]]

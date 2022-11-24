@@ -8,29 +8,30 @@ local AddonName, Addon = ...
 local eventFrame = CreateFrame("Frame")
 local eventBroker = Mixin({}, CallbackRegistryMixin)
 CallbackRegistryMixin.OnLoad(eventBroker)
+Addon.eventBroker = eventBroker
 
 -- Event Handling
 local events = {}
 local function dispatchEvent(handler, ...)
     if type(handler) == "function" then
-        handler(...)
+        xpcall(handler, CallErrorHandler, ...)
     else
         if Addon[handler] then
             -- Assume self parameter must be passed
-            Addon[handler](Addon, ...)
+            xpcall(Addon[handler], CallErrorHandler, Addon, ...)
         else
-            assert(false, "Function named "..handler.." not found in "..AddonName)
+
         end
     end
-end 
+end
 
 -- We support multiple handlers for the same event.
 local function eventDispatcher(frame, event, ...)
-    Addon:Debug("events", "Dispatching for Event: %s", tostring(event))
+
     local handler = events[event]
 
     if not handler then
-        assert(false, "Event was registered and did not appear in the events list. Event="..tostring(event))
+
     end
     
     if type(handler) == "table" then
@@ -62,8 +63,8 @@ end
 
 -- Define Register Event
 function Addon:RegisterEvent(event, handler)
-    assert(event and type(event) == "string", "Invalid arguments to RegisterEvent - Must specify a string")
-    assert(handler and (type(handler) == "function" or type(handler) == "string"), "Invalid arguments to RegisterEvent - Handler must be string or function")
+
+
 
     -- If this is a new event, we need to register for it with the frame.
     if not events[event] then
@@ -88,16 +89,16 @@ eventFrame:SetScript("OnEvent", eventDispatcher)
 
 -- Registers a callback for the specified event
 function Addon:RegisterCallback(event, target, handler)
-    assert(event and type(event) == "string", "The event must be a string")
-    assert(target and type(target) == "table", "The target must be an object")
-    assert(type(handle) == "string" or type(handler) == "function", "The handler must be a string or function")
+
+
+
 
     -- Register the event with a thunk
-    Addon:Debug("events", "Registering callback for event '%s", event)
+
     eventBroker:RegisterCallback(event, 
         function(...)            
             --[===[@debug@--
-            Addon:Debug("events", "Dispatching event '%s'", event)
+
             --@end-debug@]===]
 
             local fn = handler;
@@ -108,24 +109,24 @@ function Addon:RegisterCallback(event, target, handler)
             if (type(fn) == "function") then
                 local result, msg = xpcall(fn, CallErrorHandler, ...)
                 if (not result) then
-                    Addon:Debug("error", "Failed to invoke member: %s%s|r", RED_FONT_COLOR_CODE, msg)
+
                 end
             else
-                Addon:Debug("events", "Unable to resolve handler for %s", event)
+
             end
         end, target)
 end
 
 -- Removes a callback for the given event
 function Addon:UnregisterCallback(event, target)
-    Addon:Debug("events", "Unregistering callback for event '%s'", event)
+
     eventBroker:UnregisterCallback(event, target)
 end
 
 -- Raise an event
 function Addon:RaiseEvent(event, ...)
     --[===[@debug@--
-    Addon:Debug("events", "Raising event '%s'", event)
+
     --@end-debug@]===]
 
     eventBroker:TriggerEvent(event, ...)
@@ -133,8 +134,8 @@ end
 
 -- Register events which can be raised this is enumeration table 
 -- example: { MY_EVENT = "event" }
-function Addon:GeneratesEvents(events)
-    assert(events and type(events) == "table", "The events argument must be a table")
+function Addon:GenerateEvents(events)
+
     
     local e = {}
     for _, event in pairs(events) do
@@ -145,8 +146,8 @@ function Addon:GeneratesEvents(events)
 end
 
 -- Unregisters events which can be raised takes the ssame argument as the function above
-function Addon:RemoveEvents(event)
-    assert(events and type(events) == "table", "The events argument must be a table")
+function Addon:RemoveEvents(events)
+
     
     local e = {}
     for _, event in pairs(events) do
@@ -156,4 +157,7 @@ function Addon:RemoveEvents(event)
     eventBroker:UnregisterEvents(e)
 end
 
-
+-- Checks if the addon raises the specified event
+function Addon:RaisesEvent(event)
+    return eventBroker:DoesFrameHaveEvent(event)
+end

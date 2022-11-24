@@ -1,0 +1,194 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+
+    <Frame virtual="true" name="CommonUI_List">
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString parentKey="empty" hidden="true" inherits="GameFontNormal" justifyH="center" justifyV="TOP">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="12" y="-12"/>
+                        <Anchor point="BOTTOMRIGHT" x="-12" y="-12"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <OnLoad>Vendor.LoadImplementation(self, "CommonUI", "List")</OnLoad>
+        </Scripts>
+    </Frame>
+
+    <!-- A specialization of a list setup for categories request a model with Text and Help attributes -->
+    <Frame virtual="true" name="CommonUI_CategoryList" inherits="CommonUI_List">
+        <KeyValues>
+            <KeyValue key="ItemSource" value="GetCategories"/>
+            <KeyValue key="ItemTemplate" value="CommonUI_CategoryItem"/>
+            <KeyValue key="ItemClass" value="CommonUI.CategoryItem"/>
+        </KeyValues>
+    </Frame>
+
+    <!-- An item in the category list -->
+    <Button virtual="true" name="CommonUI_CategoryItem">
+        <Size x="1" y="22"/>
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString parentKey="text" maxLines="1" inherits="GameFontNormal" justifyH="LEFT" justifyV="MIDDLE">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="8"/>
+                        <Anchor point="BOTTOMRIGHT" x="-8"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Button>
+
+    <Frame virtual="true" name="CommonUI_ItemLink">
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString parentKey="text" maxLines="1" inherits="ChatFontNormal" justifyH="LEFT" justifyV="MIDDLE">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="8"/>
+                        <Anchor point="BOTTOMRIGHT" x="-8"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Scripts>
+        <!-- todo: make "CommonUI.ItemLink" work for laod -->
+            <OnLoad>Vendor.LoadImplementation(self, "CommonUI", "ItemLink")</OnLoad>
+        </Scripts>
+    </Frame>
+
+    <!-- URL -->
+	<EditBox name="CommonUI_Url" virtual="true" font="ChatFontNormal" autoFocus="false">
+		<Scripts><OnLoad>Vendor.LoadImplementation(self, "CommonUI", "Url")</OnLoad></Scripts>
+	</EditBox>
+
+    <!-- Markdown -->
+    <Frame virtual="true" inherits="CommonUI_List" name="CommonUI_Markdown">
+        <KeyValues>
+            <KeyValue key="Padding" value="8" type="number"/>
+        </KeyValues>
+        <Scripts>
+            <OnLoad>Vendor.LoadImplementation(self, "CommonUI", "Markdown")</OnLoad>
+        </Scripts>
+    </Frame>
+
+    <Frame virtual="true" name="Markdown_Paragraph">
+        <Size x="1" y="1"/>
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString parentKey="content" justifyH="LEFT" justifyV="TOP" inherits="GameFontNormal">
+                    <KeyValues>
+                        <KeyValue key="Color" value="SECONDARY_TEXT"/>
+                    </KeyValues>
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                        <Anchor point="TOPRIGHT"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Frame>
+
+    <Frame virtual="true" name="Markdown_Quote">
+        <Size x="1" y="1"/>
+        <KeyValues>
+            <KeyValue key="BackgroundColor" value="QUOTE_BACK"/>
+            <KeyValue key="BorderColor" value="QUOTE_BORDER"/>
+        </KeyValues>
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString parentKey="content" justifyH="LEFT" justifyV="TOP" inherits="GameFontNormal">
+                    <KeyValues>
+                        <KeyValue key="Color" value="QUOTE_TEXT"/>
+                    </KeyValues>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="10" y="-6"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Frame>
+
+    <Frame virtual="true" name="Markdown_Header_One">
+        <Size x="1" y="1"/>
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString parentKey="content" justifyH="LEFT" justifyV="MIDDLE" inherits="GameFontNormalLarge" maxLines="1">
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                        <Anchor point="TOPRIGHT"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Frame>
+
+    <Frame virtual="true" name="Markdown_Header_Two">
+        <Size x="1" y="1"/>
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString parentKey="content" justifyH="LEFT" justifyV="MIDDLE" inherits="GameFontNormal" maxLines="1">
+                    <KeyValues>
+                        <KeyValue key="Color" value="TEXT"/>
+                    </KeyValues>
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                        <Anchor point="TOPRIGHT"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Frame>
+
+    <Frame virtual="true" name="Markdown_Header">
+        <Size x="1" y="1"/>
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString parentKey="content" justifyH="LEFT" justifyV="MIDDLE" inherits="GameFontNormal" maxLines="1">
+                    <KeyValues>
+                        <KeyValue key="Color" value="SECONDARY_TEXT"/>
+                    </KeyValues>
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                        <Anchor point="TOPRIGHT"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Frame>
+
+
+    <Frame virtual="true" name="Markdown_List">
+        <KeyValues>
+            <KeyValue key="Spacing" value="4" type="number"/>
+        </KeyValues>
+        <Size x="1" y="1"/>
+    </Frame>    
+
+    <Frame virtual="true" name="Markdown_ListItem" parentArray="contents">
+        <Size x="1" y="1"/>
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString parentKey="dot" justifyH="LEFT" justifyV="MIDDLE" inherits="GameFontNormalLarge" maxLines="1" text="&#8226;">
+                    <Size x="16" y="16"/>
+                    <KeyValues>
+                        <KeyValue key="Color" value="SECONDARY_TEXT"/>
+                    </KeyValues>
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                    </Anchors>
+                </FontString>
+                <FontString parentKey="content" justifyH="LEFT" justifyV="TOP" inherits="GameFontNormal" >
+                    <KeyValues>
+                        <KeyValue key="Color" value="SECONDARY_TEXT"/>
+                    </KeyValues>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeKey="$parent.dot" x="2" />
+                        <Anchor point="TOPRIGHT"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Frame>    
+
+</Ui>

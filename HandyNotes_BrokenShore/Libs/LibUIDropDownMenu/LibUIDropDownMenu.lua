@@ -1,4 +1,4 @@
--- $Id: LibUIDropDownMenu.lua 106 2022-11-03 14:48:24Z arithmandar $
+-- $Id: LibUIDropDownMenu.lua 111 2022-11-17 17:06:37Z arithmandar $
 -- ----------------------------------------------------------------------------
 -- Localized Lua globals.
 -- ----------------------------------------------------------------------------
@@ -18,7 +18,7 @@ local GameTooltip_SetTitle, GameTooltip_AddInstructionLine, GameTooltip_AddNorma
 
 -- ----------------------------------------------------------------------------
 local MAJOR_VERSION = "LibUIDropDownMenu-4.0"
-local MINOR_VERSION = 90000 + tonumber(("$Rev: 106 $"):match("%d+"))
+local MINOR_VERSION = 90000 + tonumber(("$Rev: 111 $"):match("%d+"))
 
 
 local LibStub = _G.LibStub
@@ -242,7 +242,7 @@ local function create_MenuButton(name, parent)
 		if not button then
 			return
 		end
-		button_OnClick(button, button)
+		button_OnClick(self, button)
 	end
 	
 	local function icon_OnEnter(self)
@@ -429,8 +429,8 @@ local function create_MenuButton(name, parent)
 	end)
 	f.invisibleButton = fib
 
-	f:SetScript("OnClick", function(self, button, down)
-		button_OnClick(self, button, down)
+	f:SetScript("OnClick", function(self, button)
+		button_OnClick(self, button)
 	end)
 	f:SetScript("OnEnter", function(self, motion)
 		button_OnEnter(self)
@@ -1967,18 +1967,18 @@ function lib:UIDropDownMenu_ClearAll(frame)
 	end
 end
 
-function lib:UIDropDownMenu_JustifyText(frame, justification, customXOffset)
+function lib:UIDropDownMenu_JustifyText(frame, justification, customXOffset, customYOffset)
 	local frameName = frame:GetName();
 	local text = GetChild(frame, frameName, "Text");
 	text:ClearAllPoints();
 	if ( justification == "LEFT" ) then
-		text:SetPoint("LEFT", GetChild(frame, frameName, "Left"), "LEFT", customXOffset or 27, 2);
+		text:SetPoint("LEFT", GetChild(frame, frameName, "Left"), "LEFT", customXOffset or 27, customYOffset or 2);
 		text:SetJustifyH("LEFT");
 	elseif ( justification == "RIGHT" ) then
-		text:SetPoint("RIGHT", GetChild(frame, frameName, "Right"), "RIGHT", customXOffset or -43, 2);
+		text:SetPoint("RIGHT", GetChild(frame, frameName, "Right"), "RIGHT", customXOffset or -43, customYOffset or 2);
 		text:SetJustifyH("RIGHT");
 	elseif ( justification == "CENTER" ) then
-		text:SetPoint("CENTER", GetChild(frame, frameName, "Middle"), "CENTER", customXOffset or -5, 2);
+		text:SetPoint("CENTER", GetChild(frame, frameName, "Middle"), "CENTER", customXOffset or -5, customYOffset or 2);
 		text:SetJustifyH("CENTER");
 	end
 end

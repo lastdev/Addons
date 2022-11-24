@@ -1,5 +1,10 @@
 ## Revision History:
 
+#### v21 (November 16, 2022)
+-------------------------------
+* Added TomTom waypoint from info
+* Bump .toc to 100002
+
 #### v20 (Oktober 25, 2022)
 -------------------------------
 * Added portal icons

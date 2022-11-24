@@ -263,7 +263,7 @@ SMARTBUFF_ELEMENTAL = "元素生物";
 SMARTBUFF_DEMONTYPE = "小鬼";
 
 -- 职业
-SMARTBUFF_CLASSES = {"德鲁伊", "猎人", "法师", "圣骑士", "牧师", "潜行者", "萨满祭司", "术士", "战士", "死亡骑士", "武僧", "恶魔猎手", "猎人宠物", "术士宠物", "Death Knight Pet", "Tank", "Healer", "Damage Dealer"};
+SMARTBUFF_CLASSES = {"德鲁伊", "猎人", "法师", "圣骑士", "牧师", "潜行者", "萨满祭司", "术士", "战士", "死亡骑士", "武僧", "恶魔猎手", "唤魔者", "猎人宠物", "术士宠物", "Death Knight Pet", "Tank", "Healer", "Damage Dealer"};
 
 -- 模板和地图
 SMARTBUFF_TEMPLATES = {"Solo", "组队", "团队", "战场", "卡拉赞", "祖阿曼", "地狱火堡垒", "盘牙水库", "奥金顿", "风暴要塞", "格鲁尔巢穴", "时光之穴", "黑暗神庙", "自定义 1", "自定义 2", "自定义 3"};

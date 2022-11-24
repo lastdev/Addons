@@ -12,7 +12,7 @@ local function registerArkExtension()
 
         -- This is called by Vendor whenever its rules change and Ark needs to redo its classification of items into buckets.
         OnRuleUpdate = function()
-            assert(ArkInventory and ArkInventory.ItemCacheClear and ArkInventory.Frame_Main_Generate)
+
             -- Clear the Ark Inventory item cache, becuase this also caches rule results, which are now invalid becuase our rules changed.
             ArkInventory.ItemCacheClear()
             -- After clearing the cache we need to redraw the main window.
@@ -20,7 +20,7 @@ local function registerArkExtension()
         end
     }
 
-    assert(Vendor and Vendor.RegisterExtension, "Vendor RegisterExtension not found, cannot register extension: "..tostring(arkExtension.Source))
+
     if (not Vendor.RegisterExtension(arkExtension)) then
         -- something went wrong
     end
@@ -31,7 +31,7 @@ registerArkExtension()
 
 -- Checks if an item is auto-sold by vendor
 function Addon:Vendor_AutoSell()
-    assert(ArkInventory and ArkInventory.API.InternalIdToBlizzardBagId)
+
     local object = ArkInventoryRules.Object;
     if (not object or not object.loc_id or not object.bag_id or not object.slot_id) then
         return;
@@ -39,7 +39,7 @@ function Addon:Vendor_AutoSell()
 
     -- Becuase Ark is on another planet and has its own concept of bags, must convert to blizzard bags.
     local bag = ArkInventory.API.InternalIdToBlizzardBagId( object.loc_id, object.bag_id )
-    result, ruleid, name = Vendor.EvaluateItem(bag, object.slot_id)
+    local result = Vendor.EvaluateItem(bag, object.slot_id)
     if not result then
         return false
     else
@@ -49,7 +49,7 @@ end
 
 -- Checks if an item is marked for destruction by vendor
 function Addon:Vendor_Destroy()
-    assert(ArkInventory and ArkInventory.API.InternalIdToBlizzardBagId)
+
     local object = ArkInventoryRules.Object;
     if (not object or not object.loc_id or not object.bag_id or not object.slot_id) then
         return;
@@ -57,7 +57,7 @@ function Addon:Vendor_Destroy()
 
     -- Becuase Ark is on another planet and has its own concept of bags, must convert to blizzard bags.
     local bag = ArkInventory.API.InternalIdToBlizzardBagId( object.loc_id, object.bag_id )
-    result, ruleid, name = Vendor.EvaluateItem(bag, object.slot_id)
+    local result, ruleid, name = Vendor.EvaluateItem(bag, object.slot_id)
     if not result then
         return false
     else

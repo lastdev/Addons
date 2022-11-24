@@ -1,4 +1,6 @@
 ConRO.Spells = {};
+ConRO.SuggestedSpells = {};
+ConRO.SuggestedDefSpells = {};
 ConRO.Keybinds = {};
 ConRO.DefSpells = {};
 ConRO.Flags = {};
@@ -28,7 +30,7 @@ local defaults = {
 	["ConRO_Settings_Single"] = true,
 	["ConRO_Settings_AoE"] = false,
 }
-	
+
 if ConRO:MeleeSpec() then
 	defaults = {
 		["ConRO_Settings_Full"] = true,
@@ -47,7 +49,7 @@ function TTOnEnter(self)
 	GameTooltip:AddLine('MACRO = "/ConROToggle"', 1, 1, 1, true)
 	GameTooltip:AddLine(" ", 1, 1, 1, true)
 	GameTooltip:AddLine("Auto", .2, 1, .2)
-		GameTooltip:AddLine("Used for melee specs to auto detect the number of enemies in range. Must have nameplates turned on.", 1, 1, 1, true)	
+		GameTooltip:AddLine("Used for melee specs to auto detect the number of enemies in range. Must have nameplates turned on.", 1, 1, 1, true)
 	GameTooltip:AddLine("Single", 1, .2, .2)
 		GameTooltip:AddLine("This will force single target rotation to focus and burn a target.", 1, 1, 1, true)
 	GameTooltip:AddLine("AoE", 1, .2, .2)
@@ -109,17 +111,17 @@ function TIWOnEnter(self)
 	GameTooltip:AddLine("", .2, 1, .2)
 		GameTooltip:AddLine("This flash displays that you can interrupt.", 1, 1, 1, true)
 	GameTooltip:Show()
-	
+
 	local color = ConRO.db.profile._Interrupt_Overlay_Color;
 	ConROInterruptWindow:SetSize(ConRO.db.profile.flashIconSize * .75, ConRO.db.profile.flashIconSize * .75);
-	ConROInterruptWindow.texture:SetVertexColor(color.r, color.g, color.b);	
+	ConROInterruptWindow.texture:SetVertexColor(color.r, color.g, color.b);
 end
 
 function TIWOnLeave(self)
 	GameTooltip:Hide()
-	
+
 	ConROInterruptWindow:SetSize(ConRO.db.profile.flashIconSize * .25, ConRO.db.profile.flashIconSize * .25);
-	ConROInterruptWindow.texture:SetVertexColor(.1, .1, .1);		
+	ConROInterruptWindow.texture:SetVertexColor(.1, .1, .1);
 end
 
 function TPWOnEnter(self)
@@ -128,17 +130,17 @@ function TPWOnEnter(self)
 	GameTooltip:AddLine("", .2, 1, .2)
 		GameTooltip:AddLine("This flash displays that you can purge.", 1, 1, 1, true)
 	GameTooltip:Show()
-	
+
 	local color = ConRO.db.profile._Purge_Overlay_Color;
 	ConROPurgeWindow:SetSize(ConRO.db.profile.flashIconSize * .75, ConRO.db.profile.flashIconSize * .75);
-	ConROPurgeWindow.texture:SetVertexColor(color.r, color.g, color.b);		
+	ConROPurgeWindow.texture:SetVertexColor(color.r, color.g, color.b);
 end
 
 function TPWOnLeave(self)
 	GameTooltip:Hide()
-	
+
 	ConROPurgeWindow:SetSize(ConRO.db.profile.flashIconSize * .25, ConRO.db.profile.flashIconSize * .25);
-	ConROPurgeWindow.texture:SetVertexColor(.1, .1, .1);	
+	ConROPurgeWindow.texture:SetVertexColor(.1, .1, .1);
 end
 
 function AtoneOnEnter(self)
@@ -172,28 +174,28 @@ function ConRO:DisplayToggleFrame()
 			vert = 1;
 			hori = 2;
 		end
-		
+
 		frame:SetFrameStrata('MEDIUM');
-		frame:SetFrameLevel('5')		
+		frame:SetFrameLevel('52')
 		frame:SetSize((40 * hori) + 14, (15 * vert) + 14)
 		frame:SetScale(ConRO.db.profile.toggleButtonSize)
-			if ConRO.db.profile._Hide_Toggle then 
+			if ConRO.db.profile._Hide_Toggle then
 				frame:SetAlpha(0);
 			 else
 				frame:SetAlpha(1);
 			end
-		
-		frame:SetBackdrop( { 
-			bgFile = "Interface\\CHATFRAME\\CHATFRAMEBACKGROUND", 
+
+		frame:SetBackdrop( {
+			bgFile = "Interface\\CHATFRAME\\CHATFRAMEBACKGROUND",
 			edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
 			tile = true,
 			tileSize = 8,
-			edgeSize = 20, 
+			edgeSize = 20,
 			insets = { left = 4, right = 4, top = 4, bottom = 4 }
 			})
 		frame:SetBackdropColor(0, 0, 0, .75)
 		frame:SetBackdropBorderColor(Color.r, Color.g, Color.b, .75)
-		
+
 		frame:SetPoint("CENTER", 180, -20)
 		frame:SetMovable(true)
 		frame:EnableMouse(true)
@@ -210,7 +212,7 @@ function ConRO:DisplayToggleFrame()
 		end)
 		frame:SetScript("OnLeave", function(self)
 			if not MouseIsOver(frame) then
-				if ConRO.db.profile._Hide_Toggle then 
+				if ConRO.db.profile._Hide_Toggle then
 					frame:SetAlpha(0);
 				 else
 					frame:SetAlpha(1);
@@ -225,7 +227,7 @@ function ConRO:CreateAutoButton()
 	local Color = RAID_CLASS_COLORS[Class]
 	local tbutton = CreateFrame("Button", 'ConRO_AutoButton', ConROButtonFrame)
 		tbutton:SetFrameStrata('MEDIUM')
-		tbutton:SetFrameLevel('6')
+		tbutton:SetFrameLevel('53')
 		tbutton:SetPoint("BOTTOMRIGHT", "ConROButtonFrame", "BOTTOMRIGHT", -7, 7)
 		tbutton:SetSize(40, 15)
 			if ConROCharacter.ConRO_Settings_Auto then
@@ -234,18 +236,18 @@ function ConRO:CreateAutoButton()
 				tbutton:Hide()
 			end
 		tbutton:SetAlpha(1)
-		
+
 		tbutton:SetText("Auto")
 		tbutton:SetNormalFontObject("GameFontHighlightSmall")
-		
+
 		tbutton:SetScript("OnEnter", TTOnEnter)
 		tbutton:SetScript("OnLeave", TTOnLeave)
-		
+
 		local ntex = tbutton:CreateTexture()
 			ntex:SetTexture("Interface\\AddOns\\ConRO\\images\\buttonUp")
 			ntex:SetTexCoord(0, 0.625, 0, 0.6875)
 			ntex:SetVertexColor(Color.r, Color.g, Color.b, 1)
-			ntex:SetAllPoints()	
+			ntex:SetAllPoints()
 			tbutton:SetNormalTexture(ntex)
 
 		local htex = tbutton:CreateTexture()
@@ -266,7 +268,7 @@ function ConRO:CreateAutoButton()
 				ConROButtonFrame:StartMoving();
 			end
 		end)
-		
+
 		tbutton:SetScript("OnMouseUp", function (self, tbutton, up)
 			if ConRO.db.profile._Unlock_ConRO then
 				ConROButtonFrame:StopMovingOrSizing();
@@ -284,7 +286,7 @@ function ConRO:CreateSingleButton()
 	local Color = RAID_CLASS_COLORS[Class]
 	local tbutton = CreateFrame("Button", 'ConRO_SingleButton', ConROButtonFrame)
 		tbutton:SetFrameStrata('MEDIUM')
-		tbutton:SetFrameLevel('6')
+		tbutton:SetFrameLevel('53')
 		tbutton:SetPoint("BOTTOMRIGHT", "ConROButtonFrame", "BOTTOMRIGHT", -7, 7)
 		tbutton:SetSize(40, 15)
 			if ConROCharacter.ConRO_Settings_Single then
@@ -293,18 +295,18 @@ function ConRO:CreateSingleButton()
 				tbutton:Hide()
 			end
 		tbutton:SetAlpha(1)
-		
+
 		tbutton:SetText("Single")
 		tbutton:SetNormalFontObject("GameFontHighlightSmall")
-		
+
 		tbutton:SetScript("OnEnter", TTOnEnter)
 		tbutton:SetScript("OnLeave", TTOnLeave)
-		
+
 	local ntex = tbutton:CreateTexture()
 		ntex:SetTexture("Interface\\AddOns\\ConRO\\images\\buttonUp")
 		ntex:SetTexCoord(0, 0.625, 0, 0.6875)
 		ntex:SetVertexColor(Color.r, Color.g, Color.b, 1)
-		ntex:SetAllPoints()	
+		ntex:SetAllPoints()
 		tbutton:SetNormalTexture(ntex)
 
 	local htex = tbutton:CreateTexture()
@@ -325,7 +327,7 @@ function ConRO:CreateSingleButton()
 				ConROButtonFrame:StartMoving();
 			end
 		end)
-		
+
 		tbutton:SetScript("OnMouseUp", function (self, tbutton, up)
 			if ConRO.db.profile._Unlock_ConRO then
 				ConROButtonFrame:StopMovingOrSizing();
@@ -343,7 +345,7 @@ function ConRO:CreateAoEButton()
 	local Color = RAID_CLASS_COLORS[Class]
 	local tbutton = CreateFrame("Button", 'ConRO_AoEButton', ConROButtonFrame)
 		tbutton:SetFrameStrata('MEDIUM');
-		tbutton:SetFrameLevel('6')
+		tbutton:SetFrameLevel('53')
 		tbutton:SetPoint("BOTTOMRIGHT", "ConROButtonFrame", "BOTTOMRIGHT", -7, 7)
 		tbutton:SetSize(40, 15)
 			if ConROCharacter.ConRO_Settings_AoE then
@@ -352,10 +354,10 @@ function ConRO:CreateAoEButton()
 				tbutton:Hide()
 			end
 		tbutton:SetAlpha(1)
-		
+
 		tbutton:SetText("AoE")
 		tbutton:SetNormalFontObject("GameFontHighlightSmall")
-		
+
 		tbutton:SetScript("OnEnter", TTOnEnter)
 		tbutton:SetScript("OnLeave", TTOnLeave)
 
@@ -363,7 +365,7 @@ function ConRO:CreateAoEButton()
 		ntex:SetTexture("Interface\\AddOns\\ConRO\\images\\buttonUp")
 		ntex:SetTexCoord(0, 0.625, 0, 0.6875)
 		ntex:SetVertexColor(Color.r, Color.g, Color.b, 1)
-		ntex:SetAllPoints()	
+		ntex:SetAllPoints()
 		tbutton:SetNormalTexture(ntex)
 
 	local htex = tbutton:CreateTexture()
@@ -384,7 +386,7 @@ function ConRO:CreateAoEButton()
 				ConROButtonFrame:StartMoving();
 			end
 		end)
-		
+
 		tbutton:SetScript("OnMouseUp", function (self, tbutton, up)
 			if ConRO.db.profile._Unlock_ConRO then
 				ConROButtonFrame:StopMovingOrSizing();
@@ -410,7 +412,7 @@ function ConRO:CreateFullButton()
 	local Color = RAID_CLASS_COLORS[Class]
 	local tbutton = CreateFrame("Button", 'ConRO_FullButton', ConROButtonFrame)
 		tbutton:SetFrameStrata('MEDIUM');
-		tbutton:SetFrameLevel('6')
+		tbutton:SetFrameLevel('53')
 		tbutton:SetPoint("TOPLEFT", "ConROButtonFrame", "TOPLEFT", 7, -7)
 		tbutton:SetSize(40, 15)
 		tbutton:SetAlpha(1)
@@ -419,10 +421,10 @@ function ConRO:CreateFullButton()
 			else
 				tbutton:Hide()
 			end
-		
+
 		tbutton:SetText("Full")
 		tbutton:SetNormalFontObject("GameFontHighlightSmall")
-		
+
 		tbutton:SetScript("OnEnter", ETOnEnter)
 		tbutton:SetScript("OnLeave", ETOnLeave)
 
@@ -430,7 +432,7 @@ function ConRO:CreateFullButton()
 		ntex:SetTexture("Interface\\AddOns\\ConRO\\images\\buttonUp")
 		ntex:SetTexCoord(0, 0.625, 0, 0.6875)
 		ntex:SetVertexColor(Color.r, Color.g, Color.b, 1)
-		ntex:SetAllPoints()	
+		ntex:SetAllPoints()
 		tbutton:SetNormalTexture(ntex)
 
 	local htex = tbutton:CreateTexture()
@@ -451,7 +453,7 @@ function ConRO:CreateFullButton()
 				ConROButtonFrame:StartMoving();
 			end
 		end)
-		
+
 		tbutton:SetScript("OnMouseUp", function (self, tbutton, up)
 			if ConRO.db.profile._Unlock_ConRO then
 				ConROButtonFrame:StopMovingOrSizing();
@@ -460,7 +462,7 @@ function ConRO:CreateFullButton()
 			ConRO_BurstButton:Show();
 			ConROCharacter.ConRO_Settings_Full = false;
 			ConROCharacter.ConRO_Settings_Burst = true;
-		
+
 			if ConRO.rotationEnabled then
 				if ConRO.fetchTimer then
 					ConRO:CancelTimer(ConRO.fetchTimer);
@@ -483,7 +485,7 @@ function ConRO:CreateBurstButton()
 	local Color = RAID_CLASS_COLORS[Class]
 	local tbutton = CreateFrame("Button", 'ConRO_BurstButton', ConROButtonFrame)
 		tbutton:SetFrameStrata('MEDIUM');
-		tbutton:SetFrameLevel('6')
+		tbutton:SetFrameLevel('53')
 		tbutton:SetPoint("TOPLEFT", "ConROButtonFrame", "TOPLEFT", 7, -7)
 		tbutton:SetSize(40, 15)
 		tbutton:SetAlpha(1)
@@ -495,7 +497,7 @@ function ConRO:CreateBurstButton()
 
 		tbutton:SetText("Burst")
 		tbutton:SetNormalFontObject("GameFontHighlightSmall")
-		
+
 		tbutton:SetScript("OnEnter", ETOnEnter)
 		tbutton:SetScript("OnLeave", ETOnLeave)
 
@@ -503,7 +505,7 @@ function ConRO:CreateBurstButton()
 		ntex:SetTexture("Interface\\AddOns\\ConRO\\images\\buttonUp")
 		ntex:SetTexCoord(0, 0.625, 0, 0.6875)
 		ntex:SetVertexColor(Color.r, Color.g, Color.b, 1)
-		ntex:SetAllPoints()	
+		ntex:SetAllPoints()
 		tbutton:SetNormalTexture(ntex)
 
 	local htex = tbutton:CreateTexture()
@@ -524,7 +526,7 @@ function ConRO:CreateBurstButton()
 				ConROButtonFrame:StartMoving();
 			end
 		end)
-		
+
 		tbutton:SetScript("OnMouseUp", function (self, tbutton, up)
 			if ConRO.db.profile._Unlock_ConRO then
 				ConROButtonFrame:StopMovingOrSizing();
@@ -533,7 +535,7 @@ function ConRO:CreateBurstButton()
 			ConRO_FullButton:Show();
 			ConROCharacter.ConRO_Settings_Burst = false;
 			ConROCharacter.ConRO_Settings_Full = true;
-		
+
 			if ConRO.rotationEnabled then
 				if ConRO.fetchTimer then
 					ConRO:CancelTimer(ConRO.fetchTimer);
@@ -554,15 +556,15 @@ end
 function ConRO:CreateBlockBurstButton()
 	local tbutton = CreateFrame("Button", 'ConRO_BlockBurstButton', ConROButtonFrame)
 		tbutton:SetFrameStrata('MEDIUM');
-		tbutton:SetFrameLevel('6')
+		tbutton:SetFrameLevel('53')
 		tbutton:SetPoint("TOPLEFT", "ConROButtonFrame", "TOPLEFT", 7, -7)
 		tbutton:SetSize(40, 15)
 		tbutton:Hide()
 		tbutton:SetAlpha(1)
-		
+
 		tbutton:SetText("Just")
 		tbutton:SetNormalFontObject("GameFontHighlightSmall")
-		
+
 		tbutton:SetScript("OnEnter", ETOnEnter)
 		tbutton:SetScript("OnLeave", ETOnLeave)
 
@@ -570,7 +572,7 @@ function ConRO:CreateBlockBurstButton()
 		ntex:SetTexture("Interface\\AddOns\\ConRO\\images\\buttonUp")
 		ntex:SetTexCoord(0, 0.625, 0, 0.6875)
 		ntex:SetVertexColor(0, 0, 0, 1)
-		ntex:SetAllPoints()	
+		ntex:SetAllPoints()
 		tbutton:SetNormalTexture(ntex)
 
 		tbutton:SetScript("OnMouseDown", function (self, tbutton, up)
@@ -578,7 +580,7 @@ function ConRO:CreateBlockBurstButton()
 				ConROButtonFrame:StartMoving();
 			end
 		end)
-		
+
 		tbutton:SetScript("OnMouseUp", function (self, tbutton, up)
 			if ConRO.db.profile._Unlock_ConRO then
 				ConROButtonFrame:StopMovingOrSizing();
@@ -589,15 +591,15 @@ end
 function ConRO:CreateBlockAoEButton()
 	local tbutton = CreateFrame("Button", 'ConRO_BlockAoEButton', ConROButtonFrame)
 		tbutton:SetFrameStrata('MEDIUM');
-		tbutton:SetFrameLevel('6')
+		tbutton:SetFrameLevel('53')
 		tbutton:SetPoint("BOTTOMRIGHT", "ConROButtonFrame", "BOTTOMRIGHT", -7, 7)
 		tbutton:SetSize(40, 15)
 		tbutton:Hide()
 		tbutton:SetAlpha(1)
-		
+
 		tbutton:SetText("Kill")
 		tbutton:SetNormalFontObject("GameFontHighlightSmall")
-		
+
 		tbutton:SetScript("OnEnter", TTOnEnter)
 		tbutton:SetScript("OnLeave", TTOnLeave)
 
@@ -605,7 +607,7 @@ function ConRO:CreateBlockAoEButton()
 		ntex:SetTexture("Interface\\AddOns\\ConRO\\images\\buttonUp")
 		ntex:SetTexCoord(0, 0.625, 0, 0.6875)
 		ntex:SetVertexColor(0, 0, 0, 1)
-		ntex:SetAllPoints()	
+		ntex:SetAllPoints()
 		tbutton:SetNormalTexture(ntex)
 
 		tbutton:SetScript("OnMouseDown", function (self, tbutton, up)
@@ -613,7 +615,7 @@ function ConRO:CreateBlockAoEButton()
 				ConROButtonFrame:StartMoving();
 			end
 		end)
-		
+
 		tbutton:SetScript("OnMouseUp", function (self, tbutton, up)
 			if ConRO.db.profile._Unlock_ConRO then
 				ConROButtonFrame:StopMovingOrSizing();
@@ -627,7 +629,7 @@ function ConRO:SlashUnlock()
 	else
 		ConRO.db.profile._Unlock_ConRO = false;
 	end
-	
+
 	ConROWindow:EnableMouse(ConRO.db.profile._Unlock_ConRO);
 	ConRODefenseWindow:EnableMouse(ConRO.db.profile._Unlock_ConRO);
 	ConROInterruptWindow:EnableMouse(ConRO.db.profile._Unlock_ConRO);
@@ -635,15 +637,15 @@ function ConRO:SlashUnlock()
 	ConROInterruptWindow:SetMovable(ConRO.db.profile._Unlock_ConRO);
 	ConROPurgeWindow:SetMovable(ConRO.db.profile._Unlock_ConRO);
 	if ConRO.db.profile._Unlock_ConRO and ConRO.db.profile.enableInterruptWindow == true then
-		ConROInterruptWindow:Show();				
+		ConROInterruptWindow:Show();
 	else
-		ConROInterruptWindow:Hide();				
-	end	
+		ConROInterruptWindow:Hide();
+	end
 	if ConRO.db.profile._Unlock_ConRO and ConRO.db.profile.enablePurgeWindow == true then
-		ConROPurgeWindow:Show();					
+		ConROPurgeWindow:Show();
 	else
-		ConROPurgeWindow:Hide();					
-	end		
+		ConROPurgeWindow:Hide();
+	end
 end
 
 function ConRO:SlashToggle()
@@ -657,7 +659,7 @@ function ConRO:SlashToggle()
 			ConRO_SingleButton:Hide();
 			ConRO_AoEButton:Show();
 			ConROCharacter.ConRO_Settings_Single = false;
-			ConROCharacter.ConRO_Settings_AoE = true;			
+			ConROCharacter.ConRO_Settings_AoE = true;
 		elseif ConRO_AoEButton:IsVisible() then
 			ConRO_AoEButton:Hide();
 			ConRO_AutoButton:Show();
@@ -669,7 +671,7 @@ function ConRO:SlashToggle()
 			ConRO_SingleButton:Hide();
 			ConRO_AoEButton:Show();
 			ConROCharacter.ConRO_Settings_Single = false;
-			ConROCharacter.ConRO_Settings_AoE = true;			
+			ConROCharacter.ConRO_Settings_AoE = true;
 		elseif ConRO_AoEButton:IsVisible() then
 			ConRO_AoEButton:Hide();
 			ConRO_SingleButton:Show();
@@ -760,7 +762,7 @@ function ConRO:BlockAoE()
 	ConRO_AoEButton:Hide();
 	ConRO_BlockAoEButton:Show();
 end
-	
+
 function ConRO:DisplayWindowFrame()
 	local frame = CreateFrame("Frame", "ConROWindow", UIParent);
 		frame:SetMovable(true);
@@ -775,12 +777,12 @@ function ConRO:DisplayWindowFrame()
 		end)
 		frame:SetScript("OnDragStop", frame.StopMovingOrSizing);
 		frame:EnableMouse(ConRO.db.profile._Unlock_ConRO);
-		
+
 		frame:SetPoint("CENTER", -200, 50);
 		frame:SetSize(ConRO.db.profile.windowIconSize, ConRO.db.profile.windowIconSize);
 		frame:SetFrameStrata('MEDIUM');
-		frame:SetFrameLevel('5');
-		frame:SetAlpha(ConRO.db.profile.transparencyWindow);		
+		frame:SetFrameLevel('52');
+		frame:SetAlpha(ConRO.db.profile.transparencyWindow);
 		if ConRO.db.profile.combatWindow or ConRO:HealSpec() then
 			frame:Hide();
 		elseif not ConRO.db.profile.enableWindow then
@@ -795,7 +797,7 @@ function ConRO:DisplayWindowFrame()
 			t:SetBlendMode('BLEND');
 			frame.texture = t;
 		end
-		
+
 		t:SetAllPoints(frame)
 
 	local fontstring = frame.font;
@@ -811,13 +813,13 @@ function ConRO:DisplayWindowFrame()
 			fontstring:SetJustifyV("BOTTOM");
 			frame.font = fontstring;
 		end
-		
+
 		if ConRO.db.profile.enableWindowSpellName then
 			fontstring:Show();
-		else 
+		else
 			fontstring:Hide();
 		end
-	
+
 	local fontkey = frame.fontkey;
 		if not fontkey then
 			fontkey = frame:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
@@ -828,10 +830,10 @@ function ConRO:DisplayWindowFrame()
 		end
 		if ConRO.db.profile.enableWindowKeybinds or ConRO.db.profile._Unlock_ConRO then
 			fontkey:Show();
-		else 
+		else
 			fontkey:Hide();
 		end
-	
+
 	local cd = CreateFrame("Cooldown", "ConROWindowCooldown", frame, "CooldownFrameTemplate")
 		cd:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START");
 		cd:RegisterEvent("UNIT_SPELLCAST_CHANNEL_UPDATE");
@@ -843,10 +845,10 @@ function ConRO:DisplayWindowFrame()
         cd:RegisterEvent("UNIT_SPELLCAST_FAILED");
 		cd:RegisterEvent("UNIT_SPELLCAST_START");
 		cd:RegisterEvent("UNIT_SPELLCAST_STOP");
-		
+
 		cd:SetAllPoints(frame);
 		cd:SetFrameStrata('MEDIUM');
-		cd:SetFrameLevel('7');			
+		cd:SetFrameLevel('54');
 		if ConRO.db.profile.enableWindowCooldown then
 			cd:SetScript("OnEvent",function(self)
 				local gcdStart, gcdDuration = GetSpellCooldown(61304)
@@ -861,10 +863,66 @@ function ConRO:DisplayWindowFrame()
 				else
 					local spStart  = startTimeMS / 1000;
 					local spDuration = endTimeMS/1000 - GetTime();
-					cd:SetCooldown(spStart, spDuration)			
+					cd:SetCooldown(spStart, spDuration)
 				end
 			end)
 		end
+end
+
+function ConRO:DisplayNextWindowFrame()
+	local frame = CreateFrame("Frame", "ConRONextWindow", UIParent);
+		frame:SetMovable(false);
+		frame:SetClampedToScreen(true);
+
+		frame:SetPoint("BOTTOMRIGHT", "ConROWindow", "BOTTOMLEFT", -3, 0);
+		frame:SetSize(ConRO.db.profile.windowIconSize/1.35, ConRO.db.profile.windowIconSize/1.35);
+		frame:SetFrameStrata('MEDIUM');
+		frame:SetFrameLevel('52');
+		frame:SetAlpha(ConRO.db.profile.transparencyWindow);
+		if ConRO.db.profile.combatWindow or ConRO:HealSpec() then
+			frame:Hide();
+		elseif not ConRO.db.profile.enableWindow then
+			frame:Hide();
+		else
+			frame:Show();
+		end
+	local t = frame.texture;
+		if not t then
+			t = frame:CreateTexture("ARTWORK");
+			t:SetTexture('Interface\\AddOns\\ConRO\\images\\Bigskull');
+			t:SetBlendMode('BLEND');
+			frame.texture = t;
+		end
+
+		t:SetAllPoints(frame)
+end
+
+function ConRO:DisplayNext2WindowFrame()
+	local frame = CreateFrame("Frame", "ConRONext2Window", UIParent);
+		frame:SetMovable(false);
+		frame:SetClampedToScreen(true);
+
+		frame:SetPoint("BOTTOMRIGHT", "ConRONextWindow", "BOTTOMLEFT", -3, 0);
+		frame:SetSize(ConRO.db.profile.windowIconSize/2, ConRO.db.profile.windowIconSize/2);
+		frame:SetFrameStrata('MEDIUM');
+		frame:SetFrameLevel('52');
+		frame:SetAlpha(ConRO.db.profile.transparencyWindow);
+		if ConRO.db.profile.combatWindow or ConRO:HealSpec() then
+			frame:Hide();
+		elseif not ConRO.db.profile.enableWindow then
+			frame:Hide();
+		else
+			frame:Show();
+		end
+	local t = frame.texture;
+		if not t then
+			t = frame:CreateTexture("ARTWORK");
+			t:SetTexture('Interface\\AddOns\\ConRO\\images\\Bigskull');
+			t:SetBlendMode('BLEND');
+			frame.texture = t;
+		end
+
+		t:SetAllPoints(frame)
 end
 
 function ConRO:DefenseWindowFrame()
@@ -881,11 +939,11 @@ function ConRO:DefenseWindowFrame()
 		end)
 		frame:SetScript("OnDragStop", frame.StopMovingOrSizing);
 		frame:EnableMouse(ConRO.db.profile._Unlock_ConRO);
-		
+
 		frame:SetPoint("CENTER", -280, 50);
 		frame:SetSize(ConRO.db.profile.windowIconSize * .75, ConRO.db.profile.windowIconSize * .75);
 		frame:SetFrameStrata('MEDIUM');
-		frame:SetFrameLevel('4');
+		frame:SetFrameLevel('52');
 		frame:SetAlpha(ConRO.db.profile.transparencyWindow);
 		if ConRO.db.profile.combatWindow then
 			frame:Hide();
@@ -894,7 +952,7 @@ function ConRO:DefenseWindowFrame()
 		else
 			frame:Show();
 		end
-		
+
 	local t = frame.texture;
 		if not t then
 			t = frame:CreateTexture("ARTWORK")
@@ -904,9 +962,9 @@ function ConRO:DefenseWindowFrame()
 			t:SetVertexColor(color.r, color.g, color.b);
 			frame.texture = t;
 		end
-		
+
 		t:SetAllPoints(frame)
-	
+
 	local fontstring = frame.font;
 		if not fontstring then
 			fontstring = frame:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
@@ -920,10 +978,10 @@ function ConRO:DefenseWindowFrame()
 			fontstring:SetJustifyV("BOTTOM");
 			frame.font = fontstring;
 		end
-		
+
 		if ConRO.db.profile.enableWindowSpellName then
 			fontstring:Show();
-		else 
+		else
 			fontstring:Hide();
 		end
 
@@ -937,10 +995,10 @@ function ConRO:DefenseWindowFrame()
 		end
 		if ConRO.db.profile.enableWindowKeybinds or ConRO.db.profile._Unlock_ConRO then
 			fontkey:Show();
-		else 
+		else
 			fontkey:Hide();
 		end
-	
+
 	local cd = CreateFrame("Cooldown", "ConRODefWindowCooldown", frame, "CooldownFrameTemplate")
 		cd:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START");
 		cd:RegisterEvent("UNIT_SPELLCAST_CHANNEL_UPDATE");
@@ -952,10 +1010,10 @@ function ConRO:DefenseWindowFrame()
         cd:RegisterEvent("UNIT_SPELLCAST_FAILED");
 		cd:RegisterEvent("UNIT_SPELLCAST_START");
 		cd:RegisterEvent("UNIT_SPELLCAST_STOP");
-		
+
 		cd:SetAllPoints(frame);
 		cd:SetFrameStrata('MEDIUM');
-		cd:SetFrameLevel('7');			
+		cd:SetFrameLevel('54');
 		if ConRO.db.profile.enableWindowCooldown then
 			cd:SetScript("OnEvent",function(self)
 				local gcdStart, gcdDuration = GetSpellCooldown(61304)
@@ -970,10 +1028,10 @@ function ConRO:DefenseWindowFrame()
 				else
 					local spStart  = startTimeMS / 1000;
 					local spDuration = endTimeMS/1000 - GetTime();
-					cd:SetCooldown(spStart, spDuration)			
+					cd:SetCooldown(spStart, spDuration)
 				end
 			end)
-		end		
+		end
 end
 
 function ConRO:InterruptWindowFrame()
@@ -988,13 +1046,13 @@ function ConRO:InterruptWindowFrame()
 				frame:StartMoving()
 			end
 		end)
-		frame:SetScript("OnDragStop", frame.StopMovingOrSizing)		
+		frame:SetScript("OnDragStop", frame.StopMovingOrSizing)
 		frame:EnableMouse(ConRO.db.profile._Unlock_ConRO);
-		
-		frame:SetPoint("RIGHT", "ConROWindow", "LEFT", -5, 0);
+
+		frame:SetPoint("LEFT", "ConROWindow", "RIGHT", 5, 10);
 		frame:SetSize(ConRO.db.profile.flashIconSize * .25, ConRO.db.profile.flashIconSize * .25);
 		frame:SetFrameStrata('MEDIUM');
-		frame:SetFrameLevel('5');
+		frame:SetFrameLevel('52');
 		if ConRO.db.profile.enableInterruptWindow == true and ConRO.db.profile._Unlock_ConRO == true then
 			frame:Show();
 		else
@@ -1010,8 +1068,8 @@ function ConRO:InterruptWindowFrame()
 			t:SetVertexColor(.1, .1, .1);
 			frame.texture = t;
 		end
-		
-		t:SetAllPoints(frame)		
+
+		t:SetAllPoints(frame)
 end
 
 function ConRO:PurgeWindowFrame()
@@ -1026,13 +1084,13 @@ function ConRO:PurgeWindowFrame()
 				frame:StartMoving()
 			end
 		end)
-		frame:SetScript("OnDragStop", frame.StopMovingOrSizing)		
+		frame:SetScript("OnDragStop", frame.StopMovingOrSizing)
 		frame:EnableMouse(ConRO.db.profile._Unlock_ConRO);
-		
-		frame:SetPoint("LEFT", "ConROWindow", "RIGHT", 5, 0);
+
+		frame:SetPoint("LEFT", "ConROWindow", "RIGHT", 5, -10);
 		frame:SetSize(ConRO.db.profile.flashIconSize * .25, ConRO.db.profile.flashIconSize * .25);
 		frame:SetFrameStrata('MEDIUM');
-		frame:SetFrameLevel('5');
+		frame:SetFrameLevel('52');
 		if ConRO.db.profile.enablePurgeWindow == true and ConRO.db.profile._Unlock_ConRO == true then
 			frame:Show();
 		else
@@ -1048,8 +1106,8 @@ function ConRO:PurgeWindowFrame()
 			t:SetVertexColor(.1, .1, .1);
 			frame.texture = t;
 		end
-		
-		t:SetAllPoints(frame)		
+
+		t:SetAllPoints(frame)
 end
 
 
@@ -1058,7 +1116,9 @@ function ConRO:FindKeybinding(id)
 	if self.Keybinds[id] ~= nil then
 		for k, button in pairs(self.Keybinds[id]) do
 			for i = 1, 12 do
-				if button == 'MultiBarBottomLeftButton' .. i then
+				if button == 'ActionButton' .. i then
+					button = 'ACTIONBUTTON' .. i;
+				elseif button == 'MultiBarBottomLeftButton' .. i then
 					button = 'MULTIACTIONBAR1BUTTON' .. i;
 				elseif button == 'MultiBarBottomRightButton' .. i then
 					button = 'MULTIACTIONBAR2BUTTON' .. i;
@@ -1066,9 +1126,15 @@ function ConRO:FindKeybinding(id)
 					button = 'MULTIACTIONBAR3BUTTON' .. i;
 				elseif button == 'MultiBarLeftButton' .. i then
 					button = 'MULTIACTIONBAR4BUTTON' .. i;
+				elseif button == 'MultiBar5Button' .. i then
+					button = 'MULTIACTIONBAR5BUTTON' .. i;
+				elseif button == 'MultiBar6Button' .. i then
+					button = 'MULTIACTIONBAR6BUTTON' .. i;
+				elseif button == 'MultiBar7Button' .. i then
+					button = 'MULTIACTIONBAR7BUTTON' .. i;
 				end
-				
-				keybind = GetBindingKey(button);				
+
+				keybind = GetBindingKey(button);
 			end
 		end
 	end
@@ -1084,7 +1150,7 @@ function ConRO:CreateDamageOverlay(parent, id)
 
 	frame:SetParent(parent);
 	frame:SetFrameStrata('MEDIUM');
-	frame:SetFrameLevel('20');
+	frame:SetFrameLevel('52');
 	frame:SetPoint('CENTER', 0, 0);
 	frame:SetWidth(parent:GetWidth() * 1.6);
 	frame:SetHeight(parent:GetHeight() * 1.6);
@@ -1139,7 +1205,7 @@ function ConRO:CreateDamageOverlay(parent, id)
 		local _, _, classId = UnitClass('player');
 		color = ConRO.ClassRGB[classId];
 	end
-						
+
 	t:SetVertexColor(color.r, color.g, color.b);
 	t:SetAlpha(color.a);
 
@@ -1155,7 +1221,7 @@ function ConRO:CreateCoolDownOverlay(parent, id)
 
 	frame:SetParent(parent);
 	frame:SetFrameStrata('MEDIUM');
-	frame:SetFrameLevel('20')
+	frame:SetFrameLevel('52')
 	frame:SetPoint('CENTER', 0, 0);
 	frame:SetWidth(parent:GetWidth() * 1.6);
 	frame:SetHeight(parent:GetHeight() * 1.6);
@@ -1208,7 +1274,7 @@ function ConRO:CreateCoolDownOverlay(parent, id)
 	local color = ConRO.db.profile._Cooldown_Overlay_Color;
 	t:SetVertexColor(color.r, color.g, color.b);
 	t:SetAlpha(color.a);
-	
+
 	tinsert(self.CoolDownFrames, frame);
 	return frame;
 end
@@ -1221,7 +1287,7 @@ function ConRO:CreateDefenseOverlay(parent, id)
 
 	frame:SetParent(parent);
 	frame:SetFrameStrata('MEDIUM');
-	frame:SetFrameLevel('20')
+	frame:SetFrameLevel('52')
 	frame:SetPoint('CENTER', 0, 0);
 	frame:SetWidth(parent:GetWidth() * 1.6);
 	frame:SetHeight(parent:GetHeight() * 1.6);
@@ -1274,7 +1340,7 @@ function ConRO:CreateDefenseOverlay(parent, id)
 	local color = ConRO.db.profile._Defense_Overlay_Color;
 	t:SetVertexColor(color.r, color.g, color.b);
 	t:SetAlpha(color.a);
-	
+
 	tinsert(self.DefenseFrames, frame);
 	return frame;
 end
@@ -1287,7 +1353,7 @@ function ConRO:CreateTauntOverlay(parent, id)
 
 	frame:SetParent(parent);
 	frame:SetFrameStrata('MEDIUM');
-	frame:SetFrameLevel('20')
+	frame:SetFrameLevel('52')
 	frame:SetPoint('CENTER', 0, 0);
 	frame:SetWidth(parent:GetWidth() * 1.5);
 	frame:SetHeight(parent:GetHeight() * 1.5);
@@ -1340,7 +1406,7 @@ function ConRO:CreateTauntOverlay(parent, id)
 	local color = ConRO.db.profile._Taunt_Overlay_Color;
 	t:SetVertexColor(color.r, color.g, color.b);
 	t:SetAlpha(color.a);
-	
+
 	tinsert(self.TauntFrames, frame);
 	return frame;
 end
@@ -1353,7 +1419,7 @@ function ConRO:CreateInterruptOverlay(parent, id)
 
 	frame:SetParent(parent);
 	frame:SetFrameStrata('MEDIUM');
-	frame:SetFrameLevel('20')
+	frame:SetFrameLevel('52')
 	frame:SetPoint('CENTER', 0, 0);
 	frame:SetWidth(parent:GetWidth() * 1.8);
 	frame:SetHeight(parent:GetHeight() * 1.8);
@@ -1406,7 +1472,7 @@ function ConRO:CreateInterruptOverlay(parent, id)
 	local color = ConRO.db.profile._Interrupt_Overlay_Color;
 	t:SetVertexColor(color.r, color.g, color.b);
 	t:SetAlpha(color.a);
-	
+
 	tinsert(self.InterruptFrames, frame);
 	return frame;
 end
@@ -1419,7 +1485,7 @@ function ConRO:CreatePurgableOverlay(parent, id)
 
 	frame:SetParent(parent);
 	frame:SetFrameStrata('MEDIUM');
-	frame:SetFrameLevel('20')
+	frame:SetFrameLevel('52')
 	frame:SetPoint('CENTER', 0, 0);
 	frame:SetWidth(parent:GetWidth() * 2);
 	frame:SetHeight(parent:GetHeight() * 2);
@@ -1472,7 +1538,7 @@ function ConRO:CreatePurgableOverlay(parent, id)
 	local color = ConRO.db.profile._Purge_Overlay_Color;
 	t:SetVertexColor(color.r, color.g, color.b);
 	t:SetAlpha(color.a);
-	
+
 	tinsert(self.PurgableFrames, frame);
 	return frame;
 end
@@ -1485,7 +1551,7 @@ function ConRO:CreateRaidBuffsOverlay(parent, id)
 
 	frame:SetParent(parent);
 	frame:SetFrameStrata('MEDIUM');
-	frame:SetFrameLevel('20')
+	frame:SetFrameLevel('52')
 	frame:SetPoint('CENTER', 0, 0);
 	frame:SetWidth(parent:GetWidth() * 1.5);
 	frame:SetHeight(parent:GetHeight() * 1.65);
@@ -1538,7 +1604,7 @@ function ConRO:CreateRaidBuffsOverlay(parent, id)
 	local color = ConRO.db.profile._RaidBuffs_Overlay_Color;
 	t:SetVertexColor(color.r, color.g, color.b);
 	t:SetAlpha(color.a);
-	
+
 	tinsert(self.RaidBuffsFrames, frame);
 	return frame;
 end
@@ -1551,7 +1617,7 @@ function ConRO:CreateMovementOverlay(parent, id)
 
 	frame:SetParent(parent);
 	frame:SetFrameStrata('MEDIUM');
-	frame:SetFrameLevel('20')
+	frame:SetFrameLevel('52')
 	frame:SetPoint('CENTER', 0, -3);
 	frame:SetWidth(parent:GetWidth() * 1.65);
 	frame:SetHeight(parent:GetHeight() * 1.85);
@@ -1604,7 +1670,7 @@ function ConRO:CreateMovementOverlay(parent, id)
 	local color = ConRO.db.profile._Movement_Overlay_Color;
 	t:SetVertexColor(color.r, color.g, color.b);
 	t:SetAlpha(color.a);
-	
+
 	tinsert(self.MovementFrames, frame);
 	return frame;
 end
@@ -1753,7 +1819,7 @@ function ConRO:UpdateButtonGlow()
 
 	if IsAddOnLoaded('ElvUI') then
 		LAB = LibStub:GetLibrary('LibActionButton-1.0-ElvUI');
-		LBG = LibStub:GetLibrary('LibButtonGlow-1.0');
+		LBG = LibStub:GetLibrary('LibCustomGlow-1.0');
 		origShow = LBG.ShowOverlayGlow;
 	elseif IsAddOnLoaded('Bartender4') then
 		LAB = LibStub:GetLibrary('LibActionButton-1.0');
@@ -1931,12 +1997,12 @@ function ConRO:HideMovementGlow(button, id)
 		button.ConROMovementOverlays[id]:Hide();
 	end
 end
-	
-function ConRO:UpdateRotation()	
+
+function ConRO:UpdateRotation()
 	self = ConRO;
 
 	self:FetchBlizzard();
-	
+
 	if IsAddOnLoaded('Bartender4') then
 		self:FetchBartender4();
 	end
@@ -1944,26 +2010,26 @@ function ConRO:UpdateRotation()
 	if IsAddOnLoaded('ButtonForge') then
 		self:FetchButtonForge();
 	end
-	
+
 	if IsAddOnLoaded('ElvUI') then
 		self:FetchElvUI();
 	end
-	
+
 	if IsAddOnLoaded('Dominos') then
 		self:FetchDominos();
 	end
-	
+
     if IsAddOnLoaded('DiabolicUI') then
         self:FetchDiabolic();
     end
- 
+
     if IsAddOnLoaded('AzeriteUI') then
         self:FetchAzeriteUI();
     end
-	
+
 	if IsAddOnLoaded('ls_UI') then
         self:FetchLSUI();
-    end	
+    end
 end
 
 function ConRO:AddButton(spellID, button, hotkey)
@@ -1972,7 +2038,7 @@ function ConRO:AddButton(spellID, button, hotkey)
 			self.Spells[spellID] = {};
 		end
 		tinsert(self.Spells[spellID], button);
-		
+
 		if self.Keybinds[spellID] == nil then
 			self.Keybinds[spellID] = {};
 		end
@@ -1996,14 +2062,14 @@ function ConRO:AddStandardButton(button, hotkey)
             if not slot or slot == 0 then
                 slot = button:CalculateAction();
             end
- 
+
             if HasAction(slot) then
                 type, id = GetActionInfo(slot);
             else
                 return;
             end
         end
- 
+
         if type == 'macro' then
             spellId = GetMacroSpell(id);
             if not spellId then
@@ -2025,7 +2091,7 @@ function ConRO:DefAddButton(spellID, button, hotkey)
 			self.DefSpells[spellID] = {};
 		end
 		tinsert(self.DefSpells[spellID], button);
-		
+
 		if self.Keybinds[spellID] == nil then
 			self.Keybinds[spellID] = {};
 		end
@@ -2049,14 +2115,14 @@ function ConRO:DefAddStandardButton(button, hotkey)
             if not slot or slot == 0 then
                 slot = button:CalculateAction();
             end
- 
+
             if HasAction(slot) then
                 type, id = GetActionInfo(slot);
             else
                 return;
             end
         end
- 
+
         if type == 'macro' then
             spellId = GetMacroSpell(id);
             if not spellId then
@@ -2094,26 +2160,26 @@ function ConRO:Fetch()
 	if IsAddOnLoaded('ButtonForge') then
 		self:FetchButtonForge();
 	end
-	
+
 	if IsAddOnLoaded('ElvUI') then
 		self:FetchElvUI();
 	end
-	
+
 	if IsAddOnLoaded('Dominos') then
 		self:FetchDominos();
 	end
-	
+
     if IsAddOnLoaded('DiabolicUI') then
         self:FetchDiabolic();
     end
- 
+
     if IsAddOnLoaded('AzeriteUI') then
         self:FetchAzeriteUI();
     end
-	
+
     if IsAddOnLoaded('ls_UI') then
         self:FetchLSUI();
-    end	
+    end
 
 	if self.rotationEnabled then
 		self:EnableRotationTimer();
@@ -2132,9 +2198,9 @@ function ConRO:FetchDef()
 	self.DefSpells = {};
 	self.Flags = {};
 	self.DefGlowing = {};
-	
+
 	self:DefFetchBlizzard();
-		
+
 	if IsAddOnLoaded('Bartender4') then
 		self:DefFetchBartender4();
 	end
@@ -2142,11 +2208,11 @@ function ConRO:FetchDef()
 	if IsAddOnLoaded('ButtonForge') then
 		self:DefFetchButtonForge();
 	end
-	
+
 	if IsAddOnLoaded('ElvUI') then
 		self:DefFetchElvUI();
 	end
-	
+
 	if IsAddOnLoaded('Dominos') then
 		self:DefFetchDominos();
 	end
@@ -2154,15 +2220,15 @@ function ConRO:FetchDef()
 	if IsAddOnLoaded('DiabolicUI') then
         self:DefFetchDiabolic();
     end
- 
+
     if IsAddOnLoaded('AzeriteUI') then
         self:DefFetchAzeriteUI();
-    end	
+    end
 
     if IsAddOnLoaded('ls_UI') then
         self:DefFetchLSUI();
-    end	
-	
+    end
+
 	if self.defenseEnabled then
 		self:EnableDefenseTimer();
 		self:InvokeNextDef();
@@ -2170,7 +2236,7 @@ function ConRO:FetchDef()
 end
 
 function ConRO:FetchBlizzard()
-	local ActionBarsBlizzard = {'Stance', 'PetAction', 'Action', 'MultiBarBottomLeft', 'MultiBarBottomRight', 'MultiBarRight', 'MultiBarLeft'};
+	local ActionBarsBlizzard = {'Stance', 'PetAction', 'Action', 'MultiBarBottomLeft', 'MultiBarBottomRight', 'MultiBarRight', 'MultiBarLeft', 'MultiBar5', 'MultiBar6', 'MultiBar7'};
 	for _, barName in pairs(ActionBarsBlizzard) do
 		if barName == 'Stance' then
 			local x = GetNumShapeshiftForms();
@@ -2186,7 +2252,7 @@ function ConRO:FetchBlizzard()
 				local hotkey = barName .. 'Button' .. i;
 				local spellID = select(7, GetPetActionInfo(i));
 				self:AddButton(spellID, button, hotkey);
-			end	
+			end
 		else
 			for i = 1, 12 do
 				local button = _G[barName .. 'Button' .. i];
@@ -2198,7 +2264,7 @@ function ConRO:FetchBlizzard()
 end
 
 function ConRO:DefFetchBlizzard()
-	local ActionBarsBlizzard = {'Stance', 'PetAction', 'Action', 'MultiBarBottomLeft', 'MultiBarBottomRight', 'MultiBarRight', 'MultiBarLeft'};
+	local ActionBarsBlizzard = {'Stance', 'PetAction', 'Action', 'MultiBarBottomLeft', 'MultiBarBottomRight', 'MultiBarRight', 'MultiBarLeft', 'MultiBar5', 'MultiBar6', 'MultiBar7'};
 	for _, barName in pairs(ActionBarsBlizzard) do
 		if barName == 'Stance' then
 			local x = GetNumShapeshiftForms();
@@ -2214,7 +2280,7 @@ function ConRO:DefFetchBlizzard()
 				local hotkey = barName .. 'Button' .. i;
 				local spellID = select(7, GetPetActionInfo(i));
 				self:DefAddButton(spellID, button, hotkey);
-			end	
+			end
 		else
 			for i = 1, 12 do
 				local button = _G[barName .. 'Button' .. i];
@@ -2276,13 +2342,13 @@ function ConRO:FetchButtonForge()
 				end
 
 				tinsert(self.Spells[spellId], button);
-				
+
 				if self.Keybinds[spellId] == nil then
 					self.Keybinds[spellId] = {};
 				end
-				
+
 				tinsert(self.Keybinds[spellId], 'ButtonForge' .. i);
-				 	
+
 			end
 		end
 	end
@@ -2318,13 +2384,13 @@ function ConRO:DefFetchButtonForge()
 				end
 
 				tinsert(self.DefSpells[spellId], button);
-				
+
 				if self.Keybinds[spellId] == nil then
 					self.Keybinds[spellId] = {};
 				end
-				
+
 				tinsert(self.Keybinds[spellId], 'ButtonForge' .. i);
-				
+
 			end
 		end
 	end
@@ -2354,7 +2420,7 @@ function ConRO:FetchElvUI()
 					hotkey = 'EXTRABAR9BUTTON' .. i;
 				elseif button == 'ElvUI_Bar10Button' .. i then
 					hotkey = 'EXTRABAR10BUTTON' .. i;
-				end			
+				end
 
 				if button then
 					self:AddStandardButton(button, hotkey);
@@ -2362,7 +2428,7 @@ function ConRO:FetchElvUI()
 		end
 	end
 end
-					
+
 function ConRO:DefFetchElvUI()
 	for x = 10, 1, -1 do
 		for i = 1, 12 do
@@ -2387,7 +2453,7 @@ function ConRO:DefFetchElvUI()
 					hotkey = 'EXTRABAR9BUTTON' .. i;
 				elseif button == 'ElvUI_Bar10Button' .. i then
 					hotkey = 'EXTRABAR10BUTTON' .. i;
-				end			
+				end
 
 				if button then
 					self:DefAddStandardButton(button, hotkey);
@@ -2413,7 +2479,7 @@ function ConRO:FetchBartender4()
 				local hotkey = 'CLICK BT4PetButton' .. i .. ':LeftButton';
 				local spellID = select(7, GetPetActionInfo(i));
 				self:AddButton(spellID, button, hotkey);
-			end	
+			end
 		else
 			for i = 1, 120 do
 				local button = _G[barName .. 'Button' .. i];
@@ -2443,7 +2509,7 @@ function ConRO:DefFetchBartender4()
 				local hotkey = 'CLICK BT4PetButton' .. i .. ':LeftButton';
 				local spellID = select(7, GetPetActionInfo(i));
 				self:DefAddButton(spellID, button, hotkey);
-			end	
+			end
 		else
 			for i = 1, 120 do
 				local button = _G[barName .. 'Button' .. i];
@@ -2515,7 +2581,7 @@ function ConRO:FetchLSUI()
 				local hotkey = barName .. 'Button' .. i;
 				local spellID = select(7, GetPetActionInfo(i));
 				self:AddButton(spellID, button, hotkey);
-			end	
+			end
 		else
 			for x = 1, 5 do
 				for i = 1, 12 do
@@ -2545,7 +2611,7 @@ function ConRO:DefFetchLSUI()
 				local hotkey = barName .. 'Button' .. i;
 				local spellID = select(7, GetPetActionInfo(i));
 				self:DefAddButton(spellID, button, hotkey);
-			end	
+			end
 		else
 			for x = 1, 5 do
 				for i = 1, 12 do
@@ -2668,13 +2734,13 @@ end
 
 function ConRO:AbilityBurst(_Spell, _Condition)
 	local incombat = UnitAffectingCombat('player');
-	
+
 	if self.Flags[_Spell] == nil then
 		self.Flags[_Spell] = false;
 	end
 	if _Condition and incombat then
 		self.Flags[_Spell] = true;
-		self:AbilityBurstIndependent(_Spell);		
+		self:AbilityBurstIndependent(_Spell);
 	else
 		self.Flags[_Spell] = false;
 		self:ClearAbilityBurstIndependent(_Spell);
@@ -2685,14 +2751,14 @@ function ConRO:AbilityInterrupt(_Spell, _Condition)
 	local color = ConRO.db.profile._Interrupt_Overlay_Color;
 	if self.Flags[_Spell] == nil then
 		self.Flags[_Spell] = false;
-		self:ClearAbilityInterruptIndependent(spell, spell);		--Trying out 8.2.8
+		self:ClearAbilityInterruptIndependent(_Spelll);
 		ConROInterruptWindow:SetSize(ConRO.db.profile.flashIconSize * .25, ConRO.db.profile.flashIconSize * .25);
 		ConROInterruptWindow.texture:SetVertexColor(.1, .1, .1);
 		if UIFrameIsFlashing(ConROInterruptWindow) then
 			UIFrameFlashStop(ConROInterruptWindow);
 			if ConRO.db.profile._Unlock_ConRO == true and ConRO.db.profile.enableInterruptWindow == true then
-				ConROInterruptWindow:Show();				
-			end	
+				ConROInterruptWindow:Show();
+			end
 		end
 	end
 	if _Condition then
@@ -2712,20 +2778,20 @@ function ConRO:AbilityInterrupt(_Spell, _Condition)
 			if UIFrameIsFlashing(ConROInterruptWindow) then
 				UIFrameFlashStop(ConROInterruptWindow);
 				if ConRO.db.profile._Unlock_ConRO == true and ConRO.db.profile.enableInterruptWindow == true then
-					ConROInterruptWindow:Show();				
-				end			
+					ConROInterruptWindow:Show();
+				end
 			end
 		end
 		self.Flags[_Spell] = false;
-		self:ClearAbilityInterruptIndependent(_Spell);		
+		self:ClearAbilityInterruptIndependent(_Spell);
 	end
 end
-	
+
 function ConRO:AbilityPurge(_Spell, _Condition)
 	local color = ConRO.db.profile._Purge_Overlay_Color;
 	if self.Flags[_Spell] == nil then
 		self.Flags[_Spell] = false;
-		self:ClearAbilityPurgeIndependent(spell, spell);
+		self:ClearAbilityPurgeIndependent(_Spell);
 		ConROPurgeWindow:SetSize(ConRO.db.profile.flashIconSize * .25, ConRO.db.profile.flashIconSize * .25);
 		ConROPurgeWindow.texture:SetVertexColor(.1, .1, .1);
 		if UIFrameIsFlashing(ConROPurgeWindow) then
@@ -2800,33 +2866,22 @@ function ConRO:AbilityMovement(_Spell, _Condition)
 	end
 end
 
-noWarnInit = {2643, 33917, 53600, 53595, 77758, 162794, 188499, 205448, 213771, 326446}
-noWarnSpells = {}
-
-
-for _, v in pairs(noWarnInit) do
-  noWarnSpells[v] = true
-end
-
-
 function ConRO:GlowSpell(spellID)
 	local spellName = GetSpellInfo(spellID);
-	
+
 	if self.Spells[spellID] ~= nil then
 		for k, button in pairs(self.Spells[spellID]) do
 			self:DamageGlow(button, 'next');
 		end
 		self.SpellsGlowing[spellID] = 1;
 	else
---		if UnitAffectingCombat('player') then
-		if UnitAffectingCombat('player') and (nil == noWarnSpells[spellID]) then
-			self:Print(noWarnSpells);
+		if UnitAffectingCombat('player') and not (spellID == 162794 or spellID == 188499 or spellID == 205448) then
 			if spellName ~= nil then
-				self:Print(self.Colors.Error .. 'Spell not found on action bars1: ' .. ' ' .. spellName .. ' ' .. '(' .. spellID .. ')');
+				self:Print(self.Colors.Error .. 'Spell not found on action bars: ' .. ' ' .. spellName .. ' ' .. '(' .. spellID .. ')');
 			else
 				local itemName = GetItemInfo(spellID);
 				if itemName ~= nil then
-					self:Print(self.Colors.Error .. 'Item not found on action bars1: ' .. ' ' .. itemName .. ' ' .. '(' .. spellID .. ')');
+					self:Print(self.Colors.Error .. 'Item not found on action bars: ' .. ' ' .. itemName .. ' ' .. '(' .. spellID .. ')');
 				end
 			end
 		end
@@ -2843,14 +2898,13 @@ function ConRO:GlowDef(spellID)
 		end
 		self.DefGlowing[spellID] = 1;
 	else
---		if UnitAffectingCombat('player') then
-		if UnitAffectingCombat('player') and (nil == noWarnSpells[spellID]) then
+		if UnitAffectingCombat('player') then
 			if spellName ~= nil then
-				self:Print(self.Colors.Error .. 'Spell not found on action bars2: ' .. ' ' .. spellName .. ' ' .. '(' .. spellID .. ')');
+				self:Print(self.Colors.Error .. 'Spell not found on action bars: ' .. ' ' .. spellName .. ' ' .. '(' .. spellID .. ')');
 			else
 				local itemName = GetItemInfo(spellID);
 				if itemName ~= nil then
-					self:Print(self.Colors.Error .. 'Item not found on action bars2: ' .. ' ' .. itemName .. ' ' .. '(' .. spellID .. ')');
+					self:Print(self.Colors.Error .. 'Item not found on action bars: ' .. ' ' .. itemName .. ' ' .. '(' .. spellID .. ')');
 				end
 			end
 		end

@@ -3,7 +3,7 @@
 local _, Addon = ...
 local L = Addon:GetLocale()
 
-assert(Addon.Public, "Public not defined. This is a programmer error in load order.")
+
 
 Addon:MakePublic(
     "RegisterExtension",
@@ -13,7 +13,7 @@ Addon:MakePublic(
 
 Addon:MakePublic(
     "EvaluateItem",
-    function (arg1, arg2) return Addon:EvaluateSource(arg1, arg2) end,
+    function (bag, slot) return Addon:EvaluateSource(bag, slot) end,
     L["API_EVALUATEITEM_TITLE"],
     L["API_EVALUATEITEM_DOCS"])
 
@@ -49,15 +49,32 @@ Addon:MakePublic(
 
 Addon:MakePublic(
     "ShowKeybindings",
-    function () Addon:OpenKeybindings_Cmd() end,
+    function () 
+        -- Blizzard really messed up keybindings so we won't try to direct open them for now.
+        --Addon:OpenKeybindings_Cmd()
+    end,
     L["API_OPENKEYBINDINGS_TITLE"],
     L["API_OPENKEYBINDINGS_DOCS"])
 
 Addon:MakePublic(
     "ShowRules",
-    function () VendorRulesDialog:Toggle() end,
+    function ()
+        Addon:WithFeature("Vendor", function(vendor)
+            vendor:ShowDialog("rules")
+        end)
+    end,
     L["API_OPENRULES_TITLE"],
     L["API_OPENRULES_DOCS"])
+
+Addon:MakePublic(
+    "ShowProfiles",
+    function ()
+        Addon:WithFeature("Vendor", function(vendor)
+            vendor:ShowDialog("profiles")
+        end)
+    end,
+    L["API_OPENPROFILES_TITLE"],
+    L["API_OPENPROFILES_DOCS"])
 
 Addon:MakePublic(
     "GetEvaluationStatus",

@@ -8,7 +8,6 @@ local MaxDps = MaxDps;
 local UnitPower = UnitPower;
 local HolyPower = Enum.PowerType.HolyPower;
 local RT = {
-	ArcaneTorrent = 28730,
 	AvengingWrath = 31884,
 	AvengingWrathTalent = 384376,
 	AvengingWrathMightTalent = 384442,
@@ -132,10 +131,6 @@ function Paladin:RetributionSingleTarget()
 	if cooldown[RT.CrusaderStrike].ready then
 		return RT.CrusaderStrike;
 	end
-
-	if cooldown[RT.ArcaneTorrent].ready then
-		return RT.ArcaneTorrent;
-	end
 end
 
 
@@ -207,10 +202,6 @@ function Paladin:RetributionMultiTarget()
 
 	if cooldown[RT.CrusaderStrike].ready then
 		return RT.CrusaderStrike;
-	end
-
-	if cooldown[RT.ArcaneTorrent].ready then
-		return RT.ArcaneTorrent;
 	end
 end
 

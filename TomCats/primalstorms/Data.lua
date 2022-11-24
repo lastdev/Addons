@@ -1,21 +1,32 @@
-local addonName, addon = ...
+local _, addon = ...
+local L = addon.PrimalStorms.L
+
+local labelFormat = "%s: %s"
 
 addon.PrimalStorms.Elements = {
 	FIRE = {
-		label = "Fire",
+		label = labelFormat:format(L["Primal Elements"], L["Fire"]),
 		icon = "elementalstorm-lesser-fire",
+		dimmedIcon = "Interface/icons/inv_10_elementalcombinedfoozles_fire",
+		dimmedItem = 199836
 	},
 	WATER = {
-		label = "Water",
+		label = labelFormat:format(L["Primal Elements"], L["Water"]),
 		icon = "elementalstorm-lesser-water",
+		dimmedIcon = "Interface/icons/inv_10_elementalcombinedfoozles_water",
+		dimmedItem = 199839
 	},
 	AIR = {
-		label = "Air",
+		label = labelFormat:format(L["Primal Elements"], L["Air (Storm)"]),
 		icon = "elementalstorm-lesser-air",
+		dimmedIcon = "Interface/icons/inv_10_elementalcombinedfoozles_lightning",
+		dimmedItem = 199838
 	},
 	EARTH = {
-		label = "Earth",
+		label = labelFormat:format(L["Primal Elements"], L["Earth"]),
 		icon = "elementalstorm-lesser-earth",
+		dimmedIcon = "Interface/icons/Inv_10_elementalcombinedfoozles_earth",
+		dimmedItem = 199837
 	},
 }
 
@@ -23,7 +34,6 @@ local Elements = addon.PrimalStorms.Elements
 
 addon.PrimalStorms.ZoneEncounters = {
 	{
-		name = "Badlands",
 		mapID = 15,
 		{
 			element = Elements.FIRE,
@@ -47,7 +57,6 @@ addon.PrimalStorms.ZoneEncounters = {
 		}
 	},
 	{
-		name = "Northern Barrens",
 		mapID = 10,
 		{
 			element = Elements.FIRE,
@@ -71,8 +80,7 @@ addon.PrimalStorms.ZoneEncounters = {
 		}
 	},
 	{
-		name = "Tirisfal Glades",
-		mapID = 2070,
+		mapID = 18,
 		{
 			element = Elements.FIRE,
 			elementsPOI = 7376,
@@ -95,7 +103,6 @@ addon.PrimalStorms.ZoneEncounters = {
 		}
 	},
 	{
-		name = "Un'Goro Crater",
 		mapID = 78,
 		{
 			element = Elements.FIRE,
@@ -119,3 +126,10 @@ addon.PrimalStorms.ZoneEncounters = {
 		}
 	}
 }
+
+addon.PrimalStorms.StormVendors = {
+	[195899] = true,
+	[195912] = true
+}
+
+

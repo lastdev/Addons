@@ -1,33 +1,33 @@
 <Bindings>
     <Binding
-        name="VENDORALWAYSSELL"
-        description="BINDING_DESC_VENDORALWAYSSELL" header="VENDORQUICKLIST" category="ADDONS">
+        name="Vendor Toggle Add Item To Sell List"
+        category="Vendor Addon">
         Vendor.AddTooltipItemToSellList()
     </Binding>
     <Binding
-        name="VENDORNEVERSELL"
-        description="BINDING_DESC_VENDORNEVERSELL" category="ADDONS">
+        name="Vendor Toggle Add Item To Keep List"
+        category="Vendor Addon">
         Vendor.AddTooltipItemToKeepList()
     </Binding>
     <Binding
-        name="VENDORTOGGLEDESTROY"
-        description="BINDING_DESC_VENDORTOGGLEDESTROY" category="ADDONS">
+        name="Vendor Toggle Add Item To Destroy List"
+        category="Vendor Addon">
         Vendor.AddTooltipItemToDestroyList()
     </Binding>
     <Binding
-        name="VENDORRUNDESTROY"
-        description="BINDING_DESC_VENDORRUNDESTROY" category="ADDONS">
+        name="Vendor Destroy Next Item"
+        category="Vendor Addon">
         Vendor.DestroyItems()
     </Binding>
     <Binding
-        name="VENDORRUNAUTOSELL"
-        description="BINDING_DESC_VENDORRUNAUTOSELL" category="ADDONS">
+        name="Vendor Autosell At Merchant"
+        category="Vendor Addon">
         Vendor.AutoSell()
     </Binding>
     <Binding
-        name="VENDORRULES"
-        description="BINDING_DESC_VENDORRULES" category="ADDONS">
-        VendorRulesDialog:Toggle()
+        name="Vendor Rules Dialog"
+        category="Vendor Addon">
+        Vendor.ShowRules()
     </Binding>
     
 </Bindings>

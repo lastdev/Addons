@@ -74,10 +74,11 @@ end
 
 -- This is defunct, but in case we add a hook in...
 function Addon:OpenSettings_Cmd()
-    -- Call it twice so it opens first to the Game options, then to the AddOns category.
-    InterfaceOptionsFrame_OpenToCategory(L["ADDON_NAME"])
-    InterfaceOptionsFrame_OpenToCategory(L["ADDON_NAME"])
+    Addon:WithFeature("Vendor", function(vendor)
+        vendor:ShowDialog("settings")
+    end)
 end
+
 
 function Addon:OpenKeybindings_Cmd()
     -- Blizzard delay-loads the keybinding frame. If it doesn't exist, load it.
@@ -110,7 +111,9 @@ function Addon:OpenKeybindings_Cmd()
 end
 
 function Addon:OpenConfigDialog_Cmd()
-    VendorRulesDialog:Toggle()
+    Addon:WithFeature("Vendor", function(vendor)
+        vendor:ShowDialog("rules")
+    end)
 end
 
 -- Initiates a manual Auto-Sell. This ignores the auto-sell configuration setting.
@@ -135,8 +138,8 @@ end
 -- Withdraws all items which match your currently enabled rules set
 function Addon:Withdraw_Cmd()
     local function findBagWithSpace()
-        for i=0,NUM_BAG_SLOTS do
-            if GetContainerNumFreeSlots(i) ~= 0 then
+        for i=0,NUM_TOTAL_EQUIPPED_BAG_SLOTS  do
+            if C_Container.GetContainerNumFreeSlots(i) ~= 0 then
                 return i;
             end
         end

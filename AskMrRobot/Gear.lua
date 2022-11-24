@@ -666,10 +666,10 @@ local function findFirstEmptyBagSlot(usedBagSlots)
 	end
 	
 	for i, bagId in ipairs(bagIds) do
-		local numSlots = GetContainerNumSlots(bagId)
+		local numSlots = C_Container.GetContainerNumSlots(bagId)
 		for slotId = 1, numSlots do
 			if not usedBagSlots or not usedBagSlots[bagId] or not usedBagSlots[bagId][slotId] then
-				local _, _, _, _, _, _, itemLink = GetContainerItemInfo(bagId, slotId)
+				local itemLink = C_Container.GetContainerItemLink(bagId, slotId)
 				if not itemLink then
 					-- this prevents repeated calls to this from returning the same bag slot if desired
 					if usedBagSlots then
@@ -692,11 +692,11 @@ end
 
 -- scan a bag for the best matching item
 local function scanBagForItem(item, bagId, bestItem, bestDiff, bestLink)
-	local numSlots = GetContainerNumSlots(bagId)
+	local numSlots = C_Container.GetContainerNumSlots(bagId)
 	--local loc = ItemLocation.CreateEmpty()
 	local blizzItem
 	for slotId = 1, numSlots do
-		local _, _, _, _, _, _, itemLink = GetContainerItemInfo(bagId, slotId)
+		local itemLink = C_Container.GetContainerItemLink(bagId, slotId)
         -- we skip any stackable item, as far as we know, there is no equippable gear that can be stacked
 		if itemLink then
 			local bagItem = Amr.ParseItemLink(itemLink)
@@ -879,7 +879,7 @@ function processCurrentGearOp()
 		end
 
 		PickupInventoryItem(_currentGearOp.nextSlot)
-		PickupContainerItem(invBag, invSlot)
+		C_Container.PickupContainerItem(invBag, invSlot)
 
 		-- set an action to happen on ITEM_UNLOCKED, triggered by ClearCursor
 		_itemLockAction = {
@@ -915,8 +915,8 @@ function processCurrentGearOp()
 			end
 	
 			-- move from bank to bag
-			PickupContainerItem(bestItem.bag, bestItem.slot)
-			PickupContainerItem(invBag, invSlot)
+			C_Container.PickupContainerItem(bestItem.bag, bestItem.slot)
+			C_Container.PickupContainerItem(invBag, invSlot)
 	
 			-- set an action to happen on ITEM_UNLOCKED, triggered by ClearCursor
 			_itemLockAction = {
@@ -939,7 +939,7 @@ function processCurrentGearOp()
 
 			-- an item in the player's bags or already equipped, equip it
 			if bestItem.bag then
-				PickupContainerItem(bestItem.bag, bestItem.slot)
+				C_Container.PickupContainerItem(bestItem.bag, bestItem.slot)
 			else
 				_gearOpWaiting.inventory[bestItem.slot] = true
 				PickupInventoryItem(bestItem.slot)
@@ -1047,9 +1047,9 @@ local function handleItemUnlocked(bagId, slotId)
 			if IsInventoryItemLocked(_itemLockAction.invSlot) then return end
 
 			if _itemLockAction.bagId then
-				local _, _, locked = GetContainerItemInfo(_itemLockAction.bagId, _itemLockAction.slotId)
+				local itemInfo = C_Container.GetContainerItemInfo(_itemLockAction.bagId, _itemLockAction.slotId)
 				-- the bag slot we're swapping from is still locked, can't continue yet
-				if locked then return end
+				if itemInfo and itemInfo.isLocked then return end
 			else
 				-- inventory slot we're swapping from is still locked, can't continue yet
 				if IsInventoryItemLocked(_itemLockAction.slotId) then return end

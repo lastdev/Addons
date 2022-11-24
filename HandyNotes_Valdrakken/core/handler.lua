@@ -36,6 +36,8 @@ local RetrievingData    = L["handler_tooltip_data"]
 
 local NPClinkValdrakken = CreateFrame("GameTooltip", "NPClinkValdrakken", UIParent, "GameTooltipTemplate")
 local function GetCreatureNameByID(id)
+    if (not id) then return end
+
 	NPClinkValdrakken:SetOwner(UIParent, "ANCHOR_NONE")
 	NPClinkValdrakken:SetHyperlink(("unit:Creature-0-0-0-0-%d"):format(id))
     local name      = _G["NPClinkValdrakkenTextLeft1"]:GetText()
@@ -151,7 +153,7 @@ local GetPointInfo = function(point)
     end
 end
 
-local GetPoinInfoByCoord = function(uMapID, coord)
+local GetPointInfoByCoord = function(uMapID, coord)
     return GetPointInfo(private.DB.points[uMapID] and private.DB.points[uMapID][coord])
 end
 
@@ -242,7 +244,8 @@ local function addTomTomWaypoint(button, uMapID, coord)
     if (IsAddOnLoaded("TomTom")) then
         local x, y = HandyNotes:getXY(coord)
         TomTom:AddWaypoint(uMapID, x, y, {
-            title = GetPoinInfoByCoord(uMapID, coord),
+            title = GetPointInfoByCoord(uMapID, coord),
+            from = L["handler_context_menu_addon_name"],
             persistent = nil,
             minimap = true,
             world = true

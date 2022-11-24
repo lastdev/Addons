@@ -100,14 +100,14 @@ end
     =======================================================================--]]
 local publicAPI = {}                      -- This will hold our public API documentation.
 function Addon:MakePublic(name, value, title, documentation)
-    assert(type(name) == "string", "Invalid parameter: Name must be a string.")
-    assert(string.len(name) > 0, "Invalid parameter: Name length must be greater than zero.")
-    assert(type(title) == "string", "Invalid parameter: Title must be a string.")
-    assert(type(documentation) == "string", "Invalid parameter: Documentation must be a string.")
+
+
+
+
     if value then
-        assert(not Addon.Public[name], "MakePublic: Name '"..name.."' is already in use.")
+
     end
-    assert(not publicAPI[name], "MakePublic: Name '"..name.."' is already in use.")
+
 
     -- If there is no value provided, then we assume the value already exists,
     -- and we are adding or updating documentation to a path. Ensure the path
@@ -117,12 +117,12 @@ function Addon:MakePublic(name, value, title, documentation)
     if not targetValue then
         targetKey, targetValue = getKeyValueFromPath(name, addonPublic)
     end
-    assert(targetValue, "Invalid parameter: value by that path name does not exist in Addon.Public")
+
 
     -- If a value was provided and we got this far, alias the value into Addon.Public
     if value then
         -- Validate the string to make sure a path wasn't passed in.
-        assert(not string.find(name, '%.'), "Invalid character in name: .")
+
         Addon.Public[name] = value
     end
     
@@ -145,7 +145,7 @@ end
     |   documented - [boolean] True if the name is documented.
     =======================================================================--]]
 function Addon:IsPublic(path)
-    assert(type(path) == "string", "Invalid parameter: path must be a string.")
+
     local _, targetValue = getKeyValueFromPath(path, addonPublic)
     local documented = not not publicAPI[path]
     local undocumented = not not targetValue
@@ -263,7 +263,7 @@ function Addon:PrintPublic(showUndocumented, showTree)
     local api = self:GetPublic(showUndocumented)
     
     local color = Addon.c_APIMethodColorCode or YELLOW_FONT_COLOR_CODE
-    assert(type(color) == "string", "API color code must be a string.")
+
 
     -- Tree view w/ indentation
     if showTree then

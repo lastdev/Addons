@@ -8,6 +8,26 @@
 	<Script file="localization.cn.lua" />
 	<Script file="SmartBuff.buffs.lua" />
 	<Script file="SmartBuff.lua" />
+	<Button name="SmartBuff_ActionButtonTemplate" inherits="SecureActionButtonTemplate,SecureHandlerBaseTemplate" virtual="true" hidden="true">
+		<Size>
+			<AbsDimension x="32" y="32" />
+		</Size>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture setAllPoints="true">
+					<Color r="0.2" g="0" b="0" a="0.3" />
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>
+				self.title = self:CreateFontString(nil, "OVERLAY");
+				self.title:SetFontObject("GameFontNormal");
+				self.title:SetAllPoints(self);
+				self.title:SetText("");
+			</OnLoad>
+		</Scripts>
+	</Button>
 	<Frame name="SmartBuffFrame">
 		<Scripts>
 			<OnLoad>
@@ -35,7 +55,7 @@
 			<AbsDimension x="420" y="100" />
 		</Size>
 		<Anchors>
-			<Anchor point="CENTER" x="0" y="0">
+			<Anchor point="CENTER">
 				<AbsDimension x="0" y="0" />
 			</Anchor>
 		</Anchors>
@@ -419,7 +439,7 @@
 			<OnLoad>
 				self:EnableMouse(true);
 				self:RegisterForDrag("LeftButton");
-				self:RegisterForClicks("AnyDown");
+				self:RegisterForClicks("AnyUp", "AnyDown");
 				self:SetScript("PreClick", SMARTBUFF_OnPreClick);
 				self:SetScript("PostClick", SMARTBUFF_OnPostClick);
 				self:SetAttribute("type", "spell");
@@ -558,15 +578,15 @@
 					<OnShow>
 						local o = SMARTBUFF_Options;
 						if (o and o.AutoTimer) then
-							SmartBuff_SetSliderText(self, SMARTBUFF_OFT_AUTOTIMER, o.AutoTimer, INT_SPELL_DURATION_SEC, true);
+						SmartBuff_SetSliderText(self, SMARTBUFF_OFT_AUTOTIMER, o.AutoTimer, INT_SPELL_DURATION_SEC, true);
 						end
 					</OnShow>
 					<OnValueChanged>
 						local o = SMARTBUFF_Options;
 						local n = self:GetValue();
 						if (o and o.AutoTimer ~= n) then
-							SmartBuff_SetSliderText(self, SMARTBUFF_OFT_AUTOTIMER, n, INT_SPELL_DURATION_SEC);
-							o.AutoTimer = n;
+						SmartBuff_SetSliderText(self, SMARTBUFF_OFT_AUTOTIMER, n, INT_SPELL_DURATION_SEC);
+						o.AutoTimer = n;
 						end
 					</OnValueChanged>
 					<OnEnter>
@@ -719,20 +739,20 @@
 					<OnShow>
 						local o = SMARTBUFF_Options;
 						if (o and o.MinCharges) then
-							SmartBuff_SetSliderText(self, SMARTBUFF_MSG_CHARGES, o.MinCharges, "%d", true);
+						SmartBuff_SetSliderText(self, SMARTBUFF_MSG_CHARGES, o.MinCharges, "%d", true);
 						end
 					</OnShow>
 					<OnValueChanged>
 						local o = SMARTBUFF_Options;
 						local n = self:GetValue();
 						if (o and o.MinCharges ~= n) then
-							SmartBuff_SetSliderText(self, SMARTBUFF_MSG_CHARGES, n, "%d");
-							o.MinCharges = n;
-							if (n == 0) then
-								o.CheckCharges = false;
-							else
-								o.CheckCharges = true;
-							end
+						SmartBuff_SetSliderText(self, SMARTBUFF_MSG_CHARGES, n, "%d");
+						o.MinCharges = n;
+						if (n == 0) then
+						o.CheckCharges = false;
+						else
+						o.CheckCharges = true;
+						end
 						end
 					</OnValueChanged>
 					<OnEnter>
@@ -763,15 +783,15 @@
 					<OnShow>
 						local o = SMARTBUFF_Options;
 						if (o and o.SplashDuration) then
-							SmartBuff_SetSliderText(self, "Splash", o.SplashDuration, SPELL_DURATION_SEC, true);
+						SmartBuff_SetSliderText(self, "Splash", o.SplashDuration, SPELL_DURATION_SEC, true);
 						end
 					</OnShow>
 					<OnValueChanged>
 						local o = SMARTBUFF_Options;
 						local n = self:GetValue();
 						if (o and o.SplashDuration ~= n) then
-							SmartBuff_SetSliderText(self, "Splash", n, SPELL_DURATION_SEC);
-							o.SplashDuration = n;
+						SmartBuff_SetSliderText(self, "Splash", n, SPELL_DURATION_SEC);
+						o.SplashDuration = n;
 						end
 					</OnValueChanged>
 					<OnEnter>
@@ -802,15 +822,15 @@
 					<OnShow>
 						local o = SMARTBUFF_Options;
 						if (o and o.RebuffTimer) then
-							SmartBuff_SetSliderText(self, SMARTBUFF_OFT_REBUFFTIMER, o.RebuffTimer, INT_SPELL_DURATION_SEC, true);
+						SmartBuff_SetSliderText(self, SMARTBUFF_OFT_REBUFFTIMER, o.RebuffTimer, INT_SPELL_DURATION_SEC, true);
 						end
 					</OnShow>
 					<OnValueChanged>
 						local o = SMARTBUFF_Options;
 						local n = self:GetValue();
 						if (o and o.RebuffTimer ~= n) then
-							SmartBuff_SetSliderText(self, SMARTBUFF_OFT_REBUFFTIMER, n, INT_SPELL_DURATION_SEC);
-							o.RebuffTimer = n;
+						SmartBuff_SetSliderText(self, SMARTBUFF_OFT_REBUFFTIMER, n, INT_SPELL_DURATION_SEC);
+						o.RebuffTimer = n;
 						end
 					</OnValueChanged>
 					<OnEnter>
@@ -1208,8 +1228,8 @@
 						local o = SMARTBUFF_Options;
 						local n = self:GetValue();
 						if (o and o.BlacklistTimer ~= n) then
-							SmartBuff_SetSliderText(self, SMARTBUFF_OFT_BLDURATION, n, INT_SPELL_DURATION_SEC);
-							o.BlacklistTimer = n;
+						SmartBuff_SetSliderText(self, SMARTBUFF_OFT_BLDURATION, n, INT_SPELL_DURATION_SEC);
+						o.BlacklistTimer = n;
 						end
 					</OnValueChanged>
 					<OnEnter>
@@ -1584,14 +1604,14 @@
 						local o = SMARTBUFF_Options;
 						local n = self:GetValue();
 						if (o and o.AutoSoundSelection ~= n) then
-							SmartBuff_SetSliderText(self, SMARTBUFF_MSG_SOUNDS, n, "%d");
-							o.AutoSoundSelection = n;
+						SmartBuff_SetSliderText(self, SMARTBUFF_MSG_SOUNDS, n, "%d");
+						o.AutoSoundSelection = n;
 						end
 					</OnValueChanged>
 					<OnShow>
 						local o = SMARTBUFF_Options;
 						if (o and o.AutoSoundSelection) then
-							SmartBuff_SetSliderText(self, SMARTBUFF_MSG_SOUNDS, o.AutoSoundSelection, "%d", true);
+						SmartBuff_SetSliderText(self, SMARTBUFF_MSG_SOUNDS, o.AutoSoundSelection, "%d", true);
 						end
 					</OnShow>
 					<OnLoad>
@@ -1649,19 +1669,19 @@
 			</OnHide>
 			<OnMouseDown>
 				if (button == "LeftButton") then
-					self:StartMoving();
+				self:StartMoving();
 				end
 			</OnMouseDown>
 			<OnMouseUp>
 				if (button == "LeftButton") then
-					self:StopMovingOrSizing();
+				self:StopMovingOrSizing();
 				end
 			</OnMouseUp>
 		</Scripts>
 	</Frame>
 	<Frame name="SmartBuff_BuffSetup" hidden="true" parent="SmartBuffOptionsFrame" toplevel="true" frameStrata="DIALOG" enableMouse="true">
 		<Size>
-			<AbsDimension x="160" y="630" />
+			<AbsDimension x="213" y="720" />
 		</Size>
 		<Anchors>
 			<Anchor point="TOPLEFT" relativeTo="SmartBuffOptionsFrame" relativePoint="TOPRIGHT">
@@ -2289,9 +2309,9 @@
 					<AbsDimension x="24" y="24" />
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SmartBuff_BuffSetup_ClassIcon1" relativePoint="TOPLEFT">
+					<Anchor point="TOPLEFT" relativeTo="SmartBuff_BuffSetup_ClassIcon10" relativePoint="TOPLEFT">
 						<Offset>
-							<AbsDimension x="50" y="0" />
+							<AbsDimension x="0" y="-28" />
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -2328,22 +2348,80 @@
 				</Scripts>
 				<NormalTexture file="Interface\AddOns\SmartBuff\Icons\Demonhunter" />
 			</Button>
-			<Button name="SmartBuff_BuffSetup_ClassIcon16">
+			<Button name="SmartBuff_BuffSetup_ClassIcon13">
 				<Size>
 					<AbsDimension x="24" y="24" />
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SmartBuff_BuffSetup_ClassIcon4" relativePoint="TOPLEFT">
+					<Anchor point="TOPLEFT" relativeTo="SmartBuff_BuffSetup_ClassIcon12" relativePoint="TOPLEFT">
+						<Offset y="-28" />
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+						GameTooltip:SetText(SMARTBUFF_CLASSES[13], SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+					</OnLeave>
+				</Scripts>
+				<NormalTexture file="Interface\AddOns\SmartBuff\Icons\Envoker.tga" />
+			</Button>
+			<Button name="SmartBuff_BuffSetup_ClassIcon14">
+				<Size>
+					<AbsDimension x="24" y="24" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="SmartBuff_BuffSetup_ClassIcon2" relativePoint="TOPLEFT">
+						<Offset x="50" y="4" />
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+						GameTooltip:SetText(SMARTBUFF_CLASSES[14], SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+					</OnLeave>
+				</Scripts>
+				<NormalTexture file="Interface\AddOns\SmartBuff\Icons\HunterPet.tga" />
+			</Button>
+			<Button name="SmartBuff_BuffSetup_ClassIcon15">
+				<Size>
+					<AbsDimension x="24" y="24" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="SmartBuff_BuffSetup_ClassIcon8" relativePoint="TOPLEFT">
 						<Offset>
 							<AbsDimension x="50" y="0" />
 						</Offset>
 					</Anchor>
 				</Anchors>
 				<Scripts>
-					<OnLoad>
-						t = self:GetNormalTexture();
-						t:SetTexCoord(0.0, 19/64, 22/64, 41/64);
-					</OnLoad>
+					<OnEnter>
+						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+						GameTooltip:SetText(SMARTBUFF_CLASSES[15], SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+					</OnLeave>
+				</Scripts>
+				<NormalTexture file="Interface\AddOns\SmartBuff\Icons\WarlockPet" />
+			</Button>
+			<Button name="SmartBuff_BuffSetup_ClassIcon16">
+				<Size>
+					<AbsDimension x="24" y="24" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="SmartBuff_BuffSetup_ClassIcon10" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="50" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
 					<OnEnter>
 						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
 						GameTooltip:SetText(SMARTBUFF_CLASSES[16], SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
@@ -2352,23 +2430,23 @@
 						GameTooltip:Hide();
 					</OnLeave>
 				</Scripts>
-				<NormalTexture file="Interface\LFGFrame\UI-LFG-ICON-PORTRAITROLES" />
+				<NormalTexture file="Interface\AddOns\SmartBuff\Icons\DeathknightPet" />
 			</Button>
 			<Button name="SmartBuff_BuffSetup_ClassIcon17">
 				<Size>
 					<AbsDimension x="24" y="24" />
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SmartBuff_BuffSetup_ClassIcon16" relativePoint="TOPLEFT">
+					<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT">
 						<Offset>
-							<AbsDimension x="0" y="-28" />
+							<AbsDimension x="17" y="80" />
 						</Offset>
 					</Anchor>
 				</Anchors>
 				<Scripts>
 					<OnLoad>
 						t = self:GetNormalTexture();
-						t:SetTexCoord(20/64, 39/64, 1/64, 20/64);
+						t:SetTexCoord(0.0, 19/64, 22/64, 41/64);
 					</OnLoad>
 					<OnEnter>
 						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
@@ -2387,14 +2465,14 @@
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="SmartBuff_BuffSetup_ClassIcon17" relativePoint="TOPLEFT">
 						<Offset>
-							<AbsDimension x="0" y="-28" />
+							<AbsDimension x="50" y="0" />
 						</Offset>
 					</Anchor>
 				</Anchors>
 				<Scripts>
 					<OnLoad>
 						t = self:GetNormalTexture();
-						t:SetTexCoord(20/64, 39/64, 22/64, 41/64);
+						t:SetTexCoord(20/64, 39/64, 1/64, 20/64);
 					</OnLoad>
 					<OnEnter>
 						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
@@ -2406,71 +2484,31 @@
 				</Scripts>
 				<NormalTexture file="Interface\LFGFrame\UI-LFG-ICON-PORTRAITROLES" />
 			</Button>
-			<Button name="SmartBuff_BuffSetup_ClassIcon13" hidden="true">
+			<Button name="SmartBuff_BuffSetup_ClassIcon19">
 				<Size>
 					<AbsDimension x="24" y="24" />
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SmartBuff_BuffSetup_ClassIcon8" relativePoint="TOPLEFT">
+					<Anchor point="TOPLEFT" relativeTo="SmartBuff_BuffSetup_ClassIcon18" relativePoint="TOPLEFT">
 						<Offset>
 							<AbsDimension x="50" y="0" />
 						</Offset>
 					</Anchor>
 				</Anchors>
 				<Scripts>
+					<OnLoad>
+						t = self:GetNormalTexture();
+						t:SetTexCoord(20/64, 39/64, 22/64, 41/64);
+					</OnLoad>
 					<OnEnter>
 						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-						GameTooltip:SetText(SMARTBUFF_CLASSES[13], SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
+						GameTooltip:SetText(SMARTBUFF_CLASSES[19], SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
 					</OnEnter>
 					<OnLeave>
 						GameTooltip:Hide();
 					</OnLeave>
 				</Scripts>
-				<NormalTexture file="Interface\AddOns\SmartBuff\Icons\HunterPet" />
-			</Button>
-			<Button name="SmartBuff_BuffSetup_ClassIcon14" hidden="true">
-				<Size>
-					<AbsDimension x="24" y="24" />
-				</Size>
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SmartBuff_BuffSetup_ClassIcon13" relativePoint="TOPLEFT">
-						<Offset>
-							<AbsDimension x="0" y="-28" />
-						</Offset>
-					</Anchor>
-				</Anchors>
-				<Scripts>
-					<OnEnter>
-						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-						GameTooltip:SetText(SMARTBUFF_CLASSES[14], SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
-					</OnEnter>
-					<OnLeave>
-						GameTooltip:Hide();
-					</OnLeave>
-				</Scripts>
-				<NormalTexture file="Interface\AddOns\SmartBuff\Icons\WarlockPet" />
-			</Button>
-			<Button name="SmartBuff_BuffSetup_ClassIcon15" hidden="true">
-				<Size>
-					<AbsDimension x="24" y="24" />
-				</Size>
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="SmartBuff_BuffSetup_ClassIcon14" relativePoint="TOPLEFT">
-						<Offset>
-							<AbsDimension x="0" y="-28" />
-						</Offset>
-					</Anchor>
-				</Anchors>
-				<Scripts>
-					<OnEnter>
-						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-						GameTooltip:SetText(SMARTBUFF_CLASSES[15], SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
-					</OnEnter>
-					<OnLeave>
-						GameTooltip:Hide();
-					</OnLeave>
-				</Scripts>
-				<NormalTexture file="Interface\AddOns\SmartBuff\Icons\DeathknightPet" />
+				<NormalTexture file="Interface\LFGFrame\UI-LFG-ICON-PORTRAITROLES" />
 			</Button>
 			<CheckButton name="SmartBuff_BuffSetup_cbClass1" inherits="UICheckButtonTemplate">
 				<Size>
@@ -2672,7 +2710,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuff_BuffSetup_cbClass11" inherits="UICheckButtonTemplate" hidden="true">
+			<CheckButton name="SmartBuff_BuffSetup_cbClass11" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2692,7 +2730,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuff_BuffSetup_cbClass12" inherits="UICheckButtonTemplate" hidden="true">
+			<CheckButton name="SmartBuff_BuffSetup_cbClass12" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
@@ -2712,15 +2750,13 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="SmartBuff_BuffSetup_cbClass13" inherits="UICheckButtonTemplate" hidden="true">
+			<CheckButton name="SmartBuff_BuffSetup_cbClass13" inherits="UICheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20" />
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="SmartBuff_BuffSetup_ClassIcon13" relativePoint="TOPLEFT">
-						<Offset>
-							<AbsDimension x="24" y="-2" />
-						</Offset>
+						<Offset x="24" y="-2" />
 					</Anchor>
 				</Anchors>
 				<HitRectInsets>
@@ -2759,7 +2795,7 @@
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="SmartBuff_BuffSetup_ClassIcon15" relativePoint="TOPLEFT">
 						<Offset>
-							<AbsDimension x="24" y="-2" />
+							<AbsDimension x="24" y="0" />
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -2832,9 +2868,29 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
+			<CheckButton name="SmartBuff_BuffSetup_cbClass19" inherits="UICheckButtonTemplate">
+				<Size>
+					<AbsDimension x="20" y="20" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="SmartBuff_BuffSetup_ClassIcon19" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="24" y="-2" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<HitRectInsets>
+					<AbsInset left="0" right="0" top="0" bottom="0" />
+				</HitRectInsets>
+				<Scripts>
+					<OnClick>
+						SmartBuff_BuffSetup_OnClick();
+					</OnClick>
+				</Scripts>
+			</CheckButton>
 			<Slider name="SmartBuff_BuffSetup_RBTime" inherits="OptionsSliderTemplate" minValue="0" maxValue="0">
 				<Size>
-					<AbsDimension x="121" y="20" />
+					<AbsDimension x="175" y="20" />
 				</Size>
 				<Anchors>
 					<Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT">
@@ -2869,7 +2925,7 @@
 	</Frame>
 	<Frame name="SmartBuff_PlayerSetup" hidden="true" parent="SmartBuffOptionsFrame" toplevel="true" frameStrata="DIALOG" enableMouse="true">
 		<Size>
-			<AbsDimension x="160" y="630" />
+			<AbsDimension x="160" y="720" />
 		</Size>
 		<Anchors>
 			<Anchor point="TOPLEFT" relativeTo="SmartBuff_BuffSetup" relativePoint="TOPRIGHT">
@@ -3048,7 +3104,7 @@
 	</Frame>
 	<Frame name="SmartBuffWNF" hidden="true" parent="UIParent" toplevel="true" movable="true" frameStrata="DIALOG" enableMouse="true">
 		<Size>
-			<AbsDimension x="360" y="630" />
+			<AbsDimension x="360" y="720" />
 		</Size>
 		<Anchors>
 			<Anchor point="TOPLEFT" relativeTo="SmartBuffOptionsFrame" relativePoint="TOPRIGHT">

@@ -33,7 +33,7 @@
 ## X-DBM-Mod-MinExpansion: 4
 ## X-Curse-Project-ID: 314994
 ## X-WoWI-ID: 24904
-## Version: r44
+## Version: r45
 
 localization.en.lua
 localization.de.lua
@@ -48,6 +48,7 @@ JadeSerpentTemple\WiseMari.lua
 JadeSerpentTemple\LibraryEvent.lua
 JadeSerpentTemple\LiuFlameheart.lua
 JadeSerpentTemple\ShaofDoubt.lua
+JadeSerpentTemple\JadeTempleTrash.lua
 StormstoutBrewery\OokOok.lua
 StormstoutBrewery\Hoptallus.lua
 StormstoutBrewery\YanZhu.lua

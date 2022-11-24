@@ -51,7 +51,7 @@ local function commandParser(msg)
 end
 
 local function addCommandToNamespace(cmd, namespace)
-    assert(string.find(cmd, "^/"))
+
     namespace = string.upper(namespace)
     local slashbase = "SLASH_"..namespace
     
@@ -136,10 +136,10 @@ function Addon:AddConsoleCommand(name, help, func)
                 -- Will assume that the function is to be called with the 'self' parameter specified.
                 cmd.Func = function(...) Addon[func](Addon,...) end
             else
-                assert(false, "Specified function does not exist in addon's namespace.")
+
             end
         else
-            assert(false, "Invalid Argument: not a function.")
+
         end
     else
         cmd.Func = PrintConsoleHelp            -- No function defined will default to Showing help

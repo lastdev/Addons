@@ -1,7 +1,7 @@
-## Interface: 100000
+## Interface: 100002
 ## Title: |cff0042ffLust|cffff0000Detector
 ## Author: Vicksmile - Thrall realm
-## Version: v5 Definitive version for Dragonflight 10.0.0
+## Version: v5 Definitive version for Dragonflight 10.0.2
 ## Notes: This addon will show on your chat when someone cast any Haste Spell. Ex: Bloodlust
 ## DefaultState: Enabled
 ## LoadOnDemand: 0

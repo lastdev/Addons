@@ -1,0 +1,6 @@
+## Author: Shauren
+## Interface: 100002
+## Notes: Announces your successful interrupts to party/raid
+## Title: InterruptAnnouncer
+## Version: 1.0
+InterruptAnnouncer.lua

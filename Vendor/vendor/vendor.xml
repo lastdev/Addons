@@ -5,12 +5,15 @@
     <Script file="blocklists.lua"/>
     <Script file="tooltipscan.lua"/>
     <Script file="itemproperties.lua"/>
-    <Script file="itemcache.lua"/>	
+    <Script file="itemresultcache.lua"/>	
     <Script file="evaluation.lua"/>
+    <!--<Include file="merchantbutton.xml"/>-->
     <Script file="merchant.lua"/>
     <Script file="destroy.lua"/>
     <Script file="releasenotes.lua"/>
     <Script file="extensionmanager.lua"/>
     <Script file="listmanager.lua"/>
-    <Script file="ldbobject.lua"/>    
+    <Script file="tooltip.lua"/>
+    <Script file="refresh.lua"/>
+    <Script file="status.lua"/>
 </Ui>

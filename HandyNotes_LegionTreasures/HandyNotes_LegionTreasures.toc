@@ -1,8 +1,8 @@
-## Interface: 100000
+## Interface: 100002
 ## Title: HandyNotes_LegionTreasures
 ## Notes: Where are the hidden treasures in Legion?
 ## Author: Kemayo
-## Version: v30.2
+## Version: v31
 ## DefaultState: enabled
 ## X-Category: Map
 ## X-eMail: kemayo @ gmail DOT com

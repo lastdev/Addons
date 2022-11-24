@@ -18,7 +18,7 @@ local _isBankOpen = false
 --
 local function scanBag(bagId, matchItem, usedItems)
 
-	local numSlots = GetContainerNumSlots(bagId)
+	local numSlots = C_Container.GetContainerNumSlots(bagId)
     local loc = ItemLocation.CreateEmpty()
     
     if not usedItems[bagId] then
@@ -31,7 +31,7 @@ local function scanBag(bagId, matchItem, usedItems)
 
     for slotId = 1, numSlots do
         if not usedItems[bagId][slotId] then
-            local _, itemCount, _, _, _, _, itemLink = GetContainerItemInfo(bagId, slotId)
+            local itemLink = C_Container.GetContainerItemLink(bagId, slotId)
             if itemLink ~= nil then
                 local itemData = Amr.Serializer.ParseItemLink(itemLink)
                 if itemData ~= nil then
@@ -184,7 +184,7 @@ finishBankWithdraw = function()
     if _isBankOpen and _bankUsedBagSlots then
         for bagId,v in pairs(_bankUsedBagSlots) do
             for slotId,v in pairs(v) do
-                local _, _, _, _, _, _, itemLink = GetContainerItemInfo(bagId, slotId)
+                local itemLink = C_Container.GetContainerItemLink(bagId, slotId)
                 if not itemLink then
                     done = false
                     break

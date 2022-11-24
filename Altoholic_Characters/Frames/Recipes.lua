@@ -62,7 +62,7 @@ addon:Controller("AltoholicUI.TabCharacters.Recipes", { "AltoholicUI.Options", f
 			if itemID then
 				local _, _, _, _, _, itemType, _, _, itemEquipLoc = GetItemInfo(itemID)
 				
-				if itemType == GetItemClassInfo(LE_ITEM_CLASS_ARMOR) or itemType == GetItemClassInfo(LE_ITEM_CLASS_WEAPON) then
+				if itemType == GetItemClassInfo(Enum.ItemClass.Armor) or itemType == GetItemClassInfo(Enum.ItemClass.Weapon) then
 					if itemEquipLoc and strlen(itemEquipLoc) > 0 then
 						if currentSlots == itemEquipLoc then
 							return true

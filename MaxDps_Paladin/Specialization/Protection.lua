@@ -10,7 +10,6 @@ local MaxDps = MaxDps;
 
 local HolyPower = Enum.PowerType.HolyPower;
 local PR = {
-	ArcaneTorrent = 28730,
 	AshenHallow = 316958,
 	AvengersShield = 31935,
 	AvengingWrath = 31884,
@@ -147,10 +146,6 @@ function Paladin:ProtectionMultiTarget()
 
 	if talents[PR.HammerOfTheRighteous] and cooldown[PR.HammerOfTheRighteous].ready then
 		return PR.HammerOfTheRighteous;
-	end
-
-	if cooldown[PR.ArcaneTorrent].ready then
-		return PR.ArcaneTorrent;
 	end
 
 	if cooldown[PR.Consecration].ready then

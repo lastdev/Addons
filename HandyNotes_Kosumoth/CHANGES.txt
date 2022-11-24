@@ -1,0 +1,12 @@
+tag 5dc127dcbffbe5c96619b531f2ab0d35da1b9ebe v7
+Author:	David Lynch <kemayo@gmail.com>
+Date:	Sat Nov 19 19:04:58 2022 -0600
+
+Tagging v7
+
+commit c5bc240bf0d6025e8702369e81de7e9e956d58f2
+Author: David Lynch <kemayo@gmail.com>
+Date:   Sat Nov 19 19:04:51 2022 -0600
+
+    Update for 10.0.2
+

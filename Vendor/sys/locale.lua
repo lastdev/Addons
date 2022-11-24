@@ -36,14 +36,14 @@ local localizedStringsProxy = nil
 -- This means that Locales will be among the very first things you load in your TOC.
 -- You should load Constants -> Init -> Locale -> Locale Definitions before anything else.
 function Addon:AddLocale(locale, strings)
-    assert(type(locale) == "string", "Invalid parameter to AddLocale: locale must be a string.")
-    assert(type(strings) == "table", "Invalid parameter to AddLocale: strings must be a string table.")
-    assert(locales, "You cannot add a locale after calling GetLocale(). Move up the '"..locale.."' definition in the TOC load order to fix this.")
+
+
+
     table.insert(locales, { locale=locale, strings=strings })
 end
 
 local function findLocale(locale)
-    assert(locales and type(locales) == "table")   -- If this hits it is a programming error in this file.
+
     locale = locale
     for _, v in ipairs(locales) do
         if v.locale == locale then
@@ -113,7 +113,27 @@ local function setLocale()
 
     -- Set up proxy for the localized strings
     -- This table is empty, so adds or edits at this point will always be errors.
-    localizedStringsProxy = {}
+    localizedStringsProxy = {
+        
+        -- Retrieves the string if exists, otherwise it returns nil
+        GetString  = function(t, k)
+            return localizedStrings[k]
+        end,
+
+        -- Retrieves a formatted string (converting the arguments to strings)
+        FormatString = function(t, k, ...)
+            local fmt = localizedStrings[k]
+
+
+            local args = {}
+            for _, arg in ipairs({...}) do
+                table.insert(args, tostring(arg))
+            end
+
+            return string.format(fmt, unpack(args))
+        end
+    }
+
     local proxyMetatable = {
         __metatable = {},
 
@@ -137,6 +157,7 @@ local function setLocale()
                 error("Attempting to create or modify localized string with identifier: "..tostring(k))
             end,
     }
+
     setmetatable(localizedStringsProxy, proxyMetatable)
 
     -- Free up memory for all the unused strings.

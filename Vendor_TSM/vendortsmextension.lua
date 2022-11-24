@@ -5,7 +5,7 @@ local AddonName = select(1, ...);
 
 -- Function definition for the getCustomPriceValue from TSM
 local function getCustomPriceValue(customPriceStr)
-    assert(TSM_API and TSM_API.ToItemString and TSM_API.IsCustomPriceValid and TSM_API.GetCustomPriceValue)
+
 
     if not TSM_API.IsCustomPriceValid(customPriceStr) then
         error("Invalid custom price string for TSM")
@@ -31,37 +31,37 @@ end
 
 -- Function definitions for the various TSM quantity functions
 local function getTotalQuantity()
-    assert(TSM_API and TSM_API.ToItemString and TSM_API.GetPlayerTotals)
+
     return TSM_API.GetPlayerTotals(TSM_API.ToItemString(Link))
 end
 
 local function getBagQuantity()
-    assert(TSM_API and TSM_API.ToItemString and TSM_API.GetBagQuantity)
+
     return TSM_API.GetBagQuantity(TSM_API.ToItemString(Link))
 end
 
 local function getBankQuantity()
-    assert(TSM_API and TSM_API.ToItemString and TSM_API.GetBankQuantity)
+
     return TSM_API.GetBankQuantity(TSM_API.ToItemString(Link))
 end
 
 local function getReagentBankQuantity()
-    assert(TSM_API and TSM_API.ToItemString and TSM_API.GetReagentBankQuantity)
+
     return TSM_API.GetReagentBankQuantity(TSM_API.ToItemString(Link))
 end
 
 local function getMailQuantity()
-    assert(TSM_API and TSM_API.ToItemString and TSM_API.GetMailQuantity)
+
     return TSM_API.GetMailQuantity(TSM_API.ToItemString(Link))
 end
 
 local function getAuctionQuantity()
-    assert(TSM_API and TSM_API.ToItemString and TSM_API.GetAuctionQuantity)
+
     return TSM_API.GetAuctionQuantity(TSM_API.ToItemString(Link))
 end
 
 local function getGuildQuantity()
-    assert(TSM_API and TSM_API.ToItemString and TSM_API.GetGuildQuantity)
+
     return TSM_API.GetGuildQuantity(TSM_API.ToItemString(Link))
 end
 
@@ -169,7 +169,7 @@ local function registerTSMExtension()
     -- Register this extension with Vendor.
     -- For safety, you should make sure both Vendor and the RegisterExtension method exist before
     -- calling, as done below. If not a clean LUA error will be thrown that can be reported back to players.
-    assert(Vendor and Vendor.RegisterExtension, "Vendor RegisterExtension not found, cannot register extension: "..tostring(TSMExtension.Source))
+
     if (not Vendor.RegisterExtension(TSMExtension)) then
         -- something went wrong
     end

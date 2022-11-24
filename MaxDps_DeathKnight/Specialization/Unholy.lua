@@ -211,7 +211,7 @@ function DeathKnight:UnholyMultiTargetRotation()
 		return UH.SummonGargoyle;
 	end
 	--if runic power >= 30 or sudden doom or gargoyle up cast epidemic
-	if talents[UH.Epidemic] and (fd.runicPower >= 30 or fd.buff[UH.SuddenDoom].up) then
+	if fd.talents[UH.Epidemic] and (fd.runicPower >= 30 or fd.buff[UH.SuddenDoom].up) then
 		return UH.Epidemic;
 	end
 	
@@ -264,6 +264,7 @@ function DeathKnight:UnolyGlowCooldowns()
 		
 	local empowerRuneweaponReady = talents[COMMON.EmpowerRuneWeapon] and cooldown[COMMON.EmpowerRuneWeapon].ready;
 
+	MaxDps:GlowCooldown(UH.UnholyAssault, talents[UH.UnholyAssault] and cooldown[UH.UnholyAssault].ready);
 	if DeathKnight.db.alwaysGlowCooldowns then
 		MaxDps:GlowCooldown(UH.ArmyOfTheDead, armyOfTheDeadReady);
 		MaxDps:GlowCooldown(UH.SummonGargoyle, summonGargoyleReady);

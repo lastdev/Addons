@@ -181,6 +181,7 @@ L["Bags"] = true
 L["Bank"] = true
 L["Bank bag"] = true
 L["Bank not visited yet"] = true
+L["Not purchased yet"] = true
 L["slots"] = true
 
 -- *** Skills ***

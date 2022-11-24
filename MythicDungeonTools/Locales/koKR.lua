@@ -46,6 +46,8 @@ L["Aka'ali the Conqueror"] = "정복자 아카알리"
 L["Alarm-o-Bot"] = "경보로봇"
 L["Alcruux"] = "알크룩스"
 --[[Translation missing --]]
+--[[ L["Algeth'ar Echoknight"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["Algeth'ar Educator"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Algeth'ar Enforcer"] = ""--]] 
@@ -524,6 +526,8 @@ L["Eredar Chaosbringer"] = "에레다르 혼돈인도자"
 --[[ L["Erkhart Stormvein"] = ""--]] 
 L["Erudite Slayer"] = "똘똘한 학살자"
 L["Etherdiver"] = "에테르 새끼고룡"
+--[[Translation missing --]]
+--[[ L["Ethereal Restorer"] = ""--]] 
 L["Executioner Varruth"] = "집행자 바루스"
 L["Executor Tarvold"] = "집행관 타르볼드"
 --[[Translation missing --]]
@@ -1535,6 +1539,8 @@ L["Spectral Brute"] = "투사 유령"
 L["Spectral Charger"] = "유령 준마"
 L["Spectral Headhunter"] = "인간사냥꾼 망령"
 L["Spectral Hex Priest"] = "사술 사제 유령"
+--[[Translation missing --]]
+--[[ L["Spectral Invoker"] = ""--]] 
 L["Spectral Journeyman"] = "유령 장인"
 L["Spectral Patron"] = "유령 후원자"
 L["Spectral Retainer"] = "유령 당원"

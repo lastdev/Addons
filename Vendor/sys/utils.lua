@@ -9,7 +9,7 @@ end
 function Addon:GetVersion()
     local version = GetAddOnMetadata(AddonName, "version")
     --[===[@debug@
-    if version == "5.3.3" then version = "Debug" end
+    if version == "6.0.4" then version = "Debug" end
     --@end-debug@]===]
     return version
 end
@@ -108,7 +108,7 @@ function Addon.object(typeName, instance, API, events)
                         return member;
                     end
 
-                    --error(string.format("Type '%s' has no member '%s'", typeName, key));
+                    error(string.format("Type '%s' has no member '%s'", typeName, key));
                 end
             end,
             __newindex = function(self, key, value)

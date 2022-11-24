@@ -1050,8 +1050,8 @@ function GoGo_InBags(item)
 	end --if
 
 	for bag = 0, NUM_BAG_FRAMES do
-		for slot = 1, GetContainerNumSlots(bag) do
-			local link = GetContainerItemLink(bag, slot)
+		for slot = 1, C_Container.GetContainerNumSlots(bag) do
+			local link = C_Container.GetContainerItemLink(bag, slot)
 			if link then
 				local _, itemid, _ = strsplit(":",link,3)
 				if tonumber(itemid) == item then
@@ -2403,7 +2403,7 @@ end --function
 ---------
 function GoGo_Panel_Options()
 ---------
-	GoGo_Panel_AutoDismount = CreateFrame("CheckButton", "GoGo_Panel_AutoDismount", GoGo_Panel, "OptionsCheckButtonTemplate")
+	GoGo_Panel_AutoDismount = CreateFrame("CheckButton", "GoGo_Panel_AutoDismount", GoGo_Panel, "InterfaceOptionsCheckButtonTemplate")
 	GoGo_Panel_AutoDismount:SetPoint("TOPLEFT", 16, -16)
 	GoGo_Panel_AutoDismountText:SetText(GoGo_Variables.Localize.String.EnableAutoDismount)
 	GoGo_Panel_AutoDismount:SetScript("OnClick",
@@ -2425,7 +2425,7 @@ function GoGo_Panel_Options()
 		end --function
 	)
 
-	GoGo_Panel_GlobalPrefMount = CreateFrame("CheckButton", "GoGo_Panel_GlobalPrefMount", GoGo_Panel, "OptionsCheckButtonTemplate")
+	GoGo_Panel_GlobalPrefMount = CreateFrame("CheckButton", "GoGo_Panel_GlobalPrefMount", GoGo_Panel, "InterfaceOptionsCheckButtonTemplate")
 	GoGo_Panel_GlobalPrefMount:SetPoint("TOPLEFT", "GoGo_Panel_AutoDismount", "BOTTOMLEFT", 0, -4)
 	GoGo_Panel_GlobalPrefMountText:SetText("Preferred mount changes apply to global setting")
 	GoGo_Panel_GlobalPrefMount:SetScript("OnClick",
@@ -2447,7 +2447,7 @@ function GoGo_Panel_Options()
 		end --function
 	)
 
-	GoGo_Panel_DisableUpdateNotice = CreateFrame("CheckButton", "GoGo_Panel_DisableUpdateNotice", GoGo_Panel, "OptionsCheckButtonTemplate")
+	GoGo_Panel_DisableUpdateNotice = CreateFrame("CheckButton", "GoGo_Panel_DisableUpdateNotice", GoGo_Panel, "InterfaceOptionsCheckButtonTemplate")
 	GoGo_Panel_DisableUpdateNotice:SetPoint("TOPLEFT", "GoGo_Panel_GlobalPrefMount", "BOTTOMLEFT", 0, -12)
 	GoGo_Panel_DisableUpdateNoticeText:SetText(GoGo_Variables.Localize.String.DisableUpdateNotices)
 	GoGo_Panel_DisableUpdateNotice:SetScript("OnClick",
@@ -2469,7 +2469,7 @@ function GoGo_Panel_Options()
 		end --function
 	)
 
-	GoGo_Panel_DisableMountNotice = CreateFrame("CheckButton", "GoGo_Panel_DisableMountNotice", GoGo_Panel, "OptionsCheckButtonTemplate")
+	GoGo_Panel_DisableMountNotice = CreateFrame("CheckButton", "GoGo_Panel_DisableMountNotice", GoGo_Panel, "InterfaceOptionsCheckButtonTemplate")
 	GoGo_Panel_DisableMountNotice:SetPoint("TOPLEFT", "GoGo_Panel_DisableUpdateNotice", "BOTTOMLEFT", 0, -4)
 	GoGo_Panel_DisableMountNoticeText:SetText(GoGo_Variables.Localize.String.DisableUnknownMountNotices)
 	GoGo_Panel_DisableMountNotice:SetScript("OnClick",
@@ -2491,7 +2491,7 @@ function GoGo_Panel_Options()
 		end --function
 	)
 
-	GoGo_Panel_DisableWaterFlight = CreateFrame("CheckButton", "GoGo_Panel_DisableWaterFlight", GoGo_Panel, "OptionsCheckButtonTemplate")
+	GoGo_Panel_DisableWaterFlight = CreateFrame("CheckButton", "GoGo_Panel_DisableWaterFlight", GoGo_Panel, "InterfaceOptionsCheckButtonTemplate")
 	GoGo_Panel_DisableWaterFlight:SetPoint("TOPLEFT", "GoGo_Panel_DisableMountNotice", "BOTTOMLEFT", 0, -4)
 	GoGo_Panel_DisableWaterFlightText:SetText(GoGo_Variables.Localize.String.DisableFlyingFromWater)
 	GoGo_Panel_DisableWaterFlight:SetScript("OnClick",
@@ -2513,7 +2513,7 @@ function GoGo_Panel_Options()
 		end --function
 	)
 	
-	GoGo_Panel_RemoveBuffs = CreateFrame("CheckButton", "GoGo_Panel_RemoveBuffs", GoGo_Panel, "OptionsCheckButtonTemplate")
+	GoGo_Panel_RemoveBuffs = CreateFrame("CheckButton", "GoGo_Panel_RemoveBuffs", GoGo_Panel, "InterfaceOptionsCheckButtonTemplate")
 	GoGo_Panel_RemoveBuffs:SetPoint("TOPLEFT", "GoGo_Panel_DisableWaterFlight", "BOTTOMLEFT", 0, -4)
 	GoGo_Panel_RemoveBuffsText:SetText(GoGo_Variables.Localize.String.RemoveBuffs)
 	GoGo_Panel_RemoveBuffs.tooltipText = GoGo_Variables.Localize.String.RemoveBuffs_Long
@@ -2526,7 +2526,7 @@ function GoGo_Panel_Options()
 		end --function
 	)
 
-	GoGo_Panel_AutoExcludeFlyingMounts = CreateFrame("CheckButton", "GoGo_Panel_AutoExcludeFlyingMounts", GoGo_Panel, "OptionsCheckButtonTemplate")
+	GoGo_Panel_AutoExcludeFlyingMounts = CreateFrame("CheckButton", "GoGo_Panel_AutoExcludeFlyingMounts", GoGo_Panel, "InterfaceOptionsCheckButtonTemplate")
 	GoGo_Panel_AutoExcludeFlyingMounts:SetPoint("TOPLEFT", "GoGo_Panel_RemoveBuffs", "BOTTOMLEFT", 0, -4)
 	GoGo_Panel_AutoExcludeFlyingMountsText:SetText(GoGo_Variables.Localize.String.AutoExcludeFlyingMountsInNoFlyAreas)
 	GoGo_Panel_AutoExcludeFlyingMounts.tooltipText = GoGo_Variables.Localize.String.AutoExcludeFlyingMountsInNoFlyAreas_Long
@@ -2550,7 +2550,7 @@ function GoGo_Druid_Panel()
 	GoGo_Druid_Panel.default = function (self) GoGo_Settings_Default("DRUID"); end;  -- use clear command with default button
 	InterfaceOptions_AddCategory(GoGo_Druid_Panel)
 
-	GoGo_Druid_Panel_ClickForm = CreateFrame("CheckButton", "GoGo_Druid_Panel_ClickForm", GoGo_Druid_Panel, "OptionsCheckButtonTemplate")
+	GoGo_Druid_Panel_ClickForm = CreateFrame("CheckButton", "GoGo_Druid_Panel_ClickForm", GoGo_Druid_Panel, "InterfaceOptionsCheckButtonTemplate")
 	GoGo_Druid_Panel_ClickForm:SetPoint("TOPLEFT", 16, -16)
 	GoGo_Druid_Panel_ClickFormText:SetText(GoGo_Variables.Localize.String.DruidSingleClick)
 	if GoGo_Prefs.DruidClickForm then
@@ -2562,7 +2562,7 @@ function GoGo_Druid_Panel()
 		end --function
 	)
 
-	GoGo_Druid_Panel_FlightForm = CreateFrame("CheckButton", "GoGo_Druid_Panel_FlightForm", GoGo_Druid_Panel, "OptionsCheckButtonTemplate")
+	GoGo_Druid_Panel_FlightForm = CreateFrame("CheckButton", "GoGo_Druid_Panel_FlightForm", GoGo_Druid_Panel, "InterfaceOptionsCheckButtonTemplate")
 	GoGo_Druid_Panel_FlightForm:SetPoint("TOPLEFT", "GoGo_Druid_Panel_ClickForm", "BOTTOMLEFT", 0, -4)
 	GoGo_Druid_Panel_FlightFormText:SetText(GoGo_Variables.Localize.String.DruidFlightPreference)
 	if GoGo_Prefs.DruidFlightForm then
@@ -2574,7 +2574,7 @@ function GoGo_Druid_Panel()
 		end --function
 	)
 
-	GoGo_Druid_Panel_NoShapeInRandom = CreateFrame("CheckButton", "GoGo_Druid_Panel_NoShapeInRandom", GoGo_Druid_Panel, "OptionsCheckButtonTemplate")
+	GoGo_Druid_Panel_NoShapeInRandom = CreateFrame("CheckButton", "GoGo_Druid_Panel_NoShapeInRandom", GoGo_Druid_Panel, "InterfaceOptionsCheckButtonTemplate")
 	GoGo_Druid_Panel_NoShapeInRandom:SetPoint("TOPLEFT", "GoGo_Druid_Panel_FlightForm", "BOTTOMLEFT", 0, -4)
 	GoGo_Druid_Panel_NoShapeInRandomText:SetText(GoGo_Variables.Localize.String.NoShapeInRandom)
 	if GoGo_Prefs.DruidFormNotRandomize then
@@ -2586,7 +2586,7 @@ function GoGo_Druid_Panel()
 		end --function
 	)
 
-	GoGo_Druid_Panel_DisableInCombat = CreateFrame("CheckButton", "GoGo_Druid_Panel_DisableInCombat", GoGo_Druid_Panel, "OptionsCheckButtonTemplate")
+	GoGo_Druid_Panel_DisableInCombat = CreateFrame("CheckButton", "GoGo_Druid_Panel_DisableInCombat", GoGo_Druid_Panel, "InterfaceOptionsCheckButtonTemplate")
 	GoGo_Druid_Panel_DisableInCombat:SetPoint("TOPLEFT", "GoGo_Druid_Panel_NoShapeInRandom", "BOTTOMLEFT", 0, -4)
 	GoGo_Druid_Panel_DisableInCombatText:SetText(GoGo_Variables.Localize.String.DisableInCombat)
 	GoGo_Druid_Panel_DisableInCombat.tooltipText = GoGo_Variables.Localize.String.DisableInCombat_Long
@@ -2616,7 +2616,7 @@ function GoGo_Hunter_Panel()
 	GoGo_Hunter_Panel.default = function (self) GoGo_Settings_Default("HUNTER"); end;  -- use clear command with default button
 	InterfaceOptions_AddCategory(GoGo_Hunter_Panel)
 
-	GoGo_Hunter_Panel_AspectOfPack = CreateFrame("CheckButton", "GoGo_Hunter_Panel_AspectOfPack", GoGo_Hunter_Panel, "OptionsCheckButtonTemplate")
+	GoGo_Hunter_Panel_AspectOfPack = CreateFrame("CheckButton", "GoGo_Hunter_Panel_AspectOfPack", GoGo_Hunter_Panel, "InterfaceOptionsCheckButtonTemplate")
 	GoGo_Hunter_Panel_AspectOfPack:SetPoint("TOPLEFT", 16, -16)
 	GoGo_Hunter_Panel_AspectOfPackText:SetText(GoGo_Variables.Localize.String.UseAspectOfThePackInstead)
 	GoGo_Hunter_Panel_AspectOfPack.tooltipText = GoGo_Variables.Localize.String.UseAspectOfThePackInstead_Long
@@ -2639,7 +2639,7 @@ function GoGo_Shaman_Panel()
 	GoGo_Shaman_Panel.default = function (self) GoGo_Settings_Default("SHAMAN"); end;  -- use clear command with default button
 	InterfaceOptions_AddCategory(GoGo_Shaman_Panel)
 
-	GoGo_Shaman_Panel_ClickForm = CreateFrame("CheckButton", "GoGo_Shaman_Panel_ClickForm", GoGo_Shaman_Panel, "OptionsCheckButtonTemplate")
+	GoGo_Shaman_Panel_ClickForm = CreateFrame("CheckButton", "GoGo_Shaman_Panel_ClickForm", GoGo_Shaman_Panel, "InterfaceOptionsCheckButtonTemplate")
 	GoGo_Shaman_Panel_ClickForm:SetPoint("TOPLEFT", 16, -16)
 	GoGo_Shaman_Panel_ClickFormText:SetText(GoGo_Variables.Localize.String.ShamanSingleClick)
 	if GoGo_Prefs.ShamanClickForm then
@@ -2661,7 +2661,7 @@ function GoGo_NightFae_Panel()
 	GoGo_NightFae_Panel.default = function (self) GoGo_Settings_Default("NIGHTFAE"); end;  -- use clear command with default button
 	InterfaceOptions_AddCategory(GoGo_NightFae_Panel)
 
-	GoGo_NightFae_Panel_ClickForm = CreateFrame("CheckButton", "GoGo_NightFae_Panel_ClickForm", GoGo_NightFae_Panel, "OptionsCheckButtonTemplate")
+	GoGo_NightFae_Panel_ClickForm = CreateFrame("CheckButton", "GoGo_NightFae_Panel_ClickForm", GoGo_NightFae_Panel, "InterfaceOptionsCheckButtonTemplate")
 	GoGo_NightFae_Panel_ClickForm:SetPoint("TOPLEFT", 16, -16)
 	GoGo_NightFae_Panel_ClickFormText:SetText(GoGo_Variables.Localize.String.NightFaeSingleClick)
 	if GoGo_Prefs.NightFaeClickForm then

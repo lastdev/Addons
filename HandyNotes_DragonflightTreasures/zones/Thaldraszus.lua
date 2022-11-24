@@ -50,6 +50,7 @@ ns.RegisterPoints(MAPID, {
     },
 }, {
     achievement=16301, -- Treasures
+    minimap=true,
 })
 
 -- Rares
@@ -70,7 +71,8 @@ ns.RegisterPoints(MAPID, {
         npc=193126,
         loot={},
     },
-    [90204020] = { -- Blightpaw the Depraved
+    [31737253] = { -- Blightpaw the Depraved
+        -- overlaps a bit with plains @ 90204020
         criteria=56136,
         quest=nil,
         npc=193128,
@@ -186,14 +188,15 @@ ns.RegisterPoints(MAPID, {
         loot={},
         vignette=5177,
     },
-    [] = { -- The Weeping Vilomah
+    --]]
+    [46287298] = { -- The Weeping Vilomah
+        -- TODO: this is the vignette-location, I haven't actually found the route to it yet...
         criteria=56153,
         quest=65365,
         npc=183984,
         loot={},
         vignette=4958,
     },
-    --]]
     [52806760] = { -- Craggravated Elemental
         criteria=56154,
         quest=69964,
@@ -201,12 +204,16 @@ ns.RegisterPoints(MAPID, {
         loot={},
         vignette=5237,
     },
-    [38406800] = { -- The Great Shellkhan
+    [38436824] = { -- The Great Shellkhan
         criteria=56155,
         quest=72121,
         npc=191305,
-        loot={},
+        loot={
+            {200999, toy=true,}, -- The Super Shellkhan Gang
+        },
+        note="Bring a {item:200949:Case of Fresh Gleamfish} from 45.6, 54.8 in Azure Span",
         vignette=5439,
+        route={38436824, 32009999, highlightOnly=true},
     },
     [44806900] = { -- Corrupted Proto-Dragon
         criteria=56156,
@@ -214,6 +221,7 @@ ns.RegisterPoints(MAPID, {
         npc=193658,
         loot={},
         vignette=5235,
+        note="Interact with the egg inside the cave",
     },
     --[[
     [] = { -- Lord Epochbrgl
@@ -233,4 +241,44 @@ ns.RegisterPoints(MAPID, {
     },
 }, {
     achievement=16679, -- Adventurer
+})
+ns.RegisterPoints(MAPID, {
+    [37538339] = { -- Private Shikzar
+        quest=70986,
+        npc=193127,
+        loot={},
+        vignette=5406,
+    },
+    [36808557] = { -- Lookout Mordren
+        quest=72813, -- 69967 on vignette?
+        npc=193668,
+        loot={
+            200182, -- Riveted Drape
+        },
+        vignette=5239,
+        -- despawns without any loot, asks you to help comrades at the South Hold Gate... -- something to remove his debuff first, maybe?
+    },
+    [39207560] = { -- Acrosoth
+        quest=72114,
+        npc=193243,
+        loot={},
+        vignette=5436,
+        note="Flying nearby",
+    },
+    [55797732] = { -- Henlare
+        quest=72814, -- 69873 on vignette
+        npc=193229,
+        loot={
+            200880, -- Wind-Sealet Mana Capsule
+        },
+        vignette=5196,
+    },
+    [36737280] = { -- Liskron the Dazzling
+        quest=72842, -- vignette 72116
+        npc=193273,
+        loot={
+            {196976, quest=69176}, -- Cliffside Wylderdrake: Head Mane
+        },
+        vignette=5437,
+    },
 })

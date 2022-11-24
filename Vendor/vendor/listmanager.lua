@@ -2,7 +2,7 @@ local _, Addon = ...
 local LIST_MGR_KEY = {}
 local EMPTY = {}
 local CustomListManager = {}
-local savedLists = Addon.SavedVariable:new("CustomLists")
+local savedLists = {}
 
 local function GetListId(source)
 	if ((type(source) == "table") and (type(source.Id) == "string")) then
@@ -15,21 +15,42 @@ local function GetListId(source)
 	return nil
 end
 
+--[[ Creates a custom list ]]
 function CustomListManager:CreateList(listName, listDescription, listItems)
 	local id = Addon:GetExtensionManger():CreateUniqueId()
-	local list = 
-	{
+	local list = {
 		Name = listName,
+		Id = id,
 		Description = listDescription,
 		Items = listItems or EMPTY,
+		Timestamp = time(),
+		CreatedBy = Addon:GetCharacterFullName()
 	}
 
 	savedLists:Set(id, list)
 	list.Id = id
 	self:TriggerEvent("OnListChanged", id, "ADDED")
+
 	return list
 end
 
+--[[ Updates a custom list ]]
+function CustomListManager:UpdateList(id, name, description, items)
+	--[===[@debug@
+
+	--@end-debug@]===]
+
+	savedLists:Set(id, {
+			Name = name, 
+			Description = description,
+			Id = id,
+			Items = items or {},
+			Timestamp = time(),
+			ModifiedBy = Addon:GetCharacterFullName()
+		})
+end
+
+--[[ Gets the contents of a custom list ]]
 function CustomListManager:GetListContents(listId)
 	local list = savedLists:Get(GetListId(listId))
 	if (not list) then
@@ -38,33 +59,40 @@ function CustomListManager:GetListContents(listId)
 	return (list.Items or EMPTY), true
 end
 
+--[[ Updates the contents of a custom list ]]
 function CustomListManager:UpdateListContents(listId, items)
-	Addon:Debug("test", "updaing list contents %s", listId)
+
 	listId = GetListId(listId)	
 	local list = savedLists:Get(listId)
 	if (not list) then
 		return false
 	end
 
-	list.Items = table.copy(items or EMPTY)
-	savedLists:Set(listId, list)	
-	Addon:Debug("test", "firing event %s", listId)
+	list.Items = Addon.DeepTableCopy(items or EMPTY)
+	savedLists:Set(listId, list)
 	self:TriggerEvent("OnListChanged", listId, "UPDATED")
 end
 
+--[[ Retrieves all of the custom lists ]]
 function CustomListManager:GetLists()
 	local results = {}
 	savedLists:ForEach(function(list, id)
+		--[===[@debug@
+
+		--@end-debug@]===]
+
 		table.insert(results, {
 			Id = id,
 			Name = list.Name,
-			Description = list.Description
+			Description = list.Description,
+			Items = list.items
 		})
 	end)
 
 	return results
 end
 
+--[[ Gets a specific list ]]
 function CustomListManager:GetList(search)
 	local result = nil
 	local resultId = nil
@@ -85,7 +113,7 @@ function CustomListManager:GetList(search)
 			Id = resultId,
 			Name = result.Name,
 			Description = result.Description,
-			Items = table.copy(result.Items or EMPTY)
+			Items = Addon.DeepTableCopy(result.Items or EMPTY)
 		}
 	end
 

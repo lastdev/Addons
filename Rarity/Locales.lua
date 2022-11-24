@@ -17888,7 +17888,7 @@ end
 
 L = LibStub("AceLocale-3.0"):NewLocale("Rarity", "zhCN")
 if L then
-	L[" (Group)"] = "（队伍）"
+	L[" (Group)"] = "（队伍）組"
 L["#%d: %d attempt (%.2f%%)"] = "#%d：%d次尝试（%.2f%%）"
 L["#%d: %d attempts (%.2f%%)"] = "#%d：%d次尝试（%.2f%%）"
 L["%d |4waypoint:waypoints; |4is:are; located inside |4an instance:instances; and |4was:were; not added"] = "因为%d路径点位于副本内，所以并未添加"
@@ -23361,11 +23361,9 @@ L["Deepsea Sagefish School"] = "Cardume de Sabichões Abissais"
 L["Deepstar Polyp"] = "Pólipo Estrelafunda"
 L["Defeat Detection"] = "Detecção de Derrotas"
 L["Defeated"] = "Derrotado"
---[[Translation missing --]]
-L["Defiled Earth"] = "Defiled Earth"
+L["Defiled Earth"] = "Terra Conspurcada"
 L["Delete this item"] = "Excluir este item"
---[[Translation missing --]]
-L["Deletes accumulated profiling data for the current session."] = "Deletes accumulated profiling data for the current session."
+L["Deletes accumulated profiling data for the current session."] = "Exclui dados de perfil acumulados para a sessão atual"
 L["Demon Hunter"] = "Caçador de Demônios"
 L["Demonic"] = "Demoníaco"
 L["Determines how this item is obtained."] = "Determina como este item é obtido."
@@ -23373,44 +23371,35 @@ L["Determines what type of item this is."] = "Determina que tipo de item este é
 L["Determines whether the item can only be obtained from fishing in pools. In order for this option to work, the fishing pools must have all been translated into your client's language."] = "Determina se o item só pode ser obtido ao pescar em cardumes. Para que esta opção funcione, os cardumes devem estar traduzidos para o idioma do seu cliente."
 L["Determines whether tracking should be enabled for this item. Items that are disabled will not appear in the tooltip."] = "Determina se o rastreamento deve ser ativado para este item. Itens que são desativados não aparecerão na dica de tela."
 L["Determines whether you want to repeatedly farm this item. If you turn this on and find the item, Rarity will mark the item as un-found after a few seconds."] = "Determina se você quer \"farmar\" este item repetidamente. Se você ligar isto e encontrar o item, o Rarity marcará o item como \"não encontrado\" em alguns segundos."
---[[Translation missing --]]
 L[ [=[Determines which instance difficulties this item may be obtained in. Leave everything unchecked if the instance difficulty doesn't matter.
 
 If you specified a Statistic ID for this item, the Instance Difficulty is probably meaningless, because all modern statistics already incorporate the difficulty.
 
-You can check multiple items in this list at once.]=] ] = [=[Determines which instance difficulties this item may be obtained in. Leave everything unchecked if the instance difficulty doesn't matter.
+You can check multiple items in this list at once.]=] ] = [=[Determina em quais dificuldades de instâncias esse item pode ser obtido.
+Deixe tudo desmarcado caso a dificuldade não importe.
 
-If you specified a Statistic ID for this item, the Instance Difficulty is probably meaningless, because all modern statistics already incorporate the difficulty.
+Se você especificou um ID Estatístico para esse item, a dificuldade da instância, provavelmente, não importará, pois, todas as estatísticas recentes já incorporam a dificuldade.
 
-You can check multiple items in this list at once.]=]
---[[Translation missing --]]
+Você pode marcar múltiplos itens de uma vez nessa lista.]=]
 L[ [=[Determines which instance difficulties this item may be obtained in. Leave everything unchecked if the instance difficulty doesn't matter.
 
 If you specified a Statistic ID for this item, the Instance Difficulty is probably meaningless, because all modern statistics already incorporate the difficulty.
 
-You can check multiple items in this list at once.]=] ] = ""
+You can check multiple items in this list at once.]=] ] = "Determina em quais dificuldades de instâncias esse item pode ser obtido. Deixe tudo desmarcado caso a dificuldade não importe. Se você especificou um ID Estatístico para esse item, a dificuldade da instância, provavelmente, não importará, pois, todas as estatísticas recentes já incorporam a dificuldade. Você pode marcar múltiplos itens de uma vez nessa lista."
 L["Determines which race includes this archaeology project."] = "Determina qual raça inclui este projeto de arqueologia."
---[[Translation missing --]]
-L["Detoxified Blight Grenade"] = "Detoxified Blight Grenade"
+L["Detoxified Blight Grenade"] = "Granada de Praga Desintoxicada"
 L["Deviate Hatchling"] = "Filhote Anormal"
---[[Translation missing --]]
-L["Devoured Wader"] = "Devoured Wader"
---[[Translation missing --]]
-L["Direflame"] = "Direflame"
+L["Devoured Wader"] = "Pernalta Devorado"
+L["Direflame"] = "Chamatroz"
 L["Direhorn Runt"] = "Escornante Nanico"
---[[Translation missing --]]
-L["Dirty Glinting Object"] = "Dirty Glinting Object"
+L["Dirty Glinting Object"] = "Objeto Poeirento Brilhante"
 L["Disable for classes"] = "Desativar para classes"
---[[Translation missing --]]
-L["Disable Rarity-specific error messages"] = "Disable Rarity-specific error messages"
+L["Disable Rarity-specific error messages"] = "Desabilitar mensagens de erro específicas do Rarity"
 L["Disable sorting"] = "Desativar classificação"
---[[Translation missing --]]
-L["Disable sorting inside the main window. Can be used to troubleshoot performance issues."] = "Disable sorting inside the main window. Can be used to troubleshoot performance issues."
---[[Translation missing --]]
-L["Disables the detailed (red) error messages that are used by the addon to detect invalid states rather than allowing it to crash. Any detected errors will still be handled, but you won't see the notification."] = "Disables the detailed (red) error messages that are used by the addon to detect invalid states rather than allowing it to crash. Any detected errors will still be handled, but you won't see the notification."
+L["Disable sorting inside the main window. Can be used to troubleshoot performance issues."] = "Desabilitar a classificação na janela principal. Usado para solucionar problemas de performance."
+L["Disables the detailed (red) error messages that are used by the addon to detect invalid states rather than allowing it to crash. Any detected errors will still be handled, but you won't see the notification."] = "Desabilita mensagens detalhadas de erro (vermelhas) que são usadas pelo AddOn para detectar estados inválidos ao invés de permitir o crash do jogo. Qualquer erro detectado ainda será tratado, mas você não verá notificações."
 L["Disgusting Oozeling"] = "Gosmícula Nojenta"
---[[Translation missing --]]
-L["Displacer Meditation Stone"] = "Displacer Meditation Stone"
+L["Displacer Meditation Stone"] = "Pedra de Meditação Deslocadora"
 --[[Translation missing --]]
 L["Displays accumulated profiling data for the current session."] = "Displays accumulated profiling data for the current session."
 --[[Translation missing --]]
@@ -23816,8 +23805,7 @@ L["Gravewing Crystal"] = "Gravewing Crystal"
 L["Great Brewfest Kodo"] = "Grande Kodo da CervaFest"
 --[[Translation missing --]]
 L["Great Sea Catfish School"] = "Great Sea Catfish School"
---[[Translation missing --]]
-L["Great Sea Ray"] = "Great Sea Ray"
+L["Great Sea Ray"] = "Raia do Grande Oceano"
 L["Greater Sagefish School"] = "Grande Cardume de Sabichões"
 --[[Translation missing --]]
 L["Greatfather Winter's Hearthstone"] = "Greatfather Winter's Hearthstone"
@@ -25602,8 +25590,7 @@ L["Wild Goretusk"] = "Wild Goretusk"
 L["Wild Holly"] = "Wild Holly"
 --[[Translation missing --]]
 L["Wild Worldcracker"] = "Wild Worldcracker"
---[[Translation missing --]]
-L["Wilderling Saddle"] = "Wilderling Saddle"
+L["Wilderling Saddle"] = "Sela de Silvestrito"
 --[[Translation missing --]]
 L["will be imported"] = "will be imported"
 --[[Translation missing --]]
@@ -25623,16 +25610,12 @@ L["Witherbark Gong"] = "Witherbark Gong"
 L["Words of Akunda"] = "Words of Akunda"
 --[[Translation missing --]]
 L["World Tooltip Options"] = "World Tooltip Options"
---[[Translation missing --]]
-L["Worldedge Gorger"] = "Worldedge Gorger"
+L["Worldedge Gorger"] = "Engolidor da Beira do Mundo"
 L["Worn Troll Dice"] = "Dado Troll Gasto"
---[[Translation missing --]]
-L["Wrangler Kravos"] = "Wrangler Kravos"
+L["Wrangler Kravos"] = "Enlaçador Kravos"
 L["Wrath of the Lich King"] = true
---[[Translation missing --]]
-L["Wrath-Lord Yarez"] = "Wrath-Lord Yarez"
---[[Translation missing --]]
-L["Wreath-A-Rang"] = "Wreath-A-Rang"
+L["Wrath-Lord Yarez"] = "Senhor da Ira Yarez"
+L["Wreath-A-Rang"] = "Guirlandarangue"
 L["Wriggler"] = "Chocalhinho"
 L["Wriggling Darkness"] = "Treva Rebolante"
 L["Writhing Spine"] = "Espinha Retorcida"

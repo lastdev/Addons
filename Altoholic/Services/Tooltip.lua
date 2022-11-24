@@ -65,7 +65,7 @@ local cachedRecipeOwners
 local cachedAltStorage
 
 local itemCounts = {}
-local itemCountsLabels = {	L["Bags"], L["Bank"], VOID_STORAGE, REAGENT_BANK, L["AH"], L["Equipped"], L["Mail"], CURRENCY }
+local itemCountsLabels = { L["Bags"], L["Bank"], VOID_STORAGE, REAGENT_BANK, L["AH"], L["Equipped"], L["Mail"], CURRENCY, L["Reagent Bag"] }
 local counterLines = {}		-- list of lines containing a counter to display in the tooltip
 
 
@@ -112,7 +112,7 @@ local function GetRealmsList(isAccountBound)
 end
 
 local function GetCharacterItemCount(character, searchedID)
-	itemCounts[1], itemCounts[2], itemCounts[3], itemCounts[4] = DataStore:GetContainerItemCount(character, searchedID)
+	itemCounts[1], itemCounts[2], itemCounts[3], itemCounts[4], itemCounts[9] = DataStore:GetContainerItemCount(character, searchedID)
 	itemCounts[5] = DataStore:GetAuctionHouseItemCount(character, searchedID)
 	itemCounts[6] = DataStore:GetInventoryItemCount(character, searchedID)
 	itemCounts[7] = DataStore:GetMailItemCount(character, searchedID)
@@ -549,15 +549,15 @@ local function ProcessTooltip(tooltip, link)
 	
 	-- 25/01/2015: Removed the code that displayed the pet owners, since they have been account wide for a while now..
 	
-	if classID == LE_ITEM_CLASS_GLYPH then
+	if classID == Enum.ItemClass.Glyph then
 		AddGlyphOwners(itemID, tooltip)
 		return
 	end
 	
 	if Options.Get("UI.Tooltip.ShowKnownRecipes") == false then return end -- exit if recipe information is not wanted
 	
-	if classID ~= LE_ITEM_CLASS_RECIPE then return end		-- exit if not a recipe
-	if subclassID == LE_ITEM_RECIPE_BOOK then return end		-- exit if it's a book
+	if classID ~= Enum.ItemClass.Recipe then return end -- exit if not a recipe
+	if subclassID == Enum.ItemRecipeSubclass.Book then return end -- exit if it's a book
 
 	if not cachedRecipeOwners then
 		cachedRecipeOwners = GetRecipeOwnersText(itemSubType, link, addon:GetRecipeLevel(link, tooltip))
@@ -655,26 +655,23 @@ addon:Service("AltoholicUI.Tooltip", { function()
 				ShowGatheringNodeCounters()
 				GameTooltip:Show()
 			end)
-			GameTooltip:HookScript("OnTooltipSetItem", function(self)
+			
+			local function OnTooltipSetItem(self, data)
 				if (not isTooltipDone) and self then
 					isTooltipDone = true
 
-					local name, link = self:GetItem()
-					
-					-- Blizzard broke self:GetItem() in 6.2. Detect and fix the bug if possible.
-					if name == "" then
-						local itemID = addon:GetIDFromLink(link)
-						if not itemID or itemID == 0 then
-							-- hooking SetRecipeResultItem & SetRecipeReagentItem is necessary for trade skill UI, link is captured and saved in storedLink
-							link = storedLink
-						end
-					end
-					
+					local _, link = GetItemInfo(data.id)
+
 					if link then
 						ProcessTooltip(self, link)
 					end
-				end
-			end)
+				end			
+			end
+			
+			TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, OnTooltipSetItem)
+			-- Todo : currency link !
+			--TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Currency, see if Hook_SetCurrencyToken can be used)
+
 			GameTooltip:HookScript("OnTooltipCleared", function(self)
 				isTooltipDone = nil
 				isNodeDone = nil		-- for informant
@@ -687,15 +684,7 @@ addon:Service("AltoholicUI.Tooltip", { function()
 				addon:ListCharsOnQuest( ItemRefTooltipTextLeft1:GetText(), UnitName("player"), ItemRefTooltip)
 				ItemRefTooltip:Show()
 			end)
-			ItemRefTooltip:HookScript("OnTooltipSetItem", function(self)
-				if (not isTooltipDone) and self then
-					local _, link = self:GetItem()
-					isTooltipDone = true
-					if link then
-						ProcessTooltip(self, link)
-					end
-				end
-			end)
+
 			ItemRefTooltip:HookScript("OnTooltipCleared", function(self)
 				isTooltipDone = nil
 			end)

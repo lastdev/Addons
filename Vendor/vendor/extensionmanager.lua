@@ -86,7 +86,7 @@ function ExtensionManager:RegisterList(extension, list)
 	end
 
 	table.insert(self.lists, entry)
-	Addon:Debug("extension", "Registered list \"%s\" from extension \"%s\" items source %s [%d lists]", entry.Name, entry.Source, string.upper(itemsType), table.getn(self.lists))
+
 	return true
 end
 

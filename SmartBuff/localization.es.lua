@@ -31,7 +31,7 @@ SMARTBUFF_DEMONTYPE = "Diablillo";
 SMARTBUFF_UNDEAD    = "No-muerto";
 
 -- Classes
-SMARTBUFF_CLASSES = {"Druida", "Cazador", "Mago", "Palad\195\173n", "Sacerdote", "P\195\173caro", "Cham\195\161n", "Brujo", "Guerrero", "Caballero de la Muerte", "Monje", "Cazador de demonios", "Mascota de cazador", "Mascota de brujo", "Mascota de caballero de la Muerte", "Tanque", "Sanador", "Infligir da\195\177o"};
+SMARTBUFF_CLASSES = {"Druida", "Cazador", "Mago", "Palad\195\173n", "Sacerdote", "P\195\173caro", "Cham\195\161n", "Brujo", "Guerrero", "Caballero de la Muerte", "Monje", "Cazador de demonios", "Evoker", "Mascota de cazador", "Mascota de brujo", "Mascota de caballero de la Muerte", "Tanque", "Sanador", "Infligir da\195\177o"};
 
 -- Templates and Instances
 SMARTBUFF_TEMPLATES = {"Solo", "Grupo", "Banda", "Campos de batalla", "Arena", "CCH", "PdC", "Ulduar", "MC", "Ony", "BWL", "Naxx", "AQ", "ZG", "Custom 1", "Custom 2", "Custom 3", "Custom 4", "Custom 5"};

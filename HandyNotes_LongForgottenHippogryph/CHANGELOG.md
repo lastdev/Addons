@@ -1,7 +1,7 @@
-# HandyNotes_LongForgottenHippogryph
+# HandyNotes: Long-Forgotten Hippogryph
 
-## [v9](https://github.com/kemayo/wow-handynotes-longforgottenhippogryph/tree/v9) (2022-09-04)
-[Full Changelog](https://github.com/kemayo/wow-handynotes-longforgottenhippogryph/compare/v8...v9) [Previous Releases](https://github.com/kemayo/wow-handynotes-longforgottenhippogryph/releases)
+## [v10](https://github.com/kemayo/wow-handynotes-longforgottenhippogryph/tree/v10) (2022-11-20)
+[Full Changelog](https://github.com/kemayo/wow-handynotes-longforgottenhippogryph/compare/v9...v10) [Previous Releases](https://github.com/kemayo/wow-handynotes-longforgottenhippogryph/releases)
 
-- TOC for 9.2.7  
-- Show the points inside Oceanus Cove  
+- TOC for 10.0.2  
+- Update to my embedded-handler system  

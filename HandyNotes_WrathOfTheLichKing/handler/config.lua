@@ -355,7 +355,7 @@ ns.allQuestsComplete = allQuestsComplete
 
 local temp_criteria = {}
 local allCriteriaComplete = testMaker(function(criteria, achievement)
-    local _, _, completed, _, _, completedBy = (criteria < 100 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID)(achievement, criteria, true)
+    local _, _, completed, _, _, completedBy = ns.GetCriteria(achievement, criteria)
     if not (completed and (not completedBy or completedBy == ns.playerName)) then
         return false
     end

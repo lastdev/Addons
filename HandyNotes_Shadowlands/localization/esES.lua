@@ -18,6 +18,8 @@ L['squirrels_note'] = 'Has de usar la emoción /amor en alimañas que no sean ma
 L['options_icons_squirrels'] = '{achievement:14731}'
 L['options_icons_squirrels_desc'] = 'Sitios donde aparecen las alimañas para el logro {achievement:14731}.'
 
+L['prepatch_vendor_note'] = 'Los objetos que se compran usando la moneda {item:199211} del evento pre-parche |cFFFF8C00Tormentas Primigenias|r.'
+
 -------------------------------------------------------------------------------
 --------------------------------- ARDENWEALD ----------------------------------
 -------------------------------------------------------------------------------
@@ -791,7 +793,8 @@ L['options_icons_covenant_assaults_desc'] = 'Recompensas para los asaltos de las
 
 L['assault_sublabel_US'] = 'Los asaltos cambian los Martes a las 8 AM PDT y los Viernes a las 8 PM PDT'
 L['assault_sublabel_EU'] = 'Los asaltos cambian los Miércoles a las 8 AM CET y los Sábados a las 8 PM CET'
-L['assault_sublabel_CN'] = 'Los asaltos cambian los Martes a las 7 AM CST y los Viernes a las 7 PM CST'
+L['assault_sublabel_CN'] = 'Los asaltos cambian los Jueves a las 7 AM CST y los Domingos a las 7 PM CST'
+L['assault_sublabel_AS'] = 'Los asaltos cambian los Jueves a las 8 AM KST y los Domingos a las 8 PM KST'
 
 L['necrolord_assault'] = '{quest:63543}'
 L['necrolord_assault_note'] = 'El {item:185992} sólo se puede conseguir una vez por asalto.'

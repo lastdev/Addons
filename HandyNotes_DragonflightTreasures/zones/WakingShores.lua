@@ -7,7 +7,9 @@ ns.RegisterPoints(MAPID, {
     [65804182] = { -- Replica Dragon Goblet
         criteria=54698,
         quest=70600,
-        loot={}, -- just supplies
+        loot={
+            {202019, toy=true}, -- Golden Dragon Goblet
+        },
         related={
             [76343420] = {quest=70409,loot={{198854,quest=70409}},atlas="poi-workorders",}, -- Archeologist Artifact Notes
         },
@@ -35,19 +37,28 @@ ns.RegisterPoints(MAPID, {
     [46713121] = { -- Yennu's Kite
         criteria=54701,
         quest=70345,
-        loot={},
+        loot={
+            {202022, toy=true}, -- Yennu's Kite
+        },
         note="In the tree",
     },
     [69314658] = { -- Dead Man's Chestplate
         criteria=54702,
         quest=70346,
+        loot={
+            202193, -- Dead Man's Tunic
+            202192, -- Dead Man's Leathers
+            202190, -- Dead Man's Chains
+            202191, -- Dead Man's Breastplate
+        },
         loot={},
-        note="Inside tower; middle floor",
+        note="Inside tower; middle floor, requires flying",
+        minimap=true,
     },
     [48498516] = { -- Torn Riding Pack
         criteria=54703,
         quest=70378,
-        loot={},
+        loot={}, -- just supplies
         note="Top of waterfall",
     },
     --[[
@@ -69,6 +80,7 @@ ns.RegisterPoints(MAPID, {
     --]]
 }, {
     achievement=16297, -- Treasures
+    minimap=true,
 })
 
 -- Rares
@@ -103,10 +115,12 @@ ns.RegisterPoints(MAPID, {
         loot={},
     },
     [43427361] = { -- Helmet Missingway
+        -- no quest, no loot, it just deaggros and runs away and you get achievement-credit
         criteria=56037,
         quest=nil,
-        npc=199645,
+        npc=193263, -- 199645 is the criteria asset
         loot={},
+        minimap=true, -- just a neutral mob wandering, no vignette
     },
     [48436605] = { -- Brundin the Dragonbane
         criteria=56038,
@@ -189,7 +203,9 @@ ns.RegisterPoints(MAPID, {
         criteria=56048,
         quest=72130,
         npc=193154,
-        loot={},
+        loot={
+            200858, -- Plume of the Forgotten
+        },
         vignette=5383,
     },
     --[[
@@ -216,6 +232,7 @@ ns.RegisterPoints(MAPID, {
             {199916, pet=3365}, -- Roseate Hopper
         },
         vignette=5139, -- Hidden Hornswog Hoard
+        atlas="VignetteLootElite", scale=1.2,
         note="Bring {item:200064}, {item:200065}, and {item:200066} here to enter",
         related={
             [47738363] = {quest=70864,label="{item:200064}",inbag=200064,atlas="Islands-AzeriteChest",}, -- Marmoni's Prize
@@ -334,6 +351,58 @@ ns.RegisterPoints(MAPID, {
         },
         vignette=5055,
     },
+    [64433340] = { -- Dragonhunter Igordan
+        quest=66956, -- 72838
+        npc=191611,
+        loot={
+            200757, -- Qalashi War-Helm
+            {197005, quest=69205}, -- Cliffside Wylderdrake: Horned Nose
+            {197019, quest=69219}, -- Cliffside Wylderdrake: Blunt Spiked Tail
+            -- 198876, -- Technique: Weathered Explorer's Stave (general drop?)
+        },
+        worldquest=65994,
+        vignette=5126,
+    },
+    [54808220] = { -- Klozicc the Ascended
+        quest=66960, -- also 72841
+        npc=187209,
+        loot={
+            {197023, quest=69223}, -- Cliffside Wylderdrake: Maned Neck
+            {197602, quest=69806}, -- Windborne Velocidrake: Cluster Horns
+            {200198, toy=true}, -- Primalist Prison
+            200246, -- Lost Delving Lamp
+        },
+        vignette=5127,
+    },
+    [77602220] = { -- Ancient Hornswog
+        quest=66076, -- verify; vignette
+        npc=187111,
+        loot={
+            {196992, quest=69192}, -- Cliffside Wylderdrake: Heavy Horns
+            {197403, quest=69604}, -- Renewed Proto-Drake: Club Tail
+            {200249, toy=true}, -- Mage's Chewed Wand
+            200442, -- Basilisk Hide Jerkin
+        },
+        vignette=5057,
+    },
+    [46715715] = { -- Monsoo, The Boiling Rage
+        -- This is rare-flagged, but has no quest, no loot, and no criteria-completion...
+        quest=nil,
+        npc=190718,
+        loot={},
+        vignette=nil,
+        note="Kill {npc:190719:Primalist Arlin} to trigger",
+    },
+    [54512137] = { -- Firava the Rekindler
+        quest=72839, -- also 70648
+        npc=195915,
+        loot={
+            {197135, quest=69336}, -- Highland Drake: Toothy Mouth
+            200133, -- Volcanic Chakram
+            200217, -- Blazing Essence
+        },
+        vignette=5372,
+    },
 })
 
 -- Symbols of Hope
@@ -341,6 +410,7 @@ ns.RegisterPoints(MAPID, {
     [73193776] = { -- Wingrest Embassy
         criteria=55841,
         quest=72096,
+        note="Top of tower",
     },
     [73035290] = { -- Skytop Observatory
         criteria=55842,

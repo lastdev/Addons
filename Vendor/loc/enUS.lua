@@ -15,6 +15,7 @@ ABOUT_TUTORIAL_LABEL = "Tutorial:",
 ABOUT_RELEASES_LABEL = "Releases:",
 ABOUT_VERSION_LABEL = "Version:",
 DEFAULT_PROFILE_NAME = "Default",
+ABOUT_COPY = "Copy",
 
 -- Date Formats - For cultures who may wish to change these.
 CMD_HISTORY_DATEFORMAT = "%c",
@@ -40,7 +41,7 @@ BINDING_DESC_VENDORTOGGLEDESTROY = "Adds the item currently in the game tooltip 
 BINDING_NAME_VENDORRUNAUTOSELL = "Vendor: Autosell at Merchant",
 BINDING_DESC_VENDORRUNAUTOSELL = "Manually trigger an autoselling run while at a merchant.",
 BINDING_NAME_VENDORRUNDESTROY = "Vendor: Destroy Next Item",
-BINDING_DESC_VENDORRUNDESTROY = "Destroy the next item vendor has identified for destruction. This must be done via hardware event due to a Blizzard restriction, and one press per destroy.",
+BINDING_DESC_VENDORRUNDESTROY = "Destroy items vendor has identified for destruction. This must be done via hardware event due to a Blizzard restriction.",
 BINDING_NAME_VENDORRULES = "Vendor: Open Menu",
 BINDING_DESC_VENDORRULES = "Toggles the visibility of the main Vendor Rules menu.",
 
@@ -87,13 +88,21 @@ OPTIONS_AUDIT_FILTER_LABEL = "Filter:",
 OPTIONS_AUDIT_EMPTY = "No records match the filters and/or search terms specified.",
 OPTIONS_AUDIT_SEARCH_PLACEHOLDER = "Enter terms to search",
 OPTIONS_AUDIT_FILTER_SOLD = "Sold",
+OPTIONS_AUDIT_FILTER_SOLD_DESC = "Include all items which were sold",
 OPTIONS_AUDIT_FILTER_DESTROYED = "Destroyed",
+OPTIONS_AUDIT_FILTER_DESTROYED_DESC = "Include all items which were destroyed",
 OPTIONS_AUDIT_FILTER_EPIC = "Epic Items",
+OPTIONS_AUDIT_FILTER_EPIC_DESC = "Include Epic quality items",
 OPTIONS_AUDIT_FILTER_RARE = "Rare Items",
+OPTIONS_AUDIT_FILTER_RARE_DESC = "Include Rare quality items",
 OPTIONS_AUDIT_FILTER_UNCOMMON = "Uncommon Items",
+OPTIONS_AUDIT_FILTER_UNCOMMON_DESC = "Include Uncommon quality items",
 OPTIONS_AUDIT_FILTER_LEGENDARY = "Legendary or Better",
+OPTIONS_AUDIT_FILTER_LEGENDARY_DESC = "Include Legendary quality or better items",
 OPTIONS_AUDIT_FILTER_COMMON = "Common or Less",
+OPTIONS_AUDIT_FILTER_COMMON_DESC = "Include Common quality or worse items.",
 OPTIONS_AUDIT_FILTER_EXTENSION = "Extension Rule",
+OPTIONS_AUDIT_FILTER_EXTENSION_DESC = "Include items sold or destroyed from a Vendor extension rule.",
 OPTIONS_AUDIT_FILTER_ALL = "All",
 OPTIONS_VENDOR_AUDIT = "Vendor Audit:",
 OPTIONS_AUDIT_TT_PROFILE = "Profile:",
@@ -105,7 +114,8 @@ RULES_DIALOG_CONFIG_TAB = "Settings",
 SETTINGS_CATEGORY_LABEL = "Category",
 
 -- Setting categories and descriptions.
-OPTIONS_CATEGORY_GENERAL = "Common",
+OPTIONS_CATEGORY_GENERAL = "General",
+OPTIONS_CATEGORY_QUICK = "Common",
 OPTIONS_DESC_GENERAL = "These are the quick high-level set of common settings to govern overall Vendor behavior. Use the drop-down menu for more refined setting adjustment.",
 OPTIONS_CATEGORY_SELLING = "Selling",
 OPTIONS_DESC_SELLING = "Controls what Vendor does when you are selling at a merchant. ",
@@ -142,9 +152,16 @@ OPTIONS_SETTINGDESC_SELL_THROTTLE = "This is the number of items vendored per se
 OPTIONS_SETTINGNAME_CYCLE_RATE = "Cycle Rate",
 OPTIONS_SETTINGDESC_CYCLE_RATE = "Interval in seconds between attempts to sell the throttled number of items specified above. Lower is faster. Increase this to slow down sell rate if you notice throttling from Blizzard.",
 OPTIONS_SETTINGNAME_MINIMAP = "Show Minimap Button",
-OPTIONS_SETTINGDESC_MINIMAP = "Vendor will show a minimap button for quickly accessing rules and lists, and mousing over it shows a summary of matching items.",
+OPTIONS_SETTINGDESC_MINIMAP = "Vendor will show a minimap button for quickly accessing rules and profiles, and mousing over it shows a summary of matching items.\n\nThis is an account-wide setting.",
 OPTIONS_SETTINGNAME_SELLBUTTON = "Show Auto-Sell Button on Merchant Window",
 OPTIONS_SETTINGDESC_SELLBUTTON = "Add an 'Auto-Sell' button to the merchant's sell window to run the Vendor Auto-sell.",
+
+QUICK_SELL_SETTING = "Auto-Sell items at merchant",
+QUICK_SELL_SETTING_HELP = "Automatically sell items when interacting with a merchant. If this is disabled you can still manually trigger an autosell by setting a hotkey.\n\nThis also enables the 12-item limit on selling, which is the buyback limit for safety.",
+QUICK_REPAIR_SETTING = "Auto-Repair at repair merchants",
+QUICK_REPAIR_SETTING_HELP = "Automatically repair when visiting a repair-capable vendor.\n\nThis also enables using guild repair when available.",
+QUICK_MINIMAP_SETTING = "Show Minimap Button",
+QUICK_MINIMAP_SETTING_HELP = "Enable the Vendor Minimap button on the minimap. On mouseover the button displays items that will be sold/destroyed. Left click brings up the rules configuration page, while right-click brings up profiles.\n\nThis is an account-wide setting.",
 
 -- Profiles Page
 OPTIONS_PROFILE_TITLE = "Profiles",
@@ -152,10 +169,23 @@ OPTIONS_PROFILE_HELPTEXT = "All rules settings, addon settings, and Sell / Keep 
     "Profiles are stored globally across all servers and characters, and selected per-character.",
 OPTIONS_PROFILE_COPY = "Copy",
 OPTIONS_PROFILE_CREATE = "New",
+OPTIONS_PROFILE_RENAME = "Rename",
 OPTIONS_PROFILE_SET = "Set",
 OPTIONS_PROFILE_NAME_PLACEHOLDER = "type the name of the profile to create or copy here",
 OPTIONS_PROFILE_CREATETEXT = "You can create a new profile from scratch (starts with the vendor defaults) or you can copy an existing profile in the list. A blank name defaults to 'PlayerName - Realm'",
-OPTIONS_CONFIRM_PROFILE_DELETE_FMT1 = "Are you sure you want to delete profile '%s'?",
+OPTIONS_CONFIRM_PROFILE_DELETE_CAPTION = "Delete Profile",
+OPTIONS_CONFIRM_PROFILE_DELETE_CONFIRM = "Confirm",
+OPTIONS_CONFIRM_PROFILE_DELETE_FMT1 = [[
+# Delete Profile
+
+Are you sure you want to delete profile '%s'?"
+]],
+OPTIONS_PROFILE_DUPLICATE_NAME_CAPTION = "Duplicate Name",
+OPTIONS_PROFILE_DUPLICATE_NAME_FMT1 = [[
+# Duplicate Profile Name
+
+A profile already exists with the name '%s' please choose another.
+]],
 OPTIONS_PROFILE_CREATE_LABEL = "Create Profile",
 OPTIONS_PROFILE_DEFAULT_COPY_NAME = "%s (Copy)",
 
@@ -222,7 +252,7 @@ CMD_DESTROY_HELP = "Destroys all items matching Destroy rules or in the Destroy 
 API_REGISTEREXTENSION_TITLE = "Register Extension",
 API_REGISTEREXTENSION_DOCS = "Registers a Vendor extension with Vendor. See CurseForge documentation for details.",
 API_EVALUATEITEM_TITLE = "Evaluate Item",
-API_EVALUATEITEM_DOCS = "Evaluates an item for selling. Input is a Tooltip + Link, Bag + Slot, or Link. Bag and Slot is best.",
+API_EVALUATEITEM_DOCS = "Evaluates an item for selling. Input is a Bag and Slot.",
 API_ADDTOALWAYSSELL_TITLE = "Add Tooltip Item To Always Sell List",
 API_ADDTOALWAYSSELL_DOCS = "Toggles the item that has a tooltip showing on or off the Always Sell list.",
 API_ADDTONEVERSELL_TITLE = "Add Tooltip Item To Never Sell List",
@@ -234,7 +264,9 @@ API_OPENSETTINGS_DOCS = "Opens the Vendor Settings page.",
 API_OPENKEYBINDINGS_TITLE = "Open Keybindings",
 API_OPENKEYBINDINGS_DOCS = "Opens the Vendor Keybindings page.",
 API_OPENRULES_TITLE = "Open Rules",
-API_OPENRULES_DOCS = "Opens the main Vendor Rules interface.",
+API_OPENRULES_DOCS = "Opens the Vendor interface to the Rules tab.",
+API_OPENPROFILES_TITLE = "Open Profiles",
+API_OPENPROFILES_DOCS = "Opens the Vendor interface to the Profiles tab.",
 API_GETEVALUATIONSTATUS_TITLE = "Get Evaluation Status",
 API_GETEVALUATIONSTATUS_DOCS = "Returns current number of slots Vendor will take action, sell, delete, and their value.",
 API_GETPRICESTRING_TITLE = "Get Price String",
@@ -275,6 +307,7 @@ ALWAYS_DESTROY_LIST_NAME = "Destroy",
 ALWAYS_DESTROY_LIST_TOOLTIP = "Items that will be destroyed whenever the Destroy is run, provided they are not also matching a Sell or Keep rule.",
 RULES_DIALOG_HELP_TAB = "Help",
 RULES_DIALOG_EMPTY_LIST = "There are no items in this list. Drag an item onto this area to add it to this list.",
+CONFIG_DIALOG_CREATE_LIST = "Create",
 
 RULES_DIALOG_RULES_TAB = "Rules",
 RULES_TAB_HELPTEXT = "Rules are processed in the following order: Keep -> Sell -> Destroy|n"..
@@ -342,10 +375,14 @@ DATA_MIGRATION_SL_NOTICE = YELLOW_FONT_COLOR_CODE.. "Detected migration to Shado
 DATA_MIGRATION_ERROR = YELLOW_FONT_COLOR_CODE.. "Data migration error. Migration was detected, but no action taken. Please notify the addon authors here: https://www.curseforge.com/wow/addons/vendor/issues" ..FONT_COLOR_CODE_CLOSE,
 
 -- Edit Rule Dialog
-EDITRULE_CAPTION = "Rule Editor",
+EDITRULE_CAPTION = "Edit Rule",
+CREATERULE_CAPTION = "Create Rule",
 VIEWRULE_CAPTION = "View Rule",
 CREATE_BUTTON = "Create",
+EDITRULE_DEFAULT_NAME = "New Rule",
+EDITRULE_DEFAULT_COPY_NAME_FMT1 = "%s (Copy)",
 EDITRULE_NAME_LABEL = "Name:",
+EDITRULE_TYPE_LABEL = "Type:",
 EDITRULE_NAME_HELPTEXT = "type the name of your rule here",
 EDITRULE_FILTER_LABEL = "Filter:",
 EDITRULE_FILTER_HELPTEXT = "click here to filter the help",
@@ -378,7 +415,7 @@ EDITRULE_MIGRATE_RULE_TITLE ="Verify Rule",
 EDITRULE_MIGRATE_RULE_TEXT ="Rule requires review before it can be used. Please verify that it matches what you expect and save.",
 EDITRULE_UNHEALTHY_TEXT = "The following error occured while trying to evaulate this rule:|n%s",
 EDITRULE_EXTENSION_RULE = "Extension Rule",
-EDITRULE_EXTENSION_RULE_TEXT = "This rules comes from '%s' extension and cannot be edited or deleted. ",
+EDITRULE_EXTENSION_RULE_TEXT = "This rule comes from '%s' extension and cannot be edited or deleted. ",
 EDITRULE_SYSTEM_RULE = "Built-In Rule",
 EDITRULE_SYSTEM_RULE_TEXT = "This rules is a built-in Vendor rule and cannot be edited or deleted.",
 
@@ -397,11 +434,59 @@ RULEITEM_SOURCE = HIGHLIGHT_FONT_COLOR_CODE .. "Source: |r",
 
 -- List Pane / Dialog
 EDIT_LIST = "Edit",
-NEW_LIST = "New",
+NEW_LIST = "Create",
+COPY_LIST = "Copy",
+COPY_LIST_FMT1 = "%s (Copy)",
+LISTOOLTIP_LISTTYPE = "Type:",
+TOOLTIP_SYTEMLIST = "Built-In (profile specific)",
+TOOLTIP_CUSTOMLIST = "Custom",
 LISTDIALOG_CREATE_CAPTION = "New List",
 LISTDIALOG_EDIT_CAPTION = "Edit List",
 LISTDIALOG_NAME_LABEL = "Name:",
 LISTDIALOG_DESCR_LABEL = "Description:",
+LISTDIALOG_CONTENTS_LABEL = "Items:",
+LISTDIALOG_NAME_HELPTEXT = "type the name of your list here",
+LISTDIALOG_DESCR_HELPTEXT = "type the description of your list here",
+LISTDIALOG_ADDBYID_LABEL = "Enter Item ID to add directly, or drag item into the list.",
+LISTDIALOG_ADDBYID = "Add",
+LISTDIALOG_SYSTEM_INFO = "This is a built-in list and saved in the current profile, you can add and remove items bit you cannot modify the name or description",
+LISTDIALOG_ADDBYID_HELP = "Type the ID an item",
+EDITLIST_DUPLICATE_NAME_CAPTION = "Name already exists",
+EDITLIST_DUPLICATE_NAME_FMT1 = [[
+# Duplicate List Name
+
+A list already exists with the name '%s' please choose another.
+]],
+DELETE_LIST_CAPTION = "Delete List",
+DELETE_LIST_FMT1 = [[
+# Delete list %s?
+
+Deleting this list will remove it from all of your characters, and may affect any rules configured to use 
+the list. THIS ACTION CANNOT BE UNDONE!
+
+Are you sure?
+]],
+CONFIRM_DELETE_LIST = "Yes, DELETE",
+CANCEL_DELETE_LIST = "Cancel",
+
+DELETE_RULE_CAPTION = "Delete Rule",
+DELETE_RULE_FMT1 = [[
+# Delete rule %s?
+
+Deleting this rule will remove it from all of your characters. THIS ACTION CANNOT BE UNDONE!
+
+Are you sure?
+]],
+CONFIRM_DELETE_RULE = "Yes, DELETE",
+CANCEL_DELETE_RULE = "Cancel",
+DUPLICATE_RULE_NAME_CAPTION = "Existing Name",
+DUPLICATE_RULE_FMT1 = [[
+# Duplicate Rule Name
+
+There is already a rule with the name '%s' plase select another 
+and save the rule again.
+]],
+DUPLICATE_RULE_OK = "Close",
 
 -- ItemLists
 ITEMLIST_LOADING = "Loading...",
@@ -412,6 +497,7 @@ ITEMLIST_EMPTY_SELL_LIST = "Your always sell list is current empty you can drag 
 ITEMLIST_EMPTY_KEEP_LIST = "Your never sell list is current empty you can drag and drop items into this list to add them.",
 ITEMLIST_REMOVE_TOOLTIP = "Remove from list",
 ITEMLIST_UNSELLABLE = "%s is unsellable, adding to Destroy list instead.",
+ITEMLIST_EMPTY = "There are no items in this list yet. You can drag and drop items here to populate the list.",
 
 -- LDB Object
 LDB_BUTTON_BUTTON_LABEL = "Vendor: ",
@@ -450,7 +536,7 @@ HELP_QUALITY_TEXT = [[The quality of the item:
 5 = Legendary
 6 = Artifact
 7 = Heirloom
-8 = Wow Token<
+8 = Wow Token
 
 You can also use the following constants in your scripts: POOR, COMMON, UNCOMMON, RARE, EPIC, LEGENDARY, ARTIFACT, HEIRLOOM]],
 HELP_LEVEL_TEXT = [[The item level (iLvl) of the item.]],
@@ -512,11 +598,6 @@ HELP_ISBINDONEQUIP_NOTES =
     "If the item has yet to be picked up and it has a bind type of On-Equip, then we will always report it as true. If it is in your possession and Soulbound to you, then this will return false.",
 HELP_ISBINDONUSE_TEXT = [[True if this specific item is currently "Binds-when-used".]],
 HELP_ISBINDONUSE_NOTES = [[If the item is not yet in your possession, then it will always return true if its bind type is On-Use. If it is in your possession and Soulbound to you then this will return false.]],
-HELP_ISUNKNOWNAPPEARANCE_TEXT = [[True if the item you have not yet collected this item Appearance AND the item is not Bind-on-Pickup.]],
-HELP_ISUNKNOWNAPPEARANCE_NOTES =
-    "This will correctly detect items which are unknown appearances (i.e. transmogs you have not yet acquired). However, if the item is BoP, it will not be treated as an Unknown Appearance. This is because the moment you pick up the " ..
-    "item it will become a known appearance. Therefore, it is safe to sell and this inforamtion is irrelevant. This method is used to filter on Bind-on-Equip items that are Unknown Appearances and is generally useful for preventing " ..
-    "you from accidentally selling them. We have a built-in Keep rule for this purpose, so generally you won't need to use this.",
 HELP_ISTOY_TEXT = "True if the item is a toy.",
 HELP_ISCRAFTINGREAGENT_TEXT = "True if this specific item is a crafting reagent.",
 HELP_ISCRAFTINGREAGENT_NOTES = [[This is determined by the tooltip text. Note that if you drag a crafting reagent to the item box in a custom rule definition to read its properties, that item may incorrectly report as "false" but it will evaluate correctly with this property.]],
@@ -527,41 +608,190 @@ HELP_ISUNSELLABLE_NOTES = [[There are a few very rare exceptions where items may
 HELP_ISBAGANDSLOT_TEXT = [[True if the item has a defined bag and slot.]],
 HELP_BAG_TEXT = [[The bag ID of the item, or -1 if it is not in a bag and slot.]],
 HELP_SLOT_TEXT = [[The slot ID of the item, or -1 if it is not in a bag and slot.]],
+HELP_CRAFTEDQUALITY_TEXT = [[
+The Dragonflight Profession Crafted Quality of an item or reagent.
+
+   0 = No Quality
+   1 = 1 gem (bronze)
+   2 = 2 gems (silver)
+   3 = 3 gems, etc
+]],
 
 -- FUNCTION HELP
 
-HELP_PLAYERLEVEL = "Returns the current level of the player",
-HELP_PLAYERCLASS = "Returns the localized class name of the player. This should match any localized class names in your client, such as the tooltip.",
-HELP_ISALWAYSSELLITEM = "Returns the state of the item in the always sell list.  A return value of tue indicates it belongs to the list while false indicates it does not.",
-HELP_ISNEVERSELLITEM = "Returns the state of the item in the never sell list.  A return value of true indicates it belongs to the list false indicates it does not.",
-HELP_PLAYERITEMLEVEL = "Returns the average item level of players gear",
-
-HELP_ITEMQUALITY_ARGS = "qual [, qual1..qualN]",
-HELP_ITEMQUALITY_TEXT = "Determines the item quality",
-
-HELP_ITEMISFROMEXPANSION_ARGS = "xpack0 [, xpack1 .. xpackN]",
-HELP_ITEMISFROMEXPANSION_TEXT = "For items which are marked with and expansion this will compare it against the argeuments, they can either be the numeric identifier or one of the strings shown below.",
-
-HELP_ITEMTYPE_ARGS = "type0 [, type2...typeN]",
-HELP_ITEMTYPE_TEXT = "Checks the item type against the string/number passed in which represents the item type",
 HELP_ISEQUIPPED_TEXT = "True if the item is currently equipped. Will never be true for items in inventory.",
 
 HELP_ISINEQUIPMENTSET_ARGS = "[setName0 .. setNameN]",
-HELP_ISINEQUIPMENTSET_TEXT = 
-               "Checks if the item is a memmber of a Blizzard equipment set and returns true if found." ..
-               " If no arguments are provied then all of the chracters equipment sets are check, otherwise" ..
-               " this checks only the specified sets.",
-HELP_ISINEQUIPMENTSET_EXAMPLES =
-               "Any: " .. GREEN_FONT_COLOR_CODE .. "IsInEquipmentSet()" .. FONT_COLOR_CODE_CLOSE ..
-               "|nSpecific: " .. GREEN_FONT_COLOR_CODE .. "IsInEquipmentSet(\"Tank\")" .. FONT_COLOR_CODE_CLOSE,
+HELP_ISINEQUIPMENTSET_TEXT = [[
+Checks if the item is a memmber of a Blizzard equipment set and returns true if found.
+If no arguments are provied then all of the chracters equipment sets are check, otherwise
+this checks only the specified sets.
 
-HELP_TOOLTIPCONTAINS_ARGS = "text [, side, line]",
-HELP_TOOLTIPCONTAINS_TEXT = "Checks if specified text is in the item's tooltip." ..
-               " Which side of the tooltip (left or right), and a specific line to check are optional." ..
-               " If no line or side is specified, the entire tooltip will be checked.",
-HELP_TOOLTIPCONTAINS_EXAMPLES =
-               "Anywhere: " .. GREEN_FONT_COLOR_CODE .. "TooltipContains(\"Rogue\")" .. FONT_COLOR_CODE_CLOSE ..
-               "|nCheck left side line 1: " .. GREEN_FONT_COLOR_CODE .. "TooltipContains(\"Vanq\", \"left\", 1)" .. FONT_COLOR_CODE_CLOSE,
+## Examples
+
+Any equpment set:
+
+> IsInEquipmentSet()
+
+In your "Tank" equipment set.
+
+> IsInEquipmentSet("Tank")
+
+### Notes
+
+Equipment set matches by item ID, which means it can match different ilvl versions of the same item and all will be considered part of the equipment set. We use what Blizzard gives us.
+]],
+
+HELP_HASSTAT_TEXT = [[
+Checks if the item has a specific 'stat' or Attribute. These are attributes of the items specifically and not any random text.
+
+## Examples
+
+> HasStat("Speed")
+> HasStat("Mastery")
+]],
+
+HELP_TOOLTIPCONTAINS_TEXT = [[
+Usage: TooltipContains(text [, side, line])
+
+Checks if specified text is in the item's tooltip.
+
+## Side & Line
+
+Which side of the tooltip (left or right), and a specific line to check are optional.
+If no line or side is specified, the entire tooltip will be checked.
+
+## Examples
+
+> TooltipContains("Rogue")
+> TooltipContains("Fated Mythic")
+
+Check left side of tooltip, line 1 for "Vanq"
+
+> TooltipContains("Vanq", "left", 1)
+]],
+
+HELP_PLAYERLEVEL = [[
+Returns the current level of the player. This is so you can make rules that only work while leveling or at max level.
+]],
+
+HELP_PLAYERCLASS = [[
+Returns the English classname in all caps of the current player to make class-based rules.
+Names will be fully capitalized english class name with no spaces, such as "MAGE", "DEATHKNIGHT", "DEMONHUNTER", etc
+
+Example: PlayerClass() == "DEMONHUNTER"
+
+]],
+
+HELP_PLAYERITEMLEVEL = [[
+Returns the average item level of the player as it appears in the character panel, rounded down to nearest integer.
+]],
+
+HELP_PLAYERCLASSID = [[
+Returns the index of the current player's class to make class-based rules. Index
+is a faster and shorter lookup than name. Class Indexes:
+
+> 1 = Warrior
+> 2 = Paladin
+> 3 = Hunter
+> 4 = Rogue
+> 5 = Priest
+> 6 = Death Knight
+> 7 = Shaman
+> 8 = Mage
+> 9 = Warlock
+>10 = Monk
+>11 = Druid
+>12 = Demon Hunter
+>13 = Evoker
+
+]],
+
+HELP_PLAYERSPECIALIZATION = [[
+Returns the localized name of the player's current specialization. Ex: "Balance" for a Balance druid.
+]],
+
+HELP_PLAYERSPECIALIZATIONID = [[
+Returns the specialization ID of the player's current specialization.
+
+Spec ID Reference:
+
+> Death Knight: 250 = Blood, 251 = Frost, 252 = Unholy
+> Demon Hunter: 577 = Havoc, 581 = Vengeance
+> Druid: 102 = Balance, 103 = Feral, 104 = Guardian, 105 = Restoration
+> Evoker: 1467 = Devastation, 1468 = Preservation
+> Hunter: 253 = Beast Mastery, 254 = Marksmanship, 255 = Survival
+> Mage: 62 = Arcane, 63 = Fire, 64 = Frost
+> Monk: 268 = Brewmaster, 270 = Mistweaver, 269 = Windwalker
+> Paladin: 65 = Holy, 66 = Protection, 70 = Retribution
+> Priest: 256 = Discipline, 257 = Holy, 258 = Shadow
+> Rogue: 259 = Assassination, 260 = Outlaw, 261 = Subtlety
+> Shaman: 262 = Elemental, 263 = Enhancement, 264 = Restoration
+> Warlock: 265 = Affliction, 266 = Demonology, 267 = Destruction
+> Warrior: 71 = Arms, 72 = Fury, 73 = Protection
+
+## Examples
+
+True if the player is currently a Fury Warrior
+
+> PlayerSpecializationId() == 72
+
+]],
+
+HELP_TOTALITEMCOUNT_TEXT = [[
+Usage: TotalItemCount([includeBank, includeUses])
+
+Returns the total number of the item the player has in their bags.
+Parameters:
+  includeBank - set to 'true' if you want to include bank and reagent bank.
+  includeUses - set to 'true' if you want to count items with multiple uses multiple times.
+
+"includeUses" is for items with multiple charges per item on them, like Healthstones.
+
+## Examples
+
+More than 100 of this item in bags
+
+> TotalItemCount() > 100
+
+More than 100 of this item in bags and bank
+
+> TotalItemCount(true) > 500
+
+More than 50 uses of this item in bags only
+
+> TotalItemCount(false, true)
+
+More than 50 uses of this item across all bags and bank
+
+> TotalItemCount(true, true) > 50
+]],
+
+
+HELP_CURRENTEQUIPPEDLEVEL_TEXT = [[
+Usage: CurrentEquippedLevel()
+
+Returns the current item level of the equipped item in the same slot, or 0 if the item being evaluated is not an equippable item or doesn't have a meaningful equipment slot.
+This rule is for determining how an item compares to your currently equipped item in the same slot. For example, it can tell you
+if the item being evaluated is an item level upgrade over the current item you have equipped in that slot.
+
+For equipment that can be in multiple slots (such as rings) the number returned is the lower item level among the two items equipped.
+
+For dual wielding characters, one-handed weapons will check both weapons.
+
+For Fury warriors, two-handed weapons will check both weapons (to factor in Titan Grip).
+
+## Examples
+
+True if the item is equal to or higher item level than your current equipped item in that slot.
+
+> CurrentEquippedLevel() <= Level
+
+True if the item is within 13 item levels of your currently equipped ger (within one tier)
+
+> CurrentEquippedLevel() <= (Level + 13)
+
+]],
 
 }) -- END OF LOCALIZATION TABLE
 
