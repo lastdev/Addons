@@ -15,7 +15,7 @@ local faction = UnitFactionGroup("player")
 local Debug
 do
 	local TextDump = LibStub("LibTextDump-1.0")
-	local debuggable = GetAddOnMetadata(myname, "Version") == 'v2022.24'
+	local debuggable = GetAddOnMetadata(myname, "Version") == 'v2022.25'
 	local _window
 	local function GetDebugWindow()
 		if not _window then
@@ -185,7 +185,9 @@ do
 		for source, data in pairs(addon.datasources) do
 			if addon.db.global.datasources[source] then
 				for mobid, mobdata in pairs(data) do
-					self:NameForMob(mobid) -- prime cache
+					if not addon.debuggable then
+						self:NameForMob(mobid) -- prime cache
+					end
 
 					mobdata.id = mobid
 					mobdata.source = source

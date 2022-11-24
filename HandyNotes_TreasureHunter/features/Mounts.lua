@@ -2,7 +2,9 @@ local myname, ns = ...
 
 -- mount runners
 
-local pathrunner = { npc=50883, loot={116773},} -- Pathrunner
+local mount = ns.nodeMaker{ atlas="VignetteKillElite", scale=1.2, }
+
+local pathrunner = mount{ npc=50883, loot={116773},} -- Pathrunner
 ns.RegisterPoints(539, {
     [38803640] = pathrunner,
     [42603080] = pathrunner,
@@ -12,7 +14,7 @@ ns.RegisterPoints(539, {
     [56205240] = pathrunner,
 })
 
-local poundfist = { npc=50985, loot={116792},} -- Poundfist
+local poundfist = mount{ npc=50985, loot={116792},} -- Poundfist
 ns.RegisterPoints(543, {
     [40602580] = poundfist,
     [43205550] = poundfist,
@@ -21,8 +23,8 @@ ns.RegisterPoints(543, {
     [51404310] = poundfist,
 })
 
-local nakk = { npc=50990, loot={116659},} -- Nakk the Thunderer
-local lukhok = { npc=50981, loot={116661},} -- Luk'hok
+local nakk = mount{ npc=50990, loot={116659},} -- Nakk the Thunderer
+local lukhok = mount{ npc=50981, loot={116661},} -- Luk'hok
 ns.RegisterPoints(550, {
     [48803420] = nakk,
     [54403540] = nakk,
@@ -37,7 +39,7 @@ ns.RegisterPoints(550, {
     [83806480] = lukhok,
 })
 
-local gorok = { npc=50992, loot={116674},} -- Gorok
+local gorok = mount{ npc=50992, loot={116674},} -- Gorok
 ns.RegisterPoints(525, {
     [22406620] = gorok,
     [51205020] = gorok,
@@ -46,7 +48,7 @@ ns.RegisterPoints(525, {
     [64605200] = gorok,
 })
 
-local silthide = { npc=51015, loot={116767},} -- Silthide
+local silthide = mount{ npc=51015, loot={116767},} -- Silthide
 ns.RegisterPoints(535, {
     [51408120] = silthide,
     [61803120] = silthide,
@@ -60,7 +62,7 @@ ns.RegisterPoints(535, {
 local voidtalon = {
     quest=37864,
     loot={{121815,mount=682,}},
-    atlas="vehicle-templeofkotmogu-purpleball", scale=1.2,
+    atlas="vehicle-templeofkotmogu-purpleball", scale=1.2, minimap=true,
     note="Rarely spawning Edge of Reality portal",
 }
 ns.RegisterPoints(525, { -- FrostfireRidge

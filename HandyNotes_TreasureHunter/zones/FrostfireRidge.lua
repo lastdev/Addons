@@ -51,6 +51,7 @@ ns.RegisterPoints(525, { -- FrostfireRidge
 }, {
     achievement=9728,
     hide_quest=34557,
+    minimap=true,
 })
 -- All these Bladespire ones are available for Alliance, but Horde have to complete Moving In (33657) first
 ns.RegisterPoints(526, { -- Turgall's Den: Bladespire Citadel
@@ -60,6 +61,7 @@ ns.RegisterPoints(526, { -- Turgall's Den: Bladespire Citadel
 }, {
     achievement=9728,
     hide_quest=34557,
+    minimap=true,
 })
 ns.RegisterPoints(527, { -- Turgall's Den: Bladespite Courtyard
     [36502900]={quest=35347, currency=824, label="Ogre Booty"},
@@ -72,12 +74,14 @@ ns.RegisterPoints(527, { -- Turgall's Den: Bladespite Courtyard
 }, {
     achievement=9728,
     hide_quest=34557,
+    minimap=true,
 })
 ns.RegisterPoints(528, { -- Turgall's Den: Bladespite Throne
     [31706640]={quest=35367, loot={113108}, label="Gorr'thogg's Personal Reserve"},
 }, {
     achievement=9728,
     hide_quest=34557,
+    minimap=true,
 })
 
 ns.RegisterPoints(525, { -- FrostfireRidge

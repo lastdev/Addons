@@ -49,18 +49,22 @@ ns.RegisterPoints(539, { -- ShadowmoonValleyDR
 }, {
     achievement=9728,
     hide_quest=36464,
+    minimap=true,
 })
 ns.RegisterPoints(540, { -- BloodthornCave
     [55544974]={quest=33572, loot={113373}, label="Rotting Basket"},
 }, {
     achievement=9728,
     hide_quest=36464,
+    minimap=true,
 })
 
 ns.RegisterPoints(539, { -- ShadowmoonValleyDR
     [51803550]={ quest=33037, label="False-Bottomed Jar", note="Gold", group="junk", },
     -- followers
     [42804040]={ quest=35614, follower=179, npc=74741, faction="Alliance", note="Do the crystal defense event here to get him", }, -- Artificer Romuul
+}, {
+    minimap=true,
 })
 
 -- Rares

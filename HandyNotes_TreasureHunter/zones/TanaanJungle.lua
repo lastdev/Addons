@@ -63,6 +63,7 @@ ns.RegisterPoints(534, { -- TanaanJungle
 }, {
     achievement=10262,
     hide_quest=39463,
+    minimap=true,
 })
 
 -- Rares

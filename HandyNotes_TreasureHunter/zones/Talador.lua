@@ -46,12 +46,14 @@ ns.RegisterPoints(535, { -- Talador
 }, {
     achievement=9728,
     hide_quest=36466,
+    minimap=true,
 })
 ns.RegisterPoints(537, { -- TombofSouls
     [67602320]={quest=34671, npc=79543, loot={112370}}, -- Shirzir
 }, {
     achievement=9728,
     hide_quest=36466,
+    minimap=true,
 })
 
 ns.RegisterPoints(535, { -- Talador
@@ -63,33 +65,20 @@ ns.RegisterPoints(535, { -- Talador
     [57405120]={quest=36519, faction="Alliance", follower=207, note="Complete her quest"}, -- Defender Illona
     [58005300]={quest=36518, faction="Horde", follower=207, note="Complete her quest"}, -- Aeda Brightdawn
     [56802600]={quest=36522, follower=208, note="Complete his quest. Find him again outside your garrison."}, -- Ahm
+}, {
+    minimap=true,
 })
 
 -- Rares
 
 ns.RegisterPoints(535, { -- Talador
     [22207400]={quest=36919, npc=85572, loot={120436}, note="In a crate"}, -- Grrbrrgle
-    [30502640]={quest=37345, npc=82920, loot={119388}}, -- Lord Korinak
-    [31404750]={quest=37344, npc=87668, loot={119375, {119170, pet=1576}}, note="3 people needed to stand on the symbols"}, -- Orumo the Observer
     [31806380]={quest=34189, npc=77719, loot={{116113, toy=true}}}, -- Glimmerwing
-    [33803780]={quest=37346, npc=82942, loot={119352}}, -- Lady Demlash
     [34205700]={quest=34221, npc=77795, loot={{113670, toy=true}}}, -- Echo of Murmur
-    [36804100]={quest=37350, npc=88436, loot={119383}}, -- Vigilant Paarthos
-    [37203760]={quest=37348, npc=82988, loot={119394}}, -- Kurlosh Doomfang
     [37607040]={quest=34165, npc=77620, loot={116123}}, -- Cro Fleshrender
-    [37802140]={quest=37342, npc=88494, loot={119385}, achievement=9633}, -- Legion Vanguard
-    [38001460]={quest=37343, npc=82922, loot={119435, 119371}, achievement=9633}, -- Xothear the Destroyer
-    [39004960]={quest=37349, npc=82998, loot={119353}}, -- Matron of Sin
-    [41004200]={quest=37347, npc=82930, loot={119393}}, -- Shadowflame Terrorwalker
     [41506020]={quest=34671, npc=79543, loot={112370}}, -- Shirzir
-    [44003800]={quest=37339, npc=87597, loot={119413}, achievement=9633}, -- Bombardier Gu'gok
-    [46002740]={quest=37337, npc=88071, loot={119350}, achievement=9633, currency=823}, -- War Council: Strategist Ankor, Archmagus Tekar, Soulbinder Naylana
     [46005500]={quest=34145, npc=77614, loot={113288, 113287}}, -- Frenzied Golem
-    [46603520]={quest=37338, npc=88043, loot={119378}, achievement=9633}, -- Avatar of Socrethar
-    [47603900]={quest=37340, npc=83019, loot={119402}, achievement=9633}, -- Gug'tol
-    [48002500]={quest=37312, npc=83008, loot={119403}, achievement=9633}, -- Haakun the All-Consuming
     [49009200]={quest=34208, npc=77784, loot={116070}}, -- Lo'marg Jawcrusher
-    [50203520]={quest=37341, npc=82992, loot={119386}, achievement=9633}, -- Felfire Consort
     [50808380]={quest=35018, npc=80204, loot={112373}}, -- Felbark
     [53802580]={quest=34135, npc=77529, loot={112263}}, -- Yazheera the Incinerator
     [53909100]={quest=34668, npc=79485, loot={116110}}, -- Talonpriest Zorkra
@@ -108,4 +97,27 @@ ns.RegisterPoints(535, { -- Talador
     [69603340]={quest=34205, npc=77776, loot={112261}}, -- Wandering Vindicator
     [78005040]={quest=34167, npc=77626, loot={112369}}, -- Hen-Mother Hami
     [86403040]={quest=34859, npc=79334, loot={116077}}, -- No'losh
+})
+ns.RegisterPoints(535, { -- Talador
+    [37802140]={criteria=26579, quest=37342, npc=88494, loot={119385}}, -- Legion Vanguard
+    [38001460]={criteria=26580, quest=37343, npc=82922, loot={119435, 119371}}, -- Xothear the Destroyer
+    [44003800]={criteria=26465, quest=37339, npc=87597, loot={119413}}, -- Bombardier Gu'gok
+    [46002740]={criteria=26470, quest=37337, npc=88071, loot={119350}, currency=823}, -- War Council: Strategist Ankor, Archmagus Tekar, Soulbinder Naylana
+    [46603520]={criteria=26469, quest=37338, npc=88043, loot={119378}}, -- Avatar of Socrethar
+    [47603900]={criteria=26466, quest=37340, npc=83019, loot={119402}}, -- Gug'tol
+    [48002500]={criteria=26467, quest=37312, npc=83008, loot={119403}}, -- Haakun the All-Consuming
+    [50203520]={criteria=26468, quest=37341, npc=82992, loot={119386}}, -- Felfire Consort
+}, {
+    achievement=9633, -- Cut off the Head
+})
+ns.RegisterPoints(535, { -- Talador
+    [31404750]={criteria=26476, quest=37344, npc=87668, loot={119375, {119170, pet=1576}}, note="5 people needed to stand on the symbols. You *can* solo it by repeatedly teleporting off the symbols and running back to activate another"}, -- Orumo the Observer
+    [30502640]={criteria=26477, quest=37345, npc=82920, loot={119388}}, -- Lord Korinak
+    [33803780]={criteria=26478, quest=37346, npc=82942, loot={119352}}, -- Lady Demlash
+    [37203760]={criteria=26480, quest=37348, npc=82988, loot={119394}}, -- Kurlosh Doomfang
+    [36804100]={criteria=26582, quest=37350, npc=88436, loot={119383}}, -- Vigilant Paarthos
+    [41004200]={criteria=26479, quest=37347, npc=82930, loot={119393}}, -- Shadowflame Terrorwalker
+    [39004960]={criteria=26481, quest=37349, npc=82998, loot={119353}}, -- Matron of Sin
+}, {
+    achievement=9638, -- Heralds of the Legion
 })

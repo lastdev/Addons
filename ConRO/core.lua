@@ -2086,7 +2086,7 @@ function ConRO:DisableRotation()
 	if not self.rotationEnabled then
 		return;
 	end
---self:Print(self.Colors.Success .. 'Disabled Rotation.');
+	--self:Print(self.Colors.Success .. 'Disabled Rotation.');
 	self:DisableRotationTimer();
 
 	self:DestroyDamageOverlays();
@@ -2105,7 +2105,7 @@ function ConRO:DisableDefense()
 	if not self.defenseEnabled then
 		return;
 	end
-
+--	self:Print(self.Colors.Success .. 'Disabled Defense.');
 	self:DisableDefenseTimer();
 
 	self:DestroyDefenseOverlays();
@@ -2128,7 +2128,7 @@ end
 
 function ConRO:OnEnable()
 	self:RegisterEvent('PLAYER_TARGET_CHANGED');
-	self:RegisterEvent('PLAYER_TALENT_UPDATE');
+	--self:RegisterEvent('PLAYER_TALENT_UPDATE');
 	self:RegisterEvent('TRAIT_CONFIG_UPDATED');
 	self:RegisterEvent('ACTIONBAR_SLOT_CHANGED');
 	self:RegisterEvent('PLAYER_REGEN_DISABLED');
@@ -2157,7 +2157,7 @@ function ConRO:OnEnable()
 	self:Print(self.Colors.Info .. 'Initialized');
 end
 
-function ConRO:PLAYER_TALENT_UPDATE()
+--[[function ConRO:PLAYER_TALENT_UPDATE()
 --self:Print(self.Colors.Success .. 'Talent');
 	self:DisableRotation();
 	self:DisableDefense();
@@ -2178,15 +2178,16 @@ function ConRO:PLAYER_TALENT_UPDATE()
 		ConRONextWindow:Hide();
 		ConRONext2Window:Hide();
 	end
-end
+end]]
 
 function ConRO:TRAIT_CONFIG_UPDATED()
---self:Print(self.Colors.Success .. 'Talent');
+self:Print(self.Colors.Success .. 'Talent');
 	self:DisableRotation();
 	self:DisableDefense();
 	self:LoadModule();
 	self:EnableRotation();
 	self:EnableDefense();
+	self:UpdateButtonGlow();
 
 	if ConRO:HealSpec() then
 		ConROWindow:Hide();
@@ -2319,6 +2320,7 @@ function ConRO:PLAYER_TARGET_CHANGED()
 			self:DestroyInterruptOverlays();
 			self:DestroyPurgableOverlays();
 			self:InvokeNextSpell();
+			self:InvokeNextDef();
 		end
 
 		if ConRO.db.profile.enableWindow and (ConRO.db.profile.combatWindow or ConRO:HealSpec()) and ConRO:TarHostile() then

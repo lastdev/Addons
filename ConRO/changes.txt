@@ -1,10 +1,10 @@
-lightweight tag 2a35e3f66723eccd2d4087fc218e862fcc93b363 v10.0.1-release
+lightweight tag 9aa8734d1e9305bfc7d3ccf5b7743808d420da12 v10.0.2-release
 Author:	Vae <emuha17@gmail.com>
-Date:	Tue Nov 22 17:37:47 2022 -1000
+Date:	Wed Nov 23 13:05:37 2022 -1000
 
-commit 2a35e3f66723eccd2d4087fc218e862fcc93b363
+commit 9aa8734d1e9305bfc7d3ccf5b7743808d420da12
 Author: Vae <emuha17@gmail.com>
-Date:   Tue Nov 22 17:37:47 2022 -1000
+Date:   Wed Nov 23 13:05:37 2022 -1000
 
-    Update TOC
+    Fixed Zoning talent issue --I hope
 

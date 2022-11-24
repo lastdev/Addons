@@ -29,6 +29,7 @@ local mirror = {
     spell=TIME_LOST,
     atlas="MagePortalAlliance", -- legioninvasion-map-icon-portal-large?
     scale=1.2,
+    minimap=true,
     group="evershiftingmirror",
     OnClick=function(point, button, uiMapID, coord)
         if not point.link then return end

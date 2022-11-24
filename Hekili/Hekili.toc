@@ -1,5 +1,5 @@
 ## Interface: 100002
-## Version: v10.0.2-1.8.1
+## Version: v10.0.2-1.8.2
 ## Title: Hekili
 ## Author: Hekili
 ## Notes: Priority helper for many DPS and tanking specializations, based on SimulationCraft action lists.

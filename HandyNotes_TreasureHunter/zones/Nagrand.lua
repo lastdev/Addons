@@ -68,6 +68,7 @@ ns.RegisterPoints(550, { -- NagrandDraenor
 }, {
     achievement=9728,
     hide_quest=36468,
+    minimap=true,
 })
 --[[
 -- TODO: need the name
@@ -89,23 +90,17 @@ ns.RegisterPoints(550, { -- NagrandDraenor
     [40307610]={quest=35596, follower=170, label="Kill Bolkar nearby to get the key"}, -- Goldmane
     [46401600]={quest=34466, follower=190, label="Mysterious Staff", note="Collect all the Mysterious items across Draenor"}, -- Archmage Vargoth
     [67205600]={quest=36711, npc=82746, follower=209, note="Rebuild his fishing rod by gathering the pieces @ 38.4,49.3, 65.8,61.1, 85.4,38.7"}, -- Abu'gar
+}, {
+    minimap=true,
 })
 
 -- Rares
 
 ns.RegisterPoints(550, { -- NagrandDraenor
     [34607700]={quest=34727, npc=79725, loot={{118244, toy=true}, 116809}}, -- Captain Ironbeard
-    [38001960]={quest=37397, npc=87846, loot={119389}, achievement=9571}, -- Pit Slayer
-    [38602240]={quest=37395, npc=87788, loot={119405}, achievement=9571}, -- Durg Spinecrusher
-    [40001600]={quest=37396, npc=87837, loot={119370}, achievement=9571}, -- Bonebreaker
     [42207860]={quest=34725, npc=80122, loot={116798}, currency=824, note="In a cave"}, -- Gaz'orda
     [42804920]={quest=35875, npc=83409, loot={116765}}, -- Ophiis
-    [43003640]={quest=37400, npc=87234, loot={119380}, achievement=9541, label="{npc:87234:Brutag Grimblade}"}, -- Brutag Grimblade
-    [42603620]={quest={37472, 37473}, achievement=9541, label="Secret Meeting", note="Find the {item:120290} and use {npc:87361}, which will summon {npc:87239} and {npc:87344}"}, -- Secret Meeting: Krahl Deadeye, Gortag Steelgrip
-    -- [43803440]={quest=37473, npc=87239, achievement=9541}, -- Krahl Deadeye
-    -- [45003640]={quest=37472, npc=87344, achievement=9541}, -- Gortag Steelgrip
     [45801520]={quest=36229, npc=84435, loot={118690}}, -- Mr. Pinchy Sr.
-    [45803480]={quest=37399, npc=86959, loot={119355}, achievement=9541, label="{npc:86959:Karosh Blackwind}"}, -- Karosh Blackwind
     [47607080]={quest=35865, npc=83401, loot={{116815, pet=1524}}}, -- Netherspawn
     [52009000]={quest=37408, npc=80370, note="No loot"}, -- Lernaea
     [52205580]={quest=35715, npc=82764, loot={118246}}, -- Gar'lua
@@ -126,7 +121,16 @@ ns.RegisterPoints(550, { -- NagrandDraenor
     [77006400]={quest=35735, npc=82826, loot={116823}, note="In a cave, use the switch"}, -- Berserk T-300 Series Mark II
     [80603040]={quest=35923, npc=83603, loot={118245}}, -- Hunter Blacktooth
     [81206000]={quest=35932, npc=83643, loot={116796}}, -- Malroc Stonesunder
-    [81406040]={npc=81330, loot={{120276, toy=true}}}, -- Warleader Tome
+    [81406040]={ -- Warleader Tome
+        npc=81330, loot={{120276, toy=true}},
+        route={
+            81406040, 79606620, 77406780, 71806800, 67007300, 63607220, 59806700, 60406100, 60005700, 56805300,
+            53405200, 51404970, 50204480, 48804160, 43204180, 40803860, 44403100, 45602140, 50001900, 55202280,
+            58902420, 62702060, 64102550, 62603040, 63603480, 67804020, 71903870, 76804260, 82104990, 80905550,
+            loop=true, r=0.8, g=0, b=0.8,
+        },
+        note="Spawns here, and patrols clockwise around the entire zone with a dozen adds"
+    },
     [82607620]={quest=34645, npc=79024, loot={116805}}, -- Warmaster Blugthol
     [84603660]={quest=36159, npc=84263, loot={118689}}, -- Graveltooth
     [84605340]={quest=35778, npc=82899, loot={116832}}, -- Ancient Blademaster
@@ -147,4 +151,20 @@ ns.RegisterPoints(550, { -- NagrandDraenor
     [60003800]={quest=37222, npc=86729, loot={118657}}, -- Direhoof
     [34005100]={quest=37224, npc=87666, loot={118659}}, -- Mu'gra
     [37003800]={quest=37520, npc=88951, loot={120172}}, -- Vileclaw
+})
+ns.RegisterPoints(550, { -- NagrandDraenor
+    [43003640]={criteria=26141, quest=37400, npc=87234, loot={119380}, label="{npc:87234:Brutag Grimblade}"}, -- Brutag Grimblade
+    [45803480]={criteria=26140, quest=37399, npc=86959, loot={119355}, label="{npc:86959:Karosh Blackwind}"}, -- Karosh Blackwind
+    [42603620]={criteria={26142, 26143}, quest={37472, 37473}, npc=87239, label="Secret Meeting", note="Find the {item:120290} and use {npc:87361}, which will summon {npc:87239} and {npc:87344}"}, -- Secret Meeting: Krahl Deadeye, Gortag Steelgrip
+    -- [43803440]={criteria=26142, quest=37473, npc=87239, achievement=9541}, -- Krahl Deadeye
+    -- [45003640]={criteria=26143, quest=37472, npc=87344, achievement=9541}, -- Gortag Steelgrip
+}, {
+    achievement=9541,
+})
+ns.RegisterPoints(550, { -- NagrandDraenor
+    [38001960]={criteria=26320, quest=37397, npc=87846, loot={119389}}, -- Pit Slayer
+    [38602240]={criteria=26318, quest=37395, npc=87788, loot={119405}}, -- Durg Spinecrusher
+    [40001600]={criteria=26319, quest=37396, npc=87837, loot={119370}}, -- Bonebreaker
+}, {
+    achievement=9571,
 })

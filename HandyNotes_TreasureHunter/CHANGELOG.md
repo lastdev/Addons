@@ -1,5 +1,16 @@
 # Changelog
 
+## Changed in v33
+
+* Various achievement mobs have their achievement-criteria added for better completion-checking
+* Give the mount-dropping rares a special icon
+* Various things should always show on the minimap:
+  * Ever-Shifting Mirror portals
+  * Voidtalon portals
+  * All treasures
+* Warleader Tome's route in Nagrand is now shown
+* Orumo's note now mentions the apparent workaround to its summoning mechanic
+
 ## Changed in v32
 
 * Don't show the Ever-Shifting Mirror portals for people who don't have the toy
