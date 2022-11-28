@@ -1,24 +1,10 @@
-commit 81ac8fb49698fe811016c47b6666938508e510a8
+lightweight tag ec1e61c59a657a9062bd1c0c0d6c7ba32f79ee7e v10.0.1
+Author:	Vae <emuha17@gmail.com>
+Date:	Sun Nov 27 18:29:11 2022 -1000
+
+commit ec1e61c59a657a9062bd1c0c0d6c7ba32f79ee7e
 Author: Vae <emuha17@gmail.com>
-Date:   Sat Nov 19 23:42:42 2022 -1000
+Date:   Sun Nov 27 18:29:11 2022 -1000
 
-    Update ConRO_Evoker.toc
-
-commit e173c6297489e47021477812f81686047a8cbcff
-Author: Vae <emuha17@gmail.com>
-Date:   Tue Nov 15 22:04:10 2022 -1000
-
-    Library update
-
-commit b8348390e7055b91036176f14e9ebf95e2feff34
-Author: Vae <emuha17@gmail.com>
-Date:   Tue Nov 15 19:02:17 2022 -1000
-
-    Cleaup
-
-commit ea25e4d8547045538178ab94f8a8ce62f342464f
-Author: Vae <emuha17@gmail.com>
-Date:   Tue Nov 15 14:43:13 2022 -1000
-
-    Initial Git create
+    Added Devastation rotation
 

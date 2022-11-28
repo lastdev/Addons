@@ -621,9 +621,9 @@ function ConRO.Priest.Shadow(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 
 	ConRO:AbilityRaidBuffs(_PowerWordFortitude, _PowerWordFortitude_RDY and not ConRO:RaidBuff(Buff.PowerWordFortitude));
 
-	ConRO:AbilityBurst(_VoidEruption, _VoidEruption_RDY and not _Voidform_FORM and ConRO:BurstMode(_VoidEruption));
-	ConRO:AbilityBurst(_PowerInfusion, _PowerInfusion_RDY and not _Voidform_FORM and _Insanity >= 40 and ConRO:BurstMode(_PowerInfusion));
-	ConRO:AbilityBurst(_VoidTorrent, _VoidTorrent_RDY and not _Voidform_FORM and _VampiricTouch_DEBUFF and _ShadowWordPain_DEBUFF and ConRO:BurstMode(_VoidTorrent));
+	ConRO:AbilityBurst(_VoidEruption, _VoidEruption_RDY and not _Voidform_BUFF and ConRO:BurstMode(_VoidEruption));
+	ConRO:AbilityBurst(_PowerInfusion, _PowerInfusion_RDY and not _Voidform_BUFF and _Insanity >= 40 and ConRO:BurstMode(_PowerInfusion));
+	ConRO:AbilityBurst(_VoidTorrent, _VoidTorrent_RDY and not _Voidform_BUFF and _VampiricTouch_DEBUFF and _ShadowWordPain_DEBUFF and ConRO:BurstMode(_VoidTorrent));
 	ConRO:AbilityBurst(_Damnation, _Damnation_RDY and not _VampiricTouch_DEBUFF and not _ShadowWordPain_DEBUFF and currentSpell ~= _VampiricTouch and ConRO:BurstMode(_Damnation));
 
 	ConRO:AbilityBurst(ids.Glyph.Sha, _Shadowfiend_ID == ids.Glyph.Sha and _Shadowfiend_RDY and not tChosen[Ability.Mindbender.talentID] and ConRO:BurstMode(_Shadowfiend));
@@ -631,7 +631,7 @@ function ConRO.Priest.Shadow(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 	ConRO:AbilityBurst(ids.Glyph.Lightspawn, _Shadowfiend_ID == ids.Glyph.Lightspawn and _Shadowfiend_RDY and not tChosen[Ability.Mindbender.talentID] and ConRO:BurstMode(_Shadowfiend));
 	ConRO:AbilityBurst(_Shadowfiend, _Shadowfiend_ID == _Shadowfiend and _Shadowfiend_RDY and not tChosen[Ability.Mindbender.talentID] and ConRO:BurstMode(_Shadowfiend));
 	ConRO:AbilityBurst(_Mindbender, _Mindbender_RDY and ConRO:BurstMode(_Mindbender, timeShift));
-	ConRO:AbilityBurst(_Mindgames, _Mindgames_RDY and (_Voidform_FORM or (_VampiricTouch_DEBUFF and _ShadowWordPain_DEBUFF and _DevouringPlague_DEBUFF)) and ConRO:BurstMode(_Mindgames));
+	ConRO:AbilityBurst(_Mindgames, _Mindgames_RDY and (_Voidform_BUFF or (_VampiricTouch_DEBUFF and _ShadowWordPain_DEBUFF and _DevouringPlague_DEBUFF)) and ConRO:BurstMode(_Mindgames));
 
 --Warnings
 
@@ -640,7 +640,7 @@ function ConRO.Priest.Shadow(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 		tinsert(ConRO.SuggestedSpells, _VoidTorrent);
 	end
 
-	if _Shadowform_RDY and not _Shadowform_FORM and not _Voidform_FORM then
+	if _Shadowform_RDY and not _Shadowform_FORM and not _Voidform_BUFF then
 		tinsert(ConRO.SuggestedSpells, _Shadowform);
 	end
 
@@ -688,7 +688,7 @@ function ConRO.Priest.Shadow(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 		end
 	end
 
-	if _VoidEruption_RDY and currentSpell ~= _VoidEruption and not _Voidform_FORM and _MindBlast_CHARGE >= _MindBlast_MCHARGE and ConRO:FullMode(_VoidEruption) then
+	if _VoidEruption_RDY and currentSpell ~= _VoidEruption and not _Voidform_BUFF and _MindBlast_CHARGE >= _MindBlast_MCHARGE and ConRO:FullMode(_VoidEruption) then
 		tinsert(ConRO.SuggestedSpells, _VoidEruption);
 	end
 

@@ -1,11 +1,10 @@
-lightweight tag 6eb18591810728e89a622f1e7baa7acc46a35de4 v10.0.5
+lightweight tag 7d6c6761fb7a8ccdee5cf2ce7db67c7513b1720d v10.0.6
 Author:	Vae <emuha17@gmail.com>
-Date:	Sun Nov 27 09:17:37 2022 -1000
+Date:	Sun Nov 27 18:31:42 2022 -1000
 
-commit 6eb18591810728e89a622f1e7baa7acc46a35de4
+commit 7d6c6761fb7a8ccdee5cf2ce7db67c7513b1720d
 Author: Vae <emuha17@gmail.com>
-Date:   Sun Nov 27 09:17:37 2022 -1000
+Date:   Sun Nov 27 18:31:42 2022 -1000
 
-    Typo in Interrupt
-    Updated Totem function for shaman
+    Evoker class level adjust
 

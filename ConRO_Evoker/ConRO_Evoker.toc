@@ -1,5 +1,5 @@
 ## Title:-|cffFFFFFFConRO|r- |cff33937FEvoker|r
-## Version: 10.0.0
+## Version: 10.0.1
 ## Author: Vae
 ## Interface: 10002
 ## Dependencies: ConRO

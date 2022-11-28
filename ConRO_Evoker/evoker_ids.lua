@@ -31,6 +31,7 @@ local ConRO_Evoker, ids = ...;
 		EmeraldBlossom = {spellID = 355913},
 		Expunge = {spellID = 365585, talentID = 87716},
 		FireBreath = {spellID = 357208},
+			FireBreath_FoM = {spellID = 382266, talentID = 87656},
 		FuryoftheAspects = {spellID = 390386},
 		Hover = {spellID = 358267},
 		Landslide = {spellID = 358385, talentID = 87708},
@@ -51,6 +52,7 @@ local ConRO_Evoker, ids = ...;
 	--Devastation
 		Dragonrage = {spellID = 375087, talentID = 87665},
 		EternitySurge = {spellID = 359073, talentID = 87647},
+			EternitySurge_FoM = {spellID = 382411, talentID = 87656},
 		Firestorm = {spellID = 368847, talentID = 87659},
 		Pyre = {spellID = 357211, talentID = 87669},
 		ShatteringStar = {spellID = 370452, talentID = 87641},
@@ -146,7 +148,9 @@ local ConRO_Evoker, ids = ...;
 
 	}
 	ids.Dev_Buff = {
-
+		Burnout = 375802,
+		Dragonrage = 375087,
+		EssenceBurst = 359618,
 	}
 	ids.Dev_Debuff = {
 

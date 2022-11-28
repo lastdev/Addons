@@ -15,7 +15,12 @@ end
 function ConRO:CheckTalents()
 	self.PlayerTalents = {};
 	local _Player_Level = UnitLevel("player");
-	if _Player_Level >= 10 then
+	local _, _, classId = UnitClass('player');
+	local talentLevel = 10;
+	if classId == 13 then
+		talentLevel = 60;
+	end
+	if _Player_Level >= talentLevel then
 		wipe(self.PlayerTalents)
 		local specID = PlayerUtil.GetCurrentSpecID();
 		local configID = C_ClassTalents.GetLastSelectedSavedConfigID(specID) or C_ClassTalents.GetActiveConfigID();
@@ -185,6 +190,7 @@ ConRO.EnergyList = {
 	[13] = 'Insanity',
 	[16] = 'ArcaneCharges',
 	[17] = 'Fury',
+	[20] = 'Essence',
 }
 
 function ConRO:PlayerPower(_EnergyType)
