@@ -26,10 +26,7 @@ this.defaults = {
     transmogTrack = true,
     transmogUnobtainable = false,
     transmogAllSources = false,
-    showWaypoints = true,
     showCollection = true,
-    waypointScale = 2,
-    waypointOpacity = 100,
   },
 }
 
@@ -55,47 +52,11 @@ this.options = {
     Addon:Refresh()
   end,
   args = {
-    waypoints = {
-      type = "group",
-      name = t["config_waypoint"],
-      inline = true,
-      order = 10,
-      args = {
-        showWaypoints = {
-          name = t['config_name_waypoints_show'],
-          desc = t['config_description_waypoints_show'],
-          width = 'full',
-          type = 'toggle',
-          arg = 'showWaypoints',
-          order = 10,
-        },
-        waypointScale = {
-          type = 'range',
-          name = t['config_scale'],
-          desc = t['config_description_scale'],
-          min = 1,
-          max = 3,
-          step = 0.25,
-          arg = 'waypointScale',
-          order = 20,
-        },
-        waypointOpacity = {
-          type = 'range',
-          name = t['config_opacity'],
-          desc = t['config_description_opacity'],
-          min = 0,
-          max = 100,
-          step = 1,
-          arg = 'waypointOpacity',
-          order = 30,
-        },
-      },
-    },
     tracking = {
       type = "group",
       name = t["config_tracking"],
       inline = true,
-      order = 20,
+      order = 10,
       args = {
         showCollection = {
           name = t['config_name_collection_show'],
@@ -171,7 +132,7 @@ this.options = {
       func = function() Cache:invalidate() end,
       confirm = true,
       arg = 'resetCache',
-      order = 30,
+      order = 20,
     },
   },
 }

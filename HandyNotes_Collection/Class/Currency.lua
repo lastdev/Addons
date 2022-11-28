@@ -24,7 +24,7 @@ local Currency = {}
 function Currency:getLink(currencyId)
   local link = Cache:get(currencyId, 'currencyLink')
   if (link == nil) then
-    local currency = API:getCurrecyInfo(currencyId)
+    local currency = API:getCurrencyInfo(currencyId)
 
     link = '|T' .. currency.icon .. ':0:0:0:-1|t ' .. Text:color(currency.name, 'white')
 

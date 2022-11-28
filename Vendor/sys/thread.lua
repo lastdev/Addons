@@ -38,7 +38,7 @@ function Addon:AddThread(func, name, throttle)
 
     if Addon:GetThread(name) then
 
-        return
+        return false
     end
 
     local obj = {}
@@ -78,6 +78,7 @@ function Addon:AddThread(func, name, throttle)
     obj.timer = C_Timer.NewTicker(throttle or 0.1, doWorkOnThread)
     table.insert(threads, obj)
 
+    return true
 end
 
 -- Accessor for getting a thread from the processor

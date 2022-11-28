@@ -88,6 +88,11 @@
 					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item11" relativePoint="BOTTOMRIGHT" x="4" y="0" />
 				</Anchors>
 			</Button>
+			<Button parentKey="Item13" inherits="AltoAchievementButtonTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item12" relativePoint="BOTTOMRIGHT" x="4" y="0" />
+				</Anchors>
+			</Button>
 		</Frames>
 		<Scripts>
 			<OnLoad>

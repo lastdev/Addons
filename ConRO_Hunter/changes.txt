@@ -1,11 +1,10 @@
-lightweight tag a214bd858d950403662b90fcf18edd5a565b1524 v10.0.1-release
+lightweight tag 5142545a75747773dc6d0847c6a8b62feda6fa14 v10.0.5-release
 Author:	Vae <emuha17@gmail.com>
-Date:	Tue Nov 22 11:24:11 2022 -1000
+Date:	Sat Nov 26 09:20:12 2022 -1000
 
-commit a214bd858d950403662b90fcf18edd5a565b1524
+commit 5142545a75747773dc6d0847c6a8b62feda6fa14
 Author: Vae <emuha17@gmail.com>
-Date:   Tue Nov 22 11:24:11 2022 -1000
+Date:   Sat Nov 26 09:20:12 2022 -1000
 
-    Removed old xpack change file
-    ExplosiveShot wrong SpellID
+    Under10 fix
 

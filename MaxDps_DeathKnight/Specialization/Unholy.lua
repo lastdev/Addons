@@ -163,7 +163,7 @@ function DeathKnight:UnholySingleTargetRotation()
 	end
 	
 	--apocalypse if 4 wounds and off cd
-	if fd.cooldown[UH.Apocalypse].ready and fd.debuff[UH.FesteringWound].count >= 4	then
+	if fd.talents[UH.Apocalypse] and fd.cooldown[UH.Apocalypse].ready and fd.debuff[UH.FesteringWound].count >= 4 then
 		return UH.Apocalypse;
 	end
 	
@@ -202,7 +202,7 @@ function DeathKnight:UnholyMultiTargetRotation()
 	end
 	
 	--apocalypse if 4 wounds and off cd
-	if fd.cooldown[UH.Apocalypse].ready and fd.debuff[UH.FesteringWound].count >= 4	then
+	if fd.talents[UH.Apocalypse] and fd.cooldown[UH.Apocalypse].ready and fd.debuff[UH.FesteringWound].count >= 4 then
 		return UH.Apocalypse;
 	end
 

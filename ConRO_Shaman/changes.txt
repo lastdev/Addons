@@ -1,24 +1,10 @@
-commit c973edbeba0d4233ba306b8427034fb430245358
+lightweight tag 87c03ad60b27f1e49431475a02e263fb4b1adf87 v10.0.2
+Author:	Vae <emuha17@gmail.com>
+Date:	Sun Nov 27 16:11:21 2022 -1000
+
+commit 87c03ad60b27f1e49431475a02e263fb4b1adf87
 Author: Vae <emuha17@gmail.com>
-Date:   Mon Nov 21 18:09:57 2022 -1000
+Date:   Sun Nov 27 16:11:21 2022 -1000
 
-    DF Cleanup
-
-commit c973edbeba0d4233ba306b8427034fb430245358
-Author: Vae <emuha17@gmail.com>
-Date:   Mon Nov 21 18:09:57 2022 -1000
-
-    DF Cleanup
-
-commit d95679c718ecc439a826f4ea069b0080db9b4637
-Author: Vae <emuha17@gmail.com>
-Date:   Sat Nov 19 23:58:55 2022 -1000
-
-    Delete Shaman
-
-commit 6a128401ec6e7b53d1b4131762957331f12cd900
-Author: Vae <emuha17@gmail.com>
-Date:   Mon Nov 14 18:57:35 2022 -1000
-
-    Initial Git Creation
+    Resto lava burst fix
 

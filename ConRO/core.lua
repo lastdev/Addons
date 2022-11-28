@@ -2065,6 +2065,8 @@ function ConRO:EnableDefense()
 	end
 
 	self.FetchDef();
+	self:CheckTalents();
+	self:CheckPvPTalents();
 
 	if self.ModuleOnEnable then
 		self.ModuleOnEnable();
@@ -2128,7 +2130,7 @@ end
 
 function ConRO:OnEnable()
 	self:RegisterEvent('PLAYER_TARGET_CHANGED');
-	--self:RegisterEvent('PLAYER_TALENT_UPDATE');
+	self:RegisterEvent('ACTIVE_PLAYER_SPECIALIZATION_CHANGED');
 	self:RegisterEvent('TRAIT_CONFIG_UPDATED');
 	self:RegisterEvent('ACTIONBAR_SLOT_CHANGED');
 	self:RegisterEvent('PLAYER_REGEN_DISABLED');
@@ -2157,14 +2159,14 @@ function ConRO:OnEnable()
 	self:Print(self.Colors.Info .. 'Initialized');
 end
 
---[[function ConRO:PLAYER_TALENT_UPDATE()
+function ConRO:ACTIVE_PLAYER_SPECIALIZATION_CHANGED()
 --self:Print(self.Colors.Success .. 'Talent');
 	self:DisableRotation();
 	self:DisableDefense();
 	self:LoadModule();
 	self:EnableRotation();
 	self:EnableDefense();
-
+	
 	if ConRO:HealSpec() then
 		ConROWindow:Hide();
 		ConRONextWindow:Hide();
@@ -2178,10 +2180,10 @@ end
 		ConRONextWindow:Hide();
 		ConRONext2Window:Hide();
 	end
-end]]
+end
 
 function ConRO:TRAIT_CONFIG_UPDATED()
-self:Print(self.Colors.Success .. 'Talent');
+--self:Print(self.Colors.Success .. 'Talent');
 	self:DisableRotation();
 	self:DisableDefense();
 	self:LoadModule();

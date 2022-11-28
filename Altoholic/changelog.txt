@@ -15,6 +15,14 @@ How to support Altoholic's development :
 If you like the addon, consider supporting it, this has been the long term effort and commitment of a single person. #ArmyOfOne
 
 
+10.0.008 (27/11/2022)
+
+- Updated the Spanish (esES) translations thanks to a contribution from Romanv !
+	If you can help with untranslated strings in your own language, join our Discord !
+- UI : slightly increased the minimum width of the UI.
+- Achievements & Grids tab : added a 13th column, note that if you are using multiple pages, you will have to readjust the column positions.
+- Summary tab : the class filter now has 2 additional sub menus to filter by armor type, or by role type (tank/healer/damager).
+
 10.0.007 (20/11/2022)
 
 - DataStore_Containers : added support for the reagent bag (Thanks Feral !)

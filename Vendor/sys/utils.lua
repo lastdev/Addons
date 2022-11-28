@@ -9,7 +9,7 @@ end
 function Addon:GetVersion()
     local version = GetAddOnMetadata(AddonName, "version")
     --[===[@debug@
-    if version == "6.0.4" then version = "Debug" end
+    if version == "6.1.2" then version = "Debug" end
     --@end-debug@]===]
     return version
 end
@@ -49,6 +49,19 @@ function Addon.DeepTableCopy(obj, seen)
     for k, v in pairs(obj) do res[Addon.DeepTableCopy(k, s)] = Addon.DeepTableCopy(v, s) end
     return res
 end
+
+-- Deep Table Copy without copying the metatable
+function Addon.DeepTableCopyNoMeta(obj, seen)
+    if type(obj) ~= 'table' then return obj end
+    if seen and seen[obj] then return seen[obj] end
+
+    local s = seen or {}
+    local res = {}
+    s[obj] = res
+    for k, v in pairs(obj) do res[Addon.DeepTableCopy(k, s)] = Addon.DeepTableCopy(v, s) end
+    return res
+end
+
 
 local TypeInformation = {};
 

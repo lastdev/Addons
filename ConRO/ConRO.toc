@@ -1,6 +1,6 @@
 ## Title:-|cffFFFFFFConRO|r- Conflict Rotation Optimizer
 ## Notes: Rotation helper framework.
-## Version: 10.0.2
+## Version: 10.0.5
 ## Author: Vae
 ## Interface: 100002
 ## SavedVariables: ConROPreferences
@@ -19,7 +19,6 @@ Libs\AceGUI-3.0\AceGUI-3.0.xml
 Libs\AceGUI-3.0-SharedMediaWidgets\widget.xml
 Libs\AceConfig-3.0\AceConfig-3.0.xml
 
-config.lua
 core.lua
 buttons.lua
 helper.lua

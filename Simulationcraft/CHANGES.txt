@@ -1,10 +1,22 @@
-lightweight tag f3442e5aef26736199a7ec017c9190d074236245 v10.0.2-01
+lightweight tag c4950c48b3547988e74497bea48fa9f290c3a29c v10.0.2-03
 Author:	Dave Hendler <sollaires@gmail.com>
-Date:	Tue Nov 15 15:17:02 2022 -0800
+Date:	Sun Nov 27 15:20:20 2022 -0800
 
-commit f3442e5aef26736199a7ec017c9190d074236245
+commit c4950c48b3547988e74497bea48fa9f290c3a29c
 Author: Dave Hendler <sollaires@gmail.com>
-Date:   Tue Nov 15 15:17:02 2022 -0800
+Date:   Sun Nov 27 15:20:20 2022 -0800
 
-    Proper version
+    Bump version
+
+commit 8d6b98ebfb1c786d0e11615784823255f0c3d3e3
+Author: Dave Hendler <sollaires@gmail.com>
+Date:   Sun Nov 27 15:20:08 2022 -0800
+
+    Fix frame moving
+
+commit feb05dd0d74ac3fbc87ac2b308c35d60bdb6ca88
+Author: Dave Hendler <sollaires@gmail.com>
+Date:   Sat Nov 26 22:13:54 2022 -0800
+
+    Fix a bunch of luacheck warnings
 

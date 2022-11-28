@@ -165,7 +165,7 @@ addon.spellsDB = {
           attackPercent = 180,
         },
       [2] = {
-          target = addon.Enums.TargetType.closest_ally,
+          target = addon.Enums.TargetType.nearby_ally_or_self,
           type = addon.Enums.spellType.heal,
           healPercent = 20,
         },

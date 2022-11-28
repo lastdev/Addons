@@ -165,6 +165,15 @@ local locationLabels = {
 	format("%s %s(%s)", L["All realms"], colors.green, L["All accounts"]),
 }
 
+local armorTypeLabels = {
+	[1] = GetItemSubClassInfo(Enum.ItemClass.Armor, Enum.ItemArmorSubclass.Cloth),
+	[2] = GetItemSubClassInfo(Enum.ItemClass.Armor, Enum.ItemArmorSubclass.Leather),
+	[3] = GetItemSubClassInfo(Enum.ItemClass.Armor, Enum.ItemArmorSubclass.Mail),
+	[4] = GetItemSubClassInfo(Enum.ItemClass.Armor, Enum.ItemArmorSubclass.Plate)
+}
+
+local roleTypeLabels = { TANK, HEALER, DAMAGER}
+
 local function RealmsIcon_Initialize(frame, level)
 	if not level then return end
 	
@@ -292,30 +301,47 @@ local function ProfessionsIcon_Initialize(frame, level)
 end
 
 local function ClassIcon_Initialize(frame, level)
+	if not level then return end
+	
 	local option = Options.Get(OPTION_CLASSES)
 	
-	frame:AddTitle(L["FILTER_CLASSES"])
-	frame:AddButton(ALL, 0, OnClassFilterChange, nil, (option == 0))
-	frame:AddTitle()
+	if level == 1 then
+		frame:AddTitle(L["FILTER_CLASSES"])
+		frame:AddButton(ALL, 0, OnClassFilterChange, nil, (option == 0))
+		frame:AddTitle()
+		frame:AddCategoryButton(ARMOR, 1, level)
+		frame:AddCategoryButton(COMMUNITY_MEMBER_LIST_DROP_DOWN_ROLES, 2, level)
+		frame:AddTitle()
+		
+		-- See constants.lua
+		for key, value in ipairs(CLASS_SORT_ORDER) do
+			frame:AddButton(
+				format("|c%s%s", RAID_CLASS_COLORS[value].colorStr, LOCALIZED_CLASS_NAMES_MALE[value]), 
+				key, OnClassFilterChange, nil, (option == key)
+			)
+		end
+		frame:AddTitle()
+		frame:AddCloseMenu()
+		
+	elseif level == 2 then
+		local subMenu = frame:GetCurrentOpenMenuValue()
 	
-	-- See constants.lua
-	for key, value in ipairs(CLASS_SORT_ORDER) do
-		frame:AddButton(
-			format("|c%s%s", RAID_CLASS_COLORS[value].colorStr, LOCALIZED_CLASS_NAMES_MALE[value]), 
-			key, OnClassFilterChange, nil, (option == key)
-		)
+		if subMenu == 1 then				-- Armor types
+			-- Add the armor types
+			for index, armorType in ipairs(armorTypeLabels) do
+				-- keep a numeric index, just add +20 since we have only 13 classes
+				frame:AddButton(armorType, index + 20, OnClassFilterChange, nil, (option == index + 20), level)	
+			end
+		
+		elseif subMenu == 2 then		-- Role types
+		
+			-- Add the role types
+			for index, roleType in ipairs(roleTypeLabels) do
+				-- keep a numeric index, just add +30 since we have only 3 roles
+				frame:AddButton(roleType, index + 30, OnClassFilterChange, nil, (option == index + 30), level)	
+			end		
+		end
 	end
-	frame:AddTitle()
-	
-	-- TO DO: ok here, but finish filtering in characters.lua
-	local armorTypes = addon.Enum.ArmorTypes
-	
-	-- Add the armor types
-	-- for i = 1, #armorTypes do
-		-- frame:AddButton(armorTypes[i], armorTypes[i], OnClassFilterChange, nil, (option == armorTypes[i]))	
-	-- end
-	
-	frame:AddCloseMenu()
 end
 
 local function MiscIcon_Initialize(frame, level)

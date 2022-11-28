@@ -540,6 +540,11 @@ end
 function API:playerCanCollectSource(id)
   local _, sourceId = self:getTransmogInfo(id)
 
+  -- Check, if we actually have and id.
+  if (sourceId == nil) then
+    return false
+  end
+
   local hasItemData, canCollect = CollectionWardrobeUtil.PlayerCanCollectSource(sourceId)
 
   if (hasItemData == true and canCollect == true) then
@@ -590,22 +595,6 @@ function API:getMapName(id)
   end
 
   return C_Map.GetMapInfo(id).name
-end
-
----
---- If map is open, we change it to another one (usable for portals to another map, ie. dungeons or raids).
----
---- @link https://wowpedia.fandom.com/wiki/UiMapID
----
---- @deprecated in 0.11.0 and scheduled for removal in 0.13.0
----
---- @param id
----   Map id (uiMapID).
----
-function API:changeMap(id)
-  if self.WorldMapFrame:IsShown() then
-    self.WorldMapFrame:SetMapID(id)
-  end
 end
 
 ---
@@ -728,7 +717,7 @@ end
 ---   The number of slots in the specified bag, or 0 if there is no bag in the given slot.
 ---
 function API:getContainerNumSlots(bagId)
-  return GetContainerNumSlots(bagId)
+  return C_Container.GetContainerNumSlots(bagId)
 end
 
 ---
@@ -746,7 +735,7 @@ end
 ---   Item ID of the item held in the container slot, nil if there is no item in the container slot.
 ---
 function API:getContainerItemID(bagId, slot)
-  return GetContainerItemID(bagId, slot)
+  return C_Container.GetContainerItemID(bagId, slot)
 end
 
 ---
@@ -803,7 +792,7 @@ end
 --- @return table
 ---   Currency name and icon.
 ---
-function API:getCurrecyInfo(currencyId)
+function API:getCurrencyInfo(currencyId)
   local currencyInfo = C_CurrencyInfo.GetCurrencyInfo(currencyId)
 
   local currency = {

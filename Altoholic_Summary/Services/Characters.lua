@@ -68,6 +68,30 @@ local totalPlayed
 local totalLevels
 local realmCount
 
+-- Same order as CLASS_SORT_ORDER
+local CLASS_ARMOR_ORDER = {
+	[CLASS_SORT_ORDER[1]] = Enum.ItemArmorSubclass.Plate,		-- WARRIOR
+	[CLASS_SORT_ORDER[2]] = Enum.ItemArmorSubclass.Plate,		-- DEATHKNIGHT
+	[CLASS_SORT_ORDER[3]] = Enum.ItemArmorSubclass.Plate,		-- PALADIN
+	[CLASS_SORT_ORDER[4]] = Enum.ItemArmorSubclass.Leather,	-- MONK
+	[CLASS_SORT_ORDER[5]] = Enum.ItemArmorSubclass.Cloth,		-- PRIEST
+	[CLASS_SORT_ORDER[6]] = Enum.ItemArmorSubclass.Mail,		-- SHAMAN
+	[CLASS_SORT_ORDER[7]] = Enum.ItemArmorSubclass.Leather,	-- DRUID
+	[CLASS_SORT_ORDER[8]] = Enum.ItemArmorSubclass.Leather,	-- ROGUE
+	[CLASS_SORT_ORDER[9]] = Enum.ItemArmorSubclass.Cloth,		-- MAGE
+	[CLASS_SORT_ORDER[10]] = Enum.ItemArmorSubclass.Cloth,	-- WARLOCK
+	[CLASS_SORT_ORDER[11]] = Enum.ItemArmorSubclass.Mail,		-- HUNTER
+	[CLASS_SORT_ORDER[12]] = Enum.ItemArmorSubclass.Leather,	-- DEMONHUNTER
+	[CLASS_SORT_ORDER[13]] = Enum.ItemArmorSubclass.Mail,		-- EVOKER
+}
+
+-- Roles will be passed as 31 .. 33
+local ROLE_ORDER = {
+	["TANK"] = 31, 
+	["HEALER"] = 32,
+	["DAMAGER"] = 33
+}
+
 local function AddRealm(accountName, realmName)
 	
 	if AccountSharing.IsSharingInProgress() then
@@ -128,7 +152,25 @@ local function AddRealm(accountName, realmName)
 			shouldAddCharacter = false
 		end
 		
-		if (class ~= 0) and CLASS_SORT_ORDER[class] ~= characterClass then
+		-- If we are filtering by armor type..
+		-- class is passed as : 
+		-- 	0 for ALL, 
+		--		1..13 for actual class, 
+		--		21..24 for armor types, 
+		--		31..33 for role types
+		if class > 30 then
+			local _, _, role = DataStore:GetActiveSpecInfo(character)
+		
+			-- Roles are passed as 31..33, so direct comparison is possible
+			if ROLE_ORDER[role] ~= class then
+				shouldAddCharacter = false 
+			end
+		
+		elseif class > 20 then
+			if CLASS_ARMOR_ORDER[characterClass] ~= (class - 20) then
+				shouldAddCharacter = false 
+			end
+		elseif (class ~= 0) and CLASS_SORT_ORDER[class] ~= characterClass then
 			shouldAddCharacter = false 
 		end
 		

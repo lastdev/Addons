@@ -1,86 +1,87 @@
-local L = LibStub("AceLocale-3.0"):NewLocale( "Altoholic", "esES" )
+local L = LibStub("AceLocale-3.0"):NewLocale("Altoholic", "esES")
 
 if not L then return end
 
 -- ** Menu **
--- L["Settings"] = true
+L["Settings"] = "Ajustes"
 L["Calendar"] = "Calendario"
--- L["Tooltip"] = true
+L["Tooltip"] = "Ventana emergente"
 L["Enabled"] = "Activado"
 L["Disabled"] = "Desactivado"
--- L["Character"] = true
+L["Character"] = "Personaje"
 L["Characters"] = "Personajes"
--- L["Bank characters"] = true
-L["Account Sharing"] = "Compartici�n de cuenta"
--- L["How to"] = true
--- L["Saved Variables"] = true
--- L["Getting support"] = true
-L["About"] = "Sobre"
+L["Alt groups"] = "Grupos de alters"
+L["Bank characters"] = "Personajes banco"
+L["Account Sharing"] = "Compartición de cuenta"
+L["How to"] = "Cómo"
+L["Saved Variables"] = "Variables guardadas"
+L["Getting support"] = "Obtener soporte"
+L["About"] = "Acerca de"
 
--- L["CTRL_C_TO_COPY"] = "|cFF1CFAFECTRL+C|r to copy this address, |cFF1CFAFEESC|r to hide"
--- L["WOWI_ICON_ON_ENTER"] = "Click to display the add-on's homepage on WoW Interface"
--- L["CURSE_ICON_ON_ENTER"] = "Click to display the add-on's homepage on Curseforge"
--- L["DISCORD_ICON_ON_ENTER"] = "Click to display the address of the Discord server"
--- L["EMAIL_ICON_ON_ENTER"] = "Click to display Thaoky's E-Mail address"
--- L["TAB_NOT_LOADED_YET"] = "Tab not loaded yet"
+L["CTRL_C_TO_COPY"] = "|cFF1CFAFECTRL+C|r para copiar esta dirección, |cFF1CFAFEESC|r para ocultar"
+L["WOWI_ICON_ON_ENTER"] = "Click para mostrar la página de inicio del complemento en WoW Interface"
+L["CURSE_ICON_ON_ENTER"] = "Click para mostrar la página de inicio del complemento en Curseforge"
+L["DISCORD_ICON_ON_ENTER"] = "Click para mostrar la dirección del servidor de Discord"
+L["EMAIL_ICON_ON_ENTER"] = "Click para mostrar la dirección de correo electrónico de Thaoky"
+L["TAB_NOT_LOADED_YET"] = "Pestaña no cargada aún"
 
 -- ** Settings / Altoholic / General **
--- L["General Options"] = true
-L["Minimap Icon Angle"] = "Angulo del icono del minimapa"
+L["General Options"] = "Opciones generales"
+L["Minimap Icon Angle"] = "Ángulo del icono del minimapa"
 L["Minimap Icon Radius"] = "Radio del icono del minimapa"
--- L["Transparency"] = true
+L["Transparency"] = "Transparencia"
 
-L["BANK_AUTO_UPDATE_TEXT"] = "Autorizar autom�ticamente las actualizaciones el banco de la hermandad"
--- L["BANK_AUTO_UPDATE_TITLE"] = "Guild Bank Updates"
--- L["BANK_AUTO_UPDATE_ENABLED"] = "Your guild mates who are also using Altoholic will automatically be able to update their guild bank information with yours, if it is more recent."
--- L["BANK_AUTO_UPDATE_DISABLED"] = "Your confirmation will be required before sending any information."
+L["BANK_AUTO_UPDATE_TEXT"] = "Autorizar automáticamente las actualizaciones en el banco de la hermandad"
+L["BANK_AUTO_UPDATE_TITLE"] = "Actualizaciones del banco de hermanda"
+L["BANK_AUTO_UPDATE_ENABLED"] = "Tus compañeros de hermandad que también usen Altoholic podrán actualizar automáticamente la información de su banco de hermandad con el tuyo, si es más reciente."
+L["BANK_AUTO_UPDATE_DISABLED"] = "Se requerirá su confirmación antes de enviar cualquier información."
 
 L["CLAMP_TO_SCREEN_TEXT"] = "Fijar ventana a la pantalla"
 L["CLAMP_TO_SCREEN_TITLE"] = "Fijar ventana a la pantalla"
--- L["CLAMP_TO_SCREEN_ENABLED"] = "Altoholic's UI will not overflow outside of the screen boundaries"
--- L["CLAMP_TO_SCREEN_DISABLED"] = "Altoholic's UI will be movable anywhere, with parts going off-screen"
+L["CLAMP_TO_SCREEN_ENABLED"] = "La interfaz de usuario de Altoholic no se desborda fuera de los límites de la pantalla"
+L["CLAMP_TO_SCREEN_DISABLED"] = "La interfaz de usuario de Altoholic será movible en cualquier lugar, con partes que salen de la pantalla"
 
-L["SHOW_ICON_TEXT"] = "Mostrar icono del minimapa"
-L["SHOW_ICON_TITLE"] = "Mostrar icono del minimapa"
--- L["SHOW_ICON_ENABLED"] = "Altoholic's icon will be visible around the minimap"
--- L["SHOW_ICON_DISABLED"] = "Altoholic's icon will be hidden"
+L["SHOW_ICON_TEXT"] = "Mostrar icono en el minimapa"
+L["SHOW_ICON_TITLE"] = "Mostrar icono en el minimapa"
+L["SHOW_ICON_ENABLED"] = "El icono de Altoholic será visible en el minimapa"
+L["SHOW_ICON_DISABLED"] = "El icono de Altoholic estará oculto"
 
-L["Move to change the angle of the minimap icon"] = "Mover para cambiar el �ngulo del icono en el minimapa"
+L["Move to change the angle of the minimap icon"] = "Mover para cambiar el ángulo del icono en el minimapa"
 L["Move to change the radius of the minimap icon"] = "Mover para cambiar el angulo del icono en el minimapa"
--- L["UI_SCALE_TOOLTIP"] = "Move to change the UI scale"
--- L["UI_TRANSPARENCY_TOOLTIP"] = "Move to make the UI transparent"
+L["UI_SCALE_TOOLTIP"] = "Mover para cambiar la escala de la interfaz de usuario"
+L["UI_TRANSPARENCY_TOOLTIP"] = "Mover para que la interfaz de usuario sea transparente"
 
 
 -- ** Settings / Altoholic / Mail **
--- L["Mail Options"] = true
+L["Mail Options"] = "Opciones de correo"
 
--- L["AUTO_COMPLETE_PRIORITY"] = "Auto-Complete Priority"
--- L["AUTO_COMPLETE_BY_NAME"] = "Alphabetical order"
--- L["AUTO_COMPLETE_BY_MOST_PLAYED"] = "Highest /played"
--- L["AUTO_COMPLETE_BY_LAST_PLAYED"] = "Most recently played"
+L["AUTO_COMPLETE_PRIORITY"] = "Prioridad de autocompletado"
+L["AUTO_COMPLETE_BY_NAME"] = "Orden alfabético"
+L["AUTO_COMPLETE_BY_MOST_PLAYED"] = "Más alto/jugado"
+L["AUTO_COMPLETE_BY_LAST_PLAYED"] = "Jugado más recientemente"
 
--- L["GUILD_WARNING_TEXT"] = "New mail notification"
--- L["GUILD_WARNING_TITLE"] = "Guild mail notification"
--- L["GUILD_WARNING_ENABLED"] = "You will get a notification when a guildmate sends a mail to one of your alts.\n\nMail content will be directly visible without having to reconnect that alt."
--- L["GUILD_WARNING_DISABLED"] = "The mail will still be directly dropped into your alt's mailbox, but you will not be notified."
+L["GUILD_WARNING_TEXT"] = "Nueva notificación de correo"
+L["GUILD_WARNING_TITLE"] = "Notificación de correo de hermandad"
+L["GUILD_WARNING_ENABLED"] = "Recibirás una notificación cuando un compañero de hermandad envíe un correo a uno de tus alters.\n\nEl contenido del correo será directamente visible sin tener que volver a conectar con ese alter."
+L["GUILD_WARNING_DISABLED"] = "El correo seguirá cayendo directamente en el buzón de su alter, pero no se le notificará."
 
--- L["AUTO_COMPLETE_TEXT"] = "Auto-complete recipient name"
--- L["AUTO_COMPLETE_TITLE"] = "Auto-complete recipient name"
--- L["AUTO_COMPLETE_ENABLED"] = "Your alts' names will be used as suggestions when filling the recipient's name at a mailbox."
--- L["AUTO_COMPLETE_DISABLED"] = "Your alts' names will not be used as suggestions."
+L["AUTO_COMPLETE_TEXT"] = "Autocompletar nombre del destinatario"
+L["AUTO_COMPLETE_TITLE"] = "Autocompletar nombre del destinatario"
+L["AUTO_COMPLETE_ENABLED"] = "Los nombres de tus alters se usarán como sugerencias cuando completes el nombre del destinatario en un buzón."
+L["AUTO_COMPLETE_DISABLED"] = "Los nombres de tus alters no se utilizarán como sugerencias."
 
--- L["TIME_TO_NEXT_WARNING_TEXT"] = "Time until next warning"
--- L["TIME_TO_NEXT_WARNING_TOOLTIP"] = "Minimum time before you get the next mail expiry warning."
+L["TIME_TO_NEXT_WARNING_TEXT"] = "Tiempo hasta el próximo aviso"
+L["TIME_TO_NEXT_WARNING_TOOLTIP"] = "Tiempo mínimo antes de recibir el siguiente aviso de expiración del correo."
 
 
 -- ** Settings / Altoholic / Tooltip **
--- L["Tooltip Options"] = true
+L["Tooltip Options"] = "Opciones de ventana emergente"
 
--- L["TT_SHOW_ITEMSOURCE_TEXT"] = "Show item source"
--- L["TT_SHOW_ITEMSOURCE_TITLE"] = "Item source"
--- L["TT_SHOW_ITEMSOURCE_ENABLED"] = [[Display information about the source of the item, like the profession or the dungeon where it drops.
+L["TT_SHOW_ITEMSOURCE_TEXT"] = "Mostrar la fuente del item"
+L["TT_SHOW_ITEMSOURCE_TITLE"] = "Fuente del item"
+L["TT_SHOW_ITEMSOURCE_ENABLED"] = [[Muestra información sobre el origen del item, como la profesión o la mazmorra donde cae.
 
--- E.g.
+-- Ej.
 
  -- |cFFFFD700Info:|r |cFF00FF9AAlchemy, 65|r
  -- |cFFFFD700Goes in:|r |cFF00FF9AGem Bag|r
@@ -89,602 +90,626 @@ L["Move to change the radius of the minimap icon"] = "Mover para cambiar el angu
 
  -- |cFFFFD700Raid:|r |cFF00FF9AMolten Core|r
  -- |cFFFFD700Boss:|r |cFF00FF9ARagnaros|r]]
--- L["TT_SHOW_ITEMSOURCE_DISABLED"] = "No information is displayed."
+L["TT_SHOW_ITEMSOURCE_DISABLED"] = "No se muestra ninguna información."
 
--- L["TT_SHOW_ITEMCOUNT_TEXT"] = "Show item count per character"
--- L["TT_SHOW_ITEMCOUNT_TITLE"] = "Item count per character"
--- L["TT_SHOW_ITEMCOUNT_ENABLED"] = [[Display one line of information per character that owns at least one copy of the item being moused over.
+L["TT_SHOW_ITEMCOUNT_TEXT"] = "Mostrar el recuento de items por personaje"
+L["TT_SHOW_ITEMCOUNT_TITLE"] = "Recuento de items por personaje"
+L["TT_SHOW_ITEMCOUNT_ENABLED"] = [[Muestra una línea de información por cada personaje que posea al menos una copia del item sobre el que se pasa el ratón.
 
--- E.g.
+-- Ej.
 
     -- |cFF69CCF0Thaoky|r     |cFFFF7F003|r |cFFFFFFFF(Bags: |cFF00FF9A3|r)|r
     -- |cFFABD473Sira|r           |cFFFF7F006|r |cFFFFFFFF(Bags: |cFF00FF9A6|r)|r]]
--- L["TT_SHOW_ITEMCOUNT_DISABLED"] = "No information is displayed."
+L["TT_SHOW_ITEMCOUNT_DISABLED"] = "No se muestra ninguna información."
 
--- L["TT_SHOW_SIMPLECOUNT_TEXT"] = "Show item count without details"
--- L["TT_SHOW_SIMPLECOUNT_TITLE"] = "Item count without details"
--- L["TT_SHOW_SIMPLECOUNT_ENABLED"] = [[Display only the amount of items owned for a character, without the location.
+L["TT_SHOW_SIMPLECOUNT_TEXT"] = "Mostrar el recuento de items sin detalles"
+L["TT_SHOW_SIMPLECOUNT_TITLE"] = "Recuento de items sin detalles"
+L["TT_SHOW_SIMPLECOUNT_ENABLED"] = [[Muestra sólo la cantidad de items que posee un personaje, sin la ubicación.
 
--- E.g.
+-- Ej.
 
     -- |cFF69CCF0Thaoky|r     |cFFFF7F003|r]]
--- L["TT_SHOW_SIMPLECOUNT_DISABLED"] = [[Location information will be displayed normally.
+L["TT_SHOW_SIMPLECOUNT_DISABLED"] = [[La información sobre la ubicación se mostrará normalmente.
 
--- Note that this option is tied to 
+-- Tenga en cuenta que esta opción está vinculada a 
 -- |cFFFF7F00Show item count per character|r]]
 
--- L["TT_SHOW_TOTALCOUNT_TEXT"] = "Show total item count"
--- L["TT_SHOW_TOTALCOUNT_TITLE"] = "Total item count"
--- L["TT_SHOW_TOTALCOUNT_ENABLED"] = [[Display the total amount of items owned by all characters listed in the tooltip.
+L["TT_SHOW_TOTALCOUNT_TEXT"] = "Mostrar el recuento total de items"
+L["TT_SHOW_TOTALCOUNT_TITLE"] = "Recuento total de items"
+L["TT_SHOW_TOTALCOUNT_ENABLED"] = [[Muestra la cantidad total de items que poseen todos los personajes que aparecen en la ventana emergente
 
--- Note that this total is influenced by multiple other tooltip options, and varies depending on which alts you have chosen to display.
+-- Tenga en cuenta que este total está influenciado por otras múltiples opciones de ventanas emergentes y varía en función de los alters que haya elegido mostrar.
 
--- E.g.
+-- Ej.
 
- -- |cFFFFD700Total owned:|r |cFF00FF9A217|r]]
--- L["TT_SHOW_TOTALCOUNT_DISABLED"] = "The total line is not displayed."
+ -- |cFFFFD700Total poseídos:|r |cFF00FF9A217|r]]
+L["TT_SHOW_TOTALCOUNT_DISABLED"] = "La línea del total no se muestra."
 
--- L["TT_SHOW_RECIPES_TEXT"] = "Show recipes already known/learnable by"
--- L["TT_SHOW_RECIPES_TITLE"] = "Show recipes already known/learnable by"
--- L["TT_SHOW_RECIPES_ENABLED"] = [[Display information about which alts already know, could learn or will later be able to learn a recipe.
+L["TT_SHOW_RECIPES_TEXT"] = "Mostrar recetas ya conocidas/aprendidas por"
+L["TT_SHOW_RECIPES_TITLE"] = "Mostrar recetas ya conocidas/aprendidas por"
+L["TT_SHOW_RECIPES_ENABLED"] = [[Muestra información sobre los alters que ya conocen, podrían aprender o podrían aprender más adelante una receta.
 
--- E.g.
+-- Ej.
 
-    -- |cFF00FF9AAlready known by :|r |cFF69CCF0Thaoky|r
-    -- |cFFFFFF00Could be learned by :|r |cFFABD473Sira|r]]
--- L["TT_SHOW_RECIPES_DISABLED"] = "No information is displayed."
+    -- |cFF00FF9AYa conocida por:|r |cFF69CCF0Thaoky|r
+    -- |cFFFFFF00Puede ser aprendida por:|r |cFFABD473Sira|r]]
+L["TT_SHOW_RECIPES_DISABLED"] = "No se muestra ninguna información."
 
--- L["TT_SHOW_GUILDBANKCOUNT_TEXT"] = "Show guild bank count"
--- L["TT_SHOW_GUILDBANKCOUNT_TITLE"] = "Guild bank count"
--- L["TT_SHOW_GUILDBANKCOUNT_ENABLED"] = [[Display the total amount of items stored in guild banks.
+L["TT_SHOW_GUILDBANKCOUNT_TEXT"] = "Mostrar el recuento del banco de la hermandad"
+L["TT_SHOW_GUILDBANKCOUNT_TITLE"] = "Recuento del banco de la hermandad"
+L["TT_SHOW_GUILDBANKCOUNT_ENABLED"] = [[Muestra la cantidad total de artículos almacenados en los bancos de hermandad.
 
--- E.g. 
+-- Ej. 
 
-    -- |cFF00FF00Odysse�s|r     |cFFFF7F0084|r |cFFFFFFFF(Guild Bank: |cFF00FF9A84|r)|r]]
--- L["TT_SHOW_GUILDBANKCOUNT_DISABLED"] = "No information is displayed."
+    -- |cFF00FF00Odysseüs|r     |cFFFF7F0084|r |cFFFFFFFF(Guild Bank: |cFF00FF9A84|r)|r]]
+L["TT_SHOW_GUILDBANKCOUNT_DISABLED"] = "No se muestra ninguna información."
 
--- L["TT_INCLUDE_GUILDBANKCOUNT_TEXT"] = "Include guild bank count in the total count"
--- L["TT_INCLUDE_GUILDBANKCOUNT_TITLE"] = "Include guild bank count in the total count"
--- L["TT_INCLUDE_GUILDBANKCOUNT_ENABLED"] = "The amount of items stored in guild banks will be accounted for in the total."
--- L["TT_INCLUDE_GUILDBANKCOUNT_DISABLED"] = "The amount of items stored in guild banks will be ignored."
+L["TT_INCLUDE_GUILDBANKCOUNT_TEXT"] = "Incluir el recuento del banco de hermandad en el total"
+L["TT_INCLUDE_GUILDBANKCOUNT_TITLE"] = "Incluir el recuento del banco de hermandad en el recuento total"
+L["TT_INCLUDE_GUILDBANKCOUNT_ENABLED"] = "La cantidad de items almacenados en los bancos de hermandad se contabilizará en el total."
+L["TT_INCLUDE_GUILDBANKCOUNT_DISABLED"] = "La cantidad de items almacenados en los bancos de hermandad se ignorará."
 
--- L["TT_DETAILED_BANKCOUNT_TEXT"] = "Detailed guild bank count"
--- L["TT_DETAILED_BANKCOUNT_TITLE"] = "Detailed guild bank count"
--- L["TT_DETAILED_BANKCOUNT_ENABLED"] = [[Display the amount of items stored in guild banks, per tab.
+L["TT_DETAILED_BANKCOUNT_TEXT"] = "Recuento detallado del banco de hermandad"
+L["TT_DETAILED_BANKCOUNT_TITLE"] = "Recuento detallado del banco de hermandad"
+L["TT_DETAILED_BANKCOUNT_ENABLED"] = [[Muestra la cantidad de items almacenados en los bancos de hermandad, por pestaña.
 
--- E.g.
+-- Ej.
 
-    -- |cFF00FF00Odysse�s|r     |cFFFF7F0084|r |cFFFFFFFF(Consumables: |cFF00FF9A84|r)|r]]
--- L["TT_DETAILED_BANKCOUNT_DISABLED"] = [[Display 'Guild Bank' instead of the tab name.]]
+    -- |cFF00FF00Odysseüs|r     |cFFFF7F0084|r |cFFFFFFFF(Consumables: |cFF00FF9A84|r)|r]]
+L["TT_DETAILED_BANKCOUNT_DISABLED"] = [[Mostrar 'Banco de hermandad' en lugar del nombre de la pestaña.]]
 
--- L["TT_SHOW_GUILDBANKREALM_TEXT"] = "Show guild bank realm"
--- L["TT_SHOW_GUILDBANKREALM_TITLE"] = "Guild bank realm"
--- L["TT_SHOW_GUILDBANKREALM_ENABLED"] = [[Display the realm on which a guild bank resides.
+L["TT_SHOW_GUILDBANKREALM_TEXT"] = "Mostrar el reino del banco de hermandad"
+L["TT_SHOW_GUILDBANKREALM_TITLE"] = "Reino del bando de hermandad"
+L["TT_SHOW_GUILDBANKREALM_ENABLED"] = [[Muestra el reino en el que reside el banco de hermandad
 
--- E.g. 
+-- Ej. 
 
-    -- |cFF00FF00Odysse�s|r |cFFFFFF00(Mar�cages de Zangar)|r    |cFFFF7F0084|r |cFFFFFFFF(Guild Bank: |cFF00FF9A84|r)|r]]
--- L["TT_SHOW_GUILDBANKREALM_DISABLED"] = "Display only the guild name"
+    -- |cFF00FF00Odysseüs|r |cFFFFFF00(Marécages de Zangar)|r    |cFFFF7F0084|r |cFFFFFFFF(Guild Bank: |cFF00FF9A84|r)|r]]
+L["TT_SHOW_GUILDBANKREALM_DISABLED"] = "Mostrar sólo el nombre de la hermandad"
 
--- L["TT_SHOW_ITEMID_TEXT"] = "Show item ID and item level"
--- L["TT_SHOW_ITEMID_TITLE"] = "Item ID and item level"
--- L["TT_SHOW_ITEMID_ENABLED"] = [[Display the item ID and item level at the bottom of the tooltip.
+L["TT_SHOW_ITEMID_TEXT"] = "Mostrar ID de item y nivel de item"
+L["TT_SHOW_ITEMID_TITLE"] = "ID de item y nivel de item"
+L["TT_SHOW_ITEMID_ENABLED"] = [[Muestra el ID del item y el nivel del item en la parte inferior de la ventana emergente.
 
--- E.g.
+-- Ej.
 
     -- |cFFFFD700Item ID:|r |cFF00FF00140192|r             |cFFFFD700iLvl:|r |cFF00FF0035|r]]
--- L["TT_SHOW_ITEMID_DISABLED"] = "No information is displayed."
+L["TT_SHOW_ITEMID_DISABLED"] = "No se muestra ninguna información."
 
--- L["TT_SHOW_ITEMXPACK_TEXT"] = "Show extended item information"
--- L["TT_SHOW_ITEMXPACK_TITLE"] = "Extended item information"
--- L["TT_SHOW_ITEMXPACK_ENABLED"] = [[Display extended information about the item, like the expansion it belongs to.
+L["TT_SHOW_ITEMXPACK_TEXT"] = "Mostrar información ampliada del item"
+L["TT_SHOW_ITEMXPACK_TITLE"] = "Información ampliada del item"
+L["TT_SHOW_ITEMXPACK_ENABLED"] = [[Muestra información ampliada sobre el item, como la expansión a la que pertenece.
 
--- E.g.
+-- Ej.
 
  -- |cFFFFD700Info:|r |cFF00FF9AAlchemy, 65|r
- -- |cFFFFD700Goes in:|r |cFF00FF9AGem Bag|r
- -- |cFFFFD700Expansion:|r |cFF00FF9ABurning Crusade|r |cFFFFFF00(2.0)|r]]
--- L["TT_SHOW_ITEMXPACK_DISABLED"] = [[No information is displayed.
+ -- |cFFFFD700Entra en:|r |cFF00FF9AGem Bag|r
+ -- |cFFFFD700Expansión:|r |cFF00FF9ABurning Crusade|r |cFFFFFF00(2.0)|r]]
+L["TT_SHOW_ITEMXPACK_DISABLED"] = [[No se muestra ninguna información.
 
--- Note that this option is tied to 
+-- Tenga en cuenta que esta opción está vinculada a 
 -- |cFFFF7F00Show item source|r]]
 
--- L["TT_SHOW_NODES_TEXT"] = "Show counters on gathering nodes"
--- L["TT_SHOW_NODES_TITLE"] = "Show counters on gathering nodes"
--- L["TT_SHOW_NODES_ENABLED"] = "When mousing over a gathering node (herbs, mines), display the amount of related items owned."
--- L["TT_SHOW_NODES_DISABLED"] = "No information is displayed."
+L["TT_SHOW_COULDBESTORED_TEXT"] = "Mostrar el lugar de almacenamiento alternativo"
+L["TT_SHOW_COULDBESTORED_TITLE"] = "Muestra el lugar de almacenamiento alternativo"
+L["TT_SHOW_COULDBESTORED_ENABLED"] = [[Muestra en qué banco de alters se pueden almacenar materiales de expansiones anteriores.
 
--- L["TT_SHOW_BOTHFACTIONS_TEXT"] = "Show counters for both factions"
--- L["TT_SHOW_BOTHFACTIONS_TITLE"] = "Show counters for both factions"
--- L["TT_SHOW_BOTHFACTIONS_ENABLED"] = "Display the amount of items owned by characters of the opposite faction."
--- L["TT_SHOW_BOTHFACTIONS_DISABLED"] = "Only information about the current faction is displayed."
+Ej.
 
--- L["TT_SHOW_MERGEDREALMS_TEXT"] = "Show counters for connected realms"
--- L["TT_SHOW_MERGEDREALMS_TITLE"] = "Show counters for connected realms"
--- L["TT_SHOW_MERGEDREALMS_ENABLED"] = "Display the amount of items owned by characters on realms connected to the current realm."
--- L["TT_SHOW_MERGEDREALMS_DISABLED"] = "Only information about the current realm is displayed."
+ |cFFFFD700Podría ser almacenado en:|r |cFF69CCF0Thaoky|r]]
+L["TT_SHOW_COULDBESTORED_DISABLED"] = "No se muestra ninguna información."
 
--- L["TT_SHOW_ALLREALMS_TEXT"] = "Show counters for all realms"
--- L["TT_SHOW_ALLREALMS_TITLE"] = "Show counters for all realms"
--- L["TT_SHOW_ALLREALMS_ENABLED"] = "Information from all realms is also displayed for account bound items."
--- L["TT_SHOW_ALLREALMS_DISABLED"] = [[Only information about the current realm is displayed.
+L["TT_SHOW_NODES_TEXT"] = "Mostrar contadores en los nodos de recolección"
+L["TT_SHOW_NODES_TITLE"] = "Mostrar contadores en los nodos de recolección"
+L["TT_SHOW_NODES_ENABLED"] = "Al pasar el ratón por un nodo de recolección (hierbas, menas), muestra la cantidad de objetos relacionados que se poseen."
+L["TT_SHOW_NODES_DISABLED"] = "No se muestra ninguna información."
 
--- Note: this option supersedes |cFFFF7F00Show counters for connected realms|r for account bound items.]]
+L["TT_SHOW_BOTHFACTIONS_TEXT"] = "Mostrar contadores para ambas facciones"
+L["TT_SHOW_BOTHFACTIONS_TITLE"] = "Mostrar contadores para ambas facciones"
+L["TT_SHOW_BOTHFACTIONS_ENABLED"] = "Muestra la cantidad de items que poseen los personajes de la facción contraria."
+L["TT_SHOW_BOTHFACTIONS_DISABLED"] = "Sólo se muestra información sobre la facción actual."
 
--- L["TT_SHOW_ALLACCOUNTS_TEXT"] = "Show counters for all accounts"
--- L["TT_SHOW_ALLACCOUNTS_TITLE"] = "Show counters for all accounts"
--- L["TT_SHOW_ALLACCOUNTS_ENABLED"] = "Information from all imported accounts is also displayed."
--- L["TT_SHOW_ALLACCOUNTS_DISABLED"] = "Only information about the current account is displayed."
+L["TT_SHOW_MERGEDREALMS_TEXT"] = "Mostrar contadores de reinos conectados"
+L["TT_SHOW_MERGEDREALMS_TITLE"] = "Mostrar contadores de reinos conectados"
+L["TT_SHOW_MERGEDREALMS_ENABLED"] = "Muestra la cantidad de items que poseen los personajes de los reinos conectados al reino actual."
+L["TT_SHOW_MERGEDREALMS_DISABLED"] = "Sólo se muestra información sobre el reino actual."
 
--- L["TT_SHOW_HEARTHSTONE_TEXT"] = "Show counters for hearthstones"
--- L["TT_SHOW_HEARTHSTONE_TITLE"] = "Show counters for hearthstones"
--- L["TT_SHOW_HEARTHSTONE_ENABLED"] = "Display counters when mousing over a hearthstone, the Admiral's Compass, or the Flight Master's Whistle."
--- L["TT_SHOW_HEARTHSTONE_DISABLED"] = "Hide the counters when mousing over one of these items."
+L["TT_SHOW_ALLREALMS_TEXT"] = "Mostrar contadores para todos los reinos"
+L["TT_SHOW_ALLREALMS_TITLE"] = "Mostrar contadores para todos los reinos"
+L["TT_SHOW_ALLREALMS_ENABLED"] = "La información de todos los reinos también se muestra para los items vinculados a la cuenta."
+L["TT_SHOW_ALLREALMS_DISABLED"] = [[Sólo se muestra información sobre el reino actual.
+
+-- Nota: esta opción reemplaza a |cFFFF7F00Mostrar contadores de los reinos conectados|r para los items vinculados a la cuenta.]]
+
+L["TT_SHOW_ALLACCOUNTS_TEXT"] = "Mostrar los contadores para todas las cuentas"
+L["TT_SHOW_ALLACCOUNTS_TITLE"] = "Mostrar los contadores para todas las cuentas"
+L["TT_SHOW_ALLACCOUNTS_ENABLED"] = "También se muestra la información de todas las cuentas importadas."
+L["TT_SHOW_ALLACCOUNTS_DISABLED"] = "Sólo se muestra información sobre la cuenta actual."
+
+L["TT_SHOW_HEARTHSTONE_TEXT"] = "Mostrar contadores para las piedras de hogar"
+L["TT_SHOW_HEARTHSTONE_TITLE"] = "Mostrar contadores para las piedras de hogar"
+L["TT_SHOW_HEARTHSTONE_ENABLED"] = "Muestra contadores al pasar el ratón por encima de una piedra de hogar, la brújula del almirante o el silbato del jefe de vuelo."
+L["TT_SHOW_HEARTHSTONE_DISABLED"] = "Oculta los contadores cuando pasa el ratón por encima de uno de estos items."
 
 
 
 
 -- ** Settings / Altoholic / Calendar **
--- L["Calendar Options"] = true
+L["Calendar Options"] = "Opciones de calendario"
 L["Week starts on Monday"] = "La semana empieza el Lunes"
-L["Display warnings in a dialog box"] = "Mostrar alertas en un recuadro de di�logo"
+L["Display warnings in a dialog box"] = "Mostrar alertas en un recuadro de diálogo"
 L["Disable warnings"] = "Desactivar alertas"
--- L["Profession Cooldowns"] = true
--- L["Dungeon Resets"] = true
--- L["Calendar Events"] = true
--- L["Item Timers"] = true
+L["Profession Cooldowns"] = "Reutilización de profesión"
+L["Dungeon Resets"] = "Reinicios de mazmorras"
+L["Calendar Events"] = "Eventos del calendario"
+L["Item Timers"] = "Temporizadores de items"
+
+L["CALENDAR_WEEKSTART_MONDAY_TEXT"] = "La semana empieza el lunes"
+L["CALENDAR_WEEKSTART_MONDAY_TITLE"] = "La semana empieza el lunes"
+L["CALENDAR_WEEKSTART_MONDAY_ENABLED"] = "PARA HACER."
+L["CALENDAR_WEEKSTART_MONDAY_DISABLED"] = "PARA HACER."
+
+L["CALENDAR_WARNINGS_DIALOG_TEXT"] = "Mostrar advertencias en un cuadro de diálogo"
+L["CALENDAR_WARNINGS_DIALOG_TITLE"] = "Mostrar advertencias en un cuadro de diálogo"
+L["CALENDAR_WARNINGS_DIALOG_ENABLED"] = "Las advertencias se mostrarán en un cuadro de diálogo, en lugar del chat."
+L["CALENDAR_WARNINGS_DIALOG_DISABLED"] = "Las advertencias solo se mostrarán en el chat."
+
+L["CALENDAR_WARNINGS_ENABLED_TEXT"] = "Activar advertencias"
+L["CALENDAR_WARNINGS_ENABLED_TITLE"] = "Activar advertencias"
+L["CALENDAR_WARNINGS_ENABLED_ENABLED"] = "Altoholic mostrará un aviso cuando se produzca un determinado evento."
+L["CALENDAR_WARNINGS_ENABLED_DISABLED"] = "Altoholic no mostrará ninguna advertencia."
 
 -- ** Settings / Altoholic / Miscellaneous **
--- L["Miscellaneous Options"] = true
-L["Use color-coding for recipes at the AH"] = "Usa c�digos de colores para las recetas en la subasta"
-L["Use color-coding for recipes at vendors"] = "Usa c�digos de colores para las recetas en los vendedores"
+L["Miscellaneous Options"] = "Opciones varias"
+L["Use color-coding for recipes at the AH"] = "Usar códigos de colores para las recetas en la subasta"
+L["Use color-coding for recipes at vendors"] = "Usar códigos de colores para las recetas en los vendedores"
 
 
 -- ** Settings / DataStore / Auctions **
--- L["DataStore_Auctions' Options"] = true
+L["DataStore_Auctions' Options"] = "Opciones"
 
--- L["LAST_VISIT_SLIDER_LABEL"] = "Last Visit Warning"
--- L["LAST_VISIT_SLIDER_TITLE"] = "Last Auction House Visit Warning"
--- L["LAST_VISIT_SLIDER_TOOLTIP"] = "Warn when auction house has not been visited since more days than this value"
+L["LAST_VISIT_SLIDER_LABEL"] = "Aviso de última visita"
+L["LAST_VISIT_SLIDER_TITLE"] = "Aviso de la última visita a la casa de subastas"
+L["LAST_VISIT_SLIDER_TOOLTIP"] = "Avisa cuando la casa de subastas no ha sido visitada desde hace más días que este valor"
 
--- L["LAST_VISIT_CHECK_DISABLED"] = "The time of the last auction house visit will not be checked."
--- L["LAST_VISIT_CHECK_ENABLED"] = "The time of the last auction house visit of each character will be checked. Client add-ons will get a notification for each character who has not visited the auction house for longer than this value."
--- L["LAST_VISIT_CHECK_LABEL"] = "Last Auction House Visit"
--- L["LAST_VISIT_CHECK_TITLE"] = "Check Last Visit Time"
+L["LAST_VISIT_CHECK_DISABLED"] = "No se comprobará la hora de la última visita a la casa de subastas."
+L["LAST_VISIT_CHECK_ENABLED"] = "Se comprobará la hora de la última visita a la casa de subastas de cada personaje. Los complementos del cliente recibirán una notificación por cada personaje que no haya visitado la casa de subastas durante más tiempo que este valor."
+L["LAST_VISIT_CHECK_LABEL"] = "Última visita a la casa de subastas"
+L["LAST_VISIT_CHECK_TITLE"] = "Comprobar la hora de la última visita"
 
-L["CLEAR_EXPIRED_ITEMS_LABEL"] = "Borrar autom�ticamente subastas y pujas terminadas"
+L["CLEAR_EXPIRED_ITEMS_LABEL"] = "Borrar automáticamente subastas y pujas terminadas"
 L["CLEAR_EXPIRED_ITEMS_TITLE"] = "Borrar objetos de la Casa de Subastas"
-L["CLEAR_EXPIRED_ITEMS_ENABLED"] = "Objetos con tiempo terminado son borrados autom�ticamente de la base de datos."
+L["CLEAR_EXPIRED_ITEMS_ENABLED"] = "Objetos con tiempo terminado son borrados automáticamente de la base de datos."
 L["CLEAR_EXPIRED_ITEMS_DISABLED"] = "Objetos con tiempo terminado permanecen en la base de datos hasta que el jugador visite de nuevo la casa de subastas."
 
 -- ** Settings / DataStore / Characters **
--- L["DataStore_Characters' Options"] = true
--- L["HIDE_PLAYTIME_DISABLED"] = "Your real play time will be displayed."
--- L["HIDE_PLAYTIME_ENABLED"] = "A play time of zero days will be displayed."
--- L["HIDE_PLAYTIME_TEXT"] = "Hide real play time."
--- L["HIDE_PLAYTIME_TITLE"] = "Hide Real Play Time"
+L["DataStore_Characters' Options"] = "DataStore_Characters' Opciones"
+L["HIDE_PLAYTIME_DISABLED"] = "Se mostrará su tiempo de juego real."
+L["HIDE_PLAYTIME_ENABLED"] = "Se mostrará un tiempo de juego de cero días."
+L["HIDE_PLAYTIME_TEXT"] = "Oculta el tiempo de juego real."
+L["HIDE_PLAYTIME_TITLE"] = "Ocultar el tiempo de juego real"
 
--- L["REQUEST_PLAYTIME_DISABLED"] = "Play time will not be queried at logon. The last known value will be sent to client addons."
--- L["REQUEST_PLAYTIME_ENABLED"] = "Play time will be queried every time you log in."
--- L["REQUEST_PLAYTIME_TEXT"] = "Request play time at logon."
--- L["REQUEST_PLAYTIME_TITLE"] = "Request Play Time"
+L["REQUEST_PLAYTIME_DISABLED"] = "El tiempo de juego no se consultará al iniciar la sesión. El último valor conocido se enviará a los complementos del cliente."
+L["REQUEST_PLAYTIME_ENABLED"] = "El tiempo de juego se consultará cada vez que se conecte."
+L["REQUEST_PLAYTIME_TEXT"] = "Solicita tiempo de juego al iniciar la sesión."
+L["REQUEST_PLAYTIME_TITLE"] = "Solicitar tiempo de juego"
 
 
 -- ** Settings / DataStore / Garrisons **
 -- L["DataStore_Garrisons' Options"] = true
--- L["REPORT_LEVEL_LABEL"] = "Report at %s%s"
--- L["REPORT_LEVEL_TITLE"] = "Report Level Threshold"
--- L["REPORT_LEVEL_TOOLTIP"] = "Report when the level of uncollected resources is higher than this value"
+L["REPORT_LEVEL_LABEL"] = "Reportar en %s%s"
+L["REPORT_LEVEL_TITLE"] = "Umbral de Reportar Nivel"
+L["REPORT_LEVEL_TOOLTIP"] = "Reportar cuando el nivel de recursos no recogidos sea superior a este valor"
 
--- L["REPORT_UNCOLLECTED_LABEL"] = "Report uncollected resources"
--- L["REPORT_UNCOLLECTED_TITLE"] = "Report uncollected resources"
--- L["REPORT_UNCOLLECTED_ENABLED"] = "At logon, alts with more than 400 uncollected resources will be reported to the chat frame."
--- L["REPORT_UNCOLLECTED_DISABLED"] = "Nothing will be reported."
--- L["UNCOLLECTED_RESOURCES_ALERT"] = "%s has %s uncollected resources"
+L["REPORT_UNCOLLECTED_LABEL"] = "Reportar recursos no recogidos"
+L["REPORT_UNCOLLECTED_TITLE"] = "Reportar recursos no recogidos"
+L["REPORT_UNCOLLECTED_ENABLED"] = "Al iniciar sesión, los alters con más de 400 recursos sin recoger serán informados en el chat."
+L["REPORT_UNCOLLECTED_DISABLED"] = "No se informará nada."
+L["UNCOLLECTED_RESOURCES_ALERT"] = "%s tiene %s recursos sin recoger"
 
 -- ** Settings / DataStore / Inventory **
 -- L["DataStore_Inventory's Options"] = true
-L["CLEAR_INVENTORY_TEXT"] = "Borrar autom�ticamente el equipamiento de los miembros de la hermandad"
+L["CLEAR_INVENTORY_TEXT"] = "Borrar automáticamente el equipamiento de los miembros de la hermandad"
 L["CLEAR_INVENTORY_TITLE"] = "Borrado del equipamiento de los miembros de la hermandad"
-L["CLEAR_INVENTORY_ENABLED"] = "Para ahorrar memoria, los inventarios de los miembros de la hermandad se borran cada vez que inicies sesi�n."
-L["CLEAR_INVENTORY_DISABLED"] = "El equipo de tus compa�eros de hermandad permanece en la base de datos, y es visible incluso si est�n desconectados."
+L["CLEAR_INVENTORY_ENABLED"] = "Para ahorrar memoria, los inventarios de los miembros de la hermandad se borran cada vez que inicies sesión."
+L["CLEAR_INVENTORY_DISABLED"] = "El equipo de tus compañeros de hermandad permanece en la base de datos, y es visible incluso si están desconectados."
 
--- L["BROADCAST_AIL_TEXT"] = "Broadcast my average item level to guild at logon"
--- L["BROADCAST_AIL_TITLE"] = "Broadcast average item level"
--- L["BROADCAST_AIL_ENABLED"] = "Your alts' average item level will be sent on the guild channel at logon."
--- L["BROADCAST_AIL_DISABLED"] = "Nothing will be sent at all."
+L["BROADCAST_AIL_TEXT"] = "Informar mi nivel de objeto a la hermandad al iniciar sesión"
+L["BROADCAST_AIL_TITLE"] = "Informar nivel de objeto"
+L["BROADCAST_AIL_ENABLED"] = "El nivel medio de los items de tus alters se enviará al chat de la hermandad al iniciar sesión."
+L["BROADCAST_AIL_DISABLED"] = "No se enviará nada en absoluto."
 
--- L["EQUIP_REQ_TEXT"] = "Be notified when someone inspects one of my alts' equipment."
--- L["EQUIP_REQ_TITLE"] = "Equipment Request Notification"
--- L["EQUIP_REQ_ENABLED"] = "A chat message will inform you about which guild member is inspecting which alt."
--- L["EQUIP_REQ_DISABLED"] = "Nothing will be displayed at all."
+L["EQUIP_REQ_TEXT"] = "Ser notificado cuando alguien inspeccione el equipo de uno de mis alters."
+L["EQUIP_REQ_TITLE"] = "Notificación de solicitud de equipo"
+L["EQUIP_REQ_ENABLED"] = "Un mensaje de chat te informará sobre qué miembro de la hermandad está inspeccionando qué alter."
+L["EQUIP_REQ_DISABLED"] = "No se mostrará nada en absoluto."
 
 -- ** Settings / DataStore / Mails **
 -- L["DataStore_Mails' Options"] = true
 
--- L["SLIDER_EXPIRY_TITLE"] = "Mail Expiry Threshold"
-L["SLIDER_EXPIRY_TOOLTIP"] = "Avisar cuando el correo sea borrado en menos d�as que los indicados"
+L["SLIDER_EXPIRY_TITLE"] = "Umbral de expiración de correo"
+L["SLIDER_EXPIRY_TOOLTIP"] = "Avisar cuando el correo sea borrado en menos días que los indicados"
 
-L["EXPIRY_CHECK_LABEL"] = "Advertencia de Borrado de Correo"
-L["EXPIRY_CHECK_TITLE"] = "Revisar Tiempos de Borrado de Correo"
-L["EXPIRY_CHECK_ENABLED"] = "Los tiempos de borrado de correo ser�n revisados 5 segundos despu�s de iniciar sesi�n. Accesorios que use DataStore ser�n notificados si un correo a punto de borrarse es encontrado."
-L["EXPIRY_CHECK_DISABLED"] = "No se realizar� una revis�n de tiempos de borrado."
+L["EXPIRY_CHECK_LABEL"] = "Advertencia de borrado de Correo"
+L["EXPIRY_CHECK_TITLE"] = "Revisar tiempos de borrado de Correo"
+L["EXPIRY_CHECK_ENABLED"] = "Los tiempos de borrado de correo serán revisados 5 segundos después de iniciar sesión. Accesorios que use DataStore serán notificados si un correo a punto de borrarse es encontrado."
+L["EXPIRY_CHECK_DISABLED"] = "No se realizará una revisón de tiempos de borrado."
 
--- L["REPORT_EXPIRED_MAILS_LABEL"] = "Mail expiry warning (chat frame)"
--- L["REPORT_EXPIRED_MAILS_TITLE"] = "Mail expiry warning (chat frame)"
--- L["REPORT_EXPIRED_MAILS_ENABLED"] = "During the mail expiry check, the list of characters with expired emails will also be displayed in the chat frame."
--- L["REPORT_EXPIRED_MAILS_DISABLED"] = "Nothing will be displayed in the chat frame."
+L["REPORT_EXPIRED_MAILS_LABEL"] = "Aviso de caducidad del correo (chat frame)"
+L["REPORT_EXPIRED_MAILS_TITLE"] = "Aviso de caducidad del correo (chat frame)"
+L["REPORT_EXPIRED_MAILS_ENABLED"] = "Durante la comprobación de caducidad del correo, la lista de caracteres con correos electrónicos caducados también se mostrará en el chat."
+L["REPORT_EXPIRED_MAILS_DISABLED"] = "No se mostrará nada en el chat."
 
-L["SCAN_MAIL_BODY_LABEL"] = "Escanear el contenido de los correos (marcarlos como le�dos)"
+L["SCAN_MAIL_BODY_LABEL"] = "Escanear el contenido de los correos (marcarlos como leídos)"
 L["SCAN_MAIL_BODY_TITLE"] = "Escaneo Completo del Correo"
-L["SCAN_MAIL_BODY_ENABLED"] = "Los correos ser�n completamente escaneados al abrir el buz�n. Todos los correos ser�n marcados como le�dos."
-L["SCAN_MAIL_BODY_DISABLED"] = "S�lo correos le�dos ser�n escaneados. Los correos seguir�n teniendo el estado de no le�dos."
+L["SCAN_MAIL_BODY_ENABLED"] = "Los correos serán completamente escaneados al abrir el buzón. Todos los correos serán marcados como leídos."
+L["SCAN_MAIL_BODY_DISABLED"] = "Sólo correos leídos serán escaneados. Los correos seguirán teniendo el estado de no leídos."
 
 L["EXPIRY_ALL_ACCOUNTS_LABEL"] = "Revisar todos los tiempos de borrado de correo en todas las cuentas conocidas"
-L["EXPIRY_ALL_ACCOUNTS_TITLE"] = "Revisi�n de Todas las Cuentas"
-L["EXPIRY_ALL_ACCOUNTS_ENABLED"] = "La revisi�n de los tiempos de borrado de correo mirar� todas las cuentas conocidas."
-L["EXPIRY_ALL_ACCOUNTS_DISABLED"] = "S�lo la cuenta actual ser� tomada en consideraci�n; cuentas importadas ser�n ignoradas."
+L["EXPIRY_ALL_ACCOUNTS_TITLE"] = "Revisión de Todas las Cuentas"
+L["EXPIRY_ALL_ACCOUNTS_ENABLED"] = "La revisión de los tiempos de borrado de correo mirará todas las cuentas conocidas."
+L["EXPIRY_ALL_ACCOUNTS_DISABLED"] = "Sólo la cuenta actual será tomada en consideración; cuentas importadas serán ignoradas."
 
 L["EXPIRY_ALL_REALMS_LABEL"] = "Revisar todos los tiempos de borrado de correo en todas los reinos conocidos"
-L["EXPIRY_ALL_REALMS_TITLE"] = "Revisi�n de Todos los Reinos"
-L["EXPIRY_ALL_REALMS_ENABLED"] = "La revisi�n de los tiempos de borrado de correo mirar� todas los reinos conocidos."
-L["EXPIRY_ALL_REALMS_DISABLED"] = "S�lo el reino actual ser� tomado en consideraci�n; otros reinos ser�n ignorados."
+L["EXPIRY_ALL_REALMS_TITLE"] = "Revisión de Todos los Reinos"
+L["EXPIRY_ALL_REALMS_ENABLED"] = "La revisión de los tiempos de borrado de correo mirará todas los reinos conocidos."
+L["EXPIRY_ALL_REALMS_DISABLED"] = "Sólo el reino actual será tomado en consideración; otros reinos serán ignorados."
 
--- L["EXPIRED_EMAILS_WARNING"] = "%s (%s) has expired (or about to expire) mails "
+L["EXPIRED_EMAILS_WARNING"] = "%s (%s) tiene correos caducados (o a punto de caducar)"
 
 
 -- ** Settings / DataStore / Quests **
 -- L["DataStore_Quests' Options"] = true
 
--- L["TRACK_TURNINS_LABEL"] = "Track Quest Turn-ins"
--- L["TRACK_TURNINS_TITLE"] = "Track Quest Turn-ins"
--- L["TRACK_TURNINS_ENABLED"] = "Turned-in quests are saved into the history, to make sure it remains constantly valid."
--- L["TRACK_TURNINS_DISABLED"] = "The quest history will remain in its current state, either empty or outdated."
+L["TRACK_TURNINS_LABEL"] = "Seguimiento de entregas de misiones"
+L["TRACK_TURNINS_TITLE"] = "Seguimiento de entregas de misiones"
+L["TRACK_TURNINS_ENABLED"] = "Las misiones entregadas se guardan en el historial, para asegurarse de que siga siendo válida constantemente."
+L["TRACK_TURNINS_DISABLED"] = "El historial de misiones permanecerá en su estado actual, ya sea vacío o desactualizado."
 
--- L["AUTO_UPDATE_LABEL"] = "Auto-update History"
--- L["AUTO_UPDATE_TITLE"] = "Auto-Update Quest History"
--- L["AUTO_UPDATE_ENABLED"] = "A character's quest history will be refreshed every time you login with that character."
--- L["AUTO_UPDATE_DISABLED"] = "The quest history will remain in its current state, either empty or outdated."
+L["AUTO_UPDATE_LABEL"] = "Actualización automática del historial"
+L["AUTO_UPDATE_TITLE"] = "Actualización automática del historial de misiones"
+L["AUTO_UPDATE_ENABLED"] = "El historial de misiones de un personaje se actualizará cada vez que inicies sesión con ese personaje."
+L["AUTO_UPDATE_DISABLED"] = "El historial de misiones permanecerá en su estado actual, ya sea vacío o desactualizado."
 
--- L["DAILY_QUESTS_RESET_LABEL"] = "Reset daily quests at"
+L["DAILY_QUESTS_RESET_LABEL"] = "Restablecer misiones diarias en"
 
 
 -- ** Sharing / Authorizations **
--- L["Authorizations"] = true
--- L["Ask"] = true
--- L["Auto"] = true
+L["Authorizations"] = "Autorizaciones"
+L["Ask"] = "Preguntar"
+L["Auto"] = "Auto"
 
--- L["ACCOUNT_SHARING_ACTIVE_LABEL"] = "Account Sharing Enabled"
--- L["ACCOUNT_SHARING_ACTIVE_TITLE"] = "Account Sharing Enabled"
--- L["ACCOUNT_SHARING_ACTIVE_ENABLED"] = [[Other users will be allowed to send you account sharing requests.
+L["ACCOUNT_SHARING_ACTIVE_LABEL"] = "Compartir cuenta activado"
+L["ACCOUNT_SHARING_ACTIVE_TITLE"] = "Compartir cuenta activado"
+L["ACCOUNT_SHARING_ACTIVE_ENABLED"] = [[Otros usuarios podrán enviarle solicitudes para compartir la cuenta.
 
--- Your confirmation will still be required any time someone requests your information.]]
--- L["ACCOUNT_SHARING_ACTIVE_DISABLED"] = [[All requests will automatically be rejected.
+-- Su confirmación seguirá siendo necesaria cada vez que alguien solicite su información.]]
+L["ACCOUNT_SHARING_ACTIVE_DISABLED"] = [[Todas las solicitudes serán rechazadas automáticamente.
 
--- |cFF1CFAFESecurity hint|r: Only enable this when you actually need to transfer data, disable otherwise.]]
+-- |cFF1CFAFESugerencia de seguridad|r: Sólo active esto cuando realmente necesite transferir datos, desactívelo en caso contrario.]]
 
--- L["ACCOUNT_SHARING_AUTH_INFO"] = [[This list allows you to automate responses to account sharing requests.
--- You can choose to automatically |cFF00FF00accept|r or |cFFFF0000reject|r requests, or be |cFFFFFF00asked|r when a request comes in.
--- If account sharing is totally disabled, this list will be ignored, and all requests will be rejected.]]
+L["ACCOUNT_SHARING_AUTH_INFO"] = [[Esta lista permite automatizar las respuestas a las solicitudes de compartición de cuentas.
+-- Puede elegir que se haga de forma automática |cFF00FF00aceptar|r o |cFFFF0000cancelar|r solicitudes, o |cFFFFFF00preguntar|r cuando llega una solicitud.
+-- Si la compartición de cuentas está totalmente desactivada, esta lista será ignorada y todas las solicitudes serán rechazadas.]]
 
--- L["ACCOUNT_SHARING_AUTH_ASK"] = "Ask me whenever an account sharing request is sent by this player"
--- L["ACCOUNT_SHARING_AUTH_AUTO"] = "Automatically authorize account sharing requests sent by this player"
--- L["ACCOUNT_SHARING_AUTH_NEVER"] = "Automatically reject account sharing requests sent by this player"
+L["ACCOUNT_SHARING_AUTH_ASK"] = "Pregúntame cada vez que este jugador envíe una solicitud para compartir una cuenta"
+L["ACCOUNT_SHARING_AUTH_AUTO"] = "Autorizar automáticamente las solicitudes de compartición de cuentas enviadas por este jugador"
+L["ACCOUNT_SHARING_AUTH_NEVER"] = "Rechazar automáticamente las solicitudes de compartición de cuentas enviadas por este jugador"
 
 -- ** Sharing / Content **
--- L["Shared Content"] = true
+L["Shared Content"] = "Contenido compartido"
 
 
--- L["SHARED_CONTENT_INFO"] = [[Select the content that will be visible to players who send you account sharing requests.]]
+L["SHARED_CONTENT_INFO"] = [[Seleccione el contenido que será visible para los jugadores que le envíen solicitudes para compartir la cuenta.]]
 
 -- ** Sharing / Share ! **
--- L["Share"] = true
--- L["Account Name"] = true
--- L["Send account sharing request to:"] = true
--- L["Send Request"] = true
--- L["Request Content"] = true
+L["Share"] = "Compartir"
+L["Account Name"] = "Nombre de la cuenta"
+L["Send account sharing request to:"] = "Envíe la solicitud de compartir la cuenta a:"
+L["Send Request"] = "Enviar solicitud"
+L["Request Content"] = "Solicitar contenido"
 
--- L["ACCOUNT_NAME_INFO"] = [[Enter an account name that will be used for |cFF00FF00display|r purposes only.
+L["ACCOUNT_NAME_INFO"] = [[Introduzca un nombre de cuenta que se utilizará para |cFF00FF00mostrar|r propósitos solamente.
 
--- This name can be anything you like, it does |cFFFF0000NOT|r have to be the real account name. This field |cFFFF0000cannot|r be left empty.]]
+-- Este nombre puede ser cualquier cosa, de hecho |cFFFF0000NO|r tiene porque ser el nombre real de la cuenta. Este campo |cFFFF0000no puede|r dejarse vacío.]]
 
--- L["EMPTY_ACCOUNT_WARNING"] = "[Account Name] This field |cFF00FF00cannot|r be left empty."
+L["EMPTY_ACCOUNT_WARNING"] = "[Nombre de la cuenta] Este campo |cFF00FF00no puede|r dejarse vacío."
 
 
 
 -- ** Help **
--- L["HELP_SHARING_HOWTO"] = [[
--- |cFF00FF00Q:|cFFFFFFFF How do I share data between two accounts ?|r|r
+L["HELP_SHARING_HOWTO"] = [[
+-- |cFF00FF00Q:|cFFFFFFFF ¿Cómo puedo compartir datos entre dos cuentas?|r|r
 
--- Both accounts must be connected at the same time for this feature to work. If you are the owner of both accounts, you must run two parallel instances of the WoW client.
+-- Ambas cuentas deben estar conectadas al mismo tiempo para que esta característica funcione. Si eres el propietario de ambas cuentas, debes ejecutar dos instancias paralelas del cliente de WoW.
 
--- |cFF00FF00Q:|cFFFFFFFF Is the transfer of information bidirectional ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿La transferencia de información es bidireccional?|r|r
 
--- No. The transfer uses the game's communication channels, so the throughput is throttled. If you want to have the same data on both sides, you have to repeat the process twice.
+-- No. La transferencia utiliza los canales de comunicación del juego, por lo que el rendimiento se ve limitado. Si quieres tener los mismos datos en ambos lados, tienes que repetir el proceso dos veces.
 
--- |cFF00FF00Q:|cFFFFFFFF Is there any setup before I can share data ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Hay alguna configuración antes de poder compartir los datos?|r|r
 
--- Yes. By default, and for security reasons, account sharing is disabled, so the first step is to enable it on both sides, this is done in |cFF1CFAFE2|r|cFFFFFFFF. Authorizations|r.
+-- Sí. Por defecto y por motivos de seguridad, la compartición de cuentas está desactivada, por lo que el primer paso es activarla en ambos lados, esto se hace en |cFF1CFAFE2|r|cFFFFFFFF. Autorizaciones|r.
 
--- The next step is to setup the authorizations. The account receiving the information must determine who may send it requests. Any requestor not in the list will see its request rejected.
+-- El siguiente paso es configurar las autorizaciones. La cuenta que recibe la información debe determinar quién puede enviarle solicitudes. Cualquier solicitante que no esté en la lista verá su solicitud rechazada.
 
--- The last step is to determine which information is shared, this is done in |cFF1CFAFE3|r|cFFFFFFFF. Shared Content|r.
+-- El último paso es determinar qué información se comparte, esto se hace en |cFF1CFAFE3|r|cFFFFFFFF. Contenido compartido|r.
 
--- |cFF00FF00Q:|cFFFFFFFF The transfer seems slow, even stopped at times, what is the problem ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF La transferencia parece lenta, incluso se detiene a veces, ¿cuál es el problema?|r|r
 
--- As mentioned above, the transfer uses the game's communication channels, so this means that all the information is sent from account A to account B via Blizzard's server. This will take time, be patient. As long as there is no Lua error, you are fine, data will get through. 
+-- Como se ha mencionado anteriormente, la transferencia utiliza los canales de comunicación del juego, por lo que esto significa que toda la información se envía de la cuenta A a la cuenta B a través del servidor de Blizzard. Esto tomará tiempo, séa paciente. Mientras no haya un error de Lua, todo está bien, los datos llegarán. 
 
--- |cFF00FF00Q:|cFFFFFFFF Can the process be improved ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Se puede mejorar el proceso?|r|r
 
--- No. Data is compressed before being sent to minize traffic on the network, but the more information you share, the longer it will take. If you have doubts about the process, test it with just one character to validate that things are working, then try again with more.
+-- No. Los datos se comprimen antes de ser enviados para minimizar el tráfico en la red, pero cuanta más información comparte, más tiempo tardará. Si tiene dudas sobre el proceso, pruébelo con un solo personaje para validar que las cosas funcionan y luego vuelva a intentarlo con más.
 -- ]]
 
--- L["HELP_ALTOHOLIC_GENERAL"] = [[
--- |cFF00FF00Q:|cFFFFFFFF How does the add-on work ?|r|r
+L["HELP_ALTOHOLIC_GENERAL"] = [[
+-- |cFF00FF00Q:|cFFFFFFFF ¿Cómo funciona el complemento?|r|r
 
--- When one of your alts enters the world, a maximum of information will automatically populate the add-on's database.
--- However, some of this information cannot be read unless you trigger the event that makes it available. This is a restriction imposed by the game, not a limitation of the add-on.
+-- Cuando uno de tus alters entra en el mundo, la base de datos del complemento se rellena automáticamente con un máximo de información.
+-- Sin embargo, parte de esta información no puede leerse a menos que se active el evento que la hace disponible. Esta es una restricción impuesta por el juego, no una limitación del complemento.
 
--- |cFF00FF00Q:|cFFFFFFFF What kind of information ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Qué tipo de información?|r|r
 
--- The mailbox, the auction house and both your bank and guild bank are subject to this restriction.
--- Your character has to be physically present at those places for the add-on to be able to read this information.
+-- El buzón, la casa de subastas y tanto tu banco como el de la hermandad están sujetos a esta restricción.
+-- Tu personaje tiene que estar físicamente presente en esos lugares para que el complemento pueda leer esta información.
 
--- Profession information is also impacted, you will have to open each profession's panel to fully benefit from the add-on's functionalities.
+-- La información de la profesión también se ve afectada, tendrás que abrir el panel de cada profesión para beneficiarte plenamente de las funcionalidades del complemento.
 
--- |cFF00FF00Q:|cFFFFFFFF Does Altoholic support command line options ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Admite Altoholic opciones de línea de comandos?|r|r
 
--- Yes, type |cFFFF7F00/alto|r or |cFFFF7F00/altoholic|r to get the list of command line options.
+-- Sí, escribe |cFFFF7F00/alto|r o |cFFFF7F00/altoholic|r para obtener la lista de opciones de la línea de comandos.
 
--- |cFF00FF00Q:|cFFFFFFFF My minimap icon is gone, how do I get it back ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF Mi icono del minimapa ha desaparecido, ¿cómo lo recupero?|r|r
 
--- Stay in the Options tab, click on |cFFFF7F00Settings => Altoholic => General|r, and check the option 'Show Minimap Icon'.
+-- Permanezca en la pestaña Opciones, haga clic en |cFFFF7F00Ajustes => Altoholic => General|r, y marque la opción "Mostrar el icono en el minimapa".
 
--- |cFF00FF00Q:|cFFFFFFFF Can I bind Altoholic to a specific key ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Puedo vincular Altoholic a una tecla específica?|r|r
 
--- Yes. Use the game's |cFFFF7F00Key Bindings|r menu to select the key you like best. 
+-- Sí. Utiliza la función del juego |cFFFF7F00Atajos de teclado|r para seleccionar la tecla que más le guste. 
 
--- I personally bind it to the |cFF1CFAFEJ|r key, because the ridge makes it easy to find.
+-- Personalmente, lo vinculo a la letra |cFF1CFAFEJ|r, porque la cresta hace que sea fácil de encontrar.
 -- ]]
 
--- L["HELP_ALTOHOLIC_CHARACTERS"] = [[
--- |cFF00FF00Q:|cFFFFFFFF Why can I only see one alt ?|r|r
+L["HELP_ALTOHOLIC_CHARACTERS"] = [[
+-- |cFF00FF00Q:|cFFFFFFFF ¿Por qué sólo puedo ver un alter?|r|r
 
--- If this is your first time using the add-on, this is normal. Add-on's may only get information about the character you are currently playing with. This is another restriction of the game.
+-- Si es la primera vez que usas el complemento, es normal. Los complementos sólo pueden obtener información sobre el personaje con el que estás jugando en ese momento. Esta es otra restricción del juego.
 
--- |cFF00FF00Q:|cFFFFFFFF You mean I have to log in all my 37 alts one by one ???|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Quieres decir que tengo que iniciar sesión en todos mis 60 alters, uno por uno?|r|r
 
--- Yes I do. There is no other way.
+-- Sí, lo sé. No hay otra manera.
 
--- |cFF00FF00Q:|cFFFFFFFF I deleted an alt, or moved it to another realm, why does the add-on not see it ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF He borrado un alter, o lo he movido a otro reino, ¿por qué el complemento no lo ve?|r|r
 
--- The add-on is only active when the game is running, and your character is in the game world. Everything that happens outside of that is out of reach for all add-on's.
--- If you have a leftover alt, you can simply delete it in the add-on.
+-- El complemento sólo está activo cuando el juego está en marcha y tu personaje está en el mundo del juego. Todo lo que ocurre fuera de eso está fuera del alcance de todos los complementos.
+-- Si te sobra un alter, puedes simplemente borrarlo en el complemento.
 
--- |cFF00FF00Q:|cFFFFFFFF How do I delete an alt from the add-on's database ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Cómo puedo eliminar un alter de la base de datos del complemento?|r|r
 
--- Go to the |cFFFF7F00Summary|r tab, |cFF1CFAFEright-click|r the alt's name, and choose |cFFFF7F00Delete this Alt|r.
+-- Ve a la pestaña |cFFFF7F00Resumen|r, |cFF1CFAFEclick derecho|r sobre el nombre del alter y elija |cFFFF7F00Borrar este Alter|r.
 
--- |cFF00FF00Q:|cFFFFFFFF I cannot see any alt, what is going on ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF No puedo ver ningún alter, ¿qué está pasando?|r|r
 
--- There are two possible reasons:
+-- Hay dos posibles razones:
 
--- - You may have a combination of filters in the |cFFFF7F00Account Summary|r that prevents any alt from being displayed, so check your filter settings.
+-- - Puede tener una combinación de filtros en el |cFFFF7F00Resumen de la cuenta|r que impide que se muestre cualquier alter, así que compruebe la configuración de su filtro.
 
--- - There may be a Lua error that is not displayed. 
+-- - Puede haber un error de Lua que no se muestra. 
 
--- Be sure to enable Lua errors with this command : |cFFFFFFFF/console scriptErrors|r |cFF00FF001|r
+-- Asegúrese de habilitar los errores de Lua con este comando: |cFFFFFFFF/console scriptErrors|r |cFF00FF001|r
 
--- If you wish to disable Lua errors afterwards : |cFFFFFFFF/console scriptErrors|r |cFF00FF000|r
+-- Si desea desactivar los errores de Lua después: |cFFFFFFFF/console scriptErrors|r |cFF00FF000|r
 -- ]]
 
--- L["HELP_DATASTORE_GENERAL"] = [[
--- |cFF00FF00Q:|cFFFFFFFF What is DataStore ?|r|r
+L["HELP_DATASTORE_GENERAL"] = [[
+-- |cFF00FF00Q:|cFFFFFFFF ¿Qué es DataStore?|r|r
 
--- DataStore is the main component of a series of add-ons that serve as data repositories in game. Their respective purpose is to offer scanning and storing services to other add-ons.
+-- DataStore es el componente principal de una serie de complementos que sirven como depósitos de datos en el juego. Su propósito respectivo es ofrecer servicios de exploración y almacenamiento a otros complementos.
 
--- |cFF00FF00Q:|cFFFFFFFF Why doing this ? Now I have 17 folders just for this !|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Por qué hacer esto? ¡Ahora tengo 17 carpetas sólo para esto!|r|r
 
--- There are multiple advantages, for both players and developers
+-- Las ventajas son múltiples, tanto para los jugadores como para los desarrolladores
 
--- - Data is |cFFFF7F00scanned|r only once for all client add-ons (|cFF00FF00performance gain|r).
+-- - Los datos son |cFFFF7F00escaneados|r sólo una vez para todos los complementos del cliente (|cFF00FF00aumento de rendimiento|r).
 
--- - Data is |cFFFF7F00stored|r only once for all client add-ons (|cFF00FF00memory gain|r).
+-- - Los datos son |cFFFF7F00almacenados|r sólo una vez para todos los complementos del cliente (|cFF00FF00aumento de memoria|r).
 
--- - Add-on authors can spend more time coding higher level features.
+-- - Los autores de complementos pueden dedicar más tiempo a codificar funciones de mayor nivel.
 
--- - Each module is an independant add-on, and therefore has its own SavedVariables file, meaning that you could clean a module's data without disturbing other modules.
+-- - Cada módulo es un complemento independiente y por lo tanto, tiene su propio archivo de Variables guardadas, lo que significa que podría limpiar los datos de un módulo sin perturbar otros módulos.
 
--- |cFF00FF00Q:|cFFFFFFFF What do all these modules do? Do I need to enable them all ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Qué hacen todos estos módulos? ¿Tengo que activarlos todos?|r|r
 
--- |cFFFF7F00DataStore|r is the main module, client add-ons should have a dependency on it, it should therefore remain enabled all the time, as it is the interface used to access data from the various modules.
--- The other modules are technically all optional, and could be enabled/disabled according to your needs. However, some of these modules, like |cFFFF7F00DataStore_Characters|r, play a major role in Altoholic, and must remain enabled. 
+-- |cFFFF7F00DataStore|r es el módulo principal, los complementos de los clientes deben depender de él, por lo que debe permanecer activado todo el tiempo, ya que es la interfaz utilizada para acceder a los datos de los distintos módulos.
+-- Los demás módulos son técnicamente opcionales y pueden activarse o desactivarse según sus necesidades. Sin embargo, algunos de estos módulos, como |cFFFF7F00DataStore_Characters|r, juegan un papel importante en Altoholic y deben permanecer habilitados. 
 
--- |cFF00FF00Q:|cFFFFFFFF How should I update DataStore and its modules ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Cómo debo actualizar DataStore y sus módulos?|r|r
 
--- |cFF1CFAFEAltoholic|r is always packaged with the latest versions, most users should upgrade using this method. Please refer to the add-on's homepage in the |cFFFF7F00About|r panel.
+-- |cFF1CFAFEAltoholic|r siempre está empaquetado con las últimas versiones, la mayoría de los usuarios deberían actualizar utilizando este método. Consulte la página de inicio del complemento en el panel |cFFFF7F00Acerca de|r.
 -- ]]
 
--- L["HELP_DATASTORE_SAVEDVARS"] = [[
--- |cFF00FF00Q:|cFFFFFFFF How do I clear data from DataStore ?|r|r
+L["HELP_DATASTORE_SAVEDVARS"] = [[
+-- |cFF00FF00Q:|cFFFFFFFF ¿Cómo se borran los datos de DataStore?|r|r
 
--- Characters and guilds can be erased from Altoholic's UI.
--- If you want more control over the information that has to be deleted, you can |cFF1CFAFEedit|r or |cFF1CFAFEremove|r the files from the |cFFFF7F00Saved Variables|r folder.
+-- Los personajes y hermandades pueden ser borrados de la interfaz de usuario de Altoholic.
+-- Si quieres tener más control sobre la información que debe ser eliminada, usted puede |cFF1CFAFEeditar|r o |cFF1CFAFEeliminar|r los archivos de la carpeta |cFFFF7F00Saved Variables|r.
 
--- |cFF00FF00Q:|cFFFFFFFF Where are the Saved Variables ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Dónde se encuentran las variables guardadas?|r|r
 
--- Databases are located in |cFFFF7F00WTF \\ Account \\ |cFF1CFAFEyour_account|r \\ SavedVariables|r.
+-- Las bases de datos se encuentran en |cFFFF7F00WTF \\ Account \\ |cFF1CFAFEyour_account|r \\ SavedVariables|r.
 
--- |cFF00FF00Q:|cFFFFFFFF What are the relevant files ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Cuáles son los archivos relevantes?|r|r
 
--- The files are |cFFFF7F00DataStore.lua|r and all |cFFFF7F00DataStore_*.lua|r.
+-- Los archivos son |cFFFF7F00DataStore.lua|r y todos los |cFFFF7F00DataStore_*.lua|r.
 
--- |cFF00FF00Q:|cFFFFFFFF When can I |cFF1CFAFEmodify|r or |cFF1CFAFEdelete|r those files ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Cuándo puedo |cFF1CFAFEmodificar|r o |cFF1CFAFEborrar|r esos archivos?|r|r
 
--- It is |cFFFF0000critical|r that you |cFFFF0000DO NOT|r modify those files while the game is running.
--- Some have tried, they have had problems.
+-- Es |cFFFF0000crítico|r y usted |cFFFF0000NO DEBERIA|r modificar esos archivos mientras el juego se está ejecutando.
+-- Algunos lo han intentado y han tenido problemas.
 
--- Do not try to outsmart the game. 
--- Stop it, make your changes, and start it again.
+-- No intentes ser más astuto que el juego. 
+-- Deténgalo, haga sus cambios y vuelva a iniciarlo.
 
--- |cFF00FF00Q:|cFFFFFFFF How can I edit those files ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Cómo puedo editar esos archivos?|r|r
 
--- Use a proper text editor, like |cFF1CFAFENotepad++|r. 
+-- Utilice un editor de texto adecuado, como |cFF1CFAFENotepad++|r. 
 
--- The classic Notepad and Wordpad are not recommended.
+-- Los clásicos Bloc de notas y Wordpad no son recomendables.
 -- ]]
 
--- L["HELP_GETTING_SUPPORT"] = [[
--- |cFF00FF00Q:|cFFFFFFFF I found an error, how/where do I report it ?|r|r
+L["HELP_GETTING_SUPPORT"] = [[
+-- |cFF00FF00Q:|cFFFFFFFF He encontrado un error, ¿cómo/dónde lo reporto?|r|r
 
--- Use CurseForge's ticket section, I also read comments and respond as often as I materially can, so feel free to report in one of these places.
+-- Utilice la sección de tickets de CurseForge, también leo los comentarios y respondo tan a menudo como puedo materialmente, así que no dudes en informar en uno de estos lugares.
 
--- |cFF00FF00Q:|cFFFFFFFF What should I do before reporting ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Qué debo hacer antes de reportar?|r|r
 
--- A few things:
+-- Un par de cosas:
 
--- |cFF1CFAFE1)|r Make sure you have the latest version of the add-on.
+-- |cFF1CFAFE1)|r Asegúrese de que tiene la última versión del complemento.
 
--- |cFF1CFAFE2)|r If you suspect a conflict with another add-on, try to reproduce the issue with only Altoholic enabled. As the add-on deals with a lot of things, a conflict is always possible.
+-- |cFF1CFAFE2)|r Si sospecha que hay un conflicto con otro complemento, intente reproducir el problema sólo con Altoholic activado. Como el complemento se ocupa de muchas cosas, siempre es posible que haya un conflicto.
 
--- |cFF1CFAFE3)|r Make sure your issue has not already been reported by someone else.
+-- |cFF1CFAFE3)|r Asegúrese de que su problema no ha sido ya comunicado por otra persona.
 
--- |cFF1CFAFE4)|r Never, ever, report that 'it does not work', this is the most useless sentence in the world! 
--- Be |cFFFF7F00specific|r about what does not work.
+-- |cFF1CFAFE4)|r ¡Nunca, jamás, informes que "no funciona", esta es la frase más inútil del mundo! 
+-- Sea |cFFFF7F00específico|r sobre lo que no funciona.
 
--- |cFF1CFAFE5)|r |cFFFF0000DO NOT|r copy the entire call stack in case of a Lua error. The first 5-6 lines are enough.
+-- |cFF1CFAFE5)|r |cFFFF0000NO DEBE|r copiar toda la pila de llamadas en caso de error de Lua. Las primeras 5-6 líneas son suficientes.
 
--- |cFF00FF00Q:|cFFFFFFFF I am getting multiple errors, should I report them all ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF Estoy recibiendo múltiples errores, ¿debo informar de todos ellos?|r|r
 
--- No, simply report the first one in the list, the others are usually a consequence of the first one.
+-- No, simplemente hay que reportar el primero de la lista, los demás suelen ser consecuencia del primero.
 
--- |cFF00FF00Q:|cFFFFFFFF Where can I get live support ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Dónde puedo obtener asistencia en directo?|r|r
 
--- Join the |cFF1CFAFEDiscord|r server. I am present in the evening (Belgian Time), and even when I am not, we have a nice community ready to help in case of problem.
+-- Únase al servidor de |cFF1CFAFEDiscord|r. Estoy presente por la tarde (hora belga), e incluso cuando no lo estoy, tenemos una buena comunidad dispuesta a ayudar en caso de problemas.
 -- ]]
 
--- L["ABOUT_ALTOHOLIC"] = [[
--- |cFF00FF00Q:|cFFFFFFFF When was Altoholic started ?|r|r
+L["ABOUT_ALTOHOLIC"] = [[
+-- |cFF00FF00Q:|cFFFFFFFF Cúando se creó Altoholic?|r|r
 
--- Development started in |cFF1CFAFEDecember 2007|r, and the first version made public was |cFFFF7F002.4.001|r, released on |cFF1CFAFEMarch 29th 2008|r.
+-- El desarrollo comenzó en |cFF1CFAFEDiciembre del 2007|r, y la primera versión fue |cFFFF7F002.4.001|r, publicada el |cFF1CFAFE29 de marzo del 2008|r.
 
--- |cFF00FF00Q:|cFFFFFFFF How many people work on Altoholic ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Cuántas personas trabajan en Altoholic?|r|r
 
--- One. I do have a full-time job and my availability fluctuates. I do get the occasional help from the community though, and I want to thank all those who have lent a hand along the years.
--- The add-on would not be what it is today without your help and suggestions.
+-- Una. Tengo un trabajo a tiempo completo y mi disponibilidad fluctúa. Sin embargo, de vez en cuando recibo ayuda de la comunidad, y quiero dar las gracias a todos los que me han echado una mano a lo largo de los años.
+-- El complemento no sería lo que es hoy sin su ayuda y sugerencias.
 
--- |cFF00FF00Q:|cFFFFFFFF How many languages does the add-on support ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Cuántos idiomas admite el complemento?|r|r
 
--- Eleven: deDE, enUS, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhCW.
+-- Once: deDE, enUS, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhCW.
 
--- |cFF00FF00Q:|cFFFFFFFF Can I help with the localizations ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Puedo ayudar con las traducciones?|r|r
 
--- Yes ! Your help would be most welcome, join us on |cFF1CFAFEDiscord|r and provide me with the translation files.
+-- Sí, su ayuda será bienvenida, únase a nosotros en |cFF1CFAFEDiscord|r y proporcioneme los archivos de traducción.
 
--- |cFF1CFAFENote|r that translations are now spread over the multiple Altoholic* add-ons (one per tab).
+-- |cFF1CFAFENota:|r las traducciones se reparten ahora entre los múltiples complementos de Altoholic* (una por pestaña).
 
--- |cFF00FF00Q:|cFFFFFFFF Where can I get my updates from ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Dónde puedo obtener las actualizaciones?|r|r
 
--- The only two official homes are |cFFFF7F00Curse Forge|r and |cFFFF7F00WoW Interface|r.
+Los dos únicos sitios oficiales son |cFFFF7F00Curse Forge|r and |cFFFF7F00WoW Interface|r.
 
--- Any other source means you are using an unofficial release, and not supporting the considerable effort that went into developing this.
+Cualquier otra fuente significa que estás usando una versión no oficial y no estás apoyando el considerable esfuerzo que se hizo para desarrollar esto.
 
--- Absolutely |cFFFF0000no support|r will be given for any such version.
+Absolutamente |cFFFF0000No se brindará soporte|r para ninguna versión no oficial.
 -- ]]
 
--- L["ABOUT_DATASTORE"] = [[
--- |cFF00FF00Q:|cFFFFFFFF Why was DataStore started ?|r|r
+L["ABOUT_DATASTORE"] = [[
+-- |cFF00FF00Q:|cFFFFFFFF ¿Por qué se creó DataStore?|r|r
 
--- DataStore was released in |cFF1CFAFEAugust 2009|r, as part of version |cFFFF7F003.2|r.
+-- DataStore se lanzó en |cFF1CFAFEAgosto del 2009|r, como parte de la versión |cFFFF7F003.2|r.
 
--- After about 18 months of learning about WoW development, adding features in Altoholic, and managing a monolithic database, I felt it was time for a more professional approach and created a proper layer to manage all the data.
+-- Después de unos 18 meses aprendiendo sobre el desarrollo de WoW, añadiendo características en Altoholic y gestionando una base de datos monolítica, sentí que era el momento de un enfoque más profesional y creé una capa adecuada para gestionar todos los datos.
 
--- |cFF00FF00Q:|cFFFFFFFF Why separating the data and the UI ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Por qué separar los datos y la interfaz de usuario?|r|r
 
--- Because it is the right thing to do, and because I had back then, and still have to this day, multiple add-ons in mind which will make use of all this information.
+-- Porque es lo que hay que hacer y porque tenía entonces y sigo teniendo a día de hoy, múltiples complementos en mente que harán uso de toda esta información.
 
--- Furthermore, it provides a clean interface to manage characters, guilds, realms and accounts.
+-- Además, ofrece una interfaz limpia para gestionar personajes, hermandades, reinos y cuentas.
 
--- |cFF00FF00Q:|cFFFFFFFF Will there be more modules in the future ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Habrá más módulos en el futuro?|r|r
 
--- I am satisfied with the current modules, but I do not exclude to add more if a real need arises.
+-- Estoy satisfecho con los módulos actuales, pero no descarto añadir más si surge una necesidad real.
 
--- |cFF00FF00Q:|cFFFFFFFF I am developper, I want to know more about DataStore !|r|r
+-- |cFF00FF00Q:|cFFFFFFFF Soy desarrollador y quiero saber más sobre DataStore.|r|r
 
--- The code is well commented, structured, and pretty much self-explanatory. 
+-- El código está bien comentado, estructurado y se explica por sí mismo. 
 
--- If you still have questions, join the |cFF1CFAFEDiscord|r server and ask me !
+-- Si todavía tiene preguntas, únase al servidor de |cFF1CFAFEDiscord|r ¡y pregúnteme!
 -- ]]
 
--- L["HELP_ALTOHOLIC_BANKCHARACTERS"] = [[
--- |cFF00FF00Q:|cFFFFFFFF What are bank characters ?|r|r
+L["HELP_ALTOHOLIC_BANKCHARACTERS"] = [[
+-- |cFF00FF00Q:|cFFFFFFFF ¿Qué son los personajes banco?|r|r
 
--- If you are playing a lot of characters, chances are you are using some of them as banks. 
--- Altoholic now has a way to keep track of that in the |cFFFF7F00Summary|r tab.
+-- Si juegas con muchos personajes, lo más probable es que utilices algunos de ellos como banco. 
+-- Altoholic tiene ahora una forma de seguirlo en la pestaña |cFFFF7F00Resumen|r.
 
--- |cFF00FF00Q:|cFFFFFFFF How do I mark a character as a bank character ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Cómo puedo marcar un personaje como personaje banco?|r|r
 
--- In any panel of the |cFFFF7F00Summary|r tab, |cFF1CFAFEright-click|r the alt's name, choose |cFFFF7F00Mark as bank|r, and select the type of bank this alt should be.
+-- En cualquier panel de la pestaña |cFFFF7F00Resumen|r, |cFF1CFAFEclick derecho|r sobre el nombre del alter, elija |cFFFF7F00Marcar como banco|r y seleccione el tipo de banco que debe ser ese alter.
 
--- |cFF00FF00Q:|cFFFFFFFF Can I mark a bank character with multiple types ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Puedo marcar un personaje banco con varios tipos?|r|r
 
--- Yes.
+-- Sí.
 
--- |cFF00FF00Q:|cFFFFFFFF Where can I have an overview of my bank characters ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Dónde puedo tener una visión general de mis personajes banco?|r|r
 
--- In the |cFFFF7F00Summary|r tab, select the |cFFFF7F00Miscellaneous|r panel.
+-- En la pestaña |cFFFF7F00Resumen|r, seleccione el panel |cFFFF7F00Miscelánea|r.
 
--- |cFF00FF00Q:|cFFFFFFFF How does marking a character help me managing my alts ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Cómo me ayuda el marcado de un personaje a gestionar mis alters?|r|r
 
--- If you so choose, one of the tooltip options will allow you to see if you could send an item to a bank character.
+-- Si lo desea, una de las opciones de información sobre herramientas le permitirá ver si puede enviar un artículo a un personaje banco.
 -- ]]
 
--- L["HELP_ALTOHOLIC_ALTGROUPS"] = [[
--- |cFF00FF00Q:|cFFFFFFFF What are alt groups ?|r|r
+L["HELP_ALTOHOLIC_ALTGROUPS"] = [[
+-- |cFF00FF00Q:|cFFFFFFFF ¿Qué son los grupos de alters?|r|r
 
--- Alt groups are a simple way to easily manage your alts by grouping them based on criteria that are not related to the game. For instance, I have put my 12 main alts in a group, and my 12 bank alts on the same realm in another group.
+-- Los grupos de alters son una forma sencilla de gestionar sus alters agrupándolos en base a criterios que no están relacionados con el juego. Por ejemplo, he puesto mis 12 alters principales en un grupo y mis 12 alters banco en el mismo reino, en otro grupo.
 
--- |cFF00FF00Q:|cFFFFFFFF Is there a limit to the amount of alts in a group ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Existe un límite para la cantidad de alters en un grupo?|r|r
 
--- No there is not. You can also add alts from another realm, another faction, or even another account into the same group.
+-- No, no lo hay. También puede añadir alters de otro reino, otra facción o incluso otra cuenta en el mismo grupo.
 
--- |cFF00FF00Q:|cFFFFFFFF Is there a limit to the amount of groups I can create ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Existe un límite en la cantidad de grupos que puedo crear?|r|r
 
--- No, you can create as many groups as you like, although creating too many is likely to defeat the purpose of groups. You are in charge, you can organize groups the way you like.
+-- No, puede crear tantos grupos como quiera, aunque crear demasiados probablemente anule el propósito de los grupos. Usted está al mando, puede organizar los grupos como quiera.
 
--- |cFF00FF00Q:|cFFFFFFFF How do I add a character to a group ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Cómo puedo añadir un personaje a un grupo?|r|r
 
--- In any panel of the |cFFFF7F00Summary|r tab, |cFF1CFAFEright-click|r the alt's name, choose |cFFFF7F00Add to group|r, and select the group to which this alt should be added.
+-- En cualquier panel de la pestaña |cFFFF7F00Resumen|r, |cFF1CFAFEclick derecho|r sobre el nombre del alter, elija |cFFFF7F00Añadir al grupo|r y seleccione el grupo al que deba añadirse ese alter.
 
--- |cFF00FF00Q:|cFFFFFFFF How do I remove a character from a group ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Cómo puedo eliminar un personaje de un grupo?|r|r
 
--- In any panel of the |cFFFF7F00Summary|r tab, |cFF1CFAFEright-click|r the alt's name, choose |cFFFF7F00Remove from group|r, and select the group from which this alt should be removed.
+-- En cualquier panel de la pestaña |cFFFF7F00Resumen|r, |cFF1CFAFEclick derecho|r sobre el nombre del alter, elija |cFFFF7F00Eliminar del grupo|r y seleccione el grupo del que deba eliminarse ese alter.
 
--- |cFF00FF00Q:|cFFFFFFFF Can a character be part of multiple groups ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Puede un personaje formar parte de varios grupos?|r|r
 
--- Yes.
+-- Sí.
 -- ]]
 
 
--- L["HELP_ALTOHOLIC_SEARCH"] = [[
--- |cFF00FF00Q:|cFFFFFFFF How does the search process work ?|r|r
+L["HELP_ALTOHOLIC_SEARCH"] = [[
+-- |cFF00FF00Q:|cFFFFFFFF ¿Cómo funciona el proceso de búsqueda?|r|r
 
--- The process will look for all active filters and try to find the items and/or known profession recipes that match those filters. The search will only occur in the locations set under the |cFFFF7F00Seach Location|r icon.
+-- El proceso buscará todos los filtros activos y tratará de encontrar los items y/o recetas de profesiones conocidas que coincidan con esos filtros. La búsqueda sólo se producirá en los lugares establecidos en el ícono |cFFFF7F00Ubicación de la búsqueda|r.
 
--- |cFF00FF00Q:|cFFFFFFFF Are the filters set only with the top icons ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF ¿Los filtros se configuran sólo con los iconos superiores?|r|r
 
--- No, the categories on the left also act as filters. When you click on a given category, you immediately trigger a search for items matching that category, you can then filter even more by adding a value in the edit box, or filter by rarity for instance. If you only enter text and start a search, you will get all the results whose name contains the value you entered.
+-- No, las categorías de la izquierda también actúan como filtros. Al hacer clic en una categoría determinada, se desencadena inmediatamente una búsqueda de items que coincidan con esa categoría, y a continuación puede filtrar aún más añadiendo un valor en el cuadro de edición, o filtrar por rareza, por ejemplo. Si sólo introduce un texto e inicia la búsqueda, obtendrá todos los resultados cuyo nombre contenga el valor que ha introducido.
 
--- |cFF00FF00Q:|cFFFFFFFF I am confused by the results I see, what is going on ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF Estoy confundido por los resultados que veo, ¿qué está pasando?|r|r
 
--- Keep in mind that the results are affected by the filters you have set. Be sure to check the status message to see which filters were taken into account during the search process. 
--- When in doubt, hit the |cFF1CFAFEReset|r button to clear all the filters and try again.
+-- Tenga en cuenta que los resultados se ven afectados por los filtros que haya establecido. Asegúrese de comprobar el mensaje de estado para ver qué filtros se han tenido en cuenta durante el proceso de búsqueda. 
+-- En caso de duda, pulse el botón |cFF1CFAFEReset|r para borrar todos los filtros y volver a intentarlo.
 
--- |cFF00FF00Q:|cFFFFFFFF Some results are missing, why ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF Algunos resultados no aparecen, ¿por qué?|r|r
 
--- The results may be affected by the items known by the game client, it may happen that you will have to execute the search a second time to see the proper results. The item information required by the search process is not always available, and by the time it gets back from the server, the search is already over.
+-- Los resultados pueden verse afectados por los ítems conocidos por el cliente del juego, puede ocurrir que tenga que ejecutar la búsqueda una segunda vez para ver los resultados adecuados. La información de los ítems requerida por el proceso de búsqueda no siempre está disponible y para cuando vuelve del servidor, la búsqueda ya ha terminado.
 
--- |cFF00FF00Q:|cFFFFFFFF Sorting by rarity or item level does not seem to work, why ?|r|r
+-- |cFF00FF00Q:|cFFFFFFFF Ordenar por rareza o nivel de item no parece funcionar, ¿por qué?|r|r
 
--- Sorting by rarity does work, but in the case of upgradable items, they may have a |cFF0070DDblue|r rarity level and actually be |cFFA335EEepic|r because you own the upgraded version.
+-- La clasificación por rareza funciona, pero en el caso de los objetos mejorables, pueden tener un nivel de rareza |cFF0070DDazul|r y ser realmente |cFFA335EEépicos|r porque tienes la versión actualizada.
 -- ]]

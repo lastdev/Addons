@@ -6,13 +6,5 @@
   <Script file='Spires_of_Arak.lua'/>
   <Script file='Nagrand.lua'/>
   <Script file='Tanaan_Jungle.lua'/>
-  <Script file='Everbloom.lua'/>
-  <Script file='Grimrail_Depot.lua'/>
-  <Script file='Shadowmoon_Burial_Grounds.lua'/>
-  <Script file='Skyreach.lua'/>
-  <Script file='Upper_Blackrock_Spire.lua'/>
-  <Script file='Blackrock_Foundry.lua'/>
-  <Script file='Hellfire_Citadel.lua'/>
-  <Script file='Highmaul.lua'/>
   <Script file='Draenor.lua'/>
 </Ui>

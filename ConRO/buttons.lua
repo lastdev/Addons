@@ -2751,7 +2751,7 @@ function ConRO:AbilityInterrupt(_Spell, _Condition)
 	local color = ConRO.db.profile._Interrupt_Overlay_Color;
 	if self.Flags[_Spell] == nil then
 		self.Flags[_Spell] = false;
-		self:ClearAbilityInterruptIndependent(_Spelll);
+		self:ClearAbilityInterruptIndependent(_Spell);
 		ConROInterruptWindow:SetSize(ConRO.db.profile.flashIconSize * .25, ConRO.db.profile.flashIconSize * .25);
 		ConROInterruptWindow.texture:SetVertexColor(.1, .1, .1);
 		if UIFrameIsFlashing(ConROInterruptWindow) then

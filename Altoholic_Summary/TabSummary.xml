@@ -151,7 +151,7 @@
 			
 			<Button parentKey="RequestSharing" inherits="AddonFactory_ButtonTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.ClassIcon" relativePoint="TOPRIGHT" x="160" y="0" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.ClassIcon" relativePoint="TOPRIGHT" x="200" y="0" />
 				</Anchors>
 				<KeyValues>
 					<KeyValue key="iconFile" value="Interface\Icons\Achievement_Reputation_01" />

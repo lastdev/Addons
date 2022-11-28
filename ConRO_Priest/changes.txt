@@ -1,10 +1,10 @@
-lightweight tag 59f580ca18b414bd2bf6ddd32100a843932b7eef v10.0.1-release
+lightweight tag 7ee0dcef46393c831cb53f9000bf82e2f6849386 v10.0.2-release
 Author:	Vae <emuha17@gmail.com>
-Date:	Tue Nov 22 17:38:15 2022 -1000
+Date:	Fri Nov 25 16:39:19 2022 -1000
 
-commit 59f580ca18b414bd2bf6ddd32100a843932b7eef
+commit 7ee0dcef46393c831cb53f9000bf82e2f6849386
 Author: Vae <emuha17@gmail.com>
-Date:   Tue Nov 22 17:38:15 2022 -1000
+Date:   Fri Nov 25 16:39:19 2022 -1000
 
-    DF Rotation for Shadow Priest
+    Fixed error in DIsc
 

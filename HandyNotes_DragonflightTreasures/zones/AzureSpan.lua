@@ -18,34 +18,37 @@ ns.RegisterPoints(MAPID, {
         active={ns.conditions.QuestComplete(70535), ns.conditions.Item(199066), any=true}, -- Letter of Caution
         note="Find {item:199066} in other treasures",
     },
-    --[[
-    [] = { -- Sapphire Gem Cluster
+    [48632466] = { -- Sapphire Gem Cluster
         criteria=54806,
         quest=70605,
-        loot={},
+        loot={
+            200866, -- Glimmering Malygite Cluster
+        },
+        hide_before=ns.conditions.MajorFaction(ns.FACTION_DRAGONSCALE, 21),
         active={ns.conditions.QuestComplete(70536), ns.conditions.Item(199067), any=true}, -- Precious Plans
         note="Find {item:199067} in other treasures",
     },
-    --]]
     [74905499] = { -- Lost Compass
         criteria=54807,
         quest=70606,
-        loot={},
+        loot={
+            {202711, toy=true}, -- Lost Compass
+        },
     },
-    --[[
-    [] = { -- Rubber Fish
+    [54642933] = { -- Rubber Fish
         criteria=54808,
         quest=70380,
-        loot={},
+        loot={
+            202712, -- Rubber Fish
+        },
     },
-    --]]
     [26544629] = { -- Pepper Hammer
         criteria=54809,
         quest=70441,
         loot={
             {193834, pet=3321}, -- Blackfeather Nester
         },
-        note="Use the Tree Sap on the stick",
+        note="Climb the tree, then use the Tree Sap on the stick to summon {npc:195373}",
     },
 }, {
     achievement=16300, -- Treasures
@@ -65,15 +68,15 @@ ns.RegisterPoints(MAPID, {
 -- Rares
 ns.RegisterPoints(MAPID, {
     -- https://www.wowhead.com/beta/achievement=16678/adventurer-of-the-azure-span
-    --[[
-    [] = { -- Wilrive
+    [59405520] = { -- Wilrive
         criteria=56097,
-        quest=69948,
+        quest=69948, -- didn't actually trigger
         npc=193632,
-        loot={},
+        loot={
+            200174, -- Bonesigil Shoulderguards
+        },
         vignette=5224,
     },
-    --]]
     [27804580] = { -- Dragonhunter Gorund
         criteria=56098,
         quest=66956, -- ?
@@ -102,12 +105,17 @@ ns.RegisterPoints(MAPID, {
         loot={},
         vignette=5153,
     },
-    [] = { -- Mucka the Raker
+    --]]
+    [57685441] = { -- Mucka the Raker
+        -- ...very prone to resetting+evading and healing to full
         criteria=56102,
-        quest=nil,
+        quest=nil, -- no quest popped
         npc=193201,
-        loot={},
+        loot={
+            {200249, toy=true}, -- Mage's Chewed Wand
+        },
     },
+    --[[
     [] = { -- Brackle
         criteria=56103,
         quest=70165,
@@ -343,6 +351,32 @@ ns.RegisterPoints(MAPID, {
         },
         vignette=5191,
     },
+    [70063318] = { -- Summoned Destroyer
+        npc=193288,
+        quest=72848, -- also 69895
+        loot={
+            200163, -- Ring of Embers
+            200868, -- Integrated Primal Fire
+        },
+        vignette=5213,
+    },
+    [17394121] = { -- Vakril, the Strongest Tuskarr
+        npc=193223,
+        quest=72853, -- 69872
+        loot={
+            {201728, quest=72853}, -- Vakril's Strongbox
+            {197001, quest=69201}, -- Cliffside Wylderdrake: Finned Cheek
+        },
+        vignette=5194,
+    },
+    [27004840] = { -- Breezebiter
+        npc=195353,
+        quest=nil,
+        loot={
+            {201440, mount=1553},
+        },
+        note="Flying",
+    },
 })
 
 -- Ley Line in the Span
@@ -356,5 +390,6 @@ ns.RegisterPoints(MAPID, {
 }, {
     achievement=16638,
     atlas="AzeriteReady",
+    minimap=true,
     note="Interact with the {npc:198260}; sometimes a Miner will need to break a rock wall before you can get in",
 })

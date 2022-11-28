@@ -1,5 +1,5 @@
 ## Title: MaxDps_DeathKnight
-## Version: 10.0.3
+## Version: 10.0.4
 ## Author: Kaminaris
 ## Interface: 100002
 ## Dependencies: MaxDps

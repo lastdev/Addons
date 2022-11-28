@@ -5,6 +5,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
 addon:Controller("AltoholicUI.AchievementRow", { "AltoholicUI.Options", function(Options)
 
+	local NUM_COLUMNS = 13
 	local accountWideColor = "|cFF26C6E2"
 
 	return {
@@ -27,11 +28,11 @@ addon:Controller("AltoholicUI.AchievementRow", { "AltoholicUI.Options", function
 			local character
 			local achievementID
 			
-			for colIndex = 1, 12 do
+			for colIndex = 1, NUM_COLUMNS do
 				button = frame[format("Item%d", colIndex)]
 				button.IconBorder:Hide()
 				
-				local optionIndex = ((page - 1) * 12) + colIndex		-- Pages = 1-12, 13-24, etc..
+				local optionIndex = ((page - 1) * NUM_COLUMNS) + colIndex		-- Pages = 1-12, 13-24, etc..
 				
 				character = Options.Get(format("Tabs.Achievements.%s.%s.Column%d", account, realm, optionIndex))
 				if character then

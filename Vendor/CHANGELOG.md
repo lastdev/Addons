@@ -1,6 +1,8 @@
 # Vendor
 
-## [6.0.4](https://github.com/typicalzergling/vendor/tree/6.0.4) (2022-11-19)
-[Full Changelog](https://github.com/typicalzergling/vendor/compare/6.0.3...6.0.4) 
+## [6.1.2](https://github.com/typicalzergling/vendor/tree/6.1.2) (2022-11-28)
+[Full Changelog](https://github.com/typicalzergling/vendor/compare/6.1.1...6.1.2) 
 
-- Fix for keystones in tooltip  
+- Fix space  
+- revert unhealthy  
+- correct font size  

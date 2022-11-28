@@ -136,7 +136,7 @@ local ConRO_Warrior, ids = ...;
 		Juggernaut = {spellID = 383292, talentID = 112319},
 		MartialProwess = {spellID = 316440, talentID = 112130},
 		Massacre = {spellID = 281001, talentID = 112145},
-			MassacreExecute = {spellID = 280735, talentID = 112145},
+			MassacreExecute = {spellID = 281000, talentID = 112145},
 		MasteryDeepWounds = {spellID = 262111},
 		MercilessBonegrinder = {spellID = 383317, talentID = 112117},
 		ReapingSwings = {spellID = 383293, talentID = 112148},
@@ -158,18 +158,21 @@ local ConRO_Warrior, ids = ...;
 		Avatar = 107574,
 		BattleShout = 6673,
 		DeadlyCalm = 262228,
+		ExecutionersPrecision = 242188,
 		IgnorePain = 190456,
 		InForTheKill = 248622,
+		MercilessBonegrinder = 383316,
 		Overpower = 7384,
 		SuddenDeath = 52437,
 		SweepingStrikes = 260708,
+		TestofMight = 385013,
 		Victorious = 32216,
 	}
 	ids.Arms_Debuff = {
 		ColossusSmash = 208086,
 		DeepWounds = 262115,
 		MortalWounds = 115804,
-		Rend = 772,
+		Rend = 388539,
 	}
 	ids.Arms_PetAbility = {
 

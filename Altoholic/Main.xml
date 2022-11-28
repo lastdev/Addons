@@ -44,7 +44,7 @@
 			<OnLoad>
 				Altoholic:BindViewToController(self, "AltoholicUI.MainFrame", "AddonFactory.AuctionHouseMainFrame")
 				self:Initialize({
-					minWidth = 875, maxWidth = 1085,
+					minWidth = 925, maxWidth = 1085,
 					minHeight = 530, maxHeight = 800,
 					closeOnESC = true
 				})

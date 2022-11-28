@@ -15,13 +15,10 @@ end
 -- Configuration
 t['config_name'] = 'Collection'
 t['config_description'] = 'Handful collection of points around the World (of Warcraft).'
-t['config_name_waypoints_show'] = 'Show waypoints'
-t['config_description_waypoints_show'] = 'Should waypoints in instances (pre-Legion raids and dungeons) be shown?'
 t['config_name_collection_show'] = 'Show collection icons'
 t['config_description_collection_show'] = 'Controls, whether icons for collection (mounts, pets, transmogs, achievements) should be shown.'
 t['config_name_completed'] = 'Show completed'
 t['config_description_completed'] = 'Show points you have already found?'
-t['config_waypoint'] = 'Waypoint configuration'
 t['config_tracking'] = 'Collection configuration'
 t['config_scale'] = 'Scale'
 t['config_description_scale'] = 'The scale of the icons.'

@@ -14,15 +14,17 @@ end
 
 function ConRO:CheckTalents()
 	self.PlayerTalents = {};
-	wipe(self.PlayerTalents)
-	local specID = PlayerUtil.GetCurrentSpecID();
-	local configID = C_ClassTalents.GetLastSelectedSavedConfigID(specID) or C_ClassTalents.GetActiveConfigID();
-	local configInfo = C_Traits.GetConfigInfo(configID);
-	local treeID = configInfo.treeIDs[1];
-	local nodes = C_Traits.GetTreeNodes(treeID);
+	local _Player_Level = UnitLevel("player");
+	if _Player_Level >= 10 then
+		wipe(self.PlayerTalents)
+		local specID = PlayerUtil.GetCurrentSpecID();
+		local configID = C_ClassTalents.GetLastSelectedSavedConfigID(specID) or C_ClassTalents.GetActiveConfigID();
+		local configInfo = C_Traits.GetConfigInfo(configID);
+		local treeID = configInfo.treeIDs[1];
+		local nodes = C_Traits.GetTreeNodes(treeID);
 
-	for _, nodeID in ipairs(nodes) do
-		local nodeInfo = C_Traits.GetNodeInfo(configID, nodeID);
+		for _, nodeID in ipairs(nodes) do
+			local nodeInfo = C_Traits.GetNodeInfo(configID, nodeID);
 			if nodeInfo.currentRank and nodeInfo.currentRank > 0 then
 				local entryID = nodeInfo.activeEntry and nodeInfo.activeEntry.entryID and nodeInfo.activeEntry.entryID;
 				local entryInfo = entryID and C_Traits.GetEntryInfo(configID, entryID)
@@ -34,6 +36,7 @@ function ConRO:CheckTalents()
 					tinsert(self.PlayerTalents[entryID], {["talentName"] = name, ["rank"] = nodeInfo.currentRank})
 				end
 			end
+		end
 	end
 end
 
@@ -978,11 +981,16 @@ function ConRO:PetAssist()
 	return attackstate, petspell;
 end
 
-function ConRO:Totem(slot)
-	local havetotem, totemName, startTime, duration = GetTotemInfo(slot);
-	local est_dur = startTime + duration - GetTime()
-
-	return havetotem, est_dur;
+function ConRO:Totem(spellID)
+	local spellName = GetSpellInfo(spellID)
+	for i=1,4 do
+		local _, totemName, startTime, duration = GetTotemInfo(i);
+		if spellName == totemName then
+			local est_dur = startTime + duration - GetTime();
+			return true, est_dur;
+		end
+	end
+	return false, 0;
 end
 
 function ConRO:FormatTime(left)

@@ -1,5 +1,5 @@
 ## Title:-|cffFFFFFFConRO|r- |cffA330C9Demon Hunter|r
-## Version: 10.0.1
+## Version: 10.0.4
 ## Author: Vae
 ## Interface: 10002
 ## Dependencies: ConRO

@@ -4,9 +4,9 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 
 local addon = _G[addonName]
 
-addon.Version = "v10.0.007"
+addon.Version = "v10.0.008"
 -- addon.VersionNum = 902006
-addon.VersionNum = 1000007
+addon.VersionNum = 1000008
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local commPrefix = addonName

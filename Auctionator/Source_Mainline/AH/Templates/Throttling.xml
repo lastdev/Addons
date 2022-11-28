@@ -1,5 +1,5 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
-  <Frame name="AuctionatorAHThrottlingFrameTemplate" parent="UIParent" hidden="true" mixin="AuctionatorAHThrottlingFrameMixin" virtual="true">
+  <Frame name="AuctionatorAHThrottlingFrameTemplate" mixin="AuctionatorAHThrottlingFrameMixin" virtual="true">
     <Scripts>
       <OnLoad method="OnLoad"/>
       <OnEvent method="OnEvent" />

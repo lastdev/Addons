@@ -1,10 +1,11 @@
-lightweight tag 9aa8734d1e9305bfc7d3ccf5b7743808d420da12 v10.0.2-release
+lightweight tag 6eb18591810728e89a622f1e7baa7acc46a35de4 v10.0.5
 Author:	Vae <emuha17@gmail.com>
-Date:	Wed Nov 23 13:05:37 2022 -1000
+Date:	Sun Nov 27 09:17:37 2022 -1000
 
-commit 9aa8734d1e9305bfc7d3ccf5b7743808d420da12
+commit 6eb18591810728e89a622f1e7baa7acc46a35de4
 Author: Vae <emuha17@gmail.com>
-Date:   Wed Nov 23 13:05:37 2022 -1000
+Date:   Sun Nov 27 09:17:37 2022 -1000
 
-    Fixed Zoning talent issue --I hope
+    Typo in Interrupt
+    Updated Totem function for shaman
 

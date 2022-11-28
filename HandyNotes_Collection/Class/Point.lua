@@ -60,16 +60,6 @@ function Point:prepareName(data)
   local name = data.name
   -- If there is no name, try to load name from game.
 
-  -- Try to load map name.
-  --- @deprecated portal in 0.11.0 and scheduled for removal in 0.13.0
-  if name == nil and data.portal then
-    name = Cache:get(data.portal, 'mapName')
-    if (name == nil) then
-      name = API:getMapName(data.portal)
-      Cache:set(data.portal, name, 'mapName')
-    end
-  end
-
   -- Try to load NPC name.
   if name == nil and data.npcId ~= nil then
     name = Cache:get(data.npcId, 'npcName')
@@ -150,12 +140,10 @@ function Point:prepareTooltip(GameTooltip, data, uiMapId)
   -- Add waypoint info to tooltip.
   self:prepareWaypointTooltip(uiMapId)
   -- Add note about keeping tooltip opened.
-  --- @deprecated portal in 0.11.0 and scheduled for removal in 0.13.0
-  if (not data.portal) then
-    -- @todo need to figure out how to allow link click in tooltips. Disabled until then.
-    -- self.GameTooltip:AddLine(Text:color(t['point_tooltip'], 'green'), nil, nil, nil, true)
-    return
-  end
+
+  -- @todo need to figure out how to allow link click in tooltips. Disabled until then.
+  -- self.GameTooltip:AddLine(Text:color(t['point_tooltip'], 'green'), nil, nil, nil, true)
+  return
 end
 
 ---

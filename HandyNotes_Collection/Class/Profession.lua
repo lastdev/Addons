@@ -12,8 +12,8 @@ local Profession = {}
 ---
 --- Checks, whether profession is learned or not.
 ---
---- @param id
----   Profession ID.
+--- @param name
+---   Profession name (lowercase).
 ---
 --- @return boolean
 ---   True, if profession is learned, false otherwise.

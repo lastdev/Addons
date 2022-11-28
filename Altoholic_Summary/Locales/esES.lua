@@ -1,83 +1,81 @@
-local L = LibStub("AceLocale-3.0"):NewLocale( "Altoholic", "esES" )
+local L = LibStub("AceLocale-3.0"):NewLocale("Altoholic", "esES")
 
 if not L then return end
 
 L["Calendar"] = "Calendario"
 L["Tooltip"] = "Ventana emergente"
--- L["Getting support"] = true
--- L["Memory used"] = true
--- L["Reset all data"] = true
--- L["WIPE_DATABASE"] = "Wipe database ?"
--- L["WIPE_WARNING"] = "Warning: all information will be lost !"
--- L["DATABASE_WIPED"] = "Information saved in DataStore has been completely deleted !"
-  
+L["Getting support"] = "Obtener apoyo"
+L["Memory used"] = "Memoria utilizada"
+L["Reset all data"] = "Restablecer todos los datos"
+L["WIPE_DATABASE"] = "¿Borrar la base de datos?"
+L["WIPE_WARNING"] = "Advertencia: ¡toda la información se perderá!"
+L["DATABASE_WIPED"] = "¡La información guardada en DataStore se ha eliminado por completo!"
+
 L["Account"] = "Cuenta"
 L["Default"] = "Predeterminado"
 L["Characters"] = "Personajes"
 L["Realms"] = "Reinos"
--- L["%s%d%s characters found : did you set your filters properly ?"] = true
- 
+L["%s%d%s characters found : did you set your filters properly ?"] = "%s%d%s personajes encontrados: ¿has configurado bien tus filtros?"
+
 -- ** Menu **
--- L["Character Information"] = true
+L["Character Information"] = "Información del personaje"
 L["Account Summary"] = "Resumen de la Cuenta"
--- L["Experience"] = true
+L["Experience"] = "Experiencia"
 L["Levels"] = "Niveles"
--- L["Location"] = true
+L["Location"] = "Ubicación"
 L["Bag Usage"] = "Bolsas"
 L["Activity"] = "Actividad"
--- L["Currencies"] = true
-L["PATCH_X.0"] = "Expansion Patch"
-L["PATCH_9.1"] = "Chains of Domination"
-L["PATCH_9.2"] = "Eternity's End"
+L["Currencies"] = "Monedas"
+L["PATCH_X.0"] = "Expansión base"
+L["PATCH_9.1"] = "Cadenas de dominación"
+L["PATCH_9.2"] = "Fin de la eternidad"
 
 -- ** Filter Icons **
--- L["FILTER_REALMS"] = "Realms filter"
--- L["FILTER_FACTIONS"] = "Faction filter"
--- L["FILTER_LEVELS"] = "Level filter"
--- L["FILTER_PROFESSIONS"] = "Profession filter"
--- L["FILTER_CLASSES"] = "Class filter"
--- L["FILTER_MISC"] = "Miscellaneous filters"
--- L["FILTER_BANKTYPE"] = "Bank characters filters"
+L["FILTER_REALMS"] = "Filtro de reinos"
+L["FILTER_FACTIONS"] = "Filtro de facción"
+L["FILTER_LEVELS"] = "Filtro de nivel"
+L["FILTER_PROFESSIONS"] = "Filtro de profesión"
+L["FILTER_CLASSES"] = "Filtro de clase"
+L["FILTER_MISC"] = "Filtros varios"
+L["FILTER_BANKTYPE"] = "Filtros de personajes banqueros"
 L["This realm"] = "Este reino"
 L["All realms"] = "Todos los reinos"
 L["This account"] = "Esta cuenta"
 L["All accounts"] = "Todas las cuentas"
-L["This faction"] = "Esta facci�n"
+L["This faction"] = "Esta facción"
 L["Both factions"] = "Ambas facciones"
 L["Any"] = "Todos"
-L["ACCOUNT_SHARING_BUTTON_TITLE"] = "Petici�n de compartir cuenta"
-L["ACCOUNT_SHARING_BUTTON_INFO"] = [[Click en este bot�n para pedir a un jugador
-que comparta su base de datos de Altoholic entera
-y a�adirla a la tuya]]
+L["ACCOUNT_SHARING_BUTTON_TITLE"] = "Solicitud de compartición de cuenta"
+L["ACCOUNT_SHARING_BUTTON_INFO"] = "Haz click en este botón para preguntarle a un jugador\nsi quiere compartir toda su base de datos de Altoholic\npara añadirla a la tuya"
 
--- L["FILTER_ALT_GROUPS"] = "Alt groups"
--- L["FILTER_GROUP_CREATE"] = "Create new group"
--- L["FILTER_GROUP_DELETE"] = "Delete alt group"
--- L["FILTER_GROUP_RENAME"] = "Rename alt group"
--- L["ENTER_GROUP_NAME"] = "Enter a new group name"
--- L["CHANGE_GROUP_NAME"] = "Select a new name for %s%s|r"
--- L["ENTER_GROUP_NAME_WARNING"] = "It is recommended to avoid special characters"
--- L["DELETE_GROUP_NAME"] = "Delete this alt group ?"
--- L["ALT_GROUP_CREATED"] = "Alt group %s successfully created."
--- L["ALT_GROUP_ALREADY_EXISTS"] = "Alt group %s already exists."
--- L["ALT_GROUP_RENAMED"] = "%s successfully renamed to %s"
--- L["ALT_GROUP_NOT_RENAMED"] = "%s could not be renamed to %s"
--- L["ALT_GROUP_DELETED"] = "Alt group %s successfully deleted."
--- L["ALT_GROUP_NOT_FOUND"] = "Alt group %s was not found."
+L["FILTER_ALT_GROUPS"] = "Grupos de alters"
+L["FILTER_GROUP_CREATE"] = "Crear nuevo grupo"
+L["FILTER_GROUP_DELETE"] = "Borrar grupo de alters"
+L["FILTER_GROUP_RENAME"] = "Renombrar grupo de alters"
+L["ENTER_GROUP_NAME"] = "Introduce un nuevo nombre de grupo"
+L["CHANGE_GROUP_NAME"] = "Escoge un nuevo nombre para %s%s|r"
+L["ENTER_GROUP_NAME_WARNING"] = "Se recomienda evitar los caracteres especiales"
+L["DELETE_GROUP_NAME"] = "¿Borrar este grupo de alters"
+L["ALT_GROUP_CREATED"] = "El grupo %s fue creado con éxito."
+L["ALT_GROUP_ALREADY_EXISTS"] = "El grupo %s ya existe."
+L["ALT_GROUP_RENAMED"] = "%s se ha renombrado con éxito a %s"
+L["ALT_GROUP_NOT_RENAMED"] = "%s no pudo ser renombrado a %s"
+L["ALT_GROUP_DELETED"] = "El grupo %s fue borrado con éxito."
+L["ALT_GROUP_NOT_FOUND"] = "El grupo %s no se encontró."
 
--- L["COLORED_SKILL_LEVELS"] = "Use color for skill levels"
--- L["FILTER_MISC_HAVE_MAILS"] = "With mails"
--- L["FILTER_MISC_HAVE_MAILS_EXPIRE_SOON"] = "With mails about to expire"
--- L["FILTER_MISC_HAVE_AUCTIONS_EXPIRE_SOON"] = "Auction house not recently checked"
--- L["FILTER_MISC_GUILD_EXALTED"] = "Exalted with guild"
--- L["FILTER_MISC_GUILD_NOT_EXALTED"] = "Not exalted with guild"
--- L["FILTER_MISC_UPGRADE_RIDING_SKILL"] = "Could upgrade their riding skill"
+L["COLORED_SKILL_LEVELS"] = "Usar color para los niveles de habilidad"
+L["FILTER_MISC_HAVE_MAILS"] = "Con correo"
+L["FILTER_MISC_HAVE_MAILS_EXPIRE_SOON"] = "Con correo a punto de expirar"
+L["FILTER_MISC_HAVE_AUCTIONS_EXPIRE_SOON"] = "Casa de subastas no revisada recientemente"
+L["FILTER_MISC_GUILD_EXALTED"] = "Exaltado con la hermandad"
+L["FILTER_MISC_GUILD_NOT_EXALTED"] = "No exaltado con la hermandad"
+L["FILTER_MISC_UPGRADE_RIDING_SKILL"] = "Podría mejorar su habilidad de equitación"
 
 
 -- *** Character Information / Account Summary ***
 -- Column Name
 L["Totals"] = "Totales"
-L["Right-Click for options"] = "Click-Dch. para opciones"
+L["Right-Click for options"] = "Click derecho para opciones"
 L["Character %s successfully deleted"] = "Personaje %s eliminado correctamente"
 L["Realm %s successfully deleted"] = "Reino %s borrado correctamente"
 L["Cannot delete current character"] = "No se puede borrar el personaje actual"
@@ -87,112 +85,112 @@ L["Delete this Realm"] = "Borrar este reino"
 L["Update from %s%s"] = "Actualizar desde %s%s"
 
 L["View"] = "Ver"
--- L["Mark as bank"] = true
--- L["Add to group"] = true
--- L["Remove from group"] = true
+L["Mark as bank"] = "Marcar como banco"
+L["Add to group"] = "Añadir al grupo"
+L["Remove from group"] = "Retirar del grupo"
 
 
 
 -- Column Level
--- L["COLUMN_LEVEL_TITLE"] = "Character Level"
--- L["COLUMN_LEVEL_TITLE_SHORT"] = "Level"
--- L["COLUMN_LEVEL_SUBTITLE"] = "Click level to toggle decimals"
+L["COLUMN_LEVEL_TITLE"] = "Nivel del personaje"
+L["COLUMN_LEVEL_TITLE_SHORT"] = "Nivel"
+L["COLUMN_LEVEL_SUBTITLE"] = "Haz click para ordenar"
 
 -- Column Rest XP
--- L["COLUMN_RESTXP_TITLE"] = "Rest XP"
--- L["COLUMN_RESTXP_TITLE_SHORT"] = "Rest XP"
--- L["COLUMN_RESTXP_SUBTITLE"] = "Click to toggle 100%/150% mode"
--- L["COLUMN_RESTXP_DETAIL_1"] = "It takes 8 hours to gain 1 XP bubble (5%)."
--- L["COLUMN_RESTXP_DETAIL_2"] = "The maximum rested XP is 30 XP bubbles, or 1.5 level."
--- L["COLUMN_RESTXP_DETAIL_3"] = "It is achieved in 10 days."
--- L["COLUMN_RESTXP_DETAIL_4"] = "%d%% mode : fully rested is displayed as '%d%%'"
--- L["Fully rested"] = true
--- L["Fully rested in"] = true
--- L["CHARACTER_NOT_IN_RESTING_AREA"] = "This character is not in a resting area !"
+L["COLUMN_RESTXP_TITLE"] = "Experiencia de descanso"
+L["COLUMN_RESTXP_TITLE_SHORT"] = "Rest XP"
+L["COLUMN_RESTXP_SUBTITLE"] = "Haz click para ordenar"
+L["COLUMN_RESTXP_DETAIL_1"] = "Se necesitan 8 horas para ganar 1 burbuja de XP (5%)."
+L["COLUMN_RESTXP_DETAIL_2"] = "El máximo de XP de descanso es de 30 burbujas de XP, o de 1,5 niveles."
+L["COLUMN_RESTXP_DETAIL_3"] = "Se consigue en 10 días."
+L["COLUMN_RESTXP_DETAIL_4"] = "%d%% modo completamente descansado se muestra como: '%d%%'"
+L["Fully rested"] = "Completamente descansado"
+L["Fully rested in"] = "Completamente descansado en"
+L["CHARACTER_NOT_IN_RESTING_AREA"] = "¡Este personaje no está en un área de descanso!"
 
 -- Column Money
--- L["COLUMN_MONEY_TITLE"] = "Money"
--- L["COLUMN_MONEY_TITLE_SHORT"] = "Money"
--- L["COLUMN_MONEY_SUBTITLE_1"] = "Your shinies"
--- L["COLUMN_MONEY_SUBTITLE_2"] = "Mo Money Mo Problems"
--- L["COLUMN_MONEY_SUBTITLE_3"] = "Greed is good"
--- L["COLUMN_MONEY_SUBTITLE_4"] = "Can't buy happiness .. but buys loads of mounts !"
--- L["COLUMN_MONEY_SUBTITLE_5"] = "Does not grow on World Trees"
+L["COLUMN_MONEY_TITLE"] = "Oro"
+L["COLUMN_MONEY_TITLE_SHORT"] = "Oro"
+L["COLUMN_MONEY_SUBTITLE_1"] = "Tus brillos"
+L["COLUMN_MONEY_SUBTITLE_2"] = "Más dinero, más problemas"
+L["COLUMN_MONEY_SUBTITLE_3"] = "La codicia es buena"
+L["COLUMN_MONEY_SUBTITLE_4"] = "No se puede comprar la felicidad... ¡pero se pueden comprar montones de monturas!"
+L["COLUMN_MONEY_SUBTITLE_5"] = "No crece en los árboles del mundo."
 
 -- Column Played
--- L["COLUMN_PLAYED_TITLE"] = "Total Time Played"
--- L["COLUMN_PLAYED_TITLE_SHORT"] = "Played"
--- L["COLUMN_PLAYED_SUBTITLE"] = "Click to show/hide real play time"
+L["COLUMN_PLAYED_TITLE"] = "Tiempo total jugado"
+L["COLUMN_PLAYED_TITLE_SHORT"] = "Tiempo jugado"
+L["COLUMN_PLAYED_SUBTITLE"] = "Haz click para mostrar/ocultar el tiempo de juego real"
 
 -- Column iLevel
--- L["COLUMN_ILEVEL_TITLE"] = "Average Item Level"
--- L["COLUMN_ILEVEL_TITLE_SHORT"] = "iLvl"
--- L["COLUMN_ILEVEL_SUBTITLE"] = "Click level to toggle decimals"
+L["COLUMN_ILEVEL_TITLE"] = "Nivel de objeto"
+L["COLUMN_ILEVEL_TITLE_SHORT"] = "iLvl"
+L["COLUMN_ILEVEL_SUBTITLE"] = "Haz click para ordenar"
 
 -- Column Last Online
--- L["COLUMN_LASTONLINE_TITLE"] = "Last Online"
--- L["COLUMN_LASTONLINE_TITLE_SHORT"] = "Last Online"
--- L["COLUMN_LASTONLINE_SUBTITLE"] = "Last time a character was logged in"
+L["COLUMN_LASTONLINE_TITLE"] = "Última conexión"
+L["COLUMN_LASTONLINE_TITLE_SHORT"] = "Sesión"
+L["COLUMN_LASTONLINE_SUBTITLE"] = "Última vez que el personaje se conectó"
 
--- *** Character Information / Experience ***
--- L["COLUMN_MAXRESTXP_TITLE"] = "Maximum Rest XP"
--- L["COLUMN_MAXRESTXP_TITLE_SHORT"] = "Max XP"
--- L["COLUMN_MAXRESTXP_SUBTITLE"] = "Maximum rest experience that can be accumulated"
--- L["COLUMN_SAVEDRESTXP_TITLE"] = "Saved Rest XP"
--- L["COLUMN_SAVEDRESTXP_TITLE_SHORT"] = "Saved XP"
--- L["COLUMN_SAVEDRESTXP_SUBTITLE"] = "Amount of unused rest experience at logout"
--- L["COLUMN_EARNEDRESTXP_TITLE"] = "XP earned while resting"
--- L["COLUMN_EARNEDRESTXP_TITLE_SHORT"] = "Earned XP"
--- L["COLUMN_EARNEDRESTXP_SUBTITLE"] = "Amount of rest experience that was earned while resting"
+--*** Character Information / Experiencie ***
+L["COLUMN_MAXRESTXP_TITLE"] = "Máximo descanso de XP"
+L["COLUMN_MAXRESTXP_TITLE_SHORT"] = "Máxima XP"
+L["COLUMN_MAXRESTXP_SUBTITLE"] = "Máxima experiencia de descanso que se puede acumular"
+L["COLUMN_SAVEDRESTXP_TITLE"] = "XP de descanso acumulada"
+L["COLUMN_SAVEDRESTXP_TITLE_SHORT"] = "XP acumulada"
+L["COLUMN_SAVEDRESTXP_SUBTITLE"] = "Cantidad de experiencia de descanso no utilizada al cerrar sesión"
+L["COLUMN_EARNEDRESTXP_TITLE"] = "XP obtenida durante el descanso"
+L["COLUMN_EARNEDRESTXP_TITLE_SHORT"] = "XP ganada"
+L["COLUMN_EARNEDRESTXP_SUBTITLE"] = "Cantidad de experiencia de descanso que se ganó mientras se descansaba"
 
 -- *** Character Information / Guild ***
--- L["COLUMN_GUILD_TITLE"] = "Guild name"
--- L["COLUMN_GUILDRANK_TITLE"] = "Guild rank"
--- L["COLUMN_GUILDRANK_TITLE_SHORT"] = "Guild rank"
--- L["COLUMN_GUILDRANK_SUBTITLE"] = "Character rank in the guild"
--- L["COLUMN_GUILDREP_TITLE"] = "Guild reputation"
--- L["COLUMN_GUILDREP_SUBTITLE"] = "Character reputation with the guild"
+L["COLUMN_GUILD_TITLE"] = "Nombre de la hermandad"
+L["COLUMN_GUILDRANK_TITLE"] = "Rango de hermandad"
+L["COLUMN_GUILDRANK_TITLE_SHORT"] = "Rango"
+L["COLUMN_GUILDRANK_SUBTITLE"] = "Rango del personaje en la hermandad"
+L["COLUMN_GUILDREP_TITLE"] = "Reputación de hermandad"
+L["COLUMN_GUILDREP_SUBTITLE"] = "Reputación del personaje con la hermandad"
 
--- *** Character Information / Location ***
--- L["COLUMN_HEARTHSTONE_TITLE"] = "Hearthstone"
--- L["COLUMN_HEARTHSTONE_SUBTITLE"] = "That special place you call home"
--- L["COLUMN_SUBZONE_TITLE"] = "Sub-zone"
+--*** Character Information / Location ***
+L["COLUMN_HEARTHSTONE_TITLE"] = "Piedra de hogar"
+L["COLUMN_HEARTHSTONE_SUBTITLE"] = "Ese lugar especial al que llamas hogar"
+L["COLUMN_SUBZONE_TITLE"] = "Subzona"
 
 -- *** Character Information / Miscellaneous ***
--- L["COLUMN_CLASS_SUBTITLE"] = "Character class and active specialization"
--- L["COLUMN_BANK_TYPE_MARKS"] = "Bank type marks"
--- L["COLUMN_BANK_TYPE_MARKS_SUBTITLE"] = "List of marks set for bank characters"
+L["COLUMN_CLASS_SUBTITLE"] = "Clase del personaje y especialización activa"
+L["COLUMN_BANK_TYPE_MARKS"] = "Marcas tipo banco"
+L["COLUMN_BANK_TYPE_MARKS_SUBTITLE"] = "Lista de marcas establecidas para los personajes banqueros"
 
 -- *** Bag Usage ***
--- L["COLUMN_BAGS_TITLE"] = "Character Bags"
--- L["COLUMN_BAGS_TITLE_SHORT"] = "Bags"
--- L["COLUMN_BAGS_SUBTITLE_1"] = "Your main inventory slots"
--- L["COLUMN_BAGS_SUBTITLE_2"] = "Bigger is always better"
--- L["COLUMN_FREEBAGSLOTS_TITLE"] = "Free Bag Slots"
--- L["COLUMN_FREEBAGSLOTS_TITLE_SHORT"] = "Free"
--- L["COLUMN_FREEBAGSLOTS_SUBTITLE"] = "Free vs total slots"
--- L["COLUMN_BANK_TITLE"] = "Character Bank"
--- L["COLUMN_BANK_TITLE_SHORT"] = "Bank"
--- L["COLUMN_BANK_SUBTITLE_1"] = "Your bank inventory slots"
--- L["COLUMN_BANK_SUBTITLE_2"] = "Where old ph4t l3wts go to rest"
--- L["COLUMN_FREEBANKLOTS_TITLE"] = "Free Bank Slots"
--- L["COLUMN_FREEBANKLOTS_TITLE_SHORT"] = "Free"
--- L["COLUMN_FREEBANKLOTS_SUBTITLE"] = "Free vs total slots"
--- L["NUM_SLOTS_AND_FREE"] = "%s%d%s slots, %s%d%s free"
+L["COLUMN_BAGS_TITLE"] = "Bolsas del personaje"
+L["COLUMN_BAGS_TITLE_SHORT"] = "Bolsas"
+L["COLUMN_BAGS_SUBTITLE_1"] = "Las ranuras de tu inventario principal"
+L["COLUMN_BAGS_SUBTITLE_2"] = "Más grande siempre es mejor"
+L["COLUMN_FREEBAGSLOTS_TITLE"] = "Ranuras para bolsas libres"
+L["COLUMN_FREEBAGSLOTS_TITLE_SHORT"] = "Libre"
+L["COLUMN_FREEBAGSLOTS_SUBTITLE"] = "Ranuras libres vs totales"
+L["COLUMN_BANK_TITLE"] = "Banco del personaje"
+L["COLUMN_BANK_TITLE_SHORT"] = "Banco"
+L["COLUMN_BANK_SUBTITLE_1"] = "Tus ranuras de inventario del banco"
+L["COLUMN_BANK_SUBTITLE_2"] = "Donde los materiales viejos van a descansar"
+L["COLUMN_FREEBANKLOTS_TITLE"] = "Ranuras del banco libres"
+L["COLUMN_FREEBANKLOTS_TITLE_SHORT"] = "Libre"
+L["COLUMN_FREEBANKLOTS_SUBTITLE"] = "Ranuras libres vs totales"
+L["NUM_SLOTS_AND_FREE"] = "%s%d%s ranuras, %s%d%s libre"
 
 L["Bags"] = "Bolsas"
 L["Bank"] = "Banco"
 L["Bank bag"] = "Bolsa en banco"
-L["Bank not visited yet"] = "Banco no visitado a�n"
-L["slots"] = "casillas"
+L["Bank not visited yet"] = "Banco no visitado aún"
+L["slots"] = "ranuras"
 
 -- *** Skills ***
-L["COLUMN_PROFESSION_1_TITLE"] = "Primera Prof."
+L["COLUMN_PROFESSION_1_TITLE"] = "Primera profesión."
 L["COLUMN_PROFESSION_1_TITLE_SHORT"] = "Prof. 1"
-L["COLUMN_PROFESSION_2_TITLE"] = "Segunda Prof."
+L["COLUMN_PROFESSION_2_TITLE"] = "Segunda profesión."
 L["COLUMN_PROFESSION_2_TITLE_SHORT"] = "Prof. 2"
--- L["COLUMN_RIDING_UPGRADEABLE_MALE"] = "This character could upgrade his riding skill"
--- L["COLUMN_RIDING_UPGRADEABLE_FEMALE"] = "This character could upgrade her riding skill"
+L["COLUMN_RIDING_UPGRADEABLE_MALE"] = "Este personaje podría mejorar su habilidad de equitación"
+L["COLUMN_RIDING_UPGRADEABLE_FEMALE"] = "Este personaje podría mejorar su habilidad de equitación"
 L["COLOR_GREEN"] = "Verde"
 L["COLOR_GREY"] = "Gris"
 L["COLOR_ORANGE"] = "Naranja"
@@ -204,96 +202,95 @@ L["at"] = "a"
 L["and above"] = "y por encima"
 L["No data"] = "Sin datos"
 L["Suggestion"] = "Sugerencia"
-L["All cooldowns are up"] = "No hay habilidades recarg�ndose"
-L["Riding"] = "Equitaci�n"
- 
+L["All cooldowns are up"] = "No hay habilidades recargándose"
+L["Riding"] = "Equitación"
+
 -- *** Activity ***
--- L["COLUMN_MAILS_TITLE"] = "Mailbox Content"
--- L["COLUMN_MAILS_TITLE_SHORT"] = "Mails"
--- L["COLUMN_MAILS_SUBTITLE"] = "Number of items in the mailbox"
--- L["COLUMN_MAILS_DETAIL_1"] = "Beyond a certain limit, mails are queued server-side."
--- L["COLUMN_MAILS_DETAIL_2"] = "These mails are not accounted for here."
--- L["COLUMN_MAILBOX_VISITED_TITLE"] = "Last Mailbox Check"
--- L["COLUMN_MAILBOX_VISITED_TITLE_SHORT"] = "Visited"
--- L["COLUMN_MAILBOX_VISITED_SUBTITLE"] = "Last time mailbox content was checked"
--- L["COLUMN_AUCTIONS_TITLE"] = "Auction House Auctions"
--- L["COLUMN_AUCTIONS_TITLE_SHORT"] = "Auctions"
--- L["COLUMN_AUCTIONS_SUBTITLE"] = "Number of active auctions at the Auction House"
--- L["COLUMN_BIDS_TITLE"] = "Auction House Bids"
--- L["COLUMN_BIDS_TITLE_SHORT"] = "Bids"
--- L["COLUMN_BIDS_SUBTITLE"] = "Number of bids placed at the Auction House"
--- L["COLUMN_AUCTIONHOUSE_VISITED_TITLE"] = "Last Auction House Visit"
--- L["COLUMN_AUCTIONHOUSE_VISITED_TITLE_SHORT"] = "Visited"
--- L["COLUMN_AUCTIONHOUSE_VISITED_SUBTITLE"] = "Last time the Auction House was visited"
--- L["COLUMN_GARRISON_MISSIONS_TITLE"] = "Garrison Missions"
--- L["COLUMN_GARRISON_MISSIONS_TITLE_SHORT"] = "Missions"
--- L["COLUMN_GARRISON_MISSIONS_SUBTITLE"] = "Last time mission status was checked"
--- L["COLUMN_GARRISON_MISSIONS_DETAIL_1"] = "At least one mission is complete"
--- L["COLUMN_GARRISON_MISSIONS_DETAIL_2"] = "All missions are complete" 
--- L["COLUMN_GARRISON_MISSIONS_DETAIL_3"] = "No ongoing missions" 
+L["COLUMN_MAILS_TITLE"] = "Contenido del buzón"
+L["COLUMN_MAILS_TITLE_SHORT"] = "Correos"
+L["COLUMN_MAILS_SUBTITLE"] = "Número de items en el buzón"
+L["COLUMN_MAILS_DETAIL_1"] = "Más allá de un determinado límite, los correos se ponen en cola en el servidor."
+L["COLUMN_MAILS_DETAIL_2"] = "Estos correos no están contabilizados aquí."
+L["COLUMN_MAILBOX_VISITED_TITLE"] = "Última comprobación del buzón"
+L["COLUMN_MAILBOX_VISITED_TITLE_SHORT"] = "Visita"
+L["COLUMN_MAILBOX_VISITED_SUBTITLE"] = "Última vez que se comprobó el contenido del buzón"
+L["COLUMN_AUCTIONS_TITLE"] = "Subastas en la casa de subastas"
+L["COLUMN_AUCTIONS_TITLE_SHORT"] = "Subastas"
+L["COLUMN_AUCTIONS_SUBTITLE"] = "Número de subastas activas en la casa de subastas"
+L["COLUMN_BIDS_TITLE"] = "Pujas en la casa de subastas"
+L["COLUMN_BIDS_TITLE_SHORT"] = "Pujas"
+L["COLUMN_BIDS_SUBTITLE"] = "Número de pujas realizadas en la casa de subastas"
+L["COLUMN_AUCTIONHOUSE_VISITED_TITLE"] = "Última visita a la casa de subastas"
+L["COLUMN_AUCTIONHOUSE_VISITED_TITLE_SHORT"] = "Visita"
+L["COLUMN_AUCTIONHOUSE_VISITED_SUBTITLE"] = "Última vez que se visitó la casa de subastas"
+L["COLUMN_GARRISON_MISSIONS_TITLE"] = "Misiones de la ciudadela"
+L["COLUMN_GARRISON_MISSIONS_TITLE_SHORT"] = "Misiones"
+L["COLUMN_GARRISON_MISSIONS_SUBTITLE"] = "Última vez que se comprobó el estado de la misión"
+L["COLUMN_GARRISON_MISSIONS_DETAIL_1"] = "Al menos una misión está completa"
+L["COLUMN_GARRISON_MISSIONS_DETAIL_2"] = "Todas las misiones están completas"
+L["COLUMN_GARRISON_MISSIONS_DETAIL_3"] = "No hay misiones en curso"
 
 L["Visited"] = "Visitado"
- 
- 
--- *** Currencies ***
-L["Last collected"] = true
-L["Garrison resources"] = true
-L["Uncollected resources"] = true
-L["Max. uncollected resources in"] = true
- 
- 
+
+
+--*** Currencies ***
+L["Last collected"] = "Última recogida"
+L["Garrison resources"] = "Recursos de la ciudadela"
+L["Uncollected resources"] = "Recursos sin recoger"
+L["Max. uncollected resources in"] = "Máximo de recursos no recogidos en"
+
+
 -- *** Expansion Features / Garrison Followers ***
--- L["COLUMN_FOLLOWERS_LV40_TITLE"] = "Level 40 Followers"
--- L["COLUMN_FOLLOWERS_LV40_TITLE_SHORT"] = "Lv 40"
--- L["COLUMN_FOLLOWERS_LV40_SUBTITLE"] = "Level 40 vs Total Followers"
--- L["COLUMN_FOLLOWERS_RARITY_TITLE"] = "Followers' Rarity Level"
--- L["COLUMN_FOLLOWERS_RARITY_TITLE_SHORT"] = "Rarity"
--- L["COLUMN_FOLLOWERS_RARITY_SUBTITLE"] = "Rare vs Epic Rarity" 
--- L["COLUMN_FOLLOWERS_ILEVEL_TITLE"] = "Followers with %s iLevel"
--- L["COLUMN_FOLLOWERS_ILEVEL_SUBTITLE"] = "iLevel %s" 
--- L["COLUMN_FOLLOWERS_AIL_TITLE"] = "Followers' AiL"
--- L["COLUMN_FOLLOWERS_AIL_TITLE_SHORT"] = "iLvl"
--- L["COLUMN_FOLLOWERS_AIL_SUBTITLE"] = "Average item level of all active followers" 
+L["COLUMN_FOLLOWERS_LV40_TITLE"] = "Seguidores de nivel 40"
+L["COLUMN_FOLLOWERS_LV40_TITLE_SHORT"] = "Lv 40"
+L["COLUMN_FOLLOWERS_LV40_SUBTITLE"] = "Nivel 40 vs Total de seguidores"
+L["COLUMN_FOLLOWERS_RARITY_TITLE"] = "Nivel de rareza de los seguidores"
+L["COLUMN_FOLLOWERS_RARITY_TITLE_SHORT"] = "Rareza"
+L["COLUMN_FOLLOWERS_RARITY_SUBTITLE"] = "Rareza vs. Rareza Épica"
+L["COLUMN_FOLLOWERS_ILEVEL_TITLE"] = "Seguidores con %s iLevel"
+L["COLUMN_FOLLOWERS_ILEVEL_SUBTITLE"] = "iLevel %s"
+L["COLUMN_FOLLOWERS_AIL_TITLE"] = "AiL de los seguidores"
+L["COLUMN_FOLLOWERS_AIL_TITLE_SHORT"] = "iLvl"
+L["COLUMN_FOLLOWERS_AIL_SUBTITLE"] = "Nivel promedio de items de todos los seguidores activos"
 
 -- *** Expansion Features / Artifacts ***
- 
+
 -- *** Expansion Features / Covenant ***
--- L["COLUMN_COVENANT_SUBTITLE"] = "Click to view your soulbinds"
--- L["COLUMN_COVENANT_TITLE"] = "Chosen Covenant"
--- L["COLUMN_COVENANT_TITLE_SHORT"] = "Covenant"
--- L["COLUMN_SOULBIND_SUBTITLE"] = "Click to view your soulbinds"
--- L["COLUMN_SOULBIND_TITLE"] = "Active Soulbind"
--- L["COLUMN_SOULBIND_TITLE_SHORT"] = "Soulbind"
--- L["COLUMN_RENOWN_SUBTITLE"] = "Click to view your renown level and rewards"
--- L["COLUMN_RENOWN_TITLE"] = "Renown Level"
--- L["COLUMN_CAMPAIGNPROGRESS_TITLE_SHORT"] = "Story"
--- L["COLUMN_CAMPAIGNPROGRESS_TITLE"] = "Campaign Progress"
--- L["COLUMN_CAMPAIGNPROGRESS_SUBTITLE"] = "Number of completed chapters in the covenant campaign"
+L["COLUMN_COVENANT_SUBTITLE"] = "Click para ver nexo de almas"
+L["COLUMN_COVENANT_TITLE"] = "Curia elegida"
+L["COLUMN_COVENANT_TITLE_SHORT"] = "Curia"
+L["COLUMN_SOULBIND_SUBTITLE"] = "Click para ver nexo de almas"
+L["COLUMN_SOULBIND_TITLE"] = "Nexo de almas activo"
+L["COLUMN_SOULBIND_TITLE_SHORT"] = "Nexo de almas"
+L["COLUMN_RENOWN_SUBTITLE"] = "Click para ver tu nivel de renombre y recompensas"
+L["COLUMN_RENOWN_TITLE"] = "Nivel de Renombre"
+L["COLUMN_CAMPAIGNPROGRESS_TITLE_SHORT"] = "Historia"
+L["COLUMN_CAMPAIGNPROGRESS_TITLE"] = "Progreso de la campaña"
+L["COLUMN_CAMPAIGNPROGRESS_SUBTITLE"] = "Número de capítulos completados en la campaña de la curia"
 
 -- *** Expansion Features / Reservoir ***
--- L["COLUMN_TRANSPORT_NETWORK_TITLE"] = "Transport Network"
--- L["COLUMN_ANIMA_TITLE"] = "Anima Conductor"
--- L["COLUMN_COMMAND_TABLE_TITLE"] = "Command Table"
--- L["COLUMN_SANCTUM_UNIQUE_TITLE"] = "Sanctum Unique"
+L["COLUMN_TRANSPORT_NETWORK_TITLE"] = "Red de transporte"
+L["COLUMN_ANIMA_TITLE"] = "Conductor de ánima"
+L["COLUMN_COMMAND_TABLE_TITLE"] = "Mesa de seguidores"
+L["COLUMN_SANCTUM_UNIQUE_TITLE"] = "Actividad única"
 
--- L["Overall"] = true
--- L["Torghast"] = true
--- L["Single target build"] = true
--- L["AOE build"] = true
--- L["Recommended Covenant"] = true
--- L["Equally viable"] = true
+L["Overall"] = "Overall"
+L["Torghast"] = "Torghast"
+L["Single target build"] = "Build de un solo objetivo"
+L["AOE build"] = "Build AOE"
+L["Recommended Covenant"] = "Curia recomendada"
+L["Equally viable"] = "igualmente viable"
 
 
 -- *** Mythic Keystone ***
--- L["COLUMN_KEYNAME_TITLE"] = "Current Mythic+ Keystone"
--- L["COLUMN_KEYNAME_TITLE_SHORT"] = "Keystone"
--- L["COLUMN_KEYNAME_SUBTITLE"] = "Your next adventure"
--- L["COLUMN_KEYLEVEL_TITLE"] = "Current Mythic+ Keystone Level"
--- L["COLUMN_KEYLEVEL_SUBTITLE"] = "You are definitely not prepared!"
--- L["COLUMN_WEEKLYBEST_KEYNAME_TITLE"] = "Weekly Best Mythic+ Keystone"
--- L["COLUMN_WEEKLYBEST_KEYNAME_SUBTITLE"] = "Mouse over for weekly best for all maps"
--- L["COLUMN_WEEKLYBEST_KEYLEVEL_TITLE"] = "Weekly Best Mythic+ Level"
--- L["COLUMN_WEEKLYBEST_KEYLEVEL_SUBTITLE"] = "How deep down the rabbit hole you dared to go"
--- L["COLUMN_WEEKLYBEST_KEYTIME_TITLE"] = "Weekly Best Mythic+ Time"
--- L["COLUMN_WEEKLYBEST_KEYTIME_SUBTITLE"] = "Mouse over for season best for all maps"
-
+L["COLUMN_KEYNAME_TITLE"] = "Mítica actual+ Piedra angular"
+L["COLUMN_KEYNAME_TITLE_SHORT"] = "Piedra angular"
+L["COLUMN_KEYNAME_SUBTITLE"] = "Tu próxima aventura"
+L["COLUMN_KEYLEVEL_TITLE"] = "Mítica actual+ nivel de la piedra angular"
+L["COLUMN_KEYLEVEL_SUBTITLE"] = "¡Definitivamente no estás preparado!"
+L["COLUMN_WEEKLYBEST_KEYNAME_TITLE"] = "Mejor Mítica Semanal+ Piedra angular"
+L["COLUMN_WEEKLYBEST_KEYNAME_SUBTITLE"] = "Pasa el ratón por encima para ver lo mejor de la semana para todos los mapas"
+L["COLUMN_WEEKLYBEST_KEYLEVEL_TITLE"] = "Mejor Mítica Semanal+ Nivel"
+L["COLUMN_WEEKLYBEST_KEYLEVEL_SUBTITLE"] = "Qué tan profundo en la madriguera del conejo te atreviste a ir"
+L["COLUMN_WEEKLYBEST_KEYTIME_TITLE"] = "Mejor Mítica Semanal+ Tiempo"
+L["COLUMN_WEEKLYBEST_KEYTIME_SUBTITLE"] = "Pasa el ratón por encima para ver la mejor temporada de todos los mapas"

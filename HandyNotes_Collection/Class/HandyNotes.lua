@@ -71,14 +71,6 @@ end
 function HandyNotesPlugin:OnClick(button, down, uiMapId, coord)
   -- Left button actions.
   if (button == 'LeftButton') then
-    -- If icon is portal, we change map.
-    --- @deprecated portal in 0.11.0 and scheduled for removal in 0.13.0
-    if (down == true and this.points[uiMapId][coord]['portal']) then
-      API:changeMap(this.points[uiMapId][coord]['portal'])
-
-      return;
-    end
-
     -- Waypoint creation on shift click.
     if (API:IsShiftKeyDown() and down == false) then
       Point:createWaypoint(uiMapId, coord)
@@ -86,7 +78,7 @@ function HandyNotesPlugin:OnClick(button, down, uiMapId, coord)
 
     -- Activation and deactivation of a point (displaying pois and paths even if we hover out).
     local active = true
-    if (down == true and not this.points[uiMapId][coord]['portal']) then
+    if (down == true) then
       if (this.points[uiMapId][coord]['active'] and this.points[uiMapId][coord]['active'] == true) then
         active = false
       end
@@ -131,7 +123,7 @@ do
         local completed = Point:isCompleted(point)
 
         -- Check, whether point should be shown.
-        local show = Map:showPoint(point, completed)
+        local show = Map:showPoint(completed)
 
         if (show == true) then
           -- Create icon for to display on map.
@@ -147,11 +139,6 @@ do
             icon.r = 0
             icon.g = 255
             icon.b = 0
-          end
-
-          --- @deprecated portal in 0.11.0 and scheduled for removal in 0.13.0
-          if (point.portal) then
-            icon = API:GetAtlasInfo(point.icon)
           end
 
           return coordinates, nil, icon, scale, opacity

@@ -25,15 +25,16 @@ ns.RegisterPoints(MAPID, {
         },
         note="Fetch {item:195453} from {npc:192997}",
     },
-    --[[
-    [] = { -- Emerald Gem Cluster
+    [33205532] = { -- Emerald Gem Cluster
         criteria=54700,
         quest=70391,
-        loot={},
+        loot={
+            200865, -- Glimmering Ysemerald Cluster
+        },
+        hide_before=ns.conditions.MajorFaction(ns.FACTION_DRAGONSCALE, 21),
         active={ns.conditions.Item(198843), ns.conditions.QuestComplete(70392), any=true}, -- Emerald Gardens Explorer's Notes
         note="Find {item:198843} in other treasures"
     },
-    --]]
     [73475616] = { -- Cracked Centaur Horn
         criteria=54709,
         quest=70402,
@@ -48,6 +49,7 @@ ns.RegisterPoints(MAPID, {
             199338, -- Copper Coin of the Isles
         },
         note="In cave",
+        path=81667175,
     },
     [51985830] = { -- Yennu's Boat
         criteria=54711,
@@ -70,6 +72,20 @@ ns.RegisterPoints(MAPID, {
         },
         note="Survive the trial of the elements",
         vignette=5407,
+    },
+    [82317322] = { -- The Great Swog
+        npc=191608,
+        loot={
+            199341, -- Regurgitated
+            199342, -- Weighted
+            202102, -- Immaculate
+            {202042, toy=true, note="In bags"}, -- Aquatic Shades
+            {199234, note="In bags"}, -- Schematic: Khaz'gorite Fisherfriend
+        },
+        active={ns.conditions.Item(199338), ns.conditions.Item(199339), ns.conditions.Item(199340), any=true},
+        texture=ns.atlas_texture("Fishing-Hole", {r=1, g=0.5, b=0.5}), scale=1.2,
+        minimap=true,
+        path=81657175,
     },
 })
 
@@ -172,7 +188,11 @@ ns.RegisterPoints(MAPID, {
         criteria=56066,
         quest=nil,
         npc=193209,
-        loot={},
+        loot={
+            {200879, note="Hatches into..."}, -- Zenet Egg
+            {198825, mount=1672}, -- Zenet Hatchling
+        },
+        note="Flying",
     },
     [87406140] = { -- Liskheszaera
         criteria=56067,
@@ -229,15 +249,16 @@ ns.RegisterPoints(MAPID, {
         vignette=5195,
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
-    [] = { -- Oshigol
+    --]]
+    [60812677] = { -- Oshigol
         criteria=56074,
         quest=69877,
         npc=193235,
         loot={},
+        note="Patrols",
         vignette=5199,
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
-    --]]
     [74414762] = { -- Fulgurb
         criteria=56075,
         quest=69856,
@@ -450,6 +471,11 @@ ns.RegisterPoints(MAPID, {
         path=24503340,
         vignette=5131,
     },
+    [72615598] = { -- Biryuk
+        quest=nil,
+        npc=193168,
+        loot={}, -- only supplies and commendations
+    }
 })
 
 -- Who's a Good Bakar?
@@ -572,4 +598,19 @@ ns.RegisterPoints(MAPID, {
     texture=ns.atlas_texture("WildBattlePet", {}),
     minimap=true,
     -- icon=930453, -- Inv_stbernarddogpet
+})
+
+-- Sleeping on the Job
+ns.RegisterPoints(MAPID, {
+    [33515321] = {criteria=55776, npc=198064,}, -- Dreamguard Felyasra
+    [29876222] = {criteria=55777, npc=198068, path=29696022}, -- Dreamguard Erezsra
+    [25296540] = {criteria=55778, npc=198069,}, -- Dreamguard Sayliasra
+    [18025378] = {criteria=55779, npc=198074,}, -- Dreamguard Aiyelasra
+    [19088289] = {criteria=55780, npc=198073,}, -- Dreamguard Lucidra
+    [29404153] = {criteria=55781, npc=198075,}, -- Dreamguard Taelyasra
+}, {
+    achievement=16574,
+    note="/sleep",
+    texture=ns.atlas_texture("VenthyrAssaultsQuest-32x32", {r=0, g=1, b=0}), scale=1.2,
+    minimap=true,
 })

@@ -15,11 +15,7 @@ If you have any comment, issue or feature request, you can leave me a note on Di
 
 Configuration for this addon can be found under HandyNotes (Interface -> Addons -> HandyNotes -> Plugins -> Collection).
 
-At current time, you can modify configuration for Waypoints and Collection (tracking).
-
-### Waypoints
-
-Waypoints can be enabled or disabled, and you can change their size and opacity.
+At current time, you can modify configuration for Collection (tracking).
 
 ### Collection (tracking)
 
@@ -49,26 +45,7 @@ This works like in All The Things addon (Completionist Mode). If you enable this
 
 ### Waypoints in instances
 
-__This section is deprecated in version 0.11.0 and scheduled for removal in 0.13.0. There will be standalone addon for waypoints.__
-
-This adds waypoints (transitions between maps) to past dungeons and raids like we know it from Legion and onwards.
-In the future, this might be expanded to mini maps all over the world (like Caverns of Time).
-
-- Waypoints in all __pre-Legion__ raid instances for easier orientation:
-
-  - __Classic__ raids (_Blackwing Lair, Temple of Ahn'Qiraj_).
-  - __Burning Crusade__ raids (_Karazhan, Black Temple, Sunwell Plateau_).
-  - __Wrath of the Lich King__ raids (_Naxxramas, Ulduar, Trial of Crusader, Icecrown Citadel_).
-  - __Cataclysm__ raids (_Blackwing Descent, Bastion of Twilight, Firelands, Dragon Soul_).
-  - __Mists of Pandaria__ raids (_Heart of Fear, Mogu'shan Vaults, Throne of Thunder, Siege of Orgrimmar_).
-  - __Warlords of Draenor__ raids (_Highmaul, Blackrock Foundry, Hellfire Citadel_).
-- Waypoints in all __pre-Legion__ dungeon instances for easier orientation:
-  - __Classic__ dungeons (_Blackfathom Deeps, Blackrock Depths, Dire Maul, Gnomeregan, Lower Blackrock Spire, Maraudon, Scarlet Halls, Scarlet Monastery, Scholomance, Shadowfang Keep, The Deadmines, Uldaman_).
-  - __The Burning Crusade__ dungeons (_Auchenai Crypts, Magisters' Terrace, Sethekk Halls, The Arcatraz, The Mechanar, The Steamvault_).
-  - __Wrath of the Lich King__ dungeons (_Azjol-Nerub, Culling of Stratholme, Drak'Tharon Keep, Halls of Lightning, The Oculus, Utgarde Keep, Utgarde Pinnacle_).
-  - __Cataclysm__ dungeons (_Blackrock Caverns, End Time, Halls of Origination, Hour of Twilight, Throne of Tides_).
-  - __Mists of Pandaria__ dungeons (_Gate of the Setting Sun, Mogu'shan Palace, Siege of Niuzao Temple, Shado-Pan Monastery, Stormstout Brewery, Temple of the Jade Serpent_).
-  - __Warlords of Draenor__ dungeons (_Grimrail Depot, Shadowmoon Burial Grounds, Skyreach, The Everbloom, Upper Blackrock Spire_).
+__This feature has been removed and resides in standalone addon [HandyNotes: Nooks and Crannies](https://www.curseforge.com/wow/addons/handynotes-nooks-and-crannies).__
 
 ## Tracking
 

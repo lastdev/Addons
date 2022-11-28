@@ -1,24 +1,18 @@
-commit cd62bf185f41ddffe594589a3fedd2b5dd2a66c2
+lightweight tag 732c885274616848a65515b87e9a6a9691d2b050 v10.0.1
+Author:	GitHub <noreply@github.com>
+Date:	Sun Nov 27 16:07:23 2022 -1000
+
+commit 732c885274616848a65515b87e9a6a9691d2b050
 Author: Vae <emuha17@gmail.com>
-Date:   Mon Nov 21 22:17:47 2022 -1000
+Date:   Sun Nov 27 16:07:23 2022 -1000
 
-    DF Cleanup
+    Update ConRO_Warrior.toc
+    
+    toc update
 
-commit cd62bf185f41ddffe594589a3fedd2b5dd2a66c2
+commit d7a01e892bb2a02ae4468e2dfac8b99f364c5e0e
 Author: Vae <emuha17@gmail.com>
-Date:   Mon Nov 21 22:17:47 2022 -1000
+Date:   Sun Nov 27 16:06:11 2022 -1000
 
-    DF Cleanup
-
-commit e2d2e07c5522052cd69a6577af499367568c22ba
-Author: Vae <emuha17@gmail.com>
-Date:   Sun Nov 20 00:01:48 2022 -1000
-
-    Delete Warrior
-
-commit c81f38b81dfdad210211c4bbfb7e32ae4a368b05
-Author: Vae <emuha17@gmail.com>
-Date:   Mon Nov 14 18:57:47 2022 -1000
-
-    Initial Git Creation
+    Rotation Update for 10.0.0
 

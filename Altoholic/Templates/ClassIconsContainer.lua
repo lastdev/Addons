@@ -3,6 +3,7 @@ local addon = _G[addonName]
 
 addon:Controller("AltoholicUI.ClassIconsContainer", { "AltoholicUI.Options", function(Options)
 	
+	local NUM_COLUMNS = 13
 	local OPTION_FORMAT = "Tabs.%s.%s.%s.Column%d"
 
 	return {
@@ -26,7 +27,7 @@ addon:Controller("AltoholicUI.ClassIconsContainer", { "AltoholicUI.Options", fun
 		end,
 		SetIDs = function(frame, page)
 			for i = 1, frame.numIcons do
-				local index = ((page - 1) * 12) + i		-- Pages = 1-12, 13-24, etc..
+				local index = ((page - 1) * NUM_COLUMNS) + i		-- Pages = 1-12, 13-24, etc..
 				
 				frame[format("%s%d", frame.iconPrefix, i)]:SetID(index)
 			end		
@@ -62,7 +63,7 @@ addon:Controller("AltoholicUI.ClassIconsContainer", { "AltoholicUI.Options", fun
 			for i = 1, numIcons do
 				local class, faction, _
 				
-				local index = ((page - 1) * 12) + i		-- Pages = 1-12, 13-24, etc..
+				local index = ((page - 1) * NUM_COLUMNS) + i		-- Pages = 1-12, 13-24, etc..
 				
 				key = Options.Get(format(OPTION_FORMAT, tabName, account, realm, index))
 				if key then

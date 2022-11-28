@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.13.1] 2022-11-27
+
+### Fixed
+
+- Fixed issue with point requirements using containers.
+
+### Changed
+
+- Updated TOC for Dragonflight (10.0.2)
+
+## [0.13.0] 2022-10-26
+
+### Added
+
+- Added support for WoTLK Classic (3.4.0)
+
+### Fixed
+
+- Added check for trasmogs, if we have actual sourceId ([comment #1](https://www.curseforge.com/wow/addons/handynotes-collection#c1), [comment #5](https://www.curseforge.com/wow/addons/handynotes-collection#c5), [comment #6](https://www.curseforge.com/wow/addons/handynotes-collection#c6)).
+
+### Removed
+
+- Removed all waypoints functionality and features. It has been moved to stand alone addon [HandyNotes: Nooks and Crannies](https://www.curseforge.com/wow/addons/handynotes-nooks-and-crannies).
+
+### Changed
+
+- Increased POI/path frame level (it wasn't visible while some icons were overlaping with different addons).
+- Updated TOC for Dragonflight (10.0.0)
+
 ## [0.12.0] 2022-07-27
 
 ### Added
@@ -244,7 +273,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Basic module configuration and documentation.
 - [I Found Pepe!](https://www.wowhead.com/achievement=10053/i-found-pepe) achievement.
 
-[Unreleased]: https://gitlab.com/mulambo/HandyNotes_Collection/-/compare/v0.12.0...master
+[Unreleased]: https://gitlab.com/mulambo/HandyNotes_Collection/-/compare/v0.13.1...master
+[0.13.1]: https://gitlab.com/mulambo/HandyNotes_Collection/-/releases/v0.13.1
+[0.13.0]: https://gitlab.com/mulambo/HandyNotes_Collection/-/releases/v0.13.0
 [0.12.0]: https://gitlab.com/mulambo/HandyNotes_Collection/-/releases/v0.12.0
 [0.11.1]: https://gitlab.com/mulambo/HandyNotes_Collection/-/releases/v0.11.1
 [0.11.0]: https://gitlab.com/mulambo/HandyNotes_Collection/-/releases/v0.11.0

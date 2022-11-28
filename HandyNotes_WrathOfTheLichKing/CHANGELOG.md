@@ -1,5 +1,10 @@
 # Changelog
 
+## Changes in v10
+
+* If TomTom is present, let you set a waypoint for every related point at once
+* Route lines were being hidden sometimes in explored areas
+
 ## Changes in v9
 
 * Always show everything on the minimap, since this is a vignette-less expansion

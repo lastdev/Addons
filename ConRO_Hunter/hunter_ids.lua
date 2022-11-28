@@ -167,10 +167,13 @@ local ConRO_Hunter, ids = ...;
 		AspectoftheWild = 193530,
 		BestialWrath = 19574,
 		BeastCleave = 268877,
+		CalloftheWild = 359844,
 		Frenzy = 272790,
+		HuntersPrey = 378215,
 	}
 	ids.BM_Debuff = {
 		HuntersMark = 257284,
+		SerpentSting = 271788,
 		TarTrap = 135299,
 	}
 	ids.BM_PetAbility = {
@@ -329,6 +332,7 @@ local ConRO_Hunter, ids = ...;
 		LoneWolf = 164273,
 	}
 	ids.MM_Buff = {
+		Deathblow = 378770,
 		PreciseShots = 260242,
 		TrickShots = 257622,
 		Trueshot = 193526,
@@ -387,8 +391,8 @@ local ConRO_Hunter, ids = ...;
 		HighExplosiveTrap = {spellID = 236776, talentID = 100620},
 		HuntersMark = {spellID = 257284},
 		Intimidation = {spellID = 19577, talentID = 100621},
-		KillCommand = {spellID = 34026, talentID = 100648},
-		KillShot = {spellID = 53351, talentID = 100539},
+		KillCommand = {spellID = 259489, talentID = 100648},
+		KillShot = {spellID = 320976, talentID = 100539},
 		Misdirection = {spellID = 34477, talentID = 100637},
 		Muzzle = {spellID = 187707, talentID = 100543},
 		PetUtility = {
@@ -498,13 +502,15 @@ local ConRO_Hunter, ids = ...;
 		AspectoftheEagle = 186289,
 		CoordinatedAssault = 266779,
 		MongooseFury = 259388,
+		Spearhead = 360966,
 		TipoftheSpear = 260286,
 		VipersVenom = 268552,
 	}
 	ids.Surv_Debuff = {
 		HuntersMark = 257284,
 		InternalBleeding = 270343,
-		SerpentSting = 259491,
+		LatentPoison = 378015,
+		SerpentSting = 271788,
 		TarTrap = 135299,
 		WildfireBomb = 269747,
 			ShrapnelBomb = 270339,

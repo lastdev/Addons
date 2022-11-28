@@ -170,6 +170,11 @@ local ConRO_Shaman, ids = ...;
 		Ascendance = 114050,
 		EarthShield = 974,
 		EchoingShock = 320125,
+		ElementalBlast = {
+			CriticalStrike = 118522,
+			Haste = 173183,
+			Mastery = 173184
+		},
 		Icefury = 210714,
 		LavaSurge = 77762,
 		LightningShield = 192106,
@@ -181,9 +186,9 @@ local ConRO_Shaman, ids = ...;
 		FlameShock = 188389,
 	}
 	ids.Ele_PetAbility = {
-		CallLightning = 157348,
-		EyeoftheStorm = 157375,
-		Meteor = nil,
+		CallLightning = {spellID = 157348, talentID = 101849},
+		Tempest = {spellID = 157375, talentID = 101849},
+		Meteor = {spellID = 117588, talentID = 101850},
 	}
 		
 --Enhancement
@@ -322,8 +327,14 @@ local ConRO_Shaman, ids = ...;
 	}
 	ids.Enh_Buff = {
 		Ascendance = 114051,
+		AshenCatalyst = 390371,
 		CrashLightning = 187878,
 		EarthShield = 974,
+		ElementalSpirits = {
+			CracklingSurge = 224127,
+			IcyEdge = 224126,
+			MoltenWeapon = 224125,
+		},
 		FlametongueWeapon = 5400,
 		Frostbrand = 196834,
 		ForcefulWinds = 262652,

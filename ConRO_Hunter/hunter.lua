@@ -99,7 +99,9 @@ function ConRO.Hunter.Disabled(_, timeShift, currentSpell, gcd, tChosen, pvpChos
 end
 
 function ConRO.Hunter.Under10(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
---Info
+	wipe(ConRO.SuggestedSpells)
+	local Racial, Ability, Passive, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Hunter_Ability, ids.Hunter_Passive, ids.Hunter_Form, ids.Hunter_Buff, ids.Hunter_Debuff, ids.Hunter_PetAbility, ids.Hunter_PvPTalent, ids.Glyph;
+--Info	
 	local _Player_Level																					= UnitLevel("player");
 	local _Player_Percent_Health 																		= ConRO:PercentHealth('player');
 	local _is_PvP																						= ConRO:IsPvP();
@@ -135,7 +137,9 @@ return nil;
 end
 
 function ConRO.Hunter.Under10Def(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
---Info
+	wipe(ConRO.SuggestedDefSpells)
+	local Racial, Ability, Passive, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Hunter_Ability, ids.Hunter_Passive, ids.Hunter_Form, ids.Hunter_Buff, ids.Hunter_Debuff, ids.Hunter_PetAbility, ids.Hunter_PvPTalent, ids.Glyph;
+--Info	
 	local _Player_Level																					= UnitLevel("player");
 	local _Player_Percent_Health 																		= ConRO:PercentHealth('player');
 	local _is_PvP																						= ConRO:IsPvP();
@@ -173,195 +177,224 @@ function ConRO.Hunter.BeastMastery(_, timeShift, currentSpell, gcd, tChosen, pvp
 	wipe(ConRO.SuggestedSpells)
 	local Racial, Ability, Passive, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.BM_Ability, ids.BM_Passive, ids.BM_Form, ids.BM_Buff, ids.BM_Debuff, ids.BM_PetAbility, ids.BM_PvPTalent, ids.Glyph;
 --Info	
-	local _Player_Level																					= UnitLevel("player");
-	local _Player_Percent_Health 																		= ConRO:PercentHealth('player');
-	local _is_PvP																						= ConRO:IsPvP();
-	local _in_combat 																					= UnitAffectingCombat('player');
-	local _party_size																					= GetNumGroupMembers();
+	local _Player_Level = UnitLevel("player");
+	local _Player_Percent_Health = ConRO:PercentHealth('player');
+	local _is_PvP = ConRO:IsPvP();
+	local _in_combat = UnitAffectingCombat('player');
+	local _party_size = GetNumGroupMembers();
 
-	local _is_PC																						= UnitPlayerControlled("target");
-	local _is_Enemy 																					= ConRO:TarHostile();
-	local _Target_Health 																				= UnitHealth('target');
-	local _Target_Percent_Health 																		= ConRO:PercentHealth('target');
+	local _is_PC = UnitPlayerControlled("target");
+	local _is_Enemy = ConRO:TarHostile();
+	local _Target_Health = UnitHealth('target');
+	local _Target_Percent_Health = ConRO:PercentHealth('target');
 
 --Resources	
-	local _Focus, _Focus_Max																			= ConRO:PlayerPower('Focus');
-	local _Heroism_BUFF, _Sated_DEBUFF																	= ConRO:Heroism();
+	local _Focus, _Focus_Max = ConRO:PlayerPower('Focus');
+	local _Heroism_BUFF, _Sated_DEBUFF = ConRO:Heroism();
 
 --Racials
-	local _AncestralCall, _AncestralCall_RDY															= ConRO:AbilityReady(Racial.AncestralCall, timeShift);
-	local _ArcanePulse, _ArcanePulse_RDY																= ConRO:AbilityReady(Racial.ArcanePulse, timeShift);
-	local _Berserking, _Berserking_RDY																	= ConRO:AbilityReady(Racial.Berserking, timeShift);
-	local _ArcaneTorrent, _ArcaneTorrent_RDY															= ConRO:AbilityReady(Racial.ArcaneTorrent, timeShift);
+	local _AncestralCall, _AncestralCall_RDY = ConRO:AbilityReady(Racial.AncestralCall, timeShift);
+	local _ArcanePulse, _ArcanePulse_RDY = ConRO:AbilityReady(Racial.ArcanePulse, timeShift);
+	local _Berserking, _Berserking_RDY = ConRO:AbilityReady(Racial.Berserking, timeShift);
+	local _ArcaneTorrent, _ArcaneTorrent_RDY = ConRO:AbilityReady(Racial.ArcaneTorrent, timeShift);
 
 --Abilities	
-	local _ArcaneShot, _ArcaneShot_RDY					 												= ConRO:AbilityReady(Ability.ArcaneShot, timeShift);
-	local _AspectoftheWild, _AspectoftheWild_RDY, _AspectoftheWild_CD									= ConRO:AbilityReady(Ability.AspectoftheWild, timeShift);
-		local _AspectoftheWild_BUFF				 															= ConRO:Aura(Buff.AspectoftheWild, timeShift);
-	local _BarbedShot, _BarbedShot_RDY, _BarbedShot_CD													= ConRO:AbilityReady(Ability.BarbedShot, timeShift);
-		local _BarbedShot_CHARGES, _BarbedShot_MaxCHARGES, _BarbedShot_CCD, _BarbedShot_MCCD 				= ConRO:SpellCharges(_BarbedShot);
-		local _Frenzy_BUFF, _Frenzy_COUNT, _Frenzy_DUR														= ConRO:UnitAura(Buff.Frenzy, timeShift, 'pet');
-	local _BestialWrath, _BestialWrath_RDY, _BestialWrath_CD											= ConRO:AbilityReady(Ability.BestialWrath, timeShift);
-		local _BestialWrath_BUFF				 															= ConRO:Aura(Buff.BestialWrath, timeShift);
-	local _CallPet, _CallPet_RDY						 												= ConRO:AbilityReady(Ability.CallPet.One, timeShift);
-	local _CobraShot, _CobraShot_RDY					 												= ConRO:AbilityReady(Ability.CobraShot, timeShift);
-	local _CounterShot, _CounterShot_RDY 																= ConRO:AbilityReady(Ability.CounterShot, timeShift);
-	local _Flare, _Flare_RDY																			= ConRO:AbilityReady(Ability.Flare, timeShift);
-	local _FreezingTrap, _FreezingTrap_RDY																= ConRO:AbilityReady(Ability.FreezingTrap, timeShift);
-	local _HuntersMark, _HuntersMark_RDY 																= ConRO:AbilityReady(Ability.HuntersMark, timeShift);
-		local _HuntersMark_DEBUFF																			= ConRO:PersistentDebuff(Debuff.HuntersMark);
-	local _KillCommand, _KillCommand_RDY, _KillCommand_CD	 											= ConRO:AbilityReady(Ability.KillCommand, timeShift);
-	local _KillShot, _KillShot_RDY																		= ConRO:AbilityReady(Ability.KillShot, timeShift);
-	local _MultiShot, _MultiShot_RDY 																	= ConRO:AbilityReady(Ability.MultiShot, timeShift);
-		local _BeastCleave_BUFF, _, _BeastCleave_DUR 														= ConRO:Aura(Buff.BeastCleave, timeShift + 1);
-	local _TarTrap, _TarTrap_RDY																		= ConRO:AbilityReady(Ability.TarTrap, timeShift);
-		local _TarTrap_DEBUFF																				= ConRO:TargetAura(Debuff.TarTrap, timeShift);
-	local _TranquilizingShot, _TranquilizingShot_RDY													= ConRO:AbilityReady(Ability.TranquilizingShot, timeShift);
-	local _AMurderofCrows, _AMurderofCrows_RDY			 												= ConRO:AbilityReady(Ability.AMurderofCrows, timeShift);
-	local _Barrage, _Barrage_RDY						 												= ConRO:AbilityReady(Ability.Barrage, timeShift);
-	local _Bloodshed, _Bloodshed_RDY																	= ConRO:AbilityReady(Ability.Bloodshed, timeShift);
-	local _DireBeast, _DireBeast_RDY, _DireBeast_CD	 													= ConRO:AbilityReady(Ability.DireBeast, timeShift);
-	local _Stampede, _Stampede_RDY						 												= ConRO:AbilityReady(Ability.Stampede, timeShift);
-	local _DeathChakram, _DeathChakram_RDY																= ConRO:AbilityReady(Ability.DeathChakram, timeShift);
+	local _AMurderofCrows, _AMurderofCrows_RDY = ConRO:AbilityReady(Ability.AMurderofCrows, timeShift);
+	local _ArcaneShot, _ArcaneShot_RDY = ConRO:AbilityReady(Ability.ArcaneShot, timeShift);
+	local _AspectoftheWild, _AspectoftheWild_RDY, _AspectoftheWild_CD = ConRO:AbilityReady(Ability.AspectoftheWild, timeShift);
+		local _AspectoftheWild_BUFF = ConRO:Aura(Buff.AspectoftheWild, timeShift);
+	local _BarbedShot, _BarbedShot_RDY, _BarbedShot_CD = ConRO:AbilityReady(Ability.BarbedShot, timeShift);
+		local _BarbedShot_CHARGES, _BarbedShot_MaxCHARGES, _BarbedShot_CCD, _BarbedShot_MCCD = ConRO:SpellCharges(_BarbedShot);
+		local _Frenzy_BUFF, _Frenzy_COUNT, _Frenzy_DUR = ConRO:UnitAura(Buff.Frenzy, timeShift, 'pet');
+	local _Barrage, _Barrage_RDY = ConRO:AbilityReady(Ability.Barrage, timeShift);
+	local _BestialWrath, _BestialWrath_RDY, _BestialWrath_CD = ConRO:AbilityReady(Ability.BestialWrath, timeShift);
+		local _BestialWrath_BUFF = ConRO:Aura(Buff.BestialWrath, timeShift);
+	local _Bloodshed, _Bloodshed_RDY = ConRO:AbilityReady(Ability.Bloodshed, timeShift);
+	local _CalloftheWild, _CalloftheWild_RDY = ConRO:AbilityReady(Ability.CalloftheWild, timeShift);
+		local _CalloftheWild_BUFF= ConRO:Aura(Buff.CalloftheWild, timeShift);
+	local _CallPet, _CallPet_RDY = ConRO:AbilityReady(Ability.CallPet.One, timeShift);
+	local _CobraShot, _CobraShot_RDY = ConRO:AbilityReady(Ability.CobraShot, timeShift);
+	local _CounterShot, _CounterShot_RDY = ConRO:AbilityReady(Ability.CounterShot, timeShift);
+	local _DeathChakram, _DeathChakram_RDY = ConRO:AbilityReady(Ability.DeathChakram, timeShift);
+	local _DireBeast, _DireBeast_RDY, _DireBeast_CD = ConRO:AbilityReady(Ability.DireBeast, timeShift);
+	local _ExplosiveShot, _ExplosiveShot_RDY = ConRO:AbilityReady(Ability.ExplosiveShot, timeShift);
+	local _Flare, _Flare_RDY = ConRO:AbilityReady(Ability.Flare, timeShift);
+	local _FreezingTrap, _FreezingTrap_RDY = ConRO:AbilityReady(Ability.FreezingTrap, timeShift);
+	local _HuntersMark, _HuntersMark_RDY = ConRO:AbilityReady(Ability.HuntersMark, timeShift);
+		local _HuntersMark_DEBUFF = ConRO:PersistentDebuff(Debuff.HuntersMark);
+	local _KillCommand, _KillCommand_RDY, _KillCommand_CD = ConRO:AbilityReady(Ability.KillCommand, timeShift);
+		local _KillCommand_CHARGES, _KillCommand_MaxCHARGES = ConRO:SpellCharges(_KillCommand);
+	local _KillShot, _KillShot_RDY = ConRO:AbilityReady(Ability.KillShot, timeShift);
+		local _HuntersPrey_BUFF = ConRO:Aura(Buff.HuntersPrey, timeShift);
+	local _MultiShot, _MultiShot_RDY = ConRO:AbilityReady(Ability.MultiShot, timeShift);
+		local _BeastCleave_BUFF, _, _BeastCleave_DUR = ConRO:Aura(Buff.BeastCleave, timeShift + 1);
+	local _SerpentSting, _SerpentSting_RDY = ConRO:AbilityReady(Ability.SerpentSting, timeShift);
+		local _SerpentSting_BUFF = ConRO:Aura(Buff.SerpentSting, timeShift + 5);
+	local _Stampede, _Stampede_RDY = ConRO:AbilityReady(Ability.Stampede, timeShift);
+	local _TarTrap, _TarTrap_RDY = ConRO:AbilityReady(Ability.TarTrap, timeShift);
+		local _TarTrap_DEBUFF = ConRO:TargetAura(Debuff.TarTrap, timeShift);
+	local _TranquilizingShot, _TranquilizingShot_RDY = ConRO:AbilityReady(Ability.TranquilizingShot, timeShift);
+	local _WailingArrow, _WailingArrow_RDY = ConRO:AbilityReady(Ability.WailingArrow, timeShift);
 
 --Conditions
-	local _is_moving 																					= ConRO:PlayerSpeed();
-	local _enemies_in_melee, _target_in_melee															= ConRO:Targets("Melee");
-	local _target_in_10yrds 																			= CheckInteractDistance("target", 3);
-	local _can_execute																					= _Target_Percent_Health <= 20;
+	local _is_moving = ConRO:PlayerSpeed();
+	local _enemies_in_melee, _target_in_melee = ConRO:Targets("Melee");
+	local _target_in_10yrds = CheckInteractDistance("target", 3);
+	local _can_execute = _Target_Percent_Health <= 20;
 
-	local _Pet_summoned 																				= ConRO:CallPet();
-	local _Pet_assist 																					= ConRO:PetAssist();
-	local _Pet_Percent_Health																			= ConRO:PercentHealth('pet');
+	local _Pet_summoned = ConRO:CallPet();
+	local _Pet_assist = ConRO:PetAssist();
+	local _Pet_Percent_Health = ConRO:PercentHealth('pet');
 
 --Indicators
 	ConRO:AbilityInterrupt(_CounterShot, _CounterShot_RDY and ConRO:Interrupt());
 	ConRO:AbilityPurge(_ArcaneTorrent, _ArcaneTorrent_RDY and _target_in_melee and ConRO:Purgable());
 	ConRO:AbilityPurge(_TranquilizingShot, _TranquilizingShot_RDY and ConRO:Purgable());
 
+	ConRO:AbilityBurst(_AMurderofCrows, _AMurderofCrows_RDY and ConRO:BurstMode(_AMurderofCrows));
 	ConRO:AbilityBurst(_AspectoftheWild, _AspectoftheWild_RDY and ConRO:BurstMode(_AspectoftheWild));
 	ConRO:AbilityBurst(_BestialWrath, _BestialWrath_RDY and (_AspectoftheWild_BUFF or _AspectoftheWild_CD > 20) and ConRO:BurstMode(_BestialWrath));
-	ConRO:AbilityBurst(_Stampede, _Stampede_RDY and ((_BestialWrath_BUFF and _AspectoftheWild_BUFF) or (_AspectoftheWild_BUFF and _in_combat)) and ConRO:BurstMode(_Stampede));
 	ConRO:AbilityBurst(_Bloodshed, _Bloodshed_RDY and ConRO:BurstMode(_Bloodshed));
-	ConRO:AbilityBurst(_AMurderofCrows, _AMurderofCrows_RDY and ConRO:BurstMode(_AMurderofCrows));
-
+	ConRO:AbilityBurst(_CalloftheWild, _CalloftheWild_RDY and ConRO:BurstMode(_CalloftheWild));
 	ConRO:AbilityBurst(_DeathChakram, _DeathChakram_RDY and ConRO:BurstMode(_DeathChakram));
-
-	ConRO:AbilityBurst(_TarTrap, _TarTrap_RDY and _Flare_RDY and not _SoulforgeEmbers_DEBUFF and ConRO:BurstMode(_TarTrap));
-	ConRO:AbilityBurst(_Flare, _Flare_RDY and not _TarTrap_RDY and not _SoulforgeEmbers_DEBUFF);
+	ConRO:AbilityBurst(_Stampede, _Stampede_RDY and ((_BestialWrath_BUFF and _AspectoftheWild_BUFF) or (_AspectoftheWild_BUFF and _in_combat)) and ConRO:BurstMode(_Stampede));
 
 --Warnings
 	ConRO:Warnings("Call your pet!", _CallPet_RDY and not _Pet_summoned);
 
 --Rotations
-	if not _in_combat then
-		if _AspectoftheWild_RDY and (_BestialWrath_RDY or _BestialWrath_CD > 15) and ConRO:FullMode(_AspectoftheWild) then
-			tinsert(ConRO.SuggestedSpells, _AspectoftheWild);
+	for i = 1, 2, 1 do
+		if not _in_combat then
+			if _KillCommand_RDY then
+				tinsert(ConRO.SuggestedSpells, _KillCommand);
+				_KillCommand_RDY = false;
+			end
+
+			if _Bloodshed_RDY and ConRO:FullMode(_Bloodshed) then
+				tinsert(ConRO.SuggestedSpells, _Bloodshed);
+				_Bloodshed_RDY = false;
+			end
+
+			if _BarbedShot_RDY and _BarbedShot_CHARGES >= 1 then
+				tinsert(ConRO.SuggestedSpells, _BarbedShot);
+				_BarbedShot_CHARGES = _BarbedShot_CHARGES - 1;
+			end
+
+			if _BestialWrath_RDY and not _BestialWrath_BUFF and ConRO:FullMode(_BestialWrath) then
+				tinsert(ConRO.SuggestedSpells, _BestialWrath);
+			end
 		end
 
-		if _TarTrap_RDY and _Flare_RDY and _SoulforgeEmbers_EQUIPPED and not _SoulforgeEmbers_DEBUFF and ConRO:FullMode(_TarTrap) then
-			tinsert(ConRO.SuggestedSpells, _TarTrap);
-		end
-
-		if _BarbedShot_RDY and _BarbedShot_CHARGES >= 1 and tChosen[Passive.ScentofBlood.talentID] and _BestialWrath_RDY and not _BestialWrath_BUFF and (_AspectoftheWild_BUFF or _AspectoftheWild_CD > 15) and ConRO:FullMode(_BestialWrath) then
+		if _BarbedShot_RDY and (_Frenzy_BUFF and _Frenzy_DUR < 2 and _Frenzy_DUR > .25) then
 			tinsert(ConRO.SuggestedSpells, _BarbedShot);
+			_BarbedShot_CHARGES = _BarbedShot_CHARGES - 1;
 		end
 
-		if _BestialWrath_RDY and not _BestialWrath_BUFF and (_AspectoftheWild_BUFF or _AspectoftheWild_CD > 15) and ConRO:FullMode(_BestialWrath) then
-			tinsert(ConRO.SuggestedSpells, _BestialWrath);
+		if _MultiShot_RDY and tChosen[Passive.BeastCleave.talentID] and not _BeastCleave_BUFF and ConRO_AoEButton:IsVisible() then
+			tinsert(ConRO.SuggestedSpells, _MultiShot);
+			_BeastCleave_BUFF = true;
 		end
 
-		if _BarbedShot_RDY and (not _Frenzy_BUFF or (_Frenzy_BUFF and _Frenzy_DUR < 1.5)) then
-			tinsert(ConRO.SuggestedSpells, _BarbedShot);
+		if _Barrage_RDY and ConRO_AoEButton:IsVisible() then
+			tinsert(ConRO.SuggestedSpells, _Barrage);
+			_Barrage_RDY = false;
 		end
 
-		if _KillCommand_RDY then
+		if _Stampede_RDY and ConRO_AoEButton:IsVisible() and ConRO:FullMode(_Stampede) then
+			tinsert(ConRO.SuggestedSpells, _Stampede);
+			_Stampede_RDY = false;
+		end
+
+		if _DeathChakram_RDY and ConRO_AoEButton:IsVisible() and ConRO:FullMode(_DeathChakram) then
+			tinsert(ConRO.SuggestedSpells, _DeathChakram);
+			_DeathChakram_RDY = false;
+		end
+
+		if _KillCommand_RDY and _KillCommand_CHARGES >= 1 then
 			tinsert(ConRO.SuggestedSpells, _KillCommand);
-		end
-	end
-
-	if _BarbedShot_RDY and (_BarbedShot_CHARGES == 2 or (_Frenzy_BUFF and _Frenzy_DUR < 2 and _Frenzy_DUR > .25)) then
-		tinsert(ConRO.SuggestedSpells, _BarbedShot);
-	end
-
-	if _MultiShot_RDY and not _BeastCleave_BUFF and ConRO_AoEButton:IsVisible() then
-		tinsert(ConRO.SuggestedSpells, _MultiShot);
-	end
-
-	if _Bloodshed_RDY and ConRO:FullMode(_Bloodshed) then
-		tinsert(ConRO.SuggestedSpells, _Bloodshed);
-	end
-
-	if _Stampede_RDY and _BestialWrath_BUFF and _AspectoftheWild_BUFF and ConRO:FullMode(_Stampede) then
-		tinsert(ConRO.SuggestedSpells, _Stampede);
-	end
-
-	if _Barrage_RDY and ConRO_AoEButton:IsVisible() then
-		tinsert(ConRO.SuggestedSpells, _Barrage);
-	end
-
-	if _TarTrap_RDY and _Flare_RDY and _SoulforgeEmbers_EQUIPPED and not _SoulforgeEmbers_DEBUFF and ConRO_AoEButton:IsVisible() and ConRO:FullMode(_TarTrap) then
-		tinsert(ConRO.SuggestedSpells, _TarTrap);
-	end
-
-	if _AspectoftheWild_RDY and (_BestialWrath_RDY or _BestialWrath_CD > 15) and ConRO:FullMode(_AspectoftheWild) then
-		tinsert(ConRO.SuggestedSpells, _AspectoftheWild);
-	end
-
-	if _TarTrap_RDY and _Flare_RDY and _SoulforgeEmbers_EQUIPPED and not _SoulforgeEmbers_DEBUFF and ConRO:FullMode(_TarTrap) then
-		tinsert(ConRO.SuggestedSpells, _TarTrap);
-	end
-
-	if _BarbedShot_RDY and _BarbedShot_CHARGES >= 1 and tChosen[Passive.ScentofBlood.talentID] and _BestialWrath_RDY and not _BestialWrath_BUFF and (_AspectoftheWild_BUFF or _AspectoftheWild_CD > 15) and ConRO:FullMode(_BestialWrath) then
-		tinsert(ConRO.SuggestedSpells, _BarbedShot);
-	end
-
-	if _BestialWrath_RDY and not _BestialWrath_BUFF and (_AspectoftheWild_BUFF or _AspectoftheWild_CD > 15) and ConRO:FullMode(_BestialWrath) then
-		tinsert(ConRO.SuggestedSpells, _BestialWrath);
-	end
-
-	if _DeathChakram_RDY and ConRO:FullMode(_DeathChakram) then
-		tinsert(ConRO.SuggestedSpells, _DeathChakram);
-	end
-
-	if _KillShot_RDY and (_can_execute or _FlayersMark_BUFF) then
-		tinsert(ConRO.SuggestedSpells, _KillShot);
-	end
-
-	if _KillCommand_RDY then
-		tinsert(ConRO.SuggestedSpells, _KillCommand);
-	end
-
-	if _AMurderofCrows_RDY and ConRO:FullMode(_AMurderofCrows) then
-		tinsert(ConRO.SuggestedSpells, _AMurderofCrows);
-	end
-
-	if _DireBeast_RDY then
-		tinsert(ConRO.SuggestedSpells, _DireBeast);
-	end
-
-	if _BarbedShot_RDY and _BarbedShot_CHARGES == 1 and _BarbedShot_CCD <= 1.5 then
-		tinsert(ConRO.SuggestedSpells, _BarbedShot);
-	end
-
-	if _Barrage_RDY then
-		tinsert(ConRO.SuggestedSpells, _Barrage);
-	end
-
-	if _CobraShot_RDY and (((_KillCommand_CD >= 2 or _Focus >= _Focus_Max - 15) and ConRO_SingleButton:IsVisible()) or (_Focus >= 90 and _BeastCleave_BUFF and ConRO_AoEButton:IsVisible())) then
-		tinsert(ConRO.SuggestedSpells, _CobraShot);
-	end
-
-	if _NesingwarysTrappingApparatus_EQUIPPED and _Focus < 50 and ConRO.lastSpellId ~= _TarTrap and ConRO.lastSpellId ~= _FreezingTrap then
-		if _TarTrap_RDY then
-			tinsert(ConRO.SuggestedSpells, _TarTrap);
+			_KillCommand_CHARGES = _KillCommand_CHARGES - 1;
 		end
 
-		if _FreezingTrap_RDY then
-			tinsert(ConRO.SuggestedSpells, _FreezingTrap);
+		if _BarbedShot_RDY and (_BarbedShot_CHARGES == _BarbedShot_MaxCHARGES or (_BarbedShot_CHARGES == _BarbedShot_MaxCHARGES - 1 and _BarbedShot_CCD <= gcd) or (_BarbedShot_CHARGES >= 1 and _BestialWrath_CD <= 12 and tChosen[Passive.ScentofBlood.talentID]))  then
+			tinsert(ConRO.SuggestedSpells, _BarbedShot);
+			_BarbedShot_CHARGES = _BarbedShot_CHARGES - 1;
+		end
+
+		if _Stampede_RDY and ConRO:FullMode(_Stampede) then
+			tinsert(ConRO.SuggestedSpells, _Stampede);
+			_Stampede_RDY = false;
+		end
+
+		if _DeathChakram_RDY and ConRO:FullMode(_DeathChakram) then
+			tinsert(ConRO.SuggestedSpells, _DeathChakram);
+			_DeathChakram_RDY = false;
+		end
+
+		if _Bloodshed_RDY and ConRO:FullMode(_Bloodshed) then
+			tinsert(ConRO.SuggestedSpells, _Bloodshed);
+			_Bloodshed_RDY = false;
+		end
+
+		if _AMurderofCrows_RDY and ConRO:FullMode(_AMurderofCrows) then
+			tinsert(ConRO.SuggestedSpells, _AMurderofCrows);
+			_AMurderofCrows_RDY = false;
+		end
+
+		if _CalloftheWild_RDY and ConRO:FullMode(_CalloftheWild) then
+			tinsert(ConRO.SuggestedSpells, _CalloftheWild);
+			_CalloftheWild_RDY = false;
+		end
+
+		if _BestialWrath_RDY and ConRO:FullMode(_BestialWrath) then
+			tinsert(ConRO.SuggestedSpells, _BestialWrath);
+			_BestialWrath_RDY = false;
+		end
+
+		if _AspectoftheWild_RDY and ConRO:FullMode(_AspectoftheWild) then
+			tinsert(ConRO.SuggestedSpells, _AspectoftheWild);
+			_AspectoftheWild_RDY = false;
+		end
+
+		if _KillShot_RDY and (_can_execute or _HuntersPrey_BUFF) then
+			tinsert(ConRO.SuggestedSpells, _KillShot);
+			_KillShot_RDY = false;
+		end
+
+		if _BarbedShot_RDY and _BarbedShot_CHARGES >= 1 and tChosen[Passive.WildInstincts.talentID] and _CalloftheWild_BUFF then
+			tinsert(ConRO.SuggestedSpells, _BarbedShot);
+			_BarbedShot_CHARGES = _BarbedShot_CHARGES - 1;
+		end
+
+		if _DireBeast_RDY then
+			tinsert(ConRO.SuggestedSpells, _DireBeast);
+			_DireBeast_RDY = false;
+		end
+
+		if _ExplosiveShot_RDY then
+			tinsert(ConRO.SuggestedSpells, _ExplosiveShot);
+			_ExplosiveShot_RDY = false;
+		end
+
+		if _Barrage_RDY then
+			tinsert(ConRO.SuggestedSpells, _Barrage);
+			_Barrage_RDY = false;
+		end
+
+		if _WailingArrow_RDY and _Frenzy_DUR >= 3 then
+			tinsert(ConRO.SuggestedSpells, _WailingArrow);
+			_WailingArrow_RDY = false;
+		end
+
+		if _SerpentSting_RDY and not _SerpentSting_BUFF then
+			tinsert(ConRO.SuggestedSpells, _SerpentSting);
+			_SerpentSting_RDY = false;
+		end
+
+		if _CobraShot_RDY then
+			tinsert(ConRO.SuggestedSpells, _CobraShot);
 		end
 	end
-return nil;
+	return nil;
 end
 
 function ConRO.Hunter.BeastMasteryDef(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
@@ -421,73 +454,78 @@ function ConRO.Hunter.Marksmanship(_, timeShift, currentSpell, gcd, tChosen, pvp
 	wipe(ConRO.SuggestedSpells)
 	local Racial, Ability, Passive, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.MM_Ability, ids.MM_Passive, ids.MM_Form, ids.MM_Buff, ids.MM_Debuff, ids.MM_PetAbility, ids.MM_PvPTalent, ids.Glyph;
 --Info
-	local _Player_Level																					= UnitLevel("player");
-	local _Player_Percent_Health 																		= ConRO:PercentHealth('player');
-	local _is_PvP																						= ConRO:IsPvP();
-	local _in_combat 																					= UnitAffectingCombat('player');
-	local _party_size																					= GetNumGroupMembers();
+	local _Player_Level = UnitLevel("player");
+	local _Player_Percent_Health = ConRO:PercentHealth('player');
+	local _is_PvP = ConRO:IsPvP();
+	local _in_combat = UnitAffectingCombat('player');
+	local _party_size = GetNumGroupMembers();
 
-	local _is_PC																						= UnitPlayerControlled("target");
-	local _is_Enemy 																					= ConRO:TarHostile();
-	local _Target_Health 																				= UnitHealth('target');
-	local _Target_Percent_Health 																		= ConRO:PercentHealth('target');
+	local _is_PC = UnitPlayerControlled("target");
+	local _is_Enemy = ConRO:TarHostile();
+	local _Target_Health = UnitHealth('target');
+	local _Target_Percent_Health = ConRO:PercentHealth('target');
 
 --Resources	
-	local _Focus, _Focus_Max																			= ConRO:PlayerPower('Focus');
-	local _Heroism_BUFF, _Sated_DEBUFF																	= ConRO:Heroism();
+	local _Focus, _Focus_Max = ConRO:PlayerPower('Focus');
+	local _Heroism_BUFF, _Sated_DEBUFF = ConRO:Heroism();
 
 --Racials
-	local _AncestralCall, _AncestralCall_RDY															= ConRO:AbilityReady(Racial.AncestralCall, timeShift);
-	local _ArcanePulse, _ArcanePulse_RDY																= ConRO:AbilityReady(Racial.ArcanePulse, timeShift);
-	local _Berserking, _Berserking_RDY																	= ConRO:AbilityReady(Racial.Berserking, timeShift);
-	local _ArcaneTorrent, _ArcaneTorrent_RDY															= ConRO:AbilityReady(Racial.ArcaneTorrent, timeShift);
+	local _AncestralCall, _AncestralCall_RDY = ConRO:AbilityReady(Racial.AncestralCall, timeShift);
+	local _ArcanePulse, _ArcanePulse_RDY = ConRO:AbilityReady(Racial.ArcanePulse, timeShift);
+	local _Berserking, _Berserking_RDY = ConRO:AbilityReady(Racial.Berserking, timeShift);
+	local _ArcaneTorrent, _ArcaneTorrent_RDY = ConRO:AbilityReady(Racial.ArcaneTorrent, timeShift);
 
 --Abilities	
-	local _AimedShot, _AimedShot_RDY								 									= ConRO:AbilityReady(Ability.AimedShot, timeShift);
-		local _AimedShot_CHARGES, _, _AimedShot_CCD, _AimedShot_MCCD										= ConRO:SpellCharges(_AimedShot);
-		local _PreciseShots_BUFF																			= ConRO:Aura(Buff.PreciseShots, timeShift);
-		local _LockandLoad_BUFF																				= ConRO:Aura(Buff.LockandLoad, timeShift);
-	local _ArcaneShot, _ArcaneShot_RDY																	= ConRO:AbilityReady(Ability.ArcaneShot, timeShift);
-	local _CounterShot, _CounterShot_RDY 																= ConRO:AbilityReady(Ability.CounterShot, timeShift);
-	local _Disengage, _Disengage_RDY																	= ConRO:AbilityReady(Ability.Disengage, timeShift);
-	local _Flare, _Flare_RDY																			= ConRO:AbilityReady(Ability.Flare, timeShift);
-	local _FreezingTrap, _FreezingTrap_RDY																= ConRO:AbilityReady(Ability.FreezingTrap, timeShift);
-	local _HuntersMark, _HuntersMark_RDY																= ConRO:AbilityReady(Ability.HuntersMark, timeShift);
-		local _HuntersMark_DEBUFF 																			= ConRO:PersistentDebuff(Debuff.HuntersMark);
-	local _KillShot, _KillShot_RDY																		= ConRO:AbilityReady(Ability.KillShot, timeShift);
-		local _DeadEye_BUFF																					= ConRO:Aura(Buff.DeadEye, timeShift);
-	local _MultiShot, _MultiShot_RDY																	= ConRO:AbilityReady(Ability.MultiShot, timeShift);
-		local _TrickShots_BUFF																				= ConRO:Aura(Buff.TrickShots, timeShift);
-	local _RapidFire, _RapidFire_RDY																	= ConRO:AbilityReady(Ability.RapidFire, timeShift);
-	local _SteadyShot, _SteadyShot_RDY																	= ConRO:AbilityReady(Ability.SteadyShot, timeShift);
-		local _LethalShots_BUFF																				= ConRO:Aura(Buff.LethalShots, timeShift);
-		local _SteadyFocus_BUFF, _, _SteadyFocus_DUR														= ConRO:Aura(Buff.SteadyFocus, timeShift);
-	local _TarTrap, _TarTrap_RDY																		= ConRO:AbilityReady(Ability.TarTrap, timeShift);
-		local _TarTrap_DEBUFF																				= ConRO:TargetAura(Debuff.TarTrap, timeShift);
-	local _TranquilizingShot, _TranquilizingShot_RDY													= ConRO:AbilityReady(Ability.TranquilizingShot, timeShift);
-	local _Trueshot, _Trueshot_RDY 																		= ConRO:AbilityReady(Ability.Trueshot, timeShift);
-		local _Trueshot_BUFF, _, _Trueshot_DUR																= ConRO:Aura(Buff.Trueshot, timeShift);
+	local _AimedShot, _AimedShot_RDY = ConRO:AbilityReady(Ability.AimedShot, timeShift);
+		local _AimedShot_CHARGES, _, _AimedShot_CCD, _AimedShot_MCCD = ConRO:SpellCharges(_AimedShot);
+		local _PreciseShots_BUFF, _PreciseShots_COUNT = ConRO:Aura(Buff.PreciseShots, timeShift);
+		local _LockandLoad_BUFF = ConRO:Aura(Buff.LockandLoad, timeShift);
+	local _ArcaneShot, _ArcaneShot_RDY = ConRO:AbilityReady(Ability.ArcaneShot, timeShift);
+	local _ChimaeraShot, _ChimaeraShot_RDY = ConRO:AbilityReady(Ability.ChimaeraShot, timeShift);
+	local _CounterShot, _CounterShot_RDY = ConRO:AbilityReady(Ability.CounterShot, timeShift);
+	local _DeathChakram, _DeathChakram_RDY = ConRO:AbilityReady(Ability.DeathChakram, timeShift);
+	local _Disengage, _Disengage_RDY = ConRO:AbilityReady(Ability.Disengage, timeShift);
+	local _DoubleTap, _DoubleTap_RDY = ConRO:AbilityReady(Ability.DoubleTap, timeShift);
+		local _DoubleTap_BUFF = ConRO:Aura(Buff.DoubleTap, timeShift);
+		local _ExplosiveShot, _ExplosiveShot_RDY = ConRO:AbilityReady(Ability.ExplosiveShot, timeShift);
+	local _Flare, _Flare_RDY = ConRO:AbilityReady(Ability.Flare, timeShift);
+	local _FreezingTrap, _FreezingTrap_RDY = ConRO:AbilityReady(Ability.FreezingTrap, timeShift);
+	local _HuntersMark, _HuntersMark_RDY = ConRO:AbilityReady(Ability.HuntersMark, timeShift);
+		local _HuntersMark_DEBUFF = ConRO:PersistentDebuff(Debuff.HuntersMark);
+	local _KillShot, _KillShot_RDY = ConRO:AbilityReady(Ability.KillShot, timeShift);
+		local _KillShot_CHARGES = ConRO:SpellCharges(_KillShot);
+		local _DeadEye_BUFF = ConRO:Aura(Buff.DeadEye, timeShift);
+		local _Deathblow_BUFF = ConRO:Aura(Buff.Deathblow, timeShift);
+	local _MultiShot, _MultiShot_RDY = ConRO:AbilityReady(Ability.MultiShot, timeShift);
+		local _TrickShots_BUFF = ConRO:Aura(Buff.TrickShots, timeShift);
+		local _MultiShot_TARGETS = ConRO:Targets(Ability.MultiShot);
+	local _RapidFire, _RapidFire_RDY = ConRO:AbilityReady(Ability.RapidFire, timeShift);
+	local _SerpentSting, _SerpentSting_RDY = ConRO:AbilityReady(Ability.SerpentSting, timeShift);
+		local _SerpentSting_DEBUFF = ConRO:TargetAura(Debuff.SerpentSting, timeShift + 5);
+	local _Stampede, _Stampede_RDY = ConRO:AbilityReady(Ability.Stampede, timeShift);
+	local _SteadyShot, _SteadyShot_RDY = ConRO:AbilityReady(Ability.SteadyShot, timeShift);
+		local _LethalShots_BUFF = ConRO:Aura(Buff.LethalShots, timeShift);
+		local _SteadyFocus_BUFF, _, _SteadyFocus_DUR = ConRO:Aura(Buff.SteadyFocus, timeShift);
+	local _SteelTrap, _SteelTrap_RDY = ConRO:AbilityReady(Ability.SteelTrap, timeShift);
+	local _TarTrap, _TarTrap_RDY = ConRO:AbilityReady(Ability.TarTrap, timeShift);
+		local _TarTrap_DEBUFF = ConRO:TargetAura(Debuff.TarTrap, timeShift);
+	local _TranquilizingShot, _TranquilizingShot_RDY = ConRO:AbilityReady(Ability.TranquilizingShot, timeShift);
+	local _Trueshot, _Trueshot_RDY = ConRO:AbilityReady(Ability.Trueshot, timeShift);
+		local _Trueshot_BUFF, _, _Trueshot_DUR = ConRO:Aura(Buff.Trueshot, timeShift);
+	local _Volley, _Volley_RDY = ConRO:AbilityReady(Ability.Volley, timeShift);
+		local _Volley_BUFF = ConRO:TargetAura(Debuff.Volley, timeShift);
+	local _WailingArrow, _WailingArrow_RDY = ConRO:AbilityReady(Ability.WailingArrow, timeShift);
 
-	local _ChimaeraShot, _ChimaeraShot_RDY																= ConRO:AbilityReady(Ability.ChimaeraShot, timeShift);
-	local _DoubleTap, _DoubleTap_RDY																	= ConRO:AbilityReady(Ability.DoubleTap, timeShift);
-		local _DoubleTap_BUFF																				= ConRO:Aura(Buff.DoubleTap, timeShift);
-	local _ExplosiveShot, _ExplosiveShot_RDY															= ConRO:AbilityReady(Ability.ExplosiveShot, timeShift);
-	local _SerpentSting, _SerpentSting_RDY																= ConRO:AbilityReady(Ability.SerpentSting, timeShift);
-		local _SerpentSting_DEBUFF																			= ConRO:TargetAura(Debuff.SerpentSting, timeShift + 5);
-	local _Volley, _Volley_RDY																			= ConRO:AbilityReady(Ability.Volley, timeShift);
-		local _Volley_BUFF																					= ConRO:TargetAura(Debuff.Volley, timeShift);
-
-	local _DeathChakram, _DeathChakram_RDY																= ConRO:AbilityReady(Ability.DeathChakram, timeShift);
 
 --Conditions
-	local _is_moving 																					= ConRO:PlayerSpeed();
-	local _enemies_in_melee, _target_in_melee															= ConRO:Targets("Melee");
-	local _target_in_10yrds 																			= CheckInteractDistance("target", 3);
-	local _can_execute																					= _Target_Percent_Health <= 20;
+	local _is_moving = ConRO:PlayerSpeed();
+	local _enemies_in_melee, _target_in_melee = ConRO:Targets("Melee");
+	local _target_in_10yrds = CheckInteractDistance("target", 3);
+	local _can_execute = _Target_Percent_Health <= 20;
 
-	local _Pet_summoned 																				= ConRO:CallPet();
-	local _Pet_assist 																					= ConRO:PetAssist();
-	local _Pet_Percent_Health																			= ConRO:PercentHealth('pet');
+	local _Pet_summoned = ConRO:CallPet();
+	local _Pet_assist = ConRO:PetAssist();
+	local _Pet_Percent_Health = ConRO:PercentHealth('pet');
 
 	local _, _, _, _AimedShot_timemil = GetSpellInfo(_AimedShot);
 	local _AimedShot_time = _AimedShot_timemil*.001;
@@ -505,6 +543,12 @@ function ConRO.Hunter.Marksmanship(_, timeShift, currentSpell, gcd, tChosen, pvp
 			_RapidFire_Threshold = 64;
 		end
 
+	local _ArcaneShot_COST = 40;
+		if tChosen[Ability.ChimaeraShot.talentID] then
+			_ArcaneShot, _ArcaneShot_RDY = _ChimaeraShot, _ChimaeraShot_RDY;
+			_ArcaneShot_COST = 20;
+		end
+
 --Indicators
 	ConRO:AbilityInterrupt(_CounterShot, _CounterShot_RDY and ConRO:Interrupt());
 	ConRO:AbilityPurge(_ArcaneTorrent, _ArcaneTorrent_RDY and _target_in_melee and ConRO:Purgable());
@@ -514,126 +558,180 @@ function ConRO.Hunter.Marksmanship(_, timeShift, currentSpell, gcd, tChosen, pvp
 	ConRO:AbilityBurst(_Trueshot, _Trueshot_RDY and _AimedShot_CHARGES >= 1 and ConRO:BurstMode(_Trueshot));
 	ConRO:AbilityBurst(_DoubleTap, _DoubleTap_RDY and not _RapidFire_RDY and _AimedShot_RDY and ConRO:BurstMode(_DoubleTap));
 	ConRO:AbilityBurst(_Volley, _Volley_RDY and (_RapidFire_RDY or _AimedShot_RDY) and ConRO:BurstMode(_Volley));
-
+	ConRO:AbilityBurst(_Stampede, _Stampede_RDY and ConRO:BurstMode(_Stampede));
 	ConRO:AbilityBurst(_DeathChakram, _DeathChakram_RDY and ConRO:BurstMode(_DeathChakram));
 
 --Warnings
 
 --Rotations
-	if not _in_combat then
-		if _AimedShot_RDY and currentSpell ~= _AimedShot then
-			tinsert(ConRO.SuggestedSpells, _AimedShot);
-		end
-
-		if _DoubleTap_RDY and ConRO:FullMode(_DoubleTap) then
-			tinsert(ConRO.SuggestedSpells, _DoubleTap);
-		end
-
-		if _SteadyShot_RDY and tChosen[Ability.SteadyFocus] and not _SteadyFocus_BUFF then
-			tinsert(ConRO.SuggestedSpells, _SteadyShot);
-		end
-
-		if _ExplosiveShot_RDY and ConRO_AoEButton:IsVisible() then
-			tinsert(ConRO.SuggestedSpells, _ExplosiveShot);
-		end
-
-		if _Volley_RDY and ConRO_AoEButton:IsVisible() then
-			tinsert(ConRO.SuggestedSpells, _Volley);
-		end
-
-		if _RapidFire_RDY then
-			tinsert(ConRO.SuggestedSpells, _RapidFire);
-		end
-	end
-
-	if _SteadyShot_RDY and currentSpell == _SteadyShot and ConRO.lastSpellId ~= _SteadyShot and tChosen[Passive.SteadyFocus.talentID] and (not _SteadyFocus_BUFF or _SteadyFocus_DUR <= 4 or _Trueshot_BUFF) then
-		tinsert(ConRO.SuggestedSpells, _SteadyShot);
-	end
-
-	if _KillShot_RDY and (_can_execute or _FlayersMark_BUFF) and not _DeadEye_BUFF then
-		tinsert(ConRO.SuggestedSpells, _KillShot);
-	end
-
-	if _DoubleTap_RDY and not _RapidFire_RDY and _AimedShot_RDY and ConRO:FullMode(_DoubleTap) then
-		tinsert(ConRO.SuggestedSpells, _DoubleTap);
-	end
-
-	if _SteadyShot_RDY and tChosen[Passive.SteadyFocus.talentID] and not _SteadyFocus_BUFF and currentSpell ~= _SteadyShot then
-		tinsert(ConRO.SuggestedSpells, _SteadyShot);
-	end
-
-	if _SerpentSting_RDY and not _SerpentSting_DEBUFF and ConRO_SingleButton:IsVisible() then
-		tinsert(ConRO.SuggestedSpells, _SerpentSting);
-	end
-
-	if _ExplosiveShot_RDY then
-		tinsert(ConRO.SuggestedSpells, _ExplosiveShot);
-	end
-
-	if _Volley_RDY and (_RapidFire_RDY or _AimedShot_RDY) and ConRO:FullMode(_Volley) then
-		tinsert(ConRO.SuggestedSpells, _Volley);
-	end
-
-	if _DeathChakram_RDY and ConRO_SingleButton:IsVisible() and ConRO:FullMode(_DeathChakram) then
-		tinsert(ConRO.SuggestedSpells, _DeathChakram);
-	end
-
-	if _Trueshot_RDY and _AimedShot_CHARGES >= 1 and ConRO_FullButton:IsVisible() then
-		tinsert(ConRO.SuggestedSpells, _Trueshot);
-	end
-
-	if ConRO_AoEButton:IsVisible() then
-		if _TrickShots_BUFF then
-			if _RapidFire_RDY and tChosen[Passive.Streamline.talentID] then
-				tinsert(ConRO.SuggestedSpells, _RapidFire);
+	for i = 1, 2, 1 do
+		if not _in_combat then
+			if _SteadyShot_RDY and tChosen[Passive.SteadyFocus.talentID] and (not _SteadyFocus_BUFF and (currentSpell ~= _SteadyShot or ConRO.lastSpellId ~= _SteadyShot)) then
+				tinsert(ConRO.SuggestedSpells, _SteadyShot);
 			end
 
-			if _AimedShot_RDY and (_AimedShot_CHARGES == 2 or (_AimedShot_CHARGES == 1 and _AimedShot_CCD <= _AimedShot_time + .5) or (_LockandLoad_BUFF and not _PreciseShots_BUFF) or _DoubleTap_BUFF) and currentSpell ~= _AimedShot then
+			if _SteadyShot_RDY and tChosen[Passive.SteadyFocus.talentID] and (not _SteadyFocus_BUFF and (currentSpell == _SteadyShot or ConRO.lastSpellId == _SteadyShot)) then
+				tinsert(ConRO.SuggestedSpells, _SteadyShot);
+				_SteadyShot_RDY = false;
+			end
+
+			if _DeathChakram_RDY and ConRO:FullMode(_DeathChakram) then
+				tinsert(ConRO.SuggestedSpells, _DeathChakram);
+				_DeathChakram_RDY = false;
+			end
+
+			if _Volley_RDY and ConRO_AoEButton:IsVisible() then
+				tinsert(ConRO.SuggestedSpells, _Volley);
+				_Volley_RDY = false;
+			end
+
+			if _Trueshot_RDY and _AimedShot_CHARGES >= 1 and ConRO:FullMode(_Trueshot) then
+				tinsert(ConRO.SuggestedSpells, _Trueshot);
+				_Trueshot_RDY = false;
+			end
+
+			if _AimedShot_RDY and _AimedShot_CHARGES >= 1 and currentSpell ~= _AimedShot then
 				tinsert(ConRO.SuggestedSpells, _AimedShot);
-			end
-
-			if _RapidFire_RDY then
-				tinsert(ConRO.SuggestedSpells, _RapidFire);
+				_AimedShot_CHARGES = _AimedShot_CHARGES - 1;
 			end
 		end
-	else
-		if _AimedShot_RDY and (_AimedShot_CHARGES == 2 or (_AimedShot_CHARGES == 1 and _AimedShot_CCD <= _AimedShot_time + .5) or (_LockandLoad_BUFF and not _PreciseShots_BUFF) or _DoubleTap_BUFF) and currentSpell ~= _AimedShot then
-			tinsert(ConRO.SuggestedSpells, _AimedShot);
+
+		if _SteadyShot_RDY and tChosen[Passive.SteadyFocus.talentID] and (currentSpell == _SteadyShot and ConRO.lastSpellId ~= _SteadyShot) and _SteadyFocus_DUR <= 5 then
+			tinsert(ConRO.SuggestedSpells, _SteadyShot);
+			_SteadyShot_RDY = false;
+		end
+
+		if _KillShot_RDY and _KillShot_CHARGES >= 1 and (_can_execute or _Deathblow_BUFF) and ConRO_SingleButton:IsVisible() then
+			tinsert(ConRO.SuggestedSpells, _KillShot);
+			_KillShot_CHARGES = _KillShot_CHARGES - 1;
+			if _Deathblow_BUFF then
+				_Deathblow_BUFF = false;
+			end
+		end
+
+		if _DoubleTap_RDY and ((_AimedShot_RDY and _AimedShot_CHARGES >= 1) or _RapidFire_RDY) and ConRO:FullMode(_DoubleTap) then
+			tinsert(ConRO.SuggestedSpells, _DoubleTap);
+			_DoubleTap_RDY = false;
+		end
+
+		if _DoubleTap_BUFF then
+			if _MultiShot_RDY and not _TrickShots_BUFF then
+				tinsert(ConRO.SuggestedSpells, _MultiShot);
+				_TrickShots_BUFF = true;
+				_PreciseShots_COUNT = _PreciseShots_COUNT - 1;
+			end
+			if _AimedShot_RDY and _AimedShot_CHARGES >= 1 and currentSpell ~= _AimedShot and tChosen[Passive.CarefulAim.talentID] and _Target_Percent_Health > 70 then
+				tinsert(ConRO.SuggestedSpells, _AimedShot);
+				_AimedShot_CHARGES = _AimedShot_CHARGES - 1;
+			elseif _RapidFire_RDY then
+				tinsert(ConRO.SuggestedSpells, _RapidFire);
+				_RapidFire_RDY = false;
+			end
+			_DoubleTap_BUFF = false;
+		end
+
+		if _DeathChakram_RDY and ConRO:FullMode(_DeathChakram) then
+			tinsert(ConRO.SuggestedSpells, _DeathChakram);
+			_DeathChakram_RDY = false;
+		end
+
+		if _Stampede_RDY and ConRO:FullMode(_Stampede) then
+			tinsert(ConRO.SuggestedSpells, _Stampede);
+			_Stampede_RDY = false;
+		end
+
+		if _Volley_RDY and ConRO:FullMode(_Volley) then
+			tinsert(ConRO.SuggestedSpells, _Volley);
+			_Volley_RDY = false;
+		end
+
+		if _SerpentSting_RDY and not _SerpentSting_DEBUFF and ConRO.lastSpellId ~= _SerpentSting and ConRO_SingleButton:IsVisible() then
+			tinsert(ConRO.SuggestedSpells, _SerpentSting);
+			_SerpentSting_DEBUFF = true;
+		end
+
+		if _SteelTrap_RDY and ConRO_SingleButton:IsVisible() then
+			tinsert(ConRO.SuggestedSpells, _SteelTrap);
+			_SteelTrap_RDY = false;
+		end
+
+		if _WailingArrow_RDY then
+			tinsert(ConRO.SuggestedSpells, _WailingArrow);
+			_WailingArrow_RDY = false;
+		end
+
+		if _MultiShot_RDY and not _TrickShots_BUFF and ConRO_AoEButton:IsVisible() then
+			tinsert(ConRO.SuggestedSpells, _MultiShot);
+			_TrickShots_BUFF = true;
+			_PreciseShots_COUNT = _PreciseShots_COUNT - 1;
 		end
 
 		if _RapidFire_RDY then
 			tinsert(ConRO.SuggestedSpells, _RapidFire);
+			_RapidFire_RDY = false;
 		end
-	end
 
-	if ConRO_AoEButton:IsVisible() then
-		if _MultiShot_RDY and (_PreciseShots_BUFF or currentSpell == _AimedShot) then
-			tinsert(ConRO.SuggestedSpells, _MultiShot);
+		if _ExplosiveShot_RDY then
+			tinsert(ConRO.SuggestedSpells, _ExplosiveShot);
+			_ExplosiveShot_RDY = false;
 		end
-	else
-		if tChosen[Ability.ChimaeraShot] then
-			if _ChimaeraShot_RDY and (_PreciseShots_BUFF or currentSpell == _AimedShot) then
-				tinsert(ConRO.SuggestedSpells, _ChimaeraShot);
+
+		if _Barrage_RDY then
+			tinsert(ConRO.SuggestedSpells, _Barrage);
+			_Barrage_RDY = false;
+		end
+
+		if _Trueshot_RDY and ConRO:FullMode(_Trueshot) then
+			tinsert(ConRO.SuggestedSpells, _Trueshot);
+			_Trueshot_RDY = false;
+		end
+
+		if _AimedShot_RDY and (not _PreciseShots_BUFF or _Trueshot_BUFF) and currentSpell ~= _AimedShot then
+			tinsert(ConRO.SuggestedSpells, _AimedShot);
+			_AimedShot_RDY = false;
+		end
+
+		if _SerpentSting_RDY and not _SerpentSting_DEBUFF and ConRO_AoEButton:IsVisible() then
+			tinsert(ConRO.SuggestedSpells, _SerpentSting);
+			_SerpentSting_DEBUFF = true;
+		end
+
+		if _KillShot_RDY and _KillShot_CHARGES >= 1 and (_can_execute or _Deathblow_BUFF) and ConRO_AoEButton:IsVisible() then
+			tinsert(ConRO.SuggestedSpells, _KillShot);
+			_KillShot_CHARGES = _KillShot_CHARGES - 1;
+			if _Deathblow_BUFF then
+				_Deathblow_BUFF = false;
+			end
+		end
+
+		if _SteelTrap_RDY and ConRO_AoEButton:IsVisible() then
+			tinsert(ConRO.SuggestedSpells, _SteelTrap);
+			_SteelTrap_RDY = false;
+		end
+
+		if _SteadyShot_RDY and tChosen[Passive.SteadyFocus.talentID] and not _SteadyFocus_BUFF and currentSpell ~= _SteadyShot then
+			tinsert(ConRO.SuggestedSpells, _SteadyShot);
+			_SteadyShot_RDY = false;
+		end
+
+		if ConRO_AoEButton:IsVisible() then
+			if _MultiShot_RDY and (_PreciseShots_BUFF or currentSpell == _AimedShot or _Focus >= 55) then
+				tinsert(ConRO.SuggestedSpells, _MultiShot);
+				_Focus = _Focus - 40;
 			end
 		else
-			if _ArcaneShot_RDY and (_PreciseShots_BUFF or currentSpell == _AimedShot) then
+			if _ArcaneShot_RDY and (_PreciseShots_COUNT >= 1 or currentSpell == _AimedShot or _Focus >= 55) then
 				tinsert(ConRO.SuggestedSpells, _ArcaneShot);
+				_Focus = _Focus - _ArcaneShot_COST;
+				_PreciseShots_COUNT = _PreciseShots_COUNT - 1;
 			end
 		end
-	end
 
-	if _DeathChakram_RDY and ConRO_AoEButton:IsVisible() and ConRO:FullMode(_DeathChakram) then
-		tinsert(ConRO.SuggestedSpells, _DeathChakram);
+		if _SteadyShot_RDY then
+			tinsert(ConRO.SuggestedSpells, _SteadyShot);
+		end
 	end
-
-	if _AimedShot_RDY and not _PreciseShots_BUFF and _AimedShot_CHARGES >= 1 then
-		tinsert(ConRO.SuggestedSpells, _AimedShot);
-	end
-
-	if _SteadyShot_RDY then
-		tinsert(ConRO.SuggestedSpells, _SteadyShot);
-	end
-return nil;
+	return nil;
 end
 
 function ConRO.Hunter.MarksmanshipDef(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
@@ -723,12 +821,17 @@ function ConRO.Hunter.Survival(_, timeShift, currentSpell, gcd, tChosen, pvpChos
 --Abilities	
 	local _AspectoftheEagle, _AspectoftheEagle_RDY														= ConRO:AbilityReady(Ability.AspectoftheEagle, timeShift);
 		local _AspectoftheEagle_BUFF																		= ConRO:Aura(Buff.AspectoftheEagle, timeShift);
+	local _Barrage, _Barrage_RDY = ConRO:AbilityReady(Ability.Barrage, timeShift);
+	local _Butchery, _Butchery_RDY						 												= ConRO:AbilityReady(Ability.Butchery, timeShift);
+		local _Butchery_CHARGES, _Butchery_MCHARGES	= ConRO:SpellCharges(_Butchery);
 	local _CallPet, _CallPet_RDY						 												= ConRO:AbilityReady(Ability.CallPet.One, timeShift);
 	local _Carve, _Carve_RDY						 													= ConRO:AbilityReady(Ability.Carve, timeShift);
 	local _CoordinatedAssault, _CoordinatedAssault_RDY													= ConRO:AbilityReady(Ability.CoordinatedAssault, timeShift);
 		local _CoordinatedAssault_BUFF 																		= ConRO:Aura(Buff.CoordinatedAssault, timeShift);
+	local _ExplosiveShot, _ExplosiveShot_RDY = ConRO:AbilityReady(Ability.ExplosiveShot, timeShift);
 	local _Flare, _Flare_RDY																			= ConRO:AbilityReady(Ability.Flare, timeShift);
 	local _FreezingTrap, _FreezingTrap_RDY																= ConRO:AbilityReady(Ability.FreezingTrap, timeShift);
+	local _FuryoftheEagle, _FuryoftheEagle_RDY = ConRO:AbilityReady(Ability.FuryoftheEagle, timeShift);
 	local _Harpoon, _Harpoon_RDY						 												= ConRO:AbilityReady(Ability.Harpoon, timeShift);
 		local _, _Harpoon_RANGE						 														= ConRO:Targets(Ability.Harpoon);
 	local _KillCommand, _KillCommand_RDY				 												= ConRO:AbilityReady(Ability.KillCommand, timeShift);
@@ -739,22 +842,24 @@ function ConRO.Hunter.Survival(_, timeShift, currentSpell, gcd, tChosen, pvpChos
 	local _RaptorStrike, _RaptorStrike_RDY					 											= ConRO:AbilityReady(Ability.RaptorStrike, timeShift);
 		local _VipersVenom_BUFF																				= ConRO:Aura(Buff.VipersVenom, timeShift);
 	local _SerpentSting, _SerpentSting_RDY																= ConRO:AbilityReady(Ability.SerpentSting, timeShift);
-		local _SerpentSting_DEBUFF, _, _SerpentSting_DUR													= ConRO:TargetAura(Debuff.SerpentSting, timeShift + 2);
+		local _SerpentSting_DEBUFF, _, _SerpentSting_DUR													= ConRO:TargetAura(Debuff.SerpentSting, timeShift);
+		local _LatentPoison, _LatentPoison_COUNT = ConRO:TargetAura(Debuff.LatentPoison, timeShift);
 	local _TranquilizingShot, _TranquilizingShot_RDY													= ConRO:AbilityReady(Ability.TranquilizingShot, timeShift);
 	local _WildfireBomb, _WildfireBomb_RDY																= ConRO:AbilityReady(Ability.WildfireBomb, timeShift);
-		local _WildfireBomb_CHARGES, _, _WildfireBomb_CCD													= ConRO:SpellCharges(_WildfireBomb);
-		local _WildfireBomb_DEBUFF																			= ConRO:TargetAura(Debuff.WildfireBomb, timeShift + 1);
+		local _WildfireBomb_CHARGES, _WildfireBomb_MCHARGES, _WildfireBomb_CCD = ConRO:SpellCharges(_WildfireBomb);
+		local _WildfireBomb_DEBUFF = ConRO:TargetAura(Debuff.WildfireBomb, timeShift + 1);
 	local _PheromoneBomb, _PheromoneBomb_RDY															= ConRO:AbilityReady(Passive.WildfireInfusion.PheromoneBomb, timeShift);
 		local _PheromoneBomb_DEBUFF																			= ConRO:TargetAura(Debuff.PheromoneBomb, timeShift + 1);
 	local _ShrapnelBomb, _ShrapnelBomb_RDY																= ConRO:AbilityReady(Passive.WildfireInfusion.ShrapnelBomb, timeShift);
 		local _InternalBleeding_DEBUFF, _InternalBleeding_COUNT, _InternalBleeding_DUR						= ConRO:TargetAura(Debuff.InternalBleeding, timeShift + 1);
 		local _ShrapnelBomb_DEBUFF																			= ConRO:TargetAura(Debuff.ShrapnelBomb, timeShift + 1);
+	local _Spearhead, _Spearhead_RDY = ConRO:AbilityReady(Ability.Spearhead, timeShift);
+		local _Spearhead_BUFF = ConRO:Aura(Buff.Spearhead, timeShift);
 	local _TarTrap, _TarTrap_RDY																		= ConRO:AbilityReady(Ability.TarTrap, timeShift);
 		local _TarTrap_DEBUFF																				= ConRO:TargetAura(Debuff.TarTrap, timeShift);
 	local _VolatileBomb, _VolatileBomb_RDY 																= ConRO:AbilityReady(Passive.WildfireInfusion.VolatileBomb, timeShift);
 		local _VolatileBomb_DEBUFF																			= ConRO:TargetAura(Debuff.VolatileBomb, timeShift + 1);
 
-	local _Butchery, _Butchery_RDY						 												= ConRO:AbilityReady(Ability.Butchery, timeShift);
 	local _FlankingStrike, _FlankingStrike_RDY			 												= ConRO:AbilityReady(Ability.FlankingStrike, timeShift);
 	local _MongooseBite, _MongooseBite_RDY																= ConRO:AbilityReady(Ability.MongooseBite, timeShift);
 		local _MongooseFury_BUFF, _MongooseFury_COUNT, _MongooseFury_DUR									= ConRO:Aura(Buff.MongooseFury, timeShift);
@@ -805,95 +910,233 @@ function ConRO.Hunter.Survival(_, timeShift, currentSpell, gcd, tChosen, pvpChos
 	ConRO:Warnings("Call your pet!", _CallPet_RDY and not _Pet_summoned);
 
 --Rotations
-	if _CoordinatedAssault_RDY and ConRO:FullMode(_CoordinatedAssault) then
-		tinsert(ConRO.SuggestedSpells, _CoordinatedAssault);
-	end
+	for i = 1, 2, 1 do
+		if not _in_combat then
+			if _CoordinatedAssault_RDY and ConRO:FullMode(_CoordinatedAssault) then
+				tinsert(ConRO.SuggestedSpells, _CoordinatedAssault);
+				_CoordinatedAssault_RDY = false;
+			end
 
-	if _KillShot_RDY and (_can_execute or _FlayersMark_BUFF) then
-		tinsert(ConRO.SuggestedSpells, _KillShot);
-	end
-
-	if _DeathChakram_RDY and _Focus <= 60 and ConRO:FullMode(_DeathChakram) then
-		tinsert(ConRO.SuggestedSpells, _DeathChakram);
-	end
-
-	if _MongooseBite_RDY and _MongooseFury_DUR >= .5 and _MongooseFury_COUNT >= 1 then
-		tinsert(ConRO.SuggestedSpells, _MongooseBite);
-	end
-
-	if not tChosen[Ability.MongooseBite] then
-		if _RaptorStrike_RDY and _TipoftheSpear_COUNT >= 3 then
-			tinsert(ConRO.SuggestedSpells, _RaptorStrike);
+			if _WildfireBomb_RDY and _WildfireBomb_CHARGES >= 1 then
+				tinsert(ConRO.SuggestedSpells, _WildfireBomb);
+				_WildfireBomb_RDY = false;
+			end
 		end
-	end
 
-	if (ConRO_AutoButton:IsVisible() and _enemies_in_melee >= 2) or ConRO_AoEButton:IsVisible() then
-		if tChosen[Ability.Butchery] then
-			if _Butchery_RDY then
-				tinsert(ConRO.SuggestedSpells, _Butchery);
+		if _DeathChakram_RDY and ConRO:FullMode(_DeathChakram) then
+			tinsert(ConRO.SuggestedSpells, _DeathChakram);
+			_DeathChakram_RDY = false;
+		end
+
+		if (ConRO_AutoButton:IsVisible() and _enemies_in_melee >= 3) or ConRO_AoEButton:IsVisible() then
+			if _CoordinatedAssault_RDY and not _Spearhead_BUFF and ConRO:FullMode(_CoordinatedAssault) then
+				tinsert(ConRO.SuggestedSpells, _CoordinatedAssault);
+				_CoordinatedAssault_RDY = false;
+			end
+
+			if _KillShot_RDY and _CoordinatedAssault_BUFF and (_can_execute or tChosen[Passive.CoordinatedKill.talentID]) then
+				tinsert(ConRO.SuggestedSpells, _KillShot);
+				_KillShot_RDY = false;
+			end
+
+			if _ExplosiveShot_RDY then
+				tinsert(ConRO.SuggestedSpells, _ExplosiveShot);
+				_ExplosiveShot_RDY = false;
+			end
+
+			if _Barrage_RDY then
+				tinsert(ConRO.SuggestedSpells, _Barrage);
+				_Barrage_RDY = false;
+			end
+
+			if tChosen[Ability.Butchery] then
+				if _Butchery_RDY and _Butchery_CHARGES == _Butchery_MCHARGES then
+					tinsert(ConRO.SuggestedSpells, _Butchery);
+					_Butchery_CHARGES = _Butchery_CHARGES - 1;
+				end
+			else
+				if _Carve_RDY then
+					tinsert(ConRO.SuggestedSpells, _Carve);
+					_Carve_RDY = false;
+				end
+			end
+
+			if _WildfireBomb_RDY and _WildfireBomb_CHARGES >= 1 then
+				tinsert(ConRO.SuggestedSpells, _WildfireBomb);
+				_WildfireBomb_CHARGES = _WildfireBomb_CHARGES - 1;
+			end
+
+			if _ShrapnelBomb_DEBUFF then
+				if tChosen[Ability.Butchery] then
+					if _Butchery_RDY and _Butchery_CHARGES >= 1 then
+						tinsert(ConRO.SuggestedSpells, _Butchery);
+						_Butchery_CHARGES = _Butchery_CHARGES - 1;
+					end
+				else
+					if _Carve_RDY then
+						tinsert(ConRO.SuggestedSpells, _Carve);
+						_Carve_RDY = false;
+					end
+				end
+			end
+
+			if _FlankingStrike_RDY then
+				tinsert(ConRO.SuggestedSpells, _FlankingStrike);
+				_FlankingStrike_RDY = false;
+			end
+
+			if _WildfireBomb_CHARGES <= 0 then
+				if tChosen[Ability.Butchery] then
+					if _Butchery_RDY and _Butchery_CHARGES >= 1 then
+						tinsert(ConRO.SuggestedSpells, _Butchery);
+						_Butchery_CHARGES = _Butchery_CHARGES - 1;
+					end
+				else
+					if _Carve_RDY then
+						tinsert(ConRO.SuggestedSpells, _Carve);
+						_Carve_RDY = false;
+					end
+				end
+			end
+
+			if tChosen[Passive.PoisonInjection.talentID] and _LatentPoison_COUNT >= 8 then
+				if tChosen[Ability.MongooseBite] then
+					if _MongooseBite_RDY then
+						tinsert(ConRO.SuggestedSpells, _MongooseBite);
+					end
+				else
+					if _RaptorStrike_RDY then
+						tinsert(ConRO.SuggestedSpells, _RaptorStrike);
+					end
+				end
+			end
+
+			if _KillCommand_RDY and _Focus <= 85 then
+				tinsert(ConRO.SuggestedSpells, _KillCommand);
+				_KillCommand_RDY = false;
+			end
+
+			if _SerpentSting_RDY and not _SerpentSting_DEBUFF and tChosen[Passive.HydrasBite.talentID] then
+				tinsert(ConRO.SuggestedSpells, _SerpentSting);
+				_SerpentSting_RDY = false;
+			end
+
+			if _KillShot_RDY and _can_execute then
+				tinsert(ConRO.SuggestedSpells, _KillShot);
+				_KillShot_RDY = false;
+			end
+
+			if tChosen[Ability.MongooseBite] then
+				if _MongooseBite_RDY then
+					tinsert(ConRO.SuggestedSpells, _MongooseBite);
+				end
+			else
+				if _RaptorStrike_RDY then
+					tinsert(ConRO.SuggestedSpells, _RaptorStrike);
+				end
 			end
 		else
-			if _Carve_RDY then
-				tinsert(ConRO.SuggestedSpells, _Carve);
+			if _MongooseBite_RDY and (_MongooseFury_DUR >= 0.2 and _MongooseFury_DUR <= 1.5) and _MongooseFury_COUNT >= 1 then
+				tinsert(ConRO.SuggestedSpells, _MongooseBite);
+				_MongooseBite_RDY = false;
+			end
+
+			if _SerpentSting_RDY and not _SerpentSting_DEBUFF and ConRO.lastSpellId ~= _SerpentSting and not tChosen[Passive.VipersVenom.talentID] then
+				tinsert(ConRO.SuggestedSpells, _SerpentSting);
+				_SerpentSting_RDY = false;
+			end
+
+			if _FlankingStrike_RDY and _Focus <= 70 then
+				tinsert(ConRO.SuggestedSpells, _FlankingStrike);
+				_FlankingStrike_RDY = false;
+			end
+
+			if _CoordinatedAssault_RDY and not _Spearhead_BUFF and ConRO:FullMode(_CoordinatedAssault) then
+				tinsert(ConRO.SuggestedSpells, _CoordinatedAssault);
+				_CoordinatedAssault_RDY = false;
+			end
+
+			if _KillShot_RDY and _CoordinatedAssault_BUFF and (_can_execute or tChosen[Passive.CoordinatedKill.talentID]) then
+				tinsert(ConRO.SuggestedSpells, _KillShot);
+				_KillShot_RDY = false;
+			end
+
+			if _WildfireBomb_RDY and _WildfireBomb_CHARGES == _WildfireBomb_MCHARGES then
+				tinsert(ConRO.SuggestedSpells, _WildfireBomb);
+				_WildfireBomb_CHARGES = _WildfireBomb_CHARGES - 1;
+			end
+
+			if _PheromoneBomb_RDY and _WildfireBomb_CHARGES >= 1 and _Focus <= 50 and not _MongooseFury_BUFF then
+				tinsert(ConRO.SuggestedSpells, _PheromoneBomb);
+				_WildfireBomb_CHARGES = _WildfireBomb_CHARGES -1;
+			end
+
+			if _KillCommand_RDY and _Focus <= 85 then
+				tinsert(ConRO.SuggestedSpells, _KillCommand);
+				_KillCommand_RDY = false;
+			end
+
+			if _ShrapnelBomb_DEBUFF then
+				if tChosen[Ability.MongooseBite] then
+					if _MongooseBite_RDY then
+						tinsert(ConRO.SuggestedSpells, _MongooseBite);
+					end
+				else
+					if _RaptorStrike_RDY then
+						tinsert(ConRO.SuggestedSpells, _RaptorStrike);
+					end
+				end
+			end
+
+			if _SerpentSting_RDY and _SerpentSting_DUR <= 4 and ConRO.lastSpellId ~= _SerpentSting and not tChosen[Passive.VipersVenom.talentID] then
+				tinsert(ConRO.SuggestedSpells, _SerpentSting);
+				_SerpentSting_RDY = false;
+			end
+
+			if _KillShot_RDY and _can_execute then
+				tinsert(ConRO.SuggestedSpells, _KillShot);
+				_KillShot_RDY = false;
+			end
+
+			if _MongooseBite_RDY and ((_MongooseFury_BUFF and _MongooseFury_DUR <= 0.5) or _Spearhead_BUFF) then
+				tinsert(ConRO.SuggestedSpells, _MongooseBite);
+			end
+
+			if _Spearhead_RDY and _Focus <= 50 and not _CoordinatedAssault_BUFF then
+				tinsert(ConRO.SuggestedSpells, _Spearhead);
+				_Spearhead_RDY = false;
+			end
+
+			if _ExplosiveShot_RDY then
+				tinsert(ConRO.SuggestedSpells, _ExplosiveShot);
+				_ExplosiveShot_RDY = false;
+			end
+
+			if _Barrage_RDY then
+				tinsert(ConRO.SuggestedSpells, _Barrage);
+				_Barrage_RDY = false;
+			end
+
+			if _RaptorStrike_RDY and not tChosen[Ability.MongooseBite.talentID] then
+				tinsert(ConRO.SuggestedSpells, _RaptorStrike);
+			end
+
+			if _SteelTrap_RDY then
+				tinsert(ConRO.SuggestedSpells, _SteelTrap);
+				_SteelTrap_RDY = false;
+			end
+
+			if _WildfireBomb_RDY and _WildfireBomb_CHARGES >= 1 then
+				tinsert(ConRO.SuggestedSpells, _WildfireBomb);
+			end
+
+			if _FuryoftheEagle_RDY then
+				tinsert(ConRO.SuggestedSpells, _FuryoftheEagle);
+				_FuryoftheEagle_RDY = false;
 			end
 		end
 	end
-
-	if _ShrapnelBomb_RDY and (_Focus >= 50 or _InternalBleeding_COUNT == 3) then
-		tinsert(ConRO.SuggestedSpells, _ShrapnelBomb);
-	end
-
-	if _KillCommand_RDY and _Focus <= 80 then
-		tinsert(ConRO.SuggestedSpells, _KillCommand);
-	end
-
-	if not tChosen[Ability.MongooseBite.talentID] then
-		if _RaptorStrike_RDY and _ShrapnelBomb_DEBUFF or ConRO:FindCurrentSpell(_PheromoneBomb) then
-			tinsert(ConRO.SuggestedSpells, _RaptorStrike);
-		end
-	end
-
-	if _SerpentSting_RDY and not _SerpentSting_DEBUFF and ConRO.lastSpellId ~= _SerpentSting then
-		tinsert(ConRO.SuggestedSpells, _SerpentSting);
-	end
-
-	if _VolatileBomb_RDY and _SerpentSting_DUR <= 4 then
-		tinsert(ConRO.SuggestedSpells, _VolatileBomb);
-	end
-
-	if _WildfireBomb_RDY and (_WildfireBomb_CHARGES == 2 or (_WildfireBomb_CHARGES == 1 and _WildfireBomb_CCD <= 1)) then
-		tinsert(ConRO.SuggestedSpells, _WildfireBomb);
-	end
-
-	if _SteelTrap_RDY then
-		tinsert(ConRO.SuggestedSpells, _SteelTrap);
-	end
-
-	if _Harpoon_RDY and tChosen[Passive.TermsofEngagement.talentID] then
-		tinsert(ConRO.SuggestedSpells, _Harpoon);
-	end
-
-	if _FlankingStrike_RDY and _Focus <= 50 then
-		tinsert(ConRO.SuggestedSpells, _FlankingStrike);
-	end
-
-	if not tChosen[Passive.WildfireInfusion.talentID] then
-		if _WildfireBomb_RDY then
-			tinsert(ConRO.SuggestedSpells, _WildfireBomb);
-		end
-	end
-
-	if tChosen[Ability.MongooseBite.talentID] then
-		if _MongooseBite_RDY and _Focus >= 60 then
-			tinsert(ConRO.SuggestedSpells, _MongooseBite);
-		end
-	else
-		if _RaptorStrike_RDY and _Focus >= 60 then
-			tinsert(ConRO.SuggestedSpells, _RaptorStrike);
-		end
-	end
-
-return nil;
+	return nil;
 end
 
 function ConRO.Hunter.SurvivalDef(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)

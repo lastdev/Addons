@@ -20,7 +20,7 @@ _G[NAME .. 'PinMixin'] = PinMixin
 ---
 function PinMixin:OnLoad()
   -- We need to change frame level, because with default one, icons are not seen.
-  self:UseFrameLevelType('PIN_FRAME_LEVEL_AREA_POI')
+  self:UseFrameLevelType('PIN_FRAME_LEVEL_MAP_LINK')
 end
 
 ---

@@ -22,13 +22,6 @@ function Map:prepareSize(point)
   local scale = 2 * this.Addon.db.profile.scale
   local opacity = this.Addon.db.profile.opacity
 
-  -- If this is instance waypoint, set scale and opacity from config.
-  --- @deprecated in 0.11.0 and scheduled for removal in 0.13.0
-  if (point.portal) then
-    scale = this.Addon.db.profile.waypointScale
-    opacity = this.Addon.db.profile.waypointOpacity
-  end
-
   -- Check, if we have scale or opacity configured in point and rewrite user config.
   if (point.scale) then
     scale = point.scale
@@ -46,21 +39,15 @@ end
 ---
 --- Decides, if point should be shown on map
 ---
---- @param point
----   Point, we are evaluating.
 --- @param completed
 ---   Bool, if everything on this point has been completed.
 ---
 --- @return boolean
 ---   True, if we should display point, false otherwise.
 ---
-function Map:showPoint(point, completed)
+function Map:showPoint(completed)
   local show = false
-  -- @todo better handling.
-  --- @deprecated portal in 0.11.0 and scheduled for removal in 0.13.0
-  if (point.portal and this.Addon.db.profile.showWaypoints == true) then
-    show = true
-  elseif (not point.portal and this.Addon.db.profile.showCollection == true and (completed == false or this.Addon.db.profile.completed == true)) then
+  if (this.Addon.db.profile.showCollection == true and (completed == false or this.Addon.db.profile.completed == true)) then
     show = true
   end
 

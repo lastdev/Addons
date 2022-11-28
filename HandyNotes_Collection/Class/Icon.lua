@@ -24,10 +24,6 @@ Icon.list = {
   ['poi'] = Icon.path .. 'dot.blp',
   ['portal'] = Icon.path .. 'portal.blp',
   ['summary'] = Icon.path .. 'summary.blp',
-  ['door-up'] = 'poi-door-up',
-  ['door-right'] = 'poi-door-right',
-  ['door-down'] = 'poi-door-down',
-  ['door-left'] = 'poi-door-left',
 }
 
 this.Icon = Icon

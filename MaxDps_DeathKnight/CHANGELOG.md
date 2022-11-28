@@ -1,8 +1,12 @@
 # MaxDps_DeathKnight
 
-## [v10.0.3](https://github.com/kaminaris/MaxDps-DeathKnight/tree/v10.0.3) (2022-11-20)
-[Full Changelog](https://github.com/kaminaris/MaxDps-DeathKnight/compare/v10.0.2...v10.0.3) [Previous Releases](https://github.com/kaminaris/MaxDps-DeathKnight/releases)
+## [v10.0.4](https://github.com/kaminaris/MaxDps-DeathKnight/tree/v10.0.4) (2022-11-27)
+[Full Changelog](https://github.com/kaminaris/MaxDps-DeathKnight/compare/v10.0.3...v10.0.4) [Previous Releases](https://github.com/kaminaris/MaxDps-DeathKnight/releases)
 
 - Update MaxDps\_DeathKnight.toc  
-- Update MaxDps\_DeathKnight.toc  
-    updated toc  
+- Update Unholy.lua  
+    updated to check for existence of talent before attempting to return apocalypse  
+- Merge pull request #12 from kaminaris/bugFixes  
+    Bug fixes  
+- Merge pull request #11 from kaminaris/bugFixes  
+    Update Unholy.lua  

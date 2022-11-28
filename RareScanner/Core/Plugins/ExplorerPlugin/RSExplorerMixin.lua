@@ -509,7 +509,7 @@ function RSExplorerRareList:UpdateRareList()
 	
 	-- Load list
 	for npcID, npcName in pairs(RSNpcDB.GetAllNpcNames()) do
-		if (RSNpcDB.IsInternalNpcInMap(npcID, self.mapID, true)) then
+		if (RSNpcDB.IsInternalNpcInMap(npcID, self.mapID, false)) then
 			local npcInfo = RSNpcDB.GetInternalNpcInfoByMapID(npcID, self.mapID)
 			
 			if (npcInfo and npcInfo.displayID) then
@@ -1109,7 +1109,10 @@ function RSExplorerControl:ApplyFilters(self, button)
 	local data = {
 		callback = function()
 			mainFrame:Refresh()
-			LibDialog:Spawn(RSConstants.APPLY_COLLECTIONS_LOOT_FILTERS)
+			local subdata = {
+				filters = filters
+			}
+			LibDialog:Spawn(RSConstants.APPLY_COLLECTIONS_LOOT_FILTERS, subdata)
 		end,
 		filters = filters
 	}

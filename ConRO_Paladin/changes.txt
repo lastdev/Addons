@@ -1,12 +1,18 @@
-commit 8381c3354539362dceecf62831d4f5ba05e71976
+lightweight tag bfab2d6b74a02c5cf1e61620f6041da14357663b v10.0.1-release
+Author:	Vae <emuha17@gmail.com>
+Date:	Fri Nov 25 16:21:14 2022 -1000
+
+commit b7481c69d7ad2f53f2fcda5ce64f0ecc1c9c53d2
 Author: Vae <emuha17@gmail.com>
-Date:   Sat Nov 19 23:50:45 2022 -1000
+Date:   Fri Nov 25 16:21:08 2022 -1000
 
-    Update ConRO_Paladin.toc
+    DF Cleanup
+    Updated Ret and Prot rotations
 
-commit 3a9ed1245daaa94e9b9347c84c870ff309d68b34
+commit b7481c69d7ad2f53f2fcda5ce64f0ecc1c9c53d2
 Author: Vae <emuha17@gmail.com>
-Date:   Mon Nov 14 18:56:31 2022 -1000
+Date:   Fri Nov 25 16:21:08 2022 -1000
 
-    Initial Git Creation
+    DF Cleanup
+    Updated Ret and Prot rotations
 

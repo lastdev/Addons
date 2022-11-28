@@ -2,7 +2,7 @@
 ## Title: DataStore_Garrisons
 ## Notes: Stores information about garrisons and followers
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: 10.0.005
+## Version: 10.0.008
 ## Dependencies: DataStore
 ## OptionalDeps: Ace3
 ## SavedVariables: DataStore_GarrisonsDB

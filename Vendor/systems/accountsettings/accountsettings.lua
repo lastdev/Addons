@@ -56,6 +56,10 @@ function AccountSettings:SetAccountSetting(name, value)
     self.changed[name] = true
 
     local current = self:GetAccountSetting(name)
+
+
+
+
     if (value ~= current) then
         self.savedVariable:Set(name, value)
 
@@ -72,6 +76,8 @@ function AccountSettings:SetAccountSetting(name, value)
                     self.changed = nil
                 end
             end)
+    else
+
     end
 end
 

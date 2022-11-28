@@ -26,6 +26,11 @@ MDT.mapInfo[dungeonIndex] = {
     };
   }
 };
+local zones = { 2073, 2074, 2075, 2076, 2077 }
+-- add zones to MDT.zoneIdToDungeonIdx
+for _, zone in ipairs(zones) do
+  MDT.zoneIdToDungeonIdx[zone] = dungeonIndex
+end
 
 MDT.dungeonMaps[dungeonIndex] = {
   [0] = "ArcaneNexus",
@@ -127,8 +132,8 @@ MDT.mapPOIs[dungeonIndex] = {
   };
 };
 
-
 MDT.dungeonTotalCount[dungeonIndex] = { normal = 410, teeming = 1000, teemingEnabled = true }
+
 MDT.dungeonEnemies[dungeonIndex] = {
   [1] = {
     ["name"] = "Conjured Lasher";
@@ -144,13 +149,12 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Incapacitate"] = true;
       ["Silence"] = true;
       ["Root"] = true;
+      ["Fear"] = true;
       ["Disorient"] = true;
       ["Stun"] = true;
       ["Slow"] = true;
     };
     ["spells"] = {
-      [317898] = {
-      };
       [387564] = {
       };
     };
@@ -280,6 +284,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["level"] = 70;
     ["characteristics"] = {
       ["Taunt"] = true;
+      ["Incapacitate"] = true;
       ["Root"] = true;
       ["Disorient"] = true;
       ["Stun"] = true;
@@ -367,11 +372,10 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true;
       ["Silence"] = true;
       ["Root"] = true;
+      ["Disorient"] = true;
       ["Stun"] = true;
     };
     ["spells"] = {
-      [317898] = {
-      };
       [370764] = {
       };
       [389686] = {
@@ -686,6 +690,8 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["level"] = 70;
     ["characteristics"] = {
       ["Taunt"] = true;
+      ["Incapacitate"] = true;
+      ["Disorient"] = true;
     };
     ["spells"] = {
       [370225] = {
@@ -731,11 +737,13 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["characteristics"] = {
       ["Taunt"] = true;
       ["Silence"] = true;
+      ["Root"] = true;
+      ["Fear"] = true;
+      ["Banish"] = true;
+      ["Disorient"] = true;
       ["Stun"] = true;
     };
     ["spells"] = {
-      [317898] = {
-      };
       [371306] = {
       };
       [386546] = {
@@ -871,8 +879,11 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["level"] = 70;
     ["characteristics"] = {
       ["Taunt"] = true;
+      ["Incapacitate"] = true;
       ["Silence"] = true;
       ["Root"] = true;
+      ["Fear"] = true;
+      ["Disorient"] = true;
       ["Stun"] = true;
     };
     ["spells"] = {
@@ -932,7 +943,10 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["level"] = 70;
     ["characteristics"] = {
       ["Taunt"] = true;
+      ["Incapacitate"] = true;
       ["Silence"] = true;
+      ["Root"] = true;
+      ["Fear"] = true;
       ["Disorient"] = true;
       ["Stun"] = true;
     };
@@ -1093,6 +1107,8 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true;
       ["Silence"] = true;
       ["Root"] = true;
+      ["Fear"] = true;
+      ["Disorient"] = true;
       ["Stun"] = true;
     };
     ["spells"] = {
@@ -1161,6 +1177,8 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true;
       ["Silence"] = true;
       ["Root"] = true;
+      ["Disorient"] = true;
+      ["Stun"] = true;
     };
     ["spells"] = {
       [374778] = {

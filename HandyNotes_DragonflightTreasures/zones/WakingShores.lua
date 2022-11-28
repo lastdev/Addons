@@ -2,6 +2,11 @@ local myname, ns = ...
 
 local MAPID = ns.WAKINGSHORES -- Waking Shores
 
+--[[ mining walls
+52344167 herb
+41079405 ?
+--]]
+
 ns.RegisterPoints(MAPID, {
     -- https://www.wowhead.com/beta/achievement=16297/treasures-of-the-waking-shores
     [65804182] = { -- Replica Dragon Goblet
@@ -25,15 +30,16 @@ ns.RegisterPoints(MAPID, {
         nearby={40924140, label="{spell:199061:Fragrant Plant Scent}"},
         note="Find {item:199061} in other treasures to make this appear, then use the Fragrant Plant nearby",
     },
-    --[[
-    [] = { -- Ruby Gem Cluster
+    [61347079] = { -- Ruby Gem Cluster
         criteria=54713,
         quest=70598,
-        loot={},
+        loot={
+            200864, -- Glimmering Alexstraszite Cluster
+        },
+        hide_before=ns.conditions.MajorFaction(ns.FACTION_DRAGONSCALE, 21),
         active={ns.conditions.Item(198843), ns.conditions.QuestComplete(70392), any=true}, -- Ruby Gem Cluster Map
         note="Find {item:198843} in other treasures"
     },
-    --]]
     [46713121] = { -- Yennu's Kite
         criteria=54701,
         quest=70345,
@@ -61,23 +67,28 @@ ns.RegisterPoints(MAPID, {
         loot={}, -- just supplies
         note="Top of waterfall",
     },
-    --[[
-    [] = { -- Misty Treasure Chest
+    [58585301] = { -- Misty Treasure Chest
         criteria=55403,
         quest=65646,
-        loot={},
+        loot={
+            202194, -- Misty Satchel (34 slot bag)
+        },
+        note="On a well-hidden ledge just below the top of the waterfall",
+        -- (the clue is the nearby scouts and non-interactable handhold-objects)
     },
-    [] = { -- Onyx Gem Cluster
+    [29454699] = { -- Onyx Gem Cluster
         criteria=55448,
         quest=72020,
-        loot={},
+        loot={
+            200867, -- Glimmering Neltharite Cluster
+        },
+        hide_before=ns.conditions.MajorFaction(ns.FACTION_DRAGONSCALE, 21),
         active={ns.conditions.Item(200738), ns.conditions.QuestComplete(72021), any=true}, -- Onyx Gem Cluster Map
-        note="Buy {item:200738}"
+        note="Buy {item:200738}",
         related={
             [47008280] = {quest=72021,loot={{200738,quest=72021}},atlas="poi-workorders",active=false,}, -- Onyx Gem Cluster Map
         },
     },
-    --]]
 }, {
     achievement=16297, -- Treasures
     minimap=true,
@@ -86,14 +97,16 @@ ns.RegisterPoints(MAPID, {
 -- Rares
 ns.RegisterPoints(MAPID, {
     -- https://www.wowhead.com/beta/achievement=16676/adventurer-of-the-waking-shores
-    --[[
-    [] = { -- Gushgut the Beaksinker
+    [52535855] = { -- Gushgut the Beaksinker
         criteria=56033,
-        quest=70718,
+        quest=70718, -- didn't actually trigger?
         npc=196056,
-        loot={},
+        loot={
+            {197098, quest=69299}, -- Highland Drake: Finned Back
+        },
         vignette=5380,
     },
+    --[[
     [] = { -- Nulltheria the Void Gazer
         criteria=56034,
         quest=nil,
@@ -221,7 +234,9 @@ ns.RegisterPoints(MAPID, {
         criteria=56050,
         quest=72127,
         npc=193198,
-        loot={},
+        loot={
+            200286, -- Dragonbane Lance
+        },
         vignette=5385,
     },
     [64456922] = { -- Possessive Hornswog
@@ -251,17 +266,19 @@ ns.RegisterPoints(MAPID, {
     --]]
     [31825440] = { -- Death's Shadow
         criteria=56053,
-        quest=nil,
+        quest=67027, -- check
         npc=190985,
         loot={},
+        note="Give 20x{item:191264:Restored Obsidian Key} to {npc:191640:Sabellian} to trigger {quest:67027}",
         vignette=5113,
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
     [23825742] = { -- Shas'ith
         criteria=56054,
-        quest=nil,
+        quest=66903, -- check
         npc=189822,
         loot={},
+        note="Give 20x{item:191264:Restored Obsidian Key} to {npc:186681:Wrathion} to trigger {quest:66903}",
         vignette=5108,
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
@@ -270,7 +287,9 @@ ns.RegisterPoints(MAPID, {
         quest=69891,
         npc=193266,
         loot={},
+        note="In the Fluttering Cavern",
         vignette=5209, -- Resplendent Shimmerwing
+        path=35228165,
     },
     [25825982] = { -- Cauldronbearer Blakor
         criteria=56056,
@@ -312,22 +331,24 @@ ns.RegisterPoints(MAPID, {
         npc=193232,
         loot={},
     },
-    --[[
-    [] = { -- Morchok
+    [32215221] = { -- Morchok
         criteria=56988,
-        quest=nil,
+        quest=66901, -- check
         npc=187306,
         loot={},
+        note="Give 20x{item:191264:Restored Obsidian Key} to {npc:187275:Igys the Believer} to trigger {quest:66901}",
         vignette=5388, -- 5119 for "Morchock Reformed"?
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
-    [] = { -- Shadeslash Trakken
+    [47297386] = { -- Shadeslash Trakken
         criteria=56989,
         quest=70719,
         npc=193271,
         loot={},
+        path=48457426,
         vignette=5381,
     },
+    --[[
     [] = { -- Slurpo, the Incredible Snail
         criteria=57003,
         quest=72126,
@@ -403,7 +424,44 @@ ns.RegisterPoints(MAPID, {
         },
         vignette=5372,
     },
+    [60598286] = { -- Terillod the Devout
+        quest=72850, -- also 70751, 71240
+        npc=193171,
+        loot={
+            200208, -- Cloud Coalescing Handwraps
+        },
+        vignette=5387,
+    },
+    [28047868] = { -- Beakers
+        -- no quest, no vignette, just a random rare-flagged mob
+        quest=nil,
+        npc=193177,
+        loot={},
+    },
 })
+
+--[[
+-- Grand Hunt
+ns.RegisterPoints(MAPID, {
+    [41158455] = { -- Degmakh
+        npc=194251,
+        loot={
+            198990, -- Drakewatcher's Cord
+        },
+        vignette=5266,
+    },
+    [47767707] = { -- Muugurv
+        npc=194225,
+        loot={
+            198985, -- Drakewatcher's Vestement
+        },
+        vignette=5264,
+    },
+}, {
+    achievement=16545, criteria=true,
+})
+--]]
+
 
 -- Symbols of Hope
 ns.RegisterPoints(MAPID, {

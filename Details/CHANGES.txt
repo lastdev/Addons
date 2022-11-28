@@ -1,16 +1,10 @@
-tag d8c07e343f99678ef49b14772a4f20ee9b999b6a Details.DF.Wrath.10259.146
+tag ba9ccc7a62e9c901f4a53528502cbb3a8d810d47 Details.DF.Wrath.10301.147
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Wed Nov 2 20:42:10 2022 -0300
+Date:	Sun Nov 27 18:36:13 2022 -0300
 
-commit 32e0a5b8dfbcee5710e6d7b4fcec771e2964585e
+commit eb60b77c323ad2705da088b3ad6c69bb2b7ed0a5
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Wed Nov 2 20:41:43 2022 -0300
+Date:   Sun Nov 27 18:35:35 2022 -0300
 
-    Removed the encounter_start message from Wrath
-
-commit c48d032c1676bc5c4789fb12396a3d22a28a2d01
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Wed Nov 2 20:08:36 2022 -0300
-
-    Fix for some error involving gradient color
+    Wrath error fixes
 

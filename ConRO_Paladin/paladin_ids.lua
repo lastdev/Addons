@@ -463,6 +463,7 @@ local ConRO_Paladin, ids = ...;
 		SelflessHealer = 114250,
 	}
 	ids.Ret_Debuff = {
+		Consecration = 204242;
 		Forbearance = 25771,
 		Judgment = 197277,
 	}
