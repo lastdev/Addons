@@ -640,7 +640,7 @@ function ConRO.Paladin.Retribution(_, timeShift, currentSpell, gcd, tChosen, pvp
 	local _enemies_in_melee, _target_in_melee = ConRO:Targets("Melee");
 	local _target_in_10yrds = CheckInteractDistance("target", 3);
 	local _, _target_in_12yrds = ConRO:Targets(Ability.BladeofJustice);
-	local _, _target_in_30yrds = ConRO:Targets(Ability.Judgment);
+	local _enemies_in_30yrds, _target_in_30yrds = ConRO:Targets(Ability.Judgment);
 	local _can_execute = _Target_Percent_Health <= 20;
 
 		if _FiresofJustice_BUFF then
@@ -714,7 +714,7 @@ function ConRO.Paladin.Retribution(_, timeShift, currentSpell, gcd, tChosen, pvp
 			if _DivineToll_RDY and not _Judgment_DEBUFF and _target_in_30yrds and ConRO:FullMode(_DivineToll) then
 				tinsert(ConRO.SuggestedSpells, _DivineToll);
 				_DivineToll_RDY = false;
-				_HolyPower = _HolyPower + _target_in_30yrds;
+				_HolyPower = _HolyPower + _enemies_in_30yrds;
 			end
 
 			if _WakeofAshes_RDY and _HolyPower <= 2 and _target_in_12yrds and ConRO:FullMode(_WakeofAshes) then

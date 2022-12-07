@@ -1,5 +1,5 @@
-## Interface: 90207
-## Version: 1.00
+## Interface: 100002
+## Version: 1.05
 ## Author: Taraezor
 ## Title: Noble Garden
 ## Title-deDE: Nobelgarten Erfolge

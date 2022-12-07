@@ -86,6 +86,7 @@ local ConRO_Druid, ids = ...;
 	--Balance	
 		AstralCommunion = {spellID = 202359, talentID = 109871},
 		CelestialAlignment = {spellID = 194223, talentID = 109849},
+			CelestialAlignmentOS = {spellID = 383410, talentID = 109856},
 		ConvoketheSpirits	= {spellID = 391528, talentID = 109838},
 		ForceofNature = {spellID = 205636, talentID = 109844},
 		FuryofElune	= {spellID = 202770, talentID = 109859},
@@ -355,6 +356,7 @@ local ConRO_Druid, ids = ...;
 		Prowl = 5215,
 	}
 	ids.Feral_Buff = {
+		ApexPredatorsCraving = 391882,
 		Berserk = 106951,
 		Ironfur = 192081,
 		Regrowth = 8936,
@@ -370,8 +372,8 @@ local ConRO_Druid, ids = ...;
 		Rake = 155722,
 		RakeStun = 163505,
 		Rip = 1079,
-		Thrash_Cat = 106830,
-		Thrash_Bear = 192090,
+		ThrashCF = 106830,
+		ThrashBF = 192090,
 	}
 	ids.Feral_PetAbility = {
 

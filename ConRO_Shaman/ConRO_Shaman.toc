@@ -1,5 +1,5 @@
 ## Title:-|cffFFFFFFConRO|r- |cff0070DEShaman|r
-## Version: 10.0.2
+## Version: 10.0.3
 ## Author: Vae
 ## Interface: 10002
 ## Dependencies: ConRO

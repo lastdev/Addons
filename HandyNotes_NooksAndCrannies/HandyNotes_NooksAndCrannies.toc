@@ -1,0 +1,14 @@
+## Interface: 100002
+## Title: HandyNotes: Nooks and Crannies
+## RequiredDeps: HandyNotes
+## SavedVariables: HandyNotes_NooksAndCranniesDB, HandyNotes_NooksAndCranniesCACHE
+## DefaultState: enabled
+
+HandyNotes_NooksAndCrannies.lua
+Class\Text.lua
+
+Translation\translations.xml
+Class.xml
+
+Data\Maps.lua
+Data\maps.xml

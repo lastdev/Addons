@@ -1,5 +1,5 @@
 ## Interface: 100002
-## Version: v10.0.2-1.8.5
+## Version: v10.0.2-2.0.3
 ## Title: Hekili
 ## Author: Hekili
 ## Notes: Priority helper for many DPS and tanking specializations, based on SimulationCraft action lists.
@@ -30,6 +30,7 @@ Shadowlands\SoulbindConduits.lua
 Shadowlands\Trinkets.lua
 Shadowlands\Legendaries.lua
 
+Dragonflight\Items.lua
 Dragonflight\Classes.lua
 Dragonflight\DeathKnightBlood.lua
 Dragonflight\DeathKnightFrost.lua

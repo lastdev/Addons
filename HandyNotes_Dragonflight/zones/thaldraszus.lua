@@ -2,21 +2,24 @@
 ---------------------------------- NAMESPACE ----------------------------------
 -------------------------------------------------------------------------------
 local ADDON_NAME, ns = ...
--- local Class = ns.Class
+local Class = ns.Class
 local L = ns.locale
 local Map = ns.Map
 
--- local Collectible = ns.node.Collectible
+local Collectible = ns.node.Collectible
 local Disturbeddirt = ns.node.Disturbeddirt
 local Dragonglyph = ns.node.Dragonglyph
 local Flag = ns.node.Flag
+local Fragment = ns.node.Fragment
+local PetBattle = ns.node.PetBattle
+local PM = ns.node.ProfessionMasters
+local PT = ns.node.ProfessionTreasures
 local Rare = ns.node.Rare
 local Scoutpack = ns.node.Scoutpack
 local Treasure = ns.node.Treasure
-local PetBattle = ns.node.PetBattle
 
 local Achievement = ns.reward.Achievement
--- local Mount = ns.reward.Mount
+local Item = ns.reward.Item
 local Pet = ns.reward.Pet
 local Transmog = ns.reward.Transmog
 
@@ -26,24 +29,29 @@ local POI = ns.poi.POI
 -------------------------------------------------------------------------------
 
 local map = Map({id = 2025, settings = true})
+local val = Map({id = 2112, settings = false}) -- Valdrakken
+local tpf = Map({id = 2085, settings = false}) -- The Primalist Future
+
+-------------------------------------------------------------------------------
+
+-- war supplies 41974893
 
 -------------------------------------------------------------------------------
 ------------------------------------ RARES ------------------------------------
 -------------------------------------------------------------------------------
 
-map.nodes[59545917] = Rare({ -- review
+map.nodes[59075874] = Rare({
     id = 193664,
     quest = 69963,
     rewards = {Achievement({id = 16679, criteria = 56158})}
 }) -- Ancient Protector
 
--- map.nodes[] = Rare({
---     id = 193128,
---     quest = nil,
---     rewards = {
---         Achievement({id = 16679, criteria = 56136}),
---     }
--- }) -- Blightpaw the Depraved
+map.nodes[31097121] = Rare({ -- requirement ?
+    id = 193128,
+    quest = nil,
+    note = L['blightpaw_note'],
+    rewards = {Achievement({id = 16679, criteria = 56136})}
+}) -- Blightpaw the Depraved
 
 map.nodes[59847057] = Rare({ -- required 67030
     id = 193220,
@@ -82,13 +90,14 @@ map.nodes[47675115] = Rare({ -- required 67030
     rewards = {Achievement({id = 16679, criteria = 56147})}
 }) -- Eldoren the Reborn
 
--- map.nodes[] = Rare({
---     id = 193125,
---     quest = nil,
---     rewards = {
---         Achievement({id = 16679, criteria = 56138}),
---     }
--- }) -- Goremaul the Gluttonous
+map.nodes[53374092] = Rare({
+    id = 193125,
+    quest = 73878,
+    rewards = {
+        Achievement({id = 16679, criteria = 56138}),
+        Transmog({item = 200436, slot = L['mail']}) -- Gorestained Hauberk
+    }
+}) -- Goremaul the Gluttonous
 
 map.nodes[57828380] = Rare({ -- review
     id = 193126,
@@ -180,33 +189,60 @@ map.nodes[38466826] = Rare({
     rewards = {Achievement({id = 16679, criteria = 56155})}
 }) -- The Great Shellkhan
 
--- map.nodes[] = Rare({
---     id = 183984,
---     quest = 65365,
---     rewards = {
---         Achievement({id = 16679, criteria = 56153}),
---     }
--- }) -- The Weeping Vilomah
+map.nodes[46267317] = Rare({
+    id = 183984,
+    quest = 74086,
+    note = L['in_cave'] .. ' ' .. L['weeping_vilomah_note'],
+    rewards = {
+        Achievement({id = 16679, criteria = 56153}),
+        Transmog({item = 200214, slot = L['mail']}) -- Grasp of the Weeping Widow
+    },
+    pois = {POI({47547180})} -- Cave entrance
+}) -- The Weeping Vilomah
 
 map.nodes[35027001] = Rare({ -- reqiured 67030 review
     id = 193146,
     quest = 70947,
-    rewards = {Achievement({id = 16679, criteria = 56146})}
+    note = L['in_small_cave'],
+    rewards = {Achievement({id = 16679, criteria = 56146})},
+    pois = {POI({34896938})} -- Entrance
 }) -- Treasure-Mad Trambladd
 
--- map.nodes[] = Rare({
---     id = 193161,
---     quest = 69850,
---     rewards = {
---         Achievement({id = 16679, criteria = 56152}),
---     }
--- }) -- Woolfang
+map.nodes[47884976] = Rare({
+    id = 193161,
+    quest = 69850,
+    note = L['woofang_note'],
+    rewards = {
+        Achievement({id = 16679, criteria = 56152}),
+        Item({item = 200445, note = L['neck']}), -- Lucky Hunting Charm
+        Transmog({item = 200174, slot = L['leather']}) -- Bonesigil Shoulderguards
+    }
+}) -- Woolfang
+
+-------------------------------------------------------------------------------
+
+-- These rares/elites are not part of the adventurer achievement for the zone
+
+map.nodes[55647727] = Rare({
+    id = 193229,
+    quest = 72814, -- 69873
+    rewards = {
+        Item({item = 200880, note = L['trinket']}) -- Wind-Sealed Mana Capsule
+    }
+}) -- Henlare
+
+map.nodes[36757287] = Rare({
+    id = 193273,
+    quest = 72842,
+    rewards = {
+        Transmog({item = 200131, slot = L['dagger']}), -- Reclaimed Survivalist's Dagger
+        Transmog({item = 200193, slot = L['cloth']}) -- Manafrond Sandals
+    }
+}) -- Liskron the Dazzling
 
 -------------------------------------------------------------------------------
 ---------------------------------- TREASURES ----------------------------------
 -------------------------------------------------------------------------------
-
--- https://www.wowhead.com/beta/achievement=16301/treasures-of-thaldraszus#comments
 
 map.nodes[49436289] = Treasure({
     quest = 70611,
@@ -217,25 +253,36 @@ map.nodes[49436289] = Treasure({
     }
 }) -- Acorn Harvester
 
-map.nodes[78001400] = Treasure({ -- required 70407, 70408
-    quest = nil,
-    requires = ns.requirement.Item(198852), -- Bear Termination Orders
-    rewards = {Achievement({id = 16301, criteria = 54812})}
+map.nodes[52607673] = Treasure({
+    quest = 70408,
+    note = L['gem_cluster_note'],
+    requires = {
+        ns.requirement.Reputation(2507, 21, true), -- Dragonscale Expedition
+        ns.requirement.Quest(70833), -- Rumors of the Jeweled Whelplings
+        ns.requirement.Item(198852) -- Bear Termination Orders
+    },
+    rewards = {
+        Achievement({id = 16301, criteria = 54812}), --
+        Item({item = 200863}) -- Glimmering Nozdorite Cluster
+    }
 }) -- Amber Gem Cluster
 
-map.nodes[33967695] = Treasure({
+map.nodes[33967695] = Treasure({ -- add loot
     quest = 70607,
     note = L['cracked_hourglass_note'],
-    requires = ns.requirement.Item(199068), -- Time-Lost Memo
+    requires = {
+        ns.requirement.Quest(72709), -- Funding a Treasure Hunt
+        ns.requirement.Item(199068) -- Time-Lost Memo
+    },
     rewards = {Achievement({id = 16301, criteria = 54810})}
 }) -- Cracked Hourglass
 
-map.nodes[60244164] = Treasure({
+map.nodes[60244164] = Treasure({ -- add loot
     quest = 70609,
     rewards = {Achievement({id = 16301, criteria = 54813})}
 }) -- Elegant Canvas Brush
 
-map.nodes[58168007] = Treasure({ -- required 70538, 70608
+map.nodes[58168007] = Treasure({ -- add loot
     quest = 70608,
     note = L['sandy_wooden_duck_note'],
     requires = ns.requirement.Item(199069), -- Yennu's Map
@@ -243,7 +290,7 @@ map.nodes[58168007] = Treasure({ -- required 70538, 70608
     pois = {POI({54937543})} -- Yennu's Map
 }) -- Sandy Wooden Duck (Sand Pile)
 
-map.nodes[64851655] = Treasure({
+map.nodes[64851655] = Treasure({ -- add loot
     quest = 70610,
     note = L['in_cave'],
     rewards = {Achievement({id = 16301, criteria = 54814})}
@@ -259,8 +306,140 @@ map.nodes[52458361] = Treasure({
     rewards = {
         Pet({item = 201463, id = 3415}) -- Cubbly
     }
-
 }) -- Strange Bear Cub
+
+val.nodes[09535629] = Treasure({
+    quest = 70731,
+    label = '{item:197769}',
+    note = L['tasty_hatchling_treat_note'],
+    parent = map.id,
+    rewards = {
+        Item({item = 198106}) -- Recipe: Tasty Hatchling's Treat
+    }
+}) -- Tasty Hatchling's Treat
+
+-------------------------------------------------------------------------------
+--------------------------------- BATTLE PETS ---------------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[39467359] = PetBattle({
+    id = 197336,
+    rewards = {
+        Achievement({id = 16464, criteria = 55490}), -- Battle on the Dragon Isles
+        ns.reward.Spacer(),
+        Achievement({id = 16501, criteria = 3, oneline = true}), -- Aquatic
+        Achievement({id = 16503, criteria = 3, oneline = true}), -- Beast
+        Achievement({id = 16504, criteria = 3, oneline = true}), -- Critter
+        Achievement({id = 16505, criteria = 3, oneline = true}), -- Dragon
+        Achievement({id = 16506, criteria = 3, oneline = true}), -- Elemental
+        Achievement({id = 16507, criteria = 3, oneline = true}), -- Flying
+        Achievement({id = 16508, criteria = 3, oneline = true}), -- Humanoid
+        Achievement({id = 16509, criteria = 3, oneline = true}), -- Magic
+        Achievement({id = 16510, criteria = 3, oneline = true}), -- Mechanical
+        Achievement({id = 16511, criteria = 3, oneline = true}) -- Undead
+    }
+}) -- Enyobon
+
+map.nodes[56274924] = PetBattle({
+    id = 197350,
+    rewards = {
+        Achievement({id = 16464, criteria = 55493}), -- Battle on the Dragon Isles
+        ns.reward.Spacer(),
+        Achievement({id = 16501, criteria = 6, oneline = true}), -- Aquatic
+        Achievement({id = 16503, criteria = 6, oneline = true}), -- Beast
+        Achievement({id = 16504, criteria = 6, oneline = true}), -- Critter
+        Achievement({id = 16505, criteria = 6, oneline = true}), -- Dragon
+        Achievement({id = 16506, criteria = 6, oneline = true}), -- Elemental
+        Achievement({id = 16507, criteria = 6, oneline = true}), -- Flying
+        Achievement({id = 16508, criteria = 6, oneline = true}), -- Humanoid
+        Achievement({id = 16509, criteria = 6, oneline = true}), -- Magic
+        Achievement({id = 16510, criteria = 6, oneline = true}), -- Mechanical
+        Achievement({id = 16511, criteria = 6, oneline = true}) -- Undead
+    }
+}) -- Setimothes
+
+-------------------------------------------------------------------------------
+----------------------------- PROFESSION TREASURES ----------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[52208050] = PT.Blacksmithing({
+    id = 201006,
+    quest = nil,
+    note = L['pt_smith_draconic_flux_note']
+}) -- Draconic Flux
+
+map.nodes[55203050] = PT.Alchemy({
+    id = 201003,
+    quest = 70278,
+    note = L['pt_alch_furry_gloop_note']
+}) -- Furry Gloop
+
+map.nodes[56104090] = PT.Inscription({
+    id = 201015,
+    quest = 70287,
+    note = L['pt_script_counterfeit_darkmoon_deck_note']
+}) -- Counterfeit Darkmoon Deck
+
+map.nodes[56304120] = PT.Inscription({
+    id = 198659,
+    quest = 70264,
+    note = L['pt_script_forgetful_apprentices_tome_note']
+}) -- Forgetful Apprentice's Tome
+
+map.nodes[56803050] = PT.Leatherworking({
+    id = 198690,
+    quest = nil,
+    note = L['pt_leath_decayed_scales_note']
+}) -- Decayed Scales
+
+map.nodes[56914372] = PT.Jewelcrafting({
+    id = 198656,
+    quest = 70261,
+    note = L['pt_jewel_painters_pretty_jewel_note']
+}) -- Painter's Pretty Jewel
+
+map.nodes[58604580] = PT.Tailoring({
+    id = 201019,
+    quest = 70372,
+    note = L['pt_tailor_ancient_dragonweave_bolt_note']
+}) -- Ancient Dragonweave Bolt
+
+map.nodes[59503840] = PT.Alchemy({
+    id = 198697,
+    quest = 70301,
+    note = L['pt_alch_contraband_concoction_note']
+}) -- Contraband Concoction
+
+map.nodes[59806520] = PT.Jewelcrafting({
+    id = 198682,
+    quest = 70285,
+    note = L['pt_jewel_alexstraszite_cluster_note']
+}) -- Alexstraszite Cluster
+
+map.nodes[59897033] = PT.Enchanting({
+    id = 198800,
+    quest = 70342,
+    note = L['pt_ench_fractured_titanic_sphere_note']
+}) -- Fractured Titanic Sphere
+
+map.nodes[60407970] = PT.Tailoring({
+    id = 198684,
+    quest = 70288,
+    note = L['pt_tailor_miniature_bronze_dragonflight_banner_note']
+}) -- Miniature Bronze Dragonflight Banner
+
+val.nodes[13206368] = PT.Inscription({
+    id = 198669,
+    quest = nil,
+    parent = map.id,
+    note = L['pt_script_how_to_train_your_whelpling_note']
+}) -- How to Train Your Whelpling
+
+map.nodes[61437687] = PM.Mining({
+    id = 194843,
+    quest = 70258,
+    note = L['pt_mining_bridgette_holdug']
+}) -- Bridgette Holdug
 
 -------------------------------------------------------------------------------
 -------------------------------- DRAGON GLYPHS --------------------------------
@@ -276,8 +455,8 @@ map.nodes[46107410] = Dragonglyph({rewards = {Achievement({id = 16099})}}) -- Dr
 map.nodes[66108230] = Dragonglyph({rewards = {Achievement({id = 16098})}}) -- Dragon Glyphs: Temporal Conflux
 map.nodes[72906921] = Dragonglyph({rewards = {Achievement({id = 16107})}}) -- Dragon Glyphs: Thaldrazsus Apex
 map.nodes[61615661] = Dragonglyph({rewards = {Achievement({id = 16103})}}) -- Dragon Glyphs: Tyrhold
-map.nodes[41285813] = Dragonglyph({
-    parent = 2112,
+val.nodes[59293792] = Dragonglyph({
+    parent = map.id,
     rewards = {Achievement({id = 16101})}
 }) -- Dragon Glyphs: Valdrakken
 map.nodes[72125131] = Dragonglyph({rewards = {Achievement({id = 16106})}}) -- Dragon Glyphs: Vault of the Incarnates
@@ -291,7 +470,27 @@ map.nodes[34048484] = Flag({quest = 71222})
 map.nodes[46107397] = Flag({quest = 70024})
 map.nodes[50168163] = Flag({quest = 70039})
 map.nodes[65727498] = Flag({quest = 71223})
-map.nodes[66195378] = Flag({quest = 71224})
+map.nodes[64635672] = Flag({quest = 71224})
+
+-------------------------------------------------------------------------------
+---------------------------- FRAGMENTS OF HISTORY -----------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[38904500] = Fragment({
+    sublabel = L['golden_claw_note'],
+    rewards = {
+        Achievement({id = 16323, criteria = 55031}),
+        Item({item = 198540, quest = 70204})
+    }
+}) -- Golden Claw
+
+map.nodes[57126460] = Fragment({
+    sublabel = L['precious_stone_fragment_note'],
+    rewards = {
+        Achievement({id = 16323, criteria = 55032}),
+        Item({item = 199893, quest = 70805})
+    }
+}) -- Precious Stone Fragment
 
 -------------------------------------------------------------------------------
 ------------------------------- DISTURBED DIRT --------------------------------
@@ -316,17 +515,193 @@ map.nodes[50844623] = Scoutpack()
 map.nodes[52758333] = Scoutpack()
 map.nodes[55456797] = Scoutpack()
 map.nodes[55873598] = Scoutpack()
+map.nodes[59198794] = Scoutpack()
 
 -------------------------------------------------------------------------------
---------------------------------- BATTLE PETS ---------------------------------
+--------------------------------- DRAGONRACES ---------------------------------
 -------------------------------------------------------------------------------
 
-map.nodes[39467359] = PetBattle({
-    id = 197336,
-    rewards = {Achievement({id = 16464, criteria = 55490})}
-}) -- Enyobon
+map.nodes[57767501] = ns.node.Dragonrace({
+    label = '{quest:67095}',
+    normal = {2080, 52, 49},
+    advanced = {2081, 45, 40},
+    rewards = {
+        Achievement({id = 15924, criteria = 1, oneline = true}), -- normal bronze
+        Achievement({id = 15925, criteria = 1, oneline = true}), -- normal silver
+        Achievement({id = 15926, criteria = 1, oneline = true}), -- normal gold
+        Achievement({id = 15936, criteria = 1, oneline = true}), -- advanced bronze
+        Achievement({id = 15937, criteria = 1, oneline = true}), -- advanced silver
+        Achievement({id = 15938, criteria = 1, oneline = true}) -- advanced gold
+    }
+}) -- Flowing Forest Flight
 
-map.nodes[56274924] = PetBattle({
-    id = 197350,
-    rewards = {Achievement({id = 16464, criteria = 55493})}
-}) -- Setimothes
+map.nodes[57256690] = ns.node.Dragonrace({
+    label = '{quest:69957}',
+    normal = {2092, 84, 81},
+    advanced = {2093, 80, 75},
+    rewards = {
+        Achievement({id = 15924, criteria = 2, oneline = true}), -- normal bronze
+        Achievement({id = 15925, criteria = 2, oneline = true}), -- normal silver
+        Achievement({id = 15926, criteria = 2, oneline = true}), -- normal gold
+        Achievement({id = 15936, criteria = 2, oneline = true}), -- advanced bronze
+        Achievement({id = 15937, criteria = 2, oneline = true}), -- advanced silver
+        Achievement({id = 15938, criteria = 2, oneline = true}) -- advanced gold
+    }
+}) -- Tyrhold Trial
+
+map.nodes[37654894] = ns.node.Dragonrace({
+    label = '{quest:70051}',
+    normal = {2096, 72, 69},
+    advanced = {2097, 71, 66},
+    rewards = {
+        Achievement({id = 15924, criteria = 3, oneline = true}), -- normal bronze
+        Achievement({id = 15925, criteria = 3, oneline = true}), -- normal silver
+        Achievement({id = 15926, criteria = 3, oneline = true}), -- normal gold
+        Achievement({id = 15936, criteria = 3, oneline = true}), -- advanced bronze
+        Achievement({id = 15937, criteria = 3, oneline = true}), -- advanced silver
+        Achievement({id = 15938, criteria = 3, oneline = true}) -- advanced gold
+    }
+}) -- Cliffside Circuit
+
+map.nodes[60264179] = ns.node.Dragonrace({
+    label = '{quest:70059}',
+    normal = {2098, 57, 54},
+    advanced = {2099, 57, 52},
+    rewards = {
+        Achievement({id = 15924, criteria = 4, oneline = true}), -- normal bronze
+        Achievement({id = 15925, criteria = 4, oneline = true}), -- normal silver
+        Achievement({id = 15926, criteria = 4, oneline = true}), -- normal gold
+        Achievement({id = 15936, criteria = 4, oneline = true}), -- advanced bronze
+        Achievement({id = 15937, criteria = 4, oneline = true}), -- advanced silver
+        Achievement({id = 15938, criteria = 4, oneline = true}) -- advanced gold
+    }
+}) -- Academy Ascent
+
+map.nodes[39487621] = ns.node.Dragonrace({
+    label = '{quest:70157}',
+    normal = {2101, 64, 61},
+    advanced = {2102, 59, 54},
+    rewards = {
+        Achievement({id = 15924, criteria = 5, oneline = true}), -- normal bronze
+        Achievement({id = 15925, criteria = 5, oneline = true}), -- normal silver
+        Achievement({id = 15926, criteria = 5, oneline = true}), -- normal gold
+        Achievement({id = 15936, criteria = 5, oneline = true}), -- advanced bronze
+        Achievement({id = 15937, criteria = 5, oneline = true}), -- advanced silver
+        Achievement({id = 15938, criteria = 5, oneline = true}) -- advanced gold
+    }
+}) -- Garden Gallivant
+
+map.nodes[58043367] = ns.node.Dragonrace({
+    label = '{quest:70161}',
+    normal = {2103, 53, 50},
+    advanced = {2104, 50, 45},
+    rewards = {
+        Achievement({id = 15924, criteria = 6, oneline = true}), -- normal bronze
+        Achievement({id = 15925, criteria = 6, oneline = true}), -- normal silver
+        Achievement({id = 15926, criteria = 6, oneline = true}), -- normal gold
+        Achievement({id = 15936, criteria = 6, oneline = true}), -- advanced bronze
+        Achievement({id = 15937, criteria = 6, oneline = true}), -- advanced silver
+        Achievement({id = 15938, criteria = 6, oneline = true}) -- advanced gold
+    }
+}) -- Caverns Criss-Cross
+
+-------------------------------------------------------------------------------
+--------------------- TO ALL THE SQUIRRELS HIDDEN TIL NOW ---------------------
+-------------------------------------------------------------------------------
+
+map.nodes[55636757] = ns.node.Squirrel({
+    id = 195869,
+    rewards = {Achievement({id = 16729, criteria = 10})}
+}) -- Diminuitive Boghopper
+
+map.nodes[51695797] = ns.node.Squirrel({
+    id = 196652,
+    rewards = {Achievement({id = 16729, criteria = 11})}
+}) -- Reservoir Filly
+
+map.nodes[51307286] = ns.node.Squirrel({
+    id = 185148,
+    rewards = {Achievement({id = 16729, criteria = 12})}
+}) -- Rocdrop Scarab
+
+-------------------------------------------------------------------------------
+--------------------------- THE DISGRUNTLED HUNTER ----------------------------
+-------------------------------------------------------------------------------
+
+local HemetNesingwaryJr = Class('HemetNesingwaryJr', Collectible, {
+    id = 194590,
+    icon = 236444,
+    sublabel = L['hnj_sublabel'],
+    group = ns.groups.HEMET_NESINGWARY_JR
+}) -- Hemet Nesingwary Jr.
+
+map.nodes[34676541] = HemetNesingwaryJr({
+    rewards = {Achievement({id = 16542, criteria = 55701})}
+}) -- Southern Thaldraszus Hunt
+
+map.nodes[50674562] = HemetNesingwaryJr({
+    rewards = {Achievement({id = 16542, criteria = 55702})}
+}) -- Northern Thaldraszus Hunt
+
+-------------------------------------------------------------------------------
+-------------------------- ONE OF EVERYTHING, PLEASE --------------------------
+-------------------------------------------------------------------------------
+
+val.nodes[60921096] = Collectible({
+    label = '{item:200904}',
+    icon = 237358,
+    note = L['picante_pomfruit_cake_note'],
+    group = ns.groups.SPECIALTIES,
+    parent = map.id,
+    rewards = {Achievement({id = 16621, criteria = 55733})}
+}) -- Picante Pompfruit Cake
+
+val.nodes[29046503] = Collectible({
+    label = '{item:201045}',
+    icon = 133994,
+    note = L['icecrown_bleu_note'],
+    group = ns.groups.SPECIALTIES,
+    parent = map.id,
+    rewards = {Achievement({id = 16621, criteria = 55931})}
+}) -- Icecrown Bleu
+
+map.nodes[50054267] = Collectible({
+    label = '{item:201046}',
+    icon = 132802,
+    note = L['dreamwarding_dripbrew_note'],
+    group = ns.groups.SPECIALTIES,
+    rewards = {Achievement({id = 16621, criteria = 55933})}
+}) -- Dreamwarding Dripbrew
+
+tpf.nodes[61555322] = Collectible({
+    label = '{item:201047}',
+    icon = 134043,
+    note = L['arcanostabilized_provisions_note'],
+    group = ns.groups.SPECIALTIES,
+    parent = map.id,
+    rewards = {Achievement({id = 16621, criteria = 55934})}
+}) -- Arcanostabilized Provisions
+
+map.nodes[38944629] = Collectible({
+    label = '{item:200871}',
+    icon = 4639581,
+    note = L['steamed_scarab_steak_note'],
+    group = ns.groups.SPECIALTIES,
+    rewards = {Achievement({id = 16621, criteria = 55936})}
+}) -- Steamed Scarab Steak
+
+map.nodes[58138299] = Collectible({
+    label = '{item:201089}',
+    icon = 644375,
+    L['craft_creche_crowler_note'],
+    group = ns.groups.SPECIALTIES,
+    rewards = {Achievement({id = 16621, criteria = 55940})}
+}) -- Craft Creche Crowler
+
+map.nodes[52416987] = Collectible({
+    label = '{item:201090}',
+    icon = 134022,
+    note = L['bivigosas_blood_sausages_note'],
+    group = ns.groups.SPECIALTIES,
+    rewards = {Achievement({id = 16621, criteria = 55941})}
+}) -- Bivigosa's Blood Sausages

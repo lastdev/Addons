@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2497, "DBM-Party-Dragonflight", 3, 1198)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20221106015735")
+mod:SetRevision("20221203231852")
 mod:SetCreatureID(186615)
 mod:SetEncounterID(2636)
 --mod:SetUsedIcons(1, 2, 3)
@@ -30,13 +30,13 @@ mod:RegisterEventsInCombat(
 local warnElectricalStorm						= mod:NewSpellAnnounce(384620, 3)
 local warnEnergySurge							= mod:NewSpellAnnounce(384686, 3, nil, "Tank|Healer")
 
-local specWarnLightingStrike					= mod:NewSpecialWarningDodge(384316, nil, nil, nil, 2, 2)
+local specWarnLightingStrike					= mod:NewSpecialWarningMoveAway(384316, nil, nil, nil, 2, 2)
 --local yellInfusedStrikes						= mod:NewYell(361966)
 local specWarnEnergySurge						= mod:NewSpecialWarningDispel(384686, "MagicDispeller", nil, nil, 1, 2)
 --local specWarnGTFO							= mod:NewSpecialWarningGTFO(340324, nil, nil, nil, 1, 8)
 
 local timerLightingStrikeCD						= mod:NewCDTimer(20.2, 384316, nil, nil, nil, 3)
-local timerElectricStormCD						= mod:NewNextTimer(63.4, 384620, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)--60+3sec cast
+local timerElectricStormCD						= mod:NewCDTimer(63.1, 384620, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)--60-61+3sec cast
 local timerEnergySurgeCD						= mod:NewCDTimer(16.5, 384686, nil, "Tank|MagicDispeller", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.MAGIC_ICON)
 
 --local berserkTimer							= mod:NewBerserkTimer(600)
@@ -47,7 +47,7 @@ mod:AddInfoFrameOption(382628, false)
 
 function mod:OnCombatStart(delay)
 	timerEnergySurgeCD:Start(7-delay)
-	timerLightingStrikeCD:Start(10.7-delay)
+	timerLightingStrikeCD:Start(10.6-delay)
 	timerElectricStormCD:Start(30.1-delay)
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(382628))
@@ -68,7 +68,7 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 384316 then
 		specWarnLightingStrike:Show()
-		specWarnLightingStrike:Play("watchstep")
+		specWarnLightingStrike:Play("scatter")
 		timerLightingStrikeCD:Start()
 	elseif spellId == 384620 then
 		warnElectricalStorm:Show()

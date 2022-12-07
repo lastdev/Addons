@@ -15,7 +15,7 @@ local faction = UnitFactionGroup("player")
 local Debug
 do
 	local TextDump = LibStub("LibTextDump-1.0")
-	local debuggable = GetAddOnMetadata(myname, "Version") == 'v2022.26'
+	local debuggable = GetAddOnMetadata(myname, "Version") == 'v2022.29.1'
 	local _window
 	local function GetDebugWindow()
 		if not _window then
@@ -123,15 +123,63 @@ function addon:RegisterMobData(source, data, updated)
 	if not updated then
 		if not self.HASWARNEDABOUTOLDDATA then
 			self.HASWARNEDABOUTOLDDATA = true
-			return self:Print("You have an old SilverDragon_[expansion] folder, which can be removed")
+			return self:Print(("You have an old SilverDragon_%s folder, which can be removed"):format(source))
 		end
 		return
 	end
-	addon.datasources[source] = data
+	if not addon.datasources[source] then addon.datasources[source] = {} end
+	MergeTable(addon.datasources[source], data)
 end
 function addon:RegisterTreasureData(source, data, updated)
 	if not updated then return end
-	addon.treasuresources[source] = data
+	if not addon.treasuresources[source] then addon.treasuresources[source] = {} end
+	MergeTable(addon.treasuresources[source], data)
+end
+do
+	function addon:RegisterHandyNotesData(source, uiMapID, points, defaults)
+		-- convenience for me, really...
+		addon.datasources[source] = addon.datasources[source] or {}
+		addon.treasuresources[source] = addon.treasuresources[source] or {}
+		for coord, point in pairs(points) do
+			if point.npc or point.vignette then
+				if defaults then
+					for k,v in pairs(defaults) do
+						if k == "note" and point[k] then
+							point[k] = v .. "\n" .. point[k]
+						end
+						point[k] = point[k] or v
+					end
+				end
+				local data = {
+					name=point.label,
+					locations={[uiMapID]={coord}},
+					loot=point.loot,
+					notes=point.note,
+					active=point.active,
+					requires=point.require or point.hide_before,
+					vignette=point.vignette,
+					quest=point.quest,
+				}
+				if point.route and type(point.route) == "table" then
+					data.routes = {[uiMapID] = {point.route}}
+				end
+				if point.routes then
+					data.routes = {[uiMapID] = point.routes}
+				end
+				if point.npc then
+					addon.datasources[source][point.npc] = data
+					if point.achievement and point.criteria then
+						if not ns.achievements[point.achievement] then
+							ns.achievements[point.achievement] = {}
+						end
+						ns.achievements[point.achievement][point.npc] = point.criteria
+					end
+				else
+					addon.treasuresources[source][point.vignette] = data
+				end
+			end
+		end
+	end
 end
 do
 	local function addQuestMobLookup(mobid, quest)
@@ -353,8 +401,8 @@ do
 	function addon:IsMobInPhase(id, zone)
 		local phased, poi = true, true
 		if not mobdb[id] then return end
-		if mobdb[id].phase then
-			phased = mobdb[id].phase == C_Map.GetMapArtID(zone)
+		if mobdb[id].art then
+			phased = mobdb[id].art == C_Map.GetMapArtID(zone)
 		end
 		if mobdb[id].poi then
 			poi = checkPois(unpack(mobdb[id].poi))

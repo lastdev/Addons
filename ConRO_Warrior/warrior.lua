@@ -355,7 +355,7 @@ function ConRO.Warrior.Arms(_, timeShift, currentSpell, gcd, tChosen)
 			tinsert(ConRO.SuggestedSpells, _Execute);
 		end
 
-		if _Cleave_RDY and not _DeepWounds_DEBUFF and ((ConRO_AutoButton:IsVisible() and _enemies_in_melee >= 2) or ConRO_AoEButton:IsVisible()) then
+		if _Cleave_RDY and ((ConRO_AutoButton:IsVisible() and _enemies_in_melee >= 2) or ConRO_AoEButton:IsVisible()) then
 			tinsert(ConRO.SuggestedSpells, _Cleave);
 			_Cleave_RDY = false;
 		end
@@ -411,11 +411,11 @@ function ConRO.Warrior.ArmsDef(_, timeShift, currentSpell, gcd, tChosen)
 
 --Rotations	
 	if tChosen[Ability.ImpendingVictory.talentID] then
-		if _ImpendingVictory_RDY and _Player_Percent_Health <= 80 then
+		if _ImpendingVictory_RDY and _Player_Percent_Health <= 70 then
 			tinsert(ConRO.SuggestedDefSpells, _ImpendingVictory);
 		end
 	else
-		if _VictoryRush_RDY and _Victorious_BUFF and _Player_Percent_Health < 100 then
+		if _VictoryRush_RDY and _Victorious_BUFF and _Player_Percent_Health <= 80 then
 			tinsert(ConRO.SuggestedDefSpells, _VictoryRush);
 		end
 	end
@@ -523,12 +523,12 @@ function ConRO.Warrior.Fury(_, timeShift, currentSpell, gcd, tChosen)
 
 --Rotations		
 	for i = 1, 2, 1 do
-		if _Ravager_RDY and ConRO:FullMode(_Ravagers) then
+		if _Ravager_RDY and ConRO:FullMode(_Ravager) then
 			tinsert(ConRO.SuggestedSpells, _Ravager);
 			_Ravager_RDY = false;
 		end
 
-		if _Whirlwind_RDY and not _Whirlwind_BUFF and ((ConRO_AutoButton:IsVisible() and _enemies_in_melee >= 2) or ConRO_AoEButton:IsVisible()) then
+		if _Whirlwind_RDY and tChosen[Passive.ImprovedWhirlwind.talentID] and not _Whirlwind_BUFF and ((ConRO_AutoButton:IsVisible() and _enemies_in_melee >= 2) or ConRO_AoEButton:IsVisible()) then
 			tinsert(ConRO.SuggestedSpells, _Whirlwind);
 		end
 
@@ -631,11 +631,11 @@ function ConRO.Warrior.FuryDef(_, timeShift, currentSpell, gcd, tChosen)
 
 --Rotations	
 	if tChosen[Ability.ImpendingVictory.talentID] then
-		if _ImpendingVictory_RDY and _Player_Percent_Health <= 80 then
+		if _ImpendingVictory_RDY and _Player_Percent_Health <= 70 then
 			tinsert(ConRO.SuggestedDefSpells, _ImpendingVictory);
 		end
 	else
-		if _VictoryRush_RDY and _Victorious_BUFF and _Player_Percent_Health < 100 then
+		if _VictoryRush_RDY and _Victorious_BUFF and _Player_Percent_Health <= 80 then
 			tinsert(ConRO.SuggestedDefSpells, _VictoryRush);
 		end
 	end
@@ -654,11 +654,11 @@ function ConRO.Warrior.Protection(_, timeShift, currentSpell, gcd, tChosen)
 	wipe(ConRO.SuggestedSpells)
 	local Racial, Ability, Passive, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Prot_Ability, ids.Prot_Passive, ids.Prot_Form, ids.Prot_Buff, ids.Prot_Debuff, ids.Prot_PetAbility, ids.Prot_PvPTalent, ids.Glyph;
 --Info
-	local _Player_Level																					= UnitLevel("player");
-	local _Player_Percent_Health 																		= ConRO:PercentHealth('player');
-	local _is_PvP																						= ConRO:IsPvP();
-	local _in_combat 																					= UnitAffectingCombat('player');
-	local _party_size																					= GetNumGroupMembers();
+	local _Player_Level = UnitLevel("player");
+	local _Player_Percent_Health = ConRO:PercentHealth('player');
+	local _is_PvP = ConRO:IsPvP();
+	local _in_combat = UnitAffectingCombat('player');
+	local _party_size = GetNumGroupMembers();
 
 	local _is_PC = UnitPlayerControlled("target");
 	local _is_Enemy = ConRO:TarHostile();
@@ -731,7 +731,7 @@ function ConRO.Warrior.Protection(_, timeShift, currentSpell, gcd, tChosen)
 
 		if _DemoralizingShout_RDY and tChosen[Passive.BoomingVoice.talentID] and ConRO:FullMode(_DemoralizingShout) then
 			tinsert(ConRO.SuggestedSpells, _DemoralizingShout);
-			_DemoralizingShout = false;
+			_DemoralizingShout_RDY = false;
 		end
 
 		if _ShieldCharge_RDY and ConRO:FullMode(_ShieldCharge) then
@@ -828,6 +828,7 @@ function ConRO.Warrior.ProtectionDef(_, timeShift, currentSpell, gcd, tChosen)
 	local _DemoralizingShout, _DemoralizingShout_RDY = ConRO:AbilityReady(Ability.DemoralizingShout, timeShift);
 	local _VictoryRush, _VictoryRush_RDY = ConRO:AbilityReady(Ability.VictoryRush, timeShift);
 		local _Victorious_BUFF = ConRO:Aura(Buff.Victorious, timeShift);
+	local _ImpendingVictory, _ImpendingVictory_RDY = ConRO:AbilityReady(Ability.ImpendingVictory, timeShift);
 	local _IgnorePain, _IgnorePain_RDY = ConRO:AbilityReady(Ability.IgnorePain, timeShift);
 		local _IgnorePain_BUFF = ConRO:Aura(Buff.IgnorePain, timeShift);
 	local _SpellReflection, _SpellReflection_RDY = ConRO:AbilityReady(Ability.SpellReflection, timeShift);
@@ -842,8 +843,14 @@ function ConRO.Warrior.ProtectionDef(_, timeShift, currentSpell, gcd, tChosen)
 		tinsert(ConRO.SuggestedDefSpells, _SpellReflection);
 	end
 
-	if _VictoryRush_RDY and _Victorious_BUFF and _Player_Percent_Health < 100 then
-		tinsert(ConRO.SuggestedDefSpells, _VictoryRush);
+	if tChosen[Ability.ImpendingVictory.talentID] then
+		if _ImpendingVictory_RDY and _Player_Percent_Health <= 70 then
+			tinsert(ConRO.SuggestedDefSpells, _ImpendingVictory);
+		end
+	else
+		if _VictoryRush_RDY and _Victorious_BUFF and _Player_Percent_Health <= 80 then
+			tinsert(ConRO.SuggestedDefSpells, _VictoryRush);
+		end
 	end
 
 	if _LastStand_RDY and _Player_Percent_Health <= 40 then

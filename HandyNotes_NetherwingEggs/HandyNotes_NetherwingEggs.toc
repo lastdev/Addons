@@ -1,0 +1,35 @@
+## Interface: 100002
+## Version: 1.12
+## Author: Taraezor
+## Title: Netherwing Eggs
+## Title-deDE: Eier der Netherschwingen
+## Title-esES: Huevos de Ala Abisal
+## Title-esMX: Huevos de Ala Abisal
+## Title-frFR: Œufs de l'Aile-du-Néant
+## Title-itIT: Uova di Alafatua
+## Title-koKR: 황천날개 알
+## Title-ptBR: Ovos da Asa Etérea
+## Title-ptPT: Ovos da Asa Etérea
+## Title-ruRU: Яйца дракона из стаи Крыльев Пустоты
+## Title-zhCN: 灵翼龙卵
+## Title-zhTW: 靈翼龍卵
+## Notes: Helps you locate |cFF8258FANetherwing Eggs|r
+## Notes-deDE: Hilft dir, die |cFF8258FAEier der Netherschwingen|r zu finden
+## Notes-esES: Ayuda a encontrar los |cFF8258FAHuevos de Ala Abisal|r
+## Notes-esMX: Ayuda a encontrar los |cFF8258FAHuevos de Ala Abisal|r
+## Notes-frFR: Aide à trouver les |cFF8258FAŒufs de l'Aile-du-Néant|r
+## Notes-itIT: Aiuta a trovare le |cFF8258FAUova di Alafatua|r
+## Notes-koKR: |cFF8258FA황천날개 알|r 를 찾을 수 있도록 도와줍니다
+## Notes-ptBR: Ajuda você a localizar |cFF8258FAOvos da Asa Etérea|r
+## Notes-ptPT: Ajuda você a localizar |cFF8258FAOvos da Asa Etérea|r
+## Notes-ruRU: Помогает найти |cFF8258FAЯйца дракона из стаи Крыльев Пустоты|r
+## Notes-zhCN: 帮助你找寻|cFF8258FA灵翼龙卵|r
+## Notes-zhTW: 幫助你找尋|cFF8258FA靈翼龍卵|r
+## X-Category: Map & Minimap
+## X-Curse-Project-ID: 486174
+## X-WoWI-ID: 24013
+## RequiredDeps: HandyNotes
+## SavedVariables: HandyNotes_NetherwingEggsDB
+
+Core.lua
+Data.lua

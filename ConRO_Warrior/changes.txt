@@ -1,18 +1,10 @@
-lightweight tag 732c885274616848a65515b87e9a6a9691d2b050 v10.0.1
-Author:	GitHub <noreply@github.com>
-Date:	Sun Nov 27 16:07:23 2022 -1000
+lightweight tag fae5efd5cf080954f39a334f3a35bea4c074f68b v10.0.6
+Author:	Vae <emuha17@gmail.com>
+Date:	Mon Dec 5 17:54:41 2022 -1000
 
-commit 732c885274616848a65515b87e9a6a9691d2b050
+commit fae5efd5cf080954f39a334f3a35bea4c074f68b
 Author: Vae <emuha17@gmail.com>
-Date:   Sun Nov 27 16:07:23 2022 -1000
+Date:   Mon Dec 5 17:54:41 2022 -1000
 
-    Update ConRO_Warrior.toc
-    
-    toc update
-
-commit d7a01e892bb2a02ae4468e2dfac8b99f364c5e0e
-Author: Vae <emuha17@gmail.com>
-Date:   Sun Nov 27 16:06:11 2022 -1000
-
-    Rotation Update for 10.0.0
+    Victory Rush improvement
 

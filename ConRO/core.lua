@@ -2152,6 +2152,8 @@ function ConRO:OnEnable()
 	self:RegisterEvent('UNIT_EXITED_VEHICLE');
 	self:RegisterEvent('PLAYER_CONTROL_LOST');
 	self:RegisterEvent('PLAYER_CONTROL_GAINED');
+	self:RegisterEvent('PLAYER_GAINS_VEHICLE_DATA');
+	self:RegisterEvent('PLAYER_LOSES_VEHICLE_DATA');
 
 	self:RegisterEvent('PET_BATTLE_OPENING_START');
 	self:RegisterEvent('PET_BATTLE_OVER');
@@ -2233,6 +2235,24 @@ function ConRO:UNIT_ENTERED_VEHICLE(event, unit)
 end
 
 function ConRO:UNIT_EXITED_VEHICLE(event, unit)
+--self:Print(self.Colors.Success .. 'Vehicle!');
+	if unit == 'player' then
+		self:DisableRotation();
+		self:DisableDefense();
+		self:EnableRotation();
+		self:EnableDefense();
+	end
+end
+
+function ConRO:PLAYER_GAINS_VEHICLE_DATA(event, unit)
+--	self:Print(self.Colors.Success .. 'Vehicle!');
+	if unit == 'player' and self.ModuleLoaded then
+		self:DisableRotation();
+		self:DisableDefense();
+	end
+end
+
+function ConRO:PLAYER_LOSES_VEHICLE_DATA(event, unit)
 --self:Print(self.Colors.Success .. 'Vehicle!');
 	if unit == 'player' then
 		self:DisableRotation();

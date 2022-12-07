@@ -1,0 +1,35 @@
+## Interface: 100002
+## Version: 1.20
+## Title: Dark Soil
+## Title-deDE: Dunkle Erde
+## Title-esES: Tierra Oscura
+## Title-esMX: Tierra Oscura
+## Title-frFR: Terre Sombre
+## Title-itIT: Terreno Smosso
+## Title-koKR: 검은 토양
+## Title-ptBR: Solo Negro
+## Title-ptPT: Solo Negro
+## Title-ruRU: Темная земля
+## Title-zhCN: 黑色泥土
+## Title-zhTW: 黑色泥
+## Author: Taraezor
+## Notes: Helps you find the |cFF0070DEDark Soil|r in the Valley of the Four Winds
+## Notes-deDE: Hilft Ihnen, die |cFF0070DEDunkle Erde|r im Tal der Vier Winde zu finden
+## Notes-esES: Te ayuda a encontrar la |cFF0070DETierra Oscura|r en el Valle de los Cuatro Vientos
+## Notes-esMX: Te ayuda a encontrar la |cFF0070DETierra Oscura|r en el Valle de los Cuatro Vientos
+## Notes-frFR: Vous aide à trouver la |cFF0070DETerre Sombre|r dans la Vallée des Quatre vents
+## Notes-itIT: Ti aiuta a trovare la |cFF0070DETerra Oscura|r nella Valle dei Quattro Venti
+## Notes-koKR: 네 바람의 계곡에서 |cFF0070DE검은 토양|r 찾을 수 있도록 도와줍니다.
+## Notes-ptBR: Ajude a encontrar o |cFF0070DESolo Negro|r no Vale dos Quatro Ventos
+## Notes-ptPT: Ajude a encontrar o |cFF0070DESolo Negro|r no Vale dos Quatro Ventos
+## Notes-ruRU: Помогите найти |cFF0070DEТемная земля|r в Долине Четырех Ветров
+## Notes-zhCN: 帮助寻找四风谷的|cFF0070DE黑色泥土
+## Notes-zhTW: 幫助尋找四風谷的|cFF0070DE黑色泥土
+## X-Category: Map & Minimap
+## X-Curse-Project-ID: 491373
+## X-WoWI-ID: 26072
+## RequiredDeps: HandyNotes
+## SavedVariables: HandyNotes_DarkSoilDB
+
+Core.lua
+Data.lua

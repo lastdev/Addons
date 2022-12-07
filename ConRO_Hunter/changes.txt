@@ -1,10 +1,10 @@
-lightweight tag 5142545a75747773dc6d0847c6a8b62feda6fa14 v10.0.5-release
+lightweight tag 4d8049120b156bf62832cfd9e8d3e8f744de2ee1 v10.0.6
 Author:	Vae <emuha17@gmail.com>
-Date:	Sat Nov 26 09:20:12 2022 -1000
+Date:	Sat Dec 3 08:55:28 2022 -1000
 
-commit 5142545a75747773dc6d0847c6a8b62feda6fa14
+commit 4d8049120b156bf62832cfd9e8d3e8f744de2ee1
 Author: Vae <emuha17@gmail.com>
-Date:   Sat Nov 26 09:20:12 2022 -1000
+Date:   Sat Dec 3 08:55:28 2022 -1000
 
-    Under10 fix
+    Found small Multishot error with DoubleTap
 

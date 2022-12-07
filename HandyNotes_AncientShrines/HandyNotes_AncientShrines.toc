@@ -1,0 +1,10 @@
+## Interface: 100002
+## Title: HandyNotes_AncientShrines
+## Notes: Displays the locations of the ancientshrines, usefull for PVP or PVE
+## Author: Frostaphim-Xavius
+## Version: 10.0.0.2
+## SavedVariables: HandyNotes_AncientShrinesDB
+## RequiredDeps: HandyNotes
+
+Core.lua
+Data.lua

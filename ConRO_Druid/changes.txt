@@ -1,16 +1,10 @@
-lightweight tag 7d6b67980434cebad971cb696543f68694b57828 v10.0.1-release
+lightweight tag d870f7fa15d2c2f2e6f7b1017e2ff2ee3d410f09 v10.0.5
 Author:	Vae <emuha17@gmail.com>
-Date:	Sun Nov 20 16:52:13 2022 -1000
+Date:	Fri Dec 2 18:02:41 2022 -1000
 
-commit 7d6b67980434cebad971cb696543f68694b57828
+commit d870f7fa15d2c2f2e6f7b1017e2ff2ee3d410f09
 Author: Vae <emuha17@gmail.com>
-Date:   Sun Nov 20 16:52:13 2022 -1000
+Date:   Fri Dec 2 18:02:41 2022 -1000
 
-    TOC updated
-
-commit 7f318dc39f258dc531c425732cf59f0b78eddd46
-Author: Vae <emuha17@gmail.com>
-Date:   Sun Nov 20 16:51:24 2022 -1000
-
-    Fixed Feral talent check error
+    Celestial Alignment fix
 

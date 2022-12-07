@@ -60,6 +60,7 @@ GoGo_Variables.TestVersion = true
 -- 402 : Mount Up guild perk special (Ground)
 -- 403 : Mount Up guild perk special (Air)
 -- 405 : Water Gliding buff special
+-- 406 : Dragonriding
 -- 501 : Druid flight form
 -- 701 : Ashran Swift Riding Crop special
 -- 10001 : Underwater (speed)
@@ -100,6 +101,8 @@ function GoGo_GetMountDB()
 		[254] = {[36] = true, [53] = true, [404] = true, [10001]=108, [10004]=108}, -- Generic Water Mount
 		[284] = {[39] = true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67}, -- Chauffeured mounts
 		-- No default for type 398
+		[402] = {[406]=true} -- Dragonriding mounts
+		-- Missing type 412
 	
 	}
 

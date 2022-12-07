@@ -62,6 +62,7 @@ local HasteItem = {
 	[230935] = true, -- Drums of the Mountain
 	[309658] = true, -- Drums of Deathly Ferocity
 	[146613] = true, -- Drums of Rage
+	[381301] = true, -- Feral Hide Drums - DF
 }
 
 local warpSpells = {

@@ -3,7 +3,7 @@
 
                                             Hallow's End
 
-                                     v2.02 - 10th November 2022
+                                      v2.03 - 7th December 2022
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----

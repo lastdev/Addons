@@ -1,5 +1,93 @@
 # Changelog
 
+## Changed in v26
+
+* Questids and some added loot for all the ["super rares"](https://www.wowhead.com/news/defeat-super-rares-each-day-for-up-to-385-item-level-gear-330298), thanks to Znuff
+* More profession knowledge questids (Tailoring), thanks again to tfmonk
+* Note renown requirements for some more things
+* Add Fragments of History achievement
+
+## Changed in v25
+
+* Major addition of new rares and loot
+* More profession knowledge thanks to tfmonk; Enchanting and Tailoring are now filled out
+
+## Changed in v24
+
+* Profession knowledge: fixed some locations, added some questids thanks to tfmonk
+* More quest and loot contributions from Marthammor
+* Improved the Bakar locations
+* Don't show dragon race locations until you know dragonriding
+* Show more information about requirements in tooltips
+* Make the label for a unit level requirement prettier
+
+## Changed in v23
+
+* Added the one-time profession masters to the progression knowledge group. (*Also* mostly missing questids, for the same reason.)
+* Improved the check for profession levels - it previously required that the trade skill UI had been opened in that login session before it was reliable; now it'll *mostly* work
+* Added questids for profession knowledge in Inscription, Jewelcrafting, Mining, and Herbalism (thanks again to Marthammor!)
+* Added two missing profession knowledge treasures
+* Added the Temperamental Skyclaw mount in Azure Span
+* Adding some rares and loot across zones
+
+## Changed in v22
+
+* [Profession knowledge treasures](https://www.wowhead.com/guide/professions/knowledge-point-treasure-locations-dragon-isles) have been added, thanks to Marthammor!
+	* They mostly still need questids added, so they won't disappear when you collect them... but expect that in another few days. Getting a character through with every single crafting profession is a pain, who knew?
+* Added missing loot to some achievement treasures that wasn't implemented in beta
+* Dragon race tooltips now show your best times and general loot-rewards from the achievements
+* If you add waypoints for all related points the arrow should now wind up pointing to the closest one
+* The Highest Peaks points now have questids associated, and so will properly disappear once you find them
+* Some additional rares and loot
+
+## Changed in v21
+
+* Add dragon race locations
+* Fix the label for groups in the tooltip showing in unreadable black text
+
+## Changed in v20
+
+* Made some points with routes always show on the minimap
+* Adding of various rares and treasures across all zones
+
+## Changed in v19
+
+* Adding of various rares and treasures across all zones
+
+## Changed in v18
+
+* Minor data improvements in Waking Shores
+* Clean up minimap route lines better when refreshing data
+* Hide the route lines to related points if the connected point is hidden
+
+## Changed in v17
+
+* Fill out more Adventurer rares; Waking Shores is complete
+* Note that Azure Span treasures require level 63 and Thaldraszus treasures require level 64
+* Some other assorted loot and packs
+
+## Changed in v16
+
+* Make the Dragon Glyph icons bigger, since they're so high-priority right at the start
+* Put a few more achievement-icons behind having dragonriding unlocked, to avoid initial clutter
+* Minor amounts of new loot and packs
+
+## Changed in v15
+
+* Add the Honor Our Ancestors achievement to Ohn'ahran Plains
+* Don't show highlight-only routes on the minimap
+
+## Changed in v14
+
+* Fix an error in non-Dragonflight zones (thanks PatrM!)
+* Show the Gleamfish crate for the Great Shellkhan on the minimap
+
+## Changed in v13
+
+* Show route paths on the minimap
+* Explain the Spellwrought Snowman in Azure Span
+* Minor tweaks to rare positions and loots and explorer packs, before the release tomorrow
+
 ## Changed in v12
 
 * Show the Great Swog on the map if you've got coins for it

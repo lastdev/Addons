@@ -1,5 +1,7 @@
 local myname, ns = ...
 
+ns.SetupMapOverlay = nil
+
 ns.hiddenConfig = {
     default_icon = true,
     display = true,

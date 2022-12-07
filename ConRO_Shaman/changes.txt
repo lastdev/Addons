@@ -1,10 +1,10 @@
-lightweight tag 87c03ad60b27f1e49431475a02e263fb4b1adf87 v10.0.2
+lightweight tag 2ee2c13c14159bac814134fec34bf98dbcf74b97 v10.0.3
 Author:	Vae <emuha17@gmail.com>
-Date:	Sun Nov 27 16:11:21 2022 -1000
+Date:	Sun Dec 4 00:15:45 2022 -1000
 
-commit 87c03ad60b27f1e49431475a02e263fb4b1adf87
+commit 2ee2c13c14159bac814134fec34bf98dbcf74b97
 Author: Vae <emuha17@gmail.com>
-Date:   Sun Nov 27 16:11:21 2022 -1000
+Date:   Sun Dec 4 00:15:45 2022 -1000
 
-    Resto lava burst fix
+    Resto DPS rotation update
 

@@ -18,11 +18,13 @@ ns.RegisterPoints(MAPID, {
     [58158005] = { -- Sandy Wooden Duck
         criteria=54811,
         quest=70608,
-        loot={}, -- as of 20221127 this is still placeholder loot item (190190)
+        loot={
+            200827, -- Weathered Sculpture
+        },
         active={ns.conditions.QuestComplete(70538), ns.conditions.Item(199069), any=true}, -- Yennu's Map
         note="Find {item:199069} nearby",
         related={
-            [54937543] = {quest=70538,loot={{199069,quest=70538},},atlas="poi-workorders",active=false,}, -- Yennu's Map
+            [54937543] = {quest=70538,loot={{199069,quest=70538},},atlas="poi-islands-table",active=false,}, -- Yennu's Map
         },
         vignette=5371,
     },
@@ -37,12 +39,16 @@ ns.RegisterPoints(MAPID, {
     [60234160] = { -- Elegant Canvas Brush
         criteria=54813,
         quest=70609,
-        loot={}, -- as of 20221123 this is still placeholder loot item (190190)
+        loot={
+            203206, -- Elegant Canvas Brush (sells for 2112g)
+        },
     },
     [64851650] = { -- Surveyor's Magnifying Glass
         criteria=54814,
         quest=70610,
-        loot={}, -- as of 20221123 this is still placeholder loot item (190190)
+        loot={
+            193036, -- Left-Handed Magnifying Glass (inscription accessory, boe...)
+        },
     },
     [49456291] = { -- Acorn Harvester
         criteria=54815,
@@ -50,35 +56,29 @@ ns.RegisterPoints(MAPID, {
         loot={
             {193066, pet=3275}, -- Chestnut
         },
-        note="Give an acorn to the squirrel",
+        note="Give an acorn to the squirrel; you may have to /reloadui after picking up the acorn before you can give it",
     },
 }, {
     achievement=16301, -- Treasures
     minimap=true,
-})
-ns.RegisterPoints(MAPID, {
-    [56264118] = { -- Forgetful Apprentice's Tome
-        quest=70264,
-        loot={
-            198659, -- Forgetful Apprentice's Tome (+inscription)
-        },
-        note="Inscription",
-        vignette=5291,
-    },
+    hide_before=ns.conditions.Level(64),
 })
 
 -- Rares
 ns.RegisterPoints(MAPID, {
     -- https://www.wowhead.com/beta/achievement=16679/adventurer-of-thaldraszus
-    --[[
-    [] = { -- Razk'vex the Untamed
+    [51534871] = { -- Razk'vex the Untamed
         criteria=56133,
         quest=69853,
         npc=193143,
-        loot={},
+        loot={
+            200131, -- Reclaimed Survivalist's Dagger
+        },
+        note="Runs around, you can jump on it",
+        route={53104363, 53124230, 51624534, 50304953, 51534871, 52714652, loop=true},
+        minimap=true,
         vignette=5180,
     },
-    --]]
     [57968158] = { -- Innumerable Ruination
         criteria=56135,
         quest=nil,
@@ -90,46 +90,68 @@ ns.RegisterPoints(MAPID, {
     [31737253] = { -- Blightpaw the Depraved
         -- overlaps a bit with plains @ 90204020
         criteria=56136,
-        quest=nil,
+        quest=73869,
         npc=193128,
-        loot={},
+        loot={
+            {200178, toy=true}, -- Infected Ichor
+            {197150, quest=69351}, -- Highland Drake: Spiked Club Tail
+            {196986, quest=69186}, -- Cliffside Wylderdrake: Black Hair
+            {196973, quest=69173}, -- Cliffside Wylderdrake: Dual Horned Chin
+            {196982, quest=69182}, -- Cliffside Wylderdrake: Ears
+            200266, -- Gnollish Chewtoy Launcher
+            200127, -- Gold-Alloy Blade
+            200432, -- Rotguard Cowl
+        },
+        note="Talk to {npc:193222:Archaeologist Koranir} to spawn. Also spawns with {npc:193231:Ancient Tundrafur}. Casts a curse as well.",
     },
-    --[[
-    [] = { -- Pleasant Alpha
+    [38107820] = { -- Pleasant Alpha
         criteria=56137,
-        quest=72806,
+        quest=73889, -- 72806 on criteria?
         npc=193130,
-        loot={},
+        loot={
+            {197111, quest=69312}, -- Highland Drake: Maned Head
+            200174, -- Bonesigil Shoulderguards
+            200186, -- Amberquill Shroud
+        },
         vignette=5479,
     },
-    [] = { -- Goremaul the Gluttonous
+    [53424101] = { -- Goremaul the Gluttonous
         criteria=56138,
         quest=nil,
         npc=193125,
-        loot={},
+        loot={
+            200436, -- Gorestained Hauberk
+        },
     },
-    [] = { -- Phenran
+    [59806100] = { -- Phenran
         criteria=56140,
         quest=69976,
         npc=193688,
-        loot={},
+        loot={
+            200146, -- Phenran's Discordant Smasher
+        },
         vignette=5248,
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
-    [] = { -- Matriarch Remalla
+    [52805920] = { -- Matriarch Remalla
         criteria=56141,
         quest=69883,
         npc=193246,
-        loot={},
+        loot={
+            200257, -- Decay Infused Branch
+        },
         vignette=5204,
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
-    --]]
     [57208420] = { -- Phleep
         criteria=56142,
         quest=69866,
         npc=193210,
-        loot={},
+        loot={
+            {197130, quest=69331}, -- Highland Drake: Stag Horns
+            {200148, toy=true,}, -- A Collection Of Me
+            200202, -- Tomorrow's Chains
+        },
         vignette=5192,
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
@@ -151,15 +173,17 @@ ns.RegisterPoints(MAPID, {
         vignette=5431,
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
-    --[[
-    [] = { -- Eldoren the Reborn
+    [47805120] = { -- Eldoren the Reborn
         criteria=56147,
         quest=69875,
         npc=193234,
-        loot={},
+        loot={
+            200284, -- Phoenix Feather Pendant
+        },
         vignette=5198,
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
+    --[[
     [] = { -- Riverwalker Tamopo
         criteria=56148,
         quest=69880,
@@ -178,16 +202,15 @@ ns.RegisterPoints(MAPID, {
         -- hide_before=ns.MAXLEVEL, -- TODO
         -- path=59416977, -- too close to need
     },
-    --[[
-    [] = { -- Sandana the Tempest
+    [37387792] = { -- Sandana the Tempest
         criteria=56150,
         quest=69859,
         npc=193176,
         loot={},
+        path=38517642,
         vignette=5185,
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
-    --]]
     [50005180] = { -- Rokmur
         criteria=56151,
         quest=69966,
@@ -196,28 +219,32 @@ ns.RegisterPoints(MAPID, {
         vignette=5238,
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
-    --[[
-    [] = { -- Woolfang
+    [47914980] = { -- Woolfang
         criteria=56152,
         quest=69850,
         npc=193161,
         loot={},
+        note="Pet {npc:193156:Wooly Lamb}",
         vignette=5177,
     },
-    --]]
     [46287298] = { -- The Weeping Vilomah
-        -- TODO: this is the vignette-location, I haven't actually found the route to it yet...
         criteria=56153,
-        quest=65365,
+        quest=74086, -- 65365
         npc=183984,
-        loot={},
+        loot={
+            200214, -- Grasp of the Weeping Widow
+        },
+        note="In cave, talk to {npc:193206:Boomhooch the Lost} to summon",
+        path=47537168,
         vignette=4958,
     },
     [52806760] = { -- Craggravated Elemental
         criteria=56154,
         quest=69964,
         npc=193663,
-        loot={},
+        loot={
+            200298, -- Stoneshaped Greatbelt
+        },
         vignette=5237,
     },
     [38436824] = { -- The Great Shellkhan
@@ -233,24 +260,26 @@ ns.RegisterPoints(MAPID, {
     },
     [44806900] = { -- Corrupted Proto-Dragon
         criteria=56156,
-        quest=69962,
+        quest=74060, --69962
         npc=193658,
-        loot={},
+        loot={
+            200166, -- Corrupted Drake Horn
+        },
         vignette=5235,
         note="Interact with the egg inside the cave",
     },
-    --[[
-    [] = { -- Lord Epochbrgl
+    [62208180] = { -- Lord Epochbrgl
         criteria=56157,
         quest=69882,
         npc=193241,
-        loot={},
+        loot={
+            200185, -- Grips of the Everflowing Ocean
+        },
         vignette=5203,
     },
-    --]]
     [59545917] = { -- Ancient Protector
         criteria=56158,
-        quest=69963,
+        quest=74055, -- 69963
         npc=193664,
         loot={},
         vignette=5236,
@@ -259,29 +288,35 @@ ns.RegisterPoints(MAPID, {
     achievement=16679, -- Adventurer
 })
 ns.RegisterPoints(MAPID, {
-    [37538339] = { -- Private Shikzar
+    [37538339] = { -- Private Shikzar. -- despawns without any loot, asks you to help comrades at the South Hold Gate... -- something to remove his debuff first, maybe?
         quest=70986,
         npc=193127,
         loot={},
         vignette=5406,
+        note = "Ask him what's wrong. He attacks after.",
     },
     [36808557] = { -- Lookout Mordren
         quest=72813, -- 69967 on vignette?
         npc=193668,
         loot={
+            -- 200122, -- Temporal Spyglass
             200182, -- Riveted Drape
+            200292, -- Cragforge Pauldrons
         },
         vignette=5239,
-        -- despawns without any loot, asks you to help comrades at the South Hold Gate... -- something to remove his debuff first, maybe?
     },
     [37777413] = { -- Acrosoth
         quest=72834, -- 72114
         npc=193243,
         loot={
+            {196992, quest=69192}, -- Cliffside Wylderdrake: Heavy Horns
             {197403, quest=69604}, -- Renewed Proto-Drake: Club Tail
+            200228, -- Protoscale Pauldrons
         },
-        vignette=5436,
         note="Flying nearby",
+        route={37777413, 36307560, 36507860, 38407940, 40107780, 39507500, loop=true},
+        minimap=true,
+        vignette=5436,
     },
     [55797732] = { -- Henlare
         quest=69873, -- 72814
@@ -292,10 +327,12 @@ ns.RegisterPoints(MAPID, {
         vignette=5196,
     },
     [36737280] = { -- Liskron the Dazzling
-        quest=72842, -- vignette 72116
+        quest=72116, -- 72842
         npc=193273,
         loot={
             {196976, quest=69176}, -- Cliffside Wylderdrake: Head Mane
+            200193, -- Manafrond Sandals
+            200174, -- Bonesigil Shoulderguards
         },
         vignette=5437,
     },

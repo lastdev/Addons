@@ -56,6 +56,10 @@ if IDTip.Helpers.IsDragonflight() or IDTip.Helpers.IsPTR() then
         GameTooltip:Show()
       end)
 
+      hooksecurefunc(AchievementTemplateMixin, "OnLeave", function(self)
+        GameTooltip:Hide()
+      end)
+
       hooksecurefunc("AchievementFrameSummaryAchievement_OnEnter", function(self)
         GameTooltip:SetOwner(self, "ANCHOR_NONE")
         GameTooltip:SetPoint("TOPLEFT", self, "TOPRIGHT", 0, 0)
@@ -107,6 +111,44 @@ if IDTip.Helpers.IsDragonflight() or IDTip.Helpers.IsPTR() then
         end)
 
         frame:HookScript("OnLeave", function()
+          GameTooltip:Hide()
+        end)
+      end)
+
+      hooksecurefunc(fr, "GetMeta", function(self, asdf)
+        local frame = self:GetElementAtIndex("MetaCriteriaTemplate", self.metas, asdf,
+          AchievementButton_LocalizeMetaAchievement)
+
+        local _i = asdf
+
+        local _frame_onenter = frame.OnEnter
+        local _frame_onleave = frame.OnLeave
+
+        frame:SetScript("OnEnter", function(...)
+          local self = ...
+          if _frame_onenter then
+            _frame_onenter(...)
+          end
+          local button = self:GetParent() and self:GetParent():GetParent()
+          if not button or not button.id or _i == 0 then
+            return
+          end
+
+          local criteriaid = select(10, GetAchievementCriteriaInfo(button.id, _i))
+
+          GameTooltip:SetOwner(button:GetParent(), "ANCHOR_NONE")
+          GameTooltip:SetPoint("TOPLEFT", button, "TOPRIGHT", 0, 0)
+          IDTip:addLine(GameTooltip, button.id, IDTip.kinds.achievement)
+          IDTip:addLine(GameTooltip, criteriaid, IDTip.kinds.criteria)
+          GameTooltip:Show()
+        end)
+
+        -- frame:HookScript("OnEnter", )
+
+        frame:SetScript("OnLeave", function(...)
+          if _frame_onleave then
+            _frame_onleave(...)
+          end
           GameTooltip:Hide()
         end)
       end)
@@ -314,6 +356,14 @@ if IDTip.Helpers.IsDragonflight() or IDTip.Helpers.IsPTR() then
     ProfessionsFrame.SpecPage.DetailedView.Path:HookScript("OnEnter", hookProfSpecPathEnter)
 
     hooksecurefunc(ProfessionsSpecPathMixin, "OnEnter", hookProfSpecPathEnter)
+
+    hooksecurefunc(QuestInfoReputationRewardButtonMixin, "SetUpMajorFactionReputationReward",
+      function(self, rewardInfo)
+        self.factionID = rewardInfo.factionID
+      end)
+    hooksecurefunc(QuestInfoReputationRewardButtonMixin, "OnEnter", function(self)
+      IDTip:addLine(GameTooltip, self.factionID, IDTip.kinds.faction)
+    end)
 
     -- local function gameobjecthandler(tooltip, tooltipData)
     --   -- DevTools_Dump(tooltipData)

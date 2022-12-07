@@ -178,7 +178,7 @@ L["CONFIG_UNDERCUT_SCAN_NOT_LIFO_TOOLTIP_HEADER"] = "Unterboten-Scan für Ausrü
 L["CONFIG_UNDERCUT_SCAN_NOT_LIFO_TOOLTIP_TEXT"] = "Lasse diese Option aktiviert, um Auktionen für Haustiere und Ausrüstung einzuschließen, wenn der Unterboten-Scan verwenden wird. Schalten diese Option aus, um Haustiere und Ausrüstung auszuschließen."
 L["CONFIG_VENDOR_TOOLTIP"] = "Zeige Händlerinfos an."
 L["CONFIRM"] = "Bestätigen"
-L["CONFIRM_POST_BELOW_VENDOR"] = "Du kannst mehr Gold machen, um dies an einen Händler zu verkaufen. Bist du sicher, dass du zu diesem Preis erstellen möchtest?"
+L["CONFIRM_POST_BELOW_VENDOR"] = "Du kannst mehr Gold machen, indem du dies an einen Händler verkaufst. Bist du sicher, dass du zu diesem Preis erstellen möchtest?"
 L["CONFIRM_POST_LOW_PRICE"] = "Der Preis von %s sieht etwas niedrig aus. Bist du sicher, dass du zu diesem Preis erstellen möchtest?"
 L["CONFIRM_POST_PRICE_DROP"] = "Der Einheitspreis von %s ist ein großer Preissturz. Bist du sicher, dass du zu diesem Preis erstellen möchtest?"
 L["CONFIRM_X_TOTAL_PRICE_X"] = "Bestätigen %s, Gesamtpreis %s"
@@ -320,6 +320,7 @@ L["PROSPECT_TOOLTIP_TOOLTIP_TEXT"] = "Zeigt für Juwelierkunst die Aussicht beim
 L["PURCHASED_X_XX"] = "Gekauft %s x%s"
 L["QUANTITY"] = "Menge"
 L["REAGENT_SEARCH"] = "Reagenzien-Suche"
+L["REAGENTS_VALUE_COLON"] = "Reagenzienwert:"
 L["REALM_HISTORY"] = "Realm Verlauf"
 L["RECENT_SEARCHES"] = "Aktuelle Suchen"
 L["REFRESH"] = "Aktualisierung"
@@ -360,6 +361,40 @@ L["SHOPPING_TAB"] = "Einkaufen"
 L["SHOPPING_TAB_HEADER_2"] = "Auctionator - Einkaufen"
 L["SKIP"] = "Überspringen"
 L["SORT"] = "Sortieren"
+L["SPLASH_100015_ALL_VERSIONS_1"] = "Autovervollständigung von Suchbegriffen bei der Suche in der Registerkarte Einkaufen."
+L["SPLASH_100015_ALL_VERSIONS_2"] = "Die Begriffe der Schnellsuche können nach einer Suche sofort in der Registerkarte Einkaufen bearbeitet werden."
+L["SPLASH_100015_ALL_VERSIONS_3"] = "Option zur Übernahme der zuletzt gewählten Dauer in der Registerkarte Verkaufen."
+--[[Translation missing --]]
+L["SPLASH_100015_ALL_VERSIONS_4"] = "Both crafting cost and profit can be displayed simultaneously in the crafting views."
+L["SPLASH_100015_ALL_VERSIONS_5"] = "Die Bildlaufbereiche wurden verbessert und laufen nun flüssiger."
+L["SPLASH_100015_ALL_VERSIONS_6"] = "Allgemeine Bugfixes und Kompatibilitätsanpassungen für WoW."
+L["SPLASH_100015_ALL_VERSIONS_HEADER"] = "Neue Funktionen für alle Versionen"
+--[[Translation missing --]]
+L["SPLASH_100015_CLASSIC_1"] = "Warning when posting with a massive undercut (50% or more) to reduce mistakes."
+--[[Translation missing --]]
+L["SPLASH_100015_CLASSIC_2"] = "New optional \"Top?\" column in the Shopping tab to see if your auction is top for an item."
+--[[Translation missing --]]
+L["SPLASH_100015_CLASSIC_3"] = "Prospecting ore estimated values as an optional tooltip."
+--[[Translation missing --]]
+L["SPLASH_100015_CLASSIC_4"] = "Milling herb estimated values as an optional tooltip."
+--[[Translation missing --]]
+L["SPLASH_100015_CLASSIC_5"] = "Shows posting history as an extra option in an item's price history view."
+--[[Translation missing --]]
+L["SPLASH_100015_CLASSIC_6"] = "In the Selling tab removed extra scan after posting an item."
+--[[Translation missing --]]
+L["SPLASH_100015_CLASSIC_7"] = "Option to prevent the post button going grey/disabled and to allow attempts to post immediately, with no-cost retries on failure."
+--[[Translation missing --]]
+L["SPLASH_100015_CLASSIC_HEADER"] = "Recent features for Classic"
+--[[Translation missing --]]
+L["SPLASH_100015_DESCRIPTION"] = "Lots of improvements, including compatibility with Dragonflight"
+--[[Translation missing --]]
+L["SPLASH_100015_RETAIL_1"] = "Crafting cost and profit updates based on the reagents and quality selected."
+--[[Translation missing --]]
+L["SPLASH_100015_RETAIL_2"] = "Selling tab has an expanded prices view with historical prices available in a separate tab. Reverting to the split screen view is available as an option."
+--[[Translation missing --]]
+L["SPLASH_100015_RETAIL_3"] = "Reagents value on the auction house is shown when listing a crafting order."
+--[[Translation missing --]]
+L["SPLASH_100015_RETAIL_HEADER"] = "Recent features for Retail"
 L["SPLASH_830_BUGS_1"] = "Besuche uns auf dem Auctionator Discord-Server %s"
 L["SPLASH_830_BUGS_2"] = "Fehler bitte über Github melden %s"
 L["SPLASH_830_BUGS_3"] = "Wir sind am aktivsten auf Discord und nehmen keine Fehlerberichte über Curseforge oder Auctionatorforen auf."

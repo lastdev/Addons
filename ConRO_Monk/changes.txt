@@ -1,12 +1,10 @@
-commit 20ca3c854b692bd8dc7d097c3301aa783bbeb990
+lightweight tag 22260d381da9ee4b071c3683b2577ad21cce283e v10.0.1
+Author:	Vae <emuha17@gmail.com>
+Date:	Fri Dec 2 11:54:06 2022 -1000
+
+commit 22260d381da9ee4b071c3683b2577ad21cce283e
 Author: Vae <emuha17@gmail.com>
-Date:   Sat Nov 19 23:45:21 2022 -1000
+Date:   Fri Dec 2 11:54:06 2022 -1000
 
-    Update ConRO_Monk.toc
-
-commit f5c9392a96d841efcb03b24586d65b0f81235ef4
-Author: Vae <emuha17@gmail.com>
-Date:   Mon Nov 14 18:56:19 2022 -1000
-
-    Initial Git Creation
+    Rotational update for DF
 

@@ -1,18 +1,36 @@
 ## Interface: 100002
-## Title: HandyNotes: Long-Forgotten Hippogryph
-## Notes: Find those Ephemeral Crystals!
-## Author: Kemayo
-## Version: v10
-## DefaultState: enabled
-## X-Category: Achievements
-## X-eMail: kemayo @ gmail DOT com
-## X-Curse-Project-ID: 102309
-## SavedVariables: HandyNotes_LongForgottenHippogryphDB
+## Version: 1.10
+## Author: Taraezor
+## Title: Long-Forgotten Hippogryph
+## Title-deDE: 
+## Title-esES: 
+## Title-esMX: 
+## Title-frFR: 
+## Title-itIT: 
+## Title-koKR: 
+## Title-ptBR: 
+## Title-ptPT: 
+## Title-ruRU: 
+## Title-zhCN: 
+## Title-zhTW: 
+## Notes: Helps you to obtain the |cFFCA64EFLong-Forgotten Hippogryph|r
+## Notes-deDE: Hilft Ihnen, den |cFFCA64EFLang vergessener Hippogryph|r zu erhalten
+## Notes-esES: Te ayuda a obtener el |cFFCA64EFHipogrifo olvidado hace tiempo|r
+## Notes-esMX: Te ayuda a obtener el |cFFCA64EFHipogrifo olvidado hace tiempo|r
+## Notes-frFR: Vous aide à obtenir |cFFCA64EFl'hippogriffe oublié depuis longtemps|r
+## Notes-itIT: Ti aiuta a ottenere |cFFCA64EFl'ippogrifo del Passato|r
+## Notes-koKR: |cFFCA64EF기억 저편의 히포그리프|r 를 얻는 데 도움이됩니다.
+## Notes-koKR-better: |cFFCA64EF오랫동안 잊혀진 히포그리프|r 를 얻는 데 도움이됩니다.   
+## Notes-ptBR: Ajuda você a obter o |cFFCA64EFHipogrifo Esquecido|r
+## Notes-ptPT: Ajuda você a obter o |cFFCA64EFHipogrifo Esquecido|r
+## Notes-ruRU: Помогает получить |cFFCA64EFДавно брошенный Гиппогрифф|r
+## Notes-zhCN: 帮助您获得|cFFCA64EF失落已久的角鹰兽|r
+## Notes-zhTW: 幫助您獲得|cFFCA64EF失落已久的角鷹獸|r
+## X-Category: Map & Minimap
+## X-Curse-Project-ID: 493985
+## X-WoWI-ID: 26086
 ## RequiredDeps: HandyNotes
-## OptionalDeps: !LibUIDropDownMenu
+## SavedVariables: HandyNotes_LongForgottenHippogryphDB
 
-lib\LibUIDropDownMenu\LibUIDropDownMenu.xml
-
-handler\handler.xml
-
-nodes.lua
+Core.lua
+Data.lua

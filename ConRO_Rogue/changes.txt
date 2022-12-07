@@ -1,24 +1,16 @@
-commit e817d05dd98bc12e72793ad344092aad786d9c79
+lightweight tag 0ea867a9264442adf41e6172cbd4e9d3ddbf7b22 v10.0.1
+Author:	Vae <emuha17@gmail.com>
+Date:	Sat Dec 3 12:38:34 2022 -1000
+
+commit cf93975b9a6a3f2499b8f3620b3bc5bdb24c7c66
 Author: Vae <emuha17@gmail.com>
-Date:   Sat Nov 19 23:57:05 2022 -1000
+Date:   Sat Dec 3 12:38:28 2022 -1000
 
-    Update ConRO_Rogue.toc
+    Updated rotation for Dragonflight
 
-commit 8ba0a12ec0d8e55368df8cb1dc8116cb00415ad0
+commit cf93975b9a6a3f2499b8f3620b3bc5bdb24c7c66
 Author: Vae <emuha17@gmail.com>
-Date:   Sat Nov 19 23:56:51 2022 -1000
+Date:   Sat Dec 3 12:38:28 2022 -1000
 
-    Delete rogue_session
-
-commit f56a2f213a66d678f7728812593df820dc4d8332
-Author: Vae <emuha17@gmail.com>
-Date:   Sat Nov 19 23:56:42 2022 -1000
-
-    Delete Rogue
-
-commit 9c6543550cbea96908aeeb9c2be14b8079ce92fd
-Author: Vae <emuha17@gmail.com>
-Date:   Mon Nov 14 18:56:40 2022 -1000
-
-    Initial Git Creation
+    Updated rotation for Dragonflight
 

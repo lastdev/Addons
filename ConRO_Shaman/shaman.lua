@@ -46,7 +46,8 @@ function ConRO:EnableRotationModule(mode)
 		self.Description = 'Shaman Module [Restoration - Healer]';
 		if ConRO.db.profile._Spec_3_Enabled then
 			self.NextSpell = ConRO.Shaman.Restoration;
-			self.ToggleHealer();
+			self.ToggleDamage();
+			self.BlockBurst();
 			ConROWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
 			ConRODefenseWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
 		else
@@ -919,20 +920,20 @@ function ConRO.Shaman.Restoration(_, timeShift, currentSpell, gcd, tChosen, pvpC
 	wipe(ConRO.SuggestedSpells)
 	local Racial, Ability, Passive, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Resto_Ability, ids.Resto_Passive, ids.Resto_Form, ids.Resto_Buff, ids.Resto_Debuff, ids.Resto_PetAbility, ids.Resto_PvPTalent, ids.Glyph;
 --Info
-	local _Player_Level																					= UnitLevel("player");
-	local _Player_Percent_Health 																		= ConRO:PercentHealth('player');
-	local _is_PvP																						= ConRO:IsPvP();
-	local _in_combat 																					= UnitAffectingCombat('player');
-	local _party_size																					= GetNumGroupMembers();
+	local _Player_Level = UnitLevel("player");
+	local _Player_Percent_Health = ConRO:PercentHealth('player');
+	local _is_PvP = ConRO:IsPvP();
+	local _in_combat = UnitAffectingCombat('player');
+	local _party_size = GetNumGroupMembers();
 
-	local _is_PC																						= UnitPlayerControlled("target");
-	local _is_Enemy 																					= ConRO:TarHostile();
-	local _Target_Health 																				= UnitHealth('target');
-	local _Target_Percent_Health 																		= ConRO:PercentHealth('target');
+	local _is_PC = UnitPlayerControlled("target");
+	local _is_Enemy = ConRO:TarHostile();
+	local _Target_Health = UnitHealth('target');
+	local _Target_Percent_Health = ConRO:PercentHealth('target');
 
 --Resources
-	local _Mana, _Mana_Max, _Mana_Percent																= ConRO:PlayerPower('Mana');
-	local _Maelstrom, _Maelstrom_Max																	= ConRO:PlayerPower('Maelstrom');
+	local _Mana, _Mana_Max, _Mana_Percent = ConRO:PlayerPower('Mana');
+	local _Maelstrom, _Maelstrom_Max = ConRO:PlayerPower('Maelstrom');
 
 --Abilities
 	local _Purge, _Purge_RDY 																			= ConRO:AbilityReady(Ability.Purge, timeShift);
@@ -944,18 +945,18 @@ function ConRO.Shaman.Restoration(_, timeShift, currentSpell, gcd, tChosen, pvpC
 		local _LavaBurst_CHARGES																			= ConRO:SpellCharges(_LavaBurst);
 		local _LavaSurge_BUFF 																				= ConRO:Aura(Buff.LavaSurge, timeShift);
 	local _FlameShock, _FlameShock_RDY																	= ConRO:AbilityReady(Ability.FlameShock, timeShift);
-		local _FlameShock_DEBUFF 																			= ConRO:TargetAura(Debuff.FlameShock, timeShift + 4);
+		local _FlameShock_DEBUFF 																			= ConRO:TargetAura(Debuff.FlameShock, timeShift + 6);
 	local _HealingStreamTotem, _HealingStreamTotem_RDY													= ConRO:AbilityReady(Ability.HealingStreamTotem, timeShift);
-
+	local _Stormkeeper, _Stormkeeper_RDY = ConRO:AbilityReady(Ability.Stormkeeper, timeShift);
 	local _EarthShield, _EarthShield_RDY																= ConRO:AbilityReady(Ability.EarthShield, timeShift);
 
 	local _PrimordialWave, _PrimordialWave_RDY															= ConRO:AbilityReady(Ability.PrimordialWave, timeShift);
 		local _PrimordialWave_BUFF																			= ConRO:Aura(Buff.PrimordialWave, timeShift);
 
 --Conditions
-	local _is_moving 																					= ConRO:PlayerSpeed();
-	local _enemies_in_melee, _target_in_melee															= ConRO:Targets("Melee");
-	local _target_in_10yrds 																			= CheckInteractDistance("target", 3);
+	local _is_moving = ConRO:PlayerSpeed();
+	local _enemies_in_melee, _target_in_melee = ConRO:Targets("Melee");
+	local _target_in_10yrds = CheckInteractDistance("target", 3);
 
 		if currentSpell == _LavaBurst then
 			_LavaBurst_CHARGES = _LavaBurst_CHARGES - 1;
@@ -973,15 +974,31 @@ function ConRO.Shaman.Restoration(_, timeShift, currentSpell, gcd, tChosen, pvpC
 
 --Rotations
 	if _is_Enemy then
+		if _Stormkeeper_RDY then
+			tinsert(ConRO.SuggestedSpells, _Stormkeeper);
+			_Stormkeeper_RDY = false;
+		end
+
 		if _FlameShock_RDY and not _FlameShock_DEBUFF then
 			tinsert(ConRO.SuggestedSpells, _FlameShock);
+			_FlameShock_DEBUFF = true;
 		end
 
-		if _LavaBurst_RDY and _LavaBurst_CHARGES >= 1 then
+		if _LavaBurst_RDY and _LavaBurst_CHARGES >= 1 and ConRO_SingleButton:IsVisible() then
 			tinsert(ConRO.SuggestedSpells, _LavaBurst);
+			_LavaBurst_CHARGES = _LavaBurst_CHARGES - 1;
 		end
 
-		if _LightningBolt_RDY then
+		if _LavaBurst_RDY and _LavaSurge_BUFF and ConRO_AoEButton:IsVisible() then
+			tinsert(ConRO.SuggestedSpells, _LavaBurst);
+			_LavaSurge_BUFF = false;
+		end
+
+		if _ChainLightning_RDY and ConRO_AoEButton:IsVisible() then
+			tinsert(ConRO.SuggestedSpells, _ChainLightning);
+		end
+
+		if _LightningBolt_RDY and ConRO_SingleButton:IsVisible() then
 			tinsert(ConRO.SuggestedSpells, _LightningBolt);
 		end
 	end

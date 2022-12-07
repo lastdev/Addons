@@ -1,12 +1,12 @@
 <Bindings>
-	<Binding name="GOGOBINDING" header="GOGOHEADER">
+	<Binding name="GOGOBINDING" category="GoGoMount">
 	</Binding>
-	<Binding name="GOGOBINDING2">
+	<Binding name="GOGOBINDING2" category="GoGoMount">
 	</Binding>
-	<Binding name="GOGOBINDING3">
+	<Binding name="GOGOBINDING3" category="GoGoMount">
 	</Binding>
-	<Binding name="GOGOBINDING4">
+	<Binding name="GOGOBINDING4" category="GoGoMount">
 	</Binding>
-	<Binding name="GOGOBINDING5">
+	<Binding name="GOGOBINDING5" category="GoGoMount">
 	</Binding>
 </Bindings>

@@ -1,22 +1,10 @@
-lightweight tag c4950c48b3547988e74497bea48fa9f290c3a29c v10.0.2-03
+lightweight tag f5e56f72634b4a313483c47cc36045bbf453e3a0 v10.0.2-04
 Author:	Dave Hendler <sollaires@gmail.com>
-Date:	Sun Nov 27 15:20:20 2022 -0800
+Date:	Thu Dec 1 11:07:43 2022 -0800
 
-commit c4950c48b3547988e74497bea48fa9f290c3a29c
+commit f5e56f72634b4a313483c47cc36045bbf453e3a0
 Author: Dave Hendler <sollaires@gmail.com>
-Date:   Sun Nov 27 15:20:20 2022 -0800
+Date:   Thu Dec 1 11:07:43 2022 -0800
 
-    Bump version
-
-commit 8d6b98ebfb1c786d0e11615784823255f0c3d3e3
-Author: Dave Hendler <sollaires@gmail.com>
-Date:   Sun Nov 27 15:20:08 2022 -0800
-
-    Fix frame moving
-
-commit feb05dd0d74ac3fbc87ac2b308c35d60bdb6ca88
-Author: Dave Hendler <sollaires@gmail.com>
-Date:   Sat Nov 26 22:13:54 2022 -0800
-
-    Fix a bunch of luacheck warnings
+    Remove Shadowlands features
 

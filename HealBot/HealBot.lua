@@ -215,6 +215,12 @@ function HealBot_SetResetFlag(mode)
       --HealBot_setCall("HealBot_SetResetFlag")
 end
 
+function HealBot_SetToolTip(tip)
+    if not tip:IsOwned(HealBot) then
+        tip:SetOwner(HealBot, 'ANCHOR_NONE')
+    end
+end
+
 local uzText=""
 function HealBot_UnitZone(button)
     if button.player or UnitIsVisible(button.unit) then
@@ -841,12 +847,26 @@ function HealBot_TestBars()
 end
 
 local hbManaWatch={}
+local hbManaWatchTmp={}
 function HealBot_ManaWatch(guid, state)
     if state then
         hbManaWatch[guid]=true
     else
         hbManaWatch[guid]=nil
     end
+end
+
+function HealBot_ManaWatchTmp(guid, state)
+    if state then
+        hbManaWatchTmp[guid]=true
+    else
+        hbManaWatchTmp[guid]=nil
+    end
+end
+
+function HealBot_ManaWatchClear()
+    hbManaWatch={}
+    hbManaWatchTmp={}
 end
 
 local hbManaCurrent, hbManaMax, pLowManaDrinkNeed=0,0,false
@@ -870,6 +890,8 @@ function HealBot_OnEvent_UnitMana(button)
             end
             if hbManaWatch[button.guid] then
                 HealBot_Plugin_ManaWatch_UnitUpdate(button)
+            elseif hbManaWatchTmp[button.guid] then
+                HealBot_Plugin_ManaWatch_ProcessRetry(button)
             end
             HealBot_Aux_setPowerBars(button)
             if button.mouseover and HealBot_Data["TIPBUTTON"] then HealBot_Action_RefreshTooltip() end
@@ -1830,19 +1852,73 @@ if C_Container then
     HealBot_GetContainerItemID=C_Container.GetContainerItemID or GetContainerItemID
 end
 
-local function HealBot_ItemIdsInBag(bag)
-    local itemId=0
-    local numSlots=HealBot_GetContainerNumSlots(bag)
-    for slot = 1,numSlots do
-        itemId=HealBot_GetContainerItemID(bag,slot) or 0
-        if itemId>0 then
-            HealBot_ItemsInBags[itemId]=true
+local HealBot_WellFedItems={}
+local HealBot_ManaDrinkItems={}
+local HealBot_BuffExtraItems={}
+
+function HealBot_retWellFedItems()
+    return HealBot_WellFedItems
+end
+
+function HealBot_retManaDrinkItems()
+    return HealBot_ManaDrinkItems
+end
+
+function HealBot_retBuffExtraItems()
+    return HealBot_BuffExtraItems
+end
+
+local function EnumerateTooltipLines_helper(pattern, ...)
+    local prevText,region=nil,nil
+    for i = 1, select("#", ...) do
+        region = select(i, ...)
+        if region and region:GetObjectType() == "FontString" then
+            if region:GetText() then
+                if string.find(region:GetText(), pattern) then
+                    return prevText or region:GetText()
+                elseif not prevText then
+                    prevText=region:GetText()
+                end
+            end
         end
     end
-    if bag<NUM_BAG_SLOTS then
-        C_Timer.After(0.04, function() HealBot_ItemIdsInBag(bag+1) end)
+    return false
+end
+
+local function HealBot_ItemIdsInBag(bag, slot)
+    if slot<=HealBot_luVars["MaxBagSlots"] then
+        local itemId=HealBot_GetContainerItemID(bag,slot) or 0
+        if itemId>0 and itemId~=82800 then
+            HealBot_ItemsInBags[itemId]=true
+            HealBot_SetToolTip(HealBot_ScanTooltip)
+            local itemText=""
+            HealBot_ScanTooltip:SetBagItem(bag, slot)
+            itemText=EnumerateTooltipLines_helper(HEALBOT_STRING_MATCH_WELLFED, HealBot_ScanTooltip:GetRegions())
+            if itemText then
+                HealBot_WellFedItems[itemText]=true
+            end
+            itemText=EnumerateTooltipLines_helper(HEALBOT_STRING_MATCH_RESTOREMANA, HealBot_ScanTooltip:GetRegions())
+            if itemText then
+                HealBot_ManaDrinkItems[itemText]=true
+            end            
+            itemText=false
+            for j=1, #HEALBOT_STRING_MATCH_EXTRABUFFS do
+                if not itemText then
+                    itemText=EnumerateTooltipLines_helper(HEALBOT_STRING_MATCH_EXTRABUFFS[j], HealBot_ScanTooltip:GetRegions())
+                end
+            end
+            if itemText then
+                HealBot_BuffExtraItems[itemText]=true
+            end
+        end
+        C_Timer.After(0.01, function() HealBot_ItemIdsInBag(bag, slot+1) end)
+    elseif bag<NUM_BAG_SLOTS then
+        HealBot_luVars["MaxBagSlots"]=HealBot_GetContainerNumSlots(bag+1)
+        C_Timer.After(0.02, function() HealBot_ItemIdsInBag(bag+1, 1) end)
     else
-        C_Timer.After(0.04, HealBot_CheckWellFedItems)
+        HealBot_Options_SetBuffExtraItemText()
+        HealBot_luVars["BagsScanned"]=true
+        HealBot_Timers_Set("LAST","InitItemsData")
     end
 end
 
@@ -1850,7 +1926,17 @@ function HealBot_ItemIdsInBags()
     for x,_ in pairs(HealBot_ItemsInBags) do
         HealBot_ItemsInBags[x]=nil;
     end
-    HealBot_ItemIdsInBag(0)
+    for x,_ in pairs(HealBot_WellFedItems) do
+        HealBot_WellFedItems[x]=nil
+    end
+    for x,_ in pairs(HealBot_ManaDrinkItems) do
+        HealBot_ManaDrinkItems[x]=nil
+    end
+    for x,_ in pairs(HealBot_BuffExtraItems) do
+        HealBot_BuffExtraItems[x]=nil
+    end
+    HealBot_luVars["MaxBagSlots"]=HealBot_GetContainerNumSlots(0)
+    C_Timer.After(0.02, function() HealBot_ItemIdsInBag(0, 1) end)
       --HealBot_setCall("HealBot_retItemIdsInBag")
 end
 
@@ -2891,6 +2977,12 @@ function HealBot_SetPlayerData()
         HealBot_Data["PALIVE"]=true
     end
     HealBot_Data["PGUID"]=UnitGUID("player")
+    local _, maxHlth=UnitHealth("player")
+    if maxHlth and maxHlth>1 then
+        HealBot_Aux_setInHealAbsorbMax(maxHlth)
+    else
+        HealBot_Timers_Set("LAST", "SetPlayerData", 5)
+    end
 end
 
 function HealBot_OnEvent_AddOnLoaded(addonName, reset)
@@ -2968,6 +3060,7 @@ function HealBot_OnEvent_VariablesLoaded()
 end
 
 function HealBot_VariablesLoaded()
+    HealBot_SetToolTip(HealBot_ScanTooltip)
     if LSM then
         for i = 1, #HealBot_Default_Textures do
             LSM:Register("statusbar", HealBot_Default_Textures[i].name, HealBot_Default_Textures[i].file)
@@ -3553,6 +3646,7 @@ function HealBot_EnglishClass(unit)
 end
 
 local hbHealthWatch={}
+local hbHealthWatchTmp={}
 function HealBot_HealthWatch(guid, state)
     if state then
         hbHealthWatch[guid]=true
@@ -3561,8 +3655,17 @@ function HealBot_HealthWatch(guid, state)
     end
 end
 
+function HealBot_HealthWatchTmp(guid, state)
+    if state then
+        hbHealthWatchTmp[guid]=true
+    else
+        hbHealthWatchTmp[guid]=nil
+    end
+end
+
 function HealBot_HealthWatchClear()
     hbHealthWatch={}
+    hbHealthWatchTmp={}
 end
 
 local HealBot_Health80 = {
@@ -3627,6 +3730,8 @@ function HealBot_OnEvent_UnitHealth(button)
             HealBot_Action_UpdateHealthButton(button, true)
             if hbHealthWatch[button.guid] then
                 HealBot_Plugin_HealthWatch_UnitUpdate(button)
+            elseif hbHealthWatchTmp[button.guid] then
+                HealBot_Plugin_HealthWatch_ProcessRetry(button)
             end
             if button.status.current<HealBot_Unit_Status["DEAD"] then 
                 if health>0 then
@@ -4098,6 +4203,9 @@ function HealBot_UnitSlowUpdate(button)
             HealBot_Update_AuxRange(button)
             HealBot_Aura_Update_AllIcons(button)
             HealBot_Aux_CheckOverLays(button)
+            HealBot_Text_setNameTag(button)
+            --button.text.name="."
+            HealBot_Text_setNameText(button)
         elseif button.specupdate>0 and button.specupdate<TimeNow and not HealBot_luVars["talentUpdate"] then
             if button.frame<10 then
                 if button.player then
@@ -4984,121 +5092,6 @@ function HealBot_retIsInVehicle(unit)
     return HealBot_UnitInVehicle[unit]
 end
 
-local HealBot_WellFedItems={}
-local HealBot_ManaDrinkItems={}
-local HealBot_BuffExtraItems={}
-
-function HealBot_retWellFedItems()
-    return HealBot_WellFedItems
-end
-
-function HealBot_retManaDrinkItems()
-    return HealBot_ManaDrinkItems
-end
-
-function HealBot_retBuffExtraItems()
-    return HealBot_BuffExtraItems
-end
-
-local function EnumerateTooltipLines_helper(pattern, ...)
-    local prevText,region=nil,nil
-    for i = 1, select("#", ...) do
-        region = select(i, ...)
-        if region and region:GetObjectType() == "FontString" then
-            if region:GetText() then
-                if string.find(region:GetText(), pattern) then
-                    return prevText or region:GetText()
-                elseif not prevText then
-                    prevText=region:GetText()
-                end
-            end
-        end
-    end
-    return false
-end
-
-function HealBot_BagScanBuffExtra(bag)
-    local itemID=0
-    local itemText=false
-    local numSlots=HealBot_GetContainerNumSlots(bag)
-    for slot = 1,numSlots do
-        HealBot_ScanTooltip:SetBagItem(bag, slot)
-        itemText=false
-        for j=1, #HEALBOT_STRING_MATCH_EXTRABUFFS do
-            if not itemText then
-                itemText=EnumerateTooltipLines_helper(HEALBOT_STRING_MATCH_EXTRABUFFS[j], HealBot_ScanTooltip:GetRegions())
-            end
-        end
-        if itemText then
-            HealBot_BuffExtraItems[itemText]=true
-        end
-    end
-    if bag<4 then
-        C_Timer.After(0.04, function() HealBot_BagScanBuffExtra(bag+1) end)
-    else
-        HealBot_Options_SetBuffExtraItemText()
-        HealBot_luVars["BagsScanned"]=true
-        HealBot_Timers_Set("LAST","InitItemsData")
-    end
-end
-
-function HealBot_CheckBuffExtraItems()
-    for x,_ in pairs(HealBot_BuffExtraItems) do
-        HealBot_BuffExtraItems[x]=nil
-    end
-    HealBot_BagScanBuffExtra(0)
-end
-
-function HealBot_BagScanManaDrink(bag)
-    local itemID=0
-    local itemText=""
-    local numSlots=HealBot_GetContainerNumSlots(bag)
-    for slot = 1,numSlots do
-        HealBot_ScanTooltip:SetBagItem(bag, slot)
-        itemText=EnumerateTooltipLines_helper(HEALBOT_STRING_MATCH_RESTOREMANA, HealBot_ScanTooltip:GetRegions())
-        if itemText then
-            HealBot_ManaDrinkItems[itemText]=true
-        end
-    end
-    if bag<4 then
-        C_Timer.After(0.04, function() HealBot_BagScanManaDrink(bag+1) end)
-    else
-        C_Timer.After(0.04, HealBot_CheckBuffExtraItems)
-    end
-end
-
-function HealBot_CheckManaDrinkItems()
-    for x,_ in pairs(HealBot_ManaDrinkItems) do
-        HealBot_ManaDrinkItems[x]=nil
-    end
-    HealBot_BagScanManaDrink(0)
-end
-
-function HealBot_BagScanWellFed(bag)
-    local itemID=0
-    local itemText=""
-    local numSlots=HealBot_GetContainerNumSlots(bag)
-    for slot = 1,numSlots do
-        HealBot_ScanTooltip:SetBagItem(bag, slot)
-        itemText=EnumerateTooltipLines_helper(HEALBOT_STRING_MATCH_WELLFED, HealBot_ScanTooltip:GetRegions())
-        if itemText then
-            HealBot_WellFedItems[itemText]=true
-        end
-    end
-    if bag<4 then
-        C_Timer.After(0.04, function() HealBot_BagScanWellFed(bag+1) end)
-    else
-        C_Timer.After(0.04, HealBot_CheckManaDrinkItems)
-    end
-end
-
-function HealBot_CheckWellFedItems()
-    for x,_ in pairs(HealBot_WellFedItems) do
-        HealBot_WellFedItems[x]=nil
-    end
-    HealBot_BagScanWellFed(0)
-end
-
 function HealBot_Player_InvCheck()
     HealBot_luVars["invCheck"]=false
     HealBot_luVars["BagsScanned"]=false
@@ -5468,28 +5461,28 @@ function HealBot_PlayerCheck()
     end
     if not HealBot_Config_Cures.DebuffWatchWhenMounted then
         if HealBot_luVars["debuffMounted"] then
-            if HealBot_Data["UILOCK"] or not IsMounted() then
+            if not IsMounted() then
                 HealBot_luVars["debuffMounted"]=false
                 HealBot_luVars["CheckAuraFlags"]=true
                 HealBot_Aura_setLuVars("PlayerMounted", false)
             end
         elseif IsMounted() then
             HealBot_luVars["debuffMounted"]=true
-            HealBot_luVars["CheckAuraFlags"]=true
             HealBot_Aura_setLuVars("PlayerMounted", true)
+            HealBot_luVars["CheckAuraFlags"]=true
         end
     end
     if not HealBot_Config_Buffs.BuffWatchWhenMounted then
         if HealBot_luVars["buffMounted"] then
-            if HealBot_Data["UILOCK"] or not IsMounted() then
+            if not IsMounted() then
                 HealBot_luVars["buffMounted"]=false
                 HealBot_luVars["CheckAuraFlags"]=true
                 HealBot_Aura_setLuVars("PlayerMounted", false)
             end
         elseif IsMounted() then
             HealBot_luVars["buffMounted"]=true
-            HealBot_luVars["CheckAuraFlags"]=true
             HealBot_Aura_setLuVars("PlayerMounted", true)
+            HealBot_luVars["CheckAuraFlags"]=true
         end
     end
     if HealBot_luVars["CheckAuraFlags"] then
@@ -6736,7 +6729,7 @@ function HealBot_OnEvent(self, event, ...)
     elseif (event=="INCOMING_SUMMON_CHANGED") then
         HealBot_OnEvent_IncomingSummons(arg1)
     elseif (event=="PLAYER_MOUNT_DISPLAY_CHANGED") then
-        HealBot_Timers_Set("PLAYER","PlayerCheck")
+        HealBot_PlayerCheckExtended()
     elseif (event=="UNIT_ENTERED_VEHICLE") then
         HealBot_OnEvent_VehicleChange(arg1, true)
     elseif (event=="UNIT_EXITED_VEHICLE") then

@@ -1,5 +1,5 @@
-## Interface: 100000
-## Version: 2.02
+## Interface: 100002
+## Version: 2.03
 ## Author: Taraezor
 ## Title: Hallow's End
 ## Title-deDE: Schlotternächte

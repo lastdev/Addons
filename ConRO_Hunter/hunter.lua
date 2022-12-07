@@ -593,6 +593,7 @@ function ConRO.Hunter.Marksmanship(_, timeShift, currentSpell, gcd, tChosen, pvp
 			if _AimedShot_RDY and _AimedShot_CHARGES >= 1 and currentSpell ~= _AimedShot then
 				tinsert(ConRO.SuggestedSpells, _AimedShot);
 				_AimedShot_CHARGES = _AimedShot_CHARGES - 1;
+				_PreciseShots_COUNT = _PreciseShots_COUNT + 1;
 			end
 		end
 
@@ -615,7 +616,7 @@ function ConRO.Hunter.Marksmanship(_, timeShift, currentSpell, gcd, tChosen, pvp
 		end
 
 		if _DoubleTap_BUFF then
-			if _MultiShot_RDY and not _TrickShots_BUFF then
+			if _MultiShot_RDY and not _TrickShots_BUFF and ConRO_AoEButton:IsVisible() then
 				tinsert(ConRO.SuggestedSpells, _MultiShot);
 				_TrickShots_BUFF = true;
 				_PreciseShots_COUNT = _PreciseShots_COUNT - 1;
@@ -623,6 +624,7 @@ function ConRO.Hunter.Marksmanship(_, timeShift, currentSpell, gcd, tChosen, pvp
 			if _AimedShot_RDY and _AimedShot_CHARGES >= 1 and currentSpell ~= _AimedShot and tChosen[Passive.CarefulAim.talentID] and _Target_Percent_Health > 70 then
 				tinsert(ConRO.SuggestedSpells, _AimedShot);
 				_AimedShot_CHARGES = _AimedShot_CHARGES - 1;
+				_PreciseShots_COUNT = _PreciseShots_COUNT + 1;
 			elseif _RapidFire_RDY then
 				tinsert(ConRO.SuggestedSpells, _RapidFire);
 				_RapidFire_RDY = false;
@@ -688,6 +690,7 @@ function ConRO.Hunter.Marksmanship(_, timeShift, currentSpell, gcd, tChosen, pvp
 
 		if _AimedShot_RDY and (not _PreciseShots_BUFF or _Trueshot_BUFF) and currentSpell ~= _AimedShot then
 			tinsert(ConRO.SuggestedSpells, _AimedShot);
+			_PreciseShots_COUNT = _PreciseShots_COUNT + 1;
 			_AimedShot_RDY = false;
 		end
 

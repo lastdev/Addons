@@ -2,6 +2,10 @@ local myname, ns = ...
 
 local MAPID = ns.OHNAHRANPLAINS -- Ohn'ahran Plains
 
+-- forgotten dragon treasure: 53246888
+
+-- Aylaag camp SE: areaPoi 7101
+
 ns.RegisterPoints(MAPID, {
     -- https://www.wowhead.com/beta/achievement=16299/treasures-of-the-ohnahran-plains
     [32413815] = { -- Nokhud Warspear
@@ -24,6 +28,7 @@ ns.RegisterPoints(MAPID, {
             [61014337] = {label="{npc:192997}",quest=67718,loot={{195453,quest=67718}},atlas="poi-workorders",active=false,note="Pet to receive {item:195453}"}, -- Ludo
         },
         note="Fetch {item:195453} from {npc:192997}",
+        vignette=5214,
     },
     [33205532] = { -- Emerald Gem Cluster
         criteria=54700,
@@ -99,19 +104,22 @@ ns.RegisterPoints(MAPID, {
         },
         atlas="SanctumUpgrades-Venthyr-32x32",
         hide_before=ns.conditions.QuestComplete(66676), -- Sneaking In
+        active=ns.conditions.OnQuest(72512), -- A Whispering Breeze
         note="* 3x {item:201929} from {npc:186151:Balakar Khan} in The Nokhud Offensive\n* 1x {item:201323:Essence of Awakening} from {npc:196707:Quartermaster Huseng}\n* 1x {item:191507:Exultant Incense} (Rank 3) from Alchemy",
-        route={57593192,52006320,highlightOnly=true},
+        related={
+            [56467328] = { -- Godoloto
+                -- (at 56797587 before sneaking in)
+                label="{npc:190022:Godoloto}",
+                quest=72512, -- A Whispering Breeze
+                texture=ns.atlas_texture("SanctumUpgrades-Venthyr-32x32",{r=0.5, g=1, b=1}),
+                hide_before=ns.conditions.QuestComplete(66676), -- Sneaking In
+                active=ns.conditions.Item(201929, 3),
+                note="Bring 3x {item:201929} from {npc:186151:Balakar Khan} in The Nokhud Offensive to start {quest:72512}",
+            },
+        },
     },
-    [52006320] = { -- Godoloto
-        -- TODO: confirm location
-        npc=190022,
-        quest=72512, -- A Whispering Breeze
-        texture=ns.atlas_texture("SanctumUpgrades-Venthyr-32x32",{r=0.5, g=1, b=1}),
-        active=ns.conditions.Item(201929, 3),
-        hide_before=ns.conditions.QuestComplete(66676), -- Sneaking In
-        note="Bring 3x {item:201929} from {npc:186151:Balakar Khan} in The Nokhud Offensive to start {quest:72512}",
-        route=57593192,
-    },
+}, {
+    minimap=true,
 })
 
 -- Lizi's Reins mount:
@@ -139,51 +147,96 @@ ns.RegisterPoints(MAPID, {
                 q(71199, "Day 4") ..": 10x {item:192636} from animals\n"..
                 q(71195, "Day 5") ..": 1x {item:200598} from {npc:190015:Ohn Meluun}"
         end,
-    },
-    [53517898] = {
-        npc=190015,
-        quest=71195,
-        hide_before=ns.conditions.QuestComplete(71199), -- day 4
-        loot={200598}, -- Meluun's Green Curry
-        atlas="food", minimap=true,
+        related={
+            [53517898] = {
+                label="{item:200598}",
+                npc=190015,
+                quest=71195,
+                hide_before=ns.conditions.QuestComplete(71199), -- day 4
+                loot={200598}, -- Meluun's Green Curry
+                atlas="food", minimap=true,
+            },
+        },
     },
 }, {
     group="dailymount"
 })
 
+-- Honor Our Ancestors
+local ancestor = ns.nodeMaker{
+    achievement=16423,
+    requires=ns.conditions.AuraActive(369277), -- Essence of Awakening
+    atlas="poi-soulspiritghost",
+}
+ns.RegisterPoints(MAPID, {
+    [85662085] = {
+        label="{spell:369277:Essence of Awakening}",
+        spell=369277,
+        loot={
+            {200630, toy=true}, -- Ohn'ir Windsage's Hearthstone
+        },
+        note="Get the buff, then go talk to the ghosts. They will want stuff...",
+        hide_before=ns.conditions.MajorFaction(ns.FACTION_MARUUK, 7),
+        related={
+            [59703765] = ancestor{criteria=55302, quest=71167, active=ns.conditions.Item(197776)}, -- Maruukai Ancestor, Thrice-Spiced Mammoth Kabob (Cooking)
+            [84902343] = ancestor{criteria=55303, quest=71168, active=ns.conditions.Item(200018)}, -- Timberstep Outpost Ancestor, Enchant Boots - Plainsrunner's Breeze (Enchanting)
+            [75914208] = ancestor{criteria=55304, quest=71169, active=ns.conditions.Item(194690)}, -- Horn of Drusahl Ancestor, Horn o' Mead
+            [73005500] = ancestor{criteria=55305, quest=71170, active=ns.conditions.Item(202070)}, -- Toghusuq Village Ancestor, Exceptional Pelt
+            [84554842] = ancestor{criteria=55306, quest=71171, active=ns.conditions.Item(193470)}, -- Shikaar Highlands Ancestor, Feral Hide Drums (Leatherworking?)
+            [74706980] = ancestor{criteria=55307, quest=71172, active=ns.conditions.Item(190327)}, -- The Carving Winds Ancestor, Awakened Air
+            [63265727] = ancestor{criteria=55308, quest=71173, active=ns.conditions.Item(197788, 2)}, -- Sylvan Glade Ancestor, 2x Braised Bruffalon Brisket
+            [54707838] = ancestor{criteria=55309, quest=71174, active=ns.conditions.Item(202071)}, -- Ohn'iri Springs Ancestor, Elemental Mote
+            [41635670] = ancestor{criteria=55310, quest=71175, active=ns.conditions.Item(190501)}, -- Teerakai Ancestor, Primal Molten Greatbelt (Blacksmithing)
+            [32757029] = ancestor{criteria=55311, quest=71176, active=ns.conditions.Item(191470, 5)}, -- The Eternal Kurgans Ancestor, 5x Writhebark (Herbalism)
+        },
+    },
+}, {
+    achievement=16423,
+})
+
 -- Rares
 ns.RegisterPoints(MAPID, {
     -- https://www.wowhead.com/beta/achievement=16677/adventurer-of-the-ohnahran-plains
-    --[[
-    [] = { -- Sparkspitter Vrak
+    [20403800] = { -- Sparkspitter Vrak
         criteria=56062,
         quest=nil,
         npc=193165,
-        loot={},
+        loot={
+            {196999, quest=69199}, -- Cliffside Wylderdrake: Swept Horns
+            200234, -- Vrak's Embossed Aegis
+        },
     },
-    --]]
     [50027484] = { -- Scav Notail
         criteria=56063,
         quest=69863,
         npc=193136,
-        loot={},
+        loot={
+            200168, -- Gnoll Hide Belt
+        },
         vignette=5187,
     },
-    --[[
-    [] = { -- Enraged Sapphire
+    [56408160] = { -- Enraged Sapphire
         criteria=56064,
         quest=69840,
         npc=193142,
-        loot={},
+        loot={
+            200309, -- Rock Encrusted Chestguard
+        },
         vignette=5173,
     },
-    [] = { -- Seeker Teryx
+    [61801300] = { -- Seeker Teryx
         criteria=56065,
         quest=nil,
         npc=193188,
-        loot={},
+        loot={
+            {196970, quest=69170}, -- Cliffside Wylderdrake: Spiked Back
+            {197105, quest=69306}, -- Highland Drake: Spined Chin
+            {197586, quest=69790}, -- Windborne Velocidrake: Spiked Back
+            {197138, quest=69339}, -- Highland Drake: Striped Pattern
+            200875, -- Seeker's Bands
+            200758, -- Breastplate of Storied Antiquity
+        },
     },
-    --]]
     [31646421] = { -- Zenet Avis
         criteria=56066,
         quest=nil,
@@ -198,13 +251,20 @@ ns.RegisterPoints(MAPID, {
         criteria=56067,
         quest=nil,
         npc=197009,
-        loot={},
+        loot={
+            {197106, quest=69307}, -- Highland Drake: Finned Head
+            {197400, quest=69601}, -- Renewed Proto-Drake: Shark Snout
+            200434, -- Anund's Mana-Singed Amice
+            200446, -- Crystalized Sigil
+        },
     },
     [29426783] = { -- Deadwaker Ghendish
         criteria=56068,
         quest=nil,
         npc=189652,
-        loot={},
+        loot={
+            189055, -- Ghendish's Backup Talisman
+        },
     },
     --[[
     [] = { -- Researcher Sneakwing
@@ -215,14 +275,18 @@ ns.RegisterPoints(MAPID, {
         vignette=5378,
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
-    [] = { -- Mikrin of the Raging Winds
+    --]]
+    [62987932] = { -- Mikrin of the Raging Winds
         criteria=56070,
         quest=69857,
         npc=193173,
-        loot={},
+        loot={
+            200542, -- Breezy Companion
+        },
         vignette=5183,
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
+    --[[
     [] = { -- Ronsak the Decimator
         criteria=56071,
         quest=69878,
@@ -236,20 +300,22 @@ ns.RegisterPoints(MAPID, {
         criteria=56072,
         quest=69667,
         npc=193123,
-        loot={},
+        loot={
+            200216, -- Water Heating Cord
+        },
         vignette=5168,
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
-    --[[
-    [] = { -- Malsegan
+    [71204620] = { -- Malsegan
         criteria=56073,
         quest=69871,
         npc=193212,
-        loot={},
+        loot={
+            200197, -- Armoredon Herding Crook
+        },
         vignette=5195,
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
-    --]]
     [60812677] = { -- Oshigol
         criteria=56074,
         quest=69877,
@@ -263,7 +329,9 @@ ns.RegisterPoints(MAPID, {
         criteria=56075,
         quest=69856,
         npc=193170,
-        loot={},
+        loot={
+            200433, -- Footwraps of Subjugation
+        },
         vignette=5182,
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
@@ -271,39 +339,56 @@ ns.RegisterPoints(MAPID, {
         criteria=56076,
         quest=nil,
         npc=192045,
-        loot={},
+        loot={
+            200141, -- Wind Generating Band
+        },
     },
     [49496663] = { -- Eaglemaster Niraak
         criteria=56077,
-        quest=nil,
+        quest=74063,
         npc=192020,
         loot={
+            200536, -- Tamed Eagle
             {197367, quest=69568}, -- Renewed Proto-Drake: Gray Hair
         },
         vignette=5138,
     },
-    --[[
-    [] = { -- Zarizz
+    [29756131] = { -- Zarizz
         criteria=56078,
-        quest=72364,
+        quest=72364, -- 74091
         npc=193140,
-        loot={},
+        loot={
+            200193, -- Manafrond Sandals
+        },
         vignette=5469,
     },
-    [] = { -- Scaleseeker Mezeri
+    [20304370] = { -- Scaleseeker Mezeri
         criteria=56079,
-        quest=69865,
+        quest=74073, -- 69865?
         npc=193215,
-        loot={},
+        loot={
+            200293, -- Primal Scion's Twinblade
+        },
         vignette=5190,
+        related={
+            [16605120] = {label="{npc:193224:Dawnbell}",note="Bring {item:194681:Sugarwing Cupcakes} from an innkeeper, then follow her to {npc:193215:Scaleseeker Mezeri}"},
+        }
     },
-    --]]
     [29554146] = { -- Shade of Grief
         criteria=56080,
         quest=nil, -- ...no quest changed
         npc=187559,
         loot={
             {196985, quest=69185}, -- Cliffside Wylderdrake: Horned Jaw
+            {197382, quest=69583}, -- Renewed Proto-Drake: White Horns
+            {196996, quest=69196}, -- Cliffside Wylderdrake: Branched Horns
+            {197115, quest=69316}, -- Highland Drake: Thorned Jaw
+            200437, -- Dreamsong Censer
+            200444, -- Mantle of the Gatekeeper
+            -- these might all be generic undead-drops:
+            200256, -- Darkmaul Soul Horn
+            200158, -- Eerie Spectral Ring
+            200310, -- Stole of the Iron Phantom
         },
         vignette=5181, -- Solethus' Gravestone
     },
@@ -373,14 +458,14 @@ ns.RegisterPoints(MAPID, {
         loot={},
         vignette=5140,
     },
-    --[[
-    [] = { -- Vaniik the Stormtouched
+    [83786215] = { -- Vaniik the Stormtouched
         criteria=56090,
         quest=nil,
         npc=192453,
         loot={},
         vignette=5143, -- Vaniik the Corrupted
     },
+    --[[
     [] = { -- Quackers the Terrible
         criteria=56091,
         quest=nil,
@@ -427,11 +512,30 @@ ns.RegisterPoints(MAPID, {
     achievement=16677, -- Adventurer
 })
 ns.RegisterPoints(MAPID, {
+    [81447834] = { -- Seereel, the Spring
+        -- TODO: find the spawn point in Azure Span, which presumably exists?
+        achievement=16678, -- Adventurer of the *Azure Span*
+        criteria=56118,
+        quest=nil,
+        npc=193710,
+        loot={
+            200086, -- Khaz'gorite-infused Resin
+        },
+        note="Throw 5x {item:194701:Ominous Conch} into a Lurker Sighting to summon",
+    },
+    [81207780] = { -- Astray Splasher
+        achievement=16678, -- Adventurer of the *Azure Span*
+        criteria=56130,
+        quest=nil,
+        npc=197411,
+        loot={},
+    },
     [59926695] = { -- Prozela Galeshot
-        quest=69968, -- 72815 also
+        quest=72815, -- 69968 also
         npc=193669,
         loot={
             {197383, quest=69584}, -- Renewed Proto-Drake: Heavy Horns
+            200134, -- Ohuna Mass-Binding Totem
         },
         vignette=5240,
     },
@@ -441,8 +545,10 @@ ns.RegisterPoints(MAPID, {
         loot={
             200442, -- Basilisk Hide Jerkin
             198411, -- Claw of Preparedness
+            {200249, toy=true}, -- Mage's Chewed Wand
             {196976, quest=69176}, -- Cliffside Wylderdrake: Head Mane
         },
+        note="In cave",
         vignette=5389,
     },
     [26356534] = { -- Ripsaw the Stalker
@@ -450,6 +556,7 @@ ns.RegisterPoints(MAPID, {
         npc=193153,
         loot={
             200137, -- Chitin Dreadbringer
+            200186, -- Amberquill Shroud
         },
         vignette=5178,
     },
@@ -475,129 +582,134 @@ ns.RegisterPoints(MAPID, {
         quest=nil,
         npc=193168,
         loot={}, -- only supplies and commendations
-    }
+    },
+    [63044855] = { -- Sunscale Behemoth
+        quest=69837, -- 72849
+        npc=193133,
+        loot={
+            {198409, toy=true}, -- Personal Shell
+        },
+        note="Behind the waterfall",
+    },
 })
 
 -- Who's a Good Bakar?
 ns.RegisterPoints(MAPID, {
     [40915658] = { -- Alli
         criteria=55348,
-        quest=nil,
         npc=197569,
     },
     [84272477] = { -- Baba
         criteria=55316,
-        quest=nil,
         npc=189274,
+        hide_before=ns.conditions.QuestComplete(66006), -- Return to Roscha
     },
     [48994107] = { -- Baga
         criteria=55329,
-        quest=nil,
         npc=196871,
     },
-    [62024276] = { -- Berrel
+    [60603980] = { -- Berrel
         criteria=55326,
-        quest=nil,
         npc=195669,
     },
     [85132240] = { -- Elaichi
         criteria=55317,
-        quest=nil,
         npc=187840,
+        hide_before=ns.conditions.QuestComplete(65954), -- Release the Hounds
     },
     [76683055] = { -- Ellam
         criteria=55321,
-        quest=nil,
         npc=187667,
-        -- might require 66698 to be up
+        hide_before={ns.conditions.MajorFaction(ns.FACTION_MARUUK, 4), ns.conditions.OnQuest(66698)}, -- Counting Argali
     },
     [83902592] = { -- Gentara
         criteria=55320,
-        quest=nil,
         npc=186189,
-    },
-    [70636364] = { -- Hugo
-        criteria=55327,
-        quest=nil,
-        npc=189377,
-        -- in the great hunt camp...
     },
     [80685891] = { -- Laila
         criteria=55331,
-        quest=nil,
         npc=190043,
     },
     [61005230] = { -- Nahma
         criteria=55328,
-        quest=nil,
         npc=192687,
     },
     [84162711] = { -- Pesca
         criteria=55319,
-        quest=nil,
         npc=189278,
+        hide_before=ns.conditions.QuestComplete(65954), -- Release the Hounds
     },
     [81115841] = { -- Rotti
         criteria=55330,
-        quest=nil,
         npc=191405,
     },
     [71624965] = { -- Soyoo
         criteria=55347,
-        quest=nil,
         npc=197514,
+        hide_before=ns.conditions.QuestComplete(67772), -- The Trouble with Taivan
     },
     [84082295] = { -- Tseg
         criteria=55318,
-        quest=nil,
         npc=189276,
+        hide_before=ns.conditions.QuestComplete(65954), -- Release the Hounds
     },
     [81035949] = { -- Wish
         criteria=55324,
-        quest=nil,
         npc=191408,
     },
     --
+    --[[
     [61164002] = { -- Taivan (before quest)
         criteria=55325,
-        quest=nil,
         npc=197518,
         hide_before=ns.conditions.QuestIncomplete(69096), -- Taivan's Purpose
     },
+    --]]
     [61813865] = { -- Taivan (after quest)
         criteria=55325,
-        quest=nil,
         npc=197518,
         hide_before=ns.conditions.QuestComplete(69096), -- Taivan's Purpose
         note="The version summoned by the toy doesn't count",
     },
     --
-    [64014119] = { -- Katei
+    [64004118] = { -- Katei
         criteria=55323,
-        quest=nil,
         npc=196650,
     },
     [64014119] = { -- Vinyu
         criteria=55322,
-        quest=nil,
         npc=196651,
     },
     --
-    [84942509] = { -- Fogl
+    [84932508] = { -- Fogl
         criteria=55315,
-        quest=nil,
         npc=189387,
+        hide_before=ns.conditions.QuestComplete(65954), -- Release the Hounds
     },
     [84942509] = { -- Zephyr
         criteria=55314,
-        quest=nil,
         npc=189388,
+        hide_before=ns.conditions.QuestComplete(65954), -- Release the Hounds
     },
 }, {
     achievement=16424, -- Who's a Good Bakar?
     texture=ns.atlas_texture("WildBattlePet", {}),
     minimap=true,
     -- icon=930453, -- Inv_stbernarddogpet
+})
+-- Hugo
+ns.RegisterPoints(MAPID, {
+    [55605240] = {},
+    [70636364] = {},
+    [71193156] = {},
+}, {
+    achievement=16424, -- Who's a Good Bakar?
+    criteria=55327,
+    npc=189377,
+    note="In the Aylaag Clan camp, wherever it currently is",
+    hide_before=ns.conditions.MajorFaction(ns.FACTION_MARUUK, 4),
+    texture=ns.atlas_texture("WildBattlePet", {}),
+    minimap=true,
 })
 
 -- Sleeping on the Job

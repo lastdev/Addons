@@ -52,16 +52,40 @@ ns.RegisterPoints(MAPID, {
     },
 }, {
     achievement=16300, -- Treasures
+    hide_before=ns.conditions.Level(63),
     minimap=true,
 })
 
 ns.RegisterPoints(MAPID, {
-    [45635482] = {
+    [45635482] = { -- for The Great Shellkhan in Thaldraszus
         achievement=16679, criteria=56155,
         quest=72121,
         loot={200949}, -- Case of Fresh Gleamfish
         note="Quickly take this to {npc:191305} in Thaldraszus @ 38.4, 68.2",
         route={45635482, 52550000, highlightOnly=true},
+        minimap=true,
+    },
+    [18802540] = { -- Temperamental Skyclaw
+        -- Position is deliberately off because he overlaps with the flight point otherwise...
+        -- https://www.wowhead.com/news/how-to-obtain-the-temperament-skyclaw-secret-mount-in-dragonflight-330267
+        label="{item:201454:Temperamental Skyclaw}",
+        npc=190892, -- Zon'Wogi
+        loot={
+            {201454, mount=1674}, -- Temperamental Skyclaw
+        },
+        active={
+            ns.conditions.Item(201420, 20), -- Gnolan's House Special
+            ns.conditions.Item(201421, 20), -- Tuskarr Jerky
+            ns.conditions.Item(201422, 20), -- Flash Frozen Meat
+        },
+        note="Bring stacks of foods that drop from gnolls elsewhere",
+        related={
+            [23074372] = {label="{item:201420}", loot={201420}, note="Kill gnolls in the Inn", active=false,}, -- Gnolan's House Special
+            [34824533] = {label="{item:201421}", loot={201421}, note="Kill Darktooth gnolls", active=false,}, -- Tuskarr Jerky
+            [58234353] = {label="{item:201422}", loot={201422}, note="Kill gnolls; you may need to have done {quest:66730} or {quest:66270} before this will drop", active=false,}, -- Flash Frozen Meat
+        },
+        texture=ns.atlas_texture("stablemaster", {r=0, g=0.8, b=1, scale=1.2}),
+        minimap=true,
     },
 })
 
@@ -79,10 +103,15 @@ ns.RegisterPoints(MAPID, {
     },
     [27804580] = { -- Dragonhunter Gorund
         criteria=56098,
-        quest=66956, -- ?
+        quest=nil,
         npc=193157,
-        loot={},
-        vignette=5126, -- ?
+        loot={
+            200302, -- Magmaforged Scimitar
+            200169, -- Protector's Molten Cudgel
+            200757, -- Qalashi War-Helm
+            {197005, quest=69205}, -- Cliffside Wylderdrake: Horned Nose
+            {197019, quest=69219}, -- Cliffside Wylderdrake: Blunt Spiked Tail
+        },
     },
     [53003560] = { -- Arcane Devourer
         criteria=56099,
@@ -131,65 +160,80 @@ ns.RegisterPoints(MAPID, {
         loot={},
         vignette=5252,
     },
-    [60733168] = { -- Azure Pathfinder
+    [61213127] = { -- Azure Pathfinder
         criteria=56105,
-        quest=nil,
+        quest=73867,
         npc=194210,
         loot={},
+        note="Patrols the icy area",
+        route={61213127, 59163080, 57562986, 54223190, 52023452, 49283837},
+        minimap=true,
     },
     [73002660] = { -- Beogoka
         criteria=56106,
         quest=nil,
         npc=193116,
-        loot={},
+        loot={
+            200673, -- Beogoka's Tooth and Claw
+        },
         vignette=5189,
     },
-    [36803580] = { -- Notfar the Unbearable
-        -- also 46603980?
+    [34053080] = { -- Notfar the Unbearable
         criteria=56107,
         quest=nil,
         npc=193225,
         loot={},
+        note="In cave",
     },
-    --[[
-    [] = { -- Blue Terror
+    [16412781] = { -- Blue Terror
         criteria=56108,
         quest=nil,
         npc=193259,
-        loot={},
+        loot={
+            {197595, quest=69799}, -- Windborne Velocidrake: Finned Ears
+        },
     },
-    [] = { -- Mahg the Trampler
+    [36323583] = { -- Mahg the Trampler
         criteria=56109,
         quest=nil,
         npc=190244,
-        loot={},
+        loot={
+            200157, -- Pathmaker
+        },
+        route={36323583, 46004100, r=0, g=1, b=0}, -- verify
+        minimap=true,
     },
-    [] = { -- Skag the Thrower
+    [26804940] = { -- Skag the Thrower
         criteria=56110,
         quest=72154,
         npc=193149,
-        loot={},
+        loot={
+            200279, -- Competitive Throwing Gauntlets
+        },
         vignette=5440,
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
-    --]]
     [32652915] = { -- Gruffy
         criteria=56111,
         quest=69885,
         npc=193251,
-        loot={},
+        loot={
+            200755, -- Gruffy's Dented Horn
+        },
         vignette=5206,
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
-    --[[
-    [] = { -- Grumbletrunk
+    [19204360] = { -- Grumbletrunk
         criteria=56112,
         quest=69892,
         npc=193269,
-        loot={},
+        loot={
+            200206, -- Behemoth Slayer Greatbow
+        },
         vignette=5210,
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
+    --[[
     [] = { -- Rusthide
         criteria=56113,
         quest=nil,
@@ -199,17 +243,41 @@ ns.RegisterPoints(MAPID, {
     --]]
     [70202520] = { -- Trilvarus Loreweaver
         criteria=56114,
-        quest=69861,
+        quest=69861, -- 74087
         npc=193196,
-        loot={},
+        loot={
+            200549, -- Restored Titan Artifact
+        },
         vignette=5186,
+        note="Use crystals in the tower to the North and bring the energies to {npc:193782}",
+        nearby={70402370, label="{spell:382076}"},
     },
     [49463607] = { -- Fisherman Tinnak
         criteria=56115,
-        quest=70792,
+        quest=74064, -- 70792
         npc=193691,
-        loot={},
+        loot={
+            {197382, quest=69583}, -- Renewed Proto-Drake: White Horns
+            {196985, quest=69185}, -- Cliffside Wylderdrake: Horned Jaw
+            {197098, quest=69299}, -- Highland Drake: Finned Back
+            {197001, quest=69201}, -- Cliffside Wylderdrake: Finned Cheek
+            198070, -- Tattered Seavine
+            200187, -- Rod of Glacial Force
+            200245, -- Leviathan Lure
+            200552, -- Torrent Caller's Shell
+            200164, -- Iceloop
+            -- generic undead?
+            200256, -- Darkmaul Soul Horn
+            200158, -- Eerie Spectral Ring
+            200310, -- Stole of the Iron Phantom
+        },
+        hide_before=ns.conditions.MajorFaction(ns.FACTION_ISKAARA, 7),
         vignette=5475,
+        related={
+            [50523672] = {label="{item:381654:Broken Fishing Pole}", note="Click this first!",},
+            [49973821] = {label="{item:385046:Torn Fishing Net}", note="Click this second!",},
+            [49223842] = {label="{item:385047:Old Harpoon}", note="Click this Third! {npc:193691: Fisherman Tinnak's Ghost} spawns closely nearby.",},
+        },
     },
     --[[
     [] = { -- Snufflegust
@@ -223,12 +291,6 @@ ns.RegisterPoints(MAPID, {
         criteria=56117,
         quest=nil,
         npc=193708,
-        loot={},
-    },
-    [81447834] = { -- Seereel, the Spring
-        criteria=56118,
-        quest=nil,
-        npc=193710,
         loot={},
     },
     --[[
@@ -261,31 +323,40 @@ ns.RegisterPoints(MAPID, {
         },
         note="Complete {spell:388961:Community Feasts}",
     },
-    --[[
-    [] = { -- Blightfur
+    [13602200] = { -- Blightfur
         criteria=56122,
         quest=69858,
         npc=193178,
-        loot={},
+        loot={
+            {197404, quest=69605}, -- Renewed Proto-Drake: Finned Tail
+            {197150, quest=69351}, -- Highland Drake: Spiked Club Tail
+            200310, -- Stole of the Iron Phantom
+            200127, -- Gold-Alloy Blade
+            200432, -- Rotguard Cowl
+        },
         vignette=5184,
     },
-    [] = { -- Archmage Cleary
-        criteria=56123,
-        quest=nil,
-        npc=193255,
-        loot={},
-    },
-    --]]
     [54803420] = { -- Spellwrought Snowman
         criteria=56124,
-        quest=69879,
+        quest=74082, -- 69879 on vignette, didn't actually trigger?
         npc=193238,
-        loot={},
+        loot={
+            200211, -- Snowman's Icy Gaze
+        },
         vignette=5200,
+        note="Collect 10x {npc:193424:Arcane Energy} for {npc:193255: Archmage Cleary} nearby",
+        related={
+            [53913570] = {label="{npc:193255: Archmage Cleary}", atlas="mechagon-projects", note="Gather {npc:193424:Arcane Energy}",},
+        },
+        nearby={
+            54013628, 54083719, 54163467, 53493476, 53393655, 52923710, 52203733, 51683682, 51953565,
+            label="{npc:193424:Arcane Energy}",
+            note="Bring to {npc:193242:Arcane Pedestal}",
+        },
     },
     [11093217] = { -- Snarglebone
         criteria=56125,
-        quest=nil,
+        quest=74032,
         npc=197344,
         loot={},
         vignette=5413,
@@ -293,7 +364,7 @@ ns.RegisterPoints(MAPID, {
     },
     [14483105] = { -- Blisterhide
         criteria=56126,
-        quest=nil,
+        quest=73985,
         npc=197353,
         loot={},
         vignette=5414,
@@ -301,17 +372,31 @@ ns.RegisterPoints(MAPID, {
     },
     [14083747] = { -- Gnarls
         criteria=56127,
-        quest=nil,
+        quest=73996,
         npc=197354,
-        loot={},
+        loot={
+            {197398, quest=69599}, -- Renewed Proto-Drake: Snub Snout
+            200259, -- Forest Dweller's Shield
+            200267, -- Reinforced Garden Tenders
+        },
         vignette=5415,
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
     [16213364] = { -- High Shaman Rotknuckle
         criteria=56128,
-        quest=nil,
+        quest=74004,
         npc=197356,
-        loot={},
+        loot={
+            {200178, toy=true}, -- Infected Ichor
+            {197150, quest=69351}, -- Highland Drake: Spiked Club Tail
+            {196986, quest=69186}, -- Cliffside Wylderdrake: Black Hair
+            {196973, quest=69173}, -- Cliffside Wylderdrake: Dual Horned Chin
+            {196982, quest=69182}, -- Cliffside Wylderdrake: Ears
+            200283, -- Gnoll-Gnawed Breeches
+            200266, -- Gnollish Chewtoy Launcher
+            200127, -- Gold-Alloy Blade
+            200432, -- Rotguard Cowl
+        },
         vignette=5416,
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
@@ -323,19 +408,23 @@ ns.RegisterPoints(MAPID, {
         loot={},
     },
     --]]
-    [81207780] = { -- Astray Splasher
-        criteria=56130,
-        quest=nil,
-        npc=197411,
-        loot={},
-    },
 }, {
     achievement=16678, -- Adventurer
+})
+ns.RegisterPoints(2132, { -- Kargpaw's Den
+    [36803580] = { -- Notfar the Unbearable
+        -- or 46603980?
+        achievement=16678, -- Adventurer
+        criteria=56107,
+        quest=nil,
+        npc=193225,
+        loot={},
+    },
 })
 ns.RegisterPoints(MAPID, {
     [23443327] = { -- Cascade
         npc=186962,
-        quest=72836,
+        quest=72836, -- 72358?
         loot={
             {197098, quest=69299}, -- Highland Drake: Finned Back
             200135, -- Corroded Greatsword
@@ -366,6 +455,7 @@ ns.RegisterPoints(MAPID, {
         loot={
             {201728, quest=72853}, -- Vakril's Strongbox
             {197001, quest=69201}, -- Cliffside Wylderdrake: Finned Cheek
+            {197098, quest=69299}, -- Highland Drake: Finned Back
         },
         vignette=5194,
     },
@@ -376,6 +466,18 @@ ns.RegisterPoints(MAPID, {
             {201440, mount=1553},
         },
         note="Flying",
+    },
+    [36793249] = { -- Sharpfang
+        quest=72846, -- 67173
+        npc=192749,
+        loot={
+            {196982, quest=69182}, -- Cliffside Wylderdrake: Ears
+            {197150, quest=69351}, -- Highland Drake: Spiked Club Tail
+            200266, -- Gnollish Chewtoy Launcher
+            200283, -- Gnoll-Gnawed Breeches
+        },
+        note="Kill the gnolls to summon",
+        vignette=5158, -- Thieving Gnolls (also 5484 Sharpfang)
     },
 })
 

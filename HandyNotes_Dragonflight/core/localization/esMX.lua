@@ -86,6 +86,7 @@ L['follower_type_companion'] = nil
 
 L['context_menu_set_waypoint'] = nil
 L['context_menu_add_tomtom'] = 'Agregar a TomTom'
+L['context_menu_add_group_tomtom'] = nil
 L['context_menu_hide_node'] = 'Ocultar este nodo'
 L['context_menu_restore_hidden_nodes'] = 'Restaurar todos los nodos ocultos'
 
@@ -179,6 +180,8 @@ L['options_toggle_show_notes_desc'] = 'Agregar las notas útiles al tooltip cuan
 --------------------------------- DEVELOPMENT ---------------------------------
 
 L['options_dev_settings'] = 'Desarrollo'
+L['options_toggle_show_debug_currency'] = nil
+L['options_toggle_show_debug_currency_desc'] = nil
 L['options_toggle_show_debug_map'] = 'Debug IDs del Mapa'
 L['options_toggle_show_debug_map_desc'] = 'Muestra información de debug para los mapas'
 L['options_toggle_show_debug_quest'] = 'Debug IDs de las Misiones'

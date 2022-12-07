@@ -633,8 +633,8 @@ spec:RegisterStateTable( "frost_info", {
     last_target_virtual = "nobody",
     watching = true,
 
-    real_brain_freeze = false,
-    virtual_brain_freeze = false
+    -- real_brain_freeze = false,
+    -- virtual_brain_freeze = false
 } )
 
 
@@ -650,9 +650,9 @@ spec:RegisterHook( "COMBAT_LOG_EVENT_UNFILTERED", function( _, subtype, _, sourc
                 frost_info.last_target_actual = destGUID
             end
 
-            if spellID == 44614 then
+            --[[ if spellID == 44614 then
                 frost_info.real_brain_freeze = FindUnitBuffByID( "player", 190446 ) ~= nil
-            end
+            end ]]
         elseif subtype == "SPELL_AURA_REMOVED" and spellID == 190446 then
             brain_freeze_removed = GetTime()
         end
@@ -671,7 +671,7 @@ spec:RegisterHook( "COMBAT_LOG_EVENT_UNFILTERED", function( _, subtype, _, sourc
 end, false )
 
 spec:RegisterStateExpr( "brain_freeze_active", function ()
-    return frost_info.virtual_brain_freeze
+    return buff.brain_freeze.up -- frost_info.virtual_brain_freeze
 end )
 
 
@@ -729,12 +729,12 @@ spec:RegisterStateTable( "incanters_flow", {
                                 elseif count == 5 then flow.direction = 0
                                 else flow.direction = ( count > flow.count ) and 1 or -1 end
 
-                                flow.changed = GetTime()
+                                flow.changed = now
                                 flow.count = count
                             end
                         else
                             flow.count = 0
-                            flow.changed = GetTime()
+                            flow.changed = now
                             flow.direction = 0
                         end
                     end
@@ -776,7 +776,6 @@ spec:RegisterStateTable( "incanters_flow", {
 
 
 spec:RegisterStateExpr( "bf_flurry", function () return false end )
-
 spec:RegisterStateExpr( "comet_storm_remains", function () return buff.active_comet_storm.remains end )
 
 
@@ -785,13 +784,12 @@ spec:RegisterHook( "reset_precast", function ()
     else removeBuff( "rune_of_power" ) end
 
     frost_info.last_target_virtual = frost_info.last_target_actual
-    frost_info.virtual_brain_freeze = frost_info.real_brain_freeze
+    -- frost_info.virtual_brain_freeze = frost_info.real_brain_freeze
+
+    if now - action.flurry.lastCast < gcd.execute and debuff.winters_chill.stack < 2 then applyDebuff( "target", "winters_chill", nil, 2 ) end
 
     -- Icicles take a second to get used.
     if now - action.ice_lance.lastCast < gcd.execute then removeBuff( "icicles" ) end
-    if abs( now - brain_freeze_removed ) < 1 then applyDebuff( "target", "winters_chill" ) end
-
-    if prev_gcd[1].flurry and now - action.flurry.lastCast < gcd.execute and debuff.winters_chill.up then debuff.winters_chill.count = 2 end
 
     incanters_flow.reset()
 
@@ -904,10 +902,7 @@ spec:RegisterAbilities( {
     -- Unleash a flurry of ice, striking the target 3 times for a total of 1,462 Frost damage. Each hit reduces the target's movement speed by 80% for 1 sec and applies Winter's Chill to the target. Winter's Chill causes the target to take damage from your spells as if it were frozen.
     flurry = {
         id = 44614,
-        cast = function ()
-            if buff.brain_freeze.up then return 0 end
-            return 3 * haste
-        end,
+        cast = 0,
         charges = function() return talent.perpetual_winter.enabled and 2 or nil end,
         cooldown = 30,
         recharge = function() return talent.perpetual_winter.enabled and 30 or nil end,
@@ -919,21 +914,16 @@ spec:RegisterAbilities( {
 
         talent = "flurry",
         startsCombat = true,
-        velocity = 50,
 
         handler = function ()
-            if buff.brain_freeze.up then
-                if buff.expanded_potential.up then removeBuff( "expanded_potential" )
-                else
-                    if legendary.sinful_delight.enabled then gainChargeTime( "mirrors_of_torment", 4 ) end
-                    removeBuff( "brain_freeze" )
-                end
-                frost_info.virtual_brain_freeze = true
-            else
-                frost_info.virtual_brain_freeze = false
+            removeBuff( "brain_freeze" )
+            removeBuff( "cold_front_ready" )
+            applyDebuff( "target", "winters_chill", nil, 2 )
+
+            if buff.expanded_potential.up then removeBuff( "expanded_potential" )
+            elseif legendary.sinful_delight.enabled then gainChargeTime( "mirrors_of_torment", 4 )
             end
 
-            removeBuff( "cold_front_ready" )
 
             if talent.cold_front.enabled or legendary.cold_front.enabled then
                 addStack( "cold_front" )
@@ -948,13 +938,6 @@ spec:RegisterAbilities( {
 
             if talent.bone_chilling.enabled then addStack( "bone_chilling" ) end
             removeBuff( "ice_floes" )
-        end,
-
-        impact = function ()
-            if frost_info.virtual_brain_freeze then
-                applyDebuff( "target", "winters_chill", nil, 2 )
-                frost_info.virtual_brain_freeze = false
-            end
         end,
 
         copy = 228354 -- ID of the Flurry impact.
@@ -1113,7 +1096,7 @@ spec:RegisterAbilities( {
         startsCombat = true,
         velocity = 47,
 
-        handler = function ()
+        start = function ()
             applyDebuff( "target", "chilled" )
 
             if buff.fingers_of_frost.up or debuff.frozen.up then
@@ -1125,7 +1108,6 @@ spec:RegisterAbilities( {
             if talent.bone_chilling.enabled then addStack( "bone_chilling" ) end
             if talent.hailstones.enabled and debuff.frozen.up then addStack( "icicles" ) end
 
-            removeStack( "fingers_of_frost" )
 
             if azerite.whiteout.enabled then
                 cooldown.frozen_orb.expires = max( 0, cooldown.frozen_orb.expires - 0.5 )
@@ -1133,10 +1115,8 @@ spec:RegisterAbilities( {
         end,
 
         impact = function ()
-            if debuff.winters_chill.up then
-                if debuff.winters_chill.stack > 1 then removeDebuffStack( "target", "winters_chill", 1 )
-                else removeDebuff( "target", "winters_chill" ) end
-            end
+            removeStack( "fingers_of_frost" )
+            removeDebuffStack( "target", "winters_chill" )
         end,
 
         copy = 228598
@@ -1376,4 +1356,4 @@ spec:RegisterSetting( "manual_water_jet", false, {
 } )
 
 
-spec:RegisterPack( "Frost Mage", 20221115.1, [[Hekili:vRv3VTnos8)wcoa1e0cNOK002f15HBXDaBXD9fVplzAjABUHsulPKtsHH)B)gs9f)u2UO7IEVy0ioC4W5ZFCMMeN87jlYr14KVE7n3EBCC87Nf)XB)09jlQFTcNSOcL9eAd8pkrfWV)BotuFy5)v9Pk0RugkxYcbRHNbFABDDL4xU(6nK6TnRMLXkUwqkAOOAcRmJJwxl)7SRtwSQHqR)TYKvEp)7UlzbQPElJNSybP4xbotYZXTKJfzjlswqjIAHs(XRrn0A4F(v19bxIwrX5j)tGhzYdozrgRPSgZfvykTLdCsv7s)RxWzn148dlX7W8xpSSMuGHF3c)aBNXpSKiG)5oeHk57mGBCcWmckzXfhwYBkXRz8n4z5ergPIskr8xtHREbQmFwNWCy5(9hwMXy0C2ZLZw1SEDQx65yuoierhwkPXlptr8mujCEaNsQbnxOlnIstB)JuPYQvLL2AjZYfY9EN1EhVAYnUdNIlXfemOaEC(HL3DImhXWsMF)jZ8pF68g(tG1V)75oxW2HlWLsgaluXXGcDfA0XPNjT63uc4YqP4SA9tQxF3t7ZGZlpftvmgrTi9oDsxtXITQGalQoD9K0iC7ihxrjF7BiEUpnsyMa8iwtQKH0Ry0oTI00zRpas(gUmLXxnLMyqy8Oc8kxGbyx6MS8zXYef46ubeTvyjzPLSDOPvs9rvPqStwTk2HJlqKss5M0NjQa)0STekvD3VrrrowfFzSSkIsT6LhwQjDdQO2OyTvWRyLExydfLrq0urf5jirYv6EbnC(RdwS(ptYWTxvtT3dbV1qQhWFdC6MjkzpRuDMjBu3VX1e1qQCLcWAHc0lPDlgPLIkJbHaS1qshAxwjDldg)nvi(hckFN9XRNTE8OLhYh1vugUkg6QpfuwGYt0vei76oMSuefNky0DsD3GgRpHRnfPBBGCUmsEB62fk)fEtvDkzDYIyJpuuGZjYIzlI9h1ps7gkBLmBrSuWJVjOKRvDbJQ3ksxd)YkmK7l1lcj1zPGdR(Dt6nmsHGsYEkf83gj4kTcoYJzfJd1xAdIKzDa3ceek2wz8TGJhhTdtv)T)ejFn2UsSLJXAi2ug3bwz1(M1f7kf1UqZ2SogsH252DRcfNhkcpa3mJdPOYmL3DSDPvpUuT1qsLM(AfmNE16ip5iWTaCLevi(tk(AuxOGW5SwDH0RwwGY0Xo(EDYfBjRRLx5k2ZyUnPHldCQavI(HHtznH3Hsz0jb(u6kkQTkEC40BadqZQKUeGL6U2C2(Qg(GAfdCy95ExZrBKAtHRfPRcp(Lkkti)Iuy(GUwUpZUT(9Jwfg7C5nOQUfELh8Owrb4x2IAekNMMQrL5kkJLtHfSuEsp10Nr8kNAVvSoPoi4JX4AFGpozxXWUxkjxAeKBw5AAj9KSxt3HHGVPRRfGpM(Ld8YiGgYJogZPZHHkv9R2ia4D14cH117JMaAaZq66gOATNcndubjxW8NGasBxLB0jJs2STwK(hn5B8fHBI3ccsuhUnvg2CzskbKdJMkb964bk8(GO)Vc1K1QgPrdGPkCc7bFNwINLTfbjleYSekUGOQNHOv5UfA)FGRpzySDYXy4eUgZ4tJEDITRd1XgVyqm5HJS8L(8wLHRdiPS2N0xcc50Rg0TQc0N05GdojUPu1FlYrqfovwcRQB9XK(RO53FDKzg(ttdr8O8IJEDaTYraT1bFPtDb8lx0NF32gy(wmxGcHJFB3ZG3SB0CNzZqhyvLVmVHaMDUYAuVfNIez4YCCUlUysgjdqY2JJx67C)ucE4aXjX)1wlF6uch1uzIHlCK7LQdBA9K8aV4e1vx1Nf0aoILJGbNdesE1GVsil8uQ(ZRI(eigpnbWjiBcuDNFs4bCydi08Y4F2FHNjWc0gL9GdpeZgbs8NsojaMd9YAYI89ujXNxlJiCWjbPTlFA6kNDX)401ugKbWgvx33tSrCgOJgHReEQq(1AaMpC8V3gkv37n8uM0nHHLAg21oibJKOHgulbgWLPFat3Vl7smPOIXbPETSxXVPRB0VrMN6pBGJhC9em5dwrn1ScKQvZGFpK)tm7Wx(pKsyP4F5WYFLvcNLA53m9B1aExZokv9E(a1xg)YvWzD4lEKxedFEY6dwYQDxO6LUqDNAuEA53NS4xWq5EgF0yD7ti(MWQx9UQ4rV6RPlNb7h7gJlVD7uZzW4HM44YxN(74W2BdPXD6LHJkpy3oCoK3)3IlD3Hz7torZaCpPG9l4iroIZmipqGZiQBRihx44237aC0aPUft9II3rFANpYhgjlg7f)0rz8e4Q65)ja9Y5yU7Vk53MX)nj)Hqt66m7hTPZb8H)ct6E4l)MkorY4h6HXEyPAETWYayTkCgub(E5JFzRbE1xjwmByOCVD(12JH7Wx8rLOPOGvMAnho)0oIuZ)69VH9DK1ZnrE848BdWYEeAU7zESux8poS8ShX8WrnxFW1Yt4IPtqUF)P262OtA8YdccCtThT67KdvDEwU44ebym8PsV747u4rV(5tyF9aFLwGEZgifZhBBIX31S92FFCkKsjX)mlD2J61ns6nF0uuGNUo)MOGDwl6sF9uB)Ep9tZ4Jg5ZUYwc7bN7EBLt2t5PzJFB)EFJ0BEOX5fnXKeTpvDkKN9zDqUmBc7sF8V8ucMsl6eEN4788QW5XVZ(9FgFcoZyVUx95pca8m6sFOg3V3dMVRIcmfVhhMG3B1NIMh3c1dHgSc(BuZ(9Ehs3JASgep)o7(D19WbBHZOthggqhuP2B1Tli2uy23rhR0WZiTmtEYFg9dif8WKZSfe7h8kfN(3n)4D3ezNI9HOlMaORn3hAmFiNu90PqM)5dtKAWFXyKwrEgNLbdaE3o6k7Vo6aBVYuMYwkggo0Gq5zCsw7XGIj2xu4rq9y8n2CDymt2lmoAjNvggNK9kwtqYE5HHgzVG5CI0TG9fjNRAcukQuvYYPNrgxS(v7swOA9ZG(YSjrb3KzHhTfpxV7B9YLXG1GsGkhNUQqup)NUI2gRyK87kDbhUsdtQsx6d3J1phBT)25uzHVPD7wuQvC9ui3hClXrrAh58a4iFVE1ILMzWpPyF1(m05Q07bgdQ520Nh05SlRAy(NvKLN(CBdMdBAx1FR6J89c3OjEwAK7eFEC(9wIWPcvi6IW(3FN6SlVW3nA)(lM4oDv0Lxe6vY7374cEv0uAu7WNjkj53f7myEFEIVZq7FQG82g6Rp9d38fA)Nrn5)9d]] )
+spec:RegisterPack( "Frost Mage", 20221205, [[Hekili:9Iv3UTTos4NLEJAcAHIvsCsBrCUypalWPy3EJpxlzAjkBDIKOxsQKMcd)SVdPKOiPiLT7jTOaPjAihoZWV5h(fhf)xXlZqCC83UE21xhD9S5HrF(2pn7ZXl5VUdhVChk9j0g4xQrvWp)3ucJFy1)v(PDOxljOmHoyKgAk8PTC(o2xU6Qnf8TnRdtjvxXkQAkr8csDkfLZf)D6vXlx3uuY)Z641UnG5Xlrn8TeA8YLfv)bO5ISmC7YXS04LXlllyCM0bW5OMso8RFt6qOuXPfVmL0uZXu2oCzz8sCnADjol(FfZHdtSUHVSmLwaRSaj2ePmJ8sDyEzdL(Ay6weDdMLKtBvlQ8WQhoSkA4yEbmFAYFJ5cfFJLIv2cQSmP9psegER5N0gvtZyI9ERxJsSXNXj4ACvbMDy1JloS6(dR2V)WkxIU5WQGdR4OsCnpSifNioDmnSx3lzCArkxeUonderWcdC(jBGpiTpWiUySf(G0af2(7MWipS6YZ3ozY7G7(zUdQipJRatjw8VL7Oya7UgnguHOPOACsbGSaZfmohaltKbUuQyKng0gQm9191dQDDzXp(bIMDEyMfgG2CrI8AszN)kUG79uNABDtEEiRM8cJtOvHmouxqQtlbvOVN0jeU9ZWsXWH9dCDyZUEibeEFoztAwyuO0qsQjpJAXeAIeGclbK8CPWCkg)dSeJmKTdxlK8Kui)D0nrRfKqORDDjmkWAUMBnlQuH5jsN1Az(ZoUqGZHQi8Ws8Z42ciD)2hujdDROGLGYeO)(y1qsYquwLJmkglkD1QpvHm9atifJYEvUVFIB0l1dOIlaxzBVrUTgoqlK)lZ1GDjom4lTL3nC2EGOWDV)xG76kFFUuYVbp1QMGYr)0BxTa)jPF(O9HtaNnLlnBkUcvuxuVj5LczJ9K0TfLLYJEMEUGH4Uuc3fEeva93h9(HyCoCScvc2UCJHDMv7rRNyihBq4BrZMoc6tLcRXmPU1XfgfaGOiasLWlQWTl1tuXe9wIQtLzRrgnZyBlY5ITUJ8cMAvplYOcQkhWArgfqH8umzKEo9EuYG(G6YOOnKAwYAiYW3k1L)ISvOAu4oraeIs3mZBI19J6LJ)(Usct8fXjCNUdHxtQLDjTCP7TAU01l1yv82b7oEBv833IAycD13Iu(51LeswjiqIGhooXvFYli6UPhK1OFzr6RjpJLyibMznHXKhuEXMT8ef(cQhC3SHtAhH3fv8pRI0uPnTP1syKrcNuS601Ap11tZCN6Z(na86280J7mLDOQIoyi6PurAUSHguD17L2WGj)44kMfE4oZPiG7TK8gOkG5QmanRHmvm9ji5ZAvFsFvLI7hwYF3KTroCQ5s)SbkSGILhTnwDMX4RqDayQAuPCC7rawgFA8QE9Z2cD25(hht6E76ZvnjG73DJbnjBkrPfqOJTR4jSNQ((rOtzLrADAetw1TQmMvUpf9QQFX0ZCE02cgoZ0dYD2n8N6wX)Wa2fvDpXU)5sCvT)6PFkSUuvGNcM9WBLhsRhE1L)Xw8ugYBl3)bZjeiFBGF45p7WbNCS9whthOMBWRwiduRyKjpbYm64vdoD6AuT0vJMOUHrBebzbNdpzxHpA(P1XxrJWKLr7xvywbKVar)r9Ha0w9ttxmTR1kojVKGTluO(UQy6ORkth0FDRtDWkngkCny1C7MvjRlrm7wA3zBQTGtRWmSRNbWSyrT8ggDZmbDlubuhU6(RTqeTOAhHcwDoHEy177ij89ICI)xdC8qUpJigIg1WjviU4da6bY1yHh(6)POgeD7xoS6pi1Wzjf)(r1ra1XjUe0x)awWfrF)sLgN)gQXdF1HFIi4ZZh9yrQQ6wg0isioI9aJaFE2ZnUThJAQw2KZHipIDXotOWNEdV4MuJgTHSuQZwu6o6Fk9rH6URnjLat4ijkhelM)IKxuI7ZWyHkEo)WIRSz28WxDTkwtvfPoXIAt3RTVL5hlYxywX4Xfx7ElQkRJ3ZIiHh2TjyP607R)DfF8cvC8(dpezOuloI)OGD4fai(4lcY8(ylH1lIC5X3VFV9NUjyeA54Nd8)(pMhUp4cRVCZ(9VB0XC5XpN(MuAr9qWhLr(Hb3eMGR5dT)OA2WaBsHdUWjDW737Gk4UpAsd8L223WSJ2s6rKJ9ObkghPmXziCZl0P37b5p)aeCnO07YGlENDLYGXu0UF)em7fCwXZrEFFS6mmz3KT(gAKbDuo(qKRlRUB8t3GTZJMh8lWsFtr9J8Az5i9kuTtbh4zI9fZc8(g2XjqIcOJR2CFWeVNyXmNaj54xkV19w3V3jDLpQrv5(9(E9R1zA(8iFqB7V3Y9G9xnPp0zjz7Typ4Qyt9Z)(4nZgb8gPG(xx4eL3kyqe0wbeP4ZtfMniemWbzG2QOLOoX(DZ63(9cg)cmy77H7MzRg16vwY4xYgCHdk9ejOJNe7sB9BiDQZWpHDpgnYQvKYzlyGiUrsuKVzlXIWnBXks2SfyYRM(LCFB02Up1pLGQL59JEdOHRPTl1t5urmZh95DtMzkAcpxu(1o1YWB48AbYQh6bdgxLTQqR68bATsTMrNYY)Duu1hFlxAzl6m1jSiFMquGpw)SuOXPnHghfc)h01YxGZoU7yEl2rFaW4zFdC9mhlvA2GyIIiw77uBMf8oF3WNqpmMEQNlN(2JDP2k1ndzw7TVvZz)mNU7gD2UgFH2ZVf88Q04VD3TswxI))d]] )

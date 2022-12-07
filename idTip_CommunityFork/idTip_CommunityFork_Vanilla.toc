@@ -1,6 +1,6 @@
 ## Interface: 11403
 ## Title: idTip_CommunityFork
-## Version: 11.0.29
+## Version: 11.0.32
 ## Notes: Adds IDs to the ingame tooltips
 ## Author: silverwind, ItsJustMeChris
 ## SavedVariables: IDTIP_CONFIG

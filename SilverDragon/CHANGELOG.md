@@ -1,5 +1,24 @@
 # Changelog
 
+## Changed in v2022.29
+
+* Update Dragonflight rares
+* Add Who's A Good Bakar? to tooltips
+* Improve how the popup's loot button count behaves when only showing items relevant to your character; it'll now notice when item data isn't loaded from the server completely and refresh the count once it's available
+* Fix display of the Battle For Azeroth Black Empire Assault rares, which I had tied to the continent-level icons that Blizzard removed when Dragonflight launched
+
+## Changed in v2022.28
+
+* Changed the behavior of the loot button on the popup a bit: it'll now always show if there's any loot, but loot not suitable for your character will be grayed out
+* Add the Expedition Scout's Pack loot-data for vignettes
+* Fixed an error that would pop up on logging in for people playing Wrath
+
+## Changed in v2022.27
+
+* Dragonflight data added. It's incomplete (some achievement-rares were never even seen in the beta period), so expect a bunch of releases over the next month or two.
+* Improve the model position/background in a few of the non-default popup skins
+* Workaround for the 10.0 model-interior-alpha bug in the popup models (the model still being visible until combat ended if a popup auto-hid in combat)
+
 ## Changed in v2022.26
 
 * Classic: route lines were sometimes being hidden behind explored territory on maps

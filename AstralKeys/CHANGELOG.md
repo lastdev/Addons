@@ -1,9 +1,13 @@
 # Astral Keys
 
-## [3.64](https://github.com/astralguild/AstralKeys/tree/3.64) (2022-11-16)
-[Full Changelog](https://github.com/astralguild/AstralKeys/compare/3.63...3.64) [Previous Releases](https://github.com/astralguild/AstralKeys/releases)
+## [3.65](https://github.com/astralguild/AstralKeys/tree/3.65) (2022-12-01)
+[Full Changelog](https://github.com/astralguild/AstralKeys/compare/3.64...3.65) [Previous Releases](https://github.com/astralguild/AstralKeys/releases)
 
-- Merge pull request #60 from astralguild/dragonflight  
-    Update to 10.0.2 api  
-- Update TOC  
-- Revert "Fix changes that were only supposed to go out for 100002"  
+- Merge pull request #62 from dekallo/container  
+    Fix communications for Dragonflight  
+- Merge pull request #64 from astralguild/dragonflight  
+    Silence errors  
+- bump toc  
+- Disable tooltips  
+- Add DF key names  
+- Fix communications for Dragonflight  

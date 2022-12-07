@@ -422,7 +422,10 @@ function SMARTBUFF_InitSpellIDs()
   SMARTBUFF_REFRESHMENT     = GetSpellInfo(42955); --"Conjure Refreshment"
   SMARTBUFF_TEMPSHIELD      = GetSpellInfo(198111);--"Temporal Shield"
   --SMARTBUFF_AMPMAGIC        = GetSpellInfo(159916);--"Amplify Magic"
+
   SMARTBUFF_PRISBARRIER     = GetSpellInfo(235450);--"Prismatic Barrier"
+  SMARTBUFF_IMPPRISBARRIER     = GetSpellInfo(321745);--"Improved Prismatic Barrier"
+
   SMARTBUFF_BLAZBARRIER     = GetSpellInfo(235313);--"Blazing Barrier"
   SMARTBUFF_ARCANEFAMILIAR  = GetSpellInfo(205022);--"Arcane Familiar"
   SMARTBUFF_CREATEMG		= GetSpellInfo(759);   --"Conjure Mana Gem"
@@ -514,9 +517,11 @@ function SMARTBUFF_InitSpellIDs()
   SMARTBUFF_INSTANTPOISON       = GetSpellInfo(315584); --"Instant Poison"
   SMARTBUFF_NUMBINGPOISON       = GetSpellInfo(5761);   --"Numbing Poison"
   SMARTBUFF_AMPLIFYPOISON       = GetSpellInfo(381664); --"Amplifying Poison"
+  SMARTBUFF_ATROPHICPOISON      = GetSpellInfo(381637);   --"Atrophic Poison"
+
   -- Rogue buff links
   S.ChainRoguePoisonsLethal     = { SMARTBUFF_DEADLYPOISON, SMARTBUFF_WOUNDPOISON, SMARTBUFF_INSTANTPOISON, SMARTBUFF_AGONIZINGPOISON, SMARTBUFF_AMPLIFYPOISON };
-  S.ChainRoguePoisonsNonLethal  = { SMARTBUFF_CRIPPLINGPOISON, SMARTBUFF_LEECHINGPOISON, SMARTBUFF_NUMBINGPOISON };
+  S.ChainRoguePoisonsNonLethal  = { SMARTBUFF_CRIPPLINGPOISON, SMARTBUFF_LEECHINGPOISON, SMARTBUFF_NUMBINGPOISON, SMARTBUFF_ATROPHICPOISON };
   
   -- Paladin
   SMARTBUFF_RIGHTEOUSFURY         = GetSpellInfo(25780);  --"Righteous Fury"
@@ -565,9 +570,13 @@ function SMARTBUFF_InitSpellIDs()
   SMARTBUFF_SOTSTURDYOX     = GetSpellInfo(115069); --"Stagger"
 --  SMARTBUFF_SOTWISESERPENT  = GetSpellInfo(115070); --"Stance of the Wise Serpent"
 --  SMARTBUFF_SOTSPIRITEDCRANE= GetSpellInfo(154436); --"Stance of the Spirited Crane"
+
   -- Monk buff links
   S.ChainMonkStatue = { SMARTBUFF_BLACKOX, SMARTBUFF_JADESERPENT };  
   S.ChainMonkStance = { SMARTBUFF_SOTFIERCETIGER, SMARTBUFF_SOTSTURDYOX, SMARTBUFF_SOTWISESERPENT, SMARTBUFF_SOTSPIRITEDCRANE };
+
+  -- Evoker
+  SMARTBUFF_BRONZEBLESSING  = GetSpellInfo(364342);   --"Blessing of the Bronze"
 
   -- Demon Hunter
 
@@ -839,6 +848,7 @@ function SMARTBUFF_InitSpellList()
       {SMARTBUFF_ARCANEPOWER, 0.25, SMARTBUFF_CONST_SELF},
       {SMARTBUFF_PRESENCEOFMIND, 0.165, SMARTBUFF_CONST_SELF},
 	  {SMARTBUFF_PRISBARRIER, 1, SMARTBUFF_CONST_SELF},
+      {SMARTBUFF_IMPPRISBARRIER, 1, SMARTBUFF_CONST_SELF},
       {SMARTBUFF_BLAZBARRIER, 1, SMARTBUFF_CONST_SELF},
       {SMARTBUFF_REFRESHMENT, 0.03, SMARTBUFF_CONST_ITEM, nil, SMARTBUFF_CONJUREDMANA, nil, S.FoodMage},
 	  {SMARTBUFF_CREATEMG, 0.03, SMARTBUFF_CONST_ITEM, nil, SMARTBUFF_MANAGEM},
@@ -936,7 +946,8 @@ function SMARTBUFF_InitSpellList()
       {SMARTBUFF_LEECHINGPOISON, 60, SMARTBUFF_CONST_SELF, nil, S.CheckFishingPole, nil, S.ChainRoguePoisonsNonLethal},
       {SMARTBUFF_NUMBINGPOISON, 60, SMARTBUFF_CONST_SELF, nil, S.CheckFishingPole, nil, S.ChainRoguePoisonsNonLethal},
       {SMARTBUFF_CRIPPLINGPOISON, 60, SMARTBUFF_CONST_SELF, nil, S.CheckFishingPole, nil, S.ChainRoguePoisonsNonLethal},
-      {SMARTBUFF_AMPLIFYPOISON, 60, SMARTBUFF_CONST_SELF, nil, S.CheckFishingPole, nil, S.ChainRoguePoisonsNonLethal} 
+      {SMARTBUFF_AMPLIFYPOISON, 60, SMARTBUFF_CONST_SELF, nil, S.CheckFishingPole, nil, S.ChainRoguePoisonsNonLethal},
+      {SMARTBUFF_ATROPHICPOISON, 60, SMARTBUFF_CONST_SELF, nil, S.CheckFishingPole, nil, S.ChainRoguePoisonsNonLethal} 
     };
   end
 
@@ -1001,6 +1012,7 @@ function SMARTBUFF_InitSpellList()
   -- Evoker
   if (SMARTBUFF_PLAYERCLASS == "EVOKER") then
     SMARTBUFF_BUFFLIST = {
+      {SMARTBUFF_BRONZEBLESSING, 60, SMARTBUFF_CONST_SELF},
     };
   end
 

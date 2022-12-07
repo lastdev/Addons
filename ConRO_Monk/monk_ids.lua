@@ -58,7 +58,7 @@ local ConRO_Monk, ids = ...;
 		InvokeNiuzaotheBlackOx = {spellID = 132578, talentID = 101544},
 		KegSmash = {spellID = 121253, talentID = 101451},
 		PurifyingBrew = {spellID = 119582, talentID = 101453},
-		RushingJadeWind = {spellID = 116847, talentID = 101548},
+		RushingJadeWind = {spellID = 116847, talentID = 101549},
 		WeaponsofOrder = {spellID = 387184, talentID = 101539},
 		ZenMeditation = {spellID = 115176, talentID = 101547},
 	}
@@ -126,7 +126,7 @@ local ConRO_Monk, ids = ...;
 		ScaldingBrew = {spellID = 383698, talentID = 101467},
 		ShadowboxingTreads = {spellID = 387638, talentID = 101444},
 		Shuffle = {spellID = 322120, talentID = 101455},
-		SpecialDelivery = {spellID = 196730, talentID = 101549},
+		SpecialDelivery = {spellID = 196730, talentID = 101548},
 		Stagger = {spellID = 115069, talentID = 101454},
 		StaggeringStrikes = {spellID = 387625, talentID = 101459},
 		StormstoutsLastKeg = {spellID = 383707, talentID = 101541},
@@ -143,6 +143,7 @@ local ConRO_Monk, ids = ...;
 	}
 	ids.Bm_Buff = {
 		BlackoutCombo = 228563,
+		CharredPassions = 386963,
 		ChiTorpedo = 119085,
 		RushingJadeWind = 116847,
 		PurifiedChi = 325092,
@@ -304,7 +305,7 @@ local ConRO_Monk, ids = ...;
 --Windwalker
 	ids.Ww_Ability = {
 	--Monk
-		BlackoutKick = {spellID = 205523},
+		BlackoutKick = {spellID = 100784},
 		ChiBurst = {spellID = 123986, talentID = 101527},
 		ChiTorpedo = {spellID = 115008, talentID = 101502},
 		ChiWave = {spellID = 115098, talentID = 101528},
@@ -323,7 +324,7 @@ local ConRO_Monk, ids = ...;
 		RingofPeace = {spellID = 116844, talentID = 101516},
 		Roll = {spellID = 109132},
 		SpearHandStrike = {spellID = 116705, talentID = 101504},
-		SpinningCraneKick = {spellID = 322729},
+		SpinningCraneKick = {spellID = 101546},
 		SoothingMist = {spellID = 115175, talentID = 101509},
 		SummonBlackOxStatue = {spellID = 115315, talentID = 101535},
 		SummonJadeSerpentStatue = {spellID = 115313, talentID = 101532},
@@ -436,8 +437,10 @@ local ConRO_Monk, ids = ...;
 		DanceofChiJi = 325202,
 		Serenity = 152173,
 		StormEarthandFire = 137639,
+		TeachingsoftheMonastery = 202090,
 	}
 	ids.Ww_Debuff = {
+		FaeExposure = 395414,
 		MarkoftheCrane = 228287,
 	}
 	ids.Ww_PetAbility = {

@@ -113,21 +113,16 @@ function Item:IsMet() return ns.PlayerHasItem(self.id, self.count) end
 
 local Profession = Class('Profession', Requirement)
 
-function Profession:Initialize(profession, skillID)
-    self.profession = profession
-    self.text = C_TradeSkillUI.GetTradeSkillDisplayName(skillID)
+function Profession:Initialize(skillID, variantID, level)
+    self.skillID = skillID
+    self.variantID = variantID
+    self.level = level
+    self.text = C_TradeSkillUI.GetTradeSkillDisplayName(variantID or skillID)
+
+    if level then self.text = self.text .. ' (' .. level .. ')' end
 end
 
-function Profession:IsMet()
-    local prof1, prof2, archaeology, fishing, cooking = GetProfessions()
-    local professions = {prof1, prof2, archaeology, fishing, cooking}
-    for i = 1, #professions do
-        if professions[i] ~= nil then
-            if self.profession == professions[i] then return true end
-        end
-    end
-    return false
-end
+function Profession:IsMet() return ns.PlayerHasProfession(self.skillID) end
 
 -------------------------------------------------------------------------------
 ------------------------------------ QUEST ------------------------------------
@@ -137,7 +132,8 @@ local Quest = Class('Quest', Requirement)
 
 function Quest:Initialize(id) self.id = id end
 
-function Quest:GetText() return C_QuestLog.GetTitleForQuestID(self.id) end
+function Quest:GetText() return
+    C_QuestLog.GetTitleForQuestID(self.id) or UNKNOWN end
 
 function Quest:IsMet() return C_QuestLog.IsQuestFlaggedCompleted(self.id) end
 
@@ -161,8 +157,9 @@ function Reputation:GetText()
 end
 
 function Reputation:IsMet()
-    local _, _, standingID = GetFactionInfoByID(self.id)
-
+    local standingID = self.isRenown and
+                           C_MajorFactions.GetCurrentRenownLevel(self.id) or
+                           select(3, GetFactionInfoByID(self.id))
     return standingID >= self.level
 end
 

@@ -14,17 +14,16 @@ end
 
 function ConRO:CheckTalents()
 	self.PlayerTalents = {};
-	local _Player_Level = UnitLevel("player");
-	local _, _, classId = UnitClass('player');
-	local talentLevel = 10;
-	if classId == 13 then
-		talentLevel = 60;
-	end
-	if _Player_Level >= talentLevel then
-		wipe(self.PlayerTalents)
+
+	wipe(self.PlayerTalents)
+	if select(1, GetSpecialization()) ~= 5 then
 		local specID = PlayerUtil.GetCurrentSpecID();
 		local configID = C_ClassTalents.GetLastSelectedSavedConfigID(specID) or C_ClassTalents.GetActiveConfigID();
 		local configInfo = C_Traits.GetConfigInfo(configID);
+		if configInfo == nil then
+			configID = C_ClassTalents.GetActiveConfigID();
+			configInfo = C_Traits.GetConfigInfo(configID);
+		end
 		local treeID = configInfo.treeIDs[1];
 		local nodes = C_Traits.GetTreeNodes(treeID);
 
@@ -798,6 +797,8 @@ function ConRO:AbilityReady(spellCheck, timeShift, spelltype)
 	local rdy = false;
 		if spelltype == 'pet' then
 			have = IsSpellKnown(spellid, true);
+		elseif spelltype == 'pvp' then
+			have = ConRO:PvPTalentChosen(entryID);
 		end
 		if have then
 			known = true;
@@ -894,6 +895,7 @@ end
 function ConRO:Cooldown(spellid, timeShift)
 	local start, maxCooldown, enabled = GetSpellCooldown(spellid);
 	local baseCooldownMS, gcdMS = GetSpellBaseCooldown(spellid);
+	local baseCooldown = 0;
 
 	if baseCooldownMS ~= nil then
 		baseCooldown = (baseCooldownMS/1000) + (timeShift or 0);
@@ -911,6 +913,7 @@ end
 function ConRO:ItemCooldown(itemid, timeShift)
 	local start, maxCooldown, enabled = GetItemCooldown(itemid);
 	local baseCooldownMS, gcdMS = GetSpellBaseCooldown(itemid);
+	local baseCooldown = 0;
 
 	if baseCooldownMS ~= nil then
 		baseCooldown = baseCooldownMS/1000;

@@ -361,7 +361,7 @@ local ConRO_Paladin, ids = ...;
 		JusticarsVengeance = {spellID = 215661, talentID = 102487},
 		ShieldofVengeance = {spellID = 184662, talentID = 102521},
 		DivineProtection = {spellID = 498, talentID = 102520},
-		RadiantDecree = {spellID = 384052, talentID = 102493},
+		RadiantDecree = {spellID = 383469, talentID = 102493},
 		TemplarsVerdict = {spellID = 85256},
 		WakeofAshes = {spellID = 255937, talentID = 102495},
 	}

@@ -16,7 +16,7 @@ local round, roundUp, roundDown = ns.round, ns.roundUp, ns.roundDown
 local safeMin, safeMax = ns.safeMin, ns.safeMax
 
 local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID
-local FindPlayerAuraByID, IsDisabledCovenantSpell = ns.FindPlayerAuraByID, ns.IsDisabledCovenantSpell
+local FindPlayerAuraByID, IsAbilityDisabled, IsDisabledCovenantSpell = ns.FindPlayerAuraByID, ns.IsAbilityDisabled, ns.IsDisabledCovenantSpell
 
 -- Clean up table_x later.
 local insert, remove, sort, tcopy, unpack, wipe = table.insert, table.remove, table.sort, ns.tableCopy, table.unpack, table.wipe
@@ -986,27 +986,10 @@ local function removeStack( aura, stacks )
         b.lastCount = b.count
         b.count = max( 1, b.count - stacks )
     else
-        removeBuff( aura )
+        state.removeBuff( aura )
     end
 end
 state.removeStack = removeStack
-
-
-local function removeDebuffStack( unit, aura, stacks )
-    stacks = stacks or 1
-
-    local d = state.debuff[ aura ]
-
-    if not d then return end
-
-    if d.count > stacks then
-        d.lastCount = d.count
-        d.count = max( 1, d.count - stacks )
-    else
-        removeDebuff( unit, aura )
-    end
-end
-state.removeDebuffStack = removeDebuffStack
 
 
 -- Add a debuff to the simulated game state.
@@ -1082,6 +1065,23 @@ end
 state.removeDebuff = removeDebuff
 
 
+local function removeDebuffStack( unit, aura, stacks )
+    stacks = stacks or 1
+
+    local d = state.debuff[ aura ]
+
+    if not d then return end
+
+    if d.count > stacks then
+        d.lastCount = d.count
+        d.count = max( 1, d.count - stacks )
+    else
+        removeDebuff( unit, aura )
+    end
+end
+state.removeDebuffStack = removeDebuffStack
+
+
 local function setStance( stance )
     for k in pairs( state.stance ) do
         state.stance[ k ] = false
@@ -1113,8 +1113,13 @@ local function summonPet( name, duration, spec )
     state.pet[ name ].name = name
     state.pet[ name ].expires = state.query_time + ( duration or 3600 )
 
-    if class.pets[ name ] then
-        state.pet[ name ].id = id
+    local model = class.pets[ name ]
+
+    if model then
+        state.pet[ name ].id = type( model.id ) == "function" and model.id() or id
+        if ( type( model.duration ) == "function" and model.duration() or model.duration ) == 3600 then
+            state.pet.alive = true
+        end
     end
 
     if spec then
@@ -2412,6 +2417,12 @@ do
     mt_default_pet = {
         __index = function( t, k )
             if k == "expires" then
+                local petGUID = UnitGUID( "pet" )
+                if petGUID and t.id == tonumber( petGUID:match( "%-(%d+)%-[0-9A-F]+$" ) ) then
+                    t[ k ] = state.query_time + 3600
+                    return t[ k ]
+                end
+
                 local present, name, start, duration
 
                 for i = 1, 5 do
@@ -2431,14 +2442,16 @@ do
                 return max( 0, t.expires - ( state.query_time ) )
 
             elseif k == "up" or k == "active" or k == "alive" or k == "exists" then
-                -- TODO:  Need to make pet.alive work here.
                 return ( t.expires >= ( state.query_time ) )
 
             elseif k == "down" then
                 return ( t.expires < ( state.query_time ) )
 
             elseif k == "id" then
-                return t.exists and UnitGUID( "pet" ) and tonumber( UnitGUID( "pet" ):match("(%d+)-%x-$" ) ) or nil
+                local id = t.model and t.model.id
+                if type( id ) == "function" then id = id() end
+
+                return id
 
             elseif k == "spec" then
                 return t.exists and GetSpecialization( false, true )
@@ -2463,7 +2476,13 @@ do
 
     local petAutoReset = setmetatable( {
         real_pet = 1,
+        up = 1,
         exists = 1,
+        active = 1,
+        alive = 1,
+        dead = 1,
+        health_pct = 1,
+        health_percent = 1,
     }, {
         __index = function( t, k, v )
             if v == nil then return end
@@ -2480,36 +2499,24 @@ do
 
                 if petID then
                     petID = tonumber( petID:match( "%-(%d+)%-[0-9A-F]+$" ) )
+                    local model = class.pets[ petID ]
 
-                    for k, v in pairs( class.pets ) do
-                        local id = v.id and ( type( v.id ) == "function" and v.id() ) or v.id
+                    if model then
+                        key = model.token
+                        local spell = model.spell
+                        local ability = spell and class.abilities[ spell ]
+                        local lastCast = ability and ability.lastCast or 0
+                        local duration = model.duration and ( type( model.duration ) == "function" and model.duration() or model.duration ) or 3600
 
-                        if id == petID then
-                            local spell = v.spell
-                            local ability = spell and class.abilities[ spell ]
-                            local lastCast = ability and ability.lastCast or 0
-                            local duration = v.duration and ( type( v.duration ) == "function" and v.duration() or v.duration ) or 3600
-
-                            if lastCast > 0 and duration < 3600 then
-                                summonPet( k, lastCast + duration - state.now )
-                            else
-                                summonPet( k )
-                            end
-
-                            key = k
-                            break
+                        if lastCast > 0 and duration < 3600 then
+                            summonPet( key, lastCast + duration - state.now )
+                        else
+                            summonPet( key )
                         end
                     end
                 end
 
                 t.real_pet = key or "fake_pet"
-            end
-
-            -- Should probably add all totems, but holding off for now.
-            for _, pet in pairs( t ) do
-                if type( pet ) == "table" and pet.up and pet[ k ] ~= nil then
-                    return pet[ k ]
-                end
             end
 
             if k == "up" or k == "exists" or k == "active" then
@@ -2536,11 +2543,11 @@ do
 
             if model then
                 t[ k ] = {
-                    id = model.id,
                     name = k,
                     duration = model.duration,
                     expires = nil,
                     spec = model.spec,
+                    model = model
                 }
 
                 if model.spec then
@@ -6719,7 +6726,7 @@ function state:IsKnown( sID )
         return false
     end
 
-    if ability.disabled then return false, "not usable here" end
+    if IsAbilityDisabled( ability ) then return false, "not usable here" end
 
     if sID < 0 then
         if ability.known ~= nil then
@@ -6809,7 +6816,6 @@ do
 
         spell = ability.key
 
-        if self.empowerment.active and spell ~= self.empowerment.spell then return true, "empowerment:" .. self.empowerment.spell end
         if self.holds[ spell ] then return true, "on hold" end
 
         local profile = Hekili.DB.profile
@@ -6833,6 +6839,7 @@ do
             if toggle and toggle ~= "none" and ( not self.toggle[ toggle ] or ( profile.toggles[ toggle ].separate and state.filter ~= toggle ) ) then return true, "toggle" end
 
             if ability.id < -100 or ability.id > 0 or toggleSpells[ spell ] then
+                if self.empowerment.active and self.empowerment.spell and spell ~= self.empowerment.spell then return true, "empowerment: " .. self.empowerment.spell end
                 if state.filter ~= "none" and state.filter ~= toggle and not ability[ state.filter ] then return true, "display"
                 elseif ability.item and not ability.bagItem and not state.equipped[ ability.item ] then return false
                 end

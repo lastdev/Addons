@@ -57,20 +57,30 @@ function module:RefreshData(popup)
 	else
 		self:RefreshLootData(popup)
 	end
-	local hasLoot, lootCount = ns.Loot.HasLoot(data.id, data.type == "loot")
-	if hasLoot then
+	local isTreasure = data.type == "loot"
+	local anyLoot = ns.Loot.GetLootTable(data.id, isTreasure)
+	if anyLoot and #anyLoot > 0 then
+		popup.lootIcon.count:SetText("?")
 		popup.lootIcon:Show()
-		popup.lootIcon.count:SetText(lootCount)
-		ns.Loot.Cache(data.id, data.type == "loot")
 	else
 		popup.lootIcon:Hide()
 	end
-	if ns.Loot.Status(data.id, true, data.type == "loot") then
-		-- all loot is collected
-		popup.lootIcon.complete:Show()
-	else
-		popup.lootIcon.complete:Hide()
-	end
+	ns.Loot.OnceAllLootLoaded(data.id, data.type == "loot", function(loot)
+		if popup.waitingToHide then return end
+		local hasLoot, lootCount, suitableLootCount = ns.Loot.HasLoot(data.id, isTreasure)
+		if hasLoot then
+			popup.lootIcon:Show()
+			popup.lootIcon.count:SetText(suitableLootCount)
+		else
+			popup.lootIcon:Hide()
+		end
+		if ns.Loot.Status(data.id, true, data.type == "loot") then
+			-- all loot is collected
+			popup.lootIcon.complete:Show()
+		else
+			popup.lootIcon.complete:Hide()
+		end
+	end)
 end
 
 function module:RefreshMobData(popup)
@@ -125,6 +135,7 @@ function module:SetModel(popup)
 	-- reset the model
 	popup.model:ClearModel()
 	popup.model:SetModelScale(1)
+	popup.model:SetModelAlpha(1)
 	popup.model:SetPosition(0, 0, 0)
 	popup.model:SetFacing(0)
 	popup.model.fallback:Hide()
@@ -631,7 +642,13 @@ PopupMixin.scripts = {
 		self:GetParent():Hide()
 	end,
 	AnimationRequestHideParent = function(self)
-		self:GetParent():HideWhenPossible()
+		local parent = self:GetParent()
+		if parent.model:IsVisible() then
+			-- 10.0 bug: the models within a Model don't inherit alpha
+			-- We *can* directly set the interior model alpha, though
+			parent.model:SetModelAlpha(0)
+		end
+		parent:HideWhenPossible()
 	end,
 }
 function PopupMixin:COMBAT_LOG_EVENT_UNFILTERED()

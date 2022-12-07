@@ -33,6 +33,9 @@ local buttons = {
 
 local blocks = {};
 
+local SHOW_COMMAND = 'SHOW';
+local RESET_COMMAND = 'RESET';
+local SEND_FORMAT = 'SEND|%s|%s|%s|%s';
 local SOLUTION_FORMAT = '%s %s        %s %s';
 
 local TAZAVESH_INSTANCE_ID   = 2441;
@@ -348,7 +351,8 @@ function RH:SendActiveButtons()
     end
 
     local b1, b2, b3, b4 = GetActiveButtons();
-    ChatThrottleLib:SendAddonMessage(ADDON_COMM_MODE, ADDON_COMM_PREFIX, string.format('SEND|%s|%s|%s|%s', b1, b2, b3, b4), partyChatType);
+
+    ChatThrottleLib:SendAddonMessage(ADDON_COMM_MODE, ADDON_COMM_PREFIX, string.format(SEND_FORMAT, b1, b2, b3, b4), partyChatType);
 end
 
 function RH:ReceiveActiveButtons(b1, b2, b3, b4)
@@ -375,7 +379,7 @@ function RH:SendReset()
         return;
     end
 
-    ChatThrottleLib:SendAddonMessage(ADDON_COMM_MODE, ADDON_COMM_PREFIX, 'RESET', partyChatType);
+    ChatThrottleLib:SendAddonMessage(ADDON_COMM_MODE, ADDON_COMM_PREFIX, RESET_COMMAND, partyChatType);
 end
 
 function RH:SendShow()
@@ -384,7 +388,7 @@ function RH:SendShow()
         return;
     end
 
-    ChatThrottleLib:SendAddonMessage(ADDON_COMM_MODE, ADDON_COMM_PREFIX, 'SHOW', partyChatType);
+    ChatThrottleLib:SendAddonMessage(ADDON_COMM_MODE, ADDON_COMM_PREFIX, SHOW_COMMAND, partyChatType);
 end
 
 RH.ResetButton = CreateFrame('Button', nil, MainFrame, 'SharedButtonSmallTemplate');
@@ -566,6 +570,7 @@ function MainFrame:ADDON_LOADED(addonName)
     end
 
     _G['SLASH_RUNEHELPER1'] = '/rh';
+
     SlashCmdList['RUNEHELPER'] = function()
         MainFrame:SetShown(not MainFrame:IsShown());
     end

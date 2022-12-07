@@ -47,13 +47,15 @@ local function hookScript(table, fn, cb)
 end
 
 local function addLine(tooltip, id, kind)
-  if not id or id == "" then return end
+  if not id or id == "" or not tooltip or not tooltip.GetName then return end
   if type(id) == "table" and #id == 1 then id = id[1] end
 
   -- Check if we already added to this tooltip. Happens on the talent frame
   local frame, text
+  local name = tooltip:GetName()
+  if not name then return end
   for i = 1,15 do
-    frame = _G[tooltip:GetName() .. "TextLeft" .. i]
+    frame = _G[name .. "TextLeft" .. i]
     if frame then text = frame:GetText() end
     if text and string.find(text, kind) then return end
   end
@@ -105,6 +107,53 @@ local function addLineByKind(self, id, kind)
   elseif kind == "visual" then
     addLine(self, id, kinds.visual)
   end
+end
+
+local function addFromData(tooltip, data, kind)
+  for _, val in ipairs(data.args) do
+    if kind == kinds.unit and val.guidVal then
+      local id = tonumber(val.guidVal:match("-(%d+)-%x+$"), 10)
+      if id and val.guidVal:match("%a+") ~= "Player" then addLine(tooltip, id, kind) end
+    else
+      if val.field == "id" and val.intVal then
+        addLine(tooltip, val.intVal, kind)
+      end
+    end
+  end
+end
+
+-- https://github.com/Ketho/wow-ui-source-df/blob/e6d3542fc217592e6144f5934bf22c5d599c1f6c/Interface/AddOns/Blizzard_APIDocumentationGenerated/TooltipInfoSharedDocumentation.lua
+if TooltipDataProcessor then
+  TooltipDataProcessor.AddTooltipPostCall(TooltipDataProcessor.AllTypes, function(tooltip, data)
+    if not data or not data.type then return end
+    if data.type == Enum.TooltipDataType.Spell then
+      addFromData(tooltip, data, kinds.spell)
+    elseif data.type == Enum.TooltipDataType.Item then
+      addFromData(tooltip, data, kinds.item)
+    elseif data.type == Enum.TooltipDataType.Unit then
+      addFromData(tooltip, data, kinds.unit)
+    elseif data.type == Enum.TooltipDataType.Currency then
+      addFromData(tooltip, data, kinds.currency)
+    elseif data.type == Enum.TooltipDataType.UnitAura then
+      addFromData(tooltip, data, kinds.spell)
+    elseif data.type == Enum.TooltipDataType.Mount then
+      addFromData(tooltip, data, kinds.mount)
+    elseif data.type == Enum.TooltipDataType.Achievement then
+      addFromData(tooltip, data, kinds.achievement)
+    elseif data.type == Enum.TooltipDataType.EquipmentSet then
+      addFromData(tooltip, data, kinds.equipmentset)
+    elseif data.type == Enum.TooltipDataType.RecipeRankInfo then
+      addFromData(tooltip, data, kinds.spell)
+    elseif data.type == Enum.TooltipDataType.Totem then
+      addFromData(tooltip, data, kinds.spell)
+    elseif data.type == Enum.TooltipDataType.Toy then
+      addFromData(tooltip, data, kinds.item)
+    elseif data.type == Enum.TooltipDataType.Quest then
+      addFromData(tooltip, data, kinds.quest)
+    elseif data.type == Enum.TooltipDataType.Macro then
+      addFromData(tooltip, data, kinds.macro)
+    end
+  end)
 end
 
 local function onSetHyperlink(self, link)
@@ -281,39 +330,41 @@ local f = CreateFrame("frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(_, _, what)
   if what == "Blizzard_AchievementUI" then
-    for i,button in ipairs(AchievementFrameAchievementsContainer.buttons) do
-      hookScript(button, "OnEnter", function()
-        GameTooltip:SetOwner(button, "ANCHOR_NONE")
-        GameTooltip:SetPoint("TOPLEFT", button, "TOPRIGHT", 0, 0)
-        addLine(GameTooltip, button.id, kinds.achievement)
-        GameTooltip:Show()
-      end)
-      hookScript(button, "OnLeave", function()
-        GameTooltip:Hide()
-      end)
+    if AchievementFrameAchievementsContainer then
+      for i,button in ipairs(AchievementFrameAchievementsContainer.buttons) do
+        hookScript(button, "OnEnter", function()
+          GameTooltip:SetOwner(button, "ANCHOR_NONE")
+          GameTooltip:SetPoint("TOPLEFT", button, "TOPRIGHT", 0, 0)
+          addLine(GameTooltip, button.id, kinds.achievement)
+          GameTooltip:Show()
+        end)
+        hookScript(button, "OnLeave", function()
+          GameTooltip:Hide()
+        end)
 
-      local hooked = {}
-      hook(_G, "AchievementButton_GetCriteria", function(index, renderOffScreen)
-        local frame = _G["AchievementFrameCriteria" .. (renderOffScreen and "OffScreen" or "") .. index]
-        if frame and not hooked[frame] then
-          hookScript(frame, "OnEnter", function(self)
-            local button = self:GetParent() and self:GetParent():GetParent()
-            if not button or not button.id then return end
-            local criteriaid = select(10, GetAchievementCriteriaInfo(button.id, index))
-            if criteriaid then
-              GameTooltip:SetOwner(button:GetParent(), "ANCHOR_NONE")
-              GameTooltip:SetPoint("TOPLEFT", button, "TOPRIGHT", 0, 0)
-              addLine(GameTooltip, button.id, kinds.achievement)
-              addLine(GameTooltip, criteriaid, kinds.criteria)
-              GameTooltip:Show()
-            end
-          end)
-          hookScript(frame, "OnLeave", function()
-            GameTooltip:Hide()
-          end)
-          hooked[frame] = true
-        end
-      end)
+        local hooked = {}
+        hook(_G, "AchievementButton_GetCriteria", function(index, renderOffScreen)
+          local frame = _G["AchievementFrameCriteria" .. (renderOffScreen and "OffScreen" or "") .. index]
+          if frame and not hooked[frame] then
+            hookScript(frame, "OnEnter", function(self)
+              local button = self:GetParent() and self:GetParent():GetParent()
+              if not button or not button.id then return end
+              local criteriaid = select(10, GetAchievementCriteriaInfo(button.id, index))
+              if criteriaid then
+                GameTooltip:SetOwner(button:GetParent(), "ANCHOR_NONE")
+                GameTooltip:SetPoint("TOPLEFT", button, "TOPRIGHT", 0, 0)
+                addLine(GameTooltip, button.id, kinds.achievement)
+                addLine(GameTooltip, criteriaid, kinds.criteria)
+                GameTooltip:Show()
+              end
+            end)
+            hookScript(frame, "OnLeave", function()
+              GameTooltip:Hide()
+            end)
+            hooked[frame] = true
+          end
+        end)
+      end
     end
   elseif what == "Blizzard_Collections" then
     hook(_G, "WardrobeCollectionFrame_SetAppearanceTooltip", function(self, sources)

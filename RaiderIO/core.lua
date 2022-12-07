@@ -4410,10 +4410,11 @@ do
         },
         ["us"] = {
             ["Skullcrusher"] = {
-                ["Aspyrox"] = "Raider.IO Creator",
+                ["Aspyrio"] = "Raider.IO Creator",
                 ["Ulsoga"] = "Raider.IO Creator",
                 ["Mccaffrey"] = "Killing Keys Since 1977!",
-                ["Oscassey"] = "Master of dis guys"
+                ["Oscassey"] = "Master of dis guys",
+                ["Rhoma"] = "Plays an MDI Champion on TV"
             },
             ["Thrall"] = {
                 ["Firstclass"] = "Author of mythicpl.us"

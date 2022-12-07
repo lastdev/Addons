@@ -190,7 +190,7 @@ local ConRO_Warrior, ids = ...;
 		Charge = {spellID = 100},
 		DefensiveStance = {spellID = 386208, talentID = 112187},
 		Execute = {spellID = 5308},
-			MassacreExecute = {spellID = 280735},
+			MassacreExecute = {spellID = 280735, talentID = 112279},
 		Hamstring = {spellID = 1715},
 		HeroicLeap = {spellID = 6544, talentID = 112208},
 		HeroicThrow = {spellID = 57755},

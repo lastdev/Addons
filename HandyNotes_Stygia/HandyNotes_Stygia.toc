@@ -2,7 +2,7 @@
 ## Title: HandyNotes: Stygia
 ## Notes: Where are the Stygia gathering nodes in the Maw?
 ## Author: Kemayo
-## Version: v100002.0
+## Version: v100002.1
 ## DefaultState: enabled
 ## X-Category: Map
 ## X-eMail: kemayo @ gmail DOT com

@@ -666,6 +666,15 @@ function GoGo_ChooseMount()
 	if GoGo_Variables.Player.MapID ~= 1355 then
 	GoGo_Variables.FilteredMounts = GoGo_FilterMountsOut(GoGo_Variables.FilteredMounts, 53)
 	end
+	
+	-- Force Dragon riding mounts only
+	if (table.getn(mounts) == 0) and GoGo_Variables.ZoneExclude.DragonRiding then
+		mounts = GoGo_FilterMountsIn(GoGo_Variables.FilteredMounts, 406) or {}
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ChooseMount: Forcing Dragon riding mounts.")
+		end --if		-- if this comes empty we will still have ground mounts
+	end
+	
 	if (table.getn(mounts) == 0) and GoGo_Variables.CanFly then
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_ChooseMount: Looking for flying mounts since we past flight checks.")

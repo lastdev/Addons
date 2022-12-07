@@ -1,5 +1,12 @@
 ## Revision History:
 
+#### v22 (November 28, 2022)
+-------------------------------
+* Updated zhCN by [nanjuekaien1](https://github.com/Dathwada/handynotes-oribos/pull/9)
+* Removed AceTimer-3.0 lib
+
+##### NOTE: If you liked this addon, you might want to check out my new addon for the Dragonflight's capital city [Valdrakken](https://www.curseforge.com/wow/addons/handynotes-valdrakken)
+
 #### v21 (November 16, 2022)
 -------------------------------
 * Added TomTom waypoint from info

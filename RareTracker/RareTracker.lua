@@ -7,7 +7,8 @@ local rare_tracker_addons = {
 	"RareTrackerVale", 
 	"RareTrackerWorldBosses", 
 	"RareTrackerMaw", 
-	"RareTrackerZerethMortis"
+	"RareTrackerZerethMortis", 
+	"RareTrackerDragonflight"
 }
 
 -- Simply check whether all addons are installed. If not, warn the user!

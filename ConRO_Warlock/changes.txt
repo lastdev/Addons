@@ -1,10 +1,10 @@
-lightweight tag 1da77b91e2406828bccb7b0e227feb40c5073109 v10.0.2-release
+lightweight tag de598292aeabef680aa5f7a5d3d3da8aac5bf415 v10.0.5
 Author:	Vae <emuha17@gmail.com>
-Date:	Tue Nov 22 15:19:35 2022 -1000
+Date:	Sat Dec 3 20:06:05 2022 -1000
 
-commit 1da77b91e2406828bccb7b0e227feb40c5073109
+commit de598292aeabef680aa5f7a5d3d3da8aac5bf415
 Author: Vae <emuha17@gmail.com>
-Date:   Tue Nov 22 15:19:35 2022 -1000
+Date:   Sat Dec 3 20:06:05 2022 -1000
 
-    Talent tags missed
+    Pvp talent update
 

@@ -546,7 +546,7 @@ do
 
                         -- Check for Toggles.
                         for n, setting in pairs( spec.settings ) do
-                            if not setting.info.arg or setting.info.arg() then
+                            if setting.info and ( not setting.info.arg or setting.info.arg() ) then
                                 if setting.info.type == "toggle" then
                                     insert( menuData, {
                                         text = setting.info.name,
@@ -712,7 +712,7 @@ do
     }
 
     local kbEvents = {
-        ACTIONBAR_SLOT_CHANGED = 1,
+        -- ACTIONBAR_SLOT_CHANGED = 1,
         ACTIONBAR_PAGE_CHANGED = 1,
         ACTIONBAR_UPDATE_STATE = 1,
         SPELLS_CHANGED = 1,

@@ -11,7 +11,7 @@ local CommitKey = ns.commitKey
 local FindUnitBuffByID, FindUnitDebuffByID = ns.FindUnitBuffByID, ns.FindUnitDebuffByID
 local GetItemInfo = ns.CachedGetItemInfo
 local GetResourceInfo, GetResourceKey = ns.GetResourceInfo, ns.GetResourceKey
-local IsSpellDisabled = ns.IsSpellDisabled
+local ResetDisabledGearAndSpells = ns.ResetDisabledGearAndSpells
 local RegisterEvent = ns.RegisterEvent
 local RegisterUnitEvent = ns.RegisterUnitEvent
 
@@ -27,8 +27,6 @@ local mt_resource = ns.metatables.mt_resource
 local GetItemCooldown = _G.GetItemCooldown
 local GetSpellDescription, GetSpellTexture = _G.GetSpellDescription, _G.GetSpellTexture
 local GetSpecialization, GetSpecializationInfo = _G.GetSpecialization, _G.GetSpecializationInfo
-
-local FlagDisabledSpells
 
 
 local specTemplate = {
@@ -1375,7 +1373,15 @@ all:RegisterAuras( {
     power_infusion = {
         id = 10060,
         duration = 20,
-        max_stack = 1
+        max_stack = 1,
+        shared = "player"
+    },
+
+    battle_shout = {
+        id = 6673,
+        duration = 3600,
+        max_stack = 1,
+        shared = "player"
     },
 
     -- SL Season 3
@@ -2253,7 +2259,8 @@ local gotn_classes = {
     HUNTER = 59543,
     PRIEST = 59544,
     MAGE = 59548,
-    PALADIN = 59542
+    PALADIN = 59542,
+    ROGUE = 370626
 }
 
 local baseClass = UnitClassBase( "player" ) or "WARRIOR"
@@ -2262,7 +2269,7 @@ all:RegisterAura( "gift_of_the_naaru", {
     id = gotn_classes[ baseClass ],
     duration = 5,
     max_stack = 1,
-    copy = { 28800, 121093, 59545, 59547, 59543, 59544, 59548, 59542 }
+    copy = { 28800, 121093, 59545, 59547, 59543, 59544, 59548, 59542, 370626 }
 } )
 
 all:RegisterAbility( "gift_of_the_naaru", {
@@ -2383,6 +2390,7 @@ local bf_classes = {
     SHAMAN = 33697,
     WARLOCK = 33702,
     WARRIOR = 20572,
+    PRIEST = 33702
 }
 
 all:RegisterAbilities( {
@@ -4636,6 +4644,8 @@ do
         { "cosmic_gladiators_badge_of_ferocity", 186866 },
         { "eternal_aspirants_badge_of_ferocity", 192352 },
         { "eternal_gladiators_badge_of_ferocity", 192295 },
+        { "crimson_aspirants_badge_of_ferocity", 201449 },
+        { "crimson_gladiators_badge_of_ferocity", 201807 }
     }
 
     local pvp_badges_copy = {}
@@ -4657,7 +4667,7 @@ do
         cooldown = 120,
         gcd = "off",
 
-        items = { 162966, 161902, 165223, 165058, 167528, 167380, 172849, 172669, 175884, 175921, 185161, 185197, 186906, 186866, 192352, 192295 },
+        items = { 162966, 161902, 165223, 165058, 167528, 167380, 172849, 172669, 175884, 175921, 185161, 185197, 186906, 186866, 192352, 192295, 201449, 201807 },
         texture = 135884,
 
         toggle = "cooldowns",
@@ -4726,6 +4736,8 @@ do
         cosmic_gladiators_emblem = 186868,
         eternal_aspirants_emblem = 192392,
         eternal_gladiators_emblem = 192297,
+        crimson_aspirants_emblem = 201452,
+        crimson_gladiators_emblem = 201809
     }
 
     local pvp_emblems_copy = {}
@@ -4756,7 +4768,7 @@ do
             end
             return e
         end,
-        items = { 162898, 161675, 165221, 165056, 167378, 167526, 172667, 172847, 178334, 178447, 185242, 185282, 186946, 186868, 192392, 192297 },
+        items = { 162898, 161675, 165221, 165056, 167378, 167526, 172667, 172847, 178334, 178447, 185242, 185282, 186946, 186868, 192392, 192297, 201452, 201809 },
         toggle = "cooldowns",
 
         handler = function ()
@@ -5946,23 +5958,6 @@ function Hekili:GetActivePack()
 end
 
 
-do
-    local seen = {}
-
-    FlagDisabledSpells = function()
-        wipe( seen )
-
-        for _, v in pairs( class.abilities ) do
-            if not seen[ v ] then
-                if v.id > 0 then v.disabled = IsSpellDisabled( v.id ) end
-                seen[ v ] = true
-            end
-        end
-    end
-    ns.FlagDisabledSpells = FlagDisabledSpells
-end
-
-
 Hekili.SpecChangeHistory = {}
 
 function Hekili:SpecializationChanged()
@@ -6238,14 +6233,12 @@ function Hekili:SpecializationChanged()
     ns.callHook( "specializationChanged" )
 
     ns.updateTalents()
-    -- ns.updateGear()
+    ResetDisabledGearAndSpells()
 
     state.swings.mh_speed, state.swings.oh_speed = UnitAttackSpeed( "player" )
 
     self:UpdateDisplayVisibility()
     self:UpdateDamageDetectionForCLEU()
-
-    FlagDisabledSpells()
 end
 
 
@@ -6265,17 +6258,15 @@ do
         CHALLENGE_MODE_START = 1,
         CHALLENGE_MODE_RESET = 1,
         CHALLENGE_MODE_COMPLETED = 1,
-        PLAYER_ENTERING_WORLD = 1,
         PLAYER_ALIVE = 1,
         ZONE_CHANGED_NEW_AREA = 1
     }
 
     local WipeCovenantCache = ns.WipeCovenantCache
 
-
     local function CheckSpellsAndGear()
         WipeCovenantCache()
-        FlagDisabledSpells()
+        ResetDisabledGearAndSpells()
         ns.updateGear()
     end
 

@@ -16,6 +16,7 @@ IDTip.kinds = {
   currency = "CurrencyID",
   artifactpower = "ArtifactPowerID",
   enchant = "EnchantID",
+  faction = "FactionID",
   bonus = "BonusID",
   gem = "GemID",
   mount = "MountID",
@@ -245,6 +246,6 @@ function IDTipLib:Log(...)
   print("|cffFF8000[IDTip]|r ", ...)
 end
 
--- IDTipLib:Log("Library Loaded", "11.0.29")
+-- IDTipLib:Log("Library Loaded", "11.0.32")
 
 setmetatable(IDTip, { __index = setmetatable(IDTipLib, getmetatable(IDTip)) })
