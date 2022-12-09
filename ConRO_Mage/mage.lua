@@ -19,6 +19,7 @@ function ConRO:EnableRotationModule(mode)
 		if ConRO.db.profile._Spec_1_Enabled then
 			self.NextSpell = ConRO.Mage.Arcane;
 			self.ToggleDamage();
+			self.BlockAoE();
 			ConROWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
 			ConRODefenseWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
 		else
@@ -207,8 +208,12 @@ function ConRO.Mage.Arcane(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 	local _ArcaneExplosion, _ArcaneExplosion_RDY														= ConRO:AbilityReady(Ability.ArcaneExplosion, timeShift);
 	local _ArcaneIntellect, _ArcaneIntellect_RDY														= ConRO:AbilityReady(Ability.ArcaneIntellect, timeShift);
 	local _ArcaneMissiles, _ArcaneMissiles_RDY 															= ConRO:AbilityReady(Ability.ArcaneMissiles, timeShift);
-		local _Clearcasting_BUFF 																			= ConRO:Aura(Buff.Clearcasting, timeShift);
-		local _Clearcasting_PvP_BUFF 																		= ConRO:Aura(Buff.ClearcastingPvP, timeShift);
+		local _, _ArcaneHarmony_COUNT = ConRO:Form(Form.ArcaneHarmony);
+		local _Clearcasting_BUFF, _Clearcasting_COUNT = ConRO:Aura(Buff.Clearcasting, timeShift);
+		local _ClearcastingAE_BUFF, _ClearcastingAE_COUNT = ConRO:Aura(Buff.ClearcastingAE, timeShift);
+		local _Clearcasting_MCOUNT = 3;
+		local _NetherPrecision_BUFF, _NetherPrecision_COUNT = ConRO:Aura(Buff.NetherPrecision, timeShift);
+	local _ArcaneSurge, _ArcaneSurge_RDY = ConRO:AbilityReady(Ability.ArcaneSurge, timeShift);
 	local _Blink, _Blink_RDY																			= ConRO:AbilityReady(Ability.Blink, timeShift);
 	local _ConjureManaGem, _ConjureManaGem_RDY															= ConRO:AbilityReady(Ability.ManaGem.Conjure, timeShift);
 		local _ManaGem, _ManaGem_RDY, _, _, _ManaGem_COUNT													= ConRO:ItemReady(Ability.ManaGem.Use.spellID, timeShift);
@@ -217,7 +222,12 @@ function ConRO.Mage.Arcane(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 		local _Evocation_BUFF 																				= ConRO:Aura(Buff.Evocation, timeShift);
 	local _PresenceofMind, _PresenceofMind_RDY 															= ConRO:AbilityReady(Ability.PresenceofMind, timeShift);
 		local _PresenceofMind_BUFF 																			= ConRO:Form(Form.PresenceofMind, timeShift);
+	local _RadiantSpark, _RadiantSpark_RDY																= ConRO:AbilityReady(Ability.RadiantSpark, timeShift);
+		local _RadiantSpark_DEBUFF = ConRO:TargetAura(Debuff.RadiantSpark, timeShift);
+		local _RadiantSparkVulnerability_DEBUFF, _RadiantSparkVulnerability_COUNT = ConRO:TargetAura(Debuff.RadiantSparkVulnerability, timeShift);
 	local _Spellsteal, _Spellsteal_RDY 																	= ConRO:AbilityReady(Ability.Spellsteal, timeShift);
+	local _TimeWarp, _TimeWarp_RDY = ConRO:AbilityReady(Ability.TimeWarp, timeShift);
+		local _, _TemporalDisplacement = ConRO:Heroism();
 	local _TouchoftheMagi, _TouchoftheMagi_RDY, _TouchoftheMagi_CD										= ConRO:AbilityReady(Ability.TouchoftheMagi, timeShift);
 		local _TouchoftheMagi_DEBUFF 																		= ConRO:TargetAura(Debuff.TouchoftheMagi, timeShift);
 
@@ -231,13 +241,13 @@ function ConRO.Mage.Arcane(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 		local _RuneofPower_BUFF 																			= ConRO:Form(Form.RuneofPower, timeShift);
 	local _Shimmer, _Shimmer_RDY 																		= ConRO:AbilityReady(Ability.Shimmer, timeShift);
 
-	local _RadiantSpark, _RadiantSpark_RDY																= ConRO:AbilityReady(Ability.RadiantSpark, timeShift);
+
 	local _ShiftingPower, _ShiftingPower_RDY															= ConRO:AbilityReady(Ability.ShiftingPower, timeShift);
 
 --Conditions
-	local _is_moving 																					= ConRO:PlayerSpeed();
-	local _enemies_in_melee, _target_in_melee															= ConRO:Targets("Melee");
-	local _target_in_10yrds 																			= CheckInteractDistance("target", 3);
+	local _is_moving = ConRO:PlayerSpeed();
+	local _enemies_in_melee, _target_in_melee = ConRO:Targets("Melee");
+	local _enemies_in_10yrds, _target_in_10yrds = ConRO:Targets("10");
 
 	if currentSpell == _ArcaneBlast then
 		_ArcaneCharges = _ArcaneCharges + 1;
@@ -252,8 +262,8 @@ function ConRO.Mage.Arcane(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 		end
 
 	if _is_PvP then
-		if pvpChosen[PvPTalent.ArcaneEmpowerment] then
-			_Clearcasting_BUFF = _Clearcasting_PvP_BUFF;
+		if pvpChosen[PvPTalent.ArcaneEmpowerment.spellID] then
+			_Clearcasting_BUFF, _Clearcasting_COUNT, _Clearcasting_MCOUNT = _ClearcastingAE_BUFF, _ClearcastingAE_COUNT, 5;
 		end
 	end
 
@@ -266,8 +276,10 @@ function ConRO.Mage.Arcane(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 
 	ConRO:AbilityRaidBuffs(_ArcaneIntellect, _ArcaneIntellect_RDY and not ConRO:RaidBuff(Buff.ArcaneIntellect));
 
+	ConRO:AbilityBurst(_ArcaneSurge, _ArcaneSurge_RDY and _RadiantSparkVulnerability_COUNT == 3 and ConRO:BurstMode(_ArcaneSurge));
 	ConRO:AbilityBurst(_PresenceofMind, _PresenceofMind_RDY and not _PresenceofMind_BUFF and _ArcanePower_BUFF and _ArcanePower_DUR <= 3 and ConRO:BurstMode(_PresenceofMind));
 	ConRO:AbilityBurst(_RuneofPower, _RuneofPower_RDY and not _RuneofPower_BUFF and not _ArcanePower_BUFF and currentSpell ~= _RuneofPower and ConRO:BurstMode(_RuneofPower));
+	ConRO:AbilityBurst(_TimeWarp, _TimeWarp_RDY and tChosen[Passive.TemporalWarp.talentID] and (_TemporalDisplacement or ConRO:IsSolo()) and ConRO:BurstMode(_TimeWarp));
 	ConRO:AbilityBurst(_TouchoftheMagi, _TouchoftheMagi_RDY and _ArcaneCharges <= 0 and currentSpell ~= _TouchoftheMagi and ConRO:BurstMode(_TouchoftheMagi));
 
 	ConRO:AbilityBurst(_ShiftingPower, _ShiftingPower_RDY and _target_in_10yrds and not _ArcanePower_RDY and not _Evocation_RDY and not _TouchoftheMagi_RDY and ConRO:BurstMode(_ShiftingPower));
@@ -275,173 +287,178 @@ function ConRO.Mage.Arcane(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 --Warnings	
 
 --Rotations
-	if _Evocation_BUFF and _Mana < _Mana_Max then
-		tinsert(ConRO.SuggestedSpells, _Evocation);
-	end
-
 	if not _in_combat then
 		if _ConjureManaGem_RDY and _ManaGem_COUNT <= 0 then
 			tinsert(ConRO.SuggestedSpells, _ConjureManaGem);
-		end
-
-		if _ArcaneBlast_RDY and currentSpell ~= _ArcaneBlast and currentSpell ~= _TouchoftheMagi then
-			tinsert(ConRO.SuggestedSpells, _ArcaneBlast);
-		end
-
-		if _ArcaneBarrage_RDY and _TouchoftheMagi_RDY and _ArcaneCharges >= 4 and currentSpell ~= _TouchoftheMagi then
-			tinsert(ConRO.SuggestedSpells, _ArcaneBarrage);
-		end
-
-		if _TouchoftheMagi_RDY and currentSpell ~= _TouchoftheMagi and ConRO:FullMode(_TouchoftheMagi) then
-			tinsert(ConRO.SuggestedSpells, _TouchoftheMagi);
+			_ConjureManaGem_RDY = false;
 		end
 	end
 
-	if _Evocation_RDY or _Evocation_CD < 30 then
-		if _RadiantSpark_RDY and currentSpell ~= _RadiantSpark then
-			tinsert(ConRO.SuggestedSpells, _RadiantSpark);
-		end
-
-		if _ArcaneOrb_RDY and not _TouchoftheMagi_RDY and _ArcaneCharges <= 3 and currentSpell ~= _TouchoftheMagi then
-			tinsert(ConRO.SuggestedSpells, _ArcaneOrb);
-		end
-
-		if _NetherTempest_RDY and _ArcaneCharges >= 4 and not _NetherTempest_DEBUFF and not _ArcanePower_BUFF and not _RuneofPower_BUFF then
-			tinsert(ConRO.SuggestedSpells, _NetherTempest);
-		end
-
-		if _ManaGem_RDY and _ManaGem_COUNT > 0 and _Mana_Percent <= 85 and not _ArcanePower_BUFF then
-			tinsert(ConRO.SuggestedSpells, _ManaGem);
-		end
-
-		if _RuneofPower_RDY and not _RuneofPower_BUFF and not _ArcanePower_BUFF and currentSpell ~= _RuneofPower and ConRO:FullMode(_RuneofPower) then
-			tinsert(ConRO.SuggestedSpells, _RuneofPower);
-		end
-
-		if _TouchoftheMagi_RDY and currentSpell ~= _TouchoftheMagi then
-			tinsert(ConRO.SuggestedSpells, _TouchoftheMagi);
-		end
-
-		if _PresenceofMind_RDY and not _PresenceofMind_BUFF and _ArcanePower_BUFF and _ArcanePower_DUR <= 3 and ConRO:FullMode(_PresenceofMind) then
-			tinsert(ConRO.SuggestedSpells, _PresenceofMind);
-		end
-
-		if ConRO_AoEButton:IsVisible() then
-			if _ArcaneBarrage_RDY and _ArcaneCharges >= 4 then
-				tinsert(ConRO.SuggestedSpells, _ArcaneBarrage);
-			end
-
-			if _ArcaneExplosion_RDY then
-				tinsert(ConRO.SuggestedSpells, _ArcaneExplosion);
-			end
-		else
-			if _ArcaneMissiles_RDY and ((_Clearcasting_BUFF and _Mana_Percent < 95 and _TouchoftheMagi_CD > 10) or (_TouchoftheMagi_DEBUFF and (tChosen[ids.Arc_Talent.ArcaneEcho] or _Clearcasting_BUFF))) then
-				tinsert(ConRO.SuggestedSpells, _ArcaneMissiles);
-			end
-
-			if _ArcaneBlast_RDY then
-				tinsert(ConRO.SuggestedSpells, _ArcaneBlast);
-			end
-		end
-
-		if _Evocation_RDY then
+	for i = 1, 2, 1 do
+		if _Evocation_BUFF and _Mana < _Mana_Max then
 			tinsert(ConRO.SuggestedSpells, _Evocation);
 		end
-	end
 
-	if (_Evocation_RDY or _Evocation_CD < 30) then
-		if _ArcaneBarrage_RDY and _TouchoftheMagi_RDY and _ArcaneCharges >= 4 and currentSpell ~= _TouchoftheMagi then
-			tinsert(ConRO.SuggestedSpells, _ArcaneBarrage);
-		end
-
-		if _RadiantSpark_RDY and currentSpell ~= _RadiantSpark then
-			tinsert(ConRO.SuggestedSpells, _RadiantSpark);
-		end
-
-		if _TouchoftheMagi_RDY and currentSpell ~= _TouchoftheMagi and ConRO:FullMode(_TouchoftheMagi) then
-			tinsert(ConRO.SuggestedSpells, _TouchoftheMagi);
-		end
-
-		if _ArcaneOrb_RDY and not _TouchoftheMagi_RDY and _ArcaneCharges <= 3 and currentSpell ~= _TouchoftheMagi then
-			tinsert(ConRO.SuggestedSpells, _ArcaneOrb);
-		end
-
-		if _NetherTempest_RDY and _ArcaneCharges >= 4 and not _NetherTempest_DEBUFF then
-			tinsert(ConRO.SuggestedSpells, _NetherTempest);
-		end
-
-		if _ArcaneBlast_RDY and _ArcaneCharges < 4 and currentSpell ~= _TouchoftheMagi then
-			tinsert(ConRO.SuggestedSpells, _ArcaneBlast);
-		end
-
-	elseif _TouchoftheMagi_DEBUFF or currentSpell == _TouchoftheMagi then
-		if _ArcaneMissiles_RDY and (tChosen[Passive.ArcaneEcho.talentID] or _Clearcasting_BUFF) then
-			tinsert(ConRO.SuggestedSpells, _ArcaneMissiles);
-		end
-
-		if _ArcaneBlast_RDY then
-			tinsert(ConRO.SuggestedSpells, _ArcaneBlast);
-		end
-	else
-		if _ShiftingPower_RDY and _target_in_10yrds and not _ArcanePower_RDY and not _Evocation_RDY and not _TouchoftheMagi_RDY and ConRO:FullMode(_ShiftingPower) then
-			tinsert(ConRO.SuggestedSpells, _ShiftingPower);
-		end
-
-		if _RuneofPower_RDY and not _RuneofPower_BUFF and _TouchoftheMagi_RDY and _ArcanePower_CD >= 42 and currentSpell ~= _RuneofPower and ConRO:FullMode(_RuneofPower) then
-			tinsert(ConRO.SuggestedSpells, _RuneofPower);
-		end
-
-		if _ArcaneBarrage_RDY and _ArcaneCharges >= 1 and _TouchoftheMagi_RDY and _ArcanePower_CD >= 40 and currentSpell ~= _TouchoftheMagi then
-			tinsert(ConRO.SuggestedSpells, _ArcaneBarrage);
-		end
-
-		if _TouchoftheMagi_RDY and _ArcanePower_CD >= 40 and currentSpell ~= _TouchoftheMagi and ConRO:FullMode(_TouchoftheMagi) then
-			tinsert(ConRO.SuggestedSpells, _TouchoftheMagi);
-		end
-
-		if _RadiantSpark_RDY and currentSpell ~= _RadiantSpark then
-			tinsert(ConRO.SuggestedSpells, _RadiantSpark);
-		end
-
-		if _NetherTempest_RDY and _ArcaneCharges >= 4 and not _NetherTempest_DEBUFF then
-			tinsert(ConRO.SuggestedSpells, _NetherTempest);
-		end
-
-		if _ArcaneOrb_RDY and not _TouchoftheMagi_RDY and _ArcaneCharges <= 3 and currentSpell ~= _TouchoftheMagi then
-			tinsert(ConRO.SuggestedSpells, _ArcaneOrb);
-		end
-
-		if _ArcaneBlast_RDY and _RuleofThrees_BUFF then
-			tinsert(ConRO.SuggestedSpells, _ArcaneBlast);
-		end
-
-		if ConRO_AoEButton:IsVisible() then
-			if _ArcaneExplosion_RDY and _Clearcasting_BUFF then
-				tinsert(ConRO.SuggestedSpells, _ArcaneExplosion);
+		if _RadiantSpark_DEBUFF or _RadiantSparkVulnerability_DEBUFF or currentSpell == _RadiantSpark then
+			if _ArcaneBlast_RDY and ((_RadiantSparkVulnerability_COUNT < 3 and _ArcaneSurge_RDY) or (_RadiantSparkVulnerability_COUNT < 4 and not _ArcaneSurge_RDY)) then
+				tinsert(ConRO.SuggestedSpells, _ArcaneBlast);
+				_RadiantSparkVulnerability_COUNT = _RadiantSparkVulnerability_COUNT + 1;
+				_ArcaneCharges = _ArcaneCharges + 1;
 			end
 
-			if _ArcaneBarrage_RDY and _ArcaneCharges >= 4 and (_Mana_Percent < _Mana_Threshold) then
+			if _ArcaneSurge_RDY and _RadiantSparkVulnerability_COUNT == 3 and ConRO:FullMode(_ArcaneSurge) then
+				tinsert(ConRO.SuggestedSpells, _ArcaneSurge);
+				_RadiantSparkVulnerability_COUNT = _RadiantSparkVulnerability_COUNT + 1;
+			end
+
+			if _NetherTempest_RDY then
+				tinsert(ConRO.SuggestedSpells, _NetherTempest);
+				_NetherTempest_RDY = false;
+			end
+
+			if _ArcaneBarrage_RDY and _RadiantSparkVulnerability_COUNT == 4 then
 				tinsert(ConRO.SuggestedSpells, _ArcaneBarrage);
+				_ArcaneBarrage_RDY = false;
+				_ArcaneCharges = 0;
+			end
+		end
+
+		if _TouchoftheMagi_DEBUFF then
+			if _enemies_in_10yrds >= 3 then
+				if _ArcaneExplosion_RDY then
+					tinsert(ConRO.SuggestedSpells, _ArcaneExplosion);
+					_ArcaneCharges = _ArcaneCharges + 1;
+				end
+			else
+				if _ArcaneBlast_RDY and _NetherPrecision_COUNT >= 1 then
+					tinsert(ConRO.SuggestedSpells, _ArcaneBlast);
+					_NetherPrecision_COUNT = _NetherPrecision_COUNT - 1;
+					_ArcaneCharges = _ArcaneCharges + 1;
+				end
+
+				if _ArcaneMissiles_RDY and _Clearcasting_COUNT >= 1 then
+					tinsert(ConRO.SuggestedSpells, _ArcaneMissiles);
+					_Clearcasting_COUNT = _Clearcasting_COUNT - 1;
+				end
+			end
+		end
+
+		if ConRO:BurnPhase() then
+			if _Evocation_RDY and tChosen[Passive.SiphonStorm.talentID] then
+				tinsert(ConRO.SuggestedSpells, _Evocation);
+				_Evocation_RDY = false;
+				_Evocation_BUFF = true;
 			end
 
-			if _ArcaneExplosion_RDY then
-				tinsert(ConRO.SuggestedSpells, _ArcaneExplosion);
+			if _TimeWarp_RDY and ((tChosen[Passive.TemporalWarp.talentID] and _TemporalDisplacement) or ConRO:IsSolo()) and ConRO:FullMode(_TimeWarp) then
+				tinsert(ConRO.SuggestedSpells, _TimeWarp);
+				_TimeWarp_RDY = false;
+			end
+
+			if _ArcaneMissiles_RDY and tChosen[Passive.ArcaneHarmony.talentID] and _ArcaneHarmony_COUNT < 20 then
+				tinsert(ConRO.SuggestedSpells, _ArcaneMissiles);
+				_ArcaneHarmony_COUNT = _ArcaneHarmony_COUNT + 5;
+			end
+
+			if _ArcaneOrb_RDY then
+				tinsert(ConRO.SuggestedSpells, _ArcaneOrb);
+				_ArcaneOrb_RDY = false;
+				_ArcaneCharges = _ArcaneCharges + 1;
+			end
+
+			if _RuneofPower_RDY and not _RuneofPower_BUFF and currentSpell ~= _RuneofPower and ConRO:FullMode(_RuneofPower) then
+				tinsert(ConRO.SuggestedSpells, _RuneofPower);
+				_RuneofPower_RDY = false;
+			end
+
+			if _PresenceofMind_RDY and not _PresenceofMind_BUFF and ConRO:FullMode(_PresenceofMind) then
+				tinsert(ConRO.SuggestedSpells, _PresenceofMind);
+				_PresenceofMind_RDY = false;
+			end
+
+			if _RadiantSpark_RDY and currentSpell ~= _RadiantSpark then
+				tinsert(ConRO.SuggestedSpells, _RadiantSpark);
+				_RadiantSpark_RDY = false;
+			end
+
+			if _TouchoftheMagi_RDY then
+				tinsert(ConRO.SuggestedSpells, _TouchoftheMagi);
+				_TouchoftheMagi_RDY = false;
+			end
+
+			if _ManaGem_RDY and _ManaGem_COUNT > 0 and _Mana_Percent <= 75 and _Clearcasting_COUNT <= 1 then
+				tinsert(ConRO.SuggestedSpells, _ManaGem);
+				_ManaGem_RDY = false;
+			end
+
+			if _ArcaneBarrage_RDY and _ArcaneCharges >= 4 and _enemies_in_10yrds >= 3 then
+				tinsert(ConRO.SuggestedSpells, _ArcaneBarrage);
+				_ArcaneBarrage_RDY = false;
+				_ArcaneCharges = 0;
+			end
+
+			if _enemies_in_10yrds >= 3 then
+				if _ArcaneExplosion_RDY then
+					tinsert(ConRO.SuggestedSpells, _ArcaneExplosion);
+					_ArcaneCharges = _ArcaneCharges + 1;
+				end
+			else
+				if _ArcaneBlast_RDY then
+					tinsert(ConRO.SuggestedSpells, _ArcaneBlast);
+					_ArcaneCharges = _ArcaneCharges + 1;
+				end
 			end
 		else
-			if _ArcaneMissiles_RDY and _Clearcasting_BUFF and _Mana_Percent < 95 and _TouchoftheMagi_CD > 10 then
+			if _ArcaneOrb_RDY then
+				tinsert(ConRO.SuggestedSpells, _ArcaneOrb);
+				_ArcaneOrb_RDY = false;
+				_ArcaneCharges = _ArcaneCharges + 1;
+			end
+
+			if _ShiftingPower_RDY and ConRO:FullMode(_ShiftingPower) then
+				tinsert(ConRO.SuggestedSpells, _ShiftingPower);
+			end
+
+			if _ArcaneMissiles_RDY and _Clearcasting_COUNT >= _Clearcasting_MCOUNT then
 				tinsert(ConRO.SuggestedSpells, _ArcaneMissiles);
+				_Clearcasting_COUNT = _Clearcasting_COUNT - 1;
 			end
 
-			if _ArcaneBarrage_RDY and _ArcaneCharges >= 2 and _Mana_Percent < _Mana_Threshold then
+			if _ArcaneBarrage_RDY and _ArcaneCharges >= 4 and (((_Mana_Percent < _Mana_Threshold) and not _Evocation_RDY) or _enemies_in_10yrds >= 3) then
 				tinsert(ConRO.SuggestedSpells, _ArcaneBarrage);
+				_ArcaneCharges = 0;
 			end
-		end
 
-		if _ArcaneBlast_RDY then
-			tinsert(ConRO.SuggestedSpells, _ArcaneBlast);
+			if _ArcaneBlast_RDY and _NetherPrecision_COUNT >= 1 then
+				tinsert(ConRO.SuggestedSpells, _ArcaneBlast);
+				_NetherPrecision_COUNT = _NetherPrecision_COUNT - 1;
+				_ArcaneCharges = _ArcaneCharges + 1;
+			end
+
+			if _ArcaneMissiles_RDY and _Clearcasting_COUNT >= 1 then
+				tinsert(ConRO.SuggestedSpells, _ArcaneMissiles);
+				_Clearcasting_COUNT = _Clearcasting_COUNT - 1;
+			end
+
+			if _NetherTempest_RDY and _ArcaneCharges >= 4 and not _NetherTempest_DEBUFF then
+				tinsert(ConRO.SuggestedSpells, _NetherTempest);
+				_NetherTempest_RDY = false;
+			end
+
+			if _enemies_in_10yrds >= 3 then
+				if _ArcaneExplosion_RDY then
+					tinsert(ConRO.SuggestedSpells, _ArcaneExplosion);
+					_ArcaneCharges = _ArcaneCharges + 1;
+				end
+			else
+				if _ArcaneBlast_RDY then
+					tinsert(ConRO.SuggestedSpells, _ArcaneBlast);
+					_ArcaneCharges = _ArcaneCharges + 1;
+				end
+			end
 		end
 	end
-return nil;
+	return nil;
 end
 
 function ConRO.Mage.ArcaneDef(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
@@ -1046,4 +1063,28 @@ function ConRO.Mage.FrostDef(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 		tinsert(ConRO.SuggestedDefSpells, _MirrorImage);
 	end
 	return nil;
+end
+
+function ConRO:BurnPhase()
+	local _, _ArcaneBlast_RDY = ConRO:AbilityReady(ids.Arc_Ability.ArcaneBlast, timeShift);
+	local _, _RadiantSpark_RDY = ConRO:AbilityReady(ids.Arc_Ability.RadiantSpark, timeShift);
+	local _, _RuneofPower_RDY =  ConRO:AbilityReady(ids.Arc_Ability.RuneofPower, timeShift);
+	local _, _TouchoftheMagi_RDY = ConRO:AbilityReady(ids.Arc_Ability.TouchoftheMagi, timeShift);
+		local _TouchoftheMagi_DEBUFF = ConRO:TargetAura(ids.Arc_Debuff.TouchoftheMagi, timeShift);
+
+	if self.arcaneBurnPhase == nil then
+		self.arcaneBurnPhase = false;
+	end
+
+	if not self.arcaneBurnPhase and ((self.PlayerTalents[ids.Arc_Ability.TouchoftheMagi.talentID] and _TouchoftheMagi_RDY) or not self.PlayerTalents[ids.Arc_Ability.TouchoftheMagi.talentID]) and ((self.PlayerTalents[ids.Arc_Ability.RadiantSpark.talentID] and _RadiantSpark_RDY) or not self.PlayerTalents[ids.Arc_Ability.RadiantSpark.talentID]) and ((self.PlayerTalents[ids.Arc_Ability.RuneofPower.talentID] and _RuneofPower_RDY) or not self.PlayerTalents[ids.Arc_Ability.RuneofPower.talentID]) then
+		self.arcaneBurnPhase = true;
+		print("Beginning Burn Phase!")
+	end
+
+	if self.arcaneBurnPhase and self.PlayerTalents[ids.Arc_Ability.TouchoftheMagi.talentID] and not _TouchoftheMagi_RDY and not _TouchoftheMagi_DEBUFF and not _ArcaneBlast_RDY then
+		self.arcaneBurnPhase = false;
+		print("Cooldown and conserve!")
+	end
+
+	return self.arcaneBurnPhase
 end

@@ -193,6 +193,8 @@ ConRO.EnergyList = {
 }
 
 function ConRO:PlayerPower(_EnergyType)
+	local resource;
+
 	for k, v in pairs(ConRO.EnergyList) do
 		if v == _EnergyType then
 			resource = k;
@@ -207,11 +209,131 @@ function ConRO:PlayerPower(_EnergyType)
 	return _Resource, _Resource_Max, _Resource_Percent;
 end
 
+	--[[local FriendItems  = {
+    [5] = {
+        37727, -- Ruby Acorn
+    },
+    [8] = {
+        34368, -- Attuned Crystal Cores
+        33278, -- Burning Torch
+    },
+    [10] = {
+        32321, -- Sparrowhawk Net
+    },
+    [15] = {
+        1251, -- Linen Bandage
+        2581, -- Heavy Linen Bandage
+        3530, -- Wool Bandage
+        3531, -- Heavy Wool Bandage
+        6450, -- Silk Bandage
+        6451, -- Heavy Silk Bandage
+        8544, -- Mageweave Bandage
+        8545, -- Heavy Mageweave Bandage
+        14529, -- Runecloth Bandage
+        14530, -- Heavy Runecloth Bandage
+        21990, -- Netherweave Bandage
+        21991, -- Heavy Netherweave Bandage
+        34721, -- Frostweave Bandage
+        34722, -- Heavy Frostweave Bandage
+--        38643, -- Thick Frostweave Bandage
+--        38640, -- Dense Frostweave Bandage
+    },
+    [20] = {
+        21519, -- Mistletoe
+    },
+    [25] = {
+        31463, -- Zezzak's Shard
+    },
+    [30] = {
+        1180, -- Scroll of Stamina
+        1478, -- Scroll of Protection II
+        3012, -- Scroll of Agility
+        1712, -- Scroll of Spirit II
+        2290, -- Scroll of Intellect II
+        1711, -- Scroll of Stamina II
+        34191, -- Handful of Snowflakes
+    },
+    [35] = {
+        18904, -- Zorbin's Ultra-Shrinker
+    },
+    [40] = {
+        34471, -- Vial of the Sunwell
+    },
+    [45] = {
+        32698, -- Wrangling Rope
+    },
+    [60] = {
+        32825, -- Soul Cannon
+        37887, -- Seeds of Nature's Wrath
+    },
+    [80] = {
+        35278, -- Reinforced Net
+    },
+}
+
+local HarmItems = {
+    [5] = {
+        37727, -- Ruby Acorn
+    },
+    [8] = {
+        34368, -- Attuned Crystal Cores
+        33278, -- Burning Torch
+    },
+    [10] = {
+        32321, -- Sparrowhawk Net
+    },
+    [15] = {
+        33069, -- Sturdy Rope
+    },
+    [20] = {
+        10645, -- Gnomish Death Ray
+    },
+    [25] = {
+        24268, -- Netherweave Net
+        41509, -- Frostweave Net
+        31463, -- Zezzak's Shard
+    },
+    [30] = {
+        835, -- Large Rope Net
+        7734, -- Six Demon Bag
+        34191, -- Handful of Snowflakes
+    },
+    [35] = {
+        24269, -- Heavy Netherweave Net
+        18904, -- Zorbin's Ultra-Shrinker
+    },
+    [40] = {
+        28767, -- The Decapitator
+    },
+    [45] = {
+        32698, -- Wrangling Rope
+    },
+    [60] = {
+        32825, -- Soul Cannon
+        37887, -- Seeds of Nature's Wrath
+    },
+    [80] = {
+        35278, -- Reinforced Net
+    },
+}]]
+
 function ConRO:Targets(spellID)
 	local target_in_range = false;
 	local number_in_range = 0;
 		if spellID == "Melee" then
 			if IsItemInRange(37727, "target") then
+				target_in_range = true;
+			end
+
+			for i = 1, 15 do
+				if not UnitIsFriend("player", 'nameplate' .. i) then
+					if UnitExists('nameplate' .. i) and IsItemInRange(37727, "nameplate"..i) == true then
+						number_in_range = number_in_range + 1
+					end
+				end
+			end
+		elseif spellID == "10" then
+			if IsItemInRange(32321, "target") then
 				target_in_range = true;
 			end
 
@@ -794,6 +916,7 @@ function ConRO:AbilityReady(spellCheck, timeShift, spelltype)
 	local known = IsPlayerSpell(spellid);
 	local usable, notEnough = IsUsableSpell(spellid);
 	local castTimeMilli = select(4, GetSpellInfo(spellid));
+	local castTime;
 	local rdy = false;
 		if spelltype == 'pet' then
 			have = IsSpellKnown(spellid, true);
@@ -1000,6 +1123,26 @@ function ConRO:Totem(spellID)
 		end
 	end
 	return false, 0;
+end
+
+function ConRO:Dragonriding()
+	local Is_Dragonriding = false;
+	local Dragons = {
+		CliffsideWylderdrake = 368901,
+		HighlandDrake = 360954,
+		RenewedProtoDrake = 368896,
+		Soar = 369536,
+		WindborneVelocidrake = 368899,
+	}
+
+	for k, v in pairs(Dragons) do
+		local Dragonriding_BUFF = ConRO:Form(v);
+		if Dragonriding_BUFF then
+			Is_Dragonriding = true;
+			break
+		end
+	end
+	return Is_Dragonriding;
 end
 
 function ConRO:FormatTime(left)

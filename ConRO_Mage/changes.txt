@@ -1,12 +1,10 @@
-commit bfbe4c8abbb781cf4ecb3b489edaeb8399f12876
+lightweight tag 8685e669d6a71ed5c28fe7a644676537f2302651 v10.0.1
+Author:	Vae <emuha17@gmail.com>
+Date:	Wed Dec 7 01:00:53 2022 -1000
+
+commit 8685e669d6a71ed5c28fe7a644676537f2302651
 Author: Vae <emuha17@gmail.com>
-Date:   Tue Nov 22 14:06:14 2022 -1000
+Date:   Wed Dec 7 01:00:53 2022 -1000
 
-    DF Cleanup
-
-commit 1b2503fba8139eebf96cb3c680d9f098716682f9
-Author: Vae <emuha17@gmail.com>
-Date:   Mon Nov 14 18:57:19 2022 -1000
-
-    Initial Git Creation
+    Arcane Rotation updated
 

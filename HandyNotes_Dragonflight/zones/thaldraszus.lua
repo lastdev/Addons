@@ -17,8 +17,10 @@ local PT = ns.node.ProfessionTreasures
 local Rare = ns.node.Rare
 local Scoutpack = ns.node.Scoutpack
 local Treasure = ns.node.Treasure
+local NewPerspective = ns.node.NewPerspective
 
 local Achievement = ns.reward.Achievement
+local Currency = ns.reward.Currency
 local Item = ns.reward.Item
 local Pet = ns.reward.Pet
 local Transmog = ns.reward.Transmog
@@ -43,7 +45,9 @@ local tpf = Map({id = 2085, settings = false}) -- The Primalist Future
 map.nodes[59075874] = Rare({
     id = 193664,
     quest = 69963,
-    rewards = {Achievement({id = 16679, criteria = 56158})}
+    note = L['ancient_protector_note'],
+    rewards = {Achievement({id = 16679, criteria = 56158})},
+    pois = {POI({60755543, 60736211, 59225648, 59266104})} -- Titanic Reactors
 }) -- Ancient Protector
 
 map.nodes[31097121] = Rare({ -- requirement ?
@@ -87,7 +91,10 @@ map.nodes[52746732] = CRAGGRAVATEDELEMENTAL
 map.nodes[47675115] = Rare({ -- required 67030
     id = 193234,
     quest = 69875,
-    rewards = {Achievement({id = 16679, criteria = 56147})}
+    rewards = {
+        Achievement({id = 16446, criteria = 6, note = L['pretty_neat_note']}),
+        Achievement({id = 16679, criteria = 56147})
+    }
 }) -- Eldoren the Reborn
 
 map.nodes[53374092] = Rare({
@@ -235,6 +242,7 @@ map.nodes[36757287] = Rare({
     id = 193273,
     quest = 72842,
     rewards = {
+        Achievement({id = 16446, criteria = 13, note = L['pretty_neat_note']}),
         Transmog({item = 200131, slot = L['dagger']}), -- Reclaimed Survivalist's Dagger
         Transmog({item = 200193, slot = L['cloth']}) -- Manafrond Sandals
     }
@@ -435,11 +443,28 @@ val.nodes[13206368] = PT.Inscription({
     note = L['pt_script_how_to_train_your_whelpling_note']
 }) -- How to Train Your Whelpling
 
+-------------------------------------------------------------------------------
+
 map.nodes[61437687] = PM.Mining({
     id = 194843,
     quest = 70258,
-    note = L['pt_mining_bridgette_holdug']
+    note = L['pm_mining_bridgette_holdug'],
+    rewards = {
+        Item({item = 190456, note = '25'}), -- Artisan's Mettle
+        Currency({id = 2035, note = '10'}) -- Dragon Isles Mining Knowledge
+    }
 }) -- Bridgette Holdug
+
+val.nodes[27894576] = PM.Tailoring({
+    id = 194845,
+    quest = 70260,
+    note = L['pm_tailor_elysa_raywinder'],
+    parent = map.id,
+    rewards = {
+        Item({item = 190456, note = '25'}), -- Artisan's Mettle
+        Currency({id = 2026, note = '5'}) -- Dragon Isles Tailoring Knowledge
+    }
+}) -- Elysa Raywinder
 
 -------------------------------------------------------------------------------
 -------------------------------- DRAGON GLYPHS --------------------------------
@@ -693,7 +718,7 @@ map.nodes[38944629] = Collectible({
 map.nodes[58138299] = Collectible({
     label = '{item:201089}',
     icon = 644375,
-    L['craft_creche_crowler_note'],
+    note = L['craft_creche_crowler_note'],
     group = ns.groups.SPECIALTIES,
     rewards = {Achievement({id = 16621, criteria = 55940})}
 }) -- Craft Creche Crowler
@@ -705,3 +730,37 @@ map.nodes[52416987] = Collectible({
     group = ns.groups.SPECIALTIES,
     rewards = {Achievement({id = 16621, criteria = 55941})}
 }) -- Bivigosa's Blood Sausages
+
+-------------------------------------------------------------------------------
+----------------------------- THAT'S PRETTY NEAT! -----------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[43567208] = ns.node.PrettyNeat({
+    id = 187280,
+    rewards = {Achievement({id = 16446, criteria = 4})}
+}) -- Iridescent Peafowl
+
+map.nodes[54285271] = ns.node.PrettyNeat({
+    id = 192383,
+    rewards = {Achievement({id = 16446, criteria = 12})}
+}) -- Iridescent Peafowl
+
+-------------------------------------------------------------------------------
+-------------------------- FRAMING A NEW PERSPECTIVE --------------------------
+-------------------------------------------------------------------------------
+
+val.nodes[56674327] = NewPerspective({criteria = 56003, parent = map.id}) -- Valdrakken's Portal Room
+
+-------------------------------------------------------------------------------
+------------------------------ A LEGENDARY ALBUM ------------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[51134219] = ns.node.LegendaryCharacter({
+    id = 187284,
+    rewards = {Achievement({id = 16570, criteria = 55775})}
+}) -- Wrathion
+
+map.nodes[38386903] = ns.node.LegendaryCharacter({
+    id = 195633,
+    rewards = {Achievement({id = 16570, criteria = 55773})}
+}) -- Time-Warped Mysterious Fisher

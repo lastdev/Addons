@@ -471,6 +471,9 @@ ns.itemRestricted = function(item)
     if item.class and ns.playerClass ~= item.class then
         return true
     end
+    if item.requires and not ns.conditions.check(item.requires) then
+        return true
+    end
     -- TODO: profession recipes
     return false
 end

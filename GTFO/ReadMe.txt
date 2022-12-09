@@ -1793,3 +1793,12 @@ Change Log:
 * Added Dragonflight for Halls of Infusion
 * Added Dragonflight for Algeth'ar Academy
 * Added Dragonflight for The Azure Vault
+
+4.70.1
+* Added Dragonflight spells (world)
+* Added Dragonflight for Neltharus
+* Added Dragonflight for Algeth'ar Academy
+* Added Dragonflight for Halls of Infusion
+* Added Dragonflight for Uldaman: Legacy of Tyr
+* Added Dragonflight for Brackenhide Hollow
+* Added Dragonflight for The Azure Vault

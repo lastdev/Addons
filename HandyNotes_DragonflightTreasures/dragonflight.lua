@@ -30,19 +30,16 @@ ns.PROF_DF_MINING = 2833
 ns.PROF_DF_SKINNING = 2834
 ns.PROF_DF_TAILORING = 2831 -- spell: 366258
 
-ns.hiddenConfig = {
-    groupsHidden = true,
-}
+ns.hiddenConfig = {}
 
-ns.defaults.profile.groupsHiddenByZone[ns.WAKINGSHORES] = {
+ns.defaults.profile.groupsHidden = {
     scoutpack = true,
-}
-ns.defaults.profile.groupsHiddenByZone[ns.OHNAHRANPLAINS] = {
-    scoutpack = true,
+    warsupply = true,
 }
 
 ns.groups["junk"] = BAG_FILTER_JUNK
 ns.groups["scoutpack"] = "Expedition Scout's Pack"
+ns.groups["warsupply"] = "War Supply Chest"
 ns.groups["glyphs"] = "Dragon Glyphs"
 ns.groups["dailymount"] = "Daily Mounts"
 ns.groups["races"] = "{achievement:15939:Dragon Racing Completionist}"
@@ -62,4 +59,3 @@ ns.groups["hunts"] = "{achievement:16540:Hunt Master}"
 
 -- TODO achievements:
 -- Selfie achievements: Framing A New Perspective (16634), That's Pretty Neat! (16446)
--- Fragments of History (16323)

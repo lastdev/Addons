@@ -284,7 +284,7 @@ function ns.SetupMapOverlay()
             LibDD:UIDropDownMenu_AddSeparator(level)
 
             if not (ns.hiddenConfig.groupsHiddenByZone and OptionsDropdown.isHidden(ns.options, "groupsHidden")) and zoneHasGroups(uiMapID) then
-                local global = ns.hiddenConfig.groupsHiddenByZone
+                local global = not ns.hiddenConfig.groupsHidden
                 wipe(info)
                 info.isNotRadio = true
                 info.keepShownOnClick = true
@@ -297,12 +297,16 @@ function ns.SetupMapOverlay()
                     end
                     ns.HL:Refresh()
                 end
-                info.tooltipTitle = global and "Hide this type of point everywhere" or "Hide this type of point on this map"
+                info.tooltipTitle = global and "Show this type of point everywhere" or "Show this type of point on this map"
                 for _, group in iterKeysByValue(zoneGroups(uiMapID)) do
+                    info.tooltipText = nil
                     info.text = ns.render_string(ns.groups[group] or group)
                     info.arg1 = group
                     if global then
                         info.checked = not ns.db.groupsHidden[group]
+                        if ns.db.groupsHiddenByZone[uiMapID][group] then
+                            info.tooltipText = "Currently hidden in this zone"
+                        end
                     else
                         info.checked = not ns.db.groupsHiddenByZone[uiMapID][group]
                     end
@@ -318,7 +322,7 @@ function ns.SetupMapOverlay()
                     ns.db.achievementsHidden[achievementid] = not button.checked
                     ns.HL:Refresh()
                 end
-                info.tooltipTitle = "Hide this type of point"
+                info.tooltipTitle = "Show this type of point"
                 for achievementid in pairs(zoneAchievements(uiMapID)) do
                     info.text = ns.render_string(("{achievement:%d}"):format(achievementid))
                     info.arg1 = achievementid
@@ -445,6 +449,7 @@ function ns.SetupMapOverlay()
                     info.text = ns.render_string(ns.groups[group] or group)
                     info.value = group
                     info.checked = not ns.db.groupsHiddenByZone[uiMapID][group]
+                    info.disabled = ns.db.groupsHidden[group] -- if it's global-disabled
                     LibDD:UIDropDownMenu_AddButton(info, level)
                 end
             end

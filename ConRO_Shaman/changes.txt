@@ -1,10 +1,10 @@
-lightweight tag 2ee2c13c14159bac814134fec34bf98dbcf74b97 v10.0.3
+lightweight tag 2c548970cdccaeb355d2aadd35409646340f4c94 v10.0.5
 Author:	Vae <emuha17@gmail.com>
-Date:	Sun Dec 4 00:15:45 2022 -1000
+Date:	Wed Dec 7 12:27:23 2022 -1000
 
-commit 2ee2c13c14159bac814134fec34bf98dbcf74b97
+commit 2c548970cdccaeb355d2aadd35409646340f4c94
 Author: Vae <emuha17@gmail.com>
-Date:   Sun Dec 4 00:15:45 2022 -1000
+Date:   Wed Dec 7 12:27:23 2022 -1000
 
-    Resto DPS rotation update
+    Removed test code
 

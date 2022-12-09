@@ -1,7 +1,6 @@
-## Changed in v2022.29
+## Changed in v2022.30
 
-* Update Dragonflight rares
-* Add Who's A Good Bakar? to tooltips
-* Improve how the popup's loot button count behaves when only showing items relevant to your character; it'll now notice when item data isn't loaded from the server completely and refresh the count once it's available
-* Fix display of the Battle For Azeroth Black Empire Assault rares, which I had tied to the continent-level icons that Blizzard removed when Dragonflight launched
+* Questids and some added loot for all the ["super rares"](https://www.wowhead.com/news/defeat-super-rares-each-day-for-up-to-385-item-level-gear-330298), thanks to Znuff
+* Show Sleeping on the Job and Who's a Good Bakar in mob tooltips
+* Show requirements for active mobs in map tooltips, too
 

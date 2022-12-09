@@ -1,16 +1,10 @@
-lightweight tag 0ea867a9264442adf41e6172cbd4e9d3ddbf7b22 v10.0.1
+lightweight tag 7f621ff3f1b1cf305e9a81e6330a8d23feaee72c v10.0.2
 Author:	Vae <emuha17@gmail.com>
-Date:	Sat Dec 3 12:38:34 2022 -1000
+Date:	Wed Dec 7 11:41:28 2022 -1000
 
-commit cf93975b9a6a3f2499b8f3620b3bc5bdb24c7c66
+commit 7f621ff3f1b1cf305e9a81e6330a8d23feaee72c
 Author: Vae <emuha17@gmail.com>
-Date:   Sat Dec 3 12:38:28 2022 -1000
+Date:   Wed Dec 7 11:41:28 2022 -1000
 
-    Updated rotation for Dragonflight
-
-commit cf93975b9a6a3f2499b8f3620b3bc5bdb24c7c66
-Author: Vae <emuha17@gmail.com>
-Date:   Sat Dec 3 12:38:28 2022 -1000
-
-    Updated rotation for Dragonflight
+    Updated Assassination rotation
 

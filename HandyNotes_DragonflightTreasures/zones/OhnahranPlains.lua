@@ -134,8 +134,8 @@ ns.RegisterPoints(MAPID, {
             {192799, mount=1639}, -- Lizi's Reins
         },
         hide_before=ns.conditions.QuestComplete(66676), -- Sneaking In
-        active=ns.conditions.MajorFaction(2503, 9), -- Maruuk rank 9
-        atlas="stablemaster", minimap=true,
+        active={ns.conditions.MajorFaction(2503, 9), ns.conditions.Level(70)}, -- Maruuk rank 9
+        texture=ns.atlas_texture("stablemaster", {r=0, g=0.5, b=1}), scale=1.2, minimap=true,
         note=function()
             local function q(quest, label)
                 return (C_QuestLog.IsQuestFlaggedCompleted(quest) and GREEN_FONT_COLOR or RED_FONT_COLOR):WrapTextInColorCode(label)
@@ -163,23 +163,33 @@ ns.RegisterPoints(MAPID, {
 })
 
 -- Honor Our Ancestors
-local ancestor = ns.nodeMaker{
-    achievement=16423,
-    requires=ns.conditions.AuraActive(369277), -- Essence of Awakening
-    atlas="poi-soulspiritghost",
-}
+local ancestor = function(details)
+    return ns.merge({
+        label=function(self)
+            self.label = ("{achievement:%d.%d}"):format(self.achievement, self.criteria)
+            return self.label
+        end,
+        achievement=16423,
+        requires=ns.conditions.AuraActive(369277), -- Essence of Awakening
+        atlas="poi-soulspiritghost",
+        minimap=true,
+    }, details)
+end
 ns.RegisterPoints(MAPID, {
     [85662085] = {
+        achievement=16423,
         label="{spell:369277:Essence of Awakening}",
         spell=369277,
         loot={
             {200630, toy=true}, -- Ohn'ir Windsage's Hearthstone
         },
-        note="Get the buff, then go talk to the ghosts. They will want stuff...",
+        note="Get the buff from a small purple pile of dust in the hut, then go talk to the ghosts. They will want stuff...",
         hide_before=ns.conditions.MajorFaction(ns.FACTION_MARUUK, 7),
+        texture=ns.atlas_texture("poi-soulspiritghost", {r=1, g=0, b=0.8}),
+        minimap=true,
         related={
             [59703765] = ancestor{criteria=55302, quest=71167, active=ns.conditions.Item(197776)}, -- Maruukai Ancestor, Thrice-Spiced Mammoth Kabob (Cooking)
-            [84902343] = ancestor{criteria=55303, quest=71168, active=ns.conditions.Item(200018)}, -- Timberstep Outpost Ancestor, Enchant Boots - Plainsrunner's Breeze (Enchanting)
+            [84902343] = ancestor{criteria=55303, quest=71168, active={ns.conditions.Item(199934), ns.conditions.Item(199976), ns.conditions.Item(200018), any=true}}, -- Timberstep Outpost Ancestor, Enchant Boots - Plainsrunner's Breeze (Enchanting)
             [75914208] = ancestor{criteria=55304, quest=71169, active=ns.conditions.Item(194690)}, -- Horn of Drusahl Ancestor, Horn o' Mead
             [73005500] = ancestor{criteria=55305, quest=71170, active=ns.conditions.Item(202070)}, -- Toghusuq Village Ancestor, Exceptional Pelt
             [84554842] = ancestor{criteria=55306, quest=71171, active=ns.conditions.Item(193470)}, -- Shikaar Highlands Ancestor, Feral Hide Drums (Leatherworking?)
@@ -190,8 +200,6 @@ ns.RegisterPoints(MAPID, {
             [32757029] = ancestor{criteria=55311, quest=71176, active=ns.conditions.Item(191470, 5)}, -- The Eternal Kurgans Ancestor, 5x Writhebark (Herbalism)
         },
     },
-}, {
-    achievement=16423,
 })
 
 -- Rares
@@ -199,7 +207,7 @@ ns.RegisterPoints(MAPID, {
     -- https://www.wowhead.com/beta/achievement=16677/adventurer-of-the-ohnahran-plains
     [20403800] = { -- Sparkspitter Vrak
         criteria=56062,
-        quest=nil,
+        quest=73896,
         npc=193165,
         loot={
             {196999, quest=69199}, -- Cliffside Wylderdrake: Swept Horns
@@ -337,7 +345,7 @@ ns.RegisterPoints(MAPID, {
     },
     [58596822] = { -- Windseeker Avash
         criteria=56076,
-        quest=nil,
+        quest=74088,
         npc=192045,
         loot={
             200141, -- Wind Generating Band
@@ -376,7 +384,7 @@ ns.RegisterPoints(MAPID, {
     },
     [29554146] = { -- Shade of Grief
         criteria=56080,
-        quest=nil, -- ...no quest changed
+        quest=74075,
         npc=187559,
         loot={
             {196985, quest=69185}, -- Cliffside Wylderdrake: Horned Jaw
@@ -420,6 +428,7 @@ ns.RegisterPoints(MAPID, {
         npc=188124,
         loot={},
         vignette=5078,
+        path=79383649,
     },
     [72222321] = { -- Zerimek
         criteria=56085,
@@ -573,6 +582,7 @@ ns.RegisterPoints(MAPID, {
         quest=66970, -- also 72852
         npc=191354,
         loot={
+            {197372, quest=69573}, -- Renewed Proto-Drake: Purple Hair
             198429, -- Typhoon Bringer
         },
         path=24503340,

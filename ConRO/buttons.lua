@@ -2327,12 +2327,12 @@ function ConRO:FetchButtonForge()
 			local id;
 			local spellId;
 			if type == 'macro' then
-				local id = GetMacroSpell(actionType);
+				id = GetMacroSpell(actionType);
 				if id then
 					spellId = select(7, GetSpellInfo(id));
 				end
 			elseif type == 'item' then
-				actionName = GetItemInfo(actionType);
+				spellId = GetItemInfo(actionType);
 			elseif type == 'spell' then
 				spellId = select(7, GetSpellInfo(actionType));
 			end
@@ -2374,7 +2374,7 @@ function ConRO:DefFetchButtonForge()
 					spellId = select(7, GetSpellInfo(id));
 				end
 			elseif type == 'item' then
-				actionName = GetItemInfo(actionType);
+				spellId = GetItemInfo(actionType);
 			elseif type == 'spell' then
 				spellId = select(7, GetSpellInfo(actionType));
 			end
@@ -2390,7 +2390,6 @@ function ConRO:DefFetchButtonForge()
 				end
 
 				tinsert(self.Keybinds[spellId], 'ButtonForge' .. i);
-
 			end
 		end
 	end
@@ -2400,6 +2399,7 @@ function ConRO:FetchElvUI()
 	for x = 10, 1, -1 do
 		for i = 1, 12 do
 			local button = _G['ElvUI_Bar' .. x .. 'Button' .. i];
+			local hotkey;
 				if button == 'ElvUI_Bar1Button' .. i then
 					hotkey = 'ACTIONBUTTON' .. i;
 				elseif button == 'ElvUI_Bar2Button' .. i then
@@ -2433,6 +2433,7 @@ function ConRO:DefFetchElvUI()
 	for x = 10, 1, -1 do
 		for i = 1, 12 do
 			local button = _G['ElvUI_Bar' .. x .. 'Button' .. i];
+			local hotkey;
 				if button == 'ElvUI_Bar1Button' .. i then
 					hotkey = 'ACTIONBUTTON' .. i;
 				elseif button == 'ElvUI_Bar2Button' .. i then
@@ -2891,7 +2892,7 @@ end
 
 function ConRO:GlowDef(spellID)
 	local spellName = GetSpellInfo(spellID);
-	local itemName = GetItemInfo(spellID);
+
 	if self.DefSpells[spellID] ~= nil then
 		for k, button in pairs(self.DefSpells[spellID]) do
 			self:DefenseGlow(button, 'nextdef');

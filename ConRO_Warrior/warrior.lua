@@ -201,7 +201,8 @@ function ConRO.Warrior.Arms(_, timeShift, currentSpell, gcd, tChosen)
 --Abilities	
 	local _Avatar, _Avatar_RDY = ConRO:AbilityReady(Ability.Avatar, timeShift);
 	local _BattleShout, _BattleShout_RDY = ConRO:AbilityReady(Ability.BattleShout, timeShift);
-	local _Bladestorm, _Bladestorm_RDY, _Bladestorm_CD = ConRO:AbilityReady(Ability.Bladestorm, timeShift);
+	local _Bladestorm, _Bladestorm_RDY = ConRO:AbilityReady(Ability.Bladestorm, timeShift);
+	local _BladestormH, _BladestormH_RDY = ConRO:AbilityReady(Ability.BladestormH, timeShift);
 		local _MercilessBonegrinder_BUFF = ConRO:Aura(Buff.MercilessBonegrinder, timeShift);
 	local _Charge, _Charge_RDY = ConRO:AbilityReady(Ability.Charge, timeShift);
 		local _Charge_RANGE = ConRO:Targets(Ability.Charge);
@@ -253,6 +254,9 @@ function ConRO.Warrior.Arms(_, timeShift, currentSpell, gcd, tChosen)
 		_Execute = _MassacreExecute;
 	end
 
+	if tChosen[Passive.Hurricane.talentID] then
+		_Bladestorm, _Bladestorm_RDY = _BladestormH, _BladestormH_RDY;
+	end
 
 --Indicators		
 	ConRO:AbilityInterrupt(_Pummel, _Pummel_RDY and ConRO:Interrupt());
@@ -574,10 +578,10 @@ function ConRO.Warrior.Fury(_, timeShift, currentSpell, gcd, tChosen)
 
 		if _Onslaught_RDY and _Enrage_BUFF then
 			tinsert(ConRO.SuggestedSpells, _Onslaught);
-			_Onslaught = false;
+			_Onslaught_RDY = false;
 		end
 
-		if _RagingBlow_RDY and _RagingBlow_CHARGES >= 2 then
+		if _RagingBlow_RDY and _RagingBlow_CHARGES >= 2 and not tChosen[Passive.Annihilator.talentID] then
 			tinsert(ConRO.SuggestedSpells, _RagingBlow);
 			_RagingBlow_CHARGES = _RagingBlow_CHARGES - 1;
 		end
@@ -587,7 +591,7 @@ function ConRO.Warrior.Fury(_, timeShift, currentSpell, gcd, tChosen)
 			_Bloodthirst_RDY = false;
 		end
 
-		if _RagingBlow_RDY and _RagingBlow_CHARGES >= 1 then
+		if _RagingBlow_RDY and _RagingBlow_CHARGES >= 1 and not tChosen[Passive.Annihilator.talentID] then
 			tinsert(ConRO.SuggestedSpells, _RagingBlow);
 			_RagingBlow_CHARGES = _RagingBlow_CHARGES - 1;
 		end

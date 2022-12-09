@@ -244,7 +244,7 @@ local ConRO_Shaman, ids = ...;
 		Ascendance = {spellID = 114051, talentID = 114291},
 			Windstrike = {spellID = 115356, talentID = 114291},
 		CrashLightning = {spellID = 187874, talentID = 101840},
-		Doomwinds = {spellID = 384352, talentID = 101824},
+		DoomWinds = {spellID = 384352, talentID = 101824},
 		ElementalBlast = {spellID = 117014, talentID = 101831},
 		FeralLunge = {spellID = 196884, talentID = 101810},
 		FeralSpirit = {spellID = 51533, talentID = 101838},

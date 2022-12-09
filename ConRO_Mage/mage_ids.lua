@@ -146,6 +146,7 @@ local ConRO_Mage, ids = ...;
 		PrismaticCloak = 198064,
 	}
 	ids.Arc_Form = {
+		ArcaneHarmony = 384455,
 		PresenceofMind = 205025,
 		IncantersFlow = 116267,
 		RuneofPower = 116014,
@@ -155,13 +156,16 @@ local ConRO_Mage, ids = ...;
 		ArcaneIntellect = 1459,
 		ArcanePower = 12042,
 		Clearcasting = 263725,
-		ClearcastingPvP = 276743,
+		ClearcastingAE = 276743,
 		Evocation = 12051,
+		NetherPrecision = 383783,
 		PrismaticBarrier = 235450,
 		RuleofThrees = 264774,
 	}
 	ids.Arc_Debuff = {
 		NetherTempest = 114923,
+		RadiantSpark = 376103,
+		RadiantSparkVulnerability = 376104,
 		TouchoftheMagi = 210824,
 	}
 	ids.Arc_PetAbility = {

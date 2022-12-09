@@ -232,6 +232,19 @@ ns.conditions.Level = Class{
     Matched = function(self) return UnitLevel('player') >= self.id end,
 }
 
+ns.conditions.Class = Class{
+    __parent = Condition,
+    type = 'class',
+    Label = function(self)
+        local className = ((UnitSex("player") == 2) and LOCALIZED_CLASS_NAMES_MALE or LOCALIZED_CLASS_NAMES_FEMALE)[self.id] or self.id
+        if RAID_CLASS_COLORS[self.id] then
+            return RAID_CLASS_COLORS[self.id]:WrapTextInColorCode(className)
+        end
+        return className
+    end,
+    Matched = function(self) return select(2, UnitClass("player")) == self.id end,
+}
+
 ns.conditions.CalendarEvent = Class{
     __parent = Condition,
     type = 'calendarevent',

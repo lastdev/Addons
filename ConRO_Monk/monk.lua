@@ -206,6 +206,7 @@ function ConRO.Monk.Brewmaster(_, timeShift, currentSpell, gcd, tChosen, pvpChos
 	local _InvokeNiuzaotheBlackOx, _InvokeNiuzaotheBlackOx_RDY = ConRO:AbilityReady(Ability.InvokeNiuzaotheBlackOx, timeShift);
 	local _KegSmash, _KegSmash_RDY = ConRO:AbilityReady(Ability.KegSmash, timeShift);
 		local _KegSmash_DEBUFF = ConRO:TargetAura(Debuff.KegSmash, timeShift);
+		local _KegSmash_CHARGES = ConRO:SpellCharges(_KegSmash);
 	local _Provoke, _Provoke_RDY = ConRO:AbilityReady(Ability.Provoke, timeShift);
 	local _PurifyingBrew, _PurifyingBrew_RDY = ConRO:AbilityReady(Ability.PurifyingBrew, timeShift);
 		local _PurifyingBrew_CHARGES = ConRO:SpellCharges(_PurifyingBrew);

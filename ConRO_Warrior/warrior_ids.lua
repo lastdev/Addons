@@ -63,6 +63,7 @@ local ConRO_Warrior, ids = ...;
 		WreckingThrow = {spellID = 384110, talentID = 112215},
 	--Arms
 		Bladestorm = {spellID = 227847, talentID = 112314},
+		BladestormH = {spellID = 389774, talentID = 112312},
 		Cleave = {spellID = 845, talentID = 112147},
 		ColossusSmash = {spellID = 167105, talentID = 112144},
 		DiebytheSword = {spellID = 118038, talentID = 112128},

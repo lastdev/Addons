@@ -87,6 +87,12 @@ ns.RegisterPoints(MAPID, {
         texture=ns.atlas_texture("stablemaster", {r=0, g=0.8, b=1, scale=1.2}),
         minimap=true,
     },
+    [66403330] = {
+        quest=71002, -- Best Spell Ever
+        loot={200205}, -- Tome of Polymorph: Duck
+        path={66433179, note="Blink through the blocked cave entrance with a duck above it"},
+        requires=ns.conditions.Class("MAGE"),
+    },
 })
 
 -- Rares
@@ -185,13 +191,14 @@ ns.RegisterPoints(MAPID, {
         loot={},
         note="In cave",
     },
-    [16412781] = { -- Blue Terror
+    [16622799] = { -- Blue Terror
         criteria=56108,
         quest=nil,
         npc=193259,
         loot={
             {197595, quest=69799}, -- Windborne Velocidrake: Finned Ears
         },
+        note="Spawns at the top of a tree",
     },
     [36323583] = { -- Mahg the Trampler
         criteria=56109,
@@ -358,15 +365,30 @@ ns.RegisterPoints(MAPID, {
         criteria=56125,
         quest=74032,
         npc=197344,
-        loot={},
+        loot={
+            200283, -- Gnoll-Gnawed Breeches
+            200266, -- Gnollish Chewtoy Launcher
+            {196982, quest=69182}, -- Cliffside Wylderdrake: Ears
+            {197150, quest=69351}, -- Highland Drake: Spiked Club Tail
+        },
         vignette=5413,
+        note="On ~10 minute rotation with the other Brackenhide Hollow rares ({npc:197344}, {npc:197353}, {npc:197354}, {npc:197356})",
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
     [14483105] = { -- Blisterhide
         criteria=56126,
         quest=73985,
         npc=197353,
-        loot={},
+        loot={
+            200186, -- Amberquill Shroud
+            200232, -- Raptor Talonglaive
+            200131, -- Reclaimed Survivalist's Dagger
+            200174, -- Bonesigil Shoulderguards
+            200563, -- Primal Ritual Shell
+            200193, -- Manafrond Sandals
+            200445, -- Lucky Hunting Charm
+        },
+        note="On ~10 minute rotation with the other Brackenhide Hollow rares ({npc:197344}, {npc:197353}, {npc:197354}, {npc:197356})",
         vignette=5414,
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
@@ -380,6 +402,7 @@ ns.RegisterPoints(MAPID, {
             200267, -- Reinforced Garden Tenders
         },
         vignette=5415,
+        note="On ~10 minute rotation with the other Brackenhide Hollow rares ({npc:197344}, {npc:197353}, {npc:197354}, {npc:197356})",
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
     [16213364] = { -- High Shaman Rotknuckle
@@ -398,6 +421,7 @@ ns.RegisterPoints(MAPID, {
             200432, -- Rotguard Cowl
         },
         vignette=5416,
+        note="On ~10 minute rotation with the other Brackenhide Hollow rares ({npc:197344}, {npc:197353}, {npc:197354}, {npc:197356})",
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
     --[[
@@ -459,13 +483,13 @@ ns.RegisterPoints(MAPID, {
         },
         vignette=5194,
     },
-    [27004840] = { -- Breezebiter
+    [29814613] = { -- Breezebiter
         npc=195353,
         quest=nil,
         loot={
             {201440, mount=1553},
         },
-        note="Flying",
+        note="Spawns in this cave, then flies around the area in a big circle",
     },
     [36793249] = { -- Sharpfang
         quest=72846, -- 67173

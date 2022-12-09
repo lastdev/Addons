@@ -500,20 +500,20 @@ function ConRO.Shaman.Enhancement(_, timeShift, currentSpell, gcd, tChosen, pvpC
 	wipe(ConRO.SuggestedSpells)
 	local Racial, Ability, Passive, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Enh_Ability, ids.Enh_Passive, ids.Enh_Form, ids.Enh_Buff, ids.Enh_Debuff, ids.Enh_PetAbility, ids.Enh_PvPTalent, ids.Glyph;
 --Info
-	local _Player_Level																					= UnitLevel("player");
-	local _Player_Percent_Health 																		= ConRO:PercentHealth('player');
-	local _is_PvP																						= ConRO:IsPvP();
-	local _in_combat 																					= UnitAffectingCombat('player');
-	local _party_size																					= GetNumGroupMembers();
+	local _Player_Level = UnitLevel("player");
+	local _Player_Percent_Health = ConRO:PercentHealth('player');
+	local _is_PvP = ConRO:IsPvP();
+	local _in_combat = UnitAffectingCombat('player');
+	local _party_size = GetNumGroupMembers();
 
-	local _is_PC																						= UnitPlayerControlled("target");
-	local _is_Enemy 																					= ConRO:TarHostile();
-	local _Target_Health 																				= UnitHealth('target');
-	local _Target_Percent_Health 																		= ConRO:PercentHealth('target');
+	local _is_PC = UnitPlayerControlled("target");
+	local _is_Enemy = ConRO:TarHostile();
+	local _Target_Health = UnitHealth('target');
+	local _Target_Percent_Health = ConRO:PercentHealth('target');
 
 --Resources
-	local _Mana, _Mana_Max, _Mana_Percent																= ConRO:PlayerPower('Mana');
-	local _Maelstrom, _Maelstrom_Max																	= ConRO:PlayerPower('Maelstrom');
+	local _Mana, _Mana_Max, _Mana_Percent = ConRO:PlayerPower('Mana');
+	local _Maelstrom, _Maelstrom_Max = ConRO:PlayerPower('Maelstrom');
 
 --Abilities
 	local _Ascendance, _Ascendance_RDY = ConRO:AbilityReady(Ability.Ascendance, timeShift);
@@ -522,6 +522,7 @@ function ConRO.Shaman.Enhancement(_, timeShift, currentSpell, gcd, tChosen, pvpC
 	local _ChainLightning, _ChainLightning_RDY = ConRO:AbilityReady(Ability.ChainLightning, timeShift);
 	local _CrashLightning, _CrashLightning_RDY = ConRO:AbilityReady(Ability.CrashLightning, timeShift);
 		local _CrashLightning_BUFF = ConRO:Aura(Buff.CrashLightning, timeShift);
+	local _DoomWinds, _DoomWinds_RDY = ConRO:AbilityReady(Ability.DoomWinds, timeShift);
 	local _ElementalBlast, _ElementalBlast_RDY = ConRO:AbilityReady(Ability.ElementalBlast, timeShift);
 		local _ElementalBlast_CHARGES, _ElementalBlast_MCHARGES = ConRO:SpellCharges(_ElementalBlast);
 	local _FeralSpirit, _FeralSpirit_RDY, _FeralSpirit_CD = ConRO:AbilityReady(Ability.FeralSpirit, timeShift);
@@ -552,7 +553,7 @@ function ConRO.Shaman.Enhancement(_, timeShift, currentSpell, gcd, tChosen, pvpC
 	local _WindShear, _WindShear_RDY 																	= ConRO:AbilityReady(Ability.WindShear, timeShift);
 	local _WindfuryTotem, _WindfuryTotem_RDY															= ConRO:AbilityReady(Ability.WindfuryTotem, timeShift);
 		local _WindfuryTotem_BUFF																			= ConRO:Form(Form.WindfuryTotem);
-		local _, _WindfuryTotem_DUR = ConRO:Totem(spellID);
+		local _, _WindfuryTotem_DUR = ConRO:Totem(_WindfuryTotem);
 	local _WindfuryWeapon, _WindfuryWeapon_RDY															= ConRO:AbilityReady(Ability.WindfuryWeapon, timeShift);
 		local _WindfuryWeapon_BUFF, _, _WindfuryWeapon_DUR													= ConRO:UnitAura(Buff.WindfuryWeapon, timeShift, _, _, "Weapon");
 
@@ -580,7 +581,8 @@ function ConRO.Shaman.Enhancement(_, timeShift, currentSpell, gcd, tChosen, pvpC
 	ConRO:AbilityRaidBuffs(_FlametongueWeapon, _FlametongueWeapon_RDY and not _FlametongueWeapon_BUFF or (not _in_combat and _FlametongueWeapon_DUR < 600));
 
 	ConRO:AbilityBurst(_Ascendance, _Ascendance_RDY and not _Stormstrike_RDY and ConRO:BurstMode(_Ascendance));
-	ConRO:AbilityBurst(_FeralSpirit, _FeralSpirit_RDY and ftBuff and ConRO:BurstMode(_FeralSpirit));
+	ConRO:AbilityBurst(_DoomWinds, _DoomWinds_RDY and ConRO:BurstMode(_DoomWinds));
+	ConRO:AbilityBurst(_FeralSpirit, _FeralSpirit_RDY and ConRO:BurstMode(_FeralSpirit));
 	ConRO:AbilityBurst(_WindfuryTotem, _WindfuryTotem_RDY and not _WindfuryTotem_BUFF and ConRO_BurstButton:IsVisible());
 	ConRO:AbilityBurst(_PrimordialWave, _PrimordialWave_RDY and not _PrimordialWave_BUFF and ConRO:BurstMode(_PrimordialWave));
 
@@ -638,6 +640,11 @@ function ConRO.Shaman.Enhancement(_, timeShift, currentSpell, gcd, tChosen, pvpC
 		if _Ascendance_RDY and not _Stormstrike_RDY and ConRO:FullMode(_Ascendance) then
 			tinsert(ConRO.SuggestedSpells, _Ascendance);
 			_Ascendance_RDY = false;
+		end
+
+		if _DoomWinds_RDY and ConRO:FullMode(_DoomWinds) then
+			tinsert(ConRO.SuggestedSpells, _DoomWinds);
+			_DoomWinds_RDY = false;
 		end
 
 		if _Stormstrike_RDY and _Ascendance_BUFF then
@@ -743,7 +750,7 @@ function ConRO.Shaman.Enhancement(_, timeShift, currentSpell, gcd, tChosen, pvpC
 			tinsert(ConRO.SuggestedSpells, _LavaLash);
 			_LavaLash_RDY = false;
 		end
-		
+
 		if _MaelstromWeapon_COUNT >= 10 and tChosen[Passive.OverflowingMaelstrom.talentID] then
 			if tChosen[Ability.ElementalBlast.talentID] then
 				if _ElementalBlast_RDY and _ElementalBlast_CHARGES == _ElementalBlast_MCHARGES then
@@ -864,7 +871,7 @@ function ConRO.Shaman.Enhancement(_, timeShift, currentSpell, gcd, tChosen, pvpC
 		if _WindfuryTotem_RDY and _WindfuryTotem_DUR <= 30 and ConRO_FullButton:IsVisible() then
 			tinsert(ConRO.SuggestedSpells, _WindfuryTotem);
 			_WindfuryTotem_BUFF = true;
-			_WindfuryTotem_DUR = 120; 
+			_WindfuryTotem_DUR = 120;
 		end
 	end
 	return nil;

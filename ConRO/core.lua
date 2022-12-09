@@ -2152,8 +2152,6 @@ function ConRO:OnEnable()
 	self:RegisterEvent('UNIT_EXITED_VEHICLE');
 	self:RegisterEvent('PLAYER_CONTROL_LOST');
 	self:RegisterEvent('PLAYER_CONTROL_GAINED');
-	self:RegisterEvent('PLAYER_GAINS_VEHICLE_DATA');
-	self:RegisterEvent('PLAYER_LOSES_VEHICLE_DATA');
 
 	self:RegisterEvent('PET_BATTLE_OPENING_START');
 	self:RegisterEvent('PET_BATTLE_OVER');
@@ -2244,24 +2242,6 @@ function ConRO:UNIT_EXITED_VEHICLE(event, unit)
 	end
 end
 
-function ConRO:PLAYER_GAINS_VEHICLE_DATA(event, unit)
---	self:Print(self.Colors.Success .. 'Vehicle!');
-	if unit == 'player' and self.ModuleLoaded then
-		self:DisableRotation();
-		self:DisableDefense();
-	end
-end
-
-function ConRO:PLAYER_LOSES_VEHICLE_DATA(event, unit)
---self:Print(self.Colors.Success .. 'Vehicle!');
-	if unit == 'player' then
-		self:DisableRotation();
-		self:DisableDefense();
-		self:EnableRotation();
-		self:EnableDefense();
-	end
-end
-
 function ConRO:PET_BATTLE_OPENING_START()
 --	self:Print(self.Colors.Success .. 'Pet Battle Started!');
 
@@ -2323,7 +2303,7 @@ end
 
 function ConRO:PLAYER_ENTERING_WORLD()
 	self:UpdateButtonGlow();
-	if not self.rotationEnabled then
+	if not self.rotationEnabled and not UnitHasVehicleUI("player") and not ConRO:Dragonriding() then
 		self:Print(self.Colors.Success .. 'Auto enable on login!');
 		self:Print(self.Colors.Info .. 'Loading class module');
 		self:LoadModule();
@@ -2370,13 +2350,26 @@ function ConRO:PLAYER_TARGET_CHANGED()
 end
 
 function ConRO:PLAYER_REGEN_DISABLED()
-	if not self.rotationEnabled and not UnitHasVehicleUI("player") then
-		self:Print(self.Colors.Success .. 'Auto enable on combat!');
-		self:Print(self.Colors.Info .. 'Loading class module');
+	self:UpdateButtonGlow();
+	if not self.rotationEnabled and not UnitHasVehicleUI("player") and not ConRO:Dragonriding() then
 		self:LoadModule();
 		self:EnableRotation();
 		self:EnableDefense();
 	end
+end
+
+function ConRO:ACTIONBAR_SLOT_CHANGED()
+	self:UpdateButtonGlow();
+	if ConRO:Dragonriding() and self.ModuleLoaded and self.rotationEnabled then
+		self:DisableRotation();
+		self:DisableDefense();
+	elseif not ConRO:Dragonriding() and not self.rotationEnabled then
+		self:LoadModule();
+		self:EnableRotation();
+		self:EnableDefense();
+	end
+
+	ConRO:ButtonFetch()
 end
 
 function ConRO:ButtonFetch()
@@ -2390,7 +2383,6 @@ function ConRO:ButtonFetch()
 	end
 end
 
-ConRO.ACTIONBAR_SLOT_CHANGED = ConRO.ButtonFetch;
 ConRO.PLAYER_REGEN_ENABLED = ConRO.ButtonFetch;
 ConRO.ACTIONBAR_PAGE_CHANGED = ConRO.ButtonFetch;
 ConRO.UPDATE_SHAPESHIFT_FORM = ConRO.ButtonFetch;

@@ -194,8 +194,16 @@ function ConRO.Rogue.Assassination(_, timeShift, currentSpell, gcd, tChosen, pvp
 
 --Abilities
 	local _Ambush, _Ambush_RDY = ConRO:AbilityReady(Ability.Ambush, timeShift);
+		local _Blindside_BUFF = ConRO:Aura(Buff.Blindside, timeShift);
+	local _CrimsonTempest, _CrimsonTempest_RDY = ConRO:AbilityReady(Ability.CrimsonTempest, timeShift);
+		local _CrimsonTempest_DEBUFF = ConRO:TargetAura(Debuff.CrimsonTempest, timeShift + 2);
+	local _EchoingReprimand, _EchoingReprimand_RDY = ConRO:AbilityReady(Ability.EchoingReprimand, timeShift);
+		local _EchoingReprimand_2_BUFF = ConRO:Aura(Buff.EchoingReprimand_2, timeShift);
+		local _EchoingReprimand_3_BUFF = ConRO:Aura(Buff.EchoingReprimand_3, timeShift);
+		local _EchoingReprimand_4_BUFF = ConRO:Aura(Buff.EchoingReprimand_4, timeShift);
 	local _Envenom, _Envenom_RDY = ConRO:AbilityReady(Ability.Envenom, timeShift);
 		local _Envenom_BUFF = ConRO:Aura(Buff.Envenom, timeShift + 1);
+	local _Exsanguinate, _Exsanguinate_RDY, _Exsanguinate_CD, _Exsanguinate_MaxCD = ConRO:AbilityReady(Ability.Exsanguinate, timeShift);
 	local _FanofKnives, _FanofKnives_RDY = ConRO:AbilityReady(Ability.FanofKnives, timeShift);
 	local _Garrote, _Garrote_RDY = ConRO:AbilityReady(Ability.Garrote, timeShift);
 		local _Garrote_DEBUFF, _, _Garrote_DUR = ConRO:TargetAura(Debuff.Garrote, timeShift);
@@ -203,20 +211,21 @@ function ConRO.Rogue.Assassination(_, timeShift, currentSpell, gcd, tChosen, pvp
 	local _Kick, _Kick_RDY = ConRO:AbilityReady(Ability.Kick, timeShift);
 	local _KingsBane, _KingsBane_RDY = ConRO:AbilityReady(Ability.KingsBane, timeShift);
 		local _KingsBane_DEBUFF, _, _KingsBane_DUR = ConRO:TargetAura(Debuff.KingsBane, timeShift);
+	local _MarkedforDeath, _MarkedforDeath_RDY = ConRO:AbilityReady(Ability.MarkedforDeath, timeShift);
 	local _Mutilate, _Mutilate_RDY = ConRO:AbilityReady(Ability.Mutilate, timeShift);
 	--Poisons
-		local _CripplingPoison_BUFF 																									= ConRO:Aura(Buff.CripplingPoison, timeShift);
-		local _DeadlyPoison_BUFF 																											= ConRO:Aura(Buff.DeadlyPoison, timeShift);
-		local _DeadlyPoison_DEBUFF																										= ConRO:TargetAura(Debuff.DeadlyPoison, timeShift);
-		local _InstantPoison_BUFF 																										= ConRO:Aura(Buff.InstantPoison, timeShift);
-		local _WoundPoison_BUFF 																											= ConRO:Aura(Buff.WoundPoison, timeShift);
+		local _CripplingPoison_BUFF = ConRO:Aura(Buff.CripplingPoison, timeShift);
+		local _DeadlyPoison_BUFF = ConRO:Aura(Buff.DeadlyPoison, timeShift);
+		local _DeadlyPoison_DEBUFF = ConRO:TargetAura(Debuff.DeadlyPoison, timeShift);
+		local _InstantPoison_BUFF = ConRO:Aura(Buff.InstantPoison, timeShift);
+		local _WoundPoison_BUFF = ConRO:Aura(Buff.WoundPoison, timeShift);
 	local _PoisonedKnife, _PoisonedKnife_RDY = ConRO:AbilityReady(Ability.PoisonedKnife, timeShift);
 	local _Rupture, _Rupture_RDY = ConRO:AbilityReady(Ability.Rupture, timeShift);
 		local _Rupture_DEBUFF, _, _Rupture_DUR = ConRO:TargetAura(Debuff.Rupture, timeShift);
 	local _Sepsis, _Sepsis_RDY = ConRO:AbilityReady(Ability.Sepsis, timeShift);
 		local _Sepsis_DEBUFF, _Sepsis_DUR = ConRO:TargetAura(Debuff.Rupture, timeShift);
 	local _SerratedBoneSpike, _SerratedBoneSpike_RDY = ConRO:AbilityReady(Ability.SerratedBoneSpike, timeShift);
-		local _SerratedBoneSpike_DEBUFF = ConRO:TargetAura(Debuff.SerratedBoneSpike, timeShift);
+		local _SerratedBoneSpike_DEBUFF, _SerratedBoneSpike_COUNT = ConRO:PersistentDebuff(Debuff.SerratedBoneSpike);
 		local _SerratedBoneSpike_CHARGES, _, _SerratedBoneSpike_CCD = ConRO:SpellCharges(_SerratedBoneSpike);
 	local _ShadowDance, _ShadowDance_RDY, _ShadowDance_CD = ConRO:AbilityReady(Ability.ShadowDance, timeShift);
 		local _ShadowDance_CHARGES, _ShadowDance_MaxCHARGES, _ShadowDance_CCD = ConRO:SpellCharges(_ShadowDance);
@@ -228,30 +237,24 @@ function ConRO.Rogue.Assassination(_, timeShift, currentSpell, gcd, tChosen, pvp
 		local _Shiv_CHARGES, _, _Shiv_CCD = ConRO:SpellCharges(_Shiv);
 	local _SliceandDice, _SliceandDice_RDY = ConRO:AbilityReady(Ability.SliceandDice, timeShift);
 		local _SliceandDice_BUFF, _, _SliceandDice_DUR = ConRO:Aura(Buff.SliceandDice, timeShift);
-	local _Sprint, _Sprint_RDY 																										= ConRO:AbilityReady(Ability.Sprint, timeShift);
-	local _Stealth, _Stealth_RDY 																									= ConRO:AbilityReady(Ability.Stealth, timeShift);
-	local _Subterfuge_Stealth, _Subterfuge_Stealth_RDY, _Subterfuge_Stealth_CD													= ConRO:AbilityReady(Passive.Subterfuge_Stealth, timeShift);
-		local _Subterfuge_BUFF																												= ConRO:Aura(Buff.Subterfuge, timeShift);
-		local _MasterAssassin_BUFF																										= ConRO:Aura(Buff.MasterAssassin, timeShift);
-	local _Vanish, _Vanish_RDY 																										= ConRO:AbilityReady(Ability.Vanish, timeShift);
-		local _Vanish_BUFF																														= ConRO:Aura(Buff.Vanish, timeShift);
+	local _Sprint, _Sprint_RDY = ConRO:AbilityReady(Ability.Sprint, timeShift);
+	local _Stealth, _Stealth_RDY = ConRO:AbilityReady(Ability.Stealth, timeShift);
+	local _Subterfuge_Stealth, _Subterfuge_Stealth_RDY, _Subterfuge_Stealth_CD = ConRO:AbilityReady(Passive.Subterfuge_Stealth, timeShift);
+		local _Subterfuge_BUFF = ConRO:Aura(Buff.Subterfuge, timeShift);
+		local _MasterAssassin_BUFF = ConRO:Aura(Buff.MasterAssassin, timeShift);
+	local _ThistleTea, _ThistleTea_RDY = ConRO:AbilityReady(Ability.ThistleTea, timeShift);
+	local _Vanish, _Vanish_RDY = ConRO:AbilityReady(Ability.Vanish, timeShift);
+		local _Vanish_BUFF = ConRO:Aura(Buff.Vanish, timeShift);
 
-		local _Blindside_BUFF																													= ConRO:Aura(Buff.Blindside, timeShift);
-	local _Exsanguinate, _Exsanguinate_RDY, _Exsanguinate_CD, _Exsanguinate_MaxCD	= ConRO:AbilityReady(Ability.Exsanguinate, timeShift);
-	local _CrimsonTempest, _CrimsonTempest_RDY																		= ConRO:AbilityReady(Ability.CrimsonTempest, timeShift);
-		local _CrimsonTempest_DEBUFF																									= ConRO:TargetAura(Debuff.CrimsonTempest, timeShift + 2);
 
-		local _ElaboratePlanning_BUFF	 																								= ConRO:Aura(Buff.ElaboratePlanning, timeShift);
 
-	local _EchoingReprimand, _EchoingReprimand_RDY																= ConRO:AbilityReady(Ability.EchoingReprimand, timeShift);
-		local _EchoingReprimand_2_BUFF																								= ConRO:Aura(Buff.EchoingReprimand_2, timeShift);
-		local _EchoingReprimand_3_BUFF																								= ConRO:Aura(Buff.EchoingReprimand_3, timeShift);
-		local _EchoingReprimand_4_BUFF																								= ConRO:Aura(Buff.EchoingReprimand_4, timeShift);
+		local _ElaboratePlanning_BUFF = ConRO:Aura(Buff.ElaboratePlanning, timeShift);
+
 
 --Conditions
-	local _is_moving 																															= ConRO:PlayerSpeed();
-	local _enemies_in_melee, _target_in_melee																			= ConRO:Targets("Melee");
-	local _target_in_10yrds 																											= CheckInteractDistance("target", 3);
+	local _is_moving = ConRO:PlayerSpeed();
+	local _enemies_in_melee, _target_in_melee = ConRO:Targets("Melee");
+	local _enemies_in_10yrds, _target_in_10yrds = ConRO:Targets("10");
 
 	local _is_stealthed = IsStealthed();
 	local _combat_stealth = _is_stealthed or _ShadowDance_BUFF or _Vanish_BUFF or _Shadowmeld_BUFF or _Sepsis_BUFF or _Subterfuge_BUFF;
@@ -287,10 +290,11 @@ function ConRO.Rogue.Assassination(_, timeShift, currentSpell, gcd, tChosen, pvp
 	ConRO:AbilityMovement(_Shadowstep, _Shadowstep_RDY and _Shadowstep_RANGE and not _target_in_melee);
 	ConRO:AbilityMovement(_Sprint, _Sprint_RDY and not _target_in_melee);
 
-	ConRO:AbilityBurst(_Vanish, _Vanish_RDY and _in_combat and not ConRO:TarYou() and ((_Combo >= _Combo_Max and not _Rupture_DEBUFF and tChosen[Passive.Subterfuge.talentID]) or (tChosen[Passive.Subterfuge.talentID] and not _Garrote_DEBUFF)) and ConRO:BurstMode(_Vanish));
+	ConRO:AbilityBurst(_EchoingReprimand, _EchoingReprimand_RDY and _Combo <= _Combo_Max - 2 and ConRO:BurstMode(_EchoingReprimand));
+	ConRO:AbilityBurst(_MarkedforDeath, _MarkedforDeath_RDY and _Combo <= 1 and ConRO:BurstMode(_MarkedforDeath));
 	ConRO:AbilityBurst(_Sepsis, _Sepsis_RDY and _Combo <= _Combo_Max - 1 and ConRO:BurstMode(_Sepsis));
 	ConRO:AbilityBurst(_ShadowDance, _ShadowDance_RDY and not _combat_stealth and ConRO:BurstMode(_ShadowDance));
-	ConRO:AbilityBurst(_EchoingReprimand, _EchoingReprimand_RDY and _Combo <= _Combo_Max - 2 and ConRO:BurstMode(_EchoingReprimand));
+	ConRO:AbilityBurst(_Vanish, _Vanish_RDY and _in_combat and not ConRO:TarYou() and ((_Combo >= _Combo_Max and not _Rupture_DEBUFF and tChosen[Passive.Subterfuge.talentID]) or (tChosen[Passive.Subterfuge.talentID] and not _Garrote_DEBUFF)) and ConRO:BurstMode(_Vanish));
 
 --Warnings
 	ConRO:Warnings("Put lethal poison on your weapon!", not _Poison_applied and (_in_combat or _is_stealthed));
@@ -300,6 +304,10 @@ function ConRO.Rogue.Assassination(_, timeShift, currentSpell, gcd, tChosen, pvp
 		if _Stealth_RDY and not _combat_stealth then
 			tinsert(ConRO.SuggestedSpells, _Stealth);
 			_Stealth_RDY = false;
+		end
+
+		if _MarkedforDeath_RDY and _Combo <= 1 and ConRO:FullMode(_MarkedforDeath) then
+			tinsert(ConRO.SuggestedSpells, _MarkedforDeath);
 		end
 
 		if _SliceandDice_RDY and not _SliceandDice_BUFF and _Combo >= 1 then
@@ -362,6 +370,10 @@ function ConRO.Rogue.Assassination(_, timeShift, currentSpell, gcd, tChosen, pvp
 
 		if _ShadowDance_RDY and not _combat_stealth and ConRO:FullMode(_ShadowDance) then
 			tinsert(ConRO.SuggestedSpells, _ShadowDance);
+		end
+
+		if _MarkedforDeath_RDY and _Combo <= 1 and ConRO:FullMode(_MarkedforDeath) then
+			tinsert(ConRO.SuggestedSpells, _MarkedforDeath);
 		end
 
 		if _Garrote_RDY and (not _Garrote_DEBUFF or (_Garrote_DEBUFF and _Garrote_DUR <= 3)) and not _MasterAssassin_BUFF then
@@ -444,7 +456,7 @@ function ConRO.Rogue.Assassination(_, timeShift, currentSpell, gcd, tChosen, pvp
 			_Combo = _Combo + 1;
 		end
 
-		if _SerratedBoneSpike_RDY and (_SerratedBoneSpike_CHARGES == 3 or (_SerratedBoneSpike_CHARGES >= 2 and _SerratedBoneSpike_CCD >= 25 )) then
+		if _SerratedBoneSpike_RDY and (_SerratedBoneSpike_CHARGES == 3 or (_SerratedBoneSpike_CHARGES >= 2 and _SerratedBoneSpike_CCD < 3 )) then
 			tinsert(ConRO.SuggestedSpells, _SerratedBoneSpike);
 			_SerratedBoneSpike_BUFF = true;
 			_Combo = _Combo + 1 + _SerratedBoneSpike_COUNT;
@@ -454,6 +466,11 @@ function ConRO.Rogue.Assassination(_, timeShift, currentSpell, gcd, tChosen, pvp
 			tinsert(ConRO.SuggestedSpells, _Envenom);
 			_Envenom_RDY = false;
 			_Combo = 0;
+		end
+
+		if _ThistleTea_RDY and _ThistleTea_CHARGES >= 1 and _Energy <= 25 then
+			tinsert(ConRO.SuggestedSpells, _ThistleTea);
+			_ThistleTea_CHARGES = _ThistleTea_CHARGES - 1;
 		end
 
 		if _FanofKnives_RDY and _Combo <= (_Combo_Max - 1) and ((ConRO_AutoButton:IsVisible() and _enemies_in_melee >= 3) or ConRO_AoEButton:IsVisible()) then
@@ -679,6 +696,7 @@ function ConRO.Rogue.Outlaw(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 	ConRO:AbilityBurst(_BladeRush, _BladeRush_RDY and (((ConRO_AutoButton:IsVisible() and _enemies_in_melee == 1) or ConRO_SingleButton:IsVisible()) or (_BladeFlurry_BUFF and ((ConRO_AutoButton:IsVisible() and _enemies_in_melee >= 2) or ConRO_AoEButton:IsVisible()))) and ConRO:BurstMode(_BladeRush));
 	ConRO:AbilityBurst(_Dreadblades, _Dreadblades_RDY and _Combo <= 1 and ConRO:BurstMode(_Dreadblades));
 	ConRO:AbilityBurst(_KillingSpree, _KillingSpree_RDY and not _AdrenalineRush_BUFF and _Energy <= _Energy_Max - 35 and (((ConRO_AutoButton:IsVisible() and _enemies_in_melee == 1) or ConRO_SingleButton:IsVisible()) or (_BladeFlurry_BUFF and ((ConRO_AutoButton:IsVisible() and _enemies_in_melee >= 2) or ConRO_AoEButton:IsVisible()))) and ConRO:BurstMode(_KillingSpree));
+	ConRO:AbilityBurst(_MarkedforDeath, _MarkedforDeath_RDY and _Combo <= 1 and ConRO:BurstMode(_MarkedforDeath));
 	ConRO:AbilityBurst(_RolltheBones, _RolltheBones_RDY and _should_Roll and ConRO:BurstMode(_RolltheBones));
 	ConRO:AbilityBurst(_Vanish, _Vanish_RDY and not _combat_stealth and not ConRO:TarYou() and _Combo <= 1 and _Energy >= 50 and ConRO:BurstMode(_Vanish));
 	ConRO:AbilityBurst(_Shadowmeld, _Shadowmeld_RDY and not _combat_stealth and not ConRO:TarYou() and _Combo <= 1 and _Energy >= 50 and ConRO:BurstMode(_Shadowmeld));
@@ -998,12 +1016,13 @@ function ConRO.Rogue.Subtlety(_, timeShift, currentSpell, gcd, tChosen, pvpChose
 	ConRO:AbilityMovement(_Shadowstep, _Shadowstep_RDY and _Shadowstep_RANGE and not _target_in_melee);
 	ConRO:AbilityMovement(_Sprint, _Sprint_RDY and not _target_in_melee);
 
+	ConRO:AbilityBurst(_MarkedforDeath, _MarkedforDeath_RDY and _Combo <= 1 and ConRO:BurstMode(_MarkedforDeath));
 	ConRO:AbilityBurst(_SecretTechnique, _SecretTechnique_RDY and (_SymbolsofDeath_BUFF or (not _SymbolsofDeath_BUFF and _SymbolsofDeath_CD > 5)) and (_Combo >= (_Combo_Max - 1) or _Combo == EchoingReprimand_COUNT) and ConRO:BurstMode(_SecretTechnique));
 	ConRO:AbilityBurst(_ShadowBlades, _ShadowBlades_RDY and _SymbolsofDeath_BUFF and ConRO:BurstMode(_ShadowBlades));
 	ConRO:AbilityBurst(_ShadowDance, _ShadowDance_RDY and not _combat_stealth and _SymbolsofDeath_BUFF and ConRO:BurstMode(_ShadowDance));
 	ConRO:AbilityBurst(_Shadowmeld, _Shadowmeld_RDY and not ConRO:TarYou() and not _combat_stealth and not _FindWeakness_DEBUFF and _Combo <= 0 and ConRO:BurstMode(_Shadowmeld));
 	ConRO:AbilityBurst(_Vanish, _Vanish_RDY and not ConRO:TarYou() and not _combat_stealth and _Energy >= 45 and _Combo <= 1 and ConRO:BurstMode(_Vanish))
-	ConRO:AbilityBurst(_MarkedforDeath, _MarkedforDeath_RDY and _Combo <= 1 and ConRO:BurstMode(_MarkedforDeath));
+
 
 	ConRO:AbilityBurst(_Flagellation, _Flagellation_RDY and ConRO:BurstMode(_Flagellation));
 	ConRO:AbilityBurst(_Sepsis, _Sepsis_RDY and _Combo <= _Combo_Max - 1 and ConRO:BurstMode(_Sepsis));

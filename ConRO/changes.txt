@@ -1,10 +1,10 @@
-lightweight tag d4eb61b89ac143276973db03638a4cfba1d5d3b6 v10.0.11
+lightweight tag bc4814ee07b605298f65ed9d0c6787db5144a586 v10.0.13
 Author:	Vae <emuha17@gmail.com>
-Date:	Sun Dec 4 10:08:46 2022 -1000
+Date:	Wed Dec 7 01:00:37 2022 -1000
 
-commit d4eb61b89ac143276973db03638a4cfba1d5d3b6
+commit bc4814ee07b605298f65ed9d0c6787db5144a586
 Author: Vae <emuha17@gmail.com>
-Date:   Sun Dec 4 10:08:46 2022 -1000
+Date:   Wed Dec 7 01:00:37 2022 -1000
 
-    Found global taint in CoolDown function
+    Added to Targets scan
 
