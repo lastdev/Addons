@@ -478,11 +478,13 @@ function ConRO.Warrior.Fury(_, timeShift, currentSpell, gcd, tChosen)
 	local _Onslaught, _Onslaught_RDY = ConRO:AbilityReady(Ability.Onslaught, timeShift);
 	local _Pummel, _Pummel_RDY = ConRO:AbilityReady(Ability.Pummel, timeShift);
 	local _Rampage, _Rampage_RDY = ConRO:AbilityReady(Ability.Rampage, timeShift);
+		local _RecklessAbandon_BUFF = ConRO:Aura(Buff.RecklessAbandon, timeShift);
 	local _RagingBlow, _RagingBlow_RDY = ConRO:AbilityReady(Ability.RagingBlow, timeShift);
 		local _RagingBlow_CHARGES = ConRO:SpellCharges(_RagingBlow);
 	local _Ravager, _Ravager_RDY = ConRO:AbilityReady(Ability.Ravager, timeShift);
 	local _Recklessness, _Recklessness_RDY, _Recklessness_CD = ConRO:AbilityReady(Ability.Recklessness, timeShift);
-		local _Recklessness_BUFF = ConRO:Aura(Buff.Recklessness, timeShift - .5);
+		local _Recklessness_BUFF = ConRO:Aura(Buff.Recklessness, timeShift);
+	local _Slam, _Slam_RDY = ConRO:AbilityReady(Ability.Slam, timeShift);
 	local _ShatteringThrow, _ShatteringThrow_RDY = ConRO:AbilityReady(Ability.ShatteringThrow, timeShift);
 		local _IceBlock_BUFF = ConRO:UnitAura(45438, timeShift, 'target', 'HELPFUL');
 		local _DivineShield_BUFF = ConRO:UnitAura(642, timeShift, 'target', 'HELPFUL');
@@ -503,7 +505,7 @@ function ConRO.Warrior.Fury(_, timeShift, currentSpell, gcd, tChosen)
 		_Execute = _MassacreExecute;
 	end
 
-	if tChosen[Passive.RecklessAbandon.talentID] and _Recklessness_BUFF then
+	if tChosen[Passive.RecklessAbandon.talentID] and _RecklessAbandon_BUFF then
 		_Bloodthirst_RDY = _Bloodthirst_RDY and _BloodbathCD <= 0;
 		_Bloodthirst = _Bloodbath;
 
@@ -518,22 +520,24 @@ function ConRO.Warrior.Fury(_, timeShift, currentSpell, gcd, tChosen)
 	ConRO:AbilityRaidBuffs(_BattleShout, _BattleShout_RDY and not ConRO:RaidBuff(Buff.BattleShout));
 	ConRO:AbilityMovement(_Charge, _Charge_RDY and _Charge_RANGE);
 
+	ConRO:AbilityBurst(_Avatar, _Avatar_RDY and _Recklessness_BUFF and ((_Enrage_BUFF and tChosen[Passive.TitansTorment.talentID]) or not tChosen[Passive.TitansTorment.talentID]) and ConRO:BurstMode(_Avatar));
 	ConRO:AbilityBurst(_Recklessness, _Recklessness_RDY and ConRO:BurstMode(_Recklessness));
 	ConRO:AbilityBurst(_SpearofBastion, _SpearofBastion_RDY and _in_combat and ConRO:BurstMode(_SpearofBastion));
 	ConRO:AbilityBurst(_Ravager, _Ravager_RDY and ConRO:BurstMode(_Ravager));
 
---Warnings	
+--Warnings
 
 
---Rotations		
+--Rotations
 	for i = 1, 2, 1 do
-		if _Ravager_RDY and ConRO:FullMode(_Ravager) then
+		if _Ravager_RDY and _Enrage_BUFF and ConRO:FullMode(_Ravager) then
 			tinsert(ConRO.SuggestedSpells, _Ravager);
 			_Ravager_RDY = false;
 		end
 
 		if _Whirlwind_RDY and tChosen[Passive.ImprovedWhirlwind.talentID] and not _Whirlwind_BUFF and ((ConRO_AutoButton:IsVisible() and _enemies_in_melee >= 2) or ConRO_AoEButton:IsVisible()) then
 			tinsert(ConRO.SuggestedSpells, _Whirlwind);
+			_Whirlwind_BUFF = true;
 		end
 
 		if _Recklessness_RDY and not _Recklessness_BUFF and ConRO:FullMode(_Recklessness) then
@@ -541,24 +545,19 @@ function ConRO.Warrior.Fury(_, timeShift, currentSpell, gcd, tChosen)
 			_Recklessness_RDY = false;
 		end
 
-		if _SpearofBastion_RDY and _Recklessness_BUFF and _Enrage_BUFF and ConRO:FullMode(_SpearofBastion) then
-			tinsert(ConRO.SuggestedSpells, _SpearofBastion);
-			_SpearofBastion_RDY = false;
-		end
-
-		if _Avatar_RDY and _Recklessness_BUFF then
+		if _Avatar_RDY and _Recklessness_BUFF and ((_Enrage_BUFF and tChosen[Passive.TitansTorment.talentID]) or not tChosen[Passive.TitansTorment.talentID]) and ConRO:FullMode(_Avatar) then
 			tinsert(ConRO.SuggestedSpells, _Avatar);
 			_Avatar_RDY = false;
 		end
 
-		if _Rampage_RDY and (not _Enrage_BUFF or _Recklessness_BUFF or _Rage >= 90) then
-			tinsert(ConRO.SuggestedSpells, _Rampage);
-			_Rampage_RDY = false;
+		if _SpearofBastion_RDY and _Enrage_BUFF and ConRO:FullMode(_SpearofBastion) then
+			tinsert(ConRO.SuggestedSpells, _SpearofBastion);
+			_SpearofBastion_RDY = false;
 		end
 
-		if _Bloodthirst_RDY and not _Enrage_BUFF and tChosen[Passive.FreshMeat.talentID] then
-			tinsert(ConRO.SuggestedSpells, _Bloodthirst);
-			_Bloodthirst_RDY = false;
+		if _RagingBlow_RDY and tChosen[Passive.RecklessAbandon.talentID] and _RecklessAbandon_BUFF then
+			tinsert(ConRO.SuggestedSpells, _RagingBlow);
+			_RagingBlow_CHARGES = _RagingBlow_CHARGES - 1;
 		end
 
 		if _Execute_RDY and (_can_execute or _SuddenDeath_BUFF) then
@@ -571,17 +570,27 @@ function ConRO.Warrior.Fury(_, timeShift, currentSpell, gcd, tChosen)
 			_ThunderousRoar_RDY = false;
 		end
 
-		if _OdynsFury_RDY and _Enrage_BUFF then
+		if _OdynsFury_RDY and (_Enrage_BUFF or tChosen[Passive.TitanicRage.talentID]) then
 			tinsert(ConRO.SuggestedSpells, _OdynsFury);
 			_OdynsFury_RDY = false;
 		end
 
-		if _Onslaught_RDY and _Enrage_BUFF then
+		if _Onslaught_RDY and (_Enrage_BUFF or tChosen[Passive.Tenderize.talentID]) then
 			tinsert(ConRO.SuggestedSpells, _Onslaught);
 			_Onslaught_RDY = false;
 		end
 
-		if _RagingBlow_RDY and _RagingBlow_CHARGES >= 2 and not tChosen[Passive.Annihilator.talentID] then
+		if _Rampage_RDY and (not _Enrage_BUFF or _Rage >= 90) then
+			tinsert(ConRO.SuggestedSpells, _Rampage);
+			_Rampage_RDY = false;
+		end
+
+		if _Bloodthirst_RDY and tChosen[Passive.RecklessAbandon.talentID] and _RecklessAbandon_BUFF then
+			tinsert(ConRO.SuggestedSpells, _Bloodthirst);
+			_Bloodthirst_RDY = false;
+		end
+
+		if _RagingBlow_RDY and _RagingBlow_CHARGES >= 1 and not tChosen[Passive.Annihilator.talentID] then
 			tinsert(ConRO.SuggestedSpells, _RagingBlow);
 			_RagingBlow_CHARGES = _RagingBlow_CHARGES - 1;
 		end
@@ -591,9 +600,9 @@ function ConRO.Warrior.Fury(_, timeShift, currentSpell, gcd, tChosen)
 			_Bloodthirst_RDY = false;
 		end
 
-		if _RagingBlow_RDY and _RagingBlow_CHARGES >= 1 and not tChosen[Passive.Annihilator.talentID] then
-			tinsert(ConRO.SuggestedSpells, _RagingBlow);
-			_RagingBlow_CHARGES = _RagingBlow_CHARGES - 1;
+		if _Slam_RDY and tChosen[Passive.Annihilator.talentID] then
+			tinsert(ConRO.SuggestedSpells, _Slam);
+			_Slam_RDY = false;
 		end
 
 		if _Whirlwind_RDY then
@@ -733,19 +742,24 @@ function ConRO.Warrior.Protection(_, timeShift, currentSpell, gcd, tChosen)
 			_Avatar_RDY = false;
 		end
 
+		if _ShieldBlock_RDY and (_ShieldSlam_RDY or _ShieldSlam_CD < 2) and not _ShieldBlock_BUFF and _ShieldBlock_CHARGES >= 2 then
+			tinsert(ConRO.SuggestedSpells, _ShieldBlock);
+			_ShieldBlock_CHARGES = _ShieldBlock_CHARGES - 1;
+		end
+
 		if _DemoralizingShout_RDY and tChosen[Passive.BoomingVoice.talentID] and ConRO:FullMode(_DemoralizingShout) then
 			tinsert(ConRO.SuggestedSpells, _DemoralizingShout);
 			_DemoralizingShout_RDY = false;
 		end
 
-		if _ShieldCharge_RDY and ConRO:FullMode(_ShieldCharge) then
-			tinsert(ConRO.SuggestedSpells, _ShieldCharge);
-			_ShieldCharge_RDY = false;
-		end
-
 		if _Ravager_RDY and ConRO:FullMode(_Ravager) then
 			tinsert(ConRO.SuggestedSpells, _Ravager);
 			_Ravager_RDY = false;
+		end
+
+		if _ShieldCharge_RDY and ConRO:FullMode(_ShieldCharge) then
+			tinsert(ConRO.SuggestedSpells, _ShieldCharge);
+			_ShieldCharge_RDY = false;
 		end
 
 		if _ThunderousRoar_RDY and ConRO:FullMode(_ThunderousRoar) then
@@ -758,19 +772,9 @@ function ConRO.Warrior.Protection(_, timeShift, currentSpell, gcd, tChosen)
 			_SpearofBastion_RDY = false;
 		end
 
-		if _Revenge_RDY and (_Revenge_BUFF or _Rage >= 60) and _enemies_in_melee >= 3 then
-			tinsert(ConRO.SuggestedSpells, _Revenge);
-			_Rage = _Rage - 20;
-		end
-
 		if _ThunderClap_RDY and _enemies_in_melee >= 3 then
 			tinsert(ConRO.SuggestedSpells, _ThunderClap);
 			_ThunderClap_RDY = false;
-		end
-
-		if _ShieldBlock_RDY and (_ShieldSlam_RDY or _ShieldSlam_CD < 2) and not _ShieldBlock_BUFF and _ShieldBlock_CHARGES >= 2 then
-			tinsert(ConRO.SuggestedSpells, _ShieldBlock);
-			_ShieldBlock_CHARGES = _ShieldBlock_CHARGES - 1;
 		end
 
 		if _ShieldSlam_RDY then
@@ -783,7 +787,7 @@ function ConRO.Warrior.Protection(_, timeShift, currentSpell, gcd, tChosen)
 			_ThunderClap_RDY = false;
 		end
 
-		if _Revenge_RDY and _Revenge_BUFF and _enemies_in_melee <= 2 then
+		if _Revenge_RDY and (_Revenge_BUFF or _Rage >= 80) and _enemies_in_melee >= 2 then
 			tinsert(ConRO.SuggestedSpells, _Revenge);
 			_Revenge_BUFF = false;
 		end
@@ -793,7 +797,7 @@ function ConRO.Warrior.Protection(_, timeShift, currentSpell, gcd, tChosen)
 			_Rage = _Rage - 40;
 		end
 
-		if _Revenge_RDY and _Rage >= 80 and _enemies_in_melee <= 2 then
+		if _Revenge_RDY and (_Revenge_BUFF or _Rage >= 80) and _enemies_in_melee <= 2 then
 			tinsert(ConRO.SuggestedSpells, _Revenge);
 			_Rage = _Rage - 20;
 		end

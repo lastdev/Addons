@@ -18,7 +18,10 @@ function ConRO:CheckTalents()
 	wipe(self.PlayerTalents)
 	if select(1, GetSpecialization()) ~= 5 then
 		local specID = PlayerUtil.GetCurrentSpecID();
-		local configID = C_ClassTalents.GetLastSelectedSavedConfigID(specID) or C_ClassTalents.GetActiveConfigID();
+		local configID = C_ClassTalents.GetLastSelectedSavedConfigID(specID);
+		if configID == nil then
+			configID = C_ClassTalents.GetActiveConfigID();
+		end
 		local configInfo = C_Traits.GetConfigInfo(configID);
 		if configInfo == nil then
 			configID = C_ClassTalents.GetActiveConfigID();
@@ -189,7 +192,7 @@ ConRO.EnergyList = {
 	[13] = 'Insanity',
 	[16] = 'ArcaneCharges',
 	[17] = 'Fury',
-	[20] = 'Essence',
+	[19] = 'Essence',
 }
 
 function ConRO:PlayerPower(_EnergyType)

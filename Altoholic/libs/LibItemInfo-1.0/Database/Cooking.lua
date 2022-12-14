@@ -59,6 +59,7 @@ lib:RegisterItems({
 	[12208] = SetReagent(0, e.Cooking), -- Tender Wolf Meat
 	[12223] = SetReagent(0, e.Cooking), -- Meaty Bat Wing
 	[20424] = SetReagent(0, e.Cooking), -- Sandworm Meat
+	[21024] = SetReagent(0, e.Cooking), -- Chimaerok Tenderloin
 	[22644] = SetReagent(0, e.Cooking), -- Crunchy Spider Leg
 	[23676] = SetReagent(0, e.Cooking), -- Moongraze Stag Tenderloin
 	[27668] = SetReagent(0, e.Cooking), -- Lynx Meat
@@ -211,4 +212,23 @@ lib:RegisterItems({
 	[179315] = SetReagent(8, e.Cooking), -- Shadowy Shank
 	[187704] = SetReagent(8, e.Cooking), -- Protoflesh
 	[187812] = SetReagent(8, e.Cooking), -- Empty Kettle
+	
+	-- 10.0 Dragonflight
+	[197741] = SetReagent(9, e.Cooking), -- Maybe Meat
+	[197742] = SetReagent(9, e.Cooking), -- Ribbed Mollusk Meat
+	[197743] = SetReagent(9, e.Cooking), -- Waterfowl Filet
+	[197744] = SetReagent(9, e.Cooking), -- Hornswog Hunk
+	[197745] = SetReagent(9, e.Cooking), -- Basilisk Eggs
+	[197746] = SetReagent(9, e.Cooking), -- Bruffalon Flank
+	[197747] = SetReagent(9, e.Cooking), -- Mighty Mammoth Ribs
+	[197748] = SetReagent(9, e.Cooking), -- Burly Bear Haunch
+	[197749] = SetReagent(9, e.Cooking), -- Ohn'ahran Potato
+	[197750] = SetReagent(9, e.Cooking), -- Three-Cheese Blend
+	[197751] = SetReagent(9, e.Cooking), -- Pastry Packets
+	[197752] = SetReagent(9, e.Cooking), -- Conveniently Packaged Ingredients
+	[197753] = SetReagent(9, e.Cooking), -- Thaldraszian Cocoa Powder
+	[197754] = SetReagent(9, e.Cooking), -- Salt Deposit
+	[197755] = SetReagent(9, e.Cooking), -- Lava Beetle
+	[197756] = SetReagent(9, e.Cooking), -- Pebbled Rock Salts
+	
 })

@@ -34,17 +34,26 @@ ns.hiddenConfig = {}
 
 ns.defaults.profile.groupsHidden = {
     scoutpack = true,
+    disturbeddirt = true,
+    tuskarrchests = true,
     warsupply = true,
 }
 
 ns.groups["junk"] = BAG_FILTER_JUNK
 ns.groups["scoutpack"] = "Expedition Scout's Pack"
+ns.groups["disturbeddirt"] = "{spell:340561:Disturbed Dirt}"
+ns.groups["tuskarrchests"] = "{item:200071:Sacred Tuskarr Totem}"
 ns.groups["warsupply"] = "War Supply Chest"
 ns.groups["glyphs"] = "Dragon Glyphs"
 ns.groups["dailymount"] = "Daily Mounts"
 ns.groups["races"] = "{achievement:15939:Dragon Racing Completionist}"
 ns.groups["professionknowledge"] = "Profession Knowledge"
 ns.groups["hunts"] = "{achievement:16540:Hunt Master}"
+
+ns.SUPERRARE = ns.nodeMaker{
+    texture=ns.atlas_texture("VignetteKillElite", {r=1, g=0.5, b=1, scale=1.5}),
+    note="This is a \"super rare\" which can drop higher level loot",
+}
 
 -- Intro:
 -- Talked to Azurathel: 72285
@@ -56,6 +65,3 @@ ns.groups["hunts"] = "{achievement:16540:Hunt Master}"
 -- Talked to Lethanak at the Life Pools: 72059
 
 -- unlocked dragon customization: 68797
-
--- TODO achievements:
--- Selfie achievements: Framing A New Perspective (16634), That's Pretty Neat! (16446)

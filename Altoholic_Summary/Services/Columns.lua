@@ -81,6 +81,8 @@ addon:Service("AltoholicUI.TabSummaryColumnProfiles",  function()
 		-- Weekly Rewards
 		[26] = { "Name", "Level", "RewardMythic", "RewardRaid", "RewardPvP" },	
 
+		-- Currencies / Dragonflight 10.0
+		[27] = { "Name", "Level", "Cur_DragonIslesSupplies", "Cur_ElementalOverflow", "Cur_StormSigil" },
 	}
 
 	return {

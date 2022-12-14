@@ -2,7 +2,7 @@
 ## Title: BankStack
 ## Author: Kemayo
 ## Notes: From bags we came, to bank we return
-## Version: v2022.3
+## Version: v2022.4
 ## X-Category: Inventory
 ## LoadOnDemand: 0
 ## OptionalDeps: Ace3, LibDBIcon-1.0, tekDebug

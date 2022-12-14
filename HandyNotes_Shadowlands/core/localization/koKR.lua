@@ -75,6 +75,7 @@ L['unobtainable'] = '획득불가'
 L['unlearnable'] = '습득불가'
 L['defeated'] = '처치함'
 L['undefeated'] = '처치하지 않음'
+L['elite'] = nil
 
 L['follower_type_follower'] = nil
 L['follower_type_champion'] = nil
@@ -86,6 +87,7 @@ L['follower_type_companion'] = nil
 
 L['context_menu_set_waypoint'] = '지도 비행경로 설정'
 L['context_menu_add_tomtom'] = 'TomTom에 추가'
+L['context_menu_add_group_tomtom'] = nil
 L['context_menu_hide_node'] = '이 지점 숨김'
 L['context_menu_restore_hidden_nodes'] = '모든 숨긴 지점 복구'
 
@@ -179,6 +181,8 @@ L['options_toggle_show_notes_desc'] = '가이드가 있으면 툴팁에 표시�
 --------------------------------- DEVELOPMENT ---------------------------------
 
 L['options_dev_settings'] = '개발도구'
+L['options_toggle_show_debug_currency'] = nil
+L['options_toggle_show_debug_currency_desc'] = nil
 L['options_toggle_show_debug_map'] = nil
 L['options_toggle_show_debug_map_desc'] = nil
 L['options_toggle_show_debug_quest'] = nil

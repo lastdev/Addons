@@ -32,8 +32,7 @@ function ConRO:EnableRotationModule(mode)
 		self.Description = "Evoker [Preservation - Healer]";
 		if ConRO.db.profile._Spec_2_Enabled then
 			self.NextSpell = ConRO.Evoker.Preservation;
-			self.ToggleDamage();
-			self.BlockAoE();
+			self.ToggleHealer();
 			ConROWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
 			ConRODefenseWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
 		else
@@ -323,18 +322,64 @@ function ConRO.Evoker.Preservation(_, timeShift, currentSpell, gcd, tChosen, pvp
 	local _Essence, _Essence_Max = ConRO:PlayerPower('Essence');
 
 --Racials
+	local _TailSwipe, _TailSwipe_RDY = ConRO:AbilityReady(Racial.TailSwipe, timeShift);
+	local _WingBuffet, _WingBuffet_RDY = ConRO:AbilityReady(Racial.WingBuffet, timeShift);
 
 --Abilities
+	local _AzureStrike, _AzureStrike_RDY = ConRO:AbilityReady(Ability.AzureStrike, timeShift);
+	local _DeepBreath, _DeepBreath_RDY = ConRO:AbilityReady(Ability.DeepBreath, timeShift);
+	local _Disintegrate, _Disintegrate_RDY = ConRO:AbilityReady(Ability.Disintegrate, timeShift);
+	local _FireBreath, _FireBreath_RDY = ConRO:AbilityReady(Ability.FireBreath, timeShift);
+	local _FireBreath_FoM, _FireBreath_FoM_RDY = ConRO:AbilityReady(Ability.FireBreath_FoM, timeShift);
+	local _Hover, _Hover_RDY = ConRO:AbilityReady(Ability.Hover, timeShift);
+	local _Landslide, _Landslide_RDY = ConRO:AbilityReady(Ability.Landslide, timeShift);
+	local _LivingFlame, _LivingFlame_RDY = ConRO:AbilityReady(Ability.LivingFlame, timeShift);
+		local _EssenceBurst_BUFF, _EssenceBurst_COUNT = ConRO:Aura(Buff.EssenceBurst, timeShift);
+	local _Quell, _Quell_RDY = ConRO:AbilityReady(Ability.Quell, timeShift);
+	local _TiptheScales, _TiptheScales_RDY = ConRO:AbilityReady(Ability.TiptheScales, timeShift);
+	local _Unravel, _Unravel_RDY = ConRO:AbilityReady(Ability.Unravel, timeShift);
 
 --Conditions
 	local _is_moving = ConRO:PlayerSpeed();
 	local _enemies_in_melee, _target_in_melee = ConRO:Targets("Melee");
-	local _target_in_10yrds = CheckInteractDistance("target", 3);
+	local _enemies_in_10yrds, _target_in_10yrds = ConRO:Targets("10");
+
+	if tChosen[Passive.FontofMagic.talentID] then
+		_FireBreath, _FireBreath_RDY =_FireBreath_FoM, _FireBreath_FoM_RDY;
+	end
 
 --Indicators
+	ConRO:AbilityInterrupt(_Quell, _Quell_RDY and ConRO:Interrupt());
 
 --Rotations
+	if _is_Enemy then
+		if select(2, ConRO:EndChannel()) == _Disintegrate and select(1, ConRO:EndChannel()) > 1 then
+			tinsert(ConRO.SuggestedSpells, _Disintegrate);
+		end
 
+		if _FireBreath_RDY then
+			tinsert(ConRO.SuggestedSpells, _FireBreath);
+			_FireBreath_RDY = false;
+		end
+
+		if _Disintegrate_RDY and _Essence >= 3 then
+			tinsert(ConRO.SuggestedSpells, _Disintegrate);
+			_Essence = _Essence - 3;
+		end
+
+		if _DeepBreath_RDY and _enemies_in_10yrds >= 3 then
+			tinsert(ConRO.SuggestedSpells, _DeepBreath);
+			_DeepBreath_RDY = false;
+		end
+
+		if _AzureStrike_RDY and (_is_moving or _enemies_in_10yrds >= 3) then
+			tinsert(ConRO.SuggestedSpells, _AzureStrike);
+		end
+
+		if _LivingFlame_RDY then
+			tinsert(ConRO.SuggestedSpells, _LivingFlame);
+		end
+	end
 	return nil;
 end
 

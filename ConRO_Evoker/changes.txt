@@ -1,10 +1,10 @@
-lightweight tag ec1e61c59a657a9062bd1c0c0d6c7ba32f79ee7e v10.0.1
+lightweight tag 6aab3b919a53dbe1b646a59071a1981c21714a91 v10.0.4
 Author:	Vae <emuha17@gmail.com>
-Date:	Sun Nov 27 18:29:11 2022 -1000
+Date:	Mon Dec 12 13:34:27 2022 -1000
 
-commit ec1e61c59a657a9062bd1c0c0d6c7ba32f79ee7e
+commit 6aab3b919a53dbe1b646a59071a1981c21714a91
 Author: Vae <emuha17@gmail.com>
-Date:   Sun Nov 27 18:29:11 2022 -1000
+Date:   Mon Dec 12 13:34:27 2022 -1000
 
-    Added Devastation rotation
+    Finished Library for Preservation spec
 

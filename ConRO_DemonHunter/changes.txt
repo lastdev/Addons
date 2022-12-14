@@ -1,10 +1,10 @@
-lightweight tag 007416b6b5d6ca6f453a6547ee3d953d33901282 v10.0.4
+lightweight tag a61ab56436d0172cddc2de824a8033bad8f07119 v10.0.5
 Author:	Vae <emuha17@gmail.com>
-Date:	Sun Nov 27 14:31:24 2022 -1000
+Date:	Sat Dec 10 17:45:47 2022 -1000
 
-commit 007416b6b5d6ca6f453a6547ee3d953d33901282
+commit a61ab56436d0172cddc2de824a8033bad8f07119
 Author: Vae <emuha17@gmail.com>
-Date:   Sun Nov 27 14:31:24 2022 -1000
+Date:   Sat Dec 10 17:45:47 2022 -1000
 
-    Added Vengeful Retreat to burst mode to avoid bad
+    Updated Toc
 

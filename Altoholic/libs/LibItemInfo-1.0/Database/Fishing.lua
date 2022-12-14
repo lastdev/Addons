@@ -155,4 +155,24 @@ lib:RegisterItems({
 	[173036] = SetReagent(8, e.Fishing), -- Spinefin Piranha
 	[173037] = SetReagent(8, e.Fishing), -- Elysian Thade
 	[187702] = SetReagent(8, e.Fishing), -- Precursor Placoderm
+	
+	-- 10.0 Dragonflight
+	[194730] = SetReagent(9, e.Fishing), -- Scalebelly Mackerel
+	[194970] = SetReagent(9, e.Fishing), -- Islefin Dorado
+	[198395] = SetReagent(9, e.Fishing), -- Dull Spined Clam
+	[194966] = SetReagent(9, e.Fishing), -- Thousandbite Piranha
+	[194967] = SetReagent(9, e.Fishing), -- Aileron Seamoth
+	[194968] = SetReagent(9, e.Fishing), -- Cerulean Spinefish
+	[194969] = SetReagent(9, e.Fishing), -- Temporal Dragonhead
+	[199100] = SetReagent(9, e.Fishing), -- Peppersmelt
+	[199205] = SetReagent(9, e.Fishing), -- Manasucker
+	[199207] = SetReagent(9, e.Fishing), -- Iceback Sculpin
+	[199212] = SetReagent(9, e.Fishing), -- Clubfish
+	[199213] = SetReagent(9, e.Fishing), -- Lakkamuk Blenny
+	[199344] = SetReagent(9, e.Fishing), -- Magma Thresher
+	[199346] = SetReagent(9, e.Fishing), -- Rotten Rimefin Tuna
+	[199832] = SetReagent(9, e.Fishing), -- Smoked Seaviper
+	[199833] = SetReagent(9, e.Fishing), -- Dragonhead Eel
+	[200061] = SetReagent(9, e.Fishing), -- Prismatic Leaper
+	[200074] = SetReagent(9, e.Fishing), -- Frosted Rimefin Tuna
 })

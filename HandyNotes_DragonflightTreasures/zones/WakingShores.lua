@@ -102,6 +102,46 @@ ns.RegisterPoints(MAPID, {
         note="{item:191122:Fullsails Supply Chest Key} drops from {npc:187971} or {npc:187320} south of Wingrest Embassy",
         vignette=5046,
     },
+    [23246049] = { -- Continuing Veritistrasz's story
+        label="{item:198661:Partially Destroyed Diary}",
+        achievement=16406,
+        criteria=55245,
+        quest=70268, -- Memories Revived
+        onquest=true,
+        loot={198661}, -- Partially Destroyed Diary
+        -- hide_before=ns.conditions.QuestComplete(70132), -- Stay a While
+        atlas="profession", minimap=true,
+        path=27176090,
+    },
+})
+local drink = ns.nodeMaker{
+    atlas="EmberCourt-32x32",
+    minimap=true,
+    requires=ns.conditions.OnQuest(65875), -- A Dragon's Day Off
+}
+ns.RegisterPoints(MAPID, {
+    [20163958] = { -- A Dragon's Day Off
+        label="{quest:65875}",
+        quest=65875,
+        loot={{198622, pet=3342}}, -- Spyragos
+        hide_before=ns.conditions.QuestComplete(66057), -- restoring the faith, end of Wrathion's questline in-zone
+        note="Wait for {npc:196000:Vazallia} to land, then fetch booze for her",
+        atlas="EmberCourt-32x32", minimap=true,
+        related={
+            -- available before the quest starts:
+            [63247992] = drink{label="{item:195543}", inbag=195543}, -- Riptide Brew
+            [46923071] = drink{label="{item:198045}", inbag=198045}, -- Slam Bam Swill
+            -- only after:
+            [35934792] = drink{label="{item:197738}", inbag=197738, note="Complete {npc:185627:Ingot}'s quests first"}, -- Flameslinger Rum
+            [39454833] = drink{label="{npc:185627}", quest=65691, note="Complete this questline to unlock {npc:193310:Dealer Vexil}"}, -- Ingot, if you've not completed The Shadow of His Wings
+            [39303832] = drink{label="{item:197737}", inbag=197737, note="In shipwreck"}, -- Popfizz Punch
+            [25705514] = drink{label="{item:198043}", inbag=198043, note="Buy from {npc:188349:Outfitter Tipech}"}, --Stealthy Elven Port
+            [43106730] = drink{label="{item:197739}", inbag=197739, note="Buy from {npc:186752:Firstmate Kaleson}"}, -- Happy Trigger Sour
+            [76184290] = drink{label="{item:198044}", inbag=198044, note="Buy {item:198047} from {npc:186454:Kora Fullsails} to throw at {npc:187494:Rampaging Wind}"}, -- Whirlwind Wine
+            -- for the previous:
+            [43106732] = drink{label="{item:198047}", inbag=198047, note="Buy from {npc:186454:Kora Fullsails} to throw at {npc:187494:Rampaging Wind}"}, -- Kul Tiran Red
+        },
+    }
 })
 
 -- Rares
@@ -148,13 +188,23 @@ ns.RegisterPoints(MAPID, {
         loot={},
         minimap=true, -- just a neutral mob wandering, no vignette
     },
-    [48436605] = { -- Brundin the Dragonbane
+    [52906590] = { -- Brundin the Dragonbane
         criteria=56038,
-        quest=nil,
+        quest=73890, -- TODO: verify; got this for killing the mammoth when it was all that was left
         npc=192738,
-        loot={},
-        route={48436605, 47706890, 48007100, 46907360, 45407400, 42607250, 41706940},
+        loot={
+            -- this is somewhat consolidated with the entire war party
+            200133, -- Volcanic Chakram
+            200217, -- Blazing Essence
+        },
+        route={
+            52906590, 53006650, 52006670, 51306660, 49606530, 48706530, 48436605, 47706890,
+            48007100, 46907360, 45407400, 42607250, 41706940, 40306820, 39306830, 37906960,
+            37607070, 36507160, 34607110,
+        },
+        note="Patrols with {npc:192737:Qalashi War Mammoth}",
         minimap=true,
+        vignette=5386, -- Qalashi War Party
     },
     [45413562] = { -- Thunderous Matriarch
         criteria=56040,
@@ -239,7 +289,7 @@ ns.RegisterPoints(MAPID, {
         },
         vignette=5383,
     },
-    [21606478] = { -- Enkine the Voracious
+    [21606478] = ns.SUPERRARE{ -- Enkine the Voracious
         criteria=56049,
         quest=73072, -- 72128
         npc=193134,
@@ -256,20 +306,22 @@ ns.RegisterPoints(MAPID, {
         note="Kill nearby mobs for {item:201092:Lava Spices}, then fish here to summon",
         vignette=5382,
     },
-    [27017601] = { -- Captain Lancer
+    [27017601] = ns.SUPERRARE{ -- Captain Lancer
         criteria=56050,
-        quest=72127,
+        quest=72127, -- 73075
         npc=193198,
         loot={
             {197005, quest=69205}, -- Cliffside Wylderdrake: Horned Nose
             {197019, quest=69219}, -- Cliffside Wylderdrake: Blunt Spiked Tail
             200286, -- Dragonbane Lance
+            200169, -- Protector's Molten Cudgel
+            200757, -- Qalashi War-Helm
         },
         vignette=5385,
         note="Spawns after Dragonbane Keep event",
     },
     [64456922] = { -- Possessive Hornswog
-        criteria=56051,
+        criteria=57852,
         quest=67048, -- 70864 for cave-access
         npc=192362,
         loot={
@@ -323,9 +375,9 @@ ns.RegisterPoints(MAPID, {
         loot={},
         note="In the Fluttering Cavern",
         vignette=5209, -- Resplendent Shimmerwing
-        path=35228165,
+        path=35808453,
     },
-    [30915494] = { -- Cauldronbearer Blakor
+    [30915494] = ns.SUPERRARE{ -- Cauldronbearer Blakor
         -- also 25825982?
         criteria=56056,
         quest=74042,
@@ -334,42 +386,81 @@ ns.RegisterPoints(MAPID, {
         note="Patrols",
         vignette=5480,
     },
-    [25286032] = { -- Rohzor Forgesmash
+    [25286032] = ns.SUPERRARE{ -- Rohzor Forgesmash
         criteria=56057,
         quest=74052,
         npc=187598,
         loot={
+            200757, -- Qalashi War-Helm
+            200169, -- Protector's Molten Cudgel
             194503, -- Plans: Black Dragon Touched Hammer
+            194508, -- Plans: Alvin the Anvil
+            {197005, quest=69205}, -- Cliffside Wylderdrake: Horned Nose
+            {197019, quest=69219}, -- Cliffside Wylderdrake: Blunt Spiked Tail
         },
+        vignette=5513,
     },
-    [33115569] = { -- Turboris
+    [33115569] = ns.SUPERRARE{ -- Turboris
         criteria=56058,
         quest=74054,
         npc=187886,
-        loot={},
+        loot={
+            200246, -- Lost Delving Lamp
+            200244, -- Enchanted Muckstompers
+            200683, -- Legguards of the Deep Strata
+            {196991, quest=69191}, -- Cliffside Wylderdrake: Black Horns
+            {197624, quest=69828}, -- Windborne Velocidrake: Club Tail
+        },
         vignette=5109,
     },
-    [28635882] = { -- Battlehorn Pyrhus
+    [28635882] = ns.SUPERRARE{ -- Battlehorn Pyrhus
         criteria=56059,
         quest=74040,
         npc=190986,
-        loot={},
+        loot={
+            200247, -- Inextinguishable Gavel
+            200252, -- Molten Flak Cannon
+            200217, -- Blazing Essence
+            200163, -- Ring of Embers
+            200133, -- Volcanic Chakram
+            {197135, quest=69336}, -- Highland Drake: Toothy Mouth
+            {197379, quest=69580}, -- Renewed Proto-Drake: Impaler Horns
+        },
         vignette=5112, -- and 5114
     },
-    [29245162] = { -- Char
+    [29245162] = ns.SUPERRARE{ -- Char
         criteria=56060,
         quest=74043,
         npc=190991,
         loot={
+            {200198, toy=true}, -- Primalist Prison
+            200244, -- Enchanted Muckstompers
+            200683, -- Legguards of the Deep Strata
+            200246, -- Lost Delving Lamp
+            200292, -- Cragforge Pauldrons
+            200313, -- Earthen Protoscale Drape
+            200439, -- Earthpact Scepter
+            200293, -- Primal Scion's Twinblade
+            200199, -- Elements' Burden
+            200294, -- Primal Chain Hauberk
+            {196991, quest=69191}, -- Cliffside Wylderdrake: Black Horns
+            {197624, quest=69828}, -- Windborne Velocidrake: Club Tail
             {197602, quest=69806}, -- Windborne Velocidrake: Cluster Horns
+            {197383, quest=69584}, -- Renewed Proto-Drake: Heavy Horns
         },
         vignette=5115,
     },
     [30226045] = { -- Rasnar the War Ender
         criteria=56061,
-        quest=nil,
+        quest=74051,
         npc=193232,
-        loot={},
+        loot={
+            200757, -- Qalashi War-Helm
+            200169, -- Protector's Molten Cudgel
+            {197005, quest=69205}, -- Cliffside Wylderdrake: Horned Nose
+            {197019, quest=69219}, -- Cliffside Wylderdrake: Blunt Spiked Tail
+        },
+        vignette=5512,
     },
     [32215221] = { -- Morchok
         criteria=56988,
@@ -383,9 +474,9 @@ ns.RegisterPoints(MAPID, {
         vignette=5388, -- 5119 for "Morchock Reformed"?
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
-    [47297386] = { -- Shadeslash Trakken
+    [46987332] = { -- Shadeslash Trakken
         criteria=56989,
-        quest=70719,
+        quest=74076, -- 70719
         npc=193271,
         loot={
             200297, -- Hastily Cobbled Maul
@@ -394,17 +485,36 @@ ns.RegisterPoints(MAPID, {
         },
         note="Use the three Pilfered objects inside the cave to summon",
         path=48457426,
+        nearby={47727445, 46857355, }, -- TODO: last one
         vignette=5381,
     },
-    [84163456] = { -- Slurpo, the Incredible Snail
+    [34628978] = { -- Slurpo, the Incredible Snail
+        -- at ~65001620 in Ohn'ahran...
         criteria=57003,
-        quest=72126,
+        quest=74079, -- 72126
         npc=193175,
-        loot={},
+        loot={
+            200189, -- Hydroforged Shell Helm
+        },
         vignette=5384,
+        note="Bring {item:201033:Magical Salt Crystal} from Azure Span @ 11.6 41.0 and {spell:392947:Toss Salt} to spawn; this only works when the pool is full of {npc:198216:Unsalted Water Snail}",
+        path=36048985,
+        minimap=true,
     },
 }, {
     achievement=16676, -- Adventurer
+})
+ns.RegisterPoints(ns.AZURESPAN, {
+    [11614107] = { -- Salt Crystal for Slurpo
+        achievement=16676, -- Adventurer
+        criteria=57003,
+        quest=74079, -- 72126
+        loot={201033}, -- Magical Salt Crystal
+        inbag=201033,
+        note="In the corner of the cave; take to Waking Shores to spawn {npc:193175}",
+        atlas="AzeriteSpawning", minimap=true,
+        path=11024139,
+    },
 })
 -- Drakewing
 local drakewing = {
@@ -462,14 +572,16 @@ ns.RegisterPoints(MAPID, {
         vignette=5127,
     },
     [77602220] = { -- Ancient Hornswog
-        quest=66076, -- verify; vignette
+        quest=72835, -- 66076
         npc=187111,
         loot={
+            {196976, quest=69176}, -- Cliffside Wylderdrake: Head Mane
             {196992, quest=69192}, -- Cliffside Wylderdrake: Heavy Horns
             {197403, quest=69604}, -- Renewed Proto-Drake: Club Tail
             {200249, toy=true}, -- Mage's Chewed Wand
             200442, -- Basilisk Hide Jerkin
         },
+        note="In cave",
         vignette=5057,
     },
     [46715715] = { -- Monsoo, The Boiling Rage

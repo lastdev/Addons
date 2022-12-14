@@ -1,7 +1,7 @@
-## Interface: 100000
+## Interface: 100002
 ## Title: AnnounceInterrupts
 ## Notes: Announces whenever you interrupt a spell.
-## Version: 1.8g
+## Version: 1.9
 ## SavedVariablesPerCharacter: AnnounceInterruptsDB
 ## Author: Sildor
 

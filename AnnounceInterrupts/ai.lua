@@ -5,6 +5,7 @@ local L = AnnounceInterrupts_Locales
 local config = CreateFrame("Frame")
 local configOpenRunOnce = false
 
+local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 
 local function printFormattedString(t, sid, sn, ss, ssid)
 	local msg = options.message
@@ -204,11 +205,12 @@ local function setupAIConfig(c)
 	config.channeltitle:SetText("|cffffffff" .. L.channel .. "|r")
 
 	--config.channeldropdown = CreateFrame("Button", "AIchannelDropdown", config, "L_UIDropDownMenuTemplate")
-	config.channeldropdown = L_Create_UIDropDownMenu("AIchannelDropdown", config)
+	--config.channeldropdown = L_Create_UIDropDownMenu("AIchannelDropdown", config)
+	config.channeldropdown = LibDD:Create_UIDropDownMenu("AIchannelDropdown", config)
 	config.channeldropdown:SetPoint("TOPLEFT", config, 10, -253)
 
-	L_UIDropDownMenu_Initialize(config.channeldropdown, function(self, level)   
-		local info = L_UIDropDownMenu_CreateInfo()
+	LibDD:UIDropDownMenu_Initialize(config.channeldropdown, function(self, level)   
+		local info = LibDD:UIDropDownMenu_CreateInfo()
 		local channelOptions = {
 			L.channel_say,
 			L.channel_raid,
@@ -220,21 +222,21 @@ local function setupAIConfig(c)
 			L.channel_whisper
 		}
 		for k,v in pairs(channelOptions) do
-			info = L_UIDropDownMenu_CreateInfo()
+			info = LibDD:UIDropDownMenu_CreateInfo()
 			info.text = v
 			info.value = v
-			info.func = function(self) L_UIDropDownMenu_SetSelectedID(config.channeldropdown, self:GetID()) if self:GetID() < 8 then config.channelextrabox:Hide() else config.channelextrabox:Show() end end
-			L_UIDropDownMenu_AddButton(info, level)
+			info.func = function(self) LibDD:UIDropDownMenu_SetSelectedID(config.channeldropdown, self:GetID()) if self:GetID() < 8 then config.channelextrabox:Hide() else config.channelextrabox:Show() end end
+			LibDD:UIDropDownMenu_AddButton(info, level)
 		end 
 	end)
-	L_UIDropDownMenu_SetSelectedID(config.channeldropdown, selectIdFromChannelName(options.channel))
+	LibDD:UIDropDownMenu_SetSelectedID(config.channeldropdown, selectIdFromChannelName(options.channel))
 
 	config.channelextrabox = CreateFrame("EditBox", "AIextrachannelbox", config.channeldropdown, "InputBoxTemplate")
 	config.channelextrabox:SetPoint("RIGHT", 250, 2)
 	config.channelextrabox:SetSize(130, 25)
 	config.channelextrabox:SetAutoFocus(false)
 	config.channelextrabox:SetScript("OnEnterPressed", function(self) self:ClearFocus() end)
-	if L_UIDropDownMenu_GetSelectedID(config.channeldropdown) < 7 then
+	if LibDD:UIDropDownMenu_GetSelectedID(config.channeldropdown) < 7 then
 		config.channelextrabox:Hide()
 	end
 	config.channelextrabox:SetText(options.channelExtra)
@@ -305,7 +307,7 @@ local function setupAIConfig(c)
 			"EMOTE",
 			"WHISPER"
 		}
-		AnnounceInterruptsDB.channel = channelOptions[L_UIDropDownMenu_GetSelectedID(config.channeldropdown)]
+		AnnounceInterruptsDB.channel = channelOptions[LibDD:UIDropDownMenu_GetSelectedID(config.channeldropdown)]
 
 		options = AnnounceInterruptsDB
 		registerEvents()
@@ -324,7 +326,7 @@ local function setupAIConfig(c)
 		config.smartbox:SetChecked(options.smartChannel)
 		config.outputbox:SetText(options.message)
 		config.channelextrabox:SetText(options.channelExtra)
-		L_UIDropDownMenu_SetSelectedID(config.channeldropdown, selectIdFromChannelName(options.channel))
+		LibDD:UIDropDownMenu_SetSelectedID(config.channeldropdown, selectIdFromChannelName(options.channel))
 	end
 
 	InterfaceOptions_AddCategory(config)

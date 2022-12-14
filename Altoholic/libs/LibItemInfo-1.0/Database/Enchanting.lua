@@ -91,4 +91,9 @@ lib:RegisterItems({
 	[172438] = SetReagent(8, e.Enchanting, 0, bag.LeatherworkingBag), -- Enchanted Heavy Callous Hide
 	[183951] = SetReagent(8, e.Enchanting), -- Immortal Shard
 	
+	-- 10.0 Dragonflight
+	[194123] = SetReagent(9, e.Enchanting), -- Chromatic Dust
+	[194124] = SetReagent(9, e.Enchanting), -- Vibrant Shard
+	[200113] = SetReagent(9, e.Enchanting), -- Resonant Crystal
+	[201584] = SetReagent(9, e.Enchanting), -- Serevite Rod
 })

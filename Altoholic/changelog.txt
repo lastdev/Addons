@@ -15,6 +15,16 @@ How to support Altoholic's development :
 If you like the addon, consider supporting it, this has been the long term effort and commitment of a single person. #ArmyOfOne
 
 
+10.0.009 (11/12/2022)
+
+- LibItemInfo : udpated sources for tailoring, leatherworking, mining, cooking, herbalism and enchanting.
+- Summary tab : added Dragonflight currencies.
+- Datastore_Reputations : added tracking of a first batch of Dragonflight reputations.
+- Grids tab : added tracking of a first batch of Dragonflight reputations.
+
+Note: this is a small release, next week I will be on holidays with more time to catch up on missing Dragonflight features.
+You can expect a few releases during the holiday period :)
+
 10.0.008 (27/11/2022)
 
 - Updated the Spanish (esES) translations thanks to a contribution from Romanv !

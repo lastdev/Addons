@@ -75,6 +75,7 @@ L['unobtainable'] = 'Introuvable'
 L['unlearnable'] = 'Non Apprenable'
 L['defeated'] = 'Vaincu'
 L['undefeated'] = 'Invaincu'
+L['elite'] = 'Élite'
 
 L['follower_type_follower'] = 'Sujet'
 L['follower_type_champion'] = 'Champion'
@@ -86,6 +87,7 @@ L['follower_type_companion'] = 'Compagnon'
 
 L['context_menu_set_waypoint'] = 'Définir les points de passage' -- Need review
 L['context_menu_add_tomtom'] = 'Ajouter à TomTom'
+L['context_menu_add_group_tomtom'] = 'Ajouter le groupe à TomTom'
 L['context_menu_hide_node'] = 'Cacher ce nœud'
 L['context_menu_restore_hidden_nodes'] = 'Restaurer tous les nœuds cachés'
 
@@ -179,6 +181,8 @@ L['options_toggle_show_notes_desc'] = 'Ajouter les notes utiles à l\'infobulle 
 --------------------------------- DEVELOPMENT ---------------------------------
 
 L['options_dev_settings'] = 'Développement'
+L['options_toggle_show_debug_currency'] = 'Debug ID monnaies'
+L['options_toggle_show_debug_currency_desc'] = 'Afficher les informations de debug pour les variations de monnaies (rechargement nécessaire)'
 L['options_toggle_show_debug_map'] = 'Debug ID Carte' -- Need review
 L['options_toggle_show_debug_map_desc'] = 'Afficher les informations de déboguage pour les cartes'
 L['options_toggle_show_debug_quest'] = 'Debug ID Quête'

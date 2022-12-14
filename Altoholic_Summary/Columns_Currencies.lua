@@ -760,3 +760,47 @@ Columns.RegisterColumn("Cur_CosmicFlux", {
 	JustifyH = "CENTER",
 	GetText = function(character)	return GetCurrencyText(character, enum.CosmicFlux) end,
 })
+
+-- ** Dragonflight / 10.0 **
+
+Columns.RegisterColumn("Cur_DragonIslesSupplies", {
+	-- Header
+	headerWidth = 100,
+	headerLabel = format("   %s", Formatter.Texture18("Interface\\Icons\\inv_faction_warresources")),
+	headerOnEnter = function(frame, tooltip) CurrencyHeader_OnEnter(frame, enum.DragonIslesSupplies)	end,
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("Cur_DragonIslesSupplies") end,
+	headerSort = function(self, character) return GetTotals(character, enum.DragonIslesSupplies) end,
+	
+	-- Content
+	Width = 100,
+	JustifyH = "CENTER",
+	GetText = function(character)	return GetCurrencyText(character, enum.DragonIslesSupplies) end,
+})
+
+Columns.RegisterColumn("Cur_ElementalOverflow", {
+	-- Header
+	headerWidth = 100,
+	headerLabel = format("   %s", Formatter.Texture18("Interface\\Icons\\inv_misc_powder_thorium")),
+	headerOnEnter = function(frame, tooltip) CurrencyHeader_OnEnter(frame, enum.ElementalOverflow)	end,
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("Cur_ElementalOverflow") end,
+	headerSort = function(self, character) return GetTotals(character, enum.ElementalOverflow) end,
+	
+	-- Content
+	Width = 100,
+	JustifyH = "CENTER",
+	GetText = function(character)	return GetCurrencyText(character, enum.ElementalOverflow) end,
+})
+
+Columns.RegisterColumn("Cur_StormSigil", {
+	-- Header
+	headerWidth = 100,
+	headerLabel = format("   %s", Formatter.Texture18("Interface\\Icons\\inv_cloudserpent_egg_yellow")),
+	headerOnEnter = function(frame, tooltip) CurrencyHeader_OnEnter(frame, enum.StormSigil)	end,
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("Cur_StormSigil") end,
+	headerSort = function(self, character) return GetTotals(character, enum.StormSigil) end,
+	
+	-- Content
+	Width = 100,
+	JustifyH = "CENTER",
+	GetText = function(character)	return GetCurrencyText(character, enum.StormSigil) end,
+})

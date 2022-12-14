@@ -88,4 +88,31 @@ lib:RegisterItems({
 	[173204] = SetReagent(8, e.Tailoring), -- Lightless Silk
 	[177062] = SetReagent(8, e.Tailoring), -- Penumbra Thread
 	[187703] = SetReagent(8, e.Tailoring), -- Silken Protofiber
+	
+	-- 10.0 Dragonflight
+	[192095] = SetReagent(9, e.Tailoring), -- Spool of Wilderthread 1
+	[192096] = SetReagent(9, e.Tailoring), -- Spool of Wilderthread 2
+	[192097] = SetReagent(9, e.Tailoring), -- Spool of Wilderthread 3
+	[193050] = SetReagent(9, e.Tailoring), -- Tattered Wildercloth
+	[193053] = SetReagent(9, e.Tailoring), -- Contoured Fowlfeather
+	[193922] = SetReagent(9, e.Tailoring), -- Wildercloth
+	[193923] = SetReagent(9, e.Tailoring), -- Decayed Wildercloth
+	[193924] = SetReagent(9, e.Tailoring), -- Frostbitten Wildercloth
+	[193925] = SetReagent(9, e.Tailoring), -- Singed Wildercloth
+	[193926] = SetReagent(9, e.Tailoring), -- Wildercloth Bolt 1
+	[193927] = SetReagent(9, e.Tailoring), -- Wildercloth Bolt 2
+	[193928] = SetReagent(9, e.Tailoring), -- Wildercloth Bolt 3
+	[193929] = SetReagent(9, e.Tailoring), -- Vibrant Wildercloth Bolt 1
+	[193930] = SetReagent(9, e.Tailoring), -- Vibrant Wildercloth Bolt 2
+	[193931] = SetReagent(9, e.Tailoring), -- Vibrant Wildercloth Bolt 3
+	[193932] = SetReagent(9, e.Tailoring), -- Infurious Wildercloth Bolt 1
+	[193933] = SetReagent(9, e.Tailoring), -- Infurious Wildercloth Bolt 2
+	[193934] = SetReagent(9, e.Tailoring), -- Infurious Wildercloth Bolt 3
+	[193935] = SetReagent(9, e.Tailoring), -- Chronocloth Bolt 1
+	[193936] = SetReagent(9, e.Tailoring), -- Chronocloth Bolt 2
+	[193937] = SetReagent(9, e.Tailoring), -- Chronocloth Bolt 3
+	[193938] = SetReagent(9, e.Tailoring), -- Azureweave Bolt 1
+	[193939] = SetReagent(9, e.Tailoring), -- Azureweave Bolt 2
+	[193940] = SetReagent(9, e.Tailoring), -- Azureweave Bolt 3
+	
 })

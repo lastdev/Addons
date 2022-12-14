@@ -9,6 +9,7 @@ local Group = ns.Group
 
 local Collectible = ns.node.Collectible
 local Node = ns.node.Node
+local Rare = ns.node.Rare
 
 local Achievement = ns.reward.Achievement
 local Currency = ns.reward.Currency
@@ -43,6 +44,8 @@ ns.groups.KITE = Group('kite', 133837, {defaults = ns.GROUP_HIDDEN})
 ns.groups.LAYLINE = Group('layline', 1033908, {defaults = ns.GROUP_HIDDEN})
 ns.groups.LEGENDARY_ALBUM = Group('legendary_album', 1109168,
     {defaults = ns.GROUP_HIDDEN})
+ns.groups.NEW_PERSPECTIVE = Group('new_perspective', 1109100,
+    {defaults = ns.GROUP_HIDDEN})
 ns.groups.PROFESSION_TREASURES = Group('profession_treasures', 4620676,
     {defaults = ns.GROUP_HIDDEN})
 ns.groups.SCOUT_PACK =
@@ -55,6 +58,18 @@ ns.groups.PRETTY_NEAT = Group('pretty_neat', 133707,
     {defaults = ns.GROUP_HIDDEN})
 ns.groups.GRAND_THEFT_MAMMOTH = Group('grand_theft_mammoth', 4034836,
     {defaults = ns.GROUP_HIDDEN})
+ns.groups.SAFARI = Group('safari', 4048818, {defaults = ns.GROUP_HIDDEN})
+
+-------------------------------------------------------------------------------
+--------------------------------- ELITE RARES ---------------------------------
+-------------------------------------------------------------------------------
+
+local RareElite = Class('RareElite', Rare, {
+    rlabel = '(' .. ns.color.Gray(L['elite']) .. ')',
+    sublabel = L['elite_loot_385']
+})
+
+ns.node.RareElite = RareElite
 
 -------------------------------------------------------------------------------
 ----------------------------- PROFESSION TREASURES ----------------------------
@@ -207,6 +222,39 @@ ns.DRAGON_CUSTOMIZATIONS = {
         ThinSpinedJaw = Item({item = 197387, quest = 69588}),
         WhiteHorns = Item({item = 197382, quest = 69583}),
         WhiteScales = Item({item = 197393, quest = 69594})
+    },
+    WindborneVelocidrake = {
+        ClubTail = Item({item = 197624, quest = 69828}),
+        FinnedEars = Item({item = 197595, quest = 69799}),
+        GrayHorns = Item({item = 197608, quest = 69812}),
+        LargeHeadFin = Item({item = 197589, quest = 69793}),
+        SweptHorns = Item({item = 197606, quest = 69810}),
+        SpikedBack = Item({item = 197586, quest = 69790}),
+        ClusterHorns = Item({item = 197602, quest = 69806})
+    },
+    HighlandDrake = {
+        ClubTail = Item({item = 197149, quest = 69350}),
+        CrestedBrow = Item({item = 197100, quest = 69301}),
+        FinnedBack = Item({item = 197098, quest = 69299}),
+        ManedHead = Item({item = 197111, quest = 69312}),
+        SpikedClubTail = Item({item = 197150, quest = 69351}),
+        StripedPattern = Item({item = 197138, quest = 69339}),
+        TanHorns = Item({item = 197121, quest = 69322}),
+        ToothyMouth = Item({item = 197135, quest = 69336})
+    },
+    CliffsideWylderdrake = {
+        BlackHorns = Item({item = 196991, quest = 69191}),
+        BluntSpikedTail = Item({item = 197019, quest = 69219}),
+        BranchedHorns = Item({item = 196996, quest = 69196}),
+        Ears = Item({item = 196982, quest = 69182}),
+        DualHornedChin = Item({item = 196973, quest = 69173}),
+        FinnedCheek = Item({item = 197001, quest = 69201}),
+        FinnedNeck = Item({item = 197022, quest = 69222}),
+        HeadMane = Item({item = 196976, quest = 69176}),
+        HeavyHorns = Item({item = 196992, quest = 69192}),
+        HornedJaw = Item({item = 196985, quest = 69185}),
+        HornedNose = Item({item = 197005, quest = 69205}),
+        ManedNeck = Item({item = 197023, quest = 69223})
     }
 }
 
@@ -393,22 +441,6 @@ local PrettyNeat = Class('PrettyNeat', Collectible, {
 ns.node.PrettyNeat = PrettyNeat
 
 -------------------------------------------------------------------------------
--------------------------- FRAMING A NEW PERSPECTIVE! -------------------------
--------------------------------------------------------------------------------
-
-local NewPerspective = Class('NewPerspective', Collectible, {
-    icon = 1109100,
-    -- sublabel = L['new_perspective_note'],
-    group = ns.groups.NEW_PERSPECTIVE
-}) -- That's Pretty Neat!
-
-function NewPerspective.getters:rewards()
-    return {Achievement({id = 16634, criteria = self.criteria})}
-end
-
-ns.node.NewPerspective = NewPerspective
-
--------------------------------------------------------------------------------
 ------------------------------ A LEGENDARY ALBUM ------------------------------
 -------------------------------------------------------------------------------
 
@@ -422,3 +454,12 @@ local LegendaryCharacter = Class('LegendaryCharacter', Collectible, {
 }) -- A Legendary Album
 
 ns.node.LegendaryCharacter = LegendaryCharacter
+
+-------------------------------------------------------------------------------
+----------------------------- DRAGON ISLES SAFARI -----------------------------
+-------------------------------------------------------------------------------
+
+local Safari = Class('Safari', Collectible,
+    {icon = 'paw_g', group = ns.groups.SAFARI}) -- Dragon Isles Safari
+
+ns.node.Safari = Safari

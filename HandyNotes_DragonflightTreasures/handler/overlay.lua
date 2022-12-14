@@ -141,42 +141,40 @@ function ns.SetupMapOverlay()
     local frame
     local Krowi = LibStub("Krowi_WorldMapButtons-1.4", true) or LibStub("Krowi_WorldMapButtons-1.3", true)
     if Krowi then
-        frame = Krowi:Add("WorldMapTrackingOptionsButtonTemplate", "DROPDOWNTOGGLEBUTTON")
-    elseif false and WorldMapFrame.AddOverlayFrame then
+        frame = Krowi:Add(nil, "DropDownToggleButton")
+    --elseif false and WorldMapFrame.AddOverlayFrame then
         -- retail
         -- This is super-tainted on retail, so is currently disabled
-        frame = WorldMapFrame:AddOverlayFrame("WorldMapTrackingOptionsButtonTemplate", "DROPDOWNTOGGLEBUTTON", "TOPRIGHT", WorldMapFrame:GetCanvasContainer(), "TOPRIGHT", -68, -2)
+        -- frame = WorldMapFrame:AddOverlayFrame("WorldMapTrackingOptionsButtonTemplate", "DROPDOWNTOGGLEBUTTON", "TOPRIGHT", WorldMapFrame:GetCanvasContainer(), "TOPRIGHT", -68, -2)
     else
-        -- classic!
         -- (this is a close translation of WorldMapTrackingOptionsButtonTemplate)
         frame = CreateFrame("DropDownToggleButton", WorldMapFrame, WorldMapFrame:GetCanvasContainer())
-        frame:SetFrameStrata(WorldMapFrame:GetFrameStrata() or "HIGH")
-        frame:SetSize(32, 32)
-        frame.Background = frame:CreateTexture(nil, "BACKGROUND")
-        frame.Background:SetPoint("TOPLEFT", 2, -4)
-        frame.Background:SetSize(25, 25)
-        frame.Background:SetTexture([[Interface\Minimap\UI-Minimap-Background]])
-        frame.Icon = frame:CreateTexture(nil, "ARTWORK")
-        frame.Icon:SetTexture([[Interface\Minimap\Tracking\None]])
-        frame.Icon:SetSize(20, 20)
-        frame.Icon:SetPoint("TOPLEFT", 6, -6)
-        frame.IconOverlay = frame:CreateTexture(nil, "OVERLAY")
-        frame.IconOverlay:Hide()
-        frame.IconOverlay:SetPoint("TOPLEFT", frame.Icon)
-        frame.IconOverlay:SetPoint("BOTTOMRIGHT", frame.Icon)
-        frame.IconOverlay:SetColorTexture(0, 0, 0, 0.5)
-        frame.Border = frame:CreateTexture(nil, "OVERLAY", nil, -1)
-        frame.Border:SetTexture([[Interface\Minimap\MiniMap-TrackingBorder]])
-        frame.Border:SetSize(54, 54)
-        frame.Border:SetPoint("TOPLEFT")
-        frame:SetHighlightTexture([[Interface\Minimap\UI-Minimap-ZoomButton-Highlight]], "ADD")
-        
         frame:SetPoint("TOPRIGHT", -68, -2)
-
         hooksecurefunc(WorldMapFrame, "OnMapChanged", function()
             frame:Refresh()
         end)
     end
+    frame:SetFrameStrata(ns.CLASSIC and "TOOLTIP" or "HIGH")
+    frame:SetSize(32, 32)
+    frame.Background = frame:CreateTexture(nil, "BACKGROUND")
+    frame.Background:SetPoint("TOPLEFT", 2, -4)
+    frame.Background:SetSize(25, 25)
+    frame.Background:SetTexture([[Interface\Minimap\UI-Minimap-Background]])
+    frame.Icon = frame:CreateTexture(nil, "ARTWORK")
+    frame.Icon:SetTexture([[Interface\Minimap\Tracking\None]])
+    frame.Icon:SetSize(20, 20)
+    frame.Icon:SetPoint("TOPLEFT", 6, -6)
+    frame.IconOverlay = frame:CreateTexture(nil, "OVERLAY")
+    frame.IconOverlay:Hide()
+    frame.IconOverlay:SetPoint("TOPLEFT", frame.Icon)
+    frame.IconOverlay:SetPoint("BOTTOMRIGHT", frame.Icon)
+    frame.IconOverlay:SetColorTexture(0, 0, 0, 0.5)
+    frame.Border = frame:CreateTexture(nil, "OVERLAY", nil, -1)
+    frame.Border:SetTexture([[Interface\Minimap\MiniMap-TrackingBorder]])
+    frame.Border:SetSize(54, 54)
+    frame.Border:SetPoint("TOPLEFT")
+    frame:SetHighlightTexture([[Interface\Minimap\UI-Minimap-ZoomButton-Highlight]], "ADD")
+
     -- replace the default dropdown:
     frame.DropDown = LibDD:Create_UIDropDownMenu(myname .. "OptionsDropdown", frame) -- replace the template
     frame.Icon:SetAtlas("VignetteLootElite")

@@ -1,7 +1,7 @@
-## Interface: 90001
+## Interface: 100002
 ## Title: Lib: UIDropDownMenu
 ## Notes: A Replacement for standard UIDropDownMenu
-## Version: v3.02.9000136272
+## Version: v4.18.10000046801
 ## X-Category: Libraries
 ## X-Website: https://www.wowace.com/projects/libuidropdownmenu
 ## OptionalDeps: LibStub
@@ -9,4 +9,4 @@
 #@no-lib-strip@
 LibStub\LibStub.lua
 #@end-no-lib-strip@
-LibUIDropDownMenu\LibUIDropDownMenu.xml
+LibUIDropDownMenu\LibUIDropDownMenu.lua

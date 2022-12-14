@@ -573,43 +573,41 @@ function ConRO.Priest.Shadow(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 	local _MindFlay, _MindFlay_RDY = ConRO:AbilityReady(Ability.MindFlay, timeShift);
 	local _MindFlayInsanity, _MindFlayInsanity_RDY = ConRO:AbilityReady(Ability.MindFlayInsanity, timeShift);
 	local _MindFlayInsanity_BUFF = ConRO:Aura(Buff.MindFlayInsanity, timeShift);
-	local _MindSear, _MindSear_RDY																								= ConRO:AbilityReady(Ability.MindSear, timeShift);
+	local _MindSear, _MindSear_RDY = ConRO:AbilityReady(Ability.MindSear, timeShift);
 		local _MindSear_enemies, _MindSear_RANGE = ConRO:Targets(Ability.MindSear);
 	local _MindSpike, _MindSpike_RDY = ConRO:AbilityReady(Ability.MindSpike, timeShift);
 		local _SurgeofDarkness_Buff = ConRO:Aura(Buff.SurgeofDarkness, timeShift);
 	local _Mindbender, _Mindbender_RDY = ConRO:AbilityReady(Ability.Mindbender, timeShift);
-		local _Mindbender_ACTIVE, _Mindbender_DUR = ConRO:Totem(1);
-	local _Mindgames, _Mindgames_RDY																							= ConRO:AbilityReady(Ability.Mindgames, timeShift);
+		local _Mindbender_ACTIVE, _Mindbender_DUR = ConRO:Totem(_Mindbender);
+	local _Mindgames, _Mindgames_RDY = ConRO:AbilityReady(Ability.Mindgames, timeShift);
 	local _PowerInfusion, _PowerInfusion_RDY = ConRO:AbilityReady(Ability.PowerInfusion, timeShift);
 		local _PowerInfusion_BUFF = ConRO:Aura(Buff.PowerInfusion, timeShift);
-	local _PowerWordFortitude, _PowerWordFortitude_RDY														= ConRO:AbilityReady(Ability.PowerWordFortitude, timeShift);
-	local _PowerWordShield, _PowerWordShield_RDY																	= ConRO:AbilityReady(Ability.PowerWordShield, timeShift);
-		local _WeakenedSoul_DEBUFF 																										= ConRO:UnitAura(Debuff.WeakenedSoul, timeShift, 'player', 'HARMFUL');
-		local _PowerWordShield_BUFF 																									= ConRO:Aura(Buff.PowerWordShield, timeShift);
-	local _PsychicHorror, _PsychicHorror_RDY																			= ConRO:AbilityReady(Ability.PsychicHorror, timeShift);
-	local _PsychicScream, _PsychicScream_RDY																			= ConRO:AbilityReady(Ability.PsychicScream, timeShift);
-	local _Shadowfiend, _Shadowfiend_RDY																					= ConRO:AbilityReady(Ability.Shadowfiend, timeShift + 1);
-		local _Shadowfiend_ID																													= select(7, GetSpellInfo(GetSpellInfo(Ability.Shadowfiend)));
-	local _Silence, _Silence_RDY																									= ConRO:AbilityReady(Ability.Silence, timeShift);
+	local _PowerWordFortitude, _PowerWordFortitude_RDY = ConRO:AbilityReady(Ability.PowerWordFortitude, timeShift);
+	local _PowerWordShield, _PowerWordShield_RDY = ConRO:AbilityReady(Ability.PowerWordShield, timeShift);
+		local _PowerWordShield_BUFF  = ConRO:Aura(Buff.PowerWordShield, timeShift);
+	local _PsychicHorror, _PsychicHorror_RDY = ConRO:AbilityReady(Ability.PsychicHorror, timeShift);
+	local _PsychicScream, _PsychicScream_RDY = ConRO:AbilityReady(Ability.PsychicScream, timeShift);
+	local _Shadowfiend, _Shadowfiend_RDY = ConRO:AbilityReady(Ability.Shadowfiend, timeShift + 1);
+		local _Shadowfiend_ID = select(7, GetSpellInfo(GetSpellInfo(Ability.Shadowfiend)));
+	local _Silence, _Silence_RDY = ConRO:AbilityReady(Ability.Silence, timeShift);
 	local _ShadowCrash, _ShadowCrash_RDY, _ShadowCrash_CD = ConRO:AbilityReady(Ability.ShadowCrash, timeShift);
-	local _ShadowWordDeath, _ShadowWordDeath_RDY																	= ConRO:AbilityReady(Ability.ShadowWordDeath, timeShift + 0.5);
-	local _ShadowWordPain, _ShadowWordPain_RDY 																		= ConRO:AbilityReady(Ability.ShadowWordPain, timeShift);
-		local _ShadowWordPain_DEBUFF, _, _ShadowWordPain_DUR 													= ConRO:TargetAura(Debuff.ShadowWordPain, timeShift + 3);
-	local _Shadowform, _Shadowform_RDY 																						= ConRO:AbilityReady(Ability.Shadowform, timeShift);
-		local _Shadowform_FORM 																												= ConRO:Form(Form.Shadowform);
+	local _ShadowWordDeath, _ShadowWordDeath_RDY = ConRO:AbilityReady(Ability.ShadowWordDeath, timeShift + 0.5);
+	local _ShadowWordPain, _ShadowWordPain_RDY = ConRO:AbilityReady(Ability.ShadowWordPain, timeShift);
+		local _ShadowWordPain_DEBUFF, _, _ShadowWordPain_DUR = ConRO:TargetAura(Debuff.ShadowWordPain, timeShift + 3);
+	local _Shadowform, _Shadowform_RDY = ConRO:AbilityReady(Ability.Shadowform, timeShift);
+		local _Shadowform_FORM = ConRO:Form(Form.Shadowform);
 	local _VoidEruption, _VoidEruption_RDY = ConRO:AbilityReady(Ability.VoidEruption, timeShift);
-		local _Voidform_BUFF, _Voidform_CHARGES = ConRO:Aura(Buff.Voidform);
-	local _VoidBolt, _, _VoidBolt_CD																							= ConRO:AbilityReady(Ability.VoidBolt, timeShift);
-	local _VampiricTouch, _VampiricTouch_RDY																			= ConRO:AbilityReady(Ability.VampiricTouch, timeShift);
-		local _VampiricTouch_DEBUFF, _, _VampiricTouch_DUR 														= ConRO:TargetAura(Debuff.VampiricTouch, timeShift + 4);
-		local _UnfurlingDarkness_BUFF																									= ConRO:Aura(Buff.UnfurlingDarkness, timeShift);
-	local _VoidTorrent, _VoidTorrent_RDY																					= ConRO:AbilityReady(Ability.VoidTorrent, timeShift);
+		local _Voidform_BUFF = ConRO:Aura(Buff.Voidform);
+	local _VoidBolt, _VoidBolt_RDY = ConRO:AbilityReady(Ability.VoidBolt, timeShift);
+	local _VampiricTouch, _VampiricTouch_RDY = ConRO:AbilityReady(Ability.VampiricTouch, timeShift);
+		local _VampiricTouch_DEBUFF, _, _VampiricTouch_DUR = ConRO:TargetAura(Debuff.VampiricTouch, timeShift + 4);
+	local _VoidTorrent, _VoidTorrent_RDY = ConRO:AbilityReady(Ability.VoidTorrent, timeShift);
 
 --Conditions
-	local _is_moving 																															= ConRO:PlayerSpeed();
+	local _is_moving = ConRO:PlayerSpeed();
 	local _enemies_in_melee, _target_in_melee = ConRO:Targets("Melee");
-	local _target_in_10yrds 																											= CheckInteractDistance("target", 3);
-	local _can_Execute																														= _Target_Percent_Health < 20;
+	local _enemies_in_10yrds, _target_in_10yrds = ConRO:Targets("10");
+	local _can_Execute = _Target_Percent_Health < 20;
 
 --Indicators
 	ConRO:AbilityInterrupt(_Silence, _Silence_RDY and ConRO:Interrupt());
@@ -642,37 +640,47 @@ function ConRO.Priest.Shadow(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 
 	if _Shadowform_RDY and not _Shadowform_FORM and not _Voidform_BUFF then
 		tinsert(ConRO.SuggestedSpells, _Shadowform);
+		_Shadowform_FORM = true;
 	end
 
 	if not _in_combat then
 		if _ShadowCrash_RDY then
 			tinsert(ConRO.SuggestedSpells, _ShadowCrash);
+			_ShadowCrash_RDY = false;
+			_VampiricTouch_DEBUFF = true;
 		end
 
 		if _VampiricTouch_RDY and (not _VampiricTouch_DEBUFF or (tChosen[Passive.Misery.talentID] and not _ShadowWordPain_DEBUFF)) and currentSpell ~= _VampiricTouch and ConRO.lastSpellId ~= _ShadowCrash then
 			tinsert(ConRO.SuggestedSpells, _VampiricTouch);
+			_VampiricTouch_DEBUFF = true;
 		end
 
 		if _ShadowWordPain_RDY and ((not _ShadowWordPain_DEBUFF and not tChosen[Passive.Misery.talentID]) or (_is_moving and _ShadowWordPain_DUR <= 5)) then
 			tinsert(ConRO.SuggestedSpells, _ShadowWordPain);
+			_ShadowWordPain_DEBUFF = true;
 		end
 	end
 
 	if _ShadowCrash_RDY and not _VampiricTouch_DEBUFF then
 		tinsert(ConRO.SuggestedSpells, _ShadowCrash);
+		_ShadowCrash_RDY = false;
+		_VampiricTouch_DEBUFF = true;
 	end
 
 	if _VampiricTouch_RDY and (not _VampiricTouch_DEBUFF or (tChosen[Passive.Misery.talentID] and not _ShadowWordPain_DEBUFF)) and currentSpell ~= _VampiricTouch and ConRO.lastSpellId ~= _ShadowCrash then
 		tinsert(ConRO.SuggestedSpells, _VampiricTouch);
+		_VampiricTouch_DEBUFF = true;
 	end
 
 	if _ShadowWordPain_RDY and ((not _ShadowWordPain_DEBUFF and not tChosen[Passive.Misery.talentID]) or (_is_moving and _ShadowWordPain_DUR <= 5)) then
 		tinsert(ConRO.SuggestedSpells, _ShadowWordPain);
+		_ShadowWordPain_DEBUFF = true;
 	end
 
 	if tChosen[Ability.Mindbender.talentID] then
 		if _Mindbender_RDY and ConRO:FullMode(_Mindbender) then
 			tinsert(ConRO.SuggestedSpells, _Mindbender);
+			_Mindbender_RDY = false;
 		end
 	else
 		if _Shadowfiend_RDY and ConRO:FullMode(_Shadowfiend) then
@@ -688,32 +696,39 @@ function ConRO.Priest.Shadow(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 		end
 	end
 
-	if _VoidEruption_RDY and currentSpell ~= _VoidEruption and not _Voidform_BUFF and _MindBlast_CHARGE >= _MindBlast_MCHARGE and ConRO:FullMode(_VoidEruption) then
+	if _VoidEruption_RDY and currentSpell ~= _VoidEruption and not _Voidform_BUFF and ConRO:FullMode(_VoidEruption) then
 		tinsert(ConRO.SuggestedSpells, _VoidEruption);
+		_VoidEruption_RDY = false;
 	end
 
 	if _DarkAscension_RDY and currentSpell ~= _DarkAscension and ConRO:FullMode(_DarkAscension) then
 		tinsert(ConRO.SuggestedSpells, _DarkAscension);
+		_DarkAscension_RDY = false;
 	end
 
 	if _PowerInfusion_RDY and (_DarkAscension_BUFF or _Voidform_BUFF or currentSpell == _DarkAscension or currentSpell == _VoidEruption) and ConRO:FullMode(_PowerInfusion) then
 		tinsert(ConRO.SuggestedSpells, _PowerInfusion);
+		_PowerInfusion_RDY = false;
 	end
 
 	if _ShadowWordDeath_RDY and _Mindbender_ACTIVE and tChosen[Passive.InescapableTorment.talentID] then
 		tinsert(ConRO.SuggestedSpells, _ShadowWordDeath);
+		_ShadowWordDeath_RDY = false;
 	end
 
 	if _MindBlast_RDY and _MindBlast_CHARGE >= _MindBlast_MCHARGE and currentSpell ~= _MindBlast then
 		tinsert(ConRO.SuggestedSpells, _MindBlast);
+		_MindBlast_CHARGE = _MindBlast_CHARGE - 1;
 	end
 
 	if _Damnation_RDY and not _VampiricTouch_DEBUFF and not _ShadowWordPain_DEBUFF and currentSpell ~= _VampiricTouch and ConRO:FullMode(_Damnation) then
 		tinsert(ConRO.SuggestedSpells, _Damnation);
+		_Damnation_RDY = false;
 	end
 
-	if _Voidform_BUFF and _Insanity < 85 then
+	if _VoidBolt_RDY and _Voidform_BUFF then
 		tinsert(ConRO.SuggestedSpells, _VoidBolt);
+		_VoidBolt_RDY = false;
 	end
 
 	if _MindSear_RDY and ConRO_AoEButton:IsVisible() and _MindSear_enemies >= 3 then
@@ -726,30 +741,37 @@ function ConRO.Priest.Shadow(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 
 	if _VampiricTouch_RDY and (not _VampiricTouch_DEBUFF or (tChosen[Passive.Misery.talentID] and not _ShadowWordPain_DEBUFF)) and currentSpell ~= _VampiricTouch and (not tChosen[Ability.ShadowCrash.talentID] or (tChosen[Ability.ShadowCrash.talentID] and _ShadowCrash_CD >= (_VampiricTouch_DUR + 1))) then
 		tinsert(ConRO.SuggestedSpells, _VampiricTouch);
+		_VampiricTouch_RDY = false;
 	end
 
 	if _ShadowWordPain_RDY and ((not _ShadowWordPain_DEBUFF and not tChosen[Passive.Misery.talentID]) or (_is_moving and _ShadowWordPain_DUR <= 4)) then
 		tinsert(ConRO.SuggestedSpells, _ShadowWordPain);
+		_ShadowWordPain_RDY = false;
 	end
 
 	if _ShadowWordDeath_RDY and _can_Execute and _Player_Percent_Health >= 50 then
 		tinsert(ConRO.SuggestedSpells, _ShadowWordDeath);
+		_ShadowWordDeath_RDY = false;
 	end
 
 	if _MindBlast_RDY and currentSpell ~= _MindBlast then
 		tinsert(ConRO.SuggestedSpells, _MindBlast);
+		_MindBlast_RDY = false;
 	end
 
 	if _Mindgames_RDY and (_Voidform_Buff or (_VampiricTouch_DEBUFF and _ShadowWordPain_DEBUFF and _DevouringPlague_DEBUFF)) and ConRO:FullMode(_Mindgames) then
 		tinsert(ConRO.SuggestedSpells, _Mindgames);
+		_Mindgames_RDY = false;
 	end
 
 	if _ShadowCrash_RDY then
 		tinsert(ConRO.SuggestedSpells, _ShadowCrash);
+		_ShadowCrash_RDY = false;
 	end
 
 	if _DarkVoid_RDY then
 		tinsert(ConRO.SuggestedSpells, _DarkVoid);
+		_DarkVoid_RDY = false;
 	end
 
 	if _DevouringPlague_RDY and _Voidform_BUFF then
@@ -758,6 +780,7 @@ function ConRO.Priest.Shadow(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 
 	if _VoidTorrent_RDY and (_Insanity <= 35) and _VampiricTouch_DEBUFF and _ShadowWordPain_DEBUFF and ConRO:FullMode(_VoidTorrent) then
 		tinsert(ConRO.SuggestedSpells, _VoidTorrent);
+		_VoidTorrent_RDY = false;
 	end
 
 	if _MindSpike_RDY and _SurgeofDarkness_Buff then
@@ -770,10 +793,12 @@ function ConRO.Priest.Shadow(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 
 	if _Halo_RDY and _VampiricTouch_DEBUFF and _ShadowWordPain_DEBUFF and _DevouringPlague_DEBUFF then
 		tinsert(ConRO.SuggestedSpells, _Halo);
+		_Halo_RDY = false;
 	end
 
 	if _DivineStar_RDY and _VampiricTouch_DEBUFF and _ShadowWordPain_DEBUFF and _DevouringPlague_DEBUFF then
 		tinsert(ConRO.SuggestedSpells, _DivineStar);
+		_DivineStar_RDY = false;
 	end
 
 	if _MindFlayInsanity_RDY and _MindFlayInsanity_BUFF and select(2, ConRO:EndChannel()) ~= _MindFlayInsanity then
@@ -831,11 +856,11 @@ function ConRO.Priest.ShadowDef(_, timeShift, currentSpell, gcd, tChosen, pvpCho
 			tinsert(ConRO.SuggestedDefSpells, _DesperatePrayer);
 		end
 
-		if _VampiricEmbrace_RDY and _Player_Percent_Health <= 50 then
+		if _VampiricEmbrace_RDY and _Player_Percent_Health <= 75 then
 			tinsert(ConRO.SuggestedDefSpells, _VampiricEmbrace);
 		end
 
-		if _Dispersion_RDY and _Player_Percent_Health <= 25 then
+		if _Dispersion_RDY and _Player_Percent_Health <= 40 then
 			tinsert(ConRO.SuggestedDefSpells, _Dispersion);
 		end
 
@@ -843,7 +868,7 @@ function ConRO.Priest.ShadowDef(_, timeShift, currentSpell, gcd, tChosen, pvpCho
 			tinsert(ConRO.SuggestedDefSpells, _Fade);
 		end
 
-		if _PowerWordShield_RDY and not _WeakenedSoul_DEBUFF and not _PowerWordShield_BUFF then
+		if _PowerWordShield_RDY and not _PowerWordShield_BUFF then
 			tinsert(ConRO.SuggestedDefSpells, _PowerWordShield);
 		end
 	return nil;

@@ -146,7 +146,11 @@ end
 
 function Achievement:GetText()
     local _, name, _, _, _, _, _, _, _, icon = GetAchievementInfo(self.id)
-    return Icon(icon) .. ACHIEVEMENT_COLOR_CODE .. '[' .. name .. ']|r'
+    local text = Icon(icon) .. ACHIEVEMENT_COLOR_CODE .. '[' .. name .. ']|r'
+    if self.note then
+        text = text .. ns.color.White('\n(' .. self.note .. ')')
+    end
+    return text
 end
 
 function Achievement:GetStatus()
@@ -246,7 +250,7 @@ end
 
 function Follower:IsObtained()
     local followers = C_Garrison.GetFollowers(self:GetType('enum'))
-    for i = 1, #followers do
+    for i = 1, followers and #followers or 0 do
         local followerID = followers[i].followerID
         if (self.id == followerID) then return false end
     end

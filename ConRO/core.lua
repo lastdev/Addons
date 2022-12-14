@@ -2131,14 +2131,17 @@ end
 function ConRO:OnEnable()
 	self:RegisterEvent('PLAYER_TARGET_CHANGED');
 	self:RegisterEvent('ACTIVE_PLAYER_SPECIALIZATION_CHANGED');
+	self:RegisterEvent('ACTIVE_COMBAT_CONFIG_CHANGED');
 	self:RegisterEvent('TRAIT_CONFIG_UPDATED');
 	self:RegisterEvent('ACTIONBAR_SLOT_CHANGED');
 	self:RegisterEvent('PLAYER_REGEN_DISABLED');
 	self:RegisterEvent('PLAYER_REGEN_ENABLED');
 	self:RegisterEvent('PLAYER_ENTERING_WORLD');
+	self:RegisterEvent('PLAYER_LEAVING_WORLD');
 	self:RegisterEvent('UPDATE_SHAPESHIFT_FORM');
 	self:RegisterEvent('UPDATE_STEALTH');
-
+	self:RegisterEvent('LOADING_SCREEN_ENABLED');
+	self:RegisterEvent('LOADING_SCREEN_DISABLED');
 	self:RegisterEvent('ACTIONBAR_HIDEGRID');
 	self:RegisterEvent('ACTIONBAR_PAGE_CHANGED');
 	self:RegisterEvent('LEARNED_SPELL_IN_TAB');
@@ -2166,7 +2169,7 @@ function ConRO:ACTIVE_PLAYER_SPECIALIZATION_CHANGED()
 	self:LoadModule();
 	self:EnableRotation();
 	self:EnableDefense();
-	
+
 	if ConRO:HealSpec() then
 		ConROWindow:Hide();
 		ConRONextWindow:Hide();
@@ -2180,7 +2183,59 @@ function ConRO:ACTIVE_PLAYER_SPECIALIZATION_CHANGED()
 		ConRONextWindow:Hide();
 		ConRONext2Window:Hide();
 	end
+
+	ConRO:ButtonFetch()
 end
+
+function ConRO:ACTIVE_COMBAT_CONFIG_CHANGED()
+	--self:Print(self.Colors.Success .. 'Talent');
+		self:DisableRotation();
+		self:DisableDefense();
+		self:LoadModule();
+		self:EnableRotation();
+		self:EnableDefense();
+
+		if ConRO:HealSpec() then
+			ConROWindow:Hide();
+			ConRONextWindow:Hide();
+			ConRONext2Window:Hide();
+		elseif ConRO.db.profile.enableWindow and not ConRO.db.profile.combatWindow then
+			ConROWindow:Show();
+			ConRONextWindow:Show();
+			ConRONext2Window:Show();
+		else
+			ConROWindow:Hide();
+			ConRONextWindow:Hide();
+			ConRONext2Window:Hide();
+		end
+
+		ConRO:ButtonFetch()
+	end
+
+function ConRO:PLAYER_SPECIALIZATION_CHANGED()
+	--self:Print(self.Colors.Success .. 'Talent');
+		self:DisableRotation();
+		self:DisableDefense();
+		self:LoadModule();
+		self:EnableRotation();
+		self:EnableDefense();
+
+		if ConRO:HealSpec() then
+			ConROWindow:Hide();
+			ConRONextWindow:Hide();
+			ConRONext2Window:Hide();
+		elseif ConRO.db.profile.enableWindow and not ConRO.db.profile.combatWindow then
+			ConROWindow:Show();
+			ConRONextWindow:Show();
+			ConRONext2Window:Show();
+		else
+			ConROWindow:Hide();
+			ConRONextWindow:Hide();
+			ConRONext2Window:Hide();
+		end
+
+		ConRO:ButtonFetch()
+	end
 
 function ConRO:TRAIT_CONFIG_UPDATED()
 --self:Print(self.Colors.Success .. 'Talent');
@@ -2204,6 +2259,8 @@ function ConRO:TRAIT_CONFIG_UPDATED()
 		ConRONextWindow:Hide();
 		ConRONext2Window:Hide();
 	end
+
+	ConRO:ButtonFetch()
 end
 
 function ConRO:ACTIONBAR_HIDEGRID()
@@ -2301,7 +2358,30 @@ function ConRO:PLAYER_CONTROL_GAINED()
 	end
 end
 
+function ConRO:PLAYER_LEAVING_WORLD()
+	--	self:Print(self.Colors.Success .. 'Lost Control!');
+			self:DisableRotation();
+			self:DisableDefense();
+end
+
 function ConRO:PLAYER_ENTERING_WORLD()
+	self:UpdateButtonGlow();
+	if not self.rotationEnabled and not UnitHasVehicleUI("player") and not ConRO:Dragonriding() then
+		self:Print(self.Colors.Success .. 'Auto enable on login!');
+		self:Print(self.Colors.Info .. 'Loading class module');
+		self:LoadModule();
+		self:EnableRotation();
+		self:EnableDefense();
+	end
+end
+
+function ConRO:LOADING_SCREEN_ENABLED()
+	--	self:Print(self.Colors.Success .. 'Lost Control!');
+			self:DisableRotation();
+			self:DisableDefense();
+end
+
+function ConRO:LOADING_SCREEN_DISABLED()
 	self:UpdateButtonGlow();
 	if not self.rotationEnabled and not UnitHasVehicleUI("player") and not ConRO:Dragonriding() then
 		self:Print(self.Colors.Success .. 'Auto enable on login!');
@@ -2360,15 +2440,6 @@ end
 
 function ConRO:ACTIONBAR_SLOT_CHANGED()
 	self:UpdateButtonGlow();
-	if ConRO:Dragonriding() and self.ModuleLoaded and self.rotationEnabled then
-		self:DisableRotation();
-		self:DisableDefense();
-	elseif not ConRO:Dragonriding() and not self.rotationEnabled then
-		self:LoadModule();
-		self:EnableRotation();
-		self:EnableDefense();
-	end
-
 	ConRO:ButtonFetch()
 end
 
@@ -2389,7 +2460,6 @@ ConRO.UPDATE_SHAPESHIFT_FORM = ConRO.ButtonFetch;
 ConRO.UPDATE_STEALTH = ConRO.ButtonFetch;
 ConRO.LEARNED_SPELL_IN_TAB = ConRO.ButtonFetch;
 ConRO.CHARACTER_POINTS_CHANGED = ConRO.ButtonFetch;
-ConRO.PLAYER_SPECIALIZATION_CHANGED = ConRO.ButtonFetch;
 ConRO.ACTIVE_TALENT_GROUP_CHANGED = ConRO.ButtonFetch;
 ConRO.UPDATE_MACROS = ConRO.ButtonFetch;
 ConRO.VEHICLE_UPDATE = ConRO.ButtonFetch;

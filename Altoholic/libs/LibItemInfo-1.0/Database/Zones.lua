@@ -40,6 +40,7 @@ local MALDRAXXUS = 1536
 local THE_MAW = 1960
 local KORTHIA = 1961
 local ZERETH_MORTIS = 1970
+local OHNAHRAN_PLAINS = 2023
 
 lib:RegisterItems({
 
@@ -103,6 +104,9 @@ lib:RegisterItems({
 	[190198] = SetZoneItem(8, ZERETH_MORTIS), -- Sandworn Chest Key Fragment
 	[190739] = SetZoneItem(8, ZERETH_MORTIS), -- Provis Wax
 	[190740] = SetZoneItem(8, ZERETH_MORTIS), -- Automa Integration
+	
+	-- 10.0 Dragonflight
+	[200093] = SetZoneItem(9, OHNAHRAN_PLAINS, 640, 410), -- Centaur Hunting Trophy
 	
 
 })

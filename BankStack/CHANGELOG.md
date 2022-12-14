@@ -1,6 +1,10 @@
 # BankStack
 
-## [v2022.3](https://github.com/kemayo/wow-bankstack/tree/v2022.3) (2022-11-16)
-[Full Changelog](https://github.com/kemayo/wow-bankstack/compare/v2022.2...v2022.3) [Previous Releases](https://github.com/kemayo/wow-bankstack/releases)
+## [v2022.4](https://github.com/kemayo/wow-bankstack/tree/v2022.4) (2022-12-06)
+[Full Changelog](https://github.com/kemayo/wow-bankstack/compare/v2022.3...v2022.4) [Previous Releases](https://github.com/kemayo/wow-bankstack/releases)
 
-- Some missing C\_Container compatibility functions  
+- Handle reagent bag better  
+    It needed some special flagging to be treated like the bank reagent slot  
+- Let the sort fall back to itemid if names are identical  
+    Was causing issues with the new identically-named different-quality  
+    dragonflight items.  

@@ -1,10 +1,10 @@
-lightweight tag 4d8049120b156bf62832cfd9e8d3e8f744de2ee1 v10.0.6
+lightweight tag 9be88a21ded4ae4a71c2aff6f5d0c305328697d9 v10.0.7
 Author:	Vae <emuha17@gmail.com>
-Date:	Sat Dec 3 08:55:28 2022 -1000
+Date:	Sun Dec 11 14:16:49 2022 -1000
 
-commit 4d8049120b156bf62832cfd9e8d3e8f744de2ee1
+commit 9be88a21ded4ae4a71c2aff6f5d0c305328697d9
 Author: Vae <emuha17@gmail.com>
-Date:   Sat Dec 3 08:55:28 2022 -1000
+Date:   Sun Dec 11 14:16:49 2022 -1000
 
-    Found small Multishot error with DoubleTap
+    Mongoose bite fix
 

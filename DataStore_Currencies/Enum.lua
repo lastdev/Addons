@@ -75,5 +75,8 @@ enum.CurrencyIDs = {
 	CyphersOfTheFirstOnes = 1979,
 	CosmicFlux = 2009,
 	
-	
+	-- Dragonflight 10.0
+	DragonIslesSupplies = 2003,
+	ElementalOverflow = 2118,
+	StormSigil = 2122,
 }

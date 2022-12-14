@@ -86,6 +86,7 @@ local function eventHandler(self, event, ...)
     local arg1 = ...
     if event == "ADVENTURE_MAP_OPEN" then
         if arg1 ~= 123 then return end
+        if C_Map.GetBestMapForUnit("player") == 2022 then return end -- this is The Waking Shores. There is an interactable "Scouting Map" that passes in 123 for some reason.
         adventureMapOpenHandler(arg1)
         preloadItemRewards()
         if #C_Garrison.GetCompleteMissions(123) == 0 then

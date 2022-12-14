@@ -373,11 +373,11 @@ spec:RegisterAuras( {
         duration = 10,
         max_stack = 1,
     },
-    shadow_dance = {	
-        id = 185313,	
-        duration = 6,	
-        max_stack = 1,	
-        copy = 185422	
+    shadow_dance = {
+        id = 185313,
+        duration = 6,
+        max_stack = 1,
+        copy = 185422
     },
     sharpened_sabers = {
         id = 252285,
@@ -514,6 +514,30 @@ spec:RegisterStateExpr( "rtb_buffs", function ()
     return buff.roll_the_bones.count
 end )
 
+spec:RegisterStateExpr( "rtb_buffs_shorter", function ()
+    local n = 0
+    for _, rtb in ipairs( rtb_buff_list ) do
+        if buff[ rtb ].up and buff[ rtb ].expires - buff[ rtb ].applied < 30 then n = n + 1 end
+    end
+    return n
+end )
+
+spec:RegisterStateExpr( "rtb_buffs_normal", function ()
+    local n = 0
+    for _, rtb in ipairs( rtb_buff_list ) do
+        if buff[ rtb ].up and buff[ rtb ].expires - buff[ rtb ].applied == 30 then n = n + 1 end
+    end
+    return n
+end )
+
+spec:RegisterStateExpr( "rtb_buffs_longer", function ()
+    local n = 0
+    for _, rtb in ipairs( rtb_buff_list ) do
+        if buff[ rtb ].up and buff[ rtb ].expires - buff[ rtb ].applied > 30 then n = n + 1 end
+    end
+    return n
+end )
+
 
 spec:RegisterStateExpr( "cp_max_spend", function ()
     return combo_points.max
@@ -585,6 +609,21 @@ spec:RegisterCombatLogEvent( function( _, subtype, _,  sourceGUID, sourceName, _
 end )
 
 
+-- Tier Set
+spec:RegisterGear( "tier29", 200372, 200374, 200369, 200371, 200373 )
+spec:RegisterAuras( {
+    vicious_followup = {
+        id = 394879,
+        duration = 15,
+        max_stack = 1
+    },
+    brutal_opportunist = {
+        id = 394888,
+        duration = 15,
+        max_stack = 1
+    }
+} )
+
 -- Legendary from Legion, shows up in APL still.
 spec:RegisterGear( "mantle_of_the_master_assassin", 144236 )
 spec:RegisterAura( "master_assassins_initiative", {
@@ -616,7 +655,7 @@ end )
 
 spec:RegisterStateExpr( "effective_combo_points", function ()
     local c = combo_points.current or 0
-    if not action.echoing_reprimand.known then return c end
+    if not talent.echoing_reprimand.enabled and not covenant.kyrian then return c end
     if c < 2 or c > 5 then return c end
     if buff[ "echoing_reprimand_" .. c ].up then return 7 end
     return c
@@ -904,14 +943,19 @@ spec:RegisterAbilities( {
 
         usable = function() return combo_points.current > 0, "requires combo points" end,
         handler = function ()
+            removeBuff( "brutal_opportunist" )
+            removeBuff( "echoing_reprimand_" .. combo_points.current )
+            removeBuff( "storm_of_steel" )
+
             if talent.alacrity.enabled and combo_points.current > 4 then
                 addStack( "alacrity" )
             end
             if talent.summarily_dispatched.enabled and combo_points.current > 5 then
                 addStack( "summarily_dispatched", ( buff.summarily_dispatched.up and buff.summarily_dispatched.remains or nil ), 1 )
             end
-            removeBuff( "storm_of_steel" )
-            removeBuff( "echoing_reprimand_" .. combo_points.current )
+
+            if set_bonus.tier29_2pc > 0 then applyBuff( "vicious_followup" ) end
+
             spend( combo_points.current, "combo_points" )
         end,
     },
@@ -1034,7 +1078,16 @@ spec:RegisterAbilities( {
 
         handler = function ()
             gain( action.pistol_shot.cp_gain, "combo_points" )
-            removeStack( "opportunity" )
+
+            removeBuff( "deadshot" )
+            removeBuff( "concealed_blunderbuss" ) -- Generating 2 extra combo points is purely a guess.
+            removeBuff( "greenskins_wickers" )
+            removeBuff( "tornado_trigger" )
+
+            if buff.opportunity.up then
+                removeStack( "opportunity" )
+                if set_bonus.tier29_4pc > 0 then applyBuff( "brutal_opportunist" ) end
+            end
 
             -- If Fan the Hammer is talented, let's generate more.
             if talent.fan_the_hammer.enabled then
@@ -1042,11 +1095,6 @@ spec:RegisterAbilities( {
                 gain( shots * action.pistol_shot.cp_gain, "combo_points" )
                 removeStack( "opportunity", shots )
             end
-
-            removeBuff( "deadshot" )
-            removeBuff( "concealed_blunderbuss" ) -- Generating 2 extra combo points is purely a guess.
-            removeBuff( "greenskins_wickers" )
-            removeBuff( "tornado_trigger" )
         end,
     },
 
@@ -1240,4 +1288,4 @@ spec:RegisterSetting( "allow_shadowmeld", nil, {
 } )
 
 
-spec:RegisterPack( "Outlaw", 20221203.1, [[Hekili:nZtAZTTXs(Br1wfnPLmnjLLDswsvvIsE7lPEBI3OKnF4vlbbbgsIvGaCXHLvvS4V9T7zgamh9aqQd7xv5WMyqp991mnMpE(Fm)2q)c28FDYOjtgpz0LdhpA8hg)TZVT4HDS53UZp4o)1WFiXFl8F)TYIy)7XF(H4u)q81ZtlZcGhTPOyx(3923UoQyt5YHbPBFBE02Yy)IO0KGm)vf4Fp4TZVDzzuCXpNmFj9EF18B9ll2KMn)2BJ2Eda5OWqMy5S8G53o)24O8ICCZrqHyXVYPewI)Yyw48FaGqaUTa2X2LhLp)2GhcIzEf(zRzWBcl)2GSOcwwKpqP8FDyr0wyfPEHrSdlU(WIXJpSO3HfHSLLRwnCjR4EglXRydZJ9alFy5Udl2V)WIvrR3u4LX26hLKFyXu8ffyAw0obs8diwYYYNxa0QbI2GgYnA9M08I4h8YlYIUJnSbWZoS4sog1)WI8DS44kYz4Yy)qM3Q4YSShelCIa34ammJ5hYxIaPhWbYzYNMxUe2)vLRz8hcpHKDaW8QgUQooIK1LojRZirJgyXc2KgLSg4G7YI26NeIG7DoeN(BxwMVXG9(3bjWHfWBNcBkWa(E(IoSiokbq9I0dl83TlgEWFlkj8WI)I5FxclhyPPzhweKMKxUfw3F)3o)7ld9d4GaXy4)YwLMbp6JG6wA8Hf3UjTqxXjMLumuOF6LUBxAwrzcaGHsuNZp5uVVe01QnY3DfGsE3lXiTxtQoOVGW07tq(Zvo4p74yQxohr1ys)zoqi)hzGkC(DC9P)kk4oqNSIwJ2ULfgbMJiJ6EWg(WIFRHGoSOmjMZZYktsaXfWm9taQydY58H3ntLXiuKR3mV7f7vLgwFU6xfhWxyuTHdfBoNkBTI55c(AwHdVc01rM17pzM1FXPFtk8cfTfnEJFXHfB9)mywwaUlLkwrat9EgYlJbvhWIsUM3D(Hf38r4LqDXFSXOaEd4FtsH1HMhwAzNkFsWNTEehffg0wpdWpp5ZR5YQpxL9orYC)Gtd)hpEdXowM6TdClao3czRIalhUl5(8)b8lFET6Z)xji79cZ8VVb0GhUx7s)kZp5otFGMEinvrBZahzuU9Lw)Kn(GPRxOFsG4zdOvdbg63yWqbxqEjSpxWdAv)oPWBKXKXEHN9TDjg6IgEc(Jm9oJO6Ot2MJ7Gs1tlPBi0Q6gq9an5(yAbljaDxLM8k4VN(jwwGpWCzjSS1paMR3VHbMWrfvwHSpd4b6GJVSB(4fctvXYkZ5(1(Vqfk0YeZZrlm2JxHUFfonCPFoZtvLw(7zS1io8APFlPwLChb29U0KT(5fg7hTHcMaGWgrK5sgKPwEuiZm2dLPJYJRdzPUJNrfpJ7iympfS68UIsIq0TkfbfDbulhe9R8lJlOsDttR43zau8Jr9au0VlnppcwiWstG46FQmgyF(8FayKBJ4Urtemg)cfJmjuOYaRAj3bCdJD)NtasiRChQCXHAAmQXltQioo9EWNpe5KR4eHlwaS8kD3In(fgArsmHfoeaavQtP7W0wlAqSp5dVl8u8pfxYQnPdsltk4QIPHH6gR9v3hqNlkqXLUWz0wwCOEavkNuASJB2W4H3QcT5JjhHSBmqjKJvwkKegKcby)wj0GWj4FFfAMbAcRxd8bKzXdREdsaY)8VbKaGhPjL5Ck2tuWrnv4fuKsLzy3CRSILEi9vh3Q29oH5XXMDIMB)7kHKXH45EbzG(jqdKzAxKvY8wY8rgGoJhlLcOWWOk(U4zki(mfexG1LzrWRuarUYlZQXDzIriUaYxwJjVtQ1j21ZfYzAHMIEw5YWFaP8dl(Dwg)3UjnjmIBoOkrrQkJVcQez7wC6i5abhQjVGOTG64NaexeuQrYr7wSxLNyzToJSvfCzUvlgrAI)CHgqD2siahpYMZ9tjOOtykXZpCvjY2QkFbtsCTac8CfbRnEyobZJBfryaj0x8V3)bvMUGj4fujrOsl(0y9cYkyNhpPXDmedFdjR9n0jI2yTDCHJCzjoO2EHTAfdq9pX8Ahrned)nmu1gLS4BcYGIa0rEAPm9IvGlFoNN7OsgagFdCNUOPkjU)UFO4NWClIcqGhdse4bqIpLXawVeG(v8kbuftR4OIUyYmbBumbz(5sq5eukrHQIJz3udmr4hewdoyMt5ncqJb(9sAZVOGTfJvIrhlX054CaKVki1lqL31(zHcMu6kPsoM5Z9y2nu5)2TAzRndPYXzMFuOh7t8eBqZxmSfK(1KrkgWQVQI5Rrfh3fXT(aDjOa0k9qYci3cz4eTdvKKi3fOTkwMxfnik6laJRI6YiJlKfawo8KsbXcOgLNIfCEZpAO9K)aeMoSkrJFarDOKvoURQhOstE47qvTGv7uW9TPHk1rZX(UjvUTD9icXx2e9)T)3(cllmlOQuWxcQy3jZAatEkznYfwhNU0pUrgh4Jru5)fpCtXebYIckm6C3rMJJOHH6zu0Avk2BVcaccZBY31ft8FKEF38WB5ijuRbMXvB7EdfxP4mupXixeO7UnwdiBhfv4rwzItMG4T47Hz(Rhftu04w81ntORbfPlzcdMEf3EuT0jLIqHAatWoxMbXl5vup(k1ktKpFxzCUrzj)643RUWySXU5E)VLHR3IqYyTFqDTl9x7LUYd1rVl3QyhWrHOGK6YDQrgSXKOV1C8VPTbt0GFArb8eWo2)bwigcciWphz(oxQvcMupqFjU6S6w)S7Wnind41(4R1iiC578kfsZlNHQqaXdwvT0Hs)qqS4JTM1lJ3kxRov0K5M(sBC1sSPx2wJ(0tmtJYu6O1LKaEcvm4AwCmKvmpZFm9yDaVccsVreNIIjj0mQKrTCcgQoWnCYCBLe2IhQ0jk1YcpIEb1Z4WfQtTwPwbT4KG7vIIQpjhnbq6iElJttdPQh(Kavyu(o)IGnuQ6D5fve(WkMsVJO5yN5O)ygDCXnJFUDt0keHAECQg3itXdKFgjhiALXKZR7yIwa1NvrVvZvfnprV(BJQMQ4y1IOM6f16AQHnDR6nN5aCQ1tRvYY5Ukk(8Uk5VAbzLfBWSC9qB)OCaLRQS)AZs51A7IGdzu9pkgEVg1FhJTZlQWtwjy7A7MnDstLSLMiPY2ms34OIXlFhpzctMrecSoIqth(unKPROdcIZOMLzYZRWzuiIGhTX)65yhmrwZGQw9pQUsmRvkReBG0)d9rYcHAB881yN1wil748CUqa4bA8qiGEBhuUzEaQLWBJGtD1FAtbKExCSAPW42pUgZw2cfv6ZRhH3DYYDqnx5jr7yYAvstyv1mb1YZWCX)J)4hhEyb)8heNeq4d8A8xXB4oV8LerLQ1ik)udQAmGFYd4Jhsv9QB2UfwJn0wG5IkL4mrCtIQogs8yGG8ugX70aIU)NR(rH78LP55uyu3jXD5iot28PHLz8lUrlhZGlHLBjfrLN2obWcKlqvqMFNhFc3eyKR7HrWguRmNFQk6Upv2dY6ajYuWQo6kcTX1qw6AS63ETFNr6PtmvMm8opbYJ3P4KxTrdKLCEk4jHar7rwD)Vle1TNjnQqGqvEzBPIus3S9pMavoZl8OpiTAiy2Oun1MMMkqw4RrIp8eAJlZlqF5bfU0sVuTdu2raB29DP8)FDnZnmyyF8wvI5aYul1tVU3LSSCw2Dy2cTv17QOmMiv82Q3fvsYlY8J9WmamxQMtWLDkJBl8pnpZSdK)O40e53pd5roiBXszoIf4zaZ2MpS6AST1pjkWBDweBvrAMOAHXMUMQDwaz)DhRqlsyxxkm57mSy8Wn(54LQa8RM8Gx4UCAAcZFyewqzke1TzlX0RD1Kk5IM8OWRjpf8AIwXREoQsP7g32zvrM2VA(OCMlL2Q45rrx3m2etzvsQDm9t(2nH30Rv30wxiDpxhSH4cQ0(fCP5P2hs)0o9yQ0kB9YiAkg1IBOiC05mUDc2zrZoVrjD5sw9PwslfrsvlkDxA0rOb2ZXLEqeCYepi5tko4jUkwtjEKYnXAWZn3O16W6uOD2r0mJUckFQy8PFsLDz61rcAAfXzCHC1C7qFNDBo7FnaPM8LtNxQlsRgWh1nsJqJTnVotRV5WN54eBhWtiQX9GkhU9ZTKsnZH)hDne6TGVgrIRAnHLY2KoTWJGv(4481YsHgCTy0mrsbjrv1OLdQNkJQVcwzcl9By(OQ6Z7A14XIoz0ZkV2nhQO(eNARDOgwZKNZpKf83jpyASJVi5jRU(MmSMsHfTSXb4fD63)O4qA5)aMsjpVYMBsTYP(ZbJOIiX74VKxoo)yDJyd1fSKfovFd)D5Hsnn43PXCjUp0ubXCCTS1t0Qdy1AlopIEcByYQstgjG2dVYa1hLIT5y(9rRk8YJ9rjBB9a0UBfQAB6NJtHXjPPC(e6v6Ovhw9rpOTgUU7NagiUM6jDz(T37NH3JEqj9pqTMOTOjHu56vcD9xH0oK(xgsrIBbGFzr6w)c8hc24NSguio8l)d(Com(7434kyR4p(voLKVsOq6EbvSryH9h)5bFb3Hj07GMq2a4KkanW9WVqWELx(0tJ)EjnUPNKTbYrNbUjv)oAiRhH2aY03gktiFfnKnUBCgG2XnN7iH9Za)490qUPqidOAxH0rcXNehMuZQ(KEpnDRoLt6DgXPaJ(ir6aNLLXFAySdFbnN7SPzQ1bsFKExStzWaYUZP4yTZuR1XujGQoOJeUplyoPelGByDcslhy4ZGT6xkn3wTJnpCfJDX1PWzPb6i8ZZaBA83aG(ptYl5YAe4L5mpSPKGClqKN8)eV(P69L8)5Fh7bFbEO9q2fCi3aYV1eBL92ZULJ1OS7UsAIWtg5a62no0c6Kl5i8a5DY61V8(mC5NtP8etpDe9CWI7(LeQpH4MoGyvxfmGNzVipsO9myE5aYg1UAaAh1uBcBh599V0rnA138tgZDa3Nrm3HF(NO9HdOQ38od4s38VJeYk9YZaSeTc8iH5Zix(dVGwnoG9lp2)mUdFZli)XbSFwWEYyS8lC9RoPORV8EOEPYi3LNVNs9ETAv(mazh6ZVCq(jKxWlVTNvYTFP2HNSU3yRmNF2eKUaT61AXaWu34fvpf)82Qcs(qtLi8pVoWJ53h4G5)6K3pcVe7PRIIRhtL8H19648zVvDogo8luRW1emqV6QH(M8HM1ZDH19RF24rxeTAM9vE76jxrdtJcqja5LieLCvx1TsdB9RQmbONWrwrlVNEPdoIwlQPizbqA6voiD)3oS4N(mlOKlGbgbwijEIdhehvbSp8Vuj4jv8j)Oy81gYFRN2y3xtbZQLJamFwgM(AqdSeCG9rI(m9RueUxFHMuDvSP6eWUapy0zA3x6l4NkDLYJEjn96BmWb73RCD8KdWM2VvFf9gievhX8x7gpBUo8sKS(ANpDsV(NjodkL7gp8BKUS2VxSwhxm(b9ep24c1lPl9rmFW(91iXmaje4G18U3tEAwQZ6EfwOHXK7CpQnwyW8Yov2UffM3SdPaH6Y3E9SjNB5kI)6NBt)IlX51ZUAuJWtxhukgONF9RbNPcoZx5bL2nNZ8mNj4Cxpt9W)EJfx6n9jUUd96BLr0(9KQ)daLw6jMwFJ58XNV5L(eyjP7MXNAC0HzhZ)DpAkz6vCS)R7On7MITU4ZsTa3tho4HJkdHrsZbQPb)6Xv2DKtboNb91B(PvzoMtMJwyPlettTiNHJi(t3aoaOaK4p95EUByxH0aU6yW9uaHXqlRAnObaR7PsNObVcA1LPpPXi0jMsbW95vNR9rEYgc8zrw93ng9y1hPnPXYC8Q((s2K5ihxNj(4xEH2i9iK523(KRhpUN7Bf3(9A3lJPJhBSxaMP3QmCxA9lA50zxc5(424C2ePMO(mluLjH23ATEe0ZSRSrrRV1K80hj2LAd5VyFxjTrwraDLQoSRTvKfJYL8Rj8KAPQ9CFtBr68f)tdPnTP8zGdjq3xmjx5B2JiCTuFX93fYPJhE1aLGyFf)ap2jl5OP6E2zUWXYRNz9713QyjNs9zvSOjdEgrnYCx73VoiAtEvdEnDNqW7LALjVUjAJMHTDrD1iAojotjWMAruwKR6hxXlQ((loJWL3ryI(4Ti)xRVfIDQvC82P96tfNung5Rbdvqgs0dlsvQPZgBx3tnJ3UDM1pY8elLQikoujupm(0gkJbFcdCFdiHSM0YBLNoMAirOqpjozm49AWWUhtv(unh((Qs6Tg6(97jMq(bM7IXHBWf7eVxvn7ksdH8XOiCXp6OLbIhsEjthCDvBbSMDELEhC9S3BraTMGjE)dS7NuTYIrFBoRJCrL7OzJfRt4WEA3A8O5Q)I73Rvq2SjweOIa3Mu6z82nBOzlvbJVogn9bK5CnEKOvFF9gcBtgIvZILJ7(mWfdvMX2Z4o2fatkDkLBiDPttVA068Wy6Oz1STxGPaVtwcDRYVC0BCnv40b2niuh0PoUOmj2nMg6JaoD4cqvBKzvjYb((1229AvRRvhOvBd6DMXeD3szr9CmG0x)oteOzkO7A3Ps1HmZf3BoLPPfg1uGpHJI(0(8Cw9mDW66WQoNEnlbLyiNRJFzmd1Mc8lR6vdXOdBjaQMsARNupy0MpPEwOTCQRn(ZCB3JDeKnbv19auejY8casiACf9WK3CLRDk)c(08oRAiJvQuNSYF33RqZTC2Krh5Mo5y3u77si5MQ0F6VMd4td1lmqMzsBo69YL963X8(m9D15HyxFRuNGSa6gltI3RLuSmjLZTocYkBu6H5zQMuQNYbt2K1H2SBOh9upycf20muoepSAwCKAg3AECYstkRKVRqS66g75U3lNAI6Y9ud1pUwsQ8Qve2j)InLQsN36(9g9bUhzDRN54ZCwT2PnJYqgOuPKjAIjGptVR(MJhS(rPsw5FLmujAPA6S2FDaiXJZnpFH2gWBjwrT19C3xd7UGCUrDPtjddxFee6vJ5MmQA(9P1jc3rT75C6TpACGWEYQ27E9n3hsMprZS4n5AQ1px3)RbVm02z0MmUjzNwWpgSq76hqokW6gpAAPTKJBT7A9(4VFVRHFFqZROKhRQnO1qUp4y6MNMQHBZQPtQEb92onyGlENkNqvoAyG1RJjTUhv4qn1y70MDs0DXrihY8JMcFKey)Ugl8PZWuY7AvxpEYOhjxzaFGAN))d]] )
+spec:RegisterPack( "Outlaw", 20221213, [[Hekili:n3ZAZTTrs(Br1wfmPLmnjLLD8wKQQy7nxsQ9s2BvUB)gbbbgsItGa8WdlRQyXF7x3ZGhZJEaaLOI3pKeBIb90VFnd6SyYI)yXDbE5Sf)20XtNoz6KRhn5JtNm(hwCx(J7zlUBVN)9EBG)qS3o4F)7f5rEpG)8JrjEb4RNLuK6dpABE((S)6BF7MW8TfRg5NS7TzH7kI8YdtI9t9wNJ)D)3U4UvfHr5)s8Ive79Kpm96f35vKVnjDXD3fU7ZaKddcyILZY8xC3I7IcZYZWnFDyCy2w4p9BCsHf7TkIfS4tILMgUh38f39t8LXsZoU84YpL)3oUmp54Y7zS9WFAl74YpNgMFCzaBvX61hxwS)QJldH)W)8Fa)3SYFij94Y14)6)iLXIZUpmod(1I4iwwwjyY9s3WYfVJ3QKICXgfeYgT4oaDYzPHEaRLVSr5H7yU5jUWJpU82JlV(4sNJlhuHhJwXYFa2jxa0UShzzJsz78GD94Yzhx(UJlpCa3XiwC(On1OK7dH(3du6OsEbhMxCCjhIelRyVaqx0xyXbukiGq62DFkZpmdyYCaneeD(cwUoYVihKZAYOgochOzrH(mxV4aGJ4ZuO21HB2M7w)laAKYwNYY2IWQIT1qczpeUo3nlYdf6nypsNGE5Qe39jHX5aGUDo8l7D359n3S9S4afsqfFqc4AKaQESFsuG7QOKKazIcw17Kxvqy2EVC)TQRjhvqx7veL3PU7)KLLZ8IY3kuj3NKLfYj6bXGQ1xlIIzPcUalMTlKbuvySGo9YLPgbuOKdk73VedYK0I9GUBchoazM8qSqt2lkk5HJlbd5DHXBWDcwSyhG99HqelZ36L3ST3dQq1SoP9mzpGsmPf(vpqtaEk(NIkyOvcxw6NueNZvJsccuvfbzEjvXcgTYll0xiJfAtB9a8EhlkOwhx63Dd8IbDSsLwfgWN3Y8VptWTFayREPmbl1d)N97tt2dyAo8J3vjyYY5)DU3H80WnBaTAK9i8TGeq5F(3bsaWJK4Imof7kCRwtfU(5j1QqNe3knFLlsFc7LPs2ecFjPG76SWabjRBVS2tyOU1B3oDdMkiKDFrue3AWpf0bbAGj8EmuXftEAbZDfZdzaQmEmGbR02U89WNjH4ZLqCbwxKgcVsEkZlRiTg3l9LH4ciFzmzNy0uRvSZXgYPBfMefvkd)es5qSbwk)3(CsCqi3aqwIIuvkFfO48MtwCoqIX4gNKUZlIZFglC(v)OOKyqzt4iBIKSyGnor7SHUfYMaU2Rmgc7JscCLDX6QicLyDTKON(QhQgQLRGJH6DdHiiGabXgfn8wD0qluDVpmTYw99NSWvog0iioqOpM9XTc1)lRrOWDGVMVcALE7wvKTTbPV0MWfIaKU5rbOUzSPDUnFPncdK2WNRZAr1RXMMf)Ty0Uu4NKN5Z6c0M4h5imyBa5pTrabpm4k4kn(v5yW7sbbP3rHZaVh8EuM5lycU(vMBiR)dplwpv4)3qYAFtJEFY(9jP5fXH5pYF0R5pQK)()var7Cds9EGudZMB2H1odzRxZau)Rm32ruY8BbEgWjH1iNLakcW4Y8KrbTP01qeCoNNhfQmHi8nWDskHwEWmEUYpSn0hbEeirGhKbWkcW6va0V5sChKftImYvft)aHycsEZMGYkOKSRRslHkjzVGhfwdwyMq8XB0yG)yjT5LNZ2TVmT9Imwjha5Rcs9ku5DJxAGGjLSUujNb5g8GhehhP3pEYQLGqfn841fKnAveemYDDurA6JsHZt9cdCzFf1K8qZxmNeWN30XsgWYVQINXjYEwUpKB9b6sqU(nE6uyj)lEYCqbC5H7JQRTb1qY3I13urdIQD8XKMqDzE9oGJ8a0RWwgiwa1OSKDOQ4x00EYEeYblOkVXpHO(XL)eh3L1dKPjx8DqE8KXTLe7pd1lGBmKPwcOZ8OuUAyTJLA3M(EejWv0KB3B)F8eMwywTiMIU3wb6y3xMtiMmC8gKnSjkzLxKu9bEySk(FXf3uz13EM2QOsx1Ke5eVEfd23tja4hWRcBsRP))3tEOBg3DCK84YVGjr3pkUsDzKAUU2iq9YfiaKP7Hk8iTi2ktOSJb4EONKDVyIyZlc4VUEsDnOOimmkAzUkH3NCd3kS85GJeMew7L67fJneifIsMZ3I3lxjz5Z3xeLX0Q4CYhKxyewSCM7)BrWMDiK0w7piV2vEBCtwdzydbUYmQrftjJxhzDvQ1iZ(9rpIEuZW)MYgmvb(j55WtaRxVhzbyGhGa)wO(7OuyDLEarv1esRDEP3JBqskWR9WxRrqyZJ5nsKMBgdvHaIhCPqKREnfhaIfpWTjZnfseHijZM81uxAJdwIn9AQuiRvKvshtHYKAoY1KaEkvcs1Sy1wBOa46(QqZKeAgOVKU6CXNlJrNX76MS3DrRfMEzDplu8nkhlSoTyPI4uIXHojRv2KEqp63uaMQa)DGSW5T4qKVSAfPLrxRD70ueG1huvDGs3K0KLeTePb9UWY(5yRWUlTvy3LDvy3L2ldRSUVB1RkxPdkcgNwH8Om79kuVwbyug0kKFtasVkgD39dsMTPfMPx(2lFh3YaL2DWxPjQBOt1BLU8kq1wYzcD(H29(q40On(NJLDqhz1DMA0kO68UnwzzE3Igfq2HBEnKnKKK5xBUQm9VZ5c(G70jJah5(p6hXQCxGEKAX)FJ8HcbNPYKAQmxxaPwZUrbKt07jMSJg0FLA)wHsi84jFYB0i)OgYId3ZktmfSuRYqgQCJH5G9h)XxgDC5)DMifBW8l4rEfDRXcqs55QglQlPgrXS2Qld0l(r8XJOQnZa3WUmlWprYVCwfckmykhdJzFda61J5vpIi1)56Vi8WVkjlJAF7oe91J5Ss9NguKYppjdn6UfjTipSQQrulNPtaSCOCufK5jPGzphWXLru0otdu7BlQvMXBQGQ7tP9GS4hI0JnQAQIf04AinzdwQJJ9tCsPVscIPYKH3Nbqs9ojN8YLvswNYPGNeIkLhz0i)Uqu7EMuOcbcv5L1OAPoCZoOpbQSwdJ(zX9aZBFs8oUDnne0BlM6jyvxmzhfvvMxvssqurwo6l3p3Mw61Y9BWmcyZUVpH)FRl1QHbd7J76cSkFLu8fLuvVmwAgl9EmBbTLPuw06Wug1PWPwteQKKLN6f5IzaqwsKnNGFrCqDO)MQo9xwgCrg(ghxcCXDzJQoJ8DEXH(UBsdzRHA5832PktBztqlcUr2NL2UH0JDNwTzOZtYcYC8E0(yYOTEzU4bBncCB7gSpJgzW8igJfuKarFVR81Ni55Q6xW8XT72Q3410NdEn1aVMkkNPQKZUkP5UQstnk(lRyf8dRl2WuStlFQ4km4k38y5v9Nrjp9OVjsNODRLN0dqvFS3TMOpD26cbQrlYA4MW2g4cUgVhkIXOcGsnj11uRg1L4qYJb3XQI6HRLQE7U)UDUV6o(vcUznjCLvXtaNwFfB1zzT4Ynw9REM9QxxbQBARlK2X25FK6fFVCxPPo9KMN6ve45RWXM1zOwPoEtFaGeCdjHJkNXU9qFulTsfowuzR7irlH6LFQHWusIv1Yt7wI9qbvosvfv0KVRoEqYgLsCqElaV5(3ZLNgpINgV4Xdp3Cd713RE5iOfRsUtmfQd1e7DWxBjFWtLOo9tJUlJ3oQnqHxTzBcuNcKhpeE9EnhxLWrBjnxUafajN3Vv3FYlsP9dd6lVVeI2uQBZVL4y5KbG(rdpKNlEJdgzoC7NJTscJT7btvdHEl4RruZK6vSJW8LUIKEWkFAC(AzPqdUwmQxdJGKOAyHHpSNlJAGewPdlL8lRkeQ7vJN)60XNvETDouE1HurKPs9RW2NfM1EZZSuP8KjD6vGUOLjt0so5tiwcf51EER0UnufevC2wpg951gSKDwqTLDsPZxAKyRLMs1IPIJTNZqx9II5Vnb7LskBFAiuKxav8BJZ8w(GBRUeoybLhf3Et8q7oU8NcXUI9VkJOj6niOdMvGhs)p)7x(JLocfyiEu9q1UWJ(hHz5jr4P)MKF65oy6Jvsz3EQtwZnIitDJi6k8hE)sBU72ahqC7MRiZqW5EaEXorEKOHR)EdT0CXyslIJ5TB9N8Q6a6pZdmy0qflx3AD3K2UwqowIRuRctaFfdUr3O4Nypx(5MHIpImfiU9h6u4vskkk8M6lEepxTsDQQlqROVX8RhgFnV7srZP5xjSV0O)lUjjXj5yxWPYV(e5to03ARY0jrB32s3Kmtvz2702yU2JO)0jgl97MtLd0UHpu1snK3y52YPPTJT4jfE3IVuRTW1odTZW(DHnNxpn6DyZ0tJS3ss)jO5XN5NUoS4KCwSp63jHFbjXlQNV3(QgAFv1b9ewFhKyFdqk0tfFz8lMg)mE4lRiJ7G6)cvcqtm8t2HkNYNGsO1J2q9ATWv14oG6zdTPvUNnVsVwKTHYHEljv74Ixsw1nzE)2vafN5sDcuyQBanufRxPHY8CWajiEk61FDtq2pp4LIroG8U(d0NA4oK7w2l5xv2JPxHxWqGCsrSuCV58kYt2bXLc4Nqu8gWC84V(35r1N8x5xaDyV4p(vv1YvBX9krKFZhuXkGfmyY3g2fenTU0GSDZp9D4D07GIDNgWjnA7jCply(XFLqIv(f8CAsSRPXs1oyPHH0T3QN0VQnUoJL0bGoKVHgYAL7ObAlLH1tyFg4hVNgYA3QEnqB5o33tyFgW6pqd5ghCAq10ZxpH4ZsVG0EO(2IDAwew0aSDVzSkWOVEnDGZIsWpne2IlsZSX1qv7FyL90j8zChMAjWH8hoPgWj)Ok7G96ZTcobERfNyNbdR)SuZA1bH(nmrBxSD9Rm0pSi(odSPjFuh0LN8Q5bcxdF7NzSHA3ylq38yDnGo5sAt5t6u7onLWx(CGSL3Mu9q6wFeTNVVg1Viq9zerYceRsexdE6jV3tODgSfSa5ZsEpwYd8zNfSf4(e5TVK5u3QB5NnFWcCFI8blq7mYhSeW4zA7AbQQnQwdU0NHxpHSupJ0alXj61tyEg5YwYf(SyrBb2V8y)zCh(Hxq(JfyFwWEY4)8tb7vNuK)xE)DVuD)WMF0NtvETAvEgG8lrLPTc5NrolF3S9E53HNTUNrjdNn5Ofil3fzn4s1Gzz)e)c3fbcSpaEc8fh7oFEsbpg)I3swhgv)nTMnQUPgxo)TYF0Jh)vQvy7ZDKE1vd2hYhQxl4vgFmEZNm(QW1Zn)ckUD6n0WuR4vcqEncXswPTAEPHT633gbONYrwXbOn7AlCeL7NcfjlasZSFceP)fCyS8Cgss14ISmbG6zzuijdCCyiXH8FsZyi59U6wNCfEzKMRCHBVIFtWQe7Q1g5mq7I4E4G0r3v(DQR8B1hN3qHOPhtoh74zZx)yjsw)vgoBQZGlmovi43iDWC4GyTw(oih6iES23pzjDPoCGgE4qnsmhqcboymPICkpIE5PuufwOGXK7Sd1g3h2u13EQKDSw(zhoqkOl5Vd0h7qZh7OpUHUD(eGHnWKuStj2576GP0dXTx)XsUp1yeQ5P2hFqnRPTXgeSkHE6l8OSXUSt)ISwkiOoq0BNp9sdNZ8x)stHH44yVD(nJBmkuf5vSqYH(diKhl4mFNNUm25C63Foco3TZL)waFJbx6ndioO7xpWiTWAJgv3kdbNb0Jzg1nMZhpFdzMtGLKSFoFu7G(d6yO54qtjZUHJ9FFNhm2PyJVFWsTa73fqiYbvotJlnhOgHo3oPYUJC05WzqF)M5mYmh9pWDLW9OsqpcN3n88behP5tFAX0nSLWvlFFqsGqBuViBeOaaJRABNObV7bYltD(SGqN4IWaEnV5sLlcJje4tWf5FxBGTi)iL5ZszYUv3B2MuO54kM8k)A9ELYT6vKYS5Tx92jtCSFjEpCq5c8oBYeZDtTrH4U06D1D28RHKjTBvoFAPUO69oRk1mLBrMdb9m)gtu04w0Iy5fe7sTf8FA3GwtKvejxkXnZk7fjtjDJLAIljxOUJ9VOiKoFXVjSM0M0LPcjWYCJjUES2sG3HioDP(I9Rb7SjJUzOu0RVJ3N1ozj9MQDmtzHJL3o343RVoRLCk5NvXIMo8mIAKjToyqD0ZMeQg(A6gbHxe1ktEvt0gndt7I6Y7uCsCHuOnLQs)lvT(rIKHCJa3eIPz(vyxxWXAXCc3E9Wm9PBv(Vx3A0o1m6VTQZaQOLYrkFnyScYrI(4rQwnB(eZIEQz8Mn0T(r6N1xPAIKtvclcT77zzK4tycx1asi3jmWUuOpEAzYbgH68kXkTp8BDOO10TkpR6t2kNMQ6NdP5wNvutBdi)XQEjmuFB16OaxtG49DmBrGqKP1IaXpAPfbIhsoEQgEBv7xmgjvs9O525V3GaAnZt8cJWjjLr1GL2M4CrhjPwUJ6TETopeZP(qJJoBDG9WbLc0Mp1GaL0amjfhT3Uzd1B6myp2XeFAizQytglAG63VzBKodXOD6LtrQ5GxhQeMnhDuodmP0zuEMuLon9UrPtetOdYvZ2Ebg7sDYsOpmHRh)gBJHj649AeQf6ufxKgWrnMgQtwj6iiGQ2y9IvkNJsV20UxP6DLcenAJGZfAdkPwQwYXYCh623r72VYdqB7ovgqKj0yFZPmnnWOMk)jCumG2NN1YQPJFxhP16hVVHGsm7GQdOPnAI0f4xx17gIrOJHaOA4dz8K65nK(tQhXqgo1vMQqCB3(oTG0bfyb7IprejsFQ(qiASf9qN3CJTDk7k(WXzE1e6rQaEYgcy)IGQVLZNoUNB60(UPMx(tYnLlcmh6jnyJui(l17KO(4vq9yXil6O8zYwKYHmnNplNeMiTxgyf1w7yVKkZcWUulD4zKM61T9unJp7KrvN3ila6cT90Efr2Dv4yDCy0BKIOVkg1a4mqFFiLgefwZl4EMXpxxl(WxgARPVjYmtJQEg6yVkA7(1FkiMYXntoUfunWu0KBjwBnHQ2MXdhSnGrg28ksXtLTtngKid7tZgu0wSB6nBA1lOwr8WH24DYCc5QS1mcD6yAwuEYR6J8djnBZW3wj6U4iKdYJEtHprcCqxJEJzZXud6Av3oz64NixzyzmN)n4)dZ1WRfeapLgvZhlNeW1od64)LZn7D1mbZUTw68KSDUnXijEVwQSNGy0UBqvPgs))14MPKCGJ0ngQrpw5dAsTOn1AyOWMMzLhXdRM(DAjKOBmq0gOkuRUpMo29wFQTmQzxBqELQqSEizsVAfPDYVytBtPByYHdANmPdDkewMVFTyKYhP8(l(TPVFm)tZEX))]] )

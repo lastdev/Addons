@@ -231,6 +231,8 @@ function ConRO.Druid.Balance(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 		local _Starfall_BUFF, _, _Starfall_DUR = ConRO:Aura(Buff.Starfall, timeShift);
 	local _Sunfire, _Sunfire_RDY = ConRO:AbilityReady(Ability.Sunfire, timeShift);
 		local _Sunfire_DEBUFF, _, _Sunfire_DUR = ConRO:TargetAura(Debuff.Sunfire, timeShift);
+	local _WildMushroom, _WildMushroom_RDY = ConRO:AbilityReady(Ability.WildMushroom, timeShift);
+		local _WildMushroom_CHARGES = ConRO:SpellCharges(_WildMushroom);
 	local _Wrath, _Wrath_RDY = ConRO:AbilityReady(Ability.Wrath, timeShift);
 		local _Wrath_Count = GetSpellCount(_Wrath);
 		local _EclipseLunar_BUFF, _, _EclipseLunar_DUR = ConRO:Aura(Buff.EclipseLunar, timeShift);

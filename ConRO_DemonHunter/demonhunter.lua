@@ -423,7 +423,9 @@ function ConRO.DemonHunter.Vengeance(_, timeShift, currentSpell, gcd, tChosen, p
 	local _Shear, _Shear_RDY = ConRO:AbilityReady(Ability.Shear, timeShift);
 	local _SigilofFlame, _SigilofFlame_RDY = ConRO:AbilityReady(Ability.SigilofFlame, timeShift);
 	local _SigilofFlameCS, _SigilofFlameCS_RDY = ConRO:AbilityReady(Ability.SigilofFlameCS, timeShift);
+	local _SigilofFlamePS, _SigilofFlamePS_RDY = ConRO:AbilityReady(Ability.SigilofFlamePS, timeShift);
 		local _SigilofFlame_DEBUFF = ConRO:TargetAura(Debuff.SigilofFlame, timeShift);
+		
 	local _SpiritBomb, _SpiritBomb_RDY = ConRO:AbilityReady(Ability.SpiritBomb, timeShift);
 		local _Frailty_DEBUFF, _Frailty_COUNT = ConRO:TargetAura(Debuff.Frailty, timeShift + 3);
 	local _SoulCarver, _SoulCarver_RDY = ConRO:AbilityReady(Ability.SoulCarver, timeShift);
@@ -443,6 +445,11 @@ function ConRO.DemonHunter.Vengeance(_, timeShift, currentSpell, gcd, tChosen, p
 		_SigilofFlame = _SigilofFlameCS;
 	--	_ElysianDecree_RDY = _ElysianDecreeCS_RDY;
 		--_ElysianDecree = _ElysianDecreeCS;
+	end
+
+	if tChosen[Passive.PreciseSigils.talentID] then
+		_SigilofFlame_RDY = _SigilofFlamePS_RDY;
+		_SigilofFlame = _SigilofFlamePS;
 	end
 
 --Indicators

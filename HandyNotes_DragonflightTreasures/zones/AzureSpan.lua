@@ -2,6 +2,11 @@ local myname, ns = ...
 
 local MAPID = ns.AZURESPAN -- Azure Span
 
+-- heart of the deck (66846), in case it becomes relevant later...
+-- 66992 dragon
+-- 66983 life-giver
+-- 66995 adaptive
+
 ns.RegisterPoints(MAPID, {
     -- https://www.wowhead.com/beta/achievement=16300/treasures-of-the-azure-span
     [45135939] = { -- Forgotten Jewel Box
@@ -184,9 +189,9 @@ ns.RegisterPoints(MAPID, {
         },
         vignette=5189,
     },
-    [34053080] = { -- Notfar the Unbearable
+    [20674974] = { -- Notfar the Unbearable
         criteria=56107,
-        quest=nil,
+        quest=73887,
         npc=193225,
         loot={},
         note="In cave",
@@ -202,12 +207,12 @@ ns.RegisterPoints(MAPID, {
     },
     [36323583] = { -- Mahg the Trampler
         criteria=56109,
-        quest=nil,
+        quest=73883,
         npc=190244,
         loot={
             200157, -- Pathmaker
+            {197149, quest=69350}, -- Highland Drake: Club Tail
         },
-        route={36323583, 46004100, r=0, g=1, b=0}, -- verify
         minimap=true,
     },
     [26804940] = { -- Skag the Thrower
@@ -343,7 +348,7 @@ ns.RegisterPoints(MAPID, {
         },
         vignette=5184,
     },
-    [54803420] = { -- Spellwrought Snowman
+    [55043408] = { -- Spellwrought Snowman
         criteria=56124,
         quest=74082, -- 69879 on vignette, didn't actually trigger?
         npc=193238,
@@ -361,7 +366,7 @@ ns.RegisterPoints(MAPID, {
             note="Bring to {npc:193242:Arcane Pedestal}",
         },
     },
-    [11093217] = { -- Snarglebone
+    [11093217] = ns.SUPERRARE{ -- Snarglebone
         criteria=56125,
         quest=74032,
         npc=197344,
@@ -375,7 +380,7 @@ ns.RegisterPoints(MAPID, {
         note="On ~10 minute rotation with the other Brackenhide Hollow rares ({npc:197344}, {npc:197353}, {npc:197354}, {npc:197356})",
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
-    [14483105] = { -- Blisterhide
+    [14483105] = ns.SUPERRARE{ -- Blisterhide
         criteria=56126,
         quest=73985,
         npc=197353,
@@ -392,7 +397,7 @@ ns.RegisterPoints(MAPID, {
         vignette=5414,
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
-    [14083747] = { -- Gnarls
+    [14083747] = ns.SUPERRARE{ -- Gnarls
         criteria=56127,
         quest=73996,
         npc=197354,
@@ -405,7 +410,7 @@ ns.RegisterPoints(MAPID, {
         note="On ~10 minute rotation with the other Brackenhide Hollow rares ({npc:197344}, {npc:197353}, {npc:197354}, {npc:197356})",
         -- hide_before=ns.MAXLEVEL, -- TODO
     },
-    [16213364] = { -- High Shaman Rotknuckle
+    [16213364] = ns.SUPERRARE{ -- High Shaman Rotknuckle
         criteria=56128,
         quest=74004,
         npc=197356,
@@ -435,16 +440,6 @@ ns.RegisterPoints(MAPID, {
 }, {
     achievement=16678, -- Adventurer
 })
-ns.RegisterPoints(2132, { -- Kargpaw's Den
-    [36803580] = { -- Notfar the Unbearable
-        -- or 46603980?
-        achievement=16678, -- Adventurer
-        criteria=56107,
-        quest=nil,
-        npc=193225,
-        loot={},
-    },
-})
 ns.RegisterPoints(MAPID, {
     [23443327] = { -- Cascade
         npc=186962,
@@ -457,7 +452,7 @@ ns.RegisterPoints(MAPID, {
     },
     [38185903] = { -- Forgotten Creation
         npc=193214,
-        quest=72840,
+        quest=69864, -- 72840
         loot={
             200210, -- Amnesia
             200758, -- Breastplate of Storied Antiquity

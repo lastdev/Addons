@@ -1003,7 +1003,7 @@ function ConRO.Hunter.Survival(_, timeShift, currentSpell, gcd, tChosen, pvpChos
 			end
 
 			if tChosen[Passive.PoisonInjection.talentID] and _LatentPoison_COUNT >= 8 then
-				if tChosen[Ability.MongooseBite] then
+				if tChosen[Ability.MongooseBite.talentID] then
 					if _MongooseBite_RDY then
 						tinsert(ConRO.SuggestedSpells, _MongooseBite);
 					end
@@ -1029,7 +1029,7 @@ function ConRO.Hunter.Survival(_, timeShift, currentSpell, gcd, tChosen, pvpChos
 				_KillShot_RDY = false;
 			end
 
-			if tChosen[Ability.MongooseBite] then
+			if tChosen[Ability.MongooseBite.talentID] then
 				if _MongooseBite_RDY then
 					tinsert(ConRO.SuggestedSpells, _MongooseBite);
 				end
@@ -1080,7 +1080,7 @@ function ConRO.Hunter.Survival(_, timeShift, currentSpell, gcd, tChosen, pvpChos
 			end
 
 			if _ShrapnelBomb_DEBUFF then
-				if tChosen[Ability.MongooseBite] then
+				if tChosen[Ability.MongooseBite.talentID] then
 					if _MongooseBite_RDY then
 						tinsert(ConRO.SuggestedSpells, _MongooseBite);
 					end

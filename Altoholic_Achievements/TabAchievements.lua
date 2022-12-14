@@ -434,7 +434,7 @@ addon:Controller("AltoholicUI.TabAchievementsCategoriesList", {
 					{ text = C_Covenants.GetCovenantData(4).name, id = cat.ExpansionFeaturesCovenantSanctumsNecrolords },
 					{ text = COVENANT_MISSIONS_TITLE, id = cat.ExpansionFeaturesCovenantSanctumsAdventures },
 				}},
-				{ text = "Dragonrider Racing", id = cat.ExpansionFeaturesDragonriderRacing },
+				{ text = GetCategoryInfo(cat.ExpansionFeaturesDragonriderRacing), id = cat.ExpansionFeaturesDragonriderRacing },
 				{ text = "Primal Storms", id = cat.ExpansionFeaturesPrimalStorms },
 			}},
 			{ id = cat.FeatsOfStrength, subMenu = {

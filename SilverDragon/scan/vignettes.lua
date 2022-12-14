@@ -207,7 +207,7 @@ function module:WorkOutMobFromVignette(instanceid)
 		if (not core.db.profile.taxi) and UnitOnTaxi('player') then
 			return -- Debug("skipping notification", "on taxi")
 		end
-		if already_notified_loot[vignetteInfo.vignetteID] and time() < (already_notified_loot[vignetteInfo.vignetteID] + core.db.profile.delay) then
+		if already_notified_loot[vignetteInfo.vignetteGUID] and time() < (already_notified_loot[vignetteInfo.vignetteGUID] + core.db.profile.delay) then
 			return -- Debug("skipping notification", "delay not exceeded")
 		end
 		local treasure = ns.vignetteTreasureLookup[vignetteInfo.vignetteID]
@@ -221,10 +221,13 @@ function module:WorkOutMobFromVignette(instanceid)
 				return
 			end
 		end
-		already_notified_loot[vignetteInfo.vignetteID] = time()
+		already_notified_loot[vignetteInfo.vignetteGUID] = time()
 		core.events:Fire("SeenVignette", vignetteInfo.name, vignetteInfo.vignetteID, vignetteInfo.atlasName, current_zone, x or 0, y or 0, instanceid)
 		core.events:Fire("SeenLoot", vignetteInfo.name, vignetteInfo.vignetteID, current_zone, x or 0, y or 0, instanceid)
 		return true
+	end
+	if ns.vignetteTreasureLookup[vignetteInfo.vignetteID] and ns.vignetteTreasureLookup[vignetteInfo.vignetteID].hidden then
+		return -- Debug("skipping notification", "ignored by vignette-id")
 	end
 	if vignetteInfo.objectGUID then
 		-- this *may* be a mob, but it also may be something which you interact with to summon the mob

@@ -1,7 +1,8 @@
-## Changed in v28
+## Changed in v32
 
-* Profession Knowledge: Blacksmithing thanks to tfmonk
-* Waking Shores: correct location for Enkine the Voracious and explain how to summon it
-* Ohn'ahran Plains: better display for Honor Our Ancestors; clarify Lizi's Reins requirements
-* Azure Span: Breezebiter's spawn location has been found; add loot and a rotation explanation to the Brackenhide Hollow rares
+* Add the various chests for Sacred Tuskarr Totems in Azure Span, hidden by default
+* Explain what to do with the gleamfish for Shellkhan a bit better
+* Fix the requirement for Lizi's Reins day 4, thanks to stevietv!
+* Fix the "debug mode" being on in cases when it shouldn't be, which would have made you see a largely pointless "coord" line in the map tooltips
+* More rare data, disturbed dirt, packs, etc
 

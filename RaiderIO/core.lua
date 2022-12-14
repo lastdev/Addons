@@ -3171,21 +3171,21 @@ do
             }
         end
         results.mplusCurrent = {
-            score = results.currentScore,
+            score = results.currentScore or 0,
             roles = ORDERED_ROLES[results.currentRoleOrdinalIndex] or ORDERED_ROLES[1]
         }
         results.mplusPrevious = {
             season = results.previousScoreSeason,
-            score = results.previousScore,
+            score = results.previousScore or 0,
             roles = ORDERED_ROLES[results.previousRoleOrdinalIndex] or ORDERED_ROLES[1]
         }
         results.mplusMainCurrent = {
-            score = results.mainCurrentScore,
+            score = results.mainCurrentScore or 0,
             roles = ORDERED_ROLES[results.mainCurrentRoleOrdinalIndex] or ORDERED_ROLES[1]
         }
         results.mplusMainPrevious = {
             season = results.mainPreviousScoreSeason,
-            score = results.mainPreviousScore,
+            score = results.mainPreviousScore or 0,
             roles = ORDERED_ROLES[results.mainPreviousRoleOrdinalIndex] or ORDERED_ROLES[1]
         }
     end
@@ -7916,10 +7916,10 @@ do
         return linkType, linkArg1, link, linkCount, HEX_COLOR_QUALITY[linkHexColor]
     end
 
-    -- Sepulcher of the First Ones
+    -- Vault of the Incarnates
     local LOG_FILTER = {
-        GUILD_NEWS = "item:.-:1:28:216[5678]:",
-        ITEM_LEVEL = 252,
+        GUILD_NEWS = { "item:.-:1:28:215[89]:", "item:.-:1:28:216[01]:" },
+        ITEM_LEVEL = 376,
     }
 
     local LOG_TYPE = {
@@ -8097,8 +8097,16 @@ do
         if itemQuality and itemQuality == Enum.ItemQuality.Poor then
             return false
         end
-        if itemLinkFilter and itemLink:find(itemLinkFilter) then
-            return true
+        if itemLinkFilter then
+            if type(itemLinkFilter) == "table" then
+                for _, filter in pairs(itemLinkFilter) do
+                    if itemLink:find(filter) then
+                        return true
+                    end
+                end
+            elseif itemLink:find(itemLinkFilter) then
+                return true
+            end
         end
         -- local _, _, _, itemEquipLoc = GetItemInfoInstant(itemLink)
         -- if itemEquipLoc and itemEquipLoc == "" then
@@ -8720,8 +8728,7 @@ do
             button.LeftLabel:SetText(elementData.text)
         end
 
-        function frame:CreateButtonAndInit(factory, elementData)
-            local button = factory("Button")
+        function frame:CreateButtonAndInit(button, elementData)
             button.elementData = elementData
             if not button.isInit then
                 button.isInit = true
@@ -8822,7 +8829,7 @@ do
 
         local view = CreateScrollBoxListLinearView()
         view:SetElementExtent(20)
-        view:SetElementFactory(function(factory, elementData) frame:CreateButtonAndInit(factory, elementData) end)
+        view:SetElementInitializer("Button", function(button, elementData) frame:CreateButtonAndInit(button, elementData) end)
 
         local pad, spacing = 2
         view:SetPadding(pad, pad, pad, pad, spacing)

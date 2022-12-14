@@ -18,8 +18,6 @@ L['squirrels_note'] = 'Вы должны использовать эмоцию /
 L['options_icons_squirrels'] = '{achievement:14731}'
 L['options_icons_squirrels_desc'] = 'Места появления зверьков для {achievement:14731}'
 
-L['prepatch_vendor_note'] = 'Покупайте награды за валюту {item:199211} во время события пре-патча |cFFFF8C00Неудержимая буря|r.'
-
 -------------------------------------------------------------------------------
 --------------------------------- ARDENWEALD ----------------------------------
 -------------------------------------------------------------------------------
@@ -690,6 +688,7 @@ L['nexus_cave_forlorn'] = 'Внутри пещеры Тоскливый Прию
 L['nexus_cave_howl_outside'] = 'На земле за пределами пещеры Вой Смерти.'
 L['nexus_cave_howl'] = 'Внутри пещеры Вой Смерти'
 L['nexus_cave_roar'] = 'Внутри пещеры Рев Смерти'
+L['nexus_cave_roar_outside'] = nil
 L['nexus_cave_ledge'] = 'В маленькой пещере под уступом'
 L['nexus_cave_prodigum'] = 'В маленькой пещере в Продигум'
 L['nexus_cave_soulstained'] = 'В маленькой пещере в Полях Оскверненных Душ'
@@ -699,6 +698,7 @@ L['nexus_npc_akros'] = 'Наверху лестницы рядом с {npc:17078
 L['nexus_npc_dekaris'] = 'На вершине пика, где находится {npc:157964}'
 L['nexus_npc_dolos'] = 'На земле позади {npc:170711}'
 L['nexus_npc_ekphoras'] = 'Рядом с платформой {npc:169827}'
+L['nexus_npc_eternas'] = nil
 L['nexus_npc_incinerator'] = 'На небольшом выступе под {npc:156203}'
 L['nexus_npc_orophea'] = 'На земле рядом с {npc:172577}'
 L['nexus_npc_orrholyn'] = 'Найдено ниже платформы {npc:162845}'

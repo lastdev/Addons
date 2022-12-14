@@ -14,11 +14,9 @@ L['anima_channeled'] = 'anima canalisé vers %s.'
 --------------------------------- SHADOWLANDS ---------------------------------
 -------------------------------------------------------------------------------
 
-L['squirrels_note'] = 'Vous devez utiliser l\'émote /amour sur les bestioles, pas sur les familiers de combat'
+L['squirrels_note'] = 'Vous devez utiliser l\'émote /amour sur les bestioles, pas sur les familiers de combat.'
 L['options_icons_squirrels'] = '{achievement:14731}'
-L['options_icons_squirrels_desc'] = 'Emplacements des bestioles pour {achievement:14731}'
-
-L['prepatch_vendor_note'] = 'Achetez des récompenses en utilisant la monnaie {item:199211} provenant de l\'événement du pré-patch |cFFFF8C00Tempêtes primordiales|r.'
+L['options_icons_squirrels_desc'] = 'Afficher les emplacements des bestioles pour le haut-fait {achievement:14731}.'
 
 -------------------------------------------------------------------------------
 --------------------------------- ARDENWEALD ----------------------------------
@@ -690,6 +688,7 @@ L['nexus_cave_forlorn'] = 'A l\'intérieur de la grotte de la Halte Mélancoliqu
 L['nexus_cave_howl_outside'] = 'Sur le sol à l\'extérieur de la caverne de la Complainte de la mort'
 L['nexus_cave_howl'] = 'A l\'intérieur de la caverne de la Complainte de la mort'
 L['nexus_cave_roar'] = 'A l\'intérieur de la caverne du Rugissement de la mort'
+L['nexus_cave_roar_outside'] = 'A l\'extérieur de la Caverne du Rugissement de la mort'
 L['nexus_cave_ledge'] = 'Dans une petite grotte sous une corniche'
 L['nexus_cave_prodigum'] = 'Dans une petite grotte dans le Prodigium'
 L['nexus_cave_soulstained'] = 'Dans une petite grotte dans les Champs Maculés d’âmes'
@@ -699,6 +698,7 @@ L['nexus_npc_akros'] = 'En haut des escaliers à côté de {npc:170787}'
 L['nexus_npc_dekaris'] = 'Au sommet du pic où se trouve {npc:157964}'
 L['nexus_npc_dolos'] = 'Sur le sol derrière {npc:170711}'
 L['nexus_npc_ekphoras'] = 'A côté de la plate-forme d\'{npc:169827}'
+L['nexus_npc_eternas'] = 'Sur le sol derrière {npc:154330}'
 L['nexus_npc_incinerator'] = 'Sur une petite corniche en dessous de l\'{npc:156203}'
 L['nexus_npc_orophea'] = 'Sur le sol à côté d\'{npc:172577}'
 L['nexus_npc_orrholyn'] = 'Trouvé sous la plate-forme de {npc:162845}'
@@ -1035,7 +1035,7 @@ L['energized_firmament_note'] = string.format(proto_area, 'Pics Résonnants')
 L['honeycombed_lattice_note'] = string.format(proto_area, 'Précipice Bourdonnant')
 L['incorporeal_sand_note'] = 'Peut être trouvé dans les forges des zones désertiques de la zone.'
 L['pollinated_extraction_note'] = string.format(proto_area, 'Verdure Indomptée')
-L['serene_pigment_note'] = 'Dans une forge au-dessus de l\'entrée du |cFFFFFD00	Creux de l’Exil|r. Peut nécessiter plusieurs essais.'
+L['serene_pigment_note'] = 'Dans une forge au-dessus de l\'entrée du |cFFFFFD00Creux de l’Exil|r. Peut nécessiter plusieurs essais.'
 L['volatile_precursor_note'] = 'Trouvé dans la petite forge au sommet. Peut nécessiter plusieurs essais.'
 L['wayward_essence_note'] = 'Difficile à atteindre sans voler; utilisez {spell:300728} ou {spell:111771}. Dans une forge flottante derrière le |cFFFFFD00Creux de l’Exil|r. Placez-vous dans le renfoncement pour siphonner la forge.'
 

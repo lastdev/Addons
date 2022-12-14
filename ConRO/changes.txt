@@ -1,10 +1,10 @@
-lightweight tag bc4814ee07b605298f65ed9d0c6787db5144a586 v10.0.13
+lightweight tag 26a1372d87003bbbf83d3c3d64420355257724f5 v10.0.16
 Author:	Vae <emuha17@gmail.com>
-Date:	Wed Dec 7 01:00:37 2022 -1000
+Date:	Mon Dec 12 12:58:54 2022 -1000
 
-commit bc4814ee07b605298f65ed9d0c6787db5144a586
+commit 26a1372d87003bbbf83d3c3d64420355257724f5
 Author: Vae <emuha17@gmail.com>
-Date:   Wed Dec 7 01:00:37 2022 -1000
+Date:   Mon Dec 12 12:58:54 2022 -1000
 
-    Added to Targets scan
+    Update to fix talent scan error
 

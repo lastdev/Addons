@@ -146,4 +146,26 @@ lib:RegisterItems({
 	[177061] = SetReagent(8, e.Mining), -- Twilight Bark
 	[187700] = SetReagent(8, e.Mining), -- Progenium Ore	
 	
+	-- 10.0 Dragonflight
+	[188658] = SetReagent(9, e.Mining), -- Draconium Ore 1
+	[189143] = SetReagent(9, e.Mining), -- Draconium Ore 2
+	[190311] = SetReagent(9, e.Mining), -- Draconium Ore 3
+	[189541] = SetReagent(9, e.Mining), -- Primal Molten Alloy 1
+	[189542] = SetReagent(9, e.Mining), -- Primal Molten Alloy 2
+	[189543] = SetReagent(9, e.Mining), -- Primal Molten Alloy 3
+	[190312] = SetReagent(9, e.Mining), -- Khaz'gorite Ore 1
+	[190313] = SetReagent(9, e.Mining), -- Khaz'gorite Ore 2
+	[190314] = SetReagent(9, e.Mining), -- Khaz'gorite Ore 3
+	[190394] = SetReagent(9, e.Mining), -- Serevite Ore 3
+	[190395] = SetReagent(9, e.Mining), -- Serevite Ore 1
+	[190396] = SetReagent(9, e.Mining), -- Serevite Ore 2
+	[190530] = SetReagent(9, e.Mining), -- Frostfire Alloy 1
+	[190531] = SetReagent(9, e.Mining), -- Frostfire Alloy 2
+	[190532] = SetReagent(9, e.Mining), -- Frostfire Alloy 3
+	[190533] = SetReagent(9, e.Mining), -- Obsidian Seared Alloy 1
+	[190534] = SetReagent(9, e.Mining), -- Obsidian Seared Alloy 2
+	[190535] = SetReagent(9, e.Mining), -- Obsidian Seared Alloy 3
+	[190536] = SetReagent(9, e.Mining), -- Infurious Alloy 1
+	[190537] = SetReagent(9, e.Mining), -- Infurious Alloy 2
+	[190538] = SetReagent(9, e.Mining), -- Infurious Alloy 3
 })

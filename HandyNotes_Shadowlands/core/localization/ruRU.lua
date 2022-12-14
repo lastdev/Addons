@@ -75,6 +75,7 @@ L['unobtainable'] = 'Недоступно'
 L['unlearnable'] = 'Не поддается изучению'
 L['defeated'] = 'Побежден'
 L['undefeated'] = 'Не Побежден'
+L['elite'] = 'Элитный'
 
 L['follower_type_follower'] = 'Последователь'
 L['follower_type_champion'] = 'Чемпион'
@@ -86,6 +87,7 @@ L['follower_type_companion'] = 'Компаньон'
 
 L['context_menu_set_waypoint'] = 'Установить путевую точку на карте'
 L['context_menu_add_tomtom'] = 'Добавить в TomTom'
+L['context_menu_add_group_tomtom'] = 'Добавить данные группы в TomTom'
 L['context_menu_hide_node'] = 'Скрыть эту точку'
 L['context_menu_restore_hidden_nodes'] = 'Восстановить все скрытые точки'
 
@@ -179,6 +181,8 @@ L['options_toggle_show_notes_desc'] = 'Добавьте полезные зам�
 --------------------------------- DEVELOPMENT ---------------------------------
 
 L['options_dev_settings'] = 'Разработка'
+L['options_toggle_show_debug_currency'] = 'Отладка ID валюты'
+L['options_toggle_show_debug_currency_desc'] = 'Показать отладочную информацию для изменений валюты (требуется перезагрузка)'
 L['options_toggle_show_debug_map'] = 'Отладка идентификаторов карты'
 L['options_toggle_show_debug_map_desc'] = 'Показать отладочную информацию для карт'
 L['options_toggle_show_debug_quest'] = 'Отлаживать'

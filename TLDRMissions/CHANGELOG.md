@@ -1,9 +1,7 @@
 # TL;DR Missions
 
-##  (2022-11-24)
+##  (2022-12-12)
  
 
 - Update TLDRMissions.toc  
-- Fix Teliah healing targetting issue  
-    Closes https://github.com/TLDRMissions/TLDRMissions/issues/602  
-- 2224  
+- Workaround for issue found in The Waking Shores - the Scouting Map behaves internally like the Covenant Mission Tables for some reason?  

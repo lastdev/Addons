@@ -1,16 +1,16 @@
 # See license.txt for license and copyright information
 ## Interface: 100002
 ## Title: TomCat's Tours
-## Notes: Version: 2.4.42
+## Notes: Version: 2.4.43
 ## Author: TomCat
 ## X-Website: https://www.tomcatstours.com
-## Version: 2.4.42
+## Version: 2.4.43
 ## DefaultState: enabled
 ## SavedVariables: TomCats_Account
 ## SavedVariablesPerCharacter: TomCats_Character
 ## X-Category: Achievements, Map, Miscellaneous
 ## X-Localizations: enUS, enGB, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ptPT, ruRU, zhCN, zhTW
-## X-TomCats-Expiry: 1671009271
+## X-TomCats-Expiry: 1671609802
 
 constants.lua
 slashcommands.lua
@@ -57,6 +57,8 @@ minimap_icon.lua
 worldmap_icon.lua
 #discoveries.xml
 #discoveries.lua
+support/support.xml
+support/support.lua
 beta.lua
 noblegarden/Main.xml
 #primalstorms/Main.xml

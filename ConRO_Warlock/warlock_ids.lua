@@ -189,6 +189,7 @@ local ConRO_Warlock, ids = ...;
 		DarkPact = 108416,
 		GrimoireofSacrifice = 196099,
 		InevitableDemise = 334320,
+		InquisitorsGaze = 388068,
 	}
 	ids.Aff_Debuff = {
 		Agony = 980,
@@ -379,6 +380,7 @@ local ConRO_Warlock, ids = ...;
 		DarkPact = 108416,
 		DemonicCalling = 205146,
 		DemonicCore = 264173,
+		InquisitorsGaze = 388068,
 		NetherPortal = 267218,
 	}
 	ids.Demo_Debuff = {
@@ -541,16 +543,17 @@ local ConRO_Warlock, ids = ...;
 		Ruin = {spellID = 387103, talentID = 91584},
 		ScaldingFlames = {spellID = 388832, talentID = 91486},
 	}
-
 	ids.Dest_Form = {
-	
+
 	}
 	ids.Dest_Buff = {
 		BackDraft = 117828,
 		BurningRush = 111400,
 		DarkPact = 108416,
 		GrimoireofSacrifice = 196099,
+		InquisitorsGaze = 388068,
 		DarkSoulInstability = 113858,
+		RitualofRuin = 387157,
  	}
 	ids.Dest_Debuff = {
 		Conflagrate = 265931,

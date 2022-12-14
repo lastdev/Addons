@@ -25,6 +25,7 @@ lib:RegisterItems({
 	[4235] = SetReagent(0, e.Skinning), -- Heavy Hide
 	[4289] = SetReagent(0, e.Leatherworking, 0, bag.LeatherworkingBag), -- Salt
 	[4304] = SetReagent(0, e.Skinning), -- Thick Leather
+	[4461] = SetReagent(0, e.Leatherworking), -- Raptor Hide
 	[5082] = SetReagent(0, e.Skinning), -- Thin Kodo Leather
 	[5784] = SetReagent(0, e.Leatherworking, 0, bag.LeatherworkingBag), -- Slimy Murloc Scale
 	[5785] = SetReagent(0, e.Leatherworking, 0, bag.LeatherworkingBag), -- Thick Murloc Scale
@@ -48,6 +49,8 @@ lib:RegisterItems({
 	[15417] = SetReagent(0, e.Skinning), -- Devilsaur Leather
 	[15419] = SetReagent(0, e.Skinning), -- Warbear Leather
 	[17012] = SetReagent(0, e.Skinning), -- Core Leather
+	[19767] = SetReagent(0, e.Leatherworking), -- Primal Bat Leather
+	[19768] = SetReagent(0, e.Leatherworking), -- Primal Tiger Leather
 	[17056] = SetReagent(0, e.Leatherworking, 0, bag.LeatherworkingBag), -- Light Feather
 	[20381] = SetReagent(0, e.Leatherworking, 0, bag.LeatherworkingBag), -- Dreamscale (removed, but still sold at AH)
 	
@@ -143,4 +146,49 @@ lib:RegisterItems({
 	[172096] = SetReagent(8, e.Skinning), -- Heavy Desolate Leather
 	[172097] = SetReagent(8, e.Skinning), -- Heavy Callous Hide
 	[187701] = SetReagent(8, e.Skinning), -- Protogenic Pelt
+	
+	-- 10.0 Dragonflight
+	[193208] = SetReagent(9, e.Skinning), -- Resilient Leather 1
+	[193210] = SetReagent(9, e.Skinning), -- Resilient Leather 2
+	[193211] = SetReagent(9, e.Skinning), -- Resilient Leather 3
+	[193213] = SetReagent(9, e.Skinning), -- Adamant Scales 1
+	[193214] = SetReagent(9, e.Skinning), -- Adamant Scales 2
+	[193215] = SetReagent(9, e.Skinning), -- Adamant Scales 3
+	[193216] = SetReagent(9, e.Skinning), -- Dense Hide 1
+	[193217] = SetReagent(9, e.Skinning), -- Dense Hide 2
+	[193218] = SetReagent(9, e.Skinning), -- Dense Hide 3
+	[193222] = SetReagent(9, e.Skinning), -- Lustrous Scaled Hide 1
+	[193223] = SetReagent(9, e.Skinning), -- Lustrous Scaled Hide 2
+	[193224] = SetReagent(9, e.Skinning), -- Lustrous Scaled Hide 3
+	[193226] = SetReagent(9, e.Skinning), -- Stonecrust Hide 1
+	[193227] = SetReagent(9, e.Skinning), -- Stonecrust Hide 2
+	[193228] = SetReagent(9, e.Skinning), -- Stonecrust Hide 3
+	[193229] = SetReagent(9, e.Skinning), -- Mireslush Hide 1
+	[193230] = SetReagent(9, e.Skinning), -- Mireslush Hide 2
+	[193231] = SetReagent(9, e.Skinning), -- Mireslush Hide 3
+	[193236] = SetReagent(9, e.Skinning), -- Infurious Hide 1
+	[193237] = SetReagent(9, e.Skinning), -- Infurious Hide 2
+	[193238] = SetReagent(9, e.Skinning), -- Infurious Hide 3
+	[193242] = SetReagent(9, e.Skinning), -- Earthshine Scales 1
+	[193243] = SetReagent(9, e.Skinning), -- Earthshine Scales 2
+	[193244] = SetReagent(9, e.Skinning), -- Earthshine Scales 3
+	[193245] = SetReagent(9, e.Skinning), -- Frostbite Scales 1
+	[193246] = SetReagent(9, e.Skinning), -- Frostbite Scales 2
+	[193247] = SetReagent(9, e.Skinning), -- Frostbite Scales 3
+	[193248] = SetReagent(9, e.Skinning), -- Infurious Scales 1
+	[193249] = SetReagent(9, e.Skinning), -- Infurious Scales 2
+	[193250] = SetReagent(9, e.Skinning), -- Infurious Scales 3
+	[193251] = SetReagent(9, e.Skinning), -- Crystalspine Fur
+	[193252] = SetReagent(9, e.Skinning), -- Salamanther Scales
+	[193253] = SetReagent(9, e.Skinning), -- Cacophonous Thunderscale
+	[193254] = SetReagent(9, e.Skinning), -- Rockfang Leather
+	[193255] = SetReagent(9, e.Skinning), -- Pristine Vorquin Horn
+	[193256] = SetReagent(9, e.Skinning), -- Windsong Plumage
+	[193258] = SetReagent(9, e.Skinning), -- Fire-Infused Hide
+	[193259] = SetReagent(9, e.Skinning), -- Flawless Proto Dragon Scale
+	[193261] = SetReagent(9, e.Skinning), -- Bite-Sized Morsel
+	[193262] = SetReagent(9, e.Skinning), -- Exceptional Morsel
+	[197735] = SetReagent(9, e.Skinning), -- Finished Prototype Explorer's Barding
+	[197736] = SetReagent(9, e.Skinning), -- Finished Prototype Regal Barding
+	
 })

@@ -2867,8 +2867,30 @@ function ConRO:AbilityMovement(_Spell, _Condition)
 	end
 end
 
+local swapSpells = {
+	Bloodthirst = 23881,
+		Bloodbath = 335096,
+	RagingBlow = 85288,
+		CrushingBlow = 335097,
+	ChaosStrike = 162794,
+		Annihilation = 201427,
+	BladeDance = 188499,
+		DeathSweep = 210152,
+	VoidBolt = 205448,
+}
+
+ConROSwapSpells = ConROSwapSpells or swapSpells;
+
 function ConRO:GlowSpell(spellID)
 	local spellName = GetSpellInfo(spellID);
+	local _IsSwapSpell = false;
+
+	for k, swapSpellID in pairs(ConROSwapSpells) do
+		if spellID == swapSpellID then
+			_IsSwapSpell = true;
+			break;
+		end
+	end
 
 	if self.Spells[spellID] ~= nil then
 		for k, button in pairs(self.Spells[spellID]) do
@@ -2876,7 +2898,7 @@ function ConRO:GlowSpell(spellID)
 		end
 		self.SpellsGlowing[spellID] = 1;
 	else
-		if UnitAffectingCombat('player') and not (spellID == 162794 or spellID == 188499 or spellID == 205448) then
+		if UnitAffectingCombat('player') and not _IsSwapSpell and not ConRO:Dragonriding() then
 			if spellName ~= nil then
 				self:Print(self.Colors.Error .. 'Spell not found on action bars: ' .. ' ' .. spellName .. ' ' .. '(' .. spellID .. ')');
 			else
@@ -2899,7 +2921,7 @@ function ConRO:GlowDef(spellID)
 		end
 		self.DefGlowing[spellID] = 1;
 	else
-		if UnitAffectingCombat('player') then
+		if UnitAffectingCombat('player') and not _IsSwapSpell and not ConRO:Dragonriding() then
 			if spellName ~= nil then
 				self:Print(self.Colors.Error .. 'Spell not found on action bars: ' .. ' ' .. spellName .. ' ' .. '(' .. spellID .. ')');
 			else

@@ -253,10 +253,24 @@ local factions = {
 	{ id = 2470, name = GetFactionInfoByID(2470) },     -- 9.1 Death's Advance
 	{ id = 2472, name = GetFactionInfoByID(2472) },     -- 9.1 Archivist's Codex
 	{ id = 2478, name = GetFactionInfoByID(2478) },     -- 9.2 The Enlightened
+	
+	-- Dragonflight
+	{ id = 2507, name = GetFactionInfoByID(2507) },     -- Dragonscale Expedition
+	{ id = 2503, name = GetFactionInfoByID(2503) },     -- Maruuk Centaur
+	{ id = 2511, name = GetFactionInfoByID(2511) },     -- Iskaara Tuskarr
+	{ id = 2510, name = GetFactionInfoByID(2510) },     -- Valdrakken Accord
+	
+	{ id = 2526, name = GetFactionInfoByID(2526) },     -- Winterpelt Furbolg
 }
 
 local FactionUIDsRev = {}
 local FactionIdToName = {}
+local MajorFactions = { 
+	[2503] = true, -- Dragonscale Expedition
+	[2507] = true, -- Maruuk Centaur
+	[2510] = true, -- Iskaara Tuskarr
+	[2511] = true, -- Valdrakken Accord
+}
 
 for k, v in pairs(factions) do
 	if v.id and v.name then
@@ -329,10 +343,11 @@ local function GetLimits(earned)
 end
 
 local function GetEarnedRep(character, faction)
-	local earned 
+	-- Return guild reputation
 	if character.guildName and faction == character.guildName then
 		return character.guildRep
 	end
+	
 	return character.Factions[FactionUIDsRev[faction]]
 end
 
@@ -364,7 +379,14 @@ local function ScanReputations()
 					f[FactionUIDsRev[name]] = 43000 + currentValue
 				else
 					f[FactionUIDsRev[name]] = earned
-				end			
+				end
+
+				-- Special treatment for new major factions in 10.0
+				if MajorFactions[factionID] then
+					local data = C_MajorFactions.GetMajorFactionData(factionID)
+					
+					f[FactionUIDsRev[name]] = format("%d,%d,%d", data.renownLevel, data.renownReputationEarned, data.renownLevelThreshold)
+				end
 			end
 		end
 	end
@@ -430,11 +452,24 @@ local function _GetReputationInfo(character, faction)
 	local earned = GetEarnedRep(character, faction)
 	if not earned then return end
 
-	local bottom, top = GetLimits(earned)
-	local rate = (earned - bottom) / (top - bottom) * 100
+	-- earned reputation will be saved as a number for old/normal reputations.
+	if type(earned) == "number" then
+		local bottom, top = GetLimits(earned)
+		local rate = (earned - bottom) / (top - bottom) * 100
 
-	-- ex: "Revered", 15400, 21000, 73%
-	return BottomLevelNames[bottom], (earned - bottom), (top - bottom), rate 
+		-- ex: "Revered", 15400, 21000, 73%
+		return BottomLevelNames[bottom], (earned - bottom), (top - bottom), rate 
+	
+	-- For the new major factions introduced in Dragonflight, different processing is required
+	elseif type(earned) == "string" then
+		-- ex: "9,1252,2500" = level 9, 1252/2500
+		local renownLevel, repEarned, nextLevelThreshold = strsplit(",", earned)
+		local rate = repEarned / nextLevelThreshold * 100
+		local isMajorFaction = true	-- explicitly inform the called we are dealing with a major faction
+		
+		-- 9, 1252, 2500, 50%, true
+		return renownLevel, repEarned, nextLevelThreshold, rate, isMajorFaction
+	end
 end
 
 local function _GetRawReputationInfo(character, faction)

@@ -76,9 +76,12 @@ lib:RegisterItems({
 	[22794] = SetReagent(1, e.Herbalism), -- Fel Lotus
 	[108344] = SetReagent(1, e.Herbalism), -- Felweed Stalk
 	[108345] = SetReagent(1, e.Herbalism), -- Dreaming Glory Petal
+	[108346] = SetReagent(1, e.Herbalism), -- Ragveil Cap
 	[108347] = SetReagent(1, e.Herbalism), -- Terocone Leaf
 	[108348] = SetReagent(1, e.Herbalism), -- Ancient Lichen Petal
+	[108349] = SetReagent(1, e.Herbalism), -- Netherbloom Leaf
 	[108350] = SetReagent(1, e.Herbalism), -- Nightmare Vine Stem
+	[108351] = SetReagent(1, e.Herbalism), -- Mana Thistle Leaf
 	
 	-- 3.0 WotLK
 	[36901] = SetReagent(2, e.Herbalism), -- Goldclover
@@ -90,15 +93,27 @@ lib:RegisterItems({
 	[36908] = SetReagent(2, e.Herbalism), -- Frost Lotus
 	[37921] = SetReagent(2, e.Herbalism), -- Deadnettle
 	[39970] = SetReagent(2, e.Herbalism), -- Fire Leaf
+	[108352] = SetReagent(2, e.Herbalism), -- Goldclover Leaf
+	[108353] = SetReagent(2, e.Herbalism), -- Adder's Tongue Stem
+	[108354] = SetReagent(2, e.Herbalism), -- Tiger Lily Petal
+	[108355] = SetReagent(2, e.Herbalism), -- Lichbloom Stalk
+	[108356] = SetReagent(2, e.Herbalism), -- Icethorn Bramble
 	[108357] = SetReagent(2, e.Herbalism), -- Talandra's Rose Petal
+	[108359] = SetReagent(2, e.Herbalism), -- Fire Leaf Bramble
 	
 	-- 4.0 Cataclysm
 	[52983] = SetReagent(3, e.Herbalism), -- Cinderbloom
 	[52984] = SetReagent(3, e.Herbalism), -- Stormvine
 	[52985] = SetReagent(3, e.Herbalism), -- Azshara's Veil
 	[52986] = SetReagent(3, e.Herbalism), -- Heartblossom
-	[52987] = SetReagent(3, e.Herbalism), -- Twilight Jasmine	
+	[52987] = SetReagent(3, e.Herbalism), -- Twilight Jasmine
 	[52988] = SetReagent(3, e.Herbalism), -- Whiptail
+	[108360] = SetReagent(3, e.Herbalism), -- Cinderbloom Petal
+	[108361] = SetReagent(3, e.Herbalism), -- Stormvine Stalk
+	[108362] = SetReagent(3, e.Herbalism), -- Azshara's Veil Stem
+	[108363] = SetReagent(3, e.Herbalism), -- Heartblossom Petal
+	[108364] = SetReagent(3, e.Herbalism), -- Twilight Jasmine Petal
+	[108365] = SetReagent(3, e.Herbalism), -- Whiptail Stem
 	
 	-- 5.0 Mists of Pandaria
 	[72234] = SetReagent(4, e.Herbalism), -- Green Tea Leaf
@@ -164,5 +179,19 @@ lib:RegisterItems({
 	[170554] = SetReagent(8, e.Herbalism), -- Vigil's Torch
 	[171315] = SetReagent(8, e.Herbalism), -- Nightshade
 	[187699] = SetReagent(8, e.Herbalism), -- First Flower
+
+	-- 10.0 Dragonflight
+	[191460] = SetReagent(9, e.Herbalism), -- Hochenblume 1
+	[191461] = SetReagent(9, e.Herbalism), -- Hochenblume 2
+	[191462] = SetReagent(9, e.Herbalism), -- Hochenblume 3
+	[191464] = SetReagent(9, e.Herbalism), -- Saxifrage 1
+	[191465] = SetReagent(9, e.Herbalism), -- Saxifrage 2
+	[191466] = SetReagent(9, e.Herbalism), -- Saxifrage 3
+	[191467] = SetReagent(9, e.Herbalism), -- Bubble Poppy 1
+	[191468] = SetReagent(9, e.Herbalism), -- Bubble Poppy 2
+	[191469] = SetReagent(9, e.Herbalism), -- Bubble Poppy 3
+	[191470] = SetReagent(9, e.Herbalism), -- Writhebark 1
+	[191471] = SetReagent(9, e.Herbalism), -- Writhebark 2
+	[191472] = SetReagent(9, e.Herbalism), -- Writhebark 3
 
 })

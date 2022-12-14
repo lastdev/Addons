@@ -297,7 +297,17 @@ local Factions = {
 			{ name = DataStore:GetFactionName(2478), icon = "achievement_reputation_enlightenedbrokers" },  	 -- 9.2 The Enlightened
 		},
 	},
-	{	-- [10]
+	{ -- [10]
+		name = EXPANSION_NAME9, -- "Dragonflight"
+		{	-- [1]
+			name = OTHER,
+			{ name = DataStore:GetFactionName(2507), icon = "ui_majorfaction_expedition" },     		-- Dragonscale Expedition
+			{ name = DataStore:GetFactionName(2503), icon = "ui_majorfaction_centaur" },      			-- Maruuk Centaur
+			{ name = DataStore:GetFactionName(2511), icon = "ui_majorfaction_tuskarr" },      			-- Iskaara Tuskarr
+			{ name = DataStore:GetFactionName(2510), icon = "ui_majorfaction_valdrakken" },      		-- Valdrakken Accord
+		},
+	},
+	{	-- [11]
 		name = GUILD,
 		{	-- [1]
 			name = GUILD,
@@ -436,12 +446,20 @@ tab:RegisterGrid(2, {
 			button.Name:SetPoint("BOTTOMRIGHT", 5, 0)
 			button.Background:SetDesaturated(false)
 			
-			local status, _, _, rate = DataStore:GetReputationInfo(character, faction.name)
+			local status, _, _, rate, isMajorFaction = DataStore:GetReputationInfo(character, faction.name)
 			if status and rate then 
 				local text
-				if status == FACTION_STANDING_LABEL8 then
-					text = icons.ready
-				elseif status == PARAGON_LABEL then
+				
+				
+				if isMajorFaction then									-- If we are dealing with a major faction ..
+					text = format("Lv %d", status)					-- .. status will contain the renown level
+					button.Name:SetFontObject("NumberFontNormalSmall")
+					button.Name:SetJustifyH("RIGHT")
+					button.Name:SetPoint("BOTTOMRIGHT", -4, 0)
+				
+				elseif status == FACTION_STANDING_LABEL8 then	-- If exalted .. 
+					text = icons.ready									-- .. just show the green check
+				elseif status == PARAGON_LABEL then					-- Else if paragon levels..
 					if rate >= 100 then
 						text = icons.waiting
 					else
@@ -458,7 +476,7 @@ tab:RegisterGrid(2, {
 					text = format("%2d%%", floor(rate))
 				end
 
-				local vc = VertexColors[status]
+				local vc = isMajorFaction and VertexColors[FACTION_STANDING_LABEL4] or VertexColors[status]
 				button.Background:SetVertexColor(vc.r, vc.g, vc.b);
 				
 				local color = colors.white
@@ -484,7 +502,7 @@ tab:RegisterGrid(2, {
 			if not character then return end
 
 			local faction = view[ frame:GetID() ].name
-			local status, currentLevel, maxLevel, rate = DataStore:GetReputationInfo(character, faction)
+			local status, currentLevel, maxLevel, rate, isMajorFaction = DataStore:GetReputationInfo(character, faction)
 			if not status then return end
 			
 			local tooltip = AddonFactory_Tooltip
@@ -495,19 +513,24 @@ tab:RegisterGrid(2, {
 				DataStore:GetColoredCharacterName(character), colors.white, colors.teal, faction))
 
 			rate = format("%d%%", floor(rate))
-			tooltip:AddLine(format("%s: %d/%d (%s)", status, currentLevel, maxLevel, rate),1,1,1 )
 			
-			tooltip:AddLine(" ",1,1,1)
-			tooltip:AddLine(format("%s = %s", icons.notReady, UNKNOWN), 0.8, 0.13, 0.13)
-			tooltip:AddLine(FACTION_STANDING_LABEL1, 0.8, 0.13, 0.13)
-			tooltip:AddLine(FACTION_STANDING_LABEL2, 1.0, 0.0, 0.0)
-			tooltip:AddLine(FACTION_STANDING_LABEL3, 0.93, 0.4, 0.13)
-			tooltip:AddLine(FACTION_STANDING_LABEL4, 1.0, 1.0, 0.0)
-			tooltip:AddLine(FACTION_STANDING_LABEL5, 0.0, 1.0, 0.0)
-			tooltip:AddLine(FACTION_STANDING_LABEL6, 0.0, 1.0, 0.8)
-			tooltip:AddLine(FACTION_STANDING_LABEL7, 1.0, 0.4, 1.0)
-			tooltip:AddLine(format("%s = %s", icons.ready, FACTION_STANDING_LABEL8), 1, 1, 1)
-			tooltip:AddLine(format("%s = %s%s", icons.waiting, colors.epic, PARAGON_LABEL), 1, 1, 1)
+			if isMajorFaction then
+				tooltip:AddLine(format("%s: %d/%d (%s)", format(LEVEL_GAINED, status), currentLevel, maxLevel, rate),1,1,1 )
+			else
+				tooltip:AddLine(format("%s: %d/%d (%s)", status, currentLevel, maxLevel, rate),1,1,1 )
+				
+				tooltip:AddLine(" ",1,1,1)
+				tooltip:AddLine(format("%s = %s", icons.notReady, UNKNOWN), 0.8, 0.13, 0.13)
+				tooltip:AddLine(FACTION_STANDING_LABEL1, 0.8, 0.13, 0.13)
+				tooltip:AddLine(FACTION_STANDING_LABEL2, 1.0, 0.0, 0.0)
+				tooltip:AddLine(FACTION_STANDING_LABEL3, 0.93, 0.4, 0.13)
+				tooltip:AddLine(FACTION_STANDING_LABEL4, 1.0, 1.0, 0.0)
+				tooltip:AddLine(FACTION_STANDING_LABEL5, 0.0, 1.0, 0.0)
+				tooltip:AddLine(FACTION_STANDING_LABEL6, 0.0, 1.0, 0.8)
+				tooltip:AddLine(FACTION_STANDING_LABEL7, 1.0, 0.4, 1.0)
+				tooltip:AddLine(format("%s = %s", icons.ready, FACTION_STANDING_LABEL8), 1, 1, 1)
+				tooltip:AddLine(format("%s = %s%s", icons.waiting, colors.epic, PARAGON_LABEL), 1, 1, 1)
+			end
 			
 			tooltip:AddLine(" ",1,1,1)
 			tooltip:AddLine(format("%s%s", colors.green, L["Shift+Left click to link"]))
@@ -519,12 +542,16 @@ tab:RegisterGrid(2, {
 			if not character then return end
 
 			local faction = view[ frame:GetParent():GetID() ].name
-			local status, currentLevel, maxLevel, rate = DataStore:GetReputationInfo(character, faction)
+			local status, currentLevel, maxLevel, rate, isMajorFaction = DataStore:GetReputationInfo(character, faction)
 			if not status then return end
 			
 			if button == "LeftButton" and IsShiftKeyDown() then
 				local chat = ChatEdit_GetLastActiveWindow()
 				if chat:IsShown() then
+					if isMajorFaction then
+						status = format(LEVEL_GAINED, status)
+					end
+					
 					chat:Insert(format(L["%s is %s with %s (%d/%d)"], DataStore:GetCharacterName(character), status, faction, currentLevel, maxLevel))
 				end
 			end

@@ -751,6 +751,7 @@ addon:Controller("AltoholicUI.TabSummaryCategoriesList", {
 					{ text = format("%s9.1|r %s", colors.green, L["PATCH_9.1"]), profile = 17 },
 					{ text = format("%s9.2|r %s", colors.green, L["PATCH_9.2"]), profile = 23 },
 				}},
+				{ text = EXPANSION_NAME9, profile = 27 },
 			}},
 			-- Expansion Features
 			{ text = GetCategoryInfo(15301), subMenu = {

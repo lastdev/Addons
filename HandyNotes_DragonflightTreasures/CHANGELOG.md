@@ -1,5 +1,38 @@
 # Changelog
 
+## Changed in v32
+
+* Add the various chests for Sacred Tuskarr Totems in Azure Span, hidden by default
+* Explain what to do with the gleamfish for Shellkhan a bit better
+* Fix the requirement for Lizi's Reins day 4, thanks to stevietv!
+* Fix the "debug mode" being on in cases when it shouldn't be, which would have made you see a largely pointless "coord" line in the map tooltips
+* More rare data, disturbed dirt, packs, etc
+
+## Changed in v31
+
+* Starting on adding Disturbed Dirt locations; like the Explorer's Scout Packs these are hidden by default, so turn them on in the menu if you want to see them
+* Waking Shores: fix Slurpo's position, explain the spawn requirements, and show the required item in Azure Span
+* Explain Ingot's position for A Dragon's Day Off if you need it
+* Highest Peaks: fix the renown level requirement, it only needs 6 now
+* Assorted rare quests and loot
+
+## Changed in v30
+
+* Add the S.E.L.F.I.E. achievements: Framing a New Perspective, and That's Pretty Neat!
+* Explain the Ancient Protector's summoning method
+* Profession knowledge: Engineering and Leatherworking, thanks to InvisiBill!
+* Note where to find the book to continue Veritistrasz's story
+* Waking Shores: A Dragon's Day Off hidden quest
+* A few more rare quests and loot
+* Actually embed Krowi_WorldMapButtons-1.4 since it's spreading (this means I'll play better with Rarescanner's icon, since it loaded after me)
+
+## Changed in v29
+
+* Give the known ["super rares"](https://www.wowhead.com/news/defeat-super-rares-each-day-for-up-to-385-item-level-gear-330298) a distinctive icon and a note explaining the concept
+* Some improvements to the grand hunt bosses
+* Show Khadin on the map after doing his quests, since you can return to trade shards for knowledge
+* Add the generic-daily for Lizi's Reins so we can hide the point after you're done for the day
+
 ## Changed in v28
 
 * Profession Knowledge: Blacksmithing thanks to tfmonk

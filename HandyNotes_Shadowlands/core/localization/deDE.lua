@@ -75,6 +75,7 @@ L['unobtainable'] = 'Nicht erhältlich'
 L['unlearnable'] = 'Nicht erlernbar'
 L['defeated'] = 'Besiegt'
 L['undefeated'] = 'Unbesiegt'
+L['elite'] = 'Elite'
 
 L['follower_type_follower'] = 'Anhänger'
 L['follower_type_champion'] = 'Champion'
@@ -86,6 +87,7 @@ L['follower_type_companion'] = 'Abenteurer'
 
 L['context_menu_set_waypoint'] = 'Kartenmarkierung setzen'
 L['context_menu_add_tomtom'] = 'Zu TomTom hinzufügen'
+L['context_menu_add_group_tomtom'] = 'Gruppe zu TomTom hinzufügen'
 L['context_menu_hide_node'] = 'Verstecke diesen Punkt'
 L['context_menu_restore_hidden_nodes'] = 'Versteckte Punkte wiederherstellen'
 
@@ -179,9 +181,11 @@ L['options_toggle_show_notes_desc'] = 'Zeigt hilfreiche Notizen an sofern diese 
 --------------------------------- DEVELOPMENT ---------------------------------
 
 L['options_dev_settings'] = 'Entwicklung'
+L['options_toggle_show_debug_currency'] = 'Debug Währungs IDs'
+L['options_toggle_show_debug_currency_desc'] = 'Zeigt Debug-Informationen für Änderungen bei Währungs-IDs an (Neuladen erforderlich).'
 L['options_toggle_show_debug_map'] = 'Debug Karten IDs'
-L['options_toggle_show_debug_map_desc'] = 'Zeigt debug informationen für Karten'
+L['options_toggle_show_debug_map_desc'] = 'Zeigt Debug-Informationen für Karten an.'
 L['options_toggle_show_debug_quest'] = 'Debug Quest IDs'
-L['options_toggle_show_debug_quest_desc'] = 'Zeigt debug informationen für Quest Änderungen'
+L['options_toggle_show_debug_quest_desc'] = 'Zeigt Debug-Informationen für Änderungen bei Quest-IDs an (Neuladen erforderlich).'
 L['options_toggle_force_nodes'] = 'Erzwinge Punkte'
-L['options_toggle_force_nodes_desc'] = 'Anzeige aller Punkte erzwingen'
+L['options_toggle_force_nodes_desc'] = 'Anzeige aller Punkte erzwingen.'
