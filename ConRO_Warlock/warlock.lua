@@ -338,131 +338,140 @@ function ConRO.Warlock.Affliction(_, timeShift, currentSpell, gcd, tChosen, pvpC
 	end
 
 --Rotations	
-	for i = 1, 2, 1 do
-		if _DrainLife_RDY and _InevitableDemise_COUNT == 50 and _InevitableDemise_DUR <= 3 then
-			tinsert(ConRO.SuggestedSpells, _DrainLife);
-		end
-
-		if not _in_combat then
-			if _Haunt_RDY and currentSpell ~= _Haunt and currentSpell ~= _UnstableAffliction then
-				tinsert(ConRO.SuggestedSpells, _Haunt);
-				_Haunt_RDY = false;
+			if _DrainLife_RDY and _InevitableDemise_COUNT == 50 and _InevitableDemise_DUR <= 3 then
+				tinsert(ConRO.SuggestedSpells, _DrainLife);
+				_DrainLife_RDY = false;
+				spellList = spellList + 1;
 			end
 
-			if _UnstableAffliction_RDY and not _UnstableAffliction_DEBUFF and currentSpell ~= _Haunt and currentSpell ~= _UnstableAffliction then
-				tinsert(ConRO.SuggestedSpells, _UnstableAffliction);
-				_UnstableAffliction_DEBUFF = true;
-			end
+			if not _in_combat then
+				if _Haunt_RDY and currentSpell ~= _Haunt and currentSpell ~= _UnstableAffliction then
+					tinsert(ConRO.SuggestedSpells, _Haunt);
+					_Haunt_RDY = false;
 
-			if _Corruption_RDY and not (_Corruption_DEBUFF or _SeedofCorruption_DEBUFF) and currentSpell ~= _Corruption then
-				tinsert(ConRO.SuggestedSpells, _Corruption);
-				_Corruption_DEBUFF = true;
-			end
-		else
-			if _VileTaint_RDY and _SoulShards >= 1 and currentSpell ~= _VileTaint and ConRO_AoEButton:IsVisible() then
-				tinsert(ConRO.SuggestedSpells, _VileTaint);
-				_VileTaint_RDY = false;
-			end
+				end
 
-			if _Agony_RDY and (not _Agony_DEBUFF or _Agony_DUR <= 3) then
-				tinsert(ConRO.SuggestedSpells, _Agony);
-				_Agony_RDY = false;
-			elseif _UnstableAffliction_RDY and (not _UnstableAffliction_DEBUFF or _UnstableAffliction_DUR <= 3) and currentSpell ~= _UnstableAffliction then
-				tinsert(ConRO.SuggestedSpells, _UnstableAffliction);
-				_UnstableAffliction_RDY = false;
-			elseif _Corruption_RDY and (not (_Corruption_DEBUFF or _SeedofCorruption_DEBUFF) or _Corruption_DUR <= 3) then
-				tinsert(ConRO.SuggestedSpells, _Corruption);
-				_Corruption_RDY = false;
-			elseif _SiphonLife_RDY and (not _SiphonLife_DEBUFF or _SiphonLife_DUR <= 3) and ConRO_SingleButton:IsVisible() then
-				tinsert(ConRO.SuggestedSpells, _SiphonLife);
-				_SiphonLife_RDY = false;
-			end
+				if _UnstableAffliction_RDY and not _UnstableAffliction_DEBUFF and currentSpell ~= _Haunt and currentSpell ~= _UnstableAffliction then
+					tinsert(ConRO.SuggestedSpells, _UnstableAffliction);
+					_UnstableAffliction_DEBUFF = true;
+					_in_combat = true;
 
-			if tChosen[Passive.ShadowEmbrace.talentID] and (not _ShadowEmbrace_DEBUFF or _ShadowEmbrace_DUR <= 3.5) and ConRO_SingleButton:IsVisible() then
-				if _DrainSoul_RDY and tChosen[Ability.DrainSoul.talentID] then
-					tinsert(ConRO.SuggestedSpells, _DrainSoul);
-				elseif _ShadowBolt_RDY and not tChosen[Ability.DrainSoul.talentID] then
-					tinsert(ConRO.SuggestedSpells, _ShadowBolt);
+				end
+
+				if _Corruption_RDY and not (_Corruption_DEBUFF or _SeedofCorruption_DEBUFF) and currentSpell ~= _Corruption then
+					tinsert(ConRO.SuggestedSpells, _Corruption);
+					_Corruption_DEBUFF = true;
+					_in_combat = true;
+
 				end
 			end
 
-			if _MaleficRapture_RDY and _SoulShards == 5 then
-				tinsert(ConRO.SuggestedSpells, _MaleficRapture);
-				_SoulShards = _SoulShards - 1;
+			if _VileTaint_RDY and _SoulShards >= 1 and currentSpell ~= _VileTaint and ConRO_AoEButton:IsVisible() then
+				tinsert(ConRO.SuggestedSpells, _VileTaint);
+				_VileTaint_RDY = false;
+
 			end
 
 			if _Haunt_RDY and currentSpell ~= _Haunt then
 				tinsert(ConRO.SuggestedSpells, _Haunt);
 				_Haunt_RDY = false;
+
+			end
+
+			if _Agony_RDY and (not _Agony_DEBUFF or _Agony_DUR <= 3) then
+				tinsert(ConRO.SuggestedSpells, _Agony);
+				_Agony_RDY = false;
+
+			elseif _UnstableAffliction_RDY and (not _UnstableAffliction_DEBUFF or _UnstableAffliction_DUR <= 3) and currentSpell ~= _UnstableAffliction then
+				tinsert(ConRO.SuggestedSpells, _UnstableAffliction);
+				_UnstableAffliction_RDY = false;
+
+			elseif _Corruption_RDY and (not (_Corruption_DEBUFF or _SeedofCorruption_DEBUFF) or _Corruption_DUR <= 3) then
+				tinsert(ConRO.SuggestedSpells, _Corruption);
+				_Corruption_RDY = false;
+
+			elseif _SiphonLife_RDY and (not _SiphonLife_DEBUFF or _SiphonLife_DUR <= 3) and ConRO_SingleButton:IsVisible() then
+				tinsert(ConRO.SuggestedSpells, _SiphonLife);
+				_SiphonLife_RDY = false;
+
+			end
+
+			if tChosen[Passive.ShadowEmbrace.talentID] and (not _ShadowEmbrace_DEBUFF or _ShadowEmbrace_DUR <= 3.5) and ConRO_SingleButton:IsVisible() then
+				if _DrainSoul_RDY and tChosen[Ability.DrainSoul.talentID] then
+					tinsert(ConRO.SuggestedSpells, _DrainSoul);
+
+				elseif _ShadowBolt_RDY and not tChosen[Ability.DrainSoul.talentID] then
+					tinsert(ConRO.SuggestedSpells, _ShadowBolt);
+
+				end
 			end
 
 			if _SummonSoulkeeper_RDY and _SummonSoulkeeper_Count >= 10 then
 				tinsert(ConRO.SuggestedSpells, _SummonSoulkeeper);
 				__SummonSoulkeeper_Count = 0;
-			end
 
-			if _MaleficRapture_RDY and _SoulShards >= 1 and tChosen[Passive.DreadTouch.talentID] and _MaleficAffliction_COUNT < 3 and ConRO_SingleButton:IsVisible() then
-				tinsert(ConRO.SuggestedSpells, _MaleficRapture);
-				_MaleficAffliction_COUNT = _MaleficAffliction_COUNT + 1;
-				_SoulShards = _SoulShards - 1;
-			end
-
-			if _MaleficRapture_RDY and tChosen[Passive.DreadTouch.talentID] and _MaleficAffliction_COUNT == 3 and not _DreadTouch_DEBUFF then
-				tinsert(ConRO.SuggestedSpells, _MaleficRapture);
-				_SoulShards = _SoulShards - 1;
-				_DreadTouch_DEBUFF = true;
 			end
 
 			if _VileTaint_RDY and _SoulShards >= 1 and currentSpell ~= _VileTaint and ConRO_SingleButton:IsVisible() then
 				tinsert(ConRO.SuggestedSpells, _VileTaint);
 				_VileTaint_RDY = false;
+
+			end
+
+			if _MaleficRapture_RDY and _SoulShards >= 1 and tChosen[Passive.DreadTouch.talentID] and (_MaleficAffliction_COUNT < 3 or (_MaleficAffliction_COUNT >= 3 and not _DreadTouch_DEBUFF)) and ConRO_SingleButton:IsVisible() then
+				tinsert(ConRO.SuggestedSpells, _MaleficRapture);
+				_SoulShards = _SoulShards - 1;
+
 			end
 
 			if tChosen[Ability.SoulRot.talentID] then
 				if _PhantomSingularity_RDY and _SoulRot_RDY and ConRO:FullMode(_PhantomSingularity) then
 					tinsert(ConRO.SuggestedSpells, _PhantomSingularity);
 					_PhantomSingularity_RDY = false;
+
 				end
 			else
 				if _PhantomSingularity_RDY and ConRO:FullMode(_PhantomSingularity) then
 					tinsert(ConRO.SuggestedSpells, _PhantomSingularity);
 					_PhantomSingularity_RDY = false;
+
 				end
 			end
 
 			if _SoulRot_RDY and currentSpell ~= _SoulRot and ConRO:FullMode(_SoulRot) then
 				tinsert(ConRO.SuggestedSpells, _SoulRot);
 				_SoulRot_RDY = false;
+
 			end
 
 			if _SummonDarkglare_RDY and _Agony_DEBUFF and _Corruption_DEBUFF and _UnstableAffliction_DEBUFF and ConRO:FullMode(_SummonDarkglare) then
 				tinsert(ConRO.SuggestedSpells, _SummonDarkglare);
 				_SummonDarkglare_RDY = false;
+
 			end
 
 			if _MaleficRapture_RDY and _SoulShards >= 1 and tChosen[Passive.DoomBlossom.talentID] and _MaleficAffliction_COUNT < 3  and ConRO_AoEButton:IsVisible() then
 				tinsert(ConRO.SuggestedSpells, _MaleficRapture);
 				_SoulShards = _SoulShards - 1;
-			end
 
-
-			if _MaleficRapture_RDY and _SoulShards >= 1 and (_PhantomSingularity_DEBUFF or _VileTaint_DEBUFF) and ConRO_SingleButton:IsVisible() then
-				tinsert(ConRO.SuggestedSpells, _MaleficRapture);
-				_SoulShards = _SoulShards - 1;
 			end
 
 			if _MaleficRapture_RDY and _SoulShards >= 1 and ConRO_SingleButton:IsVisible() then
 				tinsert(ConRO.SuggestedSpells, _MaleficRapture);
 				_SoulShards = _SoulShards - 1;
+
 			end
 
 			if _DrainSoul_RDY and tChosen[Ability.DrainSoul.talentID] then
 				tinsert(ConRO.SuggestedSpells, _DrainSoul);
+				_ShadowBolt_RDY = false;
+
 			elseif _ShadowBolt_RDY and not tChosen[Ability.DrainSoul.talentID] then
 				tinsert(ConRO.SuggestedSpells, _ShadowBolt);
+				_ShadowBolt_RDY = false;
+
 			end
-		end
-	end
+
 	return nil;
 end
 
@@ -606,13 +615,18 @@ function ConRO.Warlock.Demonology(_, timeShift, currentSpell, gcd, tChosen, pvpC
 	local _Void_out																						= IsSpellKnown(ids.Demo_PetAbility.ThreateningPresence.spellID, true);
 	local _Felhunter_out																				= IsSpellKnown(ids.Demo_PetAbility.ShadowBite.spellID, true);
 
+	local _CallDreadstalkers_COST = 2;
+
+	if _DemonicCalling_BUFF then
+		_CallDreadstalkers_COST = 0;
+	end
 
 	if currentSpell == _HandofGuldan then
 		_SoulShards = _SoulShards - 3;
 	elseif currentSpell == _NetherPortal then
 		_SoulShards = _SoulShards - 1;
 	elseif currentSpell == _CallDreadstalkers then
-		_SoulShards = _SoulShards - 2;
+		_SoulShards = _SoulShards - _CallDreadstalkers_COST;
 	elseif currentSpell == _SummonVilefiend then
 		_SoulShards = _SoulShards - 1;
 	elseif currentSpell == _Demonbolt then
@@ -638,138 +652,194 @@ function ConRO.Warlock.Demonology(_, timeShift, currentSpell, gcd, tChosen, pvpC
 
 --Rotations
 	if not _in_combat then
-		if _Demonbolt_RDY and currentSpell ~= _Demonbolt then
-			tinsert(ConRO.SuggestedSpells, _Demonbolt);
-			_Demonbolt_RDY = false;
+		if _PowerSiphon_RDY and _DemonicCore_COUNT <= 3 and ConRO:ImpsOut() >= 2 then
+			tinsert(ConRO.SuggestedSpells, _PowerSiphon);
+			_PowerSiphon_RDY = false;
+			_DemonicCore_COUNT = _DemonicCore_COUNT + 2;
 		end
 
-		if _Doom_RDY and not _Doom_DEBUFF then
-			tinsert(ConRO.SuggestedSpells, _Doom);
-			_Doom_RDY = false;
+		if _Demonbolt_RDY and currentSpell ~= _Demonbolt and currentSpell ~= _ShadowBolt and _DemonicCore_COUNT <= 0 then
+			tinsert(ConRO.SuggestedSpells, _Demonbolt);
+			_Demonbolt_RDY = false;
+			_SoulShards = _SoulShards + 2;
+
+		end
+
+		if _ShadowBolt_RDY and _SoulShards <= 4 and currentSpell ~= _Demonbolt and currentSpell ~= _ShadowBolt then
+			tinsert(ConRO.SuggestedSpells, _ShadowBolt);
+			_ShadowBolt_RDY = false;
+			_SoulShards = _SoulShards + 1;
+
+		end
+
+		if _CallDreadstalkers_RDY and _SoulShards >= _CallDreadstalkers_COST and currentSpell ~= _CallDreadstalkers then
+			tinsert(ConRO.SuggestedSpells, _CallDreadstalkers);
+			_CallDreadstalkers_RDY = false;
+			_SoulShards = _SoulShards - _CallDreadstalkers_COST;
+
 		end
 	end
 
 	if _Demonbolt_RDY and _DemonicCore_DUR <= 2 and _DemonicCore_COUNT >= 1 then
 		tinsert(ConRO.SuggestedSpells, _Demonbolt);
+		_DemonicCore_COUNT = _DemonicCore_COUNT - 1;
+
 	end
 
 	if _NetherPortal_BUFF or currentSpell == _NetherPortal then
 		if _SummonDemonicTyrant_RDY and (ConRO.lastSpellId == _HandofGuldan or currentSpell == _HandofGuldan) and ConRO:FullMode(_SummonDemonicTyrant) then
 			tinsert(ConRO.SuggestedSpells, _SummonDemonicTyrant);
+			_SummonDemonicTyrant_RDY = false;
+
 		end
 
 		if _BilescourgeBombers_RDY and _SoulShards >= 2 then
 			tinsert(ConRO.SuggestedSpells, _BilescourgeBombers);
-		end
+			_BilescourgeBombers_RDY = false;
 
-		if _GrimoireFelguard_RDY and _SoulShards >= 1 and ConRO:FullMode(_GrimoireFelguard) then
-			tinsert(ConRO.SuggestedSpells, _GrimoireFelguard);
-		end
-
-		if _SummonVilefiend_RDY and _SoulShards >= 1 and (_SummonDemonicTyrant_RDY or _SummonDemonicTyrant_CD >= 40) and currentSpell ~= _SummonVilefiend and ConRO:FullMode(_SummonVilefiend) then
-			tinsert(ConRO.SuggestedSpells, _SummonVilefiend);
-		end
-
-		if _CallDreadstalkers_RDY and (_SoulShards >= 2 or (_SoulShards >= 1 and _DemonicCalling_BUFF)) and currentSpell ~= _CallDreadstalkers then
-			tinsert(ConRO.SuggestedSpells, _CallDreadstalkers);
-		end
-
-		if _HandofGuldan_RDY and _SoulShards >= 1 and currentSpell ~= _HandofGuldan then
-			tinsert(ConRO.SuggestedSpells, _HandofGuldan);
-		end
-
-		if _Demonbolt_RDY and _DemonicCore_COUNT >= 1 then
-			tinsert(ConRO.SuggestedSpells, _Demonbolt);
-		end
-
-		if _ShadowBolt_RDY and _SoulShards <= 4 and currentSpell ~= _ShadowBolt then
-			tinsert(ConRO.SuggestedSpells, _ShadowBolt);
-		end
-	else
-		if _NetherPortal_RDY and currentSpell ~= _NetherPortal and ConRO:FullMode(_NetherPortal) then
-			tinsert(ConRO.SuggestedSpells, _NetherPortal);
-			_NetherPortal_RDY = false;
-		end
-
-		if _SummonDemonicTyrant_RDY and currentSpell ~= _SummonDemonicTyrant and _CallDreadstalkers_CD >= 8 and ConRO:ImpsOut() >= 3 and (ConRO.lastSpellId == _HandofGuldan or currentSpell == _HandofGuldan) and ConRO:FullMode(_SummonDemonicTyrant) then
-			tinsert(ConRO.SuggestedSpells, _SummonDemonicTyrant)
-			_SummonDemonicTyrant_RDY = false;
 		end
 
 		if _GrimoireFelguard_RDY and _SoulShards >= 1 and ConRO:FullMode(_GrimoireFelguard) then
 			tinsert(ConRO.SuggestedSpells, _GrimoireFelguard);
 			_GrimoireFelguard_RDY = false;
+
+		end
+
+		if _SummonVilefiend_RDY and _SoulShards >= 1 and (_SummonDemonicTyrant_RDY or _SummonDemonicTyrant_CD >= 40) and currentSpell ~= _SummonVilefiend and ConRO:FullMode(_SummonVilefiend) then
+			tinsert(ConRO.SuggestedSpells, _SummonVilefiend);
 			_SoulShards = _SoulShards - 1;
+			_SummonVilefiend_RDY = false;
+
+		end
+
+		if _CallDreadstalkers_RDY and _SoulShards >= _CallDreadstalkers_COST and currentSpell ~= _CallDreadstalkers then
+			tinsert(ConRO.SuggestedSpells, _CallDreadstalkers);
+			_CallDreadstalkers_RDY = false;
+			_SoulShards = _SoulShards - _CallDreadstalkers_COST;
+
+		end
+
+		if _HandofGuldan_RDY and _SoulShards >= 1 and currentSpell ~= _HandofGuldan then
+			tinsert(ConRO.SuggestedSpells, _HandofGuldan);
+			_SoulShards = _SoulShards - 3;
+
+		end
+
+		if _Demonbolt_RDY and _DemonicCore_COUNT >= 1 then
+			tinsert(ConRO.SuggestedSpells, _Demonbolt);
+			_SoulShards = _SoulShards + 2;
+			_DemonicCore_COUNT = _DemonicCore_COUNT - 1;
+
+		end
+
+		if _ShadowBolt_RDY and _SoulShards <= 4 and currentSpell ~= _ShadowBolt then
+			tinsert(ConRO.SuggestedSpells, _ShadowBolt);
+			_SoulShards = _SoulShards + 1;
+
+		end
+	else
+		if _NetherPortal_RDY and currentSpell ~= _NetherPortal and ConRO:FullMode(_NetherPortal) then
+			tinsert(ConRO.SuggestedSpells, _NetherPortal);
+			_NetherPortal_RDY = false;
+
+		end
+
+		if _DemonicStrength_RDY and _Felstorm_CD <= 25 and ConRO:FullMode(_DemonicStrength) then
+			tinsert(ConRO.SuggestedSpells, _DemonicStrength);
+			_DemonicStrength_RDY = false;
+
 		end
 
 		if _SummonVilefiend_RDY and _SoulShards >= 1 and currentSpell ~= _SummonVilefiend and ConRO:FullMode(_SummonVilefiend) then
 			tinsert(ConRO.SuggestedSpells, _SummonVilefiend);
 			_SummonVilefiend_RDY = false;
 			_SoulShards = _SoulShards - 1;
+
 		end
 
-		if _DemonicStrength_RDY and _Felstorm_CD <= 25 and ConRO:FullMode(_DemonicStrength) then
-			tinsert(ConRO.SuggestedSpells, _DemonicStrength);
-			_DemonicStrength_RDY = false;
+		if _GrimoireFelguard_RDY and _SoulShards >= 1 and ConRO:FullMode(_GrimoireFelguard) then
+			tinsert(ConRO.SuggestedSpells, _GrimoireFelguard);
+			_GrimoireFelguard_RDY = false;
+			_SoulShards = _SoulShards - 1;
+
 		end
 
 		if _SummonSoulkeeper_RDY and _SummonSoulkeeper_Count >= 10 then
 			tinsert(ConRO.SuggestedSpells, _SummonSoulkeeper);
 			__SummonSoulkeeper_Count = 0;
+
 		end
 
-		if _Guillotine_RDY and ConRO:FullMode(_Guillotine) then
-			tinsert(ConRO.SuggestedSpells, _Guillotine);
-			_Guillotine_RDY = false;
-		end
+		if _SummonDemonicTyrant_RDY and currentSpell ~= _SummonDemonicTyrant and _CallDreadstalkers_CD >= 8 and ConRO:ImpsOut() >= 6 and (ConRO.lastSpellId == _HandofGuldan or currentSpell == _HandofGuldan) and ConRO:FullMode(_SummonDemonicTyrant) then
+			tinsert(ConRO.SuggestedSpells, _SummonDemonicTyrant);
+			_SummonDemonicTyrant_RDY = false;
 
-		if _BilescourgeBombers_RDY and _SoulShards >= 2 then
-			tinsert(ConRO.SuggestedSpells, _BilescourgeBombers);
-			_BilescourgeBombers_RDY = false;
-			_SoulShards = _SoulShards - 2;
 		end
 
 		if _SoulStrike_RDY and _SoulShards <= 4 then
 			tinsert(ConRO.SuggestedSpells, _SoulStrike);
 			_SoulStrike_RDY = false;
 			_SoulShards = _SoulShards + 1;
-		end
 
-		if _Implosion_RDY and ConRO:ImpsOut() >= 6 and ConRO_AoEButton:IsVisible() then
-			tinsert(ConRO.SuggestedSpells, _Implosion);
-			_Implosion_RDY = false;
-		end
-
-		if _CallDreadstalkers_RDY and (_SoulShards >= 2 or _DemonicCalling_BUFF) and currentSpell ~= _CallDreadstalkers then
-			tinsert(ConRO.SuggestedSpells, _CallDreadstalkers);
-			_CallDreadstalkers_RDY = false;
-		end
-
-		if _HandofGuldan_RDY and _SoulShards >= 4 and currentSpell ~= ids.Demo_Ability.HandofGuldan then
-			tinsert(ConRO.SuggestedSpells, _HandofGuldan);
-			_SoulShards = _SoulShards - 3;
 		end
 
 		if _Doom_RDY and not _Doom_DEBUFF then
 			tinsert(ConRO.SuggestedSpells, _Doom);
 			_Doom_RDY = false;
+
 		end
 
-		if _Demonbolt_RDY and _DemonicCore_COUNT >= 2 and _SoulShards <= 3 then
-			tinsert(ConRO.SuggestedSpells, _Demonbolt);
+		if _Guillotine_RDY and ConRO:FullMode(_Guillotine) then
+			tinsert(ConRO.SuggestedSpells, _Guillotine);
+			_Guillotine_RDY = false;
+
+		end
+
+		if _BilescourgeBombers_RDY and _SoulShards >= 2 and ConRO_AoEButton:IsVisible() then
+			tinsert(ConRO.SuggestedSpells, _BilescourgeBombers);
+			_BilescourgeBombers_RDY = false;
+			_SoulShards = _SoulShards - 2;
+
 		end
 
 		if _PowerSiphon_RDY and _DemonicCore_COUNT <= 3 and ConRO:ImpsOut() >= 2 then
 			tinsert(ConRO.SuggestedSpells, _PowerSiphon);
+			_PowerSiphon_RDY = false;
+			_DemonicCore_COUNT = _DemonicCore_COUNT + 2;
+
+		end
+
+		if _CallDreadstalkers_RDY and _SoulShards >= _CallDreadstalkers_COST and currentSpell ~= _CallDreadstalkers then
+			tinsert(ConRO.SuggestedSpells, _CallDreadstalkers);
+			_CallDreadstalkers_RDY = false;
+			_SoulShards = _SoulShards - _CallDreadstalkers_COST;
+
 		end
 
 		if _HandofGuldan_RDY and _SoulShards >= 3 and currentSpell ~= ids.Demo_Ability.HandofGuldan then
 			tinsert(ConRO.SuggestedSpells, _HandofGuldan);
 			_SoulShards = _SoulShards - 3;
+
+		end
+
+		if _Implosion_RDY and ConRO:ImpsOut() >= 6 and ConRO_AoEButton:IsVisible() then
+			tinsert(ConRO.SuggestedSpells, _Implosion);
+			_Implosion_RDY = false;
+
+		end
+
+		if _Demonbolt_RDY and _DemonicCore_COUNT >= 2 and _SoulShards <= 3 then
+			tinsert(ConRO.SuggestedSpells, _Demonbolt);
+			_DemonicCore_COUNT = _DemonicCore_COUNT - 1;
+			_SoulShards = _SoulShards + 2;
+
 		end
 
 		if _ShadowBolt_RDY and _SoulShards <= 4 then
 			tinsert(ConRO.SuggestedSpells, _ShadowBolt);
+			_ShadowBolt_RDY = false;
+			_SoulShards = _SoulShards + 1;
+
 		end
 	end
 return nil;
@@ -920,7 +990,7 @@ function ConRO.Warlock.Destruction(_, timeShift, currentSpell, gcd, tChosen, pvp
 	elseif currentSpell == _SoulFire then
 		_SoulShards = _SoulShards + 1;
 	end
-	
+
 
 --Indicators
 	ConRO:AbilityInterrupt(_SpellLock, _SpellLock_RDY and ConRO:Interrupt());
@@ -1153,7 +1223,6 @@ function ConRO:COMBAT_LOG_EVENT_UNFILTERED()
 
 	local ImpMaxCasts = 5;
 	local ImpMaxTime = 20; --seconds
-	local randomDemonsDuration = 15; --seconds
 	local TyrantDuration = 15; --seconds
 	local TyrantStart = 0;
 	local TyrantActive = false;
@@ -1173,32 +1242,6 @@ function ConRO:COMBAT_LOG_EVENT_UNFILTERED()
 						end
 					end
 			end)
-
-			--Other demons are summoned
-		elseif subevent == "SPELL_SUMMON" and sourceGUID == myGUID and not (spellID == 104317 or spellID == 279910) then
-
-			if ConRO.BasicDemons[spellID] and ConRO.BasicDemons[spellID] > 0 then
-				ConRO.DemonCount[destGUID] = GetTime() + ConRO.BasicDemons[spellID] - 0.1
-
-				C_Timer.After(ConRO.BasicDemons[spellID], function()
-						for k, v in pairs(ConRO.DemonCount) do
-							if GetTime() > v then
-								ConRO.DemonCount[k] = nil
-							end
-						end
-				end)
-
-			elseif not ConRO.BasicDemons[spellID] then
-				ConRO.DemonCount[destGUID] = GetTime() + randomDemonsDuration - 0.1
-
-				C_Timer.After(randomDemonsDuration, function()
-						for k, v in pairs(ConRO.DemonCount) do
-							if GetTime() > v then
-								ConRO.DemonCount[k] = nil
-							end
-						end
-				end)
-			end
 		end
 
 		--Imps succesfully consume energy
@@ -1217,22 +1260,12 @@ function ConRO:COMBAT_LOG_EVENT_UNFILTERED()
 			TyrantActive = true
 			TyrantStart = GetTime()
 
-			if IsPlayerSpell(267215) then
-				wipe(ConRO.ImpCount)
-			end
-
 			C_Timer.After(TyrantDuration, function()
 					TyrantActive = false
 
 					for k in pairs(ConRO.ImpCount) do
 						if GetTime() > ConRO.ImpCount[k][2] then
 							ConRO.ImpCount[k] = nil
-						end
-					end
-
-					for k, v in pairs(ConRO.DemonCount) do
-						if GetTime() > v then
-							ConRO.DemonCount[k] = nil
 						end
 					end
 			end)
@@ -1249,19 +1282,6 @@ function ConRO:COMBAT_LOG_EVENT_UNFILTERED()
 						end
 				end)
 			end
-
-			for k in pairs(ConRO.DemonCount) do
-				remains = ConRO.DemonCount[k] - GetTime()
-				ConRO.DemonCount[k] = ConRO.DemonCount[k] + TyrantDuration - 0.1
-
-				C_Timer.After(TyrantDuration + remains, function()
-						for k, v in pairs(ConRO.DemonCount) do
-							if GetTime() > v then
-								ConRO.DemonCount[k] = nil
-							end
-						end
-				end)
-			end
 		end
 
 		--Implosion
@@ -1272,7 +1292,6 @@ function ConRO:COMBAT_LOG_EVENT_UNFILTERED()
 		--Power Siphon
 		if subevent == "SPELL_CAST_SUCCESS" and sourceGUID == myGUID and spellID == 264130 then
 			local oldest, oldestTime = "", 2*GetTime()
-
 			for i = 1, 2 do
 				for name, imp in pairs(ConRO.ImpCount) do
 					oldestTime = math.min(imp[2], oldestTime)
@@ -1283,7 +1302,6 @@ function ConRO:COMBAT_LOG_EVENT_UNFILTERED()
 				end
 
 				oldestTime = oldestTime*2
-
 				ConRO.ImpCount[oldest] = nil
 			end
 		end
@@ -1292,13 +1310,8 @@ function ConRO:COMBAT_LOG_EVENT_UNFILTERED()
 		if subevent == "UNIT_DIED" or subevent == "SPELL_INSTAKILL" or subevent == "UNIT_DESTROYED" then
 			if ConRO.ImpCount[destGUID] then
 				ConRO.ImpCount[destGUID] = nil
-
-			elseif ConRO.DemonCount[destGUID] then
-				ConRO.DemonCount[destGUID] = nil
-
 			elseif destGUID == myGUID then
 				wipe(ConRO.ImpCount)
-				wipe(ConRO.DemonCount)
 			end
 		end
 	return true;
@@ -1307,24 +1320,14 @@ end
 function ConRO:ImpsOut()
   local count = 0
 	for k in pairs(ConRO.ImpCount) do
-		if k then
-			count = count + 1;
+		if k ~= nil then
+			if k then
+				count = count + 1;
+			end
+		else
+			break;
 		end
 	end
---	print("Imp Count: " .. count);
-	return count;
-end
-
-function ConRO:DemonsOut()
-  local count = ConRO:ImpsOut();
-	if IsPetActive() then
-		count = count + 1;
-	end
-	for k in pairs(ConRO.DemonCount) do
-		if k then
-			count = count + 1;
-		end
-	end
---	print("Demon Count: " .. count);
+	--print("Imp Count: " .. count);
 	return count;
 end

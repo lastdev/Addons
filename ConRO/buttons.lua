@@ -897,34 +897,6 @@ function ConRO:DisplayNextWindowFrame()
 		t:SetAllPoints(frame)
 end
 
-function ConRO:DisplayNext2WindowFrame()
-	local frame = CreateFrame("Frame", "ConRONext2Window", UIParent);
-		frame:SetMovable(false);
-		frame:SetClampedToScreen(true);
-
-		frame:SetPoint("BOTTOMRIGHT", "ConRONextWindow", "BOTTOMLEFT", -3, 0);
-		frame:SetSize(ConRO.db.profile.windowIconSize/2, ConRO.db.profile.windowIconSize/2);
-		frame:SetFrameStrata('MEDIUM');
-		frame:SetFrameLevel('52');
-		frame:SetAlpha(ConRO.db.profile.transparencyWindow);
-		if ConRO.db.profile.combatWindow or ConRO:HealSpec() then
-			frame:Hide();
-		elseif not ConRO.db.profile.enableWindow then
-			frame:Hide();
-		else
-			frame:Show();
-		end
-	local t = frame.texture;
-		if not t then
-			t = frame:CreateTexture("ARTWORK");
-			t:SetTexture('Interface\\AddOns\\ConRO\\images\\Bigskull');
-			t:SetBlendMode('BLEND');
-			frame.texture = t;
-		end
-
-		t:SetAllPoints(frame)
-end
-
 function ConRO:DefenseWindowFrame()
 	local frame = CreateFrame("Frame", "ConRODefenseWindow", UIParent);
 		frame:SetMovable(true);

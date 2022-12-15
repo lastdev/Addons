@@ -1,10 +1,10 @@
-lightweight tag fe623730e7596d55a20b4a4c4600c4033a53db15 v10.0.6
+lightweight tag ebb49eb6a537d545d736e07213d7e1889ed60f5e v10.0.7
 Author:	Vae <emuha17@gmail.com>
-Date:	Sat Dec 10 17:44:34 2022 -1000
+Date:	Wed Dec 14 15:10:15 2022 -1000
 
-commit fe623730e7596d55a20b4a4c4600c4033a53db15
+commit ebb49eb6a537d545d736e07213d7e1889ed60f5e
 Author: Vae <emuha17@gmail.com>
-Date:   Sat Dec 10 17:44:34 2022 -1000
+Date:   Wed Dec 14 15:10:15 2022 -1000
 
-    Added Summon Soulkeeper and Inq Gaze
+    Updated Rotations slightly
 

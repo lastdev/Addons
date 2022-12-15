@@ -1,10 +1,10 @@
-lightweight tag 26a1372d87003bbbf83d3c3d64420355257724f5 v10.0.16
+lightweight tag 6d2dc5128cf0ee234e5665dfc2f686c2acef38e5 v10.0.17
 Author:	Vae <emuha17@gmail.com>
-Date:	Mon Dec 12 12:58:54 2022 -1000
+Date:	Wed Dec 14 15:11:08 2022 -1000
 
-commit 26a1372d87003bbbf83d3c3d64420355257724f5
+commit 6d2dc5128cf0ee234e5665dfc2f686c2acef38e5
 Author: Vae <emuha17@gmail.com>
-Date:   Mon Dec 12 12:58:54 2022 -1000
+Date:   Wed Dec 14 15:11:08 2022 -1000
 
-    Update to fix talent scan error
+    Adjusted Predictive windows down to 1 extra
 

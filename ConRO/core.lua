@@ -258,7 +258,6 @@ local options = {
 				ConRO.db.profile._Unlock_ConRO = val;
 				ConROWindow:EnableMouse(ConRO.db.profile._Unlock_ConRO);
 				ConRONextWindow:EnableMouse(ConRO.db.profile._Unlock_ConRO);
-				ConRONext2Window:EnableMouse(ConRO.db.profile._Unlock_ConRO);
 				ConRODefenseWindow:EnableMouse(ConRO.db.profile._Unlock_ConRO);
 				ConROInterruptWindow:EnableMouse(ConRO.db.profile._Unlock_ConRO);
 				ConROPurgeWindow:EnableMouse(ConRO.db.profile._Unlock_ConRO);
@@ -300,15 +299,12 @@ local options = {
 						if ConRO:HealSpec() then
 							ConROWindow:Hide();
 							ConRONextWindow:Hide();
-							ConRONext2Window:Hide();
 						elseif ConRO.db.profile.enableWindow and not ConRO.db.profile.combatWindow then
 							ConROWindow:Show();
 							ConRONextWindow:Show();
-							ConRONext2Window:Show();
 						else
 							ConROWindow:Hide();
 							ConRONextWindow:Hide();
-							ConRONext2Window:Hide();
 						end
 					end,
 					get = function(info) return ConRO.db.profile._Spec_1_Enabled end
@@ -331,15 +327,12 @@ local options = {
 						if ConRO:HealSpec() then
 							ConROWindow:Hide();
 							ConRONextWindow:Hide();
-							ConRONext2Window:Hide();
 						elseif ConRO.db.profile.enableWindow and not ConRO.db.profile.combatWindow then
 							ConROWindow:Show();
 							ConRONextWindow:Show();
-							ConRONext2Window:Show();
 						else
 							ConROWindow:Hide();
 							ConRONextWindow:Hide();
-							ConRONext2Window:Hide();
 						end
 					end,
 					get = function(info) return ConRO.db.profile._Spec_2_Enabled end
@@ -363,15 +356,12 @@ local options = {
 						if ConRO:HealSpec() then
 							ConROWindow:Hide();
 							ConRONextWindow:Hide();
-							ConRONext2Window:Hide();
 						elseif ConRO.db.profile.enableWindow and not ConRO.db.profile.combatWindow then
 							ConROWindow:Show();
 							ConRONextWindow:Show();
-							ConRONext2Window:Show();
 						else
 							ConROWindow:Hide();
 							ConRONextWindow:Hide();
-							ConRONext2Window:Hide();
 						end
 					end,
 					get = function(info) return ConRO.db.profile._Spec_3_Enabled end
@@ -395,15 +385,12 @@ local options = {
 						if ConRO:HealSpec() then
 							ConROWindow:Hide();
 							ConRONextWindow:Hide();
-							ConRONext2Window:Hide();
 						elseif ConRO.db.profile.enableWindow and not ConRO.db.profile.combatWindow then
 							ConROWindow:Show();
 							ConRONextWindow:Show();
-							ConRONext2Window:Show();
 						else
 							ConROWindow:Hide();
 							ConRONextWindow:Hide();
-							ConRONext2Window:Hide();
 						end
 					end,
 					get = function(info) return ConRO.db.profile._Spec_4_Enabled end
@@ -1686,11 +1673,9 @@ local options = {
 						if val == true and not ConRO:HealSpec() then
 							ConROWindow:Show();
 							ConRONextWindow:Show();
-							ConRONext2Window:Show();
 						else
 							ConROWindow:Hide();
 							ConRONextWindow:Hide();
-							ConRONext2Window:Hide();
 						end
 					end,
 					get = function(info) return ConRO.db.profile.enableWindow end
@@ -1706,12 +1691,10 @@ local options = {
 						if val == true then
 							ConROWindow:Hide();
 							ConRONextWindow:Hide();
-							ConRONext2Window:Hide();
 							ConRODefenseWindow:Hide();
 						else
 							ConROWindow:Show();
 							ConRONextWindow:Show();
-							ConRONext2Window:Show();
 							ConRODefenseWindow:Show();
 						end
 					end,
@@ -1976,7 +1959,6 @@ local options = {
 				ConROButtonFrame:SetUserPlaced(false);
 				ConROWindow:SetUserPlaced(false);
 				ConRONextWindow:SetUserPlaced(false);
-				ConRONext2Window:SetUserPlaced(false);
 				ConRODefenseWindow:SetUserPlaced(false);
 				ConROInterruptWindow:SetUserPlaced(false);
 				ConROPurgeWindow:SetUserPlaced(false);
@@ -2018,7 +2000,6 @@ function ConRO:OnInitialize()
 	self.optionsFrame = LibStub('AceConfigDialog-3.0'):AddToBlizOptions('Conflict Rotation Optimizer', 'ConRO');
 	self.DisplayWindowFrame();
 	self.DisplayNextWindowFrame();
-	self.DisplayNext2WindowFrame();
 	self.DefenseWindowFrame();
 	self.InterruptWindowFrame();
 	self.PurgeWindowFrame();
@@ -2173,15 +2154,12 @@ function ConRO:ACTIVE_PLAYER_SPECIALIZATION_CHANGED()
 	if ConRO:HealSpec() then
 		ConROWindow:Hide();
 		ConRONextWindow:Hide();
-		ConRONext2Window:Hide();
 	elseif ConRO.db.profile.enableWindow and not ConRO.db.profile.combatWindow then
 		ConROWindow:Show();
 		ConRONextWindow:Show();
-		ConRONext2Window:Show();
 	else
 		ConROWindow:Hide();
 		ConRONextWindow:Hide();
-		ConRONext2Window:Hide();
 	end
 
 	ConRO:ButtonFetch()
@@ -2198,15 +2176,12 @@ function ConRO:ACTIVE_COMBAT_CONFIG_CHANGED()
 		if ConRO:HealSpec() then
 			ConROWindow:Hide();
 			ConRONextWindow:Hide();
-			ConRONext2Window:Hide();
 		elseif ConRO.db.profile.enableWindow and not ConRO.db.profile.combatWindow then
 			ConROWindow:Show();
 			ConRONextWindow:Show();
-			ConRONext2Window:Show();
 		else
 			ConROWindow:Hide();
 			ConRONextWindow:Hide();
-			ConRONext2Window:Hide();
 		end
 
 		ConRO:ButtonFetch()
@@ -2223,15 +2198,12 @@ function ConRO:PLAYER_SPECIALIZATION_CHANGED()
 		if ConRO:HealSpec() then
 			ConROWindow:Hide();
 			ConRONextWindow:Hide();
-			ConRONext2Window:Hide();
 		elseif ConRO.db.profile.enableWindow and not ConRO.db.profile.combatWindow then
 			ConROWindow:Show();
 			ConRONextWindow:Show();
-			ConRONext2Window:Show();
 		else
 			ConROWindow:Hide();
 			ConRONextWindow:Hide();
-			ConRONext2Window:Hide();
 		end
 
 		ConRO:ButtonFetch()
@@ -2249,15 +2221,12 @@ function ConRO:TRAIT_CONFIG_UPDATED()
 	if ConRO:HealSpec() then
 		ConROWindow:Hide();
 		ConRONextWindow:Hide();
-		ConRONext2Window:Hide();
 	elseif ConRO.db.profile.enableWindow and not ConRO.db.profile.combatWindow then
 		ConROWindow:Show();
 		ConRONextWindow:Show();
-		ConRONext2Window:Show();
 	else
 		ConROWindow:Hide();
 		ConRONextWindow:Hide();
-		ConRONext2Window:Hide();
 	end
 
 	ConRO:ButtonFetch()
@@ -2306,7 +2275,6 @@ function ConRO:PET_BATTLE_OPENING_START()
 	self:DisableDefense();
 	ConROWindow:Hide();
 	ConRONextWindow:Hide();
-	ConRONext2Window:Hide();
 	ConRODefenseWindow:Hide();
 end
 
@@ -2321,15 +2289,12 @@ function ConRO:PET_BATTLE_OVER()
 	if ConRO.db.profile.enableWindow and (ConRO.db.profile.combatWindow or ConRO:HealSpec()) and ConRO:TarHostile() then
 		ConROWindow:Show();
 		ConRONextWindow:Show();
-		ConRONext2Window:Show();
 	elseif ConRO.db.profile.enableWindow and not (ConRO.db.profile.combatWindow or ConRO:HealSpec()) then
 		ConROWindow:Show();
 		ConRONextWindow:Show();
-		ConRONext2Window:Show();
 	else
 		ConROWindow:Hide();
 		ConRONextWindow:Hide();
-		ConRONext2Window:Hide();
 	end
 
 	if ConRO.db.profile.enableDefenseWindow and ConRO.db.profile.combatWindow and ConRO:TarHostile() then
@@ -2408,15 +2373,12 @@ function ConRO:PLAYER_TARGET_CHANGED()
 		if ConRO.db.profile.enableWindow and (ConRO.db.profile.combatWindow or ConRO:HealSpec()) and ConRO:TarHostile() then
 			ConROWindow:Show();
 			ConRONextWindow:Show();
-			ConRONext2Window:Show();
 		elseif ConRO.db.profile.enableWindow and not (ConRO.db.profile.combatWindow or ConRO:HealSpec()) then
 			ConROWindow:Show();
 			ConRONextWindow:Show();
-			ConRONext2Window:Show();
 		else
 			ConROWindow:Hide();
 			ConRONextWindow:Hide();
-			ConRONext2Window:Hide();
 		end
 
 		if ConRO.db.profile.enableDefenseWindow and ConRO.db.profile.combatWindow and ConRO:TarHostile() then
@@ -2475,7 +2437,6 @@ function ConRO:InvokeNextSpell()
 --	ConRO:UpdateButtonGlow();
 	local spellName, _, spellTexture = GetSpellInfo(self.Spell);
 	local _, _, nextspellTexture = GetSpellInfo(self.SuggestedSpells[2]);
-	local _, _, next2spellTexture = GetSpellInfo(self.SuggestedSpells[3]);
 
 	if (oldSkill ~= self.Spell or oldSkill == nil) and self.Spell ~= nil then
 		self:GlowNextSpell(self.Spell);
@@ -2484,7 +2445,6 @@ function ConRO:InvokeNextSpell()
 			ConROWindow.texture:SetTexture(spellTexture);
 			ConROWindow.font:SetText(spellName);
 			ConRONextWindow.texture:SetTexture(nextspellTexture);
-			ConRONext2Window.texture:SetTexture(next2spellTexture);
 		else
 			local itemName, _, _, _, _, _, _, _, _, itemTexture = GetItemInfo(self.Spell);
 			local _, _, _, _, _, _, _, _, _, nextitemTexture = GetItemInfo(self.Spell);
@@ -2492,7 +2452,6 @@ function ConRO:InvokeNextSpell()
 			ConROWindow.texture:SetTexture(itemTexture);
 			ConROWindow.font:SetText(itemName);
 			ConRONextWindow.texture:SetTexture(nextitemTexture);
-			ConRONext2Window.texture:SetTexture(next2itemTexture);
 		end
 	end
 
@@ -2502,7 +2461,6 @@ function ConRO:InvokeNextSpell()
 		ConROWindow.font:SetText(" ");
 		ConROWindow.fontkey:SetText(" ");
 		ConRONextWindow.texture:SetTexture('Interface\\AddOns\\ConRO\\images\\Bigskull');
-		ConRONext2Window.texture:SetTexture('Interface\\AddOns\\ConRO\\images\\Bigskull');
 	end
 end
 
