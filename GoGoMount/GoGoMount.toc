@@ -1,6 +1,6 @@
 ## Interface: 100002
 ## Title: GoGoMount (Ghuda's fork)
-## Version: 4.1.5
+## Version: 4.1.6
 ##
 ## Notes: One-key solution for mounting/dismounting, supports spells, shapeshifting
 ## Notes-enGB: One-key solution for mounting/dismounting, supports spells, shapeshifting

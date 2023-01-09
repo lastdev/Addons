@@ -291,6 +291,19 @@ Plater.TriggerDefaultMembers = {
 	},
 }
 
+function platerInternal.Scripts.GetDefaultScriptForSpellId(spellId)
+	--platerInternal.Scripts.DefaultCastScripts
+	local allScripts = Plater.db.profile.script_data
+	for i = 1, #allScripts do
+		local scriptObject = allScripts[i]
+		local triggers = scriptObject.SpellIds
+		local index = DF.table.find(triggers, spellId)
+		if (index) then
+			return scriptObject
+		end
+	end
+end
+
 local openURL = function(url)
 
 	if (not PlaterURLFrameHelper) then
@@ -723,7 +736,7 @@ end
 		for slug, entry in pairs(slugs) do
 			local isUpdate, isScipt, isMod, isProfile = is_wago_update(slug)
 			
-			local newScriptObject = { -- Dummy data --~prototype
+			local newScriptObject = { -- Dummy data --~prototype ~new ~create ñew
 				Enabled = true,
 				Name = "New Mod",
 				Icon = "",
@@ -774,7 +787,7 @@ end
 			local isAlreadyImported = is_wago_stash_slug_already_imported(slug)
 			
 			if not isAlreadyImported then
-				local newScriptObject = { -- Dummy data --~prototype
+				local newScriptObject = { -- Dummy data --~prototype ~new ~create ñew
 					Enabled = true,
 					Name = "New Mod",
 					Icon = "",
@@ -2421,7 +2434,7 @@ function Plater.CreateHookingPanel()
 	function hookFrame.CreateNewScript()
 
 		--build the table of the new script
-		local newScriptObject = { --~prototype
+		local newScriptObject = { --~prototype ~new ~create ñew
 			Enabled = true,
 			Name = "New Mod",
 			Icon = "",
@@ -3169,7 +3182,7 @@ function Plater.CreateScriptingPanel()
 	function scriptingFrame.CreateNewScript()
 
 		--build the table of the new script
-		local newScriptObject = { --~prototype
+		local newScriptObject = { --~prototype ~new ~create ñew
 			Enabled = true,
 			ScriptType = 0x1,
 			Name = "New Script",

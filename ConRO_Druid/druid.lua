@@ -215,11 +215,20 @@ function ConRO.Druid.Balance(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 	local _CelestialAlignment, _CelestialAlignment_RDY, _CelestialAlignment_CD = ConRO:AbilityReady(Ability.CelestialAlignment, timeShift);
 	local _CelestialAlignmentOS, _CelestialAlignmentOS_RDY, _CelestialAlignmentOS_CD = ConRO:AbilityReady(Ability.CelestialAlignmentOS, timeShift);
 		local _CelestialAlignment_BUFF = ConRO:Aura(Buff.CelestialAlignment, timeShift);
+	local _ConvoketheSpirits, _ConvoketheSpirits_RDY = ConRO:AbilityReady(Ability.ConvoketheSpirits, timeShift);
+	local _ForceofNature, _ForceofNature_RDY = ConRO:AbilityReady(Ability.ForceofNature, timeShift);
+	local _FuryofElune, _FuryofElune_RDY = ConRO:AbilityReady(Ability.FuryofElune, timeShift);
+	local _IncarnationChosenofElune, _IncarnationChosenofElune_RDY, _IncarnationChosenofElune_CD = ConRO:AbilityReady(Ability.IncarnationChosenofElune, timeShift);
+		local _IncarnationChosenofElune_BUFF = ConRO:Aura(Buff.IncarnationChosenofElune, timeShift);
 	local _Moonfire, _Moonfire_RDY = ConRO:AbilityReady(Ability.Moonfire, timeShift);
 		local _Moonfire_DEBUFF, _, _Moonfire_DUR = ConRO:TargetAura(Debuff.Moonfire, timeShift);
 	local _MoonkinForm, _MoonkinForm_RDY = ConRO:AbilityReady(Ability.MoonkinForm, timeShift);
 		local _MoonkinForm_FORM = ConRO:Form(Form.MoonkinForm);
 		local _OwlkinFrenzy_BUFF = ConRO:Aura(Buff.OwlkinFrenzy, timeShift);
+	local _NewMoon, _NewMoon_RDY = ConRO:AbilityReady(Ability.NewMoon, timeShift);
+		local _HalfMoon, _, _HalfMoon_CD = ConRO:AbilityReady(Ability.HalfMoon, timeShift);
+		local _FullMoon, _, _FullMoon_CD = ConRO:AbilityReady(Ability.FullMoon, timeShift);
+		local _NewMoon_CHARGES, _NewMoon_MCHARGES, _NewMoon_CCD = ConRO:SpellCharges(_NewMoon);
 	local _SolarBeam, _SolarBeam_RDY = ConRO:AbilityReady(Ability.SolarBeam, timeShift);
 	local _Soothe, _Soothe_RDY = ConRO:AbilityReady(Ability.Soothe, timeShift);
 	local _Starfire, _Starfire_RDY = ConRO:AbilityReady(Ability.Starfire, timeShift);
@@ -227,35 +236,25 @@ function ConRO.Druid.Balance(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 		local _EclipseSolar_BUFF, _, _EclipseSolar_DUR = ConRO:Aura(Buff.EclipseSolar, timeShift);
 	local _Starsurge, _Starsurge_RDY = ConRO:AbilityReady(Ability.Starsurge, timeShift);
 		local _Starlord_BUFF, _Starlord_COUNT = ConRO:Aura(Buff.Starlord, timeShift);
+		local _UmbralEmbrace_BUFF = ConRO:Aura(Buff.UmbralEmbrace, timeShift);
 	local _Starfall, _Starfall_RDY = ConRO:AbilityReady(Ability.Starfall, timeShift);
 		local _Starfall_BUFF, _, _Starfall_DUR = ConRO:Aura(Buff.Starfall, timeShift);
+	local _StellarFlare, _StellarFlare_RDY = ConRO:AbilityReady(Ability.StellarFlare, timeShift);
+		local _StellarFlare_DEBUFF, _, _StellarFlare_DUR = ConRO:TargetAura(Debuff.StellarFlare, timeShift);
 	local _Sunfire, _Sunfire_RDY = ConRO:AbilityReady(Ability.Sunfire, timeShift);
 		local _Sunfire_DEBUFF, _, _Sunfire_DUR = ConRO:TargetAura(Debuff.Sunfire, timeShift);
+	local _WarriorofElune, _WarriorofElune_RDY = ConRO:AbilityReady(Ability.WarriorofElune, timeShift);
+		local _WarriorofElune_BUFF = ConRO:Form(Form.WarriorofElune);
 	local _WildMushroom, _WildMushroom_RDY = ConRO:AbilityReady(Ability.WildMushroom, timeShift);
 		local _WildMushroom_CHARGES = ConRO:SpellCharges(_WildMushroom);
 	local _Wrath, _Wrath_RDY = ConRO:AbilityReady(Ability.Wrath, timeShift);
 		local _Wrath_Count = GetSpellCount(_Wrath);
 		local _EclipseLunar_BUFF, _, _EclipseLunar_DUR = ConRO:Aura(Buff.EclipseLunar, timeShift);
 
-	local _ForceofNature, _ForceofNature_RDY															= ConRO:AbilityReady(Ability.ForceofNature, timeShift);
-	local _FuryofElune, _FuryofElune_RDY																= ConRO:AbilityReady(Ability.FuryofElune, timeShift);
-	local _IncarnationChosenofElune, _IncarnationChosenofElune_RDY, _IncarnationChosenofElune_CD		= ConRO:AbilityReady(Ability.IncarnationChosenofElune, timeShift);
-		local _IncarnationChosenofElune_BUFF																= ConRO:Aura(Buff.IncarnationChosenofElune, timeShift);
-	local _NewMoon, _NewMoon_RDY  																		= ConRO:AbilityReady(Ability.NewMoon, timeShift);
-		local _HalfMoon, _, _HalfMoon_CD  																	= ConRO:AbilityReady(Ability.HalfMoon, timeShift);
-		local _FullMoon, _, _FullMoon_CD  																	= ConRO:AbilityReady(Ability.FullMoon, timeShift);
-		local _NewMoon_CHARGES																				= ConRO:SpellCharges(_NewMoon);
-	local _StellarFlare, _StellarFlare_RDY																= ConRO:AbilityReady(Ability.StellarFlare, timeShift);
-		local _StellarFlare_DEBUFF, _, _StellarFlare_DUR													= ConRO:TargetAura(Debuff.StellarFlare, timeShift);
-	local _WarriorofElune, _WarriorofElune_RDY															= ConRO:AbilityReady(Ability.WarriorofElune, timeShift);
-		local _WarriorofElune_BUFF 																			= ConRO:Form(Form.WarriorofElune);
-
-	local _ConvoketheSpirits, _ConvoketheSpirits_RDY													= ConRO:AbilityReady(Ability.ConvoketheSpirits, timeShift);
-
 --Conditions
 	local _is_moving = ConRO:PlayerSpeed();
 	local _enemies_in_melee, _target_in_melee = ConRO:Targets("Melee");
-	local _target_in_10yrds = CheckInteractDistance("target", 3);
+	local _enemies_in_10yrds, _target_in_10yrds = ConRO:Targets("10");
 	local _enemies_in_range, _target_in_range = ConRO:Targets(Ability.Wrath);
 
 		if _Wrath_Count == 1 and currentSpell == _Wrath then
@@ -285,6 +284,7 @@ function ConRO.Druid.Balance(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 		elseif currentSpell == Ability.Starfire then
 			_AstralPower = _AstralPower + 8;
 			_Starfire_Count = _Starfire_Count - 1;
+			_UmbralEmbrace_BUFF = false;
 		end
 
 		if ConRO:FindSpell(_FullMoon) then
@@ -323,11 +323,13 @@ function ConRO.Druid.Balance(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 			tinsert(ConRO.SuggestedSpells, _MoonkinForm);
 		end
 
-		if _No_Eclipse then
-			if _Wrath_RDY and _Wrath_Count >= 1 then
-				tinsert(ConRO.SuggestedSpells, _Wrath);
-				_Wrath_Count = _Wrath_Count - 1;
-				_EclipseLunar_BUFF = true;
+		if not _in_combat then
+			if _No_Eclipse then
+				if _Wrath_RDY and _Wrath_Count >= 1 then
+					tinsert(ConRO.SuggestedSpells, _Wrath);
+					_Wrath_Count = _Wrath_Count - 1;
+					_EclipseLunar_BUFF = true;
+				end
 			end
 		end
 
@@ -335,7 +337,7 @@ function ConRO.Druid.Balance(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 			tinsert(ConRO.SuggestedSpells, _Moonfire);
 			_Moonfire_DEBUFF = true;
 			_Moonfire_DUR = 16;
-		elseif _StellarFlare_RDY and (not _StellarFlare_DEBUFF or _StellarFlare_DUR <= 5) and currentSpell ~= _StellarFlare and ConRO_SingleButton:IsVisible() then
+		elseif _StellarFlare_RDY and (not _StellarFlare_DEBUFF or _StellarFlare_DUR <= 5) and currentSpell ~= _StellarFlare and ((ConRO_AutoButton:IsVisible() and _enemies_in_range <= 2) or ConRO_SingleButton:IsVisible()) then
 			tinsert(ConRO.SuggestedSpells, _StellarFlare);
 			_StellarFlare_DEBUFF = true;
 			_StellarFlare_DUR = 18;
@@ -343,6 +345,14 @@ function ConRO.Druid.Balance(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 			tinsert(ConRO.SuggestedSpells, _Sunfire);
 			_Sunfire_DEBUFF = true;
 			_Sunfire_DUR = 13;
+		end
+
+		if _No_Eclipse then
+			if _Wrath_RDY and _Wrath_Count >= 1 then
+				tinsert(ConRO.SuggestedSpells, _Wrath);
+				_Wrath_Count = _Wrath_Count - 1;
+				_EclipseLunar_BUFF = true;
+			end
 		end
 
 		if _AdaptiveSwarm_RDY then
@@ -367,17 +377,28 @@ function ConRO.Druid.Balance(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 			_ConvoketheSpirits_RDY = false;
 		end
 
-		if _Starsurge_RDY and _AstralPower >= 40 and (_EclipseLunar_BUFF or _EclipseSolar_BUFF) and ConRO_SingleButton:IsVisible() then
+		if _Starsurge_RDY and _AstralPower >= 40 and (_EclipseLunar_BUFF or _EclipseSolar_BUFF) and ((ConRO_AutoButton:IsVisible() and _enemies_in_range <= 2) or ConRO_SingleButton:IsVisible()) then
 			tinsert(ConRO.SuggestedSpells, _Starsurge);
 			_AstralPower = _AstralPower - 40;
 		end
 
-		if _Starfall_RDY and _AstralPower >= 50 and ConRO_AoEButton:IsVisible() then
+		if _Starfall_RDY and _AstralPower >= 50 and ((ConRO_AutoButton:IsVisible() and _enemies_in_range >= 3) or ConRO_AoEButton:IsVisible()) then
 			tinsert(ConRO.SuggestedSpells, _Starfall);
 			_AstralPower = _AstralPower - 50;
 		end
 
-		if _WildMushroom_RDY and _WildMushroom_CHARGES >= 1 and (tChosen[Passive.FungalGrowth.talentID] or ConRO_AoEButton:IsVisible()) then
+		if _AstralCommunion_RDY and _AstralPower < _AstralPower_Max - 60 and ((ConRO_AutoButton:IsVisible() and _enemies_in_range <= 2) or ConRO_SingleButton:IsVisible()) then
+			tinsert(ConRO.SuggestedSpells, _AstralCommunion);
+			_AstralCommunion_RDY = false;
+			_AstralPower = AstralCommunion + 60;
+		end
+
+		if _FuryofElune_RDY and _AstralPower <= 70 and ((ConRO_AutoButton:IsVisible() and _enemies_in_range <= 2) or ConRO_SingleButton:IsVisible()) and ConRO:FullMode(_FuryofElune) then
+			tinsert(ConRO.SuggestedSpells, _FuryofElune);
+			_FuryofElune_RDY = false;
+		end		
+
+		if _WildMushroom_RDY and _WildMushroom_CHARGES >= 1 and (tChosen[Passive.FungalGrowth.talentID] or ((ConRO_AutoButton:IsVisible() and _enemies_in_range >= 3) or ConRO_AoEButton:IsVisible())) then
 			tinsert(ConRO.SuggestedSpells, _WildMushroom);
 			_WildMushroom_CHARGES = _WildMushroom_CHARGES - 1;
 		end
@@ -393,7 +414,7 @@ function ConRO.Druid.Balance(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 			_AstralPower = AstralCommunion + 60;
 		end
 
-		if _NewMoon_RDY and _NewMoon_CHARGES >= 1 then
+		if _NewMoon_RDY and (_NewMoon_CHARGES == _NewMoon_MCHARGES or (_NewMoon_CHARGES >= _NewMoon_MCHARGES - 1 and _NewMoon_CCD <= 3) or _AstralPower <= 40) then
 			tinsert(ConRO.SuggestedSpells, _NewMoon);
 			_NewMoon_CHARGES = _NewMoon_CHARGES - 1;
 		end
@@ -408,11 +429,11 @@ function ConRO.Druid.Balance(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 			_WarriorofElune_RDY = false;
 		end
 
-		if _Starfire_RDY and _EclipseLunar_BUFF then
+		if _Starfire_RDY and ((_EclipseLunar_BUFF or _EclipseSolar_BUFF) and (_UmbralEmbrace_BUFF or (ConRO_AutoButton:IsVisible() and _enemies_in_range >= 2) or ConRO_AoEButton:IsVisible())) then
 			tinsert(ConRO.SuggestedSpells, _Starfire);
 		end
 
-		if _Wrath_RDY and _EclipseSolar_BUFF then
+		if _Wrath_RDY then
 			tinsert(ConRO.SuggestedSpells, _Wrath);
 		end
 	end
@@ -423,16 +444,16 @@ function ConRO.Druid.BalanceDef(_, timeShift, currentSpell, gcd, tChosen, pvpCho
 	wipe(ConRO.SuggestedDefSpells)
 	local Racial, Ability, Passive, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Bal_Ability, ids.Bal_Passive, ids.Bal_Form, ids.Bal_Buff, ids.Bal_Debuff, ids.Bal_PetAbility, ids.Bal_PvPTalent, ids.Glyph;
 --Info
-	local _Player_Level																					= UnitLevel("player");
-	local _Player_Percent_Health 																		= ConRO:PercentHealth('player');
-	local _is_PvP																						= ConRO:IsPvP();
-	local _in_combat 																					= UnitAffectingCombat('player');
-	local _party_size																					= GetNumGroupMembers();
+	local _Player_Level = UnitLevel("player");
+	local _Player_Percent_Health = ConRO:PercentHealth('player');
+	local _is_PvP = ConRO:IsPvP();
+	local _in_combat = UnitAffectingCombat('player');
+	local _party_size = GetNumGroupMembers();
 
-	local _is_PC																						= UnitPlayerControlled("target");
-	local _is_Enemy 																					= ConRO:TarHostile();
-	local _Target_Health 																				= UnitHealth('target');
-	local _Target_Percent_Health 																		= ConRO:PercentHealth('target');
+	local _is_PC = UnitPlayerControlled("target");
+	local _is_Enemy = ConRO:TarHostile();
+	local _Target_Health = UnitHealth('target');
+	local _Target_Percent_Health = ConRO:PercentHealth('target');
 
 --Resources
 	local _AstralPower, _AstralPower_Max																	= ConRO:PlayerPower('LunarPower');
@@ -542,7 +563,7 @@ function ConRO.Druid.Feral(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 --Conditions
 	local _is_moving = ConRO:PlayerSpeed();
 	local _enemies_in_melee, _target_in_melee = ConRO:Targets("Melee");
-	local _target_in_10yrds = CheckInteractDistance("target", 3);
+	local _enemies_in_10yrds, _target_in_10yrds = ConRO:Targets("10");
 
 		if _BearForm_FORM then
 			_WildCharge = _WildChargeBF;
@@ -578,7 +599,7 @@ function ConRO.Druid.Feral(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 --Rotations	
 	for i = 1, 2, 1 do
 		if _BearForm_FORM then
-			if _Thrash_RDY and _Thrash_Bear_COUNT < 3 then
+			if _Thrash_RDY and _ThrashBF_COUNT < 3 then
 				tinsert(ConRO.SuggestedSpells, _Thrash);
 			end
 
@@ -769,21 +790,21 @@ function ConRO.Druid.Guardian(_, timeShift, currentSpell, gcd, tChosen, pvpChose
 		local _BearForm_FORM = ConRO:Form(Form.BearForm);
 	local _BerserkRavage, _BerserkRavage_RDY = ConRO:AbilityReady(Ability.BerserkRavage, timeShift);
 	local _BerserkUncheckedAggression, _BerserkUncheckedAggression_RDY = ConRO:AbilityReady(Ability.BerserkUncheckedAggression, timeShift);
-	local _Growl, _Growl_RDY 																			= ConRO:AbilityReady(Ability.Growl, timeShift);
-	local _Mangle, _Mangle_RDY 																			= ConRO:AbilityReady(Ability.Mangle, timeShift);
-	local _Maul, _Maul_RDY																				= ConRO:AbilityReady(Ability.Maul, timeShift);
-	local _Moonfire, _Moonfire_RDY 																		= ConRO:AbilityReady(Ability.Moonfire, timeShift);
-		local _GalacticGuardian_BUFF 																		= ConRO:Aura(Buff.GalacticGuardian, timeShift);
-		local _Moonfire_DEBUFF 																				= ConRO:TargetAura(Debuff.Moonfire, timeShift);
-	local _SkullBash, _SkullBash_RDY						 											= ConRO:AbilityReady(Ability.SkullBash, timeShift);
-	local _Soothe, _Soothe_RDY																			= ConRO:AbilityReady(Ability.Soothe, timeShift);
-	local _Swipe, _Swipe_RDY 																			= ConRO:AbilityReady(Ability.Swipe, timeShift);
-		local _SwipeBF, _, _SwipeBF_CD																= ConRO:AbilityReady(Ability.SwipeBF, timeShift);
-		local _SwipeCF, _, _SwipeCF_CD																	= ConRO:AbilityReady(Ability.SwipeCF, timeShift);
-	local _Thrash, _Thrash_RDY 																			= ConRO:AbilityReady(Ability.Thrash, timeShift);
-		local _ThrashCF, _, _ThrashCF_CD 																= ConRO:AbilityReady(Ability.ThrashCF, timeShift);
-		local _ThrashCF_DEBUFF, _, _ThrashCF_DUR 														= ConRO:TargetAura(Debuff.ThrashCF, timeShift + 2);
-		local _ThrashBF, _, _ThrashBF_CD 																= ConRO:AbilityReady(Ability.ThrashBF, timeShift);
+	local _Growl, _Growl_RDY = ConRO:AbilityReady(Ability.Growl, timeShift);
+	local _Mangle, _Mangle_RDY = ConRO:AbilityReady(Ability.Mangle, timeShift);
+	local _Maul, _Maul_RDY = ConRO:AbilityReady(Ability.Maul, timeShift);
+	local _Moonfire, _Moonfire_RDY = ConRO:AbilityReady(Ability.Moonfire, timeShift);
+		local _GalacticGuardian_BUFF = ConRO:Aura(Buff.GalacticGuardian, timeShift);
+		local _Moonfire_DEBUFF = ConRO:TargetAura(Debuff.Moonfire, timeShift);
+	local _SkullBash, _SkullBash_RDY = ConRO:AbilityReady(Ability.SkullBash, timeShift);
+	local _Soothe, _Soothe_RDY = ConRO:AbilityReady(Ability.Soothe, timeShift);
+	local _Swipe, _Swipe_RDY = ConRO:AbilityReady(Ability.Swipe, timeShift);
+		local _SwipeBF, _, _SwipeBF_CD = ConRO:AbilityReady(Ability.SwipeBF, timeShift);
+		local _SwipeCF, _, _SwipeCF_CD = ConRO:AbilityReady(Ability.SwipeCF, timeShift);
+	local _Thrash, _Thrash_RDY = ConRO:AbilityReady(Ability.Thrash, timeShift);
+		local _ThrashCF, _, _ThrashCF_CD = ConRO:AbilityReady(Ability.ThrashCF, timeShift);
+		local _ThrashCF_DEBUFF, _, _ThrashCF_DUR = ConRO:TargetAura(Debuff.ThrashCF, timeShift + 2);
+		local _ThrashBF, _, _ThrashBF_CD = ConRO:AbilityReady(Ability.ThrashBF, timeShift);
 		local _Thrash_DEBUFF, _Thrash_COUNT = ConRO:TargetAura(Debuff.Thrash, timeShift);
 
 	local _Pulverize, _Pulverize_RDY = ConRO:AbilityReady(Ability.Pulverize, timeShift);

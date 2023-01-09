@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2480, "DBM-VaultoftheIncarnates", nil, 1200)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20221214004227")
+mod:SetRevision("20221228062737")
 mod:SetCreatureID(184972)
 mod:SetEncounterID(2587)
 mod:SetUsedIcons(1, 2, 3, 4, 5)
-mod:SetHotfixNoticeRev(20221213000000)
-mod:SetMinSyncRevision(20221013000000)
+mod:SetHotfixNoticeRev(20221215000000)
+mod:SetMinSyncRevision(20221215000000)
 --mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
@@ -16,7 +16,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 394917 396022",
 	"SPELL_AURA_APPLIED 370597 371562 390715 394906 396094",
 	"SPELL_AURA_APPLIED_DOSE 394906",
-	"SPELL_AURA_REMOVED 370597 371562 390715 396094",
+	"SPELL_AURA_REMOVED 370597 371562 390715 396094 370307",
 	"SPELL_PERIODIC_DAMAGE 370648",
 	"SPELL_PERIODIC_MISSED 370648",
 	"UNIT_DIED"
@@ -94,7 +94,7 @@ function mod:OnCombatStart(delay)
 	self.vb.riftCount = 0
 	self.vb.roarCount = 0
 	self.vb.spikesCount = 0
-	timerIncineratingRoarCD:Start(10-delay, 1)
+	timerIncineratingRoarCD:Start(9.8-delay, 1)
 	timerFlameriftCD:Start(13.9-delay, 1)
 	timerMoltenCleaveCD:Start(37.9-delay, 1)
 	if self:IsHard() then
@@ -217,18 +217,13 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnFlamerift:CombinedShow(0.5, args.destName)
 	elseif spellId == 394906 then
 		local amount = args.amount or 1
-		if (amount % 3 == 0) then
+		if amount >= 3 and self:AntiSpam(3, 1) then
 			if amount >= 6 then
 				if args:IsPlayer() then
 					specWarnBurningWound:Show(amount)
 					specWarnBurningWound:Play("stackhigh")
 				else
-					local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
-					local remaining
-					if expireTime then
-						remaining = expireTime-GetTime()
-					end
-					if (not remaining or remaining and remaining < 10.9) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
+					if not DBM:UnitDebuff("player", spellId) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
 						specWarnBurningWoundTaunt:Show(args.destName)
 						specWarnBurningWoundTaunt:Play("tauntboss")
 					else
@@ -278,7 +273,7 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
-	if spellId == 370648 and destGUID == UnitGUID("player") and self:AntiSpam(2, 4) then
+	if spellId == 370648 and destGUID == UnitGUID("player") and self:AntiSpam(2, 2) then
 		specWarnGTFO:Show(spellName)
 		specWarnGTFO:Play("watchfeet")
 	end

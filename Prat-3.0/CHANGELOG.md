@@ -1,7 +1,8 @@
 # Prat 3.0
 
-## [3.9.13](https://github.com/Legacy-of-Sylvanaar/prat-3-0/tree/3.9.13) (2022-11-26)
-[Full Changelog](https://github.com/Legacy-of-Sylvanaar/prat-3-0/compare/3.9.12...3.9.13) [Previous Releases](https://github.com/Legacy-of-Sylvanaar/prat-3-0/releases)
+## [3.9.15](https://github.com/Legacy-of-Sylvanaar/prat-3-0/tree/3.9.15) (2022-12-31)
+[Full Changelog](https://github.com/Legacy-of-Sylvanaar/prat-3-0/compare/3.9.14...3.9.15) [Previous Releases](https://github.com/Legacy-of-Sylvanaar/prat-3-0/releases)
 
-- Memory module: Fix taint by restoring layout on classic only  
-- Bump toc for Prat-3.0\_Libraries  
+- [Fixes #84] Timestamps: Duplicate timestamps for emotes on retail  
+- [Fixes #95] ChannelColorMemory: Error when retrieving channel 0 color  
+- Fixing Achievement locale string typos  

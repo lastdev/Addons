@@ -1,30 +1,30 @@
 ## Interface: 100002
-## Version: 1.20
-## Title: Dark Soil
-## Title-deDE: Dunkle Erde
-## Title-esES: Tierra Oscura
-## Title-esMX: Tierra Oscura
-## Title-frFR: Terre Sombre
-## Title-itIT: Terreno Smosso
-## Title-koKR: 검은 토양
-## Title-ptBR: Solo Negro
-## Title-ptPT: Solo Negro
-## Title-ruRU: Темная земля
-## Title-zhCN: 黑色泥土
-## Title-zhTW: 黑色泥
+## Version: 2.01
+## Title: Dark Soil Tillers
+## Title-deDE: Dunkle Erde Die Ackerbauern
+## Title-esES: Los Labradores Tierra Oscura
+## Title-esMX: Los Labradores Tierra Oscura
+## Title-frFR: Laboureurs Terre Sombre
+## Title-itIT: Coltivatori Terreno Smosso
+## Title-koKR: 검은 토양 토양과
+## Title-ptBR: Os Lavradores Solo Negro
+## Title-ptPT: Os Lavradores Solo Negro
+## Title-ruRU: Земледельцами Темная земля
+## Title-zhCN: 阡陌客 黑色泥土
+## Title-zhTW: 阡陌客 黑色泥土
 ## Author: Taraezor
-## Notes: Helps you find the |cFF0070DEDark Soil|r in the Valley of the Four Winds
-## Notes-deDE: Hilft Ihnen, die |cFF0070DEDunkle Erde|r im Tal der Vier Winde zu finden
-## Notes-esES: Te ayuda a encontrar la |cFF0070DETierra Oscura|r en el Valle de los Cuatro Vientos
-## Notes-esMX: Te ayuda a encontrar la |cFF0070DETierra Oscura|r en el Valle de los Cuatro Vientos
-## Notes-frFR: Vous aide à trouver la |cFF0070DETerre Sombre|r dans la Vallée des Quatre vents
-## Notes-itIT: Ti aiuta a trovare la |cFF0070DETerra Oscura|r nella Valle dei Quattro Venti
-## Notes-koKR: 네 바람의 계곡에서 |cFF0070DE검은 토양|r 찾을 수 있도록 도와줍니다.
-## Notes-ptBR: Ajude a encontrar o |cFF0070DESolo Negro|r no Vale dos Quatro Ventos
-## Notes-ptPT: Ajude a encontrar o |cFF0070DESolo Negro|r no Vale dos Quatro Ventos
-## Notes-ruRU: Помогите найти |cFF0070DEТемная земля|r в Долине Четырех Ветров
-## Notes-zhCN: 帮助寻找四风谷的|cFF0070DE黑色泥土
-## Notes-zhTW: 幫助尋找四風谷的|cFF0070DE黑色泥土
+## Notes: Helps you with the |cFF0070DEDark Soil|r and |cFF0070DEThe Tillers|r in the Valley of the Four Winds
+## Notes-deDE: Hilft dir bei |cFF0070DEDunkle Erde|r und |cFF0070DEDie Ackerbauern|r im Tal der Vier Winde
+## Notes-esES: Te ayuda con |cFF0070DETierra Oscura|r y |cFF0070DELos Labradores|r en el Valle de los Cuatro Vientos
+## Notes-esMX: Te ayuda con |cFF0070DETierra Oscura|r y |cFF0070DELos Labradores|r en el Valle de los Cuatro Vientos
+## Notes-frFR: Vous aide avec |cFF0070DETerre Sombre|r et |cFF0070DELaboureurs|r dans la Vallée des Quatre vents
+## Notes-itIT: Ti aiuta con |cFF0070DETerra Oscura|r e |cFF0070DEColtivatori|r in the Valle dei Quattro Venti
+## Notes-koKR: 네 바람의 계곡에서 |cFF0070DE어두운|r |cFF0070DE토양과|r 경작자를 돕습니다.
+## Notes-ptBR: Ajuda você com |cFF0070DESolo Escuro|r e |cFF0070DEOs Lavradores|r no Vale dos Quatro Ventos
+## Notes-ptPT: Ajuda você com |cFF0070DESolo Escuro|r e |cFF0070DEOs Lavradores|r no Vale dos Quatro Ventos
+## Notes-ruRU: Помогает вам с |cFF0070DEТемная Земля|r и |cFF0070DEЗемледельцами|r в Долине Четырех Ветров
+## Notes-zhCN: 四风谷的|cFF0070DE分蘖|r和cFF0070DE黑土|r
+## Notes-zhTW: 幫助四風谷的|cFF0070DE分蘗|r和|cFF0070DE黑土|r
 ## X-Category: Map & Minimap
 ## X-Curse-Project-ID: 491373
 ## X-WoWI-ID: 26072

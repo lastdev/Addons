@@ -10,7 +10,7 @@ points[ns.votfw] = {	-- "D", ["Author"], tip
 	[29633445] = { "D" },
 	[31085362] = { "D" },
 	[31403198] = { "D" },
-	[31403396] = { "D", "Author" },	-- *
+	[31403396] = { "D" },
 	[31702670] = { "D" },
 	[31925255] = { "D" },
 	[31925918] = { "D" },
@@ -19,7 +19,7 @@ points[ns.votfw] = {	-- "D", ["Author"], tip
 	[32595845] = { "D", },
 	[32675778] = { "D" },
 	[32824906] = { "D" },
-	[32844976] = { "D", "Author" },	-- *
+	[32844976] = { "D" },
 	[33015311] = { "D", "Under the water tower" },
 	[33125822] = { "D" },
 	[33234843] = { "D" },
@@ -43,7 +43,7 @@ points[ns.votfw] = {	-- "D", ["Author"], tip
 	[36485291] = { "D" },
 	[36765099] = { "D" },
 	[37184876] = { "D" },
-	[37734622] = { "D", "Author" },	-- *
+	[37734623] = { "D" },
 	[37994414] = { "D" },
 	[38245042] = { "D" },
 	[38374595] = { "D" },
@@ -57,7 +57,7 @@ points[ns.votfw] = {	-- "D", ["Author"], tip
 	[39504243] = { "D", "Under the foliage" },
 	[39584982] = { "D" },
 	[39634032] = { "D", "Author" },	-- *
-	[39634082] = { "D", "Author", "Under the foliage" },	-- *
+	[39634081] = { "D", "Under the foliage" },
 	[39683888] = { "D", "Under the trees.\nVery difficult to see" },
 	[39835116] = { "D", "Under the foliage" },
 	[39854587] = { "D" },
@@ -71,13 +71,15 @@ points[ns.votfw] = {	-- "D", ["Author"], tip
 	[40494153] = { "D" },
 	[40504929] = { "D", "Under the foliage" },
 	[40564853] = { "D", "Under the foliage" },
+	[40574362] = { "D" },
 	[40714460] = { "D" },
 	[40763866] = { "D" },
 	[40785117] = { "D", "Under the foliage" },
+	[40824719] = { "D" },
 	[40833529] = { "D", "Author" },	-- *
 	[40883664] = { "D" },
 	[40903452] = { "D" },
-	[40914020] = { "D", "Author" },	-- *
+	[40914021] = { "D" },
 	[40915178] = { "D", "Under the foliage" },
 	[40954495] = { "D", "Under the foliage" },
 	[41004944] = { "D", "Under the foliage" },
@@ -143,7 +145,7 @@ points[ns.votfw] = {	-- "D", ["Author"], tip
 	[46584225] = { "D", "Under the water tower" },
 	[46625282] = { "D", "Author", "Under the foliage" },	-- *
 	[46653394] = { "D", "Under the foliage" },
-	[46743295] = { "D", "Author", "Under the foliage" },	-- *
+	[46743295] = { "D", "Under the foliage" },
 	[46815580] = { "D", "Author" },	-- *
 	[46993714] = { "D" },
 	[46993785] = { "D" },
@@ -176,7 +178,7 @@ points[ns.votfw] = {	-- "D", ["Author"], tip
 	[51103009] = { "D", "Under the foliage" },
 	[51122822] = { "D", "Under the foliage" },
 	[51143083] = { "D", "Under the foliage" },
-	[51202938] = { "D", "Author" },	-- *
+	[51192938] = { "D" },
 	[51342897] = { "D" },
 	[29533059] = { "N", 1278, "Sho" },
 	[30945310] = { "N", 1276, "Old Hillpaw" },
@@ -188,13 +190,49 @@ points[ns.votfw] = {	-- "D", ["Author"], tip
 	[48283385] = { "N", 1283, "Farmer Fung" },
 	[53575257] = { "N", 1273, "Jogu the Drunk" },
 	[53165180] = { "N", 1281, "Gina Mudclaw" },
+	[52024800] = { "O", 30252, "Farmer Yoon", "Begin your Tillers journey here!\n"
+											.."Please enable \"low level\" quests" },
+	[52254879] = { "O", 30257, "Farmer Yoon", "Continue your Tillers journey here!" },
+	[52965180] = { "O", 31945, "Gina's Vote Quest", "Continue your Tillers journey here!\n"
+											.."Buy up to four packets of seeds as\n"
+											.."your plot only has space for four.\n\n"
+											.."Dark Soil is available to harvest!!!" },
+	[51974832] = { "O", 31945, "Gina's Vote Quest", "Your sown seeds will probably have\n"
+											.."problems such as weeds. Look around\n"
+											.."for tools to help you or try pulling\n"
+											.."on the problem seedlings!\n\n"
+											.."From now on you must wait for your\n"
+											.."plants to grow!\n\n"
+											.."Dark Soil is available to harvest!!!" },
+	[51004650] = { "O", 31945, "Dark Soil", "At this stage you may dig up Dark Soil\n"
+											.."and turn in any valuable finds to NPCs.\n"
+											.."Check the tooltips for each NPC to\n"
+											.."ensure you give them their favourite\n"
+											.."find.\n\n"
+											.."The markers show the \"home\" location of\n"
+											.."each Tillers NPC. If they are not present\n"
+											.."you can find them at the market.\n\n"
+											.."Set \"Ground Clutter\" to \"1\" in\n"
+											.."Options -> Graphics -> Advanced" },
+	[52504650] = { "O", 31945, "Dailies", "There will be six possible dailies.\n\n"
+											.."Two out of ten NPCs will travel from\n"
+											.."their home into the market. Both will\n"
+											.."offer their personal daily quest.\n\n"
+											.."Andi, near the market, will offer a quest\n"
+											.."to earn rep with one of the ten NPCs.\n\n"
+											.."Farmer Yoon, at your farm, will offer\n"
+											.."both a farming and a killing quest for\n"
+											.."Tillers rep.\n\n"
+											.."(You'll notice a cooking daily too. This\n"
+											.."does nothing for The Tillers)" },
 	-- Note: Author not implemented for "B"
 	[32886269] = { "B", "Blackhoof", "Battle Horn" },
 	[34545922] = { "B", "Blackhoof", "Battle Horn"  },
 	[36962575] = { "B", "Sulik'shor", "Crystal of Insanity" },
 	[37826040] = { "B", "Blackhoof", "Battle Horn", },
 	[39635765] = { "B", "Blackhoof", "Battle Horn"  }, 
-	[45403838] = { "B", "Ghostly Pandaren Craftsman", 31292 },
+	[45403838] = { "B", "Ghostly Pandaren Craftsman", 31292, "Standing under a tree" },
+	[43613748] = { "B", "Cache of Pilfered Goods", 31406, "Descend into the Springtail Warren" },
 }
 
 -- Choice of texture

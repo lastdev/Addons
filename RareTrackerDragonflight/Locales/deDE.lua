@@ -124,3 +124,15 @@ L[193161] = "Wollfang"
 L[193663] = "Aufgebrachter Elementar"
 L[193658] = "Verderbter Protodrache"
 L[193664] = "Urtumbeschützer"
+
+-- "That's Pretty Neat!" Rares
+L[193259] = "Blauer Schrecken"
+L[195895] = "Nergazurai"
+L[192557] = "Quaker der Schreckliche"
+L[193209] = "Zenet Avis"
+L[193273] = "Liskron der Blendende"
+L[193234] = "Eldoren der Wiedergeborene"
+L[193217] = "Drachenschwinge"
+L[193154] = "Vergessener Greif"
+
+L[195353] = "Brisenbiss"

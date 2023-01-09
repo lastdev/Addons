@@ -1,5 +1,26 @@
 # Changelog
 
+## Changed in v2023.1
+
+* Quest ID for Liskanoth
+* Fix an error that was occuring in zones with time-gated events on days with no calendar events active
+
+## Changed in v2022.33
+
+* More mining of mobs and loot
+* Tooltips: option not to show loot while in combat, because MysticalOS complained about it taking up too much space when using mouseover macros
+* Custom / ignore options: remember rares seen this session so you can just go into settings and ignore them by checking a box, without needing to look up their ID
+* Range extender: hide some of the more inconvenient "mystery" vignettes that're just highlights for NPCs in towns. I have to manually flag these, so I'll improve these over time.
+* Added all the treasure-maps to the dragonscale expedition treasures
+* Avoid an error that could happen in some weird cases for the popup
+* Fix a few rares showing in the wrong map phase in Battle for Azeroth zones
+
+## Changed in v2022.32
+
+* Major mining of mobs and loot
+* Fix the addon being stuck in debug mode for everyone because of a bad check (say goodbye to "ID" and "location" on all the map tooltips)
+* Since we were stuck in debug mode for everyone, everyone has been getting experiemental mob-name code for the last few releases... so properly release that and clean up. This noticably reduces SavedVariables size and memory usage.
+
 ## Changed in v2022.31
 
 * Differentiate treasure vignettes on GUID rather than ID -- this is going to make things like the Expedition Scout's Pack or Disturbed Dirt pop up alerts more frequently, since every separate copy of them is going to alert

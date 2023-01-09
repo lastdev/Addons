@@ -102,4 +102,34 @@ lib:RegisterItems({
 	
 	[172936] = SetReagent(8, e.Engineering, 15), -- Mortal Coiled Spring
 	[172937] = SetReagent(8, e.Engineering, 25), -- Wormfed Gear Assembly
+	
+	-- 10.0 Dragonflight
+	[198183] = SetReagent(9, e.Engineering), -- Handful of Serevite Bolts 1
+	[198184] = SetReagent(9, e.Engineering), -- Handful of Serevite Bolts 2
+	[198185] = SetReagent(9, e.Engineering), -- Handful of Serevite Bolts 3
+	[198186] = SetReagent(9, e.Engineering), -- Shock-Spring Coil 1
+	[198187] = SetReagent(9, e.Engineering), -- Shock-Spring Coil 2
+	[198188] = SetReagent(9, e.Engineering), -- Shock-Spring Coil 3
+	[198189] = SetReagent(9, e.Engineering), -- Everburning Blasting Powder 1
+	[198190] = SetReagent(9, e.Engineering), -- Everburning Blasting Powder 2
+	[198191] = SetReagent(9, e.Engineering), -- Everburning Blasting Powder 3
+	[198192] = SetReagent(9, e.Engineering), -- Greased-Up Gears 1
+	[198193] = SetReagent(9, e.Engineering), -- Greased-Up Gears 2
+	[198194] = SetReagent(9, e.Engineering), -- Greased-Up Gears 3
+	[198195] = SetReagent(9, e.Engineering), -- Arclight Capacitor 1
+	[198196] = SetReagent(9, e.Engineering), -- Arclight Capacitor 2
+	[198197] = SetReagent(9, e.Engineering), -- Arclight Capacitor 3
+	[198198] = SetReagent(9, e.Engineering), -- Reinforced Machine Chassis 1
+	[198199] = SetReagent(9, e.Engineering), -- Reinforced Machine Chassis 2
+	[198200] = SetReagent(9, e.Engineering), -- Reinforced Machine Chassis 3
+	[198201] = SetReagent(9, e.Engineering), -- Assorted Safety Fuses 1
+	[198202] = SetReagent(9, e.Engineering), -- Assorted Safety Fuses 2
+	[198203] = SetReagent(9, e.Engineering), -- Assorted Safety Fuses 3
+	
+	[198216] = SetReagent(9, e.Engineering), -- Haphazardly Tethered Wires 1
+	[198217] = SetReagent(9, e.Engineering), -- Haphazardly Tethered Wires 2
+	[198218] = SetReagent(9, e.Engineering), -- Haphazardly Tethered Wires 3
+	[198219] = SetReagent(9, e.Engineering), -- Overcharged Overclocker 1
+	[198220] = SetReagent(9, e.Engineering), -- Overcharged Overclocker 2
+	[198221] = SetReagent(9, e.Engineering), -- Overcharged Overclocker 3
 })

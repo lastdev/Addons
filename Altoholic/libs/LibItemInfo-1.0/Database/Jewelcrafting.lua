@@ -72,6 +72,7 @@ lib:RegisterItems({
 	[36930] = SetReagent(2, e.Jewelcrafting), -- Monarch Topaz
 	[36932] = SetReagent(2, e.Jewelcrafting), -- Dark Jade
 	[36933] = SetReagent(2, e.Jewelcrafting), -- Forest Emerald
+	[42225] = SetReagent(2, e.Jewelcrafting), -- Dragon's Eye
 	
 	-- 4.0 Cataclysm
 	[52177] = SetReagent(3, e.Jewelcrafting), -- Carnelian
@@ -81,6 +82,7 @@ lib:RegisterItems({
 	[52181] = SetReagent(3, e.Jewelcrafting), -- Hessonite
 	[52182] = SetReagent(3, e.Jewelcrafting), -- Jasper
 	[52188] = SetReagent(3, e.Jewelcrafting), -- Jeweler's Setting
+	[52196] = SetReagent(3, e.Jewelcrafting), -- Chimera's Eye
 	
 	[71805] = SetReagent(3, e.Jewelcrafting), -- Queen's Garnet
 	[71806] = SetReagent(3, e.Jewelcrafting), -- Lightstone
@@ -118,6 +120,7 @@ lib:RegisterItems({
 	[130181] = SetReagent(6, e.Jewelcrafting), -- Pandemonite
 	[130182] = SetReagent(6, e.Jewelcrafting), -- Maelstrom Sapphire
 	[130183] = SetReagent(6, e.Jewelcrafting), -- Shadowruby
+	[130245] = SetReagent(6, e.Jewelcrafting), -- Saber's Eye
 	[151579] = SetReagent(6, e.Jewelcrafting), -- Labradorite
 	[151718] = SetReagent(6, e.Jewelcrafting), -- Argulite
 	[151719] = SetReagent(6, e.Jewelcrafting), -- Lightsphene
@@ -156,4 +159,90 @@ lib:RegisterItems({
 	[173171] = SetReagent(8, e.Jewelcrafting), -- Essence of Torment
 	[173172] = SetReagent(8, e.Jewelcrafting), -- Essence of Servitude
 	[173173] = SetReagent(8, e.Jewelcrafting), -- Essence of Valor
+	
+	-- 10.0 Dragonflight
+	[200860] = SetReagent(9, e.Jewelcrafting), -- Draconic Stopper
+	[192833] = SetReagent(9, e.Jewelcrafting), -- Misshapen Filigree
+	[192872] = SetReagent(9, e.Jewelcrafting), -- Fractured Glass
+	[198397] = SetReagent(9, e.Jewelcrafting), -- Rainbow Pearl
+	[200863] = SetReagent(9, e.Jewelcrafting), -- Glimmering Nozdorite Cluster
+	[200864] = SetReagent(9, e.Jewelcrafting), -- Glimmering Alexstraszite Cluster
+	[200865] = SetReagent(9, e.Jewelcrafting), -- Glimmering Ysemerald Cluster
+	[200866] = SetReagent(9, e.Jewelcrafting), -- Glimmering Malygite Cluster
+	[200867] = SetReagent(9, e.Jewelcrafting), -- Glimmering Neltharite Cluster
+	
+	[193950] = SetReagent(9, e.Jewelcrafting), -- Abrasive Polishing Cloth 1
+	[193951] = SetReagent(9, e.Jewelcrafting), -- Abrasive Polishing Cloth 2
+	[193952] = SetReagent(9, e.Jewelcrafting), -- Abrasive Polishing Cloth 3
+	[193953] = SetReagent(9, e.Jewelcrafting), -- Vibrant Polishing Cloth 1
+	[193954] = SetReagent(9, e.Jewelcrafting), -- Vibrant Polishing Cloth 2
+	[193955] = SetReagent(9, e.Jewelcrafting), -- Vibrant Polishing Cloth 3
+	
+	[192852] = SetReagent(9, e.Jewelcrafting), -- Alexstraszite 1
+	[192853] = SetReagent(9, e.Jewelcrafting), -- Alexstraszite 2
+	[192855] = SetReagent(9, e.Jewelcrafting), -- Alexstraszite 3
+	[192889] = SetReagent(9, e.Jewelcrafting), -- Dreamer's Vision 1
+	[202049] = SetReagent(9, e.Jewelcrafting), -- Dreamer's Vision 2
+	[202055] = SetReagent(9, e.Jewelcrafting), -- Dreamer's Vision 3
+	[192891] = SetReagent(9, e.Jewelcrafting), -- Earthwarden's Prize 1
+	[202051] = SetReagent(9, e.Jewelcrafting), -- Earthwarden's Prize 2
+	[202057] = SetReagent(9, e.Jewelcrafting), -- Earthwarden's Prize 3
+	[192849] = SetReagent(9, e.Jewelcrafting), -- Eternity Ember 1
+	[192850] = SetReagent(9, e.Jewelcrafting), -- Eternity Ember 2
+	[192851] = SetReagent(9, e.Jewelcrafting), -- Eternity Ember 3
+	[192876] = SetReagent(9, e.Jewelcrafting), -- Frameless Lens 1
+	[192877] = SetReagent(9, e.Jewelcrafting), -- Frameless Lens 2
+	[192878] = SetReagent(9, e.Jewelcrafting), -- Frameless Lens 3
+	[192883] = SetReagent(9, e.Jewelcrafting), -- Glossy Stone 1
+	[192884] = SetReagent(9, e.Jewelcrafting), -- Glossy Stone 2
+	[192885] = SetReagent(9, e.Jewelcrafting), -- Glossy Stone 3
+	[192869] = SetReagent(9, e.Jewelcrafting), -- Illimited Diamond 1
+	[192870] = SetReagent(9, e.Jewelcrafting), -- Illimited Diamond 2
+	[192871] = SetReagent(9, e.Jewelcrafting), -- Illimited Diamond 3
+	[192893] = SetReagent(9, e.Jewelcrafting), -- Jeweled Dragon's Heart 1
+	[202053] = SetReagent(9, e.Jewelcrafting), -- Jeweled Dragon's Heart 2
+	[202059] = SetReagent(9, e.Jewelcrafting), -- Jeweled Dragon's Heart 3
+	[192890] = SetReagent(9, e.Jewelcrafting), -- Keeper's Glory 1
+	[202050] = SetReagent(9, e.Jewelcrafting), -- Keeper's Glory 2
+	[202056] = SetReagent(9, e.Jewelcrafting), -- Keeper's Glory 3
+	[192856] = SetReagent(9, e.Jewelcrafting), -- Malygite 1
+	[192857] = SetReagent(9, e.Jewelcrafting), -- Malygite 2
+	[192858] = SetReagent(9, e.Jewelcrafting), -- Malygite 3
+	[192840] = SetReagent(9, e.Jewelcrafting), -- Mystic Sapphire 1
+	[192841] = SetReagent(9, e.Jewelcrafting), -- Mystic Sapphire 2
+	[192842] = SetReagent(9, e.Jewelcrafting), -- Mystic Sapphire 3
+	[192862] = SetReagent(9, e.Jewelcrafting), -- Neltharite 1
+	[192863] = SetReagent(9, e.Jewelcrafting), -- Neltharite 2
+	[192865] = SetReagent(9, e.Jewelcrafting), -- Neltharite 3
+	[192866] = SetReagent(9, e.Jewelcrafting), -- Nozdorite 1
+	[192867] = SetReagent(9, e.Jewelcrafting), -- Nozdorite 2
+	[192868] = SetReagent(9, e.Jewelcrafting), -- Nozdorite 3
+	[193029] = SetReagent(9, e.Jewelcrafting), -- Projection Prism 1
+	[193030] = SetReagent(9, e.Jewelcrafting), -- Projection Prism 2
+	[193031] = SetReagent(9, e.Jewelcrafting), -- Projection Prism 3
+	[192888] = SetReagent(9, e.Jewelcrafting), -- Queen's Gift 1
+	[202048] = SetReagent(9, e.Jewelcrafting), -- Queen's Gift 2
+	[202054] = SetReagent(9, e.Jewelcrafting), -- Queen's Gift 3
+	[192837] = SetReagent(9, e.Jewelcrafting), -- Queen's Ruby 1
+	[192838] = SetReagent(9, e.Jewelcrafting), -- Queen's Ruby 2
+	[192839] = SetReagent(9, e.Jewelcrafting), -- Queen's Ruby 3
+	[192834] = SetReagent(9, e.Jewelcrafting), -- Shimmering Clasp 1
+	[192835] = SetReagent(9, e.Jewelcrafting), -- Shimmering Clasp 2
+	[192836] = SetReagent(9, e.Jewelcrafting), -- Shimmering Clasp 3
+	[193368] = SetReagent(9, e.Jewelcrafting), -- Silken Gemdust 1
+	[193369] = SetReagent(9, e.Jewelcrafting), -- Silken Gemdust 2
+	[193370] = SetReagent(9, e.Jewelcrafting), -- Silken Gemdust 3
+	[192846] = SetReagent(9, e.Jewelcrafting), -- Sundered Onyx 1
+	[192847] = SetReagent(9, e.Jewelcrafting), -- Sundered Onyx 2
+	[192848] = SetReagent(9, e.Jewelcrafting), -- Sundered Onyx 3
+	[192892] = SetReagent(9, e.Jewelcrafting), -- Timewatcher's Patience 1
+	[202052] = SetReagent(9, e.Jewelcrafting), -- Timewatcher's Patience 2
+	[202058] = SetReagent(9, e.Jewelcrafting), -- Timewatcher's Patience 3
+	[192843] = SetReagent(9, e.Jewelcrafting), -- Vibrant Emerald 1
+	[192844] = SetReagent(9, e.Jewelcrafting), -- Vibrant Emerald 2
+	[192845] = SetReagent(9, e.Jewelcrafting), -- Vibrant Emerald 3
+	[192859] = SetReagent(9, e.Jewelcrafting), -- Ysemerald 1
+	[192860] = SetReagent(9, e.Jewelcrafting), -- Ysemerald 2
+	[192861] = SetReagent(9, e.Jewelcrafting), -- Ysemerald 3
+	
 })

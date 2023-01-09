@@ -101,6 +101,7 @@ local TYPE_RAID_LOOT = 3
 local TYPE_PVP_LOOT = 4
 local TYPE_FACTION_ITEM = 5
 local TYPE_ZONE_ITEM = 6
+local TYPE_QUEST_ITEM = 7	-- Quest items that are safe to delete after quest completion.
 
 local reagentTypes = {
 	[1] = GetSpellInfo(2259),		-- Alchemy
@@ -176,6 +177,13 @@ function lib.SetZoneItem(expansion, zoneID, locX, locY)
 		+ ((locY or 0) * 2^36)								-- Bits 36-45 : locY = Y coordinates on the map
 end
 
+function lib.SetQuestItem(expansion)
+	-- Quest items that are safe to delete after quest completion.
+	
+	return expansion											-- Bits 0-4 : expansion (classic = 0)
+		+ (TYPE_QUEST_ITEM * 32)							-- Bits 5-9 : type
+end
+
 
 -- Returns the name of the profession that created the item
 function lib:GetItemSource(itemID)
@@ -231,5 +239,9 @@ function lib:GetItemSource(itemID)
 		local zoneName = (zoneInfo) and zoneInfo.name or ""
 	
 		return itemType, _G[format("EXPANSION_NAME%d", expansion)], expansion, zoneName, locX, locY
+	
+	elseif itemType == TYPE_QUEST_ITEM then
+	
+		return itemType, _G[format("EXPANSION_NAME%d", expansion)], expansion, "Can be deleted after quest completion"
 	end
 end

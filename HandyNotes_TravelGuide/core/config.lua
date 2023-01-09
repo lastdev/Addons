@@ -162,6 +162,13 @@ config.options = {
                     name = "",
                     order = 25,
                 },
+                remove_unknown = {
+                    type = "toggle",
+                    width = "full",
+                    name = L["config_remove_unknown"],
+                    desc = L["config_remove_unknown_desc"],
+                    order = 25.1,
+                },
                 remove_AreaPois = {
                     type = "toggle",
                     width = "full",
@@ -171,7 +178,7 @@ config.options = {
                 },
                 easy_waypoint = {
                     type = "toggle",
-                    width = 1.67,
+                    width = 1.57,
                     name = L["config_easy_waypoints"],
                     desc = L["config_easy_waypoints_desc"],
                     order = 27,

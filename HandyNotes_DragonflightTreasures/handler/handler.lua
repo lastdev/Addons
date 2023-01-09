@@ -106,6 +106,9 @@ function ns.RegisterPoints(zone, points, defaults)
             point.routes = {point.route}
             point.route = nil
         end
+        if point.atlas and point.color then
+            point.texture = ns.atlas_texture(point.atlas, point.color)
+        end
         local proxy_meta
         if point.path or point.nearby or point.related then
             proxy_meta = {__index=point}
@@ -186,10 +189,15 @@ function ns.RegisterVignettes(zone, vignettes, defaults)
     for vignetteID, point in pairs(vignettes) do
         point._coord = point._coord or 0
         point._uiMapID = zone
+        point.vignette = vignetteID
         point.always = true
         point.label = false
 
-        ns.VignetteIDsToPoints[vignetteID] = defaults and defaults(point) or point
+        point = defaults and defaults(point) or point
+
+        intotable(ns.POIsToPoints, point.areaPoi, point)
+        intotable(ns.VignetteIDsToPoints, point.vignette, point)
+        intotable(ns.WorldQuestsToPoints, point.worldquest, point)
     end
 end
 

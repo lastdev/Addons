@@ -6,9 +6,9 @@
 -- Cast the most important buffs on you, tanks or party/raid members/pets.
 -------------------------------------------------------------------------------
 
-SMARTBUFF_DATE          = "041222";
+SMARTBUFF_DATE          = "191222";
 
-SMARTBUFF_VERSION       = "r14."..SMARTBUFF_DATE;
+SMARTBUFF_VERSION       = "r15."..SMARTBUFF_DATE;
 SMARTBUFF_VERSIONNR     = 100002;
 SMARTBUFF_TITLE         = "SmartBuff";
 SMARTBUFF_SUBTITLE      = "Supports you in casting buffs";
@@ -22,7 +22,7 @@ local SmartbuffPrefix = "Smartbuff";
 local SmartbuffSession = true;
 local SmartbuffVerCheck = false;					-- for my use when checking guild users/testers versions  :)
 local buildInfo = select(4, GetBuildInfo())
-local SmartbuffRevision = 14;
+local SmartbuffRevision = 15;
 local SmartbuffVerNotifyList = {}
 
 local SG = SMARTBUFF_GLOBALS;
@@ -370,7 +370,6 @@ local function SendSmartbuffVersion(player, unit)
 	-- not announced, add the player and announce.
 	tinsert(SmartbuffVerNotifyList, {player, unit, GetTime()})
 	C_ChatInfo.SendAddonMessage(SmartbuffPrefix, SmartbuffRevision, "WHISPER", player)
-	SMARTBUFF_AddMsgD(string.format("%s was sent version information.",player))
 end
 
 -- TODO: Redesign if reactivated!
@@ -446,9 +445,6 @@ function SMARTBUFF_OnEvent(self, event, ...)
     if  (event == "PLAYER_ENTERING_WORLD" and isInit and O.Toggle) then
       isSetZone = true;
       tStartZone = GetTime();
-
---    elseif (event == "PLAYER_ENTERING_WORLD" and isLoaded and isPlayer and not isInit and not InCombatLockdown()) then
---        SMARTBUFF_Options_Init(self);
     end
 
   elseif(event == "ADDON_LOADED" and arg1 == SMARTBUFF_TITLE) then
@@ -748,6 +744,7 @@ function SMARTBUFF_SetUnits()
   local s = nil;
   local psg = 0;
   local b = false;
+  local f = nil
   local iBFA = SMARTBUFF_IsActiveBattlefield();
 
   if (iBFA > 0) then
@@ -803,6 +800,7 @@ function SMARTBUFF_SetUnits()
       name, rank, subgroup, level, class, classeng, zone, online, isDead = GetRaidRosterInfo(n);
       if (name) then
         server = nil;
+        f = name;
         i = string.find(name, "-", 1, true);
         if (i and i > 0) then
           server = string.sub(name, i + 1);
@@ -833,9 +831,7 @@ function SMARTBUFF_SetUnits()
           end
         end
         -- attempt to announce the addon version (if they have it)
-        -- seems to be an issue with cross-realm, need to look at this later
-        -- but in the meantime I am disabling it...  CM
---		if online then SendSmartbuffVersion(name, sRUnit) end
+--		if online and O.SendVerInfo then SendSmartbuffVersion(f, sRUnit) end
       end
     end --end for
     
@@ -2986,7 +2982,8 @@ function SMARTBUFF_Options_Init(self)
   SMARTBUFF_BROKER_SetIcon();
   
   
-  if (O.Toggle == nil) then O.Toggle = true; end  
+  if (O.Toggle == nil) then O.Toggle = true; end 
+  if (O.SendVerInfo == nil) then O.SendVerInfo = true; end 
   if (O.ToggleAuto == nil) then O.ToggleAuto = true; end
   if (O.AutoTimer == nil) then O.AutoTimer = 5; end
   if (O.BlacklistTimer == nil) then O.BlacklistTimer = 5; end

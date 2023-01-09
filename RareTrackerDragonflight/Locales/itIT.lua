@@ -124,3 +124,15 @@ L[193161] = "Zanna Lanosa"
 L[193663] = "Elementale Appietrantito"
 L[193658] = "Proto-Drago Corrotto"
 L[193664] = "Protettore Antico"
+
+-- "That's Pretty Neat!" Rares
+L[193259] = "Terrore Blu"
+L[195895] = "Nergazurai"
+L[192557] = "Ciarlatans il Terribile"
+L[193209] = "Zenet Avis"
+L[193273] = "Liskron l'Abbagliante"
+L[193234] = "Eldoren la Rinata"
+L[193217] = "Aladraco"
+L[193154] = "Grifone Dimenticato"
+
+L[195353] = "Mordivento"

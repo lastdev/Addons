@@ -210,6 +210,7 @@ function ConRO.Monk.Brewmaster(_, timeShift, currentSpell, gcd, tChosen, pvpChos
 	local _Provoke, _Provoke_RDY = ConRO:AbilityReady(Ability.Provoke, timeShift);
 	local _PurifyingBrew, _PurifyingBrew_RDY = ConRO:AbilityReady(Ability.PurifyingBrew, timeShift);
 		local _PurifyingBrew_CHARGES = ConRO:SpellCharges(_PurifyingBrew);
+	local _RisingSunKick, _RisingSunKick_RDY = ConRO:AbilityReady(Ability.RisingSunKick, timeShift);
 	local _Roll, _Roll_RDY = ConRO:AbilityReady(Ability.Roll, timeShift);
 	local _SpearHandStrike, _SpearHandStrike_RDY = ConRO:AbilityReady(Ability.SpearHandStrike, timeShift);
 	local _SpinningCraneKick, _SpinningCraneKick_RDY = ConRO:AbilityReady(Ability.SpinningCraneKick, timeShift);

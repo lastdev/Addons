@@ -22,7 +22,11 @@ local modulesList = {
 	["DataStore_Talents"] = true
 }
 
-if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+if WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC then
+	-- Add wrath modules
+	modulesList["DataStore_Currencies"] = true
+
+elseif WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
 	-- retail, add the remaining modules
 	modulesList["DataStore_Currencies"] = true
 	modulesList["DataStore_Garrisons"] = true

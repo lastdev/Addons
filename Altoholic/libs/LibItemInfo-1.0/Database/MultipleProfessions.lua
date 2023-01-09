@@ -24,6 +24,7 @@ lib:RegisterItems({
 	[7077] = SetReagent(0, e.Multi), -- Heart of Fire
 	[7079] = SetReagent(0, e.Multi), -- Globe of Water
 	[7081] = SetReagent(0, e.Multi), -- Breath of Wind
+	[7971] = SetReagent(0, e.Multi), -- Black Pearl
 	[7972] = SetReagent(0, e.Multi), -- Ichor of Undeath
 	[10286] = SetReagent(0, e.Multi, 0, bag.HerbBag), -- Heart of the wild
 	[11291] = SetReagent(0, e.Multi), -- Star Wood
@@ -85,4 +86,31 @@ lib:RegisterItems({
 	[187836] = SetReagent(8, e.Multi), -- Erratic Genesis Matrix
 	[187849] = SetReagent(8, e.Multi), -- Devourer Essence Stone
 	[187850] = SetReagent(8, e.Multi), -- Sustaining Armor Polish
+	
+	-- 10.0 Dragonflight
+	[190315] = SetReagent(9, e.Multi), -- Rousing Earth
+	[190316] = SetReagent(9, e.Multi), -- Awakened Earth
+	[190320] = SetReagent(9, e.Multi), -- Rousing Fire
+	[190321] = SetReagent(9, e.Multi), -- Awakened Fire
+	[190322] = SetReagent(9, e.Multi), -- Rousing Order
+	[190324] = SetReagent(9, e.Multi), -- Awakened Order
+	[190326] = SetReagent(9, e.Multi), -- Rousing Air
+	[190327] = SetReagent(9, e.Multi), -- Awakened Air
+	[190328] = SetReagent(9, e.Multi), -- Rousing Frost
+	[190329] = SetReagent(9, e.Multi), -- Awakened Frost
+	[190330] = SetReagent(9, e.Multi), -- Rousing Decay
+	[190331] = SetReagent(9, e.Multi), -- Awakened Decay
+	[190450] = SetReagent(9, e.Multi), -- Awakened Ire
+	[190451] = SetReagent(9, e.Multi), -- Rousing Ire
+		
+	[192887] = SetReagent(9, e.Multi), -- Elemental Harmony 1
+	[193378] = SetReagent(9, e.Multi), -- Elemental Harmony 2
+	[193379] = SetReagent(9, e.Multi), -- Elemental Harmony 3
+	[191514] = SetReagent(9, e.Multi), -- Brood Salt 1
+	[191515] = SetReagent(9, e.Multi), -- Brood Salt 2
+	[191516] = SetReagent(9, e.Multi), -- Brood Salt 3
+	[191517] = SetReagent(9, e.Multi), -- Writhefire Oil 1
+	[191518] = SetReagent(9, e.Multi), -- Writhefire Oil 2
+	[191519] = SetReagent(9, e.Multi), -- Writhefire Oil 3
+	
 })

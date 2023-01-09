@@ -5,7 +5,7 @@ local vMajor         = string.split(".", select(1, GetBuildInfo()))
 HEALBOT_GAME_VERSION = tonumber(vMajor)
 
 function HealBot_Global_Version()
-    return "10.0.2.5"
+    return "10.0.2.12"
 end
 function HealBot_globalVars()
     --Consumables
@@ -722,7 +722,6 @@ function HealBot_globalVars()
     HEALBOT_DETOX                           = GetSpellInfo(115450) or 115450
     HEALBOT_NATURES_CURE                    = GetSpellInfo(88423) or 88423
     HEALBOT_PURIFY                          = GetSpellInfo(527) or 527
-    HEALBOT_IMPROVED_PURIFY                 = GetSpellInfo(390632) or 390632
     HBC_PURIFY                              = GetSpellInfo(1152) or 1152
     HEALBOT_PURIFY_SPIRIT                   = GetSpellInfo(77130) or 77130
     HEALBOT_PURIFY_DISEASE                  = GetSpellInfo(213634) or 213634

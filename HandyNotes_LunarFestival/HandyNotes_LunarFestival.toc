@@ -1,12 +1,35 @@
-## Interface: 90002
-## Title: HandyNotes_LunarFestival
-## Notes: Displays the locations of Lunar Festival elders.
-## Author: Ravendwyr
-## Version: v1.6.3
+## Interface: 100002
+## Version: 1.00
+## Author: Taraezor
+## Title: Lunar Festival
+## Title-deDE: Mondfest
+## Title-esES: Festival Lunar
+## Title-esMX: Festival Lunar
+## Title-frFR: Fête lunaire
+## Title-itIT: Celebrazione della Luna
+## Title-koKR: 달의 축제
+## Title-ptBR: Festival da Lua
+## Title-ptPT: Festival da Lua
+## Title-ruRU: Лунный фестиваль
+## Title-zhCN: 春节
+## Title-zhTW: 春節
+## Notes: Helps you with the |cFFCA64EFLunar Festival|r world event
+## Notes-deDE: Hilft bei der |cFFCA64EFMondfest|r 
+## Notes-esES: Ayuda con el suceso mundial |cFFCA64EFFestival Lunar|r
+## Notes-esMX: Ayuda con el suceso mundial |cFFCA64EFFestival Lunar|r
+## Notes-frFR: Aide à l'événement mondial |cFFCA64EFFête lunaire|r
+## Notes-itIT: Assiste con l'evento mondiale |cFFCA64EFCelebrazione della Luna|r
+## Notes-koKR: |cFFCA64EF달의 축제|r 대규모 이벤트 지원
+## Notes-ptBR: Auxilia no evento mundial |cFFCA64EFFestival da Lua|r
+## Notes-ptPT: Auxilia no evento mundial |cFFCA64EFFestival da Lua|r
+## Notes-ruRU: Помогает с игровое событие |cFFCA64EFЛунный фестиваль|r
+## Notes-zhCN: 协助 |cFFCA64EF春节|r 活动
+## Notes-zhTW: 協助 |cFFCA64EF春節|r 活動
 ## X-Category: Map & Minimap
-## SavedVariables: HandyNotes_LunarFestivalDB
+## X-Curse-Project-ID: 776143
+## X-WoWI-ID: 00000
 ## RequiredDeps: HandyNotes
-## X-Curse-Project-ID: 45902
+## SavedVariables: HandyNotes_LunarFestivalDB
 
 Core.lua
 Data.lua

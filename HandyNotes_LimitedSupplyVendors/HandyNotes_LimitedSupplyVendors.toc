@@ -1,0 +1,12 @@
+## Interface: 100002
+## Title: HandyNotes_LimitedSupplyVendors
+## Notes: Displays the locations of Limited Supply Vendor Recipes.
+## Author: Killdnaction@Zul'jin
+## Version: v1.0.5
+## X-Category: Map & Minimap
+## SavedVariables: HandyNotes_LimitedSupplyVendorsDB
+## RequiredDeps: HandyNotes
+
+Core.lua
+Alliance.lua
+Horde.lua

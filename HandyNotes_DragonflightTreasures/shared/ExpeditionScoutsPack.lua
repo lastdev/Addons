@@ -3,9 +3,18 @@ local myname, ns = ...
 local scoutpack = {
     label="Expedition Scout's Pack",
     loot={
-        {192764, mount=1617, note="Renown 25"}, -- Verdant Skitterfly
-        {199061, quest=70527}, -- A Guide to Rare Fish
+        -- all the treasure-prerequisite items
+        {199061, quest=70527}, -- A Guide To Rare Fish
         {194540, quest=67046}, -- Nokhud Armorer's Notes
+        {199065, quest=70534}, -- Sorrowful Letter
+        {199066, quest=70535}, -- Letter of Caution
+        {199068, quest=70537}, -- Time-Lost Memo
+        {198843, quest=70392, requires=ns.conditions.MajorFaction(ns.FACTION_DRAGONSCALE, 21)}, -- Ruby Gem Cluster Map
+        {198843, quest=70392, requires=ns.conditions.MajorFaction(ns.FACTION_DRAGONSCALE, 21)}, -- Emerald Gardens Explorer's Notes
+        {199067, quest=70536, requires=ns.conditions.MajorFaction(ns.FACTION_DRAGONSCALE, 21)}, -- Precious Plans
+        {198852, quest=70407, requires=ns.conditions.MajorFaction(ns.FACTION_DRAGONSCALE, 21)}, -- Bear Termination Orders
+        -- ...the rest
+        {192764, mount=1617, note="Renown 25"}, -- Verdant Skitterfly
         201387, -- Drakonid Stalker's Halberd
         201388, -- Dragonspawn Wingtipped Staff
         201389, -- Wingcrest Battle Staff
@@ -19,7 +28,7 @@ local scoutpack = {
     -- quest 72023 (after 70822 Lost Expedition Camp) at basecamp *says* it unlocks these, but I saw them before
     requires=ns.conditions.MajorFaction(ns.FACTION_DRAGONSCALE, 2),
     texture=ns.atlas_texture("VignetteLoot", {r=0.5, g=1, b=0.5, scale=0.9}),
-    group="scoutpack",
+    group="scoutpack", always=true,
     vignette=5468,
 }
 ns.RegisterPoints(ns.WAKINGSHORES, {
@@ -35,6 +44,7 @@ ns.RegisterPoints(ns.WAKINGSHORES, {
     [29915270] = {},
     [29947646] = {},
     [33517660] = {},
+    [33708739] = {},
     [34097703] = {},
     [34174840] = {},
     [34438918] = {note="In cave"},
@@ -53,12 +63,14 @@ ns.RegisterPoints(ns.WAKINGSHORES, {
     [44148103] = {},
     [45206652] = {},
     [45226524] = {},
+    [45429268] = {},
     [45528231] = {},
     [45823518] = {},
     [46206456] = {},
     [46335382] = {},
     [46889363] = {note="In cave"},
     [46955170] = {},
+    [47119230] = {},
     [47245387] = {},
     [47275597] = {},
     [47446489] = {},
@@ -176,6 +188,7 @@ ns.RegisterPoints(ns.OHNAHRANPLAINS, {
     [35925854] = {},
     [39465229] = {},
     [41964521] = {},
+    [44866760] = {},
     [47103262] = {},
     [47364563] = {},
     [50392906] = {},
@@ -199,6 +212,7 @@ ns.RegisterPoints(ns.OHNAHRANPLAINS, {
     [82683763] = {},
     [82723275] = {},
     [83663234] = {note="In cave"},
+    [84103724] = {},
     [85103901] = {},
     [86513680] = {},
     [86622765] = {},
@@ -228,14 +242,17 @@ ns.RegisterPoints(ns.OHNAHRANPLAINS, {
 ns.RegisterPoints(ns.AZURESPAN, {
     [10254317] = {},
     [12434313] = {},
+    [12813169] = {},
     [12934166] = {},
     [14532071] = {},
     [14953300] = {},
+    [16143459] = {},
     [33864679] = {},
     [34344607] = {},
     [34864550] = {},
     [35424781] = {},
     [42625622] = {},
+    [43015294] = {},
     [44162421] = {},
     [46882208] = {},
     [47253630] = {},
@@ -254,7 +271,7 @@ ns.RegisterPoints(ns.AZURESPAN, {
     [62215064] = {},
     [65195980] = {},
     [65712841] = {},
-    [65781081] = {},
+    [65781081] = {note="In cave"},
     [65871071] = {},
     [65952788] = {},
     [66126002] = {},
@@ -269,13 +286,18 @@ ns.RegisterPoints(ns.AZURESPAN, {
     [71713541] = {},
     [71784392] = {},
     [72604267] = {},
+    [75163843] = {},
+    [77343866] = {},
     [77883303] = {},
+    [78203510] = {},
     [78963094] = {},
+    [79632956] = {},
 }, scoutpack)
 ns.RegisterPoints(ns.THALDRASZUS, {
     [34107306] = {},
     [34936010] = {},
     [35447335] = {},
+    [35517551] = {},
     [35628577] = {},
     [36798246] = {},
     [38837770] = {},
@@ -294,7 +316,7 @@ ns.RegisterPoints(ns.THALDRASZUS, {
     [50604505] = {},
     [50854624] = {},
     [52133863] = {},
-    [52597681] = {},
+    [52597681] = {note="In cave"},
     [52758334] = {},
     [54073858] = {},
     [54195536] = {},
@@ -302,11 +324,16 @@ ns.RegisterPoints(ns.THALDRASZUS, {
     [55456798] = {},
     [55875137] = {},
     [55883598] = {},
+    [55927732] = {},
     [56053178] = {},
     [56264118] = {},
     [56613828] = {},
     [57112915] = {},
+    [57138078] = {},
+    [57468106] = {},
+    [57518531] = {},
     [57547623] = {},
+    [58036703] = {},
     [58544918] = {},
     [58965753] = {},
     [59003659] = {},

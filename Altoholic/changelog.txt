@@ -15,6 +15,19 @@ How to support Altoholic's development :
 If you like the addon, consider supporting it, this has been the long term effort and commitment of a single person. #ArmyOfOne
 
 
+10.0.010 (06/01/2023)
+
+- Datastore_Reputations : added tracking of 5 more Dragonflight reputations.
+- Grids tab : added tracking of 5 more Dragonflight reputations.
+- LibItemInfo : udpated sources for the remaining professions.
+- Attempted to fix the tooltip issue related to the reagent bank. 
+The problem occurs when a quest using craft reagents stored in the reagent bank is being turned-in. 
+The game triggers update events but the information cannot be read properly (it's WoW issue, not an Altoholic issue).
+I can detect the conditions, and now prevent erasing the previous content, but in such cases, the counter will not be correct, so be sure to check your bank occasionnally.
+Blizzard has to fix this, there used to be a similar issue when crafting using reagents stored in the bank.
+This use case is now fine, but is still wrong when using reagents for a quest turn-in. 
+I've looked at several ways, but there is nothing I can do => go nag Blizzard about this :)
+
 10.0.009 (11/12/2022)
 
 - LibItemInfo : udpated sources for tailoring, leatherworking, mining, cooking, herbalism and enchanting.

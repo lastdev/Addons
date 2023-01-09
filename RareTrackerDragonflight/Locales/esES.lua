@@ -124,3 +124,15 @@ L[193161] = "Colmillolana"
 L[193663] = "Elemental agravarrisco"
 L[193658] = "Protodragón corrupto"
 L[193664] = "Anciano protector"
+
+-- "That's Pretty Neat!" Rares
+L[193259] = "Terror azul"
+L[195895] = "Nergazurai"
+L[192557] = "Patoso el Terrible"
+L[193209] = "Zenet Avis"
+L[193273] = "Liskron el Deslumbrante"
+L[193234] = "Eldoren el Renacido"
+L[193217] = "Aladraco"
+L[193154] = "Grifo olvidado"
+
+L[195353] = "Mascabrisas"

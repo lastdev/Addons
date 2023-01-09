@@ -1,10 +1,10 @@
-lightweight tag 9be88a21ded4ae4a71c2aff6f5d0c305328697d9 v10.0.7
+lightweight tag 5f75689bd18fc0154b842f954b4f81e9ee743095 v10.0.10
 Author:	Vae <emuha17@gmail.com>
-Date:	Sun Dec 11 14:16:49 2022 -1000
+Date:	Sat Jan 7 11:05:07 2023 -1000
 
-commit 9be88a21ded4ae4a71c2aff6f5d0c305328697d9
+commit 5f75689bd18fc0154b842f954b4f81e9ee743095
 Author: Vae <emuha17@gmail.com>
-Date:   Sun Dec 11 14:16:49 2022 -1000
+Date:   Sat Jan 7 11:05:07 2023 -1000
 
-    Mongoose bite fix
+    Fix Bestrail Wrath burst mode
 

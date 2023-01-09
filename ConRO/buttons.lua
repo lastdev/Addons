@@ -176,7 +176,7 @@ function ConRO:DisplayToggleFrame()
 		end
 
 		frame:SetFrameStrata('MEDIUM');
-		frame:SetFrameLevel('52')
+		frame:SetFrameLevel('73')
 		frame:SetSize((40 * hori) + 14, (15 * vert) + 14)
 		frame:SetScale(ConRO.db.profile.toggleButtonSize)
 			if ConRO.db.profile._Hide_Toggle then
@@ -227,7 +227,7 @@ function ConRO:CreateAutoButton()
 	local Color = RAID_CLASS_COLORS[Class]
 	local tbutton = CreateFrame("Button", 'ConRO_AutoButton', ConROButtonFrame)
 		tbutton:SetFrameStrata('MEDIUM')
-		tbutton:SetFrameLevel('53')
+		tbutton:SetFrameLevel('74')
 		tbutton:SetPoint("BOTTOMRIGHT", "ConROButtonFrame", "BOTTOMRIGHT", -7, 7)
 		tbutton:SetSize(40, 15)
 			if ConROCharacter.ConRO_Settings_Auto then
@@ -286,7 +286,7 @@ function ConRO:CreateSingleButton()
 	local Color = RAID_CLASS_COLORS[Class]
 	local tbutton = CreateFrame("Button", 'ConRO_SingleButton', ConROButtonFrame)
 		tbutton:SetFrameStrata('MEDIUM')
-		tbutton:SetFrameLevel('53')
+		tbutton:SetFrameLevel('74')
 		tbutton:SetPoint("BOTTOMRIGHT", "ConROButtonFrame", "BOTTOMRIGHT", -7, 7)
 		tbutton:SetSize(40, 15)
 			if ConROCharacter.ConRO_Settings_Single then
@@ -345,7 +345,7 @@ function ConRO:CreateAoEButton()
 	local Color = RAID_CLASS_COLORS[Class]
 	local tbutton = CreateFrame("Button", 'ConRO_AoEButton', ConROButtonFrame)
 		tbutton:SetFrameStrata('MEDIUM');
-		tbutton:SetFrameLevel('53')
+		tbutton:SetFrameLevel('74')
 		tbutton:SetPoint("BOTTOMRIGHT", "ConROButtonFrame", "BOTTOMRIGHT", -7, 7)
 		tbutton:SetSize(40, 15)
 			if ConROCharacter.ConRO_Settings_AoE then
@@ -412,7 +412,7 @@ function ConRO:CreateFullButton()
 	local Color = RAID_CLASS_COLORS[Class]
 	local tbutton = CreateFrame("Button", 'ConRO_FullButton', ConROButtonFrame)
 		tbutton:SetFrameStrata('MEDIUM');
-		tbutton:SetFrameLevel('53')
+		tbutton:SetFrameLevel('74')
 		tbutton:SetPoint("TOPLEFT", "ConROButtonFrame", "TOPLEFT", 7, -7)
 		tbutton:SetSize(40, 15)
 		tbutton:SetAlpha(1)
@@ -485,7 +485,7 @@ function ConRO:CreateBurstButton()
 	local Color = RAID_CLASS_COLORS[Class]
 	local tbutton = CreateFrame("Button", 'ConRO_BurstButton', ConROButtonFrame)
 		tbutton:SetFrameStrata('MEDIUM');
-		tbutton:SetFrameLevel('53')
+		tbutton:SetFrameLevel('74')
 		tbutton:SetPoint("TOPLEFT", "ConROButtonFrame", "TOPLEFT", 7, -7)
 		tbutton:SetSize(40, 15)
 		tbutton:SetAlpha(1)
@@ -556,7 +556,7 @@ end
 function ConRO:CreateBlockBurstButton()
 	local tbutton = CreateFrame("Button", 'ConRO_BlockBurstButton', ConROButtonFrame)
 		tbutton:SetFrameStrata('MEDIUM');
-		tbutton:SetFrameLevel('53')
+		tbutton:SetFrameLevel('74')
 		tbutton:SetPoint("TOPLEFT", "ConROButtonFrame", "TOPLEFT", 7, -7)
 		tbutton:SetSize(40, 15)
 		tbutton:Hide()
@@ -591,7 +591,7 @@ end
 function ConRO:CreateBlockAoEButton()
 	local tbutton = CreateFrame("Button", 'ConRO_BlockAoEButton', ConROButtonFrame)
 		tbutton:SetFrameStrata('MEDIUM');
-		tbutton:SetFrameLevel('53')
+		tbutton:SetFrameLevel('74')
 		tbutton:SetPoint("BOTTOMRIGHT", "ConROButtonFrame", "BOTTOMRIGHT", -7, 7)
 		tbutton:SetSize(40, 15)
 		tbutton:Hide()
@@ -781,7 +781,7 @@ function ConRO:DisplayWindowFrame()
 		frame:SetPoint("CENTER", -200, 50);
 		frame:SetSize(ConRO.db.profile.windowIconSize, ConRO.db.profile.windowIconSize);
 		frame:SetFrameStrata('MEDIUM');
-		frame:SetFrameLevel('52');
+		frame:SetFrameLevel('73');
 		frame:SetAlpha(ConRO.db.profile.transparencyWindow);
 		if ConRO.db.profile.combatWindow or ConRO:HealSpec() then
 			frame:Hide();
@@ -877,7 +877,7 @@ function ConRO:DisplayNextWindowFrame()
 		frame:SetPoint("BOTTOMRIGHT", "ConROWindow", "BOTTOMLEFT", -3, 0);
 		frame:SetSize(ConRO.db.profile.windowIconSize/1.35, ConRO.db.profile.windowIconSize/1.35);
 		frame:SetFrameStrata('MEDIUM');
-		frame:SetFrameLevel('52');
+		frame:SetFrameLevel('73');
 		frame:SetAlpha(ConRO.db.profile.transparencyWindow);
 		if ConRO.db.profile.combatWindow or ConRO:HealSpec() then
 			frame:Hide();
@@ -915,7 +915,7 @@ function ConRO:DefenseWindowFrame()
 		frame:SetPoint("CENTER", -280, 50);
 		frame:SetSize(ConRO.db.profile.windowIconSize * .75, ConRO.db.profile.windowIconSize * .75);
 		frame:SetFrameStrata('MEDIUM');
-		frame:SetFrameLevel('52');
+		frame:SetFrameLevel('73');
 		frame:SetAlpha(ConRO.db.profile.transparencyWindow);
 		if ConRO.db.profile.combatWindow then
 			frame:Hide();
@@ -1024,7 +1024,7 @@ function ConRO:InterruptWindowFrame()
 		frame:SetPoint("LEFT", "ConROWindow", "RIGHT", 5, 10);
 		frame:SetSize(ConRO.db.profile.flashIconSize * .25, ConRO.db.profile.flashIconSize * .25);
 		frame:SetFrameStrata('MEDIUM');
-		frame:SetFrameLevel('52');
+		frame:SetFrameLevel('73');
 		if ConRO.db.profile.enableInterruptWindow == true and ConRO.db.profile._Unlock_ConRO == true then
 			frame:Show();
 		else
@@ -1062,7 +1062,7 @@ function ConRO:PurgeWindowFrame()
 		frame:SetPoint("LEFT", "ConROWindow", "RIGHT", 5, -10);
 		frame:SetSize(ConRO.db.profile.flashIconSize * .25, ConRO.db.profile.flashIconSize * .25);
 		frame:SetFrameStrata('MEDIUM');
-		frame:SetFrameLevel('52');
+		frame:SetFrameLevel('73');
 		if ConRO.db.profile.enablePurgeWindow == true and ConRO.db.profile._Unlock_ConRO == true then
 			frame:Show();
 		else
@@ -1122,7 +1122,7 @@ function ConRO:CreateDamageOverlay(parent, id)
 
 	frame:SetParent(parent);
 	frame:SetFrameStrata('MEDIUM');
-	frame:SetFrameLevel('52');
+	frame:SetFrameLevel('73');
 	frame:SetPoint('CENTER', 0, 0);
 	frame:SetWidth(parent:GetWidth() * 1.6);
 	frame:SetHeight(parent:GetHeight() * 1.6);
@@ -1193,7 +1193,7 @@ function ConRO:CreateCoolDownOverlay(parent, id)
 
 	frame:SetParent(parent);
 	frame:SetFrameStrata('MEDIUM');
-	frame:SetFrameLevel('52')
+	frame:SetFrameLevel('73')
 	frame:SetPoint('CENTER', 0, 0);
 	frame:SetWidth(parent:GetWidth() * 1.6);
 	frame:SetHeight(parent:GetHeight() * 1.6);
@@ -1259,7 +1259,7 @@ function ConRO:CreateDefenseOverlay(parent, id)
 
 	frame:SetParent(parent);
 	frame:SetFrameStrata('MEDIUM');
-	frame:SetFrameLevel('52')
+	frame:SetFrameLevel('73')
 	frame:SetPoint('CENTER', 0, 0);
 	frame:SetWidth(parent:GetWidth() * 1.6);
 	frame:SetHeight(parent:GetHeight() * 1.6);
@@ -1325,7 +1325,7 @@ function ConRO:CreateTauntOverlay(parent, id)
 
 	frame:SetParent(parent);
 	frame:SetFrameStrata('MEDIUM');
-	frame:SetFrameLevel('52')
+	frame:SetFrameLevel('73')
 	frame:SetPoint('CENTER', 0, 0);
 	frame:SetWidth(parent:GetWidth() * 1.5);
 	frame:SetHeight(parent:GetHeight() * 1.5);
@@ -1391,7 +1391,7 @@ function ConRO:CreateInterruptOverlay(parent, id)
 
 	frame:SetParent(parent);
 	frame:SetFrameStrata('MEDIUM');
-	frame:SetFrameLevel('52')
+	frame:SetFrameLevel('73')
 	frame:SetPoint('CENTER', 0, 0);
 	frame:SetWidth(parent:GetWidth() * 1.8);
 	frame:SetHeight(parent:GetHeight() * 1.8);
@@ -1457,7 +1457,7 @@ function ConRO:CreatePurgableOverlay(parent, id)
 
 	frame:SetParent(parent);
 	frame:SetFrameStrata('MEDIUM');
-	frame:SetFrameLevel('52')
+	frame:SetFrameLevel('73')
 	frame:SetPoint('CENTER', 0, 0);
 	frame:SetWidth(parent:GetWidth() * 2);
 	frame:SetHeight(parent:GetHeight() * 2);
@@ -1523,7 +1523,7 @@ function ConRO:CreateRaidBuffsOverlay(parent, id)
 
 	frame:SetParent(parent);
 	frame:SetFrameStrata('MEDIUM');
-	frame:SetFrameLevel('52')
+	frame:SetFrameLevel('73')
 	frame:SetPoint('CENTER', 0, 0);
 	frame:SetWidth(parent:GetWidth() * 1.5);
 	frame:SetHeight(parent:GetHeight() * 1.65);
@@ -1589,7 +1589,7 @@ function ConRO:CreateMovementOverlay(parent, id)
 
 	frame:SetParent(parent);
 	frame:SetFrameStrata('MEDIUM');
-	frame:SetFrameLevel('52')
+	frame:SetFrameLevel('73')
 	frame:SetPoint('CENTER', 0, -3);
 	frame:SetWidth(parent:GetWidth() * 1.65);
 	frame:SetHeight(parent:GetHeight() * 1.85);
@@ -2849,6 +2849,7 @@ local swapSpells = {
 	BladeDance = 188499,
 		DeathSweep = 210152,
 	VoidBolt = 205448,
+	MindFlayInsanity = 391403,
 }
 
 ConROSwapSpells = ConROSwapSpells or swapSpells;
@@ -2870,7 +2871,7 @@ function ConRO:GlowSpell(spellID)
 		end
 		self.SpellsGlowing[spellID] = 1;
 	else
-		if UnitAffectingCombat('player') and not _IsSwapSpell and not ConRO:Dragonriding() then
+		if UnitAffectingCombat('player') and not _IsSwapSpell then
 			if spellName ~= nil then
 				self:Print(self.Colors.Error .. 'Spell not found on action bars: ' .. ' ' .. spellName .. ' ' .. '(' .. spellID .. ')');
 			else
@@ -2893,7 +2894,7 @@ function ConRO:GlowDef(spellID)
 		end
 		self.DefGlowing[spellID] = 1;
 	else
-		if UnitAffectingCombat('player') and not _IsSwapSpell and not ConRO:Dragonriding() then
+		if UnitAffectingCombat('player') and not _IsSwapSpell then
 			if spellName ~= nil then
 				self:Print(self.Colors.Error .. 'Spell not found on action bars: ' .. ' ' .. spellName .. ' ' .. '(' .. spellID .. ')');
 			else

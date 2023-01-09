@@ -236,7 +236,7 @@ local ConRO_Rogue, ids = ...;
 		KillingSpree = {spellID = 51690, talentID = 112551},
 		PistolShot = {spellID = 185763},
 		RolltheBones = {spellID = 315508, talentID = 112543},
-		Sepsis = {spellID = 328408, talentID = 112565},
+		Sepsis = {spellID = 385408, talentID = 112565},
 		--Poisons
 			Poisons = {
 				AtrophicPoison = {spellID = 381637, talentID = 112655},
@@ -340,9 +340,11 @@ local ConRO_Rogue, ids = ...;
 	}
 	ids.Out_Buff = {
 		AdrenalineRush = 13750,
+		Audacity = 386270,
 		BladeFlurry = 13877,
 		Broadside = 193356,
 		BuriedTreasure = 199600,
+		Dreadblades = 343142,
 		InstantPoison = 315584,
 		GrandMelee = 193358,
 		LoadedDice = 256171,
@@ -506,6 +508,7 @@ local ConRO_Rogue, ids = ...;
 		Premeditation = 343173,
 	}
 	ids.Sub_Buff = {
+		ColdBlood = 382245,
 		InstantPoison = 315584,
 		ShadowBlades = 121471,
 		ShadowDance = 185422,

@@ -12,15 +12,18 @@ Azure Span continent: 7345
 Azure Span: 7094 @ 38603540 (70004 / 70906?)
 Azure Span: 7096 @ 68505370 (70006)
 Thaldraszus continent: 7344
-Thaldraszus: 7097 @ 34406750
+Thaldraszus: 7097 @ 34406750 (70007 / 71136)
 
 Grand hunt spoils: 200468 (epic), 200513 (rare), 200515 (uncommon), 200516 (common)
 {194089, quest=71046}, -- Bakar Companion Color: Orange
 {194095, quest=71052}, -- Ohuna Companion Color: Sepia
+{193205, quest=71050}, -- Ohuna Companion Color: Brown
 
-Siege on Dragonsbane Keep: 7267 @ Waking Shores 30607790, quest 71210 (+72671)
-Dragonbane Keep Strongbox: 200072 (epic)
+Siege on Dragonsbane Keep: 7267 @ Waking Shores 30607790, quest 71210 (+72671) / 70866+74295
+-- 74295 seems to be the daily, for the blue strongbox (202142)
+Dragonbane Keep Strongbox: 200072 (epic),
 192007, -- Wyrmforged Sabatons
+192008, -- Wyrmforged Gauntlets
 --]]
 
 local hunt = {
@@ -112,5 +115,9 @@ ns.RegisterPoints(ns.AZURESPAN, {
         },
         vignette=5281,
     },
-
+    [33214095] = { -- Tenmod
+        npc=194763,
+        quest=73938,
+        vignette=5283,
+    }
 }, hunt)

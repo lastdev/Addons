@@ -37,6 +37,8 @@ L[197353] = "Blisterhide"
 L[197356] = "High Shaman Rotknuckle"
 L[197411] = "Astray Splasher"
 
+L[195353] = "Breezebiter"
+    
 -- The Ohnahran Plains
 L[193165] = "Sparkspitter Vrak"
 L[193142] = "Enraged Sapphire"
@@ -131,3 +133,13 @@ L[187886] = "Turboris"
 L[190991] = "Char"
 L[187306] = "Morchok"
 L[193175] = "Slurpo, the Incredible Snail"
+
+-- "That's Pretty Neat!" Rares
+L[193259] = "Blue Terror"
+L[195895] = "Nergazurai"
+L[192557] = "Quackers the Terrible"
+L[193209] = "Zenet Avis"
+L[193273] = "Liskron the Dazzling"
+L[193234] = "Eldoren the Reborn"
+L[193217] = "Drakewing"
+L[193154] = "Forgotten Gryphon"

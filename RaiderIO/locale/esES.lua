@@ -60,20 +60,38 @@ L["DISABLE_RWF_MODE_BUTTON"] = "Desactivar"
 L["DISABLE_RWF_MODE_BUTTON_TOOLTIP"] = "Haz clic para desactivar el modo Race World First. Esto hará que su interfaz se vuelva a cargar."
 L["DISABLE_RWF_MODE_RELOAD"] = "Estás desactivando el modo Race World First. Al hacer clic en Confirmar, volverá a cargar su interfaz."
 L["DPS"] = "DPS"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_AA"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_AV"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_COS"] = ""--]] 
 L["DUNGEON_SHORT_NAME_DOS"] = "El Otro Lado - DOS"
 L["DUNGEON_SHORT_NAME_GD"] = "Terminal Malavía - GD"
 L["DUNGEON_SHORT_NAME_GMBT"] = "Tazavesh: Gambito - GMBT"
 L["DUNGEON_SHORT_NAME_HOA"] = "Salas de la Expiación - HOA"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_HOV"] = ""--]] 
 L["DUNGEON_SHORT_NAME_ID"] = "Puerto de Hierro - ID"
 L["DUNGEON_SHORT_NAME_LOWR"] = "Karazhan: Inferior - LOWR"
 L["DUNGEON_SHORT_NAME_MISTS"] = "Nieblas de Tirna Scithe - MISTS"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_NO"] = ""--]] 
 L["DUNGEON_SHORT_NAME_NW"] = "Estela Necrótica - NW"
 L["DUNGEON_SHORT_NAME_PF"] = "Bajapeste - PF"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_RLP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_SBG"] = ""--]] 
 L["DUNGEON_SHORT_NAME_SD"] = "Cavernas Sanguinas - SD"
 L["DUNGEON_SHORT_NAME_SOA"] = "Agujas de Ascensión - SOA"
 L["DUNGEON_SHORT_NAME_STRT"] = "Tazavesh: Calles - STRT"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_TJS"] = ""--]] 
 L["DUNGEON_SHORT_NAME_TOP"] = "Teatro del Dolor - TOP"
 L["DUNGEON_SHORT_NAME_UPPR"] = "Karazhan: Superior - UPPR"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_VOTW"] = ""--]] 
 L["DUNGEON_SHORT_NAME_WORK"] = "Mechagon: Taller - WORK"
 L["DUNGEON_SHORT_NAME_YARD"] = "Mechagon: Desguace - YARD"
 L["ENABLE_AUTO_FRAME_POSITION"] = "Posicionar automáticamente el marco de perfil de RaiderIO"
@@ -199,6 +217,22 @@ L["RAID_BOSS_SOD_6"] = "Forjapenas Raznal"
 L["RAID_BOSS_SOD_7"] = "Guardián de los Primeros"
 L["RAID_BOSS_SOD_8"] = "Escriba del destino Roh-Kalo"
 L["RAID_BOSS_SOD_9"] = "Kel'Thuzad"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VOTI_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VOTI_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VOTI_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VOTI_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VOTI_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VOTI_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VOTI_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VOTI_8"] = ""--]] 
 L["RAID_DIFFICULTY_NAME_HEROIC"] = "Heroico"
 L["RAID_DIFFICULTY_NAME_MYTHIC"] = "Mítico"
 L["RAID_DIFFICULTY_NAME_NORMAL"] = "Normal"

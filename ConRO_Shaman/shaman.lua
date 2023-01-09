@@ -229,8 +229,8 @@ function ConRO.Shaman.Elemental(_, timeShift, currentSpell, gcd, tChosen, pvpCho
 		local _WindGust_BUFF, _WindGust_COUNT = ConRO:Form(Form.WindGust);
 		local _CallLightning, _CallLightning_RDY = ConRO:AbilityReady(PetAbility.CallLightning, timeShift, 'pet');
 		local _Tempest, _Tempest_RDY = ConRO:AbilityReady(PetAbility.Tempest, timeShift, 'pet');
-	local _Stormkeeper, _Stormkeeper_RDY 																= ConRO:AbilityReady(Ability.Stormkeeper, timeShift);
-		local _Stormkeeper_BUFF 																			= ConRO:Aura(Buff.Stormkeeper, timeShift);
+	local _Stormkeeper, _Stormkeeper_RDY = ConRO:AbilityReady(Ability.Stormkeeper, timeShift);
+		local _Stormkeeper_BUFF = ConRO:Aura(Buff.Stormkeeper, timeShift);
 		local _Stormkeeper_CHARGES = ConRO:SpellCharges(_Stormkeeper);
 	local _PrimordialWave, _PrimordialWave_RDY															= ConRO:AbilityReady(Ability.PrimordialWave, timeShift);
 
@@ -351,7 +351,7 @@ function ConRO.Shaman.Elemental(_, timeShift, currentSpell, gcd, tChosen, pvpCho
 		end
 
 		if (tChosen[Passive.SurgeofPower.talentID] and _Maelstrom >= 58) or not tChosen[Passive.SurgeofPower.talentID] then
-			if _Stormkeeper_RDY and currentSpell ~= _Stormkeeper and _Stormkeeper_CHARGES >= 1 and ConRO:FullMode(_Stormkeeper) then
+			if _Stormkeeper_RDY and currentSpell ~= _Stormkeeper and not _Stormkeeper_BUFF and ConRO:FullMode(_Stormkeeper) then
 				tinsert(ConRO.SuggestedSpells, _Stormkeeper);
 				_Stormkeeper_RDY = false;
 			end
@@ -943,6 +943,8 @@ function ConRO.Shaman.Restoration(_, timeShift, currentSpell, gcd, tChosen, pvpC
 	local _Maelstrom, _Maelstrom_Max = ConRO:PlayerPower('Maelstrom');
 
 --Abilities
+	local _EarthlivingWeapon, _EarthlivingWeapon_RDY = ConRO:AbilityReady(Ability.EarthlivingWeapon, timeShift);
+		local _EarthlivingWeapon_BUFF, _, _EarthlivingWeapon_DUR = ConRO:UnitAura(Buff.EarthlivingWeapon, timeShift, _, _, "Weapon");
 	local _Purge, _Purge_RDY 																			= ConRO:AbilityReady(Ability.Purge, timeShift);
 	local _WindShear, _WindShear_RDY 																	= ConRO:AbilityReady(Ability.WindShear, timeShift);
 	local _LightningBolt, _LightningBolt_RDY															= ConRO:AbilityReady(Ability.LightningBolt, timeShift);
@@ -955,7 +957,11 @@ function ConRO.Shaman.Restoration(_, timeShift, currentSpell, gcd, tChosen, pvpC
 		local _FlameShock_DEBUFF 																			= ConRO:TargetAura(Debuff.FlameShock, timeShift + 6);
 	local _HealingStreamTotem, _HealingStreamTotem_RDY													= ConRO:AbilityReady(Ability.HealingStreamTotem, timeShift);
 	local _Stormkeeper, _Stormkeeper_RDY = ConRO:AbilityReady(Ability.Stormkeeper, timeShift);
-	local _EarthShield, _EarthShield_RDY																= ConRO:AbilityReady(Ability.EarthShield, timeShift);
+	local _EarthShield, _EarthShield_RDY = ConRO:AbilityReady(Ability.EarthShield, timeShift);
+	local _LightningShield, _LightningShield_RDY = ConRO:AbilityReady(Ability.LightningShield, timeShift);
+		local _LightningShield_BUFF = ConRO:Aura(Buff.LightningShield, timeShift);
+	local _WaterShield, _WaterShield_RDY = ConRO:AbilityReady(Ability.WaterShield, timeShift);
+		local _WaterShield_BUFF = ConRO:Aura(Buff.WaterShield, timeShift);
 
 	local _PrimordialWave, _PrimordialWave_RDY															= ConRO:AbilityReady(Ability.PrimordialWave, timeShift);
 		local _PrimordialWave_BUFF																			= ConRO:Aura(Buff.PrimordialWave, timeShift);
@@ -973,8 +979,10 @@ function ConRO.Shaman.Restoration(_, timeShift, currentSpell, gcd, tChosen, pvpC
 	ConRO:AbilityInterrupt(_WindShear, _WindShear_RDY and ConRO:Interrupt());
 	ConRO:AbilityPurge(_Purge, _Purge_RDY and ConRO:Purgable());
 
-	ConRO:AbilityRaidBuffs(_EarthShield, _EarthShield_RDY and not ConRO:OneBuff(ids.Resto_Buff.EarthShield));
+	ConRO:AbilityRaidBuffs(_EarthShield, _EarthShield_RDY and not ConRO:OneBuff(Buff.EarthShield));
 	ConRO:AbilityRaidBuffs(_HealingStreamTotem, _HealingStreamTotem_RDY);
+	ConRO:AbilityRaidBuffs(_WaterShield, _WaterShield_RDY and not (_WaterShield_BUFF or _LightningShield_BUFF));
+	ConRO:AbilityRaidBuffs(_EarthlivingWeapon, _EarthlivingWeapon_RDY and not _EarthlivingWeapon_BUFF or (not _in_combat and _EarthlivingWeapon_DUR < 600));
 
 	ConRO:AbilityBurst(_EarthElemental, _EarthElemental_RDY and _is_Enemy);
 	ConRO:AbilityBurst(_PrimordialWave, _PrimordialWave_RDY and not _PrimordialWave_BUFF and _is_Enemy);

@@ -5,9 +5,8 @@
 -- Whats new info
 SMARTBUFF_WHATSNEW = "\n\n|cffffffff         Whats new:|r\n\n"
   .."          |cffffffffDragonflight version by Codermik.|cff00e0ff\n\n\n"
-  .."          Changes in r14.041222:\n\n"
-  .."             * Added Atrophic Poison and the new Evokers\n"
-  .."                Blessing of the bronze.\n\n"
+  .."          Changes in r15.191222:\n\n"
+  .."             * Added Warlock's Inquisitor's Gaze.\n\n"
   .."\n\n"
   .."          |c0000FF96Many thanks to Chris S. and Samantha R. for\n"
   .."          their very kind donations - thanks a lot.\n\n"

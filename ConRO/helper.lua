@@ -13,6 +13,7 @@ function ConRO:SpecName()
 end
 
 function ConRO:CheckTalents()
+	--print("Bing")
 	self.PlayerTalents = {};
 
 	wipe(self.PlayerTalents)
@@ -342,7 +343,31 @@ function ConRO:Targets(spellID)
 
 			for i = 1, 15 do
 				if not UnitIsFriend("player", 'nameplate' .. i) then
-					if UnitExists('nameplate' .. i) and IsItemInRange(37727, "nameplate"..i) == true then
+					if UnitExists('nameplate' .. i) and IsItemInRange(32321, "nameplate"..i) == true then
+						number_in_range = number_in_range + 1
+					end
+				end
+			end
+		elseif spellID == "25" then
+			if IsItemInRange(24268, "target") then
+				target_in_range = true;
+			end
+
+			for i = 1, 15 do
+				if not UnitIsFriend("player", 'nameplate' .. i) then
+					if UnitExists('nameplate' .. i) and IsItemInRange(24268, "nameplate"..i) == true then
+						number_in_range = number_in_range + 1
+					end
+				end
+			end
+		elseif spellID == "40" then
+			if IsItemInRange(28767, "target") then
+				target_in_range = true;
+			end
+
+			for i = 1, 15 do
+				if not UnitIsFriend("player", 'nameplate' .. i) then
+					if UnitExists('nameplate' .. i) and IsItemInRange(28767, "nameplate"..i) == true then
 						number_in_range = number_in_range + 1
 					end
 				end
@@ -435,6 +460,7 @@ function ConRO:Heroism()
 	local _Bloodlust = 2825;
 	local _TimeWarp	= 80353;
 	local _Heroism = 32182;
+	local _PrimalRage = 264667;
 	local _AncientHysteria = 90355;
 	local _Netherwinds = 160452;
 	local _DrumsofFury = 120257;
@@ -446,7 +472,7 @@ function ConRO:Heroism()
 	local _Sated = 57724;
 	local _TemporalDisplacement = 80354;
 	local _Insanity = 95809;
-	local _Fatigued = 160455;
+	local _Fatigued = 264689;
 
 	local buffed = false;
 	local sated = false;
@@ -455,6 +481,7 @@ function ConRO:Heroism()
 			bl = ConRO:Aura(_Bloodlust, timeShift);
 			tw = ConRO:Aura(_TimeWarp, timeShift);
 			hero = ConRO:Aura(_Heroism, timeShift);
+			pr = ConRO:Aura(_PrimalRage, timeShift);
 			ah = ConRO:Aura(_AncientHysteria, timeShift);
 			nw = ConRO:Aura(_Netherwinds, timeShift);
 			dof = ConRO:Aura(_DrumsofFuryBuff, timeShift);
@@ -954,7 +981,7 @@ end
 
 function ConRO:SpellCharges(spellid)
 	local currentCharges, maxCharges, cooldownStart, maxCooldown = GetSpellCharges(spellid);
-	local currentCooldown = 10000;
+	local currentCooldown = 0;
 		if currentCharges ~= nil and currentCharges < maxCharges then
 			currentCooldown = (maxCooldown - (GetTime() - cooldownStart));
 		end

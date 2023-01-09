@@ -1,35 +1,15 @@
-## Interface: 100002
-## Version: 2.03
-## Author: Taraezor
-## Title: Hallow's End
-## Title-deDE: Schlotternächte
-## Title-esES: Halloween
-## Title-esMX: Halloween
-## Title-frFR: Sanssaint
-## Title-itIT: Veglia delle Ombre
-## Title-koKR: 할로윈 축제
-## Title-ptBR: Noturnália
-## Title-ptPT: Noturnália
-## Title-ruRU: Тыквовин
-## Title-zhCN: 万圣节
-## Title-zhTW: 萬聖節
-## Notes: Help for |cFFCA64EFHallow's End|r achievements and quests
-## Notes-deDE: Hilfe für Erfolge und Quests in |cFFCA64EFSchlotternächte|r
-## Notes-esES: Ayuda para logros y misiones en |cFFCA64EFHalloween|r
-## Notes-esMX: Ayuda para logros y misiones en |cFFCA64EFHalloween|r
-## Notes-frFR: Aide pour les réalisations et les quêtes dans |cFFCA64EFSanssaint|r
-## Notes-itIT: Aiuto per obiettivi e missioni in |cFFCA64EFVeglia delle Ombre|r
-## Notes-koKR: |cFFCA64EF할로윈 축제|r의 업적 및 퀘스트에 대한 도움말
-## Notes-ptBR: Ajuda para conquistas e missões em |cFFCA64EFNoturnália|r
-## Notes-ptPT: Ajuda para conquistas e missões em |cFFCA64EFNoturnália|r
-## Notes-ruRU: Справка по достижениям и квестам в |cFFCA64EFТыквовине|r
-## Notes-zhCN: 帮助|cFFCA64EF万圣节|r的成就和任务
-## Notes-zhTW: 幫助|cFFCA64EF萬聖節|r的成就和任務
+## Interface: 90207
+## Title: HandyNotes_HallowsEnd
+## Notes: Displays the locations of Hallow's End candy buckets.
+## Author: Ravendwyr
+## Version: v1.5.2
 ## X-Category: Map & Minimap
-## X-Curse-Project-ID: 689428
-## X-WoWI-ID: 00000
-## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_HallowsEndDB
+## RequiredDeps: HandyNotes
+## X-Curse-Project-ID: 46114
+## X-Wago-ID: XrNkjlGa
 
 Core.lua
-Data.lua
+
+Alliance.lua
+Horde.lua

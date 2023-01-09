@@ -489,6 +489,7 @@ local ConRO_Priest, ids = ...;
 	ids.Shad_Buff = {
 		DarkAscension = 391109,
 		MindFlayInsanity = 391401,
+		MindMelt = 391092,
 		PowerInfusion = 10060,
 		PowerWordFortitude = 21562,
 		PowerWordShield = 17,

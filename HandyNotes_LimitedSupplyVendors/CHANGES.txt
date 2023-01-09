@@ -1,0 +1,7 @@
+12/30/2022 - Added profession icons to each of the recipes.
+10/16/2020 - Fixed Bug the prevented icons from showing with the pre-patch update of 9.0.1
+06/18/2020 - Updated Horde Vendor Coordinates on Eastern Kingdoms to be more precise. (Outland next)
+06/04/2020 - Updated Horde Vendor Coordinates on Kalimdor to be more precise. (Eastern Kingdoms Next)
+05/28/2020 - Removed vendors that were removed/replaced with the addition of the Horde Embassy in Orgrimmar.
+04/21/2020 - Fixed a error where No Names and No items were provided for Vendors in Duratar.
+04/16/2020 - Initial Upload.

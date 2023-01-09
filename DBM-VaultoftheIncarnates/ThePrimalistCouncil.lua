@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2486, "DBM-VaultoftheIncarnates", nil, 1200)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20221214084436")
+mod:SetRevision("20221231062543")
 mod:SetCreatureID(187771, 187768, 187772, 187767)
 mod:SetEncounterID(2590)
 mod:SetUsedIcons(1, 2)
 mod:SetBossHPInfoToHighest()
-mod:SetHotfixNoticeRev(20221214000000)
+mod:SetHotfixNoticeRev(20221222000000)
 mod:SetMinSyncRevision(20221214000000)
 --mod.respawnTime = 29
 
@@ -22,9 +22,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_PERIODIC_MISSED 371514"
 )
 
---TODO, conductive mark has numerous spellids and the one that's a cast looks like a hidden script. 10 to 1, it's not in combat log. (https://www.wowhead.com/beta/spell=375331/conductive-mark)
---TODO, mark some of conductive marks? On mythic it goes on 10 targets, not enough marks for all that, plus meteor axe needs 2 marks as prio
---TODO, earthen pillar targetting unclear, it probably uses RAID_BOSS_WHISPER if i had to guess, because there is no debuff
 --[[
 (ability.id = 373059 or ability.id = 372322 or ability.id = 372056 or ability.id = 372027 or ability.id = 372279 or ability.id = 374038 or ability.id = 375331 or ability.id = 397134) and type = "begincast"
  or (ability.id = 386440 or ability.id = 386375 or ability.id = 386370 or ability.id = 386289) and type = "applybuff"
@@ -40,7 +37,7 @@ local warnFrostTomb								= mod:NewTargetNoFilterAnnounce(371591, 4)
 local warnGlacialConvocation					= mod:NewSpellAnnounce(386440, 4)
 
 local specWarnPrimalBlizzard					= mod:NewSpecialWarningCount(373059, nil, nil, nil, 2, 2)
-local specWarnPrimalBlizzardStack				= mod:NewSpecialWarningStack(373059, nil, 8, nil, nil, 1, 6)
+local specWarnPrimalBlizzardStack				= mod:NewSpecialWarningStack(373059, nil, 7, nil, nil, 1, 6)
 local specWarnFrostSpike						= mod:NewSpecialWarningInterrupt(372315, "HasInterrupt", nil, nil, 1, 2)
 
 local timerPrimalBlizzardCD						= mod:NewCDCountTimer(79.4, 373059, nil, nil, nil, 2)--Can be delayed by many seconds
@@ -102,23 +99,27 @@ mod.vb.meteorTotal = 0
 mod.vb.blazeCast = 0
 local difficultyName = "normal"--Unused right now, mythic and normal are same with very minor variances, heroic is probably obsolete but will see on live
 local allTimers = {
+	["mythic"] = {--Needs work, some of these can be lower
+		--Conductive Mark
+		[375331] = {13, 42.5, 26, 24.7, 26, 26.8, 25, 26, 27, 27},
+		--Pillars
+		[372322] = {5, 27, 29, 26, 25, 28, 27, 26, 27, 27, 26, 28},
+		--Primal Blizzard (excluded for now)
+		[373059] = {37, 89, 80, 81},
+	},
 	["heroic"] = {--Needs work, some of these can be lower
 		--Conductive Mark
-		[375331] = {15.7, 55.9, 35.3, 36.5, 34.1, 36.5, 36.5, 35.2, 37.7, 32.8, 35.2},--New
-		--Meteor Axes (excluded for now)
---		[374038] = {22.3, 40.4, 40.3, 40.2, 40.3, 39.1, 40.2, 40.2, 39.0},--New
+		[375331] = {15.7, 55.9, 35.3, 36.5, 34.1, 36.5, 36.5, 35.2, 37.7, 32.8, 35.2},
 		--Pillars
-		[372322] = {7.2, 35.3, 37.7, 35.2, 36.5, 35.3, 35.2, 34.1, 37.7, 34, 35.2, 37.6},--New
+		[372322] = {7.2, 35.3, 37.7, 35.2, 36.5, 35.3, 35.2, 34.1, 37.7, 34, 35.2, 37.6},
 		--Primal Blizzard (excluded for now)
 		[373059] = {49.8, 118, 105.8, 108},
 	},
-	["normal"] = {--Needs work, some of these can be lower
+	["normal"] = {--Needs work, some of these can be lower (Also includes LFR)
 		--Conductive Mark
-		[375331] = {16.7, 73.6, 43.7, 44.9, 43.7, 44.9, 47.4, 41.2, 44.9, 45, 42.5},--New
-		--Meteor Axes (excluded for now)
---		[374038] = {36.7, 69.4, 65.6, 66.9, 66.8, 66.8, 66.8, 66.8},--New
+		[375331] = {16.7, 70.5, 43.7, 44.9, 43.7, 44.9, 43.8, 41.2, 44.9, 45, 42.5},
 		--Pillars
-		[372322] = {9.5, 42.9, 47.6, 43.7, 43.7, 46.1, 43.7, 42.5, 47.3, 42.5, 43.7, 47.4},
+		[372322] = {8.5, 42.9, 47.6, 43.7, 43.7, 46.1, 43.7, 42.5, 47.3, 42.5, 43.7, 47.4},
 		--Primal Blizzard (excluded for now)
 		[373059] = {60, 149.6, 133, 133},
 	},
@@ -153,18 +154,32 @@ function mod:OnCombatStart(delay)
 	self.vb.meteorCast = 0
 	self.vb.blazeCast = 0
 	if self:IsHard() then
-		difficultyName = "heroic"
-		--Kadros Icewrath
-		timerPrimalBlizzardCD:Start(48-delay, 1)
-		--Dathea Stormlsh
-		timerChainLightningCD:Start(12.1-delay)
-		timerConductiveMarkCD:Start(15.7-delay, 1)
-		--Opalfang
-		timerEarthenPillarCD:Start(6.9-delay, 1)
-		timerCrushCD:Start(18.1-delay, 1)
+		--Same on heroic and mythic
 		--Embar Firepath
 		timerSlashingBlazeCD:Start(10.2-delay, 1)
-		timerMeteorAxeCD:Start(30.1-delay, 1)
+		timerMeteorAxeCD:Start(23-delay, 1)
+		if self:IsMythic() then
+			difficultyName = "mythic"
+			--Kadros Icewrath
+			timerPrimalBlizzardCD:Start(37-delay, 1)
+			--Dathea Stormlsh
+			timerChainLightningCD:Start(12.1-delay)
+			timerConductiveMarkCD:Start(13-delay, 1)
+			--Opalfang
+			timerEarthenPillarCD:Start(5-delay, 1)
+			timerCrushCD:Start(28.1-delay, 1)--TODO verify, seems iffy, but maybe delayed by other casts being altered
+		else--Heroic
+			difficultyName = "heroic"
+			--Kadros Icewrath
+			timerPrimalBlizzardCD:Start(48-delay, 1)
+			--Dathea Stormlsh
+			timerChainLightningCD:Start(12.1-delay)
+			timerConductiveMarkCD:Start(15.7-delay, 1)
+			--Opalfang
+			timerEarthenPillarCD:Start(6.9-delay, 1)
+			timerCrushCD:Start(18.1-delay, 1)
+
+		end
 	else--Timers are slowed down
 		difficultyName = "normal"
 		--Kadros Icewrath
@@ -173,8 +188,8 @@ function mod:OnCombatStart(delay)
 		timerChainLightningCD:Start(10.7-delay)
 		timerConductiveMarkCD:Start(16.7-delay, 1)
 		--Opalfang
-		timerEarthenPillarCD:Start(9.5-delay, 1)
-		timerCrushCD:Start(18.4-delay, 1)
+		timerEarthenPillarCD:Start(8.5-delay, 1)
+		timerCrushCD:Start(18.2-delay, 1)
 		--Embar Firepath
 		timerSlashingBlazeCD:Start(9.2-delay, 1)
 		timerMeteorAxeCD:Start(22.3-delay, 1)
@@ -198,7 +213,9 @@ function mod:OnCombatEnd()
 end
 
 function mod:OnTimerRecovery()
-	if self:IsHard() then
+	if self:IsMythic() then
+		difficultyName = "mythic"
+	elseif self:IsHeroic() then
 		difficultyName = "heroic"
 	else
 		difficultyName = "normal"
@@ -215,7 +232,7 @@ function mod:SPELL_CAST_START(args)
 		else
 			specWarnPrimalBlizzard:Play("aesoon")--Just aoe damage, spread mechanic disabled
 		end
-		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.blizzardCast+1) or self:IsHard() and 105.8 or self:IsEasy() and 133
+		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.blizzardCast+1) or self:IsMythic() and 80 or self:IsHeroic() and 105.8 or self:IsEasy() and 133
 		timerPrimalBlizzardCD:Start(timer, self.vb.blizzardCast+1)
 	elseif spellId == 372315 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnFrostSpike:Show(args.sourceName)
@@ -227,19 +244,19 @@ function mod:SPELL_CAST_START(args)
 		self.vb.pillarCast = self.vb.pillarCast + 1
 		specWarnEarthenPillar:Show(self.vb.pillarCast)
 		specWarnEarthenPillar:Play("watchstep")
-		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, 372322, self.vb.pillarCast+1) or self:IsHard() and 34 or self:IsEasy() and 42.5
+		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, 372322, self.vb.pillarCast+1) or self:IsMythic() and 25 or self:IsHeroic() and 34 or self:IsEasy() and 42.5
 		timerEarthenPillarCD:Start(timer, self.vb.pillarCast+1)
 	elseif spellId == 372056 then
 		self.vb.crushCast = self.vb.crushCast + 1
 		timerCrushCD:Start(nil, self.vb.crushCast+1)
-		if self:IsTanking("player", nil, nil, nil, args.sourceGUID) then
+		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
 			specWarnCrush:Show()
 			specWarnCrush:Play("defensive")
 		end
 	elseif spellId == 372027 then
 		self.vb.blazeCast = self.vb.blazeCast + 1
 		timerSlashingBlazeCD:Start(nil, self.vb.blazeCast+1)
-		if self:IsTanking("player", nil, nil, nil, args.sourceGUID) then
+		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
 			specWarnSlashingBlaze:Show()
 			specWarnSlashingBlaze:Play("defensive")
 		end
@@ -249,12 +266,12 @@ function mod:SPELL_CAST_START(args)
 		self.vb.meteorCast = self.vb.meteorCast + 1
 		self.vb.meteorTotal = 0
 --		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.meteorCast+1) or 49.7
-		timerMeteorAxeCD:Start(nil, self.vb.meteorCast+1)
+		timerMeteorAxeCD:Start(self:IsEasy() and 66 or 39.1, self.vb.meteorCast+1)
 	elseif spellId == 375331 then
 		self.vb.markCast = self.vb.markCast + 1
 		specWarnConductiveMarkSpread:Show()
 		specWarnConductiveMarkSpread:Play("range5")
-		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.markCast+1) or 24.4
+		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.markCast+1) or self:IsMythic() and 25 or self:IsHeroic() and 32.8 or self:IsEasy() and 41.2
 		if timer then
 			timerConductiveMarkCD:Start(timer, self.vb.markCast+1)
 		end
@@ -266,7 +283,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 391599 or spellId == 371836 then--Mythic, Non Mythic
 		local amount = args.amount or 1
 		blizzardStacks[args.destName] = amount
-		if args:IsPlayer() and amount >= 8 then
+		if args:IsPlayer() and amount >= 7 then
 			playerBlizzardHigh = true
 			specWarnPrimalBlizzardStack:Show(amount)
 			specWarnPrimalBlizzardStack:Play("stackhigh")
@@ -298,17 +315,20 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerConductiveMarkCD:Stop()
 		timerChainLightningCD:Stop()
 	elseif spellId == 372056 and not args:IsPlayer() then
-		local amount = args.amount or 1
-		local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
-		local remaining
-		if expireTime then
-			remaining = expireTime-GetTime()
-		end
-		if (not remaining or remaining and remaining < 6.1) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
-			specWarnCrushTaunt:Show(args.destName)
-			specWarnCrushTaunt:Play("tauntboss")
-		else
-			warnCrush:Show(args.destName, amount)
+		local uId = DBM:GetRaidUnitId(args.destName)
+		if self:IsTanking(uId) then
+			local amount = args.amount or 1
+			local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
+			local remaining
+			if expireTime then
+				remaining = expireTime-GetTime()
+			end
+			if (not remaining or remaining and remaining < 6.1) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
+				specWarnCrushTaunt:Show(args.destName)
+				specWarnCrushTaunt:Play("tauntboss")
+			else
+				warnCrush:Show(args.destName, amount)
+			end
 		end
 	elseif spellId == 386370 then
 		warnQuakingConvocation:Show()
@@ -317,24 +337,27 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 374039 then
 		self.vb.meteorTotal = self.vb.meteorTotal + 1
 		if self.Options.SetIconOnMeteorAxe then
-			self:SetSortedIcon("tankroster", self.vb.meteorTotal == 2 and 0.1 or 0.4, args.destName, 1, 2, false)
+			self:SetSortedIcon("tankroster", self.vb.meteorTotal == 2 and 0.1 or 1.4, args.destName, 1, 2, false)
 		end
 		if args:IsPlayer() then
-			self:Schedule(self.vb.meteorTotal == 2 and 0.2 or 0.5, checkMyAxe, self)
+			self:Schedule(self.vb.meteorTotal == 2 and 0.2 or 1.5, checkMyAxe, self)
 		end
-		warnMeteorAxe:CombinedShow(self.vb.meteorTotal == 2 and 0.3 or 0.6, args.destName)
+		warnMeteorAxe:CombinedShow(self.vb.meteorTotal == 2 and 0.3 or 1.6, args.destName)
 	elseif spellId == 372027 and not args:IsPlayer() then
-		local amount = args.amount or 1
-		local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
-		local remaining
-		if expireTime then
-			remaining = expireTime-GetTime()
-		end
-		if (not remaining or remaining and remaining < 6.1) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
-			specWarnSlashingBlazeTaunt:Show(args.destName)
-			specWarnSlashingBlazeTaunt:Play("tauntboss")
-		else
-			warnSlashingBlaze:Show(args.destName, amount)
+		local uId = DBM:GetRaidUnitId(args.destName)
+		if self:IsTanking(uId) then
+			local amount = args.amount or 1
+			local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
+			local remaining
+			if expireTime then
+				remaining = expireTime-GetTime()
+			end
+			if (not remaining or remaining and remaining < 6.1) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
+				specWarnSlashingBlazeTaunt:Show(args.destName)
+				specWarnSlashingBlazeTaunt:Play("tauntboss")
+			else
+				warnSlashingBlaze:Show(args.destName, amount)
+			end
 		end
 	elseif spellId == 386289 then
 		warnBurningConvocation:Show()

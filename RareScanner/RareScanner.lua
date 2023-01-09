@@ -136,6 +136,9 @@ scanner_button.Description_text:SetPoint("RIGHT", Description)
 scanner_button.CloseButton = CreateFrame("Button", "CloseButton", scanner_button, "UIPanelCloseButton")
 scanner_button.CloseButton:SetPoint("BOTTOMRIGHT", -4, 4)
 scanner_button.CloseButton:SetSize(16, 16)
+scanner_button.CloseButton:HookScript("OnClick", function(self)
+	RSTomtom.RemoveCurrentTomtomWaypoint();
+end)
 
 -- Filter disabled button
 scanner_button.FilterDisabledButton = CreateFrame("Button", "FilterDisabledButton", scanner_button, "GameMenuButtonTemplate")
@@ -355,7 +358,7 @@ function scanner_button:DetectedNewVignette(self, vignetteInfo, isNavigating)
 		return
 	end
 	
-	--RSLogger:PrintDebugMessage(string.format("Vignette ATLAS [%s]", vignetteInfo.atlasName))
+	RSLogger:PrintDebugMessage(string.format("Vignette ATLAS [%s]", vignetteInfo.atlasName))
 		
 	-- Overrides name if Torghast vignette
 	if (vignetteInfo.type and vignetteInfo.type == Enum.VignetteType.Torghast) then
@@ -427,31 +430,31 @@ function scanner_button:DetectedNewVignette(self, vignetteInfo, isNavigating)
 	if (entityID == RSConstants.CATACOMBS_CACHE or RSUtils.Contains(RSConstants.CONTAINERS_WITH_NPC_VIGNETTE, entityID)) then
 		vignetteInfo.atlasName = RSConstants.CONTAINER_VIGNETTE
 	end
-	
-	-- Ignore if hidden quest is completed
-	if (RSConfigDB.IsIgnoringCompletedEntities()) then
-		if (RSConstants.IsNpcAtlas(vignetteInfo.atlasName)) then
-			if (RSNpcDB.GetInternalNpcInfo(entityID) and RSNpcDB.GetInternalNpcInfo(entityID).questID) then
-				for _, questID in ipairs(RSNpcDB.GetInternalNpcInfo(entityID).questID) do
-					if (C_QuestLog.IsQuestFlaggedCompleted(questID)) then
-						RSLogger:PrintDebugMessage(string.format("Detectado NPC [%s] con misión oculta completa, se ignora.", entityID))
-						return
+
+	if (not isNavigating) then
+		-- Ignore if hidden quest is completed
+		if (RSConfigDB.IsIgnoringCompletedEntities()) then
+			if (RSConstants.IsNpcAtlas(vignetteInfo.atlasName)) then
+				if (RSNpcDB.GetInternalNpcInfo(entityID) and RSNpcDB.GetInternalNpcInfo(entityID).questID) then
+					for _, questID in ipairs(RSNpcDB.GetInternalNpcInfo(entityID).questID) do
+						if (C_QuestLog.IsQuestFlaggedCompleted(questID)) then
+							RSLogger:PrintDebugMessage(string.format("Detectado NPC [%s] con misión oculta completa, se ignora.", entityID))
+							return
+						end
 					end
 				end
-			end
-		elseif (RSConstants.IsContainerAtlas(vignetteInfo.atlasName)) then
-			if (RSContainerDB.GetInternalContainerInfo(entityID) and RSContainerDB.GetInternalContainerInfo(entityID).questID) then
-				for _, questID in ipairs(RSNpcDB.GetInternalContainerInfo(entityID).questID) do
-					if (C_QuestLog.IsQuestFlaggedCompleted(questID)) then
-						RSLogger:PrintDebugMessage(string.format("Detectado Contenedor [%s] con misión oculta completa, se ignora.", entityID))
-						return
+			elseif (RSConstants.IsContainerAtlas(vignetteInfo.atlasName)) then
+				if (RSContainerDB.GetInternalContainerInfo(entityID) and RSContainerDB.GetInternalContainerInfo(entityID).questID) then
+					for _, questID in ipairs(RSContainerDB.GetInternalContainerInfo(entityID).questID) do
+						if (C_QuestLog.IsQuestFlaggedCompleted(questID)) then
+							RSLogger:PrintDebugMessage(string.format("Detectado Contenedor [%s] con misión oculta completa, se ignora.", entityID))
+							return
+						end
 					end
 				end
 			end
 		end
-	end
-
-	if (not isNavigating) then
+		
 		-- If the vignette is simulated
 		if (vignetteInfo.x and vignetteInfo.y) then
 			local coordinates = {}

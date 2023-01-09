@@ -8,6 +8,24 @@ function Plater.GetChangelogTable()
 	if (not Plater.ChangeLogTable) then
 		Plater.ChangeLogTable = {
 		
+			{1672167745,  "New Feature", "December 27th, 2022", "Added 'Send to Raid' button on Npc and Cast customization tab.", "Terciob"},
+			{1672167745,  "Bug Fix", "December 26th, 2022", "Fixing charged Combo Points not updating properly in some cases.", "cont1nuity"},
+			{1672167745,  "Bug Fix", "December 26th, 2022", "Fixing cast color/sounds not working after profile import.", "cont1nuity"},
+			{1672167745,  "Backend Change", "December 25th, 2022", "Better search results on NPC Colors and Names.", "Terciob"},
+			
+			{1671749018,  "Bug Fix", "December 22nd, 2022", "Fixing Evoker Essence resource points.", "cont1nuity"},
+			
+			{1671439834,  "Bug Fix", "December 17th, 2022", "Fixing more cases of invisible nameplates on some spawned or hostility changed units.", "cont1nuity"},
+			
+			{1671232346,  "Bug Fix", "December 17th, 2022", "Multiple Script bug fixes.", "Terciob"},
+			{1671232346,  "Bug Fix", "December 17th, 2022", "Hopefully fixing invisible nameplates on some spawned units.", "cont1nuity"},
+			{1671232346,  "Bug Fix", "December 13th, 2022", "Hiding blizzard buffs on personal bar.", "cont1nuity"},
+			{1671232346,  "Bug Fix", "December 13th, 2022", "Fixing cast timer being behind cast name.", "cont1nuity"},
+			{1671232346,  "Bug Fix", "December 13th, 2022", "Fixing taint issues with widgets by reusing blizzards WidgetContainer.", "cont1nuity"},
+			{1671232346,  "Bug Fix", "December 12th, 2022", "Fixing issues with LibRangeCheck by switching to other version.", "cont1nuity"},
+			{1671232346,  "Bug Fix", "December 11th, 2022", "Adding support for 'Arcane Bombardment' execute.", "D. Potvin"},
+			{1671232346,  "Bug Fix", "December 10th, 2022", "Fixing channeled spells not appearing on Cast Colors tab.", "cont1nuity"},
+			
 			{1669577376,  "Bug Fix", "December 1st, 2022", "Fixing an error when setting cast bar colors.", "cont1nuity"},
 			{1669577376,  "Bug Fix", "November 28th, 2022", "Fixing aura integration in Masque.", "cont1nuity"},
 			{1669577376,  "Bug Fix", "November 28th, 2022", "Fixing aura tooltip not updating properly.", "cont1nuity"},

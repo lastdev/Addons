@@ -137,7 +137,28 @@ lib:RegisterItems({
 	[43109] = SetReagent(2, e.Inscription), -- Icy Pigment
 	[43126] = SetReagent(2, e.Inscription, 1), -- Ink of the Sea
 	[43127] = SetReagent(2, e.Inscription, 1), -- Snowfall Ink
+
+	[37140] = SetReagent(2, e.Inscription), -- A of Rogues
+	[37143] = SetReagent(2, e.Inscription), -- 2 of Rogues
+	[37156] = SetReagent(2, e.Inscription), -- 3 of Rogues
 	
+	[37145] = SetReagent(2, e.Inscription), -- A of Swords
+	[37147] = SetReagent(2, e.Inscription), -- 2 of Swords
+	[37159] = SetReagent(2, e.Inscription), -- 3 of Swords
+	[37160] = SetReagent(2, e.Inscription), -- 3 of Swords
+	
+	[44165] = SetReagent(2, e.Inscription), -- A of Mages
+	[44144] = SetReagent(2, e.Inscription), -- 2 of Mages
+	[44145] = SetReagent(2, e.Inscription), -- 3 of Mages
+	[44146] = SetReagent(2, e.Inscription), -- 4 of Mages
+	[44147] = SetReagent(2, e.Inscription), -- 5 of Mages
+
+	[44143] = SetReagent(2, e.Inscription), -- A of Demons
+	[44154] = SetReagent(2, e.Inscription), -- 2 of Demons
+	[44155] = SetReagent(2, e.Inscription), -- 3 of Demons
+	[44156] = SetReagent(2, e.Inscription), -- 4 of Demons
+	[44157] = SetReagent(2, e.Inscription), -- 5 of Demons
+
 	[44276] = SetReagent(2, e.Inscription, 25), -- Chaos Deck
 	[42989] = SetReagent(2, e.Inscription, 25), -- Darkmoon Card: Berserker
 	[44277] = SetReagent(2, e.Inscription, 25), -- A of Chaos
@@ -489,4 +510,84 @@ lib:RegisterItems({
 	[173162] = SetReagent(8, e.Inscription, 85), -- Missive of Mastery
 	[173163] = SetReagent(8, e.Inscription, 85), -- Missive of Versatility
 	
+	-- 10.0 Dragonflight
+	[192894] = SetReagent(9, e.Inscription), -- Blotting Sand 1
+	[192895] = SetReagent(9, e.Inscription), -- Blotting Sand 2
+	[192896] = SetReagent(9, e.Inscription), -- Blotting Sand 3
+	[192897] = SetReagent(9, e.Inscription), -- Pounce 1
+	[192898] = SetReagent(9, e.Inscription), -- Pounce 2
+	[192899] = SetReagent(9, e.Inscription), -- Pounce 3
+	
+	[194751] = SetReagent(9, e.Inscription), -- Blazing Ink 1
+	[194752] = SetReagent(9, e.Inscription), -- Blazing Ink 2
+	[194846] = SetReagent(9, e.Inscription), -- Blazing Ink 3
+	[194760] = SetReagent(9, e.Inscription), -- Burnished Ink 1
+	[194761] = SetReagent(9, e.Inscription), -- Burnished Ink 2
+	[194855] = SetReagent(9, e.Inscription), -- Burnished Ink 3
+	[194754] = SetReagent(9, e.Inscription), -- Cosmic Ink 1
+	[194755] = SetReagent(9, e.Inscription), -- Cosmic Ink 2
+	[194756] = SetReagent(9, e.Inscription), -- Cosmic Ink 3
+	[194850] = SetReagent(9, e.Inscription), -- Flourishing Ink 1
+	[194758] = SetReagent(9, e.Inscription), -- Flourishing Ink 2
+	[194852] = SetReagent(9, e.Inscription), -- Flourishing Ink 3
+	[194856] = SetReagent(9, e.Inscription), -- Serene Ink 1
+	[194857] = SetReagent(9, e.Inscription), -- Serene Ink 2
+	[194858] = SetReagent(9, e.Inscription), -- Serene Ink 3
+	[194859] = SetReagent(9, e.Inscription), -- Chilled Rune 1
+	[194767] = SetReagent(9, e.Inscription), -- Chilled Rune 2
+	[194768] = SetReagent(9, e.Inscription), -- Chilled Rune 3
+	[194862] = SetReagent(9, e.Inscription), -- Runed Writhebark 1
+	[194863] = SetReagent(9, e.Inscription), -- Runed Writhebark 2
+	[194864] = SetReagent(9, e.Inscription), -- Runed Writhebark 3
+	[194784] = SetReagent(9, e.Inscription), -- Glittering Parchment
+	[198487] = SetReagent(9, e.Inscription), -- Iridescent Water
+
+	[198412] = SetReagent(9, e.Inscription), -- Serene Pigment 1
+	[198413] = SetReagent(9, e.Inscription), -- Serene Pigment 2
+	[198414] = SetReagent(9, e.Inscription), -- Serene Pigment 3
+	[198415] = SetReagent(9, e.Inscription), -- Flourishing Pigment 1
+	[198416] = SetReagent(9, e.Inscription), -- Flourishing Pigment 2
+	[198417] = SetReagent(9, e.Inscription), -- Flourishing Pigment 3
+	[198418] = SetReagent(9, e.Inscription), -- Blazing Pigment 1
+	[198419] = SetReagent(9, e.Inscription), -- Blazing Pigment 2
+	[198420] = SetReagent(9, e.Inscription), -- Blazing Pigment 3
+	[198421] = SetReagent(9, e.Inscription), -- Shimmering Pigment 1
+	[198422] = SetReagent(9, e.Inscription), -- Shimmering Pigment 2
+	[198423] = SetReagent(9, e.Inscription), -- Shimmering Pigment 3
+	
+	[194785] = SetReagent(9, e.Inscription), -- A of Fire
+	[194786] = SetReagent(9, e.Inscription), -- 2 of Fire
+	[194787] = SetReagent(9, e.Inscription), -- 3 of Fire
+	[194788] = SetReagent(9, e.Inscription), -- 4 of Fire
+	[194789] = SetReagent(9, e.Inscription), -- 5 of Fire
+	[194790] = SetReagent(9, e.Inscription), -- 6 of Fire
+	[194799] = SetReagent(9, e.Inscription), -- 7 of Fire
+	[194792] = SetReagent(9, e.Inscription), -- 8 of Fire
+	
+	[194793] = SetReagent(9, e.Inscription), -- A of Frost
+	[194794] = SetReagent(9, e.Inscription), -- 2 of Frost
+	[194795] = SetReagent(9, e.Inscription), -- 3 of Frost
+	[194796] = SetReagent(9, e.Inscription), -- 4 of Frost
+	[194797] = SetReagent(9, e.Inscription), -- 5 of Frost
+	[194798] = SetReagent(9, e.Inscription), -- 6 of Frost
+	[194791] = SetReagent(9, e.Inscription), -- 7 of Frost
+	[194800] = SetReagent(9, e.Inscription), -- 8 of Frost
+	
+	[194801] = SetReagent(9, e.Inscription), -- A of Air
+	[194802] = SetReagent(9, e.Inscription), -- 2 of Air
+	[194803] = SetReagent(9, e.Inscription), -- 3 of Air
+	[194804] = SetReagent(9, e.Inscription), -- 4 of Air
+	[194805] = SetReagent(9, e.Inscription), -- 5 of Air
+	[194806] = SetReagent(9, e.Inscription), -- 6 of Air
+	[194807] = SetReagent(9, e.Inscription), -- 7 of Air
+	[194808] = SetReagent(9, e.Inscription), -- 8 of Air
+	
+	[194809] = SetReagent(9, e.Inscription), -- A of Earth
+	[194810] = SetReagent(9, e.Inscription), -- 2 of Earth
+	[194811] = SetReagent(9, e.Inscription), -- 3 of Earth
+	[194812] = SetReagent(9, e.Inscription), -- 4 of Earth
+	[194813] = SetReagent(9, e.Inscription), -- 5 of Earth
+	[194814] = SetReagent(9, e.Inscription), -- 6 of Earth
+	[194815] = SetReagent(9, e.Inscription), -- 7 of Earth
+	[194816] = SetReagent(9, e.Inscription), -- 8 of Earth	
 })

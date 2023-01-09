@@ -1,10 +1,16 @@
-lightweight tag 2991066d9e1308555532680032383d9e1aa538dc v10.0.1
+lightweight tag 29812bfb11993c0d21fad4fcbd4e6732d8156f84 v10.0.3
 Author:	Vae <emuha17@gmail.com>
-Date:	Tue Nov 29 11:33:36 2022 -1000
+Date:	Fri Dec 16 11:18:35 2022 -1000
 
-commit 2991066d9e1308555532680032383d9e1aa538dc
+commit 29812bfb11993c0d21fad4fcbd4e6732d8156f84
 Author: Vae <emuha17@gmail.com>
-Date:   Tue Nov 29 11:33:36 2022 -1000
+Date:   Fri Dec 16 11:18:35 2022 -1000
 
-    Updated Blood and Unholy rotations
+    Updated Unholy rotation
+
+commit 67a950645c5d5ebd707188a3691e21646cd5c79f
+Author: Vae <emuha17@gmail.com>
+Date:   Wed Dec 14 10:47:35 2022 -1000
+
+    TOC update
 

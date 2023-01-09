@@ -4,7 +4,7 @@
 
 local FOLDER_NAME, private = ...
 
-local addon = LibStub("AceAddon-3.0"):NewAddon(FOLDER_NAME, "AceEvent-3.0", "AceTimer-3.0")
+local addon = LibStub("AceAddon-3.0"):NewAddon(FOLDER_NAME, "AceEvent-3.0")
 local AceDB = LibStub("AceDB-3.0")
 local HandyNotes = LibStub("AceAddon-3.0"):GetAddon("HandyNotes")
 local HBD = LibStub('HereBeDragons-2.0')
@@ -533,6 +533,10 @@ do
     function private:ShouldShow(coord, point, currentMapID)
         if (not private.db.force_nodes) then
             if (private.hidden[currentMapID] and private.hidden[currentMapID][coord]) then
+                return false
+            end
+            -- this will check if requirements are fulfilled, when remove_unknown option enabled
+            if (point.requirements and private.db.remove_unknown and not ReqFulfilled(point.requirements)) then
                 return false
             end
             -- this will check if any node is for specific class

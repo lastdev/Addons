@@ -1,5 +1,53 @@
 # Changelog
 
+## Changed in v41
+
+* Quest ID for Liskanoth
+* Assorted dirt and packs
+
+## Changed in v40
+
+* Assorted rare locations and quests
+
+## Changed in v39
+
+* Show Initiate Radiya's new location on day 5 of the Lizi's Reins quest chain
+* More dirt locations
+* Fix so that loot shows more reliably on some map POIs
+
+## Changed in v38
+
+* Add Magic-Bound Chests (with Dragonscale Expedition rep 16)
+* Honor Our Ancestors: Teerakai Ancestor got hotfixed to want a Fire-Blessed Greatsword instead
+* Show all the treasure-maps in dirt/packs/chests
+* Some minor adjustments to points in Ohn'ahran Plains
+
+## Changed in v37
+
+* Add the Otto mount
+* Add the remainder of the profession knowledge questids, thanks to Shifted
+
+## Changed in v36
+
+* More loot data obtained
+* Some position fixes for rares in Thaldraszus
+
+## Changed in v35
+
+* Add some recipes that are findable in the open world
+* Assorted data improvements, mostly around Dragonbane Keep and in the Azure Span
+
+## Changed in v34
+
+* Add loot data for the world bosses now they're present
+* Assorted random data-gathering
+
+## Changed in v33
+
+* Major loot and locations update from wowhead data
+* Show the locations for the Magmashell mount in Waking Shores
+* Profession Knowledge: How To Train Your Whelpling is finally unbugged, and I've got the questid for it
+
 ## Changed in v32
 
 * Add the various chests for Sacred Tuskarr Totems in Azure Span, hidden by default

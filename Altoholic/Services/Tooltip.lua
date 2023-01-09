@@ -463,6 +463,7 @@ local function ProcessTooltip(tooltip, link)
 		local TYPE_RAID_LOOT = 3
 		local TYPE_FACTION_ITEM = 5
 		local TYPE_ZONE_ITEM = 6
+		local TYPE_QUEST_ITEM = 7	-- Quest items that are safe to delete after quest completion.
 		
 		if itemType and expansion then
 			
@@ -494,6 +495,10 @@ local function ProcessTooltip(tooltip, link)
 					tooltip:AddLine(format("%s%s: %s%2.1f %2.1f", colors.gold, USE, colors.teal, (arg2/10), (arg3/10)), 1,1,1)
 					
 				end
+				
+			elseif itemType == TYPE_QUEST_ITEM then
+				tooltip:AddLine(format("%s%s: %s%s", colors.gold, USE, colors.teal, arg1), 1,1,1)
+			
 			end
 			
 			if Options.Get("UI.Tooltip.ShowItemXPack") then

@@ -33,7 +33,12 @@ GTFO.SpellID["390326"] = {
 
 GTFO.SpellID["372339"] = {
   --desc = "Lava";
-  sound = 1;
+  soundFunction = function() 
+	if (GTFO.Settings.IgnoreOptions and GTFO.Settings.IgnoreOptions["Lava"]) then
+		return 0;
+	end
+	return 1;
+  end;
 };
 
 GTFO.SpellID["393577"] = {
@@ -100,8 +105,94 @@ GTFO.SpellID["388759"] = {
 };
 
 GTFO.SpellID["393467"] = {
-  --desc = "Stormwall";
+  --desc = "Stormwall (Forbidden Isles)";
   sound = 1;
+};
+
+GTFO.SpellID["377853"] = {
+  --desc = "Unstable Time (Eon's Fringe)";
+  applicationOnly = true;
+  soundFunction = function() 
+	local stacks = GTFO_DebuffStackCount("player", 377853);
+	if (UnitOnTaxi("player")) then
+		-- Don't alert when flying through this area on a flight path
+		return 0;
+	elseif (stacks > 45) then
+		-- Get teleported out at 49 stacks (98% movement reduction)
+		return 1;
+	elseif (stacks == 1 or stacks % 10 == 0 or stacks >= 40) then
+		-- Getting close to being teleported out
+		return 2;
+	end
+  end;
+};
+
+GTFO.SpellID["385355"] = {
+  --desc = "Fracturing Tremor - Pool (Basrikron)";
+  sound = 1;
+};
+
+GTFO.SpellID["378927"] = {
+  --desc = "Blizzard";
+  sound = 1;
+};
+
+GTFO.SpellID["391190"] = {
+  --desc = "Stir (Bisquius)";
+  sound = 1;
+};
+
+GTFO.SpellID["395561"] = {
+  --desc = "Restless Earth (Gravlion)";
+  sound = 1;
+};
+
+GTFO.SpellID["395562"] = {
+  --desc = "Restless Earth (Gravlion)";
+  applicationOnly = true;
+  sound = 1;
+};
+
+GTFO.SpellID["375033"] = {
+  --desc = "Quaking Spike";
+  sound = 1;
+};
+
+GTFO.SpellID["394073"] = {
+  --desc = "Furious Flames (Vadne Bleakheart)";
+  sound = 1;
+};
+
+GTFO.SpellID["369690"] = {
+  --desc = "Molten Trail (Cauldronbearer Blakor)";
+  sound = 1;
+};
+
+GTFO.SpellID["390295"] = {
+  --desc = "Arc Expulsion (Strunraan)";
+  sound = 1;
+};
+
+GTFO.SpellID["388459"] = {
+  --desc = "Glaciate (Cobalt Assembly)";
+  applicationOnly = true;
+  sound = 1;
+};
+
+GTFO.SpellID["388379"] = {
+  --desc = "Glaciate (Cobalt Assembly)";
+  applicationOnly = true;
+  sound = 1;
+};
+
+GTFO.SpellID["377838"] = {
+  --desc = "Slowing Sands";
+  sound = 1;
+};
+
+GTFO.SpellID["393562"] = {
+  --desc = "Lava Pool (Zhurtan the Riverboiler)";
+  sound = 1; -- Ground AOE spawned by a mob, not be ignored like other "lava pools"
 };
 
 --- *******************
@@ -167,6 +258,17 @@ GTFO.SpellID["372820"] = {
   sound = 1;
 };
 
+GTFO.SpellID["392019"] = {
+  --desc = "Magma Eruption (Bazual)";
+  applicationOnly = true;
+  sound = 1;
+};
+
+GTFO.SpellID["389366"] = {
+  --desc = "Magma Eruption (Bazual)";
+  sound = 1;
+};
+
 --- ************************
 --- * The Nokhud Offensive *
 --- ************************
@@ -199,6 +301,11 @@ GTFO.SpellID["386916"] = {
 
 GTFO.SpellID["395669"] = {
   --desc = "Aftershock (Maruuk)";
+  sound = 1;
+};
+
+GTFO.SpellID["376899"] = {
+  --desc = "Crackling Cloud (Balakar Khan)";
   sound = 1;
 };
 
@@ -489,13 +596,33 @@ GTFO.SpellID["376325"] = {
 GTFO.SpellID["370648"] = {
   --desc = "Lava Flow (Eranog)";
   sound = 1;
-  test = true;
+};
+
+GTFO.SpellID["392563"] = {
+  --desc = "Whirling Destruction (Quarry Stonebreaker)";
+  sound = 1;
+  tankSound = 0;
+};
+
+GTFO.SpellID["393784"] = {
+  --desc = "Magma Breath (Iskakx)";
+  sound = 1;
+  tankSound = 0;
 };
 
 GTFO.SpellID["382458"] = {
   --desc = "Resonant Aftermath (Terros)";
   sound = 1;
-  test = true;
+};
+
+GTFO.SpellID["398200"] = {
+  --desc = "Djaradin Lava";
+  sound = 1;
+};
+
+GTFO.SpellID["396544"] = {
+  --desc = "Charred Ground (Magmas)";
+  sound = 1;
 };
 
 GTFO.SpellID["371514"] = {
@@ -506,27 +633,60 @@ GTFO.SpellID["371514"] = {
 	end
 	return 1;
   end;
-  test = true;
 };
 
 GTFO.SpellID["372055"] = {
   --desc = "Icy Ground (Sennarth)";
-  sound = 1;
-  test = true;
+  sound = 2;
+};
+
+GTFO.SpellID["371836"] = {
+  --desc = "Primal Blizzard (Kadros Icewrath)";
+  soundFunction = function() 
+	local stacks = GTFO_DebuffStackCount("player", 371836);
+	if (stacks == 7 or stacks == 8) then
+		return 2;
+	elseif (stacks == 9) then
+		return 1;
+	end
+  end;
+};
+
+GTFO.SpellID["371624"] = {
+  --desc = "Conductive Mark (Dathea Stormlash)";
+  spellType = "SPELL_AURA_APPLIED_DOSE"; -- Only alert when passing debuff to another player, refreshing your own
+  sound = 4;
+};
+
+GTFO.SpellID["372030"] = {
+  --desc = "Sticky Webbing (Sennarth)";
+  applicationOnly = true;
+  soundFunction = function() 
+	GTFO_AddEvent("StickyWebbing", 30);
+	local stacks = GTFO_DebuffStackCount("player", 372030);
+	if (stacks > 6) then
+		return 1;
+	else
+		return 2;
+	end
+  end;
 };
 
 GTFO.SpellID["391686"] = {
   --desc = "Conductive Mark (Dathea)";
-  applicationOnly = true;
-  spellType = "SPELL_AURA_REFRESH"; -- Only alert when passing debuff to another player, refreshing your own
+  spellType = "SPELL_AURA_APPLIED_DOSE"; -- Only alert when passing debuff to another player, refreshing your own
   sound = 4;
-  test = true;
+};
+
+GTFO.SpellID["376851"] = {
+  --desc = "Aerial Buffet (Dathea)";
+  tankSound = 1;
+  sound = 0;
 };
 
 GTFO.SpellID["374554"] = {
   --desc = "Magma Pool (Kurog Grimtotem)";
   sound = 1;
-  test = true;
 };
 
 GTFO.SpellID["390747"] = {
@@ -535,16 +695,76 @@ GTFO.SpellID["390747"] = {
   test = true;
 };
 
+GTFO.SpellID["377662"] = {
+  --desc = "Static Field (Raszageth)";
+  sound = 2;
+  negatingDebuffSpellID = 377612 -- Hurricane Wing
+};
+
 GTFO.SpellID["388115"] = {
   --desc = "Lightning Devastation (Raszageth)";
+  applicationOnly = true;
   sound = 1;
-  test = true;
 };
 
 GTFO.SpellID["395929"] = {
   --desc = "Storm's Spite (Raging Storm)";
   sound = 1;
-  test = true;
+};
+
+GTFO.SpellID["395278"] = {
+  --desc = "Electric Surge (Primal Stormsentry)";
+  sound = 4;
+  negatingDebuffSpellID = 395273; -- Electric Surge
+  ignoreSelfInflicted = true;
+};
+
+GTFO.SpellID["391711"] = {
+  --desc = "Lethal Current (Thundering Ravager)";
+  sound = 4;
+  negatingDebuffSpellID = 391696;
+};
+
+GTFO.SpellID["375883"] = {
+  --desc = "Greatstaff's Wrath (Broodkeeper Diurna)";
+  sound = 1;
+};
+
+GTFO.SpellID["379419"] = {
+  --desc = "Empowered Greatstaff's Wrath (Broodkeeper Diurna)";
+  sound = 1;
+};
+
+GTFO.SpellID["375883"] = {
+  --desc = "Greatstaff's Wrath (Broodkeeper Diurna)";
+  sound = 1;
+};
+
+GTFO.SpellID["375873"] = {
+  --desc = "Wildfire (Broodkeeper Diurna)";
+  sound = 1;
+  spellType = "SPELL_AURA_REFRESH"; -- Only alert when refreshing, being hit more than once
+};
+
+GTFO.SpellID["375578"] = {
+  --desc = "Flame Sentry (Dragonspawn Flamebender)";
+  sound = 1;
+};
+
+GTFO.SpellID["377597"] = {
+  --desc = "Lightning Breath (Raszageth)";
+  sound = 1;
+};
+
+GTFO.SpellID["394583"] = {
+  --desc = "Scattered Charge (Raszageth)";
+  applicationOnly = true;
+  sound = 4;
+};
+
+GTFO.SpellID["392196"] = {
+  --desc = "Scattered Charge (Raszageth)";
+  sound = 4;
 };
 
 end

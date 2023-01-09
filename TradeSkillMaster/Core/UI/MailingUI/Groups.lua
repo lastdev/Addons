@@ -9,8 +9,10 @@ local Groups = TSM.UI.MailingUI:NewPackage("Groups")
 local L = TSM.Include("Locale").GetTable()
 local FSM = TSM.Include("Util.FSM")
 local Log = TSM.Include("Util.Log")
+local TempTable = TSM.Include("Util.TempTable")
 local Settings = TSM.Include("Service.Settings")
 local UIElements = TSM.Include("UI.UIElements")
+local UIUtils = TSM.Include("UI.UIUtils")
 local private = {
 	settings = nil,
 	filterText = "",
@@ -39,7 +41,7 @@ end
 -- ============================================================================
 
 function private.GetGroupsFrame()
-	TSM.UI.AnalyticsRecordPathChange("mailing", "groups")
+	UIUtils.AnalyticsRecordPathChange("mailing", "groups")
 	return UIElements.New("Frame", "groups")
 		:SetLayout("VERTICAL")
 		:AddChild(UIElements.New("Frame", "container")
@@ -72,7 +74,7 @@ function private.GetGroupsFrame()
 				)
 			)
 		)
-		:AddChild(TSM.UI.Views.Line.NewHorizontal("line"))
+		:AddChild(UIElements.New("HorizontalLine", "line"))
 		:AddChild(UIElements.New("ApplicationGroupTree", "groupTree")
 			:SetMargin(0, 0, 0, 1)
 			:SetSettingsContext(private.settings, "groupTree")
@@ -103,7 +105,7 @@ function private.GetGroupsFrame()
 				:SetText(L["Total Items"]..": ".."0")
 			)
 		)
-		:AddChild(TSM.UI.Views.Line.NewHorizontal("line"))
+		:AddChild(UIElements.New("HorizontalLine", "line"))
 		:AddChild(UIElements.New("Frame", "bottom")
 			:SetLayout("VERTICAL")
 			:SetHeight(40)
@@ -234,7 +236,7 @@ function private.FSMCreate()
 		:AddState(FSM.NewState("ST_SENDING_START")
 			:SetOnEnter(function(context, sendRepeat, isDryRun)
 				context.sending = true
-				local groups = {}
+				local groups = TempTable.Acquire()
 				for _, groupPath in context.frame:GetElement("groupTree"):SelectedGroupsIterator() do
 					tinsert(groups, groupPath)
 				end
@@ -242,6 +244,7 @@ function private.FSMCreate()
 					Log.PrintUser(L["Performing a dry-run of your Mailing operations for the selected groups."])
 				end
 				TSM.Mailing.Groups.StartSending(private.FSMGroupsCallback, groups, sendRepeat, isDryRun)
+				TempTable.Release(groups)
 				UpdateButton(context)
 			end)
 			:SetOnExit(function(context)

@@ -1,10 +1,13 @@
-lightweight tag a61ab56436d0172cddc2de824a8033bad8f07119 v10.0.5
+lightweight tag 2660eb1374f88e6f8841c65e11f4019642305bfc v10.0.6
 Author:	Vae <emuha17@gmail.com>
-Date:	Sat Dec 10 17:45:47 2022 -1000
+Date:	Fri Dec 30 11:18:08 2022 -1000
 
-commit a61ab56436d0172cddc2de824a8033bad8f07119
+commit 2660eb1374f88e6f8841c65e11f4019642305bfc
 Author: Vae <emuha17@gmail.com>
-Date:   Sat Dec 10 17:45:47 2022 -1000
+Date:   Fri Dec 30 11:18:08 2022 -1000
 
-    Updated Toc
+    Updated Havoc rotation
+    Updated Vengeance rotation
+    Fixed Con sigils and precise sigils for both
+    Fixed fiery Brand for Vengeance
 

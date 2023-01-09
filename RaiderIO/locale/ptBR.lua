@@ -40,37 +40,38 @@ L["COPY_RAIDERIO_RECRUITMENT_URL"] = "Copiar URL de Recrutamento"
 L["COPY_RAIDERIO_URL"] = "Copiar URL do Raider.IO"
 L["CURRENT_MAINS_SCORE"] = "Pontuação de M+ Atual do Main"
 L["CURRENT_SCORE"] = "Pontuação Atual de M+"
---[[Translation missing --]]
---[[ L["DB_MODULES"] = ""--]] 
---[[Translation missing --]]
---[[ L["DB_MODULES_HEADER_MYTHIC_PLUS"] = ""--]] 
---[[Translation missing --]]
---[[ L["DB_MODULES_HEADER_RAIDING"] = ""--]] 
---[[Translation missing --]]
---[[ L["DB_MODULES_HEADER_RECRUITMENT"] = ""--]] 
+L["DB_MODULES"] = "Módulos de banco de dados"
+L["DB_MODULES_HEADER_MYTHIC_PLUS"] = "Mítica+"
+L["DB_MODULES_HEADER_RAIDING"] = "Raidando"
+L["DB_MODULES_HEADER_RECRUITMENT"] = "Recrutamento"
 L["DISABLE_DEBUG_MODE_RELOAD"] = "Você está desabilitando o Modo de Depuração. Clicar em Confirmar irá Recarregar sua Interface."
 L["DISABLE_RWF_MODE_BUTTON"] = "Desabilitar"
 L["DISABLE_RWF_MODE_BUTTON_TOOLTIP"] = "Clique para desativar o modo Race World First. Isso fará com que sua interface seja recarregada."
 L["DISABLE_RWF_MODE_RELOAD"] = "Você está desabilitando o modo Race World First. Clicar em Confirmar irá recarregar sua interface."
 L["DPS"] = "DPS"
+L["DUNGEON_SHORT_NAME_AA"] = "Academia Algeth'ar"
+L["DUNGEON_SHORT_NAME_AV"] = "Câmara Lazúli"
+L["DUNGEON_SHORT_NAME_COS"] = "Pátio das Estrelas"
 L["DUNGEON_SHORT_NAME_DOS"] = "Outro Lado"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_GD"] = ""--]] 
+L["DUNGEON_SHORT_NAME_GD"] = "Central do Carrilcruel"
 L["DUNGEON_SHORT_NAME_GMBT"] = "Gambito de So'leah"
 L["DUNGEON_SHORT_NAME_HOA"] = "Salões"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_ID"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_LOWR"] = ""--]] 
+L["DUNGEON_SHORT_NAME_HOV"] = "Salões da Bravura"
+L["DUNGEON_SHORT_NAME_ID"] = "Docas de Ferro"
+L["DUNGEON_SHORT_NAME_LOWR"] = "Karazhan: Inferior "
 L["DUNGEON_SHORT_NAME_MISTS"] = "Brumas"
+L["DUNGEON_SHORT_NAME_NO"] = "Ofensiva Nokhid"
 L["DUNGEON_SHORT_NAME_NW"] = "Chaga"
 L["DUNGEON_SHORT_NAME_PF"] = "Empéstia"
+L["DUNGEON_SHORT_NAME_RLP"] = "Poços da Vida Rubi"
+L["DUNGEON_SHORT_NAME_SBG"] = "Sepulcrário da Lua Negra"
 L["DUNGEON_SHORT_NAME_SD"] = "Profundezas"
 L["DUNGEON_SHORT_NAME_SOA"] = "Torres"
 L["DUNGEON_SHORT_NAME_STRT"] = "Ruas das Maravilhas"
+L["DUNGEON_SHORT_NAME_TJS"] = "Templo da Serpente de Jade"
 L["DUNGEON_SHORT_NAME_TOP"] = "Teatro"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_UPPR"] = ""--]] 
+L["DUNGEON_SHORT_NAME_UPPR"] = "Karazhan: Superior"
+L["DUNGEON_SHORT_NAME_VOTW"] = "Câmara das Guardiãs"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_WORK"] = ""--]] 
 --[[Translation missing --]]
@@ -116,8 +117,7 @@ L["MODULE_EUROPE"] = "Europa"
 L["MODULE_KOREA"] = "Coréia"
 L["MODULE_TAIWAN"] = "Taiwan"
 L["MY_PROFILE_TITLE"] = "Perfil do Raider.IO"
---[[Translation missing --]]
---[[ L["MYTHIC_PLUS_DB_MODULES"] = ""--]] 
+L["MYTHIC_PLUS_DB_MODULES"] = "Módulos de banco de dados de Mítica+"
 L["MYTHIC_PLUS_SCORES"] = "Tooltips de Mítica+"
 L["NO_GUILD_RECORD"] = "Sem registros da Guilda"
 L["OPEN_CONFIG"] = "Abrir Configuração"
@@ -134,8 +134,7 @@ L["OUTDATED_PROFILE_TOOLTIP_MESSAGE"] = [=[Atualize seu Addon agora para ver os 
 ]=]
 L["PREVIOUS_SCORE"] = "Pontuação anterior de M+ (%s)"
 L["PROFILE_BEST_RUNS"] = "Melhores Runs por Masmorra"
---[[Translation missing --]]
---[[ L["PROFILE_TOOLTIP_ANCHOR_TOOLTIP"] = ""--]] 
+L["PROFILE_TOOLTIP_ANCHOR_TOOLTIP"] = "Tranque o Quadro de Perfil do Raider.IO ou ative o Posicionamento Automático para ocultar esta âncora."
 L["PROVIDER_NOT_LOADED"] = "|cffFF0000Warning:|r |cffFFFFFF%s|r não pode encontrar dados para sua facção atual. Verifique suas configurações |cffFFFFFF/raiderio|r e ative os dados da ferramenta para |cffFFFFFF%s|r."
 L["RAID_BOSS_CN_1"] = "Guinchasa"
 L["RAID_BOSS_CN_10"] = "Sir Denathrius"
@@ -147,68 +146,37 @@ L["RAID_BOSS_CN_6"] = "Lady Verva Venumbra"
 L["RAID_BOSS_CN_7"] = "O Conselho de Sangue"
 L["RAID_BOSS_CN_8"] = "Punholodo"
 L["RAID_BOSS_CN_9"] = "Generais da Legião de Pedra"
---[[Translation missing --]]
---[[ L["RAID_BOSS_FCN_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FCN_10"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FCN_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FCN_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FCN_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FCN_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FCN_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FCN_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FCN_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FCN_9"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_10"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_11"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_9"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_10"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_9"] = ""--]] 
+L["RAID_BOSS_FCN_1"] = "[Guinchasa]"
+L["RAID_BOSS_FCN_10"] = "Sir Denathrius"
+L["RAID_BOSS_FCN_2"] = "Guarda-caça Altimor"
+L["RAID_BOSS_FCN_3"] = "Destruidor Faminto"
+L["RAID_BOSS_FCN_4"] = "Artífice Xy'mox"
+L["RAID_BOSS_FCN_5"] = "Salvação do Rei Sol"
+L["RAID_BOSS_FCN_6"] = "Lady Verva Venumbra"
+L["RAID_BOSS_FCN_7"] = "O Conselho de Sangue"
+L["RAID_BOSS_FCN_8"] = "Punholodo"
+L["RAID_BOSS_FCN_9"] = "Generais da Legião de Pedra"
+L["RAID_BOSS_FSFO_1"] = "Guardião Vigilante"
+L["RAID_BOSS_FSFO_10"] = "Rygelon"
+L["RAID_BOSS_FSFO_11"] = "O Carcereiro"
+L["RAID_BOSS_FSFO_2"] = "Skolex"
+L["RAID_BOSS_FSFO_3"] = "Artífice Xy'mox"
+L["RAID_BOSS_FSFO_4"] = "Dausegne"
+L["RAID_BOSS_FSFO_5"] = "Protótipo de Panteão"
+L["RAID_BOSS_FSFO_6"] = "Lihuvim"
+L["RAID_BOSS_FSFO_7"] = "Halondrus"
+L["RAID_BOSS_FSFO_8"] = "Anduin Wrynn"
+L["RAID_BOSS_FSFO_9"] = "Senhores do Pavor"
+L["RAID_BOSS_FSOD_1"] = "O Tarratrom"
+L["RAID_BOSS_FSOD_10"] = "Sylvana Correventos"
+L["RAID_BOSS_FSOD_2"] = "O Olho do Carcereiro"
+L["RAID_BOSS_FSOD_3"] = "As Nove"
+L["RAID_BOSS_FSOD_4"] = "Resquícios de Ner'zhul"
+L["RAID_BOSS_FSOD_5"] = "Rasgalmas Dormazain"
+L["RAID_BOSS_FSOD_6"] = "Artífice da Dor Raznal"
+L["RAID_BOSS_FSOD_7"] = "Guardião dos Primogênitos"
+L["RAID_BOSS_FSOD_8"] = "Escreve-sinas Roh-Kalo"
+L["RAID_BOSS_FSOD_9"] = "Kel'Thuzad"
 L["RAID_BOSS_SFO_1"] = "Guardião Vigilante"
 L["RAID_BOSS_SFO_10"] = "Rygelon"
 L["RAID_BOSS_SFO_11"] = "O Carcereiro"
@@ -230,6 +198,14 @@ L["RAID_BOSS_SOD_6"] = "Artífice da Dor Raznal"
 L["RAID_BOSS_SOD_7"] = "Guardião dos Primogênitos"
 L["RAID_BOSS_SOD_8"] = "Escreve-sinas Roh-Kalo"
 L["RAID_BOSS_SOD_9"] = "Kel'Thuzad"
+L["RAID_BOSS_VOTI_1"] = "Eranog"
+L["RAID_BOSS_VOTI_2"] = "Terros"
+L["RAID_BOSS_VOTI_3"] = "Conselho Primevo"
+L["RAID_BOSS_VOTI_4"] = "Sennarth, o Sopro Frio"
+L["RAID_BOSS_VOTI_5"] = "Dathea, Ascendida"
+L["RAID_BOSS_VOTI_6"] = "Kurog Temível Totem"
+L["RAID_BOSS_VOTI_7"] = "Guarda-prole Diurna"
+L["RAID_BOSS_VOTI_8"] = "Raszageth, a Devoradora de Tempestade"
 L["RAID_DIFFICULTY_NAME_HEROIC"] = "Heroico"
 L["RAID_DIFFICULTY_NAME_MYTHIC"] = "Mítico"
 L["RAID_DIFFICULTY_NAME_NORMAL"] = "Normal"
@@ -246,10 +222,8 @@ L["RAIDERIO_MP_BEST_SCORE"] = "Raider.IO Pontuação de M+ (%s)"
 L["RAIDERIO_MP_SCORE"] = "Raider.IO Pontuação de M+"
 L["RAIDERIO_MYTHIC_OPTIONS"] = "Opções do Addon do Raider.IO "
 L["RAIDING_DATA_HEADER"] = "Raider.IO Progresso de Raid"
---[[Translation missing --]]
---[[ L["RAIDING_DB_MODULES"] = ""--]] 
---[[Translation missing --]]
---[[ L["RECRUITMENT_DB_MODULES"] = ""--]] 
+L["RAIDING_DB_MODULES"] = "Módulos de banco de dados de raide"
+L["RECRUITMENT_DB_MODULES"] = "Módulos de banco de dados de recrutamento"
 L["RELOAD_LATER"] = "Recarregarei depois."
 L["RELOAD_NOW"] = "Recarregar agora."
 L["RELOAD_RWF_MODE_BUTTON"] = "Salvar"

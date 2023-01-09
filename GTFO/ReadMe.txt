@@ -1810,3 +1810,36 @@ Change Log:
 * Added Dragonflight spells for Vault of the Incarnates
 * Added Dragonflight spells for Uldaman: Legacy of Tyr
 * Added Dragonflight spells for The Azure Vault
+
+4.70.3
+* Fixed Dragonflight spells for Algeth'ar Academy
+* Added Dragonflight spells (world)
+* Added Dragonflight spells for Vault of the Incarnates
+* Added Dragonflight spells for The Nokhud Offensive
+* Added Mists of Pandaria spells for Temple of the Jade Serpent
+
+4.70.4
+* Fixed Dragonflight spells for Vault of the Incarnates
+* Added Dragonflight spells (world)
+* Added Dragonflight spells for Vault of the Incarnates
+* Added Mists of Pandaria spells for Temple of the Jade Serpent
+
+4.70.5
+* Fixed Dragonflight spells for Vault of the Incarnates
+* Added Dragonflight spells (world)
+* Added Dragonflight spells for Vault of the Incarnates
+
+5.0
+* Native support for custom sounds
+* Added Dragonflight spells (world)
+* Added Dragonflight spells for Vault of the Incarnates
+
+5.0.1
+* Added an ignore option for lava pools and campfires
+* Added Dragonflight spells (world)
+* Added Dragonflight spells for Vault of the Incarnates
+* Added Dragonflight spells for The Azure Vault
+
+5.0.2
+* Added Dragonflight spells (world)
+* Fixed Dragonflight spells for Vault of the Incarnates

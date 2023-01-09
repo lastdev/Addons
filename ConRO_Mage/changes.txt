@@ -1,10 +1,11 @@
-lightweight tag 8685e669d6a71ed5c28fe7a644676537f2302651 v10.0.1
+lightweight tag 69daa5c8755a82d735f1c733ac4c0847b1ec660f v10.0.4
 Author:	Vae <emuha17@gmail.com>
-Date:	Wed Dec 7 01:00:53 2022 -1000
+Date:	Sat Dec 31 00:39:33 2022 -1000
 
-commit 8685e669d6a71ed5c28fe7a644676537f2302651
+commit 69daa5c8755a82d735f1c733ac4c0847b1ec660f
 Author: Vae <emuha17@gmail.com>
-Date:   Wed Dec 7 01:00:53 2022 -1000
+Date:   Sat Dec 31 00:39:33 2022 -1000
 
-    Arcane Rotation updated
+    Update to Frost mage rotation.
+    Lots of small changes with big notices.
 

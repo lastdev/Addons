@@ -188,6 +188,7 @@ local ConRO_Druid, ids = ...;
 		Starfall = 191034,
 		Starlord = 279709,
 		StellarDrift = 202461,
+		UmbralEmbrace = 393763,
 	}
 	ids.Bal_Debuff = {
 		Moonfire = 164812,

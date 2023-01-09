@@ -70,16 +70,16 @@ local function showRealDate(curseDate)
 end
 
 DBM = {
-	Revision = parseCurseDate("20221214111355"),
+	Revision = parseCurseDate("20230104060624"),
 }
 
 local fakeBWVersion, fakeBWHash
 local bwVersionResponseString = "V^%d^%s"
 -- The string that is shown as version
 if isRetail then
-	DBM.DisplayVersion = "10.0.7"
-	DBM.ReleaseRevision = releaseDate(2022, 12, 14) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
-	fakeBWVersion, fakeBWHash = 243, "d58ab26"
+	DBM.DisplayVersion = "10.0.16"
+	DBM.ReleaseRevision = releaseDate(2023, 1, 4) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	fakeBWVersion, fakeBWHash = 259, "3fbb48c"
 elseif isClassic then
 	DBM.DisplayVersion = "1.14.29 alpha"
 	DBM.ReleaseRevision = releaseDate(2022, 11, 28) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
@@ -449,7 +449,7 @@ if isRetail then
 		[1220]={45, 1},[1779]={45, 1},--Legion World bosses
 		[1643]={50, 1},[1642]={50, 1},[1718]={50, 1},[1943]={50, 1},[1876]={50, 1},[2105]={50, 1},[2111]={50, 1},[2275]={50, 1},--Bfa World bosses and warfronts
 		[2222]={60, 1},[2374]={60, 1},--Shadowlands World Bosses
-		[2574]={70, 1},--Dragonflight World Bosses
+		[2444]={70, 1},[2512]={70, 1},[2574]={70, 1},--Dragonflight World Bosses
 		--Raids
 		[509]={30, 3},[531]={30, 3},[469]={30, 3},[409]={30, 3},--Classic Raids
 		[564]={30, 3},[534]={30, 3},[532]={30, 3},[565]={30, 3},[544]={30, 3},[548]={30, 3},[580]={30, 3},[550]={30, 3},--BC Raids
@@ -2644,7 +2644,7 @@ function DBM:IsTrivial(customLevel)
 			return true
 		end
 	else
-		--First, auto bail and return non trivial if it's an instancce not in table to prevent nil error
+		--First, auto bail and return non trivial if it's an instance not in table to prevent nil error
 		if not instanceDifficultyBylevel[LastInstanceMapID] then return false end
 		--Content is trivial if player level is 10 higher than content involved
 		local levelDiff = isRetail and 10 or 15
@@ -3280,7 +3280,7 @@ function DBM:SCENARIO_COMPLETED()
 		for i = #inCombat, 1, -1 do
 			local v = inCombat[i]
 			if v.inScenario then
-				self:EndCombat(v)
+				self:EndCombat(v, nil, nil, "SCENARIO_COMPLETED")
 			end
 		end
 	end
@@ -3290,7 +3290,7 @@ end
 --  Load Boss Mods on Demand  --
 --------------------------------
 do
-	local modAdvertisementShown = false
+	local pvpShown = false
 	local classicZones = {[509]=true,[531]=true,[469]=true,[409]=true}
 	local bcZones = {[564]=true,[534]=true,[532]=true,[565]=true,[544]=true,[548]=true,[580]=true,[550]=true}
 	local wrathZones = {[615]=true,[724]=true,[649]=true,[616]=true,[631]=true,[533]=true,[249]=true,[603]=true,[624]=true}
@@ -3304,13 +3304,10 @@ do
 	local pvpZones = {[30]=true,[489]=true,[529]=true,[559]=true,[562]=true,[566]=true,[572]=true,[617]=true,[618]=true,[628]=true,[726]=true,[727]=true,[761]=true,[968]=true,[980]=true,[998]=true,[1105]=true,[1134]=true,[1170]=true,[1504]=true,[1505]=true,[1552]=true,[1681]=true,[1672]=true,[1803]=true,[1825]=true,[1911]=true,[2106]=true,[2107]=true,[2118]=true,[2167]=true,[2177]=true,[2197]=true,[2245]=true,[2373]=true,[2509]=true,[2511]=true,[2547]=true,[2563]=true}
 	--This never wants to spam you to use mods for trivial content you don't need mods for.
 	--It's intended to suggest mods for content that's relevant to your level (TW, leveling up in dungeons, or even older raids you can't just roll over)
-	function DBM:CheckAvailableMods(wipeNag)
-		if _G["BigWigs"] or modAdvertisementShown then return end--If they are running two boss mods at once, lets assume they are only using DBM for a specific feature (such as brawlers) and not nag
+	function DBM:CheckAvailableMods()
+		if _G["BigWigs"] then return end--If they are running two boss mods at once, lets assume they are only using DBM for a specific feature (such as brawlers) and not nag
 		if isRetail then
 			if not self:IsTrivial() then
-				if wipeNag then--Disable message after one wipe nag, don't want to rub in a person is wiping, just nudge (once) that a mod might help
-					modAdvertisementShown = true
-				end
 				if instanceDifficultyBylevel[LastInstanceMapID] and instanceDifficultyBylevel[LastInstanceMapID][2] == 2 and not GetAddOnInfo("DBM-Party-Dragonflight") then
 					AddMsg(self, L.MOD_AVAILABLE:format("DBM Dungeon mods"))
 				elseif (classicZones[LastInstanceMapID] or bcZones[LastInstanceMapID]) and not GetAddOnInfo("DBM-BlackTemple") then
@@ -3332,12 +3329,11 @@ do
 				end
 			elseif challengeScenarios[LastInstanceMapID] and not GetAddOnInfo("DBM-Challenges") then--No trivial check on challenge scenarios
 				AddMsg(self, L.MOD_AVAILABLE:format("DBM-Challenges"))
-				modAdvertisementShown = true
 			end
 		end
-		if pvpZones[LastInstanceMapID] and not GetAddOnInfo("DBM-PvP") then
+		if pvpZones[LastInstanceMapID] and not GetAddOnInfo("DBM-PvP") and not pvpShown then
 			AddMsg(self, L.MOD_AVAILABLE:format("DBM-PvP"))
-			modAdvertisementShown = true
+			pvpShown = true
 		end
 	end
 	function DBM:TransitionToDungeonBGM(force, cleanup)
@@ -3425,15 +3421,13 @@ do
 			end
 			if savedDifficulty == "worldboss" then
 				for i = #inCombat, 1, -1 do
-					self:EndCombat(inCombat[i], true)
+					self:EndCombat(inCombat[i], true, nil, "Left zone of world boss")
 				end
 			end
 		end
 		-- LoadMod
 		self:LoadModsOnDemand("mapId", mapID)
-		if self.Options.ShowReminders then
-			self:CheckAvailableMods()
-		end
+		self:CheckAvailableMods()
 		if self:HasMapRestrictions() then
 			self.Arrow:Hide()
 			self.HudMap:Disable()
@@ -3465,6 +3459,7 @@ do
 	end
 
 	function DBM:CHALLENGE_MODE_RESET()
+		self:CheckAvailableMods()
 		if not self.Options.RecordOnlyBosses then
 			self:StartLogging(0, nil, true)
 		end
@@ -3494,9 +3489,7 @@ do
 				if enabled ~= 0 then
 					self:LoadMod(v)
 				else
-					if self.Options.ShowReminders then
-						self:AddMsg(L.LOAD_MOD_DISABLED:format(v.name))
-					end
+					self:AddMsg(L.LOAD_MOD_DISABLED:format(v.name))
 				end
 			end
 		end
@@ -3770,7 +3763,7 @@ do
 			eeSyncSender[sender] = true
 			eeSyncReceived = eeSyncReceived + 1
 			if eeSyncReceived > (isRetail and 2 or 0) then -- need at least 3 person to combat end. (for security) (only 1 on classic because classic breaks too badly otherwise)
-				DBM:EndCombat(mod, success == 0)
+				DBM:EndCombat(mod, success == 0, nil, "ENCOUNTER_END synced")
 			end
 		end
 	end
@@ -4522,9 +4515,7 @@ do
 	function DBM:ENCOUNTER_START(encounterID, name, difficulty, size)
 		self:Debug("ENCOUNTER_START event fired: "..encounterID.." "..name.." "..difficulty.." "..size)
 		if dbmIsEnabled then
-			if self.Options.ShowReminders then
-				self:CheckAvailableMods()
-			end
+			self:CheckAvailableMods()
 			if combatInfo[LastInstanceMapID] then
 				for _, v in ipairs(combatInfo[LastInstanceMapID]) do
 					if not v.noESDetection and not (#inCombat > 0 and v.noMultiBoss) then
@@ -4547,6 +4538,7 @@ do
 
 	function DBM:ENCOUNTER_END(encounterID, name, difficulty, size, success)
 		self:Debug("ENCOUNTER_END event fired: "..encounterID.." "..name.." "..difficulty.." "..size.." "..success)
+		self:CheckAvailableMods()
 		for i = #inCombat, 1, -1 do
 			local v = inCombat[i]
 			if not v.combatInfo then return end
@@ -4559,19 +4551,16 @@ do
 			if v.multiEncounterPullDetection then
 				for _, eId in ipairs(v.multiEncounterPullDetection) do
 					if encounterID == eId then
-						self:EndCombat(v, success == 0)
+						self:EndCombat(v, success == 0, nil, "ENCOUNTER_END")
 						sendSync("EE", encounterID.."\t"..success.."\t"..v.id.."\t"..(v.revision or 0))
 						return
 					end
 				end
 			elseif encounterID == v.combatInfo.eId then
-				self:EndCombat(v, success == 0)
+				self:EndCombat(v, success == 0, nil, "ENCOUNTER_END")
 				sendSync("EE", encounterID.."\t"..success.."\t"..v.id.."\t"..(v.revision or 0))
 				return
 			end
-		end
-		if not success then
-			self:CheckAvailableMods(true)
 		end
 	end
 
@@ -4584,13 +4573,13 @@ do
 			if v.multiEncounterPullDetection then
 				for _, eId in ipairs(v.multiEncounterPullDetection) do
 					if encounterID == eId then
-						self:EndCombat(v)
+						self:EndCombat(v, nil, nil, "BOSS_KILL")
 						sendSync("EE", encounterID.."\t1\t"..v.id.."\t"..(v.revision or 0))
 						return
 					end
 				end
 			elseif encounterID == v.combatInfo.eId then
-				self:EndCombat(v)
+				self:EndCombat(v, nil, nil, "BOSS_KILL")
 				sendSync("EE", encounterID.."\t1\t"..v.id.."\t"..(v.revision or 0))
 				return
 			end
@@ -4632,7 +4621,7 @@ do
 			local v = inCombat[i]
 			if not v.combatInfo then return end
 			if v.combatInfo.killType == type and v.combatInfo.killMsgs[msg] then
-				self:EndCombat(v)
+				self:EndCombat(v, nil, nil, "onMonsterMessage")
 			end
 		end
 	end
@@ -4765,7 +4754,7 @@ function checkWipe(self, confirm)
 				if not mod.noStatistics then
 					self:Debug("You wiped. Reason : " .. (wipe == 1 and "No combat unit found in your party." or "No boss found : "..(wipe or "nil")))
 				end
-				self:EndCombat(mod, true)
+				self:EndCombat(mod, true, nil, "checkWipe")
 			end
 		else
 			local maxDelayTime = (savedDifficulty == "worldboss" and 15) or 5 --wait 10s more on worldboss do actual wipe.
@@ -4951,11 +4940,11 @@ do
 				self:StartLogging(0)
 			end
 			if self.Options.HideObjectivesFrame and mod.addon.type ~= "SCENARIO" and (not isRetail or GetNumTrackedAchievements() == 0) and difficultyIndex ~= 8 and not InCombatLockdown() then
-				if isRetail then
-					if ObjectiveTrackerFrame:IsVisible() then
-						ObjectiveTracker_Collapse()
-						watchFrameRestore = true
-					end
+				if isRetail then--Do nothing do to taint and breaking
+					--if ObjectiveTrackerFrame:IsVisible() then
+					--	ObjectiveTracker_Collapse()
+					--	watchFrameRestore = true
+					--end
 				else
 					if isWrath then
 						if WatchFrame:IsVisible() then
@@ -5159,7 +5148,7 @@ do
 	end
 	DBM.UNIT_HEALTH_FREQUENT = DBM.UNIT_HEALTH
 
-	function DBM:EndCombat(mod, wipe, srmIncluded)
+	function DBM:EndCombat(mod, wipe, srmIncluded, event)
 		if removeEntry(inCombat, mod) then
 			local scenario = mod.addon.type == "SCENARIO" and not mod.soloChallenge
 			if mod.inCombatOnlyEvents and mod.inCombatOnlyEventsRegistered then
@@ -5179,6 +5168,9 @@ do
 				mod:UnregisterOnUpdateHandler()
 			end
 			mod:Stop()
+			if event then
+				self:Debug("EndCombat called by : "..event..". LastInstanceMapID is "..LastInstanceMapID)
+			end
 			if private.enableIcons and not self.Options.DontSetIcons and not self.Options.DontRestoreIcons then
 				-- restore saved previous icon
 				for uId, icon in pairs(mod.iconRestore) do
@@ -5403,7 +5395,7 @@ do
 				if not InCombatLockdown() then
 					if watchFrameRestore then
 						if isRetail then
-							ObjectiveTracker_Expand()
+							--ObjectiveTracker_Expand()
 						elseif isWrath then
 							WatchFrame:Show()
 						else -- Classic Era / BCC
@@ -5473,13 +5465,13 @@ function DBM:OnMobKill(cId, synced)
 				end
 			end
 			if allMobsDown then
-				self:EndCombat(v)
+				self:EndCombat(v, nil, nil, "All Mobs Down")
 			end
 		elseif cId == v.combatInfo.mob and not v.combatInfo.killMobs and not v.combatInfo.multiMobPullDetection then
 			if not synced then
 				sendSync("K", cId)
 			end
-			self:EndCombat(v)
+			self:EndCombat(v, nil, nil, "Main CID Down")
 		end
 	end
 end
@@ -7456,6 +7448,7 @@ do
 		[96231] = true,--Paldin Rebuke
 		[106839] = true,--Druid Skull Bash
 		[116705] = true,--Monk Spear Hand Strike
+		[147362] = true,--Hunter Countershot
 		[183752] = true,--Demon hunter Disrupt
 		[351338] = true,--Evoker Quell
 	}

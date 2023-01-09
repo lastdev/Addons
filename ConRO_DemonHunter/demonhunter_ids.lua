@@ -33,6 +33,7 @@ local ConRO_DemonHunter, ids = ...;
 		Metamorphosis = {spellID = 191427},
 		SigilofFlame = {spellID = 204596, talentID = 112854},
 			SigilofFlameCS = {spellID = 204513, talentID = 112854},
+			SigilofFlamePS = {spellID = 389810, talentID = 112854},
 		SigilofMisery = {spellID = 207684, talentID = 112859},
 		SpectralSight = {spellID = 188501},
 		TheHunt = {spellID = 370965, talentID = 112837},
@@ -47,6 +48,8 @@ local ConRO_DemonHunter, ids = ...;
 			Annihilation = {spellID = 201427},
 		DemonsBite = {spellID = 162243},
 		ElysianDecree = {spellID = 390163, talentID = 112930},
+			ElysianDecreeCS = {spellID = 389858, talentID = 112930},
+			ElysianDecreePS = {spellID = 389815, talentID = 112930},
 		EssenceBreak = {spellID = 258860, talentID = 112956},
 		EyeBeam = {spellID = 198013, talentID = 112939},
 		FelBarrage = {spellID = 258925, talentID = 112945},
@@ -165,7 +168,7 @@ local ConRO_DemonHunter, ids = ...;
 		Momentum = 208628,
 	}
 	ids.Havoc_Debuff = {
-
+		EssenceBreak = 320338,
 	}
 	ids.Havoc_PetAbility = {
 
@@ -185,7 +188,7 @@ local ConRO_DemonHunter, ids = ...;
 		Metamorphosis = {spellID = 187827},
 		SigilofFlame = {spellID = 204596, talentID = 112854},
 			SigilofFlameCS = {spellID = 204513, talentID = 112854},
-			SigilofFlamePS = {spellID = 389810, talentID = 112855},
+			SigilofFlamePS = {spellID = 389810, talentID = 112854},
 		SigilofMisery = {spellID = 207684, talentID = 112859},
 		SpectralSight = {spellID = 188501},
 		TheHunt = {spellID = 370965, talentID = 112837},
@@ -196,6 +199,8 @@ local ConRO_DemonHunter, ids = ...;
 		BulkExtraction = {spellID = 320341, talentID = 112869},
 		DemonSpikes = {spellID = 203720},
 		ElysianDecree = {spellID = 390163, talentID = 112874},
+			ElysianDecreeCS = {spellID = 389858, talentID = 112874},
+			ElysianDecreePS = {spellID = 389815, talentID = 112874},
 		FelDevastation = {spellID = 212084, talentID = 112908},
 		FieryBrand = {spellID = 204021, talentID = 112864},
 		Fracture = {spellID = 263642, talentID = 112885},
@@ -316,7 +321,7 @@ local ConRO_DemonHunter, ids = ...;
 		SoulBarrier = 263648,
 	}
 	ids.Ven_Debuff = {
-		FieryBrand = 207744,
+		FieryBrand = 207771,
 		FieryDemise = 212818,
 		Frailty = 247456,
 		SigilofFlame = 204598,

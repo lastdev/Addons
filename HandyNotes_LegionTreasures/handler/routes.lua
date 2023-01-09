@@ -36,7 +36,7 @@ function RouteWorldMapDataProvider:RefreshAllData(fromOnShow)
     for coord, point in pairs(ns.points[uiMapID]) do
         if point.routes and ns.should_show_point(coord, point, uiMapID, false) then
             for _, route in ipairs(point.routes) do
-                self:DrawRoute(route, point)
+                self:DrawRoute(route, point, uiMapID)
             end
         end
     end
@@ -67,7 +67,11 @@ function RouteWorldMapDataProvider:CreatePools()
 end
 
 local pins = {}
-function RouteWorldMapDataProvider:DrawRoute(route, point)
+function RouteWorldMapDataProvider:DrawRoute(route, point, uiMapID)
+    local related = point.related and point.related[route[1]] and ns.points[uiMapID][route[1]]
+    if related and not ns.should_show_point(related._coord, related, related._uiMapID, false) then
+        return
+    end
     for _, node in ipairs(route) do
         local x, y = HandyNotes:getXY(node)
         local pin = self:AcquirePin()
@@ -121,7 +125,7 @@ end
 
 function RoutePinMixin:OnLoad()
     -- This is below normal handynotes pins
-    self:UseFrameLevelType("PIN_FRAME_LEVEL_EVENT_OVERLAY")
+    self:UseFrameLevelType(ns.CLASSIC and "PIN_FRAME_LEVEL_MAP_LINK" or "PIN_FRAME_LEVEL_EVENT_OVERLAY")
     self:SetSize(40, 40)
     self:EnableMouse()
 end

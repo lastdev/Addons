@@ -305,6 +305,11 @@ local Factions = {
 			{ name = DataStore:GetFactionName(2503), icon = "ui_majorfaction_centaur" },      			-- Maruuk Centaur
 			{ name = DataStore:GetFactionName(2511), icon = "ui_majorfaction_tuskarr" },      			-- Iskaara Tuskarr
 			{ name = DataStore:GetFactionName(2510), icon = "ui_majorfaction_valdrakken" },      		-- Valdrakken Accord
+			{ name = DataStore:GetFactionName(2526), icon = "ui_majorfaction_valdrakken" },      		-- Winterpelt Furbolg
+			{ name = DataStore:GetFactionName(2544), icon = "inv_misc_statue_04" },      					-- Artisan's Consortium - Dragon Isles Branch
+			{ name = DataStore:GetFactionName(2550), icon = "inv_artifact_stolenpower" },      			-- Cobalt Assembly
+			{ name = DataStore:GetFactionName(2517), icon = "inv_crown_02" },      							-- Sabellian
+			{ name = DataStore:GetFactionName(2518), icon = "ui_majorfaction_valdrakken" },      		-- inv_crown_02
 		},
 	},
 	{	-- [11]
@@ -446,16 +451,16 @@ tab:RegisterGrid(2, {
 			button.Name:SetPoint("BOTTOMRIGHT", 5, 0)
 			button.Background:SetDesaturated(false)
 			
-			local status, _, _, rate, isMajorFaction = DataStore:GetReputationInfo(character, faction.name)
+			local status, _, _, rate, isMajorFaction, isFrienshipFaction = DataStore:GetReputationInfo(character, faction.name)
+			
 			if status and rate then 
 				local text
-				
 				
 				if isMajorFaction then									-- If we are dealing with a major faction ..
 					text = format("Lv %d", status)					-- .. status will contain the renown level
 					button.Name:SetFontObject("NumberFontNormalSmall")
 					button.Name:SetJustifyH("RIGHT")
-					button.Name:SetPoint("BOTTOMRIGHT", -4, 0)
+					button.Name:SetPoint("BOTTOMRIGHT", -2, 0)
 				
 				elseif status == FACTION_STANDING_LABEL8 then	-- If exalted .. 
 					text = icons.ready									-- .. just show the green check
@@ -476,7 +481,7 @@ tab:RegisterGrid(2, {
 					text = format("%2d%%", floor(rate))
 				end
 
-				local vc = isMajorFaction and VertexColors[FACTION_STANDING_LABEL4] or VertexColors[status]
+				local vc = (isMajorFaction or isFrienshipFaction) and VertexColors[FACTION_STANDING_LABEL4] or VertexColors[status]
 				button.Background:SetVertexColor(vc.r, vc.g, vc.b);
 				
 				local color = colors.white
@@ -502,9 +507,9 @@ tab:RegisterGrid(2, {
 			if not character then return end
 
 			local faction = view[ frame:GetID() ].name
-			local status, currentLevel, maxLevel, rate, isMajorFaction = DataStore:GetReputationInfo(character, faction)
+			local status, currentLevel, maxLevel, rate, isMajorFaction, isFrienshipFaction, factionID = DataStore:GetReputationInfo(character, faction)
 			if not status then return end
-			
+
 			local tooltip = AddonFactory_Tooltip
 			
 			tooltip:SetOwner(frame, "ANCHOR_LEFT")
@@ -516,8 +521,13 @@ tab:RegisterGrid(2, {
 			
 			if isMajorFaction then
 				tooltip:AddLine(format("%s: %d/%d (%s)", format(LEVEL_GAINED, status), currentLevel, maxLevel, rate),1,1,1 )
+			elseif isFrienshipFaction then
+				local ranks = C_GossipInfo.GetFriendshipReputationRanks(factionID)
+
+				tooltip:AddLine(format("%s %s/%s", RANK, status, ranks.maxLevel), 1,1,1)
+				tooltip:AddLine(format("%d/%d (%s)", currentLevel, maxLevel, rate), 1,1,1)
 			else
-				tooltip:AddLine(format("%s: %d/%d (%s)", status, currentLevel, maxLevel, rate),1,1,1 )
+				tooltip:AddLine(format("%s: %d/%d (%s)", status, currentLevel, maxLevel, rate),1,1,1)
 				
 				tooltip:AddLine(" ",1,1,1)
 				tooltip:AddLine(format("%s = %s", icons.notReady, UNKNOWN), 0.8, 0.13, 0.13)
@@ -542,7 +552,7 @@ tab:RegisterGrid(2, {
 			if not character then return end
 
 			local faction = view[ frame:GetParent():GetID() ].name
-			local status, currentLevel, maxLevel, rate, isMajorFaction = DataStore:GetReputationInfo(character, faction)
+			local status, currentLevel, maxLevel, rate, isMajorFaction, isFrienshipFaction = DataStore:GetReputationInfo(character, faction)
 			if not status then return end
 			
 			if button == "LeftButton" and IsShiftKeyDown() then

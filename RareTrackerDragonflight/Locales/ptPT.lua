@@ -124,3 +124,15 @@ L[193161] = "Presa de Lã"
 L[193663] = "Elemental Rochagravado"
 L[193658] = "Protodragão Corrompido"
 L[193664] = "Protetor Antigo"
+
+-- "That's Pretty Neat!" Rares
+L[193259] = "Terror Azul"
+L[195895] = "Nergazurai"
+L[192557] = "Quacz, o Terrível"
+L[193209] = "Zenet Avis"
+L[193273] = "Liskron, o Ofuscante"
+L[193234] = "Eldoren, o Renascido"
+L[193217] = "Asa de Draco"
+L[193154] = "Grifone Dimenticato"
+
+L[195353] = "Mascabrisa"

@@ -114,5 +114,14 @@ lib:RegisterItems({
 	[193938] = SetReagent(9, e.Tailoring), -- Azureweave Bolt 1
 	[193939] = SetReagent(9, e.Tailoring), -- Azureweave Bolt 2
 	[193940] = SetReagent(9, e.Tailoring), -- Azureweave Bolt 3
-	
+
+	[193956] = SetReagent(9, e.Tailoring), -- Blazing Embroidery Thread 1
+	[193957] = SetReagent(9, e.Tailoring), -- Blazing Embroidery Thread 2
+	[193958] = SetReagent(9, e.Tailoring), -- Blazing Embroidery Thread 3
+	[193959] = SetReagent(9, e.Tailoring), -- Chromatic Embroidery Thread 1
+	[193960] = SetReagent(9, e.Tailoring), -- Chromatic Embroidery Thread 2
+	[193961] = SetReagent(9, e.Tailoring), -- Chromatic Embroidery Thread 3
+	[193962] = SetReagent(9, e.Tailoring), -- Shimmering Embroidery Thread 1
+	[193963] = SetReagent(9, e.Tailoring), -- Shimmering Embroidery Thread 2
+	[193964] = SetReagent(9, e.Tailoring), -- Shimmering Embroidery Thread 3	
 })

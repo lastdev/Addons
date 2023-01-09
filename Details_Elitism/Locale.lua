@@ -23,14 +23,10 @@ if locale == 'zhCN' then
 --[[ L["Show how much avoidable damage was taken."] = "Show how much avoidable damage was taken."--]] 
 
 elseif locale == 'zhTW' then
---[[Translation missing --]]
---[[ L["Avoidable Abilities Taken"] = "Avoidable Abilities Taken"--]] 
---[[Translation missing --]]
---[[ L["Avoidable Damage Taken"] = "Avoidable Damage Taken"--]] 
---[[Translation missing --]]
---[[ L["Show how many avoidable abilities hit players."] = "Show how many avoidable abilities hit players."--]] 
---[[Translation missing --]]
---[[ L["Show how much avoidable damage was taken."] = "Show how much avoidable damage was taken."--]] 
+L["Avoidable Abilities Taken"] = "可避免的法術"
+L["Avoidable Damage Taken"] = "可避免的傷害"
+L["Show how many avoidable abilities hit players."] = "顯示被擊中了多少可避免的法術。"
+L["Show how much avoidable damage was taken."] = "顯示承受了多少可避免的傷害。"
 
 elseif locale == 'deDE' then
 L["Avoidable Abilities Taken"] = "Vermeidbare Fähigkeiten"

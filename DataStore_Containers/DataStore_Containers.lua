@@ -254,6 +254,7 @@ local function ScanContainer(bagID, containerType)
 	for slotID = baseIndex + 1, baseIndex + bag.size do
 		index = slotID - baseIndex
 		link = Container:GetLink(slotID, bagID)
+		
 		if link then
 			bag.ids[index] = tonumber(link:match("item:(%d+)"))
 
@@ -457,8 +458,35 @@ local function OnPlayerBankSlotsChanged(event, slotID)
 	end
 end
 
-local function OnPlayerReagentBankSlotsChanged(event)
-	ScanReagentBank()
+local function OnPlayerReagentBankSlotsChanged(event, slotID)
+	-- This event does not work in a consistent way.
+	-- When triggered after crafting an item that uses reagents from the reagent bank, it is possible to properly read the container info.
+	-- When triggered after validating a quest that uses reagents from the reagent bank, then C_Container.GetContainerItemInfo returns nil
+	
+	local bag = addon.ThisCharacter.Containers["Bag-3"]
+	if not bag then return end
+		
+	-- Get the info for that slot
+	local info = C_Container.GetContainerItemInfo(-3, slotID)
+	
+	-- Will work for crafts, but not for quest validation, leaving an invalid count. (at least in 10.0.002)
+	if info then
+		bag.ids[slotID] = info.itemID
+	
+		if info.stackCount and info.stackCount	> 1 then 
+	
+			-- only save the count if it's > 1 (to save some space since a count of 1 is extremely redundant)
+			bag.counts[slotID] = info.stackCount
+		else
+			-- otherwise be sure to invalidate the previous count
+			bag.counts[slotID] = nil
+		end
+	else
+	
+		-- the only ugly possible workaround : if info is nil (which it should not be when turning in a quest), then clear that slot.
+		bag.ids[slotID] = nil
+		bag.counts[slotID] = nil
+	end
 end
 
 local function OnBankFrameOpened()

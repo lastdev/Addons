@@ -261,16 +261,14 @@ local factions = {
 	{ id = 2510, name = GetFactionInfoByID(2510) },     -- Valdrakken Accord
 	
 	{ id = 2526, name = GetFactionInfoByID(2526) },     -- Winterpelt Furbolg
+	{ id = 2544, name = GetFactionInfoByID(2544) },     -- Artisan's Consortium - Dragon Isles Branch
+	{ id = 2550, name = GetFactionInfoByID(2550) },     -- Cobalt Assembly
+	{ id = 2517, name = GetFactionInfoByID(2517) },     -- Sabellian
+	{ id = 2518, name = GetFactionInfoByID(2518) },     -- Wrathion
 }
 
 local FactionUIDsRev = {}
 local FactionIdToName = {}
-local MajorFactions = { 
-	[2503] = true, -- Dragonscale Expedition
-	[2507] = true, -- Maruuk Centaur
-	[2510] = true, -- Iskaara Tuskarr
-	[2511] = true, -- Valdrakken Accord
-}
 
 for k, v in pairs(factions) do
 	if v.id and v.name then
@@ -348,7 +346,11 @@ local function GetEarnedRep(character, faction)
 		return character.guildRep
 	end
 	
-	return character.Factions[FactionUIDsRev[faction]]
+	local internalIndex = FactionUIDsRev[faction]
+	local factionID = factions[internalIndex] and factions[internalIndex].id
+	
+	-- also return the game's faction ID, the caller may need it
+	return character.Factions[internalIndex], factionID
 end
 
 -- *** Scanning functions ***
@@ -362,10 +364,20 @@ local function ScanReputations()
 	for i = 1, GetNumFactions() do		-- 2nd pass, data collection
 		local name, _, _, _, _, earned, _, _, _, _, _, _, _, factionID = GetFactionInfo(i)
 		
-		-- new in 3.0.2, headers may have rep, ex: alliance vanguard + horde expedition
-		-- 2021/08/20 do not test for positivity, earned rep may be negative !
-		if earned then			
-			if FactionUIDsRev[name] then		-- is this a faction we're tracking ?
+		if FactionUIDsRev[name] then		-- is this a faction we're tracking ?
+			local repInfo = factionID and C_GossipInfo.GetFriendshipReputation(factionID)
+
+			-- From WoW's ReputationFrame.lua, give priority to friendship factions
+			if (repInfo and repInfo.friendshipFactionID > 0) then
+				
+				local ranks = C_GossipInfo.GetFriendshipReputationRanks(factionID)
+
+				-- Ex: Cobalt assembly, ID 2550, standing 205 / next threshold 300 => rank 1 / 5 (5 is not saved, maxLevel is identical for all)
+				f[FactionUIDsRev[name]] = format("%d,%d,%d", ranks.currentLevel, repInfo.standing, repInfo.nextThreshold)
+			
+			-- new in 3.0.2, headers may have rep, ex: alliance vanguard + horde expedition
+			-- 2021/08/20 do not test for positivity, earned rep may be negative !
+			elseif earned then
 				-- check paragon factions
 				if (C_Reputation.IsFactionParagon(factionID)) then
 					local currentValue, threshold, _, hasRewardPending = C_Reputation.GetFactionParagonInfo(factionID)
@@ -382,7 +394,7 @@ local function ScanReputations()
 				end
 
 				-- Special treatment for new major factions in 10.0
-				if MajorFactions[factionID] then
+				if C_Reputation.IsMajorFaction(factionID) then
 					local data = C_MajorFactions.GetMajorFactionData(factionID)
 					
 					f[FactionUIDsRev[name]] = format("%d,%d,%d", data.renownLevel, data.renownReputationEarned, data.renownLevelThreshold)
@@ -449,27 +461,37 @@ end
 
 -- ** Mixins **
 local function _GetReputationInfo(character, faction)
-	local earned = GetEarnedRep(character, faction)
+	local earned, factionID = GetEarnedRep(character, faction)
 	if not earned then return end
 
+	local currentLevel, repEarned, nextLevel, rate
+	
 	-- earned reputation will be saved as a number for old/normal reputations.
 	if type(earned) == "number" then
 		local bottom, top = GetLimits(earned)
-		local rate = (earned - bottom) / (top - bottom) * 100
-
+	
 		-- ex: "Revered", 15400, 21000, 73%
-		return BottomLevelNames[bottom], (earned - bottom), (top - bottom), rate 
+		currentLevel = BottomLevelNames[bottom]
+		repEarned = earned - bottom
+		nextLevel = top - bottom
 	
 	-- For the new major factions introduced in Dragonflight, different processing is required
 	elseif type(earned) == "string" then
 		-- ex: "9,1252,2500" = level 9, 1252/2500
-		local renownLevel, repEarned, nextLevelThreshold = strsplit(",", earned)
-		local rate = repEarned / nextLevelThreshold * 100
-		local isMajorFaction = true	-- explicitly inform the called we are dealing with a major faction
-		
-		-- 9, 1252, 2500, 50%, true
-		return renownLevel, repEarned, nextLevelThreshold, rate, isMajorFaction
+		-- => 9, 1252, 2500, 50%
+		currentLevel, repEarned, nextLevel = strsplit(",", earned)
 	end
+	
+	rate = repEarned / nextLevel * 100
+	
+	-- is it a major faction ? (4 Dragonflight renown)
+	local isMajorFaction = factionID and C_Reputation.IsMajorFaction(factionID)
+	
+	-- is it a friendship faction ? 
+	local repInfo = factionID and C_GossipInfo.GetFriendshipReputation(factionID)	
+	local isFrienshipFaction = (repInfo and repInfo.friendshipFactionID > 0) 
+	
+	return currentLevel, repEarned, nextLevel, rate, isMajorFaction, isFrienshipFaction, factionID
 end
 
 local function _GetRawReputationInfo(character, faction)

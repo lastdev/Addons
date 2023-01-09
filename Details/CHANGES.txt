@@ -1,10 +1,10 @@
-tag 8020d523b6e13b2de9200c111fb0f092c3a2f46a Details.DF.Wrath.10336.148
+tag f44489911c7793612735cfdb8b173e51e4464dac Details.DF.Wrath.10403.148
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Mon Dec 12 19:06:58 2022 -0300
+Date:	Fri Jan 6 19:33:23 2023 -0300
 
-commit 388154a5408f10b5c7ffc0f2fa4b874a700b23e8
+commit 77f8e7cab3e768b903627cb8aa05f6cbcb2dfadb
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Mon Dec 12 19:06:43 2022 -0300
+Date:   Fri Jan 6 19:33:09 2023 -0300
 
-    Lib Update
+    Fixed an issue with the Streamer! plugin hiding after a logon
 

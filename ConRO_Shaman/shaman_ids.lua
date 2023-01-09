@@ -498,9 +498,11 @@ local ConRO_Shaman, ids = ...;
 	
 	}
 	ids.Resto_Buff = {
+		EarthlivingWeapon = 6498,
 		EarthShield = 974,
 		LavaSurge = 77762,
 		LightningShield = 192106,
+		WaterShield = 52127,
  	}
 	ids.Resto_Debuff = {
 		FlameShock = 188389,	

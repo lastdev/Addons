@@ -52,4 +52,8 @@ lib:RegisterItems({
 	[180733] = SetReagent(8, e.Blacksmithing, 0, bag.MiningBag), -- Luminous Flux
 	[171428] = SetReagent(8, e.Blacksmithing, 57, bag.MiningBag), -- Shadowghast Ingot
 	
+	-- 10.0 Dragonflight
+	[191511] = SetReagent(9, e.Blacksmithing), -- Stable Fluidic Draconium 1
+	[191512] = SetReagent(9, e.Blacksmithing), -- Stable Fluidic Draconium 2
+	[191513] = SetReagent(9, e.Blacksmithing), -- Stable Fluidic Draconium 3
 })

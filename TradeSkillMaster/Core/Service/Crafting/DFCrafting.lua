@@ -6,27 +6,15 @@
 
 local TSM = select(2, ...) ---@type TSM
 local DFCrafting = TSM.Crafting:NewPackage("DFCrafting")
-local Math = TSM.Include("Util.Math")
-local String = TSM.Include("Util.String")
+local Quality = TSM.Include("Service.ProfessionHelpers.Quality")
 local CraftString = TSM.Include("Util.CraftString")
+local MatString = TSM.Include("Util.MatString")
 local TempTable = TSM.Include("Util.TempTable")
+local Table = TSM.Include("Util.Table")
 local ProfessionInfo = TSM.Include("Data.ProfessionInfo")
 local private = {
-	matQualityIterContext = {
-		inUse = false,
-		isFirst = false,
-		result = {},
-		qualityMatStrings = {},
-	},
 	tempTables = {{}, {}},
 	tempTableInUse = {false, false},
-}
-local MAX_QUALITY_MAT_DIFFICULTY_RATIO = 0.25
-local NUM_QUALITY_MAT_QUALITIES = 3
-local QUALITY_MAT_STRING_ITEM_ID_PATTERNS = {
-	"^q:%d+:(%d+),%d+,%d+$",
-	"^q:%d+:%d+,(%d+),%d+$",
-	"^q:%d+:%d+,%d+,(%d+)$",
 }
 
 
@@ -35,99 +23,51 @@ local QUALITY_MAT_STRING_ITEM_ID_PATTERNS = {
 -- Module Functions
 -- ============================================================================
 
-function DFCrafting.GetCraftingCostByCraftString(craftString, usedMats)
-	local recipeDifficulty, recipeQuality, recipeMaxQuality = TSM.Crafting.GetQualityInfo(craftString)
-	if not recipeDifficulty then
-		return
-	end
-	local targetQuality = CraftString.GetQuality(craftString)
-	-- Calculate how much skill we need to add in order to craft the target item
-	local difficultyPerQuality = recipeDifficulty / (recipeMaxQuality - 1)
-	local neededSkill, maxAddedSkill = 0, 0
-	local minQuality = floor(recipeQuality)
-	if targetQuality < minQuality then
-		-- We can't craft this low of a quality anymore
-		return nil, nil
-	elseif targetQuality == recipeMaxQuality then
-		neededSkill = difficultyPerQuality * (targetQuality - recipeQuality)
-		maxAddedSkill = math.huge
-	else
-		neededSkill = max(difficultyPerQuality * (targetQuality - recipeQuality), 0)
-		maxAddedSkill = difficultyPerQuality * (targetQuality + 1 - recipeQuality)
-	end
-	assert(neededSkill >= 0 and maxAddedSkill > 0)
-	local maxQualityMatDifficulty = recipeDifficulty * MAX_QUALITY_MAT_DIFFICULTY_RATIO
-
-	local mats = private.AcquireTempTable()
-	TSM.Crafting.GetMatsAsTable(craftString, mats)
-	local cost = private.CraftingCostHelper(craftString, mats, neededSkill, maxAddedSkill, maxQualityMatDifficulty, usedMats)
-	private.ReleaseTempTable(mats)
-	return cost
+function DFCrafting.CanCraftQuality(targetQuality, recipeDifficulty, recipeQuality, recipeMaxQuality)
+	return Quality.GetNeededSkill(targetQuality, recipeDifficulty, recipeQuality, recipeMaxQuality) and true or false
 end
 
+function DFCrafting.GetOptionalMats(craftString, mats, optionalMats)
+	local recipeDifficulty, recipeQuality, recipeMaxQuality = TSM.Crafting.GetQualityInfo(craftString)
+	if not recipeDifficulty then
+		return false
+	end
+	local targetQuality = CraftString.GetQuality(craftString)
+	local neededSkill, maxAddedSkill, maxQualityMatSkill = Quality.GetNeededSkill(targetQuality, recipeDifficulty, recipeQuality, recipeMaxQuality)
+	if not neededSkill then
+		return false
+	end
 
-
--- ============================================================================
--- Private Helper Functions
--- ============================================================================
-
-function private.CraftingCostHelper(craftString, mats, neededSkill, maxAddedSkill, maxQualityMatDifficulty, usedMats)
-	local cost = 0
+	-- Cache the cost of each quality mat and calculate the total weight
 	local totalWeight = 0
 	local qualityMatCostTemp = private.AcquireTempTable()
-	-- Sum up the cost of all the base mats and cache the cost of each quality mat
-	for matString, quantity in pairs(mats) do
-		local prefix = strsub(matString, 1, 2)
-		if prefix == "i:" then
-			local matCost = TSM.Crafting.Cost.GetMatCost(matString)
-			if not matCost then
-				cost = nil
-				break
+	for matString in private.QualityMatIterator(mats) do
+		local quantity = mats[matString]
+		local isFirst = true
+		local hasValidCost = false
+		for matItemString in MatString.ItemIterator(matString) do
+			qualityMatCostTemp[matItemString] = TSM.Crafting.Cost.GetMatCost(matItemString)
+			hasValidCost = hasValidCost or qualityMatCostTemp[matItemString] ~= nil
+			if isFirst then
+				isFirst = false
+				totalWeight = totalWeight + ProfessionInfo.GetQualityMatWeight(matItemString) * quantity
 			end
-			cost = cost + matCost * quantity
-		elseif prefix == "q:" then
-			local isFirst = true
-			local _, dataSlotIndex, itemList = strsplit(":", matString)
-			dataSlotIndex = tonumber(dataSlotIndex)
-			local hasValidCost = false
-			for matItemString in String.SplitIterator(itemList, ",") do
-				matItemString = "i:"..matItemString
-				qualityMatCostTemp[matItemString] = TSM.Crafting.Cost.GetMatCost(matItemString)
-				hasValidCost = hasValidCost or qualityMatCostTemp[matItemString] ~= nil
-				if isFirst then
-					isFirst = false
-					totalWeight = totalWeight + ProfessionInfo.GetQualityMatWeight(matItemString) * quantity
-				end
-			end
-			if not hasValidCost then
-				cost = nil
-				break
-			end
-			assert(not isFirst)
-		elseif prefix == "f:" or prefix == "o:" then
-			-- Ignore for now
-		else
-			error("Invalid matString: "..tostring(matString))
 		end
+		if not hasValidCost then
+			private.ReleaseTempTable(qualityMatCostTemp)
+			return false
+		end
+		assert(not isFirst)
 	end
-	if not cost then
-		private.ReleaseTempTable(qualityMatCostTemp)
-		return nil
-	end
+
 	-- Get all combinations of quality mats
 	local lowestQualityMatCost = math.huge
-	for qualities in private.MatQualityIterator(mats) do
+	for qualities in Quality.MatCombationIterator(mats) do
 		-- Calculate the weight and cost for this set of qualities
 		local currentMatCost = 0
 		local weight = 0
-		for matString, quality in pairs(qualities) do
-			local matItemString = "i:"..strmatch(matString, QUALITY_MAT_STRING_ITEM_ID_PATTERNS[quality])
-			local matWeight = nil
-			if quality == 1 then
-				matWeight = 0
-			else
-				matWeight = ProfessionInfo.GetQualityMatWeight(matItemString) * (quality - 1) / (NUM_QUALITY_MAT_QUALITIES - 1)
-			end
+		for matString, quality, matWeight in Quality.MatQualityItemIterator(qualities) do
+			local matItemString = MatString.GetQualityItem(matString, quality)
 			local quantity = mats[matString]
 			weight = weight + matWeight * quantity
 			local matCost = qualityMatCostTemp[matItemString]
@@ -137,84 +77,46 @@ function private.CraftingCostHelper(craftString, mats, neededSkill, maxAddedSkil
 			end
 			currentMatCost = currentMatCost + matCost * quantity
 		end
-		local bonusSkill = (weight / totalWeight) * maxQualityMatDifficulty
+		local bonusSkill = (weight / totalWeight) * maxQualityMatSkill
 		if bonusSkill >= neededSkill and bonusSkill <= maxAddedSkill and currentMatCost < lowestQualityMatCost then
 			lowestQualityMatCost = currentMatCost
-			if usedMats then
-				wipe(usedMats)
-				for matString in pairs(mats) do
-					local prefix = strsub(matString, 1, 2)
-					if prefix == "i:" then
-						-- pass
-					elseif prefix == "q:" then
-						local quality = qualities[matString]
-						local matItemString = "i:"..strmatch(matString, QUALITY_MAT_STRING_ITEM_ID_PATTERNS[quality])
-						tinsert(usedMats, matItemString)
-					elseif prefix == "f:" or prefix == "o:" then
-						-- Ignore for now
-					else
-						error("Invalid matString: "..tostring(matString))
-					end
-				end
+			wipe(optionalMats)
+			for matString in private.QualityMatIterator(mats) do
+				local quality = qualities[matString]
+				local matItemString = MatString.GetQualityItem(matString, quality)
+				tinsert(optionalMats, matItemString)
+				optionalMats[matItemString] = matString
 			end
 		end
 	end
 	private.ReleaseTempTable(qualityMatCostTemp)
 	if lowestQualityMatCost == math.huge then
-		return nil
+		return false
 	end
-	local numResult = TSM.Crafting.GetNumResult(craftString)
-	cost = Math.Round((cost + lowestQualityMatCost) / numResult)
-	if cost <= 0 then
-		return nil
-	end
-	return cost
+	Table.SortWithValueLookup(optionalMats, optionalMats)
+	return true
 end
 
-function private.MatQualityIterator(mats)
-	local context = private.matQualityIterContext
-	assert(not context.inUse)
-	context.inUse = true
-	context.isFirst = true
-	for matString in pairs(mats) do
-		if strmatch(matString, "^q:") then
-			tinsert(context.qualityMatStrings, matString)
-			context.qualityMatStrings[matString] = 1
-		end
-	end
-	return private.MatQualityIteratorHelper, context
+
+
+-- ============================================================================
+-- Private Helper Functions
+-- ============================================================================
+
+function private.QualityMatIterator(mats)
+	return private.QualityMatIteratorHelper, mats, nil
 end
 
-function private.MatQualityIteratorHelper(context)
-	if context.isFirst then
-		context.isFirst = false
-	else
-		-- Increment the current value
-		local carry = true
-		for i = #context.qualityMatStrings, 1, -1 do
-			local matString = context.qualityMatStrings[i]
-			context.qualityMatStrings[matString] = context.qualityMatStrings[matString] + 1
-			if context.qualityMatStrings[matString] > NUM_QUALITY_MAT_QUALITIES then
-				context.qualityMatStrings[matString] = 1
-			else
-				carry = false
-				break
-			end
-		end
-		if carry then
-			-- No more values
-			wipe(context.result)
-			wipe(context.qualityMatStrings)
-			context.inUse = false
+function private.QualityMatIteratorHelper(mats, matString)
+	while true do
+		matString = next(mats, matString)
+		if not matString then
 			return
 		end
-	end
-	for matString, quality in pairs(context.qualityMatStrings) do
-		if type(matString) == "string" then
-			context.result[matString] = quality
+		if MatString.GetType(matString) == MatString.TYPE.QUALITY then
+			return matString
 		end
 	end
-	return context.result
 end
 
 function private.AcquireTempTable()

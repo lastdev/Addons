@@ -2,7 +2,7 @@
 ## Title: HandyNotes: Dragonflight Treasures
 ## Notes: Where are the hidden treasures in the Dragon Isles?
 ## Author: Kemayo
-## Version: v32
+## Version: v41
 ## DefaultState: enabled
 ## X-Category: Map
 ## X-eMail: kemayo @ gmail DOT com
@@ -27,9 +27,11 @@ zones\WakingShores.lua
 
 shared\ExpeditionScoutsPack.lua
 shared\DisturbedDirt.lua
+shared\MagicBoundChest.lua
 shared\TuskarrChests.lua
 shared\WarSupplyChest.lua
 shared\GrandHunts.lua
+shared\Recipes.lua
 
 achievements\FragmentsOfHistory.lua
 achievements\HighestPeaks.lua

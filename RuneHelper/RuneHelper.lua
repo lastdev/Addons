@@ -75,7 +75,7 @@ MainFrame:SetScript('OnDragStart', function(self)
     end
 end);
 MainFrame:SetScript('OnDragStop', BetterOnDragStop);
-MainFrame:SetShown(false);
+MainFrame:Hide();
 
 MainFrame.background = MainFrame:CreateTexture(nil, 'BACKGROUND');
 MainFrame.background:SetPoint('TOPLEFT', MainFrame, 'TOPLEFT', -22, 32);
@@ -98,7 +98,7 @@ VertLine:SetEndPoint('BOTTOM', -3, 28);
 local CloseButton = CreateFrame('Button', nil, MainFrame, 'UIPanelCloseButton');
 CloseButton:SetPoint('BOTTOMLEFT', MainFrame, 'TOPRIGHT', -18, -8);
 CloseButton:SetScript('OnClick', function()
-    MainFrame:SetShown(false);
+    MainFrame:Hide();
 end);
 
 local function CreateBigBoy(blockFrame)
@@ -130,7 +130,7 @@ local function CreateBigBoy(blockFrame)
     f.glowFrame:SetFrameStrata('MEDIUM');
     f.glowFrame:SetPoint('TOPLEFT', -3, 3);
     f.glowFrame:SetPoint('BOTTOMRIGHT', 3, -3);
-    f.glowFrame:SetShown(false);
+    f.glowFrame:Hide();
 
     f.glowTexture = f.glowFrame:CreateTexture(nil, 'BORDER', nil, 1);
     f.glowTexture:SetAllPoints();
@@ -160,7 +160,7 @@ local function CreateBigBoy(blockFrame)
 
     f.glowFrame.AnimGroup:SetLooping('REPEAT');
 
-    f:SetShown(false);
+    f:Hide();
 
     return f;
 end
@@ -220,7 +220,7 @@ local function MiniButton_OnClick(self, send)
 
     blocks[self.blockIndex].bigBoy.index = self.buttonIndex;
     blocks[self.blockIndex].bigBoy.texture:SetTexture(data[self.buttonIndex][1]);
-    blocks[self.blockIndex].bigBoy:SetShown(true);
+    blocks[self.blockIndex].bigBoy:Show();
     blocks[self.blockIndex].state = true;
 
     RH.ResetButton:SetEnabled(true);
@@ -244,7 +244,7 @@ local function MiniButton_OnClick(self, send)
 
                 blocks[i].bigBoy.index = lb.buttonIndex;
                 blocks[i].bigBoy.texture:SetTexture(data[lb.buttonIndex][1]);
-                blocks[i].bigBoy:SetShown(true);
+                blocks[i].bigBoy:Show();
                 blocks[i].state = true;
             end
         end
@@ -458,7 +458,7 @@ local function UpdateBossState(encounterId, inFight, isKilled)
         MainFrame:UnregisterEvent('ENCOUNTER_START');
         MainFrame:UnregisterEvent('ENCOUNTER_END');
 
-        MainFrame:SetShown(false);
+        MainFrame:Hide();
     end
 
     ResetAll();
@@ -494,7 +494,7 @@ function MainFrame:COMBAT_LOG_EVENT_UNFILTERED()
 
     if subEvent == 'SPELL_AURA_REMOVED' and spellId == HIDE_SPELL_ID then
         ResetAll();
-        MainFrame:SetShown(false);
+        MainFrame:Hide();
     end
 end
 
@@ -514,7 +514,7 @@ function MainFrame:CHAT_MSG_ADDON(prefix, message, _, sender)
     elseif command == 'RESET' then
         ResetAll();
     elseif command == 'SHOW' then
-        MainFrame:SetShown(true);
+        MainFrame:Show();
     end
 end
 
@@ -537,16 +537,16 @@ function MainFrame:UNIT_AURA()
 
     for i = 1, MAX_BLOCKS do
         if index and blocks[i].bigBoy.index == index then
-            blocks[i].bigBoy.glowFrame:SetShown(true);
+            blocks[i].bigBoy.glowFrame:Show();
             blocks[i].bigBoy.glowFrame.AnimGroup:Play();
         else
-            blocks[i].bigBoy.glowFrame:SetShown(false);
+            blocks[i].bigBoy.glowFrame:Hide();
             blocks[i].bigBoy.glowFrame.AnimGroup:Stop();
         end
     end
 
     if FindShowAura() then
-        MainFrame:SetShown(true);
+        MainFrame:Show();
         RH:SendShow();
     end
 end

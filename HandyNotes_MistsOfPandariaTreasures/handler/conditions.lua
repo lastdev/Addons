@@ -43,6 +43,7 @@ ns.conditions.Achievement = Class{
     type = 'achievement',
     Matched = function(self) return (select(4, GetAchievementInfo(self.id))) end,
 }
+ns.conditions.AchievementIncomplete = Class(Negated(ns.conditions.Achievement))
 
 ns.conditions.AuraActive = Class{
     __parent = Condition,
@@ -55,6 +56,50 @@ ns.conditions.SpellKnown = Class{
     __parent = Condition,
     type = 'spell',
     Matched = function(self) return IsSpellKnown(self.id) end,
+}
+
+ns.conditions.Profession = Class{
+    -- See https://wowpedia.fandom.com/wiki/TradeSkillLineID for IDs
+    -- TODO: make work in Classic? Whole different API.
+    __parent = RankedCondition,
+    type = "profession",
+    Matched = function(self)
+        -- The problem: this is only reliable for skill levels after the trade skill has been opened
+        local info = C_TradeSkillUI.GetProfessionInfoBySkillLineID(self.id)
+        if not (info and info.skillLevel) then return false end
+        if info.skillLevel > 0 then
+            -- we have good data
+            return info.skillLevel >= (self.rank or 1)
+        end
+        -- we need to start making guesses
+        return self:CheckProfessions(info, GetProfessions())
+    end,
+    CheckProfessions = function(self, info, ...)
+        for i = 1, select("#", ...) do
+            if self:CheckProfession(info, select(i, ...)) then
+                return true
+            end
+        end
+        return false
+    end,
+    CheckProfession = function(self, info, professionid)
+        if not professionid then return end
+        local skillName, _, skillLevel, maxSkillLevel, _, _, skillLineID, _, _, _, displayName = GetProfessionInfo(professionid)
+        if info.professionID == skillLineID then
+            -- This is the exact skill!
+            return skillLevel >= (self.rank or 1)
+        end
+        if info.parentProfessionID == skillLineID then
+            -- The overall skill is known
+            if displayName == info.professionName then
+                -- This is the highest expansion skill currently, so the reported skill level is correct
+                return skillLevel >= (self.rank or 1)
+            end
+            -- This is the wrong expansion skill... so ignore the rank check and just claim we know it
+            -- TODO: this the worst case, improve it somehow?
+            return true
+        end
+    end,
 }
 
 ns.conditions.Covenant = Class{
@@ -133,6 +178,11 @@ ns.conditions.Item = Class{
     Matched = function(self) return GetItemCount(self.id, true) >= (self.count or 1) end,
 }
 
+ns.conditions.Toy = Class{
+    __parent = ns.conditions.Item,
+    Matched = function(self) return PlayerHasToy(self.id) end,
+}
+
 ns.conditions.QuestComplete = Class{
     __parent = Condition,
     type = 'quest',
@@ -144,6 +194,12 @@ ns.conditions.WorldQuestActive = Class{
     __parent = Condition,
     type = 'worldquest',
     Matched = function(self) return C_TaskQuest.IsActive(self.id) or C_QuestLog.IsQuestFlaggedCompleted(self.id) end,
+}
+
+ns.conditions.OnQuest = Class{
+    __parent = Condition,
+    type = 'quest',
+    Matched = function(self) return C_QuestLog.IsOnQuest(self.id) end,
 }
 
 ns.conditions.Vignette = Class{
@@ -172,7 +228,82 @@ ns.conditions.Vignette = Class{
 ns.conditions.Level = Class{
     __parent = Condition,
     type = 'level',
-    Matched = function() return UnitLevel('player') >= self.id end,
+    Label = function(self) return UNIT_LEVEL_TEMPLATE:format(self.id) end,
+    Matched = function(self) return UnitLevel('player') >= self.id end,
+}
+
+ns.conditions.Class = Class{
+    __parent = Condition,
+    type = 'class',
+    Label = function(self)
+        local className = ((UnitSex("player") == 2) and LOCALIZED_CLASS_NAMES_MALE or LOCALIZED_CLASS_NAMES_FEMALE)[self.id] or self.id
+        if RAID_CLASS_COLORS[self.id] then
+            return RAID_CLASS_COLORS[self.id]:WrapTextInColorCode(className)
+        end
+        return className
+    end,
+    Matched = function(self) return select(2, UnitClass("player")) == self.id end,
+}
+
+ns.conditions.CalendarEvent = Class{
+    __parent = Condition,
+    type = 'calendarevent',
+    Label = function(self)
+        local event = self:getEvent()
+        if event and event.title then
+            return event.title
+        end
+        return Condition.Label(self)
+    end,
+    Matched = function(self)
+        if self:getEvent() then
+            return true
+        end
+    end,
+    getEvent = function(self)
+        local offset, day = self:getOffsets()
+        for i=1, C_Calendar.GetNumDayEvents(offset, day) do
+            local event = C_Calendar.GetDayEvent(offset, day, i)
+            if event.eventID == self.id then
+                return true
+            end
+        end
+    end,
+    getOffsets = function(self, current)
+        -- we could call C_Calendar.SetMonth, but that'd jump the calendar around if it's open... so instead, work out the actual offset
+        current = current or C_DateAndTime.GetCurrentCalendarTime()
+        local selected = C_Calendar.GetMonthInfo()
+        local offset = (selected.month - current.month) + ((selected.year - current.year) * 12)
+        if offset >= 1 or offset <= -1 then
+            -- calendar APIs only return information on events within the next month either way
+            if not (_G.CalendarFrame and _G.CalendarFrame:IsVisible()) then
+                -- calendar's not visible, so it's fine to move it around
+                -- SetAbsMonth because when the calendar hasn't been opened yet just SetMonth can jump to an incorrect year...
+                C_Calendar.SetAbsMonth(current.month, current.year)
+                offset = 0
+            end
+        end
+        return offset, current.monthDay
+    end,
+}
+ns.conditions.CalendarEventStartTexture = Class{
+    __parent = ns.conditions.CalendarEvent,
+    type = 'calendareventtexture',
+    getEvent = function(self)
+        local offset, day = self:getOffsets()
+        for i=1, C_Calendar.GetNumDayEvents(offset, day) do
+            local event = C_Calendar.GetDayEvent(offset, day, i)
+            if event.startTime then
+                local startoffset, startday = self:getOffsets(event.startTime)
+                for ii=1, C_Calendar.GetNumDayEvents(startoffset, startday) do
+                    local startEvent = C_Calendar.GetDayEvent(startoffset, startday, ii)
+                    if startEvent and startEvent.iconTexture == self.id then
+                        return event
+                    end
+                end
+            end
+        end
+    end
 }
 
 -- Helpers:

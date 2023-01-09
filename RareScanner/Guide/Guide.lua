@@ -574,6 +574,9 @@ private.NPC_GUIDE = {
 		[RSConstants.ENTRANCE] = { x = 0.4753, y = 0.7168 };
 		[RSConstants.FLAG] = { x = 0.4627, y = 0.7317, comment = AL["NOTE_183984_1"] };
 	}; --The Weeping Vilomah
+	["1925572023"] = { 
+		[RSConstants.FLAG] = { x = 0.7043, y = 0.6349, comment = AL["NOTE_192557_1"] };
+	}; --Quackers the Terrible
 }
 
 ---============================================================================
@@ -1099,6 +1102,36 @@ private.CONTAINER_GUIDE = {
 		[RSConstants.STEP2] = { x = 0.3301, y = 0.6410, comment = AL["NOTE_380822_1"] };
 		[RSConstants.STEP3] = { x = 0.3438, y = 0.6460, comment = AL["NOTE_380822_1"] };
 	}; --Igneous Gem
+	["3805842025"] = { 
+		[RSConstants.FLAG] = { x = 0.4984, y = 0.4031, comment = AL["NOTE_380584_1"] };
+	}; --Curious Glyph
+	["3806012024"] = { 
+		[RSConstants.ENTRANCE] = { x = 0.4652, y = 0.2430 };
+	}; --Dusty Darkmoon Card
+	["2010032025"] = { 
+		[RSConstants.DOT..1] = { x = 0.5520, y = 0.3060, comment = AL["NOTE_201003_1"] };
+		[RSConstants.DOT..2] = { x = 0.5660, y = 0.2900, comment = AL["NOTE_201003_1"] };
+		[RSConstants.DOT..3] = { x = 0.5660, y = 0.3060, comment = AL["NOTE_201003_1"] };
+		[RSConstants.DOT..4] = { x = 0.5580, y = 0.3100, comment = AL["NOTE_201003_1"] };
+		[RSConstants.DOT..5] = { x = 0.5580, y = 0.3120, comment = AL["NOTE_201003_1"] };
+	}; --Furry Gloop
+	["3823252022"] = { 
+		[RSConstants.ENTRANCE..1] = { x = 0.3063, y = 0.5147 };
+		[RSConstants.ENTRANCE..2] = { x = 0.2942, y = 0.5272 };
+	}; --Onyx Gem Cluster
+	["3780102023"] = { 
+		[RSConstants.STEP1..1] = { x = 0.2661, y = 0.4876, comment = AL["NOTE_378010_1"] };
+		[RSConstants.STEP1..2] = { x = 0.2686, y = 0.4733, comment = AL["NOTE_378010_1"] };
+		[RSConstants.STEP1..3] = { x = 0.2758, y = 0.5276, comment = AL["NOTE_378010_1"] };
+		[RSConstants.STEP1..4] = { x = 0.2774, y = 0.5084, comment = AL["NOTE_378010_1"] };
+		[RSConstants.STEP1..5] = { x = 0.2935, y = 0.4888, comment = AL["NOTE_378010_1"] };
+		[RSConstants.STEP1..6] = { x = 0.2949, y = 0.5166, comment = AL["NOTE_378010_1"] };
+		[RSConstants.STEP1..7] = { x = 0.3050, y = 0.4596, comment = AL["NOTE_378010_1"] };
+		[RSConstants.STEP1..8] = { x = 0.3618, y = 0.4690, comment = AL["NOTE_378010_1"] };
+		[RSConstants.STEP1..9] = { x = 0.3213, y = 0.4689, comment = AL["NOTE_378010_1"] };
+		[RSConstants.STEP2] = { x = 0.6703, y = 0.4372, comment = AL["NOTE_378010_2"] };
+		[RSConstants.STEP3] = { x = 0.6697, y = 0.5036, comment = AL["NOTE_378010_3"] };
+	}; --Forgotten Dragon Treasure
 }
 
 ---============================================================================

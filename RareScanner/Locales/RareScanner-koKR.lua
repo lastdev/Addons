@@ -95,7 +95,7 @@ if AL then
 	AL["DISABLE_SOUND_DESC"] = "활성화하면, 소리로 알림을 받을 수 없습니다."
 	AL["DISABLED_SEARCHING_CONTAINER"] = "이 상자에 대한 알림 꺼짐: %s"
 	AL["DISABLED_SEARCHING_EVENT"] = "이 이벤트에 대한 알림 꺼짐: %s"
-	AL["DISABLED_SEARCHING_RARE"] = "이 희귀 NPC에 대한 알림 꺼짐:"
+	AL["DISABLED_SEARCHING_RARE"] = "이 희귀 NPC에 대한 알림 꺼짐: "
 	AL["DISPLAY"] = "표시"
 	AL["DISPLAY_BUTTON"] = "버튼과 미니어쳐 표시 토글"
 	AL["DISPLAY_BUTTON_CONTAINERS"] = "보물/상자 버튼 표시 전환"

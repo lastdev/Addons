@@ -1,16 +1,11 @@
-lightweight tag a0b279212568863eadaa6e4c3e7001dd020e7bc7 v10.0.4
+lightweight tag f7b828696939f9f851573201a499393fbe8a2047 v10.0.6
 Author:	Vae <emuha17@gmail.com>
-Date:	Sun Dec 11 23:08:22 2022 -1000
+Date:	Wed Jan 4 20:54:04 2023 -1000
 
-commit a0b279212568863eadaa6e4c3e7001dd020e7bc7
+commit f7b828696939f9f851573201a499393fbe8a2047
 Author: Vae <emuha17@gmail.com>
-Date:   Sun Dec 11 23:08:22 2022 -1000
+Date:   Wed Jan 4 20:54:04 2023 -1000
 
-    Shadow update
-
-commit b4f7a9531d7925bb38eb005f8a9de06894c92702
-Author: Vae <emuha17@gmail.com>
-Date:   Sun Dec 11 00:09:12 2022 -1000
-
-    Fixed Voidbolt
+    Adjusted rotation for Shadow
+    Added Shadow to auto detect
 

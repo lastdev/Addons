@@ -243,7 +243,6 @@ function ConRO.Warlock.Affliction(_, timeShift, currentSpell, gcd, tChosen, pvpC
 		local _InevitableDemise_BUFF, _InevitableDemise_COUNT, _InevitableDemise_DUR = ConRO:Aura(Buff.InevitableDemise, timeShift);
 	local _Corruption, _Corruption_RDY																	= ConRO:AbilityReady(Ability.Corruption, timeShift);
 		local _Corruption_DEBUFF, _, _Corruption_DUR														= ConRO:TargetAura(Debuff.Corruption, timeShift);
-	local _CommandDemon_SpellLock																		= ConRO:AbilityReady(Ability.CommandDemon.SpellLock, timeShift);
 	local _DrainLife, _DrainLife_RDY = ConRO:AbilityReady(Ability.DrainLife, timeShift);
 	local _InquisitorsGaze, _InquisitorsGaze_RDY = ConRO:AbilityReady(Ability.InquisitorsGaze, timeShift);
 		local _InquisitorsGaze_BUFF = ConRO:Aura(Buff.InquisitorsGaze, timeShift);
@@ -264,7 +263,8 @@ function ConRO.Warlock.Affliction(_, timeShift, currentSpell, gcd, tChosen, pvpC
 		local _UnstableAffliction_DEBUFF, _, _UnstableAffliction_DUR = ConRO:TargetAura(Debuff.UnstableAffliction, timeShift);
 		local _UnstableAfflictionRA_DEBUFF, _, _UnstableAfflictionRA_DUR = ConRO:TargetAura(Debuff.UnstableAfflictionRA, timeShift);
 
-	local _SpellLock, _SpellLock_RDY																	= ConRO:AbilityReady(PetAbility.SpellLock, timeShift, 'pet');
+	local _SpellLockCD = ConRO:AbilityReady(Ability.CommandDemon.SpellLock, timeShift);
+	local _SpellLock, _SpellLock_RDY = ConRO:AbilityReady(PetAbility.SpellLock, timeShift, 'pet');
 	local _DevourMagic, _DevourMagic_RDY																= ConRO:AbilityReady(PetAbility.DevourMagic, timeShift, 'pet');
 	local _DrainSoul, _DrainSoul_RDY																	= ConRO:AbilityReady(Ability.DrainSoul, timeShift);
 		local _DrainSoul_DEBUFF																				= ConRO:TargetAura(Debuff.DrainSoul, timeShift);
@@ -319,8 +319,8 @@ function ConRO.Warlock.Affliction(_, timeShift, currentSpell, gcd, tChosen, pvpC
 
 
 --Indicators
-	ConRO:AbilityInterrupt(_CommandDemon_SpellLock, _SpellLock_RDY and ConRO:Interrupt());
 	ConRO:AbilityInterrupt(_SpellLock, _SpellLock_RDY and ConRO:Interrupt());
+	ConRO:AbilityInterrupt(_SpellLockCD, _SpellLock_RDY and ConRO:Interrupt());
 	ConRO:AbilityPurge(_DevourMagic, _DevourMagic_RDY and ConRO:Purgable());
 	ConRO:AbilityPurge(_ArcaneTorrent, _ArcaneTorrent_RDY and _target_in_melee and ConRO:Purgable());
 	ConRO:AbilityRaidBuffs(_InquisitorsGaze, _InquisitorsGaze_RDY and not _InquisitorsGaze_BUFF);
@@ -591,7 +591,8 @@ function ConRO.Warlock.Demonology(_, timeShift, currentSpell, gcd, tChosen, pvpC
 	local _AxeToss, _AxeToss_RDY																		= ConRO:AbilityReady(PetAbility.AxeToss, timeShift, 'pet');
 	local _DevourMagic, _DevourMagic_RDY																= ConRO:AbilityReady(PetAbility.DevourMagic, timeShift, 'pet');
 	local _Felstorm, _Felstorm_RDY, _Felstorm_CD														= ConRO:AbilityReady(PetAbility.Felstorm, timeShift, 'pet');
-	local _SpellLock, _SpellLock_RDY					 												= ConRO:AbilityReady(Ability.CommandDemon.SpellLock, timeShift, 'pet');
+	local _SpellLockCD = ConRO:AbilityReady(Ability.CommandDemon.SpellLock, timeShift);
+	local _SpellLock, _SpellLock_RDY = ConRO:AbilityReady(PetAbility.SpellLock, timeShift, 'pet');
 
 	local _BilescourgeBombers, _BilescourgeBombers_RDY													= ConRO:AbilityReady(Ability.BilescourgeBombers, timeShift);
 	local _DemonicStrength, _DemonicStrength_RDY														= ConRO:AbilityReady(Ability.DemonicStrength, timeShift);
@@ -637,6 +638,7 @@ function ConRO.Warlock.Demonology(_, timeShift, currentSpell, gcd, tChosen, pvpC
 
 --Indicators
 	ConRO:AbilityInterrupt(_SpellLock, _SpellLock_RDY and ConRO:Interrupt());
+	ConRO:AbilityInterrupt(_SpellLockCD, _SpellLock_RDY and ConRO:Interrupt());
 	ConRO:AbilityPurge(_DevourMagic, _DevourMagic_RDY and ConRO:Purgable());
 	ConRO:AbilityPurge(_ArcaneTorrent, _ArcaneTorrent_RDY and _target_in_melee and ConRO:Purgable());
 	ConRO:AbilityRaidBuffs(_InquisitorsGaze, _InquisitorsGaze_RDY and not _InquisitorsGaze_BUFF);
@@ -962,8 +964,9 @@ function ConRO.Warlock.Destruction(_, timeShift, currentSpell, gcd, tChosen, pvp
 	local _SummonSoulkeeper, _SummonSoulkeeper_RDY = ConRO:AbilityReady(Ability.SummonSoulkeeper, timeShift);
 		local _SummonSoulkeeper_Count = GetSpellCount(_SummonSoulkeeper);
 
-	local _SpellLock, _SpellLock_RDY 																	= ConRO:AbilityReady(Ability.CommandDemon.SpellLock, timeShift, 'pet');
-	local _DevourMagic, _DevourMagic_RDY																= ConRO:AbilityReady(PetAbility.DevourMagic, timeShift, 'pet');
+	local _SpellLockCD = ConRO:AbilityReady(Ability.CommandDemon.SpellLock, timeShift);
+	local _SpellLock, _SpellLock_RDY = ConRO:AbilityReady(PetAbility.SpellLock, timeShift, 'pet');
+	local _DevourMagic, _DevourMagic_RDY = ConRO:AbilityReady(PetAbility.DevourMagic, timeShift, 'pet');
 
 	local _Cataclysm, _Cataclysm_RDY																	= ConRO:AbilityReady(Ability.Cataclysm, timeShift);
 	local _ChannelDemonfire, _ChannelDemonfire_RDY									 					= ConRO:AbilityReady(Ability.ChannelDemonfire, timeShift);
@@ -994,6 +997,7 @@ function ConRO.Warlock.Destruction(_, timeShift, currentSpell, gcd, tChosen, pvp
 
 --Indicators
 	ConRO:AbilityInterrupt(_SpellLock, _SpellLock_RDY and ConRO:Interrupt());
+	ConRO:AbilityInterrupt(_SpellLockCD, _SpellLock_RDY and ConRO:Interrupt());
 	ConRO:AbilityPurge(_DevourMagic, _DevourMagic_RDY and ConRO:Purgable());
 	ConRO:AbilityPurge(_ArcaneTorrent, _ArcaneTorrent_RDY and _target_in_melee and ConRO:Purgable());
 	ConRO:AbilityRaidBuffs(_InquisitorsGaze, _InquisitorsGaze_RDY and not _InquisitorsGaze_BUFF);

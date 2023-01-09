@@ -133,4 +133,12 @@ lib:RegisterItems({
 	[171288] = SetReagent(8, e.Alchemy, 80), -- Ground Vigil's Torch
 	[171289] = SetReagent(8, e.Alchemy, 105), -- Ground Widowbloom
 	[180457] = SetReagent(8, e.Alchemy, 175), -- Shadestone
+	
+	-- 10.0 Dragonflight
+	[191520] = SetReagent(9, e.Alchemy), -- Agitating Potion Augmentation 1
+	[191521] = SetReagent(9, e.Alchemy), -- Agitating Potion Augmentation 2
+	[191522] = SetReagent(9, e.Alchemy), -- Agitating Potion Augmentation 3
+	[191523] = SetReagent(9, e.Alchemy), -- Reactive Phial Embellishment 1
+	[191524] = SetReagent(9, e.Alchemy), -- Reactive Phial Embellishment 2
+	[191525] = SetReagent(9, e.Alchemy), -- Reactive Phial Embellishment 3
 })

@@ -1,7 +1,7 @@
 --[[-------------------------------------------------------------------------
 -- Simple Configuration Panel for SIA and STA
 --
--- Copyright 2012-2020 BeathsCurse (Bowmore - Silvermoon EU)
+-- Copyright 2012-2022 BeathsCurse (Bowmore - Silvermoon EU)
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
@@ -125,7 +125,10 @@ function panel:CreateCheckBox(text, LoadValue, SaveValue, defaultValue)
 	getglobal(checkBox:GetName() .. 'Text'):SetText(text)
 
 	-- Update currentValue on click
-	checkBox:SetScript('OnClick', function(self) self.currentValue = self:GetChecked() end)
+	checkBox:SetScript('OnClick', function(self)
+		self.currentValue = self:GetChecked()
+		self.SaveValue(self.currentValue)
+	end)
 
 	self.controls[checkBox:GetName()] = checkBox
 
@@ -137,6 +140,7 @@ end
 local function DropDownOnClick(_, dropDown, selectedValue)
 	dropDown.currentValue = selectedValue
 	UIDropDownMenu_SetText(dropDown, dropDown.valueTexts[selectedValue])
+	dropDown.SaveValue(selectedValue)
 end
 
 -- Initialization function for dropdowns, adds all pairs in valueList

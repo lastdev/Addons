@@ -1940,7 +1940,7 @@ do
             elseif k == "mounted" or k == "is_mounted" then t[k] = IsMounted()
             elseif k == "moving" then t[k] = ( GetUnitSpeed("player") > 0 )
             elseif k == "raid" then t[k] = IsInRaid() and t.group_members > 5
-            elseif k == "solo" then t[k] = t.group_members == 0
+            elseif k == "solo" then t[k] = t.group_members == 1
             elseif k == "tanking" then t[k] = t.role.tank and t.aggro
 
             -- Enemy counting.
@@ -6826,6 +6826,8 @@ do
         local profile = Hekili.DB.profile
         local spec = rawget( profile.specs, state.spec.id )
         if not spec then return true end
+
+        if ability.disabled then return true, "disabled per ability function" end
 
         local option = ability.item and spec.items[ spell ] or spec.abilities[ spell ]
 

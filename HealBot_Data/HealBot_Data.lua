@@ -139,6 +139,9 @@ HealBot_Config_BuffsDefaults = {
   LongBuffTimer=120,
   AutoBuff=1,
   AutoBuffCastBy=1,
+  ListSortOrder=1,
+  ListSortFilter=1,
+  ListSortFilterTag="",
   AutoBuffExpireTime=31,
   BuffWatchWhenGrouped=false,
   BuffWatchWhenMounted=false,
@@ -184,6 +187,9 @@ HealBot_Config_CuresDefaults = {
   ShowDebuffWarning = true,
   AlwaysShowBoss = true,
   AlwaysShowTimed = false,
+  ListSortOrder=1,
+  ListSortFilter=1,
+  ListSortFilterTag="",
   ShowTimeMaxDuration = 31,
   CDCshownHB=true,
   ShowGroups={[1]=true, [2]=true, [3]=true, [4]=true, [5]=true, [6]=true, [7]=true, [8]=true, },
@@ -273,6 +279,7 @@ function HealBot_Data_InitVars()
         PluginHealthWatch=true,
         PluginManaWatch=true,
         AllowPlayerRoles=false,
+        VehicleFontSizeReduction=4,
         CrashProtTime=0,
         NoRanks=false,
         ClassicHoTTime=6,
@@ -400,6 +407,7 @@ function HealBot_Data_InitVars()
         HealBot_Custom_Debuffs_ShowBarCol={  
             [HEALBOT_CUSTOM_CAT_CUSTOM_AUTOMATIC] = 3,
         },
+        CDCTag={},
         IgnoreCustomDebuff={},
         FilterCustomDebuff={
         },
@@ -409,6 +417,7 @@ function HealBot_Data_InitVars()
             [HEALBOT_CUSTOM_CAT_CUSTOM_AUTOMATIC] = 15,
         },
         Custom_Debuff_Categories=HEALBOT_CUSTOM_DEBUFF_CATS,
+        CustomBuffTag={},
         IgnoreCustomBuff={},
         HealBot_Custom_Buffs={},
         CustomBuffBarColour = {

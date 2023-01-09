@@ -36,7 +36,7 @@ local ConRO_Warrior, ids = ...;
 		BitterImmunity = {spellID = 383762, talentID = 112220},
 		Charge = {spellID = 100},
 		DefensiveStance = {spellID = 386208, talentID = 112187},
-		Execute = {spellID = 281000},
+		Execute = {spellID = 163201},
 		Hamstring = {spellID = 1715},
 		HeroicLeap = {spellID = 6544, talentID = 112208},
 		HeroicThrow = {spellID = 57755},

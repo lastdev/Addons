@@ -330,7 +330,7 @@ function ConRO.Warrior.Arms(_, timeShift, currentSpell, gcd, tChosen)
 			_Skullsplitter_RDY = false;
 		end
 
-		if _MortalStrike_RDY and not _DeepWounds_DEBUFF or _ExecutionersPrecision_COUNT >= 2 and (_enemies_in_melee <= 3 or ConRO_SingleButton:IsVisible()) then
+		if _MortalStrike_RDY and (not _DeepWounds_DEBUFF or _ExecutionersPrecision_COUNT >= 2 and (not tChosen[Passive.TestofMight.talentID] or (tChosen[Passive.TestofMight.talentID] and _ColossusSmash_DEBUFF))) and (_enemies_in_melee <= 3 or ConRO_SingleButton:IsVisible()) then
 			tinsert(ConRO.SuggestedSpells, _MortalStrike);
 			_MortalStrike_RDY = false;
 		end
@@ -345,7 +345,7 @@ function ConRO.Warrior.Arms(_, timeShift, currentSpell, gcd, tChosen)
 			_Rend_DEBUFF = true;
 		end
 
-		if _Bladestorm_RDY and ConRO:FullMode(_Bladestorm) then
+		if _Bladestorm_RDY and (not tChosen[Passive.TestofMight.talentID] or (tChosen[Passive.TestofMight.talentID] and not _ColossusSmash_DEBUFF)) and ConRO:FullMode(_Bladestorm) then
 			tinsert(ConRO.SuggestedSpells, _Bladestorm);
 			_Bladestorm_RDY = false;
 		end
@@ -368,12 +368,12 @@ function ConRO.Warrior.Arms(_, timeShift, currentSpell, gcd, tChosen)
 			tinsert(ConRO.SuggestedSpells, _Whirlwind);
 		end
 
-		if _Overpower_RDY and _Overpower_CHARGES >= 1 then
+		if _Overpower_RDY and _Overpower_CHARGES >= 1 and (not tChosen[Passive.TestofMight.talentID] or (tChosen[Passive.TestofMight.talentID] and not _ColossusSmash_DEBUFF)) then
 			tinsert(ConRO.SuggestedSpells, _Overpower);
 			_Overpower_CHARGES = _Overpower_CHARGES - 1;
 		end
 
-		if _Slam_RDY and not _can_execute and _Rage >= 50 and ((ConRO_AutoButton:IsVisible() and _enemies_in_melee <= 1) or ConRO_SingleButton:IsVisible()) then
+		if _Slam_RDY and not _can_execute and _Rage >= 50 and (not tChosen[Passive.TestofMight.talentID] or (tChosen[Passive.TestofMight.talentID] and _ColossusSmash_DEBUFF)) and ((ConRO_AutoButton:IsVisible() and _enemies_in_melee <= 1) or ConRO_SingleButton:IsVisible()) then
 			tinsert(ConRO.SuggestedSpells, _Slam);
 		end
 	end
@@ -555,9 +555,9 @@ function ConRO.Warrior.Fury(_, timeShift, currentSpell, gcd, tChosen)
 			_SpearofBastion_RDY = false;
 		end
 
-		if _RagingBlow_RDY and tChosen[Passive.RecklessAbandon.talentID] and _RecklessAbandon_BUFF then
-			tinsert(ConRO.SuggestedSpells, _RagingBlow);
-			_RagingBlow_CHARGES = _RagingBlow_CHARGES - 1;
+		if _OdynsFury_RDY and (_Enrage_BUFF or tChosen[Passive.TitanicRage.talentID]) then
+			tinsert(ConRO.SuggestedSpells, _OdynsFury);
+			_OdynsFury_RDY = false;
 		end
 
 		if _Execute_RDY and (_can_execute or _SuddenDeath_BUFF) then
@@ -565,14 +565,14 @@ function ConRO.Warrior.Fury(_, timeShift, currentSpell, gcd, tChosen)
 			_Execute_RDY = false;
 		end
 
+		if _RagingBlow_RDY and tChosen[Passive.RecklessAbandon.talentID] and _RecklessAbandon_BUFF and not tChosen[Passive.Annihilator.talentID] then
+			tinsert(ConRO.SuggestedSpells, _RagingBlow);
+			_RagingBlow_CHARGES = _RagingBlow_CHARGES - 1;
+		end
+
 		if _ThunderousRoar_RDY and _Enrage_BUFF then
 			tinsert(ConRO.SuggestedSpells, _ThunderousRoar);
 			_ThunderousRoar_RDY = false;
-		end
-
-		if _OdynsFury_RDY and (_Enrage_BUFF or tChosen[Passive.TitanicRage.talentID]) then
-			tinsert(ConRO.SuggestedSpells, _OdynsFury);
-			_OdynsFury_RDY = false;
 		end
 
 		if _Onslaught_RDY and (_Enrage_BUFF or tChosen[Passive.Tenderize.talentID]) then

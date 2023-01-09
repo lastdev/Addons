@@ -124,3 +124,15 @@ L[193161] = "Croc-de-laine"
 L[193663] = "Élémentaire furoc"
 L[193658] = "Proto-dragon corrompu"
 L[193664] = "Ancien protecteur"
+
+-- "That's Pretty Neat!" Rares
+L[193259] = "Terreur bleue"
+L[195895] = "Nergazuraï"
+L[192557] = "Coincoin le Terrible"
+L[193209] = "Zenet Avis"
+L[193273] = "Liskron l'éblouissant"
+L[193234] = "Eldoren le Ressuscité"
+L[193217] = "Aile-de-drake"
+L[193154] = "Griffon oublié"
+
+L[195353] = "Croque-bise"

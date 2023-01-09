@@ -456,6 +456,7 @@ local ConRO_Mage, ids = ...;
 		PrismaticCloak = {spellID = 198064},
 	}
 	ids.Frost_Form = {
+		FreezingWinds = 382106,
 		RuneofPower = 116014,
 	}
 	ids.Frost_Buff = {
