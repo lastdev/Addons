@@ -295,11 +295,23 @@ local function DragonflightRenownShow(toon, index)
 
   local text
   local majorFactionIDs = C_MajorFactions.GetMajorFactionIDs(LE_EXPANSION_DRAGONFLIGHT)
-  for i, factionID in ipairs(majorFactionIDs) do
-    if i == 1 then
+
+  local factionIDs = Module.TrackedQuest[index].factionIDs
+  for _, factionID in ipairs(factionIDs) do
+    if not text then
       text = t.Progress[index][factionID] and t.Progress[index][factionID][1] or '0'
     else
       text = text .. ' / ' .. (t.Progress[index][factionID] and t.Progress[index][factionID][1] or '0')
+    end
+  end
+
+  for _, factionID in ipairs(majorFactionIDs) do
+    if not tContains(factionIDs, factionID) then
+      if not text then
+        text = t.Progress[index][factionID] and t.Progress[index][factionID][1] or '0'
+      else
+        text = text .. ' / ' .. (t.Progress[index][factionID] and t.Progress[index][factionID][1] or '0')
+      end
     end
   end
 
@@ -308,6 +320,191 @@ end
 
 local function DragonflightRenownReset(toon, index)
   -- do nothing
+end
+
+-- Aiding the Accord
+local function AidingTheAccordUpdate(index)
+  SI.db.Toons[SI.thisToon].Progress[index] = wipe(SI.db.Toons[SI.thisToon].Progress[index] or {})
+  local result = SI.db.Toons[SI.thisToon].Progress[index]
+
+  for _, questID in ipairs(Module.TrackedQuest[index].relatedQuest) do
+    if C_QuestLog_IsQuestFlaggedCompleted(questID) then
+      result.unlocked = true
+      result.isComplete = true
+
+      break
+    elseif C_QuestLog_IsOnQuest(questID) then
+      result.unlocked = true
+      result.isComplete = false
+
+      local showText
+      local allFinished = true
+      local leaderboardCount = C_QuestLog.GetNumQuestObjectives(questID)
+      for i = 1, leaderboardCount do
+        local text, objectiveType, finished, numFulfilled, numRequired = GetQuestObjectiveInfo(questID, i, false)
+        result[i] = text
+        allFinished = allFinished and finished
+
+        local objectiveText
+        if objectiveType == 'progressbar' then
+          objectiveText = floor((numFulfilled or 0) / numRequired * 100) .. "%"
+        else
+          objectiveText = numFulfilled .. "/" .. numRequired
+        end
+
+        if i == 1 then
+          showText = objectiveText
+        else
+          showText = showText .. ' ' .. objectiveText
+        end
+      end
+
+      result.leaderboardCount = leaderboardCount
+      result.isFinish = allFinished
+      result.text = showText
+      break
+    end
+  end
+end
+
+local function AidingTheAccordShow(toon, index)
+  local t = SI.db.Toons[toon]
+  if not t or not t.Quests then return end
+  if not t or not t.Progress or not t.Progress[index] then return end
+
+  return t.Progress[index].text
+end
+
+local function AidingTheAccordReset(toon, index)
+  local t = SI.db.Toons[toon]
+  if not t or not t.Quests then return end
+  if not t or not t.Progress or not t.Progress[index] then return end
+
+  if t.Progress[index].isComplete then
+    wipe(t.Progress[index])
+  end
+end
+
+-- Grand Hunt
+local function GrandHuntUpdate(index)
+  SI.db.Toons[SI.thisToon].Progress[index] = wipe(SI.db.Toons[SI.thisToon].Progress[index] or {})
+  for _, questID in ipairs(Module.TrackedQuest[index].relatedQuest) do
+    SI.db.Toons[SI.thisToon].Progress[index][questID] = C_QuestLog_IsQuestFlaggedCompleted(questID)
+  end
+end
+
+local function GrandHuntShow(toon, index)
+  local t = SI.db.Toons[toon]
+  if not t or not t.Quests then return end
+  if not t or not t.Progress or not t.Progress[index] then return end
+
+  local totalDone = 0
+  for _, questID in ipairs(Module.TrackedQuest[index].relatedQuest) do
+    if t.Progress[index][questID] then
+      totalDone = totalDone + 1
+    end
+  end
+  return string.format("%d/%d", totalDone, #Module.TrackedQuest[index].relatedQuest)
+end
+
+local function GrandHuntReset(toon, index)
+  local t = SI.db.Toons[toon]
+  if not t or not t.Progress or not t.Progress[index] then return end
+
+  wipe(t.Progress[index])
+end
+
+-- Primal Storms Core
+local function PrimalStormsCoreUpdate(index)
+  SI.db.Toons[SI.thisToon].Progress[index] = wipe(SI.db.Toons[SI.thisToon].Progress[index] or {})
+  for _, questID in ipairs(Module.TrackedQuest[index].relatedQuest) do
+    SI.db.Toons[SI.thisToon].Progress[index][questID] = C_QuestLog_IsQuestFlaggedCompleted(questID)
+  end
+end
+
+local function PrimalStormsCoreShow(toon, index)
+  local t = SI.db.Toons[toon]
+  if not t or not t.Quests then return end
+  if not t or not t.Progress or not t.Progress[index] then return end
+
+  local totalDone = 0
+  for _, questID in ipairs(Module.TrackedQuest[index].relatedQuest) do
+    if t.Progress[index][questID] then
+      totalDone = totalDone + 1
+    end
+  end
+  return string.format("%d/%d", totalDone, #Module.TrackedQuest[index].relatedQuest)
+end
+
+local function PrimalStormsCoreReset(toon, index)
+  local t = SI.db.Toons[toon]
+  if not t or not t.Progress or not t.Progress[index] then return end
+
+  wipe(t.Progress[index])
+end
+
+local function SparksOfLifeUpdate(index)
+  SI.db.Toons[SI.thisToon].Progress[index] = wipe(SI.db.Toons[SI.thisToon].Progress[index] or {})
+  local result = SI.db.Toons[SI.thisToon].Progress[index]
+  for _, questID in ipairs(Module.TrackedQuest[index].relatedQuest) do
+    if C_TaskQuest_IsActive(questID) then
+      local _, objectiveType, finished, numFulfilled, numRequired = GetQuestObjectiveInfo(questID, 1, false)
+      result.objectiveType = objectiveType
+      result.isFinish = finished
+      result.numFulfilled = numFulfilled
+      result.numRequired = numRequired
+      if C_QuestLog_IsQuestFlaggedCompleted(questID) then
+        result.unlocked = true
+        result.isComplete = true
+      else
+        local isOnQuest = C_QuestLog_IsOnQuest(questID)
+        result.unlocked = isOnQuest
+        result.isComplete = false
+      end
+      break
+    end
+    if C_QuestLog_IsQuestFlaggedCompleted(questID) then
+      result.unlocked = true
+      result.isComplete = true
+      break
+    end
+  end
+end
+
+local function SparksOfLifeReset(toon, index)
+  local t = SI.db.Toons[toon]
+  if not t or not t.Progress or not t.Progress[index] then return end
+
+  wipe(t.Progress[index])
+end
+
+-- Primal Storms Elementals
+local function PrimalStormsElementalsUpdate(index)
+  SI.db.Toons[SI.thisToon].Progress[index] = wipe(SI.db.Toons[SI.thisToon].Progress[index] or {})
+  for _, questID in ipairs(Module.TrackedQuest[index].relatedQuest) do
+    SI.db.Toons[SI.thisToon].Progress[index][questID] = C_QuestLog_IsQuestFlaggedCompleted(questID)
+  end
+end
+
+local function PrimalStormsElementalsShow(toon, index)
+  local t = SI.db.Toons[toon]
+  if not t or not t.Quests then return end
+  if not t or not t.Progress or not t.Progress[index] then return end
+
+  local totalDone = 0
+  for _, questID in ipairs(Module.TrackedQuest[index].relatedQuest) do
+    if t.Progress[index][questID] then
+      totalDone = totalDone + 1
+    end
+  end
+  return string.format("%d/%d", totalDone, #Module.TrackedQuest[index].relatedQuest)
+end
+
+local function PrimalStormsElementalsReset(toon, index)
+  local t = SI.db.Toons[toon]
+  if not t or not t.Progress or not t.Progress[index] then return end
+
+  wipe(t.Progress[index])
 end
 
 Module.TrackedQuest = {
@@ -463,12 +660,27 @@ Module.TrackedQuest = {
     showFunc = DragonflightRenownShow,
     resetFunc = DragonflightRenownReset,
     tooltipKey = 'ShowDragonflightRenownTooltip',
+    factionIDs = {
+      2507, -- Dragonscale Expedition
+      2503, -- Maruuk Centaur
+      2511, -- Iskaara Tuskarr
+      2510, -- Valdrakken Accord
+    },
   },
   {
     name = L["Aiding the Accord"],
     weekly = true,
-    quest = 70750,
-    relatedQuest = {70750},
+    func = AidingTheAccordUpdate,
+    showFunc = AidingTheAccordShow,
+    resetFunc = AidingTheAccordReset,
+    tooltipKey = 'ShowAidingTheAccordTooltip',
+    relatedQuest = {
+      70750, -- Aiding the Accord
+      72068, -- Aiding the Accord: A Feast For All
+      72373, -- Aiding the Accord: The Hunt is On
+      72374, -- Aiding the Accord: Dragonbane Keep
+      72375, -- Aiding the Accord: The Isles Call
+    },
   },
   {
     name = L["Community Feast"],
@@ -476,6 +688,89 @@ Module.TrackedQuest = {
     quest = 70893,
     relatedQuest = {70893},
   },
+  {
+    name = L["Siege on Dragonbane Keep"],
+    weekly = true,
+    quest = 70866,
+    relatedQuest = {70866},
+  },
+  {
+    name = L["Grand Hunt"],
+    weekly = true,
+    func = GrandHuntUpdate,
+    showFunc = GrandHuntShow,
+    resetFunc = GrandHuntReset,
+    relatedQuest = {
+      70906, -- Epic
+      71136, -- Rare
+      71137, -- Uncommon
+    },
+    tooltipKey = 'ShowGrandHuntTooltip',
+  },
+  {
+    name = L["Trial of Elements"],
+    weekly = true,
+    quest = 71995,
+    relatedQuest = {71995},
+  },
+  {
+    name = L["Trial of Flood"],
+    weekly = true,
+    quest = 71033,
+    relatedQuest = {71033},
+  },
+  {
+    name = L["Primal Storms Core"],
+    weekly = true,
+    func = PrimalStormsCoreUpdate,
+    showFunc = PrimalStormsCoreShow,
+    resetFunc = PrimalStormsCoreReset,
+    relatedQuest = {
+      70723, -- Earth
+      70752, -- Water
+      70753, -- Air
+      70754, -- Fire
+    },
+    tooltipKey = 'ShowPrimalStormsCoreTooltip',
+  },
+  {
+    name = L["Primal Storms Elementals"],
+    daily = true,
+    func = PrimalStormsElementalsUpdate,
+    showFunc = PrimalStormsElementalsShow,
+    resetFunc = PrimalStormsElementalsReset,
+    relatedQuest = {
+      73991, --Emblazion -- Fire
+      74005, --Infernum
+      74006, --Kain Firebrand
+      74016, --Neela Firebane
+      73989, --Crystalus -- Water
+      73993, --Frozion
+      74027, --Rouen Icewind
+      74009, --Iceblade Trio
+      73986, --Bouldron -- Earth
+      73998, --Gravlion
+      73999, --Grizzlerock
+      74039, --Zurgaz Corebreaker
+      73995, --Gaelzion -- Air
+      74007, --Karantun
+      74022, --Pipspark Thundersnap
+      74038, --Voraazka
+    },
+    tooltipKey = 'ShowPrimalStormsElementalsTooltip',
+  },
+  {
+    name = L["Sparks of Life"],
+    weekly = true,
+    func = SparksOfLifeUpdate,
+    resetFunc = SparksOfLifeReset,
+    relatedQuest = {
+      72646, -- The Waking Shores
+      72647, -- Ohn'ahran Plains
+      72648, -- The Azure Span
+      72649, -- Thaldraszus
+    },
+  }
 }
 
 function Module:OnEnable()

@@ -1,0 +1,12 @@
+tag b075d3894cf9eab48d8d4b904f9baa4ce437bf3d 10.0.28
+Author:	Floraline <floraline@ophiuchus.org>
+Date:	Tue Jan 10 21:13:18 2023 +0100
+
+Tagging for release
+
+commit 97d3a2a1c2f9468cb6ec17953afe1d001dc8b412
+Author: Floraline <floraline@ophiuchus.org>
+Date:   Thu Jan 5 23:10:43 2023 +0100
+
+    Add ClassicUI support
+

@@ -1,5 +1,5 @@
 ## Interface: 100002
-## Version: 1.13
+## Version: 1.14
 ## Title: Higher Learning
 ## Title-deDE: Höheres Studium
 ## Title-esES: Conocimiento Superior

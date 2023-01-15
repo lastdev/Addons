@@ -153,6 +153,8 @@ SI.defaultDB = {
   -- Arena2v2rating: integer
   -- Arena3v3rating: integer
   -- RBGrating: integer
+  -- SoloShuffleRating: table
+  -- SpecializationIDs: table
 
   -- currency: key: currencyID  value:
   -- amount: integer
@@ -395,6 +397,15 @@ SI.defaultDB = {
     Progress9 = false, -- Emissary of War
     Progress10 = false, -- Patterns Within Patterns
     Progress11 = true, -- Dragonflight Renown
+    Progress12 = false, -- Aiding the Accord
+    Progress13 = false, -- Community Feast
+    Progress14 = false, -- Siege on Dragonbane Keep
+    Progress15 = false, -- Grand Hunt
+    Progress16 = false, -- Trial of the Elements
+    Progress17 = false, -- Trial of the Flood
+    Progress18 = false, -- Primal Storms Core
+    Progress19 = false, -- Primal Storms Elementals
+    Progress20 = false, -- Sparks of Life
     Warfront1 = false, -- Arathi Highlands
     Warfront2 = false, -- Darkshores
     KeystoneReportTarget = "EXPORT",
@@ -1337,13 +1348,27 @@ function SI:UpdateToonData()
     if ti.pvpdesert and (ti.pvpdesert < now) then ti.pvpdesert = nil end
     ti.Quests = ti.Quests or {}
   end
-  local IL,ILe = GetAverageItemLevel()
+  local IL,ILe,ILPvp = GetAverageItemLevel()
   if IL and tonumber(IL) and tonumber(IL) > 0 then -- can fail during logout
     t.IL, t.ILe = tonumber(IL), tonumber(ILe)
+  end
+  if ILPvp and tonumber(ILPvp) > 0 then
+    t.ILPvp = tonumber(ILPvp)
   end
   t.Arena2v2rating = tonumber(GetPersonalRatedInfo(1), 10) or t.Arena2v2rating
   t.Arena3v3rating = tonumber(GetPersonalRatedInfo(2), 10) or t.Arena3v3rating
   t.RBGrating = tonumber(GetPersonalRatedInfo(4), 10) or t.RBGrating
+
+  t.SpecializationIDs = t.SpecializationIDs or {}
+  for i = 1, GetNumSpecializations() do
+    t.SpecializationIDs[i] = GetSpecializationInfo(i) or t.SpecializationIDs[i]
+  end
+  -- Solo Shuffle rating is unique to each specialization
+  t.SoloShuffleRating = t.SoloShuffleRating or {}
+  local currentSpecID = GetSpecialization()
+  if currentSpecID then
+    t.SoloShuffleRating[currentSpecID] = GetPersonalRatedInfo(7) or t.SoloShuffleRating[currentSpecID]
+  end
   SI:GetModule("TradeSkill"):ScanItemCDs()
   local Calling = SI:GetModule("Calling")
   local Progress = SI:GetModule("Progress")
@@ -1621,6 +1646,7 @@ hoverTooltip.ShowToonTooltip = function (cell, arg, ...)
     indicatortip:AddLine(COMBAT_XP_GAIN, format("%.0f%% + %.0f%%", t.XP / t.MaxXP * 100, percent))
   end
   indicatortip:AddLine(STAT_AVERAGE_ITEM_LEVEL,("%d "):format(t.IL or 0)..STAT_AVERAGE_ITEM_LEVEL_EQUIPPED:format(t.ILe or 0))
+  indicatortip:AddLine(LFG_LIST_ITEM_LEVEL_INSTR_PVP_SHORT,("%d"):format(t.ILPvp or 0))
   if t.Covenant and t.Covenant > 0 then
     local data = C_Covenants.GetCovenantData(t.Covenant)
     local name = data and data.name
@@ -1639,6 +1665,14 @@ hoverTooltip.ShowToonTooltip = function (cell, arg, ...)
   end
   if t.RBGrating and t.RBGrating > 0 then
     indicatortip:AddLine(BG_RATING_ABBR, t.RBGrating)
+  end
+  if t.SoloShuffleRating and t.SpecializationIDs then
+    for i, specID in ipairs(t.SpecializationIDs) do
+      if t.SoloShuffleRating[i] and t.SoloShuffleRating[i] > 0 then
+        local _, specName = GetSpecializationInfoForSpecID(specID)
+        indicatortip:AddLine(PVP_RATED_SOLO_SHUFFLE .. " " .. RATING .. ": " .. specName, t.SoloShuffleRating[i])
+      end
+    end
   end
   if t.Money then
     indicatortip:AddLine(MONEY,SI:formatNumber(t.Money,true))
@@ -2500,7 +2534,9 @@ hoverTooltip.ShowDragonflightRenownTooltip = function (cell, arg, ...)
   indicatortip:AddHeader(ClassColorise(t.Class, toon), L["Dragonflight Renown"])
 
   local majorFactionIDs = C_MajorFactions.GetMajorFactionIDs(LE_EXPANSION_DRAGONFLIGHT)
-  for _, factionID in ipairs(majorFactionIDs) do
+
+  local factionIDs = SI:GetModule("Progress").TrackedQuest[index].factionIDs
+  for _, factionID in ipairs(factionIDs) do
     if t.Progress[index][factionID] then
       indicatortip:AddLine(
         C_MajorFactions.GetMajorFactionData(factionID).name,
@@ -2509,6 +2545,180 @@ hoverTooltip.ShowDragonflightRenownTooltip = function (cell, arg, ...)
     else
       indicatortip:AddLine(C_MajorFactions.GetMajorFactionData(factionID).name, LOCKED)
     end
+  end
+
+  for _, factionID in ipairs(majorFactionIDs) do
+    if not tContains(factionIDs, factionID) then
+      if t.Progress[index][factionID] then
+        indicatortip:AddLine(
+          C_MajorFactions.GetMajorFactionData(factionID).name,
+          format("%s %s (%s/%s)", COVENANT_SANCTUM_TAB_RENOWN, unpack(t.Progress[index][factionID]))
+        )
+      else
+        indicatortip:AddLine(C_MajorFactions.GetMajorFactionData(factionID).name, LOCKED)
+      end
+    end
+  end
+
+  finishIndicator()
+end
+
+hoverTooltip.ShowAidingTheAccordTooltip = function (cell, arg, ...)
+  -- Should be in Module Progress
+  local toon, index = unpack(arg)
+  local t = SI.db.Toons[toon]
+  if not t or not t.Progress or not t.Progress[index] then return end
+  if not t or not t.Quests then return end
+  openIndicator(2, "LEFT", "RIGHT")
+  indicatortip:AddHeader(ClassColorise(t.Class, toon), L["Aiding the Accord"])
+
+  if t.Progress[index].leaderboardCount and t.Progress[index].leaderboardCount > 0 then
+    for i = 1, t.Progress[index].leaderboardCount do
+      indicatortip:AddLine("")
+      indicatortip:SetCell(i + 1, 1, t.Progress[index][i], nil, "LEFT", 2)
+    end
+  end
+
+  finishIndicator()
+end
+
+hoverTooltip.ShowGrandHuntTooltip = function (cell, arg, ...)
+  -- Should be in Module Progress
+  local toon, index = unpack(arg)
+  local t = SI.db.Toons[toon]
+  if not t or not t.Progress or not t.Progress[index] then return end
+  if not t or not t.Quests then return end
+  openIndicator(2, "LEFT", "RIGHT")
+
+  local P = SI:GetModule("Progress")
+  local totalDone = 0
+  for _, questID in ipairs(P.TrackedQuest[index].relatedQuest) do
+    if t.Progress[index][questID] then
+      totalDone = totalDone + 1
+    end
+  end
+
+  local toonstr = (db.Tooltip.ShowServer and toon) or strsplit(' ', toon)
+
+  indicatortip:AddHeader(ClassColorise(t.Class, toonstr), string.format("%d/%d", totalDone, #P.TrackedQuest[index].relatedQuest))
+
+  local naming = {
+    MAW_BUFF_QUALITY_STRING_EPIC,
+    MAW_BUFF_QUALITY_STRING_RARE,
+    MAW_BUFF_QUALITY_STRING_UNCOMMON,
+  }
+  local IDs = P.TrackedQuest[index].relatedQuest
+
+  for i, questID in ipairs(IDs) do
+    indicatortip:AddLine(
+      naming[i],
+      t.Progress[index][questID] and REDFONT .. ALREADY_LOOTED .. FONTEND or GREENFONT .. AVAILABLE .. FONTEND
+    )
+  end
+
+  finishIndicator()
+end
+
+hoverTooltip.ShowPrimalStormsCoreTooltip = function (cell, arg, ...)
+  -- Should be in Module Progress
+  local toon, index = unpack(arg)
+  local t = SI.db.Toons[toon]
+  if not t or not t.Progress or not t.Progress[index] then return end
+  if not t or not t.Quests then return end
+  openIndicator(2, "LEFT", "RIGHT")
+
+  local P = SI:GetModule("Progress")
+  local totalDone = 0
+  for _, questID in ipairs(P.TrackedQuest[index].relatedQuest) do
+    if t.Progress[index][questID] then
+      totalDone = totalDone + 1
+    end
+  end
+
+  local toonstr = (db.Tooltip.ShowServer and toon) or strsplit(' ', toon)
+
+  indicatortip:AddHeader(ClassColorise(t.Class, toonstr), string.format("%d/%d", totalDone, #P.TrackedQuest[index].relatedQuest))
+
+  local stringTypeCore = {
+    YELLOW_FONT_COLOR_CODE .. L["Earth Core"] .. FONT_COLOR_CODE_CLOSE,
+    "|cff42a4f5" .. L["Water Core"] .. FONT_COLOR_CODE_CLOSE,
+    "|cffe4f2f5" .. L["Air Core"] .. FONT_COLOR_CODE_CLOSE,
+    ORANGE_FONT_COLOR_CODE .. L["Fire Core"] .. FONT_COLOR_CODE_CLOSE
+  }
+  local IDs = P.TrackedQuest[index].relatedQuest
+
+  for i, questID in ipairs(IDs) do
+    indicatortip:AddLine(
+      stringTypeCore[i],
+      t.Progress[index][questID] and REDFONT .. ALREADY_LOOTED .. FONTEND or GREENFONT .. AVAILABLE .. FONTEND
+    )
+  end
+
+  finishIndicator()
+end
+
+hoverTooltip.ShowPrimalStormsElementalsTooltip = function (cell, arg, ...)
+  -- Should be in Module Progress
+  local toon, index = unpack(arg)
+  local t = SI.db.Toons[toon]
+  if not t or not t.Progress or not t.Progress[index] then return end
+  if not t or not t.Quests then return end
+  openIndicator(2, "LEFT", "RIGHT")
+
+  local P = SI:GetModule("Progress")
+  local totalDone = 0
+  for _, questID in ipairs(P.TrackedQuest[index].relatedQuest) do
+    if t.Progress[index][questID] then
+      totalDone = totalDone + 1
+    end
+  end
+
+  local toonstr = (db.Tooltip.ShowServer and toon) or strsplit(' ', toon)
+
+  indicatortip:AddHeader(ClassColorise(t.Class, toonstr), string.format("%d/%d", totalDone, #P.TrackedQuest[index].relatedQuest))
+
+  local earthColor = YELLOW_FONT_COLOR_CODE
+  local waterColor = "|cff42a4f5"
+  local airColor = "|cffe4f2f5"
+  local fireColor = ORANGE_FONT_COLOR_CODE
+
+  local stringNameElementals = {
+    fireColor .. L["Emblazion"] .. FONT_COLOR_CODE_CLOSE,
+    fireColor .. L["Infernum"] .. FONT_COLOR_CODE_CLOSE,
+    fireColor .. L["Kain Firebrand"] .. FONT_COLOR_CODE_CLOSE,
+    fireColor .. L["Neela Firebane"] .. FONT_COLOR_CODE_CLOSE,
+    waterColor .. L["Crystalus"] .. FONT_COLOR_CODE_CLOSE,
+    waterColor .. L["Frozion"] .. FONT_COLOR_CODE_CLOSE,
+    waterColor .. L["Rouen Icewind"] .. FONT_COLOR_CODE_CLOSE,
+    waterColor .. L["Iceblade Trio"] .. FONT_COLOR_CODE_CLOSE,
+    earthColor .. L["Bouldron"] .. FONT_COLOR_CODE_CLOSE,
+    earthColor .. L["Gravlion"] .. FONT_COLOR_CODE_CLOSE,
+    earthColor .. L["Grizzlerock"] .. FONT_COLOR_CODE_CLOSE,
+    earthColor .. L["Zurgaz Corebreaker"] .. FONT_COLOR_CODE_CLOSE,
+    airColor .. L["Gaelzion"] .. FONT_COLOR_CODE_CLOSE,
+    airColor .. L["Karantun"] .. FONT_COLOR_CODE_CLOSE,
+    airColor .. L["Pipspark Thundersnap"] .. FONT_COLOR_CODE_CLOSE,
+    airColor .. L["Voraazka"] .. FONT_COLOR_CODE_CLOSE,
+  }
+
+  local typeElementals = {
+    fireColor .. L["Fire"] .. FONT_COLOR_CODE_CLOSE,
+    waterColor .. L["Water"] .. FONT_COLOR_CODE_CLOSE,
+    earthColor .. L["Earth"] .. FONT_COLOR_CODE_CLOSE,
+    airColor .. L["Air"] .. FONT_COLOR_CODE_CLOSE,
+  }
+
+  local IDs = P.TrackedQuest[index].relatedQuest
+  indicatortip:AddLine()
+  for i, questID in ipairs(IDs) do
+    if i%4 == 1 then
+      indicatortip:AddLine()
+      indicatortip:AddLine(typeElementals[math.floor(i/4)+1])
+    end
+    indicatortip:AddLine(
+      stringNameElementals[i],
+      t.Progress[index][questID] and REDFONT .. ALREADY_LOOTED .. FONTEND or GREENFONT .. AVAILABLE .. FONTEND
+    )
   end
 
   finishIndicator()
@@ -2542,7 +2752,7 @@ end
 function SI:OnInitialize()
   local versionString = GetAddOnMetadata("SavedInstances", "version")
   --[==[@debug@
-  if versionString == "10.0.5" then
+  if versionString == "10.0.6" then
     versionString = "Dev"
   end
   --@end-debug@]==]
@@ -2652,6 +2862,15 @@ function SI:OnEnable()
   self:RegisterEvent("MYTHIC_PLUS_NEW_WEEKLY_RECORD", "UpdateToonData")
   self:RegisterEvent("ZONE_CHANGED_NEW_AREA", RequestRatedInfo)
   self:RegisterEvent("PLAYER_ENTERING_WORLD", function()
+    C_Timer.After(1, function()
+      RequestRatedInfo()
+      RequestRaidInfo()
+    end)
+
+    SI:UpdateToonData()
+  end)
+  -- Update rating on spec change because Solo Shuffle is unique to each spec
+  self:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED", function()
     C_Timer.After(1, function()
       RequestRatedInfo()
       RequestRaidInfo()

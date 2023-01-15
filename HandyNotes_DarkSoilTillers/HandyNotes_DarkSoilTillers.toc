@@ -1,15 +1,15 @@
 ## Interface: 100002
-## Version: 2.01
+## Version: 2.02
 ## Title: Dark Soil Tillers
 ## Title-deDE: Dunkle Erde Die Ackerbauern
 ## Title-esES: Los Labradores Tierra Oscura
 ## Title-esMX: Los Labradores Tierra Oscura
 ## Title-frFR: Laboureurs Terre Sombre
 ## Title-itIT: Coltivatori Terreno Smosso
-## Title-koKR: 검은 토양 토양과
+## Title-koKR: 농사꾼 연합 검은 토양
 ## Title-ptBR: Os Lavradores Solo Negro
 ## Title-ptPT: Os Lavradores Solo Negro
-## Title-ruRU: Земледельцами Темная земля
+## Title-ruRU: Земледельцами Темная Земля
 ## Title-zhCN: 阡陌客 黑色泥土
 ## Title-zhTW: 阡陌客 黑色泥土
 ## Author: Taraezor
@@ -19,7 +19,7 @@
 ## Notes-esMX: Te ayuda con |cFF0070DETierra Oscura|r y |cFF0070DELos Labradores|r en el Valle de los Cuatro Vientos
 ## Notes-frFR: Vous aide avec |cFF0070DETerre Sombre|r et |cFF0070DELaboureurs|r dans la Vallée des Quatre vents
 ## Notes-itIT: Ti aiuta con |cFF0070DETerra Oscura|r e |cFF0070DEColtivatori|r in the Valle dei Quattro Venti
-## Notes-koKR: 네 바람의 계곡에서 |cFF0070DE어두운|r |cFF0070DE토양과|r 경작자를 돕습니다.
+## Notes-koKR: 네 바람의 계곡에서 |cFF0070DE농사꾼 연합|r 및 |cFF0070DE검은 토양|r에 대한 도움말
 ## Notes-ptBR: Ajuda você com |cFF0070DESolo Escuro|r e |cFF0070DEOs Lavradores|r no Vale dos Quatro Ventos
 ## Notes-ptPT: Ajuda você com |cFF0070DESolo Escuro|r e |cFF0070DEOs Lavradores|r no Vale dos Quatro Ventos
 ## Notes-ruRU: Помогает вам с |cFF0070DEТемная Земля|r и |cFF0070DEЗемледельцами|r в Долине Четырех Ветров

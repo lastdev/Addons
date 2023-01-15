@@ -3,7 +3,7 @@
 
                                            Higher Learning
 
-                                      v1.13 - 7th December 2022
+                                      v1.14 - 12th January 2023
                                 Copyright (C) Taraezor / Chris Birch
 
 -- titivation with addon description text reordering
@@ -764,10 +764,6 @@ function pluginHandler:OnEnable()
 	end
 	HandyNotes:RegisterPluginDB("HigherLearning", pluginHandler, ns.options)
 	ns.db = LibStub("AceDB-3.0"):New("HandyNotes_HigherLearningDB", defaults, "Default").profile
-	if ns.db.icon_choice > 11 then
-		ns.db.icon_choice = 5
-		printPC("fixed")
-	end
 	pluginHandler:Refresh()
 end
 
