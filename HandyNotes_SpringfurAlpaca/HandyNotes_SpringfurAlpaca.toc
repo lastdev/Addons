@@ -1,5 +1,5 @@
 ## Interface: 100002
-## Version: 1.08
+## Version: 1.09
 ## Title: Springfur Alpaca
 ## Title-deDE: Frühlingsfellalpaka
 ## Title-esES: Alpaca de pelaje primaveral
@@ -13,18 +13,18 @@
 ## Title-zhCN: 春裘羊驼
 ## Title-zhTW: 春裘羊駝
 ## Author: Taraezor
-## Notes: Helps you find the |cFF0070DEFrühlingsfellalpaka|r in Uldum
-## Notes-deDE: Hilft Ihnen, die |cFF0070DEDunkle Erde|r im Uldum zu finden
-## Notes-esES: Te ayuda a encontrar la |cFF0070DEAlpaca de pelaje primaveral|r en el Uldum
-## Notes-esMX: Te ayuda a encontrar la |cFF0070DEAlpaca de pelaje primaveral|r en el Uldum
-## Notes-frFR: Vous aide à trouver la |cFF0070DEAlpaga toison-vernale|r dans la Uldum
-## Notes-itIT: Ti aiuta a trovare la |cFF0070DEAlpaca Primopelo|r nella Uldum
-## Notes-koKR: 울둠에서 |cFF0070DE봄털 알파카|r 찾을 수 있도록 도와줍니다.
-## Notes-ptBR: Ajude a encontrar o |cFF0070DEAlpaca Lã de Primavera|r no Uldum
-## Notes-ptPT: Ajude a encontrar o |cFF0070DEAlpaca Lã de Primavera|r no Uldum
-## Notes-ruRU: Помогите найти |cFF0070DEКурчавая альпака|r в Ульдум
-## Notes-zhCN: 帮助寻奥丹姆|cFF0070DE春裘羊驼
-## Notes-zhTW: 幫助尋奧丹姆|cFF0070DE春裘羊駝
+## Notes: Helps you find the |cFFF4A460Springfur Alpaca|r in Uldum
+## Notes-deDE: Hilft Ihnen, die |cFFF4A460Frühlingsfellalpaka|r im Uldum zu finden
+## Notes-esES: Te ayuda a encontrar la |cFFF4A460Alpaca de pelaje primaveral|r en el Uldum
+## Notes-esMX: Te ayuda a encontrar la |cFFF4A460Alpaca de pelaje primaveral|r en el Uldum
+## Notes-frFR: Vous aide à trouver la |cFFF4A460Alpaga toison-vernale|r dans la Uldum
+## Notes-itIT: Ti aiuta a trovare la |cFFF4A460Alpaca Primopelo|r nella Uldum
+## Notes-koKR: 울둠에서 |cFFF4A460봄털 알파카|r 찾을 수 있도록 도와줍니다.
+## Notes-ptBR: Ajude a encontrar o |cFFF4A460Alpaca Lã de Primavera|r no Uldum
+## Notes-ptPT: Ajude a encontrar o |cFFF4A460Alpaca Lã de Primavera|r no Uldum
+## Notes-ruRU: Помогите найти |cFFF4A460Курчавая альпака|r в Ульдум
+## Notes-zhCN: 帮助寻奥丹姆|cFFF4A460春裘羊驼
+## Notes-zhTW: 幫助尋奧丹姆|cFFF4A460春裘羊駝
 ## X-Category: Map & Minimap
 ## X-Curse-Project-ID: 502415
 ## X-WoWI-ID: 26113

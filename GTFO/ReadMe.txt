@@ -1843,3 +1843,11 @@ Change Log:
 5.0.2
 * Added Dragonflight spells (world)
 * Fixed Dragonflight spells for Vault of the Incarnates
+
+5.0.3
+* Added an option to ignore Icy Ground from Sennarth in Vault of the Incarnates
+* Added Dragonflight spells (world)
+* Added Dragonflight spells for Vault of the Incarnates
+* Added WoD spells for Grimrail Depot
+* Added WoD spells for the Everbloom
+* Added Legion spells for Court of Stars

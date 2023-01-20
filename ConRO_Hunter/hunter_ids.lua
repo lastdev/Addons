@@ -345,6 +345,7 @@ local ConRO_Hunter, ids = ...;
 		DeadEye = 321461,
 	}
 	ids.MM_Debuff = {
+		ExplosiveShot = 212431,
 		HuntersMark = 257284,
 		SerpentSting = 271788,
 		TarTrap = 135299,

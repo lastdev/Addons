@@ -3,7 +3,7 @@
 
                                           Dark Soil Tillers
 
-                                      v2.02 - 13th January 2023
+                                      v2.03 - 17th January 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -699,7 +699,13 @@ function pluginHandler:OnEnter(mapFile, coord)
 				else
 					GameTooltip:AddLine( ns.colour.plaintext ..L[third] )
 				end
-			else			
+			elseif ( first == 30526 ) then
+				completed = C_QuestLog.IsQuestFlaggedCompleted( 30526 )
+				GameTooltip:AddDoubleLine( ns.colour.prefix ..L[second],
+					( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] ) 
+										or ( "\124cFFFF0000" ..L["Not Completed"] ) )
+				GameTooltip:AddLine( ns.colour.plaintext ..L[third] )
+			else
 				GameTooltip:SetText( ns.colour.prefix ..L[second] )
 				GameTooltip:AddLine( ns.colour.plaintext ..L[third] )
  			end
@@ -760,7 +766,7 @@ do
 							elseif ( v[2] == 30526 ) then
 								completed = C_QuestLog.IsQuestFlaggedCompleted( 30526 )
 								if ( completed == false ) then
-									if coord == 42404998 then
+									if coord == 42395000 then
 										return coord, nil, ns.textures[ns.db.icon_tillersQuests],
 											ns.db.icon_scale * ns.scaling[ns.db.icon_tillersQuests], ns.db.icon_alpha
 									end

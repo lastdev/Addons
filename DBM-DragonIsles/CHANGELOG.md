@@ -1,34 +1,40 @@
 # <DBM> World Bosses (Dragonflight)
 
-## [10.0.19](https://github.com/DeadlyBossMods/DBM-Retail/tree/10.0.19) (2023-01-10)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Retail/compare/10.0.16...10.0.19) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Retail/releases)
+## [10.0.20](https://github.com/DeadlyBossMods/DBM-Retail/tree/10.0.20) (2023-01-17)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Retail/compare/10.0.19...10.0.20) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Retail/releases)
 
-- prep for 4th dbm release today for retail for more bug fix pushes  
-- Fix heroic meteor axes timer, Closes #850  
-- Fix more thundering bugs  
-- Bump alpha  
-- prep new retail tag to fix regression  
-- remove some left over debug code  
-- Fix regression with the yell code on thundering  
+- prep new retail tag  
+- Raszageth Update  
+     - Fixed a bug where initial timers where showing LFR/Normal timers on all difficulties. Mythic and Heroic timers on engage will now show correctly.  
+     - Fixed a bug where an extra storm surge timer would start in P2 for a 4th stormsurge that wasn't possible to happen.  
+     - Added additional P3 timers for normal and LFR difficulty  
+     - Updated Lightning Devastation timers for normal and LFR difficulty  
+     - Enabled phase duration timer for phase 2 , it should be accurate for most part in non mythic difficulties.  
+- Timer updates for LFR Broodkeeper  
 - bump alphas  
-- prep new tags  
-- Update localization.ru.lua (#173)  
-- Update localization.cn.lua (#849)  
-    Co-authored-by: Adam <MysticalOS@users.noreply.github.com>  
-- luacheck  
-- uncomment these timers for now.  
-- Enable countdown by default for thundering timers, reset option so defaults reset. (Sorry for those who might have customized color or countdown voice previously as this will do a one time reset on it)  
-    Code cleanup and fix on thundering expiring  
-- Make the countdown on thundering red numbers not white, following conventions taht these are group up spells, not spread spells  
-- Add common local  
-- tweak chat yells again for thundering to say "Clear" when removed  
-- Fix errors  
-- Further improved thundering code to cancel yells if 4/5 are dispelled and alert remaining player it's over  
-- Rework thundering yells to give countedown with icon, from 5 seconds down  
-- Add redundant disabled checked, because users aren't seeing the first one.  
-- Fix event for sundering crash on Basrikron  
-- Fix rain of destruction event for Bazual  
-- Add basic Strunraan mod finally  
-- Fix deep freeze event, which is not in combat log  
-- tweak chilling blast to say spread instead of run out. need to be more consistent about this distinction. run out should be used for like "get this way the hell out of raid" versus spread which is just "you can stay in but spread out"  
-- Bump alpha  
+- prep new tags for wrath classic and classic era, retail's new tag on hold until LFR wing 3 can be logged at (LFR raszageth was never tested,, so it's gonna need updates first)  
+- Fixed a few unregistered events that caused following things not to work  
+     - Empowered storm was broken do to invalid spellid on Strunraan  
+     - Rending bite timer/alert never worked on Broodkeeper  
+     - Add auto marking never worked on Dathea  
+     - Flame Smite alert never worked on Kurog  
+     - Scattered Charge alert never worked on Raszageth  
+     - Lighting strike alert/timer never worked on Raszageth  
+     - Wrapped in Webs alert didn't work on LFR/Normal Sennarth  
+     - Reflections alert didn't work on aniversery Azuregos world boss  
+- Brawlers guild: no idea what was going on here or what this will break, but it'll fix another thing. these mods were made so long ago  
+- Fix last  
+- code cleanup  
+- Fix bug where no clear yell was showing if you got negative charge with the new antispam code  
+- Fixed a bug that causd empowered great staff warning/say to never work in p2 broodkeeper. How do bugs this obvious take months to get reported. Either everyone using DBM is only 6/8 or they just don't care when it's broken. :\  
+- Comment cleanup  
+- Even more anti spam against player clearing thundering  
+- Fix German localization for roleplay timer text (#177)  
+- Fix lightning crash on Kurog, which was apparently redesigned at some point to not have a 4 second pre targetting debuff and never knew because no one reported it hasn't worked in weeks.  
+- Fix cast time in blowback alert  
+- Update localization.cn.lua (#175)  
+- Update commonlocal.cn.lua (#176)  
+- Fix some minor debug errors with deleted journal entries  
+- Update koKR (#174)  
+- Fix sundering crash again, update timers for Basrikron  
+- bump alpha  

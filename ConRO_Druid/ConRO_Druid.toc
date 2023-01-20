@@ -1,5 +1,5 @@
 ## Title:-|cffFFFFFFConRO|r- |cffFF7D0ADruid|r
-## Version: 10.0.7
+## Version: 10.0.8
 ## Author: Vae
 ## Interface: 100002
 ## Dependencies: ConRO

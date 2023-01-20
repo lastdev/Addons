@@ -175,14 +175,19 @@ local ConRO_Shaman, ids = ...;
 			Haste = 173183,
 			Mastery = 173184
 		},
+		EchoesofGreatSundering = 384088,
+		FluxMelting = 381777,
 		Icefury = 210714,
 		LavaSurge = 77762,
 		LightningShield = 192106,
 		MasteroftheElements = 260734,
+		PoweroftheMaelstrom = 191877,
+		PrimordialWave = 375986,
 		Stormkeeper = 191634,
 		SurgeofPower = 285514,
 	}
 	ids.Ele_Debuff = {
+		ElectrifiedShocks = 382089,
 		FlameShock = 188389,
 	}
 	ids.Ele_PetAbility = {

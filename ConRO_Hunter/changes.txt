@@ -1,10 +1,10 @@
-lightweight tag 5f75689bd18fc0154b842f954b4f81e9ee743095 v10.0.10
+lightweight tag 147f9451b4809c58ac83f01d0aea922f6794af27 v10.0.11
 Author:	Vae <emuha17@gmail.com>
-Date:	Sat Jan 7 11:05:07 2023 -1000
+Date:	Sat Jan 14 13:18:44 2023 -1000
 
-commit 5f75689bd18fc0154b842f954b4f81e9ee743095
+commit 147f9451b4809c58ac83f01d0aea922f6794af27
 Author: Vae <emuha17@gmail.com>
-Date:   Sat Jan 7 11:05:07 2023 -1000
+Date:   Sat Jan 14 13:18:44 2023 -1000
 
-    Fix Bestrail Wrath burst mode
+    Explosive shot update
 

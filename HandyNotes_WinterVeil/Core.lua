@@ -3,7 +3,7 @@
 
                                              Winter Veil
 
-                                     v1.06 - 23rd December 2022
+                                      v1.07 - 18th January 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----

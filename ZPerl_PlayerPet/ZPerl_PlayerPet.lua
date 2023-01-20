@@ -10,9 +10,10 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player_Pet) then
 		XPerl_Player_Pet.conf = pconf
 	end
-end, "$Revision: cd469ddf009de44eb4c4cd248a7ab1a7cf618486 $")
+end, "$Revision: 5a89ecaf32f24ffefbf320bef9dff40e1992eb4e $")
 
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
+local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
 
 local XPerl_Player_Pet_HighlightCallback
 
@@ -239,6 +240,15 @@ local function XPerl_Player_Pet_UpdateAbsorbPrediction(self)
 	end
 end
 
+-- XPerl_Player_Pet_UpdateHotsPrediction
+local function XPerl_Player_Pet_UpdateHotsPrediction(self)
+	if pconf.absorbs then
+		XPerl_SetExpectedHots(self)
+	else
+		self.statsFrame.expectedHots:Hide()
+	end
+end
+
 -- XPerl_Player_Pet_UpdateHealPrediction
 local function XPerl_Player_Pet_UpdateHealPrediction(self)
 	if pconf.healprediction then
@@ -273,6 +283,7 @@ local function XPerl_Player_Pet_UpdateHealth(self)
 	XPerl_SetHealthBar(self, pethealth, pethealthmax)
 
 	XPerl_Player_Pet_UpdateAbsorbPrediction(self)
+	XPerl_Player_Pet_UpdateHotsPrediction(self)
 	XPerl_Player_Pet_UpdateHealPrediction(self)
 	XPerl_Player_Pet_UpdateResurrectionStatus(self)
 
@@ -607,7 +618,7 @@ function XPerl_Player_Pet_Events:UNIT_EXITED_VEHICLE(unit)
 end
 
 function XPerl_Player_Pet_Events:UNIT_THREAT_LIST_UPDATE(unit)
-	if (unit == "target") then
+	if unit == "target" then
 		XPerl_Unit_ThreatStatus(self)
 	end
 end
@@ -620,7 +631,7 @@ XPerl_Player_Pet_Events.UNIT_TARGET = XPerl_Player_Pet_Events.PLAYER_TARGET_CHAN
 -- PLAYER_REGEN_DISABLED
 local virtual
 function XPerl_Player_Pet_Events:PLAYER_REGEN_DISABLED()
-	if (virtual) then
+	if virtual then
 		virtual = nil
 		RegisterUnitWatch(XPerl_Player_Pet)
 		if (UnitExists("pet")) then
@@ -643,13 +654,16 @@ function XPerl_Player_Pet_Events:PLAYER_REGEN_DISABLED()
 end
 
 function XPerl_Player_Pet_Events:UNIT_HEAL_PREDICTION(unit)
-	if (pconf.healprediction and unit == self.partyid) then
+	if pconf.healprediction and unit == self.partyid then
 		XPerl_SetExpectedHealth(self)
+	end
+	if IsWrathClassic and pconf.hotPrediction and unit == self.partyid then
+		XPerl_SetExpectedHots(self)
 	end
 end
 
 function XPerl_Player_Pet_Events:UNIT_ABSORB_AMOUNT_CHANGED(unit)
-	if (pconf.absorbs and unit == self.partyid) then
+	if pconf.absorbs and unit == self.partyid then
 		XPerl_SetExpectedAbsorbs(self)
 	end
 end

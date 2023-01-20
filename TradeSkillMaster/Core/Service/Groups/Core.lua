@@ -359,13 +359,14 @@ function Groups.BulkCreateFromImport(groupName, items, groups, groupOperations, 
 		end
 	end
 	private.itemDB:TruncateAndBulkInsertStart()
+	for itemString, groupPath in pairs(TSM.db.profile.userData.items) do
+		groupPath = moveItems[itemString] or groupPath
+		private.SetItemGroup(itemString, groupPath, true, true)
+	end
 	for itemString, groupPath in pairs(insertItems) do
 		private.SetItemGroup(itemString, groupPath, true, true)
 	end
 	private.itemDB:BulkInsertEnd()
-	for itemString, groupPath in pairs(moveItems) do
-		private.SetItemGroup(itemString, groupPath, false, true)
-	end
 	TempTable.Release(moveItems)
 	TempTable.Release(insertItems)
 	private.itemStringMap:Invalidate()

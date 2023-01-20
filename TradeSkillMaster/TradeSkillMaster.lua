@@ -34,7 +34,7 @@ local private = {
 local LOGOUT_TIME_WARNING_THRESHOLD_MS = 20
 do
 	-- show a message if we were updated
-	if GetAddOnMetadata("TradeSkillMaster", "Version") ~= "v4.12.20" then
+	if GetAddOnMetadata("TradeSkillMaster", "Version") ~= "v4.12.25" then
 		Wow.ShowBasicMessage("TSM was just updated and may not work properly until you restart WoW.")
 	end
 end
@@ -388,6 +388,8 @@ function private.DebugSlashCommandHandler(arg)
 		end
 	elseif arg == "db" then
 		TSM.UI.DBViewer.Toggle()
+	elseif arg == "sb" or arg == "story" or arg == "storyboard" then
+		TSM.UI.StoryBoard.Toggle()
 	elseif arg == "logout" then
 		TSM.AddonTestLogout()
 	elseif arg == "clearitemdb" then

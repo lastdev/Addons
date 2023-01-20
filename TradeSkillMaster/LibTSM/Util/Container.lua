@@ -30,7 +30,7 @@ function Container.GetBagItemFamily(bag)
 		return 0
 	end
 	local inventoryId = nil
-	if TSM.IsWowClassic() then
+	if TSM.IsWowClassic() and not TSM.IsWowWrathPatch341() then
 		inventoryId = ContainerIDToInventoryID(bag)
 	else
 		inventoryId = C_Container.ContainerIDToInventoryID(bag)
@@ -73,7 +73,7 @@ end
 ---@param bag number The index of the bag
 ---@return number
 function Container.GetNumSlots(bag)
-	if TSM.IsWowClassic() then
+	if TSM.IsWowClassic() and not TSM.IsWowWrathPatch341() then
 		return GetContainerNumSlots(bag)
 	else
 		return C_Container.GetContainerNumSlots(bag)
@@ -84,7 +84,7 @@ end
 ---@param bag number The index of the bag
 ---@return number
 function Container.GetNumFreeSlots(bag)
-	if TSM.IsWowClassic() then
+	if TSM.IsWowClassic() and not TSM.IsWowWrathPatch341() then
 		return GetContainerNumFreeSlots(bag)
 	else
 		return C_Container.GetContainerNumFreeSlots(bag)
@@ -96,7 +96,7 @@ end
 ---@param slot number The index of the slot whitin the bag
 ---@return number
 function Container.GetItemId(bag, slot)
-	if TSM.IsWowClassic() then
+	if TSM.IsWowClassic() and not TSM.IsWowWrathPatch341() then
 		return GetContainerItemID(bag, slot)
 	else
 		return C_Container.GetContainerItemID(bag, slot)
@@ -118,7 +118,7 @@ end
 ---@return number itemId The unique identifier for the item in the bag slot
 ---@return boolean isBound Whether the item is bound of the character
 function Container.GetItemInfo(bag, slot)
-	if TSM.IsWowClassic() then
+	if TSM.IsWowClassic() and not TSM.IsWowWrathPatch341() then
 		return GetContainerItemInfo(bag, slot)
 	else
 		local info = C_Container.GetContainerItemInfo(bag, slot)
@@ -134,7 +134,7 @@ end
 ---@param slot number The index of the slot whitin the bag
 ---@return string
 function Container.GetItemLink(bag, slot)
-	if TSM.IsWowClassic() then
+	if TSM.IsWowClassic() and not TSM.IsWowWrathPatch341() then
 		return GetContainerItemLink(bag, slot)
 	else
 		return C_Container.GetContainerItemLink(bag, slot)
@@ -145,7 +145,7 @@ end
 ---@param bag number The index of the bag
 ---@param slot number The index of the slot whitin the bag
 function Container.UseItem(bag, slot)
-	if TSM.IsWowClassic() then
+	if TSM.IsWowClassic() and not TSM.IsWowWrathPatch341() then
 		return UseContainerItem(bag, slot)
 	else
 		return C_Container.UseContainerItem(bag, slot)
@@ -156,7 +156,7 @@ end
 ---@param bag number The index of the bag
 ---@param slot number The index of the slot whitin the bag
 function Container.PickupItem(bag, slot)
-	if TSM.IsWowClassic() then
+	if TSM.IsWowClassic() and not TSM.IsWowWrathPatch341() then
 		return PickupContainerItem(bag, slot)
 	else
 		return C_Container.PickupContainerItem(bag, slot)
@@ -168,10 +168,20 @@ end
 ---@param slot number The index of the slot whitin the bag
 ---@param count number The quantity to split
 function Container.SplitItem(bag, slot, count)
-	if TSM.IsWowClassic() then
+	if TSM.IsWowClassic() and not TSM.IsWowWrathPatch341() then
 		return SplitContainerItem(bag, slot, count)
 	else
 		return C_Container.SplitContainerItem(bag, slot, count)
+	end
+end
+
+---Register a secure hook function for when a container item is used.
+---@param func function
+function Container.SecureHookUseItem(func)
+	if TSM.IsWowClassic() and not TSM.IsWowWrathPatch341() then
+		hooksecurefunc("UseContainerItem", func)
+	else
+		hooksecurefunc(C_Container, "UseContainerItem", func)
 	end
 end
 

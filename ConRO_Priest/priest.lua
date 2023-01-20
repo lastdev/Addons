@@ -24,11 +24,13 @@ function ConRO:EnableRotationModule(mode)
 			ConROButtonFrame:SetAlpha(1);
 			ConRO_ShowAtonement();
 			ConROWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
+			ConRONextWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
 			ConRODefenseWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
 		else
 			self.NextSpell = ConRO.Priest.Disabled;
 			self.ToggleHealer();
 			ConROWindow:SetAlpha(0);
+			ConRONextWindow:SetAlpha(0);
 			ConRODefenseWindow:SetAlpha(0);
 		end
 	end;
@@ -38,11 +40,13 @@ function ConRO:EnableRotationModule(mode)
 			self.NextSpell = ConRO.Priest.Holy;
 			self.ToggleHealer();
 			ConROWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
+			ConRONextWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
 			ConRODefenseWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
 		else
 			self.NextSpell = ConRO.Priest.Disabled;
 			self.ToggleHealer();
 			ConROWindow:SetAlpha(0);
+			ConRONextWindow:SetAlpha(0);
 			ConRODefenseWindow:SetAlpha(0);
 		end
 	end;
@@ -52,11 +56,13 @@ function ConRO:EnableRotationModule(mode)
 			self.NextSpell = ConRO.Priest.Shadow;
 			self.ToggleDamage();
 			ConROWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
+			ConRONextWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
 			ConRODefenseWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
 		else
 			self.NextSpell = ConRO.Priest.Disabled;
 			self.ToggleHealer();
 			ConROWindow:SetAlpha(0);
+			ConRONextWindow:SetAlpha(0);
 			ConRODefenseWindow:SetAlpha(0);
 		end
 	end;
@@ -99,10 +105,13 @@ function ConRO:UNIT_SPELLCAST_SUCCEEDED(event, unitID, lineID, spellID)
 end
 
 function ConRO.Priest.Disabled(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
+	wipe(ConRO.SuggestedSpells)
+	wipe(ConRO.SuggestedDefSpells)
 	return nil;
 end
 
 function ConRO.Priest.Under10(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
+	wipe(ConRO.SuggestedSpells)
 --Info
 	local _Player_Level																														= UnitLevel("player");
 	local _Player_Percent_Health 																									= ConRO:PercentHealth('player');
@@ -138,6 +147,7 @@ function ConRO.Priest.Under10(_, timeShift, currentSpell, gcd, tChosen, pvpChose
 end
 
 function ConRO.Priest.Under10Def(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
+	wipe(ConRO.SuggestedDefSpells)
 --Info
 	local _Player_Level																														= UnitLevel("player");
 	local _Player_Percent_Health 																									= ConRO:PercentHealth('player');
@@ -728,11 +738,6 @@ function ConRO.Priest.Shadow(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 		_ShadowWordDeath_RDY = false;
 	end
 
-	if _MindSpike_RDY and (tChosen[Passive.MindMelt.talentID] and not tChosen[Passive.IdolofCThun.talentID]) and ((_MindBlast_CHARGE >= _MindBlast_MCHARGE) or (_MindBlast_CHARGE >= _MindBlast_MCHARGE -1 and _MindBlast_CHARGECD < 3))  and _MindMelt_COUNT < 2 then
-		tinsert(ConRO.SuggestedSpells, _MindSpike);
-		_MindMelt_COUNT = _MindMelt_COUNT + 1;
-	end
-
 	if _MindBlast_RDY and ((_MindBlast_CHARGE >= _MindBlast_MCHARGE) or (_MindMelt_COUNT >= 2)) and currentSpell ~= _MindBlast then
 		tinsert(ConRO.SuggestedSpells, _MindBlast);
 		_MindBlast_CHARGE = _MindBlast_CHARGE - 1;
@@ -751,7 +756,7 @@ function ConRO.Priest.Shadow(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 	if _MindSear_RDY and ((ConRO_AutoButton:IsVisible() and _enemies_in_40yrds >= 3) or ConRO_AoEButton:IsVisible()) then
 		tinsert(ConRO.SuggestedSpells, _MindSear);
 	else
-		if _DevouringPlague_RDY and (not _DevouringPlague_DEBUFF or _DevouringPlague_DUR <= 1 or _Insanity > 90) then
+		if _DevouringPlague_RDY and (not _DevouringPlague_DEBUFF or _DevouringPlague_DUR <= 1 or _Insanity > 80) then
 			tinsert(ConRO.SuggestedSpells, _DevouringPlague);
 		end
 	end
@@ -766,12 +771,12 @@ function ConRO.Priest.Shadow(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 		_ShadowWordPain_RDY = false;
 	end
 
-	if _ShadowWordDeath_RDY and _can_Execute and _Player_Percent_Health >= 50 then
+	if _ShadowWordDeath_RDY and _can_Execute then
 		tinsert(ConRO.SuggestedSpells, _ShadowWordDeath);
 		_ShadowWordDeath_RDY = false;
 	end
 
-	if _MindSpike_RDY and (tChosen[Passive.MindMelt.talentID] and not tChosen[Passive.IdolofCThun.talentID]) and _MindBlast_RDY and _MindMelt_COUNT < 2 then
+	if _MindSpike_RDY and _SurgeofDarkness_Buff then
 		tinsert(ConRO.SuggestedSpells, _MindSpike);
 		_MindMelt_COUNT = _MindMelt_COUNT + 1;
 	end
@@ -799,11 +804,6 @@ function ConRO.Priest.Shadow(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 	if _VoidTorrent_RDY and (_Insanity <= 35) and _VampiricTouch_DEBUFF and _ShadowWordPain_DEBUFF and ConRO:FullMode(_VoidTorrent) then
 		tinsert(ConRO.SuggestedSpells, _VoidTorrent);
 		_VoidTorrent_RDY = false;
-	end
-
-	if _MindSpike_RDY and _SurgeofDarkness_Buff then
-		tinsert(ConRO.SuggestedSpells, _MindSpike);
-		_MindMelt_COUNT = _MindMelt_COUNT + 1;
 	end
 
 	if _MindFlayInsanity_RDY and _MindFlayInsanity_BUFF and select(2, ConRO:EndChannel()) ~= _MindFlayInsanity and tChosen[Passive.ScreamsoftheVoid.talentID] then

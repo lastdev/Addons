@@ -1,5 +1,7 @@
 local HealBot_UnitBuffIcons={}
 local HealBot_UnitDebuffIcons={}
+local HealBot_UnitBuffCurrent={}
+local HealBot_UnitDebuffCurrent={}
 local HealBot_UnitExtraIcons={}
 local HealBot_BuffNameTypes = {}
 local HealBot_BuffMinLevels={}
@@ -35,7 +37,6 @@ local tmpBCheck, tmpCBuffs, tmpGBuffs, tmpDCheck=false,false,false,false
 local uaName, uaTexture, uaCount, uaDebuffType, uaDuration = "","",0,"",0
 local uaExpirationTime, uaUnitCaster, uaSpellId, uaIsBossDebuff = 0,"",0,false
 local classicAbsorbPWS=""
-local highestBuffPrio=20
 local HealBot_Classic_Absorbs={}
 local HealBot_TargetIconsTextures = {[1]=[[Interface\Addons\HealBot\Images\Star.tga]],
                                      [2]=[[Interface\Addons\HealBot\Images\Circle.tga]],
@@ -646,6 +647,11 @@ function HealBot_Aura_InitUnitDebuffIcons(buttonId)
     end
 end
 
+function HealBot_Aura_InitUnitAuraCurrent(guid)
+    if not HealBot_UnitBuffCurrent[guid] then HealBot_UnitBuffCurrent[guid]={} end
+    if not HealBot_UnitDebuffCurrent[guid] then HealBot_UnitDebuffCurrent[guid]={} end
+end
+    
 function HealBot_Aura_InitUnitExtraIcons(buttonId)
     HealBot_UnitExtraIcons[buttonId]={}
     for i = 91,94 do
@@ -802,11 +808,15 @@ local weaponEnchantState={[1]={["Active"]=false,["Expire"]=0},[2]={["Active"]=fa
 function HealBot_Aura_SetGeneralBuff(button, bName)
     curBuffName=bName
     button.aura.buff.missingbuff=bName
-    button.aura.buff.colbar=3
-    button.aura.buff.priority=45
+    button.aura.buff.colbar=(HealBot_Globals.HealBot_Custom_Buffs_ShowBarCol["DEFAULT"] or 4)-1
+    --button.aura.buff.priority=21
 end
 
 local buffWatchName=""
+local HealBot_GetItemCooldown=GetItemCooldown
+if C_Container then
+    HealBot_GetItemCooldown=C_Container.GetItemCooldown
+end
 function HealBot_Aura_CheckGeneralBuff(button)  
     PlayerBuffsList=button.aura.buff.recheck
     for bName,nexttime in pairs (PlayerBuffsList) do
@@ -829,7 +839,7 @@ function HealBot_Aura_CheckGeneralBuff(button)
             if GetSpellCooldown(buffWatchName) then
                 buffSpellStart, buffSpellDur=GetSpellCooldown(buffWatchName)
             elseif HealBot_Buff_ItemIDs[buffWatchName] then
-                buffSpellStart, buffSpellDur=GetItemCooldown(HealBot_Buff_ItemIDs[buffWatchName])
+                buffSpellStart, buffSpellDur=HealBot_GetItemCooldown(HealBot_Buff_ItemIDs[buffWatchName])
             end 
             if ((buffSpellStart or 0)+(buffSpellDur or 0))-TimeNow<2 then
                 buffCheckThis=false;
@@ -1216,7 +1226,7 @@ function HealBot_Aura_CheckCurDebuff(button)
             cDebuffPrio=15
             debuffIsAuto=true
             if dTypePriority>15 then
-                debuffIsAlways=true 
+                debuffIsAlways=true
             end
         elseif dNamePriority<21 then
             HealBot_Aura_CheckCurCustomDebuff(false)
@@ -1296,8 +1306,8 @@ function HealBot_Aura_BuffWarnings(button, buffName, force)
             elseif button.hazard.buff then
                 HealBot_Action_DisableBorderHazardType(button, "BUFF")
             end
-            if button.aura.buff.colbar==5 then
-                HealBot_Action_EnableButtonGlowType(button, button.aura.buff.r, button.aura.buff.g, button.aura.buff.b, "BUFF")
+            if button.aura.buff.colbar>4 then
+                HealBot_Action_EnableButtonGlowType(button, button.aura.buff.r, button.aura.buff.g, button.aura.buff.b, "BUFF", "", button.aura.buff.colbar)
             elseif button.glow.buff then
                 HealBot_Action_DisableButtonGlowType(button, "BUFF")
             end
@@ -1368,8 +1378,8 @@ function HealBot_Aura_DebuffWarnings(button, debuffName, force)
             elseif button.hazard.debuff then
                 HealBot_Action_DisableButtonGlowType(button, "DEBUFF")
             end
-            if button.aura.debuff.colbar==5 then
-                HealBot_Action_EnableButtonGlowType(button, button.aura.debuff.r, button.aura.debuff.g, button.aura.debuff.b, "DEBUFF")
+            if button.aura.debuff.colbar>4 then
+                HealBot_Action_EnableButtonGlowType(button, button.aura.debuff.r, button.aura.debuff.g, button.aura.debuff.b, "DEBUFF", "", button.aura.debuff.colbar)
             elseif button.glow.debuff then
                 HealBot_Action_DisableBorderHazardType(button, "DEBUFF")
             end
@@ -1449,26 +1459,21 @@ function HealBot_Aura_RequestsClear()
 end
 
 local hbAuraBuffWatch={}
-local hbAuraBuffWatchActive={}
-local hbAuraBuffWatchAlert={}
+local hbAuraDebuffWatch={}
 function HealBot_Aura_BuffWatch(guid, buff, state)
     if buff then
         if state then
             if not hbAuraBuffWatch[guid] then 
                 hbAuraBuffWatch[guid]={}
-                hbAuraBuffWatchActive[guid]={}
-                hbAuraBuffWatchAlert[guid]={}
             end
-            if not hbAuraBuffWatchActive[guid][buff] then
-                hbAuraBuffWatch[guid][buff]=true
+            if not hbAuraBuffWatch[guid][buff] then
+                hbAuraBuffWatch[guid][buff]=0
             end
         elseif hbAuraBuffWatch[guid] and hbAuraBuffWatch[guid][buff] then
             hbAuraBuffWatch[guid][buff]=false
         end
     elseif hbAuraBuffWatch[guid] then
         hbAuraBuffWatch[guid]=nil
-        hbAuraBuffWatchActive[guid]=nil
-        hbAuraBuffWatchAlert[guid]=nil
     end
 end
 
@@ -1476,23 +1481,57 @@ function HealBot_Aura_BuffWatchClear()
     hbAuraBuffWatch={}
 end
 
+function HealBot_Aura_DebuffWatch(guid, debuff, state)
+    if debuff then
+        if state then
+            if not hbAuraDebuffWatch[guid] then 
+                hbAuraDebuffWatch[guid]={}
+            end
+            if not hbAuraDebuffWatch[guid][debuff] then
+                hbAuraDebuffWatch[guid][debuff]=0
+            end
+        elseif hbAuraDebuffWatch[guid] and hbAuraDebuffWatch[guid][debuff] then
+            hbAuraDebuffWatch[guid][debuff]=false
+        end
+    elseif hbAuraDebuffWatch[guid] then
+        hbAuraDebuffWatch[guid]=nil
+    end
+end
+
+function HealBot_Aura_DebuffWatchClear()
+    hbAuraDebuffWatch={}
+end
+
+function HealBot_Aura_CurrentBuff(guid, bName)
+    if HealBot_UnitBuffCurrent[guid] then
+        return HealBot_UnitBuffCurrent[guid][bName]
+    else
+        return false
+    end
+end
+
+function HealBot_Aura_CurrentDebuff(guid, dName)
+    if HealBot_UnitDebuffCurrent[guid] then
+        return HealBot_UnitDebuffCurrent[guid][dName]
+    else
+        return false
+    end
+end
+
 local uaIsCurrent, uaIsCustom, uaNever, uaZ, tGeneralBuffs=false, false, false, 1, true
 local onlyPlayers,prevMissingbuff=false,false
 function HealBot_Aura_CheckUnitBuff(button)
     if uaExpirationTime then
-        if hbAuraRequests[button.guid] and hbAuraRequests[button.guid]==uaName then
-            HealBot_Plugin_Requests_CancelGUID(button.guid)
-            hbAuraRequests[button.guid]=nil
-        end
-        if hbAuraBuffWatch[button.guid] then
-            if hbAuraBuffWatch[button.guid][uaName] then
-                hbAuraBuffWatchActive[button.guid][uaName]=true
-                hbAuraBuffWatch[button.guid][uaName]=false
-                HealBot_Plugin_BuffWatch_PlayerReady(button.guid, uaName, true)
+        if HealBot_UnitBuffCurrent[button.guid] then
+            if hbAuraRequests[button.guid] and hbAuraRequests[button.guid]==uaName then
+                HealBot_Plugin_Requests_CancelGUID(button.guid)
+                hbAuraRequests[button.guid]=false
             end
-            if hbAuraBuffWatchActive[button.guid][uaName] then
-                hbAuraBuffWatchAlert[button.guid][uaName]=false
+            if hbAuraBuffWatch[button.guid] and hbAuraBuffWatch[button.guid][uaName] and hbAuraBuffWatch[button.guid][uaName]==0 then
+                hbAuraBuffWatch[button.guid][uaName]=1
+                HealBot_Plugin_AuraWatch_PlayerBuffReady(button.guid, uaName, true)
             end
+            HealBot_UnitBuffCurrent[button.guid][uaName]=TimeNow
         end
         if not HealBot_ExcludeBuffInCache[uaSpellId] then
             if not uaUnitCaster then uaUnitCaster="nil" end
@@ -1543,6 +1582,13 @@ function HealBot_Aura_CheckUnitDebuff(button)
     --    uaDebuffType=HEALBOT_POISON_en
     --    HealBot_AddDebug("Strange Aura")
     --end
+    if HealBot_UnitDebuffCurrent[button.guid] then
+        HealBot_UnitDebuffCurrent[button.guid][uaName]=TimeNow
+        if hbAuraDebuffWatch[button.guid] and hbAuraDebuffWatch[button.guid][uaName] and hbAuraDebuffWatch[button.guid][uaName]==0 then
+            hbAuraDebuffWatch[button.guid][uaName]=1
+            --HealBot_Plugin_AuraWatch_PlayerDebuffReady(button.guid, uaName, true)
+        end
+    end
     if not uaUnitCaster then uaUnitCaster="nil" end
     if not HealBot_AuraDebuffCache[uaSpellId] or not HealBot_AuraDebuffCache[uaSpellId].always then
         uaIsCurrent=HealBot_Aura_CheckCurDebuff(button)
@@ -1612,23 +1658,50 @@ if HEALBOT_GAME_VERSION>8 then
     HealBot_Aura_CheckBuffs=HealBot_Aura_CheckBuffsV9
 end
 
-local buffBarCol=0
+function HealBot_Aura_ClearUnitBuffOverDebuff(button)
+    button.aura.buff.overdb=false
+    button.aura.debuff.update=true
+    HealBot_Check_UnitDebuff(button)
+end
+
+local hbOverDebuff=false
+function HealBot_Aura_SetUnitBuffOverDebuff(button, dCol)
+    button.aura.debuff.colbar=dCol
+    button.aura.buff.overdb=true
+    hbOverDebuff=true
+end
+
+function HealBot_Aura_CheckUnitBuffOverDebuff(button)
+    hbOverDebuff=false
+    if button.aura.buff.priority<button.aura.debuff.priority then
+        if (button.aura.buff.colbar<5 or button.aura.buff.colbar==7) and (button.aura.debuff.colbar<5 or button.aura.debuff.colbar==7) then
+            if button.aura.buff.colbar==button.aura.debuff.colbar or (button.aura.buff.colbar==2 and button.aura.debuff.colbar<4) then
+                HealBot_Aura_SetUnitBuffOverDebuff(button, 0)
+            elseif button.aura.debuff.colbar==2 then
+                if button.aura.buff.colbar==1 then
+                    HealBot_Aura_SetUnitBuffOverDebuff(button, 3)
+                elseif button.aura.buff.colbar==3 then
+                    HealBot_Aura_SetUnitBuffOverDebuff(button, 1)
+                end
+            end
+        end
+    end
+    if button.aura.buff.overdb and not hbOverDebuff then
+        HealBot_Aura_ClearUnitBuffOverDebuff(button)
+    end
+end
+
+local buffBarCol,buffPrio=0,99
 function HealBot_Aura_CheckUnitBuffs(button)
     prevMissingbuff=button.aura.buff.missingbuff
     button.aura.buff.missingbuff=false
+    button.aura.buff.priority=99
     if buffCheck and button.status.current<HealBot_Unit_Status["DEAD"] then
         button.aura.buff.colbar=0
-        highestBuffPrio=50
         curBuffName=false;
         unitCurrentBuff.active=false
-        button.aura.buff.priority=99
         HealBot_Aura_luVars["prevBuffIconCount"]=button.icon.buff.count
         tGeneralBuffs=generalBuffs
-        if hbAuraBuffWatch[button.guid] then 
-            for buff,_ in pairs(hbAuraBuffWatch[button.guid]) do
-                hbAuraBuffWatchAlert[button.guid][buff]=true
-            end
-        end
         if tGeneralBuffs then
             if button.player then
                 onlyPlayers=true
@@ -1651,40 +1724,44 @@ function HealBot_Aura_CheckUnitBuffs(button)
             buffSort[x]=nil;
         end
         HealBot_Aura_CheckBuffs(button)
+        if HealBot_UnitBuffCurrent[button.guid] then
+            for bName, bTime in pairs(HealBot_UnitBuffCurrent[button.guid]) do
+                if bTime<TimeNow then
+                    HealBot_UnitBuffCurrent[button.guid][bName]=nil
+                    if hbAuraBuffWatch[button.guid] and hbAuraBuffWatch[button.guid][bName] then
+                        hbAuraBuffWatch[button.guid][bName]=0
+                        HealBot_Plugin_AuraWatch_PlayerBuffReady(button.guid, bName, false)
+                    end
+                end
+            end
+        end
         if tGeneralBuffs and onlyPlayers then
             HealBot_Aura_CheckGeneralBuff(button)
         end
         HealBot_Aura_SortBuffIcons(button)
         HealBot_Aura_CheckUnitBuffIcons(button)
        
-        if hbAuraBuffWatch[button.guid] then 
-            for buff,_ in pairs(hbAuraBuffWatchAlert[button.guid]) do
-                if hbAuraBuffWatchAlert[button.guid][buff] and hbAuraBuffWatchActive[button.guid][buff] then
-                    hbAuraBuffWatchActive[button.guid][buff]=false
-                    HealBot_Plugin_BuffWatch_PlayerReady(button.guid, buff, false)
-                end
-            end
-        end 
         if not curBuffName then
             if HealBot_UnitBuffIcons[button.id][1].current then
                 button.aura.buff.id=HealBot_UnitBuffIcons[button.id][1]["spellId"]
                 curBuffName=HealBot_AuraBuffCache[button.aura.buff.id]["name"]
-                button.aura.buff.priority=HealBot_AuraBuffCache[button.aura.buff.id]["priority"]
+                buffPrio=HealBot_AuraBuffCache[button.aura.buff.id]["priority"]
             elseif unitCurrentBuff.active then
                 button.aura.buff.id=unitCurrentBuff.id
                 curBuffName=unitCurrentBuff.name
-                button.aura.buff.priority=unitCurrentBuff.prio
+                buffPrio=unitCurrentBuff.prio
             end
             if curBuffName then
                 buffBarCol=HealBot_Globals.HealBot_Custom_Buffs_ShowBarCol[HealBot_AuraBuffCache[button.aura.buff.id]["name"]] or 1
                 if (HealBot_Globals.HealBot_Custom_Buffs_ShowBarCol[button.aura.buff.id] or 1) > buffBarCol then
                     buffBarCol=HealBot_Globals.HealBot_Custom_Buffs_ShowBarCol[button.aura.buff.id] or 1
                 end
-                if buffBarCol>1 then
-                    highestBuffPrio=HealBot_AuraBuffCache[button.aura.buff.id]["priority"]
-                    if button.aura.buff.colbar==0 then
-                        button.aura.buff.colbar=buffBarCol-1
-                    end
+                if buffBarCol>1 and button.aura.buff.colbar==0 then
+                    button.aura.buff.colbar=buffBarCol-1
+                    button.aura.buff.priority=buffPrio
+                    HealBot_Aura_CheckUnitBuffOverDebuff(button)
+                elseif button.aura.buff.overdb then
+                    HealBot_Aura_ClearUnitBuffOverDebuff(button)
                 end
             end
         end
@@ -1789,6 +1866,17 @@ function HealBot_Aura_CheckUnitDebuffs(button)
         end
         unitCurrentDebuff.active=false
         HealBot_Aura_CheckDebuffs(button)
+        if HealBot_UnitDebuffCurrent[button.guid] then
+            for dName, dTime in pairs(HealBot_UnitDebuffCurrent[button.guid]) do
+                if dTime<(TimeNow+0.1) then
+                    HealBot_UnitDebuffCurrent[button.guid][dName]=nil
+                    if hbAuraDebuffWatch[button.guid] and hbAuraDebuffWatch[button.guid][dName] then
+                        hbAuraDebuffWatch[button.guid][dName]=0
+                    --    HealBot_Plugin_AuraWatch_PlayerDebuffReady(button.guid, dName, false)
+                    end
+                end
+            end
+        end
         HealBot_Aura_SortDebuffIcons(button)
         HealBot_Aura_CheckUnitDebuffIcons(button)
         if HealBot_UnitDebuffIcons[button.id][51].current then
@@ -1802,13 +1890,21 @@ function HealBot_Aura_CheckUnitDebuffs(button)
         end
         if button.aura.debuff.id>0 then
             if HealBot_AuraDebuffCache[button.aura.debuff.id].isAuto then 
-                debuffBarCol=HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[HEALBOT_CUSTOM_CAT_CUSTOM_AUTOMATIC] or 3
+                debuffBarCol=HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[HEALBOT_CUSTOM_CAT_CUSTOM_AUTOMATIC] or 
+                             HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol["DEFAULT"] or 3
+            elseif HealBot_AuraDebuffCache[button.aura.debuff.id]["debuffType"]==HEALBOT_CUSTOM_en then
+                debuffBarCol=HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[button.aura.debuff.id] or 
+                             HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[HealBot_AuraDebuffCache[button.aura.debuff.id]["name"]] or 
+                             HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[HEALBOT_CUSTOM_CAT_CUSTOM_AUTOMATIC] or 
+                             HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol["DEFAULT"] or 3
             else
-                debuffBarCol=HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[button.aura.debuff.id] or HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[HealBot_AuraDebuffCache[button.aura.debuff.id]["name"]] or 3
+                debuffBarCol=HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol["DEFAULT"] or 
+                             HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[HEALBOT_CUSTOM_CAT_CUSTOM_AUTOMATIC] or 3
             end
-            if debuffBarCol>2 and highestBuffPrio<button.aura.debuff.priority then debuffBarCol=2 end
             button.aura.debuff.colbar=debuffBarCol-1
-            if button.aura.debuff.type~=HealBot_AuraDebuffCache[button.aura.debuff.id]["debuffType"] then
+            HealBot_Aura_CheckUnitBuffOverDebuff(button)
+            if button.aura.debuff.type~=HealBot_AuraDebuffCache[button.aura.debuff.id]["debuffType"] or button.aura.debuff.update then
+                button.aura.debuff.update=false
                 button.aura.debuff.name="needUpdate"
                 button.aura.debuff.type=HealBot_AuraDebuffCache[button.aura.debuff.id]["debuffType"]
             end
@@ -1953,9 +2049,11 @@ function HealBot_Aura_ClearBuff(button)
         button.aura.buff.name=false
         button.aura.buff.colbar=0
         button.aura.buff.missingbuff=false
-        button.aura.buff.priority=99
         if button.glow.buff then
             HealBot_Action_DisableButtonGlowType(button, "BUFF")
+        end
+        if button.aura.buff.overdb then
+            HealBot_Aura_ClearUnitBuffOverDebuff(button)
         end
         HealBot_Aura_AuxClearAuraBuffBars(button)
         HealBot_RefreshUnit(button)
@@ -2379,8 +2477,8 @@ end
 function HealBot_Aura_ClearGUID(guid)
     hbAuraRequests[guid]=nil
     hbAuraBuffWatch[guid]=nil
-    hbAuraBuffWatchActive[guid]=nil
-    hbAuraBuffWatchAlert[guid]=nil
+    HealBot_UnitBuffCurrent[guid]=nil
+    HealBot_UnitDebuffCurrent[guid]=nil
 end
 
 function HealBot_Aura_BuffIdLookup()

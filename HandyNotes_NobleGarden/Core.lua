@@ -3,7 +3,7 @@
 
                                             Noble Garden
 
-                                      v1.05 - 7th December 2022
+                                      v1.06 - 18th January 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----

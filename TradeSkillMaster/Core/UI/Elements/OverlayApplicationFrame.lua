@@ -67,7 +67,7 @@ function OverlayApplicationFrame.Release(self)
 	self._contentFrame = nil
 	self._contextTable = nil
 	self._defaultContextTable = nil
-	if TSM.IsWowClassic() then
+	if TSM.IsWowClassic() and not TSM.IsWowWrathPatch341() then
 		self:_GetBaseFrame():SetMinResize(0, 0)
 	else
 		self:_GetBaseFrame():SetResizeBounds(0, 0)

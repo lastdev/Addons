@@ -6,10 +6,13 @@ local init_done, gradient, conf, doneOptions
 local errorCount = 0
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 50e769c4305c42360c08e4eba003ac2f06dc3d9a $")
+end, "$Revision: 5a89ecaf32f24ffefbf320bef9dff40e1992eb4e $")
+
+local _, _, _, clientRevision = GetBuildInfo()
 
 local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
+local IsWrathClassicPTR = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC and clientRevision >= 30401
 local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 
 local _G = _G
@@ -124,7 +127,7 @@ function XPerl_DoGradient(self, force)
 			end
 			if (self.gradient) then
 				local orient, r, g, b, a, r2, g2, b2, a2 = unpack(gradient)
-				if IsRetail then
+				if IsRetail or IsWrathClassicPTR then
 					self.gradient:SetGradient(orient, CreateColor(r, g, b, a), CreateColor(r2, g2, b2, a2))
 				else
 					self.gradient:SetGradientAlpha(orient, r, g, b, a, r2, g2, b2, a2)
@@ -545,7 +548,7 @@ function ZPerl_Init()
 	name, title, notes, enabled = GetAddOnInfo("AutoBar")
 	if (name and enabled) then
 		local ver = GetAddOnMetadata(name, "Version")
-		if (ver < "2.01.00.02 beta") then
+		if (ver < "2.01.00.02") then
 			XPerl_Notice("Out-dated version of AutoBar detected. This will taint the Targetting system for all mods that use them, including X-Perl.")
 		end
 	end

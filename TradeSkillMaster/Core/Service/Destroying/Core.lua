@@ -53,6 +53,7 @@ local SPELL_IDS = {
 local ITEM_SUB_CLASS_METAL_AND_STONE = 7
 local ITEM_SUB_CLASS_HERB = 9
 local TARGET_SLOT_ID_MULTIPLIER = 1000000
+local CLEANUP_THRESHOLD = 60 * 24 * 60 * 60
 local GEM_CHIPS = {
 	["i:129099"] = "i:129100",
 	["i:130200"] = "i:129100",
@@ -90,6 +91,16 @@ function Destroying.OnInitialize()
 		:RegisterCallback("deMaxQuality", private.UpdateBagDB)
 		:RegisterCallback("includeSoulbound", private.UpdateBagDB)
 
+	local currentTime = time()
+	for _, entries in pairs(private.settings.destroyingHistory) do
+		for i = #entries, 1, -1 do
+			local value = entries[i]
+			if value.time < currentTime - CLEANUP_THRESHOLD then
+				tremove(entries, i)
+			end
+		end
+	end
+
 	private.ignoreDB = Database.NewSchema("DESTROYING_IGNORE")
 		:AddUniqueStringField("itemString")
 		:AddBooleanField("ignoreSession")
@@ -115,7 +126,9 @@ function Destroying.OnInitialize()
 
 	Event.Register("LOOT_READY", private.SendEventToThread)
 	Event.Register("LOOT_CLOSED", private.SendEventToThread)
-	Event.Register("BAG_UPDATE_DELAYED", private.SendEventToThread)
+	BagTracking.RegisterCallback(function()
+		private.SendEventToThread("BAG_UPDATE_DELAYED")
+	end)
 	Event.Register("UNIT_SPELLCAST_START", private.SpellCastEventHandler)
 	Event.Register("UNIT_SPELLCAST_FAILED", private.SpellCastEventHandler)
 	Event.Register("UNIT_SPELLCAST_FAILED_QUIET", private.SpellCastEventHandler)
@@ -278,8 +291,7 @@ function private.DestroyThread(button, row)
 
 	local itemString, spellId, bag, slot = row:GetFields("itemString", "spellId", "bag", "slot")
 	local startQuantity = select(2, Container.GetItemInfo(bag, slot))
-	local spellName = GetSpellInfo(spellId)
-	button:SetMacroText(format("/cast %s;\n/use %d %d", spellName, bag, slot))
+	button:SetMacroText(format("/cast %s;\n/use %d %d", GetSpellInfo(spellId), bag, slot))
 
 	-- Wait for the spell cast to start or fail
 	private.pendingSpellId = spellId
@@ -336,8 +348,8 @@ function private.DestroyThread(button, row)
 		time = time(),
 		result = lootResult,
 	}
-	private.settings.destroyingHistory[spellName] = private.settings.destroyingHistory[spellName] or {}
-	tinsert(private.settings.destroyingHistory[spellName], newEntry)
+	private.settings.destroyingHistory[spellId] = private.settings.destroyingHistory[spellId] or {}
+	tinsert(private.settings.destroyingHistory[spellId], newEntry)
 
 	-- Wait up to a second for the item we destroyed to be removed from the bags
 	local timeout = GetTime() + 1
@@ -360,7 +372,14 @@ function private.SendEventToThread(event)
 end
 
 function private.SpellCastEventHandler(event, unit, _, spellId)
-	if unit ~= "player" or spellId ~= private.pendingSpellId then
+	if unit ~= "player" then
+		return
+	end
+	if not TSM.IsWowClassic() and event == "UNIT_SPELLCAST_START" and not ProfessionInfo.IsSalvage(spellId) then
+		private.destroySpellId = nil
+		private.itemSpellId = nil
+	end
+	if spellId ~= private.pendingSpellId then
 		return
 	end
 	private.SendEventToThread(event)
@@ -389,9 +408,8 @@ function private.TradeSkillListUpdateHandler()
 		time = time(),
 		result = CopyTable(private.destroyResultCache),
 	}
-	local spellName = GetSpellInfo(private.destroySpellId)
-	private.settings.destroyingHistory[spellName] = private.settings.destroyingHistory[spellName] or {}
-	tinsert(private.settings.destroyingHistory[spellName], newEntry)
+	private.settings.destroyingHistory[private.destroySpellId] = private.settings.destroyingHistory[private.destroySpellId] or {}
+	tinsert(private.settings.destroyingHistory[private.destroySpellId], newEntry)
 
 	wipe(private.destroyResultCache)
 end

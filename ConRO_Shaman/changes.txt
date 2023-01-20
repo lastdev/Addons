@@ -1,10 +1,11 @@
-lightweight tag 8fb6af60b0e73d2e1d04773932d88d256402174e v10.0.7
+lightweight tag 933ce9ef36006d06419eda40bff5eb64a1ba8dad v10.0.8
 Author:	Vae <emuha17@gmail.com>
-Date:	Wed Jan 4 20:48:37 2023 -1000
+Date:	Sat Jan 14 13:04:55 2023 -1000
 
-commit 8fb6af60b0e73d2e1d04773932d88d256402174e
+commit 933ce9ef36006d06419eda40bff5eb64a1ba8dad
 Author: Vae <emuha17@gmail.com>
-Date:   Wed Jan 4 20:48:37 2023 -1000
+Date:   Sat Jan 14 13:04:55 2023 -1000
 
-    Stormkeeper error fix
+    Updated Elemental rotation
+    Added Auto target detect
 

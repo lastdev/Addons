@@ -1,3 +1,17 @@
+**7.0.5**
+* Fix for right click buff remove not working with `ActionButtonUseKeyDown` setting enabled.
+* Compact raid error fixes.
+* Druid combo error fix.
+
+**7.0.4**
+* Fix default buff cooldowns.
+
+**7.0.3**
+* Updated for 3.4.1.
+* Adde heal over times bar for Wrath Classic.
+* Totem frame fixes.
+* Various other fixes.
+
 **7.0.2**
 * Properly hiding party frames, to show/hide the default raid frames use the raid manager.
 * Fixed druid and monk special bars.

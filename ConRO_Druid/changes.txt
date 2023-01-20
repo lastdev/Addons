@@ -1,11 +1,10 @@
-lightweight tag 2093afa8b8f904f5807b70cba834c9b98465c9c4 v10.0.7
+lightweight tag 420a3fbc65254d02398113f1eb5d8f690fedfcd7 v10.0.8
 Author:	Vae <emuha17@gmail.com>
-Date:	Wed Jan 4 20:51:13 2023 -1000
+Date:	Sat Jan 14 13:02:15 2023 -1000
 
-commit 2093afa8b8f904f5807b70cba834c9b98465c9c4
+commit 420a3fbc65254d02398113f1eb5d8f690fedfcd7
 Author: Vae <emuha17@gmail.com>
-Date:   Wed Jan 4 20:51:13 2023 -1000
+Date:   Sat Jan 14 13:02:15 2023 -1000
 
-    Added auto target detect to Balance
-    Fixed Feral, bear form, error
+    Update for Balance and code cleaning
 

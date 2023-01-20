@@ -8,8 +8,8 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: d4352b4d3412c6bdb7ef55739ad7a825931fc6bb $")
-XPerl_SetModuleRevision("$Revision: d4352b4d3412c6bdb7ef55739ad7a825931fc6bb $")
+end, "$Revision: dec7ffcf716cf4904759d4f0e42c1bded31028be $")
+XPerl_SetModuleRevision("$Revision: dec7ffcf716cf4904759d4f0e42c1bded31028be $")
 
 local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
@@ -21,7 +21,7 @@ if LCD then
 	LCD:Register("ZPerl")
 	UnitAuraDirect = LCD.UnitAuraDirect
 end
-local HealComm = IsVanillaClassic and LibStub and LibStub("LibHealComm-4.0", true)
+local HealComm = IsClassic and LibStub and LibStub("LibHealComm-4.0", true)
 
 -- Upvalues
 local _G = _G
@@ -2823,15 +2823,24 @@ local function AuraButtonOnShow(self)
 	if (not cd) then
 		cd = CreateFrame("Cooldown", nil, self, BackdropTemplateMixin and "BackdropTemplate,CooldownFrameTemplate" or "CooldownFrameTemplate")
 		self.cooldown = cd
-		cd:SetAllPoints(self.Icon)
+		if self.Icon then
+			cd:SetAllPoints(self.Icon)
+		else
+			cd:SetAllPoints(self:GetName().."Icon")
+		end
 	end
 	cd:SetReverse(true)
 	--cd:SetDrawEdge(true) Blizzard removed this call from 5.0.4, commented it out to avoid lua error
 
 	if (not cd.countdown) then
 		cd.countdown = self.cooldown:CreateFontString(nil, "OVERLAY", "GameFontNormalHuge")
-		cd.countdown:SetPoint("TOPLEFT", self.Icon)
-		cd.countdown:SetPoint("BOTTOMRIGHT", self.Icon, -1, 2)
+		if self.Icon then
+			cd.countdown:SetPoint("TOPLEFT", self.Icon)
+			cd.countdown:SetPoint("BOTTOMRIGHT", self.Icon, -1, 2)
+		else
+			cd.countdown:SetPoint("TOPLEFT", self:GetName().."Icon")
+			cd.countdown:SetPoint("BOTTOMRIGHT", self:GetName().."Icon", -1, 2)
+		end
 		cd.countdown:SetTextColor(1, 1, 0)
 	end
 
@@ -4009,7 +4018,7 @@ function XPerl_SetExpectedAbsorbs(self)
 			local min, max = healthBar:GetMinMaxValues()
 			local position = ((max - healthBar:GetValue()) / max) * healthBar:GetWidth()
 
-			if healthBar:GetWidth() <= 0 then
+			if healthBar:GetWidth() <= 0 or healthBar:GetWidth() == position then
 				return
 			end
 
@@ -4017,6 +4026,50 @@ function XPerl_SetExpectedAbsorbs(self)
 
 			bar:SetPoint("TopRight", healthBar, "TopRight", -position, 0)
 			bar:SetPoint("BottomRight", healthBar, "BottomRight", -position, 0)
+			return
+		end
+		bar:Hide()
+	end
+end
+
+-- XPerl_SetExpectedHots
+function XPerl_SetExpectedHots(self)
+	if WOW_PROJECT_ID ~= WOW_PROJECT_WRATH_CLASSIC then
+		return
+	end
+	local bar
+	if self.statsFrame and self.statsFrame.expectedHots then
+		bar = self.statsFrame.expectedHots
+	else
+		bar = self.expectedHots
+	end
+	if (bar) then
+		local unit = self.partyid
+
+		if not unit then
+			unit = self:GetParent().targetid
+		end
+
+		local amount
+		if IsClassic then
+			local guid = UnitGUID(unit)
+			amount = (HealComm:GetHealAmount(guid, HealComm.OVERTIME_HEALS, GetTime() + 3) or 0) * HealComm:GetHealModifier(guid)
+		end
+
+		if (amount and amount > 0 and not UnitIsDeadOrGhost(unit)) then
+			local healthMax = UnitHealthMax(unit)
+			local health = UnitIsGhost(unit) and 1 or (UnitIsDead(unit) and 0 or UnitHealth(unit))
+
+			if UnitIsAFK(unit) then
+				bar:SetStatusBarColor(0.2, 0.2, 0.2, 0.7)
+			else
+				bar:SetStatusBarColor(conf.colour.bar.hot.r, conf.colour.bar.hot.g, conf.colour.bar.hot.b, conf.colour.bar.hot.a)
+			end
+
+			bar:Show()
+			bar:SetMinMaxValues(0, healthMax)
+			bar:SetValue(min(healthMax, health + amount))
+
 			return
 		end
 		bar:Hide()
@@ -4043,7 +4096,7 @@ function XPerl_SetExpectedHealth(self)
 			amount = UnitGetIncomingHeals(unit)
 		else
 			local guid = UnitGUID(unit)
-			amount = (HealComm:GetHealAmount(guid, HealComm.ALL_HEALS, GetTime() + 3) or 0) * HealComm:GetHealModifier(guid)
+			amount = (HealComm:GetHealAmount(guid, HealComm.CASTED_HEALS, GetTime() + 3) or 0) * HealComm:GetHealModifier(guid)
 		end
 		if (amount and amount > 0 and not UnitIsDeadOrGhost(unit)) then
 			local healthMax = UnitHealthMax(unit)
@@ -4061,6 +4114,7 @@ function XPerl_SetExpectedHealth(self)
 			bar:Show()
 			bar:SetMinMaxValues(0, healthMax)
 			bar:SetValue(min(healthMax, health + amount))
+
 			return
 		end
 		bar:Hide()
@@ -4215,6 +4269,30 @@ function XPerl_Register_Prediction(self, conf, g2u, ...)
 			else
 				self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
 			end
+		else
+			-- HoT predictions do not work properly on Wrath Classic so use HealComm
+			if conf.hotPrediction then
+				local UpdateHealth = function(event, ...)
+					local unit = g2u(select(select("#", ...), ...))
+					if unit then
+						local f = self:GetScript("OnEvent")
+						f(self, "UNIT_HEAL_PREDICTION", unit)
+					end
+				end
+				HealComm.RegisterCallback(self, "HealComm_HealStarted", UpdateHealth)
+				HealComm.RegisterCallback(self, "HealComm_HealStopped", UpdateHealth)
+				HealComm.RegisterCallback(self, "HealComm_HealDelayed", UpdateHealth)
+				HealComm.RegisterCallback(self, "HealComm_HealUpdated", UpdateHealth)
+				HealComm.RegisterCallback(self, "HealComm_ModifierChanged", UpdateHealth)
+				HealComm.RegisterCallback(self, "HealComm_GUIDDisappeared", UpdateHealth)
+			else
+				HealComm.UnregisterCallback(self, "HealComm_HealStarted")
+				HealComm.UnregisterCallback(self, "HealComm_HealStopped")
+				HealComm.UnregisterCallback(self, "HealComm_HealDelayed")
+				HealComm.UnregisterCallback(self, "HealComm_HealUpdated")
+				HealComm.UnregisterCallback(self, "HealComm_ModifierChanged")
+				HealComm.UnregisterCallback(self, "HealComm_GUIDDisappeared")
+			end
 		end
 	else
 		if conf.healprediction then
@@ -4240,5 +4318,4 @@ function XPerl_Register_Prediction(self, conf, g2u, ...)
 			HealComm.UnregisterCallback(self, "HealComm_GUIDDisappeared")
 		end
 	end
-
 end

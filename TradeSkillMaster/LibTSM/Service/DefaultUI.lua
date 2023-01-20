@@ -35,7 +35,7 @@ DefaultUI:OnModuleLoad(function()
 		private.callbacks[frame] = {}
 		private.callbackFilter[frame] = {}
 	end
-	if TSM.IsWowClassic() then
+	if TSM.IsWowClassic() and not TSM.IsWowWrathPatch341() then
 		Event.Register("MAIL_SHOW", function() private.HandleEvent(FRAMES.MAIL, true) end)
 		Event.Register("MAIL_CLOSED", function() private.HandleEvent(FRAMES.MAIL, false) end)
 		Event.Register("AUCTION_HOUSE_SHOW", function() private.HandleEvent(FRAMES.AUCTION_HOUSE, true) end)

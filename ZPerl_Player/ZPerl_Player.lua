@@ -12,7 +12,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player) then
 		XPerl_Player.conf = conf.player
 	end
-end, "$Revision: 9f6c75eeab82c0b47de6b403dca2b68407247c11 $")
+end, "$Revision: 7c303655db44388c76e9dd660ef8ea045a1a721f $")
 
 local perc1F = "%.1f"..PERCENT_SYMBOL
 local percD = "%.0f"..PERCENT_SYMBOL
@@ -24,6 +24,7 @@ end
 --@end-debug@]===]
 
 local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
+local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
 local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 
@@ -102,6 +103,7 @@ local XPerl_Player_HighlightCallback
 function XPerl_Player_OnLoad(self)
 	XPerl_SetChildMembers(self)
 	self.partyid = "player"
+	self.unit = self.partyid
 
 	XPerl_BlizzFrameDisable(PlayerFrame)
 
@@ -777,8 +779,20 @@ local function XPerl_Player_UpdateAbsorbPrediction(self)
 	end
 end
 
+-- XPerl_Player_UpdateHotsPrediction
+local function XPerl_Player_UpdateHotsPrediction(self)
+	if not IsWrathClassic then
+		return
+	end
+	if pconf.hotPrediction then
+		XPerl_SetExpectedHots(self)
+	else
+		self.statsFrame.expectedHots:Hide()
+	end
+end
+
 local function XPerl_Player_UpdateResurrectionStatus(self)
-	if (UnitHasIncomingResurrection(self.partyid)) then
+	if UnitHasIncomingResurrection(self.partyid) then
 		if pconf.portrait then
 			self.portraitFrame.resurrect:Show()
 		else
@@ -807,6 +821,7 @@ local function XPerl_Player_UpdateHealth(self)
 
 	XPerl_SetHealthBar(self, playerhealth, playerhealthmax)
 	XPerl_Player_UpdateAbsorbPrediction(self)
+	XPerl_Player_UpdateHotsPrediction(self)
 	XPerl_Player_UpdateHealPrediction(self)
 	XPerl_Player_UpdateResurrectionStatus(self)
 
@@ -1883,8 +1898,14 @@ function XPerl_Player_Events:UNIT_PET()
 end
 
 function XPerl_Player_Events:UNIT_HEAL_PREDICTION(unit)
-	if (pconf.healprediction and unit == self.partyid) then
+	if pconf.healprediction and unit == self.partyid then
 		XPerl_SetExpectedHealth(self)
+	end
+	if not IsWrathClassic then
+		return
+	end
+	if pconf.hotPrediction and unit == self.partyid then
+		XPerl_SetExpectedHots(self)
 	end
 end
 
@@ -1959,7 +1980,7 @@ local function MakeXPBar(self)
 end
 
 -- XPerl_Player_SetTotems
-function XPerl_Player_SetTotems(self, ...)
+function XPerl_Player_SetTotems()
 	if (pconf.totems and pconf.totems.enable) then
 		TotemFrame:SetParent(XPerl_Player)
 		TotemFrame:ClearAllPoints()
@@ -1967,7 +1988,11 @@ function XPerl_Player_SetTotems(self, ...)
 	else
 		TotemFrame:SetParent(PlayerFrame)
 		TotemFrame:ClearAllPoints()
-		TotemFrame:SetPoint("TOPLEFT", PlayerFrame, "BOTTOMLEFT", 99, 38)
+		if IsRetail then
+			TotemFrame:SetPoint("TOPRIGHT", PlayerFrame, "BOTTOMRIGHT", 0, 20)
+		else
+			TotemFrame:SetPoint("TOPLEFT", PlayerFrame, "BOTTOMLEFT", 99, 38)
+		end
 	end
 end
 
@@ -2120,9 +2145,44 @@ function XPerl_Player_Set_Bits(self)
 			}
 		end
 
-		if (not IsRetail and not IsVanillaClassic and not self.totemHooked) then
-			hooksecurefunc("TotemFrame_Update", XPerl_Player_SetTotems)
-			self.totemHooked = true
+		if not IsVanillaClassic then
+			if (pconf.totems and pconf.totems.enable and not self.totemHooked) then
+				local moving
+				hooksecurefunc(TotemFrame, "SetPoint", function(self)
+					if not pconf.totems.enable then
+						return
+					end
+					if moving then
+						return
+					end
+					moving = true
+					self:SetMovable(true)
+					self:ClearAllPoints()
+					self:SetPoint("TOP", XPerl_Player, "BOTTOM", pconf.totems.offsetX, pconf.totems.offsetY)
+					self:SetMovable(false)
+					moving = nil
+				end)
+				local parenting
+				hooksecurefunc(TotemFrame, "SetParent", function(self)
+					if not pconf.totems.enable then
+						return
+					end
+					if parenting then
+						return
+					end
+					parenting = true
+					self:SetMovable(true)
+					self:SetParent(XPerl_Player)
+					self:ClearAllPoints()
+					self:SetPoint("TOP", XPerl_Player, "BOTTOM", pconf.totems.offsetX, pconf.totems.offsetY)
+					self:SetMovable(false)
+					parenting = nil
+				end)
+				self.totemHooked = true
+				XPerl_Player_SetTotems()
+			else
+				XPerl_Player_SetTotems()
+			end
 		end
 	end
 
@@ -2283,7 +2343,6 @@ end
 function XPerl_Player_InitWarlock(self)
 	local _, class = UnitClass("player")
 	if (class == "WARLOCK" ) then
-
 		if not WarlockPowerFrame then
 			return
 		end
@@ -2342,7 +2401,6 @@ end
 function XPerl_Player_InitPaladin(self)
 	local _, class = UnitClass("player")
 	if (class == "PALADIN") then
-
 		if not PaladinPowerBarFrame then
 			return
 		end
@@ -2511,7 +2569,6 @@ end
 function XPerl_Player_InitMage(self)
 	local _, class = UnitClass("player")
 	if (class == "MAGE") then
-
 		if not MageArcaneChargesFrame then
 			return
 		end
@@ -2570,7 +2627,6 @@ end
 function XPerl_Player_InitDK(self)
 	local _, class = UnitClass("player")
 	if (class == "DEATHKNIGHT") then
-
 		if not RuneFrame then
 			return
 		end
@@ -2629,7 +2685,6 @@ end
 function XPerl_Player_InitEvoker(self)
 	local _, class = UnitClass("player")
 	if (class == "EVOKER") then
-
 		if not EssencePlayerFrame then
 			return
 		end

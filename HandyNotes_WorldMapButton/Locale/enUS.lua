@@ -1,7 +1,7 @@
 local debug = false
 --[===[@debug@
 debug = true
---@end-debug@]===]
+--@end-debug@]==]]===]
 
 local L = LibStub("AceLocale-3.0"):NewLocale("HandyNotes_WorldMapButton", "enUS", true, debug)
 

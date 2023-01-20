@@ -6,7 +6,6 @@
 
 local TSM = select(2, ...) ---@type TSM
 local ProfessionUtil = TSM.Crafting:NewPackage("ProfessionUtil")
-local ProfessionInfo = TSM.Include("Data.ProfessionInfo")
 local CraftString = TSM.Include("Util.CraftString")
 local Event = TSM.Include("Util.Event")
 local Log = TSM.Include("Util.Log")
@@ -227,7 +226,7 @@ function ProfessionUtil.Craft(craftString, recipeId, quantity, useVellum, callba
 	end
 	local enchantItemLocation = nil
 	if not TSM.IsWowClassic() and useVellum and isEnchant and vellumable then
-		local bag, slot = BagTracking.CreateQueryBagsItem(ProfessionInfo.GetVellumItemString())
+		local bag, slot = BagTracking.CreateQueryBagsItem(Profession.GetVellumItemString(craftString))
 			:Select("bag", "slot")
 			:GetFirstResultAndRelease()
 		if not bag then
@@ -272,13 +271,7 @@ function ProfessionUtil.Craft(craftString, recipeId, quantity, useVellum, callba
 		TempTable.Release(optionalMats)
 	end
 	if TSM.IsWowClassic() and useVellum and isEnchant and vellumable then
-		local indirectSpellId = nil
-		if TSM.IsWowWrathClassic() then
-			local itemLink = Profession.GetResultItem(craftString)
-			indirectSpellId = strmatch(itemLink, "enchant:(%d+)")
-			indirectSpellId = indirectSpellId and tonumber(indirectSpellId)
-		end
-		UseItemByName(ItemInfo.GetName(ProfessionInfo.GetVellumItemString(indirectSpellId)))
+		UseItemByName(ItemInfo.GetName(Profession.GetVellumItemString(craftString)))
 	end
 	private.castingTimeout = nil
 	private.craftTimeout = nil
@@ -288,9 +281,9 @@ end
 
 function ProfessionUtil.GetCraftResultTooltipFromRecipeString(recipeString)
 	local craftString = CraftString.FromRecipeString(recipeString)
-	local itemString, texture = Profession.GetResultInfo(craftString)
 	local tooltip = nil
-	itemString = itemString or TSM.Crafting.GetItemString(craftString)
+	local itemString = TSM.Crafting.GetItemString(craftString)
+	local texture = nil
 	if not itemString or itemString == "" then
 		if Profession.IsClassicCrafting() then
 			tooltip = "craft:"..(Profession.GetIndexByCraftString(craftString) or craftString)
@@ -299,7 +292,7 @@ function ProfessionUtil.GetCraftResultTooltipFromRecipeString(recipeString)
 			tooltip = "enchant:"..spellId
 		end
 	else
-		texture = ItemInfo.GetTexture(itemString) or texture
+		texture = ItemInfo.GetTexture(itemString)
 		local level = RecipeString.GetLevel(recipeString)
 		local rank = RecipeString.GetRank(recipeString)
 		if level or rank or RecipeString.HasOptionalMats(recipeString) then
@@ -390,6 +383,9 @@ function private.SpellMatchesCraft(spellId)
 	if TSM.IsWowClassic() then
 		return GetSpellInfo(spellId) == private.craftName
 	else
+		if not Profession.ScannerHasSkills() then
+			return false
+		end
 		local resultItem = Profession.GetResultItem(CraftString.Get(spellId))
 		if not resultItem then
 			return false

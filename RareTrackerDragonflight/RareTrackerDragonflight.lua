@@ -146,7 +146,35 @@ if RareTracker.db.global.window.force_display_in_english then
         
     L[193217] = "Drakewing"
     L[193154] = "Forgotten Gryphon"
+    
+    -- Stormed off
+    L[193648] = "Infernum"
+    L[193644] = "Bouldron"
+    L[193686] = "Neela Firebane"
+    L[193680] = "Zurgaz Corebreaker"
+    L[193652] = "Grizzlerock"
+    L[193675] = "Kain Firebrand"
+    L[193678] = "Fieraan"
+    L[193653] = "Gaelzion"
+    L[193650] = "Emblazion"
+    L[193645] = "Crystalus"
+    L[193647] = "Karantun"
+    L[193682] = "Rouen Icewind"
+    L[193684] = "Pipspark Thundersnap"
+    L[193674] = "Voraazka"
+    L[193677] = "Maeleera"
+    L[193679] = "Leerain"
+    L[193654] = "Gravlion"
+    L[193655] = "Frozion"
 end
+
+-- Special category for elemental storms
+local categorized_rare_ids = {
+    ["Primal Storms"] = {
+        193648, 193644, 193686, 193680, 193652, 193675, 193678, 193653, 193650, 
+        193645, 193647, 193682, 193674, 193674, 193677, 193679, 193654, 193655
+    }
+}
 
 RareTracker.RegisterRaresForModule({
     -- Define the zone(s) in which the rares are present.
@@ -192,10 +220,28 @@ RareTracker.RegisterRaresForModule({
         [197411] = {L[197411], nil, nil}, --"Astray Splasher"
         
         [193259] = {L[193259], nil, nil}, --"Blue Terror"
-        
         [195353] = {L[195353], nil, nil}, --"Breezebiter"
         
-    }
+        [193648] = {L[193648], nil, nil}, --"Infernum"
+        [193644] = {L[193644], nil, nil}, --"Bouldron"
+        [193686] = {L[193686], nil, nil}, --"Neela Firebane"
+        [193680] = {L[193680], nil, nil}, --"Zurgaz Corebreaker"
+        [193652] = {L[193652], nil, nil}, --"Grizzlerock"
+        [193675] = {L[193675], nil, nil}, --"Kain Firebrand"
+        [193678] = {L[193678], nil, nil}, --"Fieraan"
+        [193653] = {L[193653], nil, nil}, --"Gaelzion"
+        [193650] = {L[193650], nil, nil}, --"Emblazion"
+        [193645] = {L[193645], nil, nil}, --"Crystalus"
+        [193647] = {L[193647], nil, nil}, --"Karantun"
+        [193682] = {L[193682], nil, nil}, --"Rouen Icewind"
+        [193684] = {L[193684], nil, nil}, --"Pipspark Thundersnap"
+        [193674] = {L[193674], nil, nil}, --"Voraazka"
+        [193677] = {L[193677], nil, nil}, --"Maeleera"
+        [193679] = {L[193679], nil, nil}, --"Leerain"
+        [193654] = {L[193654], nil, nil}, --"Gravlion"
+        [193655] = {L[193655], nil, nil}, --"Frozion"
+    },
+    ["special_categories"] = categorized_rare_ids
 })
 
 RareTracker.RegisterRaresForModule({
@@ -245,7 +291,27 @@ RareTracker.RegisterRaresForModule({
         [195895] = {L[195895], nil, nil}, --"Nergazurai"
         [192557] = {L[192557], nil, nil}, --"Quackers the Terrible"
         [193209] = {L[193209], nil, nil}, --"Zenet Avis"
-    }
+        
+        [193648] = {L[193648], nil, nil}, --"Infernum"
+        [193644] = {L[193644], nil, nil}, --"Bouldron"
+        [193686] = {L[193686], nil, nil}, --"Neela Firebane"
+        [193680] = {L[193680], nil, nil}, --"Zurgaz Corebreaker"
+        [193652] = {L[193652], nil, nil}, --"Grizzlerock"
+        [193675] = {L[193675], nil, nil}, --"Kain Firebrand"
+        [193678] = {L[193678], nil, nil}, --"Fieraan"
+        [193653] = {L[193653], nil, nil}, --"Gaelzion"
+        [193650] = {L[193650], nil, nil}, --"Emblazion"
+        [193645] = {L[193645], nil, nil}, --"Crystalus"
+        [193647] = {L[193647], nil, nil}, --"Karantun"
+        [193682] = {L[193682], nil, nil}, --"Rouen Icewind"
+        [193684] = {L[193684], nil, nil}, --"Pipspark Thundersnap"
+        [193674] = {L[193674], nil, nil}, --"Voraazka"
+        [193677] = {L[193677], nil, nil}, --"Maeleera"
+        [193679] = {L[193679], nil, nil}, --"Leerain"
+        [193654] = {L[193654], nil, nil}, --"Gravlion"
+        [193655] = {L[193655], nil, nil}, --"Frozion"
+    },
+    ["special_categories"] = categorized_rare_ids
 })
 
 RareTracker.RegisterRaresForModule({
@@ -281,7 +347,27 @@ RareTracker.RegisterRaresForModule({
         
         [193273] = {L[193273], nil, nil}, --"Liskron the Dazzling"
         [193234] = {L[193234], nil, nil}, --"Eldoren the Reborn"
-    }
+        
+        [193648] = {L[193648], nil, nil}, --"Infernum"
+        [193644] = {L[193644], nil, nil}, --"Bouldron"
+        [193686] = {L[193686], nil, nil}, --"Neela Firebane"
+        [193680] = {L[193680], nil, nil}, --"Zurgaz Corebreaker"
+        [193652] = {L[193652], nil, nil}, --"Grizzlerock"
+        [193675] = {L[193675], nil, nil}, --"Kain Firebrand"
+        [193678] = {L[193678], nil, nil}, --"Fieraan"
+        [193653] = {L[193653], nil, nil}, --"Gaelzion"
+        [193650] = {L[193650], nil, nil}, --"Emblazion"
+        [193645] = {L[193645], nil, nil}, --"Crystalus"
+        [193647] = {L[193647], nil, nil}, --"Karantun"
+        [193682] = {L[193682], nil, nil}, --"Rouen Icewind"
+        [193684] = {L[193684], nil, nil}, --"Pipspark Thundersnap"
+        [193674] = {L[193674], nil, nil}, --"Voraazka"
+        [193677] = {L[193677], nil, nil}, --"Maeleera"
+        [193679] = {L[193679], nil, nil}, --"Leerain"
+        [193654] = {L[193654], nil, nil}, --"Gravlion"
+        [193655] = {L[193655], nil, nil}, --"Frozion"
+    },
+    ["special_categories"] = categorized_rare_ids
 })
 
 RareTracker.RegisterRaresForModule({
@@ -327,5 +413,25 @@ RareTracker.RegisterRaresForModule({
         
         [193217] = {L[193217], nil, nil}, --"Drakewing"
         [193154] = {L[193154], nil, nil}, --"Forgotten Gryphon"
-    }
+        
+        [193648] = {L[193648], nil, nil}, --"Infernum"
+        [193644] = {L[193644], nil, nil}, --"Bouldron"
+        [193686] = {L[193686], nil, nil}, --"Neela Firebane"
+        [193680] = {L[193680], nil, nil}, --"Zurgaz Corebreaker"
+        [193652] = {L[193652], nil, nil}, --"Grizzlerock"
+        [193675] = {L[193675], nil, nil}, --"Kain Firebrand"
+        [193678] = {L[193678], nil, nil}, --"Fieraan"
+        [193653] = {L[193653], nil, nil}, --"Gaelzion"
+        [193650] = {L[193650], nil, nil}, --"Emblazion"
+        [193645] = {L[193645], nil, nil}, --"Crystalus"
+        [193647] = {L[193647], nil, nil}, --"Karantun"
+        [193682] = {L[193682], nil, nil}, --"Rouen Icewind"
+        [193684] = {L[193684], nil, nil}, --"Pipspark Thundersnap"
+        [193674] = {L[193674], nil, nil}, --"Voraazka"
+        [193677] = {L[193677], nil, nil}, --"Maeleera"
+        [193679] = {L[193679], nil, nil}, --"Leerain"
+        [193654] = {L[193654], nil, nil}, --"Gravlion"
+        [193655] = {L[193655], nil, nil}, --"Frozion"
+    },
+    ["special_categories"] = categorized_rare_ids
 })

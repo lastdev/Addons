@@ -517,7 +517,8 @@ function ConRO.Hunter.Marksmanship(_, timeShift, currentSpell, gcd, tChosen, pvp
 	local _Disengage, _Disengage_RDY = ConRO:AbilityReady(Ability.Disengage, timeShift);
 	local _DoubleTap, _DoubleTap_RDY = ConRO:AbilityReady(Ability.DoubleTap, timeShift);
 		local _DoubleTap_BUFF = ConRO:Aura(Buff.DoubleTap, timeShift);
-		local _ExplosiveShot, _ExplosiveShot_RDY = ConRO:AbilityReady(Ability.ExplosiveShot, timeShift);
+	local _ExplosiveShot, _ExplosiveShot_RDY = ConRO:AbilityReady(Ability.ExplosiveShot, timeShift);
+		local _ExplosiveShot_DEBUFF = ConRO:TargetAura(Debuff.ExplosiveShot);
 	local _Flare, _Flare_RDY = ConRO:AbilityReady(Ability.Flare, timeShift);
 	local _FreezingTrap, _FreezingTrap_RDY = ConRO:AbilityReady(Ability.FreezingTrap, timeShift);
 	local _HuntersMark, _HuntersMark_RDY = ConRO:AbilityReady(Ability.HuntersMark, timeShift);
@@ -533,7 +534,7 @@ function ConRO.Hunter.Marksmanship(_, timeShift, currentSpell, gcd, tChosen, pvp
 	local _PrimalRage, _PrimalRage_RDY = ConRO:AbilityReady(PetAbility.PrimalRage, timeShift, 'pet');
 	local _RapidFire, _RapidFire_RDY = ConRO:AbilityReady(Ability.RapidFire, timeShift);
 	local _SerpentSting, _SerpentSting_RDY = ConRO:AbilityReady(Ability.SerpentSting, timeShift);
-		local _SerpentSting_DEBUFF = ConRO:TargetAura(Debuff.SerpentSting, timeShift + 5);
+		local _SerpentSting_DEBUFF = ConRO:TargetAura(Debuff.SerpentSting, timeShift + 3);
 	local _Stampede, _Stampede_RDY = ConRO:AbilityReady(Ability.Stampede, timeShift);
 	local _SteadyShot, _SteadyShot_RDY = ConRO:AbilityReady(Ability.SteadyShot, timeShift);
 		local _LethalShots_BUFF = ConRO:Aura(Buff.LethalShots, timeShift);
@@ -707,7 +708,7 @@ function ConRO.Hunter.Marksmanship(_, timeShift, currentSpell, gcd, tChosen, pvp
 			_RapidFire_RDY = false;
 		end
 
-		if _ExplosiveShot_RDY then
+		if _ExplosiveShot_RDY and not _ExplosiveShot_DEBUFF then
 			tinsert(ConRO.SuggestedSpells, _ExplosiveShot);
 			_ExplosiveShot_RDY = false;
 		end

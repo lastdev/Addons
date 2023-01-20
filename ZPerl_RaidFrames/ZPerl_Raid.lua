@@ -22,7 +22,7 @@ local conf, rconf
 XPerl_RequestConfig(function(newConf)
 	conf = newConf
 	rconf = conf.raid
-end, "$Revision: 50e769c4305c42360c08e4eba003ac2f06dc3d9a $")
+end, "$Revision: 7c303655db44388c76e9dd660ef8ea045a1a721f $")
 
 --[[if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
@@ -515,6 +515,18 @@ local function XPerl_Raid_UpdateHealPrediction(self)
 	end
 end
 
+-- XPerl_Raid_UpdateHotsPrediction
+local function XPerl_Raid_UpdateHotsPrediction(self)
+	if not IsWrathClassic then
+		return
+	end
+	if rconf.hotPrediction then
+		XPerl_SetExpectedHots(self)
+	else
+		self.statsFrame.expectedHots:Hide()
+	end
+end
+
 local function XPerl_Raid_UpdateResurrectionStatus(self)
 	if (UnitHasIncomingResurrection(self.partyid)) then
 		self.statsFrame.resurrect:Show()
@@ -560,6 +572,7 @@ local function XPerl_Raid_UpdateHealth(self)
 
 	XPerl_Raid_UpdateAbsorbPrediction(self)
 	XPerl_Raid_UpdateHealPrediction(self)
+	XPerl_Raid_UpdateHotsPrediction(self)
 	XPerl_Raid_UpdateResurrectionStatus(self)
 
 	local name, realm = UnitName(partyid)
@@ -1346,8 +1359,26 @@ end
 
 -- COMPACT_UNIT_FRAME_PROFILES_LOADED
 function XPerl_Raid_Events:COMPACT_UNIT_FRAME_PROFILES_LOADED()
-	if rconf.enable then
+	if not rconf.disableDefault then
+		return
+	end
+	if IsClassic then
 		DisableCompactRaidFrames()
+	end
+	if CompactRaidFrameManager then
+		CompactRaidFrameManager:UnregisterAllEvents()
+		hooksecurefunc(CompactRaidFrameManager, "Show", function(self)
+			self:Hide()
+		end)
+		CompactRaidFrameManager:Hide()
+	end
+
+	if CompactRaidFrameContainer then
+		CompactRaidFrameContainer:UnregisterAllEvents()
+		hooksecurefunc(CompactRaidFrameContainer, "Show", function(self)
+			self:Hide()
+		end)
+		CompactRaidFrameContainer:Hide()
 	end
 end
 
@@ -1681,7 +1712,7 @@ end
 
 -- UNIT_SPELLCAST_STOP
 function XPerl_Raid_Events:UNIT_SPELLCAST_STOP(unit)
-	if (unit) then
+	if unit then
 		local unitName, realm = UnitName(unit)
 		if realm and realm ~= "" then
 			unitName = unitName.."-"..realm
@@ -1692,7 +1723,7 @@ end
 
 -- UNIT_SPELLCAST_FAILED
 function XPerl_Raid_Events:UNIT_SPELLCAST_FAILED(unit)
-	if (unit) then
+	if unit then
 		local unitName, realm = UnitName(unit)
 		if realm and realm ~= "" then
 			unitName = unitName.."-"..realm
@@ -1705,13 +1736,19 @@ XPerl_Raid_Events.UNIT_SPELLCAST_INTERRUPTED = XPerl_Raid_Events.UNIT_SPELLCAST_
 
 
 function XPerl_Raid_Events:UNIT_HEAL_PREDICTION(unit)
-	if (rconf.healprediction and unit == self.partyid) then
+	if rconf.healprediction and unit == self.partyid then
 		XPerl_SetExpectedHealth(self)
+	end
+	if not IsWrathClassic then
+		return
+	end
+	if rconf.hotPrediction and unit == self.partyid then
+		XPerl_SetExpectedHots(self)
 	end
 end
 
 function XPerl_Raid_Events:UNIT_ABSORB_AMOUNT_CHANGED(unit)
-	if (rconf.absorbs and unit == self.partyid) then
+	if rconf.absorbs and unit == self.partyid then
 		XPerl_SetExpectedAbsorbs(self)
 	end
 end

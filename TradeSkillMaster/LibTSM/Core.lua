@@ -10,6 +10,7 @@ local ADDON_NAME = select(1, ...)
 local TSM = select(2, ...) ---@class TSM
 local VERSION_RAW = GetAddOnMetadata("TradeSkillMaster", "Version")
 local IS_DEV_VERSION = strmatch(VERSION_RAW, "^@tsm%-project%-version@$") and true or false
+local BUILD_NUMBER = select(4, GetBuildInfo())
 local private = {
 	context = {},
 	initOrder = {},
@@ -145,6 +146,12 @@ end
 ---@return boolean
 function TSM.IsWowWrathClassic()
 	return WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC or WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC
+end
+
+---Returns whether or not we're running within Wrath Classic.
+---@return boolean
+function TSM.IsWowWrathPatch341()
+	return TSM.IsWowWrathClassic() and BUILD_NUMBER >= 30401
 end
 
 ---Unloads all modules to simulate a logout.

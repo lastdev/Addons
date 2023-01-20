@@ -239,7 +239,7 @@ local ConRO_Druid, ids = ...;
 		RemoveCorruption = {spellID = 2782, talentID = 103283},
 		Renewal = {spellID = 108238, talentID = 103310},
 		Shred = {spellID = 5221},
-		SkullBash = {spellID = 106839, talentID = 103302},	
+		SkullBash = {spellID = 106839, talentID = 103302},
 		Soothe = {spellID = 2908, talentID = 103307},
 		StampedingRoar = {spellID = 77764, talentID = 103312},
 		Starfire = {spellID = 194153, talentID = 103279},

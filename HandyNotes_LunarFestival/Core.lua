@@ -3,7 +3,7 @@
 
                                            Lunar Festival
 
-                                     v1.00 - 25th December 2023
+                                      v1.01 - 17th January 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -15,16 +15,16 @@ ns.db = {}
 ns.points = {}
 ns.textures = {}
 ns.scaling = {}
--- Xmas theme
+-- Red/Gold theme
 ns.colour = {}
-ns.colour.prefix	= "\124cFF5FFB17" -- Emerald Green
-ns.colour.highlight = "\124cFF52D017" -- Pea Green
-ns.colour.plaintext = "\124cFF008000" -- Green W3C
+ns.colour.prefix	= "\124cFFC11B17" -- Chilli Pepper
+ns.colour.highlight = "\124cFFFDBD01" -- Neon Gold
+ns.colour.plaintext = "\124cFF990000" -- Crimson Red
 
 local defaults = { profile = { icon_scale = 1.7, icon_alpha = 1, showCoords = true,
 								removeDailies = true, removeSeasonal = true, removeEver = false,
-								icon_zoneElders = 8, icon_dungeonElders = 7, 
-								icon_factionElders = 15, } }
+								icon_zoneElders = 16, icon_dungeonElders = 14, 
+								icon_factionElders = 11, } }
 local continents = {}
 local pluginHandler = {}
 
@@ -67,6 +67,19 @@ end
 
 if ns.locale == "deDE" then
 	L["Lunar Festival"] = "Mondfest"
+	L["Dungeons"] = "Kerker"
+	L["Factions"] = "Fraktionen"
+	L["Zones"] = "Gebiete"
+	L["Blue Coin"] = "Blaue Münze"
+	L["Deep Green Coin"] = "Tiefgrüne Münze"
+	L["Deep Pink Coin"] = "Tiefrosa Münze"
+	L["Deep Red Coin"] = "Tiefrote Münze"
+	L["Green Coin"] = "Grüne Münze"
+	L["Light Blue Coin"] = "Hellblaue Münze"
+	L["Pink Coin"] = "Rosa Münze"
+	L["Purple Coin"] = "Lila Münze"
+	L["Teal Coin"] = "Blaugrüne Münze"
+	L["Original Coin"] = "Ursprüngliche Münze"
 	L["AddOn Description"] = "Hilfe für Erfolge und Quests in Mondfest"
 	L["Character"] = "Charakter"
 	L["Account"] = "Accountweiter"
@@ -101,6 +114,19 @@ if ns.locale == "deDE" then
 
 elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Lunar Festival"] = "El festín del Festival Lunar"
+	L["Dungeons"] = "Mazmorras"
+	L["Factions"] = "Facciones"
+	L["Zones"] = "Zonas"
+	L["Blue Coin"] = "Moneda Azul"
+	L["Deep Green Coin"] = "Moneda Verde Oscuro"
+	L["Deep Pink Coin"] = "Moneda Rosa Oscuro"
+	L["Deep Red Coin"] = "Moneda de color Rojo Oscuro"
+	L["Green Coin"] = "Moneda Verde"
+	L["Light Blue Coin"] = "Moneda Azul Claro"
+	L["Pink Coin"] = "Moneda Rosa"
+	L["Purple Coin"] = "Moneda Morada"
+	L["Teal Coin"] = "Moneda Verde Azulado"
+	L["Original Coin"] = "Moneda Original"
 	L["AddOn Description"] = "Ayuda para los logros del Festival Lunar"
 	L["Character"] = "Personaje"
 	L["Account"] = "la Cuenta"
@@ -137,6 +163,19 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 
 elseif ns.locale == "frFR" then
 	L["Lunar Festival"] = "Fête lunaire"
+	L["Dungeons"] = "Donjons"
+	L["Factions"] = "Factions"
+	L["Zones"] = "Zones"
+	L["Blue Coin"] = "Pièce bleue"
+	L["Deep Green Coin"] = "Pièce vert foncé"
+	L["Deep Pink Coin"] = "Pièce rose foncé"
+	L["Deep Red Coin"] = "Pièce rouge foncé"
+	L["Green Coin"] = "Pièce verte"
+	L["Light Blue Coin"] = "Pièce bleu clair"
+	L["Pink Coin"] = "Pièce rose"
+	L["Purple Coin"] = "Pièce violette"
+	L["Teal Coin"] = "Pièce sarcelle"
+	L["Original Coin"] = "Pièce originale"
 	L["AddOn Description"] = "Aide à l'événement mondial Fête lunaire"
 	L["Character"] = "Personnage"
 	L["Account"] = "le Compte"
@@ -173,6 +212,19 @@ elseif ns.locale == "frFR" then
 
 elseif ns.locale == "itIT" then
 	L["Lunar Festival"] = "Celebrazione della Luna"
+	L["Dungeons"] = "Sotterranee"
+	L["Factions"] = "Fazioni"
+	L["Zones"] = "Zone"
+	L["Blue Coin"] = "Moneta blu"
+	L["Deep Green Coin"] = "Moneta verde intenso"
+	L["Deep Pink Coin"] = "Moneta rosa intenso"
+	L["Deep Red Coin"] = "Moneta rosso scuro"
+	L["Green Coin"] = "Moneta verde"
+	L["Light Blue Coin"] = "Moneta azzurra"
+	L["Pink Coin"] = "Moneta rosa"
+	L["Purple Coin"] = "Moneta viola"
+	L["Teal Coin"] = "Moneta verde acqua"
+	L["Original Coin"] = "Moneta originale"
 	L["AddOn Description"] = "Assiste con l'evento mondiale Celebrazione della Luna"
 	L["Character"] = "Personaggio"
 	L["Completed"] = "Completo"
@@ -208,6 +260,19 @@ elseif ns.locale == "itIT" then
 
 elseif ns.locale == "koKR" then
 	L["Lunar Festival"] = "달의 축제"
+	L["Dungeons"] = "던전"
+	L["Factions"] = "진영"
+	L["Zones"] = "지역"
+	L["Blue Coin"] = "블루 코인"
+	L["Deep Green Coin"] = "딥그린 코인"
+	L["Deep Pink Coin"] = "딥 핑크 코인"
+	L["Deep Red Coin"] = "딥 레드 코인"
+	L["Green Coin"] = "그린 코인"
+	L["Light Blue Coin"] = "하늘색 동전"
+	L["Pink Coin"] = "핑크 코인"
+	L["Purple Coin"] = "퍼플 코인"
+	L["Teal Coin"] = "틸 코인"
+	L["Original Coin"] = "원래 동전"
 	L["AddOn Description"] = "달의 축제 대규모 이벤트 지원"	
 	L["Character"] = "캐릭터"
 	L["Account"] = "계정"
@@ -242,6 +307,19 @@ elseif ns.locale == "koKR" then
 		
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Lunar Festival"] = "Festival da Lua"
+	L["Dungeons"] = "Masmorras"
+	L["Factions"] = "Facções"
+	L["Zones"] = "Zonas"
+	L["Blue Coin"] = "Moeda azul"
+	L["Deep Green Coin"] = "moeda verde escuro"
+	L["Deep Pink Coin"] = "Moeda rosa escuro"
+	L["Deep Red Coin"] = "moeda vermelha escura"
+	L["Green Coin"] = "moeda verde"
+	L["Light Blue Coin"] = "Moeda azul claro"
+	L["Pink Coin"] = "moeda rosa"
+	L["Purple Coin"] = "moeda roxa"
+	L["Teal Coin"] = "moeda azul-petróleo"
+	L["Original Coin"] = "moeda original"
 	L["AddOn Description"] = "Auxilia no evento mundial Festival da Lua"
 	L["Character"] = "Personagem"
 	L["Account"] = "à Conta"
@@ -278,6 +356,19 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 
 elseif ns.locale == "ruRU" then
 	L["Lunar Festival"] = "Лунный фестиваль"
+	L["Dungeons"] = "Подземелья"
+	L["Factions"] = "ФракцииФракции"
+	L["Zones"] = "Территории"
+	L["Blue Coin"] = "Синяя монета"
+	L["Deep Green Coin"] = "Темно-зеленая монета"
+	L["Deep Pink Coin"] = "Темно-розовая монета"
+	L["Deep Red Coin"] = "Темно-красная монета"
+	L["Green Coin"] = "Зеленая монета"
+	L["Light Blue Coin"] = "Голубая монета"
+	L["Pink Coin"] = "Розовая монета"
+	L["Purple Coin"] = "Фиолетовая монета"
+	L["Teal Coin"] = "Бирюзовая монета"
+	L["Original Coin"] = "Оригинальная монета"
 	L["AddOn Description"] = "Помогает с игровое событие Лунный фестиваль"
 	L["Character"] = "Персонажа"
 	L["Account"] = "Счет"
@@ -313,6 +404,19 @@ elseif ns.locale == "ruRU" then
 
 elseif ns.locale == "zhCN" then
 	L["Lunar Festival"] = "春节"
+	L["Dungeons"] = "地下城"
+	L["Factions"] = "阵营"
+	L["Zones"] = "地区"
+	L["Blue Coin"] = "蓝币"
+	L["Deep Green Coin"] = "深绿币"
+	L["Deep Pink Coin"] = "深粉色硬币"
+	L["Deep Red Coin"] = "深红硬币"
+	L["Green Coin"] = "绿币"
+	L["Light Blue Coin"] = "淡蓝色硬币"
+	L["Pink Coin"] = "粉币"
+	L["Purple Coin"] = "紫币"
+	L["Teal Coin"] = "蓝绿色硬币"
+	L["Original Coin"] = "原币"
 	L["AddOn Description"] = "协助春节活动"
 	L["Character"] = "角色"
 	L["Account"] = "账号"
@@ -347,6 +451,19 @@ elseif ns.locale == "zhCN" then
 
 elseif ns.locale == "zhTW" then
 	L["Lunar Festival"] = "春節"
+	L["Dungeons"] = "地下城"
+	L["Factions"] = "陣營"
+	L["Zones"] = "地區"
+	L["Blue Coin"] = "藍幣"
+	L["Deep Green Coin"] = "深綠幣"
+	L["Deep Pink Coin"] = "深粉色硬幣"
+	L["Deep Red Coin"] = "深紅硬幣"
+	L["Green Coin"] = "綠幣"
+	L["Light Blue Coin"] = "淡藍色硬幣"
+	L["Pink Coin"] = "粉幣"
+	L["Purple Coin"] = "紫幣"
+	L["Teal Coin"] = "藍綠色硬幣"
+	L["Original Coin"] = "原幣"
 	L["AddOn Description"] = "協助春節活動"
 	L["Character"] = "角色"
 	L["Account"] = "賬號"
@@ -610,7 +727,7 @@ ns.options = {
 			args = {
 				icon_zoneElders = {
 					type = "range",
-					name = L["BB King"],
+					name = L["Zones"],
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
 							..L["Yellow"] .."\n5 = " ..L["Green"] .."\n6 = " ..L["Grey"] .."\n7 = "
 							.. L["Blue Coin"] .."\n8 = " ..L["Deep Green Coin"] .."\n9 = "
@@ -624,7 +741,7 @@ ns.options = {
 				},
 				icon_dungeonElders = {
 					type = "range",
-					name = L["Caroling"],
+					name = L["Dungeons"],
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
 							..L["Yellow"] .."\n5 = " ..L["Green"] .."\n6 = " ..L["Grey"] .."\n7 = "
 							.. L["Blue Coin"] .."\n8 = " ..L["Deep Green Coin"] .."\n9 = "
@@ -638,7 +755,7 @@ ns.options = {
 				},
 				icon_factionElders = {
 					type = "range",
-					name = L["Caroling"],
+					name = L["Factions"],
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
 							..L["Yellow"] .."\n5 = " ..L["Green"] .."\n6 = " ..L["Grey"] .."\n7 = "
 							.. L["Blue Coin"] .."\n8 = " ..L["Deep Green Coin"] .."\n9 = "
@@ -667,17 +784,16 @@ function pluginHandler:OnEnable()
 		for _, map in next, children do
 			local coords = ns.points[map.mapID]
 			-- Maps here will not propagate upwards
-			if ( map.mapID == 7 ) or -- Mulgore
+			if ( map.mapID == 33 ) or -- Blackrock Mountain - Blackrock Spire
+				( map.mapID == 34 ) or -- Blackrock Mountain - Blackrock Caverns
+				( map.mapID == 35 ) or -- Blackrock Mountain - Blackrock Depths
 				( map.mapID == 84 ) or -- Stormwind
 				( map.mapID == 85 ) or -- Orgrimmar
 				( map.mapID == 87 ) or -- Ironforge
+				( map.mapID == 88 ) or -- Thunder Bluff
+				( map.mapID == 89 ) or -- Darnassus
 				( map.mapID == 90 ) or -- Undercity
-				( map.mapID == 103 ) or -- The Exodar
-				( map.mapID == 110 ) or -- Silvermoon City
-				( map.mapID == 127 ) or -- Crystalsong Forest
-				( map.mapID == 224 ) or -- Stranglethorn Vale
-				( map.mapID == 582 ) or -- Lunarfall Alliance Garrison
-				( map.mapID == 590 ) then -- Frostwall Horde Garrison
+				( map.mapID == 224 ) then -- Stranglethorn Vale
 			elseif (version < 40000) and ( map.mapID < 1400 ) then
 			elseif (version >= 40000) and ( map.mapID >= 1400 ) then
 			elseif coords then
@@ -690,6 +806,7 @@ function pluginHandler:OnEnable()
 							ns.points[continentMapID][HandyNotes:getCoord(cx, cy)] = v
 						end
 					end
+					
 					if ( v[1] > 0 ) and ( v[2] > 0 ) then
 						AddToContinent()
 					elseif ( v[1] > 0 ) or ( v[5] > 0 ) then

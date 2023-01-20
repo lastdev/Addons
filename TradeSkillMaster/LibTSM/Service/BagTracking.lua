@@ -42,6 +42,7 @@ local private = {
 	callbackQuery = nil, -- luacheck: ignore 1004 - just stored for GC reasons
 	callbacks = {},
 	bagUpdateTimer = nil,
+	bagUpdateDelayedTimer = nil,
 	bankSlotUpdateTimer = nil,
 	reagentBankSlotUpdateTimer = nil,
 	bagTrackingTimer = nil,
@@ -74,7 +75,13 @@ end
 
 BagTracking:OnSettingsLoad(function()
 	Event.Register("BAG_UPDATE", private.BagUpdateHandler)
-	Event.Register("BAG_UPDATE_DELAYED", private.BagUpdateDelayedHandler)
+	if TSM.IsWowWrathClassic() then
+		-- in 3.4.1, BAG_UPDATE_DELAYED doesnt fire for non-backpack slots, so emulate it
+		private.bagUpdateDelayedTimer = Delay.CreateTimer("BAG_TRACKING_BAG_UPDATE_DELAYED", private.BagUpdateDelayedHandler)
+		Event.Register("BAG_UPDATE", function() private.bagUpdateDelayedTimer:RunForFrames(0) end)
+	else
+		Event.Register("BAG_UPDATE_DELAYED", private.BagUpdateDelayedHandler)
+	end
 	DefaultUI.RegisterBankVisibleCallback(private.BankVisible, true)
 	Event.Register("PLAYERBANKSLOTS_CHANGED", private.BankSlotChangedHandler)
 	if not TSM.IsWowClassic() then

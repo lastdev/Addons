@@ -1,11 +1,10 @@
-lightweight tag f7b828696939f9f851573201a499393fbe8a2047 v10.0.6
+lightweight tag 79ed3945905aa5e6784f1e2042789a81ff969394 v10.0.9
 Author:	Vae <emuha17@gmail.com>
-Date:	Wed Jan 4 20:54:04 2023 -1000
+Date:	Sat Jan 14 13:26:54 2023 -1000
 
-commit f7b828696939f9f851573201a499393fbe8a2047
+commit 79ed3945905aa5e6784f1e2042789a81ff969394
 Author: Vae <emuha17@gmail.com>
-Date:   Wed Jan 4 20:54:04 2023 -1000
+Date:   Sat Jan 14 13:26:54 2023 -1000
 
-    Adjusted rotation for Shadow
-    Added Shadow to auto detect
+    Updated shadow priest rotation
 

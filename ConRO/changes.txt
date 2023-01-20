@@ -1,10 +1,10 @@
-lightweight tag 8c6aba546bacee29d8699cd412e3cf92d2bcb6a0 v10.0.22
+lightweight tag f0bf7d60ffc903053c2399542e8592d05e2a50ad v10.0.24
 Author:	Vae <emuha17@gmail.com>
-Date:	Wed Jan 4 20:49:58 2023 -1000
+Date:	Sun Jan 15 18:01:07 2023 -1000
 
-commit 8c6aba546bacee29d8699cd412e3cf92d2bcb6a0
+commit f0bf7d60ffc903053c2399542e8592d05e2a50ad
 Author: Vae <emuha17@gmail.com>
-Date:   Wed Jan 4 20:49:58 2023 -1000
+Date:   Sun Jan 15 18:01:07 2023 -1000
 
-    Adjusted for some ranged auto detection
+    Added Evoker to Auto Detect list
 

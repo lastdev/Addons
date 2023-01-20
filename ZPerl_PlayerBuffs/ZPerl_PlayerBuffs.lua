@@ -6,7 +6,7 @@ local conf, pconf
 XPerl_RequestConfig(function(new)
 	conf = new
 	pconf = new.player
-end, "$Revision: 50e769c4305c42360c08e4eba003ac2f06dc3d9a $")
+end, "$Revision: 7c303655db44388c76e9dd660ef8ea045a1a721f $")
 
 --local playerClass
 
@@ -421,8 +421,11 @@ end
 
 function XPerl_PlayerBuffs_OnLoad(self)
 	XPerl_SetChildMembers(self)
-	self:RegisterForClicks("RightButtonUp") -- The XML version doesn't work..
-	--XPerl_ProtectedCall(setupButton, self)
+	if IsRetail then
+		self:RegisterForClicks("RightButtonDown", "RightButtonUp")
+	else
+		self:RegisterForClicks("RightButtonUp")
+	end
 end
 
 

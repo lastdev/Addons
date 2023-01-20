@@ -207,9 +207,11 @@ local ACCESSIBLE_FACTIONS = TSM.IsWowClassic() and { FACTION } or {
 -- [113] updated global.craftingUIContext.professionDividedContainerBottom
 -- [114] updated factionrealm.internalData.crafts
 -- [115] removed global.internalData.optionalMatTextLookup
+-- [116] updated global.internalData.destroyingHistory
+-- [117] added global.storyBoardUIContext, updated global.craftingUIContext.{craftsScrollingTable,matsScrollingTable,gatheringScrollingTable}
 
 local SETTINGS_INFO = {
-	version = 115,
+	version = 117,
 	minVersion = 10,
 	global = {
 		debug = {
@@ -219,7 +221,7 @@ local SETTINGS_INFO = {
 			lastCharacter = { type = "string", default = "???", lastModifiedVersion = 90 },
 			vendorItems = { type = "table", default = {}, lastModifiedVersion = 10 },
 			appMessageId = { type = "number", default = 0, lastModifiedVersion = 10 },
-			destroyingHistory = { type = "table", default = {}, lastModifiedVersion = 10 },
+			destroyingHistory = { type = "table", default = {}, lastModifiedVersion = 116 },
 			whatsNewVersion = { type = "number", default = 0, lastModifiedVersion = 94 },
 		},
 		appearanceOptions = {
@@ -251,10 +253,10 @@ local SETTINGS_INFO = {
 		craftingUIContext = {
 			frame = { type = "table", default = { width = 820, height = 587, centerX = -200, centerY = 0, scale = 1, page = 1 }, lastModifiedVersion = 55 },
 			showDefault = { type = "boolean", default = false, lastModifiedVersion = 55 },
-			craftsScrollingTable = { type = "table", default = { colWidth = { queued = 30, craftName = 218, operation = 80, bags = 28, ah = 24, craftingCost = 100, itemValue = 100, profit = 100, profitPct = 50, saleRate = 32 }, colHidden = { profitPct = true } }, lastModifiedVersion = 86 },
-			matsScrollingTable = { type = "table", default = { colWidth = { name = 242, price = 100, professions = 310, num = 100 }, colHidden = {} }, lastModifiedVersion = 55 },
+			craftsScrollingTable = { type = "table", default = { colWidth = { queued = 30, craftName = 222, operation = 80, bags = 28, ah = 24, craftingCost = 100, itemValue = 100, profit = 100, profitPct = 50, saleRate = 32 }, colHidden = { profitPct = true } }, lastModifiedVersion = 117 },
+			matsScrollingTable = { type = "table", default = { colWidth = { name = 246, price = 100, professions = 310, num = 100 }, colHidden = {} }, lastModifiedVersion = 117 },
 			gatheringDividedContainer = { type = "table", default = { leftWidth = 284 }, lastModifiedVersion = 55 },
-			gatheringScrollingTable = { type = "table", default = { colWidth = { name = 206, sources = 160, have = 50, need = 50 }, colHidden = {} }, lastModifiedVersion = 55 },
+			gatheringScrollingTable = { type = "table", default = { colWidth = { name = 210, sources = 160, have = 50, need = 50 }, colHidden = {} }, lastModifiedVersion = 117 },
 			professionScrollingTable = { type = "table", default = { colWidth = { name = 310, qty = 54, craftingCost = 100, itemValue = 100, profit = 100, profitPct = 50, saleRate = 42 }, colHidden = { craftingCost = true, itemValue = true, profitPct = true }, collapsed = {} }, lastModifiedVersion = 112 },
 			professionDividedContainer = { type = "table", default = { leftWidth = 556 }, lastModifiedVersion = 111 },
 			professionDividedContainerBottom = { type = "table", default = { leftWidth = TSM.IsWowClassic() and 390 or 348 }, lastModifiedVersion = 113 },
@@ -262,6 +264,9 @@ local SETTINGS_INFO = {
 		destroyingUIContext = {
 			frame = { type = "table", default = { width = 296, height = 442, centerX = 0, centerY = 0, scale = 1 }, lastModifiedVersion = 55 },
 			itemsScrollingTable = { type = "table", default = { colWidth = { item = 214, num = 30 }, colHidden = {} }, lastModifiedVersion = 55 },
+		},
+		storyBoardUIContext = {
+			frame = { type = "table", default = { width = 800, height = 600, centerX = 0, centerY = 0, scale = 1 }, lastModifiedVersion = 117 },
 		},
 		mailingUIContext = {
 			frame = { type = "table", default = { width = 620, height = 516, centerX = -200, centerY = 0, scale = 1, page = 1 }, lastModifiedVersion = 55 },

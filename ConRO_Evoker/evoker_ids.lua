@@ -148,12 +148,15 @@ local ConRO_Evoker, ids = ...;
 
 	}
 	ids.Dev_Buff = {
+		BlessingoftheBronze = 381748,
 		Burnout = 375802,
+		ChargedBlast = 370454,
 		Dragonrage = 375087,
 		EssenceBurst = 359618,
+		Snapfire = 370818,
 	}
 	ids.Dev_Debuff = {
-
+		FireBreath = 357209,
 	}
 	ids.Dev_PetAbility = {
 

@@ -13,11 +13,12 @@ XPerl_RequestConfig(function(new)
 	for k, v in pairs(PartyFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 9f6c75eeab82c0b47de6b403dca2b68407247c11 $")
+end, "$Revision: 5a89ecaf32f24ffefbf320bef9dff40e1992eb4e $")
 
 local percD = "%d"..PERCENT_SYMBOL
 
 local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
+local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 
@@ -355,9 +356,20 @@ local function XPerl_Party_UpdateAbsorbPrediction(self)
 		self.statsFrame.expectedAbsorbs:Hide()
 	end
 end
+-- XPerl_Party_UpdateHotsPrediction
+local function XPerl_Party_UpdateHotsPrediction(self)
+	if not IsWrathClassic then
+		return
+	end
+	if pconf.hotPrediction then
+		XPerl_SetExpectedHots(self)
+	else
+		self.statsFrame.expectedHots:Hide()
+	end
+end
 
 local function XPerl_Party_UpdateResurrectionStatus(self)
-	if (UnitHasIncomingResurrection(self.partyid)) then
+	if UnitHasIncomingResurrection(self.partyid) then
 		if pconf.portrait then
 			self.portraitFrame.resurrect:Show()
 		else
@@ -391,6 +403,7 @@ local function XPerl_Party_UpdateHealth(self)
 
 	XPerl_Party_UpdateAbsorbPrediction(self)
 	XPerl_Party_UpdateHealPrediction(self)
+	XPerl_Party_UpdateHotsPrediction(self)
 	XPerl_Party_UpdateResurrectionStatus(self)
 
 	if (not UnitIsConnected(partyid)) then
@@ -1479,8 +1492,14 @@ function XPerl_Party_Events:UNIT_TARGET()
 end
 
 function XPerl_Party_Events:UNIT_HEAL_PREDICTION(unit)
-	if (pconf.healprediction and unit == self.partyid) then
+	if pconf.healprediction and unit == self.partyid then
 		XPerl_SetExpectedHealth(self)
+	end
+	if not IsWrathClassic then
+		return
+	end
+	if pconf.hotPrediction and unit == self.partyid then
+		XPerl_SetExpectedHots(self)
 	end
 end
 

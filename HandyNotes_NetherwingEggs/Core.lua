@@ -3,7 +3,7 @@
 
                                            Netherwing Eggs
 
-                                      v1.12 - 7th December 2022
+                                      v1.14 - 18th January 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -52,6 +52,7 @@ if ns.oceania[realm] then
 end
 
 if ns.locale == "deDE" then
+	L["Netherwing Egg"] = "Ei der Netherschwingen"
 	L["Netherwing Eggs"] = "Eier der Netherschwingen"
 	L["The Not-So-Friendly Skies..."] = "Ein Schatten am Horizont"
 	L["Please stand here, facing north"] = "Bitte hier stehen, nach Norden"
@@ -85,6 +86,7 @@ if ns.locale == "deDE" then
 		.."koordinaten\124r in QuickInfos auf der Weltkarte und auf der Minikarte an"
 
 elseif ns.locale == "esES" or ns.locale == "esMX" then
+	L["Netherwing Egg"] = "Huevo de Ala Abisal"
 	L["Netherwing Eggs"] = "Huevos de Ala Abisal"
 	L["The Not-So-Friendly Skies..."] = "Los cielos no tan amistosos..."
 	L["Please stand here, facing north"] = "Por favor, quédate aquí, mirando hacia el norte"
@@ -117,6 +119,7 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 		.."coordenadas\124r en información sobre herramientas en el mapa del mundo y en el minimapa"
 
 elseif ns.locale == "frFR" then
+	L["Netherwing Egg"] = "Œuf de l'Aile-du-Néant"
 	L["Netherwing Eggs"] = "Œufs de l'Aile-du-Néant"
 	L["The Not-So-Friendly Skies..."] = "Les cieux pas si cléments…"
 	L["Please stand here, facing north"] = "S'il vous plaît, restez ici, face au nord"
@@ -149,6 +152,7 @@ elseif ns.locale == "frFR" then
 		.."les coordonnées\124r dans les info-bulles sur la carte du monde et la mini-carte"
 
 elseif ns.locale == "itIT" then
+	L["Netherwing Egg"] = "Uovo di Alafatua"
 	L["Netherwing Eggs"] = "Uova di Alafatua"
 	L["The Not-So-Friendly Skies..."] = "Cieli non molto amici..."
 	L["Please stand here, facing north"] = "Si prega di stare qui, verso nord."
@@ -181,6 +185,7 @@ elseif ns.locale == "itIT" then
 		.."le coordinate\124r nelle descrizioni comandi sulla mappa del mondo e sulla minimappa"
 
 elseif ns.locale == "koKR" then
+	L["Netherwing Egg"] = "황천날개 알"
 	L["Netherwing Eggs"] = "황천날개 알"
 	L["The Not-So-Friendly Skies..."] = "하늘과 땅의 대립"
 	L["Please stand here, facing north"] = "여기 북쪽을 향하여 서십시오."
@@ -212,6 +217,7 @@ elseif ns.locale == "koKR" then
 	L["Show Coordinates Description"] = "세계지도 및 미니지도의 도구 설명에 좌표를 표시합니다."
 
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
+	L["Netherwing Egg"] = "Ovo da Asa Etérea"
 	L["Netherwing Eggs"] = "Ovos da Asa Etérea"
 	L["The Not-So-Friendly Skies..."] = "Viaje não-tão-bem-assim..."
 	L["Please stand here, facing north"] = "Por favor fique aqui, virado para o norte."
@@ -244,6 +250,7 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 		.."coordenadas\124r em dicas de ferramentas no mapa mundial e no minimapa"
 
 elseif ns.locale == "ruRU" then
+	L["Netherwing Egg"] = "Яйцо дракона из стаи Крыльев Пустоты"
 	L["Netherwing Eggs"] = "Яйца дракона из стаи Крыльев Пустоты"
 	L["The Not-So-Friendly Skies..."] = "Недружелюбные небеса"
 	L["Please stand here, facing north"] = "Пожалуйста, встаньте здесь, лицом на север."
@@ -277,6 +284,7 @@ elseif ns.locale == "ruRU" then
 		.."координаты\124r во всплывающих подсказках на карте мира и мини-карте"
 
 elseif ns.locale == "zhCN" then
+	L["Netherwing Egg"] = "灵翼龙卵"
 	L["Netherwing Eggs"] = "灵翼龙卵"
 	L["The Not-So-Friendly Skies..."] = "危险的天空"
 	L["Please stand here, facing north"] = "请站在这里，面朝北方。"
@@ -308,6 +316,7 @@ elseif ns.locale == "zhCN" then
 	L["Show Coordinates Description"] = "在世界地图和迷你地图上的工具提示中" ..ns.colour.highlight .."显示坐标"
 
 elseif ns.locale == "zhTW" then
+	L["Netherwing Egg"] = "靈翼龍卵"
 	L["Netherwing Eggs"] = "靈翼龍卵"
 	L["The Not-So-Friendly Skies..."] = "危險的天空"
 	L["Please stand here, facing north"] = "請站在這裡，面朝北方。"
@@ -486,16 +495,17 @@ ns.options = {
 		pluginHandler:Refresh()
 	end,
 	args = {
-		icon = {
+		options = {
 			type = "group",
-			name = L["Icon settings"],
+			-- Add a " " to force this to be before the first group. HN arranges alphabetically on local language
+			name = " " ..L["Options"],
 			inline = true,
 			args = {
 				icon_scale = {
 					type = "range",
 					name = L["Icon Scale"],
 					desc = L["The scale of the icons"],
-					min = 0.25, max = 2, step = 0.01,
+					min = 0.5, max = 3, step = 0.1,
 					arg = "icon_scale",
 					order = 2,
 				},
@@ -507,24 +517,6 @@ ns.options = {
 					arg = "icon_alpha",
 					order = 3,
 				},
-				icon_choice = {
-					type = "range",
-					name = L["Icon"],
-					desc = "1 = " ..L["Phasing"] .."\n2 = " ..L["Raptor egg"] .."\n3 = " ..L["Stars"] .."\n4 = " ..L["Purple"] 
-							.."\n5 = " ..L["White"] .."\n6 = " ..L["Mana Orb"] .."\n7 = " ..L["Cogwheel"] .."\n8 = " ..L["Frost"] 
-							.."\n9 = " ..L["Diamond"] .."\n10 = " ..L["Red"] .."\n11 = " ..L["Yellow"] .."\n12 = " ..L["Green"] 
-							.."\n13 = " ..L["Screw"] .."\n14 = " ..L["Grey"],
-					min = 1, max = 14, step = 1,
-					arg = "icon_choice",
-					order = 4,
-				},
-			},
-		},
-		options = {
-			type = "group",
-			name = L["Options"],
-			inline = true,
-			args = {
 				showCoords = {
 					name = L["Show Coordinates"],
 					desc = L["Show Coordinates Description"] 
@@ -532,6 +524,24 @@ ns.options = {
 					type = "toggle",
 					width = "full",
 					arg = "showCoords",
+					order = 4,
+				},
+			},
+		},
+		icon = {
+			type = "group",
+			name = L["Icon Selection"],
+			inline = true,
+			args = {
+				icon_choice = {
+					type = "range",
+					name = L["Icon"],
+					desc = "1 = " ..L["Phasing"] .."\n2 = " ..L["Raptor egg"] .."\n3 = " ..L["Stars"] .."\n4 = " ..L["Purple"] 
+							.."\n5 = " ..L["White"] .."\n6 = " ..L["Mana Orb"] .."\n7 = " ..L["Cogwheel"] .."\n8 = " ..L["Frost"] 
+							.."\n9 = " ..L["Diamond"] .."\n10 = " ..L["Red"] .."\n11 = " ..L["Yellow"] .."\n12 = " ..L["Green"] 
+							.."\n13 = " ..L["Screw"] .."\n14 = " ..L["Grey"] .."\n15 = " ..L["Netherwing Egg"],
+					min = 1, max = 15, step = 1,
+					arg = "icon_choice",
 					order = 5,
 				},
 			},

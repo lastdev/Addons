@@ -594,7 +594,7 @@ function private.StateToCanCraft(state)
 end
 
 function private.CraftTypeToButtonText(craftType)
-	if craftType == "ITEM" then
+	if craftType == "ITEM" or craftType == "RESEARCH" then
 		return L["Craft"]
 	elseif craftType == "ENCHANT" or craftType == "ENCHANT_VELLUM" then
 		return L["Enchant"]
@@ -732,8 +732,10 @@ function private.CraftStringToCraftType(craftString)
 		return "NONE"
 	elseif Profession.IsEnchant(craftString) then
 		return TSM.IsWowVanillaClassic() and "ENCHANT" or "ENCHANT_VELLUM"
-	elseif not Profession.GetResultInfo(craftString) then
+	elseif Profession.IsTinker(craftString) then
 		return "TINKER"
+	elseif not Profession.GetResultInfo(craftString) then
+		return "RESEARCH"
 	else
 		return "ITEM"
 	end

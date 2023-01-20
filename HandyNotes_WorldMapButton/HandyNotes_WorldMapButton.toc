@@ -1,10 +1,13 @@
-## Interface: 90207
+## Interface: 100002
 ## Title: HandyNotes_WorldMapButton
-## Version: 90207.01-Retail
-## Notes: Adds a Button to the Worldmap to toggle HandyNotes
+## Version: 100002.02-Release
+## Notes: Adds a Button to the Worldmap that can toggle HandyNotes Icons
 ## Author: fuba
 ## OptionalDeps: Ace3
 ## RequiredDeps: HandyNotes
+
+## X-Curse-Project-ID: 298530
+## X-Wago-ID: q96dVqGO
 
 #@no-lib-strip@
 # Library files

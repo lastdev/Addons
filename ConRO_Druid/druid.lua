@@ -20,11 +20,13 @@ function ConRO:EnableRotationModule(mode)
 			self.NextSpell = ConRO.Druid.Balance;
 			self.ToggleDamage();
 			ConROWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
+			ConRONextWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
 			ConRODefenseWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
 		else
 			self.NextSpell = ConRO.Druid.Disabled;
 			self.ToggleHealer();
 			ConROWindow:SetAlpha(0);
+			ConRONextWindow:SetAlpha(0);
 			ConRODefenseWindow:SetAlpha(0);
 		end
 	end;
@@ -34,11 +36,13 @@ function ConRO:EnableRotationModule(mode)
 			self.NextSpell = ConRO.Druid.Feral;
 			self.ToggleDamage();
 			ConROWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
+			ConRONextWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
 			ConRODefenseWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
 		else
 			self.NextSpell = ConRO.Druid.Disabled;
 			self.ToggleHealer();
 			ConROWindow:SetAlpha(0);
+			ConRONextWindow:SetAlpha(0);
 			ConRODefenseWindow:SetAlpha(0);
 		end
 	end;
@@ -49,11 +53,13 @@ function ConRO:EnableRotationModule(mode)
 			self.ToggleDamage();
 			self.BlockAoE();
 			ConROWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
+			ConRONextWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
 			ConRODefenseWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
 		else
 			self.NextSpell = ConRO.Druid.Disabled;
 			self.ToggleHealer();
 			ConROWindow:SetAlpha(0);
+			ConRONextWindow:SetAlpha(0);
 			ConRODefenseWindow:SetAlpha(0);
 		end
 	end;
@@ -63,11 +69,13 @@ function ConRO:EnableRotationModule(mode)
 			self.NextSpell = ConRO.Druid.Restoration;
 			self.ToggleHealer();
 			ConROWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
+			ConRONextWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
 			ConRODefenseWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
 		else
 			self.NextSpell = ConRO.Druid.Disabled;
 			self.ToggleHealer();
 			ConROWindow:SetAlpha(0);
+			ConRONextWindow:SetAlpha(0);
 			ConRODefenseWindow:SetAlpha(0);
 		end
 	end;
@@ -742,6 +750,8 @@ function ConRO.Druid.FeralDef(_, timeShift, currentSpell, gcd, tChosen, pvpChose
 	local _SurvivalInstincts, _SurvivalInstincts_RDY = ConRO:AbilityReady(Ability.SurvivalInstincts, timeShift);
 	local _Barkskin, _Barkskin_RDY = ConRO:AbilityReady(Ability.Barkskin, timeShift);
 	local _Renewal, _Renewal_RDY = ConRO:AbilityReady(Ability.Renewal, timeShift);
+	local _Regrowth, _Regrowth_RDY = ConRO:AbilityReady(Ability.Regrowth, timeShift);
+		local _PredatorySwiftness_BUFF = ConRO:Aura(Buff.PredatorySwiftness, timeShift);
 
 --Conditions
 	local _is_moving = ConRO:PlayerSpeed();
@@ -749,6 +759,10 @@ function ConRO.Druid.FeralDef(_, timeShift, currentSpell, gcd, tChosen, pvpChose
 	local _target_in_10yrds = CheckInteractDistance("target", 3);
 
 --Rotations	
+		if _Regrowth_RDY and _PredatorySwiftness_BUFF and _Player_Percent_Health <= 75 then
+			tinsert(ConRO.SuggestedDefSpells, _Regrowth);
+		end
+
 		if _Renewal_RDY and _Player_Percent_Health <= 60 then
 			tinsert(ConRO.SuggestedDefSpells, _Renewal);
 		end

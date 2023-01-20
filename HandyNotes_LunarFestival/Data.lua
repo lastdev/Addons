@@ -6,16 +6,12 @@ local colourPrefix		= ns.colour.prefix
 local colourHighlight	= ns.colour.highlight
 local colourPlaintext	= ns.colour.plaintext
 
-local armada = "\"Flamer\": Do the \"You're a mean one...\" daily\n"
-				.."(I've marked the Tanaan mob locations. Be patient,\n"
-				.."drop rates are 10%. This pin marks your progress)"
-										
 -- Achievements:
--- Elders of the Dungeons		910	Alliance/Horde
--- Elders of Kalimdor			911	Alliance/Horde
--- Elders of Eastern Kingdoms	912	Alliance/Horde
--- Elders of The Horde			914	Alliance/Horde
--- Elders of The Alliance		915	Alliance/Horde
+-- Elders of the Dungeons		910		Alliance/Horde
+-- Elders of Kalimdor			911		Alliance/Horde
+-- Elders of Eastern Kingdoms	912		Alliance/Horde
+-- Elders of The Horde			914		Alliance/Horde
+-- Elders of The Alliance		915		Alliance/Horde
 -- Elders of Northrend			1396	Alliance/Horde
 -- Elders of Cataclysm			6006	Alliance/Horde
 
@@ -45,8 +41,6 @@ points[ 157 ] = { -- Azjol-Nerub - The Brood Pt
 }
 points[ 76 ] = { -- Azshara
 	[64607920] = { 911, 911, 2, 2, 8720, 8720, },
-}
-points[ 97 ] = { -- Azuremyst Isle
 }
 points[ 242 ] = { -- Blackrock Depths - Detention Block
 	[38007650] = { 910, 910, 5, 5, 8619, 8619, "1) This way" },
@@ -88,8 +82,6 @@ points[ 252 ] = { -- Blackrock Spire - Hordemar City
 points[ 253 ] = { -- Blackrock Spire - Hall of Blackhand
 	[48004100] = { 910, 910, 4, 4, 8644, 8644, "2) Plow on past the mobs" },
 }
-points[ 105 ] = { -- Blade's Edge Mountains
-}
 points[ 17 ] = { -- Blasted Lands
 	[54204960] = { 912, 912, 2, 2, 8647, 8647, "Can't find him? Speak to Zidormi" },
 }
@@ -109,24 +101,19 @@ points[ 36 ] = { -- Burning Steppes
 	[21023744] = { 910, 910, 4, 4, 8644, 8644, "Enter through here and follow the markers" },
 	[21023944] = { 910, 910, 5, 5, 8619, 8619, "Enter through here and follow the markers" },
 }
-points[ 127 ] = { -- Crystalsong Forest
-}
-points[ 125 ] = { -- Dalaran
-	-- Dalaran will not show in Crystalsong Forest but it will propagate upwards
-}
 points[ 62 ] = { -- Darkshore
-	[49501895] = { 911, 911, 7, 7, 8721, 8721, "If Teldrassil looks destroyed\n"
-												.."then have a chat with Zidormi!" },
+	[49501895] = { 911, 911, 7, 7, 8721, 8721, "If Teldrassil looks destroyed then have a chat with Zidormi!" },
 }
 points[ 89 ] = { -- Darnassus
-	[39603200] = { 915, 915, 1, 1, 8718, 8718, }, -- Split. horde need help
+	[39203190] = { 915, 915, 1, 1, 8718, 8718, },
+	[37325047] = { 0, 915, 0, 1, 0, 8718, "Immediately go left and up high - don't delay" },
+	[30402709] = { 0, 915, 0, 1, 0, 8718, "Hide here for respite/cooldowns, as necessary" },
 }
 points[ 207 ] = { -- Deepholm
 	[49605480] = { 6006, 6006, 1, 1, 29735, 29735, },
 	[27606920] = { 6006, 6006, 9, 9, 29734, 29734, },
 }
 points[ 66 ] = { -- Desolace
-	-- 67 The Wicked Grotto, 68 - Foulspore Cavern
 	[29626248] = { 910, 910, 3, 3, 8635, 8635, "Enter Maraudon. Follow the markers" },
 }
 points[ 115 ] = { -- Dragonblight
@@ -157,13 +144,11 @@ points[ 160 ] = { -- Drak'Tharon Keep - The Vestibules of Drak'Tharon
 }
 points[ 27 ] = { -- Dun Morogh
 	[53804980] = { 912, 912, 1, 1, 8653, 8653, },
+	[60173345] = { 0, 915, 0, 2, 0, 8866, "Fly through here, keep to the left" }, 
 }
 points[ 1 ] = { -- Durotar
 	[53204360] = { 911, 911, 1, 1, 8670, 8670, },
-}
-points[ 47 ] = { -- Duskwood
-}
-points[ 70 ] = { -- Dustwallow Marsh
+	[47000300] = { 914, 914, 1, 1, 8677, 8677, },
 }
 points[ 23 ] = { -- Eastern Plaguelands
 	[35606880] = { 912, 912, 15, 15, 8688, 8688, },
@@ -172,9 +157,7 @@ points[ 23 ] = { -- Eastern Plaguelands
 }
 points[ 37 ] = { -- Elwynn Forest
 	[39806360] = { 912, 912, 3, 3, 8649, 8649, },
-	[34605060] = { 915, 915, 3, 3, 8646, 8646, }, -- Split. horde need help
-}
-points[ 94 ] = { -- Eversong Woods
+	[34405040] = { 915, 915, 3, 3, 8646, 8646, },
 }
 points[ 77 ] = { -- Felwood
 	[38405280] = { 911, 911, 12, 12, 8723, 8723, },
@@ -183,8 +166,6 @@ points[ 69 ] = { -- Feralas
 	[76603780] = { 911, 911, 10, 10, 8679, 8679, "In the Lariss Pavillion" },
 	[62603100] = { 911, 911, 11, 11, 8685, 8685, "In the Dire Maul arena -\n"
 												.."she's not in the instance" },
-}
-points[ 95 ] = { -- Ghostlands
 }
 points[ 116 ] = { -- Grizzly Hills
 	[60602760] = { 1396, 1396, 2, 2, 13013, 13013, },
@@ -205,10 +186,11 @@ points[ 117 ] = { -- Howling Fjord
 	[58854834] = { 910, 910, 7, 7, 13017, 13017, "Utgarde Keep is this way. It at the base" },
 	[57254671] = { 910, 910, 13, 13, 13067, 13067, "This is the correct portal. It's up quite high" },
 }
-points[ 118 ] = { -- Icecrown
-}
 points[ 87 ] = { -- Ironforge
-	[29001700] = { 915, 915, 2, 2, 8866, 8866, }, -- Split. horde need help
+	[29201640] = { 915, 915, 2, 2, 8866, 8866, }, 
+	[12158801] = { 0, 915, 0, 2, 0, 8866, "1) Fly through here, keep to the left" }, 
+	[24365947] = { 0, 915, 0, 2, 0, 8866, "2) Drop straight down into here and follow to the left" }, 
+	[23683637] = { 0, 915, 0, 2, 0, 8866, "3) Stick your head up a little and assess the situation" }, 
 }
 points[ 48 ] = { -- Loch Modan
 	[33204660] = { 912, 912, 7, 7, 8642, 8642, },
@@ -248,6 +230,7 @@ points[ 198 ] = { -- Mount Hyjal
 }
 points[ 7 ] = { -- Mulgore
 	[47606080] = { 911, 911, 8, 8, 8673, 8673, },
+	[44882325] = { 914, 914, 2, 2, 8678, 8678, },
 }
 points[ 10 ] = { -- Northern Barrens
 	[48605920] = { 911, 911, 3, 3, 8717, 8717, },
@@ -257,14 +240,12 @@ points[ 50 ] = { -- Northern Stranglethorn
 	[71003420] = { 912, 912, 5, 5, 8716, 8716, },
 }
 points[ 85 ] = { -- Orgrimmar
-	[52606020] = { 914, 914, 1, 1, 8677, 8677, }, -- Split. alliance need help
+	[52205980] = { 914, 914, 1, 1, 8677, 8677, },
 }
 points[ 32 ] = { -- Searing Gorge
 	[21307800] = { 912, 912, 12, 12, 8651, 8651, },
 	[34898498] = { 910, 910, 4, 4, 8644, 8644, "Enter through here and follow the markers" },
 	[34898298] = { 910, 910, 5, 5, 8619, 8619, "Enter through here and follow the markers" },
-}
-points[ 111 ] = { -- Shattrath City
 }
 points[ 205 ] = { -- Shimmering Expanse in Vashj'ir
 	[57208620] = { 6006, 6006, 8, 8, 29738, 29738, },
@@ -278,8 +259,6 @@ points[ 81 ] = { -- Silithus
 												.."huge sword stuck into Azeroth" },
 	[53003560] = { 911, 911, 21, 21, 8719, 8719, "Visit Zidormi if you see a\n"
 												.."huge sword stuck into Azeroth" },
-}
-points[ 110 ] = { -- Silvermoon City
 }
 points[ 21 ] = { -- Silverpine Forest
 	[44924123] = { 912, 912, 14, 14, 8645, 8645, },
@@ -296,8 +275,10 @@ points[ 120 ] = { -- Storm Peaks
 	[39482691] = { 910, 910, 12, 12, 13066, 13066, "Enter through here" },
 }
 points[ 84 ] = { -- Stormwind City
+	[79529585] = { 915, 915, 3, 3, 8646, 8646, },
 }
 points[ 224 ] = { -- Stranglethorn Vale
+	[63252259] = { 912, 912, 5, 5, 8716, 8716, },
 }
 points[ 317 ] = { -- Stratholme
 	[73505480] = { 910, 910, 6, 6, 8727, 8727, "Lift the portcullis" },
@@ -311,8 +292,6 @@ points[ 51 ] = { -- Swamp of Sorrows
 											.."3) Resurface and follow the path and\n"
 											.."enter the portal and follow the markers" },
 }
-points[ 534 ] = { -- Tanaan Jungle
-}
 points[ 71 ] = { -- Tanaris
 	[37297894] = { 911, 911, 15, 15, 8671, 8671, },
 	[51402880] = { 911, 911, 16, 16, 8684, 8684, },
@@ -320,11 +299,12 @@ points[ 71 ] = { -- Tanaris
 }
 points[ 57 ] = { -- Teldrassil
 	[56805300] = { 911, 911, 6, 6, 8715, 8715, },
+	[28114368] = { 915, 915, 1, 1, 8718, 8718, },
+	[55108853] = { 0, 915, 0, 1, 0, 8718, "Fly straight into the pink portal at Rut'theran.\n"
+											.."Immediately turn left and fly up high" },
 }
 points[ 210 ] = { -- The Cape of Stranglethorn
 	[40007260] = { 912, 912, 6, 6, 8674, 8674, },
-}
-points[ 103 ] = { -- The Exodar
 }
 points[ 26 ] = { -- The Hinterlands
 	[50004800] = { 912, 912, 11, 11, 8643, 8643, },
@@ -336,8 +316,6 @@ points[ 129 ] = { -- The Nexus
 	[61906400] = { 910, 910, 8, 8, 13021, 13021, "4) This way!" },
 	[52756990] = { 910, 910, 8, 8, 13021, 13021, "5) Come up this way for a shortcut exit!" },
 }
-points[ 143 ] = { -- The Oculus
-}
 points[ 220 ] = { -- The Temple of Atal'Hakkar
 	[62503510] = { 910, 910, 2, 2, 8713, 8713, },
 	[50002500] = { 910, 910, 2, 2, 8713, 8713, "Head straight for the other marker" },
@@ -347,10 +325,12 @@ points[ 64 ] = { -- Thousand Needles
 	[77007560] = { 911, 911, 14, 14, 8724, 8724, },
 }
 points[ 88 ] = { -- Thunder Bluff
-	[73602400] = { 914, 914, 2, 2, 8678, 8678, }, -- Split. alliance need help
+	[72662348] = { 914, 914, 2, 2, 8678, 8678, },
 }
 points[ 18 ] = { -- Tirisfal Glades
 	[61805400] = { 912, 912, 13, 13, 8652, 8652, },
+	[61967295] = { 914, 914, 3, 3, 8648, 8648, },
+	[61827154] = { 914, 914, 3, 3, 8648, 8648, "Drop down in to here. Elder Darkcore is a short walk away" },
 }
 points[ 241 ] = { -- Twilight Highlands
 	[50807040] = { 6006, 6006, 4, 4, 29737, 29737, },
@@ -365,7 +345,9 @@ points[ 1527 ] = { -- Uldum
 	[31606300] = { 6006, 6006, 3, 3, 29741, 29741, },
 }
 points[ 90 ] = { -- Undercity
-	[67003720] = { 914, 914, 3, 3, 8648, 8648, }, -- Split. alliance need help
+	[67003720] = { 914, 914, 3, 3, 8648, 8648, "The achievement text is wrong. Elder Darkcore\n"
+												.."is NOT in the Undercity. Darkcore is above, in\n"
+												.."The Ruins of Lordaeron" },
 }
 points[ 78 ] = { -- Un'Goro
 	[50607620] = { 911, 911, 17, 17, 8681, 8681, },
@@ -402,8 +384,6 @@ points[ 52 ] = { -- Westfall
 points[ 22 ] = { -- Western Plaguelands
 	[39806360] = { 912, 912, 4, 4, 8722, 8722, },
 	[69107350] = { 912, 912, 17, 17, 8714, 8714, },
-}
-points[ 56 ] = { -- Wetlands
 }
 points[ 123 ] = { -- Wintergrasp
 	[50001627] = { 1396, 1396, 10, 10, 13026, 13026, "He is through here. If your faction is not in control then see\n"
@@ -469,6 +449,7 @@ textures[12] = "Interface\\AddOns\\HandyNotes_LunarFestival\\CoinOfAncestryLight
 textures[13] = "Interface\\AddOns\\HandyNotes_LunarFestival\\CoinOfAncestryPink"
 textures[14] = "Interface\\AddOns\\HandyNotes_LunarFestival\\CoinOfAncestryPurple"
 textures[15] = "Interface\\AddOns\\HandyNotes_LunarFestival\\CoinOfAncestryTeal"
+textures[16] = "Interface\\AddOns\\HandyNotes_LunarFestival\\CoinOfAncestry"
 
 scaling[1] = 0.85
 scaling[2] = 0.85
@@ -484,4 +465,4 @@ scaling[11] = 0.75
 scaling[12] = 0.75
 scaling[13] = 0.75
 scaling[14] = 0.75
-scaling[15] = 0.75
+scaling[16] = 0.75

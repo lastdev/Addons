@@ -232,10 +232,6 @@ function Scanner.GetRecipeQualityInfo(craftString)
 	if not operationInfo then
 		return nil, nil
 	end
-	if isItem and not ItemInfo.IsCommodity("i:"..info.outputItemID) and operationInfo.isQualityCraft then
-		-- TODO: Support crafts where the quality results in higher item level gear
-		return nil, nil
-	end
 	return operationInfo.baseDifficulty, operationInfo.quality
 end
 
@@ -247,7 +243,16 @@ function Scanner.GetResultItem(craftString)
 		local itemLink = State.IsClassicCrafting() and GetCraftItemLink(spellId) or GetTradeSkillItemLink(spellId)
 		local emptyLink = strfind(itemLink or "", "item::") and true or false
 		itemLink = not emptyLink and itemLink or nil
-		return itemLink or (TSM.IsWowWrathClassic() and GetTradeSkillRecipeLink(spellId)) or nil
+		itemLink = itemLink or (TSM.IsWowWrathClassic() and GetTradeSkillRecipeLink(spellId)) or nil
+		if TSM.IsWowWrathClassic() then
+			local indirectSpellId = strmatch(itemLink, "enchant:(%d+)")
+			indirectSpellId = indirectSpellId and tonumber(indirectSpellId)
+			local itemString = ProfessionInfo.GetIndirectCraftResult(indirectSpellId)
+			itemLink = itemString and ItemInfo.GetLink(itemString) or itemLink
+			return itemLink, indirectSpellId
+		else
+			return itemLink
+		end
 	else
 		local indirectResult = ProfessionInfo.GetIndirectCraftResult(spellId)
 		if indirectResult then
@@ -261,28 +266,62 @@ function Scanner.GetResultItem(craftString)
 				indirectResult = ItemInfo.GetLink(indirectResult)
 				assert(indirectResult)
 			end
-			return indirectResult
+			return indirectResult, spellId
 		end
 		local result = C_TradeSkillUI.GetRecipeQualityItemIDs(spellId)
 		if not result then
-			return C_TradeSkillUI.GetRecipeItemLink(spellId)
-		end
-		wipe(private.resultQualityTemp)
-		for i = 1, #result do
-			local itemId = result[i]
-			local itemString = "i:"..itemId
-			local quality = C_TradeSkillUI.GetItemCraftedQualityByItemInfo(itemId) or C_TradeSkillUI.GetItemReagentQualityByItemInfo(itemId) or ItemInfo.GetCraftedQuality(itemString)
-			assert(quality)
-			private.resultQualityTemp[itemId] = quality
+			result = C_TradeSkillUI.GetRecipeItemLink(spellId)
+			local baseItemString = result and ItemString.GetBase(result) or nil
+			if not baseItemString then
+				return result
+			end
+			local ilvlBonuses = C_TradeSkillUI.GetRecipeInfo(spellId).qualityIlvlBonuses
+			if not ilvlBonuses then
+				return result
+			end
+			local baseLevel = GetDetailedItemLevelInfo(result)
+			assert(baseLevel)
+			result = ilvlBonuses
+			wipe(private.resultQualityTemp)
+			for i = 1, #result do
+				local relLevel = result[i]
+				assert(relLevel >= 0)
+				local itemString = baseItemString.."::i"..(baseLevel + relLevel)
+				result[i] = baseItemString.."::i"..(baseLevel + relLevel)
+				private.resultQualityTemp[itemString] = relLevel
+			end
+		else
+			wipe(private.resultQualityTemp)
+			for i = 1, #result do
+				local itemId = result[i]
+				local itemString = "i:"..itemId
+				result[i] = itemString
+				local quality = C_TradeSkillUI.GetItemCraftedQualityByItemInfo(itemId) or C_TradeSkillUI.GetItemReagentQualityByItemInfo(itemId) or ItemInfo.GetCraftedQuality(itemString)
+				assert(quality)
+				private.resultQualityTemp[itemString] = quality
+			end
 		end
 		Table.SortWithValueLookup(result, private.resultQualityTemp)
 		for i = 1, #result do
-			local link = ItemInfo.GetLink("i:"..result[i])
+			local link = ItemInfo.GetLink(result[i])
 			assert(link)
 			result[i] = link
 		end
 		return result
 	end
+end
+
+function Scanner.GetVellumItemString(craftString)
+	if TSM.IsWowWrathClassic() then
+		local spellId = CraftString.GetSpellId(craftString)
+		spellId = private.classicSpellIdLookup[spellId] or spellId
+		local itemLink = (State.IsClassicCrafting() and GetCraftItemLink(spellId) or GetTradeSkillItemLink(spellId)) or GetTradeSkillRecipeLink(spellId)
+		local indirectSpellId = itemLink and strmatch(itemLink, "enchant:(%d+)")
+		indirectSpellId = indirectSpellId and tonumber(indirectSpellId)
+		assert(indirectSpellId)
+		return ProfessionInfo.GetVellumItemString(indirectSpellId)
+	end
+	return ProfessionInfo.GetVellumItemString()
 end
 
 function Scanner.GetNumResultItems(craftString)
@@ -296,7 +335,7 @@ function Scanner.GetNumResultItems(craftString)
 	if indirectResult then
 		return type(indirectResult) == "table" and #indirectResult or 1
 	end
-	local result = C_TradeSkillUI.GetRecipeQualityItemIDs(spellId)
+	local result = C_TradeSkillUI.GetRecipeQualityItemIDs(spellId) or C_TradeSkillUI.GetRecipeInfo(spellId).qualityIlvlBonuses
 	return result and #result or 1
 end
 
@@ -342,7 +381,9 @@ function Scanner.IsEnchant(craftString)
 	end
 	local spellId = CraftString.GetSpellId(craftString)
 	if TSM.IsWowClassic() then
-		local itemLink = Scanner.GetResultItem(craftString)
+		spellId = private.classicSpellIdLookup[spellId] or spellId
+		local itemLink = State.IsClassicCrafting() and GetCraftItemLink(spellId) or GetTradeSkillItemLink(spellId)
+		itemLink = itemLink or (TSM.IsWowWrathClassic() and GetTradeSkillRecipeLink(spellId)) or nil
 		if not itemLink or not strfind(itemLink, "enchant:") then
 			return false
 		end
@@ -600,18 +641,43 @@ function private.ScanProfession()
 					end
 				else
 					local craftString = CraftString.Get(spellId, rank)
-					local resultItems = C_TradeSkillUI.GetRecipeQualityItemIDs(spellId) or ProfessionInfo.GetIndirectCraftResult(spellId)
 					local numResultItems = nil
-					if type(resultItems) ~= "table" then
-						numResultItems = 1
+					local indirectResult = ProfessionInfo.GetIndirectCraftResult(spellId)
+					if indirectResult then
+						if type(indirectResult) == "table" then
+							numResultItems = #indirectResult
+						else
+							numResultItems = 1
+						end
 					else
-						numResultItems = #resultItems
+						local result = C_TradeSkillUI.GetRecipeQualityItemIDs(spellId)
+						if result then
+							numResultItems = #result
+						else
+							if ItemString.GetBase(C_TradeSkillUI.GetRecipeItemLink(spellId)) then
+								local ilvlBonuses = C_TradeSkillUI.GetRecipeInfo(spellId).qualityIlvlBonuses
+								if ilvlBonuses then
+									numResultItems = #ilvlBonuses
+								else
+									numResultItems = 1
+								end
+							else
+								numResultItems = 1
+							end
+						end
 					end
-					if numResultItems == 1 then
+					if info.isSalvageRecipe then
+						-- Just ignore this craft for now
+					elseif not info.supportsQualities then
+						assert(numResultItems == 1)
 						local recipeScanResult, matScanResult = private.BulkInsertRecipe(craftString, index, info.name, info.categoryID, info.relativeDifficulty, rank, numSkillUps, 1, info.currentRecipeExperience or -1, info.nextLevelRecipeExperience or -1)
 						haveInvalidRecipes = haveInvalidRecipes or not recipeScanResult
 						haveInvalidMats = haveInvalidMats or not matScanResult
+					elseif numResultItems == 1 then
+						-- Just ignore this craft for now - this can happen with alchemy experimentation for example
+						Log.Warn("Unexpected single result item (%s, %s)", tostring(professionName), tostring(craftString))
 					else
+						assert(numResultItems > 1)
 						-- This is a quality craft
 						local recipeDifficulty, baseRecipeQuality = Scanner.GetRecipeQualityInfo(craftString)
 						if baseRecipeQuality then
@@ -697,41 +763,22 @@ function private.BulkInsertRecipe(craftString, index, name, categoryId, relative
 	return true, matScanResult
 end
 
-
 function private.GetItemStringAndCraftName(craftString)
 	-- get the links
 	local spellId = CraftString.GetSpellId(craftString)
 	local quality = CraftString.GetQuality(craftString)
-	local resultItem = Scanner.GetResultItem(craftString)
+	local resultItem, indirectSpellId = Scanner.GetResultItem(craftString)
 
 	-- get the itemString and craft name
-	local itemString, craftName, indirectSpellId = nil, nil, nil
+	local itemString, craftName = nil, nil
 	if quality then
 		assert(type(resultItem) == "table")
 		assert(resultItem[quality])
-		itemString = ItemString.GetBase(resultItem[quality])
+		itemString = ItemString.ToLevel(ItemString.Get(resultItem[quality]))
 		craftName = ItemInfo.GetName(itemString)
 	elseif strfind(resultItem, "enchant:") then
-		if TSM.IsWowClassic() and not TSM.IsWowWrathClassic() then
-			return "", ""
-		else
-			-- result of craft is not an item
-			if TSM.IsWowWrathClassic() then
-				indirectSpellId = strmatch(resultItem, "enchant:(%d+)")
-				indirectSpellId = indirectSpellId and tonumber(indirectSpellId)
-				if not indirectSpellId then
-					return "", ""
-				end
-			else
-				indirectSpellId = spellId
-			end
-			itemString = ProfessionInfo.GetIndirectCraftResult(indirectSpellId)
-			if not itemString then
-				-- we don't care about this craft
-				return "", ""
-			end
-			craftName = GetSpellInfo(indirectSpellId)
-		end
+		itemString = ""
+		craftName = GetSpellInfo(indirectSpellId or spellId)
 	elseif strfind(resultItem, "item:") then
 		-- result of craft is item
 		itemString = ItemString.GetBase(resultItem)
@@ -774,19 +821,11 @@ function private.BulkInsertMats(craftString)
 			private.matQuantitiesTemp[matItemString] = quantity
 		end
 	end
-	if Scanner.IsEnchant(craftString) and not TSM.IsWowVanillaClassic() then
+	if Scanner.IsEnchant(craftString) and TSM.IsWowWrathClassic() then
 		-- Add a vellum to the list of mats
-		local resultItem = Scanner.GetResultItem(craftString)
-		local indirectSpellId = nil
-		if TSM.IsWowWrathClassic() then
-			indirectSpellId = strmatch(resultItem, "enchant:(%d+)")
-			indirectSpellId = indirectSpellId and tonumber(indirectSpellId)
-		else
-			indirectSpellId = CraftString.GetSpellId(craftString)
-		end
-		if indirectSpellId then
-			local matItemString = ProfessionInfo.GetVellumItemString(indirectSpellId)
-			private.matQuantitiesTemp[matItemString] = 1
+		local vellumItemString = Scanner.GetVellumItemString(craftString)
+		if vellumItemString then
+			private.matQuantitiesTemp[vellumItemString] = 1
 		else
 			haveInvalidMats = true
 		end

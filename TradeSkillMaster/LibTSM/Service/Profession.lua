@@ -191,6 +191,13 @@ function Profession.GetResultItem(craftString)
 	return Scanner.GetResultItem(craftString)
 end
 
+---Gets the vellum item string to use with a recipe.
+---@param craftString string The craft string for the recipe
+---@return string
+function Profession.GetVellumItemString(craftString)
+	return Scanner.GetVellumItemString(craftString)
+end
+
 ---Gets the number of different result items of a recipe.
 ---@param craftString string The craft string for the recipe
 ---@return number
@@ -254,6 +261,13 @@ end
 ---@return boolean
 function Profession.IsEnchant(craftString)
 	return Scanner.IsEnchant(craftString)
+end
+
+---Returns whether or not a recipe is a tinker.
+---@param craftString string The craft string for the recipe
+---@return boolean
+function Profession.IsTinker(craftString)
+	return ProfessionInfo.IsEngineeringTinker(CraftString.GetSpellId(craftString))
 end
 
 ---Gets the needed tools string for a recipe.

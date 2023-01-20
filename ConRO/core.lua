@@ -175,12 +175,344 @@ local _Alpha_Modes = {
 	'DISABLE',
 }
 
+local BACKDROP_ConRO = {
+	bgFile = "Interface\\TutorialFrame\\TutorialFrameBackground",
+	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+	tile = true,
+	tileEdge = true,
+	tileSize = 16,
+	edgeSize = 16,
+	insets = { left = 3, right = 5, top = 3, bottom = 5 },
+};
+
 local _, _, classIdv = UnitClass('player');
 local cversion = GetAddOnMetadata('ConRO_' .. ConRO.Classes[classIdv], 'Version');
 local classinfo = " ";
 	if cversion ~= nil then
 		classinfo = ConRO.Classes[classIdv] .. ' Version: ' .. cversion;
 	end
+
+--[[function ConRO:CreateOptionsFrame()
+	local f = CreateFrame("Frame", "ConRO_OptionsFrame")
+		local background = f:CreateTexture()
+			background:SetAllPoints(f)
+			background:SetColorTexture(0, 0, 0, 0)
+
+		local t = f:CreateFontString("nil", "OVERLAY")
+			t:SetFont("Fonts\\FRIZQT__.TTF", 24, "OUTLINE")
+			t:SetPoint("TOP", 0, -15)
+			t:SetText("ConRO (Conflict Rotation Optimizer)")
+end
+
+ConRO:CreateOptionsFrame();
+
+function ConRO:CreateOptionsMenuPanel(name)
+	local panel = CreateFrame("Frame", "ConRO_Panel_" ..  name, ConRO_OptionsFrame, "BackdropTemplate");
+	panel:SetBackdrop(BACKDROP_ConRO);
+	panel:SetPoint("BOTTOM", 0, 35);
+	panel:SetSize(650, 480);
+	return panel;
+end
+
+function ConRO:CreateButton(point, xOff, yOff, name, displayName, template)
+	local button = CreateFrame("Button", "ConRO_Button_" ..  name, ConRO_OptionsFrame, template);
+	button:SetPoint(point, xOff or 0, yOff or 0);
+	button:SetText(displayName or "");
+	return button;
+end
+
+function ConRO:CreateCheckButton(point, xOff, yOff, name, displayname)
+	local checkButton = CreateFrame("CheckButton", "ConRO_CheckButton_" ..  name, ConRO_OptionsFrame, "ChatConfigCheckButtonTemplate");
+	checkButton:SetPoint(point, xOff or 0, yOff or 0);
+	local t= checkButton:CreateFontString(nil, "OVERLAY");
+		t:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE");
+		t:SetPoint("LEFT", checkButton, "RIGHT", 0, 0);
+		t:SetText(displayname);
+	return checkButton;
+end
+
+function ConRO:CreateOptionTabAbout()
+	local a = ConRO:CreateButton("TOPRIGHT", -10, -65, "AboutTab", "About", "ChatTabArtTemplate");
+	a.tooltip = "About";
+	a:SetSize(80, 24);
+	a:SetAlpha(1);
+	a:HookScript("OnClick", function()
+			ConRO:HideOptionPanels();
+			ConRO_Panel_About:Show();
+			ConRO_Button_AboutTab:Hide();
+			ConRO_Button_AboutTab2:Show();
+	end);
+	local at= a:CreateFontString(nil, "OVERLAY");
+		at:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE");
+		at:SetPoint("TOP", 0, -8);
+		at:SetText("About");
+	a:Hide();
+
+	local b = ConRO:CreateButton("TOPRIGHT", -5, -60, "AboutTab2", "About", "ChatTabArtTemplate");
+		b.tooltip = "About";
+		b:SetSize(90, 28);
+		b:SetAlpha(1);
+		b:HookScript("OnClick", function()
+
+		end);
+		local bt= b:CreateFontString(nil, "OVERLAY");
+			bt:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE");
+			bt:SetVertexColor(1, 0.84, 0);
+			bt:SetPoint("TOP", 0, -10);
+			bt:SetText("About");
+	b:Show();
+end
+
+function ConRO:CreateOptionTabClass()
+	local a = ConRO:CreateButton("TOPLEFT", 10, -65, "ClassSettings", "Class Settings", "ChatTabArtTemplate");
+	a.tooltip = "Class Settings";
+	a:SetSize(110, 24);
+	a:SetAlpha(1);
+	a:HookScript("OnClick", function()
+		ConRO:HideOptionPanels();
+		ConRO_Panel_ClassSettings:Show();
+		ConRO_Button_ClassSettings:Hide();
+		ConRO_Button_ClassSettings2:Show();
+	end);
+	local at= a:CreateFontString(nil, "OVERLAY");
+		at:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE");
+		at:SetPoint("TOP", 0, -8);
+		at:SetText("Class Settings");
+	a:Show();
+
+	local b = ConRO:CreateButton("TOPLEFT", 5, -60, "ClassSettings2", "Class Settings", "ChatTabArtTemplate");
+		b.tooltip = "Class Settings";
+		b:SetSize(120, 28);
+		b:SetAlpha(1);
+		b:HookScript("OnClick", function()
+
+		end);
+	local bt= b:CreateFontString(nil, "OVERLAY");
+		bt:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE");
+		bt:SetVertexColor(1, 0.84, 0);
+		bt:SetPoint("TOP", 0, -10);
+		bt:SetText("Class Settings");
+	b:Hide();
+end
+
+function ConRO:CreateOptionTabOverlay()
+	local a = ConRO:CreateButton("TOPLEFT", 130, -65, "OverlaySettings", "Overlay Settings", "ChatTabArtTemplate");
+		a.tooltip = "Overlay Settings";
+		a:SetSize(130, 24);
+		a:SetAlpha(1);
+		a:HookScript("OnClick", function()
+			ConRO:HideOptionPanels();
+			ConRO_Panel_OverlaySettings:Show();
+			ConRO_Button_OverlaySettings:Hide();
+			ConRO_Button_OverlaySettings2:Show();
+		end);
+	local at= a:CreateFontString(nil, "OVERLAY");
+		at:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE");
+		at:SetPoint("TOP", 0, -8);
+		at:SetText("Overlay Settings");
+	a:Show();
+
+	local b = ConRO:CreateButton("TOPLEFT", 125, -60, "OverlaySettings2", "Overlay Settings", "ChatTabArtTemplate");
+		b.tooltip = "Overlay Settings";
+		b:SetSize(140, 28);
+		b:SetAlpha(1);
+		b:HookScript("OnClick", function()
+
+		end);
+	local bt= b:CreateFontString(nil, "OVERLAY");
+		bt:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE");
+		bt:SetVertexColor(1, 0.84, 0);
+		bt:SetPoint("TOP", 0, -10);
+		bt:SetText("Overlay Settings");
+	b:Hide();
+end
+
+function ConRO:CreateOptionTabDisplayWindow()
+	local a = ConRO:CreateButton("TOPLEFT", 270, -65, "DisplayWindowSettings", "Display Window Settings", "ChatTabArtTemplate");
+	a.tooltip = "Display Window Settings";
+	a:SetSize(180, 24);
+	a:SetAlpha(1);
+	a:HookScript("OnClick", function()
+			ConRO:HideOptionPanels();
+			ConRO_Panel_DisplayWindowSettings:Show();
+			ConRO_Button_DisplayWindowSettings:Hide();
+			ConRO_Button_DisplayWindowSettings2:Show();
+	end);
+	local at= a:CreateFontString(nil, "OVERLAY");
+		at:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE");
+		at:SetPoint("TOP", 0, -8);
+		at:SetText("Display Window Settings");
+	a:Show();
+
+	local b = ConRO:CreateButton("TOPLEFT", 265, -60, "DisplayWindowSettings2", "Display Window Settings", "ChatTabArtTemplate");
+		b.tooltip = "Display Window Settings";
+		b:SetSize(190, 28);
+		b:SetAlpha(1);
+		b:HookScript("OnClick", function()
+
+		end);
+	local bt= b:CreateFontString(nil, "OVERLAY");
+		bt:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE");
+		bt:SetVertexColor(1, 0.84, 0);
+		bt:SetPoint("TOP", 0, -10);
+		bt:SetText("Display Window Settings");
+	b:Hide();
+end
+
+function ConRO:CreateAboutPanel()
+	local p = ConRO:CreateOptionsMenuPanel("About");
+	p:Show();
+
+	local t2 = p:CreateFontString(nil, "OVERLAY");
+		t2:SetFont("Fonts\\FRIZQT__.TTF", 16, "OUTLINE");
+		t2:SetPoint("BOTTOMLEFT", 10, 10);
+		t2:SetText(addoninfo);
+
+	local t3 = p:CreateFontString(nil, "OVERLAY");
+		t3:SetFont("Fonts\\FRIZQT__.TTF", 16, "OUTLINE");
+		t3:SetPoint("BOTTOMRIGHT", -10, 10);
+		t3:SetText(classinfo);
+
+	local t4 = p:CreateFontString(nil, "OVERLAY");
+		t4:SetFont("Fonts\\FRIZQT__.TTF", 16, "OUTLINE");
+		t4:SetPoint("TOPRIGHT", -10, -10);
+		t4:SetText("Author: Vae2009");
+end
+
+function ConRO:CreateClassPanel()
+	local p = ConRO:CreateOptionsMenuPanel("ClassSettings");
+	local name;
+	local s1 = CreateFrame("Button", "ConRO_Button_Spec_1", p, "ChannelButtonBaseTemplate");
+	s1:SetPoint("TOPLEFT", 10, -10);
+	s1:SetSize(120, 24);
+
+	s1:SetScript("OnShow", function()
+
+	end);
+	s1:HookScript("OnClick", function()
+
+	end);
+
+	local t = s1:CreateFontString(nil, "OVERLAY");
+		t:SetFont("Fonts\\FRIZQT__.TTF", 16, "OUTLINE");
+		t:SetPoint("TOPRIGHT", -10, -10);
+		t:SetText(name);
+
+	p:Hide();
+end
+
+function ConRO:CreateOverlayPanel()
+	local p = ConRO:CreateOptionsMenuPanel("OverlaySettings");
+	p:Hide();
+end
+
+function ConRO:CreateDisplayWindowPanel()
+	local p = ConRO:CreateOptionsMenuPanel("DisplayWindowSettings");
+	p:Hide();
+end
+
+function ConRO:CreateOption_Disable_Messages()
+	local cb = ConRO:CreateCheckButton("BOTTOMLEFT", 140, 5, "Disable_Messages", "Disable Messages");
+	cb.tooltip = "Enables / disables messages, if you have issues with addon, make sure to deselect this.";
+	cb:SetScript("OnShow", function()
+		cb:SetChecked(ConRO.db.profile._Disable_Info_Messages);
+	end);
+	cb:HookScript("OnClick", function()
+		ConRO.db.profile._Disable_Info_Messages = cb:GetChecked(ConRO.db.profile._Disable_Info_Messages);
+	end);
+end
+
+function ConRO:CreateOption_Unlock_ConRO()
+	local cb = ConRO:CreateCheckButton("BOTTOMLEFT", 10, 5, "Unlock_ConRO", "Unlock ConRO");
+	cb.tooltip = "Make display windows movable.";
+	cb:SetScript("OnShow", function()
+		cb:SetChecked(ConRO.db.profile._Unlock_ConRO);
+	end);
+	cb:HookScript("OnClick", function()
+		ConRO.db.profile._Unlock_ConRO = cb:GetChecked(ConRO.db.profile._Unlock_ConRO);
+		ConROWindow:EnableMouse(ConRO.db.profile._Unlock_ConRO);
+		ConRONextWindow:EnableMouse(ConRO.db.profile._Unlock_ConRO);
+		ConRODefenseWindow:EnableMouse(ConRO.db.profile._Unlock_ConRO);
+		ConROInterruptWindow:EnableMouse(ConRO.db.profile._Unlock_ConRO);
+		ConROPurgeWindow:EnableMouse(ConRO.db.profile._Unlock_ConRO);
+		if ConRO.db.profile._Unlock_ConRO and ConRO.db.profile.enableInterruptWindow == true then
+			ConROInterruptWindow:Show();
+		else
+			ConROInterruptWindow:Hide();
+		end
+		if ConRO.db.profile._Unlock_ConRO and ConRO.db.profile.enablePurgeWindow == true then
+			ConROPurgeWindow:Show();
+		else
+			ConROPurgeWindow:Hide();
+		end
+	end);
+end
+
+function ConRO:CreateReloadUI()
+	local b = ConRO:CreateButton("BOTTOMRIGHT", -245, 5, "Reload_UI", "Reload UI", "UIPanelButtonGrayTemplate")
+	b:SetSize(120, 24);
+	b.tooltip = "Reloads UI after making changes that need it.";
+	b:HookScript("OnClick", function()
+		ReloadUI();
+	end);
+end
+
+function ConRO:CreatePositionReset()
+	local b = ConRO:CreateButton("BOTTOMRIGHT", -125, 5, "Reset_Positions", "Reset Positions", "UIPanelButtonGrayTemplate")
+	b:SetSize(120, 24);
+	b.tooltip = "Reset ConRO UI positions back to default. RELOAD REQUIRED";
+	b:HookScript("OnClick", function()
+		ConROButtonFrame:SetUserPlaced(false);
+		ConROWindow:SetUserPlaced(false);
+		ConRONextWindow:SetUserPlaced(false);
+		ConRODefenseWindow:SetUserPlaced(false);
+		ConROInterruptWindow:SetUserPlaced(false);
+		ConROPurgeWindow:SetUserPlaced(false);
+		ReloadUI();
+	end);
+end
+
+function ConRO:CreateSettingReset()
+	local b = ConRO:CreateButton("BOTTOMRIGHT", -5, 5, "Reset_Settings", "Reset Settings", "UIPanelButtonGrayTemplate")
+	b:SetSize(120, 24);
+	b.tooltip = "Resets ConRO option settings back to default. RELOAD REQUIRED";
+	b:HookScript("OnClick", function()
+		ConRO.db:ResetProfile();
+		ReloadUI();
+	end);
+end
+
+ConRO:CreateOptionTabAbout();
+ConRO:CreateOptionTabClass();
+ConRO:CreateOptionTabOverlay();
+ConRO:CreateOptionTabDisplayWindow();
+ConRO:CreateAboutPanel();
+ConRO:CreateClassPanel();
+ConRO:CreateOverlayPanel();
+ConRO:CreateDisplayWindowPanel();
+ConRO:CreateOption_Disable_Messages();
+ConRO:CreateOption_Unlock_ConRO();
+ConRO:CreateReloadUI();
+ConRO:CreatePositionReset();
+ConRO:CreateSettingReset();
+
+local category = Settings.RegisterCanvasLayoutCategory(ConRO_OptionsFrame, "ConRO")
+Settings.RegisterAddOnCategory(category)
+
+function ConRO:HideOptionPanels()
+	ConRO_Panel_About:Hide();
+	ConRO_Panel_ClassSettings:Hide();
+	ConRO_Panel_OverlaySettings:Hide();
+	ConRO_Panel_DisplayWindowSettings:Hide();
+	ConRO_Button_AboutTab:Show();
+	ConRO_Button_AboutTab2:Hide();
+	ConRO_Button_ClassSettings:Show();
+	ConRO_Button_ClassSettings2:Hide();
+	ConRO_Button_OverlaySettings:Show();
+	ConRO_Button_OverlaySettings2:Hide();
+	ConRO_Button_DisplayWindowSettings:Show();
+	ConRO_Button_DisplayWindowSettings2:Hide();
+end]]
 
 local options = {
 	type = 'group',
@@ -2355,14 +2687,16 @@ function ConRO:PLAYER_LEAVING_WORLD()
 end
 
 function ConRO:PLAYER_ENTERING_WORLD()
-	self:UpdateButtonGlow();
-	if not self.rotationEnabled and not UnitHasVehicleUI("player") then
-		self:Print(self.Colors.Success .. 'Auto enable on login!');
-		self:Print(self.Colors.Info .. 'Loading class module');
-		self:LoadModule();
-		self:EnableRotation()
-		self:EnableDefense();
-	end
+	C_Timer.After(1, function()
+		self:UpdateButtonGlow();
+		if not self.rotationEnabled and not UnitHasVehicleUI("player") then
+			self:Print(self.Colors.Success .. 'Auto enable on login!');
+			self:Print(self.Colors.Info .. 'Loading class module');
+			self:LoadModule();
+			self:EnableRotation()
+			self:EnableDefense();
+		end
+	end);
 end
 
 function ConRO:LOADING_SCREEN_ENABLED()
@@ -2372,14 +2706,16 @@ function ConRO:LOADING_SCREEN_ENABLED()
 end
 
 function ConRO:LOADING_SCREEN_DISABLED()
-	self:UpdateButtonGlow();
-	if not self.rotationEnabled and not UnitHasVehicleUI("player") then
-		self:Print(self.Colors.Success .. 'Auto enable on login!');
-		self:Print(self.Colors.Info .. 'Loading class module');
-		self:LoadModule();
-		self:EnableRotation();
-		self:EnableDefense();
-	end
+	C_Timer.After(1, function()
+		self:UpdateButtonGlow();
+		if not self.rotationEnabled and not UnitHasVehicleUI("player") then
+			self:Print(self.Colors.Success .. 'Auto enable on login!');
+			self:Print(self.Colors.Info .. 'Loading class module');
+			self:LoadModule();
+			self:EnableRotation();
+			self:EnableDefense();
+		end
+	end);
 end
 
 function ConRO:PLAYER_TARGET_CHANGED()
@@ -2417,12 +2753,14 @@ function ConRO:PLAYER_TARGET_CHANGED()
 end
 
 function ConRO:PLAYER_REGEN_DISABLED()
-	self:UpdateButtonGlow();
-	if not self.rotationEnabled and not UnitHasVehicleUI("player") then
-		self:LoadModule();
-		self:EnableRotation();
-		self:EnableDefense();
-	end
+	C_Timer.After(1, function()
+		self:UpdateButtonGlow();
+		if not self.rotationEnabled and not UnitHasVehicleUI("player") and not ConRO:Dragonriding() then
+			self:LoadModule();
+			self:EnableRotation();
+			self:EnableDefense();
+		end
+	end);
 end
 
 function ConRO:ACTIONBAR_SLOT_CHANGED()
@@ -2616,9 +2954,10 @@ function ConRO:MeleeSpec()
 		[9] = 'Warlock',
 		[10] = 'Monk',
 		[11] = 'Druid',
-		[12] = 'DemonHunter',]]
+		[12] = 'DemonHunter',
+		[13] = 'Evoker', ]]
 
-	if classId == 1 or classId == 2 or classId == 3 or classId == 4 or classId == 5 or classId == 6 or (classId == 7 and specId == 2) or classId == 10 or classId == 11 or classId == 12 then
+	if classId == 1 or classId == 2 or classId == 3 or classId == 4 or classId == 5 or classId == 6 or classId == 7 or classId == 10 or classId == 11 or classId == 12 or classId == 13 then
 		return true;
 	end
 	return false;

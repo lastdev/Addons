@@ -1,5 +1,5 @@
 ## Interface: 100002
-## Version: 1.00
+## Version: 1.01
 ## Author: Taraezor
 ## Title: Lunar Festival
 ## Title-deDE: Mondfest
@@ -13,18 +13,18 @@
 ## Title-ruRU: Лунный фестиваль
 ## Title-zhCN: 春节
 ## Title-zhTW: 春節
-## Notes: Helps you with the |cFFCA64EFLunar Festival|r world event
-## Notes-deDE: Hilft bei der |cFFCA64EFMondfest|r 
-## Notes-esES: Ayuda con el suceso mundial |cFFCA64EFFestival Lunar|r
-## Notes-esMX: Ayuda con el suceso mundial |cFFCA64EFFestival Lunar|r
-## Notes-frFR: Aide à l'événement mondial |cFFCA64EFFête lunaire|r
-## Notes-itIT: Assiste con l'evento mondiale |cFFCA64EFCelebrazione della Luna|r
-## Notes-koKR: |cFFCA64EF달의 축제|r 대규모 이벤트 지원
-## Notes-ptBR: Auxilia no evento mundial |cFFCA64EFFestival da Lua|r
-## Notes-ptPT: Auxilia no evento mundial |cFFCA64EFFestival da Lua|r
-## Notes-ruRU: Помогает с игровое событие |cFFCA64EFЛунный фестиваль|r
-## Notes-zhCN: 协助 |cFFCA64EF春节|r 活动
-## Notes-zhTW: 協助 |cFFCA64EF春節|r 活動
+## Notes: Helps you with the |cFFFDBD01Lunar Festival|r world event
+## Notes-deDE: Hilft bei der |cFFFDBD01Mondfest|r 
+## Notes-esES: Ayuda con el suceso mundial |cFFFDBD01Festival Lunar|r
+## Notes-esMX: Ayuda con el suceso mundial |cFFFDBD01Festival Lunar|r
+## Notes-frFR: Aide à l'événement mondial |cFFFDBD01Fête lunaire|r
+## Notes-itIT: Assiste con l'evento mondiale |cFFFDBD01Celebrazione della Luna|r
+## Notes-koKR: |cFFFDBD01달의 축제|r 대규모 이벤트 지원
+## Notes-ptBR: Auxilia no evento mundial |cFFFDBD01Festival da Lua|r
+## Notes-ptPT: Auxilia no evento mundial |cFFFDBD01Festival da Lua|r
+## Notes-ruRU: Помогает с игровое событие |cFFFDBD01Лунный фестиваль|r
+## Notes-zhCN: 协助 |cFFFDBD01春节|r 活动
+## Notes-zhTW: 協助 |cFFFDBD01春節|r 活動
 ## X-Category: Map & Minimap
 ## X-Curse-Project-ID: 776143
 ## X-WoWI-ID: 00000

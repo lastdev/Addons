@@ -14,10 +14,14 @@ end
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 9f6c75eeab82c0b47de6b403dca2b68407247c11 $")
+end, "$Revision: 5a89ecaf32f24ffefbf320bef9dff40e1992eb4e $")
+
+
+local _, _, _, clientRevision = GetBuildInfo()
 
 local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
+local IsWrathClassicPTR = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC and clientRevision >= 30401
 local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 
 local min = min
@@ -57,7 +61,7 @@ local barColours = {
 }
 
 local events = {
-	"UNIT_SPELLCAST_START", "UNIT_SPELLCAST_STOP", "UNIT_SPELLCAST_FAILED", "UNIT_SPELLCAST_INTERRUPTED", "UNIT_SPELLCAST_INTERRUPTIBLE",  "UNIT_SPELLCAST_NOT_INTERRUPTIBLE", "UNIT_SPELLCAST_DELAYED", "UNIT_SPELLCAST_CHANNEL_START", "UNIT_SPELLCAST_CHANNEL_UPDATE", "UNIT_SPELLCAST_CHANNEL_STOP", "PLAYER_ENTERING_WORLD"
+	"UNIT_SPELLCAST_START", "UNIT_SPELLCAST_STOP", "UNIT_SPELLCAST_FAILED", "UNIT_SPELLCAST_INTERRUPTED", "UNIT_SPELLCAST_INTERRUPTIBLE", "UNIT_SPELLCAST_NOT_INTERRUPTIBLE", "UNIT_SPELLCAST_DELAYED", "UNIT_SPELLCAST_CHANNEL_START", "UNIT_SPELLCAST_CHANNEL_UPDATE", "UNIT_SPELLCAST_CHANNEL_STOP", "PLAYER_ENTERING_WORLD"
 }
 
 -- enableToggle
@@ -120,7 +124,11 @@ local function overrideToggle(value)
 					end
 				else
 					for i, event in pairs(events) do
-						CastingBarFrame:RegisterEvent(event)
+						if IsRetail then
+							PlayerCastingBarFrame:RegisterEvent(event)
+						else
+							CastingBarFrame:RegisterEvent(event)
+						end
 					end
 				end
 				pconf.bar.Overrided = nil
@@ -537,13 +545,11 @@ local function XPerl_MakePreCast(self)
 	self.precast:SetWidth(1)
 	self.precast:Hide()
 	self.precast:SetBlendMode("ADD")
-	--self.precast:SetVertexColor(1, 0, 0)	--SetGradient("HORIZONTAL", 0, 0, 1, 1, 0, 0)
-	if IsRetail then
+	if IsRetail or IsWrathClassicPTR then
 		self.precast:SetGradient("HORIZONTAL", CreateColor(0, 0, 1, 1), CreateColor(1, 0, 0, 1))
 	else
 		self.precast:SetGradient("HORIZONTAL", 0, 0, 1, 1, 0, 0)
 	end
-	--XPerl_MakePreCast = nil
 end
 
 -- XPerl_ArcaneBar_RegisterFrame

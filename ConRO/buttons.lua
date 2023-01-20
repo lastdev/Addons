@@ -1107,6 +1107,10 @@ function ConRO:FindKeybinding(id)
 				end
 
 				keybind = GetBindingKey(button);
+
+				if keybind ~= nil then
+					return keybind;
+				end
 			end
 		end
 	end
@@ -2265,7 +2269,7 @@ end
 
 
 function ConRO:FetchDominos()
-	for i = 1, 60 do
+	for i = 1, 168 do
 		local button = _G['DominosActionButton' .. i];
 		local hotkey = 'CLICK DominosActionButton' .. i .. ':HOTKEY';
 		if button then
@@ -2275,7 +2279,7 @@ function ConRO:FetchDominos()
 end
 
 function ConRO:DefFetchDominos()
-	for i = 1, 60 do
+	for i = 1, 168 do
 		local button = _G['DominosActionButton' .. i];
 		local hotkey = 'CLICK DominosActionButton' .. i .. ':HOTKEY';
 		if button then
@@ -2454,7 +2458,7 @@ function ConRO:FetchBartender4()
 				self:AddButton(spellID, button, hotkey);
 			end
 		else
-			for i = 1, 120 do
+			for i = 1, 180 do
 				local button = _G[barName .. 'Button' .. i];
 				local hotkey = 'CLICK BT4Button' .. i .. ':LeftButton';
 				if button then
@@ -2484,7 +2488,7 @@ function ConRO:DefFetchBartender4()
 				self:DefAddButton(spellID, button, hotkey);
 			end
 		else
-			for i = 1, 120 do
+			for i = 1, 180 do
 				local button = _G[barName .. 'Button' .. i];
 				local hotkey = 'CLICK BT4Button' .. i .. ':LeftButton';
 				if button then

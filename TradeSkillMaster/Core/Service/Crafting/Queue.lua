@@ -145,8 +145,8 @@ function Queue.RestockGroups(groups)
 	for _, groupPath in ipairs(groups) do
 		if groupPath ~= TSM.CONST.ROOT_GROUP_PATH then
 			for _, itemString in TSM.Groups.ItemIterator(groupPath) do
-				local baseItemString = ItemString.GetBaseFast(itemString)
-				if TSM.Crafting.CanCraftItem(baseItemString) then
+				local levelItemString = ItemString.ToLevel(itemString)
+				if TSM.Crafting.CanCraftItem(levelItemString) then
 					local isValid, err = TSM.Operations.Crafting.IsValid(itemString)
 					if isValid then
 						private.RestockItem(itemString)

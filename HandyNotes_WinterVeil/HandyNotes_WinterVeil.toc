@@ -1,5 +1,5 @@
 ## Interface: 100002
-## Version: 1.06
+## Version: 1.07
 ## Author: Taraezor
 ## Title: Winter Veil
 ## Title-deDE: Winterhauchfest
@@ -13,18 +13,18 @@
 ## Title-ruRU: Зимний Покров
 ## Title-zhCN: 冬幕节
 ## Title-zhTW: 冬幕節
-## Notes: Helps you with the |cFFCA64EFWinter Veil|r world event
-## Notes-deDE: Hilft bei der |cFFCA64EFWinterhauchfest|r 
-## Notes-esES: Ayuda con el suceso mundial |cFFCA64EFEl festín del Festival de Invierno|r
-## Notes-esMX: Ayuda con el suceso mundial |cFFCA64EFEl festín del Festival de Invierno|r
-## Notes-frFR: Aide à l'événement mondial |cFFCA64EFVoile d'hiver|r
-## Notes-itIT: Assiste con l'evento mondiale |cFFCA64EFVigilia di Grande Inverno|r
-## Notes-koKR: |cFFCA64EF겨울맞이 축제|r 대규모 이벤트 지원
-## Notes-ptBR: Auxilia no evento mundial |cFFCA64EFFesta do Véu de Inverno|r
-## Notes-ptPT: Auxilia no evento mundial |cFFCA64EFFesta do Véu de Inverno|r
-## Notes-ruRU: Помогает с игровое событие |cFFCA64EFЗимний Покров|r
-## Notes-zhCN: 协助 |cFFCA64EF冬幕节|r 活动
-## Notes-zhTW: 協助 |cFFCA64EF冬幕節|r 活動
+## Notes: Helps you with the |cFF5FFB17Winter Veil|r world event
+## Notes-deDE: Hilft bei der |cFF5FFB17Winterhauchfest|r 
+## Notes-esES: Ayuda con el suceso mundial |cFF5FFB17El festín del Festival de Invierno|r
+## Notes-esMX: Ayuda con el suceso mundial |cFF5FFB17El festín del Festival de Invierno|r
+## Notes-frFR: Aide à l'événement mondial |cFF5FFB17Voile d'hiver|r
+## Notes-itIT: Assiste con l'evento mondiale |cFF5FFB17Vigilia di Grande Inverno|r
+## Notes-koKR: |cFF5FFB17겨울맞이 축제|r 대규모 이벤트 지원
+## Notes-ptBR: Auxilia no evento mundial |cFF5FFB17Festa do Véu de Inverno|r
+## Notes-ptPT: Auxilia no evento mundial |cFF5FFB17Festa do Véu de Inverno|r
+## Notes-ruRU: Помогает с игровое событие |cFF5FFB17Зимний Покров|r
+## Notes-zhCN: 协助 |cFF5FFB17冬幕节|r 活动
+## Notes-zhTW: 協助 |cFF5FFB17冬幕節|r 活動
 ## X-Category: Map & Minimap
 ## X-Curse-Project-ID: 739812
 ## X-WoWI-ID: 00000

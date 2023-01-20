@@ -316,7 +316,7 @@ do
 			reg.quantity = lNum == hNum and lNum or 1
 		end,
 		SetBagItem = function(self, ...)
-			if TSM.IsWowClassic() then
+			if TSM.IsWowClassic() and not TSM.IsWowWrathPatch341() then
 				PreHookHelper(self, GetContainerItemInfo, 2, ...)
 			else
 				PreHookHelper(self, C_Container.GetContainerItemInfo, "stackCount", ...)

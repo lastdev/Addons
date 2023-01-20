@@ -1,5 +1,5 @@
-## v4.12.20 Changes
+## v4.12.25 Changes
 
-* [Retail] Fixed issue with Gathering not collecting the right quantity of quality materials
+* [Wrath] Added workaround for 3.4.1 bug with the game not indicating when bags are updated
 
 [Known Issues](https://support.tradeskillmaster.com/en_US/known_issues)

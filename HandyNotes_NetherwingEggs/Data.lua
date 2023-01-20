@@ -134,6 +134,8 @@ textures[11] = "Interface\\Common\\Indicator-Yellow"
 textures[12] = "Interface\\Common\\Indicator-Green"
 textures[13] = "Interface\\Vehicles\\UI-Vehicles-Raid-Icon"
 textures[14] = "Interface\\Common\\Indicator-Gray"
+textures[15] = "Interface\\AddOns\\HandyNotes_NetherwingEggs\\NetherwingEgg"
+
 
 scaling[1] = 0.95
 scaling[2] = 1.2
@@ -149,3 +151,4 @@ scaling[11] = 0.83
 scaling[12] = 0.83
 scaling[13] = 0.67
 scaling[14] = 0.83
+scaling[15] = 0.9

@@ -52,7 +52,7 @@
 	</GameTooltip>
 	<MessageFrame name="SmartBuffSplashFrame" parent="UIParent" toplevel="true" movable="true" frameStrata="MEDIUM" insertMode="TOP">
 		<Size>
-			<AbsDimension x="420" y="100" />
+			<AbsDimension x="500" y="100" />
 		</Size>
 		<Anchors>
 			<Anchor point="CENTER">
@@ -1418,7 +1418,7 @@
 			</Button>
 			<ScrollFrame name="SmartBuffOptionsFrame_ScrollFrameBuffs" inherits="FauxScrollFrameTemplate">
 				<Size>
-					<AbsDimension x="240" y="424" />
+					<AbsDimension x="240" y="540" />
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT">
@@ -3114,7 +3114,7 @@
 			</Anchor>
 		</Anchors>
 		<Frames>
-			<EditBox name="$parent_lblText" letters="2000" multiLine="true" autoFocus="false">
+			<EditBox name="$parent_lblText" letters="0" multiLine="true" autoFocus="false">
 				<Size>
 					<AbsDimension x="313" y="572" />
 				</Size>
