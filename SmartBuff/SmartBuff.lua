@@ -1,14 +1,14 @@
 -------------------------------------------------------------------------------
 -- SmartBuff
 -- Originally created by Aeldra (EU-Proudmoore)
--- Retail version fixes / improvements by Codermik & Speedwaystar
+-- Retail version fixes / improvements by Codermik
 -- Discord: https://discord.gg/R6EkZ94TKK
 -- Cast the most important buffs on you, tanks or party/raid members/pets.
 -------------------------------------------------------------------------------
 
-SMARTBUFF_DATE          = "150123";
+SMARTBUFF_DATE          = "200123";
 
-SMARTBUFF_VERSION       = "r16."..SMARTBUFF_DATE;
+SMARTBUFF_VERSION       = "r17."..SMARTBUFF_DATE;
 SMARTBUFF_VERSIONNR     = 100002;
 SMARTBUFF_TITLE         = "SmartBuff";
 SMARTBUFF_SUBTITLE      = "Supports you in casting buffs";
@@ -22,7 +22,7 @@ local SmartbuffPrefix = "Smartbuff";
 local SmartbuffSession = true;
 local SmartbuffVerCheck = false;					-- for my use when checking guild users/testers versions  :)
 local buildInfo = select(4, GetBuildInfo())
-local SmartbuffRevision = 16;
+local SmartbuffRevision = 17;
 local SmartbuffVerNotifyList = {}
 
 local SG = SMARTBUFF_GLOBALS;
@@ -51,7 +51,6 @@ local isSetZone = false;
 local isFirstError = false;
 local isMounted = false;
 local isCTRA = true;
-local isSetUnits = false;
 local isKeyUpChanged = false;
 local isKeyDownChanged = false;
 local isAuraChanged = false;
@@ -74,7 +73,6 @@ local sPlayerName = nil;
 local sID = nil;
 local sPlayerClass = nil;
 local tLastCheck = 0;
-local iGroupSetup = -1;
 local iLastBuffSetup = -1;
 local sLastTexture = "";
 local iLastGroupSetup = -99;
@@ -82,7 +80,7 @@ local sLastZone = "";
 local tAutoBuff = 0;
 local tDebuff = 0;
 local sMsgWarning = "";
-local iCurrentFont = 1;
+local iCurrentFont = 6;
 local iCurrentList = -1;
 local iLastPlayer = -1;
 
@@ -397,7 +395,6 @@ function SMARTBUFF_OnLoad(self)
   self:RegisterEvent("PLAYER_LOGIN");                   -- added
   self:RegisterEvent("PLAYER_ENTERING_WORLD");
   self:RegisterEvent("UNIT_NAME_UPDATE");
-  self:RegisterEvent("GROUP_ROSTER_UPDATE");
   self:RegisterEvent("PLAYER_REGEN_ENABLED");
   self:RegisterEvent("PLAYER_REGEN_DISABLED");
   self:RegisterEvent("PLAYER_STARTED_MOVING");          -- added
@@ -411,6 +408,9 @@ function SMARTBUFF_OnLoad(self)
   self:RegisterEvent("UPDATE_MOUSEOVER_UNIT");
   self:RegisterEvent("UNIT_SPELLCAST_FAILED");
   self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
+  --auto template events
+  self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+  self:RegisterEvent("GROUP_ROSTER_UPDATE")
 
   --One of them allows SmartBuff to be closed with the Escape key
   tinsert(UISpecialFrames, "SmartBuffOptionsFrame");
@@ -487,10 +487,7 @@ function SMARTBUFF_OnEvent(self, event, ...)
     return;
   end;
 
-  if (event == "GROUP_ROSTER_UPDATE") then
-    isSetUnits = true;
-
-  elseif (event == "PLAYER_REGEN_DISABLED") then
+  if (event == "PLAYER_REGEN_DISABLED") then
     SMARTBUFF_Ticker(true);
 
     if (O.Toggle) then
@@ -648,6 +645,10 @@ function SMARTBUFF_OnEvent(self, event, ...)
 
   end
 
+  if event == "ZONE_CHANGED_NEW_AREA" or event == "GROUP_ROSTER_UPDATE" then
+    SMARTBUFF_SetTemplate()
+  end
+
 end
 -- END SMARTBUFF_OnEvent
 
@@ -671,9 +672,6 @@ function SMARTBUFF_OnUpdate(self, elapsed)
       end
     end
   else
-    if (isSetZone and GetTime() > (tStartZone + 4)) then
-      SMARTBUFF_CheckLocation();
-    end
     SMARTBUFF_Ticker();
     SMARTBUFF_Check(1);
   end
@@ -682,12 +680,6 @@ end
 function SMARTBUFF_Ticker(force)
   if (force or GetTime() > tTicker + 1) then
     tTicker = GetTime();
-
-    if (isSetUnits) then
-      isSetUnits = false;
-      SMARTBUFF_SetUnits();
-      isSyncReq = true;
-    end
 
     if (isSyncReq or tTicker > tSync + 10) then
       SMARTBUFF_SyncBuffTimers();
@@ -734,89 +726,68 @@ function SMARTBUFF_AddMsgD(msg, r, g, b)
   end
 end
 
+Enum.SmartBuffGroup = {
+  Solo = 1,
+  Party = 2,
+  LFR = 3,
+  Raid = 4,
+  MythicKeystone = 5,
+  Battleground = 6,
+  Arena = 7,
+  VoTI = 8,
+  Custom1 = 9,
+  Custom2 = 10,
+  Custom3 = 11,
+  Custom4 = 12,
+  Custom5 = 13
+}
 
--- Creates an array of units
-function SMARTBUFF_SetUnits()
-  if (InCombatLockdown()) then
-    isSetUnits = true;
-    return;
-  end
-  if (SmartBuffOptionsFrame:IsVisible()) then return; end
+-- Set the current template and create an array of units
+function SMARTBUFF_SetTemplate()
+  -- print(SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Solo])
+  -- print(Enum.SmartBuffGroup["Raid"])
 
-  local i = 0;
-  local n = 0;
-  local j = 0;
-  local s = nil;
-  local psg = 0;
-  local b = false;
-  local iBFA = SMARTBUFF_IsActiveBattlefield();
+  if (InCombatLockdown()) then return end
+  if (SmartBuffOptionsFrame:IsVisible()) or not O.AutoSwitchTemplate then return end
 
-  if (iBFA > 0) then
-    SMARTBUFF_CheckLocation();
-  end
-
-  -- player
-  -- pet
-  -- party1-4
-  -- partypet1-4
-  -- raid1-40
-  -- raidpet1-40
-
-  Enum.SmartBuffGroup = {
-    Solo = 1,
-    Party = 2,
-    LFR = 3,
-    Raid = 4,
-    MythicKeystone = 5,
-    Battleground = 6,
-    Arena = 7,
-    VoTI = 8,
-    Custom1 = 9,
-    Custom2 = 10,
-    Custom3 = 11,
-    Custom4 = 12,
-    Custom5 = 13
-  }
-
+  local newTemplate = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Solo];
   local name, instanceType, difficultyID, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceID, instanceGroupSize, LfgDungeonID = GetInstanceInfo()
 
-  iGroupSetup = Enum.SmartBuffGroup.Solo;
-
   if IsInRaid() then
-    iGroupSetup = Enum.SmartBuffGroup.Raid;
+    newTemplate = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Raid];
   elseif IsInGroup() then
-    iGroupSetup = Enum.SmartBuffGroup.Party;
+    newTemplate = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Party];
   end
-
   -- check instance type (allows solo raid clearing, etc)
   if instanceType == "raid" then
-    iGroupSetup = Enum.SmartBuffGroup.Raid;
+    newTemplate = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Raid];
     if LfgDungeonID then
-      iGroupSetup = Enum.SmartBuffGroup.LFR;
+      newTemplate = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.LFR];
     end
   elseif instanceType == "party" then
-    iGroupSetup = Enum.SmartBuffGroup.Party;
+    newTemplate = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Party];
     if ( difficultyID == 8 ) then
-      iGroupSetup = Enum.SmartBuffGroup.MythicKeystone;
+      newTemplate = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.MythicKeystone];
     end
   end
 
-  if (iGroupSetup ~= iLastGroupSetup) then
-    iLastGroupSetup = iGroupSetup;
-    wipe(cBlacklist);
-    wipe(cBuffTimer);
-    if (SMARTBUFF_TEMPLATES[iGroupSetup] == nil) then
-      SMARTBUFF_SetBuffs();
+  -- overwrite with named raid template, unless in LFR
+  if O.AutoSwitchTemplateInst and not (newTemplate == SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.LFR]) then
+    local zone = GetRealZoneText()
+    local instances = Enum.MakeEnumFromTable(SMARTBUFF_INSTANCES);
+    local i = instances[zone]
+    if i and SMARTBUFF_TEMPLATES[i + Enum.SmartBuffGroup.Arena] then
+      newTemplate = SMARTBUFF_TEMPLATES[i + Enum.SmartBuffGroup.Arena]
     end
-    local tmp = SMARTBUFF_TEMPLATES[iGroupSetup];
-    if (O.AutoSwitchTemplate and currentTemplate ~= tmp and iBFA == 0) then
-      SMARTBUFF_AddMsg(SMARTBUFF_OFT_AUTOSWITCHTMP .. ": " .. currentTemplate .. " -> " .. tmp);
-      currentTemplate = tmp;
-      SMARTBUFF_SetBuffs();
-    end
-    --SMARTBUFF_AddMsgD("Group type changed");
   end
 
+  SMARTBUFF_AddMsgD("Current tmpl: " .. currentTemplate or "nil" .. " - new tmpl: " .. newTemplate or "nil");
+  SMARTBUFF_AddMsg(SMARTBUFF_TITLE.." :: "..SMARTBUFF_OFT_AUTOSWITCHTMP .. ": " .. currentTemplate .. " -> " .. newTemplate);
+  currentTemplate = newTemplate;
+
+  SMARTBUFF_SetBuffs();
+  wipe(cBlacklist);
+  wipe(cBuffTimer);
   wipe(cUnits);
   wipe(cGroups);
   cClassGroups = nil;
@@ -824,7 +795,7 @@ function SMARTBUFF_SetUnits()
   wipe(cIgnoreUnitList);
 
   -- Raid Setup
-  if (iGroupSetup == Enum.SmartBuffGroup.Raid) then
+  if (newTemplate == (SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Raid])) then
     cClassGroups = { };
     local name, server, rank, subgroup, level, class, classeng, zone, online, isDead;
     local sRUnit = nil;
@@ -878,7 +849,7 @@ function SMARTBUFF_SetUnits()
     SMARTBUFF_AddMsgD("Raid Unit-Setup finished");
 
   -- Party Setup
-  elseif (iGroupSetup == Enum.SmartBuffGroup.Party) then
+  elseif (newTemplate == (SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Party])) then
     cClassGroups = { };
     if (B[CS()][currentTemplate].SelfFirst) then
       SMARTBUFF_AddSoloSetup();
@@ -893,8 +864,8 @@ function SMARTBUFF_SetUnits()
       SMARTBUFF_AddUnitToClass("party", j);
       SmartBuff_AddToUnitList(1, "party"..j, 1);
       SmartBuff_AddToUnitList(2, "party"..j, 1);
-	  name, _, _, _, _, _, _, online, _, _ = GetRaidRosterInfo(j);
-	  if name and online then SendSmartbuffVersion(name, "party") end
+    name, _, _, _, _, _, _, online, _, _ = GetRaidRosterInfo(j);
+    if name and online then SendSmartbuffVersion(name, "party") end
     end
     SMARTBUFF_AddMsgD("Party Unit-Setup finished");
 
@@ -903,7 +874,6 @@ function SMARTBUFF_SetUnits()
     SMARTBUFF_AddSoloSetup();
     SMARTBUFF_AddMsgD("Solo Unit-Setup finished");
   end
-
   --collectgarbage();
 end
 
@@ -2875,62 +2845,6 @@ end
 -- END Reagent functions
 
 
--- check the current zone and set buff template
-function SMARTBUFF_CheckLocation()
-  if (not O.AutoSwitchTemplate and not O.AutoSwitchTemplateInst) then return; end
-
-  -- if in LFR, we don't want to use specific instance templates
-  if currentTemplate == SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.LFR] then return; end
-
-  local zone = GetRealZoneText();
-  if (zone == nil) then
-    SMARTBUFF_AddMsgD("No zone found, try again...");
-    tStartZone = GetTime();
-    isSetZone = true;
-    return;
-  end
-
-  isSetZone = false;
-  local tmp = nil;
-  local b = false;
-
-  SMARTBUFF_AddMsgD("Current zone: "..zone..", last zone: "..sLastZone);
-  if (zone ~= sLastZone) then
-    sLastZone = zone;
-    if (IsActiveBattlefieldArena()) then
-      tmp = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Arena];
-    elseif (SMARTBUFF_IsActiveBattlefield(zone) == 1) then
-      tmp = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Battleground];
-    else
-      if (O.AutoSwitchTemplateInst) then
-        local i = 1;
-        for _ in pairs(SMARTBUFF_INSTANCES) do
-          if (string.find(string.lower(zone), string.lower(SMARTBUFF_INSTANCES[i]))) then
-            b = true;
-            break;
-          end
-          i = i + 1;
-        end
-        tmp = nil;
-        if (b) then
-          if SMARTBUFF_TEMPLATES[i + Enum.SmartBuffGroup.Arena] then
-            tmp = SMARTBUFF_TEMPLATES[i + Enum.SmartBuffGroup.Arena]
-          end
-        end
-      end
-    end
-
-    SMARTBUFF_AddMsgD("Current tmpl: " .. currentTemplate or "nil" .. " - new tmpl: " .. tmp or "nil");
-    if (tmp and currentTemplate ~= tmp) then
-      SMARTBUFF_AddMsg(SMARTBUFF_OFT_AUTOSWITCHTMP .. ": " .. currentTemplate .. " -> " .. tmp);
-      currentTemplate = tmp;
-      SMARTBUFF_SetBuffs();
-    end
-  end
-end
--- END SMARTBUFF_CheckLocation
-
-
 -- checks if the player is inside a battlefield
 function SMARTBUFF_IsActiveBattlefield(zone)
   local i, status, map, instanceId, teamSize;
@@ -3094,7 +3008,7 @@ function SMARTBUFF_Options_Init(self)
 
   if (O.SplashX == nil) then O.SplashX = 100; end
   if (O.SplashY == nil) then O.SplashY = -100; end
-  if (O.CurrentFont == nil) then O.CurrentFont = 9; end
+  if (O.CurrentFont == nil) then O.CurrentFont = 6; end
   if (O.ColSplashFont == nil) then
     O.ColSplashFont = { };
     O.ColSplashFont.r = 1.0;
@@ -3167,7 +3081,7 @@ function SMARTBUFF_Options_Init(self)
     O.VersionNr = SMARTBUFF_VERSIONNR;
     SMARTBUFF_SetBuffs();
     InitBuffOrder(true);
-    print("Upgraded SmartBuff to "..SMARTBUFF_VERSION);
+    SMARTBUFF_AddMsg("Upgraded SmartBuff to "..SMARTBUFF_VERSION);
   end
 
   if (SMARTBUFF_OptionsGlobal == nil) then SMARTBUFF_OptionsGlobal = { }; end
@@ -3199,7 +3113,7 @@ function SMARTBUFF_Options_Init(self)
     SmartBuff_KeyButton:SetPoint("CENTER", UIParent, "CENTER", 0, 100);
   end
 
-  SMARTBUFF_SetUnits();
+  SMARTBUFF_SetTemplate();
   SMARTBUFF_RebindKeys();
   isSyncReq = true;
 end
@@ -3319,7 +3233,7 @@ function SMARTBUFF_command(msg)
 
   if(msg == "toggle" or msg == "t") then
     SMARTBUFF_OToggle();
-    SMARTBUFF_SetUnits();
+    SMARTBUFF_SetTemplate();
   elseif (msg == "menu") then
     SMARTBUFF_OptionsFrame_Toggle();
   elseif (msg == "rbt") then
@@ -3350,7 +3264,6 @@ function SMARTBUFF_command(msg)
     SmartBuffOptionsFrame:ClearAllPoints();
     SmartBuffOptionsFrame:SetPoint("CENTER", UIParent, "CENTER");
   elseif (msg == "test") then
-
     -- Test Code ******************************************
     -- ****************************************************
     --local spellname = "Mind--numbing Poison";
@@ -3393,7 +3306,7 @@ function SMARTBUFF_OToggle()
   O.Toggle = SMARTBUFF_toggleBool(O.Toggle, "Active = ");
   SMARTBUFF_CheckMiniMapButton();
   if (O.Toggle) then
-    SMARTBUFF_SetUnits();
+    SMARTBUFF_SetTemplate();
   end
 end
 
@@ -3851,7 +3764,7 @@ function SMARTBUFF_Options_OnHide()
   SMARTBUFF_SetInCombatBuffs();
   SmartBuff_BuffSetup:Hide();
   SmartBuff_PlayerSetup:Hide();
-  SMARTBUFF_SetUnits();
+  SMARTBUFF_SetTemplate();
   SMARTBUFF_Splash_Hide();
   SMARTBUFF_RebindKeys();
   --collectgarbage();

@@ -246,6 +246,12 @@ points[ns.votfw] = {	-- "D", ["Author"], tip
 	[39635765] = { "B", "Blackhoof", "Battle Horn"  }, 
 	[45403838] = { "B", "Ghostly Pandaren Craftsman", 31292, "Standing under a tree" },
 	[43613748] = { "B", "Cache of Pilfered Goods", 31406, "Descend into the Springtail Warren" },
+	
+	[18944247] = { "S", "Staff of the Hidden Master", "Confirmed" },
+	[19103770] = { "S", "Staff of the Hidden Master" },
+	[17503580] = { "S", "Staff of the Hidden Master" },
+	[14903370] = { "S", "Staff of the Hidden Master" },
+	[15502910] = { "S", "Staff of the Hidden Master" },
 }
 
 -- Choice of texture

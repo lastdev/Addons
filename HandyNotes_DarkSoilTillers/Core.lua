@@ -3,7 +3,7 @@
 
                                           Dark Soil Tillers
 
-                                      v2.03 - 17th January 2023
+                                      v2.04 - 21st January 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -710,6 +710,11 @@ function pluginHandler:OnEnter(mapFile, coord)
 				GameTooltip:AddLine( ns.colour.plaintext ..L[third] )
  			end
 		end
+	elseif dataType == "S" then
+		GameTooltip:SetText( ns.colour.prefix ..L[first] )
+		if second then
+			GameTooltip:AddLine(ns.colour.plaintext ..L[second])
+		end
 	else
 		GameTooltip:SetText( ns.colour.prefix ..L["Dark Soil"] )
 		if first then
@@ -770,7 +775,7 @@ do
 										return coord, nil, ns.textures[ns.db.icon_tillersQuests],
 											ns.db.icon_scale * ns.scaling[ns.db.icon_tillersQuests], ns.db.icon_alpha
 									end
-								elseif coord == 52254893 then
+								elseif coord == 52254894 then
 									return coord, nil, ns.textures[ns.db.icon_tillersQuests],
 										ns.db.icon_scale * ns.scaling[ns.db.icon_tillersQuests], ns.db.icon_alpha
 								end
@@ -809,6 +814,9 @@ do
 						return coord, nil, ns.textures[ns.db.icon_choice],
 								ns.db.icon_scale * ns.scaling[ns.db.icon_choice], ns.db.icon_alpha
 					end
+				elseif ( v[1] == "S" ) and ns.author then
+					return coord, nil, ns.textures[10],
+							ns.db.icon_scale * ns.scaling[10], ns.db.icon_alpha
 				end
 			end
 			coord, v = next(t, coord)

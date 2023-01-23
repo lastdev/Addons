@@ -12,7 +12,8 @@ From version 4.2.1.0 it is possible to set two targets. Left click on an option 
 
 Please note that you cannot change your misdirection / tricks of the trade target during combat as addons are prevented from modifying macros unless your character is out of combat.
 
- 
+ Themes
+As of V5.0.0.2 Misdirection Helper has custom theme support. It also now supports an ElvUI look and feel and has basic TipTac support.
  
 
 Data Broker

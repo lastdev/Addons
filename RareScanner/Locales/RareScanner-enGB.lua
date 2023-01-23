@@ -756,6 +756,7 @@ if AL then
 	AL["NOTE_193271_2"] = "[Pilfered Globe]"
 	AL["NOTE_193271_3"] = "[Pilfered Focus]"
 	AL["NOTE_193658"] = "A [Corrupted Dragon Egg] will appear in its position when it is ready to spawn. Interact with it to summon him."
+	AL["NOTE_193663"] = "It can spawn after breaking the [Rock Wall] at this position. To break the wall you need the profession mining or to buy an [Expedition Explosives] at the Dragonscale Expedition base."
 	AL["NOTE_193664"] = "In order to summon her you need to collect 5x[Unstable Matrix Core] dropped from [Titan Defense Matrix] in the area. Combine them and a [Titanium Reactor] will show up in your minimap. Click on it to start the event."
 	AL["NOTE_193664_1"] = "You can find [Unstable Matrix Core] here."
 	AL["NOTE_193664_2"] = "[Titanium Reactor]"
