@@ -10,6 +10,8 @@ local all = Hekili.Class.specs[ 0 ]
 local FindPlayerAuraByID = ns.FindPlayerAuraByID
 local RegisterEvent = ns.RegisterEvent
 
+local GetSpellCooldown = _G.GetSpellCooldown
+
 
 -- 10.0
 all:RegisterAbilities( {
@@ -95,8 +97,8 @@ all:RegisterAbilities( {
         proc = "random",
     },
     broodkeepers_promise = {
-        cast = 0,
-        cooldown = 90,
+        cast = 1,
+        cooldown = 5,
         gcd = "off",
 
         item = 194307,
@@ -112,7 +114,7 @@ all:RegisterAbilities( {
 
         auras = {
             broodkeepers_promise = {
-                id = 382280,
+                id = 394457,
                 duration = 3600,
                 max_stack = 1,
             },

@@ -1,3 +1,6 @@
+v2.0.6:
+- Wrath Classic 3.4.1 Compatibility.
+
 v2.0.5:
 - 10.0.2 compatibility.
 - Minor code change for Party and Raid detection.

@@ -1,7 +1,7 @@
 local _, addon = ...
 if (not addon.lunarfestival.IsEventActive()) then return end
 
-local TCL = addon.TomCatsLibs
+local TCL = addon.lunarfestival.TomCatsLibs
 local D = TCL.Data
 local function QUEST_COMPLETE()
     local enabledVar = TomCats_Account and TomCats_Account.lunarfestival and TomCats_Account.lunarfestival.autoEnabled
@@ -34,15 +34,15 @@ local function BAG_UPDATE()
     if (enabledVar) then
         local origState = GetCVar("autoLootDefault")
         for bagId = 0, 4 do
-            for slot = 1, GetContainerNumSlots(bagId) do
-                local itemLink = GetContainerItemLink(bagId, slot)
+            for slot = 1, C_Container.GetContainerNumSlots(bagId) do
+                local itemLink = C_Container.GetContainerItemLink(bagId, slot)
                 if (itemLink) then
                     local itemId = GetItemInfoInstant(itemLink)
                     if (itemId == 21746) then
                         if (origState == "0") then
                             SetCVar("autoLootDefault","1")
                         end
-                        UseContainerItem(bagId, slot)
+                        C_Container.UseContainerItem(bagId, slot)
                         if (not (GetCVar("autoLootDefault") == origState)) then
                             SetCVar("autoLootDefault", origState)
                         end

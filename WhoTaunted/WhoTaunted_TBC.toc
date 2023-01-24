@@ -4,9 +4,9 @@
 ## OptionalDeps: Ace3
 ## SavedVariables: WhoTauntedDB
 ## Title: Who Taunted?
-## Version: v2.0.5
+## Version: v2.0.6
 ## X-Embeds: Ace3
-## X-Date: 2022-11-15T7:21:05Z
+## X-Date: 2023-01-20T1:21:58Z
 ## X-Website: https://www.curseforge.com/wow/addons/who-taunted
 ## X-License: GPLv3
 ## X-Category: Tank

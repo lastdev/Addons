@@ -1057,8 +1057,7 @@ spec:RegisterAbilities( {
 
 
     intimidating_shout = {
-        id = 316593,
-        copy = { 316593, 5246 },
+        id = function() return talent.menace.enabled and 316593 or 5246 end,
         cast = 0,
         cooldown = 90,
         gcd = "spell",
@@ -1067,12 +1066,14 @@ spec:RegisterAbilities( {
         startsCombat = true,
         texture = 132154,
 
-        toggle = "cooldowns",
+        toggle = "interrupts",
 
         handler = function ()
             applyDebuff( "target", "intimidating_shout" )
             active_dot.intimidating_shout = max( active_dot.intimidating_shout, active_enemies )
         end,
+
+        copy = { 316593, 5246 },
     },
 
 
@@ -1334,7 +1335,7 @@ spec:RegisterAbilities( {
         texture = 132110,
 
         nobuff = function()
-            if not settings.stack_shield_block or not legendary.reprisal.enabled then return "shield_block" end
+            if not settings.stack_shield_block then return "shield_block" end
         end,
 
         handler = function ()

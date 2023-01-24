@@ -223,7 +223,7 @@ end
 --    TomCats:Register(
 --        {
 --            name = "@shortName@",
---            version = "2.4.47",
+--            version = "2.4.49",
 --        }
 --    )
 --end
