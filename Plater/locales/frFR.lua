@@ -59,12 +59,9 @@ L["OPTIONS_TABNAME_BUFF_LIST"] = "Liste des Buffs"
 L["OPTIONS_TABNAME_BUFF_SETTINGS"] = "Paramêtres des Buffs"
 L["OPTIONS_TABNAME_BUFF_SPECIAL"] = "Buffs Spéciaux"
 L["OPTIONS_TABNAME_BUFF_TRACKING"] = "Suivi des Buffs"
---[[Translation missing --]]
-L["OPTIONS_TABNAME_CASTBAR"] = "Cast Bar"
---[[Translation missing --]]
-L["OPTIONS_TABNAME_CASTCOLORS"] = "Cast Colors and Names"
---[[Translation missing --]]
-L["OPTIONS_TABNAME_COMBOPOINTS"] = "Combo Points"
+L["OPTIONS_TABNAME_CASTBAR"] = "Barre d'incantation"
+L["OPTIONS_TABNAME_CASTCOLORS"] = "Couleurs et noms d'incantations"
+L["OPTIONS_TABNAME_COMBOPOINTS"] = "Points de combo"
 L["OPTIONS_TABNAME_GENERALSETTINGS"] = "Réglages généraux"
 L["OPTIONS_TABNAME_MODDING"] = "Modding"
 L["OPTIONS_TABNAME_NPC_COLORNAME"] = "Couleurs et noms des PNJ"

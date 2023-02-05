@@ -1,5 +1,5 @@
-## Interface: 100002
-## Version: 1.01
+## Interface: 100005
+## Version: 1.08
 ## Author: Taraezor
 ## Title: Lunar Festival
 ## Title-deDE: Mondfest

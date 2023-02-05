@@ -8,6 +8,7 @@ local TSM = select(2, ...) ---@type TSM
 local ProfessionScanner = TSM.Crafting:NewPackage("ProfessionScanner")
 local Log = TSM.Include("Util.Log")
 local MatString = TSM.Include("Util.MatString")
+local Wow = TSM.Include("Util.Wow")
 local Profession = TSM.Include("Service.Profession")
 local Settings = TSM.Include("Service.Settings")
 local private = {
@@ -25,7 +26,7 @@ function ProfessionScanner.OnInitialize()
 	private.settings = Settings.NewView()
 		:AddKey("sync", "internalData", "playerProfessions")
 		:AddKey("factionrealm", "internalData", "mats")
-	Profession.SetScanHookFuncs(private.ScanHook, TSM.Crafting.RemovePlayerSpells)
+	Profession.SetScanHookFuncs(private.ScanHook, function(craftStrings) TSM.Crafting.RemovePlayerSpells(Wow.GetCharacterName(), craftStrings) end)
 end
 
 

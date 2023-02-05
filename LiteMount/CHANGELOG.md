@@ -1,8 +1,6 @@
 # LiteMount
 
-## [10.0.8](https://github.com/xod-wow/LiteMount/tree/10.0.8) (2022-11-29)
-[Full Changelog](https://github.com/xod-wow/LiteMount/compare/10.0.7...10.0.8) [Previous Releases](https://github.com/xod-wow/LiteMount/releases)
+## [10.0.10](https://github.com/xod-wow/LiteMount/tree/10.0.10) (2023-01-31)
+[Full Changelog](https://github.com/xod-wow/LiteMount/compare/10.0.9...10.0.10) [Previous Releases](https://github.com/xod-wow/LiteMount/releases)
 
-- Try detecting dragonriding by spell usability.  
-    - Fix #121  
-- Disable edit/delete buttons after current rule is deleted  
+- Add families for 10.0.5 mounts  

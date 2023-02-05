@@ -4,7 +4,7 @@
 --    All Rights Reserved - Detailed license information included with addon.     --
 -- ------------------------------------------------------------------------------ --
 
-local _, TSM = ...
+local TSM = select(2, ...) ---@type TSM
 local Transactions = TSM.Accounting:NewPackage("Transactions")
 local L = TSM.Include("Locale").GetTable()
 local Database = TSM.Include("Util.Database")
@@ -16,6 +16,7 @@ local Log = TSM.Include("Util.Log")
 local Table = TSM.Include("Util.Table")
 local ItemString = TSM.Include("Util.ItemString")
 local Theme = TSM.Include("Util.Theme")
+local Wow = TSM.Include("Util.Wow")
 local CustomPrice = TSM.Include("Service.CustomPrice")
 local ItemInfo = TSM.Include("Service.ItemInfo")
 local Inventory = TSM.Include("Service.Inventory")
@@ -671,7 +672,7 @@ function private.InsertRecord(recordType, itemString, source, stackSize, price, 
 	timestamp = floor(timestamp)
 	local baseItemString = ItemString.GetBase(itemString)
 	local levelItemString = ItemString.ToLevel(itemString)
-	local player = UnitName("player")
+	local player = Wow.GetCharacterName()
 	local matchingRow = private.db:NewQuery()
 		:Equal("type", recordType)
 		:Equal("itemString", itemString)
@@ -730,7 +731,7 @@ function private.OnItemRecordsChanged(recordType, itemString)
 end
 
 function private.SyncHashesThread(otherPlayer)
-	private.CalculateSyncHashesThreaded(UnitName("player"))
+	private.CalculateSyncHashesThreaded(Wow.GetCharacterName())
 	while #private.pendingSyncHashCharacters > 0 do
 		local player = tremove(private.pendingSyncHashCharacters, 1)
 		private.CalculateSyncHashesThreaded(player)

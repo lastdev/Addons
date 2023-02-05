@@ -6,6 +6,7 @@
 
 local TSM = select(2, ...) ---@type TSM
 local Scanner = TSM.Init("Service.ProfessionHelpers.Scanner") ---@class Service.ProfessionHelpers.Scanner
+local Environment = TSM.Include("Environment")
 local State = TSM.Include("Service.ProfessionHelpers.State")
 local Quality = TSM.Include("Service.ProfessionHelpers.Quality")
 local ProfessionInfo = TSM.Include("Data.ProfessionInfo")
@@ -60,10 +61,10 @@ Scanner:OnModuleLoad(function()
 		:AddStringField("name")
 		:AddStringField("craftName")
 		:AddNumberField("categoryId")
-	if TSM.IsWowClassic() then
-		dbSchema:AddStringField("difficulty")
-	else
+	if Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) then
 		dbSchema:AddNumberField("difficulty")
+	else
+		dbSchema:AddStringField("difficulty")
 	end
 	private.db = dbSchema
 		:AddNumberField("rank")
@@ -82,11 +83,11 @@ Scanner:OnModuleLoad(function()
 		:Commit()
 	private.scanTimer = Delay.CreateTimer("PROFESSION_SCAN", private.ScanProfession)
 	State.RegisterCallback(private.ProfessionStateUpdate)
-	if TSM.IsWowClassic() then
+	if Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) then
+		Event.Register("TRADE_SKILL_LIST_UPDATE", private.OnTradeSkillUpdateEvent)
+	else
 		Event.Register("CRAFT_UPDATE", private.OnTradeSkillUpdateEvent)
 		Event.Register("TRADE_SKILL_UPDATE", private.OnTradeSkillUpdateEvent)
-	else
-		Event.Register("TRADE_SKILL_LIST_UPDATE", private.OnTradeSkillUpdateEvent)
 	end
 	Event.Register("CHAT_MSG_SKILL", private.ChatMsgSkillEventHandler)
 end)
@@ -127,7 +128,7 @@ function Scanner.GetItemStringByCraftString(craftString)
 end
 
 function Scanner.GetIndexByCraftString(craftString)
-	assert(TSM.IsWowClassic() or private.dbPopulated)
+	assert(not Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) or private.dbPopulated)
 	return private.db:GetUniqueRowField("craftString", craftString, "index")
 end
 
@@ -213,7 +214,7 @@ function Scanner.SetHookFuncs(scanFunc, inactiveFunc)
 end
 
 function Scanner.GetRecipeQualityInfo(craftString)
-	if TSM.IsWowClassic() then
+	if not Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) then
 		return nil, nil
 	end
 	local spellId = CraftString.GetSpellId(craftString)
@@ -238,22 +239,7 @@ end
 ---TODO: Should this handle indirect crafts on classic like GetResultInfo()?
 function Scanner.GetResultItem(craftString)
 	local spellId = CraftString.GetSpellId(craftString)
-	if TSM.IsWowClassic() then
-		spellId = private.classicSpellIdLookup[spellId] or spellId
-		local itemLink = State.IsClassicCrafting() and GetCraftItemLink(spellId) or GetTradeSkillItemLink(spellId)
-		local emptyLink = strfind(itemLink or "", "item::") and true or false
-		itemLink = not emptyLink and itemLink or nil
-		itemLink = itemLink or (TSM.IsWowWrathClassic() and GetTradeSkillRecipeLink(spellId)) or nil
-		if TSM.IsWowWrathClassic() then
-			local indirectSpellId = strmatch(itemLink, "enchant:(%d+)")
-			indirectSpellId = indirectSpellId and tonumber(indirectSpellId)
-			local itemString = ProfessionInfo.GetIndirectCraftResult(indirectSpellId)
-			itemLink = itemString and ItemInfo.GetLink(itemString) or itemLink
-			return itemLink, indirectSpellId
-		else
-			return itemLink
-		end
-	else
+	if Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) then
 		local indirectResult = ProfessionInfo.GetIndirectCraftResult(spellId)
 		if indirectResult then
 			if type(indirectResult) == "table" then
@@ -308,11 +294,26 @@ function Scanner.GetResultItem(craftString)
 			result[i] = link
 		end
 		return result
+	else
+		spellId = private.classicSpellIdLookup[spellId] or spellId
+		local itemLink = State.IsClassicCrafting() and GetCraftItemLink(spellId) or GetTradeSkillItemLink(spellId)
+		local emptyLink = strfind(itemLink or "", "item::") and true or false
+		itemLink = not emptyLink and itemLink or nil
+		if Environment.IsWrathClassic() then
+			itemLink = itemLink or GetTradeSkillRecipeLink(spellId) or nil
+			local indirectSpellId = strmatch(itemLink, "enchant:(%d+)")
+			indirectSpellId = indirectSpellId and tonumber(indirectSpellId)
+			local itemString = ProfessionInfo.GetIndirectCraftResult(indirectSpellId)
+			itemLink = itemString and ItemInfo.GetLink(itemString) or itemLink
+			return itemLink, indirectSpellId
+		else
+			return itemLink
+		end
 	end
 end
 
 function Scanner.GetVellumItemString(craftString)
-	if TSM.IsWowWrathClassic() then
+	if Environment.IsWrathClassic() then
 		local spellId = CraftString.GetSpellId(craftString)
 		spellId = private.classicSpellIdLookup[spellId] or spellId
 		local itemLink = (State.IsClassicCrafting() and GetCraftItemLink(spellId) or GetTradeSkillItemLink(spellId)) or GetTradeSkillRecipeLink(spellId)
@@ -325,7 +326,7 @@ function Scanner.GetVellumItemString(craftString)
 end
 
 function Scanner.GetNumResultItems(craftString)
-	if TSM.IsWowClassic() then
+	if not Environment.IsRetail() then
 		return 1
 	elseif not CraftString.GetQuality(craftString) then
 		return 1
@@ -365,12 +366,12 @@ function Scanner.GetCraftedQuantityRange(craftString)
 		end
 	end
 	local lNum, hNum = nil, nil
-	if TSM.IsWowClassic() then
-		spellId = private.classicSpellIdLookup[spellId] or spellId
-		lNum, hNum = GetTradeSkillNumMade(spellId)
-	else
+	if Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) then
 		local info = C_TradeSkillUI.GetRecipeSchematic(spellId, false)
 		lNum, hNum = info.quantityMin, info.quantityMax
+	else
+		spellId = private.classicSpellIdLookup[spellId] or spellId
+		lNum, hNum = GetTradeSkillNumMade(spellId)
 	end
 	return lNum, hNum
 end
@@ -380,40 +381,37 @@ function Scanner.IsEnchant(craftString)
 		return false
 	end
 	local spellId = CraftString.GetSpellId(craftString)
-	if TSM.IsWowClassic() then
-		spellId = private.classicSpellIdLookup[spellId] or spellId
-		local itemLink = State.IsClassicCrafting() and GetCraftItemLink(spellId) or GetTradeSkillItemLink(spellId)
-		itemLink = itemLink or (TSM.IsWowWrathClassic() and GetTradeSkillRecipeLink(spellId)) or nil
-		if not itemLink or not strfind(itemLink, "enchant:") then
-			return false
-		end
-		return true
-	else
+	if Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) then
 		if not strfind(C_TradeSkillUI.GetRecipeItemLink(spellId), "enchant:") then
 			return false
 		end
 		local recipeInfo = C_TradeSkillUI.GetRecipeInfo(spellId)
 		return recipeInfo.isEnchantingRecipe
+	else
+		spellId = private.classicSpellIdLookup[spellId] or spellId
+		local itemLink = State.IsClassicCrafting() and GetCraftItemLink(spellId) or GetTradeSkillItemLink(spellId)
+		itemLink = itemLink or (Environment.IsWrathClassic() and GetTradeSkillRecipeLink(spellId)) or nil
+		if not itemLink or not strfind(itemLink, "enchant:") then
+			return false
+		end
+		return true
 	end
 end
 
 function Scanner.HasCooldown(craftString)
 	local spellId = CraftString.GetSpellId(craftString)
-	if TSM.IsWowClassic() then
+	if Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) then
+		return select(2, C_TradeSkillUI.GetRecipeCooldown(spellId)) and true or false
+	else
 		spellId = private.classicSpellIdLookup[spellId] or spellId
 		return GetTradeSkillCooldown(spellId) and true or false
-	else
-		return select(2, C_TradeSkillUI.GetRecipeCooldown(spellId)) and true or false
 	end
 end
 
 function Scanner.GetNumMats(craftString)
 	local spellId = CraftString.GetSpellId(craftString)
 	local numMats = nil
-	if TSM.IsWowClassic() then
-		spellId = private.classicSpellIdLookup[spellId] or spellId
-		numMats = State.IsClassicCrafting() and GetCraftNumReagents(spellId) or GetTradeSkillNumReagents(spellId)
-	else
+	if Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) then
 		local level = CraftString.GetLevel(craftString)
 		local info = C_TradeSkillUI.GetRecipeSchematic(spellId, false, level)
 		local num = 0
@@ -423,24 +421,16 @@ function Scanner.GetNumMats(craftString)
 			end
 		end
 		numMats = num
+	else
+		spellId = private.classicSpellIdLookup[spellId] or spellId
+		numMats = State.IsClassicCrafting() and GetCraftNumReagents(spellId) or GetTradeSkillNumReagents(spellId)
 	end
 	return numMats
 end
 
 function Scanner.GetMatInfo(craftString, index)
 	local spellId = CraftString.GetSpellId(craftString)
-	if TSM.IsWowClassic() then
-		spellId = private.classicSpellIdLookup[spellId] or spellId
-		local itemLink = State.IsClassicCrafting() and GetCraftReagentItemLink(spellId, index) or GetTradeSkillReagentItemLink(spellId, index)
-		local itemString = ItemString.Get(itemLink)
-		if State.IsClassicCrafting() then
-			local name, _, quantity = GetCraftReagentInfo(spellId, index)
-			return itemString, quantity, name, false
-		else
-			local name, _, quantity = GetTradeSkillReagentInfo(spellId, index)
-			return itemString, quantity, name, false
-		end
-	else
+	if Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) then
 		local info = C_TradeSkillUI.GetRecipeSchematic(spellId, false, CraftString.GetLevel(craftString))
 		local reagentSlotInfo = nil
 		local reagentOffset = index - 1
@@ -471,6 +461,17 @@ function Scanner.GetMatInfo(craftString, index)
 			return itemString, quantity, name, true
 		else
 			error("Invalid mat: %s, %s", tostring(craftString), tostring(index))
+		end
+	else
+		spellId = private.classicSpellIdLookup[spellId] or spellId
+		local itemLink = State.IsClassicCrafting() and GetCraftReagentItemLink(spellId, index) or GetTradeSkillReagentItemLink(spellId, index)
+		local itemString = ItemString.Get(itemLink)
+		if State.IsClassicCrafting() then
+			local name, _, quantity = GetCraftReagentInfo(spellId, index)
+			return itemString, quantity, name, false
+		else
+			local name, _, quantity = GetTradeSkillReagentInfo(spellId, index)
+			return itemString, quantity, name, false
 		end
 	end
 end
@@ -546,32 +547,7 @@ function private.ScanProfession()
 	local scannedHash = nil
 	local haveInvalidRecipes = false
 	local haveInvalidMats = false
-	if TSM.IsWowClassic() then
-		private.PopulateClassicSpellIdLookup()
-		local lastHeaderIndex = 0
-		private.db:TruncateAndBulkInsertStart()
-		private.matDB:TruncateAndBulkInsertStart()
-		for i = 1, State.IsClassicCrafting() and GetNumCrafts() or GetNumTradeSkills() do
-			local name, skillType = nil, nil
-			if State.IsClassicCrafting() then
-				local _
-				name, _, skillType = GetCraftInfo(i)
-			else
-				name, skillType = GetTradeSkillInfo(i)
-			end
-			if skillType == "header" then
-				lastHeaderIndex = i
-			elseif name then
-				local craftString = CraftString.Get(private.classicSpellIdLookup[-i])
-				local recipeScanResult, matScanResult = private.BulkInsertRecipe(craftString, i, name, lastHeaderIndex, skillType, -1, 1, 1, -1, -1)
-				haveInvalidRecipes = haveInvalidRecipes or not recipeScanResult
-				haveInvalidMats = haveInvalidMats or not matScanResult
-			end
-		end
-		private.matDB:BulkInsertEnd()
-		private.db:BulkInsertEnd()
-		private.dbPopulated = true
-	else
+	if Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) then
 		wipe(private.recipeInfoCache)
 		local prevRecipeIds = TempTable.Acquire()
 		local nextRecipeIds = TempTable.Acquire()
@@ -710,6 +686,31 @@ function private.ScanProfession()
 		TempTable.Release(recipes)
 		TempTable.Release(prevRecipeIds)
 		TempTable.Release(nextRecipeIds)
+	else
+		private.PopulateClassicSpellIdLookup()
+		local lastHeaderIndex = 0
+		private.db:TruncateAndBulkInsertStart()
+		private.matDB:TruncateAndBulkInsertStart()
+		for i = 1, State.IsClassicCrafting() and GetNumCrafts() or GetNumTradeSkills() do
+			local name, skillType = nil, nil
+			if State.IsClassicCrafting() then
+				local _
+				name, _, skillType = GetCraftInfo(i)
+			else
+				name, skillType = GetTradeSkillInfo(i)
+			end
+			if skillType == "header" then
+				lastHeaderIndex = i
+			elseif name then
+				local craftString = CraftString.Get(private.classicSpellIdLookup[-i])
+				local recipeScanResult, matScanResult = private.BulkInsertRecipe(craftString, i, name, lastHeaderIndex, skillType, -1, 1, 1, -1, -1)
+				haveInvalidRecipes = haveInvalidRecipes or not recipeScanResult
+				haveInvalidMats = haveInvalidMats or not matScanResult
+			end
+		end
+		private.matDB:BulkInsertEnd()
+		private.db:BulkInsertEnd()
+		private.dbPopulated = true
 	end
 	if haveInvalidRecipes then
 		-- We'll try again
@@ -729,7 +730,7 @@ function private.ScanProfession()
 		:AsTable(craftStrings)
 		:Release()
 	local categorySkillLevelLookup = TempTable.Acquire()
-	if not TSM.IsWowClassic() then
+	if Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) then
 		for _, craftString in ipairs(craftStrings) do
 			local spellId = CraftString.GetSpellId(craftString)
 			local categoryId = private.recipeInfoCache[spellId].categoryID
@@ -755,7 +756,7 @@ function private.BulkInsertRecipe(craftString, index, name, categoryId, relative
 		return false, false
 	end
 	private.db:BulkInsertNewRow(craftString, itemString, index, name, craftName, categoryId, relativeDifficulty, rank, numSkillUps, level, currentRecipeExperience, nextLevelRecipeExperience)
-	if not TSM.IsWowClassic() then
+	if Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) then
 		local spellId = CraftString.GetSpellId(craftString)
 		private.recipeInfoCache[craftString] = private.recipeInfoCache[spellId]
 	end
@@ -821,7 +822,7 @@ function private.BulkInsertMats(craftString)
 			private.matQuantitiesTemp[matItemString] = quantity
 		end
 	end
-	if Scanner.IsEnchant(craftString) and TSM.IsWowWrathClassic() then
+	if Scanner.IsEnchant(craftString) and Environment.IsWrathClassic() then
 		-- Add a vellum to the list of mats
 		local vellumItemString = Scanner.GetVellumItemString(craftString)
 		if vellumItemString then
@@ -838,7 +839,7 @@ function private.BulkInsertMats(craftString)
 	for matString, quantity in pairs(private.matQuantitiesTemp) do
 		private.matDB:BulkInsertNewRow(craftString, matString, quantity, "")
 	end
-	if not TSM.IsWowClassic() then
+	if Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) then
 		local categorySkillLevel = private.GetCurrentCategorySkillLevel(private.recipeInfoCache[craftString].categoryID)
 		local spellId = CraftString.GetSpellId(craftString)
 		local level = CraftString.GetLevel(craftString)
@@ -882,10 +883,7 @@ function private.DoneScanning(scannedHash)
 end
 
 function private.ClearFilters()
-	if TSM.IsWowClassic() then
-		-- TODO
-		return false
-	else
+	if Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) then
 		local hadFilter = false
 		if C_TradeSkillUI.GetShowUnlearned() then
 			C_TradeSkillUI.SetShowLearned(true)
@@ -925,11 +923,14 @@ function private.ClearFilters()
 			hadFilter = true
 		end
 		return hadFilter
+	else
+		-- TODO
+		return false
 	end
 end
 
 function private.PopulateClassicSpellIdLookup()
-	assert(TSM.IsWowClassic())
+	assert(not Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI))
 	assert(State.GetCurrentProfession() and State.IsDataStable())
 	wipe(private.classicSpellIdLookup)
 	for i = 1, State.IsClassicCrafting() and GetNumCrafts() or GetNumTradeSkills() do
@@ -999,7 +1000,7 @@ function private.IsSpecialMatValid(data, categorySkillLevel)
 end
 
 function private.IsRegularMat(info)
-	assert(not TSM.IsWowClassic())
+	assert(Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI))
 	if info.reagentType ~= Enum.CraftingReagentType.Basic then
 		return false
 	end

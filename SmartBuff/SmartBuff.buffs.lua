@@ -30,7 +30,7 @@ S.Toybox = { };
 local function GetItems(items)
   local t = { };
   for _, id in pairs(items) do
-    local name = GetItemInfo(id);
+    local _,name = GetItemInfo(id);
     if (name) then
       --print("Item found: "..id..", "..name);
       tinsert(t, name);
@@ -61,7 +61,7 @@ local function LoadToys()
 	if (nLearned <= 0) then
 	  return;
 	end
-	
+
 	for i = 1, nTotal do
 		local num = C_ToyBox.GetToyFromIndex(i);
 		local id, name, icon = C_ToyBox.GetToyInfo(num);
@@ -76,7 +76,7 @@ local function LoadToys()
   SMARTBUFF_AddMsgD("Toys initialized");
 end
 
-function SMARTBUFF_InitItemList()  
+function SMARTBUFF_InitItemList()
   -- Stones and oils
   _,SMARTBUFF_HEALTHSTONE         = GetItemInfo(5512);  --"Healthstone"
   _,SMARTBUFF_MANAGEM             = GetItemInfo(36799); --"Mana Gem"
@@ -108,7 +108,7 @@ function SMARTBUFF_InitItemList()
   _,SMARTBUFF_WIZARDOIL4          = GetItemInfo(20749); --"Brilliant Wizard Oil"
   _,SMARTBUFF_WIZARDOIL5          = GetItemInfo(22522); --"Superior Wizard Oil"
   _,SMARTBUFF_SHADOWCOREOIL       = GetItemInfo(171285); --"Shadowcore Oil"
-  _,SMARTBUFF_EMBALMERSOIL        = GetItemInfo(171286); --"Embalmer's Oil"  
+  _,SMARTBUFF_EMBALMERSOIL        = GetItemInfo(171286); --"Embalmer's Oil"
   -- Dragonflight
   _,SMARTBUFF_SafeRockets_q1      = GetItemInfo(198160); -- Completely Safe Rockets (Quality 1)
   _,SMARTBUFF_SafeRockets_q2      = GetItemInfo(198161); -- Completely Safe Rockets (Quality 2)
@@ -128,7 +128,7 @@ function SMARTBUFF_InitItemList()
   _,SMARTBUFF_PrimalWhetstone_q1  = GetItemInfo(191933); -- Primal Whestone (Quality 1)
   _,SMARTBUFF_PrimalWhetstone_q2  = GetItemInfo(191939); -- Primal Whestone (Quality 2)
   _,SMARTBUFF_PrimalWhetstone_q3  = GetItemInfo(191940); -- Primal Whestone (Quality 3)
-    
+
   -- Food
 --  SMARTBUFF_KIBLERSBITS         = GetItemInfo(33874); --"Kibler's Bits"
 --  SMARTBUFF_STORMCHOPS          = GetItemInfo(33866); --"Stormchops"
@@ -211,7 +211,7 @@ function SMARTBUFF_InitItemList()
   _,SMARTBUFF_FatedFortuneCookie  = GetItemInfo(197792); -- Fated Fortune Cookie (76 primary stat)
   _,SMARTBUFF_KaluakBanquet       = GetItemInfo(197794); -- Feast: Grand Banquet of the Kalu'ak (76 primary stat)
   _,SMARTBUFF_HoardOfDelicacies   = GetItemInfo(197795); -- Feast: Hoard of Draconic Delicacies (76 primary stat)
-  
+
   -- Food item IDs
   S.FoodItems = GetItems({
     -- WotLK
@@ -223,14 +223,14 @@ function SMARTBUFF_InitItemList()
  	-- WoD
  	111431, 111432, 111433, 111434, 111435, 111436, 111437, 111438, 111439, 111440, 11441, 111442, 111443, 111444, 111445, 111446, 111447, 111448, 111449, 111450, 111451, 111452, 111453, 111454,127991, 111457, 111458, 118576,
   });
-  
+
   -- Conjured mage food IDs
-  _,SMARTBUFF_CONJUREDMANA        = GetItemInfo(113509); --"Conjured Mana Buns"
+  SMARTBUFF_CONJUREDMANA        = GetItemInfo(113509); --"Conjured Mana Buns"
   S.FoodMage = GetItems({113509, 80618, 80610, 65499, 43523, 43518, 34062, 65517, 65516, 65515, 65500, 42955});
-  
+
   --_,SMARTBUFF_BCPETFOOD1          = GetItemInfo(33874); --"Kibler's Bits (Pet food)"
   --_,SMARTBUFF_WOTLKPETFOOD1       = GetItemInfo(43005); --"Spiced Mammoth Treats (Pet food)"
-  
+
   -- Scrolls
   _,SMARTBUFF_SOAGILITY1          = GetItemInfo(3012);  --"Scroll of Agility I"
   _,SMARTBUFF_SOAGILITY2          = GetItemInfo(1477);  --"Scroll of Agility II"
@@ -278,7 +278,7 @@ function SMARTBUFF_InitItemList()
   _,SMARTBUFF_SOSTRENGHT8         = GetItemInfo(43466); --"Scroll of Strength VIII"
   _,SMARTBUFF_SOSTRENGHT9         = GetItemInfo(63304); --"Scroll of Strength IX"
   _,SMARTBUFF_SOPROTECTION9       = GetItemInfo(63308); --"Scroll of Protection IX"
-  
+
   _,SMARTBUFF_MiscItem1           = GetItemInfo(178512);  --"Celebration Package"
   _,SMARTBUFF_MiscItem2           = GetItemInfo(44986);  --"Warts-B-Gone Lip Balm"
   _,SMARTBUFF_MiscItem3           = GetItemInfo(69775);  --"Vrykul Drinking Horn"
@@ -302,7 +302,7 @@ function SMARTBUFF_InitItemList()
   _,SMARTBUFF_VantusRune_VotI_q1  = GetItemInfo(198491); -- Vantus Rune: Vault of the Incarnates (Quality 1)
   _,SMARTBUFF_VantusRune_VotI_q2  = GetItemInfo(198492); -- Vantus Rune: Vault of the Incarnates (Quality 2)
   _,SMARTBUFF_VantusRune_VotI_q3  = GetItemInfo(198493); -- Vantus Rune: Vault of the Incarnates (Quality 3)
-  
+
   _,SMARTBUFF_FLASKTBC1           = GetItemInfo(22854);  --"Flask of Relentless Assault"
   _,SMARTBUFF_FLASKTBC2           = GetItemInfo(22866);  --"Flask of Pure Death"
   _,SMARTBUFF_FLASKTBC3           = GetItemInfo(22851);  --"Flask of Fortification"
@@ -327,11 +327,11 @@ function SMARTBUFF_InitItemList()
   _,SMARTBUFF_FLASKWOD1           = GetItemInfo(109152); --"Draenic Stamina Flask"
   _,SMARTBUFF_FLASKWOD2           = GetItemInfo(109148); --"Draenic Strength Flask"
   _,SMARTBUFF_FLASKWOD3           = GetItemInfo(109147); --"Draenic Intellect Flask"
-  _,SMARTBUFF_FLASKWOD4           = GetItemInfo(109145); --"Draenic Agility Flask"				
+  _,SMARTBUFF_FLASKWOD4           = GetItemInfo(109145); --"Draenic Agility Flask"
   _,SMARTBUFF_GRFLASKWOD1         = GetItemInfo(109160); --"Greater Draenic Stamina Flask"
   _,SMARTBUFF_GRFLASKWOD2         = GetItemInfo(109156); --"Greater Draenic Strength Flask"
   _,SMARTBUFF_GRFLASKWOD3         = GetItemInfo(109155); --"Greater Draenic Intellect Flask"
-  _,SMARTBUFF_GRFLASKWOD4         = GetItemInfo(109153); --"Greater Draenic Agility Flask"  
+  _,SMARTBUFF_GRFLASKWOD4         = GetItemInfo(109153); --"Greater Draenic Agility Flask"
   _,SMARTBUFF_FLASKLEG1           = GetItemInfo(127850); --"Flask of Ten Thousand Scars"
   _,SMARTBUFF_FLASKLEG2           = GetItemInfo(127849); --"Flask of the Countless Armies"
   _,SMARTBUFF_FLASKLEG3           = GetItemInfo(127847); --"Flask of the Whispered Pact"
@@ -358,27 +358,27 @@ function SMARTBUFF_InitItemList()
   _,SMARTBUFF_FlaskDF3_q1        = GetItemInfo(191324); -- Phial of Icy Preservation (Quality 1)
   _,SMARTBUFF_FlaskDF3_q2        = GetItemInfo(191325); -- Phial of Icy Preservation (Quality 2)
   _,SMARTBUFF_FlaskDF3_q3        = GetItemInfo(191326); -- Phial of Icy Preservation (Quality 3)
-  
+
   _,SMARTBUFF_FlaskDF4_q1        = GetItemInfo(191327); -- Iced Phial of Corrupting Rage (Quality 1)
   _,SMARTBUFF_FlaskDF4_q2        = GetItemInfo(191328); -- Iced Phial of Corrupting Rage (Quality 2)
   _,SMARTBUFF_FlaskDF4_q3        = GetItemInfo(191329); -- Iced Phial of Corrupting Rage (Quality 3)
-  
+
   _,SMARTBUFF_FlaskDF5_q1        = GetItemInfo(191330); -- Phial of Charged Isolation (Quality 1)
   _,SMARTBUFF_FlaskDF5_q2        = GetItemInfo(191331); -- Phial of Charged Isolation (Quality 2)
   _,SMARTBUFF_FlaskDF5_q3        = GetItemInfo(191332); -- Phial of Charged Isolation (Quality 3)
-  
+
   _,SMARTBUFF_FlaskDF6_q1        = GetItemInfo(191333); -- Phial of Glacial Fury (Quality 1)
   _,SMARTBUFF_FlaskDF6_q2        = GetItemInfo(191334); -- Phial of Glacial Fury (Quality 2)
   _,SMARTBUFF_FlaskDF6_q3        = GetItemInfo(191335); -- Phial of Glacial Fury (Quality 3)
-  
+
   _,SMARTBUFF_FlaskDF7_q1        = GetItemInfo(191336); -- Phial of Static Empowerment (Quality 1)
   _,SMARTBUFF_FlaskDF7_q2        = GetItemInfo(191337); -- Phial of Static Empowerment (Quality 2)
   _,SMARTBUFF_FlaskDF7_q3        = GetItemInfo(191338); -- Phial of Static Empowerment (Quality 3)
-  
+
   _,SMARTBUFF_FlaskDF8_q1        = GetItemInfo(191339); -- Phial of Tepid Versatility (Quality 1)
   _,SMARTBUFF_FlaskDF8_q2        = GetItemInfo(191340); -- Phial of Tepid Versatility (Quality 2)
   _,SMARTBUFF_FlaskDF8_q3        = GetItemInfo(191341); -- Phial of Tepid Versatility (Quality 3)
-  
+
   _,SMARTBUFF_FlaskDF9_q1        = GetItemInfo(191342); -- Aerated Phial of Deftness (Quality 1)
   _,SMARTBUFF_FlaskDF9_q3        = GetItemInfo(191343); -- Aerated Phial of Deftness (Quality 2)
   _,SMARTBUFF_FlaskDF9_q3        = GetItemInfo(191344); -- Aerated Phial of Deftness (Quality 3)
@@ -394,7 +394,7 @@ function SMARTBUFF_InitItemList()
   _,SMARTBUFF_FlaskDF12_q1       = GetItemInfo(191354); -- Crystalline Phial of Perception (Quality 1)
   _,SMARTBUFF_FlaskDF12_q2       = GetItemInfo(191355); -- Crystalline Phial of Perception (Quality 2)
   _,SMARTBUFF_FlaskDF12_q3       = GetItemInfo(191356); -- Crystalline Phial of Perception (Quality 3)
-  
+
   _,SMARTBUFF_FlaskDF13_q1       = GetItemInfo(191357); -- Phial of Elemental Chaos (Quality 1)
   _,SMARTBUFF_FlaskDF13_q2       = GetItemInfo(191358); -- Phial of Elemental Chaos (Quality 2)
   _,SMARTBUFF_FlaskDF13_q3       = GetItemInfo(191359); -- Phial of Elemental Chaos (Quality 3)
@@ -402,7 +402,7 @@ function SMARTBUFF_InitItemList()
   _,SMARTBUFF_FlaskDF14_q1       = GetItemInfo(197720); -- Aerated Phial of Quick Hands (Quality 1)
   _,SMARTBUFF_FlaskDF14_q2       = GetItemInfo(197721); -- Aerated Phial of Quick Hands (Quality 2)
   _,SMARTBUFF_FlaskDF14_q3       = GetItemInfo(197722); -- Aerated Phial of Quick Hands (Quality 3)
-  
+
   _,SMARTBUFF_ELIXIRTBC1          = GetItemInfo(22831);  --"Elixir of Major Agility"
   _,SMARTBUFF_ELIXIRTBC2          = GetItemInfo(28104);  --"Elixir of Mastery"
   _,SMARTBUFF_ELIXIRTBC3          = GetItemInfo(22825);  --"Elixir of Healing Power"
@@ -435,7 +435,7 @@ function SMARTBUFF_InitItemList()
   _,SMARTBUFF_ELIXIR13            = GetItemInfo(40076);  --"Guru's Elixir"
   _,SMARTBUFF_ELIXIR14            = GetItemInfo(9187);   --"Elixir of Greater Agility"
   _,SMARTBUFF_ELIXIR15            = GetItemInfo(28103);  --"Adept's Elixir"
-  _,SMARTBUFF_ELIXIR16            = GetItemInfo(40070);  --"Spellpower Elixir"  
+  _,SMARTBUFF_ELIXIR16            = GetItemInfo(40070);  --"Spellpower Elixir"
   _,SMARTBUFF_ELIXIRCT1           = GetItemInfo(58148);  --"Elixir of the Master"
   _,SMARTBUFF_ELIXIRCT2           = GetItemInfo(58144);  --"Elixir of Mighty Speed"
   _,SMARTBUFF_ELIXIRCT3           = GetItemInfo(58094);  --"Elixir of Impossible Accuracy"
@@ -455,10 +455,10 @@ function SMARTBUFF_InitItemList()
 
   -- Draught of Ten Lands
   _,SMARTBUFF_EXP_POTION          = GetItemInfo(166750); --"Draught of Ten Lands"
-  
+
   -- fishing pole
   _, _, _, _, _, _, S.FishingPole = GetItemInfo(6256);  --"Fishing Pole"
-  
+
   SMARTBUFF_AddMsgD("Item list initialized");
   -- i still want to load them regardless of the option to turn them off/hide them
   -- so that my settings are preserved and loaded should i turn it back on.
@@ -468,8 +468,8 @@ end
 
 function SMARTBUFF_InitSpellIDs()
   SMARTBUFF_TESTSPELL       = GetSpellInfo(774);
-  
-  -- Druid  
+
+  -- Druid
   SMARTBUFF_DRUID_CAT       = GetSpellInfo(768);   --"Cat Form"
   SMARTBUFF_DRUID_TREE      = GetSpellInfo(33891); --"Incarnation: Tree of Life"
   SMARTBUFF_DRUID_TREANT    = GetSpellInfo(114282);--"Treant Form"
@@ -496,8 +496,8 @@ function SMARTBUFF_InitSpellIDs()
   --SMARTBUFF_CHAKRA2         = GetSpellInfo(81208)  --"Chakra Serenity"
   --SMARTBUFF_CHAKRA3         = GetSpellInfo(81209)  --"Chakra Chastise"
   -- Priest buff links
-  S.LinkPriestChakra        = { SMARTBUFF_CHAKRA1, SMARTBUFF_CHAKRA2, SMARTBUFF_CHAKRA3 }; 
-  
+  S.LinkPriestChakra        = { SMARTBUFF_CHAKRA1, SMARTBUFF_CHAKRA2, SMARTBUFF_CHAKRA3 };
+
   -- Mage
   SMARTBUFF_AB              = GetSpellInfo(1459);  --"Arcane Intellect"
   SMARTBUFF_DALARANB        = GetSpellInfo(61316); --"Dalaran Brilliance"
@@ -523,14 +523,14 @@ function SMARTBUFF_InitSpellIDs()
   SMARTBUFF_BLAZBARRIER     = GetSpellInfo(235313);--"Blazing Barrier"
   SMARTBUFF_ARCANEFAMILIAR  = GetSpellInfo(205022);--"Arcane Familiar"
   SMARTBUFF_CREATEMG		= GetSpellInfo(759);   --"Conjure Mana Gem"
-  
+
   -- Mage buff links
   S.ChainMageArmor = { SMARTBUFF_FROSTARMOR, SMARTBUFF_MAGEARMOR, SMARTBUFF_MOLTENARMOR };
-  
+
   -- Warlock
   SMARTBUFF_AMPLIFYCURSE    = GetSpellInfo(328774);--"Amplify Curse"
   SMARTBUFF_DEMONARMOR      = GetSpellInfo(285933);--"Demon ARmor"
-  SMARTBUFF_DARKINTENT      = GetSpellInfo(183582);--"Dark Intent"  
+  SMARTBUFF_DARKINTENT      = GetSpellInfo(183582);--"Dark Intent"
   SMARTBUFF_UNENDINGBREATH  = GetSpellInfo(5697);  --"Unending Breath"
   SMARTBUFF_SOULLINK        = GetSpellInfo(108447);--"Soul Link"
   SMARTBUFF_LIFETAP         = GetSpellInfo(1454);  --"Life Tap"
@@ -552,7 +552,7 @@ function SMARTBUFF_InitSpellIDs()
   SMARTBUFF_SUMMONSHIVARRA	= GetSpellInfo(112868); --"Summon Shivarra"
   SMARTBUFF_SUMMONOBSERVER	= GetSpellInfo(112869); --"Summon Observer"
   SMARTBUFF_SUMMONWRATHGUARD= GetSpellInfo(112870); --"Summon Wrathguard"
-  
+
   -- Hunter
   SMARTBUFF_TRUESHOTAURA    = GetSpellInfo(193526); --"Trueshot Aura" (P)
   SMARTBUFF_VOLLEY          = GetSpellInfo(194386); --"Volley"
@@ -585,7 +585,7 @@ function SMARTBUFF_InitSpellIDs()
   S.LinkAspects  = { SMARTBUFF_AOTF, SMARTBUFF_AOTC, SMARTBUFF_AOTP, SMARTBUFF_AOTW };
   S.LinkAmmo     = { SMARTBUFF_AMMOI, SMARTBUFF_AMMOP, SMARTBUFF_AMMOF };
   S.LinkLoneWolf = { SMARTBUFF_LW1, SMARTBUFF_LW2, SMARTBUFF_LW3, SMARTBUFF_LW4, SMARTBUFF_LW5, SMARTBUFF_LW6, SMARTBUFF_LW7, SMARTBUFF_LW8 };
-  
+
   -- Shaman
   SMARTBUFF_LIGHTNINGSHIELD = GetSpellInfo(192106); --"Lightning Shield"
   SMARTBUFF_WATERSHIELD     = GetSpellInfo(52127);  --"Water Shield"
@@ -601,7 +601,7 @@ function SMARTBUFF_InitSpellIDs()
 
   -- Shaman buff links
   S.ChainShamanShield = { SMARTBUFF_LIGHTNINGSHIELD, SMARTBUFF_WATERSHIELD, SMARTBUFF_EARTHSHIELD };
-  
+
   -- Warrior
   SMARTBUFF_BATTLESHOUT     = GetSpellInfo(6673);   --"Battle Shout"
   --SMARTBUFF_COMMANDINGSHOUT = GetSpellInfo(97462);    --"Reallying Cry"
@@ -636,14 +636,14 @@ function SMARTBUFF_InitSpellIDs()
   -- Rogue buff links
   S.ChainRoguePoisonsLethal     = { SMARTBUFF_DEADLYPOISON, SMARTBUFF_WOUNDPOISON, SMARTBUFF_INSTANTPOISON, SMARTBUFF_AGONIZINGPOISON, SMARTBUFF_AMPLIFYPOISON };
   S.ChainRoguePoisonsNonLethal  = { SMARTBUFF_CRIPPLINGPOISON, SMARTBUFF_LEECHINGPOISON, SMARTBUFF_NUMBINGPOISON, SMARTBUFF_ATROPHICPOISON };
-  
+
   -- Paladin
   SMARTBUFF_RIGHTEOUSFURY         = GetSpellInfo(25780);  --"Righteous Fury"
 --  SMARTBUFF_HOLYSHIELD            = GetSpellInfo(20925);  --"Sacred Shield"
-  SMARTBUFF_BOK                   = GetSpellInfo(203538); --"Greater Blessing of Kings"  
+  SMARTBUFF_BOK                   = GetSpellInfo(203538); --"Greater Blessing of Kings"
 --  SMARTBUFF_BOM                   = GetSpellInfo(203528); --"Greater Blessing of Might"
   SMARTBUFF_BOW                   = GetSpellInfo(203539); --"Greater Blessing of Wisdom"
-  SMARTBUFF_HOF                   = GetSpellInfo(1044);   --"Blessing of Freedom"  
+  SMARTBUFF_HOF                   = GetSpellInfo(1044);   --"Blessing of Freedom"
   SMARTBUFF_HOP                   = GetSpellInfo(1022);   --"Blessing of Protection"
   SMARTBUFF_HOSAL                 = GetSpellInfo(204013); --"Blessing of Salvation"
 --  SMARTBUFF_SOJUSTICE             = GetSpellInfo(20164);  --"Seal of Justice"
@@ -661,12 +661,12 @@ function SMARTBUFF_InitSpellIDs()
   S.ChainPaladinAura     = { SMARTBUFF_DEVOTIONAURA, SMARTBUFF_RETRIBUTIONAURA };
   S.ChainPaladinSeal     = { SMARTBUFF_SOCOMMAND, SMARTBUFF_SOTRUTH, SMARTBUFF_SOJUSTICE, SMARTBUFF_SOINSIGHT, SMARTBUFF_SORIGHTEOUSNESS };
   S.ChainPaladinBlessing = { SMARTBUFF_BOK, SMARTBUFF_BOM, SMARTBUFF_BOW};
-  
+
   -- Death Knight
   SMARTBUFF_DANCINGRW         = GetSpellInfo(49028); --"Dancing Rune Weapon"
 --  SMARTBUFF_BLOODPRESENCE     = GetSpellInfo(48263); --"Blood Presence"
 --  SMARTBUFF_FROSTPRESENCE     = GetSpellInfo(48266); --"Frost Presence"
---  SMARTBUFF_UNHOLYPRESENCE    = GetSpellInfo(48265); --"Unholy Presence"  
+--  SMARTBUFF_UNHOLYPRESENCE    = GetSpellInfo(48265); --"Unholy Presence"
   SMARTBUFF_PATHOFFROST       = GetSpellInfo(3714);  --"Path of Frost"
 --  SMARTBUFF_BONESHIELD        = GetSpellInfo(49222); --"Bone Shield"
   SMARTBUFF_HORNOFWINTER      = GetSpellInfo(57330); --"Horn of Winter"
@@ -674,7 +674,7 @@ function SMARTBUFF_InitSpellIDs()
 --  SMARTBUFF_POTGRAVE          = GetSpellInfo(155522); --"Power of the Grave" (P)
   -- Death Knight buff links
   S.ChainDKPresence = { SMARTBUFF_BLOODPRESENCE, SMARTBUFF_FROSTPRESENCE, SMARTBUFF_UNHOLYPRESENCE };
-  
+
   -- Monk
 --  SMARTBUFF_LOTWT           = GetSpellInfo(116781); --"Legacy of the White Tiger"
 --  SMARTBUFF_LOTE            = GetSpellInfo(115921); --"Legacy of the Emperor"
@@ -686,15 +686,16 @@ function SMARTBUFF_InitSpellIDs()
 --  SMARTBUFF_SOTSPIRITEDCRANE= GetSpellInfo(154436); --"Stance of the Spirited Crane"
 
   -- Monk buff links
-  S.ChainMonkStatue = { SMARTBUFF_BLACKOX, SMARTBUFF_JADESERPENT };  
+  S.ChainMonkStatue = { SMARTBUFF_BLACKOX, SMARTBUFF_JADESERPENT };
   S.ChainMonkStance = { SMARTBUFF_SOTFIERCETIGER, SMARTBUFF_SOTSTURDYOX, SMARTBUFF_SOTWISESERPENT, SMARTBUFF_SOTSPIRITEDCRANE };
 
   -- Evoker
   SMARTBUFF_BRONZEBLESSING  = GetSpellInfo(364342);   --"Blessing of the Bronze"
+  SMARTBUFF_Visage          = GetSpellInfo(351239);   --"Visage"
 
   -- Demon Hunter
 
-  
+
   -- Tracking
   SMARTBUFF_FINDMINERALS    = GetSpellInfo(2580);  --"Find Minerals"
   SMARTBUFF_FINDHERBS       = GetSpellInfo(2383);  --"Find Herbs"
@@ -714,16 +715,16 @@ function SMARTBUFF_InitSpellIDs()
   SMARTBUFF_BERSERKING      = GetSpellInfo(26297); --"Berserking"
   SMARTBUFF_WOTFORSAKEN     = GetSpellInfo(7744);  --"Will of the Forsaken"
   SMARTBUFF_WarStomp        = GetSpellInfo(20549); --"War Stomp"
-  
+
   -- Food
   SMARTBUFF_FOOD_AURA       = GetSpellInfo(46899); --"Well Fed"
   SMARTBUFF_FOOD_SPELL      = GetSpellInfo(433);   --"Food"
   SMARTBUFF_DRINK_SPELL     = GetSpellInfo(430);   --"Drink"
-  
+
   -- Misc
   SMARTBUFF_KIRUSSOV        = GetSpellInfo(46302); --"K'iru's Song of Victory"
   SMARTBUFF_FISHING         = GetSpellInfo(7620) or GetSpellInfo(111541); --"Fishing"
-  
+
   -- Scroll
   SMARTBUFF_SBAGILITY       = GetSpellInfo(8115);   --"Scroll buff: Agility"
   SMARTBUFF_SBINTELLECT     = GetSpellInfo(8096);   --"Scroll buff: Intellect"
@@ -761,7 +762,7 @@ function SMARTBUFF_InitSpellIDs()
 
   S.LinkSafariHat           = { SMARTBUFF_BMiscItem9, SMARTBUFF_BMiscItem10 };
   S.LinkAugment             = { SMARTBUFF_BMiscItem14, SMARTBUFF_BMiscItem14_1, SMARTBUFF_BMiscItem14_2, SMARTBUFF_BMiscItem14_3, SMARTBUFF_BAugmentRune,  SMARTBUFF_BVieledAugment, SMARTBUFF_BDraconicRune };
-  
+
   -- Flasks & Elixirs
   SMARTBUFF_BFLASKTBC1      = GetSpellInfo(28520);  --"Flask of Relentless Assault"
   SMARTBUFF_BFLASKTBC2      = GetSpellInfo(28540);  --"Flask of Pure Death"
@@ -794,7 +795,7 @@ function SMARTBUFF_InitSpellIDs()
   SMARTBUFF_BGRFLASKWOD1    = GetSpellInfo(156084); --"Greater Draenic Stamina Flask"
   SMARTBUFF_BGRFLASKWOD2    = GetSpellInfo(156080); --"Greater Draenic Strength Flask"
   SMARTBUFF_BGRFLASKWOD3    = GetSpellInfo(156079); --"Greater Draenic Intellect Flask"
-  SMARTBUFF_BGRFLASKWOD4    = GetSpellInfo(156064); --"Greater Draenic Agility Flask"  
+  SMARTBUFF_BGRFLASKWOD4    = GetSpellInfo(156064); --"Greater Draenic Agility Flask"
   SMARTBUFF_BFLASKLEG1      = GetSpellInfo(188035); --"Flask of Ten Thousand Scars"
   SMARTBUFF_BFLASKLEG2      = GetSpellInfo(188034); --"Flask of the Countless Armies"
   SMARTBUFF_BFLASKLEG3      = GetSpellInfo(188031); --"Flask of the Whispered Pact"
@@ -828,7 +829,7 @@ function SMARTBUFF_InitSpellIDs()
   SMARTBUFF_BFlaskDF13_3   = GetSpellInfo(371351); -- Elemental Chaos: Earth
   SMARTBUFF_BFlaskDF13_4   = GetSpellInfo(371353); -- Elemental Chaos: Frost
   SMARTBUFF_BFlaskDF14     = GetSpellInfo(393665); -- Aerated Phial of Quick Hands
-  
+
   S.LinkFlaskTBC            = { SMARTBUFF_BFLASKTBC1, SMARTBUFF_BFLASKTBC2, SMARTBUFF_BFLASKTBC3, SMARTBUFF_BFLASKTBC4, SMARTBUFF_BFLASKTBC5 };
   S.LinkFlaskCT7            = { SMARTBUFF_BFLASKCT1, SMARTBUFF_BFLASKCT2, SMARTBUFF_BFLASKCT3, SMARTBUFF_BFLASKCT4, SMARTBUFF_BFLASKCT5 };
   S.LinkFlaskMoP            = { SMARTBUFF_BFLASKCT61, SMARTBUFF_BFLASKCT62, SMARTBUFF_BFLASKCT63, SMARTBUFF_BFLASKMOP2, SMARTBUFF_BFLASKMOP3, SMARTBUFF_BFLASKMOP4, SMARTBUFF_BFLASKMOP5, SMARTBUFF_BFLASKMOP6 };
@@ -837,7 +838,7 @@ function SMARTBUFF_InitSpellIDs()
   S.LinkFlaskBfA            = { SMARTBUFF_BFLASKBFA1, SMARTBUFF_BFLASKBFA2, SMARTBUFF_BFLASKBFA3, SMARTBUFF_BFLASKBFA4, SMARTBUFF_BGRFLASKBFA1, SMARTBUFF_BGRFLASKBFA2, SMARTBUFF_BGRFLASKBFA3, SMARTBUFF_BGRFLASKBFA4 };
   S.LinkFlaskSL             = { SMARTBUFF_BFLASKSL1, SMARTBUFF_BFLASKSL2 };
   S.LinkFlaskDF             = { SMARTBUFF_BFlaskDF1, SMARTBUFF_BFlaskDF2, SMARTBUFF_BFlaskDF3, SMARTBUFF_BFlaskDF4, SMARTBUFF_BFlaskDF5, SMARTBUFF_BFlaskDF6, SMARTBUFF_BFlaskDF7, SMARTBUFF_BFlaskDF8, SMARTBUFF_BFlaskDF9, SMARTBUFF_BFlaskDF10, SMARTBUFF_BFlaskDF11, SMARTBUFF_BFlaskDF12, SMARTBUFF_BFlaskDF13_1, SMARTBUFF_BFlaskDF13_2, SMARTBUFF_BFlaskDF13_3, SMARTBUFF_BFlaskDF13_4, SMARTBUFF_BFlaskDF14 };
-  
+
   SMARTBUFF_BELIXIRTBC1     = GetSpellInfo(54494);  --"Major Agility" B
   SMARTBUFF_BELIXIRTBC2     = GetSpellInfo(33726);  --"Mastery" B
   SMARTBUFF_BELIXIRTBC3     = GetSpellInfo(28491);  --"Healing Power" B
@@ -889,11 +890,11 @@ function SMARTBUFF_InitSpellIDs()
   SMARTBUFF_BELIXIRMOP8     = GetSpellInfo(105688); --"Monk's Elixir" B
   -- Draught of Ten Lands
   SMARTBUFF_BEXP_POTION     = GetSpellInfo(289982); --Draught of Ten Lands
-  
+
   --if (SMARTBUFF_GOTW) then
   --  SMARTBUFF_AddMsgD(SMARTBUFF_GOTW.." found");
   --end
-  
+
   -- Buff map
   S.LinkStats = { SMARTBUFF_BOK, SMARTBUFF_MOTW, SMARTBUFF_LOTE, SMARTBUFF_LOTWT,
                   GetSpellInfo(159988), -- Bark of the Wild
@@ -901,38 +902,38 @@ function SMARTBUFF_InitSpellIDs()
                   GetSpellInfo(90363),  -- Embrace of the Shale Spider
                   GetSpellInfo(160077)  -- Strength of the Earth
                 };
-  
+
   S.LinkSta   = { SMARTBUFF_PWF, SMARTBUFF_COMMANDINGSHOUT, SMARTBUFF_BLOODPACT,
                   GetSpellInfo(50256),  -- Invigorating Roar
                   GetSpellInfo(90364),  -- Qiraji Fortitude
                   GetSpellInfo(160014), -- Sturdiness
                   GetSpellInfo(160003)  -- Savage Vigor
                 };
-  
+
   S.LinkAp    = { SMARTBUFF_HORNOFWINTER, SMARTBUFF_BATTLESHOUT, SMARTBUFF_TRUESHOTAURA };
-  
+
   S.LinkMa    = { SMARTBUFF_BOM, SMARTBUFF_DRUID_MKAURA, SMARTBUFF_GRACEOFAIR, SMARTBUFF_POTGRAVE,
                   GetSpellInfo(93435),  -- Roar of Courage
                   GetSpellInfo(160039), -- Keen Senses
                   GetSpellInfo(128997), -- Spirit Beast Blessing
                   GetSpellInfo(160073)  -- Plainswalking
                 };
-  
+
   S.LinkInt   = { SMARTBUFF_BOW, SMARTBUFF_AB, SMARTBUFF_DALARANB };
-  
+
   --S.LinkSp    = { SMARTBUFF_DARKINTENT, SMARTBUFF_AB, SMARTBUFF_DALARANB, SMARTBUFF_STILLWATER };
-  
+
   --SMARTBUFF_AddMsgD("Spell IDs initialized");
 end
 
 
 function SMARTBUFF_InitSpellList()
   if (SMARTBUFF_PLAYERCLASS == nil) then return; end
-  
+
   --if (SMARTBUFF_GOTW) then
   --  SMARTBUFF_AddMsgD(SMARTBUFF_GOTW.." found");
   --end
-  
+
   -- Druid
   if (SMARTBUFF_PLAYERCLASS == "DRUID") then
     SMARTBUFF_BUFFLIST = {
@@ -949,7 +950,7 @@ function SMARTBUFF_InitSpellList()
       {SMARTBUFF_SAVAGEROAR, 0.15, SMARTBUFF_CONST_SELF, nil, SMARTBUFF_DRUID_CAT}
     };
   end
-  
+
   -- Priest
   if (SMARTBUFF_PLAYERCLASS == "PRIEST") then
     SMARTBUFF_BUFFLIST = {
@@ -965,7 +966,7 @@ function SMARTBUFF_InitSpellList()
       {SMARTBUFF_LIGHTWELL, 3, SMARTBUFF_CONST_SELF}
     };
   end
-  
+
   -- Mage
   if (SMARTBUFF_PLAYERCLASS == "MAGE") then
     SMARTBUFF_BUFFLIST = {
@@ -994,7 +995,7 @@ function SMARTBUFF_InitSpellList()
 --	  {SMARTBUFF_ARCANEINTELLECT, 60, SMARTBUFF_CONST_GROUP, {32}, "HPET;WPET;DKPET"}
     };
   end
-  
+
   -- Warlock
   if (SMARTBUFF_PLAYERCLASS == "WARLOCK") then
     SMARTBUFF_BUFFLIST = {
@@ -1085,7 +1086,7 @@ function SMARTBUFF_InitSpellList()
       {SMARTBUFF_GLADSTANCE, -1, SMARTBUFF_CONST_SELF, nil, nil, nil, S.ChainWarriorStance}
     };
   end
-  
+
   -- Rogue
   if (SMARTBUFF_PLAYERCLASS == "ROGUE") then
     SMARTBUFF_BUFFLIST = {
@@ -1104,7 +1105,7 @@ function SMARTBUFF_InitSpellList()
       {SMARTBUFF_NUMBINGPOISON, 60, SMARTBUFF_CONST_SELF, nil, S.CheckFishingPole, nil, S.ChainRoguePoisonsNonLethal},
       {SMARTBUFF_CRIPPLINGPOISON, 60, SMARTBUFF_CONST_SELF, nil, S.CheckFishingPole, nil, S.ChainRoguePoisonsNonLethal},
       {SMARTBUFF_AMPLIFYPOISON, 60, SMARTBUFF_CONST_SELF, nil, S.CheckFishingPole, nil, S.ChainRoguePoisonsNonLethal},
-      {SMARTBUFF_ATROPHICPOISON, 60, SMARTBUFF_CONST_SELF, nil, S.CheckFishingPole, nil, S.ChainRoguePoisonsNonLethal} 
+      {SMARTBUFF_ATROPHICPOISON, 60, SMARTBUFF_CONST_SELF, nil, S.CheckFishingPole, nil, S.ChainRoguePoisonsNonLethal}
     };
   end
 
@@ -1116,7 +1117,7 @@ function SMARTBUFF_InitSpellList()
       {SMARTBUFF_AVENGINGWARTH, 0.333, SMARTBUFF_CONST_SELF},
       {SMARTBUFF_BOK, 60, SMARTBUFF_CONST_GROUP, {20}, nil, S.LinkStats},
       {SMARTBUFF_BOM, 60, SMARTBUFF_CONST_GROUP, {20}, nil, S.LinkMa},
-      {SMARTBUFF_BOW, 60, SMARTBUFF_CONST_GROUP, {20}, nil, S.LinkInt},     
+      {SMARTBUFF_BOW, 60, SMARTBUFF_CONST_GROUP, {20}, nil, S.LinkInt},
       {SMARTBUFF_HOF, 0.1, SMARTBUFF_CONST_GROUP, {52}, "WARRIOR;DEATHKNIGHT;DRUID;SHAMAN;HUNTER;ROGUE;MAGE;PRIEST;PALADIN;WARLOCK;MONK;DEMONHUNTER;EVOKER;HPET;WPET;DKPET"},
       {SMARTBUFF_HOSAL, 0.1, SMARTBUFF_CONST_GROUP, {66}, "WARRIOR;DEATHKNIGHT;DRUID;SHAMAN;HUNTER;ROGUE;MAGE;PRIEST;PALADIN;WARLOCK;MONK;DEMONHUNTER;EVOKER;HPET;WPET;DKPET"},
       {SMARTBUFF_BEACONOFLIGHT, 5, SMARTBUFF_CONST_GROUP, {39}, "WARRIOR;DRUID;SHAMAN;HUNTER;ROGUE;MAGE;PRIEST;PALADIN;WARLOCK;DEATHKNIGHT;MONK;DEMONHUNTER;EVOKER;HPET;WPET;DKPET"},
@@ -1131,7 +1132,7 @@ function SMARTBUFF_InitSpellList()
       {SMARTBUFF_SOCOMMAND, -1, SMARTBUFF_CONST_STANCE, nil, nil, nil, S.ChainPaladinSeal}
     };
   end
-  
+
   -- Deathknight
   if (SMARTBUFF_PLAYERCLASS == "DEATHKNIGHT") then
     SMARTBUFF_BUFFLIST = {
@@ -1145,7 +1146,7 @@ function SMARTBUFF_InitSpellList()
       {SMARTBUFF_PATHOFFROST, -1, SMARTBUFF_CONST_SELF}
     };
   end
-  
+
   -- Monk
   if (SMARTBUFF_PLAYERCLASS == "MONK") then
     SMARTBUFF_BUFFLIST = {
@@ -1170,6 +1171,7 @@ function SMARTBUFF_InitSpellList()
   if (SMARTBUFF_PLAYERCLASS == "EVOKER") then
     SMARTBUFF_BUFFLIST = {
       {SMARTBUFF_BRONZEBLESSING, 60, SMARTBUFF_CONST_SELF},
+      {SMARTBUFF_Visage, -1, SMARTBUFF_CONST_SELF}
     };
   end
 
@@ -1263,7 +1265,7 @@ function SMARTBUFF_InitSpellList()
     {SMARTBUFF_BIGMECH, 60, SMARTBUFF_CONST_FOOD},
     {SMARTBUFF_BLACKENEDBASILISK, 30, SMARTBUFF_CONST_FOOD},
     {SMARTBUFF_BLACKENEDSPOREFISH, 30, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_BROILEDBLOODFIN, 30, SMARTBUFF_CONST_FOOD},    
+    {SMARTBUFF_BROILEDBLOODFIN, 30, SMARTBUFF_CONST_FOOD},
     {SMARTBUFF_BUTTERSCOTCHRIBS, 60, SMARTBUFF_CONST_FOOD},
     {SMARTBUFF_BUZZARDBITES, 30, SMARTBUFF_CONST_FOOD},
 	  {SMARTBUFF_CHARREDBEARKABOBS,	15,	SMARTBUFF_CONST_FOOD},
@@ -1306,7 +1308,7 @@ function SMARTBUFF_InitSpellList()
     {SMARTBUFF_SALTPEPPERSHANK, 60, SMARTBUFF_CONST_FOOD},
     {SMARTBUFF_SEASONEDLOINS, 60, SMARTBUFF_CONST_FOOD},
     {SMARTBUFF_SERAPHTENDERS, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_SKULLFISHSOUP, 30, SMARTBUFF_CONST_FOOD},    
+    {SMARTBUFF_SKULLFISHSOUP, 30, SMARTBUFF_CONST_FOOD},
     {SMARTBUFF_SPICEDSNAPPER, 60, SMARTBUFF_CONST_FOOD},
     {SMARTBUFF_SPICYCRAWDAD, 30, SMARTBUFF_CONST_FOOD},
     {SMARTBUFF_SPICYHOTTALBUK, 30, SMARTBUFF_CONST_FOOD},
@@ -1333,14 +1335,14 @@ function SMARTBUFF_InitSpellList()
     {SMARTBUFF_KaluakBanquet, 60, SMARTBUFF_CONST_FOOD},
     {SMARTBUFF_HoardOfDelicacies, 60, SMARTBUFF_CONST_FOOD},
   };
-  
+
   for n, name in pairs(S.FoodItems) do
     if (name) then
       --print("Adding: "..n..". "..name);
       tinsert(SMARTBUFF_FOOD, 1, {name, 60, SMARTBUFF_CONST_FOOD});
     end
   end
-  
+
   --[[
   for _, v in pairs(SMARTBUFF_FOOD) do
     if (v and v[1]) then
@@ -1348,7 +1350,7 @@ function SMARTBUFF_InitSpellList()
     end
   end
   ]]
-  
+
 
   -- Scrolls
   SMARTBUFF_SCROLL = {
@@ -1425,7 +1427,7 @@ function SMARTBUFF_InitSpellList()
     {SMARTBUFF_VantusRune_VotI_q2, 60, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_BVantusRune_VotI_q2},
     {SMARTBUFF_VantusRune_VotI_q3, 60, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_BVantusRune_VotI_q3},
   };
-  
+
   --      ItemId, SpellId, Duration [min]
   AddItem(174906, 270058,  60); -- Lightning-Forged Augment Rune
   AddItem(153023, 224001,  60); -- Lightforged Augment Rune
@@ -1657,19 +1659,19 @@ function SMARTBUFF_InitSpellList()
     {SMARTBUFF_FlaskDF9_q1, 30, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFlaskDF9, S.LinkFlaskDF},
     {SMARTBUFF_FlaskDF9_q2, 30, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFlaskDF9, S.LinkFlaskDF},
     {SMARTBUFF_FlaskDF9_q3, 30, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFlaskDF9, S.LinkFlaskDF},
-    
+
     {SMARTBUFF_FlaskDF10_q1, 30, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFlaskDF10, S.LinkFlaskDF},
     {SMARTBUFF_FlaskDF10_q2, 30, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFlaskDF10, S.LinkFlaskDF},
     {SMARTBUFF_FlaskDF10_q3, 30, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFlaskDF10, S.LinkFlaskDF},
-    
+
     {SMARTBUFF_FlaskDF11_q1, 30, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFlaskDF11, S.LinkFlaskDF},
     {SMARTBUFF_FlaskDF11_q2, 30, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFlaskDF11, S.LinkFlaskDF},
     {SMARTBUFF_FlaskDF11_q3, 30, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFlaskDF11, S.LinkFlaskDF},
-    
+
     {SMARTBUFF_FlaskDF12_q1, 30, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFlaskDF12, S.LinkFlaskDF},
     {SMARTBUFF_FlaskDF12_q2, 30, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFlaskDF12, S.LinkFlaskDF},
     {SMARTBUFF_FlaskDF12_q3, 30, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFlaskDF12, S.LinkFlaskDF},
-    
+
     -- the Elemental Chaos flask has 4 random effects changing every 60 seconds
     {SMARTBUFF_FlaskDF13_q1, 60, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFlaskDF13_1, S.LinkFlaskDF},
     {SMARTBUFF_FlaskDF13_q2, 60, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFlaskDF13_1, S.LinkFlaskDF},
@@ -1678,7 +1680,7 @@ function SMARTBUFF_InitSpellList()
     {SMARTBUFF_FlaskDF14_q1, 30, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFlaskDF14, S.LinkFlaskDF},
     {SMARTBUFF_FlaskDF14_q2, 30, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFlaskDF14, S.LinkFlaskDF},
     {SMARTBUFF_FlaskDF14_q3, 30, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFlaskDF14, S.LinkFlaskDF},
-    
+
   }
   SMARTBUFF_AddMsgD("Spell list initialized");
 

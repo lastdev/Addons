@@ -455,7 +455,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED
 	L["End of %s"] = "Fin de %s"
 	--[[Translation missing --]]
 	L["Enemy nameplate(s) found"] = "Enemy nameplate(s) found"
-	L["Enter a Spell ID"] = "Entrer un ID de sort"
+	--[[Translation missing --]]
+	L["Enter a Spell ID. You can use the addon idTip to determine spell ids."] = "Enter a Spell ID. You can use the addon idTip to determine spell ids."
 	L["Enter an Aura Name, partial Aura Name, or Spell ID. A Spell ID will match any spells with the same name."] = "Saisissez un nom d'aura, un nom d'aura partiel ou un ID de sort. L'ID d'un sort correspondra à tous les sorts portant le même nom."
 	L["Enter Author Mode"] = "Entrer en Mode Auteur"
 	--[[Translation missing --]]

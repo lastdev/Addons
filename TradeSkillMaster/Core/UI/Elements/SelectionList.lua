@@ -9,7 +9,7 @@
 -- @{ScrollingTable} class.
 -- @classmod SelectionList
 
-local _, TSM = ...
+local TSM = select(2, ...) ---@type TSM
 local Theme = TSM.Include("Util.Theme")
 local SelectionList = TSM.Include("LibTSMClass").DefineClass("SelectionList", TSM.UI.ScrollingTable)
 local UIElements = TSM.Include("UI.UIElements")

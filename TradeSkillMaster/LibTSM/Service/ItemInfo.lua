@@ -6,6 +6,7 @@
 
 local TSM = select(2, ...) ---@type TSM
 local ItemInfo = TSM.Init("Service.ItemInfo") ---@class Service.ItemInfo
+local Environment = TSM.Include("Environment")
 local L = TSM.Include("Locale").GetTable()
 local ItemClass = TSM.Include("Data.ItemClass")
 local VendorSell = TSM.Include("Data.VendorSell")
@@ -37,6 +38,8 @@ local private = {
 	processInfoTimer = nil,
 	processAvailableTimer = nil,
 	merchantTimer = nil,
+	deferredSetSingleField = {},
+	deferredSetSingleFieldTimer = nil,
 }
 local ITEM_MAX_ID = 999999
 local SEP_CHAR = "\002"
@@ -161,6 +164,7 @@ ItemInfo:OnModuleLoad(function()
 	private.processAvailableTimer = Delay.CreateTimer("ITEM_INFO_PROCESS_AVAILABLE", private.ProcessAvailableItems)
 	private.processInfoTimer = Delay.CreateTimer("ITEM_INFO_PROCESS_INFO", private.ProcessItemInfo)
 	private.merchantTimer = Delay.CreateTimer("ITEM_INFO_SCAN_MERCHANT", private.ScanMerchant)
+	private.deferredSetSingleFieldTimer = Delay.CreateTimer("ITEM_INFO_DEFERRED_SET_SINGLE_FIELD", private.HandleDeferredSetSingleField)
 end)
 
 ItemInfo:OnSettingsLoad(function()
@@ -465,7 +469,7 @@ end
 ---@param name string The item name
 function ItemInfo.StoreItemName(itemString, name)
 	assert(not ItemString.ParseLevel(itemString))
-	private.SetSingleField(itemString, "name", name)
+	private.DeferSetSingleField(itemString, "name", name)
 end
 
 ---Store information about an item from its link.
@@ -487,10 +491,10 @@ function ItemInfo.StoreItemInfoByLink(itemLink)
 	end
 	assert(not ItemString.ParseLevel(itemString))
 	if name then
-		private.SetSingleField(itemString, "name", name)
+		private.DeferSetSingleField(itemString, "name", name)
 	end
 	if quality then
-		private.SetSingleField(itemString, "quality", quality)
+		private.DeferSetSingleField(itemString, "quality", quality)
 	end
 end
 
@@ -551,7 +555,7 @@ function ItemInfo.GetName(item)
 			name = nil
 		end
 		if name then
-			private.SetSingleField(itemString, "name", name)
+			private.DeferSetSingleField(itemString, "name", name)
 		end
 	end
 	return name
@@ -599,8 +603,13 @@ end
 ---@param item string The item
 ---@return number?
 function ItemInfo.GetCraftedQuality(item)
+	if not Environment.HasFeature(Environment.FEATURES.CRAFTING_QUALITY) then
+		return nil
+	end
 	local itemString = ItemString.Get(item)
-	if itemString == ItemString.GetUnknown() or itemString == ItemString.GetPlaceholder() then
+	if not itemString then
+		return nil
+	elseif itemString == ItemString.GetUnknown() or itemString == ItemString.GetPlaceholder() then
 		return nil
 	elseif ItemString.ParseLevel(itemString) then
 		itemString = ItemString.GetBaseFast(itemString)
@@ -639,7 +648,7 @@ function ItemInfo.GetQuality(item)
 		end
 	end
 	if quality then
-		private.SetSingleField(itemString, "quality", quality)
+		private.DeferSetSingleField(itemString, "quality", quality)
 	else
 		ItemInfo.FetchInfo(itemString)
 	end
@@ -695,7 +704,7 @@ function ItemInfo.GetItemLevel(item)
 		if not itemLevel then
 			-- just get the level from the item string
 			itemLevel = randOrLevel or 0
-			private.SetSingleField(itemString, "itemLevel", itemLevel)
+			private.DeferSetSingleField(itemString, "itemLevel", itemLevel)
 		end
 	elseif itemType == "i" then
 		if randOrLevel and not bonusOrQuality then
@@ -703,7 +712,7 @@ function ItemInfo.GetItemLevel(item)
 			itemLevel = ItemInfo.GetItemLevel(ItemString.GetBaseFast(itemString))
 		end
 		if itemLevel then
-			private.SetSingleField(itemString, "itemLevel", itemLevel)
+			private.DeferSetSingleField(itemString, "itemLevel", itemLevel)
 		end
 		ItemInfo.FetchInfo(itemString)
 	else
@@ -734,7 +743,7 @@ function ItemInfo.GetMinLevel(item)
 			-- the bonusId does not affect the minLevel of this item
 			minLevel = ItemInfo.GetMinLevel(baseItemString)
 			if minLevel then
-				private.SetSingleField(itemString, "minLevel", minLevel)
+				private.DeferSetSingleField(itemString, "minLevel", minLevel)
 			end
 		end
 	end
@@ -778,7 +787,7 @@ function ItemInfo.GetMaxStack(item)
 			end
 		end
 		if maxStack then
-			private.SetSingleField(itemString, "maxStack", maxStack)
+			private.DeferSetSingleField(itemString, "maxStack", maxStack)
 		end
 	end
 	return maxStack
@@ -944,7 +953,7 @@ end
 ---@param item string The item
 ---@return number?
 function ItemInfo.IsCommodity(item)
-	if TSM.IsWowClassic() then
+	if not Environment.HasFeature(Environment.FEATURES.COMMODITY_ITEMS) then
 		return false
 	end
 	local stackSize = ItemInfo.GetMaxStack(item)
@@ -1088,20 +1097,20 @@ function private.GetFieldValueHelper(itemString, field, baseIsSame, storeBaseVal
 	end
 	ItemInfo.FetchInfo(itemString)
 	if ItemString.IsPet(itemString) then
-		-- we can fetch info instantly for pets so try again
+		-- We can fetch info instantly for pets so try again
 		value = private.GetField(itemString, field)
 		if value == nil and petDefaultValue ~= nil then
 			value = petDefaultValue
-			private.SetSingleField(itemString, field, value)
+			private.DeferSetSingleField(itemString, field, value)
 		end
 	end
 	if value == nil and baseIsSame then
-		-- the value is the same for the base item
+		-- The value is the same for the base item
 		local baseItemString = ItemString.GetBase(itemString)
 		if baseItemString ~= itemString then
 			value = private.GetFieldValueHelper(baseItemString, field)
 			if value ~= nil and storeBaseValue then
-				private.SetSingleField(itemString, field, value)
+				private.DeferSetSingleField(itemString, field, value)
 			end
 		end
 	end
@@ -1117,7 +1126,7 @@ function private.ProcessPendingItemInfo(itemString)
 		if private.numRequests[itemString] ~= math.huge then
 			private.numRequests[itemString] = math.huge
 			local itemId = ItemString.IsItem(itemString) and ItemString.ToId(itemString) or nil
-			if not TSM.IsWowClassic() then
+			if Environment.IsRetail() then
 				Log.Err("Giving up on item info for %s", itemString)
 			end
 			if itemId and itemString == ItemString.GetBaseFast(itemString) then
@@ -1315,21 +1324,27 @@ function private.CreateDBRowIfNotExists(itemString, isBulkInsert)
 	private.hasChanged = true
 end
 
-function private.SetSingleField(itemString, key, value)
+function private.DeferSetSingleField(itemString, key, value)
 	if type(value) == "boolean" then
 		value = value and 1 or 0
 	end
 	if key ~= "name" then
 		private.CheckFieldValue(key, value)
 	end
-	if private.db:GetUniqueRowField("itemString", itemString, key) == value then
-		-- no change
-		return
+	Table.InsertMultiple(private.deferredSetSingleField, itemString, key, value)
+	private.deferredSetSingleFieldTimer:RunForFrames(0)
+end
+
+function private.HandleDeferredSetSingleField()
+	for _, itemString, key, value in Table.StrideIterator(private.deferredSetSingleField, 3) do
+		-- Make sure it actually changed
+		if private.db:GetUniqueRowField("itemString", itemString, key) ~= value then
+			private.CreateDBRowIfNotExists(itemString)
+			private.db:SetUniqueRowField("itemString", itemString, key, value)
+			private.hasChanged = true
+			private.stream:Send(itemString)
+		end
 	end
-	private.CreateDBRowIfNotExists(itemString)
-	private.db:SetUniqueRowField("itemString", itemString, key, value)
-	private.hasChanged = true
-	private.stream:Send(itemString)
 end
 
 function private.SetItemInfoInstantFields(itemString, texture, classId, subClassId, invSlotId)
@@ -1365,7 +1380,7 @@ function private.StoreGetItemInfoInstant(itemString)
 		-- some items (such as i:37445) give a classId of -1 for some reason in which case we can look up the classId
 		if classId < 0 then
 			classId = ItemClass.GetClassIdFromClassString(classStr)
-			if not classId and TSM.IsWowClassic() then
+			if not classId and not Environment.IsRetail() then
 				-- this can happen for items which don't yet exist in classic (i.e. WoW Tokens)
 				return
 			end
@@ -1379,7 +1394,7 @@ function private.StoreGetItemInfoInstant(itemString)
 			private.SetItemInfoInstantFields(baseItemString, texture, classId, subClassId, invSlotId)
 		end
 	elseif itemStringType == "p" then
-		if TSM.IsWowClassic() then
+		if not Environment.HasFeature(Environment.FEATURES.BATTLE_PETS) then
 			return
 		end
 		local name, texture, petTypeId = C_PetJournal.GetPetInfoBySpeciesID(id)
@@ -1448,7 +1463,7 @@ function private.StoreGetItemInfo(itemString)
 
 	local name, link, quality, itemLevel, minLevel, _, _, maxStack, _, _, vendorSell, _, _, bindType, expansionId, _, isCraftingReagent = GetItemInfo(baseWowItemString)
 	local craftedQuality = nil
-	if TSM.IsWowClassic() then
+	if not Environment.HasFeature(Environment.FEATURES.CRAFTING_QUALITY) then
 		expansionId = -1
 		craftedQuality = -1
 	elseif link then

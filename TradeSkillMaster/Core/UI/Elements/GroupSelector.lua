@@ -9,7 +9,7 @@
 -- filtering. It is a subclass of the @{Element} class.
 -- @classmod GroupSelector
 
-local _, TSM = ...
+local TSM = select(2, ...) ---@type TSM
 local L = TSM.Include("Locale").GetTable()
 local Table = TSM.Include("Util.Table")
 local Analytics = TSM.Include("Util.Analytics")

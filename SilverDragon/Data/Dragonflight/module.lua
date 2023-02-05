@@ -11,6 +11,7 @@ local AZURESPAN = 2024
 local THALDRASZUS = 2025
 local FORBIDDENREACH = 2026
 local FORBIDDENREACHINTRO = 2118 -- Dracthyr
+local PRIMALISTFUTURE = 2085
 
 local FACTION_MARUUK = 2503
 local FACTION_DRAGONSCALE = 2507
@@ -61,7 +62,7 @@ core:RegisterTreasureData("Dragonflight", {
 			{199065, quest=70534}, -- Sorrowful Letter
 			{199066, quest=70535}, -- Letter of Caution
 			{199068, quest=70537}, -- Time-Lost Memo
-			{198843, quest=70392, requires=core.conditions.MajorFaction(FACTION_DRAGONSCALE, 21)}, -- Ruby Gem Cluster Map
+			{199062, quest=70528, requires=core.conditions.MajorFaction(FACTION_DRAGONSCALE, 21)}, -- Ruby Gem Cluster Map
 			{198843, quest=70392, requires=core.conditions.MajorFaction(FACTION_DRAGONSCALE, 21)}, -- Emerald Gardens Explorer's Notes
 			{199067, quest=70536, requires=core.conditions.MajorFaction(FACTION_DRAGONSCALE, 21)}, -- Precious Plans
 			{198852, quest=70407, requires=core.conditions.MajorFaction(FACTION_DRAGONSCALE, 21)}, -- Bear Termination Orders
@@ -87,7 +88,7 @@ core:RegisterTreasureData("Dragonflight", {
 			{199065, quest=70534}, -- Sorrowful Letter
 			{199066, quest=70535}, -- Letter of Caution
 			{199068, quest=70537}, -- Time-Lost Memo
-			{198843, quest=70392, requires=core.conditions.MajorFaction(FACTION_DRAGONSCALE, 21)}, -- Ruby Gem Cluster Map
+			{199062, quest=70528, requires=core.conditions.MajorFaction(FACTION_DRAGONSCALE, 21)}, -- Ruby Gem Cluster Map
 			{198843, quest=70392, requires=core.conditions.MajorFaction(FACTION_DRAGONSCALE, 21)}, -- Emerald Gardens Explorer's Notes
 			{199067, quest=70536, requires=core.conditions.MajorFaction(FACTION_DRAGONSCALE, 21)}, -- Precious Plans
 			{198852, quest=70407, requires=core.conditions.MajorFaction(FACTION_DRAGONSCALE, 21)}, -- Bear Termination Orders
@@ -106,7 +107,7 @@ core:RegisterTreasureData("Dragonflight", {
 			{199065, quest=70534}, -- Sorrowful Letter
 			{199066, quest=70535}, -- Letter of Caution
 			{199068, quest=70537}, -- Time-Lost Memo
-			{198843, quest=70392, requires=core.conditions.MajorFaction(FACTION_DRAGONSCALE, 21)}, -- Ruby Gem Cluster Map
+			{199062, quest=70528, requires=core.conditions.MajorFaction(FACTION_DRAGONSCALE, 21)}, -- Ruby Gem Cluster Map
 			{198843, quest=70392, requires=core.conditions.MajorFaction(FACTION_DRAGONSCALE, 21)}, -- Emerald Gardens Explorer's Notes
 			{199067, quest=70536, requires=core.conditions.MajorFaction(FACTION_DRAGONSCALE, 21)}, -- Precious Plans
 			{198852, quest=70407, requires=core.conditions.MajorFaction(FACTION_DRAGONSCALE, 21)}, -- Bear Termination Orders
@@ -119,7 +120,7 @@ core:RegisterTreasureData("Dragonflight", {
 -- Handynotes imports
 --[[
 minor transformations applied:
-s/{ -- (.+)${/{\n\t\tlabel="$1",/g",
+s/{ -- (.+)$/{\n\t\tlabel="$1",/g",
 --]]
 
 -- Stub time!
@@ -135,6 +136,7 @@ local ns = {
 	VALDRAKKEN = VALDRAKKEN,
 	FORBIDDENREACHINTRO = FORBIDDENREACHINTRO,
 	FORBIDDENREACH = FORBIDDENREACH,
+	PRIMALISTFUTURE = PRIMALISTFUTURE,
 	FACTION_MARUUK = FACTION_MARUUK,
 	FACTION_DRAGONSCALE = FACTION_DRAGONSCALE,
 	FACTION_VALDRAKKEN = FACTION_VALDRAKKEN,
@@ -1664,6 +1666,39 @@ ns.RegisterPoints(ns.OHNAHRANPLAINS, {
 			66005880, 68805560, 68605160, 67205100, 68805680, 65605980, 65206900, r=1, g=0, b=0, loop=true,
 		},
 	},
+	[33803840] = {
+		label="Huntmaster Yrgena",
+		quest=74466,
+		npc=201538,
+		loot={
+			203672, -- Master Huntmaster's Wristguards
+		},
+	},
+	--[[
+	-- accompanied by
+	[33803840] = {
+		label="Rugren",
+		-- [33803840, 33803860]
+		quest=nil,
+		npc=201563,
+	},
+	]]
+	[35404080] = {
+		label="Groffnar",
+		quest=74463,
+		npc=201537,
+		loot={
+			203671, -- Pack Leader's Pelt
+		},
+	},
+	[37003640] = {
+		label="Bloodbeak the Ravenous",
+		quest=74467,
+		npc=201535,
+		loot={
+			203673, -- Bloodbeak's Ravenor
+		},
+	},
 })
 ns.RegisterPoints(ns.AZURESPAN, {
 	-- https://www.wowhead.com/beta/achievement=16678/adventurer-of-the-azure-span
@@ -2274,7 +2309,8 @@ ns.RegisterPoints(ns.AZURESPAN, {
 		note="Kill the gnolls to summon",
 		vignette=5158, -- Thieving Gnolls (also 5484 Sharpfang)
 	},
-	[79503590] = { -- Bazual
+	[79503590] = {
+		label="Bazual",
 		quest=69927,
 		worldquest=69927,
 		npc=193532,
@@ -2780,6 +2816,22 @@ ns.RegisterPoints(ns.THALDRASZUS, {
 		},
 		vignette=5437,
 	},
+	[62005980] = {
+		label="Morlash",
+		quest=74450,
+		npc=201549,
+		loot={
+			203666, -- Vinelashed Bracers
+		},
+	},
+	[59406120] = {
+		label="Overloading Defense Matrix",
+		quest=74449,
+		npc=201550,
+		loot={
+			203677, -- Watcher's 'Neck' Ring
+		},
+	},
 	[60008190] = {
 		-- also primalist future @ 53686325
 		label="Liskanoth",
@@ -2792,6 +2844,43 @@ ns.RegisterPoints(ns.THALDRASZUS, {
 			200745, -- Horns of the Futurebane
 			200746, -- Icebound Girdle
 			200763, -- Frosted Scale Drape
+		},
+	},
+})
+ns.RegisterPoints(ns.PRIMALISTFUTURE, {
+	[48601740] = {
+		label="Shardwing",
+		quest=74453,
+		npc=201562,
+		loot={
+			{197593,quest=69797,}, -- Windborne Velocidrake: Feathery Head
+			200241, -- Stormcaller's Ritual Hatchet
+			200242, -- Watcher's Lightning Rod
+			203669, -- Chillwing Leggings
+		},
+	},
+	[52206760] = {
+		label="Avalantus",
+		quest=74452,
+		npc=201543,
+		loot={
+			203670, -- Prismatic Diamond Loop
+		},
+	},
+	[61603200] = {
+		label="Tikarr Frostclaw",
+		quest=74451,
+		npc=201542,
+		loot={
+			203667, -- Frostclaw's Spellfingers
+		},
+	},
+	[46204120] = {
+		label="Shapemaster Za'lani",
+		quest=74454,
+		npc=201545,
+		loot={
+			203668, -- Earhshaping Grips
 		},
 	},
 })

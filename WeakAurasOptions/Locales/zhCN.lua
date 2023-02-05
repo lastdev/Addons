@@ -360,7 +360,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["End Angle"] = "结束角度"
 	L["End of %s"] = "%s 的结尾"
 	L["Enemy nameplate(s) found"] = "已找到的敌方姓名版"
-	L["Enter a Spell ID"] = "输入一个法术 ID"
+	--[[Translation missing --]]
+	L["Enter a Spell ID. You can use the addon idTip to determine spell ids."] = "Enter a Spell ID. You can use the addon idTip to determine spell ids."
 	L["Enter an Aura Name, partial Aura Name, or Spell ID. A Spell ID will match any spells with the same name."] = "输入全部或部分光环名称，或者法术 ID。如果输入法术 ID，则会匹配所有具有相同名称的法术。"
 	L["Enter Author Mode"] = "进入作者模式"
 	L["Enter in a value for the tick's placement."] = "输入进度指示放置位置的值"

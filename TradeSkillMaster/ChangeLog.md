@@ -1,5 +1,6 @@
-## v4.12.25 Changes
+## v4.12.32 Changes
 
-* [Wrath] Added workaround for 3.4.1 bug with the game not indicating when bags are updated
+* [All] Fixed various UI errors
+* [Retail] Fixed error when opening profession
 
 [Known Issues](https://support.tradeskillmaster.com/en_US/known_issues)

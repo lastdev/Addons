@@ -1,4 +1,4 @@
-## Interface: 100002
+## Interface: 100005
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff0055FFSpell Timers|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff0055FFSpell Timers|r
 ## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff0055FF冷却助手|r
@@ -19,7 +19,7 @@
 ## URL: http://www.deadlybossmods.com
 ## SavedVariables: DBM_SpellTimers_Settings
 ## X-Curse-Project-ID: 18712
-## Version: r144
+## Version: r145
 
 localization.en.lua
 localization.de.lua

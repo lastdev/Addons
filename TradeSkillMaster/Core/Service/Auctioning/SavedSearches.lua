@@ -4,7 +4,7 @@
 --    All Rights Reserved - Detailed license information included with addon.     --
 -- ------------------------------------------------------------------------------ --
 
-local _, TSM = ...
+local TSM = select(2, ...) ---@type TSM
 local SavedSearches = TSM.Auctioning:NewPackage("SavedSearches")
 local L = TSM.Include("Locale").GetTable()
 local Log = TSM.Include("Util.Log")
@@ -183,7 +183,7 @@ function private.GetSearchName(filter, searchType)
 		local numItems = 0
 		for itemString in gmatch(filter, "[^"..FILTER_SEP.."]+") do
 			numItems = numItems + 1
-			local coloredName = UIUtils.GetColoredItemName(itemString)
+			local coloredName = UIUtils.GetDisplayItemName(itemString)
 			if coloredName then
 				tinsert(filters, coloredName)
 			end

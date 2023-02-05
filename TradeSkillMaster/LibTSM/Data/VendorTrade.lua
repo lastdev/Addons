@@ -4,8 +4,9 @@
 --    All Rights Reserved - Detailed license information included with addon.     --
 -- ------------------------------------------------------------------------------ --
 
-local _, TSM = ...
-local VendorTrade = TSM.Init("Data.VendorTrade")
+local TSM = select(2, ...) ---@type TSM
+local VendorTrade = TSM.Init("Data.VendorTrade") ---@class Data.VendorTrade
+local Environment = TSM.Include("Environment")
 local private = {}
 local DATA = nil
 
@@ -15,9 +16,9 @@ local DATA = nil
 -- Vendor Trade Data
 -- ============================================================================
 
-if TSM.IsWowVanillaClassic() then
+if Environment.IsVanillaClassic() then
 	DATA = {}
-elseif TSM.IsWowWrathClassic() then
+elseif Environment.IsWrathClassic() then
 	DATA = {
 		["i:37101"] = {
 			["i:43126"] = 1, -- Ivory Ink
@@ -50,7 +51,7 @@ elseif TSM.IsWowWrathClassic() then
 			["i:43126"] = 0.1, -- Snowfall Ink
 		},
 	}
-else
+elseif Environment.IsRetail() then
 	DATA = {
 		["i:39469"] = {
 			["i:173058"] = 1, -- Moonglow Ink
@@ -116,6 +117,8 @@ else
 			["i:173058"] = 1, -- Maroon Ink
 		},
 	}
+else
+	error("Invalid game version")
 end
 
 

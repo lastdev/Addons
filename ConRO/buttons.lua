@@ -2145,6 +2145,10 @@ function ConRO:Fetch()
 		self:FetchDominos();
 	end
 
+	if IsAddOnLoaded('NDui') then
+		self:FetchNDui();
+	end
+
     if IsAddOnLoaded('DiabolicUI') then
         self:FetchDiabolic();
     end
@@ -2191,6 +2195,10 @@ function ConRO:FetchDef()
 
 	if IsAddOnLoaded('Dominos') then
 		self:DefFetchDominos();
+	end
+
+	if IsAddOnLoaded('NDui') then
+		self:DefFetchNDui();
 	end
 
 	if IsAddOnLoaded('DiabolicUI') then
@@ -2284,6 +2292,40 @@ function ConRO:DefFetchDominos()
 		local hotkey = 'CLICK DominosActionButton' .. i .. ':HOTKEY';
 		if button then
 			self:DefAddStandardButton(button, hotkey);
+		end
+	end
+end
+
+function ConRO:FetchNDui()
+	for i = 1, 8 do
+		for b = 1, 12 do
+			local button = _G['NDui_ActionBar' .. i .. 'Button' .. b];
+			local hotkey;
+			if i == 1 then
+				hotkey = 'ActionButton' .. i .. ':HOTKEY';
+			else
+				hotkey = 'ActionBar' .. i .. 'Button' .. b .. ':HOTKEY';
+			end
+			if button then
+				self:AddStandardButton(button, hotkey);
+			end
+		end
+	end
+end
+
+function ConRO:DefFetchNDui()
+	for i = 1, 8 do
+		for b = 1, 12 do
+			local button = _G['NDui_ActionBar' .. i .. 'Button' .. b];
+			local hotkey;
+			if i == 1 then
+				hotkey = 'ActionButton' .. i .. ':HOTKEY';
+			else
+				hotkey = 'ActionBar' .. i .. 'Button' .. b .. ':HOTKEY';
+			end
+			if button then
+				self:DefAddStandardButton(button, hotkey);
+			end
 		end
 	end
 end

@@ -2,7 +2,7 @@
 -- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 50e769c4305c42360c08e4eba003ac2f06dc3d9a $")
+XPerl_SetModuleRevision("$Revision: 8fc5cc64a1ac44a94d1ce283b83dcf1af669c63d $")
 
 if type(C_ChatInfo.RegisterAddonMessagePrefix) == "function" then
 	C_ChatInfo.RegisterAddonMessagePrefix("CTRA")
@@ -415,7 +415,11 @@ end
 
 -- XPerl_PickupContainerItem
 local PickupBag, PickupSlot
-if PickupContainerItem then
+if C_Container then
+	hooksecurefunc(C_Container, "PickupContainerItem", function(bagID, slot)
+		PickupBag, PickupSlot = bagID, slot
+	end)
+elseif PickupContainerItem then
 	hooksecurefunc("PickupContainerItem", function(bagID, slot)
 		PickupBag, PickupSlot = bagID, slot
 	end)

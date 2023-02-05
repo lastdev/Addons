@@ -6,6 +6,7 @@
 
 local TSM = select(2, ...) ---@type TSM
 local ProfessionUtil = TSM.Crafting:NewPackage("ProfessionUtil")
+local Environment = TSM.Include("Environment")
 local CraftString = TSM.Include("Util.CraftString")
 local Event = TSM.Include("Util.Event")
 local Log = TSM.Include("Util.Log")
@@ -45,7 +46,7 @@ function ProfessionUtil.OnInitialize()
 			return
 		end
 
-		if not TSM.IsWowClassic() then
+		if Environment.IsRetail() then
 			-- check if we need to update bank quantity manually
 			for _, itemString, quantity in TSM.Crafting.MatIterator(private.craftString) do
 				local bagQuantity, bankQuantity, reagentBankQuantity = BagTracking.GetQuantities(itemString)
@@ -84,7 +85,7 @@ function ProfessionUtil.OnInitialize()
 	Event.Register("UNIT_SPELLCAST_FAILED", SpellCastFailedEventHandler)
 	Event.Register("UNIT_SPELLCAST_FAILED_QUIET", SpellCastFailedEventHandler)
 	Event.Register("TRADE_SKILL_CLOSE", ClearCraftCast)
-	if TSM.IsWowClassic() then
+	if not Environment.IsRetail() then
 		Event.Register("CRAFT_CLOSE", ClearCraftCast)
 	end
 end
@@ -123,9 +124,14 @@ function ProfessionUtil.GetNumCraftableRecipeString(recipeString)
 	end
 	for _, _, itemId in RecipeString.OptionalMatIterator(recipeString) do
 		local itemString = ItemString.Get(itemId)
+		local totalQuantity = CustomPrice.GetItemPrice(itemString, "NumInventory") or 0
+		if totalQuantity == 0 then
+			return 0, 0
+		end
 		local quantity = TSM.Crafting.GetOptionalMatQuantity(craftString, itemId)
 		local bagQuantity = BagTracking.GetCraftingMatQuantity(itemString)
 		num = min(num, floor(bagQuantity / quantity))
+		numAll = min(numAll, floor(totalQuantity / quantity))
 	end
 	if num == math.huge or numAll == math.huge then
 		return 0, 0
@@ -217,7 +223,7 @@ function ProfessionUtil.Craft(craftString, recipeId, quantity, useVellum, callba
 		return 0
 	end
 	local isEnchant = Profession.IsEnchant(craftString)
-	local vellumable = isEnchant and not TSM.IsWowVanillaClassic()
+	local vellumable = isEnchant and not Environment.IsVanillaClassic()
 	if isEnchant or hasOptionalMats then
 		quantity = 1
 	elseif spellId ~= private.preparedSpellId or private.preparedTime == GetTime() then
@@ -225,7 +231,7 @@ function ProfessionUtil.Craft(craftString, recipeId, quantity, useVellum, callba
 		quantity = 1
 	end
 	local enchantItemLocation = nil
-	if not TSM.IsWowClassic() and useVellum and isEnchant and vellumable then
+	if Environment.IsRetail() and useVellum and isEnchant and vellumable then
 		local bag, slot = BagTracking.CreateQueryBagsItem(Profession.GetVellumItemString(craftString))
 			:Select("bag", "slot")
 			:GetFirstResultAndRelease()
@@ -241,15 +247,7 @@ function ProfessionUtil.Craft(craftString, recipeId, quantity, useVellum, callba
 	private.craftSpellId = spellId
 	private.craftBaseString = ItemString.GetBase(TSM.Crafting.GetItemString(craftString))
 	private.craftCallback = callback
-	if TSM.IsWowClassic() then
-		local index = Profession.GetIndexByCraftString(craftString)
-		if Profession.IsClassicCrafting() then
-			private.craftName = GetCraftInfo(index)
-		else
-			private.craftName = GetTradeSkillInfo(index)
-			DoTradeSkill(index, quantity)
-		end
-	else
+	if Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) then
 		local optionalMats = TempTable.Acquire()
 		if type(recipeId) == "string" then
 			for _, slotId, itemId in RecipeString.OptionalMatIterator(recipeId) do
@@ -269,8 +267,16 @@ function ProfessionUtil.Craft(craftString, recipeId, quantity, useVellum, callba
 			TempTable.Release(info)
 		end
 		TempTable.Release(optionalMats)
+	else
+		local index = Profession.GetIndexByCraftString(craftString)
+		if Profession.IsClassicCrafting() then
+			private.craftName = GetCraftInfo(index)
+		else
+			private.craftName = GetTradeSkillInfo(index)
+			DoTradeSkill(index, quantity)
+		end
 	end
-	if TSM.IsWowClassic() and useVellum and isEnchant and vellumable then
+	if not Environment.IsRetail() and useVellum and isEnchant and vellumable then
 		UseItemByName(ItemInfo.GetName(Profession.GetVellumItemString(craftString)))
 	end
 	private.castingTimeout = nil
@@ -372,17 +378,15 @@ function private.CraftTimeoutMonitor()
 end
 
 function private.GetPlayerCastingInfo()
-	if TSM.IsWowClassic() then
-		return CastingInfo()
-	else
+	if Environment.IsRetail() then
 		return UnitCastingInfo("player")
+	else
+		return CastingInfo()
 	end
 end
 
 function private.SpellMatchesCraft(spellId)
-	if TSM.IsWowClassic() then
-		return GetSpellInfo(spellId) == private.craftName
-	else
+	if Environment.IsRetail() then
 		if not Profession.ScannerHasSkills() then
 			return false
 		end
@@ -401,5 +405,7 @@ function private.SpellMatchesCraft(spellId)
 			local baseItemString = ItemString.GetBase(resultItem) or ""
 			return spellId == private.craftSpellId and baseItemString == private.craftBaseString
 		end
+	else
+		return GetSpellInfo(spellId) == private.craftName
 	end
 end

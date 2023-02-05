@@ -4,9 +4,8 @@
 --    All Rights Reserved - Detailed license information included with addon.     --
 -- ------------------------------------------------------------------------------ --
 
--- This is the main TSM file that holds the majority of the APIs that modules will use.
-
-local _, TSM = ...
+local TSM = select(2, ...) ---@type TSM
+local Environment = TSM.Include("Environment")
 local Log = TSM.Include("Util.Log")
 local Analytics = TSM.Include("Util.Analytics")
 local Math = TSM.Include("Util.Math")
@@ -34,7 +33,7 @@ local private = {
 local LOGOUT_TIME_WARNING_THRESHOLD_MS = 20
 do
 	-- show a message if we were updated
-	if GetAddOnMetadata("TradeSkillMaster", "Version") ~= "v4.12.25" then
+	if GetAddOnMetadata("TradeSkillMaster", "Version") ~= "v4.12.32" then
 		Wow.ShowBasicMessage("TSM was just updated and may not work properly until you restart WoW.")
 	end
 end
@@ -218,7 +217,7 @@ function TSM.OnInitialize()
 		OnTooltipShow = function(tooltip)
 			local cs = Theme.GetColor("INDICATOR_ALT"):GetTextColorPrefix()
 			local ce = "|r"
-			tooltip:AddLine("TradeSkillMaster " .. TSM.GetVersion())
+			tooltip:AddLine("TradeSkillMaster "..Environment.GetVersion())
 			tooltip:AddLine(format(L["%sLeft-Click%s to open the main window"], cs, ce))
 			tooltip:AddLine(format(L["%sDrag%s to move this button"], cs, ce))
 		end,
@@ -226,7 +225,7 @@ function TSM.OnInitialize()
 	LibDBIcon:Register("TradeSkillMaster", dataObj, private.settings.minimapIcon)
 
 	-- cache battle pet names
-	if not TSM.IsWowClassic() then
+	if Environment.HasFeature(Environment.FEATURES.BATTLE_PETS) then
 		for i = 1, C_PetJournal.GetNumPets() do
 			C_PetJournal.GetPetInfoByIndex(i)
 		end
@@ -407,7 +406,7 @@ end
 
 function private.PrintVersions()
 	Log.PrintUser(L["TSM Version Info:"])
-	Log.PrintUserRaw("TradeSkillMaster "..Log.ColorUserAccentText(TSM.GetVersion()))
+	Log.PrintUserRaw("TradeSkillMaster "..Log.ColorUserAccentText(Environment.GetVersion()))
 	local appHelperVersion = GetAddOnMetadata("TradeSkillMaster_AppHelper", "Version")
 	if appHelperVersion then
 		-- use strmatch so that our sed command doesn't replace this string

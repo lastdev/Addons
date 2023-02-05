@@ -8,7 +8,7 @@
 -- An collapsible container is a container which can be collapsed to a single heading line. It is a subclass of the @{Frame} class.
 -- @classmod CollapsibleContainer
 
-local _, TSM = ...
+local TSM = select(2, ...) ---@type TSM
 local CollapsibleContainer = TSM.Include("LibTSMClass").DefineClass("CollapsibleContainer", TSM.UI.Frame)
 local UIElements = TSM.Include("UI.UIElements")
 UIElements.Register(CollapsibleContainer)

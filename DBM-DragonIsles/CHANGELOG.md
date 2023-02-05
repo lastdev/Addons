@@ -1,25 +1,26 @@
 # <DBM> World Bosses (Dragonflight)
 
-## [10.0.21](https://github.com/DeadlyBossMods/DBM-Retail/tree/10.0.21) (2023-01-22)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Retail/compare/10.0.20...10.0.21) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Retail/releases)
+## [10.0.23](https://github.com/DeadlyBossMods/DBM-Retail/tree/10.0.23) (2023-02-02)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Retail/compare/10.0.22...10.0.23) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Retail/releases)
 
-- version bump with no update notification nag. this update is mainly for M+ pushers to get latest fixes now instead of waiting for tuesdays actually mandatory patch update version.  
-- fix sennarth staging  
-- run custom actions on retail repo  
-- lower antispam on thundering just in case  
-- Add ability to force internal handling of nameplate auras when using them on trash modules  
-- Add sanguine nameplates Icons (on by default for tanks) to make it easier to see when mobs are gaining heal from sanguine for M+ Affixes. Note, because of nature of 3rd party addon callbacks requiring registering and unregistering events on boss engage, doing this ona trash module can't use 3rd party mods, this particular nameplate aura will use only internal handling.  
-- attempt to fix cases the unscheduling for thundering yells fails, by resetting theh slate on any new thundering  
-- Filter guild combat messages if you're in that group and inside instance. It should only show if outside (bench group) or not part of group.  
-- bump alpha  
-- Prep new wrath classic tag to give wrath players another round of Ulduar fixes  
-- bump alpha  
-- prep new wrath tag  
-- Don't schedule reinforcement timer twice on pull, fixes double countedown bug on broodkeeper  
-- Fix bad option default  
-- bump alpha  
-- Guess a new wrath release happening after all. Fix typo in toc and prep new tag Closes https://github.com/DeadlyBossMods/DBM-WoTLKC/issues/12  
-- remove hacky object replacement solution and just use a fallback icon if there is no icon setter  
-- Fix minor bug where alerts on kurog in options weren't flagged as mythic only alerts in GUI  
-- Fix cosmetic warning about  duplicate spellid usage  
-- bump alpha  
+- Fix a regression (from when icons were changed to match other mods) that caused broodkeeper to never mark more than one mage  
+- prep tags  
+- Allow core to seemlessly switch to gossip index if gossipID missing  
+- Bump mod HF revision  
+- actually also scrap this warning entirely, it's also too spammy  
+- address even more massive amount of spam on broodkeeper  
+- also distance filter scope two of adds abilities to further reduce spam if adds are far away and not your problem  
+- massively increase alert aggregation due to excessive alert spam on broodkeeper (that agian wasn't reported)  
+- remove unused warnings/options  
+- Update koKR (#179)  
+- Update localization.ru.lua (#178)  
+- disable manual calls to collectgarbage due to a 10.0.5 bug where manually calling garbage collect actually causes natural GC to cease working and instead leak memory like mad. It'll result in a briefly high memory usage report after loading mods, but it'll eventually clear out from non broken automatic GC, it's not urgent to purge it right away and was purely for cosmetic/reporting reasons anyways that we did this.  
+- more tweaks to resolve more potential for mod conflicts/squelching that was unwanted  
+- also cleanup unused this season  
+- This is a bug at least, fixed a bug where thundering count didn't reset on new thundering, if a trash warning from another mod recently used same antispam ID.  
+- more safety for good measure  
+- debug  
+- Scrap lightning crash icon options since it never worked anyways, and change yells to use non icons  
+- Announce mark cast with count when each set goes out  
+- Very tiny tweaks to add timers  
+- bump alphas  

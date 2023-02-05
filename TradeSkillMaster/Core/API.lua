@@ -7,7 +7,7 @@
 --- Public TSM API functions
 -- @module TSM_API
 
-local _, TSM = ...
+local TSM = select(2, ...) ---@type TSM
 local Money = TSM.Include("Util.Money")
 local ItemString = TSM.Include("Util.ItemString")
 local ItemInfo = TSM.Include("Service.ItemInfo")

@@ -5,6 +5,7 @@
 -- ------------------------------------------------------------------------------ --
 
 local TSM = select(2, ...) ---@type TSM
+local Environment = TSM.Include("Environment")
 local UIElements = TSM.Include("UI.UIElements")
 
 
@@ -31,7 +32,7 @@ end
 function SecureMacroActionButton:Acquire()
 	self.__super:Acquire()
 	local frame = self:_GetBaseFrame()
-	frame:RegisterForClicks(not TSM.IsWowClassic() and GetCVarBool("ActionButtonUseKeyDown") and "LeftButtonDown" or "LeftButtonUp")
+	frame:RegisterForClicks(Environment.IsRetail() and GetCVarBool("ActionButtonUseKeyDown") and "LeftButtonDown" or "LeftButtonUp")
 end
 
 function SecureMacroActionButton:Release()

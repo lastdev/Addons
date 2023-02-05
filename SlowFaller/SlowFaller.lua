@@ -151,6 +151,7 @@ local SlowFallEvent = CreateFrame("Frame")
 
 --SlowFallEvent:RegisterEvent("ADDON_LOADED");
 SlowFallEvent:RegisterEvent("PLAYER_ENTERING_WORLD");
+SlowFallEvent:RegisterEvent("PLAYER_REGEN_DISABLED");
 
 function SlowFallEvent:OnEvent(event,arg1)
 
@@ -162,9 +163,12 @@ function SlowFallEvent:OnEvent(event,arg1)
 		end
 	end
 
+	if event == "PLAYER_REGEN_DISABLED" then
+		ClearOverrideBindings(SlowFallEvent);
+	end
+
 	if event == "PLAYER_ENTERING_WORLD" then
 		SlowFallEvent:RegisterEvent("PLAYER_LOGOUT");
-		SlowFallEvent:RegisterEvent("PLAYER_REGEN_DISABLED");
 		SlowFallEvent:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED");
 
 		local spell = Spell:CreateFromSpellID(f.spellID);

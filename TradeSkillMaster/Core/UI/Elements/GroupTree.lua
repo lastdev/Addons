@@ -8,7 +8,7 @@
 -- A group tree is an abstract element which displays TSM groups. It is a subclass of the @{ScrollingTable} class.
 -- @classmod GroupTree
 
-local _, TSM = ...
+local TSM = select(2, ...) ---@type TSM
 local L = TSM.Include("Locale").GetTable()
 local TempTable = TSM.Include("Util.TempTable")
 local String = TSM.Include("Util.String")

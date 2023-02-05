@@ -1,5 +1,5 @@
-## Changed in v2023.1
+## Changed in v2023.2
 
-* Quest ID for Liskanoth
-* Fix an error that was occuring in zones with time-gated events on days with no calendar events active
+* New rares for 10.0.5
+* Fix Emerald Garden Explorer's Notes / Ruby Gem Cluster Map mixup in some treasure tooltips
 

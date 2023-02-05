@@ -6,6 +6,7 @@
 
 local TSM = select(2, ...) ---@type TSM
 local Publisher = TSM.Init("Util.ReactiveClasses.Publisher") ---@class Util.ReactiveClasses.Publisher
+local Environment = TSM.Include("Environment")
 local Math = TSM.Include("Util.Math")
 local String = TSM.Include("Util.String")
 local ObjectPool = TSM.Include("Util.ObjectPool")
@@ -26,6 +27,7 @@ local STEP_DATA_SIZE = 3
 local OPTIMIZATION_IGNORED_STEPS = {
 	IGNORE_NIL = true,
 	PRINT = true,
+	START_PROFILING = true,
 	MAP_TO_BOOLEAN = true,
 	INVERT_BOOLEAN = true,
 	CALL_METHOD = true,
@@ -91,11 +93,12 @@ end
 -- ============================================================================
 
 ---Map published values to another value using a function.
----@param func fun(value: any): any The mapping function which takes the published values and returns the results
+---@param func fun(value: any, arg: any): any The mapping function which takes the published values and returns the results
+---@param arg any An additional argument to pass to the function
 ---@return ReactivePublisher
-function ReactivePublisher:MapWithFunction(func)
+function ReactivePublisher:MapWithFunction(func, arg)
 	assert(type(func) == "function")
-	return self:_AddStepHelper(PUBLISHER_STATES.STEPS, "MAP_WITH_FUNCTION", func)
+	return self:_AddStepHelper(PUBLISHER_STATES.STEPS, "MAP_WITH_FUNCTION", func, arg)
 end
 
 ---Maps published values by calling a method on it.
@@ -234,8 +237,16 @@ end
 ---@param tag? string An optional tag to add to the prints
 ---@return ReactivePublisher
 function ReactivePublisher:Print(tag)
-	assert(TSM.IsDevVersion())
+	assert(Environment.IsDev())
 	return self:_AddStepHelper(PUBLISHER_STATES.STEPS, "PRINT", tag)
+end
+
+---Wraps all following steps in profiling nodes.
+---@param prefix string A prefix to use for the profiling nodes
+---@return ReactivePublisher
+function ReactivePublisher:StartProfiling(prefix)
+	assert(Environment.IsDev())
+	return self:_AddStepHelper(PUBLISHER_STATES.STEPS, "START_PROFILING", prefix)
 end
 
 ---Calls a method with the published values.
@@ -393,9 +404,15 @@ function ReactivePublisher:_HandleData(data, optimizeKey)
 	if optimizeKey and next(self._optimizeKeys) and not self._optimizeKeys[optimizeKey] then
 		return
 	end
+	local finished = false
+	local profilingPrefix = nil
 	for i, stepType, arg1, arg2 in self:_StepIterator() do
+		local stepProfilingNode = profilingPrefix and profilingPrefix.."_"..stepType or nil
+		if stepProfilingNode then
+			TSMDEV.Profiling.StartNode(stepProfilingNode)
+		end
 		if stepType == "MAP_WITH_FUNCTION" then
-			data = arg1(data)
+			data = arg1(data, arg2)
 		elseif stepType == "MAP_WITH_METHOD" then
 			data = data[arg1](data)
 		elseif stepType == "MAP_WITH_KEY" then
@@ -427,28 +444,28 @@ function ReactivePublisher:_HandleData(data, optimizeKey)
 			data = not data
 		elseif stepType == "IGNORE_IF_KEY_EQUALS" then
 			if data[arg1] == arg2 then
-				return
+				finished = true
 			end
 		elseif stepType == "IGNORE_IF_KEY_NOT_EQUALS" then
 			if data[arg1] ~= arg2 then
-				return
+				finished = true
 			end
 		elseif stepType == "IGNORE_IF_NOT_KEY_IN_TABLE" then
 			if arg1[data] == nil then
-				return
+				finished = true
 			end
 		elseif stepType == "IGNORE_IF_NOT_EQUALS" then
 			if data ~= arg1 then
-				return
+				finished = true
 			end
 		elseif stepType == "IGNORE_NIL" then
 			if data == nil then
-				return
+				finished = true
 			end
 		elseif stepType == "IGNORE_WITH_FUNCTION" then
 			local result = arg1(data)
 			if result == false then
-				return
+				finished = true
 			elseif result ~= true then
 				error("Invalid IgnoreWithFunction result: "..tostring(result))
 			end
@@ -460,9 +477,10 @@ function ReactivePublisher:_HandleData(data, optimizeKey)
 			local hash = Math.CalculateHash(value)
 			-- We use stepArg2 to store the previous hash
 			if hash == arg2 then
-				return
+				finished = true
+			else
+				self._stepData[i + 2] = hash
 			end
-			self._stepData[i + 2] = hash
 		elseif stepType == "IGNORE_DUPLICATES_WITH_KEYS" then
 			local hash = nil
 			for key in String.SplitIterator(arg1, KEYS_SEP) do
@@ -474,16 +492,18 @@ function ReactivePublisher:_HandleData(data, optimizeKey)
 			end
 			-- We use stepArg2 to store the previous hash
 			if hash == arg2 then
-				return
+				finished = true
+			else
+				self._stepData[i + 2] = hash
 			end
-			self._stepData[i + 2] = hash
 		elseif stepType == "IGNORE_DUPLICATES_WITH_METHOD" then
 			local hash = data[arg1](data)
 			-- We use stepArg2 to store the previous hash
 			if hash == arg2 then
-				return
+				finished = true
+			else
+				self._stepData[i + 2] = hash
 			end
-			self._stepData[i + 2] = hash
 		elseif stepType == "PRINT" then
 			if arg1 then
 				print(format("Published value (%s):", tostring(arg1)))
@@ -491,38 +511,53 @@ function ReactivePublisher:_HandleData(data, optimizeKey)
 				print("Published value:")
 			end
 			TSMDEV.Dump(data)
+		elseif stepType == "START_PROFILING" then
+			assert(not profilingPrefix)
+			profilingPrefix = arg1
+			TSMDEV.Profiling.StartNode(profilingPrefix)
 		elseif stepType == "CALL_METHOD" then
 			arg1[arg2](arg1, data)
-			return
+			finished = true
 		elseif stepType == "CALL_METHOD_IF_NOT_NIL" then
 			local func = arg1[arg2]
 			if func ~= nil then
 				func(arg1, data)
 			end
-			return
+			finished = true
 		elseif stepType == "CALL_METHOD_FOR_EACH_LIST_VALUE" then
 			for j = 1, #arg1 do
 				local obj = arg1[j]
 				obj[arg2](obj, data)
 			end
-			return
+			finished = true
 		elseif stepType == "CALL_FUNCTION" then
 			arg1(data)
-			return
+			finished = true
 		elseif stepType == "UNPACK_AND_CALL_FUNCTION" then
 			arg1(unpack(data))
-			return
+			finished = true
 		elseif stepType == "UNPACK_AND_CALL_METHOD" then
 			arg1[arg2](arg1, unpack(data))
-			return
+			finished = true
 		elseif stepType == "ASSIGN_TO_TABLE_KEY" then
 			arg1[arg2] = data
-			return
+			finished = true
 		else
 			error("Invalid stepType: "..tostring(stepType))
 		end
+		if stepProfilingNode then
+			TSMDEV.Profiling.EndNode(stepProfilingNode)
+		end
+		if finished then
+			break
+		end
 	end
-	error("Publisher did not terminate")
+	if profilingPrefix then
+		TSMDEV.Profiling.EndNode(profilingPrefix)
+	end
+	if not finished then
+		error("Publisher did not terminate")
+	end
 end
 
 function ReactivePublisher:_StepIterator()

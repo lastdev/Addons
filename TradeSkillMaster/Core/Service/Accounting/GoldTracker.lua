@@ -6,6 +6,7 @@
 
 local TSM = select(2, ...) ---@type TSM
 local GoldTracker = TSM.Accounting:NewPackage("GoldTracker")
+local Environment = TSM.Include("Environment")
 local Event = TSM.Include("Util.Event")
 local Delay = TSM.Include("Util.Delay")
 local CSV = TSM.Include("Util.CSV")
@@ -41,7 +42,7 @@ local ERRONEOUS_ZERO_THRESHOLD = 5 * 1000 * COPPER_PER_GOLD
 
 function GoldTracker.OnInitialize()
 	private.playerGoldRetryTimer = Delay.CreateTimer("PLAYER_GOLD_RETRY", private.PlayerLogGold)
-	if not TSM.IsWowVanillaClassic() then
+	if Environment.HasFeature(Environment.FEATURES.GUILD_BANK) then
 		DefaultUI.RegisterGuildBankVisibleCallback(private.GuildLogGold, true)
 		Event.Register("GUILDBANK_UPDATE_MONEY", private.GuildLogGold)
 	end
@@ -197,7 +198,7 @@ function private.LoadCharacterGoldLog(characterKey, data, lastUpdate)
 end
 
 function private.UpdateGoldLog(goldLog, copper)
-	copper = Math.Round(copper, COPPER_PER_GOLD * (TSM.IsWowClassic() and 1 or 1000))
+	copper = Math.Round(copper, COPPER_PER_GOLD * (Environment.IsRetail() and 1000 or 100))
 	local currentMinute = floor(time() / SECONDS_PER_MIN)
 	local prevRecord = goldLog[#goldLog]
 

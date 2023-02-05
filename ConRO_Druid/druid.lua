@@ -227,6 +227,7 @@ function ConRO.Druid.Balance(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 	local _ForceofNature, _ForceofNature_RDY = ConRO:AbilityReady(Ability.ForceofNature, timeShift);
 	local _FuryofElune, _FuryofElune_RDY = ConRO:AbilityReady(Ability.FuryofElune, timeShift);
 	local _IncarnationChosenofElune, _IncarnationChosenofElune_RDY, _IncarnationChosenofElune_CD = ConRO:AbilityReady(Ability.IncarnationChosenofElune, timeShift);
+	local _IncarnationChosenofEluneOS, _IncarnationChosenofEluneOS_RDY, _IncarnationChosenofEluneOS_CD = ConRO:AbilityReady(Ability.IncarnationChosenofEluneOS, timeShift);
 		local _IncarnationChosenofElune_BUFF = ConRO:Aura(Buff.IncarnationChosenofElune, timeShift);
 	local _Moonfire, _Moonfire_RDY = ConRO:AbilityReady(Ability.Moonfire, timeShift);
 		local _Moonfire_DEBUFF, _, _Moonfire_DUR = ConRO:TargetAura(Debuff.Moonfire, timeShift);
@@ -305,8 +306,12 @@ function ConRO.Druid.Balance(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 
 		if tChosen[Passive.OrbitalStrike.talentID] then
 			_CelestialAlignment, _CelestialAlignment_RDY, _CelestialAlignment_CD = _CelestialAlignmentOS, _CelestialAlignmentOS_RDY, _CelestialAlignmentOS_CD;
+			_IncarnationChosenofElune, _IncarnationChosenofElune_RDY, _IncarnationChosenofElune_CD = _IncarnationChosenofEluneOS, _IncarnationChosenofEluneOS_RDY, _IncarnationChosenofEluneOS_CD;
 		end
 
+		if tChosen[Ability.IncarnationChosenofElune.talentID] then
+			_CelestialAlignment, _CelestialAlignment_RDY, _CelestialAlignment_CD, _CelestialAlignment_BUFF = _IncarnationChosenofElune, _IncarnationChosenofElune_RDY, _IncarnationChosenofElune_CD, _IncarnationChosenofElune_BUFF;
+		end
 
 	local _No_Eclipse = not _EclipseSolar_BUFF and not _EclipseLunar_BUFF;
 
@@ -314,8 +319,7 @@ function ConRO.Druid.Balance(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 	ConRO:AbilityInterrupt(_SolarBeam, _SolarBeam_RDY and ConRO:Interrupt());
 	ConRO:AbilityPurge(_Soothe, _Soothe_RDY and ConRO:Purgable());
 
-	ConRO:AbilityBurst(_CelestialAlignment, _CelestialAlignment_RDY and _Moonfire_DEBUFF and _Sunfire_DEBUFF and (not tChosen[Ability.StellarFlare] or (tChosen[Ability.StellarFlare] and _StellarFlare_DEBUFF)) and (_EclipseSolar_BUFF or _EclipseLunar_BUFF) and not tChosen[Ability.IncarnationChosenofElune] and ConRO:BurstMode(_CelestialAlignment));
-	ConRO:AbilityBurst(_IncarnationChosenofElune, _IncarnationChosenofElune_RDY and _Moonfire_DEBUFF and _Sunfire_DEBUFF and (not tChosen[Ability.StellarFlare] or (tChosen[Ability.StellarFlare] and _StellarFlare_DEBUFF)) and (_EclipseSolar_BUFF or _EclipseLunar_BUFF) and ConRO:BurstMode(_IncarnationChosenofElune));
+	ConRO:AbilityBurst(_CelestialAlignment, _CelestialAlignment_RDY and _Moonfire_DEBUFF and _Sunfire_DEBUFF and (not tChosen[Ability.StellarFlare] or (tChosen[Ability.StellarFlare] and _StellarFlare_DEBUFF)) and (_EclipseSolar_BUFF or _EclipseLunar_BUFF) and ConRO:BurstMode(_CelestialAlignment));
 	ConRO:AbilityBurst(_FuryofElune, _FuryofElune_RDY and _AstralPower <= 60 and (((_CelestialAlignment_BUFF or _CelestialAlignment_CD >= 50) and not tChosen[Ability.IncarnationChosenofElune]) or ((_IncarnationChosenofElune_BUFF or _IncarnationChosenofElune_CD >= 40) and tChosen[Ability.IncarnationChosenofElune])) and ConRO:BurstMode(_FuryofElune));
 	ConRO:AbilityBurst(_ForceofNature, _ForceofNature_RDY and _AstralPower <= 80 and ConRO:BurstMode(_ForceofNature));
 	ConRO:AbilityBurst(_WarriorofElune, _WarriorofElune_RDY and not _WarriorofElune_BUFF and ConRO:BurstMode(_WarriorofElune));
@@ -368,16 +372,9 @@ function ConRO.Druid.Balance(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 			_AdaptiveSwarm_RDY = false;
 		end
 
-		if tChosen[Ability.IncarnationChosenofElune.talentID] then
-			if _IncarnationChosenofElune_RDY and not _IncarnationChosenofElune_BUFF and ConRO:FullMode(_IncarnationChosenofElune) then
-				tinsert(ConRO.SuggestedSpells, _IncarnationChosenofElune);
-				_IncarnationChosenofElune_RDY = false;
-			end
-		else
-			if _CelestialAlignment_RDY and not _CelestialAlignment_BUFF and ConRO:FullMode(_CelestialAlignment) then
-				tinsert(ConRO.SuggestedSpells, _CelestialAlignment);
-				_CelestialAlignment_RDY = false;
-			end
+		if _CelestialAlignment_RDY and not _CelestialAlignment_BUFF and ConRO:FullMode(_CelestialAlignment) then
+			tinsert(ConRO.SuggestedSpells, _CelestialAlignment);
+			_CelestialAlignment_RDY = false;
 		end
 
 		if _ConvoketheSpirits_RDY and _AstralPower < 50 and ConRO:FullMode(_ConvoketheSpirits) then
@@ -435,6 +432,10 @@ function ConRO.Druid.Balance(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 		if _WarriorofElune_RDY and not _WarriorofElune_BUFF and ConRO:FullMode(_WarriorofElune) then
 			tinsert(ConRO.SuggestedSpells, _WarriorofElune);
 			_WarriorofElune_RDY = false;
+		end
+
+		if _Wrath_RDY and _CelestialAlignment_BUFF and ((ConRO_AutoButton:IsVisible() and _enemies_in_range <= 1) or ConRO_SingleButton:IsVisible()) then
+			tinsert(ConRO.SuggestedSpells, _Wrath);
 		end
 
 		if _Starfire_RDY and ((_EclipseLunar_BUFF or _EclipseSolar_BUFF) and (_UmbralEmbrace_BUFF or (ConRO_AutoButton:IsVisible() and _enemies_in_range >= 2) or ConRO_AoEButton:IsVisible())) then
@@ -539,6 +540,7 @@ function ConRO.Druid.Feral(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 	local _Shred, _Shred_RDY = ConRO:AbilityReady(Ability.Shred, timeShift);
 		local _Clearcasting_BUFF = ConRO:Aura(Buff.Clearcasting, timeShift);
 		local _Bloodtalons_BUFF = ConRO:Aura(Buff.Bloodtalons, timeShift);
+		local _SuddenAmbush_BUFF = ConRO:Aura(Buff.SuddenAmbush, timeShift);
 	local _SkullBash, _SkullBash_RDY = ConRO:AbilityReady(Ability.SkullBash, timeShift);
 	local _Soothe, _Soothe_RDY = ConRO:AbilityReady(Ability.Soothe, timeShift);
 	local _Swipe, _Swipe_RDY = ConRO:AbilityReady(Ability.Swipe, timeShift);
@@ -594,6 +596,10 @@ function ConRO.Druid.Feral(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 			_Moonfire = _MoonfireCF;
 		end
 
+		if tChosen[Ability.IncarnationAvatarofAshmane.talentID] then
+			_Berserk, _Berserk_RDY = _IncarnationAvatarofAshmane, _IncarnationAvatarofAshmane_RDY;
+		end
+
 --Indicators		
 	ConRO:AbilityInterrupt(_SkullBash, _SkullBash_RDY and ConRO:Interrupt());
 	ConRO:AbilityPurge(_Soothe, _Soothe_RDY and ConRO:Purgable());
@@ -626,7 +632,7 @@ function ConRO.Druid.Feral(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 			_CatForm_FORM = true;
 		end
 
-		if not _in_combat then
+		if not _in_combat or _Prowl_FORM then
 			if _Prowl_RDY and not _Prowl_FORM then
 				tinsert(ConRO.SuggestedSpells, _Prowl);
 				_Prowl_RDY = false;
@@ -638,86 +644,136 @@ function ConRO.Druid.Feral(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 			end
 		end
 
-		if _Moonfire_RDY and not _Moonfire_DEBUFF and tChosen[Passive.LunarInspiration.talentID] then
-			tinsert(ConRO.SuggestedSpells, _Moonfire);
-			_Moonfire_RDY = false;
-		end
-
 		if _TigersFury_RDY and not _TigersFury_BUFF and _Energy <= _Energy_Max - 55 then
 			tinsert(ConRO.SuggestedSpells, _TigersFury);
 			_TigersFury_RDY = false;
 		end
 
-		if _FerociousBite_RDY and _ApexPredatorsCraving_BUFF then
-			tinsert(ConRO.SuggestedSpells, _FerociousBite);
-			_ApexPredatorsCraving_BUFF = false;
-		end
+		if ((ConRO_AutoButton:IsVisible() and _enemies_in_melee >= 3) or ConRO_AoEButton:IsVisible()) then
+			if _Berserk_RDY and ConRO:FullMode(_Berserk) then
+				tinsert(ConRO.SuggestedSpells, _Berserk);
+				_Berserk_RDY = false;
+			end
 
-		if _FeralFrenzy_RDY and _Combo <= 0 and ConRO:FullMode(_FeralFrenzy) then
-			tinsert(ConRO.SuggestedSpells, _FeralFrenzy);
-			_FeralFrenzy_RDY = false;
-		end
+			if _PrimalWrath_RDY and _Combo == 5 then
+				tinsert(ConRO.SuggestedSpells, _PrimalWrath);
+				_Combo = _Combo - 5;
+			end
 
-		if _AdaptiveSwarm_RDY and not _AdaptiveSwarm_DEBUFF then
-			tinsert(ConRO.SuggestedSpells, _AdaptiveSwarm);
-			_AdaptiveSwarm_RDY = false;
-		end
+			if _FerociousBite_RDY and _ApexPredatorsCraving_BUFF then
+				tinsert(ConRO.SuggestedSpells, _FerociousBite);
+				_ApexPredatorsCraving_BUFF = false;
+			end
 
-		if _Berserk_RDY and not tChosen[Ability.IncarnationAvatarofAshmane.talentID] and ConRO:FullMode(_Berserk) then
-			tinsert(ConRO.SuggestedSpells, _Berserk);
-			_Berserk_RDY = false;
-		end
+			if _ConvoketheSpirits_RDY and _Combo <= 0 and ConRO:FullMode(_ConvoketheSpirits) then
+				tinsert(ConRO.SuggestedSpells, _ConvoketheSpirits);
+				_ConvoketheSpirits_RDY = false;
+			end
 
-		if _IncarnationAvatarofAshmane_RDY and ConRO:FullMode(_IncarnationAvatarofAshmane) then
-			tinsert(ConRO.SuggestedSpells, _IncarnationAvatarofAshmane);
-			_IncarnationAvatarofAshmane_RDY = false;
-		end
+			if _Rake_RDY and not _Rake_DEBUFF then
+				tinsert(ConRO.SuggestedSpells, _Rake);
+			end
 
-		if _PrimalWrath_RDY and _Combo == 5 and _enemies_in_melee >= 2 then
-			tinsert(ConRO.SuggestedSpells, _PrimalWrath);
-			_Combo = _Combo - 5;
-		end
+			if _AdaptiveSwarm_RDY and not _AdaptiveSwarm_DEBUFF then
+				tinsert(ConRO.SuggestedSpells, _AdaptiveSwarm);
+				_AdaptiveSwarm_RDY = false;
+			end
 
-		if _Rip_RDY and (not _Rip_DEBUFF or _Rip_DUR <= 7) and _Combo >= 5 then
-			tinsert(ConRO.SuggestedSpells, _Rip);
-			_Rip_DUR = 24;
-			_Combo = _Combo - 5;
-		end
+			if _Thrash_RDY and _Combo <= 4 and (not _ThrashCF_DEBUFF or _ThrashCF_DUR <= 4) and ConRO.lastSpellId ~= _Thrash then
+				tinsert(ConRO.SuggestedSpells, _Thrash);
+				_Thrash_Cat_DUR = 15;
+				_Combo = _Combo + 1;
+			end
 
-		if _Rake_RDY and not _Rake_DEBUFF then
-			tinsert(ConRO.SuggestedSpells, _Rake);
-		end
+			if _Moonfire_RDY and not _Moonfire_DEBUFF and tChosen[Passive.LunarInspiration.talentID] then
+				tinsert(ConRO.SuggestedSpells, _Moonfire);
+				_Moonfire_RDY = false;
+			end
 
-		if _FerociousBite_RDY and _Rake_DEBUFF and _Combo >= 5 and _Energy >= 50 then
-			tinsert(ConRO.SuggestedSpells, _FerociousBite);
-			_Combo = _Combo - 5;
-		end
+			if _BrutalSlash_RDY and _Combo <= 4 and (_BrutalSlash_CHARGES == _BrutalSlash_MaxCHARGES or (_BrutalSlash_CHARGES == _BrutalSlash_MaxCHARGES - 1 and _BrutalSlash_CCD <= 1.5)) then
+				tinsert(ConRO.SuggestedSpells, _BrutalSlash);
+				_BrutalSlash_CHARGES = _BrutalSlash_CHARGES - 1;
+				_Combo = _Combo + 1;
+			end
 
-		if _ConvoketheSpirits_RDY and ConRO:FullMode(_ConvoketheSpirits) then
-			tinsert(ConRO.SuggestedSpells, _ConvoketheSpirits);
-			_ConvoketheSpirits_RDY = false;
-		end
+			if _BrutalSlash_RDY and _Combo <= 4 then
+				tinsert(ConRO.SuggestedSpells, _BrutalSlash);
+				_BrutalSlash_CHARGES = _BrutalSlash_CHARGES - 1;
+				_Combo = _Combo + 1;
+			end
 
-		if _BrutalSlash_RDY and _Combo <= 4 and (_BrutalSlash_CHARGES == _BrutalSlash_MaxCHARGES or (_BrutalSlash_CHARGES == _BrutalSlash_MaxCHARGES - 1 and _BrutalSlash_CCD <= 1.5)) then
-			tinsert(ConRO.SuggestedSpells, _BrutalSlash);
-			_BrutalSlash_CHARGES = _BrutalSlash_CHARGES - 1;
-			_Combo = _Combo + 1;
-		end
+			if _Swipe_RDY and not tChosen[Ability.BrutalSlash.talentID] and _Combo <= 4 then
+				tinsert(ConRO.SuggestedSpells, _Swipe);
+				_Combo = _Combo + 1;
+			end
 
-		if _Thrash_RDY and _Combo <= 4 and (not _ThrashCF_DEBUFF or _ThrashCF_DUR <= 4) and ((tChosen[Passive.Bloodtalons.talentID] and not _Bloodtalons_BUFF) or tChosen[Passive.TasteforBlood.talentID]) and ConRO.lastSpellId ~= _Thrash then
-			tinsert(ConRO.SuggestedSpells, _Thrash);
-			_Thrash_Cat_DUR = 15;
-			_Combo = _Combo + 1;
-		end
+			if _Thrash_RDY and _Combo <= 4 and tChosen[Passive.Bloodtalons.talentID] and not _Bloodtalons_BUFF and ConRO.lastSpellId ~= _Thrash then
+				tinsert(ConRO.SuggestedSpells, _Thrash);
+				_Thrash_Cat_DUR = 15;
+				_Combo = _Combo + 1;
+			end
+		else
+			if _ConvoketheSpirits_RDY and _Combo <= 0 and ConRO:FullMode(_ConvoketheSpirits) then
+				tinsert(ConRO.SuggestedSpells, _ConvoketheSpirits);
+				_ConvoketheSpirits_RDY = false;
+			end
 
-		if _Swipe_RDY and not tChosen[Ability.BrutalSlash.talentID] and _Combo <= 4 and _enemies_in_melee >= 2 then
-			tinsert(ConRO.SuggestedSpells, _Swipe);
-			_Combo = _Combo + 1;
-		end
+			if _FeralFrenzy_RDY and _Combo <= 0 and ConRO:FullMode(_FeralFrenzy) then
+				tinsert(ConRO.SuggestedSpells, _FeralFrenzy);
+				_FeralFrenzy_RDY = false;
+			end
 
-		if _Shred_RDY and _Combo <= 4 then
-			tinsert(ConRO.SuggestedSpells, _Shred);
-			_Combo = _Combo + 1;
+			if _Berserk_RDY and ConRO:FullMode(_Berserk) then
+				tinsert(ConRO.SuggestedSpells, _Berserk);
+				_Berserk_RDY = false;
+			end
+
+			if _AdaptiveSwarm_RDY and not _AdaptiveSwarm_DEBUFF then
+				tinsert(ConRO.SuggestedSpells, _AdaptiveSwarm);
+				_AdaptiveSwarm_RDY = false;
+			end
+
+			if _Rip_RDY and (not _Rip_DEBUFF or _Rip_DUR <= 7) and _Combo >= 5 then
+				tinsert(ConRO.SuggestedSpells, _Rip);
+				_Rip_DUR = 24;
+				_Combo = _Combo - 5;
+			end
+
+			if _FerociousBite_RDY and _ApexPredatorsCraving_BUFF then
+				tinsert(ConRO.SuggestedSpells, _FerociousBite);
+				_ApexPredatorsCraving_BUFF = false;
+			end
+
+			if _FerociousBite_RDY and _Rip_DUR >= 6 and _Combo >= 5 then
+				tinsert(ConRO.SuggestedSpells, _FerociousBite);
+				_Combo = _Combo - 5;
+			end
+
+			if _Rake_RDY and not _Rake_DEBUFF then
+				tinsert(ConRO.SuggestedSpells, _Rake);
+			end
+
+			if _Moonfire_RDY and not _Moonfire_DEBUFF and tChosen[Passive.LunarInspiration.talentID] then
+				tinsert(ConRO.SuggestedSpells, _Moonfire);
+				_Moonfire_RDY = false;
+			end
+
+			if _BrutalSlash_RDY and _Combo <= 4 and (_BrutalSlash_CHARGES == _BrutalSlash_MaxCHARGES or (_BrutalSlash_CHARGES == _BrutalSlash_MaxCHARGES - 1 and _BrutalSlash_CCD <= 1.5)) then
+				tinsert(ConRO.SuggestedSpells, _BrutalSlash);
+				_BrutalSlash_CHARGES = _BrutalSlash_CHARGES - 1;
+				_Combo = _Combo + 1;
+			end
+
+			if _Thrash_RDY and _Combo <= 4 and (not _ThrashCF_DEBUFF or _ThrashCF_DUR <= 4) and ((tChosen[Passive.Bloodtalons.talentID] and not _Bloodtalons_BUFF) or tChosen[Passive.TasteforBlood.talentID]) and ConRO.lastSpellId ~= _Thrash then
+				tinsert(ConRO.SuggestedSpells, _Thrash);
+				_Thrash_Cat_DUR = 15;
+				_Combo = _Combo + 1;
+			end
+
+			if _Shred_RDY and _Combo <= 4 then
+				tinsert(ConRO.SuggestedSpells, _Shred);
+				_Combo = _Combo + 1;
+			end
 		end
 	end
 	return nil;
@@ -759,7 +815,7 @@ function ConRO.Druid.FeralDef(_, timeShift, currentSpell, gcd, tChosen, pvpChose
 	local _target_in_10yrds = CheckInteractDistance("target", 3);
 
 --Rotations	
-		if _Regrowth_RDY and _PredatorySwiftness_BUFF and _Player_Percent_Health <= 75 then
+		if _Regrowth_RDY and _PredatorySwiftness_BUFF and _Player_Percent_Health <= 95 then
 			tinsert(ConRO.SuggestedDefSpells, _Regrowth);
 		end
 
@@ -802,14 +858,19 @@ function ConRO.Druid.Guardian(_, timeShift, currentSpell, gcd, tChosen, pvpChose
 --Abilities	
 	local _BearForm, _BearForm_RDY = ConRO:AbilityReady(Ability.BearForm, timeShift);
 		local _BearForm_FORM = ConRO:Form(Form.BearForm);
+	local _Berserk, _Berserk_RDY, _Berserk_CD = ConRO:AbilityReady(Ability.BerserkPersistence, timeShift);
 	local _BerserkRavage, _BerserkRavage_RDY = ConRO:AbilityReady(Ability.BerserkRavage, timeShift);
 	local _BerserkUncheckedAggression, _BerserkUncheckedAggression_RDY = ConRO:AbilityReady(Ability.BerserkUncheckedAggression, timeShift);
+	local _ConvoketheSpirits, _ConvoketheSpirits_RDY = ConRO:AbilityReady(Ability.ConvoketheSpirits, timeShift);
+	local _IncarnationGuardianofUrsoc, _IncarnationGuardianofUrsoc_RDY, _IncarnationGuardianofUrsoc_CD = ConRO:AbilityReady(Ability.IncarnationGuardianofUrsoc, timeShift);
 	local _Growl, _Growl_RDY = ConRO:AbilityReady(Ability.Growl, timeShift);
+	local _HeartoftheWild, _HeartoftheWild_RDY = ConRO:AbilityReady(Ability.HeartoftheWild, timeShift);
 	local _Mangle, _Mangle_RDY = ConRO:AbilityReady(Ability.Mangle, timeShift);
 	local _Maul, _Maul_RDY = ConRO:AbilityReady(Ability.Maul, timeShift);
 	local _Moonfire, _Moonfire_RDY = ConRO:AbilityReady(Ability.Moonfire, timeShift);
 		local _GalacticGuardian_BUFF = ConRO:Aura(Buff.GalacticGuardian, timeShift);
 		local _Moonfire_DEBUFF = ConRO:TargetAura(Debuff.Moonfire, timeShift);
+	local _RageoftheSleeper, _RageoftheSleeper_RDY = ConRO:AbilityReady(Ability.RageoftheSleeper, timeShift);
 	local _SkullBash, _SkullBash_RDY = ConRO:AbilityReady(Ability.SkullBash, timeShift);
 	local _Soothe, _Soothe_RDY = ConRO:AbilityReady(Ability.Soothe, timeShift);
 	local _Swipe, _Swipe_RDY = ConRO:AbilityReady(Ability.Swipe, timeShift);
@@ -827,7 +888,7 @@ function ConRO.Druid.Guardian(_, timeShift, currentSpell, gcd, tChosen, pvpChose
 		local _, _WildCharge_RANGE = ConRO:Targets(Ability.WildCharge)
 		local _WildChargeBF = ConRO:AbilityReady(Ability.WildChargeBF, timeShift);
 		local _WildChargeCF	= ConRO:AbilityReady(Ability.WildChargeCF, timeShift);
-	local _ConvoketheSpirits, _ConvoketheSpirits_RDY = ConRO:AbilityReady(Ability.ConvoketheSpirits, timeShift);
+	
 
 --Conditions
 	local _is_moving = ConRO:PlayerSpeed();
@@ -850,12 +911,12 @@ function ConRO.Druid.Guardian(_, timeShift, currentSpell, gcd, tChosen, pvpChose
 			_Swipe = _SwipeCF;
 		end
 
-		if tChosen[Ability.BerserkRavage.talentID] then
-			_Berserk = _BerserkRavage;
-			_Berserk_RDY = _BerserkRavage_RDY;
+		if tChosen[Ability.IncarnationGuardianofUrsoc.talentID] then
+			_Berserk, _Berserk_RDY, _Berserk_CD = _IncarnationGuardianofUrsoc, _IncarnationGuardianofUrsoc_RDY, _IncarnationGuardianofUrsoc_CD;
+		elseif tChosen[Ability.BerserkRavage.talentID] then
+			_Berserk_RDY = _BerserkRavage;
 		elseif tChosen[Ability.BerserkUncheckedAggression.talentID] then
-			_Berserk = _BerserkUncheckedAggression;
-			_Berserk_RDY = _BerserkUncheckedAggression_RDY;
+			_Berserk_RDY = _BerserkUncheckedAggression;
 		end
 
 --Indicators	
@@ -865,7 +926,10 @@ function ConRO.Druid.Guardian(_, timeShift, currentSpell, gcd, tChosen, pvpChose
 
 	ConRO:AbilityTaunt(_Growl, _Growl_RDY and (not ConRO:InRaid() or (ConRO:InRaid() and ConRO:TarYou())));
 
+	ConRO:AbilityBurst(_RageoftheSleeper, _RageoftheSleeper_RDY and ConRO:BurstMode(_RageoftheSleeper));
+	ConRO:AbilityBurst(_HeartoftheWild, _HeartoftheWild_RDY and ConRO:BurstMode(_HeartoftheWild));
 	ConRO:AbilityBurst(_ConvoketheSpirits, _ConvoketheSpirits_RDY and ConRO:BurstMode(_ConvoketheSpirits));
+	ConRO:AbilityBurst(_Berserk, _Berserk_RDY and _Berserk_CD <= 0 and ConRO:BurstMode(_Berserk));
 
 --Rotations	
 	for i = 1, 2, 1 do
@@ -874,17 +938,32 @@ function ConRO.Druid.Guardian(_, timeShift, currentSpell, gcd, tChosen, pvpChose
 			_BearForm_FORM = true;
 		end
 
+		if _RageoftheSleeper_RDY and ConRO:FullMode(_RageoftheSleeper) then
+			tinsert(ConRO.SuggestedSpells, _RageoftheSleeper);
+			_RageoftheSleeper_RDY = false;
+		end
+
+		if _HeartoftheWild_RDY and ConRO:FullMode(_HeartoftheWild) then
+			tinsert(ConRO.SuggestedSpells, _HeartoftheWild);
+			_HeartoftheWild_RDY = false;
+		end
+
+		if _ConvoketheSpirits_RDY and ConRO:FullMode(_ConvoketheSpirits) then
+			tinsert(ConRO.SuggestedSpells, _ConvoketheSpirits);
+			_ConvoketheSpirits_RDY = false;
+		end
+
+		if _Berserk_RDY and _Berserk_CD <= 0 and ConRO:FullMode(_Berserk) then
+			tinsert(ConRO.SuggestedSpells, _Berserk);
+			_Berserk_RDY = false;
+		end
+
 		if _Moonfire_RDY and not _Moonfire_DEBUFF then
 			tinsert(ConRO.SuggestedSpells, _Moonfire);
 			_Moonfire_DEBUFF = true;
 		end
 
-		if _Moonfire_RDY and _GalacticGuardian_BUFF and _enemies_in_melee == 1  then
-			tinsert(ConRO.SuggestedSpells, _Moonfire);
-			_GalacticGuardian_BUFF = false;
-		end
-
-		if _Thrash_RDY and (_Thrash_COUNT < 3 or _enemies_in_melee >= 2) then
+		if _Thrash_RDY then
 			tinsert(ConRO.SuggestedSpells, _Thrash);
 			_Thrash_RDY = false;
 		end
@@ -894,28 +973,19 @@ function ConRO.Druid.Guardian(_, timeShift, currentSpell, gcd, tChosen, pvpChose
 			_Pulverize_RDY = false;
 		end
 
-		if _Mangle_RDY and _enemies_in_melee <= 3 then
+		if _Mangle_RDY then
 			tinsert(ConRO.SuggestedSpells, _Mangle);
 			_Mangle_RDY = false;
 		end
 
-		if _Thrash_RDY and _enemies_in_melee == 1 then
-			tinsert(ConRO.SuggestedSpells, _Thrash);
-			_Thrash_RDY = false;
-		end
-
-		if _Moonfire_RDY and _GalacticGuardian_BUFF and _enemies_in_melee <= 5  then
-			tinsert(ConRO.SuggestedSpells, _Moonfire);
-			_GalacticGuardian_BUFF = false;
-		end
-
-		if _Maul_RDY and not ConRO:TarYou() and _Rage >= 90 and _enemies_in_melee <= 3 then
+		if _Maul_RDY and _Rage >= 90 then
 			tinsert(ConRO.SuggestedSpells, _Maul);
 			_Rage = _Rage - 40;
 		end
 
 		if _Swipe_RDY then
 			tinsert(ConRO.SuggestedSpells, _Swipe);
+			_Swipe_RDY = false;
 		end
 	end
 	return nil;
@@ -951,11 +1021,8 @@ function ConRO.Druid.GuardianDef(_, timeShift, currentSpell, gcd, tChosen, pvpCh
 	local _Ironfur, _Ironfur_RDY 																		= ConRO:AbilityReady(Ability.Ironfur, timeShift);
 		local _Ironfur_BUFF, _Ironfur_COUNT																	= ConRO:Aura(Buff.Ironfur, timeShift);
 	local _FrenziedRegeneration, _FrenziedRegeneration_RDY 												= ConRO:AbilityReady(Ability.FrenziedRegeneration, timeShift);
-	local _Berserk, _Berserk_RDY																		= ConRO:AbilityReady(Ability.BerserkPersistence, timeShift);
 
 	local _BristlingFur, _BristlingFur_RDY																= ConRO:AbilityReady(Ability.BristlingFur, timeShift);
-	local _IncarnationGuardianofUrsoc, _IncarnationGuardianofUrsoc_RDY									= ConRO:AbilityReady(Ability.IncarnationGuardianofUrsoc, timeShift);
-		local _IncarnationGuardianofUrsoc_BUFF																= ConRO:Aura(Buff.IncarnationGuardianofUrsoc, timeShift);
 
 --Conditions
 	local _is_moving 																					= ConRO:PlayerSpeed();
@@ -973,16 +1040,6 @@ function ConRO.Druid.GuardianDef(_, timeShift, currentSpell, gcd, tChosen, pvpCh
 
 		if _Ironfur_RDY and ConRO:TarYou() and _Ironfur_COUNT < 4 then
 			tinsert(ConRO.SuggestedDefSpells, _Ironfur);
-		end
-
-		if tChosen[Ability.IncarnationGuardianofUrsoc.talentID] then
-			if _IncarnationGuardianofUrsoc_RDY and not _Barkskin_BUFF and not _SurvivalInstincts_BUFF then
-				tinsert(ConRO.SuggestedDefSpells, _IncarnationGuardianofUrsoc);
-			end
-		else
-			if _Berserk_RDY then
-				tinsert(ConRO.SuggestedDefSpells, _Berserk);
-			end
 		end
 
 		if _Barkskin_RDY and not _IncarnationGuardianofUrsoc_BUFF and not _SurvivalInstincts_BUFF then

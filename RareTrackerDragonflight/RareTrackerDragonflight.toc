@@ -1,8 +1,8 @@
-## Interface: 100002
+## Interface: 100005
 ## Title: RareTrackerDragonflight
 ## Notes: Track and coordinate rare spawn timers in the zones released during the Dragonflight expansion.
 ## Author: Melroy
-## Version: 7.2.0
+## Version: 7.2.1
 ## Dependencies: RareTrackerCore
 
 Locales\enUS.lua

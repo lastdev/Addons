@@ -44,7 +44,7 @@ local function handler (msg)
 		print("Lust Detector is now set for announcing to |cffff0000"..LUSTDETECTOR.."|r.")
 		
 	elseif msg == 'TEST' then
-		LUSTDETECTORMSG("[LD Test] ADDON: Lust Detector is working correctly!")
+		LUSTDETECTORMSG("[LD Test] {rt8} ADDON: Lust Detector is working correctly!")
 		
 	else
 		print("Lust Detector Status: is |cff1cb619"..(LUSTDETECTOR and "On" or "Off").."|r and announcing to: |cff1cb619"..LUSTDETECTORMode.."|r.\nCommands: \n/ld on, /ld off, /ld test, /ld group, /ld self")
@@ -66,16 +66,16 @@ local HasteItem = {
 }
 
 local warpSpells = {
-	[2825] = true, 		-- Bloodlust
-	[32182] = true, 	-- Heroism 
-	[80353] = true, 	-- Time Warp
-    [264667] = true, -- Primal Rage
+	[2825] = true, -- Bloodlust
+	[32182] = true, -- Heroism 
+	[80353] = true, -- Time Warp
+    [264667] = true, -- Primal Rage 1
 	[390386] = true, -- Fury of the Aspects(Dracthyr Evoker DF)
-	[1626] = true, -- Primal Rage
-	[275200] = true, -- Primal Rage
-	[204276] = true, -- Primal Rage
-	[357650] = true, -- Primal Rage | Raiva Primeva(PTBR)
-	[272678] = true, 	-- Primal Rage
+	[1626] = true, -- Primal Rage 2
+	[275200] = true, -- Primal Rage 3
+	[204276] = true, -- Primal Rage 4
+	[357650] = true, -- Primal Rage | Raiva Primeva(PTBR) 4.5
+	[272678] = true, 	-- Primal Rage 6
 	[293076] = true, -- Mallet of Thunderous Skins
 }
 
@@ -92,9 +92,9 @@ frame:SetScript("OnEvent", function(self, event, ...)
 			end
 
 			if HasteItem[spellID] then
-				LUSTDETECTORMSG("{rt1} Lust Detector: " .. UnitName(sourceName) .. " used " .. GetSpellLink(spellID) .. " and increased +15% haste on party!! {rt1}", chatType)
+				LUSTDETECTORMSG("{rt2} Lust Detector: " .. UnitName(sourceName) .. " used " .. GetSpellLink(spellID) .. " and increased +15% haste on party!! {rt2}", chatType)
 				elseif warpSpells[spellID] then
-				LUSTDETECTORMSG("{rt3} [Lust Detector]: " .. UnitName(sourceName) .. " cast " .. GetSpellLink(spellID) .. " and increased +30% haste on party!! {rt3}", chatType)
+				LUSTDETECTORMSG("{rt5} [Lust Detector]: " .. UnitName(sourceName) .. " cast " .. GetSpellLink(spellID) .. " and increased +30% haste on party!! {rt5}", chatType)
 				if UnitIsUnit("pet", sourceName) then
 						sourceName = ("%s"):format(UnitName("player"))
 					elseif IsInRaid() then

@@ -1,5 +1,5 @@
-## Interface: 100002
-## Version: 2.04
+## Interface: 100005
+## Version: 2.06
 ## Title: Dark Soil Tillers
 ## Title-deDE: Dunkle Erde Die Ackerbauern
 ## Title-esES: Los Labradores Tierra Oscura

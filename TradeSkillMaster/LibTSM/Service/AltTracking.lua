@@ -11,6 +11,7 @@ local TempTable = TSM.Include("Util.TempTable")
 local ItemString = TSM.Include("Util.ItemString")
 local Vararg = TSM.Include("Util.Vararg")
 local Wow = TSM.Include("Util.Wow")
+local Table = TSM.Include("Util.Table")
 local Settings = TSM.Include("Service.Settings")
 local Sync = TSM.Include("Service.Sync")
 local PlayerInfo = TSM.Include("Service.PlayerInfo")
@@ -140,8 +141,7 @@ function AltTracking.CharacterIterator()
 	local result = TempTable.Acquire()
 	for _, cacheKey in ipairs(private.characterFactionrealmCache) do
 		local character, factionrealm = strsplit(CACHE_SEP, cacheKey)
-		tinsert(result, character)
-		tinsert(result, factionrealm)
+		Table.InsertMultiple(result, character, factionrealm)
 	end
 	return TempTable.Iterator(result, 2)
 end
@@ -151,8 +151,7 @@ function AltTracking.GuildQuantityIterator(itemString)
 	for _, guildName, factionrealm in PlayerInfo.GuildIterator() do
 		local quantity = AltTracking.GetGuildQuantity(itemString, guildName, factionrealm)
 		if quantity > 0 then
-			tinsert(result, guildName)
-			tinsert(result, quantity)
+			Table.InsertMultiple(result, guildName, quantity)
 		end
 	end
 	return TempTable.Iterator(result, 2)

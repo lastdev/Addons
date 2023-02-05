@@ -1,8 +1,8 @@
-## Interface: 100002
+## Interface: 100005
 ## Author: Voopie
 ## Title: Rune Helper [|cffff6a00Tazavesh, the Veiled Market|r]
 ## Notes: Helper to fight the boss Hylbrande in Tazavesh
-## Version: 1.11
+## Version: 1.12
 
 ChatThrottleLib.lua
 RuneHelper.lua

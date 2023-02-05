@@ -1,6 +1,6 @@
 # <DBM> Spell Timers
 
-## [r144](https://github.com/DeadlyBossMods/DBM-SpellTimers/tree/r144) (2023-01-17)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-SpellTimers/compare/r143...r144) [Previous Releases](https://github.com/DeadlyBossMods/DBM-SpellTimers/releases)
+## [r145](https://github.com/DeadlyBossMods/DBM-SpellTimers/tree/r145) (2023-01-24)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-SpellTimers/compare/r144...r145) [Previous Releases](https://github.com/DeadlyBossMods/DBM-SpellTimers/releases)
 
-- bump toc for wrath  
+- bump toc  

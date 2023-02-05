@@ -37,9 +37,9 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Deathtouch		= "Deathtouch",
-	Dispel			= "Dispel",
-	ExtendReset		= "Your Ritualist icon dropdown setting has been reset due to fact you were using extended icons before, but aren't any longer"
+	Deathtouch		= "Смертельное касание",
+	Dispel			= "Рассеивание",
+	ExtendReset		= "Настройка раскрывающегося списка значков Ритуалиста была сброшена из-за того, что Вы раньше использовали расширенные значки, но теперь не используете их"
 })
 
 ---------------------------

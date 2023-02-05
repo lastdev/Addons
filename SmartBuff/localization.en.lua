@@ -4,11 +4,13 @@
 
 -- Whats new info
 SMARTBUFF_WHATSNEW = "\n\n|cffffffff         Whats new:|r\n\n"
-  .."          |cffffffffDragonflight version by Codermik, additional\n"
+  .."          |cffffffffDragonflight version by Codermik, additional.\n"
   .."          retail coding by Speedwaystar.|cff00e0ff\n\n\n"
-  .."          Changes in r17.200123:\n\n"
-  .."             * Added Warlock's Inquisitor's Gaze.\n"
-  .."             * Changed default splash font.\n\n"
+  .."          Changes in r19.030223:\n\n"
+  .."             * GetSpellBookItemName now used to iterate\n"
+  .."                over the players spellbook.\n\n"
+  .."             * Other bug fixes, see github for detailed\n"
+  .."                information on changes in this version.\n\n"
   .."\n\n"
   .."          |c0000FF96Many thanks to Chris S., Samantha R. and\n"
   .."          Twilight's Sundries for their kind donations.\n"

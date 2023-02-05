@@ -17,8 +17,8 @@ local L
 L= DBM:GetModLocalization(2428)
 
 L:SetOptionLocalization({
-	SortDesc 				= "Сортировать $spell:334755 Инфофрейм по наибольшему стаку дебаффов (вместо наименьшего).",
-	ShowTimeNotStacks		= "Показать оставшееся время $spell:334755 Инфофрейм вместо количества стака."
+	SortDesc 				= "Сортировать $spell:334755 на инфофрейме по наибольшему стаку дебаффов (вместо наименьшего).",
+	ShowTimeNotStacks		= "Показать оставшееся время $spell:334755 на инфофрейме вместо количества стака."
 })
 
 ---------------------------
@@ -64,7 +64,7 @@ L= DBM:GetModLocalization(2425)
 
 L:SetOptionLocalization({
 	ExperimentalTimerCorrection	= "Автоматически настраивать таймеры, когда способности попадают в очередь заклинаний из-за других способностей",
-	BladeMarking				= "Set marking behavior for raid (If raid leader, overrides raid)",
+	BladeMarking				= "Установить поведение маркировки для рейда (если лидер рейда, то переопределяет рейд)",
 	SetOne						= "DBM по умолчанию",
 	SetTwo						= "BigWigs по умолчанию"
 })

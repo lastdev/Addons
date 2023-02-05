@@ -4,8 +4,9 @@
 --    All Rights Reserved - Detailed license information included with addon.     --
 -- ------------------------------------------------------------------------------ --
 
-local _, TSM = ...
-local TooltipScanning = TSM.Init("Service.TooltipScanning")
+local TSM = select(2, ...) ---@type TSM
+local TooltipScanning = TSM.Init("Service.TooltipScanning") ---@class Service.TooltipScanning
+local Environment = TSM.Include("Environment")
 local ItemString = TSM.Include("Util.ItemString")
 local Container = TSM.Include("Util.Container")
 local private = {
@@ -29,7 +30,7 @@ function TooltipScanning.IsSoulbound(bag, slot)
 	end
 
 	local info = private.SetContainerItem(bag, slot)
-	if TSM.IsWowClassic() and private.tooltip:NumLines() < 1 then
+	if not Environment.HasFeature(Environment.FEATURES.C_TOOLTIP_INFO) and private.tooltip:NumLines() < 1 then
 		-- The tooltip didn't fully load yet
 		return false, nil, nil
 	end
@@ -51,7 +52,7 @@ function TooltipScanning.IsSoulbound(bag, slot)
 end
 
 function TooltipScanning.HasUsedCharges(bag, slot)
-	assert(TSM.IsWowClassic())
+	assert(not Environment.HasFeature(Environment.FEATURES.C_TOOLTIP_INFO))
 	local itemId = Container.GetItemId(bag, slot)
 	if not itemId then
 		-- No item in this slot
@@ -80,11 +81,11 @@ function TooltipScanning.GetInboxMaxUnique(index, num)
 	num = num or 1
 
 	local speciesId, info = nil, nil
-	if TSM.IsWowClassic() then
-		speciesId = private.SetInboxItem(index, num)
-	else
+	if Environment.HasFeature(Environment.FEATURES.C_TOOLTIP_INFO) then
 		info = private.SetInboxItem(index, num)
 		speciesId = info.battlePetSpeciesID
+	else
+		speciesId = private.SetInboxItem(index, num)
 	end
 	if speciesId and speciesId > 0 then
 		-- No max for battle pets
@@ -108,20 +109,23 @@ function TooltipScanning.GetInboxMaxUnique(index, num)
 end
 
 function TooltipScanning.GetInboxBattlePetInfo(index, attachIndex)
-	if TSM.IsWowClassic() then
-		return private.SetInboxItem(index, attachIndex)
-	else
+	if Environment.HasFeature(Environment.FEATURES.C_TOOLTIP_INFO) then
 		local info = private.SetInboxItem(index, attachIndex)
 		return info.battlePetSpeciesID, info.battlePetLevel, info.battlePetBreedQuality
+	else
+		return private.SetInboxItem(index, attachIndex)
 	end
 end
 
 function TooltipScanning.GetBuildBankBattlePetInfo(tab, slot)
-	if TSM.IsWowClassic() then
-		return private.SetGuildBankItem(tab, slot)
-	else
+	if Environment.HasFeature(Environment.FEATURES.C_TOOLTIP_INFO) then
 		local info = private.SetGuildBankItem(tab, slot)
+		if not info then
+			return nil, nil, nil
+		end
 		return info.battlePetSpeciesID, info.battlePetLevel, info.battlePetBreedQuality
+	else
+		return private.SetGuildBankItem(tab, slot)
 	end
 end
 
@@ -134,15 +138,7 @@ end
 
 function private.SetContainerItem(bag, slot)
 	private.PrepareTooltip()
-	if TSM.IsWowClassic() then
-		if bag == BANK_CONTAINER then
-			private.tooltip:SetInventoryItem("player", BankButtonIDToInvSlotID(slot))
-		elseif bag == REAGENTBANK_CONTAINER then
-			private.tooltip:SetInventoryItem("player", ReagentBankButtonIDToInvSlotID(slot))
-		else
-			private.tooltip:SetBagItem(bag, slot)
-		end
-	else
+	if Environment.HasFeature(Environment.FEATURES.C_TOOLTIP_INFO) then
 		local info = nil
 		if bag == BANK_CONTAINER then
 			info = C_TooltipInfo.GetInventoryItem("player", BankButtonIDToInvSlotID(slot), true)
@@ -153,44 +149,55 @@ function private.SetContainerItem(bag, slot)
 		end
 		TooltipUtil.SurfaceArgs(info)
 		return info
+	else
+		if bag == BANK_CONTAINER then
+			private.tooltip:SetInventoryItem("player", BankButtonIDToInvSlotID(slot))
+		elseif bag == REAGENTBANK_CONTAINER then
+			private.tooltip:SetInventoryItem("player", ReagentBankButtonIDToInvSlotID(slot))
+		else
+			private.tooltip:SetBagItem(bag, slot)
+		end
 	end
 end
 
 function private.SetItemId(itemId)
 	private.PrepareTooltip()
-	if TSM.IsWowClassic() then
-		private.tooltip:SetItemByID(itemId)
-	else
+	if Environment.HasFeature(Environment.FEATURES.C_TOOLTIP_INFO) then
 		local info =  C_TooltipInfo.GetItemByID(itemId)
 		TooltipUtil.SurfaceArgs(info)
 		return info
+	else
+		private.tooltip:SetItemByID(itemId)
 	end
 end
 
 function private.SetInboxItem(index, attachIndex)
 	private.PrepareTooltip()
-	if TSM.IsWowClassic() then
-		return select(2, private.tooltip:SetInboxItem(index, attachIndex))
-	else
+	if Environment.HasFeature(Environment.FEATURES.C_TOOLTIP_INFO) then
 		local info = C_TooltipInfo.GetInboxItem(index, attachIndex)
 		TooltipUtil.SurfaceArgs(info)
 		return info
+	else
+		return select(2, private.tooltip:SetInboxItem(index, attachIndex))
 	end
 end
 
 function private.SetGuildBankItem(tab, slot)
 	private.PrepareTooltip()
-	if TSM.IsWowClassic() then
-		return private.tooltip:SetGuildBankItem(tab, slot)
-	else
+	if Environment.HasFeature(Environment.FEATURES.C_TOOLTIP_INFO) then
 		local info = C_TooltipInfo.GetGuildBankItem(tab, slot)
+		if not info then
+			return nil
+		end
 		TooltipUtil.SurfaceArgs(info)
 		return info
+	else
+		return private.tooltip:SetGuildBankItem(tab, slot)
 	end
 end
 
 function private.PrepareTooltip()
-	if not TSM.IsWowClassic() then
+	if Environment.HasFeature(Environment.FEATURES.C_TOOLTIP_INFO) then
 		return
 	end
 	private.tooltip = private.tooltip or CreateFrame("GameTooltip", "TSMScanTooltip", UIParent, "GameTooltipTemplate")
@@ -221,29 +228,29 @@ function private.ScanTooltipCharges(info)
 end
 
 function private.TooltipLineIterator(info)
-	if TSM.IsWowClassic() then
-		assert(not info)
-		return private.TooltipLineIteratorHelper, nil, 1
-	else
+	if Environment.HasFeature(Environment.FEATURES.C_TOOLTIP_INFO) then
 		assert(info)
 		return private.TooltipLineIteratorHelper, info, 1
+	else
+		assert(not info)
+		return private.TooltipLineIteratorHelper, nil, 1
 	end
 end
 
 function private.TooltipLineIteratorHelper(info, index)
 	while true do
 		index = index + 1
-		local numLines = TSM.IsWowClassic() and private.tooltip:NumLines() or #info.lines
+		local numLines = Environment.HasFeature(Environment.FEATURES.C_TOOLTIP_INFO) and #info.lines or private.tooltip:NumLines()
 		if index > numLines then
 			return
 		end
 		local text = nil
-		if TSM.IsWowClassic() then
-			local tooltipText = _G["TSMScanTooltipTextLeft"..index]
-			text = strtrim(tooltipText and tooltipText:GetText() or "")
-		else
+		if Environment.HasFeature(Environment.FEATURES.C_TOOLTIP_INFO) then
 			TooltipUtil.SurfaceArgs(info.lines[index])
 			text = info.lines[index].leftText
+		else
+			local tooltipText = _G["TSMScanTooltipTextLeft"..index]
+			text = strtrim(tooltipText and tooltipText:GetText() or "")
 		end
 		if text and text ~= "" then
 			return index, text

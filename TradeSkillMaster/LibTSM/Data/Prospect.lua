@@ -4,8 +4,9 @@
 --    All Rights Reserved - Detailed license information included with addon.     --
 -- ------------------------------------------------------------------------------ --
 
-local _, TSM = ...
-local Prospect = TSM.Init("Data.Prospect")
+local TSM = select(2, ...) ---@type TSM
+local Prospect = TSM.Init("Data.Prospect") ---@class Data.Prospect
+local Environment = TSM.Include("Environment")
 local private = {}
 local DATA = nil
 
@@ -15,9 +16,9 @@ local DATA = nil
 -- Prospect Data
 -- ============================================================================
 
-if TSM.IsWowVanillaClassic() then
+if Environment.IsVanillaClassic() then
 	DATA = {}
-elseif TSM.IsWowWrathClassic() then
+elseif Environment.IsWrathClassic() then
 	DATA = {
 		-- ======================================== Uncommon Gems ======================================
 		["i:774"] = { -- Malachite
@@ -201,7 +202,7 @@ elseif TSM.IsWowWrathClassic() then
 			["i:36910"] = {requiredSkill = 450, matRate = 0.0300, minAmount = 1, maxAmount = 2, amountOfMats = 0.0061}, -- Titanium Ore
 		},
 	}
-else
+elseif Environment.IsRetail() then
 	DATA = {
 		-- ======================================== Uncommon Gems ======================================
 		["i:774"] = { -- Malachite
@@ -721,6 +722,8 @@ else
 			["i:187700"] = {matRate = 0.0450, minAmount = 1, maxAmount = 3, amountOfMats = 0.0180}, -- Progenium Ore
 		},
 	}
+else
+	error("Invalid game version")
 end
 
 

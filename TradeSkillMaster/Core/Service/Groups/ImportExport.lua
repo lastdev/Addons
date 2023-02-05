@@ -4,8 +4,9 @@
 --    All Rights Reserved - Detailed license information included with addon.     --
 -- ------------------------------------------------------------------------------ --
 
-local _, TSM = ...
+local TSM = select(2, ...) ---@type TSM
 local ImportExport = TSM.Groups:NewPackage("ImportExport")
+local Environment = TSM.Include("Environment")
 local L = TSM.Include("Locale").GetTable()
 local TempTable = TSM.Include("Util.TempTable")
 local Table = TSM.Include("Util.Table")
@@ -13,10 +14,12 @@ local Log = TSM.Include("Util.Log")
 local String = TSM.Include("Util.String")
 local ItemString = TSM.Include("Util.ItemString")
 local CustomPrice = TSM.Include("Service.CustomPrice")
+local Settings = TSM.Include("Service.Settings")
 local AceSerializer = LibStub("AceSerializer-3.0")
 local LibDeflate = LibStub("LibDeflate")
 local LibSerialize = LibStub("LibSerialize")
 local private = {
+	settings = nil,
 	isOperationSettingsTable = {},
 	importContext = {
 		groupName = nil,
@@ -49,7 +52,7 @@ local EXPORT_CUSTOM_STRINGS = {
 		maxPrice = true,
 		normalPrice = true,
 		cancelRepostThreshold = true,
-		stackSize = TSM.IsWowClassic() or nil,
+		stackSize = not Environment.IsRetail() and true or nil,
 	},
 	Crafting = {
 		minRestock = true,
@@ -84,6 +87,11 @@ local SERIALIZE_OPTIONS = {
 -- ============================================================================
 -- Module Functions
 -- ============================================================================
+
+function ImportExport.OnInitialize()
+	private.settings = Settings.NewView()
+		:AddKey("global", "userData", "customPriceSources")
+end
 
 function ImportExport.GenerateExport(exportGroupPath, includeSubGroups, excludeOperations, excludeCustomSources)
 	assert(exportGroupPath ~= TSM.CONST.ROOT_GROUP_PATH)
@@ -195,7 +203,7 @@ function ImportExport.GetImportTotals()
 	end
 	local numExistingCustomSources = 0
 	for name in pairs(private.importContext.customSources) do
-		if TSM.db.global.userData.customPriceSources[name] then
+		if private.settings.customPriceSources[name] then
 			numExistingCustomSources = numExistingCustomSources + 1
 		end
 	end
@@ -262,7 +270,7 @@ function ImportExport.CommitImport(moveExistingItems, includeOperations, replace
 				end
 			end
 			for name in pairs(private.importContext.customSources) do
-				if TSM.db.global.userData.customPriceSources[name] then
+				if private.settings.customPriceSources[name] then
 					private.importContext.customSources[name] = nil
 				end
 			end

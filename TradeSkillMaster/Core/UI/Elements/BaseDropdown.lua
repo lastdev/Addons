@@ -9,7 +9,7 @@
 -- @{MultiselectionDropdown} classes. It is a subclass of the @{Text} class.
 -- @classmod BaseDropdown
 
-local _, TSM = ...
+local TSM = select(2, ...) ---@type TSM
 local Rectangle = TSM.Include("UI.Rectangle")
 local Color = TSM.Include("Util.Color")
 local Theme = TSM.Include("Util.Theme")

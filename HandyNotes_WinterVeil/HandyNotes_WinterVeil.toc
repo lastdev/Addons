@@ -1,5 +1,5 @@
-## Interface: 100002
-## Version: 1.07
+## Interface: 100005
+## Version: 1.08
 ## Author: Taraezor
 ## Title: Winter Veil
 ## Title-deDE: Winterhauchfest

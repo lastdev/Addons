@@ -4,13 +4,12 @@
 
 local FOLDER_NAME, private = ...
 
-local addon = LibStub("AceAddon-3.0"):NewAddon(FOLDER_NAME, "AceEvent-3.0", "AceTimer-3.0")
+local addon = LibStub("AceAddon-3.0"):NewAddon(FOLDER_NAME, "AceEvent-3.0")
 local AceDB = LibStub("AceDB-3.0")
 local HandyNotes = LibStub("AceAddon-3.0"):GetAddon("HandyNotes")
 local HBD = LibStub('HereBeDragons-2.0')
 local L = LibStub("AceLocale-3.0"):GetLocale(FOLDER_NAME)
 
-private.DATA = {}
 private.locale = L
 
 addon.constants = private.constants
@@ -19,16 +18,6 @@ _G.HandyNotes_Valdrakken = addon
 
 local IsQuestCompleted = C_QuestLog.IsQuestFlaggedCompleted
 local constantsicon = private.constants.icon
-local DATA = private.DATA
-
-----------------------------------------------------------------------------------------------------
------------------------------------------------LOCALS-----------------------------------------------
-----------------------------------------------------------------------------------------------------
-
-local requires          = L["handler_tooltip_requires"]
-local RequiresPlayerLvl = L["handler_tooltip_requires_level"]
-local RequiresQuest     = L["handler_tooltip_quest"]
-local RetrievingData    = L["handler_tooltip_data"]
 
 ----------------------------------------------------------------------------------------------------
 --------------------------------------------GET NPC NAMES-------------------------------------------
@@ -50,7 +39,7 @@ end
 ---------------------------------------------PROFESSIONS--------------------------------------------
 ----------------------------------------------------------------------------------------------------
 
-function addon:CharacterHasProfession(SkillLineID)
+local function CharacterHasProfession(SkillLineID)
     local prof1, prof2 = GetProfessions()
     local ID1 = prof1 and select(7, GetProfessionInfo(prof1))
     local ID2 = prof2 and select(7, GetProfessionInfo(prof2))
@@ -185,13 +174,13 @@ local function SetTooltip(tooltip, point)
             tooltip:AddLine(Prepare(point.multilabel, point.multinote))
         end
         if (point.level and UnitLevel("player") < point.level) then
-            tooltip:AddLine(RequiresPlayerLvl..": "..point.level, 1) -- red
+            tooltip:AddLine(L["handler_tooltip_requires_level"]..": "..point.level, 1) -- red
         end
         if (point.quest and not IsQuestCompleted(point.quest)) then
             if (C_QuestLog.GetTitleForQuestID(point.quest) ~= nil) then
-                tooltip:AddLine(RequiresQuest..": ["..C_QuestLog.GetTitleForQuestID(point.quest).."] (ID: "..point.quest..")",1,0,0)
+                tooltip:AddLine(L["handler_tooltip_quest"]..": ["..C_QuestLog.GetTitleForQuestID(point.quest).."] (ID: "..point.quest..")",1,0,0)
             else
-                tooltip:AddLine(RetrievingData,1,0,1) -- pink
+                tooltip:AddLine(L["handler_tooltip_data"],1,0,1) -- pink
                 C_Timer.After(1, function() addon:Refresh() end) -- Refresh
                 -- print("refreshed")
             end
@@ -389,7 +378,7 @@ do
             return false
         end
         -- this will check if the node is for a specific profession
-        if (point.profession and (not addon:CharacterHasProfession(point.profession) and HasTwoProfessions()) and private.db.show_onlymytrainers and not point.auctioneer) then
+        if (point.profession and (not CharacterHasProfession(point.profession) and HasTwoProfessions()) and private.db.show_onlymytrainers and not point.auctioneer) then
             return false
         end
         if (point.icon == "auctioneer" and not private.db.show_auctioneer) then return false end

@@ -613,6 +613,13 @@ do
                                     }
 
                                     local low, high, step = setting.info.min, setting.info.max, setting.info.step
+                                    local fractional, factor = step < 1, 1 / step
+
+                                    if fractional then
+                                        low = low * factor
+                                        high = high * factor
+                                        step = step * factor
+                                    end
 
                                     if ceil( ( high - low ) / step ) > 20 then
                                         step = ceil( ( high - low ) / 20 )
@@ -622,20 +629,21 @@ do
                                     end
 
                                     for j = low, high, step do
+                                        local actual = j / factor
                                         insert( submenu.menuList, {
-                                            text = tostring( j ),
+                                            text = tostring( actual ),
                                             func = function ()
                                                 menu.args[1] = setting.name
-                                                setting.info.set( menu.args, j )
+                                                setting.info.set( menu.args, actual )
                                                 if Hekili.DB.profile.notifications.enabled then
-                                                    Hekili:Notify( setting.info.name .. " set to |cFF00FF00" .. j .. "|r." )
+                                                    Hekili:Notify( setting.info.name .. " set to |cFF00FF00" .. actual .. "|r." )
                                                 else
-                                                    Hekili:Print( setting.info.name .. " set to |cFF00FF00" .. j .. "|r." )
+                                                    Hekili:Print( setting.info.name .. " set to |cFF00FF00" .. actual .. "|r." )
                                                 end
                                             end,
                                             checked = function ()
                                                 menu.args[1] = setting.name
-                                                return setting.info.get( menu.args ) == j
+                                                return setting.info.get( menu.args ) == actual
                                             end,
                                             hidden = function () return Hekili.State.spec.id ~= i end,
                                         } )
@@ -2016,8 +2024,13 @@ do
 
         local specEnabled = GetSpecialization()
         specEnabled = specEnabled and GetSpecializationInfo( specEnabled )
-        specEnabled = specEnabled and rawget( profile.specs, specEnabled )
-        specEnabled = specEnabled and rawget( specEnabled, "enabled" ) or false
+
+        if class.specs[ specEnabled ] then
+            specEnabled = specEnabled and rawget( profile.specs, specEnabled )
+            specEnabled = specEnabled and rawget( specEnabled, "enabled" ) or false
+        else
+            specEnabled = false
+        end
 
         if profile.enabled and specEnabled then
             for i, display in pairs( profile.displays ) do

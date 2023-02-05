@@ -4,8 +4,8 @@
 --    All Rights Reserved - Detailed license information included with addon.     --
 -- ------------------------------------------------------------------------------ --
 
-local _, TSM = ...
-local SlashCommands = TSM.Init("Service.SlashCommands")
+local TSM = select(2, ...) ---@type TSM
+local SlashCommands = TSM.Init("Service.SlashCommands") ---@class Service.SlashCommands
 local Log = TSM.Include("Util.Log")
 local L = TSM.Include("Locale").GetTable()
 local private = {

@@ -1,11 +1,11 @@
-lightweight tag 08f73916ba13899aff07507ecb8944f938976fba v10.0.5
+lightweight tag 7e6dfea62c91e97cea2254af6470511579708ed8 v10.0.6
 Author:	Vae <emuha17@gmail.com>
-Date:	Sun Jan 15 18:17:39 2023 -1000
+Date:	Sat Feb 4 16:08:10 2023 -1000
 
-commit 08f73916ba13899aff07507ecb8944f938976fba
+commit 7e6dfea62c91e97cea2254af6470511579708ed8
 Author: Vae <emuha17@gmail.com>
-Date:   Sun Jan 15 18:17:39 2023 -1000
+Date:   Sat Feb 4 16:08:10 2023 -1000
 
-    Adjusted Rotation
-    Added Evoker to Auto Detect feature
+    Updated for 10.0.5
+    Added Empower function
 

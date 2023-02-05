@@ -5,12 +5,13 @@
 -- ------------------------------------------------------------------------------ --
 
 local TSM = select(2, ...) ---@type TSM
+local Environment = TSM.Include("Environment")
 local Locale = TSM.Init("Locale")
 local private = {
 	locale = nil,
 	tbl = nil,
+	hasNoLocaleTable = nil,
 }
-local HAS_NO_LOCALE_TABLE = TSM.IsDevVersion() or TSM.IsTestEnvironment()
 
 
 
@@ -19,11 +20,12 @@ local HAS_NO_LOCALE_TABLE = TSM.IsDevVersion() or TSM.IsTestEnvironment()
 -- ============================================================================
 
 Locale:OnModuleLoad(function()
+	private.hasNoLocaleTable = Environment.IsDev() or Environment.IsTest()
 	private.locale = GetLocale()
 	if private.locale == "enGB" then
 		private.locale = "enUS"
 	end
-	if HAS_NO_LOCALE_TABLE then
+	if private.hasNoLocaleTable then
 		Locale.SetTable({})
 	end
 end)
@@ -35,7 +37,7 @@ end
 
 function Locale.ShouldLoad(locale)
 	assert(private.locale)
-	return not HAS_NO_LOCALE_TABLE and locale == private.locale
+	return not private.hasNoLocaleTable and locale == private.locale
 end
 
 function Locale.SetTable(tbl)
@@ -43,7 +45,7 @@ function Locale.SetTable(tbl)
 	private.tbl = setmetatable(tbl, {
 		__index = function(t, k)
 			local v = tostring(k)
-			if not HAS_NO_LOCALE_TABLE then
+			if not private.hasNoLocaleTable then
 				error(format("Locale string does not exist: \"%s\"", v))
 			end
 			rawset(t, k, v)

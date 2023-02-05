@@ -6,6 +6,7 @@
 
 local TSM = select(2, ...) ---@type TSM
 local Destroying = TSM:NewPackage("Destroying")
+local Environment = TSM.Include("Environment")
 local DisenchantInfo = TSM.Include("Data.DisenchantInfo")
 local Container = TSM.Include("Util.Container")
 local Database = TSM.Include("Util.Database")
@@ -135,7 +136,7 @@ function Destroying.OnInitialize()
 	Event.Register("UNIT_SPELLCAST_INTERRUPTED", private.SpellCastEventHandler)
 	Event.Register("UNIT_SPELLCAST_SUCCEEDED", private.SpellCastEventHandler)
 
-	if not TSM.IsWowClassic() then
+	if Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) then
 		hooksecurefunc(C_TradeSkillUI, "CraftSalvage", function(spellId, _, itemLocation)
 			if not ProfessionInfo.IsSalvage(spellId) then
 				return
@@ -375,7 +376,7 @@ function private.SpellCastEventHandler(event, unit, _, spellId)
 	if unit ~= "player" then
 		return
 	end
-	if not TSM.IsWowClassic() and event == "UNIT_SPELLCAST_START" and not ProfessionInfo.IsSalvage(spellId) then
+	if Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) and event == "UNIT_SPELLCAST_START" and not ProfessionInfo.IsSalvage(spellId) then
 		private.destroySpellId = nil
 		private.itemSpellId = nil
 	end
@@ -432,7 +433,7 @@ function private.UpdateBagDB()
 		query:Equal("isBoP", false)
 			:Equal("isBoA", false)
 	end
-	if TSM.IsWowWrathClassic() then
+	if Environment.IsWrathClassic() then
 		private.disenchantSkillLevel = TSM.Crafting.PlayerProfessions.GetProfessionSkill(UnitName("player"), GetSpellInfo(7411))
 		private.jewelcraftSkillLevel = TSM.Crafting.PlayerProfessions.GetProfessionSkill(UnitName("player"), GetSpellInfo(28897))
 		private.inscriptionSkillLevel = TSM.Crafting.PlayerProfessions.GetProfessionSkill(UnitName("player"), GetSpellInfo(45357))
@@ -494,7 +495,7 @@ function private.IsDestroyable(itemString)
 	local quality = ItemInfo.GetQuality(itemString)
 	if ItemInfo.IsDisenchantable(itemString) and quality <= private.settings.deMaxQuality then
 		local hasSourceItem = true
-		if TSM.IsWowWrathClassic() then
+		if Environment.IsWrathClassic() then
 			local classId = ItemInfo.GetClassId(itemString)
 			local itemLevel = ItemInfo.GetItemLevel(ItemString.GetBase(itemString))
 			hasSourceItem = false

@@ -6,6 +6,7 @@
 
 local TSM = select(2, ...) ---@type TSM
 local Operations = TSM.MainUI:NewPackage("Operations")
+local Environment = TSM.Include("Environment")
 local L = TSM.Include("Locale").GetTable()
 local Log = TSM.Include("Util.Log")
 local Theme = TSM.Include("Util.Theme")
@@ -909,7 +910,7 @@ function private.DefaultValidateFunction(_, value, badSources)
 end
 
 function private.UndercutValidateFunction(_, value, badSources)
-	if not TSM.IsWowClassic() then
+	if Environment.IsRetail() then
 		if Money.FromString(Money.ToString(value) or value) == 0 then
 			return true
 		elseif (Money.FromString(Money.ToString(value) or value) or math.huge) < COPPER_PER_SILVER then

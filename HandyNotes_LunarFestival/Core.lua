@@ -3,7 +3,7 @@
 
                                            Lunar Festival
 
-                                      v1.01 - 17th January 2023
+                                      v1.08 - 3rd February 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -22,9 +22,9 @@ ns.colour.highlight = "\124cFFFDBD01" -- Neon Gold
 ns.colour.plaintext = "\124cFF990000" -- Crimson Red
 
 local defaults = { profile = { icon_scale = 1.7, icon_alpha = 1, showCoords = true,
-								removeDailies = true, removeSeasonal = true, removeEver = false,
-								icon_zoneElders = 16, icon_dungeonElders = 14, 
-								icon_factionElders = 11, } }
+								removeOneOff = true, removeSeasonal = true, removeEver = false,
+								icon_zoneElders = 16, icon_dungeonElders = 14, icon_crown = 1,
+								icon_factionElders = 11, icon_preservation = 10 } }
 local continents = {}
 local pluginHandler = {}
 
@@ -47,10 +47,9 @@ ns.name = UnitName( "player" ) or "Character"
 
 continents[ 12 ] = true -- Kalimdor
 continents[ 13 ] = true -- Eastern Kingdoms
-continents[ 101 ] = true -- Outland
 continents[ 113 ] = true -- Northrend
-continents[ 572 ] = true -- Draenor
 continents[ 947 ] = true -- Azeroth
+continents[ 1978 ] = true -- Dragon Isles
 
 -- Localisation
 ns.locale = GetLocale()
@@ -70,6 +69,19 @@ if ns.locale == "deDE" then
 	L["Dungeons"] = "Kerker"
 	L["Factions"] = "Fraktionen"
 	L["Zones"] = "Gebiete"
+	L["Lunar Preservation"] = "Mondschutz"
+	L["Flower of Compassion"] = "Blume des Mitgefühls"
+	L["Flower of Felicity"] = "Blume der Glückseligkeit"
+	L["Flower of Fortitude"] = "Blume der Standhaftigkeit"
+	L["Flower of Generosity"] = "Blume des Großmuts"
+	L["Flower of Luck"] = "Blume des Glücks"
+	L["Flower of Peace"] = "Blume des Friedens"
+	L["Flower of Reflection"] = "Blume der Besinnung"
+	L["Flower of Sincerity"] = "Blume der Aufrichtigkeit"
+	L["Flower of Solemnity"] = "Blume der Feierlichkeit"
+	L["Flower of Thoughtfulness"] = "Blume der Besonnenheit"
+	L["Flower of Vigor"] = "Blume der Vitalität"
+	L["Flower of Wealth"] = "Blume des Wohlstands"
 	L["Blue Coin"] = "Blaue Münze"
 	L["Deep Green Coin"] = "Tiefgrüne Münze"
 	L["Deep Pink Coin"] = "Tiefrosa Münze"
@@ -117,6 +129,19 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Dungeons"] = "Mazmorras"
 	L["Factions"] = "Facciones"
 	L["Zones"] = "Zonas"
+	L["Lunar Preservation"] = "Preservación Lunar"
+	L["Flower of Compassion"] = "Flor de compasión"
+	L["Flower of Felicity"] = "Flor de felicidad"
+	L["Flower of Fortitude"] = "Flor de entereza"
+	L["Flower of Generosity"] = "Flor de generosidad"
+	L["Flower of Luck"] = "Flor de suerte"
+	L["Flower of Peace"] = "Flor de paz"
+	L["Flower of Reflection"] = "Flor de reflejo"
+	L["Flower of Sincerity"] = "Flor de sinceridad"
+	L["Flower of Solemnity"] = "Flor de solemnidad"
+	L["Flower of Thoughtfulness"] = "Flor de consideración"
+	L["Flower of Vigor"] = "Flor de vigor"
+	L["Flower of Wealth"] = "Flor de riqueza"
 	L["Blue Coin"] = "Moneda Azul"
 	L["Deep Green Coin"] = "Moneda Verde Oscuro"
 	L["Deep Pink Coin"] = "Moneda Rosa Oscuro"
@@ -166,6 +191,19 @@ elseif ns.locale == "frFR" then
 	L["Dungeons"] = "Donjons"
 	L["Factions"] = "Factions"
 	L["Zones"] = "Zones"
+	L["Lunar Preservation"] = "Préservation Lunaire"
+	L["Flower of Compassion"] = "Fleur de compassion"
+	L["Flower of Felicity"] = "Fleur de félicité"
+	L["Flower of Fortitude"] = "Fleur de robustesse"
+	L["Flower of Generosity"] = "Fleur de générosité"
+	L["Flower of Luck"] = "Fleur de chance"
+	L["Flower of Peace"] = "Fleur de paix"
+	L["Flower of Reflection"] = "Fleur de réflexion"
+	L["Flower of Sincerity"] = "Fleur de sincérité"
+	L["Flower of Solemnity"] = "Fleur de solennité"
+	L["Flower of Thoughtfulness"] = "Fleur de prévenance"
+	L["Flower of Vigor"] = "Fleur de vigueur"
+	L["Flower of Wealth"] = "Fleur de richesse"
 	L["Blue Coin"] = "Pièce bleue"
 	L["Deep Green Coin"] = "Pièce vert foncé"
 	L["Deep Pink Coin"] = "Pièce rose foncé"
@@ -215,6 +253,19 @@ elseif ns.locale == "itIT" then
 	L["Dungeons"] = "Sotterranee"
 	L["Factions"] = "Fazioni"
 	L["Zones"] = "Zone"
+	L["Lunar Preservation"] = "Preservazione Lunare"
+	L["Flower of Compassion"] = "Fiore della Compassione"
+	L["Flower of Felicity"] = "Fiore della Letizia"
+	L["Flower of Fortitude"] = "Fiore della Fermezza"
+	L["Flower of Generosity"] = "Fiore della Generosità"
+	L["Flower of Luck"] = "Fiore della Fortuna"
+	L["Flower of Peace"] = "Fiore della Pace"
+	L["Flower of Reflection"] = "Fiore della Riflessione"
+	L["Flower of Sincerity"] = "Fiore della Sincerità"
+	L["Flower of Solemnity"] = "Fiore della Solennità"
+	L["Flower of Thoughtfulness"] = "Fiore del Raccoglimento"
+	L["Flower of Vigor"] = "Fiore del Vigore"
+	L["Flower of Wealth"] = "Fiore della Prosperità"
 	L["Blue Coin"] = "Moneta blu"
 	L["Deep Green Coin"] = "Moneta verde intenso"
 	L["Deep Pink Coin"] = "Moneta rosa intenso"
@@ -263,6 +314,19 @@ elseif ns.locale == "koKR" then
 	L["Dungeons"] = "던전"
 	L["Factions"] = "진영"
 	L["Zones"] = "지역"
+	L["Lunar Preservation"] = "달빛지기"
+	L["Flower of Compassion"] = "연민의 꽃"
+	L["Flower of Felicity"] = "희락의 꽃"
+	L["Flower of Fortitude"] = "인내의 꽃"
+	L["Flower of Generosity"] = "아량의 꽃"
+	L["Flower of Luck"] = "행운의 꽃"
+	L["Flower of Peace"] = "평화의 꽃"
+	L["Flower of Reflection"] = "비춤의 꽃"
+	L["Flower of Sincerity"] = "신실의 꽃"
+	L["Flower of Solemnity"] = "장엄의 꽃"
+	L["Flower of Thoughtfulness"] = "사색의 꽃"
+	L["Flower of Vigor"] = "활력의 꽃"
+	L["Flower of Wealth"] = "부귀의 꽃"
 	L["Blue Coin"] = "블루 코인"
 	L["Deep Green Coin"] = "딥그린 코인"
 	L["Deep Pink Coin"] = "딥 핑크 코인"
@@ -310,6 +374,19 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Dungeons"] = "Masmorras"
 	L["Factions"] = "Facções"
 	L["Zones"] = "Zonas"
+	L["Lunar Preservation"] = "Preservação lunar"
+	L["Flower of Compassion"] = "Flor da Compaixão"
+	L["Flower of Felicity"] = "Flor da Felicidade"
+	L["Flower of Fortitude"] = "Flor da Fortitude"
+	L["Flower of Generosity"] = "Flor da Generosidade"
+	L["Flower of Luck"] = "Flor da Sorte"
+	L["Flower of Peace"] = "Flor da Paz"
+	L["Flower of Reflection"] = "Flor da Reflexão"
+	L["Flower of Sincerity"] = "Flor da Sinceridade"
+	L["Flower of Solemnity"] = "Flor da Dignidade"
+	L["Flower of Thoughtfulness"] = "Flor da Meditação"
+	L["Flower of Vigor"] = "Flor do Vigor"
+	L["Flower of Wealth"] = "Flor da Riqueza"
 	L["Blue Coin"] = "Moeda azul"
 	L["Deep Green Coin"] = "moeda verde escuro"
 	L["Deep Pink Coin"] = "Moeda rosa escuro"
@@ -359,16 +436,29 @@ elseif ns.locale == "ruRU" then
 	L["Dungeons"] = "Подземелья"
 	L["Factions"] = "ФракцииФракции"
 	L["Zones"] = "Территории"
-	L["Blue Coin"] = "Синяя монета"
-	L["Deep Green Coin"] = "Темно-зеленая монета"
-	L["Deep Pink Coin"] = "Темно-розовая монета"
-	L["Deep Red Coin"] = "Темно-красная монета"
-	L["Green Coin"] = "Зеленая монета"
-	L["Light Blue Coin"] = "Голубая монета"
-	L["Pink Coin"] = "Розовая монета"
-	L["Purple Coin"] = "Фиолетовая монета"
-	L["Teal Coin"] = "Бирюзовая монета"
-	L["Original Coin"] = "Оригинальная монета"
+	L["Lunar Preservation"] = "Лунная Консервация"
+	L["Flower of Compassion"] = "Цветок сострадания"
+	L["Flower of Felicity"] = "Цветок счастья"
+	L["Flower of Fortitude"] = "Цветок стойкости"
+	L["Flower of Generosity"] = "Цветок щедрости"
+	L["Flower of Luck"] = "Цветок удачи"
+	L["Flower of Peace"] = "Цветок мира"
+	L["Flower of Reflection"] = "Цветок размышлений"
+	L["Flower of Sincerity"] = "Цветок искренности"
+	L["Flower of Solemnity"] = "Цветок печали"
+	L["Flower of Thoughtfulness"] = "Цветок проницательности"
+	L["Flower of Vigor"] = "Цветок жизненной силы"
+	L["Flower of Wealth"] = "Цветок богатства"
+	L["Blue Coin"] = "Синяя Монета"
+	L["Deep Green Coin"] = "Темно-зеленая Монета"
+	L["Deep Pink Coin"] = "Темно-розовая Монета"
+	L["Deep Red Coin"] = "Темно-красная Монета"
+	L["Green Coin"] = "Зеленая Монета"
+	L["Light Blue Coin"] = "Голубая Монета"
+	L["Pink Coin"] = "Розовая Монета"
+	L["Purple Coin"] = "Фиолетовая Монета"
+	L["Teal Coin"] = "Бирюзовая Монета"
+	L["Original Coin"] = "Оригинальная Монета"
 	L["AddOn Description"] = "Помогает с игровое событие Лунный фестиваль"
 	L["Character"] = "Персонажа"
 	L["Account"] = "Счет"
@@ -407,6 +497,19 @@ elseif ns.locale == "zhCN" then
 	L["Dungeons"] = "地下城"
 	L["Factions"] = "阵营"
 	L["Zones"] = "地区"
+	L["Lunar Preservation"] = "月光守护"
+	L["Flower of Compassion"] = "恻隐之花"
+	L["Flower of Felicity"] = "幸福之花"
+	L["Flower of Fortitude"] = "坚韧之花"
+	L["Flower of Generosity"] = "慷慨之花"
+	L["Flower of Luck"] = "幸运之花"
+	L["Flower of Peace"] = "平和之花"
+	L["Flower of Reflection"] = "反思之花"
+	L["Flower of Sincerity"] = "诚挚之花"
+	L["Flower of Solemnity"] = "庄严之花"
+	L["Flower of Thoughtfulness"] = "思绪之花"
+	L["Flower of Vigor"] = "活力之花"
+	L["Flower of Wealth"] = "财富之花"
 	L["Blue Coin"] = "蓝币"
 	L["Deep Green Coin"] = "深绿币"
 	L["Deep Pink Coin"] = "深粉色硬币"
@@ -454,6 +557,19 @@ elseif ns.locale == "zhTW" then
 	L["Dungeons"] = "地下城"
 	L["Factions"] = "陣營"
 	L["Zones"] = "地區"
+	L["Lunar Preservation"] = "月光守護"
+	L["Flower of Compassion"] = "惻隱之花"
+	L["Flower of Felicity"] = "幸福之花"
+	L["Flower of Fortitude"] = "堅韌之花"
+	L["Flower of Generosity"] = "慷慨之花"
+	L["Flower of Luck"] = "幸運之花"
+	L["Flower of Peace"] = "平和之花"
+	L["Flower of Reflection"] = "反思之花"
+	L["Flower of Sincerity"] = "誠摯之花"
+	L["Flower of Solemnity"] = "莊嚴之花"
+	L["Flower of Thoughtfulness"] = "思緒之花"
+	L["Flower of Vigor"] = "活力之花"
+	L["Flower of Wealth"] = "財富之花"
 	L["Blue Coin"] = "藍幣"
 	L["Deep Green Coin"] = "深綠幣"
 	L["Deep Pink Coin"] = "深粉色硬幣"
@@ -531,6 +647,7 @@ function pluginHandler:OnEnter(mapFile, coord)
 	local pName = UnitName( "player" ) or "Character"
 	local completed, aName, completedMe;
 	local bypassCoords = false
+	local showTip = true
 	
 	if (aID > 0) and (aIndex > 0) then
 		_, aName, _, completed, _, _, _, _, _, _, _, _, completedMe = GetAchievementInfo( aID )
@@ -539,8 +656,13 @@ function pluginHandler:OnEnter(mapFile, coord)
 										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..L["Account"] ..")" ) )
 		GameTooltip:AddDoubleLine( " ",
 					( completedMe == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
-										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )										
-		aName, _, completed = GetAchievementCriteriaInfo( aID, aIndex )
+										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
+		if ( aQuest > 0 ) then
+			completed = C_QuestLog.IsQuestFlaggedCompleted( aQuest )
+			aName = GetAchievementCriteriaInfo( aID, aIndex )
+		else
+			aName, _, completed = GetAchievementCriteriaInfo( aID, aIndex )
+		end
 		GameTooltip:AddDoubleLine( ns.colour.highlight.. aName,
 					( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
 										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
@@ -553,16 +675,45 @@ function pluginHandler:OnEnter(mapFile, coord)
 					( completedMe == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
 										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
 	elseif ( aQuest > 0 ) then
-		completed = C_QuestLog.IsQuestFlaggedCompleted( aQuest )
-		GameTooltip:AddDoubleLine( "\124cFF1F45FC".. "Daily Quest",
-					( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
-										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
-	elseif (aIndex > 0) then
+		if ( aQuest == 63213 ) then
+			completed = C_QuestLog.IsQuestFlaggedCompleted( aQuest )
+			GameTooltip:AddDoubleLine( ns.colour.prefix .."Naladu the Elder",
+						( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
+											or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
+		elseif ( aQuest == 56842 ) then
+			GameTooltip:SetText( ns.colour.prefix ..L["Lunar Preservation"] )
+			completed = C_QuestLog.IsQuestFlaggedCompleted( 56842 )
+			GameTooltip:AddDoubleLine( ns.colour.highlight .."All nine locations...",
+						( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
+											or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
+			showTip = false
+		elseif ( aQuest == 56903 ) or ( aQuest == 56904 ) or ( aQuest == 56905 ) or ( aQuest == 56906 ) then
+			completed = C_QuestLog.IsQuestFlaggedCompleted( aQuest )
+			GameTooltip:AddDoubleLine( ns.colour.prefix ..( ( aQuest == 56906) and L["Crown of Good Fortune"]
+										or ( ( aQuest == 56905) and L["Crown of Dark Blossoms"] 
+										or ( ( aQuest == 56904) and L["Crown of Prosperity"] 
+										or L["Crown of Courage"] ) ) ),
+						( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
+											or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
+			questObjectives = C_QuestLog.GetQuestObjectives( aQuest )
+			for k,v in pairs( questObjectives ) do
+				if ( aIndex == k ) then
+					for i,j in pairs( v ) do
+						if ( i == "finished" ) then
+							GameTooltip:AddDoubleLine( ns.colour.prefix ..L[tip],
+										( j == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
+															or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
+						end
+					end
+				end
+			end
+			showTip = false
+		end
 	else
 		bypassCoords = true
 	end
-	if  not ( tip == nil ) then
-		GameTooltip:AddLine( ns.colour.plaintext ..tip )
+	if ( showTip == true ) and not ( tip == nil ) then
+		GameTooltip:AddLine( ns.colour.plaintext ..L[tip] )
 	end	
 	if ( ns.db.showCoords == true ) and ( bypassCoords == false ) then
 		local mX, mY = HandyNotes:getXY(coord)
@@ -592,10 +743,21 @@ local function ShowConditionallyE( aID, aIndex )
 	return true
 end
 
-local function ShowConditionallyD( v5or6 )
+local function ShowConditionallyO( aQuestA, aQuestH )
 	local completed;
-	if ( ns.db.removeDailies == true ) then
-		completed = C_QuestLog.IsQuestFlaggedCompleted( v5or6 )
+	if ( ns.db.removeOneOff == true ) and ( ( aQuestA > 0 ) or ( aQuestH > 0 ) ) then
+		completed = C_QuestLog.IsQuestFlaggedCompleted( ( aQuestA > 0 ) and aQuestA or aQuestH )
+		if ( completed == true ) then
+			return false
+		end
+	end
+	return true
+end
+
+local function ShowConditionallyS( aQuestA, aQuestH )
+	local completed;
+	if ( ns.db.removeSeasonal == true ) and ( ( aQuestA > 0 ) or ( aQuestH > 0 ) ) then
+		completed = C_QuestLog.IsQuestFlaggedCompleted( ( aQuestA > 0 ) and aQuestA or aQuestH )
 		if ( completed == true ) then
 			return false
 		end
@@ -611,33 +773,65 @@ do
 			if v then
 				if ( v[1] == 910 ) and ( ns.faction == "Alliance" ) then
 					if ( ShowConditionallyE( v[1], v[3] ) == true ) then
-						return coord, nil, ns.textures[ns.db.icon_dungeonElders],
-							ns.db.icon_scale * ns.scaling[ns.db.icon_dungeonElders], ns.db.icon_alpha
+						if ( ShowConditionallyS( v[5], v[6] ) == true ) then
+							return coord, nil, ns.textures[ns.db.icon_dungeonElders],
+								ns.db.icon_scale * ns.scaling[ns.db.icon_dungeonElders], ns.db.icon_alpha
+						end
 					end
 				elseif ( v[2] == 910 ) and ( ns.faction == "Horde" ) then
 					if ( ShowConditionallyE( v[2], v[4] ) == true ) then
-						return coord, nil, ns.textures[ns.db.icon_dungeonElders],
-							ns.db.icon_scale * ns.scaling[ns.db.icon_dungeonElders], ns.db.icon_alpha
+						if ( ShowConditionallyS( v[5], v[6] ) == true ) then
+							return coord, nil, ns.textures[ns.db.icon_dungeonElders],
+								ns.db.icon_scale * ns.scaling[ns.db.icon_dungeonElders], ns.db.icon_alpha
+						end
 					end
-				elseif ( ( v[1] == 911 ) or ( v[1] == 912 ) or ( v[1] == 1396 ) or ( v[1] == 6006 ) ) and ( ns.faction == "Alliance" ) then
+				elseif ( ( v[1] == 911 ) or ( v[1] == 912 ) or ( v[1] == 1396 ) or ( v[1] == 6006 ) or ( v[1] == 17321 ) ) 
+						and ( ns.faction == "Alliance" ) then
 					if ( ShowConditionallyE( v[1], v[3] ) == true ) then
-						return coord, nil, ns.textures[ns.db.icon_zoneElders],
-							ns.db.icon_scale * ns.scaling[ns.db.icon_zoneElders], ns.db.icon_alpha
+						if ( ShowConditionallyS( v[5], v[6] ) == true ) then
+							return coord, nil, ns.textures[ns.db.icon_zoneElders],
+								ns.db.icon_scale * ns.scaling[ns.db.icon_zoneElders], ns.db.icon_alpha
+						end
 					end
-				elseif ( ( v[2] == 911 ) or ( v[2] == 912 ) or ( v[2] == 1396 ) or ( v[2] == 6006 ) ) and ( ns.faction == "Horde" ) then
+				elseif ( ( v[2] == 911 ) or ( v[2] == 912 ) or ( v[2] == 1396 ) or ( v[2] == 6006 ) or ( v[1] == 17321 ) )
+						and ( ns.faction == "Horde" ) then
 					if ( ShowConditionallyE( v[2], v[4] ) == true ) then
-						return coord, nil, ns.textures[ns.db.icon_zoneElders],
-							ns.db.icon_scale * ns.scaling[ns.db.icon_zoneElders], ns.db.icon_alpha
+						if ( ShowConditionallyS( v[5], v[6] ) == true ) then
+							return coord, nil, ns.textures[ns.db.icon_zoneElders],
+								ns.db.icon_scale * ns.scaling[ns.db.icon_zoneElders], ns.db.icon_alpha
+						end
 					end
 				elseif ( ( v[1] == 914 ) or ( v[1] == 915 ) ) and ( ns.faction == "Alliance" ) then
 					if ( ShowConditionallyE( v[1], v[3] ) == true ) then
-						return coord, nil, ns.textures[ns.db.icon_factionElders],
-							ns.db.icon_scale * ns.scaling[ns.db.icon_factionElders], ns.db.icon_alpha
+						if ( ShowConditionallyS( v[5], v[6] ) == true ) then
+							return coord, nil, ns.textures[ns.db.icon_factionElders],
+								ns.db.icon_scale * ns.scaling[ns.db.icon_factionElders], ns.db.icon_alpha
+						end
 					end
 				elseif ( ( v[2] == 914 ) or ( v[2] == 915 ) ) and ( ns.faction == "Horde" ) then
 					if ( ShowConditionallyE( v[2], v[4] ) == true ) then
+						if ( ShowConditionallyS( v[5], v[6] ) == true ) then
+							return coord, nil, ns.textures[ns.db.icon_factionElders],
+								ns.db.icon_scale * ns.scaling[ns.db.icon_factionElders], ns.db.icon_alpha
+						end
+					end
+				elseif ( v[5] == 63213 ) or ( v[6] == 63213 ) then
+					if ( ShowConditionallyS( v[5], v[6] ) == true ) then
 						return coord, nil, ns.textures[ns.db.icon_factionElders],
 							ns.db.icon_scale * ns.scaling[ns.db.icon_factionElders], ns.db.icon_alpha
+					end
+				elseif ( v[5] == 56842 ) or ( v[6] == 56842 ) then
+					if ( ShowConditionallyO( v[5], v[6] ) == true ) then
+						return coord, nil, ns.textures[ns.db.icon_preservation],
+							ns.db.icon_scale * ns.scaling[ns.db.icon_preservation], ns.db.icon_alpha
+					end
+				elseif ( v[5] == 56903 ) or ( v[6] == 56903 ) or ( v[5] == 56904 ) or ( v[6] == 56904 )
+					or ( v[5] == 56905 ) or ( v[6] == 56905 ) or ( v[5] == 56906 ) or ( v[6] == 56906 ) then
+					if C_QuestLog.IsQuestFlaggedCompleted( 56842 ) == true then
+						if ( ShowConditionallyO( v[5], v[6] ) == true ) then
+							return coord, nil, ns.textures[ns.db.icon_crown],
+								ns.db.icon_scale * ns.scaling[ns.db.icon_crown] * 0.75, ns.db.icon_alpha
+						end
 					end
 				end
 			end
@@ -692,14 +886,13 @@ ns.options = {
 					arg = "showCoords",
 					order = 4,
 				},
-				removeDailies = {
-					name = "Remove dailies if completed today by " ..ns.name,
-					desc = "If you have completed the daily quest\n"
-							.."today then the map marker is removed\n"
-							.."or replaced as appropriate",
+				removeOneOff = {
+					name = "Remove \"one time only\" and seasonal quests if completed by " ..ns.name,
+					desc = "Primarily the Lunar Preservation quest for visiting moonwells\n"
+							.."and the four \"Crown of...\" quests which follow on from that",
 					type = "toggle",
 					width = "full",
-					arg = "removeDailies",
+					arg = "removeOneOff",
 					order = 5,
 				},
 				removeSeasonal = {
@@ -767,6 +960,34 @@ ns.options = {
 					arg = "icon_factionElders",
 					order = 9,
 				},
+				icon_preservation = {
+					type = "range",
+					name = L["Lunar Preservation"],
+					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
+							..L["Yellow"] .."\n5 = " ..L["Green"] .."\n6 = " ..L["Grey"] .."\n7 = "
+							.. L["Blue Coin"] .."\n8 = " ..L["Deep Green Coin"] .."\n9 = "
+							..L["Deep Pink Coin"] .."\n10 = " ..L["Deep Red Coin"] .."\n11 = "
+							..L["Green Coin"] .."\n12 = " ..L["Light Blue Coin"] .."\n13 = "
+							..L["Pink Coin"] .."\n14 = " ..L["Purple Coin"] .."\n15 = " ..L["Teal Coin"]
+							.."\n16 = " ..L["Original Coin"], 
+					min = 1, max = 16, step = 1,
+					arg = "icon_preservation",
+					order = 10,
+				},
+				icon_crown = {
+					type = "range",
+					name = L["Crown of... Quests"],
+					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
+							..L["Yellow"] .."\n5 = " ..L["Green"] .."\n6 = " ..L["Grey"] .."\n7 = "
+							.. L["Blue Coin"] .."\n8 = " ..L["Deep Green Coin"] .."\n9 = "
+							..L["Deep Pink Coin"] .."\n10 = " ..L["Deep Red Coin"] .."\n11 = "
+							..L["Green Coin"] .."\n12 = " ..L["Light Blue Coin"] .."\n13 = "
+							..L["Pink Coin"] .."\n14 = " ..L["Purple Coin"] .."\n15 = " ..L["Teal Coin"]
+							.."\n16 = " ..L["Original Coin"], 
+					min = 1, max = 16, step = 1,
+					arg = "icon_crown",
+					order = 11,
+				},
 			},
 		},
 	},
@@ -793,9 +1014,9 @@ function pluginHandler:OnEnable()
 				( map.mapID == 88 ) or -- Thunder Bluff
 				( map.mapID == 89 ) or -- Darnassus
 				( map.mapID == 90 ) or -- Undercity
+				( map.mapID == 203 ) or -- Vashj'ir
 				( map.mapID == 224 ) then -- Stranglethorn Vale
 			elseif (version < 40000) and ( map.mapID < 1400 ) then
-			elseif (version >= 40000) and ( map.mapID >= 1400 ) then
 			elseif coords then
 				for coord, v in next, coords do
 					local function AddToContinent()

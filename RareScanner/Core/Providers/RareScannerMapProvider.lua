@@ -188,13 +188,25 @@ function RareScannerDataProviderMixin:RefreshAllData(fromOnShow)
 					--Toggle state
 					if (IsShiftKeyDown() and IsAltKeyDown()) then
 						if (POI.isNpc) then
-							RSConfigDB.SetNpcFiltered(POI.entityID, false)
+							if (RSConfigDB.GetDefaultNpcFilter() == RSConstants.ENTITY_FILTER_ALERTS) then
+								RSConfigDB.SetNpcFiltered(POI.entityID, RSConstants.ENTITY_FILTER_ALL)
+							else
+								RSConfigDB.SetNpcFiltered(POI.entityID)
+							end
 							self:Hide();
 						elseif (POI.isContainer) then
-							RSConfigDB.SetContainerFiltered(POI.entityID, false)
+							if (RSConfigDB.GetDefaultContainerFilter() == RSConstants.ENTITY_FILTER_ALERTS) then
+								RSConfigDB.SetContainerFiltered(POI.entityID, RSConstants.ENTITY_FILTER_ALL)
+							else
+								RSConfigDB.SetContainerFiltered(POI.entityID)
+							end
 							self:Hide();
 						elseif (POI.isEvent) then
-							RSConfigDB.SetEventFiltered(POI.entityID, false)
+							if (RSConfigDB.GetDefaultEventFilter() == RSConstants.ENTITY_FILTER_ALERTS) then
+								RSConfigDB.SetEventFiltered(POI.entityID, RSConstants.ENTITY_FILTER_ALL)
+							else
+								RSConfigDB.SetEventFiltered(POI.entityID)
+							end
 							self:Hide();
 						end
 						RSMinimap.RefreshEntityState(POI.entityID)

@@ -7,7 +7,7 @@
 --- "What's New" Dialog
 -- @module WhatsNew
 
-local _, TSM = ...
+local TSM = select(2, ...) ---@type TSM
 local WhatsNew = TSM.UI:NewPackage("WhatsNew")
 local L = TSM.Include("Locale").GetTable()
 local Theme = TSM.Include("Util.Theme")

@@ -97,6 +97,7 @@ HealBot_Panel_luVars["LoadTime"]=GetTime()+5
 HealBot_Panel_luVars["cpMacro"]="hb-CrashProt"
 HealBot_Panel_luVars["cpCrash"]=false
 HealBot_Panel_luVars["resetAuxText"]=false
+HealBot_Panel_luVars["MainTankGUID"]=""
 
 local tClass={["WARR"]=true,["PALA"]=true,["DRUI"]=true,["DEAT"]=true}
 function HealBot_Panel_retLuVars(vName)
@@ -255,7 +256,6 @@ end
 local hbPlayerRaidID=0
 function HealBot_Panel_buildDataStore(doPlayers, doPets)
     if doPlayers then
-        HealBot_setLuVars("pluginClearDown", 1)
         for x,_ in pairs(hbPanel_dataNames) do
             hbPanel_dataNames[x]=nil
         end
@@ -1992,7 +1992,7 @@ function HealBot_Panel_enemyTargets(preCombat)
     HeaderPos[hbCurrentFrame][i[hbCurrentFrame]+1] = HEALBOT_OPTIONS_TARGETHEALS
     vEnemyIndex=i[hbCurrentFrame]
     if Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["INCSELF"] then
-        if HEALBOT_GAME_VERSION>9 then
+        if HEALBOT_GAME_VERSION>11 then
             HealBot_Panel_checkEnemyBar("anyenemy", "player", preCombat, 
                                         Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["EXISTSHOWPTAR"],
                                         Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["INCOMBATSHOWSELF"])
@@ -3028,20 +3028,8 @@ function HealBot_Panel_PrePartyChanged(preCombat, changeType)
             end
             HealBot_Panel_DoPartyChanged(preCombat, 5)
         else
-            if Healbot_Config_Skins.HealGroups[Healbot_Config_Skins.Current_Skin][7]["FRAME"]==6 then 
-                if Healbot_Config_Skins.HealGroups[Healbot_Config_Skins.Current_Skin][7]["STATE"] then
-                    HealBot_nextRecalcParty(1)
-                else
-                    HealBot_Panel_DoPartyChanged(preCombat, 1)
-                end
-            end
-            if Healbot_Config_Skins.HealGroups[Healbot_Config_Skins.Current_Skin][8]["FRAME"]==7 then 
-                if Healbot_Config_Skins.HealGroups[Healbot_Config_Skins.Current_Skin][8]["STATE"] then
-                    HealBot_nextRecalcParty(2) 
-                else    
-                    HealBot_Panel_DoPartyChanged(preCombat, 2)
-                end
-            end
+            if Healbot_Config_Skins.HealGroups[Healbot_Config_Skins.Current_Skin][7]["FRAME"]==6 then HealBot_nextRecalcParty(1) end
+            if Healbot_Config_Skins.HealGroups[Healbot_Config_Skins.Current_Skin][8]["FRAME"]==7 then HealBot_nextRecalcParty(2) end
             HealBot_nextRecalcParty(5)
         end
         if Healbot_Config_Skins.HealGroups[Healbot_Config_Skins.Current_Skin][9]["FRAME"]==8 then HealBot_Panel_DoPartyChanged(preCombat, 3) end

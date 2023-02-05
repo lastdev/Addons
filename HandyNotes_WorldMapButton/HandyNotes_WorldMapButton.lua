@@ -10,11 +10,10 @@ local isTBCC = (buildver > 20000) and (buildver < 30000)
 local isWOTLKC = (buildver > 30000) and (buildver < 40000)
 
 local L = LibStub("AceLocale-3.0"):GetLocale("HandyNotes_WorldMapButton", false);
+local db = LibStub("AceDB-3.0"):New("HandyNotesDB", defaults).profile
 
 local iconDefault = [[Interface\AddOns\]] .. AddOnName .. [[\Buttons\Default]];
 local iconDisabled = [[Interface\AddOns\]] .. AddOnName .. [[\Buttons\Disabled]];
-
-local point, relativeTo, relativePoint, xOfs, yOfs
 
 local ButtonName = "HandyNotesWorldMapButton"
 local btn = _G[ButtonName]
@@ -59,15 +58,19 @@ local function btnOnLeave(self, motion)
 	end
 end
 
-local function btnOnClick(self)
-	local db = LibStub("AceDB-3.0"):New("HandyNotesDB", defaults).profile;
+local function btnOnClick(self, button)
+	db = LibStub("AceDB-3.0"):New("HandyNotesDB", defaults).profile;
 
-	if HandyNotes:IsEnabled() then
-		db.enabled = false
-		HandyNotes:Disable();
-	else
-		db.enabled = true
-		HandyNotes:Enable();
+	if button == "LeftButton" then
+		if HandyNotes:IsEnabled() then
+			db.enabled = false
+			HandyNotes:Disable();
+		else
+			db.enabled = true
+			HandyNotes:Enable();
+		end
+	elseif button == "RightButton" then
+		LibStub("AceConfigDialog-3.0"):Open("HandyNotes")
 	end
 	SetIconTexture();
 	SetIconTooltip(false);

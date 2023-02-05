@@ -91,13 +91,9 @@ L["Show how many avoidable abilities hit players."] = "Mostra quantas habilidade
 L["Show how much avoidable damage was taken."] = "Mostra quanto dano evitável foi tomado."
 
 elseif locale == 'ruRU' then
---[[Translation missing --]]
---[[ L["Avoidable Abilities Taken"] = "Avoidable Abilities Taken"--]] 
---[[Translation missing --]]
---[[ L["Avoidable Damage Taken"] = "Avoidable Damage Taken"--]] 
---[[Translation missing --]]
---[[ L["Show how many avoidable abilities hit players."] = "Show how many avoidable abilities hit players."--]] 
---[[Translation missing --]]
---[[ L["Show how much avoidable damage was taken."] = "Show how much avoidable damage was taken."--]] 
+L["Avoidable Abilities Taken"] = "Используемые способности, которых можно избежать"
+L["Avoidable Damage Taken"] = "Полученный урон, которого можно избежать"
+L["Show how many avoidable abilities hit players."] = "Показать, сколько способностей, которых можно избежать, поражает игроков."
+L["Show how much avoidable damage was taken."] = "Показать, сколько предотвратимого урона было получено."
 
 end

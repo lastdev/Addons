@@ -4,11 +4,9 @@
 --    All Rights Reserved - Detailed license information included with addon.     --
 -- ------------------------------------------------------------------------------ --
 
---- Custom Price Functions
--- @module CustomPrice
-
-local _, TSM = ...
-local CustomPrice = TSM.Init("Service.CustomPrice")
+local TSM = select(2, ...) ---@type TSM
+local CustomPrice = TSM.Init("Service.CustomPrice") ---@class Service.CustomPrice
+local Environment = TSM.Include("Environment")
 local L = TSM.Include("Locale").GetTable()
 local DisenchantInfo = TSM.Include("Data.DisenchantInfo")
 local TempTable = TSM.Include("Util.TempTable")
@@ -383,8 +381,8 @@ function CustomPrice.GetConversionsValue(itemString, customPrice, method)
 	if (not method or method == Conversions.METHOD.DISENCHANT) and ItemInfo.IsDisenchantable(itemString) then
 		local classId = ItemInfo.GetClassId(itemString)
 		local quality = ItemInfo.GetQuality(itemString)
-		local itemLevel = not TSM.IsWowClassic() and ItemInfo.GetItemLevel(itemString) or ItemInfo.GetItemLevel(ItemString.GetBase(itemString))
-		local expansion = not TSM.IsWowClassic() and ItemInfo.GetExpansion(itemString) or nil
+		local itemLevel = Environment.IsRetail() and ItemInfo.GetItemLevel(itemString) or ItemInfo.GetItemLevel(ItemString.GetBase(itemString))
+		local expansion = Environment.IsRetail() and ItemInfo.GetExpansion(itemString) or nil
 		local value = 0
 		if quality and itemLevel and classId then
 			for targetItemString in DisenchantInfo.TargetItemIterator() do

@@ -348,6 +348,18 @@ function ConRO:Targets(spellID)
 					end
 				end
 			end
+		elseif spellID == "15" then
+			if IsItemInRange(33069, "target") then
+				target_in_range = true;
+			end
+
+			for i = 1, 15 do
+				if not UnitIsFriend("player", 'nameplate' .. i) then
+					if UnitExists('nameplate' .. i) and IsItemInRange(33069, "nameplate"..i) == true then
+						number_in_range = number_in_range + 1
+					end
+				end
+			end
 		elseif spellID == "25" then
 			if IsItemInRange(24268, "target") then
 				target_in_range = true;

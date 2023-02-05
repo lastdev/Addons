@@ -1,9 +1,10 @@
 ## Title:-|cffFFFFFFConRO|r- |cff33937FEvoker|r
-## Version: 10.0.5
+## Version: 10.0.6
 ## Author: Vae
-## Interface: 100002
+## Interface: 100005
 ## Dependencies: ConRO
 ## LoadOnDemand: 1
 
 evoker_ids.lua
 evoker.lua
+evoker_helpers.lua

@@ -3,7 +3,7 @@
 
                                           Dark Soil Tillers
 
-                                      v2.04 - 21st January 2023
+                                      v2.06 - 31st January 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -21,6 +21,7 @@ ns.colour.plaintext = "\124cFFDEB887"	-- X11BurlyWood
 -- Map IDs
 ns.pandaria = 424
 ns.votfw = 376
+ns.voeb = 390
 
 --ns.author = true
 
@@ -710,7 +711,7 @@ function pluginHandler:OnEnter(mapFile, coord)
 				GameTooltip:AddLine( ns.colour.plaintext ..L[third] )
  			end
 		end
-	elseif dataType == "S" then
+	elseif ( dataType == "S" ) or ( dataType == "V" ) then
 		GameTooltip:SetText( ns.colour.prefix ..L[first] )
 		if second then
 			GameTooltip:AddLine(ns.colour.plaintext ..L[second])
@@ -814,7 +815,7 @@ do
 						return coord, nil, ns.textures[ns.db.icon_choice],
 								ns.db.icon_scale * ns.scaling[ns.db.icon_choice], ns.db.icon_alpha
 					end
-				elseif ( v[1] == "S" ) and ns.author then
+				elseif ( ( v[1] == "S" ) or ( v[1] == "V" ) ) and ns.author then
 					return coord, nil, ns.textures[10],
 							ns.db.icon_scale * ns.scaling[10], ns.db.icon_alpha
 				end

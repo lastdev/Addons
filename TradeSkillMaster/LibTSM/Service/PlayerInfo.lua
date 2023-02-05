@@ -4,13 +4,11 @@
 --    All Rights Reserved - Detailed license information included with addon.     --
 -- ------------------------------------------------------------------------------ --
 
----PlayerInfo Functions
--- @module PlayerInfo
-
 local TSM = select(2, ...) ---@type TSM
 local PlayerInfo = TSM.Init("Service.PlayerInfo") ---@class Service.PlayerInfo
 local String = TSM.Include("Util.String")
 local TempTable = TSM.Include("Util.TempTable")
+local Table = TSM.Include("Util.Table")
 local Wow = TSM.Include("Util.Wow")
 local Settings = TSM.Include("Service.Settings")
 local private = {
@@ -67,8 +65,7 @@ function PlayerInfo.CharacterIterator(currentAccountOnly)
 	local result = TempTable.Acquire()
 	for _, _, character, factionrealm in private.settings:AccessibleValueIterator("classKey") do
 		if not currentAccountOnly or Settings.IsCurrentAccountOwner(character, factionrealm) then
-			tinsert(result, character)
-			tinsert(result, factionrealm)
+			Table.InsertMultiple(result, character, factionrealm)
 		end
 	end
 	return TempTable.Iterator(result, 2)
@@ -83,8 +80,7 @@ function PlayerInfo.GuildIterator(includeIgnored)
 		local ignoreGuilds = private.settings:GetForScopeKey("ignoreGuilds", factionrealm)
 		for guildName in pairs(guildVaults) do
 			if includeIgnored or not ignoreGuilds[guildName] then
-				tinsert(result, guildName)
-				tinsert(result, factionrealm)
+				Table.InsertMultiple(result, guildName, factionrealm)
 			end
 		end
 	end

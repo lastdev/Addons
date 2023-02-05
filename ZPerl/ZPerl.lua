@@ -8,8 +8,8 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: dec7ffcf716cf4904759d4f0e42c1bded31028be $")
-XPerl_SetModuleRevision("$Revision: dec7ffcf716cf4904759d4f0e42c1bded31028be $")
+end, "$Revision: af8a7c4dc62dd72dd127b8edca73163e186047f6 $")
+XPerl_SetModuleRevision("$Revision: af8a7c4dc62dd72dd127b8edca73163e186047f6 $")
 
 local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
@@ -2884,8 +2884,9 @@ local function XPerl_AuraButton_Update(buttonName, index, filter)
 	end
 end
 
-if IsRetail then
-	hooksecurefunc(BuffButtonMixin, "Update", XPerl_AuraButton_UpdateInfo)
+if AuraFrameMixin then
+	-- TODO: Figure out what's changed here
+	--hooksecurefunc(AuraFrameMixin, "Update", XPerl_AuraButton_UpdateInfo)
 elseif AuraButton_Update then
 	hooksecurefunc("AuraButton_Update", XPerl_AuraButton_Update)
 end

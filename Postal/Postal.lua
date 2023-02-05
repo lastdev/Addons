@@ -206,7 +206,7 @@ function Postal:MAIL_CLOSED()
 	if Postal.WOWClassic or Postal.WOWBCClassic or Postal.WOWWotLKClassic then
 		MiniMapMailFrame:Hide()
 	else
-		MinimapCluster.MailFrame:Hide()
+		MiniMapMailFrameMixin:OnLeave()
 	end
 end
 

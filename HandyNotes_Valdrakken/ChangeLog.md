@@ -1,5 +1,19 @@
 ## Revision History:
 
+#### v2 (January 25, 2022)
+-------------------------------
+* Updated zhCN by [nanjuekaien1](https://github.com/Dathwada/handynotes-valdrakken/pull/2)
+* Bump .toc to 100005
+
+#### v1 (November 28, 2022)
+-------------------------------
+* Added new NPC
+* Added addon description
+* Updated portaltrainer (only show for mages)
+* Updated zhCN by [nanjuekaien1](https://github.com/Dathwada/handynotes-valdrakken/pull/1)
+* Removed AceTimer-3.0 lib
+* Code clean up
+
 #### v0.5 (November 16, 2022)
 -------------------------------
 * Added TomTom waypoint from info

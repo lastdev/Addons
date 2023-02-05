@@ -10,7 +10,7 @@
 -- @{GroupTree} class.
 -- @classmod ApplicationGroupTree
 
-local _, TSM = ...
+local TSM = select(2, ...) ---@type TSM
 local TempTable = TSM.Include("Util.TempTable")
 local UIElements = TSM.Include("UI.UIElements")
 local ApplicationGroupTree = TSM.Include("LibTSMClass").DefineClass("ApplicationGroupTree", TSM.UI.GroupTree)

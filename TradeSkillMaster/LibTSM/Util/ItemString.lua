@@ -6,6 +6,7 @@
 
 local TSM = select(2, ...) ---@type TSM
 local ItemString = TSM.Init("Util.ItemString") ---@class Util.ItemString
+local Environment = TSM.Include("Environment")
 local BonusIds = TSM.Include("Data.BonusIds")
 local SmartMap = TSM.Include("Util.SmartMap")
 local private = {
@@ -242,7 +243,7 @@ function ItemString.ToWow(itemString)
 		extraPart = extra and strmatch(itemString, "i:[0-9]+:[0-9%-]*:(.+)") or ""
 	end
 	local level = UnitLevel("player")
-	local spec = not TSM.IsWowClassic() and GetSpecialization() or nil
+	local spec = Environment.IsRetail() and GetSpecialization() or nil
 	spec = spec and GetSpecializationInfo(spec) or ""
 	return "item:"..itemId.."::::::"..(rand or "").."::"..level..":"..spec..":::"..extraPart..":::"
 end

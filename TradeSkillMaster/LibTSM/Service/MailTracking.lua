@@ -6,6 +6,7 @@
 
 local TSM = select(2, ...) ---@type TSM
 local MailTracking = TSM.Init("Service.MailTracking") ---@class Service.MailTracking
+local Environment = TSM.Include("Environment")
 local Database = TSM.Include("Util.Database")
 local Delay = TSM.Include("Util.Delay")
 local Event = TSM.Include("Util.Event")
@@ -101,7 +102,19 @@ MailTracking:OnSettingsLoad(function()
 	private.settings.pendingMail[PLAYER_NAME] = private.settings.pendingMail[PLAYER_NAME] or {}
 	Event.Register("MAIL_INBOX_UPDATE", private.MailInboxUpdateHandler)
 
-	if TSM.IsWowClassic() then
+	if Environment.HasFeature(Environment.FEATURES.C_AUCTION_HOUSE) then
+		private.cancelAuctionQuery = AuctionTracking.CreateQuery()
+			:Equal("auctionId", Database.BoundQueryParam())
+			:Select("levelItemString", "stackSize")
+
+		-- handle auction canceling
+		hooksecurefunc(C_AuctionHouse, "CancelAuction", function(auctionId)
+			private.cancelAuctionQuery:BindParams(auctionId)
+			for _, levelItemString, stackSize in private.cancelAuctionQuery:Iterator() do
+				private.ChangePendingMailQuantity(levelItemString, stackSize)
+			end
+		end)
+	else
 		-- handle auction buying
 		hooksecurefunc("PlaceAuctionBid", function(listType, index, bidPlaced)
 			local itemString = ItemString.Get(GetAuctionItemLink(listType, index))
@@ -121,18 +134,6 @@ MailTracking:OnSettingsLoad(function()
 				return
 			end
 			private.ChangePendingMailQuantity(ItemString.ToLevel(itemString), stackSize)
-		end)
-	else
-		private.cancelAuctionQuery = AuctionTracking.CreateQuery()
-			:Equal("auctionId", Database.BoundQueryParam())
-			:Select("levelItemString", "stackSize")
-
-		-- handle auction canceling
-		hooksecurefunc(C_AuctionHouse, "CancelAuction", function(auctionId)
-			private.cancelAuctionQuery:BindParams(auctionId)
-			for _, levelItemString, stackSize in private.cancelAuctionQuery:Iterator() do
-				private.ChangePendingMailQuantity(levelItemString, stackSize)
-			end
 		end)
 	end
 
@@ -232,8 +233,8 @@ function MailTracking.GetQuantity(itemString)
 end
 
 function MailTracking.RecordAuctionBuyout(levelItemString, stackSize)
-	if TSM.IsWowClassic() then
-		-- on classic, we'll handle auction buys via a direct hook
+	if not Environment.HasFeature(Environment.FEATURES.C_AUCTION_HOUSE) then
+		-- We'll handle auction buys via a direct hook
 		return
 	end
 	private.ChangePendingMailQuantity(levelItemString, stackSize)

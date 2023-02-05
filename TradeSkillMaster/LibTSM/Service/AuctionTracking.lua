@@ -6,6 +6,7 @@
 
 local TSM = select(2, ...) ---@type TSM
 local AuctionTracking = TSM.Init("Service.AuctionTracking") ---@class Service.AuctionTracking
+local Environment = TSM.Include("Environment")
 local L = TSM.Include("Locale").GetTable()
 local Database = TSM.Include("Util.Database")
 local Delay = TSM.Include("Util.Delay")
@@ -53,7 +54,7 @@ local private = {
 local PLAYER_NAME = UnitName("player")
 local SALE_HINT_SEP = "\001"
 local SALE_HINT_EXPIRE_TIME = 33 * 24 * 60 * 60
-local SORT_ORDER = not TSM.IsWowClassic() and {
+local SORT_ORDER = Environment.IsRetail() and {
 	{ sortOrder = Enum.AuctionHouseSortOrder.Name, reverseSort = false },
 	{ sortOrder = Enum.AuctionHouseSortOrder.Price, reverseSort = false },
 }
@@ -78,11 +79,11 @@ AuctionTracking:OnSettingsLoad(function()
 	private.scanTimer = Delay.CreateTimer("AUCTION_TRACKING_OWNED_LIST_SCAN", private.AuctionOwnedListUpdateDelayed)
 	private.auctionPriceMessagesThrottleTimer = Delay.CreateTimer("AUCTION_TRACKING_PRICE_MESSAGES_THROTTLE", private.UpdateAuctionPricesMessages)
 	DefaultUI.RegisterAuctionHouseVisibleCallback(private.AuctionHouseVisibilityHandler)
-	if TSM.IsWowClassic() then
-		Event.Register("AUCTION_OWNED_LIST_UPDATE", private.AuctionOwnedListUpdateHandler)
-	else
+	if Environment.HasFeature(Environment.FEATURES.C_AUCTION_HOUSE) then
 		Event.Register("OWNED_AUCTIONS_UPDATED", private.AuctionOwnedListUpdateHandler)
 		Event.Register("AUCTION_CANCELED", private.AuctionCanceledHandler)
+	else
+		Event.Register("AUCTION_OWNED_LIST_UPDATE", private.AuctionOwnedListUpdateHandler)
 	end
 	private.indexDB = Database.NewSchema("AUCTION_TRACKING_INDEXES")
 		:AddUniqueNumberField("index")
@@ -123,11 +124,7 @@ AuctionTracking:OnSettingsLoad(function()
 		end
 	end
 
-	if TSM.IsWowClassic() then
-		hooksecurefunc("PostAuction", function(_, _, duration)
-			private.PostAuctionHookHandler(duration)
-		end)
-	else
+	if Environment.HasFeature(Environment.FEATURES.C_AUCTION_HOUSE) then
 		hooksecurefunc(C_AuctionHouse, "PostCommodity", function(_, duration)
 			private.PostAuctionHookHandler(duration)
 		end)
@@ -137,29 +134,21 @@ AuctionTracking:OnSettingsLoad(function()
 		hooksecurefunc(C_AuctionHouse, "CancelAuction", function(auctionId)
 			private.cancelAuctionId = auctionId
 		end)
+	else
+		hooksecurefunc("PostAuction", function(_, _, duration)
+			private.PostAuctionHookHandler(duration)
+		end)
 	end
 
 	-- setup enhanced sale / buy messages
-	if TSM.IsWowClassic() then
-		ChatFrame_AddMessageEventFilter("CHAT_MSG_SYSTEM", private.FilterSystemMsg)
-	else
+	if Environment.HasFeature(Environment.FEATURES.C_AUCTION_HOUSE) then
 		Event.Register("AUCTION_HOUSE_SHOW_NOTIFICATION", private.FilterAuctionMsg)
 		Event.Register("AUCTION_HOUSE_SHOW_FORMATTED_NOTIFICATION", private.FilterAuctionMsg)
 		Event.Register("AUCTION_HOUSE_SHOW_COMMODITY_WON_NOTIFICATION", private.FilterCommodityAuctionMsg)
-	end
-	if TSM.IsWowClassic() then
-		hooksecurefunc("PlaceAuctionBid", function(_, index, amountPaid)
-			local link = GetAuctionItemLink("list", index)
-			local name, _, stackSize, _, _, _, _, _, _, buyout = GetAuctionItemInfo("list", index)
-			if amountPaid == buyout then
-				wipe(private.lastPurchase)
-				private.lastPurchase.name = name
-				private.lastPurchase.link = link
-				private.lastPurchase.stackSize = stackSize
-				private.lastPurchase.buyout = buyout
-			end
-		end)
 	else
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_SYSTEM", private.FilterSystemMsg)
+	end
+	if Environment.HasFeature(Environment.FEATURES.C_AUCTION_HOUSE) then
 		Event.Register("ITEM_SEARCH_RESULTS_UPDATED", function(_, itemKey)
 			wipe(private.auctionIdToLink)
 			wipe(private.auctionIdToItemBuyout)
@@ -207,6 +196,18 @@ AuctionTracking:OnSettingsLoad(function()
 			private.lastPurchase.stackSize = origQuantity
 			private.lastPurchase.buyout = buyout
 		end)
+	else
+		hooksecurefunc("PlaceAuctionBid", function(_, index, amountPaid)
+			local link = GetAuctionItemLink("list", index)
+			local name, _, stackSize, _, _, _, _, _, _, buyout = GetAuctionItemInfo("list", index)
+			if amountPaid == buyout then
+				wipe(private.lastPurchase)
+				private.lastPurchase.name = name
+				private.lastPurchase.link = link
+				private.lastPurchase.stackSize = stackSize
+				private.lastPurchase.buyout = buyout
+			end
+		end)
 	end
 end)
 
@@ -220,7 +221,7 @@ AuctionTracking:OnGameDataLoad(function()
 			ElvUIChatIsEnabled = true
 		end
 	end
-	if TSM.IsWowClassic() then
+	if not Environment.HasFeature(Environment.FEATURES.C_AUCTION_HOUSE) then
 		if ElvUIChatIsEnabled then
 			private.origChatFrameOnEvent = ElvUIChat.ChatFrame_OnEvent
 			ElvUIChat.ChatFrame_OnEvent = private.ChatFrameOnEvent
@@ -277,7 +278,7 @@ function AuctionTracking.CreateQueryUnsoldItem(itemString)
 end
 
 function AuctionTracking.GetSaleHintItemString(name, stackSize, buyout)
-	if not TSM.IsWowClassic() and stackSize > 1 then
+	if not Environment.HasFeature(Environment.FEATURES.AH_STACKS) and stackSize > 1 then
 		buyout = buyout / stackSize
 	end
 	for info in pairs(private.settings.auctionSaleHints) do
@@ -303,9 +304,7 @@ function AuctionTracking.QueryOwnedAuctions()
 	if not DefaultUI.IsAuctionHouseVisible() then
 		return
 	end
-	if TSM.IsWowClassic() then
-		GetOwnerAuctionItems()
-	else
+	if Environment.HasFeature(Environment.FEATURES.C_AUCTION_HOUSE) then
 		if private.pendingFuture then
 			return
 		end
@@ -315,6 +314,8 @@ function AuctionTracking.QueryOwnedAuctions()
 			return
 		end
 		private.pendingFuture:SetScript("OnDone", private.PendingFutureOnDone)
+	else
+		GetOwnerAuctionItems()
 	end
 end
 
@@ -326,12 +327,12 @@ end
 
 function private.AuctionHouseVisibilityHandler(visible)
 	if visible then
-		if TSM.IsWowClassic() then
+		if Environment.HasFeature(Environment.FEATURES.C_AUCTION_HOUSE) then
+			private.queryTimer:RunForTime(0.1)
+		else
 			AuctionTracking.QueryOwnedAuctions()
 			-- We don't always get AUCTION_OWNED_LIST_UPDATE events, so do our own scanning if needed
 			private.backgroundScanTimer:RunForTime(1)
-		else
-			private.queryTimer:RunForTime(0.1)
 		end
 	else
 		private.backgroundScanTimer:Cancel()
@@ -397,12 +398,12 @@ function private.AuctionOwnedListUpdateDelayed()
 		-- default UI auctions tab is visible, so scan later
 		private.scanTimer:RunForFrames(2)
 		return
-	elseif not TSM.IsWowClassic() and not C_AuctionHouse.HasFullOwnedAuctionResults() then
+	elseif Environment.HasFeature(Environment.FEATURES.C_AUCTION_HOUSE) and not C_AuctionHouse.HasFullOwnedAuctionResults() then
 		-- don't have all the results yet, so try again in a moment
 		private.scanTimer:RunForFrames(2)
 		return
 	end
-	if TSM.IsWowClassic() then
+	if not Environment.HasFeature(Environment.FEATURES.C_AUCTION_HOUSE) then
 		-- check if we need to change the sort
 		local needsSort = false
 		local numColumns = #AuctionSort.owner_duration
@@ -448,12 +449,15 @@ function private.AuctionOwnedListUpdateDelayed()
 				highBidder = highBidder or ""
 				local itemString = ItemString.Get(link)
 				local currentBid = highBidder ~= "" and bid or minBid
-				if not currentBid and saleStatus == 1 and not TSM.IsWowClassic() then
+				if not currentBid and saleStatus == 1 and Environment.IsRetail() then
 					-- sometimes wow doesn't tell us the current bid on sold auctions on retail
 					currentBid = 0
 				end
 				if saleStatus == 0 then
-					if TSM.IsWowClassic() then
+					if Environment.HasFeature(Environment.FEATURES.C_AUCTION_HOUSE) then
+						duration = time() + duration
+						expire = min(expire, duration)
+					else
 						if duration == 1 then -- 30 min
 							expire = min(expire, time() + 0.5 * 60 * 60)
 						elseif duration == 2 then -- 2 hours
@@ -461,9 +465,6 @@ function private.AuctionOwnedListUpdateDelayed()
 						elseif duration == 3 then -- 12 hours
 							expire = min(expire, time() + 12 * 60 * 60)
 						end
-					else
-						duration = time() + duration
-						expire = min(expire, duration)
 					end
 					local levelItemString = ItemString.ToLevel(itemString)
 					private.settings.auctionQuantity[levelItemString] = (private.settings.auctionQuantity[levelItemString] or 0) + stackSize
@@ -477,7 +478,7 @@ function private.AuctionOwnedListUpdateDelayed()
 				private.indexDB:BulkInsertNewRow(index, itemString, link, texture, name, quality, duration, highBidder, currentBid, buyout, stackSize, saleStatus, auctionId)
 			elseif shouldLog then
 				Log.Warn("Missing info (%s, %s, %s, %s)", gsub(tostring(link), "\124", "\\124"), tostring(name), tostring(texture), tostring(quality))
-				if link and strmatch(link, "item:") and not TSM.IsWowClassic() then
+				if link and strmatch(link, "item:") and Environment.IsRetail() then
 					Analytics.Action("AUCTION_TRACKING_MISSING_INFO", link)
 				end
 			end
@@ -524,23 +525,15 @@ function private.RebuildQuantityDB()
 end
 
 function private.GetNumOwnedAuctions()
-	if TSM.IsWowClassic() then
-		return GetNumAuctionItems("owner")
-	else
+	if Environment.HasFeature(Environment.FEATURES.C_AUCTION_HOUSE) then
 		return C_AuctionHouse.GetNumOwnedAuctions()
+	else
+		return GetNumAuctionItems("owner")
 	end
 end
 
 function private.GetOwnedAuctionInfo(index)
-	if TSM.IsWowClassic() then
-		local name, texture, stackSize, quality, _, _, _, minBid, _, buyout, bid, highBidder, _, _, _, saleStatus = GetAuctionItemInfo("owner", index)
-		local link = name and name ~= "" and GetAuctionItemLink("owner", index)
-		if not link then
-			return
-		end
-		local duration = GetAuctionItemTimeLeft("owner", index)
-		return index, link, name, texture, stackSize, quality, minBid, buyout, bid, highBidder, saleStatus, duration
-	else
+	if Environment.HasFeature(Environment.FEATURES.C_AUCTION_HOUSE) then
 		local info = C_AuctionHouse.GetOwnedAuctionInfo(index)
 		if info.itemKey.itemID == AUCTIONABLE_WOW_TOKEN_ITEM_ID then
 			-- this is a token, so just ignore it
@@ -558,6 +551,14 @@ function private.GetOwnedAuctionInfo(index)
 		local bid = info.bidAmount or info.buyoutAmount
 		local minBid = bid
 		return info.auctionID, link, nil, nil, info.quantity, nil, minBid, info.buyoutAmount or 0, bid, info.bidder or "", info.status, info.timeLeftSeconds
+	else
+		local name, texture, stackSize, quality, _, _, _, minBid, _, buyout, bid, highBidder, _, _, _, saleStatus = GetAuctionItemInfo("owner", index)
+		local link = name and name ~= "" and GetAuctionItemLink("owner", index)
+		if not link then
+			return
+		end
+		local duration = GetAuctionItemTimeLeft("owner", index)
+		return index, link, name, texture, stackSize, quality, minBid, buyout, bid, highBidder, saleStatus, duration
 	end
 end
 
@@ -617,10 +618,10 @@ function private.UpdateAuctionPricesMessages()
 		if auctionStackSizes[link] ~= INVALID_STACK_SIZE then
 			sort(prices)
 			private.settings.auctionPrices[link] = prices
-			if TSM.IsWowClassic() then
-				private.settings.auctionMessages[format(ERR_AUCTION_SOLD_S, name)] = link
-			else
+			if Environment.HasFeature(Environment.FEATURES.C_AUCTION_HOUSE) then
 				private.settings.auctionMessages[name] = link
+			else
+				private.settings.auctionMessages[format(ERR_AUCTION_SOLD_S, name)] = link
 			end
 		end
 	end
@@ -643,7 +644,7 @@ function private.FilterSystemMsg(_, _, msg, ...)
 		private.prevLineId = lineID
 		private.prevLineResult = nil
 		local link = private.settings.auctionMessages and private.settings.auctionMessages[msg]
-		if private.lastPurchase.name and (msg == format(ERR_AUCTION_WON_S, private.lastPurchase.name) or (not TSM.IsWowClassic() and msg == format(ERR_AUCTION_COMMODITY_WON_S, private.lastPurchase.name, private.lastPurchase.stackSize))) then
+		if private.lastPurchase.name and (msg == format(ERR_AUCTION_WON_S, private.lastPurchase.name) or (Environment.IsRetail() and msg == format(ERR_AUCTION_COMMODITY_WON_S, private.lastPurchase.name, private.lastPurchase.stackSize))) then
 			-- we just bought an auction
 			private.prevLineResult = format(L["You won an auction for %sx%d for %s"], private.lastPurchase.link, private.lastPurchase.stackSize, Money.ToString(private.lastPurchase.buyout, "|cffffffff"))
 			return nil, private.prevLineResult, ...

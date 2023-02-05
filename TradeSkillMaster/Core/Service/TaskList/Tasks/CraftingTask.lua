@@ -4,8 +4,9 @@
 --    All Rights Reserved - Detailed license information included with addon.     --
 -- ------------------------------------------------------------------------------ --
 
-local _, TSM = ...
+local TSM = select(2, ...) ---@type TSM
 local CraftingTask = TSM.Include("LibTSMClass").DefineClass("CraftingTask", TSM.TaskList.Task)
+local Environment = TSM.Include("Environment")
 local L = TSM.Include("Locale").GetTable()
 local CraftString = TSM.Include("Util.CraftString")
 local Table = TSM.Include("Util.Table")
@@ -127,7 +128,7 @@ function CraftingTask.OnButtonClick(self)
 			private.currentlyCrafting = nil
 		end
 	elseif self._buttonText == L["OPEN"] then
-		Profession.Open(TSM.IsWowClassic() and self._profession or self._skillId)
+		Profession.Open(Environment.IsRetail() and self._skillId or self._profession)
 	else
 		error("Invalid state: "..tostring(self._buttonText))
 	end

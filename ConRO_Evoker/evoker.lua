@@ -81,6 +81,16 @@ function ConRO.Evoker.Disabled(_, timeShift, currentSpell, gcd, tChosen, pvpChos
 	return nil;
 end
 
+local Empowered_Color = {
+    blue = {r = 0.01, b = 0.79, g = 0.37};
+    red = {r = 0.8, b = 0, g = 0};
+    green = {r = 0.01, b = 0.37, g = 0.78};
+}
+
+local EmpoweredFrame_Color = Empowered_Color.red;
+local Empowered_FireBreath_Rank = "1";
+local Empowered_EternitySurge_Rank = "1";
+
 function ConRO.Evoker.Under60(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 	wipe(ConRO.SuggestedSpells)
 --Info
@@ -211,6 +221,29 @@ function ConRO.Evoker.Devastation(_, timeShift, currentSpell, gcd, tChosen, pvpC
 		_EssenceBurst_MCOUNT = 2;
 	end
 
+	local _EternitySurge_Targets = _enemies_in_25yrds;
+	if tChosen[Passive.EternitysSpan.talentID] then
+		_EternitySurge_Targets = _enemies_in_25yrds / 2;
+	end
+
+	if _EternitySurge_Targets <= 1 then
+		Empowered_EternitySurge_Rank = "1";
+	elseif _EternitySurge_Targets <= 2 then
+		Empowered_EternitySurge_Rank = "2";
+	else
+		if tChosen[Passive.FontofMagic.talentID] then
+			if _EternitySurge_Targets <= 3 then
+				Empowered_EternitySurge_Rank = "3";
+			elseif _EternitySurge_Targets > 3 then
+				Empowered_EternitySurge_Rank = "4";
+			end
+		else
+			if _EternitySurge_Targets > 2 then
+				Empowered_EternitySurge_Rank = "3";
+			end
+		end
+	end
+
 --Indicators
 	ConRO:AbilityInterrupt(_Quell, _Quell_RDY and ConRO:Interrupt());
 
@@ -220,20 +253,37 @@ function ConRO.Evoker.Devastation(_, timeShift, currentSpell, gcd, tChosen, pvpC
 	ConRO:AbilityBurst(_TiptheScales, _TiptheScales_RDY and _EternitySurge_RDY and ((ConRO_AutoButton:IsVisible() and _enemies_in_25yrds >= 5) or ConRO_AoEButton:IsVisible()));
 	ConRO:AbilityBurst(_Dragonrage, _Dragonrage_RDY and _EssenceBurst_COUNT == 0 and ConRO:BurstMode(_Dragonrage));
 
+	
+
 --Rotations
+	if (select(2, ConRO:EndChannel()) == _EternitySurge) then
+		local color = Empowered_Color.blue;
+		ConROEmpoweredFrame.texture:SetVertexColor(color.r, color.g, color.b);
+		ConROEmpoweredFrame.font:SetText(Empowered_EternitySurge_Rank);
+		ConROEmpoweredFrame:Show();
+	elseif (select(2, ConRO:EndChannel()) == _FireBreath) then
+		local color = Empowered_Color.red;
+		ConROEmpoweredFrame.texture:SetVertexColor(color.r, color.g, color.b);
+		ConROEmpoweredFrame.font:SetText(Empowered_FireBreath_Rank);
+		ConROEmpoweredFrame:Show();
+	else
+		ConROEmpoweredFrame:Hide();
+	end
+
 	for i = 1, 2, 1 do
 		if select(2, ConRO:EndChannel()) == _Disintegrate and select(1, ConRO:EndChannel()) > 1 then
 			tinsert(ConRO.SuggestedSpells, _Disintegrate);
 		end
 
-		if _Dragonrage_RDY and (not tChosen[Passive.ChargedBlast.talentID] or (tChosen[Passive.ChargedBlast.talentID] and _ChargedBlast_COUNT >= 18)) and _EssenceBurst_COUNT < _EssenceBurst_MCOUNT and _FireBreath_RDY and (not tChosen[Ability.EternitySurge.talentID] or (tChosen[Ability.EternitySurge.talentID])) and _EternitySurge_RDY and ConRO:FullMode(_Dragonrage) then
+		if _Dragonrage_RDY and _FireBreath_RDY and (not tChosen[Ability.EternitySurge.talentID] or (tChosen[Ability.EternitySurge.talentID])) and _EternitySurge_RDY and ConRO:FullMode(_Dragonrage) then
 			tinsert(ConRO.SuggestedSpells, _Dragonrage);
 			_Dragonrage_RDY = false;
 		end
 
-		if _FireBreath_RDY then
+		if _FireBreath_RDY and _Dragonrage_CD >= 10 then
 			tinsert(ConRO.SuggestedSpells, _FireBreath);
 			_FireBreath_RDY = false;
+			Empowered_FireBreath_Rank = "1";
 		end
 
 		if _Firestorm_RDY and (_Snapfire_BUFF or (tChosen[Passive.EverburningFlame.talentID] and _FireBreath_DUR <= 3 and _FireBreath_DUR < _FireBreath_CD)) then
@@ -251,9 +301,10 @@ function ConRO.Evoker.Devastation(_, timeShift, currentSpell, gcd, tChosen, pvpC
 			_DeepBreath_RDY = false;
 		end
 
-		if _EternitySurge_RDY then
+		if _EternitySurge_RDY and _Dragonrage_CD >= 15 then
 			tinsert(ConRO.SuggestedSpells, _EternitySurge);
 			_EternitySurge_RDY = false;
+			
 		end
 
 		if _LivingFlame_RDY and _Burnout_COUNT >= 1 and _EssenceBurst_COUNT < _EssenceBurst_MCOUNT then
@@ -379,6 +430,10 @@ function ConRO.Evoker.Preservation(_, timeShift, currentSpell, gcd, tChosen, pvp
 	ConRO:AbilityRaidBuffs(_BlessingoftheBronze, _BlessingoftheBronze_RDY and not ConRO:RaidBuff(Buff.BlessingoftheBronze));
 	--ConRO:AbilityRaidBuffs(_SourceofMagic, _SourceofMagic_RDY and not ConRO:OneBuff(Buff.SourceofMagic));
 
+	local color = EmpoweredFrame_Color;
+	ConROEmpoweredFrame.texture:SetVertexColor(color.r, color.g, color.b);
+	ConROEmpoweredFrame.font:SetText(EmpoweredFrame_Rank);
+
 --Rotations
 	if _is_Enemy then
 		if select(2, ConRO:EndChannel()) == _Disintegrate and select(1, ConRO:EndChannel()) > 1 then
@@ -388,6 +443,7 @@ function ConRO.Evoker.Preservation(_, timeShift, currentSpell, gcd, tChosen, pvp
 		if _FireBreath_RDY then
 			tinsert(ConRO.SuggestedSpells, _FireBreath);
 			_FireBreath_RDY = false;
+			EmpoweredFrame_Color = Empowered_Color.red;
 		end
 
 		if _Disintegrate_RDY and _Essence >= 3 then

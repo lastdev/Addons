@@ -1,15 +1,15 @@
 -------------------------------------------------------------------------------
 -- SmartBuff
 -- Originally created by Aeldra (EU-Proudmoore)
--- Retail version fixes / improvements by Codermik
+-- Retail version fixes / improvements by Codermik & Speedwaystar
 -- Discord: https://discord.gg/R6EkZ94TKK
 -- Cast the most important buffs on you, tanks or party/raid members/pets.
 -------------------------------------------------------------------------------
 
-SMARTBUFF_DATE          = "200123";
+SMARTBUFF_DATE          = "030223";
 
-SMARTBUFF_VERSION       = "r17."..SMARTBUFF_DATE;
-SMARTBUFF_VERSIONNR     = 100002;
+SMARTBUFF_VERSION       = "r19."..SMARTBUFF_DATE;
+SMARTBUFF_VERSIONNR     = 100005;
 SMARTBUFF_TITLE         = "SmartBuff";
 SMARTBUFF_SUBTITLE      = "Supports you in casting buffs";
 SMARTBUFF_DESC          = "Cast the most important buffs on you, your tanks, party/raid members/pets";
@@ -22,7 +22,7 @@ local SmartbuffPrefix = "Smartbuff";
 local SmartbuffSession = true;
 local SmartbuffVerCheck = false;					-- for my use when checking guild users/testers versions  :)
 local buildInfo = select(4, GetBuildInfo())
-local SmartbuffRevision = 17;
+local SmartbuffRevision = 19;
 local SmartbuffVerNotifyList = {}
 
 local SG = SMARTBUFF_GLOBALS;
@@ -781,8 +781,10 @@ function SMARTBUFF_SetTemplate()
     end
   end
 
-  SMARTBUFF_AddMsgD("Current tmpl: " .. currentTemplate or "nil" .. " - new tmpl: " .. newTemplate or "nil");
-  SMARTBUFF_AddMsg(SMARTBUFF_TITLE.." :: "..SMARTBUFF_OFT_AUTOSWITCHTMP .. ": " .. currentTemplate .. " -> " .. newTemplate);
+  if currentTemplate ~= newTemplate then
+    SMARTBUFF_AddMsgD("Current tmpl: " .. currentTemplate or "nil" .. " - new tmpl: " .. newTemplate or "nil");
+    SMARTBUFF_AddMsg(SMARTBUFF_TITLE.." :: "..SMARTBUFF_OFT_AUTOSWITCHTMP .. ": " .. currentTemplate .. " -> " .. newTemplate);
+  end
   currentTemplate = newTemplate;
 
   SMARTBUFF_SetBuffs();
@@ -922,32 +924,17 @@ end
 
 -- Get Spell ID from spellbook
 function SMARTBUFF_GetSpellID(spellname)
+  local i, id = 1, nil;
+  local spellN, spellId, skillType;
   if (spellname) then
     spellname = string.lower(spellname);
   else
     return nil;
   end
-
-  local i = 0;
-  local nSpells = 0;
-  local id = nil;
-  local spellN, spellId, skillType;
-
-  -- Get number of spells
-  --for i = 1, GetNumSpellTabs() do
-  -- Common and specialization
-  for i = 1, GetNumSpellTabs() do
-    local _, _, _, n = GetSpellTabInfo(i);
-    nSpells = nSpells + n;
-  end
-
-  i = 0;
-  while (i < nSpells) do
-    i = i + 1;
+  while GetSpellBookItemName(i, BOOKTYPE_SPELL) do
     spellN = GetSpellBookItemName(i, BOOKTYPE_SPELL);
     skillType, spellId = GetSpellBookItemInfo(i, BOOKTYPE_SPELL);
     --print(spellN.." "..spellId);
-
     if (skillType == "FLYOUT") then
       for j = 1, GetNumFlyouts() do
         local fid = GetFlyoutID(j);
@@ -963,20 +950,18 @@ function SMARTBUFF_GetSpellID(spellname)
 		    end
 		  end
     end
-
     if (spellN ~= nil and string.lower(spellN) == spellname) then
       id = spellId;
       break;
     end
+    i = i + 1;
   end
-
   if (id) then
     if (IsPassiveSpell(id) or skillType == "FUTURESPELL" or not IsSpellKnown(id)) then
       id = nil;
       i = nil;
     end
   end
-
   return id, i;
 end
 -- END SMARTBUFF_GetSpellID

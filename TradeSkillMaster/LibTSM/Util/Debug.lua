@@ -6,6 +6,7 @@
 
 local TSM = select(2, ...) ---@type TSM
 local Debug = TSM.Init("Util.Debug") ---@class Util.Debug
+local Environment = TSM.Include("Environment")
 local private = {
 	startSystemTimeMs = floor(GetTime() * 1000),
 	startTimeMs = time() * 1000 + (floor(GetTime() * 1000) % 1000),
@@ -52,7 +53,7 @@ function Debug.GetStackLevelLocation(targetLevel, thread)
 		if not stackLine or stackLine == "" then
 			return
 		end
-		if TSM.IsTestEnvironment() then
+		if Environment.IsTest() then
 			stackLine = strmatch(stackLine, "^%.*([^:]+\"]:%d+):")
 		else
 			local numSubs = nil

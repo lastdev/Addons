@@ -8650,7 +8650,7 @@ function Hekili:GenerateProfile()
     for k, v in orderedPairs( s.talent ) do
         if v.enabled then
             if talents then talents = format( "%s\n    %s = %d/%d", talents, k, v.rank, v.max )
-            else talents = k end
+            else talents = format( "%s = %d/%d", k, v.rank, v.max ) end
         end
     end
 
@@ -10236,6 +10236,7 @@ do
         { "trinket%.([%w_]+)%.proc%.([%w_]+)%.duration" , "trinket.%1.buff_duration"        },
         { "trinket%.([%w_]+)%.proc%.([%w_]+)%.[%w_]+"   , "trinket.%1.has_use_buff"         },
         { "trinket%.([%w_]+)%.has_buff%.([%w_]+)"       , "trinket.%1.has_use_buff"         },
+        { "trinket%.([%w_]+)%.has_use_buff%.([%w_]+)"   , "trinket.%1.has_use_buff"         },
         { "min:([%w_]+)"                                , "%1"                              },
         { "position_back"                               , "true"                            },
         { "max:(%w_]+)"                                 , "%1"                              },

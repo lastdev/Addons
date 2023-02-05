@@ -1,6 +1,8 @@
 # HandyNotes_WorldMapButton
 
-## [100002.02-Release](https://github.com/fubaWoW/HandyNotes_WorldMapButton/tree/100002.02-Release) (2023-01-18)
-[Full Changelog](https://github.com/fubaWoW/HandyNotes_WorldMapButton/compare/100002.01-Release...100002.02-Release) [Previous Releases](https://github.com/fubaWoW/HandyNotes_WorldMapButton/releases)
+## [100005.02-Release](https://github.com/fubaWoW/HandyNotes_WorldMapButton/tree/100005.02-Release) (2023-02-05)
+[Full Changelog](https://github.com/fubaWoW/HandyNotes_WorldMapButton/compare/100005.01-Release...100005.02-Release) [Previous Releases](https://github.com/fubaWoW/HandyNotes_WorldMapButton/releases)
 
-- TOC Update for Wrath  
+- forgot to add "RightButton" check to prevent errors  
+- Right-Click the "AddOn Button" now open HandyNotes Options (feature Request)  
+    Left-Click still Toggle HandyNote as usual  

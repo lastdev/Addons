@@ -37,95 +37,98 @@ spec:RegisterResource( Enum.PowerType.Focus, {
 
 -- Talents
 spec:RegisterTalents( {
-    aimed_shot                  = { 79873, 19434 , 1 }, -- A powerful aimed shot that deals 4,769 Physical damage and causes your next 1-2 Arcane Shots or Multi-Shots to deal 75% more damage. Aimed Shot deals 50% bonus damage to targets who are above 70% health. Aimed Shot also fires a Serpent Sting at the primary target.
+    -- Hunter
     alpha_predator              = { 79904, 269737, 1 }, -- Kill Command now has 2 charges, and deals 15% increased damage.
     arctic_bola                 = { 79815, 390231, 2 }, -- Aimed Shot has a chance to fling an Arctic Bola at your target, dealing 0 Frost damage and snaring the target by 20% for 3 sec. The Arctic Bola strikes up to 2 targets.
-    barrage                     = { 79914, 120360, 1 }, -- Rapidly fires a spray of shots for 2.6 sec, dealing an average of 2,108 Physical damage to all nearby enemies in front of you. Usable while moving. Deals reduced damage beyond 8 targets.
-    beast_master                = { 79926, 378007, 2 }, -- Pet damage increased by 5%.
+    barrage                     = { 79914, 120360, 1 }, -- Rapidly fires a spray of shots for 2.6 sec, dealing an average of 4,392 Physical damage to all nearby enemies in front of you. Usable while moving. Deals reduced damage beyond 8 targets.
+    beast_master                = { 79926, 378007, 2 }, -- Pet damage increased by 3%.
     binding_shackles            = { 79920, 321468, 1 }, -- Targets rooted by Binding Shot, knocked back by High Explosive Trap, incapacitated by Scatter Shot, or stunned by Intimidation deal 10% less damage to you for 8 sec after the effect ends.
     binding_shot                = { 79937, 109248, 1 }, -- Fires a magical projectile, tethering the enemy and any other enemies within 5 yards for 10 sec, stunning them for 3 sec if they move more than 5 yards from the arrow.
-    bombardment                 = { 79889, 378880, 1 }, -- Every 4 Arcane Shots grants you the Bombardment effect, causing your next Multi-Shot to grant Trick Shots, regardless of how many targets were hit.
     born_to_be_wild             = { 79933, 266921, 2 }, -- Reduces the cooldowns of Aspect of the Cheetah, Survival of the Fittest, and Aspect of the Turtle by 7%.
-    bulletstorm                 = { 79817, 389019, 1 }, -- Each additional target your Rapid Fire or Aimed Shot ricochets to from Trick Shots increases the damage of Multi-Shot by 7% for 15 sec, stacking up to 10 times. The duration of this effect is not refreshed when gaining a stack.
-    bullseye                    = { 79876, 204089, 2 }, -- When your abilities damage a target below 20% health, you gain 1% increased critical strike chance for 6 sec, stacking up to 15 times.
-    bursting_shot               = { 79872, 186387, 1 }, -- Fires an explosion of bolts at all enemies in front of you, knocking them back, snaring them by 50% for 6 sec, and dealing 83 Physical damage.
-    calling_the_shots           = { 79902, 260404, 1 }, -- TODO: Every 50 Focus spent reduces the cooldown of Trueshot by 1.5 sec.
     camouflage                  = { 79934, 199483, 1 }, -- You and your pet blend into the surroundings and gain stealth for 1 min. While camouflaged, you will heal for 2% of maximum health every 1 secs.
-    careful_aim                 = { 79879, 260228, 2 }, -- Aimed Shot deals 25% bonus damage to targets who are above 70% health.
-    chimaera_shot               = { 79915, 342049, 1 }, -- A two-headed shot that hits your primary target for 1,290 Nature damage and another nearby target for 645 Frost damage.
     concussive_shot             = { 79906, 5116  , 1 }, -- Dazes the target, slowing movement speed by 50% for 6 sec. Steady Shot will increase the duration of Concussive Shot on the target by 3.0 sec.
-    counter_shot                = { 79836, 147362, 1 }, -- Interrupts spellcasting, preventing any spell in that school from being cast for 3 sec.
-    crack_shot                  = { 79895, 321293, 1 }, -- Arcane Shot and Chimaera Shot Focus cost reduced by 20.
-    deadeye                     = { 79892, 321460, 1 }, -- Kill Shot now has 2 charges and has its cooldown reduced by 3.0 sec.
-    death_chakram               = { 79916, 375891, 1 }, -- Throw a deadly chakram at your current target that will rapidly deal 502 Physical damage 7 times, bouncing to other targets if they are nearby. Enemies struck by Death Chakram take 10% more damage from you and your pet for 10 sec. Each time the chakram deals damage, its damage is increased by 15% and you generate 3 Focus.
-    deathblow                   = { 79883, 378769, 1 }, -- Aimed Shot has a 15% and Rapid Fire has a 25% chance to grant a charge of Kill Shot, and cause your next Kill Shot to be usable on any target regardless of their current health.
-    double_tap                  = { 79874, 260402, 1 }, -- Your next Aimed Shot will fire a second time instantly at 100% power without consuming Focus, or your next Rapid Fire will shoot 100% additional shots during its channel.
-    eagletalons_true_focus      = { 79901, 389449, 2 }, -- Trueshot lasts an additional 1.5 sec, reduces the Focus cost of Arcane Shot, Chimaera Shot, and Multi-Shot by 12%, and reduces the Focus Cost of Aimed Shot by 12%.
+    death_chakram               = { 79916, 375891, 1 }, -- Throw a deadly chakram at your current target that will rapidly deal 905 Physical damage 7 times, bouncing to other targets if they are nearby. Enemies struck by Death Chakram take 10% more damage from you and your pet for 10 sec. Each time the chakram deals damage, its damage is increased by 15% and you generate 3 Focus.
     entrapment                  = { 79977, 393344, 1 }, -- When Tar Trap is activated, all enemies in its area are rooted for 4 sec. Damage taken may break this root.
-    explosive_shot              = { 79914, 212431, 1 }, -- Fires an explosive shot at your target. After 3 sec, the shot will explode, dealing 2,993 Fire damage to all enemies within 8 yards. Deals reduced damage beyond 5 targets.
-    focused_aim                 = { 79896, 378767, 2 }, -- Aimed Shot and Rapid Fire damage increased by 5%.
-    heavy_ammo                  = { 79903, 378910, 1 }, -- Trick Shots now ricochets to 2 fewer targets, but each ricochet deals an additional 10% damage.
-    high_explosive_trap         = { 79910, 236776, 1 }, -- Hurls a fire trap to the target location that explodes when an enemy approaches, causing 728 Fire damage and knocking all enemies away. Trap will exist for 1 min.
+    explosive_shot              = { 79914, 212431, 1 }, -- Fires an explosive shot at your target. After 3 sec, the shot will explode, dealing 6,215 Fire damage to all enemies within 8 yards. Deals reduced damage beyond 5 targets.
+    high_explosive_trap         = { 79910, 236776, 1 }, -- Hurls a fire trap to the target location that explodes when an enemy approaches, causing 1,079 Fire damage and knocking all enemies away. Trap will exist for 1 min.
     hunters_avoidance           = { 79832, 384799, 1 }, -- Damage taken from area of effect attacks reduced by 6%.
-    hunters_knowledge           = { 79888, 378766, 2 }, -- Aimed Shot and Rapid Fire critical strike chance increased by 5%.
     hydras_bite                 = { 79911, 260241, 1 }, -- Serpent Sting fires arrows at 2 additional enemies near your target, and its damage over time is increased by 20%.
     improved_kill_command       = { 79932, 378010, 2 }, -- Kill Command damage increased by 5%.
     improved_kill_shot          = { 79930, 343248, 1 }, -- Kill Shot's critical damage is increased by 25%.
-    improved_steady_shot        = { 79898, 321018, 1 }, -- Steady Shot now generates 10 Focus.
     improved_tranquilizing_shot = { 79919, 343244, 1 }, -- When Tranquilizing Shot successfully dispels an effect, gain 10 Focus.
     improved_traps              = { 79923, 343247, 2 }, -- The cooldown of Tar Trap, Steel Trap, High Explosive Trap, and Freezing Trap is reduced by 2.5 sec.
     intimidation                = { 79910, 19577 , 1 }, -- Commands your pet to intimidate the target, stunning it for 5 sec.
     keen_eyesight               = { 79922, 378004, 2 }, -- Critical strike chance increased by 2%.
-    kill_command                = { 79838, 34026 , 1 }, -- Give the command to kill, causing your pet to savagely deal 1,332 Physical damage to the enemy.
-    kill_shot                   = { 79834, 53351 , 1 }, -- You attempt to finish off a wounded target, dealing 3,653 Physical damage. Only usable on enemies with less than 20% health. Kill Shot deals 25% increased critical damage.
-    killer_accuracy             = { 79900, 378765, 2 }, -- Kill Shot critical strike chance increased by 10%.
     killer_instinct             = { 79904, 273887, 1 }, -- Kill Command deals 50% increased damage against enemies below 35% health.
-    legacy_of_the_windrunners   = { 79899, 190852, 2 }, -- Aimed Shot has a 25% chance to coalesce 3 extra Wind Arrows that also shoot your target for 327 Physical damage. Modifiers to Aimed Shot damage also increase the damage of Wind Arrows.
+    lone_survivor               = { 79820, 388039, 1 }, -- Reduce the cooldown of Survival of the Fittest by 30 sec, and increase its duration by 2.0 sec.
+    master_marksman             = { 79913, 260309, 2 }, -- Your melee and ranged special attack critical strikes cause the target to bleed for an additional 7% of the damage dealt over 6 sec.
+    misdirection                = { 79924, 34477 , 1 }, -- Misdirects all threat you cause to the targeted party or raid member, beginning with your next attack within 30 sec and lasting for 8 sec.
+    natural_mending             = { 79925, 270581, 2 }, -- Every 30 Focus you spend reduces the remaining cooldown on Exhilaration by 1.0 sec.
+    natures_endurance           = { 79820, 388042, 1 }, -- Survival of the Fittest reduces damage taken by an additional 20%.
+    pathfinding                 = { 79918, 378002, 2 }, -- Movement speed increased by 2%.
+    poison_injection            = { 79911, 378014, 1 }, -- Serpent Sting's damage applies Latent Poison to the target, stacking up to 10 times. Aimed Shot consumes all stacks of Latent Poison, dealing 389 Nature damage to the target per stack consumed.
+    posthaste                   = { 79921, 109215, 2 }, -- Disengage also frees you from all movement impairing effects and increases your movement speed by 25% for 4 sec.
+    rejuvenating_wind           = { 79909, 385539, 2 }, -- Exhilaration heals you for an additional 10.0% of your maximum health over 8 sec.
+    scare_beast                 = { 79927, 1513  , 1 }, -- Scares a beast, causing it to run in fear for up to 20 sec. Damage caused may interrupt the effect. Only one beast can be feared at a time.
+    scatter_shot                = { 79937, 213691, 1 }, -- A short-range shot that deals 108 damage, removes all harmful damage over time effects, and incapacitates the target for 4 sec. Any damage caused will remove the effect. Turns off your attack when used.
+    sentinel_owl                = { 79819, 388045, 1 }, -- Call forth a Sentinel Owl to the target location within 40 yds, granting you unhindered vision. Your attacks ignore line of sight against any target in this area. Every 90 Focus spent grants you 1 sec of the Sentinel Owl when cast, up to a maximum of 12 sec. The Sentinel Owl can only be summoned when it will last at least 5 sec.
+    sentinels_perception        = { 79818, 388056, 1 }, -- Sentinel Owl now also grants unhindered vision to party members while active.
+    sentinels_protection        = { 79818, 388057, 1 }, -- While the Sentinel Owl is active, your party gains 5% Leech.
+    serpent_sting               = { 79905, 271788, 1 }, -- Fire a shot that poisons your target, causing them to take 366 Nature damage instantly and an additional 2,537 Nature damage over 18 sec. Serpent Sting's damage applies Latent Poison to the target, stacking up to 10 times. Aimed Shot consumes all stacks of Latent Poison, dealing 389 Nature damage to the target per stack consumed.
+    serrated_shots              = { 79814, 389882, 2 }, -- Serpent Sting and Bleed damage increased by 10%. This value is increased to 20% against targets below 30% health.
+    stampede                    = { 79916, 201430, 1 }, -- Summon a herd of stampeding animals from the wilds around you that deal 2,947 Physical damage to your enemies over 12 sec. Enemies struck by the stampede are snared by 30%, and you have 10% increased critical strike chance against them for 5 sec.
+    steel_trap                  = { 79908, 162488, 1 }, -- Hurls a Steel Trap to the target location that snaps shut on the first enemy that approaches, immobilizing them for 20 sec and causing them to bleed for 4,102 damage over 20 sec. Damage other than Steel Trap may break the immobilization effect. Trap will exist for 1 min. Limit 1.
+    survival_of_the_fittest     = { 79821, 264735, 1 }, -- Reduces all damage you and your pet take by 20% for 8 sec.
+    tar_trap                    = { 79928, 187698, 1 }, -- Hurls a tar trap to the target location that creates a 8 yd radius pool of tar around itself for 30 sec when the first enemy approaches. All enemies have 50% reduced movement speed while in the area of effect. Trap will exist for 1 min.
+    trailblazer                 = { 79931, 199921, 2 }, -- Your movement speed is increased by 15% anytime you have not attacked for 3 seconds.
+    tranquilizing_shot          = { 79907, 19801 , 1 }, -- Removes 1 Enrage and 1 Magic effect from an enemy target.
+    wilderness_medicine         = { 79936, 343242, 2 }, -- Mend Pet heals for an additional 25% of your pet's health over its duration, and has a 25% chance to dispel a magic effect each time it heals your pet.
+
+    -- Marksmanship
+    aimed_shot                  = { 79873, 19434 , 1 }, -- A powerful aimed shot that deals 8,034 Physical damage and causes your next 1-2 Arcane Shots or Multi-Shots to deal 75% more damage. Aimed Shot deals 50% bonus damage to targets who are above 70% health. Aimed Shot also fires a Serpent Sting at the primary target.
+    bombardment                 = { 79889, 378880, 1 }, -- Every 4 Arcane Shots grants you the Bombardment effect, causing your next Multi-Shot to grant Trick Shots, regardless of how many targets were hit.
+    bulletstorm                 = { 79817, 389019, 1 }, -- Each additional target your Rapid Fire or Aimed Shot ricochets to from Trick Shots increases the damage of Multi-Shot by 7% for 15 sec, stacking up to 10 times. The duration of this effect is not refreshed when gaining a stack.
+    bullseye                    = { 79876, 204089, 2 }, -- When your abilities damage a target below 20% health, you gain 1% increased critical strike chance for 6 sec, stacking up to 15 times.
+    bursting_shot               = { 79872, 186387, 1 }, -- Fires an explosion of bolts at all enemies in front of you, knocking them back, snaring them by 50% for 6 sec, and dealing 151 Physical damage.
+    calling_the_shots           = { 79902, 260404, 1 }, -- Every 50 Focus spent reduces the cooldown of Trueshot by 2.5 sec.
+    careful_aim                 = { 79879, 260228, 2 }, -- Aimed Shot deals 25% bonus damage to targets who are above 70% health.
+    chimaera_shot               = { 79915, 342049, 1 }, -- A two-headed shot that hits your primary target for 2,327 Nature damage and another nearby target for 1,163 Frost damage.
+    counter_shot                = { 79836, 147362, 1 }, -- Interrupts spellcasting, preventing any spell in that school from being cast for 3 sec.
+    crack_shot                  = { 79895, 321293, 1 }, -- Arcane Shot and Chimaera Shot Focus cost reduced by 20.
+    deadeye                     = { 79892, 321460, 1 }, -- Kill Shot now has 2 charges and has its cooldown reduced by 3.0 sec.
+    deathblow                   = { 79883, 378769, 1 }, -- Aimed Shot has a 15% and Rapid Fire has a 25% chance to grant a charge of Kill Shot, and cause your next Kill Shot to be usable on any target regardless of their current health.
+    eagletalons_true_focus      = { 79901, 389449, 2 }, -- Trueshot lasts an additional 1.5 sec, reduces the Focus cost of Arcane Shot, Chimaera Shot, and Multi-Shot by 12%, and reduces the Focus Cost of Aimed Shot by 12%.
+    focused_aim                 = { 79896, 378767, 2 }, -- Aimed Shot and Rapid Fire damage increased by 5%.
+    heavy_ammo                  = { 79903, 378910, 1 }, -- Trick Shots now ricochets to 2 fewer targets, but each ricochet deals an additional 25% damage.
+    hunters_knowledge           = { 79888, 378766, 2 }, -- Aimed Shot and Rapid Fire critical strike chance increased by 5%.
+    improved_steady_shot        = { 79898, 321018, 1 }, -- Steady Shot now generates 10 Focus.
+    kill_command                = { 79838, 34026 , 1 }, -- Give the command to kill, causing your pet to savagely deal 1,870 Physical damage to the enemy.
+    kill_shot                   = { 79834, 53351 , 1 }, -- You attempt to finish off a wounded target, dealing 7,246 Physical damage. Only usable on enemies with less than 20% health. Kill Shot deals 25% increased critical damage.
+    killer_accuracy             = { 79900, 378765, 2 }, -- Kill Shot critical strike chance increased by 10%.
+    legacy_of_the_windrunners   = { 79899, 190852, 2 }, -- Aimed Shot has a 25% chance to coalesce 3 extra Wind Arrows that also shoot your target for 472 Physical damage. Modifiers to Aimed Shot damage also increase the damage of Wind Arrows.
     lethal_shots                = { 79897, 260393, 1 }, -- Arcane Shot and Multi-Shot have a 30% chance to reduce the cooldown of Rapid Fire by 5.0 sec.
     light_ammo                  = { 79903, 378913, 1 }, -- Trick Shots now causes Aimed Shot and Rapid Fire to ricochet to 2 additional targets.
     lock_and_load               = { 79884, 194595, 1 }, -- Your ranged auto attacks have a 8% chance to trigger Lock and Load, causing your next Aimed Shot to cost no Focus and be instant.
-    lone_survivor               = { 79820, 388039, 1 }, -- Reduce the cooldown of Survival of the Fittest by 30 sec, and increase its duration by 2.0 sec.
     lone_wolf                   = { 79871, 155228, 1 }, -- Increases your damage by 10% when you do not have an active pet.
-    master_marksman             = { 79913, 260309, 2 }, -- Your melee and ranged special attack critical strikes cause the target to bleed for an additional 7% of the damage dealt over 6 sec.
-    misdirection                = { 79924, 34477 , 1 }, -- Misdirects all threat you cause to the targeted party or raid member, beginning with your next attack within 30 sec and lasting for 8 sec.
-    multishot                   = { 79840, 257620, 1 }, -- Fires several missiles, hitting your current target and all enemies within 10 yards for 818 Physical damage. Deals reduced damage beyond 5 targets.
-    natural_mending             = { 79925, 270581, 2 }, -- TODO: Every 30 Focus you spend reduces the remaining cooldown on Exhilaration by 1.0 sec.
-    natures_endurance           = { 79820, 388042, 1 }, -- Survival of the Fittest reduces damage taken by an additional 20%.
-    pathfinding                 = { 79918, 378002, 2 }, -- Movement speed increased by 2%.
-    poison_injection            = { 79911, 378014, 1 }, -- Serpent Sting's damage applies Latent Poison to the target, stacking up to 10 times. Aimed Shot consumes all stacks of Latent Poison, dealing 263 Nature damage to the target per stack consumed.
-    posthaste                   = { 79921, 109215, 2 }, -- Disengage also frees you from all movement impairing effects and increases your movement speed by 25% for 4 sec.
+    multishot                   = { 79840, 257620, 1 }, -- Fires several missiles, hitting your current target and all enemies within 10 yards for 1,475 Physical damage. Deals reduced damage beyond 5 targets.
     precise_shots               = { 79877, 260240, 2 }, -- Aimed Shot causes your next 1-2 Arcane Shots or Multi-Shots to deal 35% more damage.
-    quick_load                  = { 79878, 378771, 1 }, -- When you fall below 40% health, Bursting Shot's cooldown is immediately reset. This can only occur once every 25 sec.
-    rapid_fire                  = { 79880, 257044, 1 }, -- Shoot a stream of 7 shots at your target over 1.7 sec, dealing a total of 5,344 Physical damage. Usable while moving. Rapid Fire causes your next Aimed Shot to cast 30% faster. Each shot generates 1 Focus.
+    quick_load                  = { 79878, 378771, 1 }, -- When you fall below 40% heath, Bursting Shot's cooldown is immediately reset. This can only occur once every 25 sec.
+    rapid_fire                  = { 79880, 257044, 1 }, -- Shoot a stream of 7 shots at your target over 1.7 sec, dealing a total of 15,613 Physical damage. Usable while moving. Rapid Fire causes your next Aimed Shot to cast 30% faster. Each shot generates 1 Focus.
     razor_fragments             = { 79831, 384790, 1 }, -- When the Trick Shots effect fades or is consumed, or after gaining Deathblow, your next Kill Shot will deal 50% increased damage, and shred up to 5 targets near your Kill Shot target for 25% of the damage dealt by Kill Shot over 6 sec.
     readiness                   = { 79813, 389865, 1 }, -- Wailing Arrow resets the cooldown of Rapid Fire and generates 2 charges of Aimed Shot.
-    rejuvenating_wind           = { 79909, 385539, 2 }, -- Exhilaration heals you for an additional 10.0% of your maximum health over 8 sec.
-    salvo                       = { 79830, 384791, 1 }, -- Multi-Shot and Volley now also apply Explosive Shot to up to 2 targets hit. This can only occur once every 45 sec.
-    scare_beast                 = { 79927, 1513  , 1 }, -- Scares a beast, causing it to run in fear for up to 20 sec. Damage caused may interrupt the effect. Only one beast can be feared at a time.
-    scatter_shot                = { 79937, 213691, 1 }, -- A short-range shot that deals 71 damage, removes all harmful damage over time effects, and incapacitates the target for 4 sec. Any damage caused will remove the effect. Turns off your attack when used.
-    sentinel_owl                = { 79819, 388045, 1 }, -- Call forth a Sentinel Owl to the target location, granting you unhindered vision. Your attacks ignore line of sight against any target in this area. Every 90 Focus spent grants you 1 sec of the Sentinel Owl when cast, up to a maximum of 12 sec. The Sentinel Owl can only be summoned when it will last at least 5 sec.
-    sentinels_perception        = { 79818, 388056, 1 }, -- Sentinel Owl now also grants unhindered vision to party members while active.
-    sentinels_protection        = { 79818, 388057, 1 }, -- While the Sentinel Owl is active, your party gains 5% Leech.
-    serpent_sting               = { 79905, 271788, 1 }, -- Fire a shot that poisons your target, causing them to take 209 Nature damage instantly and an additional 1,456 Nature damage over 18 sec. Serpent Sting's damage applies Latent Poison to the target, stacking up to 10 times. Aimed Shot consumes all stacks of Latent Poison, dealing 263 Nature damage to the target per stack consumed.
+    salvo                       = { 79830, 400456, 1 }, -- Your next Multi-Shot or Volley now also applies Explosive Shot to up to 2 targets hit.
     serpentstalkers_trickery    = { 79881, 378888, 1 }, -- Aimed Shot also fires a Serpent Sting at the primary target.
-    serrated_shots              = { 79814, 389882, 2 }, -- Serpent Sting and Bleed damage increased by 10%. This value is increased to 20% against targets below 30% health.
     sharpshooter                = { 79887, 378907, 2 }, -- Critical strike damage increased by 2%.
-    stampede                    = { 79916, 201430, 1 }, -- Summon a herd of stampeding animals from the wilds around you that deal 1,686 Physical damage to your enemies over 12 sec. Enemies struck by the stampede are snared by 30%, and you have 10% increased critical strike chance against them for 5 sec.
     steady_focus                = { 79891, 193533, 2 }, -- Using Steady Shot twice in a row increases your Haste by 7% for 15 sec.
-    steel_trap                  = { 79908, 162488, 1 }, -- Hurls a Steel Trap to the target location that snaps shut on the first enemy that approaches, immobilizing them for 20 sec and causing them to bleed for 2,942 damage over 20 sec. Damage other than Steel Trap may break the immobilization effect. Trap will exist for 1 min. Limit 1.
     streamline                  = { 79893, 260367, 2 }, -- Rapid Fire's damage is increased by 7%, and Rapid Fire also causes your next Aimed Shot to cast 15% faster.
     surging_shots               = { 79897, 391559, 1 }, -- Rapid Fire deals 35% additional damage, and Aimed Shot has a 15% chance to reset the cooldown of Rapid Fire.
-    survival_of_the_fittest     = { 79821, 264735, 1 }, -- Reduces all damage you and your pet take by 20% for 8 sec.
-    tar_trap                    = { 79928, 187698, 1 }, -- Hurls a tar trap to the target location that creates a 8 yd radius pool of tar around itself for 30 sec when the first enemy approaches. All enemies have 50% reduced movement speed while in the area of effect. Trap will exist for 1 min.
+    tactical_reload             = { 79874, 400472, 1 }, -- Aimed Shot and Rapid Fire cooldown reduced by 10%.
     target_practice             = { 79886, 321287, 1 }, -- Arcane Shot and Multi-Shot damage increased by 25%.
-    trailblazer                 = { 79931, 199921, 2 }, -- Your movement speed is increased by 15% anytime you have not attacked for 3 seconds.
-    tranquilizing_shot          = { 79907, 19801 , 1 }, -- Removes 1 Enrage and 1 Magic effect from an enemy target. Successfully dispelling an effect generates 10 Focus.
     trick_shots                 = { 79875, 257621, 1 }, -- When Multi-Shot hits 3 or more targets, your next Aimed Shot or Rapid Fire will ricochet and hit up to 5 additional targets for 55% of normal damage.
-    trueshot                    = { 79882, 288613, 1 }, -- Reduces the cooldown of your Aimed Shot and Rapid Fire by 70%, and causes Aimed Shot to cast 50% faster for 18 sec. While Trueshot is active, you generate 50% additional Focus. Every 50 Focus spent reduces the cooldown of Trueshot by 1.5 sec.
+    trueshot                    = { 79882, 288613, 1 }, -- Reduces the cooldown of your Aimed Shot and Rapid Fire by 70%, and causes Aimed Shot to cast 50% faster for 18 sec. While Trueshot is active, you generate 50% additional Focus and you gain 1% critical strike chance and 2% increased critical damage dealt every 1 sec, stacking up to 10 times..
     unerring_vision             = { 79902, 386878, 1 }, -- While Trueshot is active you gain 1% critical strike chance and 2% increased critical damage dealt every 1 sec, stacking up to 10 times.
-    volley                      = { 79890, 260243, 1 }, -- Rain a volley of arrows down over 6 sec, dealing up to 4,669 Physical damage to any enemy in the area, and gain the effects of Trick Shots for as long as Volley is active.
-    wailing_arrow               = { 79885, 392060, 1 }, -- Fire an enchanted arrow, dealing 4,407 Shadow damage to your target and an additional 1,786 Shadow damage to all enemies within 8 yds of your target. Non-Player targets struck by a Wailing Arrow are silenced for 3 sec.
-    wilderness_medicine         = { 79936, 343242, 2 }, -- Mend Pet heals for an additional 25% of your pet's health over its duration, and has a 25% chance to dispel a magic effect each time it heals your pet.
+    volley                      = { 79890, 260243, 1 }, -- Rain a volley of arrows down over 6 sec, dealing up to 8,420 Physical damage to any enemy in the area, and gain the effects of Trick Shots for as long as Volley is active.
+    wailing_arrow               = { 79885, 392060, 1 }, -- Fire an enchanted arrow, dealing 7,948 Shadow damage to your target and an additional 3,222 Shadow damage to all enemies within 8 yds of your target. Non-Player targets struck by a Wailing Arrow have their spellcasting interrupted and are silenced for 3 sec.
     windrunners_barrage         = { 79813, 389866, 1 }, -- Wailing Arrow fires off 5 Wind Arrows at your primary target, and 10 Wind Arrows split among any secondary targets hit.
     windrunners_guidance        = { 79894, 378905, 1 }, -- Each Wind Arrow fired has a 3% chance to grant you 10.0 sec of Trueshot.
 } )
@@ -271,13 +274,13 @@ spec:RegisterAuras( {
         duration = 12,
         max_stack = 1
     },
-    -- Talent: Your next Aimed Shot will fire a second time instantly at $s4% power and consume no Focus, or your next Rapid Fire will shoot $s3% additional shots during its channel.
+    --[[ Talent: Your next Aimed Shot will fire a second time instantly at $s4% power and consume no Focus, or your next Rapid Fire will shoot $s3% additional shots during its channel.
     -- https://wowhead.com/beta/spell=260402
     double_tap = {
         id = 260402,
         duration = 15,
         max_stack = 1
-    },
+    }, ]]
     -- Vision is enhanced.
     -- https://wowhead.com/beta/spell=6197
     eagle_eye = {
@@ -411,7 +414,7 @@ spec:RegisterAuras( {
         id = 257044,
         duration = function () return 2 * haste end,
         tick_time = function ()
-            return ( 2 * haste ) / ( buff.double_tap.up and 14 or 7 )
+            return ( 2 * haste ) / 7
         end,
         type = "Ranged",
         max_stack = 1
@@ -428,9 +431,9 @@ spec:RegisterAuras( {
         mechanic = "bleed",
         max_stack = 1
     },
-    salvo = { -- ICD.
-        id = 384791,
-        duration = 45,
+    salvo = {
+        id = 400456,
+        duration = 15,
         max_stack = 1
     },
     -- Talent: Feared.
@@ -693,8 +696,8 @@ spec:RegisterAbilities( {
             return 2.5 * haste * ( buff.rapid_fire.up and 0.7 or 1 ) * ( buff.trueshot.up and 0.5 or 1 ) * ( buff.streamline.up and ( 1 - 0.15 * talent.streamline.rank ) or 1 )
         end,
         charges = 2,
-        cooldown = function () return haste * ( buff.trueshot.up and 4.8 or 12 ) end,
-        recharge = function () return haste * ( buff.trueshot.up and 4.8 or 12 ) end,
+        cooldown = function () return haste * ( buff.trueshot.up and 4.8 or 12 ) * ( 1 - 0.1 * talent.tactical_reload.rank ) end,
+        recharge = function () return haste * ( buff.trueshot.up and 4.8 or 12 ) * ( 1 - 0.1 * talent.tactical_reload.rank ) end,
         gcd = "spell",
         school = "physical",
 
@@ -715,7 +718,6 @@ spec:RegisterAbilities( {
         end,
 
         handler = function ()
-            removeBuff( "double_tap" )
             if buff.lock_and_load.up then removeBuff( "lock_and_load" )
             elseif buff.secrets_of_the_unblinking_vigil.up then removeBuff( "secrets_of_the_unblinking_vigil" ) end
             if talent.precise_shots.enabled then applyBuff( "precise_shots" ) end
@@ -873,7 +875,7 @@ spec:RegisterAbilities( {
         end,
     },
 
-    -- Talent: Your next Aimed Shot will fire a second time instantly at $s4% power without consuming Focus, or your next Rapid Fire will shoot $s3% additional shots during its channel.
+    --[[ Removed in 10.0.5 -- Talent: Your next Aimed Shot will fire a second time instantly at $s4% power without consuming Focus, or your next Rapid Fire will shoot $s3% additional shots during its channel.
     double_tap = {
         id = 260402,
         cast = 0,
@@ -889,7 +891,7 @@ spec:RegisterAbilities( {
         handler = function ()
             applyBuff( "double_tap" )
         end,
-    },
+    }, ]]
 
 
     explosive_shot = {
@@ -985,12 +987,13 @@ spec:RegisterAbilities( {
                 removeBuff( "bombardment" )
             end
 
-            if talent.trick_shots.enabled and active_enemies > 2 then applyBuff( "trick_shots" ) end
-            if talent.calling_the_shots.enabled then cooldown.rapid_fire.expires = max( 0, cooldown.rapid_fire.expires - 2.5 ) end
-            if talent.salvo.enabled and debuff.salvo.down then
+            if buff.salvo.up then
                 applyDebuff( "target", "explosive_shot" )
-                applyDebuff( "player", "salvo" )
+                if active_enemies > 1 and active_dot.explosive_shot < active_enemies then active_dot.explosive_shot = active_dot.explosive_shot + 1 end
+                removeBuff( "salvo" )
             end
+
+            if talent.trick_shots.enabled and active_enemies > 2 then applyBuff( "trick_shots" ) end
         end,
     },
 
@@ -999,7 +1002,7 @@ spec:RegisterAbilities( {
         id = 257044,
         cast = function () return ( 2 * haste ) end,
         channeled = true,
-        cooldown = function() return 20 * ( buff.trueshot.up and 0.3 or 1 ) end,
+        cooldown = function() return 20 * ( buff.trueshot.up and 0.3 or 1 ) * ( 1 - 0.1 * talent.tactical_reload.rank ) end,
         gcd = "spell",
         school = "physical",
 
@@ -1016,7 +1019,6 @@ spec:RegisterAbilities( {
         end,
 
         finish = function ()
-            removeBuff( "double_tap" )
             if buff.volley.down then
                 removeBuff( "trick_shots" )
                 if talent.razor_fragments.enabled then applyBuff( "razor_fragments" ) end
@@ -1024,6 +1026,21 @@ spec:RegisterAbilities( {
         end,
     },
 
+    -- Your next Multi-Shot or Volley now also applies Explosive Shot to up to 2 targets hit.
+    salvo = {
+        id = 400456,
+        cast = 0,
+        cooldown = 45,
+        gcd = "off",
+
+        talent = "salvo",
+        startsCombat = false,
+        texture = 1033904,
+
+        handler = function ()
+            applyBuff( "salvo" )
+        end,
+    },
 
     sniper_shot = {
         id = 203155,
@@ -1128,9 +1145,11 @@ spec:RegisterAbilities( {
         handler = function ()
             applyBuff( "volley" )
             applyBuff( "trick_shots", 6 )
-            if talent.salvo.enabled and debuff.salvo.down then
+
+            if buff.salvo.up then
                 applyDebuff( "target", "explosive_shot" )
-                applyDebuff( "player", "salvo" )
+                if active_enemies > 1 and active_dot.explosive_shot < active_enemies then active_dot.explosive_shot = active_dot.explosive_shot + 1 end
+                removeBuff( "salvo" )
             end
         end,
     },
@@ -1171,19 +1190,19 @@ spec:RegisterOptions( {
 
 
 spec:RegisterSetting( "prevent_hardcasts", false, {
-    name = "Prevent Hardcasts of |T135130:0|t Aimed Shot During Movement",
-    desc = "If checked, the addon will not recommend |T135130:0|t Aimed Shot if it has a cast time and you are moving.",
+    name = "Prevent Hardcasts While Moving",
+    desc = "If checked, the addon will not recommend |T135130:0|t Aimed Shot or |T132323:0|t Wailing Arrow when moving and hardcasting.",
     type = "toggle",
     width = "full"
 } )
 
-spec:RegisterSetting( "eagletalon_swap", false, {
+--[[ spec:RegisterSetting( "eagletalon_swap", false, {
     name = "Use |T132329:0|t Trueshot with Eagletalon's True Focus Runeforge",
     desc = "If checked, the default priority includes usage of |T132329:0|t Trueshot pre-pull, assuming you will successfully swap " ..
         "your legendary on your own.  The addon will not tell you to swap your gear.",
     type = "toggle",
     width = "full",
-} )
+} ) ]]
 
 
-spec:RegisterPack( "Marksmanship", 20230117, [[Hekili:T3ZFVnUnY(zP4WZB8LuVXA3S72I4a8Al6HwCV2IMEV3)zBgB6yDrwYvsEZMfb(Z(BgskjsQHsukoT72Z461glsnCMHdNFXrKthp93ME9swoF6pfCEWRoF843o683D(Rgp968h2YNE9w2I7y3c)rmBd8V)FyP3LTHfNToCl24drjSLimYs2LUa6WFB)8155BZ(6x(YBdZxV7Mrls28YSWn7Iy5HjXlszRYXFV4LtV(MDHr5)q80BiXHZF90Rz7YxNKo96Rd38TtVED4YLCz35zlME90RJcZYZWXppnCXDzRte)6NeKfpMDteF50Vz61lsdZ5PHmOFSiEC(OSCoB5dZwLSyx2ivh3pFW(56nmBrYU4CXJVz3QvMVukFdlmoB)8l3p)DaIUaPoGpi7dIjtZbcYjIiGyk7JjPZwLYUDdGvzJ2TTcs3fgfvcNx5eolssIwMCFmaRTHlNTkmLBGB3Uy5OnSpSF(JpUF(xSFEjdiLZ2efgZli)QrEzYo4bZYzBXH(1hMHEbBgc)3Z7pMCbIjfnX)W2OKmaEsEKggc98n69CjNLVE2I1S7szBS64B17ywoBZw(sUvFENEFUNfcO6TZyPPj3B1XVYItvcxE6wGsNLLdVPodmLVkLNTgFbHuMIJS(HLPSSz3aDZq2uJNjHiGWr3XtZMjK(5PpuXbx8WcbJl9woSKawqa434ZDovkNAMXJ5Bc5WS3v7N)2kc4gGArLaimgRZnEFsue)bl2W4a9UKNUJtmdn2TeTyLHGIetTAl1UAY(58pWxSlhiTWnsM2jvCLDP3IZnY3QKZHIBcywjnbl00z41fb3pFyfjujElWC7fefDJby0sL0yn2pHkOwMdliUUZoeVX2u(IWmU6DWLPACIIjfbFaF6QDGYg4nwJyScyxIlAZYv)6uT1ZdfShuhCA4wjX)9jP7NFTbj9caf)nfrDgYRrMb8Fxdqlk5EEg8djTatALVm8h4YKr7N)paPXuwu0d7NNeJ)BeB2ppCf8)H)79j7IaMeWNzOsL7bRnQXdaHGO3p)7sIFb01K3ZtVh5)7N)ls2IQl7NVloINjqujhbGn(uGTGe0)noLk7B1aYWgbQi9EaqJeIex8efj(8AAooPlt1RdVDTyU(FcM4X53Fjjmljgn1c(watsxZWb(w5SnisSlc1aXYuVpqHVpmzh8tXcub)(nhaLhoxF)w)bUsncXmHQfHVcc1PlsqEaWELJ6OkrJrYMgiBsxlmm186k0CX6WnmGhv6uW435pMwjzql5uiHiA6gqmbesZts3msmlTFoW8gFUqKOluvfYd()LhwI4(APSHLmoSDUviCnlm(FZLyuFnGAi2)Zc9p7q9g3WY4OGOTclPeldyoGFBCyvsyCLYjPoRxuislvNjDzg(f0iB72OheqXCvIqCpWTDBZL54KSHRO8iGYKopf42N4EmDA4CAGBVC7bOnKucA1nbss)g2TZswjNvZeW51Mo6v5KUHBj548(kgGbLrruU6dJfGNs5TPL)oS4FhIRj8JfUIy1BBkkzlk3RXaEpdOpOv8VI2X18ZUKAtr8VWoaivNYafy83Js2SLlbFF(agxKwhuI94c7m(dCtNJwbAOZNvPOeNSShXL7sfXVn72Dc7LNABIPOd7N)Y9ZdSuMigZknjMphS1mt12qDuonm(oE(O8XJwdEddl(MHVNeYAnwffIgb8QZBQFcMh5yf00yf45yfqnwypADAYUdkRiNuVLk29P1Bev9a2ocUGEyXMb8(nN7eXuJR9J1P6XvVnrWdJvcajzsYZsetHC2Ex8DCyf2gHY1cV8cLkvVnjbewLUOKNOufx4Zg4dXVcykyE)9cvNja42e(rf)jNDhIuBtdtaDhc9U47dXZiHEgOHEjAtd0zl09SfTOOm6i1QhLuOFx64PWPYL8i2dsFlbNCyrceg6sXmdGv)CHxIWlhbU8QgLSnWVuaitspslkiBxk3XxTcSFvktLbovXIbS8(18ye7fMk(g1kOZkrgPV1c3KvuiACr8uXmqbzIE3jwYLnsOVzMm7oflMNjeBPc(VuBiqbZK)ygMdgzMyuGzXYSYW1767wqWLrX7v4QG80RSZRGU3pLw19chYYltnGxJoiVh4jO1stLWAd6ewYMByv2BihXkQcef5ZUpjAvDAkB3MnWyULtM5jCKkCZF61JpFQJKSyBEsI3Siy1ae1WST7(4hHoFtYh0IYHOXgKD0dkYy5)VirrRWUW1Wj4QduYn)(eT1MfbVDphnzzeoOyHQiKW)xrokKWr)1h1UaLT5tz6omnEs8MbOMnIfanlbvpVy1trzft0mpuelwi91HMDFDU0kvf)2KnJ6IrwmlLluxku(ymhHQWmdexY1ptlszfKxNYvZLBss5(nBuXECmrqe70eCrPynwPkfILyT78vXdgzPC0KxED4TXSiH)9S8k)NYumnjYjjBLlbilt8ygMwc5RHMJaWgMkJQb7s2dXlewanTlGmzdv3y)QuBBV4VDY0oFbntFclkAeP8PcsTz8xkCOXtQteYNF48uw4YHf58Bi(Z2itVVWePWZc4NHr1PU7drZ13WRM78LCBB6sIBe6kBNuR71AbgxZZxtxA7VtVv(CE5EspRR6GniQsWK1Rw1G7xzIRxzqB45K2WZHvAD7p)sLe6)JHJ1GB7ILoz5PGdZOBXkqPV2qQbOC1f4L8pelwgTGhVuyzPWt9V2CvK0oWs2gHFTQNDM05CCSGgHv8P54FxcExTlS7HSeBhGf47SXZkObk74DBX54MwCslk1NOFPf1iNJTbbTOwGtrTXUe1cCjQrINtAdpjwC2D(L1IZ)YZXgsjphyip7YvrvVhds3rj56)gzNjRwn72flT3mRM57LEpv5FsTMQVOZJ8UujB03HGgbRsWrZtfvj5QjzZgjHRCo6F5(5JVODaaD7cHeOdWmWzlNUF(RpxGbwjMrXwRX4cQX4AeZ8Ol9h5XnYjOXCUzmey3DpgherGY0C1QAgl2DJiWPTbpYPVHLtI08MILhUPAK36UdTQRuYwmWKUPF2qt55owNxervzwC9YhTdIohFhdsgBRdIQFMZKIyKhHmLz5jZwgYltH6bHUS8N7FLHbqtNiYAoWPsmzOkojHhCO3EQmsQsdjMzt8PY8Kk8subXkqPV1(ImSgLiYCAv2AJ3RLltWZXVhgWm5ZraifAK439C2DiXB5bzOC0FOCmGGAtKX2PNh4iMPBKatEnB7wECwnKKinWUipbJIr6FScy3OyvckfOMHYugy50lbzegVINc)tj9ZIFWEkuWff(BNdUAJ0AEbPdM7)s2TXjz5HlKjixfIlcLK0LiUwMj5mX(1xI6BzHPcxRf5FlLNTlkxBUs2B5ytLwvlNpcSC(iWlNp8BLytEge4Abd1gm1pNpQBd1dlpnOITTO8BKe6KZhuaO)2V7SZh19ARrmZJU0FKN05d3dXHW5JwebQ78HReq0xNpiHNVoFuFJxpqoF0GpzoD(O9m3CqC(OLyHEk6C8DmA35dhAfoaoF0n6sMK(Sw2bS2QB7t6zPBR2I86DsAYEGyI1o5471RouQk(UOTQYKP5AaXVQAXSGECT9AExTX(xnuv8rlmJQkJ7yvAtqbABiP1Uqi2GPVt08(5)gwiMc31(vSa(q3br)FqFJqFxI4Qn3QO2ELoPILdq8iRIVSsS0JkzVPsxxtNqdLLdcf)l1dv1CmwQz0znzuTh4oQ3d1Esx5pk2xITABSUQt)rt1kUjLf)HVOXqPsGUxl(nvy)2vyyJBU44g2xvzrZxMPxYcE3wTvrV1kSutb5)pPp6usPNzjGRjBpIsH4HRM3fKI7s5ttnV5gHw5bVQs)ZjkV)IovvDFw7ixA4Tcdg6vWnS8onzZ(5FdwIePl3iQUNQkdsfaNYTIDBptvJafG6Aw07tKVqrraOEPB4I4ubRNQOGkFNW8r1uhFt1WBuXV51QV2bUwqjnKkz8iwvxZQ8X6wDi3RBbZ1NkR4q)fi4QqZpPJ1AEPQ0tnQ7CD1Mk0ZOEN9POlWw0(mJgQTmiNSIWjQREh6djx)6Ug4339V2beKj7Gh8TkYUO2kw693WapeR1c7VLHc2rJFpd3WxjQgdrfSfZ)qUCYbRHnmqEJYbrMGH(JMY0JO4pHkaIgh(wg4IYUibAIMpIls6dy(iu6FpUwTozQwo7KsbsCROhnqMv4n4LehRp7cfnlyXfv3YH5R94)0xprSysi5FW)Ms6ZNscLB9M47Vk9JUQUP(EzrUB9HjLUdWhbDD)6q0CUY)BHGOLzM2IUP5yymz6)DzHpP(owOCfX05Lw)isiJfPUFsU94Qj4iIqArYMnSyHTT2(whO)Qv6XNzqTVMMg(ajoSJmlf0OW95RNOjgx9pXHxz6)S7pXbS(CBmy7gkBBWXUkuaCAGNEhgMjrnN5Imk4CLXCzxRwcUzrr13eQ8gnujkjbeV3L(qxcV(zbvyXlavtPmqSMffrfP(Zo68vvydUIxWCOkKf)K0Iq4Nn7FVBP4RuNkY9MOinFifis0USksvLCP1Cwu(6rBXTP4YYCq1cvgOX03Mi(V5sbCWwEg(ZIZtG3G6RsrhVYu1(x4MTjP5Q0h8I8YQY(fOA6FFhW0wI7dcQpLTlpzdyMbDvAn6ts2O9)4)uKpHXFn40ssmmCIMFbHA8xi9zHQPcn8qxoz8hgwc1x5cQfbSvdM2rYzdXxFWH4xrdrTVCDlqs8nT7jmDfLIno3sWm2J2yxSz9aQThdQGT9gW9NBp21e4ZeRXXmH93wP1W46tV0xWFWPM9)iXAD133x3wO7ykT4tyZcdT)k7ADbUk)4MP0VeO0z83FGANZDcat0LNrG3nWc6lBgOYo0D81la3kidAEsRwZEHN1Rsdca33jT(b8UbwkElrh6o(6fGDbYKTC5gfMjZRWlO80caWGt(c6u3dn4yn(JpA4GYv1HS5xq7PwECPA8)k4XhLUkz8vZoX8zLFXSdreIw)WJp2WsWRE15UAhiFdOg4cQ1LrmHQ9SYWhF0jtT(Umm4exFXRNwFFfUm4I6apm(Q3CoXGcW2XEOC1yS)MzS4QXWec4d6aJPxyahwig(jNm0lpkd9zJmuPMQ3q7HrEvE2SCYiV(N3AlE(u(TM2nFFCeKt5hIQfEv7du1wnVdFzLBZHfWm37dBiDXZs4xoMj6e(rY)Zomm(Ni59hBOeoyMpLyHCXwEYXT5KF3FC1vOG4E9zdn9Tf0xa1jHY)CIL0XWzK(vRXGCJkQbyhR(F6a2PmBpx3rQmqzIRJjCQgZ0iiKcBLVGoieTMBwJqzWspHWrBgt7z4sUbAPBcfw4jGmvFEwbFRaMOegjyZ9gV7l4BfWA1jjfJqRnFXtNGBC3b3N8yxRtkhLv9g8Ea4JAXEsGVva33PopX7(c(wb8N86j(0g7ADs5OSQ3GVeW1CQ1qlwXl6qlMwZgyRlG(K0I1mM2t9TUbA)4RpZGVva3x5ypX7(c(wbCp1w0aE2hDzF2IDToPCuw1BW7bGpQf7jb(wbCFN68eV7l4BfWFYRN4tBSR1jLJYQEd(saxl5IhcfoUaQgM0HD6)zf4Tc2(kz4jw3xW3kGFsMHoS84NvG)mb2J48rC(ttCUVAm8eR7l4F2a8r8UF4THSLxLPMNyC3bCxazNCJP7yCNaFRa(zXlPE6i(rhbAfShzepbW(NcoxRczDS2AWjeN8vApu9AAhDtnw1FdF8XVORaSokia1v6RDT1WGLxRdbWbnGExrosF54lA6L(YlUK81gq(0tF95xzuEGalPHdwNbN0Wi3yJDdTUAsGZ6XubURMqdVEo9ikuYM60LgSjhdZPnbblg9WHnuXPoylbNt3WLuaQI8eJLRQTvBAtZSZKZRT2qwDPdhCIZsS9jTsSDyAXkAUGEdoxYHRDmsDzWfpb8SfJ)FMQG6Lhvq1n06pwfuV8V2kOE5rfuhqfuL(y92NdhKDb0XT7pizxEgbERGLqu0R4f9eR7l4BfWpPWrpS84NvG)mb2J48rC(ttCUVAm8eR7l4F2a8r8UF4THSLxFp5EIXDhWDbKDkX3DhJ7e4BfWplEjf0VQL4OJaTc2JmINay)tbNDNZ32IVIodibubivhF8pLkb(NsfcT4g58DSJuQuh98iLk1FPUL7cVsPYyQuQuFKBSXUHwwPuHcC9nLkoMEmtPcrN6ykviGqtPuX2wAVtPcH9TA581EnLos3XuQ4mJNDFLy7W0Dkviw70XuQ4lE2IX)ptvq9YJkO6gA9hRcQ6589VukOQLZ3JkO6pEI(yT)h)bXx6p6A1BkonyXtC4SC8d5F61zB5lM(tbx8A8s5pzviEVXk7v2OYZOLtN8YQ7Z)ZcxnP4qdQ88vz)ps9svN3)NPFJ)pz8509hzKH58nNHxyOtiUj)3)J)n5r5n7pUBMFAuT6a1f5hMhXox(QQJvj55FH9HWZLbdPbRXjzCDiFvaU4O(58GjF5tIRqFA6t7KaMM6myBdmBFsakqRa7eXv8bpvaRYNcdrEkl(33bSXpwCkRi4oA3l0vxAdIBaVBtsachfmLe(oK2kop3hHx6f4DEH40vcJpb6y4hzY1r493sw1LeT82QR4ccmZ8A8tCztSnIRnrGNf44ncT8VA(E8tCkXxONepJ4RMhyrrj3RgLSnm8(HxaGmj9iVUzWd5wujv9BrXZuxgG3VMhJyVqC4BuhnxNvImYlpaHaMIclVe(ewlkit84FxCwEPjdatlfQXKRTnV2ootCtvpPudwVp8YoqhAzpHd(oxNzzeQ91pCXSnQQdsxhyze7EOoidSb5FXoUY0fUWd36zYFodTTjfYwSmR9ovSkO9EMrQQVsHCE1HGw7alV8uEMspOMEUravaqP64nh7pbhz8RQ9kLhd5IxzN5zH9JpsTCRsmIAiEJ9qyE8I)SnmLNB4hOr4RShaRtv86ddcE7xsEmFtHsdorQPq7egV09UQtx8ldqXDkH73Op)Nry3KWfGbNu)kNBGanOUQgU8cLgUAxZCd(cBQzOfUuEpYvhhv3iCTX)KDx)QH7mJROKjJriODfXn4lA5e)AqRdN5L)MWLGd3n4M1yP53lqhNuPhU2f62L3UyPUlDfaFOtJEKkuRPSg0jp(Cx6zrLweARlqZ6QGXqY8zufcDtg3i0hAlovC5QzZd1Vp1SARnVKhB1FP3KI58EEzNzbWQjs9vJ6hSFQLxg34zdQnnBb2c5xeOAH9P7QKGi(e6(jZIckVr1kvbyEFLvSo18UkBqDB(6heHk1yL3jzdmdUsBE94LGvVqZpNVeSSea1IlNWKsBwrK2TRFBy94JNu3TJ63bwO28tltZXWQ4tmoRhRNmaWfMIB2QHkfh51VtRUs)QvQ2sMHLld(t56RQttdF(YLfm5d0DUv3DXZT7C6i9FpWP1Q2SJ2Qxu63qwE9cgZjoM7ftZi5CfE3uDQ89TVYQSfWQU3QoGq14ESYl6tBwt3P9QW78BMTt(U)ohJtPJ5LyEk7JjPZwLYeH1iUOWOFvtpw7HdRhg4wUaTddHTJ904bT3Kwtt2oIA0SXIfxGOlX0OiqTlJOwdZXXWcoybtXCcpHFRJ3OWZjYglK3D0SPZVo1JoXqr6j93jzPLTVh9HWFRA(4G3)a4sPSOirw)X)Tm95wQXnZdUUh3JWag81hltxaXSX2O7FLPzFKJzHdHJoEmT50uTxwQlTsFkS8EO2ezCsxMm90fLBLZNDWxLoWr)ZIJDWwc6au0gO1HwruB2Mxh0Q1vl3NU81oWH6rnAhHyHRH1nXldYeyKWmvEs6MrYu1p(8HTJFc5XFwS0xSPp3WY4Yu7yQRqkkXWn6agNuziqLBHOqDXlkK1KAsYs2LUGl3IeiuNOheqXu81LCyFmIyFDN1xlj(Ndp3EE4bBVDPG(cKo5bNnPR7jhMFWWBJzrIjwmHrfEVKP25uPWTupUkTkyWWIhZqtbYxdv3VKNfMYePwc7cwDac5je5Q2qo0cJPqHyNjo1EZZQk)h1gN1uUISicHmQgLiFQGEAgjLM)0iCVXuz3vOQTsqz(SqKITbD7vTRIInJf(zyuDu((qChoVHxX19Lg6jJwOmTH9Ou0U9MmlW6Ic1yFXMTQJwsoAjHbMX(HybfSGhVuOVOyFL)AtcitC1RUKTrSlSQNDMCRKXXcAeWS0C8VlbVR2fU8G87mF4i51QZkfFXA3kRYLCo5gJ2TT3SSWMYRVDPfTz8Ifgr1FHINr2XjeDCqdyYKgWe9cyYtQUQWM(8LQh2bXNaNIpJDi(yZV6YgUxJrsqAgVyngzafJCmbJmGGrsGjtAat0fF8KQReF(8LQLbh8VYqh3n1wxinvtJPQUvcv2eeQmr1RQcwrvLkyOw4tLLrJmv3siwbk9G(eb0fLikSMQI5jEVwPUmc3vOi0Ok(Ceasdws87Eo7ou1QLk7q5O)q5yawLtK2X0ltOiMPE79Zpzn4bjpoRgssuLqUipbJIrAqsbSBuSkbLcuZqPJnwwziiJW4v8u4FkPFw8d2tHcUOWah4a8YI9rsq6rj5Fj72yWJUWfY6NszohHss6sexll0OmrCELO(wwyQWwMmFR8mWdsT5kzVvJnLYPY6ne)JKvRMbXCbUyJ4uHSQmAAhR68RGSP(g9Rx7o(xG3(FOEqSgu)dqXXr6brDf1A1Dx)D6wvu7vXDtDGEuFGBQTUHuML2nf06zLD7yEXOWUP0K3P66Maanuw32vlwFRQBcv72F1jny7QBL0DVofpix51keDwp3elw6y5C7js2xfyb6kWAJ(Ov4qvW5K1fVNkW8)luHuAYzmfUXT2vG9u)mq8sbg1xNs9bUP26gszQaJcA9ubMJ5fdfyurY0jfyeaObfy2vqBFvGrQB2ubwdXU1nfy96tsHCLxRq0PcmIflDubMNi50C4)n9))d]] )
+spec:RegisterPack( "Marksmanship", 20230131, [[Hekili:T3vCZTTnY(plz68uSo7kBrhN02X2Z8A70BAN7DTtDV37)SeSeKeptrQssfhNXJ(S)2faKeaCbjiTCBspnnnXMaCXUlwS7paSe42X3(B3EZCwo)2)zWzbNF24ZhpA8x)Mlo7IBVj)Xn8BVzdB29SLWpeZwd)9)dl9(S1S4SvHBWcFmkHnhjswY20zqf(IDtxLNVj7Bo90LH5R2E3OzjRpnlC92iwEys8Su2IC83ND6T3C32WO8Fm(27OzI3C7nST5RssV9MBcx)D3EZQW5Z5YQZZMD7n3EtuywEg2(5PHZUpBvI43(Nc5IhZUlIp)2V92BMLgMZtdzq9yr848rz5C28hNSiz22SrQkUB6GDt1lyYSKTX5IhF32flmFPu(AwyC2UPxUB6xbm6mu6a9GSoiNCBoiqozebftzFmjDYIu2Y1axLnA7MkkDFyuujDohPtrj8pSjkjl89CzXA0hQ5B0R5ColF1KzRy3NYwBvXl0RywoB9g(CUvDEREDEGfgfgVCclnn5bRk(ol5SKU80nGKnjlhEtDXpLViLNTcFbHcw1VS6X5PSSj3bvZOB5vL1qrrGHJUNNMnr0XZtFSO6qJ84Si(KCw6soyna2ca)9vo7hqof0K8y(6qo0DE9UPVRI)Vdew08hiXxRRlEFsue)rlLW4Z0RsE6wor)Zy32MctcH8i6y1SXU(QDt5FGpBBoiyHRnuzzBtxIDlYxPuluWgPSnHZNSimvieJTnilQgdO6CL9unfiX4Nw6fem4rQXn(lsfVXMu(SWmU6DMN8q8UPp9uj5Kkwy0I8Pl2cJuG3yfYXkIbJkNXYYv)2X7MUC28rRzFy30HWFKoqsd3if(FijD30BmePxdS4VPeQtqDnQmG)DfqTOKh4zWViLfq3x(YWpGg6J2n9VdguPSOOh3nnjg)BKB2nnCb8)W)(qY2iqjb6z27bk(a4Qu1Eajec9UPFFs8RHQM8EE6dO(F30FrQwuvz30TXr8mbJk1iaTXNcQfuG(VXUuzDRAqgwiifPpaeAKWK48NPjXNxDZXjDPREv4YvI(6)beFc7F)LKWSKymobeye6KUHHn8szVnysSncDIWYuVpiHVpmzl8RGRtL((n7bhaohFFH)eh1Rdi7juLic0j8iolb1bG6v2QJQmngjlAGSiDhPqxZBQyZzRcxZaDuzeTXV1FoTYYG2YPWcru0DGzcyKMNKUEKOxA3uq5n(mHjrxKQkMhaVKhwY4(gRRHHmoI(TryCnjm(FZLCuFdbAy2)Zc)pBr)g3XY4OHOTdlPflduoaOdomkjmUY5K0N1RlmPLUZK49GFdkKTzt0JcQyokrAU7o0R5WCSt2ahfpcKm2gbr(ANePhDNgiRcoBFsAdlLGwd1tk63XwojzHSxntqNatOAvimnGwKJ97lyahucbUC0hcKLNsHxmWeZcl(3bq5HFSarHvTTJvKSbT71uaVNbYhuk(trB5ytNeHYxL0MI8FrCaWQoLboW4VhTSzZNdqy(acQxRckZECGDg)rnGHIOcGh68jvokXol7wC(2uXKpMSCRiE5X2HykQWUPNUBAGLZerBw5jX85qSMjQYgQZYPHX3ZZhLpE0kaplm4Bc(EskRvyjVQlaNFwt1tO8iBRGMARapBRaQ2cRrRDt2vqff5O6LuPUpUEHORhi2rWf0nlwmW3V9mNmMQDTFSUupU6TjW)pwzaKKjfpltmfZzJU475WiS1cNRfO8cLovxMKagRsik5jkxXfy2ame)kWPq493lCDMaKBD4hv6NC29itTjnmb8Di87IVpmLej1Zap0ZXyAGpBHVNnyefvqhPx9OKc)7sGNcqLZ5rShLylbqoSibddvPONb4QFUaLi8YraKxvRaZ(pksrGmP8iJOGQDPDhFXci(vPnvgaQIfdC5dR4Xi3lcv8TQrqNuYmsS1cyYkjedUiEQOhOqmr0DIHCzJe(BMixAIIbZteMTLtfMiq9mqcMi)Lj4ciixgbfzMnpRC2XD9Dle4YPo71mob7PZLwCv(60r)ugvpdFAUakHxStwo1uZBCQVbDVv0w5frmieAwY67y5nVqmvYkyGYN8qs0I6tEnB761qBUHtUykylva()2BGzFx9ESO3NqfVsYYSiy4bmnIjB2(XpcG0Ul5dAt7HOWgmM0NLKH)GFrYDwZddhuNGdxqt58hs0gSwmBUh4ymmJ5hkg5kMJ4)RyHhK0r)1h1UfMD8u5AyygnL4ndqxDeJiA2oY2GMAb3QuIMlTeXOhsWp0Q7BYLHTQ03MQz05mQIzPCH)tH3iJ(i0NM5mZLA9t0M6SIYRs5Q(Y1jPC)6nQupo6iiMm1v4qtXWRsFmeJUAhnwXdgz5T0uxEt4YywKaWplVcqvMsPjzoPyRWiGQmXJz46uiFnm(eq2Wu50CWQK9y8mrirZafOs2WxowVk)42J7BxmTxaHMLprignHu(uHO2m)lno00j1fc5Z3FqNfyqSeNFd5F2A5IvlIzkGAa)AyuDP7Hqm(9D8Q(oFf326UK8gHVY2f16Wyl44AqHnX42FuWvGqVChju7QkytIQvCY6vRkW9RCLRxzqB85vTXNdR862F9LSg)NJgRbC8IHoaEiabnItwrk9XgspaLJUayZ)ySyy0mE8CrKLcO7FJ5OizCG5S1cGUQNDIeTo2wqHWi(0C8NljVRYfX9qvInIyb)oz8KczGkoE3gCoUPbN0Ms9z6W0MAK9X2KG2ulWPP2yxMAbUm1i5ZRAJpjgC2D9L1GZ)YRXgszphyyp7cQOQ2W0yYIsY1)DuDMSyXKLZMBV7wnR3lrpvHpPwr1h05XcXuzB03MGMbRwXJM7kQw1RMSnBueU2zR)L7Mo(I2jauTlewGoiZaNLC8UPV5mbhyTsnk1AnfxqnfxJCMhvP)mpUZobnUiCgnbwD3TXEXeOCDVA1nJL6Urg442Ohz33WYorADtXWd3snQBDxHw9vkvlgCs38pB4P8mhJZlMrv5Y66fgT9IphFBdsfBRnIQEM9KI5ipcvktYtMmpKxUMQ7f5Ycp3)kdNan9ktwdaNALkdvZtsGGdr7PwIs16sIl1j(u5cNkqjQOyfP03RFXsUgLiwk1QLVnEN2IBcih)bObZKphjG0OrYFpWz3JcVfcYqzR)yzBatQnro3o9fgoIzcJeuYRyB2WJZQXKeRlSlXtOOyK4Jve7oLQsiPG0muUKbwGEjeJW4f8u4pLYpl(r7UqHwuG3ohGAJYAEHOdH7)s2Y4KS8WzYvmxnfxKkjPZrETCPLZeBGFjRVHfMkGwlw)TuE22OCT(kzTLTn1IRAb(iWc8rGxGp8BKytidcCnGHAhN6h4J6Xq9iYtdUyBBw(nkcDc8bfb6F87od(OoQTg5mpQs)zEsWhUBI9b4JwmbQd(W1cq0xWhK0ZxWh13j29e4JgWK5e8r7RCZEb8rlZf654ZX32ODWho8kShaF0n5sUi9zTS5xTLfYh1ZerwTN51RKmK9arhR9IJlGmrTbl2zhsvEZ0CsHyLMlInJZi1MvzplXkf7xgYyMCqU2QwVZ9y)ZSQQUaloJkNJnsE6gZz73zMFpKPI9xPxNMYRB3PkfXgrnUH9GZmDMPZ452nXFwzNCf50gwAUXvviUuPBDEdP0Av6zzTdkPHlfdW1tbxiKqAY6Dt)wC3StNVwKEgvP2HcWTkmW2nNO2t3csDdA2lFHInTv9s3XfZRa82PqTw(oH5JQng4UQM3iLnZRLGKdAmBw0hkAz2BUbKcnOpB39(opXDLoWh1XmcUmhGp2i7GlJVvj4gzLQp7eowYmMEiZsDBozE7sK9Z09r2tB9)tmXh3zQ8UUNt6ijt2cp47uIDXgEp37mnNhIBaUDgNRVHWoZ6874leBrUipJI5Fix25GzAeo7kJ9OxoRV(ZMY5SQ0pHkcItI77yGZ)Trc2etrS4IzIZMppuc6chqwxmvJzDkPGiUruJgeZk(gI)WXSOTWBYmwCrkhitAwxX08D43)PpEIyWKWYFVN5)(KW)Dpzw(vjcLQKz5hKPIS1Nps6wGFeY1dRcrWmkKncdrRyjTb5SzGLMk9)MmBuuPcprSCluc9lfWRdiXn0MMOJa26SK1RzXIyBnKX3edBkhB09KbV238qBje(ERLzPGhfEv72YNHO3jI(5MavDNi6ywu24mGAi5Ab0BvSaaAGNEpcGNirGCjgfAUY5NzNancTzrQp3eR8wnwjkjbmV3M(OhZ55LLvyXZaxtPmWSMff1L5rT3yNVUIBWr8cLd1KX8ZslcPF2K)925IpewQT1TjjsddPGrI2MvjQQz8VIZIYxnAdU2XxwUWaTiLbAk9njI)LyrFBCgwbwkCfwBJUwImxvmkcamKHpv9DrhCXOXOBXueFxMkVVcxVjjnxTs)VoVmzCFngn433c9nZX1ahDBZ2MNSgIMHiYwHqFYgT7N(hImDz83ayJsIHguu8RjIw8Aj0iQIkcKav5OXFyyjvFhnv1(iFTikXN)RN001enS56wMpIDRn2LIrFAT2Tb1uERr4G)yLdhQn7V4mRMX1hKMVKFVln7(jcJE1x9u3S4pNMJl(WES4q7V9iBfqnQPwKqZ11SKO0l7P)e1EHhjimrvEbjE3il44OzIkRq35xViCRKmO5oTAf7fFwFRQjiCF706hX7gzP0TevO78Rxe2fjt2WL7wsMCE8VMczdqGbh9k6pGnOahJXF6jdabxxNYMFxHhBHWrv4)vWtpjHMy8TeEL5Zk)ochImeT)HNEQHHGxF(zUkheFdQg4IQ1TrmPQDVYWNEYPsT(xL3GJC9DaEC9pYVldUOoXdJV(TNr0OaTD81(D9yS(MWYUEm0Hay(gy09cn4WcZWp5SHo9Gn0Nn2qLEQElncJ8Q11YcKrE9p6Vwq(u(T21nSpoa1w(H4zXx1(a9SDZ)gA6jNQJfXm3RbBkDXlY8qC0t0j(Ju)NTFu8ptXZLsBFd((LEkroGK3PUjfPCyr(sPsC0CglaOvBqUu51iSJU2NpHDmKO3wIKdpuo974ArutzAalVi6bbKrRIB2fv50hEgtqRzoTNtGWnrldCweZJGYu15fL8TsyImBIqn3B(UVKVvcRL(uukcTY8LpDsUXDNCFYZDT2PCWw1BY7bHp4f7zr(wjCF768KV7l5BLWFY7N4tBUR1oLd2QEt(scxduRHxSIx0HxmTIBEsq7dVynZP90FRBI2p96lm5BLW91o2t(UVKVvc3tVfnWN9Xx2NTCxRDkhSv9M8Eq4dEXEwKVvc33Uop57(s(wj8N8(j(0M7ATt5GTQ3KVKW1wCX9HdhxevJt6WEF)Is8wjBFTm8KR7l5BLWpRWq7xD8lkXFHi7bE(ap)Pjp3xpgEY19L8Vye(aF3p(2W2YRe3YtoU7eUlKStWy6oh3jY3kHFrqj1tG4hac0kzpOiEgK9pfEUwoJ6yS1GJioqC0EO610orxAmp4g(0tVQReSolii116JDT9WGjCQddWbnWExt2sF54lA6L(YlUK81gq(0JFZzxBKWCGkPHZBJbh1ql3yHDJTU(QaNzOOICxFfn96z3Ji1bBQsxAOMC0mh3efSu0dh2qoy6qTeCgDbxsrOkXt0wUY)uTUnTWoxDwTXgY8TC4GJCM0PpRrITttlvrZP4AWzsnCTtxMldU4zWNTe8)ZuhuNEWbv3yR)yDqD6FTDqD6bhu7rhuLySQ9faQERNfazxeDC74bjRYliXBLSeMIEnFrp56(s(wj8ZA6O7xD8lkXFHi7bE(ap)Pjp3xpgEY19L8Vye(aF3p(2W2YRVWAp54Ut4UqYoTW3DNJ7e5BLWViOKc6x2sCaiqRK9GI4zq2)u4z3R5BBZVIEfqcOMGuD(X)LujW)LuHWlUXA(o2XsQuN98yjvQ)sDBTl8AjvgtTKk1B5glSBSL1sQqrU(UKko6EmxsfIk1XLuHGcnTKk2Xs79sQqeFR2A(ApMsNP74sQ4Cfp7(iX2PP7LuHySthxsfF5Zwc()zQdQtp4GQBS1FSoOQVMV)LYbvT189GdQ(ZNigRD)0pk(s)rOvVT48ifpZBZYXpKF8U5ozriEhsklkBu5rvYXxDA1169jHlU6v2hZi7(jYxcpzepr)o)(QXNrxvuXfMZxFcEVbEfXf69UF6lKhE0S)4UGUPz1QJWvuvyEiZC55vhSqYZ7c7JHMldgstwJZo36u(6aCWq9Z1bt9YNe3K2omgQo7zPLod12aZYVkanGvK9kXDRbpvqRYNcnrEkl(33cQXpwCYLi0oAxpSv3faIlcRLjjGGJgMsbFlkBfNG4J2n9xzHq5IZxiC(iqfd)itoUjNDpECHwCxXkV0QkUNWYmVnVe3HbBI4ADe4PpnEXWk)PMVoVeNl5f(fXtL8Q(bwuuYdQwjBndVMOfeitkprcHgpwvrNs1Vm1orDNG9WkEmY9cZHVvD4uDsjZipU6fgykjS8U4seDOqmXdCCXPzLMna0Tu42so2282G4eXfw7vLES69X31E6y76zC0V56u7IWnV(XRLDquDs66i7Iy3c1jzGnj)l2b2LUXfECkpr(RtWyzsJSzZZAVsfJcAVMW)cbAdNLF1ykF(vEMZRopWANQ5LN8Vnq9R198ncKlGCvhX2y9j0rJpV2RuEuylELTMNhZp9e1aWkdlQM4T2nH5rC9lwZuE2vVNAHV2UbSozRR3mi5TFj5rnnfln4iPVdTt56saEvNW1xgGdaOm3RPaKOQidHwk8Mhz1xIOUQitgr4ycKfdoQ(fA1aHSqDNdC5fkhN1UeRg8kBvYqlEP8wQY65sPOuPwEv4utsuxTuT1vjRU(Dm1jg3ihYXFA31udEvlhVydAT5mVfPQX6YlokRhBCxrzvwBWehtQdTEy19(GEFV(j(M1luiHy11MfIEKCbuRpHUvMSKGY7rQsJeZBPPIEsZBOPb2A3cJCLP4atW(cDWHRbONbB(581aKLfN28ej8Y0MJfzuJ63hqp90r1d6v)wa6YLZMFC50UhwHx24SgS(KtHyif3Tpdv2651VvFUw)YLP2yKHLdd(t5c8PtDdF(QLfk590Tou3Xg4ghGot)3cCg4PTWATgyv)ocYRxWOpXrFVOBgfNRXBNNJLVV9L2JTbw1n3ZEKQg3KpEjFA9A6O9QMLHF9SDc03x5ODkr0vY5PSpMKozrktaQoZagNXR6cWKrLCGqYswTbxzuSHfNls0fSIkLP2fIsRWhD0SaSeqpXjq39ohVHnkpJclmACuSjyqNoJUYWBenMXVaDaL2fx((G(5VdspmTYiXs0I)TCToT8XzUOL64pbs89EdaXeFeU0znInQCnrh5q7Upqb0E3HB0cEfgRme2XqaTHdR6iJt6sNPNXVxk7p7qG8oOr)ZsJT3gA5Gu0rV0PwXCySJ9mO1qpwylU8no4H6ZHYE(sf4MQh)toLlqrc9u5jPRvRR64Zg2o)jSh)zXqFXk0FhlJlxABtFfstjgUQ0q7KkNFq5(9iCx86cBnPNKSKTPZuRNnmpGOhfuX081LDyFcoyF7m13ie(VMhUdl7HAVDRG(sKobVXfegeMdyzCt4YywKOJLLxDVTLP2MlPXT0pUArgWzkkEmddfiFn0D)CEwyk2FjRcU1Tc7jK5Q29emcJPrHyzKp2ENoQYnd1UC00kNyjecBunjr(uH80mtkd)Pj4EZPYQRyvBNGYv3bzk2A5nBVylGe7Cg8RHr1z5hcXTJ6oELw3xzONkAHZ0g2qjr527iOGRl2f9Df7mMoBj1OLcgeg7hJfsWmE8CH)IInb8BmfGmXTj4C2AXwMPE2jY99dBlOqGZsZXFUK8Ukxa5b13z(OrYRLemk9I1wlv0S6BhLzEm0L9IQmRtYRV3wfLz8Ifbr1FHINrwXRiQ4Gg4KRAGt0ZUepL6QSo5ZxPEyhmFcCA(m2H5JT(Ql7oAnfjHOz8I1uKbukYXekYacfjbNCvdCIU5JNsDL5ZNVsTCYb)Rme4UP36cRPAEmvjzqOkMGWLj6EvLDbQukaNQf(uzopixhyjfRiL(K(etOlkrKfevzEr8oT8saCv)dqdMjFosazalj)9aNDp6A1YLDOS1FSSnGOYjY4y650reZ0V9UPhTcqqYJZQXKeP0HlXtOOyKbKue7oLQsiPG0mucSXkkdHyegVGNc)Pu(zXpA3fk0IIaCaa45f7QIq0JsY)s2Yyarx4mzYUOcNJujjDoYRLzfsMyEELS(gwyQiwMCXi5zacsT(kzTvTnLZPYKdd)HKflMaZ5cGyJ8uHTQC20og15x2Ys9buxprl8p7B9)exGymO(xhGJZBbIKaP1uVT(70TuC1RmVL60wOEd3uzDJPmZ7wkQ1Z0U1r)Irw3s5jVtjDlbbAiNBTtTN(MYTeU2T)KaAi2v3Y32EDelqoYRvk6mzBjgS0XCT1tMSVoWc0DG1M8r7WHkBGjtAzpDG5)NpaP1KZ5u4M3A3b2Znh99Ybg1Noq9gUPY6gtz6aJIA90bMJ(fdhyuZKPtoWiiqdoWSt3X(6aJ03SPdSgM7w3CG1RVxaYrETsrNoWigS0rhyEYK3Et2g(SB)Nbx8MBZH)72)))]] )

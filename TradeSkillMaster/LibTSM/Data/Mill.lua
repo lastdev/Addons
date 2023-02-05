@@ -4,8 +4,9 @@
 --    All Rights Reserved - Detailed license information included with addon.     --
 -- ------------------------------------------------------------------------------ --
 
-local _, TSM = ...
-local Mill = TSM.Init("Data.Mill")
+local TSM = select(2, ...) ---@type TSM
+local Mill = TSM.Init("Data.Mill") ---@class Data.Mill
+local Environment = TSM.Include("Environment")
 local private = {}
 local DATA = nil
 
@@ -15,9 +16,9 @@ local DATA = nil
 -- Mill Data
 -- ============================================================================
 
-if TSM.IsWowVanillaClassic() then
+if Environment.IsVanillaClassic() then
 	DATA = {}
-elseif TSM.IsWowWrathClassic() then
+elseif Environment.IsWrathClassic() then
 	DATA = {
 		-- ======================================= Common Pigments =======================================
 		["i:39151"] = { -- Alabaster Pigment (Ivory / Moonglow Ink)
@@ -137,7 +138,7 @@ elseif TSM.IsWowWrathClassic() then
 			["i:36906"] = {requiredSkill = 325, matRate = 0.5000, minAmount = 1, maxAmount = 3, amountOfMats = 0.1075}, -- Icethorn
 		},
 	}
-else
+elseif Environment.IsRetail() then
 	DATA = {
 		-- ======================================= Common Pigments =======================================
 		["i:39151"] = { -- Alabaster Pigment (Ivory / Moonglow Ink)
@@ -374,6 +375,8 @@ else
 			["i:187699"] = {matRate = 1.0000, minAmount = 2, maxAmount = 3, amountOfMats = 0.5000}, -- First Flower
 		},
 	}
+else
+	error("Invalid game version")
 end
 
 

@@ -1,7 +1,6 @@
 # HandyNotes: DungeonLocations
 
-## [2.00](https://github.com/Caliaha/HandyNotes_DungeonLocations/tree/2.00) (2023-01-23)
-[Full Changelog](https://github.com/Caliaha/HandyNotes_DungeonLocations/compare/1.55a...2.00) [Previous Releases](https://github.com/Caliaha/HandyNotes_DungeonLocations/releases)
+## [2.01a](https://github.com/Caliaha/HandyNotes_DungeonLocations/tree/2.01a) (2023-01-29)
+[Full Changelog](https://github.com/Caliaha/HandyNotes_DungeonLocations/compare/2.01...2.01a) [Previous Releases](https://github.com/Caliaha/HandyNotes_DungeonLocations/releases)
 
-- Added Shadowlands and Dragonflight dungeons/raids  
-    Thanks to BadBoyBarny for sending me all the Shadowlands and Dragonflight data  
+- Update HandyNotes\_DungeonLocations.lua  

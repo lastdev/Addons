@@ -1,5 +1,5 @@
-## Interface: 100002
-## Version: 1.11
+## Interface: 100005
+## Version: 1.12
 ## Title: Loose Pebbles
 ## Title-deDE: Loser Steine
 ## Title-esES: Guijarros Sueltos

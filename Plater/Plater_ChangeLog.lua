@@ -8,6 +8,20 @@ function Plater.GetChangelogTable()
 	if (not Plater.ChangeLogTable) then
 		Plater.ChangeLogTable = {
 		
+			{1674723541,  "Bug Fix", "February 3rd, 2023", "Fix 'Hide Blizzard Healthbars' functionality for classic-era.", "cont1nuity"},
+			{1674723541,  "Backend Change", "February 3rd, 2023", "More detailed performance analysis.", "cont1nuity"},
+			{1674723541,  "Backend Change", "February 3rd, 2023", "Properly throttling cast updates to increase performance.", "cont1nuity"},
+			
+			{1674723541,  "Backend Change", "January 27th, 2023", "Extend 'Hide Blizzard Healthbars' functionality for classic.", "cont1nuity"},
+			{1674723541,  "Backend Change", "January 26th, 2023", "Bring back 'Hide Blizzard Healthbars' functionality for retail.", "cont1nuity"},
+			{1674723541,  "Bug Fix", "January 26th, 2023", "Fixing a bug with wago update data in the options menu.", "cont1nuity"},
+			
+			{1674631327,  "Backend Change", "January 19th, 2023", "Try syncing cast update and nameplate update ticks for mods/scripts.", "cont1nuity"},
+			{1674631327,  "Backend Change", "January 19th, 2023", "TOC update for WotlK.", "cont1nuity"},
+			{1674631327,  "Bug Fix", "January 18th, 2023", "Multiple Script bug fixes.", "Terciob"},
+			{1674631327,  "Bug Fix", "January 13th, 2023", "Fixing an issue with blizzard nameplates updating and changing sizes.", "cont1nuity"},
+			{1674631327,  "Bug Fix", "January 11th, 2023", "Fixing Cast Color tab issues when default scripts are removed.", "cont1nuity"},
+			
 			{1673301078,  "Bug Fix", "January 7th, 2023", "Fixing spec icon indicators for evoker.", "cont1nuity"},
 			{1673301078,  "Bug Fix", "January 3rd, 2023", "More fixes for invisible nameplates.", "cont1nuity"},
 			{1673301078,  "Bug Fix", "January 2nd, 2023", "Better hide blizzard resources on the personal bar if necessary.", "cont1nuity"},

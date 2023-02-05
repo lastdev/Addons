@@ -1,0 +1,8 @@
+<Ui>
+    <Script file="Plugins.lua" />
+    <Script file="BetterWardrobe.lua" />
+    <Script file="ElvUI.lua" />
+    <Script file="InstanceAchievementTracker.lua" />
+    <Script file="ZygorGuidesViewer.lua" />
+    <Script file="AchievementsTabFixes.lua" />
+</Ui>

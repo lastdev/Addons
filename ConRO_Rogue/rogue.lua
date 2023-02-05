@@ -1072,8 +1072,12 @@ function ConRO.Rogue.Subtlety(_, timeShift, currentSpell, gcd, tChosen, pvpChose
 				tinsert(ConRO.SuggestedSpells, _MarkedforDeath);
 			end
 
-			if _SliceandDice_RDY and not _SliceandDice_BUFF and _Combo >= 5 then
+			if _SliceandDice_RDY and not _SliceandDice_BUFF and _Combo <= _Combo_Max - 1 then
 				tinsert(ConRO.SuggestedSpells, _SliceandDice);
+			end
+
+			if _Rupture_RDY and not _Rupture_DEBUFF and _Combo <= _Combo_Max - 1 then
+				tinsert(ConRO.SuggestedSpells, _Rupture);
 			end
 
 			if _Shadowstrike_RDY and _combat_stealth and _Combo <= _Combo_Max - 1 then
@@ -1095,10 +1099,6 @@ function ConRO.Rogue.Subtlety(_, timeShift, currentSpell, gcd, tChosen, pvpChose
 				_SymbolsofDeath_RDY = false;
 			end
 
-			if _ShadowDance_RDY and not _combat_stealth and _SymbolsofDeath_BUFF and ConRO:FullMode(_ShadowDance) then
-				tinsert(ConRO.SuggestedSpells, _ShadowDance);
-			end
-
 			if _ShadowBlades_RDY and ConRO:FullMode(_ShadowBlades) then
 				tinsert(ConRO.SuggestedSpells, _ShadowBlades);
 				_ShadowBlades_RDY = false;
@@ -1107,6 +1107,10 @@ function ConRO.Rogue.Subtlety(_, timeShift, currentSpell, gcd, tChosen, pvpChose
 			if _ShurikenTornado_RDY and _SymbolsofDeath_BUFF and ConRO:FullMode(_ShurikenTornado) then
 				tinsert(ConRO.SuggestedSpells, _ShurikenTornado);
 				_ShurikenTornado_RDY = false;
+			end
+
+			if _ShadowDance_RDY and not _combat_stealth and _SymbolsofDeath_BUFF and ConRO:FullMode(_ShadowDance) then
+				tinsert(ConRO.SuggestedSpells, _ShadowDance);
 			end
 
 			if _ColdBlood_RDY and (_Combo >= _Combo_Max - 1 or _Combo == EchoingReprimand_COUNT) and ConRO:FullMode(_ColdBlood) then

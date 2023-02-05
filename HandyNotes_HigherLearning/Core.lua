@@ -3,7 +3,7 @@
 
                                            Higher Learning
 
-                                      v1.15 - 18th January 2023
+                                      v1.16 - 26th January 2023
                                 Copyright (C) Taraezor / Chris Birch
 
 -- titivation with addon description text reordering

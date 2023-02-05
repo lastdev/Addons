@@ -65,97 +65,100 @@ spec:RegisterTalents( {
     astral_influence            = { 82210, 197524, 2 }, -- Increases the range of all of your abilities by 3 yards.
     cyclone                     = { 82213, 33786 , 1 }, -- Tosses the enemy target into the air, disorienting them but making them invulnerable for up to 6 sec. Only one target can be affected by your Cyclone at a time.
     feline_swiftness            = { 82239, 131768, 2 }, -- Increases your movement speed by 15%.
+    forestwalk                  = { 92229, 400129, 2 }, -- Casting Regrowth increases your movement speed and healing received by 5% for 3 sec.
+    gale_winds                  = { 92228, 400142, 1 }, -- Increases Typhoon's radius by 20% and its range by 5 yds.
     heart_of_the_wild           = { 82231, 319454, 1 }, -- Abilities not associated with your specialization are substantially empowered for 45 sec. Feral: Physical damage increased by 30%. Guardian: Bear Form gives an additional 20% Stamina, multiple uses of Ironfur may overlap, and Frenzied Regeneration has 2 charges. Restoration: Healing increased by 30%, and mana costs reduced by 50%.
     hibernate                   = { 82211, 2637  , 1 }, -- Forces the enemy target to sleep for up to 40 sec. Any damage will awaken the target. Only one target can be forced to hibernate at a time. Only works on Beasts and Dragonkin.
-    improved_barkskin           = { 82219, 327993, 1 }, -- Duration increased by 4 sec.
+    improved_barkskin           = { 82219, 327993, 1 }, -- Barkskin's duration is increased by 4 sec.
     improved_rejuvenation       = { 82240, 231040, 1 }, -- Rejuvenation's duration is increased by 3 sec.
     improved_stampeding_roar    = { 82230, 288826, 1 }, -- Cooldown reduced by 60 sec.
     improved_sunfire            = { 82207, 231050, 1 }, -- Sunfire now applies its damage over time effect to all enemies within 8 yards.
+    improved_swipe              = { 82226, 400158, 1 }, -- Increases Swipe damage by 100%.
     incapacitating_roar         = { 82237, 99    , 1 }, -- Shift into Bear Form and invoke the spirit of Ursol to let loose a deafening roar, incapacitating all enemies within 15 yards for 3 sec. Damage will cancel the effect.
+    incessant_tempest           = { 92228, 400140, 1 }, -- Reduces the cooldown of Typhoon by 5 sec.
     innervate                   = { 82243, 29166 , 1 }, -- Infuse a friendly healer with energy, allowing them to cast spells without spending mana for 10 sec.
-    ironfur                     = { 82227, 192081, 1 }, -- Increases armor by 452 for 7 sec.
-    killer_instinct             = { 82225, 108299, 3 }, -- Physical damage and Armor increased by 2%.
+    ironfur                     = { 82227, 192081, 1 }, -- Increases armor by 2,091 for 7 sec.
+    killer_instinct             = { 82225, 108299, 2 }, -- Physical damage and Armor increased by 2%.
     lycaras_teachings           = { 82233, 378988, 3 }, -- You gain 2% of a stat while in each form: No Form: Haste Cat Form: Critical Strike Bear Form: Versatility Moonkin Form: Mastery
-    maim                        = { 82221, 22570 , 1 }, -- Finishing move that causes Physical damage and stuns the target. Damage and duration increased per combo point: 1 point : 298 damage, 1 sec 2 points: 596 damage, 2 sec 3 points: 894 damage, 3 sec 4 points: 1,192 damage, 4 sec 5 points: 1,490 damage, 5 sec
+    maim                        = { 82221, 22570 , 1 }, -- Finishing move that causes Physical damage and stuns the target. Damage and duration increased per combo point: 1 point : 736 damage, 1 sec 2 points: 1,471 damage, 2 sec 3 points: 2,206 damage, 3 sec 4 points: 2,942 damage, 4 sec 5 points: 3,677 damage, 5 sec
     mass_entanglement           = { 82242, 102359, 1 }, -- Roots the target and all enemies within 15 yards in place for 30 sec. Damage may interrupt the effect. Usable in all shapeshift forms.
-    matted_fur                  = { 82236, 385786, 1 }, -- When you use Barkskin or Survival Instincts, absorb 6,140 damage for 8 sec.
+    matted_fur                  = { 82236, 385786, 1 }, -- When you use Barkskin or Survival Instincts, absorb 15,146 damage for 8 sec.
     mighty_bash                 = { 82237, 5211  , 1 }, -- Invokes the spirit of Ursoc to stun the target for 4 sec. Usable in all shapeshift forms.
     natural_recovery            = { 82206, 377796, 2 }, -- Healing done and healing taken increased by 3%.
     natures_vigil               = { 82244, 124974, 1 }, -- For 30 sec, all single-target damage also heals a nearby friendly target for 20% of the damage done.
-    nurturing_instinct          = { 82214, 33873 , 3 }, -- Magical damage and healing increased by 2%.
+    nurturing_instinct          = { 82214, 33873 , 2 }, -- Magical damage and healing increased by 2%.
     primal_fury                 = { 82238, 159286, 1 }, -- When you critically strike with an attack that generates a combo point, you gain an additional combo point. Damage over time cannot trigger this effect.
-    protector_of_the_pack       = { 82245, 378986, 1 }, -- Store 10% of your damage, up to 2,137. Your next Regrowth consumes all stored damage to increase its healing.
+    protector_of_the_pack       = { 82245, 378986, 1 }, -- Store 5% of your damage, up to 6,942. Your next Regrowth consumes all stored damage to increase its healing.
     renewal                     = { 82232, 108238, 1 }, -- Instantly heals you for 30% of maximum health. Usable in all shapeshift forms.
-    rip                         = { 82222, 1079  , 1 }, -- Finishing move that causes Bleed damage over time. Lasts longer per combo point. 1 point : 2,319 over 8 sec 2 points: 3,479 over 12 sec 3 points: 4,639 over 16 sec 4 points: 5,799 over 20 sec 5 points: 6,959 over 24 sec
     skull_bash                  = { 82224, 106839, 1 }, -- You charge and bash the target's skull, interrupting spellcasting and preventing any spell in that school from being cast for 4 sec.
     soothe                      = { 82229, 2908  , 1 }, -- Soothes the target, dispelling all enrage effects.
     stampeding_roar             = { 82234, 106898, 1 }, -- Shift into Bear Form and let loose a wild roar, increasing the movement speed of all friendly players within 20 yards by 60% for 8 sec.
-    sunfire                     = { 82208, 93402 , 1 }, -- A quick beam of solar light burns the enemy for 399 Nature damage and then an additional 4,041 Nature damage over 18 sec to the primary target and all enemies within 8 yards. Generates 2 Astral Power.
-    swipe                       = { 82226, 213764, 1 }, -- Swipe nearby enemies, inflicting Physical damage. Damage varies by shapeshift form.
+    sunfire                     = { 82208, 93402 , 1 }, -- A quick beam of solar light burns the enemy for 1,136 Nature damage and then an additional 9,755 Nature damage over 18 sec to the primary target and all enemies within 8 yards. Generates 2 Astral Power.
     thick_hide                  = { 82228, 16931 , 2 }, -- Reduces all damage taken by 6%.
     tiger_dash                  = { 82198, 252216, 1 }, -- Shift into Cat Form and increase your movement speed by 200%, reducing gradually over 5 sec.
     tireless_pursuit            = { 82197, 377801, 1 }, -- For 3 sec after leaving Cat Form or Travel Form, you retain up to 40% movement speed.
-    typhoon                     = { 82209, 132469, 1 }, -- Blasts targets within 20 yards in front of you with a violent Typhoon, knocking them back and dazing them for 6 sec. Usable in all shapeshift forms.
+    typhoon                     = { 82209, 132469, 1 }, -- Blasts targets within 20 yards in front of you with a violent Typhoon, knocking them back and reducing their movement speed by 50% for 6 sec. Usable in all shapeshift forms.
     ursine_vigor                = { 82235, 377842, 2 }, -- For 4 sec after shifting into Bear Form, your health and armor are increased by 10%.
     ursols_vortex               = { 82242, 102793, 1 }, -- Conjures a vortex of wind for 10 sec at the destination, reducing the movement speed of all enemies within 8 yards by 50%. The first time an enemy attempts to leave the vortex, winds will pull that enemy back to its center. Usable in all shapeshift forms.
     verdant_heart               = { 82218, 301768, 1 }, -- Frenzied Regeneration and Barkskin increase all healing received by 20%.
     wellhoned_instincts         = { 82246, 377847, 2 }, -- When you fall below 40% health, you cast Frenzied Regeneration, up to once every 120 sec.
     wild_charge                 = { 82198, 102401, 1 }, -- Fly to a nearby ally's position.
-    wild_growth                 = { 82241, 48438 , 1 }, -- Heals up to 5 injured allies within 30 yards of the target for 2,859 over 7 sec. Healing starts high and declines over the duration.
+    wild_growth                 = { 82241, 48438 , 1 }, -- Heals up to 5 injured allies within 30 yards of the target for 6,636 over 7 sec. Healing starts high and declines over the duration.
 
     -- Balance
-    aetherial_kindling          = { 88209, 327541, 2 }, -- Casting Starfall extends the duration of active Moonfires and Sunfires by 2 sec, up to 28 sec.
-    astral_communion            = { 88235, 202359, 1 }, -- Generates 60 Astral Power.
+    aetherial_kindling          = { 88209, 327541, 1 }, -- Casting Starfall extends the duration of active Moonfires and Sunfires by 4 sec, up to 28 sec.
+    astral_communion            = { 88235, 400636, 1 }, -- Increases maximum Astral Power by 20 and teaches Astral Communion: Astral Communion: Generates 60 Astral Power. 60 sec cooldown.
     astral_smolder              = { 88204, 394058, 2 }, -- Your critical strikes from Starfire and Wrath cause the target to languish for an additional 20% of your spell's damage over 4 sec.
     balance_of_all_things       = { 88214, 394048, 2 }, -- Entering Eclipse increases your critical strike chance with Arcane or Nature spells by 16%, decreasing by 2% every 1 sec.
     celestial_alignment         = { 88215, 194223, 1 }, -- Celestial bodies align, maintaining both Eclipses and granting 10% haste for 20 sec.
-    circle_of_life_and_death    = { 88227, 391969, 1 }, -- Your damage over time effects deal their damage in 25% less time, and your healing over time effects in 15% less time.
     convoke_the_spirits         = { 88206, 391528, 1 }, -- Call upon the Night Fae for an eruption of energy, channeling a rapid flurry of 16 Druid spells and abilities over 4 sec. You will cast Wild Growth, Swiftmend, Moonfire, Wrath, Regrowth, Rejuvenation, Rake, and Thrash on appropriate nearby targets, favoring your current shapeshift form.
+    cosmic_rapidity             = { 88227, 400059, 2 }, -- Your Moonfire, Sunfire, and Stellar Flare deal damage 25% faster.
     denizen_of_the_dream        = { 88218, 394065, 1 }, -- Your Moonfire and Sunfire have a chance to summon a Faerie Dragon to assist you in battle for 30 sec.
-    eclipse                     = { 88223, 79577 , 1 }, -- Casting 2 Starfires empowers Wrath for 15 sec. Casting 2 Wraths empowers Starfire for 15 sec.  Eclipse (Solar) Nature spells deal 15% additional damage and Wrath damage is increased by 40%.  Eclipse (Lunar) Arcane spells deal 15% additional damage and Starfire critical strike chance is increased by 40%.
+    eclipse                     = { 88223, 79577 , 1 }, -- Casting 2 Starfires empowers Wrath for 15 sec. Casting 2 Wraths empowers Starfire for 15 sec.  Eclipse (Solar) Nature spells deal 15% additional damage and Wrath damage is increased by 20%.  Eclipse (Lunar) Arcane spells deal 15% additional damage and the damage Starfire deals to nearby enemies is increased by 50%.
     elunes_guidance             = { 88228, 393991, 1 }, -- Incarnation: Chosen of Elune reduces the Astral Power cost of Starsurge by 5, and the Astral Power cost of Starfall by 8. Convoke the Spirits' cooldown is reduced by 50% and its duration and number of spells cast is reduced by 25%. Convoke the Spirits has an increased chance to use an exceptional spell or ability.
     force_of_nature             = { 88210, 205636, 1 }, -- Summons a stand of 3 Treants for 10 sec which immediately taunt and attack enemies in the targeted area. Generates 20 Astral Power.
     frenzied_regeneration       = { 82220, 22842 , 1 }, -- Heals you for 32% health over 3 sec.
     friend_of_the_fae           = { 88234, 394081, 1 }, -- When a Faerie Dragon is summoned, your Arcane and Nature damage is increased by 4% for 30 sec.
     fungal_growth               = { 88205, 392999, 1 }, -- Enemies struck by Wild Mushrooms are damaged for an additional 70% over 8 sec and slowed by 50%.
-    fury_of_elune               = { 88224, 202770, 1 }, -- Calls down a beam of pure celestial energy that follows the enemy, dealing up to 5,279 Astral damage over 8 sec within its area. Damage reduced on secondary targets. Generates 40 Astral Power over its duration.
-    incarnation_chosen_of_elune = { 88206, 394013, 1 }, -- An improved Moonkin Form that grants both Eclipses, any learned Celestial Alignment bonuses, and 10% critical strike chance. Lasts 30 sec. You may shapeshift in and out of this improved Moonkin Form for its duration.
+    fury_of_elune               = { 88224, 202770, 1 }, -- Calls down a beam of pure celestial energy that follows the enemy, dealing up to 14,999 Astral damage over 8 sec within its area. Damage reduced on secondary targets. Generates 40 Astral Power over its duration.
     incarnation                 = { 88206, 394013, 1 }, -- An improved Moonkin Form that grants both Eclipses, any learned Celestial Alignment bonuses, and 10% critical strike chance. Lasts 30 sec. You may shapeshift in and out of this improved Moonkin Form for its duration.
+    incarnation_chosen_of_elune = { 88206, 394013, 1 }, -- An improved Moonkin Form that grants both Eclipses, any learned Celestial Alignment bonuses, and 10% critical strike chance. Lasts 30 sec. You may shapeshift in and out of this improved Moonkin Form for its duration.
     light_of_the_sun            = { 88211, 202918, 1 }, -- Reduces the remaining cooldown on Solar Beam by 15 sec when it interrupts the primary target.
-    lunar_shrapnel              = { 88232, 393868, 1 }, -- Starfall's stars have a chance to deal an additional 25% damage to nearby enemies when they damage an enemy afflicted by Moonfire. Deals reduced damage beyond 8 targets.
+    lunar_shrapnel              = { 88232, 393868, 2 }, -- Starfall's stars have a chance to deal an additional 13% damage to nearby enemies when they damage an enemy afflicted by Moonfire. Deals reduced damage beyond 8 targets.
     moonkin_form                = { 82212, 24858 , 1 }, -- Shapeshift into Astral Form, increasing the damage of your spells by 10% and your armor by 125%, and granting protection from Polymorph effects. While in this form, single-target attacks against you have a 15% chance to make your next Starfire instant. The act of shapeshifting frees you from movement impairing effects.
     natures_balance             = { 88226, 202430, 1 }, -- While in combat you generate 1 Astral Power every 2 sec. While out of combat your Astral Power rebalances to 50 instead of depleting to empty.
     natures_grace               = { 88222, 393958, 1 }, -- After an Eclipse ends, you gain 15% Haste for 6 sec.
-    new_moon                    = { 88224, 274281, 1 }, -- Deals 1949.9 Astral damage to the target and empowers New Moon to become Half Moon. Generates 10 Astral Power.
+    new_moon                    = { 88224, 274281, 1 }, -- Deals 5539.5 Astral damage to the target and empowers New Moon to become Half Moon. Generates 10 Astral Power.
     orbit_breaker               = { 88199, 383197, 1 }, -- Every 30th Shooting Star calls down a Full Moon at 80% power upon its target.
-    power_of_goldrinn           = { 88207, 394046, 1 }, -- Starsurge has a chance to summon the Spirit of Goldrinn, which immediately deals 1,351 Arcane damage to the target.
+    orbital_strike              = { 88221, 390378, 1 }, -- Celestial Alignment blasts all enemies in a targeted area for 11,363 Astral damage and applies Stellar Flare to them. Reduces the cooldown of Celestial Alignment by 60 sec.
+    power_of_goldrinn           = { 88207, 394046, 2 }, -- Starsurge has a chance to summon the Spirit of Goldrinn, which immediately deals 2,560 Astral damage to the target.
     primordial_arcanic_pulsar   = { 88221, 393960, 1 }, -- Every 600 Astral Power spent grants Celestial Alignment for 12 sec.
     radiant_moonlight           = { 88213, 394121, 1 }, -- Full Moon becomes Full Moon once more before resetting to New Moon. Fury of Elune's cooldown is reduced by 15 sec.
-    rake                        = { 82199, 1822  , 1 }, -- Rake the target for 393 Bleed damage and an additional 3,660 Bleed damage over 15 sec. While stealthed, Rake will also stun the target for 4 sec and deal 60% increased damage. Awards 1 combo point.
+    rake                        = { 82199, 1822  , 1 }, -- Rake the target for 969 Bleed damage and an additional 7,676 Bleed damage over 15 sec. Awards 1 combo point.
     rattle_the_stars            = { 88236, 393954, 1 }, -- Starsurge and Starfall reduce the cost of Starsurge and Starfall by 5% and increase their damage by 10% for 5 sec, stacking up to 2 times.
-    rejuvenation                = { 82217, 774   , 1 }, -- Heals the target for 3,432 over 12 sec.
+    rejuvenation                = { 82217, 774   , 1 }, -- Heals the target for 8,198 over 12 sec.
     remove_corruption           = { 82205, 2782  , 1 }, -- Nullifies corrupting effects on the friendly target, removing all Curse and Poison effects.
-    shooting_stars              = { 88225, 202342, 1 }, -- Moonfire, Sunfire, and Stellar Flare damage over time has a chance to call down a falling star, dealing 359 Astral damage and generating 2 Astral Power.
+    rip                         = { 82222, 1079  , 1 }, -- Finishing move that causes Bleed damage over time. Lasts longer per combo point. 1 point : 4,862 over 8 sec 2 points: 7,294 over 12 sec 3 points: 9,725 over 16 sec 4 points: 12,157 over 20 sec 5 points: 14,588 over 24 sec
+    shooting_stars              = { 88225, 202342, 1 }, -- Moonfire, Sunfire, and Stellar Flare damage over time has a chance to call down a falling star, dealing 1,023 Astral damage and generating 2 Astral Power.
     solar_beam                  = { 88231, 78675 , 1 }, -- Summons a beam of solar light over an enemy target's location, interrupting the target and silencing all enemies within the beam. Lasts 8 sec.
-    solstice                    = { 88203, 343647, 2 }, -- During the first 6 sec of every Eclipse, Shooting Stars fall 100% more often.
+    solstice                    = { 88203, 343647, 1 }, -- During the first 6 sec of every Eclipse, Shooting Stars fall 200% more often.
     soul_of_the_forest          = { 88212, 114107, 1 }, -- Eclipse increases Wrath's Astral power generation 50%, and increases Starfire's area effect damage by 150%.
-    starfall                    = { 88201, 191034, 1 }, -- Calls down waves of falling stars upon enemies within 45 yds, dealing 1,580 Astral damage over 8 sec. Multiple uses of this ability may overlap.
-    starfire                    = { 82201, 194153, 1 }, -- Call down a burst of energy, causing 1,300 Arcane damage to the target, and 418 Arcane damage to all other enemies within 10 yards. Generates 8 Astral Power.
+    starfall                    = { 88201, 191034, 1 }, -- Calls down waves of falling stars upon enemies within 45 yds, dealing 4,489 Astral damage over 8 sec. Multiple uses of this ability may overlap.
+    starfire                    = { 82201, 194153, 1 }, -- Call down a burst of energy, causing 3,694 Arcane damage to the target, and 1,188 Arcane damage to all other enemies within 10 yards. Generates 8 Astral Power.
     starlord                    = { 88200, 202345, 2 }, -- Starsurge and Starfall grant you 2% Haste for 15 sec. Stacks up to 3 times. Gaining a stack does not refresh the duration.
-    starsurge                   = { 82202, 78674 , 1 }, -- Launch a surge of stellar energies at the target, dealing 2,287 Astral damage.
+    starsurge                   = { 82202, 78674 , 1 }, -- Launch a surge of stellar energies at the target, dealing 6,498 Astral damage.
     starweaver                  = { 88236, 393940, 1 }, -- Starsurge has a 20% chance to make Starfall free. Starfall has a 40% chance to make Starsurge free.
-    stellar_flare               = { 91048, 202347, 1 }, -- Burns the target for 250 Astral damage, and then an additional 2,709 damage over 24 sec. Generates 8 Astral Power.
+    stellar_flare               = { 91048, 202347, 1 }, -- Burns the target for 710 Astral damage, and then an additional 6,541 damage over 24 sec. Generates 8 Astral Power.
     stellar_innervation         = { 88229, 394115, 1 }, -- During Solar Eclipse, Sunfire generates 100% additional Astral Power. During Lunar Eclipse, Moonfire generates 100% additional Astral Power.
     sundered_firmament          = { 88217, 394094, 1 }, -- Every other Eclipse creates a Fury of Elune at 20% effectiveness that follows your current target for 8 sec.
-    swiftmend                   = { 82216, 18562 , 1 }, -- Consumes a Regrowth, Wild Growth, or Rejuvenation effect to instantly heal an ally for 7,800.
-    syzygy                      = { 88221, 390378, 1 }, -- Celestial Alignment blasts all enemies in a targeted area for 3,999 Astral damage and applies Stellar Flare to them.
+    swiftmend                   = { 82216, 18562 , 1 }, -- Consumes a Regrowth, Wild Growth, or Rejuvenation effect to instantly heal an ally for 21,306.
     thrash                      = { 82223, 106832, 1 }, -- Thrash all nearby enemies, dealing immediate physical damage and periodic bleed damage. Damage varies by shapeshift form.
     twin_moons                  = { 88208, 279620, 1 }, -- Moonfire deals 10% increased damage and also hits another nearby enemy within 15 yds of the target.
-    umbral_embrace              = { 88216, 393760, 2 }, -- Dealing Astral damage has a chance to cause your next Wrath or Starfire to become Astral and deal 25% additional damage.
-    umbral_intensity            = { 88219, 383195, 2 }, -- Solar Eclipse increases the damage of Wrath by an additional 10%. Lunar Eclipse increases the critical strike chance of Starfire by an additional 10%.
+    umbral_embrace              = { 88216, 393760, 2 }, -- Dealing Astral damage has a chance to cause your next Wrath or Starfire cast during an Eclipse to become Astral and deal 25% additional damage.
+    umbral_intensity            = { 88219, 383195, 2 }, -- Solar Eclipse increases the damage of Wrath by an additional 10%. Lunar Eclipse increases the damage Starfire deals to nearby enemies by an additional 10%.
     waning_twilight             = { 88202, 393956, 2 }, -- When you have 3 periodic effects on a target, your damage and healing on them are increased by 4%.
-    warrior_of_elune            = { 88233, 202425, 1 }, -- Your next 3 Starfires are instant cast and generate 40% increased Astral Power.
-    wild_mushroom               = { 88220, 88747 , 1 }, -- Grow a magical mushroom at the target enemy's location. After 1 sec, the mushroom detonates, dealing 2,799 Nature damage and generating up to 20 Astral Power based on targets hit.
+    warrior_of_elune            = { 88210, 202425, 1 }, -- Your next 3 Starfires are instant cast and generate 40% increased Astral Power.
+    wild_mushroom               = { 88220, 88747 , 1 }, -- Grow a magical mushroom at the target enemy's location. After 1 sec, the mushroom detonates, dealing 7,954 Nature damage and generating up to 20 Astral Power based on targets hit.
 } )
 
 
@@ -187,11 +190,11 @@ spec:RegisterPower( "lively_spirit", 279642, {
 
 
 local mod_circle_hot = setfenv( function( x )
-    return x * ( legendary.circle_of_life_and_death.enabled and 0.85 or 1 ) * ( talent.circle_of_life_and_death.enabled and 0.85 or 1 )
+    return x
 end, state )
 
 local mod_circle_dot = setfenv( function( x )
-    return x * ( legendary.circle_of_life_and_death.enabled and 0.75 or 1 ) * ( talent.circle_of_life_and_death.enabled and 0.75 or 1 )
+    return x
 end, state )
 
 
@@ -322,6 +325,11 @@ spec:RegisterAuras( {
         id = 205644,
         duration = 15,
         max_stack = 1,
+    },
+    forestwalk = {
+        id = 400129,
+        duration = function() return 3 * talent.forestwalk.rank end,
+        max_stack = 1
     },
     -- Bleeding for $w1 damage every $t sec.
     -- https://wowhead.com/beta/spell=391140
@@ -487,7 +495,7 @@ spec:RegisterAuras( {
     moonfire = {
         id = 164812,
         duration = function () return mod_circle_dot( 22 ) end,
-        tick_time = function () return mod_circle_dot( 2 ) * haste end,
+        tick_time = function () return mod_circle_dot( 2 ) * ( 1 - 0.125 * talent.cosmic_rapidity.rank ) * haste end,
         type = "Magic",
         max_stack = 1,
         copy = 155625
@@ -498,7 +506,8 @@ spec:RegisterAuras( {
         id = 24858,
         duration = 3600,
         type = "Magic",
-        max_stack = 1
+        max_stack = 1,
+        copy = 197625
     },
     -- Talent: $?s137012[Single-target healing also damages a nearby enemy target for $w3% of the healing done][Single-target damage also heals a nearby friendly target for $w3% of the damage done].
     -- https://wowhead.com/beta/spell=124974
@@ -627,7 +636,7 @@ spec:RegisterAuras( {
     stellar_flare = {
         id = 202347,
         duration = function () return mod_circle_dot( 24 ) end,
-        tick_time = function () return mod_circle_dot( 2 ) * haste end,
+        tick_time = function () return mod_circle_dot( 2 ) * ( 1 - 0.125 * talent.cosmic_rapidity.rank )* haste end,
         type = "Magic",
         max_stack = 1
     },
@@ -636,7 +645,7 @@ spec:RegisterAuras( {
     sunfire = {
         id = 164815,
         duration = function () return mod_circle_dot( 18 ) end,
-        tick_time = function () return mod_circle_dot( 2 ) * haste end,
+        tick_time = function () return mod_circle_dot( 2 ) * ( 1 - 0.125 * talent.cosmic_rapidity.rank )* haste end,
         type = "Magic",
         max_stack = 1
     },
@@ -751,9 +760,10 @@ spec:RegisterAuras( {
         max_stack = 1,
     },
     primordial_arcanic_pulsar = {
-        id = 338825,
+        id = 393961,
         duration = 3600,
         max_stack = 10,
+        copy = 338825
     },
     timeworn_dreambinder = {
         id = 340049,
@@ -1637,19 +1647,18 @@ spec:RegisterAbilities( {
 
     -- Talent: Celestial bodies align, maintaining both Eclipses and granting $s1% haste for $d.
     celestial_alignment = {
-        id = function() return talent.syzygy.enabled and 383410 or 194223 end,
-        known = 194223,
+        id = 194223,
         cast = 0,
         cooldown = function () return ( essence.vision_of_perfection.enabled and 0.85 or 1 ) * 180 end,
         gcd = "off",
         school = "astral",
 
         talent = "celestial_alignment",
+        notalent = "incarnation",
         startsCombat = false,
 
         toggle = "cooldowns",
 
-        notalent = "incarnation",
 
         handler = function ()
             applyBuff( "celestial_alignment" )
@@ -1676,7 +1685,7 @@ spec:RegisterAbilities( {
             if covenant.night_fae then return end
             return "convoke_the_spirits"
         end,
-        startsCombat = false,
+        startsCombat = true,
 
         toggle = "cooldowns",
 
@@ -1711,7 +1720,7 @@ spec:RegisterAbilities( {
         spendType = "mana",
 
         talent = "cyclone",
-        startsCombat = false,
+        startsCombat = true,
 
         handler = function ()
             applyDebuff( "target", "cyclone" )
@@ -1746,7 +1755,7 @@ spec:RegisterAbilities( {
         spend = 0.06,
         spendType = "mana",
 
-        startsCombat = false,
+        startsCombat = true,
         texture = 136100,
 
         handler = function ()
@@ -1763,7 +1772,7 @@ spec:RegisterAbilities( {
         school = "nature",
 
         talent = "force_of_nature",
-        startsCombat = false,
+        startsCombat = true,
 
         toggle = "cooldowns",
         ap_check = function() return check_for_ap_overcap( "force_of_nature" ) end,
@@ -1831,7 +1840,7 @@ spec:RegisterAbilities( {
         gcd = "off",
         school = "physical",
 
-        startsCombat = false,
+        startsCombat = true,
 
         handler = function ()
             applyBuff( "growl" )
@@ -1879,7 +1888,7 @@ spec:RegisterAbilities( {
         toggle = "cooldowns",
         talent = "heart_of_the_wild",
 
-        startsCombat = true,
+        startsCombat = false,
         texture = 135879,
 
         handler = function ()
@@ -1923,7 +1932,7 @@ spec:RegisterAbilities( {
         school = "physical",
 
         talent = "incapacitating_roar",
-        startsCombat = false,
+        startsCombat = true,
 
         handler = function ()
             applyDebuff( "target", "incapacitating_roar" )
@@ -2013,7 +2022,7 @@ spec:RegisterAbilities( {
         spendType = "energy",
 
         talent = "maim",
-        startsCombat = false,
+        startsCombat = true,
 
         usable = function () return combo_points.current > 0, "requires combo points" end,
         handler = function ()
@@ -2071,7 +2080,7 @@ spec:RegisterAbilities( {
         school = "nature",
 
         talent = "mass_entanglement",
-        startsCombat = false,
+        startsCombat = true,
 
         handler = function ()
             applyDebuff( "target", "mass_entanglement" )
@@ -2106,7 +2115,7 @@ spec:RegisterAbilities( {
         spend = 0.06,
         spendType = "mana",
 
-        startsCombat = false,
+        startsCombat = true,
 
         cycle = "moonfire",
 
@@ -2124,7 +2133,7 @@ spec:RegisterAbilities( {
 
     -- Talent: Shapeshift into $?s114301[Astral Form][Moonkin Form], increasing the damage of your spells by $s9% and your armor by $m3%, and granting protection from Polymorph effects.$?a231042[    While in this form, single-target attacks against you have a $h% chance to make your next Starfire instant.][]    The act of shapeshifting frees you from movement impairing effects.
     moonkin_form = {
-        id = 24858,
+        id = function() return state.spec.restoration and 197625 or 24858 end,
         cast = 0,
         cooldown = 0,
         gcd = "spell",
@@ -2139,6 +2148,8 @@ spec:RegisterAbilities( {
         handler = function ()
             shift( "moonkin_form" )
         end,
+
+        copy = { 24858, 197625 }
     },
 
     -- Talent: For $d, $?s137012[all single-target healing also damages a nearby enemy target for $s3% of the healing done][all single-target damage also heals a nearby friendly target for $s3% of the damage done].
@@ -2173,7 +2184,7 @@ spec:RegisterAbilities( {
         spendType = "astral_power",
 
         talent = "new_moon",
-        startsCombat = false,
+        startsCombat = true,
         bind = { "half_moon", "full_moon" },
 
         ap_check = function() return check_for_ap_overcap( "new_moon" ) end,
@@ -2225,6 +2236,7 @@ spec:RegisterAbilities( {
         handler = function ()
             if buff.moonkin_form.down then unshift() end
             applyBuff( "regrowth" )
+            if talent.forestwalk.enabled then applyBuff( "forestwalk" ) end
         end,
     },
 
@@ -2297,7 +2309,7 @@ spec:RegisterAbilities( {
         school = "physical",
 
         talent = "skull_bash",
-        startsCombat = false,
+        startsCombat = true,
 
         toggle = "interrupts",
 
@@ -2321,7 +2333,7 @@ spec:RegisterAbilities( {
         spendType = "mana",
 
         talent = "solar_beam",
-        startsCombat = false,
+        startsCombat = true,
 
         toggle = "interrupts",
 
@@ -2613,7 +2625,7 @@ spec:RegisterAbilities( {
         school = "astral",
 
         talent = "stellar_flare",
-        startsCombat = false,
+        startsCombat = true,
 
     ap_check = function() return check_for_ap_overcap( "stellar_flare" ) end,
 
@@ -2647,6 +2659,7 @@ spec:RegisterAbilities( {
         end,
 
         handler = function ()
+            if buff.bear_form.up or buff.cat_form.up then unshift() end
             spend( 0.12 * mana.max, "mana" ) -- I want to see AP in mouseovers.
             applyDebuff( "target", "sunfire" )
             if talent.improved_sunfire.enabled then active_dot.sunfire = active_enemies end
@@ -2749,12 +2762,12 @@ spec:RegisterAbilities( {
     typhoon = {
         id = 132469,
         cast = 0,
-        cooldown = 30,
+        cooldown = function() return 30 - 5 * talent.incessant_tempest.rank end,
         gcd = "spell",
         school = "nature",
 
         talent = "typhoon",
-        startsCombat = false,
+        startsCombat = true,
 
         handler = function ()
             applyDebuff( "target", "typhoon" )
@@ -2875,7 +2888,7 @@ spec:RegisterAbilities( {
         spend = function () return ( talent.soul_of_the_forest.enabled and buff.eclipse_solar.up ) and -9 or -6 end,
         spendType = "astral_power",
 
-        startsCombat = true,
+        startsCombat = false,
         texture = 535045,
 
         ap_check = function () return check_for_ap_overcap( "solar_wrath" ) end,
@@ -2954,4 +2967,4 @@ class.specs[0].abilities.cancel_buff.funcs.usable = setfenv( function ()
 end, state )
 
 
-spec:RegisterPack( "Balance", 20230122, [[Hekili:nZrxVnUnYFlbhQxBNnkwY2jElS9b0I7HU4qFj9zlllrhlezjF6JKnag(3(nKIsIIAO(W2j7IwKKksoZWHZ3CyxPV6Fw9KJvmz1FBmYy8iDddn9VPpAYJREk(9dKvpDWY(fRNH)W3Ap8Z)WYZY3M9939cSCORpkijK(PDXXhI(97VFt6CUlYDVT2ZUX7s2O5gCpFP39K7()8(9oA7I379V366rwWxGw8pIx90MexV4)YF1gecB0Sr6REYkjExq4QNOacWQRJdjD6Ki7vpT6jp3O4i2gJS1kXlg(Z)MTrj(wB8ioR(J05g6Ei2nWF1t)NFqStIjoNwtELe((P1XU7jWp3b)WYooi80A3i4pF1Y1JcbnGgStxAuGNvO5gI1(vXaPsXsXqbaeeXkmJXs0bqeXKqxlGDZW58tR1pTU3P19bIX2Z9qerZY)DtFYpIpT(4XIV6L4dyo97dkW6BHwX7OyAIeMcoaKejUyMVAb4fgL(xEjWVIoq88mJTcFMehPfb)XwlpVtRxc0eB6MPYaUrMwbekoMEnWHBibfh2EeRxzO5HoJMhoT((tRtr2oROyad3chOwEe)ynFR4KqsKzMyhhYItjiCJBS5MqI1lKWIjm80ANGyT9bb(uYwl21(fx)NzdahyBs2UvAPWo0(f22dg34XtRVd(fB(SjdIpraqiAjhGtr2)cdnzKiR4GvuK7RetROduMXJkLGyq02Y013wlKS3Y1heAxUaq4OurNm2KMFGPTJz6EnDOnbrrm5UTUpVl2mF5u5XPfm6nKWisiDptjLzF2KY4rfKYHa2VbY4BsKr2mIdD9FHeRlsy54nW3mjIyYNZP13SitZ7gqki9RAXga1B58UPDqGNtWB(PuyFb6xgoPGP0wezkJzh194sbCgfvg485nv4SiOfyFrEbGXXcEdW)0hvpd0O1mqJkmqDugyD0OXVc8fdgFrx0CoDnatyFKKfDDdLAb5OKBXmhwHj(MP)Tj1zvQllU6o30QUSNI2Sw4)K(ppDiKyhSFJvHRVSvtnDbQVMBdc3lTrk58AVv4lMbBnbpyMV5650GBSMTiFtUTvBIhbm6z5zA55(S)E63YTWYfFsNjC4BfcwRP7v7DbreFkjrapF5gTfnukkwCEEa541IaB7qkfcSkhpWANwOL)lcINf04HG3iHuY6zqaheE8XOSTqeshSnZCPAYoNodVNL8luwowLFslhN62Wf6PGBsg8OAES9OWyzAVAojHw5GsjDi7IQz6OFjBUQjfJQKsMttJ6Pj1(QU0iTIt1zrcYuuPJgVGiwVrWOvizlepYo66YI9lncjnAqHMXbMoUewOd5g2gWIP4b20H4BcbzvMKOgeZRRTBmB4C7pcHqWIYzmqjVdXxLfigL0ZSaGq)rjvi)lHKVJn9srcYcxZiZP4vBdPYgk2bYVCNgD38vUUHCKxGBWPz2TK9SQEhsJjFuZ(xNY2e0zoSlwUz6sfASGLB7aFhx2suKEbINv5LXisGlzUjWpjc2pKqJVzo5GnBaz9CK0MKTH2wC2VCUdwuJ8HUVqk5Adx2yEnYgZyCvjDf2jc9ymoiXEhZhTDq0(GOS0iOtqjU6xp6ONLgLYOHZ1mz2bljunrGwYMflJy5znOKLZm)G1NoJs(DbGqcLOEB9TaMcIU5jxKlLyfg6geMlllhkOCG0fig3ddc7LRs2aJpLG0ysTAK0YxysvErKO1LDlvqvD3wfnA6uP9IqG2M4)maLNddEJsnzY70nyXKEZYhIJYmgcMKAcP80OjvxgkLSWKgdaUfQhZSRbX8(Q5Z2oA6A0awn3NeTlmiyFzF2IJ0q07DN5mRoc1OGk2Me(EHmewW(xcvmj)iQoHiacIYnnRixzbde3qG5jQtv2Mr2XvHApyfdm4Vf(XLgmXDsgffkLuQZ4ulzQMZz5No94vfitTSQRZOnUqFY(nuC46ht8JCJFNNgrXe4eby72ZbiJ0HhGhpGUA3Hke5MusqGsQVrlPwyKjyi7qEE1CAHoUxqOtjpw5RKncVAwZtlGbUbDD1EqRsgKTXzw8QHVoUmMIsG5WqLANhzB6NTyPYbwEyRmMtb8AYPli2ZpRi0FvuqUZsqPFMF7(muaFzK2KII(j7fjV4FsmuAaQ0DPA3zDN0Mkubn(QTd2VpXN7UtxUyA4ilnKYrQo4yLnovkPOMQS9AK5ZjUoLl7ARmw1IqnsNLaxe8W)AWlewasrhCHDselnh1UP7odvxGH6tEl3kOXhJx3pnt67S82wSzUMEjne4yBdcTjufH0AYZWLAFHNR9dWobUbeJjIr3LR0jvxmz7UzZVUkXrvbI3fMKwFG8)lKIe0IYfkAE1qMIt3mLjzv59IKiFP7ZquYi)VP1wXGLGoyjsDMQvZTwKKIzfNSMAK0IAmunMWweOap18UvWdS6d8Xtnkp1ABCtDxxC2LUvQtIqyRCz1Uq)mlEX0FkfVaV4UnLdAuC3kDr6wtAhXRyJAUY88kyRuwj7(suT8PfXfEi0Dpewil)7qBibpBZdjErGlg2H6j2n(nLgMa2fu31kTW5qQl8rU7U2rxpmQCeUsovu4YOHRFTDOMh5ufbACt(DTCgrc6zkQqI6O8AgKsfijTOhTTcjYM)B2WWNxLtk0NbUejmDXnuKGC2L4sqQbt3VWmrjdKaHbfCLMmxsVP8AVZ0bTmEYUe1TG5qEC35YpOLfqigY0ZeKW11EXNDPX9e3TitJDjZSPvi)wHiuKezBSuRgwkYXOMSG7Ux6PcDGbAsBQnk1DK1q45x1Srp)cMP2aM6ADiyXfX)HIWTvNR4zw2eHkUawhI94IourYQGiDgo8HfTWvEerlC0AGU36hQs55ccaV7hWQUOXljW7Rhv8ZiGBfKsngh7mouwsc1w66os(PxsIRPb2F2Lm3OHOkrR5rTxYxNQn5uXSFIcs8Y68hW(pe9yP(Fez)w07Ic22K9tvY2wUV8kZs0q24gtFBQkJCxtNutZKnA1nEL7vqWeshVSR0GZcTCDmjVY4LoorqwP5b2DxAUTWPH9oQzKOgzuIMeQChygQDMMf8TRFQYqH)hPYLdbGz3UqZrQ(TKRxEDVhxoXcwO0LZMySkFzTUYCWquLk6I49zoKHcnjg6LvgT6P)H2c4U7peecBUT0gb)l8Mk)l0sH8)saAfowJcOA3wjXb7Ty9roCU4dNlAN(()11hg6HF)06)eIuKeYg(l4DImaZ4aLJMjfbZQV(pg0eSl1hYsqgT9MBaUbhiPnCfirrLf)Yd)Mq)vFB908T1H4Hy9u9W(mPfKUPEzFJhVZyyQHXI(NEWGHtgLTpF4(FbPTCo73KpX4T3MC3gNFQPQDKLpY0hPaYYTHBfiJmboKp9DeLG8gmTBQbJXfvrksHKaBn9mQmpqboQPOEs4QfL)tgNtWXzLEdvctk7D0gvXZpwfBvsKdvPHBjqR0JLiqgBoFOGphWpQu7PwMrLHlrTQbAZul(C(qbVk9sRas30inAWiVqgp96xnr974bzmy5d31V0nW9Bgd6HfR1sS4SUDC2U(SX39DeFnP7(HAVOox2wzDoiMpBl52kSIhaDCqxkGtjiJgnBBbSuFDjbAfD9vfGpfh4zvqrcQYLCPc4Q4GnDDsDGGeuv0Fcn4jmlCYUP2nUb1oSBLDj)3dnm(n9zzeFdZ8EyMQi9Oo69(NHMIrLiAUijdvGtUsCsGvvH6Qa(k255KvLCQLPBLjD3wuiNjTecuLoEfWp7dY(Hkaxkr5kNMijrlQp(xm5zk4MMDZoNwZE(VWWROp2uB6fuzqFrub0NACwkIrA5rWE7I7fFuuN(o6mKEou4ZkZvZxPzAUq8gx(k7sDwCtSYWz7DtZkjTbRvFQrCCNjiG)2MwyKtavIkTnOT8dUHJYrNXkdoSWYXjJMrJZTxnHsEPySpE0K9QjGTbdnWXkRKfF1D7I(Y3H5XJvFBrdOc0)RtR78Jrph5aklEo6L)k9LOl(LCsJc8569AlfYHWIYm00(vIZbXBhWL6IOVYYtFR3QHa4HQoiieAhhgTP4eOj(Fft4xKElE40uUoYD7UCHXOJhrVU2JhPv2RxPQ6nxFQi4tFm0xjqpUeLN)Ux)k7jYMPtQtrwomlRsDZcDWAIIIAC8yFflBHUavkn04b9e3zjh6YgQ02xcWTzVAu7E1OyVkxff1O14tD7i(rPAJMQarvFf3JPA0nUSOyQrRmBFWk4otP6oFT09CTGjVCdB30(C86sgDY0b)(mXiJ2taxwsTDH18jYzkB7u(LqXnGQO5sMpT3nLLCXi0L6JWLCNER(OHnhOZazso3Fv(ouMS7H15C9Q08qYcjC3t1d6(IokYtbh9iyo6rWSHLeJaEJIMqyWXJOqTpoyVv3G7Ac9klNpHJj07NC(Kbv4ZibMwlRrE9cNPDADYxkKYZ)QXPGEDt9QHPKczKoaRcsfVOmkYBVoNXOE9Vbl9OJhZ(SuProEu59co3OhIk2J9Ur1tERYXAP(NPB7Kzy42Okc43MD3a(eGnP(KAP4HtDsYLMyLnFPSiVa3b3Hhx6GLZUfFKoyJEwpCqmVVU(DCbg0ht2DLZVx8HKHWikm2HCOoHFwG07uhpkvFLE5ZSObNMpgfJSlLppYuKozq1wVQhD(iSuQyqt5R7APoxEPYR6QloW7pByF9BhPnzOQBUUQfu5cT0nfIPJQyrUA)fkdY5thHXdHt65JZYXrQ4M1Q2vRxJLtQSLZ6XOUTv1RSvZ7VNUbiJpdJisDczxPWRQIH(JQ0mK)oAq7zvSwm09SVTanGiPSbYNT4gbFu1XG3CfUrHy2sej(O42hUFHl16JVwc61f5(va8DYfv7L7M1w6zMe9utgc51tuvcc6TmdHPxRmeIIBobHO42LFWXJLihipgmIFoK(o6PanZCSPpn1FzdpoKLlMoDK8gRKLcLBov5tWn41mIFyupvMHqiOmleTe4G)jjrcjy2P0oIILwDRs6OYQuNYbIkaP41DWf))CserHSTa5uVMR87wGt8yfje863xHo9YXQQF4GRuGevf15mhLVjKEn)Eq6vijiZhKL)WdYQ1R)cd6BQe4UAbBKcTpUK)WniGKabx)h7z7vJmqRs6ip3e5lPnD6YVGcSVMPqYF5eNxKfTNRo(mdU48XWhv8fsO5YteGbMFnZdGRl9RyDoQQ5OYxUIYlwB2VthQSjfgIqR0KIZ1jLnm2RXo)NQqJexOSjYlO2CtvwAoS2oO26YnOx1U0hCwEN(0H8oZh)U7KL4fRSHCl33dRogS2TV2qoW(FYmiHvi9TAtyK1V8R()d]] )
+spec:RegisterPack( "Balance", 20230131, [[Hekili:TZX2UTno2VLGfJRLtJJLSDs6aBVaZG9HzWI5fppBzzz6yHil5vxAAam83(EifLej1H6IJtBb2fZGMurYZnEUtYUYC1FVA5wNeYQ)YAK14rMJnhA(flZXpSAzYBhjRwE0X9fNNHFjW5a8N)MJVtGl77V5h6SLU(4W0i6N2NKCm(xV)(nzZ5UyVdUdF2lzF6MHEH3Zx6Dl9o873Fy7W9jh8)N788jZ5lyyY3swTCtQNFYFeSAdoHnD1sN0K9HrRwsbeGvVTBjztNe7UA5QL(EXjXmgJSZj1pb(1)IXOKaNn(KTR(TS5g5DmXlmy1Y)13iUPjKTNxt(kj6TZRt8oqG)Cp8hoUjHrNx7fd)6xD88PqyiqdUzlno03jYEdX5WQeGuPyPCOqacIyfMXyf6aiIesKNdiUz4C251p7UD4bNVDEDVZR7dKKRV3XyYqNG3SdiFl586tNk)QFAaG)SVBuI7xJCs2tLebeB3TRwoLI7jAXDezxejEpDegAlOfRZRhitrBs3TBih72mSpm9OatNq8PsKDWFqujGPkeqiSWyss5Q)QdqoWO0FZpf(r8raC2jorptsIhgd)YohF)ZRxCETjB62zQLEX2oHekoEOZ44HZRV)86mmT3byGZRVfebo(KGKHbojPGOXoxfLdzXPegTXlXEteX5fsu5ea522WKHhcdd25fbk3EUV4f8mBG(C5O8sb2Z9fgVbJB94513LVbWMmOQfdaHaYByVM9)Wqtgjkho6eh79vITt8rQW4rT74mi66y7f4omICWXlauWxmhq4OmfSCX0WGqyd0oJxZgAtyCmtxyN3Z7tSlwoOVyoTuqVHeftIO8mLuEslPCdiOIs92MHP4C9(pikC8ijdLJHSFce4xuiW8zKe5f8cjXuKKlqDyGDkyhWNZ513a0NjdZaxX)6WelGbC2(MTByO)2WxdYiY(cSGkCYaJexImLXmLGEYYkQ2XLlEQiCrqlOXf7hcUylLnG8ZCu9cqRwlaTQianrfG1rJw)mixSyYftXGc01acHdXkXfmT0AFuGsUtUcyfLgyN9720qEzb(4oc4EdnvJ30M1c)v6)T8yeXn8WgNYaO5RM6udmST3fgDqHrKcbEWj6f7WD2qCq7x9832qWWM9vFtHxxxIpbCh64B7479CWb63k89YvFYMjS57eb(XP8Q7(WysaLKiqSlb3509wrVqIovfvuWIJ2mzZPK0dBIac2liHee7L82WiNGxYuxfXxwof5Xyz7gxqOtP4cYAR6It6SDBDmrP1ieMKbpQ9vwcdLJLBJoCBAKtbO0shQHOAMo6l5zvpPyvLuYdAAvpnPpw17lFmMvf1YejHurtlA(ckrilCnPMQgvAWspAinPn7Kq7TEewQdfUVmy5u8aB6q(nuvWJHVcjCa5h756LWgUWlJqkeSSCgduYBU(K8SWOKEUDoc9hNwH8FpK8DSPlLgilDnR8qFxngsNNsSnKF62n6UljnzDvyYOM5fedCAUJv1WQ6zCAE6JAo46ugVrN5GU522GzLvAld(PDdd26XwfpgOQRtKiRQlJrNG8ZEtyqAmWsKiRVyp5OlBavpavnZR4Dvt5rVlBK7uSlYkpc0uZ1XEIjv1nNls97PmjJgqoJr3MMmAR(yELtGteXhafpGmYgoZ2w7(dUrG(QDQFJUVCPCuIbcg8crkFcCz1S6LvdQ46IzjqnFsctD3ZsmYne4948Q6OtqlU6xp6O2qwsfykxOUOn3ebAPivdAIhQZYqkqwEj41hMSMnUCaHK)gwvyDcMcUmkRiPW20jkYlmQWjIAc4QbKlXmEeF0gHuw1HEjFgbnK5RyijR1t2uRCe)i1uwq3nEP1WKPUxMC8U0GNbO8Cu4RuQrmD4Yj9QtaufVDcKcp13TswZHQqrY1Ewoz4HgEmpGcuPXxTPDzYCiTmb7dPX7JcdpiNdL4iOf38EeopvhHAvsf7sJERuhIsf6BRw3PIjfBr1PebqquVPzl5klWqKHa)t0KCymJAWY)FGRog4cp0KPAcbc99fxLBIKIaLuFL48vsuSn4i7yr3m40cDC)WOTsHSkwjBeE3fNL12iCp6Mn0WqjYGSlj3JxnY1XYykofMddv1wKfdBpdobHVaEEyRmHtb8EKAkO2Z3Ri0Fu2G0lsrPFEG7(muaFz0WjLnHvnksrZyveO0cgOCP(4zDN0MoQej8v7gE4qAapENLAh4WrwwU8J0TXX6VEMwszpUz8AS9ZqbdYTbVvoRArUgzZsqkcH4)A4lewgsXh9aojMXJ6dt3DbQPGanG8AHxqRpMOUF3CPV3XFxjZCnJsAjiX2fg5sOgczNrcdx6JfEP(paxs4oqS0xxNso3zhweM5P1dsziMDOzsPfAP6rmFY11avQnuY(O0Sg(u83q66tl6YRO)z5ZxSqAitY6AKbsNzKoGkrvRIFN2Smlwhxah26B9q1MLissjSEkxttVArtJQMuzlY0G3RfCcxxhSWA4Zhp1ODxRTjE1DJ5NEVSsDAecSYhsZOmVWUrn9hv3OW7JFt13gNK5GST9IkJ7uykEx40lyMvCIzA1IYpamDlFAzkNhJ8oazCYQTpYfQD01(yQFme9ITDFMDkUtNocTd5vADwlLq6BQsrK02rxpmso5zL4vAIg1qIZTd18KYQOtJhmORTFjwWc8k19frqEvB(sZUm6AtzAUJyzOcPVmf9LdjFmnqVAN0Qd6I(mGDcsXH)TQ(wavSPiTigbvmuLdteVof9jjIJeed3kncP5nrr1CKcgQleWISRYrnNOVrB237y1jc(251NuymScR9jc5ANT)JuwZWxcyxPHEIClY0yxbc5n3QeHMITBJtv9WstTy10TGUNmYuHBoewXT10VGUJSgkJ5Qw1(f3yXAkNxFpHecFGemutvf6Rk5cBVKqNPaVdj(CvhQkzvqKnJT8Hf7HU8iIEt53irnQ7vQFVd1z09nyDhqExoq5poQq1P83J6k0qk14CSZ4qBRB07PR7i5hERBUMoy)rF0cw6DGRV3q1EAODQhUtfRMlom1p)EPb()HuHLU3UAYZZOirq5taOioLKVTIy5vMLOJSXnwo6uDo50hKstWgqAW2rIiU7PZGVHDh7G4mAKqen5QCwCJ1hSkptDVGmLTs)7kTThsWXTX84zJG0fE88AhlDTfXAW3yDXkADd(GHOkT0fXFRcGQoTIh6HMgVA5FtFgbEhoggbm3o6Jj4t8hMWNODu5)Kc0kOYehs3mCstcp4WElcWMuWZK4HN)Z)Txam0d)651)oKjgjIn8NWVH6amtc1oAUgkmR(MFZOjylD)0vGm61EVb4gEKKDr8ankpiL3p9WViCV7VTEA(26q8aS7A)G(mTfKBz)I(wpEN1GmhpL3REdJbtgLZNpC)pH0wHK9lQ7y8R9O6DnVyxt3LrxDlZCKgiREjSRazKjWH85)eXiO46f3nZGX4QQiD0qrHTMBmSQmqdoQPjGk4QfTlSrtWcXU4vCfrORmClbAL7glcKXMZhk4la8JA1URvyuzyjQvpqBMAXNZhk41z34es6MfJvdoHfY4Vx)Q5oChpjaJfpCxFPJw7xSm6HLD2cSmZUDCoxFX47(oIVcjWKFa2ZvuhWUIHyXuDuV)Hv8qBHdAPBHLcKrVNxTfWk3)lfqR52Hvb4AYXiVdckqvTLdQGZQsyk0BQGcu1CpgAisvE6EDZSBCdMDyh(6c(phyz9lMpLt8nmZ7HzQJ0J7y01FewkwMxxndnGtTtukGvxJQQa(N0qTvQPuLU1w0zBrHALKkiqx5OIA3)bt7Gc0P5NjX51Shmnmm7Mt4sp7gl6R)kK(4SZlikEyr(A3o)EXha25)eDgkp9l8zL74(Z06QMl2)(pZoIG53Op5TE30Sk3PtsNRClOb1ZlHthCuHEPaNB1gal)mJ4GD0fSYWJZD2UnNUqZsSxnjI9EXyF8CX6vt6ogd0iHyfK)zVDZ7RECENoL)LYxuLbvb(FCEDNFU(fihqz5d2x(R03QV4xkinkWNX73CV2rNFM)S3NpvchIDCLczX8GyyXAqoEq7)boyL35YU9q8Tk8B33ct9lxi)jomAtf6Ov)EfR6vKElFv5uriYbiUyU1OtNqptWtNOT3QNuRTMzkjnZEp4uqFJONJE9VcyA8idruv8uG)m7vdNBkBsrEbqLTeVzUj41ttL(No1xZYMBkqMkdn2ONiRLESlCKe)Ra4rTGxTQLxTk5v1wlOhTwFxzhXpQ0WWmdkQXOipMzF24YItO(6YDzcRGhZLAl9zPdxzotF5gg30(cR6szuQ0b)q0WiJ2taVVkj7IO57OKr2xQ67ukpJgz)kAUGdZM27gzfzm6EH5iCf5P3AoAqZPhzyOYcfH9k4yv2Oh2DrRxLRJJQsJuWVlx15o8RkSXINUfFKoSF(upCqmRVP5D1La4DYjGl(Iqm6PvqwveLfFUEPF)eSwfGYLZW5YbsCjO)O5YcyC6eku7Jd2BnT4r3rpAXzt4yc9CeNnPQQisk)1kAuxVGEFNwN6HlP1ePAUGOPTHLmxoBNbzSBfMksfpWnkYBVAT1OE9VbRnqNoDdElCGQM09O(Mz1dXn0J9Ur3t4RY2Q09CPBCYty42Qkc4N6C3a(Kr9Qr9DH4MtDAYstScZ))SUbRZzhYM6e(EbYDC60jL(a1RyMLxePzJrXi7WZlQBa5ghOJ1RMeeFewXRmOP91QTWKRVu5vQ1LCE6)0G(M3oA4Kb6ob8QEqvBiu3miMoQIh5Q3dqvqoB6imziStpB8T4nHTwZUAJASysfwo)Ua1nw1ScRwCpC6gGS(E4er5gl2vk8QAyy(yDwgslsOVdIrsv)iA9q5DGxSQO8VnhnXjLcTkMTidJpQ(YBAUJ9OqmFjIeFCs7RKQm0B9LUOa96kk6ka(ofkR96Np1w65jf6PMIVk6IBlR9YSLfFn9Qv8vCsZ1EfN0UsVoDsIEGAeXO(zZTW3vOnbbB6tZIZ2WlzzX8PthPYysEy0YC6QdH7OSze)WOE6CFHqq5EmAjWH4Ak6ekWStLReNOS6wvSsLvPVufetcI473GBq02syQRWUmuIudJbAiUkqtUqq9qdBpKhNPqCjXJLLEREOonA4jbN6D0O(Sj4swrDfHKz05ZzXyDTs24kLFuvlrUOw7tsPxZphfHUBOkhunpWZDS1R)DMl7ufWD1YHkdAFC10I7VcPUiU7jSNazn6aTQwQIsUupJ8SPR(aoW(AU5D()usFrjc1EP64lmxOlhdFuPdPGM3F9nmW8Zz5nCBPFgBFtvlhDPAOPRP1wu)0bAVJidqdHAyuytQ6ySxJp8aQbnsERQUiR0Yrehv9R(GcU7rd8ZzvvhumaEEEi5VrGEynmH9(aQTjRy)RZdsOELVvBfNSl4)Q)7p]] )

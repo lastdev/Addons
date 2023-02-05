@@ -2478,7 +2478,7 @@ end
 
 function ConRO:ACTIVE_PLAYER_SPECIALIZATION_CHANGED()
 --self:Print(self.Colors.Success .. 'Talent');
-	C_Timer.After(1, function()
+	C_Timer.After(2, function()
 		self:DisableRotation();
 		self:DisableDefense();
 		self:LoadModule();
@@ -2502,7 +2502,7 @@ end
 
 function ConRO:ACTIVE_COMBAT_CONFIG_CHANGED()
 	--self:Print(self.Colors.Success .. 'Talent');
-	C_Timer.After(1, function()
+	C_Timer.After(2, function()
 		self:DisableRotation();
 		self:DisableDefense();
 		self:LoadModule();
@@ -2687,7 +2687,7 @@ function ConRO:PLAYER_LEAVING_WORLD()
 end
 
 function ConRO:PLAYER_ENTERING_WORLD()
-	C_Timer.After(1, function()
+	C_Timer.After(3, function()
 		self:UpdateButtonGlow();
 		if not self.rotationEnabled and not UnitHasVehicleUI("player") then
 			self:Print(self.Colors.Success .. 'Auto enable on login!');
@@ -2706,7 +2706,7 @@ function ConRO:LOADING_SCREEN_ENABLED()
 end
 
 function ConRO:LOADING_SCREEN_DISABLED()
-	C_Timer.After(1, function()
+	C_Timer.After(3, function()
 		self:UpdateButtonGlow();
 		if not self.rotationEnabled and not UnitHasVehicleUI("player") then
 			self:Print(self.Colors.Success .. 'Auto enable on login!');
@@ -2957,7 +2957,7 @@ function ConRO:MeleeSpec()
 		[12] = 'DemonHunter',
 		[13] = 'Evoker', ]]
 
-	if classId == 1 or classId == 2 or classId == 3 or classId == 4 or classId == 5 or classId == 6 or classId == 7 or classId == 10 or classId == 11 or classId == 12 or classId == 13 then
+	if classId == 1 or classId == 2 or classId == 3 or classId == 4 or classId == 5 or classId == 6 or classId == 7 or classId == 8 or classId == 9 or classId == 10 or classId == 11 or classId == 12 or classId == 13 then
 		return true;
 	end
 	return false;

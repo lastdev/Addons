@@ -4,8 +4,8 @@
 --    All Rights Reserved - Detailed license information included with addon.     --
 -- ------------------------------------------------------------------------------ --
 
-local _, TSM = ...
-local Inventory = TSM.Init("Service.Inventory")
+local TSM = select(2, ...) ---@type TSM
+local Inventory = TSM.Init("Service.Inventory") ---@class Service.Inventory
 local CustomPrice = TSM.Include("Service.CustomPrice")
 local AltTracking = TSM.Include("Service.AltTracking")
 local BagTracking = TSM.Include("Service.BagTracking")

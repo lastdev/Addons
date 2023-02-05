@@ -6,6 +6,7 @@
 
 local TSM = select(2, ...) ---@type TSM
 local Crafting = TSM.UI.CraftingUI:NewPackage("Crafting")
+local Environment = TSM.Include("Environment")
 local L = TSM.Include("Locale").GetTable()
 local CraftString = TSM.Include("Util.CraftString")
 local Delay = TSM.Include("Util.Delay")
@@ -68,7 +69,7 @@ function private.GetCraftingFrame()
 	UIUtils.AnalyticsRecordPathChange("crafting", "crafting")
 	private.filterText = ""
 	local frame = UIElements.New("DividedContainer", "crafting")
-		:SetMinWidth(200, TSM.IsWowClassic() and 147 or 189)
+		:SetMinWidth(200, Environment.IsRetail() and 189 or 147)
 		:SetVertical()
 		:HideDivider()
 		:SetSettingsContext(private.settings, "professionDividedContainerBottom")
@@ -189,7 +190,7 @@ function private.GetCraftingFrame()
 		)
 		:SetBottomChild(UIElements.New("CraftDetails", "details")
 			:SetCraftableQuantityFunction(TSM.Crafting.ProfessionUtil.GetNumCraftableRecipeString)
-			:SetCraftingCostFunction(TSM.Crafting.Cost.GetCostsByRecipeString)
+			:SetCraftingCostFunction(TSM.Crafting.Cost.GetCraftingCostByRecipeString)
 			:SetScript("OnQueueButtonClick", private.QueueBtnOnClick)
 			:SetScript("OnCraftButtonMouseDown", private.CraftBtnOnMouseDown)
 			:SetScript("OnCraftButtonClick", private.CraftBtnOnClick)
@@ -289,7 +290,7 @@ function private.ProfessionDropdownOnSelectionChanged(dropdown)
 	end
 	-- TODO: support showing of other player's professions?
 	assert(player == UnitName("player"))
-	Profession.Open(TSM.IsWowClassic() and profession or tonumber(skillId))
+	Profession.Open(not Environment.IsRetail() and profession or tonumber(skillId))
 end
 
 function private.FilterInputOnValueChanged(input)
@@ -605,7 +606,7 @@ function private.FSMCreate()
 	}
 
 	Profession.RegisterStateCallback(function()
-		if Profession.GetCurrentProfession() and TSM.IsWowVanillaClassic() and CraftCreateButton then
+		if Profession.GetCurrentProfession() and Environment.IsVanillaClassic() and CraftCreateButton then
 			if Profession.IsClassicCrafting() then
 				CraftCreateButton:Show()
 			else
@@ -655,7 +656,7 @@ function private.FSMCreate()
 		wipe(private.professions)
 		wipe(private.professionsKeys)
 		if currentProfession and not isCurrentProfessionPlayer then
-			assert(not TSM.IsWowVanillaClassic())
+			assert(not Environment.IsVanillaClassic())
 			local playerName = nil
 			local linked, linkedName = Profession.IsLinked()
 			if linked then
@@ -881,7 +882,7 @@ function private.FSMCreate()
 						:End()
 				end
 				if private.haveSkillUp then
-					context.recipeQuery:NotEqual("difficulty", TSM.IsWowClassic() and "trivial" or Enum.TradeskillRelativeDifficulty.Trivial)
+					context.recipeQuery:NotEqual("difficulty", Environment.IsRetail() and Enum.TradeskillRelativeDifficulty.Trivial or "trivial")
 				end
 				if private.haveMaterials then
 					context.recipeQuery:Custom(private.HaveMaterialsFilterHelper)

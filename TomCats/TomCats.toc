@@ -1,16 +1,16 @@
 # See license.txt for license and copyright information
-## Interface: 100002
+## Interface: 100005
 ## Title: TomCat's Tours
-## Notes: Version: 2.4.49
+## Notes: Version: 2.4.51
 ## Author: TomCat
 ## X-Website: https://www.tomcatstours.com
-## Version: 2.4.49
+## Version: 2.4.51
 ## DefaultState: enabled
 ## SavedVariables: TomCats_Account
 ## SavedVariablesPerCharacter: TomCats_Character
 ## X-Category: Achievements, Map, Miscellaneous
 ## X-Localizations: enUS, enGB, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ptPT, ruRU, zhCN, zhTW
-## X-TomCats-Expiry: 1675732975
+## X-TomCats-Expiry: 1675982698
 
 constants.lua
 slashcommands.lua

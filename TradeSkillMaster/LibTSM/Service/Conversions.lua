@@ -4,8 +4,8 @@
 --    All Rights Reserved - Detailed license information included with addon.     --
 -- ------------------------------------------------------------------------------ --
 
-local _, TSM = ...
-local Conversions = TSM.Init("Service.Conversions")
+local TSM = select(2, ...) ---@type TSM
+local Conversions = TSM.Init("Service.Conversions") ---@class Service.Conversions
 local DisenchantInfo = TSM.Include("Data.DisenchantInfo")
 local Mill = TSM.Include("Data.Mill")
 local Prospect = TSM.Include("Data.Prospect")

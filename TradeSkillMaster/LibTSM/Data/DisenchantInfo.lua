@@ -4,8 +4,9 @@
 --    All Rights Reserved - Detailed license information included with addon.     --
 -- ------------------------------------------------------------------------------ --
 
-local _, TSM = ...
-local DisenchantInfo = TSM.Init("Data.DisenchantInfo")
+local TSM = select(2, ...) ---@type TSM
+local DisenchantInfo = TSM.Init("Data.DisenchantInfo") ---@class Data.DisenchantInfo
+local Environment = TSM.Include("Environment")
 local private = {}
 local DATA = nil
 
@@ -15,7 +16,7 @@ local DATA = nil
 -- Disenchant Rates Data
 -- ============================================================================
 
-if TSM.IsWowVanillaClassic() then
+if Environment.IsVanillaClassic() then
 	DATA = {
 		-- Dust
 		["i:10940"] = { -- Strange Dust
@@ -265,7 +266,7 @@ if TSM.IsWowVanillaClassic() then
 			},
 		},
 	}
-elseif TSM.IsWowWrathClassic() then
+elseif Environment.IsWrathClassic() then
 	DATA = {
 		-- Dust
 		["i:10940"] = { -- Strange Dust
@@ -643,7 +644,7 @@ elseif TSM.IsWowWrathClassic() then
 			},
 		},
 	}
-else
+elseif Environment.IsRetail() then
 	DATA = {
 		-- Dust
 		["i:10940"] = { -- Strange Dust
@@ -1137,6 +1138,8 @@ else
 			},
 		},
 	}
+else
+	error("Invalid game version")
 end
 
 

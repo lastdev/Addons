@@ -4,11 +4,8 @@
 --    All Rights Reserved - Detailed license information included with addon.     --
 -- ------------------------------------------------------------------------------ --
 
---- ApplicationFrame UI Element Class.
--- An application frame is the base frame of all of the TSM UIs. It is a subclass of the @{Frame} class.
--- @classmod ApplicationFrame
-
-local _, TSM = ...
+local TSM = select(2, ...) ---@type TSM
+local Environment = TSM.Include("Environment")
 local L = TSM.Include("Locale").GetTable()
 local Math = TSM.Include("Util.Math")
 local TempTable = TSM.Include("Util.TempTable")
@@ -120,11 +117,11 @@ function ApplicationFrame.Release(self)
 	self._contentFrame = nil
 	self._contextTable = nil
 	self._defaultContextTable = nil
-	if TSM.IsWowClassic() and not TSM.IsWowWrathPatch341() then
+	if Environment.HasFeature(Environment.FEATURES.REGION_SET_RESIZE_BOUNDS) then
+		self:_GetBaseFrame():SetResizeBounds(0, 0, 0, 0)
+	else
 		self:_GetBaseFrame():SetMinResize(0, 0)
 		self:_GetBaseFrame():SetMaxResize(0, 0)
-	else
-		self:_GetBaseFrame():SetResizeBounds(0, 0, 0, 0)
 	end
 	self._isScaling = nil
 	self._protected = nil
@@ -506,18 +503,18 @@ function private.ResizeButtonOnMouseDown(self, mouseButton)
 	if self._isScaling then
 		local minWidth = width * MIN_SCALE / self._contextTable.scale
 		local minHeight = height * MIN_SCALE / self._contextTable.scale
-		if TSM.IsWowClassic() and not TSM.IsWowWrathPatch341() then
+		if Environment.HasFeature(Environment.FEATURES.REGION_SET_RESIZE_BOUNDS) then
+			frame:SetResizeBounds(minWidth, minHeight, width * 10, height * 10)
+		else
 			frame:SetMinResize(minWidth, minHeight)
 			frame:SetMaxResize(width * 10, height * 10)
-		else
-			frame:SetResizeBounds(minWidth, minHeight, width * 10, height * 10)
 		end
 	else
-		if TSM.IsWowClassic() and not TSM.IsWowWrathPatch341() then
+		if Environment.HasFeature(Environment.FEATURES.REGION_SET_RESIZE_BOUNDS) then
+			frame:SetResizeBounds(self._minWidth, self._minHeight, width * 10, height * 10)
+		else
 			frame:SetMinResize(self._minWidth, self._minHeight)
 			frame:SetMaxResize(width * 10, height * 10)
-		else
-			frame:SetResizeBounds(self._minWidth, self._minHeight, width * 10, height * 10)
 		end
 	end
 	self:_SetResizing(true)
@@ -660,7 +657,7 @@ end
 function private.GetAppStatusTooltip()
 	local tooltipLines = TempTable.Acquire()
 	local regionRealmName = TSM.AppHelper.GetRegion().."-"..GetRealmName()
-	if TSM.IsWowClassic() then
+	if not Environment.HasFeature(Environment.FEATURES.CONNECTED_FACTION_AH) then
 		regionRealmName = regionRealmName.."-"..UnitFactionGroup("player")
 	end
 	tinsert(tooltipLines, format(L["TSM Desktop App Status (%s)"], regionRealmName))

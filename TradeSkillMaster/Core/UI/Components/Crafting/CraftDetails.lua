@@ -5,6 +5,7 @@
 -- ------------------------------------------------------------------------------ --
 
 local TSM = select(2, ...) ---@type TSM
+local Environment = TSM.Include("Environment")
 local ProfessionInfo = TSM.Include("Data.ProfessionInfo")
 local ItemString = TSM.Include("Util.ItemString")
 local TextureAtlas = TSM.Include("Util.TextureAtlas")
@@ -214,7 +215,7 @@ function CraftDetails:Acquire()
 		:IgnoreDuplicatesWithKeys("craftString", "neededTools", "remainingCooldown", "numCraftable")
 		:MapWithFunction(private.StateToErrStr)
 		:IgnoreDuplicates()
-		:CallMethod(self:GetElement("header.error"), "SetText")
+		:CallFunction(self:__closure("_SetErrorText"))
 
 	local craftBtn = buttons:GetElement("content.craftBtn")
 	self._state:PublisherForKeyChange("craftType")
@@ -260,7 +261,7 @@ function CraftDetails:Acquire()
 
 	self._state:PublisherForKeyChange("craftingCost")
 		:MapWithFunction(private.CraftingCostToText)
-		:CallMethod(self:GetElement("header.craftingCostText"), "SetText")
+		:CallFunction(self:__closure("_SetCraftingCostText"))
 
 	local craftNum = self:GetElement("header.craftNum")
 	self._state:PublisherForKeyChange("craftString")
@@ -324,6 +325,9 @@ end
 function CraftDetails:SetCraftableQuantityFunction(func)
 	assert(func and not self._craftableQuantityFunc)
 	self._craftableQuantityFunc = func
+	self._state:PublisherForKeyChange("recipeString")
+		:MapWithFunction(private.RecipeStringToNumCraftable, func)
+		:AssignToTableKey(self._state, "numCraftable")
 	return self
 end
 
@@ -333,6 +337,9 @@ end
 function CraftDetails:SetCraftingCostFunction(func)
 	assert(func and not self._craftingCostFunc)
 	self._craftingCostFunc = func
+	self._state:PublisherForKeyChange("recipeString")
+		:MapWithFunction(private.RecipeStringToCraftingCost, func)
+		:AssignToTableKey(self._state, "craftingCost")
 	return self
 end
 
@@ -381,7 +388,6 @@ end
 function CraftDetails:SetState(craftingType, craftingQuantity)
 	assert(craftingType == "" or craftingType == "all" or craftingType == "craft" or craftingType == "queue")
 	self._state.craftingType = craftingType
-	self._state.numCraftable = self._craftableQuantityFunc(self._state.recipeString)
 	self._state.remainingCooldown = Profession.GetRemainingCooldown(self._state.craftString)
 	if Profession.IsClassicCrafting() and CraftCreateButton then
 		local craftBtnBaseFrame = self:GetElement("content.buttons.content.craftBtn"):_GetBaseFrame()
@@ -432,8 +438,6 @@ end
 function CraftDetails.__private:_UpdateRecipeString(wipeExisting)
 	if not self._state.craftString then
 		self._state.recipeString = nil
-		self._state.craftingCost = nil
-		self._state.numCraftable = 0
 		return
 	end
 	assert(not next(private.optionalMatsTemp))
@@ -458,13 +462,6 @@ function CraftDetails.__private:_UpdateRecipeString(wipeExisting)
 	end
 	self._state.recipeString = RecipeString.FromCraftString(self._state.craftString, private.optionalMatsTemp)
 	wipe(private.optionalMatsTemp)
-	self:_UpdateCraftingCostAndNumCraftable()
-end
-
-function CraftDetails.__private:_UpdateCraftingCostAndNumCraftable()
-	self._state.craftingCost = self._state.recipeString and self._craftingCostFunc(self._state.recipeString) or nil
-	self._state.numCraftable = self._state.recipeString and self._craftableQuantityFunc(self._state.recipeString) or nil
-	self:GetElement("header.craftingCostText"):Draw()
 end
 
 function CraftDetails.__private:_AddOptionalMat(slotId, itemId)
@@ -482,7 +479,6 @@ function CraftDetails.__private:_AddOptionalMat(slotId, itemId)
 	private.optionalMatsTemp[slotId] = itemId
 	self._state.recipeString = RecipeString.FromCraftString(self._state.craftString, private.optionalMatsTemp)
 	wipe(private.optionalMatsTemp)
-	self:_UpdateCraftingCostAndNumCraftable()
 end
 
 function CraftDetails.__private:_RemoveOptionalMat(slotId)
@@ -494,7 +490,6 @@ function CraftDetails.__private:_RemoveOptionalMat(slotId)
 	end
 	self._state.recipeString = RecipeString.FromCraftString(self._state.craftString, private.optionalMatsTemp)
 	wipe(private.optionalMatsTemp)
-	self:_UpdateCraftingCostAndNumCraftable()
 end
 
 function CraftDetails.__private:_GetQuantityValue()
@@ -535,7 +530,6 @@ end
 
 function CraftDetails.__private:_HandleDialogRecipeStringChanged(_, recipeString)
 	self._state.recipeString = recipeString
-	self:_UpdateCraftingCostAndNumCraftable()
 end
 
 function CraftDetails.__private:_HandleMaxBtnOnClick(button)
@@ -553,6 +547,16 @@ function CraftDetails.__private:_HandleItemClick()
 	if itemString then
 		UIUtils.HandleModifiedItemClick(itemString)
 	end
+end
+
+function CraftDetails.__private:_SetCraftingCostText(text)
+	self:GetElement("header.craftingCostText"):SetText(text)
+	self:GetElement("header"):Draw()
+end
+
+function CraftDetails.__private:_SetErrorText(text)
+	self:GetElement("header.error"):SetText(text)
+	self:GetElement("header"):Draw()
 end
 
 
@@ -724,14 +728,14 @@ function private.CraftStringToNameText(craftString)
 		return ""
 	end
 	local itemString, _, name = Profession.GetResultInfo(craftString)
-	return itemString and UIUtils.GetColoredItemName(itemString) or name
+	return itemString and UIUtils.GetDisplayItemName(itemString) or name
 end
 
 function private.CraftStringToCraftType(craftString)
 	if not craftString then
 		return "NONE"
 	elseif Profession.IsEnchant(craftString) then
-		return TSM.IsWowVanillaClassic() and "ENCHANT" or "ENCHANT_VELLUM"
+		return Environment.IsVanillaClassic() and "ENCHANT" or "ENCHANT_VELLUM"
 	elseif Profession.IsTinker(craftString) then
 		return "TINKER"
 	elseif not Profession.GetResultInfo(craftString) then
@@ -739,4 +743,12 @@ function private.CraftStringToCraftType(craftString)
 	else
 		return "ITEM"
 	end
+end
+
+function private.RecipeStringToNumCraftable(recipeString, func)
+	return recipeString and func(recipeString) or 0
+end
+
+function private.RecipeStringToCraftingCost(recipeString, func)
+	return recipeString and func(recipeString) or nil
 end

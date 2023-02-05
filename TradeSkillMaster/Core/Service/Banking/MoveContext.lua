@@ -4,8 +4,9 @@
 --    All Rights Reserved - Detailed license information included with addon.     --
 -- ------------------------------------------------------------------------------ --
 
-local _, TSM = ...
+local TSM = select(2, ...) ---@type TSM
 local MoveContext = TSM.Banking:NewPackage("MoveContext")
+local Environment = TSM.Include("Environment")
 local Table = TSM.Include("Util.Table")
 local SlotId = TSM.Include("Util.SlotId")
 local Container = TSM.Include("Util.Container")
@@ -58,7 +59,7 @@ end
 
 function BagToBankMoveContext.GetEmptySlotsThreaded(self, emptySlotIds)
 	local sortValue = Threading.AcquireSafeTempTable()
-	if not TSM.IsWowClassic() then
+	if Environment.HasFeature(Environment.FEATURES.REAGENT_BANK) then
 		private.GetEmptySlotsHelper(REAGENTBANK_CONTAINER, emptySlotIds, sortValue)
 	end
 	private.GetEmptySlotsHelper(BANK_CONTAINER, emptySlotIds, sortValue)

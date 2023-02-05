@@ -990,12 +990,12 @@ function ConRO.DeathKnight.Unholy(_, timeShift, currentSpell, gcd, tChosen, pvpC
 			end
 		end
 
-		if _SummonGargoyle_RDY and _RunicPower >= 90 and _SuddenDoom_BUFF and ConRO:FullMode(_SummonGargoyle) then
+		if _SummonGargoyle_RDY and _RunicPower >= _RunicPower_Max - 50 and ConRO:FullMode(_SummonGargoyle) then
 			tinsert(ConRO.SuggestedSpells, _SummonGargoyle);
 			_SummonGargoyle_RDY = false;
 		end
 
-		if _DeathCoil_RDY and (_RunicPower >= 30 or _SuddenDoom_BUFF) and (_SummonGargoyle_CD >= 150 and tChosen[Ability.SummonGargoyle.talentID]) then
+		if _DeathCoil_RDY and (_RunicPower >= 30 or _SuddenDoom_BUFF) and (_SummonGargoyle_CD >= 155 and tChosen[Ability.SummonGargoyle.talentID]) then
 			tinsert(ConRO.SuggestedSpells, _DeathCoil);
 			_RunicPower = _RunicPower - 30;
 		end
@@ -1067,7 +1067,7 @@ function ConRO.DeathKnight.Unholy(_, timeShift, currentSpell, gcd, tChosen, pvpC
 			_Runes = _Runes - 1;
 		end
 
-		if _DeathCoil_RDY and (_SuddenDoom_BUFF or (not tChosen[Passive.RunicMastery.talentID] and _RunicPower >= 80) or _RunicPower >= 100) then
+		if _DeathCoil_RDY and (_SuddenDoom_BUFF or (not tChosen[Passive.RunicMastery.talentID] and _RunicPower >= 100) or _RunicPower >= 80) then
 			tinsert(ConRO.SuggestedSpells, _DeathCoil);
 			_RunicPower = _RunicPower - 30;
 		end

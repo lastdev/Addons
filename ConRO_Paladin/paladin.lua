@@ -613,7 +613,7 @@ function ConRO.Paladin.Retribution(_, timeShift, currentSpell, gcd, tChosen, pvp
 		local _DivinePurpose_BUFF = ConRO:Aura(Buff.DivinePurpose, timeShift);
 	local _DivineToll, _DivineToll_RDY = ConRO:AbilityReady(Ability.DivineToll, timeShift);
 	local _Exorcism, _Exorcism_RDY = ConRO:AbilityReady(Ability.Exorcism, timeShift);
-	local _FinalVerdict, _, _FinalVerdict_CD = ConRO:AbilityReady(Ability.FinalVerdict, timeShift);
+	local _FinalVerdict, _FinalVerdict_RDY, _FinalVerdict_CD = ConRO:AbilityReady(Ability.FinalVerdict, timeShift);
 	local _HammerofJustice, _HammerofJustice_RDY = ConRO:AbilityReady(Ability.HammerofJustice, timeShift);
 	local _HammerofWrath, _HammerofWrath_RDY = ConRO:AbilityReady(Ability.HammerofWrath, timeShift);
 	local _Judgment, _Judgment_RDY = ConRO:AbilityReady(Ability.Judgment, timeShift);
@@ -633,8 +633,6 @@ function ConRO.Paladin.Retribution(_, timeShift, currentSpell, gcd, tChosen, pvp
 	local _HolyAvenger, _HolyAvenger_RDY = ConRO:AbilityReady(Ability.HolyAvenger, timeShift);
 	local _JusticarsVengeance, _JusticarsVengeance_RDY = ConRO:AbilityReady(Ability.JusticarsVengeance, timeShift);
 
-
-
 --Conditions
 	local _is_moving = ConRO:PlayerSpeed();
 	local _enemies_in_melee, _target_in_melee = ConRO:Targets("Melee");
@@ -643,13 +641,17 @@ function ConRO.Paladin.Retribution(_, timeShift, currentSpell, gcd, tChosen, pvp
 	local _enemies_in_30yrds, _target_in_30yrds = ConRO:Targets(Ability.Judgment);
 	local _can_execute = _Target_Percent_Health <= 20;
 
-		if _FiresofJustice_BUFF then
-			_HolyPower = _HolyPower + 1;
-		end
+	if _FiresofJustice_BUFF then
+		_HolyPower = _HolyPower + 1;
+	end
 
-		if _DivinePurpose_BUFF then
-			_HolyPower = 5;
-		end
+	if _DivinePurpose_BUFF then
+		_HolyPower = 5;
+	end
+
+	if tChosen[Ability.FinalVerdict.talentID] then
+		_TemplarsVerdict, _TemplarsVerdict_RDY = _FinalVerdict, _FinalVerdict_RDY;
+	end
 
 --Warnings
 	ConRO:Warnings("Select an Aura!", GetShapeshiftForm() == 0 and GetNumShapeshiftForms() >= 1);

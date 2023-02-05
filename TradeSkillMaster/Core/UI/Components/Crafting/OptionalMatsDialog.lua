@@ -224,7 +224,7 @@ function OptionalMatsDialog.__private:_GetOptionalMatRow(matString, slotText, re
 				:SetFont("BODY_BODY2")
 				:SetJustifyH("LEFT")
 				:PropagateScript("OnMouseUp")
-				:SetText(itemString and UIUtils.GetColoredCraftedItemName(itemString) or slotText)
+				:SetText(itemString and UIUtils.GetDisplayItemName(itemString) or slotText)
 			)
 			:AddChild(UIElements.New("Frame", "spacer"))
 			:AddChild(UIElements.New("Button", "removeBtn")
@@ -293,7 +293,7 @@ function OptionalMatsDialog.__private:_AddOptionalMatEntries(frame)
 			:SetJustifyH("LEFT")
 			:SetBackground("PRIMARY_BG_ALT", true)
 			:SetContext(ItemString.ToId(itemString))
-			:SetText(UIUtils.GetColoredCraftedItemName(itemString) or Theme.GetColor("FEEDBACK_RED"):ColorText("?"))
+			:SetText(UIUtils.GetDisplayItemName(itemString) or Theme.GetColor("FEEDBACK_RED"):ColorText("?"))
 			:SetTooltip(itemString)
 			:SetScript("OnClick", self:__closure("_HandleOptionalMatOnEntrySelected"))
 		)
@@ -374,5 +374,5 @@ function private.GetResultInfo(recipeString)
 			end
 		end
 	end
-	return tooltip, itemString and UIUtils.GetColoredItemName(itemString) or name, texture or ItemInfo.GetTexture(itemString)
+	return tooltip, itemString and UIUtils.GetDisplayItemName(itemString) or name, texture or ItemInfo.GetTexture(itemString)
 end

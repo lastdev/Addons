@@ -23,7 +23,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_PetTarget) then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 5a89ecaf32f24ffefbf320bef9dff40e1992eb4e $")
+end, "$Revision: 8fc5cc64a1ac44a94d1ce283b83dcf1af669c63d $")
 
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
@@ -1149,7 +1149,7 @@ local function XPerl_Target_UpdateLeader(self)
 			if UnitIsUnit("raid"..raidID, partyid) then
 				masterLooter = true
 			end
-		else
+		elseif partyID then
 			if UnitIsUnit("party"..partyID, partyid) or (partyID == 0 and UnitIsUnit("player", partyid)) then
 				masterLooter = true
 			end

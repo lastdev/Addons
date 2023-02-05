@@ -67,6 +67,7 @@ points[ns.votfw] = {	-- "D", ["Author"], tip
 	[40115108] = { "D", "Under the foliage" },
 	[40233989] = { "D" },
 	[40283825] = { "D", "Under the foliage" },
+	[40313699] = { "D", "Under the foliage" },
 	[40475170] = { "D", "Under the foliage" },
 	[40494153] = { "D" },
 	[40504929] = { "D", "Under the foliage" },
@@ -252,7 +253,34 @@ points[ns.votfw] = {	-- "D", ["Author"], tip
 	[17503580] = { "S", "Staff of the Hidden Master" },
 	[14903370] = { "S", "Staff of the Hidden Master" },
 	[15502910] = { "S", "Staff of the Hidden Master" },
+	
+	[15211190] = { "V", "Vale of Eternal Blossoms" },
+	[19041006] = { "V", "Vale of Eternal Blossoms" },
+	[21321303] = { "V", "Vale of Eternal Blossoms" },
+	[23411714] = { "V", "Vale of Eternal Blossoms" },
+	[25301495] = { "V", "Vale of Eternal Blossoms" },
+	[31201235] = { "V", "Vale of Eternal Blossoms" },
+	[34301050] = { "V", "Vale of Eternal Blossoms", "Author" },
+	[35641431] = { "V", "Vale of Eternal Blossoms" },
+	[38711243] = { "V", "Vale of Eternal Blossoms" },
+	[38981025] = { "V", "Vale of Eternal Blossoms", },
+	[39330712] = { "V", "Vale of Eternal Blossoms" },
 }
+points[ns.voeb] = {
+	[15766894] = { "V", "Vale of Eternal Blossoms" },
+	[16604562] = { "V", "Vale of Eternal Blossoms" }, -- Off the map for VotFW
+	[21686610] = { "V", "Vale of Eternal Blossoms" },
+	[25227070] = { "V", "Vale of Eternal Blossoms" },
+	[28467707] = { "V", "Vale of Eternal Blossoms" },
+	[31397367] = { "V", "Vale of Eternal Blossoms" },
+	[40536965] = { "V", "Vale of Eternal Blossoms" },
+	[45326678] = { "V", "Vale of Eternal Blossoms", "Author" },
+	[47417268] = { "V", "Vale of Eternal Blossoms" },
+	[52166977] = { "V", "Vale of Eternal Blossoms" },
+	[52596639] = { "V", "Vale of Eternal Blossoms", },
+	[53126154] = { "V", "Vale of Eternal Blossoms" },
+}
+
 
 -- Choice of texture
 -- Note that these textures are all repurposed and as such have non-uniform sizing. I've copied my scaling factors from my old AddOn

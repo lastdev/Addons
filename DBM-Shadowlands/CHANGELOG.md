@@ -1,10 +1,11 @@
 # <DBM> World Bosses (Shadowlands)
 
-## [r1](https://github.com/DeadlyBossMods/DBM-Shadowlands/tree/r1) (2022-12-06)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Shadowlands/commits/r1) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Shadowlands/releases)
+## [r2](https://github.com/DeadlyBossMods/DBM-Shadowlands/tree/r2) (2023-01-24)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Shadowlands/compare/r1...r2) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Shadowlands/releases)
 
-- Fix packager  
-- Update luacheck  
-- Merge pull request #1 from DeadlyBossMods/main  
-- Update luacheck  
-- Initial commit and packaging of shadowlands modules  
+- bump tocs  
+- Fix several bugs in shadowlands mods that caused timers, tank swaps, icons, chat yells etc not to work right spanning all encounters. Bugs that thankfully wll be far less likely in future with better checking  
+- This one is gonna take an entire mawning to fix  
+- Update localization.ru.lua (#3)  
+- Update localization.ru.lua (#2)  
+- Add LICENSE and README.md  

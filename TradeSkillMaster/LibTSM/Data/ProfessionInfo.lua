@@ -6,6 +6,7 @@
 
 local TSM = select(2, ...) ---@type TSM
 local ProfessionInfo = TSM.Init("Data.ProfessionInfo") ---@class Data.ProfessionInfo
+local Environment = TSM.Include("Environment")
 
 
 
@@ -1331,7 +1332,7 @@ function ProfessionInfo.GetName(key)
 end
 
 function ProfessionInfo.IsSubNameClassic(str)
-	assert(TSM.IsWowClassic())
+	assert(Environment.HasFeature(Environment.FEATURES.SUB_PROFESSION_NAMES))
 	return CLASSIC_SUB_NAMES[str] or false
 end
 
@@ -1340,7 +1341,7 @@ function ProfessionInfo.MapProfessionName(str)
 end
 
 function ProfessionInfo.GetVellumItemString(spellId)
-	return TSM.IsWowWrathClassic() and WRATH_VELLUMS[spellId] or VELLUM_ITEM_STRING
+	return Environment.HasFeature(Environment.FEATURES.MULTIPLE_ENCHANTING_VELLUMS) and WRATH_VELLUMS[spellId] or VELLUM_ITEM_STRING
 end
 
 function ProfessionInfo.IsEngineeringTinker(spellId)

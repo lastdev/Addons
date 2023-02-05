@@ -147,7 +147,7 @@ end
 
 function CraftingMatList.__private:_AddMaterial(itemString, quantity)
 	tinsert(self._itemString, itemString)
-	tinsert(self._text, UIUtils.GetColoredCraftedItemName(itemString) or Theme.GetColor("FEEDBACK_RED"):ColorText("?"))
+	tinsert(self._text, UIUtils.GetDisplayItemName(itemString) or Theme.GetColor("FEEDBACK_RED"):ColorText("?"))
 	tinsert(self._icon, ItemInfo.GetTexture(itemString) or ItemInfo.GetTexture(ItemString.GetUnknown()))
 	tinsert(self._quantity, quantity)
 	tinsert(self._playerQuantity, BagTracking.GetCraftingMatQuantity(itemString))

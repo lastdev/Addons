@@ -239,7 +239,7 @@ sliderHeadText:SetText("SCALE")
 
 local optionsVersionText =  aura_env.settingsFrame:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 optionsVersionText:SetPoint("BOTTOM",  aura_env.settingsFrame, "BOTTOM", 0, 10)
-optionsVersionText:SetText("ZMPH 1.6.2")
+optionsVersionText:SetText("ZMPH 1.6.3")
 optionsVersionText:SetFont(fontMain, 12, "OUTLINE")
 
 local groupEnabled = CreateFrame('Frame', nil, aura_env.settingsFrame, 'BackdropTemplate')

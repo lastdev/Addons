@@ -4,11 +4,8 @@
 --    All Rights Reserved - Detailed license information included with addon.     --
 -- ------------------------------------------------------------------------------ --
 
---- Threading Functions
--- @module Threading
-
-local _, TSM = ...
-local Threading = TSM.Init("Service.Threading")
+local TSM = select(2, ...) ---@type TSM
+local Threading = TSM.Init("Service.Threading") ---@class Service.Threading
 local Debug = TSM.Include("Util.Debug")
 local Math = TSM.Include("Util.Math")
 local TempTable = TSM.Include("Util.TempTable")
