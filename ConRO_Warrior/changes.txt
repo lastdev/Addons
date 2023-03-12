@@ -1,11 +1,10 @@
-lightweight tag 059d00391035fa71ddd3c840540bd7c2f47c4070 v10.0.14
+lightweight tag 7790dc182c4773abff03734edaf1ee08250d9733 v10.0.15
 Author:	Vae <emuha17@gmail.com>
-Date:	Fri Dec 30 12:08:31 2022 -1000
+Date:	Thu Mar 9 14:41:48 2023 -1000
 
-commit 059d00391035fa71ddd3c840540bd7c2f47c4070
+commit 7790dc182c4773abff03734edaf1ee08250d9733
 Author: Vae <emuha17@gmail.com>
-Date:   Fri Dec 30 12:08:31 2022 -1000
+Date:   Thu Mar 9 14:41:48 2023 -1000
 
-    Updated Fury rotation
-    Updated Arms to include test of might
+    Full rotation sweep and cleanup.
 

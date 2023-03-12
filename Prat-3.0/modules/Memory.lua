@@ -232,7 +232,7 @@ L = {
 		["load_desc"] = "Ladet den Chat-Rahmen/Registerkarten aus der letzten Speicherung",
 		["load_name"] = "Einstellungen laden",
 		["module_desc"] = "Unterstützt das Speichern der Blizzard-Chat Einstellungen in deinem Profil, damit sie für alle deine Charaktere synchronisiert werden können",
-		["module_info"] = "DIESES MODUL IST EXPERIMENTELL = Du kannst deine Chat-Einstellungen in deinem Konto synchronisieren",
+		["module_info"] = "|cffff8888DIESES MODUL IST EXPERIMENTELL|r Mit diesem Modul kannst du alle deine Chat-Einstellungen und deine Rahmenanordnung laden/speichern. Diese Einstellungen können auf jeden deiner Charaktere geladen werden",
 		["module_name"] = "Erinnerung",
 		["msg_loadfailed"] = "Die Chat-Einstellungen konnten nicht vollständig wiederhergestellt werden",
 		["msg_nosettings"] = "Keine gespeicherten Einstellungen",

@@ -141,9 +141,9 @@ function private.ProcessModuleLoad(path)
 	tinsert(private.loadOrder, path)
 	context.moduleLoadTime = 0
 	if context.moduleLoadFunc then
-		local st = debugprofilestop()
+		local st = GetTimePreciseSec()
 		context.moduleLoadFunc()
-		context.moduleLoadTime = debugprofilestop() - st
+		context.moduleLoadTime = GetTimePreciseSec() - st
 	end
 end
 
@@ -156,9 +156,9 @@ function private.ProcessSettingsLoad(path)
 	end
 	context.settingsLoadTime = 0
 	if context.settingsLoadFunc then
-		local st = debugprofilestop()
+		local st = GetTimePreciseSec()
 		context.settingsLoadFunc()
-		context.settingsLoadTime = debugprofilestop() - st
+		context.settingsLoadTime = GetTimePreciseSec() - st
 	end
 end
 
@@ -171,9 +171,9 @@ function private.ProcessGameDataLoad(path)
 	end
 	context.gameDataLoadTime = 0
 	if context.gameDataLoadFunc then
-		local st = debugprofilestop()
+		local st = GetTimePreciseSec()
 		context.gameDataLoadFunc()
-		context.gameDataLoadTime = debugprofilestop() - st
+		context.gameDataLoadTime = GetTimePreciseSec() - st
 	end
 end
 
@@ -186,9 +186,9 @@ function private.ProcessModuleUnload(path)
 	end
 	context.moduleUnloadTime = 0
 	if context.moduleUnloadFunc then
-		local st = debugprofilestop()
+		local st = GetTimePreciseSec()
 		context.moduleUnloadFunc()
-		context.moduleUnloadTime = debugprofilestop() - st
+		context.moduleUnloadTime = GetTimePreciseSec() - st
 	end
 end
 

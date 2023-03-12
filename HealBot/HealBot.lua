@@ -22,6 +22,7 @@ local HealBot_SlowUpdateQueue={}
 local HealBot_UpdateQueue={}
 local HealBot_SpecQueue={}
 local HealBot_SpecQueueList={}
+local HealBot_CDQueue={}
 local HealBot_notVisible={}
 local hbManaPlayers={}
 local HealBot_customTempUserName={}
@@ -105,8 +106,6 @@ HealBot_luVars["CheckFramesOnCombat"]=true
 HealBot_luVars["UpdateSlowNext"]=TimeNow+1
 HealBot_luVars["cpuAdj"]=0
 HealBot_luVars["rangeCheckAdj"]=0.5
-HealBot_luVars["pluginCDsCheckExisting"]=TimeNow+15
-HealBot_luVars["pluginCDsCheckIncoming"]=TimeNow+1
 HealBot_luVars["HealthDropPct"]=999
 HealBot_luVars["InInstance"]=false
 HealBot_luVars["DoSendGuildVersion"]=true
@@ -755,6 +754,10 @@ function HealBot_SlashCmd(cmd)
             HealBot_Globals.DebugOut=true
             HealBot_AddChat("Debug ON")
         end
+    elseif (HBcmd=="debugtip") then
+        if HealBot_Data["TIPUSE"] then
+            HealBot_ToolTip_ToggleDebug()
+        end
     elseif (HBcmd=="resetcalls") then
         HealBot_AddChat("Calls Reset")
         HealBot_Calls={}
@@ -784,8 +787,7 @@ function HealBot_SlashCmd(cmd)
             HealBot_luVars["OORTest"]=true
         --    HealBot_Plugin_AuraWatch_CancelNoIndex(button)
         end
-        local n=GetSpellInfo(393024)
-        HealBot_AddDebug("Name="..(n or "nil"))
+        HealBot_Aura_Counts(button)
     else
         if x then HBcmd=HBcmd.." "..x end
         if y then HBcmd=HBcmd.." "..y end
@@ -817,7 +819,7 @@ function HealBot_ToggleSuppressSetting(settingType)
         end
         HealBot_Comms_MacroSuppressError()
     end
-    HealBot_Timers_Set("INIT","PrepSetAllAttribs",0.2)
+    HealBot_Timers_Set("INIT","PrepSetAllAttribs",0.5)
       --HealBot_setCall("HealBot_ToggleSuppressSetting")
 end
 
@@ -1345,6 +1347,9 @@ function HealBot_UpdateUnitClear(button)
     HealBot_Aura_RemoveIcons(button)
     HealBot_Aux_clearAllBars(button)
     HealBot_Aggro_ClearUnitAggro(button)
+    if HealBot_luVars["pluginAuraWatch"] then
+        HealBot_Plugin_AuraWatch_CancelNoIndex(button)
+    end
     HealBot_Action_DisableButtonGlowType(button, "ALL")
     button.status.incombat=false
     button.status.hostile=false
@@ -1471,14 +1476,11 @@ function HealBot_UnitClass(button)
                     HealBot_Action_setGuidData(button, "CLASSB", button.text.b)
                     HealBot_Action_setGuidData(button, "NAME", guName)
                 end
-            elseif not button.isplayer then
-                button.name=UnitName(button.unit) or false
             end 
         elseif button.isplayer then
             button.status.classknown=false
         else
             button.status.classknown=true
-            button.name=UnitName(button.unit) or false
             button.text.r,button.text.g,button.text.b=HealBot_Action_ClassColour(button.unit)
         end
     end
@@ -1487,7 +1489,7 @@ function HealBot_UnitClass(button)
 end
 
 function HealBot_UpdateUnitExists(button)
-    if button.status.current==HealBot_Unit_Status["RESERVED"] or not button.status.classknown or not button.name then 
+    if button.status.current==HealBot_Unit_Status["RESERVED"] or not button.status.classknown then 
         button.guid=button.unit
     else
         button.status.change=false
@@ -1960,7 +1962,7 @@ local function HealBot_ItemIdsInBag(bag, slot, firstScan)
                 end
             end
         end
-        C_Timer.After(0.001, function() HealBot_ItemIdsInBag(bag, slot+1, firstScan) end)
+        C_Timer.After(0.01, function() HealBot_ItemIdsInBag(bag, slot+1, firstScan) end)
     elseif bag<NUM_BAG_SLOTS then
         HealBot_luVars["MaxBagSlots"]=HealBot_GetContainerNumSlots(bag+1)
         C_Timer.After(0.01, function() HealBot_ItemIdsInBag(bag+1, 1, firstScan) end)
@@ -2181,7 +2183,7 @@ function HealBot_Register_Events()
             end
         end
         HealBot:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED")
-        --HealBot:RegisterEvent("SPELL_UPDATE_COOLDOWN")
+        HealBot:RegisterEvent("SPELL_UPDATE_COOLDOWN")
         HealBot:RegisterEvent("PLAYER_REGEN_DISABLED");
         HealBot:RegisterEvent("PLAYER_REGEN_ENABLED");
         HealBot:RegisterEvent("PLAYER_TARGET_CHANGED");
@@ -2242,6 +2244,7 @@ end
 
 function HealBot_Load()
     if not HealBot_luVars["Loaded"] then
+        HealBot_FastFuncs()
         HealBot_Timers_TurboOn(5)
         HealBot_Init_Spells_Defaults()
         HealBot_InitNewChar()
@@ -2277,7 +2280,6 @@ function HealBot_Load()
         HealBot_Timers_Set("INIT","RegEvents")
         HealBot_Timers_Set("SKINS","RaidTargetUpdate")
         HealBot_Timers_Set("SKINS","TextExtraCustomCols")
-        HealBot_Timers_Set("SKINS","UpdateIconFreq")
         HealBot_Timers_Set("SKINS","PowerIndicator")
         HealBot_Timers_Set("AURA","InitAuraData")
         HealBot_Timers_Set("AURA","ConfigClassHoT")
@@ -2345,7 +2347,7 @@ function HealBot_UnRegister_Events()
         HealBot:UnregisterEvent("PET_BATTLE_OPENING_START");
         HealBot:UnregisterEvent("PET_BATTLE_OVER");
     end
-    --HealBot:UnregisterEvent("SPELL_UPDATE_COOLDOWN")
+    HealBot:UnregisterEvent("SPELL_UPDATE_COOLDOWN")
     HealBot:UnregisterEvent("RAID_TARGET_UPDATE")
     HealBot:UnregisterEvent("LEARNED_SPELL_IN_TAB");
     HealBot:UnregisterEvent("PLAYER_LEVEL_UP");
@@ -2996,7 +2998,29 @@ function HealBot_Update_Skins()
                             HealBot_Globals.WatchHoT["EVOK"][id]=x
                         end
                     end
+                    if type(HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[HEALBOT_CUSTOM_CAT_CUSTOM_AUTOMATIC])~="number" then
+                        HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[HEALBOT_CUSTOM_CAT_CUSTOM_AUTOMATIC]=4
+                    end
+                    if type(HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol["DEFAULT"])~="number" then
+                        HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol["DEFAULT"]=4
+                    end
+                    for id,_  in pairs(HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol) do
+                        if type(HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[id])~="number" then
+                            HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[id]=4
+                        end
+                    end
+                    for id,_  in pairs(HealBot_Globals.HealBot_Custom_Buffs_ShowBarCol) do
+                        if type(HealBot_Globals.HealBot_Custom_Buffs_ShowBarCol[id])~="number" then
+                            HealBot_Globals.HealBot_Custom_Buffs_ShowBarCol[id]=4
+                        end
+                    end
                 end
+            end
+            if not HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol["DEFAULT"] then
+                HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol["DEFAULT"]=4
+            end
+            if not HealBot_Globals.HealBot_Custom_Buffs_ShowBarCol["DEFAULT"] then
+                HealBot_Globals.HealBot_Custom_Buffs_ShowBarCol["DEFAULT"]=4
             end
         end
     end
@@ -3101,7 +3125,7 @@ function HealBot_SetPlayerData()
     if maxHlth and maxHlth>1 then
         HealBot_Aux_setInHealAbsorbMax(maxHlth)
     else
-        HealBot_Timers_Set("LAST", "SetPlayerData", 5)
+        --HealBot_Timers_Set("LAST", "SetPlayerData", 1)
     end
 end
 
@@ -3160,7 +3184,10 @@ function HealBot_OnEvent_AddOnLoaded(addonName, reset)
         if HealBot_Globals.AutoCacheSize>30 and (HealBot_Globals.AutoCacheTime or 0)<HealBot_luVars["RunDate"] then
             HealBot_Globals.AutoCacheSize=HealBot_Globals.AutoCacheSize-1
             HealBot_Globals.AutoCacheTime=HealBot_luVars["RunDate"]
+        elseif HealBot_Globals.AutoCacheSize<30 then
+            HealBot_Globals.AutoCacheSize=30
         end
+        HealBot_AddDebug("AutoCacheSize="..HealBot_Globals.AutoCacheSize,"Perf",true)
         C_ChatInfo.RegisterAddonMessagePrefix(HEALBOT_HEALBOT)
         HealBot_Options_ObjectsEnableDisable("HealBot_FrameStickyOffsetHorizontal",false)
         HealBot_Options_ObjectsEnableDisable("HealBot_FrameStickyOffsetVertical",false)
@@ -3175,7 +3202,7 @@ end
 HealBot_luVars["WaitedOnAddonLoaded"]=false
 function HealBot_OnEvent_VariablesLoaded()
     if HealBot_luVars["AddonLoaded"] then
-        C_Timer.After(0.1, HealBot_VariablesLoaded)
+        C_Timer.After(0.025, HealBot_VariablesLoaded)
     elseif not HealBot_luVars["WaitedOnAddonLoaded"] then
         HealBot_luVars["WaitedOnAddonLoaded"]=true
         C_Timer.After(2, HealBot_OnEvent_VariablesLoaded)
@@ -3185,6 +3212,7 @@ function HealBot_OnEvent_VariablesLoaded()
 end
 
 function HealBot_VariablesLoaded()
+    HealBot_SetPlayerData()
     HealBot_SetToolTip(HealBot_ScanTooltip)
     local g
     for x=1,8 do
@@ -3208,7 +3236,6 @@ function HealBot_VariablesLoaded()
     HealBot_globalVars()
     HealBot_Lang_InitVars()
     HealBot_Data_InitVars()
-    HealBot_SetPlayerData()
     HealBot_Include_Skin(HEALBOT_SKINS_STD, true)
     if HealBot_Globals.FirstLoad then
         HealBot_Include_Skin(HEALBOT_OPTIONS_GROUPHEALS, true)
@@ -3220,7 +3247,6 @@ function HealBot_VariablesLoaded()
     HealBot_Config.LastAutoSkinChangeTime=0
     HealBot_luVars["CPUProfilerOn"]=GetCVarBool("scriptProfile")
     HealBot_Options_InitVars()
-    HealBot_Action_InitCacheButtons()
     HealBot_Panel_SethbTopRole(HealBot_Globals.TopRole)
     HealBot_Options_IgnoreDebuffsDuration_setAura()
     HealBot_Timers_ToggleBlizzardFrames()
@@ -3228,11 +3254,11 @@ function HealBot_VariablesLoaded()
     HealBot_Text_sethbAggroNumberFormat()
     HealBot_Options_SetFrames()
     HealBot_Init_ClassicSpecs()
-    HealBot_Timers_Set("AURA","SetIconUpdateInterval")
     HealBot_Timers_Set("LAST","SetAutoClose", 12)
-    HealBot_Timers_Set("LAST","LoadTips")
-    HealBot_FastFuncs()
-    HealBot_Load()
+    HealBot_Timers_Set("LAST","LoadTips", 2)
+    C_Timer.After(0.025, HealBot_Action_CacheButton)
+    C_Timer.After(0.05, HealBot_Action_DeleteMarkedButton)
+    C_Timer.After(0.1, HealBot_Load)
       --HealBot_setCall("HealBot_OnEvent_VariablesLoaded")
 end
 
@@ -3324,6 +3350,7 @@ function HealBot_ResetOnSpecChange()
         end
         HealBot_Timers_Set("SKINS","PartyUpdateCheckSkin")
         HealBot_Timers_Set("PLAYER","CheckSpellsValid",0.5)
+        HealBot_Timers_Set("PLAYER","SaveProfile",1)
     end
     HealBot_Data["PLEVEL"]=UnitLevel("player")
     HealBot_Timers_InitSpells()
@@ -4512,8 +4539,10 @@ function HealBot_ProcessRefreshTypes()
                 HealBot_Panel_setLuVars("resetAuxText", false)
                 HealBot_Aux_ResetTextButtons()
             end
-            if (GetNumGroupMembers()+HealBot_luVars["NumPrivateUnits"]+HealBot_luVars["NumPetUnits"]+10)>HealBot_Globals.AutoCacheSize then    
-                HealBot_Globals.AutoCacheSize=(GetNumGroupMembers()+HealBot_luVars["NumPrivateUnits"]+HealBot_luVars["NumPetUnits"]+10)
+            if (GetNumGroupMembers()+HealBot_luVars["NumPrivateUnits"]+HealBot_luVars["NumPetUnits"]+15)>HealBot_Globals.AutoCacheSize then    
+                HealBot_Globals.AutoCacheSize=(GetNumGroupMembers()+HealBot_luVars["NumPrivateUnits"]+HealBot_luVars["NumPetUnits"]+15)
+                HealBot_AddDebug("AutoCacheSize="..HealBot_Globals.AutoCacheSize,"Perf",true)
+                HealBot_Timers_Set("LAST","ProcMarkedCacheButtons",1)
             end
             if not HealBot_luVars["TestBarsOn"] then
                 HealBot_Timers_Set("LAST","CheckHideUnusedFrames")
@@ -4562,6 +4591,10 @@ function HealBot_Update_Slow()
                 end
             end
         else
+            if HealBot_luVars["resetFromID"] then
+                HealBot_luVars["resetFromID"]=false
+                HealBot_Action_resetFreeId()
+            end
             if HealBot_luVars["MaxCount"]>0 then
                 HealBot_Debug_UpdateCalls()
                 HealBot_AddDebug("#Calls active")
@@ -4640,39 +4673,19 @@ function HealBot_Update_Slow()
 end
         
 local hbStartTime, hbDuration, hbCDTime, hbCDEnd=0,0,0,0
-local hbHasCD={}
-function HealBot_SpellCooldown(spellName, spellId, retry1, retry2, retry3)
+function HealBot_SpellCooldown(spellName, spellId)
     hbStartTime, hbDuration=GetSpellCooldown(spellName)
     hbCDEnd=(hbStartTime or 0)+(hbDuration or 0)
     hbCDTime=hbCDEnd-TimeNow
     if hbCDTime>2 then
-        hbHasCD[spellName]=true
         if HealBot_luVars["pluginMyCooldowns"] then
             HealBot_Plugin_MyCooldowns_PlayerUpdate(spellName, spellId, hbStartTime, hbDuration)
         end
         if HealBot_luVars["pluginAuraWatch"] then
             HealBot_Plugin_AuraWatch_SelfCD(spellName, hbCDTime, hbCDEnd)
         end
-        --    HealBot_AddDebug("CD for spell "..spellName,"Cooldown",true)
-        --    HealBot_AddDebug("Start="..(hbStartTime or "nil").."  Dur="..(hbDuration or "nil").."  hbCDTime="..hbCDTime,"Cooldown",true)
-    elseif hbCDTime>0 then
-        if not retry1 then
-            C_Timer.After(0.1, function() HealBot_SpellCooldown(spellName, spellId, true) end)
-            --    HealBot_AddDebug("1st ReCheck CD for spell "..spellName,"Cooldown",true)
-        elseif hbHasCD[spellName] then
-            if not retry2 then
-                C_Timer.After(0.3, function() HealBot_SpellCooldown(spellName, spellId, true, true) end)
-            elseif not retry3 then
-                C_Timer.After(0.5, function() HealBot_SpellCooldown(spellName, spellId, true, true, true) end)
-            end
-            --    HealBot_AddDebug("2nd ReCheck CD for spell "..spellName,"Cooldown",true)
-        else
-            if HealBot_luVars["pluginAuraWatch"] then
-                HealBot_Plugin_AuraWatch_SelfCD(spellName, hbCDTime, hbCDEnd)
-            end
-            --    HealBot_AddDebug("No CD for spell "..spellName,"Cooldown",true)
-            --    HealBot_AddDebug("Start="..(hbStartTime or "nil").."  Dur="..(hbDuration or "nil").."  hbCDTime="..hbCDTime,"Cooldown",true)
-        end
+    --        HealBot_AddDebug("CD for spell "..spellName,"Cooldown",true)
+    --        HealBot_AddDebug("Start="..(hbStartTime or "nil").."  hbCDEnd="..hbCDEnd.."  floor="..floor(hbCDEnd),"Cooldown",true)
     end
 end
 
@@ -4680,9 +4693,7 @@ function HealBot_Check_SpellCooldown(spellId)
     if HealBot_luVars["pluginMyCooldowns"] or HealBot_luVars["pluginAuraWatch"] then
         if HealBot_Spell_IDs[spellId] then
             scName=GetSpellInfo(spellId)
-            if scName then
-                C_Timer.After(0.05, function() HealBot_SpellCooldown(scName, spellId) end)
-            end
+            if scName and not HealBot_CDQueue[scName] then HealBot_CDQueue[scName]=spellId end
         end
     end
 end
@@ -4714,7 +4725,7 @@ function HealBot_OnEvent_Combat_Log()
             if pButton then HealBot_Update_RecentHealsBar(pButton) end
         end
         --if type(Log12)=="number" then 
-            --HealBot_Check_SpellCooldown(Log12)
+        --    HealBot_Check_SpellCooldown(Log12)
         --end
     end
 
@@ -4811,14 +4822,14 @@ function HealBot_EnemyUpdateButton(button, checkAura)
         end
         if button.guid~=UnitGUID(button.unit) then
             HealBot_UpdateUnitGUIDChange(button)
+            if hbAuraTargetWatch[button.id] then
+                button.awtarget=true
+            end
         elseif button.status.update then
             if button.status.change then
                 HealBot_UpdateUnitExists(button)
             else
                 HealBot_UpdateUnit(button)
-            end
-            if hbAuraTargetWatch[button.id] then
-                button.awtarget=true
             end
             HealBot_EnemyUpdateAura(button)
         elseif button.awtarget then
@@ -4846,8 +4857,8 @@ function HealBot_UpdateUnit_Button()
     HealBot_luVars["UpdateID"]=HealBot_luVars["UpdateID"]+1
     if HealBot_Buttons[HealBot_UpdateQueue[HealBot_luVars["UpdateID"]]] then
         HealBot_UnitUpdateButton(HealBot_Buttons[HealBot_UpdateQueue[HealBot_luVars["UpdateID"]]])
-    elseif HealBot_luVars["UpdateID"]>HealBot_luVars["maxButtinID"] then
-        HealBot_luVars["UpdateID"]=HealBot_luVars["minButtinID"]
+    elseif HealBot_luVars["UpdateID"]>#HealBot_UpdateQueue then
+        HealBot_luVars["UpdateID"]=0
     end
 end
 
@@ -4890,11 +4901,6 @@ function HealBot_Update_Test()
     end
 end
 
-function HealBot_MyCooldowns_PlayerUpdateAll()
-    HealBot_luVars["pluginCDsCheckExisting"]=TimeNow+15
-    HealBot_Plugin_MyCooldowns_PlayerUpdateAll()
-end
-
 function HealBot_Update_Final()
     if HealBot_luVars["MovingFrame"]>0 then
         HealBot_Action_CheckForStickyFrame(HealBot_luVars["MovingFrame"],false)
@@ -4906,8 +4912,9 @@ function HealBot_Update_Final()
             HealBot_Tooltip_UpdateIconTooltip()
         end
     end
-    if HealBot_luVars["pluginMyCooldowns"] and HealBot_luVars["pluginCDsCheckExisting"]<TimeNow then
-        HealBot_MyCooldowns_PlayerUpdateAll()
+    for spellName, spellId in pairs(HealBot_CDQueue) do
+        HealBot_SpellCooldown(spellName, spellId)
+        HealBot_CDQueue[spellName]=nil
     end
     if HealBot_luVars["talentUpdate"] then
         if HealBot_luVars["talentUpdate"]<(TimeNow-HealBot_luVars["talentUpdateFreq"]) then HealBot_luVars["talentUpdate"]=false end
@@ -5008,31 +5015,22 @@ function HealBot_Update_Fast()
     end
 end
 
-HealBot_luVars["minButtinID"]=1
-HealBot_luVars["maxButtinID"]=1
 HealBot_luVars["auraWatchIncEnemy"]=false
 function HealBot_Update_RefreshList(button, uQueue, pClear)
     table.insert(HealBot_SlowUpdateQueue,button.id)
     if uQueue then
         table.insert(HealBot_UpdateQueue,button.id)
     end
-    if pClear then
-        if not hbPrevGUIDs[button.guid] then
-            HealBot_luVars["pluginClearDown"]=1
-            hbPrevGUIDs[button.guid]=true
-        end
+    if pClear and not hbPrevGUIDs[button.guid] then
+        HealBot_luVars["pluginClearDown"]=1
+        hbPrevGUIDs[button.guid]=true
     end
-    if button.id<HealBot_luVars["minButtinID"] then
-        HealBot_luVars["minButtinID"]=button.id
-    end
-    if button.id>HealBot_luVars["maxButtinID"] then
-        HealBot_luVars["maxButtinID"]=button.id
+    if button.id>HealBot_Globals.AutoCacheSize then
+        HealBot_luVars["resetFromID"]=true
     end
 end
 
 function HealBot_Update_ResetRefreshLists()
-    HealBot_luVars["minButtinID"]=998
-    HealBot_luVars["maxButtinID"]=1
     for guid,_ in pairs(hbPrevGUIDs) do
         if not HealBot_Panel_AllUnitGUID(guid) then
             HealBot_luVars["pluginClearDown"]=1
@@ -5061,7 +5059,6 @@ function HealBot_Update_ResetRefreshLists()
         HealBot_luVars["prevNumUnits"]=#HealBot_UpdateQueue
         HealBot_UpdateNumUnits()
     end
-    HealBot_luVars["minButtinID"]=HealBot_luVars["minButtinID"]-1
     HealBot_TestBarsState(HealBot_luVars["TestBarsOn"])
 end
 
@@ -5368,7 +5365,7 @@ function HealBot_Player_InvChange()
     if HealBot_luVars["InvReady"] then
         if not HealBot_luVars["invCheck"] then
             HealBot_luVars["invCheck"]=true
-            C_Timer.After(0.25, HealBot_Player_InvCheck)
+            C_Timer.After(0.05, HealBot_Player_InvCheck)
         end
     else
         HealBot_Timers_Set("PLAYER","InvChange",0.2)
@@ -5510,9 +5507,10 @@ function HealBot_AuxSetTargetBar()
 end
 
 function HealBot_PlayerTargetChanged()
-    if not HealBot_luVars["PlayerTargetChanged"] then
-        HealBot_luVars["PlayerTargetChanged"]=true
+    if UnitExists("target") then
         C_Timer.After(0.02, function() HealBot_nextRecalcParty(3) end)
+    else
+        HealBot_nextRecalcParty(3)
     end
 end
 
@@ -5878,7 +5876,7 @@ function HealBot_CheckAllActiveBuffs()
         --HealBot_setCall("HealBot_CheckAllActiveBuffs")
 end
 
-function HealBot_UpdateAllIconsAlpha()
+function HealBot_UpdateAllIcons()
     if not HealBot_luVars["TestBarsOn"] then
         for _,xButton in pairs(HealBot_Unit_Button) do
             HealBot_Aura_Update_AllIcons(xButton)
@@ -5946,12 +5944,20 @@ function HealBot_UnitPet(unit)
     return upUnit
 end
 
-function HealBot_OnEvent_PartyMembersChanged()
+function HealBot_PartyMembersChanged()
+    HealBot_luVars["PartyMembersChanged"]=false
     HealBot_Timers_Set("INIT","RefreshPartyNextRecalcPlayers")
     if HealBot_Data["UILOCK"] then 
         HealBot_CheckAllPartyGUIDs()
     end
-      --HealBot_setCall("HealBot_OnEvent_PartyMembersChanged")
+      --HealBot_setCall("HealBot_PartyMembersChanged")
+end
+
+function HealBot_OnEvent_PartyMembersChanged()
+    if not HealBot_luVars["PartyMembersChanged"] then
+        HealBot_luVars["PartyMembersChanged"]=true
+        C_Timer.After(0.1, HealBot_PartyMembersChanged)
+    end
 end
 
 function HealBot_OnEvent_PetsChanged()
@@ -6328,7 +6334,7 @@ function HealBot_OnEvent_UnitSpellCastSent(caster,unitName,castGUID,spellID)
                 HealBot_CastNotify(uscUnitName,uscSpellName,uscUnit)
             end
         end
-        C_Timer.After(0.05, function() HealBot_Check_SpellCooldown(spellID) end)
+        C_Timer.After(0.01, function() HealBot_Check_SpellCooldown(spellID) end)
     end
     --HealBot_setCall("HealBot_OnEvent_UnitSpellCastSent")
 end
@@ -6698,14 +6704,8 @@ function HealBot_UpdateUnitRange(button)
                 HealBot_Plugin_Requests_CancelGUID(button.guid)
                 hbRangeRequests[button.guid]=nil
             end
-            if button.status.range<0 or oldRange<0 then
-                if HealBot_luVars["pluginAuraWatch"] and button.status.unittype<7 then
-                    if button.status.range>-1 then
-                        HealBot_Plugin_AuraWatch_IsVisible(button)
-                    else
-                        HealBot_Plugin_AuraWatch_CancelNoIndex(button)
-                    end
-                end
+            if HealBot_luVars["pluginAuraWatch"] then
+                HealBot_Plugin_AuraWatch_RangeUpdate(button)
             end
             if button.status.enabled or button.status.range==1 or oldRange==1 then
                 if hbHealthWatch[button.guid] then HealBot_Plugin_HealthWatch_UnitUpdate(button) end
@@ -6989,11 +6989,14 @@ function HealBot_OnEvent(self, event, ...)
     --HealBot_AddDebug("Event "..event,"events",true)
     if (event=="UNIT_SPELLCAST_SENT") then
         HealBot_OnEvent_UnitSpellCastSent(arg1,arg2,arg3,arg4);  
-    --elseif (event=="SPELL_UPDATE_COOLDOWN") then
-    --    if HealBot_Data["TIPBUTTON"] then HealBot_Action_RefreshTooltip() end
-    --    if HealBot_luVars["pluginMyCooldowns"] then 
-    --        HealBot_MyCooldowns_PlayerUpdateAll()
-    --    end
+    elseif (event=="SPELL_UPDATE_COOLDOWN") then
+        if HealBot_Data["TIPBUTTON"] then HealBot_Action_RefreshTooltip() end
+        if HealBot_luVars["pluginMyCooldowns"] then 
+            HealBot_Plugin_MyCooldowns_PlayerUpdateAll()
+        end
+        if HealBot_luVars["pluginAuraWatch"] then
+            HealBot_Plugin_AuraWatch_UpdateAllCDs()
+        end
     elseif (event=="COMBAT_LOG_EVENT_UNFILTERED") then
         HealBot_OnEvent_Combat_Log()
     elseif (event=="PLAYER_REGEN_DISABLED") then
@@ -7003,7 +7006,7 @@ function HealBot_OnEvent(self, event, ...)
         HealBot_UpdateLocalUILock(false)
         --HealBot_Timers_TurboOn(1)
     elseif (event=="GROUP_ROSTER_UPDATE") or (event=="RAID_ROSTER_UPDATE") then
-        HealBot_Timers_Set("SKINS","PartyUpdateCheckSkin")
+        HealBot_Timers_Set("SKINS","PartyUpdateCheckSkin",0.05)
         HealBot_OnEvent_PartyMembersChanged();
     elseif (event=="RAID_TARGET_UPDATE") then
         HealBot_OnEvent_RaidTargetUpdateAll()
@@ -7027,7 +7030,7 @@ function HealBot_OnEvent(self, event, ...)
         HealBot_Timers_Set("AURA","PlayerCheckExtended")
     elseif (event=="ROLE_CHANGED_INFORM") or (event=="PLAYER_ROLES_ASSIGNED") then
         HealBot_OnEvent_PartyMembersChanged()
-        HealBot_Timers_Set("AURA","ResetClassIconTexture")
+        HealBot_Timers_Set("AURA","ResetClassIconTexture",0.05)
     elseif (event=="INCOMING_SUMMON_CHANGED") then
         HealBot_OnEvent_IncomingSummons(arg1)
     elseif (event=="PLAYER_MOUNT_DISPLAY_CHANGED") then

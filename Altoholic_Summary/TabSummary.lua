@@ -328,7 +328,7 @@ local function ClassIcon_Initialize(frame, level)
 	
 		if subMenu == 1 then				-- Armor types
 			-- Add the armor types
-			for index, armorType in ipairs(armorTypeLabels) do
+			for index, armorType in ipairs(addon.Enum.ArmorTypes) do
 				-- keep a numeric index, just add +20 since we have only 13 classes
 				frame:AddButton(armorType, index + 20, OnClassFilterChange, nil, (option == index + 20), level)	
 			end
@@ -789,7 +789,9 @@ addon:Controller("AltoholicUI.TabSummaryCategoriesList", {
 			}},
 			{ text = CHALLENGES, subMenu = {
 				-- Weekly Best
-				{ text = CHALLENGE_MODE_WEEKLY_BEST, profile = 22 },
+				{ text = L["Mythic+ Keystone"], profile = 22 },
+				-- Weekly Best Runs per dungeon
+				{ text = CHALLENGE_MODE_WEEKLY_BEST, profile = 28 },
 				-- Weekly Rewards
 				{ text = REWARDS, profile = 26 },
 			}},

@@ -1155,7 +1155,7 @@ function private.ProcessItemInfo()
 	if InCombatLockdown() then
 		return
 	end
-	local startTime = debugprofilestop()
+	local startTime = GetTimePreciseSec()
 	private.db:SetQueryUpdatesPaused(true)
 
 	-- create rows for items which don't exist at all in the DB in bulk
@@ -1203,7 +1203,7 @@ function private.ProcessItemInfo()
 				break
 			end
 		end
-		if (debugprofilestop() - startTime) / 1000 > ITEM_INFO_INTERVAL / 5 and numRequested >= maxRequests / 2 then
+		if (GetTimePreciseSec() - startTime) > ITEM_INFO_INTERVAL / 5 and numRequested >= maxRequests / 2 then
 			-- bail early since we've already used a good number of CPU cycles this frame
 			shouldStop = true
 			break
@@ -1218,7 +1218,7 @@ function private.ProcessItemInfo()
 					break
 				end
 			end
-			if (debugprofilestop() - startTime) / 1000 > ITEM_INFO_INTERVAL / 5 and numRequested >= maxRequests / 2 then
+			if (GetTimePreciseSec() - startTime) > ITEM_INFO_INTERVAL / 5 and numRequested >= maxRequests / 2 then
 				-- bail early since we've already used a good number of CPU cycles this frame
 				shouldStop = true
 				break

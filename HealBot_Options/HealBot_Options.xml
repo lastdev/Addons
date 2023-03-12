@@ -16074,7 +16074,7 @@
                         <Anchors>
                           <Anchor point="TOP">
                             <Offset>
-                              <AbsDimension x="-105" y="-10"/>
+                              <AbsDimension x="-175" y="-10"/>
                             </Offset>
                           </Anchor>
                         </Anchors>
@@ -16103,7 +16103,7 @@
                         <Anchors>
                           <Anchor point="TOP">
                             <Offset>
-                              <AbsDimension x="105" y="-10"/>
+                              <AbsDimension x="175" y="-10"/>
                             </Offset>
                           </Anchor>
                         </Anchors>
@@ -16125,6 +16125,20 @@
                         <BarTexture file="Interface\AddOns\HealBot\Images\tukuibar.tga"/>
                         <BarColor r="0.2" g="0.2" b="0.2"/>
                       </StatusBar>
+                      <Frame name="HealBot_Options_IconDebuffIconSet" inherits="UIDropDownMenuTemplate">
+                        <Anchors>
+                          <Anchor point="TOP">
+                            <Offset>
+                              <AbsDimension x="0" y="-9"/>
+                            </Offset>
+                          </Anchor>
+                        </Anchors>
+                        <Scripts>
+                          <OnLoad>HealBot_Options_UIDropDownMenu_OnLoad(self, 124)</OnLoad>
+                          <OnEnter>HealBot_Options_Show_Help("ICONSET",true)</OnEnter>
+                          <OnLeave>HealBot_Options_Show_Help("ICONSET",false)</OnLeave>
+                        </Scripts>
+                      </Frame>
                       <Frame name="HealBot_Options_SkinsFrameIconsDebuffGeneral" inherits="BackdropTemplate">
                         <Size>
                           <AbsDimension y="450"/>
@@ -16553,7 +16567,7 @@
                         <Anchors>
                           <Anchor point="TOP">
                             <Offset>
-                              <AbsDimension x="-105" y="-10"/>
+                              <AbsDimension x="-175" y="-10"/>
                             </Offset>
                           </Anchor>
                         </Anchors>
@@ -16582,7 +16596,7 @@
                         <Anchors>
                           <Anchor point="TOP">
                             <Offset>
-                              <AbsDimension x="105" y="-10"/>
+                              <AbsDimension x="175" y="-10"/>
                             </Offset>
                           </Anchor>
                         </Anchors>
@@ -16604,7 +16618,20 @@
                         <BarTexture file="Interface\AddOns\HealBot\Images\tukuibar.tga"/>
                         <BarColor r="0.2" g="0.2" b="0.2"/>
                       </StatusBar>
-
+                      <Frame name="HealBot_Options_IconBuffIconSet" inherits="UIDropDownMenuTemplate">
+                        <Anchors>
+                          <Anchor point="TOP">
+                            <Offset>
+                              <AbsDimension x="0" y="-9"/>
+                            </Offset>
+                          </Anchor>
+                        </Anchors>
+                        <Scripts>
+                          <OnLoad>HealBot_Options_UIDropDownMenu_OnLoad(self, 124)</OnLoad>
+                          <OnEnter>HealBot_Options_Show_Help("ICONSET",true)</OnEnter>
+                          <OnLeave>HealBot_Options_Show_Help("ICONSET",false)</OnLeave>
+                        </Scripts>
+                      </Frame>
                       <Frame name="HealBot_Options_SkinsFrameIconsBuffGeneral" inherits="BackdropTemplate">
                         <Size>
                           <AbsDimension y="450"/>
@@ -20271,14 +20298,14 @@
                       </Anchor>
                     </Anchors>
                     <Scripts>
-                      <OnLoad>HealBot_Options_UIDropDownMenu_OnLoad(self, 220)</OnLoad>
+                      <OnLoad>HealBot_Options_UIDropDownMenu_OnLoad(self, 180)</OnLoad>
                       <OnEnter>HealBot_Options_Show_Help("DEBUFFSCUSTOMDEBUFF",true)</OnEnter>
                       <OnLeave>HealBot_Options_Show_Help("DEBUFFSCUSTOMDEBUFF",false)</OnLeave>
                     </Scripts>
                   </Frame>
                   <EditBox name="HealBot_Options_CDebuffTag" inherits="HealBot_Options_EditBoxTemplate">
                     <Size>
-                      <AbsDimension x="180" y="20"/>
+                      <AbsDimension x="150" y="20"/>
                     </Size>
                     <Layers>
                       <Layer level="BACKGROUND">
@@ -20323,7 +20350,7 @@
                     <Anchors>
                       <Anchor point="LEFT" relativeTo="HealBot_Options_CDebuffTxt1" relativePoint="RIGHT">
                         <Offset>
-                          <AbsDimension x="-5" y="0"/>
+                          <AbsDimension x="75" y="0"/>
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -20351,9 +20378,9 @@
                       </Layer>
                     </Layers>
                     <Anchors>
-                      <Anchor point="LEFT" relativeTo="HealBot_Options_CDebuffTxt1" relativePoint="RIGHT">
+                      <Anchor point="TOP" relativeTo="HealBot_Options_CDCIDMethod" relativePoint="TOP">
                         <Offset>
-                          <AbsDimension x="15" y="0"/>
+                          <AbsDimension x="0" y="-2"/>
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -20375,7 +20402,7 @@
                     <Anchors>
                       <Anchor point="LEFT" relativeTo="HealBot_Options_CDCIDMethod" relativePoint="RIGHT">
                         <Offset>
-                          <AbsDimension x="-5" y="0"/>
+                          <AbsDimension x="-25" y="0"/>
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -20403,21 +20430,21 @@
                       </Layer>
                     </Layers>
                     <Anchors>
-                      <Anchor point="LEFT" relativeTo="HealBot_Options_CDCIDMethod" relativePoint="RIGHT">
+                      <Anchor point="TOP" relativeTo="HealBot_Options_CDCCastBy" relativePoint="TOP">
                         <Offset>
-                          <AbsDimension x="15" y="0"/>
+                          <AbsDimension x="0" y="-2"/>
                         </Offset>
                       </Anchor>
                     </Anchors>
                   </Button>
                   <Button name="HealBot_Options_ResetCDebuffBtn" inherits="UIPanelButtonTemplate" text="HEALBOT_WORD_RESET">
                     <Size>
-                      <AbsDimension x="80" y="22"/>
+                      <AbsDimension x="100" y="22"/>
                     </Size>
                     <Anchors>
                       <Anchor point="TOPLEFT" relativeTo="HealBot_Options_CDebuffTxt1" relativePoint="BOTTOMRIGHT">
                         <Offset>
-                          <AbsDimension x="12" y="-4"/>
+                          <AbsDimension x="2" y="-4"/>
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -20491,7 +20518,7 @@
                       </Layer>
                     </Layers>
                     <Size>
-                      <AbsDimension x="80" y="22"/>
+                      <AbsDimension x="100" y="22"/>
                     </Size>
                     <Anchors>
                       <Anchor point="LEFT" relativeTo="HealBot_Options_ResetCDebuffBtn" relativePoint="RIGHT">
@@ -20508,7 +20535,7 @@
                   </Button>
                   <Button name="HealBot_Options_DeleteCDebuffBtn" inherits="UIPanelButtonTemplate" text="HEALBOT_OPTIONS_DELSKIN">
                     <Size>
-                      <AbsDimension x="80" y="22"/>
+                      <AbsDimension x="100" y="22"/>
                     </Size>
                     <Anchors>
                       <Anchor point="LEFT" relativeTo="HealBot_Options_EnableDisableCDBtn" relativePoint="RIGHT">
@@ -20538,21 +20565,21 @@
                       </Layer>
                     </Layers>
                     <Anchors>
-                      <Anchor point="TOPLEFT" relativeTo="HealBot_Options_CDebuffTxt1" relativePoint="BOTTOMLEFT">
+                      <Anchor point="LEFT" relativeTo="HealBot_Options_CDebuffTxt1" relativePoint="RIGHT">
                         <Offset>
-                          <AbsDimension x="10" y="-60"/>
+                          <AbsDimension x="-22" y="0"/>
                         </Offset>
                       </Anchor>
                     </Anchors>
                     <Scripts>
-                      <OnLoad>HealBot_Options_UIDropDownMenu_OnLoad(self, 90)</OnLoad>
+                      <OnLoad>HealBot_Options_UIDropDownMenu_OnLoad(self, 70)</OnLoad>
                       <OnEnter>HealBot_Options_Show_Help("DEBUFFSCUSTOMPRIORITY",true)</OnEnter>
                       <OnLeave>HealBot_Options_Show_Help("DEBUFFSCUSTOMPRIORITY",false)</OnLeave>
                     </Scripts>
                   </Frame>
                   <Button name="HealBot_Options_CDCPriorityCustom" inherits="UIPanelButtonTemplate" text="10">
                     <Size>
-                      <AbsDimension x="110" y="24"/>
+                      <AbsDimension x="88" y="24"/>
                     </Size>
                     <Layers>
                       <Layer level="BACKGROUND">
@@ -20568,21 +20595,21 @@
                       </Layer>
                     </Layers>
                     <Anchors>
-                      <Anchor point="TOPLEFT" relativeTo="HealBot_Options_CDebuffTxt1" relativePoint="BOTTOMLEFT">
+                      <Anchor point="TOP" relativeTo="HealBot_Options_CDCPriorityC" relativePoint="TOP">
                         <Offset>
-                          <AbsDimension x="25" y="-61"/>
+                          <AbsDimension x="0" y="-2"/>
                         </Offset>
                       </Anchor>
                     </Anchors>
                   </Button>
                   <Button name="HealBot_CustomColorpickb">--added by Diacono
                     <Size>
-                      <AbsDimension x="140" y="22"/>
+                      <AbsDimension x="90" y="22"/>
                     </Size>
                     <Anchors>
                       <Anchor point="TOPLEFT" relativeTo="HealBot_Options_CDebuffTxt1" relativePoint="BOTTOMLEFT">
                         <Offset>
-                          <AbsDimension x="355" y="-63"/>
+                          <AbsDimension x="450" y="-73"/>
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -20594,18 +20621,18 @@
                   </Button>
                   <StatusBar name="HealBot_CustomColorpick">
                     <Size>
-                      <AbsDimension x="140" y="22"/>
+                      <AbsDimension x="90" y="22"/>
                     </Size>
                     <Anchors>
                       <Anchor point="TOPLEFT" relativeTo="HealBot_Options_CDebuffTxt1" relativePoint="BOTTOMLEFT">
                         <Offset>
-                          <AbsDimension x="355" y="-63"/>
+                          <AbsDimension x="450" y="-73"/>
                         </Offset>
                       </Anchor>
                     </Anchors>
                     <Layers>
                       <Layer level="OVERLAY">
-                        <FontString name="healbotcustomdebuffclassfontstr" inherits="GameFontNormalSmall" text="HEALBOT_CLASSES_CUSTOM">
+                        <FontString name="healbotcustomdebuffclassfontstr" inherits="GameFontNormalSmall" text="HEALBOT_WORD_COLOUR">
                           <Anchors>
                             <Anchor point="CENTER" relativeTo="HealBot_CustomColorpick" relativePoint="CENTER">
                               <Offset>
@@ -20639,6 +20666,110 @@
                       <OnLeave>HealBot_Options_Show_Help("PRESETCOLS",false)</OnLeave>
                     </Scripts>
                   </Button>
+                  <Frame name="HealBot_Options_CDCIconSet" inherits="UIDropDownMenuTemplate">
+                    <Layers>
+                      <Layer level="BACKGROUND">
+                        <FontString name="HealBot_Options_CDCIconSetTxt" text="HEALBOT_SKIN_ICONSET" inherits="GameFontNormal">
+                          <Anchors>
+                            <Anchor point="CENTER">
+                              <Offset>
+                                <AbsDimension x="0" y="25" />
+                              </Offset>
+                            </Anchor>
+                          </Anchors>
+                        </FontString>
+                      </Layer>
+                    </Layers>
+                    <Anchors>
+                      <Anchor point="TOPLEFT" relativeTo="HealBot_Options_CDebuffTxt1" relativePoint="BOTTOMLEFT">
+                        <Offset>
+                          <AbsDimension x="-10" y="-70"/>
+                        </Offset>
+                      </Anchor>
+                    </Anchors>
+                    <Scripts>
+                      <OnLoad>HealBot_Options_UIDropDownMenu_OnLoad(self, 70)</OnLoad>
+                      <OnEnter>HealBot_Options_Show_Help("DEBUFFSCUSTOMICONSET",true)</OnEnter>
+                      <OnLeave>HealBot_Options_Show_Help("DEBUFFSCUSTOMICONSET",false)</OnLeave>
+                    </Scripts>
+                  </Frame>
+                  <Button name="HealBot_Options_CDCIconSetCustom" inherits="UIPanelButtonTemplate" text="HEALBOT_WORDS_NONE">
+                      <Size>
+                           <AbsDimension x="88" y="22"/>
+                      </Size>
+                    <Layers>
+                      <Layer level="BACKGROUND">
+                        <FontString name="HealBot_Options_CDCIconSetTxtC" text="HEALBOT_SKIN_ICONSET" inherits="GameFontNormal">
+                          <Anchors>
+                            <Anchor point="CENTER">
+                              <Offset>
+                                <AbsDimension x="0" y="20" />
+                              </Offset>
+                            </Anchor>
+                          </Anchors>
+                        </FontString>
+                      </Layer>
+                    </Layers>
+                    <Anchors>
+                      <Anchor point="TOP" relativeTo="HealBot_Options_CDCIconSet" relativePoint="TOP">
+                        <Offset>
+                          <AbsDimension x="0" y="-2"/>
+                        </Offset>
+                      </Anchor>
+                    </Anchors>
+                  </Button>
+                  <Frame name="HealBot_Options_CDCIconGlow" inherits="UIDropDownMenuTemplate">
+                    <Layers>
+                      <Layer level="BACKGROUND">
+                        <FontString name="HealBot_Options_CDCIconGlowTxt" text="HEALBOT_SKIN_HEADERBARCOL" inherits="GameFontNormal">
+                          <Anchors>
+                            <Anchor point="CENTER">
+                              <Offset>
+                                <AbsDimension x="0" y="25" />
+                              </Offset>
+                            </Anchor>
+                          </Anchors>
+                        </FontString>
+                      </Layer>
+                    </Layers>
+                    <Anchors>
+                      <Anchor point="TOPLEFT" relativeTo="HealBot_Options_CDebuffTxt1" relativePoint="BOTTOMLEFT">
+                        <Offset>
+                          <AbsDimension x="85" y="-70"/>
+                        </Offset>
+                      </Anchor>
+                    </Anchors>
+                    <Scripts>
+                      <OnLoad>HealBot_Options_UIDropDownMenu_OnLoad(self, 130)</OnLoad>
+                      <OnEnter>HealBot_Options_Show_Help("DEBUFFSCUSTOMICONGLOW",true)</OnEnter>
+                      <OnLeave>HealBot_Options_Show_Help("DEBUFFSCUSTOMICONGLOW",false)</OnLeave>
+                    </Scripts>
+                  </Frame>
+                  <Button name="HealBot_Options_CDCIconGlowCustom" inherits="UIPanelButtonTemplate" text="HEALBOT_WORDS_NONE">
+                      <Size>
+                          <AbsDimension x="148" y="22"/>
+                      </Size>
+                    <Layers>
+                      <Layer level="BACKGROUND">
+                        <FontString name="HealBot_Options_CDCIconGlowTxtC" text="HEALBOT_SKIN_HEADERBARCOL" inherits="GameFontNormal">
+                          <Anchors>
+                            <Anchor point="CENTER">
+                              <Offset>
+                                <AbsDimension x="0" y="20" />
+                              </Offset>
+                            </Anchor>
+                          </Anchors>
+                        </FontString>
+                      </Layer>
+                    </Layers>
+                    <Anchors>
+                      <Anchor point="TOP" relativeTo="HealBot_Options_CDCIconGlow" relativePoint="TOP">
+                        <Offset>
+                          <AbsDimension x="0" y="-2"/>
+                        </Offset>
+                      </Anchor>
+                    </Anchors>
+                  </Button>
                   <Frame name="HealBot_Options_CDCCol" inherits="UIDropDownMenuTemplate">
                     <Layers>
                       <Layer level="BACKGROUND">
@@ -20656,19 +20787,19 @@
                     <Anchors>
                       <Anchor point="TOPLEFT" relativeTo="HealBot_Options_CDebuffTxt1" relativePoint="BOTTOMLEFT">
                         <Offset>
-                          <AbsDimension x="135" y="-60"/>
+                          <AbsDimension x="245" y="-70"/>
                         </Offset>
                       </Anchor>
                     </Anchors>
                     <Scripts>
-                      <OnLoad>HealBot_Options_UIDropDownMenu_OnLoad(self, 170)</OnLoad>
+                      <OnLoad>HealBot_Options_UIDropDownMenu_OnLoad(self, 155)</OnLoad>
                       <OnEnter>HealBot_Options_Show_Help("DEBUFFSCUSTOMBARCOLOUR",true)</OnEnter>
                       <OnLeave>HealBot_Options_Show_Help("DEBUFFSCUSTOMBARCOLOUR",false)</OnLeave>
                     </Scripts>
                   </Frame>
                   <Button name="HealBot_Options_CDCColCustom" inherits="UIPanelButtonTemplate" text="HEALBOT_WORDS_NONE">
                       <Size>
-                          <AbsDimension x="125" y="22"/>
+                          <AbsDimension x="173" y="22"/>
                       </Size>
                     <Layers>
                       <Layer level="BACKGROUND">
@@ -20684,9 +20815,9 @@
                       </Layer>
                     </Layers>
                     <Anchors>
-                      <Anchor point="TOPLEFT" relativeTo="HealBot_Options_CDebuffTxt1" relativePoint="BOTTOMLEFT">
+                      <Anchor point="TOP" relativeTo="HealBot_Options_CDCCol" relativePoint="TOP">
                         <Offset>
-                          <AbsDimension x="205" y="-62"/>
+                          <AbsDimension x="0" y="-2"/>
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -23429,7 +23560,6 @@
                       <OnLeave>HealBot_Options_Show_Help("BUFFSCUSTOMNEWNAME",false)</OnLeave>
                     </Scripts>
                   </EditBox>
-
                   <Button name="HealBot_Options_NewBuffHoTBtn" inherits="UIPanelButtonTemplate" text="HEALBOT_OPTIONS_SAVESKIN">
                     <Size>
                       <AbsDimension x="120" y="22"/>
@@ -23469,14 +23599,66 @@
                       </Anchor>
                     </Anchors>
                     <Scripts>
-                      <OnLoad>HealBot_Options_UIDropDownMenu_OnLoad(self, 220)</OnLoad>
+                      <OnLoad>HealBot_Options_UIDropDownMenu_OnLoad(self, 180)</OnLoad>
                       <OnEnter>HealBot_Options_Show_Help("BUFFSCUSTOMBUFF",true)</OnEnter>
                       <OnLeave>HealBot_Options_Show_Help("BUFFSCUSTOMBUFF",false)</OnLeave>
                     </Scripts>
                   </Frame>
+                  <Frame name="HealBot_Options_BuffPriorityC" inherits="UIDropDownMenuTemplate">
+                    <Layers>
+                      <Layer level="BACKGROUND">
+                        <FontString name="HealBot_Options_CustomBuff_PriorityTxt" text="HEALBOT_WORD_PRIORITY" inherits="GameFontNormal">
+                          <Anchors>
+                            <Anchor point="CENTER">
+                              <Offset>
+                                <AbsDimension x="0" y="25" />
+                              </Offset>
+                            </Anchor>
+                          </Anchors>
+                        </FontString>
+                      </Layer>
+                    </Layers>
+                    <Anchors>
+                      <Anchor point="LEFT" relativeTo="HealBot_Options_Class_HoTctlName" relativePoint="RIGHT">
+                        <Offset>
+                          <AbsDimension x="-22" y="0"/>
+                        </Offset>
+                      </Anchor>
+                    </Anchors>
+                    <Scripts>
+                      <OnLoad>HealBot_Options_UIDropDownMenu_OnLoad(self, 70)</OnLoad>
+                      <OnEnter>HealBot_Options_Show_Help("BUFFSCUSTOMPRIORITY",true)</OnEnter>
+                      <OnLeave>HealBot_Options_Show_Help("BUFFSCUSTOMPRIORITY",false)</OnLeave>
+                    </Scripts>
+                  </Frame>
+                  <Button name="HealBot_Options_BuffPriorityCustom" inherits="UIPanelButtonTemplate" text="10">
+                    <Size>
+                      <AbsDimension x="88" y="22"/>
+                    </Size>
+                    <Layers>
+                      <Layer level="BACKGROUND">
+                        <FontString name="HealBot_Options_BuffPriorityCustomText" text="HEALBOT_WORD_PRIORITY" inherits="GameFontNormal">
+                          <Anchors>
+                            <Anchor point="CENTER">
+                              <Offset>
+                                <AbsDimension x="0" y="25" />
+                              </Offset>
+                            </Anchor>
+                          </Anchors>
+                        </FontString>
+                      </Layer>
+                    </Layers>
+                    <Anchors>
+                      <Anchor point="TOP" relativeTo="HealBot_Options_BuffPriorityC" relativePoint="TOP">
+                        <Offset>
+                          <AbsDimension x="0" y="-2"/>
+                        </Offset>
+                      </Anchor>
+                    </Anchors>
+                  </Button>
                   <EditBox name="HealBot_Options_BuffHoTTag" inherits="HealBot_Options_EditBoxTemplate">
                     <Size>
-                      <AbsDimension x="180" y="20"/>
+                      <AbsDimension x="150" y="20"/>
                     </Size>
                     <Layers>
                       <Layer level="BACKGROUND">
@@ -23518,10 +23700,10 @@
                         </FontString>
                       </Layer>
                       </Layers>                                
-                      <Anchors>
+                    <Anchors>
                       <Anchor point="LEFT" relativeTo="HealBot_Options_Class_HoTctlName" relativePoint="RIGHT">
                         <Offset>
-                          <AbsDimension x="-5" y="0"/>
+                          <AbsDimension x="75" y="0"/>
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -23549,9 +23731,9 @@
                       </Layer>
                     </Layers>
                     <Anchors>
-                      <Anchor point="LEFT" relativeTo="HealBot_Options_Class_HoTctlName" relativePoint="RIGHT">
+                      <Anchor point="TOP" relativeTo="HealBot_Options_Class_HoTctlIDMethod" relativePoint="TOP">
                         <Offset>
-                          <AbsDimension x="15" y="0"/>
+                          <AbsDimension x="0" y="-2"/>
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -23573,7 +23755,7 @@
                       <Anchors>
                       <Anchor point="LEFT" relativeTo="HealBot_Options_Class_HoTctlIDMethod" relativePoint="RIGHT">
                         <Offset>
-                          <AbsDimension x="-5" y="0"/>
+                          <AbsDimension x="-25" y="0"/>
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -23601,21 +23783,21 @@
                       </Layer>
                     </Layers>
                     <Anchors>
-                      <Anchor point="LEFT" relativeTo="HealBot_Options_Class_HoTctlIDMethod" relativePoint="RIGHT">
+                      <Anchor point="TOP" relativeTo="HealBot_Options_Class_HoTctlAction" relativePoint="TOP">
                         <Offset>
-                          <AbsDimension x="15" y="0"/>
+                          <AbsDimension x="0" y="-2"/>
                         </Offset>
                       </Anchor>
                     </Anchors>
                   </Button>
                   <Button name="HealBot_Options_ResetBuffBtn" inherits="UIPanelButtonTemplate" text="HEALBOT_WORD_RESET">
                     <Size>
-                      <AbsDimension x="80" y="22"/>
+                      <AbsDimension x="100" y="22"/>
                     </Size>
                     <Anchors>
                       <Anchor point="TOPLEFT" relativeTo="HealBot_Options_Class_HoTctlName" relativePoint="BOTTOMRIGHT">
                         <Offset>
-                          <AbsDimension x="12" y="-4"/>
+                          <AbsDimension x="2" y="-4"/>
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -23640,7 +23822,7 @@
                       </Layer>
                     </Layers>
                     <Size>
-                      <AbsDimension x="80" y="22"/>
+                      <AbsDimension x="100" y="22"/>
                     </Size>
                     <Anchors>
                       <Anchor point="LEFT" relativeTo="HealBot_Options_ResetBuffBtn" relativePoint="RIGHT">
@@ -23657,7 +23839,7 @@
                   </Button>
                   <Button name="HealBot_Options_DeleteBuffHoTBtn" inherits="UIPanelButtonTemplate" text="HEALBOT_OPTIONS_DELSKIN">
                     <Size>
-                      <AbsDimension x="80" y="22"/>
+                      <AbsDimension x="100" y="22"/>
                     </Size>
                     <Anchors>
                       <Anchor point="LEFT" relativeTo="HealBot_Options_EnableDisableBuffBtn" relativePoint="RIGHT">
@@ -23672,66 +23854,14 @@
                       <OnLeave>HealBot_Options_Show_Help("BUFFSCUSTOMDELETE",false)</OnLeave>
                     </Scripts>
                   </Button>
-                  <Frame name="HealBot_Options_BuffPriorityC" inherits="UIDropDownMenuTemplate">
-                    <Layers>
-                      <Layer level="BACKGROUND">
-                        <FontString name="HealBot_Options_CustomBuff_PriorityTxt" text="HEALBOT_WORD_PRIORITY" inherits="GameFontNormal">
-                          <Anchors>
-                            <Anchor point="CENTER">
-                              <Offset>
-                                <AbsDimension x="0" y="25" />
-                              </Offset>
-                            </Anchor>
-                          </Anchors>
-                        </FontString>
-                      </Layer>
-                    </Layers>
-                    <Anchors>
-                      <Anchor point="TOPLEFT" relativeTo="HealBot_Options_Class_HoTctlName" relativePoint="BOTTOMLEFT">
-                        <Offset>
-                          <AbsDimension x="10" y="-60"/>
-                        </Offset>
-                      </Anchor>
-                    </Anchors>
-                    <Scripts>
-                      <OnLoad>HealBot_Options_UIDropDownMenu_OnLoad(self, 90)</OnLoad>
-                      <OnEnter>HealBot_Options_Show_Help("BUFFSCUSTOMPRIORITY",true)</OnEnter>
-                      <OnLeave>HealBot_Options_Show_Help("BUFFSCUSTOMPRIORITY",false)</OnLeave>
-                    </Scripts>
-                  </Frame>
-                  <Button name="HealBot_Options_BuffPriorityCustom" inherits="UIPanelButtonTemplate" text="10">
-                    <Size>
-                      <AbsDimension x="125" y="22"/>
-                    </Size>
-                    <Layers>
-                      <Layer level="BACKGROUND">
-                        <FontString name="HealBot_Options_BuffPriorityCustomText" text="HEALBOT_WORD_PRIORITY" inherits="GameFontNormal">
-                          <Anchors>
-                            <Anchor point="CENTER">
-                              <Offset>
-                                <AbsDimension x="0" y="25" />
-                              </Offset>
-                            </Anchor>
-                          </Anchors>
-                        </FontString>
-                      </Layer>
-                    </Layers>
-                    <Anchors>
-                      <Anchor point="TOPLEFT" relativeTo="HealBot_Options_Class_HoTctlName" relativePoint="BOTTOMLEFT">
-                        <Offset>
-                          <AbsDimension x="52" y="-63"/>
-                        </Offset>
-                      </Anchor>
-                    </Anchors>
-                  </Button>
                   <Button name="HealBot_BuffCustomColorpickb">
                     <Size>
-                      <AbsDimension x="140" y="22"/>
+                      <AbsDimension x="90" y="22"/>
                     </Size>
                     <Anchors>
                       <Anchor point="TOPLEFT" relativeTo="HealBot_Options_Class_HoTctlName" relativePoint="BOTTOMLEFT">
                         <Offset>
-                          <AbsDimension x="355" y="-63"/>
+                          <AbsDimension x="450" y="-73"/>
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -23743,12 +23873,12 @@
                   </Button>
                   <StatusBar name="HealBot_BuffCustomColorpick">
                     <Size>
-                      <AbsDimension x="140" y="22"/>
+                      <AbsDimension x="90" y="22"/>
                     </Size>
                     <Anchors>
                       <Anchor point="TOPLEFT" relativeTo="HealBot_Options_Class_HoTctlName" relativePoint="BOTTOMLEFT">
                         <Offset>
-                          <AbsDimension x="355" y="-63"/>
+                          <AbsDimension x="450" y="-73"/>
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -23788,6 +23918,110 @@
                       <OnLeave>HealBot_Options_Show_Help("PRESETCOLS",false)</OnLeave>
                     </Scripts>
                   </Button>
+                  <Frame name="HealBot_Options_BuffIconSet" inherits="UIDropDownMenuTemplate">
+                    <Layers>
+                      <Layer level="BACKGROUND">
+                        <FontString name="HealBot_Options_BuffIconSetTxt" text="HEALBOT_SKIN_ICONSET" inherits="GameFontNormal">
+                          <Anchors>
+                            <Anchor point="CENTER">
+                              <Offset>
+                                <AbsDimension x="0" y="25" />
+                              </Offset>
+                            </Anchor>
+                          </Anchors>
+                        </FontString>
+                      </Layer>
+                    </Layers>
+                    <Anchors>
+                      <Anchor point="TOPLEFT" relativeTo="HealBot_Options_Class_HoTctlName" relativePoint="BOTTOMLEFT">
+                        <Offset>
+                          <AbsDimension x="-10" y="-70"/>
+                        </Offset>
+                      </Anchor>
+                    </Anchors>
+                    <Scripts>
+                      <OnLoad>HealBot_Options_UIDropDownMenu_OnLoad(self, 70)</OnLoad>
+                      <OnEnter>HealBot_Options_Show_Help("BUFFSCUSTOMICONSET",true)</OnEnter>
+                      <OnLeave>HealBot_Options_Show_Help("BUFFSCUSTOMICONSET",false)</OnLeave>
+                    </Scripts>
+                  </Frame>
+                  <Button name="HealBot_Options_BuffIconSetCustom" inherits="UIPanelButtonTemplate" text="10">
+                    <Size>
+                      <AbsDimension x="88" y="22"/>
+                    </Size>
+                    <Layers>
+                      <Layer level="BACKGROUND">
+                        <FontString name="HealBot_Options_BuffIconSetCustomText" text="HEALBOT_SKIN_ICONSET" inherits="GameFontNormal">
+                          <Anchors>
+                            <Anchor point="CENTER">
+                              <Offset>
+                                <AbsDimension x="0" y="25" />
+                              </Offset>
+                            </Anchor>
+                          </Anchors>
+                        </FontString>
+                      </Layer>
+                    </Layers>
+                    <Anchors>
+                      <Anchor point="TOP" relativeTo="HealBot_Options_BuffIconSet" relativePoint="TOP">
+                        <Offset>
+                          <AbsDimension x="0" y="-2"/>
+                        </Offset>
+                      </Anchor>
+                    </Anchors>
+                  </Button>
+                  <Frame name="HealBot_Options_CustomBuffIconGlow" inherits="UIDropDownMenuTemplate">
+                    <Layers>
+                      <Layer level="BACKGROUND">
+                        <FontString name="HealBot_Options_CustomBuffIconGlowTxt" text="HEALBOT_SKIN_ICONGLOW" inherits="GameFontNormal">
+                          <Anchors>
+                            <Anchor point="CENTER">
+                              <Offset>
+                                <AbsDimension x="0" y="25" />
+                              </Offset>
+                            </Anchor>
+                          </Anchors>
+                        </FontString>
+                      </Layer>
+                    </Layers>
+                    <Anchors>
+                      <Anchor point="TOPLEFT" relativeTo="HealBot_Options_Class_HoTctlName" relativePoint="BOTTOMLEFT">
+                        <Offset>
+                          <AbsDimension x="85" y="-70"/>
+                        </Offset>
+                      </Anchor>
+                    </Anchors>
+                    <Scripts>
+                      <OnLoad>HealBot_Options_UIDropDownMenu_OnLoad(self, 130)</OnLoad>
+                      <OnEnter>HealBot_Options_Show_Help("BUFFSCUSTOMICONGLOW",true)</OnEnter>
+                      <OnLeave>HealBot_Options_Show_Help("BUFFSCUSTOMICONGLOW",false)</OnLeave>
+                    </Scripts>
+                  </Frame>
+                  <Button name="HealBot_Options_CustomBuffIconGlowCustom" inherits="UIPanelButtonTemplate" text="HEALBOT_WORDS_NONE">
+                      <Size>
+                          <AbsDimension x="148" y="22"/>
+                      </Size>
+                    <Layers>
+                      <Layer level="BACKGROUND">
+                        <FontString name="HealBot_Options_CustomBuffIconGlowTxtC" text="HEALBOT_SKIN_ICONGLOW" inherits="GameFontNormal">
+                          <Anchors>
+                            <Anchor point="CENTER">
+                              <Offset>
+                                <AbsDimension x="0" y="20" />
+                              </Offset>
+                            </Anchor>
+                          </Anchors>
+                        </FontString>
+                      </Layer>
+                    </Layers>
+                    <Anchors>
+                      <Anchor point="TOP" relativeTo="HealBot_Options_CustomBuffIconGlow" relativePoint="TOP">
+                        <Offset>
+                          <AbsDimension x="0" y="-2"/>
+                        </Offset>
+                      </Anchor>
+                    </Anchors>
+                  </Button>
                   <Frame name="HealBot_Options_CustomBuffCol" inherits="UIDropDownMenuTemplate">
                     <Layers>
                       <Layer level="BACKGROUND">
@@ -23805,12 +24039,12 @@
                     <Anchors>
                       <Anchor point="TOPLEFT" relativeTo="HealBot_Options_Class_HoTctlName" relativePoint="BOTTOMLEFT">
                         <Offset>
-                          <AbsDimension x="135" y="-60"/>
+                          <AbsDimension x="245" y="-70"/>
                         </Offset>
                       </Anchor>
                     </Anchors>
                     <Scripts>
-                      <OnLoad>HealBot_Options_UIDropDownMenu_OnLoad(self, 170)</OnLoad>
+                      <OnLoad>HealBot_Options_UIDropDownMenu_OnLoad(self, 155)</OnLoad>
                       <OnEnter>HealBot_Options_Show_Help("BUFFSCUSTOMBARCOLOUR",true)</OnEnter>
                       <OnLeave>HealBot_Options_Show_Help("BUFFSCUSTOMBARCOLOUR",false)</OnLeave>
                     </Scripts>
@@ -23833,9 +24067,9 @@
                       </Layer>
                     </Layers>
                     <Anchors>
-                      <Anchor point="TOPLEFT" relativeTo="HealBot_Options_Class_HoTctlName" relativePoint="BOTTOMLEFT">
+                      <Anchor point="TOP" relativeTo="HealBot_Options_CustomBuffCol" relativePoint="TOP">
                         <Offset>
-                          <AbsDimension x="205" y="-62"/>
+                          <AbsDimension x="0" y="-2"/>
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -24749,19 +24983,6 @@
           </Frame>
 
           <Frame name="HealBot_Options_Panel9" hidden="true" setAllPoints="true">
-            <Layers>
-              <Layer level="OVERLAY">
-                <FontString name="HealBot_Options_InOutSkinStatust" inherits="GameFontNormal">
-                  <Anchors>
-                    <Anchor point="BOTTOM">
-                      <Offset>
-                        <AbsDimension x="0" y="14"/>
-                      </Offset>
-                    </Anchor>
-                  </Anchors>
-                </FontString>
-              </Layer>
-            </Layers>
             <Frames>
               <CheckButton name="HealBot_Options_InOutCompressExport" inherits="HealBotUIPanelCheckButton">
                 <Anchors>
@@ -24940,11 +25161,11 @@
                 </Anchors>
                 <Layers>
                   <Layer level="OVERLAY">
-                    <FontString name="HealBot_Options_ShareSkinStatusf" inherits="GameFontNormalSmall">
+                    <FontString name="HealBot_Options_ShareSkinStatusf" inherits="GameFontNormal">
                       <Anchors>
                         <Anchor point="BOTTOM">
                           <Offset>
-                            <AbsDimension x="0" y="20"/>
+                            <AbsDimension x="0" y="14"/>
                           </Offset>
                         </Anchor>
                       </Anchors>
@@ -25148,11 +25369,11 @@
                 </Anchors>
                 <Layers>
                   <Layer level="OVERLAY">
-                    <FontString name="HealBot_Options_ShareCDbuffStatusf" inherits="GameFontNormalSmall">
+                    <FontString name="HealBot_Options_ShareCDbuffStatusf" inherits="GameFontNormal">
                       <Anchors>
                         <Anchor point="BOTTOM">
                           <Offset>
-                            <AbsDimension x="0" y="20"/>
+                            <AbsDimension x="0" y="14"/>
                           </Offset>
                         </Anchor>
                       </Anchors>
@@ -25303,11 +25524,11 @@
                 </Anchors>
                 <Layers>
                   <Layer level="OVERLAY">
-                    <FontString name="HealBot_Options_ShareBuffsStatusf" inherits="GameFontNormalSmall">
+                    <FontString name="HealBot_Options_ShareBuffsStatusf" inherits="GameFontNormal">
                       <Anchors>
                         <Anchor point="BOTTOM">
                           <Offset>
-                            <AbsDimension x="0" y="20"/>
+                            <AbsDimension x="0" y="14"/>
                           </Offset>
                         </Anchor>
                       </Anchors>
@@ -25458,11 +25679,11 @@
                 </Anchors>
                 <Layers>
                   <Layer level="OVERLAY">
-                    <FontString name="HealBot_Options_ShareSpellsStatusf" inherits="GameFontNormalSmall">
+                    <FontString name="HealBot_Options_ShareSpellsStatusf" inherits="GameFontNormal">
                       <Anchors>
                         <Anchor point="BOTTOM">
                           <Offset>
-                            <AbsDimension x="0" y="20"/>
+                            <AbsDimension x="0" y="14"/>
                           </Offset>
                         </Anchor>
                       </Anchors>
@@ -25613,11 +25834,11 @@
                 </Anchors>
                 <Layers>
                   <Layer level="OVERLAY">
-                    <FontString name="HealBot_Options_SharePresetColsStatusf" inherits="GameFontNormalSmall">
+                    <FontString name="HealBot_Options_SharePresetColsStatusf" inherits="GameFontNormal">
                       <Anchors>
                         <Anchor point="BOTTOM">
                           <Offset>
-                            <AbsDimension x="0" y="20"/>
+                            <AbsDimension x="0" y="14"/>
                           </Offset>
                         </Anchor>
                       </Anchors>

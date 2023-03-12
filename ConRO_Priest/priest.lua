@@ -204,48 +204,60 @@ function ConRO.Priest.Discipline(_, timeShift, currentSpell, gcd, tChosen, pvpCh
 	local _ArcaneTorrent, _ArcaneTorrent_RDY = ConRO:AbilityReady(Racial.ArcaneTorrent, timeShift);
 
 --Abilities
+	local _AngelicFeather, _AngelicFeather_RDY = ConRO:AbilityReady(Ability.AngelicFeather, timeShift);	
 	local _DispelMagic, _DispelMagic_RDY = ConRO:AbilityReady(Ability.DispelMagic, timeShift);
-	local _HolyNova, _HolyNova_RDY																								= ConRO:AbilityReady(Ability.HolyNova, timeShift);
-	local _MindBlast, _MindBlast_RDY																							= ConRO:AbilityReady(Ability.MindBlast, timeShift);
-	local _PainSuppression, _PainSuppression_RDY 																	= ConRO:AbilityReady(Ability.PainSuppression, timeShift);
-	local _Penance, _Penance_RDY 																									= ConRO:AbilityReady(Ability.Penance, timeShift);
-	local _PowerInfusion, _PowerInfusion_RDY 																			= ConRO:AbilityReady(Ability.PowerInfusion, timeShift);
-	local _PowerWordBarrier, _PowerWordBarrier_RDY 																= ConRO:AbilityReady(Ability.PowerWordBarrier, timeShift);
-	local _PowerWordFortitude, _PowerWordFortitude_RDY 														= ConRO:AbilityReady(Ability.PowerWordFortitude, timeShift);
-	local _PowerWordShield, _PowerWordShield_RDY																	= ConRO:AbilityReady(Ability.PowerWordShield, timeShift);
-		local _WeakenedSoul_DEBUFF 																										= ConRO:UnitAura(Debuff.WeakenedSoul, timeShift, 'target', 'HARMFUL');
-	local _PowerWordRadiance, _PowerWordRadiance_RDY															= ConRO:AbilityReady(Ability.PowerWordRadiance, timeShift);
-		local _PowerWordRadiance_CHARGES 																							= ConRO:SpellCharges(_PowerWordRadiance);
-		local _Atonement_BUFF 																												= ConRO:UnitAura(Buff.Atonement, timeShift, 'target', 'HELPFUL');
-		local _Atonement_COUNT		 																										= ConRO:GroupBuffCount(Buff.Atonement);
-		local _Atonement_THRESHOLD																										= ConRO_AtonementBox:GetNumber();
-	local _PsychicScream, _PsychicScream_RDY																			= ConRO:AbilityReady(Ability.PsychicScream, timeShift);
-	local _Rapture, _Rapture_RDY																									= ConRO:AbilityReady(Ability.Rapture, timeShift);
-		local _Rapture_BUFF	 																													= ConRO:Aura(Buff.Rapture, timeShift);
-	local _ShadowWordDeath, _ShadowWordDeath_RDY																	= ConRO:AbilityReady(Ability.ShadowWordDeath, timeShift);
-	local _ShadowWordPain, _ShadowWordPain_RDY 																		= ConRO:AbilityReady(Ability.ShadowWordPain, timeShift);
-		local _ShadowWordPain_DEBUFF 																									= ConRO:TargetAura(Debuff.ShadowWordPain, timeShift + 3);
-		local _PoweroftheDarkSide_BUFF	 																							= ConRO:Aura(Buff.PoweroftheDarkSide, timeShift);
-	local _Shadowfiend, _Shadowfiend_RDY																					= ConRO:AbilityReady(Ability.Shadowfiend, timeShift);
-		local _Shadowfiend_ID																													= select(7, GetSpellInfo(GetSpellInfo(Ability.Shadowfiend)));
-	local _Smite, _Smite_RDY 																											= ConRO:AbilityReady(Ability.Smite, timeShift);
-
-	local _AngelicFeather, _AngelicFeather_RDY																		= ConRO:AbilityReady(Ability.AngelicFeather, timeShift);
-	local _DivineStar, _DivineStar_RDY 																						= ConRO:AbilityReady(Ability.DivineStar, timeShift);
-	local _Evangelism, _Evangelism_RDY, _Evangelism_CD														= ConRO:AbilityReady(Ability.Evangelism, timeShift);
-	local _Halo, _Halo_RDY 																												= ConRO:AbilityReady(Ability.Halo, timeShift);
-	local _Mindbender, _Mindbender_RDY 																						= ConRO:AbilityReady(Ability.Mindbender, timeShift);
-	local _PowerWordSolace, _PowerWordSolace_RDY																	= ConRO:AbilityReady(Ability.PowerWordSolace, timeShift);
-	local _PurgetheWicked, _PurgetheWicked_RDY 																		= ConRO:AbilityReady(Ability.PurgetheWicked, timeShift);
-		local _PurgetheWicked_DEBUFF																									= ConRO:TargetAura(Debuff.PurgetheWicked, timeShift + 3);
-	local _Schism, _Schism_RDY 																										= ConRO:AbilityReady(Ability.Schism, timeShift);
-	local _Mindgames, _Mindgames_RDY																							= ConRO:AbilityReady(Ability.Mindgames, timeShift);
+	local _DivineStar, _DivineStar_RDY = ConRO:AbilityReady(Ability.DivineStar, timeShift);
+		local _DivineStarSC, _DivineStarSC_RDY = ConRO:AbilityReady(Ability.DivineStarSC, timeShift);
+	local _Evangelism, _Evangelism_RDY, _Evangelism_CD = ConRO:AbilityReady(Ability.Evangelism, timeShift);
+	local _Halo, _Halo_RDY = ConRO:AbilityReady(Ability.Halo, timeShift);
+		local _HaloSC, _HaloSC_RDY = ConRO:AbilityReady(Ability.HaloSC, timeShift);
+	local _HolyNova, _HolyNova_RDY = ConRO:AbilityReady(Ability.HolyNova, timeShift);
+	local _Mindbender, _Mindbender_RDY = ConRO:AbilityReady(Ability.Mindbender, timeShift);
+		local _Mindbender_ACTIVE, _Mindbender_DUR = ConRO:Totem(_Mindbender);
+	local _MindBlast, _MindBlast_RDY = ConRO:AbilityReady(Ability.MindBlast, timeShift);
+		local _MindBlast_CHARGE, _MindBlast_MCHARGE, _MindBlast_CHARGECD = ConRO:SpellCharges(_MindBlast);
+	local _Mindgames, _Mindgames_RDY = ConRO:AbilityReady(Ability.Mindgames, timeShift);
+	local _PainSuppression, _PainSuppression_RDY = ConRO:AbilityReady(Ability.PainSuppression, timeShift);
+	local _Penance, _Penance_RDY = ConRO:AbilityReady(Ability.Penance, timeShift);
+		local _DarkReprimand, _DarkReprimand_RDY = ConRO:AbilityReady(Ability.DarkReprimand, timeShift);
+	local _PowerInfusion, _PowerInfusion_RDY = ConRO:AbilityReady(Ability.PowerInfusion, timeShift);
+	local _PowerWordBarrier, _PowerWordBarrier_RDY = ConRO:AbilityReady(Ability.PowerWordBarrier, timeShift);
+	local _PowerWordFortitude, _PowerWordFortitude_RDY = ConRO:AbilityReady(Ability.PowerWordFortitude, timeShift);
+	local _PowerWordShield, _PowerWordShield_RDY = ConRO:AbilityReady(Ability.PowerWordShield, timeShift);
+		local _WeakenedSoul_DEBUFF = ConRO:UnitAura(Debuff.WeakenedSoul, timeShift, 'target', 'HARMFUL');
+	local _PowerWordRadiance, _PowerWordRadiance_RDY = ConRO:AbilityReady(Ability.PowerWordRadiance, timeShift);
+		local _PowerWordRadiance_CHARGES = ConRO:SpellCharges(_PowerWordRadiance);
+		local _Atonement_BUFF = ConRO:UnitAura(Buff.Atonement, timeShift, 'target', 'HELPFUL');
+		local _Atonement_COUNT = ConRO:GroupBuffCount(Buff.Atonement);
+		local _Atonement_THRESHOLD = ConRO_AtonementBox:GetNumber();
+	local _PowerWordSolace, _PowerWordSolace_RDY = ConRO:AbilityReady(Ability.PowerWordSolace, timeShift);
+	local _PsychicScream, _PsychicScream_RDY = ConRO:AbilityReady(Ability.PsychicScream, timeShift);
+	local _PurgetheWicked, _PurgetheWicked_RDY = ConRO:AbilityReady(Ability.PurgetheWicked, timeShift);
+		local _PurgetheWicked_DEBUFF = ConRO:TargetAura(Debuff.PurgetheWicked, timeShift + 3);
+	local _Rapture, _Rapture_RDY = ConRO:AbilityReady(Ability.Rapture, timeShift);
+		local _Rapture_BUFF = ConRO:Aura(Buff.Rapture, timeShift);
+	local _Schism, _Schism_RDY = ConRO:AbilityReady(Ability.Schism, timeShift);
+	local _ShadowCovenant, _ShadowCovenant_RDY = ConRO:AbilityReady(Ability.ShadowCovenant, timeShift);
+		local _ShadowCovenant_BUFF = ConRO:Aura(Buff.ShadowCovenant, timeShift);
+	local _ShadowWordDeath, _ShadowWordDeath_RDY = ConRO:AbilityReady(Ability.ShadowWordDeath, timeShift);
+	local _ShadowWordPain, _ShadowWordPain_RDY = ConRO:AbilityReady(Ability.ShadowWordPain, timeShift);
+		local _ShadowWordPain_DEBUFF = ConRO:TargetAura(Debuff.ShadowWordPain, timeShift + 3);
+		local _PoweroftheDarkSide_BUFF = ConRO:Aura(Buff.PoweroftheDarkSide, timeShift);
+	local _Shadowfiend, _Shadowfiend_RDY = ConRO:AbilityReady(Ability.Shadowfiend, timeShift);
+		local _Shadowfiend_ID = select(7, GetSpellInfo(GetSpellInfo(Ability.Shadowfiend)));
+	local _Smite, _Smite_RDY = ConRO:AbilityReady(Ability.Smite, timeShift);
 
 --Conditions
-	local _is_moving 																															= ConRO:PlayerSpeed();
-	local _enemies_in_melee, _target_in_melee																			= ConRO:Targets("Melee");
-	local _target_in_10yrds 																											= CheckInteractDistance("target", 3);
-	local _can_Execute																														= _Target_Percent_Health < 20;
+	local _is_moving = ConRO:PlayerSpeed();
+	local _enemies_in_melee, _target_in_melee = ConRO:Targets("Melee");
+	local _target_in_10yrds = CheckInteractDistance("target", 3);
+	local _can_Execute = _Target_Percent_Health < 20;
+
+	if _ShadowCovenant_BUFF then
+		_DivineStar, _DivineStar_RDY = _DivineStarSC, _DivineStarSC_RDY;
+		_Halo, _Halo_RDY = _HaloSC, _HaloSC_RDY;
+		_Penance, _Penance_RDY = _DarkReprimand, _DarkReprimand_RDY;
+	end
 
 	ConRO:Atonements(_Atonement_COUNT);
 
@@ -255,73 +267,72 @@ function ConRO.Priest.Discipline(_, timeShift, currentSpell, gcd, tChosen, pvpCh
 	ConRO:AbilityPurge(_ArcaneTorrent, _ArcaneTorrent_RDY and _target_in_melee and ConRO:Purgable());
 	ConRO:AbilityMovement(_AngelicFeather, _AngelicFeather_RDY);
 
-	ConRO:AbilityBurst(_Mindbender, _Mindbender_RDY and _is_Enemy and (tChosen[Passive.Lenience.talentID] or _SpiritShell_BUFF or _Evangelism_CD >= 85));
-	ConRO:AbilityBurst(ids.Glyph.Sha, _Shadowfiend_ID == ids.Glyph.Sha and _Shadowfiend_RDY and _is_Enemy and (tChosen[Passive.Lenience.talentID] or _SpiritShell_BUFF or _Evangelism_CD >= 85) and not tChosen[Passive.Mindbender.talentID]);
-	ConRO:AbilityBurst(ids.Glyph.Voidling, _Shadowfiend_ID == ids.Glyph.Voidling and _Shadowfiend_RDY and _is_Enemy and (tChosen[Passive.Lenience.talentID] or _SpiritShell_BUFF or _Evangelism_CD >= 85) and not tChosen[Passive.Mindbender.talentID]);
-	ConRO:AbilityBurst(ids.Glyph.Lightspawn, _Shadowfiend_ID == ids.Glyph.Lightspawn and _Shadowfiend_RDY and _is_Enemy and (tChosen[Passive.Lenience.talentID] or _SpiritShell_BUFF or _Evangelism_CD >= 85) and not tChosen[Passive.Mindbender.talentID]);
-	ConRO:AbilityBurst(_Shadowfiend, _Shadowfiend_ID == _Shadowfiend and _Shadowfiend_RDY and _is_Enemy and (tChosen[Passive.Lenience.talentID] or _SpiritShell_BUFF or _Evangelism_CD >= 85) and not tChosen[Passive.Mindbender.talentID]);
+	ConRO:AbilityBurst(_Mindbender, _Mindbender_RDY and ConRO:BurstMode(_Mindbender));
+	ConRO:AbilityBurst(ids.Glyph.Sha, _Shadowfiend_ID == ids.Glyph.Sha and _Shadowfiend_RDY and (tChosen[Passive.Lenience.talentID] or _SpiritShell_BUFF or _Evangelism_CD >= 85) and not tChosen[Passive.Mindbender.talentID] and ConRO:BurstMode(_Shadowfiend));
+	ConRO:AbilityBurst(ids.Glyph.Voidling, _Shadowfiend_ID == ids.Glyph.Voidling and _Shadowfiend_RDY and (tChosen[Passive.Lenience.talentID] or _SpiritShell_BUFF or _Evangelism_CD >= 85) and not tChosen[Passive.Mindbender.talentID] and ConRO:BurstMode(_Shadowfiend));
+	ConRO:AbilityBurst(ids.Glyph.Lightspawn, _Shadowfiend_ID == ids.Glyph.Lightspawn and _Shadowfiend_RDY and (tChosen[Passive.Lenience.talentID] or _SpiritShell_BUFF or _Evangelism_CD >= 85) and not tChosen[Passive.Mindbender.talentID] and ConRO:BurstMode(_Shadowfiend));
+	ConRO:AbilityBurst(_Shadowfiend, _Shadowfiend_ID == _Shadowfiend and _Shadowfiend_RDY and (tChosen[Passive.Lenience.talentID] or _SpiritShell_BUFF or _Evangelism_CD >= 85) and not tChosen[Passive.Mindbender.talentID] and ConRO:BurstMode(_Shadowfiend));
 
-	ConRO:AbilityBurst(_PowerInfusion, _PowerInfusion_RDY and ((ConRO:IsSolo() and _Atonement_COUNT < 1) or (ConRO:InParty() and _Atonement_COUNT < _Atonement_THRESHOLD) or (ConRO:InRaid() and _Atonement_COUNT < _Atonement_THRESHOLD)));
-	ConRO:AbilityBurst(_Evangelism, _Evangelism_RDY and ((ConRO:IsSolo() and _Atonement_COUNT == 1) or (ConRO:InParty() and _Atonement_COUNT >= _Atonement_THRESHOLD) or (ConRO:InRaid() and _Atonement_COUNT > _Atonement_THRESHOLD)));
+	ConRO:AbilityBurst(_PowerInfusion, _PowerInfusion_RDY and ((ConRO:IsSolo() and _Atonement_COUNT <= 1) or ((ConRO:InParty() or ConRO:InRaid()) and _Atonement_COUNT < _Atonement_THRESHOLD)));
+	ConRO:AbilityBurst(_Evangelism, _Evangelism_RDY and ((ConRO:IsSolo() and _Atonement_COUNT == 1) or ((ConRO:InParty() or ConRO:InRaid()) and _Atonement_COUNT < _Atonement_THRESHOLD)));
 
 	ConRO:AbilityRaidBuffs(_PowerWordFortitude, _PowerWordFortitude_RDY and not ConRO:RaidBuff(Buff.PowerWordFortitude));
 
-	ConRO:AbilityRaidBuffs(_PowerWordShield, _PowerWordShield_RDY and not _Atonement_BUFF and not _WeakenedSoul_DEBUFF and _Target_Percent_Health > 95 and not is_Enemy and (ConRO:InParty() and _Atonement_COUNT < _Atonement_THRESHOLD) or (ConRO:InRaid() and _Atonement_COUNT < _Atonement_THRESHOLD));
-	ConRO:AbilityRaidBuffs(_PowerWordRadiance, _PowerWordRadiance_RDY and _Atonement_BUFF and not is_Enemy and (ConRO:InParty() and _Atonement_COUNT < _Atonement_THRESHOLD) or (ConRO:InRaid() and _Atonement_COUNT < _Atonement_THRESHOLD));
+	ConRO:AbilityRaidBuffs(_PowerWordShield, _PowerWordShield_RDY and ((ConRO:InParty() or ConRO:InRaid()) and _Atonement_COUNT < _Atonement_THRESHOLD));
+	ConRO:AbilityRaidBuffs(_PowerWordRadiance, _PowerWordRadiance_RDY and ((ConRO:InParty() or ConRO:InRaid()) and _Atonement_COUNT < _Atonement_THRESHOLD));
 
 --Warnings
-	ConRO:Warnings("Refresh Atonement!", _is_Enemy and (ConRO:InParty() and _Atonement_COUNT < _Atonement_THRESHOLD) or (ConRO:InRaid() and _Atonement_COUNT < _Atonement_THRESHOLD));
+	ConRO:Warnings("Refresh Atonement!", _is_Enemy and ((ConRO:InParty() or ConRO:InRaid()) and _Atonement_COUNT < _Atonement_THRESHOLD));
 
 --Rotations
 	if _Rapture_BUFF then
 		if _PowerWordShield_RDY then
 			tinsert(ConRO.SuggestedSpells, _PowerWordShield);
 		end
-	elseif _is_Enemy then
-		if not _in_combat then
-			if _PurgetheWicked_RDY and not _PurgetheWicked_DEBUFF and (currentSpell == _Schism or currentSpell == _MindBlast or currentSpell == _Smite) then
-				tinsert(ConRO.SuggestedSpells, _PurgetheWicked);
-			elseif not tChosen[Ability.PurgetheWicked.talentID] and _ShadowWordPain_RDY and not _ShadowWordPain_DEBUFF and (currentSpell == _Schism or currentSpell == _MindBlast or currentSpell == _Smite) then
-				tinsert(ConRO.SuggestedSpells, _ShadowWordPain);
-			end
-
-			if _Schism_RDY and currentSpell ~= _Schism then
-				tinsert(ConRO.SuggestedSpells, _Schism);
-			end
-
-			if _Penance_RDY then
-				tinsert(ConRO.SuggestedSpells, _Penance);
-			end
-
-			if _MindBlast_RDY and currentSpell ~= _MindBlast then
-				tinsert(ConRO.SuggestedSpells, _MindBlast);
-			end
-
-			if _Smite_RDY and currentSpell ~= _Smite and not _BoonoftheAscended_BUFF then
-				tinsert(ConRO.SuggestedSpells, _Smite);
-			end
-		end
-
-		if _HolyNova_RDY and _enemies_in_melee >= 3 then
-			tinsert(ConRO.SuggestedSpells, _HolyNova);
-		end
-
-		if _ShadowWordDeath_RDY and _can_Execute then
-			tinsert(ConRO.SuggestedSpells, _ShadowWordDeath);
-		end
-
+	else
 		if _PurgetheWicked_RDY and not _PurgetheWicked_DEBUFF then
 			tinsert(ConRO.SuggestedSpells, _PurgetheWicked);
 		elseif not tChosen[Ability.PurgetheWicked.talentID] and _ShadowWordPain_RDY and not _ShadowWordPain_DEBUFF then
 			tinsert(ConRO.SuggestedSpells, _ShadowWordPain);
 		end
 
-		if _Schism_RDY and currentSpell ~= Ability.Schism then
+		if tChosen[Ability.Mindbender.talentID] then
+			if _Mindbender_RDY and ConRO:FullMode(_Mindbender) then
+				tinsert(ConRO.SuggestedSpells, _Mindbender);
+				_Mindbender_RDY = false;
+			end
+		else
+			if _Shadowfiend_RDY and ConRO:FullMode(_Shadowfiend) then
+				if _Shadowfiend_ID == Glyph.Sha then
+					tinsert(ConRO.SuggestedSpells, Glyph.Sha);
+				elseif _Shadowfiend_ID == ids.Glyph.Voidling then
+					tinsert(ConRO.SuggestedSpells, Glyph.Voidling);
+				elseif _Shadowfiend_ID == ids.Glyph.Lightspawn then
+					tinsert(ConRO.SuggestedSpells, Glyph.Lightspawn);
+				else
+					tinsert(ConRO.SuggestedSpells, _Shadowfiend);
+				end
+			end
+		end
+
+		if _MindBlast_RDY and (_MindBlast_CHARGE >= _MindBlast_MCHARGE) and currentSpell ~= _MindBlast then
+			tinsert(ConRO.SuggestedSpells, _MindBlast);
+		end
+
+		if _ShadowCovenant_RDY then
+			tinsert(ConRO.SuggestedSpells, _ShadowCovenant);
+		end
+
+		if _Schism_RDY and currentSpell ~= _Schism then
 			tinsert(ConRO.SuggestedSpells, _Schism);
 		end
 
-		if _Mindgames_RDY then
-			tinsert(ConRO.SuggestedSpells, _Mindgames);
+		if _Penance_RDY then
+			tinsert(ConRO.SuggestedSpells, _Penance);
+		end
+
+		if _ShadowWordDeath_RDY and _can_Execute then
+			tinsert(ConRO.SuggestedSpells, _ShadowWordDeath);
 		end
 
 		if _DivineStar_RDY then
@@ -332,19 +343,19 @@ function ConRO.Priest.Discipline(_, timeShift, currentSpell, gcd, tChosen, pvpCh
 			tinsert(ConRO.SuggestedSpells, _Halo);
 		end
 
-		if _Penance_RDY then
-			tinsert(ConRO.SuggestedSpells, _Penance);
+		if _MindBlast_RDY and currentSpell ~= _MindBlast then
+			tinsert(ConRO.SuggestedSpells, _MindBlast);
 		end
 
 		if _PowerWordSolace_RDY then
 			tinsert(ConRO.SuggestedSpells, _PowerWordSolace);
 		end
 
-		if _MindBlast_RDY and currentSpell ~= _MindBlast then
-			tinsert(ConRO.SuggestedSpells, _MindBlast);
+		if _Mindgames_RDY then
+			tinsert(ConRO.SuggestedSpells, _Mindgames);
 		end
 
-		if _Smite_RDY and not _BoonoftheAscended_BUFF then
+		if _Smite_RDY then
 			tinsert(ConRO.SuggestedSpells, _Smite);
 		end
 	end
@@ -656,8 +667,12 @@ function ConRO.Priest.Shadow(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 --Warnings
 
 --Rotations
-	if select(2, ConRO:EndChannel()) == _VoidTorrent and select(1, ConRO:EndChannel()) > 1 then
+	if select(2, ConRO:EndChannel()) == _VoidTorrent and select(1, ConRO:EndChannel()) > 0.5 then
 		tinsert(ConRO.SuggestedSpells, _VoidTorrent);
+	end
+
+	if select(2, ConRO:EndChannel()) == _MindFlayInsanity and select(1, ConRO:EndChannel()) > 0.5 then
+		tinsert(ConRO.SuggestedSpells, _MindFlayInsanity);
 	end
 
 	if _Shadowform_RDY and not _Shadowform_FORM and not _Voidform_BUFF then
@@ -761,6 +776,11 @@ function ConRO.Priest.Shadow(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 		end
 	end
 
+	if _VoidTorrent_RDY and _VampiricTouch_DEBUFF and _ShadowWordPain_DEBUFF and ConRO:FullMode(_VoidTorrent) then
+		tinsert(ConRO.SuggestedSpells, _VoidTorrent);
+		_VoidTorrent_RDY = false;
+	end
+
 	if _VampiricTouch_RDY and (not _VampiricTouch_DEBUFF or (tChosen[Passive.Misery.talentID] and not _ShadowWordPain_DEBUFF)) and currentSpell ~= _VampiricTouch and ConRO.lastSpellId ~= _ShadowCrash and (not tChosen[Ability.ShadowCrash.talentID] or (tChosen[Ability.ShadowCrash.talentID] and _ShadowCrash_CD >= (_VampiricTouch_DUR + 1))) then
 		tinsert(ConRO.SuggestedSpells, _VampiricTouch);
 		_VampiricTouch_RDY = false;
@@ -801,12 +821,7 @@ function ConRO.Priest.Shadow(_, timeShift, currentSpell, gcd, tChosen, pvpChosen
 		_DarkVoid_RDY = false;
 	end
 
-	if _VoidTorrent_RDY and (_Insanity <= 35) and _VampiricTouch_DEBUFF and _ShadowWordPain_DEBUFF and ConRO:FullMode(_VoidTorrent) then
-		tinsert(ConRO.SuggestedSpells, _VoidTorrent);
-		_VoidTorrent_RDY = false;
-	end
-
-	if _MindFlayInsanity_RDY and _MindFlayInsanity_BUFF and select(2, ConRO:EndChannel()) ~= _MindFlayInsanity and tChosen[Passive.ScreamsoftheVoid.talentID] then
+	if _MindFlayInsanity_RDY and _MindFlayInsanity_BUFF and tChosen[Passive.ScreamsoftheVoid.talentID] then
 		tinsert(ConRO.SuggestedSpells, _MindFlayInsanity);
 	end
 

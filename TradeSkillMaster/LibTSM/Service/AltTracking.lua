@@ -176,10 +176,14 @@ function private.UpdateDB()
 					tinsert(private.characterFactionrealmCache, cacheKey)
 				end
 				for levelItemString, quantity in pairs(data) do
-					if key == "auctionQuantity" then
-						auctionQuantity[levelItemString] = (auctionQuantity[levelItemString] or 0) + quantity
+					if quantity <= 0 then
+						data[levelItemString] = nil
+					else
+						if key == "auctionQuantity" then
+							auctionQuantity[levelItemString] = (auctionQuantity[levelItemString] or 0) + quantity
+						end
+						totalQuantity[levelItemString] = (totalQuantity[levelItemString] or 0) + quantity
 					end
-					totalQuantity[levelItemString] = (totalQuantity[levelItemString] or 0) + quantity
 				end
 			end
 		end
@@ -188,7 +192,7 @@ function private.UpdateDB()
 		for character, pendingQuantity in pairs(data) do
 			local isValid = true
 			for levelItemString, quantity in pairs(pendingQuantity) do
-				if type(quantity) ~= "number" then
+				if type(quantity) ~= "number" or quantity < 0 then
 					isValid = false
 					break
 				end

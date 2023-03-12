@@ -22,10 +22,12 @@ local ConRO_Priest, ids = ...;
 		DesperatePrayer = {spellID = 19236},
 		DispelMagic = {spellID = 528, talentID = 103867},
 		DivineStar = {spellID = 110744, talentID = 103831},
+			DivineStarSC = {spellID = 122121, talentID = 103831},
 		DominantMind = {spellID = 205364, talentID = 103678},
 		Fade = {spellID = 586},
 		FlashHeal = {spellID = 2061},
 		Halo = {spellID = 120517, talentID = 103830},
+			HaloSC = {spellID = 120644, talentID = 103830},
 		HolyNova = {spellID = 132157, talentID = 103851},
 		LeapofFaith = {spellID = 73325, talentID = 103868},
 		Levitate = {spellID = 1706},
@@ -58,6 +60,7 @@ local ConRO_Priest, ids = ...;
 		Mindbender = {spellID = 123040, talentID = 103710},
 		PainSuppression = {spellID = 33206, talentID = 103713},
 		Penance = {spellID = 47540},
+			DarkReprimand = {spellID = 400169, talentID = 103706},
 		PowerWordBarrier = {spellID = 62618, talentID = 103687},
 		PowerWordRadiance = {spellID = 194509, talentID = 103722},
 		PowerWordSolace = {spellID = 129250, talentID = 103716},
@@ -165,6 +168,7 @@ local ConRO_Priest, ids = ...;
 		PowerWordFortitude = 21562,
 		PowerWordShield = 17,
 		Rapture = 47536,
+		ShadowCovenant = 322105,
 		SpiritShell = 109964,
 	}
 	ids.Disc_Debuff = {

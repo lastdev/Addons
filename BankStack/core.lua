@@ -119,20 +119,40 @@ function core:OnInitialize()
 		self.setup_config()
 	end
 
-	self:RegisterEvent("BANKFRAME_OPENED")
-	self:RegisterEvent("BANKFRAME_CLOSED")
-	if self.has_guild_bank then
-		self:RegisterAddonHook("Blizzard_GuildBankUI", function()
-			self.guild_bank_open = GuildBankFrame and GuildBankFrame:IsVisible()
-			GuildBankFrame:HookScript("OnShow", function()
+	if Enum.PlayerInteractionType then
+		-- Retail and Wrath
+		function core.PLAYER_INTERACTION_MANAGER_FRAME_SHOW(_, event, id)
+			if id == Enum.PlayerInteractionType.Banker then
+				self.bank_open = true
+				self.events:Fire("Bank_Open")
+			elseif id == Enum.PlayerInteractionType.GuildBanker then
 				self.guild_bank_open = true
 				self.events:Fire("GuildBank_Open")
-			end)
-			GuildBankFrame:HookScript("OnHide", function()
+			end
+		end
+		function core.PLAYER_INTERACTION_MANAGER_FRAME_HIDE(_, event, id)
+			if id == Enum.PlayerInteractionType.Banker then
+				self.bank_open = false
+				self.events:Fire("Bank_Close")
+			elseif id == Enum.PlayerInteractionType.GuildBanker then
 				self.guild_bank_open = false
 				self.events:Fire("GuildBank_Close")
-			end)
-		end)
+			end
+		end
+		self:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW")
+		self:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE")
+	else
+		-- Classic Era (doesn't include guild bank)
+		function core.BANKFRAME_OPENED()
+			self.bank_open = true
+			self.events:Fire("Bank_Open")
+		end
+		function core.BANKFRAME_CLOSED()
+			self.bank_open = false
+			self.events:Fire("Bank_Close")
+		end
+		self:RegisterEvent("BANKFRAME_OPENED")
+		self:RegisterEvent("BANKFRAME_CLOSED")
 	end
 	self:RegisterEvent("ADDON_LOADED")
 end
@@ -283,39 +303,70 @@ end
 do
 	local tooltip
 	function core.CheckTooltipFor(bag, slot, text)
-		if not tooltip then
-			tooltip = CreateFrame("GameTooltip", "BankStackTooltip", nil, "GameTooltipTemplate")
-			tooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
-		end
-		tooltip:ClearLines()
-		if slot and not bag then
-			-- just showing tooltip for an itemid
-			-- uses rather innocent checking so that slot can be a link or an itemid
-			local link = tostring(slot) -- so that ":match" is guaranteed to be okay
-			if not link:match("item:") then
-				link = "item:"..link
-			end
-			tooltip:SetHyperlink(link)
-		elseif is_guild_bank_bag(bag) then
-			tooltip:SetGuildBankItem(bag-50, slot)
-		else
-			-- This is just ridiculous... since 3.3, SetBagItem doesn't work in the base
-			-- bank slot or the keyring since they're not real bags.
-			if bag == BANK_CONTAINER then
-				tooltip:SetInventoryItem("player", BankButtonIDToInvSlotID(slot, nil))
-			elseif bag == REAGENTBANK_CONTAINER then
-				tooltip:SetInventoryItem("player", ReagentBankButtonIDToInvSlotID(slot))
+		if _G.C_TooltipInfo then
+			-- retail
+			local info
+			if slot and not bag then
+				if type(slot) == "string" then
+					info = C_TooltipInfo.GetHyperlink(slot)
+				else
+					info = C_TooltipInfo.GetItemByID(slot)
+				end
+			elseif is_guild_bank_bag(bag) then
+				info = C_TooltipInfo.GetGuildBankItem(bag - 50, slot)
 			else
-				tooltip:SetBagItem(bag, slot)
+				if bag == BANK_CONTAINER then
+					info = C_TooltipInfo.GetInventoryItem("player", BankButtonIDToInvSlotID(slot, nil))
+				elseif bag == REAGENTBANK_CONTAINER then
+					info = C_TooltipInfo.GetInventoryItem("player", ReagentBankButtonIDToInvSlotID(slot))
+				else
+					info = C_TooltipInfo.GetBagItem(bag, slot)
+				end
 			end
+			if not info then return false end -- got reports of this, but haven't been able to reproduce it
+			TooltipUtil.SurfaceArgs(info)
+			for _, line in ipairs(info.lines) do
+				TooltipUtil.SurfaceArgs(line)
+				if line.leftText and string.match(line.leftText, text) then
+					return true
+				end
+			end
+			return false
+		else
+			if not tooltip then
+				tooltip = CreateFrame("GameTooltip", "BankStackTooltip", nil, "GameTooltipTemplate")
+				tooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
+			end
+			tooltip:ClearLines()
+			if slot and not bag then
+				-- just showing tooltip for an itemid
+				-- uses rather innocent checking so that slot can be a link or an itemid
+				local link = tostring(slot) -- so that ":match" is guaranteed to be okay
+				if not link:match("item:") then
+					link = "item:"..link
+				end
+				tooltip:SetHyperlink(link)
+			elseif is_guild_bank_bag(bag) then
+				tooltip:SetGuildBankItem(bag-50, slot)
+			else
+				-- This is just ridiculous... since 3.3, SetBagItem doesn't work in the base
+				-- bank slot or the keyring since they're not real bags.
+				if bag == BANK_CONTAINER then
+					tooltip:SetInventoryItem("player", BankButtonIDToInvSlotID(slot, nil))
+				elseif bag == REAGENTBANK_CONTAINER then
+					tooltip:SetInventoryItem("player", ReagentBankButtonIDToInvSlotID(slot))
+				else
+					tooltip:SetBagItem(bag, slot)
+				end
+			end
+			for i=2, tooltip:NumLines() do
+				local left = _G["BankStackTooltipTextLeft"..i]
+				--local right = _G["BankStackTooltipTextRight"..i]
+				if left and left:IsShown() and string.match(left:GetText(), text) then return true end
+				--if right and right:IsShown() and string.match(right:GetText(), text) then return true end
+			end
+			return false
 		end
-		for i=2, tooltip:NumLines() do
-			local left = _G["BankStackTooltipTextLeft"..i]
-			--local right = _G["BankStackTooltipTextRight"..i]
-			if left and left:IsShown() and string.match(left:GetText(), text) then return true end
-			--if right and right:IsShown() and string.match(right:GetText(), text) then return true end
-		end
-		return false
 	end
 end
 
@@ -582,15 +633,6 @@ function core:ADDON_LOADED(event, addon)
         hooks[addon]()
         hooks[addon] = nil
     end
-end
-
-function core:BANKFRAME_OPENED()
-	self.bank_open = true
-	self.events:Fire("Bank_Open")
-end
-function core:BANKFRAME_CLOSED()
-	self.bank_open = false
-	self.events:Fire("Bank_Close")
 end
 
 local moves = {--[[encode_move(encode_bagslot(),encode_bagslot(target)),. ..--]]}

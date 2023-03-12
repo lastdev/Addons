@@ -3,7 +3,7 @@
 
                                           Dark Soil Tillers
 
-                                      v2.06 - 31st January 2023
+                                       v2.12 - 10th March 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -71,8 +71,11 @@ if ns.locale == "deDE" then
 	L["Under the tree.\nIn front of Thunder"] = "Unter dem Baum.\nVor Thunnnder"
 	L["Under the bridge"] = "Unter der Brücke"
 	L["Inside the building"] = "Im Gebäude"
+	L["Descend into the Springtail Crag"] = "Steigen Sie in den Sprungschweifhöhlen geht"
 	L["Descend into the Springtail Warren"] = "Steigen Sie in den Sprungschweifebau hinab"
 	L["Standing under a tree"] = "Unter einem Baum stehen"
+	L["Same colour as the ground"] = "Gleiche farbe wie der schmutz"
+	L["At the entrance"] = "Am Eingang"
 	L["Sho"] = "Sho"
 	L["Old Hillpaw"] = "Der alte Hügelpranke"
 	L["Ella"] = "Ella"
@@ -88,10 +91,11 @@ if ns.locale == "deDE" then
 	L["Battle Horn"] = "Schlachthorn"
 	L["Ghostly Pandaren Craftsman"] = "Geisterhafter Pandarenhandwerker"
 	L["Cache of Pilfered Goods"] = "Truhe mit geklauten Waren"
+	L["Forgotten Lockbox"] = "Vergessene Schließkassette"
 	L["Show the Dark Soil"] = "Zeige den Dunklen Erde"
-	L["AddOn Description"] = ns.colour.plaintext .."Hilft dir bei " ..ns.colour.highlight .."Dunkle Erde"
-			..ns.colour.plaintext .." und " ..ns.colour.highlight .."Die Ackerbauern" ..ns.colour.plaintext
-			.." im Tal der Vier Winde"
+	L["AddOn Description"] = ns.colour.plaintext .."Hilft dir bei " ..ns.colour.highlight
+		.."Dunkle Erde" ..ns.colour.plaintext .." und " ..ns.colour.highlight .."Die Ackerbauern"
+		..ns.colour.plaintext .." im Tal der Vier Winde"
 	L["Icon Selection"] = "Symbolauswahl"
 	L["Icon Scale"] = "Symbolskalierung"
 	L["The scale of the icons"] = "Die Skalierung der Symbole"
@@ -132,8 +136,11 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Under the tree.\nIn front of Thunder"] = "Debajo del árbol. Delante de Trueno"
 	L["Under the bridge"] = "Bajo el puente"
 	L["Inside the building"] = "Dentro del edificio"
+	L["Descend into the Springtail Crag"] = "Desciende a la madriguera de los Risco Cola Saltarina"
 	L["Descend into the Springtail Warren"] = "Desciende a la madriguera de los Cola Saltarina"
 	L["Standing under a tree"] = "De pie debajo de un árbol"
+	L["Same colour as the ground"] = "Del mismo color que el suelo"
+	L["At the entrance"] = "En la entrada"
 	L["Sho"] = "Sho"
 	L["Old Hillpaw"] = "Viejo Zarpa Collado"
 	L["Ella"] = "Ella"
@@ -149,10 +156,11 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Battle Horn"] = "Cuerno de batalla"
 	L["Ghostly Pandaren Craftsman"] = "Artesano pandaren fantasmal"
 	L["Cache of Pilfered Goods"] = "Alijo de bienes trincados"
+	L["Forgotten Lockbox"] = "Arcón Olvidado"
 	L["Show the Dark Soil"] = "Mostrar la Tierra Oscura"
-	L["AddOn Description"] = ns.colour.plaintext .."Te ayuda co " ..ns.colour.highlight .."Tierra Oscura"
-			..ns.colour.plaintext .." y " ..ns.colour.highlight .."Los Labradores" ..ns.colour.plaintext
-			.." en el Valle de los Cuatro Vientos"
+	L["AddOn Description"] = ns.colour.plaintext .."Te ayuda co " ..ns.colour.highlight
+		.."Tierra Oscura" ..ns.colour.plaintext .." y " ..ns.colour.highlight .."Los Labradores"
+		..ns.colour.plaintext .." en el Valle de los Cuatro Vientos"
 	L["Icon Selection"] = "Selección de iconos"
 	L["Icon Scale"] = "Escala de icono"
 	L["The scale of the icons"] = "La escala de los iconos"
@@ -195,8 +203,11 @@ elseif ns.locale == "frFR" then
 	L["Under the tree.\nIn front of Thunder"] = "Sous l'arbre. Devant Tonnerre"
 	L["Under the bridge"] = "Sous le pont"
 	L["Inside the building"] = "À l'intérieur du bâtiment"
+	L["Descend into the Springtail Crag"] = "Descendez dans la combe des Queubrioles"
 	L["Descend into the Springtail Warren"] = "Descendez dans la garenne des queubriole"
 	L["Standing under a tree"] = "Debout sous un arbre"
+	L["Same colour as the ground"] = "De la même couleur que le sol"
+	L["At the entrance"] = "À l'entrée"
 	L["Sho"] = "Sho"
 	L["Old Hillpaw"] = "Vieux Patte des Hauts"
 	L["Ella"] = "Ella"
@@ -212,10 +223,11 @@ elseif ns.locale == "frFR" then
 	L["Battle Horn"] = "Cor de bataille"
 	L["Ghostly Pandaren Craftsman"] = "Artisan pandaren fantomatique"
 	L["Cache of Pilfered Goods"] = "Cache de fournitures chapardées"
+	L["Forgotten Lockbox"] = "Coffret Oublié"
 	L["Show the Dark Soil"] = "Montre la Terre Sombre"
-	L["AddOn Description"] = ns.colour.plaintext .."Vous aide avec " ..ns.colour.highlight .."Terre Sombre"
-			..ns.colour.plaintext .." et " ..ns.colour.highlight .."Laboureurs" ..ns.colour.plaintext
-			.." dans la Vallée des Quatre vents"
+	L["AddOn Description"] = ns.colour.plaintext .."Vous aide avec " ..ns.colour.highlight
+		.."Terre Sombre" ..ns.colour.plaintext .." et " ..ns.colour.highlight .."Laboureurs"
+		..ns.colour.plaintext .." dans la Vallée des Quatre vents"
 	L["Icon Selection"] = "Sélection d'icônes"
 	L["Icon Scale"] = "Echelle de l’icône"
 	L["The scale of the icons"] = "L'échelle des icônes"
@@ -259,8 +271,11 @@ elseif ns.locale == "itIT" then
 	L["Under the bridge"] = "Sotto il ponte"
 	L["Inside the building"] = "All'interno dell'edificio"
 	L["Inside the building"] = "À l'intérieur du bâtiment"
-	L["Descend into the Springtail Warren"] = "Scendi nella tana del Codalesta"
+	L["Descend into the Springtail Crag"] = "Scendi nella Rupe dei Codalesta"
+	L["Descend into the Springtail Warren"] = "Scendi nella Tana del Codalesta"
 	L["Standing under a tree"] = "In piedi sotto un albero"
+	L["Same colour as the ground"] = "Lo stesso colore del terreno"
+	L["At the entrance"] = "All'entrata"
 	L["Sho"] = "Sho"
 	L["Old Hillpaw"] = "Vecchio Zampa Brulla"
 	L["Ella"] = "Ella"
@@ -276,6 +291,7 @@ elseif ns.locale == "itIT" then
 	L["Battle Horn"] = "Corno da Battaglia"
 	L["Ghostly Pandaren Craftsman"] = "Artigiano Spettrale Pandaren"
 	L["Cache of Pilfered Goods"] = "Cassa di Beni Rubati"
+	L["Forgotten Lockbox"] = "Scrigno Dimenticato"
 	L["Show the Dark Soil"] = "Mostra la Terreno Smosso"
 	L["AddOn Description"] = ns.colour.plaintext .."Ti aiuta con " ..ns.colour.highlight .."Terra Oscura"
 			..ns.colour.plaintext .." e " ..ns.colour.highlight .."Coltivatori" ..ns.colour.plaintext
@@ -322,8 +338,11 @@ elseif ns.locale == "koKR" then
 	L["Under the tree.\nIn front of Thunder"] = "나무 아래. 우레 앞에서."
 	L["Under the bridge"] = "다리 아래"
 	L["Inside the building"] = "건물 내부"
+	L["Descend into the Springtail Crag"] = "있는 껑충꼬리 바위굴 처로 내려가세요"
 	L["Descend into the Springtail Warren"] = "껑충꼬리 은신처로 내려가세요"
 	L["Standing under a tree"] = "나무 아래 서"
+	L["Same colour as the ground"] = "땅과 같은 색"
+	L["At the entrance"] = "입구에서"
 	L["Sho"] = "쇼"
 	L["Old Hillpaw"] = "늙은 힐포우"
 	L["Ella"] = "엘라"
@@ -340,10 +359,11 @@ elseif ns.locale == "koKR" then
 	L["Battle Horn"] = "전투 뿔피리"
 	L["Ghostly Pandaren Craftsman"] = "유령 판다렌 장인"
 	L["Cache of Pilfered Goods"] = "도둑맞은 물품이 든 상자"
+	L["Forgotten Lockbox"] = "잊혀진 금고"
 	L["Show the Dark Soil"] = "검은 토양 보여줘"
 	L["AddOn Description"] = ns.colour.plaintext .."네 바람의 계곡에서 " ..ns.colour.highlight .."농사꾼 연합"
-			..ns.colour.plaintext .." 및 " ..ns.colour.highlight .."검은 토양" ..ns.colour.plaintext
-			.." 에 대한 도움말"
+		..ns.colour.plaintext .." 및 " ..ns.colour.highlight .."검은 토양" ..ns.colour.plaintext
+		.." 에 대한 도움말"
 	L["Icon Selection"] = "아이콘 선택"
 	L["Icon Scale"] = "아이콘 크기 비율"
 	L["The scale of the icons"] = "아이콘의 크기 비율입니다"
@@ -384,8 +404,11 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Under the tree.\nIn front of Thunder"] = "Debaixo da árvore. Na frente de Trovão"
 	L["Under the bridge"] = "Debaixo da ponte"
 	L["Inside the building"] = "Dentro do prédio"
-	L["Descend into the Springtail Warren"] = "Desça para o labirinto Cauda-de-mola"
+	L["Descend into the Springtail Crag"] = "Desça para o Rochedo Cauda-de-mola"
+	L["Descend into the Springtail Warren"] = "Desça para o Labirinto Cauda-de-mola"
 	L["Standing under a tree"] = "De pé debaixo de uma árvore"
+	L["Same colour as the ground"] = "Da mesma cor do chão"
+	L["At the entrance"] = "Na entrada"
 	L["Sho"] = "Sho"
 	L["Old Hillpaw"] = "Velho Pata do Monte"
 	L["Ella"] = "Ella"
@@ -401,10 +424,11 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Battle Horn"] = "Trombeta de Batalha"
 	L["Ghostly Pandaren Craftsman"] = "Artesão Pandaren Fantasmagórico"
 	L["Cache of Pilfered Goods"] = "Baú de Mercadorias Pilhadas"
+	L["Forgotten Lockbox"] = "Cofre Esquecido"
 	L["Show the Dark Soil"] = "Mostrar o Solo Negro"
-	L["AddOn Description"] = ns.colour.plaintext .."Ajuda você com " ..ns.colour.highlight .."Solo Escuro"
-			..ns.colour.plaintext .." e " ..ns.colour.highlight .."Os Lavradores" ..ns.colour.plaintext
-			.." no Vale dos Quatro Ventos"
+	L["AddOn Description"] = ns.colour.plaintext .."Ajuda você com " ..ns.colour.highlight
+		.."Solo Escuro" ..ns.colour.plaintext .." e " ..ns.colour.highlight .."Os Lavradores"
+		..ns.colour.plaintext .." no Vale dos Quatro Ventos"
 	L["Icon Selection"] = "Seleção de ícones"
 	L["Icon Scale"] = "Escala de Ícone"
 	L["The scale of the icons"] = "A escala dos ícones"
@@ -447,8 +471,11 @@ elseif ns.locale == "ruRU" then
 	L["Under the tree.\nIn front of Thunder"] = "Под деревом.\nПеред Гром"
 	L["Under the bridge"] = "Под мостом"
 	L["Inside the building"] = "Внутри здания"
+	L["Descend into the Springtail Crag"] = "Спускайтесь в Утес Прыгохвостов"
 	L["Descend into the Springtail Warren"] = "Спускайтесь в лабиринт Прыгохвост"
 	L["Standing under a tree"] = "Стоя под деревом"
+	L["Same colour as the ground"] = "Тот же цвет, что и земля"
+	L["At the entrance"] = "На входе"
 	L["Sho"] = "Шо"
 	L["Old Hillpaw"] = "Старик Горная Лапа"
 	L["Ella"] = "Элла"
@@ -465,10 +492,11 @@ elseif ns.locale == "ruRU" then
 	L["Battle Horn"] = "Боевой рог"
 	L["Ghostly Pandaren Craftsman"] = "Призрачный пандарен-ремесленник"
 	L["Cache of Pilfered Goods"] = "Груда украденных товаров"
+	L["Forgotten Lockbox"] = "Позабытый ларец"
 	L["Show the Dark Soil"] = "Показать Темная Земля"
-	L["AddOn Description"] = ns.colour.plaintext .."Помогает вам с " ..ns.colour.highlight .."Темная Земля"
-			..ns.colour.plaintext .." и " ..ns.colour.highlight .."Земледельцами" ..ns.colour.plaintext
-			.." в Долине Четырех Ветров"
+	L["AddOn Description"] = ns.colour.plaintext .."Помогает вам с " ..ns.colour.highlight
+		.."Темная Земля" ..ns.colour.plaintext .." и " ..ns.colour.highlight .."Земледельцами"
+		..ns.colour.plaintext .." в Долине Четырех Ветров"
 	L["Icon Selection"] = "Выбор Значка"
 	L["Icon Scale"] = "Масштаб Значка"
 	L["The scale of the icons"] = "Масштаб для Значков"
@@ -510,8 +538,11 @@ elseif ns.locale == "zhCN" then
 	L["Under the tree.\nIn front of Thunder"] = "在树下。在雷霆前面"
 	L["Under the bridge"] = "在桥下"
 	L["Inside the building"] = "建筑物内"
+	L["Descend into the Springtail Crag"] = "下降到的弹尾峭壁巢穴" -- 弹尾峭壁
 	L["Descend into the Springtail Warren"] = "下降到弹尾者巢穴"
 	L["Standing under a tree"] = "站在树下"
+	L["Same colour as the ground"] = "与地面颜色相同"
+	L["At the entrance"] = "在入口"
 	L["Sho"] = "阿烁"
 	L["Old Hillpaw"] = "老农山掌"
 	L["Ella"] = "艾拉"
@@ -528,9 +559,10 @@ elseif ns.locale == "zhCN" then
 	L["Battle Horn"] = "战斗号角"
 	L["Ghostly Pandaren Craftsman"] = "幽灵熊猫人工匠"
 	L["Cache of Pilfered Goods"] = "箱被偷的货物"
+	L["Forgotten Lockbox"] = "被遗忘的锁箱"
 	L["Show the Dark Soil"] = "显示黑色泥土"
 	L["AddOn Description"] = ns.colour.plaintext .."四风谷的" ..ns.colour.highlight .."分蘖"
-			..ns.colour.plaintext .."和" ..ns.colour.highlight .."黑土"
+		..ns.colour.plaintext .."和" ..ns.colour.highlight .."黑土"
 	L["Icon Selection"] = "图标选择"
 	L["Icon Scale"] = "图示大小"
 	L["The scale of the icons"] = "图示的大小"
@@ -571,8 +603,11 @@ elseif ns.locale == "zhTW" then
 	L["Under the tree.\nIn front of Thunder"] = "在樹下。在雷霆前面"
 	L["Under the bridge"] = "在橋下"
 	L["Inside the building"] = "建築物內"
+	L["Descend into the Springtail Crag"] = "下降到的彈尾峭壁巢穴"
 	L["Descend into the Springtail Warren"] = "下降到彈尾者巢穴"
 	L["Standing under a tree"] = "站在樹下"
+	L["Same colour as the ground"] = "與地面顏色相同"
+	L["At the entrance"] = "在入口"
 	L["Sho"] = "阿爍"
 	L["Old Hillpaw"] = "老農山掌"
 	L["Ella"] = "艾拉"
@@ -589,9 +624,10 @@ elseif ns.locale == "zhTW" then
 	L["Battle Horn"] = "戰鬥號角"
 	L["Ghostly Pandaren Craftsman"] = "幽靈熊貓人工匠"
 	L["Cache of Pilfered Goods"] = "箱被偷的貨物"
+	L["Forgotten Lockbox"] = "被遺忘的鎖箱"
 	L["Show the Dark Soil"] = "顯示黑色泥土"
 	L["AddOn Description"] = ns.colour.plaintext .."幫助四風谷的" ..ns.colour.highlight .."分蘗"
-			..ns.colour.plaintext .."和" ..ns.colour.highlight .."黑土"
+		..ns.colour.plaintext .."和" ..ns.colour.highlight .."黑土"
 	L["Icon Selection"] = "圖標選擇"
 	L["Icon Scale"] = "圖示大小"
 	L["The scale of the icons"] = "圖示的大小"
@@ -622,13 +658,12 @@ else
 	if ns.locale == "enUS" then
 		L["Grey"] = "Gray"
 	end
-	L["AddOn Description"] = ns.colour.plaintext .."Helps you with the " ..ns.colour.highlight .."Dark Soil"
-			..ns.colour.plaintext .." and " ..ns.colour.highlight .."The Tillers" ..ns.colour.plaintext
-			.." in the Valley of the Four Winds"
+	L["AddOn Description"] = ns.colour.plaintext .."Helps you with the " ..ns.colour.highlight 
+			.."Dark Soil" ..ns.colour.plaintext .." and " ..ns.colour.highlight .."The Tillers"
+			..ns.colour.plaintext .." in the Valley of the Four Winds"
 	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
 end
 
--- I use this for debugging
 local function printPC( message )
 	if message then
 		DEFAULT_CHAT_FRAME:AddMessage( ns.colour.prefix ..L["Dark Soil Tillers"] ..": " ..ns.colour.plaintext
@@ -711,10 +746,11 @@ function pluginHandler:OnEnter(mapFile, coord)
 				GameTooltip:AddLine( ns.colour.plaintext ..L[third] )
  			end
 		end
-	elseif ( dataType == "S" ) or ( dataType == "V" ) then
-		GameTooltip:SetText( ns.colour.prefix ..L[first] )
-		if second then
-			GameTooltip:AddLine(ns.colour.plaintext ..L[second])
+	elseif ( dataType == "S" ) then
+		local itemName = C_Item.GetItemNameByID( second ) or "Staff of the Hidden Master"
+		GameTooltip:SetText(ns.colour.prefix ..itemName)
+		if third then
+			GameTooltip:AddLine(ns.colour.plaintext ..L[third])
 		end
 	else
 		GameTooltip:SetText( ns.colour.prefix ..L["Dark Soil"] )
@@ -747,7 +783,7 @@ do
 	local function iterator(t, prev)
 		if not t or ns.CurrentMap == ns.pandaria then return end
 		local coord, v = next(t, prev)
-		local aId, completed, iconIndex, quest
+		local aId, completed, iconIndex, quest, found;
 		while coord do
 			if v then
 				if ( v[1] == "N" ) then
@@ -794,6 +830,11 @@ do
 					if quest then
 						if C_QuestLog.IsQuestFlaggedCompleted(quest) == true then
 							-- don't bother showing
+						elseif ( quest == 31292 ) or ( quest == 31406 ) then
+							if not _G["HandyNotes_EAPandariaDB"] then
+								return coord, nil, ns.texturesSpecial[ns.db.icon_choiceBonus],
+									ns.db.icon_scale * ns.scaling[ns.db.icon_choiceBonus], ns.db.icon_alpha
+							end
 						else
 							return coord, nil, ns.texturesSpecial[ns.db.icon_choiceBonus],
 									ns.db.icon_scale * ns.scaling[ns.db.icon_choiceBonus], ns.db.icon_alpha
@@ -802,9 +843,9 @@ do
 						return coord, nil, ns.texturesSpecial[ns.db.icon_choiceBonus],
 								ns.db.icon_scale * ns.scaling[ns.db.icon_choiceBonus], ns.db.icon_alpha
 					end
-				elseif ( v[1] == "D" ) and ( ns.db.icon_darkSoil == true ) then
+				elseif ( ( v[1] == "D" ) or ( v[1] == "V" ) ) and ( ns.db.icon_darkSoil == true ) then
 					if ns.author then
-						if v[2] and v[2] == "Author" then
+						if v[2] and ( v[2] == "Author" ) then
 							return coord, nil, ns.textures[10],
 									ns.db.icon_scale * ns.scaling[10], ns.db.icon_alpha
 						else
@@ -815,9 +856,15 @@ do
 						return coord, nil, ns.textures[ns.db.icon_choice],
 								ns.db.icon_scale * ns.scaling[ns.db.icon_choice], ns.db.icon_alpha
 					end
-				elseif ( ( v[1] == "S" ) or ( v[1] == "V" ) ) and ns.author then
-					return coord, nil, ns.textures[10],
-							ns.db.icon_scale * ns.scaling[10], ns.db.icon_alpha
+				elseif ( v[1] == "S" ) and ns.author then
+					if v[2] then
+						if C_QuestLog.IsQuestFlaggedCompleted( v[2] ) == true then
+							-- don't bother showing
+						elseif not _G["HandyNotes_EAPandariaDB"] then
+							return coord, nil, ns.texturesSpecial[ns.db.icon_choiceBonus],
+								ns.db.icon_scale * ns.scaling[ns.db.icon_choiceBonus], ns.db.icon_alpha
+						end
+					end
 				end
 			end
 			coord, v = next(t, coord)

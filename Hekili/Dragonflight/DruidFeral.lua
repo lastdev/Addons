@@ -475,7 +475,7 @@ spec:RegisterAuras( {
     -- https://wowhead.com/beta/spell=155625
     moonfire_cat = {
         id = 155625,
-        duration = function () return mod_circle_dot( 16 ) end,
+        duration = function () return mod_circle_dot( 16 ) * haste end,
         tick_time = function() return mod_circle_dot( 2 ) * haste end,
         max_stack = 1,
         copy = "lunar_inspiration",
@@ -492,7 +492,7 @@ spec:RegisterAuras( {
     -- https://wowhead.com/beta/spell=164812
     moonfire = {
         id = 164812,
-        duration = function () return mod_circle_dot( 16 ) end,
+        duration = function () return mod_circle_dot( 16 ) * haste end,
         tick_time = function () return mod_circle_dot( 2 ) * haste end,
         type = "Magic",
         max_stack = 1
@@ -544,7 +544,7 @@ spec:RegisterAuras( {
     -- https://wowhead.com/beta/spell=155722
     rake = {
         id = 155722,
-        duration = function () return mod_circle_dot( ( talent.veinripper.enabled and 1.25 or 1 ) * 15 ) end,
+        duration = function () return mod_circle_dot( ( talent.veinripper.enabled and 1.25 or 1 ) * 15 ) * haste end,
         tick_time = function() return mod_circle_dot( 3 ) * haste end,
         mechanic = "bleed",
         copy = "rake_bleed",
@@ -563,7 +563,7 @@ spec:RegisterAuras( {
     -- https://wowhead.com/beta/spell=8936
     regrowth = {
         id = 8936,
-        duration = function () return mod_circle_hot( 12 ) end,
+        duration = function () return mod_circle_hot( 12 ) * haste end,
         type = "Magic",
         max_stack = 1
     },
@@ -586,7 +586,7 @@ spec:RegisterAuras( {
     -- https://wowhead.com/beta/spell=1079
     rip = {
         id = 1079,
-        duration = function () return mod_circle_dot( ( talent.veinripper.enabled and 1.25 or 1 ) * ( 4 + ( combo_points.current * 4 ) ) ) end,
+        duration = function () return mod_circle_dot( ( talent.veinripper.enabled and 1.25 or 1 ) * ( 4 + ( combo_points.current * 4 ) ) ) * haste end,
         tick_time = function() return mod_circle_dot( 2 ) * haste end,
         mechanic = "bleed",
         meta = {
@@ -683,13 +683,13 @@ spec:RegisterAuras( {
     -- https://wowhead.com/beta/spell=192090
     thrash_bear = {
         id = 192090,
-        duration = function () return mod_circle_dot( 15 ) end,
-        tick_time = function () return mod_circle_dot( 3 ) end,
+        duration = function () return mod_circle_dot( 15 ) * haste end,
+        tick_time = function () return mod_circle_dot( 3 ) * haste end,
         max_stack = 3,
     },
     thrash_cat ={
         id = 106830,
-        duration = function () return mod_circle_dot( ( talent.veinripper.enabled and 1.25 or 1 ) * 15 ) end,
+        duration = function () return mod_circle_dot( ( talent.veinripper.enabled and 1.25 or 1 ) * 15 ) * haste end,
         tick_time = function() return mod_circle_dot( 3 ) * haste end,
         meta = {
             ticks_gained_on_refresh = function( t )
@@ -715,7 +715,7 @@ spec:RegisterAuras( {
     tigers_fury = {
         id = 5217,
         duration = function() return talent.predator.enabled and 15 or 10 end,
-        multiplier = function() return 1.15 + state.conduit.carnivorous_instinct.mod * 0.01 end,
+        multiplier = function() return 1.15 + state.conduit.carnivorous_instinct.mod * 0.01 + state.talent.carnivorous_instinct.rank * 0.06 end,
     },
     -- Talent: Your next finishing move restores $391874s1 combo $Lpoint:points;.
     -- https://wowhead.com/beta/spell=391873
@@ -1906,11 +1906,11 @@ spec:RegisterAbilities( {
         aura = "rip",
 
         apply_duration = function ()
-            return mod_circle_dot( 2 + 2 * combo_points.current )
+            return mod_circle_dot( 2 + 2 * combo_points.current ) * haste
         end,
 
         max_apply_duration = function ()
-            return mod_circle_dot( 12 )
+            return mod_circle_dot( 12 ) * haste
         end,
 
         ticks_gained_on_refresh = function()
@@ -1926,7 +1926,7 @@ spec:RegisterAbilities( {
             if talent.tear_open_wounds.enabled and debuff.rip.up then
                 debuff.rip.expires = debuff.rip.expires - 4
             end
-            applyDebuff( "target", "rip", mod_circle_dot( 2 + 2 * combo_points.current ) )
+            applyDebuff( "target", "rip", mod_circle_dot( 2 + 2 * combo_points.current ) * haste )
             active_dot.rip = active_enemies
 
             spend( combo_points.current, "combo_points" )
@@ -2144,7 +2144,7 @@ spec:RegisterAbilities( {
         form = "cat_form",
 
         apply_duration = function ()
-            return mod_circle_dot( 4 + 4 * combo_points.current )
+            return mod_circle_dot( 4 + 4 * combo_points.current ) * haste
         end,
 
         usable = function ()
@@ -2159,7 +2159,7 @@ spec:RegisterAbilities( {
         handler = function ()
             spend( combo_points.current, "combo_points" )
 
-            applyDebuff( "target", "rip", mod_circle_dot( min( 1.3 * class.auras.rip.duration, debuff.rip.remains + class.auras.rip.duration ) ) )
+            applyDebuff( "target", "rip", mod_circle_dot( min( 1.3 * class.auras.rip.duration, debuff.rip.remains + class.auras.rip.duration ) ) * haste )
             debuff.rip.pmultiplier = persistent_multiplier
 
             removeStack( "bloodtalons" )
@@ -2519,6 +2519,22 @@ spec:RegisterSetting( "rip_duration", 9, {
     width = "full",
 } )
 
+spec:RegisterSetting( "use_funnel", false, {
+    name = "|T132127:0|t Ferocious Bite Funnel",
+    desc = function()
+        return "If checked, when |T132127:0|t Taste for Blood and |T132138:0|t Relentless Predator are talented and |T1392547:0|t Tear Open Wounds is |cFFFFD100not|r talented, the addon will recommend |T132127:0|t Ferocious Bite over |T1392547:0|t Primal Wrath unless |T132152:0|t Rip needs to be refreshed.\n\n"
+            .. ( state.talent.taste_for_blood.enabled and "|cFF00FF00" or "|cFFFF0000" ) .. "Requires |T132127:0|t Taste for Blood\n"
+            .. ( state.talent.relentless_predator.enabled and "|cFF00FF00" or "|cFFFF0000" ) .. "Requires |T132138:0|t Relentless Predator\n"
+            .. ( not state.talent.tear_open_wounds.enabled and "|cFF00FF00" or "|cFFFF0000" ) .. "Requires no |T1392547:0|t Tear Open Wounds"
+    end,
+    type = "toggle",
+    width = "full"
+} )
+
+spec:RegisterStateExpr( "funneling", function()
+    return settings.use_funnel and talent.taste_for_blood.enabled and talent.relentless_predator.enabled and not talent.tear_open_wounds.enabled
+end )
+
 spec:RegisterSetting( "allow_shadowmeld", nil, {
     name = "Allow |T132089:0|t Shadowmeld",
     desc = "If checked, |T132089:0|t Shadowmeld can be recommended for Night Elves when its conditions are met.  Your stealth-based abilities can be used in Shadowmeld, even if your action bar does not change.  " ..
@@ -2550,4 +2566,4 @@ spec:RegisterOptions( {
 } )
 
 
-spec:RegisterPack( "Feral", 20230125, [[Hekili:9U1EVTnos8plblGQDEOl2ooB3fogy72DbAXIUaN7FBzAzABErp8Phjnfg(Z(ndPOejfPKt327FQBfhoCEp)4i1LJw(5Ll2qkOl)04Bhp52rJN6pE047N(2LlkE5aD5IdKWhj7G)scjg(Z)KMrIWN(sukzdU780YSqyLLlwxYIk(qYY12z5pVCbPSyFA2YflyX)(Yf7zB2qfKtZdroeXYlYrMUoknDtbjknb)NFIlM0eY6i6MLVd4tyblnz5ImYJWjhMXkOzmYYfdoTkJUnJMVhj90QJhpTAK)DNwD5PvhOz5a7PjfbXLrfSdrmA2PvZpTAtAHpYj)dQlm80kVtRwxUDR)6Ia(6BsFgo0WxcJObfKSDuqybzRa0udbSrK0KhfggNMMSLLjzQuJIktizbSK8dSmc)ra3N4K7sUToReSwb5rK89gCuDjKz35WwwSpdOiiKuCoIVG6oSitDkZ5hOrrsQ9ZFMDGINk3vms7q4RzOo10JhY99AyY3Nr3yYc8z42)5(3EFsWB7LfAwklgBGj)sVmPo8JBFctJxNgCiLLuKZnB3zKsGCDXwwclFpnZwcKlVXHmwmeS8me7TNZ5XnCwDnBX8wPRJqPEo5r2JRmZfQ1B2HUombt8lyXadtd2WGhp)bqiOffSKD5(W(d2uwLZz9KntC0k7WRHWoahq4Ja)eLESDOZCCMYcoaVUqMbKdfcc9lpi42G2p2JtmKEdv18HcXrbPBHaoAW2uq7l8RKwoVh2yR2sZsdzPL5bRbvy5IyYxcOj0SDV0BY73tv1I20RQ4uj4H8GtJKfsYXZS7WEL4dxzLURP3zfmhfkCxdxNBQLR5mCQQHjongBGbMMWicWHxABxSwVxV0NICWnByJ7n9vOG7TunW(zuGTkzGLjbI)Ea2hx0npqaBqZX0rTdZg6T6MltcYlrSdbK41LqX1QONxBlEpLfAcobYVNNU8Ak)0UVTRGTZP0Yz3tUJEVwJh088D0(8Bjc)N7pql95ONPKNCKDwV3soYimakb4oWM7UCx4gbl2q3saxy9(R30JLGeVUTsowJQ0uOMIbf9aV6)uMSdmX5Gv8rAMmwZ2sz0ycecWR8nMd6eeBFO6Qi21Eq4mNXTW(HS88CFceBIDibZhQHu)gQuB7cl3kHVGTdyEW2YSxm0A314L9Fa)kw9ngu5ggkF4za)Ilr1TVePT7jakMyA0gnMwbAPfGSuGgOfsdHpbf9eX9prIkHFQQlQCFHMME1TyuwuaddytvHPekDtWARq5A0yiWYzHT00iopTaJtYaYgYHc2tqCYZeWWP3nv0Vhdn0jlydjgU3LExw3Kze6vJLW9oGG2Wh50prWC7IXEkjssRaG(qjUdH(zDdSKGTrSD7l6M2kr58OwLSHUb1X7yI6dYeyVaWMygvGtES8aod7nqOatKWgnTZt0ED4r36mbrhcVWPHcT(ZFqkY6qL0abb12H2bjF9f(jEUa9TDTRQCjvK4nWlYlYyH4jCEn8jP8e6rUbrXvjYb6xcoaTkifPqzQWmEZbtvuhN3Ng5UGDlZ3uRsENP013Bc3JBq)Ysr(vLqKHwUCvDEMQZ7apw3fNBf4m1AaYRvPxdDjOzpgubfuifURV3wk(goYkuNciOMN)RyQp9Ih6)xi5RQ4Gx6pJTdB82kf(7YOA(Nb2CA)40WS3oCa63WhhEhC9oXs)w6F0t(yN(JUlk0yhZjqatbcMZWe2UAHB3L1myB(qCqbNzDpJe5Fea7vyNUPhuGI9SCzxkSzszc8Z7(3la9kkpfEsgCDjSzi9jA2la1yNo6xcPha62ciOrwGIgn3DyPzzbJ8st5URRZvzTLiJ5LsemOQTTHo(zU(ftjiuNI9yMkrk4cgmyQ)0RG1G245akbKCOWuAYoerngcvaMHr3YWBxlfslip7kv7CvqpdD50QB004w8woXnnv(p5k3FHkYAkQWlWIrv6cdwIKbUzaU7KBuvkaJd9anzd3dJSEpC7BAno32v20VDGlSSv1l0KWpS90QNP4j8e8NVldJ2qbkjTkaBnTOan)OPhhcW1Wp7PiIsgS1pZd4oT69VxOHGOVqCk6vwbaHvtZLJuJBSQEEt6u1InOVSLXzuTRgdV5DkRAk11fkH(TKSKQidnY65wLkxmtwzRvt1kG5RtZZ5eSfb)gOc1FQsV20KNsFKYNzggrXkAQazOq49Vp3ld6syvbC4yW0G8DNsjBTj2uVfNxkEK)9AGWXXCFRylzLSnInXtZd2b2dOcoupUk)JtTZE7xYBjFJSXSBm9nb9YBTAR8NHTYyQTD48KXDYTuVwp7BIIODiL)BhvWIjjSWGDzm6wODAO2i5f2w)n0TSqwrLnw(Q(ATXoUJmjcmH7HQzhk)6xHkERt)IldtTNFq9nousI0U9ETbsLaTWF5LMKgsr8TjndLQKnXuwStQkL50aqUJZBvNaGKGb4KcByJSo7dDSjXeaGB1uTFMjcMmHc5wo70wlR30GqdhgKEoUwLG6X4yOKGA(eonkGg5RVfAibxqobhJp2agYoyXhsZqadPqQ6BKw)3GV81)Bjld9E5PXaHKYI0ysb(GW9eOhCU)Pp(xqY6PvV9xpT63HswamoC530ou4nIggwwrgKaumy0xgc880h)axMqwn6wzFHtR4VqzyDUfzlRzy)440Q8Mx9W)Y0ZCnB7dgUXtF02gLblxJ(ThS4zSVnoBTVK0XG6u16WtBMUP2t5tZu9jCgxl9TMCPxhtTC24lRMw5XJ2kkpZ6ukVS3juQkEk9ruFSuNrb)cZrpQsiktg(MYdhp2E0IQBscZx4JQW6FnF(Hp4E8HEwhDOUuRF5wb)LzdQuQpPPR1aq(WiuHgm4IEhjLWT054)MnEO3GEg53SjhpA7WAg038rd9UOczvNd3ZfvMJ1ZbDnem0RDt45tpEe3wZi8Mp2RFRKNON2SjtTYtv3I6WZqNGk6LzJpEu9F)WypJU7QHL6xiSQyqk9AXireUyhWrMpYRJ5UziUkxTTonW9TL7nwvoPln5utRN2ptusrWTBEPAVlCB3CWqJrb5u6MnTdFIdEl4zhSeR7(tNw9BP)b87pj7Kav4sPy9vi7gWIj(MNUgQqfKq)cWNMA5v0P4l7WOwr9R1Z6zBgiMm1AqzFoRQeoLPFmhvUVDdrZ1USv2t96YCR(33ryykmAVB9xLsH0(5)(9)9VAUfEhjRf0R7H64okIERxoy0vv5)Bslb7a0p9zGo(oRkcmC48boQEC5T(JhD)vt8NmE4qUj8hYesAfB5qRv8N1fVL2Hz6ZcXTjT1yrSDsamLbdCyzVA0WBCAWg7F3ViTvFxhTIPn6SudfdMNM95gfRxlonFS5H1C7wuV(bnqMwhk(qulQ6URoDM5vpR1KzCxGqbXRkURUsY0I3g5F3LwXOo3gC2HEYbY38T1544B7jn8CsoP9nD6IBQfHQl1B79c4IbNDj1A5s5tq0ftRdG6gQIKJnFxKozOm4OEl1FjMNLmC(NKI9qzFNHoRDBc1abp121ZVtlW0aCY5vmSZ9FEM(ozHzmv72414x7oqRnRLX0Nr8w3APOcIcnI1CHur9lgR2j1(ZpZk)63HC84aldLeqwD(fq8A9PJn)(H2eNxLfufusdl6hTvdTND5bBBwhHu71F1XQn700)R6lBLfBvmn2XRvwm2UzoJ7pdZ5tLxrZ5NFPBHSLAxnFaucezjwxtzAxwx3Y0(RZs0NwVwXm8Y)4KL90MQ8SPDjFiIbBl3mWfxNS5yF1fL78C8Eb8So(Pr(3xD3(53DRx)VdG5oraEZ4UhnGQskMVEtxc5vnTAgDmqFR0oX(5PpqrZrWJYH(m7bBXzWhldM0uL4g(bTN1QxxdHF2uCkj2h((SPd7uYYvZkKtI4Q2xD29)nbuHb7Ib9GqQdMpYkZZyh6JNwITEW(3bVw1EvnO3Y9keBm8GMVL)kmYgFU(hp2w(Mzv8g6n4cZG(b6pW7II((G9ho8CK6)HcQHu1RqPg618njJ10eF6Xxx9Lh)G4dpg)mHcXxO8e(Biz5)7d]] )
+spec:RegisterPack( "Feral", 20230301, [[Hekili:TVXAVnQX2FlrxjwtEqd2XBFiBl1DBRuRQARQxP(nJX4X20GbF5rYMvw8B)EoZWaZmmdGZUTF6(LDtGZCMZ7NKvUR(WQLB9ZjR(TX3pEY9tU31X11DYKvlZF5ez1Yt(bp6Vh(Hy)JW)(tKu)i8PVeL4VfpCwsrAa8Mvl3uegL)ZXR2OfJ3dO0Vi)qs6QLldp((vlpeUDlHbojly1se87UF8DUt)UY1LR)J0WK0W8xkx)Cyuu56Ims56DHXHzhiPzLR9Zlx)WnLRFFYXnja4jHX5WJF(ajUC9VgMe)g43wMNsI3NFOCDi8B5(rK4CY2BlxhKeNfMLd)kIFeGiGMZGFdiUc4Nbe8(u)DWdkoHStMt5Vu(lCACSlLg)(T)DbGKTLRFhqtK0hb0KSpmaUkGKoLsEIEb7sjKpfgV)RiPPjPkyIXTFaUBacGTaWlIJjahNCcPIY1JYorIH749)b8m43bLqsqysbWrVlmhKkHXar4dqKSJk3o6dN(Vs9P8n8O)m8eWLGebPfFuyMSBNTmz81cmeNeOeeYjuz)F8xmSLdYF4x9X)bev5HNIGFQi(o4AoHYIC)09K8mNvlJarCgALSjkjzli(bPo8R)g1SJe7VjISD17adJaKtxTm1)rWukau7K0q)vlhvUoLasVSdiOLRpFUCTRZdLRVgKUGeNPb9QOIqsA56fLR3MK7GyY5K4lSlxBvUEtXUDoBY9OVFBYZWLg8sqeXRIOrAlhmDviWgssIEeq4XKK4DHPCKY5OOIy)upqbDkmLAuHyFIrSZX2M0cqA5Lf5NDqbJIVcr2dgKL5hsbi8c8Zhc5ZGUdjYuJ0myDgfXH2j75Wte8wPQcxPlH(of2PgE8sEBVcMSdPKTQOaFgE8VU)J3hf8n9IcjjLgHnGKVTxKuB(rLpbyimVtvrWaX2dkUeiwxYJ9PZbYK24enyG3ZSybaMh3GzX3PZMxlCDyk1Zn7Q3Us1xOMVdp11LXqItE4raHjEBdHhVyoqeKCmoAMdCEVTfv(CAVzvhhPWo0yiHNGli4rAyqm0JUlDMH7KhWbW1vCpGmiqqGtXjg2g1(XwuGzPPCGmRrEj7adoI3UeG7ZDQOwkUTBKv74je82aSWQLh9)OhjMKU)LEDE)sYQA4MEzfJmb1KhuA(Pb(0uJDB2lyFyYR0Cm9oJGziqH5y4YytmCnfHtffmhtoIjWartqKpwTtB5I249YH(eOdQydReBBFbkOAlrbStkbqRGhyrSh7N9W84SS5ES6aLumDe7qnHERS5CNGScSyqp)JBkGGRvwpxAkElHx0yCcG)wQ7YLe(PDEBtgBdj0YGZj3rUxT2dsA(osF(ASW)6byO1uwNNFc5)xA3akTRPcMMlrYnSY43OkBUSkJx8J50zVIIk7mHrl9gILNiEOYPXcNMVGPaGCrhdjzQkQbuj1R0I(YQ6CaLn2vvN9xYyVuq)fmoazL799ILxtzNBj78bFTAF7Ag4XcqbSPDuOXsqLKaj9vGOhNK)UiEpy1KbwKpss5(d6Evk5Op4asn1gtdDSpyRdu(dZUuF0IzgdWaNhsdNL54djpWsytEMYHeNgOeRlgEDRmY5H7bK7TRi9ffU2SpfVarqrILhDey5geYFy3Ud0ZtPO66lz5vp4d67JKOTsiTs92Y0pbGbQXRbWNGQsyjMEYpQa(VQcxeI83uvATtNWlzwSaAQQCiMq26TrBVwnCmyyzSYJKKiko142WrG)w)t0iszp7dco5OxScYrtdzW826F0FprUmyZGPy6vxSV5tagTbpsHFcd56jJde)ioSSyz28gdy8N2deg7TlkC)H8UHTIugg0IGzBURlAjTcPbQJ2VGkzSgQ8gaK10ctgnTZBuFU9ocbkhSJP0qIw(5Z5KSCVmsDPa5jH8FXF6f6no0oX1LHQYxsSv5M6)ZYtddWByyvKJLFHqBU8gkl5FI8rVtqMl)8eimvqQ)tSAoKyr5gX(nxZbS5XhCQ8R56BtYVo9TfNsiETD2HERSxteLPrHynPzvJ)vQXzTA9PknFR)8A1kDYs1dTbpJ5maTSoNQ1k8sV9nSPs7v1qitQAojsBQ4vCLv9EY6pq9(VGge6TRO)T6NVkSgwewA4(90LpOeN4IQT2uZHFETCk1JO(U16Pdn558H7Kjn8e7vFFYpA2oP21tywsIzhNOp7WDs9nKIROGfySk1OWkiS7wD3DGn1PWL5dwL5yzPItI7knLUuLeEopjCvSdbcZQzagDC)Td4WezMNGxN2JAd5QZiDHCNIDL9qTr(omt)CMHHa6KTVYX1kXwrhEiuEvGBo7D)5sG3IYsGNKwabsbqiprsFbGgvaKpgqor3xfUvlgPrYm77Pg7tj4JkDBA4akn9INUD7Uk84hO83rIp6wKFadh5ZjCgcgn1z6nW7GcIYSzBSeI(MeVh7nbnKWvX5EFioirorQPg(UINmug0QvR7YURTWnF5csS8przUFfzKneKHxIrCR4LWiChIGAgYkp5orMccJqWnEs1WiQp4NXCk(gPGC1HVL7ZYuxbvbfLOWFEx56Nj4n8e8VVlfT2qckoPYaBdjphf)OOhhqdU64demSaUk0pqn4kx)d)aJdXnoZUf50hqP1vJqGwZlvyv98g3PQx2uhRopoLq6qahmYIFUUa7A7ouo30rFi7C1G5FgYrRlqBv9LrGQ5aO0pv8PpbggBs(OqdxAEjpgwt6fSDzzvLuNZ1n6QYK1T8PoccOSi)04kBBjeBozrtjEbjXpL8iHY7ODCyUqRSSDG0pCSma7WMK8Qt6HbE5eT2JxdP9fDtddNZWGexeEvjFabJV)cUr01VQhWnjzz6Wj2W1uH4YScd7orNULM1b(NmwyUhcJHHxdqN8I8(QUqb2mbKxrVvVtW8pH()AsS2WW8QNK2DXuPYm0YxkvT)Gm7ktrmT199knNkvFIgbIUK6VADNBBBJQnl1ZiV0ipeVAdZ6SwiXQiuA3t1hX40dDDER00kWjNYCx2MweULDiAwCV9ahcfPbLCvLELcTX(tUM2wXD8Mlmp8JMCA8X71vLah9Jdd82Ngs2bfNgiTfFgt4SLSlmimVIz4b9BDWCZtTtBcc9ge1I4r1ECcHY1hYteaf7uw91CRDM1Jkm2DLhJx0aNvkYiEaDFmRvQiif2ZeAL9D1jvwbDFryf2XGMfkh4HR3hSLIcajpHtFgGJ9bYngJl(mWB4E1XYeXpORJNssXYAtalU3W5T3GRE5)waygKnzjhXpcRI8KJ(0VaTGd(qLI4hx2Vc3A56V57WVnUy4YOV(nTf0VHvwJM3WvbaeJC)i7lf7NP0eIkxxE1lLRPFHxW7P533f2S9DC85v1MCZ8VsToJBd3nxPOKYFr3b5QIBrT3Cnkp9hJIw9VIxMbYtvVhEAZ2mKEkD7fIpHI4AQV1MkS6ylfZgFD12joFwxSLzA3kX19UrcrYtiCO4J58ms4xPUQbrarAsr3uC6852Rsq8q8gsz6OQUsVLUVG5MxxGL2vfit1YZzIHFU3GiKYtw(wP2CM7Im0Orx17iOzQLoh3)SX2wJ6ze)ZMC(SUlRzW(lCTTUQQ()ohMVjOuhJVb4AaW2QDUKftpFgpwZqzwm2QFPKflJXSjt1Itr1I4WYrLGys4zJpFw83Np2sPMbrZs5rxufmiHClB6KmvSHSQlCT6yo7kKRWqyQDdmpzNETvfSUr0Po5gRRmZY6riFCYsm(ir54IjwDocBBfX(uRR6EK59stQd5vI2Ku5t7qfBa3mC2bkXW4)NY1FFYpc)))HNyccyMqWW1qWcO0l2hP(TqapVyYhb80KAOcobtd17aKOJuMRj6Il76Cx1Vwb4cxigq9GcTvVUl1sZA0vTND55ZvpT1mlN7AdQ56R3Au3yx2IyXKwKRw3pLrgQ1(UsOimvYfOS)1RNAgfIUG8IJWIAu8LDSIQeJ0N23fXuiSF43)HF)7upcn)R20x1vmyOXcwLexpY9Mk35TjfGCaQE4zao6j5raSxmYqSYRV3zS7BVzIZKX22ur4)itTSL9LbUwqFw7VXLdZKNpPzrARrvQ7MGIYgnYGK9gx77mkWg78W3YLvFrh3PQmAqSHGaZss(igEQfMwmw9YAAjf5R)HgsARlfFiYfShlnX0fvpR10snhGqO(Eh1uudZMRZZxlI6S0JorHy8doFlhTSUOinlyStuZ)KfhuKYU4sMIsaMMO(DfUsYZ115HR12BZcDTbzxZYnFTAgU(2(ek(aCmj9fCAcBQQJHi5LqWGtovtxcFvFMq6WSZQXyZNAOreYDZQpsZhK6qOHHFtcYdHZnaEwQlurdblPcvEWGHPxp5s)xW40Zuq7xTbQNsqY2ApgYu(uITmyYiwAv7B5ZZvWRvTATK6cPJAatoLU9G9s8usA9fXtPF59GPLl7gFDEnI28xQNdlC)ngQZx0GQg1T)7grl(6phl0edRZgL)(pSgUpPvR)Mpw8wBDKZfLuuSC(gu0FFknWo40b6oSCVfTF)Wm21Es1u6I6Yw2FAjtLtCP0IYXvd2y(VFQft5Z2W4F3uMjYwSD1CeH3jm5BTVVQWiK44dlPJneE(C)WynsAhylMpKfTApimpemnZ9(bHlzI0D89dc7lgp98zCzFYNF24PALUSnJ2e1IpDiT4yY4QPrlV4VUPl49xkZoZ06t1XbAWkYoQRZfmFhPN2fgO1dwgU5fJVxRezQDx2SIbT7wY6Qx70m1)A8Oq(I4UvQgGF0eFNcM2DG4682QbmV4H7T6FFQlm2y(DJ7E(0ImP8wMu36jY4YRjfOTbGhnBRsvxqfeJYBTaoRU275SP4e70VVttMd1R0umeiFAY30EaOM)J5wCAbMqqpT)0bYD1ICWlQpCQrxpx)FTYsP2f5GEZTlaSYeCB(lUUQhdUVF9QLAtFZ0sE28z9k4Tos(b1tS38Fw122dHQ)mjufQQxIs00Rzr6ymg2(YVTAD5ZzBlh)mUdWVfUj01MV6)9d]] )

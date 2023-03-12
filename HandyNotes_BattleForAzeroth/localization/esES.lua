@@ -104,6 +104,10 @@ L['options_icons_locked_chest_desc'] = 'Muestra dónde están los cofres cerrado
 L['options_icons_recrig'] = '{npc:150448}'
 L['options_icons_recrig_desc'] = 'Muestra dónde está el {npc:150448} y sus recompensas.'
 
+L['mechagon_snooter_note'] = 'El {npc:154769} (bastante raro) y el {npc:154767} comparten los mismos puntos de reaparición.'
+L['battlepet_secondary_only_note'] = 'Sólo se puede encontrar como mascota secundaria.'
+L['mechagon_explode_note'] = '{note:Cuidado, puede {spell:90096}. Si lo hace, lo matará y no podrás capturarlo.}'
+
 -------------------------------------------------------------------------------
 ----------------------------------- NAZJATAR ----------------------------------
 -------------------------------------------------------------------------------
@@ -301,7 +305,7 @@ L['lets_bee_friends_step_3'] = 'Dale el {item:163699} a {npc:143128} en Boralus.
 L['lets_bee_friends_step_4'] = 'Dale la {item:163702} a {npc:133907} en Granja de Hidromiel Mildenhall.'
 L['lets_bee_friends_step_5'] = 'Completa la misión {quest:53347} para {npc:133907}.'
 
-local luncheon = (ns.faction == 'Alliance') and '{npc:138221} en Brennadam' or '{npc:138096} en Fuerte Guerracolmillo'
+local luncheon = (UnitFactionGroup('player') == 'Alliance') and '{npc:138221} en Brennadam' or '{npc:138096} en Fuerte Guerracolmillo'
 L['these_hills_sing_note'] = 'Abre {item:160485} aquí. Cómpraselo a ' .. luncheon .. ' o despoja uno del tesoro "Fiambrera desechada" en Brennadam.'
 
 L['ancient_tidesage_scroll'] = 'Pergamino Antiguo de Sabiomar'
@@ -662,7 +666,7 @@ L['options_icons_brutosaurs'] = '{achievement:13029}'
 L['options_icons_brutosaurs_desc'] = 'Muestra dónde están los brutosaurios para el logro {achievement:13029}.'
 
 local hekd_note = '\n\nPara conseguir acceso a {npc:126334}, necesitas completar %s.'
-if ns.faction == 'Horde' then
+if UnitFactionGroup('player') == 'Horde' then
     hekd_note = hekd_note:format('{quest:47441} que te da {npc:127665} en Dazar\'alor le sigue la misión {quest:47442} que te da {npc:126334}')
 else
     hekd_note = hekd_note:format('{quest:51142} que te da el {npc:136562} en Voldun le sigue la misión {quest:51145} que te da {npc:136559}')
@@ -705,7 +709,7 @@ L['options_icons_sausage_sampler'] = '{achievement:13087}'
 L['options_icons_sausage_sampler_desc'] = 'Muestra dónde están los vendedores para el logro {achievement:13087}.'
 
 -- Para la Horda, incluida una nota para las bebidas que deben comprarse en la AH
-local horde_sheets = (ns.faction == 'Horde') and [[ Las siguientes bebidas son inaccesibles para la Horda y deben comprarse en la casa de subastas:
+local horde_sheets = (UnitFactionGroup('player') == 'Horde') and [[ Las siguientes bebidas son inaccesibles para la Horda y deben comprarse en la casa de subastas:
 
 • {item:163639}
 • {item:163638}
@@ -735,3 +739,10 @@ L['options_icons_secret_supplies_desc'] = 'Muestra dónde están los {object:Cof
 L['squirrels_note'] = 'Has de usar la emoción {emote:/amor} en alimañas que no sean mascotas de combate.'
 L['options_icons_squirrels'] = '{achievement:14730}'
 L['options_icons_squirrels_desc'] = 'Muestra dónde están las alimañas para el logro {achievement:14730}.'
+
+L['options_icons_battle_safari'] = '{achievement:12930}'
+L['options_icons_battle_safari_desc'] = 'Muestra dónde están  las mascotas de combate para el logro {achievement:12930}.'
+L['options_icons_mecha_safari'] = '{achievement:13693}'
+L['options_icons_mecha_safari_desc'] = 'Muestra dónde están  las mascotas de combate para el logro {achievement:13693}.'
+L['options_icons_nazja_safari'] = '{achievement:13694}'
+L['options_icons_nazja_safari_desc'] = 'Muestra dónde están  las mascotas de combate para el logro {achievement:13694}.'

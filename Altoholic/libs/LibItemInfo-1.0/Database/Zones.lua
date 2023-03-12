@@ -115,11 +115,13 @@ lib:RegisterItems({
 	[191251] = SetZoneItem(9, WAKING_SHORES, 267, 626), -- Key Fragments
 	[193201] = SetZoneItem(9, WAKING_SHORES, 267, 626), -- Key Framing
 	[199906] = SetZoneItem(9, VALDRAKKEN, 260, 400), -- Titan Relic
+	[200071] = SetZoneItem(9, AZURE_SPAN, 124, 493), -- Sacred Tuskarr Totem
 	[200078] = SetZoneItem(9, AZURE_SPAN, 128, 491), -- Pickaxe Blade
 	[200093] = SetZoneItem(9, OHNAHRAN_PLAINS, 640, 410), -- Centaur Hunting Trophy
 	[199338] = SetZoneItem(9, OHNAHRAN_PLAINS, 822, 731), -- Copper Coin of the Isles
 	[199339] = SetZoneItem(9, OHNAHRAN_PLAINS, 822, 731), -- Silver Coin of the Isles
 	[199340] = SetZoneItem(9, OHNAHRAN_PLAINS, 822, 731), -- Gold Coin of the Isles
+	[201159] = SetZoneItem(9, OHNAHRAN_PLAINS, 623, 423), -- Aloom's Token
 	
 
 })

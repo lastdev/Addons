@@ -150,7 +150,7 @@ function MDH:MDHShowToolTip()
 	end
 	if IsAddOnLoaded("TipTac") then 
 		if not self.tiptacstyled then
-			table.insert(TipTac.tipsToModify, tooltip:GetName())
+			TipTac:AddModifiedTip(tooltip:GetName())
 			self.tiptacstyled = true
 		end
 	else

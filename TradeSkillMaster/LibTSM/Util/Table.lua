@@ -402,7 +402,7 @@ function Table.InsertFill(tbl, startIndex, numValues, fillValue)
 	Table.RotateRight(tbl, numValues, startIndex)
 end
 
----Reverses a table.
+---Reverses a table in place.
 ---@param tbl table The table to reverse
 function Table.Reverse(tbl)
 	private.ReverseTable(tbl, 1, #tbl)

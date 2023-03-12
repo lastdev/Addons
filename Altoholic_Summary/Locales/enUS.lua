@@ -283,6 +283,7 @@ L["Equally viable"] = true
 
 
 -- *** Mythic Keystone ***
+L["Mythic+ Keystone"] = true
 L["COLUMN_KEYNAME_TITLE"] = "Current Mythic+ Keystone"
 L["COLUMN_KEYNAME_TITLE_SHORT"] = "Keystone"
 L["COLUMN_KEYNAME_SUBTITLE"] = "Your next adventure"
@@ -294,3 +295,4 @@ L["COLUMN_WEEKLYBEST_KEYLEVEL_TITLE"] = "Weekly Best Mythic+ Level"
 L["COLUMN_WEEKLYBEST_KEYLEVEL_SUBTITLE"] = "How deep down the rabbit hole you dared to go"
 L["COLUMN_WEEKLYBEST_KEYTIME_TITLE"] = "Weekly Best Mythic+ Time"
 L["COLUMN_WEEKLYBEST_KEYTIME_SUBTITLE"] = "Mouse over for season best for all maps"
+L["COLUMN_WEEKLYBEST_DUNGEON_SUBTITLE"] = "Highest keystone completed this week for this dungeon"

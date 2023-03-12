@@ -286,6 +286,7 @@ L["Equally viable"] = "Tout aussi viable"
 
 
 -- *** Mythic Keystone ***
+L["Mythic+ Keystone"] = "Clé Mythic+"
 L["COLUMN_KEYNAME_TITLE"] = "Clé Mythic+ actuelle"
 L["COLUMN_KEYNAME_TITLE_SHORT"] = "Clé Mythic+"
 L["COLUMN_KEYNAME_SUBTITLE"] = "Votre prochaine aventure"

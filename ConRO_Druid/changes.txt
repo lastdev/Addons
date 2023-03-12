@@ -1,16 +1,10 @@
-lightweight tag a1ef59877c77046cba0ac2789a40e9e9184ce75d v10.0.11
+lightweight tag e7c5daf7e1905698bc9cb223f893dff929e5128e v10.0.12
 Author:	Vae <emuha17@gmail.com>
-Date:	Thu Feb 2 21:23:22 2023 -1000
+Date:	Sat Feb 11 13:46:41 2023 -1000
 
-commit a1ef59877c77046cba0ac2789a40e9e9184ce75d
+commit e7c5daf7e1905698bc9cb223f893dff929e5128e
 Author: Vae <emuha17@gmail.com>
-Date:   Thu Feb 2 21:23:22 2023 -1000
+Date:   Sat Feb 11 13:46:41 2023 -1000
 
-    Guardian update
-
-commit a92abcceb0b468febf583778320c564282227d26
-Author: Vae <emuha17@gmail.com>
-Date:   Thu Feb 2 21:07:25 2023 -1000
-
-    Fix guardian druid error
+    Feral Tiger's fury adjustment
 

@@ -1,10 +1,11 @@
-lightweight tag 039f779d905c4eccd5f47cff5a0df301c1395dbb v10.0.4
+lightweight tag b9d951f2a134901399792b8dd95cc53fbec02b2c v10.0.5
 Author:	Vae <emuha17@gmail.com>
-Date:	Fri Jan 27 13:46:18 2023 -1000
+Date:	Sun Feb 12 08:07:50 2023 -1000
 
-commit 039f779d905c4eccd5f47cff5a0df301c1395dbb
+commit b9d951f2a134901399792b8dd95cc53fbec02b2c
 Author: Vae <emuha17@gmail.com>
-Date:   Fri Jan 27 13:46:18 2023 -1000
+Date:   Sun Feb 12 08:07:50 2023 -1000
 
-    v10.0.5 tweaks
+    Small adjustment to raise dead
+    Fix for Obliteration, Thanks to Lexwebb
 

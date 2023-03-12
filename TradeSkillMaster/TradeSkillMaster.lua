@@ -30,10 +30,10 @@ local private = {
 	itemInfoPublisher = nil,  --luacheck: ignore 1004 - just stored for GC reasons
 	oribosExchangeTemp = {},
 }
-local LOGOUT_TIME_WARNING_THRESHOLD_MS = 20
+local LOGOUT_TIME_WARNING_THRESHOLD = 0.02
 do
 	-- show a message if we were updated
-	if GetAddOnMetadata("TradeSkillMaster", "Version") ~= "v4.12.32" then
+	if GetAddOnMetadata("TradeSkillMaster", "Version") ~= "v4.12.33" then
 		Wow.ShowBasicMessage("TSM was just updated and may not work properly until you restart WoW.")
 	end
 end
@@ -304,11 +304,11 @@ end
 function TSM.OnDisable()
 	local originalProfile = TSM.db:GetCurrentProfile()
 	-- erroring here would cause the profile to be reset, so use pcall
-	local startTime = debugprofilestop()
+	local startTime = GetTimePreciseSec()
 	local success, errMsg = pcall(private.SaveAppData)
-	local timeTaken = debugprofilestop() - startTime
-	if timeTaken > LOGOUT_TIME_WARNING_THRESHOLD_MS then
-		Log.Warn("private.SaveAppData took %0.2fms", timeTaken)
+	local timeTaken = GetTimePreciseSec() - startTime
+	if timeTaken > LOGOUT_TIME_WARNING_THRESHOLD then
+		Log.Warn("private.SaveAppData took %0.5fs", timeTaken)
 	end
 	if not success then
 		Log.Err("private.SaveAppData hit an error: %s", tostring(errMsg))

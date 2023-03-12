@@ -119,9 +119,6 @@ local function OnVignettesUpdated(rareScannerButton)
 		if (vignetteInfo and vignetteInfo.onWorldMap) then
 			vignetteInfo.id = vignetteGUID
 			rareScannerButton:DetectedNewVignette(rareScannerButton, vignetteInfo)
-		elseif (vignetteInfo and vignetteInfo.onMinimap and vignetteInfo.objectGUID) then
-			local _, _, _, _, _, vignetteEntityID, _ = strsplit("-", vignetteInfo.objectGUID);
-			RSMinimap.HideIcon(vignetteEntityID)
 		end
 	end
 end

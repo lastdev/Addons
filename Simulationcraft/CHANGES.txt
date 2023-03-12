@@ -1,10 +1,10 @@
-lightweight tag f5e56f72634b4a313483c47cc36045bbf453e3a0 v10.0.2-04
+lightweight tag 4a6b9151cf0cf2f87a69cd939e5d986c40dec151 10.0.5-02
 Author:	Dave Hendler <sollaires@gmail.com>
-Date:	Thu Dec 1 11:07:43 2022 -0800
+Date:	Sat Mar 11 11:31:51 2023 -0600
 
-commit f5e56f72634b4a313483c47cc36045bbf453e3a0
+commit 4a6b9151cf0cf2f87a69cd939e5d986c40dec151
 Author: Dave Hendler <sollaires@gmail.com>
-Date:   Thu Dec 1 11:07:43 2022 -0800
+Date:   Sat Mar 11 11:31:51 2023 -0600
 
-    Remove Shadowlands features
+    Fix weird race condition / startup issue with GetItemGem
 

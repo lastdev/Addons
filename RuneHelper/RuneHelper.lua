@@ -185,20 +185,20 @@ local function CreateBlock(index)
 end
 
 local function MiniButton_HideSameIndex(buttonIndex)
-    for i = 1, MAX_BLOCKS do
-        for j = 1, MAX_BUTTONS do
-            if buttons[i][j].buttonIndex == buttonIndex then
-                buttons[i][j]:Hide();
+    for blockId = 1, MAX_BLOCKS do
+        for buttonId = 1, MAX_BUTTONS do
+            if buttons[blockId][buttonId].buttonIndex == buttonIndex then
+                buttons[blockId][buttonId]:Hide();
             end
         end
     end
 end
 
 local function MiniButton_HideSameBlock(blockIndex)
-    for i = 1, MAX_BLOCKS do
-        if i == blockIndex then
-            for j = 1, MAX_BUTTONS do
-                buttons[i][j]:Hide();
+    for blockId = 1, MAX_BLOCKS do
+        if blockId == blockIndex then
+            for buttonId = 1, MAX_BUTTONS do
+                buttons[blockId][buttonId]:Hide();
             end
         end
     end
@@ -230,22 +230,22 @@ local function MiniButton_OnClick(self, send)
     end
 
     if NUM_CLICKED == 3 then
-        for i = 1, MAX_BLOCKS do
-            if not blocks[i].state then
+        for blockId = 1, MAX_BLOCKS do
+            if not blocks[blockId].state then
                 local lb;
-                for j = 1, MAX_BUTTONS do
-                    if buttons[i][j]:IsShown() then
-                        lb = buttons[i][j];
+                for buttonId = 1, MAX_BUTTONS do
+                    if buttons[blockId][buttonId]:IsShown() then
+                        lb = buttons[blockId][buttonId];
                         break;
                     end
                 end
 
-                MiniButton_HideSameBlock(i);
+                MiniButton_HideSameBlock(blockId);
 
-                blocks[i].bigBoy.index = lb.buttonIndex;
-                blocks[i].bigBoy.texture:SetTexture(data[lb.buttonIndex][1]);
-                blocks[i].bigBoy:Show();
-                blocks[i].state = true;
+                blocks[blockId].bigBoy.index = lb.buttonIndex;
+                blocks[blockId].bigBoy.texture:SetTexture(data[lb.buttonIndex][1]);
+                blocks[blockId].bigBoy:Show();
+                blocks[blockId].state = true;
             end
         end
 
@@ -317,15 +317,15 @@ local function CreateMiniButton(blockIndex, buttonIndex, blockFrame)
 end
 
 local function ResetAll()
-    for i = 1, MAX_BLOCKS do
+    for blockId = 1, MAX_BLOCKS do
         NUM_CLICKED = 0;
 
-        blocks[i].bigBoy.index = nil;
-        blocks[i].bigBoy:Hide();
-        blocks[i].state = false;
+        blocks[blockId].bigBoy.index = nil;
+        blocks[blockId].bigBoy:Hide();
+        blocks[blockId].state = false;
 
-        for j = 1, MAX_BUTTONS do
-            buttons[i][j]:Show();
+        for buttonId = 1, MAX_BUTTONS do
+            buttons[blockId][buttonId]:Show();
         end
     end
 
@@ -350,26 +350,26 @@ function RH:SendActiveButtons()
         return;
     end
 
-    local b1, b2, b3, b4 = GetActiveButtons();
+    local button1, button2, button3, button4 = GetActiveButtons();
 
-    ChatThrottleLib:SendAddonMessage(ADDON_COMM_MODE, ADDON_COMM_PREFIX, string.format(SEND_FORMAT, b1, b2, b3, b4), partyChatType);
+    ChatThrottleLib:SendAddonMessage(ADDON_COMM_MODE, ADDON_COMM_PREFIX, string.format(SEND_FORMAT, button1, button2, button3, button4), partyChatType);
 end
 
-function RH:ReceiveActiveButtons(b1, b2, b3, b4)
-    if b1 and b1 ~= 0 then
-        MiniButton_OnClick(buttons[1][b1]);
+function RH:ReceiveActiveButtons(button1, button2, button3, button4)
+    if button1 and button1 ~= 0 then
+        MiniButton_OnClick(buttons[1][button1]);
     end
 
-    if b2 and b2 ~= 0 then
-        MiniButton_OnClick(buttons[2][b2]);
+    if button2 and button2 ~= 0 then
+        MiniButton_OnClick(buttons[2][button2]);
     end
 
-    if b3 and b3 ~= 0 then
-        MiniButton_OnClick(buttons[3][b3]);
+    if button3 and button3 ~= 0 then
+        MiniButton_OnClick(buttons[3][button3]);
     end
 
-    if b4 and b4 ~= 0 then
-        MiniButton_OnClick(buttons[4][b4]);
+    if button4 and button4 ~= 0 then
+        MiniButton_OnClick(buttons[4][button4]);
     end
 end
 
@@ -535,13 +535,13 @@ end
 function MainFrame:UNIT_AURA()
     local index = FindRuneAura();
 
-    for i = 1, MAX_BLOCKS do
-        if index and blocks[i].bigBoy.index == index then
-            blocks[i].bigBoy.glowFrame:Show();
-            blocks[i].bigBoy.glowFrame.AnimGroup:Play();
+    for blockId = 1, MAX_BLOCKS do
+        if index and blocks[blockId].bigBoy.index == index then
+            blocks[blockId].bigBoy.glowFrame:Show();
+            blocks[blockId].bigBoy.glowFrame.AnimGroup:Play();
         else
-            blocks[i].bigBoy.glowFrame:Hide();
-            blocks[i].bigBoy.glowFrame.AnimGroup:Stop();
+            blocks[blockId].bigBoy.glowFrame:Hide();
+            blocks[blockId].bigBoy.glowFrame.AnimGroup:Stop();
         end
     end
 
@@ -561,11 +561,11 @@ function MainFrame:ADDON_LOADED(addonName)
     self:RegisterEvent('PLAYER_LOGIN');
     self:RegisterEvent('PLAYER_ENTERING_WORLD');
 
-    for i = 1, MAX_BLOCKS do
-        local block = CreateBlock(i);
+    for blockId = 1, MAX_BLOCKS do
+        local block = CreateBlock(blockId);
 
-        for j = 1, MAX_BUTTONS do
-            CreateMiniButton(i, j, block);
+        for buttonId = 1, MAX_BUTTONS do
+            CreateMiniButton(blockId, buttonId, block);
         end
     end
 

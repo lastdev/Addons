@@ -15,6 +15,7 @@ points[ns.votfw] = {	-- "D", ["Author"], tip
 	[31925255] = { "D" },
 	[31925918] = { "D" },
 	[32165795] = { "D" },
+	[32395727] = { "D" },
 	[32583071] = { "D" },
 	[32595845] = { "D", },
 	[32675778] = { "D" },
@@ -48,12 +49,14 @@ points[ns.votfw] = {	-- "D", ["Author"], tip
 	[38245042] = { "D" },
 	[38374595] = { "D" },
 	[38564231] = { "D", "Under the foliage" },
+	[38591825] = { "D", "Descend into the Springtail Crag" },
 	[38824500] = { "D", "Under the hut" },
-	[38944165] = { "D" },
+	[38944165] = { "D", "Same colour as the soil" },
 	[39034094] = { "D" },
 	[39035160] = { "D" },
 	[39054286] = { "D", "Under the foliage" },
 	[39124424] = { "D", "Under the hut's\nnorthern side ramp" },
+	[39172073] = { "D", "At the entrance" },
 	[39504243] = { "D", "Under the foliage" },
 	[39584982] = { "D" },
 	[39634032] = { "D", "Author" },	-- *
@@ -77,7 +80,7 @@ points[ns.votfw] = {	-- "D", ["Author"], tip
 	[40763866] = { "D" },
 	[40785117] = { "D", "Under the foliage" },
 	[40824719] = { "D" },
-	[40833529] = { "D", "Author" },	-- *
+	[40833529] = { "D" },
 	[40883664] = { "D" },
 	[40903452] = { "D" },
 	[40914021] = { "D" },
@@ -86,7 +89,7 @@ points[ns.votfw] = {	-- "D", ["Author"], tip
 	[41004944] = { "D", "Under the foliage" },
 	[41264902] = { "D", "Under the foliage" },
 	[41404578] = { "D", "Under the foliage" },
-	[41413992] = { "D", "Author" },	-- *
+	[41413992] = { "D", },
 	[41493820] = { "D", "Descend into the Springtail Warren" },
 	[41494400] = { "D", "Author", "Under the foliage" },	-- *
 	[41585279] = { "D", "Under the foliage" },
@@ -97,7 +100,7 @@ points[ns.votfw] = {	-- "D", ["Author"], tip
 	[41884709] = { "D" },
 	[41913716] = { "D", "Author" },	-- *
 	[42023115] = { "D", "Under the tree, at\nthe edge of the lake" },
-	[42093967] = { "D", "Author" },	-- *
+	[42093967] = { "D", },
 	[42124785] = { "D", "Under the foliage" },
 	[42174876] = { "D" },
 	[42185318] = { "D", "Under the foliage" },
@@ -117,11 +120,13 @@ points[ns.votfw] = {	-- "D", ["Author"], tip
 	[43623956] = { "D", "Under the foliage" },
 	[43784861] = { "D" },
 	[43853703] = { "D", "Under the foliage" },
-	[43915048] = { "D", "Author", "Under the foliage" },	-- *
+	[43915048] = { "D", "Under the foliage" },
 	[44014759] = { "D", "Under the foliage" },
 	[44164222] = { "D" },
 	[44305384] = { "D" },
+	[44442283] = { "D", "At the entrance" },
 	[44484075] = { "D" },
+	[44571883] = { "D", "Descend into the Springtail Crag" },
 	[44624346] = { "D" },
 	[44673335] = { "D", "Under the tree.\nIn front of Thunder" },
 	[44673777] = { "D" },
@@ -149,11 +154,13 @@ points[ns.votfw] = {	-- "D", ["Author"], tip
 	[46653394] = { "D", "Under the foliage" },
 	[46743295] = { "D", "Under the foliage" },
 	[46815580] = { "D", "Author" },	-- *
-	[46993714] = { "D" },
-	[46993785] = { "D" },
+	[46993714] = { "D", },
+	[46993785] = { "D", "Same colour as the soil" },
 	[47165123] = { "D", "Under the foliage" },
+	[47332116] = { "D", "At the entrance" },
 	[47373569] = { "D", "Under the foliage" },
 	[47583807] = { "D" },
+	[47651896] = { "D", "Descend into the Springtail Crag" },
 	[47773267] = { "D" },
 	[47773475] = { "D" },
 	[47824624] = { "D" },
@@ -247,40 +254,22 @@ points[ns.votfw] = {	-- "D", ["Author"], tip
 	[39635765] = { "B", "Blackhoof", "Battle Horn"  }, 
 	[45403838] = { "B", "Ghostly Pandaren Craftsman", 31292, "Standing under a tree" },
 	[43613748] = { "B", "Cache of Pilfered Goods", 31406, "Descend into the Springtail Warren" },
-	
-	[18944247] = { "S", "Staff of the Hidden Master", "Confirmed" },
-	[19103770] = { "S", "Staff of the Hidden Master" },
-	[17503580] = { "S", "Staff of the Hidden Master" },
-	[14903370] = { "S", "Staff of the Hidden Master" },
-	[15502910] = { "S", "Staff of the Hidden Master" },
-	
-	[15211190] = { "V", "Vale of Eternal Blossoms" },
-	[19041006] = { "V", "Vale of Eternal Blossoms" },
-	[21321303] = { "V", "Vale of Eternal Blossoms" },
-	[23411714] = { "V", "Vale of Eternal Blossoms" },
-	[25301495] = { "V", "Vale of Eternal Blossoms" },
-	[31201235] = { "V", "Vale of Eternal Blossoms" },
-	[34301050] = { "V", "Vale of Eternal Blossoms", "Author" },
-	[35641431] = { "V", "Vale of Eternal Blossoms" },
-	[38711243] = { "V", "Vale of Eternal Blossoms" },
-	[38981025] = { "V", "Vale of Eternal Blossoms", },
-	[39330712] = { "V", "Vale of Eternal Blossoms" },
-}
-points[ns.voeb] = {
-	[15766894] = { "V", "Vale of Eternal Blossoms" },
-	[16604562] = { "V", "Vale of Eternal Blossoms" }, -- Off the map for VotFW
-	[21686610] = { "V", "Vale of Eternal Blossoms" },
-	[25227070] = { "V", "Vale of Eternal Blossoms" },
-	[28467707] = { "V", "Vale of Eternal Blossoms" },
-	[31397367] = { "V", "Vale of Eternal Blossoms" },
-	[40536965] = { "V", "Vale of Eternal Blossoms" },
-	[45326678] = { "V", "Vale of Eternal Blossoms", "Author" },
-	[47417268] = { "V", "Vale of Eternal Blossoms" },
-	[52166977] = { "V", "Vale of Eternal Blossoms" },
-	[52596639] = { "V", "Vale of Eternal Blossoms", },
-	[53126154] = { "V", "Vale of Eternal Blossoms" },
-}
+	[72540985] = { "B", "Forgotten Lockbox", 31867, "Second floor of the \"Tavern in the Mists\"" },
 
+		-- "S", quest flag, item ID - This for the Staff of the Hidden Master
+	[18944247] = { "S", 31407, 86218, },
+	[19183773] = { "S", 31407, 86218 },
+	[17473586] = { "S", 31407, 86218 },
+	[14933373] = { "S", 31407, 86218 },
+	[15422917] = { "S", 31407, 86218 },
+	
+}
+points[ 371 ] = { -- The Jade Forest
+	[23206046] = { "B", "Forgotten Lockbox", 31867, "Second floor of the \"Tavern in the Mists\"" },
+}
+points[ 433 ] = { -- The Veiled Stair
+	[54667122] = { "B", "Forgotten Lockbox", 31867, "Second floor of the \"Tavern in the Mists\"" },
+}
 
 -- Choice of texture
 -- Note that these textures are all repurposed and as such have non-uniform sizing. I've copied my scaling factors from my old AddOn

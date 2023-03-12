@@ -5,7 +5,7 @@
 -- ------------------------------------------------------------------------------ --
 
 local TSM = select(2, ...) ---@type TSM
-local SyntaxHelpers = TSM.Init("UI.SyntaxHelpers")
+local SyntaxHelpers = TSM.Init("UI.SyntaxHelpers") ---@class UI.SyntaxHelpers
 local CustomPrice = TSM.Include("Service.CustomPrice")
 local Theme = TSM.Include("Util.Theme")
 local Money = TSM.Include("Util.Money")
@@ -318,6 +318,8 @@ function private.InsertColoredToken(tokenType, str)
 		elseif CustomPrice.IsSource(str) then
 			color = SOURCE_COLOR
 		elseif CustomPrice.IsCustomSource(str) then
+			color = CUSTOM_SOURCE_COLOR
+		elseif strlower(str) == "baseitem" or strmatch(str, "^[ip]:%d+") then
 			color = CUSTOM_SOURCE_COLOR
 		else
 			color = UNKNOWN_COLOR

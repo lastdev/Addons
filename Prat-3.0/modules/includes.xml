@@ -28,9 +28,11 @@
 <Script file="History.lua"/>
 <Script file="HoverTips.lua" />
 <Script file="Invites.lua"/>
+<Script file="LinkInfoIcons.lua"/>
 <Script file="Keybindings.lua"/>
 <Script file="Mentions.lua" />
 <Script file="Memory.lua" />
+<Script file="NewcomersChat.lua" />
 <Script file="Paragraph.lua"/>
 <Script file="PlayerNames.lua"/>
 <Script file="PopupMessage.lua"/>

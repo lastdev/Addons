@@ -1,8 +1,8 @@
-## Interface: 100002
+## Interface: 100005
 ## Title: DataStore_Mails
 ## Notes: Stores information about character mails
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: 2023.01.06
+## Version: 2023.02.23
 ## Dependencies: DataStore
 ## OptionalDeps: Ace3
 ## SavedVariables: DataStore_MailsDB

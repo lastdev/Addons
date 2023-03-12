@@ -182,7 +182,7 @@ function private.ErrorHandler(msg, thread)
 		msg = #stackInfo > 0 and gsub(msg, String.Escape(stackInfo[1].file)..":"..stackInfo[1].line..": ", "") or msg,
 		stackInfo = stackInfo,
 		time = time(),
-		debugTime = floor(debugprofilestop()),
+		debugTime = floor(GetTimePreciseSec() * 1000),
 		client = format("%s (%s)", clientVersion, clientBuild),
 		locale = GetLocale(),
 		inCombat = tostring(InCombatLockdown() and true or false),

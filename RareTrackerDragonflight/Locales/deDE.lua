@@ -125,6 +125,8 @@ L[193663] = "Aufgebrachter Elementar"
 L[193658] = "Verderbter Protodrache"
 L[193664] = "Urtumbeschützer"
 
+L[186200] = "Harkyn Grymmstein"
+
 -- "That's Pretty Neat!" Rares
 L[193259] = "Blauer Schrecken"
 L[195895] = "Nergazurai"

@@ -2,10 +2,10 @@
 ## Title: |cff00fe00TradeSkillMaster|r
 ## Notes: Auction house and gold making addon.
 ## Author: TradeSkillMaster Team
-## Version: v4.12.32
+## Version: v4.12.33
 ## SavedVariables: TradeSkillMasterDB, TSMItemInfoDB
 ## OptionalDeps: ArkInventory, Auc-Advanced, Auctionator, TheUndermineJournal, BootyBayGazette, AuctionDB
-## X-Embeds: AccurateTime, Ace3, LibDataBroker-1.1, LibDBIcon-1.0, LibRealmInfo, LibDeflate, LibSerialize
+## X-Embeds: Ace3, LibDataBroker-1.1, LibDBIcon-1.0, LibRealmInfo, LibDeflate, LibSerialize, LibAHTab
 
 # External libraries
 External\EmbeddedLibs\LibStub\LibStub.lua
@@ -20,7 +20,6 @@ External\EmbeddedLibs\LibSerialize\LibSerialize.lua
 External\EmbeddedLibs\LibAHTab\LibAHTab.xml
 
 # 1st-party libraries
-External\AccurateTime\AccurateTime.lua
 External\LibTSMClass\LibTSMClass.lua
 
 # Our core init files

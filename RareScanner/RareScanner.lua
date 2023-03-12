@@ -502,6 +502,10 @@ function scanner_button:DetectedNewVignette(self, vignetteInfo, isNavigating)
 	elseif (UnitOnTaxi("player") and not RSConfigDB.IsScanningWhileOnTaxi()) then
 		RSLogger:PrintDebugMessage(string.format("La entidad [%s] se ignora por estar montado en un transporte", entityID))
 		return
+	-- disable alerts while racing
+	elseif (not RSConfigDB.IsScanningWhileOnRacingQuest() and C_UnitAuras.GetPlayerAuraBySpellID(RSConstants.RACING_SPELL_ID)) then
+		RSLogger:PrintDebugMessage(string.format("La entidad [%s] se ignora por estar haciendo una mision de vuelo", entityID))
+		return
 	-- disable alerts while in pet combat
 	elseif (C_PetBattles.IsInBattle() and not RSConfigDB.IsScanningWhileOnPetBattle()) then
 		RSLogger:PrintDebugMessage(string.format("La entidad [%s] se ignora por estar en medio de un combate de mascotas", entityID))

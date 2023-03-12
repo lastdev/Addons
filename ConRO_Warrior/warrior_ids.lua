@@ -67,6 +67,7 @@ local ConRO_Warrior, ids = ...;
 		Cleave = {spellID = 845, talentID = 112147},
 		ColossusSmash = {spellID = 167105, talentID = 112144},
 		DiebytheSword = {spellID = 118038, talentID = 112128},
+		IgnorePain = {spellID = 190456, talentID = 114738},
 		MortalStrike = {spellID = 12294, talentID = 112122},
 		Overpower = {spellID = 7384, talentID = 112123},
 		Rend = {spellID = 772, talentID = 112136},
@@ -160,6 +161,7 @@ local ConRO_Warrior, ids = ...;
 		BattleShout = 6673,
 		DeadlyCalm = 262228,
 		ExecutionersPrecision = 242188,
+		Hurricane = 390581,
 		IgnorePain = 190456,
 		InForTheKill = 248622,
 		MercilessBonegrinder = 383316,
@@ -333,7 +335,7 @@ local ConRO_Warrior, ids = ...;
 --Protection
 	ids.Prot_Ability = {
 	--Warrior
-		Avatar = {spellID = 107574, talentID = 112232},
+		Avatar = {spellID = 401150, talentID = 114769},
 		BattleShout = {spellID = 6673},
 		BattleStance = {spellID = 386164, talentID = 112184},
 		BerserkerRage = {spellID = 18499, talentID = 112239},
@@ -468,6 +470,7 @@ local ConRO_Warrior, ids = ...;
 		Revenge = 5302,
 		ShieldBlock = 132404,
 		Victorious = 32216,
+		ViolentOutburst = 386478,
  	}
 	ids.Prot_Debuff = {
 		DeepWounds = 115767,

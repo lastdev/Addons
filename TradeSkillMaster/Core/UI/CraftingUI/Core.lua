@@ -335,9 +335,9 @@ function private.FSMCreate()
 				context.frame:Draw()
 				private.isVisible = true
 				for addonTag, func in pairs(private.apiCallbacks) do
-					local apiFuncStartTime = debugprofilestop()
+					local apiFuncStartTime = GetTimePreciseSec()
 					func(true, context.frame:_GetBaseFrame())
-					Log.Info("API function (%s) took %d ms", addonTag, floor(debugprofilestop() - apiFuncStartTime + 0.5))
+					Log.Info("API function (%s) took %0.5fs", addonTag, GetTimePreciseSec() - apiFuncStartTime)
 				end
 			end)
 			:SetOnExit(function(context)
@@ -349,9 +349,9 @@ function private.FSMCreate()
 					UpdateDefaultCraftButton()
 				end
 				for addonTag, func in pairs(private.apiCallbacks) do
-					local apiFuncStartTime = debugprofilestop()
+					local apiFuncStartTime = GetTimePreciseSec()
 					func(false)
-					Log.Info("API function (%s) took %d ms", addonTag, floor(debugprofilestop() - apiFuncStartTime + 0.5))
+					Log.Info("API function (%s) took %0.5fs", addonTag, GetTimePreciseSec() - apiFuncStartTime)
 				end
 			end)
 			:AddTransition("ST_CLOSED")

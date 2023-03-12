@@ -430,6 +430,11 @@ local QuestExceptions = {
   [70562] = "Weekly", -- The Plumbers, Mason
   [66953] = "Weekly", -- All Things Fluffy
   [70234] = "Weekly", -- All this Hammering
+  [66945] = "Weekly", -- Icy Ink
+  [72158] = "Weekly", -- A Dense Delivery
+  [72156] = "Weekly", -- A Fiery Flight
+  [66949] = "Weekly", -- Trinket Bandits
+  [70211] = "Weekly", -- Stomping Explorers
   -- Primalist Invasions
   [70723] = "Weekly", -- Shattering the Earth Primalists
   [70752] = "Weekly", -- Vaporizing the Water Primalists
@@ -465,9 +470,10 @@ local QuestExceptions = {
   -- [62634] = "Weekly", -- A Shattered Path Through Time - CTM Timewalking
   [72725] = "Weekly", -- A Shrouded Path Through Time - MOP Timewalking
   [72724] = "Weekly", -- A Savage Path Through Time - WOD Timewalking
+  [72719] = "Weekly", -- A Fel Path Through Time - LEG Timewalking
   [72723] = "Weekly", -- A Call to Battle - Battlegrounds
   [72722] = "Weekly", -- Emissary of War - Mythic Dungeons
-  -- [62639] = "AccountWeekly", -- The Very Best - PvP Pet Battles
+  [72721] = "AccountWeekly", -- The Very Best - PvP Pet Battles
   [72720] = "Weekly", -- The Arena Calls - Arena Skirmishes
 }
 SI.QuestExceptions = QuestExceptions

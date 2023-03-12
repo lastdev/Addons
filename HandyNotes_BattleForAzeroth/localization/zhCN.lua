@@ -100,6 +100,10 @@ L['options_icons_locked_chest_desc'] = '在 {location:西浪岩} 显示锁住的
 L['options_icons_recrig'] = '{npc:150448}'
 L['options_icons_recrig_desc'] = '显示 {npc:150448} 的位置和奖励。'
 
+L['mechagon_snooter_note'] = '{npc:154769}（非常稀有）和 {npc:154767} 共享刷新点。'
+L['battlepet_secondary_only_note'] = '只能作为次要宠物找到。'
+L['mechagon_explode_note'] = '{note:当心，它可以 {spell:90096}，这会杀死它，将无法抓住它。}'
+
 -------------------------------------------------------------------------------
 ----------------------------------- NAZJATAR ----------------------------------
 -------------------------------------------------------------------------------
@@ -297,7 +301,7 @@ L['lets_bee_friends_step_3'] = '把 {item:163699} 交给位于 {location:伯拉�
 L['lets_bee_friends_step_4'] = '把 {item:163702} 交给位于 {location:米登霍尔蜜酒庄} 的 {npc:133907}。'
 L['lets_bee_friends_step_5'] = '完成 {npc:133907} 的 {quest:53347}。'
 
-local luncheon = (ns.faction == 'Alliance') and '{npc:138221} 位于 {location:布伦纳丹}' or '{npc:138096} 位于 {location:战牙要塞}'
+local luncheon = (UnitFactionGroup('player') == 'Alliance') and '{npc:138221} 位于 {location:布伦纳丹}' or '{npc:138096} 位于 {location:战牙要塞}'
 L['these_hills_sing_note'] = '在这里打开 {item:160485}。从' .. luncheon .. '购买或者从 {location:布伦纳丹} 的 {object:被丢弃的午餐盒} 拾取宝藏。'
 
 L['ancient_tidesage_scroll'] = '古代海潮贤者卷轴'
@@ -658,7 +662,7 @@ L['options_icons_brutosaurs'] = '{achievement:13029}'
 L['options_icons_brutosaurs_desc'] = '显示 {achievement:13029} 成就中雷龙的位置。'
 
 local hekd_note = '\n\n要获得 {npc:126334} 访问权限，必须完成任务 %s。'
-if ns.faction == 'Horde' then
+if UnitFactionGroup('player') == 'Horde' then
     hekd_note = hekd_note:format('位于 {location:达萨罗} 的 {npc:127665} 的 {quest:47441} 然后是 {npc:126334} 的 {quest:47442}')
 else
     hekd_note = hekd_note:format('位于 {location:沃顿} 的 {npc:136562} 的 {quest:51142} 然后是 {npc:136559} 的 {quest:51145}')
@@ -701,7 +705,7 @@ L['options_icons_sausage_sampler'] = '{achievement:13087}'
 L['options_icons_sausage_sampler_desc'] = '显示 {achievement:13087} 成就中供应商的位置。'
 
 -- For Horde, include a note about drinks that must be purchased on the AH
-local horde_sheets = (ns.faction == 'Horde') and [[ 以下饮料部落不提供，必须在拍卖行购买：
+local horde_sheets = (UnitFactionGroup('player') == 'Horde') and [[ 以下饮料部落不提供，必须在拍卖行购买：
 
 · {item:163639}
 · {item:163638}
@@ -731,3 +735,10 @@ L['options_icons_secret_supplies_desc'] = '显示 {achievement:13317} 成就中 
 L['squirrels_note'] = '必须使用表情 {emote:/爱}，{emote:/love} 给非战斗宠物的小动物。'
 L['options_icons_squirrels'] = '{achievement:14730}'
 L['options_icons_squirrels_desc'] = '显示 {achievement:14730} 成就中小动物的位置。'
+
+L['options_icons_battle_safari'] = '{achievement:12930}'
+L['options_icons_battle_safari_desc'] = '显示 {achievement:12930} 成就中战斗宠物的位置。'
+L['options_icons_mecha_safari'] = '{achievement:13693}'
+L['options_icons_mecha_safari_desc'] = '显示 {achievement:13693} 成就中战斗宠物的位置。'
+L['options_icons_nazja_safari'] = '{achievement:13694}'
+L['options_icons_nazja_safari_desc'] = '显示 {achievement:13694} 成就中战斗宠物的位置。'

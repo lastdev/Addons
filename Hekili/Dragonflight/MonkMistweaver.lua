@@ -149,6 +149,21 @@ spec:RegisterAuras( {
         duration = 30,
         max_stack = 6
     },
+    ancient_concordance = {
+        id = 389391,
+        duration = 3600,
+        max_stack = 1
+    },
+    ancient_teachings = {
+        id = 388026,
+        duration = 15,
+        max_stack = 1
+    },
+    awakened_faeline = {
+        id = 389387,
+        duration = 3600,
+        max_stack = 1
+    },
     bonedust_brew = {
         id = 386276,
         duration = 10,
@@ -175,7 +190,10 @@ spec:RegisterAuras( {
         max_stack = 2
     },
     close_to_heart = {
-        id = 389574,
+        id = 389684,
+        duration = 3600,
+        max_stack = 1,
+        copy = 389574
     },
     clouded_focus = {
         id = 388048,
@@ -211,10 +229,11 @@ spec:RegisterAuras( {
         max_stack = 1
     },
     essence_font = {
-        id = 191840,
+        id = 344006,
         duration = 8,
         tick_time = 2,
-        max_stack = 1
+        max_stack = 1,
+        copy = 191840
     },
     eye_of_the_tiger = {
         id = 196608,
@@ -244,25 +263,27 @@ spec:RegisterAuras( {
         max_stack = 1
     },
     generous_pour = {
-        id = 389575,
+        id = 389685,
+        duration = 3600,
+        max_stack = 1
     },
     grapple_weapon = {
         id = 233759,
         duration = 6,
         max_stack = 1
     },
-    invoke_chiji_the_red_crane = { -- TODO: Is a totem.
-        id = 325197,
-        duration = 25,
-        max_stack = 1,
-        copy = "invoke_chiji"
+    invoke_chiji_the_red_crane = { -- This is not the presence of the totem, but the buff stacks gained while totem is up.
+        id = 343820,
+        duration = 20,
+        max_stack = 3,
+        copy = { "invoke_chiji", "chiji_the_red_crane", "chiji" }
     },
-    invoke_yulon_the_jade_serpent = { -- TODO: Is a totem.
+    invoke_yulon_the_jade_serpent = { -- Misleading; use pet.yulon.up or totem.yulon.up instead.
         id = 322118,
         duration = 25,
         tick_time = 1,
         max_stack = 1,
-        copy = "invoke_yulon"
+        copy = { "invoke_yulon", "yulon_the_jade_serpent", "yulon" }
     },
     invokers_delight = {
         id = 388663,
@@ -326,7 +347,8 @@ spec:RegisterAuras( {
     secret_infusion_critical_strike = {
         id = 388498,
         duration = 10,
-        max_stack = 1
+        max_stack = 1,
+        copy = "secret_infusion_crit"
     },
     secret_infusion_haste = {
         id = 388497,
@@ -347,6 +369,11 @@ spec:RegisterAuras( {
         id = 198909,
         duration = 20,
         max_stack = 1
+    },
+    soothing_breath = { -- Applied by Yu'lon while active.
+        id = 343737,
+        duration = 25,
+        max_stack = 1,
     },
     soothing_mist = {
         id = 115175,
@@ -377,6 +404,11 @@ spec:RegisterAuras( {
         id = 388686,
         duration = 30,
         max_stack = 1
+    },
+    teachings_of_the_monastery = {
+        id = 202090,
+        duration = 10,
+        max_stack = 3
     },
     thunder_focus_tea = {
         id = 116680,
@@ -429,22 +461,68 @@ spec:RegisterAuras( {
 } )
 
 
+spec:RegisterTotem( "chiji", 877514 )
+spec:RegisterTotem( "yulon", 574571 )
+
+spec:RegisterStateTable( "gust_of_mist", setmetatable( {}, {
+    __index = function( t,  k)
+        if k == "count" then
+            t[ k ] = GetSpellCount( action.sheiluns_gift.id )
+            return t[ k ]
+        end
+    end
+} ) )
+
+spec:RegisterHook( "reset_precast", function()
+    gust_of_mist.count = nil
+end )
+
+
 -- Abilities
 spec:RegisterAbilities( {
+    -- Strike with a blast of Chi energy, dealing 1,429 Physical damage and granting Shuffle for 3 sec.
+    blackout_kick = {
+        id = 100784,
+        cast = 0,
+        cooldown = 3,
+        hasteCD = true,
+        gcd = "spell",
+        school = "physical",
+
+        startsCombat = true,
+
+        handler = function ()
+            removeBuff( "teachings_of_the_monastery" )
+            if pet.chiji.up then
+                addStack( "invoke_chiji" )
+                gust_of_mist.count = min( 10, gust_of_mist.count + 1 )
+            end
+        end,
+    },
+
     enveloping_mist = {
         id = 124682,
-        cast = 2,
+        cast = function()
+            if buff.invoke_chiji.stack == 3 then return 0 end
+            return 2 * ( 1 - 0.333 * buff.invoke_chiji.stack ) * haste
+        end,
         cooldown = 0,
         gcd = "spell",
 
-        spend = 0.24,
+        spend = function()
+            return pet.yulon.up and 0.12 or 0.24
+        end,
         spendType = "mana",
 
         startsCombat = false,
         texture = 775461,
 
         handler = function ()
+            removeBuff( "invoke_chiji" )
+            gust_of_mist.count = 0
+
             applyBuff( "enveloping_mist" )
+            if talent.secret_infusion.enabled and buff.thunder_focus_tea.stack == buff.thunder_focus_tea.max_stack then applyBuff( "secret_infusion_versatility" ) end
         end,
     },
 
@@ -461,7 +539,9 @@ spec:RegisterAbilities( {
         texture = 1360978,
 
         handler = function ()
-            applyBuff("essence_font")
+            applyBuff( "essence_font" )
+            if talent.ancient_teachings.enabled then applyBuff( "ancient_teachings" ) end
+            if talent.secret_infusion.enabled and buff.thunder_focus_tea.stack == buff.thunder_focus_tea.max_stack then applyBuff( "secret_infusion_haste" ) end
         end,
     },
 
@@ -496,6 +576,7 @@ spec:RegisterAbilities( {
         toggle = "cooldowns",
 
         handler = function ()
+            summonTotem( "chiji", 25 )
         end,
 
         copy = "invoke_chiji"
@@ -516,6 +597,7 @@ spec:RegisterAbilities( {
         toggle = "cooldowns",
 
         handler = function ()
+            summonTotem( "yulon", 25 )
         end,
 
         copy = "invoke_yulon"
@@ -536,7 +618,7 @@ spec:RegisterAbilities( {
         toggle = "cooldowns",
 
         handler = function ()
-            applyBuff("life_cocoon")
+            applyBuff( "life_cocoon" )
         end,
     },
 
@@ -552,7 +634,7 @@ spec:RegisterAbilities( {
         toggle = "cooldowns",
 
         handler = function ()
-            applyBuff("mana_tea")
+            applyBuff( "mana_tea" )
         end,
     },
 
@@ -619,6 +701,7 @@ spec:RegisterAbilities( {
 
         handler = function ()
             applyBuff( "renewing_mist" )
+            if talent.secret_infusion.enabled and buff.thunder_focus_tea.stack == buff.thunder_focus_tea.max_stack then applyBuff( "secret_infusion_haste" ) end
         end,
     },
 
@@ -678,6 +761,33 @@ spec:RegisterAbilities( {
         end,
     },
 
+    -- Talent: Kick upwards, dealing 3,359 Physical damage.
+    rising_sun_kick = {
+        id = 107428,
+        cast = 0,
+        cooldown = function() return ( buff.thunder_focus_tea.up and 3 or 12 ) * haste end,
+        gcd = "spell",
+        school = "physical",
+
+        talent = "rising_sun_kick",
+        startsCombat = true,
+
+        handler = function ()
+            if state.spec.mistweaver then
+                if talent.rapid_diffusion.enabled then
+                    if solo then applyBuff( "renewing_mist", 3 * talent.rapid_diffusion.rank )
+                    else active_dot.renewing_mist = max( group_members, active_dot.renewing_mist + 1 ) end
+                end
+                if talent.secret_infusion.enabled and buff.thunder_focus_tea.stack == buff.thunder_focus_tea.max_stack then applyBuff( "secret_infusion_versatility" ) end
+                if pet.chiji.up then
+                    addStack( "invoke_chiji" )
+                    gust_of_mist.count = min( 10, gust_of_mist.count + 1 )
+                end
+                removeStack( "thunder_focus_tea" )
+            end
+        end,
+    },
+
     -- Draws in all nearby clouds of mist, healing up to 3 nearby allies for 1,220 per cloud absorbed. A cloud of mist is generated every 8 sec while in combat.
     sheiluns_gift = {
         id = 399491,
@@ -692,7 +802,12 @@ spec:RegisterAbilities( {
         startsCombat = false,
         texture = 1242282,
 
+        usable = function()
+            return gust_of_mist.count > 0, "requires mists"
+        end,
+
         handler = function ()
+            gust_of_mist.count = 0
         end,
     },
 
@@ -724,7 +839,7 @@ spec:RegisterAbilities( {
         texture = 606550,
 
         handler = function ()
-            applyBuff("soothing_mist")
+            applyBuff( "soothing_mist" )
         end,
     },
 
@@ -742,6 +857,10 @@ spec:RegisterAbilities( {
 
         handler = function ()
             applyBuff( "spinning_crane_kick" )
+            if pet.chiji.up then
+                addStack( "invoke_chiji" )
+                gust_of_mist.count = min( 10, gust_of_mist.count + 1 )
+            end
         end,
     },
 
@@ -756,7 +875,28 @@ spec:RegisterAbilities( {
         nobuff = "thunder_focus_tea",
 
         handler = function ()
-            applyBuff( "thunder_focus_tea", nil, 2 )
+            addStack( "thunder_focus_tea", nil, talent.focused_thunder.enabled and 2 or 1 )
+        end,
+    },
+
+    -- Strike with the palm of your hand, dealing 568 Physical damage. Reduces the remaining cooldown on your Brews by 1 sec.
+    tiger_palm = {
+        id = 100780,
+        cast = 0,
+        cooldown = 0,
+        gcd = "spell",
+        school = "physical",
+
+        startsCombat = true,
+
+        handler = function ()
+            if talent.eye_of_the_tiger.enabled then
+                applyDebuff( "target", "eye_of_the_tiger" )
+                applyBuff( "eye_of_the_tiger" )
+            end
+            if talent.teachings_of_the_monastery.enabled then
+                addStack( "teachings_of_the_monastery" )
+            end
         end,
     },
 
@@ -773,6 +913,7 @@ spec:RegisterAbilities( {
         texture = 1360980,
 
         handler = function ()
+            if talent.secret_infusion.enabled and buff.thunder_focus_tea.stack == buff.thunder_focus_tea.max_stack then applyBuff( "secret_infusion_mastery" ) end
         end,
     },
 
@@ -786,7 +927,7 @@ spec:RegisterAbilities( {
         texture = 651940,
 
         handler = function ()
-            applyBuff("zen_focus_tea")
+            applyBuff( "zen_focus_tea" )
         end,
     },
 
@@ -809,6 +950,20 @@ spec:RegisterAbilities( {
 } )
 
 
+spec:RegisterSetting( "experimental_msg", nil, {
+    type = "description",
+    name = "|cFFFF0000WARNING|r:  Healer support in this addon is focused on DPS output only.  This is more useful for solo content or downtime when your healing output is less critical in a group/encounter.  Use at your own risk.",
+    width = "full",
+} )
+
+spec:RegisterSetting( "save_faeline", false, {
+    type = "toggle",
+    name = "|T3636842:0|t Faeline Stomp: Don't Reuse",
+    desc = "If checked, the default priority will not recommend |T3636842:0|t Faeline Stomp when you already have |T3528274:0|t Ancient Concordance and/or |T3528275:0|t Awakened Faeline active.\n\n"
+        .. "This may be desired from a mana efficiency standpoint.",
+    width = "full",
+} )
+
 
 spec:RegisterOptions( {
     enabled = true,
@@ -830,4 +985,4 @@ spec:RegisterOptions( {
 } )
 
 
-spec:RegisterPack( "Mistweaver", 20230123, [[Hekili:9A1xVnkoq8Vn9LTInaDV2kLSs7(0Tv62xOpBJbgcEbSr2MgfPk(SFJHMGXjTPTN09qcjZ8ZZF(ndZysi5rssbZaKFhTkkEvyuCquC4nr3tsm77asshlVMTf)HG1IF)pCTzhWEcuwv7BKScRj0YEvoQMKK1ZBm)sqYoVDVdX2b5O4BxrsQ4ffWewqNtsESIRhsTFydPV45Huzj()CdxkgsBq)JQlLQH0)gQ5n8amquYsEd6(ju6GofKlBZyMVS5RDYXt(W50LxXPz9kT51vVdZ1HhoQhLIXptrRyIcQ2O41GRYEnq5gOv7kmRrklOL9Q9lKcknOQ5ITUsB4BRmA6F6l22ccJRQsUcgnLRqMihWWG1qZznnlSpBlvwsXqmVEr44XiwlZGgUaW8r225QWAt60FPwQ)ABxWgMeU2M65MnHxZl3yb8eqbb0Yb933eFztGpFDlSo2HXd02sHPQxuakAPmVxtnaZtVIRrIKQ7f0AmF90M1G9sYEZOoR)Y6lldqRGvyXw9invb0wPGPnGApEk8aBcVkxkBkK7ebE2pqbTmUqVomYZvZ9mNi2RtBkV4BXSQJ10(UdR1Xp)8LaEi8ICjsSSDoM8m8Vtf8Lt5L)VRZ8Hz9(URUOrpLFNL7rWtk0DCHWg75kg2IBJfsco)sJyMNors2XuwyAsYVA7KkdumKEJ3GNGHhijJ)Yo0dTp(43JZqbblRbki)KKKRWbakoBAC0CYmKUEZqA8HPu4aw)kbXGb0N1AEviRTIFvBD5kXq6vtj)B4YffyRdVzKwEr7HkLBiGy(MpMXQMhO)Yf0zRGUWXtJw4qP41P3L(iYfSp7Te6NNihFJDif5TWrg9sduqogHg9)gh)FjPWinEi95NhsV0bCtoNCBE43urSakz9nNwjpzJ7BvjpUb(C1Wzw9Wgzpuly35n0Vf)6TX(T6KpUb3d0TUGwUr3d5DlIp3n8EaV3f40gFpeHRweAUxbWh57Fe33NMqmTB3wgNBd9UhW0Gu601kTJsTW)at)(u(rBM60oElVt61olvf9EEFk(YVyo6BwVPsIxF(h8AMGvZgLs(3d]] )
+spec:RegisterPack( "Mistweaver", 20230216, [[Hekili:nF1wVTTnu4Fl5LMeSunFjlDDioaDdyanyRVO(SKOPOS5SePgjvDmGb)TVpk5l00YXEfBD7HeBZZhpNd)ox4Hjdt(CsCoXWs(0ObJgpy0WhIgoA447Vpj2SQMLextOliZWxeKk8)FNRnlzKVWuorRkLKCNk0YgffItIN2WlnFuKmTF9ogyRzuS87gKepNNNZ6WY00Kyh23oy0Bh(WpzZSzFasZTzYAdxkSzgPnJ8fjhlPyuI2WfZSz)kHvYfmBwSrwvBZwoNbSAdrK3kNJFrWFSx4B2rX2DCtHuzZQiccexuWPCMGU62iC0uYcEjoqeQZ26OAyrz1uI57M891Yw)55(KrNZtN2O0MtlEjyp7Z7KJvbJquPZHhNQnk(cMVWgnlLByvA)fNwkL5PfnQvhSktPzQfUdP3QL8zZn60)OjFwfty8fvWvSwv5VirqzWniLPusz5b6NmlvwKcxKU4a3jGrCAUJJX5bbL74ftUsZmo6xhPX5pDJ81RV6MPnffrWOG8nPuPGkv5oFiQPE96oHljlycw(2Dbj36BmNFM29Z0seLVZLRoHiz35OtQzYqNh4aaldfvXz6NMm(8QaFEAn84yVOyK2fEnZBe5mvAHK2OtnmsGCfxdkiv3isxaomq60suRjBmTYA5mdPeKseuesCa31Y(ZzPvsbs)zQvBiOtdau1BOszzUCPikW8rkwfHl0pnJMhvrEjWD2NRE0Ybz4DND(mCYRjLv)t56OgMU4XXNh4MZXJJ8dii83xePN4OxMWMDfqux0E(3k6DwdFCCA)6bbQob6AUq4oFufbLOo)njgD01aZ2(1dEFs8sIYbtNe)55OBjVQwQmO9PRP51qvx76d)NnOhc6iRLvadPb17OTpwGI(zZy6i7Z)wBZ2XOL(VifWoTIV(SSZ1DD8ppWiMGmTKLJnCZWxUnYLf0JhRn))1H7S4dFdTO95p2YoodDp4bA3DSUEFokijU9BU72rKgF8P2rf2OMKFojMQWTskoP7oY9zO2ShNaYB7vNyoIWsWedYY(A1wqPPtxJpPUUc8ZLsn2S1RTzNVG0M9Mo66vCYd6f4CX7BjYns3wW670aZpeIPT4na0d(G6Tq2ho2n0W2G3PdihAJr(Gd57dH(Fa1FUBZSzpzZ2CJ23SiY3ikO9grKTHKTlBd74eSLrEza7URUljjNvqAkpot5ObtFTmLDdQ2xoY(4W2bxdqDq8y)GSVwejyW2xRsz3GUbGENpOdh8na5pEG)5piCaW37dSBW4aedh8APm9oNCx0gsVztmV)5L9sk6zMzB2TEmI)a6TE1L3G)PUUDDJg7sz2xKemgD31iPDVD0DrId(FJE)Fv2rB6YQ39WRJYR7nSm6sQ2hF(2gT2gZvmxI3i)b(c88YfK2vt(R]] )

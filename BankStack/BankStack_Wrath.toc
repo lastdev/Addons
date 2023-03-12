@@ -1,8 +1,8 @@
-## Interface: 30400
+## Interface: 30401
 ## Title: BankStack
 ## Author: Kemayo
 ## Notes: From bags we came, to bank we return
-## Version: v2022.4
+## Version: v2023.1
 ## X-Category: Inventory
 ## LoadOnDemand: 0
 ## OptionalDeps: Ace3, LibDBIcon-1.0, tekDebug

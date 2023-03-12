@@ -285,6 +285,7 @@ L["COLUMN_FOLLOWERS_AIL_TITLE_SHORT"] = "裝等"
 
 
 -- *** Mythic Keystone ***
+-- L["Mythic+ Keystone"] = true
 -- L["COLUMN_KEYNAME_TITLE"] = "Current Mythic+ Keystone"
 -- L["COLUMN_KEYNAME_TITLE_SHORT"] = "Keystone"
 -- L["COLUMN_KEYNAME_SUBTITLE"] = "Your next adventure"

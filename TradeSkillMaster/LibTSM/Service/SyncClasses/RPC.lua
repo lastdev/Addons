@@ -19,7 +19,7 @@ local private = {
 	pendingTimer = nil,
 }
 local RPC_EXTRA_TIMEOUT = 15
-local CALLBACK_TIME_WARNING_THRESHOLD_MS = 20
+local CALLBACK_TIME_WARNING_THRESHOLD = 0.02
 
 
 
@@ -89,18 +89,18 @@ function private.HandleCall(dataType, _, sourcePlayer, data)
 	end
 	local responseData = TempTable.Acquire()
 
-	local funcStartTime = debugprofilestop()
+	local funcStartTime = GetTimePreciseSec()
 	responseData.result = TempTable.Acquire(private.rpcFunctions[data.name](unpack(data.args)))
-	local funcTimeTaken = debugprofilestop() - funcStartTime
-	if funcTimeTaken > CALLBACK_TIME_WARNING_THRESHOLD_MS then
-		Log.Warn("RPC (%s) took %0.2fms", tostring(data.name), funcTimeTaken)
+	local funcTimeTaken = GetTimePreciseSec() - funcStartTime
+	if funcTimeTaken > CALLBACK_TIME_WARNING_THRESHOLD then
+		Log.Warn("RPC (%s) took %0.5fs", tostring(data.name), funcTimeTaken)
 	end
 	responseData.seq = data.seq
-	local sendStartTime = debugprofilestop()
+	local sendStartTime = GetTimePreciseSec()
 	local numBytes = Comm.SendData(Constants.DATA_TYPES.RPC_RETURN, sourcePlayer, responseData)
-	local sendTimeTaken = debugprofilestop() - sendStartTime
-	if sendTimeTaken > CALLBACK_TIME_WARNING_THRESHOLD_MS then
-		Log.Warn("Sending RPC result (%s) took %0.2fms (%d bytes)", tostring(data.name), sendTimeTaken, numBytes)
+	local sendTimeTaken = GetTimePreciseSec() - sendStartTime
+	if sendTimeTaken > CALLBACK_TIME_WARNING_THRESHOLD then
+		Log.Warn("Sending RPC result (%s) took %0.5fs (%d bytes)", tostring(data.name), sendTimeTaken, numBytes)
 	end
 	TempTable.Release(responseData.result)
 	TempTable.Release(responseData)
@@ -126,11 +126,11 @@ function private.HandleReturn(dataType, _, character, data)
 		return
 	end
 	assert(character == context.targetPlayer)
-	local startTime = debugprofilestop()
+	local startTime = GetTimePreciseSec()
 	context.handler(true, context.targetPlayer, unpack(data.result))
-	local timeTaken = debugprofilestop() - startTime
-	if timeTaken > CALLBACK_TIME_WARNING_THRESHOLD_MS then
-		Log.Warn("RPC (%s) result handler took %0.2fms", tostring(context.name), timeTaken)
+	local timeTaken = GetTimePreciseSec() - startTime
+	if timeTaken > CALLBACK_TIME_WARNING_THRESHOLD then
+		Log.Warn("RPC (%s) result handler took %0.5fs", tostring(context.name), timeTaken)
 	end
 	TempTable.Release(context)
 	private.pendingRPC[data.seq] = nil

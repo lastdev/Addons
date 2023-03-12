@@ -251,8 +251,19 @@ local function GetGeneralOptions()
 					end,
 					width = "full",
 				},
-				scanOnPetBattle = {
+				scanOnFlyingQuest = {
 					order = 8,
+					name = AL["ENABLE_SCAN_ON_RACING_QUEST"],
+					desc = AL["ENABLE_SCAN_ON_RACING_QUEST_DESC"],
+					type = "toggle",
+					get = function() return RSConfigDB.IsScanningWhileOnRacingQuest() end,
+					set = function(_, value)
+						RSConfigDB.SetScanningWhileOnRacingQuest(value)
+					end,
+					width = "full",
+				},
+				scanOnPetBattle = {
+					order = 9,
 					name = AL["ENABLE_SCAN_ON_PET_BATTLE"],
 					desc = AL["ENABLE_SCAN_ON_PET_BATTLE_DESC"],
 					type = "toggle",
@@ -263,7 +274,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				scanWorldMapVignettes = {
-					order = 9,
+					order = 10,
 					name = AL["ENABLE_SCAN_WORLDMAP_VIGNETTES"],
 					desc = AL["ENABLE_SCAN_WORLDMAP_VIGNETTES_DESC"],
 					type = "toggle",
@@ -274,7 +285,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				ignoreCompletedEntities = {
-					order = 10,
+					order = 11,
 					name = AL["IGNORE_SCAN_COMPLETED_ENTITIES"],
 					desc = AL["IGNORE_SCAN_COMPLETED_ENTITIES_DESC"],
 					type = "toggle",
@@ -285,7 +296,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				showMaker = {
-					order = 11,
+					order = 12,
 					name = AL["ENABLE_MARKER"],
 					desc = AL["ENABLE_MARKER_DESC"],
 					type = "toggle",
@@ -296,7 +307,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				marker = {
-					order = 12,
+					order = 13,
 					type = "select",
 					dialogControl = 'RS_Markers',
 					name = AL["MARKER"],
@@ -310,12 +321,12 @@ local function GetGeneralOptions()
 					disabled = function() return not RSConfigDB.IsDisplayingMarkerOnTarget() end,
 				},
 				separatorIngameWaypoints = {
-					order = 13,
+					order = 14,
 					type = "header",
 					name = AL["INGAME_WAYPOINTS"],
 				},
 				enableIngameWaypoints = {
-					order = 14,
+					order = 15,
 					name = AL["ENABLE_WAYPOINTS_SUPPORT"],
 					desc = AL["ENABLE_WAYPOINTS_SUPPORT_DESC"],
 					type = "toggle",
@@ -326,7 +337,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				autoIngameWaypoints = {
-					order = 15,
+					order = 16,
 					name = AL["ENABLE_AUTO_WAYPOINTS"],
 					desc = AL["ENABLE_AUTO_WAYPOINTS_DESC"],
 					type = "toggle",
@@ -338,12 +349,12 @@ local function GetGeneralOptions()
 					disabled = function() return not RSConfigDB.IsWaypointsSupportEnabled() end,
 				},
 				separatorTomtomWaypoints = {
-					order = 16,
+					order = 17,
 					type = "header",
 					name = AL["TOMTOM_WAYPOINTS"],
 				},
 				enableTomtomSupport = {
-					order = 17,
+					order = 18,
 					name = AL["ENABLE_TOMTOM_SUPPORT"],
 					desc = AL["ENABLE_TOMTOM_SUPPORT_DESC"],
 					type = "toggle",
@@ -355,7 +366,7 @@ local function GetGeneralOptions()
 					disabled = function() return not TomTom end,
 				},
 				autoTomtomWaypoints = {
-					order = 18,
+					order = 19,
 					name = AL["ENABLE_AUTO_TOMTOM_WAYPOINTS"],
 					desc = AL["ENABLE_AUTO_TOMTOM_WAYPOINTS_DESC"],
 					type = "toggle",

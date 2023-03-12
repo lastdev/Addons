@@ -584,13 +584,13 @@ function ConRO.DeathKnight.Frost(_, timeShift, currentSpell, gcd, tChosen, pvpCh
 	ConRO:AbilityBurst(_EmpowerRuneWeapon, _EmpowerRuneWeapon_RDY and _PillarofFrost_RDY and _Runes < 6 and not tChosen[Ability.BreathofSindragosa.talentID] and ConRO:BurstMode(_EmpowerRuneWeapon, 120));
 	ConRO:AbilityBurst(_HornofWinter, _HornofWinter_RDY and _Runes <= 4 and _RunicPower <= _RunicPower_Max - 25 and (not tChosen[Passive.Obliteration.talentID] and (not tChosen[Ability.BreathofSindragosa.talentID] or (tChosen[Ability.BreathofSindragosa.talentID] and _BreathofSindragosa_CD >= 40))) and ConRO:BurstMode(_HornofWinter));
 	ConRO:AbilityBurst(_PillarofFrost, _PillarofFrost_RDY and ((not tChosen[Ability.BreathofSindragosa.talentID] and _Runes <= 2) or (tChosen[Ability.BreathofSindragosa.talentID] and _BreathofSindragosa_CD >= 40)) and ConRO:BurstMode(_PillarofFrost));
-	ConRO:AbilityBurst(_RaiseDead, _RaiseDead_RDY and not _Pet_summoned and _PillarofFrost_RDY and ConRO:BurstMode(_RaiseDead, timeShift));
+	ConRO:AbilityBurst(_RaiseDead, _RaiseDead_RDY and not _Pet_summoned and _PillarofFrost_RDY and ConRO:BurstMode(_RaiseDead));
 
 	ConRO:AbilityBurst(_AbominationLimb, _AbominationLimb_RDY and _FrostFever_DEBUFF and (_BreathofSindragosa_FORM or not tChosen[Ability.BreathofSindragosa.talentID]) and ConRO:BurstMode(_AbominationLimb));
 
 --Rotations
 		if tChosen[Passive.ColdHeart.talentID] then
-			if tChosen[Ability.Obliteration.talentID] then
+			if tChosen[Passive.Obliteration.talentID] then
 				if _ChainsofIce_RDY and not _PillarofFrost_BUFF and (_ColdHeart_COUNT >= 20 or (_UnholyStrength_BUFF and _UnholyStrength_DUR <= 2 and _ColdHeart_COUNT >= 17)) then
 					tinsert(ConRO.SuggestedSpells, _ChainsofIce);
 				end
@@ -652,7 +652,7 @@ function ConRO.DeathKnight.Frost(_, timeShift, currentSpell, gcd, tChosen, pvpCh
 				tinsert(ConRO.SuggestedSpells, _AbominationLimb);
 			end
 		elseif tChosen[Ability.BreathofSindragosa.talentID] and (_BreathofSindragosa_RDY or _BreathofSindragosa_CD <= 10) and ConRO:FullMode(_BreathofSindragosa) then
-			if _RaiseDead_RDY and not _Pet_summoned and _Runes >= 3 and _RunicPower >= 60 and _PillarofFrost_RDY then
+			if _RaiseDead_RDY and not _Pet_summoned and _Runes >= 3 and _RunicPower >= 60 and _PillarofFrost_RDY and ConRO:FullMode(_RaiseDead) then
 				tinsert(ConRO.SuggestedSpells, _RaiseDead);
 			end
 

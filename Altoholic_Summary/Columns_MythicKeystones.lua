@@ -96,9 +96,20 @@ Columns.RegisterColumn("WeeklyBestKeyName", {
 			tt:AddDoubleLine(DataStore:GetColoredCharacterName(character), CHALLENGE_MODE_WEEKLY_BEST)
 			tt:AddLine(" ")
 			
-			for _, map in pairs(DataStore:GetWeeklyBestMaps(character)) do
-				tt:AddDoubleLine(format("%s %s %s+%d", Formatter.Texture18(map.texture), map.name, colors.green, map.level), Formatter.Duration(map.timeInSeconds))
-			end
+			-- Get this character's dungeons
+			local dungeons = DataStore:GetDungeonStats(character)
+			
+			for mapID, info in pairs(dungeons) do
+				-- Add season best lines
+				if info.weeklyBestLevel then
+					local name, _, _, texture = C_ChallengeMode.GetMapUIInfo(mapID)
+				
+					tt:AddDoubleLine(
+						format("%s %s %s+%d", Formatter.Texture18(texture), name, colors.green, info.weeklyBestLevel), 
+						Formatter.Duration(info.weeklyBestTimeInSeconds)
+					)
+				end
+			end			
 
 			tt:Show()
 		end,	
@@ -154,30 +165,59 @@ Columns.RegisterColumn("WeeklyBestKeyTime", {
 			tt:SetOwner(frame, "ANCHOR_RIGHT")
 			tt:AddDoubleLine(DataStore:GetColoredCharacterName(character), MYTHIC_PLUS_SEASON_BEST)
 			tt:AddLine(" ")
-			
-			for _, map in pairs(DataStore:GetSeasonBestMaps(character)) do
-				tt:AddDoubleLine(format("%s %s %s+%d", Formatter.Texture18(map.texture), map.name, colors.green, map.level), Formatter.Duration(map.timeInSeconds))
-			end
-			
-			
-			local maps = DataStore:GetSeasonBestMapsOvertime(character)
 
-			if DataStore:GetHashSize(maps) > 0 then
-				tt:AddLine(" ")
-				tt:AddLine(MYTHIC_PLUS_OVERTIME_SEASON_BEST, 1, 1, 1)
-				tt:AddLine(" ")
+			-- Get this character's dungeons
+			local dungeons = DataStore:GetDungeonStats(character)
 			
-				for _, map in pairs(maps) do
-					tt:AddDoubleLine(format("%s %s %s+%d", Formatter.Texture18(map.texture), map.name, colors.green, map.level), Formatter.Duration(map.timeInSeconds))
-				end			
+			for mapID, info in pairs(dungeons) do
+				-- Add season best lines
+				if info.seasonBestLevel then
+					local name, _, _, texture = C_ChallengeMode.GetMapUIInfo(mapID)
+				
+					tt:AddDoubleLine(
+						format("%s %s %s+%d", Formatter.Texture18(texture), name, colors.green, info.seasonBestLevel), 
+						Formatter.Duration(info.seasonBestTimeInSeconds)
+					)
+				end
+			end
+
+			-- second pass for overtime
+			local isHeaderShownYet = false
+			
+			for mapID, info in pairs(dungeons) do
+				-- Add season best lines
+				if info.seasonBestOvertimeLevel then
+					local name, _, _, texture = C_ChallengeMode.GetMapUIInfo(mapID)
+				
+					if not isHeaderShownYet then
+						tt:AddLine(" ")
+						tt:AddLine(MYTHIC_PLUS_OVERTIME_SEASON_BEST, 1, 1, 1)
+						tt:AddLine(" ")
+						
+						isHeaderShownYet = true
+					end
+				
+					tt:AddDoubleLine(
+						format("%s %s %s+%d", Formatter.Texture18(texture), name, colors.green, info.seasonBestOvertimeLevel), 
+						Formatter.Duration(info.seasonBestOvertimeTimeInSeconds)
+					)
+				end
 			end
 
 			tt:Show()
-		end,	
+		end,
 })
 
 
 -- ** Weekly Rewards **
+
+-- Source : https://www.wowhead.com/guide/mythic-plus-dungeons/dragonflight-season-1/rewards
+local greatVaultItemLevels = {
+	0, 382, 385, 385, 389,
+	389, 392, 395, 395, 398,
+	402, 405, 408, 408, 411,
+	415, 415, 418, 418, 421
+}
 
 Columns.RegisterColumn("RewardMythic", {
 	-- Header
@@ -194,8 +234,72 @@ Columns.RegisterColumn("RewardMythic", {
 		local level = DataStore:GetWeeklyMythicPlusReward(character) or 0
 		local color = (level == 0) and colors.grey or colors.white
 		
+		if level > 8 then level = 8 end
+		
 		return format("%s%s%s/%s%s", color, level, colors.white, colors.yellow, 8)
 	end,
+	OnEnter = function(frame)
+			local character = frame:GetParent().character
+			if not character or not DataStore:GetModuleLastUpdateByKey("DataStore_Stats", character) then
+				return
+			end
+			
+			-- Get the top 10 runs this week
+			local top10runs = DataStore:GetWeeklyTop10Runs(character)
+			if not top10runs or #top10runs == 0 then return end
+			
+			local tt = AddonFactory_Tooltip
+			tt:ClearLines()
+			tt:SetOwner(frame, "ANCHOR_RIGHT")
+			tt:AddDoubleLine(DataStore:GetColoredCharacterName(character), format(WEEKLY_REWARDS_MYTHIC_TOP_RUNS, 10))
+			tt:AddLine(" ")
+			
+			-- Add the top 10 runs
+			for _, run in pairs(top10runs) do
+				local mapName = C_ChallengeMode.GetMapUIInfo(run.mapID)
+				local rewardLevel = (run.level <= 20) and run.level or 20
+				
+				tt:AddDoubleLine(
+					format("%s+%d|r %s%s", colors.green, run.level, colors.white, mapName), 
+					format("%s%d", colors.epic, greatVaultItemLevels[rewardLevel])
+				)
+			end
+			
+			-- Add the break down by dungeon
+			tt:AddLine(" ")
+			tt:AddLine(DUNGEONS)
+			
+			local dungeons = DataStore:GetDungeonStats(character)
+			local runLevels = {}
+			
+			for mapID, dungeonInfo in pairs(dungeons) do
+				local mapName = C_ChallengeMode.GetMapUIInfo(mapID)
+			
+				wipe(runLevels)
+				
+				local runHistory = DataStore:GetWeeklyRunHistory(character, mapID)
+				
+				if runHistory then
+					for _, run in pairs(runHistory) do
+						local color = run.completed and colors.green or colors.red
+						
+						-- build a table of levels, by color, for simple concat later on
+						table.insert(runLevels, format("%s%d|r", color, run.level))
+					end
+					
+					tt:AddDoubleLine(
+						format("%s%s", colors.white, mapName),		-- map name
+						table.concat(runLevels, "-")					-- list of levels for this map, descending
+					)
+				end
+			end
+
+			tt:AddLine(" ")
+			tt:AddLine(format("%s%s", colors.green, CRITERIA_COMPLETED))
+			tt:AddLine(format("%s%s", colors.red, CRITERIA_NOT_COMPLETED))
+
+			tt:Show()
+		end,	
 })
 
 Columns.RegisterColumn("RewardRaid", {
@@ -212,6 +316,8 @@ Columns.RegisterColumn("RewardRaid", {
 	GetText = function(character) 
 		local level = DataStore:GetWeeklyRaidReward(character) or 0
 		local color = (level == 0) and colors.grey or colors.white
+		
+		if level > 8 then level = 8 end
 		
 		return format("%s%s%s/%s%s", color, level, colors.white, colors.yellow, 8)
 	end,
@@ -232,6 +338,54 @@ Columns.RegisterColumn("RewardPvP", {
 		local level = DataStore:GetWeeklyRankedPvPReward(character) or 0
 		local color = (level == 0) and colors.grey or colors.white
 		
+		if level > 5500 then level = 5500 end
+		
 		return format("%s%s%s/%s%s", color, level, colors.white, colors.yellow, 5500)
 	end,
 })
+
+-- This creates maps = { [1] = 123, [2] = 234, ... } for the 8 maps of the season
+local maps = C_ChallengeMode.GetMapTable()
+
+local function GetMapName(index)
+	local mapID = maps[index]
+	
+	return select(1, C_ChallengeMode.GetMapUIInfo(mapID))
+end
+
+local function GetMapTexture(index)
+	local mapID = maps[index]
+	
+	return select(4, C_ChallengeMode.GetMapUIInfo(mapID))
+end
+
+local function GetWeeklyBestByDungeon(character, mapID)
+	return DataStore:GetWeeklyBestByDungeon(character, mapID) or 0
+end
+
+for mapIndex = 1, 8 do
+
+	Columns.RegisterColumn("MPlus" .. mapIndex, {
+		-- Header
+		headerWidth = 60,
+		headerLabel = format("     %s", Formatter.Texture18(GetMapTexture(mapIndex))),
+		tooltipTitle = GetMapName(mapIndex),
+		tooltipSubTitle = L["COLUMN_WEEKLYBEST_DUNGEON_SUBTITLE"],
+		
+		headerOnClick = function() AltoholicFrame.TabSummary:SortBy("MPlus" .. mapIndex) end,
+		headerSort = function(self, character) 
+			return GetWeeklyBestByDungeon(character, maps[mapIndex])
+		end,
+		
+		-- Content
+		Width = 60,
+		JustifyH = "CENTER",
+		GetText = function(character) 
+			local level = GetWeeklyBestByDungeon(character, maps[mapIndex])
+			local color = (level == 0) and colors.grey or colors.green
+			
+			return format("%s%s", color, level)
+		end,
+	})
+
+end

@@ -1,5 +1,5 @@
 ## Title:-|cffFFFFFFConRO|r- |cffC41F3BDeath Knight|r
-## Version: 10.0.4
+## Version: 10.0.5
 ## Author: Vae
 ## Interface: 100005
 ## Dependencies: ConRO

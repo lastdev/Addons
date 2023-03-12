@@ -201,9 +201,10 @@ spec:RegisterPvpTalents( {
 -- Auras
 spec:RegisterAuras( {
     avatar = {
-        id = 107574,
+        id = 401150,
         duration = 20,
-        max_stack = 1
+        max_stack = 1,
+        copy = 107574
     },
     battering_ram = {
         id = 394313,
@@ -352,9 +353,10 @@ spec:RegisterAuras( {
         max_stack = 5
     },
     juggernaut = {
-        id = 383290,
+        id = 393968,
         duration = 12,
-        max_stack = 15
+        max_stack = 15,
+        copy = 383290
     },
     last_stand = {
         id = 12975,

@@ -6,9 +6,9 @@
 -- Cast the most important buffs on you, tanks or party/raid members/pets.
 -------------------------------------------------------------------------------
 
-SMARTBUFF_DATE          = "030223";
+SMARTBUFF_DATE          = "010323";
 
-SMARTBUFF_VERSION       = "r19."..SMARTBUFF_DATE;
+SMARTBUFF_VERSION       = "r20."..SMARTBUFF_DATE;
 SMARTBUFF_VERSIONNR     = 100005;
 SMARTBUFF_TITLE         = "SmartBuff";
 SMARTBUFF_SUBTITLE      = "Supports you in casting buffs";
@@ -22,7 +22,7 @@ local SmartbuffPrefix = "Smartbuff";
 local SmartbuffSession = true;
 local SmartbuffVerCheck = false;					-- for my use when checking guild users/testers versions  :)
 local buildInfo = select(4, GetBuildInfo())
-local SmartbuffRevision = 19;
+local SmartbuffRevision = 20;
 local SmartbuffVerNotifyList = {}
 
 local SG = SMARTBUFF_GLOBALS;
@@ -141,7 +141,40 @@ local Icons = {
 };
 
 -- available sounds (25)
+---@type LSM
+local sharedMedia = LibStub:GetLibrary("LibSharedMedia-3.0")
 local Sounds = { 1141, 3784, 4574, 17318, 15262, 13830, 15273, 10042, 10720, 17316, 3337, 7894, 7914, 10033, 416, 57207, 78626, 49432, 10571, 58194, 21970, 17339, 84261, 43765}
+local soundTable = {
+  ["Deathbind_Sound"] = 1141,
+  ["Air_Elemental"] = 3784,
+  ["PVP_Update"] = 4574,
+  ["LFG_DungeonReady"] = 17318,
+  ["Aggro_Enter_Warning_State"] = 15262,
+  ["Glyph_MinorDestroy"] = 13830,
+  ["GM_ChatWarning"] = 15273,
+  ["SPELL_SpellReflection_State_Shield"] = 10042,
+  ["Disembowel_Impact"] = 10720,
+  ["LFG_Rewards"] = 17316,
+  ["EyeOfKilrogg_Death"] = 3337,
+  ["TextEmote_HuF_Sigh"] = 7894,
+  ["TextEmote_HuM_Sigh"] = 7914,
+  ["TextEmote_BeM_Whistle"] = 10033,
+  ["Murloc_Aggro"] = 416,
+  ["SPELL_WR_ShieldSlam_Revamp_Cast"] = 57207,
+  ["Spell_Moroes_Vanish_poof_01"] = 78626,
+  ["SPELL_WR_WhirlWind_Proto_Cast"] = 49432,
+  ["Fel_Reaver_Alarm"] = 10571,
+  ["SPELL_RO_SaberSlash_Cast"] = 58194,
+  ["FX_ArcaneMagic_DarkSwell"] = 21970,
+  ["Epic_Fart"] = 17339,
+  ["VO_72_LASAN_SKYHORN_WOUND"] = 84261,
+  ["SPELL_PA_SealofInsight"] = 43765
+}
+for soundName, soundData in pairs(soundTable) do
+  sharedMedia:Register(sharedMedia.MediaType.SOUND, soundName, soundData )
+end
+local sounds = sharedMedia:HashTable("sound")
+-- dump(sounds)
 
 local DebugChatFrame = DEFAULT_CHAT_FRAME;
 
@@ -155,7 +188,6 @@ StaticPopupDialogs["SMARTBUFF_DATA_PURGE"] = {
   whileDead = 1,
   hideOnEscape = 1
 }
-
 
 -- Rounds a number to the given number of decimal places.
 local r_mult;
@@ -190,6 +222,23 @@ local CY  = BCC(0.5, 1, 1);
 -- function to preview selected warning sound in options screen
 function SMARTBUFF_PlaySpashSound()
   PlaySound(Sounds[O.AutoSoundSelection]);
+end
+
+function SMARTBUFF_ChooseSplashSound()
+  local menu = {}
+  local i = 1
+  for sound, soundpath in pairs(sounds) do
+    menu[i] = { text = sound, notCheckable = true, func = function() PlaySound(soundpath) end }
+    i = i + 1
+  end
+  local dropDown = CreateFrame("Frame", "DropDownMenuFrame", UIParent, "UIDropDownMenuTemplate")
+  -- UIDropDownMenu_Initialize(dropDown, menu, "MENU")
+  -- make the menu appear at the frame:
+  dropDown:SetPoint("CENTER", UIParent, "CENTER")
+  dropDown:SetScript("OnMouseUp", function (self, button, down)
+    print("mousedown")
+    -- EasyMenu(menu, dropDown, dropDown, 0 , 0, "MENU");
+  end)
 end
 
 -- Reorders values in the table
@@ -239,7 +288,6 @@ local function IsVisibleToPlayer(self)
   return false;
 end
 
-
 local function CS()
   if (currentSpec == nil) then
     currentSpec = GetSpecialization();
@@ -247,6 +295,7 @@ local function CS()
   if (currentSpec == nil) then
     currentSpec = 1;
     SMARTBUFF_AddMsgErr("Could not detect active talent group, set to default = 1");
+    printd("Could not detect active talent group, set to default = 1");
   end
   return currentSpec;
 end
@@ -744,40 +793,44 @@ Enum.SmartBuffGroup = {
 
 -- Set the current template and create an array of units
 function SMARTBUFF_SetTemplate()
-  -- print(SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Solo])
-  -- print(Enum.SmartBuffGroup["Raid"])
-
   if (InCombatLockdown()) then return end
-  if (SmartBuffOptionsFrame:IsVisible()) or not O.AutoSwitchTemplate then return end
+  if (SmartBuffOptionsFrame:IsVisible()) then return end
 
-  local newTemplate = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Solo];
-  local name, instanceType, difficultyID, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceID, instanceGroupSize, LfgDungeonID = GetInstanceInfo()
+  local newTemplate = currentTemplate -- default to old template
 
-  if IsInRaid() then
-    newTemplate = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Raid];
-  elseif IsInGroup() then
-    newTemplate = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Party];
-  end
-  -- check instance type (allows solo raid clearing, etc)
-  if instanceType == "raid" then
-    newTemplate = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Raid];
-    if LfgDungeonID then
-      newTemplate = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.LFR];
+  -- if autoswitch no group change is enabled, load new template based on group composition
+  if O.AutoSwitchTemplate then
+    newTemplate = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Solo];
+    local name, instanceType, difficultyID, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceID, instanceGroupSize, LfgDungeonID = GetInstanceInfo()
+
+    if IsInRaid() then
+      newTemplate = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Raid];
+    elseif IsInGroup() then
+      newTemplate = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Party];
     end
-  elseif instanceType == "party" then
-    newTemplate = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Party];
-    if ( difficultyID == 8 ) then
-      newTemplate = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.MythicKeystone];
+    -- check instance type (allows solo raid clearing, etc)
+    if instanceType == "raid" then
+      newTemplate = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Raid];
+      if LfgDungeonID then
+        newTemplate = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.LFR];
+      end
+    elseif instanceType == "party" then
+      newTemplate = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Party];
+      if ( difficultyID == 8 ) then
+        newTemplate = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.MythicKeystone];
+      end
     end
   end
 
-  -- overwrite with named raid template, unless in LFR
+  -- if autoswitch on instance change is enabled, load new instance template if any, unless in LFR
+  local isRaidInstanceTemplate = false
   if O.AutoSwitchTemplateInst and not (newTemplate == SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.LFR]) then
     local zone = GetRealZoneText()
     local instances = Enum.MakeEnumFromTable(SMARTBUFF_INSTANCES);
     local i = instances[zone]
     if i and SMARTBUFF_TEMPLATES[i + Enum.SmartBuffGroup.Arena] then
       newTemplate = SMARTBUFF_TEMPLATES[i + Enum.SmartBuffGroup.Arena]
+      isRaidInstanceTemplate = true
     end
   end
 
@@ -796,8 +849,8 @@ function SMARTBUFF_SetTemplate()
   wipe(cAddUnitList);
   wipe(cIgnoreUnitList);
 
-  -- Raid Setup
-  if (newTemplate == (SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Raid])) then
+  -- Raid Setup, including smart instance templates
+  if currentTemplate == (SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Raid]) or isRaidInstanceTemplate then
     cClassGroups = { };
     local name, server, rank, subgroup, level, class, classeng, zone, online, isDead;
     local sRUnit = nil;
@@ -851,7 +904,7 @@ function SMARTBUFF_SetTemplate()
     SMARTBUFF_AddMsgD("Raid Unit-Setup finished");
 
   -- Party Setup
-  elseif (newTemplate == (SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Party])) then
+  elseif (currentTemplate == (SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Party])) then
     cClassGroups = { };
     if (B[CS()][currentTemplate].SelfFirst) then
       SMARTBUFF_AddSoloSetup();
@@ -3062,12 +3115,15 @@ function SMARTBUFF_Options_Init(self)
     end
   end
 
-  if (O.VersionNr == nil or O.VersionNr < SMARTBUFF_VERSIONNR) then
+  -- major version changes are backwards incompatible by definition, so trigger a RESET ALL
+  O.VersionNr = O.VersionNr or SMARTBUFF_VERSIONNR -- don't reset if O.VersionNr == nil
+  if O.VersionNr < SMARTBUFF_VERSIONNR then
     O.VersionNr = SMARTBUFF_VERSIONNR;
+    StaticPopup_Show("SMARTBUFF_DATA_PURGE");
     SMARTBUFF_SetBuffs();
     InitBuffOrder(true);
-    SMARTBUFF_AddMsg("Upgraded SmartBuff to "..SMARTBUFF_VERSION);
   end
+  SMARTBUFF_AddMsg("Upgraded SmartBuff to " .. SMARTBUFF_VERSION);
 
   if (SMARTBUFF_OptionsGlobal == nil) then SMARTBUFF_OptionsGlobal = { }; end
   OG = SMARTBUFF_OptionsGlobal;
@@ -3749,7 +3805,6 @@ function SMARTBUFF_Options_OnHide()
   SMARTBUFF_SetInCombatBuffs();
   SmartBuff_BuffSetup:Hide();
   SmartBuff_PlayerSetup:Hide();
-  SMARTBUFF_SetTemplate();
   SMARTBUFF_Splash_Hide();
   SMARTBUFF_RebindKeys();
   --collectgarbage();

@@ -125,6 +125,8 @@ L[193663] = "Elementale Appietrantito"
 L[193658] = "Proto-Drago Corrotto"
 L[193664] = "Protettore Antico"
 
+L[186200] = "Harkyn Pietracupa"
+
 -- "That's Pretty Neat!" Rares
 L[193259] = "Terrore Blu"
 L[195895] = "Nergazurai"

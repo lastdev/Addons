@@ -267,6 +267,14 @@ function RSConfigDB.SetScanningWhileOnTaxi(value)
 	private.db.general.scanOnTaxi = value
 end
 
+function RSConfigDB.IsScanningWhileOnRacingQuest()
+	return private.db.general.scanOnRacingQuest
+end
+
+function RSConfigDB.SetScanningWhileOnRacingQuest(value)
+	private.db.general.scanOnRacingQuest = value
+end
+
 function RSConfigDB.IsScanningWhileOnPetBattle()
 	return private.db.general.scanOnPetBattle
 end

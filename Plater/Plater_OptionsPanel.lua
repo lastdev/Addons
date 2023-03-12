@@ -6443,6 +6443,20 @@ local targetOptions = {
 			desc = "Target Overlay Alpha",
 			usedecimals = true,
 		},
+		{
+			type = "color",
+			get = function()
+				local color = Plater.db.profile.health_selection_overlay_color
+				return {color[1], color[2], color[3], color[4]}
+			end,
+			set = function (self, r, g, b, a) 
+				local color = Plater.db.profile.health_selection_overlay_color
+				color[1], color[2], color[3], color[4] = r, g, b, a
+				Plater.OnPlayerTargetChanged()
+			end,
+			name = L["OPTIONS_COLOR"],
+			desc = "Focus Color",
+		},
 
 		{type = "blank"},
 		
@@ -6538,6 +6552,60 @@ local targetOptions = {
 		{type = "blank"},
 		
 		{
+			type = "select",
+			get = function() return Plater.db.profile.target_indicator end,
+			values = function() return build_target_indicator_table() end,
+			name = "Target Bracket Indicator",
+			desc = "Target Bracket Indicator",
+		},
+		
+		{type = "blank"},
+		
+		--target alpha
+		{
+			type = "toggle",
+			get = function() return Plater.db.profile.target_shady_enabled end,
+			set = function (self, fixedparam, value) 
+				Plater.db.profile.target_shady_enabled = value
+				Plater.RefreshDBUpvalues()
+				Plater.OnPlayerTargetChanged()
+				--update
+			end,
+			name = "Target Shading",
+			desc = "Apply a layer of shadow above the nameplate when the unit is in range but isn't your current target.",
+		},
+		{
+			type = "toggle",
+			get = function() return Plater.db.profile.target_shady_combat_only end,
+			set = function (self, fixedparam, value) 
+				Plater.db.profile.target_shady_combat_only = value
+				Plater.RefreshDBUpvalues()
+				Plater.OnPlayerTargetChanged()
+				--update
+			end,
+			name = "Target Shading Only in Combat",
+			desc = "Apply target shading only when in combat.",
+		},
+		{
+			type = "range",
+			get = function() return Plater.db.profile.target_shady_alpha end,
+			set = function (self, fixedparam, value) 
+				Plater.db.profile.target_shady_alpha = value
+				Plater.RefreshDBUpvalues()
+				Plater.OnPlayerTargetChanged()
+				--update
+			end,
+			min = 0,
+			max = 1,
+			step = 0.1,
+			name = "Target Shading Amount",
+			desc = "Amount of shade to apply.",
+			usedecimals = true,
+		},		
+		
+		{type = "breakline"},
+		
+		{
 			type = "toggle",
 			get = function() return GetCVarBool ("nameplateTargetRadialPosition") end,
 			set = function (self, fixedparam, value) 
@@ -6621,61 +6689,6 @@ local targetOptions = {
 			desc = "The nameplate size for the current target is multiplied by this value.\n\n|cFFFFFFFFDefault: 1|r\n\n|cFFFFFFFFRecommended: 1.15|r" .. CVarDesc,
 			nocombat = true,
 		},		
-		
-		{type = "blank"},
-		
-		{
-			type = "select",
-			get = function() return Plater.db.profile.target_indicator end,
-			values = function() return build_target_indicator_table() end,
-			name = "Target Bracket Indicator",
-			desc = "Target Bracket Indicator",
-		},
-		
-		{type = "blank"},
-		
-		--target alpha
-		{
-			type = "toggle",
-			get = function() return Plater.db.profile.target_shady_enabled end,
-			set = function (self, fixedparam, value) 
-				Plater.db.profile.target_shady_enabled = value
-				Plater.RefreshDBUpvalues()
-				Plater.OnPlayerTargetChanged()
-				--update
-			end,
-			name = "Target Shading",
-			desc = "Apply a layer of shadow above the nameplate when the unit is in range but isn't your current target.",
-		},
-		{
-			type = "toggle",
-			get = function() return Plater.db.profile.target_shady_combat_only end,
-			set = function (self, fixedparam, value) 
-				Plater.db.profile.target_shady_combat_only = value
-				Plater.RefreshDBUpvalues()
-				Plater.OnPlayerTargetChanged()
-				--update
-			end,
-			name = "Target Shading Only in Combat",
-			desc = "Apply target shading only when in combat.",
-		},
-		{
-			type = "range",
-			get = function() return Plater.db.profile.target_shady_alpha end,
-			set = function (self, fixedparam, value) 
-				Plater.db.profile.target_shady_alpha = value
-				Plater.RefreshDBUpvalues()
-				Plater.OnPlayerTargetChanged()
-				--update
-			end,
-			min = 0,
-			max = 1,
-			step = 0.1,
-			name = "Target Shading Amount",
-			desc = "Amount of shade to apply.",
-			usedecimals = true,
-		},		
-		
 		
 		{type = "breakline"},
 		
@@ -7020,10 +7033,9 @@ local relevance_options = {
 				else
 					Plater:Msg (L["OPTIONS_ERROR_CVARMODIFY"])
 					self:SetValue (GetCVarBool ("nameplateShowOnlyNames"))
-					if NamePlateDriverFrame and NamePlateDriverFrame.UpdateNamePlateOptions then
-						NamePlateDriverFrame:UpdateNamePlateOptions() --update the setting directly
-					end
 				end
+
+				Plater.UpdateBaseNameplateOptions()
 			end,
 			name = "Hide Blizzard Health Bars" .. CVarIcon,
 			desc = "While in dungeons or raids, if friendly nameplates are enabled it'll show only the player name.\nIf any Plater module is disabled, this will affect these nameplates as well." .. CVarDesc .. CVarNeedReload,
@@ -12023,7 +12035,7 @@ end
 
 	--overlay frame to indicate the feature is disabled
 	uiParentFeatureFrame.disabledOverlayFrame = CreateFrame ("frame", nil, uiParentFeatureFrame, BackdropTemplateMixin and "BackdropTemplate")
-	uiParentFeatureFrame.disabledOverlayFrame:SetPoint ("topleft", uiParentFeatureFrame, "topleft", 1, -155)
+	uiParentFeatureFrame.disabledOverlayFrame:SetPoint ("topleft", uiParentFeatureFrame, "topleft", 1, -175)
 	uiParentFeatureFrame.disabledOverlayFrame:SetPoint ("bottomright", uiParentFeatureFrame, "bottomright", -1, 21)
 	uiParentFeatureFrame.disabledOverlayFrame:SetBackdrop ({bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], tileSize = 64, tile = true})
 	uiParentFeatureFrame.disabledOverlayFrame:SetFrameLevel (uiParentFeatureFrame:GetFrameLevel() + 100)
@@ -12312,6 +12324,132 @@ end
 		
 		{type = "blank"},
 		
+		{type = "label", get = function() return "Auto Toggle Enemy Nameplates:" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
+		
+		{
+			type = "toggle",
+			get = function() return Plater.db.profile.auto_toggle_enemy_enabled end,
+			set = function (self, fixedparam, value) 
+				Plater.db.profile.auto_toggle_enemy_enabled = value
+				
+				Plater.RefreshDBUpvalues()
+				Plater.UpdateAllPlates()
+				Plater.RefreshAutoToggle()
+			end,
+			name = L["OPTIONS_ENABLED"],
+			desc = "When enabled, Plater will enable or disable enemy plates based on the settings below.",
+		},
+		
+		{
+			type = "toggle",
+			get = function() return Plater.db.profile.auto_toggle_enemy ["party"] end,
+			set = function (self, fixedparam, value) 
+				Plater.db.profile.auto_toggle_enemy ["party"] = value
+				Plater.RefreshAutoToggle()
+			end,
+			name = "In Dungeons",
+			desc = "Show enemy nameplates when inside dungeons.",
+		},	
+		{
+			type = "toggle",
+			get = function() return Plater.db.profile.auto_toggle_enemy ["raid"] end,
+			set = function (self, fixedparam, value) 
+				Plater.db.profile.auto_toggle_enemy ["raid"] = value
+				Plater.RefreshAutoToggle()
+			end,
+			name = "In Raid",
+			desc = "Show enemy nameplates when inside raids.",
+		},
+		{
+			type = "toggle",
+			get = function() return Plater.db.profile.auto_toggle_enemy ["arena"] end,
+			set = function (self, fixedparam, value) 
+				Plater.db.profile.auto_toggle_enemy ["arena"] = value
+				Plater.RefreshAutoToggle()
+			end,
+			name = "In Arena / BG",
+			desc = "Show enemy nameplates when inside arena or battleground.",
+		},
+		{
+			type = "toggle",
+			get = function() return Plater.db.profile.auto_toggle_enemy ["cities"] end,
+			set = function (self, fixedparam, value) 
+				Plater.db.profile.auto_toggle_enemy ["cities"] = value
+				Plater.RefreshAutoToggle()
+			end,
+			name = "In Major Cities",
+			desc = "Show enemy nameplates when inside a major city.",
+		},
+		{
+			type = "toggle",
+			get = function() return Plater.db.profile.auto_toggle_enemy ["world"] end,
+			set = function (self, fixedparam, value) 
+				Plater.db.profile.auto_toggle_enemy ["world"] = value
+				Plater.RefreshAutoToggle()
+			end,
+			name = "In Open World",
+			desc = "Show enemy nameplates when at any place not listed on the other options.",
+		},
+		
+		{type = "blank"},
+		
+		{type = "label", get = function() return "Combat toggle:" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
+		{
+			type = "toggle",
+			get = function() return Plater.db.profile.auto_toggle_combat_enabled end,
+			set = function (self, fixedparam, value) 
+				Plater.db.profile.auto_toggle_combat_enabled = value
+				
+				Plater.RefreshDBUpvalues()
+				Plater.UpdateAllPlates()
+				Plater.RefreshAutoToggle()
+			end,
+			name = L["OPTIONS_ENABLED"],
+			desc = "When enabled, Plater will enable or disable stacking nameplates based on the settings below.\n\n" .. ImportantText .. "only toggle on if 'Stacking Nameplates' is enabled in the General Settings tab.",
+		},
+		{
+			type = "toggle",
+			get = function() return Plater.db.profile.auto_toggle_combat.enemy_ic end,
+			set = function (self, fixedparam, value) 
+				Plater.db.profile.auto_toggle_combat.enemy_ic = value
+				Plater.RefreshAutoToggle()
+			end,
+			name = "Enemy Nameplates in combat",
+			desc = "Automatically enable / disable enemy nameplates in combat.",
+		},
+		{
+			type = "toggle",
+			get = function() return Plater.db.profile.auto_toggle_combat.enemy_ooc end,
+			set = function (self, fixedparam, value) 
+				Plater.db.profile.auto_toggle_combat.enemy_ooc = value
+				Plater.RefreshAutoToggle()
+			end,
+			name = "Enemy Nameplates out of combat",
+			desc = "Automatically enable / disable enemy nameplates out of combat.",
+		},
+		{
+			type = "toggle",
+			get = function() return Plater.db.profile.auto_toggle_combat.friendly_ic end,
+			set = function (self, fixedparam, value) 
+				Plater.db.profile.auto_toggle_combat.friendly_ic = value
+				Plater.RefreshAutoToggle()
+			end,
+			name = "Friendly Nameplates in combat",
+			desc = "Automatically enable / disable friendly nameplates in combat.",
+		},
+		{
+			type = "toggle",
+			get = function() return Plater.db.profile.auto_toggle_combat.friendly_ooc end,
+			set = function (self, fixedparam, value) 
+				Plater.db.profile.auto_toggle_combat.friendly_ooc = value
+				Plater.RefreshAutoToggle()
+			end,
+			name = "Friendly Nameplates out of combat",
+			desc = "Automatically enable / disable friendly nameplates out of combat.",
+		},
+		
+		{type = "breakline"},
+		{type = "breakline"},
 		{type = "label", get = function() return "Auto Toggle Stacking Nameplates:" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
 		
 		{
@@ -13315,6 +13453,13 @@ end
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --> ~advanced ãdvanced
 	
+	--font select
+	local on_select_blizzard_nameplate_font = function (_, _, value)
+		Plater.db.profile.blizzard_nameplate_font = value
+	end
+	local on_select_blizzard_nameplate_large_font = function (_, _, value)
+		Plater.db.profile.blizzard_nameplate_large_font = value
+	end
 
 	local advanced_options = {
 	
@@ -13738,6 +13883,69 @@ end
 			desc = "Show friendly totems" .. CVarDesc,
 			nocombat = true,
 		},
+		
+		{type = "blank"},
+		{type = "label", get = function() return "Blizzard nameplate fonts:" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
+		{
+			type = "toggle",
+			get = function() return Plater.db.profile.blizzard_nameplate_font_override_enabled end,
+			set = function (self, fixedparam, value) 
+				Plater.db.profile.blizzard_nameplate_font_override_enabled = value
+			end,
+			name = L["OPTIONS_ENABLED"],
+			desc = "Enable blizzard nameplate font override." .. CVarNeedReload,
+		},
+		{type = "label", get = function() return "Normal:" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
+		{
+			type = "select",
+			get = function() return Plater.db.profile.blizzard_nameplate_font end,
+			values = function() return DF:BuildDropDownFontList (on_select_blizzard_nameplate_font) end,
+			name = L["OPTIONS_FONT"],
+			desc = "Font of the text." .. CVarNeedReload,
+		},
+		{
+			type = "range",
+			get = function() return Plater.db.profile.blizzard_nameplate_font_size end,
+			set = function (self, fixedparam, value) Plater.db.profile.blizzard_nameplate_font_size = value end,
+			min = 6,
+			max = 24,
+			step = 1,
+			name = L["OPTIONS_SIZE"],
+			desc = "Size" .. CVarNeedReload,
+		},
+		{
+			type = "select",
+			get = function() return Plater.db.profile.blizzard_nameplate_font_outline end,
+			values = function() return build_outline_modes_table (nil, "blizzard_nameplate_font_outline") end,
+			name = L["OPTIONS_OUTLINE"],
+			desc = "Outline" .. CVarNeedReload,
+		},
+		{type = "label", get = function() return "Large:" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
+		{
+			type = "select",
+			get = function() return Plater.db.profile.blizzard_nameplate_large_font end,
+			values = function() return DF:BuildDropDownFontList (on_select_blizzard_nameplate_large_font) end,
+			name = L["OPTIONS_FONT"],
+			desc = "Font of the text." .. CVarNeedReload,
+		},
+		{
+			type = "range",
+			get = function() return Plater.db.profile.blizzard_nameplate_large_font_size end,
+			set = function (self, fixedparam, value) Plater.db.profile.blizzard_nameplate_large_font_size = value end,
+			min = 6,
+			max = 24,
+			step = 1,
+			name = L["OPTIONS_SIZE"],
+			desc = "Size" .. CVarNeedReload,
+		},
+		{
+			type = "select",
+			get = function() return Plater.db.profile.blizzard_nameplate_large_font_outline end,
+			values = function() return build_outline_modes_table (nil, "blizzard_nameplate_large_font_outline") end,
+			name = L["OPTIONS_OUTLINE"],
+			desc = "Outline" .. CVarNeedReload,
+		},
+		
 
 		{type = "breakline"},
 	

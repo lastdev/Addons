@@ -129,14 +129,14 @@ end)
 -- Module Functions
 -- ============================================================================
 
---- Register a built-in price source.
--- @tparam string moduleName The name of the module which provides this source
--- @tparam string key The key for this price source (i.e. DBMarket)
--- @tparam string label The label which describes this price source for display to the user
--- @tparam function callback The price source callback
--- @tparam[opt=false] boolean fullLink Whether or not the full itemLink is required instead of just the itemString
--- @param[opt] arg An additional argument which is passed to the callback
--- @tparam[opt=false] booolean isVolatile Should be set if the price source may change without CustomPrice.OnSourceChange being called
+---Register a built-in price source.
+---@param moduleName string The name of the module which provides this source
+---@param key string The key for this price source (i.e. DBMarket)
+---@param label string The label which describes this price source for display to the user
+---@param callback function The price source callback
+---@param fullLink boolean Whether or not the full itemLink is required instead of just the itemString
+---@param arg? any An additional argument which is passed to the callback
+---@param isVolatile? booolean Should be set if the price source may change without CustomPrice.OnSourceChange being called
 function CustomPrice.RegisterSource(moduleName, key, label, callback, fullLink, arg, isVolatile)
 	tinsert(private.priceSourceKeys, strlower(key))
 	private.priceSourceInfo[strlower(key)] = {
@@ -151,13 +151,15 @@ function CustomPrice.RegisterSource(moduleName, key, label, callback, fullLink, 
 	}
 end
 
+---Register a callback when custom sources change.
+---@param callback function The callback function
 function CustomPrice.RegisterCustomSourceCallback(callback)
 	tinsert(private.customSourceCallbacks, callback)
 end
 
---- Create a new custom price source.
--- @tparam string name The name of the custom price source
--- @tparam string value The value of the custom price source
+---Create a new custom price source.
+---@param name string The name of the custom price source
+---@param value string The value of the custom price source
 function CustomPrice.CreateCustomPriceSource(name, value)
 	assert(name ~= "")
 	assert(gsub(name, "([a-z]+)", "") == "")
@@ -173,9 +175,9 @@ function CustomPrice.CreateCustomPriceSource(name, value)
 	private.CallCustomSourceCallbacks()
 end
 
---- Rename a custom price source.
--- @tparam string oldName The old name of the custom price source
--- @tparam string newName The new name of the custom price source
+---Rename a custom price source.
+---@param oldName string The old name of the custom price source
+---@param newName string The new name of the custom price source
 function CustomPrice.RenameCustomPriceSource(oldName, newName)
 	if oldName == newName then
 		return
@@ -196,8 +198,8 @@ function CustomPrice.RenameCustomPriceSource(oldName, newName)
 	private.CallCustomSourceCallbacks()
 end
 
---- Delete a custom price source.
--- @tparam string name The name of the custom price source
+---Delete a custom price source.
+---@param name string The name of the custom price source
 function CustomPrice.DeleteCustomPriceSource(name)
 	assert(private.settings.customPriceSources[name])
 	private.settings.customPriceSources[name] = nil
@@ -209,9 +211,9 @@ function CustomPrice.DeleteCustomPriceSource(name)
 	private.CallCustomSourceCallbacks()
 end
 
---- Sets the value of a custom price source.
--- @tparam string name The name of the custom price source
--- @tparam string value The value of the custom price source
+---Sets the value of a custom price source.
+---@param name string The name of the custom price source
+---@param value string The value of the custom price source
 function CustomPrice.SetCustomPriceSource(name, value)
 	assert(private.settings.customPriceSources[name])
 	value = private.SanitizeCustomPriceString(value)
@@ -223,6 +225,9 @@ function CustomPrice.SetCustomPriceSource(name, value)
 	CustomPrice.OnSourceChange(name)
 end
 
+---Bulk creates custom price sources from a group import.
+---@param customSources table<string, string> The custom sources to impor
+---@param replaceExisting boolean Whether or not existing sources should be replaced
 function CustomPrice.BulkCreateCustomPriceSourcesFromImport(customSources, replaceExisting)
 	for name, value in pairs(customSources) do
 		value = private.SanitizeCustomPriceString(value)
@@ -235,7 +240,7 @@ function CustomPrice.BulkCreateCustomPriceSourcesFromImport(customSources, repla
 	end
 end
 
---- Print built-in price sources to chat.
+---Print built-in price sources to chat.
 function CustomPrice.PrintSources()
 	Log.PrintUser(L["Below is a list of all available price sources, along with a brief description of what they represent."])
 	local moduleList = TempTable.Acquire()
@@ -265,15 +270,18 @@ function CustomPrice.PrintSources()
 	TempTable.Release(moduleList)
 end
 
+---Gets the description of a price source.
+---@param key string The custom price source
+---@return string?
 function CustomPrice.GetDescription(key)
 	local info = private.priceSourceInfo[key]
 	return info and info.label or nil
 end
 
---- Validate a custom price name.
--- @tparam string customPriceName The custom price name
--- @tparam[opt=false] boolean ignoreExistingCustomPriceSources Whether or not to ignore existing custom price sources
--- @treturn boolean Whether or not the custom price name is valid
+---Validate a custom price name.
+---@param customPriceName string The custom price name
+---@param ignoreExistingCustomPriceSources boolean Whether or not to ignore existing custom price sources
+---@return boolean @Whether or not the custom price name is valid
 function CustomPrice.ValidateName(customPriceName, ignoreExistingCustomPriceSources)
 	-- custom price names must be lowercase
 	if strlower(customPriceName) ~= customPriceName then
@@ -304,22 +312,22 @@ function CustomPrice.ValidateName(customPriceName, ignoreExistingCustomPriceSour
 	return true
 end
 
---- Validate a custom price string.
--- @tparam string customPriceStr The custom price string
--- @tparam ?table badPriceSources A table of price sources (as keys) which aren't allowed to be used
--- @treturn boolean Whether or not the custom price string is valid
--- @treturn ?string The error message if the custom price string was invalid
+---Validate a custom price string.
+---@param customPriceStr string The custom price string
+---@param badPriceSources? table A table of price sources (as keys) which aren't allowed to be used
+---@return boolean @Whether or not the custom price string is valid
+---@return ?string @The error message if the custom price string was invalid
 function CustomPrice.Validate(customPriceStr, badPriceSources)
 	local proxy, err = private.ParseCustomPrice(customPriceStr, badPriceSources)
 	return proxy and true or false, err
 end
 
---- Evaulates a custom price source for an item.
--- @tparam string customPriceStr The custom price string
--- @tparam string itemString The item to evalulate the custom price string for
--- @tparam[opt=false] boolean allowZero If true, allows the result to be 0
--- @treturn ?number The resulting value or nil if the custom price string is invalid
--- @treturn ?string The error message if the custom price string was invalid
+---Evaulates a custom price source for an item.
+---@param customPriceStr string The custom price string
+---@param itemString string The item to evalulate the custom price string for
+---@param allowZero boolean If true, allows the result to be 0
+---@return number? @The resulting value or nil if the custom price string is invalid
+---@return string? @The error message if the custom price string was invalid
 function CustomPrice.GetValue(customPriceStr, itemString, allowZero)
 	local proxy, err = private.ParseCustomPrice(customPriceStr)
 	if not proxy then
@@ -338,10 +346,10 @@ function CustomPrice.GetValue(customPriceStr, itemString, allowZero)
 	return value
 end
 
---- Gets a built-in price source's value for an item.
--- @tparam string itemString The item to evalulate the price source for
--- @tparam string key The key of the price source
--- @treturn ?number The resulting value or nil if no price was found for the item
+---Gets a built-in price source's value for an item.
+---@param itemString string The item to evalulate the price source for
+---@param key string The key of the price source
+---@return number? @The resulting value or nil if no price was found for the item
 function CustomPrice.GetItemPrice(itemString, key)
 	itemString = ItemString.Get(itemString)
 	if not itemString then
@@ -372,12 +380,18 @@ function CustomPrice.GetItemPrice(itemString, key)
 	return value
 end
 
+---Gets the conversion value for an item.
+---@param itemString string
+---@param customPrice any
+---@param method any
+---@return integer
+---@return table
 function CustomPrice.GetConversionsValue(itemString, customPrice, method)
 	if not customPrice then
 		return
 	end
 
-	-- calculate disenchant value first
+	-- Calculate disenchant value first
 	if (not method or method == Conversions.METHOD.DISENCHANT) and ItemInfo.IsDisenchantable(itemString) then
 		local classId = ItemInfo.GetClassId(itemString)
 		local quality = ItemInfo.GetQuality(itemString)
@@ -403,7 +417,7 @@ function CustomPrice.GetConversionsValue(itemString, customPrice, method)
 		end
 	end
 
-	-- calculate other conversion values
+	-- Calculate other conversion values
 	local value = 0
 	for targetItemString, rate, _, _, _, _, targetItemMethod in Conversions.TargetItemsByMethodIterator(itemString, method) do
 		method = method or targetItemMethod
@@ -415,28 +429,37 @@ function CustomPrice.GetConversionsValue(itemString, customPrice, method)
 	return value > 0 and value or nil, method
 end
 
---- Iterate over the price sources.
--- @return An iterator which provides the following fields: `index, key, moduleName, label`
+---Iterate over the price sources.
+---@return any @An iterator which provides the following fields: `index, key, moduleName, label`
 function CustomPrice.Iterator()
 	return private.IteratorHelper, nil, 0
 end
 
+---Returns whether or not a key is a math function.
+---@param key string The key to check
+---@return boolean
 function CustomPrice.IsMathFunction(key)
-	return MATH_FUNCTIONS[strlower(key)]
+	return MATH_FUNCTIONS[strlower(key)] and true or false
 end
 
+---Returns whether or not a key is a source.
+---@param key string The key to check
+---@return boolean
 function CustomPrice.IsSource(key)
 	key = strlower(key)
 	return (private.priceSourceInfo[key] or key == "convert") and true or false
 end
 
+---Returns whether or not a key is a custom source.
+---@param key string The key to check
+---@return boolean
 function CustomPrice.IsCustomSource(key)
 	return private.settings.customPriceSources[strlower(key)] and true or false
 end
 
---- Should be called when the value of a registered source changes.
--- @tparam string key The key of the price source
--- @tparam[opt=nil] string itemString The item which the source changed for or nil if it changed for all items
+---Should be called when the value of a registered source changes.
+---@param key string The key of the price source
+---@param itemString? string The item which the source changed for or nil if it changed for all items
 function CustomPrice.OnSourceChange(key, itemString)
 	key = strlower(key)
 	if private.priceSourceInfo[key] then
@@ -511,6 +534,9 @@ function CustomPrice.OnSourceChange(key, itemString)
 	end
 end
 
+---Iterates over the custom sources which a string depends on.
+---@param str string The custom string
+---@return fun():number, string, string @An iterator with fields: `index`, `name`, `customSourceStr`
 function CustomPrice.DependantCustomSourceIterator(str)
 	local result = TempTable.Acquire()
 	local proxy = private.ParseCustomPrice(str)

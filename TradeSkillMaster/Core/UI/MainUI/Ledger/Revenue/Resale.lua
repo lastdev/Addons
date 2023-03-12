@@ -33,7 +33,7 @@ do
 	for _, key in ipairs(TYPE_KEYS) do
 		private.typeFilter[key] = true
 	end
-	for i = 1, 4 do
+	for i = 0, 5 do
 		tinsert(private.rarityList, _G[format("ITEM_QUALITY%d_DESC", i)])
 		private.rarityFilter[i] = true
 	end

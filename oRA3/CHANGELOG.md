@@ -1,7 +1,10 @@
 # oRA3
 
-## [v10.0.7](https://github.com/BigWigsMods/oRA3/tree/v10.0.7) (2023-02-05)
-[Full Changelog](https://github.com/BigWigsMods/oRA3/compare/v10.0.6...v10.0.7) [Previous Releases](https://github.com/BigWigsMods/oRA3/releases)
+## [v10.0.8](https://github.com/BigWigsMods/oRA3/tree/v10.0.8) (2023-03-09)
+[Full Changelog](https://github.com/BigWigsMods/oRA3/compare/v10.0.7...v10.0.8) [Previous Releases](https://github.com/BigWigsMods/oRA3/releases)
 
-- modules/BattleRes: Add Engineering Tinker (#130)  
-- modules/Tanks: Fix clicking the button (#129)  
+- ReadyCheck: Fix missing raid buffs  
+    Fixes #131  
+- BattleRes: Update Engineer checks  
+- BattleRes: Show when group has a Paladin  
+- Gear: Check legs for enchant  

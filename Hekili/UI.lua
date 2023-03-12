@@ -360,8 +360,6 @@ function ns.StopConfiguration()
     HekiliNotification:SetMovable( false )
     HekiliNotification.Mover:Hide()
     -- HekiliNotification.Mover.Header:Hide()
-
-    Hekili:UpdateDisplayVisibility()
 end
 
 local function MasqueUpdate( Addon, Group, SkinID, Gloss, Backdrop, Colors, Disabled )
@@ -549,15 +547,17 @@ do
                             if setting.info and ( not setting.info.arg or setting.info.arg() ) then
                                 if setting.info.type == "toggle" then
                                     insert( menuData, {
-                                        text = setting.info.name,
+                                        text = type( setting.info.name ) == "function" and setting.info.name() or setting.info.name,
                                         func = function ()
                                             menu.args[1] = setting.name
                                             setting.info.set( menu.args, not setting.info.get( menu.args ) )
 
+                                            local name = type( setting.info.name ) == "function" and setting.info.name() or setting.info.name
+
                                             if Hekili.DB.profile.notifications.enabled then
-                                                Hekili:Notify( setting.info.name .. ": " .. ( setting.info.get( menu.args ) and "ON" or "OFF" ) )
+                                                Hekili:Notify( name .. ": " .. ( setting.info.get( menu.args ) and "ON" or "OFF" ) )
                                             else
-                                                Hekili:Print( setting.info.name .. ": " .. ( setting.info.get( menu.args ) and " |cFF00FF00ENABLED|r." or " |cFFFF0000DISABLED|r." ) )
+                                                Hekili:Print( name .. ": " .. ( setting.info.get( menu.args ) and " |cFF00FF00ENABLED|r." or " |cFFFF0000DISABLED|r." ) )
                                             end
                                         end,
                                         checked = function ()
@@ -569,7 +569,7 @@ do
 
                                 elseif setting.info.type == "select" then
                                     local submenu = {
-                                        text = setting.info.name,
+                                        text = type( setting.info.name ) == "function" and setting.info.name() or setting.info.name,
                                         hasArrow = true,
                                         menuList = {},
                                         notCheckable = true,
@@ -605,7 +605,7 @@ do
                                 elseif setting.info.type == "range" then
 
                                     local submenu = {
-                                        text = setting.info.name,
+                                        text = type( setting.info.name ) == "function" and setting.info.name() or setting.info.name,
                                         hasArrow = true,
                                         menuList = {},
                                         notCheckable = true,
@@ -635,10 +635,13 @@ do
                                             func = function ()
                                                 menu.args[1] = setting.name
                                                 setting.info.set( menu.args, actual )
+
+                                                local name = type( setting.info.name ) == "function" and setting.info.name() or setting.info.name
+
                                                 if Hekili.DB.profile.notifications.enabled then
-                                                    Hekili:Notify( setting.info.name .. " set to |cFF00FF00" .. actual .. "|r." )
+                                                    Hekili:Notify( name .. " set to |cFF00FF00" .. actual .. "|r." )
                                                 else
-                                                    Hekili:Print( setting.info.name .. " set to |cFF00FF00" .. actual .. "|r." )
+                                                    Hekili:Print( name .. " set to |cFF00FF00" .. actual .. "|r." )
                                                 end
                                             end,
                                             checked = function ()
@@ -1489,6 +1492,8 @@ do
             end
         end
 
+        Hekili:ProfileCPU( "HekiliDisplay" .. id .. ":OnUpdate", d.OnUpdate )
+
         function d:UpdateAlpha()
             if not self.Active then
                 self:SetAlpha( 0 )
@@ -1537,14 +1542,11 @@ do
                         start, duration, enabled, modRate = GetSpellCooldown( ability.id )
                     end
 
-                    if i == 1 then
-                        if conf.delays.extend and rec.delay and rec.delay > 0 and rec.exact_time > max( now, start + duration ) then
-                            start = ( start > 0 and start ) or ( cStart > 0 and cStart ) or ( gStart > 0 and gStart ) or max( state.gcd.lastStart, state.combat )
-                            duration = rec.exact_time - start
-                        end
-                    end
+                    if i == 1 and conf.delays.extend and rec.exact_time > max( now, start + duration ) then
+                        start = ( start > 0 and start ) or ( cStart > 0 and cStart ) or ( gStart > 0 and gStart ) or max( state.gcd.lastStart, state.combat )
+                        duration = rec.exact_time - start
 
-                    if enabled and enabled == 0 then
+                    elseif enabled and enabled == 0 then
                         start = 0
                         duration = 0
                         modRate = 1
@@ -1556,8 +1558,8 @@ do
                         cd.lastDuration = duration
                     end
 
-                    if i == 1 then
-                        if ability.empowered and state.empowerment.spell == ability.key and duration == 0 then
+                    if i == 1 and ability.empowered then
+                        if state.empowerment.spell == ability.key and duration == 0 then
                             button.Empowerment:Show()
                         else
                             button.Empowerment:Hide()
@@ -1698,6 +1700,8 @@ do
                 self.eventMaxType = event
             end
         end
+
+        Hekili:ProfileCPU( "HekiliDisplay" .. id .. ":OnEvent", d.OnEvent )
 
         function d:Activate()
             if not self.Active then
@@ -2154,9 +2158,7 @@ do
             local thread = self.activeThread
 
             -- If there's no thread, then see if we have a reason to update.
-            if Hekili.freshFrame and ( self.superUpdate or ( not thread and self.refreshTimer > ( self.criticalUpdate and self.combatRate or self.refreshRate ) ) ) then
-                Hekili.freshFrame = nil
-
+            if self.superUpdate or ( not thread and self.refreshTimer > ( self.criticalUpdate and self.combatRate or self.refreshRate ) ) then
                 self.criticalUpdate = false
                 self.superUpdate = false
 
@@ -2168,11 +2170,9 @@ do
                 if Hekili:GetActiveSpecOption( "throttleTime" ) then
                     Hekili.maxFrameTime = Hekili:GetActiveSpecOption( "maxTime" )
                 else
-                    Hekili.maxFrameTime = 10 -- ms.
+                    Hekili.maxFrameTime = min( 16.6, 667 / GetFramerate() )
                 end
 
-                -- Being greedy, let's take a maximum of half of a frame at a time (less if configured above).
-                Hekili.maxFrameTime = min( Hekili.maxFrameTime, 500 / GetFramerate() )
                 thread = self.activeThread
             end
 
@@ -2255,9 +2255,12 @@ do
     Hekili:ProfileFrame( "HekiliEngine", Hekili.Engine )
 
 
-    function Hekili:ForceUpdate( event, super )
-        self.freshFrame = false
+    function HekiliEngine:IsThreadActive()
+        return self.activeThread and coroutine.status( self.activeThread ) == "suspended"
+    end
 
+
+    function Hekili:ForceUpdate( event, super )
         self.Engine.criticalUpdate = true
         if super then self.Engine.superUpdate = true end
         if self.Engine.firstForce == 0 then self.Engine.firstForce = GetTime() end
@@ -2739,8 +2742,6 @@ function Hekili:BuildUI()
     for disp in pairs( self.DB.profile.displays ) do
         self:CreateDisplay( disp )
     end
-
-    self:UpdateDisplayVisibility()
 
     --if Hekili.Config then ns.StartConfiguration() end
     if MasqueGroup then

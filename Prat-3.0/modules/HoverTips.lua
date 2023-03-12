@@ -104,7 +104,7 @@ PL:AddLocale(PRAT_MODULE, "frFR", L)
 
 L = {
 	["HoverTips"] = {
-		["module_desc"] = "Zeigt einen Tooltip an, wenn der Mauszeiger über den Link im Chat schwebt",
+		["module_desc"] = "Zeigt Tooltip an, wenn der Mauszeiger über einen Link im Chat schwebt",
 		["module_name"] = "Schwebetipps",
 	}
 }

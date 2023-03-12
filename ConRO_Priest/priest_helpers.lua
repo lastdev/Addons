@@ -20,7 +20,7 @@ end
 function ConRO:CreateAtonementButton()
 	local tbutton = CreateFrame("Button", 'ConRO_AtonementButton', ConROButtonFrame)
 		tbutton:SetFrameStrata('MEDIUM');
-		tbutton:SetFrameLevel('6')
+		tbutton:SetFrameLevel('74')
 		tbutton:SetPoint("TOPLEFT", "ConROButtonFrame", "TOPLEFT", 7, -7)
 		tbutton:SetSize(40, 15)
 		tbutton:Hide()
@@ -57,7 +57,7 @@ end
 function ConRO:CreateRaidAtonementButton()
 	local tbutton = CreateFrame("Button", 'ConRO_RaidAtonementButton', ConROButtonFrame)
 		tbutton:SetFrameStrata('MEDIUM');
-		tbutton:SetFrameLevel('6')
+		tbutton:SetFrameLevel('74')
 		tbutton:SetPoint("BOTTOMRIGHT", "ConROButtonFrame", "BOTTOMRIGHT", -7, 7)
 		tbutton:SetSize(40, 15)
 		tbutton:Hide()

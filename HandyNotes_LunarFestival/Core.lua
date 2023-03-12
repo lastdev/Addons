@@ -3,7 +3,7 @@
 
                                            Lunar Festival
 
-                                      v1.08 - 3rd February 2023
+                                     v1.10 - 15th February 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -32,6 +32,7 @@ local pluginHandler = {}
 local GameTooltip = _G.GameTooltip
 local GetAchievementCriteriaInfo = GetAchievementCriteriaInfo
 local GetAchievementInfo = GetAchievementInfo
+local UnitName = UnitName
 --local GetMapInfo = C_Map.GetMapInfo -- phase checking during testing
 local LibStub = _G.LibStub
 local UIParent = _G.UIParent
@@ -644,7 +645,7 @@ function pluginHandler:OnEnter(mapFile, coord)
 	local aID = ((  aIDA > 0 ) and aIDA ) or aIDH
 	local aIndex = ((  aIndexA > 0 ) and aIndexA ) or aIndexH
 	local aQuest = ((  aQuestA > 0 ) and aQuestA ) or aQuestH
-	local pName = UnitName( "player" ) or "Character"
+	local pName = UnitName( "player" ) or L["Character"]
 	local completed, aName, completedMe;
 	local bypassCoords = false
 	local showTip = true
@@ -683,7 +684,7 @@ function pluginHandler:OnEnter(mapFile, coord)
 		elseif ( aQuest == 56842 ) then
 			GameTooltip:SetText( ns.colour.prefix ..L["Lunar Preservation"] )
 			completed = C_QuestLog.IsQuestFlaggedCompleted( 56842 )
-			GameTooltip:AddDoubleLine( ns.colour.highlight .."All nine locations...",
+			GameTooltip:AddDoubleLine( ns.colour.highlight .."All eight locations...",
 						( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
 											or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
 			showTip = false
@@ -1030,6 +1031,8 @@ function pluginHandler:OnEnable()
 					
 					if ( v[1] > 0 ) and ( v[2] > 0 ) then
 						AddToContinent()
+					elseif ( v[5] > 0 ) and ( v[6] > 0 ) then
+						AddToContinent()
 					elseif ( v[1] > 0 ) or ( v[5] > 0 ) then
 						if ( ns.faction == "Alliance" ) then
 							AddToContinent()
@@ -1038,6 +1041,8 @@ function pluginHandler:OnEnable()
 						if ( ns.faction == "Horde" ) then
 							AddToContinent()
 						end
+					elseif ( v[3] > 0 ) and ( v[4] > 0 ) then
+						AddToContinent()
 					elseif ( v[3] > 0 ) or ( v[4] > 0 ) then
 						AddToContinent()
 					end

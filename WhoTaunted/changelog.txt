@@ -1,3 +1,6 @@
+v2.0.7:
+- 10.0.5 compatibility.
+
 v2.0.6:
 - Wrath Classic 3.4.1 Compatibility.
 

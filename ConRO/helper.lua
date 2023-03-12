@@ -15,9 +15,61 @@ end
 function ConRO:CheckTalents()
 	--print("Bing")
 	self.PlayerTalents = {};
-
 	wipe(self.PlayerTalents)
-	if select(1, GetSpecialization()) ~= 5 then
+
+	local configId = C_ClassTalents.GetActiveConfigID()
+	if configId ~= nil then
+		local configInfo = C_Traits.GetConfigInfo(configId)
+		if configInfo ~= nil then
+			for _, treeId in pairs(configInfo.treeIDs) do
+				local nodes = C_Traits.GetTreeNodes(treeId)
+				for _, nodeId in pairs(nodes) do
+					local node = C_Traits.GetNodeInfo(configId, nodeId)
+					if node.currentRank and node.currentRank > 0 then
+						local entryId = nil
+
+						if node.activeEntry ~= nil then
+							entryId = node.activeEntry.entryID
+						elseif node.nextEntry ~= nil then
+							entryId = node.nextEntry.entryID
+						elseif node.entryIDs ~= nil then
+							entryId = node.entryIDs[1]
+						end
+
+						if entryId ~= nil then
+							local entryInfo = C_Traits.GetEntryInfo(configId, entryId)
+							local definitionInfo = C_Traits.GetDefinitionInfo(entryInfo.definitionID)
+
+							if definitionInfo ~= nil then
+								local spellId = nil
+								if definitionInfo.spellID ~= nil then
+									spellId = definitionInfo.spellID
+								elseif definitionInfo.overriddenSpellID ~= nil then
+									spellId = definitionInfo.overriddenSpellID
+								end
+
+								if spellId ~= nil then
+									local name = GetSpellInfo(spellId)
+										tinsert(self.PlayerTalents, entryId);
+									self.PlayerTalents[entryId] = {};
+
+									tinsert(self.PlayerTalents[entryId], {
+										id = entryId,
+										["talentName"] = name,
+										["rank"] = node.ranksPurchased,
+									})
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+
+
+
+	--[[if select(1, GetSpecialization()) ~= 5 then
 		local specID = PlayerUtil.GetCurrentSpecID();
 		local configID = C_ClassTalents.GetLastSelectedSavedConfigID(specID);
 		if configID == nil then
@@ -45,7 +97,7 @@ function ConRO:CheckTalents()
 				end
 			end
 		end
-	end
+	end]]
 end
 
 function ConRO:IsPvP()
@@ -331,7 +383,7 @@ function ConRO:Targets(spellID)
 
 			for i = 1, 15 do
 				if not UnitIsFriend("player", 'nameplate' .. i) then
-					if UnitExists('nameplate' .. i) and IsItemInRange(37727, "nameplate"..i) == true then
+					if UnitExists('nameplate' .. i) and IsItemInRange(37727, "nameplate"..i) == true and UnitName('nameplate' .. i) ~= "Explosive" then
 						number_in_range = number_in_range + 1
 					end
 				end
@@ -343,7 +395,7 @@ function ConRO:Targets(spellID)
 
 			for i = 1, 15 do
 				if not UnitIsFriend("player", 'nameplate' .. i) then
-					if UnitExists('nameplate' .. i) and IsItemInRange(32321, "nameplate"..i) == true then
+					if UnitExists('nameplate' .. i) and IsItemInRange(32321, "nameplate"..i) == true and UnitName('nameplate' .. i) ~= "Explosive" then
 						number_in_range = number_in_range + 1
 					end
 				end
@@ -355,7 +407,7 @@ function ConRO:Targets(spellID)
 
 			for i = 1, 15 do
 				if not UnitIsFriend("player", 'nameplate' .. i) then
-					if UnitExists('nameplate' .. i) and IsItemInRange(33069, "nameplate"..i) == true then
+					if UnitExists('nameplate' .. i) and IsItemInRange(33069, "nameplate"..i) == true and UnitName('nameplate' .. i) ~= "Explosive" then
 						number_in_range = number_in_range + 1
 					end
 				end
@@ -367,7 +419,7 @@ function ConRO:Targets(spellID)
 
 			for i = 1, 15 do
 				if not UnitIsFriend("player", 'nameplate' .. i) then
-					if UnitExists('nameplate' .. i) and IsItemInRange(24268, "nameplate"..i) == true then
+					if UnitExists('nameplate' .. i) and IsItemInRange(24268, "nameplate"..i) == true and UnitName('nameplate' .. i) ~= "Explosive" then
 						number_in_range = number_in_range + 1
 					end
 				end
@@ -379,7 +431,7 @@ function ConRO:Targets(spellID)
 
 			for i = 1, 15 do
 				if not UnitIsFriend("player", 'nameplate' .. i) then
-					if UnitExists('nameplate' .. i) and IsItemInRange(28767, "nameplate"..i) == true then
+					if UnitExists('nameplate' .. i) and IsItemInRange(28767, "nameplate"..i) == true and UnitName('nameplate' .. i) ~= "Explosive" then
 						number_in_range = number_in_range + 1
 					end
 				end
@@ -390,7 +442,7 @@ function ConRO:Targets(spellID)
 			end
 
 			for i = 1, 15 do
-				if UnitExists('nameplate' .. i) and ConRO:IsSpellInRange(spellID, 'nameplate' .. i) then
+				if UnitExists('nameplate' .. i) and ConRO:IsSpellInRange(spellID, 'nameplate' .. i) and UnitName('nameplate' .. i) ~= "Explosive" then
 					number_in_range = number_in_range + 1
 				end
 			end
@@ -455,6 +507,26 @@ end
 
 function ConRO:TargetAura(spellID, timeShift)
 	return self:UnitAura(spellID, timeShift, 'target', 'PLAYER|HARMFUL');
+end
+
+function ConRO:AnyTargetAura(spellID)
+	local haveBuff = false;
+	for i = 1, 15 do
+		if UnitExists('nameplate' .. i) then
+			for x=1, 40 do
+				local spell = select(10, UnitAura('nameplate' .. i, x, 'PLAYER|HARMFUL'));
+				if spell == spellID then
+					haveBuff = true;
+					break;
+				end
+			end
+			if haveBuff then
+				break;
+			end
+		end
+	end
+
+	return haveBuff;
 end
 
 function ConRO:Purgable()

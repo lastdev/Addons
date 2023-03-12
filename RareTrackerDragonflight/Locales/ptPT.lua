@@ -125,6 +125,8 @@ L[193663] = "Elemental Rochagravado"
 L[193658] = "Protodragão Corrompido"
 L[193664] = "Protetor Antigo"
 
+L[186200] = "Harkyn Sombrólito"
+
 -- "That's Pretty Neat!" Rares
 L[193259] = "Terror Azul"
 L[195895] = "Nergazurai"

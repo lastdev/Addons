@@ -182,7 +182,7 @@ local ConRO_Warlock, ids = ...;
 			UnstableAfflictionRA = {spellID = 342938, talentID = 335052},
 	}
 	ids.Aff_Form = {
-	
+		MaleficAffliction = 389845,
 	}
 	ids.Aff_Buff = {
 		BurningRush = 111400,
@@ -550,9 +550,12 @@ local ConRO_Warlock, ids = ...;
 		BackDraft = 117828,
 		BurningRush = 111400,
 		DarkPact = 108416,
+		DarkSoulInstability = 113858,
 		GrimoireofSacrifice = 196099,
 		InquisitorsGaze = 388068,
-		DarkSoulInstability = 113858,
+		MadnessoftheAzjAqirCB = 387409,
+		MadnessoftheAzjAqirRoF = 387413,
+		MadnessoftheAzjAqirSB = 387414,
 		RitualofRuin = 387157,
  	}
 	ids.Dest_Debuff = {

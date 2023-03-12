@@ -147,6 +147,8 @@ if RareTracker.db.global.window.force_display_in_english then
     L[193217] = "Drakewing"
     L[193154] = "Forgotten Gryphon"
     
+    L[186200] = "Harkyn Grymstone"
+    
     -- Stormed off
     L[193648] = "Infernum"
     L[193644] = "Bouldron"
@@ -432,6 +434,8 @@ RareTracker.RegisterRaresForModule({
         [193679] = {L[193679], nil, nil}, --"Leerain"
         [193654] = {L[193654], nil, nil}, --"Gravlion"
         [193655] = {L[193655], nil, nil}, --"Frozion"
+        
+        [186200] = {L[186200], nil, nil}, --"Harkyn Grymstone"
     },
     ["special_categories"] = categorized_rare_ids
 })

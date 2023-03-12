@@ -670,6 +670,7 @@ L = {
       local edit = _G[k]
       if (edit) then
         if self.db.profile.savehistory then
+          edit:SetHistoryLines(self.db.profile.maxlines)
           edit.history_lines = Prat3CharDB.history.cmdhistory[k]
         else
           edit.history_lines = {}
@@ -778,9 +779,9 @@ L = {
       text = header
     end
 
-    if (type == "WHISPER") then
+    if (type == "WHISPER") and editBox:GetAttribute("tellTarget") ~= nil then
       text = text .. " " .. editBox:GetAttribute("tellTarget")
-    elseif (type == "CHANNEL") then
+    elseif (type == "CHANNEL") and editBox:GetAttribute("channelTarget") ~= nil then
       text = "/" .. editBox:GetAttribute("channelTarget")
     end
 

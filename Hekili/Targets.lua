@@ -201,6 +201,7 @@ local enemyExclusions = {
     [166971] = true,      -- Niklaus
     [168113] = 329606,    -- Grashaal (when shielded)
     [168112] = 329636,    -- Kaal (when shielded)
+    [193760] = true,      -- Surging Ruiner (Raszageth) -- gives bad range information.
 }
 
 local FindExclusionAuraByID
@@ -311,14 +312,6 @@ do
     function ns.getNumberTargets( forceUpdate )
         if not forceUpdate then
             return lastCount, lastStationary
-        end
-
-        local now = GetTime()
-
-        if now - Hekili.lastAudit > 1 then
-            -- Kick start the damage-based target detection filter.
-            Hekili.AuditorStalled = true
-            ns.Audit()
         end
 
         local showNPs = GetCVar( "nameplateShowEnemies" ) == "1"
@@ -838,65 +831,66 @@ function ns.healingInLast(t)
 end
 
 -- Auditor should clean things up for us.
-Hekili.lastAudit = GetTime()
-Hekili.auditInterval = 0
+do
+    ns.Audit = function( special )
+        -- Don't audit while recommendations are being generated.
+        if HekiliEngine:IsThreadActive() then
+            return
+        end
 
-ns.Audit = function( special )
-    if not special and not Hekili.DB.profile.enabled or not Hekili:IsValidSpec() then
-        C_Timer.After( 1, ns.Audit )
-        return
-    end
+       if not special and not Hekili.DB.profile.enabled or not Hekili:IsValidSpec() then
+            return
+        end
 
-    local now = GetTime()
-    local spec = state.spec.id and rawget( Hekili.DB.profile.specs, state.spec.id )
-    local nodmg = spec and ( spec.damage == false ) or false
-    local grace = spec and spec.damageExpiration or 6
+        local now = GetTime()
+        local spec = state.spec.id and rawget( Hekili.DB.profile.specs, state.spec.id )
+        local nodmg = spec and ( spec.damage == false ) or false
+        local grace = spec and spec.damageExpiration or 6
 
-    Hekili.auditInterval = now - Hekili.lastAudit
-    Hekili.lastAudit = now
+        for aura, targets in pairs( debuffs ) do
+            local a = class.auras[ aura ]
+            local window = a and a.duration or grace
+            local expires = a and a.no_ticks or false
+            local friendly = a and a.friendly or false
 
-    for aura, targets in pairs( debuffs ) do
-        local a = class.auras[ aura ]
-        local window = a and a.duration or grace
-        local expires = a and a.no_ticks or false
-        local friendly = a and a.friendly or false
+            for unit, entry in pairs( targets ) do
+                -- NYI: Check for dot vs. debuff, since debuffs won't 'tick'
+                if expires and now - entry.last_seen > window then
+                    ns.trackDebuff( aura, unit )
+                elseif special == "combatExit" and not friendly then
+                    -- Hekili:Error( format( "Auditor removed an aura %d from %s after exiting combat.", aura, unit ) )
+                    ns.trackDebuff( aura, unit )
+                end
+            end
+        end
 
-        for unit, entry in pairs( targets ) do
-            -- NYI: Check for dot vs. debuff, since debuffs won't 'tick'
-            if expires and now - entry.last_seen > window then
-                ns.trackDebuff( aura, unit )
-            elseif special == "combatExit" and not friendly then
-                Hekili:Error( format( "Auditor removed an aura %d from %s after exiting combat.", aura, unit ) )
-                ns.trackDebuff( aura, unit )
+        Hekili:ExpireTTDs()
+
+        for whom, when in pairs( targets ) do
+            if nodmg or now - when > grace then
+                ns.eliminateUnit( whom )
+            end
+        end
+
+        local cutoff = now - 15
+        for i = #incomingDamage, 1, -1 do
+            local instance = incomingDamage[ i ]
+
+            if instance.t < cutoff then
+                table.remove( incomingDamage, i )
+            end
+        end
+
+        for i = #incomingHealing, 1, -1 do
+            local instance = incomingHealing[ i ]
+
+            if instance.t < cutoff then
+                table.remove( incomingHealing, i )
             end
         end
     end
 
-    for whom, when in pairs( targets ) do
-        if nodmg or now - when > grace then
-            ns.eliminateUnit( whom )
-        end
-    end
-
-    local cutoff = now - 15
-    for i = #incomingDamage, 1, -1 do
-        local instance = incomingDamage[ i ]
-
-        if instance.t < cutoff then
-            table.remove( incomingDamage, i )
-        end
-    end
-
-    for i = #incomingHealing, 1, -1 do
-        local instance = incomingHealing[ i ]
-
-        if instance.t < cutoff then
-            table.remove( incomingHealing, i )
-        end
-    end
-
-    Hekili:ExpireTTDs()
-    C_Timer.After( 1, ns.Audit )
+    Hekili.AuditTimer = C_Timer.NewTicker( 1, ns.Audit )
 end
 Hekili:ProfileCPU( "Audit", ns.Audit )
 
@@ -927,11 +921,7 @@ do
 
         db[guid] = nil
         wipe(enemy)
-        insert(recycle, enemy)
-
-        for k, v in pairs( debuffs ) do
-            if v[ guid ] then ns.trackDebuff( k, guid ) end
-        end
+        insert( recycle, enemy )
     end
 
 
@@ -1300,7 +1290,7 @@ do
 
         for k, v in pairs(db) do
             if all or now - v.lastSeen > 10 then
-                EliminateEnemy(k)
+                EliminateEnemy( k )
             end
         end
     end
@@ -1311,28 +1301,28 @@ do
     local UpdateTTDs
 
     UpdateTTDs = function()
+        if not InCombatLockdown() then return end
+
         wipe(seen)
 
         local now = GetTime()
 
-        -- local updates, deletions = 0, 0
-
-        for i, unit in ipairs(trackedUnits) do
+        for _, unit in ipairs( trackedUnits ) do
             local guid = UnitGUID(unit)
 
             if guid and not seen[guid] then
                 if db[ guid ] and ( not UnitExists(unit) or UnitIsDead(unit) or not UnitCanAttack("player", unit) or ( UnitHealth(unit) <= 1 and UnitHealthMax(unit) > 1 ) ) then
-                    EliminateEnemy(guid)
+                    EliminateEnemy( guid )
                     -- deletions = deletions + 1
                 else
                     local health, healthMax = UnitHealth(unit), UnitHealthMax(unit)
                     health = health + UnitGetTotalAbsorbs(unit)
                     healthMax = max( 1, healthMax )
 
-                    UpdateEnemy(guid, health / healthMax, unit, now)
+                    UpdateEnemy( guid, health / healthMax, unit, now )
                     -- updates = updates + 1
                 end
-                seen[guid] = true
+                seen[ guid ] = true
             end
         end
 
@@ -1345,13 +1335,10 @@ do
                 UpdateEnemy(guid, health / healthMax, unit, now)
                 -- updates = updates + 1
             end
-            seen[guid] = true
+            seen[ guid ] = true
         end
-
-        C_Timer.After( 0.25, UpdateTTDs )
     end
     Hekili:ProfileCPU( "UpdateTTDs", UpdateTTDs )
 
-
-    C_Timer.After( 0.25, UpdateTTDs )
+    C_Timer.NewTicker( 0.5, UpdateTTDs )
 end

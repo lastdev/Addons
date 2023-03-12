@@ -509,6 +509,11 @@ spec:RegisterAuras( {
         max_stack = 1,
         copy = 197625
     },
+    natures_grace = {
+        id = 393959,
+        duration = 6,
+        max_stack = 1
+    },
     -- Talent: $?s137012[Single-target healing also damages a nearby enemy target for $w3% of the healing done][Single-target damage also heals a nearby friendly target for $w3% of the damage done].
     -- https://wowhead.com/beta/spell=124974
     natures_vigil = {
@@ -524,6 +529,11 @@ spec:RegisterAuras( {
         duration = 10,
         type = "Magic",
         max_stack = function () return pvptalent.owlkin_adept.enabled and 2 or 1 end
+    },
+    parting_skies = {
+        id = 395110,
+        duration = 60,
+        max_stack = 1,
     },
     -- Cost of Starsurge and Starfall reduced by $w1%, and their damage increased by $w2%.
     -- https://wowhead.com/beta/spell=393955
@@ -1325,6 +1335,14 @@ spec:RegisterStateTable( "eclipse", setmetatable( {
         if set_bonus.tier29_2pc > 0 then applyBuff( "celestial_infusion" ) end
         applyBuff( "eclipse_solar", ( duration or class.auras.eclipse_solar.duration ) + buff.eclipse_solar.remains )
 
+        if buff.parting_skies.up then
+            removeBuff( "parting_skies" )
+            applyDebuff( "target", "fury_of_elune", 8 )
+            applyBuff( "fury_of_elune_ap", 8 )
+        elseif talent.parting_skies.enabled then
+            applyBuff( "parting_skies" )
+        end
+
         state:QueueAuraExpiration( "ca_inc", ExpireCelestialAlignment, buff.ca_inc.expires )
         state:RemoveAuraExpiration( "eclipse_solar" )
         state:QueueAuraExpiration( "eclipse_solar", ExpireEclipseSolar, buff.eclipse_solar.expires )
@@ -1346,6 +1364,13 @@ spec:RegisterStateTable( "eclipse", setmetatable( {
                 eclipse.state = "IN_SOLAR"
                 eclipse.starfire_counter = 0
                 eclipse.wrath_counter = 2
+                if buff.parting_skies.up then
+                    removeBuff( "parting_skies" )
+                    applyDebuff( "target", "fury_of_elune", 8 )
+                    applyBuff( "fury_of_elune_ap", 8 )
+                elseif talent.parting_skies.enabled then
+                    applyBuff( "parting_skies" )
+                end
                 if Hekili.ActiveDebug then Hekili:Debug( "Eclipse Advance (Post): %s - Starfire(%d), Wrath(%d), Solar(%.2f), Lunar(%.2f)", eclipse.state, eclipse.starfire_counter, eclipse.wrath_counter, buff.eclipse_solar.remains, buff.eclipse_lunar.remains ) end
                 return
             end
@@ -1361,6 +1386,13 @@ spec:RegisterStateTable( "eclipse", setmetatable( {
                 eclipse.wrath_counter = 0
                 eclipse.starfire_counter = 2
                 if Hekili.ActiveDebug then Hekili:Debug( "Eclipse Advance (Post): %s - Starfire(%d), Wrath(%d), Solar(%.2f), Lunar(%.2f)", eclipse.state, eclipse.starfire_counter, eclipse.wrath_counter, buff.eclipse_solar.remains, buff.eclipse_lunar.remains ) end
+                if buff.parting_skies.up then
+                    removeBuff( "parting_skies" )
+                    applyDebuff( "target", "fury_of_elune", 8 )
+                    applyBuff( "fury_of_elune_ap", 8 )
+                elseif talent.parting_skies.enabled then
+                    applyBuff( "parting_skies" )
+                end
                 return
             end
         end
@@ -1449,7 +1481,7 @@ spec:RegisterHook( "reset_precast", function ()
     else active_moon = nil end
 
     -- UGLY
-    if talent.incarnation_chosen_of_elune.enabled then
+    if talent.incarnation.enabled then
         rawset( cooldown, "ca_inc", cooldown.incarnation )
         rawset( buff, "ca_inc", buff.incarnation )
     else
@@ -1647,9 +1679,9 @@ spec:RegisterAbilities( {
 
     -- Talent: Celestial bodies align, maintaining both Eclipses and granting $s1% haste for $d.
     celestial_alignment = {
-        id = 194223,
+        id = function() return talent.orbital_strike.enabled and 383410 or 194223 end,
         cast = 0,
-        cooldown = function () return ( essence.vision_of_perfection.enabled and 0.85 or 1 ) * 180 end,
+        cooldown = function () return ( essence.vision_of_perfection.enabled and 0.85 or 1 ) * 180 - 60 * talent.orbital_strike.rank end,
         gcd = "off",
         school = "astral",
 
@@ -1941,9 +1973,9 @@ spec:RegisterAbilities( {
 
 
     incarnation = {
-        id = 102560,
+        id = function() return talent.orbital_strike.enabled and 390414 or 102560 end,
         cast = 0,
-        cooldown = function () return ( essence.vision_of_perfection.enabled and 0.85 or 1 ) * 180 end,
+        cooldown = function () return ( essence.vision_of_perfection.enabled and 0.85 or 1 ) * 180 - 60 * talent.orbital_strike.rank end,
         gcd = "off",
 
         spend = -40,
@@ -1968,7 +2000,7 @@ spec:RegisterAbilities( {
             if pvptalent.moon_and_stars.enabled then applyBuff( "moon_and_stars" ) end
         end,
 
-        copy = { "incarnation_chosen_of_elune", "Incarnation" },
+        copy = { "incarnation_chosen_of_elune", "Incarnation", 102560, 390414 },
     },
 
     -- Talent: Infuse a friendly healer with energy, allowing them to cast spells without spending mana for $d.$?s326228[    If cast on somebody else, you gain the effect at $326228s1% effectiveness.][]
@@ -2942,7 +2974,7 @@ spec:RegisterOptions( {
 } )
 
 
-spec:RegisterSetting( "starlord_cancel", false, {
+--[[ spec:RegisterSetting( "starlord_cancel", false, {
     name = "Cancel |T462651:0|t Starlord",
     desc = "If checked, the addon will recommend canceling your Starlord buff before starting to build stacks with Starsurge again.\n\n" ..
         "You will likely want a |cFFFFD100/cancelaura Starlord|r macro to manage this during combat.",
@@ -2950,7 +2982,7 @@ spec:RegisterSetting( "starlord_cancel", false, {
     iconCoords = { 0.1, 0.9, 0.1, 0.9 },
     type = "toggle",
     width = "full"
-} )
+} ) ]]
 
 spec:RegisterSetting( "delay_berserking", false, {
     name = "Delay |T135727:0|t Berserking",
@@ -2960,11 +2992,11 @@ spec:RegisterSetting( "delay_berserking", false, {
 } )
 
 
--- Starlord Cancel Override
+--[[ Starlord Cancel Override
 class.specs[0].abilities.cancel_buff.funcs.usable = setfenv( function ()
     if not settings.starlord_cancel and args.buff_name == "starlord" then return false, "starlord cancel option disabled" end
     return args.buff_name ~= nil, "no buff name detected"
-end, state )
+end, state ) ]]
 
 
-spec:RegisterPack( "Balance", 20230131, [[Hekili:TZX2UTno2VLGfJRLtJJLSDs6aBVaZG9HzWI5fppBzzz6yHil5vxAAam83(EifLej1H6IJtBb2fZGMurYZnEUtYUYC1FVA5wNeYQ)YAK14rMJnhA(flZXpSAzYBhjRwE0X9fNNHFjW5a8N)MJVtGl77V5h6SLU(4W0i6N2NKCm(xV)(nzZ5UyVdUdF2lzF6MHEH3Zx6Dl9o873Fy7W9jh8)N788jZ5lyyY3swTCtQNFYFeSAdoHnD1sN0K9HrRwsbeGvVTBjztNe7UA5QL(EXjXmgJSZj1pb(1)IXOKaNn(KTR(TS5g5DmXlmy1Y)13iUPjKTNxt(kj6TZRt8oqG)Cp8hoUjHrNx7fd)6xD88PqyiqdUzlno03jYEdX5WQeGuPyPCOqacIyfMXyf6aiIesKNdiUz4C251p7UD4bNVDEDVZR7dKKRV3XyYqNG3SdiFl586tNk)QFAaG)SVBuI7xJCs2tLebeB3TRwoLI7jAXDezxejEpDegAlOfRZRhitrBs3TBih72mSpm9OatNq8PsKDWFqujGPkeqiSWyss5Q)QdqoWO0FZpf(r8raC2jorptsIhgd)YohF)ZRxCETjB62zQLEX2oHekoEOZ44HZRV)86mmT3byGZRVfebo(KGKHbojPGOXoxfLdzXPegTXlXEteX5fsu5ea522WKHhcdd25fbk3EUV4f8mBG(C5O8sb2Z9fgVbJB94513LVbWMmOQfdaHaYByVM9)Wqtgjkho6eh79vITt8rQW4rT74mi66y7f4omICWXlauWxmhq4OmfSCX0WGqyd0oJxZgAtyCmtxyN3Z7tSlwoOVyoTuqVHeftIO8mLuEslPCdiOIs92MHP4C9(pikC8ijdLJHSFce4xuiW8zKe5f8cjXuKKlqDyGDkyhWNZ513a0NjdZaxX)6WelGbC2(MTByO)2WxdYiY(cSGkCYaJexImLXmLGEYYkQ2XLlEQiCrqlOXf7hcUylLnG8ZCu9cqRwlaTQianrfG1rJw)mixSyYftXGc01acHdXkXfmT0AFuGsUtUcyfLgyN9720qEzb(4oc4EdnvJ30M1c)v6)T8yeXn8WgNYaO5RM6udmST3fgDqHrKcbEWj6f7WD2qCq7x9832qWWM9vFtHxxxIpbCh64B7479CWb63k89YvFYMjS57eb(XP8Q7(WysaLKiqSlb3509wrVqIovfvuWIJ2mzZPK0dBIac2liHee7L82WiNGxYuxfXxwof5Xyz7gxqOtP4cYAR6It6SDBDmrP1ieMKbpQ9vwcdLJLBJoCBAKtbO0shQHOAMo6l5zvpPyvLuYdAAvpnPpw17lFmMvf1YejHurtlA(ckrilCnPMQgvAWspAinPn7Kq7TEewQdfUVmy5u8aB6q(nuvWJHVcjCa5h756LWgUWlJqkeSSCgduYBU(K8SWOKEUDoc9hNwH8FpK8DSPlLgilDnR8qFxngsNNsSnKF62n6UljnzDvyYOM5fedCAUJv1WQ6zCAE6JAo46ugVrN5GU522GzLvAld(PDdd26XwfpgOQRtKiRQlJrNG8ZEtyqAmWsKiRVyp5OlBavpavnZR4Dvt5rVlBK7uSlYkpc0uZ1XEIjv1nNls97PmjJgqoJr3MMmAR(yELtGteXhafpGmYgoZ2w7(dUrG(QDQFJUVCPCuIbcg8crkFcCz1S6LvdQ46IzjqnFsctD3ZsmYne4948Q6OtqlU6xp6O2qwsfykxOUOn3ebAPivdAIhQZYqkqwEj41hMSMnUCaHK)gwvyDcMcUmkRiPW20jkYlmQWjIAc4QbKlXmEeF0gHuw1HEjFgbnK5RyijR1t2uRCe)i1uwq3nEP1WKPUxMC8U0GNbO8Cu4RuQrmD4Yj9QtaufVDcKcp13TswZHQqrY1Ewoz4HgEmpGcuPXxTPDzYCiTmb7dPX7JcdpiNdL4iOf38EeopvhHAvsf7sJERuhIsf6BRw3PIjfBr1PebqquVPzl5klWqKHa)t0KCymJAWY)FGRog4cp0KPAcbc99fxLBIKIaLuFL48vsuSn4i7yr3m40cDC)WOTsHSkwjBeE3fNL12iCp6Mn0WqjYGSlj3JxnY1XYykofMddv1wKfdBpdobHVaEEyRmHtb8EKAkO2Z3Ri0Fu2G0lsrPFEG7(muaFz0WjLnHvnksrZyveO0cgOCP(4zDN0MoQej8v7gE4qAapENLAh4WrwwU8J0TXX6VEMwszpUz8AS9ZqbdYTbVvoRArUgzZsqkcH4)A4lewgsXh9aojMXJ6dt3DbQPGanG8AHxqRpMOUF3CPV3XFxjZCnJsAjiX2fg5sOgczNrcdx6JfEP(paxs4oqS0xxNso3zhweM5P1dsziMDOzsPfAP6rmFY11avQnuY(O0Sg(u83q66tl6YRO)z5ZxSqAitY6AKbsNzKoGkrvRIFN2Smlwhxah26B9q1MLissjSEkxttVArtJQMuzlY0G3RfCcxxhSWA4Zhp1ODxRTjE1DJ5NEVSsDAecSYhsZOmVWUrn9hv3OW7JFt13gNK5GST9IkJ7uykEx40lyMvCIzA1IYpamDlFAzkNhJ8oazCYQTpYfQD01(yQFme9ITDFMDkUtNocTd5vADwlLq6BQsrK02rxpmso5zL4vAIg1qIZTd18KYQOtJhmORTFjwWc8k19frqEvB(sZUm6AtzAUJyzOcPVmf9LdjFmnqVAN0Qd6I(mGDcsXH)TQ(wavSPiTigbvmuLdteVof9jjIJeed3kncP5nrr1CKcgQleWISRYrnNOVrB237y1jc(251NuymScR9jc5ANT)JuwZWxcyxPHEIClY0yxbc5n3QeHMITBJtv9WstTy10TGUNmYuHBoewXT10VGUJSgkJ5Qw1(f3yXAkNxFpHecFGemutvf6Rk5cBVKqNPaVdj(CvhQkzvqKnJT8Hf7HU8iIEt53irnQ7vQFVd1z09nyDhqExoq5poQq1P83J6k0qk14CSZ4qBRB07PR7i5hERBUMoy)rF0cw6DGRV3q1EAODQhUtfRMlom1p)EPb()HuHLU3UAYZZOirq5taOioLKVTIy5vMLOJSXnwo6uDo50hKstWgqAW2rIiU7PZGVHDh7G4mAKqen5QCwCJ1hSkptDVGmLTs)7kTThsWXTX84zJG0fE88AhlDTfXAW3yDXkADd(GHOkT0fXFRcGQoTIh6HMgVA5FtFgbEhoggbm3o6Jj4t8hMWNODu5)Kc0kOYehs3mCstcp4WElcWMuWZK4HN)Z)Txam0d)651)oKjgjIn8NWVH6amtc1oAUgkmR(MFZOjylD)0vGm61EVb4gEKKDr8ankpiL3p9WViCV7VTEA(26q8aS7A)G(mTfKBz)I(wpEN1GmhpL3REdJbtgLZNpC)pH0wHK9lQ7y8R9O6DnVyxt3LrxDlZCKgiREjSRazKjWH85)eXiO46f3nZGX4QQiD0qrHTMBmSQmqdoQPjGk4QfTlSrtWcXU4vCfrORmClbAL7glcKXMZhk4la8JA1URvyuzyjQvpqBMAXNZhk41z34es6MfJvdoHfY4Vx)Q5oChpjaJfpCxFPJw7xSm6HLD2cSmZUDCoxFX47(oIVcjWKFa2ZvuhWUIHyXuDuV)Hv8qBHdAPBHLcKrVNxTfWk3)lfqR52Hvb4AYXiVdckqvTLdQGZQsyk0BQGcu1CpgAisvE6EDZSBCdMDyh(6c(phyz9lMpLt8nmZ7HzQJ0J7y01FewkwMxxndnGtTtukGvxJQQa(N0qTvQPuLU1w0zBrHALKkiqx5OIA3)bt7Gc0P5NjX51Shmnmm7Mt4sp7gl6R)kK(4SZlikEyr(A3o)EXha25)eDgkp9l8zL74(Z06QMl2)(pZoIG53Op5TE30Sk3PtsNRClOb1ZlHthCuHEPaNB1gal)mJ4GD0fSYWJZD2UnNUqZsSxnjI9EXyF8CX6vt6ogd0iHyfK)zVDZ7RECENoL)LYxuLbvb(FCEDNFU(fihqz5d2x(R03QV4xkinkWNX73CV2rNFM)S3NpvchIDCLczX8GyyXAqoEq7)boyL35YU9q8Tk8B33ct9lxi)jomAtf6Ov)EfR6vKElFv5uriYbiUyU1OtNqptWtNOT3QNuRTMzkjnZEp4uqFJONJE9VcyA8idruv8uG)m7vdNBkBsrEbqLTeVzUj41ttL(No1xZYMBkqMkdn2ONiRLESlCKe)Ra4rTGxTQLxTk5v1wlOhTwFxzhXpQ0WWmdkQXOipMzF24YItO(6YDzcRGhZLAl9zPdxzotF5gg30(cR6szuQ0b)q0WiJ2taVVkj7IO57OKr2xQ67ukpJgz)kAUGdZM27gzfzm6EH5iCf5P3AoAqZPhzyOYcfH9k4yv2Oh2DrRxLRJJQsJuWVlx15o8RkSXINUfFKoSF(upCqmRVP5D1La4DYjGl(Iqm6PvqwveLfFUEPF)eSwfGYLZW5YbsCjO)O5YcyC6eku7Jd2BnT4r3rpAXzt4yc9CeNnPQQisk)1kAuxVGEFNwN6HlP1ePAUGOPTHLmxoBNbzSBfMksfpWnkYBVAT1OE9VbRnqNoDdElCGQM09O(Mz1dXn0J9Ur3t4RY2Q09CPBCYty42Qkc4N6C3a(Kr9Qr9DH4MtDAYstScZ))SUbRZzhYM6e(EbYDC60jL(a1RyMLxePzJrXi7WZlQBa5ghOJ1RMeeFewXRmOP91QTWKRVu5vQ1LCE6)0G(M3oA4Kb6ob8QEqvBiu3miMoQIh5Q3dqvqoB6imziStpB8T4nHTwZUAJASysfwo)Ua1nw1ScRwCpC6gGS(E4er5gl2vk8QAyy(yDwgslsOVdIrsv)iA9q5DGxSQO8VnhnXjLcTkMTidJpQ(YBAUJ9OqmFjIeFCs7RKQm0B9LUOa96kk6ka(ofkR96Np1w65jf6PMIVk6IBlR9YSLfFn9Qv8vCsZ1EfN0UsVoDsIEGAeXO(zZTW3vOnbbB6tZIZ2WlzzX8PthPYysEy0YC6QdH7OSze)WOE6CFHqq5EmAjWH4Ak6ekWStLReNOS6wvSsLvPVufetcI473GBq02syQRWUmuIudJbAiUkqtUqq9qdBpKhNPqCjXJLLEREOonA4jbN6D0O(Sj4swrDfHKz05ZzXyDTs24kLFuvlrUOw7tsPxZphfHUBOkhunpWZDS1R)DMl7ufWD1YHkdAFC10I7VcPUiU7jSNazn6aTQwQIsUupJ8SPR(aoW(AU5D()usFrjc1EP64lmxOlhdFuPdPGM3F9nmW8Zz5nCBPFgBFtvlhDPAOPRP1wu)0bAVJidqdHAyuytQ6ySxJp8aQbnsERQUiR0Yrehv9R(GcU7rd8ZzvvhumaEEEi5VrGEynmH9(aQTjRy)RZdsOELVvBfNSl4)Q)7p]] )
+spec:RegisterPack( "Balance", 20230225, [[Hekili:TZX2UnUn2VLGI6X2zSJKCCsAHTxSTyFOfl6lPpBzfz6eHil5vxMmbWWF77HuuuKuhQlojZma7Iw0KksEUXZDsM12R)713V1lJS(VCSCMz54mFQT98BCUz99zVEGS((dE(p79i8lrE7H)7V5f6f5Z((RHXEBPRpnopH(PNYYoK(RxD1dfZzsAWE)PpgK9u(dtdIVIV0j3hS)3VA)2PpLTp8FSliKSKVGPzFnB99pKheM9hrRFaNWCwFVxE2tXjRVNciaRbB3skMoj1F990PpXYzIZ8F90MtB(NWOBpTjni6XqYKmVKhjzN2KNsoTjE3Pn3dFzNxy4PnVae6Pn)DCUp8JSNGX)9409XPtxFFyqAwktsr25LhMb)6FXKCKiVhcjBx)Bfipj4qwqC067)xFL4NNrXl5lKKxb4fSNWHQNFwCYPnbPWV(fVGqkeaCaFMT004qVe3hiE7xNb8oflvdfdqqgRWmMPrharKrsc8G9pgoxCAZJ(BNU37RN2m40MHaj5hgCiLm1l6v3iYxbPXXJvFnmpcWFX3hvH7xs8YEIkjIiU(BxF)CkUV2iUti7siPprhHHwbT4CAZyvk6H8D7MYXUld7tZpiX0zKqQezh8Fi6eWCncigwykjRA1FXdihyu6VfMd)i9aao3c1G0PPID)vN2yZMUBHEEqQRxmHIJB6noU50MRanogMEYdyGtBUeebEHKOSPrEz5GOXTuNNdz5PeN8qqM7djeVNjjvtaKBBJZMUpooAxqcyTe4)mOvZgyixoQUuG98FMXBW4o3EAZKYna2KbvTuaieqEd71S)fg6Alz5WbV00GVqC9spqfg3AChNbrFp3Gi)PjK9EbrGc(QLacTkuWkfttJIHnq3cETyOhIttz6c7cE8PmxXYb9f75vc6hijPKekptjL7mskxacQK8GTfykTuV)dIcNzPyOCiM9tGa)fncSCgzjbrptYSLjzbQJJCbFtU85CAZfa9zZWmWv8VonZbyaVTV66hhhUn(LOcICOelOdNcWOWLitzgtjyGQSIQDC(INAcxe0cACPHXGl2kzdi)STAwa60zbOtnbOnQaSjA05hb5IdtUylhuGUgqiSpvlUGTJr7dbk5o5eWkjpYT43DPH8kc8XDeW9gARhVPlRf(FP)Z9hsi(X7FWRkaA5QPo1adB3DXj71yeLqG79sE2nENleh09LGWTTemSDF1xi866tcjG7qVqxVWGhJ2t)MW3lx9PyMWMVxc4hNYR(pfNsIOKebIDj5oNU3k7fs2PQSIcwC02jBoLKV)HeGGdIYirPbzVonXl65c1vz8vKtrzmw2UXze6ujUGQ2QP4KEB32etuzncHjzWJAFvKWq1yL2Ot3MN4jaLr6qpev70XqfpRMjfN6KszqtNMPjZXQEB5JXSQOwMijKkBArZxqlcPW1KEQAuPbl9OP0K2CZID3gqyPoiCFnILtXnSPd53qvbpe)cKWbKFCGFqgByHxgPuiyz5mdOKx9djLzHrj9s7Ce6pnVg5)wi5jSPRKgilDnNYqFVBmKjpLyBi)WTB0FxsgY6syYON5fedCEPJv9WQMzCAE6wThCDoJ3OZCC)CBpIzLvzld(P9JJ2gWwfpgOURtKiR6lJrNG8Z9H4O8uGLijo)I71h8zdO7bOUzEnVRgkp6nzJmrZUOO8iqtTuh7oMu10Col1V7kKmga5cgDBBZOTMJ5vnbora1UhUfiJIHlSTnU)GBeyUANM3OhQwkhLyGGbptuYNaxwTOzz14AUUywcuZNmANlyjg5x03cEvD0jyexdBgDuBihLcmvlux2M7AjArKQbnXd9znsjqwzj4nhMSHnUsaHK)gwvy9cMsUmQQiryB6LKeeNiCIONaUEa5kmJhXhTrivvDywYxqqtz(kMskA9Kl1khXpsdLf0FJxAnmfQ7vjhVlp6rakpMe)cLAKthUAsV4fbvX7MbPWt9DRL1CSouuCTxKtgEOHBldOavA8fxAxMSNsltWDFE6tjXX7vZHsEe0IBElcN7AIqDQOID5jVwPdrPcZTvR)uX1ITOMuIaiiR30ULCTfmsMHa)t0KCymJ5GLgenxRqWu3dVq8(cjj1fm4oiQ6MRjrhpmozRIRvXkzJW7c2II2BG75Xwp(Qsg6m49iybbFbuBPlmnJJd)Nl7CIqMXJqrO)OQ7ANv4XHLE9hY6Fd8fRPxx1bpDxqIo5PXL0SnPCzlTVtryt2Lv6)PHWZZuXuAomhgQ09L))tyPNjSGNsIT54z9NxMBvTVWxTF8(95r84Do6DGdhzf5YBzsWW6VEH1xvpUzQRPUpcfmO2g8o5SQd5Aumljdbie)xIFMWYqk9qaWjPmE0Cy6(lqTLeOrKxeEbD(yI6(nZL(tEH7QyM3ZOKossSDXj(eQVSIZiHHlZXcpxpwGtqCxwoMdvPLZDXHfH5H15gLmelo0mL0cD09bxo5MAGk1gk7PK8Ig(i()q66th6YRCCp1ZxuinujztnYaPZmkhqLSQL43PnlZH1XfieH5wpuVzjYKugRNYn00Ro00O6jv2Hio8ETGt4M6GfwdF(4PgJ7ADnaC)nMV7TYknPriXkFinJY(m7g18VxDJcVp(TvFBAwHdYU2lQcUtJP4DHZSGzH4eZmQfvEayMw(8Qu5pKeShYKNvBFIpu7OV7H8Wui6fB7(e7uCNp3cTd51ADwhLqMBQYG6ksQ3yHk)R9TdsTIBru8UjtUXsTGiTyLgIeAUpm9a18ecRzpHlO6BBAsLS(n05NANFCFGPENFuoTY268JEGG29x13oc1E74kqfstHenfejzqdqVEB8Ac6YoSGTcI4Khx3ClweBkklIrqIHQDsM415AoRrCKG41OwJlAFtuwphPALMI)SQ4EK0W1jyux237zPrsbw4fhjmgw3Ctr47)i1un95i29PqXjjY0y3)c1n36eHHEl0fVQMHLHcbR1XI3sznZLU2syvw)UwgFB1q1TQ47gUo7UA2qD2MB0Nu8dKOHgkPXCT2NzpdLA3i4DilKR6qvjRdIIzSLpSCd8vhr2Bk)6qAqDVw929OiN(VbB6051DP2NIBE)OcDNYFlkQXaP0GZXEJdJ9nYSNU(JKV79n690b737Z1WXSdCZnMQXJI1iRIDgaZLlLmnopS8sXb()HCHvU0WgYZBKirq12qlItP4BtelV2SKDKnR1AHNBWj3mZbPmeSbKgSDKeI)t0zW3WMWofWrTsiYMC1oiWzTF2TbrfkBv(31o2hibh)wZJNncYP4GNx7mL21H1DXzNZ1ZuP7IWquLw6I4V8cR7yv8qpX2013)303WqW(dXjaZTJ(sg(e)vr8jA7C(p5aTsFVfX0ndV8S49EShcbSjf9ijD6P)8FhebdDZVsFGfraUyd)j8RhpaZSyJJwQHcZAO9xh1gSvUC8Aqg9o33cCJpqkUfGGgvaKY7NU5NLU0)x2mnFztiEm2f9F8qM2cYv8F1qNBN4mUWXt1L6F0OXxBvYN3C1pG0MqY(l67y87CP(fDxSRz6MWRVLzBzaY63a8AqgzcCiF6prmce3T5(zgmdxvfPLgAkSnCDL1LbgWrdDGudxDOxLTAcke7Y3VweHU2WDeO1UyUiqgBoFOGxa4BnQD3OWO2WkuRzG2o1IpNpuWBYUXlM0plgNwCclLX)GH1ZDycpjGrRUzYqLZ17NDgnal7SvyzMD5SsU(SX3v9eFcjW1FhSNRPoGD)gXIP6PF5hR5H2bh0kxbmniJEjZ6kG1U8zAG2WvtRgWNJd8YoiObv9woOdoNAHPqVMeAq1WLOOLivLP71pZUzTy2HDYVR4)CSJZpBFxjX3YmVcMPjspTNrx)EyP4yqT7C1mmao9orPbwtnQQg4RL5LPAk1PBJfD2vuOxjPgcmvoQS29FW0oOaDE5zsCAd71AddtFVzX03xEzvqPtfjPD5YRKFYzN(t0zO9yZWNvP36ptlMAPCt7)m7CbwEH5m2gCr76zhpQCs2DGg0pKeoDWrf61rBPtxaS6dBIdwRZyLXhw6TDBjDHMA4GgY(6TIXH4jGnOHCCgn2GeIvf(Nd2TCO(z4D8y5xQEdxJOAT)0Pn9(pqacKdOS6praQFL(xha5ViinkWxWBY8GUrNFM)q7xoxbhYTzLcz5KFyyXzCjEqB6boyv35kUVs8Tk87t4kBZlxkPjom6sz5OL8(owQRm9w9o2PIqKtnC1shRJhrpiWJhP90AGs)SwyRinlEb6uqFHSNJbdFhW0mRrYOs84J)m7DkxAkBtrUaOQwIxS0g86zO8(JhhAyzlTLitTHMnAGmRLFOpCKc)RbyRoWRonYRov8QE)emJwNVPSd4p6NkdEshiO40rbNaeiIuiZZi3YIwLcqt7Yt5ky1l3zLTZXJ6KKmE1AezbKP27YIXcxaTUS0mQ70sVYWk4H1PMRFw5qBwYujVGjW6EbB9P8mD6GF4CyKr3jG3wfQ9r08nuYO6Uw)XxvM0KQRldxCIfZhCHQTcgDVY2c3wz(L2wJBpdSrJ0zbrKvbhRZgdWUGDdQDnF0vAuIVE(QotWV)ZJwD3L4J0J9Z7gGdIfdTTN0uoMtutSx(5omAGrbzDrurkanl9hMH1ccuUCboxowHlb9hdxcHrhpIc1H4G9sBhEceOhz5IR5yc98jxCDDvrKQkAu0OVEj9(ETo9dTYOjs90nrZmelFXs2UaYy32mDKkFqEuK3D1AhRbdVaR9shpEbERHGcZm9sfx4maXn0TdUW07sS22QY9NPFCYDy42Poc4NMD)a(1wdAq9DL8MttAYktSgZlBJJWlxZjbKRm0XJATvzGyMv3RNfZWXyqrnnfa34Z9B5moJv7z(1NGZdVB8q7lTME9ythbCDtDXbMlkBa5wgyY7C9eu(F1yn6cc9gn1pdI5w18ix)(fQdYfZTW4mqLFXSlXBUBJMDng1y111y5Y7yu)yv7ASQ4(90pa58TWjI2nHSVu47QXN9Tn5WrzrsT2qosQ(hrRhQSZ(Yvfv(TLOjoPvOLy2Ymm(OMlVP9tcafILlrM4tZ6ELuvHEBU0fnO3urrVdGVxEz7U(5DDLEUtJEAO4lrJI7yTx2DS4R5VBfFLM1ETxPzDR0lTUua1iIr9lw6GVRq7Zc20NxKWrlprMvlNp3sNXAVYgG3mvgYG6VijeWlCG1B4Z9d3oFDJ1atEhBGF7iWHWMAQCAWSxvdLMPT6ovluTvzUsieloI8ZoHBV11kKAQUXcuIuI0i0iO1GMADMMHg2EipmMqCPWJvv2RFSuTAxRaNM9JP)Ap4swzDfPCLm5sB1mtndF07u6x1Te5IAJVKMbT)kAKAEIUCq38ap10oV(3yQYZ1a37wkAfq7JRKzC)vi1FYDpH90nBqhOt1SkkTv)O9lMU(7ob7RLM3L)53(SYZQ7s1zNzQwNpg(OY2sdnV9YNyG5hZQN42s)i2DO6woMs1WqtzBSvmZhB8QTmgne6OrcBsDhJdA99sqnOrslw3fzToAI4OAy93bXKBhHFsX66GYbWlZdP8Pnu4cb7zn0ypCX(JsfsOETV1ybTS)cS4tFs3oSNOW6)7p]] )

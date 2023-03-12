@@ -131,16 +131,11 @@ PL:AddLocale(PRAT_MODULE, "frFR",L)
 
 L = {
 	["DebugModules"] = {
-		--[[Translation missing --]]
-		["Copy a list of active and loaded modules"] = "Copy a list of active and loaded modules",
-		--[[Translation missing --]]
-		["Copy this text and include it in a Github issue when requested."] = "Copy this text and include it in a Github issue when requested.",
-		--[[Translation missing --]]
-		["DebugModules"] = "DebugModules",
-		--[[Translation missing --]]
-		["Prat Debug Information"] = "Prat Debug Information",
-		--[[Translation missing --]]
-		["Shows debug information to help resolve bugs."] = "Shows debug information to help resolve bugs.",
+		["Copy a list of active and loaded modules"] = "Kopiert eine Liste aktiver und geladener Module",
+		["Copy this text and include it in a Github issue when requested."] = "Kopiert diesen Text und fügt ihn auf Anfrage in ein Github-Problem ein.",
+		["DebugModules"] = "Fehlerbeseitigungsmodule",
+		["Prat Debug Information"] = "Prat Fehlerbeseitigungs-Information",
+		["Shows debug information to help resolve bugs."] = "Zeigt Fehlerbeseitigungs-Informationen an, um Fehler zu beheben.",
 	}
 }
 

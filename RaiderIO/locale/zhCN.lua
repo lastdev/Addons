@@ -298,7 +298,7 @@ L["USE_RAIDERIO_CLIENT_LIVE_TRACKING_SETTINGS"] = "允许Raider.IO客户端控�
 L["USE_RAIDERIO_CLIENT_LIVE_TRACKING_SETTINGS_DESC"] = "允许Raider.IO客户端（运行时）自动控制你的战斗日志设置。"
 L["WARNING_DEBUG_MODE_ENABLE"] = "|cffFFFFFF%s|r Debug模式已经开启. 输入 |cffFFFFFF/raiderio debug|r 关闭debug模式"
 L["WARNING_LOCK_POSITION_FRAME_AUTO"] = "Raider.IO：你必须先关闭Raider.IO个人页面的自动定位"
-L["WARNING_RWF_MODE_ENABLE"] = "|cffFFFFFF%s|r 冲击世界首杀模式已开启。你可以通过使用 |cffFFFFFF/raiderio rwf |r来关闭它。"
+L["WARNING_RWF_MODE_ENABLE"] = "|cffFFFFFF%s|r 首杀争夺赛模式已开启。你可以通过使用 |cffFFFFFF/raiderio rwf |r来关闭它。"
 L["WIPE_RWF_MODE_BUTTON"] = "清除"
 L["WIPE_RWF_MODE_BUTTON_TOOLTIP"] = "点击以从存储文件中清除日志。 这将需要重新加载您的界面。"
 

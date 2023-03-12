@@ -16,12 +16,11 @@ local AddonDB_Defaults = {
 			['*'] = {				-- ["Account.Realm.Name"] 
 				lastUpdate = nil,
 				Stats = {},
-				SeasonBestMaps = {},
-				SeasonBestMapsOvertime = {},
-				WeeklyBestMaps = {},
 				WeeklyBestKeystone = {},
 				WeeklyActivities = { 0, 0, 0 },			-- [1] = MythicPlus, [2] = RankedPvP, [3] = Raid
+				WeeklyRunHistoryTop10 = {},
 				
+				Dungeons = {},
 				dungeonScore = 0,					-- Mythic+ dungeon score
 			}
 		}
@@ -29,6 +28,10 @@ local AddonDB_Defaults = {
 }
 
 -- *** Scanning functions ***
+local function SortByLevelDesc(a, b)
+	return a.level > b.level
+end
+
 local function ScanStats()
 	local stats = addon.ThisCharacter.Stats
 	wipe(stats)
@@ -111,10 +114,8 @@ end
 
 local function ScanMythicPlusBestForMapInfo()
 	local char = addon.ThisCharacter
-	wipe(char.WeeklyBestMaps)
+
 	wipe(char.WeeklyBestKeystone)
-	wipe(char.SeasonBestMaps)
-	wipe(char.SeasonBestMapsOvertime)
 	
 	-- Get the dungeons
 	local maps = C_ChallengeMode.GetMapTable()
@@ -129,18 +130,28 @@ local function ScanMythicPlusBestForMapInfo()
 		local mapID = maps[i]
 		local name, _, _, texture = C_ChallengeMode.GetMapUIInfo(mapID)
 		
+		-- clear previously saved info
+		if char.Dungeons[mapID] then
+			local dungeonInfo = char.Dungeons[mapID]
+			
+			dungeonInfo.weeklyBestLevel = nil
+			dungeonInfo.weeklyBestTimeInSeconds = nil
+			dungeonInfo.seasonBestLevel = nil
+			dungeonInfo.seasonBestTimeInSeconds = nil
+			dungeonInfo.seasonBestOvertimeLevel = nil
+			dungeonInfo.seasonBestOvertimeTimeInSeconds = nil			
+		end
+		
 		-- Weekly Best
 		local durationSec, level = C_MythicPlus.GetWeeklyBestForMap(mapID)
 		
 		if level then
 			-- save this map's info
-			char.WeeklyBestMaps[mapID] = {}
-			local mapInfo = char.WeeklyBestMaps[mapID]
-
-			mapInfo.name = name
-			mapInfo.level = level
-			mapInfo.timeInSeconds = durationSec
-			mapInfo.texture = texture
+			char.Dungeons[mapID] = char.Dungeons[mapID] or {}
+			local dungeonInfo = char.Dungeons[mapID]
+			
+			dungeonInfo.weeklyBestLevel = level
+			dungeonInfo.weeklyBestTimeInSeconds = durationSec
 			
 			-- Is it the best ?
 			if (level > bestLevel) or ((level == bestLevel) and (durationSec < bestTime)) then
@@ -153,25 +164,20 @@ local function ScanMythicPlusBestForMapInfo()
 		-- Season Best
 		local intimeInfo, overtimeInfo = C_MythicPlus.GetSeasonBestForMap(mapID)
 		if intimeInfo and intimeInfo.level then
-			char.SeasonBestMaps[mapID] = {}
-			local mapInfo = char.SeasonBestMaps[mapID]
-
-			mapInfo.name = name
-			mapInfo.level = intimeInfo.level
-			mapInfo.timeInSeconds = intimeInfo.durationSec
-			mapInfo.texture = texture
+			char.Dungeons[mapID] = char.Dungeons[mapID] or {}
+			local dungeonInfo = char.Dungeons[mapID]
+		
+			dungeonInfo.seasonBestLevel = intimeInfo.level
+			dungeonInfo.seasonBestTimeInSeconds = intimeInfo.durationSec
 		end
 		
 		if overtimeInfo and overtimeInfo.level then
-			char.SeasonBestMapsOvertime[mapID] = {}
-			local mapInfo = char.SeasonBestMapsOvertime[mapID]
+			char.Dungeons[mapID] = char.Dungeons[mapID] or {}
+			local dungeonInfo = char.Dungeons[mapID]
 
-			mapInfo.name = name
-			mapInfo.level = overtimeInfo.level
-			mapInfo.timeInSeconds = overtimeInfo.durationSec
-			mapInfo.texture = texture
+			dungeonInfo.seasonBestOvertimeLevel = overtimeInfo.level
+			dungeonInfo.seasonBestOvertimeTimeInSeconds = overtimeInfo.durationSec			
 		end
-		
 	end
 	
 	-- Save the best map info
@@ -205,6 +211,59 @@ local function ScanRewardType(rewardType)
 	end
 end
 
+local function ScanRunHistory()
+	local includePreviousWeeks = false
+	local includeIncompleteRuns = true
+	
+	local runs = C_MythicPlus.GetRunHistory(includePreviousWeeks, includeIncompleteRuns)
+	if not runs or #runs == 0 then return end		-- no runs ? exit
+	
+	local char = addon.ThisCharacter
+	local top10 = {}
+	
+	-- clear the run history from previous scans
+	for mapID, mapInfo in pairs(char.Dungeons) do
+		if mapInfo.weeklyRunHistory then
+			wipe(mapInfo.weeklyRunHistory)
+		end
+	end
+
+	-- loop through runs
+	for i, runInfo in pairs(runs) do
+		local mapID = runInfo.mapChallengeModeID
+		char.Dungeons[mapID] = char.Dungeons[mapID] or {}
+		local dungeonInfo = char.Dungeons[mapID]
+
+		-- Make room for the run history
+		dungeonInfo.weeklyRunHistory = dungeonInfo.weeklyRunHistory or {}		-- Create if it does not exist yet
+		table.insert(dungeonInfo.weeklyRunHistory, { level = runInfo.level, completed = runInfo.completed })
+		
+		-- Track the top10 completed dungeons
+		if runInfo.completed then
+			table.insert(top10, { mapID = mapID, level = runInfo.level })
+		end
+	end
+
+	-- sort the levels of each map
+	for mapID, mapInfo in pairs(char.Dungeons) do
+		if mapInfo.weeklyRunHistory then
+			table.sort(mapInfo.weeklyRunHistory, SortByLevelDesc)
+		end
+	end
+	
+	-- Sort the top 10 runs by level, descending
+	table.sort(top10, SortByLevelDesc)
+	
+	-- if we have more than 10 in the list, trim the surplus
+	if #top10 > 10 then
+		for i = #top10, 11, -1 do
+			table.remove(top10)		-- remove last
+		end
+	end
+	
+	char.WeeklyRunHistoryTop10 = top10
+end
+
 -- *** Event Handlers ***
 local function OnPlayerAlive()
 	ScanStats()
@@ -214,6 +273,8 @@ local function OnPlayerAlive()
 	-- show the best times of the previous alt until the event is triggered. So clearly, on alt can read another alt's data.
 	-- To avoid this, trigger the event from here (not before PLAYER_ALIVE, it's too soon)
 	C_MythicPlus.RequestMapInfo()
+	
+	ScanRunHistory()
 end
 
 local function OnWeeklyRewardsUpdate()
@@ -226,6 +287,14 @@ end
 
 local function OnWeeklyRewardsFrameOpened(event, interactionType)
 	if interactionType == Enum.PlayerInteractionType.WeeklyRewards then
+		ScanRewardType(Enum.WeeklyRewardChestThresholdType.Raid)
+		ScanRewardType(Enum.WeeklyRewardChestThresholdType.MythicPlus)
+		ScanRewardType(Enum.WeeklyRewardChestThresholdType.RankedPvP)
+	end
+end
+
+local function OnLoginCheckRewards(event, isLogin, isReload)
+	if isLogin or isReload then
 		ScanRewardType(Enum.WeeklyRewardChestThresholdType.Raid)
 		ScanRewardType(Enum.WeeklyRewardChestThresholdType.MythicPlus)
 		ScanRewardType(Enum.WeeklyRewardChestThresholdType.RankedPvP)
@@ -256,18 +325,6 @@ local function _GetWeeklyBestKeystoneTime(character)
 	return character.WeeklyBestKeystone.timeInSeconds or 0
 end
 
-local function _GetWeeklyBestMaps(character)
-	return character.WeeklyBestMaps
-end
-
-local function _GetSeasonBestMaps(character)
-	return character.SeasonBestMaps
-end
-
-local function _GetSeasonBestMapsOvertime(character)
-	return character.SeasonBestMapsOvertime
-end
-
 local function _GetDungeonScore(character)
 	return character.dungeonScore
 end
@@ -284,18 +341,43 @@ local function _GetWeeklyRaidReward(character)
 	return character.WeeklyActivities[3]
 end
 
+local function _GetDungeonStats(character)
+	return character.Dungeons
+end
+
+local function _GetWeeklyRunHistory(character, mapID)
+	local info = character.Dungeons[mapID]
+	
+	if info then
+		return info.weeklyRunHistory
+	end
+end
+
+local function _GetWeeklyTop10Runs(character)
+	return character.WeeklyRunHistoryTop10
+end
+
+local function _GetWeeklyBestByDungeon(character, mapID)
+	local info = character.Dungeons[mapID]
+	
+	if info then
+		return info.weeklyBestLevel
+	end
+end
+
 local PublicMethods = {
 	GetStats = _GetStats,
 	GetWeeklyBestKeystoneName = _GetWeeklyBestKeystoneName,
 	GetWeeklyBestKeystoneLevel = _GetWeeklyBestKeystoneLevel,
 	GetWeeklyBestKeystoneTime = _GetWeeklyBestKeystoneTime,
-	GetWeeklyBestMaps = _GetWeeklyBestMaps,
-	GetSeasonBestMaps = _GetSeasonBestMaps,
-	GetSeasonBestMapsOvertime = _GetSeasonBestMapsOvertime,
 	GetDungeonScore = _GetDungeonScore,
 	GetWeeklyMythicPlusReward = _GetWeeklyMythicPlusReward,
 	GetWeeklyRankedPvPReward = _GetWeeklyRankedPvPReward,
 	GetWeeklyRaidReward = _GetWeeklyRaidReward,
+	GetDungeonStats = _GetDungeonStats,
+	GetWeeklyRunHistory = _GetWeeklyRunHistory,
+	GetWeeklyTop10Runs = _GetWeeklyTop10Runs,
+	GetWeeklyBestByDungeon = _GetWeeklyBestByDungeon,
 }
 
 function addon:OnInitialize()
@@ -306,13 +388,14 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetWeeklyBestKeystoneName")
 	DataStore:SetCharacterBasedMethod("GetWeeklyBestKeystoneLevel")
 	DataStore:SetCharacterBasedMethod("GetWeeklyBestKeystoneTime")
-	DataStore:SetCharacterBasedMethod("GetWeeklyBestMaps")
-	DataStore:SetCharacterBasedMethod("GetSeasonBestMaps")
-	DataStore:SetCharacterBasedMethod("GetSeasonBestMapsOvertime")
 	DataStore:SetCharacterBasedMethod("GetDungeonScore")
 	DataStore:SetCharacterBasedMethod("GetWeeklyMythicPlusReward")
 	DataStore:SetCharacterBasedMethod("GetWeeklyRankedPvPReward")
 	DataStore:SetCharacterBasedMethod("GetWeeklyRaidReward")
+	DataStore:SetCharacterBasedMethod("GetDungeonStats")
+	DataStore:SetCharacterBasedMethod("GetWeeklyRunHistory")
+	DataStore:SetCharacterBasedMethod("GetWeeklyTop10Runs")
+	DataStore:SetCharacterBasedMethod("GetWeeklyBestByDungeon")
 end
 
 function addon:OnEnable()
@@ -322,6 +405,7 @@ function addon:OnEnable()
 	addon:RegisterEvent("CHALLENGE_MODE_MAPS_UPDATE", OnChallengeModeMapsUpdate)
 	
 	addon:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", OnWeeklyRewardsFrameOpened)
+	addon:RegisterEvent("PLAYER_ENTERING_WORLD", OnLoginCheckRewards)
 end
 
 function addon:OnDisable()
@@ -329,4 +413,5 @@ function addon:OnDisable()
 	addon:UnregisterEvent("UNIT_INVENTORY_CHANGED")
 	addon:UnregisterEvent("WEEKLY_REWARDS_UPDATE")
 	addon:UnregisterEvent("CHALLENGE_MODE_MAPS_UPDATE")
+	addon:UnregisterEvent("PLAYER_ENTERING_WORLD")
 end

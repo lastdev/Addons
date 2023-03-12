@@ -66,6 +66,7 @@ end
 
 local function SetupCharacterButton(button, character)
     if (character) then
+        button.character = character
         if (character.boxes > 0 and character ~= addon.loveisintheair.character) then
             button.Alert:Show()
             button.Complete:Hide()
@@ -95,6 +96,7 @@ local function SetupCharacterButton(button, character)
         button.Bracelets:SetText(tostring(character.bracelets))
         button:Show()
     else
+        button.character = nil
         button:Hide()
     end
 end
@@ -153,6 +155,8 @@ function PageMixin:Show()
     for _, component in ipairs(self.components) do
         component:Show()
     end
+    _G["TomCats-LoveIsInTheAirTourGuideFrameTitle"]:SetScale(0.95)
+    _G["TomCats-LoveIsInTheAirTourGuideFrameDescription"]:SetScale(0.95)
     local warning1Font = self.components[1].frame:CreateFontString(nil, nil, "GameFontNormal")
     warning1Font:SetPoint("BOTTOMLEFT", self.components[2].frame, "TOPLEFT", 0, 4)
     warning1Font:SetPoint("RIGHT", self.components[1].frame, "RIGHT", 0, 0)
@@ -246,6 +250,17 @@ function PageMixin:Show()
         else
             button:Hide()
         end
+        button:SetScript("OnClick", function()
+            if (IsShiftKeyDown() and IsControlKeyDown()) then
+                for k, v in pairs(TomCats_Account.loveisintheair.characters) do
+                    if (v == button.character) then
+                        TomCats_Account.loveisintheair.characters[k] = nil
+                        addon.loveisintheair:UpdateScrollFrame()
+                        break
+                    end
+                end
+            end
+        end)
     end
     totalsFont = insetFrame:CreateFontString(nil, nil, "GameFontHighlightSmall")
     totalsFont:SetPoint("BOTTOMLEFT", insetFrame, "BOTTOMLEFT", 0, 5)
@@ -258,11 +273,15 @@ function PageMixin:Show()
     leaveframe:SetScript("OnClick", function()
         ConfirmOrLeaveLFGParty()
     end)
+    leaveframe:RegisterForClicks("AnyUp", "AnyDown")
+    leaveframe:SetMouseClickEnabled(true)
     leaveframe:SetPoint("BOTTOMLEFT", self.components[2].frame, "BOTTOMRIGHT", 10, -16)
     local item1frame = CreateFrame("ItemButton", nil, _G["TomCats-LoveIsInTheAirTourGuideFrame"], "SecureActionButtonTemplate")
     item1frame.NormalTexture:Hide()
     SetItemButtonTexture(item1frame, "Interface\\ICONS\\inv_valentinesboxofchocolates02")
     SetItemButtonQuality(item1frame, LE_ITEM_QUALITY_EPIC, 54537, false)
+    item1frame:RegisterForClicks("AnyUp", "AnyDown")
+    item1frame:SetMouseClickEnabled(true)
     item1frame:SetAttribute("type1", "macro")
     item1frame:SetAttribute("macrotext1", "/use item:54537")
     item1frame.Count:Show()
@@ -277,6 +296,8 @@ function PageMixin:Show()
     item2frame.NormalTexture:Hide()
     SetItemButtonTexture(item2frame, "Interface\\ICONS\\inv_misc_gem_sapphire_01")
     SetItemButtonQuality(item2frame, LE_ITEM_QUALITY_NORMAL, 49655, false)
+    item2frame:RegisterForClicks("AnyUp", "AnyDown")
+    item2frame:SetMouseClickEnabled(true)
     item2frame:SetAttribute("type1", "macro")
     item2frame:SetAttribute("macrotext1", "/use item:49655")
     item2frame.Count:Show()
@@ -331,15 +352,19 @@ function PageMixin:Show()
     local dailyResetLabel = self.components[3].frame:CreateFontString(nil, nil, "GameFontNormal")
     dailyResetLabel:SetPoint("BOTTOM", self.components[3].frame, "CENTER", 0, 4)
     dailyResetLabel:SetShadowOffset(1,-1)
+    dailyResetLabel:SetScale(0.9)
     local dailyResetTime = self.components[3].frame:CreateFontString(nil, nil, "GameFontHighlight")
     dailyResetTime:SetPoint("TOP", self.components[3].frame, "CENTER", 0, -4)
     dailyResetTime:SetShadowOffset(1,-1)
+    dailyResetTime:SetScale(0.9)
     local eventEndLabel = self.components[4].frame:CreateFontString(nil, nil, "GameFontNormal")
     eventEndLabel:SetPoint("BOTTOM", self.components[4].frame, "CENTER", 0, 4)
     eventEndLabel:SetShadowOffset(1,-1)
+    eventEndLabel:SetScale(0.9)
     local eventEndTime = self.components[3].frame:CreateFontString(nil, nil, "GameFontHighlight")
     eventEndTime:SetPoint("TOP", self.components[4].frame, "CENTER", 0, -4)
     eventEndTime:SetShadowOffset(1,-1)
+    eventEndTime:SetScale(0.9)
     local lastLocalTimeSetting = not GetCVarBool("timeMgrUseLocalTime")
     local function setTimerText()
         local nextReset

@@ -285,7 +285,7 @@ L = {
     self:SetAllEvents(self.db.profile.allevents)
   end
 
-  local function allEventsEnabled() return true end
+  local function allEventsEnabled() return Prat.EventProcessingType.Full end
 
   function mod:SetAllEvents(allevents)
     if not allevents then

@@ -136,13 +136,6 @@ function RareScannerDataProviderMixin:RefreshAllData(fromOnShow)
 					if (not RSContainerDB.GetContainerName(containerID) and pin:GetVignetteName()) then
 						RSContainerDB.SetContainerName(containerID, pin:GetVignetteName())
 					end
-				-- If NPC
-				elseif (RSConstants.IsNpcAtlas(pin.vignetteInfo.atlasName)) then
-					local _, _, _, _, _, vignetteObjectID = strsplit("-", pin:GetObjectGUID())
-					local npcID = tonumber(vignetteObjectID)
-					if (pin:GetVignetteName()) then
-						RSNpcDB.SetNpcName(npcID, pin:GetVignetteName())
-					end
 				end
 			end
 			

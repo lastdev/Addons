@@ -283,8 +283,7 @@ L = {
 		["shadowcolor_name"] = "Schattenfarbe einstellen",
 		["Thick Outline"] = "Dicke Umrandung",
 		["Toggle setting options separately for each chat window."] = "Optionen einzeln für jedes Chatfenster einstellen umschalten.",
-		--[[Translation missing --]]
-		["whisper_tabs"] = "Whisper Tabs",
+		["whisper_tabs"] = "Flüster-Tabs",
 		["Workaround a Blizzard bug which changes the font size when you open a system menu."] = "Einen Bug von Blizzard umgehen, welcher die Schriftgröße ändert sobald du ein Systemmenü öffnest.",
 	}
 }

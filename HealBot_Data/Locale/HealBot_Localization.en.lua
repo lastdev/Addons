@@ -410,6 +410,14 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_PERCENTAGEFORMAT        = "Percentage format";
     HEALBOT_SKIN_HEADERBARCOL               = "Bar col"..HEALBOT_enWORD_COLOUR_SUFFIX;
     HEALBOT_SKIN_HEADERTEXTCOL              = "Text col"..HEALBOT_enWORD_COLOUR_SUFFIX;
+    HEALBOT_SKIN_ICONGLOW                   = "Icon glow";
+    HEALBOT_SKIN_ICONSET                    = "Icon set";
+    HEALBOT_SKIN_ICONBUFFSET01              = "Buff icon set 1";
+    HEALBOT_SKIN_ICONBUFFSET02              = "Buff icon set 2";
+    HEALBOT_SKIN_ICONBUFFSET03              = "Buff icon set 3";
+    HEALBOT_SKIN_ICONDEBUFFSET01            = "Debuff icon set 1";
+    HEALBOT_SKIN_ICONDEBUFFSET02            = "Debuff icon set 2";
+    HEALBOT_SKIN_ICONDEBUFFSET03            = "Debuff icon set 3";
     HEALBOT_OPTIONS_BUFFSTEXT1              = "Spell to buff";
     HEALBOT_OPTIONS_BUFFSTEXTWE             = "Weapon enchants";
     HEALBOT_OPTIONS_BUFFSTEXTWEMAIN         = "Main hand / 2H";
@@ -1290,6 +1298,7 @@ function HealBot_Lang_enALL()
     HEALBOT_PLUGIN_BUFFWATCHONLYINCOMBAT    = "Only in combat";
     HEALBOT_PLUGIN_BUFFWATCHSELFBUFF        = "My spell";
     HEALBOT_PLUGIN_BUFFWATCHPLAYERSBUFF     = "Target players buff";
+    HEALBOT_PLUGIN_BUFFWATCHPLAYERSTAG      = "Target players tag";
     HEALBOT_PLUGIN_BUFFWATCHPLAYERSDEBUFF   = "Target players debuff";
     HEALBOT_PLUGIN_BUFFWATCHSELFBUFFH       = "Alert when spell cooldown ends";
     HEALBOT_PLUGIN_BUFFWATCHSTATE1          = "Inactive"
@@ -1301,9 +1310,11 @@ function HealBot_Lang_enALL()
     HEALBOT_PLUGIN_BUFFWATCHSOUND           = "Play sound on alert";
     HEALBOT_PLUGIN_AURAWATCHT               = "Watch"
     HEALBOT_PLUGIN_AURAWATCHBUFFEXISTS      = "Buff exists"
+    HEALBOT_PLUGIN_AURAWATCHBUFFEXISTSTAG   = "Buff exists with tag"
     HEALBOT_PLUGIN_AURAWATCHBUFFEXPIRE      = "Buff exists or not exists"
     HEALBOT_PLUGIN_AURAWATCHBUFFNOTEXIST    = "Buff does not exist"
     HEALBOT_PLUGIN_AURAWATCHDEBUFFEXISTS    = "Debuff exists"
+    HEALBOT_PLUGIN_AURAWATCHDEBUFFEXISTSTAG = "Debuff exists with tag"
     HEALBOT_PLUGIN_AURAWATCHDEBUFFEXPIRE    = "Debuff exists or not exists"
     HEALBOT_PLUGIN_AURAWATCHDEBUFFNOTEXIST  = "Debuff does not exist"
     HEALBOT_PLUGIN_AURAWATCHHEALTHBELOW     = "Health below"

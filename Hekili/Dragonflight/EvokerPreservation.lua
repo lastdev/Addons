@@ -362,26 +362,6 @@ end
 
 -- Abilities
 spec:RegisterAbilities( {
-    azure_strike = {
-        id = 362969,
-        cast = 0,
-        cooldown = 0,
-        gcd = "spell",
-
-        spend = 0.01,
-        spendType = "mana",
-
-        startsCombat = true,
-
-        minRange = 0,
-        maxRange = 25,
-
-        damage = function () return stat.spell_power * 0.755 end,
-        spell_targets = function() return talent.protracted_talons.enabled and 3 or 2 end,
-
-        handler = function ()
-        end,
-    },
     cauterizing_flame = {
         id = 374251,
         cast = 0,
@@ -426,37 +406,6 @@ spec:RegisterAbilities( {
             if talent.temporal_compression.enabled then addStack("temporal_compression") end
         end,
     },
-    deep_breath = {
-        id = function () return buff.recall.up and 371807 or 357210 end,
-        cast = 0,
-        cooldown = 120,
-        gcd = "spell",
-
-        startsCombat = true,
-
-        toggle = "cooldowns",
-
-        min_range = 15,
-        max_range = 50,
-
-        damage = function () return 2.30 * stat.spell_power end,
-
-        usable = function() return settings.use_deep_breath, "settings.use_deep_breath is disabled" end,
-
-        handler = function ()
-            if buff.recall.up then
-                removeBuff( "recall" )
-            else
-                setCooldown( "global_cooldown", 6 ) -- TODO: Check.
-                applyBuff( "recall", 9 )
-                buff.recall.applied = query_time + 6
-            end
-
-            if talent.terror_of_the_skies.enabled then applyDebuff( "target", "terror_of_the_skies" ) end
-        end,
-
-        copy = { "recall", 371807, 357210 },
-    },
     disintegrate = {
         id = 356995,
         cast = function() return 3 * ( talent.natural_convergence.enabled and 0.8 or 1 ) end,
@@ -474,9 +423,9 @@ spec:RegisterAbilities( {
         min_range = 0,
         max_range = 25,
 
-        handler = function ()
-            removeStack("essence_burst")
-            if talent.energy_loop.enabled then gain(0.0277 * mana.max, "mana") end
+        start = function ()
+            removeStack( "essence_burst" )
+            if talent.energy_loop.enabled then gain( 0.0277 * mana.max, "mana" ) end
         end,
     },
     dream_breath = {
@@ -550,7 +499,7 @@ spec:RegisterAbilities( {
         startsCombat = false,
 
         handler = function ()
-            removeStack("essence_burst")
+            removeStack( "essence_burst" )
             if talent.temporal_compression.enabled then addStack("temporal_compression") end
         end,
     },
@@ -628,22 +577,6 @@ spec:RegisterAbilities( {
 
         copy = { 382266, 357208 }
     },
-    landslide = {
-        id = 358385,
-        cast = 0,
-        cooldown = 90,
-        gcd = "spell",
-
-        spend = 0.03,
-        spendType = "mana",
-
-        startsCombat = true,
-
-        toggle = "cooldowns",
-
-        handler = function ()
-        end,
-    },
     living_flame = {
         id = 361469,
         cast = 2,
@@ -663,8 +596,8 @@ spec:RegisterAbilities( {
             removeBuff( "ancient_flame" )
             removeBuff( "leaping_flames" )
             removeBuff( "scarlet_adaptation" )
-            removeBuff("call_of_ysera")
-            removeStack("lifespark")
+            removeBuff( "call_of_ysera" )
+            removeStack( "lifespark" )
         end,
     },
     naturalize = {
@@ -703,39 +636,6 @@ spec:RegisterAbilities( {
         toggle = "cooldowns",
 
         handler = function ()
-        end,
-    },
-    obsidian_scales = {
-        id = 363916,
-        cast = 0,
-        charges = function() return talent.obsidian_bulwark.enabled and 2 or nil end,
-        cooldown = 90,
-        recharge = function() return talent.obsidian_bulwark.enabled and 90 or nil end,
-        gcd = "off",
-
-        startsCombat = false,
-
-        toggle = "defensives",
-
-        handler = function ()
-            applyBuff( "obsidian_scales" )
-        end,
-    },
-    quell = {
-        id = 351338,
-        cast = 0,
-        cooldown = 40,
-        gcd = "off",
-
-        startsCombat = true,
-
-        toggle = "interrupts",
-        debuff = "casting",
-        readyTime = state.timeToInterrupt,
-
-        handler = function ()
-            interrupt()
-            if talent.roar_of_exhilaration.enabled then gain( 1, "essence" ) end
         end,
     },
     renewing_blaze = {
@@ -869,25 +769,14 @@ spec:RegisterAbilities( {
             if talent.temporal_compression.enabled then addStack("temporal_compression") end
         end,
     },
-    unravel = {
-        id = 368432,
-        cast = 0,
-        cooldown = 9,
-        gcd = "spell",
+} )
 
-        spend = 0.01,
-        spendType = "mana",
 
-        startsCombat = true,
 
-        debuff = "all_absorbs",
-
-        usable = function() return settings.use_unravel, "use_unravel setting is OFF" end,
-
-        handler = function ()
-            removeDebuff( "all_absorbs" )
-        end,
-    }
+spec:RegisterSetting( "experimental_msg", nil, {
+    type = "description",
+    name = "|cFFFF0000WARNING|r:  Healer support in this addon is focused on DPS output only.  This is more useful for solo content or downtime when your healing output is less critical in a group/encounter.  Use at your own risk.",
+    width = "full",
 } )
 
 spec:RegisterSetting( "use_deep_breath", true, {
@@ -905,26 +794,25 @@ spec:RegisterSetting( "use_unravel", false, {
     width = "full",
 } )
 
-spec:RegisterSetting( "use_early_chain", false, {
-    name = "Early Chain |T4622451:0|t Disintegrate",
-    type = "toggle",
-    desc = "If checked, the default priority may recommend |T4622451:0|t Disintegrate in the middle of a Disintegrate channel.",
-    width = "full"
+
+spec:RegisterOptions( {
+    enabled = true,
+
+    aoe = 3,
+
+    nameplates = true,
+    nameplateRange = 30,
+
+    damage = true,
+    damageDots = true,
+    damageExpiration = 8,
+    damageOnScreen = true,
+    damageRange = 30,
+
+    potion = "potion_of_spectral_intellect",
+
+    package = "Preservation",
 } )
 
-spec:RegisterSetting( "use_clipping", false, {
-    name = "Clip |T4622451:0t|t Disintegrate",
-    type = "toggle",
-    desc = "If checked, the default priority may recommend interrupting a |T4622451:0|t Disintegrate channel when another spell is ready.",
-    width = "full",
-} )
 
-spec:RegisterPriority( "Preservation", 20221116,
--- Notes
-[[
-
-]],
--- Priority
-[[
-
-]] )
+spec:RegisterPack( "Preservation", 20230205, [[Hekili:LwvtVjomq0Fl9svRAvwYhTL9q3d7PTCaTsPNDSjzcXQH4S2ou1kK)TVJDOGjb6UOkeOW438EJh)ghsi5zsAbtdK5rtIINen5UGWhcNgFhjv)wlqsBz5VWwIp0WwH)(BjOa5AMMlASl(wTGvyjrj6K5ias6IoET(PgYIJZCmjL1PRess6VGx41CsAfVOa6tau5K0NR4kd1(LzOBladvuI)p3kSHwZvAC5sH0q7zjaRgPOKxJ1qpkvqReYfRwW03843wudkfVzzMOmtxbzlKIM3bZmZSTOrm)PdQR9dKJvki5VBZRSgBa(l21izRHdWxaqlYmW0v(HBfUQ2pxfKX1WkLFWsUe2M9TWQwXRGmtlEm8wE5JL8Lv6mjSIXBu)im5MCMsNP5hwsNGHOXmm9SiiEmbrNfbjJj4OPxjwdsl2vI1yt)GElhp(0Wsj6PSiw0vwgGNPqtoQyNuPd6AV8Ql6ZCZg36o(cgj51(exZxV781s8)fd(eWEVd30kTK)cSV2V0l9cXR40c(KYo2SBGGK(kt2GyvK0NWMLudfgA0aBEGzgoE1c5K5Hj3pLK6I6gCHswxTgFCUBqUpnsQZhtsHgg66li)KOrn9bmYxpaCSp4T(8bqs8H457ha7oFy9ZbdqC)bA9XCXaqpybTpYo8E2nCxj52DfZg2ZPzO)Wqdtm0Bm0DNFiB7CN2UhQX0VQgt)mjISs89VQerFMeXwjcN8v14eSN4ypCa77jQ31VxpNZ3Lt0jZ5OZWg6Lg6vg6fg62BbOB2yOJNgpSAn0R9mKExw4QH4twdNPm71W)EdNgj)JEJBJn6wHpOZ)weKoT99zBF91Ob8J)YSdNz(4d5Vd]] )

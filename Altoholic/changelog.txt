@@ -15,6 +15,13 @@ How to support Altoholic's development :
 If you like the addon, consider supporting it, this has been the long term effort and commitment of a single person. #ArmyOfOne
 
 
+10.0.011 (23/02/2023)
+
+- Grids Tab : added the Dragonflight LFR raid. (Thanks Feral !)
+- Summary Tab => M+ Dungeons => Rewards : added a list of the best runs when mousing over the mythic+ reward.
+- Summary Tab => M+ Dungeons => Created a new view to show the best level completed for each dungeon of the season.
+- DataStore_Stats : added tracking of M+ stats.
+
 10.0.010 (06/01/2023)
 
 - Datastore_Reputations : added tracking of 5 more Dragonflight reputations.

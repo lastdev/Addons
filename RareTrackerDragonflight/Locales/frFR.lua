@@ -125,6 +125,8 @@ L[193663] = "Élémentaire furoc"
 L[193658] = "Proto-dragon corrompu"
 L[193664] = "Ancien protecteur"
 
+L[186200] = "Harkyn Trysteroc"
+
 -- "That's Pretty Neat!" Rares
 L[193259] = "Terreur bleue"
 L[195895] = "Nergazuraï"

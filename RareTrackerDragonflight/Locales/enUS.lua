@@ -134,6 +134,8 @@ L[190991] = "Char"
 L[187306] = "Morchok"
 L[193175] = "Slurpo, the Incredible Snail"
 
+L[186200] = "Harkyn Grymstone"
+
 -- "That's Pretty Neat!" Rares
 L[193259] = "Blue Terror"
 L[195895] = "Nergazurai"

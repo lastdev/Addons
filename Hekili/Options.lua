@@ -149,11 +149,10 @@ local displayTemplate = {
     enabled = true,
 
     numIcons = 4,
+    forecastPeriod = 15,
 
     primaryWidth = 50,
     primaryHeight = 50,
-
-    elvuiCooldown = false,
 
     keepAspectRatio = true,
     zoom = 30,
@@ -161,6 +160,7 @@ local displayTemplate = {
     frameStrata = "LOW",
     frameLevel = 10,
 
+    elvuiCooldown = false,
     hideOmniCC = false,
 
     queue = {
@@ -766,15 +766,12 @@ do
     end
 
     local multiSet = false
-    local rebuild = false
+    local timer
 
     local function QueueRebuildUI()
-        rebuild = true
-        C_Timer.After( 0.5, function ()
-            if rebuild then
-                Hekili:BuildUI()
-                rebuild = false
-            end
+        if timer and not timer:IsCancelled() then timer:Cancel() end
+        timer = C_Timer.NewTimer( 0.5, function ()
+            Hekili:BuildUI()
         end )
     end
 
@@ -1372,6 +1369,34 @@ do
                                     local display = info[2]
 
                                     if display == "Defensives" or display == "Interrupts" then
+                                        return true
+                                    end
+
+                                    return false
+                                end,
+                            },
+
+                            forecastPeriod = {
+                                type = "range",
+                                name = "Forecast Period",
+                                desc = "Specify the amount of time that the addon can look forward to generate a recommendation.  For example, in a Cooldowns display, if this is set to |cFFFFD10015|r (default), then "
+                                    .. "a cooldown ability could start to appear when it has 15 seconds remaining on its cooldown and its usage conditions are met.\n\n"
+                                    .. "If set to a very short period of time, recommendations may be prevented due to having no abilities off cooldown with resource requirements and usage conditions met.",
+                                softMin = 1.5,
+                                min = 0,
+                                softMax = 15,
+                                max = 30,
+                                step = 0.1,
+                                width = "full",
+                                order = 2,
+                                disabled = function()
+                                    return name == "Multi"
+                                end,
+                                hidden = function( info, val )
+                                    local n = #info
+                                    local display = info[2]
+
+                                    if display == "Primary" or display == "AOE" then
                                         return true
                                     end
 
@@ -9213,9 +9238,8 @@ function Hekili:TotalRefresh( noOptions )
             ACD:SelectGroup( "Hekili", "profiles" )
         else Hekili.OptionsReady = false end
     end
-    self:UpdateDisplayVisibility()
-    self:BuildUI()
 
+    self:BuildUI()
     self:OverrideBinds()
 
     if WeakAuras and WeakAuras.ScanEvents then
@@ -9564,8 +9588,6 @@ do
                         index = -1
                     elseif ( "mode" ):match( "^" .. args[2] ) then
                         index = -2
-                    elseif ( "priority" ):match( "^" .. args[2] ) then
-                        index = -3
                     else
                         for i, setting in ipairs( settings ) do
                             if setting.name:match( "^" .. args[2] ) then
@@ -9630,6 +9652,8 @@ do
                             " - Reset to Default:  |cFFFFD100/hek set %s default|r", output, exNumber, exNumber )
                     end
 
+                    output = format( "%s\n\nTo select another priority, see |cFFFFD100/hekili priority|r.", output )
+
                     Hekili:Print( output )
                     return
                 end
@@ -9684,6 +9708,7 @@ do
                 elseif index == -2 then
                     if args[3] then
                         Hekili:SetMode( args[3] )
+                        if WeakAuras and WeakAuras.ScanEvents then WeakAuras.ScanEvents( "HEKILI_TOGGLE", "mode", args[3] ) end
                     else
                         Hekili:FireToggle( "mode" )
                     end
@@ -9691,6 +9716,10 @@ do
                 end
 
                 local setting = settings[ index ]
+                if not setting then
+                    Hekili:Print( "Not a valid option." )
+                    return
+                end
 
                 if setting.info.type == "toggle" then
                     local to

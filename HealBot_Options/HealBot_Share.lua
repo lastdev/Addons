@@ -71,25 +71,71 @@ local function HealBot_Comms_SendShareAddonMsg(msg, pName)
     C_ChatInfo.SendAddonMessage(HEALBOT_HEALBOT, msg, "WHISPER", pName);
 end
 
-local function HealBot_Share_ClearExportComplete(sText)
-    local g=_G["HealBot_Options_InOutSkinStatust"]
-    local cText=g:GetText()
-    if sText==cText then
+local function HealBot_Share_ClearExportComplete(sType)
+    local g
+    if sType==HEALBOT_OPTIONS_SKIN then
+        g=_G["HealBot_Options_ShareSkinStatusf"]
         g:SetText("")
+        g=_G["HealBot_InOut_ShareSkins_Text"]
+        g:SetText(HEALBOT_OPTIONS_SKINS_DISCORD)
+    elseif sType==HEALBOT_OPTIONS_TAB_CUSTOM_DEBUFFS then
+        g=_G["HealBot_Options_ShareCDbuffStatusf"]
+        g:SetText("")
+        g=_G["HealBot_InOut_ShareCDbuffs_Text"]
+        g:SetText(HEALBOT_OPTIONS_CDEBUFFS_DISCORD)
+    elseif sType==HEALBOT_OPTIONS_TAB_CUSTOM_BUFFS then
+        g=_G["HealBot_Options_ShareBuffsStatusf"]
+        g:SetText("")
+        g=_G["HealBot_InOut_ShareBuffs_Text"]
+        g:SetText(HEALBOT_OPTIONS_CBUFFS_DISCORD)
+    elseif sType==HEALBOT_OPTIONS_TAB_SPELLS then
+        g=_G["HealBot_Options_ShareSpellsStatusf"]
+        g:SetText("")
+        g=_G["HealBot_InOut_ShareSpells_Text"]
+        g:SetText(HEALBOT_OPTIONS_SPELLS_DISCORD)
+    elseif sType==HEALBOT_OPTIONS_CONTENT_INOUT_PRESETCOL then
+        g=_G["HealBot_Options_SharePresetColsStatusf"]
+        g:SetText("")
+        g=_G["HealBot_InOut_SharePresetCols_Text"]
+        g:SetText(HEALBOT_OPTIONS_PRECOLS_DISCORD)
     end
 end
 
 local function HealBot_Share_ExportComplete(sType, sExtra)
-    local g=_G["HealBot_Options_InOutSkinStatust"]
+    local g
     local sText=""
     if sExtra then
         sText=" |cff77c8ff"..sType.." |cffffffff"..sExtra.." |cff77c8ff"..HEALBOT_SHARE_EXPORTED
     else
         sText=" |cff77c8ff"..sType.." "..HEALBOT_SHARE_EXPORTED
     end
-    --HealBot_AddChat(HEALBOT_CHAT_ADDONID..sText)
-    g:SetText(sText)
-    C_Timer.After(15, function() HealBot_Share_ClearExportComplete(sText) end)
+    if sType==HEALBOT_OPTIONS_SKIN then
+        g=_G["HealBot_Options_ShareSkinStatusf"]
+        g:SetText(sText)
+        g=_G["HealBot_InOut_ShareSkins_Text"]
+        g:SetText("")
+    elseif sType==HEALBOT_OPTIONS_TAB_CUSTOM_DEBUFFS then
+        g=_G["HealBot_Options_ShareCDbuffStatusf"]
+        g:SetText(sText)
+        g=_G["HealBot_InOut_ShareCDbuffs_Text"]
+        g:SetText("")
+    elseif sType==HEALBOT_OPTIONS_TAB_CUSTOM_BUFFS then
+        g=_G["HealBot_Options_ShareBuffsStatusf"]
+        g:SetText(sText)
+        g=_G["HealBot_InOut_ShareBuffs_Text"]
+        g:SetText("")
+    elseif sType==HEALBOT_OPTIONS_TAB_SPELLS then
+        g=_G["HealBot_Options_ShareSpellsStatusf"]
+        g:SetText(sText)
+        g=_G["HealBot_InOut_ShareSpells_Text"]
+        g:SetText("")
+    elseif sType==HEALBOT_OPTIONS_CONTENT_INOUT_PRESETCOL then
+        g=_G["HealBot_Options_SharePresetColsStatusf"]
+        g:SetText(sText)
+        g=_G["HealBot_InOut_SharePresetCols_Text"]
+        g:SetText("")
+    end
+    C_Timer.After(15, function() HealBot_Share_ClearExportComplete(sType) end)
 end
 
 local function HealBot_Share_SendLinkRequest()
@@ -416,7 +462,7 @@ function HealBot_Share_LoadSpells(sIn)
     HealBot_Options_SaveProfile()
     HealBot_Timers_InitExtraOptions()
     HealBot_Options_ComboClass_Text()
-    HealBot_Timers_Set("INIT","PrepSetAllAttribs")
+    HealBot_Timers_Set("INIT","PrepSetAllAttribs",0.2)
 end
 
 function HealBot_Share_ImportSpells_OnClick()
@@ -638,7 +684,7 @@ function HealBot_Share_LoadDebuffs(sIn)
         HealBot_Globals.HealBot_Custom_Debuffs={ [HEALBOT_CUSTOM_CAT_CUSTOM_AUTOMATIC]     = 15, }
         HealBot_Globals.FilterCustomDebuff={}
         HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol={}
-        HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[HEALBOT_CUSTOM_CAT_CUSTOM_AUTOMATIC]=3
+        HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[HEALBOT_CUSTOM_CAT_CUSTOM_AUTOMATIC]=4
         local r=HealBot_Globals.CDCBarColour[customDebuffPriority]["R"]
         local g=HealBot_Globals.CDCBarColour[customDebuffPriority]["G"]
         local b=HealBot_Globals.CDCBarColour[customDebuffPriority]["B"]
@@ -879,6 +925,10 @@ local function HealBot_Share_ExportSkinFrames(skinName, varName, varNameAppend)
             tabStr=HealBot_Options_tab2str(tmpTab)
         elseif varName=="AuxBarText" then
             tabStr=HealBot_Options_tab2str(Healbot_Config_Skins[varName][skinName][varNameAppend][i])
+        elseif varName=="IconSets" then
+            tabStr=HealBot_Options_tab2str(Healbot_Config_Skins[varName][skinName][i][varNameAppend])
+        elseif varName=="IconSetsText" then
+            tabStr=HealBot_Options_tab2str(Healbot_Config_Skins[varName][skinName][i][varNameAppend])
         else
             tabStr=HealBot_Options_tab2str(Healbot_Config_Skins[varName][skinName][i])
         end
@@ -953,9 +1003,15 @@ function HealBot_Share_ExportSkin(skinName, lData)
     end
     for x=1,9 do
         HealBot_Share_ExportSkinFrames(skinName, "AuxBar", x)
-    end
-    for x=1,9 do
         HealBot_Share_ExportSkinFrames(skinName, "AuxBarText", x)
+    end
+    for x=1,3 do
+        if Healbot_Config_Skins.IconSets and Healbot_Config_Skins.IconSets[skinName] then
+            HealBot_Share_ExportSkinFrames(skinName, "IconSets", x)
+        end
+        if Healbot_Config_Skins.IconSetsText and Healbot_Config_Skins.IconSetsText[skinName] then
+            HealBot_Share_ExportSkinFrames(skinName, "IconSetsText", x)
+        end
     end
     HealBot_Share_BuildSkinData("Complete", "", lData)
 end
@@ -1014,7 +1070,7 @@ local tmpRecParts={}
 local lFrame=1
 function HealBot_Share_BuildSkinRecMsg(skinName, cmd, parts, msg)
     local varDat, vType, fNo = string.split("~", cmd)
-    local varName, AuxID=string.split("^", varDat)
+    local varName, aID=string.split("^", varDat)
     msg=string.gsub(msg,'\"', '' )
     if parts==1 then
         tmpRecParts[varName]=msg
@@ -1027,24 +1083,30 @@ function HealBot_Share_BuildSkinRecMsg(skinName, cmd, parts, msg)
         if tonumber(fNo) then fNo=tonumber(fNo) end
         if not Healbot_Config_Skins[varName][skinName] then Healbot_Config_Skins[varName][skinName]={} end
         if varName=="AuxBar" or varName=="AuxBarText" then
-            if tonumber(AuxID) then 
-                AuxID=tonumber(AuxID) 
-                if not Healbot_Config_Skins[varName][skinName][AuxID] then Healbot_Config_Skins[varName][skinName][AuxID]={} end
+            if tonumber(aID) then 
+                aID=tonumber(aID) 
+                if not Healbot_Config_Skins[varName][skinName][aID] then Healbot_Config_Skins[varName][skinName][aID]={} end
                 for j=1,10 do
-                    if not Healbot_Config_Skins[varName][skinName][AuxID][j] then Healbot_Config_Skins[varName][skinName][AuxID][j]={} end
+                    if not Healbot_Config_Skins[varName][skinName][aID][j] then Healbot_Config_Skins[varName][skinName][aID][j]={} end
                 end
             end
         else
             for j=1,10 do
                 if not Healbot_Config_Skins[varName][skinName][j] then Healbot_Config_Skins[varName][skinName][j]={} end
+                if varName=="IconSets" or varName=="IconSetsText" then
+                    if tonumber(aID) then 
+                        aID=tonumber(aID) 
+                        if not Healbot_Config_Skins[varName][skinName][j][aID] then Healbot_Config_Skins[varName][skinName][j][aID]={} end
+                    end
+                end
             end
         end
         if varName=="HealGroups" then
             if not Healbot_Config_Skins[varName][skinName][11] then Healbot_Config_Skins[varName][skinName][11]={} end
         end
         if varName=="AuxBar" or varName=="AuxBarText" then
-            if tonumber(AuxID) then 
-                AuxID=tonumber(AuxID) 
+            if tonumber(aID) then 
+                aID=tonumber(aID) 
                 local lMsg=strsub(msg,2,string.len(msg)-1)
                 local d={}
                 d=HealBot_Options_StringSplit(lMsg, ",")
@@ -1056,11 +1118,32 @@ function HealBot_Share_BuildSkinRecMsg(skinName, cmd, parts, msg)
                             dat=HealBot_Share_SkinDecodeAux(dat, fNo)
                         end
                         if dat=="false" then                
-                            Healbot_Config_Skins[varName][skinName][AuxID][fNo][var]=false 
+                            Healbot_Config_Skins[varName][skinName][aID][fNo][var]=false 
                         elseif dat=="true" then
-                            Healbot_Config_Skins[varName][skinName][AuxID][fNo][var]=true 
+                            Healbot_Config_Skins[varName][skinName][aID][fNo][var]=true 
                         else
-                            Healbot_Config_Skins[varName][skinName][AuxID][fNo][var]=dat 
+                            Healbot_Config_Skins[varName][skinName][aID][fNo][var]=dat 
+                        end
+                    end
+                    lFrame=fNo
+                end
+            end
+        elseif varName=="IconSets" or varName=="IconSetsText" then
+            if tonumber(aID) then 
+                aID=tonumber(aID) 
+                local lMsg=strsub(msg,2,string.len(msg)-1)
+                local d={}
+                d=HealBot_Options_StringSplit(lMsg, ",")
+                for j=1,getn(d) do
+                    local var, dat=string.split("=", d[j])
+                    if tonumber(dat) then dat=tonumber(dat) end
+                    if var and dat then
+                        if dat=="false" then                
+                            Healbot_Config_Skins[varName][skinName][fNo][aID][var]=false 
+                        elseif dat=="true" then
+                            Healbot_Config_Skins[varName][skinName][fNo][aID][var]=true 
+                        else
+                            Healbot_Config_Skins[varName][skinName][fNo][aID][var]=dat 
                         end
                     end
                     lFrame=fNo
@@ -1092,9 +1175,14 @@ function HealBot_Share_BuildSkinRecMsg(skinName, cmd, parts, msg)
             local f=nil
             if tonumber(dups[j]) then f=tonumber(dups[j]) end
             if varName=="AuxBar" or varName=="AuxBarText" then
-                if tonumber(AuxID) then 
-                    AuxID=tonumber(AuxID) 
-                    if f then Healbot_Config_Skins[varName][skinName][AuxID][f]=HealBot_Options_copyTable(Healbot_Config_Skins[varName][skinName][AuxID][lFrame]) end
+                if tonumber(aID) then 
+                    aID=tonumber(aID) 
+                    if f then Healbot_Config_Skins[varName][skinName][aID][f]=HealBot_Options_copyTable(Healbot_Config_Skins[varName][skinName][aID][lFrame]) end
+                end
+            elseif varName=="IconSets" or varName=="IconSetsText" then
+                if tonumber(aID) then 
+                    aID=tonumber(aID) 
+                    if f then Healbot_Config_Skins[varName][skinName][f][aID]=HealBot_Options_copyTable(Healbot_Config_Skins[varName][skinName][lFrame][aID]) end
                 end
             else
                 if f then Healbot_Config_Skins[varName][skinName][f]=HealBot_Options_copyTable(Healbot_Config_Skins[varName][skinName][lFrame]) end

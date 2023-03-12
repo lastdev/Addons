@@ -644,7 +644,7 @@ function ConRO.Druid.Feral(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 			end
 		end
 
-		if _TigersFury_RDY and not _TigersFury_BUFF and _Energy <= _Energy_Max - 55 then
+		if _TigersFury_RDY and not _TigersFury_BUFF and _Energy <= 80 then
 			tinsert(ConRO.SuggestedSpells, _TigersFury);
 			_TigersFury_RDY = false;
 		end

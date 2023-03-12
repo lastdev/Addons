@@ -24,8 +24,8 @@ RSConstants.LOOT_ITEM_ID = nil
 -- Current versions
 ---============================================================================
 
-RSConstants.CURRENT_DB_VERSION = 84
-RSConstants.CURRENT_LOOT_DB_VERSION = 95
+RSConstants.CURRENT_DB_VERSION = 88
+RSConstants.CURRENT_LOOT_DB_VERSION = 99
 
 ---============================================================================
 -- Current maps (newer)
@@ -105,6 +105,7 @@ RSConstants.PROFILE_DEFAULTS = {
 			scanInstances = false,
 			scanOnTaxi = true,
 			scanOnPetBattle = true,
+			scanOnRacingQuest = true,
 			scanWorldmapVignette = true,
 			ignoreCompletedEntities = true,
 			filteredRares = {},
@@ -172,7 +173,7 @@ RSConstants.PROFILE_DEFAULTS = {
 		},
 		map = {
 			displayNpcIcons = true,
-			displayHuntingPartyRaresNpcIcons = true,
+			displayHuntingPartyRaresNpcIcons = false,
 			displayPrimalStormRaresNpcIcons = true,
 			displayContainerIcons = true,
 			displayNotTrackeableContainerIcons = true,
@@ -301,6 +302,12 @@ RSConstants.EVENT_ELITE_VIGNETTE = "VignetteEventElite"
 RSConstants.EVENT_TORMENTORS_VIGNETTE = "Tormentors-Event"
 
 ---============================================================================
+-- SpellIDs
+---============================================================================
+
+RSConstants.RACING_SPELL_ID = 369968
+
+---============================================================================
 -- MapIDS
 ---============================================================================
 
@@ -365,7 +372,7 @@ RSConstants.CACHES_SWAGSNOUT_GROMIT = { 369292, 369294, 369310, 369297, 369295, 
 RSConstants.STOLEN_ANIMA_VESSEL = { 368946, 368947, 368948, 368949, 368950, 368951, 368952, 368953 }
 RSConstants.STOLEN_ANIMA_VESSEL_RIFT = { 369227, 369235, 369236 }
 RSConstants.DISTURBED_DIRT = { 382029, 376386, 383733, 383734, 383735 }
-RSConstants.HUNTING_PARTY_NPCS = { 195093, 194760, 194251, 191103, 194409, 194601, 191450, 194438, 194458, 195417, 195101, 195283, 195300, 195430, 195132, 193853, 193896, 193311, 193330, 193228, 194761 }
+RSConstants.HUNTING_PARTY_NPCS = { 195093, 194760, 194251, 191103, 194409, 194601, 191450, 194438, 194458, 195417, 195101, 195283, 195300, 195430, 195132, 193853, 193896, 193311, 193330, 193228, 194761, 193722, 187614, 190161, 190523, 190601, 190625, 190634, 190641, 190751, 190752, 190756, 190757, 190907, 190968, 191103, 193311, 193330, 193341, 193704, 193724, 193885, 194225, 194240, 194608, 194624, 194761, 194763, 195286, 195431, 196244, 196246, 196250, 196324, 196326, 196334, 196350, 196535, 197409, 197501 }
 RSConstants.OMINOUS_CONCHS_NPCS = { 193735, 193634, 193710, 197371, 193708, 193706 } --197411
 RSConstants.CONTAINERS_WITHOUT_VIGNETTE = { 376582, 376583, 376585, 376579, 376584, 377587, 378010, 376580 }
 RSConstants.MAGIC_BOUND_CHEST = { 376426, 385075, 385074 }

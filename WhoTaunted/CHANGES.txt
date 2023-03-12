@@ -1,11 +1,10 @@
-lightweight tag 6c05767355783878f20fc33395d240fa5abe40fb v2.0.6
+lightweight tag 3f9b32348dad919e55b2a05f8bf7c4c2d973f5da v2.0.7
 Author:	Davie3 <Davie3@users.noreply.github.com>
-Date:	Thu Jan 19 17:21:58 2023 -0800
+Date:	Tue Jan 24 21:11:34 2023 -0800
 
-commit 6c05767355783878f20fc33395d240fa5abe40fb
+commit 3f9b32348dad919e55b2a05f8bf7c4c2d973f5da
 Author: Davie3 <Davie3@users.noreply.github.com>
-Date:   Thu Jan 19 17:21:58 2023 -0800
+Date:   Tue Jan 24 21:11:34 2023 -0800
 
-    Toc bump for Wrath Classic 3.4.1.
-    Updated changelog for v2.0.6.
+    Toc bump for 10.0.5.
 

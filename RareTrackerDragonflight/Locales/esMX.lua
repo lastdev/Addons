@@ -125,6 +125,8 @@ L[193663] = "Elemental agravarrisco"
 L[193658] = "Protodragón corrupto"
 L[193664] = "Anciano protector"
 
+L[186200] = "Harkyn Piedrasiniestra"
+
 -- "That's Pretty Neat!" Rares
 L[193259] = "Terror azul"
 L[195895] = "Nergazurai"

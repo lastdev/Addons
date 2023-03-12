@@ -254,9 +254,14 @@ function ConRO.DemonHunter.Havoc(_, timeShift, currentSpell, gcd, tChosen, pvpCh
 		end
 
 		if not _in_combat then
-			if _ImmolationAura_RDY then
-				tinsert(ConRO.SuggestedSpells, _ImmolationAura);
-				_ImmolationAura_RDY = false;
+			if _SigilofFlame_RDY and currentSpell == _TheHunt then
+				tinsert(ConRO.SuggestedSpells, _SigilofFlame);
+				_SigilofFlame_RDY = false;
+			end
+
+			if _TheHunt_RDY and ConRO:FullMode(_TheHunt) then
+				tinsert(ConRO.SuggestedSpells, _TheHunt);
+				_TheHunt_RDY = false;
 			end
 
 			if _Felblade_RDY and _Fury < 80 then
@@ -290,11 +295,6 @@ function ConRO.DemonHunter.Havoc(_, timeShift, currentSpell, gcd, tChosen, pvpCh
 			_BladeDance_RDY = false;
 		end
 
-		if _GlaiveTempest_RDY and _target_in_melee then
-			tinsert(ConRO.SuggestedSpells, _GlaiveTempest);
-			_GlaiveTempest_RDY = false;
-		end
-
 		if _EyeBeam_RDY and currentSpell ~= _EyeBeam and _Felblade_RANGE then
 			tinsert(ConRO.SuggestedSpells, _EyeBeam);
 			_EyeBeam_RDY = false;
@@ -308,6 +308,11 @@ function ConRO.DemonHunter.Havoc(_, timeShift, currentSpell, gcd, tChosen, pvpCh
 		if _EssenceBreak_RDY and _Disrupt_RANGE then
 			tinsert(ConRO.SuggestedSpells, _EssenceBreak);
 			_EssenceBreak_RDY = false;
+		end
+
+		if _GlaiveTempest_RDY and _target_in_melee then
+			tinsert(ConRO.SuggestedSpells, _GlaiveTempest);
+			_GlaiveTempest_RDY = false;
 		end
 
 		if _Metamorphosis_RDY and not _Metamorphosis_BUFF and not _EyeBeam_RDY and not _BladeDance_RDY and ConRO:FullMode(_Metamorphosis) then
@@ -333,11 +338,6 @@ function ConRO.DemonHunter.Havoc(_, timeShift, currentSpell, gcd, tChosen, pvpCh
 		if _ChaosStrike_RDY and _Fury >= 50 and _target_in_melee and _Metamorphosis_BUFF then
 			tinsert(ConRO.SuggestedSpells, _ChaosStrike);
 			_Fury = _Fury - 40;
-		end
-
-		if _ImmolationAura_RDY then
-			tinsert(ConRO.SuggestedSpells, _ImmolationAura);
-			_ImmolationAura_RDY = false;
 		end
 
 		if _FelRush_RDY and _FelRush_CHARGES >= 1 and _UnboundChaos_BUFF then

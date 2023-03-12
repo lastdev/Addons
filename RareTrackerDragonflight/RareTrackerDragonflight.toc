@@ -2,7 +2,7 @@
 ## Title: RareTrackerDragonflight
 ## Notes: Track and coordinate rare spawn timers in the zones released during the Dragonflight expansion.
 ## Author: Melroy
-## Version: 7.2.1
+## Version: 7.2.2
 ## Dependencies: RareTrackerCore
 
 Locales\enUS.lua

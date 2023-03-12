@@ -23,6 +23,7 @@ LibSharedMedia:Register ("statusbar", "PlaterBackground", [[Interface\AddOns\Pla
 LibSharedMedia:Register ("statusbar", "PlaterTexture", [[Interface\AddOns\Plater\images\platetexture]])
 LibSharedMedia:Register ("statusbar", "PlaterHighlight", [[Interface\AddOns\Plater\images\plateselected]])
 LibSharedMedia:Register ("statusbar", "PlaterFocus", [[Interface\AddOns\Plater\images\overlay_indicator_1]])
+LibSharedMedia:Register ("statusbar", "PlaterChess", [[Interface\AddOns\Plater\images\overlay_indicator_2]])
 LibSharedMedia:Register ("statusbar", "PlaterHealth", [[Interface\AddOns\Plater\images\nameplate_health_texture]])
 LibSharedMedia:Register ("statusbar", "testbar", [[Interface\AddOns\Plater\images\testbar.tga]])
 LibSharedMedia:Register ("statusbar", "You Are Beautiful!", [[Interface\AddOns\Plater\images\regular_white]])
@@ -591,6 +592,7 @@ PLATER_DEFAULT_SETTINGS = {
 				scale = 0.8,
 				padding = 2,
 			},
+			druid_show_always = false,
 			resource_options = {
 				--names below are from Enum.PowerType[<resource name>]
 				["ComboPoints"] = {
@@ -690,6 +692,15 @@ PLATER_DEFAULT_SETTINGS = {
 		ui_parent_buff_special_level = 0,
 		ui_parent_cast_level = 0,
 		ui_parent_scale_tune = 0, --testing, a slider to change the unit frame scale / goal is to have a fine tune knob to adjust the overall size when using this feature
+		
+		--blizzard default nameplate fonts
+		blizzard_nameplate_font_override_enabled = false,
+		blizzard_nameplate_font = "Arial Narrow",
+		blizzard_nameplate_font_outline = "OUTLINE",
+		blizzard_nameplate_font_size = 9,
+		blizzard_nameplate_large_font = "Arial Narrow",
+		blizzard_nameplate_large_font_outline = "OUTLINE",
+		blizzard_nameplate_large_font_size = 11,
 		
 		resources = {
 			alpha = 1,
@@ -978,6 +989,15 @@ PLATER_DEFAULT_SETTINGS = {
 			["cities"] = true,
 		},
 		
+		auto_toggle_enemy_enabled = false,
+		auto_toggle_enemy = {
+			["party"] = true,
+			["raid"] = true,
+			["arena"] = true,
+			["world"] =  true,
+			["cities"] = false,
+		},
+		
 		stacking_nameplates_enabled = true,
 		
 		auto_toggle_stacking_enabled = false,
@@ -992,6 +1012,14 @@ PLATER_DEFAULT_SETTINGS = {
 		auto_inside_raid_dungeon = {
 			hide_enemy_player_pets = false,
 			hide_enemy_player_totems = false,
+		},
+		
+		auto_toggle_combat_enabled = false,
+		auto_toggle_combat = {
+			friendly_ic = false,
+			enemy_ic = false,
+			friendly_ooc = false,
+			enemy_ooc = false,
 		},
 
 		spell_animations = true,
@@ -2962,6 +2990,7 @@ PLATER_DEFAULT_SETTINGS = {
 		
 		health_selection_overlay = "Details Flat",
 		health_selection_overlay_alpha = 0.1,
+		health_selection_overlay_color = {1, 1, 1, 1},
 		
 		health_statusbar_bgtexture = "PlaterBackground 2",
 		health_statusbar_bgcolor = {0.113725, 0.113725, 0.113725, 0.89000000},

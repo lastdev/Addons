@@ -1,7 +1,8 @@
-## Interface: 100002
+## Interface: 100005
 
 ## X-Curse-Project-ID: 7473
 ## X-WoWI-ID: 10783
+## X-Wago-ID: RNL9ae6o
 
 ## Title: Prat |cff8080ff3.0|r
 ## Notes: A framework for chat ehancement modules.
@@ -13,7 +14,7 @@
 ## Notes-deDE: Ein Grundaddon für Chatfenstermodule.
 ## Notes-koKR: 대화창에 대한 다양한 기능을 제공하는 애드온입니다.
 ## Notes-ruRU: Фреймворк для чата. Это БЕТА-версия, а значит возможны баги и глюки.
-## Version: 3.9.19
+## Version: 3.9.21
 ## Author: Sylvanaar (Sylvaann - Proudmoore/US-Alliance)
 ## eMail: sylvanaar@mindspring.com
 

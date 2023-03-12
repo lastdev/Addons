@@ -231,10 +231,8 @@ L = {
 		["Chat window frame parameter options"] = "Optionen für Parameter des Chatfenster-Rahmens",
 		["framealpha_desc"] = "Steuert die Transparenz des Chatfensters, wenn du die Maus darüberlegst.",
 		["framealpha_name"] = "Transparenz für Chatfenster einstellen",
-		--[[Translation missing --]]
-		["framealphastatic_desc"] = "Set the transparency of the chatframe to always match the configured transparency",
-		--[[Translation missing --]]
-		["framealphastatic_name"] = "Static Chatframe Alpha",
+		["framealphastatic_desc"] = "Stelle die Transparenz des Chatrahmens so ein, dass sie immer der konfigurierten Transparenz entspricht",
+		["framealphastatic_name"] = "Statische Chatrahmen Transparenz",
 		["Frames"] = "Fenster",
 		["mainchatonload_desc"] = "Automatisch das erste Chatfenster auswählen und beim Laden aktivieren.",
 		["mainchatonload_name"] = "Haupt-Chatfenster beim Laden erzwingen",

@@ -1,7 +1,7 @@
 # <DBM> PvP
 
-## [r142](https://github.com/DeadlyBossMods/DBM-PvP/tree/r142) (2023-01-28)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-PvP/compare/r141...r142) [Previous Releases](https://github.com/DeadlyBossMods/DBM-PvP/releases)
+## [r143](https://github.com/DeadlyBossMods/DBM-PvP/tree/r143) (2023-02-16)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-PvP/compare/r142...r143) [Previous Releases](https://github.com/DeadlyBossMods/DBM-PvP/releases)
 
-- Add Strand Of The Ancients for Wrath.  
-    Add MapID for Strand of the Ancients, and create stub module for it, but don't load it (much like wintergrasp), as there's no extra functionality as of yet.  
+- Add DBM5 prefix.  
+- Update to new DBM comms channel  

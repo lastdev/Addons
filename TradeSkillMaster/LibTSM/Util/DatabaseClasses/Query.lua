@@ -537,7 +537,7 @@ end
 ---Results iterator.
 ---
 ---Note that the iterator must run to completion (don't use `break` or `return` to escape it early).
----@param canAbort boolean Allow the iterator to be aborted if the underlying data is updated which must
+---@param canAbort? boolean Allow the iterator to be aborted if the underlying data is updated which must
 ---be handled by the caller by calling `IsIteratorAborted()` at the end of each iteration loop
 ---@return fun(): number, DatabaseRow @An iterator with fields: `index`, row
 function DatabaseQuery:Iterator(canAbort)

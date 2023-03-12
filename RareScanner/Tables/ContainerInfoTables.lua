@@ -798,7 +798,10 @@ private.CONTAINER_INFO = {
 	[380860] = { zoneID = 2023, artID = { 1705 }, x = 7346, y = 5616, overlay = { "7349-5614" }, reset = false, questID = { 70402 } }; --Centaur Horn
 	[380991] = { zoneID = 2023, artID = { 1705 }, x = 7055, y = 3553, overlay = { "7064-3537" }, reset = false, questID = { 67950 } }; --Dirt Mound
 	[381712] = { zoneID = 2023, artID = { 1705 }, x = 5600, y = 7878, overlay = { "5600-7878" }, reset = false, questID = { 71033 }, worldmap = true }; --Water-Bound Chest
-	[191905] = { zoneID = 2024, artID = { 1707 }, x = 2637, y = 0261, overlay = { "0911-4839","2637-0261" } }; --Objects
+	[191905] = { zoneID = {
+			[2024] = { x = 2637, y = 0261, artID = { 1707 }, overlay = { "0911-4839","2637-0261" } };
+			[2022] = { x = 6426, y = 4325, artID = { 1706 }, overlay = { "6426-4325" } };
+		  }, reset = true, factionID = { 2507,2511 } }; --Decay Covered Chest
 	[195373] = { zoneID = 2024, artID = { 1707 }, x = 2654, y = 4629, overlay = { "2654-4629" }, reset = false, questID = { 70441 } }; --Objects
 	[376582] = { zoneID = 2024, artID = { 1707 }, x = 4500, y = 5220, overlay = { "4500-5220","0720-4510","0840-4070","0940-3790","4580-5620","4690-5420","5580-6870","5650-6570","5690-6790","5760-6970","5880-6840","5890-5480","5900-6670","6050-5900","5920-5660" }, reset = true, factionID = { 2507,2511 } }; --Tuskarr Chest
 	[376583] = { zoneID = {

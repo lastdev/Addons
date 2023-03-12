@@ -3,7 +3,7 @@
 
                                             Noble Garden
 
-                                      v1.07 - 26th January 2023
+                                       v1.09 - 8th March 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -13,18 +13,17 @@ local myName, ns = ...
 ns.db = {}
 -- From Data.lua
 ns.points = {}
-ns.texturesL = {}
-ns.scalingL = {}
-ns.texturesS = {}
-ns.scalingS = {}
+ns.textures = {}
+ns.scaling = {}
 -- Pink-Purple theme
 ns.colour = {}
 ns.colour.prefix	= "\124cFFE641EF"
 ns.colour.highlight = "\124cFFCA64EF"
 ns.colour.plaintext = "\124cFFA165F0"
 
-local defaults = { profile = { icon_scale = 1.7, icon_alpha = 1, icon_hardBoiled = 9, showCoords = true,
-								icon_nobleGarden = 10, icon_springFling = 12, icon_desertRose = 11 } }
+local defaults = { profile = { icon_scale = 1.7, icon_alpha = 1, showCoords = true,
+								removeSeasonal = true, removeEver = false, icon_hardBoiled = 14, 
+								icon_nobleGarden = 12, icon_springFling = 13, icon_desertRose = 11 } }
 local continents = {}
 local pluginHandler = {}
 
@@ -35,6 +34,7 @@ local GetAchievementInfo = GetAchievementInfo
 local GetMapInfo = C_Map.GetMapInfo
 local LibStub = _G.LibStub
 local UIParent = _G.UIParent
+local UnitName = UnitName
 local format = _G.format
 local next = _G.next
 
@@ -42,6 +42,7 @@ local HandyNotes = _G.HandyNotes
 
 local _, _, _, version = GetBuildInfo()
 ns.faction = UnitFactionGroup( "player" )
+ns.azeroth = 947
 ns.kalimdor = (version < 40000) and 1414 or 12
 ns.easternKingdom = (version < 40000) and 1415 or 13
 ns.unGoroCrater = (version < 40000) and 1449 or 78
@@ -61,8 +62,12 @@ ns.tirisfalGlades = (version < 40000) and 1420 or 18
 ns.durotar = (version < 40000) and 1411 or 1
 ns.stormwindCity = (version < 40000) and 1453 or 84
 ns.silvermoonCity = (version < 40000) and 1954 or 110
+continents[ns.azeroth] = true
 continents[ns.kalimdor] = true
 continents[ns.easternKingdom] = true
+
+ns.faction = UnitFactionGroup( "player" )
+ns.name = UnitName( "player" ) or "Character"
 
 -- Localisation
 ns.locale = GetLocale()
@@ -687,7 +692,6 @@ else
 	
 end
 
--- I use this for debugging
 local function printPC( message )
 	if message then
 		DEFAULT_CHAT_FRAME:AddMessage( ns.colour.prefix .."NobleGarden" ..": " ..ns.colour.plaintext
@@ -709,7 +713,8 @@ function pluginHandler:OnEnter(mapFile, coord)
 	end
 
 	local aID, aIndex, aTitle, tip, fifth = infoFromCoord(mapFile, coord)
-	local completed
+	local pName = UnitName( "player" ) or L["Character"]
+	local completed;
 	
 	if aID == 2436 then -- Desert Rose - Five indexes/zones to tick off
 		completed = select( 4, GetAchievementInfo( 2436 ))
@@ -719,8 +724,8 @@ function pluginHandler:OnEnter(mapFile, coord)
 		completed = ( completed == true ) and select( 3, GetAchievementCriteriaInfo( 2436, aIndex ) )
 		local zoneName = GetMapInfo(fifth).name		
 		GameTooltip:AddDoubleLine( ns.colour.highlight.. L[zoneName],
-					( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..L["Character"] ..")" ) 
-										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..L["Character"] ..")" ) )
+					( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
+										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName..")" ) )
 		GameTooltip:AddLine( ns.colour.plaintext ..L[tip] )
 		
 	elseif aID == 2416 then -- Hard Boiled - give step by step prompts
@@ -730,8 +735,8 @@ function pluginHandler:OnEnter(mapFile, coord)
 										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..L["Account"] ..")" ) )
 		completed = ( completed == true ) and select( 3, GetAchievementCriteriaInfo( 2416, 1, true ) )
 		GameTooltip:AddDoubleLine( ns.colour.highlight.. L[fifth],
-					( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..L["Character"] ..")" ) 
-										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..L["Character"] ..")" ) )
+					( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
+										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
 		GameTooltip:AddLine( ns.colour.plaintext ..L[tip] )
 		
 	elseif aID == 2419 or aID == 2497 then -- Spring Fling Alliance/Horde
@@ -741,8 +746,8 @@ function pluginHandler:OnEnter(mapFile, coord)
 										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..L["Account"] ..")" ) )
 		completed = ( completed == true ) and select( 3, GetAchievementCriteriaInfo( aID, aIndex ) )
 		GameTooltip:AddDoubleLine( ns.colour.highlight.. L[fifth],
-					( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..L["Character"] ..")" ) 
-										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..L["Character"] ..")" ) )
+					( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
+										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
 		GameTooltip:AddLine( ns.colour.plaintext ..L[tip] )
 		
 	elseif aID == 2420 or aID == 2421 then -- Noble Garden Horde/Alliance
@@ -752,8 +757,8 @@ function pluginHandler:OnEnter(mapFile, coord)
 										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..L["Account"] ..")" ) )
 		completed = ( completed == true ) and select( 3, GetAchievementCriteriaInfo( aID, 1, true ) )
 		GameTooltip:AddDoubleLine( " ",
-					( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..L["Character"] ..")" ) 
-										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..L["Character"] ..")" ) )
+					( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
+										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
 		GameTooltip:AddLine( ns.colour.plaintext ..L[tip] )
 	end	
 
@@ -770,36 +775,86 @@ function pluginHandler:OnLeave()
 	GameTooltip:Hide()
 end
 
-do	
-	if ns.insideCave == nil then
-		ns.insideCave = ( GetSubZoneText() == L["Raptor Ridge"] and IsIndoors() ) and true or false
+local function ShowConditionallyS( aID, aIndex )
+	if ( ns.db.removeSeasonal == true ) then
+		if ( aIndex > 0 ) then
+			local _, _, completed = GetAchievementCriteriaInfo( aID, aIndex )
+		else
+			local _, _, _, _, _, _, _, _, _, _, _, _, completed = GetAchievementInfo( aID )
+		end
+		if ( completed == true ) then
+			return false
+		end
 	end
+	return true
+end
 
+local function ShowConditionallyE( aID )
+	if ( ns.db.removeEver == true ) then
+		local _, _, _, completed = GetAchievementInfo( aID )
+		if ( completed == true ) then
+			return false
+		end
+	end
+	return true
+end
+
+do	
 	local function iterator(t, prev)
 		if not t then return end
 		local coord, v = next(t, prev)
 		while coord do
 			if v then
 				if v[1] == 2436 then -- Desert Rose
-					return coord, nil, ns.texturesL[ns.db.icon_desertRose], ns.db.icon_scale * ns.scalingL[ns.db.icon_desertRose], ns.db.icon_alpha
+					if ( ShowConditionallyE( v[1] ) == true ) then
+						if ( ShowConditionallyS( v[1], v[2] ) == true ) then
+							return coord, nil, ns.textures[ns.db.icon_desertRose],
+									ns.db.icon_scale * ns.scaling[ns.db.icon_desertRose], ns.db.icon_alpha
+						end
+					end
 				elseif v[1] == 2419 then -- Spring Fling Alliance
 					if ns.faction == "Alliance" then
-						return coord, nil, ns.texturesL[ns.db.icon_springFling], ns.db.icon_scale * ns.scalingL[ns.db.icon_springFling], ns.db.icon_alpha
+						if ( ShowConditionallyE( v[1] ) == true ) then
+							if ( ShowConditionallyS( v[1], v[2] ) == true ) then
+								return coord, nil, ns.textures[ns.db.icon_springFling],
+										ns.db.icon_scale * ns.scaling[ns.db.icon_springFling], ns.db.icon_alpha
+							end
+						end
 					end
 				elseif v[1] == 2497 then -- Spring Fling Horde
 					if ns.faction == "Horde" then
-						return coord, nil, ns.texturesL[ns.db.icon_springFling], ns.db.icon_scale * ns.scalingL[ns.db.icon_springFling], ns.db.icon_alpha
+						if ( ShowConditionallyE( v[1] ) == true ) then
+							if ( ShowConditionallyS( v[1], v[2] ) == true ) then
+								return coord, nil, ns.textures[ns.db.icon_springFling],
+										ns.db.icon_scale * ns.scaling[ns.db.icon_springFling], ns.db.icon_alpha
+							end
+						end
 					end
 				elseif v[1] == 2421 then -- Noble Garden Alliance
 					if ns.faction == "Alliance" then
-						return coord, nil, ns.texturesS[ns.db.icon_nobleGarden], ns.db.icon_scale * ns.scalingS[ns.db.icon_nobleGarden], ns.db.icon_alpha
+						if ( ShowConditionallyE( v[1] ) == true ) then
+							if ( ShowConditionallyS( v[1], 0 ) == true ) then
+								return coord, nil, ns.textures[ns.db.icon_nobleGarden],
+										ns.db.icon_scale * ns.scaling[ns.db.icon_nobleGarden], ns.db.icon_alpha
+							end
+						end
 					end
 				elseif v[1] == 2420 then -- Noble Garden Horde
 					if ns.faction == "Horde" then
-						return coord, nil, ns.texturesS[ns.db.icon_nobleGarden], ns.db.icon_scale * ns.scalingS[ns.db.icon_nobleGarden], ns.db.icon_alpha
+						if ( ShowConditionallyE( v[1] ) == true ) then
+							if ( ShowConditionallyS( v[1], 0 ) == true ) then
+								return coord, nil, ns.textures[ns.db.icon_nobleGarden],
+										ns.db.icon_scale * ns.scaling[ns.db.icon_nobleGarden], ns.db.icon_alpha
+							end
+						end
 					end
 				else -- Hard Boiled
-					return coord, nil, ns.texturesS[ns.db.icon_hardBoiled], ns.db.icon_scale * ns.scalingS[ns.db.icon_hardBoiled], ns.db.icon_alpha
+					if ( ShowConditionallyE( v[1] ) == true ) then
+						if ( ShowConditionallyS( v[1], 0 ) == true ) then
+							return coord, nil, ns.textures[ns.db.icon_hardBoiled],
+									ns.db.icon_scale * ns.scaling[ns.db.icon_hardBoiled], ns.db.icon_alpha
+						end
+					end
 				end
 			end
 			coord, v = next(t, coord)
@@ -853,6 +908,23 @@ ns.options = {
 					arg = "showCoords",
 					order = 4,
 				},
+				removeSeasonal = {
+					name = "Remove the marker if completed this season by " ..ns.name,
+					desc = "Achievements are usually repeatable each season.\n"
+							.."This also applies to components within an achievement",
+					type = "toggle",
+					width = "full",
+					arg = "removeSeasonal",
+					order = 6,
+				},
+				removeEver = {
+					name = "Remove the marker if ever fully completed on this account",
+					desc = "If any of your characters has completed the achievement",
+					type = "toggle",
+					width = "full",
+					arg = "removeEver",
+					order = 7,
+				},
 			},
 		},
 		icon = {
@@ -863,28 +935,29 @@ ns.options = {
 				icon_hardBoiled = {
 					type = "range",
 					name = L["Hard Boiled"],
-					desc = "1 = " ..L["Ring"] .." - " ..L["Gold"] .."\n2 = " ..L["Ring"] .." - " ..L["Red"] 
-							.."\n3 = " ..L["Ring"] .." - " ..L["Blue"] .."\n4 = " ..L["Ring"] .." - " 
-							..L["Green"] .."\n5 = " ..L["Cross"] .." - " ..L["Red"] .."\n6 = "
-							..L["Diamond"] .." - " ..L["White"] .."\n7 = " ..L["Frost"] .."\n8 = " 
-							..L["Cogwheel"] .."\n9 = " ..L["Noble Garden"] .." - " ..L["Red"] 
-							.."\n10 = " ..L["Noble Garden"] .." - " ..L["Green"],
-					min = 1, max = 10, step = 1,
+					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
+							..L["Yellow"] .."\n5 = " ..L["Green"] .."\n6 = " ..L["Grey"] .."\n7 = " ..L["Mana Orb"]
+							.."\n8 = " ..L["Phasing"] .."\n9 = " ..L["Raptor egg"] .."\n10 = " ..L["Stars"]
+							.."\n11 = " ..L["Noble Garden"] .." - " ..L["Blue"] .."\n12 = " ..L["Noble Garden"] 
+							.." - " ..L["Green"] .."\n13 = " ..L["Noble Garden"] .." - " ..L["Pink"]
+							.."\n14 = " ..L["Noble Garden"] .." - " ..L["Red"],
+					min = 1, max = 14, step = 1,
 					arg = "icon_hardBoiled",
-					order = 5,
+					order = 8,
 				},
 				icon_nobleGarden = {
 					type = "range",
 					name = L["Noble Garden"],
-					desc = "1 = " ..L["Ring"] .." - " ..L["Gold"] .."\n2 = " ..L["Ring"] .." - " ..L["Red"] 
-							.."\n3 = " ..L["Ring"] .." - " ..L["Blue"] .."\n4 = " ..L["Ring"] .." - " 
-							..L["Green"] .."\n5 = " ..L["Cross"] .." - " ..L["Red"] .."\n6 = "
-							..L["Diamond"] .." - " ..L["White"] .."\n7 = " ..L["Frost"] .."\n8 = " 
-							..L["Cogwheel"] .."\n9 = " ..L["Noble Garden"] .." - " ..L["Red"] 
-							.."\n10 = " ..L["Noble Garden"] .." - " ..L["Green"],
-					min = 1, max = 10, step = 1,
+					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
+							..L["Yellow"] .."\n5 = " ..L["Green"] .."\n6 = " ..L["Grey"] .."\n7 = " ..L["Mana Orb"]
+							.."\n8 = " ..L["Phasing"] .."\n9 = " ..L["Raptor egg"] .."\n10 = " ..L["Stars"]
+							.."\n11 = " ..L["Noble Garden"] .." - " ..L["Blue"] .."\n12 = " ..L["Noble Garden"] 
+							.." - " ..L["Green"] .."\n13 = " ..L["Noble Garden"] .." - " ..L["Pink"]
+							.."\n14 = " ..L["Noble Garden"] .." - " ..L["Red"],
+					min = 1, max = 14, step = 1,
+					min = 1, max = 13, step = 1,
 					arg = "icon_nobleGarden",
-					order = 6,
+					order = 9,
 				},
 				icon_springFling = {
 					type = "range",
@@ -892,11 +965,12 @@ ns.options = {
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
 							..L["Yellow"] .."\n5 = " ..L["Green"] .."\n6 = " ..L["Grey"] .."\n7 = " ..L["Mana Orb"]
 							.."\n8 = " ..L["Phasing"] .."\n9 = " ..L["Raptor egg"] .."\n10 = " ..L["Stars"]
-							.."\n11 = " ..L["Noble Garden"] .." - " ..L["Blue"] 
-							.."\n12 = " ..L["Noble Garden"] .." - " ..L["Pink"],
-					min = 1, max = 12, step = 1,
+							.."\n11 = " ..L["Noble Garden"] .." - " ..L["Blue"] .."\n12 = " ..L["Noble Garden"] 
+							.." - " ..L["Green"] .."\n13 = " ..L["Noble Garden"] .." - " ..L["Pink"]
+							.."\n14 = " ..L["Noble Garden"] .." - " ..L["Red"],
+					min = 1, max = 14, step = 1,
 					arg = "icon_springFling",
-					order = 7,
+					order = 10,
 				},
 				icon_desertRose = {
 					type = "range",
@@ -904,11 +978,12 @@ ns.options = {
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
 							..L["Yellow"] .."\n5 = " ..L["Green"] .."\n6 = " ..L["Grey"] .."\n7 = " ..L["Mana Orb"]
 							.."\n8 = " ..L["Phasing"] .."\n9 = " ..L["Raptor egg"] .."\n10 = " ..L["Stars"]
-							.."\n11 = " ..L["Noble Garden"] .." - " ..L["Blue"] 
-							.."\n12 = " ..L["Noble Garden"] .." - " ..L["Pink"],
-					min = 1, max = 12, step = 1,
+							.."\n11 = " ..L["Noble Garden"] .." - " ..L["Blue"] .."\n12 = " ..L["Noble Garden"] 
+							.." - " ..L["Green"] .."\n13 = " ..L["Noble Garden"] .." - " ..L["Pink"]
+							.."\n14 = " ..L["Noble Garden"] .." - " ..L["Red"],
+					min = 1, max = 14, step = 1,
 					arg = "icon_desertRose",
-					order = 8,
+					order = 11,
 				},
 			},
 		},

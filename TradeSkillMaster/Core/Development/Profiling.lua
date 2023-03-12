@@ -33,7 +33,7 @@ local NODE_PATH_SEP = "`"
 ---Starts profiling
 function Profiling.Start()
 	assert(not private.startTime, "Profiling already started")
-	private.startTime = debugprofilestop()
+	private.startTime = GetTimePreciseSec()
 end
 
 ---Starts profiling of a node.
@@ -62,7 +62,7 @@ function Profiling.StartNode(node)
 	elseif private.nodeParent[node] ~= parentNode then
 		error("Node changed parents", 2)
 	end
-	private.nodeStart[node] = debugprofilestop()
+	private.nodeStart[node] = GetTimePreciseSec()
 end
 
 ---Ends profiling of a node.
@@ -75,7 +75,7 @@ function Profiling.EndNode(node, arg)
 		-- profiling is not running
 		return
 	end
-	local endTime = debugprofilestop()
+	local endTime = GetTimePreciseSec()
 	local nodeStackLen = #private.nodeStack
 	if node ~= private.nodeStack[nodeStackLen] then
 		error("Node isn't at the top of the stack", 2)
@@ -102,9 +102,9 @@ function Profiling.End(minTotalTime)
 		-- profiling is not running
 		return
 	end
-	local totalTime = debugprofilestop() - private.startTime
+	local totalTime = GetTimePreciseSec() - private.startTime
 	if totalTime > (minTotalTime or 0) then
-		print(format("Total: %.03f", Math.Round(totalTime, 0.001)))
+		print(format("Total: %.06f", Math.Round(totalTime, 0.000001)))
 		for _, node in ipairs(private.nodes) do
 			local parentNode = private.nodeParent[node]
 			local parentTotalTime = nil
@@ -113,7 +113,7 @@ function Profiling.End(minTotalTime)
 			else
 				parentTotalTime = totalTime
 			end
-			local nodeTotalTime = Math.Round(private.nodeTotal[node], 0.001)
+			local nodeTotalTime = Math.Round(private.nodeTotal[node], 0.000001)
 			local pctTime = Math.Round(nodeTotalTime * 100 / parentTotalTime)
 			local nodeRuns = private.nodeRuns[node]
 			local nodeMaxContext = private.nodeMaxContext[node]
@@ -121,9 +121,9 @@ function Profiling.End(minTotalTime)
 			local name = strmatch(node, NODE_PATH_SEP.."?([^"..NODE_PATH_SEP.."]+)$")
 			if nodeMaxContext ~= nil then
 				local nodeMaxTime = private.nodeMaxTime[node]
-				print(format("%s%s | %d%% | %.03f | %d | %.03f | %s", strrep("  ", level), name, pctTime, nodeTotalTime, nodeRuns, nodeMaxTime, tostring(nodeMaxContext)))
+				print(format("%s%s | %d%% | %.06f | %d | %.06f | %s", strrep("  ", level), name, pctTime, nodeTotalTime, nodeRuns, nodeMaxTime, tostring(nodeMaxContext)))
 			else
-				print(format("%s%s | %d%% | %.03f | %d", strrep("  ", level), name, pctTime, nodeTotalTime, nodeRuns))
+				print(format("%s%s | %d%% | %.06f | %d", strrep("  ", level), name, pctTime, nodeTotalTime, nodeRuns))
 			end
 		end
 	end
@@ -146,7 +146,7 @@ end
 ---@return number
 function Profiling.GetMemoryUsage()
 	collectgarbage()
-	UpdateAddOnMemoryUsage("TradeSkillMaster")
+	UpdateAddOnMemoryUsage()
 	return GetAddOnMemoryUsage("TradeSkillMaster") * 1024
 end
 
