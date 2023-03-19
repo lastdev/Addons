@@ -327,7 +327,7 @@ local function processResults(results, dontClear)
         
         gui.FailedCalcLabel:SetText()
         gui.CostLabel:Show()
-        gui.CostResultLabel:SetText((C_Garrison.GetMissionCost(missionWaitingUserAcceptance.missionID) + numAutoTroops).." "..POWER_TYPE_ANIMA)
+        gui.CostResultLabel:SetText(((C_Garrison.GetMissionCost(missionWaitingUserAcceptance.missionID) or 10) + numAutoTroops).." "..POWER_TYPE_ANIMA)
         local timeRemaining = (C_Garrison.GetBasicMissionInfo(results.missionID).offerEndTime or (GetTime() + 601)) - GetTime()
         if timeRemaining < 600 then
             gui.LowTimeWarningLabel:SetText(string.format(L["LowTimeWarning"], math.floor(timeRemaining/60), math.floor(mod(timeRemaining, 60))))

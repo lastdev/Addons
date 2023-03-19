@@ -55,8 +55,8 @@ function ConRO:CheckTalents()
 
 									tinsert(self.PlayerTalents[entryId], {
 										id = entryId,
-										["talentName"] = name,
-										["rank"] = node.ranksPurchased,
+										talentName = name,
+										rank = node.currentRank,
 									})
 								end
 							end
@@ -120,8 +120,20 @@ function ConRO:CheckPvPTalents()
 end
 
 function ConRO:TalentChosen(entryCheck, rankCheck)
-	if rankCheck ~= nil and self.PlayerTalents.entryCheck[rank] >= rankCheck then
-		return true;
+	if rankCheck ~= nil then
+		local talent = self.PlayerTalents[entryCheck];
+		if talent then
+			for _,i in pairs(talent) do
+				for k,v in pairs(i) do
+					if k == "rank" then
+						if v >= rankCheck then
+							return true;
+						end
+					end
+				end
+				return false;
+			end
+		end
 	else
 		return self.PlayerTalents[entryCheck];
 	end
@@ -511,22 +523,21 @@ end
 
 function ConRO:AnyTargetAura(spellID)
 	local haveBuff = false;
+	local count = 0;
 	for i = 1, 15 do
 		if UnitExists('nameplate' .. i) then
 			for x=1, 40 do
 				local spell = select(10, UnitAura('nameplate' .. i, x, 'PLAYER|HARMFUL'));
 				if spell == spellID then
 					haveBuff = true;
+					count = count + 1;
 					break;
 				end
-			end
-			if haveBuff then
-				break;
 			end
 		end
 	end
 
-	return haveBuff;
+	return haveBuff, count;
 end
 
 function ConRO:Purgable()

@@ -197,7 +197,7 @@ local ConRO_Hunter, ids = ...;
 		ArcaneShot = {spellID = 185358},
 		AspectoftheCheetah = {spellID = 186257},
 		AspectoftheTurtle = {spellID = 186265},
-		BindingShot = {spellID = 109248, talentID = 100650},
+		BindingShot = {spellID = 109248, talentID = 100650},--
 		CallPet = {
 			One = {spellID = 883},
 			Two = {spellID = 83242},
@@ -205,30 +205,30 @@ local ConRO_Hunter, ids = ...;
 			Four = {spellID = 83244},
 			Five = {spellID = 83245},
 		},
-		Camouflage = {spellID = 199483, talentID = 100647},
+		Camouflage = {spellID = 199483, talentID = 100647},--
 		CommandPet = {
 			PrimalRage = {spellID = 272678},
 			FortitudeoftheBear = {spellID = 272679},
 			MastersCall = {spellID = 272682},
 		},
-		Barrage = {spellID = 120360, talentID = 100526},
-		ConcussiveShot = {spellID = 5116, talentID = 100616},
-		CounterShot = {spellID = 147362, talentID = 100624},
-		DeathChakram = {spellID = 375891, talentID = 100628},
+		Barrage = {spellID = 120360, talentID = 100526},--
+		ConcussiveShot = {spellID = 5116, talentID = 100616},--
+		CounterShot = {spellID = 147362, talentID = 100540},--
+		DeathChakram = {spellID = 375891, talentID = 100628},--
 		Disengage = {spellID = 781},
 		EagleEye = {spellID = 6197},
 		Exhilaration = {spellID = 109304},
-		ExplosiveShot = {spellID = 212431, talentID = 100626},
+		ExplosiveShot = {spellID = 212431, talentID = 100626},--
 		EyesoftheBeast = {spellID = 321297},
 		FeignDeath = {spellID = 5384},
 		Flare = {spellID = 1543},
 		FreezingTrap = {spellID = 187650},
-		HighExplosiveTrap = {spellID = 236776, talentID = 100620},
+		HighExplosiveTrap = {spellID = 236776, talentID = 100620},--
 		HuntersMark = {spellID = 257284},
-		Intimidation = {spellID = 19577, talentID = 100621},
-		KillCommand = {spellID = 34026, talentID = 100648},
-		KillShot = {spellID = 53351, talentID = 100539},
-		Misdirection = {spellID = 34477, talentID = 100637},
+		Intimidation = {spellID = 19577, talentID = 100621},--
+		KillCommand = {spellID = 34026, talentID = 100541},--
+		KillShot = {spellID = 53351, talentID = 100539},--
+		Misdirection = {spellID = 34477, talentID = 100637},--
 		PetUtility = {
 			BeastLore = {spellID = 1462},
 			DismissPet = {spellID = 2641},
@@ -237,93 +237,93 @@ local ConRO_Hunter, ids = ...;
 			MendPet = {spellID = 136},
 			TameBeast = {spellID = 1515},
 		},
-		ScareBeast = {spellID = 1513, talentID = 100640},
-		ScatterShot = {spellID = 213691, talentID = 100651},
-		SentinelOwl = {spellID = 388045, talentID = 100520},
-		SerpentSting = {spellID = 271788, talentID = 100615},
-		Stampede = {spellID = 201430, talentID = 100629},
+		ScareBeast = {spellID = 1513, talentID = 100640},--
+		ScatterShot = {spellID = 213691, talentID = 100651},--
+		SentinelOwl = {spellID = 388045, talentID = 100520},--
+		SerpentSting = {spellID = 271788, talentID = 100615},--
+		Stampede = {spellID = 201430, talentID = 100629},--
 		SteadyShot = {spellID = 56641},
-		SteelTrap = {spellID = 162488, talentID = 100618},
-		SurvivaloftheFittest = {spellID = 264735, talentID = 100523},
-		TarTrap = {spellID = 187698, talentID = 100641},
-		TranquilizingShot = {spellID = 19801, talentID = 100617},
+		SteelTrap = {spellID = 162488, talentID = 100618},--
+		SurvivaloftheFittest = {spellID = 264735, talentID = 100523},--
+		TarTrap = {spellID = 187698, talentID = 100641},--
+		TranquilizingShot = {spellID = 19801, talentID = 100617},--
 		WingClip = {spellID = 195645},
 	--Marksmanship
-		AimedShot = {spellID = 19434, talentID = 100578},
-		BurstingShot = {spellID = 186387, talentID = 100577},
-		ChimaeraShot = {spellID = 342049, talentID = 100627},
-		DoubleTap = {spellID = 260402, talentID = 100579},
-		MultiShot = {spellID = 257620, talentID = 100544},
-		RapidFire = {spellID = 257044, talentID = 100585},
-		Trueshot = {spellID = 288613, talentID = 100587},
-		Volley = {spellID = 260243, talentID = 100595},
-		WailingArrow = {spellID = 392060, talentID = 100590},
+		AimedShot = {spellID = 19434, talentID = 100578},--
+		BurstingShot = {spellID = 186387, talentID = 100577},--
+		ChimaeraShot = {spellID = 342049, talentID = 100627},--
+		MultiShot = {spellID = 257620, talentID = 100544},--
+		RapidFire = {spellID = 257044, talentID = 100585},--
+		Salvo = {spellID = 400456, talentID = 100534},--
+		Trueshot = {spellID = 288613, talentID = 100587},--
+		Volley = {spellID = 260243, talentID = 100595},--
+		WailingArrow = {spellID = 392060, talentID = 100590},--
 	}
 	ids.MM_Passive = {
 	--Hunter
-		AlphaPredator = {spellID = 269737, talentID = 100613},
-		ArcticBola = {spellID = 390231, talentID = 100514},
-		BeastMaster = {spellID = 378007, talentID = 100639},
-		BindingShackles = {spellID = 321468, talentID = 100633},
-		BornToBeWild = {spellID = 266921, talentID = 100646},
-		Entrapment = {spellID = 393344, talentID = 100692},
-		HuntersAvoidance = {spellID = 384799, talentID = 100536},
-		HydrasBite = {spellID = 260241, talentID = 100622},
-		ImprovedKillCommand = {spellID = 378010, talentID = 100645},
-		ImprovedKillShot = {spellID = 343248, talentID = 100643},
-		ImprovedTranquilizingShot = {spellID = 343244, talentID = 100632},
-		ImprovedTraps = {spellID = 343247, talentID = 100636},
-		KeenEyesight = {spellID = 378004, talentID = 100635},
-		KillerInstinct = {spellID = 273887, talentID = 100614},
-		LoneSurvivor = {spellID = 388039, talentID = 100522},
-		MasterMarksman = {spellID = 260309, talentID = 100625},
-		NaturalMending = {spellID = 270581, talentID = 100638},
-		NaturesEndurance = {spellID = 388042, talentID = 100521},
-		Pathfinding = {spellID = 378002},
-		PoisonInjection = {spellID = 378014, talentID = 100623},
-		Posthaste = {spellID = 109215, talentID = 100634},
-		RejuvenatingWind = {spellID = 385539, talentID = 100619},
-		SentinelsPerception = {spellID = 388056, talentID = 100519},
-		SentinelsProtection = {spellID = 388057, talentID = 100518},
-		SerratedShots = {spellID = 389882, talentID = 100513},
-		Trailblazer = {spellID = 199921, talentID = 100644},
-		WildernessMedicine = {spellID = 343242, talentID = 100649},
+		AlphaPredator = {spellID = 269737, talentID = 100613},--
+		ArcticBola = {spellID = 390231, talentID = 100514},--
+		BeastMaster = {spellID = 378007, talentID = 100639},--
+		BindingShackles = {spellID = 321468, talentID = 100633},--
+		BornToBeWild = {spellID = 266921, talentID = 100646},--
+		Entrapment = {spellID = 393344, talentID = 100692},--
+		HuntersAvoidance = {spellID = 384799, talentID = 100536},--
+		HydrasBite = {spellID = 260241, talentID = 100622},--
+		ImprovedKillCommand = {spellID = 378010, talentID = 100645},--
+		ImprovedKillShot = {spellID = 343248, talentID = 100643},--
+		ImprovedTranquilizingShot = {spellID = 343244, talentID = 100632},--
+		ImprovedTraps = {spellID = 343247, talentID = 100636},--
+		KeenEyesight = {spellID = 378004, talentID = 100635},--
+		KillerInstinct = {spellID = 273887, talentID = 100614},--
+		LoneSurvivor = {spellID = 388039, talentID = 100522},--
+		MasterMarksman = {spellID = 260309, talentID = 100625},--
+		NaturalMending = {spellID = 270581, talentID = 100638},--
+		NaturesEndurance = {spellID = 388042, talentID = 100521},--
+		Pathfinding = {spellID = 378002, talentID = 100631},--
+		PoisonInjection = {spellID = 378014, talentID = 100623},--
+		Posthaste = {spellID = 109215, talentID = 100634},--
+		RejuvenatingWind = {spellID = 385539, talentID = 100619},--
+		SentinelsPerception = {spellID = 388056, talentID = 100519},--
+		SentinelsProtection = {spellID = 388057, talentID = 100518},--
+		SerratedShots = {spellID = 389882, talentID = 100513},--
+		Trailblazer = {spellID = 199921, talentID = 100644},--
+		WildernessMedicine = {spellID = 343242, talentID = 100649},--
 	--Marksmanship
-		Bombardment = {spellID = 378880, talentID = 100594},
-		Bulletstorm = {spellID = 389019, talentID = 100517},
-		Bullseye = {spellID = 204089, talentID = 100581},
-		CallingtheShots = {spellID = 260404, talentID = 100609},
-		CarefulAim = {spellID = 260228, talentID = 100584},
-		CrackShot = {spellID = 321293, talentID = 100600},
-		Deadeye = {spellID = 321460, talentID = 100597},
-		Deathblow = {spellID = 378769, talentID = 100588},
-		EagletalonsTrueFocus = {spellID = 389449, talentID = 100607},
-		FocusedAim = {spellID = 378767, talentID = 100601},
-		HeavyAmmo = {spellID = 378910, talentID = 100611},
-		HuntersKnowledge = {spellID = 378766, talentID = 100593},
-		ImprovedSteadyShot = {spellID = 321018, talentID = 100604},
-		KillerAccuracy = {spellID = 378765, talentID = 100606},
-		LegacyoftheWindrunners = {spellID = 190852, talentID = 100605},
-		LethalShots = {spellID = 260393, talentID = 100603},
-		LightAmmo = {spellID = 378913, talentID = 100610},
-		LockandLoad = {spellID = 194595, talentID = 100589},
-		LoneWolf = {spellID = 155228, talentID = 100576},
+		Bombardment = {spellID = 378880, talentID = 100594},--
+		Bulletstorm = {spellID = 389019, talentID = 100517},--
+		Bullseye = {spellID = 204089, talentID = 100581},--
+		CallingtheShots = {spellID = 260404, talentID = 100609},--
+		CarefulAim = {spellID = 260228, talentID = 100584},--
+		CrackShot = {spellID = 321293, talentID = 100600},--
+		Deadeye = {spellID = 321460, talentID = 100597},--
+		Deathblow = {spellID = 378769, talentID = 100588},--
+		EagletalonsTrueFocus = {spellID = 389449, talentID = 100607},--
+		FocusedAim = {spellID = 378767, talentID = 100601},--
+		HeavyAmmo = {spellID = 378910, talentID = 100611},--
+		HuntersKnowledge = {spellID = 378766, talentID = 100593},--
+		ImprovedSteadyShot = {spellID = 321018, talentID = 100604},--
+		KillerAccuracy = {spellID = 378765, talentID = 100606},--
+		LegacyoftheWindrunners = {spellID = 190852, talentID = 100605},--
+		LethalShots = {spellID = 260393, talentID = 100603},--
+		LightAmmo = {spellID = 378913, talentID = 100610},--
+		LockandLoad = {spellID = 194595, talentID = 100589},--
+		LoneWolf = {spellID = 155228, talentID = 100576},--
 		MasterySniperTraining = {spellID = 193468},
-		PreciseShots = {spellID = 260240, talentID = 100582},
-		QuickLoad = {spellID = 378771, talentID = 100583},
-		RazorFragments = {spellID = 384790, talentID = 100535},
-		Readiness = {spellID = 389865, talentID = 389865},
-		Salvo = {spellID = 384791, talentID = 100534},
-		SerpentstalkersTrickery = {spellID = 378888, talentID = 100586},
-		Sharpshooter = {spellID = 378907, talentID = 100592},
-		SteadyFocus = {spellID = 193533, talentID = 100596},
-		Streamline = {spellID = 260367, talentID = 100598},
-		SurgingShots = {spellID = 391559, talentID = 100602},
-		TargetPractice = {spellID = 321287, talentID = 100591},
-		TrickShots = {spellID = 257621, talentID = 100580},
-		UnerringVision = {spellID = 386878, talentID = 100608},
-		WindrunnersBarrage = {spellID = 389866, talentID = 100512},
-		WindrunnersGuidance = {spellID = 378905, talentID = 100599},
+		PreciseShots = {spellID = 260240, talentID = 100582},--
+		QuickLoad = {spellID = 378771, talentID = 100583},--
+		RazorFragments = {spellID = 384790, talentID = 100535},--
+		Readiness = {spellID = 389865, talentID = 389865},--
+		SerpentstalkersTrickery = {spellID = 378888, talentID = 100586},--
+		Sharpshooter = {spellID = 378907, talentID = 100592},--
+		SteadyFocus = {spellID = 193533, talentID = 100596},--
+		Streamline = {spellID = 260367, talentID = 100598},--
+		SurgingShots = {spellID = 391559, talentID = 100602},--
+		TacticalReload= {spellID = 400472, talentID = 100579},--
+		TargetPractice = {spellID = 321287, talentID = 100591},--
+		TrickShots = {spellID = 257621, talentID = 100580},--
+		UnerringVision = {spellID = 386878, talentID = 100608},--
+		WindrunnersBarrage = {spellID = 389866, talentID = 100512},--
+		WindrunnersGuidance = {spellID = 378905, talentID = 100599},--
 	}
 
 	ids.MM_PvPTalent = {
@@ -341,7 +341,6 @@ local ConRO_Hunter, ids = ...;
 		RazorFragments = 388998,
 		SteadyFocus = 193534,
 		LethalShots = 260395,
-		DoubleTap = 260402,
 		DeadEye = 321461,
 	}
 	ids.MM_Debuff = {
@@ -510,8 +509,10 @@ local ConRO_Hunter, ids = ...;
 	ids.Surv_Buff = {
 		AspectoftheEagle = 186289,
 		CoordinatedAssault = 266779,
+		DeadlyDuo = 397568,
 		MongooseFury = 259388,
 		Spearhead = 360966,
+		TermsofEngagement = 262898,
 		TipoftheSpear = 260286,
 		VipersVenom = 268552,
 	}

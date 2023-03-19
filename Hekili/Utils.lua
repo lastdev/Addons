@@ -579,6 +579,30 @@ function ns.IsActiveSpell( id )
 end
 
 
+function Hekili:GetSpellLinkWithTexture( id, size, color )
+    if not id then return "" end
+
+    local name, _, _, _, _, _, _, icon = GetSpellInfo( id )
+
+    if name and icon then
+        if type( color ) == "boolean" then
+            color = color and "ff00ff00" or "ffff0000"
+        end
+
+        if color == nil then color = "ff71d5ff" end
+
+        return "|W|T" .. icon .. ":" .. ( size or 0 ) .. ":" .. ( size or "" ) .. ":::64:64:4:60:4:60|t " .. ( color and ( "|c" .. color ) or "" ) .. name .. ( color and "|r" or "" ) .. "|w"
+    end
+
+    return tostring( id )
+end
+
+function Hekili:ZoomedTextureWithText( texture, text )
+    if not texture or not text then return end
+    return "|W|T" .. texture .. ":0::::64:64:4:60:4:60|t " .. text .. "|w"
+end
+
+
 -- Tooltip Parsing Utilities (10.0.2)
 do
     local SurfaceArgs = TooltipUtil and TooltipUtil.SurfaceArgs

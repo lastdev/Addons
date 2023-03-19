@@ -1,11 +1,10 @@
-lightweight tag 933ce9ef36006d06419eda40bff5eb64a1ba8dad v10.0.8
+lightweight tag 2aa52b1be35901a80f9bcf85a0fc6e45ece25394 v10.0.9
 Author:	Vae <emuha17@gmail.com>
-Date:	Sat Jan 14 13:04:55 2023 -1000
+Date:	Mon Mar 13 00:41:23 2023 -1000
 
-commit 933ce9ef36006d06419eda40bff5eb64a1ba8dad
+commit 2aa52b1be35901a80f9bcf85a0fc6e45ece25394
 Author: Vae <emuha17@gmail.com>
-Date:   Sat Jan 14 13:04:55 2023 -1000
+Date:   Mon Mar 13 00:41:23 2023 -1000
 
-    Updated Elemental rotation
-    Added Auto target detect
+    Sweep for Ele and Enh rotations.
 

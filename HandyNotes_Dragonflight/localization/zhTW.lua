@@ -51,6 +51,7 @@ L['options_icons_scout_pack_desc'] = '顯示 {object:遠征隊斥侯包} 可能�
 L['magicbound_chest'] = '縛法寶箱'
 L['options_icons_magicbound_chest'] = '縛法寶箱'
 L['options_icons_magicbound_chest_desc'] = '顯示 {object:縛法寶箱} 可能的位置.'
+L['ice_bound_chest'] = nil
 
 L['tuskarr_tacklebox'] = '巨牙海民釣具箱'
 L['options_icons_tuskarr_tacklebox'] = '巨牙海民釣具箱'
@@ -86,12 +87,14 @@ L['options_icons_legendary_album'] = '{achievement:16570}'
 L['options_icons_legendary_album_desc'] = '顯示成就 {achievement:16570} 所需的傳奇角色所在位置.'
 
 L['signal_transmitter_label'] = '龍洞產生器信號發送器'
-L['signal_transmitter_note'] = '{note:需要點機械心靈 10點\n需要點新奇作品 30點.}\n\n和 {object:未啟動的信號發送器} 互動來允許你傳送到此位置.'
+L['signal_transmitter_note'] = '{note:需要點機械心靈 10點\n需要點新奇作品 30點.}\n\n和 {object:關閉的信號發送器} 互動來允許你傳送到此位置.'
 L['options_icons_signal_transmitter'] = '龍洞產生器信號發送器'
-L['options_icons_signal_transmitter_desc'] = '顯示 {item:198156} 所需的 {object:未啟動的信號發送器} 位置.'
+L['options_icons_signal_transmitter_desc'] = '顯示 {item:198156} 所需的 {object:關閉的信號發送器} 位置.'
 
-L['rare_14h'] = '此稀有和其他稀有們共用一個14小時的循環, 每30分鐘會重生一隻稀有.\n\n下個可能的重生時間是: {note:%s} (伺服器時間)'
-L['time_format'] = '%Y/%m/%d - %H:%M'
+L['rare_14h'] = '此稀有和其他稀有們共用一個14小時的循環, 每30分鐘會重生一隻稀有.\n\n下個可能的重生時間是: {note:%s}'
+L['time_format_12hrs'] = '%m/%d - %I:%M %p 本地時間'
+L['time_format_24hrs'] = '%m/%d - %H:%M 本地時間'
+L['now'] = nil
 L['spawns_at_night'] = '{note:僅在晚上重生 (伺服器時間 18:30 之後)}'
 
 L['elemental_storm'] = '元素風暴'
@@ -132,6 +135,22 @@ L['the_best_at_what_i_do_suffix'] = '首領已擊殺'
 L['options_icons_grand_hunts'] = '大狩獵'
 L['options_icons_grand_hunts_desc'] = '顯示 {object:大狩獵} 的位置和獎勵.'
 
+L['reed_chest'] = nil
+L['options_icons_reed_chest'] = nil
+L['options_icons_reed_chest_desc'] = nil
+
+L['dracthyr_supply_chest'] = nil
+L['options_icons_dracthyr_supply_chest'] = nil
+L['options_icons_dracthyr_supply_chest_desc'] = nil
+
+L['simmering_chest'] = nil
+L['options_icons_simmering_chest'] = nil
+L['options_icons_simmering_chest_desc'] = nil
+
+L['frostbound_chest'] = nil
+L['options_icons_frostbound_chest'] = nil
+L['options_icons_frostbound_chest_desc'] = nil
+
 -------------------------------------------------------------------------------
 ------------------------------- THE AZURE SPAN --------------------------------
 -------------------------------------------------------------------------------
@@ -154,7 +173,7 @@ L['snow_covered_scroll'] = '覆滿雪的卷軸'
 
 L['pm_engi_frizz_buzzcrank'] = '站在祭壇邊.'
 L['pm_jewel_pluutar'] = '在建築內.'
-L['pm_script_lydiara_whisperfeather'] = '坐在長椅上.'
+L['pm_script_lydiara_whisperfeather'] = '在長椅上坐著.'
 L['pt_alch_experimental_decay_sample_note'] = '在一個綠色的大鍋內.'
 L['pt_alch_firewater_powder_sample_note'] = '在木頭房子外面的花瓶附近.'
 L['pt_ench_enriched_earthen_shard_note'] = '在一堆石頭上.'
@@ -165,7 +184,7 @@ L['pt_jewel_harmonic_crystal_harmonizer_note'] = '點選 {object:共鳴鑰匙} �
 L['pt_leath_decay_infused_tanning_oil_note'] = '在桶子裡.'
 L['pt_leath_treated_hides_note'] = '在 {location:雪革營地}.'
 L['pt_leath_well_danced_drum_note'] = '和 {npc:186446} 跟 {npc:186448} 在一個地下建築物內. 修好 {npc:194862} 附近的鼓. 當他開始在上面跳舞時你就可以拾取物品.'
-L['pt_script_dusty_darkmoon_card_note'] = '在一個上層建築物內.'
+L['pt_script_dusty_darkmoon_card_note'] = '在一個建築物內的上層.'
 L['pt_script_frosted_parchment_note'] = '在 {npc:190776} 後面.'
 L['pt_smith_spelltouched_tongs_note'] = '在一個被堵住的小山洞裡.'
 L['pt_tailor_decaying_brackenhide_blanket_note'] = '掛在一個臨時帳篷內的樹上.'
@@ -229,6 +248,14 @@ L['community_feast_label'] = '{spell:388961}'
 L['options_icons_community_feast'] = '{spell:388961}'
 L['options_icons_community_feast_desc'] = '顯示 {spell:388961} 的位置和獎勵.'
 
+L['decay_covered_chest'] = nil
+L['options_icons_decay_covered_chest'] = nil
+L['options_icons_decay_covered_chest_desc'] = nil
+
+L['icemaw_storage_cache'] = nil
+L['options_icons_icemaw_storage_cache'] = nil
+L['options_icons_icemaw_storage_cache_desc'] = nil
+
 -------------------------------------------------------------------------------
 ------------------------------- FORBIDDEN REACH -------------------------------
 -------------------------------------------------------------------------------
@@ -286,7 +313,7 @@ L['pt_jewel_lofty_malygite_note'] = '漂浮在一個洞穴的空中.'
 L['pt_leath_wind_blessed_hide_note'] = '在 {location:席卡高地} 內的半人馬營地.'
 L['pt_script_sign_language_reference_sheet_note'] = '掛在帳篷的入口.'
 L['pt_smith_ancient_spear_shards_note'] = '在{location:拉札薩爾之境}.'
-L['pt_smith_falconer_gauntlet_drawings_note'] = '海上的小島, 在一個小屋內.'
+L['pt_smith_falconer_gauntlet_drawings_note'] = '湖上的小島, 在一個小屋內.'
 L['pt_tailor_noteworthy_scrap_of_carpet_note'] = '坐落於一個小屋. {note:小屋內有三支菁英}.'
 L['pt_tailor_silky_surprise_note'] = '找到並拾取一個 {object:貓草嫩葉}.'
 
@@ -332,11 +359,17 @@ L['options_icons_nokhud_do_it_desc'] = '顯示成就 {achievement:16583} 有用�
 
 L['chest_of_the_flood'] = '洪流寶箱'
 
-L['aylaag_camp_note'] = '{faction:艾拉格氏族} 每3天又3小時 (75) 移動到另外一個營地, 跟著他們並在路上保護他們.'
+L['aylaag_camp_note'] = '{faction:艾拉格氏族} 每3天又3小時 (75小時) 移動到另外一個營地, 跟著他們並在路上保護他們.'
 
 L['clan_chest'] = '氏族箱子'
 L['options_icons_clan_chest'] = '氏族箱子'
 L['options_icons_clan_chest_desc'] = '顯示 {object:氏族箱子} 可能的位置.'
+
+L['lightning_bound_chest'] = nil
+L['options_icons_lightning_bound_chest'] = nil
+L['options_icons_lightning_bound_chest_desc'] = nil
+
+L['bloodgullet_note'] = nil
 
 -------------------------------------------------------------------------------
 --------------------------------- THALDRASZUS ---------------------------------
@@ -362,11 +395,11 @@ L['pt_alch_contraband_concoction_note'] = '藏在樹叢內 {note:很難看到}.'
 L['pt_alch_tasty_candy_note'] = '各丟一個在附近的 {object:[Discarded Toy]} 到每個大鍋, 然後殺掉刷新出來的怪物.'
 L['pt_ench_fractured_titanic_sphere_note'] = '{location:提爾堡} 南邊.'
 L['pt_jewel_alexstraszite_cluster_note'] = '{location:提爾堡} 內.'
-L['pt_jewel_painters_pretty_jewel_note'] = '在燈籠內.'
-L['pt_leath_decayed_scales_note'] = '在籃子內.'
-L['pt_script_counterfeit_darkmoon_deck_note'] = '和 {npc:194856} 講話並幫助她整理散落在他腳邊的 {object:暗月套卡}. 依照順序點選卡片 (A到8) 之後和她交談來取得套卡.'
-L['pt_script_forgetful_apprentices_tome_note'] = '在桌上一個大望遠鏡旁.'
-L['pt_script_how_to_train_your_whelpling_note'] = '躺在沙盒內的一本小棕書.'
+L['pt_jewel_painters_pretty_jewel_note'] = '在燈座內.'
+L['pt_leath_decayed_scales_note'] = '在一個袋子裡.'
+L['pt_script_counterfeit_darkmoon_deck_note'] = '和 {npc:194856} 講話並幫助她整理散落在他腳邊的 {object:風暴套卡}. 依照順序點選卡片 (1到8) 之後和她交談來取得套卡.'
+L['pt_script_forgetful_apprentices_tome_note'] = '在桌上一個大圓規旁.'
+L['pt_script_how_to_train_your_whelpling_note'] = '躺在沙盒內的一本小綠書.'
 L['pt_smith_draconic_flux_note'] = '在一棟建築內.'
 L['pt_tailor_ancient_dragonweave_bolt_note'] = '點選 {object:古老的龍紡織布機} 來完成一個小遊戲把線捲連到中間的寶石.'
 L['pt_tailor_miniature_bronze_dragonflight_banner_note'] = '在一堆沙中的小旗幟.'
@@ -399,6 +432,10 @@ L['hoard_of_draconic_delicacies_note_end'] = '當所有任務都完成後, {npc:
 L['brendormi_note_start'] = '用 {item:202039} 和 {currency:2118} 交換裝備, 1個寵物, 1個玩具和1個坐騎.'
 L['brendormi_note_item'] = '你現在有 %s {item:202039}.'
 L['brendormi_note_currency'] = '你現在有 %s {currency:2118}.'
+
+L['titan_chest'] = nil
+L['options_icons_titan_chest'] = nil
+L['options_icons_titan_chest_desc'] = nil
 
 -------------------------------------------------------------------------------
 ------------------------------ THE WAKING SHORE -------------------------------
@@ -444,16 +481,16 @@ L['pt_alch_well_insulated_mug_note'] = '在 {location:龍禍要塞} 內許多菁
 L['pt_ench_enchanted_debris_note'] = '使用並跟著 {npc:194872} 走到最後來拾取殘骸.'
 L['pt_ench_flashfrozen_scroll_note'] = '在 {location:閃霜營地} 的洞穴系統內.'
 L['pt_ench_lava_infused_seed_note'] = '在 {location:碎鱗者要塞} 的一朵花內.'
-L['pt_engi_boomthyr_rocket_note'] = '收集列在 {object:轟希爾火箭筆記} 內的物品:\n\n{item:198815}\n{item:198817}\n{item:198816}\n{item:198814}\n\n當你收集完後, 帶著它們回來到火箭以取得寶藏.'
-L['pt_engi_intact_coil_capacitor_note'] = '和三個 {object:裸露電線} 互動來修好並拾取 {object:超載的特斯拉線圈}.'
-L['pt_jewel_closely_guarded_shiny_note'] = '樹下巢邊的藍色寶石.'
+L['pt_engi_boomthyr_rocket_note'] = '收集列在 {object:轟希爾火箭筆記} 內的物品:\n\n{item:198815}\n{item:198817}\n{item:198816}\n{item:198814}\n\n當你收集完後, 帶著它們回來到火箭旁以取得寶藏.'
+L['pt_engi_intact_coil_capacitor_note'] = '和三個 {object:外露的線} 互動來修好並拾取 {object:超載的特斯拉線圈}.'
+L['pt_jewel_closely_guarded_shiny_note'] = '巢邊樹下的藍色寶石.'
 L['pt_jewel_igneous_gem_note'] = '快速點選在岩漿內的小島上的三個水晶.'
-L['pt_leath_poachers_pack_note'] = '在河床旁一個死掉的狐狸人旁邊.'
-L['pt_leath_spare_djaradin_tools_note'] = '在死掉的紅龍旁邊.'
+L['pt_leath_poachers_pack_note'] = '在河岸旁一個死掉的狐狸人旁邊.'
+L['pt_leath_spare_djaradin_tools_note'] = '在紅龍屍體旁邊.'
 L['pt_script_pulsing_earth_rune_note'] = '在倒塌建築內的桌子後方.'
 L['pt_smith_ancient_monument_note'] = '擊敗在臺座上環繞著劍的4個 {npc:188648}.\n\n{bug:(BUG: 目前在點選劍後你不會取得物品, 取而代之的是它在過段時間後會寄到你的信箱.)}'
 L['pt_smith_curious_ingots_note'] = '在 {location:碎鱗者要塞} 內地上的小金屬錠.'
-L['pt_smith_glimmer_of_blacksmithing_wisdom_note'] = '在 {object:黯淡的熔爐} 旁製造1個 {item:189541}, 然後在 {object:淬火盆} 裡的物品會變成可拾取的.'
+L['pt_smith_glimmer_of_blacksmithing_wisdom_note'] = '在 {object:昏暗熔爐} 旁製造1個 {item:189541}, 然後在 {object:淬火盆} 裡的物品會變成可拾取的.'
 L['pt_smith_molten_ingot_note'] = '踢3個金屬錠到熔岩中來召喚怪物. 在擊敗怪物後拾取箱子.'
 L['pt_smith_qalashi_weapon_diagram_note'] = '在一個鐵砧上方.'
 L['pt_tailor_itinerant_singed_fabric_note'] = '在最後首領刷新的山洞外面樹上掛著的一片織物. {note:需要精準的御龍術或是術士傳送門}.'

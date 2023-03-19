@@ -62,7 +62,7 @@ local ConRO_Rogue, ids = ...;
 		FanofKnives = {spellID = 51723},
 		Garrote = {spellID = 703},
 		IndiscriminateCarnage = {spellID = 381802, talentID = 112667},
-		KingsBane = {spellID = 385627, talentID = 112677},
+		KingsBane = {spellID = 385627, talentID = 114736},
 		Mutilate = {spellID = 1329},
 		PoisonedKnife = {spellID = 185565},
 		Rupture = {spellID = 1943},
@@ -117,6 +117,7 @@ local ConRO_Rogue, ids = ...;
 		Vigor = {spellID = 14983, talentID = 112651},
 		VirulentPoisons = {spellID = 381543, talentID = 112653},
 	--Assassination
+		ArterialPrecision = {spellID = 400783, talentID = 112677},
 		Blindside = {spellID = 328085, talentID = 112679},
 		BloodyMess = {spellID = 381626, talentID = 112510},
 		CuttotheChase = {spellID = 51667, talentID = 112514},
@@ -155,6 +156,7 @@ local ConRO_Rogue, ids = ...;
 		Stealth = 1784,
 	}
 	ids.Ass_Buff = {
+		AmplifyingPoison = 381664,
 		Blindside = 121153,
 		CrimsonTempest = 121411,
 		CripplingPoison = 3408,

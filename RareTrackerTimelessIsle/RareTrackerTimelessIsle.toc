@@ -1,0 +1,16 @@
+## Interface: 100005
+## Title: RareTrackerTimelessIsle
+## Notes: Track and coordinate rare spawn timers on the Timeless Isle.
+## Author: Melroy, Urtgard
+## Version: 7.1.15
+## SavedVariables: RareTrackerTimelessIsleDB
+## Dependencies: RareTrackerCore
+
+Locales\enUS.lua
+Locales\deDE.lua
+Locales\esES.lua
+Locales\frFR.lua
+Locales\ptBR.lua
+Locales\ruRU.lua
+
+RareTrackerTimelessIsle.lua

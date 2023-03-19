@@ -1,8 +1,7 @@
 # TL;DR Missions
 
-##  (2023-01-30)
+##  (2023-03-15)
  
 
-- Update TLDRMissions.toc  
-- 2224  
-    Closes https://github.com/TLDRMissions/TLDRMissions/issues/605  
+- Workaround for Lua error that can happen in unusual situations.  
+    Closes https://github.com/TLDRMissions/TLDRMissions/issues/606  

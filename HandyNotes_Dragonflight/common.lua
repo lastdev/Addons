@@ -16,6 +16,7 @@ local Currency = ns.reward.Currency
 local Item = ns.reward.Item
 local Mount = ns.reward.Mount
 local Pet = ns.reward.Pet
+local Recipe = ns.reward.Recipe
 local Spacer = ns.reward.Spacer
 local Transmog = ns.reward.Transmog
 
@@ -113,6 +114,46 @@ ns.groups.TUSKARR_CHEST = Group('tuskarr_chest', 'chest_bn', {
 })
 
 ns.groups.CLAN_CHEST = Group('clan_chest', 'chest_bk', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.DECAY_COVERED_CHEST = Group('decay_covered_chest', 'chest_pk', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.REED_CHEST = Group('reed_chest', 'chest_yw', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.DRACTHYR_SUPPLY_CHEST = Group('dracthyr_supply_chest', 'chest_bl', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.SIMMERING_CHEST = Group('simmering_chest', 'chest_gn', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.ICEMAW_STORAGE_CACHE = Group('icemaw_storage_cache', 'chest_nv', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.TITAN_CHEST = Group('titan_chest', 'chest_rd', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.FROSTBOUND_CHEST = Group('frostbound_chest', 'chest_rd', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.LIGHTNING_BOUND_CHEST = Group('lightning_bound_chest', 'chest_pp', {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.EXPANSION
 })
@@ -738,15 +779,19 @@ ns.node.Scoutpack = Scoutpack
 ------------------------------ Magic-Bound Chest ------------------------------
 -------------------------------------------------------------------------------
 
+-- Ice Bound Chest         377540 -- cosmetics, maps,       same spawn points as Magic Bound Chest
 local MagicBoundChest = Class('MagicBoundChest', Node, {
     icon = 'chest_tl',
-    label = L['magicbound_chest'],
+    label = L['magicbound_chest'] .. ' / ' .. L['ice_bound_chest'],
     group = ns.groups.MAGICBOUND_CHEST,
     requires = ns.requirement.Reputation(2507, 16, true), -- Dragonscale Expedition
     rewards = {
         Item({item = 191784}), -- Dragon Shard of Knowledge
         Item({item = 190454}), -- Primal Chaos
         Item({item = 199062, quest = 70528}), -- Ruby Gem Cluster Map
+        Item({item = 198843, quest = 70392}), -- Emerald Gardens Explorer's Notes
+        Item({item = 194540, quest = 67046}), -- Nokhud Armorer's Notes
+        Item({item = 199067, quest = 70536}), -- Precious Plans
         Item({item = 192055}), -- Dragon Isles Artifact
         Currency({id = 2003}) -- Dragon Isles Supplies
     }
@@ -782,6 +827,92 @@ local TuskarrTacklebox = Class('TuskarrTacklebox', Node, {
 })
 
 ns.node.TuskarrTacklebox = TuskarrTacklebox
+
+-------------------------------------------------------------------------------
+---------------------------------- REED CHEST ---------------------------------
+-------------------------------------------------------------------------------
+
+ns.node.ReedChest = Class('ReedChest', Node, {
+    label = L['reed_chest'],
+    icon = 'chest_yw', -- TODO change color
+    group = ns.groups.REED_CHEST,
+    rewards = {
+        Item({item = 191784}), -- Dragon Shard of Knowledge
+        Item({item = 190454}), -- Primal Chaos
+        Item({item = 199061, quest = 70527}), -- A Guide to Rare Fish
+        Item({item = 199068, quest = 70537}), -- Time-Lost Memo
+        Item({item = 194540, quest = 67046}), -- Nokhud Armorer's Notes
+        Item({item = 192055}), -- Dragon Isles Artifact
+        Item({item = 200071}), -- Sacred Tuskarr Totem
+        Currency({id = 2003}) -- Dragon Isles Supplies
+    }
+})
+
+-------------------------------------------------------------------------------
+---------------------------- DRACTHYR SUPPLY CHEST ----------------------------
+-------------------------------------------------------------------------------
+
+ns.node.DracthyrSupplyChest = Class('DracthyrSupplyChest', Node, {
+    label = L['dracthyr_supply_chest'],
+    icon = 'chest_bl',
+    group = ns.groups.DRACTHYR_SUPPLY_CHEST,
+    rewards = {
+        Item({item = 191784}), -- Dragon Shard of Knowledge
+        Item({item = 190454}), -- Primal Chaos
+        Item({item = 199061, quest = 70527}), -- A Guide to Rare Fish
+        Item({item = 199066, quest = 70535}), -- Letter of Caution
+        Item({item = 194540, quest = 67046}), -- Nokhud Armorer's Notes
+        Item({item = 199068, quest = 70537}), -- Time-Lost Memo
+        Item({item = 192055}), -- Dragon Isles Artifact
+        Item({item = 200071}), -- Sacred Tuskarr Totem
+        Currency({id = 2003}) -- Dragon Isles Supplies
+    }
+})
+
+-------------------------------------------------------------------------------
+------------------------------- SIMMERING CHEST -------------------------------
+-------------------------------------------------------------------------------
+
+ns.node.SimmeringChest = Class('SimmeringChest', Node, {
+    label = L['simmering_chest'],
+    icon = 'chest_gn',
+    group = ns.groups.SIMMERING_CHEST,
+    rewards = {
+        Item({item = 191784}), -- Dragon Shard of Knowledge
+        Item({item = 190454}), -- Primal Chaos
+        Transmog({item = 201446, slot = L['cosmetic']}), -- Primal Revenant's Firewall
+        Transmog({item = 201445, slot = L['cosmetic']}), -- Primal Revenant's Emberblade
+        Item({item = 199061, quest = 70527}), -- A Guide to Rare Fish
+        Item({item = 194540, quest = 67046}), -- Nokhud Armorer's Notes
+        Item({item = 199068, quest = 70537}), -- Time-Lost Memo
+        Item({item = 194486}), -- Plans: Shield of the Hearth
+        Item({item = 192055}), -- Dragon Isles Artifact
+        Item({item = 199906}), -- Titan Relic
+        Currency({id = 2003}) -- Dragon Isles Supplies
+    }
+})
+
+-------------------------------------------------------------------------------
+------------------------------- FROSTBOUND CHEST ------------------------------
+-------------------------------------------------------------------------------
+
+ns.node.FrostboundChest = Class('FrostboundChest', Node, {
+    label = L['frostbound_chest'],
+    icon = 'chest_gn',
+    group = ns.groups.FROSTBOUND_CHEST,
+    rewards = {
+        Item({item = 191784}), -- Dragon Shard of Knowledge
+        Item({item = 190454}), -- Primal Chaos
+        Transmog({item = 201443, slot = L['cosmetic']}), -- Primal Revenant's Icewall
+        Transmog({item = 201442, slot = L['cosmetic']}), -- Primal Revenant's Frostblade
+        Item({item = 199065, quest = 70534}), -- Sorrowful Letter
+        Item({item = 199066, quest = 70535}), -- Letter of Caution
+        Item({item = 199068, quest = 70537}), -- Time-Lost Memo
+        Item({item = 192055}), -- Dragon Isles Artifact
+        Item({item = 199906}), -- Titan Relic
+        Currency({id = 2003}) -- Dragon Isles Supplies
+    }
+})
 
 -------------------------------------------------------------------------------
 --------------------------------- DRAGONRACES ---------------------------------
@@ -943,47 +1074,64 @@ ns.node.ElementalChest = ElementalChest
 ------------------------------- INTERVAL RARES --------------------------------
 -------------------------------------------------------------------------------
 
-local function nextSpawn(self)
+local function nextSpawn(self, timeYellow, timeGreen)
     local region = GetCurrentRegion() -- https://wowpedia.fandom.com/wiki/API_GetCurrentRegion
     local initial = self.initialSpawn
+    local CurrentTime = GetServerTime()
 
-    local start = initial.us + self.rotationID * self.spawnOffset
-
-    if region == 3 and initial.eu then
-        start = initial.eu + self.rotationID * self.spawnOffset
+    local SpawnTime = self.rotationID * self.spawnOffset
+    if region == 2 and initial.kr then
+        SpawnTime = SpawnTime + initial.kr
+    elseif region == 3 and initial.eu then
+        SpawnTime = SpawnTime + initial.eu
+    elseif region == 4 and initial.tw then
+        SpawnTime = SpawnTime + initial.tw
+    else
+        SpawnTime = SpawnTime + initial.us
     end
 
-    if region == 4 and initial.tw then
-        start = initial.tw + self.rotationID * self.spawnOffset
+    local NextSpawn = SpawnTime +
+                          math.ceil(
+            (CurrentTime - SpawnTime) / self.spawnInterval) * self.spawnInterval
+    local TimeLeft = NextSpawn - CurrentTime
+    local SpawnsIn = TimeLeft <= 60 and L['now'] or
+                         SecondsToTime(TimeLeft, true, true)
+
+    if timeYellow and timeGreen then
+        local color = ns.color.Orange
+        if TimeLeft < timeYellow then color = ns.color.Yellow end
+        if TimeLeft < timeGreen then color = ns.color.Green end
+        SpawnsIn = color(SpawnsIn)
     end
 
-    local elapsedTime = GetServerTime() - start
-    return start + math.ceil(elapsedTime / self.spawnInterval) *
-               self.spawnInterval
+    local TimeFormat =
+        ns:GetOpt('use_standard_time') and L['time_format_12hrs'] or
+            L['time_format_24hrs']
+    return format('%s (%s)', SpawnsIn, date(TimeFormat, NextSpawn))
 end
 
 ---------------------------------- 14 HOURS -----------------------------------
 
 local Rare14h = Class('Rare14h', Rare, {
-    initialSpawn = {eu = 1676237400, us = 1676205000, tw = 1675701000}, -- initial spawn time of the first rare to calculate other rares
+    initialSpawn = {eu = 1676237400, us = 1677335400, tw = 1675701000}, -- initial spawn time of the first rare to calculate other rares
     spawnOffset = 1800, -- time between rares
     spawnInterval = 50400 -- inverval of a single rare
 })
 
 function Rare14h.getters:note()
-    local note = format(L['rare_14h'], date(L['time_format'], nextSpawn(self)))
+    local note = format(L['rare_14h'], nextSpawn(self, 14400, 1800))
     if self.cave then note = note .. '\n\n' .. L['in_cave'] end
     return note
 end
 
 local RareElite14h = Class('RareElite14h', RareElite, {
-    initialSpawn = {eu = 1676237400, us = 1676205000, tw = 1675701000},
+    initialSpawn = {eu = 1676237400, us = 1677335400, tw = 1675701000},
     spawnOffset = 1800,
     spawnInterval = 50400
 })
 
 function RareElite14h.getters:note()
-    local note = format(L['rare_14h'], date(L['time_format'], nextSpawn(self)))
+    local note = format(L['rare_14h'], nextSpawn(self, 14400, 1800))
     if self.cave then note = note .. '\n\n' .. L['in_cave'] end
     return note
 end
@@ -991,18 +1139,13 @@ end
 --------------------------------- BRACKENHIDE ---------------------------------
 
 local Brackenhide = Class('Brackenhide', Rare, {
-    initialSpawn = {
-        us = 1672531800, -- review
-        eu = 1672531200,
-        tw = 1677162000
-    },
+    initialSpawn = {us = 1672531800, eu = 1672531200, tw = 1677162000},
     spawnOffset = 600,
     spawnInterval = 2400
 })
 
 function Brackenhide.getters:note()
-    return format(L['brackenhide_rare_note'],
-        date(L['time_format'], nextSpawn(self)))
+    return format(L['brackenhide_rare_note'], nextSpawn(self, 1200, 600))
 end
 
 ------------------------------------ FEAST ------------------------------------
@@ -1015,13 +1158,26 @@ local Feast = Class('Feast', Rare, {
 })
 
 function Feast.getters:note()
-    return format(L['bisquis_note'], date(L['time_format'], nextSpawn(self)))
+    return format(L['bisquis_note'], nextSpawn(self, 3600, 600))
+end
+
+----------------------------- THE OHN'AHRAN TRAIL -----------------------------
+
+local AylaagCamp = Class('AylaagCamp', Collectible, {
+    initialSpawn = {us = 1677456000, eu = 1677502800, tw = 1677571200},
+    spawnOffset = 270000,
+    spawnInterval = 810000
+})
+
+function AylaagCamp.getters:note()
+    return format(L['aylaag_camp_note'], nextSpawn(self, 7200, 1800))
 end
 
 ns.node.Rare14h = Rare14h
 ns.node.RareElite14h = RareElite14h
 ns.node.Brackenhide = Brackenhide
 ns.node.Feast = Feast
+ns.node.AylaagCamp = AylaagCamp
 
 -------------------------------------------------------------------------------
 ------------------------------ ELEMENTAL STORMS -------------------------------
@@ -1181,14 +1337,27 @@ local ELEMENTAL_STORM_PET_REWARDS = {
 }
 
 local ELEMENTAL_STORM_FORMULA_REWARDS = {
-    ['all'] = Item({item = 194641}), -- Design: Elemental Lariat
-    ['thunderstorm'] = Item({
+    ['all'] = Recipe({item = 194641, profession = 755}), -- Design: Elemental Lariat
+    ['thunderstorm'] = Recipe({
         item = 200911,
+        profession = 333,
         note = L['elemental_storm_thunderstorm']
     }), -- Formula: Illusion: Primal Air
-    ['sandstorm'] = Item({item = 200912, note = L['elemental_storm_sandstorm']}), -- Formula: Illusion: Primal Earth
-    ['firestorm'] = Item({item = 200913, note = L['elemental_storm_firestorm']}), -- Formula: Illusion: Primal Fire
-    ['snowstorm'] = Item({item = 200914, note = L['elemental_storm_snowstorm']}) -- Formula: Illusion: Primal Frost
+    ['sandstorm'] = Recipe({
+        item = 200912,
+        profession = 333,
+        note = L['elemental_storm_sandstorm']
+    }), -- Formula: Illusion: Primal Earth
+    ['firestorm'] = Recipe({
+        item = 200913,
+        profession = 333,
+        note = L['elemental_storm_firestorm']
+    }), -- Formula: Illusion: Primal Fire
+    ['snowstorm'] = Recipe({
+        item = 200914,
+        profession = 333,
+        note = L['elemental_storm_snowstorm']
+    }) -- Formula: Illusion: Primal Frost
 }
 
 local ElementalStorm = Class('ElementalStorm', Collectible, {

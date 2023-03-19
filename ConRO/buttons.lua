@@ -2897,6 +2897,9 @@ local swapSpells = {
 	VoidBolt = 205448,
 	MindFlayInsanity = 391403,
 	DarkReprimand = 400169,
+	ShrapnelBomb = 270335,
+	VolatileBomb = 271045,
+	PheronomeBomb = 270323,
 }
 
 ConROSwapSpells = ConROSwapSpells or swapSpells;

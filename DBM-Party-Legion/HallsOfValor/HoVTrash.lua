@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("HoVTrash", "DBM-Party-Legion", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230308052229")
+mod:SetRevision("20230312071337")
 --mod:SetModelID(47785)
 mod:SetZone(1477)
 
@@ -153,7 +153,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnSearingLight:Play("kickcast")
 		end
 		--On fly correct santify which is delayed by the forced ICD of Searing Light casts
-		if timerSanctifyCD:GetRemaining() < 6 then
+		if (timerSanctifyCD:GetRemaining() > 0) and (timerSanctifyCD:GetRemaining() < 6) then
 			local elapsed, total = timerSanctifyCD:GetTime()
 			local extend = 6 - (total-elapsed)
 			DBM:Debug("timerSanctifyCD extended by: "..extend, 2)

@@ -457,9 +457,11 @@ local ConRO_Druid, ids = ...;
 		BristlingFur = {spellID = 155835, talentID = 103230},
 		ConvoketheSpirits = {spellID = 391528, talentID = 103200},
 		IncarnationGuardianofUrsoc = {spellID = 102558, talentID = 103201},
+		LunarBeam = {spellID = 204066, talentID = 114700},
 		Maul = {spellID = 6807, talentID = 103191},
 		Pulverize = {spellID = 80313, talentID = 103222},
 		RageoftheSleeper = {spellID = 200851, talentID = 103207},
+		Raze = {spellID = 400254, talentID = 114701},
 		SurvivalInstincts = {spellID = 61336, talentID = 236169},
 	}
 	ids.Guard_Passive = {
@@ -557,9 +559,9 @@ local ConRO_Druid, ids = ...;
 		Moonfire = 164812,
 	}
 	ids.Guard_PetAbility = {
-	
+
 	}
-	
+
 --Restoration
 	ids.Resto_Ability = {
 	--Druid
@@ -586,7 +588,7 @@ local ConRO_Druid, ids = ...;
 		MassEntanglement = {spellID = 102359, talentID = 103322},
 		MightyBash = {spellID = 5211, talentID = 103315},
 		Moonfire = {spellID = 8921},
-		MoonkinForm = {spellID = 24858, talentID = 103290},	
+		MoonkinForm = {spellID = 197625, talentID = 103290},
 		MountForm = {spellID = 210053},
 		NaturesVigil = {spellID = 124974, talentID = 103324},
 		Prowl = {spellID = 5215},
@@ -702,10 +704,9 @@ local ConRO_Druid, ids = ...;
 		VerdantInfusion = {spellID = 392410, talentID = 103137},
 		WakingDream = {spellID = 382221, talentID = 103097},
 		YserasGift = {spellID = 145108, talentID = 103099},
-		
 	}
 	ids.Resto_PvPTalent = {
-		
+
 	}
 	ids.Resto_Form = {
 		BearForm = 5487,
@@ -715,7 +716,7 @@ local ConRO_Druid, ids = ...;
 	}
 	ids.Resto_Buff = {
 		EclipseLunar = 48518,
-		EclipseSolar = 48517,		
+		EclipseSolar = 48517,
 		Ironfur = 192081,
 		Regrowth = 8936,
 		Lifebloom =	33763,
@@ -725,5 +726,5 @@ local ConRO_Druid, ids = ...;
 		Sunfire = 164815,
 	}
 	ids.Resto_PetAbility = {
-	
+
 	}

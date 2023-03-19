@@ -1,11 +1,10 @@
-lightweight tag 40698c6e064202678a981cf48e228195afba9c0a v10.0.30
+lightweight tag 2f3ed8c42991e0581c4a34c5055de7dbffad2bf0 v10.0.32
 Author:	Vae <emuha17@gmail.com>
-Date:	Sat Mar 11 01:10:01 2023 -1000
+Date:	Sat Mar 18 22:39:41 2023 -1000
 
-commit 40698c6e064202678a981cf48e228195afba9c0a
+commit 2f3ed8c42991e0581c4a34c5055de7dbffad2bf0
 Author: Vae <emuha17@gmail.com>
-Date:   Sat Mar 11 01:10:01 2023 -1000
+Date:   Sat Mar 18 22:39:41 2023 -1000
 
-    Updated Talent scan code.
-    Added function  to scan auras of targets near you.
+    Added some survival hunter spell ignores.
 

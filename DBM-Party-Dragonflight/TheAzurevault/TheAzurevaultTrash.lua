@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("TheAzurevaultTrash", "DBM-Party-Dragonflight", 6)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230304022551")
+mod:SetRevision("20230314022917")
 --mod:SetModelID(47785)
 mod:SetZone(2515)
 
@@ -10,7 +10,7 @@ mod.isTrashMod = true
 mod:RegisterEvents(
 	"SPELL_CAST_START 391136 370764 386526 387564 377105 370766 386546 387067 377488 396991",
 	"SPELL_CAST_SUCCESS 374885 371358 375652 375596 391136",
-	"SPELL_AURA_APPLIED 371007 395492 375596",
+	"SPELL_AURA_APPLIED 371007 395492 375596 374778",
 --	"SPELL_AURA_APPLIED_DOSE 339528",
 --	"SPELL_AURA_REMOVED 339525",
 	"UNIT_DIED",
@@ -36,13 +36,14 @@ local specWarnNullStomp						= mod:NewSpecialWarningDodge(386526, false, nil, 2,
 local specWarnShoulderSlam					= mod:NewSpecialWarningDodge(391136, false, nil, nil, 2, 2)
 local specWarnCrystallineRupture			= mod:NewSpecialWarningDodge(370766, nil, nil, nil, 2, 2)
 local specWarnWildEruption					= mod:NewSpecialWarningDodge(375652, nil, nil, nil, 2, 2)
-local specWarnArcaneBash					= mod:NewSpecialWarningDefensive(387067, nil, nil, nil, 1, 2)
+local specWarnArcaneBash					= mod:NewSpecialWarningDodge(387067, nil, nil, nil, 2, 2)
 local specWarnSplinteringShards				= mod:NewSpecialWarningMoveAway(371007, nil, nil, nil, 1, 2)
 local yellSplinteringShards					= mod:NewYell(371007)
 local yellErraticGrowth						= mod:NewYell(375596)
 local specWarnIcyBindings					= mod:NewSpecialWarningInterrupt(377488, "HasInterrupt", nil, nil, 1, 2)
 local specWarnMysticVapors					= mod:NewSpecialWarningInterrupt(387564, "HasInterrupt", nil, nil, 1, 2)
 local specWarnWakingBane					= mod:NewSpecialWarningInterrupt(386546, "HasInterrupt", nil, nil, 1, 2)
+local specWarnBrilliantScales				= mod:NewSpecialWarningDispel(374778, "MagicDispeller", nil, nil, 1, 2)
 
 local timerIcyBindingsCD					= mod:NewCDTimer(17.1, 377488, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerWakingBaneCD						= mod:NewCDTimer(20.5, 386546, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
@@ -107,7 +108,7 @@ function mod:SPELL_CAST_START(args)
 		timerArcaneBashCD:Start(18.2, args.sourceGUID)
 		if self:IsTanking("player", nil, nil, true, args.sourceGUID) and self:AntiSpam(3, 5) then
 			specWarnArcaneBash:Show()
-			specWarnArcaneBash:Play("carefly")
+			specWarnArcaneBash:Play("shockwave")
 		end
 	end
 end
@@ -147,6 +148,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			yellErraticGrowth:Yell()
 		end
+	elseif spellId == 374778 and not args:IsDestTypePlayer() and self:AntiSpam(3, 5) then
+		specWarnBrilliantScales:Show(args.destName)
+		specWarnBrilliantScales:Play("helpdispel")
 	end
 end
 --mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED

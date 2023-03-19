@@ -52,6 +52,7 @@ L['options_icons_scout_pack_desc'] = 'Afficher les emplacements possibles des {o
 L['magicbound_chest'] = 'Coffre lié par magie'
 L['options_icons_magicbound_chest'] = 'Coffres lié par magie'
 L['options_icons_magicbound_chest_desc'] = 'Afficher les emplacements possibles des {object:Coffres liés par magie}.'
+L['ice_bound_chest'] = 'Coffre cerclé de glace'
 
 L['tuskarr_tacklebox'] = 'Boîte d\'appâts de pêche roharts'
 L['options_icons_tuskarr_tacklebox'] = 'Boîtes d\'appâts de pêche roharts'
@@ -91,8 +92,10 @@ L['signal_transmitter_note'] = '{note:Requiert 10 points dans Esprit mécanique\
 L['options_icons_signal_transmitter'] = 'Transmetteurs de signaux du Générateur de trou de wyrm'
 L['options_icons_signal_transmitter_desc'] = 'Afficher les emplacements des {object:Transmetteurs de signaux désactivés} pour le {item:198156}.'
 
-L['rare_14h'] = 'Ce rare fait partie d\'une rotation de 14 heures avec les autres rares, un rare apparaissant toutes les 30 minutes.\n\nProchaine apparition possible : {note:%s} (heure du serveur)'
-L['time_format'] = '%H:%M - %d/%m/%Y'
+L['rare_14h'] = 'Ce rare fait partie d\'une rotation de 14 heures avec les autres rares, avec un rare apparaissant toutes les 30 minutes.\n\nProchaine apparition: {note:%s}'
+L['time_format_12hrs'] = '%I:%M %p - %d/%m heure locale'
+L['time_format_24hrs'] = '%H:%M - %d/%m heure locale'
+L['now'] = 'Maintenant'
 L['spawns_at_night'] = '{note:Apparaît uniquement la nuit. (Après 18:30, heure du serveur)}'
 
 L['elemental_storm'] = 'Tempête élémentaire'
@@ -133,13 +136,29 @@ L['the_best_at_what_i_do_suffix'] = 'boss tués'
 L['options_icons_grand_hunts'] = 'Grandes Chasses'
 L['options_icons_grand_hunts_desc'] = 'Afficher les emplacements et les récompenses pour les {object:Grandes Chasses}.'
 
+L['reed_chest'] = 'Coffre en roseau'
+L['options_icons_reed_chest'] = 'Coffre en roseau'
+L['options_icons_reed_chest_desc'] = 'Afficher les emplacements possibles des {object:Coffres en roseau}.'
+
+L['dracthyr_supply_chest'] = 'Coffre de fournitures dracthyr'
+L['options_icons_dracthyr_supply_chest'] = 'Coffre de fournitures dracthyr'
+L['options_icons_dracthyr_supply_chest_desc'] = 'Afficher les emplacements possibles des {object:Coffres de fournitures dracthyr}.'
+
+L['simmering_chest'] = 'Coffre ardent'
+L['options_icons_simmering_chest'] = 'Coffre ardent'
+L['options_icons_simmering_chest_desc'] = 'Afficher les emplacements possibles des {object:Coffres ardents}.'
+
+L['frostbound_chest'] = 'Coffre lié par le givre'
+L['options_icons_frostbound_chest'] = 'Coffre lié par le givre'
+L['options_icons_frostbound_chest_desc'] = 'Afficher les emplacements possibles des {object:Coffres liés par le givre}.'
+
 -------------------------------------------------------------------------------
 ------------------------------- THE AZURE SPAN --------------------------------
 -------------------------------------------------------------------------------
 
-L['bisquis_note'] = 'Cuisiner une soupe légendaire au festin tribal {location:d’Iskaara}, puis vaincre {npc:197557}.\n\nProchain festin : {note:%s} (heure du serveur)'
+L['bisquis_note'] = 'Cuisiner une soupe légendaire au festin tribal {location:d’Iskaara}, puis vaincre {npc:197557}.\n\nProchain festin : {note:%s}'
 L['blightfur_note'] = 'Parlez à {npc:193633} pour invoquer le rare.'
-L['brackenhide_rare_note'] = 'Ces rares apparaissent selon une rotation fixe comme suit : {npc:197344} > {npc:197353} > {npc:197354} > {npc:197356} avec un intervalle de 10 minutes entre chacun.\n\nProchaine apparition possible : {note:%s} (heure du serveur)'
+L['brackenhide_rare_note'] = 'Ces rares apparaissent selon une rotation fixe comme suit : {npc:197344} > {npc:197353} > {npc:197354} > {npc:197356} avec un intervalle de 10 minutes entre chacun.\n\nProchaine apparition possible : {note:%s}'
 L['fisherman_tinnak_note'] = 'Récupérez la {object:Canne à pêche cassée}, le {object:Filet de pêche déchiré} et le {object:Vieux harpon} pour faire apparaître le rare.'
 L['frostpaw_note'] = 'Après avoir pris le {object:Marteau en bois}, vous avez 20 secondes pour frapper le {object:Jeu du Gnoll} sur la {object:Souche d\'arbre}, et faire apparaître le rare.'
 L['sharpfang_note'] = 'Aidez {npc:192747} à vaincre les {npc:192748s} pour faire apparaître le rare.'
@@ -229,6 +248,14 @@ L['options_icons_tuskarr_chest_desc'] = 'Afficher les emplacements possibles des
 L['community_feast_label'] = '{spell:388961}'
 L['options_icons_community_feast'] = '{spell:388961}'
 L['options_icons_community_feast_desc'] = 'Afficher les emplacements et les récompenses pour le {spell:388961}.'
+
+L['decay_covered_chest'] = 'Coffre couvert de putréfaction'
+L['options_icons_decay_covered_chest'] = 'Coffre couvert de putréfaction'
+L['options_icons_decay_covered_chest_desc'] = 'Afficher les emplacements possibles des {object:Coffres couverts de putréfaction}.'
+
+L['icemaw_storage_cache'] = 'Cache glacegueule'
+L['options_icons_icemaw_storage_cache'] = 'Cache glacegueule'
+L['options_icons_icemaw_storage_cache_desc'] = 'Afficher les emplacements possibles des {object:Caches glacegueules}.'
 
 -------------------------------------------------------------------------------
 ------------------------------- FORBIDDEN REACH -------------------------------
@@ -333,11 +360,17 @@ L['options_icons_nokhud_do_it_desc'] = 'Afficher des informations utiles pour ob
 
 L['chest_of_the_flood'] = 'Coffre du déluge'
 
-L['aylaag_camp_note'] = 'Le {faction:Clan des Aylaags} se déplace vers un autre campement tous les 3 jours et 3 heures (75), suivez-les et défendez-les sur leur chemin.'
+L['aylaag_camp_note'] = 'Le {faction:Clan des Aylaags} se déplace vers un autre campement tous les 3 jours et 3 heures (75 heures), suivez-les et défendez-les sur leur chemin.\n\nProchain déplacement : {note:%s}'
 
 L['clan_chest'] = 'Coffre clanique'
 L['options_icons_clan_chest'] = 'Coffres claniques'
 L['options_icons_clan_chest_desc'] = 'Afficher les emplacements possibles des {object:Coffres claniques}.'
+
+L['lightning_bound_chest'] = 'Coffre lié par la foudre'
+L['options_icons_lightning_bound_chest'] = 'Coffre lié par la foudre'
+L['options_icons_lightning_bound_chest_desc'] = 'Afficher les emplacements possibles des {object:Coffres liés par la foudre}.'
+
+L['bloodgullet_note'] = 'Obtenez le buff {spell:369277} (1 heure) dans une tente à l\'{location:Avant-poste de Pas-de-bois} à partir de l\'{object:Essence de l’éveil} pour voir cet Esprit de bête.\n\n{note:N\'apparaît que pour les Chasseurs Maîtrise des bêtes.}'
 
 -------------------------------------------------------------------------------
 --------------------------------- THALDRASZUS ---------------------------------
@@ -360,7 +393,7 @@ L['tasty_hatchling_treat_note'] = 'Dans un tonneau derrière l\'étagère.'
 L['pm_mining_bridgette_holdug'] = 'Au sommet d\'un pilier de roche couvert d\'herbe.'
 L['pm_tailor_elysa_raywinder'] = 'Sur une corniche à mi-hauteur de la tour.'
 L['pt_alch_contraband_concoction_note'] = 'Caché dans les buissons. {note:Difficile à voir}.'
-L['pt_alch_tasty_candy_note'] = 'Jetez un {object:Jouet abandonné} proche dans chaque chaudron puis tuez le monstre qui apparaît.'
+L['pt_alch_tasty_candy_note'] = 'Jetez un {object:Jouet abandonné} proche dans chaque chaudron.'
 L['pt_ench_fractured_titanic_sphere_note'] = 'Au sud du {location:Bastion de Tyr}.'
 L['pt_jewel_alexstraszite_cluster_note'] = 'Au {location:Bastion de Tyr}.'
 L['pt_jewel_painters_pretty_jewel_note'] = 'A l\'intérieur d\'une lanterne.'
@@ -400,6 +433,10 @@ L['hoard_of_draconic_delicacies_note_end'] = 'Une fois toutes les quêtes termin
 L['brendormi_note_start'] = 'Échangez vos {item:202039} et {currency:2118} contre de l\'équipement, une mascotte, un jouet et une monture.'
 L['brendormi_note_item'] = 'Vous avez actuellement %s {item:202039}.'
 L['brendormi_note_currency'] = 'Vous avez actuellement %s {currency:2118}.'
+
+L['titan_chest'] = 'Coffre des Titans'
+L['options_icons_titan_chest'] = 'Coffre des Titans'
+L['options_icons_titan_chest_desc'] = 'Afficher les emplacements possibles des {object:Coffres des Titans}.'
 
 -------------------------------------------------------------------------------
 ------------------------------ THE WAKING SHORE -------------------------------

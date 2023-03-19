@@ -138,7 +138,7 @@ local ConRO_Shaman, ids = ...;
 		FlowofPower = {spellID = 385923, talentID = 101871},
 		FluxMelting = {spellID = 381776, talentID = 101869},
 		FurtherBeyond = {spellID = 381787, talentID = 101875},
-		ImprovedFlametongue = {spellID = 382027, talentID = 101886},
+		ImprovedFlametongueWeapon = {spellID = 382027, talentID = 101886},
 		Inundate = {spellID = 378776, talentID = 101856},
 		LavaSurge = {spellID = 77756, talentID = 101846},
 		LightningRod = {spellID = 210689, talentID = 101864},
@@ -177,6 +177,7 @@ local ConRO_Shaman, ids = ...;
 		},
 		EchoesofGreatSundering = 384088,
 		FluxMelting = 381777,
+		ImprovedFlametongueWeapon = 382028,
 		Icefury = 210714,
 		LavaSurge = 77762,
 		LightningShield = 192106,
@@ -334,6 +335,8 @@ local ConRO_Shaman, ids = ...;
 		Ascendance = 114051,
 		AshenCatalyst = 390371,
 		CrashLightning = 187878,
+		ChainCrashLightning = 333964,
+		DoomWinds = 384352,
 		EarthShield = 974,
 		ElementalSpirits = {
 			CracklingSurge = 224127,
@@ -346,7 +349,6 @@ local ConRO_Shaman, ids = ...;
 		GatheringStorms = 198300,
 		Hailstorm = 334196,
 		HotHand = 215785,
-		LashingFlames = 334168,
 		LightningShield = 192106,
 		MaelstromWeapon = 344179,
 		Stormbringer = 201846,
@@ -356,6 +358,7 @@ local ConRO_Shaman, ids = ...;
 	ids.Enh_Debuff = {
 		EarthenSpike = 188089,
 		FlameShock = 188389,
+		LashingFlames = 334168,
 	}
 	ids.Enh_PetAbility = {
 

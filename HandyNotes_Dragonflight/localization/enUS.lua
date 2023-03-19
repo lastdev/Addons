@@ -51,6 +51,7 @@ L['options_icons_scout_pack_desc'] = 'Display possible locations of {object:Expe
 L['magicbound_chest'] = 'Magic-Bound Chest'
 L['options_icons_magicbound_chest'] = 'Magic-Bound Chests'
 L['options_icons_magicbound_chest_desc'] = 'Display possible locations of {object:Magic-Bound Chests}.'
+L['ice_bound_chest'] = 'Ice Bound Chest'
 
 L['tuskarr_tacklebox'] = 'Tuskarr Tacklebox'
 L['options_icons_tuskarr_tacklebox'] = 'Tuskarr Tackleboxes'
@@ -90,8 +91,10 @@ L['signal_transmitter_note'] = '{note:Requires 10 points in Mechanical Mind\nReq
 L['options_icons_signal_transmitter'] = 'Wyrmhole Generator Signal Transmitters'
 L['options_icons_signal_transmitter_desc'] = 'Display {object:Deactivated Signal Transmitters} locations for the {item:198156}.'
 
-L['rare_14h'] = 'The rare is on a 14 hour rotation with other rares, one rare can spawning every 30 minutes.\n\nNext possible spawn: {note:%s} (server time)'
-L['time_format'] = '%H:%M - %m/%d/%Y'
+L['rare_14h'] = 'This rare is on a 14 hour rotation with other rares with one rare spawning every 30 minutes.\n\nNext spawn in: {note:%s}'
+L['time_format_12hrs'] = '%B %d - %I:%M %p local time'
+L['time_format_24hrs'] = '%B %d - %H:%M local time'
+L['now'] = 'Now'
 L['spawns_at_night'] = '{note:Spawns only at night. (After 18:30 server time)}'
 
 L['elemental_storm'] = 'Elemental Storm'
@@ -132,13 +135,29 @@ L['the_best_at_what_i_do_suffix'] = 'bosses killed'
 L['options_icons_grand_hunts'] = 'Grand Hunts'
 L['options_icons_grand_hunts_desc'] = 'Display locations and rewards for {object:Grand Hunts}.'
 
+L['reed_chest'] = 'Reed Chest'
+L['options_icons_reed_chest'] = 'Reed Chest'
+L['options_icons_reed_chest_desc'] = 'Display possible locations of {object:Reed Chests}.'
+
+L['dracthyr_supply_chest'] = 'Dracthyr Supply Chest'
+L['options_icons_dracthyr_supply_chest'] = 'Dracthyr Supply Chest'
+L['options_icons_dracthyr_supply_chest_desc'] = 'Display possible locations of {object:Dracthyr Supply Chests}.'
+
+L['simmering_chest'] = 'Simmering Chest'
+L['options_icons_simmering_chest'] = 'Simmering Chest'
+L['options_icons_simmering_chest_desc'] = 'Display possible locations of {object:Simmering Chests}.'
+
+L['frostbound_chest'] = 'Frostbound Chest'
+L['options_icons_frostbound_chest'] = 'Frostbound Chest'
+L['options_icons_frostbound_chest_desc'] = 'Display possible locations of {object:Frostbound Chests}.'
+
 -------------------------------------------------------------------------------
 ------------------------------- THE AZURE SPAN --------------------------------
 -------------------------------------------------------------------------------
 
-L['bisquis_note'] = 'Cook Legendary soup at the Community Feast in {location:Iskaara}, then defeat {npc:197557}.\n\nNext Feast: {note:%s} (server time)'
+L['bisquis_note'] = 'Cook Legendary soup at the Community Feast in {location:Iskaara}, then defeat {npc:197557}.\n\nNext Feast: {note:%s}'
 L['blightfur_note'] = 'Talk to {npc:193633} to summon the rare.'
-L['brackenhide_rare_note'] = 'These rares spawn in a set rotation of {npc:197344} > {npc:197353} > {npc:197354} > {npc:197356} on a 10 minute timer.\n\nNext possible spawn: {note:%s} (server time)'
+L['brackenhide_rare_note'] = 'These rares spawn in a set rotation of {npc:197344} > {npc:197353} > {npc:197354} > {npc:197356} on a 10 minute timer.\n\nNext possible spawn: {note:%s}'
 L['fisherman_tinnak_note'] = 'Collect {object:Broken Fishing Pole}, {object:Torn Fishing Net} and {object:Old Harpoon} to spawn the rare.'
 L['frostpaw_note'] = 'After taking the {object:Wooden Hammer}, you have 20 seconds to hit the {object:Whack a Gnoll} on the {object:Tree Stump}, and spawn the rare.'
 L['sharpfang_note'] = 'Help {npc:192747} defeat {npc:192748s} to spawn the rare.'
@@ -229,6 +248,14 @@ L['community_feast_label'] = 'Community Feast'
 L['options_icons_community_feast'] = 'Community Feast'
 L['options_icons_community_feast_desc'] = 'Display location and rewards for the Community Feast.'
 
+L['decay_covered_chest'] = 'Decay Covered Chest'
+L['options_icons_decay_covered_chest'] = 'Decay Covered Chest'
+L['options_icons_decay_covered_chest_desc'] = 'Display possible locations of {object:Decay Covered Chests}.'
+
+L['icemaw_storage_cache'] = 'Icemaw Storage Cache'
+L['options_icons_icemaw_storage_cache'] = 'Icemaw Storage Cache'
+L['options_icons_icemaw_storage_cache_desc'] = 'Display possible locations of {object:Icemaw Storage Caches}.'
+
 -------------------------------------------------------------------------------
 ------------------------------- FORBIDDEN REACH -------------------------------
 -------------------------------------------------------------------------------
@@ -247,7 +274,7 @@ L['mysterious_wand_note'] = 'Pick up the {object:Crystal Key} and place it into 
 
 L['eaglemaster_niraak_note'] = 'Kill nearby {npc:186295s} and {npc:186299s} to spawn the rare.'
 L['hunter_of_the_deep_note'] = 'Click on the weapon rack and shoot fish until the rare spawns.'
-L['porta_the_overgrown_note'] = 'Find 5x {item:194426} at the bottom of the lake to the west, then spread the soil at {npc:191953} to spawn the rare.'
+L['porta_the_overgrown_note'] = 'Find 5x {item:194426} at the bottom of the {location:Mirror of the Sky} on the west, then spread the soil at {npc:191953} to spawn the rare.'
 L['scaleseeker_mezeri_note'] = 'Offer {item:194681} to {npc:193224} and follow her until she reveals the rare.\n\n{note:{npc:190315} at {location:Three-Falls Lookout} in {location:The Azure Span} is the nearest vendor.}'
 L['shade_of_grief_note'] = 'Click the {npc:193166} to spawn the rare.'
 L['windscale_the_stormborn_note'] = 'Kill the {npc:192367s} channeling into the {npc:192357}.'
@@ -323,7 +350,7 @@ L['hunt_instructor_basku_note'] = 'Exchange {item:200093} for {faction:2503} rep
 L['elder_yusa_note'] = 'Target {npc:192818} and {emote:/hungry} to obtain the cooking recipe.'
 L['initiate_kittileg_note'] = 'Complete {quest:66226} to obtain the toy!'
 
-L['quackers_duck_trap_kit'] = 'To summon {npc:192557} you first need the {item:194740} which you can find in a nearby {faction:Clan Aylaag} camp.{dot:Blue}\n\nTo make a {item:194712} you need the following materials:'
+L['quackers_duck_trap_kit'] = 'To summon {npc:192557} you first need the {item:194740} which you can find in a nearby Clan Aylaag camp.{dot:Blue}\n\nTo make a {item:194712} you need the following materials:'
 L['quackers_spawn'] = 'Next you need to catch a duck near the nest with the {item:194712}. Use the {item:194739} at the {npc:192581} to summon {npc:192557}.'
 
 L['knew_you_nokhud_do_it_note'] = '{note:All 3 items are unique and have a 30 minute timer.}\n\nCollect {item:200184}, {item:200194}, and {item:200196} from various {npc:185357s}, {npc:185353s}, and {npc:185168s} around {location:Nokhudon Hold}.\n\nCombine them to create {item:200201} and use it to speak with {npc:197884} to begin the training course.\n\nUse your |cFFFFFD00Extra Action Button|r to complete it and earn your achievement.\n\n{note:Completing the achievement while in a raid during an Elemental Storm makes farming the items much easier.}'
@@ -332,11 +359,17 @@ L['options_icons_nokhud_do_it_desc'] = 'Display helpful information for completi
 
 L['chest_of_the_flood'] = 'Chest of the Flood'
 
-L['aylaag_camp_note'] = '{faction:Clan Aylaag} moves on to another camp every 3 days and 3 hours (75), follow them and defend them on their way.'
+L['aylaag_camp_note'] = '{faction:Clan Aylaag} moves on to another camp every 3 days and 3 hours (75 hours), follow them and defend them on their way.\n\nNext move: {note:%s}'
 
 L['clan_chest'] = 'Clan Chest'
 L['options_icons_clan_chest'] = 'Clan Chests'
 L['options_icons_clan_chest_desc'] = 'Display possible locations of {object:Clan Chests}.'
+
+L['lightning_bound_chest'] = 'Lightning Bound Chest'
+L['options_icons_lightning_bound_chest'] = 'Lightning Bound Chest'
+L['options_icons_lightning_bound_chest_desc'] = 'Display possible locations of {object:Lightning Bound Chests}.'
+
+L['bloodgullet_note'] = 'Get the {spell:369277} buff (1 hour) in a tent at the {location:Timberstep Outpost} from {object:Essence of Awakening} to see this Spirit Beast.\n\n{note:Only appears to Beast Mastery Hunters.}'
 
 -------------------------------------------------------------------------------
 --------------------------------- THALDRASZUS ---------------------------------
@@ -359,7 +392,7 @@ L['tasty_hatchling_treat_note'] = 'In a barrel behind the bookshelf.'
 L['pm_mining_bridgette_holdug'] = 'On top of a grassy rock pillar.'
 L['pm_tailor_elysa_raywinder'] = 'On a ledge halfway up the tower.'
 L['pt_alch_contraband_concoction_note'] = 'Hidden in bushes. {note:Difficult to see}.'
-L['pt_alch_tasty_candy_note'] = 'Drop a nearby {object:Discarded Toy} into each cauldron then kill the monster that spawns.'
+L['pt_alch_tasty_candy_note'] = 'Drop a nearby {object:Discarded Toy} into each cauldron.'
 L['pt_ench_fractured_titanic_sphere_note'] = 'South of {location:Tyrhold}.'
 L['pt_jewel_alexstraszite_cluster_note'] = 'In {location:Tyrhold}.'
 L['pt_jewel_painters_pretty_jewel_note'] = 'Inside a lantern.'
@@ -399,6 +432,10 @@ L['hoard_of_draconic_delicacies_note_end'] = 'After all quests have been complet
 L['brendormi_note_start'] = 'Exchange {item:202039} and {currency:2118} for gear, a pet, a toy, and a mount.'
 L['brendormi_note_item'] = 'You currently have %s {item:202039}.'
 L['brendormi_note_currency'] = 'You currently have %s {currency:2118}.'
+
+L['titan_chest'] = 'Titan Chest'
+L['options_icons_titan_chest'] = 'Titan Chest'
+L['options_icons_titan_chest_desc'] = 'Display possible locations of {object:TuskarrTackleboxes}.'
 
 -------------------------------------------------------------------------------
 ------------------------------ THE WAKING SHORE -------------------------------

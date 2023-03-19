@@ -51,6 +51,7 @@ L['options_icons_scout_pack_desc'] = 'Zeigt die möglichen Positionen für {obje
 L['magicbound_chest'] = 'Magiegebundene Truhe'
 L['options_icons_magicbound_chest'] = 'Magiegebundene Truhen'
 L['options_icons_magicbound_chest_desc'] = 'Zeigt die möglichen Positionen für {object:Magiegebundene Truhe} an.'
+L['ice_bound_chest'] = 'Eisgebundene Truhe'
 
 L['tuskarr_tacklebox'] = 'Angelzubehör der Tuskarr'
 L['options_icons_tuskarr_tacklebox'] = 'Angelzubehör der Tuskarr'
@@ -90,8 +91,10 @@ L['signal_transmitter_note'] = ns.color.Orange('Benötigt 10 Punkte in Mechanisc
 L['options_icons_signal_transmitter'] = 'Wyrmlochgenerator Signaltransmitters'
 L['options_icons_signal_transmitter_desc'] = 'Zeigt die Positionen der {object:Deaktivierten Signaltransmitter} für {item:198156} an.'
 
-L['rare_14h'] = 'Dieser Gegner befindet sich in einem 14 Stunden Interval mit anderen Gegnern, wobei alle 30 Minuten einer dieser Gegner erscheinen kann.\n\nNächstes mögliches erscheinen: {note:%s} (Server Zeit)'
-L['time_format'] = '%H:%M - %d.%m.%Y'
+L['rare_14h'] = 'Dieser Gegner befindet sich in einem 14 Stunden Interval mit anderen Gegnern, wobei alle 30 Minuten einer dieser Gegner erscheinen kann.\n\nNächstes mögliches erscheinen: {note:%s}'
+L['time_format_12hrs'] = '%d.%m - %I:%M %p'
+L['time_format_24hrs'] = '%d.%m - %H:%M'
+L['now'] = 'Jetzt'
 L['spawns_at_night'] = '{note:Erscheint nur nachts. (Ab 18:30 Server Zeit)}'
 
 L['elemental_storm'] = 'Elementarsturm'
@@ -132,13 +135,29 @@ L['the_best_at_what_i_do_suffix'] = 'Bosse getötet'
 L['options_icons_grand_hunts'] = 'Große Jagden'
 L['options_icons_grand_hunts_desc'] = 'Zeigt die möglichen Positionen und Belohnungen der {location:Großen Jagd} an.'
 
+L['reed_chest'] = 'Schilfkiste'
+L['options_icons_reed_chest'] = 'Schilfkiste'
+L['options_icons_reed_chest_desc'] = 'Zeigt die möglichen Positionen der {object:Schilfkisten} an.'
+
+L['dracthyr_supply_chest'] = 'Vorratstruhe der Dracthyr'
+L['options_icons_dracthyr_supply_chest'] = 'Vorratstruhe der Dracthyr'
+L['options_icons_dracthyr_supply_chest_desc'] = 'Zeigt die möglichen Positionen der {object:Vorratstruhen der Dracthyr} an.'
+
+L['simmering_chest'] = 'Brodelnde Kiste'
+L['options_icons_simmering_chest'] = 'Brodelnde Kiste'
+L['options_icons_simmering_chest_desc'] = 'Zeigt die möglichen Positionen der {object:Brodelnde Kisten} an.'
+
+L['frostbound_chest'] = 'Frostgebundene Kiste'
+L['options_icons_frostbound_chest'] = 'Frostgebundene Kiste'
+L['options_icons_frostbound_chest_desc'] = 'Zeigt die möglichen Positionen der {object:Frostgebundene Kisten} an.'
+
 -------------------------------------------------------------------------------
 ------------------------------- THE AZURE SPAN --------------------------------
 -------------------------------------------------------------------------------
 
-L['bisquis_note'] = 'Kocht beim gemeinschaftlichen Festmahl in {location:Iskaara} eine legendäre Suppe und besiegt dann {npc:197557}.\n\nNächstes Festmahl: {note:%s} (Serverzeit)'
+L['bisquis_note'] = 'Kocht beim gemeinschaftlichen Festmahl in {location:Iskaara} eine legendäre Suppe und besiegt dann {npc:197557}.\n\nNächstes Festmahl: {note:%s}'
 L['blightfur_note'] = 'Sprich mit {npc:193633}, um den seltenen Gegner erscheinen zu lassen.'
-L['brackenhide_rare_note'] = 'Dieser seltene Gegner erscheint nach einer festen Rotation von {npc:197344} > {npc:197353} > {npc:197354} > {npc:197356} im Abstand von 10 Minuten.\n\nNächstes mögliches erscheinen: {note:%s} (Server Zeit)'
+L['brackenhide_rare_note'] = 'Dieser seltene Gegner erscheint nach einer festen Rotation von {npc:197344} > {npc:197353} > {npc:197354} > {npc:197356} im Abstand von 10 Minuten.\n\nNächstes mögliches erscheinen: {note:%s}'
 L['fisherman_tinnak_note'] = 'Sammel {object:Zerbrochene Angelrute}, {object:Zerrissenes Fischernetz} und {object:Alte Harpune}, um ihn zu beschwören.'
 L['frostpaw_note'] = 'Hebe den {object:Holzhammer} in der Nähe auf und schlage die drei {object:Hau den Gnoll} innerhalb von 20 Sekunden auf dem {object:Baumstumpf} damit, um den seltenen Gegner erscheinen zu lassen.'
 L['sharpfang_note'] = 'Hilf {npc:192747} dabei, drei {npc:192748s} zu besiegen, um den seltenen Gegner erscheinen zu lassen.'
@@ -222,6 +241,14 @@ L['options_icons_tuskarr_chest_desc'] = 'Zeigt die möglichen Positionen für {o
 L['community_feast_label'] = '{spell:386441}'
 L['options_icons_community_feast'] = '{spell:386441}'
 L['options_icons_community_feast_desc'] = 'Zeigt die Position und Belohnungen des {spell:386441s}'
+
+L['decay_covered_chest'] = 'Mit Moder bedeckte Kiste'
+L['options_icons_decay_covered_chest'] = 'Mit Moder bedeckte Kiste'
+L['options_icons_decay_covered_chest_desc'] = 'Zeigt die möglichen Positionen für {object:Mit Moder bedeckte Kisten} an.'
+
+L['icemaw_storage_cache'] = 'Vorratsdepot des Eisschlunds'
+L['options_icons_icemaw_storage_cache'] = 'Vorratsdepot des Eisschlunds'
+L['options_icons_icemaw_storage_cache_desc'] = 'Zeigt die möglichen Positionen für {object:Vorratsdepots des Eisschlunds} an.'
 
 -------------------------------------------------------------------------------
 ------------------------------- FORBIDDEN REACH -------------------------------
@@ -332,6 +359,12 @@ L['clan_chest'] = 'Klankiste'
 L['options_icons_clan_chest'] = 'Klankisten'
 L['options_icons_clan_chest_desc'] = 'Zeigt die möglichen Positionen für {object:Klankisten} an.'
 
+L['lightning_bound_chest'] = 'Blitzgebundene Kiste'
+L['options_icons_lightning_bound_chest'] = 'Blitzgebundene Kiste'
+L['options_icons_lightning_bound_chest_desc'] = 'Zeigt die möglichen Positionen für {object:Blitzgebundene Kisten} an.'
+
+L['bloodgullet_note'] = nil
+
 -------------------------------------------------------------------------------
 --------------------------------- THALDRASZUS ---------------------------------
 -------------------------------------------------------------------------------
@@ -353,7 +386,7 @@ L['tasty_hatchling_treat_note'] = 'In einem Fass hinter dem Bücherregal.'
 L['pm_mining_bridgette_holdug'] = 'Auf einem grasbewachsenen Felspfeiler.'
 L['pm_tailor_elysa_raywinder'] = 'Auf einem Vorsprung auf halber Höhe des Turms.'
 L['pt_alch_contraband_concoction_note'] = 'In Büschen versteckt. {note:Schwer zu sehen.}'
-L['pt_alch_tasty_candy_note'] = 'Wirf ein {object:Weggeworfenes Spielzeug} in der Nähe in jeden Kessel und töte dann den Gegner, der erscheint.' -- laut wowhead [Discarded Toy]
+L['pt_alch_tasty_candy_note'] = 'Wirf ein {object:Weggeworfenes Spielzeug} in der Nähe in jeden Kessel.' -- laut wowhead [Discarded Toy]
 L['pt_ench_fractured_titanic_sphere_note'] = 'Südlich von {location:Tyrhold}.'
 L['pt_jewel_alexstraszite_cluster_note'] = 'In {location:Tyrhold}.'
 L['pt_jewel_painters_pretty_jewel_note'] = 'In einer Laterne.'
@@ -393,6 +426,10 @@ L['hoard_of_draconic_delicacies_note_end'] = 'Nachdem alle Quests abgeschlossen 
 L['brendormi_note_start'] = 'Tausche {item:202039} und {currency:2118} gegen Ausrüstung, ein Haustier, ein Spielzeug oder ein Reittier ein.'
 L['brendormi_note_item'] = 'Zurzeit hast du %s {item:202039}.'
 L['brendormi_note_currency'] = 'Zurzeit hast du %s {currency:2118}.'
+
+L['titan_chest'] = 'Titanentruhe'
+L['options_icons_titan_chest'] = 'Titanentruhe'
+L['options_icons_titan_chest_desc'] = 'Zeigt die möglichen Positionen für {object:Titanentruhen} an.'
 
 -------------------------------------------------------------------------------
 ------------------------------ THE WAKING SHORE -------------------------------

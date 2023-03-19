@@ -36,6 +36,7 @@ local Currency = ns.reward.Currency
 local Item = ns.reward.Item
 local Mount = ns.reward.Mount
 local Pet = ns.reward.Pet
+local Recipe = ns.reward.Recipe
 local Toy = ns.reward.Toy
 local Transmog = ns.reward.Transmog
 
@@ -865,6 +866,42 @@ map.nodes[86485063] = ClanChest()
 map.nodes[86505330] = ClanChest()
 
 -------------------------------------------------------------------------------
+---------------------------- DRACTHYR SUPPLY CHEST ----------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[62701630] = ns.node.DracthyrSupplyChest()
+map.nodes[62901870] = ns.node.DracthyrSupplyChest()
+map.nodes[64101480] = ns.node.DracthyrSupplyChest()
+
+-------------------------------------------------------------------------------
+---------------------------- LIGHTNING BOUND CHEST -----------------------------
+-------------------------------------------------------------------------------
+
+local LightningBoundChest = Class('LightningBoundChest', ns.node.Node, {
+    label = L['lightning_bound_chest'],
+    icon = 'chest_pk',
+    group = ns.groups.LIGHTNING_BOUND_CHEST,
+    rewards = {
+        Item({item = 191784}), -- Dragon Shard of Knowledge
+        Item({item = 190454}), -- Primal Chaos
+        Transmog({item = 201447, slot = L['cosmetic']}), -- Primal Revenant's Breezeblade
+        Transmog({item = 201448, slot = L['cosmetic']}), -- Primal Revenant's Windwall
+        Item({item = 199065, quest = 70534}), -- Sorrowful Letter
+        Item({item = 199066, quest = 70535}), -- Letter of Caution
+        Item({item = 192055}), -- Dragon Isles Artifact
+        Item({item = 199906}), -- Titan Relic
+        Currency({id = 2003}) -- Dragon Isles Supplies
+    }
+}) -- Lightning Bound Chest
+
+map.nodes[60804950] = LightningBoundChest()
+map.nodes[61005110] = LightningBoundChest()
+map.nodes[62005160] = LightningBoundChest()
+map.nodes[65601340] = LightningBoundChest()
+map.nodes[67001180] = LightningBoundChest()
+map.nodes[67101270] = LightningBoundChest()
+
+-------------------------------------------------------------------------------
 --------------------------------- BATTLE PETS ---------------------------------
 -------------------------------------------------------------------------------
 
@@ -1155,6 +1192,7 @@ map.nodes[25976132] = Disturbeddirt({note = L['in_small_cave']})
 map.nodes[29765203] = Disturbeddirt()
 map.nodes[29777163] = Disturbeddirt()
 map.nodes[29777363] = Disturbeddirt()
+map.nodes[32834660] = Disturbeddirt()
 map.nodes[36553269] = Disturbeddirt()
 map.nodes[38825564] = Disturbeddirt()
 map.nodes[39565456] = Disturbeddirt()
@@ -1162,20 +1200,25 @@ map.nodes[41103789] = Disturbeddirt()
 map.nodes[42335555] = Disturbeddirt()
 map.nodes[42934942] = Disturbeddirt()
 map.nodes[43316632] = Disturbeddirt()
+map.nodes[43334434] = Disturbeddirt()
+map.nodes[44433243] = Disturbeddirt()
 map.nodes[46345356] = Disturbeddirt()
 map.nodes[48867036] = Disturbeddirt()
 map.nodes[49716952] = Disturbeddirt()
 map.nodes[50152501] = Disturbeddirt()
+map.nodes[50184541] = Disturbeddirt()
 map.nodes[51445485] = Disturbeddirt()
 map.nodes[51936274] = Disturbeddirt()
 map.nodes[54115705] = Disturbeddirt()
 map.nodes[55197076] = Disturbeddirt()
 map.nodes[55944340] = Disturbeddirt()
+map.nodes[60425738] = Disturbeddirt()
 map.nodes[62171310] = Disturbeddirt()
 map.nodes[62787415] = Disturbeddirt()
 map.nodes[63251396] = Disturbeddirt()
 map.nodes[65868145] = Disturbeddirt()
 map.nodes[66451981] = Disturbeddirt()
+map.nodes[66825534] = Disturbeddirt({note = L['in_small_cave']})
 map.nodes[69087885] = Disturbeddirt()
 map.nodes[71706413] = Disturbeddirt()
 map.nodes[75003584] = Disturbeddirt()
@@ -1190,7 +1233,7 @@ map.nodes[80133864] = Disturbeddirt({
     note = L['in_cave'],
     pois = {POI({79403650})}
 })
-map.nodes[32834660] = Disturbeddirt()
+map.nodes[80823851] = Disturbeddirt({note = L['in_cave']})
 map.nodes[81403827] = Disturbeddirt()
 map.nodes[82543651] = Disturbeddirt()
 map.nodes[82593486] = Disturbeddirt()
@@ -1231,6 +1274,10 @@ map.nodes[61301817] = Scoutpack()
 map.nodes[61781881] = Scoutpack()
 map.nodes[63423235] = Scoutpack()
 map.nodes[64028081] = Scoutpack()
+map.nodes[36428558] = Scoutpack()
+map.nodes[36168691] = Scoutpack()
+map.nodes[60952000] = Scoutpack()
+map.nodes[59492006] = Scoutpack()
 map.nodes[65021064] = Scoutpack()
 map.nodes[66798258] = Scoutpack()
 map.nodes[73618656] = Scoutpack()
@@ -1278,10 +1325,21 @@ map.nodes[32102907] = TuskarrTacklebox()
 map.nodes[36305212] = TuskarrTacklebox()
 map.nodes[37635533] = TuskarrTacklebox()
 map.nodes[41105448] = TuskarrTacklebox()
+map.nodes[41724432] = TuskarrTacklebox()
 map.nodes[42245532] = TuskarrTacklebox()
 map.nodes[45936616] = TuskarrTacklebox()
 map.nodes[50407120] = TuskarrTacklebox()
 map.nodes[75665637] = TuskarrTacklebox()
+
+-------------------------------------------------------------------------------
+---------------------------------- REED CHEST ---------------------------------
+-------------------------------------------------------------------------------
+
+-- map.nodes[80703060] = ns.node.ReedChest()
+-- map.nodes[80903210] = ns.node.ReedChest()
+-- map.nodes[81302970] = ns.node.ReedChest()
+-- map.nodes[82303040] = ns.node.ReedChest()
+-- map.nodes[82303050] = ns.node.ReedChest()
 
 -------------------------------------------------------------------------------
 ----------------------------- HONOR OUR ANCESTORS -----------------------------
@@ -1903,6 +1961,16 @@ map.nodes[34603468] = Collectible({
 -------------------------------- MISCELLANEOUS --------------------------------
 -------------------------------------------------------------------------------
 
+-------------------------- SPIRIT BEAST: BLOODGULLET --------------------------
+
+map.nodes[66564391] = Collectible({
+    id = 193254,
+    icon = 236165,
+    class = 'HUNTER',
+    note = L['bloodgullet_note'],
+    pois = {POI({85702073})} -- Essence of Awakening
+}) -- Bloodgulllet
+
 -------------------------- MOUNT: LIZI, THUNDERSPINE --------------------------
 
 local Lizi = Class('Lizi', Collectible, {
@@ -1979,34 +2047,44 @@ map.nodes[57473193] = Ohnahra()
 
 ----------------------------- THE OHN'AHRAN TRAIL -----------------------------
 
-local AylaagCamp = Class('AylaagCamp', Collectible, {
-    icon = 237385,
-    requires = {
-        ns.requirement.Reputation(2503, 4, true) -- Maruuk Centaur
-    },
-    note = L['aylaag_camp_note']
-})
+map.nodes[71473180] = ns.node.AylaagCamp(
+    { -- Aylaag Outpost to river camp
+        icon = 237385,
+        requires = {
+            ns.requirement.Reputation(2503, 4, true) -- Maruuk Centaur
+        },
+        rotationID = 0,
+        rewards = {
+            Achievement({id = 16462, criteria = 55480}) -- The Ohn'ahran Trail
+        },
+        pois = {POI({70666300})}
+    })
 
-map.nodes[71473180] = AylaagCamp({ -- Aylaag Outpost to river camp
-    rewards = {
-        Achievement({id = 16462, criteria = 55480}) -- The Ohn'ahran Trail
-    },
-    pois = {POI({70666300})}
-})
+map.nodes[70666300] = ns.node.AylaagCamp(
+    { -- River camp to Eaglewatch Outpost
+        icon = 237385,
+        requires = {
+            ns.requirement.Reputation(2503, 4, true) -- Maruuk Centaur
+        },
+        rotationID = 1,
+        rewards = {
+            Achievement({id = 16462, criteria = 55481}) -- The Ohn'ahran Trail
+        },
+        pois = {POI({55375224})}
+    })
 
-map.nodes[70666300] = AylaagCamp({ -- River camp to Eaglewatch Outpost
-    rewards = {
-        Achievement({id = 16462, criteria = 55481}) -- The Ohn'ahran Trail
-    },
-    pois = {POI({55375224})}
-})
-
-map.nodes[55375224] = AylaagCamp({ -- Eaglewatch Outpost to Aylaag Outpost
-    rewards = {
-        Achievement({id = 16462, criteria = 55482}) -- The Ohn'ahran Trail
-    },
-    pois = {POI({71473180})}
-})
+map.nodes[55375224] = ns.node.AylaagCamp(
+    { -- Eaglewatch Outpost to Aylaag Outpost
+        icon = 237385,
+        requires = {
+            ns.requirement.Reputation(2503, 4, true) -- Maruuk Centaur
+        },
+        rotationID = 2,
+        rewards = {
+            Achievement({id = 16462, criteria = 55482}) -- The Ohn'ahran Trail
+        },
+        pois = {POI({71473180})}
+    })
 
 ----------------------------- MISCELLANEOUS NPCs ------------------------------
 
@@ -2030,7 +2108,7 @@ map.nodes[41606220] = Collectible({
     icon = 4659336,
     note = L['elder_yusa_note'],
     rewards = {
-        Item({item = 197793}) -- Yusa's Hearty Stew
+        Recipe({item = 197793, profession = 185}) -- Yusa's Hearty Stew
     }
 }) -- Elder Yusa
 

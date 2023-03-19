@@ -870,7 +870,10 @@ function ConRO.Druid.Guardian(_, timeShift, currentSpell, gcd, tChosen, pvpChose
 	local _Moonfire, _Moonfire_RDY = ConRO:AbilityReady(Ability.Moonfire, timeShift);
 		local _GalacticGuardian_BUFF = ConRO:Aura(Buff.GalacticGuardian, timeShift);
 		local _Moonfire_DEBUFF = ConRO:TargetAura(Debuff.Moonfire, timeShift);
+	local _Pulverize, _Pulverize_RDY = ConRO:AbilityReady(Ability.Pulverize, timeShift);
+		local _Pulverize_BUFF = ConRO:Aura(Buff.Pulverize, timeShift + 3);
 	local _RageoftheSleeper, _RageoftheSleeper_RDY = ConRO:AbilityReady(Ability.RageoftheSleeper, timeShift);
+	local _Raze, _Raze_RDY = ConRO:AbilityReady(Ability.Raze, timeShift);
 	local _SkullBash, _SkullBash_RDY = ConRO:AbilityReady(Ability.SkullBash, timeShift);
 	local _Soothe, _Soothe_RDY = ConRO:AbilityReady(Ability.Soothe, timeShift);
 	local _Swipe, _Swipe_RDY = ConRO:AbilityReady(Ability.Swipe, timeShift);
@@ -881,14 +884,10 @@ function ConRO.Druid.Guardian(_, timeShift, currentSpell, gcd, tChosen, pvpChose
 		local _ThrashCF_DEBUFF, _, _ThrashCF_DUR = ConRO:TargetAura(Debuff.ThrashCF, timeShift + 2);
 		local _ThrashBF, _, _ThrashBF_CD = ConRO:AbilityReady(Ability.ThrashBF, timeShift);
 		local _Thrash_DEBUFF, _Thrash_COUNT = ConRO:TargetAura(Debuff.Thrash, timeShift);
-
-	local _Pulverize, _Pulverize_RDY = ConRO:AbilityReady(Ability.Pulverize, timeShift);
-		local _Pulverize_BUFF = ConRO:Aura(Buff.Pulverize, timeShift + 3);
 	local _WildCharge, _WildCharge_RDY = ConRO:AbilityReady(Ability.WildCharge, timeShift);
 		local _, _WildCharge_RANGE = ConRO:Targets(Ability.WildCharge)
 		local _WildChargeBF = ConRO:AbilityReady(Ability.WildChargeBF, timeShift);
 		local _WildChargeCF	= ConRO:AbilityReady(Ability.WildChargeCF, timeShift);
-	
 
 --Conditions
 	local _is_moving = ConRO:PlayerSpeed();
@@ -978,7 +977,12 @@ function ConRO.Druid.Guardian(_, timeShift, currentSpell, gcd, tChosen, pvpChose
 			_Mangle_RDY = false;
 		end
 
-		if _Maul_RDY and _Rage >= 90 then
+		if _Raze and _Rage >= 90 then
+			tinsert(ConRO.SuggestedSpells, _Raze);
+			_Rage = _Rage - 40;
+		end
+
+		if _Maul_RDY and _Rage >= 90 and not tChosen[Ability.Raze.talentID] then
 			tinsert(ConRO.SuggestedSpells, _Maul);
 			_Rage = _Rage - 40;
 		end

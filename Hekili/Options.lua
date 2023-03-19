@@ -3926,7 +3926,7 @@ do
                 type = "toggle",
                 name = function () return "Disable " .. ( ability.item and ability.link or k ) end,
                 desc = function () return "If checked, this ability will |cffff0000NEVER|r be recommended by the addon.  This can cause " ..
-                    "issues for some specializations, if other abilities depend on you using " .. ( ability.item and ability.link or k ) .. "." end,
+                    "issues for some specializations, if other abilities depend on you using |W" .. ( ability.item and ability.link or k ) .. "|w." end,
                 width = 1.5,
                 order = 1,
             },
@@ -3934,7 +3934,7 @@ do
             boss = {
                 type = "toggle",
                 name = "Boss Encounter Only",
-                desc = "If checked, the addon will not recommend " .. k .. " unless you are in a boss fight (or encounter).  If left unchecked, " .. k .. " can be recommended in any type of fight.",
+                desc = "If checked, the addon will not recommend |W" .. k .. "|w unless you are in a boss fight (or encounter).  If left unchecked, |W" .. k .. "|w can be recommended in any type of fight.",
                 width = 1.5,
                 order = 1.1,
             },
@@ -3943,7 +3943,7 @@ do
                 type = "input",
                 name = "Override Keybind Text",
                 desc = "If specified, the addon will show this text in place of the auto-detected keybind text when recommending this ability.  " ..
-                    "This can be helpful if the addon incorrectly detects your keybindings.",
+                    "This can be helpful if your keybinds are detected incorrectly or is found on multiple action bars.",
                 validate = function( info, val )
                     val = val:trim()
                     if val:len() > 20 then return "Keybindings should be no longer than 20 characters in length." end
@@ -4825,14 +4825,14 @@ do
                 specNameByID[ id ] = sName
                 specIDByName[ sName ] = id
 
-                specs[ id ] = '|T' .. texture .. ':0|t ' .. name
+                specs[ id ] = Hekili:ZoomedTextureWithText( texture, name )
 
                 local options = {
                     type = "group",
                     -- name = specs[ id ],
                     name = name,
                     icon = texture,
-                    -- iconCoords = { 0.1, 0.9, 0.1, 0.9 },
+                    iconCoords = { 0.15, 0.85, 0.15, 0.85 },
                     desc = description,
                     order = 50 + i,
                     childGroups = "tab",
@@ -4877,7 +4877,7 @@ do
                                         for key, pkg in pairs( self.DB.profile.packs ) do
                                             local pname = pkg.builtIn and "|cFF00B4FF" .. key .. "|r" or key
                                             if pkg.spec == id then
-                                                packs[ key ] = '|T' .. texture .. ':0|t ' .. pname
+                                                packs[ key ] = Hekili:ZoomedTextureWithText( texture, pname )
                                             end
                                         end
 
@@ -4968,9 +4968,9 @@ do
 
                                         if Hekili:HasPetBasedTargetSpell() then
                                             local spell = Hekili:GetPetBasedTargetSpell()
-                                            local name, _, tex = GetSpellInfo( spell )
+                                            local link = Hekili:GetSpellLinkWithTexture( spell )
 
-                                            msg = msg .. "\n\n|T" .. tex .. ":0|t |cFFFFD100" .. name .. "|r is on your action bar and will be used for all your " .. UnitClass("player") .. " pets."
+                                            msg = msg .. "\n\n" .. link .. "|w|r is on your action bar and will be used for all your " .. UnitClass( "player" ) .. " pets."
                                         else
                                             msg = msg .. "\n\n|cFFFF0000Requires pet ability on one of your action bars.|r"
                                         end
@@ -5001,7 +5001,7 @@ do
 
                                             if not spells then return " " end
 
-                                            out = out .. "For %s, |T%d:0|t |cFFFFD100%s|r is recommended due to its range.  It will work for all your pets."
+                                            out = out .. "For %s, %s is recommended due to its range.  It will work for all your pets."
 
                                             if spells.count > 1 then
                                                 out = out .. "\nAlternative(s): "
@@ -5009,20 +5009,20 @@ do
 
                                             local n = 1
 
-                                            local name, _, tex = GetSpellInfo( spells.best )
-                                            out = format( out, UnitClass( "player" ), tex, name )
+                                            local link = Hekili:GetSpellLinkWithTexture( spells.best )
+                                            out = format( out, UnitClass( "player" ), link )
                                             for spell in pairs( spells ) do
                                                 if type( spell ) == "number" and spell ~= spells.best then
                                                     n = n + 1
 
-                                                    name, _, tex = GetSpellInfo( spell )
+                                                    link = Hekili:GetSpellLinkWithTexture( spell )
 
                                                     if n == 2 and spells.count == 2 then
-                                                        out = out .. "|T" .. tex .. ":0|t |cFFFFD100" .. name .. "|r."
+                                                        out = out .. link .. "."
                                                     elseif n ~= spells.count then
-                                                        out = out .. "|T" .. tex .. ":0|t |cFFFFD100" .. name .. "|r, "
+                                                        out = out .. link .. ", "
                                                     else
-                                                        out = out .. "and |T" .. tex .. ":0|t |cFFFFD100" .. name .. "|r."
+                                                        out = out .. "and " .. link .. "."
                                                     end
                                                 end
                                             end
@@ -5196,26 +5196,21 @@ do
                             args = {
                                 throttleRefresh = {
                                     type = "toggle",
-                                    name = "Throttle Updates",
-                                    desc = "By default, the addon will update its recommendations immediately following |cffff0000critical|r combat events, within |cffffd1000.1|rs of routine combat events, or every |cffffd1000.5|rs.\n" ..
-                                        "If |cffffd100Throttle Updates|r is checked, you can specify the |cffffd100Combat Refresh Interval|r and |cff00ff00Regular Refresh Interval|r for this specialization.",
+                                    name = "Set Update Period",
+                                    desc = "If checked, you may specify how frequently new recommendations can be generated, in- and out-of-combat.\n\n"
+                                        .. "More frequent updates can utilize more CPU time, but increase responsiveness. After certain critical combat "
+                                        .. "events, recommendations will always update earlier, regardless of these settings.",
                                     order = 1,
                                     width = "full",
                                 },
 
-                                perfSpace01 = {
-                                    type = "description",
-                                    name = " ",
-                                    order = 1.05,
-                                    width = "full"
-                                },
-
                                 regularRefresh = {
                                     type = "range",
-                                    name = "Regular Refresh Interval",
-                                    desc = "In the absence of combat events, this addon will allow itself to update according to the specified interval.  Specifying a higher value may reduce CPU usage but will result in slower updates, though " ..
-                                        "combat events will always force the addon to update more quickly.\n\nIf set to |cffffd1001.0|rs, the addon will not provide new updates until 1 second after its last update (unless forced by a combat event).\n\n" ..
-                                        "Default value:  |cffffd1000.5|rs.",
+                                    name = "Out-of-Combat Period",
+                                    desc = "When out-of-combat, each display will update its recommendations as frequently as you specify. "
+                                        .. "Specifying a lower number means updates are generated more frequently, potentially using more CPU time.\n\n"
+                                        .. "Some critical events, like generating resources, will force an update to occur earlier, regardless of this setting.\n\n"
+                                        .. "Default value:  |cffffd1000.5|rs.",
                                     order = 1.1,
                                     width = 1.5,
                                     min = 0.05,
@@ -5226,10 +5221,11 @@ do
 
                                 combatRefresh = {
                                     type = "range",
-                                    name = "Combat Refresh Interval",
-                                    desc = "When routine combat events occur, the addon will update more frequently than its Regular Refresh Interval.  Specifying a higher value may reduce CPU usage but will result in slower updates, though " ..
-                                        "critical combat events will always force the addon to update more quickly.\n\nIf set to |cffffd1000.2|rs, the addon will not provide new updates until 0.2 seconds after its last update (unless forced by a critical combat event).\n\n" ..
-                                        "Default value:  |cffffd1000.1|rs.",
+                                    name = "In-Combat Period",
+                                    desc = "When in-combat, each display will update its recommendations as frequently as you specify.\n\n"
+                                    .. "Specifying a lower number means updates are generated more frequently, potentially using more CPU time.\n\n"
+                                    .. "Some critical events, like generating resources, will force an update to occur earlier, regardless of this setting.\n\n"
+                                    .. "Default value:  |cffffd1000.25|rs.",
                                     order = 1.2,
                                     width = 1.5,
                                     min = 0.05,
@@ -5238,44 +5234,35 @@ do
                                     hidden = function () return self.DB.profile.specs[ id ].throttleRefresh == false end,
                                 },
 
-                                perfSpace = {
-                                    type = "description",
-                                    name = " ",
-                                    order = 1.9,
-                                    width = "full"
-                                },
-
                                 throttleTime = {
                                     type = "toggle",
-                                    name = "Throttle Time",
-                                    desc = "By default, when the addon needs to generate new recommendations, it will use up to |cffffd10010ms|r per frame or up to half a frame, whichever is lower.  If you get 60 FPS, that is 1 second / 60 frames, which equals equals 16.67ms.  " ..
-                                        "Half of 16.67 is ~|cffffd1008ms|r, so the addon could use up to ~8ms per frame until it has successfully updated its recommendations for all visible displays.  If more time is needed, the work will be split across multiple frames.\n\n" ..
-                                        "If you choose to |cffffd100Throttle Time|r, you can specify the |cffffd100Maximum Update Time|r the addon should use per frame.",
-                                    order = 2,
-                                    width = 1,
+                                    name = "Set Update Time",
+                                    desc = "By default, calculations can take 80% of your frametime or 50ms, whichever is lower.  If recommendations take more "
+                                        .. "than the alotted time, then the work will be split across multiple frames to reduce impact to your framerate.\n\n"
+                                        .. "If you choose to |cffffd100Set Update Time|r, you can specify the |cffffd100Maximum Update Time|r used per frame.",
+                                    order = 2.1,
+                                    width = "full",
                                 },
 
                                 maxTime = {
                                     type = "range",
                                     name = "Maximum Update Time (ms)",
-                                    desc = "Specify the maximum amount of time (in milliseconds) that the addon can use |cffffd100per frame|r when updating its recommendations.\n\n" ..
-                                        "If set to |cffffd10010|r, then recommendations should not impact a 100 FPS system (1 second / 100 frames = 10ms).\n" ..
-                                        "If set to |cffffd10016|r, then recommendations should not impact a 60 FPS system (1 second / 60 frames = 16.7ms).\n\n" ..
-                                        "If you set this value too low, the addon can take more frames to update its recommendations and may feel delayed.  " ..
-                                        "If set too high, the addon will do more work each frame, finishing faster but potentially impacting your FPS.  The default value is |cffffd10010ms|r.",
-                                    order = 2.1,
-                                    min = 2,
+                                    desc = "Specify the maximum amount of time (in milliseconds) that can be used |cffffd100per frame|r when updating.  " ..
+                                        "If set to |cffffd1000|r, then there is no maximum regardless of your frame rate.\n\n" ..
+                                        "|cffffd100Examples|r\n" ..
+                                        "|W- 60 FPS: 1 second / 60 frames = |cffffd10016.7|rms|w\n" ..
+                                        "|W- 100 FPS: 1 second / 100 frames = |cffffd10010|rms|w\n\n" ..
+                                        "If you set this value too low, it can take longer to update and may feel less responsive.\n\n" ..
+                                        "If set too high (or to zero), updates may resolve more quickly but with possible impact to your FPS.\n\n" ..
+                                        "The default value is |cffffd10020|rms.",
+                                    order = 2.2,
+                                    min = 0,
                                     max = 100,
-                                    width = 2,
-                                    hidden = function () return self.DB.profile.specs[ id ].throttleTime == false end,
-                                },
-
-                                throttleSpace = {
-                                    type = "description",
-                                    name = " ",
-                                    order = 3,
-                                    width = "full",
-                                    hidden = function () return self.DB.profile.specs[ id ].throttleRefresh == false end,
+                                    step = 1,
+                                    width = 1.5,
+                                    hidden = function ()
+                                        return not self.DB.profile.specs[ id ].throttleTime
+                                    end,
                                 },
 
                                 --[[ gcdSync = {
@@ -5290,12 +5277,12 @@ do
                                 enhancedRecheck = {
                                     type = "toggle",
                                     name = "Enhanced Recheck",
-                                    desc = "When the addon cannot recommend an ability at the present time, it rechecks action's conditions at a few points in the future.  If checked, this feature will enable the addon to do additional checking on entries that use the 'variable' feature.  " ..
-                                        "This may use slightly more CPU, but can reduce the likelihood that the addon will fail to make a recommendation.",
+                                    desc = "When the addon cannot recommend an ability at the present time, it rechecks action conditions at a few points in the future.  "
+                                        .. "If checked, this feature will enable the addon to do additional checking on entries that use the 'variable' feature.  "
+                                        .. "This may use slightly more CPU, but can reduce the likelihood that the addon will fail to make a recommendation.",
                                     width = "full",
                                     order = 5,
-                                }
-
+                                },
                             }
                         }
                     },
@@ -5929,7 +5916,8 @@ do
 
                                 exportString = {
                                     type = "input",
-                                    name = "Priority Export String\n|cFFFFFFFFPress CTRL+A to select, then CTRL+C to copy.|r",
+                                    name = "Priority Export String",
+                                    desc = "Press CTRL+A to select, then CTRL+C to copy.",
                                     order = 3,
                                     get = function ()
                                         if rawget( Hekili.DB.profile.packs, shareDB.actionPack ) then
@@ -5986,6 +5974,7 @@ do
                     icon = function()
                         return class.specs[ data.spec ].texture
                     end,
+                    iconCoords = { 0.15, 0.85, 0.15, 0.85 },
                     childGroups = "tab",
                     order = 100 + count,
                     args = {
@@ -7434,7 +7423,8 @@ do
                             args = {
                                 exportString = {
                                     type = "input",
-                                    name = "Priority Export String\n|cFFFFFFFFPress CTRL+A to select, then CTRL+C to copy.|r",
+                                    name = "Priority Export String",
+                                    desc = "Press CTRL+A to select, then CTRL+C to copy.",
                                     get = function( info )
                                         return SerializeActionPack( pack )
                                     end,
