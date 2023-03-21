@@ -34,8 +34,10 @@ end
 Hekili.IsDragonflight = function()
     return buildNum >= 100000
 end
+Hekili.BuiltFor = 100007
+Hekili.GameBuild = buildStr
 
-ns.PTR = buildNum > 100005
+ns.PTR = buildNum > 100007
 
 
 ns.Patrons = "|cFFFFD100Current Status|r\n\n"
@@ -317,9 +319,7 @@ function Hekili:SaveDebugSnapshot( dispName )
             auraString = auraString .. "\n\n"
 
             insert( v.log, 1, auraString )
-            if Hekili.TargetDebug and Hekili.TargetDebug:len() > 0 then
-                insert( v.log, 1, "targets:\n" .. Hekili.TargetDebug )
-            end
+            insert( v.log, 1, "targets:  " .. ( Hekili.TargetDebug or "no data" ) )
             insert( v.log, 1, self:GenerateProfile() )
 
             local custom = ""

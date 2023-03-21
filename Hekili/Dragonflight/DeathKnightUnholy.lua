@@ -237,7 +237,7 @@ me:RegisterTalents( {
     -- Unholy
     all_will_serve            = { 76181, 194916, 1 }, -- Your Raise Dead spell summons an additional skeletal minion.
     apocalypse                = { 76185, 275699, 1 }, -- Bring doom upon the enemy, dealing 620 Shadow damage and bursting up to 4 Festering Wounds on the target. Summons an Army of the Dead ghoul for 20 sec for each burst Festering Wound. Generates 2 Runes.
-    army_of_the_damned        = { 76153, 276837, 1 }, -- Apocalypse's cooldown is reduced by 45 sec. Additionally, Death Coil reduces the cooldown of Army of the Dead by 5 sec.
+    army_of_the_damned        = { 76153, 276837, 1 }, -- Apocalypse's cooldown is reduced by 45 sec. Additionally, Death Coil and Epidemic reduce the cooldown of Army of the Dead by 5 sec.
     army_of_the_dead          = { 76196, 42650 , 1 }, -- Summons a legion of ghouls who swarms your enemies, fighting anything they can for 30 sec.
     bursting_sores            = { 76164, 207264, 1 }, -- Bursting a Festering Wound deals 20% more damage, and deals 200 Shadow damage to all nearby enemies. Deals reduced damage beyond 8 targets.
     chains_of_ice             = { 76081, 45524 , 1 }, -- Shackles the target with frozen chains, reducing movement speed by 70% for 8 sec.
@@ -246,39 +246,39 @@ me:RegisterTalents( {
     commander_of_the_dead     = { 76149, 390259, 1 }, -- Dark Transformation also empowers your Gargoyle and Army of the Dead for 30 sec, increasing their damage by 35%.
     dark_transformation       = { 76187, 63560 , 1 }, -- Your geist deals 554 Shadow damage to 5 nearby enemies and transforms into a powerful undead monstrosity for 15 sec. Granting them 100% energy and the geist's abilities are empowered and take on new functions while the transformation is active.
     death_rot                 = { 76158, 377537, 1 }, -- Death Coil and Epidemic debilitate your enemy applying Death Rot causing them to take 1% increased Shadow damage, up to 10% from you for 10 sec. If Death Coil or Epidemic consume Sudden Doom it applies two stacks of Death Rot.
-    death_strike              = { 76071, 49998 , 1 }, -- Focuses dark power into a strike that deals 436 Physical damage and heals you for 25.00% of all damage taken in the last 5 sec, minimum 7.0% of maximum health.
-    defile                    = { 76180, 152280, 1 }, -- Defile the targeted ground, dealing 682 Shadow damage to all enemies over 10 sec. While you remain within your Defile, your Scourge Strike will hit 7 enemies near the target. If any enemies are standing in the Defile, it grows in size and deals increasing damage every sec.
+    death_strike              = { 76071, 49998 , 1 }, -- Focuses dark power into a strike that deals 436 Physical damage and heals you for 40.00% of all damage taken in the last 5 sec, minimum 11.2% of maximum health.
+ -- defile                    = { 76180, 152280, 1 }, -- Defile the targeted ground, dealing 682 Shadow damage to all enemies over 10 sec. While you remain within your Defile, your Scourge Strike will hit 7 enemies near the target. Every sec, if any enemies are standing in the Defile, it grows in size, dealing increased damage, and increasing your Mastery by 1%, up to 8%.
+    defile                    = { 76160, 152280, 1 }, -- Defile the targeted ground, dealing 682 Shadow damage to all enemies over 10 sec. While you remain within your Defile, your Scourge Strike will hit 7 enemies near the target. Every sec, if any enemies are standing in the Defile, it grows in size, dealing increased damage, and increasing your Mastery by 1%, up to 8%.
     ebon_fever                = { 76164, 207269, 1 }, -- Virulent Plague deals 15% more damage over time in half the duration.
-    epidemic                  = { 76161, 207317, 1 }, -- Causes each of your Virulent Plagues to flare up, dealing 282 Shadow damage to the infected enemy, and an additional 113 Shadow damage to all other enemies near them. Increases the duration of Dark Transformation by 1 sec.
+    epidemic                  = { 76162, 207317, 1 }, -- Causes each of your Virulent Plagues to flare up, dealing 282 Shadow damage to the infected enemy, and an additional 113 Shadow damage to all other enemies near them. Increases the duration of Dark Transformation by 1 sec.
     eternal_agony             = { 76195, 390268, 1 }, -- Death Coil and Epidemic increase the duration of Dark Transformation by 1 sec.
-    feasting_strikes          = { 76193, 390161, 1 }, -- Festering Strike has a 15% chance to generate 1 Rune.
-    festering_strike          = { 76189, 85948 , 1 }, -- Strikes for 1,308 Physical damage and infects the target with 2-3 Festering Wounds.  Festering Wound A pustulent lesion that will burst on death or when damaged by Scourge Strike, dealing 308 Shadow damage and generating 3 Runic Power.
+    feasting_strikes          = { 76193, 390161, 1 }, -- Festering Strike has a 15% chance to generate 1 Rune and grant Runic Corruption.
+    festering_strike          = { 76189, 85948 , 1 }, -- Strikes for 1,090 Physical damage and infects the target with 2-3 Festering Wounds.  Festering Wound A pustulent lesion that will burst on death or when damaged by Scourge Strike, dealing 256 Shadow damage and generating 5 Runic Power.
     festermight               = { 76152, 377590, 2 }, -- Popping a Festering Wound increases your Strength by 1% for 20 sec stacking. Does not refresh duration.
     ghoulish_frenzy           = { 76154, 377587, 2 }, -- Dark Transformation also increases the attack speed and damage of you and your Monstrosity by 0%.
-    harbinger_of_doom         = { 76175, 276023, 1 }, -- Sudden Doom triggers 30% more often and can accumulate up to 2 charges.
+    harbinger_of_doom         = { 76175, 276023, 1 }, -- Sudden Doom triggers 30% more often, can accumulate up to 2 charges, and increases the damage of your next Death Coil by 20% or Epidemic by 10%.
     improved_death_coil       = { 76184, 377580, 2 }, -- Death Coil deals 15% additional damage and seeks out 1 additional nearby enemy.
     improved_festering_strike = { 76192, 316867, 2 }, -- Festering Strike and Festering Wound damage increased by 10%.
     infected_claws            = { 76182, 207272, 1 }, -- Your ghoul's Claw attack has a 30% chance to cause a Festering Wound on the target.
     magus_of_the_dead         = { 76148, 390196, 1 }, -- Apocalypse and Army of the Dead also summon a Magus of the Dead who hurls Frostbolts and Shadow Bolts at your foes.
     morbidity                 = { 76197, 377592, 2 }, -- Diseased enemies take 1% increased damage from you per disease they are affected by.
-    outbreak                  = { 76191, 77575 , 1 }, -- Deals 124 Shadow damage to the target and infects all nearby enemies with Virulent Plague.  Virulent Plague A disease that deals 1,394 Shadow damage over 27 sec. It erupts when the infected target dies, dealing 297 Shadow damage to nearby enemies.
+    outbreak                  = { 76191, 77575 , 1 }, -- Deals 124 Shadow damage to the target and infects all nearby enemies with Virulent Plague.  Virulent Plague A disease that deals 1,603 Shadow damage over 13.5 sec. It erupts when the infected target dies, dealing 297 Shadow damage to nearby enemies.
     pestilence                = { 76157, 277234, 1 }, -- Death and Decay damage has a 10% chance to apply a Festering Wound to the enemy.
-    pestilent_pustules        = { 76160, 194917, 1 }, -- Bursting a Festering Wound has a 10% chance to grant you Runic Corruption.
     plaguebringer             = { 76183, 390175, 1 }, -- Scourge Strike causes your disease damage to occur 100% more quickly for 5 sec.
-    raise_dead                = { 76072, 46585 , 1 }, -- Raises a geist to fight by your side. You can have a maximum of one geist at a time. Lasts 1 min.
+    raise_dead                = { 76072, 46585 , 1 }, -- Raises a geist to fight by your side. You can have a maximum of one geist at a time. Lasts 60 sec.
     raise_dead_2              = { 76188, 46584 , 1 }, -- Raises a geist to fight by your side. You can have a maximum of one geist at a time.
     reaping                   = { 76177, 377514, 1 }, -- Your Soul Reaper, Scourge Strike, Festering Strike, and Death Coil deal 25% addtional damage to enemies below 35% health.
     replenishing_wounds       = { 76163, 377585, 1 }, -- When a Festering Wound pops it generates an additional 2 Runic Power.
-    rotten_touch              = { 76178, 390275, 1 }, -- Sudden Doom causes your next Death Coil to also increase your Scourge Strike damage against the target by 50% for 6 sec.
-    runic_mastery             = { 76186, 390166, 2 }, -- Increases your maximum Runic Power by 10.
-    ruptured_viscera          = { 76148, 390236, 1 }, -- When your ghouls expire, they explode in viscera dealing 138 Shadow damage to nearby enemies.
+    rotten_touch              = { 76178, 390275, 1 }, -- Sudden Doom causes your next Death Coil to also increase your Scourge Strike damage against the target by 50% for 10 sec.
+    runic_mastery             = { 76186, 390166, 2 }, -- Increases your maximum Runic Power by 10 and increases the Rune regeneration rate of Runic Corruption by 10%.
+    ruptured_viscera          = { 76148, 390236, 1 }, -- When your ghouls expire, they explode in viscera dealing 152 Shadow damage to nearby enemies. Each explosion has a 25% chance to apply Festering Wounds to enemies hit.
     scourge_strike            = { 76190, 55090 , 1 }, -- An unholy strike that deals 379 Physical damage and 275 Shadow damage, and causes 1 Festering Wound to burst.
-    sudden_doom               = { 76179, 49530 , 1 }, -- Your auto attacks have a chance to make your next Death Coil cost no Runic Power.
+    sudden_doom               = { 76179, 49530 , 1 }, -- Your auto attacks have a chance to make your next Death Coil or Epidemic cost no Runic Power.
     summon_gargoyle           = { 76176, 49206 , 1 }, -- Summon a Gargoyle into the area to bombard the target for 25 sec. The Gargoyle gains 1% increased damage for every 1 Runic Power you spend. Generates 50 Runic Power.
     superstrain               = { 76155, 390283, 1 }, -- Your Virulent Plague also applies Frost Fever and Blood Plague at 80% effectiveness.
     unholy_assault            = { 76151, 207289, 1 }, -- Strike your target dealing 1,261 Shadow damage, infecting the target with 4 Festering Wounds and sending you into an Unholy Frenzy increasing haste by 20% for 20 sec.
     unholy_aura               = { 76150, 377440, 2 }, -- All enemies within 8 yards take 10% increased damage from your minions.
-    unholy_blight             = { 76162, 115989, 1 }, -- Surrounds yourself with a vile swarm of insects for 6 sec, stinging all nearby enemies and infecting them with Virulent Plague and an unholy disease that deals 394 damage over 14 sec, stacking up to 4 times.
+    unholy_blight             = { 76161, 115989, 1 }, -- Surrounds yourself with a vile swarm of insects for 6 sec, stinging all nearby enemies and infecting them with Virulent Plague and an unholy disease that deals 394 damage over 14 sec, stacking up to 4 times.
     unholy_command            = { 76194, 316941, 2 }, -- The cooldown of Dark Transformation is reduced by 8 sec.
     unholy_pact               = { 76180, 319230, 1 }, -- Dark Transformation creates an unholy pact between you and your pet, igniting flaming chains that deal 2,781 Shadow damage over 15 sec to enemies between you and your pet.
     vile_contagion            = { 76159, 390279, 1 }, -- Inflict disease upon your enemies spreading Festering Wounds equal to the amount currently active on your target to 7 nearby enemies.
@@ -363,34 +363,8 @@ me:RegisterAuras( {
     commander_of_the_dead = { -- 10.0.7 PTR
         id = 390260,
         duration = 30,
-        max_stack = 1
-    },
-    commander_of_the_dead_window = {
-        duration = 4,
         max_stack = 1,
-        generate = function( t )
-            if talent.commander_of_the_dead.enabled then
-                local applied = action.dark_transformation.lastCast
-                local expires = applied + 4
-
-                if query_time < expires then
-                    t.name = t.name or GetSpellInfo( 390264 ) or "commander_of_the_dead_window"
-                    t.count = 1
-                    t.expires = expires
-                    t.duration = 4
-                    t.applied = applied
-                    t.caster = "player"
-                    return
-                end
-            end
-
-            t.name = t.name or GetSpellInfo( 390264 ) or "commander_of_the_dead_window"
-            t.count = 0
-            t.expires = 0
-            t.duration = 4
-            t.applied = 0
-            t.caster = "nobody"
-        end,
+        copy = "commander_of_the_dead_window"
     },
     -- Talent: Controlled.
     -- https://wowhead.com/beta/spell=111673
@@ -485,6 +459,12 @@ me:RegisterAuras( {
         duration = 10,
         tick_time = 1,
         max_stack = 1
+    },
+    defile_buff = {
+        id = 218100,
+        duration = 10,
+        max_stack = 8,
+        copy = "defile_mastery"
     },
     -- Talent: Haste increased by $s3%.  Generating $s1 $LRune:Runes; and ${$m2/10} Runic Power every $t1 sec.
     -- https://wowhead.com/beta/spell=47568
@@ -613,7 +593,7 @@ me:RegisterAuras( {
     -- Disease damage occurring ${100*(1/(1+$s1/100)-1)}% more quickly.
     plaguebringer = {
         id = 390178,
-        duration = 5,
+        duration = 10,
         max_stack = 1
     },
     raise_abomination = { -- TODO: Is a totem.
@@ -639,6 +619,11 @@ me:RegisterAuras( {
         tick_time = 1,
         type = "Magic",
         max_stack = 5
+    },
+    rotten_touch = {
+        id = 390276,
+        duration = 10,
+        max_stack = 1
     },
     -- Strength increased by $w1%
     -- https://wowhead.com/beta/spell=374585
@@ -903,15 +888,17 @@ local any_dnd_set, wound_spender_set = false, false
 local ExpireRunicCorruption = setfenv( function()
     local debugstr
 
-    if Hekili.ActiveDebug then debugstr = format( "Runic Corruption expired; updating regen from %.2f to %.2f at %.2f + %.2f.", rune.cooldown, rune.cooldown * 2, offset, delay ) end
-    rune.cooldown = rune.cooldown * 2
+    local mod = ( 2 + 0.1 * talent.runic_mastery.rank )
+
+    if Hekili.ActiveDebug then debugstr = format( "Runic Corruption expired; updating regen from %.2f to %.2f at %.2f + %.2f.", rune.cooldown, rune.cooldown * mod, offset, delay ) end
+    rune.cooldown = rune.cooldown * mod
 
     for i = 1, 6 do
         local exp = rune.expiry[ i ] - query_time
 
         if exp > 0 then
-            rune.expiry[ i ] = rune.expiry[ i ] + exp
-            if Hekili.ActiveDebug then debugstr = format( "%s\n - rune %d extended by %.2f [%.2f].", debugstr, i, exp, rune.expiry[ i ] - query_time ) end
+            rune.expiry[ i ] = query_time + exp * mod
+            if Hekili.ActiveDebug then debugstr = format( "%s\n - rune %d extended by %.2f [%.2f].", debugstr, i, exp * mod, rune.expiry[ i ] - query_time ) end
         end
     end
 
@@ -1432,6 +1419,7 @@ me:RegisterAbilities( {
 
             if buff.sudden_doom.up then
                 removeStack( "sudden_doom" )
+                if talent.rotten_touch.enabled then applyDebuff( "target", "rotten_touch" ) end
                 if talent.death_rot.enabled then applyDebuff( "target", "death_rot", nil, 2 ) end
             elseif talent.death_rot.enabled then applyDebuff( "target", "death_rot" ) end
             if cooldown.dark_transformation.remains > 0 then setCooldown( "dark_transformation", max( 0, cooldown.dark_transformation.remains - 1 ) ) end
@@ -1558,6 +1546,7 @@ me:RegisterAbilities( {
         handler = function ()
             applyBuff( "death_and_decay" )
             applyDebuff( "target", "defile" )
+            applyBuff( "defile_buff" )
         end,
 
         bind = { "defile", "any_dnd" },
@@ -1852,6 +1841,11 @@ me:RegisterAbilities( {
                 if set_bonus.tier29_2pc > 0 then applyBuff( "vile_infusion" ) end
             end
 
+            if talent.plaguebringer.enabled then
+                removeBuff( "plaguebringer" )
+                applyBuff( "plaguebringer" )
+            end
+
             if conduit.lingering_plague.enabled and debuff.virulent_plague.up then
                 debuff.virulent_plague.expires = debuff.virulent_plague.expires + ( conduit.lingering_plague.mod * 0.001 )
             end
@@ -2061,4 +2055,4 @@ me:RegisterSetting( "ob_macro", nil, {
 } )
 
 
-me:RegisterPack( "Unholy", 20230313, [[Hekili:T3ZAZnUns(BX1wHJ0mt0isz5DsolvvUuxT1MAFm16C39ntrjrzZ1uK6iPSJt5s)2paWx4r3aGsuEMm1u7MDJfbB0Or)gnAER7T)6T3SoOi82)H3yVjJN4ozK7u3RU8J3EtXZ7cV9MDbREi4oY)ssWwY)7)DY9PXpt)5NJtdwtF9809zRip6(IID5)4h(WDrf3VF5OvPB)qE029XbfrPjRYc2uq)7vF42BwUpkU4VMC7s452LaZDHRi)8upcyJwVoSCSH5RU9g6y)(XEFVN7pEyXHf)R09frjHhwSFhfwhwSjlD7Hf30mZ)mDM)poS4t)6)6WcYqcoSilCB6JHRRhBwyCyqo5vFmmlN8gJU9M4O8IC6IBvAA860NsO)X)GrTctcwghU(2)tYdZIkcZIcU9Mbhwmz8HfZNDyXUWIr3fKDx6ZXHJiZuqus(Hfospiyvr0JKPC4HfV8YHfK3)IdlkcIdtkgLVF720e)MXwnJLJSgHugvZun)WIRgBCWbRFMn7oSjF5(nBgToi7b)ISGK8nPzBzeVr73Xgs9IdDCnZoDAPR0GSTp7F39P7JBwRokpP5TUEw5C0827sxH82Tpr5TRiMltZlP4BIU7(cFPHD7nuiMMq4Htz))fegnPn26r8yuCO)Q0KIG7y)D7gEjw5hMeUnkmVK44XM01HmI0MWC6qtUZ)P09jRhLxqeKkh3LSX1S3eK8S)AYiAXtcAsMRNxrM8cYowiHvKW7rWZjOmGq4ZK2fI0(pfwxIcRS9u5PRRxqpgq(1LuE21RZROMTqoyz62OegtGFC02Luqpff0xujgWTZ2cQSGO8q)1ewtkqUcfiniuEH)U4GKecvUMrUseIO8zBqY6Wm)0n(f3xc1wbjbYpHHki(5D5Hc7a3TA9OTb)2HfVLrheKMGEL5TmWxylAmSDTditrjc)zZebUDLAIGwwl3XSHvHHrjBcxveU2FvCWt5cuObIWsuwquGNSZT2p8rkaPOZOWFJQ)Kbf5hrXY5LyXWk5LGI79FiHkRoAdtyHGov89mmUusOH1wKelHwT0261GmcWVJnTbAyRGHYZhgbZ8E5hruY0YnXV)AqncHBJTaLL7z64e0QdYd6)uuczxLPEVtSScYbAneujqmewt2pCoig6KjUOMtJS4iRPvbppQiA1d1QoAxtsdI3cEJIXjLecDaSCSKDdCAG7yZs3aQ4a9Jq16y9te3Er9TOvLaZ(C9MFW2KqrfNgmUFkiWf2IdADx5yMpDJs7KnSMtWkguDEM452kfeUDx6terqktK)tHeIktdIlUdOOS(AWEZZNSFra(iij5XXVQ3hbxzFzQh8Eweg(b55b7JlmjuGizH7CJSctcL3TI7NcbIm8wc0s93TQWFYu2sCk0ZxhfwBcPrbJ96Bn6kHGbfsewXK90GDHzSvNS)vqJJBjBALH7llYAMSAxNseAANUwK)DmOIPXd3PoCK4cZHNyTfPRmeHqJFFCe1acsUjAvuqSpjy4IBP)NBOAk8ZdlisrAdm0sfdDYyT1RwVtWHuodXabije5RDW2r0DsT4ERjw7OkkEPzgxQgOO2g4ieKgJSZ0IZSgaAn6XVnWBiSkYi7Jc8pGk3W1C3jzeRP1LUQfTYNzbKHFxowebLID(M9KOut3SXNOQOsVgEaVFlXqFrKyiOK(GBlYAohRY1thyhngdPC(aQhElgKxKf9qOuoxA8CAx6UsCm3c8)66uvv7uER4SaN3PmbUsAgvNdypjKdMwXZuQQpoYjlsTvPrX6c(KHC(57cP7pDYk(LwfgWSJE9s94GOvplAfK7gaRswYYZI2v(G)s17IYvKgtXwbfHLY)YH8cQRQXqD(EAU69xNMULQjzvHfgeAtjLrQ8Kg1IQ(TrcMwRFkgI)FaQBW0Pt02(Dzm8Q1CDf2RnpwuOjKiloB8LzPdY0UrotqbpkkJ7pnczawot2C8XRWbg(mlNq8VTZjJ7FD4gw4G1C)1VcjUY1(BYcd)9qX3PKvOXgovv6D0tesEy4otfLSIg26D(BdUJiwmP0c64JYLi7gPJzFNMwZUXjRoIqCiXNu048IdEEISm5iw7qbxQMjopYiu53hghpA9(mMvlrVzfheedw6oYUvyr0M23QMzI(VfVpeowXjDaPDTIu7ktTGS)5y)uAfPNTA9lpRvUymb8X0aHQgim3Iiu9sj8gM7ErLm1i7Lv7k(HX0C261SjvQqw2jllX6YjCltlpr0D1dIA9UaplOvKxoaOMmp(hwj3na4rn0JpWE(LSZcQ5CHgY(VZl9ZGNey2jGbm21V3MZuOIyAgMUqUhwrT1iknWSCqBQfBzLSr0OjgIgaaSR2F(n1niztW9EcNuMvb2RlpYW503cKMX6PZXhobho7TaEjBMFWWPQ5yXbc2Kuyb3jVUm4thXWfeYKl)QqXHui)2nVCKTuiC8yxGFSFusn2jxoTsWSgz5xdqNQt3XY2IeO7yPMJEvkrOclc(Z2h6KgASGlNpkXan(uwukrlD0Vtug)tKH((dl(N7lwsIfGWit895WI)ozgki)dJ5)tXb3TpCjLNxoL1MdwUMa9TukAb6Xw46QlMlVf6aFYdxP1xbUiucIk6Idgn2rDSBh5wOZmsipBiY6I0YWDrRjpFfGzkmpkSb7SCG8sG8fyI7ilCjLNO1MAqZt65lgKk7wLHTLL24mLYVdUggILEMoC6DcAk)CTbAIK9v8gxT40TqhlPG)6wVigG5PKtDjjz2lqTeIH8kR3MMTmADuXZkP0eFavMgGpYDyN0Au965kq)QuTVmM(g3cDcP1JmTYmQMd2T(uBONn7Jrz7P4pL(rmXkCEdF(5)gGHKBYcZVNU2fY7w((DHz0u4eLiB8NcMnzPegLnepDY85hQc4OdEzCA66QjeF0d5WufdXL7wImm6hbGP)QHiKJGP1HAoq)s)T1Pc9D8dDhVZucd2tDWHljHPWizaJC4b0dWhVGe)8ZvzAGWbY6yIa6yKpKTueFBafNyzZLswXpod(OL4sienJMrROVAlyjR5y)Y)WNwa7LLXoyYKCXoceTWOMaZIT0toohRabbRtEGYprHawqgAHqwaTumkbG209VkLe6tazBljnjS7eS6xVCMS)m3NxMumGPJenl6SfKwwNf276Z1Lv4DhNN6trILu9DzHebWLbQPvNRuSbYQoWwMACHnaNkPXYmiBoR3(0w1myj32Rj52Mt6QSxxwKKg6WWCIuQO4T5GnfkJJvbjuJ0zzemaIqQwNdLwQ2Sp7zUKP)LuHeie5u3pwF8fz9(q3pSF9Wesuv7zIDWMRuc2C2U73(q9N4uZopXktygfb(AENhArEQ78yW8CUZRoNC78npe6SUA35zqQYZqIg9WK7kUNlGOl0FUgnUtbE6fxtFz1afAEj5P10lYPwJ5dBU))E)672wPxtBPqr9W9Ri(y3PNchB9BFE4njrJ3A9jzvi1T1yFQhpqhlNE3z8A2aOwb5SipRUebHnypRIkRyhC3(4Y6kvB4eLS0rzHm9NFfRkeAnE88vAb55HzdzkB33BEg0PsHZ81CCDdq0v1emjEbDpvGbCzWDm3uj(a)qEPhPnHKa4sADStpggx7DlzPq8MoiBjfPBbSMXa4TN5ZeQcRgv4okkFu2(Lp7)09HX7kRCIQKoimMNUpIesjZz0OKvbzjbfH(rRQGUy8x(U(H)2Q49RdH8iPdyNNfyNxNXopESdPcrSb7ChDFqUpTEDPCpn6a0(8x7hwQaHpmF19iWnq6RNdzYTdeipdeiON)A)qCcKNocKxlb6ilcLwsD(ZjcfpjWwfBYQ1vXTz3E6Kn6H)UdlUCk3DdKV4rgpAAZUKUs6WwC3ZmU7HG7ENmUJu(b2I77kpm5NXshgeXVdRokxw9k0mlwjt6fkcYTqq(ybqWaJK4pima676ZvmDS00sDLE0uwkD1j28wXttrKNOotVZvWkqM2pimaRXkaTDiyLlhwjYx52WvrZHeA1BxbiA3djoTG)VLUWgDqq2ohgbgRC(WWoFk5Hv55cHRBhRKWq8Zu1PWAUt8dgZPYhkdxLve)yREQfKc06o1kFQ)blxRdmTC14T7qRigoyspcAeuEETwRAVxLST1qeAw0Y6vK1mnSL4JkasxycU(YsYpwg6RGJNKKIxNKuuvR9njLVjPSeY)vBKu8uyXnlPaybwwsrXakSKc2jrDm2um5IcIdawRpO654cKIm421ae0lfAh0mckNolpREdMp1LJJTfmi3SBL4Oxt1TQlduAsuH7ugRi2jSDmkT1YMGhQI1cCySIUFJvSJ4WxGSIf8NbU2JR9rS61c7CCDVQM9tBnBizPwFpHXosPfRDUtsp)jYKstz1w65OR9uB1UqkxR45Ev(jxBiX6Lvj87aH6BllUB2B)iAjQPGlMMq5lfVmLb)unr5oiBT0l))YOK1JIP19ZYNjICbB3P6X4Nb2eNQt7O(SVUKrgyUcvsJwLMLTFN47zG3Aa3k(HWhP6yst)9q6DDOfjPLH1hfi2q9ph8ZseLEBlXMwMCcvPM)6uPkvt56SzrHVPNGRF1IFQIMxTOe6QvRXBm0L1CRu(bcUFhrEQfhZPx)0KFxQasTCOoMQvv9Kfl6rIY9dQUYtRhbSO)ecudVAxYZHUce9LqTjD)ChAA(9egaAbqsMY9jpLMvC)Z6p9kuA(anNUgJzb7I6Woi3lfv8IGwYzfRfTAee2TpVyp9cOxVflWX2mShtPnoxY4YtJz4KKFnm2f5b5F)(TbjPrRz9vSOeYCtNfFAUErHSWa3UnCDe7(zZzaEtCy(9SEhm)yVloDzqCzsMPhZrAOE)tUq)D)x3(MUYUWXqvxOC5taHYqrwe7BGaLq3WBrEPpkJgl3NLxq10LNMfMJ42k2naeIF1M7CgJv2v)yM30ro5vsORXJAgFTidgonarF3qLbeGwLNyjnlDBTQsrIf6E46mXCDecCpoBIcbUOKREmuHE3(u8sEMTw6qnnNVkDpHNRUDqyQo3mZnwBfTUAkP)Tzgy9wZRo2QAw9gbFnnafiN2VQb7uDv(ALooe)DK5iBNg60Ez0fMRv7408MDz97jHNk30GlvZyyk84zRW2GqUvby9ZWtJQyubYC(gaSj1iWyo2T1XIMyPSXgZTAbpyCaRNqPPBg1HgaJD3mbmbOwcR8fVSfpxRT3mz98blWHEgiOuNwFjX6eWCEOA1GNwT)2nZ7GBhm)DQ(mfu9ztWZBk923MrDWM8s)69enMreJuzeLre7Chw8MQENZBOFPd()2hLr5NZt3sgxW(IuIHq6pS6(aIs(8rh(L)g7ZPWKF8WIFonHmxSh)g4CErGzrk6tR3RjJAG7VnSb2xcd7w1ssGv9qlSeI9c2EfmSf9vqc0WosyjK5CtucSaoqAaMPeNdkJ9KWvqu08MlasjOdo4Du8WD)oNbyU9(DdU8TvEgmC48zU1O)zDs)G8K2ql(Z9oF2RgefnGibv4gcGLqUxKj(imSfTEkbAytRYq21fg0G3uqPzqBpq4lUjQh2I)ma6(N8GyPP2kUeSL9JqbCt7Drumq2C1WLGOYvg)8dqeljCXgQiNRe1OTavivVW8wIPb(ZoGplKbHyJLalyy12c42i2Lz9vcL3eivS(REFEMRPBb4m4cMrxd3s7xEXMr5OjRVZNo0zGHocWlVGVNv(Yw0haE5fB7badjy0f6y(AWhWN2UAbVV)ZDN(DdgGVGE7KHVBGoMP361oav(cYthoSL75B75FHSN)HZ(EERQae3)oD1wO(vEukzp8larSwDjXFtNIy17m6V7NHOHpPOarCWOxW3ZtCfG8bvDRGEHpOsMSS5nd7DHyJD2aU1uBmDd7qCRw9aoLqr8ta1eVk2X(xpbMklatW)vCfiDu(kRaKJ63KexFtHqKOpz)BLLQ7B6Im81wed1tIvv6WNVzclJn9h36pGTRiFE7kBlyhiV1ZG8bQRmdyNLVbDBbPH9IwTtYg2RimfpVkjWcFywwc5(iJyV2qUhYSnQVyhLpIAH5jeUmcepzxKrSq2dCzNpiJyZQhGmIVO9a)lswO7CMdb1bwvl7D09ofwQQsNh8w83GGT1xp8O0Z1YpfOxZE45s3W1Z4vbgW7)VYCHnk7Nc7xxghUE2(gIj)9wfG4j94oauwItQ7GfiqwEm9m4pbeFBa1i7Z6W72H0Va)eWAYZYPocXNBDamxCy9)KCcRG7PKgD4E9a6taFc4lTGk0HUvpVhblgYQy)PrVIwrCLh3bGQxgeEm9m4pbehtkeCi9lWpbSwN0h6W6)j5ewbWsIadOpb8jGVGYIQpVhblgYQCsAnkoAlqRQBamGYdOXCwbpgGvoUoSlwPZaDW)7(UlNoBCZ5)CKaPegnOQsEuA24mtdGhJajUVbpgGntI9uOoaW3ej2oGirIvcNrq2O(1ren4ES(yKA4D1cuLhBfqp2DRZm4TaW7Ysxvw5Z7Y1bCSXzj(B70q5E87o4T15aT(EC6GhtnnoVO59vlut33G3caB3(j(4Se)TDAok2g7dB8OyBSh8wY2OwsROw4SsVmVIohvy10VFE5Llqupo8LxWNj9MaWK5h(2bUJM(oeblYtbMqA)ZA4W5d0BxhJDrEgDnoJUvZy925FG3h(WR((Whod7dnsmYhyuts2pPJOxlSLBZfsahRlyyl0p(Q38ZbTOhX2k2a1gfKopFAhYze4wa2tWVvmGAVXqRS5E6tJwBUUJpJCFyaVNefrb)XZD)5HC0N4Bd7HrjgWHCoHUnW9eI5dfQ2hvJvsK9W8OxKu5uVpjTGNxOBdCpbLSyxYJ(rE0MsD7eup9nCVBaVVWD8ZF2ihUf6e7xOBdCpfDINZAogd4NT9XVH7NxCNvKjBsJJtFI1McciwOYpS4PWmYVtcWBDz(mkOdR8AQFyb9t3gTzCuupUKuwfQSpry0Rxth86GIGLb5H)4HF5WIV)Wc6jPGw9YLC0DS8woN6TqUou9(fo81AEqQ80EO66qGCpurvNpCgPwT6DQ(NNqm6VQj(B4)rG)NiWHV7jb1FWu7fvK9oJoIvQV2MNE4QS)Qd5EN2GuCU9(8CoV2yVwMDFTMNxTwbYjaX(m)0h(L)kt)ifq)GOdQuLF0p4VPBIOFjFkFu(OMVaWVB2hA)GcF4xGEUS3ZVx8Zh8mpkcu9IKHVnkzn9I)e(7H8)m9ceKC3(yIMz(FoiHadIFpRkl843hTzwuYQ0Y(xm73NKpF8R6nFgO3Xn)scka0OCON3fOK2lV0mjYYG1ZulwiscAYE2Wd)YF6pvVBksR(90KqkP6Znz5ppUUvbr0ghTnkMH4DJuvTm)FQo6SCEUJ6Zt790V(uZAn7)(0DZyFTQEp7Rp0mXob48ztSG(7QDb72IVTp1XmqrxM4llk8R(K3lVUCh)(2V2sZ8EpjiH1ruOmtdUFT7yhDDSURNDjoYWDrTO9JZvpeMjJu6G98zU8yS(HoyY3xrReJtzi360Y2tv3AlvY9clCYXU0DL4CE1IFGoMM2giy7wkeF0qN2tkgGG)YlgiXoQG0870G4s(pvZ141illoahegAhO2iTb04YHV8Iq7vLWRQJ4R0jbR2fQWiXaNBxHWDvYRNWRd76RgZvjd8DcBu8HBqG6DUE2eIHk4oW7lVi)7rjZDNouJAH2MqjIwUl7WSv(7oi9335xvPf()9(WeAcVyjb7nH)gzpmjiUSoniy8JPpe(M3FyXtr0VKO7ZdPj5kkN6QrcTdSgNsSov63Y6qgBn1vNNyaL(JS34tLTGY)AYM90EL4izZCLtJVWKxZqqBVVrvVi1ai0giO5hDk7r1z3yCtYdihWpVuoGFONWb(fyqNjab3rKXHM(xslfbXy27M26Jc0EsRJkYc1Z8iQuj7PFQ8RiveXtWf)ezvs4C(N7lwMfg8azdNMM0)oz8fK)HXV9j(lWPGtIYEGs251fxGtRwAnDD(RNyNJrdBj6WZgSAtt6BDh3cxenUGthbPtZZDKO4teSP)uquX7ZdxPZnbkruNxevgiDSHeXp3RB6zSmpuvur2UQRV1NdHLyTzITyq1Q4iRN36osRxF1R5xE510X6klML0TSuMRlk)Megky3OMosP3a2iEDOTFfsxfA8huIRvipNVDcgLga50MMLWWA9knTyWwjNMFIVSk5CyqwHmtJHNRWQlTst87f6LXe)3zkx)QQVK9A2pYG7dzM7)yG9Co0(ogC)gJ1NXeSdW3jTFTtyqxJuYbAH6aSBYqoWV)b1IX0msrDQ8NdO(P(tRkZh2FJ9PWGJ8qWQy)Y)0NMSmL0mqMWOvfLYeTbl0oaZaR5WCnp0QcBWIrw1d2mpWMgHL4kP(NhLKMiKycs8rQajinu41vmXyecv9kmnqH4xq9E2pL(FjUL1MvscMWsdg7JGaBLSgUF57aPu0zGn5nGZ5Wluhpv)JUMf)8zcnkEA4WAg9Sp2ojInSJgxafdLTRX1D9mxx0y(MsmhBiK5w0t85d1fUrTiRysDQYgd83OLkfosEktC9EiO3UCjnOINq8tCcx8b86nu0xcRXXg1lIZoVdydG3qj7CKv81UnMhK2V1L2KzJhYLQcGSI4mqwM8k28jNV2RNmEOmUl)H8aYDauXSbAZZ4LiMacw)m3te)KMOpbsx75as(65vLbPcQKdICHmEiYrdHfGAQ0N(wp5zr0mpWKGSsLHJyOB6z5KdItNmHwi15ftBS9WFypMtJS24GM60ff51gN(ukZUudk3yENG47ypJPdyY45Zec7Q2tzGyXgsJkcoPowCkgxnw7GiIAdR08IOSMIQOpVrOutcVA)1gJotgx9gYjdtofzCVbSMEYdQ8KtXpkbAVOyiexJSgspTcz0aNXurD9eyCqI6dnPiVP8NVr6RYmx4b6idmqApgxMihJtJ)dop4lbSPJNwvTjbZIW)FRN2aENpzSHmTn84wec(aIUR6ogZXft2dS2RmAk)hpuVINRLCGeZbSbACRd5ub4sKP0bUHWw2SfbBtrJ4Zehf)7Rudzm0tdj)SvXoU(Q5c(50Bljygku3imzcYHjIpPogbvaqF(mSvcGJ0D7ar64Pvu9ZQvB4z8WqkHVgRxMHxhoMKHgo8YjoqgO8CpU9hEEinivhnymb8uzHbsh8n1iSOD1wYQjyxzAMef(N56iLqXDRk8Nm96PY)onrJtToDIATLGi2WJOMt8zdEQ69aaMZYYi3euJmVBkgYeSklIgzwqS)oYaG9t5cDUVzL6WRa9Tsoxzvjf6WIFAjTlAffk4RvvIKOyn)3xEuDoqLlK7vo6QFcUsLqvlGnluKSf4A56qdQPgHTNIfUPWR5XVt6DF7vdbnL8YlsZbmaVu0Iq76bsPa4wZfynn9Z8UdZGw7h485m(6mKpU5GBLdWAB6V17JNkvbNOO9JU)CxxLZXvoN)6ik9fwlrq0NAgA4nxOTNTxMVk0hRZD)JzjXBnSlCjis2aFi2XDosNze(dP)yz7Hvkn9irDbFpr8CunGKg3vCVez7P9Z5oD6q7d(V8cAdSVYqLUp)8Vh4Jkp1WR0NpEHFIhBKHDTTR)cXy8Hf3iCKmChtJOJ)MD03YivSz3FUxhcQveJbk6f9HG)1CvVGrL(I2Xtrmvk9q02gu6Mn(e3Wk990sUo97kCEmi6PGaU8TuvwRp8OsvjcvfjpuA3VmyL2W2ncIy1PFWLt(6ACw)5oCztoa4kGLUdgOQxgJGkCEeSaC5kwBXXA8yd0xyYMRFAiSMvLJ)LYt3MdVk)bLfGHZWRoDqGxEcgULVF96WeI3NPBPcmRk0QkY09aGOQst1yZTkS5a3vJpsUqyk)cEzi7Nkh7Ik2yCJgGJuj0kw6)nCMyTt5XkpPNLO25L)Lu1CmQQ8oMfKTkiHAEkJ4ZDrLiGs8GEJ5m8JO7TTa8quFxFNYa5(CQolc9I1dvwaKvBzPuTzF2ZTw4A)TMki(1ZeuvTMAVbcmuURMnWHJ1SMihrggKb3pcZYdZOaJB)O53(JZ(HkkFC7hqWPF2puHm0(blrb5()79RVBBLmo71R0zw3vwzLvAnzMRCKQSlav)sQo4kwKnnGg)faLOdswfsRNMyFAjNX4ICN(fm)I70UYzqFJtLhGp8EoAxPc9D7JZbpEyIntMxan62rYP4SRgdU3SjklKPiOv4U5N(dJSTkg31nquWCQ7QiagurBWDmh1jg9FihmY0bic6Gtn9eek9w4xLRs06EnB(mAeLrfHBRlJ1hdJRdwGG05f(bzljppt9vFN8LpR6b(U1D236lExwDR5c4RgfXJp(hJ(HEQdZVhY8d(vRQD(1)HMQdZFvxswz1Z33FjsjIpO0x9QDuEIsZdR(sRa(ShB)oMa(87PVl4tO9uQHaTN5MnXoSW9ax4EylCGgqp)Ub(ch(d4c4ZLw4EMx4EhXcVSJnRCrS5VvZJhnL7gkdqUzKohoUI2eZv3QVl)at0b8Y7KXlLg7n(hpJoGx7kVJFplJzE8yMl)n6gLGzdgFeDI8JPrKRRFWJ0StLAo4asew2sY11z4r69XsZnGAiDnNCWD7gJjI5PmpoTOEVxmABf2FmFh4Vkus54MpFgY9SVktHKn4DSsxIZbd8YmPnRigQ8dqhvgYDzIexcG5OXOlr)Ggmg86HP4WI2cVNVTcaiqO8SAr3zU8AvBwfnzu9cyXpAX5BGVC(mb3yowgnpqgnVVXO9feJMRnmAE8CmAy0Crz0qu(2tmAszYtrL2riLWNICjoxZvVMkBl2BG8coDGnN)KkTfHS6eWzq2ipR3yhO2uG5JpVBBXEWBXkUA0b(tOTy3VTfFYBX3EtW(I7tZU9MBI2UVS3s9Z0ku4w6)52))d]] )
+me:RegisterPack( "Unholy", 20230320.1, [[Hekili:T3ZAVnoYr(BX4WYrANzKfPS8(awcyZEhcYGCbbXBUpAAAjklgljQJKA86ad9B)6hK9ZQA2up8o7EdcqwpInRU66DvD3fVl8UF5UBNNuLE3FlAy0OHJIgoikC0Or)WD3w9Y207UDBYSNsEK8hBswt())NBwMV6f6p)YQ8K50xVmFxXmYJwwvTT8hV8YhZQwU7HbZYxFzz26DRsQYY3mRizrf9Fp7Y7U9HDzRQ(lBU7bO5o6QRiWCB6mYppoIa2S5Zt5JnTC2D3sh7hho6JHJ(X93)p3sbW(7xKxS)(WHdgo47gS)t7)uZGIgsg0)DEbzi7ydTuFS3D7QSYQs6YijpnUmTA3wY)4VXOlPBsEyv687(tKhoJUii)3nVepFZCoUuKTL)R)u()1(7VL9U3s(1Q0ISK7UT3(7Vy)9vjRs3un4HDfLvzBEmUKGmLdQb9(7F9193ppnPAz8tBYECz1GfpNVBZ805XvjfpMwrW3Pt2F)SxMTknoDt66m6sWZ3675JSijBEC6NPOrY85Kj)xPR593hy)OI01jzBip7gYRhg6Emt3F)4933)UkcNcHETiTKsnOR7QISNsvPpTSaUz)9uO8zLLDqlKtc0z0PAyqzJeCBKbUjXac75ZjK)I8KbBZZxrbyXUnzZI3M)CAbN6TGIFXscdv2rUat3MnNGDZOt0vVbeb4L44dyMNrwWZZFEZGKT5Zsw9Y2Y0bQRsbLH(84QS1eWWybZtFy3IfdKWMH1dkRiwkyV5vWi51hoFiqvvQHKl56nlxoXCwE2kY8vD3TfjZYswv6uHUywYgcMMxuqGTHE9)O(9vqvf0AW80fzZYQykcrdzyjrNxqxl3TED(M4hjeH8xwPtCFC28bRt(vUeMCPz(kAMj2Mwnq8eUubx)C3MugqJ8J9eIOZQz5IbJhwLNppEXUIxgmFxbZoo3WIgQiwxbi4yFo(3Z7vA7Kqcf)6HmiZj605nPy9lXpUmF3kvQJXt0mWHViBO3mzFyykFshGPPfnkXSHTrLDt2mpEE6SKxguLn7jMgxn17H8soj20EKJ5ukMlFOBlIcoFArzAbfb(JmNhArESCEmyEo582ZPcNx8qixusopds7yr3rDwKU5XQLd2TTHml5FCdlRzoS04DkMD4pv1Gh3vazTTMASnEEwQYlzoTT9I9LlVv0zQm(FTB(JRPgWbCgQjDdl)sTko(3HIXuK(WfyBE7ZJOz4y1WMNrKlkswftI0yL7GbqWMAga1zNIJ3jSqq5obb8lpPMkB5VF7UvLPu847A1u4ISIuM5Z)aBjeAnE4Yvob55rydzkvIeU5zuM(37TW3ew4sC6lQfsNixDoss7XjpgNViMeo(SNk5HPsZ8KLqJRavfjAaK65FI9YhsQNIyhd5)7wELwdVKqVeIK(evFpybIRfyNTsnbzhneXJJelIg2sMPm0oUCBkjHRc9mYCTaPyx4xy5z2Hjk4asKI7qfHUjrJgr5dqi(pty(e9H93tKM70YbLUDimELPAlNPJKTTjJwyJXr226lf3W)nM)syBuNlEu8lrHcm5FKxhOayTRjDLMT1z5RxNq5kmdKltj(bsM3edkAGBrHMzrddhHrSws(1pGeONR)8KINi20t2uUiVynZ3JgsosXGf(YSFhxjbIbw7wkPSmz3QkTriWrJXORXyoZoaONONAmxKqpugHBJLOUGnYey7SQ4rJB8WA)CwMc0sukrKssOkelfjBjk(TNmeoFQRmjnvuMCVILDJ47U72DLPeiTi(XzZrkVNerXQjeI2c1XyOI541mCIAcjn(zcDH8JoJn)4MoDzQwJ(gvJF0WFlIZULbNm)fLyXzcqqgfQTMH(CZ1Pik8ohyV2B35y4hPN202C2)1zSZhJ6qN0Pu8JztbP44p4YbkAAgTgClrqyOAoT8TcImFKaoWMqFcxwjWBLAXdAdxRw9mrUwX6ByUzncNM)ZdDe7cDzzgiGwzWtRtZ3ruf8W6CfsHYRagsiwWpnH2eVTilNmIxAu88jcPEk59msQKyzlr4XUChDliJNNNVMs2Nvzynazhuch6b7zkdhAlfxoWAjYL)Fp1bmBjNPL5YyasUPrAkS1(0ESGH1gHh2DtVS0lh6GQJ6SLVzShM7I6nYTX)Lh7SS2(rdAteBZq7s6x81dctiaL7bNv1HShPDjRTRvZsw1UMCofv7Pr3W5wt(5Sv0rUPk5r2)2As92nJmvlPsjNtPhVbuTL(zbQ2y7bnWv1fQd1o19R0vvCMcLxI)7(GAKwy7kryKIS7d5RZ2WIHiEv26hCjeRMjSvaqDV4zABZIltsY8nngKA9NnTE7cG8XkQANoTU7lev5TUPfAKBG3I23mrxocoMBhASyEgywzvmGkr1IKSszISotHXP6wTdWAID2MfPZQi2zNTk55stpjQWs3UGeKSq88)O(KTrOI5Lz)BSTeRlUyGxIvGiPOwoir1qdBjyjEIrX63A(b45W4ugseDbCAZoZ6OTec9RsstfLg3rSq1NTefd1jeuHw98KvXBj)i3p02IuswwpKi31babCDB6yLu1QapsGtp4qeDNi(CUKGSIGsD57RoFtD)r)Dr0S)eByLFTGbFHvWGwKnzdZRQVIYbc8HbiJTWtEQdTPrJDiN7mohG8hyuatmZSm9gBPluka(uLePyJZ6Q3wAAJBdoQI9rx3eYbxEL5rPixemM1Vdy3s3aU2grHxWwOCeeBUWBl16KU(vtKfVkW(ewPJcm1A26tXonOVxiodXag1ijxp3BxL84U0hOyyAHzeoc10TPf0Jks2gDeupF7hwPNbqFj)tFwC6yupxuNrekw)LvXKzyZgLQeC8eynY068IhYMt8ZPdGlCnGAlVsUejYPAZyTAHdOe9CYlu4TndmFx1deFypPB7gCdyMNtJnSyhf3J5ChT8v6HnKfKSowsNznjaqjejywuKtyrlibqweRoulWrhm)yrYNq8r3xXIS1oKzkj2USAG9EYvpevfo6HZ6YgXlxl9VTrr79Qdfrx7BzEgnhC6depJmsgWi7ZmibK)ejEUkc8FkTYzzmEm5ZPRASLUiJG)Xje53kA1F0cV7xAaw9vnXXlcecroja9Y0kLYNuRlq)Rv7sfi7GQWbzKKp29WlXpVmD124sY))QAoN2yEEzgX4aZIA2MzjfBsQsJZMvd9yoAw)kXHXP)6Sv7MNcfvqhWUipWUOoJDrQyNPF0oGDHdwMugt3IsQXwrSZoF(B9dTp(r28iqgi91lHC12bcuuleiON)w)qCcuKlcuKKaz6OSMaLTaMeztQlFzZmq)RgCdr4bsMTmvzXbl8Bir7nwuhRAMsCk9mEE7WbJfCPqixADe3JAh3JqW9OJg3nRCrhXDrQ3i14gI43HvhvkRzf2UiMmSgDfzjemJQbbdALeFP2aOVBS8H9z(6iWiCWyMFrxQn8rcGquzIg3LtTWkqH2l1gG3yfG1oeSkubR0LRcfsvrqvUQruQgqKrxUkVs9FBCgv6GISFfAbkWAJKVXcV2Cy1bvrK62YkxiYbN2UGh1wUBp0EOCFI0YjbRWo1c4i1RPVrCV40k0nOT9ALqigF)xmeJam1lntgwpxUn3tKNKzalcALk)chMU6VV1AzHR8Eh0jcXqLkYqLkQtQu22)(Qk1xvP6KkvyxuPISc4UDvkaF5MQuy(KVd6ShDm(KAlehKai82Cr9ZX1tBaq7ID(QC6h0AfubDwnpYAl5p2Ltqh29RO23xf9bZXbx78JRtv0yMOi22EDi2YDkMGNQJ3QzyIIHFvuSJ4WxGIIS(tWc2bKWCpBxNTzE8II00)T5bXr)m7qxqps7jlD686a2YdUAOQdoqFLEWz8Mekfo2uLTo5rcoXknMsgvQ3Zt9b5E3J0o5djR)3XjpuMx8q820IzeKNn98flgT470olhjLLzRZ4n(gZaWogAf467FNVj1rnROLgWA7vZwVTi)ZP0teuZ(RHORqFevxzE6NtkRSxrqXMmsliRdbcxzssAdHbdrYO(Y)p12elvRmI1rLfTgFnLKrVGmhyHWO826lCvl7I5OoOIeAyffER8SUVuTDOZBzk9u4LjsKToT2EOtQ6bwIoL9MuLS6KG47jr(g7Zqj2fQAk)QBQU(IKRVHhrD8uohJuxtZEs)i0I5ErAzc84tgGF6j756auY3EQXS6pj38AEjW43mavsq7hzWEmP9pkv6XpGx1eZ2Hziu9T8KARDIFHpwFDzZYBxPZoDnagohqESYnJ6bj7sFHuRI93icZPEgDChcflqTTtxbDkYRQs3exLVB2sJtpHBm1JLetrUoKlWRRVFZLtlywfaYBzoRBLbG)BSJAzGhhtu(bdoW(6aDTigviUJ7vRz26EUA1GpUFW6Jnvqt9sWoIOugk2XCDSvrWnxdi7OCBRbLJArB(YV6axd(0W(4hn0wwIMb5RfF0pNq3Nz(rRC)9)vwFruSYP9TLy()iM2Ye5noXAsG(X6Kor4XAlKTKHaX38lwYjzZQyjm3mTezu0zvjgk6lHF8OGfNbMnNlYgfl2(Fg6XjfstWORZM(TeH(IyNehNGPo9Foemd6Wli00d9Oaa)eodTOncgf)eWFHJBYJx4OS1DsZ3f)YyIRtIo)hcFJ3lxOOc(fO0P5bCI2upiA2fbsJP03)vcBnGFwDbnt3DswZ1eLvFdPmVJJuK1npsZo2T)YL)8Q0eAGVYlVKcAZCSJDkpfvmbCfFH)3le86P0w6ikh4yK7Vq3UwsWXA5vmoEEjE8yUWQ8ra6X2FcuR9ORvymz9M05w7RJJZgp8204hcGuHrBCW5E2CiZNRr12ge5SWJtoYggH6DrdjSFfXxGBGhMxp87lg8CajgFaTbStEpib7OxOomT4)Dp)qUvICHz94hewLPtQc((MExg4H)Kq0)CArjfBL9VBISYZjfusoXK7VSKmhzerMIQ6UU97eEQFhju20)3DzfuP0YCAzHs2vLtenP)WSLjBEmTCW(p9xZOcqH)i1w(gY8XE87Qf71VGIeqwLJ9WgvcYG6f(R9fqo6Sb5RHHCtbhnGP5LarcT9FcGokCt2n64yyCYW8HbQHyCXC9IaBBtHgGh3wPNZWxX(ZeSbL8eb42njVZNg85dYxDo1GRZRQBureRvhjFMd7rNryJqjvQUPbCbQt9BJmph2F3zb2GYbYQy0nrbeXEW8AmquNxeotsbIi3F0Mh94jnMa4cz)BoKp50ge10t(8CEuV4W(7FJwdVvZt4qKite56BaD795Pnlq86V0nZpiEl0AhsWY66TkPwWnTYGEsWWJYNdIcY5lwJtaKru203CvdidVZREcz9nEYaYW7CLNq(OWzm5RUjvDwJjSPA9DdLS8ouF2abVMJceuEacHhLBhqQtb69qeEUCnC3bKwdgWliP1CHnk)Nc)xxToC3Q6cIP6f7bG4z84oauwnaB6z9iq2CmNyWFei(6eQH5xCH3YHCAb(rG1KNvMuLTkRYjMRpSt)KCeRGLusJlCVzaNsaFe4lTmPUq36NFcblgYALBQWUItvCRh3bG6wheEmNyWFeioMwi4qoTa)iWAxAFOd70pjhXkawteyaNsaFe4lOUO9ZpHGfdzTkVVWWH8geuFW0bmEanMZk4XaCojKf2ikjbJUHafSBosqpxW)B(MRgpzy)gu5abchgdqZcqW4ANgapg3jzCKGhdWTtIJSOoaWVnsSFaXGeBvfdnDJMxhr1q5XAewmGg6gOwp2lGEOCRZm49aWBlYNXpHpBlDbCSX5j(770qLEI7o49n4aNXEC8GhZmnUSy78vpmtFQbVha2p(j(48e)9DAoiXg)tB8GeB8h8Ek2yzc)cupCEzxw1qxGnSe97GxF9ceZJ9F9v8zYTlamD((FBVWbJFpIIf5PatiTbJ0V)0EU9RJjUyoJHToJH1Zyd783X8HlFZ5dxEg4dcnMFWux8eUNoiW28E8AaCSR5RVq)q2GLF7OfNqSTwmWUti4kYh5qoJa3dWEeXTIbu)Dg6Lp3JFAC6ZfBddpjsFO7g5Prv8KUzN)wsooL4Rq8OvngWHCoHUpW9iY5dfQ(NvJxAKNG5XTkP1H15OScEEHUpW9imYAd1tP(icWpvMN(kU3nGFQWD89FUvjCpSjEAHUpW9ySjEopdOya)SXh)kUFEXD2Hmzr(Qv5pZUjwjepuL7V)50cYVtsWBoVEgv0HXV6j7VNE18OxBOQMXTjNDcv2TrB0ZNth88KQKhskt)X9FI16gO7KcYPBPU1f9UoD4w(n4ujR29Emj4an2hpH6jbJroZZaDhhd47O)545Ca0gFmMdhn6NVGMJtkTc5o(CeH)JaXtI0dYrw9OovDoH8rDwlBTeSa3N0aCWhWkhSElUjON1pw7f)B6n(BRBPn97pDsyd6FwN0lnNubT4nOOpNliEco(7yzzFuh0uqxuAnYIU5O6CgE95m0JZjSrCE35dlRtODYpX9Vv3ccehuAF5wmGp4x1fpHRYhpglUP1NvgpHP2NVgyDB9V(nMW9nZbQ4BMKbaT(wkDUHh6DF5i4oiW8O5oVXW9CqdoATje4k)KjzAfZ6BPulq0kWg7BQ)uhFcTc61YhpRxFfNiYFzp(Kz96R((5YQF)GEx4syqGpGpnqupfWpnwtdh)n96HVG(2r9FFpxS3VnsoaBwf5PY9w(R8bN8Hlp78bwuA)fwaAufLWi9AuqJ9I(LMnFr2krB4PCG4tp77NCPSL8S)tqp3SakFq)7w7Kikgu)IKHR0KLv)zLMQS6pB0cI)q2IjaTp4PxnmOhqwf0JCqd5vlyRxFvWAmddRH5igawRsUpmEsBLWu0CU7(H80HbqlKVBytMqQLjPBlocI9FS)ErN6vfnBodcFG21OMy13E)q(2jSU13hyD8UjHFq2i8Mm8dKmbiELjGAs9edKLFqdsbuLHa9oRY0jJe6p(m6RKRyOj2C4r4lCkLIFFX9EfdG6Tkcfknay3MQMgkxoYNg0oqDiut13MgneFHR0lvTw5dvx6rklDhlIBchg4QdyDZKRSmcA0ZtNg6aFbADRM4TRPFQo)09q7n6JnsxA1RPVcPWZsx0TswywNeCYHSz66TCBpxIGYMBNuUasQK4gumuawcXHQBMqGniB)DArU5MiHPs9bea18QetNrpX1P0lblAbnVQ)RVQ1UVUzCBq0f31QT16nBUMsOxWgjjeUp2EZivFq3C9qLJVNAVNdfJvgK3yQUH0BMmIeIfCVA91xT7dTKyM67W8MShnEG4dXlthWh(VhG0pzNEn1tmXv8)SKKXYnj7VFjj2YjVBzv12YF8YlF(5Nh8C(ZlPL3GeW0LLBjHxqSdp86HxY4iFKyiAhT5G9UP)DEhg(Vu)d3CzY093)8YSvDaYx9drdV(sUtJpkkk10)C9FXHzgjdkIBrsuIST4I2nBP)LVZr03n(6F4hUuP2dt)jXFZNbArcFoRAP)a96rJjKeA737J6TFV3n9)K8J7V)x0(16fYc)NapXAFbNxe6eXUcY1DjrNZewKY2zB(C(tejZFLyhztYk25iTXsbTbc2iDqJ2esVfmQXaOof5ntIgIgwHiGuJ48da7cKbGDasCGFbg0zgrHB5I4qZ9lbroAlER3pwMjaedrKoWRVAfIyTlFm8zoCRNTpXNcTxsgO7yzsuilUEGomTQbrZUelxGrRM8Qd3O3qBfEmVp0sSEQkJjF(KHTp3nKVsyGH4ObgwATYey4P2NEBfE1NxepOG1TAS2hOO7mIHvkjfO3zIPbtFbIqHFZlRzMOrwS9UDmtame7HTGM6ybruhHio9BhpQB1oowMKGkO1CGOS83fFb(4kms(3anvcYKTnVQ2wApqtKJggay)GOR27WRXW1dDoOK5V03PneC7DsS(1xDyNw(RcZmI3W0gUPLDL3aXI1OH4KBRQgri8ig1BJmEtKJuIbWRrJXrlz9eyscwYvYzQP4j9HDZkQRbWMzXzByDpBxfnGKEHJ3TrSk6ArAl81djPhLCDK)wduBY(eNU0SArSaCUwTN81blxSysyAuuHxMoWS1O5RBN0QSSVDnR63pci(G(bqv3naOKWW1zUpN0QxByfAbozqdm4XpcqcCU0fliXo4j1xe)K6T9sXYpOQAui(AiFx1deBKp9bToRm3FWBW2o8wUDdWS)23EbWT5bDBfG3ob22iu7o9NY)VOB7wD8xswJwyz0SY1k3aedYDrsUcpgPr4ZQHTF8bA2J0R3vHuQJeRI0XrPqL8JuEkW4B8kduOVBcJCGucTjybA2uR3T6Wk1eZ4fsCxskR5aAugyuIrOPNWE(eQl)l6es1WAXPa6LXRRsnKeKQ5gi9PF05vUbx054cZpof4ViWeXIAWva(10m9smtS02sP68U2t0sKnSFG2UpTGrMitwnX8gDprsoP(CtSgHvzlIJzKIKPixyugDC6iWxebkD8GyMLjZkYO7Lgj)8TKbXyPUcHwQpGhg90Rb9oXCXknmEl77WKgMXseKQCZfeyshWQnn6BiSSPt4QdcwwlJ(79wGreTEyiAHmh3hEzjvePjJ9eOLRUijgasAGNB1isLPscudDZk0RSFtN1fZHplUcjgk4s3Bb3vWiIEMooPGbM58Ok1)NO8k9PGX(myrOI9m3nHIiC6GZeItOa34DpZqUVMnFM76ollzyh)tIg2hEXPNjrhDwPUpqOKSJsQUbGhhBU1fETKWFMxtgUiH6BDcxs(qZvaFZoLAcdFuaVWd4CCewcnd6tSLCsCeyRW3iwo1WqX7WC8iehNjTddj3X3cM)P3rs6rWeh9gKGFUla3Ge2NXKZ4wKWH)bTjjhWMN4ylja51yjyncCZ5Hbs7Pd4pSu(0mrFrD3ctcda)KqDZyZFNwhbeXB1zO9csiMathurqtzpKVUuVFCtI50Tw0kau520OR(1QVPRQl6mAn7avru1qaFZ(yOgEPGHlOypFIzNMcRZvr)wqxKtxIzrxmpwkQvkW4vDoDieNZJKR(uy4EH2ZIYxSiMKEdx41jzSnQOIFqIK1qeCaXQDxSpJazdZiNgG(1nlItGoOnlcHMIeQrxeUArweZ(Jm5C0QM50GjMqTvOMTy5DYqrAqqNiuTyTiS7ws7tlvNBq180JJL5LMMCIwy9Y3K)doc)16mfh0RLC0AQ3i4rCMTal3nFE6M4555RPR8zvo3eI2otQthbhntOMKPyHQM(YFCxL(OdyLnDK5(sW)S0WdR2xtcKuHhcswaTjtR8yxmrnDC)wkgQrL1GiohsAN2B3xuRh9cLP84ZsfsvTwT(FyCwwguF4wyXInlzdnIHIccFT2IG1TuiAOsmyy7kF9MXIMhICZuHy(89JXTjUW(qlb(oTTyxXlm)ZS3x(BIZR10jqYxNd321NqaFfzVzcgk3vFT4WXBztKe)WGmi)iTOmTGcmf(H43(9d)WgLpm(beCon8dBidXpyBsCz8)A38hxxRJZE9AB4nn7xTJaH7T8SbnSZ5OEWMGg)fa1Ot2mlLU31RIPNim8OUdh)fH4s44UkyqFJJveiCSd75B3TQe807rCHZcnryAFYyW7L2KRhcYAwKvKYSdi1Tf)0VBuTTX4UYarbZXYvramOD2Khzj7qC6)ujyTc6HONdo1IAl9lMNr2MgyC5eALcYQsx3CSH)C6QM8Ti4CzvCsXd0V662V67nV6g1pioSPDrxFVnK97nGpfzK4pvFm6xpSom)riZp4Ncn587(RxwhM)6wVT1QxTzstus0Fap)HAgQkrr8W6pFpGp7ZYpooGpFj9DbFcTrL1hONFlyIDyHhbUWJWw4aFvdu5g4lC4VkqGp3yHh1(cp6aw482aU77R0GXk3yjaYnJ0fOiviRqAt)JN)vlPd4v0rJxwDlE8VilDaVWUSYrQywO6L2eLG5dgFaT3(dP7276Jmash01OJZdOr4zFU31NBaKgQTXCdygYvhVhKBlCMOx)5Yv5vn8E9KTTe)XcDq9GSASxdQ1yXSrqw7jKWG3YohtkXxyV5DGhvwlV)9Bzt2adEPVYXpvFDbebLhHj99N5LraKqNqlX6zn6Z0lBlG2qnwROEPRtICDPAr(9qLaJaLaJ(Qe4x6sGH(ibgPgLJdjWqyjWwSxFOYCgf7ZYS3bO0OE7RmeIB)Cdylb3LdgbDBB6GeVRlMkgc53z6mY9(P1mOaORnksT1hFOS4iywSv4iDqQeIfh(vw8rZIV72KDvlZlU72BZwVJ3FE(5IKfv3r)F39)9]] )

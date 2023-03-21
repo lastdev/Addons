@@ -73,31 +73,32 @@ local function showRealDate(curseDate)
 end
 
 DBM = {
-	Revision = parseCurseDate("20230309070430"),
+	Revision = parseCurseDate("20230321085316"),
 }
 
 local fakeBWVersion, fakeBWHash
 local bwVersionResponseString = "V^%d^%s"
+local PForceDisable
 -- The string that is shown as version
 if isRetail then
-	DBM.DisplayVersion = "10.0.32"
-	DBM.ReleaseRevision = releaseDate(2023, 3, 9) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
-	DBM.ForceDisable = 1--When this is incremented, trigger force disable regardless of major patch
+	DBM.DisplayVersion = "10.0.33"
+	DBM.ReleaseRevision = releaseDate(2023, 3, 21) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	PForceDisable = 2--When this is incremented, trigger force disable regardless of major patch
 	fakeBWVersion, fakeBWHash = 265, "5c1ee43"
 elseif isClassic then
 	DBM.DisplayVersion = "1.14.37 alpha"
 	DBM.ReleaseRevision = releaseDate(2023, 3, 3) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
-	DBM.ForceDisable = 1--When this is incremented, trigger force disable regardless of major patch
+	PForceDisable = 1--When this is incremented, trigger force disable regardless of major patch
 	fakeBWVersion, fakeBWHash = 47, "ca1da33"
 elseif isBCC then
 	DBM.DisplayVersion = "2.6.0 alpha"--When TBC returns (and it will one day). It'll probably be game version 2.6
 	DBM.ReleaseRevision = releaseDate(2023, 3, 3) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
-	DBM.ForceDisable = 1--When this is incremented, trigger force disable regardless of major patch
+	PForceDisable = 1--When this is incremented, trigger force disable regardless of major patch
 	fakeBWVersion, fakeBWHash = 47, "ca1da33"
 elseif isWrath then
 	DBM.DisplayVersion = "3.4.38 alpha"
 	DBM.ReleaseRevision = releaseDate(2023, 3, 3) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
-	DBM.ForceDisable = 1--When this is incremented, trigger force disable regardless of major patch
+	PForceDisable = 1--When this is incremented, trigger force disable regardless of major patch
 	fakeBWVersion, fakeBWHash = 47, "ca1da33"
 end
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
@@ -464,7 +465,6 @@ end
 --[InstanceID]={level,zoneType}
 --zoneType: 1 = outdoor, 2 = dungeon, 3 = raid
 local instanceDifficultyBylevel
--- TODO: BCC support
 if isRetail then
 	instanceDifficultyBylevel = {
 		--World
@@ -475,7 +475,7 @@ if isRetail then
 		[1220]={45, 1},[1779]={45, 1},--Legion World bosses
 		[1643]={50, 1},[1642]={50, 1},[1718]={50, 1},[1943]={50, 1},[1876]={50, 1},[2105]={50, 1},[2111]={50, 1},[2275]={50, 1},--Bfa World bosses and warfronts
 		[2222]={60, 1},[2374]={60, 1},--Shadowlands World Bosses
-		[2444]={70, 1},[2512]={70, 1},[2574]={70, 1},--Dragonflight World Bosses
+		[2444]={70, 1},[2512]={70, 1},[2574]={70, 1},[2454]={70, 1},--Dragonflight World Bosses
 		--Raids
 		[509]={30, 3},[531]={30, 3},[469]={30, 3},[409]={30, 3},--Classic Raids
 		[564]={30, 3},[534]={30, 3},[532]={30, 3},[565]={30, 3},[544]={30, 3},[548]={30, 3},[580]={30, 3},[550]={30, 3},--BC Raids
@@ -486,7 +486,7 @@ if isRetail then
 		[1712]={50, 3},[1520]={50, 3},[1530]={50, 3},[1676]={50, 3},[1648]={50, 3},--Legion Raids (Set to 50 because 45 tuning makes them difficult even at 50)
 		[1861]={50, 3},[2070]={50, 3},[2096]={50, 3},[2164]={50, 3},[2217]={50, 3},--BfA Raids
 		[2296]={60, 3},[2450]={60, 3},[2481]={60, 3},--Shadowlands Raids (yes, only 3 kekw, seconded)
-		[2522]={70, 3},--Dragonflight Raids
+		[2522]={70, 3},[2569]={70, 3},--Dragonflight Raids
 		--Dungeons
 		[48]={30, 2},[230]={30, 2},[429]={30, 2},[389]={30, 2},[34]={30, 2},--Classic Dungeons
 		[540]={30, 2},[558]={30, 2},[556]={30, 2},[555]={30, 2},[542]={30, 2},[546]={30, 2},[545]={30, 2},[547]={30, 2},[553]={30, 2},[554]={30, 2},[552]={30, 2},[557]={30, 2},[269]={30, 2},[560]={30, 2},[543]={30, 2},[585]={30, 2},--BC Dungeons
@@ -1136,8 +1136,7 @@ do
 
 	-- UNIT_* events are special: they can take 'parameters' like this: "UNIT_HEALTH boss1 boss2" which only trigger the event for the given unit ids
 	function DBM:RegisterEvents(...)
-		for i = 1, select("#", ...) do
-			local event = select(i, ...)
+		for _, event in ipairs({...}) do
 			-- spell events with special care.
 			if event:sub(0, 6) == "SPELL_" and event ~= "SPELL_NAME_UPDATE" or event:sub(0, 6) == "RANGE_" or event:sub(0, 6) == "SWING_" or event == "UNIT_DIED" or event == "UNIT_DESTROYED" or event == "PARTY_KILL" then
 				registerCLEUEvent(self, event)
@@ -4041,7 +4040,7 @@ do
 
 	local function SendVersion(guild)
 		if guild then
-			local message = ("%s\t%s\t%s\t%s"):format(tostring(DBM.Revision), tostring(DBM.ReleaseRevision), DBM.DisplayVersion, tostring(DBM.ForceDisable))
+			local message = ("%s\t%s\t%s\t%s"):format(tostring(DBM.Revision), tostring(DBM.ReleaseRevision), DBM.DisplayVersion, tostring(PForceDisable))
 			sendGuildSync(2, "GV", message)
 			return
 		end
@@ -4056,9 +4055,9 @@ do
 			VPVersion = "/ VP"..VoicePack..": v"..DBM.VoiceVersions[VoicePack]
 		end
 		if VPVersion then
-			sendSync(2, "V", ("%s\t%s\t%s\t%s\t%s\t%s\t%s"):format(tostring(DBM.Revision), tostring(DBM.ReleaseRevision), DBM.DisplayVersion, GetLocale(), tostring(not DBM.Options.DontSetIcons), tostring(DBM.ForceDisable), VPVersion))
+			sendSync(2, "V", ("%s\t%s\t%s\t%s\t%s\t%s\t%s"):format(tostring(DBM.Revision), tostring(DBM.ReleaseRevision), DBM.DisplayVersion, GetLocale(), tostring(not DBM.Options.DontSetIcons), tostring(PForceDisable), VPVersion))
 		else
-			sendSync(2, "V", ("%s\t%s\t%s\t%s\t%s"):format(tostring(DBM.Revision), tostring(DBM.ReleaseRevision), DBM.DisplayVersion, GetLocale(), tostring(not DBM.Options.DontSetIcons), tostring(DBM.ForceDisable)))
+			sendSync(2, "V", ("%s\t%s\t%s\t%s\t%s"):format(tostring(DBM.Revision), tostring(DBM.ReleaseRevision), DBM.DisplayVersion, GetLocale(), tostring(not DBM.Options.DontSetIcons), tostring(PForceDisable)))
 		end
 	end
 
@@ -4068,7 +4067,7 @@ do
 				if not checkEntry(newerVersionPerson, sender) then
 					newerVersionPerson[#newerVersionPerson + 1] = sender
 					DBM:Debug("Newer version detected from "..sender.." : Rev - "..revision..", Ver - "..version..", Rev Diff - "..(revision - DBM.Revision), 3)
-					if forceDisable > DBM.ForceDisable and not checkEntry(forceDisablePerson, sender) then
+					if forceDisable > PForceDisable and not checkEntry(forceDisablePerson, sender) then
 						forceDisablePerson[#forceDisablePerson + 1] = sender
 						DBM:Debug("Newer force disable detected from "..sender.." : Rev - "..forceDisable, 3)
 					end
@@ -9062,6 +9061,7 @@ do
 		["moveto"] = "spell",
 		["jump"] = "spell",
 		["run"] = "spell",
+		["runcount"] = "spell",
 		["cast"] = "spell",
 		["lookaway"] = "spell",
 		["reflect"] = "target",
@@ -9350,6 +9350,7 @@ do
 --		["moveto"] = "spell",
 --		["jump"] = "spell",
 --		["run"] = "spell",
+--		["runcount"] = "spell",
 --		["cast"] = "spell",
 --		["lookaway"] = "spell",
 --		["reflect"] = "target",
@@ -9513,7 +9514,7 @@ do
 				if announceType == "target" or announceType == "targetcount" or announceType == "close" or announceType == "reflect" then
 					catType = "announceother"
 				--Directly affects you
-				elseif announceType == "you" or announceType == "youcount" or announceType == "youpos" or announceType == "move" or announceType == "dodge" or announceType == "dodgecount" or announceType == "moveaway" or announceType == "moveawaycount" or announceType == "keepmove" or announceType == "stopmove" or announceType == "run" or announceType == "stack" or announceType == "moveto" or announceType == "soak" or announceType == "soakcount" or announceType == "soakpos" then
+				elseif announceType == "you" or announceType == "youcount" or announceType == "youpos" or announceType == "move" or announceType == "dodge" or announceType == "dodgecount" or announceType == "moveaway" or announceType == "moveawaycount" or announceType == "keepmove" or announceType == "stopmove" or announceType == "run" or announceType == "runcount" or announceType == "stack" or announceType == "moveto" or announceType == "soak" or announceType == "soakcount" or announceType == "soakpos" then
 					catType = "announcepersonal"
 				--Things you have to do to fulfil your role
 				elseif announceType == "taunt" or announceType == "dispel" or announceType == "interrupt" or announceType == "interruptcount" or announceType == "switch" or announceType == "switchcount" then
@@ -9653,6 +9654,10 @@ do
 
 	function bossModPrototype:NewSpecialWarningRun(spellId, optionDefault, optionName, optionVersion, runSound, ...)
 		return newSpecialWarning(self, "run", spellId, nil, optionDefault, optionName, optionVersion, runSound or 4, ...)
+	end
+
+	function bossModPrototype:NewSpecialWarningRunCount(spellId, optionDefault, optionName, optionVersion, runSound, ...)
+		return newSpecialWarning(self, "runcount", spellId, nil, optionDefault, optionName, optionVersion, runSound or 4, ...)
 	end
 
 	function bossModPrototype:NewSpecialWarningCast(spellId, optionDefault, ...)
@@ -10183,7 +10188,11 @@ do
 	--In past boss mods have always had to manually call Stop just to restart a timer, to avoid triggering false debug messages
 	--This function should simplify boss mod creation by allowing you to "Restart" a timer with one call in mod instead of 2
 	function timerPrototype:Restart(timer, ...)
-		self:Stop(...)
+		if self.type and (self.type == "cdcount" or self.type == "nextcount") and not self.allowdouble then
+			self:Stop()--Cleanup any count timers left over on a restart
+		else
+			self:Stop(...)
+		end
 		self:Unschedule(...)--Also unschedules not yet started timers that used timer:Schedule()
 		self:Start(timer, ...)
 	end

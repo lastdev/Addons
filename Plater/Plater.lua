@@ -2619,7 +2619,9 @@ local class_specs_coords = {
 				local reactionChanged = false
 				local curReaction = plateFrame [MEMBER_REACTION]
 				local newReaction = UnitReaction(unit, "player")
-				if curReaction ~= newReaction then
+				if not curReaction then -- in case the plater nameplate is not on screen, ensure that it can change
+					reactionChanged = true
+				elseif curReaction ~= newReaction then
 					if curReaction == Plater.UnitReaction.UNITREACTION_NEUTRAL and newReaction ~= curReaction then
 						reactionChanged = true
 					elseif curReaction < Plater.UnitReaction.UNITREACTION_NEUTRAL and newReaction >= Plater.UnitReaction.UNITREACTION_NEUTRAL then
@@ -2630,7 +2632,7 @@ local class_specs_coords = {
 				end
 
 				--can the user attack or no longer attack?
-				local attackableChanged = plateFrame.PlayerCannotAttack ~= not UnitCanAttack ("player", unit)
+				local attackableChanged = plateFrame.PlayerCannotAttack ~= UnitCanAttack ("player", unit)
 				
 				if (reactionChanged or attackableChanged or not plateFrame.unitFrame.PlaterOnScreen) then
 					--print ("UNIT_FLAG", plateFrame, issecure(), unit, unit and UnitName (unit))
@@ -3734,10 +3736,12 @@ local class_specs_coords = {
 				--try forbidden as well for hiding stuff
 				plateFrame = C_NamePlate.GetNamePlateForUnit (unitID, true)
 				if (plateFrame) then
-					if GetCVarBool ("nameplateShowOnlyNames") or Plater.db.profile.saved_cvars.nameplateShowOnlyNames == "1" then
-						TextureLoadingGroupMixin.RemoveTexture({ textures = plateFrame.UnitFrame.CastBar }, "showCastbar")
-					else
-						TextureLoadingGroupMixin.AddTexture({ textures = plateFrame.UnitFrame.CastBar }, "showCastbar")
+					if (not IS_WOW_PROJECT_MAINLINE) then
+						if GetCVarBool ("nameplateShowOnlyNames") or Plater.db.profile.saved_cvars.nameplateShowOnlyNames == "1" then
+							TextureLoadingGroupMixin.RemoveTexture({ textures = plateFrame.UnitFrame.CastBar }, "showCastbar")
+						else
+							TextureLoadingGroupMixin.AddTexture({ textures = plateFrame.UnitFrame.CastBar }, "showCastbar")
+						end
 					end
 				end
 				return
@@ -6234,14 +6238,15 @@ end
 			end
 
 		end
-		for _, plateFrame in pairs(C_NamePlate.GetNamePlates(true)) do
-			if (plateFrame) then
-				if GetCVarBool ("nameplateShowOnlyNames") or Plater.db.profile.saved_cvars.nameplateShowOnlyNames == "1" then
-					TextureLoadingGroupMixin.RemoveTexture({ textures = plateFrame.UnitFrame.CastBar }, "showCastbar")
-				else
-					TextureLoadingGroupMixin.AddTexture({ textures = plateFrame.UnitFrame.CastBar }, "showCastbar")
+		if not IS_WOW_PROJECT_MAINLINE then
+			for _, plateFrame in pairs(C_NamePlate.GetNamePlates(true)) do
+				if (plateFrame) then
+					if GetCVarBool ("nameplateShowOnlyNames") or Plater.db.profile.saved_cvars.nameplateShowOnlyNames == "1" then
+						TextureLoadingGroupMixin.RemoveTexture({ textures = plateFrame.UnitFrame.CastBar }, "showCastbar")
+					else
+						TextureLoadingGroupMixin.AddTexture({ textures = plateFrame.UnitFrame.CastBar }, "showCastbar")
+					end
 				end
-				print(plateFrame.UnitFrame.CastBar.showCastbar)
 			end
 		end
 	end
@@ -9709,12 +9714,14 @@ end
 		else
 			if IS_WOW_PROJECT_MAINLINE then
 				local tooltipData = C_TooltipInfo.GetHyperlink ("unit:" .. plateFrame [MEMBER_GUID])
-				TooltipUtil.SurfaceArgs(tooltipData)
-				for _, line in ipairs(tooltipData.lines) do
-					TooltipUtil.SurfaceArgs(line)
-					if line.type == Enum.TooltipDataLineType.QuestObjective or line.type == Enum.TooltipDataLineType.QuestTitle or line.type == Enum.TooltipDataLineType.QuestPlayer then
-						--only add actual quest tooltip lines
-						ScanQuestTextCache [#ScanQuestTextCache + 1] = line.leftText or ""
+				if tooltipData then
+					TooltipUtil.SurfaceArgs(tooltipData)
+					for _, line in ipairs(tooltipData.lines) do
+						TooltipUtil.SurfaceArgs(line)
+						if line.type == Enum.TooltipDataLineType.QuestObjective or line.type == Enum.TooltipDataLineType.QuestTitle or line.type == Enum.TooltipDataLineType.QuestPlayer then
+							--only add actual quest tooltip lines
+							ScanQuestTextCache [#ScanQuestTextCache + 1] = line.leftText or ""
+						end
 					end
 				end
 			else

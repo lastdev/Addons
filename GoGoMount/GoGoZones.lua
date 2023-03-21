@@ -4305,6 +4305,12 @@ function GoGo_ZoneCheck()
 			GoGo_DebugAddLine("GoGo_ZoneCheck: The Forbidden Reach - The Old Weyrn Grounds")
 		end --if
 		GoGo_Variables.ZoneExclude.CanFly = false
+	elseif GoGo_Variables.Player.MapID == 2151 then -- The Forbidden Reach
+		GoGo_Variables.ZoneExclude.DragonRiding = true
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for The Forbidden Reach")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = true
 --	elseif GoGo_Variables.Player.ZoneID == -1 then
 		-- Arenas:
 		-- -- Nagrand Arena

@@ -173,7 +173,9 @@ function Hekili:OnEnable()
     self.PendingSpecializationChange = true
     self:ForceUpdate( "ADDON_ENABLED" )
 
-    -- ns.Audit()
+    if self.BuiltFor > self.CurrentBuild then
+        self:Notify( "|cFFFF0000WARNING|r: This version of Hekili is for a future version of WoW; you should reinstall for " .. self.GameBuild .. "." )
+    end
 end
 
 
@@ -886,7 +888,7 @@ function Hekili:GetPredictionFromAPL( dispName, packName, listName, slot, action
                                         if debug then self:Debug( " - variable.%s references a hardcoded variable and this entry will be ignored.", name ) end
                                     elseif name ~= nil then
                                         state:RegisterVariable( name, scriptID, listName, Stack )
-                                        if debug then self:Debug( " - variable.%s will check this script entry ( %s )\n%s", name, scriptID, scripts:GetModifierValues( "value", scriptID ) ) end
+                                        if debug then self:Debug( " - variable.%s[%s] will check this script entry ( %s )", name, tostring( state.variable[ name ] ), scriptID ) end
                                     else
                                         if debug then self:Debug( " - variable name not provided, skipping." ) end
                                     end
@@ -1562,8 +1564,8 @@ function Hekili.Update( initial )
                         state:HandleEvent( event )
                         state.offset = state.offset + t
                         event = events[ 1 ]
-                    elseif t < 0.05 then
-                        if debug then Hekili:Debug( 1, "Finishing queued event #%d ( %s of %s ) due at %.2f because the event occurs w/in 0.05 seconds.\n", n, event.type, event.action, t ) end
+                    elseif t < 0.2 then
+                        if debug then Hekili:Debug( 1, "Finishing queued event #%d ( %s of %s ) due at %.2f because the event occurs w/in 0.2 seconds.\n", n, event.type, event.action, t ) end
                         state.advance( t )
                         if event == events[ 1 ] then
                             -- Event did not get handled due to rounding.

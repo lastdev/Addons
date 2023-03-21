@@ -102,6 +102,12 @@ local FILTERS_TYPE = {}
 FILTERS_TYPE[RSConstants.ENTITY_FILTER_ALL] = AL["FILTER_TYPE_ALL"];
 FILTERS_TYPE[RSConstants.ENTITY_FILTER_WORLDMAP] = AL["FILTER_TYPE_WORLDMAP"];
 FILTERS_TYPE[RSConstants.ENTITY_FILTER_ALERTS] = AL["FILTER_TYPE_ALERTS"];
+		
+-- load filters animations
+local ANIMATIONS_TYPE = {}
+ANIMATIONS_TYPE[RSConstants.MAP_ANIMATIONS_ON_FOUND] = AL["MAP_ANIMATIONS_ON_FOUND"];
+ANIMATIONS_TYPE[RSConstants.MAP_ANIMATIONS_ON_CLICK] = AL["MAP_ANIMATIONS_ON_CLICK"];
+ANIMATIONS_TYPE[RSConstants.MAP_ANIMATIONS_ON_BOTH] = AL["MAP_ANIMATIONS_ON_BOTH"];
 
 local filterLine = "line_%s_filter"
 local filterTypeLine = "line_%s_filtertype"
@@ -333,6 +339,9 @@ local function GetGeneralOptions()
 					get = function() return RSConfigDB.IsWaypointsSupportEnabled() end,
 					set = function(_, value)
 						RSConfigDB.SetWaypointsSupportEnabled(value)
+						if (not value) then
+							RSConfigDB.SetAddingWaypointsAutomatically(false)
+						end
 					end,
 					width = "full",
 				},
@@ -361,6 +370,9 @@ local function GetGeneralOptions()
 					get = function() return RSConfigDB.IsTomtomSupportEnabled() end,
 					set = function(_, value)
 						RSConfigDB.SetTomtomSupportEnabled(value)
+						if (not value) then
+							RSConfigDB.SetAddingTomtomWaypointsAutomatically(false)
+						end
 					end,
 					width = "full",
 					disabled = function() return not TomTom end,
@@ -3283,6 +3295,125 @@ local function GetMapOptions()
 					handler = RareScanner,
 					desc = AL["MAP_SPAWN_SPOTS_DESC"],
 					args = {
+					}
+				},
+				animations = {
+					type = "group",
+					order = 1,
+					name = AL["MAP_ANIMATIONS"],
+					handler = RareScanner,
+					desc = AL["MAP_ANIMATIONS_DESC"],
+					args = {
+						separatorNpcs = {
+							order = 1,
+							type = "header",
+							name = AL["MAP_ANIMATIONS_NPCS_SEPARATOR"],
+						},
+						npcs = {
+							order = 2,
+							type = "toggle",
+							name = AL["MAP_ANIMATIONS_NPCS"],
+							desc = AL["MAP_ANIMATIONS_NPCS_DESC"],
+							get = function() return RSConfigDB.IsShowingAnimationForNpcs() end,
+							set = function(_, value)
+								RSConfigDB.SetShowingAnimationForNpcs(value)
+								if (not value and not RSConfigDB.IsShowingAnimationForContainers() and not RSConfigDB.IsShowingAnimationForEvents()) then
+									RSConfigDB.SetShowingAnimationForVignettes(false)
+								end
+							end,
+							width = "full",
+						},
+						npcsBehaviour = {
+							order = 3,
+							type = "select",
+							name = AL["MAP_ANIMATIONS_WHEN"],
+							values = ANIMATIONS_TYPE,
+							get = function() return RSConfigDB.GetAnimationForNpcs() end,
+							set = function(_, value)
+								RSConfigDB.SetAnimationForNpcs(value)
+							end,
+							width = "full",
+							disabled = function() return not RSConfigDB.IsShowingAnimationForNpcs() end,
+						},
+						separatorContainers = {
+							order = 4,
+							type = "header",
+							name = AL["MAP_ANIMATIONS_CONTAINERS_SEPARATOR"],
+						},
+						containers = {
+							order = 5,
+							type = "toggle",
+							name = AL["MAP_ANIMATIONS_CONTAINERS"],
+							desc = AL["MAP_ANIMATIONS_CONTAINERS_DESC"],
+							get = function() return RSConfigDB.IsShowingAnimationForContainers() end,
+							set = function(_, value)
+								RSConfigDB.SetShowingAnimationForContainers(value)
+								if (not value and not RSConfigDB.IsShowingAnimationForNpcs() and not RSConfigDB.IsShowingAnimationForEvents()) then
+									RSConfigDB.SetShowingAnimationForVignettes(false)
+								end
+							end,
+							width = "full",
+						},
+						containersBehaviour = {
+							order = 6,
+							type = "select",
+							name = AL["MAP_ANIMATIONS_WHEN"],
+							values = ANIMATIONS_TYPE,
+							get = function() return RSConfigDB.GetAnimationForContainers() end,
+							set = function(_, value)
+								RSConfigDB.SetAnimationForContainers(value)
+							end,
+							width = "full",
+							disabled = function() return not RSConfigDB.IsShowingAnimationForContainers() end,
+						},
+						separatorEvents = {
+							order = 7,
+							type = "header",
+							name = AL["MAP_ANIMATIONS_EVENTS_SEPARATOR"],
+						},
+						events = {
+							order = 7,
+							type = "toggle",
+							name = AL["MAP_ANIMATIONS_EVENTS"],
+							desc = AL["MAP_ANIMATIONS_EVENTS_DESC"],
+							get = function() return RSConfigDB.IsShowingAnimationForEvents() end,
+							set = function(_, value)
+								RSConfigDB.SetShowingAnimationForEvents(value)
+								if (not value and not RSConfigDB.IsShowingAnimationForNpcs() and not RSConfigDB.IsShowingAnimationForContainers()) then
+									RSConfigDB.SetShowingAnimationForVignettes(false)
+								end
+							end,
+							width = "full",
+						},
+						eventsBehaviour = {
+							order = 8,
+							type = "select",
+							name = AL["MAP_ANIMATIONS_WHEN"],
+							values = ANIMATIONS_TYPE,
+							get = function() return RSConfigDB.GetAnimationForEvents() end,
+							set = function(_, value)
+								RSConfigDB.SetAnimationForEvents(value)
+							end,
+							width = "full",
+							disabled = function() return not RSConfigDB.IsShowingAnimationForEvents() end,
+						},
+						separatorVignettes = {
+							order = 9,
+							type = "header",
+							name = AL["MAP_ANIMATIONS_VIGNETTES_SEPARATOR"],
+						},
+						vignettes = {
+							order = 10,
+							type = "toggle",
+							name = AL["MAP_ANIMATIONS_VIGNETTES"],
+							desc = AL["MAP_ANIMATIONS_VIGNETTES_DESC"],
+							get = function() return RSConfigDB.IsShowingAnimationForVignettes() end,
+							set = function(_, value)
+								RSConfigDB.SetShowingAnimationForVignettes(value)
+							end,
+							width = "full",
+							disabled = function() return not RSConfigDB.IsShowingAnimationForNpcs() and not RSConfigDB.IsShowingAnimationForContainers() and not RSConfigDB.IsShowingAnimationForEvents() end,
+						},
 					}
 				}
 			}

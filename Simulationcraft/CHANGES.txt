@@ -1,10 +1,16 @@
-lightweight tag 4a6b9151cf0cf2f87a69cd939e5d986c40dec151 10.0.5-02
+lightweight tag f103aa9f3b514c4ba2667c17a20cfb1a295a2e7c v10.0.7-01
 Author:	Dave Hendler <sollaires@gmail.com>
-Date:	Sat Mar 11 11:31:51 2023 -0600
+Date:	Mon Mar 20 14:21:39 2023 -0700
 
-commit 4a6b9151cf0cf2f87a69cd939e5d986c40dec151
+commit 5a32fa70d037fc5002ac244f943e135ac99bc167
 Author: Dave Hendler <sollaires@gmail.com>
-Date:   Sat Mar 11 11:31:51 2023 -0600
+Date:   Mon Mar 20 14:21:11 2023 -0700
 
-    Fix weird race condition / startup issue with GetItemGem
+    Bump TOC for 10.0.7
+
+commit 5a32fa70d037fc5002ac244f943e135ac99bc167
+Author: Dave Hendler <sollaires@gmail.com>
+Date:   Mon Mar 20 14:21:11 2023 -0700
+
+    Bump TOC for 10.0.7
 
