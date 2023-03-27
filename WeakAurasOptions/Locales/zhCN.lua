@@ -244,8 +244,7 @@ Off Screen]=] ] = "光环在屏幕外"
 	L["Column Height"] = "行高度"
 	L["Column Space"] = "行空间"
 	L["Columns"] = "列"
-	--[[Translation missing --]]
-	L["COMBAT_LOG_EVENT_UNFILTERED with no filter can trigger frame drops in raid environment."] = "COMBAT_LOG_EVENT_UNFILTERED with no filter can trigger frame drops in raid environment."
+	L["COMBAT_LOG_EVENT_UNFILTERED with no filter can trigger frame drops in raid environment."] = "无过滤的 COMBAT_LOG_EVENT_UNFILTERED 触发器会在团队副本中导致掉帧。"
 	L["Combinations"] = "组合"
 	L["Combine Matches Per Unit"] = "组合每个单位的匹配"
 	L["Common Text"] = "一般文本"
@@ -306,8 +305,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Debug Log:"] = "调试日志："
 	L["Default"] = "默认"
 	L["Default Color"] = "默认颜色"
-	--[[Translation missing --]]
-	L["Delay"] = "Delay"
+	L["Delay"] = "延迟"
 	L["Delete"] = "删除"
 	L["Delete all"] = "删除所有"
 	L["Delete children and group"] = "删除子项目和组"
@@ -628,7 +626,6 @@ Can use \ to escape -.]=] ] = [=[过滤格式：'名称'，'名称-服务器'，
 	L["Note: Automated Messages to SAY and YELL are blocked outside of Instances."] = "注意：无法在副本外自动发送“说”与“大喊”信息。"
 	L["Npc ID"] = "NPC ID"
 	L["Number of Entries"] = "条目数"
-	--[[Translation missing --]]
 	L[ [=[Occurence of the event, reset when aura is unloaded
 Can be a range of values
 Can have multiple values separated by a comma or a space
@@ -638,16 +635,16 @@ Examples:
 2nd to 6th: 2-6
 every 2 events: /2
 every 3 events starting from 2nd: 2/3
-every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = [=[Occurence of the event, reset when aura is unloaded
-Can be a range of values
-Can have multiple values separated by a comma or a space
+every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = [=[事件发生的次数，光环不再加载时重置
+可以为值的范围
+可以有多个条目，由英文逗号或空格分隔
 
-Examples:
-2nd 5th and 6th events: 2, 5, 6
-2nd to 6th: 2-6
-every 2 events: /2
-every 3 events starting from 2nd: 2/3
-every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
+例如：
+第二、第五和第六次事件：2, 5, 6
+第二到第六次事件：2-6
+每两次事件：/2
+从第二次开始每三次事件：2/3
+从第二到第十一次事件开始每三次事件：2-11/3]=]
 	L["Offer a guided way to create auras for your character"] = "提供为角色创建光环的指导"
 	L["Offset by |cFFFF0000%s|r/|cFFFF0000%s|r"] = "偏移|cFFFF0000%s|r/|cFFFF0000%s|r"
 	L["Offset by 1px"] = "偏移1px"

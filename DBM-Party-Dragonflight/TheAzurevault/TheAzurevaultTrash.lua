@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("TheAzurevaultTrash", "DBM-Party-Dragonflight", 6)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230314022917")
+mod:SetRevision("20230320021831")
 --mod:SetModelID(47785)
 mod:SetZone(2515)
 
@@ -148,7 +148,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			yellErraticGrowth:Yell()
 		end
-	elseif spellId == 374778 and not args:IsDestTypePlayer() and self:AntiSpam(3, 5) then
+	elseif spellId == 374778 and not args:IsDestTypePlayer() and self:AntiSpam(3, 3) then
 		specWarnBrilliantScales:Show(args.destName)
 		specWarnBrilliantScales:Play("helpdispel")
 	end

@@ -1722,6 +1722,8 @@ L["Volatile Sapling"] = "Instabiler Setzling"
 L["Volcanic"] = "Vulkanisch"
 L["Vol'kaal"] = "Vol'kaal"
 L["Vol'zith the Whisperer"] = "Vol'zith der Flüsterer"
+--[[Translation missing --]]
+L["VortexPinnacle"] = "Vortex Pinnacle"
 L["Vy Relic"] = "Relikt Vy"
 L["Wandering Shellback"] = "Wandernder Schildrücken"
 L["Wanton Sapper"] = "Zerstörungswütige Pionierin"
@@ -1791,6 +1793,12 @@ L["Zolramus Gatekeeper"] = "Torwächter von Zolramus"
 L["Zolramus Necromancer"] = "Nekromant von Zolramus"
 L["Zolramus Siphoner"] = "Schröpferin von Zolramus"
 L["Zolramus Sorcerer"] = "Zauberer von Zolramus"
+--[[Translation missing --]]
+L["Zoom"] = "Zoom"
+--[[Translation missing --]]
+L["zoomIn"] = "In"
+--[[Translation missing --]]
+L["zoomOut"] = "Out"
 L["Zo'phex"] = "Zo'phex"
 L["Zul'gamux"] = "Zul'gamux"
 L["Zul'Gurub"] = "Zul'Gurub"

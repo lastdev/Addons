@@ -858,7 +858,7 @@ local CrusadingStrikes = setfenv( function()
         if Hekili.ActiveDebug then Hekili:Debug( "Crusading Strikes energize fails: Out of range." ) end
         return
     end
-    action.crusader_strike.handler()
+    spec.abilities.crusader_strike.handler()
 end, state )
 
 local csStartCombat = setfenv( function()
@@ -1525,7 +1525,7 @@ spec:RegisterAbilities( {
         talent = "hammer_of_wrath",
         startsCombat = false,
 
-        usable = function () return target.health_pct < 20 or ( level > 57 and talent.avenging_wrath.enabled and ( buff.avenging_wrath.up or buff.crusade.up ) ) or buff.final_verdict.up or buff.hammer_of_wrath_hallow.up or buff.negative_energy_token_proc.up, "requires buff/talent or target under 20% health" end,
+        usable = function () return target.health_pct < 20 or ( talent.avenging_wrath.enabled and ( buff.avenging_wrath.up or buff.crusade.up ) ) or buff.final_verdict.up or buff.hammer_of_wrath_hallow.up or buff.negative_energy_token_proc.up, "requires buff/talent or target under 20% health" end,
         handler = function ()
             removeBuff( "final_verdict" )
             if buff.divine_arbiter.stack > 24 then removeBuff( "divine_arbiter" ) end

@@ -168,6 +168,38 @@ if RareTracker.db.global.window.force_display_in_english then
     L[193679] = "Leerain"
     L[193654] = "Gravlion"
     L[193655] = "Frozion"
+    
+    -- The Forbidden Reach
+    L[200584] = "Vraken the Hunter"
+    L[200579] = "Ishyra"
+    L[200610] = "Duzalgor"
+    L[200717] = "Galakhad"
+    L[200885] = "Lady Shaz'ra"
+    L[201181] = "Mad-Eye Carrey"
+    L[200960] = "Warden Entrix"
+    L[200978] = "Pyrachniss"
+    L[200619] = "Tectonus"
+    L[200621] = "Manathema"
+    L[200722] = "Gareed"
+    L[200730] = "Tidesmith Zarviss"
+    L[200738] = "Kangalo"
+    L[200740] = "Agni Blazehoof"
+    L[200743] = "Amephyst"
+    L[200537] = "Gahz'raxes"
+    L[200600] = "Reisa the Drowned"
+    L[200681] = "Bonesifter Marwak"
+    L[200721] = "Grugoth the Hullcrusher"
+    L[200904] = "Veltrax"
+    L[201013] = "Wyrmslayer Angvardi"
+    L[200956] = "Ookbeard"
+    L[200911] = "Volcanakk"
+    L[200620] = "Sir Pinchalot"
+    L[200622] = "Snarfang"
+    L[200725] = "Faunos"
+    L[200737] = "Arcantrix"
+    L[200739] = "Fimbol"
+    L[200742] = "Luttrok"
+    L[203353] = "Loot Specialist"
 end
 
 -- Special category for elemental storms
@@ -438,4 +470,45 @@ RareTracker.RegisterRaresForModule({
         [186200] = {L[186200], nil, nil}, --"Harkyn Grymstone"
     },
     ["special_categories"] = categorized_rare_ids
+})
+
+RareTracker.RegisterRaresForModule({
+    -- Define the zone(s) in which the rares are present.
+    ["target_zones"] = {2151},
+    ["zone_name"] = "The Forbidden Reach",
+    ["plugin_name"] = "The Forbidden Reach",
+    ["plugin_name_abbreviation"] = "Dragonflight",
+    ["entities"] = {
+        --npc_id = {name, quest_id, coordinates}
+        [200584] = {L[200584], 74336, nil}, --"Vraken the Hunter"
+        [200579] = {L[200579], 74338, nil}, --"Ishyra"
+        [200610] = {L[200610], 74340, nil}, --"Duzalgor"
+        [200717] = {L[200717], 74342, nil}, --"Galakhad"
+        [200885] = {L[200885], 74344, nil}, --"Lady Shaz'ra"
+        [201181] = {L[201181], 74346, nil}, --"Mad-Eye Carrey"
+        [200960] = {L[200960], 74348, nil}, --"Warden Entrix"
+        [200978] = {L[200978], 74350, nil}, --"Pyrachniss"
+        [200619] = {L[200619], nil, nil}, --"Tectonus"
+        [200621] = {L[200621], nil, nil}, --"Manathema"
+        [200722] = {L[200722], nil, nil}, --"Gareed"
+        [200730] = {L[200730], nil, nil}, --"Tidesmith Zarviss"
+        [200738] = {L[200738], nil, nil}, --"Kangalo"
+        [200740] = {L[200740], nil, nil}, --"Agni Blazehoof"
+        [200743] = {L[200743], nil, nil}, --"Amephyst"
+        [200537] = {L[200537], 74337, nil}, --"Gahz'raxes"
+        [200600] = {L[200600], 74339, nil}, --"Reisa the Drowned"
+        [200681] = {L[200681], 74341, nil}, --"Bonesifter Marwak"
+        [200721] = {L[200721], 74343, nil}, --"Grugoth the Hullcrusher"
+        [200904] = {L[200904], 74345, nil}, --"Veltrax"
+        [201013] = {L[201013], 74347, nil}, --"Wyrmslayer Angvardi"
+        [200956] = {L[200956], 74349, nil}, --"Ookbeard"
+        [200911] = {L[200911], 74351, nil}, --"Volcanakk"
+        [200620] = {L[200620], nil, nil}, --"Sir Pinchalot"
+        [200622] = {L[200622], nil, nil}, --"Snarfang"
+        [200725] = {L[200725], nil, nil}, --"Faunos"
+        [200737] = {L[200737], nil, nil}, --"Arcantrix"
+        [200739] = {L[200739], nil, nil}, --"Fimbol"
+        [200742] = {L[200742], nil, nil}, --"Luttrok"
+        [203353] = {L[203353], nil, nil}, --"Loot Specialist" 
+    }
 })

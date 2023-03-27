@@ -201,6 +201,12 @@ L["CONFIG_SMALL_TABS_TOOLTIP_TEXT"] = "Quando há muitos addons adicionando abas
 L["CONFIG_STACK_TOOLTIP"] = "Mostrar o preço da pilha inteira quando se pressiona o shift."
 L["CONFIG_TOOLTIPS_CATEGORY"] = "Caixas de Texto"
 L["CONFIG_TOOLTIPS_TEXT"] = "Opções para apresentar diferentes informações relacionadas a leilões na caixa de texto do jogo."
+--[[Translation missing --]]
+L["CONFIG_UNDERCUT_SCAN_MATCH_ILVL_VARIANTS"] = "For gear use item level and title when doing undercut checks"
+--[[Translation missing --]]
+L["CONFIG_UNDERCUT_SCAN_MATCH_ILVL_VARIANTS_TOOLTIP_HEADER"] = "Gear Use Item Level and Title"
+--[[Translation missing --]]
+L["CONFIG_UNDERCUT_SCAN_MATCH_ILVL_VARIANTS_TOOLTIP_TEXT"] = "Leave this on to match potential gear undercuts by item level and title, rather than by only item base type."
 L["CONFIG_UNDERCUT_SCAN_NOT_LIFO"] = "Incluir equipamento e bichos de estimação nas varreduras de subcotação"
 L["CONFIG_UNDERCUT_SCAN_NOT_LIFO_TOOLTIP_HEADER"] = "Varreduras de Subcotação para Equipamento/Bichos de Estimação"
 L["CONFIG_UNDERCUT_SCAN_NOT_LIFO_TOOLTIP_TEXT"] = "Deixe isso ativado para incluir leilões de bichos de estimação e equipamentos quando utilizar a varredura de subcotação. Desative para excluir os mesmos."
@@ -266,6 +272,8 @@ L["ENGAGE_HEADER"] = "Engajar Com o Auctionator"
 L["ERROR_REOPEN_AUCTION_HOUSE"] = [=[Não foi possível concluir a ação, feche e reabra a casa de leilões.
 ]=]
 L["EXACT_SEARCH"] = "Procura Exata"
+--[[Translation missing --]]
+L["EXPANSION"] = "Expansion"
 L["EXPORT"] = "Exportar"
 L["EXPORT_AS"] = "Exportar como"
 L["EXPORT_RESULTS"] = "Exportar os Resultados"
@@ -287,6 +295,8 @@ L["GEAR_VENDOR_PRICE_MULTIPLIER"] = "Multiplicador de preço de venda de equipam
 L["HIDE"] = "Esconder"
 L["HISTORY"] = "História"
 L["IMPORT"] = "Importar"
+--[[Translation missing --]]
+L["IMPORTED"] = "Imported"
 L["INFO_TAB_HEADER"] = "Auctionator - Informações"
 L["IS_TOP_COLUMN"] = "Topo?"
 L["IS_UNDERCUT"] = "Subcotado?"

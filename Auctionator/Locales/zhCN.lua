@@ -169,6 +169,12 @@ L["CONFIG_SMALL_TABS_TOOLTIP_TEXT"] = "当有过多的插件将标签页加到�
 L["CONFIG_STACK_TOOLTIP"] = "按住 Shift 键时显示堆叠总价"
 L["CONFIG_TOOLTIPS_CATEGORY"] = "鼠标提示"
 L["CONFIG_TOOLTIPS_TEXT"] = "在游戏鼠标提示中显示拍卖场相关的各类资讯的选项。"
+--[[Translation missing --]]
+L["CONFIG_UNDERCUT_SCAN_MATCH_ILVL_VARIANTS"] = "For gear use item level and title when doing undercut checks"
+--[[Translation missing --]]
+L["CONFIG_UNDERCUT_SCAN_MATCH_ILVL_VARIANTS_TOOLTIP_HEADER"] = "Gear Use Item Level and Title"
+--[[Translation missing --]]
+L["CONFIG_UNDERCUT_SCAN_MATCH_ILVL_VARIANTS_TOOLTIP_TEXT"] = "Leave this on to match potential gear undercuts by item level and title, rather than by only item base type."
 L["CONFIG_UNDERCUT_SCAN_NOT_LIFO"] = "在低价格扫描中包含装备和宠物"
 L["CONFIG_UNDERCUT_SCAN_NOT_LIFO_TOOLTIP_HEADER"] = "装备/宠物低价格扫描"
 L["CONFIG_UNDERCUT_SCAN_NOT_LIFO_TOOLTIP_TEXT"] = "启用时，使用低价格扫描的时候会包含任何装备和宠物的拍卖。关闭时会排除装备和宠物。"
@@ -222,6 +228,8 @@ L["ENCHANT_TOOLTIP_TOOLTIP_TEXT"] = "鼠标指向时，在鼠标提示中显示�
 L["ENGAGE_HEADER"] = "参与拍卖小帮手"
 L["ERROR_REOPEN_AUCTION_HOUSE"] = "无法完成操作,请关闭并重新打开拍卖行"
 L["EXACT_SEARCH"] = "精确搜寻"
+--[[Translation missing --]]
+L["EXPANSION"] = "Expansion"
 L["EXPORT"] = "导出"
 L["EXPORT_AS"] = "导出为："
 L["EXPORT_RESULTS"] = "导出结果"
@@ -241,6 +249,8 @@ L["GEAR_VENDOR_PRICE_MULTIPLIER"] = "装备商人售价倍数"
 L["HIDE"] = "隐藏"
 L["HISTORY"] = "历史记录"
 L["IMPORT"] = "导入"
+--[[Translation missing --]]
+L["IMPORTED"] = "Imported"
 L["INFO_TAB_HEADER"] = "拍卖小帮手 - 资讯"
 L["IS_TOP_COLUMN"] = "顶部?"
 L["IS_UNDERCUT"] = "有更低价?"

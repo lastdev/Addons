@@ -150,9 +150,11 @@ function TomTom:Initialize(event, addon)
     self.tooltip:SetFrameStrata("DIALOG")
 
     self.dropdown = ldd:NewMenu(UIParent, "TomTomDropdown")
+    self.dropdown:SetFrameStrata("HIGH")
     self:InitializeDropdown(self.dropdown)
 
     self.worlddropdown = ldd:NewMenu(WorldMapFrame, "TomTomWorldMapDropdown")
+    self.worlddropdown:SetFrameStrata("HIGH")
     self:InitializeDropdown(self.worlddropdown)
 
     -- Both the waypoints and waypointprofile tables are going to contain subtables for each

@@ -1,5 +1,7 @@
-## Changed in v2023.2
+## Changed in v2023.3
 
-* New rares for 10.0.5
-* Fix Emerald Garden Explorer's Notes / Ruby Gem Cluster Map mixup in some treasure tooltips
+* New Forbidden Reach rares for 10.0.7
+* Make the Stormed Off rares from Primal Storms work properly for alerts
+* Was missing Overseer Stonetongue
+* Assorted minor data fixes
 

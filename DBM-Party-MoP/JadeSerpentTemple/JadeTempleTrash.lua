@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("JadeTempleTrash", "DBM-Party-MoP", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230304023748")
+mod:SetRevision("20230320021831")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 
@@ -127,7 +127,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 396020 then
 		warnGoldenBarrier:Show(args.destName)
-	elseif spellId == 396018 then
+	elseif spellId == 396018 and self:AntiSpam(3, 3) then
 		specWarnFitOfRage:Show(args.destName)
 		specWarnFitOfRage:Play("enrage")
 	end

@@ -1,8 +1,6 @@
 # HandyNotes_WorldMapButton
 
-## [100005.02-Release](https://github.com/fubaWoW/HandyNotes_WorldMapButton/tree/100005.02-Release) (2023-02-05)
-[Full Changelog](https://github.com/fubaWoW/HandyNotes_WorldMapButton/compare/100005.01-Release...100005.02-Release) [Previous Releases](https://github.com/fubaWoW/HandyNotes_WorldMapButton/releases)
+## [100007.01-Release](https://github.com/fubaWoW/HandyNotes_WorldMapButton/tree/100007.01-Release) (2023-03-26)
+[Full Changelog](https://github.com/fubaWoW/HandyNotes_WorldMapButton/compare/100005.02-Release...100007.01-Release) [Previous Releases](https://github.com/fubaWoW/HandyNotes_WorldMapButton/releases)
 
-- forgot to add "RightButton" check to prevent errors  
-- Right-Click the "AddOn Button" now open HandyNotes Options (feature Request)  
-    Left-Click still Toggle HandyNote as usual  
+- TOC Bump  

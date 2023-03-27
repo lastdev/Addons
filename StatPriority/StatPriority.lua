@@ -12,9 +12,9 @@ statPriorityStats["WARRIORProtection"] = "Strength > Haste > Versatility = Criti
 
 statPriorityStats["PALADINHoly"] = "Intellect > Haste > Mastery > Versatility > Critical Strike"
 statPriorityStats["PALADINProtection"] = "Haste > Mastery > Versatility > Critical Strike"
-statPriorityStats["PALADINRetribution"] = "Strength > Mastery = Haste > Critical Strike > Versatility"
+statPriorityStats["PALADINRetribution"] = "Strength > Versatility > Critical Strike = Haste = Mastery"
 
-statPriorityStats["HUNTERBeast Mastery"] = "Haste > Critical Strike > Mastery > Versatility"
+statPriorityStats["HUNTERBeast Mastery"] = "Mastery = Haste = Critical Strike > Versatility"
 statPriorityStats["HUNTERMarksmanship"] = "Mastery > Critical Strike > Versatility > Haste"
 statPriorityStats["HUNTERSurvival"] = "Haste > Critical Strike > Versatility > Mastery"
 
@@ -31,11 +31,11 @@ statPriorityStats["SHAMANEnhancement"] = "Agility > Mastery = Haste > Versatilit
 statPriorityStats["SHAMANRestoration"] = "Intellect > Versatility = Critical Strike > Haste = Mastery"
 
 statPriorityStats["MAGEArcane"] = "Intellect > Critical Strike > Mastery > Versatility > Haste"
-statPriorityStats["MAGEFire"] = "Intellect > Haste > Versatility > Mastery > Critical Strike"
+statPriorityStats["MAGEFire"] = "Intellect > Haste > Mastery > Versatility > Critical Strike"
 statPriorityStats["MAGEFrost"] = "Intellect > Mastery > Haste > Critical Strike to 33.34% > Versatility"
 
 statPriorityStats["WARLOCKAffliction"] = "Intellect > Mastery > Haste > Critical Strike > Versatility"
-statPriorityStats["WARLOCKDemonology"] = "Intellect > Haste > Critical Strike > Mastery = Versatility"
+statPriorityStats["WARLOCKDemonology"] = "Intellect > Haste > Critical Strike = Mastery > Versatility"
 statPriorityStats["WARLOCKDestruction"] = "Intellect > Haste = Mastery > Critical Strike > Versatility"
 
 statPriorityStats["DRUIDBalance"] = "Intellect > Mastery > Haste > Critical Strike > Versatility"
@@ -55,7 +55,7 @@ statPriorityStats["DEMONHUNTERHavoc"] = "Agility > Critical Strike > Mastery > V
 statPriorityStats["DEMONHUNTERVengeance"] = "Agility > Haste > Versatility = Critical Strike > Mastery"
 
 statPriorityStats["EVOKERDevastation"] = "Intellect > Mastery > Haste > Critial Strike > Versatility"
-statPriorityStats["EVOKERPreservation"] = "Intellect > Critial Strike > Mastery > Versatility > Haste"
+statPriorityStats["EVOKERPreservation"] = "Intellect > Mastery > Critial Strike > Versatility > Haste"
 
 function statPriorityFrameOnEvent(self, event, arg1)
 	if event == "ADDON_LOADED" and arg1 == "StatPriority" then

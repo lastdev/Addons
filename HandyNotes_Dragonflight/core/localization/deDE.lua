@@ -82,6 +82,10 @@ L['follower_type_follower'] = 'Anhänger'
 L['follower_type_champion'] = 'Champion'
 L['follower_type_companion'] = 'Abenteurer'
 
+L['rep_honored'] = 'Wohlwollend'
+L['rep_revered'] = 'Respektvoll'
+L['rep_exalted'] = 'Erfürchtig'
+
 -------------------------------------------------------------------------------
 --------------------------------- CONTEXT MENU --------------------------------
 -------------------------------------------------------------------------------
@@ -89,6 +93,7 @@ L['follower_type_companion'] = 'Abenteurer'
 L['context_menu_set_waypoint'] = 'Kartenmarkierung setzen'
 L['context_menu_add_tomtom'] = 'Zu TomTom hinzufügen'
 L['context_menu_add_group_tomtom'] = 'Gruppe zu TomTom hinzufügen'
+L['context_menu_add_focus_group_tomtom'] = 'Verwandte Punkte zu TomTom hinzufügen'
 L['context_menu_hide_node'] = 'Verstecke diesen Punkt'
 L['context_menu_restore_hidden_nodes'] = 'Versteckte Punkte wiederherstellen'
 
@@ -180,8 +185,8 @@ L['options_toggle_show_loot'] = 'Zeige Beute'
 L['options_toggle_show_loot_desc'] = 'Zeigt Beuteinformationen im Tooltip an.'
 L['options_toggle_show_notes'] = 'Zeige Notizen'
 L['options_toggle_show_notes_desc'] = 'Zeigt hilfreiche Notizen an sofern diese verfügbar sind.'
-L['options_toggle_use_standard_time'] = nil
-L['options_toggle_use_standard_time_desc'] = nil
+L['options_toggle_use_standard_time'] = 'Verwende das 12-Stunden-Format'
+L['options_toggle_use_standard_time_desc'] = 'Zeigt die Uhrzeit im 12-Stunden-Format (z.B.: 8:00 PM) anstelle des 24-Stunden-Formates (z.B.: 20:00) in Tooltips an.'
 
 --------------------------------- DEVELOPMENT ---------------------------------
 

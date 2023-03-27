@@ -389,7 +389,7 @@ function TomCatsDragonFlyingGlyphsPinMixin:OnAcquired(pinInfo)
     ShowHide(self, enabled)
 end
 function TomCatsDragonFlyingGlyphsPinMixin:OnCanvasScaleChanged()
-    local scaleBase = 0.425
+    local scaleBase = 0.286
     local uiMapID = self:GetMap():GetMapID()
     if (uiMapID == 12 or uiMapID == 13 or uiMapID == 113) then scaleBase = 0.35 end
     self:SetScale(scaleBase * self:GetMap():GetGlobalPinScale() / self:GetParent():GetScale())

@@ -5,6 +5,28 @@
 	local addonName, Details222 = ...
 
 --[[global]] DETAILS_TOTALS_ONLYGROUP = true
+--[[global]] DETAILS_SEGMENTID_OVERALL = -1
+--[[global]] DETAILS_SEGMENTID_CURRENT = 0
+
+--enum segments type
+--[[global]] DETAILS_SEGMENTTYPE_GENERIC = 0
+
+--[[global]] DETAILS_SEGMENTTYPE_OVERALL = 1
+
+--[[global]] DETAILS_SEGMENTTYPE_DUNGEON_TRASH = 5
+--[[global]] DETAILS_SEGMENTTYPE_DUNGEON_BOSS = 6
+
+--[[global]] DETAILS_SEGMENTTYPE_RAID_TRASH = 7
+--[[global]] DETAILS_SEGMENTTYPE_RAID_BOSS = 8
+
+--[[global]] DETAILS_SEGMENTTYPE_MYTHICDUNGEON_GENERIC = 10
+--[[global]] DETAILS_SEGMENTTYPE_MYTHICDUNGEON_TRASH = 11
+--[[global]] DETAILS_SEGMENTTYPE_MYTHICDUNGEON_OVERALL = 12
+--[[global]] DETAILS_SEGMENTTYPE_MYTHICDUNGEON_TRASHOVERALL = 13
+--[[global]] DETAILS_SEGMENTTYPE_MYTHICDUNGEON_BOSS = 14
+
+--[[global]] DETAILS_SEGMENTTYPE_PVP_ARENA = 20
+--[[global]] DETAILS_SEGMENTTYPE_PVP_BATTLEGROUND = 21
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --local pointers
@@ -110,10 +132,13 @@
 		return self.is_mythic_dungeon_trash
 	end
 
+	---return if the combat is a mythic dungeon segment and the run id
+	---@return boolean
+	---@return number
 	function combate:IsMythicDungeon()
-		local is_segment = self.is_mythic_dungeon_segment
-		local run_id = self.is_mythic_dungeon_run_id
-		return is_segment, run_id
+		local bIsMythicPlusSegment = self.is_mythic_dungeon_segment
+		local runId = self.is_mythic_dungeon_run_id
+		return bIsMythicPlusSegment, runId
 	end
 
 	function combate:IsMythicDungeonOverall()
@@ -179,29 +204,6 @@
 		end
 		return Loc ["STRING_UNKNOW"]
 	end
-
-	--[[global]] DETAILS_SEGMENTID_OVERALL = -1
-	--[[global]] DETAILS_SEGMENTID_CURRENT = 0
-
-	--enum segments type
-	--[[global]] DETAILS_SEGMENTTYPE_GENERIC = 0
-
-	--[[global]] DETAILS_SEGMENTTYPE_OVERALL = 1
-
-	--[[global]] DETAILS_SEGMENTTYPE_DUNGEON_TRASH = 5
-	--[[global]] DETAILS_SEGMENTTYPE_DUNGEON_BOSS = 6
-
-	--[[global]] DETAILS_SEGMENTTYPE_RAID_TRASH = 7
-	--[[global]] DETAILS_SEGMENTTYPE_RAID_BOSS = 8
-
-	--[[global]] DETAILS_SEGMENTTYPE_MYTHICDUNGEON_GENERIC = 10
-	--[[global]] DETAILS_SEGMENTTYPE_MYTHICDUNGEON_TRASH = 11
-	--[[global]] DETAILS_SEGMENTTYPE_MYTHICDUNGEON_OVERALL = 12
-	--[[global]] DETAILS_SEGMENTTYPE_MYTHICDUNGEON_TRASHOVERALL = 13
-	--[[global]] DETAILS_SEGMENTTYPE_MYTHICDUNGEON_BOSS = 14
-
-	--[[global]] DETAILS_SEGMENTTYPE_PVP_ARENA = 20
-	--[[global]] DETAILS_SEGMENTTYPE_PVP_BATTLEGROUND = 21
 
 	function combate:GetCombatType()
 		--mythic dungeon

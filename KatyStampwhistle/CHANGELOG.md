@@ -1,2 +1,2 @@
-### 1.1.6
-- 10.0.2 Dragonflight support
+### 1.1.7
+- 10.0.7 Dragonflight support

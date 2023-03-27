@@ -1,7 +1,8 @@
-## Changed in v44
+## Changed in v45
 
-* Do better at hiding some of the recipes if you know them
-* Cracked hourglass loot+vignette added
-* Add assorted dirt and packs
-* Fix: routes weren't obeying their display setting on the minimap
+* Updated for 10.0.7 and the Forbidden Reach
+* Forbidden Reach has: rares, dragon glyphs, high peaks, dragon races, librarian books
+* Add the missing Overseer Stonetongue from 10.0.5
+* Show the Revival Catalyst in Thaldraszus
+* Add Titan Chests in Thaldraszus
 

@@ -28,12 +28,17 @@ ns.expansion = 10
 ----------------------------------- GROUPS ------------------------------------
 -------------------------------------------------------------------------------
 
+ns.groups.CLAN_CHEST = Group('clan_chest', 'chest_bk', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
 ns.groups.COMMUNITY_FEAST = ns.Group('community_feast', 629056, {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.EXPANSION
 })
 
-ns.groups.DJARADIN_CACHE = Group('djaradin_cache', 'chest_pp', {
+ns.groups.DECAY_COVERED_CHEST = Group('decay_covered_chest', 'chest_pk', {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.EXPANSION
 })
@@ -43,7 +48,22 @@ ns.groups.DISTURBED_DIRT = Group('disturbed_dirt', 1060570, {
     type = ns.group_types.EXPANSION
 })
 
+ns.groups.DJARADIN_CACHE = Group('djaradin_cache', 'chest_pp', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.DRACTHYR_SUPPLY_CHEST = Group('dracthyr_supply_chest', 'chest_bl', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
 ns.groups.DRAGON_GLYPH = Group('dragon_glyph', 4728198, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.DRAGONBANE_SIEGE = ns.Group('dragonbane_siege', 3753264, {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.EXPANSION
 })
@@ -61,89 +81,14 @@ ns.groups.ELEMENTAL_STORM = Group('elemental_storm', 538566, {
 ns.groups.ELUSIVE_CREATURE = ns.Group('elusive_creature', 644271, {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.EXPANSION,
-    IsEnabled = function(self) -- Only display group for skinning players
-        if not ns.PlayerHasProfession(393) then return false end
+    IsEnabled = function(self)
+        -- Only display group for skinning players
+        if not ns.professions.SKINNING:HasProfession() then return false end
         return ns.Group.IsEnabled(self)
     end
 })
 
-ns.groups.GRAND_HUNTS = Group('grand_hunts', 237377, {
-    defaults = ns.GROUP_HIDDEN,
-    type = ns.group_types.EXPANSION
-})
-
-ns.groups.MAGICBOUND_CHEST = Group('magicbound_chest', 'chest_tl', {
-    defaults = ns.GROUP_HIDDEN,
-    type = ns.group_types.EXPANSION
-})
-
-ns.groups.PROFESSION_TREASURES = Group('profession_treasures', 4620676, {
-    defaults = ns.GROUP_HIDDEN,
-    type = ns.group_types.EXPANSION
-})
-
-ns.groups.SCOUT_PACK = Group('scout_pack', 4562583, {
-    defaults = ns.GROUP_HIDDEN,
-    type = ns.group_types.EXPANSION
-})
-
-ns.groups.DRAGONBANE_SIEGE = ns.Group('dragonbane_siege', 3753264, {
-    defaults = ns.GROUP_HIDDEN,
-    type = ns.group_types.EXPANSION
-})
-
-ns.groups.SIGNAL_TRANSMITTER = Group('signal_transmitter', 4548860, {
-    defaults = ns.GROUP_HIDDEN,
-    type = ns.group_types.EXPANSION,
-
-    -- Only display group for engineering players
-    IsEnabled = function(self)
-        if not ns.PlayerHasProfession(202) then return false end
-        return Group.IsEnabled(self)
-    end
-})
-
-ns.groups.TUSKARR_TACKLEBOX = Group('tuskarr_tacklebox', 'chest_yw', {
-    defaults = ns.GROUP_HIDDEN,
-    type = ns.group_types.EXPANSION
-})
-
-ns.groups.TUSKARR_CHEST = Group('tuskarr_chest', 'chest_bn', {
-    defaults = ns.GROUP_HIDDEN,
-    type = ns.group_types.EXPANSION
-})
-
-ns.groups.CLAN_CHEST = Group('clan_chest', 'chest_bk', {
-    defaults = ns.GROUP_HIDDEN,
-    type = ns.group_types.EXPANSION
-})
-
-ns.groups.DECAY_COVERED_CHEST = Group('decay_covered_chest', 'chest_pk', {
-    defaults = ns.GROUP_HIDDEN,
-    type = ns.group_types.EXPANSION
-})
-
-ns.groups.REED_CHEST = Group('reed_chest', 'chest_yw', {
-    defaults = ns.GROUP_HIDDEN,
-    type = ns.group_types.EXPANSION
-})
-
-ns.groups.DRACTHYR_SUPPLY_CHEST = Group('dracthyr_supply_chest', 'chest_bl', {
-    defaults = ns.GROUP_HIDDEN,
-    type = ns.group_types.EXPANSION
-})
-
-ns.groups.SIMMERING_CHEST = Group('simmering_chest', 'chest_gn', {
-    defaults = ns.GROUP_HIDDEN,
-    type = ns.group_types.EXPANSION
-})
-
-ns.groups.ICEMAW_STORAGE_CACHE = Group('icemaw_storage_cache', 'chest_nv', {
-    defaults = ns.GROUP_HIDDEN,
-    type = ns.group_types.EXPANSION
-})
-
-ns.groups.TITAN_CHEST = Group('titan_chest', 'chest_rd', {
+ns.groups.FORBIDDEN_HOARD = Group('forbidden_hoard', 'chest_pp', {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.EXPANSION
 })
@@ -153,7 +98,89 @@ ns.groups.FROSTBOUND_CHEST = Group('frostbound_chest', 'chest_rd', {
     type = ns.group_types.EXPANSION
 })
 
+ns.groups.FROSTSTONE_VAULT_STORM = Group('froststone_vault_storm', 463562, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.GRAND_HUNTS = Group('grand_hunts', 237377, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.ICEMAW_STORAGE_CACHE = Group('icemaw_storage_cache', 'chest_nv', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
 ns.groups.LIGHTNING_BOUND_CHEST = Group('lightning_bound_chest', 'chest_pp', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.MAGICBOUND_CHEST = Group('magicbound_chest', 'chest_tl', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.PROFESSION_RARES = Group('profession_rares', 'peg_rd', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.PROFESSION_TREASURES = Group('profession_treasures', 4620676, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.REED_CHEST = Group('reed_chest', 'chest_yw', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.SCOUT_PACK = Group('scout_pack', 4562583, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.SIGNAL_TRANSMITTER = Group('signal_transmitter', 4548860, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION,
+    IsEnabled = function(self)
+        -- Only display group for engineering players
+        if not ns.professions.ENGINEERING:HasProfession() then
+            return false
+        end
+        return Group.IsEnabled(self)
+    end
+})
+
+ns.groups.SIMMERING_CHEST = Group('simmering_chest', 'chest_gn', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.SMALL_TREASURES = Group('small_treasures', 'chest_rd', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.TITAN_CHEST = Group('titan_chest', 'chest_rd', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.TUSKARR_CHEST = Group('tuskarr_chest', 'chest_bn', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.TUSKARR_TACKLEBOX = Group('tuskarr_tacklebox', 'chest_yw', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.ZSKERA_VAULTS = Group('zskera_vaults', 4909720, {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.EXPANSION
 })
@@ -220,12 +247,6 @@ ns.groups.KITE = Group('kite', 133837, {
     achievement = 16584
 })
 
-ns.groups.NOKHUD_DO_IT = Group('nokhud_do_it', 1103068, {
-    defaults = ns.GROUP_HIDDEN,
-    type = ns.group_types.ACHIEVEMENT,
-    achievement = 16583
-})
-
 ns.groups.LEGENDARY_ALBUM = Group('legendary_album', 1109168, {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.ACHIEVEMENT,
@@ -238,10 +259,22 @@ ns.groups.LEYLINE = Group('leyline', 1033908, {
     achievement = 16638
 })
 
+ns.groups.LIBRARY = Group('librarian_of_the_reach', 4549135, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.ACHIEVEMENT,
+    achievement = 17530
+})
+
 ns.groups.NEW_PERSPECTIVE = Group('new_perspective', 1109100, {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.ACHIEVEMENT,
     achievement = 16634
+})
+
+ns.groups.NOKHUD_DO_IT = Group('nokhud_do_it', 1103068, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.ACHIEVEMENT,
+    achievement = 16583
 })
 
 ns.groups.PRETTY_NEAT = Group('pretty_neat', 133707, {
@@ -254,6 +287,18 @@ ns.groups.SAFARI = Group('safari', 4048818, {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.ACHIEVEMENT,
     achievement = 16519
+})
+
+ns.groups.SCALECOMMANDER_ITEM = Group('scalecommander_item', 134422, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.ACHIEVEMENT,
+    achievement = 17315
+})
+
+ns.groups.SCROLL_HUNTER = Group('scroll_hunter', 4549192, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.ACHIEVEMENT,
+    achievement = 17532
 })
 
 ns.groups.SNACK_ATTACK = Group('snack_attack', 134062, {
@@ -295,23 +340,6 @@ ns.node.RareElite = RareElite
 ----------------------------- PROFESSION TREASURES ----------------------------
 -------------------------------------------------------------------------------
 
--- LuaFormatter off
-local PROFESSIONS = {
-    -- name, icon, skillID, variantID
-    {'Alchemy', 4620669, 171, 2823},
-    {'Blacksmithing', 4620670, 164, 2822},
-    {'Enchanting', 4620672, 333, 2825},
-    {'Engineering', 4620673, 202, 2827},
-    {'Herbalism', 4620675, 182, 2832},
-    {'Inscription', 4620676, 773, 2828},
-    {'Jewelcrafting', 4620677, 755, 2829},
-    {'Leatherworking', 4620678, 165, 2830},
-    {'Mining', 4620679, 186, 2833},
-    {'Skinning', 4620680, 393, 2834},
-    {'Tailoring', 4620681, 197, 2831}
-}
--- LuaFormatter on
-
 local ProfessionMaster = Class('ProfessionMaster', ns.node.NPC, {
     scale = 0.9,
     group = ns.groups.PROFESSION_TREASURES
@@ -338,20 +366,25 @@ ns.node.ProfessionTreasures = {}
 local PM = ns.node.ProfessionMasters
 local PT = ns.node.ProfessionTreasures
 
-for i, ids in ipairs(PROFESSIONS) do
-    local name, icon, skillID, variantID = unpack(ids)
+for _, profession in pairs(ns.professions) do
+    if profession.variantID ~= nil then
+        local name = profession.name
+        local icon = profession.icon
+        local skillID = profession.skillID
+        local variantID = profession.variantID[10]
 
-    PM[name] = Class(name .. 'Master', ProfessionMaster, {
-        icon = icon,
-        skillID = skillID,
-        requires = ns.requirement.Profession(skillID, variantID, 25)
-    })
+        PM[name] = Class(name .. 'Master', ProfessionMaster, {
+            icon = icon,
+            skillID = skillID,
+            requires = ns.requirement.Profession(skillID, variantID, 25)
+        })
 
-    PT[name] = Class(name .. 'Treasure', ProfessionTreasure, {
-        icon = icon,
-        skillID = skillID,
-        requires = ns.requirement.Profession(skillID, variantID, 25)
-    })
+        PT[name] = Class(name .. 'Treasure', ProfessionTreasure, {
+            icon = icon,
+            skillID = skillID,
+            requires = ns.requirement.Profession(skillID, variantID, 25)
+        })
+    end
 end
 
 -------------------------------------------------------------------------------
@@ -561,7 +594,7 @@ ns.DRAGON_CUSTOMIZATIONS = {
         SweptSpikedHead = Item({item = 197113, quest = 69314}),
         TanHorns = Item({item = 197121, quest = 69322}),
         TaperedChin = Item({item = 197104, quest = 69305}),
-        TapereredNose = Item({item = 197136, quest = 69337}),
+        TaperedNose = Item({item = 197136, quest = 69337}),
         ThornedJaw = Item({item = 197115, quest = 69324}),
         ThornHorns = Item({item = 197123, quest = 69316}),
         ToothyMouth = Item({item = 197135, quest = 69336}),
@@ -635,6 +668,10 @@ ns.DRAGON_CUSTOMIZATIONS = {
         WideStripesPattern = Item({item = 197007, quest = 69207})
     }
 }
+
+ns.DRAGON_CUSTOMIZATIONS.SetNote = function(dc, note)
+    return Item({item = dc.item, quest = dc.quest, note = note})
+end
 
 -------------------------------------------------------------------------------
 ------------------ DRAGONSCALE EXPEDITION: THE HIGHEST PEAKS ------------------
@@ -1058,12 +1095,15 @@ ns.node.Safari = Safari
 -------------------------------------------------------------------------------
 
 local ElementalChest = Class('ElementalChest', ns.node.Treasure, {
-    icon = 'chest_rd', -- temporary, maybe change it to different icon?
+    icon = 'chest_rd',
     getters = {
         rlabel = function(self)
-            local completed = C_QuestLog.IsQuestFlaggedCompleted(self.quest[1])
-            local color = completed and ns.status.Green or ns.status.Gray
-            return color(L['weekly'])
+            if self.quest then
+                local completed = C_QuestLog.IsQuestFlaggedCompleted(
+                    self.quest[1])
+                local color = completed and ns.status.Green or ns.status.Gray
+                return color(L['weekly'])
+            end
         end
     }
 })
@@ -1084,7 +1124,7 @@ local function nextSpawn(self, timeYellow, timeGreen)
         SpawnTime = SpawnTime + initial.kr
     elseif region == 3 and initial.eu then
         SpawnTime = SpawnTime + initial.eu
-    elseif region == 4 and initial.tw then
+    elseif region == 2 and initial.tw then
         SpawnTime = SpawnTime + initial.tw
     else
         SpawnTime = SpawnTime + initial.us

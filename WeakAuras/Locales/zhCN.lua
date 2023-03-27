@@ -279,12 +279,9 @@ L["Clone per Match"] = "复制每项符合项"
 L["Color"] = "颜色"
 L["Color Animation"] = "颜色动画"
 L["Combat Log"] = "战斗记录"
---[[Translation missing --]]
 L[ [=[COMBAT_LOG_EVENT_UNFILTERED without a filter is generally advised against as it’s very performance costly.
 Find more information:
-https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events]=] ] = [=[COMBAT_LOG_EVENT_UNFILTERED without a filter is generally advised against as it’s very performance costly.
-Find more information:
-https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events]=]
+https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events]=] ] = "无过滤的 COMBAT_LOG_EVENT_UNFILTERED 触发器由于效能较差所以不推荐使用。请查阅：https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events"
 L["Condition Custom Text"] = "条件自定义文本"
 L["Conditions"] = "常用状态"
 L["Contains"] = "包含"
@@ -323,8 +320,7 @@ L["Custom Check"] = "自定义检查"
 L["Custom Color"] = "自定义颜色"
 L["Custom Condition Code"] = "自定义条件代码"
 L["Custom Configuration"] = "自定义设置"
---[[Translation missing --]]
-L["Custom Fade Animation"] = "Custom Fade Animation"
+L["Custom Fade Animation"] = "自定义淡化动画"
 L["Custom Function"] = "自定义函数"
 L["Custom Grow"] = "自定义生长"
 L["Custom Sort"] = "自定义排序"
@@ -731,8 +727,7 @@ L["Maximum"] = "最大"
 L["Maximum Estimate"] = "最大预估"
 L["Media"] = "媒体"
 L["Medium"] = "中"
---[[Translation missing --]]
-L["Melee"] = "Melee"
+L["Melee"] = "近战"
 L["Melee Haste (%)"] = "攻速百分比"
 L["Message"] = "信息"
 L["Message Type"] = "信息类型"
@@ -917,8 +912,7 @@ L["Raid Warning"] = "团队警告"
 L["Raids"] = "团队地下城"
 L["Range"] = "远程攻击"
 L["Range Check"] = "距离检查"
---[[Translation missing --]]
-L["Ranged"] = "Ranged"
+L["Ranged"] = "远程"
 L["Rank"] = "等级"
 L["Rare"] = "稀有"
 L["Rare Elite"] = "稀有精英"
@@ -1068,8 +1062,7 @@ L["Source unit's raid mark texture"] = "来源单位的团队标记材质"
 L["Space"] = "空白"
 L["Spacing"] = "间距"
 L["Spark"] = "闪光"
---[[Translation missing --]]
-L["Spec Position"] = "Spec Position"
+L["Spec Position"] = "专精位置"
 L["Spec Role"] = "专精角色"
 L["Specialization"] = "专精"
 L["Specific Type"] = "特定类型"

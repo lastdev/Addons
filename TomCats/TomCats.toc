@@ -1,66 +1,15 @@
 # See license.txt for license and copyright information
-## Interface: 100005
+## Interface: 100007
 ## Title: TomCat's Tours
-## Notes: Version: 2.4.56
+## Notes: Version: 2.4.57
 ## Author: TomCat
 ## X-Website: https://www.tomcatstours.com
-## Version: 2.4.56
+## Version: 2.4.57
 ## DefaultState: enabled
 ## SavedVariables: TomCats_Account
 ## SavedVariablesPerCharacter: TomCats_Character
 ## X-Category: Achievements, Map, Miscellaneous
 ## X-Localizations: enUS, enGB, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ptPT, ruRU, zhCN, zhTW
-## X-TomCats-Expiry: 1680167531
+## X-TomCats-Expiry: 1680732204
 
-constants.lua
-slashcommands.lua
-event.lua
-popup.xml
-default_saved_variables.lua
-saved_variables.lua
-update.lua
-version_info.lua
-legacy.lua
-constants.lua
-maps.lua
-playerposition.lua
-arrows.lua
-cache.lua
-rules.lua
-bit32.lua
-base64.lua
-compression.lua
-vignette_descriptions.lua
-db_vignette_names.lua
-db_vignette_info.lua
-db_item_companion.lua
-db_vignettes_known.lua
-dao_vignettes.lua
-dao_loot.lua
-proxy.lua
-proxy_mapcanvas.lua
-proxy_mapcanvaspinmixin.lua
-ui_vignettes_tooltip.lua
-ui_vignettes_tooltip.xml
-ui_vignettes_section.lua
-ui_vignettes_section.xml
-ui_vignettes_pins.lua
-ui_vignettes_pins.xml
-lunarfestival/Main.xml
-loveisintheair/Main.xml
-hallowsend/Main.xml
-announcements.lua
-configuration.xml
-configuration.lua
-minimap_icon.xml
-minimap_icon.lua
-worldmap_icon.lua
-#discoveries.xml
-#discoveries.lua
-support/support.xml
-support/support.lua
-beta.lua
-noblegarden/Main.xml
-#primalstorms/Main.xml
-dragonflyingglyphs/Main.xml
-notaint.lua
+Main.xml

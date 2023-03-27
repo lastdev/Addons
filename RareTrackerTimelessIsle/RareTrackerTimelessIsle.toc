@@ -1,8 +1,8 @@
-## Interface: 100005
+## Interface: 100007
 ## Title: RareTrackerTimelessIsle
 ## Notes: Track and coordinate rare spawn timers on the Timeless Isle.
 ## Author: Melroy, Urtgard
-## Version: 7.1.15
+## Version: 7.1.16
 ## SavedVariables: RareTrackerTimelessIsleDB
 ## Dependencies: RareTrackerCore
 

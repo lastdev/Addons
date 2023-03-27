@@ -681,6 +681,108 @@ GTFO.SpellID["395304"] = {
   sound = 3;
 };
 
+GTFO.SpellID["399065"] = {
+  --desc = "Ground Shatter (Irontide Crusher)";
+  sound = 3;
+  tankSound = 0;
+};
+
+GTFO.SpellID["399063"] = {
+  --desc = "Boulder Throw (Irontide Crusher)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["399069"] = {
+  --desc = "Tidelord's Fury (Farscale Tidelord)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["399080"] = {
+  --desc = "Shell Breach (Farscale Tidelord)";
+  sound = 3;
+};
+
+GTFO.SpellID["393861"] = {
+  --desc = "Poison Juice (Invasive Scalecrawler)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["403570"] = {
+  --desc = "Stasis Trap (Warden Entrix)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["400172"] = {
+  --desc = "Wild Scavenging (Bonesifter Marwak)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["400354"] = {
+  --desc = "Bonemerang (Bonemerang)";
+  sound = 3;
+};
+
+GTFO.SpellID["406187"] = {
+  --desc = "Damp Scavenging (Bonesifter Marwak)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["400887"] = {
+  --desc = "Bubble Burster (Rampant Tide)";
+  sound = 3;
+};
+
+GTFO.SpellID["406188"] = {
+  --desc = "Heated Scavenging (Bonesifter Marwak)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["402901"] = {
+  --desc = "Torrid Upheaval (Bonesifter Marwak)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["406283"] = {
+  --desc = "Ruinous Pyre (Bonesifter Marwak)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["406572"] = {
+  --desc = "Banana Broadside (Ookbeard)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["404568"] = {
+  --desc = "Stormy Weather (Galakhad)";
+  sound = 3;
+};
+
+GTFO.SpellID["404481"] = {
+  --desc = "Spiraling Squall (Spiraling Squall)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["403731"] = {
+  --desc = "Left Reap (Duzalgor)";
+  sound = 3;
+};
+
+GTFO.SpellID["405230"] = {
+  --desc = "Right Reap (Duzalgor)";
+  sound = 3;
+};
+
 --- *******************
 --- * Ruby Life Pools *
 --- *******************
@@ -1521,6 +1623,11 @@ GTFO.SpellID["396394"] = {
 
 GTFO.SpellID["370991"] = {
   --desc = "Earthen Pillar (Opalfang)";
+  sound = 3;
+};
+
+GTFO.SpellID["396868"] = {
+  --desc = "Searing Barrage (Magmas)";
   sound = 3;
 };
 

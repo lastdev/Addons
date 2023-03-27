@@ -125,5 +125,8 @@ GTFO.IgnoreScan["382541"] = true; -- Surge
 GTFO.IgnoreScan["391282"] = true; -- Crackling Energy
 GTFO.IgnoreScan["387333"] = true; -- Storm Surge
 GTFO.IgnoreScan["396328"] = true; -- Quaking Pillar
---GTFO.IgnoreScan["375873"] = true; -- Wildfire
+GTFO.IgnoreScan["381931"] = true; -- Mana Spring
+GTFO.IgnoreScan["361029"] = true; -- Time Dilation
+GTFO.IgnoreScan["363143"] = true; -- Light Dilation
+
 

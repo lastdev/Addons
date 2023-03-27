@@ -198,6 +198,12 @@ L["CONFIG_SMALL_TABS_TOOLTIP_TEXT"] = "다른 경매자 애드온을 통해 경�
 L["CONFIG_STACK_TOOLTIP"] = "쉬프트로 전체 가격 표시"
 L["CONFIG_TOOLTIPS_CATEGORY"] = "툴팁"
 L["CONFIG_TOOLTIPS_TEXT"] = "게임 내 툴팁에 대한 설정을 변경합니다."
+--[[Translation missing --]]
+L["CONFIG_UNDERCUT_SCAN_MATCH_ILVL_VARIANTS"] = "For gear use item level and title when doing undercut checks"
+--[[Translation missing --]]
+L["CONFIG_UNDERCUT_SCAN_MATCH_ILVL_VARIANTS_TOOLTIP_HEADER"] = "Gear Use Item Level and Title"
+--[[Translation missing --]]
+L["CONFIG_UNDERCUT_SCAN_MATCH_ILVL_VARIANTS_TOOLTIP_TEXT"] = "Leave this on to match potential gear undercuts by item level and title, rather than by only item base type."
 L["CONFIG_UNDERCUT_SCAN_NOT_LIFO"] = "장비/펫의 최저가도 포함"
 L["CONFIG_UNDERCUT_SCAN_NOT_LIFO_TOOLTIP_HEADER"] = "장비/펫의 최저가 검색"
 L["CONFIG_UNDERCUT_SCAN_NOT_LIFO_TOOLTIP_TEXT"] = "장비/펫의 최저가도  함께 검색합니다. 체크 해제시 장비와 펫의 최저가는 검색하지 않습니다."
@@ -254,6 +260,8 @@ L["ENCHANT_TOOLTIP_TOOLTIP_TEXT"] = "마법부여 정보를 툴팁에 표시합�
 L["ENGAGE_HEADER"] = "옥셔네이터와 함께하기"
 L["ERROR_REOPEN_AUCTION_HOUSE"] = "작업을 완료할 수 없습니다. 경매장을 닫았다가 다시 여십시오."
 L["EXACT_SEARCH"] = "정확한 이름 검색"
+--[[Translation missing --]]
+L["EXPANSION"] = "Expansion"
 L["EXPORT"] = "내보내기"
 L["EXPORT_AS"] = "다음으로 내보내기"
 L["EXPORT_RESULTS"] = "결과 내보내기"
@@ -274,6 +282,8 @@ L["GEAR_VENDOR_PRICE_MULTIPLIER"] = "상점에 판매하는 가격의 배수로 
 L["HIDE"] = "숨기기"
 L["HISTORY"] = "거래 기록"
 L["IMPORT"] = "가져오기"
+--[[Translation missing --]]
+L["IMPORTED"] = "Imported"
 L["INFO_TAB_HEADER"] = "옥셔네이터 - 정보"
 L["IS_TOP_COLUMN"] = "최고가?"
 L["IS_UNDERCUT"] = "최저가 아님"

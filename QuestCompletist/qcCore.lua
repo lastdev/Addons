@@ -24,7 +24,7 @@ local qcNewDataAlertTooltip = nil
 local qcMutuallyExclusiveAlertTooltip = nil
 
 --[[ Constants ]]--
-local QCADDON_VERSION = 109.42
+local QCADDON_VERSION = 109.43
 local QCADDON_PURGE = true
 local QCDEBUG_MODE = false
 local QCADDON_CHAT_TITLE = "|CFF9482C9Quest Completist:|r "
@@ -665,43 +665,46 @@ function qcUpdateTooltip(index)
 	local stringFormat = string.format
 	local questId = _G["qcMenuButton" .. index].QuestID
 
-	if not (questId == nil) then
-		qcQuestInformationTooltip:SetOwner(qcQuestCompletistUI,"ANCHOR_BOTTOMRIGHT",-30,500)
-		qcQuestInformationTooltip:ClearLines()
-		qcQuestInformationTooltip:SetHyperlink(stringFormat("quest:%d",questId))
-		qcQuestInformationTooltip:AddLine(" ")
-		qcQuestInformationTooltip:AddDoubleLine("Quest ID:", stringFormat("|cFF69CCF0%d|r",questId))
-		qcQuestInformationTooltip:AddLine(" ")
-		qcQuestInformationTooltip:AddDoubleLine("Prerequired Completed Quest/Quests:", stringFormat("|cFF69CCF0%d|r",questRequired))
-		qcQuestInformationTooltip:AddLine(" ")
-		if not (qcQuestDatabase[questId][14] == nil) then
-			for qcInitiatorIndex, qcInitiatorEntry in pairs{qcQuestDatabase[questId][14]} do
-			--	local qcInitiatorID = qcInitiatorEntry[1]
-			--	local qcInitiatorName = qcInitiatorEntry[2]
-			--	local qcInitiatorUiMapID = qcInitiatorEntry[3]
-			--	local qcInitiatorMapLevel = qcInitiatorEntry[4]
-			--	local qcInitiatorX = qcInitiatorEntry[5]
-			--	local qcInitiatorY = qcInitiatorEntry[6]
-				if not (qcInitiatorID == 0) then
-					if not (qcInitiatorName == nil) then
-						qcQuestInformationTooltip:AddDoubleLine("Quest Giver:", stringFormat("%s%s [%d]",COLOUR_HUNTER,qcInitiatorName,qcInitiatorID))
-					else
-						qcQuestInformationTooltip:AddDoubleLine("Quest Giver:", stringFormat("%s%s [%d]",COLOUR_HUNTER,"Self-provided Quest",qcInitiatorID))
-					end
-				else
-					if not (qcInitiatorName == nil) then
-						qcQuestInformationTooltip:AddDoubleLine("Quest Giver:", stringFormat("%s%s",COLOUR_HUNTER,qcInitiatorName))
-					else
-						qcQuestInformationTooltip:AddDoubleLine("Quest Giver:", stringFormat("%s%s",COLOUR_HUNTER,"Self-provided Quest"))
-					end
-				end
-				if not (qcInitiatorMapLevel == 0) then
-					--qcQuestInformationTooltip:AddDoubleLine("  - Location:", stringFormat("%s%s, Floor %d @ %.1f,%.1f",COLOUR_HUNTER,tostring(GetMapNameByID(qcInitiatorUiMapID) or nil),qcInitiatorMapLevel,qcInitiatorX,qcInitiatorY),nil,nil,nil,true)
-				else
-					qcQuestInformationTooltip:AddDoubleLine("  - Location:", stringFormat("%s%s @ %.1f,%.1f",COLOUR_HUNTER,tostring(GetMapNameByID(qcInitiatorUiMapID) or nil),qcInitiatorX,qcInitiatorY),nil,nil,nil,true)
-				end
-			end
-		end
+if not (questId == nil) then
+    qcQuestInformationTooltip:SetOwner(qcQuestCompletistUI,"ANCHOR_BOTTOMRIGHT",-30,500)
+    qcQuestInformationTooltip:ClearLines()
+    qcQuestInformationTooltip:SetHyperlink(string.format("quest:%d",questId))
+    qcQuestInformationTooltip:AddLine(" ")
+    qcQuestInformationTooltip:AddDoubleLine("Quest ID:", string.format("|cFF69CCF0%d|r",questId))
+    qcQuestInformationTooltip:AddLine(" ")
+    local prereqQuestName = qcQuestDatabase[questId][13] or "No known prequest" -- look up the name of the prerequisite quest in qcQuestDatabase
+    qcQuestInformationTooltip:AddDoubleLine("Prerequired Completed Quest/Quests:", string.format("%s [%d]", prereqQuestName, questRequired))
+    --qcQuestInformationTooltip:AddDoubleLine("Prerequired Completed Quest/Quests:", string.format("|cFF69CCF0%d|r",questRequired))
+    qcQuestInformationTooltip:AddLine(" ")
+    if not (qcQuestDatabase[questId][14] == nil) then
+        for qcInitiatorIndex, qcInitiatorEntry in pairs{qcQuestDatabase[questId][14]} do
+         --   local qcInitiatorID = qcInitiatorEntry[1]
+         --   local qcInitiatorName = qcInitiatorEntry[2]
+         --   local qcInitiatorUiMapID = qcInitiatorEntry[3]
+         --   local qcInitiatorMapLevel = qcInitiatorEntry[4]
+         --   local qcInitiatorX = qcInitiatorEntry[5]
+         --   local qcInitiatorY = qcInitiatorEntry[6]
+            if not (qcInitiatorID == 0) then
+                if not (qcInitiatorName == nil) then
+                    qcQuestInformationTooltip:AddDoubleLine("Quest Giver:", string.format("%s%s [%d]",COLOUR_HUNTER,qcInitiatorName,qcInitiatorID))
+                else
+                    qcQuestInformationTooltip:AddDoubleLine("Quest Giver:", string.format("%s%s [%d]",COLOUR_HUNTER,"Self-provided Quest",qcInitiatorID))
+                end
+            else
+                if not (qcInitiatorName == nil) then
+                    qcQuestInformationTooltip:AddDoubleLine("Quest Giver:", string.format("%s%s",COLOUR_HUNTER,qcInitiatorName))
+                else
+                    qcQuestInformationTooltip:AddDoubleLine("Quest Giver:", string.format("%s%s",COLOUR_HUNTER,"Self-provided Quest"))
+                end
+            end
+            if not (qcInitiatorMapLevel == 0) then
+               -- qcQuestInformationTooltip:AddDoubleLine("  - Location:", string.format("%s%s, Floor %d @ %.1f,%.1f",COLOUR_HUNTER,tostring(GetMapNameByID(qcInitiatorUiMapID) or nil),qcInitiatorMapLevel,qcInitiatorX,qcInitiatorY),nil,nil,nil,true)
+            else
+                qcQuestInformationTooltip:AddDoubleLine("  - Location:", string.format("%s%s @ %.1f,%.1f",COLOUR_HUNTER,tostring(GetMapNameByID(qcInitiatorUiMapID) or nil),qcInitiatorX,qcInitiatorY),nil,nil,nil,true)
+            end
+        end
+    end
+
 		qcQuestInformationTooltip:Show()
 		qcQuestReputationTooltip:SetOwner(qcQuestInformationTooltip,"ANCHOR_BOTTOMRIGHT",-qcQuestInformationTooltip:GetWidth())
 		qcQuestReputationTooltip:ClearLines()

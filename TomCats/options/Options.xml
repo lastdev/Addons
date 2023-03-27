@@ -1,0 +1,14 @@
+<!-- See license.txt for license and copyright information -->
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+
+	<SimpleHTML name="TomCats_HTML_Welcome" file="Interface\AddOns\TomCats\options\Welcome.html" virtual="true">
+		<FontString inherits="GameFontHighlight" justifyH="LEFT" spacing="1" />
+	</SimpleHTML>
+
+	<Include file="options\Home.lua" />
+	<Include file="options\Header.lua" />
+	<Include file="options\ScrollBox.lua" />
+	<Include file="options\LinkButton.lua" />
+
+</Ui>

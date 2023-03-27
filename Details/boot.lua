@@ -10,8 +10,8 @@
 		local addonName, Details222 = ...
 		local version, build, date, tocversion = GetBuildInfo()
 
-		_detalhes.build_counter = 10662
-		_detalhes.alpha_build_counter = 10662 --if this is higher than the regular counter, use it instead
+		_detalhes.build_counter = 10730
+		_detalhes.alpha_build_counter = 10730 --if this is higher than the regular counter, use it instead
 		_detalhes.dont_open_news = true
 		_detalhes.game_version = version
 		_detalhes.userversion = version .. " " .. _detalhes.build_counter
@@ -74,6 +74,7 @@
 		Details222.Textures = {}
 		--namespace for pet
 		Details222.Pets = {}
+		Details222.Instances = {}
 		Details222.MythicPlus = {}
 		Details222.EJCache = {}
 		Details222.Segments = {}
@@ -82,6 +83,7 @@
 		Details222.Cache = {}
 		Details222.Perf = {}
 		Details222.Cooldowns = {}
+		Details222.GarbageCollector = {}
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --initialization stuff
@@ -92,6 +94,12 @@ do
 	_detalhes.resize_debug = {}
 
 	local Loc = _G.LibStub("AceLocale-3.0"):GetLocale("Details")
+
+	--change logs
+	--[=[
+
+
+	--]=]
 
 	local news = {
 		{"v10.0.5.10661.147", "Mar 1st, 2023"},

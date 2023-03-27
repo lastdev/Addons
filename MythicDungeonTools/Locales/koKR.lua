@@ -1989,6 +1989,8 @@ L["Volatile Sapling"] = "Volatile Sapling"
 L["Volcanic"] = "화산"
 L["Vol'kaal"] = "볼카알"
 L["Vol'zith the Whisperer"] = "속삭임의 볼지스"
+--[[Translation missing --]]
+L["VortexPinnacle"] = "Vortex Pinnacle"
 L["Vy Relic"] = "바이 유물"
 L["Wandering Shellback"] = "떠도는 등껍질거북"
 L["Wanton Sapper"] = "통제불가 공병"
@@ -2063,6 +2065,12 @@ L["Zolramus Gatekeeper"] = "조르라무스 문지기"
 L["Zolramus Necromancer"] = "조르라무스 강령술사"
 L["Zolramus Siphoner"] = "조르라무스 착취자"
 L["Zolramus Sorcerer"] = "조르라무스 마술사"
+--[[Translation missing --]]
+L["Zoom"] = "Zoom"
+--[[Translation missing --]]
+L["zoomIn"] = "In"
+--[[Translation missing --]]
+L["zoomOut"] = "Out"
 L["Zo'phex"] = "조펙스"
 L["Zul'gamux"] = "Zul'gamux"
 L["Zul'Gurub"] = "줄구룹"

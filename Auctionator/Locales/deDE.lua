@@ -170,6 +170,12 @@ L["CONFIG_SMALL_TABS_TOOLTIP_TEXT"] = "Wenn zu viele Addons im Auktionshaus Reit
 L["CONFIG_STACK_TOOLTIP"] = "Zeige Stapelpreis, während Shift gedrückt wird, an."
 L["CONFIG_TOOLTIPS_CATEGORY"] = "Tooltips"
 L["CONFIG_TOOLTIPS_TEXT"] = "Optionen zum Anzeigen verschiedener auktionsbezogener Informationen in Tooltips."
+--[[Translation missing --]]
+L["CONFIG_UNDERCUT_SCAN_MATCH_ILVL_VARIANTS"] = "For gear use item level and title when doing undercut checks"
+--[[Translation missing --]]
+L["CONFIG_UNDERCUT_SCAN_MATCH_ILVL_VARIANTS_TOOLTIP_HEADER"] = "Gear Use Item Level and Title"
+--[[Translation missing --]]
+L["CONFIG_UNDERCUT_SCAN_MATCH_ILVL_VARIANTS_TOOLTIP_TEXT"] = "Leave this on to match potential gear undercuts by item level and title, rather than by only item base type."
 L["CONFIG_UNDERCUT_SCAN_NOT_LIFO"] = "Schließe Ausrüstung und Haustiere in Unterboten-Scans ein"
 L["CONFIG_UNDERCUT_SCAN_NOT_LIFO_TOOLTIP_HEADER"] = "Unterboten-Scan für Ausrüstung/Haustiere"
 L["CONFIG_UNDERCUT_SCAN_NOT_LIFO_TOOLTIP_TEXT"] = "Lasse diese Option aktiviert, um Auktionen für Haustiere und Ausrüstung einzuschließen, wenn der Unterboten-Scan verwenden wird. Schalten diese Option aus, um Haustiere und Ausrüstung auszuschließen."
@@ -223,6 +229,8 @@ L["ENCHANT_TOOLTIP_TOOLTIP_TEXT"] = "Zeigt entzaubern Infos im Tooltip an."
 L["ENGAGE_HEADER"] = "Weitere Infos und Support"
 L["ERROR_REOPEN_AUCTION_HOUSE"] = "Vorgang kann nicht abgeschlossen werden, bitte schließe und öffne das Auktionshaus erneut."
 L["EXACT_SEARCH"] = "Genaue Suche"
+--[[Translation missing --]]
+L["EXPANSION"] = "Expansion"
 L["EXPORT"] = "Exportieren"
 L["EXPORT_AS"] = "Exportieren als:"
 L["EXPORT_RESULTS"] = "Ergebnisse exportieren"
@@ -242,6 +250,8 @@ L["GEAR_VENDOR_PRICE_MULTIPLIER"] = "Händlerpreis-Multiplikator für Ausrüstun
 L["HIDE"] = "Ausblenden"
 L["HISTORY"] = "Verlauf"
 L["IMPORT"] = "Importieren"
+--[[Translation missing --]]
+L["IMPORTED"] = "Imported"
 L["INFO_TAB_HEADER"] = "Auctionator - Info"
 L["IS_TOP_COLUMN"] = "Spitze?"
 L["IS_UNDERCUT"] = "Unterboten?"

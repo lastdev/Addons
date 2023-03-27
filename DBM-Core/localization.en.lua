@@ -7,8 +7,8 @@ L.DBM									= "DBM" -- NO TRANSLATE
 
 local dateTable = date("*t")
 if dateTable.day and dateTable.month and dateTable.day == 1 and dateTable.month == 4 then
-	L.DEADLY_BOSS_MODS					= "Harmless Boss Mods"
-	L.DBM								= "HBM"
+	L.DEADLY_BOSS_MODS					= "Bigwigs"
+	L.DBM								= "BW"
 end
 
 L.HOW_TO_USE_MOD						= "Welcome to " .. L.DBM .. ". Type /dbm help for a list of supported commands. To access options type /dbm in your chat to begin configuration. Load specific zones manually to configure any boss specific settings to your liking as well. " .. L.DBM .. " will setup defaults for your spec, but you may want to fine tune these."
@@ -542,8 +542,8 @@ L.AUTO_YELL_CUSTOM_POSITION2			= "{rt%d}%s{rt%d}"--Doesn't need translating. Has
 L.AUTO_YELL_CUSTOM_FADE					= "%s faded"
 L.AUTO_HUD_OPTION_TEXT					= "Show HudMap for $spell:%s (Retired)"
 L.AUTO_HUD_OPTION_TEXT_MULTI			= "Show HudMap for various mechanics (Retired)"
-L.AUTO_NAMEPLATE_OPTION_TEXT			= "Show Nameplate Auras for $spell:%s using compatible nameplate addon or DBM"
-L.AUTO_NAMEPLATE_OPTION_TEXT_FORCED		= "Show Nameplate Auras for $spell:%s using only DBM"
+L.AUTO_NAMEPLATE_OPTION_TEXT			= "Show Nameplate Auras for $spell:%s using compatible nameplate addon or "..L.DBM
+L.AUTO_NAMEPLATE_OPTION_TEXT_FORCED		= "Show Nameplate Auras for $spell:%s using only "..L.DBM
 L.AUTO_RANGE_OPTION_TEXT				= "Show range frame (%s) for $spell:%s"--string used for range so we can use things like "5/2" as a value for that field
 L.AUTO_RANGE_OPTION_TEXT_SHORT			= "Show range frame (%s)"--For when a range frame is just used for more than one thing
 L.AUTO_RRANGE_OPTION_TEXT				= "Show reverse range frame (%s) for $spell:%s"--Reverse range frame (green when players in range, red when not)

@@ -1862,3 +1862,8 @@ Change Log:
 * Added Dragonflight spells (world)
 * Added Wrath spells for Ulduar (thanks Furento)
 * Added Wrath spells (Heroic+) (thanks wazerFPS)
+
+5.0.6
+* Updated for patch 10.0.7
+* Added Dragonflight spells (world)
+* Added Dragonflight spells for Vault of the Incarnates

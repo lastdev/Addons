@@ -217,6 +217,46 @@ GTFO.SpellID["396050"] = {
   end;
 };
 
+GTFO.SpellID["396911"] = {
+  --desc = "Fire Patch";
+  sound = 1;
+};
+
+GTFO.SpellID["406272"] = {
+  --desc = "Wild Flames (Bonesifter Marwak)";
+  sound = 1;
+  test = true;
+};
+
+GTFO.SpellID["400606"] = {
+  --desc = "Inferno (Nidharr)";
+  sound = 1;
+};
+
+GTFO.SpellID["400713"] = {
+  --desc = "Magma Wake (Nidharr)";
+  sound = 1;
+  ignoreApplication = true;
+};
+
+GTFO.SpellID["400687"] = {
+  --desc = "Rain of Devastation (Wyrmslayer Angvardi)";
+  sound = 1;
+};
+
+GTFO.SpellID["407721"] = {
+  --desc = "Dead In The Water (Ookbeard)";
+  sound = 1;
+};
+
+GTFO.SpellID["407712"] = {
+  --desc = "Dead In The Water (Ookbeard)";
+  sound = 1;
+};
+
+
+
+
 --- *******************
 --- * Ruby Life Pools *
 --- *******************

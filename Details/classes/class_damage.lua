@@ -2474,6 +2474,7 @@ end
 		local maxStringLength_StringThree = 0
 		local profileOffsetString3 = self.fontstrings_text3_anchor
 		local profileOffsetString2 = self.fontstrings_text2_anchor
+		local profileYOffset = self.row_info.text_yoffset
 
 		Details.CacheInLineMaxDistance = Details.CacheInLineMaxDistance or {}
 		Details.CacheInLineMaxDistance[self:GetId()] = Details.CacheInLineMaxDistance[self:GetId()] or {[2] = profileOffsetString2, [3] = profileOffsetString3}
@@ -2514,7 +2515,7 @@ end
 			--update the lines
 			for lineId = 1, self:GetNumLinesShown() do
 				local thisLine = self:GetLine(lineId)
-				thisLine.lineText3:SetPoint("right", thisLine.statusbar, "right", -newOffset, 0)
+				thisLine.lineText3:SetPoint("right", thisLine.statusbar, "right", -newOffset, profileYOffset)
 			end
 		end
 
@@ -2535,7 +2536,7 @@ end
 				--update the lines
 				for lineId = 1, self:GetNumLinesShown() do
 					local thisLine = self:GetLine(lineId)
-					thisLine.lineText2:SetPoint("right", thisLine.statusbar, "right", -newOffset, 0)
+					thisLine.lineText2:SetPoint("right", thisLine.statusbar, "right", -newOffset, profileYOffset)
 				end
 			end
 		end
@@ -6004,11 +6005,6 @@ end
 
 			return shadow
 		end
-
-function atributo_damage:ColetarLixo (lastevent)
-	return Details:ColetarLixo (class_type, lastevent)
-end
-
 
 --actor 1 is who will receive the sum from actor2
 function Details.SumDamageActors(actor1, actor2, actorContainer)

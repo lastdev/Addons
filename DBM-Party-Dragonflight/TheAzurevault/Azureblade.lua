@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2505, "DBM-Party-Dragonflight", 6, 1203)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230314183646")
+mod:SetRevision("20230316065655")
 mod:SetCreatureID(186739)
 mod:SetEncounterID(2585)
 --mod:SetUsedIcons(1, 2, 3)
@@ -113,7 +113,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerSummonDraconicImageCD:Start(4.7)--4.7-5.7
 		timerArcaneCleaveCD:Start(7.1)--7.1-8.1
 		timerAncientOrbCD:Start(12)--12-13
-		timerOverwhelmingenergyCD:Start(73.4)
+		timerOverwhelmingenergyCD:Start(70)
 	end
 end
 

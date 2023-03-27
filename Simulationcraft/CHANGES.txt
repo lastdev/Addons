@@ -1,16 +1,10 @@
-lightweight tag f103aa9f3b514c4ba2667c17a20cfb1a295a2e7c v10.0.7-01
+lightweight tag dff6ac78bd3cae2ab35aa3b637725ef6f3e83cb1 10.0.7-03
 Author:	Dave Hendler <sollaires@gmail.com>
-Date:	Mon Mar 20 14:21:39 2023 -0700
+Date:	Sat Mar 25 11:49:19 2023 -0700
 
-commit 5a32fa70d037fc5002ac244f943e135ac99bc167
+commit dff6ac78bd3cae2ab35aa3b637725ef6f3e83cb1
 Author: Dave Hendler <sollaires@gmail.com>
-Date:   Mon Mar 20 14:21:11 2023 -0700
+Date:   Sat Mar 25 11:49:19 2023 -0700
 
-    Bump TOC for 10.0.7
-
-commit 5a32fa70d037fc5002ac244f943e135ac99bc167
-Author: Dave Hendler <sollaires@gmail.com>
-Date:   Mon Mar 20 14:21:11 2023 -0700
-
-    Bump TOC for 10.0.7
+    Better error messaging when a loadout is corrupted
 

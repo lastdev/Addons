@@ -108,12 +108,15 @@
 	--pets
 		local container_pets = {} --just initialize table (placeholder)
 	--ignore deaths
-		local ignore_death = {}
+		local ignore_death_cache = {}
 	--cache
 		local cacheAnything = {
 			arenaHealth = {},
 			paladin_vivaldi_blessings = {},
+			track_hunter_frenzy = false,
 		}
+
+		
 
 	--cache the data for passive trinkets procs
 		local _trinket_data_cache = {}
@@ -258,6 +261,11 @@
 
 			--charge warrior
 			[105771] = 126664,
+
+			--elemental stances
+			[377458] = 377459,
+			[377461] = 377459,
+			[382133] = 377459,
 		}
 
 	else --retail
@@ -353,6 +361,9 @@
 		[169429] = true,
 		[169428] = true,
 		[169430] = true,
+
+		--Volatile Spark on razga'reth
+		[194999] = true,
 	}
 
 	local ignored_npcids = {}
@@ -2468,7 +2479,7 @@
 
 				C_Timer.After(0.05, function() --25/12/2022: enabled the delay to wait the combatlog dump damage events which will happen after the buff is applied
 					parser:dead("UNIT_DIED", time, sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags)
-					ignore_death [sourceName] = true
+					ignore_death_cache [sourceName] = true
 				end)
 				return
 
@@ -2476,7 +2487,7 @@
 				--BfA monk talent
 				monk_guard_talent [sourceSerial] = amount
 
-			elseif (spellId == 272790) then --hunter pet Frenzy quick fix for show the Frenzy uptime
+			elseif (spellId == 272790 and cacheAnything.track_hunter_frenzy) then --hunter pet Frenzy quick fix for show the Frenzy uptime
 				if (pet_frenzy_cache[sourceName]) then
 					if (DetailsFramework:IsNearlyEqual(pet_frenzy_cache[sourceName], time, 0.2)) then
 						return
@@ -2685,7 +2696,7 @@
 		end
 
 		if (tipo == "BUFF") then
-			if (spellid == 272790) then --hunter pet Frenzy spellid
+			if (spellid == 272790 and cacheAnything.track_hunter_frenzy) then --hunter pet Frenzy spellid
 				local miscActorObject = misc_cache[sourceName]
 				if (miscActorObject) then
 					--fastest way to query utility spell data
@@ -2773,7 +2784,7 @@
 		end
 
 		if (tipo == "BUFF") then
-				if (spellid == 272790) then --hunter pet Frenzy spellid
+				if (spellid == 272790 and cacheAnything.track_hunter_frenzy) then --hunter pet Frenzy spellid
 					if (not pet_frenzy_cache[sourceName]) then
 						return
 					end
@@ -4085,8 +4096,8 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 				--must be in combat
 				_in_combat
 			) then
-				if (ignore_death[targetName]) then
-					ignore_death[targetName] = nil
+				if (ignore_death_cache[targetName]) then
+					ignore_death_cache[targetName] = nil
 					return
 				end
 
@@ -4120,6 +4131,10 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 				if (not recordedEvents) then
 					recordedEvents = _current_combat:CreateLastEventsTable(targetName)
 				end
+
+				--during a regular combat, 99.9% of the events aren't used by the death log
+				--hence the process of getting data for the death log is made as fast as it can be
+				--when a death occurs, the death log data is then parsed and built, the next 200 lines does this processing
 
 				--lesses index = older / higher index = newer
 
@@ -4318,10 +4333,12 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 						overallDeathTable.dead_at = mythicPlusElapsedTime
 
 						--save data about the mythic run in the deathTable which goes in the regular segment
+						--confused? 'playerDeathTable' is added into the '_current_combat.last_events_tables' ~20 above on a tinsert
 						playerDeathTable["mythic_plus"] = true
 						playerDeathTable["mythic_plus_dead_at"] = mythicPlusElapsedTime
 						playerDeathTable["mythic_plus_dead_at_string"] = overallDeathTable[6]
 
+						--now add the death table into the overall data (this is the regular overall data, not the mythic plus overall data)
 						tinsert(_detalhes.tabela_overall.last_events_tables, #_detalhes.tabela_overall.last_events_tables + 1, overallDeathTable)
 					end
 				end
@@ -5549,7 +5566,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 
 			if (_detalhes.in_group) then
 				--player entered in a group, cleanup and set the new enviromnent
-				Details:RestartInternalGarbageCollector(true)
+				Details222.GarbageCollector.RestartInternalGarbageCollector(true)
 				Details:WipePets()
 				Details:SchedulePetUpdate(1)
 				Details:InstanceCall(Details.AdjustAlphaByContext)
@@ -5569,7 +5586,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 
 			if (not _detalhes.in_group) then
 				--player left the group, run routines to cleanup the environment
-				Details:RestartInternalGarbageCollector(true)
+				Details222.GarbageCollector.RestartInternalGarbageCollector(true)
 				Details:WipePets()
 				Details:SchedulePetUpdate(1)
 				wipe(Details.details_users)
@@ -5957,7 +5974,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		wipe(enemy_cast_cache)
 		wipe(empower_cache)
 
-		wipe(ignore_death)
+		wipe(ignore_death_cache)
 
 		wipe(reflection_damage)
 		wipe(reflection_debuffs)
@@ -5969,6 +5986,53 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		wipe(dk_pets_cache.apoc)
 
 		wipe(cacheAnything.paladin_vivaldi_blessings)
+
+		cacheAnything.track_hunter_frenzy = Details.combat_log.track_hunter_frenzy
+
+		if (Details.combat_log.merge_gemstones_1007) then
+			--ring powers merged, https://gist.github.com/ljosberinn/65abe150133ff3a08cd70f840f7dd019 (by Gerrit Alex - WCL)
+			override_spellId[403225] = 404884 --Flame Licked Stone
+			override_spellId[404974] = 404884 --Shining Obsidian Stone
+			override_spellId[405220] = 404884 --Pestilent Plague Stone
+			override_spellId[405221] = 404884 --Pestilent Plague Stone
+			override_spellId[405209] = 404884 --Humming Arcane Stone
+			override_spellId[403391] = 404884 --Freezing Ice Stone
+			override_spellId[404911] = 404884 --Desirous Blood Stone
+			override_spellId[404941] = 404884 --Shining Obsidian Stone
+			override_spellId[403087] = 404884 --Storm Infused Stone
+			override_spellId[403273] = 404884 --Fel Flame via Entropic Fel Stone
+			override_spellId[403171] = 404884 --Uncontainable Charge via Echoing Thunder Stone
+			override_spellId[405235] = 404884 --Wild Spirit Stone
+			override_spellId[403381] = 404884 --Deluging Water Stone
+			override_spellId[405118] = 404884 --Exuding Steam Stone
+			override_spellId[403408] = 404884 --Exuding Steam Stone
+			override_spellId[403336] = 404884 --Indomitable Earth Stone
+			override_spellId[403392] = 404884 --Cold Frost Stone
+			override_spellId[403376] = 404884 --Gleaming Iron Stone
+			override_spellId[403253] = 404884 --Raging Magma Stone
+			override_spellId[403257] = 404884 --Searing Smokey Stone
+		else
+			override_spellId[403225] = nil --Flame Licked Stone
+			override_spellId[404974] = nil --Shining Obsidian Stone
+			override_spellId[405220] = nil --Pestilent Plague Stone
+			override_spellId[405221] = nil --Pestilent Plague Stone
+			override_spellId[405209] = nil --Humming Arcane Stone
+			override_spellId[403391] = nil --Freezing Ice Stone
+			override_spellId[404911] = nil --Desirous Blood Stone
+			override_spellId[404941] = nil --Shining Obsidian Stone
+			override_spellId[403087] = nil --Storm Infused Stone
+			override_spellId[403273] = nil --Fel Flame via Entropic Fel Stone
+			override_spellId[403171] = nil --Uncontainable Charge via Echoing Thunder Stone
+			override_spellId[405235] = nil --Wild Spirit Stone
+			override_spellId[403381] = nil --Deluging Water Stone
+			override_spellId[405118] = nil --Exuding Steam Stone
+			override_spellId[403408] = nil --Exuding Steam Stone
+			override_spellId[403336] = nil --Indomitable Earth Stone
+			override_spellId[403392] = nil --Cold Frost Stone
+			override_spellId[403376] = nil --Gleaming Iron Stone
+			override_spellId[403253] = nil --Raging Magma Stone
+			override_spellId[403257] = nil --Searing Smokey Stone
+		end
 
 		damage_cache = setmetatable({}, _detalhes.weaktable)
 		damage_cache_pets = setmetatable({}, _detalhes.weaktable)
@@ -6242,31 +6306,6 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 
 	function Details:IsInEncounter()
 		return Details.encounter_table.id and true or false
-	end
-
-	--get combat
-	function Details:GetCombat(combat)
-		if (not combat) then
-			return _current_combat
-
-		elseif (type(combat) == "number") then
-			if (combat == -1) then --overall
-				return Details.tabela_overall
-			elseif (combat == 0) then --current
-				return _current_combat
-			else
-				return Details.tabela_historico.tabelas [combat]
-			end
-
-		elseif (type(combat) == "string") then
-			if (combat == "overall") then
-				return Details.tabela_overall
-			elseif (combat == "current") then
-				return _current_combat
-			end
-		end
-
-		return nil
 	end
 
 	function Details:GetAllActors(_combat, _actorname)

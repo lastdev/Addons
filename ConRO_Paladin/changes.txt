@@ -1,10 +1,10 @@
-lightweight tag bf1e0f01b8bc9661dc69a94e29586215c267c56b v10.0.4
+lightweight tag e9f1eee6161e9d3276fa9e5e8d89ea2f2c99935c v10.0.5
 Author:	Vae <emuha17@gmail.com>
-Date:	Sat Feb 4 16:47:08 2023 -1000
+Date:	Thu Mar 23 12:23:23 2023 -1000
 
-commit bf1e0f01b8bc9661dc69a94e29586215c267c56b
+commit e9f1eee6161e9d3276fa9e5e8d89ea2f2c99935c
 Author: Vae <emuha17@gmail.com>
-Date:   Sat Feb 4 16:47:08 2023 -1000
+Date:   Thu Mar 23 12:23:23 2023 -1000
 
-    Fixed Final Verdict
+    Ret pally update
 
