@@ -471,7 +471,7 @@ do --[[ KrowiAF_RegisterTabOptions ]]
 		KrowiAF_InjectOptions.AddTable("Layout.args.Tabs.args.Show.args.Show.args", _addonName .. tabName, {
 			order = OrderPP(), type = "toggle", width = AdjustedWidth(0.95),
 			name = tabDisplayName,
-			desc = (""):AddDefaultValueText("Tabs." .. _addonName .. "." .. tabName .. ".Show"),
+			desc = (""):AddDefaultValueText_KAF("Tabs." .. _addonName .. "." .. tabName .. ".Show"),
 			get = function() return addon.Options.db.Tabs[_addonName][tabName].Show; end,
 			set = function() addon.GUI.ShowHideTabs(_addonName, tabName); end
 		});
@@ -497,6 +497,10 @@ do --[[ KrowiAF_RegisterTabOptions ]]
 		InjectOptionsDefaults(_addonName, tabName, showByDefault);
 		SetOptionsOrder(_addonName, tabName, index);
 		InjectOptionsTable(_addonName, tabName, addonDisplayName, tabDisplayName, bindingName, index);
+
+		if bindingName then
+			_G["BINDING_NAME_" .. bindingName] = addon.L["Toggle"] .. " " .. tabDisplayName .. " "  .. addon.L["tab"];
+		end
 	end
 end
 
@@ -544,6 +548,9 @@ do --[[ KrowiAF_RegisterEventOptions ]]
 
 		KrowiAF_InjectOptions.AddTable("EventReminders.args." .. eventType .. "Events.args." .. groupName .. ".args", "Blank1", {
 			order = OrderPP(), type = "description", width = "full", name = ""
+		});
+		KrowiAF_InjectOptions.AddTable("EventReminders.args." .. eventType .. "Events.args." .. groupName .. ".args", "Blank2", {
+			order = OrderPP(), type = "description", width = AdjustedWidth(), name = ""
 		});
 		KrowiAF_InjectOptions.AddTable("EventReminders.args." .. eventType .. "Events.args." .. groupName .. ".args", "SelectAll", {
 			order = OrderPP(), type = "execute", width = AdjustedWidth(),

@@ -254,8 +254,37 @@ GTFO.SpellID["407712"] = {
   sound = 1;
 };
 
+GTFO.SpellID["404653"] = {
+  --desc = "Hard to Port (Grugoth the Hullcrusher)";
+  sound = 1;
+  tankSound = 0;
+};
 
+GTFO.SpellID["340409"] = {
+  --desc = "Corrupted Residue (Forgotten Research)";
+  sound = 1;
+};
 
+GTFO.SpellID["374238"] = {
+  --desc = "Crushing Earth";
+  sound = 1;
+};
+
+GTFO.SpellID["373908"] = {
+  --desc = "Celestial Sear";
+  sound = 1;
+};
+
+GTFO.SpellID["401136"] = {
+  --desc = "Ancient Ice";
+  sound = 2;
+};
+
+GTFO.SpellID["401087"] = {
+  --desc = "Detected!";
+  sound = 1;
+  negatingBuffSpellID = 401091; -- Reflective Arcane Ward
+};
 
 --- *******************
 --- * Ruby Life Pools *
@@ -810,11 +839,38 @@ GTFO.SpellID["375883"] = {
   sound = 1;
 };
 
+GTFO.SpellID["396624"] = {
+  --desc = "Storm Fissure (Broodkeeper Diurna)";
+  sound = 1;
+};
+
 GTFO.SpellID["375873"] = {
   --desc = "Wildfire (Broodkeeper Diurna)";
   applicationOnly = true;
   minimumStacks = 1;
-  sound = 1;
+  soundFunction = function() 
+		local stacks = GTFO_DebuffStackCount("player", 375873);
+
+		-- Alert if hit in Phase 1
+		if (not GTFO_HasBuff("boss1", 375879)) then
+			if (stacks > 1) then
+				return 1;
+			else
+				return 0;
+			end
+		end
+		
+		-- Alert if more than 2 stacks in Phase 2
+		local isHeroic, isMythic = select(5, GetDifficultyInfo(select(3, GetInstanceInfo())));
+		if (isHeroic or isMythic) then
+			if (stacks > 2) then
+				return 1;
+			end
+			return 0;
+		elseif (stacks > 1) then
+			return 1;
+		end
+	end;
 };
 
 GTFO.SpellID["375578"] = {
@@ -856,4 +912,92 @@ GTFO.SpellID["388659"] = {
 	end;
 };
 
+
+--- **********************************
+--- * Aberrus, the Shadowed Crucible *
+--- **********************************
+
+GTFO.SpellID["408976"] = {
+  --desc = "Dancing Steel (Sundered Edgelord)";
+  sound = 1;
+  tankSound = 0;
+};
+
+GTFO.SpellID["406530"] = {
+  --desc = "Riftburn (Kazzara, the Hellforged)";
+  sound = 1;
+};
+
+GTFO.SpellID["402420"] = {
+  --desc = "Molten Scar (Kazzara, the Hellforged)";
+  sound = 1;
+};
+
+GTFO.SpellID["400432"] = {
+  --desc = "Hellbeam (Kazzara, the Hellforged)";
+  sound = 1;
+};
+
+GTFO.SpellID["405927"] = {
+  --desc = "Chrono Pocket (Sundered Timewalker)";
+  applicationOnly = true;
+  sound = 2;
+};
+
+GTFO.SpellID["411905"] = {
+  --desc = "Blaze Boil (Sundered Chemist)";
+  sound = 1;
+};
+
+GTFO.SpellID["411900"] = {
+  --desc = "Gloom Fluid (Sundered Chemist)";
+  sound = 1;
+};
+
+GTFO.SpellID["412625"] = {
+  --desc = "Shadowflame Spill (Sundered Chemist)";
+  sound = 1;
+};
+
+GTFO.SpellID["405084"] = {
+  --desc = "Lingering Umbra (Essence of Shadow)";
+  sound = 1;
+};
+
+GTFO.SpellID["405645"] = {
+  --desc = "Engulfing Heat (Shadowflame Amalgamation)";
+  sound = 1;
+};
+
+GTFO.SpellID["411892"] = {
+  --desc = "Viscous Bile (???)";
+  applicationOnly = true;
+  sound = 2;
+};
+
+GTFO.SpellID["412498"] = {
+  --desc = "Stagnating Pool (Oozing Sludge)";
+  applicationOnly = true;
+  sound = 2;
+};
+
+GTFO.SpellID["411799"] = {
+  --desc = "Creeping Ooze (Oozing Sludge)";
+  applicationOnly = true;
+  sound = 2;
+  test = true;
+};
+
+GTFO.SpellID["406233"] = {
+  --desc = "Deep Breath (Rionthus)";
+  sound = 1;
+};
+
+GTFO.SpellID["405457"] = {
+  --desc = "Disintegrate (Rionthus)";
+  sound = 4;
+};
+
+
 end
+

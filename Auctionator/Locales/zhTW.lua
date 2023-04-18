@@ -112,6 +112,12 @@ L["CONFIG_SELLING_ALL_ITEMS_CATEGORY"] = "銷售: 全部物品"
 L["CONFIG_SELLING_AUTO_SELECT_NEXT"] = "自動選擇背包中的下個物品"
 L["CONFIG_SELLING_AUTO_SELECT_NEXT_TOOLTIP_HEADER"] = "自動選擇物品"
 L["CONFIG_SELLING_AUTO_SELECT_NEXT_TOOLTIP_TEXT"] = "張貼時自動選擇背包檢視中的下一個物品。"
+--[[Translation missing --]]
+L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER"] = "Select any partial stacks that exist after posting all complete stacks."
+--[[Translation missing --]]
+L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_HEADER"] = "Automatic partial stack selection"
+--[[Translation missing --]]
+L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_TEXT"] = "When posting add the partial stack as the next item to post if it exists. This won't cause any further searches."
 L["CONFIG_SELLING_BAG_SELECT_SHORTCUT"] = "背包中的物品，會將它放到銷售標籤頁面"
 L["CONFIG_SELLING_BUY_SHORTCUT"] = "不是你拍賣的物品，會直接購買"
 L["CONFIG_SELLING_CANCEL_SHORTCUT"] = "你拍賣的物品，會取消拍賣"

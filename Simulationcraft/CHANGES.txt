@@ -1,10 +1,10 @@
-lightweight tag dff6ac78bd3cae2ab35aa3b637725ef6f3e83cb1 10.0.7-03
+lightweight tag ca142a12646f21597a2cbdbc8ca6a71787b35b7d 10.0.7-04
 Author:	Dave Hendler <sollaires@gmail.com>
-Date:	Sat Mar 25 11:49:19 2023 -0700
+Date:	Sat Apr 1 11:54:54 2023 -0700
 
-commit dff6ac78bd3cae2ab35aa3b637725ef6f3e83cb1
+commit ca142a12646f21597a2cbdbc8ca6a71787b35b7d
 Author: Dave Hendler <sollaires@gmail.com>
-Date:   Sat Mar 25 11:49:19 2023 -0700
+Date:   Sat Apr 1 11:54:54 2023 -0700
 
-    Better error messaging when a loadout is corrupted
+    Forward compatibility with 10.1 GetAddOnMetadata API change
 

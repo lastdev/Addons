@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("MPlusAffixes", "DBM-Affixes")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230319211142")
+mod:SetRevision("20230409014614")
 --mod:SetModelID(47785)
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)--All of the S1 DF M+ Dungeons (2516, 2526, 2515, 2521, 1477, 1571, 1176, 960)
 
@@ -15,13 +15,19 @@ mod:RegisterEvents(
 
 --TODO, fine tune tank stacks/throttle?
 --[[
-(ability.id = 240446) and type = "begincast"
+(ability.id = 240446 or ability.id = 409492 or ability.id = 408805) and type = "begincast"
+ or ability.id = 408556 and type = "applydebuff"
+ or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 local warnExplosion							= mod:NewCastAnnounce(240446, 4)
+local warnAfflictedCry						= mod:NewCastAnnounce(409492, 4)
+local warnDestabalize						= mod:NewCastAnnounce(408805, 4)
 local warnThunderingFades					= mod:NewFadesAnnounce(396363, 1, 396347)
 
 local specWarnQuake							= mod:NewSpecialWarningMoveAway(240447, nil, nil, nil, 1, 2)
 local specWarnSpitefulFixate				= mod:NewSpecialWarningYou(350209, nil, nil, nil, 1, 2)
+local specWarnEntangled						= mod:NewSpecialWarningYou(408556, nil, nil, nil, 1, 2)--Change to 14 when new voice ready
+
 local specWarnPositiveCharge				= mod:NewSpecialWarningYou(396369, nil, 391990, nil, 1, 13)--Short name is using Positive Charge instead of Mark of Lightning
 local specWarnNegativeCharge				= mod:NewSpecialWarningYou(396364, nil, 391991, nil, 1, 13)--Short name is using Netative Charge instead of Mark of Winds
 local yellThundering						= mod:NewIconRepeatYell(396363, DBM_CORE_L.AUTO_YELL_ANNOUNCE_TEXT.shortyell)--15-9
@@ -29,6 +35,7 @@ local yellThunderingFades					= mod:NewIconFadesYell(396363, nil, nil, nil, "YEL
 local specWarnGTFO							= mod:NewSpecialWarningGTFO(209862, nil, nil, nil, 1, 8)--Volcanic and Sanguine
 
 local timerQuakingCD						= mod:NewNextTimer(20, 240447, nil, nil, nil, 3)
+local timerEntangledCD						= mod:NewCDTimer(60, 408556, nil, nil, nil, 3, 396347, nil, nil, 2, 4)
 local timerThunderingCD						= mod:NewNextTimer(66, 396363, nil, nil, nil, 3, 396347, nil, nil, 2, 4)
 local timerPositiveCharge					= mod:NewBuffFadesTimer(15, 396369, 391990, nil, 2, 5, nil, nil, nil, 1, 5)
 local timerNegativeCharge					= mod:NewBuffFadesTimer(15, 396364, 391991, nil, 2, 5, nil, nil, nil, 1, 5)
@@ -79,18 +86,7 @@ end
 --player regen was very unreliable due to fact it only fires for self
 --This wastes cpu time being an infinite loop though but probably no more so than any WA doing this
 local function checkForCombat(self)
-	local combatFound = false
-	if IsEncounterInProgress() then
-		combatFound = true
-	end
-	if not combatFound then
-		for uId in DBM:GetGroupMembers() do
-			if UnitAffectingCombat(uId) and not UnitIsDeadOrGhost(uId) then
-				combatFound = true
-				break
-			end
-		end
-	end
+	local combatFound = self:GroupInCombat()
 	if combatFound and not thunderingCounting then
 		thunderingCounting = true
 		timerThunderingCD:Resume()
@@ -99,6 +95,15 @@ local function checkForCombat(self)
 		timerThunderingCD:Pause()
 	end
 	self:Schedule(0.25, checkForCombat, self)
+end
+
+local function checkEntangled(self)
+	if timerEntangledCD:GetRemaining() > 0 then
+		--Timer exists, do nothing
+		return
+	end
+	timerEntangledCD:Start(25)
+	self:Schedule(checkEntangled, 30)
 end
 
 do
@@ -114,9 +119,9 @@ do
 		if validZones[currentZone] and not eventsRegistered then
 			eventsRegistered = true
 			self:RegisterShortTermEvents(
-				"SPELL_CAST_START 240446",
+				"SPELL_CAST_START 240446 409492 408805",
 			--	"SPELL_CAST_SUCCESS",
-				"SPELL_AURA_APPLIED 240447 226510 226512 350209 396369 396364",
+				"SPELL_AURA_APPLIED 240447 226510 226512 350209 396369 396364 408556",
 			--	"SPELL_AURA_APPLIED_DOSE",
 				"SPELL_AURA_REMOVED 396369 396364 226510",
 				"SPELL_DAMAGE 209862",
@@ -130,6 +135,7 @@ do
 			eventsRegistered = false
 			self:UnregisterShortTermEvents()
 			self:Unschedule(checkForCombat)
+			self:Unschedule(checkEntangled)
 			self:Stop()
 			if self.Options.NPSanguine then
 				DBM.Nameplate:Hide(true, nil, nil, nil, true, true)
@@ -146,6 +152,8 @@ do
 end
 
 function mod:CHALLENGE_MODE_COMPLETED()
+	self:Unschedule(checkForCombat)
+	self:Unschedule(checkEntangled)
 	self:Stop()--Stop M+ timers on completion as well
 end
 
@@ -154,6 +162,10 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 240446 and self:AntiSpam(3, "aff6") then
 		warnExplosion:Show()
+	elseif spellId == 409492 and self:AntiSpam(3, "aff3") then
+		warnAfflictedCry:Show()
+	elseif spellId == 408805 and self:AntiSpam(3, "aff5") then
+		warnDestabalize:Show()
 	end
 end
 
@@ -217,6 +229,18 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellRepeater(self, formatedIcon, 0)
 			yellThunderingFades:Cancel()
 			yellThunderingFades:Countdown(15, 8, icon)--Start icon spam with count at 8 remaining
+		end
+	elseif spellId == 408556 then
+		if self:AntiSpam(20, "affseasonal") then
+			timerEntangledCD:Start(30)
+			--Entangled check runs every 30 seconds, and if conditions aren't met for it activating it skips and goes into next 30 second CD
+			--This checks if it was cast (by seeing if timer exists) if not, it starts next timer for next possible cast
+			self:Unschedule(checkEntangled)
+			self:Schedule(checkEntangled, 35)
+		end
+		if args:IsPlayer() then
+			specWarnEntangled:Show()
+			specWarnEntangled:Play("targetyou")--breakvine
 		end
 	end
 end

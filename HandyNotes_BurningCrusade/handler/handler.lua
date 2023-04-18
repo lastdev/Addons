@@ -9,7 +9,7 @@ ns.HL = HL
 local HBD = LibStub("HereBeDragons-2.0")
 local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 
-ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v2'
+ns.DEBUG = GetAddOnMetadata(myname, "Version") == '@'..'project-version@'
 
 ns.CLASSIC = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE
 
@@ -91,8 +91,11 @@ function ns.RegisterPoints(zone, points, defaults)
             points[coord] = nodeType(point)
         end
     end
-    ns.merge(ns.points[zone], points)
     for coord, point in pairs(points) do
+        if ns.DEBUG and ns.points[zone][coord] then
+            print(myname, "point collision", zone, coord)
+        end
+        ns.points[zone][coord] = point
         point._coord = coord
         point._uiMapID = zone
         intotable(ns.POIsToPoints, point.areaPoi, point)
@@ -103,6 +106,9 @@ function ns.RegisterPoints(zone, points, defaults)
             point.routes = {point.route}
             point.route = nil
         end
+        if point.atlas and point.color then
+            point.texture = ns.atlas_texture(point.atlas, point.color)
+        end
         local proxy_meta
         if point.path or point.nearby or point.related then
             proxy_meta = {__index=point}
@@ -111,12 +117,12 @@ function ns.RegisterPoints(zone, points, defaults)
             local route = type(point.path) == "table" and point.path or {point.path}
             table.insert(route, 1, coord)
             ns.points[zone][route[#route]] = setmetatable({
-                label=route.label or (point.npc and "Path to NPC" or "Path to treasure"),
+                label=route.label or (point.npc and ("Path to {npc:%s}"):format(point.npc) or "Path to treasure"),
                 atlas=route.atlas or "poi-door", scale=route.scale or 0.95, minimap=true, texture=false,
                 note=route.note or false,
                 loot=route.loot,
                 routes={route},
-                _coord=route[#route],
+                _coord=route[#route], _uiMapID=zone,
             }, proxy_meta)
             -- highlight
             point.route = point.route or route[#route]
@@ -131,7 +137,7 @@ function ns.RegisterPoints(zone, points, defaults)
                     minimap=true, worldmap=false, scale=0.95,
                     note=nearby.note or false,
                     loot=nearby.loot, active=nearby.active,
-                    _coord=ncoord,
+                    _coord=ncoord, _uiMapID=zone,
                 }, proxy_meta)
                 if nearby.color then
                     npoint.texture = ns.atlas_texture(npoint.atlas, nearby.color)
@@ -140,23 +146,22 @@ function ns.RegisterPoints(zone, points, defaults)
             end
         end
         if point.related then
-            -- like
+            local relatedNode = ns.nodeMaker(setmetatable({
+                label=point.npc and "Related to nearby NPC" or "Related to nearby treasure",
+                atlas="playerpartyblip",
+                texture=false,
+                note=false,
+                route=coord,
+                _uiMapID=zone,
+            }, proxy_meta))
             for rcoord, related in pairs(point.related) do
-                local rpoint = setmetatable({
-                    label=related.label or (point.npc and "Related to nearby NPC" or "Related to nearby treasure"),
-                    atlas=related.atlas or "playerpartyblip",
-                    texture=related.texture or false,
-                    minimap=related.minimap ~= nil and related.minimap or true, worldmap=true, scale=0.95,
-                    note=related.note or false,
-                    loot=related.loot, active=related.active,
-                    route=coord,
-                    _coord=rcoord,
-                }, proxy_meta)
+                local rpoint = relatedNode(related)
+                rpoint._coord = rcoord
                 if related.color then
                     rpoint.texture = ns.atlas_texture(rpoint.atlas, related.color)
                 end
                 if not point.routes then point.routes = {} end
-                table.insert(point.routes, {coord, rcoord, highlightOnly=true})
+                table.insert(point.routes, {rcoord, coord, highlightOnly=true})
                 ns.points[zone][rcoord] = rpoint
             end 
         end
@@ -184,10 +189,15 @@ function ns.RegisterVignettes(zone, vignettes, defaults)
     for vignetteID, point in pairs(vignettes) do
         point._coord = point._coord or 0
         point._uiMapID = zone
+        point.vignette = vignetteID
         point.always = true
         point.label = false
 
-        ns.VignetteIDsToPoints[vignetteID] = defaults and defaults(point) or point
+        point = defaults and defaults(point) or point
+
+        intotable(ns.POIsToPoints, point.areaPoi, point)
+        intotable(ns.VignetteIDsToPoints, point.vignette, point)
+        intotable(ns.WorldQuestsToPoints, point.worldquest, point)
     end
 end
 
@@ -253,6 +263,7 @@ ns.playerClassMask = ({
 
 function ns.GetCriteria(achievement, criteriaid)
     local retOK, criteriaString, criteriaType, completed, quantity, reqQuantity, charName, flags, assetID, quantityString, criteriaID, eligible = pcall(criteriaid < 100 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID, achievement, criteriaid, true)
+    if not retOK then return end
     return criteriaString, criteriaType, completed, quantity, reqQuantity, charName, flags, assetID, quantityString, criteriaID, eligible
 end
 
@@ -317,26 +328,29 @@ local function render_string(s, context)
             if name and icon then
                 return quick_texture_markup(icon) .. " " .. name
             end
-        elseif variant == "quest" or variant == "worldquest" then
+        elseif variant == "quest" or variant == "worldquest" or variant == "questname" then
             local name = C_QuestLog.GetTitleForQuestID(id)
             if not (name and name ~= "") then
                 name = tostring(id)
             end
+            if variant == "questname" then return name end
             local completed = C_QuestLog.IsQuestFlaggedCompleted(id)
             return CreateAtlasMarkup(variant == "worldquest" and "worldquest-tracker-questmarker" or "questnormal") ..
                 (completed and completeColor or incompleteColor):WrapTextInColorCode(name)
         elseif variant == "questid" then
             return CreateAtlasMarkup("questnormal") .. (C_QuestLog.IsQuestFlaggedCompleted(id) and completeColor or incompleteColor):WrapTextInColorCode(id)
-        elseif variant == "achievement" then
+        elseif variant == "achievement" or variant == "achievementname" then
             if mainid and subid then
-                local criteria = ns.GetCriteria(mainid, subid)
+                local criteria, _, completed = ns.GetCriteria(mainid, subid)
                 if criteria then
-                    return criteria
+                    if variant == "achievementname" then return criteria end
+                    return (completed and completeColor or incompleteColor):WrapTextInColorCode(criteria)
                 end
                 id = 'achievement:'..mainid..'.'..subid
             else
                 local _, name, _, completed = GetAchievementInfo(id)
                 if name and name ~= "" then
+                    if variant == "achievementname" then return name end
                     return CreateAtlasMarkup("storyheader-cheevoicon") .. " " .. (completed and completeColor or incompleteColor):WrapTextInColorCode(name)
                 end
             end
@@ -373,6 +387,12 @@ local function render_string(s, context)
             if info then
                 return quick_texture_markup(info.icon) .. " " .. (info.researched and completeColor or incompleteColor):WrapTextInColorCode(info.name)
             end
+        elseif variant == "profession" then
+            local info = C_TradeSkillUI.GetProfessionInfoBySkillLineID(id)
+            if (info and info.professionName and info.professionName ~= "") then
+                -- there's also info.parentProfessionName for the general case ("Dragon Isles Inscription" vs "Inscription")
+                return info.professionName
+            end
         end
         return fallback ~= "" and fallback or (variant .. ':' .. id)
     end)
@@ -386,7 +406,7 @@ local function cache_string(s, context)
             C_Item.RequestLoadItemDataByID(id)
         elseif variant == "spell" then
             C_Spell.RequestLoadSpellData(id)
-        elseif variant == "quest" or variant == "worldquest" then
+        elseif variant == "quest" or variant == "worldquest" or variant == "questname" then
             C_QuestLog.RequestLoadQuestByID(id)
         elseif variant == "npc" then
             mob_name(id)
@@ -772,6 +792,9 @@ local function handle_tooltip(tooltip, point, skip_label)
     if not skip_label and point.label ~= false then
         tooltip:AddLine(work_out_label(point))
     end
+    if point.OnTooltipShow then
+        point:OnTooltipShow(tooltip)
+    end
     if point.follower then
         local follower = C_Garrison.GetFollowerInfo(point.follower)
         if follower then
@@ -856,9 +879,25 @@ local function handle_tooltip(tooltip, point, skip_label)
     if point.level and point.level > UnitLevel("player") then
         tooltip:AddLine(ITEM_MIN_LEVEL:format(point.level), 1, 0, 0)
     end
-    if point.hide_before and not ns.conditions.check(point.hide_before) then
-        tooltip:AddLine(COMMUNITY_TYPE_UNAVAILABLE, 1, 0, 0)
-        tooltip:AddLine(ns.render_string(ns.conditions.summarize(point.hide_before), point), 1, 0, 0, true)
+    if point.hide_before then
+        local isHidden = not ns.conditions.check(point.hide_before)
+        if isHidden then
+            tooltip:AddLine(COMMUNITY_TYPE_UNAVAILABLE, 1, 0, 0)
+        end
+        tooltip:AddLine(
+            ns.render_string(ns.conditions.summarize(point.hide_before), point),
+            isHidden and 1 or 0, isHidden and 0 or 1, 0, true
+        )
+    end
+    if point.requires then
+        local isHidden = not ns.conditions.check(point.requires)
+        if isHidden then
+            tooltip:AddLine(COMMUNITY_TYPE_UNAVAILABLE, 1, 0, 0)
+        end
+        tooltip:AddLine(
+            ns.render_string(ns.conditions.summarize(point.requires), point),
+            isHidden and 1 or 0, isHidden and 0 or 1, 0, true
+        )
     end
     if point.active then
         local isActive = ns.point_active(point)
@@ -869,7 +908,7 @@ local function handle_tooltip(tooltip, point, skip_label)
     end
 
     if point.group then
-        tooltip:AddDoubleLine(GROUP, render_string(ns.groups[point.group] or point.group, point))
+        tooltip:AddDoubleLine(GROUP, (render_string(ns.groups[point.group] or point.group, point)))
     end
 
     if point.quest and ns.db.tooltip_questid then
@@ -884,6 +923,7 @@ local function handle_tooltip(tooltip, point, skip_label)
         local comparison = _G[myname.."ComparisonTooltip"]
         if not comparison then
             comparison = CreateFrame("GameTooltip", myname.."ComparisonTooltip", UIParent, "ShoppingTooltipTemplate")
+            Mixin(comparison, GameTooltipDataMixin)
             comparison:SetFrameStrata("TOOLTIP")
             comparison:SetClampedToScreen(true)
         end
@@ -940,6 +980,38 @@ local handle_tooltip_by_coord = function(tooltip, uiMapID, coord)
     return handle_tooltip(tooltip, ns.points[uiMapID] and ns.points[uiMapID][coord])
 end
 
+do
+    local currentZone, currentPoint
+    local function is_valid_related_point(basePoint, point)
+        if not (basePoint and point) then return false end
+        if basePoint.group and basePoint.group == point.group then return true end
+        if basePoint.achievement and basePoint.achievement == point.achievement then return true end
+        return false
+    end
+    local function iter(t, prestate)
+        if not t then return nil end
+        local state, point = next(t, prestate)
+        while state do -- Have we reached the end of this zone?
+            if is_valid_related_point(currentPoint, point) then
+                return state, point
+            end
+            state, point = next(t, state) -- Get next data
+        end
+        return
+    end
+    function ns.IterateRelatedPointsInZone(uiMapID, point)
+        currentPoint = point
+        return iter, ns.points[uiMapID], nil
+    end
+    function ns.PointHasRelatedPointsInZone(uiMapID, point)
+        for _, rpoint in ns.IterateRelatedPointsInZone(uiMapID, point) do
+            if rpoint ~= point then
+                return true
+            end
+        end
+    end
+end
+
 ---------------------------------------------------------
 -- Plugin Handlers to HandyNotes
 local HLHandler = {}
@@ -987,14 +1059,53 @@ local function showAchievement(button, achievement)
 end
 
 local function createWaypoint(button, uiMapID, coord)
+    local x, y = HandyNotes:getXY(coord)
     if TomTom then
-        local x, y = HandyNotes:getXY(coord)
         TomTom:AddWaypoint(uiMapID, x, y, {
             title = get_point_info_by_coord(uiMapID, coord),
             persistent = nil,
             minimap = true,
             world = true
         })
+    elseif C_Map and C_Map.CanSetUserWaypointOnMap and C_Map.CanSetUserWaypointOnMap(uiMapID) then
+        local uiMapPoint = UiMapPoint.CreateFromCoordinates(uiMapID, x, y)
+        C_Map.SetUserWaypoint(uiMapPoint)
+        C_SuperTrack.SetSuperTrackedUserWaypoint(true)
+    end
+end
+local createWaypointForAll
+do
+    local function getDistance(x1, y1, x2, y2)
+        local deltaX, deltaY = x2 - x1, y2 - y1
+        return ((deltaX ^ 2) + (deltaY ^ 2)) ^ 0.5
+    end
+    local function distanceSort(lhs, rhs)
+        local px, py = HBD:GetPlayerZonePosition()
+        return getDistance(px, py, HandyNotes:getXY(lhs)) > getDistance(px, py, HandyNotes:getXY(rhs))
+    end
+    function createWaypointForAll(button, uiMapID, coord)
+        if not TomTom then return end
+        local point = ns.points[uiMapID] and ns.points[uiMapID][coord]
+        if not point then return end
+        local points = {}
+        for rcoord, rpoint in ns.IterateRelatedPointsInZone(uiMapID, point) do
+            if ns.should_show_point(rcoord, rpoint, uiMapID, false) then
+                table.insert(points, rcoord)
+            end
+        end
+        -- Add waypoints in a useful order so we wind up with the closest one
+        -- on the arrow. Not just doing TomTom:SetClosestWaypoint because I
+        -- want to respect the crazy-arrow settings, and that forces it on.
+        table.sort(points, distanceSort)
+        for _, rcoord in ipairs(points) do
+            local x, y = HandyNotes:getXY(rcoord)
+            TomTom:AddWaypoint(uiMapID, x, y, {
+                title = get_point_info_by_coord(uiMapID, rcoord),
+                persistent = nil,
+                minimap = true,
+                world = true
+            })
+        end
     end
 end
 
@@ -1068,11 +1179,21 @@ do
                 wipe(info)
             end
 
-            if TomTom then
+            if TomTom or (C_Map and C_Map.CanSetUserWaypointOnMap and C_Map.CanSetUserWaypointOnMap(currentZone)) then
                 -- Waypoint menu item
                 info.text = "Create waypoint"
                 info.notCheckable = 1
                 info.func = createWaypoint
+                info.arg1 = currentZone
+                info.arg2 = currentCoord
+                LibDD:UIDropDownMenu_AddButton(info, level)
+                wipe(info)
+            end
+            -- Specifically for TomTom, since it supports multiples:
+            if TomTom and ns.PointHasRelatedPointsInZone(currentZone, point) then
+                info.text = render_string(("Create waypoint for all %s"):format(point.group and (ns.groups[point.group] or point.group) or ("{achievement:%d}"):format(point.achievement)), point)
+                info.notCheckable = 1
+                info.func = createWaypointForAll
                 info.arg1 = currentZone
                 info.arg2 = currentCoord
                 LibDD:UIDropDownMenu_AddButton(info, level)
@@ -1255,6 +1376,9 @@ do
         HL:SendMessage("HandyNotes_NotifyUpdate", myname:gsub("HandyNotes_", ""))
         if ns.RouteWorldMapDataProvider then
             ns.RouteWorldMapDataProvider:RefreshAllData()
+        end
+        if ns.RouteMiniMapDataProvider then
+            ns.RouteMiniMapDataProvider:UpdateMinimapRoutes()
         end
     end
     function HL:RefreshOnEvent(event)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("RubyLifePoolsTrash", "DBM-Party-Dragonflight", 7)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230314022917")
+mod:SetRevision("20230409031133")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 
@@ -115,7 +115,7 @@ function mod:SPELL_CAST_START(args)
 		if self:AntiSpam(3, 6) then
 			warnTectonicSlam:Show()
 			warnTectonicSlam:Play("aesoon")
-			warnTectonicSlam:Schedule(1.5, "crowdcontrol")
+			warnTectonicSlam:ScheduleVoice(1.5, "crowdcontrol")
 		end
 	elseif spellId == 392395 then
 		timerThunderjawCD:Start()

@@ -12725,6 +12725,15 @@
                                   </Anchor>
                                 </Anchors>
                               </FontString>
+                              <FontString name="HealBot_Options_Skins_NameTextRoleLabelTxt" text="HEALBOT_OPTIONS_NAMEROLELABELTEXT" inherits="GameFontNormal">
+                                <Anchors>
+                                  <Anchor point="TOPRIGHT">
+                                    <Offset>
+                                      <AbsDimension x="-55" y="-35" />
+                                    </Offset>
+                                  </Anchor>
+                                </Anchors>
+                              </FontString>
                             </Layer>
                           </Layers>
                             <Frames>
@@ -12732,7 +12741,7 @@
                                 <Anchors>
                                   <Anchor point="TOPLEFT">
                                     <Offset>
-                                      <AbsDimension x="95" y="-40" />
+                                      <AbsDimension x="40" y="-40" />
                                     </Offset>
                                   </Anchor>
                                 </Anchors>
@@ -12760,7 +12769,7 @@
                                 <Anchors>
                                   <Anchor point="TOPLEFT" relativeTo="HealBot_Options_ShowNameOnBar" relativePoint="TOPLEFT">
                                     <Offset>
-                                      <AbsDimension x="230" y="0"/>
+                                      <AbsDimension x="200" y="0"/>
                                     </Offset>
                                   </Anchor>
                                 </Anchors>
@@ -12784,11 +12793,62 @@
                                   <OnLeave>HealBot_Options_Show_Help("HEALBARSTXTSHOWROLE",false)</OnLeave>
                                 </Scripts>
                               </CheckButton>
+                              <EditBox name="HealBot_Options_RoleTankTag" inherits="HealBot_Options_EditBoxTemplate">
+                                <Size>
+                                  <AbsDimension x="120" y="20"/>
+                                </Size>
+                                <Anchors>
+                                  <Anchor point="TOP">
+                                    <Offset>
+                                      <AbsDimension x="200" y="-70" />
+                                    </Offset>
+                                  </Anchor>
+                                </Anchors>
+                                <Scripts>
+                                  <OnTextChanged>HealBot_Options_RoleTankTag_OnTextChanged(self)</OnTextChanged>
+                                  <OnEnter>HealBot_Options_Show_Help("HEALBARSTXTROLELABEL",true)</OnEnter>
+                                  <OnLeave>HealBot_Options_Show_Help("HEALBARSTXTROLELABEL",false)</OnLeave>
+                                </Scripts>
+                              </EditBox>
+                              <EditBox name="HealBot_Options_RoleHealerTag" inherits="HealBot_Options_EditBoxTemplate">
+                                <Size>
+                                  <AbsDimension x="120" y="20"/>
+                                </Size>
+                                <Anchors>
+                                  <Anchor point="TOP">
+                                    <Offset>
+                                      <AbsDimension x="200" y="-120" />
+                                    </Offset>
+                                  </Anchor>
+                                </Anchors>
+                                <Scripts>
+                                  <OnTextChanged>HealBot_Options_RoleHealerTag_OnTextChanged(self)</OnTextChanged>
+                                  <OnEnter>HealBot_Options_Show_Help("HEALBARSTXTROLELABEL",true)</OnEnter>
+                                  <OnLeave>HealBot_Options_Show_Help("HEALBARSTXTROLELABEL",false)</OnLeave>
+                                </Scripts>
+                              </EditBox>
+                              <EditBox name="HealBot_Options_RoleDamagerTag" inherits="HealBot_Options_EditBoxTemplate">
+                                <Size>
+                                  <AbsDimension x="120" y="20"/>
+                                </Size>
+                                <Anchors>
+                                  <Anchor point="TOP">
+                                    <Offset>
+                                      <AbsDimension x="200" y="-170" />
+                                    </Offset>
+                                  </Anchor>
+                                </Anchors>
+                                <Scripts>
+                                  <OnTextChanged>HealBot_Options_RoleDamagerTag_OnTextChanged(self)</OnTextChanged>
+                                  <OnEnter>HealBot_Options_Show_Help("HEALBARSTXTROLELABEL",true)</OnEnter>
+                                  <OnLeave>HealBot_Options_Show_Help("HEALBARSTXTROLELABEL",false)</OnLeave>
+                                </Scripts>
+                              </EditBox>
                               <Frame name="HealBot_Options_AggroTextIndicator" inherits="UIDropDownMenuTemplate">
                                 <Anchors>
                                   <Anchor point="TOP">
                                     <Offset>
-                                      <AbsDimension x="40" y="-110" />
+                                      <AbsDimension x="0" y="-110" />
                                     </Offset>
                                   </Anchor>
                                 </Anchors>
@@ -12806,7 +12866,7 @@
                                   </Layer>
                                 </Layers>
                                 <Scripts>
-                                  <OnLoad>HealBot_Options_UIDropDownMenu_OnLoad(self, 158)</OnLoad>
+                                  <OnLoad>HealBot_Options_UIDropDownMenu_OnLoad(self, 140)</OnLoad>
                                   <OnEnter>HealBot_Options_Show_Help("HEALBARSEXTRAAGGRSHOWIND",true)</OnEnter>
                                   <OnLeave>HealBot_Options_Show_Help("HEALBARSEXTRAAGGRSHOWIND",false)</OnLeave>
                                 </Scripts>
@@ -12833,7 +12893,7 @@
                                   </Layer>
                                 </Layers>
                                 <Scripts>
-                                  <OnLoad>HealBot_Options_UIDropDownMenu_OnLoad(self, 158)</OnLoad>
+                                  <OnLoad>HealBot_Options_UIDropDownMenu_OnLoad(self, 140)</OnLoad>
                                   <OnEnter>HealBot_Options_Show_Help("HEALBARSTXTNAMEANCHOR",true)</OnEnter>
                                   <OnLeave>HealBot_Options_Show_Help("HEALBARSTXTNAMEANCHOR",false)</OnLeave>
                                 </Scripts>
@@ -16242,12 +16302,12 @@
                           </Frame>
                           <Slider name="HealBot_BarButtonDebuffIconVOffset" inherits="HealBot_Options_SliderTemplate">
                             <Size>
-                              <AbsDimension x="210" y="18" />
+                              <AbsDimension x="475" y="18" />
                             </Size>
                             <Anchors>
                               <Anchor point="BOTTOM">
                                 <Offset>
-                                  <AbsDimension x="-125" y="295"/>
+                                  <AbsDimension x="0" y="305"/>
                                 </Offset>
                               </Anchor>
                             </Anchors>
@@ -16259,12 +16319,12 @@
                           </Slider>
                           <Slider name="HealBot_BarButtonDebuffIconHOffset" inherits="HealBot_Options_SliderTemplate">
                             <Size>
-                              <AbsDimension x="210" y="18" />
+                              <AbsDimension x="475" y="18" />
                             </Size>
                             <Anchors>
                               <Anchor point="BOTTOM">
                                 <Offset>
-                                  <AbsDimension x="125" y="295"/>
+                                  <AbsDimension x="0" y="245"/>
                                 </Offset>
                               </Anchor>
                             </Anchors>
@@ -16281,7 +16341,7 @@
                             <Anchors>
                               <Anchor point="BOTTOM">
                                 <Offset>
-                                  <AbsDimension x="-125" y="225"/>
+                                  <AbsDimension x="-125" y="185"/>
                                 </Offset>
                               </Anchor>
                             </Anchors>
@@ -16299,7 +16359,7 @@
                             <Anchors>
                               <Anchor point="BOTTOM">
                                 <Offset>
-                                  <AbsDimension x="125" y="225"/>
+                                  <AbsDimension x="125" y="185"/>
                                 </Offset>
                               </Anchor>
                             </Anchors>
@@ -16316,7 +16376,7 @@
                             <Anchors>
                               <Anchor point="BOTTOM">
                                 <Offset>
-                                  <AbsDimension x="-125" y="155"/>
+                                  <AbsDimension x="-125" y="125"/>
                                 </Offset>
                               </Anchor>
                             </Anchors>
@@ -16330,7 +16390,7 @@
                             <Anchors>
                               <Anchor point="BOTTOM">
                                 <Offset>
-                                  <AbsDimension x="95" y="185"/>
+                                  <AbsDimension x="95" y="145"/>
                                 </Offset>
                               </Anchor>
                             </Anchors>
@@ -16344,7 +16404,7 @@
                             <Anchors>
                               <Anchor point="BOTTOM">
                                 <Offset>
-                                  <AbsDimension x="-210" y="100"/>
+                                  <AbsDimension x="-210" y="70"/>
                                 </Offset>
                               </Anchor>
                             </Anchors>
@@ -16375,7 +16435,7 @@
                             <Anchors>
                               <Anchor point="BOTTOM">
                                 <Offset>
-                                  <AbsDimension x="0" y="55"/>
+                                  <AbsDimension x="0" y="25"/>
                                 </Offset>
                               </Anchor>
                             </Anchors>
@@ -16679,6 +16739,23 @@
                           </Layer>
                         </Layers>
                         <Frames>
+                          <Button name="HealBot_Options_BarButtonIconBuffSelfCastLink" inherits="UIPanelButtonTemplate" text="HEALBOT_OPTIONS_TAB_SELFCASTINDICATORS">
+                            <Size>
+                              <AbsDimension x="170" y="20"/>
+                            </Size>
+                            <Anchors>
+                              <Anchor point="TOPRIGHT">
+                                <Offset>
+                                  <AbsDimension x="-5" y="-5"/>
+                                </Offset>
+                              </Anchor>
+                            </Anchors>
+                            <Scripts>
+                              <OnClick>HealBot_Options_UpdateTab(3, 315, "SkinsFramesIndicators", true); HealBot_Options_ShowSkinsPanel("HealBot_Options_IndicatorsSkinsFrame", 1015); HealBot_Options_ShowIndicatorsPanel("HealBot_Options_SkinsFrameIndicatorsSelfCast", "HealBot_Options_SkinsFrameIndicatorsSelfCastb", "SkinsFramesIndicatorsSelfCast")</OnClick>
+                              <OnEnter>HealBot_Options_Show_Help("ICONSELFCASTLINK",true)</OnEnter>
+                              <OnLeave>HealBot_Options_Show_Help("ICONSELFCASTLINK",false)</OnLeave>
+                            </Scripts>
+                          </Button>
                           <Frame name="HealBot_Options_IconBuffPosition" inherits="UIDropDownMenuTemplate">
                             <Anchors>
                               <Anchor point="TOP">
@@ -16735,12 +16812,12 @@
                           </Frame>
                           <Slider name="HealBot_BarButtonBuffIconVOffset" inherits="HealBot_Options_SliderTemplate">
                             <Size>
-                              <AbsDimension x="210" y="18" />
+                              <AbsDimension x="475" y="18" />
                             </Size>
                             <Anchors>
                               <Anchor point="BOTTOM">
                                 <Offset>
-                                  <AbsDimension x="-125" y="295"/>
+                                  <AbsDimension x="0" y="305"/>
                                 </Offset>
                               </Anchor>
                             </Anchors>
@@ -16752,12 +16829,12 @@
                           </Slider>
                           <Slider name="HealBot_BarButtonBuffIconHOffset" inherits="HealBot_Options_SliderTemplate">
                             <Size>
-                              <AbsDimension x="210" y="18" />
+                              <AbsDimension x="475" y="18" />
                             </Size>
                             <Anchors>
                               <Anchor point="BOTTOM">
                                 <Offset>
-                                  <AbsDimension x="125" y="295"/>
+                                  <AbsDimension x="0" y="245"/>
                                 </Offset>
                               </Anchor>
                             </Anchors>
@@ -16774,7 +16851,7 @@
                             <Anchors>
                               <Anchor point="BOTTOM">
                                 <Offset>
-                                  <AbsDimension x="-125" y="225"/>
+                                  <AbsDimension x="-125" y="185"/>
                                 </Offset>
                               </Anchor>
                             </Anchors>
@@ -16791,7 +16868,7 @@
                             <Anchors>
                               <Anchor point="BOTTOM">
                                 <Offset>
-                                  <AbsDimension x="125" y="225"/>
+                                  <AbsDimension x="125" y="185"/>
                                 </Offset>
                               </Anchor>
                             </Anchors>
@@ -16808,7 +16885,7 @@
                             <Anchors>
                               <Anchor point="BOTTOM">
                                 <Offset>
-                                  <AbsDimension x="-125" y="155"/>
+                                  <AbsDimension x="-125" y="125"/>
                                 </Offset>
                               </Anchor>
                             </Anchors>
@@ -16822,7 +16899,7 @@
                             <Anchors>
                               <Anchor point="BOTTOM">
                                 <Offset>
-                                  <AbsDimension x="95" y="185"/>
+                                  <AbsDimension x="95" y="145"/>
                                 </Offset>
                               </Anchor>
                             </Anchors>
@@ -16836,7 +16913,7 @@
                             <Anchors>
                               <Anchor point="BOTTOM">
                                 <Offset>
-                                  <AbsDimension x="-210" y="100"/>
+                                  <AbsDimension x="-210" y="70"/>
                                 </Offset>
                               </Anchor>
                             </Anchors>
@@ -16867,7 +16944,7 @@
                             <Anchors>
                               <Anchor point="BOTTOM">
                                 <Offset>
-                                  <AbsDimension x="0" y="55"/>
+                                  <AbsDimension x="0" y="25"/>
                                 </Offset>
                               </Anchor>
                             </Anchors>
@@ -16877,23 +16954,7 @@
                               <OnLeave>HealBot_Options_Show_Help("ICONFADESTART",false)</OnLeave>
                             </Scripts>
                           </Slider>
-                          <Button name="HealBot_Options_BarButtonIconBuffSelfCastLink" inherits="UIPanelButtonTemplate" text="HEALBOT_OPTIONS_TAB_SELFCASTINDICATORS">
-                            <Size>
-                              <AbsDimension x="220" y="22"/>
-                            </Size>
-                            <Anchors>
-                              <Anchor point="BOTTOM">
-                                <Offset>
-                                  <AbsDimension x="0" y="20"/>
-                                </Offset>
-                              </Anchor>
-                            </Anchors>
-                            <Scripts>
-                              <OnClick>HealBot_Options_UpdateTab(3, 315, "SkinsFramesIndicators", true); HealBot_Options_ShowSkinsPanel("HealBot_Options_IndicatorsSkinsFrame", 1015); HealBot_Options_ShowIndicatorsPanel("HealBot_Options_SkinsFrameIndicatorsSelfCast", "HealBot_Options_SkinsFrameIndicatorsSelfCastb", "SkinsFramesIndicatorsSelfCast")</OnClick>
-                              <OnEnter>HealBot_Options_Show_Help("ICONSELFCASTLINK",true)</OnEnter>
-                              <OnLeave>HealBot_Options_Show_Help("ICONSELFCASTLINK",false)</OnLeave>
-                            </Scripts>
-                          </Button>
+
                         </Frames>
                       </Frame>
                       

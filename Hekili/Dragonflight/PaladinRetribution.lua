@@ -348,15 +348,15 @@ spec:RegisterAuras( {
             dh.caster = "nobody"
         end
     },
-    -- Talent: Damage taken reduced by $w1%.
-    -- https://wowhead.com/beta/spell=498
+    -- Damage taken reduced by $w1%.
+    -- https://wowhead.com/beta/spell=403876
     divine_protection = {
-        id = 498,
+        id = 403876,
         duration = 8,
         max_stack = 1
     },
     divine_purpose = {
-        id = 223819,
+        id = 408458,
         duration = 12,
         max_stack = 1,
     },
@@ -836,7 +836,11 @@ end )
 
 local last_empyrean_legacy_icd_expires = 0
 
-local current_crusading_strikes = 0
+local current_crusading_strikes = 1
+-- Strike 0 = SPELL_ENERGIZE occurred; Holy Power was gained -- the swing lands *after*.
+-- Strike 1 = The swing that caused Holy Power gain just landed.
+-- Strike 2 = The non-producing Holy Power swing has landed.
+-- Strike 3 = Should never actually reach due to SPELL_ENERGIZE reset, but this would be the next productive swing.
 local last_crusading_strike = 0
 
 spec:RegisterCombatLogEvent( function( _, subtype, _,  sourceGUID, sourceName, _, _, destGUID, destName, destFlags, _, spellID, spellName )
@@ -845,10 +849,15 @@ spec:RegisterCombatLogEvent( function( _, subtype, _,  sourceGUID, sourceName, _
     elseif sourceGUID == state.GUID then
         if spellID == 406834 then -- Crusader Strikes: Energize
             current_crusading_strikes = 0
-            Hekili:ForceUpdate( "CRUSADING_STRIKES", true )
-        elseif spellID == 408385 then -- Crusader Strikes: Swing Damage
-            current_crusading_strikes = current_crusading_strikes + 1
-            last_crusading_strike = GetTime()
+        elseif spellID == 408385 then
+            local now = GetTime()
+            if now - last_crusading_strike > 0.5 then -- Crusader Strikes: Swing Damage
+                current_crusading_strikes = current_crusading_strikes + 1
+                last_crusading_strike = GetTime()
+                if current_crusading_strikes < 2 then
+                    Hekili:ForceUpdate( "CRUSADING_STRIKES", true )
+                end
+            end
         end
     end
 end )
@@ -865,35 +874,35 @@ local csStartCombat = setfenv( function()
     if not talent.crusading_strikes.enabled then return end
 
     if not action.rebuke.in_range then
-        if Hekili.ActiveDebug then Hekili:Debug( "Crusading Strikes energize fails: Out of range." ) end
+        if Hekili.ActiveDebug then Hekili:Debug( "Unable to forecast Crusading Strikes; out of range." ) end
         return
     end
 
     local mh_speed = swings.mh_speed
-    local time_since = false_start - last_crusading_strike
+    local first_productive_swing = state.false_start
 
-    if last_crusading_strike > 0 and mh_speed > 0 and time_since > 0 and time_since < mh_speed then
-        -- Should already be queued.
-        if Hekili.ActiveDebug then Hekili:Debug( "Crusading Strikes not forecasted for virtual combat start; energizes already queued." ) end
-        return
-    end
-
-    local strikes_to_go = max( 0, 2 - current_crusading_strikes )
-
-    local next_cs = state.false_start + ( 2 - strikes_to_go ) * mh_speed
-    if Hekili.ActiveDebug then Hekili:Debug( "Next Crusading Strikes energize in %.2f seconds (%.2f interval) due to virtual combat start.", next_cs - query_time, mh_speed * 2 ) end
-
-    if next_cs < query_time then
-        gain( 1, "holy_power" )
+    if current_crusading_strikes < 2 then
+        first_productive_swing = first_productive_swing + mh_speed
+        if Hekili.ActiveDebug then Hekili:Debug( "First Crusading Strikes resource gain forecasted for next swing." ) end
+        state:QueueAuraEvent( "crusading_strikes", CrusadingStrikes, first_productive_swing, "AURA_PERIODIC" )
     else
-        state:QueueAuraEvent( "crusading_strikes", CrusadingStrikes, next_cs, "AURA_PERIODIC" ) -- Pretend it's an aura.
+        -- Generate Holy Power on combat start.
+        if Hekili.ActiveDebug then Hekili:Debug( "Immediate Crusading Strikes resource gain on virtual combat start." ) end
+        spec.abilities.crusader_strike.handler()
     end
 
-    state:QueueAuraEvent( "crusading_strikes", CrusadingStrikes, next_cs + 2 * mh_speed, "AURA_PERIODIC" )
-    state:QueueAuraEvent( "crusading_strikes", CrusadingStrikes, next_cs + 4 * mh_speed, "AURA_PERIODIC" )
-    state:QueueAuraEvent( "crusading_strikes", CrusadingStrikes, next_cs + 6 * mh_speed, "AURA_PERIODIC" )
-    state:QueueAuraEvent( "crusading_strikes", CrusadingStrikes, next_cs + 8 * mh_speed, "AURA_PERIODIC" )
+    for i = 1, 4 do
+        state:QueueAuraEvent( "crusading_strikes", CrusadingStrikes, first_productive_swing + 2 * i * mh_speed, "AURA_PERIODIC" )
+    end
 end, state )
+
+
+
+spec:RegisterUnitEvent( "UNIT_POWER_UPDATE", "player", nil, function( event, unit, resource )
+    if resource == "HOLY_POWER" then
+        Hekili:ForceUpdate( event, true )
+    end
+end )
 
 
 spec:RegisterStateExpr( "consecration", function () return buff.consecration end )
@@ -913,24 +922,32 @@ spec:RegisterHook( "reset_precast", function ()
     local last_ts = action.templar_strike.lastCast
 
     if now - last_ts < 3 and action.templar_slash.lastCast < last_ts then
-        applyBuff( "templar_slash" )
+        applyBuff( "templar_strikes" )
     end
 
-    if talent.crusading_strikes.enabled and action.rebuke.in_range then
-        local mh_speed = swings.mh_speed
-        local time_since = now - last_crusading_strike
-
-        if last_crusading_strike > 0 and mh_speed > 0 and time_since > 0 and time_since < mh_speed then
-            local next_cs = last_crusading_strike + ( 3 - current_crusading_strikes ) * mh_speed
-            if Hekili.ActiveDebug then Hekili:Debug( "Next Crusading Strikes energize in %.2f seconds (%.2f interval).", next_cs - now, mh_speed * 2 ) end
-
-            state:QueueAuraEvent( "crusading_strikes", CrusadingStrikes, next_cs               , "AURA_PERIODIC" ) -- Pretend it's an aura.
-            state:QueueAuraEvent( "crusading_strikes", CrusadingStrikes, next_cs + 2 * mh_speed, "AURA_PERIODIC" )
-            state:QueueAuraEvent( "crusading_strikes", CrusadingStrikes, next_cs + 4 * mh_speed, "AURA_PERIODIC" )
-            state:QueueAuraEvent( "crusading_strikes", CrusadingStrikes, next_cs + 6 * mh_speed, "AURA_PERIODIC" )
-            state:QueueAuraEvent( "crusading_strikes", CrusadingStrikes, next_cs + 8 * mh_speed, "AURA_PERIODIC" )
+    if time > 0 and talent.crusading_strikes.enabled then
+        if not action.rebuke.in_range then
+            if Hekili.ActiveDebug then Hekili:Debug( "Unable to forecast Crusading Strikes; out of range." ) end
         else
-            if Hekili.ActiveDebug then Hekili:Debug( "No Crusading Strikes energize queued." ) end
+            local mh_speed = swings.mh_speed
+
+            if last_crusading_strike == 0 or now - last_crusading_strike > mh_speed then
+                if Hekili.ActiveDebug then Hekili:Debug( "Unable to forecast Crusading Strikes swing; no prior swings have been detected or the last swing was more than 1 swing timer ago." ) end
+            else
+                local time_since = now - last_crusading_strike
+
+                local was_productive = current_crusading_strikes < 2
+                local next_swing = now + ( mh_speed * ( was_productive and 2 or 1 ) ) - time_since
+
+                if Hekili.ActiveDebug then
+                    if last_crusading_strike == 0 then Hekili:Debug( "No prior Crusading Strikes swings have been detected; assuming first swing is non-productive." )
+                    else Hekili:Debug( "Last Crusading Strikes swing was %.2f seconds ago (vs. %.2f swing timer); it was %s.", time_since, mh_speed, was_productive and "productive" or "non-productive" ) end
+                end
+
+                for i = 1, 5 do
+                    state:QueueAuraEvent( "crusading_strikes", CrusadingStrikes, next_swing + 2 * ( i - 1 ) * mh_speed, "AURA_PERIODIC" )
+                end
+            end
         end
     end
 end )
@@ -1241,7 +1258,7 @@ spec:RegisterAbilities( {
 
     -- Talent: Reduces all damage you take by $s1% for $d.
     divine_protection = {
-        id = 498,
+        id = 403876,
         cast = 0,
         cooldown = function () return 60 * ( talent.unbreakable_spirit.enabled and 0.7 or 1 ) end,
         gcd = "off",
@@ -1251,6 +1268,7 @@ spec:RegisterAbilities( {
         spendType = "mana",
 
         startsCombat = false,
+        toggle = "defensives",
 
         handler = function ()
             applyBuff( "divine_protection" )
@@ -1620,7 +1638,7 @@ spec:RegisterAbilities( {
 
         handler = function ()
             removeBuff( "recompense" )
-            gain( 1, "holy_power" )
+            gain( talent.boundless_judgment.enabled and 2 or 1, "holy_power" )
             if talent.divine_arbiter.enabled then addStack( "divine_arbiter" ) end
             if talent.empyrean_legacy.enabled and debuff.empyrean_legacy_icd.down then
                 applyBuff( "empyrean_legacy" )
@@ -1862,8 +1880,8 @@ spec:RegisterAbilities( {
         buff = "templar_strikes",
 
         handler = function ()
-            removeBuff( "templar_strikes" )
             gain( 1, "holy_power" )
+            removeBuff( "templar_strikes" )
             if talent.divine_arbiter.enabled then addStack( "divine_arbiter" ) end
         end,
 
@@ -1941,7 +1959,7 @@ spec:RegisterAbilities( {
         gcd = "spell",
         school = "holyfire",
 
-        spend = function() return -3 + ( buff.holy_avenger.up and -6 or 0 ) end,
+        spend = -3,
         spendType = "holy_power",
 
         talent = "wake_of_ashes",
@@ -2035,4 +2053,4 @@ spec:RegisterSetting( "desync_toll", false, {
 } )
 
 
-spec:RegisterPack( "Retribution", 20230320, [[Hekili:T3XApUTnYFlloeh70ehl51D3wS2f3vCFObhYho37R2w2IETAKL8PhBYwSq)2VH6jFmuI6HZ1Ig0I2eXrZmCEZHu0Bm28RBwBBfr28rZzMZNn30yQXcJV)2nRJE(czZ6lwh(K1JWFWZ6m8F)3KOaN9Xro(E0XE213YMIIq)4GdW4BwVp2Xn6x82ShfVZ)ba2lKdB(4DZ2S(KJTnjdus4HnRPG(UzMVZ04ht2LS7xIibaks257LSdOR3NirWFW5SJ3Jj7gt8SHHoMSBVFy4rNhpbd66)OZHjtt(qYhYq283zmpfz)tBNOq4T9t2fgF5IFaa9rhpNWtKa452XbPy9NdIdTSbAEjW)a88Jb(Nt2XmTt293JdS4Oqo7AmB6SP3rFth)aNONt2fFHkcMcsQa)JoUG8X6afhHtVeqo4FEVv03T89wbhS8iBJ8dciErV154Yilx4pnfypl3TaKFY3JYCFa7Tdp5qCT36FC7teVhjwEhi4a(KvGJ1ExYBPAYL5IZTgB3hF8y4BFYYnU8PtnMEYkmDKPHrax9y0PxEbzWZwHGo6z0XEcKRwroUGKaD8t03fDKdG0RnZbt05GzDZbZAMdMnmhmvohm7(CWy7zlVylxjfHtiWHEoh2(yGd5iyKC4uBWRjoEn7lEn2g(S3H36FzzijY5yo6nY()BjUHKLZMU4Th89a)oaNllqZublVrJRMRh89DT9)S3uWB0I(wV6vLp6qMJz5qlN9Ylkh8vVQgKsFt9OPf1Lc882(zyOt4KwbmnWbtAJS2S3YAtrzT51qwJGuwzD90CqK1OCqRK1fbVfL2MSsBdgz9nknSvPfE5f16NAvqvJrton1Y75T2xclhFYBgBmDX3vt8pacestnUMmz14ADeRgthAJK)aJ2g50MMm9VbPO)c5qCebYQtGaVpNMQhYehDc(pGg0pizNdKs26jlh3u8uQyb1zazF8NiSprqbd4cYXUn38vu)kzEhqoB54f(WpLhoN7PCUEmgd5jUZHMLzoy56Un7VU11jmkJPkOAyZG(iXJwnKpuSYhQmOlrWYl(0NqREiLHfCvIV8YlCtK4lJ4(7HrqHElnaVT0kP2wm9nxGqmGjDPqfU93ITF8CEvlqDDaJhzf8ijkCQaaRwA(Yl3ey5yVfuUGmYY2oCk5lW8dCieFUJ3Q7wi)44l4mZrhq7767B37Ppo(JdjBDIiNZ0ewUWe8KvW2lX)(V7s2U3)lu6owvyQcr5Ir3WBFWgiG36eGLh0jJgFY395Tx8)mjy1syy4fEaerSpDE6txTysdZIqx)OIaEgPSoUmBudZOv3ottXkW(3WhxQa1OPhYXpsGYIWZlnMWMehnM0QLCMYTqOy(vxOyOqOy0kHI5ewX5alusTuuNTBm2qz1EMlpeZEdeJxWqFYe0AukN7YePmP6nIcDvH0xzoRa62RDnN1gVltCzMPAzMz)Kzy2lk1z)FxMHS2vQaJZcDLHImq8eJ(ESXcVT2iK8p1SiyRTZtoWkXTI)cSKpRGNhvftNKwBcWefZkUctfwPEfmkM4ffHuKUsSOJhpydRo7ldqq)s(EBimdj5s4X6R4nedNvvPqt690qCC8QMY9jJYQIOmTOTdz19QY9Zj6tNDigc3Jk1wEV2CutP3xb6mKvjLp6ijjoMuDfnRa1BoFAF6YJRMXYHl11YLMBr3ITO8csby3oBcBLML9ktQYABiXLfW)0hKvmnFLG58wiu7650YatN4KZxEoaC5ZMkCL2Xsk2xMQBlJLXq1r3WJrxYJwhEMAvFtws8cPtWEicDqzczHhNPcmVfKDJLQutP)bO2FZ80u5zVHSdhKtgxjrhq0mNAOkh0PexCK1KHScUb1qZMcALJADkI5bd2aCSQTFlomY5GvqiFK9Vjx1vUIlwH6lU4MjvdSDoe9nzA7KPvs1QLtRCf3Lc(3gcfoDiAPbFrg0GXJTjPKQyzUPbtzabcMWgQjGe67rDg4I3XXlF26teAfrwaPd5j4dq8(MsdPw73GExhf5T4wbTjzdKyHwkPCoOjkKh5sUiFxxzPXnYI)2XlZX5LgfZqvP14NrhKVnk3RA61KPNqzTZhPPLokXYdFSn0fSUkl(S8PGv(NiHSfHoQ2m5kOcBpHqvqS6qOKWcRY9(XE2UKWQMgnPt0FVlikOUqzjHicLeYrZ0hN(cDJwNSoFMeqjw5QqgRgppyYmBPZuI92dakUaiEIKCj3v7eXYfm8UCikBry5V)twEpgBfaLbD2NkRIpRYeR1A9wixBuSE9Tr6UJ1yjjmetzg(kVr6GOQczvYrWtihYAdt68M9b0jDxmaZHkZouUlS6HK85uHXafnIX2kgBkyVcOoC7XGmuz5cRAz6Dl4vzMSzbbny16lfTI4tLZN8u33QcUsBi(ce6MnIo(tnbtQqtdNaTT31pqupdNONTIcO4ptdA4qOJ59M109JhaQ4qLymFZ6pBfqRimCZ6FLUproNZpAh0Dl612KJwXUrVozxa5)g7eq3BPqF6Mkzfh5F2kDZMalAyjkHtt(W)cOvYoZFmz3p77b0kD4xZxE9RZodjcpDkXJUsuBy0XgFj7aOGWpL7)y74idCosOOybotSKzjomd3ZfXT6TWRKa5GeHdZaJEAJvPW1bmNF0oQJVRazyrEp4AMdDsDCopydpr6Xmi9yXuhVxaWqI4EWV0dRtDSB(4diAvXS3QaRiBMVeMXHzGrFpyCvomOGmSiVhCDDokkbB4jspMb4oniamKiUh8lQBJ84diAvXSlu6JJC65q80XHIJeFVsgxhsOckosCNYzrzzZf7omYCadMRk6VAi(B89Fj4B)lKmicHQV9aS08jpfd)9)4qIHv2ZdzduDqoqK48WKcbChfnDuY0lbttZzTKlnjwkTPUxzy5MnwXHHZxyOr)vdXFJV)lbF3CmtPtqog(hGyMnCgYBGQ9j2qd8G6yM6jA6OKPxcMMMZAjxAsSuAt9ddSXQGVWqJEnqm6jOeb5QGtt(xxYqnZ22E0R7s7RTZb9h9QwKLkm316cVYOxdeRN(unCAY)6sMoz2OF)z7KzJ(OxtZgPmyxPVlh04SQ8rf(QyeCe08RXbTAyvQxrkA0ifl(gCke)FfLBV)RUC79xb5208D65OVRR)NDOFeXwawb7WptcGNdiXoZMS4dzYH(vet3VXKD7JJkGZZpDBII94G22McSTvK1ERqYpM8HKDVlzx2xxk6wmvmNdFDR2IjPgO1Pn9A4XLQwWX)vKOiLdZWAI0slM89pUUkjQa5kI8grR(5b0kDt)jtTPBu1UtJ6vNsdRjsBuIJcYve5nIw9Rgul1z)jtTQtv90RB26xvK34AQ7McvZfS3nKxIwJz4HufpXScXwfhwvqwdfh5HHc9s7v6FoqpA(1Yth0RBv(1H5qLulUKp4UcOf5K92ok0BjATyFqoolxxoxHLwN0IkW1aQfVw(f1I9brlED58HS(uf4Aa1IkOW1vwmiAXRfN)vF5wfSu2hkMIedvNBXbjZWaAbjveygcKpBPcuqgavuqQuTmeuDmWfWC1aQWOuHu5SKWPMxKJfgULyx(qWkGFzauwuIIk26HiXqXXaDa1Jgux2)Jx(fKgLif(pVM7K4YuzQuh(gCMYuHOCa1wMTyE)vp6JWxQbn8ZVCUGpxWteAyLnRHOnN8d2SETZ5FEZ60NNEp)LDAOH)4htV3)YfgB(hz3)EboxOiAZ6wFp8uCV2TzD2TWZMOnF0uGc(x2So9c3Pc4IEQL(N2MDbdkCrOSznTvxeaoyi0eY0xU4U4zZ6z5)v49kwmLWhNvYUh(jQQ4O0xDpLRNlW1fSQ4xkqMunNNlB5gfd32fmuL7aqre9(cm)CIJPRKKikshxrB(tJFP2PyyKRHbwcIiwYvM4QYuXVIoPMS7Lxs291DqoZRmqk6PnMcRfZnZ6yIVkdIn3mRMBl6(Cd90lIlkZUXsO0777o9qpkJ4tVk6DxhdYuY60E4Z6rPAZps2ncszWzIjT5cj7EfuDNyyNQrxMSBwMYSgGEvt0Ocl6Zlk2AFuwsjSAYztecipDrPU2GQYUVFQmZMvzMkuzi7a1GRYqPbIkRrEzWvz1WznPY(H(PYkUEQyvA3KSRwxn1kv6mVjvEJA93ZbaxlUbXrYU3KIdJPq1vFxnbMlHuX(rMcb8VRK4kuhO3ZbG2CLyQq1CLbdxXRZnk14MzvGWursTLGu9rgMAnTitbbex(J6nBiHx42uUzuEfz5fBZEnjaMAr0BFbktOxXuLDOfRmuCo)bGtmlSEu5xvwajA8GYrNuGhWgVXLQlGm139cPgr3Mhfr6oyaMbWIA5Pn(TGqggKVjesXV5m8HP6UjvsFUROcSYdBsiFdU5rFy951X6ARzbezSOjfmdq83LEfkHkjvU9m9YRaRutC50kqonVYNOG(5siUNLEFpKsxJzDX7qS(WkgkLmkUJasjy(vuwkpP(BopB2ywXBCF80yLmYLJqTvIOH18mfsLpN6(luyq0cUUafy1CwXW6WwYT5PdSJ4xdpwDvCSvD4(HuVsbHNI(OX4lPyMk9vMZfyPIcQ7ndNdKWN1ow1iT3MTgRrWnshxunvT1RXmuNv9kA6JBuBOop5yuLAAW8CTAkJkDFzWmgBiSYhkFbWXYC6hdZqD2NBOHX5UJnARNg7RNsm1HWBbw5VvdOOvDGyX8q1CrCKrh6LXHktft5AWEOmBtjLuDzBK6kxg3)nOOlRKUUIn23t8Q8adEwdgEXtQuvm3shmUUJTrz8Hl4BrMX9OqMXmcGQoewp8TXDSnBDaT(hbV2W3MgSYjrTgVGYKRnLcDXua05COL1TvaWBzbK3tKdYiwtbK1a1CVTAmIqDrdzxjnZDDz9RP5jKBhZIkU5jt5DKzXWJ5xcw1DLP0QZ4UVmZmoULPWaUv(i0SEnkTM1dFENwnvd7JCtRHQnlitmCKmZQO38TGtl5ff3bIkye0KV1T(bSfUKASw)k8(M6(pNQB20fs3vR1Vy1VPY)ZUkx8EKnlDxbF0ql)Av5(k4NLzrCOVICpumxuXPz)SMuFwVA)HhHlvB36T0DlWhMMKUGpfOA9Xmhmjyf9l)jqbZ1TSck5F5se8RBSdzpK2J3rngbOQ3Z8BOpdgu96OTyy1YYxl9Wi8qzVMXBDwguRsHAsXVEHyZFKUGv6LK12CdbzKkT3ineF0M4oRdkAHip8BirbvZd5GSZhCTUwABbQ(blKsRYylQ3lcQyMZTf8bD9JyKyin2tqQA(hxPQrDsv5JPVosvtzPQ0(o1Ku1eR7J1zR20MSLnTrajBd2zeOi)mKilzZEAPeTr7qmAZTnF3GRoRT4cM1P2tlkZSkILnSf70ADg21ohvRcmhyvGkJ2ATq(JPkWS(Ealunr6E1uPIWoPt6313vLn3Q95GWGYKnnO6sehXV3vs)s0GEMauwk5YIT8VSOao5FdnMMZyq12bnSPUfAvuZDRUl2SgyPpKRvvhJwU0kiZWEyjmjhm5f2a09(krL8AAAOr5iCQGH(9AOXwQeSwn)0Pmu2feXPyKuULbzLSjuPVxvvBqvK0QFrEsj(m555Y(6N31nVVyUOy1l3Y7Uleyytu5)S5)n]] )
+spec:RegisterPack( "Retribution", 20230330, [[Hekili:T3XApUTnYFlloeh70ehlz7UBlw7I7kUp0Gd5dN79vBR1METAKL8PhBYwSW)2VHK6bFmuVDUw0au0UvC0mdN3Cif9AR1)66v7DIjR)O9e7PtMoDYyR5t(bR7wVk(5ZK1Ro7S7topc)HVZj4F)VjXHUpKe7g4th7zVaN9uCefKeUdgF9QhsC9I)f)1pOJ4zZMn9haypt2T(J3oz9QJU73t4GsI2TEff03nX(D2w)4LTx2(lXKqafx2g4Fzlqx)prIH)W9KR)Jx2oK4Vhg6WLTpeefDW9XJWGEbp6UB04lF4Yh4iB67SMYq2)CVBCe82bx2gLC(Cqia9bxF3OJKq457tczy9NdtIC2d08CyWo45hcdoDzRW0(Y2)EsOJefszxRjJNm(w6B6ge6g)8LTjNPIazyVJb7)HncaBahNWC5DbhEx6SayHhjCED3rYUpbSrqiFEoge7HbhC9aHTZo6lhn(CizxWPhCI)UfV3jCNJpztCqyiXp(TUhwe74b)1yyU64TbG8tb(0z6hWE7OJUeV9BcoS5jI)Jeh)DeCaFYj015bpYBPMfls1nBS28qYHdrV9jhVK8No2A8rNi2iJJIbU6X4JV8cYGNCIaf(ZOJ9eOKCID9aXk64hPVl6i7avrtMd2OZb7YMd2LmhSRyoyBCoy3(5G1Mto(joEAkc3iGd9D3T5XqxYbWiz3XMGxBC8A3v8ATj6z)DVn48IisS7Hu0BX)VBiErKftgp)T7c8bNyaNlYqZyflVbdlMR7cc82h8z)XGRTd9TE1RYF0oUxE(qlM8Ylgh8vVQeKsFZ6rthQlf45T5ZWqhXjTbyQGdg1ezTDNL12QYA7RHSgbPIY6YPzViRr5GgjRZYeOkTTfL2wcY6BmAyBsl8YlM1pLQGkgJMPBSJ)ZB2FokF8rVzO145FxjX)aiqin14A0OLdl1rSyS6qBK8hy02kL20ST)niF)xi7sIjqjceiW7ZS6gO5upc)lqdsZN6c53DEYX1JHNCflOodjpK8jI4tuuWaUGCSBsnFv1VAM3HKtoU(r3)tPHZLEQKRNGXqAI7uOfzMDoEEB4)VB8CJI5mvgvJQg0hj(0sRcGkF(qHbDocwWllHw9aJHvCvso)YlstKKZdK()JIHQgxybEB0swgWQQztMmWEocfbo1Jcv0MFlz)JNslDbQue4(yNWhjXrJvay5c7xE5Mqh39BanmiOC2VpAm5lWKe8kuFUR)YBNR)4KZ4mZbxWeWliyFNLb44pjISXnMCIRoC8Gj4rNWnNt(9F3JS5HGVqP7qtXQYeLZhCJSrIy0aztuawzqhny4XaVN3Co4ZKWLlGHHx4Eqej(0PSNUC(OkMfrEbXzr9SySoUmBqfZOLZMutXkW(3ihCkd1O5isXps0YSy0lSgjMjhnW0YfsMYnqOy)vxOyzqOy1iHI9irXzpluywkMt5neBiEbOPYd1u4aXKfm0NmcTqL85UorYZSEJQq3uC9L2tYGU5Ax7jnX7YgxMzBwMz3nzgM9IrD2)3LzilGLkWKSqxAzidKmXOVNySWzLgHu(P2zbB37(KlSCCNKVaR7Zj85bfX0jScuaMiBwjvDQYY1lGXWepRsKS0vQvE84U9Ws0(spe0pNV3ebZqsQeEy9v8wQHZkkxOk9oleNeVwt5(Ob8QiYtlU3LS8ot5(Le9SzhIHWDOsTf3vBoQQ07lbDgYsLshDGMehtQUKMvG6nNoTpE(XLte5Wf11YLMBPUfBr5fKcWMnzKy5M5DFtR869qIlhG)PpGxrTCLGP8weua7jwzGSjo505NdbxE(urQ0orsj(YuDBESmbQo4gzm6rE0z3ZuR6B4jXZKoHparOdZtiR8yUkWEgi7gQvPMr)dqT)MPSu583q3HdYjJRKOdOAMtnu1d6KJljYAlqwf3GsOzvbTsrDDkI5ElXaCIQTFljk2DNtyKCK9VjxRRCfxSc1xC2Jlvd37Ul(BY0MjtlKQfRP24YUZf8VnckCAx8cl5ImObJhUNWiv2YCzbtfabcMigQjKef4tDgKI3jXlF25teAfroaPJKj49q8(Qsdzw7xHEVokYz4wbnjzdKyHwkPEoOrgKhPsU4appDPXn6I)MXltX5LkfZqvPL4NrhuUnk3zA61otpAbm10KhLQPXr2e5bMz5vHM)uGMFIejwn6GstPBGkInhcvtjQmHAdZmpFiiXFVhjQO7rJAf9FWdefuFjE2iIsTHs0K9y2l0oAD050jsiLy5lhzOz8CVTWSLotj73SdqXzaXJ0KlP(ChjoEGf45DX8vJL((p54)yItiup0PaQSk5KjBTgR1BGCTsX613gPh8WgQjQHOmtWxlospfnvARrwdEczhVXmmbG4dOZ(2yjMcf3GuVVS1djPZPmRckAuJ2Ln2yWWfqD0MdHCu54bRJz8TZL1D2I5fbvzXkovnNKtUlNoTUVvbC5gtYLm0oJL64yvfmmHwn8gQTHF9Ji1X4k1ZwXauYh1HA4quhZ71ROBtpau2bxX(U1R(StiTgXO1R(v62h5Ek94Jq3ePxVNCWjXl(1x2gs(VjUH0TCkkGUxtojXbNCy7bfyrdlAjA8Lp8VaADzR9pEz7ph4d0In8RLl4(18Z(HYtht8PRnDpm6qRVWpKli8t(2s2moYcNJuktwHZulIwJd54EQkUnVZE5eifKyCy6z0tB1kfUwG50t8rz8Dbi9lY7axlCwukJZLbR)jshMbStltz8Ega9jI7a)spdpLXUPJ3JO1eZoZawr2JFnmJdtpJ(oW4MCyqbPFrEh46YCumcw)tKomdWDAqaOprCh4xu3g9X7r0AIzNB0hh5q1H4PJdLej(EJmEDiHjOKiXTgNf5LnNTFXiZbmyUQO)QH4VX3)LGVdot4qebvF7dyP6dKkg(7(PKedRIhtYkOAVCojX5Hrzc4wkAAPKPtcMQMZ1sUuLyj3M6oJHLR2yfhgjFH(g9xne)n((Ve8D1Xm1oy5y4VhIzwXrlVcQ2LydvWdMJzwprtlLmDsWu1CUwYLQel52u)qpBSQ4l03OVgig9mvIGCtWvt(VUKHAMTP5OVUlTV0oh0D0BArwMWCBRl8kJ(AG46Ppndxn5)6sMwz2u)(Z2kZM6J(AA2OLb7k956GgN1KpQYhlJIJqn)iDqRg2K6vLIwvsXSpnNmX)xr527)Ql3E)vqUnoDNEoe45f8zx6hQSdGvWo8ZKqc9dgMAFsTjZ((MCPFvX09B8Y2hsIZGZpGTnrj(sqVFpf49oXop4er(XlF4Y23Dzl)JofDlMYMZrVUrBXKwd0A1ME1)4Yul4K)UsmKYry4AI0ClM09pUSkjka5kI8krB9ZduR0nDNmLMUXu7oTkxDQnCnrALsCuqUIiVs0w)QbRL6S7KPu1PPE61oB9RkYRCn1TtHwZfS3oKNJwRj4HuvpdTkXwvh2uqwldh5H(c9A7v6FoqpA(18th0RBu(1(5qLukU0pkVkOf5S(2mk0zjAPyVxoolxxo3GLwR0IgWvpQfVw(fLI9ErlED58(S(ud4Qh1IgOW1vw0lAXRfNJgxU4yd2lbM7rfOwnyCeOF0ovOGoaMOGwLsCeuCCSvWCXaMWOwDmPSKYPxxLJvgUHyx)mOQGFDamwtGHcM6GiXYWPWSh1JwATlR3jHTbbtVi7V8HFH5tsr8C5wDqD4wVI9xS71o(bZf(ZpYUN7sr16)b)6Ml09m9vxVQX3umz38ARxXVNywhV(J2kui486vSReMcGZAVd7V2WVp9uULoOd5La)N8Y0v(qGUS9(FI2rNdAFH3PVk7AKz9QjakcPFdQUoarqZYq56PkCDgRQEO15s1uEoV7pummRnyOiokGIy6nAx6rwgtxPnpmKzOG2Yhm8CTt2Wi3raIeerSKQmXvLm9LHM6Dz7lVCz7x3bLmV4GK1EvmfwdMB2LXeFvgeBUzxm3M3(5g6bPdxuYVonO077Bp9qpvD4tVc6DBldYKZ602jNZlwkHmgpx0zZul6VSDaelwY6tRf4x2(kOii1qyfJU4Y2jC9Cja9QQOrbwQpVyydOrzjJWwtoBevLDx3uz2DsLzBqLHSpj9UkdLgiQSk5LExLvcNXuz)q3uzz3Ds5knBzLMLOk7MlBl1rZSkLoVRsHxPo)9sai1gwqyCz7By4WAmuO13vse7CinSNzmiG)zPgxH6(8EjaQnxPMJ0mxzjWv8kqeQiP0sqk(E3yMmZ56bGg6FOP8HuEHzmIoiTeoKVHFWulM(1JszI6vmvEZcXkdfNZVh4e7mJetop5vCI60Np6Om8aMYvUSvfKz(IbGzRmlnuH2feamdGf4jtB8prFog0)m9z43Ec(WuD3OcPV09Naw5HvjKVb38OlS(0Yy9ARzbeznVkfSaqYx0BzkHcjLWnRawPM4YPLGCAAHprg9tLqspJDheWOR1Ko6OOwQybVXOOHpHDgTtVkTySN5VeA(eZUG3K(KEXQEukRGzdgvBSPCDtH7N5fQNzB0aUodfyLFwWW1HT07(rlyh1VrBSsSKyRYW99mhufHNH2lj4wzyMQ9TplfJPGcMBYHKVKYhBnwHjn3MTeRrWJQoER1u1wUgZYCc2ROPpUrTL5uMdrvQS46PAvgJQDloimMy0S8hQFrLrzUofoZYCoPBOb3LUeiAQtN4RZiM5a7naRYF29u0AoMSA2PsUPi40HEBryYQXwVYS7ZZbLtjt3gemV68uaVbfD8c9Al2eFp17Acm4fmSvepmPQAAMwyCDRy7ZKJCi34mR7qHKZmkGAoAwhCZX9XTBCSTUhmV0i52wIYjvTMSGYwQ5Lk92ub0PsOv0TvbWzIaQCbyiczSOPaYkJQUJxvgrOSaJIRVw46zS8v68eYf6ywD4YKj)ADmB4HYlmR46DuBnBsxXJCJJzc1iiTEiLgVxJcUf9WN2Q1yvXgDw1kRAYY0udhPZSg6yFd40CEXW12NbgbnpCzRQaB5mmJ1Yx333u3)5uDlMUq76fT8LW(nv(F2v5Qx9P80Dz8rfncSrv(BGFwWJ4WELGiExB1BXI98cwM)7Yr5P)k9hndPCUTR1t3ohFyA26m(uHQLh8S3eLf0p)NVdmFyE5ei)MBiuLf2Gs((v2BT7zDhEqLrjkAoT8rbqadMED0osSCr(RXogd3N3LA8MUXHAjdQrL3zSHMxW7GAirOD0DsluRkbCK3eImQMgPbz3oK6JT2wbu8J1hLw5HumV)dujNKtQqaf(lblGN(l2GW)FPn77pwsvRYKQ6hF86ivT1LQA71u1svBfPQD5DKSQnwJpTraHVB7ccuKFWm0LS8NMlrR0oeJ2sBT3n4QZsRPqy5PD0IYwUq4YmSn391sNJMvb29SkWKrBPwi)rvfG6fyUtkkvtW2kNcCIDqOQFNGxM3LRMNObdkBXCDMRvCG8wBP9ROc65cWynLls32)Im)sAKkAwTK5HPTiQxZpR2ZOQ7GDBSITWsOOx0ADmJLs0Gmd7GLWOuW0xHdq37kev6lUPIoMJWPkg63vdn2cJG1O5xDQ1uCLrskgnLBEyxnBct67LfvlueBT4xtggXNOppx0v)82U3(zZfdREzMS7UsGH1Plc0jj(yq46vRCp9ZSNS()9d]] )

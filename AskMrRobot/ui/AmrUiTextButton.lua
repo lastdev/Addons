@@ -28,7 +28,9 @@ end]]
 
 -- since 10.0, can't seem to get pre-click to work at all if cvar ActionButtonUseKeyDown is set to 0, so hack around it with mouse down for now...
 local function buttonMouseDown(frame)
-	frame.obj.preClick(frame.obj)
+	if frame.obj.preClick then
+		frame.obj.preClick(frame.obj)
+	end
 end
 
 local function buttonPreClick(frame, ...)

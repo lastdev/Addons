@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("CoSTrash", "DBM-Party-Legion", 7)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230310190659")
+mod:SetRevision("20230410013138")
 --mod:SetModelID(47785)
 mod:SetOOCBWComms()
 mod:SetMinSyncRevision(20221228000000)
@@ -59,7 +59,7 @@ local specWarnBewitch				= mod:NewSpecialWarningInterrupt(211470, "HasInterrupt"
 local specWarnChargingStation		= mod:NewSpecialWarningInterrupt(225100, "HasInterrupt", nil, nil, 1, 2)
 local specWarnSearingGlare			= mod:NewSpecialWarningInterrupt(211299, "HasInterrupt", nil, nil, 1, 2)
 local specWarnDisintegrationBeam	= mod:NewSpecialWarningInterrupt(207980, "HasInterrupt", nil, nil, 1, 2)
-local specWarnFelDetonation			= mod:NewSpecialWarningMoveTo(211464, nil, nil, nil, 2, 2)
+local specWarnFelDetonation			= mod:NewSpecialWarningMoveTo(211464, nil, nil, nil, 2, 13)
 local specWarnSealMagic				= mod:NewSpecialWarningRun(209404, false, nil, 2, 4, 2)
 local specWarnWhirlingBlades		= mod:NewSpecialWarningRun(209378, "Melee", nil, nil, 4, 2)
 local specWarnScreamofPain			= mod:NewSpecialWarningCast(397892, "SpellCaster", nil, nil, 1, 2)
@@ -79,7 +79,7 @@ local timerBewitchCD				= mod:NewCDTimer(17, 211470, nil, "HasInterrupt", nil, 4
 local timerFelDetonationCD			= mod:NewCDTimer(12.1, 211464, nil, nil, nil, 2)
 local timerScreamofPainCD			= mod:NewCDTimer(14.6, 397892, nil, nil, nil, 2)
 local timerWhirlingBladesCD			= mod:NewCDTimer(18.2, 209378, nil, "Melee", nil, 2)
-local timerDisintegrationBeamCD		= mod:NewCDTimer(7.2, 207980, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerDisintegrationBeamCD		= mod:NewCDTimer(6.4, 207980, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerShockwaveCD				= mod:NewCDTimer(8.4, 207979, nil, nil, nil, 3)
 local timerCrushingLeapCD			= mod:NewCDTimer(16.9, 397897, nil, nil, nil, 3)
 
@@ -164,7 +164,7 @@ function mod:SPELL_CAST_START(args)
 		timerFelDetonationCD:Start(nil, args.sourceGUID)
 		if self:AntiSpam(3, 4) then
 			specWarnFelDetonation:Show(DBM_COMMON_L.BREAK_LOS)
-			specWarnFelDetonation:Play("findshelter")
+			specWarnFelDetonation:Play("breaklos")
 		end
 	elseif spellId == 209404 then
 		timerSealMagicCD:Start(nil, args.sourceGUID)
@@ -613,7 +613,6 @@ do
 		end
 		local gossipOptionID = self:GetGossipID()
 		if gossipOptionID then
-			DBM:Debug("GOSSIP_SHOW triggered with a gossip ID of: "..gossipOptionID)
 			if self.Options.AGBoat and gossipOptionID == 45624 then -- Boat
 				self:SelectGossip(gossipOptionID)
 			elseif self.Options.AGDisguise and gossipOptionID == 45656 then -- Disguise
@@ -639,7 +638,7 @@ do
 				end
 				if self.Options.SpyHelperClose2 then
 					--Delay used so DBM doesn't prevent other mods or WAs from parsing data
-					C_Timer.After(0.3, function() C_GossipInfo.CloseGossip() end)
+					C_Timer.After(0.2, function() C_GossipInfo.CloseGossip() end)
 				end
 			end
 		end

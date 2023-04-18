@@ -1,0 +1,89 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+
+  <Frame name="DFH_TodoItemFrame" inherits="DFH_StatusBarFrame" mixin="DFH_TodoStatusBar" virtual="true">
+    <Scripts>
+      <OnEvent method="OnEvent" />
+      <OnShow method="OnShow" />
+      <OnHide method="OnHide" />
+
+    </Scripts>
+  </Frame>
+
+  <Frame name="DFH_TodosFrame" virtual="true">
+    <Size y="162" />
+
+    <Frames>
+      <Frame parentKey="Title" inherits="DFH_SectionTitleFrame">
+        <KeyValues>
+          <KeyValue key="title" value="Todos" type="string" />
+        </KeyValues>
+      </Frame>
+      <Frame parentKey="AidingTheAccord" inherits="DFH_TodoItemFrame">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.Title" relativePoint="BOTTOMLEFT" />
+        </Anchors>
+        <KeyValues>
+          <KeyValue key="weeklyIndex" value="Aiding the Accord" type="string" />
+        </KeyValues>
+      </Frame>
+      <Frame parentKey="RevivalCatalyst" inherits="DFH_TodoItemFrame">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.AidingTheAccord" relativePoint="BOTTOMLEFT" y="-2" />
+        </Anchors>
+        <KeyValues>
+          <KeyValue key="weeklyIndex" value="Revival Catalyst" type="string" />
+        </KeyValues>
+      </Frame>
+      <Frame parentKey="Feast" inherits="DFH_TodoItemFrame">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.RevivalCatalyst" relativePoint="BOTTOMLEFT" y="-2" />
+        </Anchors>
+        <KeyValues>
+          <KeyValue key="weeklyIndex" value="Iskaara Tuskarr Feast" type="string" />
+        </KeyValues>
+      </Frame>
+      <Frame parentKey="Siege" inherits="DFH_TodoItemFrame">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.Feast" relativePoint="BOTTOMLEFT" y="-2" />
+        </Anchors>
+        <KeyValues>
+          <KeyValue key="weeklyIndex" value="Siege on Dragonbane Keep" type="string" />
+        </KeyValues>
+      </Frame>
+      <Frame parentKey="Hunts" inherits="DFH_TodoItemFrame">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.Siege" relativePoint="BOTTOMLEFT" y="-2" />
+        </Anchors>
+        <KeyValues>
+          <KeyValue key="weeklyIndex" value="Grand Hunts" type="string" />
+        </KeyValues>
+      </Frame>
+      <Frame parentKey="Flood" inherits="DFH_TodoItemFrame">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.Hunts" relativePoint="BOTTOMLEFT" y="-2" />
+        </Anchors>
+        <KeyValues>
+          <KeyValue key="weeklyIndex" value="Trial of Flood" type="string" />
+        </KeyValues>
+      </Frame>
+      <Frame parentKey="Elements" inherits="DFH_TodoItemFrame">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.Flood" relativePoint="BOTTOMLEFT" y="-2" />
+        </Anchors>
+        <KeyValues>
+          <KeyValue key="weeklyIndex" value="Trial of Elements" type="string" />
+        </KeyValues>
+      </Frame>
+      <Frame parentKey="WorldBosses" inherits="DFH_TodoItemFrame">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.Elements" relativePoint="BOTTOMLEFT" y="-2" />
+        </Anchors>
+        <KeyValues>
+          <KeyValue key="weeklyIndex" value="World Bosses" type="string" />
+        </KeyValues>
+      </Frame>
+    </Frames>
+  </Frame>
+</Ui>

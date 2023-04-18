@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2499, "DBM-VaultoftheIncarnates", nil, 1200)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230214033845")
+mod:SetRevision("20230410212315")
 mod:SetCreatureID(189492)
 mod:SetEncounterID(2607)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -52,7 +52,7 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(25244))
 local warnStaticCharge							= mod:NewTargetNoFilterAnnounce(381615, 3)
 local warnLightningStrike						= mod:NewSpellAnnounce(376126, 3)
 
-local specWarnHurricaneWing						= mod:NewSpecialWarningCount(377612, nil, nil, nil, 2, 2)
+local specWarnHurricaneWing						= mod:NewSpecialWarningCount(377612, nil, nil, nil, 2, 13)
 local specWarnStaticCharge						= mod:NewSpecialWarningYouPos(381615, nil, 37859, nil, 1, 2)
 local yellStaticCharge							= mod:NewShortPosYell(381615, 37859)
 local yellStaticChargeFades						= mod:NewIconFadesYell(381615, 37859)
@@ -93,7 +93,7 @@ local warnShatteringShroudFaded					= mod:NewFadesAnnounce(397382, 1)
 local specWarnSurgingBlast						= mod:NewSpecialWarningMoveAway(396037, nil, 37859, nil, 1, 2)
 local yellSurgingBlast							= mod:NewShortYell(396037, 37859)
 local yellSurgingBlastFades						= mod:NewShortFadesYell(396037, 37859)
-local specWarnStormBolt							= mod:NewSpecialWarningInterruptCount(385553, "HasInterrupt", nil, nil, 1, 2)
+--local specWarnStormBolt							= mod:NewSpecialWarningInterruptCount(385553, "HasInterrupt", nil, nil, 1, 2)
 local specWarnShatteringShroud					= mod:NewSpecialWarningYou(397382, nil, nil, nil, 1, 2, 4)
 local specWarnFlameShield						= mod:NewSpecialWarningSwitch(397387, nil, nil, nil, 1, 2, 4)
 
@@ -137,7 +137,7 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(25812))
 --Colossal Stormfiend
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25816))
 local warnFuse								= mod:NewStackAnnounce(389878, 2, nil, "Tank|Healer")
-local warnStormBreak						= mod:NewSpellAnnounce(389870, 3, nil, nil, 7794)--Shortname Teleport
+local warnStormBreak						= mod:NewCountAnnounce(389870, 3, nil, nil, 7794)--Shortname Teleport
 
 local specWarnBallLightning					= mod:NewSpecialWarningDodge(385068, nil, nil, nil, 2, 2)
 
@@ -469,9 +469,15 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerTempestWingCD:Start(timer, self.vb.wingCount+1)
 		end
-	elseif spellId == 389870 and self:AntiSpam(5, 1) then
-		warnStormBreak:Show()
-		timerStormBreakCD:Start()
+	elseif spellId == 389870 then
+		if not castsPerGUID[args.sourceGUID] then
+			castsPerGUID[args.sourceGUID] = 0
+		end
+		castsPerGUID[args.sourceGUID] = castsPerGUID[args.sourceGUID] + 1
+		if self:AntiSpam(2, 1) then--Aggregate similtanious teleports
+			warnStormBreak:Show(castsPerGUID[args.sourceGUID])
+			timerStormBreakCD:Start(nil, castsPerGUID[args.sourceGUID]+1)
+		end
 	elseif spellId == 385068 and self:AntiSpam(5, 2) then
 		self.vb.ballCount = self.vb.ballCount + 1
 		specWarnBallLightning:Show(self.vb.ballCount)
@@ -864,8 +870,8 @@ function mod:UNIT_DIED(args)
 	elseif cid == 199549 then--Flamesworn Herald
 		timerFlameShieldCD:Stop(castsPerGUID[args.destGUID])
 		castsPerGUID[args.destGUID] = nil
---	elseif cid == 197145 or cid == 200943 then--Colossal Stormfiend
-
+	elseif cid == 197145 or cid == 200943 then--Colossal Stormfiend
+		castsPerGUID[args.destGUID] = nil
 	end
 end
 

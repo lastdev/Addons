@@ -130,10 +130,12 @@ function Cost.GetLevelItemString(recipeString)
 	end
 	if absItemLevel then
 		assert(level == 0)
-		return itemString.."::i"..absItemLevel
+		local baseItemString = ItemString.GetBase(itemString)
+		return baseItemString.."::i"..absItemLevel
 	elseif level > 0 then
 		local relLevel = ProfessionInfo.GetRelativeItemLevelByRank(level)
-		return itemString..(relLevel < 0 and "::-" or "::+")..abs(relLevel)
+		local baseItemString = ItemString.GetBase(itemString)
+		return baseItemString..(relLevel < 0 and "::-" or "::+")..abs(relLevel)
 	else
 		return itemString
 	end

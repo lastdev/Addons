@@ -19,7 +19,7 @@ local function Init(parent)
 	ScrollUtil.InitScrollBoxWithScrollBar(scrollFrame, scrollBar, view)
 end
 
-function ScrollBox.Acquire(parent, contents)
+function ScrollBox.Acquire(parent, contents, padding)
 	Init = Init(parent) or nop
 	scrollFrame:SetParent(parent)
 	scrollBar:SetParent(parent)
@@ -35,10 +35,8 @@ function ScrollBox.Acquire(parent, contents)
 	contents:ClearAllPoints()
 	contents:SetPoint("TOPLEFT")
 	contents:SetPoint("RIGHT")
-	if (contents.Reset) then
-		contents:Reset()
-	end
-	boundingBox:SetHeight(contents:GetHeight())
+	contents:Layout()
+	boundingBox:SetHeight(contents:GetHeight() + (padding or 0))
 	scrollFrame:FullUpdate(true)
 	scrollFrame:ScrollToBegin()
 end

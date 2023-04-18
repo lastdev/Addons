@@ -31,6 +31,10 @@ local HealBot_Aura_ID={}
 local HealBot_Aura_IconSet={}
 local HealBot_SpellID_LookupData={}
 local HealBot_SpellID_LookupIdx={}
+local HealBot_BuffIconSet={}
+local HealBot_BuffIconGlow={}
+local HealBot_DebuffIconSet={}
+local HealBot_DebuffIconGlow={}
 local _
 local HealBot_Buff_Aura2Item={};
 local HealBot_Buff_ItemIDs={};
@@ -176,7 +180,7 @@ function HealBot_Aura_RemoveBuffIcons(button)
         for i=9,8+button.icon.buff.count[2] do
             HealBot_Aura_RemoveIcon(button, i)
         end
-        for i=13,12+button.icon.buff.count[3] do
+        for i=11,10+button.icon.buff.count[3] do
             HealBot_Aura_RemoveIcon(button, i)
         end
     end
@@ -202,86 +206,86 @@ end
 
 function HealBot_Aura_RemoveUnusedBuffIcons()
     for _,xButton in pairs(HealBot_Unit_Button) do
-        if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXBICONS"]<5 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXBICONS"]+1,5 do
+        if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXBICONS"]<8 then
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXBICONS"]+1,8 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
         if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXBICONS"]<2 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXBICONS"]+6,7 do
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXBICONS"]+9,10 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
         if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXBICONS"]<2 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXBICONS"]+8,9 do
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXBICONS"]+11,12 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
     end
     for _,xButton in pairs(HealBot_Private_Button) do
-        if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXBICONS"]<5 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXBICONS"]+1,5 do
+        if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXBICONS"]<8 then
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXBICONS"]+1,8 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
         if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXBICONS"]<2 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXBICONS"]+6,7 do
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXBICONS"]+9,10 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
         if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXBICONS"]<2 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXBICONS"]+8,9 do
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXBICONS"]+11,12 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
     end
     for _,xButton in pairs(HealBot_Enemy_Button) do
-        if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXBICONS"]<5 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXBICONS"]+1,5 do
+        if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXBICONS"]<8 then
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXBICONS"]+1,8 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
         if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXBICONS"]<2 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXBICONS"]+6,7 do
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXBICONS"]+9,10 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
         if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXBICONS"]<2 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXBICONS"]+8,9 do
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXBICONS"]+11,12 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
     end
     for _,xButton in pairs(HealBot_Pet_Button) do
-        if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXBICONS"]<5 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXBICONS"]+1,5 do
+        if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXBICONS"]<8 then
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXBICONS"]+1,8 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
         if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXBICONS"]<2 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXBICONS"]+6,7 do
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXBICONS"]+9,10 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
         if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXBICONS"]<2 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXBICONS"]+8,9 do
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXBICONS"]+11,12 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
     end
     for _,xButton in pairs(HealBot_Extra_Button) do
-        if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXBICONS"]<5 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXBICONS"]+1,5 do
+        if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXBICONS"]<8 then
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXBICONS"]+1,8 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
         if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXBICONS"]<2 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXBICONS"]+6,7 do
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXBICONS"]+9,10 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
         if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXBICONS"]<2 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXBICONS"]+8,9 do
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXBICONS"]+11,12 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
@@ -325,103 +329,103 @@ end
 
 function HealBot_Aura_RemoveUnusedDebuffIcons()
     for _,xButton in pairs(HealBot_Unit_Button) do
-        if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXDICONS"]<5 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXDICONS"]+51,55 do
+        if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXDICONS"]<6 then
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXDICONS"]+51,56 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
         if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXDICONS"]<2 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXDICONS"]+56,57 do
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXDICONS"]+57,58 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
         if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXDICONS"]<2 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXDICONS"]+58,59 do
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXDICONS"]+59,60 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
     end
     for _,xButton in pairs(HealBot_Private_Button) do
-        if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXDICONS"]<5 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXDICONS"]+51,55 do
+        if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXDICONS"]<6 then
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXDICONS"]+51,56 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
         if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXDICONS"]<2 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXDICONS"]+56,57 do
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXDICONS"]+57,58 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
         if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXDICONS"]<2 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXDICONS"]+58,59 do
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXDICONS"]+59,60 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
     end
     for _,xButton in pairs(HealBot_Enemy_Button) do
-        if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXDICONS"]<5 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXDICONS"]+51,55 do
+        if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXDICONS"]<6 then
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXDICONS"]+51,56 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
         if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXDICONS"]<2 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXDICONS"]+56,57 do
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXDICONS"]+57,58 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
         if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXDICONS"]<2 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXDICONS"]+58,59 do
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXDICONS"]+59,60 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
     end
     for _,xButton in pairs(HealBot_Pet_Button) do
-        if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXDICONS"]<5 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXDICONS"]+51,55 do
+        if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXDICONS"]<6 then
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXDICONS"]+51,56 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
         if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXDICONS"]<2 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXDICONS"]+56,57 do
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXDICONS"]+57,58 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
         if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXDICONS"]<2 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXDICONS"]+58,59 do
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXDICONS"]+59,60 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
     end
     for _,xButton in pairs(HealBot_Vehicle_Button) do
-        if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXDICONS"]<5 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXDICONS"]+51,55 do
+        if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXDICONS"]<6 then
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXDICONS"]+51,56 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
         if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXDICONS"]<2 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXDICONS"]+56,57 do
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXDICONS"]+57,58 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
         if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXDICONS"]<2 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXDICONS"]+58,59 do
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXDICONS"]+59,60 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
     end
     for _,xButton in pairs(HealBot_Extra_Button) do
-        if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXDICONS"]<5 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXDICONS"]+51,55 do
+        if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXDICONS"]<6 then
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][1]["MAXDICONS"]+51,56 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
         if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXDICONS"]<2 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXDICONS"]+56,57 do
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][2]["MAXDICONS"]+57,58 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
         if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXDICONS"]<2 then
-            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXDICONS"]+58,59 do
+            for i = Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][xButton.frame][3]["MAXDICONS"]+59,60 do
                 HealBot_Aura_RemoveIcon(xButton, i)
             end
         end
@@ -611,7 +615,7 @@ function HealBot_Aura_UpdateDebuffIcon(button, iconData, index, timer, spellId, 
                                    false)
     if iAlpha and HealBot_AuraDebuffCache[spellId] then
         hbGlowSpellName=HealBot_AuraDebuffCache[spellId]["name"] or "x"
-        hbGlowIdx=HealBot_Globals.HealBot_Custom_Debuffs_IconGlow[spellId] or HealBot_Globals.HealBot_Custom_Debuffs_IconGlow[hbGlowSpellName] or 1
+        hbGlowIdx=HealBot_DebuffIconGlow[spellId] or HealBot_DebuffIconGlow[hbGlowSpellName] or 1
     else
         hbGlowIdx=1
     end
@@ -665,7 +669,7 @@ function HealBot_Aura_UpdateBuffIcon(button, iconData, index, timer, spellId, ic
                                    true)
     if iAlpha and HealBot_AuraBuffCache[spellId] then
         hbGlowSpellName=HealBot_AuraBuffCache[spellId]["name"] or "x"
-        hbGlowIdx=HealBot_Globals.HealBot_Custom_Buffs_IconGlow[spellId] or HealBot_Globals.HealBot_Custom_Buffs_IconGlow[hbGlowSpellName] or 1
+        hbGlowIdx=HealBot_BuffIconGlow[spellId] or HealBot_BuffIconGlow[hbGlowSpellName] or 1
     else
         hbGlowIdx=1
     end
@@ -792,7 +796,6 @@ function HealBot_Aura_UpdateState(button)
     end
 end
 
-local ooruPrevTexture=false
 function HealBot_Aura_OORUpdate(button, texture)
     button.icon.extra.oorarrow=texture
     if HealBot_UnitExtraIcons[button.id] then
@@ -810,7 +813,7 @@ end
 
 function HealBot_Aura_InitUnitBuffIcons(buttonId)
     HealBot_UnitBuffIcons[buttonId]={}
-    for i = 1,9 do
+    for i = 1,12 do
         HealBot_UnitBuffIcons[buttonId][i]={}
         HealBot_UnitBuffIcons[buttonId][i]["count"]=0
         HealBot_UnitBuffIcons[buttonId][i]["expirationTime"]=0
@@ -824,7 +827,7 @@ end
 
 function HealBot_Aura_InitUnitDebuffIcons(buttonId)
     HealBot_UnitDebuffIcons[buttonId]={}
-    for i = 51,59 do
+    for i = 51,60 do
         HealBot_UnitDebuffIcons[buttonId][i]={}
         HealBot_UnitDebuffIcons[buttonId][i]["count"]=0
         HealBot_UnitDebuffIcons[buttonId][i]["expirationTime"]=0
@@ -947,7 +950,7 @@ function HealBot_Aura_SortDebuffIcons(button)
             button.icon.debuff.count[2]=Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][2]["MAXDICONS"]
         end
         for j=1, button.icon.debuff.count[2], 1 do
-            HealBot_Aura_CacheDebuffIcon(button, 55+j, debuffAuraCache[debuffSort[2][j]]["spellId"], debuffSort[2][j])
+            HealBot_Aura_CacheDebuffIcon(button, 56+j, debuffAuraCache[debuffSort[2][j]]["spellId"], debuffSort[2][j])
         end
     end
     button.icon.debuff.count[3]=#debuffSort[3]
@@ -957,7 +960,7 @@ function HealBot_Aura_SortDebuffIcons(button)
             button.icon.debuff.count[3]=Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][3]["MAXDICONS"]
         end
         for j=1, button.icon.debuff.count[3], 1 do
-            HealBot_Aura_CacheDebuffIcon(button, 57+j, debuffAuraCache[debuffSort[3][j]]["spellId"], debuffSort[3][j])
+            HealBot_Aura_CacheDebuffIcon(button, 58+j, debuffAuraCache[debuffSort[3][j]]["spellId"], debuffSort[3][j])
         end
     end
 end
@@ -990,9 +993,8 @@ function HealBot_Aura_Counts(button)
     HealBot_AddDebug("button count="..button.icon.debuff.count[1].."  Aura Count="..HealBot_Aura_prevIconCount["DEBUFF"][1],"DebuffSet",true)
 end
 
-local debuffIndex=0
 function HealBot_Aura_CheckUnitDebuffIcons(button)
-    for i=51,55 do
+    for i=51,56 do
         if i<=(50+button.icon.debuff.count[1]) then
             if not HealBot_UnitDebuffIcons[button.id][i].current then
                 HealBot_UnitDebuffIcons[button.id][i].current=true
@@ -1004,25 +1006,25 @@ function HealBot_Aura_CheckUnitDebuffIcons(button)
             break
         end
     end
-    for i=56,57 do
-        if i<=(55+button.icon.debuff.count[2]) then
+    for i=57,58 do
+        if i<=(56+button.icon.debuff.count[2]) then
             --if not HealBot_UnitDebuffIcons[button.id][i].current then
                 HealBot_UnitDebuffIcons[button.id][i].current=true
                 HealBot_Aura_DebuffAddIcon(button, i)
             --end
-        elseif i<=(55+HealBot_Aura_prevIconCount["DEBUFF"][2]) then
+        elseif i<=(56+HealBot_Aura_prevIconCount["DEBUFF"][2]) then
             HealBot_Aura_RemoveIcon(button, i)
         else
             break
         end
     end
-    for i=58,59 do
-        if i<=(57+button.icon.debuff.count[3]) then
+    for i=59,69 do
+        if i<=(58+button.icon.debuff.count[3]) then
             if not HealBot_UnitDebuffIcons[button.id][i].current then
                 HealBot_UnitDebuffIcons[button.id][i].current=true
                 HealBot_Aura_DebuffAddIcon(button, i)
             end
-        elseif i<=(57+HealBot_Aura_prevIconCount["DEBUFF"][3]) then
+        elseif i<=(58+HealBot_Aura_prevIconCount["DEBUFF"][3]) then
             HealBot_Aura_RemoveIcon(button, i)
         else
             break
@@ -1194,7 +1196,7 @@ function HealBot_Aura_CheckCurBuff()
     if ciCustomBuff or HealBot_BuffWatch[uaName] or HealBot_BuffNameTypes[uaName] then
         if not HealBot_AuraBuffCache[uaSpellId] or HealBot_AuraBuffCache[uaSpellId].reset then
             if not HealBot_AuraBuffCache[uaSpellId] then HealBot_AuraBuffCache[uaSpellId]={} end
-            HealBot_AuraBuffCache[uaSpellId]["priority"]=HealBot_Globals.HealBot_Custom_Buffs[uaName] or HealBot_Globals.HealBot_Custom_Buffs[uaSpellId] or 15
+            HealBot_AuraBuffCache[uaSpellId]["priority"]=HealBot_Globals.HealBot_Custom_Buffs[uaName] or HealBot_Globals.HealBot_Custom_Buffs[uaSpellId] or 20
             HealBot_AuraBuffCache[uaSpellId]["texture"]=uaTexture
             HealBot_AuraBuffCache[uaSpellId]["name"]=uaName
             HealBot_AuraBuffCache[uaSpellId]["type"]=uaDebuffType
@@ -1299,7 +1301,7 @@ function HealBot_Aura_SortBuffIcons(button)
             button.icon.buff.count[2]=Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][2]["MAXBICONS"]
         end
         for j=1, button.icon.buff.count[2], 1 do
-            HealBot_Aura_CacheBuffIcon(button, j+5, buffAuraCache[buffSort[2][j]]["spellId"], buffSort[2][j])
+            HealBot_Aura_CacheBuffIcon(button, j+8, buffAuraCache[buffSort[2][j]]["spellId"], buffSort[2][j])
         end
     end
     button.icon.buff.count[3]=#buffSort[3]
@@ -1309,7 +1311,7 @@ function HealBot_Aura_SortBuffIcons(button)
             button.icon.buff.count[3]=Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][3]["MAXBICONS"]
         end
         for j=1, button.icon.buff.count[3], 1 do
-            HealBot_Aura_CacheBuffIcon(button, j+7, buffAuraCache[buffSort[3][j]]["spellId"], buffSort[3][j])
+            HealBot_Aura_CacheBuffIcon(button, j+10, buffAuraCache[buffSort[3][j]]["spellId"], buffSort[3][j])
         end
     end
 end
@@ -1701,7 +1703,7 @@ function HealBot_Aura_SetUnitBuffTimer(button)
 end
 
 function HealBot_Aura_CheckUnitBuffIcons(button)
-    for i=1,5 do
+    for i=1,8 do
         if i<=button.icon.buff.count[1] then
             if not HealBot_UnitBuffIcons[button.id][i].current then
                 HealBot_UnitBuffIcons[button.id][i].current=true
@@ -1713,25 +1715,25 @@ function HealBot_Aura_CheckUnitBuffIcons(button)
             break
         end
     end
-    for i=6,7 do
-        if i<=(5+button.icon.buff.count[2]) then
+    for i=9,10 do
+        if i<=(8+button.icon.buff.count[2]) then
             if not HealBot_UnitBuffIcons[button.id][i].current then
                 HealBot_UnitBuffIcons[button.id][i].current=true
                 HealBot_Aura_AddBuffIcon(button, i)
             end
-        elseif i<=(5+HealBot_Aura_prevIconCount["BUFF"][2]) then
+        elseif i<=(8+HealBot_Aura_prevIconCount["BUFF"][2]) then
             HealBot_Aura_RemoveIcon(button, i)
         else
             break
         end
     end
-    for i=8,9 do
-        if i<=(7+button.icon.buff.count[3]) then
+    for i=11,12 do
+        if i<=(10+button.icon.buff.count[3]) then
             if not HealBot_UnitBuffIcons[button.id][i].current then
                 HealBot_UnitBuffIcons[button.id][i].current=true
                 HealBot_Aura_AddBuffIcon(button, i)
             end
-        elseif i<=(7+HealBot_Aura_prevIconCount["BUFF"][3]) then
+        elseif i<=(10+HealBot_Aura_prevIconCount["BUFF"][3]) then
             HealBot_Aura_RemoveIcon(button, i)
         else
             break
@@ -1862,7 +1864,11 @@ function HealBot_Aura_CurrentBuffTag(id, tag)
 end
 
 function HealBot_Aura_CurrentBuff(id, bName)
-    return HealBot_UnitBuffCurrent[id][bName]
+    if HealBot_UnitBuffCurrent[id] then
+        return HealBot_UnitBuffCurrent[id][bName]
+    else
+        return false
+    end
 end
 
 function HealBot_Aura_CurrentDebuff(id, dName)
@@ -1886,7 +1892,7 @@ local onlyPlayers,prevMissingbuff=false,false
 function HealBot_Aura_CheckUnitBuff(button)
     if uaExpirationTime then
         if not HealBot_Aura_IconSet[uaSpellId] then
-            HealBot_Aura_IconSet[uaSpellId]=HealBot_Globals.HealBot_Custom_Buffs_IconSet[uaSpellId] or HealBot_Globals.HealBot_Custom_Buffs_IconSet[uaName] or 1
+            HealBot_Aura_IconSet[uaSpellId]=HealBot_BuffIconSet[uaSpellId] or HealBot_BuffIconSet[uaName] or 1
             HealBot_Aura_ID[uaName]=uaSpellId
         end
         if uaUnitCaster then
@@ -1943,7 +1949,7 @@ end
 
 function HealBot_Aura_CheckUnitDebuff(button)
     if not HealBot_Aura_IconSet[uaSpellId] then
-        HealBot_Aura_IconSet[uaSpellId]=HealBot_Globals.HealBot_Custom_Debuffs_IconSet[uaSpellId] or HealBot_Globals.HealBot_Custom_Debuffs_IconSet[uaName] or 1
+        HealBot_Aura_IconSet[uaSpellId]=HealBot_DebuffIconSet[uaSpellId] or HealBot_DebuffIconSet[uaName] or 1
         HealBot_Aura_ID[uaName]=uaSpellId
         if HealBot_Aura_CanDispell[uaSpellId]==nil then
             local aId=1
@@ -1961,14 +1967,14 @@ function HealBot_Aura_CheckUnitDebuff(button)
             end
         end
     end
-    if uaSpellId==32407 or uaName=="Strange Aura" then
+--    if uaSpellId==32407 or uaName=="Strange Aura" then
     --    uaDebuffType=HEALBOT_DISEASE_en
     --    uaDebuffType=HEALBOT_MAGIC_en
     --    uaDebuffType=HEALBOT_CURSE_en
     --    uaDebuffType=HEALBOT_POISON_en
     --    HealBot_Aura_CanDispell[uaSpellId]=true
-    --    HealBot_AddDebug("Strange Aura - IconSet="..HealBot_Aura_IconSet[uaSpellId])
-    end
+    --    HealBot_Aura_IconSet[uaSpellId]=3
+--    end
     if uaUnitCaster then
         if UnitIsUnit(uaUnitCaster,"player") then
             uaUnitCasterIsPlayer=true
@@ -2848,10 +2854,12 @@ function HealBot_Aura_RemoveIcons(button)
       --HealBot_setCall("HealBot_Aura_RemoveIcons")
 end
 
-function HealBot_Aura_ConfigClassAllHoT(id, sName, wType)
+local function HealBot_Aura_ConfigClassAllHoT(id, sName, wType)
     if (HealBot_Globals.CustomBuffIDMethod[id] or 3)<3 then
-        if HealBot_Globals.CustomBuffIDMethod[id]==2 and sName then
-            HealBot_Watch_HoT[sName]=wType
+        if HealBot_Globals.CustomBuffIDMethod[id]==2 then
+            if sName then
+                HealBot_Watch_HoT[sName]=wType
+            end
         else
             HealBot_Watch_HoT[id]=wType
         end
@@ -2861,10 +2869,46 @@ function HealBot_Aura_ConfigClassAllHoT(id, sName, wType)
     end
 end
 
+local function HealBot_Aura_ConfigBuffIconSetId(id, sName, set)
+    if (HealBot_Globals.CustomBuffIDMethod[id] or 3)<3 then
+        if HealBot_Globals.CustomBuffIDMethod[id]==2 then
+            if sName then
+                HealBot_BuffIconSet[sName]=set
+            end
+        else
+            HealBot_BuffIconSet[id]=set
+        end
+    else
+        HealBot_BuffIconSet[id]=set
+        if sName then HealBot_BuffIconSet[sName]=set end
+    end
+end
+
+local function HealBot_Aura_ConfigBuffIconGlowId(id, sName, glow)
+    if (HealBot_Globals.CustomBuffIDMethod[id] or 3)<3 then
+        if HealBot_Globals.CustomBuffIDMethod[id]==2 then
+            if sName then
+                HealBot_BuffIconGlow[sName]=glow
+            end
+        else
+            HealBot_BuffIconGlow[id]=glow
+        end
+    else
+        HealBot_BuffIconGlow[id]=glow
+        if sName then HealBot_BuffIconGlow[sName]=glow end
+    end
+end
+
 function HealBot_Aura_ConfigClassHoT()
     local hbClassHoTwatch=HealBot_Globals.WatchHoT
     for id,_ in pairs(HealBot_Watch_HoT) do
-        HealBot_Watch_HoT[id]=false
+        HealBot_Watch_HoT[id]=nil
+    end
+    for id,_ in pairs(HealBot_BuffIconSet) do
+        HealBot_BuffIconSet[id]=nil
+    end
+    for id,_ in pairs(HealBot_BuffIconGlow) do
+        HealBot_BuffIconGlow[id]=nil
     end
     for xClass,_  in pairs(hbClassHoTwatch) do
         local HealBot_configClassHoTClass=HealBot_Globals.WatchHoT[xClass]
@@ -2885,13 +2929,65 @@ function HealBot_Aura_ConfigClassHoT()
             else
                 HealBot_Aura_ConfigClassAllHoT(id, sName, "A")
             end
+            if HealBot_Globals.HealBot_Custom_Buffs_IconSet[id] then
+                HealBot_Aura_ConfigBuffIconSetId(id, sName, HealBot_Globals.HealBot_Custom_Buffs_IconSet[id])
+            end
+            if HealBot_Globals.HealBot_Custom_Buffs_IconGlow[id] then
+                HealBot_Aura_ConfigBuffIconGlowId(id, sName, HealBot_Globals.HealBot_Custom_Buffs_IconGlow[id])
+            end
         end
-    end
-    for id,_ in pairs(HealBot_Watch_HoT) do
-        if not HealBot_Watch_HoT[id] then HealBot_Watch_HoT[id]=nil end
     end
     HealBot_Aura_setCustomBuffFilterDisabled()
       --HealBot_setCall("HealBot_configClassHoT")
+end
+
+local function HealBot_Aura_ConfigDebuffIconSetId(id, sName, set)
+    if (HealBot_Globals.CustomDebuffIDMethod[id] or 3)<3 then
+        if HealBot_Globals.CustomDebuffIDMethod[id]==2 then
+            if sName then
+                HealBot_DebuffIconSet[sName]=set
+            end
+        else
+            HealBot_DebuffIconSet[id]=set
+        end
+    else
+        HealBot_DebuffIconSet[id]=set
+        if sName then HealBot_DebuffIconSet[sName]=set end
+    end
+end
+
+local function HealBot_Aura_ConfigDebuffIconSetGlow(id, sName, glow)
+    if (HealBot_Globals.CustomDebuffIDMethod[id] or 3)<3 then
+        if HealBot_Globals.CustomDebuffIDMethod[id]==2 then
+            if sName then
+                HealBot_DebuffIconGlow[sName]=glow
+            end
+        else
+            HealBot_DebuffIconGlow[id]=glow
+        end
+    else
+        HealBot_DebuffIconGlow[id]=glow
+        if sName then HealBot_DebuffIconGlow[sName]=glow end
+    end
+end
+
+function HealBot_Aura_ConfigDebuffs()
+    for id,_ in pairs(HealBot_DebuffIconGlow) do
+        HealBot_DebuffIconGlow[id]=nil
+    end
+    for id,_ in pairs(HealBot_DebuffIconSet) do
+        HealBot_DebuffIconSet[id]=nil
+    end
+    for id, _ in pairs(HealBot_Globals.HealBot_Custom_Debuffs) do
+        if HealBot_Globals.HealBot_Custom_Debuffs_IconSet[id] then
+            local sName=GetSpellInfo(id)
+            HealBot_Aura_ConfigDebuffIconSetId(id, sName, HealBot_Globals.HealBot_Custom_Debuffs_IconSet[id])
+        end
+        if HealBot_Globals.HealBot_Custom_Debuffs_IconGlow[id] then
+            local sName=GetSpellInfo(id)
+            HealBot_Aura_ConfigDebuffIconSetGlow(id, sName, HealBot_Globals.HealBot_Custom_Debuffs_IconGlow[id])
+        end
+    end
 end
 
 function HealBot_Aura_ClearGUID(guid)

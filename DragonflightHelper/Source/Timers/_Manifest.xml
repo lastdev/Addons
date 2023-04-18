@@ -1,0 +1,4 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+  <Script file="Mixins\Timers.lua" />
+  <Include file="Timers.xml" />
+</Ui>

@@ -2934,6 +2934,16 @@ local function pAdd(data, simpleChange)
         end
       end
 
+      -- If the aura has a onHide animation we need to cancel it to ensure it's truely hidden now
+      if Private.regions[id] then
+        Private.CancelAnimation(Private.regions[id].region, true, true, true, true, true, true)
+      end
+      if clones[id] then
+        for _, region in pairs(clones[id]) do
+          Private.CancelAnimation(region, true, true, true, true, true, true)
+        end
+      end
+
       Private.ClearAuraEnvironment(id);
       for parent in Private.TraverseParents(data) do
         Private.ClearAuraEnvironment(parent.id);
@@ -3854,10 +3864,14 @@ function WeakAuras.GetAuraInstanceTooltipInfo(unit, auraInstanceId, filter)
     end
     local secondLine = tooltipData and tooltipData.lines[2] -- This is the line we want
     if secondLine then
-      for _, arg in ipairs(secondLine.args) do
-        if arg.field == "leftText" then
-          tooltipText = arg.stringVal or ""
+      if type(secondLine.args) == "table" then
+        for _, arg in ipairs(secondLine.args) do
+          if arg.field == "leftText" then
+            tooltipText = arg.stringVal or ""
+          end
         end
+      elseif secondLine.leftText then
+        tooltipText = secondLine.leftText
       end
     end
     return Private.ParseTooltipText(tooltipText)
@@ -5961,5 +5975,4 @@ do
     return data.regionType == "group" or data.regionType == "dynamicgroup"
   end
 end
-
 

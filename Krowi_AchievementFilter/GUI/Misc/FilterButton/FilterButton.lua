@@ -34,7 +34,7 @@ end
 
 local menu = LibStub("Krowi_Menu-1.0");
 function KrowiAF_AchievementFrameFilterButton_OnMouseDown(self)
-    UIMenuButtonStretchMixin.OnMouseDown(self);
+    -- UIMenuButtonStretchMixin.OnMouseDown(self);
 	PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
 
     -- Reset menu
@@ -93,7 +93,7 @@ function KrowiAF_AchievementFrameFilterButton_OnMouseDown(self)
 
     help:AddFull({Text = addon.L["View Tutorial"], IsTitle = true});
     for i, _ in next, pages do
-        help:AddFull({ Text = (pages[i].IsViewed and "" or "|T132049:0|t") .. string.format(addon.Colors.White, addon.Colors.RemoveColor(pages[i].SubTitle)),
+        help:AddFull({ Text = (pages[i].IsViewed and "" or "|T132049:0|t") .. string.format(addon.Util.Colors.White, addon.Util.Colors.RemoveColor(pages[i].SubTitle)),
                         Func = function()
                             menu:Close();
                             addon.Tutorials.FeaturesTutorial:ShowTutorial(i);

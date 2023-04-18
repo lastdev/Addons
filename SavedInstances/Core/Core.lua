@@ -1,4 +1,4 @@
-local SI, L = unpack(select(2, ...))
+local SI, L = unpack((select(2, ...)))
 
 local QTip = SI.Libs.QTip
 local db
@@ -370,6 +370,7 @@ SI.defaultDB = {
     Currency2118 = true, -- Elemental Overflow
     Currency2122 = true, -- Storm Sigil
     Currency2123 = true, -- Bloody Tokens
+    Currency2167 = true, -- Catalyst Charges
     CurrencyMax = false,
     CurrencyEarned = true,
     CurrencySortName = false,
@@ -2644,6 +2645,8 @@ hoverTooltip.ShowPrimalStormsCoreTooltip = function (cell, arg, ...)
   indicatortip:AddHeader(ClassColorise(t.Class, toonstr), string.format("%d/%d", totalDone, #P.TrackedQuest[index].relatedQuest))
 
   local stringTypeCore = {
+    L["Storm's Fury"],
+    L["Storm Surge"],
     YELLOW_FONT_COLOR_CODE .. L["Earth Core"] .. FONT_COLOR_CODE_CLOSE,
     "|cff42a4f5" .. L["Water Core"] .. FONT_COLOR_CODE_CLOSE,
     "|cffe4f2f5" .. L["Air Core"] .. FONT_COLOR_CODE_CLOSE,
@@ -2756,7 +2759,7 @@ end
 function SI:OnInitialize()
   local versionString = GetAddOnMetadata("SavedInstances", "version")
   --[==[@debug@
-  if versionString == "10.0.10" then
+  if versionString == "10.0.12" then
     versionString = "Dev"
   end
   --@end-debug@]==]

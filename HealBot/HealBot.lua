@@ -88,7 +88,7 @@ HealBot_luVars["showReloadMsg"]=true
 HealBot_luVars["overhealUnit"]="-nil-"
 HealBot_luVars["overhealCastID"]="-nil-"
 HealBot_luVars["ChatMSG"]=""
-HealBot_luVars["ChatNOTIFY"]=0
+HealBot_luVars["ChatNOTIFY"]=1
 HealBot_luVars["pluginThreat"]=false
 HealBot_luVars["pluginTimeToDie"]=false
 HealBot_luVars["adjMaxHealth"]=0
@@ -2282,7 +2282,6 @@ function HealBot_Load()
         HealBot_Timers_Set("SKINS","TextExtraCustomCols")
         HealBot_Timers_Set("SKINS","PowerIndicator")
         HealBot_Timers_Set("AURA","InitAuraData")
-        HealBot_Timers_Set("AURA","ConfigClassHoT")
         HealBot_Timers_Set("LAST","LowManaTrig")
         HealBot_Timers_Set("LAST","CheckFramesOnCombat")
         HealBot_Timers_Set("LAST","LastLoad",0.2)
@@ -2988,6 +2987,28 @@ function HealBot_Update_Skins()
                                 HealBot_Globals.Tooltip_SetAlpha=nil
                             else
                                 HealBot_Globals.Tooltip_Alpha=HealBot_Globals.Tooltip_SetAlphaValue or 1
+                            end
+                        end
+                    end
+                    if tonumber(tPatch)==0 or (tonumber(tPatch)<8 and tonumber(tHealbot)<4) then
+                        for id,_  in pairs(HealBot_Globals.HealBot_Custom_Buffs_IconSet) do
+                            if type(id)=="number" and not HealBot_Globals.HealBot_Custom_Buffs[id] then
+                                HealBot_Globals.HealBot_Custom_Buffs_IconSet[id]=nil
+                            end
+                        end
+                        for id,_  in pairs(HealBot_Globals.HealBot_Custom_Buffs_IconGlow) do
+                            if type(id)=="number" and not HealBot_Globals.HealBot_Custom_Buffs[id] then
+                                HealBot_Globals.HealBot_Custom_Buffs_IconGlow[id]=nil
+                            end
+                        end
+                        for id,_  in pairs(HealBot_Globals.HealBot_Custom_Debuffs_IconSet) do
+                            if type(id)=="number" and not HealBot_Globals.HealBot_Custom_Debuffs[id] then
+                                HealBot_Globals.HealBot_Custom_Debuffs_IconSet[id]=nil
+                            end
+                        end
+                        for id,_  in pairs(HealBot_Globals.HealBot_Custom_Debuffs_IconGlow) do
+                            if type(id)=="number" and not HealBot_Globals.HealBot_Custom_Debuffs[id] then
+                                HealBot_Globals.HealBot_Custom_Debuffs_IconGlow[id]=nil
                             end
                         end
                     end
@@ -6386,8 +6407,23 @@ function HealBot_ToggelFocusMonitor(unit, zone)
       --HealBot_setCall("HealBot_ToggelFocusMonitor")
 end
 
-function HealBot_PlaySound(id)
-    PlaySoundFile(LSM:Fetch('sound',id));
+local hbSounds={}
+hbSounds["TIME"]=0
+hbSounds["CALLBACKTIME"]=0
+function HealBot_PlaySound(id, channel)
+    hbSounds["SOUNDID"]=LSM:Fetch('sound',id)
+    if hbSounds["SOUNDID"] then 
+        if hbSounds["TIME"]<TimeNow then
+                hbSounds["TIME"]=TimeNow+0.5
+                hbSounds["LASTID"]=id
+                hbSounds["CHANNEL"]=channel or "SFX"
+                PlaySoundFile(hbSounds["SOUNDID"], hbSounds["CHANNEL"]); 
+        elseif id~=hbSounds["LASTID"] and hbSounds["CALLBACKTIME"]<TimeNow then
+            hbSounds["DELAY"]=0.01+(hbSounds["TIME"]-TimeNow)
+            hbSounds["CALLBACKTIME"]=TimeNow+hbSounds["DELAY"]
+            C_Timer.After(hbSounds["DELAY"], function() HealBot_PlaySound(id, channel) end)
+        end
+    end
       --HealBot_setCall("HealBot_PlaySound")
 end
 

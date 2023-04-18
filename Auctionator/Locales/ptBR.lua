@@ -134,6 +134,12 @@ L["CONFIG_SELLING_ALL_ITEMS_CATEGORY"] = [=[Vendendo: Todos os itens
 L["CONFIG_SELLING_AUTO_SELECT_NEXT"] = "Selecione automaticamente o próximo item da sua bolsa"
 L["CONFIG_SELLING_AUTO_SELECT_NEXT_TOOLTIP_HEADER"] = "Seleção automática de itens"
 L["CONFIG_SELLING_AUTO_SELECT_NEXT_TOOLTIP_TEXT"] = "Ao postar, selecione automaticamente o próximo item da bolsa."
+--[[Translation missing --]]
+L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER"] = "Select any partial stacks that exist after posting all complete stacks."
+--[[Translation missing --]]
+L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_HEADER"] = "Automatic partial stack selection"
+--[[Translation missing --]]
+L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_TEXT"] = "When posting add the partial stack as the next item to post if it exists. This won't cause any further searches."
 L["CONFIG_SELLING_BAG_SELECT_SHORTCUT"] = "em um item no seu inventório coloca o mesmo na aba de venda."
 L["CONFIG_SELLING_BUY_SHORTCUT"] = "em um leilão de outra pessoa compra o mesmo"
 L["CONFIG_SELLING_CANCEL_SHORTCUT"] = "em um leilão seu cancela o mesmo"

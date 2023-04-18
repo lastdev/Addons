@@ -1,4 +1,4 @@
-## Interface: 100002
+## Interface: 100007
 #@non-debug@
 ## Title: HandyNotes - Broken Shore
 ## Title-deDE: HandyNotes - Verheerte Küste
@@ -15,7 +15,7 @@
 ## Notes-frFR: Description
 ## Notes-koKR: 부서진 해변에 관심 지점을 표시합니다
 ## Notes-ptBR: Mostra os POIs em Costa Partida
-## Notes-ruRU: Показывает точки на Расколотом берегу
+## Notes-ruRU: Показывает достопримечательности на Расколотом берегу
 ## Notes-zhCN: 顯示破碎海滩的 POI 位置
 ## Notes-zhTW: 顯示破碎海岸的 POI 位置
 #@end-non-debug@
@@ -28,12 +28,12 @@
 # ## Notes-zhTW: 顯示破碎海岸的 POI 位置
 #@end-debug@
 ## Author: arith
-## Version: v1.51
+## Version: v1.52
 ## RequiredDeps: HandyNotes
 ## OptionalDeps: LibBabble-SubZone-3.0, !LibUIDropDownMenu
 ## DefaultState: enabled
 ## SavedVariables: HandyNotes_BrokenShoreDB
-## X-Date: 2022-11-19T2:20:41Z
+## X-Date: 2023-03-20T15:18:22Z
 ## X-License: GPLv2
 ## X-Category: Map
 

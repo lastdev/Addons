@@ -1,0 +1,21 @@
+## Interface: 100007
+## Title: HandyNotes: MythicPlus
+## Title-ruRU: HandyNotes: Подземелья М+
+## Version: V100007-2
+## Notes: Dragonflight MythicPlus Notes
+## Notes-ruRU: Заметки к подземельям М+
+## OptionalDeps: Ace3
+## RequiredDeps: HandyNotes
+## SavedVariables: HandyNotes_MythicPlusDB
+## X-Curse-Project-ID: 785031
+
+
+# Locale files
+Locales\enUS.lua
+Locales\frFR.lua
+Locales\ruRU.lua
+Locales\esES.lua
+
+core.lua
+config.lua
+nodes.lua

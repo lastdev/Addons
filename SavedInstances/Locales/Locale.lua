@@ -3,7 +3,7 @@
 -- To help with missing translations please go here:
 local url = "http://www.wowace.com/addons/saved_instances/localization/"
 
-local SI, L = unpack(select(2, ...))
+local SI, L = unpack((select(2, ...)))
 
 -- Lua functions
 local print, format, rawget = print, format, rawget
@@ -244,6 +244,8 @@ Ld["Sorting"] = "Sorting"
 Ld["SOTS"] = "SOTS"
 Ld["Space between categories"] = "Space between categories"
 Ld["Sparks of Life"] = "Sparks of Life"
+Ld["Storm Surge"] = "Storm Surge"
+Ld["Storm's Fury"] = "Storm's Fury"
 Ld["STRT"] = "STRT"
 Ld["TAV"] = "TAV"
 Ld["TD"] = "TD"
@@ -575,6 +577,10 @@ La["SOTS"] = "SOTS"
 La["Space between categories"] = "Espacer les catégories"
 --[[Translation missing --]]
 La["Sparks of Life"] = "Sparks of Life"
+--[[Translation missing --]]
+La["Storm Surge"] = "Storm Surge"
+--[[Translation missing --]]
+La["Storm's Fury"] = "Storm's Fury"
 --[[Translation missing --]]
 La["STRT"] = "STRT"
 --[[Translation missing --]]
@@ -923,6 +929,10 @@ La["Space between categories"] = "Freiraum zwischen Kategorien"
 --[[Translation missing --]]
 La["Sparks of Life"] = "Sparks of Life"
 --[[Translation missing --]]
+La["Storm Surge"] = "Storm Surge"
+--[[Translation missing --]]
+La["Storm's Fury"] = "Storm's Fury"
+--[[Translation missing --]]
 La["STRT"] = "STRT"
 --[[Translation missing --]]
 La["TAV"] = "TAV"
@@ -1211,6 +1221,10 @@ La["Sorting"] = "정렬"
 La["SOTS"] = "폭사"
 La["Space between categories"] = "카테고리 사이에 공백"
 La["Sparks of Life"] = "생명의 불꽃"
+--[[Translation missing --]]
+La["Storm Surge"] = "Storm Surge"
+--[[Translation missing --]]
+La["Storm's Fury"] = "Storm's Fury"
 La["STRT"] = "타자:경이"
 La["TAV"] = "하늘빛"
 La["TD"] = "톨다고르"
@@ -1608,6 +1622,10 @@ La["Space between categories"] = "Espacio entre categorías"
 --[[Translation missing --]]
 La["Sparks of Life"] = "Sparks of Life"
 --[[Translation missing --]]
+La["Storm Surge"] = "Storm Surge"
+--[[Translation missing --]]
+La["Storm's Fury"] = "Storm's Fury"
+--[[Translation missing --]]
 La["STRT"] = "STRT"
 --[[Translation missing --]]
 La["TAV"] = "TAV"
@@ -1693,19 +1711,15 @@ elseif locale == "ruRU" then
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00ЛКМ|r, чтобы показать информацию в отдельном окне"
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "Нажмите на колёсико мышки, чтобы показать информацию о рейдах от Blizzard"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00ПКМ|r, чтобы настроить SavedInstances"
---[[Translation missing --]]
-La["AA"] = "AA"
-La["Abbreviate keystones"] = "Сокращения названия ключей"
+La["AA"] = "АА"
+La["Abbreviate keystones"] = "Сокращение названия ключей"
 La["Abbreviate Mythic keystone dungeon names"] = "Сократить названия эпохальных подземелий"
 La["Account"] = "Аккаунт"
 La["Account Summary"] = "Общая сводка по аккаунту"
 La["AD"] = "АТАЛ"
---[[Translation missing --]]
-La["Aiding the Accord"] = "Aiding the Accord"
---[[Translation missing --]]
-La["Air"] = "Air"
---[[Translation missing --]]
-La["Air Core"] = "Air Core"
+La["Aiding the Accord"] = "Помощь союзу"
+La["Air"] = "Воздух"
+La["Air Core"] = "Воздушное ядро"
 La["Always show"] = "Всегда отображать"
 La["Amathet Reliquary"] = "Реликварий аматетов"
 La["Ambered Coffer"] = "Покрытый янтарем сундук"
@@ -1723,8 +1737,7 @@ La["Bonus rolls"] = "Отслеживать бонусные броски"
 La[ [=[Boss kill information is missing for this lockout.
 This is a Blizzard bug affecting certain old raids.]=] ] = [=[Отсутствует информация об убийстве босса для этого сохранения рейда.
 Это является ошибкой компании Blizzard, затрагивающей некоторые старые рейды.]=]
---[[Translation missing --]]
-La["Bouldron"] = "Bouldron"
+La["Bouldron"] = "Валурон"
 La["BRH"] = "КЧЛ"
 La["Calling Missing"] = "Призыв отсутствует"
 La["Categories"] = "Категории"
@@ -1736,14 +1749,12 @@ La["Combine Emissaries"] = "Объединить эмиссаров"
 La["Combine emissaries of same expansion"] = "Объединить эмиссаров одного и того же дополнения"
 La["Combine LFR"] = "Объединять СПР (LFR)"
 La["Combine World Bosses"] = "Объединять мировых босcов"
---[[Translation missing --]]
-La["Community Feast"] = "Community Feast"
+La["Community Feast"] = "Большое пиршество"
 La["Connected Realms"] = "Соединенные сервера"
 La["COS"] = "КЗ"
 La["Covenant"] = "Ковенант"
 La["Covenant Assaults"] = "Атаки ковенантов"
---[[Translation missing --]]
-La["Crystalus"] = "Crystalus"
+La["Crystalus"] = "Кристалий"
 La["Currency settings"] = "Настройки валюты"
 La["Cursed Coffer"] = "Проклятый сундук"
 La["Daily Quests"] = "Ежедневные задания"
@@ -1754,25 +1765,18 @@ La["Disable mouseover"] = "Откл. отобр. по наведению"
 La["Disable tooltip display on icon mouseover"] = "Отключить отображение подсказки по наведению на иконку"
 La["Display instances in order of recommended level from lowest to highest"] = "Отображать подземелья в порядке рекомендуемого уровня от самого низкого до самого высокого"
 La["Display instances with space inserted between categories"] = "Показывать подземелья с промежутком между категориями"
---[[Translation missing --]]
-La["Disturbed Dirt / Expedition Scout's Pack"] = "Disturbed Dirt / Expedition Scout's Pack"
+La["Disturbed Dirt / Expedition Scout's Pack"] = "Потревоженная почва / Сумка разведчика экспедиции"
 La["Doomwalker"] = "Судьболом"
 La["DOS"] = "ТС"
 La["Dragon of Nightmare"] = "Драконы Кошмара"
---[[Translation missing --]]
-La["Dragonflight Experimentation"] = "Dragonflight Experimentation"
---[[Translation missing --]]
-La["Dragonflight Renown"] = "Dragonflight Renown"
---[[Translation missing --]]
-La["Dragonflight Transmute"] = "Dragonflight Transmute"
+La["Dragonflight Experimentation"] = "Эксперименты Драконьих островов"
+La["Dragonflight Renown"] = "Известность Драконьих островов"
+La["Dragonflight Transmute"] = "Трансмутация Драконьих островов"
 La["Dump quest debugging information"] = "Сохранить отладочную информацию квеста в файле"
 La["Dump time debugging information"] = "Вывести информацию о времени для отладки"
---[[Translation missing --]]
-La["Earth"] = "Earth"
---[[Translation missing --]]
-La["Earth Core"] = "Earth Core"
---[[Translation missing --]]
-La["Emblazion"] = "Emblazion"
+La["Earth"] = "Земля"
+La["Earth Core"] = "Земляное ядро"
+La["Emblazion"] = "Пламенион"
 La["Emissary Missing"] = "Посланники отсутствуют"
 La["Emissary of War"] = "Посланник войны"
 La["Emissary Quests"] = "Задания Посланников"
@@ -1784,38 +1788,28 @@ La["Export"] = "Экспорт"
 La["Extended Lockout - Not yet saved"] = "Продление сохранения - ещё не сохранено"
 La["Facets of Research"] = "Грань исследования (ювелирное дело)"
 La["FH"] = "ГАВАНЬ"
---[[Translation missing --]]
-La["Fire"] = "Fire"
---[[Translation missing --]]
-La["Fire Core"] = "Fire Core"
+La["Fire"] = "Огонь"
+La["Fire Core"] = "Огненное ядро"
 La["Fit to screen"] = "Подогнать под размер экрана"
 La["Flex"] = "Гибкий"
 La["Format large numbers"] = "Формат больших чисел"
---[[Translation missing --]]
-La["Frozion"] = "Frozion"
+La["Frozion"] = "Ледозион"
 La["Full Clear + 1 Mask"] = "Полный проход + 1 Маска"
 La["Full Clear + 2 Masks"] = "Полный проход + 2 Маски"
 La["Full Clear + 3 Masks"] = "Полный проход + 3 Маски"
 La["Full Clear + 4 Masks"] = "Полный проход + 4 Маски"
 La["Full Clear + 5 Masks"] = "Полный проход + 5 Масок"
 La["Full Clear No Masks"] = "Полный проход без масок"
---[[Translation missing --]]
-La["Gaelzion"] = "Gaelzion"
+La["Gaelzion"] = "Шторморон"
 La["GD"] = "ДЕПО"
 La["General settings"] = "Общие настройки"
 La["GMBT"] = "ГАМБИТ"
---[[Translation missing --]]
-La["Grand Hunt"] = "Grand Hunt"
---[[Translation missing --]]
-La["Grand Hunts: Mythic Reward"] = "Grand Hunts: Mythic Reward"
---[[Translation missing --]]
-La["Grand Hunts: Rare Reward"] = "Grand Hunts: Rare Reward"
---[[Translation missing --]]
-La["Grand Hunts: Uncommon Reward"] = "Grand Hunts: Uncommon Reward"
---[[Translation missing --]]
-La["Gravlion"] = "Gravlion"
---[[Translation missing --]]
-La["Grizzlerock"] = "Grizzlerock"
+La["Grand Hunt"] = "Великая охота"
+La["Grand Hunts: Mythic Reward"] = "Великая охота: эпохальная награда"
+La["Grand Hunts: Rare Reward"] = "Великая охота: редкая награда"
+La["Grand Hunts: Uncommon Reward"] = "Великая охота: необычная награда"
+La["Gravlion"] = "Гравлион"
+La["Grizzlerock"] = "Седокамень"
 La["Group"] = "Группировать"
 La["Guild"] = "Гильдия"
 La["HOA"] = "ЧП"
@@ -1826,21 +1820,17 @@ La["Hunt: Death Elementals"] = "Охота: элементали смерти"
 La["Hunt: Shadehounds"] = "Охота: Темные Гончие"
 La["Hunt: Soul Eaters"] = "Охота: Пожиратели Душ"
 La["Hunt: Winged Soul Eaters"] = "Охота: Крылатые пожиратели душ"
---[[Translation missing --]]
-La["Iceblade Trio"] = "Iceblade Trio"
+La["Iceblade Trio"] = "Трио ледяных клинков"
 La["ID"] = "ДОКИ"
 La["Ignore"] = "Игнорировать"
 La["Indicators"] = "Индикаторы"
---[[Translation missing --]]
-La["Infernum"] = "Infernum"
+La["Infernum"] = "Инферн"
 La["Infested Strongbox"] = "Зараженный сундучок"
 La["Instance limit in Broker"] = "Предел подземелий на Расколотых Островах"
 La["Instances"] = "Подземелья"
 La["Interleave"] = "Смешивать в пределах соединенного сервера"
---[[Translation missing --]]
-La["Kain Firebrand"] = "Kain Firebrand"
---[[Translation missing --]]
-La["Karantun"] = "Karantun"
+La["Kain Firebrand"] = "Кайн Жгучее Клеймо"
+La["Karantun"] = "Карантун"
 La["Keystone report target"] = "Цель отчета по ключам"
 La["KR"] = "ГК"
 La["Last updated"] = "Последнее обновление"
@@ -1865,8 +1855,7 @@ La["Mythic Best"] = "Лучший Эпохальный"
 La["Mythic Key Best"] = "Лучший эпохальный ключ"
 La["Mythic Keystone"] = "Эпохальный ключ"
 La["Nathanos Blightcaller"] = "Натанос Гнилостень"
---[[Translation missing --]]
-La["Neela Firebane"] = "Neela Firebane"
+La["Neela Firebane"] = "Нила Гнев Пламени"
 La["Never show"] = "Никогда не отображать"
 La["NL"] = "ЛН"
 La["NW"] = "СТ"
@@ -1877,8 +1866,7 @@ La["Paragon Chests"] = "Сундуки за Репутацию"
 La["Party"] = "Группа"
 La["Patterns Within Patterns"] = "Закономерности в закономерностях"
 La["PF"] = "ЧК"
---[[Translation missing --]]
-La["Pipspark Thundersnap"] = "Pipspark Thundersnap"
+La["Pipspark Thundersnap"] = "Искрописк Громошлепс"
 --[[Translation missing --]]
 La["Primal Storms Core"] = "Primal Storms Core"
 --[[Translation missing --]]
@@ -1891,14 +1879,11 @@ La["Recover Dailies"] = "Восстановление Ежедневных за�
 La["Report instance resets to group"] = "Сообщать группе об обновлении подземелья"
 La["Reset Characters"] = "Сброс персонажей"
 La["Reverse ordering"] = "Обратный порядок"
---[[Translation missing --]]
-La["RLP"] = "RLP"
+La["RLP"] = "РОЖ"
 La["Roll Bonus"] = "Бонусный бросок"
---[[Translation missing --]]
-La["Rouen Icewind"] = "Rouen Icewind"
+La["Rouen Icewind"] = "Руан Ледяной Ветер"
 La["Row Highlight"] = "Подсветка строки"
---[[Translation missing --]]
-La["SBG"] = "SBG"
+La["SBG"] = "НпЛ"
 La["SD"] = "КК"
 La["SEAT"] = "ПТ"
 La["Set All"] = "Установить значение для всех"
@@ -1942,11 +1927,13 @@ La["Sort Order"] = "Порядок сортировки"
 La["Sorting"] = "Сортировка"
 La["SOTS"] = "СШ"
 La["Space between categories"] = "Промежуток между категориями"
+La["Sparks of Life"] = "Искры жизни"
 --[[Translation missing --]]
-La["Sparks of Life"] = "Sparks of Life"
+La["Storm Surge"] = "Storm Surge"
+--[[Translation missing --]]
+La["Storm's Fury"] = "Storm's Fury"
 La["STRT"] = "УЛИЦЫ"
---[[Translation missing --]]
-La["TAV"] = "TAV"
+La["TAV"] = "ЛХ"
 La["TD"] = "ТД"
 La["Text"] = "Текст"
 La["The Four Celestials"] = "Четыре небожителя"
@@ -1956,10 +1943,8 @@ La["This should only be used for characters who have been renamed or deleted, as
 La["Time /played"] = "Общее время игры"
 La["Time Left"] = "Обновится через"
 La["Timeworn Mythic Keystone"] = "Старый ключ"
---[[Translation missing --]]
-La["TJS"] = "TJS"
---[[Translation missing --]]
-La["TNO"] = "TNO"
+La["TJS"] = "ХНЗ"
+La["TNO"] = "НкН"
 La["Tooltip Scale"] = "Масштаб подсказки"
 La["TOP"] = "Театр"
 La["Torghast"] = "Торгаст"
@@ -1971,26 +1956,21 @@ La["Track Timeworn Mythic keystone acquisition"] = "Отслеживать по�
 La["Trade Skill Cooldowns"] = "Восстановление способностей профессий."
 La["Trade skills"] = "Отслеживать восстановление способностей профессий"
 La["Transmute"] = "Трансмутация (алхимия)"
---[[Translation missing --]]
-La["Trial of Elements"] = "Trial of Elements"
---[[Translation missing --]]
-La["Trial of Flood"] = "Trial of Flood"
+La["Trial of Elements"] = "Испытание стихий"
+La["Trial of Flood"] = "Испытание наводнения"
 La["Type"] = "Тип"
 La["UNDR"] = "ПОДГН"
 La["UPPR"] = "ВЕРХ"
 La["Use class color"] = "Цвет класса"
 La["Vision Boss + 2 Bonus Objectives"] = "Босс Видения + 2 Бонусных цели"
 La["Vision Boss Only"] = "Только Босс Видения"
---[[Translation missing --]]
-La["Voraazka"] = "Voraazka"
+La["Voraazka"] = "Вораазка"
 La["VOTW"] = "КС"
 La["Warfronts"] = "Фронты"
 La["Warn about instance limit"] = "Предупреждать о пределе подземелий"
 La["Warning: You've entered about %i instances recently and are approaching the %i instance per hour limit for your account. More instances should be available in %s."] = "Внимание! За последнее время Вы вошли в %i подземелий и приближаетесь к ограничению в \"%i подземелий в час\" для Вашего аккаунта. Новые подземелья будут доступны через %s."
---[[Translation missing --]]
-La["Water"] = "Water"
---[[Translation missing --]]
-La["Water Core"] = "Water Core"
+La["Water"] = "Вода"
+La["Water Core"] = "Водяное ядро"
 La["Weekly Quests"] = "Еженедельные задания"
 La["Wild Transmute"] = "Дикая трансмутация"
 La["WM"] = "УУ"
@@ -2000,8 +1980,7 @@ La["World Bosses"] = "Мировые боcсы"
 La["Wrath of the Jailer"] = "Гнев Тюремщика"
 La["YARD"] = "СВАЛКА"
 La["You can combine icons and text in a single indicator if you wish. Simply choose an icon, and insert the word ICON into the text field. Anywhere the word ICON is found, the icon you chose will be substituted in."] = "Вы можете комбинировать иконки и текст в одном индикаторе. Выберите иконку и вставьте слово ICON в текстовое поле. Слово ICON будет автоматически заменено на выбранную иконку."
---[[Translation missing --]]
-La["Zurgaz Corebreaker"] = "Zurgaz Corebreaker"
+La["Zurgaz Corebreaker"] = "Зургаз Разрушительница Недр"
 
 elseif locale == "zhCN" then
   La["|cffffff00Click|r to open weekly rewards"] = "|cffffff00点击|r 显示每周奖励"
@@ -2223,6 +2202,10 @@ La["Sorting"] = "排序"
 La["SOTS"] = "风暴"
 La["Space between categories"] = "显示分类间距"
 La["Sparks of Life"] = "生命火花"
+--[[Translation missing --]]
+La["Storm Surge"] = "Storm Surge"
+--[[Translation missing --]]
+La["Storm's Fury"] = "Storm's Fury"
 La["STRT"] = "天街"
 La["TAV"] = "魔馆"
 La["TD"] = "托尔"
@@ -2574,6 +2557,10 @@ La["Space between categories"] = "Espacio entre categorías"
 --[[Translation missing --]]
 La["Sparks of Life"] = "Sparks of Life"
 --[[Translation missing --]]
+La["Storm Surge"] = "Storm Surge"
+--[[Translation missing --]]
+La["Storm's Fury"] = "Storm's Fury"
+--[[Translation missing --]]
 La["STRT"] = "STRT"
 --[[Translation missing --]]
 La["TAV"] = "TAV"
@@ -2827,8 +2814,7 @@ La["PF"] = "瘟疫"
 --[[Translation missing --]]
 La["Pipspark Thundersnap"] = "Pipspark Thundersnap"
 La["Primal Storms Core"] = "元素風暴核心"
---[[Translation missing --]]
-La["Primal Storms Elementals"] = "Primal Storms Elementals"
+La["Primal Storms Elementals"] = "洪荒風暴元素"
 La["Quest progresses"] = "任務進度"
 La["Raids before dungeons"] = "團隊在地城之前"
 La["Recent Bonus Rolls"] = "最近的額外骰子"
@@ -2888,8 +2874,11 @@ La["Sorting"] = "排序"
 --[[Translation missing --]]
 La["SOTS"] = "SOTS"
 La["Space between categories"] = "分類間距"
+La["Sparks of Life"] = "生命火花"
 --[[Translation missing --]]
-La["Sparks of Life"] = "Sparks of Life"
+La["Storm Surge"] = "Storm Surge"
+--[[Translation missing --]]
+La["Storm's Fury"] = "Storm's Fury"
 La["STRT"] = "街道"
 --[[Translation missing --]]
 La["TAV"] = "TAV"
@@ -3277,6 +3266,10 @@ La["SOTS"] = "SOTS"
 La["Space between categories"] = "Espaço entre as categorias"
 --[[Translation missing --]]
 La["Sparks of Life"] = "Sparks of Life"
+--[[Translation missing --]]
+La["Storm Surge"] = "Storm Surge"
+--[[Translation missing --]]
+La["Storm's Fury"] = "Storm's Fury"
 --[[Translation missing --]]
 La["STRT"] = "STRT"
 --[[Translation missing --]]
@@ -3699,6 +3692,10 @@ La["SOTS"] = "SOTS"
 La["Space between categories"] = "Spazio tra le categorie"
 --[[Translation missing --]]
 La["Sparks of Life"] = "Sparks of Life"
+--[[Translation missing --]]
+La["Storm Surge"] = "Storm Surge"
+--[[Translation missing --]]
+La["Storm's Fury"] = "Storm's Fury"
 --[[Translation missing --]]
 La["STRT"] = "STRT"
 --[[Translation missing --]]

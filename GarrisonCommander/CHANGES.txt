@@ -1,0 +1,12 @@
+tag 8bfda9b3966f0b53ec6e5d7294332ee2fd90c8cf 3.5.2
+Author:	Alar of Runetotem <alar@aspide.it>
+Date:	Tue Apr 4 20:19:27 2023 +0200
+
+3.5.2
+
+commit 43256ce5f969b6af961134ef928bf63e64bedd52
+Author: Alar of Runetotem <alar@aspide.it>
+Date:   Tue Apr 4 20:18:48 2023 +0200
+
+    Removed debug message
+

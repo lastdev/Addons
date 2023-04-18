@@ -128,6 +128,12 @@ L["CONFIG_SELLING_ALL_ITEMS_CATEGORY"] = "판매: 모든 아이템"
 L["CONFIG_SELLING_AUTO_SELECT_NEXT"] = "경매 시작시 다음 아이템을 선택"
 L["CONFIG_SELLING_AUTO_SELECT_NEXT_TOOLTIP_HEADER"] = "자동 아이템 선택"
 L["CONFIG_SELLING_AUTO_SELECT_NEXT_TOOLTIP_TEXT"] = "경매 시작시 가방에 있는 다음 아이템을 자동으로 선택합니다."
+--[[Translation missing --]]
+L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER"] = "Select any partial stacks that exist after posting all complete stacks."
+--[[Translation missing --]]
+L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_HEADER"] = "Automatic partial stack selection"
+--[[Translation missing --]]
+L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_TEXT"] = "When posting add the partial stack as the next item to post if it exists. This won't cause any further searches."
 L["CONFIG_SELLING_BAG_SELECT_SHORTCUT"] = "판매하기 탭으로 바로가기"
 L["CONFIG_SELLING_BUY_SHORTCUT"] = "본인것이 아닐 경우 즉시구매"
 L["CONFIG_SELLING_CANCEL_SHORTCUT"] = "본인것이면 경매 취소"

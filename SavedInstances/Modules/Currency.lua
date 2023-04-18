@@ -1,4 +1,4 @@
-local SI, L = unpack(select(2, ...))
+local SI, L = unpack((select(2, ...)))
 local Module = SI:NewModule('Currency', 'AceEvent-3.0', 'AceTimer-3.0', 'AceBucket-3.0')
 
 -- Lua functions
@@ -90,6 +90,7 @@ local currency = {
   2118, -- Elemental Overflow
   2122, -- Storm Sigil
   2123, -- Bloody Tokens
+  2167, -- Catalyst Charges
 }
 SI.currency = currency
 
@@ -103,6 +104,10 @@ table.sort(currencySorted, function (c1, c2)
   return c1_name < c2_name
 end)
 SI.currencySorted = currencySorted
+
+local hiddenCurrency = {
+  [2167] = true, -- Catalyst Charges
+}
 
 local specialCurrency = {
   [1129] = { -- WoD - Seal of Tempered Fate
@@ -174,12 +179,15 @@ end
 
 function Module:UpdateCurrency()
   if SI.logout then return end -- currency is unreliable during logout
+
   local t = SI.db.Toons[SI.thisToon]
   t.Money = GetMoney()
   t.currency = t.currency or {}
+
+  local covenantID = C_Covenants_GetActiveCovenantID()
   for _,idx in ipairs(currency) do
     local data = C_CurrencyInfo_GetCurrencyInfo(idx)
-    if not data.discovered then
+    if not data.discovered and not hiddenCurrency[idx] then
       t.currency[idx] = nil
     else
       local ci = t.currency[idx] or {}
@@ -191,7 +199,6 @@ function Module:UpdateCurrency()
         ci.totalEarned = data.totalEarned
       end
       -- handle special currency
-      local covenantID = C_Covenants_GetActiveCovenantID()
       if specialCurrency[idx] then
         local tbl = specialCurrency[idx]
         if tbl.weeklyMax then ci.weeklyMax = tbl.weeklyMax end
@@ -219,6 +226,9 @@ function Module:UpdateCurrency()
           ci.covenant = ci.covenant or {}
           ci.covenant[covenantID] = ci.amount
         end
+      elseif idx == 2167 then -- Catalyst Charges
+        ci.weeklyMax = nil
+        ci.earnedThisWeek = nil
       end
       -- don't store useless info
       if ci.weeklyMax == 0 then ci.weeklyMax = nil end

@@ -3,12 +3,21 @@
     xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 
 	<SimpleHTML name="TomCats_HTML_Welcome" file="Interface\AddOns\TomCats\options\Welcome.html" virtual="true">
-		<FontString inherits="GameFontHighlight" justifyH="LEFT" spacing="1" />
+		<FontString inherits="Game15Font" justifyH="LEFT" spacing="3" />
+	</SimpleHTML>
+
+	<SimpleHTML name="TomCats_HTML_Contact" file="Interface\AddOns\TomCats\options\Contact.html" virtual="true">
+		<FontString inherits="GameFontHighlight" justifyH="LEFT" spacing="3" />
+	</SimpleHTML>
+
+	<SimpleHTML name="TomCats_HTML_Features" file="Interface\AddOns\TomCats\options\Features.html" virtual="true">
+		<FontString inherits="GameFontHighlight" justifyH="LEFT" spacing="3" indented="true"/>
 	</SimpleHTML>
 
 	<Include file="options\Home.lua" />
 	<Include file="options\Header.lua" />
-	<Include file="options\ScrollBox.lua" />
 	<Include file="options\LinkButton.lua" />
+	<Include file="options\Popup.lua" />
+	<Include file="options\ScrollBox.lua" />
 
 </Ui>

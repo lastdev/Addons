@@ -1,5 +1,5 @@
 ## Interface: 100007
-## Version: 2.15
+## Version: 3.01
 ## Title: Dark Soil Tillers
 ## Title-deDE: Dunkle Erde Die Ackerbauern
 ## Title-esES: Los Labradores Tierra Oscura
@@ -30,6 +30,7 @@
 ## X-WoWI-ID: 26072
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_DarkSoilDB
+## OptionalDeps: HandyNotes_APathLessTravelled, HandyNotes_EA-Pandaria
 
 Core.lua
 Data.lua

@@ -783,6 +783,76 @@ GTFO.SpellID["405230"] = {
   sound = 3;
 };
 
+GTFO.SpellID["403371"] = {
+  --desc = "Expel (Expulsion Drone)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["404781"] = {
+  --desc = "Crash Course (Grugoth the Hullcrusher)";
+  sound = 3;
+  tankSound = 0;
+};
+
+GTFO.SpellID["324511"] = {
+  --desc = "Slime Wave (Experimental Misstep)";
+  sound = 3;
+};
+
+GTFO.SpellID["405617"] = {
+  --desc = "Coin Shower (Animated Riches)";
+  sound = 3;
+};
+
+GTFO.SpellID["404710"] = {
+  --desc = "Lightning Storm (Jamoku)";
+  sound = 3;
+};
+
+GTFO.SpellID["404601"] = {
+  --desc = "Storm Stomp (Jamoku)";
+  sound = 3;
+};
+
+GTFO.SpellID["405347"] = {
+  --desc = "Cave In (Gahz'raxes)";
+  tankSound = 0;
+  sound = 3;
+};
+
+GTFO.SpellID["400159"] = {
+  --desc = "Wing Shredder (Vraken the Hunter)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["400344"] = {
+  --desc = "Spike Traps (Vraken the Hunter)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["405416"] = {
+  --desc = "Chilling Wave (Lady Shaz'ra)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["403169"] = {
+  --desc = "Judgement Wave (Ishyra)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["401455"] = {
+  --desc = "Obsidian Blast";
+  applicationOnly = true;
+  sound = 3;
+  negatingBuffSpellID = 396787; -- Protective Ward of Flames
+};
+
+
 --- *******************
 --- * Ruby Life Pools *
 --- *******************
@@ -1766,6 +1836,104 @@ GTFO.SpellID["385073"] = {
   applicationOnly = true;
   sound = 3;
 };
+
+--- **********************************
+--- * Aberrus, the Shadowed Crucible *
+--- **********************************
+
+GTFO.SpellID["408619"] = {
+  --desc = "Fire Pillar (Sundered Devastator)";
+  sound = 3;
+};
+
+GTFO.SpellID["402461"] = {
+  --desc = "Hellsteel Fragment (Kazzara, the Hellforged)";
+  sound = 3;
+};
+
+GTFO.SpellID["404789"] = {
+  --desc = "Revenant's Blood (Kazzara, the Hellforged)";
+  sound = 3;
+};
+
+GTFO.SpellID["406860"] = {
+  --desc = "Arcane Chaos (Sundered Arcanist)";
+  sound = 3;
+};
+
+GTFO.SpellID["411917"] = {
+  --desc = "Dreadfire Emission (Sundered Devourer)";
+  sound = 3;
+};
+
+GTFO.SpellID["411908"] = {
+  --desc = "Flame Canister (Sundered Chemist)";
+  sound = 3;
+};
+
+GTFO.SpellID["408947"] = {
+  --desc = "Cleansing Breath (Sundered Preserver)";
+  sound = 3;
+  tankSound = 0;
+};
+
+GTFO.SpellID["408714"] = {
+  --desc = "Splintered Flames (Eternal Blaze)";
+  sound = 3;
+};
+
+GTFO.SpellID["404910"] = {
+  --desc = "Swirling Flame (Eternal Blaze)";
+  sound = 3;
+};
+
+GTFO.SpellID["408717"] = {
+  --desc = "Splintered Shadow (Essence of Shadow)";
+  sound = 3;
+};
+
+GTFO.SpellID["405704"] = {
+  --desc = "Swirling Shadowflame (Shadowflame Amalgamation)";
+  sound = 3;
+};
+
+GTFO.SpellID["406783"] = {
+  --desc = "Shadowflame Burst (Shadowflame Amalgamation)";
+  sound = 3;
+  tankSound = 0;
+};
+
+GTFO.SpellID["404472"] = {
+  --desc = "Massive Slam (Neldris)";
+  sound = 3;
+};
+
+GTFO.SpellID["407733"] = {
+  --desc = "Massive Slam (Neldris)";
+  sound = 3;
+};
+
+GTFO.SpellID["405599"] = {
+  --desc = "Volatile Spew (Thadrion)";
+  sound = 3;
+};
+
+GTFO.SpellID["405601"] = {
+  --desc = "Volatile Spew (Thadrion)";
+  sound = 3;
+};
+
+GTFO.SpellID["408462"] = {
+  --desc = "Unstable Essence (Thadrion)";
+  sound = 3;
+};
+
+GTFO.SpellID["406233"] = {
+  --desc = "Deep Breath (Rionthus)";
+  applicationOnly = true;
+  sound = 3;
+};
+
 
 end
 

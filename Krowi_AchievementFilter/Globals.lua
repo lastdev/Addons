@@ -454,11 +454,15 @@ end
 --     end);
 -- end
 
-function addon.HookAchievementFrameOnShow()
+function addon.HookFunctions()
     hooksecurefunc(AchievementFrame, "Show", function()
         addon.Data.GetCurrentZoneAchievements();
     end);
 
+    if addon.IsDragonflightRetail then
+        hooksecurefunc("AchievementFrame_SetComparisonTabs", addon.GUI.ShowHideTabs);
+    end
+    
     -- local funcName = addon.IsWrathClassic and "PanelTemplates_SetTab" or "AchievementFrame_SetTabs";
     -- if addon.IsWrathClassic then
     --     hooksecurefunc("PanelTemplates_SetTab", AchievementFrame_SetTabs);
@@ -549,10 +553,6 @@ function addon.ReplaceVarsWithReloadReq(str, vars)
     end
     vars["reloadRequired"] = addon.L["Requires a reload"];
     return addon.Util.ReplaceVars(str, vars);
-end
-
-string["InjectAddonName"] = function(str)
-    return str:ReplaceVars{addonName = addon.MetaData.Title};
 end
 
 function addon.GetAchievementInfo(achievementID) -- Returns an additional bool indicating if the achievement is added to the game yet or not

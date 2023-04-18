@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod(2527, "DBM-Aberrus", nil, 1208)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230323034838")
+mod:SetRevision("20230411014105")
 mod:SetCreatureID(201579)
 mod:SetEncounterID(2683)
---mod:SetUsedIcons(1, 2, 3)
-mod:SetHotfixNoticeRev(20230322000000)
+mod:SetUsedIcons(1, 2, 3)
+mod:SetHotfixNoticeRev(20230410000000)
 --mod:SetMinSyncRevision(20221215000000)
 --mod.respawnTime = 29
 
@@ -13,23 +13,23 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 408358 402989 403740 403671 409093 402344 404846",
---	"SPELL_CAST_SUCCESS",
-	"SPELL_AURA_APPLIED 408839 407879 408955",
+	"SPELL_AURA_APPLIED 408839 407879 408955 402994 411633 406712",
 	"SPELL_AURA_APPLIED_DOSE 408839 408955",
-	"SPELL_AURA_REMOVED 408839 407879"
---	"SPELL_PERIODIC_DAMAGE",
---	"SPELL_PERIODIC_MISSED",
---	"UNIT_DIED"
---	"UNIT_SPELLCAST_SUCCEEDED boss1"
+	"SPELL_AURA_REMOVED 408839 407879 402994",
+	"SPELL_PERIODIC_DAMAGE 411633 406712",
+	"SPELL_PERIODIC_MISSED 411633 406712",
+	"UNIT_POWER_UPDATE boss1"
 )
 
 --[[
-
+(ability.id = 408358 or ability.id = 402989 or ability.id = 403740 or ability.id = 403671 or ability.id = 409093 or ability.id = 402344 or ability.id = 404846) and type = "begincast"
+ or ability.id = 407879 and (type = "applybuff" or type = "removebuff")
 --]]
---TODO, dynamic energy calculation for accurate Catastrophic timer. Since energy rate changes based on puddles this would have to be a near constant check
+--TODO, dynamic energy calculation for accurate Catastrophic timer needs verification
+--TODO, the way timers are sequenced assumes doing fight with no mistakes. If tantrums are triggered, it can make timers wrong rest of fight.
+--However, doing timers the way they are done is most accurate if people don't do fight wrong., so may just tell users "do fight correctly 5head" that complain instead of using complicated updateAllTimers methods just to work around player mistakes
 --TODO, fine tune personal stack alerts
---TODO, nani? https://www.wowhead.com/ptr/spell=401522/incinerating-maws
-local warnMoltenSpittle								= mod:NewCountAnnounce(402989, 2)
+local warnMoltenSpittle								= mod:NewTargetCountAnnounce(402989, 2)
 local warnIncineratingMaws							= mod:NewStackAnnounce(404846, 2, nil, "Tank|Healer")
 
 local specWarnCatastrophicEruption					= mod:NewSpecialWarningSpell(408358, nil, nil, nil, 3, 2)
@@ -37,33 +37,35 @@ local specWarnHeatStacks							= mod:NewSpecialWarningStack(408839, nil, 12, nil
 local specWarnBlazingTantrum						= mod:NewSpecialWarningMove(407879, "Tank", nil, nil, 1, 2)
 local specWarnIgnitingRoar							= mod:NewSpecialWarningCount(403740, nil, nil, nil, 2, 2)
 local specWarnOverpoweringStomp						= mod:NewSpecialWarningCount(403671, nil, nil, nil, 2, 2)
---local yellFlamerift								= mod:NewShortYell(390715)
---local yellFlameriftFades							= mod:NewShortFadesYell(390715)
+local specWarnMoltenSpittle							= mod:NewSpecialWarningYou(402989, nil, nil, nil, 1, 2)
+local yellMoltenSpittle								= mod:NewShortPosYell(402989)
+local yellMoltenSpittleFades						= mod:NewIconFadesYell(402989)
 local specWarnBlazingBreath							= mod:NewSpecialWarningDodge(409238, nil, nil, nil, 2, 2)
 local specWarnIncineratingMaws						= mod:NewSpecialWarningStack(404846, nil, 2, nil, nil, 1, 6)
 local specWarnIncineratingMawsSwap					= mod:NewSpecialWarningTaunt(404846, nil, nil, nil, 1, 2)
---local specWarnGTFO								= mod:NewSpecialWarningGTFO(370648, nil, nil, nil, 1, 8)
+local specWarnGTFO									= mod:NewSpecialWarningGTFO(411633, nil, nil, nil, 1, 8)
 
---local timerCatastrophicCD							= mod:NewAITimer(28.9, 408358, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
-local timerMoltenSpittleCD							= mod:NewAITimer(29.9, 402989, nil, nil, nil, 3)
-local timerIngitingRoarCD							= mod:NewAITimer(28.9, 403740, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)
-local timerOverpoweringStompCD						= mod:NewAITimer(28.9, 403671, nil, nil, nil, 2)
-local timerBlazingBreathCD							= mod:NewAITimer(29.9, 409238, nil, nil, nil, 3)
-local timerIncineratingMawsCD						= mod:NewAITimer(28.9, 404846, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerCatastrophicCD							= mod:NewCDTimer(28.9, 408358, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
+local timerMoltenSpittleCD							= mod:NewCDCountTimer(29.9, 402989, nil, nil, nil, 3)
+local timerIngitingRoarCD							= mod:NewCDCountTimer(28.9, 403740, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)
+local timerOverpoweringStompCD						= mod:NewCDCountTimer(101.7, 403671, nil, nil, nil, 2)
+local timerBlazingBreathCD							= mod:NewCDCountTimer(29.9, 409238, nil, nil, nil, 3)
+local timerIncineratingMawsCD						= mod:NewCDCountTimer(20, 404846, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
 --local berserkTimer								= mod:NewBerserkTimer(600)
 
 mod:AddInfoFrameOption(408839, true)
 --mod:AddRangeFrameOption(5, 390715)
---mod:AddSetIconOption("SetIconOnMagneticCharge", 399713, true, 0, {4})
+mod:AddSetIconOption("SetIconOnMoltenSpittle", 402989, true, 0, {1, 2, 3})
 mod:AddNamePlateOption("NPAuraOnTantrum", 407879)
---mod:GroupSpells(390715, 396094)
 
 local heatStacks = {}
 mod.vb.spitCount = 0
 mod.vb.roarCount = 0
 mod.vb.stompCount = 0
 mod.vb.breathCount = 0
+mod.vb.mawCount = 0
+mod.vb.spitIcon = 1
 
 function mod:OnCombatStart(delay)
 	table.wipe(heatStacks)
@@ -71,11 +73,22 @@ function mod:OnCombatStart(delay)
 	self.vb.roarCount = 0
 	self.vb.stompCount = 0
 	self.vb.breathCount = 0
-	timerMoltenSpittleCD:Start(1-delay)
-	timerIngitingRoarCD:Start(1-delay)
-	timerOverpoweringStompCD:Start(1-delay)
-	timerBlazingBreathCD:Start(1-delay)
-	timerIncineratingMawsCD:Start(1-delay)
+	self.vb.mawCount = 0
+	self.vb.spitIcon = 1
+	if self:IsEasy() then
+		timerIngitingRoarCD:Start(8.9-delay, 1)
+		timerMoltenSpittleCD:Start(16.6-delay, 1)
+		timerIncineratingMawsCD:Start(22.2-delay, 1)
+		timerBlazingBreathCD:Start(33.3-delay, 1)
+		timerOverpoweringStompCD:Start(76.7,-delay, 1)
+	else
+		timerIngitingRoarCD:Start(4.9-delay, 1)
+		timerMoltenSpittleCD:Start(12.9-delay, 1)
+		timerIncineratingMawsCD:Start(19.9-delay, 1)
+		timerBlazingBreathCD:Start(25.9-delay, 1)
+		timerOverpoweringStompCD:Start(68.9-delay, 1)
+	end
+	timerCatastrophicCD:Start(340-delay)
 	if self.Options.NPAuraOnTantrum then
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
 	end
@@ -98,7 +111,6 @@ function mod:OnCombatEnd()
 	end
 end
 
-
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 408358 then
@@ -106,36 +118,100 @@ function mod:SPELL_CAST_START(args)
 		specWarnCatastrophicEruption:Play("stilldanger")
 	elseif spellId == 402989 then
 		self.vb.spitCount = self.vb.spitCount + 1
-		warnMoltenSpittle:Show(self.vb.spitCount)
-		timerMoltenSpittleCD:Start()
+		self.vb.spitIcon = 1
+		--16.6, 40.0, 41.1, 32.2, 40.0, 41.1, 32.3, 40.0, 41.1
+		if self:IsEasy() then
+			if self.vb.spitCount % 3 == 1 then
+				timerMoltenSpittleCD:Start(40, self.vb.spitCount+1)
+			elseif self.vb.spitCount % 3 == 0 then
+				timerMoltenSpittleCD:Start(32, self.vb.spitCount+1)
+			else
+				timerMoltenSpittleCD:Start(41, self.vb.spitCount+1)
+			end
+		else
+			--13.0, 24.0, 26.0, 25.0, 27.0, 24.0, 26.0, 25.0, 27.0, 24.0, 26.0, 25.0, 27.0
+			if self.vb.spitCount % 4 == 0 then
+				timerMoltenSpittleCD:Start(26.9, self.vb.spitCount+1)
+			elseif self.vb.spitCount % 4 == 3 then
+				timerMoltenSpittleCD:Start(25, self.vb.spitCount+1)
+			elseif self.vb.spitCount % 4 == 2 then
+				timerMoltenSpittleCD:Start(25.9, self.vb.spitCount+1)
+			else
+				timerMoltenSpittleCD:Start(24, self.vb.spitCount+1)
+			end
+		end
 	elseif spellId == 403740 then
 		self.vb.roarCount = self.vb.roarCount + 1
 		specWarnIgnitingRoar:Show(self.vb.roarCount)
 		specWarnIgnitingRoar:Play("aesoon")
-		timerIngitingRoarCD:Start()
+		if self:IsEasy() then
+			--8.9, 40.0, 44.4, 28.9, 40.0, 44.5, 28.9, 40.0, 44.4
+			if self.vb.roarCount % 3 == 0 then
+				timerIngitingRoarCD:Start(28.9, self.vb.roarCount+1)
+			elseif self.vb.roarCount % 2 == 0 then
+				timerIngitingRoarCD:Start(44.4, self.vb.roarCount+1)
+			else
+				timerIngitingRoarCD:Start(40, self.vb.roarCount+1)
+			end
+		else
+			--5.0, 40.0, 39.0, 23.0, 40.0, 39.0, 23.0, 40.0, 39.0, 23.0
+			if self.vb.roarCount % 3 == 0 then
+				timerIngitingRoarCD:Start(23, self.vb.roarCount+1)
+			elseif self.vb.roarCount % 2 == 0 then
+				timerIngitingRoarCD:Start(39, self.vb.roarCount+1)
+			else
+				timerIngitingRoarCD:Start(40, self.vb.roarCount+1)
+			end
+		end
 	elseif spellId == 403671 then
 		self.vb.stompCount = self.vb.stompCount + 1
 		specWarnOverpoweringStomp:Show(self.vb.stompCount)
 		specWarnOverpoweringStomp:Play("carefly")
-		timerOverpoweringStompCD:Start()
-	elseif spellId == 409093 or spellId == 402344 then
+		timerOverpoweringStompCD:Start(self:IsEasy() and 113.3 or 101.7, self.vb.stompCount+1)
+	elseif spellId == 409093 or spellId == 402344 then--409093 confirmed for heroic/normal, 402344 unknown
 		self.vb.breathCount = self.vb.breathCount + 1
 		specWarnBlazingBreath:Show(self.vb.breathCount)
 		specWarnBlazingBreath:Play("breathsoon")
-		timerBlazingBreathCD:Start()
+		if self:IsEasy() then
+			--33.3, 27.8, 42.2, 43.3, 27.8, 42.2, 43.4, 27.8, 42.2
+			if self.vb.breathCount % 3 == 0 then
+				timerBlazingBreathCD:Start(43.3, self.vb.breathCount+1)
+			elseif self.vb.breathCount % 3 == 2 then
+				timerBlazingBreathCD:Start(42.2, self.vb.breathCount+1)
+			else
+				timerBlazingBreathCD:Start(27.8, self.vb.breathCount+1)
+			end
+		else
+			--26.0, 28.0, 41.0, 33.0, 28.0, 41.0, 33.0, 28.0, 41.0
+			if self.vb.breathCount % 3 == 0 then
+				timerBlazingBreathCD:Start(33, self.vb.breathCount+1)
+			elseif self.vb.breathCount % 3 == 2 then
+				timerBlazingBreathCD:Start(41, self.vb.breathCount+1)
+			else
+				timerBlazingBreathCD:Start(28, self.vb.breathCount+1)
+			end
+		end
 	elseif spellId == 404846 then
-		timerIncineratingMawsCD:Start()
+		self.vb.mawCount = self.vb.mawCount + 1
+		if self:IsEasy() then
+			--22.2, 22.3, 22.2, 22.2, 22.2, 24.8, 21.8, 22.3, 22.2, 22.2, 24.5, 22.2, 22.3, 22.2
+			if self.vb.mawCount % 5 == 0 then
+				timerIncineratingMawsCD:Start(24.5, self.vb.mawCount+1)
+			else
+				timerIncineratingMawsCD:Start(22.2, self.vb.mawCount+1)
+			end
+		else
+			--20.0, 20.0, 20.0, 20.0, 42.0, 20.0, 20.0, 20.0, 20.0, 22.0, 20.0, 20.0, 20.0
+			--20.2, 19.7, 20.0, 20.0, 42.0, 20.0, 20.0, 20.0, 42.1, 20.0, 20.0, 20.0
+			--19.9, 20.0, 20.0, 20.0, 42.0, 20.0, 20.0, 20.0
+--			if self.vb.mawCount % 4 == 0 then--accurate one pull but not another
+--				timerIncineratingMawsCD:Start(42, self.vb.mawCount+1)
+--			else
+				timerIncineratingMawsCD:Start(20, self.vb.mawCount+1)
+--			end
+		end
 	end
 end
-
---[[
-function mod:SPELL_CAST_SUCCESS(args)
-	local spellId = args.spellId
-	if spellId == 394917 then
-
-	end
-end
---]]
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
@@ -159,21 +235,39 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 408955 then
 		local amount = args.amount or 1
-		if amount >= 2 then
-			if args:IsPlayer() then
-				specWarnIncineratingMaws:Show(amount)
-				specWarnIncineratingMaws:Play("stackhigh")
-			else
-				if not DBM:UnitDebuff("player", spellId) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
-					specWarnIncineratingMawsSwap:Show(args.destName)
-					specWarnIncineratingMawsSwap:Play("tauntboss")
+		if amount % 3 == 0 then--Boss applies 3 stacks per cast
+			if amount >= 6 then--And you pretty much swap every other cast
+				if args:IsPlayer() then
+					specWarnIncineratingMaws:Show(amount)
+					specWarnIncineratingMaws:Play("stackhigh")
 				else
-					warnIncineratingMaws:Show(args.destName, amount)
+					if not DBM:UnitDebuff("player", spellId) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
+						specWarnIncineratingMawsSwap:Show(args.destName)
+						specWarnIncineratingMawsSwap:Play("tauntboss")
+					else
+						warnIncineratingMaws:Show(args.destName, amount)
+					end
 				end
+			else
+				warnIncineratingMaws:Show(args.destName, amount)
 			end
-		else
-			warnIncineratingMaws:Show(args.destName, amount)
 		end
+	elseif spellId == 402994 then
+		local icon = self.vb.spitIcon
+		if self.Options.SetIconOnMoltenSpittle then
+			self:SetIcon(args.destName, icon)
+		end
+		if args:IsPlayer() then
+			specWarnMoltenSpittle:Show()
+			specWarnMoltenSpittle:Play("targetyou")
+			yellMoltenSpittle:Yell(icon, icon)
+			yellMoltenSpittleFades:Countdown(spellId, nil, icon)
+		end
+		warnMoltenSpittle:CombinedShow(0.3, self.vb.spitCount, args.destName)
+		self.vb.spitIcon = self.vb.spitIcon + 1
+	elseif (spellId == 406712 or spellId == 411633) and args:IsPlayer() and self:AntiSpam(3, 2) then
+		specWarnGTFO:Show(args.spellName)
+		specWarnGTFO:Play("watchfeet")
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -189,29 +283,33 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.Options.NPAuraOnTantrum then
 			DBM.Nameplate:Hide(true, args.destGUID, spellId)
 		end
+	elseif spellId == 402994 then
+		if self.Options.SetIconOnMoltenSpittle then
+			self:SetIcon(args.destName, 0)
+		end
+		if args:IsPlayer() then
+			yellMoltenSpittleFades:Cancel()
+		end
 	end
 end
 
+do
+	local lastPower = 0
+	function mod:UNIT_POWER_UPDATE(uId)
+		local bossPower = UnitPower(uId) --Get Boss Power
+		if bossPower-lastPower > 2 then--Boss gained an energy spike, because he should only gain 1 energy per second
+			--So update timer
+			DBM:Debug("Power gain detected. Updating Cata timer.")
+			timerCatastrophicCD:RemoveTime(17)
+		end
+		lastPower = bossPower
+	end
+end
 
---[[
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
-	if spellId == 370648 and destGUID == UnitGUID("player") and self:AntiSpam(2, 2) then
+	if (spellId == 406712 or spellId == 411633) and destGUID == UnitGUID("player") and self:AntiSpam(3, 2) then
 		specWarnGTFO:Show(spellName)
 		specWarnGTFO:Play("watchfeet")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
-
-function mod:UNIT_DIED(args)
-	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 199233 then
-
-	end
-end
---]]
-
---function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
---	if spellId == 396734 then
---
---	end
---end

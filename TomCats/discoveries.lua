@@ -374,11 +374,6 @@ do
 		["racing"] = true,
 		["Warfronts-FieldMapIcons-Empty-Banner-Minimap-small"] = true,
 		["dragonriding-winds"] = true,
-
-		-- new vignettes for 10.0.7
-		["vignettelootelite-locked"] = true,
-
-
 	}
 	for k in pairs(tmp2) do
 		atlasNameInclusions[string.lower(k)] = true
@@ -517,10 +512,9 @@ local function OnUpdate(_, elapsed)
 		vignettes = nil
 		checkedVignetteGUIDs = { }
 		timeSinceLastUpdate = 0
-		if (mapID == 2151) then -- only scan for new discoveries in ZM for now
-			vignettes = { }
-			--vignettes = addon.getVignettes(lastVignetteMapID)
-		end
+		--if (mapID == 1970) then -- only scan for new discoveries in ZM for now
+			vignettes = addon.getVignettes(lastVignetteMapID)
+		--end
 	end
 	if (timeSinceLastUpdate >= interval) then
 		timeSinceLastUpdate = 0
@@ -571,12 +565,12 @@ local function OnEvent(event, arg1)
 		if (addonName == arg1) then
 			TomCatsDiscoveryAlertSystem = AlertFrame:AddQueuedAlertFrameSubSystem("TomCatsDiscoveryAlertFrameTemplate", TomCatsDiscoveryAlertFrame_SetUp);
 			--todo: re-enable when going live
-			--if (_G["TomCats_Account"].discoveriesVersion ~= "2.4.57") then
+			--if (_G["TomCats_Account"].discoveriesVersion ~= "2.4.64") then
 			--	_G["TomCats_Account"].discoveries.vignettes = { }
 			--	_G["TomCats_Account"].discoveries.vignetteAtlases = { }
-			--	_G["TomCats_Account"].discoveries.version = "2.4.57"
+			--	_G["TomCats_Account"].discoveries.version = "2.4.64"
 			--	_G["TomCats_Account"].discoveriesResetCount = 0
-			--	_G["TomCats_Account"].discoveriesVersion = "2.4.57"
+			--	_G["TomCats_Account"].discoveriesVersion = "2.4.64"
 			--end
 			local discoveries = 0
 			discoveredVignettes = _G["TomCats_Account"].discoveries.vignettes

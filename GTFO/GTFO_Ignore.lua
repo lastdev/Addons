@@ -128,5 +128,8 @@ GTFO.IgnoreScan["396328"] = true; -- Quaking Pillar
 GTFO.IgnoreScan["381931"] = true; -- Mana Spring
 GTFO.IgnoreScan["361029"] = true; -- Time Dilation
 GTFO.IgnoreScan["363143"] = true; -- Light Dilation
-
-
+GTFO.IgnoreScan["408370"] = true; -- Infernal Heart 
+GTFO.IgnoreScan["411913"] = true; -- Shadowflame Exhaust
+GTFO.IgnoreScan["402617"] = true; -- Blazing Heat
+GTFO.IgnoreScan["401809"] = true; -- Corrupting Shadow
+GTFO.IgnoreScan["405394"] = true; -- Shadowflame Contamination

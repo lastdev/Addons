@@ -977,7 +977,7 @@ function ConRO.Druid.Guardian(_, timeShift, currentSpell, gcd, tChosen, pvpChose
 			_Mangle_RDY = false;
 		end
 
-		if _Raze and _Rage >= 90 then
+		if _Raze_RDY and _Rage >= 90 then
 			tinsert(ConRO.SuggestedSpells, _Raze);
 			_Rage = _Rage - 40;
 		end

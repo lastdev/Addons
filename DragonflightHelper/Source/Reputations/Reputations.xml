@@ -1,0 +1,92 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+  <Frame name="DFH_ReputationItemFrame" inherits="DFH_StatusBarFrame" mixin="DFH_RenownMixin" virtual="true">
+    <Scripts>
+      <OnEvent method="OnEvent" />
+    </Scripts>
+  </Frame>
+
+  <Frame name="DFH_FriendItemFrame" inherits="DFH_StatusBarFrame" mixin="DFH_FriendMixin" virtual="true">
+    <Scripts>
+      <OnEvent method="OnEvent" />
+    </Scripts>
+  </Frame>
+
+  <Frame name="DFH_ReputationsFrame" virtual="true">
+    <!-- Section Title = 25, StatusBar = 15 (each with an offset of 2) => 25 + (8 * (15 + 2)) -->
+    <Size y="161" />
+    <Frames>
+      <Frame parentKey="Title" inherits="DFH_SectionTitleFrame">
+        <KeyValues>
+          <KeyValue key="title" value="Factions" type="string" />
+        </KeyValues>
+      </Frame>
+      <Frame parentKey="DragonscaleExpedition" inherits="DFH_ReputationItemFrame">
+        <KeyValues>
+          <KeyValue key="factionId" value="2507" type="number" />
+        </KeyValues>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.Title" relativePoint="BOTTOMLEFT" y="-2" />
+        </Anchors>
+      </Frame>
+      <Frame parentKey="MaruukCentaur" inherits="DFH_ReputationItemFrame">
+        <KeyValues>
+          <KeyValue key="factionId" value="2503" type="number" />
+        </KeyValues>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.DragonscaleExpedition" relativePoint="BOTTOMLEFT" y="-2" />
+        </Anchors>
+      </Frame>
+      <Frame parentKey="IskaaraTuskarr" inherits="DFH_ReputationItemFrame">
+        <KeyValues>
+          <KeyValue key="factionId" value="2511" type="number" />
+        </KeyValues>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.MaruukCentaur" relativePoint="BOTTOMLEFT" y="-2" />
+        </Anchors>
+      </Frame>
+      <Frame parentKey="ValdrakkenAccord" inherits="DFH_ReputationItemFrame">
+        <KeyValues>
+          <KeyValue key="factionId" value="2510" type="number" />
+        </KeyValues>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.IskaaraTuskarr" relativePoint="BOTTOMLEFT" y="-2" />
+        </Anchors>
+      </Frame>
+
+      <Frame parentKey="Consortium" inherits="DFH_FriendItemFrame">
+        <KeyValues>
+          <KeyValue key="factionId" value="2544" type="number" />
+        </KeyValues>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.ValdrakkenAccord" relativePoint="BOTTOMLEFT" y="-2" />
+        </Anchors>
+      </Frame>
+      <Frame parentKey="CobaltAssembly" inherits="DFH_FriendItemFrame">
+        <KeyValues>
+          <KeyValue key="factionId" value="2550" type="number" />
+        </KeyValues>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.Consortium" relativePoint="BOTTOMLEFT" y="-2" />
+        </Anchors>
+      </Frame>
+      <Frame parentKey="Sabellian" inherits="DFH_FriendItemFrame">
+        <KeyValues>
+          <KeyValue key="factionId" value="2518" type="number" />
+        </KeyValues>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.CobaltAssembly" relativePoint="BOTTOMLEFT" y="-2" />
+        </Anchors>
+      </Frame>
+      <Frame parentKey="Wrathion" inherits="DFH_FriendItemFrame">
+        <KeyValues>
+          <KeyValue key="factionId" value="2517" type="number" />
+        </KeyValues>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.Sabellian" relativePoint="BOTTOMLEFT" y="-2" />
+        </Anchors>
+      </Frame>
+    </Frames>
+  </Frame>
+</Ui>

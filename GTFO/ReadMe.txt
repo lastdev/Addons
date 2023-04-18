@@ -1867,3 +1867,12 @@ Change Log:
 * Updated for patch 10.0.7
 * Added Dragonflight spells (world)
 * Added Dragonflight spells for Vault of the Incarnates
+
+5.1
+* Fixed heroic difficulty check in raids
+* Fixed Dragonflight spells for Vault of the Incarnates
+* Added Dragonflight spells (world)
+
+5.1.1
+* Added Dragonflight spells for Vault of the Incarnates
+* Added Dragonflight spells for Aberrus, the Shadowed Crucible

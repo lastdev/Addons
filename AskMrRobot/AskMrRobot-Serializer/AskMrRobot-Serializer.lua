@@ -1,6 +1,6 @@
 -- AskMrRobot-Serializer will serialize and communicate character data between users.
 
-local MAJOR, MINOR = "AskMrRobot-Serializer", 121
+local MAJOR, MINOR = "AskMrRobot-Serializer", 124
 local Amr, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not Amr then return end -- already loaded by something else
@@ -246,7 +246,7 @@ function Amr.ParseItemLink(itemLink)
 	item.stat2 = 0
 	item.craftQuality = 0
 
-	-- part 14 + numBonuses, seems to be the number of prop-value "pairs" that will follow,
+	-- part 14 + offset, seems to be the number of prop-value "pairs" that will follow,
 	-- for now we just parse the properties that we care about
 	local numProps = tonumber(parts[14 + offset]) or 0
 	if numProps > 0 then
@@ -264,38 +264,34 @@ function Amr.ParseItemLink(itemLink)
 			end
 		end
 	end
+	offset = offset + numProps * 2
 
-	-- we don't need relic information anymore
-	--[[elseif #parts > 19 + offset then
-		-- check for relic info
+	-- following this are bonus IDs for gems
+	if #parts > 15 + offset then
 		item.relicBonusIds = { nil, nil, nil }
-		numBonuses = tonumber(parts[16 + offset])
-		if numBonuses then
+
+		numBonuses = tonumber(parts[15 + offset]) or 0		
+		if numBonuses > 0 then
+			item.relicBonusIds[1] = readBonusIdList(parts, 16 + offset, 15 + offset + numBonuses)
+		end
+
+		offset = offset + numBonuses
+		if #parts > 16 + offset then
+			numBonuses = tonumber(parts[16 + offset]) or 0		
 			if numBonuses > 0 then
-				item.relicBonusIds[1] = readBonusIdList(parts, 17 + offset, 16 + offset + numBonuses)
+				item.relicBonusIds[2] = readBonusIdList(parts, 17 + offset, 16 + offset + numBonuses)
 			end
-					
+
 			offset = offset + numBonuses
 			if #parts > 17 + offset then
-				numBonuses = tonumber(parts[17 + offset])
-				if numBonuses then
-					if numBonuses > 0 then
-						item.relicBonusIds[2] = readBonusIdList(parts, 18 + offset, 17 + offset + numBonuses)
-					end
-
-					offset= offset + numBonuses
-					if #parts > 18 + offset then
-						numBonuses = tonumber(parts[18 + offset])
-						if numBonuses then
-							if numBonuses > 0 then
-								item.relicBonusIds[3] = readBonusIdList(parts, 19 + offset, 18 + offset + numBonuses)
-							end	
-						end
-					end
+				numBonuses = tonumber(parts[17 + offset]) or 0		
+				if numBonuses > 0 then
+					item.relicBonusIds[3] = readBonusIdList(parts, 18 + offset, 17 + offset + numBonuses)
 				end
+				offset = offset + numBonuses
 			end
 		end
-	end]]
+	end
 	
     return item
 end

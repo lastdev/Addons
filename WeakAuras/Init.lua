@@ -298,8 +298,8 @@ WeakAuras.halfWidth = WeakAuras.normalWidth / 2
 WeakAuras.doubleWidth = WeakAuras.normalWidth * 2
 
 local versionStringFromToc = GetAddOnMetadata("WeakAuras", "Version")
-local versionString = "5.4.3"
-local buildTime = "20230322110201"
+local versionString = "5.4.4"
+local buildTime = "20230329172446"
 
 local flavorFromToc = GetAddOnMetadata("WeakAuras", "X-Flavor")
 local flavorFromTocToNumber = {
@@ -311,7 +311,7 @@ local flavorFromTocToNumber = {
 local flavor = flavorFromTocToNumber[flavorFromToc]
 
 --[==[@debug@
-if versionStringFromToc == "5.4.3" then
+if versionStringFromToc == "5.4.4" then
   versionStringFromToc = "Dev"
   buildTime = "Dev"
 end
@@ -325,6 +325,8 @@ WeakAuras.BuildInfo = select(4, GetBuildInfo())
 function WeakAuras.IsClassicEra()
   return flavor == 1
 end
+-- save compatibility with old auras
+WeakAuras.IsClassic = WeakAuras.IsClassicEra
 
 function WeakAuras.IsWrathClassic()
   return flavor == 3

@@ -1,7 +1,7 @@
-## Interface: 100005
-## Version: 1.09
+## Interface: 100007
+## Version: 2.03
 ## Author: Taraezor
-## Title: Noble Garden
+## Title: Noblegarden
 ## Title-deDE: Nobelgarten Erfolge
 ## Title-esES: Jardín Noble
 ## Title-esMX: Jardín Noble

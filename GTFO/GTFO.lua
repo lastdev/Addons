@@ -25,9 +25,9 @@ GTFO = {
 		TrivialDamagePercent = 2; -- Minimum % of HP lost required for an alert to be trivial
 		SoundOverrides = { "", "", "", "" }; -- Override table for GTFO sounds
 	};
-	Version = "5.0.6"; -- Version number (text format)
+	Version = "5.1.1"; -- Version number (text format)
 	VersionNumber = 0; -- Numeric version number for checking out-of-date clients (placeholder until client is detected)
-	RetailVersionNumber = 50006; -- Numeric version number for checking out-of-date clients (retail)
+	RetailVersionNumber = 50101; -- Numeric version number for checking out-of-date clients (retail)
 	ClassicVersionNumber = 50005; -- Numeric version number for checking out-of-date clients (Vanilla classic)
 	BurningCrusadeVersionNumber = 50000; -- Numeric version number for checking out-of-date clients (TBC classic)
 	WrathVersionNumber = 50005; -- Numeric version number for checking out-of-date clients (Wrath classic)
@@ -2254,7 +2254,7 @@ function GTFO_GetAlertID(alert)
 			alertLevel = alert.soundLFR;
 		end
 	elseif (alert.soundHeroic or alert.soundMythic or alert.soundChallenge or (tankAlert and (alert.tankSoundHeroic or alert.tankSoundMythic or alert.tankSoundChallenge))) then
-		local isHeroic, isChallenge, _, isMythic = select(3, GetDifficultyInfo(select(3, GetInstanceInfo())));
+		local isHeroic, isChallenge, isHeroicRaid, isMythic = select(3, GetDifficultyInfo(select(3, GetInstanceInfo())));
 		if (isChallenge == true) then
 			-- Mythic+/Challenge Mode
 			local useAlert = true;
@@ -2276,7 +2276,7 @@ function GTFO_GetAlertID(alert)
 			elseif (alert.soundMythic or alert.soundHeroic) then
 				alertLevel = alert.soundMythic or alert.soundHeroic;
 			end
-		elseif (isHeroic == true) then
+		elseif (isHeroic == true or isHeroicRaid == true) then
 			-- Heroic Mode
 			if (tankAlert and alert.tankSoundHeroic) then
 				alertLevel = alert.tankSoundHeroic;

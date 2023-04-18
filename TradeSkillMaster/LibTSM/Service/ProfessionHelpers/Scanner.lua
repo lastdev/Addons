@@ -765,12 +765,12 @@ function private.BulkInsertRecipe(craftString, index, name, categoryId, relative
 end
 
 function private.GetItemStringAndCraftName(craftString)
-	-- get the links
+	-- Get the links
 	local spellId = CraftString.GetSpellId(craftString)
 	local quality = CraftString.GetQuality(craftString)
 	local resultItem, indirectSpellId = Scanner.GetResultItem(craftString)
 
-	-- get the itemString and craft name
+	-- Get the itemString and craft name
 	local itemString, craftName = nil, nil
 	if quality then
 		assert(type(resultItem) == "table")
@@ -781,8 +781,15 @@ function private.GetItemStringAndCraftName(craftString)
 		itemString = ""
 		craftName = GetSpellInfo(indirectSpellId or spellId)
 	elseif strfind(resultItem, "item:") then
-		-- result of craft is item
-		itemString = ItemString.GetBase(resultItem)
+		-- Result of craft is item
+		local level = CraftString.GetLevel(craftString)
+		if level and level > 0 then
+			local relLevel = ProfessionInfo.GetRelativeItemLevelByRank(level)
+			local baseItemString = ItemString.GetBase(resultItem)
+			itemString = baseItemString..(relLevel < 0 and "::-" or "::+")..abs(relLevel)
+		else
+			itemString = ItemString.GetBase(resultItem)
+		end
 		craftName = ItemInfo.GetName(resultItem)
 		-- Blizzard broke Brilliant Scarlet Ruby in 8.3, so just hard-code a workaround
 		if spellId == 53946 and not itemString and not craftName then

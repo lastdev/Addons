@@ -3,7 +3,7 @@
 
                                            Lunar Festival
 
-                                     v1.10 - 15th February 2023
+                                       v2.00 - 15th April 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -24,7 +24,8 @@ ns.colour.plaintext = "\124cFF990000" -- Crimson Red
 local defaults = { profile = { icon_scale = 1.7, icon_alpha = 1, showCoords = true,
 								removeOneOff = true, removeSeasonal = true, removeEver = false,
 								icon_zoneElders = 16, icon_dungeonElders = 14, icon_crown = 1,
-								icon_factionElders = 11, icon_preservation = 10 } }
+								icon_factionElders = 11, icon_preservation = 10,
+								lpBuffCount = {} } }
 local continents = {}
 local pluginHandler = {}
 
@@ -32,6 +33,8 @@ local pluginHandler = {}
 local GameTooltip = _G.GameTooltip
 local GetAchievementCriteriaInfo = GetAchievementCriteriaInfo
 local GetAchievementInfo = GetAchievementInfo
+local GetQuestObjectives = C_QuestLog.GetQuestObjectives
+local IsQuestFlaggedCompleted = C_QuestLog.IsQuestFlaggedCompleted
 local UnitName = UnitName
 --local GetMapInfo = C_Map.GetMapInfo -- phase checking during testing
 local LibStub = _G.LibStub
@@ -39,6 +42,7 @@ local UIParent = _G.UIParent
 local format = _G.format
 local gsub = string.gsub
 local next = _G.next
+local pairs = _G.pairs
 
 local HandyNotes = _G.HandyNotes
 
@@ -620,19 +624,7 @@ else
 	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
 end
 
-local function printPC( message )
-	if message then
-		DEFAULT_CHAT_FRAME:AddMessage( ns.colour.prefix .."LunarFestival" ..": " ..ns.colour.plaintext
-			..message.. "\124r" )
-	end
-end
-
 -- Plugin handler for HandyNotes
-local function infoFromCoord(mapFile, coord)
-	local point = ns.points[mapFile] and ns.points[mapFile][coord]
-	return point[1], point[2], point[3], point[4], point[5], point[6], point[7]
-end
-
 function pluginHandler:OnEnter(mapFile, coord)
 	if self:GetCenter() > UIParent:GetCenter() then
 		GameTooltip:SetOwner(self, "ANCHOR_LEFT")
@@ -640,70 +632,84 @@ function pluginHandler:OnEnter(mapFile, coord)
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 	end
 
-	local aIDA, aIDH, aIndexA, aIndexH, aQuestA, aQuestH, tip = infoFromCoord(mapFile, coord)
+	local pin = ns.points[ mapFile ] and ns.points[ mapFile ][ coord ]
 
-	local aID = ((  aIDA > 0 ) and aIDA ) or aIDH
-	local aIndex = ((  aIndexA > 0 ) and aIndexA ) or aIndexH
-	local aQuest = ((  aQuestA > 0 ) and aQuestA ) or aQuestH
-	local pName = UnitName( "player" ) or L["Character"]
+	local pName = UnitName( "player" ) or "Character"
 	local completed, aName, completedMe;
 	local bypassCoords = false
 	local showTip = true
 	
-	if (aID > 0) and (aIndex > 0) then
-		_, aName, _, completed, _, _, _, _, _, _, _, _, completedMe = GetAchievementInfo( aID )
+	if ( pin.aID ) and ( pin.index ) then
+		_, aName, _, completed, _, _, _, _, _, _, _, _, completedMe = GetAchievementInfo( pin.aID )
 		GameTooltip:AddDoubleLine( ns.colour.prefix ..aName ..ns.colour.highlight .." (" ..ns.faction ..")",
 					( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..L["Account"] ..")" ) 
 										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..L["Account"] ..")" ) )
 		GameTooltip:AddDoubleLine( " ",
 					( completedMe == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
 										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
-		if ( aQuest > 0 ) then
-			completed = C_QuestLog.IsQuestFlaggedCompleted( aQuest )
-			aName = GetAchievementCriteriaInfo( aID, aIndex )
+		if ( pin.quest ) then
+			completed = IsQuestFlaggedCompleted( pin.quest )
+			aName = GetAchievementCriteriaInfo( pin.aID, pin.index )
 		else
-			aName, _, completed = GetAchievementCriteriaInfo( aID, aIndex )
+			aName, _, completed = GetAchievementCriteriaInfo( pin.aID, pin.index )
 		end
 		GameTooltip:AddDoubleLine( ns.colour.highlight.. aName,
 					( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
 										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
-	elseif (aID > 0) then
-		_, aName, _, completed, _, _, _, _, _, _, _, _, completedMe = GetAchievementInfo( aID )
+	elseif ( pin.aID ) then
+		_, aName, _, completed, _, _, _, _, _, _, _, _, completedMe = GetAchievementInfo( pin.aID )
 		GameTooltip:AddDoubleLine( ns.colour.prefix ..aName ..ns.colour.highlight .." (" ..ns.faction ..")",
 					( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..L["Account"] ..")" ) 
 										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..L["Account"] ..")" ) )
 		GameTooltip:AddDoubleLine( " ",
 					( completedMe == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
 										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
-	elseif ( aQuest > 0 ) then
-		if ( aQuest == 63213 ) then
-			completed = C_QuestLog.IsQuestFlaggedCompleted( aQuest )
+	elseif ( pin.quest ) then
+		if ( pin.quest == 63213 ) then
+			completed = IsQuestFlaggedCompleted( pin.quest )
 			GameTooltip:AddDoubleLine( ns.colour.prefix .."Naladu the Elder",
 						( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
 											or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
-		elseif ( aQuest == 56842 ) then
-			GameTooltip:SetText( ns.colour.prefix ..L["Lunar Preservation"] )
-			completed = C_QuestLog.IsQuestFlaggedCompleted( 56842 )
-			GameTooltip:AddDoubleLine( ns.colour.highlight .."All eight locations...",
+		elseif ( pin.quest == 56842 ) then
+			completed = IsQuestFlaggedCompleted( 56842 )
+			GameTooltip:AddDoubleLine( ns.colour.prefix ..L["Lunar Preservation"],
 						( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
 											or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
+			if ( completed == false ) then
+				if ( C_QuestLog.IsOnQuest( 56842 ) == true ) then
+					completed = C_QuestLog.IsComplete( 56842 )
+					GameTooltip:AddDoubleLine( ns.colour.highlight .."All eight locations...",
+						( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
+											or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
+					if ( completed == true ) then
+						GameTooltip:AddLine( ns.colour.plaintext .."Ready to turn in" )
+					else
+						GameTooltip:AddLine( ns.colour.plaintext .."Wells so far: "
+							..ns.db.lpBuffCount[ns.name] )
+					end
+				else
+					GameTooltip:AddLine( ns.colour.plaintext .."Not yet begun" )
+				end
+			end
 			showTip = false
-		elseif ( aQuest == 56903 ) or ( aQuest == 56904 ) or ( aQuest == 56905 ) or ( aQuest == 56906 ) then
-			completed = C_QuestLog.IsQuestFlaggedCompleted( aQuest )
-			GameTooltip:AddDoubleLine( ns.colour.prefix ..( ( aQuest == 56906) and L["Crown of Good Fortune"]
-										or ( ( aQuest == 56905) and L["Crown of Dark Blossoms"] 
-										or ( ( aQuest == 56904) and L["Crown of Prosperity"] 
+		elseif ( pin.quest == 56903 ) or ( pin.quest == 56904 ) or ( pin.quest == 56905 ) or ( pin.quest == 56906 ) then
+			completed = IsQuestFlaggedCompleted( pin.quest )
+			GameTooltip:AddDoubleLine( ns.colour.prefix ..( ( pin.quest == 56906) and L["Crown of Good Fortune"]
+										or ( ( pin.quest == 56905) and L["Crown of Dark Blossoms"] 
+										or ( ( pin.quest == 56904) and L["Crown of Prosperity"] 
 										or L["Crown of Courage"] ) ) ),
 						( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
 											or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
-			questObjectives = C_QuestLog.GetQuestObjectives( aQuest )
-			for k,v in pairs( questObjectives ) do
-				if ( aIndex == k ) then
-					for i,j in pairs( v ) do
-						if ( i == "finished" ) then
-							GameTooltip:AddDoubleLine( ns.colour.prefix ..L[tip],
-										( j == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
-															or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
+			local questObjectives = GetQuestObjectives( pin.quest )
+			if questObjectives then
+				for k,v in pairs( questObjectives ) do
+					if ( pin.index == k ) then
+						for i,j in pairs( v ) do
+							if ( i == "finished" ) then
+								GameTooltip:AddDoubleLine( ns.colour.prefix ..L[ pin.obj ],
+											( j == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
+																or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
+							end
 						end
 					end
 				end
@@ -713,8 +719,8 @@ function pluginHandler:OnEnter(mapFile, coord)
 	else
 		bypassCoords = true
 	end
-	if ( showTip == true ) and not ( tip == nil ) then
-		GameTooltip:AddLine( ns.colour.plaintext ..L[tip] )
+	if ( showTip == true ) and not ( pin.tip == nil ) then
+		GameTooltip:AddLine( ns.colour.plaintext ..L[ pin.tip ] )
 	end	
 	if ( ns.db.showCoords == true ) and ( bypassCoords == false ) then
 		local mX, mY = HandyNotes:getXY(coord)
@@ -729,11 +735,11 @@ function pluginHandler:OnLeave()
 	GameTooltip:Hide()
 end
 
-local function ShowConditionallyE( aID, aIndex )
+local function ShowConditionallyE( aID, index )
 	local completed;
 	if ( ns.db.removeEver == true ) then
-		if ( aIndex > 0 ) then
-			_, _, completed = GetAchievementCriteriaInfo( aID, aIndex )
+		if ( index > 0 ) then
+			_, _, completed = GetAchievementCriteriaInfo( aID, index )
 		else
 			_, _, _, completed = GetAchievementInfo( aID )
 		end
@@ -744,10 +750,10 @@ local function ShowConditionallyE( aID, aIndex )
 	return true
 end
 
-local function ShowConditionallyO( aQuestA, aQuestH )
+local function ShowConditionallyO( quest )
 	local completed;
-	if ( ns.db.removeOneOff == true ) and ( ( aQuestA > 0 ) or ( aQuestH > 0 ) ) then
-		completed = C_QuestLog.IsQuestFlaggedCompleted( ( aQuestA > 0 ) and aQuestA or aQuestH )
+	if ( ns.db.removeOneOff == true ) and ( quest ) then
+		completed = IsQuestFlaggedCompleted( quest )
 		if ( completed == true ) then
 			return false
 		end
@@ -755,10 +761,36 @@ local function ShowConditionallyO( aQuestA, aQuestH )
 	return true
 end
 
-local function ShowConditionallyS( aQuestA, aQuestH )
+local function ShowConditionallyOI( index, quest )
 	local completed;
-	if ( ns.db.removeSeasonal == true ) and ( ( aQuestA > 0 ) or ( aQuestH > 0 ) ) then
-		completed = C_QuestLog.IsQuestFlaggedCompleted( ( aQuestA > 0 ) and aQuestA or aQuestH )
+	if ( ns.db.removeOneOff == true ) and ( quest > 0 ) then
+		completed = IsQuestFlaggedCompleted( quest )
+		if ( completed == true ) then
+			return false
+		end
+		local questObjectives = GetQuestObjectives( quest )
+		if questObjectives then
+			for k,v in pairs( questObjectives ) do
+				if ( index == k ) then
+					for i,j in pairs( v ) do
+						if ( i == "finished" ) then
+							if ( j == true ) then
+								return false
+							end
+							break
+						end
+					end
+				end
+			end
+		end
+	end
+	return true
+end
+
+local function ShowConditionallyS( quest )
+	local completed;
+	if ( ns.db.removeSeasonal == true ) and ( quest > 0 ) then
+		completed = IsQuestFlaggedCompleted( quest )
 		if ( completed == true ) then
 			return false
 		end
@@ -769,74 +801,56 @@ end
 do	
 	local function iterator(t, prev)
 		if not t then return end
-		local coord, v = next(t, prev)
+		local coord, pin = next(t, prev)
 		while coord do
-			if v then
-				if ( v[1] == 910 ) and ( ns.faction == "Alliance" ) then
-					if ( ShowConditionallyE( v[1], v[3] ) == true ) then
-						if ( ShowConditionallyS( v[5], v[6] ) == true ) then
-							return coord, nil, ns.textures[ns.db.icon_dungeonElders],
-								ns.db.icon_scale * ns.scaling[ns.db.icon_dungeonElders], ns.db.icon_alpha
+			if pin and ( ( pin.faction == nil ) or ( pin.faction == ns.faction ) ) then
+				if pin.aID then
+					if ( pin.aID == 910 ) then
+						if ( ShowConditionallyE( pin.aID, pin.index ) == true ) then
+							if ( ShowConditionallyS( pin.quest ) == true ) then
+								return coord, nil, ns.textures[ns.db.icon_dungeonElders],
+									ns.db.icon_scale * ns.scaling[ns.db.icon_dungeonElders], ns.db.icon_alpha
+							end
+						end
+					elseif ( pin.aID == 911 ) or ( pin.aID == 912 ) or ( pin.aID == 1396 ) or
+							( pin.aID == 6006 ) or ( pin.aID == 17321 ) then
+						if ( ShowConditionallyE( pin.aID, pin.index ) == true ) then
+							if ( ShowConditionallyS( pin.quest ) == true ) then
+								return coord, nil, ns.textures[ns.db.icon_zoneElders],
+									ns.db.icon_scale * ns.scaling[ns.db.icon_zoneElders], ns.db.icon_alpha
+							end
+						end
+					elseif ( pin.aID == 914 ) or ( pin.aID == 915 ) then
+						if ( ShowConditionallyE( pin.aID, pin.index ) == true ) then
+							if ( ShowConditionallyS( pin.quest ) == true ) then
+								return coord, nil, ns.textures[ns.db.icon_factionElders],
+									ns.db.icon_scale * ns.scaling[ns.db.icon_factionElders], ns.db.icon_alpha
+							end
 						end
 					end
-				elseif ( v[2] == 910 ) and ( ns.faction == "Horde" ) then
-					if ( ShowConditionallyE( v[2], v[4] ) == true ) then
-						if ( ShowConditionallyS( v[5], v[6] ) == true ) then
-							return coord, nil, ns.textures[ns.db.icon_dungeonElders],
-								ns.db.icon_scale * ns.scaling[ns.db.icon_dungeonElders], ns.db.icon_alpha
-						end
-					end
-				elseif ( ( v[1] == 911 ) or ( v[1] == 912 ) or ( v[1] == 1396 ) or ( v[1] == 6006 ) or ( v[1] == 17321 ) ) 
-						and ( ns.faction == "Alliance" ) then
-					if ( ShowConditionallyE( v[1], v[3] ) == true ) then
-						if ( ShowConditionallyS( v[5], v[6] ) == true ) then
-							return coord, nil, ns.textures[ns.db.icon_zoneElders],
-								ns.db.icon_scale * ns.scaling[ns.db.icon_zoneElders], ns.db.icon_alpha
-						end
-					end
-				elseif ( ( v[2] == 911 ) or ( v[2] == 912 ) or ( v[2] == 1396 ) or ( v[2] == 6006 ) or ( v[1] == 17321 ) )
-						and ( ns.faction == "Horde" ) then
-					if ( ShowConditionallyE( v[2], v[4] ) == true ) then
-						if ( ShowConditionallyS( v[5], v[6] ) == true ) then
-							return coord, nil, ns.textures[ns.db.icon_zoneElders],
-								ns.db.icon_scale * ns.scaling[ns.db.icon_zoneElders], ns.db.icon_alpha
-						end
-					end
-				elseif ( ( v[1] == 914 ) or ( v[1] == 915 ) ) and ( ns.faction == "Alliance" ) then
-					if ( ShowConditionallyE( v[1], v[3] ) == true ) then
-						if ( ShowConditionallyS( v[5], v[6] ) == true ) then
+				elseif pin.quest then
+					if ( pin.quest == 63213 ) or ( pin.quest == 63213 ) then
+						if ( ShowConditionallyS( pin.quest ) == true ) then
 							return coord, nil, ns.textures[ns.db.icon_factionElders],
 								ns.db.icon_scale * ns.scaling[ns.db.icon_factionElders], ns.db.icon_alpha
 						end
-					end
-				elseif ( ( v[2] == 914 ) or ( v[2] == 915 ) ) and ( ns.faction == "Horde" ) then
-					if ( ShowConditionallyE( v[2], v[4] ) == true ) then
-						if ( ShowConditionallyS( v[5], v[6] ) == true ) then
-							return coord, nil, ns.textures[ns.db.icon_factionElders],
-								ns.db.icon_scale * ns.scaling[ns.db.icon_factionElders], ns.db.icon_alpha
+					elseif ( pin.quest == 56842 ) or ( pin.quest == 56842 ) then
+						if ( ShowConditionallyO( pin.quest ) == true ) then
+							return coord, nil, ns.textures[ns.db.icon_preservation],
+								ns.db.icon_scale * ns.scaling[ns.db.icon_preservation], ns.db.icon_alpha
 						end
-					end
-				elseif ( v[5] == 63213 ) or ( v[6] == 63213 ) then
-					if ( ShowConditionallyS( v[5], v[6] ) == true ) then
-						return coord, nil, ns.textures[ns.db.icon_factionElders],
-							ns.db.icon_scale * ns.scaling[ns.db.icon_factionElders], ns.db.icon_alpha
-					end
-				elseif ( v[5] == 56842 ) or ( v[6] == 56842 ) then
-					if ( ShowConditionallyO( v[5], v[6] ) == true ) then
-						return coord, nil, ns.textures[ns.db.icon_preservation],
-							ns.db.icon_scale * ns.scaling[ns.db.icon_preservation], ns.db.icon_alpha
-					end
-				elseif ( v[5] == 56903 ) or ( v[6] == 56903 ) or ( v[5] == 56904 ) or ( v[6] == 56904 )
-					or ( v[5] == 56905 ) or ( v[6] == 56905 ) or ( v[5] == 56906 ) or ( v[6] == 56906 ) then
-					if C_QuestLog.IsQuestFlaggedCompleted( 56842 ) == true then
-						if ( ShowConditionallyO( v[5], v[6] ) == true ) then
-							return coord, nil, ns.textures[ns.db.icon_crown],
-								ns.db.icon_scale * ns.scaling[ns.db.icon_crown] * 0.75, ns.db.icon_alpha
+					elseif ( pin.quest == 56903 ) or ( pin.quest == 56904 ) or ( pin.quest == 56905 )
+												or ( pin.quest == 56906 ) then
+						if IsQuestFlaggedCompleted( 56842 ) == true then
+							if ( ShowConditionallyOI( pin.index, pin.quest ) == true ) then
+								return coord, nil, ns.textures[ns.db.icon_crown],
+									ns.db.icon_scale * ns.scaling[ns.db.icon_crown] * 0.75, ns.db.icon_alpha
+							end
 						end
 					end
 				end
 			end
-			coord, v = next(t, coord)
+			coord, pin = next(t, coord)
 		end
 	end
 	function pluginHandler:GetNodes2(mapID)
@@ -997,7 +1011,7 @@ ns.options = {
 function pluginHandler:OnEnable()
 	local HereBeDragons = LibStub("HereBeDragons-2.0", true)
 	if not HereBeDragons then
-		printPC("HandyNotes is out of date")
+		print("HandyNotes is out of date")
 		return
 	end
 	
@@ -1019,32 +1033,24 @@ function pluginHandler:OnEnable()
 				( map.mapID == 224 ) then -- Stranglethorn Vale
 			elseif (version < 40000) and ( map.mapID < 1400 ) then
 			elseif coords then
-				for coord, v in next, coords do
+				for coord, pin in next, coords do
 					local function AddToContinent()
 						local mx, my = HandyNotes:getXY(coord)
 						local cx, cy = HereBeDragons:TranslateZoneCoordinates(mx, my, map.mapID, continentMapID)
 						if cx and cy then
 							ns.points[continentMapID] = ns.points[continentMapID] or {}
-							ns.points[continentMapID][HandyNotes:getCoord(cx, cy)] = v
+							ns.points[continentMapID][HandyNotes:getCoord(cx, cy)] = pin
 						end
-					end
-					
-					if ( v[1] > 0 ) and ( v[2] > 0 ) then
-						AddToContinent()
-					elseif ( v[5] > 0 ) and ( v[6] > 0 ) then
-						AddToContinent()
-					elseif ( v[1] > 0 ) or ( v[5] > 0 ) then
-						if ( ns.faction == "Alliance" ) then
+					end				
+					if ( pin.faction == nil ) or ( pin.faction == ns.faction ) then
+						if ( pin.aID ) then
+							AddToContinent()
+						elseif ( pin.quest ) then
+							AddToContinent()
+						elseif ( pin.index ) then
+							print("Something went wrong")
 							AddToContinent()
 						end
-					elseif ( v[2] > 0 ) or ( v[6] > 0 ) then
-						if ( ns.faction == "Horde" ) then
-							AddToContinent()
-						end
-					elseif ( v[3] > 0 ) and ( v[4] > 0 ) then
-						AddToContinent()
-					elseif ( v[3] > 0 ) or ( v[4] > 0 ) then
-						AddToContinent()
 					end
 				end
 			end
@@ -1060,3 +1066,28 @@ function pluginHandler:Refresh()
 end
 
 LibStub("AceAddon-3.0"):NewAddon(pluginHandler, "HandyNotes_LunarFestivalDB", "AceEvent-3.0")
+
+ns.timeElapsed, ns.oldCount, ns.countUA, ns.spellUA = 0;
+local frameOnUpdate = CreateFrame( "Frame", "LunarFestivalOnUpdate", UIParent )
+frameOnUpdate:HookScript("OnUpdate", function(self, elapsed)
+	ns.timeElapsed = ns.timeElapsed + elapsed
+	if ns.timeElapsed > 1 then 
+		ns.timeElapsed = 0
+		if ( C_QuestLog.IsOnQuest( 56842 ) == true ) then -- Lunar Preservation
+			if ( ns.db.lpBuffCount[ns.name] == nil ) then ns.db.lpBuffCount[ns.name] = 0 end
+			for i = 1, 40 do
+				_, _, ns.countUA, _, _, _, _, _, _, ns.spellUA = UnitAura( "player", i, "HELPFUL" )
+				if ns.spellUA == 303601 then
+					if ( ns.oldCount == nil ) then ns.oldCount = ns.countUA end
+					if ns.countUA > ns.oldCount then
+						ns.db.lpBuffCount[ns.name] = ns.db.lpBuffCount[ns.name] + 1
+						ns.oldCount = ns.countUA
+					end
+					break
+				end
+			end
+		else
+			ns.db.lpBuffCount[ns.name] = nil
+		end
+	end
+end)

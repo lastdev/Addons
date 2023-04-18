@@ -1,7 +1,7 @@
-## Interface: 100005
+## Interface: 100007
 ## Title: RareTracker
 ## Author: Melroy
-## Version: 1.0.13
+## Version: 1.0.14
 ## OptionalDeps: RareTrackerCore
 
 RareTracker.lua

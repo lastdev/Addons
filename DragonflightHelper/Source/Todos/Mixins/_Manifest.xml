@@ -1,0 +1,14 @@
+<!-- Source/Todos/Mixins directory manifest -->
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+  <Script file="GenericUpdate.lua" />
+  <Script file="TodoEventHandler.lua" />
+
+  <Script file="ProfessionLoader.lua" />
+  <Script file="ProfessionUpdate.lua" />
+  <Script file="ProfessionStatusBar.lua" />
+
+  <Script file="TodoUpdate.lua" />
+  <Script file="TodoStatusBar.lua" />
+
+  <Script file="FrameProfessionTodos.lua" />
+</Ui>

@@ -73,7 +73,7 @@ local function showRealDate(curseDate)
 end
 
 DBM = {
-	Revision = parseCurseDate("20230324191510"),
+	Revision = parseCurseDate("20230411014801"),
 }
 
 local fakeBWVersion, fakeBWHash
@@ -81,25 +81,25 @@ local bwVersionResponseString = "V^%d^%s"
 local PForceDisable
 -- The string that is shown as version
 if isRetail then
-	DBM.DisplayVersion = "10.0.34"
-	DBM.ReleaseRevision = releaseDate(2023, 3, 24) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	DBM.DisplayVersion = "10.0.35"
+	DBM.ReleaseRevision = releaseDate(2023, 4, 10) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	PForceDisable = 2--When this is incremented, trigger force disable regardless of major patch
-	fakeBWVersion, fakeBWHash = 265, "5c1ee43"
+	fakeBWVersion, fakeBWHash = 270, "48070b1"
 elseif isClassic then
-	DBM.DisplayVersion = "1.14.37 alpha"
-	DBM.ReleaseRevision = releaseDate(2023, 3, 3) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	DBM.DisplayVersion = "1.14.37"
+	DBM.ReleaseRevision = releaseDate(2023, 4, 10) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	PForceDisable = 1--When this is incremented, trigger force disable regardless of major patch
-	fakeBWVersion, fakeBWHash = 47, "ca1da33"
+	fakeBWVersion, fakeBWHash = 48, "9581348"
 elseif isBCC then
 	DBM.DisplayVersion = "2.6.0 alpha"--When TBC returns (and it will one day). It'll probably be game version 2.6
-	DBM.ReleaseRevision = releaseDate(2023, 3, 3) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	DBM.ReleaseRevision = releaseDate(2023, 4, 10) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	PForceDisable = 1--When this is incremented, trigger force disable regardless of major patch
-	fakeBWVersion, fakeBWHash = 47, "ca1da33"
+	fakeBWVersion, fakeBWHash = 48, "9581348"
 elseif isWrath then
-	DBM.DisplayVersion = "3.4.38 alpha"
-	DBM.ReleaseRevision = releaseDate(2023, 3, 3) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	DBM.DisplayVersion = "3.4.38"
+	DBM.ReleaseRevision = releaseDate(2023, 4, 10) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	PForceDisable = 1--When this is incremented, trigger force disable regardless of major patch
-	fakeBWVersion, fakeBWHash = 47, "ca1da33"
+	fakeBWVersion, fakeBWHash = 48, "9581348"
 end
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -567,6 +567,7 @@ local UnitGUID, UnitHealth, UnitHealthMax, UnitBuff, UnitDebuff, UnitAura = Unit
 local UnitExists, UnitIsDead, UnitIsFriend, UnitIsUnit = UnitExists, UnitIsDead, UnitIsFriend, UnitIsUnit
 --local UnitTokenFromGUID, UnitPercentHealthFromGUID = UnitTokenFromGUID, UnitPercentHealthFromGUID
 local GetSpellInfo, GetDungeonInfo, GetSpellTexture, GetSpellCooldown = GetSpellInfo, C_LFGInfo and C_LFGInfo.GetDungeonInfo or GetDungeonInfo, GetSpellTexture, GetSpellCooldown
+local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
 local EJ_GetEncounterInfo, EJ_GetCreatureInfo = EJ_GetEncounterInfo, EJ_GetCreatureInfo
 local EJ_GetSectionInfo, GetSectionIconFlags
 if C_EncounterJournal then
@@ -1034,12 +1035,12 @@ do
 
 		function registerSpellId(event, spellId)
 			if type(spellId) == "string" then--Something is screwed up, like SPELL_AURA_APPLIED DOSE
-				DBM:AddMsg("DBM RegisterEvents Error: "..spellId.." is not a number!")
+				DBM:Debug("DBM RegisterEvents Warning: "..spellId.." is not a number!")
 				return
 			end
 			local spellName = DBM:GetSpellInfo(spellId)
 			if spellId and not spellName then
-				DBM:AddMsg("DBM RegisterEvents Error: "..spellId.." spell id does not exist!")
+				DBM:Debug("DBM RegisterEvents Warning: "..spellId.." spell id does not exist!")
 				return
 			end
 			if not registeredSpellIds[event] then
@@ -1058,7 +1059,7 @@ do
 			if not registeredSpellIds[event] then return end
 			local spellName = DBM:GetSpellInfo(spellId)
 			if spellId and not spellName then
-				DBM:AddMsg("DBM unregisterSpellId Error: "..spellId.." spell id does not exist!")
+				DBM:Debug("DBM unregisterSpellId Warning: "..spellId.." spell id does not exist!")
 				return
 			end
 			local regName = isClassic and spellName or spellId
@@ -1740,7 +1741,8 @@ do
 					"UNIT_HEALTH mouseover target focus player",--Is Frequent on retail, and _FREQUENT deleted
 					"CHALLENGE_MODE_RESET",
 					"PLAYER_SPECIALIZATION_CHANGED",
-					"SCENARIO_COMPLETED"
+					"SCENARIO_COMPLETED",
+					"GOSSIP_SHOW"
 				)
 			elseif isWrath then -- WoTLKC
 				self:RegisterEvents(
@@ -2708,8 +2710,8 @@ function DBM:IsTrivial(customLevel)
 	return false
 end
 
-function DBM:GetGossipID()
-	if self.Options.DontAutoGossip then return false end
+function DBM:GetGossipID(force)
+	if self.Options.DontAutoGossip and not force then return false end
 	local table = C_GossipInfo.GetOptions()
 	if table[1] then
 		if table[1].gossipOptionID then
@@ -4865,6 +4867,15 @@ do
 		--TINTERFACE\\ICONS\\ability_socererking_arcanewrath.blp:20|t You have been branded by |cFFF00000|Hspell:156238|h[Arcane Wrath]|h|r!"
 		if msg and msg ~= "" and IsInGroup() and not _G["BigWigs"] then
 			SendAddonMessage("Transcriptor", msg, IsInGroup(2) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")--Send any emote to transcriptor, even if no spellid
+		end
+	end
+
+	function DBM:GOSSIP_SHOW()
+		if not IsInInstance() then return end--Don't really care about it if not in a dungeon or raid
+		local cid = self:GetUnitCreatureId("npc") or 0
+		local gossipOptionID = self:GetGossipID(true)
+		if gossipOptionID then
+			self:Debug("GOSSIP_SHOW triggered with a gossip ID of "..gossipOptionID.." on creatureID "..cid)
 		end
 	end
 
@@ -9551,6 +9562,14 @@ do
 		return newSpecialWarning(self, "spell", spellId, nil, optionDefault, ...)
 	end
 
+	function bossModPrototype:NewSpecialWarningIncoming(spellId, optionDefault, ...)
+		return newSpecialWarning(self, "incoming", spellId, nil, optionDefault, ...)
+	end
+
+	function bossModPrototype:NewSpecialWarningIncomingCount(spellId, optionDefault, ...)
+		return newSpecialWarning(self, "incomingcount", spellId, nil, optionDefault, ...)
+	end
+
 	function bossModPrototype:NewSpecialWarningEnd(spellId, optionDefault, ...)
 		return newSpecialWarning(self, "ends", spellId, nil, optionDefault, ...)
 	end
@@ -11316,8 +11335,32 @@ function bossModPrototype:EnableWBEngageSync()
 	end
 end
 
+--used for knowing if a specific mod is engaged
 function bossModPrototype:IsInCombat()
 	return self.inCombat
+end
+
+--Used for knowing if any person is in any kind of combat period
+function bossModPrototype:GroupInCombat()
+	local combatFound = false
+	--Any Boss engaged
+	if IsEncounterInProgress() then
+		combatFound = true
+	end
+	--Self in Combat
+	if InCombatLockdown() or UnitAffectingCombat("player") then
+		combatFound = true
+	end
+	--Any Other group member in combat
+	if not combatFound then
+		for uId in DBM:GetGroupMembers() do
+			if UnitAffectingCombat(uId) and not UnitIsDeadOrGhost(uId) then
+				combatFound = true
+				break
+			end
+		end
+	end
+	return combatFound
 end
 
 function bossModPrototype:IsAlive()

@@ -560,6 +560,7 @@ local function UpdateStateWithMatch(time, bestMatch, triggerStates, cloneId, mat
       casterName = bestMatch.casterName,
       spellId = bestMatch.spellId,
       index = bestMatch.index,
+      auraInstanceID = bestMatch.auraInstanceID,
       filter = bestMatch.filter,
       unit = bestMatch.unit,
       unitName = bestMatch.unitName,
@@ -699,6 +700,11 @@ local function UpdateStateWithMatch(time, bestMatch, triggerStates, cloneId, mat
 
     if state.index ~= bestMatch.index then
       state.index = bestMatch.index
+      changed = true
+    end
+
+    if state.auraInstanceID ~= bestMatch.auraInstanceID then
+      state.auraInstanceID = bestMatch.auraInstanceID
       changed = true
     end
 
@@ -908,6 +914,11 @@ local function UpdateStateWithNoMatch(time, triggerStates, triggerInfo, cloneId,
 
     if state.index then
       state.index = nil
+      changed = true
+    end
+
+    if state.auraInstanceID then
+      state.auraInstanceID = nil
       changed = true
     end
 
@@ -1637,11 +1648,16 @@ local function CleanUpMatchDataForUnit(unit, filter)
     for index, data in pairs(matchData[unit][filter]) do
       matchData[unit][filter][index] = nil
       for id, triggerData in pairs(data.auras) do
-       for triggernum in pairs(triggerData) do
-         matchDataByTrigger[id][triggernum][unit][index] = nil
-         matchDataChanged[id] = matchDataChanged[id] or {}
-         matchDataChanged[id][triggernum] = true
-       end
+        for triggernum in pairs(triggerData) do
+          if matchDataByTrigger[id] and matchDataByTrigger[id][triggernum]
+             and matchDataByTrigger[id][triggernum][unit]
+             and matchDataByTrigger[id][triggernum][unit][index]
+          then
+            matchDataByTrigger[id][triggernum][unit][index] = nil
+            matchDataChanged[id] = matchDataChanged[id] or {}
+            matchDataChanged[id][triggernum] = true
+          end
+        end
       end
     end
   end
@@ -2052,6 +2068,10 @@ local function EventHandler(frame, event, arg1, arg2, ...)
       RecheckActiveForUnitType("boss", unit, deactivatedTriggerInfos)
       if not UnitExistsFixed(unit) then
         tinsert(unitsToRemove, unit)
+      else
+        if newAPI then
+          ScanUnit(time, unit)
+        end
       end
     end
   elseif event =="ARENA_OPPONENT_UPDATE" then
@@ -2933,13 +2953,24 @@ end
 
 --- @return boolean
 function BuffTrigger.SetToolTip(trigger, state)
-  if not state.unit or not state.index then
-    return false
-  end
-  if state.filter == "HELPFUL" then
-    GameTooltip:SetUnitBuff(state.unit, state.index)
-  elseif state.filter == "HARMFUL" then
-    GameTooltip:SetUnitDebuff(state.unit, state.index)
+  if newAPI then
+    if not state.unit or not state.auraInstanceID then
+      return false
+    end
+    if state.filter == "HELPFUL" then
+      GameTooltip:SetUnitBuffByAuraInstanceID(state.unit, state.auraInstanceID, state.filter)
+    elseif state.filter == "HARMFUL" then
+      GameTooltip:SetUnitDebuffByAuraInstanceID(state.unit, state.auraInstanceID, state.filter)
+    end
+  else
+    if not state.unit or not state.index then
+      return false
+    end
+    if state.filter == "HELPFUL" then
+      GameTooltip:SetUnitBuff(state.unit, state.index)
+    elseif state.filter == "HARMFUL" then
+      GameTooltip:SetUnitDebuff(state.unit, state.index)
+    end
   end
   return true
 end

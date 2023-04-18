@@ -1,5 +1,12 @@
 # Changelog
 
+## Changes in v11
+
+* Update for 10.0.7 / 3.4.1
+* Improvements to route lines showing on the minimap
+* Cope better with Krowi_WorldMapButtons-1.4
+* Cope better with other addons which are incompletely updated for 10.0.5's tooltip changes
+
 ## Changes in v10
 
 * If TomTom is present, let you set a waypoint for every related point at once

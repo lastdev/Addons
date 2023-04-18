@@ -1,4 +1,4 @@
-local SI, L = unpack(select(2, ...))
+local SI, L = unpack((select(2, ...)))
 local Module = SI:NewModule('Progress', 'AceEvent-3.0')
 
 -- Lua functions
@@ -686,6 +686,7 @@ Module.TrackedQuest = {
       72373, -- Aiding the Accord: The Hunt is On
       72374, -- Aiding the Accord: Dragonbane Keep
       72375, -- Aiding the Accord: The Isles Call
+      75259, -- Aiding the Accord: Zskera Vault
     },
   },
   {
@@ -732,6 +733,8 @@ Module.TrackedQuest = {
     showFunc = PrimalStormsCoreShow,
     resetFunc = PrimalStormsCoreReset,
     relatedQuest = {
+      73162, -- Storm's Fury
+      72686, -- Storm Surge
       70723, -- Earth
       70752, -- Water
       70753, -- Air
@@ -911,6 +914,7 @@ function Module:ShowTooltip(tooltip, columns, showall, preshow)
       local show
       for toon, t in cpairs(SI.db.Toons, true) do
         if (
+          showall or
           (t.Progress and t.Progress[index] and t.Progress[index].unlocked) or
           (tbl.showFunc and tbl.showFunc(toon, index))
         ) then

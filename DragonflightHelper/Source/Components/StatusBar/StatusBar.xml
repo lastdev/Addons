@@ -1,0 +1,72 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+  <Frame name="DFH_StatusBarFrame" mixin="DFH_StatusBarMixin" virtual="true" enableMouse="true">
+    <Scripts>
+      <OnLoad method="OnLoad" />
+      <OnShow method="OnShow" />
+      <OnHide method="OnHide" />
+      <OnEnter method="OnEnter" />
+      <OnLeave method="OnLeave" />
+    </Scripts>
+
+    <Size y="15" />
+
+    <Anchors>
+      <Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" />
+      <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-5" />
+    </Anchors>
+
+    <Frames>
+      <Frame parentKey="Container">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" />
+          <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" />
+        </Anchors>
+
+        <Layers>
+          <Layer level="OVERLAY">
+            <FontString parentKey="Title" inherits="GameFontHighlightSmall" justifyH="LEFT">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="5" />
+                <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" />
+              </Anchors>
+            </FontString>
+            <FontString parentKey="Description" inherits="GameFontHighlightSmall" justifyH="RIGHT">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" />
+                <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="-5" />
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+
+      <StatusBar parentKey="StatusBarForeground">
+        <Anchors>
+          <Anchor point="TOPLEFT" x="1" />
+          <Anchor point="BOTTOMRIGHT" />
+        </Anchors>
+      </StatusBar>
+
+      <StatusBar parentKey="StatusBarBackground">
+        <Anchors>
+          <Anchor point="TOPLEFT" x="1" />
+          <Anchor point="BOTTOMRIGHT" />
+        </Anchors>
+      </StatusBar>
+
+      <Button mixin="DFH_StatusBarButton" parentKey="Button" enableMouse="true">
+        <Anchors>
+          <Anchor point="TOPLEFT" />
+          <Anchor point="BOTTOMRIGHT" />
+        </Anchors>
+        <Scripts>
+          <OnClick method="OnClick" />
+          <OnEnter method="OnEnter" />
+          <OnLeave method="OnLeave" />
+        </Scripts>
+      </Button>
+    </Frames>
+  </Frame>
+</Ui>

@@ -147,6 +147,49 @@ local DATA = {
 	["i:35622"] = not Environment.IsVanillaClassic() and {
 		["i:37705"] = 0.1, -- Water
 	} or nil,
+	-- =========================================== Rousing / Awakened ==============================
+	["i:190322"] = Environment.IsRetail() and {
+		["i:190324"] = 10, -- Order
+	} or nil,
+	["i:190324"] = Environment.IsRetail() and {
+		["i:190322"] = 0.1, -- Order
+	} or nil,
+	["i:190326"] = Environment.IsRetail() and {
+		["i:190327"] = 10, -- Air
+	} or nil,
+	["i:190327"] = Environment.IsRetail() and {
+		["i:190326"] = 0.1, -- Air
+	} or nil,
+	["i:190320"] = Environment.IsRetail() and {
+		["i:190321"] = 10, -- Fire
+	} or nil,
+	["i:190321"] = Environment.IsRetail() and {
+		["i:190320"] = 0.1, -- Fire
+	} or nil,
+	["i:190330"] = Environment.IsRetail() and {
+		["i:190331"] = 10, -- Decay
+	} or nil,
+	["i:190331"] = Environment.IsRetail() and {
+		["i:190330"] = 0.1, -- Decay
+	} or nil,
+	["i:190328"] = Environment.IsRetail() and {
+		["i:190329"] = 10, -- Frost
+	} or nil,
+	["i:190329"] = Environment.IsRetail() and {
+		["i:190328"] = 0.1, -- Frost
+	} or nil,
+	["i:190315"] = Environment.IsRetail() and {
+		["i:190316"] = 10, -- Earth
+	} or nil,
+	["i:190316"] = Environment.IsRetail() and {
+		["i:190315"] = 0.1, -- Earth
+	} or nil,
+	["i:190451"] = Environment.IsRetail() and {
+		["i:190450"] = 10, -- Ire
+	} or nil,
+	["i:190450"] = Environment.IsRetail() and {
+		["i:190451"] = 0.1, -- Ire
+	} or nil,
 	-- ========================================= Wod Fish ==========================================
 	["i:109137"] = Environment.IsRetail() and {
 		["i:111601"] = 4, -- Enormous Crescent Saberfish
@@ -188,7 +231,7 @@ local DATA = {
 		["i:111663"] = 2, -- Blackwater Whiptail
 		["i:111662"] = 1, -- Small Blackwater Whiptail
 	} or nil,
-	-- ========================================== Aromatic Fish Oil (BFA) ===========================
+	-- ========================================== Aromatic Fish Oil (BFA) ==========================
 	["i:160711"] = Environment.IsRetail() and {
 		["i:152543"] = 1, -- Sand Shifter
 		["i:152544"] = 1, -- Slimy Mackerel
@@ -202,7 +245,7 @@ local DATA = {
 		["i:174327"] = 1, -- Malformed Gnasher
 		["i:174328"] = 1, -- Aberrant Voidfin
 	} or nil,
-	-- ========================================== Ore Nuggets =======================================
+	-- ========================================== Ore Nuggets ======================================
 	["i:2771"] = Environment.IsRetail() and {
 		["i:108295"] = 0.1, -- Tin Ore
 	} or nil,

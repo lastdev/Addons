@@ -112,6 +112,12 @@ L["CONFIG_SELLING_ALL_ITEMS_CATEGORY"] = "Venta: Todos los objetos"
 L["CONFIG_SELLING_AUTO_SELECT_NEXT"] = "Selecciona automáticamente el siguiente objeto de tu bolso"
 L["CONFIG_SELLING_AUTO_SELECT_NEXT_TOOLTIP_HEADER"] = "Selección automática de objetos"
 L["CONFIG_SELLING_AUTO_SELECT_NEXT_TOOLTIP_TEXT"] = "Al publicar, selecciona automáticamente el siguiente objeto en la vista de bolsa."
+--[[Translation missing --]]
+L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER"] = "Select any partial stacks that exist after posting all complete stacks."
+--[[Translation missing --]]
+L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_HEADER"] = "Automatic partial stack selection"
+--[[Translation missing --]]
+L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_TEXT"] = "When posting add the partial stack as the next item to post if it exists. This won't cause any further searches."
 L["CONFIG_SELLING_BAG_SELECT_SHORTCUT"] = "en un objeto en su bolsa lo pone en la pestaña Venta"
 L["CONFIG_SELLING_BUY_SHORTCUT"] = "en una subasta que no poseas lo comprará"
 L["CONFIG_SELLING_CANCEL_SHORTCUT"] = "en una subasta de su propiedad lo cancelará"

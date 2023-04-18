@@ -112,6 +112,12 @@ L["CONFIG_SELLING_ALL_ITEMS_CATEGORY"] = "Vendi: Tutti gli Oggetti"
 L["CONFIG_SELLING_AUTO_SELECT_NEXT"] = "Seleziona automaticamente il prossimo oggetto nella tua sacca"
 L["CONFIG_SELLING_AUTO_SELECT_NEXT_TOOLTIP_HEADER"] = "Selezione automatica oggetto"
 L["CONFIG_SELLING_AUTO_SELECT_NEXT_TOOLTIP_TEXT"] = "Quando crei automaticamente una nuova asta seleziona l'oggetto successivo nelle tue sacche."
+--[[Translation missing --]]
+L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER"] = "Select any partial stacks that exist after posting all complete stacks."
+--[[Translation missing --]]
+L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_HEADER"] = "Automatic partial stack selection"
+--[[Translation missing --]]
+L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_TEXT"] = "When posting add the partial stack as the next item to post if it exists. This won't cause any further searches."
 L["CONFIG_SELLING_BAG_SELECT_SHORTCUT"] = "su un'oggetto nelle tue sacche per attivare la scheda Vendita"
 L["CONFIG_SELLING_BUY_SHORTCUT"] = "su un'asta non tua per comprarlo subito"
 L["CONFIG_SELLING_CANCEL_SHORTCUT"] = "su una tua asta per cancellarla"

@@ -112,6 +112,12 @@ L["CONFIG_SELLING_ALL_ITEMS_CATEGORY"] = "Verkaufen: Alle Gegenstände"
 L["CONFIG_SELLING_AUTO_SELECT_NEXT"] = "Automatisch den nächsten Gegenstand im Inventar auswählen"
 L["CONFIG_SELLING_AUTO_SELECT_NEXT_TOOLTIP_HEADER"] = "Automatische Gegenstandsauswahl"
 L["CONFIG_SELLING_AUTO_SELECT_NEXT_TOOLTIP_TEXT"] = "Beim Einstellen von Auktionen wird automatisch der nächste Gegenstand in der Inventaransicht ausgewählt."
+--[[Translation missing --]]
+L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER"] = "Select any partial stacks that exist after posting all complete stacks."
+--[[Translation missing --]]
+L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_HEADER"] = "Automatic partial stack selection"
+--[[Translation missing --]]
+L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_TEXT"] = "When posting add the partial stack as the next item to post if it exists. This won't cause any further searches."
 L["CONFIG_SELLING_BAG_SELECT_SHORTCUT"] = "auf einen Gegenstand im Inventar, um ihn im Verkaufenreiter zu verwenden"
 L["CONFIG_SELLING_BUY_SHORTCUT"] = "auf eine fremde Auktion, kauft diese"
 L["CONFIG_SELLING_CANCEL_SHORTCUT"] = "auf eine eigene Auktion, bricht diese ab"
@@ -170,12 +176,9 @@ L["CONFIG_SMALL_TABS_TOOLTIP_TEXT"] = "Wenn zu viele Addons im Auktionshaus Reit
 L["CONFIG_STACK_TOOLTIP"] = "Zeige Stapelpreis, während Shift gedrückt wird, an."
 L["CONFIG_TOOLTIPS_CATEGORY"] = "Tooltips"
 L["CONFIG_TOOLTIPS_TEXT"] = "Optionen zum Anzeigen verschiedener auktionsbezogener Informationen in Tooltips."
---[[Translation missing --]]
-L["CONFIG_UNDERCUT_SCAN_MATCH_ILVL_VARIANTS"] = "For gear use item level and title when doing undercut checks"
---[[Translation missing --]]
-L["CONFIG_UNDERCUT_SCAN_MATCH_ILVL_VARIANTS_TOOLTIP_HEADER"] = "Gear Use Item Level and Title"
---[[Translation missing --]]
-L["CONFIG_UNDERCUT_SCAN_MATCH_ILVL_VARIANTS_TOOLTIP_TEXT"] = "Leave this on to match potential gear undercuts by item level and title, rather than by only item base type."
+L["CONFIG_UNDERCUT_SCAN_MATCH_ILVL_VARIANTS"] = "Verwende für Ausrüstung die Gegenstandsstufe und den Titel, wenn du die Unterbietung nachprüfst"
+L["CONFIG_UNDERCUT_SCAN_MATCH_ILVL_VARIANTS_TOOLTIP_HEADER"] = "Verwende für Ausrüstung die Gegenstandsstufe und den Titel"
+L["CONFIG_UNDERCUT_SCAN_MATCH_ILVL_VARIANTS_TOOLTIP_TEXT"] = "Lasse dies aktiviert, um potenzielle Ausrüstungsunterbietungen nach der Gegenstandsstufe und den Titel abzugleichen, anstatt nur nach dem Gegenstandsbasistyp."
 L["CONFIG_UNDERCUT_SCAN_NOT_LIFO"] = "Schließe Ausrüstung und Haustiere in Unterboten-Scans ein"
 L["CONFIG_UNDERCUT_SCAN_NOT_LIFO_TOOLTIP_HEADER"] = "Unterboten-Scan für Ausrüstung/Haustiere"
 L["CONFIG_UNDERCUT_SCAN_NOT_LIFO_TOOLTIP_TEXT"] = "Lasse diese Option aktiviert, um Auktionen für Haustiere und Ausrüstung einzuschließen, wenn der Unterboten-Scan verwenden wird. Schalten diese Option aus, um Haustiere und Ausrüstung auszuschließen."
@@ -229,8 +232,7 @@ L["ENCHANT_TOOLTIP_TOOLTIP_TEXT"] = "Zeigt entzaubern Infos im Tooltip an."
 L["ENGAGE_HEADER"] = "Weitere Infos und Support"
 L["ERROR_REOPEN_AUCTION_HOUSE"] = "Vorgang kann nicht abgeschlossen werden, bitte schließe und öffne das Auktionshaus erneut."
 L["EXACT_SEARCH"] = "Genaue Suche"
---[[Translation missing --]]
-L["EXPANSION"] = "Expansion"
+L["EXPANSION"] = "Erweiterung"
 L["EXPORT"] = "Exportieren"
 L["EXPORT_AS"] = "Exportieren als:"
 L["EXPORT_RESULTS"] = "Ergebnisse exportieren"
@@ -250,8 +252,7 @@ L["GEAR_VENDOR_PRICE_MULTIPLIER"] = "Händlerpreis-Multiplikator für Ausrüstun
 L["HIDE"] = "Ausblenden"
 L["HISTORY"] = "Verlauf"
 L["IMPORT"] = "Importieren"
---[[Translation missing --]]
-L["IMPORTED"] = "Imported"
+L["IMPORTED"] = "Eingeführt"
 L["INFO_TAB_HEADER"] = "Auctionator - Info"
 L["IS_TOP_COLUMN"] = "Spitze?"
 L["IS_UNDERCUT"] = "Unterboten?"

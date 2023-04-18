@@ -3,7 +3,7 @@
 
                                           Dark Soil Tillers
 
-                                       v2.15 - 26th March 2023
+                                       v3.01 - 16th April 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -35,7 +35,9 @@ local pluginHandler = {}
 local GameTooltip = _G.GameTooltip
 local GetAchievementCriteriaInfo = GetAchievementCriteriaInfo
 local GetFriendshipReputation = C_GossipInfo.GetFriendshipReputation
+local GetItemNameByID = C_Item.GetItemNameByID
 local IsControlKeyDown = _G.IsControlKeyDown
+local IsQuestFlaggedCompleted = C_QuestLog.IsQuestFlaggedCompleted
 local LibStub = _G.LibStub
 local UIParent = _G.UIParent
 local format = _G.format
@@ -672,11 +674,6 @@ local function printPC( message )
 end
 
 -- Plugin handler for HandyNotes
-local function infoFromCoord(mapFile, coord)
-	local point = ns.points[mapFile] and ns.points[mapFile][coord]
-	return point[1], point[2], point[3], point[4]
-end
-
 function pluginHandler:OnEnter(mapFile, coord)
 	if self:GetCenter() > UIParent:GetCenter() then
 		GameTooltip:SetOwner(self, "ANCHOR_LEFT")
@@ -684,11 +681,11 @@ function pluginHandler:OnEnter(mapFile, coord)
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 	end
 
-	local dataType, first, second, third = infoFromCoord(mapFile, coord)
+	local pin = ns.points[ mapFile ] and ns.points[ mapFile ][ coord ]
 	
-	if dataType == "N" then
-		GameTooltip:SetText(ns.colour.prefix ..L[second])
-		local fri = GetFriendshipReputation( first ) -- Friendship Reputation Info table
+	if ( pin.pinType == "N" ) then
+		GameTooltip:SetText(ns.colour.prefix ..L[ pin.name ])
+		local fri = GetFriendshipReputation( pin.friendID ) -- Friendship Reputation Info table
 		local reaction, likes = match( fri.text, "([^%.]*)%.%s(.*)" )
 		if fri.nextThreshold then
 			GameTooltip:AddLine( ns.colour.highlight ..reaction .." ("
@@ -698,74 +695,80 @@ function pluginHandler:OnEnter(mapFile, coord)
 		else
 			GameTooltip:AddLine(ns.colour.highlight ..reaction ..".\n" ..likes)
 		end
-		if third then
-			GameTooltip:AddLine( ns.colour.plaintext ..L[third] )
+		if pin.tip then
+			GameTooltip:AddLine( ns.colour.plaintext ..L[ pin.tip ] )
 		end
-	elseif dataType == "B" then
-		GameTooltip:SetText( ns.colour.prefix ..L[first] )
-		if type(second) == "number" then
-			if third then
-				GameTooltip:AddLine( ns.colour.plaintext ..L[third] )
-				if ( second == 31292 ) or ( second == 31406 ) then
-					GameTooltip:AddLine(ns.colour.plaintext .."A one-time rare spawn. Reward is\n"
-											.."decent gold value vendor trash" )
-				end
+	elseif ( pin.pinType == "B" ) then
+		if pin.title then
+			GameTooltip:SetText( ns.colour.prefix ..L[ pin.title ] )
+			if pin.item then
+				GameTooltip:AddLine( ns.colour.plaintext ..L[ pin.item ] )
 			end
 		else
-			GameTooltip:AddLine(ns.colour.plaintext ..L[second]) -- the item the player is probably farming
+			local itemName = GetItemNameByID( pin.item ) or "Staff of the Hidden Master"
+			GameTooltip:SetText( ns.colour.prefix ..L[ itemName ] )
 		end
-	elseif dataType == "O" then
+		if pin.quest then
+			completed = IsQuestFlaggedCompleted( pin.quest )
+			if ( completed == true ) then
+				GameTooltip:AddLine( ns.colour.highlight
+						.."\nYou won't see this as you've already\n"
+						.."clicked on it. It is a one-time reward." )
+			else
+				GameTooltip:AddLine( ns.colour.highlight
+						.."\nYou may click on this one time only.\n"
+						.."You have not yet collected this reward." )
+				if ( pin.quest==31406 ) or ( pin.quest==31867 ) then
+				elseif ( pin.quest==31407 ) then -- "Staff of the Hidden Master"
+					GameTooltip:AddLine( ns.colour.highlight
+						.."It will spawn from time to time." )
+				else
+					GameTooltip:AddLine( ns.colour.highlight
+						.."The NPC spawns from time to time." )
+				end
+			end
+			if pin.tip then
+				GameTooltip:AddLine( ns.colour.plaintext ..L[ pin.tip ] )
+			end
+		end
+	elseif ( pin.pinType == "O" ) then
 		-- Dynamically show the next NPC to visit to continue the chain?
 		-- This will show Farmer Yoon only
 		local complete;
-		if first then
-			if ( first == 30252 ) then			
-				GameTooltip:SetText( ns.colour.prefix ..L[second] )
-				completed = C_QuestLog.IsQuestFlaggedCompleted( 30252 )
-				if ( completed == true ) then
-					GameTooltip:AddLine( ns.colour.plaintext .."Continue with Farmer Yoon" )
-				else
-					GameTooltip:AddLine( ns.colour.plaintext ..L[third] )
-				end
-			elseif ( first == 30257 ) then			
-				GameTooltip:SetText( ns.colour.prefix ..L[second] )
-				completed = C_QuestLog.IsQuestFlaggedCompleted( 30257 )
-				if ( completed == true ) then
-					GameTooltip:AddLine( ns.colour.plaintext .."Continue with Farmer Yoon" )
-				else
-					GameTooltip:AddLine( ns.colour.plaintext ..L[third] )
-				end
-			elseif ( first == 30526 ) then
-				completed = C_QuestLog.IsQuestFlaggedCompleted( 30526 )
-				GameTooltip:AddDoubleLine( ns.colour.prefix ..L[second],
-					( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] ) 
-										or ( "\124cFFFF0000" ..L["Not Completed"] ) )
-				GameTooltip:AddLine( ns.colour.plaintext ..L[third] )
+		if ( pin.quest == 30252 ) then			
+			GameTooltip:SetText( ns.colour.prefix ..L[ pin.title ] )
+			completed = IsQuestFlaggedCompleted( 30252 )
+			if ( completed == true ) then
+				GameTooltip:AddLine( ns.colour.plaintext .."Continue with Farmer Yoon" )
 			else
-				GameTooltip:SetText( ns.colour.prefix ..L[second] )
-				GameTooltip:AddLine( ns.colour.plaintext ..L[third] )
- 			end
-		end
-	elseif ( dataType == "S" ) then
-		local itemName = C_Item.GetItemNameByID( second ) or "Staff of the Hidden Master"
-		GameTooltip:SetText(ns.colour.prefix ..itemName)
-		if third then
-			GameTooltip:AddLine(ns.colour.plaintext ..L[third])
+				GameTooltip:AddLine( ns.colour.plaintext ..L[ pin.tip ] )
+			end
+		elseif ( pin.quest == 30257 ) then			
+			GameTooltip:SetText( ns.colour.prefix ..L[ pin.title ] )
+			completed = IsQuestFlaggedCompleted( 30257 )
+			if ( completed == true ) then
+				GameTooltip:AddLine( ns.colour.plaintext .."Continue with Farmer Yoon" )
+			else
+				GameTooltip:AddLine( ns.colour.plaintext ..L[ pin.tip ] )
+			end
+		elseif ( pin.quest == 30526 ) then
+			completed = IsQuestFlaggedCompleted( 30526 )
+			GameTooltip:AddDoubleLine( ns.colour.prefix ..L[ pin.title ],
+				( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] ) 
+									or ( "\124cFFFF0000" ..L["Not Completed"] ) )
+			GameTooltip:AddLine( ns.colour.plaintext ..L[ pin.tip ] )
+		else
+			GameTooltip:SetText( ns.colour.prefix ..L[ pin.title ] )
+			GameTooltip:AddLine( ns.colour.plaintext ..L[ pin.tip ] )
 		end
 	else
-		GameTooltip:SetText( ns.colour.prefix ..L["Dark Soil"] )
-		if first then
-			if first == "Author" then			
-				if second then
-					GameTooltip:AddLine(ns.colour.plaintext ..L[second])
-				end
-			else
-				GameTooltip:AddLine(ns.colour.plaintext ..L[first])
-			end
+		GameTooltip:SetText( ns.colour.prefix ..L[ "Dark Soil" ] )
+		if pin.tip then
+			GameTooltip:AddLine( ns.colour.plaintext ..L[ pin.tip ] )
 		end
 	end
 
-	if ( ns.db.showCoords == true ) and ( dataType ~= "O" ) then
+	if ( ns.db.showCoords == true ) and ( pin.pinType ~= "O" ) then
 		local mX, mY = HandyNotes:getXY(coord)
 		mX, mY = mX*100, mY*100
 		GameTooltip:AddLine( ns.colour.highlight .."(" ..format( "%.02f", mX ) .."," ..format( "%.02f", mY ) ..")" )
@@ -782,21 +785,21 @@ do
 	continents[ns.pandaria] = true
 	local function iterator(t, prev)
 		if not t or ns.CurrentMap == ns.pandaria then return end
-		local coord, v = next(t, prev)
+		local coord, pin = next(t, prev)
 		local aId, completed, iconIndex, quest, found;
 		while coord do
-			if v then
-				if ( v[1] == "N" ) then
+			if pin then
+				if ( pin.pinType == "N" ) then
 					return coord, nil, ns.texturesSpecial[ns.db.icon_tillersNPCs],
 							ns.db.icon_scale * ns.scalingSpecial[ns.db.icon_tillersNPCs], ns.db.icon_alpha
-				elseif ( v[1] == "O" ) then
-					local completed = C_QuestLog.IsQuestFlaggedCompleted( 30252 )
+				elseif ( pin.pinType == "O" ) then
+					local completed = IsQuestFlaggedCompleted( 30252 )
 					if ( completed == true ) then
-						completed = C_QuestLog.IsQuestFlaggedCompleted( 30257 )
+						completed = IsQuestFlaggedCompleted( 30257 )
 						if ( completed == true ) then
-							if ( v[2] == 31945 ) then
-								completed = C_QuestLog.IsQuestFlaggedCompleted( 31945 )
-								if ( v[3] == "Gina's Vote Quest" ) then
+							if ( pin.quest == 31945 ) then
+								completed = IsQuestFlaggedCompleted( 31945 )
+								if ( pin.title == "Gina's Vote Quest" ) then
 									if ( completed == false ) then
 										return coord, nil, ns.textures[ns.db.icon_tillersQuests],
 											ns.db.icon_scale * ns.scaling[ns.db.icon_tillersQuests], ns.db.icon_alpha
@@ -805,8 +808,8 @@ do
 									return coord, nil, ns.textures[ns.db.icon_tillersQuests],
 										ns.db.icon_scale * ns.scaling[ns.db.icon_tillersQuests], ns.db.icon_alpha
 								end
-							elseif ( v[2] == 30526 ) then
-								completed = C_QuestLog.IsQuestFlaggedCompleted( 30526 )
+							elseif ( pin.quest == 30526 ) then
+								completed = IsQuestFlaggedCompleted( 30526 )
 								if ( completed == false ) then
 									if coord == 42395000 then
 										return coord, nil, ns.textures[ns.db.icon_tillersQuests],
@@ -817,57 +820,51 @@ do
 										ns.db.icon_scale * ns.scaling[ns.db.icon_tillersQuests], ns.db.icon_alpha
 								end
 							end	
-						elseif ( v[2] == 30257 ) then
+						elseif ( pin.quest == 30257 ) then
 							return coord, nil, ns.textures[ns.db.icon_tillersQuests],
 								ns.db.icon_scale * ns.scaling[ns.db.icon_tillersQuests], ns.db.icon_alpha
 						end					
-					elseif ( v[2] == 30252 ) then
+					elseif ( pin.quest == 30252 ) then
 						return coord, nil, ns.textures[ns.db.icon_tillersQuests],
 							ns.db.icon_scale * ns.scaling[ns.db.icon_tillersQuests], ns.db.icon_alpha
 					end
-				elseif v[1] == "B" then
-					quest = tonumber(v[3])
-					if quest then
-						if C_QuestLog.IsQuestFlaggedCompleted(quest) == true then
+				elseif ( pin.pinType == "B" ) then
+					if pin.quest then
+						if IsQuestFlaggedCompleted( pin.quest ) == true then
 							-- don't bother showing
-						elseif ( quest == 31292 ) or ( quest == 31406 ) then
+						elseif ( pin.quest == 31867 ) or ( pin.quest == 31869 ) then
+							if not _G["HandyNotes_APathLessTravelledDB"] then
+								return coord, nil, ns.texturesSpecial[ns.db.icon_choiceBonus],
+									ns.db.icon_scale * ns.scaling[ns.db.icon_choiceBonus], ns.db.icon_alpha
+							end
+						elseif ( pin.quest == 31292 ) or ( pin.quest == 31406 ) or ( pin.quest == 31407 )
+									or ( pin.quest == 31284) then
 							if not _G["HandyNotes_EAPandariaDB"] then
 								return coord, nil, ns.texturesSpecial[ns.db.icon_choiceBonus],
 									ns.db.icon_scale * ns.scaling[ns.db.icon_choiceBonus], ns.db.icon_alpha
 							end
-						else
-							return coord, nil, ns.texturesSpecial[ns.db.icon_choiceBonus],
-									ns.db.icon_scale * ns.scaling[ns.db.icon_choiceBonus], ns.db.icon_alpha
 						end
-					else
+					elseif not _G["HandyNotes_EAPandariaDB"] then
 						return coord, nil, ns.texturesSpecial[ns.db.icon_choiceBonus],
-								ns.db.icon_scale * ns.scaling[ns.db.icon_choiceBonus], ns.db.icon_alpha
+							ns.db.icon_scale * ns.scaling[ns.db.icon_choiceBonus], ns.db.icon_alpha
 					end
-				elseif ( ( v[1] == "D" ) or ( v[1] == "V" ) ) and ( ns.db.icon_darkSoil == true ) then
-					if ns.author then
-						if v[2] and ( v[2] == "Author" ) then
+				elseif ( ( pin.pinType == "D" ) or ( pin.pinType == "V" ) ) 
+						and ( ns.db.icon_darkSoil == true ) then
+					if pin.authorOnly then
+						if ns.author then
 							return coord, nil, ns.textures[10],
-									ns.db.icon_scale * ns.scaling[10], ns.db.icon_alpha
-						else
-							return coord, nil, ns.textures[ns.db.icon_choice],
-									ns.db.icon_scale * ns.scaling[ns.db.icon_choice], ns.db.icon_alpha
+								ns.db.icon_scale * ns.scaling[10], ns.db.icon_alpha
 						end
+					elseif pin.author and ns.author then
+						return coord, nil, ns.textures[10],
+								ns.db.icon_scale * ns.scaling[10], ns.db.icon_alpha
 					else
 						return coord, nil, ns.textures[ns.db.icon_choice],
 								ns.db.icon_scale * ns.scaling[ns.db.icon_choice], ns.db.icon_alpha
 					end
-				elseif ( v[1] == "S" ) and ns.author then
-					if v[2] then
-						if C_QuestLog.IsQuestFlaggedCompleted( v[2] ) == true then
-							-- don't bother showing
-						elseif not _G["HandyNotes_EAPandariaDB"] then
-							return coord, nil, ns.texturesSpecial[ns.db.icon_choiceBonus],
-								ns.db.icon_scale * ns.scaling[ns.db.icon_choiceBonus], ns.db.icon_alpha
-						end
-					end
 				end
 			end
-			coord, v = next(t, coord)
+			coord, pin = next(t, coord)
 		end
 	end
 	function pluginHandler:GetNodes2(mapID)
@@ -933,7 +930,7 @@ ns.options = {
 			name = L["Icon Selection"],
 			inline = true,
 			args = {
-				icon_choice = {				-- D
+				icon_choice = {				-- D/V
 					type = "range",
 					name = L["Dark Soil"],
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
