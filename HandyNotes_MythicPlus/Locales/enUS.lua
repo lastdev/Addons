@@ -44,3 +44,26 @@ L["NO_percentage"] = "93.8 % For skip"
 
 -- Court of stars
 L["COS_percentage"] = "93.68% before entering the masquerade after killing Talixae"
+
+-- Brackenhide Hollow (BH)
+L["BH_skip"] = "Skip"
+L["BH_skip_desc"] = "You can pass by walking/swimming in the water."
+L["BH_gen_cauldron"] = "Cauldron usage"
+L["BH_gen_cauldron_desc"] = "An alchemist with 25 skill points can activate the cauldron. Then players must interact with the cauldron to gain an additional ability that can remove a disease."
+L["BH_cauldron"] = "Cauldron"
+L["BH_cauldron_desc"] = "Pick the cauldron then use the extra button to clean any desease."
+
+-- Freehold (FH)
+L["FH_percentage"] = "82.25% Before Bridge"
+-- Halls of Infusion (HOI)
+-- Neltharion's Lair (NL)
+-- Neltharus (NELT)
+L["NELT_percentage"] = "88.57% Required before bridge"
+L["NELT_percentage_desc"] = "You can compensate missing % by pulling mobs around the last boss area"
+-- Uldaman: Legacy of Tyr (ULD)
+L["ULD_percentage"] = "57.22% Before event"
+-- The Underrot (UNDR)
+-- The Vortex Pinnacle (VP)
+L["VP_slipstream"] = "Use the slipstream to teleport to the other marker"
+L["VP_slipstream_desc1"] = "After defeat of Ertan"
+L["VP_slipstream_desc2"] = "After defeat of Altairus"

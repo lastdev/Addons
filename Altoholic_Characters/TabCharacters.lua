@@ -512,10 +512,10 @@ local function ProfessionsIcon_Initialize(frame, level)
 end
 
 local garrisonTypes = {
-	Enum.GarrisonFollowerType.FollowerType_6_0,
-	Enum.GarrisonFollowerType.FollowerType_7_0,
-	Enum.GarrisonFollowerType.FollowerType_8_0,
-	Enum.GarrisonFollowerType.FollowerType_9_0
+	Enum.GarrisonFollowerType.FollowerType_6_0_GarrisonFollower,
+	Enum.GarrisonFollowerType.FollowerType_7_0_GarrisonFollower,
+	Enum.GarrisonFollowerType.FollowerType_8_0_GarrisonFollower,
+	Enum.GarrisonFollowerType.FollowerType_9_0_GarrisonFollower
 }
 
 local garrisonHeaders = {

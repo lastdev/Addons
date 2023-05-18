@@ -1205,7 +1205,7 @@ L["The buyout price for %s would be above the maximum allowed price. Skipping th
 L["The canlearn filter was ignored because the CanIMogIt addon was not found."] = "Il filtro canlearn è stato ignorato perché il componente aggiuntivo CanIMogIt non è stato trovato."
 L["The experience of editing Custom Strings has been supercharged with IDE-style syntax highlighting and formatting."] = "The experience of editing Custom Strings has been supercharged with IDE-style syntax highlighting and formatting."
 L["The max quantity cannot be zero."] = "La quantità massima non può essere zero."
-L["The min profit did not evalulate to a valid value for this item."] = "Il profitto minimo non è stato valutato a un valore valido per questo oggetto."
+L["The min profit did not evaluate to a valid value for this item."] = "The min profit did not evaluate to a valid value for this item."
 L["The name portion of the search term must be at least 3 characters if present."] = "La parte del nome del termine di ricerca deve contenere almeno 3 caratteri, se presenti."
 L["The pasted value was not valid. Ensure you are pasting the entire import string."] = "Il valore incollato non era valido. Assicurati di incollare l'intera stringa di importazione."
 L["The player \\\"%s\\\" is already on your whitelist."] = "The player \\\"%s\\\" is already on your whitelist."

@@ -103,7 +103,11 @@ function addon:Init(layer)
         		end 
         	end
             
-            C_GossipInfo.SelectOption(TorghastLevelPickerFrame.currentSelectedButton.optionInfo.gossipOptionID)
+            if TorghastLevelPickerFrame.currentSelectedButton then
+                C_GossipInfo.SelectOption(TorghastLevelPickerFrame.currentSelectedButton.optionInfo.gossipOptionID)
+            else
+                print("TLDR-TFF: You have not unlocked Level 6 yet!")
+            end
             
         elseif event == "CHAT_MSG_MONSTER_SAY" then
             local text, monsterName = ...

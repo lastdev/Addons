@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("MPlusAffixes", "DBM-Affixes")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230409014614")
+mod:SetRevision("20230516231722")
 --mod:SetModelID(47785)
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)--All of the S1 DF M+ Dungeons (2516, 2526, 2515, 2521, 1477, 1571, 1176, 960)
 
@@ -26,7 +26,7 @@ local warnThunderingFades					= mod:NewFadesAnnounce(396363, 1, 396347)
 
 local specWarnQuake							= mod:NewSpecialWarningMoveAway(240447, nil, nil, nil, 1, 2)
 local specWarnSpitefulFixate				= mod:NewSpecialWarningYou(350209, nil, nil, nil, 1, 2)
-local specWarnEntangled						= mod:NewSpecialWarningYou(408556, nil, nil, nil, 1, 2)--Change to 14 when new voice ready
+local specWarnEntangled						= mod:NewSpecialWarningYou(408556, nil, nil, nil, 1, 14)
 
 local specWarnPositiveCharge				= mod:NewSpecialWarningYou(396369, nil, 391990, nil, 1, 13)--Short name is using Positive Charge instead of Mark of Lightning
 local specWarnNegativeCharge				= mod:NewSpecialWarningYou(396364, nil, 391991, nil, 1, 13)--Short name is using Netative Charge instead of Mark of Winds
@@ -35,7 +35,8 @@ local yellThunderingFades					= mod:NewIconFadesYell(396363, nil, nil, nil, "YEL
 local specWarnGTFO							= mod:NewSpecialWarningGTFO(209862, nil, nil, nil, 1, 8)--Volcanic and Sanguine
 
 local timerQuakingCD						= mod:NewNextTimer(20, 240447, nil, nil, nil, 3)
-local timerEntangledCD						= mod:NewCDTimer(60, 408556, nil, nil, nil, 3, 396347, nil, nil, 2, 4)
+local timerEntangledCD						= mod:NewCDTimer(30, 408556, nil, nil, nil, 3, 396347, nil, nil, 2, 4)
+local timerAfflictedCD						= mod:NewCDTimer(30, 409492, nil, nil, nil, 5, nil, nil, DBM_COMMON_L.HEALER_ICON, 3, 4)
 local timerThunderingCD						= mod:NewNextTimer(66, 396363, nil, nil, nil, 3, 396347, nil, nil, 2, 4)
 local timerPositiveCharge					= mod:NewBuffFadesTimer(15, 396369, 391990, nil, 2, 5, nil, nil, nil, 1, 5)
 local timerNegativeCharge					= mod:NewBuffFadesTimer(15, 396364, 391991, nil, 2, 5, nil, nil, nil, 1, 5)
@@ -103,12 +104,12 @@ local function checkEntangled(self)
 		return
 	end
 	timerEntangledCD:Start(25)
-	self:Schedule(checkEntangled, 30)
+	self:Schedule(30, checkEntangled, self)
 end
 
 do
 	local validZones
-	if DBM:GetTOC() >= 100100 then--Season 2
+	if (C_MythicPlus.GetCurrentSeason() or 0) == 10 then--DF Season 2
 		validZones = {[657]=true, [1841]=true, [1754]=true, [1458]=true, [2527]=true, [2519]=true, [2451]=true, [2520]=true}
 	else--Season 1
 		validZones = {[2516]=true, [2526]=true, [2515]=true, [2521]=true, [1477]=true, [1571]=true, [1176]=true, [960]=true}
@@ -124,8 +125,8 @@ do
 				"SPELL_AURA_APPLIED 240447 226510 226512 350209 396369 396364 408556",
 			--	"SPELL_AURA_APPLIED_DOSE",
 				"SPELL_AURA_REMOVED 396369 396364 226510",
-				"SPELL_DAMAGE 209862",
-				"SPELL_MISSED 209862",
+--				"SPELL_DAMAGE 209862",
+--				"SPELL_MISSED 209862",
 				"CHALLENGE_MODE_COMPLETED"
 			)
 			if self.Options.NPSanguine then
@@ -164,6 +165,7 @@ function mod:SPELL_CAST_START(args)
 		warnExplosion:Show()
 	elseif spellId == 409492 and self:AntiSpam(3, "aff3") then
 		warnAfflictedCry:Show()
+		timerAfflictedCD:Start()
 	elseif spellId == 408805 and self:AntiSpam(3, "aff5") then
 		warnDestabalize:Show()
 	end
@@ -236,11 +238,11 @@ function mod:SPELL_AURA_APPLIED(args)
 			--Entangled check runs every 30 seconds, and if conditions aren't met for it activating it skips and goes into next 30 second CD
 			--This checks if it was cast (by seeing if timer exists) if not, it starts next timer for next possible cast
 			self:Unschedule(checkEntangled)
-			self:Schedule(checkEntangled, 35)
+			self:Schedule(35, checkEntangled, self)
 		end
 		if args:IsPlayer() then
 			specWarnEntangled:Show()
-			specWarnEntangled:Play("targetyou")--breakvine
+			specWarnEntangled:Play("breakvine")--breakvine
 		end
 	end
 end
@@ -268,6 +270,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
+--[[
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
 	if spellId == 209862 and destGUID == UnitGUID("player") and self:AntiSpam(3, "aff7") then
 		specWarnGTFO:Show(spellName)
@@ -275,6 +278,7 @@ function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
+--]]
 
 --<610.64 01:20:34> [CHAT_MSG_MONSTER_YELL] Marked by lightning!#Raszageth###Global Affix Stalker##0#0##0#3611#nil#0#false#false#false#false", -- [3882]
 --<614.44 01:20:38> [CLEU] SPELL_AURA_APPLIED#Creature-0-3023-1477-12533-199388-00007705B2#Raszageth#Player-3726-0C073FB8#Onlysummonz-Khaz'goroth#396364#Mark of Wind#DEBUFF#nil", -- [3912]

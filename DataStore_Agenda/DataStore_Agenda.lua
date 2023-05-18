@@ -24,6 +24,7 @@ local AddonDB_Defaults = {
 				Calendar = {},
 				Contacts = {},
 				DungeonIDs = {},		-- raid timers
+				BossKills = {},		-- Boss kills (Classic & LK only)
 				ItemCooldowns = {},	-- mysterious egg, disgusting jar, etc..
 				LFGDungeons = {},		-- info about LFG dungeons/raids
 				ChallengeMode = {},	-- info about mythic+
@@ -89,9 +90,12 @@ local function ScanDungeonIDs()
 	local character = addon.ThisCharacter
 	local dungeons = character.DungeonIDs
 	wipe(dungeons)
+	
+	local bossKills = character.BossKills
+	wipe(bossKills)
 
 	for i = 1, GetNumSavedInstances() do
-		local instanceName, instanceID, instanceReset, difficulty, _, extended, _, isRaid, maxPlayers, difficultyName = GetSavedInstanceInfo(i)
+		local instanceName, instanceID, instanceReset, difficulty, _, extended, _, isRaid, maxPlayers, difficultyName, numEncounters = GetSavedInstanceInfo(i)
 
 		if instanceReset > 0 then		-- in 3.2, instances with reset = 0 are also listed (to support raid extensions)
 			extended = extended and 1 or 0
@@ -102,7 +106,20 @@ local function ScanDungeonIDs()
 			end
 
 			local key = format("%s|%s", instanceName, instanceID)
-			dungeons[key] = format("%s|%s|%s|%s", instanceReset, time(), extended, isRaid )
+			dungeons[key] = format("%s|%s|%s|%s", instanceReset, time(), extended, isRaid)
+
+			-- Vanilla & LK
+			if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
+				-- Bosses killed in this dungeon
+				bossKills[key] = {}
+				
+				for encounterIndex = 1, numEncounters do
+					local name, _, isKilled = GetSavedInstanceEncounterInfo(i, encounterIndex)
+					isKilled = isKilled and 1 or 0
+					
+					table.insert(bossKills[key], format("%s|%s", name, isKilled))
+				end
+			end
 		end
 	end
 	
@@ -195,9 +212,7 @@ local function ScanCalendar()
 				local inviteStatus = info.inviteStatus
 				
 				-- 8.0 : for some events, the calendar type may be nil, filter them out
-				if calendarType and calendarType ~= "HOLIDAY" and calendarType ~= "RAID_LOCKOUT"
-					and calendarType ~= "RAID_RESET" and inviteStatus ~= CALENDAR_INVITESTATUS_INVITED
-					and inviteStatus ~= CALENDAR_INVITESTATUS_DECLINED then
+				if calendarType and calendarType ~= "HOLIDAY" and calendarType ~= "RAID_LOCKOUT" and calendarType ~= "RAID_RESET" then
 										
 					-- don't save holiday events, they're the same for all chars, and would be redundant..who wants to see 10 fishing contests every sundays ? =)
 
@@ -237,14 +252,6 @@ end
 
 
 -- *** Event Handlers ***
-local function OnPlayerAlive()
-	ScanContacts()
-end
-
-local function OnFriendListUpdate()
-	ScanContacts()
-end
-
 local function OnUpdateInstanceInfo()
 	ScanDungeonIDs()
 end
@@ -255,6 +262,13 @@ end
 
 local function OnLFGUpdateRandomInfo()
 	ScanLFGDungeons()
+end
+
+local function OnBossKill(event, encounterID, encounterName)
+	-- To do
+	-- print("event:" .. (event or "nil"))
+	-- print("encounterID:" .. (encounterID or "nil"))
+	-- print("encounterName:" .. (encounterName or "nil"))
 end
 
 -- local function OnLFGLockInfoReceived()
@@ -372,6 +386,19 @@ local function _GetSavedInstanceInfo(character, key)
 	local reset, lastCheck, isExtended, isRaid = strsplit("|", instanceInfo)
 
 	return tonumber(reset), tonumber(lastCheck), (isExtended == "1") and true or nil, (isRaid == "1") and true or nil
+end
+
+local function _GetSavedInstanceNumEncounters(character, key)
+	return (character.BossKills[key]) and #character.BossKills[key] or 0
+end
+
+local function _GetSavedInstanceEncounterInfo(character, key, index)
+	local info = character.BossKills[key]
+	if not info then return end
+	
+	local name, isKilled = strsplit("|", info[index])
+	
+	return name, (isKilled == "1") and true or nil
 end
 
 local function _HasSavedInstanceExpired(character, key)
@@ -612,54 +639,100 @@ local PublicMethods = {
 	DeleteItemCooldown = _DeleteItemCooldown,
 }
 
+if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
+	-- if we're not in retail, overwrite the whole table
+	PublicMethods = {
+		GetSavedInstances = _GetSavedInstances,
+		GetSavedInstanceInfo = _GetSavedInstanceInfo,
+		GetSavedInstanceNumEncounters = _GetSavedInstanceNumEncounters,
+		GetSavedInstanceEncounterInfo = _GetSavedInstanceEncounterInfo,
+		HasSavedInstanceExpired = _HasSavedInstanceExpired,
+		DeleteSavedInstance = _DeleteSavedInstance,
+		
+		GetNumCalendarEvents = _GetNumCalendarEvents,
+		GetCalendarEventInfo = _GetCalendarEventInfo,
+		HasCalendarEventExpired = _HasCalendarEventExpired,
+		DeleteCalendarEvent = _DeleteCalendarEvent,
+	}
+end
+
 function addon:OnInitialize()
 	addon.db = LibStub("AceDB-3.0"):New(addonName .. "DB", AddonDB_Defaults)
 
 	DataStore:RegisterModule(addonName, addon, PublicMethods)
-	DataStore:SetCharacterBasedMethod("GetNumContacts")
-	DataStore:SetCharacterBasedMethod("GetContactInfo")
-
+	
+	-- All versions
 	DataStore:SetCharacterBasedMethod("GetSavedInstances")
 	DataStore:SetCharacterBasedMethod("GetSavedInstanceInfo")
 	DataStore:SetCharacterBasedMethod("HasSavedInstanceExpired")
 	DataStore:SetCharacterBasedMethod("DeleteSavedInstance")
-	DataStore:SetCharacterBasedMethod("IsBossAlreadyLooted")
-	DataStore:SetCharacterBasedMethod("GetLFGDungeonKillCount")
-
+	
 	DataStore:SetCharacterBasedMethod("GetNumCalendarEvents")
 	DataStore:SetCharacterBasedMethod("GetCalendarEventInfo")
 	DataStore:SetCharacterBasedMethod("HasCalendarEventExpired")
 	DataStore:SetCharacterBasedMethod("DeleteCalendarEvent")
+		
+	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+		-- Retail only
+		DataStore:SetCharacterBasedMethod("GetNumContacts")
+		DataStore:SetCharacterBasedMethod("GetContactInfo")
 
-	DataStore:SetCharacterBasedMethod("GetNumItemCooldowns")
-	DataStore:SetCharacterBasedMethod("GetItemCooldownInfo")
-	DataStore:SetCharacterBasedMethod("HasItemCooldownExpired")
-	DataStore:SetCharacterBasedMethod("DeleteItemCooldown")
+		DataStore:SetCharacterBasedMethod("GetSavedInstances")
+		DataStore:SetCharacterBasedMethod("GetSavedInstanceInfo")
+		DataStore:SetCharacterBasedMethod("HasSavedInstanceExpired")
+		DataStore:SetCharacterBasedMethod("DeleteSavedInstance")
+		DataStore:SetCharacterBasedMethod("IsBossAlreadyLooted")
+		DataStore:SetCharacterBasedMethod("GetLFGDungeonKillCount")
+
+
+		DataStore:SetCharacterBasedMethod("GetNumItemCooldowns")
+		DataStore:SetCharacterBasedMethod("GetItemCooldownInfo")
+		DataStore:SetCharacterBasedMethod("HasItemCooldownExpired")
+		DataStore:SetCharacterBasedMethod("DeleteItemCooldown")
+	else
+		-- Vanilla & LK
+		DataStore:SetCharacterBasedMethod("GetSavedInstanceNumEncounters")
+		DataStore:SetCharacterBasedMethod("GetSavedInstanceEncounterInfo")
+	end
 end
 
 function addon:OnEnable()
-	-- Contacts
-	addon:RegisterEvent("PLAYER_ALIVE", OnPlayerAlive)
-	addon:RegisterEvent("FRIENDLIST_UPDATE", OnFriendListUpdate)
 
-	-- Dungeon IDs
+	-- All versions
+	
+	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+		addon:RegisterEvent("PLAYER_ALIVE", ScanContacts)
+	else
+		addon:RegisterEvent("PLAYER_ALIVE", ScanDungeonIDs)
+	end
+	
 	addon:RegisterEvent("UPDATE_INSTANCE_INFO", OnUpdateInstanceInfo)
 	addon:RegisterEvent("RAID_INSTANCE_WELCOME", OnRaidInstanceWelcome)
-	addon:RegisterEvent("LFG_UPDATE_RANDOM_INFO", OnLFGUpdateRandomInfo)
-	-- addon:RegisterEvent("LFG_LOCK_INFO_RECEIVED", OnLFGLockInfoReceived)
-	addon:RegisterEvent("ENCOUNTER_END", OnEncounterEnd)
-		
 	addon:RegisterEvent("CHAT_MSG_SYSTEM", OnChatMsgSystem)
-	addon:RegisterEvent("CHALLENGE_MODE_MAPS_UPDATE", OnChallengeModeMapsUpdate)
 
-	ClearExpiredDungeons()
-	
 	-- Calendar (only register after setting the current month)
 	local DateInfo = C_DateAndTime.GetCurrentCalendarTime()
 	local thisMonth,thisYear = DateInfo.month, DateInfo.year
 
 	C_Calendar.SetAbsMonth(thisMonth, thisYear)
 	addon:RegisterEvent("CALENDAR_UPDATE_EVENT_LIST", OnCalendarUpdateEventList)
+
+	-- Vanilla & LK
+	if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
+		addon:RegisterEvent("BOSS_KILL", OnBossKill)
+		return
+	end
+	
+	-- Retail only
+	addon:RegisterEvent("FRIENDLIST_UPDATE", ScanContacts)
+
+	-- Dungeon IDs
+	addon:RegisterEvent("LFG_UPDATE_RANDOM_INFO", OnLFGUpdateRandomInfo)
+	-- addon:RegisterEvent("LFG_LOCK_INFO_RECEIVED", OnLFGLockInfoReceived)
+	addon:RegisterEvent("ENCOUNTER_END", OnEncounterEnd)
+	addon:RegisterEvent("CHALLENGE_MODE_MAPS_UPDATE", OnChallengeModeMapsUpdate)
+
+	ClearExpiredDungeons()
 
 	-- Item Cooldowns
 	addon:RegisterEvent("CHAT_MSG_LOOT", OnChatMsgLoot)
@@ -668,10 +741,22 @@ function addon:OnEnable()
 end
 
 function addon:OnDisable()
+	-- All versions
 	addon:UnregisterEvent("PLAYER_ALIVE")
-	addon:UnregisterEvent("FRIENDLIST_UPDATE")
 	addon:UnregisterEvent("UPDATE_INSTANCE_INFO")
 	addon:UnregisterEvent("RAID_INSTANCE_WELCOME")
 	addon:UnregisterEvent("CHAT_MSG_SYSTEM")
-	addon:UnregisterEvent("CALENDAR_UPDATE_EVENT_LIST")
+	
+	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+		-- Retail only
+		addon:UnregisterEvent("CHAT_MSG_LOOT")
+		addon:UnregisterEvent("ENCOUNTER_END")
+		addon:UnregisterEvent("FRIENDLIST_UPDATE")
+		addon:UnregisterEvent("LFG_UPDATE_RANDOM_INFO")
+		addon:UnregisterEvent("CHALLENGE_MODE_MAPS_UPDATE")
+		addon:UnregisterEvent("CALENDAR_UPDATE_EVENT_LIST")
+	else
+		-- Vanilla & LK
+		addon:UnregisterEvent("BOSS_KILL")	
+	end
 end

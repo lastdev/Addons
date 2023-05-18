@@ -189,7 +189,6 @@ points[ 1426 ] = { -- Dun Morogh Classic - Kharanos
 	[46775429] = { obj=113768, name="Brightly Colored Egg" },
 	[46775223] = { obj=113768, name="Brightly Colored Egg" },
 	[46785359] = { obj=113768, name="Brightly Colored Egg", tip="Under the wagon" },
-	[46825366] = { obj=113768, name="Brightly Colored Egg", tip="Between three stacks of crates and a large barrel" },
 	[46875212] = { obj=113768, name="Brightly Colored Egg" },
 	[46905220] = { obj=113768, name="Brightly Colored Egg", tip="In a nook on the stairs" },
 	[46905416] = { obj=113768, name="Brightly Colored Egg" },
@@ -216,9 +215,6 @@ points[ ns.durotar ] = { -- Durotar Shared - Razor Hill
 	[53854210] = { aID=2497, aIndexC=1, aIndexR=4, faction="Horde", tip="AnywhereE" }, -- Spring Fling
 
 	[50654327] = { obj=113768, name="Brightly Colored Egg", classic=false, tip="In a crate which is under the wagon" },
-	[50764270] = { obj=113768, name="Brightly Colored Egg", classic=false,
-					tip="UNDER the round cooking/eating table.\n\n((Different side of the table and additional\n"
-						.."to the orginal Wrath location))" },
 	[50804270] = { obj=113768, name="Brightly Colored Egg", classic=false,
 					tip="On the round cooking/eating table.\n\n((Hey in Wrath it's UNDER the table, with the\n"
 						.."entire cooking area much closer to the building!))" },
@@ -248,14 +244,11 @@ points[ ns.durotar ] = { -- Durotar Shared - Razor Hill
 	[52064182] = { obj=113768, name="Brightly Colored Egg", tip="In the water tub" },
 	[52164090] = { obj=113768, name="Brightly Colored Egg", tip="Under the lamp" },
 	[52564261] = { obj=113768, name="Brightly Colored Egg", classic=false, tip="On top of the wayfinding post" },
-	[52684122] = { obj=113768, name="Brightly Colored Egg", tip="Between three cactii" },
 	[52794106] = { obj=113768, name="Brightly Colored Egg", tip="Between three cactii" },
 	[52824097] = { obj=113768, name="Brightly Colored Egg" },
 	[52984187] = { obj=113768, name="Brightly Colored Egg", classic=true, tip="Under the lamp" },
 	[52984187] = { obj=113768, name="Brightly Colored Egg", classic=false,
 					tip="((In Wrath there was a lamp here, which\nexplains why this egg is out in the open!))" },
-	[53014094] = { obj=113768, name="Brightly Colored Egg", tip="In the centre of and under the round serving table.\n\n"
-																.."The best hidden egg in Razor Hill!" },
 	[53064083] = { obj=113768, name="Brightly Colored Egg", tip="Between two sacks and a cushion" },
 	[53094198] = { obj=113768, name="Brightly Colored Egg", tip="Under the rickshaw" },
 	[53094233] = { obj=113768, name="Brightly Colored Egg", tip="Under the lamp" },
@@ -275,7 +268,6 @@ points[ ns.durotar ] = { -- Durotar Shared - Razor Hill
 	[53354358] = { obj=113768, name="Brightly Colored Egg", classic=true },
 	[53384289] = { obj=113768, name="Brightly Colored Egg" },
 	[53504172] = { obj=113768, name="Brightly Colored Egg", classic=false },
-	[53814175] = { obj=113768, name="Brightly Colored Egg" },
 	[53934321] = { obj=113768, name="Brightly Colored Egg" },
 	[54334173] = { obj=113768, name="Brightly Colored Egg" },
 	[54374106] = { obj=113768, name="Brightly Colored Egg", tip="Inside the cauldron" },
@@ -574,7 +566,7 @@ points[ ns.silvermoonCity ] = { -- Silvermoon City
 }
 
 points[ ns.stormwindCity ] = { -- Stormwind City
-	[55505600] = { aID=2421, faction="Alliance", tip="hide" }, -- Noble Garden
+	[50945672] = { aID=2421, faction="Alliance", tip="hide" }, -- Noble Garden
 }
 
 points[ 71 ] = { -- Tanaris Retail

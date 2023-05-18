@@ -151,6 +151,7 @@ end
 
 function addon:OnEnable()
 	addon:RegisterEvent("AUCTION_HOUSE_SHOW")
+	addon:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW")
 	addon:SetupOptions()
 	
 	addon:ScheduleTimer(CheckExpiries, 3)	-- check AH expiries 3 seconds later, to decrease the load at startup
@@ -158,6 +159,7 @@ end
 
 function addon:OnDisable()
 	addon:UnregisterEvent("AUCTION_HOUSE_SHOW")
+	addon:UnregisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW")
 end
 
 local function GetAuctionHouseZone()
@@ -198,7 +200,7 @@ local function ScanAuctions()
 		-- if info.itemLink and itemID and not saleStatus then
 		if itemID and not saleStatus then
 			table.insert(character.Auctions, format("%s|%s|%s|%s|%s|%s|%s|%s", 
-				AHZone, itemID, info.quantity or 1, info.bidder or "", info.bidAmount or 0, info.buyoutAmount, info.timeLeftSeconds, info.auctionID))
+				AHZone, itemID, info.quantity or 1, info.bidder or "", info.bidAmount or 0, info.buyoutAmount or 0, info.timeLeftSeconds or 0, info.auctionID or 0))
 		end
 	end
 	
@@ -220,7 +222,7 @@ local function ScanBids()
 	
 		-- review item.name ? item.quantity ?
 		table.insert(character.Bids, format("%s|%s|%s|%s|%s|%s|%s", 
-			AHZone, itemID, info.quantity or 1, info.bidder or "", info.bidAmount or 0, info.buyoutAmount, info.timeLeftSeconds))	
+			AHZone, itemID, info.quantity or 1, info.bidder or "", info.bidAmount or 0, info.buyoutAmount, info.timeLeft))	
 	
 		-- local itemName, _, count, _, _, _, _, _, 
 			-- _, buyoutPrice, bidPrice, _, ownerName = C_AuctionHouse.GetReplicateItemInfo("bidder", i);
@@ -239,15 +241,35 @@ local function ScanBids()
 end
 
 -- *** EVENT HANDLERS ***
+function addon:PLAYER_INTERACTION_MANAGER_FRAME_SHOW(eventName, ...)
+	local paneType = ...
+	if paneType ==  Enum.PlayerInteractionType.Auctioneer then 
+		addon:AUCTION_HOUSE_SHOW()
+	end
+end							
+
+function addon:PLAYER_INTERACTION_MANAGER_FRAME_HIDE(eventName, ...)
+	local paneType = ...
+	if paneType ==  Enum.PlayerInteractionType.Auctioneer then 
+		addon:AUCTION_HOUSE_CLOSED()
+	end
+end
+
 function addon:AUCTION_HOUSE_SHOW()
 	addon:RegisterEvent("AUCTION_HOUSE_CLOSED")
+	addon:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE")
 	addon:RegisterEvent("OWNED_AUCTIONS_UPDATED", ScanAuctions)
 	addon:RegisterEvent("AUCTION_HOUSE_AUCTION_CREATED", ScanAuctions)
 	addon:RegisterEvent("BIDS_UPDATED", ScanBids)
+	
+	local character = addon.ThisCharacter
+	character.lastUpdate = time()
+	character.lastVisitDate = date("%Y/%m/%d %H:%M")
 end
 
 function addon:AUCTION_HOUSE_CLOSED()
 	addon:UnregisterEvent("AUCTION_HOUSE_CLOSED")
+	addon:UnregisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE")
 	addon:UnregisterEvent("OWNED_AUCTIONS_UPDATED")
 	addon:UnregisterEvent("AUCTION_HOUSE_AUCTION_CREATED")
 	addon:UnregisterEvent("BIDS_UPDATED")

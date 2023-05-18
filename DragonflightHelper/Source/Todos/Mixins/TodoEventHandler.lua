@@ -1,23 +1,19 @@
 DFH_TodoEventHandler = {}
 
+local DFH_EVENTS = {
+  "ENCOUNTER_LOOT_RECEIVED",
+  "QUEST_TURNED_IN",
+  "CURRENCY_DISPLAY_UPDATE",
+  "QUEST_ACCEPTED",
+  "QUEST_REMOVED"
+}
+
 function DFH_TodoEventHandler:OnShow()
-  FrameUtil.RegisterFrameForEvents(self, {
-    "ENCOUNTER_LOOT_RECEIVED",
-    "QUEST_TURNED_IN",
-    "CURRENCY_DISPLAY_UPDATE",
-    "QUEST_ACCEPTED",
-    "QUEST_REMOVED"
-  })
+  FrameUtil.RegisterFrameForEvents(self, DFH_EVENTS)
 end
 
 function DFH_TodoEventHandler:OnHide()
-  FrameUtil.UnregisterFrameForEvents(self, {
-    "ENCOUNTER_LOOT_RECEIVED",
-    "QUEST_TURNED_IN",
-    "CURRENCY_DISPLAY_UPDATE",
-    "QUEST_ACCEPTED",
-    "QUEST_REMOVED"
-  })
+  FrameUtil.UnregisterFrameForEvents(self, DFH_EVENTS)
 end
 
 function DFH_TodoEventHandler:OnEvent(event, ...)

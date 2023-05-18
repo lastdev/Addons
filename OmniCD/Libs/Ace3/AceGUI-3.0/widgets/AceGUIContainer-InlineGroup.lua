@@ -1,16 +1,8 @@
----------------------------------------------------------------------------------
-
--- Customized for OmniCD by permission of the copyright owner.
-
----------------------------------------------------------------------------------
-
--- Widgets backdrop
-
 --[[-----------------------------------------------------------------------------
 InlineGroup Container
 Simple container widget that creates a visible "box" with an optional title.
 -------------------------------------------------------------------------------]]
-local Type, Version = "InlineGroup-OmniCD", 22
+local Type, Version = "InlineGroup", 22
 local AceGUI = LibStub and LibStub("AceGUI-3.0", true)
 if not AceGUI or (AceGUI:GetWidgetVersion(Type) or 0) >= Version then return end
 
@@ -39,17 +31,7 @@ local methods = {
 
 	["LayoutFinished"] = function(self, width, height)
 		if self.noAutoHeight then return end
-		--[[ s r (use height to determine if the group is empty or has all content hidden)
 		self:SetHeight((height or 0) + 40)
-		]]
-		if not height or height < 20 then
-			self.frame:Hide()
-			self:SetHeight(0)
-		else
-			self:SetHeight(height + 40)
-			self.frame:Show()
-		end
-		-- e
 	end,
 
 	["OnWidthSet"] = function(self, width)
@@ -76,41 +58,29 @@ local methods = {
 --[[-----------------------------------------------------------------------------
 Constructor
 -------------------------------------------------------------------------------]]
---[[ s -r
 local PaneBackdrop  = {
 	bgFile = "Interface\\ChatFrame\\ChatFrameBackground",
 	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
 	tile = true, tileSize = 16, edgeSize = 16,
 	insets = { left = 3, right = 3, top = 5, bottom = 3 }
 }
-]]
 
 local function Constructor()
 	local frame = CreateFrame("Frame", nil, UIParent)
 	frame:SetFrameStrata("FULLSCREEN_DIALOG")
 
-	local titletext = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal-OmniCD")
-	--[[ s r
+	local titletext = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	titletext:SetPoint("TOPLEFT", 14, 0)
 	titletext:SetPoint("TOPRIGHT", -14, 0)
-	]]
-	titletext:SetPoint("TOPLEFT", 10, 0)
-	titletext:SetPoint("TOPRIGHT", -10, 0)
-	-- e
 	titletext:SetJustifyH("LEFT")
 	titletext:SetHeight(18)
 
-	local border = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate" or nil)
+	local border = CreateFrame("Frame", nil, frame, "BackdropTemplate")
 	border:SetPoint("TOPLEFT", 0, -17)
 	border:SetPoint("BOTTOMRIGHT", -1, 3)
-	--[[ s r
 	border:SetBackdrop(PaneBackdrop)
 	border:SetBackdropColor(0.1, 0.1, 0.1, 0.5)
 	border:SetBackdropBorderColor(0.4, 0.4, 0.4)
-	]]
-	OmniCD[1].BackdropTemplate(border, "ACD")
-	border:SetBackdropColor(0, 0, 0, 0.25) -- BDR (group bg) re-darken
-	border:SetBackdropBorderColor(0, 0, 0)
 
 	--Container Support
 	local content = CreateFrame("Frame", nil, border)
@@ -118,10 +88,10 @@ local function Constructor()
 	content:SetPoint("BOTTOMRIGHT", -10, 10)
 
 	local widget = {
-		frame	  = frame,
-		content	  = content,
+		frame     = frame,
+		content   = content,
 		titletext = titletext,
-		type	  = Type
+		type      = Type
 	}
 	for method, func in pairs(methods) do
 		widget[method] = func

@@ -98,7 +98,7 @@ local function BuildView()
 	end
 	
 	-- Prepare a list of uncollected followers
-	local followersList = C_Garrison.GetFollowers(Enum.GarrisonFollowerType.FollowerType_6_0)
+	local followersList = C_Garrison.GetFollowers(Enum.GarrisonFollowerType.FollowerType_6_0_GarrisonFollower)
 	if followersList then 
 		local link
 		for k, follower in pairs(followersList) do

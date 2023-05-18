@@ -41,7 +41,7 @@ function DFH_TimerMixin:Update()
   local secondsUntilNextEvent = (C_DateAndTime.GetSecondsUntilDailyReset() / interval) % 1 * interval
 
   local aboutToStart = secondsUntilNextEvent <= (10 * 60)
-  local inProgress = math.abs(interval - secondsUntilNextEvent) <= (self.activeThreshold * 60)
+  local inProgress = (interval - secondsUntilNextEvent) <= (self.activeThreshold * 60)
 
   if aboutToStart then
     self:SetForegroundColor(self.color.r, self.color.g, self.color.b)
@@ -51,9 +51,9 @@ function DFH_TimerMixin:Update()
   elseif inProgress then
     self:SetForegroundColor(self.thresholdColor.r, self.thresholdColor.g, self.thresholdColor.b)
     self:SetMinMaxValues(0, self.activeThreshold * 60)
-    self:SetValue(secondsUntilNextEvent - self.activeThreshold * 60)
+    self:SetValue(interval - secondsUntilNextEvent)
     self:SetDescription("Active - " ..
-      SecondsToTime((secondsUntilNextEvent - self.activeThreshold * 60), true))
+      SecondsToTime((interval - secondsUntilNextEvent), true))
   else
     self:SetForegroundColor(self.color.r, self.color.g, self.color.b)
     self:SetMinMaxValues(0, interval)
@@ -61,7 +61,7 @@ function DFH_TimerMixin:Update()
     self:SetDescription(SecondsToTime(secondsUntilNextEvent, true))
   end
 
-  if secondsUntilNextEvent < (5 * 60) then
+  if aboutToStart then
     self.timer = C_Timer.NewTimer(1, function() self:Update() end)
   else
     self.timer = C_Timer.NewTimer(30, function() self:Update() end)

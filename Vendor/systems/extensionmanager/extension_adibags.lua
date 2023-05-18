@@ -7,6 +7,8 @@ local sellFilterEnabled = false
 local destroyFilterEnabled = false
 local adiBags = nil
 local LAdiBags = nil
+local filters = {}
+local filterEngine = nil
 
 -- AdiBags Sell Filter for Vendor
 local function registerSellFilter()
@@ -88,6 +90,53 @@ local function registerDestroyFilter()
     end
 end
 
+-- Create and registers a filter for each non-locked rule
+local function createRuleFilters()
+    if (not filterEngine) then
+        --filterEngine = Addon:CreateRulesEngine(true)
+        --filterEngine:CreateCategory(1, "=adibags=", 0)
+    end
+
+    for _, rule in ipairs(Addon.Rules.GetDefinitions()) do
+        if (not rule.Locked) then
+            local filter = adiBags:RegisterFilter("Vendor:" .. rule.Id, 100, 'ABEvent-1.0')
+            filter.uiName = L.ADDON_NAME .. ": " .. rule.Name
+            filter.uiDesc = rule.Description
+        
+            filter.OnInitialize = function(self)
+                -- No settings, so nothing to initialize at this time.
+                --filterEngine:AddRule(1, rule)
+            end
+        
+            filter.OnEnable = function(self)
+                filter.enabled = true
+                --filterEngine:AddRule(1, rule)
+                adiBags:UpdateFilters()
+            end
+        
+            filter.OnDisable = function(self)
+                filter.eanbled = false
+                --filterEngine:RemoveRule(rule.Id)
+                adiBags:UpdateFilters()
+            end
+
+            filter.Filter = function(self, slotData)
+                -- Get Item info for bag/slot
+                local item = Addon.Systems.ItemProperties:GetItemPropertiesFromBagAndSlot(slotData.bag, slotData.slot)
+
+                if (item) then
+                    --local result = filterEngine:EvaluateOne(rule.Id, item)
+                    --if (result == true) then
+                        --return filter.uiName
+                    --end
+                end
+            end
+
+            table.insert(filters, filter)
+        end
+    end
+end
+
 
 -- This will register a callback to AdiBags with Vendor so when vendor's evaluation changes, AdiBags will be refreshed.
 local function registerAdiBagsExtension()
@@ -116,6 +165,7 @@ local function registerAdiBagsExtension()
             end
             registerSellFilter()
             registerDestroyFilter()
+            --createRuleFilters()
             return true
         end,
     }

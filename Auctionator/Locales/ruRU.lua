@@ -112,12 +112,9 @@ L["CONFIG_SELLING_ALL_ITEMS_CATEGORY"] = "Продажа: все предмет�
 L["CONFIG_SELLING_AUTO_SELECT_NEXT"] = "Автоматический выбор следующего предмета в сумке"
 L["CONFIG_SELLING_AUTO_SELECT_NEXT_TOOLTIP_HEADER"] = "Автоматический выбор предмета"
 L["CONFIG_SELLING_AUTO_SELECT_NEXT_TOOLTIP_TEXT"] = "При выставлении на аукцион автоматически выбирается следующий предмет в выбранной сумке."
---[[Translation missing --]]
-L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER"] = "Select any partial stacks that exist after posting all complete stacks."
---[[Translation missing --]]
-L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_HEADER"] = "Automatic partial stack selection"
---[[Translation missing --]]
-L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_TEXT"] = "When posting add the partial stack as the next item to post if it exists. This won't cause any further searches."
+L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER"] = "Выберите любые частичные стаки, которые остались после выставления на аукцион всех полных стаков."
+L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_HEADER"] = "Автоматический выбор частичного стака"
+L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_TEXT"] = "При выставлении на аукцион добавьте частичный стак в качестве следующего предмета для выставления, если он существует. Это не вызовет дальнейших поисков."
 L["CONFIG_SELLING_BAG_SELECT_SHORTCUT"] = "на предмете в вашей сумке помещает это во вкладку Продажи"
 L["CONFIG_SELLING_BUY_SHORTCUT"] = "на аукционе, который вам не принадлежит, вы его купите"
 L["CONFIG_SELLING_CANCEL_SHORTCUT"] = "на аукционе вы отмените его"

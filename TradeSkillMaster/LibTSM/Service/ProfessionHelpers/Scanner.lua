@@ -861,7 +861,7 @@ function private.BulkInsertMats(craftString)
 				local matStringType = nil
 				if data.reagentType == Enum.CraftingReagentType.Basic and data.dataSlotType == Enum.TradeskillSlotDataType.ModifiedReagent then
 					matStringType = MatString.TYPE.QUALITY
-				elseif data.reagentType == Enum.CraftingReagentType.Optional then
+				elseif data.reagentType == Enum.CraftingReagentType.Optional or data.reagentType == Enum.CraftingReagentType.Modifying then
 					matStringType = MatString.TYPE.OPTIONAL
 				elseif data.reagentType == Enum.CraftingReagentType.Finishing then
 					matStringType = MatString.TYPE.FINISHING
@@ -998,7 +998,7 @@ end
 function private.IsSpecialMatValid(data, categorySkillLevel)
 	if data.reagentType == Enum.CraftingReagentType.Basic and data.dataSlotType == Enum.TradeskillSlotDataType.ModifiedReagent then
 		-- pass
-	elseif data.reagentType == Enum.CraftingReagentType.Optional or data.reagentType == Enum.CraftingReagentType.Finishing then
+	elseif data.reagentType == Enum.CraftingReagentType.Optional or data.reagentType == Enum.CraftingReagentType.Modifying or data.reagentType == Enum.CraftingReagentType.Finishing then
 		-- pass
 	else
 		return false

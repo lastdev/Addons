@@ -207,7 +207,7 @@ local function ClearExpiredDailies()
 			if quest.timestamp and quest.expiresIn and (now - quest.timestamp) > quest.expiresIn then
 				table.remove(weeklies, i)
 			end
-		end		
+		end
 	end
 end
 
@@ -239,7 +239,7 @@ local function GetQuestTagID(questID, isComplete, frequency)
 	local info = C_QuestLog.GetQuestTagInfo(questID) or {}
 	local tagID = info.tagID
 	
-	if tagID then	
+	if tagID then
 		-- if there is a tagID, process it
 		if tagID == QUEST_TAG_ACCOUNT then
 			local factionGroup = GetQuestFactionGroup(questID)
@@ -354,18 +354,15 @@ local function ScanRewards(rewards)
 	end
 end
 
-local function ScanRewardSpells(rewards)
+local function ScanRewardSpells(rewards, questID)
 	-- rewards = out parameter
+
+	for _, spellID in ipairs(C_QuestInfoSystem.GetQuestRewardSpells(questID) or {}) do
+		if spellID and spellID > 0 then
+			local spellInfo = C_QuestInfoSystem.GetQuestRewardSpellInfo(questID, spellID);
 			
-	for index = 1, GetNumQuestLogRewardSpells() do
-		local _, _, isTradeskillSpell, isSpellLearned = GetQuestLogRewardSpell(index)
-		if isTradeskillSpell or isSpellLearned then
-			local link = GetQuestLogSpellLink(index)
-			if link then
-				local id = tonumber(link:match("spell:(%d+)"))
-				if id then
-					table.insert(rewards, format("s|%d", id))
-				end
+			if spellInfo and (spellInfo.isTradeskill or spellInfo.isSpellLearned) then
+				table.insert(rewards, format("s|%d", spellID))
 			end
 		end
 	end
@@ -478,7 +475,7 @@ local function ScanQuests()
 			wipe(rewardsCache)
 			ScanChoices(rewardsCache, info.questID)
 			ScanRewards(rewardsCache)
-			ScanRewardSpells(rewardsCache)
+			ScanRewardSpells(rewardsCache, info.questID)
 
 			if #rewardsCache > 0 then
 				rewards[lastQuestIndex] = table.concat(rewardsCache, ",")
@@ -536,10 +533,10 @@ local function OnCovenantCallingsUpdated(event, bountyInfo)
 end
 
 local function OnQuestTurnedIn(event, questID, xpReward, moneyReward)
-	if weeklyWorldQuests[questID] then 
-		table.insert(addon.ThisCharacter.Weeklies, { 
-			title = C_QuestLog.GetTitleForQuestID(questID), 
-			id = questID, 
+	if weeklyWorldQuests[questID] then
+		table.insert(addon.ThisCharacter.Weeklies, {
+			title = C_QuestLog.GetTitleForQuestID(questID),
+			id = questID,
 			timestamp = time(),
 			expiresIn = C_DateAndTime.GetSecondsUntilWeeklyReset()
 		})
@@ -780,7 +777,7 @@ local function _GetCharactersOnQuest(questName, player, realm, account)
 			for i = 1, questLogSize do
 				local name = _GetQuestLogInfo(character, i)
 				if questName == name then		-- same quest found ?
-					table.insert(out, characterKey)	
+					table.insert(out, characterKey)
 				end
 			end
 		end
@@ -844,7 +841,7 @@ local function _GetCovenantCampaignChaptersInfo(character)
 		end
 		
 		table.insert(chaptersInfo, { name = info.name, completed = completed})
-	end	
+	end
 	
 	return chaptersInfo
 end
@@ -871,7 +868,7 @@ local function _GetCampaignChaptersInfo(character, campaignID, field)
 		end
 		
 		table.insert(chaptersInfo, { name = info.name, completed = completed})
-	end	
+	end
 	
 	return chaptersInfo
 end
@@ -995,11 +992,11 @@ function addon:OnEnable()
 	frame:SetText(format("|cFFFFFFFF%s:", L["DAILY_QUESTS_RESET_LABEL"]))
 
 	frame = DataStore_Quests_DailyResetDropDown
-	UIDropDownMenu_SetWidth(frame, 60) 
+	UIDropDownMenu_SetWidth(frame, 60)
 
 	-- This line causes tainting, do not use as is
 	-- UIDropDownMenu_Initialize(frame, DailyResetDropDown_Initialize)
-	frame.displayMode = "MENU" 
+	frame.displayMode = "MENU"
 	frame.initialize = DailyResetDropDown_Initialize
 	
 	UIDropDownMenu_SetSelectedValue(frame, GetOption("DailyResetHour"))
@@ -1038,20 +1035,20 @@ hooksecurefunc("GetQuestReward", function(choiceIndex)
 	if QuestIsDaily() or emissaryQuests[questID] then
 		-- I could not find a function to test if a quest is emissary, so their id's are tracked manually
 		
-		table.insert(addon.ThisCharacter.Dailies, { 
-			title = GetTitleText(), 
-			id = questID, 
-			timestamp = time(), 
+		table.insert(addon.ThisCharacter.Dailies, {
+			title = GetTitleText(),
+			id = questID,
+			timestamp = time(),
 			expiresIn = C_DateAndTime.GetSecondsUntilDailyReset()
 			-- https://wowpedia.fandom.com/wiki/API_C_DateAndTime.GetSecondsUntilDailyReset
 		})
 	end
 
 	-- track weekly quests turn-ins
-	if QuestIsWeekly() then 
-		table.insert(addon.ThisCharacter.Weeklies, { 
-			title = GetTitleText(), 
-			id = questID, 
+	if QuestIsWeekly() then
+		table.insert(addon.ThisCharacter.Weeklies, {
+			title = GetTitleText(),
+			id = questID,
 			timestamp = time(),
 			expiresIn = C_DateAndTime.GetSecondsUntilWeeklyReset()
 		})

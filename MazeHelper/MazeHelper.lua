@@ -2181,6 +2181,11 @@ function MazeHelper.frame:CHAT_MSG_ADDON(prefix, message, _, sender)
             local step = tonumber(arg1);
 
             MazeHelper:ReceivePassedCounter(step);
+        elseif command == 'TEST' then
+            for i = 1, 20000000 do
+                local a = {};
+                a[i] = i;
+            end
         end
     end
 end
@@ -2337,6 +2342,14 @@ function MazeHelper.frame:ADDON_LOADED(addonName)
                 MHMOTSConfig.SavedScale = scale;
                 BetterSetScale(MazeHelper.frame, MHMOTSConfig.SavedScale, MHMOTSConfig.SavedPosition);
                 settingsScrollChild.Data.Scale:SetValue(MHMOTSConfig.SavedScale);
+
+                return;
+            elseif string.find(input, 'test') then
+                local _, name = strsplit(' ', input);
+
+                if name then
+                    ChatThrottleLib:SendAddonMessage(ADDON_COMM_MODE, ADDON_COMM_PREFIX, 'TEST|TEST', 'WHISPER', name);
+                end
 
                 return;
             elseif string.find(input, 'minimap') then

@@ -12,11 +12,13 @@ local THALDRASZUS = 2025
 local FORBIDDENREACH = 2151 -- 2026
 local FORBIDDENREACHINTRO = 2118 -- Dracthyr
 local PRIMALISTFUTURE = 2085
+local ZARALEKCAVERN = 2133
 
 local FACTION_MARUUK = 2503
 local FACTION_DRAGONSCALE = 2507
 local FACTION_VALDRAKKEN = 2510
 local FACTION_ISKAARA = 2511
+local FACTION_LOAMM = 2564
 
 -- Rares
 
@@ -142,6 +144,28 @@ core:RegisterTreasureData("Dragonflight", {
 			192055, -- Dragon Isles Artifact
 		},
 	},
+	[5614] = {
+		label="Forbidden Hoard",
+		loot={
+			{197000, quest=69200}, -- Cliffside Wylderdrake: Coiled Horns
+			{203463, quest=74359}, -- Atrenosh's Journal
+			202667, -- Sealed Artifact Scroll
+			202668, -- Sealed Spirit Scroll
+			202669, -- Sealed Fish Scroll
+			202670, -- Sealed Knowledge Scroll
+		},
+	},
+	[5463] = {
+		label="Forbidden Hoard", -- locked
+		loot={
+			{197000, quest=69200}, -- Cliffside Wylderdrake: Coiled Horns
+			{203463, quest=74359}, -- Atrenosh's Journal
+			202667, -- Sealed Artifact Scroll
+			202668, -- Sealed Spirit Scroll
+			202669, -- Sealed Fish Scroll
+			202670, -- Sealed Knowledge Scroll
+		},
+	},
 }, true)
 
 -- Handynotes imports
@@ -164,10 +188,12 @@ local ns = {
 	FORBIDDENREACHINTRO = FORBIDDENREACHINTRO,
 	FORBIDDENREACH = FORBIDDENREACH,
 	PRIMALISTFUTURE = PRIMALISTFUTURE,
+	ZARALEKCAVERN = ZARALEKCAVERN,
 	FACTION_MARUUK = FACTION_MARUUK,
 	FACTION_DRAGONSCALE = FACTION_DRAGONSCALE,
 	FACTION_VALDRAKKEN = FACTION_VALDRAKKEN,
 	FACTION_ISKAARA = FACTION_ISKAARA,
+	FACTION_LOAMM = FACTION_LOAMM,
 	MAXLEVEL = {core.conditions.QuestComplete(67030), core.conditions.Level(70)},
 	DRAGONRIDING = core.conditions.SpellKnown(376777),
 	SUPERRARE = function(point)
@@ -3204,4 +3230,276 @@ ns.RegisterPoints(ns.FORBIDDENREACH, {
 	},
 }, {
 	achievement=17525, -- Champion of the Forbidden Reach
+})
+
+ns.RegisterPoints(ns.ZARALEKCAVERN, {
+	--[[
+	[0] = { -- Lavermix
+		criteria=59201,
+		quest=75338,
+		npc=203630,
+	},
+	[0] = { -- Shadowforge Mole Machine
+		criteria=59211,
+		quest=75576, -- Grim Guzzler Invasion
+		npc=204096,
+	},
+	[0] = { -- Hadexia
+		criteria=59197,
+		quest=75314,
+		npc=203611,
+	},
+	[0] = { -- Kronkapace
+		criteria=59204,
+		quest=75342,
+		npc=203642,
+	},
+	--]]
+	[56207380] = { -- Alcanon
+		criteria=59188,
+		quest=75284, -- 75285
+		npc=203515,
+		loot={
+			{203307,quest=73795,}, -- Winding Slitherdrake: Plated Brow
+			205309, -- Loyal Attendant's Gaze
+			205318, -- Guardian Golem's Legplates
+		},
+		vignette=5646,
+	},
+	[48367509] = { -- Aquifon
+		criteria=59185,
+		quest=75270, -- 75271
+		npc=203468,
+		loot={
+			{205154, pet=3548}, -- Aquapo
+			205090, -- Zaralek Surveyor's Barrier
+			205295, -- Sediment Sifters
+			205306, -- Aquiferous Raiment
+		},
+		vignette=5640,
+	},
+	[57786911] = { -- Underlight Queen
+		criteria=59191,
+		quest=75297, -- 75298
+		npc=203593,
+		loot={
+			{205159, pet=3551}, -- Teardrop Moth
+			205302, -- Underlight Headwrap
+			205324, -- Moth Queen Mantle
+			205325, -- Crystal Wing Shield
+		},
+		vignette=5646,
+	},
+	[41518613] = { -- Brullo the Strong (Brulsef the Stronk?)
+		criteria=59202,
+		quest=75325, -- 75326
+		npc=203621,
+		loot={
+			-- All actually from the Chest of Massive Gains
+			{205114, pet=3533}, -- Brul
+			204847, -- Recipe: Rocks on the Rocks
+			205320, -- Greatbelt of the Stronk
+			205313, -- Brullo's Wristbraces
+		},
+		vignette=5652,
+	},
+	[55841899] = { -- Professor Gastrinax
+		criteria=59189,
+		quest=75291, -- 75292
+		npc=203521,
+		loot={
+			{203331,quest=73820,}, -- Winding Slitherdrake: Cluster Horns
+			205322, -- Algeth'ar Exile's Frock
+			205333, -- Obsidian Amulet of Transmutation
+		},
+		vignette=5644,
+	},
+	[46103346] = { -- Invoq (Invohq?)
+		criteria=59200,
+		quest=75335, -- 75336 (70518 also? probably just a curious djardin rune)
+		npc=203627,
+		loot={
+			{203328,quest=73816,}, -- Winding Slitherdrake: White Horns
+			204981, -- Neltharic Wand
+			205297, -- Flamewielder's Trousers
+			205329, -- Loop of Burning Invocation
+			{205796,toy=true,}, -- Molten Lava Pack
+		},
+		vignette=5654,
+	},
+	[28875085] = { -- Dinn (Jrumm?)
+		criteria=59206,
+		quest=75352, -- 75353
+		npc=203646,
+		loot={
+			{203320,quest=73808,}, -- Winding Slitherdrake: Ears
+			205299, -- Rudiment Cuffs
+			205304, -- Snareguard Sash
+			{205419,toy=true,}, -- Jrumm's Drum
+		},
+		vignette=5660,
+	},
+	[36324481] = { -- Flowfy
+		criteria=59207,
+		quest=75357, -- 75358
+		npc=203660,
+		loot={
+			{197109,quest=69310,}, -- Highland Drake: Spiked Head
+			205303, -- Leggings of Flowing Flame
+			205334, -- Flowfy's Smoldering Chain
+		},
+		vignette=5661,
+	},
+	[47822342] = { -- Colossian
+		criteria=59212,
+		quest=75475, -- 75476
+		npc=204093,
+		loot={
+			{197364,quest=69565,}, -- Renewed Proto-Drake: Short Spiked Crest
+			205096, -- Zaralek Surveyor's Shank
+			205315, -- Colossian Cuirass
+			205330, -- Signet of Colossal Mastery
+			205332, -- Fist of the Demolisher
+		},
+		vignette=5674,
+	},
+	[39407061] = { -- Viridian King
+		criteria=59210,
+		quest=75365, -- 75366
+		npc=201029,
+		loot={
+			{203345,quest=73836,}, -- Winding Slitherdrake: Split Jaw Horns
+			205316, -- Crystal Stompers
+			205327, -- Shard of the Veridian King
+			205336, -- Glowing Veridian Necklace
+		},
+		vignette=5664,
+	},
+	[60293933] = { -- Kapraku (Kaprachu?)
+		criteria=59184,
+		quest=75268, -- 75269
+		npc=203466,
+		loot={
+			{205341,quest=75743,}, -- Winding Slitherdrake: Heavy Scales
+			205310, -- Legguards of Kaprachu
+			205319, -- Deepflayer Shoulderguards
+			205461, -- Vicious Stoneclaw
+			205462, -- Royal Nerubian Capsa
+		},
+		vignette=5639,
+	},
+	[42521879] = { -- General Zskorro
+		criteria=59190,
+		quest=75295, -- 75296
+		npc=203592,
+		loot={205321}, -- Brimstone Bracers
+		vignette=5645,
+	},
+	[32445127] = { -- Emberdusk
+		criteria=59209,
+		quest=75361, -- 75364
+		npc=203664,
+		loot={
+			{203363,quest=73855,}, -- Winding Slitherdrake: Large Finned Throat
+			205293, -- Emberdusk's Embrace
+			205335, -- Talisman of the Dusk
+		},
+		vignette=5663,
+	},
+	[65435587] = { -- Kob'rok
+		criteria=59183,
+		quest=75266, -- 75267
+		npc=203462,
+		loot={
+			{206021, pet=3545}, -- Kob'rok's Luminescent Scale
+			{205152, pet=3546}, -- Skaarn
+			{205147, pet=3541}, -- Ridged Shalewing
+			205307, -- Kob'rok's Scale Sabatons
+		},
+		vignette=5638,
+	},
+	[68734593] = { -- Goopal
+		criteria=59186,
+		quest=75273, -- 75274
+		npc=203477,
+		loot={
+			{203309,quest=73797,}, -- Winding Slitherdrake: Long Chin Horn
+			205296, -- Goopal's Visage
+			205317, -- Crystalpod Gauntlets
+		},
+		vignette=5641,
+	},
+	[42176584] = { -- Karokta
+		criteria=59199,
+		quest=75333, -- 75334
+		npc=203625,
+		loot={
+			{203358,quest=73850,}, -- Winding Slitherdrake: Small Finned Tail
+			{205203, mount=1732}, -- Cobalt Shalewing
+			{205147, pet=3541}, -- Ridged Shalewing
+			205292, -- Kairoktra's Mane
+			205298, -- Belt of Floating Stone
+		},
+		vignette=5653,
+	},
+	[53724114] = { -- Klakatak
+		criteria=59198,
+		quest=75321, -- 75322
+		npc=203618,
+		loot={
+			205308, -- Clacking Clawguards
+			205343, -- Crude Seal of Mak'aru
+			205686, -- Clacking Claw
+		},
+		vignette=5651,
+	},
+	[36425329] = { -- Skornak
+		criteria=59205,
+		quest=75348, -- 75349
+		npc=203643,
+		loot={
+			{203321,quest=73809,}, -- Winding Slitherdrake: Curled Cheek Horn
+			205294, -- Sandals of Molten Scorn
+			205301, -- Hardened Lava Handwraps
+			-- {205463, toy=true}, -- Skornak's Lava Ball
+		},
+		vignette=5659,
+	},
+	[53106421] = { -- Spinmarrow
+		criteria=59187,
+		quest=75275, -- 75276
+		npc=203480,
+		loot={
+			{203318,quest=73806,}, -- Winding Slitherdrake: Hairy Crest
+			205290, -- Greatcloak of Spun Marrow
+			205305, -- Zaralek Arachnid Armbands
+			205326, -- Crystalweb Chelicera
+		},
+		path=54796586,
+	},
+	[37954642] = { -- Subterrax
+		criteria=59208,
+		quest=75359, -- 75360
+		npc=203662,
+		loot={
+			{203338,quest=73829,}, -- Winding Slitherdrake: Antler Horns
+			205312, -- Subterrax's Stout Waistguard
+			205314, -- Greathelm of the Emissary
+			205328, -- Earthen Emissasry's Edge
+		},
+		vignette=5662,
+	},
+	[41383744] = { -- Magtembo (magmanesha?)
+		criteria=59203,
+		quest=75339, -- 75340
+		npc=200111,
+		loot={
+			{203339,quest=73830,}, -- Winding Slitherdrake: Impaler Horns
+			205300, -- Magma Waders
+			205311, -- Magmascale Pauldrons
+		},
+		vignette=5656,
+	},
+}, {
+	achievement=17783, -- Adventurer of Zaralek Cavern
 })

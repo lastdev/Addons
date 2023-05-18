@@ -25,8 +25,7 @@ function P:SetIconLayout(frame, sortOrder)
 		local icon = icons[i]
 		icon:Hide()
 
-
-		if displayInactive or icon.active then
+		if (displayInactive or icon.active) and (self.multiline or i <= self.maxNumIcons) then
 			icon:ClearAllPoints()
 			if numActive > 1 then
 				count = count + 1
@@ -56,24 +55,27 @@ function P:SetIconLayout(frame, sortOrder)
 			numActive = numActive + 1
 			lastActiveIndex = i
 
-			icon:Show()
+			if not self.multiline or count < self.maxNumIcons then
+				icon:Show()
+			end
 		end
 	end
 end
 
 function P:SetAnchor(frame)
-	if E.db.general.showAnchor or (E.db.position.detached and not E.db.position.locked) then
+	local anchorShouldShow = E.db.position.detached and not E.db.position.locked
+	if anchorShouldShow or E.db.general.showAnchor then
 		frame.anchor:Show()
 	else
 		frame.anchor:Hide()
 	end
 
-	if not E.db.position.detached or E.db.position.locked then
-		frame.anchor:EnableMouse(false)
-		frame.anchor.background:SetColorTexture(0.756, 0, 0.012, 0.7)
-	else
+	if anchorShouldShow then
 		frame.anchor:EnableMouse(true)
 		frame.anchor.background:SetColorTexture(0, 0.8, 0, 1)
+	else
+		frame.anchor:EnableMouse(false)
+		frame.anchor.background:SetColorTexture(0.756, 0, 0.012, 0.7)
 	end
 end
 
@@ -83,14 +85,12 @@ function P:SetIconScale(frame)
 	frame.container:SetScale(scale)
 end
 
-function P:SetBorder(icon)
-	local db = E.db.icons
+function P:SetBorder(icon, db)
 	if db.displayBorder then
 		icon.borderTop:ClearAllPoints()
 		icon.borderBottom:ClearAllPoints()
 		icon.borderRight:ClearAllPoints()
 		icon.borderLeft:ClearAllPoints()
-
 		local edgeSize = ( E.db.general.showRange and not E.db.position.detached and self.effectivePixelMult or E.PixelMult) / db.scale
 		icon.borderTop:SetPoint("TOPLEFT", icon, "TOPLEFT")
 		icon.borderTop:SetPoint("BOTTOMRIGHT", icon, "TOPRIGHT", 0, -edgeSize)
@@ -100,25 +100,21 @@ function P:SetBorder(icon)
 		icon.borderLeft:SetPoint("BOTTOMRIGHT", icon, "BOTTOMLEFT", edgeSize, edgeSize)
 		icon.borderRight:SetPoint("TOPRIGHT", icon, "TOPRIGHT", 0, -edgeSize)
 		icon.borderRight:SetPoint("BOTTOMLEFT", icon, "BOTTOMRIGHT", -edgeSize, edgeSize)
-
 		local r, g, b = db.borderColor.r, db.borderColor.g, db.borderColor.b
 		icon.borderTop:SetColorTexture(r, g, b)
 		icon.borderBottom:SetColorTexture(r, g, b)
 		icon.borderRight:SetColorTexture(r, g, b)
 		icon.borderLeft:SetColorTexture(r, g, b)
-
 		icon.borderTop:Show()
 		icon.borderBottom:Show()
 		icon.borderRight:Show()
 		icon.borderLeft:Show()
-
 		icon.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
 	else
 		icon.borderTop:Hide()
 		icon.borderBottom:Hide()
 		icon.borderRight:Hide()
 		icon.borderLeft:Hide()
-
 		icon.icon:SetTexCoord(0, 1, 0, 1)
 	end
 end
@@ -138,12 +134,12 @@ function P:SetMarker(icon, markEnhanced)
 	end
 end
 
-function P:SetOpacity(icon)
+function P:SetOpacity(icon, db, opaque)
 
-	if icon.statusBar then
+	if opaque then
 		icon:SetAlpha(1.0)
 	else
-		icon:SetAlpha(icon.active and E.db.icons.activeAlpha or E.db.icons.inactiveAlpha)
+		icon:SetAlpha(icon.active and db.activeAlpha or db.inactiveAlpha)
 	end
 
 
@@ -159,15 +155,15 @@ function P:SetOpacity(icon)
 			icon.icon:SetVertexColor(1, 1, 1)
 		end
 		local charges = icon.maxcharges and tonumber(icon.count:GetText())
-		icon.icon:SetDesaturated(E.db.icons.desaturateActive and icon.active and not icon.isHighlighted and (not charges or charges == 0))
+		icon.icon:SetDesaturated(db.desaturateActive and icon.active and not icon.isHighlighted and (not charges or charges == 0))
 	end
 end
 
-function P:SetSwipeCounter(icon)
+function P:SetSwipeCounter(icon, db)
 	self:SetCooldownElements(icon, icon.maxcharges and tonumber(icon.count:GetText()))
-	icon.cooldown:SetReverse(E.db.icons.reverse)
-	icon.cooldown:SetSwipeColor(0, 0, 0, E.db.icons.swipeAlpha)
-	icon.counter:SetScale(E.db.icons.counterScale)
+	icon.cooldown:SetReverse(db.reverse)
+	icon.cooldown:SetSwipeColor(0, 0, 0, db.swipeAlpha)
+	icon.counter:SetScale(db.counterScale)
 end
 
 function P:SetChargeScale(icon, chargeScale)
@@ -182,16 +178,17 @@ function P:ApplySettings(frame)
 	self:SetAnchor(frame)
 	self:SetIconScale(frame)
 
-	local markEnhanced = E.db.icons.markEnhanced
-	local chargeScale = E.db.icons.chargeScale
-	local showTooltip = E.db.icons.showTooltip
-
-	for i = 1, frame.numIcons do
+	local db = E.db.icons
+	local markEnhanced = db.markEnhanced
+	local chargeScale = db.chargeScale
+	local showTooltip = db.showTooltip
+	local numIcons = frame.numIcons
+	for i = 1, numIcons do
 		local icon = frame.icons[i]
-		self:SetBorder(icon)
+		self:SetBorder(icon, db)
 		self:SetMarker(icon, markEnhanced)
-		self:SetOpacity(icon)
-		self:SetSwipeCounter(icon)
+		self:SetOpacity(icon, db)
+		self:SetSwipeCounter(icon, db)
 		self:SetChargeScale(icon, chargeScale)
 		self:SetTooltip(icon, showTooltip)
 	end

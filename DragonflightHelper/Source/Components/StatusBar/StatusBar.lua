@@ -1,6 +1,12 @@
-local SharedMedia = LibStub("LibSharedMedia-3.0")
+local addon, ns = ...
 
+local event_manager = ns.events.manager
+local custom_events = ns.events.custom
+local theme = ns.media
+local media = ns.media
 DFH_StatusBarMixin = {}
+
+local id = 0
 
 function DFH_StatusBarMixin:OnLoad()
   self.description = ""
@@ -17,22 +23,54 @@ function DFH_StatusBarMixin:OnLoad()
     -- no op by default
   end
 
-  local texture = SharedMedia:Fetch("statusbar", "BantoBar")
-  local color = ITEM_QUALITY_COLORS[3]
+  self.foreground = ITEM_QUALITY_COLORS[3]
+  self:SetColors(self.foreground)
 
+  self.barname = addon .. "_statusbar_" .. id
+  id = id + 1
+
+  event_manager:subscribe(
+    self,
+    {
+      custom_events.THEME_LOADED,
+      custom_events.STATUSBAR_TEXTURE_CHANGED,
+      custom_events.FONT_CHANGED
+    },
+    self.barname
+  )
+end
+
+function DFH_StatusBarMixin:SetColors(color)
   self.StatusBarBackground:SetStatusBarColor(220, 220, 220, 0.2)
-  self.StatusBarBackground:SetStatusBarTexture(texture)
-  self.StatusBarForeground:SetStatusBarTexture(texture)
 
-  self:SetForegroundColor(color.r, color.g, color.b, 1)
+  self.StatusBarForeground:SetStatusBarColor(color.r, color.g, color.b, color.a)
   self:SetBackgroundColor(255, 255, 255, 0.1)
 end
 
--- function DFH_StatusBarMixin:OnShow()
--- end
+function DFH_StatusBarMixin:update_texture(texture_name)
+  local texture = media:get_statusbar(texture_name)
 
--- function DFH_StatusBarMixin:OnHide()
--- end
+  self.StatusBarBackground:SetStatusBarTexture(texture)
+  self.StatusBarForeground:SetStatusBarTexture(texture)
+  self:SetColors(self.foreground)
+end
+
+function DFH_StatusBarMixin:notify(event, ...)
+  if event == custom_events.THEME_LOADED then
+    local font, statusbar = ...
+    local font_object = media:get_font_object(font)
+
+    self:update_texture(statusbar)
+    self.Container.Title:SetFontObject(font_object)
+    self.Container.Description:SetFontObject(font_object)
+  elseif event == custom_events.STATUSBAR_TEXTURE_CHANGED then
+    self:update_texture(...)
+  elseif event == custom_events.FONT_CHANGED then
+    local _, font_object = ...
+    self.Container.Title:SetFontObject(font_object)
+    self.Container.Description:SetFontObject(font_object)
+  end
+end
 
 function DFH_StatusBarMixin:SetTitle(title)
   self.Container.Title:SetText(title)
@@ -75,7 +113,8 @@ function DFH_StatusBarMixin:SetMinMaxValues(minimum, maximum)
 end
 
 function DFH_StatusBarMixin:SetForegroundColor(r, g, b, a)
-  self.StatusBarForeground:SetStatusBarColor(r, g, b, a)
+  self.foreground = { r = r, g = g, b = b, a = a }
+  self:SetColors(self.foreground)
 end
 
 function DFH_StatusBarMixin:SetBackgroundColor(r, g, b, a)

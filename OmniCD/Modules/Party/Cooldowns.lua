@@ -106,20 +106,11 @@ function P:SetCooldownElements(icon, charges)
 	icon.cooldown:SetDrawSwipe(not noSwipe)
 	icon.cooldown:SetHideCountdownNumbers(noCount)
 	if E.OmniCC then
-		icon.cooldown.noCooldownCount = noCount
+		E.OmniCC.Cooldown.SetNoCooldownCount(icon.cooldown, noCount)
 	elseif icon.cooldown.timer then
 		icon.cooldown.timer:SetShown(not noCount)
 		icon.cooldown.timer.forceDisabled = noCount
 	end
-end
-
-local function SetActiveIcon(icon, startTime, duration, charges, modRate)
-	if E.OmniCC then
-		if not P:HighlightIcon(icon) then
-			P:SetCooldownElements(icon, charges)
-		end
-	end
-	icon.cooldown:SetCooldown(startTime, duration, modRate)
 end
 
 function P:StartCooldown(icon, cd, isRecharge, noGlow)
@@ -172,23 +163,20 @@ function P:StartCooldown(icon, cd, isRecharge, noGlow)
 				active.queuedCdrOnRecharge = nil
 			end
 			currCharges = currCharges + 1
-			SetActiveIcon(icon, now, cd, currCharges, modRate)
+			icon.cooldown:SetCooldown(now, cd, modRate)
 		elseif currCharges == icon.maxcharges then
 			currCharges = currCharges - 1
-			SetActiveIcon(icon, now, cd, currCharges, modRate)
+			icon.cooldown:SetCooldown(now, cd, modRate)
 		elseif currCharges == 0 then
-			SetActiveIcon(icon, now, cd, currCharges, modRate)
+			icon.cooldown:SetCooldown(now, cd, modRate)
 		else
 			currCharges = currCharges - 1
 			now = active.startTime
-			if E.OmniCC and currCharges == 0 or auraMult then
-				SetActiveIcon(icon, now, cd, currCharges, modRate)
-			end
 		end
 		icon.count:SetText(currCharges)
 		active.charges = currCharges
 	else
-		SetActiveIcon(icon, now, cd, currCharges, modRate)
+		icon.cooldown:SetCooldown(now, cd, modRate)
 	end
 
 	active.startTime = now
@@ -212,21 +200,22 @@ function P:StartCooldown(icon, cd, isRecharge, noGlow)
 		if statusBar then
 			self:SetExStatusBarColor(icon, statusBar.key)
 			self.OmniCDCastingBarFrame_OnEvent(statusBar.CastingBar, E.db.extraBars[key].reverseFill and 'UNIT_SPELLCAST_CHANNEL_START' or 'UNIT_SPELLCAST_START')
+			if E.db.extraBars[key].useIconAlpha then
+				icon:SetAlpha(E.db.icons.activeAlpha)
+			end
 		else
 			icon:SetAlpha(E.db.icons.activeAlpha)
 		end
 		if frame.shouldRearrangeInterrupts then
-			self:SetExIconLayout(key, true, true)
+			self:SetExIconLayout(key, true)
 		end
 	end
 
-	if E.OmniCC and not icon.isHighlighted or (not E.OmniCC and not self:HighlightIcon(icon)) then
+	if not self:HighlightIcon(icon) then
 		if not isRecharge and not noGlow and E.db.highlight.glow then
 			self:SetGlow(icon)
 		end
-		if not E.OmniCC then
-			self:SetCooldownElements(icon, currCharges)
-		end
+		self:SetCooldownElements(icon, currCharges)
 		if not info.isDeadOrOffline then
 			icon.icon:SetDesaturated(E.db.icons.desaturateActive and (not currCharges or currCharges == 0))
 		end
@@ -257,6 +246,7 @@ function P:ResetAllIcons(reason)
 
 					icon.cooldown:Clear()
 					if statusBar then
+						icon:SetAlpha(E.db.extraBars[statusBar.key].useIconAlpha and E.db.icons.inactiveAlpha or 1.0)
 						self.OmniCDCastingBarFrame_OnEvent(statusBar.CastingBar, 'UNIT_SPELLCAST_FAILED')
 					else
 						icon:SetAlpha(E.db.icons.inactiveAlpha)
@@ -292,7 +282,9 @@ function P:ResetAllIcons(reason)
 		end
 	end
 
-	if self.extraBars.raidBar0.shouldRearrangeInterrupts then
-		self:SetExIconLayout("raidBar0", true, true)
+	for key, frame in pairs(self.extraBars) do
+		if frame.shouldRearrangeInterrupts then
+			self:SetExIconLayout(key, true)
+		end
 	end
 end

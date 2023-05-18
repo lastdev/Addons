@@ -132,6 +132,29 @@ function DialogBox:OnLoad()
 end
 
 function DialogBox:OnShow()
+    local template = rawget(self, "template")
+    if (type(template) == "string") then
+        local points = Addon:GetAccountSetting(template)
+        local defaultLoc = true
+        if (type(points) == "table") and (table.getn(points) ~= 0) then
+            defaultLoc = false
+            self:ClearAllPoints()
+            for _, point in ipairs(points) do
+
+                local success = pcall(self.SetPoint, self, point[1], UIParent, point[2], point[3], point[4])
+                if (not success) then
+                    defaultLoc = true
+                    break
+                end
+            end
+        end
+
+        if (defaultLoc) then
+            self:ClearAllPoints()
+            self:SetPoint("CENTER", UIParent)
+        end
+    end
+
     if (self.__needsLayout) then 
         layoutDialog(self)
     end
@@ -164,6 +187,18 @@ function DialogBox:OnHide()
         if type(self.__content.OnClose) == "function" then
             self.__content:OnClose(self)
         end
+    end
+    
+    -- Save our location
+    local template = rawget(self, "template")
+    if (type(template) == "string") then
+        local points = {}
+        for i=1,self:GetNumPoints() do
+            local point, frame, relpoint, offx, offy = self:GetPoint(i)
+
+            table.insert(points, { point, relpoint, offx, offy })
+        end
+        Addon:SetAccountSetting(template, points)
     end
 end
 

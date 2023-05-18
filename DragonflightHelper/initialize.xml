@@ -1,0 +1,26 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+  <!-- Set up addon namespace -->
+  <Script file="core\initialize.lua" />
+
+  <!-- Event manager must be loaded first -->
+  <Script file="core\events\custom.lua" />
+  <Script file="core\events\subscriber.lua" />
+  <Script file="core\events\manager.lua" />
+
+  <!-- Dependencies -->
+  <Script file="core\media\shared.lua" />
+
+  <!-- Wrapper for LibSharedMedia -->
+  <Script file="core\media\loader.lua" />
+  <Script file="core\configuration\theme.lua" />
+
+  <!-- Components -->
+  <Script file="components\frame.lua" />
+
+  <!-- Configuration manager loaded to make config available to successive components -->
+  <Script file="core\configuration\font_dropdown.lua" />
+  <Script file="core\configuration\opacity_slider.lua" />
+  <Script file="core\configuration\statusbar_dropdown.lua" />
+  <Script file="core\configuration\section_selector.lua" />
+  <Script file="core\configuration\panel.lua" />
+</Ui>

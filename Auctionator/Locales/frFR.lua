@@ -114,8 +114,7 @@ L["CONFIG_SELLING_AUTO_SELECT_NEXT_TOOLTIP_HEADER"] = "Sélectionne automatiquem
 L["CONFIG_SELLING_AUTO_SELECT_NEXT_TOOLTIP_TEXT"] = "Après une mise en vente, l'objet suivant sera automatiquement sélectionné."
 --[[Translation missing --]]
 L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER"] = "Select any partial stacks that exist after posting all complete stacks."
---[[Translation missing --]]
-L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_HEADER"] = "Automatic partial stack selection"
+L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_HEADER"] = "Sélection automatique des piles partielles"
 --[[Translation missing --]]
 L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_TEXT"] = "When posting add the partial stack as the next item to post if it exists. This won't cause any further searches."
 L["CONFIG_SELLING_BAG_SELECT_SHORTCUT"] = "sur un objet de votre inventaire le placera dans l'onglet Vente."
@@ -255,8 +254,7 @@ L["GEAR_VENDOR_PRICE_MULTIPLIER"] = "Multiplicateur du prix au marchand"
 L["HIDE"] = "Cacher"
 L["HISTORY"] = "Historique"
 L["IMPORT"] = "Importer"
---[[Translation missing --]]
-L["IMPORTED"] = "Imported"
+L["IMPORTED"] = "Importé"
 L["INFO_TAB_HEADER"] = "Auctionator - Info"
 L["IS_TOP_COLUMN"] = "Haut?"
 L["IS_UNDERCUT"] = "Dépassé ?"

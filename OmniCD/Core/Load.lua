@@ -1,19 +1,54 @@
 local E, L, C = select(2, ...):unpack()
 
-local ACD_Tooltip = E.Libs.ACD.tooltip
 local DB_VERSION = 3
 
+local function OmniCD_OnEvent(self, event, ...)
+	if event == 'ADDON_LOADED' then
+		local addon = ...
+		if addon == E.AddOn then
+			self:OnInitialize()
+			self:UnregisterEvent('ADDON_LOADED')
+		end
+	elseif event == 'PLAYER_LOGIN' then
+		self:OnEnable()
+		self:UnregisterEvent('PLAYER_LOGIN')
+		if self.preCata then
+			self:SetScript("OnEvent", nil)
+		end
+	elseif event == 'PET_BATTLE_CLOSE' then
+		for moduleName in pairs(E.moduleOptions) do
+			local module = E[moduleName]
+			local func = module.Refresh
+			if type(func) == "function" then
+				func(module, true)
+			end
+		end
+		self:UnregisterEvent('PET_BATTLE_CLOSE')
+	elseif event == 'PET_BATTLE_OPENING_START' then
+		for moduleName in pairs(E.moduleOptions) do
+			local module = E[moduleName]
+			local func = module.Test
+			if type(func) == "function" and module.isInTestMode then
+				func(module)
+			end
+
+			local func = module.HideAllBars
+			if type(func) == "function" then
+				func(module)
+			end
+		end
+		self:RegisterEvent('PET_BATTLE_CLOSE')
+	end
+end
+
+E:RegisterEvent('ADDON_LOADED')
+E:RegisterEvent('PLAYER_LOGIN')
+if not E.preCata then
+	E:RegisterEvent('PET_BATTLE_OPENING_START')
+end
+E:SetScript("OnEvent", OmniCD_OnEvent)
+
 function E:CreateFontObjects()
-	self.GameFontNormal = CreateFont("GameFontNormal-OmniCD")
-	self.GameFontNormal:CopyFontObject("GameFontNormal")
-	self.GameFontHighlight = CreateFont("GameFontHighlight-OmniCD")
-	self.GameFontHighlight:CopyFontObject("GameFontHighlight")
-	self.GameFontDisabled = CreateFont("GameFontDisable-OmniCD")
-	self.GameFontDisabled:CopyFontObject("GameFontDisable")
-	self.GameFontNormalSmall = CreateFont("GameFontNormalSmall-OmniCD")
-	self.GameFontNormalSmall:CopyFontObject("GameFontNormalSmall")
-	self.GameFontHighlightSmall = CreateFont("GameFontHighlightSmall-OmniCD")
-	self.GameFontHighlightSmall:CopyFontObject("GameFontHighlightSmall")
 	self.IconFont = CreateFont("IconFont-OmniCD")
 	self.IconFont:CopyFontObject("GameFontHighlightSmallOutline")
 	self.AnchorFont = CreateFont("AnchorFont-OmniCD")
@@ -23,31 +58,18 @@ function E:CreateFontObjects()
 end
 
 function E:UpdateFontObjects()
-	local optionFont = C.General.fonts.option
-	local optionFontSmall = C.General.fonts.optionSmall
-
-	for i = 1, select("#", ACD_Tooltip:GetRegions()) do
-		local region = select(i, ACD_Tooltip:GetRegions())
-		if region and region:GetObjectType() == "FontString" then
-			self:SetFontProperties(region, optionFont)
-		end
-	end
-	self:SetFontProperties(self.GameFontNormal, optionFont)
-	self:SetFontProperties(self.GameFontHighlight, optionFont)
-	self:SetFontProperties(self.GameFontDisabled, optionFont)
-	self:SetFontProperties(self.GameFontNormalSmall, optionFontSmall)
-	self:SetFontProperties(self.GameFontHighlightSmall, optionFontSmall)
 	self:SetFontProperties(self.AnchorFont, self.profile.General.fonts.anchor)
 	self:SetFontProperties(self.IconFont, self.profile.General.fonts.icon)
 	self:SetFontProperties(self.StatusBarFont, self.profile.General.fonts.statusBar)
 end
 
+local BASE_ICON_HEIGHT = 36
+
 function E:SetPixelMult()
-	local _, screenheight = GetPhysicalScreenSize()
-	local uiUnitFactor = 768 / screenheight
-	local uiScale = UIParent:GetScale()
-	self.PixelMult = uiUnitFactor / uiScale
+	local pixelMult, uiUnitFactor = E.Libs.OmniCDC:GetPixelMult()
+	self.PixelMult = pixelMult
 	self.uiUnitFactor = uiUnitFactor
+	self.baseIconHeight = BASE_ICON_HEIGHT - ( BASE_ICON_HEIGHT % pixelMult )
 end
 
 function E:OnInitialize()
@@ -66,13 +88,6 @@ function E:OnInitialize()
 	self.profile = self.DB.profile
 	self.db = self.profile.Party.arena
 
-	if not self.preCata then
-		self.DummyFrame:RegisterEvent('PET_BATTLE_OPENING_START')
-	end
-	self.DummyFrame:SetScript("OnEvent", function(self, event, ...)
-		self[event](self, ...)
-	end)
-
 	self:CreateFontObjects()
 	self:UpdateSpellList(true)
 	self:SetupOptions()
@@ -80,23 +95,8 @@ function E:OnInitialize()
 end
 
 function E:OnEnable()
-
-	for i = 1, 13 do
-		if i > 3 then
-			ACD_Tooltip:AddLine(" ")
-		else
-			ACD_Tooltip:AddDoubleLine(" ", " ")
-		end
-	end
-
 	self:LoadAddOns()
-
-
 	self:SetPixelMult()
-	self.BackdropTemplate(ACD_Tooltip)
-	ACD_Tooltip:SetBackdropColor(0, 0, 0)
-	ACD_Tooltip:SetBackdropBorderColor(0.3, 0.3, 0.3)
-
 	self:Refresh()
 
 	if self.global.loginMessage then
@@ -132,8 +132,6 @@ function E:Refresh(arg)
 		end
 	end
 
-	self.TooltipID:SetHooks()
-
 	if arg == "OnProfileReset" then
 		self.global.disableElvMsg = nil
 	end
@@ -152,34 +150,6 @@ function E:SetModuleEnabled(moduleName, isEnabled)
 	else
 		module:Disable()
 	end
-end
-
-function E.DummyFrame:PET_BATTLE_CLOSE()
-	for moduleName in pairs(E.moduleOptions) do
-		local module = E[moduleName]
-		local func = module.Refresh
-		if type(func) == "function" then
-			func(module, true)
-		end
-	end
-	E.DummyFrame:UnregisterEvent('PET_BATTLE_CLOSE')
-end
-
-function E.DummyFrame:PET_BATTLE_OPENING_START()
-
-	for moduleName in pairs(E.moduleOptions) do
-		local module = E[moduleName]
-		local func = module.Test
-		if type(func) == "function" and module.isInTestMode then
-			func(module)
-		end
-
-		local func = module.HideAllBars
-		if type(func) == "function" then
-			func(module)
-		end
-	end
-	E.DummyFrame:RegisterEvent('PET_BATTLE_CLOSE')
 end
 
 do

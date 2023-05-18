@@ -124,6 +124,8 @@ qcLocalize = {
 	HIDEOTHERPROFESSIONQUESTS = "다른 전문기술 퀘스트 숨김", -- Needs review
 	HIDEOTHERRACEANDCLASSQUESTS = "다른 종족 및 직업 퀘스트 숨김", -- Needs review
 	HIDEOTHERCOVENANTQUESTS = "Hide Other Covenant Quests",
+	HIDEREPEATABLEQUEST = "Hide Repeatable Quests",
+	HIDEWEEKLYQUEST = "Hide Weekly Quests",
 	HIDEWORLDQUEST = "Hide World Quests",
 	HIGHMAUL = "Highmaul", -- Requires localization
 	HILLSBRADFOOTHILLS = "언덕마루 구릉지", -- Needs review
@@ -513,6 +515,7 @@ qcLocalize = {
 	VALDRAKKEN = "Valdrakken",
 	VALDRAKKENACCORD = "Valdrakken Accord",
 	WHALLERSNOOK = "Whaler`s Nook",
+	ZARALEKCAVERN = "Zaralek Cavern",
 	}
 
 end

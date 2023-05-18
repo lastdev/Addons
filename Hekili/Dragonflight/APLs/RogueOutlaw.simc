@@ -11,6 +11,8 @@ actions.precombat+=/slice_and_dice,precombat_seconds=1,if=refreshable&buff.grand
 actions+=/stealth
 # Interrupt on cooldown to allow simming interactions with that
 actions+=/kick
+# Shiv to dispel Enrage effects.
+actions+=/shiv,if=debuff.dispellable_enrage.up
 # Checks if we are in an appropriate Stealth state for triggering the Count the Odds bonus
 actions+=/variable,name=stealthed_cto,value=talent.count_the_odds&(stealthed.basic|buff.shadowmeld.up|buff.shadow_dance.up)
 # Roll the Bones Reroll Conditions
@@ -80,6 +82,7 @@ actions.cds+=/fireblood
 actions.cds+=/ancestral_call
 # Default conditions for usable items.
 actions.cds+=/use_item,name=manic_grieftorch,use_off_gcd=1,if=!stealthed.all&debuff.between_the_eyes.up&(!talent.ghostly_strike|debuff.ghostly_strike.up|spell_targets.blade_flurry>2)|boss&fight_remains<=5
+actions.cds+=/use_item,name=beacon_to_the_beyond,use_off_gcd=1,if=gcd.remains>gcd.max-0.1&!stealthed.all&debuff.between_the_eyes.up&(!talent.ghostly_strike|debuff.ghostly_strike.up|spell_targets.blade_flurry>2)|boss&fight_remains<=5
 actions.cds+=/use_item,name=stormeaters_boon,if=spell_targets.blade_flurry>desired_targets|raid_event.adds.in>60|boss&fight_remains<10
 actions.cds+=/use_item,name=windscar_whetstone,if=spell_targets.blade_flurry>desired_targets|raid_event.adds.in>60|boss&fight_remains<7
 actions.cds+=/use_items,slots=trinket1,if=debuff.between_the_eyes.up|trinket.1.has_stat.any_dps|boss&fight_remains<=20

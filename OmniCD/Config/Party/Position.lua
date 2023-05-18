@@ -15,6 +15,8 @@ local isPreset = function(info)
 	return E.profile.Party[key].position.preset ~= "manual"
 end
 
+local isManualMode = function(info) return E.profile.Party[ info[2] ].position.detached end
+
 local isMultiline = function(info)
 	local layout = E.profile.Party[ info[2] ].position.layout
 	return layout ~= "vertical" and layout ~= "horizontal", layout == "tripleRow" or layout == "tripleColumn"
@@ -66,173 +68,207 @@ local position = {
 		P:ConfigBars(key, option)
 	end,
 	args = {
-		uf = {
-			name = ADDONS,
-			desc = L["Select addon to override auto anchoring"],
+		addOnsSettings = {
+			disabled = isManualMode,
+			name = L["Anchor"],
+			type = "group",
+			inline = true,
 			order = 1,
-			type = "select",
-			values = function() return E.customUF.optionTable end,
-			set = function(info, value)
-				local key = info[2]
-				local db = E.profile.Party[key].position
-				if P:IsCurrentZone(key) then
-					if value == "blizz" and not db.detached
-						and not ( IsAddOnLoaded("Blizzard_CompactRaidFrames") and IsAddOnLoaded("Blizzard_CUFProfiles") ) then
-						E.StaticPopup_Show("OMNICD_RELOADUI", E.STR.ENABLE_BLIZZARD_CRF)
-					else
-						if P.isInTestMode then
-							P:Test()
-							db.uf = value
-							P:Test(key)
+			args = {
+				uf = {
+					name = ADDONS,
+					desc = L["Select addon to override auto anchoring"],
+					order = 1,
+					type = "select",
+					values = function() return E.customUF.optionTable end,
+					set = function(info, value)
+						local key = info[2]
+						local db = E.profile.Party[key].position
+						if P:IsCurrentZone(key) then
+							if value == "blizz" and not db.detached
+								and not ( IsAddOnLoaded("Blizzard_CompactRaidFrames") and IsAddOnLoaded("Blizzard_CUFProfiles") ) then
+								E.Libs.OmniCDC.StaticPopup_Show("OMNICD_RELOADUI", E.STR.ENABLE_BLIZZARD_CRF)
+							else
+								if P.isInTestMode then
+									P:Test()
+									db.uf = value
+									P:Test(key)
+								else
+									db.uf = value
+									P:Refresh(true)
+								end
+							end
 						else
 							db.uf = value
-							P:Refresh(true)
 						end
-					end
-				else
-					db.uf = value
-				end
-			end,
+					end,
+				},
+			}
 		},
-		preset = {
+		positionSettings = {
+			disabled = isManualMode,
 			name = L["Position"],
-			desc = L["Set the spell bar position"],
+			type = "group",
+			inline = true,
 			order = 2,
-			type = "select",
-			values = {
-				["TOPLEFT"] = L["LEFT"],
-				["TOPRIGHT"] = L["RIGHT"],
-				["manual"] = L["More..."],
-			},
+			args = {
+				preset = {
+					name = L["Position"],
+					desc = L["Set the spell bar position"],
+					order = 2,
+					type = "select",
+					values = {
+						["TOPLEFT"] = L["LEFT"],
+						["TOPRIGHT"] = L["RIGHT"],
+						["manual"] = L["More..."],
+					},
+				},
+				anchor = {
+					disabled = isPreset,
+					name = L["Anchor Point"],
+					desc = format("%s\n\n%s", L["Set the anchor point on the spell bar"],
+					L["Having \"RIGHT\" in the anchor point, icons grow left, otherwise right"]),
+					order = 3,
+					type = "select",
+					values = L_POINTS,
+				},
+				attach = {
+					disabled = isPreset,
+					name = L["Attachment Point"],
+					desc = L["Set the anchor attachment point on the party/raid frame"],
+					order = 4,
+					type = "select",
+					values = L_POINTS,
+				},
+				lb1 = {
+					name = "", order = 5, type = "description",
+				},
+				offsetX = {
+					name = L["Offset X"],
+					desc = E.STR.MAX_RANGE,
+					order = 6,
+					type = "range",
+					min = -999, max = 999, softMin = -100, softMax = 100, step = 1,
+				},
+				offsetY = {
+					name = L["Offset Y"],
+					desc = E.STR.MAX_RANGE,
+					order = 7,
+					type = "range",
+					min = -999, max = 999, softMin = -100, softMax = 100, step = 1,
+				},
+			}
 		},
-		anchor = {
-			disabled = isPreset,
-			name = L["Anchor Point"],
-			desc = format("%s\n\n%s", L["Set the anchor point on the spell bar"],
-			L["Having \"RIGHT\" in the anchor point, icons grow left, otherwise right"]),
-			order = 3,
-			type = "select",
-			values = L_POINTS,
-		},
-		attach = {
-			disabled = isPreset,
-			name = L["Attachment Point"],
-			desc = L["Set the anchor attachment point on the party/raid frame"],
-			order = 4,
-			type = "select",
-			values = L_POINTS,
-		},
-		offsetX = {
-			name = L["Offset X"],
-			desc = E.STR.MAX_RANGE,
-			order = 5,
-			type = "range",
-			min = -999, max = 999, softMin = -100, softMax = 100, step = 1,
-		},
-		offsetY = {
-			name = L["Offset Y"],
-			desc = E.STR.MAX_RANGE,
-			order = 6,
-			type = "range",
-			min = -999, max = 999, softMin = -100, softMax = 100, step = 1,
-		},
-		lb1 = {
-			name = "\n", order = 7, type = "description",
-		},
-		layout = {
+		layoutSettings = {
 			name = L["Layout"],
-			desc = L["Select the icon layout"],
-			order = 10,
-			type = "select",
-			values = {
-				["horizontal"] = L["Horizontal"],
-				["vertical"] = L["Vertical"],
-				["doubleRow"] = L["Use Double Row"],
-				["doubleColumn"] = L["Use Double Column"],
-				["tripleRow"] = L["Use Triple Row"],
-				["tripleColumn"] = L["Use Triple Column"],
-			},
-			sorting = {"horizontal", "doubleRow", "tripleRow", "vertical", "doubleColumn", "tripleColumn"},
+			type = "group",
+			inline = true,
+			order = 3,
+			args = {
+				layout = {
+					name = L["Layout"],
+					desc = L["Select the icon layout"],
+					order = 11,
+					type = "select",
+					values = {
+						["horizontal"] = L["Horizontal"],
+						["vertical"] = L["Vertical"],
+						["doubleRow"] = L["Use Double Row"],
+						["doubleColumn"] = L["Use Double Column"],
+						["tripleRow"] = L["Use Triple Row"],
+						["tripleColumn"] = L["Use Triple Column"],
+					},
+					sorting = {"horizontal", "doubleRow", "tripleRow", "vertical", "doubleColumn", "tripleColumn"},
+				},
+				breakPoint = {
+					disabled = function(info)
+						return not isMultiline(info)
+					end,
+					name = L["Breakpoint"],
+					desc = L["Select the highest priority spell type to use as the start of the 2nd row"],
+					order = 12,
+					type = "select",
+					values = E.L_PRIORITY,
+					sorting = function(info)
+						return E.SortHashToArray(E.L_PRIORITY, E.profile.Party[ info[2] ].priority)
+					end,
+				},
+				breakPoint2 = {
+					disabled = function(info)
+						local multiline, tripleline = isMultiline(info)
+						return not multiline or not tripleline
+					end,
+					name = L["Breakpoint"] .. " 2",
+					desc = L["Select the highest priority spell type to use as the start of the 3rd row"],
+					order = 13,
+					type = "select",
+					values = E.L_PRIORITY,
+					sorting = function(info)
+						return E.SortHashToArray(E.L_PRIORITY, E.profile.Party[ info[2] ].priority)
+					end,
+					disabledItem = function(info)
+						return GetDisabledItems(info)
+					end,
+				},
+				lb1 = {
+					name = "", order = 15, type = "description",
+				},
+				columns = {
+					disabled = isMultiline,
+					name = function(info)
+						return E.profile.Party[ info[2] ].position.layout == "vertical" and L["Row"] or L["Column"]
+					end,
+					desc = function(info)
+						return E.profile.Party[ info[2] ].position.layout == "vertical" and L["Set the number of icons per column"]
+						or L["Set the number of icons per row"]
+					end,
+					order = 16,
+					type = "range",
+					min = 1, max = 100, softMax = 20, step = 1,
+				},
+				paddingX = {
+					name = L["Padding X"],
+					desc = L["Set the padding space between icon columns"],
+					order = 17,
+					type = "range",
+					min = -5, max = 100, softMin = 0, softMax = 10, step = 1,
+				},
+				paddingY = {
+					name = L["Padding Y"],
+					desc = L["Set the padding space between icon rows"],
+					order = 18,
+					type = "range",
+					min = -5, max = 100, softMin = 0, softMax = 10, step = 1,
+				},
+				maxNumIcons = {
+					name = L["Max Number of Visible Icons"],
+					desc = format("%s\n\n%s\n\n|cffff2020%s", L["Set the max number of icons that can be displayed per unit"], L["For double/triple layout, it will limit the number of icons per line"], L["0: Disable option"]),
+					order = 19,
+					type = "range",
+					min = 0, max = 100, softMax = 20, step = 1,
+				},
+				displayInactive = {
+					name = L["Display Inactive Icons"],
+					desc = L["Display icons not on cooldown"],
+					order = 21,
+					type = "toggle",
+				},
+				growUpward = {
+					name = L["Grow Rows Upward"],
+					desc = L["Toggle the grow direction of icon rows"],
+					order = 22,
+					type = "toggle",
+				},
+			}
 		},
-		columns = {
-			disabled = isMultiline,
-			name = function(info)
-				return E.profile.Party[ info[2] ].position.layout == "vertical" and L["Row"] or L["Column"]
-			end,
-			desc = function(info)
-				return E.profile.Party[ info[2] ].position.layout == "vertical" and L["Set the number of icons per column"]
-				or L["Set the number of icons per row"]
-			end,
-			order = 11,
-			type = "range",
-			min = 1, max = 100, softMax = 20, step = 1,
-		},
-		breakPoint = {
-			disabled = function(info)
-				return not isMultiline(info)
-			end,
-			name = L["Breakpoint"],
-			desc = L["Select the highest priority spell type to use as the start of the 2nd row"],
-			order = 12,
-			type = "select",
-			values = E.L_PRIORITY,
-			sorting = function(info)
-				return E.SortHashToArray(E.L_PRIORITY, E.profile.Party[ info[2] ].priority)
-			end,
-		},
-		breakPoint2 = {
-			disabled = function(info)
-				local multiline, tripleline = isMultiline(info)
-				return not multiline or not tripleline
-			end,
-			name = L["Breakpoint"] .. " 2",
-			desc = L["Select the highest priority spell type to use as the start of the 3rd row"],
-			order = 13,
-			type = "select",
-			values = E.L_PRIORITY,
-			sorting = function(info)
-				return E.SortHashToArray(E.L_PRIORITY, E.profile.Party[ info[2] ].priority)
-			end,
-			disabledItem = function(info)
-				return GetDisabledItems(info)
-			end,
-		},
-		paddingX = {
-			name = L["Padding X"],
-			desc = L["Set the padding space between icon columns"],
-			order = 14,
-			type = "range",
-			min = -5, max = 100, softMin = 0, softMax = 10, step = 1,
-		},
-		paddingY = {
-			name = L["Padding Y"],
-			desc = L["Set the padding space between icon rows"],
-			order = 15,
-			type = "range",
-			min = -5, max = 100, softMin = 0, softMax = 10, step = 1,
-		},
-		displayInactive = {
-			name = L["Display Inactive Icons"],
-			desc = L["Display icons not on cooldown"],
-			order = 16,
-			type = "toggle",
-		},
-		growUpward = {
-			name = L["Grow Rows Upward"],
-			desc = L["Toggle the grow direction of icon rows"],
-			order = 17,
-			type = "toggle",
-		},
-		lb2 = {
-			name = "\n\n", order = 19, type = "description"
-		},
-		manualMode = {
+		manualModeSettings = {
 			disabled = function(info)
 				return info[5] and not E.profile.Party[ info[2] ].position.detached
 			end,
 			name = L["Manual Mode"],
-			order = 20,
+			order = 4,
 			type = "group",
+			inline = true,
 			args = {
 				detached = {
 					disabled = false,
@@ -247,7 +283,7 @@ local position = {
 						if P:IsCurrentZone(key) then
 							if not state and not E.customUF.active
 								and not ( IsAddOnLoaded("Blizzard_CompactRaidFrames") and IsAddOnLoaded("Blizzard_CUFProfiles") ) then
-								E.StaticPopup_Show("OMNICD_RELOADUI", E.STR.ENABLE_BLIZZARD_CRF)
+								E.Libs.OmniCDC.StaticPopup_Show("OMNICD_RELOADUI", E.STR.ENABLE_BLIZZARD_CRF)
 							end
 							P:ConfigBars(key, "detached")
 							P:UpdatePosition()

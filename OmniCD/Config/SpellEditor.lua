@@ -47,6 +47,14 @@ function E:UpdateSpell(id, isInit, oldClass, oldType)
 				tremove(self.spell_db[class], i)
 
 			else
+				if self.spellNameToID then
+					local name = GetSpellInfo(id)
+					if name and not self.spellNameToID[name] then
+						self.spellNameToID[name] = id
+					else
+						return
+					end
+				end
 				force = true
 			end
 			self.spell_db[vclass][#self.spell_db[vclass] + 1] = v
@@ -553,27 +561,6 @@ local SpellEditor = {
 					desc = L["Enter Spell ID to Add/Edit"],
 					type = "input",
 					set = E.EditSpell,
-				},
-			}
-		},
-		utils = {
-			name = L["Utils"],
-			order = 20,
-			type = "group",
-			args = {
-				tooltipID = {
-					order = 1,
-					name = L["Show Spell ID in Tooltips"],
-
-
-					descStyle = "inline",
-					width = "full",
-					type = "toggle",
-					get = function() return E.profile.tooltipID end,
-					set = function(_, state)
-						E.profile.tooltipID = state
-						E.TooltipID:SetHooks()
-					end,
 				},
 			}
 		},

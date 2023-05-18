@@ -1205,7 +1205,7 @@ L["The buyout price for %s would be above the maximum allowed price. Skipping th
 L["The canlearn filter was ignored because the CanIMogIt addon was not found."] = "由于未找到CanIMogIt插件，忽略canlearn筛选器。"
 L["The experience of editing Custom Strings has been supercharged with IDE-style syntax highlighting and formatting."] = "The experience of editing Custom Strings has been supercharged with IDE-style syntax highlighting and formatting."
 L["The max quantity cannot be zero."] = "最大数量不能是0。"
-L["The min profit did not evalulate to a valid value for this item."] = "最小利润法未能为该物计算出有效估价。"
+L["The min profit did not evaluate to a valid value for this item."] = "The min profit did not evaluate to a valid value for this item."
 L["The name portion of the search term must be at least 3 characters if present."] = "搜索词的名称部分必须至少包含3个字符（如果存在）。"
 L["The pasted value was not valid. Ensure you are pasting the entire import string."] = "粘贴的价格无效。请确认您粘贴了完整的导入字符串。"
 L["The player \\\"%s\\\" is already on your whitelist."] = "The player \\\"%s\\\" is already on your whitelist."

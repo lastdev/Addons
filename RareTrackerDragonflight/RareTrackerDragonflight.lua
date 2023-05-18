@@ -38,8 +38,6 @@ if RareTracker.db.global.window.force_display_in_english then
     L[197356] = "High Shaman Rotknuckle"
     L[197411] = "Astray Splasher"
         
-    L[193259] = "Blue Terror"
-        
     L[195353] = "Breezebiter"
 
     -- The Ohnahran Plains
@@ -200,6 +198,33 @@ if RareTracker.db.global.window.force_display_in_english then
     L[200739] = "Fimbol"
     L[200742] = "Luttrok"
     L[203353] = "Loot Specialist"
+    
+    -- Zaralek Cavern
+    L[203515] = "Alcanon"
+    L[203621] = "Brullo the Strong"
+    L[203664] = "Emberdusk"
+    L[203592] = "General Zskorro"
+    L[203611] = "Hadexia"
+    L[203646] = "Dinn" -- Jrumm
+    L[203466] = "Kaprachu"
+    L[203462] = "Kob'rok"
+    L[203630] = "Lavermix"
+    L[203521] = "Professor Gastrinax"
+    L[203643] = "Skornak"
+    L[203662] = "Subterrax"
+    L[201029] = "Veridian King"
+    L[203468] = "Aquifon"
+    L[204093] = "Colossian"
+    L[203660] = "Flowfy"
+    L[203477] = "Goopal"
+    L[203627] = "Invoq" -- Invohq
+    L[203625] = "Karokta" -- Kairoktra
+    L[203618] = "Klakatak"
+    L[203642] = "Kronkapace"
+    L[200111] = "Magtembo" -- Magmanesha
+    L[204096] = "Shadowforge Mole Machine"
+    L[203480] = "Spinmarrow"
+    L[203593] = "Underlight Queen"
 end
 
 -- Special category for elemental storms
@@ -218,40 +243,40 @@ RareTracker.RegisterRaresForModule({
     ["plugin_name_abbreviation"] = "Dragonflight",
     ["entities"] = {
         --npc_id = {name, quest_id, coordinates}
-        [193632] = {L[193632], nil, nil}, --"Wilrive"
-        [194270] = {L[194270], nil, nil}, --"Arcane Devourer"
-        [191356] = {L[191356], nil, nil}, --"Frostpaw"
-        [194392] = {L[194392], 70165, nil}, --"Brackle"
+        [193632] = {L[193632], 73900, nil}, --"Wilrive"
+        [194270] = {L[194270], 73866, nil}, --"Arcane Devourer"
+        [191356] = {L[191356], 73877, nil}, --"Frostpaw"
+        [194392] = {L[194392], 73871, nil}, --"Brackle"
         [194210] = {L[194210], 73867, nil}, --"Azure Pathfinder"
         [193225] = {L[193225], 73887, nil}, --"Notfar the Unbearable"
         [190244] = {L[190244], 73883, nil}, --"Mahg the Trampler"
-        [193251] = {L[193251], 69885, nil}, --"Gruffy"
-        [193693] = {L[193693], nil, nil}, --"Rusthide"
-        [193691] = {L[193691], nil, nil}, --"Fisherman Tinnak"
-        [193708] = {L[193708], nil, nil}, --"Skald the Impaler"
-        [193735] = {L[193735], nil, nil}, --"Moth'go Deeploom"
+        [193251] = {L[193251], 74001, nil}, --"Gruffy"
+--        [193693] = {L[193693], nil, nil}, --"Rusthide"
+        [193691] = {L[193691], 72254, nil}, --"Fisherman Tinnak"
+        [193708] = {L[193708], 74078, nil}, --"Skald the Impaler"
+        [193735] = {L[193735], 74068, nil}, --"Moth'go Deeploom"
         [193167] = {L[193167], nil, nil}, --"Swagraal the Swollen"
-        [193178] = {L[193178], 69858, nil}, --"Blightfur"
+        [193178] = {L[193178], 74058, nil}, --"Blightfur"
         [197344] = {L[197344], 74032, nil}, --"Snarglebone"
         [197354] = {L[197354], 73996, nil}, --"Gnarls"
-        [197371] = {L[197371], nil, nil}, --"Ravenous Tundra Bear"
+        [197371] = {L[197371], 73891, nil}, --"Ravenous Tundra Bear"
         [193157] = {L[193157], 73873, nil}, --"Dragonhunter Gorund"
-        [198004] = {L[198004], nil, nil}, --"Mange the Outcast"
-        [193201] = {L[193201], nil, nil}, --"Mucka the Raker"
-        [193698] = {L[193698], 69985, nil}, --"Frigidpelt Den Mother"
-        [193116] = {L[193116], nil, nil}, --"Beogoka"
+        [198004] = {L[198004], 73884, nil}, --"Mange the Outcast"
+        [193201] = {L[193201], 73885, nil}, --"Mucka the Raker"
+        [193698] = {L[193698], 73876, nil}, --"Frigidpelt Den Mother"
+        [193116] = {L[193116], 73868, nil}, --"Beogoka"
         [193259] = {L[193259], 73870, nil}, --"Blue Terror"
-        [193149] = {L[193149], 72154, nil}, --"Skag the Thrower"
-        [193269] = {L[193269], 69892, nil}, --"Grumbletrunk"
-        [193196] = {L[193196], 69861, nil}, --"Trilvarus Loreweaver"
+        [193149] = {L[193149], 74030, nil}, --"Skag the Thrower"
+        [193269] = {L[193269], 74002, nil}, --"Grumbletrunk"
+        [193196] = {L[193196], 74087, nil}, --"Trilvarus Loreweaver"
         [193706] = {L[193706], nil, nil}, --"Snufflegust"
         [193710] = {L[193710], nil, nil}, --"Seereel, the Spring"
         [193634] = {L[193634], nil, nil}, --"Swog'ranka"
         [197557] = {L[197557], 74097, nil}, --"Bisquius"
-        [193238] = {L[193238], nil, nil}, --"Spellwrought Snowman"
+        [193238] = {L[193238], 74082, nil}, --"Spellwrought Snowman"
         [197353] = {L[197353], 73985, nil}, --"Blisterhide"
         [197356] = {L[197356], 74004, nil}, --"High Shaman Rotknuckle"
-        [197411] = {L[197411], nil, nil}, --"Astray Splasher"
+        [197411] = {L[197411], 74057, nil}, --"Astray Splasher"
         
         [193259] = {L[193259], nil, nil}, --"Blue Terror"
         [195353] = {L[195353], nil, nil}, --"Breezebiter"
@@ -287,44 +312,44 @@ RareTracker.RegisterRaresForModule({
     ["entities"] = {
         --npc_id = {name, quest_id, coordinates}
         [193165] = {L[193165], 73896, nil}, --"Sparkspitter Vrak"
-        [193142] = {L[193142], 69840, nil}, --"Enraged Sapphire"
+        [193142] = {L[193142], 73875, nil}, --"Enraged Sapphire"
         [193209] = {L[193209], nil, nil}, --"Zenet Avis"
-        [189652] = {L[189652], nil, nil}, --"Deadwaker Ghendish"
-        [193173] = {L[193173], 69857, nil}, --"Mikrin of the Raging Winds"
-        [193123] = {L[193123], 69667, nil}, --"Steamgill"
-        [193235] = {L[193235], 69877, nil}, --"Oshigol"
+        [189652] = {L[189652], 73872, nil}, --"Deadwaker Ghendish"
+        [193173] = {L[193173], 74015, nil}, --"Mikrin of the Raging Winds"
+        [193123] = {L[193123], 74034, nil}, --"Steamgill"
+        [193235] = {L[193235], 74018, nil}, --"Oshigol"
         [192045] = {L[192045], 74088, nil}, --"Windseeker Avash"
-        [193140] = {L[193140], 72364, nil}, --"Zarizz"
+        [193140] = {L[193140], 74091, nil}, --"Zarizz"
         [187559] = {L[187559], 74075, nil}, --"Shade of Grief"
-        [187781] = {L[187781], nil, nil}, --"Hamett"
+        [187781] = {L[187781], 73951, nil}, --"Hamett"
         [188124] = {L[188124], 73967, nil}, --"Irontree"
-        [191842] = {L[191842], nil, nil}, --"Sulfurion"
-        [195204] = {L[195204], nil, nil}, --"The Jolly Giant"
-        [192453] = {L[192453], nil, nil}, --"Vaniik the Stormtouched"
-        [195186] = {L[195186], nil, nil}, --"Cinta the Forgotten"
+        [191842] = {L[191842], 73974, nil}, --"Sulfurion"
+        [195204] = {L[195204], 73976, nil}, --"The Jolly Giant"
+        [192453] = {L[192453], 73978, nil}, --"Vaniik the Stormtouched"
+        [195186] = {L[195186], 73950, nil}, --"Cinta the Forgotten"
         [195409] = {L[195409], 73968, nil}, --"Makhra the Ashtouched"
         [196350] = {L[196350], nil, nil}, --"Old Stormhide"
-        [193136] = {L[193136], 69863, nil}, --"Scav Notail"
-        [193188] = {L[193188], nil, nil}, --"Seeker Teryx"
-        [197009] = {L[197009], nil, nil}, --"Liskheszaera"
-        [196010] = {L[196010], 70689, nil}, --"Researcher Sneakwing"
-        [193227] = {L[193227], 69878, nil}, --"Ronsak the Decimator"
-        [193212] = {L[193212], 69871, nil}, --"Malsegan"
-        [193170] = {L[193170], 69856, nil}, --"Fulgurb"
+        [193136] = {L[193136], 73893, nil}, --"Scav Notail"
+        [193188] = {L[193188], 73894, nil}, --"Seeker Teryx"
+        [197009] = {L[197009], 73882, nil}, --"Liskheszaera"
+        [196010] = {L[196010], 74023, nil}, --"Researcher Sneakwing"
+        [193227] = {L[193227], 74026, nil}, --"Ronsak the Decimator"
+        [193212] = {L[193212], 74011, nil}, --"Malsegan"
+        [193170] = {L[193170], 73994, nil}, --"Fulgurb"
         [192020] = {L[192020], 74063, nil}, --"Eaglemaster Niraak"
-        [193215] = {L[193215], nil, nil}, --"Scaleseeker Mezeri"
+        [193215] = {L[193215], 74073, nil}, --"Scaleseeker Mezeri"
         [187219] = {L[187219], nil, nil}, --"Nokhud Warmaster"
         [188095] = {L[188095], 73966, nil}, --"Hunter of Deep"
         [188451] = {L[188451], 73980, nil}, --"Zerimek"
-        [191950] = {L[191950], nil, nil}, --"Porta the Overgrown"
-        [192364] = {L[192364], nil, nil}, --"Windscale the Stormborn"
+        [191950] = {L[191950], 73971, nil}, --"Porta the Overgrown"
+        [192364] = {L[192364], 73979, nil}, --"Windscale the Stormborn"
         [192557] = {L[192557], nil, nil}, --"Quackers the Terrible"
-        [195223] = {L[195223], nil, nil}, --"Rustlily"
+        [195223] = {L[195223], 73973, nil}, --"Rustlily"
         [196334] = {L[196334], nil, nil}, --"The Great Enla"
         
         [195895] = {L[195895], nil, nil}, --"Nergazurai"
-        [192557] = {L[192557], nil, nil}, --"Quackers the Terrible"
-        [193209] = {L[193209], nil, nil}, --"Zenet Avis"
+        [192557] = {L[192557], 73972, nil}, --"Quackers the Terrible"
+        [193209] = {L[193209], 73901, nil}, --"Zenet Avis"
         
         [193648] = {L[193648], nil, nil}, --"Infernum"
         [193644] = {L[193644], nil, nil}, --"Bouldron"
@@ -356,31 +381,31 @@ RareTracker.RegisterRaresForModule({
     ["plugin_name_abbreviation"] = "Dragonflight",
     ["entities"] = {
         --npc_id = {name, quest_id, coordinates}
-        [193143] = {L[193143], 69853, nil}, --"Razk'vex the Untamed"
-        [193128] = {L[193128], 73869, nil}, --"Blightpaw the Depraved"
-        [193125] = {L[193125], nil, nil}, --"Goremaul the Gluttonous"
-        [193246] = {L[193246], 69883, nil}, --"Matriarch Remalla"
-        [193258] = {L[193258], 69886, nil}, --"Tempestrian"
+        [193143] = {L[193143], 73892, nil}, --"Razk'vex the Untamed"
+        [193128] = {L[193128], 74096, nil}, --"Blightpaw the Depraved"
+        [193125] = {L[193125], 73878, nil}, --"Goremaul the Gluttonous"
+        [193246] = {L[193246], 74013, nil}, --"Matriarch Remalla"
+        [193258] = {L[193258], 74035, nil}, --"Tempestrian"
         [193234] = {L[193234], 69875, nil}, --"Eldoren the Reborn"
-        [193220] = {L[193220], 69868, nil}, --"Broodweaver Araznae"
-        [193666] = {L[193666], 69966, nil}, --"Rokmur"
+        [193220] = {L[193220], 73987, nil}, --"Broodweaver Araznae"
+        [193666] = {L[193666], 74025, nil}, --"Rokmur"
         [183984] = {L[183984], 74086, nil}, --"The Weeping Vilomah"
-        [191305] = {L[191305], 72121, nil}, --"The Great Shellkhan"
-        [193241] = {L[193241], 69882, nil}, --"Lord Epochbrgl"
-        [193126] = {L[193126], nil, nil}, --"Innumerable Ruination"
-        [193130] = {L[193130], nil, nil}, --"Pleasant Alpha"
-        [193688] = {L[193688], 69976, nil}, --"Phenran"
+        [191305] = {L[191305], 74085, nil}, --"The Great Shellkhan"
+        [193241] = {L[193241], 74066, nil}, --"Lord Epochbrgl"
+        [193126] = {L[193126], 73881, nil}, --"Innumerable Ruination"
+        [193130] = {L[193130], 73889, nil}, --"Pleasant Alpha"
+        [193688] = {L[193688], 74020, nil}, --"Phenran"
         [193210] = {L[193210], 74021, nil}, --"Phleep"
-        [193146] = {L[193146], 70947, nil}, --"Treasure-Mad Trambladd"
-        [193240] = {L[193240], 69880, nil}, --"Riverwalker Tamopo"
-        [193176] = {L[193176], 69859, nil}, --"Sandana the Tempest"
+        [193146] = {L[193146], 74036, nil}, --"Treasure-Mad Trambladd"
+        [193240] = {L[193240], 74024, nil}, --"Riverwalker Tamopo"
+        [193176] = {L[193176], 74029, nil}, --"Sandana the Tempest"
         [193161] = {L[193161], 74089, nil}, --"Woolfang"
         [193663] = {L[193663], 74061, nil}, --"Craggravated Elemental"
         [193658] = {L[193658], 74060, nil}, --"Corrupted Proto-Dragon"
         [193664] = {L[193664], 74055, nil}, --"Ancient Protector"
         
-        [193273] = {L[193273], nil, nil}, --"Liskron the Dazzling"
-        [193234] = {L[193234], nil, nil}, --"Eldoren the Reborn"
+        [193273] = {L[193273], 72842, nil}, --"Liskron the Dazzling"
+        [193234] = {L[193234], 73990, nil}, --"Eldoren the Reborn"
         
         [193648] = {L[193648], nil, nil}, --"Infernum"
         [193644] = {L[193644], nil, nil}, --"Bouldron"
@@ -412,31 +437,31 @@ RareTracker.RegisterRaresForModule({
     ["plugin_name_abbreviation"] = "Dragonflight",
     ["entities"] = {
         --npc_id = {name, quest_id, coordinates}
-        [196056] = {L[196056], nil, nil}, --"Gushgut the Beaksinker"
-        [187945] = {L[187945], nil, nil}, --"Anhydros the Tidetaker"
+        [196056] = {L[196056], 73879, nil}, --"Gushgut the Beaksinker"
+        [187945] = {L[187945], 73865, nil}, --"Anhydros the Tidetaker"
         [199645] = {L[199645], nil, nil}, --"Helmet Missingway"
         [193217] = {L[193217], nil, nil}, --"Drakewing"
-        [193135] = {L[193135], 69839, nil}, --"Azra's Prized Peony"
-        [193118] = {L[193118], 70983, nil}, --"O'nank Shorescour"
-        [193132] = {L[193132], 69838, nil}, --"Amethyzar the Glittering"
-        [193152] = {L[193152], 69848, nil}, --"Massive Magmashell"
+        [193135] = {L[193135], 73984, nil}, --"Azra's Prized Peony"
+        [193118] = {L[193118], 74017, nil}, --"O'nank Shorescour"
+        [193132] = {L[193132], 73981, nil}, --"Amethyzar the Glittering"
+        [193152] = {L[193152], 74012, nil}, --"Massive Magmashell"
         [193134] = {L[193134], 73072, nil}, --"Enkine the Voracious"
-        [192362] = {L[192362], 67048, nil}, --"Possessive Hornswog"
+        [192362] = {L[192362], 70864, nil}, --"Possessive Hornswog"
         [190985] = {L[190985], 73074, nil}, --"Death's Shadow"
-        [193266] = {L[193266], 69891, nil}, --"Lepidoralia the Resplendent"
+        [193266] = {L[193266], 74065, nil}, --"Lepidoralia the Resplendent"
         [187598] = {L[187598], 74052, nil}, --"Rohzor Forgesmash"
         [190986] = {L[190986], 74040, nil}, --"Battlehorn Pyrhus"
         [193232] = {L[193232], 74051, nil}, --"Rasnar the War Ender"
         [193271] = {L[193271], 74076, nil}, --"Shadeslash Trakken"
-        [193256] = {L[193256], 72103, nil}, --"Nulltheria the Void Gazer"
-        [193181] = {L[193181], nil, nil}, --"Skewersnout"
-        [192738] = {L[192738], nil, nil}, --"Brundin the Dragonbane"
-        [193148] = {L[193148], 69841, nil}, --"Thunderous Matriarch"
-        [193228] = {L[193228], nil, nil}, --"Snappy"
-        [193120] = {L[193120], 69668, nil}, --"Smogswog the Firebreather"
-        [186827] = {L[186827], 70979, nil}, --"Magmaton"
-        [193154] = {L[193154], 72130, nil}, --"Forgotten Gryphon"
-        [193198] = {L[193198], 72127, nil}, --"Captain Lancer"
+        [193256] = {L[193256], 73888, nil}, --"Nulltheria the Void Gazer"
+        [193181] = {L[193181], 73895, nil}, --"Skewersnout"
+        [192738] = {L[192738], 73890, nil}, --"Brundin the Dragonbane"
+        [193148] = {L[193148], 73899, nil}, --"Thunderous Matriarch"
+        [193228] = {L[193228], 73997, nil}, --"Snappy"
+        [193120] = {L[193120], 74031, nil}, --"Smogswog the Firebreather"
+        [186827] = {L[186827], 74010, nil}, --"Magmaton"
+        [193154] = {L[193154], 73073, nil}, --"Forgotten Gryphon"
+        [193198] = {L[193198], 73075, nil}, --"Captain Lancer"
         [186859] = {L[186859], 74090, nil}, --"Worldcarver A'tir"
         [189822] = {L[189822], 74077, nil}, --"Shas'ith"
         [186783] = {L[186783], 74042, nil}, --"Cauldronbearer Blakor"
@@ -445,7 +470,7 @@ RareTracker.RegisterRaresForModule({
         [187306] = {L[187306], 74067, nil}, --"Morchok"
         [193175] = {L[193175], 74079, nil}, --"Slurpo, the Incredible Snail"
         
-        [193217] = {L[193217], nil, nil}, --"Drakewing"
+        [193217] = {L[193217], 73874, nil}, --"Drakewing"
         [193154] = {L[193154], nil, nil}, --"Forgotten Gryphon"
         
         [193648] = {L[193648], nil, nil}, --"Infernum"
@@ -467,7 +492,7 @@ RareTracker.RegisterRaresForModule({
         [193654] = {L[193654], nil, nil}, --"Gravlion"
         [193655] = {L[193655], nil, nil}, --"Frozion"
         
-        [186200] = {L[186200], nil, nil}, --"Harkyn Grymstone"
+        [186200] = {L[186200], 74000, nil}, --"Harkyn Grymstone"
     },
     ["special_categories"] = categorized_rare_ids
 })
@@ -511,4 +536,73 @@ RareTracker.RegisterRaresForModule({
         [200742] = {L[200742], 74332, nil}, --"Luttrok"
         [203353] = {L[203353], nil, nil}, --"Loot Specialist" 
     }
+})
+
+local zaralek_rare_announcements = {
+    [L["The great war beast bathes in the burning fires."]] = 200111,
+    [L["A Champion emerges on the ancient battlefield."]] = 203627,
+    [L["An eerie yet soothing light flickers in the darkness from underneath large wings."]] = 203593,
+    [L["Barked orders can be heard from within the Brimstone Garrison."]] = 203592,
+    [L["A flash of teeth and wings darts across the cavern ceiling."]] = 203625,
+    [L[203462]] = 203462,
+    [L[204093]] = 204093,
+    [L["The drone of ancient drums echoes throughout the cavern."]] = 203646,
+    [L["The earth trembles in the caldera."]] = 203662,
+    [L["Maniacal laughter and explosions can be heard echoing in the cavern."]] = 203521,
+    [L["The crystalline structures begin to stir."]] = 201029,
+    [L[203477]] = 203477,
+    [L[203466]] = 203466,
+    [L["The strong are gathering in Glimmerogg to test their mettle."]] = 203621,
+    [L["You feel the temperature within the cavern rise significantly."]] = 203643,
+    [L[203664]] = 203664,
+    [L["The snapping of great claws can be heard from the waters."]] = 203618,
+    [L["A pair of terrifying howls pierce the air."]] = 203660,
+    [L[203515]] = 203515,
+    [L[203468]] = 203468,
+    [L[203480]] = 203480,
+}
+
+RareTracker.RegisterRaresForModule({
+    -- Define the zone(s) in which the rares are present.
+    ["target_zones"] = {2133, 2184},
+    ["zone_name"] = "Zaralek Cavern",
+    ["plugin_name"] = "Zaralek Cavern",
+    ["plugin_name_abbreviation"] = "Dragonflight",
+    ["entities"] = {
+        --npc_id = {name, quest_id, coordinates}
+        [203515] = {L[203515], 75284, {56.90, 73.14}}, --"Alcanon"
+        [203621] = {L[203621], 75326, {41.46, 86.12}}, --"Brullo the Strong"
+        [203664] = {L[203664], 75361, {31.79, 50.58}}, --"Emberdusk"
+        [203592] = {L[203592], 75295, {42.63, 18.88}}, --"General Zskorro"
+        [203611] = {L[203611], nil, nil}, --"Hadexia"
+        [203646] = {L[203646], 75352, {28.51, 51.11}}, --"Jrumm"
+        [203466] = {L[203466], 75268, {59.58, 39.45}}, --"Kaprachu"
+        [203462] = {L[203462], 75266, {64.73, 55.46}}, --"Kob'rok"
+        [203630] = {L[203630], nil, nil}, --"Lavermix"
+        [203521] = {L[203521], 75291, {52.83, 18.87}}, --"Professor Gastrinax"
+        [203643] = {L[203643], 75348, {36.40, 52.74}}, --"Skornak"
+        [203662] = {L[203662], 75359, {38.45, 46.56}}, --"Subterrax"
+        [201029] = {L[201029], 75365, {38.91, 71.58}}, --"Veridian King"
+        [203468] = {L[203468], 75270, {48.33, 75.09}}, --"Aquifon"
+        [204093] = {L[204093], 75475, {48.38, 23.86}}, --"Colossian"
+        [203660] = {L[203660], 75357, {35.86, 43.83}}, --"Flowfy"
+        [203477] = {L[203477], 75273, {68.80, 45.84}}, --"Goopal"
+        [203627] = {L[203627], 75335, {45.65, 33.30}}, --"Invoq"
+        [203625] = {L[203625], 75333, {42.20, 65.17}}, --"Kairoktra"
+        [203618] = {L[203618], 75321, {54.19, 41.77}}, --"Klakatak"
+        [203642] = {L[203642], nil, nil}, --"Kronkapace"
+        [200111] = {L[200111], 75339, {40.79, 38.29}}, --"Magmanesha"
+        [204096] = {L[204096], 75576, nil}, --"Shadowforge Mole Machine"
+        [203480] = {L[203480], 75275, {54.77, 65.89}}, --"Spinmarrow"
+        [203593] = {L[203593], 75297, {57.78, 69.10}}, --"Underlight Queen"
+    },
+    ["FindMatchForText"] = function(self, text)
+        -- Check if any of the drill rig designations is contained in the broadcast text.
+        for designation, npc_id in pairs(zaralek_rare_announcements) do
+            if text:find(designation) then
+                self:ProcessEntityAlive(npc_id, npc_id, nil, nil, false)
+                return
+            end
+        end
+    end
 })

@@ -18,7 +18,7 @@ L['options_icons_profession_treasures_desc'] = 'Muestra dónde están los tesoro
 
 L['dragon_glyph'] = 'Glifos Dracónicos'
 L['options_icons_dragon_glyph'] = 'Glifos Dracónicos'
-L['options_icons_dragon_glyph_desc'] = 'Muestra dónde están los 56 glifos dracónicos.'
+L['options_icons_dragon_glyph_desc'] = 'Muestra dónde están los 64 glifos dracónicos.'
 
 L['dragonscale_expedition_flag'] = 'Expedición Dragontina'
 L['flags_placed'] = 'banderas puestas'
@@ -93,8 +93,6 @@ L['options_icons_signal_transmitter'] = 'Transmisores de Generadores de Agujeros
 L['options_icons_signal_transmitter_desc'] = 'Muestra dónde están los {object:Transmisor Desactivado} para los {item:198156}.'
 
 L['rare_14h'] = 'Este raro está en una rotación de 14 horas junto con otros raros. Hay una aparición rara cada 30 minutos.\n\nPróxima aparición: {note:%s}'
-L['time_format_12hrs'] = '%I:%M %p - %d/%m Hora local'
-L['time_format_24hrs'] = '%H:%M - %d/%m Hora local'
 L['now'] = 'Ahora'
 L['spawns_at_night'] = '{note:Sólo aparece por la noche. (Después de las 18:30 hora del servidor)}'
 
@@ -135,6 +133,10 @@ L['the_best_at_what_i_do_suffix'] = 'bosses matados'
 
 L['options_icons_grand_hunts'] = 'Grandes Cacerías'
 L['options_icons_grand_hunts_desc'] = 'Muestra las cacerías y las recompensas de las Grandes Cacerías.'
+
+L['ancient_stone_label'] = 'Ancient Stone'
+L['options_icons_ancient_stones'] = '{achievement:17560}'
+L['options_icons_ancient_stones_desc'] = 'Display {object:Ancient Stone} locations for {achievement:17560}.'
 
 L['reed_chest'] = 'Cofre de Juncos'
 L['options_icons_reed_chest'] = 'Cofre de Juncos'
@@ -207,7 +209,7 @@ L['snowclaw_cub_note_end'] = [[
 
 Una vez tengas equipado el título {title:Dríade Honoraria} ofrece los 4 objetos al {npc:196768} para recibir su mascota.
 
-{bug:(BUG: El título puede desaparecer y está pendiente de un fix.)}
+{note:Si pierdes el título antes de tiempo, puedes repetir la misión y adquirirlo de nuevo. Prueba de nuevo mañana o tras el siguiente mantenimiento semanal.}
 ]]
 
 L['tome_of_polymoph_duck'] = 'Usa {spell:1953} para entrar en la cueva e interactuar con el libro {object:Tormentas de Maná para Principiantes} para completar la misión.'
@@ -232,10 +234,10 @@ Mata el {npc:197183} de dentro y recibirás la {item:200528}.
 ]]
 
 L['gethdazr_note'] = [[
-Aparece como parte de un evento en {location:Imbu} que empieza soplando el {object:Gran Cuerno de Imbu} ({dot:Blue}).
+Aparece como parte de un evento en {location:Imbu} que empieza soplando el {object:Gran Cuerno de Imbu} {dot:Blue}.
 Sólo se podrá hacer click en el cuerno después de matar al {npc:196155}, el cual tiene una reaparición de 30-60 minutos.
 
-Luego, {npc:191143} ({dot:Green}) y otros NPC se abrirán camino desde la entrada noreste de {location:Imbu} hasta donde aparece {npc:196165}.
+Luego, {npc:191143} {dot:Green} y otros NPC se abrirán camino desde la entrada noreste de {location:Imbu} hasta donde aparece {npc:196165}.
 Los NPC pueden morir si no reciben ayuda y hacer fallar el evento.
 
 Se puede hacer en solitario pero se recomiendan 2-3 jugadores.
@@ -286,7 +288,7 @@ L['in_the_support_creche'] = 'Dentro del {location:Nido de Apoyo}.'
 L['in_the_war_creche'] = 'En las profundidades de {location:El Nido Bélico}.'
 L['in_zskera_vaults'] = 'Dentro de las {location:Cámaras de Zskera}.'
 
-L['duzalgor_note'] = 'Coge un frasco de {spell:400751} ({dot:Green}) para sanarte del gas venenoso dentro de {location:The Support Creche}.'
+L['duzalgor_note'] = 'Coge un frasco de {spell:400751} {dot:Green} para sanarte del gas venenoso dentro de {location:The Support Creche}.'
 L['mad_eye_carrey_note'] = '{npc:201181} está en grupo con la {npc:201184} y la {npc:201182}.'
 L['wymslayer_angvardi_note'] = '{npc:201013} está acompañado por su montura {npc:201310}.'
 L['loot_specialist_note'] = '{npc:203353} aparece con {spell:406143} y {spell:132653} de principio. Huirá en cuanto sea atacado.\n\n{note:Mátalo rápidamente antes de que acabe de abrir un {spell:406141}.}'
@@ -339,6 +341,17 @@ L['zskera_vaults_label'] = 'Cámaras de Zskera'
 L['zskera_vaults_note'] = 'Recoge {item:202196} de varios raros y alijos para abrir las puertas de las {location:Cámaras de Zskera}.'
 L['door_buster_suffix'] = 'Puertas abiertas usando Llaves de la Cámara de Zskera'
 
+L['broken_waygate_label'] = 'Puerta Rota'
+L['neltharions_toolkit_note'] = [[1. Recoge un {item:204278} que aparece aleatoriamente dentro de las {location:Cámaras de Zskera}.
+
+2. Viaja a {location:Nido Humeante} en las {location:Orillas del Despertar}.
+
+3. Encuentra el {object:Puerta Rota} dentro de la cueva junto al {npc:193310}.
+
+4. Repara el {object:Puerta Rota}. {note:Puede requerir hacer algunos clicks.}
+
+5. Telepórtate a la habitación escondida en las {location:Cámaras de Zskera}. Mata al {npc:200375} y al {npc:203639}. Ahora abre el {object:Alijo Majestuoso de Obsidiana} para reclamar tu botín.]]
+
 L['recipe_rat_note_1'] = 'Habla con {npc:202982} dentro de las {location:Cámaras de Zskera} y una {item:202252} entrará en tus bolsas.'
 L['recipe_rat_note_2'] = 'Interactúa con la {item:202252} para conseguir un {item:204340}. {note:(Tiene 5 minutos de reutilización)}'
 L['recipe_rat_note_3'] = 'Una vez tengas 30x {item:204340} combínalos para conseguir la receta.'
@@ -375,7 +388,10 @@ L['options_icons_scalecommander_item_desc'] = 'Muestra dónde están los objetos
 L['spellsworn_gateway'] = 'Portal Jurahechizos'
 L['gemstone_of_return'] = 'Gema de Retorno'
 
-L['morqut_village_vendor_note'] = 'Intercambia {currency:2118} u oro por monturas, mascotas, transfiguraciones, personalizaciones del draco, recetas y otros objetos útiles.'
+L['treysh_note'] = 'Intercambia {currency:2118} u oro por transfiguraciones, equipo y monturas.'
+L['renown_envoy_label'] = 'Enviado de Renombre'
+L['renown_envoy_note'] = 'Intercambia {currency:2118} u oro por monturas, mascotas, transfiguraciones, personalizaciones del draco, recetas y otros objetos útiles.\n\nCompra el {item:204383} a la {npc:200566} por 2000x {currency:2118} para un intento de conseguir a {item:191915}.'
+L['trader_hagarth_note'] = 'Intercambia {item:190456} for recetas de Bibelot del Artesano.'
 
 -------------------------------------------------------------------------------
 ------------------------------ OHN'AHRAN PLAINS -------------------------------
@@ -404,9 +420,9 @@ L['yennus_boat'] = 'Barco de Juguete Colmillarr'
 L['yennus_boat_note'] = 'Despoja el {object:Barco de Juguete Colmillarr} para conseguir el {item:200876} con el cual comienza la misión {quest:72063} para devolvérselo a {npc:195252}.'
 
 L['forgotten_dragon_treasure_label'] = 'Tesoro de Dragón Olvidado'
-L['forgotten_dragon_treasure_step1'] = '1. Recoge 5x {item:195884} de las {object:Flor Cristalina} ({dot:Green}) al oeste de las {location:Llanuras de Ohn\'ahra}.'
-L['forgotten_dragon_treasure_step2'] = '2. Combina los pétalos para crear un {item:195542} y visita la {object:Piedra Antigua} ({dot:Yellow}).'
-L['forgotten_dragon_treasure_step3'] = '3. Usa el {item:195542} cerca de la {object:Piedra Antigua} para conseguir el buff de 20 segundos {spell:378935}. Éste permite seguir el camino de flores (corriendo sobre ellas para incrementar la duración del buff) que lleva a la cueva con el {object:Cofre Esmeralda} ({dot:Blue}) y despojar la {item:195041}.'
+L['forgotten_dragon_treasure_step1'] = '1. Recoge 5x {item:195884} de las {object:Flor Cristalina} {dot:Green} al oeste de las {location:Llanuras de Ohn\'ahra}.'
+L['forgotten_dragon_treasure_step2'] = '2. Combina los pétalos para crear un {item:195542} y visita la {object:Piedra Antigua} {dot:Yellow}.'
+L['forgotten_dragon_treasure_step3'] = '3. Usa el {item:195542} cerca de la {object:Piedra Antigua} para conseguir el buff de 20 segundos {spell:378935}. Éste permite seguir el camino de flores (corriendo sobre ellas para incrementar la duración del buff) que lleva a la cueva con el {object:Cofre Esmeralda} {dot:Blue} y despojar la {item:195041}.'
 L['forgotten_dragon_treasure_step4'] = 'Con la llave ves al {object:Tesoro de dragón olvidado} para abrirlo y conseguir tu personalización de draco.'
 L['fdt_crystalline_flower'] = 'Flor Cristalina'
 L['fdt_ancient_stone'] = 'Piedra Antigua'
@@ -459,7 +475,7 @@ L['hunt_instructor_basku_note'] = 'Entrega {item:200093} para conseguir reputaci
 L['elder_yusa_note'] = 'Selecciona a la {npc:192818} y teclea {emote:/hambre} para conseguir la receta de cocina.'
 L['initiate_kittileg_note'] = 'Completa la misión {quest:66226} para conseguir el juguete.'
 
-L['quackers_duck_trap_kit'] = 'Para invocar a {npc:192557} primero te hace falta el {item:194740} el cual se puede encontrar en el campamento cercano del {faction:Clan Aylaag}. {dot:Blue}\n\nPara convertirlo en una {item:194712} necesitarás los siguientes objetos:'
+L['quackers_duck_trap_kit'] = 'Para invocar a {npc:192557} primero te hace falta el {item:194740} el cual se puede encontrar en el campamento cercano del Clan Aylaag {dot:Blue}.\n\nPara convertirlo en una {item:194712} necesitarás los siguientes objetos:'
 L['quackers_spawn'] = 'Ahora necesitas pillar un pato cerca del nido con la {item:194712}. Después usa el {item:194739} en el {npc:192581} para invocar a {npc:192557}.'
 
 L['knew_you_nokhud_do_it_note'] = '{note:Los 3 objetos son únicos y dejan de existir tras 30 minutos.}\n\nConsigue {item:200184}, {item:200194}, y {item:200196} de varios {npc:185357}, {npc:185353}, o {npc:185168} alrededor de {location:Bastión Nokhudon}.\n\nCombínalos para crear el {item:200201} y úsalo para hablar con {npc:197884} para comenzar el circuito de entrenamiento.\n\nUsa tu {object:Botón de Acción Extra} para completarlo y conseguir el logro.\n\n{note:Completar el logro mientras estás en banda durante una Tormenta Elemental hace más fácil conseguir los objetos.}'
@@ -546,6 +562,18 @@ L['titan_chest'] = 'Cofre Titánico'
 L['options_icons_titan_chest'] = 'Cofre Titánico'
 L['options_icons_titan_chest_desc'] = 'Muestra dónde pueden haber {object:Cofre Titánico}.'
 
+L['living_mud_mask_note'] = [[
+{npc:197346} soltará las {item:200586} que iniciarán la misión {quest:70377}. Tendrás que devolvérselas a {npc:198062}.
+
+Tras ello, habla de nuevo con {npc:198062} y pregúntale por una recompensa mejor. Él cogerá un planeador a la zona VIP para que puedas 'disfrutar más de su compañía como recompensa'.
+
+Cuando llegues a la isla flotante, {npc:198062} estará en el suelo. Habla de nuevo con él para decirle que parece muerto.
+
+Aparecerá una babosa llamada {npc:198590} y huirá a una rama detrás de {npc:197232}. Una vez estés suficientemente cerca, la babosa te ofrecerá la misión {quest:72060}.
+
+Vuelve con {npc:198062}, que está sentado en un banco, y entrega la misión para conseguir tu {item:200872}.
+]]
+
 -------------------------------------------------------------------------------
 ------------------------------ THE WAKING SHORE -------------------------------
 -------------------------------------------------------------------------------
@@ -560,7 +588,7 @@ L['obsidian_throne_rare_note'] = 'Dentro del {location:Trono Obsidiana}.'
 L['slurpo_snail_note'] = 'Despoja un {item:201033} de un {object:Cristal de Sal} en una cueva de {location:Las Tierras Azures}. Úsalo en una cueva de las {location:Orillas del Despertar} para invocar al raro.'
 L['worldcarver_atir_note'] = 'Recoge 3x {item:191211} del {npc:187366} cercano y ponlos en los {npc:197395} para hacer aparecer al raro.'
 
-L['bubble_drifter_note'] = 'La {item:199061} se puede encontrar en las {object:Mochila de Explorador de Expedición} y en las {object:Tierra Revuelta}.'
+L['bubble_drifter_note'] = 'La {item:199061} se puede encontrar en las {object:Mochila de Explorador de Expedición} y en las {object:Tierra Revuelta}.\n\nPara interactuar con el pez necesitas tener {spell:388331} de una {object:Planta Aromática} cercana.'
 L['dead_mans_chestplate_note'] = 'Dentro de la torre. En el piso central.'
 L['fullsails_supply_chest_note'] = 'La llave la sueltan los {npc:187971} y los {npc:187320} al sur de la {location:Embajada Reposo Alado}.'
 L['golden_dragon_goblet_note'] = 'Despoja la {item:202081} del {npc:190056} en la {location:Costa Indómita} y completa la pequeña cadena de misiones.'
@@ -682,3 +710,83 @@ L['options_icons_djaradin_cache_desc'] = 'Muestra dónde pueden haber {object:Al
 L['dragonbane_siege_label'] = 'Asedio en la Fortaleza de Ruinadragón'
 L['options_icons_dragonbane_siege'] = 'Asedio en la Fortaleza de Ruinadragón'
 L['options_icons_dragonbane_siege_desc'] = 'Muestra dónde están y las recompensas de los Asedios en la Fortaleza de Ruinadragón.'
+
+L['phoenix_wishwing_note'] = [[
+Después de conseguir el {item:199203}, {npc:196214} te ofrecerá una misión en la que te dará la {item:193373}.
+Para acabar la misión, necesitarás los siguientes objetos (los puedes obtener en cualquier orden):
+]]
+L['phoenix_wishwing_talisman'] = [[
+%s {item:199203}
+
+Lo vende {npc:88045} {dot:Gold} en las {location:Cumbres de Arak}. Si {npc:88045} no está, completa la misión {quest:35010} para poder velo.
+Necesitarás los siguientes objetos para comprarlo:]]
+L['phoenix_wishwing_phoenix_ember'] = '%s {item:199099}\nEs botín de {npc:52530} en el {location:Paseo en el tiempo: Tierras de Fuego}.'
+L['phoenix_wishwing_sacred_ash'] = '%s {item:199097}\nSe pueden encontrar dentro de {object:Ollas}, alrededor de las {location:Cumbres de Arak}.'
+L['phoenix_wishwing_inert_ash'] = '%s {item:199092}\nEs un botín raro de los {npc:6520} que hay en el centro del {location:Cráter de Un\'Goro} {dot:Gray}. Estos comparten punto de aparición (pero no su botín) con las {npc:6521}. Asegúrate de matar a todo.'
+L['phoenix_wishwing_smoldering_ash'] = [[
+%s {item:199080}
+
+Farmea varios tipos de {npc:Fénix} {dot:Yellow} como el {npc:181764} o el {npc:195448} que hay en las {location:Islas Dragón}.
+Estos se encuentran generalmente alrededor de la {location:Ciudadela Obsidiana} en las {location:Orillas del Despertar}.
+]]
+L['phoenix_wishwing_ash_feather'] = [[
+%s {item:202062}
+
+Para ver estas {object:Plumas} tendrás que comprar el {item:199177} a {npc:189207} {dot:Green} en las {location:Orillas del Despertar} junto al {location:Trono Obsidiana}.
+Usa el amuleto y coge las {item:202062} {dot:Red} que hay dentro del {location:Ascenso Ardiente} y de {location:Cienoescoria}, que son las zonas que rodean a la {location:Ciudadela Obsidiana}.
+]]
+L['phoenix_wishwing_info'] = 'Esto es parte de la mascota de combate {item:193373} localizada en las {location:Orillas del Despertar} de las {location:Islas Dragón}.'
+
+L['bugbiter_tortoise_note'] = 'Consigue un {item:202082} {dot:Red} y un {item:202084} {dot:Green} para intercambiarlos con {npc:187077} para conseguir tu {item:202085}.\n\n{npc:187077} requiere que esté activa la misión del mundo {quest:66070}.'
+
+-------------------------------------------------------------------------------
+------------------------------- Zaralek Cavern --------------------------------
+-------------------------------------------------------------------------------
+
+L['in_deepflayer_nest'] = 'Dentro del {location:Nido de los Despellejadores}.'
+
+L['brulsef_the_stronk_note'] = 'Despoja tus recompensas del {object:Cofre de Enormes Beneficios}.\n\n{bug:No le dejes ir muy lejos de la posición inicial o no habrá ningún cofre tras derrotarlo.}'
+
+L['ancient_zaqali_chest_note'] = 'Usa el {object:Magma Embotellado} cercano para abrir el cofre.'
+L['blazing_shadowflame_chest_note'] = 'Equipa la {item:15138}, que se puede comprar en la Casa de Subastas o crease por un peletero, para despojar el cofre.'
+L['crystal_encased_chest_note'] = 'Interactúa con el {object:Cristal de Armonización} azul {dot:Blue} y con el {object:Cristal de Armonización} rojo {dot:Red} para abrir el cofre.'
+L['old_trunk_note'] = 'Busca y recoge 5 veces el {npc:204277} para conseguir la {item:204323}. {note:El primer ratón está junto al cofre.}'
+L['well_chewed_chest_note'] = 'La {item:202869} {dot:Green} está escondida debajo de {npc:199962} dentro de la cueva.'
+
+L['molten_hoard_label'] = 'Tesoro de Magma'
+L['fealtys_reward_label'] = 'Recompensa de Lealtad'
+L['fealtys_reward_note'] = 'Teclea la emoción {emote:/arrodillarse} enfrente de la estatua del dragón al suroeste hasta que escupa fuego para poder abrir el cofre.'
+L['dreamers_bounty_label'] = 'Botín de Soñador'
+L['dreamers_bounty_note'] = 'El {object:Botín de Soñador} sólo se puede despojar mientras tengas en ti el debuff {spell:400066} que consigues del {npc:201068} cercano.'
+L['moth_pilfered_pouch_label'] = 'Bolsa Birlada por unas Polillas'
+L['moth_pilfered_pouch_note'] = 'Ayuda a {npc:203225} para que vuele haciendo "malabarismos" hasta que tenga cinco acumulaciones de {spell:405358}.\n\nEntonces volará a la faltriquera y te la revelará.'
+L['waterlogged_bundle_label'] = 'Fardo Empapado'
+
+L['stolen_stash_label'] = 'Alijo Robado'
+L['ritual_offering_label'] = 'Ofrendas Rituales'
+L['options_icons_ritual_offering'] = 'Ofrendas Rituales'
+L['options_icons_ritual_offering_desc'] = 'Muestra dónde pueden haber {object:Ofrendas Rituales}.'
+L['nal_kskol_reliquary_label'] = 'Relicario de Nal ks\'kol'
+L['nal_kskol_reliquary_note'] = 'Usa la {object:Consola de Acceso al Relicario} y resuelve el puzzle para abrir el {object:Relicario de Nal ks\'kol}.'
+
+L['molten_scoutbot_note'] = 'Abre el {object:Explorabot de magma} y despoja el {item:204850}.'
+L['bolts_and_brass_note'] = 'Abre los {object:Tornillos y Latón} y despoja los {item:204850}.'
+
+L['sniffen_sage_suffix'] = 'objetos especiales encontrados'
+
+L['big_slick_note'] = 'Completa misiones diarias de {npc:201752} para alcanzar el nivel de reputación "Profesional" (2800 de reputación en total) con la facción {faction:2568} para conseguir tu montura.\n\nO enséñale los siguientes caracoles (mascotas de combate) a nivel 25 para conseguir 100 de reputación por cada uno:'
+L['grogul_note'] = 'Habla con {npc:204672} y elige una golosina que puedas usar para animar al caracol correspondiente a ir más rápido.\n{note:El logro se puede conseguir con menos de Renombre 7.}'
+
+L['saccratos_note'] = 'Cambia {item:204727} por una mascota, montura, y más.'
+L['ponzo_note'] = 'Cambia {item:204985} y {item:205903} por personalizaciones para el draco, mascota, montura, y más.'
+
+L['smelly_trash_pile_label'] = 'Montón de Basura Maloliente'
+L['options_icons_smelly_trash_pile'] = 'Montón de Basura Maloliente'
+L['options_icons_smelly_trash_pile_desc'] = 'Muestra dónde puede haber {object:Montón de Basura Maloliente}.'
+
+L['seething_cache_treasure_note'] = 'Para poder ver el {object:Alijo Hirviente} y despojar la {item:192779} necesitarás coger 3 acumulaciones del debuff {spell:399342} de los {object:Orbe Hirviente} que hay en la zona de la {location:Caldera Zaqali} en la {location:Caverna Zaralek}.'
+L['chest_of_the_flights_treasure_note'] = 'Para abrir el cofre necesitarás hacer click en las {object:Gema Potenciada} en el orden {note:Rojo > Negro > Azul > Amarillo > Verde}.'
+L['curious_top_hat_note'] = 'Interactúa con la {npc:205010} mientras tengas el buff {spell:410288} para recibir {item:205021}. Si no tienes el buff y te acercas, huirá.'
+
+L['zaralek_rotation_active'] = ns.color.Blue('Este Raro puedo aparecer hoy.')
+L['zaralek_rotation_inactive'] = ns.color.Orange('Este Raro no aparecerá hoy, vuelve mañana.')

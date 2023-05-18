@@ -96,6 +96,10 @@ local function isRaidCdSubcategory(info)
 	return info[4] == "raidCDS"
 end
 
+local function isRaidCdSubcategoryInterruptType(info)
+	return info[4] == "raidCDS" and info[6] == "interrupt"
+end
+
 local function shouldHideDisabledSpell(info)
 	local module = E[ info[1] ]
 	return info[3] ~= "spells" and module.getHideDisabledSpells(info) and not module:IsEnabledSpell(info[#info], nil, info[2])
@@ -244,6 +248,7 @@ function P:UpdateSpellsOption(id, oldClass, oldType, class, stype, force)
 
 		local t = spells.args[class].args
 		t[stype] = t[stype] or {
+			hidden = isRaidCdSubcategoryInterruptType,
 			name = "|cffffd200" .. E.L_PRIORITY[stype],
 			order = 30 - C.Party.arena.priority[stype],
 			type = "group",
@@ -312,6 +317,7 @@ function P:AddSpellPickerSpells()
 				if not v.hide then
 					local vtype = v.type
 					t[vtype] = t[vtype] or {
+						hidden = isRaidCdSubcategoryInterruptType,
 						name = "|cffffd200" .. E.L_PRIORITY[vtype],
 						order = 30 - C.Party.arena.priority[vtype],
 						type = "group",

@@ -1,17 +1,7 @@
----------------------------------------------------------------------------------
-
--- Customized for OmniCD by permission of the copyright owner.
-
----------------------------------------------------------------------------------
-
 --[[-----------------------------------------------------------------------------
 Frame Container
 -------------------------------------------------------------------------------]]
---[[ s r
 local Type, Version = "Frame", 30
-]]
-local Type, Version = "Frame-OmniCD", 31 -- 28 DF
--- e
 local AceGUI = LibStub and LibStub("AceGUI-3.0", true)
 if not AceGUI or (AceGUI:GetWidgetVersion(Type) or 0) >= Version then return end
 
@@ -41,17 +31,6 @@ end
 
 local function Frame_OnMouseDown(frame)
 	AceGUI:ClearFocus()
-	frame:StartMoving() -- s a
-end
-
--- s b
-local function Frame_OnMouseUp(frame)
-	frame:StopMovingOrSizing()
-	local self = frame.obj
-	local status = self.status or self.localstatus
-	status.top = frame:GetTop()
-	status.left = frame:GetLeft()
-	AceGUI:ClearFocus()
 end
 
 local function Title_OnMouseDown(frame)
@@ -75,7 +54,6 @@ local function SizerSE_OnMouseDown(frame)
 	AceGUI:ClearFocus()
 end
 
---[[ s -r
 local function SizerS_OnMouseDown(frame)
 	frame:GetParent():StartSizing("BOTTOM")
 	AceGUI:ClearFocus()
@@ -85,7 +63,6 @@ local function SizerE_OnMouseDown(frame)
 	frame:GetParent():StartSizing("RIGHT")
 	AceGUI:ClearFocus()
 end
-]]
 
 local function StatusBar_OnEnter(frame)
 	frame.obj:Fire("OnEnterStatusBar")
@@ -107,13 +84,12 @@ local methods = {
 		self:SetStatusText()
 		self:ApplyStatus()
 		self:Show()
-	self:EnableResize(true)
+        self:EnableResize(true)
 	end,
 
 	["OnRelease"] = function(self)
 		self.status = nil
 		wipe(self.localstatus)
-		self.frame:SetScale(1) -- s a remove scaling done
 	end,
 
 	["OnWidthSet"] = function(self, width)
@@ -137,7 +113,7 @@ local methods = {
 	end,
 
 	["SetTitle"] = function(self, title)
-		self.titletext:SetText("") -- s c title
+		self.titletext:SetText(title)
 		self.titlebg:SetWidth((self.titletext:GetWidth() or 0) + 10)
 	end,
 
@@ -155,13 +131,9 @@ local methods = {
 
 	["EnableResize"] = function(self, state)
 		local func = state and "Show" or "Hide"
-		--[[ s r
 		self.sizer_se[func](self.sizer_se)
 		self.sizer_s[func](self.sizer_s)
 		self.sizer_e[func](self.sizer_e)
-		]]
-		self.sizer_seX[func](self.sizer_seX)
-		-- e
 	end,
 
 	-- called to set an external table to store status in
@@ -189,7 +161,6 @@ local methods = {
 --[[-----------------------------------------------------------------------------
 Constructor
 -------------------------------------------------------------------------------]]
---[[ s -r
 local FrameBackdrop = {
 	bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
 	edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
@@ -203,7 +174,6 @@ local PaneBackdrop  = {
 	tile = true, tileSize = 16, edgeSize = 16,
 	insets = { left = 3, right = 3, top = 5, bottom = 3 }
 }
-]]
 
 local function Constructor()
 	local frame = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
@@ -214,15 +184,8 @@ local function Constructor()
 	frame:SetResizable(true)
 	frame:SetFrameStrata("FULLSCREEN_DIALOG")
 	frame:SetFrameLevel(100) -- Lots of room to draw under it
-	--[[ s r
 	frame:SetBackdrop(FrameBackdrop)
 	frame:SetBackdropColor(0, 0, 0, 1)
-	]]
-	OmniCD[1].BackdropTemplate(frame, "ACD")
-	frame:SetBackdropColor(0.05, 0.05, 0.05, 0.75) -- BDR
-	frame:SetBackdropBorderColor(0, 0, 0, 1)
-	--frame:SetClampedToScreen(true) -- s a let's not
-	-- e
 	if frame.SetResizeBounds then -- WoW 10.0
 		frame:SetResizeBounds(400, 200)
 	else
@@ -232,22 +195,14 @@ local function Constructor()
 	frame:SetScript("OnShow", Frame_OnShow)
 	frame:SetScript("OnHide", Frame_OnClose)
 	frame:SetScript("OnMouseDown", Frame_OnMouseDown)
-	frame:SetScript("OnMouseUp", Frame_OnMouseUp) -- s a
 
-	--[[ s r
 	local closebutton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
 	closebutton:SetScript("OnClick", Button_OnClick)
 	closebutton:SetPoint("BOTTOMRIGHT", -27, 17)
 	closebutton:SetHeight(20)
 	closebutton:SetWidth(100)
 	closebutton:SetText(CLOSE)
-	]]
-	local closebutton = OmniCD[1].CreateFlashButton(frame, "X", 25, 25, "ACD") -- where is this getting pushed text position ???
-	closebutton:SetPoint("TOPRIGHT", 0, 0)
-	closebutton:SetScript("OnClick", Button_OnClick)
-	-- e
 
-	--[[ s r
 	local statusbg = CreateFrame("Button", nil, frame, "BackdropTemplate")
 	statusbg:SetPoint("BOTTOMLEFT", 15, 15)
 	statusbg:SetPoint("BOTTOMRIGHT", -132, 15)
@@ -255,27 +210,16 @@ local function Constructor()
 	statusbg:SetBackdrop(PaneBackdrop)
 	statusbg:SetBackdropColor(0.1,0.1,0.1)
 	statusbg:SetBackdropBorderColor(0.4,0.4,0.4)
-	]]
-	local statusbg = CreateFrame("Button", nil, frame)
-	statusbg:SetPoint("BOTTOMLEFT", 0, 2)
-	statusbg:SetHeight(22)
-	statusbg:SetWidth(145) -- DEFAULT_TREE_WIDTH
-	-- e
 	statusbg:SetScript("OnEnter", StatusBar_OnEnter)
 	statusbg:SetScript("OnLeave", StatusBar_OnLeave)
 
-	--[[ s r
 	local statustext = statusbg:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-	]]
-	local statustext = statusbg:CreateFontString(nil, "OVERLAY", "GameFontNormal-OmniCD")
-	-- e
 	statustext:SetPoint("TOPLEFT", 7, -2)
 	statustext:SetPoint("BOTTOMRIGHT", -7, 2)
 	statustext:SetHeight(20)
 	statustext:SetJustifyH("LEFT")
 	statustext:SetText("")
 
-	--[[ s r
 	local titlebg = frame:CreateTexture(nil, "OVERLAY")
 	titlebg:SetTexture(131080) -- Interface\\DialogFrame\\UI-DialogBox-Header
 	titlebg:SetTexCoord(0.31, 0.67, 0, 0.63)
@@ -305,20 +249,6 @@ local function Constructor()
 	titlebg_r:SetPoint("LEFT", titlebg, "RIGHT")
 	titlebg_r:SetWidth(30)
 	titlebg_r:SetHeight(40)
-	]]
-	local titlebg = frame:CreateTexture(nil, "OVERLAY")
-	titlebg:SetPoint("TOP")
-	titlebg:SetHeight(27) -- content padding, (width is set by OnAquire/SetTitle)
-
-	local title = CreateFrame("Frame", nil, frame)
-	title:EnableMouse(true)
-	title:SetScript("OnMouseDown", Title_OnMouseDown)
-	title:SetScript("OnMouseUp", MoverSizer_OnMouseUp)
-	title:SetAllPoints(titlebg)
-
-	local titletext = title:CreateFontString(nil, "OVERLAY", "GameFontNormal-OmniCD")
-	titletext:SetPoint("CENTER")
-	-- e
 
 	local sizer_se = CreateFrame("Frame", nil, frame)
 	sizer_se:SetPoint("BOTTOMRIGHT")
@@ -328,7 +258,6 @@ local function Constructor()
 	sizer_se:SetScript("OnMouseDown",SizerSE_OnMouseDown)
 	sizer_se:SetScript("OnMouseUp", MoverSizer_OnMouseUp)
 
-	--[[ s r
 	local line1 = sizer_se:CreateTexture(nil, "BACKGROUND")
 	line1:SetWidth(14)
 	line1:SetHeight(14)
@@ -360,37 +289,23 @@ local function Constructor()
 	sizer_e:EnableMouse(true)
 	sizer_e:SetScript("OnMouseDown", SizerE_OnMouseDown)
 	sizer_e:SetScript("OnMouseUp", MoverSizer_OnMouseUp)
-	]]
-	local sizer_bg = sizer_se:CreateTexture(nil, "BACKGROUND")
-	sizer_bg:SetPoint("CENTER")
-	sizer_bg:SetTexture([[Interface\AddOns\OmniCD\Media\omnicd-bullet-resizer]])
-	-- e
 
 	--Container Support
 	local content = CreateFrame("Frame", nil, frame)
-	--[[ s r
 	content:SetPoint("TOPLEFT", 17, -27)
 	content:SetPoint("BOTTOMRIGHT", -17, 40)
-	]]
-	content:SetPoint("TOPLEFT", 1, -24)
-	content:SetPoint("BOTTOMRIGHT", -1, 24)
-	-- e
 
 	local widget = {
 		localstatus = {},
 		titletext   = titletext,
 		statustext  = statustext,
-		titlebg	    = titlebg,
-		--[[ s r
+		titlebg     = titlebg,
 		sizer_se    = sizer_se,
-		sizer_s	    = sizer_s,
-		sizer_e	    = sizer_e,
-		]]
-		sizer_seX   = sizer_se, -- name change to block skins
-		-- e
-		content	    = content,
-		frame	    = frame,
-		type	    = Type
+		sizer_s     = sizer_s,
+		sizer_e     = sizer_e,
+		content     = content,
+		frame       = frame,
+		type        = Type
 	}
 	for method, func in pairs(methods) do
 		widget[method] = func

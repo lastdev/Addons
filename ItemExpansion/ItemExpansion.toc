@@ -1,0 +1,7 @@
+## Interface: 100007
+## Version: 10.0.7_0.0.5
+## Title: ItemExpansion
+## Notes: Displays items expansions in item's tooltip in WOW
+
+ItemExpansion.lua
+exceptions.lua

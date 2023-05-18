@@ -1,10 +1,16 @@
-lightweight tag 48d4b13086c6ede871e78716d685b3ea126e8e17 v10.0.11
+lightweight tag 9521701847760c6d0bd774de965ddf7faa02a6c5 v10.1.0
 Author:	Vae <emuha17@gmail.com>
-Date:	Fri Feb 24 13:19:27 2023 -1000
+Date:	Sat May 6 10:04:51 2023 -1000
 
-commit 48d4b13086c6ede871e78716d685b3ea126e8e17
+commit 9521701847760c6d0bd774de965ddf7faa02a6c5
 Author: Vae <emuha17@gmail.com>
-Date:   Fri Feb 24 13:19:27 2023 -1000
+Date:   Sat May 6 10:04:51 2023 -1000
 
-    Updated Disc spec
+    Interface version errors
+
+commit 47eaceaf4a12931bd7fdac5200bc0cd70d088d4d
+Author: Vae <emuha17@gmail.com>
+Date:   Fri May 5 15:43:51 2023 -1000
+
+    10.1 update for Shadow rotation.
 

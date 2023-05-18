@@ -210,6 +210,7 @@ qcMenu={
 {text=qcL.THEFORBIDDENREACH,isTitle=false,notCheckable=false,hasArrow=false,arg1=1304,func=function(button,arg1)qcProcessMenuSelection(button,arg1);end},
 {text=qcL.THEWALKINGSHORES,isTitle=false,notCheckable=false,hasArrow=false,arg1=1305,func=function(button,arg1)qcProcessMenuSelection(button,arg1);end},
 {text=qcL.VALDRAKKEN,isTitle=false,notCheckable=false,hasArrow=false,arg1=1306,func=function(button,arg1)qcProcessMenuSelection(button,arg1);end},
+{text=qcL.ZARALEKCAVERN,isTitle=false,notCheckable=false,hasArrow=false,arg1=1307,func=function(button,arg1)qcProcessMenuSelection(button,arg1);end},
 {text=qcL.OTHERCATEGORIES,isTitle=true,notCheckable=true,hasArrow=false},
 {text=qcL.AZMERLOTH,isTitle=false,notCheckable=false,hasArrow=false,arg1=1320,func=function(button,arg1)qcProcessMenuSelection(button,arg1);end},
 {text=qcL.BRACKENHIDEWATERHOLE,isTitle=false,notCheckable=false,hasArrow=false,arg1=1321,func=function(button,arg1)qcProcessMenuSelection(button,arg1);end},

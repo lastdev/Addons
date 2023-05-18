@@ -4,7 +4,7 @@ local P = E.Party
 local sliderTimer
 
 local visibility = {
-	name = L["Visibility"],
+	name = format("|cff20ff20%s", L["Visibility"]),
 	order = 0,
 	type = "group",
 	get = function(info) return E.profile.Party.visibility[ info[#info] ] end,
@@ -14,7 +14,7 @@ local visibility = {
 			name = ZONE,
 			order = 10,
 			type = "multiselect",
-			width = "full",
+
 			values = E.L_ALL_ZONE,
 			get = function(_, k) return E.profile.Party.visibility[k] end,
 			set = function(_, k, value)
@@ -43,26 +43,27 @@ local visibility = {
 			order = 30,
 			type = "group",
 			inline = true,
-			args = {
-				size = {
-					name = L["Max number of group members"],
-					width = "double",
-					type = "range",
-					min = 2, max = 40, step = 1,
-					set = function(info, value)
-						E.profile.Party.visibility[ info[#info] ] = value
-						if not sliderTimer then
-							local func = function()
-								P:Refresh(true)
-								sliderTimer = nil
-							end
-							sliderTimer = C_Timer.NewTimer(2, func)
-						end
-					end,
-				},
-			}
+			get = function(info) return E.profile.Party.groupSize[ info[#info] ] end,
+			set = function(info, value)
+				E.profile.Party.groupSize[ info[#info] ] = value
+				if not sliderTimer then
+					sliderTimer = C_Timer.NewTimer(1, function()
+						P:Refresh(true)
+						sliderTimer = nil
+					end)
+				end
+			end,
+			args = {}
 		},
 	}
 }
+
+for zone, localizedName in pairs(E.L_ALL_ZONE) do
+	visibility.args.groupSize.args[zone] = {
+		name = localizedName,
+		desc = L["Max number of group members"],
+		type = "range", min = 2, max = zone == "arena" and 5 or (zone == "party" and 10) or 40, step = 1,
+	}
+end
 
 P.options.args["visibility"] = visibility

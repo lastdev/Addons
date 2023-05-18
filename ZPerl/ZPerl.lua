@@ -8,8 +8,8 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: af8a7c4dc62dd72dd127b8edca73163e186047f6 $")
-XPerl_SetModuleRevision("$Revision: af8a7c4dc62dd72dd127b8edca73163e186047f6 $")
+end, "$Revision: 147632cd0a118fa9bce359554d7fa46027aa62f8 $")
+XPerl_SetModuleRevision("$Revision: 147632cd0a118fa9bce359554d7fa46027aa62f8 $")
 
 local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
@@ -2188,6 +2188,7 @@ function XPerl_RestoreAllPositions()
 						break
 					end]]
 					if v.left and v.top then
+						frame:SetUserPlaced(false)
 						frame:ClearAllPoints()
 						frame:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", v.left / frame:GetScale(), v.top / frame:GetScale())
 						if v.height and v.width then
@@ -2206,7 +2207,7 @@ function XPerl_RestoreAllPositions()
 							frame:SetScript("OnDragStop", frame.StopMovingOrSizing)
 							frame:SetUserPlaced(true)
 						else]]
-							frame:SetUserPlaced(true)
+							--frame:SetUserPlaced(true)
 						--end
 					end
 				end

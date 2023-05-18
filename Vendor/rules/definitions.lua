@@ -7,7 +7,7 @@ local Rules = Addon.Rules;
 local SELL_RULE = Addon.RuleType.SELL;
 local KEEP_RULE = Addon.RuleType.KEEP;
 local DESTROY_RULE = Addon.RuleType.DESTROY;
-local INTERFACE_VERSION = tonumber(select(4, GetBuildInfo()));
+local _, _, _, INTERFACE_VERSION = GetBuildInfo()
 local SHADOWLANDS_VERSION = 90000;
 
 local addon_Functions = {};
@@ -554,7 +554,7 @@ function Rules.CheckMigration()
             ruleDef.Locked = false;
             if (not ruleDef.needsMigration) then
                 local riv = ruleDef.interfaceversion or 0;
-                if ((INTERFACE_VERSION >=SHADOWLANDS_VERSION) and (riv < SHADOWLANDS_VERSION)) then
+                if ((INTERFACE_VERSION >= SHADOWLANDS_VERSION) and (riv < SHADOWLANDS_VERSION)) then
 
                     ruleDef.needsMigration = true;
                 end

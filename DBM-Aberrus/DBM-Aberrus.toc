@@ -1,5 +1,5 @@
-## Interface: 100007
-## X-Min-Interface: 101000
+## Interface: 100100
+## X-Min-Interface: 100100
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Aberrus, the Shadowed Crucible|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0어둠의 도가니 에베루스|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Аберрий, Затененное Горнило|r
@@ -10,6 +10,7 @@
 ## RequiredDeps: DBM-Core
 ## SavedVariables: DBMAberrus_AllSavedVars
 ## SavedVariablesPerCharacter: DBMAberrus_SavedStats
+## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: DRAGONFLIGHT

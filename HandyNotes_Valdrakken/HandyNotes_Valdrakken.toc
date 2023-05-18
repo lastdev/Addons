@@ -1,11 +1,24 @@
-## Interface: 100007
-## Title: HandyNotes_Valdrakken
-## Notes: Valdrakken map locations.
-## Author: Keyboardturn
-## Version: 0.0.4
-## SavedVariables: HandyNotes_ValdrakkenDB
+## Interface: 100100
+## Title: HandyNotes: Valdrakken
+## Notes: Shows the NPC and POI locations in Valdrakken.
+## Notes-deDE: Zeigt die Positionen von NPCs und anderen Orten von Interesse in Valdrakken an.
+## Author: |cFFFF8C00Dathwada EU-Eredar|r
+## Version: v4
 ## RequiredDeps: HandyNotes
+## DefaultState: enabled
+## SavedVariables: HandyNotes_ValdrakkenDB
+## IconTexture: 4661644
+## X-Date: 2023-05-05
+## X-Category: Map
 
-Core.lua
-locations.lua
-icons.lua
+# LOCALIZATION FILES
+localization\locales.xml
+
+# CORE FILES
+core\constants.lua
+core\handler.lua
+core\config.lua
+core\dev.lua
+
+# DATABASE
+data\DB.lua

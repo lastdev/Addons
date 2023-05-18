@@ -1,5 +1,7 @@
-## Interface: 100007
-## Version: 3.01
+## Interface: 100100
+## Version: 3.08
+## Author: Taraezor
+## IconTexture: Interface\Icons\Achievement_faction_tillers
 ## Title: Dark Soil Tillers
 ## Title-deDE: Dunkle Erde Die Ackerbauern
 ## Title-esES: Los Labradores Tierra Oscura
@@ -12,7 +14,6 @@
 ## Title-ruRU: Земледельцами Темная Земля
 ## Title-zhCN: 阡陌客 黑色泥土
 ## Title-zhTW: 阡陌客 黑色泥土
-## Author: Taraezor
 ## Notes: Helps you with the |cFFD2691EDark Soil|r and |cFFD2691EThe Tillers|r in the Valley of the Four Winds
 ## Notes-deDE: Hilft dir bei |cFFD2691EDunkle Erde|r und |cFFD2691EDie Ackerbauern|r im Tal der Vier Winde
 ## Notes-esES: Te ayuda con |cFFD2691ETierra Oscura|r y |cFFD2691ELos Labradores|r en el Valle de los Cuatro Vientos
@@ -31,6 +32,7 @@
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_DarkSoilDB
 ## OptionalDeps: HandyNotes_APathLessTravelled, HandyNotes_EA-Pandaria
+## AddonCompartmentFunc: HandyNotes_DarkSoilTillers_OnAddonCompartmentClick
 
 Core.lua
 Data.lua

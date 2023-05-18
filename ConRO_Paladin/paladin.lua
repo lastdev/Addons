@@ -394,29 +394,40 @@ function ConRO.Paladin.Protection(_, timeShift, currentSpell, gcd, tChosen, pvpC
 		local _AvengersShield_enemies, _AvengersShield_RANGE = ConRO:Targets(Ability.AvengersShield);
 	local _AvengingWrath, _AvengingWrath_RDY, _AvengingWrath_CD = ConRO:AbilityReady(Ability.AvengingWrath, timeShift);
 		local _AvengingWrath_BUFF = ConRO:Aura(Buff.AvengingWrath, timeShift);
+	local _BastionofLight, _BastionofLight_RDY = ConRO:AbilityReady(Ability.BastionofLight, timeShift);
 	local _BlessedHammer, _BlessedHammer_RDY = ConRO:AbilityReady(Ability.BlessedHammer, timeShift);
 		local _BlessedHammer_CHARGES, _BlessedHammer_MaxCHARGES	= ConRO:SpellCharges(Ability.BlessedHammer.spellID);
 		local _BlessedHammer_DEBUFF = ConRO:TargetAura(Debuff.BlessedHammer, timeShift);
 	local _Consecration, _Consecration_RDY = ConRO:AbilityReady(Ability.Consecration, timeShift);
 		local _Consecration_FORM = ConRO:Form(Form.Consecration);
+	local _DivineToll, _DivineToll_RDY = ConRO:AbilityReady(Ability.DivineToll, timeShift);
 	local _HammeroftheRighteous, _HammeroftheRighteous_RDY = ConRO:AbilityReady(Ability.HammeroftheRighteous, timeShift);
 	local _HammerofWrath, _HammerofWrath_RDY = ConRO:AbilityReady(Ability.HammerofWrath, timeShift);
 	local _HandofReckoning, _HandofReckoning_RDY = ConRO:AbilityReady(Ability.HandofReckoning, timeShift);
 	local _Judgment, _Judgment_RDY = ConRO:AbilityReady(Ability.Judgment, timeShift);
+	local _MomentofGlory, _MomentofGlory_RDY = ConRO:AbilityReady(Ability.MomentofGlory, timeShift);
 	local _Rebuke, _Rebuke_RDY = ConRO:AbilityReady(Ability.Rebuke, timeShift);
+	local _Sentinel, _Sentinel_RDY = ConRO:AbilityReady(Ability.Sentinel, timeShift);
 	local _ShieldoftheRighteous, _ShieldoftheRighteous_RDY = ConRO:AbilityReady(Ability.ShieldoftheRighteous, timeShift);
-		local _ShieldoftheRighteous_BUFF = ConRO:Aura(Buff.ShieldoftheRighteous, timeShift + 1);
-		local _, _ShiningLight_COUNT, _ShiningLight_DUR = ConRO:Aura(Buff.ShiningLight_Stack, timeShift);
+		local _ShieldoftheRighteous_BUFF, _, _ShieldoftheRighteous_DUR = ConRO:Aura(Buff.ShieldoftheRighteous, timeShift);
+		local _ShiningLight_BUFF = ConRO:Aura(Buff.ShiningLight, timeShift);
 		local _DivinePurpose_BUFF = ConRO:Aura(Buff.DivinePurpose, timeShift);
+		local _BastionofLight_BUFF, _, _BastionofLight_DUR = ConRO:Aura(Buff.BastionofLight, timeShift);
+		local _Redoubt_BUFF, _, _Redoubt_DUR = ConRO:Aura(Buff.Redoubt, timeShift);
+	local _WordofGlory, _WordofGlory_RDY = ConRO:AbilityReady(Ability.WordofGlory, timeShift);
 
 --Conditions
 	local _is_moving = ConRO:PlayerSpeed();
 	local _enemies_in_melee, _target_in_melee = ConRO:Targets("Melee");
-	local _target_in_10yrds = CheckInteractDistance("target", 3);
+	local _enemies_in_25yrds, _target_in_25yrds = ConRO:Targets("25");
 	local _can_execute = _Target_Percent_Health <= 20;
 
 		if _DivinePurpose_BUFF then
 			_HolyPower = 5;
+		end
+
+		if tChosen[Ability.Sentinel.talentID] then
+			_AvengingWrath, _AvengingWrath_RDY = _Sentinel, _Sentinel_RDY;
 		end
 
 --Warnings
@@ -429,9 +440,16 @@ function ConRO.Paladin.Protection(_, timeShift, currentSpell, gcd, tChosen, pvpC
 
 	ConRO:AbilityTaunt(_HandofReckoning, _HandofReckoning_RDY);
 
-	ConRO:AbilityBurst(_AvengingWrath, _AvengingWrath_RDY and ConRO:BurstMode(_AvengingWrath));
+	ConRO:AbilityBurst(_AvengingWrath, _AvengingWrath_RDY and _in_combat and ConRO:BurstMode(_AvengingWrath));
+	ConRO:AbilityBurst(_BastionofLight, _BastionofLight_RDY and _in_combat and not _ShieldoftheRighteous_BUFF and ConRO:BurstMode(_BastionofLight));
+	ConRO:AbilityBurst(_DivineToll, _DivineToll_RDY and _enemies_in_25yrds >= 3 and ConRO:BurstMode(_DivineToll));
+	ConRO:AbilityBurst(_MomentofGlory, _MomentofGlory_RDY and _in_combat and ConRO:BurstMode(_MomentofGlory));
 
 --Rotations
+	if _WordofGlory_RDY and _Player_Percent_Health <= 50 and (_ShiningLight_BUFF or _BastionofLight_BUFF) then
+		tinsert(ConRO.SuggestedSpells, _WordofGlory);
+	end
+
 	if not _in_combat then
 		if _AvengersShield_RDY and (_enemies_in_melee >= 3 or _AvengersShield_enemies >= 3) then
 			tinsert(ConRO.SuggestedSpells, _AvengersShield);
@@ -444,29 +462,34 @@ function ConRO.Paladin.Protection(_, timeShift, currentSpell, gcd, tChosen, pvpC
 		end
 	end
 
-	if _Consecration_RDY and not _Consecration_FORM then
-		tinsert(ConRO.SuggestedSpells, _Consecration);
-		_Consecration_RDY = false;
-	end
-
 	if _AvengingWrath_RDY and ConRO:FullMode(_AvengingWrath) then
 		tinsert(ConRO.SuggestedSpells, _AvengingWrath);
 		_AvengingWrath_RDY = false;
 	end
 
-	if _Seraphim_RDY and _HolyPower >= 3 and (_AvengingWrath_BUFF or _AvengingWrath_CD >= 40 or ConRO:BurstMode(_AvengingWrath)) and ConRO:FullMode(_Seraphim) then
-		tinsert(ConRO.SuggestedSpells, _Seraphim);
-		_Seraphim_RDY = false;
+	if _MomentofGlory_RDY and ConRO:FullMode(_MomentofGlory) then
+		tinsert(ConRO.SuggestedSpells, _MomentofGlory);
+		_MomentofGlory_RDY = false;
 	end
 
-	if _ShieldoftheRighteous_RDY and (_HolyPower >= 5 and not _ShieldoftheRighteous_BUFF) then
-		tinsert(ConRO.SuggestedSpells, _ShieldoftheRighteous);
-		_ShieldoftheRighteous_BUFF = true;
+	if _BastionofLight_RDY and ConRO:FullMode(_BastionofLight) then
+		tinsert(ConRO.SuggestedSpells, _BastionofLight);
+		_BastionofLight_RDY = false;
 	end
 
 	if _DivineToll_RDY and ConRO:FullMode(_DivineToll) then
 		tinsert(ConRO.SuggestedSpells, _DivineToll);
 		_DivineToll_RDY = false;
+	end
+
+	if _Consecration_RDY and not _Consecration_FORM then
+		tinsert(ConRO.SuggestedSpells, _Consecration);
+		_Consecration_RDY = false;
+	end
+
+	if _ShieldoftheRighteous_RDY and (_HolyPower >= 3 or _DivinePurpose_BUFF or _BastionofLight_BUFF) and (_ShieldoftheRighteous_DUR <= 9 or (_BastionofLight_BUFF and _BastionofLight_DUR <= 3)) then
+		tinsert(ConRO.SuggestedSpells, _ShieldoftheRighteous);
+		_HolyPower = _HolyPower - 3
 	end
 
 	if _AvengersShield_RDY and _enemies_in_melee >= 3 then
@@ -547,23 +570,23 @@ function ConRO.Paladin.ProtectionDef(_, timeShift, currentSpell, gcd, tChosen, p
 	local _target_in_10yrds = CheckInteractDistance("target", 3);
 
 --Rotations
-		if _WordofGlory_RDY and ((_HolyPower >= 3 or _ShiningLight_BUFF) and _Player_Percent_Health <= 80) then
-			tinsert(ConRO.SuggestedDefSpells, _WordofGlory);
-		end
-
 		if _LayonHands_RDY and not _Forbearance_BUFF and _Player_Percent_Health <= 10 then
 			tinsert(ConRO.SuggestedDefSpells, _LayonHands);
+		end
+
+		if _WordofGlory_RDY and ((_HolyPower >= 3 or _ShiningLight_BUFF) and _Player_Percent_Health <= 80) then
+			tinsert(ConRO.SuggestedDefSpells, _WordofGlory);
 		end
 
 		if _ShieldoftheRighteous_RDY and not _ShieldoftheRighteous_BUFF and _HolyPower >= 3 and not _ArdentDefender_BUFF and not _GuardianofAncientKings_BUFF then
 			tinsert(ConRO.SuggestedDefSpells, _ShieldoftheRighteous);
 		end
 
-		if _EyeofTyr_RDY and _target_in_melee then
+		if _EyeofTyr_RDY and _target_in_melee and not _ShieldoftheRighteous_BUFF then
 			tinsert(ConRO.SuggestedDefSpells, _EyeofTyr);
 		end
 
-		if _ArdentDefender_RDY and not _ArdentDefender_BUFF and not _GuardianofAncientKings_BUFF then
+		if _ArdentDefender_RDY and not _ArdentDefender_BUFF and not _GuardianofAncientKings_BUFF and not _ShieldoftheRighteous_BUFF then
 			tinsert(ConRO.SuggestedDefSpells, _ArdentDefender);
 		end
 
@@ -623,6 +646,7 @@ function ConRO.Paladin.Retribution(_, timeShift, currentSpell, gcd, tChosen, pvp
 	local _HammerofWrath, _HammerofWrath_RDY = ConRO:AbilityReady(Ability.HammerofWrath, timeShift);
 	local _Judgment, _Judgment_RDY = ConRO:AbilityReady(Ability.Judgment, timeShift);
 		local _Judgment_DEBUFF = ConRO:TargetAura(Debuff.Judgment, timeShift);
+		local _EmpyreanLegacy_BUFF = ConRO:Aura(Buff.EmpyreanLegacy, timeShift);
 	local _JusticarsVengeance, _JusticarsVengeance_RDY = ConRO:AbilityReady(Ability.JusticarsVengeance, timeShift);
 	local _Rebuke, _Rebuke_RDY = ConRO:AbilityReady(Ability.Rebuke, timeShift);
 	local _TemplarsVerdict, _TemplarsVerdict_RDY = ConRO:AbilityReady(Ability.TemplarsVerdict, timeShift);
@@ -707,7 +731,7 @@ function ConRO.Paladin.Retribution(_, timeShift, currentSpell, gcd, tChosen, pvp
 			_ExecutionSentence_RDY = false;
 		end
 
-		if _HolyPower <= _HolyPower_Max then
+		if _HolyPower < _HolyPower_Max then
 			if _WakeofAshes_RDY and _HolyPower <= 2 and ConRO:FullMode(_WakeofAshes) then
 				tinsert(ConRO.SuggestedSpells, _WakeofAshes);
 				_WakeofAshes_RDY = false;
@@ -755,7 +779,7 @@ function ConRO.Paladin.Retribution(_, timeShift, currentSpell, gcd, tChosen, pvp
 			end
 		end
 
-		if (ConRO_AutoButton:IsVisible() and (_enemies_in_melee >= 2)) and _DivineArbiter_COUNT < 25 then
+		if (ConRO_AutoButton:IsVisible() and (_enemies_in_melee >= 2)) and _DivineArbiter_COUNT < 25 and not _EmpyreanLegacy_BUFF then
 			if _DivineStorm_RDY and _HolyPower >= 4 then
 				tinsert(ConRO.SuggestedSpells, _DivineStorm);
 				_HolyPower = _HolyPower - 3;

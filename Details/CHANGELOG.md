@@ -1,6 +1,7 @@
 # Details! Damage Meter
 
-## [Details.DF.Wrath.10.0.7.10737.148](https://github.com/Tercioo/Details-Damage-Meter/tree/Details.DF.Wrath.10.0.7.10737.148) (2023-03-27)
-[Full Changelog](https://github.com/Tercioo/Details-Damage-Meter/compare/Details.DF.Wrath.10.0.7.10736.148...Details.DF.Wrath.10.0.7.10737.148) 
+## [Details.20230513.11011.151](https://github.com/Tercioo/Details-Damage-Meter/tree/Details.20230513.11011.151) (2023-05-13)
+[Full Changelog](https://github.com/Tercioo/Details-Damage-Meter/compare/Details.20230512.11010.151...Details.20230513.11011.151) 
 
-- Player breakdown window cleanup (1)  
+- Changelogs  
+- Added options "Group Player Spells With Same Name" and ""Group Pets By Spell"  

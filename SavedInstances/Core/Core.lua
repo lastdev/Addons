@@ -365,12 +365,9 @@ SI.defaultDB = {
     AugmentBonus = true,
     CurrencyValueColor = true,
     Currency2003 = true, -- Dragon Isles Supplies
-    Currency2011 = true, -- Effigy Adornments
-    Currency2045 = true, -- Purified Arcane Energy
-    Currency2118 = true, -- Elemental Overflow
-    Currency2122 = true, -- Storm Sigil
     Currency2123 = true, -- Bloody Tokens
-    Currency2167 = true, -- Catalyst Charges
+    Currency2245 = true, -- Flightstones
+    Currency2533 = true, -- Renascent Shadowflame
     CurrencyMax = false,
     CurrencyEarned = true,
     CurrencySortName = false,
@@ -2759,7 +2756,7 @@ end
 function SI:OnInitialize()
   local versionString = GetAddOnMetadata("SavedInstances", "version")
   --[==[@debug@
-  if versionString == "10.0.12" then
+  if versionString == "10.1.1" then
     versionString = "Dev"
   end
   --@end-debug@]==]

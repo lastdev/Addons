@@ -4,14 +4,11 @@
 
 -- Whats new info
 SMARTBUFF_WHATSNEW = "\n\n|cffffffff         Whats new:|r\n\n"
-  .."          |cffffffffDragonflight version by Codermik, additional.\n"
-  .."          retail coding by Speedwaystar.|cff00e0ff\n\n\n"
-  .."          Changes in r20.010323:\n\n"
-  .."             * Registered sounds with the Shared Media Library.\n\n"
-  .."             * Prevented template automatically resetting after.\n"
-  .."                a manual selection.\n\n"
-  .."             * Other changes and fixes. for more detailed changes\n"
-  .."                please visit the official github pages.\n\n"
+  .."          |cffffffffDragonflight version by Codermik & Speedwaystar.\n"
+  .."\n\n"
+  .."          Changes in r22.170523:\n\n"
+  .."             * Fixed macro casting and various LUA errors, \n"
+  .."                thanks to srtzero for the report.\n\n"
   .."\n\n"
   .."          |c0000FF96Many thanks to Chris S., Samantha R. and\n"
   .."          Twilight's Sundries for their kind donations.\n"
@@ -19,9 +16,9 @@ SMARTBUFF_WHATSNEW = "\n\n|cffffffff         Whats new:|r\n\n"
 ;
 
 SMARTBUFF_CREDITS = "|cffffffff"
-  .."Dragonflight version by Codermik.  Please join and report any issues on discord at:\n\n"
+  .."Retail & Classic by Codermik & Speedwaystar.  Please join and get support via our discord server:\n"
   .."|cff00e0ffhttps://discord.gg/R6EkZ94TKK\n\n"
-  .."|cffffffffIf you appreciate the amount of work involved and the time taken to bring you these various addons please consider supporting me by:\n\n"
+  .."|cffffffffIf you want to help support us and the development of this addon then please always download from Curse or use one of the following links:\n\n(We only ever upload to Curseforge)\n\n"
   .."|cffffffffPatreon: |cff00e0ffhttps://www.patreon.com/codermik\n"
   .."|cffffffffTwitch: |cff00e0ffhttps://www.twitch.tv/codermik\n"
   .."|cffffffffPayPal.Me: |cff00e0ffhttps://paypal.me/codermik\n\n"
@@ -46,8 +43,8 @@ SMARTBUFF_UNDEAD    = "Undead";
 SMARTBUFF_CLASSES = {"Druid", "Hunter", "Mage", "Paladin", "Priest", "Rogue", "Shaman", "Warlock", "Warrior", "Death Knight", "Monk", "Demon Hunter", "Evoker", "Hunter Pet", "Warlock Pet", "Death Knight Pet", "Tank", "Healer", "Damage Dealer"};
 
 -- Templates and Instances
-SMARTBUFF_TEMPLATES = {"Solo", "Party", "LFR", "Raid", "Mythic Keystone", "Battleground", "Arena", "Castle Nathria", "Sanctum of Domination", "Sepulcher of the First Ones", "Vault of the Incarnates", "Custom 1", "Custom 2", "Custom 3", "Custom 4", "Custom 5"};
-SMARTBUFF_INSTANCES = {"Castle Nathria", "Sanctum of Domination", "Sepulcher of the First Ones", "Vault of the Incarnates"};
+SMARTBUFF_TEMPLATES = {"Solo", "Party", "LFR", "Raid", "Mythic Keystone", "Battleground", "Arena", "Castle Nathria", "Sanctum of Domination", "Sepulcher of the First Ones", "Vault of the Incarnates", "Aberrus, The Shadowed Crucible", "Custom 1", "Custom 2", "Custom 3", "Custom 4", "Custom 5"};
+SMARTBUFF_INSTANCES = {"Castle Nathria", "Sanctum of Domination", "Sepulcher of the First Ones", "Vault of the Incarnates", "Aberrus, the Shadowed Crucible"};
 -- Mount
 SMARTBUFF_MOUNT = "Increases speed by (%d+)%%.";
 

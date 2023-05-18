@@ -124,6 +124,8 @@ qcLocalize = {
 	HIDEOTHERPROFESSIONQUESTS = "Скрывать задания других профессий",
 	HIDEOTHERRACEANDCLASSQUESTS = "Скрывать задания других рас и классов",
 	HIDEOTHERCOVENANTQUESTS = "Hide Other Covenant Quests",
+	HIDEREPEATABLEQUEST = "Hide Repeatable Quests",
+	HIDEWEEKLYQUEST = "Hide Weekly Quests",
 	HIDEWORLDQUEST = "Hide World Quests",
 	HIGHMAUL = "Highmaul", -- Requires localization
 	HILLSBRADFOOTHILLS = "Предгорья Хилсбрада",
@@ -512,6 +514,7 @@ qcLocalize = {
 	VALDRAKKEN = "Valdrakken",
 	VALDRAKKENACCORD = "Valdrakken Accord",
 	WHALLERSNOOK = "Whaler`s Nook",
+	ZARALEKCAVERN = "Zaralek Cavern",
 	}
 
 end

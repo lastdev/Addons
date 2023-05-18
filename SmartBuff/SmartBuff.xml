@@ -15,7 +15,7 @@
 		<Layers>
 			<Layer level="BACKGROUND">
 				<Texture setAllPoints="true">
-					<Color r="0.2" g="0" b="0" a="0.3" />
+					<Color r="0.2" a="0.3" />
 				</Texture>
 			</Layer>
 		</Layers>
@@ -104,7 +104,7 @@
 	</MessageFrame>
 	<Frame name="SmartBuffSplashFrameOptions" hidden="true" parent="SmartBuffSplashFrame" toplevel="true" movable="true" frameStrata="DIALOG" enableMouse="true">
 		<Size>
-			<AbsDimension x="420" y="100" />
+			<AbsDimension x="500" y="100" />
 		</Size>
 		<Anchors>
 			<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="BOTTOMLEFT">
@@ -431,7 +431,7 @@
 		<Layers>
 			<Layer level="BACKGROUND">
 				<Texture setAllPoints="true">
-					<Color r="0.2" g="0" b="0" a="0.3" />
+					<Color r="0.2" a="0.3" />
 				</Texture>
 			</Layer>
 		</Layers>
@@ -465,7 +465,7 @@
 			<AbsDimension x="560" y="720" />
 		</Size>
 		<Anchors>
-			<Anchor point="CENTER" x="30" y="-42" />
+			<Anchor x="30" y="-42" point="CENTER" />
 		</Anchors>
 		<Layers>
 			<Layer>
@@ -1408,7 +1408,7 @@
 			</Button>
 			<Button name="SmartBuffOptionsFrame_TutorialButton" parentKey="MainHelpButton" inherits="MainHelpPlateButton" toplevel="true">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent" x="-24" y="24" />
+					<Anchor x="-24" y="24" point="TOPLEFT" relativeTo="$parent" />
 				</Anchors>
 				<Scripts>
 					<OnClick>
@@ -1582,7 +1582,7 @@
 			<Button name="SmartBuffOptionsFrame_btnPlaySound" inherits="UIPanelButtonTemplate" text="&gt;">
 				<Size x="27" y="16" />
 				<Anchors>
-					<Anchor point="TOPLEFT" x="207" y="-203" />
+					<Anchor x="207" y="-203" point="TOPLEFT" />
 				</Anchors>
 				<Scripts>
 					<OnClick>
@@ -3077,12 +3077,12 @@
 							</OnLoad>
 						</Scripts>
 						<FontString inherits="GameFontNormal">
-							<Color r="1" g="0.82" b="0" />
+							<Color r="1" g="0.82" />
 							<Shadow>
 								<Offset>
 									<AbsDimension x="1" y="-1" />
 								</Offset>
-								<Color r="0" g="0" b="0" />
+								<Color />
 							</Shadow>
 						</FontString>
 					</EditBox>
@@ -3114,7 +3114,7 @@
 			</Anchor>
 		</Anchors>
 		<Frames>
-			<EditBox name="$parent_lblText" letters="0" multiLine="true" autoFocus="false">
+			<EditBox name="$parent_lblText" multiLine="true" autoFocus="false">
 				<Size>
 					<AbsDimension x="313" y="572" />
 				</Size>

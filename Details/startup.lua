@@ -15,6 +15,8 @@ function Details:StartMeUp()
 	end
 	Details.AndIWillNeverStop = true
 
+	--note: this runs after profile loaded
+
 	--set default time for arena and bg to be the Details! load time in case the client loads mid event
 	Details.lastArenaStartTime = GetTime()
 	Details.lastBattlegroundStartTime = GetTime()
@@ -92,7 +94,7 @@ function Details:StartMeUp()
 	Details.MicroButtonAlert:Hide()
 
 	--actor details window
-	Details.playerDetailWindow = Details.gump:CriaJanelaInfo()
+	Details.playerDetailWindow = Details:CreateBreakdownWindow()
 	Details.FadeHandler.Fader(Details.playerDetailWindow, 1)
 
 	--copy and paste window
@@ -341,6 +343,25 @@ function Details:StartMeUp()
 
 	--check is this is the first run of this version
 	if (Details.is_version_first_run) then
+		local breakdownData = Details.breakdown_spell_tab
+		if (breakdownData) then
+			local spellContainerHeaders = breakdownData.spellcontainer_headers
+			if (spellContainerHeaders) then
+				if (spellContainerHeaders.overheal) then
+					spellContainerHeaders.overheal.enabled = true
+					spellContainerHeaders.overheal.width = 70
+				end
+			end
+
+			local targetContainerHeaders = breakdownData.targetcontainer_headers
+			if (targetContainerHeaders) then
+				if (targetContainerHeaders.overheal) then
+					targetContainerHeaders.overheal.enabled = true
+					targetContainerHeaders.overheal.width = 70
+				end
+			end
+		end
+
 		local lowerInstanceId = Details:GetLowerInstanceNumber()
 		if (lowerInstanceId) then
 			lowerInstanceId = Details:GetInstance(lowerInstanceId)
@@ -369,6 +390,11 @@ function Details:StartMeUp()
 		Details:FillUserCustomSpells()
 		Details:AddDefaultCustomDisplays()
 	end
+
+	C_Timer.After(1, function()
+		--load custom spells on every login
+		Details:FillUserCustomSpells()
+	end)
 
 	local lowerInstanceId = Details:GetLowerInstanceNumber()
 	if (lowerInstanceId) then
@@ -442,16 +468,18 @@ function Details:StartMeUp()
 	Details:LoadFramesForBroadcastTools()
 	Details:BrokerTick()
 
-	--build trinket data
+	---return the table where the trinket data is stored
+	---@return table<spellid, trinketdata>
 	function Details:GetTrinketData()
 		return Details.trinket_data
 	end
 
-	local customSpellList = Details:GetDefaultCustomSpellsList()
+	local customSpellList = Details:GetDefaultCustomItemList()
 	local trinketData = Details:GetTrinketData()
 	for spellId, trinketTable in pairs(customSpellList) do
 		if (trinketTable.isPassive) then
 			if (not trinketData[spellId]) then
+				---@type trinketdata
 				local thisTrinketData = {
 					itemName = C_Item.GetItemNameByID(trinketTable.itemId),
 					spellName = GetSpellInfo(spellId) or "spell not found",
@@ -524,7 +552,7 @@ function Details:StartMeUp()
 	if (not DetailsFramework.IsClassicWow()) then
 		--i'm not in classc wow
 	else
-		print("|CFFFFFF00[Details!]: you're using Details! for RETAIL on Classic WOW, please get the classic version (Details! Damage Meter Classic WoW), if you need help see our Discord (/details discord).")
+		--print("|CFFFFFF00[Details!]: you're using Details! for RETAIL on Classic WOW, please get the classic version (Details! Damage Meter Classic WoW), if you need help see our Discord (/details discord).")
 	end
 
 	Details:InstallHook("HOOK_DEATH", Details.Coach.Client.SendMyDeath)
@@ -586,6 +614,8 @@ function Details:StartMeUp()
 		_G["UpdateAddOnMemoryUsage"] = Details.UpdateAddOnMemoryUsage_Custom
 	end
 
+	Details.InitializeSpellBreakdownTab()
+
 	pcall(Details222.EJCache.MakeCache)
 
 	pcall(Details222.ClassCache.MakeCache)
@@ -597,7 +627,7 @@ function Details:StartMeUp()
 	end
 
 	if (DetailsFramework:IsNearlyEqual(Details.class_coords.ROGUE[4], 0.25)) then
-		DetailsFramework.table.copy(Details.class_coords, _detalhes.default_profile.class_coords)
+		DetailsFramework.table.copy(Details.class_coords, Details.default_profile.class_coords)
 	end
 
 	--shutdown the old OnDeathMenu

@@ -1,4 +1,4 @@
-## Interface: 100005
+## Interface: 100100
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff0055FFSpell Timers|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff0055FFSpell Timers|r
 ## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff0055FF冷却助手|r
@@ -18,8 +18,9 @@
 ## Author: Nitram and Tandanu and QartemisT
 ## URL: http://www.deadlybossmods.com
 ## SavedVariables: DBM_SpellTimers_Settings
+## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
 ## X-Curse-Project-ID: 18712
-## Version: r145
+## Version: r147
 
 localization.en.lua
 localization.de.lua

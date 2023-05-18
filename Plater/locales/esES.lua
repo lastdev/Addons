@@ -1,6 +1,9 @@
-local L = LibStub("AceLocale-3.0"):NewLocale("PlaterNameplates", "esES") 
-if not L then return end 
+do
+    local addonId = ...
+    local languageTable = DetailsFramework.Language.RegisterLanguage(addonId, "esES")
+    local L = languageTable
 
+------------------------------------------------------------
 --[[Translation missing --]]
 L["HIGHLIGHT_HOVEROVER"] = "Hover Over Highlight"
 --[[Translation missing --]]
@@ -227,6 +230,17 @@ L["OPTIONS_NOCOMBATALPHA_ENABLED"] = "Use No Combat Alpha"
 L["OPTIONS_NOCOMBATALPHA_ENABLED_DESC"] = [=[Changes the nameplate alpha when you are in combat and the unit isn't.
 
 |cFFFFFF00 Important |r:If the unit isn't in combat, it overrides the alpha from the range check.]=]
+--[[Translation missing --]]
+L["OPTIONS_NOESSENTIAL_DESC"] = [=[On updating Plater, it is common for the new version to also update scripts from the scripts tab.
+This may sometimes overwrite changes made by the creator of the profile. The option below prevents Plater from modifying scripts when the addon receives an update.
+
+Note: During major patches and bug fixes, Plater may still update scripts.]=]
+--[[Translation missing --]]
+L["OPTIONS_NOESSENTIAL_NAME"] = "Disable non-essential script updates during Plater version upgrades."
+--[[Translation missing --]]
+L["OPTIONS_NOESSENTIAL_SKIP_ALERT"] = "Skipped non-essential patch:"
+--[[Translation missing --]]
+L["OPTIONS_NOESSENTIAL_TITLE"] = "Skip Non Essential Script Patches"
 L["OPTIONS_OKAY"] = "Okay"
 L["OPTIONS_OUTLINE"] = "Contorno"
 --[[Translation missing --]]
@@ -443,3 +457,5 @@ L["TARGET_OVERLAY_ALPHA"] = "Target Overlay Alpha"
 L["TARGET_OVERLAY_TEXTURE"] = "Target Overlay Texture"
 --[[Translation missing --]]
 L["TARGET_OVERLAY_TEXTURE_DESC"] = "Used above the health bar when it is the current target."
+
+end

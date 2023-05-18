@@ -198,6 +198,12 @@ function private.AuctionFrameInit()
 				self:UnregisterEvent("AUCTION_HOUSE_SHOW_FORMATTED_NOTIFICATION")
 				self:UnregisterEvent("AUCTION_HOUSE_SHOW_COMMODITY_WON_NOTIFICATION")
 			end)
+			local origOnHide = AuctionHouseFrame:GetScript("OnHide")
+			AuctionHouseFrame:SetScript("OnHide", function(self)
+				if private.settings.showDefault then
+					origOnHide(self)
+				end
+			end)
 		else
 			local tabId = private.defaultFrame.numTabs + 1
 			local tab = CreateFrame("Button", "AuctionFrameTab"..tabId, private.defaultFrame, tabTemplateName)
@@ -218,10 +224,7 @@ function private.AuctionFrameInit()
 		end
 	else
 		if Environment.HasFeature(Environment.FEATURES.C_AUCTION_HOUSE) then
-			local origCloseAuctionHouse = C_AuctionHouse.CloseAuctionHouse
-			C_AuctionHouse.CloseAuctionHouse = NoOp
 			HideUIPanel(private.defaultFrame)
-			C_AuctionHouse.CloseAuctionHouse = origCloseAuctionHouse
 		end
 		PlaySound(SOUNDKIT.AUCTION_WINDOW_OPEN)
 		private.ShowAuctionFrame()
@@ -309,13 +312,10 @@ function private.TSMTabOnClick()
 		ClickAuctionSellItemButton(AuctionsItemButton, "LeftButton")
 	end
 	ClearCursor()
-	-- Replace CloseAuctionHouse() with a no-op while hiding the AH frame so we don't stop interacting with the AH NPC
 	if Environment.HasFeature(Environment.FEATURES.C_AUCTION_HOUSE) then
-		local origCloseAuctionHouse = C_AuctionHouse.CloseAuctionHouse
-		C_AuctionHouse.CloseAuctionHouse = NoOp
 		HideUIPanel(private.defaultFrame)
-		C_AuctionHouse.CloseAuctionHouse = origCloseAuctionHouse
 	else
+		-- Replace CloseAuctionHouse() with a no-op while hiding the AH frame so we don't stop interacting with the AH NPC
 		local origCloseAuctionHouse = CloseAuctionHouse
 		CloseAuctionHouse = NoOp
 		AuctionFrame_Hide()

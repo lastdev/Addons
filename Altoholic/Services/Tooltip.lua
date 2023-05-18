@@ -647,9 +647,11 @@ addon:Service("AltoholicUI.Tooltip", { function()
 				if recipeID and reagentIndex then
 					local schematic = C_TradeSkillUI.GetRecipeSchematic(recipeID, false)
 					local reagent = schematic.reagentSlotSchematics[reagentIndex]
-					local itemID = reagent.reagents[1].itemID
+					if reagent then
+						local itemID = reagent.reagents[1].itemID
 					
-					storedLink = select(2, GetItemInfo(itemID))
+						storedLink = select(2, GetItemInfo(itemID))
+					end
 					
 					-- print(recipeID, reagentIndex)
 					-- storedLink = C_TradeSkillUI.GetRecipeReagentItemLink(recipeID, reagentIndex)

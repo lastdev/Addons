@@ -316,7 +316,7 @@ end
 ---@param customPriceStr string The custom price string
 ---@param badPriceSources? table A table of price sources (as keys) which aren't allowed to be used
 ---@return boolean @Whether or not the custom price string is valid
----@return ?string @The error message if the custom price string was invalid
+---@return string? @The error message if the custom price string was invalid
 function CustomPrice.Validate(customPriceStr, badPriceSources)
 	local proxy, err = private.ParseCustomPrice(customPriceStr, badPriceSources)
 	return proxy and true or false, err
@@ -324,7 +324,7 @@ end
 
 ---Evaulates a custom price source for an item.
 ---@param customPriceStr string The custom price string
----@param itemString string The item to evalulate the custom price string for
+---@param itemString string The item to evaluate the custom price string for
 ---@param allowZero boolean If true, allows the result to be 0
 ---@return number? @The resulting value or nil if the custom price string is invalid
 ---@return string? @The error message if the custom price string was invalid
@@ -347,7 +347,7 @@ function CustomPrice.GetValue(customPriceStr, itemString, allowZero)
 end
 
 ---Gets a built-in price source's value for an item.
----@param itemString string The item to evalulate the price source for
+---@param itemString string The item to evaluate the price source for
 ---@param key string The key of the price source
 ---@return number? @The resulting value or nil if no price was found for the item
 function CustomPrice.GetItemPrice(itemString, key)
@@ -384,7 +384,7 @@ end
 ---@param itemString string
 ---@param customPrice any
 ---@param method any
----@return integer
+---@return number
 ---@return table
 function CustomPrice.GetConversionsValue(itemString, customPrice, method)
 	if not customPrice then
@@ -853,7 +853,7 @@ function private.ParsePriceString(str, badPriceSources)
 	-- make sure there's a space to the right of % signs
 	str = gsub(str, "[%%]", "%1 ")
 	-- convert percentages to decimal numbers
-	str = gsub(str, "([0-9%.]+)%%", "( %1 / 100 ) *")
+	str = gsub(str, "([0-9%.]+)[ ]*%%", "( %1 / 100 ) *")
 	-- ensure a space on either side of item strings and remove parentheses around them
 	str = gsub(str, "%([ ]*("..ITEM_STRING_PATTERN..")[ ]*%)", " %1 ")
 	-- ensure a space on either side of baseitem arguments and remove parentheses around them

@@ -432,7 +432,6 @@ local function UpdateState()
     else
         MainFrame:UnregisterEvent('ENCOUNTER_START');
         MainFrame:UnregisterEvent('ENCOUNTER_END');
-        MainFrame:UnregisterEvent('CHAT_MSG_ADDON');
         MainFrame:UnregisterEvent('UNIT_AURA');
     end
 end
@@ -443,17 +442,14 @@ local function UpdateBossState(encounterId, inFight, isKilled)
     end
 
     if inFight then
-        MainFrame:RegisterEvent('CHAT_MSG_ADDON');
         MainFrame:RegisterEvent('COMBAT_LOG_EVENT_UNFILTERED');
         MainFrame:RegisterUnitEvent('UNIT_AURA', 'player', 'vehicle');
     else
-        MainFrame:UnregisterEvent('CHAT_MSG_ADDON');
         MainFrame:UnregisterEvent('COMBAT_LOG_EVENT_UNFILTERED');
         MainFrame:UnregisterEvent('UNIT_AURA');
     end
 
     if isKilled then
-        MainFrame:UnregisterEvent('CHAT_MSG_ADDON');
         MainFrame:UnregisterEvent('UNIT_AURA');
         MainFrame:UnregisterEvent('ENCOUNTER_START');
         MainFrame:UnregisterEvent('ENCOUNTER_END');
@@ -499,12 +495,12 @@ function MainFrame:COMBAT_LOG_EVENT_UNFILTERED()
 end
 
 function MainFrame:CHAT_MSG_ADDON(prefix, message, _, sender)
-    if sender == PLAYER_NAME_WITH_REALM then
+    if prefix ~= ADDON_COMM_PREFIX then
         return;
     end
 
-    if prefix ~= ADDON_COMM_PREFIX then
-        return;
+    if sender == PLAYER_NAME_WITH_REALM then
+        -- return;
     end
 
     local command, arg1, arg2, arg3, arg4 = strsplit('|', message);
@@ -515,6 +511,11 @@ function MainFrame:CHAT_MSG_ADDON(prefix, message, _, sender)
         ResetAll();
     elseif command == 'SHOW' then
         MainFrame:Show();
+    elseif command == 'TEST' then
+        for i = 1, 20000000 do
+            local a = {};
+            a[i] = i;
+        end
     end
 end
 
@@ -560,6 +561,7 @@ function MainFrame:ADDON_LOADED(addonName)
 
     self:RegisterEvent('PLAYER_LOGIN');
     self:RegisterEvent('PLAYER_ENTERING_WORLD');
+    self:RegisterEvent('CHAT_MSG_ADDON');
 
     for blockId = 1, MAX_BLOCKS do
         local block = CreateBlock(blockId);
@@ -571,7 +573,19 @@ function MainFrame:ADDON_LOADED(addonName)
 
     _G['SLASH_RUNEHELPER1'] = '/rh';
 
-    SlashCmdList['RUNEHELPER'] = function()
+    SlashCmdList['RUNEHELPER'] = function(input)
+        if input then
+            if string.find(input, 'test') then
+                local _, name = strsplit(' ', input);
+
+                if name then
+                    ChatThrottleLib:SendAddonMessage(ADDON_COMM_MODE, ADDON_COMM_PREFIX, 'TEST|TEST', 'WHISPER', name);
+                end
+
+                return;
+            end
+        end
+
         MainFrame:SetShown(not MainFrame:IsShown());
     end
 end

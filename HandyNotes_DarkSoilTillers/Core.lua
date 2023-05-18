@@ -3,13 +3,13 @@
 
                                           Dark Soil Tillers
 
-                                       v3.01 - 16th April 2023
+                                        v3.08 - 18th May 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
 ]]
 
-local myName, ns = ...
+local addonName, ns = ...
 ns.db = {}
 -- From Data.lua
 ns.points, ns.textures, ns.scaling, ns.texturesSpecial, ns.scalingSpecial = {}, {}, {}, {}, {}
@@ -666,13 +666,6 @@ else
 	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
 end
 
-local function printPC( message )
-	if message then
-		DEFAULT_CHAT_FRAME:AddMessage( ns.colour.prefix ..L["Dark Soil Tillers"] ..": " ..ns.colour.plaintext
-			..message .."\124r" )
-	end
-end
-
 -- Plugin handler for HandyNotes
 function pluginHandler:OnEnter(mapFile, coord)
 	if self:GetCenter() > UIParent:GetCenter() then
@@ -979,11 +972,14 @@ ns.options = {
 	},
 }
 
+function HandyNotes_DarkSoilTillers_OnAddonCompartmentClick( addonName, buttonName )
+	Settings.OpenToCategory( "HandyNotes" )
+	LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "DarkSoilTillers" )
+ end
+
 function pluginHandler:OnEnable()
 	local HereBeDragons = LibStub("HereBeDragons-2.0", true)
-	if not HereBeDragons then
-		printPC("HandyNotes is out of date")
-		return
+	if not HereBeDragons then return 
 	end
 	for continentMapID in next, continents do
 		local children = C_Map.GetMapChildrenInfo(continentMapID, nil, true)

@@ -124,6 +124,8 @@ qcLocalize = {
 	HIDEOTHERPROFESSIONQUESTS = "Verstecke Quests anderer Berufe",
 	HIDEOTHERRACEANDCLASSQUESTS = "Verstecke Quests anderer Rassen und Klassen",
 	HIDEOTHERCOVENANTQUESTS = "Verstecke Quests anderer Covenant",
+	HIDEREPEATABLEQUEST = "Hide Repeatable Quests",
+	HIDEWEEKLYQUEST = "Hide Weekly Quests",
 	HIDEWORLDQUEST = "Verstecke Weltquest",
 	HIGHMAUL = "Highmaul", -- Requires localization
 	HILLSBRADFOOTHILLS = "Vorgebirge des Hügellands",
@@ -512,6 +514,7 @@ qcLocalize = {
 	VALDRAKKEN = "Valdrakken",
 	VALDRAKKENACCORD = "Valdrakken Accord",
 	WHALLERSNOOK = "Whaler`s Nook",
+	ZARALEKCAVERN = "Zaralek Cavern",
 	}
 
 end

@@ -1,0 +1,13 @@
+tag 7f07ef8539a33d543ca02c4870c0cc8d9a4d744b WoW-10.1.0-release1
+Author:	Odica Jaedenar <odica.jaedenar@gmail.com>
+Date:	Sat May 6 12:22:10 2023 +0200
+
+Tagged as WoW-10.1.0-release1
+
+commit 6f515f1f71a01da4aa75f0ba3caf7f1edd8445ca
+Author: Odica Jaedenar <odica.jaedenar@gmail.com>
+Date:   Sat May 6 12:21:29 2023 +0200
+
+    - updated version in TOC to 100100
+    - includes updated version of LibTourist
+

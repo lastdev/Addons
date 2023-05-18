@@ -2,6 +2,29 @@ local AddonName, Addon = ...
 
 Addon.ReleaseNotes = {
 {
+Release ="6.2 (May 1, 2022)",
+Notes = [[
+# Dragonflight 10.1 Support
+
+This release only fixes Dragonflight 10.1 Support. Wrath is also supported, though scrollbars
+are now rather ugly. This is because Blizzard changed how scrollbars work in 10.1 and have not
+ported that change to Wrath.
+
+# Known Issues
+
+* Profiles created with previous version (6.1.3), which was a short release to enable wrath, had
+a profile creation bug that may have created profiles with bad data. If you are experiencing
+problems with any profiles created, we recommend deleting the affected profile and creating a
+new one.
+* The lists use item id to identify things to sell/keep, and that means if you put an item with
+crafting quality on it in a list, it will match all qualities of that item since they share the
+same item id. Use care when adding items that have a crafting quality to lists. We recommend
+that you use rules for matching unwanted crafting items, or custom lists (example, make a custom
+list, then use a rule with IsInList("mylist") and CraftingQuality < 5, or something similar). As
+always, make sure you check the "matches" and check the tooltip over items you expect to sell or
+keep after you create or enable a new rule.
+]]},
+{
 Release ="6.1 (November 27, 2022)",
 Notes = [[
 # Wrath of the Lich King Classic now supported!

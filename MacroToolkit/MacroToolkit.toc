@@ -1,10 +1,11 @@
-## Interface: 100007
+## Interface: 100100
 ## Title: Macro Toolkit
 ## Notes: Enhanced macro frame with additional tools
 ## Notes-zhTW: 增強巨集UI，方便編寫巨集並加強功能
 ## Notes-esES: Marco de macros mejorado con herramientas adicionales
 ## Author: Deepac, marciowb, The_Junksterr, Numy
-## Version: v2.0.2
+## IconTexture: 982414
+## Version: 2.1.0
 ## SavedVariables: MacroToolkitDB
 ## OptionalDeps: ElvUI, Ace3
 ## X-Curse-Project-ID: 47117

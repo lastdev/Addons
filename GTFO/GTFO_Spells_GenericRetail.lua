@@ -21,8 +21,8 @@ Sample:
 		alwaysAlert = true;
 		applicationOnly = true;
 		ignoreApplication = true;
-		minimumStacks = 1;
-		maximumStacks = 5;
+		minimumStacks = 1; -- Alerts won't go off EQUAL TO or LESS THAN this number
+		maximumStacks = 5; -- Alerts won't go off EQUAL TO or GREATER THAN this number
 		specificMobs = { 123, 234, 345 };
 		test = true;
 		vehicle = true;

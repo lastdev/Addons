@@ -31,7 +31,7 @@ local function UpdateWeekly()
 end
 
 local dataInitialized
-local function InitData()
+function InitData()
 	MapIds = C_ChallengeMode.GetMapTable()
 	C_MythicPlus.RequestRewards()
 	AstralEvents:Unregister('PLAYER_ENTERING_WORLD', 'initData')
@@ -59,20 +59,31 @@ function addon.CreateKeyLink(mapID, keyLevel)
 		mapName = addon.GetMapName(mapID, true)
 	end
 	local thisAff1, thisAff2, thisAff3, thisAff4 = 0
-	if keyLevel > 1 then
-	 thisAff1 = addon.AffixOne()
-	end
-	if keyLevel > 3 then
-	 thisAff2 = addon.AffixTwo()
-	end
-	if keyLevel > 6 then
-	 thisAff3 = addon.AffixThree()
-	end
-	if keyLevel > 8 then
-	 thisAff4 = addon.AffixFour()
+	if addon.AffixFour() == 0 then
+		if keyLevel > 1 then
+		thisAff1 = addon.AffixOne()
+		end
+		if keyLevel > 6 then
+		thisAff2 = addon.AffixTwo()
+		end
+		if keyLevel > 13 then
+		thisAff3 = addon.AffixThree() -- season affix removed in DF S2
+		end
+	else
+		if keyLevel > 1 then
+			thisAff1 = addon.AffixOne()
+		 end
+		 if keyLevel > 3 then
+			thisAff2 = addon.AffixTwo()
+		 end
+		 if keyLevel > 6 then
+			thisAff3 = addon.AffixThree()
+		 end
+		 if keyLevel > 8 then
+			thisAff4 = addon.AffixFour()
+		 end
 	end
 	return strformat('|c' .. COLOUR[3] .. '|Hkeystone:%d:%d:%d:%d:%d:%d:%d|h[%s %s (%d)]|h|r', addon.MYTHICKEY_ITEMID, mapID, keyLevel, thisAff1, thisAff2, thisAff3, thisAff4, L['KEYSTONE'], mapName, keyLevel):gsub('\124\124', '\124')
-
 end
 
 -- Prints out the same link as the CreateKeyLink but only if the Timewalking Key is found. Otherwise nothing is done.
@@ -94,13 +105,26 @@ function addon.CreateTimewalkingKeyLink(mapID, keyLevel)
 	return strformat('|c' .. COLOUR[3] .. '|Hkeystone:%d:%d:%d:%d:%d:%d:%d|h[%s %s (%d)]|h|r', addon.TIMEWALKINGKEY_ITEMID, mapID, keyLevel, thisAff1, thisAff2, thisAff3, thisAff4, L['KEYSTONE'], mapName, keyLevel):gsub('\124\124', '\124')
 end
 
-
 AstralEvents:Register('CHALLENGE_MODE_COMPLETED', function()
 	C_Timer.After(3, function()
 		C_MythicPlus.RequestRewards()
 		addon.FindKeyStone(true, true)
 	end)
 end, 'dungeonCompleted')
+
+AstralEvents:Register('CHALLENGE_MODE_MEMBER_INFO_UPDATED', function()
+	C_Timer.After(3, function()
+		C_MythicPlus.RequestRewards()
+		addon.FindKeyStone(true, false)
+	end)
+end, 'keyUpdated')
+
+AstralEvents:Register('CHALLENGE_MODE_RESET', function()
+	C_Timer.After(3, function()
+		C_MythicPlus.RequestRewards()
+		addon.FindKeyStone(true, false)
+	end)
+end, 'dungeonReset')
 
 function addon.FindKeyStone(sendUpdate, anounceKey)
 	if UnitLevel('player') < addon.EXPANSION_LEVEL then return end

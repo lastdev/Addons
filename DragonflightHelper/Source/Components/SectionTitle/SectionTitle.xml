@@ -14,7 +14,7 @@
     </Anchors>
     <Layers>
       <Layer level="ARTWORK">
-        <FontString parentKey="Title" inherits="GameFontHighlightSmall" justifyH="CENTER" text="FACTION">
+        <FontString parentKey="Title" justifyH="CENTER" text="FACTION">
           <Size y="25" />
           <Anchors>
             <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" />

@@ -127,6 +127,8 @@ qcLocalize = {
 	HIDEWORLDQUEST = "Hide Daily and World Quests",
 	HIDECOMPLETEDQUESTS = "Hide Completed Quests",
 	HIDEOTHERCOVENANTQUESTS = "Hide Other Covenant Quests",
+	HIDEREPEATABLEQUEST = "Hide Repeatable Quests",
+	HIDEWEEKLYQUEST = "Hide Weekly Quests",
 	HIDEWORLDQUEST = "Hide World Quests",
 	HIGHMAUL = "Highmaul", -- Requires localization
 	HILLSBRADFOOTHILLS = "Laderas de Trabalomas",
@@ -515,6 +517,7 @@ qcLocalize = {
 	VALDRAKKEN = "Valdrakken",
 	VALDRAKKENACCORD = "Valdrakken Accord",
 	WHALLERSNOOK = "Whaler`s Nook",
+	ZARALEKCAVERN = "Zaralek Cavern",
 	}
 
 end

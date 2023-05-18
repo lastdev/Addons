@@ -1,5 +1,5 @@
-﻿## Interface: 100007
-## Version: 109.43
+﻿## Interface: 100100
+## Version: 109.44
 ## Title: Quest Completist
 ## Notes: Enables you to see what quests you have completed, and what ones you have left to do.
 ## SavedVariables: qcSettings qcWorkingDB qcWorkingLog

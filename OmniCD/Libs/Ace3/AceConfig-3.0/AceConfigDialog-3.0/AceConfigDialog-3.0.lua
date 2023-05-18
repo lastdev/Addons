@@ -12,11 +12,12 @@
 local LibStub = LibStub
 local gui = LibStub("AceGUI-3.0")
 local reg = LibStub("AceConfigRegistry-3.0")
+local OmniCDC =	 LibStub("OmniCDC")
 
 --[[ s r
 local MAJOR, MINOR = "AceConfigDialog-3.0", 85
 ]]
-local MAJOR, MINOR = "AceConfigDialog-3.0-OmniCD", 85 -- 82 DF
+local MAJOR, MINOR = "AceConfigDialog-3.0-OmniCD", 88 -- 82 DF -- 87 backdrop
 -- e
 local AceConfigDialog, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
@@ -28,6 +29,12 @@ AceConfigDialog.frame = AceConfigDialog.frame or CreateFrame("Frame")
 --[[ s r
 AceConfigDialog.tooltip = AceConfigDialog.tooltip or CreateFrame("GameTooltip", "AceConfigDialogTooltip", UIParent, "GameTooltipTemplate")
 ]]
+-- This will be used for the option panel only starting 87. Backdrop is set on :SetDefaultSize
+AceConfigDialog.tooltip = AceConfigDialog.tooltip or CreateFrame("GameTooltip", "AceConfigDialogTooltip-OmniCD", UIParent, BackdropTemplateMixin and "GameTooltipTemplate, BackdropTemplate" or "GameTooltipTemplate")
+--if select(4, GetBuildInfo()) > 90100 then -- 9.1.5 fix > Blizzard added this for classic era
+if WOW_PROJECT_ID ~= WOW_PROJECT_BURNING_CRUSADE_CLASSIC or LE_EXPANSION_LEVEL_CURRENT ~= LE_EXPANSION_BURNING_CRUSADE then
+	SharedTooltip_SetBackdropStyle(AceConfigDialog.tooltip, nil, true);
+end
 -- Copy blizzard function so it doesn't reset backdrop onHide
 local function GameTooltip_OnHide(self)
 	self.needsReset = true;
@@ -60,12 +67,6 @@ local function GameTooltip_OnHide(self)
 		self.ItemTooltip:Hide();
 	end
 	self:SetPadding(0, 0, 0, 0);
-end
--- Precreate so we can update font obj
-AceConfigDialog.tooltip = AceConfigDialog.tooltip or CreateFrame("GameTooltip", "AceConfigDialogTooltip-OmniCD", UIParent, BackdropTemplateMixin and "GameTooltipTemplate, BackdropTemplate" or "GameTooltipTemplate")
---if select(4, GetBuildInfo()) > 90100 then -- 9.1.5 fix > Blizzard added this for classic era
-if WOW_PROJECT_ID ~= WOW_PROJECT_BURNING_CRUSADE_CLASSIC or LE_EXPANSION_LEVEL_CURRENT ~= LE_EXPANSION_BURNING_CRUSADE then
-	SharedTooltip_SetBackdropStyle(AceConfigDialog.tooltip, nil, true);
 end
 AceConfigDialog.tooltip:SetScript("OnHide", GameTooltip_OnHide)
 -- e
@@ -613,7 +614,7 @@ local function GetFuncName(option)
 		return "set"
 	end
 end
---[==[ s -r (replacing)
+--[==[ s r (replacing)
 do
 	local frame = AceConfigDialog.popup
 	if not frame or oldminor < 81 then
@@ -673,11 +674,12 @@ do
 	end
 end
 ]==]
+
 local function confirmPopup(appName, rootframe, basepath, info, message, func, ...)
 	local frame = AceConfigDialog.popup
 	-- s b (replacing popup with our own)
 	if not frame then
-		frame = OmniCD[1].GetStaticPopup()
+		frame = OmniCDC.GetStaticPopup()
 		AceConfigDialog.popup = frame
 	end
 	-- e
@@ -692,7 +694,9 @@ local function confirmPopup(appName, rootframe, basepath, info, message, func, .
 
 	frame.accept:ClearAllPoints()
 	frame.accept:SetPoint("BOTTOMRIGHT", frame, "BOTTOM", -6, 16)
+	frame.accept:Show()
 	frame.cancel:Show()
+	frame.alt:Hide()
 
 	local t = {...}
 	local tCount = select("#", ...)
@@ -1300,6 +1304,7 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 					control:SetValue(value)
 					control:SetCallback("OnValueChanged",ActivateControl)
 
+
 					if v.descStyle == "inline" then
 						local desc = GetOptionsMemberValue("desc", v, options, path, appName)
 						control:SetDescription(desc)
@@ -1487,6 +1492,11 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 								end
 							end
 
+							-- s b (Multiselect dropdown with disable support) v88
+							-- disabledItem member type must be a function
+							local item = GetOptionsMemberValue("disabledItem", v, options, path, appName)
+							-- e
+
 							control:PauseLayout()
 							local width = GetOptionsMemberValue("width",v,options,path,appName)
 							for s = 1, #valuesort do
@@ -1496,7 +1506,7 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 								check:SetLabel(name == ALL and text or "") -- name "" is header row
 								check:SetUserData("value", value)
 								check:SetUserData("text", text)
-								check:SetDisabled(disabled)
+								check:SetDisabled(disabled or s == item)
 								check:SetTriState(v.tristate)
 								check:SetValue(GetOptionsMemberValue("get",v, options, path, appName, value))
 								check:SetCallback("OnValueChanged", ActivateMultiControl_NoRefresh) -- don't refresh layout (laggy)
@@ -1900,11 +1910,12 @@ function AceConfigDialog:FeedGroup(appName,options,container,rootframe,path, isR
 		]]
 		if container.type ~= "InlineGroup-OmniCD" and container.type ~= "SimpleGroup-OmniCD" then -- <spell list> is 'multiselect'
 			scroll = gui:Create("ScrollFrame-OmniCD")
+			--[[ s r <spell list>
 			scroll:SetLayout("flow")
-			--[[ s b <spell list>
+			]]
+			-- e
 			local opt = path[#path-1]
 			scroll:SetLayout(opt and opt:match("list_") and "Flow-Nopadding-OmniCD" or "flow" )
-			]]-- e
 			scroll.width = "fill"
 			scroll.height = "fill"
 			container:SetLayout("fill")
@@ -2110,12 +2121,31 @@ reg.RegisterCallback(AceConfigDialog, "ConfigTableChange", "ConfigTableChanged")
 -- @param appName The application name as given to `:RegisterOptionsTable()`
 -- @param width The default width
 -- @param height The default height
-function AceConfigDialog:SetDefaultSize(appName, width, height)
+function AceConfigDialog:SetDefaultSize(appName, width, height, scale)
 	local status = AceConfigDialog:GetStatusTable(appName)
 	if type(width) == "number" and type(height) == "number" then
 		status.width = width
 		status.height = height
 	end
+	-- s b <panel scaling>
+	-- backward compatible: old direct scaling by self.Libs.ACD.OpenFrames.OmniSort.frame:SetScale will be
+	-- overridden by the current method (option>ActivateControl>ACD:Open(...)>SetStatusTable>ApplyStatus)
+	if type(scale) == "number" or scale == nil then
+		status.scale = scale or OmniCD[1].global.optionPanelScale or 1
+		OmniCDC.globalPanelScale = status.scale
+		OmniCDC.pixelMult = OmniCDC.GetPixelMult()
+		OmniCDC.ACDPixelMult = OmniCDC.pixelMult / OmniCDC.globalPanelScale -- basis for all of our backdrop
+	end
+
+	-- Set tooltip backdrop. This is done here so that addons that scale the UIParent are loaded first
+	-- If we're using ACD TT for the addon itself then call this func on PLAYER_LOGIN additionionally
+	if not AceConfigDialog.isTooltipBackdropSet then
+		OmniCDC.SetBackdrop(AceConfigDialog.tooltip)
+		AceConfigDialog.tooltip:SetBackdropColor(0, 0, 0)
+		AceConfigDialog.tooltip:SetBackdropBorderColor(0.3, 0.3, 0.3)
+		AceConfigDialog.isTooltipBackdropSet = true
+	end
+	-- e
 end
 
 --- Open an option window at the specified path (if any).

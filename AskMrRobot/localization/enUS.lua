@@ -95,7 +95,8 @@ L.InstanceNames = {
     [2296] = "Castle Nathria",
     [2450] = "Sanctum of Domination",
     [2481] = "Sepulcher of the First Ones",
-    [2522] = "Vault of the Incarnates"
+    [2522] = "Vault of the Incarnates",
+    [2569] = "Aberrus, the Shadowed Crucible"
 }
 
 L.DifficultyNames = {

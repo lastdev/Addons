@@ -19,5 +19,4 @@
 
 	<!-- Blizzard -->
 	<Script file="Blizzard\Blizzard.lua"/>
-	<Script file="Blizzard\TooltipID.lua"/>
 </Ui>

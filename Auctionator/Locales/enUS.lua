@@ -490,6 +490,9 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["CONFIG_CRAFTING_INFO_SHOW_COST"] = "Show reagent costs from auction house and vendors"
   L["CONFIG_CRAFTING_INFO_SHOW_COST_TOOLTIP_HEADER"] = "Crafting Info Show Cost"
   L["CONFIG_CRAFTING_INFO_SHOW_COST_TOOLTIP_TEXT"] = "Enable this option to see the cost of crafting a specific recipe when viewing it."
+  L["CONFIG_CRAFTING_INFO_SHOW_CHEAPEST_QUALITIES_COST"] = "Show reagent costs using the cheapest quality from auction house"
+  L["CONFIG_CRAFTING_INFO_SHOW_CHEAPEST_QUALITIES_COST_TOOLTIP_HEADER"] = "Crafting Info Show Cheapest Qualities Cost"
+  L["CONFIG_CRAFTING_INFO_SHOW_CHEAPEST_QUALITIES_COST_TOOLTIP_TEXT"] = "Enable this option to see the cost of crafting a specific recipe using the cheapest quality reagents when viewing it. By default Auctionator prioritises the reagents in your bags, but this value will ignore them."
   L["CONFIG_CRAFTING_INFO_SHOW_PROFIT"] = "Show profit from crafting with auction house and vendor reagents"
   L["CONFIG_CRAFTING_INFO_SHOW_PROFIT_TOOLTIP_HEADER"] = "Crafting Info Show Profit"
   L["CONFIG_CRAFTING_INFO_SHOW_PROFIT_TOOLTIP_TEXT"] = "Enable this option to see the profit of crafting a specific recipe when viewing it."
@@ -568,6 +571,11 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["CONFIG_SELLING_GEAR_USE_ILVL_VARIANTS"] = "For gear, use item level and title when selecting the price to compete with"
   L["CONFIG_SELLING_GEAR_USE_ILVL_VARIANTS_TOOLTIP_HEADER"] = "Use Item Level and Title"
   L["CONFIG_SELLING_GEAR_USE_ILVL_VARIANTS_TOOLTIP_TEXT"] = "Normally gear is compared with any other gear that is similar, but without taking item level and the \"of the\" titles into account. This will make them be taken into account."
+  L["CONFIG_MATCHING"] = "Choose how the item price is automatically selected"
+  L["CONFIG_MATCHING_ITEM_ID_AND_LEVEL"] = "Same item/pet level with the same item/pet id"
+  L["CONFIG_MATCHING_ITEM_ID"] = "Same item/pet id"
+  L["CONFIG_MATCHING_ITEM_NAME_AND_LEVEL"] = "Same item/pet id, title and level"
+  L["CONFIG_MATCHING_ITEM_NAME"] = "Same item/pet id and title (ignoring level)"
 
   L["DEFAULT_LIST_HEADER"] = "Default Shopping List"
 
@@ -581,6 +589,7 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["YOUR_HISTORY"] = "Your History"
   L["EXPORT_RESULTS"] = "Export Results"
   L["TO_CRAFT_COLON"] = "To Craft:"
+  L["CHEAPEST_QUALITY_COST_COLON"] = "Cheapest Quality Cost:"
   L["PROFIT_COLON"] = "Profit:"
   L["REAGENTS_VALUE_COLON"] = "Reagents Value:"
 

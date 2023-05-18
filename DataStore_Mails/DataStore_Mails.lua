@@ -229,7 +229,12 @@ end
 
 local function OnMailClosed()
 	addon.isOpen = nil
-	addon:UnregisterEvent("MAIL_CLOSED")
+	
+	if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+		addon:UnregisterEvent("MAIL_CLOSED")
+	else
+		addon:UnregisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE")
+	end
 	ScanMailbox()
 	
 	local character = addon.ThisCharacter
@@ -239,16 +244,34 @@ local function OnMailClosed()
 	addon:UnregisterEvent("MAIL_SEND_INFO_UPDATE")
 end
 
+local function OnManagerFrameHide(eventName, ...)
+	local paneType = ...
+	if paneType ==  Enum.PlayerInteractionType.MailInfo then 
+		OnMailClosed()
+	end
+end
+
 local function OnMailShow()
 	-- the event may be triggered multiple times, exit if the mailbox is already open
 	if addon.isOpen then return end	
 	
 	CheckInbox()
-	addon:RegisterEvent("MAIL_CLOSED", OnMailClosed)
+	if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+		addon:RegisterEvent("MAIL_CLOSED", OnMailClosed)
+	else
+		addon:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE", OnManagerFrameHide)
+	end
 	addon:RegisterEvent("MAIL_INBOX_UPDATE", OnMailInboxUpdate)
 
 	-- create a temporary table to hold the attachments that will be sent, keep it local since the event is rare
 	addon.isOpen = true
+end
+
+local function OnManagerFrameShow(eventName, ...)
+	local paneType = ...
+	if paneType ==  Enum.PlayerInteractionType.MailInfo then 
+		OnMailShow()
+	end
 end
 
 -- ** Mixins **
@@ -496,6 +519,9 @@ end
 
 function addon:OnEnable()
 	addon:RegisterEvent("MAIL_SHOW", OnMailShow)
+	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+		addon:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", OnManagerFrameShow)
+	end
 	addon:RegisterEvent("BAG_UPDATE", OnBagUpdate)
 	
 	addon:SetupOptions()
@@ -506,6 +532,9 @@ end
 
 function addon:OnDisable()
 	addon:UnregisterEvent("MAIL_SHOW")
+	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+		addon:UnregisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW")
+	end
 	addon:UnregisterEvent("BAG_UPDATE")
 end
 

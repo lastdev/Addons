@@ -906,6 +906,12 @@ end )
 
 
 spec:RegisterStateExpr( "consecration", function () return buff.consecration end )
+
+
+-- Tier 30
+spec:RegisterGear( "tier30", 202455, 202453, 202452, 202451, 202450 )
+
+
 spec:RegisterGear( "tier29", 200417, 200419, 200414, 200416, 200418 )
 
 spec:RegisterHook( "reset_precast", function ()
@@ -965,7 +971,7 @@ spec:RegisterStateFunction( "apply_aura", function( name )
 end )
 
 spec:RegisterStateFunction( "foj_cost", function( amt )
-    if buff.fires_of_justice.up then return max( 0, amt - 1 ) end
+    -- if buff.fires_of_justice.up then return max( 0, amt - 1 ) end
     return amt
 end )
 
@@ -976,7 +982,7 @@ spec:RegisterAbilities( {
     avenging_wrath = {
         id = 31884,
         cast = 0,
-        cooldown = function () return 120 * ( essence.vision_of_perfection.enabled and 0.87 or 1 ) end,
+        cooldown = function () return ( level > 42 and 60 or 120 ) * ( essence.vision_of_perfection.enabled and 0.87 or 1 ) end,
         gcd = "off",
         school = "holy",
 
@@ -1204,8 +1210,8 @@ spec:RegisterAbilities( {
         id = 35395,
         cast = 0,
         charges = 2,
-        cooldown = function () return ( talent.swift_justice.enabled and 4 or 6 ) * ( talent.seal_of_order.enabled and buff.blessing_of_dusk.up and 0.9 or 1 ) * ( talent.fires_of_justice.enabled and 0.85 or 1 ) * haste end,
-        recharge = function () return ( talent.swift_justice.enabled and 4 or 6 ) * ( talent.seal_of_order.enabled and buff.blessing_of_dusk.up and 0.9 or 1 ) * ( talent.fires_of_justice.enabled and 0.85 or 1 ) * haste end,
+        cooldown = function () return ( talent.swift_justice.enabled and 4 or 6 ) * ( talent.seal_of_order.enabled and buff.blessing_of_dusk.up and 0.9 or 1 ) * haste end,
+        recharge = function () return ( talent.swift_justice.enabled and 4 or 6 ) * ( talent.seal_of_order.enabled and buff.blessing_of_dusk.up and 0.9 or 1 ) * haste end,
         gcd = "spell",
         school = "physical",
 
@@ -1325,7 +1331,7 @@ spec:RegisterAbilities( {
         spend = function ()
             if buff.divine_purpose.up then return 0 end
             if buff.empyrean_power.up then return 0 end
-            return ( talent.vanguard_of_justice.enabled and 4 or 3 ) - ( buff.fires_of_justice.up and 1 or 0 ) - ( buff.hidden_retribution_t21_4p.up and 1 or 0 ) - ( buff.the_magistrates_judgment.up and 1 or 0 )
+            return ( talent.vanguard_of_justice.enabled and 4 or 3 ) - ( buff.hidden_retribution_t21_4p.up and 1 or 0 ) - ( buff.the_magistrates_judgment.up and 1 or 0 )
         end,
         spendType = "holy_power",
 
@@ -1341,7 +1347,6 @@ spec:RegisterAbilities( {
             elseif buff.divine_purpose.up then
                 removeBuff( "divine_purpose" )
             else
-                removeBuff( "fires_of_justice" )
                 removeBuff( "hidden_retribution_t21_4p" )
             end
 
@@ -1397,16 +1402,13 @@ spec:RegisterAbilities( {
         gcd = "spell",
         school = "holy",
 
-        spend = function ()
-            return ( talent.vanguard_of_justice.enabled and 4 or 3 ) - ( buff.fires_of_justice.up and 1 or 0 ) - ( buff.hidden_retribution_t21_4p.up and 1 or 0 ) - ( buff.the_magistrates_judgment.up and 1 or 0 )
-        end,
+        spend = function () return talent.divine_auxiliary.enabled and -3 or 0 end,
         spendType = "holy_power",
 
         talent = "execution_sentence",
         startsCombat = false,
 
         handler = function ()
-            removeBuff( "fires_of_justice" )
             removeBuff( "hidden_retribution_t21_4p" )
             removeDebuff( "target", "reckoning" )
             applyDebuff( "target", "execution_sentence" )
@@ -1453,6 +1455,9 @@ spec:RegisterAbilities( {
         cooldown = 60,
         gcd = "spell",
         school = "holy",
+
+        spend = function() return talent.divine_auxiliary.enabled and -3 or 0 end,
+        spendType = "holy_power",
 
         talent = "final_reckoning",
         startsCombat = true,
@@ -1547,13 +1552,19 @@ spec:RegisterAbilities( {
         handler = function ()
             removeBuff( "final_verdict" )
             if buff.divine_arbiter.stack > 24 then removeBuff( "divine_arbiter" ) end
-            if legendary.the_mad_paragon.enabled then
-                if buff.avenging_wrath.up then buff.avenging_wrath.expires = buff.avenging_wrath.expires + 1 end
-                if buff.crusade.up then buff.crusade.expires = buff.crusade.expires + 1 end
-            end
             if talent.zealots_paragon.enabled then
                 if buff.crusade.up then buff.crusade.expires = buff.crusade.expires + 0.5 end
                 if buff.avenging_wrath.up then buff.avenging_wrath.expires = buff.avenging_wrath.expires + 0.5 end
+            end
+            if set_bonus.tier30_2pc > 0 then
+                applyDebuff( "target", "judgment" )
+                if set_bonus.tier30_4pc > 0 then
+                    active_dot.judgment = min( active_enemies, active_dot.judgment + 4 )
+                end
+            end
+            if legendary.the_mad_paragon.enabled then
+                if buff.avenging_wrath.up then buff.avenging_wrath.expires = buff.avenging_wrath.expires + 1 end
+                if buff.crusade.up then buff.crusade.expires = buff.crusade.expires + 1 end
             end
         end,
     },
@@ -1674,7 +1685,7 @@ spec:RegisterAbilities( {
 
         spend = function ()
             if buff.divine_purpose.up then return 0 end
-            return ( talent.vanguard_of_justice.enabled and 4 or 3 ) - ( buff.fires_of_justice.up and 1 or 0 ) - ( buff.hidden_retribution_t21_4p.up and 1 or 0 ) - ( buff.the_magistrates_judgment.up and 1 or 0 )
+            return ( talent.vanguard_of_justice.enabled and 4 or 3 ) - ( buff.hidden_retribution_t21_4p.up and 1 or 0 ) - ( buff.the_magistrates_judgment.up and 1 or 0 )
         end,
         spendType = "holy_power",
 
@@ -1690,7 +1701,6 @@ spec:RegisterAbilities( {
             end
             if buff.divine_purpose.up then removeBuff( "divine_purpose" )
             else
-                removeBuff( "fires_of_justice" )
                 removeBuff( "hidden_retribution_t21_4p" )
             end
             if talent.divine_arbiter.enabled then addStack( "divine_arbiter" ) end
@@ -1839,8 +1849,8 @@ spec:RegisterAbilities( {
         id = 407480,
         cast = 0,
         charges = 2,
-        cooldown = function () return 6 * ( talent.seal_of_order.enabled and buff.blessing_of_dusk.up and 0.9 or 1 ) * ( talent.fires_of_justice.enabled and 0.85 or 1 ) * haste end,
-        recharge = function () return 6 * ( talent.seal_of_order.enabled and buff.blessing_of_dusk.up and 0.9 or 1 ) * ( talent.fires_of_justice.enabled and 0.85 or 1 ) * haste end,
+        cooldown = function () return 6 * ( talent.seal_of_order.enabled and buff.blessing_of_dusk.up and 0.9 or 1 ) * haste end,
+        recharge = function () return 6 * ( talent.seal_of_order.enabled and buff.blessing_of_dusk.up and 0.9 or 1 ) * haste end,
         gcd = "totem",
         school = "physical",
 
@@ -1900,7 +1910,7 @@ spec:RegisterAbilities( {
 
         spend = function ()
             if buff.divine_purpose.up then return 0 end
-            return ( talent.vanguard_of_justice.enabled and 4 or 3 ) - ( buff.fires_of_justice.up and 1 or 0 ) - ( buff.hidden_retribution_t21_4p.up and 1 or 0 ) - ( buff.the_magistrates_judgment.up and 1 or 0 )
+            return ( talent.vanguard_of_justice.enabled and 4 or 3 ) - ( buff.hidden_retribution_t21_4p.up and 1 or 0 ) - ( buff.the_magistrates_judgment.up and 1 or 0 )
         end,
         spendType = "holy_power",
         notalent = "justicars_vengeance",
@@ -1913,7 +1923,6 @@ spec:RegisterAbilities( {
             removeStack( "vanquishers_hammer" )
             if buff.divine_purpose.up then removeBuff( "divine_purpose" )
             else
-                removeBuff( "fires_of_justice" )
                 removeBuff( "hidden_retribution_t21_4p" )
             end
 
@@ -1988,7 +1997,7 @@ spec:RegisterAbilities( {
 
         spend = function ()
             if buff.divine_purpose.up then return 0 end
-            return 3 - ( buff.fires_of_justice.up and 1 or 0 ) - ( buff.hidden_retribution_t21_4p.up and 1 or 0 ) - ( buff.the_magistrates_judgment.up and 1 or 0 )
+            return 3 - ( buff.hidden_retribution_t21_4p.up and 1 or 0 ) - ( buff.the_magistrates_judgment.up and 1 or 0 )
         end,
         spendType = "holy_power",
 
@@ -1998,7 +2007,6 @@ spec:RegisterAbilities( {
             removeBuff( "recompense" )
             if buff.divine_purpose.up then removeBuff( "divine_purpose" )
             else
-                removeBuff( "fires_of_justice" )
                 removeBuff( "hidden_retribution_t21_4p" )
                 removeBuff( "the_magistrates_judgment" )
             end
@@ -2044,13 +2052,14 @@ spec:RegisterSetting( "sov_damage", 20, {
     step = 1,
 } )
 
-spec:RegisterSetting( "desync_toll", false, {
+--[[ Retired 20230426.
+    spec:RegisterSetting( "desync_toll", false, {
     name = "Desync |T3565448:0|t Divine Toll",
     desc = "If checked, when Seraphim, Final Reckoning, and/or Execution Sentence are toggled off or disabled, the addon will recommend |T3565448:0|t Divine Toll despite being out of sync with your cooldowns.\n\n"
         .. "This is useful for maximizing the number of Divine Toll casts in a fight, but may result in a lower overall DPS.",
     type = "toggle",
     width = "full",
-} )
+} ) ]]
 
 
-spec:RegisterPack( "Retribution", 20230330, [[Hekili:T3XApUTnYFlloeh70ehlz7UBlw7I7kUp0Gd5dN79vBR1METAKL8PhBYwSW)2VHK6bFmuVDUw0au0UvC0mdN3Cif9AR1)66v7DIjR)O9e7PtMoDYyR5t(bR7wVk(5ZK1Ro7S7topc)HVZj4F)VjXHUpKe7g4th7zVaN9uCefKeUdgF9QhsC9I)f)1pOJ4zZMn9haypt2T(J3oz9QJU73t4GsI2TEff03nX(D2w)4LTx2(lXKqafx2g4Fzlqx)prIH)W9KR)Jx2oK4Vhg6WLTpeefDW9XJWGEbp6UB04lF4Yh4iB67SMYq2)CVBCe82bx2gLC(Cqia9bxF3OJKq457tczy9NdtIC2d08CyWo45hcdoDzRW0(Y2)EsOJefszxRjJNm(w6B6ge6g)8LTjNPIazyVJb7)HncaBahNWC5DbhEx6SayHhjCED3rYUpbSrqiFEoge7HbhC9aHTZo6lhn(CizxWPhCI)UfV3jCNJpztCqyiXp(TUhwe74b)1yyU64TbG8tb(0z6hWE7OJUeV9BcoS5jI)Jeh)DeCaFYj015bpYBPMfls1nBS28qYHdrV9jhVK8No2A8rNi2iJJIbU6X4JV8cYGNCIaf(ZOJ9eOKCID9aXk64hPVl6i7avrtMd2OZb7YMd2LmhSRyoyBCoy3(5G1Mto(joEAkc3iGd9D3T5XqxYbWiz3XMGxBC8A3v8ATj6z)DVn48IisS7Hu0BX)VBiErKftgp)T7c8bNyaNlYqZyflVbdlMR7cc82h8z)XGRTd9TE1RYF0oUxE(qlM8Ylgh8vVQeKsFZ6rthQlf45T5ZWqhXjTbyQGdg1ezTDNL12QYA7RHSgbPIY6YPzViRr5GgjRZYeOkTTfL2wcY6BmAyBsl8YlM1pLQGkgJMPBSJ)ZB2FokF8rVzO145FxjX)aiqin14A0OLdl1rSyS6qBK8hy02kL20ST)niF)xi7sIjqjceiW7ZS6gO5upc)lqdsZN6c53DEYX1JHNCflOodjpK8jI4tuuWaUGCSBsnFv1VAM3HKtoU(r3)tPHZLEQKRNGXqAI7uOfzMDoEEB4)VB8CJI5mvgvJQg0hj(0sRcGkF(qHbDocwWllHw9aJHvCvso)YlstKKZdK()JIHQgxybEB0swgWQQztMmWEocfbo1Jcv0MFlz)JNslDbQue4(yNWhjXrJvay5c7xE5Mqh39BanmiOC2VpAm5lWKe8kuFUR)YBNR)4KZ4mZbxWeWliyFNLb44pjISXnMCIRoC8Gj4rNWnNt(9F3JS5HGVqP7qtXQYeLZhCJSrIy0aztuawzqhny4XaVN3Co4ZKWLlGHHx4Eqej(0PSNUC(OkMfrEbXzr9SySoUmBqfZOLZMutXkW(3ihCkd1O5isXps0YSy0lSgjMjhnW0YfsMYnqOy)vxOyzqOy1iHI9irXzpluywkMt5neBiEbOPYd1u4aXKfm0NmcTqL85UorYZSEJQq3uC9L2tYGU5Ax7jnX7YgxMzBwMz3nzgM9IrD2)3LzilGLkWKSqxAzidKmXOVNySWzLgHu(P2zbB37(KlSCCNKVaR7Zj85bfX0jScuaMiBwjvDQYY1lGXWepRsKS0vQvE84U9Ws0(spe0pNV3ebZqsQeEy9v8wQHZkkxOk9oleNeVwt5(Ob8QiYtlU3LS8ot5(Le9SzhIHWDOsTf3vBoQQ07lbDgYsLshDGMehtQUKMvG6nNoTpE(XLte5Wf11YLMBPUfBr5fKcWMnzKy5M5DFtR869qIlhG)PpGxrTCLGP8weua7jwzGSjo505NdbxE(urQ0orsj(YuDBESmbQo4gzm6rE0z3ZuR6B4jXZKoHparOdZtiR8yUkWEgi7gQvPMr)dqT)MPSu583q3HdYjJRKOdOAMtnu1d6KJljYAlqwf3GsOzvbTsrDDkI5ElXaCIQTFljk2DNtyKCK9VjxRRCfxSc1xC2Jlvd37Ul(BY0MjtlKQfRP24YUZf8VnckCAx8cl5ImObJhUNWiv2YCzbtfabcMigQjKef4tDgKI3jXlF25teAfroaPJKj49q8(Qsdzw7xHEVokYz4wbnjzdKyHwkPEoOrgKhPsU4appDPXn6I)MXltX5LkfZqvPL4NrhuUnk3zA61otpAbm10KhLQPXr2e5bMz5vHM)uGMFIejwn6GstPBGkInhcvtjQmHAdZmpFiiXFVhjQO7rJAf9FWdefuFjE2iIsTHs0K9y2l0oAD050jsiLy5lhzOz8CVTWSLotj73SdqXzaXJ0KlP(ChjoEGf45DX8vJL((p54)yItiup0PaQSk5KjBTgR1BGCTsX613gPh8WgQjQHOmtWxlospfnvARrwdEczhVXmmbG4dOZ(2yjMcf3GuVVS1djPZPmRckAuJ2Ln2yWWfqD0MdHCu54bRJz8TZL1D2I5fbvzXkovnNKtUlNoTUVvbC5gtYLm0oJL64yvfmmHwn8gQTHF9Ji1X4k1ZwXauYh1HA4quhZ71ROBtpau2bxX(U1R(StiTgXO1R(v62h5Ek94Jq3ePxVNCWjXl(1x2gs(VjUH0TCkkGUxtojXbNCy7bfyrdlAjA8Lp8VaADzR9pEz7ph4d0In8RLl4(18Z(HYtht8PRnDpm6qRVWpKli8t(2s2moYcNJuktwHZulIwJd54EQkUnVZE5eifKyCy6z0tB1kfUwG50t8rz8Dbi9lY7axlCwukJZLbR)jshMbStltz8Ega9jI7a)spdpLXUPJ3JO1eZoZawr2JFnmJdtpJ(oW4MCyqbPFrEh46YCumcw)tKomdWDAqaOprCh4xu3g9X7r0AIzNB0hh5q1H4PJdLej(EJmEDiHjOKiXTgNf5LnNTFXiZbmyUQO)QH4VX3)LGVdot4qebvF7dyP6dKkg(7(PKedRIhtYkOAVCojX5Hrzc4wkAAPKPtcMQMZ1sUuLyj3M6oJHLR2yfhgjFH(g9xne)n((Ve8D1Xm1oy5y4VhIzwXrlVcQ2LydvWdMJzwprtlLmDsWu1CUwYLQel52u)qpBSQ4l03OVgig9mvIGCtWvt(VUKHAMTP5OVUlTV0oh0D0BArwMWCBRl8kJ(AG46Ppndxn5)6sMwz2u)(Z2kZM6J(AA2OLb7k956GgN1KpQYhlJIJqn)iDqRg2K6vLIwvsXSpnNmX)xr527)Ql3E)vqUnoDNEoe45f8zx6hQSdGvWo8ZKqc9dgMAFsTjZ((MCPFvX09B8Y2hsIZGZpGTnrj(sqVFpf49oXop4er(XlF4Y23Dzl)JofDlMYMZrVUrBXKwd0A1ME1)4Yul4K)UsmKYry4AI0ClM09pUSkjka5kI8krB9ZduR0nDNmLMUXu7oTkxDQnCnrALsCuqUIiVs0w)QbRL6S7KPu1PPE61oB9RkYRCn1TtHwZfS3oKNJwRj4HuvpdTkXwvh2uqwldh5H(c9A7v6FoqpA(18th0RBu(1(5qLukU0pkVkOf5S(2mk0zjAPyVxoolxxo3GLwR0IgWvpQfVw(fLI9ErlED58(S(ud4Qh1IgOW1vw0lAXRfNJgxU4yd2lbM7rfOwnyCeOF0ovOGoaMOGwLsCeuCCSvWCXaMWOwDmPSKYPxxLJvgUHyx)mOQGFDamwtGHcM6GiXYWPWSh1JwATlR3jHTbbtVi7V8HFH5tsr8C5wDqD4wVI9xS71o(bZf(ZpYUN7sr16)b)6Ml09m9vxVQX3umz38ARxXVNywhV(J2kui486vSReMcGZAVd7V2WVp9uULoOd5La)N8Y0v(qGUS9(FI2rNdAFH3PVk7AKz9QjakcPFdQUoarqZYq56PkCDgRQEO15s1uEoV7pummRnyOiokGIy6nAx6rwgtxPnpmKzOG2Yhm8CTt2Wi3raIeerSKQmXvLm9LHM6Dz7lVCz7x3bLmV4GK1EvmfwdMB2LXeFvgeBUzxm3M3(5g6bPdxuYVonO077Bp9qpvD4tVc6DBldYKZ602jNZlwkHmgpx0zZul6VSDaelwY6tRf4x2(kOii1qyfJU4Y2jC9Cja9QQOrbwQpVyydOrzjJWwtoBevLDx3uz2DsLzBqLHSpj9UkdLgiQSk5LExLvcNXuz)q3uzz3Ds5knBzLMLOk7MlBl1rZSkLoVRsHxPo)9sai1gwqyCz7By4WAmuO13vse7CinSNzmiG)zPgxH6(8EjaQnxPMJ0mxzjWv8kqeQiP0sqk(E3yMmZ56bGg6FOP8HuEHzmIoiTeoKVHFWulM(1JszI6vmvEZcXkdfNZVh4e7mJetop5vCI60Np6Om8aMYvUSvfKz(IbGzRmlnuH2feamdGf4jtB8prFog0)m9z43Ec(WuD3OcPV09Naw5HvjKVb38OlS(0Yy9ARzbeznVkfSaqYx0BzkHcjLWnRawPM4YPLGCAAHprg9tLqspJDheWOR1Ko6OOwQybVXOOHpHDgTtVkTySN5VeA(eZUG3K(KEXQEukRGzdgvBSPCDtH7N5fQNzB0aUodfyLFwWW1HT07(rlyh1VrBSsSKyRYW99mhufHNH2lj4wzyMQ9TplfJPGcMBYHKVKYhBnwHjn3MTeRrWJQoER1u1wUgZYCc2ROPpUrTL5uMdrvQS46PAvgJQDloimMy0S8hQFrLrzUofoZYCoPBOb3LUeiAQtN4RZiM5a7naRYF29u0AoMSA2PsUPi40HEBryYQXwVYS7ZZbLtjt3gemV68uaVbfD8c9Al2eFp17Acm4fmSvepmPQAAMwyCDRy7ZKJCi34mR7qHKZmkGAoAwhCZX9XTBCSTUhmV0i52wIYjvTMSGYwQ5Lk92ub0PsOv0TvbWzIaQCbyiczSOPaYkJQUJxvgrOSaJIRVw46zS8v68eYf6ywD4YKj)ADmB4HYlmR46DuBnBsxXJCJJzc1iiTEiLgVxJcUf9WN2Q1yvXgDw1kRAYY0udhPZSg6yFd40CEXW12NbgbnpCzRQaB5mmJ1Yx333u3)5uDlMUq76fT8LW(nv(F2v5Qx9P80Dz8rfncSrv(BGFwWJ4WELGiExB1BXI98cwM)7Yr5P)k9hndPCUTR1t3ohFyA26m(uHQLh8S3eLf0p)NVdmFyE5ei)MBiuLf2Gs((v2BT7zDhEqLrjkAoT8rbqadMED0osSCr(RXogd3N3LA8MUXHAjdQrL3zSHMxW7GAirOD0DsluRkbCK3eImQMgPbz3oK6JT2wbu8J1hLw5HumV)dujNKtQqaf(lblGN(l2GW)FPn77pwsvRYKQ6hF86ivT1LQA71u1svBfPQD5DKSQnwJpTraHVB7ccuKFWm0LS8NMlrR0oeJ2sBT3n4QZsRPqy5PD0IYwUq4YmSn391sNJMvb29SkWKrBPwi)rvfG6fyUtkkvtW2kNcCIDqOQFNGxM3LRMNObdkBXCDMRvCG8wBP9ROc65cWynLls32)Im)sAKkAwTK5HPTiQxZpR2ZOQ7GDBSITWsOOx0ADmJLs0Gmd7GLWOuW0xHdq37kev6lUPIoMJWPkg63vdn2cJG1O5xDQ1uCLrskgnLBEyxnBct67LfvlueBT4xtggXNOppx0v)82U3(zZfdREzMS7UsGH1Plc0jj(yq46vRCp9ZSNS()9d]] )
+spec:RegisterPack( "Retribution", 20230517, [[Hekili:T3tBVTTrs)BXOikwPjkIuw1U3zPIEPphqdUN8HtTOF4Wjjkrkj2qrQJKYoUWq)2Vz3LVSVml5ksQCbObTO1M7WzMDEFND565wZ)L5ZCDs9M)b7H2Jgo262bwdhFN9TZNL(0bV5Zo4S(JoBHFi0zp8F)NEPX(RoM6hfsg7PGihxcosIogVggF(Svh9ds)5W5RWr83bWEWB98pC7W5Z25766Xa1lz98zeqFZWXVX62)YPL)CQxmGGtlJcpT8V)pF7p(BNwM8u46tltJoT0jii6r4bh8cD9ItypCfa9Xep3tlFCNFa8lp64N6hU90YnrXzizWP3F69fe6gGqaP2Fio6bpbYia3W7OW9)hfdaznCGfqNdKPxIiy2uW4bGB8rVXMHMFLoYPLhIiYXtlHPWBI28Mn(B3LsMaG8MnFwVZB9hZy(vrjjIiZkNydhClGSy)Oy)0NqjS1ikS)FU(PzIQKJhoefdKBJFOFYoQi09ymvy9UyGhCjmyC0A45BIJ2FAjNQ)0YF8ySdhfSZ5gbLgaF4h9aAK6VNI4RHzkm0g2SjB(geT1FD)bG5uC0gqRnFMZAcrsgCi2BD0(voPF7K36eV2j0BrAuCSxy6R93mj1ja(Pba)7eSaG8JrHeI8ES3ozNVxG7IOnlEWlCRNt4ApCaFWj23zvG3RjM7tYMalSwS64MnjV(bNGJfpDG1GDoj0rgKKcC120Dp)mYG7DsaPYtOJ9ai4Ds9dafh647iVl6iRbL95mhSrNd2vnhSRyoyxZCWw7CWU5ZbRf7Dcp6eOOi8taom0F9ITX(EBaJK17oh8AJJx72IxRfKijVo6WKeVu)nzO3I9)x4fK4nz4GXVEDui4yc4CsoAgiz5176Y566OOa3OhdhaURoK36fVO4rRzEUfdnz4ZpRDWx8Ikqk5nnJMoexkWZBXJWq7WjTgyQHd6FoYA7wlRTLL12xczncs5L1vtZorwJYbNLSopxJS02MxABXjRVsRHToTWZpRx)uPcQCms2RboHpTW9qsX49F11wdg)Tve)dGaH0eJR(9NEDLoILJzcTrYFGrBRmAtY2(nqo8p5T(ykPghpiW7t0KRKYf2b)hqdskvWhYz78GJFafpfkwqDg7T64h94FIKcgWfKJDrM5RS(vX8o2BVJFyY9)qw4CHNk46XzmKL4odAEMznuv3c2VUiWpjLXu5unPEq36fsQ)icQM59Lg0fiycRIls1dugwYv54HNFwyIC8qpHFpjfQgEIf4TrQFPhTaMf5Ya7Xiue40acujl(9JUB3Nv6cu1kW9PoXB9stgibW0j2p)8vXo(UlanmiOCCDtg49jyscEfYp3pC6TJvF8Xd4mZgFWeiikYT1YaC8dvFVWp1BptD4eatWDoXloC8p(JaVfRI(eHUxRlwvUOCCVRens4JgiAIcWkcA)ExVlk4PfhIE0lE6eyy4fUher8pDe9Pth3VMzrsquAEuplkRJlZ6vZmA6ndnuScS)vIbNYrnAoIm8JeTmpg9eR(8zYrdmnDIGP8ziuS)SluS0iuSolHIDFEXzhluOwk6t5Dn2qScqZKhYPWbIjkyipPpAHkfZDvIuKz9kzHUU46tThMd95RDThEoEx24YmB9Ym72jZWSx0QZ(YrMrJRMSZbgWZDrSZFqqItyO)oiDpK4J6p2i7IMApPHJrwYnH3e8PMAPjNPO4H8E8rVVPYy6Ip1op9GR)d(HElCo(jyLQoXpbZw2aE0cQi1rKa)QhWNLQj1XYfi0A2r7arVY0BsJW)U1bZ0rd7RrYMxCwEgC5IX2U2fw16N6G8GQtFQ5L5(cwYr4lRGQoxbAuFbE1qfB)EScRkQuW13B6D6khsq4tNDiwA3Hk1MCNXCuDv8aABKfpMnypfboMqDkjpjXhoBwV7W2Pd5zWjM6z0NV25I2dQSwbxilSdqAYdylpqSS2m0MabL2tRPLYZE7p8umenGXf06u)gsJvD934twudxVD)PzQD11J0lyIsJ0pY8w(bl4j8LPeaP)gD5R7j9f2L0tZSEP(UFIGy)THKASbu5NU70YFmtBCA5Vrvh4ZB(zcXePisiNiO3vItVaVToRFI4CCfR8OCPC8kioECrPospMPkTVbuKxRudSw3mWJ)vJOfjHgrQisLSM2GWqeutwpIiV0tBk36m0zSQj19DVfFYqE9XVFmj1FTtCIyQLVkWgIlVG6goeWexXU(Rt)QWktyvkUkBCG2EluirFDcub060jwI1LqIVETRhLu5RLNgRMdeWVM3Rp2ljkKy(kSEDbE5rNp6rkIYbiDIibVhcHxxIf9QvofQAAEUxtFjqtVHO6Lt1E)DemFgTVGuVSA7l6RrEKj5sJccuLgxPk(ppEzeoVuRygkKTchiYGI9k6oDtVMz6rkjXqtEuQMfGyrsayMvuxzXtbA(rVe(6l7vzQEnuHVdyOAkEL5OYOcRIog6g4Lu2IS(nI(RcarbXxIL)WtQApbAsFm9fAgT25avGetiwXkyUwpEUNlg4kYmfwA3Aafhae)8ZjWATwffEmbCZ8IhnCXnhw3xrAL5jUZZjaSlpSoLTq0mS(Gt42JoXqbl7JisWJ71zbE22cMOT1SC4ZrJlKIGGLmw5mu21QRnzQ0od3oWT)Afnne6BiExqq6MRU6W1YAWt8whtBjgvaW)aYSVjUhzqX8su7iUzijBoLBusqJCi48XgaEtaQtwSjMHkNay9sdUDSOUZMpznOklR3q2CsUcg(C8M(wLWvymjmEdnwmXVUoyOcnd8gm2W38WKTmSMz2kAGs8qMyGdHjM3ZNroGeaqfhfQBMp7rNysHWjZN9lKnUZFF2HXHS9DV01BJZXG0xswk7)5OFmzDSjrKD5Z5yA0Eh6U)bw0WAFihjO)bqRtljh9O3ffc0Io8lflP(LSfbl90bEHK1U6cJET1N6tpqpi8tXgcFECKfohjTwajotELckCid3JKXT(9uTGazGKIdthJEsdBjW1amNDwBQIVlbPBrEl4AUtbuvCUiyDprAXmGEoLQI3ZbOlrCl4xYPNQk2nB8oeT6y2B0GvKtxHcMXHPJrFlyCDomOG0TiVfCDvokAbR7jslMb4onia0LiUf8lQBJ64DiA1XSJ16JJCCgr80XHsGeFNwg3esOdkbsCR2zrrzZ57upYCadMlk6Vyi(R89Fk47OdEmisGQVdbSu)rbgd)T)8PIHv(dOAnuTtoHQ48q)CbCdfnnuY0kbtDZzJKl1jwkSPUtBy56nwXHrWxORr)fdXFLV)tbFxFmtLJ0pg(7GyM1CO(RHQTj2qn8G(yMMjAAOKPvcM6MZgjxQtSuyt99DSXQKVqxJEdqm6Pzfb56GZq(3uYqmZwC(O30L2xzNdAp61TilDyUP1fEHrVbi2m9PE4mK)nLmnYSX8(Z2iZgZrVHMnkzWUqFOuOXz15Jk9zkj5iy4NhfA1W6uVYu0QwkM)rrLl()mk3E7ND52BVaYTbz70ZMiYHTKEeiDaSc2Hp6r(i3zh4sInz(xwMp5t6MSFJNwU6yAoCHr0Tj6yOa0UUeGDDsDw5K49xo9(tlFZPLSp3x0TykFoN8YZAlMuAGwJ20RUhx6AbN4x0JMuoCdBislSyY2)4QQKOeKliYRfTMNhWO0nTNmvMUrx7oTQwDQmSHiTwjokixqKxlAnVAqJuNTNmvQo11tVMzRFrrETRPUzkudxWEZqETLr1mrHH1O1mKFHq7NpE(xdZUrxiio)RfRmV9)csMQ)Jg7F)xjxcnPKVMCx)eAgTcKBP5yCiFAVLsqkpSUmL6qV6XowIaiNl5ZKeDYbrXszh17wXJMQs(sh9Of5vCe1E5zvKx3CYMQexDIPGgC3Azz3lf0yZ2L4QtKOxwFRUuk0LlEqdU6ej6LYFVlLcOXokpFLDsWJom9IsXQmeOEgyLOGka6OGsjLmeuEU1LWC5a6WOsbFzSK03EGmhln8zID1dRRe(vbqBERHxCHUosO8biGAwZn(5wwsluRwAS27qXI9LxYBRrW0j2pNE)pVpVm5XI91Ie0y(miwYUO45ZM5V)DZNrFo9sYKDMSHF8d0lnZmep)VXU7kJ9pqq08zN91Zu(1D48zSlNP5PZ)GTefIomFg9EyQe48o7r)PfSlNtPRgN5ZinCZdGdgcnMl5LZVIMMpBy2VcVx(snYHpBjhNwE)pq6(3gLlDacxpsIRZzv5VxbMunJNlA8hbd30emuMzaqrk5AKm70QJPRuKiAYBwsBXVjGcTt(WixZf8eerSKPmXvLuXVudKY7N7PLp)8PLFEhuW8IbsEN1XuyNXCZUkM4ZYGyZn7Y524Mp3qpdL4Is2DydHEFxZPh6bQeF6vsVBByqMcwNStc8Eu62cMtl7bHFfmXu2IJtlFbu7MCyNYrNCA5qMYScGErD0OelMZlAoGbOSKwynKZ6lfqEW4cDTfrLDx7uz21RYS1OYq2hSoxLHsdevwT8sNRYQGZQtL99TtLLFHLXR0U60YkD10RujZ86u51Q1FRaacnAhehNw(kkoSgavx9TveyUasn7kkfc4FNQWvOoqVvaaJ5k5uH65kloUsuNBvOXTzvGWvrsLLGu(PosTMgZuqaXv)gJzdj9c3q5MEzvKHCNsaMAPKpCyctywXufTOdRmuCo)EGtSZTE05xvuajA8GIr7NJhWgV2fIlHm9xufuJOBYIIOCHvaZayjRI0g)kJGHb1Rnck(ThIpmr31Vu6lCFEGvEyDc5RWnpAdRpQkw3ynlGiRX1PG5as82vmxjukP4UPpWk1exonfKtJk9jYPFMes4z07edkDTg2shf5sfl5nkf1C5jqPD2L1gL90)rWZMy2L8MWxZnw1JcPl0BWiBJnIPBkD)0VS9CBJZGRZrbw5NLmSjSLAVqAa7i)55JvILaBvfUVN6Gkj800WmgCy3RhCoCAKbkFq8crFkPT(MHi4Lj9f4JvYY5BnxHDk4RvHHkLak3HfDOXADnPd3w1YSC4gAPwTbOL(SUxqpznZB9jNUg1sKMMkZuuNUSym(GZfpu9(bKWCTk6SL(uhxrYvjCDMCUXq4FDkX0Nl4mWQ4fibbT6JVlNSTI78egDi37j6SASvl08(IuQfus39AcnuurgTxHIowDRnfB8VN8TMcg8Cg2sIhQuvojudmUUJVBGIH7e7dO13JcjJzeb1wFqYw4MJ7JBF2X2AFgOkt)yl0FvzTMKGAepSsTQvc0BeqlVBReGJ5bu6QCHhYuEtbKf6vFd8QnIqvbg5Bxa3frk2c3KMmukiTVfFPCdSI2DkUPx(AGeLjf32Q5dFT4IIlV1vvwVSWnVkZs(gUQWewlQ02NyWID4dhncD9TA2aICxnkm62)DjgqZTSPUOYvmV6HN(MqfXyWvSyq1PoAM)Qwwgj(DLlr(RAN)hQD4ZNOCH8w9s2)QE7lc9M8fdmlPwoBut3lpR671WptyE50xjkH1dA1(cbzKlyz2FbFQU7Kv(NxhHmRnRFz3ogFyso5C(uIQvhgRZeLL0V4p0pyoIffmP(3NhjV0AnjVN236E16px2pDXdPahg096ODez6KIxJEalUVO)54TdKb1uku9Z)Rzk28hPDEfUlSTcWssgvrtlQv8rAm9WgOOLc6jUjl5unlAhYU5i0oELT6O8pLOeAveKr)(RqeZcUTGpyqukNedPdLssv7VCLQwvjvv)aimrQARkvv2lT6KQ2yTrTkB1RQzJdztBeqyhAaobQUmycsw2tlKO1AhIrBHTU8kC1zLLkWTS0wArzZ2TxvdB5wgxLHDLZr9Qa7owfOZOTslKVmvb2kTSELCFkBLHxhz)wKZPIpdNA6pUuHr0TsR0Ad7GOzERRNw0wUZpDkgu28z01xODMKT(D6TNHB07KYJlsnleON4UAQTk)jQNzKQwrWiwseU(okApxtl(fCU4lYIFFc72sHK60w999VjXaSWshRUiatcciKMgzg2cZX89is9ica09UsrLQfyn7ZacNk5TDNbASjAb7SMFMuw)0YtfGE9Ar(kfZbDQ6PLLzvgxT8pyvu6ouDkoPTXz6ZVWibN35Pf)Z8)7p]] )

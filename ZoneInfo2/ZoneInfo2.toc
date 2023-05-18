@@ -1,0 +1,20 @@
+## Interface: 100100
+## Title: Zone info 2
+## X-Name: Zone Info 2
+## X-Name-deDE: Zoneninfo 2
+## X-Name-frFR: Infos de zone 2
+## X-Name-koKR: 지역 정보 2
+## X-Name-zhTW: 地區資訊 2
+## X-Name-esES: Información de Zona 2
+## X-Name-zhCN: 区域信息 2
+## Notes: Displays information about the current zone on the World Map
+## Author: Odica
+## DefaultState: enabled
+## LoadOnDemand: 0
+## OptionalDeps: LibTourist-3.0
+## Version: 2.0
+## SavedVariables: ZIGlobalSettings
+## SavedVariablesPerCharacter: ZISettings
+
+embeds.xml
+ZoneInfo2.lua

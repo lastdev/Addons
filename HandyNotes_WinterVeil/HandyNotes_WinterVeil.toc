@@ -1,6 +1,7 @@
-## Interface: 100005
-## Version: 1.08
+## Interface: 100100
+## Version: 1.12
 ## Author: Taraezor
+## IconTexture: Interface\Icons\Inv_holiday_christmas_present_01
 ## Title: Winter Veil
 ## Title-deDE: Winterhauchfest
 ## Title-esES: El festín del Festival de Invierno
@@ -30,6 +31,7 @@
 ## X-WoWI-ID: 00000
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_WinterVeilDB
+## AddonCompartmentFunc: HandyNotes_WinterVeil_OnAddonCompartmentClick
 
 Core.lua
 Data.lua

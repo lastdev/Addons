@@ -1,7 +1,7 @@
-## Interface: 100007
+## Interface: 100100
 ## Title: HandyNotes: MythicPlus
 ## Title-ruRU: HandyNotes: Подземелья М+
-## Version: V100007-2
+## Version: V100100-3
 ## Notes: Dragonflight MythicPlus Notes
 ## Notes-ruRU: Заметки к подземельям М+
 ## OptionalDeps: Ace3

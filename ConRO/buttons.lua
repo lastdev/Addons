@@ -2896,6 +2896,7 @@ local swapSpells = {
 		DeathSweep = 210152,
 	VoidBolt = 205448,
 	MindFlayInsanity = 391403,
+	MindSpikeInsanity = 407466,
 	DarkReprimand = 400169,
 	ShrapnelBomb = 270335,
 	VolatileBomb = 271045,

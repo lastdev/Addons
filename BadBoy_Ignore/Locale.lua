@@ -21,8 +21,8 @@ elseif loc == "esES" or loc == "esMX" then
 	--L.addPlayer = "Add Player"
 	--L.removePlayer = "Remove Player"
 elseif loc == "ruRU" then
-	--L.addPlayer = "Add Player"
-	--L.removePlayer = "Remove Player"
+	L.addPlayer = "Добавить игрока"
+	L.removePlayer = "Удалить игрока"
 elseif loc == "koKR" then
 	--L.addPlayer = "Add Player"
 	--L.removePlayer = "Remove Player"

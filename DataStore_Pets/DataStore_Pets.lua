@@ -14,6 +14,7 @@ local AddonDB_Defaults = {
 	global = {
 		Reference = {
 			Spells = {},			-- spell ids are unique, so both mounts & pets are in the same table
+			CompanionGUIDs = {},	-- updated for the new API, testing to see if this works -- TechnoHunter
 		},
 		Characters = {
 			['*'] = {				-- ["Account.Realm.Name"] 
@@ -25,29 +26,111 @@ local AddonDB_Defaults = {
 	}
 }
 
+local INVALID_COMPANION_TYPE = "Invalid companionType passed, must be \"CRITTER\" or \"MOUNT\""
+
+local CompanionTypes = {
+	["CRITTER"] = {
+		GetNum = function(self)
+				return select(2, C_PetJournal.GetNumPets())
+			end,
+		GetReference = function(self, spellID)
+				local modelID = addon.db.global.Reference.CompanionGUIDs[spellID]
+				local name, icon
+				
+				if modelID then
+					local info = C_PetJournal.GetPetInfoTableByPetID(spellID)
+					if info then
+						name = info.name
+						icon = info.icon
+					end
+				end
+				
+				return modelID, name, icon
+			end,
+		GetInfo = function(self, index)
+				-- CRITTERs use C_PetJournal.GetPetInfoByIndex(index) which has return values of 
+				--     petID, speciesID, owned, customName, level, favorite, isRevoked, speciesName, 
+				--     icon, petType, companionID, tooltip, description, isWild, canBattle, isTradeable,
+				--     isUnique, obtainable = C_PetJournal.GetPetInfoByIndex(index)
+				
+				local petID = C_PetJournal.GetPetInfoByIndex(index)
+				if petID then
+					local info = C_PetJournal.GetPetInfoTableByPetID(petID)
+					if info then
+						return info.creatureID, petID
+					end
+				end
+			end,
+	},
+	["MOUNT"] = {
+		GetNum = function(self)
+				return C_MountJournal.GetNumDisplayedMounts()
+			end,
+		GetReference = function(self, spellID)
+				local modelID = addon.db.global.Reference.Spells[spellID]
+				local name, icon
+
+				if modelID then
+					name, _, icon = C_MountJournal.GetMountInfoByID(modelID)
+				end
+				
+				return modelID, name, icon
+			end,
+		GetInfo = function(self, index)
+				-- MOUNTs use C_MountJournal.GetMountInfoByID(mountID) which has return values of 
+				--     name, spellID, icon, isActive, isUsable, sourceType, isFavorite, isFactionSpecific,
+				--     faction, shouldHideOnChar, isCollected, mountID = C_MountJournal.GetMountInfoByID(mountID)
+				--     = C_MountJournal.GetDisplayedMountInfo(displayIndex)
+				
+				local mountID = C_MountJournal.GetDisplayedMountID(index)
+				if mountID then
+					local _, spellID = C_MountJournal.GetMountInfoByID(mountID)
+					if spellID then
+						return spellID, mountID
+					end
+				end
+			end,
+	}
+}
+
 -- *** Utility functions ***
-local function GetPetReference(spellID)
-	local modelID = addon.db.global.Reference.Spells[spellID]
-	local name, _, icon = GetSpellInfo(spellID)
+local function GetPetReference(spellID, companionType)
+	assert(companionType == "CRITTER" or "MOUNT", INVALID_COMPANION_TYPE)
 	
-	return modelID, name, icon
+	local Companion = CompanionTypes[companionType]
+	return Companion:GetReference(spellID)
 end
 
 -- *** Scanning functions ***
 local function ScanCompanions(companionType)
-	local list = addon.ThisCharacter[companionType]
-	local ref = addon.db.global.Reference.Spells
+	assert(companionType == "CRITTER" or "MOUNT", INVALID_COMPANION_TYPE)
 	
+	local list = addon.ThisCharacter[companionType]
+	local refSpells = addon.db.global.Reference.Spells
+	local refGUID = addon.db.global.Reference.CompanionGUIDs
+	local Companion = CompanionTypes[companionType]
+
 	wipe(list)
 	
-	for i = 1, GetNumCompanions(companionType) do
-		local modelID, _, spellID = GetCompanionInfo(companionType, i);
-		if modelID and spellID then
-			ref[spellID] = modelID
-			list[i] = spellID
+	for index = 1, Companion:GetNum() do
+		if companionType == "CRITTER" then
+			local modelID, petGUID = Companion:GetInfo(index)
+			
+			if modelID and petGUID then
+				refGUID[petGUID] = modelID
+				list[index] = petGUID
+			end
+			
+		elseif companionType == "MOUNT" then
+			local spellID, mountID = Companion:GetInfo(index)
+			
+			if spellID and mountID then
+				refSpells[spellID] = mountID
+				list[index] = spellID
+			end
 		end
 	end
-	
+
 	addon.ThisCharacter.lastUpdate = time()
 end
 
@@ -76,10 +159,10 @@ local function _GetNumPets(pets)
 	return #pets
 end
 
-local function _GetPetInfo(pets, index)
+local function _GetPetInfo(pets, index, companionType)
 	local spellID = pets[index]
 	if spellID then
-		local modelID, name, icon = GetPetReference(spellID)
+		local modelID, name, icon = GetPetReference(spellID, companionType)
 		return modelID, name, spellID, icon
 	end
 end
@@ -87,7 +170,18 @@ end
 local function _IsPetKnown(character, companionType, spellID)
 	local pets = _GetPets(character, companionType)
 	for i = 1, #pets do
-		local _, _, id = _GetPetInfo(pets, i)
+		local _, _, id = _GetPetInfo(pets, i, companionType)
+		
+		if companionType == "CRITTER" then
+			local petName = GetSpellInfo(spellID)
+			if petName then
+				local _, petID = C_PetJournal.FindPetIDByName(petName)
+				if petID then
+					spellID = petID
+				end
+			end
+		end
+		
 		if id == spellID then
 			return true			-- returns true if a given spell ID is a known pet or mount
 		end

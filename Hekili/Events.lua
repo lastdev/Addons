@@ -265,7 +265,6 @@ do
 
         if spellCallbacks == nil or next( spellCallbacks ) == nil then
             UnregisterEvent( "SPELL_DATA_LOAD_RESULT", HandleSpellData )
-            -- print( "Unregistered HandleSpellData" )
             isUnregistered = true
         end
     end
@@ -305,6 +304,7 @@ end
 RegisterEvent( "DISPLAY_SIZE_CHANGED", function()
     Hekili:BuildUI()
 end )
+
 
 
 RegisterEvent( "PLAYER_ENTERING_WORLD", function( event, login, reload )
@@ -923,7 +923,9 @@ do
         "STARTER_BUILD_ACTIVATION_FAILED",
         "TRAIT_CONFIG_DELETED",
         "TRAIT_CONFIG_UPDATED",
-        "CONFIG_COMMIT_FAILED"
+        "CONFIG_COMMIT_FAILED",
+        "PLAYER_ALIVE",
+        "PLAYER_UNGHOST"
     }
 
     for _, event in pairs( talentEvents ) do
@@ -1382,57 +1384,89 @@ local autoAuraKey = setmetatable( {}, {
 
 
 do
-    local ScrapeUnitAuras = Hekili.ScrapeUnitAuras
-    local StoreMatchingAuras = Hekili.StoreMatchingAuras
+    local playerInstances = {}
+    local targetInstances = {}
 
-    RegisterUnitEvent( "UNIT_AURA", "player", "target", function( event, unit, full, data )
-        if full then
-            ScrapeUnitAuras( unit, false, event )
-            -- Hekili:ForceUpdate( event )
-            return
-        end
+    local instanceDB
 
-        -- Already planning to update at next reset.
-        if state[ unit ].updated then return end
+    local GetAuraDataByAuraInstanceID = C_UnitAuras.GetAuraDataByAuraInstanceID
+    local ForEachAura = AuraUtil.ForEachAura
 
-        if unit == "player" then
-            state.player.updated = true
+    local function StoreInstanceInfo( aura )
+        local id = aura.spellId
+        local model = class.auras[ id ]
+        instanceDB[ aura.auraInstanceID ] = aura.isBossAura or aura.canApplyAura or aura.isFromPlayerOrPlayerPet or ( model and model.shared )
+    end
+
+    RegisterUnitEvent( "UNIT_AURA", "player", "target", function( event, unit, data )
+        local isPlayer = ( unit == "player" )
+        instanceDB = isPlayer and playerInstances or targetInstances
+
+        local forceUpdateNeeded = false
+
+        if data.isFullUpdate then
+            wipe( instanceDB )
+
+            ForEachAura( unit, "HELPFUL", nil, StoreInstanceInfo, true )
+            ForEachAura( unit, "HARMFUL", nil, StoreInstanceInfo, true )
+
+            state[ unit ].updated = true
             Hekili:ForceUpdate( event )
             return
         end
 
-        -- local harmful, helpful
+        if data.addedAuras and #data.addedAuras > 0 then
+            for _, aura in ipairs( data.addedAuras ) do
+                local id = aura.spellId
+                local model = class.auras[ id ]
 
-        for _, info in ipairs( data ) do
-            if info.isFromPlayerOrPlayerPet then
-                local id = info.spellId
-                local aura = class.auras[ id ]
+                local ofConcern = not aura or ( aura.isBossAura or aura.canApplyAura or aura.isFromPlayerOrPlayerPet ) or ( model and model.shared )
+                instanceDB[ aura.auraInstanceID ] = ofConcern
 
-                if aura then
-                    state[ unit ].updated = true
-                    Hekili:ForceUpdate( event )
-                    return
-
-                    --[[
-                    if info.isHelpful then
-                        helpful = helpful or { count = 0 }
-                        helpful[ id ] = aura.key
-                        helpful.count = helpful.count + 1
-                    else
-                        harmful = harmful or { count = 0 }
-                        harmful[ id ] = aura.key
-                        harmful.count = harmful.count + 1
-                    end ]]
+                if ofConcern then
+                    forceUpdateNeeded = true
                 end
             end
         end
 
-        --[[
-        if helpful then StoreMatchingAuras( unit, helpful, "HELPFUL", select( 2, UnitAuraSlots( unit, "HELPFUL" ) ) ) end
-        if harmful then StoreMatchingAuras( unit, harmful, "HARMFUL", select( 2, UnitAuraSlots( unit, "HARMFUL" ) ) ) end ]]
+        if data.updatedAuraInstanceIDs and #data.updatedAuraInstanceIDs > 0 then
+            for _, instance in ipairs( data.updatedAuraInstanceIDs ) do
+                local aura = GetAuraDataByAuraInstanceID( unit, instance )
+
+                local id = aura and aura.spellId
+                local model = class.auras[ id ]
+
+                local ofConcern = not aura or ( aura.isBossAura or aura.canApplyAura or aura.isFromPlayerOrPlayerPet ) or ( model and model.shared )
+                instanceDB[ instance ] = ofConcern
+
+                if ofConcern then
+                    forceUpdateNeeded = true
+                end
+            end
+        end
+
+        if data.removedAuraInstanceIDs and #data.removedAuraInstanceIDs > 0 then
+            for _, instance in ipairs( data.removedAuraInstanceIDs ) do
+                if instanceDB[ instance ] then forceUpdateNeeded = true end
+                instanceDB[ instance ] = nil
+            end
+        end
+
+        if forceUpdateNeeded then
+            state[ unit ].updated = true
+            Hekili:ForceUpdate( event )
+        end
     end )
 
     RegisterEvent( "PLAYER_TARGET_CHANGED", function( event )
+        instanceDB = targetInstances
+        wipe( instanceDB )
+
+        if UnitExists( "target" ) then
+            ForEachAura( "target", "HELPFUL", nil, StoreInstanceInfo, true )
+            ForEachAura( "target", "HARMFUL", nil, StoreInstanceInfo, true )
+        end
+
         state.target.updated = true
         Hekili:ForceUpdate( event, true )
     end )
@@ -1580,6 +1614,8 @@ local function CLEU_HANDLER( event, timestamp, subtype, hideCaster, sourceGUID, 
     local amSource  = ( sourceGUID == state.GUID )
     local petSource = ( UnitExists( "pet" ) and sourceGUID == UnitGUID( "pet" ) )
     local amTarget  = ( destGUID   == state.GUID )
+
+    if not InCombatLockdown() and not ( amSource or petSource or amTarget ) then return end
 
     if subtype == 'SPELL_SUMMON' and amSource then
         -- Guardian of Azeroth check.
@@ -1993,7 +2029,6 @@ local function StoreKeybindInfo( page, key, aType, id, console )
 end
 
 
-
 local defaultBarMap = {
     WARRIOR = {
         { bonus = 1, bar = 7 },
@@ -2022,7 +2057,7 @@ local defaultBarMap = {
 }
 
 
-    local slotsUsed = {}
+local slotsUsed = {}
 
 local function ReadKeybindings( event )
         if not Hekili:IsValidSpec() then return end
@@ -2124,21 +2159,21 @@ local function ReadKeybindings( event )
                 end
             end
 
-            for i = 144, 155 do
+            for i = 145, 156 do
                 if not slotsUsed[ i ] then
-                    StoreKeybindInfo( 13, GetBindingKey( "MULTIACTIONBAR5BUTTON" .. i - 143 ), GetActionInfo( i ) )
+                    StoreKeybindInfo( 13, GetBindingKey( "MULTIACTIONBAR5BUTTON" .. i - 144 ), GetActionInfo( i ) )
                 end
             end
 
-            for i = 156, 167 do
+            for i = 157, 168 do
                 if not slotsUsed[ i ] then
-                    StoreKeybindInfo( 14, GetBindingKey( "MULTIACTIONBAR6BUTTON" .. i - 155 ), GetActionInfo( i ) )
+                    StoreKeybindInfo( 14, GetBindingKey( "MULTIACTIONBAR6BUTTON" .. i - 156 ), GetActionInfo( i ) )
                 end
             end
 
-            for i = 168, 179 do
+            for i = 169, 180 do
                 if not slotsUsed[ i ] then
-                    StoreKeybindInfo( 15, GetBindingKey( "MULTIACTIONBAR7BUTTON" .. i - 167 ), GetActionInfo( i ) )
+                    StoreKeybindInfo( 15, GetBindingKey( "MULTIACTIONBAR7BUTTON" .. i - 168 ), GetActionInfo( i ) )
                 end
             end
 
@@ -2345,10 +2380,11 @@ end
 
 
 if select( 2, UnitClass( "player" ) ) == "DRUID" then
-    local prowlOrder = { 8, 7, 2, 3, 4, 5, 6, 9, 10, 1 }
-    local catOrder = { 7, 8, 2, 3, 4, 5, 6, 9, 10, 1 }
-    local bearOrder = { 9, 2, 3, 4, 5, 6, 7, 8, 10, 1 }
-    local owlOrder = { 10, 2, 3, 4, 5, 6, 7, 8, 9, 1 }
+    local prowlOrder = { 8, 7, 2, 3, 4, 5, 6, 9, 10, 13, 14, 15, 1 }
+    local catOrder = { 7, 8, 2, 3, 4, 5, 6, 9, 10, 13, 14, 15, 1 }
+    local bearOrder = { 9, 2, 3, 4, 5, 6, 7, 8, 10, 13, 14, 15, 1 }
+    local owlOrder = { 10, 2, 3, 4, 5, 6, 7, 8, 9, 13, 14, 15, 1 }
+    local defaultOrder = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 14, 15 }
 
     function Hekili:GetBindingForAction( key, display, i )
         if not key then return "" end
@@ -2382,28 +2418,21 @@ if select( 2, UnitClass( "player" ) ) == "DRUID" then
 
         local output, source
 
-        local order = ( state.prowling and prowlOrder ) or ( state.buff.cat_form.up and catOrder ) or ( state.buff.bear_form.up and bearOrder ) or ( state.buff.moonkin_form.up and owlOrder ) or nil
+        local order = defaultOrder
+        -- TODO: These checks should use actual aura data rather than potential stale/manipulated virtual state data.
+        if class.file == "DRUID" then
+            order = ( state.prowling and prowlOrder ) or ( state.buff.cat_form.up and catOrder ) or ( state.buff.bear_form.up and bearOrder ) or ( state.buff.moonkin_form.up and owlOrder ) or order
+        end
 
         if order then
-            for _, i in ipairs( order ) do
-                output = db[ i ]
+            for _, n in ipairs( order ) do
+                output = db[ n ]
 
                 if output then
-                    source = i
+                    source = n
                     break
                 end
             end
-
-        else
-            for i = 1, 10 do
-                output = db[ i ]
-
-                if output then
-                    source = i
-                    break
-                end
-            end
-
         end
 
         output = output or ""
@@ -2421,8 +2450,10 @@ if select( 2, UnitClass( "player" ) ) == "DRUID" then
 
         return output
     end
+
 elseif select( 2, UnitClass( "player" ) ) == "ROGUE" then
-    local stealthedOrder = { 7, 8, 1, 2, 3, 4, 5, 6, 9, 10 }
+    local stealthedOrder = { 7, 8, 1, 2, 3, 4, 5, 6, 9, 10, 13, 14, 15 }
+    local defaultOrder = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 14, 15 }
 
     function Hekili:GetBindingForAction( key, display, i )
         if not key then return "" end
@@ -2456,25 +2487,14 @@ elseif select( 2, UnitClass( "player" ) ) == "ROGUE" then
         local db = console and keys[ key ].console or ( caps and keys[ key ].upper or keys[ key ].lower )
 
         local output, source
+        local order = state.stealthed.all and stealthedOrder or defaultOrder
 
-        if state.stealthed.all then
-            for _, i in ipairs( stealthedOrder ) do
-                output = db[ i ]
+        for _, n in ipairs( order ) do
+            output = db[ n ]
 
-                if output then
-                    source = i
-                    break
-                end
-            end
-
-        else
-            for i = 1, 10 do
-                output = db[ i ]
-
-                if output then
-                    source = i
-                    break
-                end
+            if output then
+                source = n
+                break
             end
         end
 
@@ -2524,11 +2544,11 @@ else
 
         local output, source
 
-        for i = 1, 10 do
-            output = db[ i ]
+        for _, n in ipairs( { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 14, 15 } ) do
+            output = db[ n ]
 
             if output then
-                source = i
+                source = n
                 break
             end
         end

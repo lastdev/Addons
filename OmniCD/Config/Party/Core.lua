@@ -156,7 +156,7 @@ function P:ConfigBars(key, arg)
 	if arg == "priority" then
 		for barKey, frame in pairs(self.extraBars) do
 			if frame.db.enabled then
-				self:SetExIconLayout(barKey, true, true)
+				self:SetExIconLayout(barKey, true)
 			end
 		end
 	elseif arg ~= "showAnchor" and arg ~= "locked" then
@@ -193,25 +193,26 @@ function P:ConfigBars(key, arg)
 end
 
 function P:ConfigIconSettings(frame, arg, key)
-	local db = E.db.icons[arg]
+	local db = E.db.icons
+	local argdb = db[arg]
 
 	for j = 1, frame.numIcons do
 		local icon = frame.icons[j]
 		if arg == "showTooltip" then
-			self:SetTooltip(icon, db)
+			self:SetTooltip(icon, argdb)
 		elseif arg == "chargeScale" then
-			self:SetChargeScale(icon, db)
+			self:SetChargeScale(icon, argdb)
 		elseif arg == "showCounter" or arg == "counterScale" then
-			self:SetSwipeCounter(icon)
+			self:SetSwipeCounter(icon, db)
 		elseif arg == "reverse" or arg == "swipeAlpha" then
-			self:SetSwipeCounter(icon)
+			self:SetSwipeCounter(icon, db)
 		elseif arg == "activeAlpha" or arg == "inactiveAlpha" or arg == "desaturateActive" then
-			self:SetOpacity(icon)
+			self:SetOpacity(icon, db)
 		elseif arg == "displayBorder" or arg == "borderPixels" then
 			if key then
-				self:SetExBorder(icon, key)
+				self:SetExBorder(icon, E.db.extraBars[key])
 			else
-				self:SetBorder(icon)
+				self:SetBorder(icon, db)
 			end
 		elseif arg == "borderColor" then
 			local r, g, b = E.db.icons.borderColor.r, E.db.icons.borderColor.g, E.db.icons.borderColor.b
@@ -228,7 +229,7 @@ function P:ConfigIconSettings(frame, arg, key)
 			icon.borderRight:SetColorTexture(r, g, b)
 			icon.borderLeft:SetColorTexture(r, g, b)
 		elseif arg == "markEnhanced" then
-			self:SetMarker(icon, db)
+			self:SetMarker(icon, argdb)
 		end
 	end
 end

@@ -122,7 +122,7 @@ psfj.settingsList = {
     {text=L["To resize this window, drag the resize grip in the lower right corner of this window."]},
     {text=L["A \124TInterface\\AddOns\\ProtoformSynthesisFieldJournal\\textures\\owned-known:0\124t beside a pet or mount name means it's been collected in the journal."]},
     {text=L["A number like [1] beside a pet or mount name is how many of those you can make."]},
-    {text=GAME_VERSION_LABEL.." "..(GetAddOnMetadata("ProtoformSynthesisFieldJournal","Version") or "")},    
+    {text=GAME_VERSION_LABEL.." "..(GetAddOnMetadata("ProtoformSynthesisFieldJournal","Version") or "")},
 }
 
 psfj.list = {} -- ordered list of itemIDs for display in the autoscrollframe
@@ -153,6 +153,7 @@ end
 function psfj:Toggle()
     psfj:SetShown(not psfj:IsShown())
 end
+ProttoformSynthesisFieldJournalToggleWindow = psfj.Toggle
 
 -- populates the list of items and updates the list; call whenever showing the window or anything has changed
 function psfj:Update()
@@ -217,7 +218,7 @@ function psfj:PLAYER_LOGIN()
     -- broker launcher plugin
     local ldb = LibStub and LibStub.GetLibrary and LibStub:GetLibrary("LibDataBroker-1.1",true)
     if ldb then
-        ldb:NewDataObject("ProtoformSynthesisFieldJournal",{type="launcher", icon="Interface\\Icons\\inv_progenitor_protoformsynthesis", tooltiptext=L["Protoform Synthesis Field Journal"], OnClick=psfj.Toggle}) 
+        ldb:NewDataObject("ProtoformSynthesisFieldJournal",{type="launcher", icon="Interface\\Icons\\inv_progenitor_protoformsynthesis", tooltiptext=L["Protoform Synthesis Field Journal"], OnClick=psfj.Toggle})
     end
 
     minimapButton:Update()
@@ -253,7 +254,7 @@ end
 function psfj:UpdateTabs()
     for _,tab in ipairs(self.PanelTabs.Tabs) do
         self.PanelTabs:UpdateTab(tab)
-    end    
+    end
 end
 
 function psfj.PanelTabs:UpdateTab(tab)
@@ -429,7 +430,7 @@ function psfj:FillListButton(itemID)
     end
     if GetMouseFocus()==self then
         self:GetScript("OnEnter")(self)
-    end    
+    end
 end
 
 -- rather than calculate values in the FillListButton(), this gathers data for all rows
@@ -493,7 +494,7 @@ function psfj:GatherButtonData()
         if inJournal then
             info.nameText = info.nameText .. (info.isUnknown and " \124TInterface\\AddOns\\ProtoformSynthesisFieldJournal\\textures\\owned-unknown:0\124t" or " \124TInterface\\AddOns\\ProtoformSynthesisFieldJournal\\textures\\owned-known:0\124t")
         end
-        
+
         info.moteText = format("%d/%d ",info.moteCount,info.moteCost)
         info.glimmerText = format("%d/1 %s",info.glimmerCount,info.glimmerName or "")
         info.latticeText = format("%d/1 %s",info.latticeCount,info.latticeName or "")
@@ -513,7 +514,7 @@ function psfj:GatherButtonData()
     if notCached then -- if any names are blank, come back in half a second to try again
         C_Timer.After(0.5,psfj.Update)
     elseif needsSorted then
-        table.sort(psfj.list,psfj.SortList) 
+        table.sort(psfj.list,psfj.SortList)
     end
 end
 
@@ -728,7 +729,7 @@ function minimapButton:OnMouseUp()
 end
 
 function minimapButton:OnClick()
-    psfj:Toggle() 
+    psfj:Toggle()
 end
 
 function minimapButton:OnDragStart()

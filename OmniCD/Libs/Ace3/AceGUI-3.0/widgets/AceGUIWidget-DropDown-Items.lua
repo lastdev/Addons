@@ -1,9 +1,3 @@
----------------------------------------------------------------------------------
-
--- Customized for OmniCD by permission of the copyright owner.
-
----------------------------------------------------------------------------------
-
 --[[ $Id: AceGUIWidget-DropDown-Items.lua 1272 2022-08-29 15:56:35Z nevcairiel $ ]]--
 
 local AceGUI = LibStub("AceGUI-3.0")
@@ -45,8 +39,8 @@ end
 
 local ItemBase = {
 	-- NOTE: The ItemBase version is added to each item's version number
-	--	 to ensure proper updates on ItemBase changes.
-	--	 Use at least 1000er steps.
+	--       to ensure proper updates on ItemBase changes.
+	--       Use at least 1000er steps.
 	version = 2000,
 	counter = 0,
 }
@@ -92,7 +86,7 @@ end
 
 -- exported
 -- NOTE: this is called by a Dropdown-Pullout.
---	 Do not call this method directly
+--       Do not call this method directly
 function ItemBase.SetPullout(self, pullout)
 	self.pullout = pullout
 
@@ -141,14 +135,14 @@ end
 
 -- exported
 -- NOTE: this is called by a Dropdown-Pullout.
---	 Do not call this method directly
+--       Do not call this method directly
 function ItemBase.SetOnLeave(self, func)
 	self.specialOnLeave = func
 end
 
 -- exported
 -- NOTE: this is called by a Dropdown-Pullout.
---	 Do not call this method directly
+--       Do not call this method directly
 function ItemBase.SetOnEnter(self, func)
 	self.specialOnEnter = func
 end
@@ -176,10 +170,6 @@ function ItemBase.Create(type)
 
 	local highlight = frame:CreateTexture(nil, "OVERLAY")
 	highlight:SetTexture(136810) -- Interface\\QuestFrame\\UI-QuestTitleHighlight
-	-- s b
-	highlight:SetTexCoord(0.5, 1, 0, 1)
-	--highlight:SetVertexColor(0.5, 0, 0)
-	-- e
 	highlight:SetBlendMode("ADD")
 	highlight:SetHeight(14)
 	highlight:ClearAllPoints()
@@ -211,13 +201,13 @@ function ItemBase.Create(type)
 	self.OnRelease = ItemBase.OnRelease
 
 	self.SetPullout = ItemBase.SetPullout
-	self.GetText	= ItemBase.GetText
-	self.SetText	= ItemBase.SetText
+	self.GetText    = ItemBase.GetText
+	self.SetText    = ItemBase.SetText
 	self.SetDisabled = ItemBase.SetDisabled
 
-	self.SetPoint	= ItemBase.SetPoint
-	self.Show	= ItemBase.Show
-	self.Hide	= ItemBase.Hide
+	self.SetPoint   = ItemBase.SetPoint
+	self.Show       = ItemBase.Show
+	self.Hide       = ItemBase.Hide
 
 	self.SetOnLeave = ItemBase.SetOnLeave
 	self.SetOnEnter = ItemBase.SetOnEnter
@@ -304,11 +294,7 @@ end
 -- Item: Execute
 -- A simple button
 do
-	--[[ s r
 	local widgetType = "Dropdown-Item-Execute"
-	]]
-	local widgetType = "Dropdown-Item-Execute-OmniCD"
-	-- e
 	local widgetVersion = 1
 
 	local function Frame_OnClick(this, button)
@@ -323,8 +309,6 @@ do
 	local function Constructor()
 		local self = ItemBase.Create(widgetType)
 
-		self.text:SetFontObject("GameFontNormalSmall-OmniCD") -- s a can't change color here > done in dropdown.lua
-
 		self.frame:SetScript("OnClick", Frame_OnClick)
 
 		AceGUI:RegisterAsWidget(self)
@@ -337,13 +321,8 @@ end
 -- Item: Toggle
 -- Some sort of checkbox for dropdown menus.
 -- Does not close the pullout on click.
-
 do
-	--[[ s r
 	local widgetType = "Dropdown-Item-Toggle"
-	]]
-	local widgetType = "Dropdown-Item-Toggle-OmniCD"
-	-- e
 	local widgetVersion = 4
 
 	local function UpdateToggle(self)
@@ -385,8 +364,6 @@ do
 
 	local function Constructor()
 		local self = ItemBase.Create(widgetType)
-
-		self.text:SetFontObject("GameFontNormalSmall-OmniCD") -- s a
 
 		self.frame:SetScript("OnClick", Frame_OnClick)
 

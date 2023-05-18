@@ -6,31 +6,32 @@
 
 local TSM = select(2, ...) ---@type TSM
 local Environment = TSM.Init("Environment") ---@class Environment
-Environment.FEATURES = {
-	TEXTURE_SET_GRADIENT = newproxy(),
-	REGION_SET_RESIZE_BOUNDS = newproxy(),
-	PLAYER_INTERACTION_MANAGER = newproxy(),
-	C_CONTAINER = newproxy(),
-	REAGENT_BAG = newproxy(),
-	CONNECTED_FACTION_AH = newproxy(),
-	HONOR_POINTS = newproxy(),
-	MULTIPLE_ENCHANTING_VELLUMS = newproxy(),
-	SUB_PROFESSION_NAMES = newproxy(),
-	AH_COPPER = newproxy(),
-	AH_STACKS = newproxy(),
-	AH_UNCOLLECTED_FILTER = newproxy(),
-	AH_UPGRADES_FILTER = newproxy(),
-	BATTLE_PETS = newproxy(),
-	GARRISON = newproxy(),
-	GUILD_BANK = newproxy(),
-	C_AUCTION_HOUSE = newproxy(),
-	COMMODITY_ITEMS = newproxy(),
-	CRAFTING_QUALITY = newproxy(),
-	C_TRADE_SKILL_UI = newproxy(),
-	C_TOOLTIP_INFO = newproxy(),
-	REAGENT_BANK = newproxy(),
-	BLACK_MARKET_AH = newproxy(),
-}
+local EnumType = TSM.Include("Util.EnumType")
+Environment.FEATURES = EnumType.New("FEATURES", {
+	TEXTURE_SET_GRADIENT = EnumType.CreateValue(),
+	REGION_SET_RESIZE_BOUNDS = EnumType.CreateValue(),
+	PLAYER_INTERACTION_MANAGER = EnumType.CreateValue(),
+	C_CONTAINER = EnumType.CreateValue(),
+	REAGENT_BAG = EnumType.CreateValue(),
+	CONNECTED_FACTION_AH = EnumType.CreateValue(),
+	HONOR_POINTS = EnumType.CreateValue(),
+	MULTIPLE_ENCHANTING_VELLUMS = EnumType.CreateValue(),
+	SUB_PROFESSION_NAMES = EnumType.CreateValue(),
+	AH_COPPER = EnumType.CreateValue(),
+	AH_STACKS = EnumType.CreateValue(),
+	AH_UNCOLLECTED_FILTER = EnumType.CreateValue(),
+	AH_UPGRADES_FILTER = EnumType.CreateValue(),
+	BATTLE_PETS = EnumType.CreateValue(),
+	GARRISON = EnumType.CreateValue(),
+	GUILD_BANK = EnumType.CreateValue(),
+	C_AUCTION_HOUSE = EnumType.CreateValue(),
+	COMMODITY_ITEMS = EnumType.CreateValue(),
+	CRAFTING_QUALITY = EnumType.CreateValue(),
+	C_TRADE_SKILL_UI = EnumType.CreateValue(),
+	C_TOOLTIP_INFO = EnumType.CreateValue(),
+	REAGENT_BANK = EnumType.CreateValue(),
+	BLACK_MARKET_AH = EnumType.CreateValue(),
+})
 local private = {
 	features = nil,
 }

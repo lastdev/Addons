@@ -63,7 +63,7 @@ ns.RegisterPoints(ns.FORBIDDENREACH, {
     },
     [44727943] = { -- Galakhad
         criteria=58464,
-        quest=74342,
+        quest=73152, -- 74342
         npc=200717,
         vignette=5498,
     },
@@ -115,7 +115,7 @@ ns.RegisterPoints(ns.FORBIDDENREACH, {
     },
     [43204900] = { -- Tectonus
         criteria=58474,
-        quest=74300,
+        quest=74300, -- 73127 + 74926 (one of these is probably not related...)
         npc=200619,
         loot={
             204233, -- Impenetrable Elemental Core
@@ -163,7 +163,7 @@ ns.RegisterPoints(ns.FORBIDDENREACH, {
     },
     [36731223] = { -- Ookbeard
         criteria=58471,
-        quest=74349,
+        quest=73366, -- 74349
         npc=200956,
         loot={
             {197636,quest=69847,}, -- Windborne Velocidrake: Shrieker Pattern
@@ -308,7 +308,9 @@ ns.RegisterPoints(ns.FORBIDDENREACH, {
 
 ns.RegisterPoints(ns.FORBIDDENREACH, {
     [48197366] = {criteria=58501, loot={204338}, path=51915963}, -- The Burden of Lapisagos
+    -- ^ 2102 @ 52405970
     [64783441] = {criteria=58502, loot={204316}, path=60313860}, -- A Soldier's Journal
+    -- ^ 2154 @ 64765652
     [71046733] = {criteria=58503, loot={204335}}, -- A Song of the Depths
     [34930891] = {criteria=58504, loot={204328}}, -- Return of the Nightsquall
     [57456342] = {criteria=58505, loot={204321}}, -- Lost Expedition Notes
@@ -321,4 +323,18 @@ ns.RegisterPoints(ns.FORBIDDENREACH, {
     achievement=17530, -- Librarian of the Reach
     texture=ns.atlas_texture("profession", {r=1, g=1, b=0}),
     minimap=true,
+})
+
+ns.RegisterVignettes(ns.FORBIDDENREACH, {
+    [5614] = {}, -- Forbidden Hoard
+    [5463] = {}, -- Forbidden Hoard (locked)
+}, {
+    loot={
+        {197000, quest=69200}, -- Cliffside Wylderdrake: Coiled Horns
+        {203463, quest=74359}, -- Atrenosh's Journal
+        202667, -- Sealed Artifact Scroll
+        202668, -- Sealed Spirit Scroll
+        202669, -- Sealed Fish Scroll
+        202670, -- Sealed Knowledge Scroll
+    },
 })

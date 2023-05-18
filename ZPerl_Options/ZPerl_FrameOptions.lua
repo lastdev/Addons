@@ -2,7 +2,7 @@
 -- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 5a89ecaf32f24ffefbf320bef9dff40e1992eb4e $")
+XPerl_SetModuleRevision("$Revision: 622ab1f8aebd021111f667b2de0adca45dd07d93 $")
 
 local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
@@ -2565,7 +2565,7 @@ end
 local function XPerl_Raid_ConfigDefault(default)
 	default.raid = {
 		enable			= 1,
-		disableDefault	= 1,
+		disableDefault	= nil,
 --		sortByClass		= nil,
 		sortByRole 		= nil,
 --		sortAlpha		= nil,
@@ -2585,7 +2585,7 @@ local function XPerl_Raid_ConfigDefault(default)
 			{enable = 1, name = "DEMONHUNTER"},
 			{enable = 1, name = "EVOKER"},
 		},
-		role			= 0,
+		role			= nil,
 		titles			= 1,
 		percent			= 1,
 		precisionPercent = 1,
@@ -3523,7 +3523,11 @@ if (XPerl_UpgradeSettings) then
 				old.party.hotPrediction = 1
 				old.raid.hotPrediction = 1
 				old.raid.disableDefault = 1
-				old.raid.role = 0
+				old.raid.role = nil
+			end
+			if (oldVersion < "7.0.7") then
+				old.raid.role = nil
+				old.raid.disableDefault = nil
 			end
 		end
 	end

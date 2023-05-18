@@ -1,5 +1,7 @@
 local _, addon = ...
 
+local NOINFO = "We do not have much information on this yet. Please contact TomCat if you have new information to share!"
+
 addon.vignetteDescriptions = {
 	[3980] = "May require completion of the quest \"The Endmire\" to be eligible for the mount quest item to drop",
 	[4783] = "Go to Keeper's Respite and wait for Caretaker Kah-Kay to spawn (60.6, 23.2).  Speak to him to gain the Sharp-eyed buff.  Follow the purple footsteps and then click on the pile of bones to spawn Mailbog.",
@@ -34,4 +36,28 @@ addon.vignetteDescriptions = {
 	[4949] = "Find the three Empowered Keys in the area and use them to open the Suspiciously Angry Vault to spawn Furidian.",
 	[4988] = "Find the nearby matching Mysterious Sigils (out of 4) for each of the Barrier Control Console(s) to unlock them.  This may require two people if the symbols on each console are different",
 	[4984] = "Requires fishing with an Aurelid Lure to spawn Hirukon",
+-- Zaralek Cavern
+	[5522] = "Get the key nearby from the back of the neck of the Massive Corebeast",
+	[5523] = "Obtain an Onyxia Scale Cloak and equip it before attempting to open the chest",
+	[5527] = NOINFO,
+	[5528] = NOINFO,
+	[5529] = NOINFO,
+	[5530] = NOINFO,
+	[5531] = NOINFO,
+	[5619] = "The path to the cave entrance is about 80 yards Southwest of the chest. To unlock it, click the empowered gems in the following order: red, black, blue, yellow, green.",
+	[5637] = "This likely becomes available once \"The Ancient Bargain\" chapter of the Embers of Neltharion campaign is able to be completed.",
+	[5675] = NOINFO,
+	[5685] = "To unlock the chest, /kneel before the dragon statue that is about 680 yards Southwest of the chest (at 43.6, 23.0) ",
+	[5649] = NOINFO,
+	[5657] = NOINFO,
+	[5655] = NOINFO,
+	[5534] = "Pickup the nearby Bottled Magma and use its spell on the chest",
+	[5658] = "Stand near the Struggling Mothling until you get 5 stacks of \"Fly High\" to spawn the Moth-Pilfered Pouch",
+	[5593] = "The underwater cave entrance is about 20 yards to the North",
+	[5687] = "Click on the nearby Thieving Rock Mouse 5 times to get it to drop the Old Trunk Key",
+	[5690] = "To unlock the chest:\n\n1) Go about 200 yards East atop the pillars to collect the orange \"Attunement Crystal\"\n\n2) Go about 250 yards North of the orange crystal atop the pillars to collect the purple \"Attunement Crystal\"",
+	[5638] = "To get Salverun, combine the Kob'rok's Luminescent Scale that drops from Kob'rok with the Ouroboros Tablet (obtained from Sniffenseeking reward bags)",
+	[5711] = "Solve the puzzle inside of the reliquary to open the chest.\n\nNote: The entrance will not be opened until you have completed the campaign quest: Open That Door!",
+	[5712] = "Let a nearby Preying Dustmoth cast Drowsy Dust on you and then open the chest while you have the debuff",
+	[5714] = "Multiple spawns across Zaralek Cavern"
 }

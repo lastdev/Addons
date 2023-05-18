@@ -5,6 +5,8 @@
 ## SavedVariables: DRAGONFLIGHT_HELPER_CONFIG
 ## OptionalDeps: TomTom LibSharedMedia-3.0
 
+initialize.xml
+
 Libs\lib.xml
 
 Source\Data\Manifest.xml

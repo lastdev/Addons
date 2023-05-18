@@ -148,9 +148,6 @@ function P:RemoveHighlight(icon)
 		end
 
 		self:SetCooldownElements(icon, active.charges)
-		if E.OmniCC then
-			icon.cooldown:SetCooldown(active.startTime, active.duration, active.iconModRate)
-		end
 		icon.icon:SetDesaturated(E.db.icons.desaturateActive and (not active.charges or active.charges == 0))
 	end
 end

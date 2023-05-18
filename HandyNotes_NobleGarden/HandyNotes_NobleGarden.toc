@@ -1,6 +1,7 @@
-## Interface: 100007
-## Version: 2.03
+## Interface: 100100
+## Version: 2.06
 ## Author: Taraezor
+## IconTexture: Interface\Icons\Achievement_noblegarden_chocolate_egg
 ## Title: Noblegarden
 ## Title-deDE: Nobelgarten Erfolge
 ## Title-esES: Jardín Noble
@@ -30,6 +31,7 @@
 ## X-WoWI-ID: 00000
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_NobleGardenDB
+## AddonCompartmentFunc: HandyNotes_NobleGarden_OnAddonCompartmentClick
 
 Core.lua
 Data.lua

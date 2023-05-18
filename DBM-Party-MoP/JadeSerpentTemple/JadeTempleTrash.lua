@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("JadeTempleTrash", "DBM-Party-MoP", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230410013138")
+mod:SetRevision("20230507021253")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 
@@ -77,7 +77,7 @@ function mod:SPELL_CAST_START(args)
 			warnHauntingScream:Show()
 		end
 	elseif spellId == 395872 then
-		timerSleepySililoquyCD:Start()
+		timerSleepySililoquyCD:Start(nil, args.sourceGUID)
 		if self.Options.SpecWarn395872interrupt and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnSleepySililoquy:Show(args.sourceName)
 			specWarnSleepySililoquy:Play("kickcast")
@@ -107,7 +107,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 396018 and self:AntiSpam(3, 5) then
 		warnFitofRage:Show()
 	elseif spellId == 397931 then
-		timerDarkClawCD:Start()
+		timerDarkClawCD:Start(nil, args.sourceGUID)
 		if self:AntiSpam(3, 5) then
 			warnDarkClaw:Show()
 		end
@@ -151,7 +151,7 @@ function mod:UNIT_DIED(args)
 	elseif cid == 59555 then--Haunting Sha
 		timerHauntingScreamCD:Stop(args.destGUID)
 	elseif cid == 59546 then--The Talking Fish
-		timerSleepySililoquyCD:Stop()
+		timerSleepySililoquyCD:Stop(args.destGUID)
 	elseif cid == 200387 then--Shambling Infester
 		timerFlamesofDoubtCD:Stop(args.destGUID)
 	elseif cid == 200137 then--Depraved mistweaver

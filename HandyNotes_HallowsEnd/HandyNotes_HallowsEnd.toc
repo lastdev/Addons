@@ -1,6 +1,7 @@
-## Interface: 100005
-## Version: 2.05
+## Interface: 100100
+## Version: 2.09
 ## Author: Taraezor
+## IconTexture: Interface\Icons\Inv_misc_bag_28_halloween
 ## Title: Hallow's End
 ## Title-deDE: Schlotternächte
 ## Title-esES: Halloween
@@ -30,6 +31,7 @@
 ## X-WoWI-ID: 00000
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_HallowsEndDB
+## AddonCompartmentFunc: HandyNotes_HallowsEnd_OnAddonCompartmentClick
 
 Core.lua
 Data.lua

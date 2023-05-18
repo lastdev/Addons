@@ -1,10 +1,10 @@
-## Interface: 100007
+## Interface: 100100
 ## Title: Details! Damage Meter
 ## Notes: Essential tool to impress that chick in your raid.
 ## SavedVariables: _detalhes_global, __details_backup
 ## SavedVariablesPerCharacter: _detalhes_database
 ## OptionalDeps: Ace3, LibSharedMedia-3.0, LibWindow-1.1, LibDBIcon-1.0, NickTag-1.0, LibDataBroker-1.1, LibGraph-2.0
-## Version: #Details.DF.Wrath.10.0.7.10737.148
+## Version: #Details.20230513.11011.151
 
 ## X-Curse-Project-ID: 61284
 ## X-Wago-ID: 25NRDlK3
@@ -87,6 +87,8 @@ frames\window_playerbreakdown_list.lua
 frames\window_playerbreakdown_compare.lua
 frames\window_playerbreakdown_avoidance.lua
 frames\window_playerbreakdown_auras.lua
+frames\window_playerbreakdown_spells.lua
+frames\window_playerbreakdown_spells_options.lua
 frames\window_report.lua
 frames\window_main.lua
 frames\window_custom.lua
@@ -113,6 +115,7 @@ frames\window_statistics.lua
 frames\window_aura_tracker.lua
 
 classes\class_error.lua
+classes\class_spelltable.lua
 classes\class_combat.lua
 classes\class_damage.lua
 classes\class_spelldamage.lua

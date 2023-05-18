@@ -244,7 +244,6 @@ L.DisableGuildStatus 		= "길드에 진행 상황 알림 메시지를 전송하�
 
 L.Area_BugAlerts			= "버그 제보 알림 설정"
 L.BadTimerAlert				= "DBM이 최소 1초 이상 맞지 않는 불량 타이머를 감지했을 때 대화창에 메시지 표시"
-L.BadIDAlert				= "DBM에 쓰이는 주문이나 도감 ID가 잘못됐을 때 대화창에 메시지 표시"
 
 -- Panel: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "음성 경고"
@@ -387,12 +386,18 @@ L.SpamBlockNoShowTimers		= "모드 타이머 표시 안함 (보스 모드/도전
 L.SpamBlockNoShowUTimers	= "사용자 전송 타이머 표시 안함 (사용자 지정/풀링/휴식)"
 L.SpamBlockNoCountdowns		= "초읽기 음성 재생 안함"
 
+L.Area_SpamFilter_Nameplates		= "이름표 애드온 전체적인 기능 끄기 및 필터 설정"
+L.SpamBlockNoNameplate		= "이름표 오라 표시 안함"
+L.SpamBlockNoBossGUIDs			= "메인 보스 (boss1)의 타이머를 Plater 이름표 오라로 표시 안함\n(Plater에서 해당 기능을 활성화 했다면 일반몹/보스 쫄의 타이머는 볼 수 있습니다)"
+L.SpamBlockTimersWithNameplates		= "Plater에서 오라 쿨타임 설정을 활성화 했을 때 일반몹에선 DBM 타이머 바 보지 않음 (보스 전투에는 적용되지 않고 항상 타이머 바가 표시됩니다)"
+L.NameplateFooter					= "Plater Nameplates를 사용중이라면 이 메뉴에서 추가로 기능을 설정할 수 있습니다"
+
 L.Area_SpamFilter_Misc		= "기타 여러 기능 끄기 및 필터 설정"
 L.SpamBlockNoSetIcon		= "대상에 공격대 징표를 설정하지 않음"
 L.SpamBlockNoRangeFrame		= "거리 창 표시 안함"
 L.SpamBlockNoInfoFrame		= "정보 창 표시 안함"
 L.SpamBlockNoHudMap			= "HUD 표시 안함"
-L.SpamBlockNoNameplate		= "이름표 오라 표시 안함"
+
 L.SpamBlockNoYells			= "말풍선 알림 사용 안함"
 L.SpamBlockNoNoteSync		= "메모 공유 수락 안함"
 L.SpamBlockAutoGossip		= "NPC 대화 자동 수락 안함"

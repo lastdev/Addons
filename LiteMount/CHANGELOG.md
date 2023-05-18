@@ -1,10 +1,9 @@
 # LiteMount
 
-## [10.0.13](https://github.com/xod-wow/LiteMount/tree/10.0.13) (2023-04-10)
-[Full Changelog](https://github.com/xod-wow/LiteMount/compare/10.0.12...10.0.13) [Previous Releases](https://github.com/xod-wow/LiteMount/releases)
+## [10.1.0-1](https://github.com/xod-wow/LiteMount/tree/10.1.0-1) (2023-05-03)
+[Full Changelog](https://github.com/xod-wow/LiteMount/compare/10.0.13...10.1.0-1) [Previous Releases](https://github.com/xod-wow/LiteMount/releases)
 
-- Add missing (new) NEW\_MOUNT\_ADDED event for rescan  
-- Add mount families for 10.0.7 mounts  
-- Check Journeyman Riding for riding skills too.  
-    As far as I know only affects Running Wild.  
-    A possible for fix #144.  
+- Update ToC for 10.1  
+- Use pressAndHoldAction workaround for actionbutton to allow macro to return to original setup.  
+    See https://github.com/Stanzilla/WoWUIBugs/issues/317#issuecomment-1510847497  
+- Add mount families for 10.1 mounts.  

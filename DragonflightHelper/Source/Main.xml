@@ -21,11 +21,62 @@
       </Layer>
     </Layers>
     <Frames>
-      <Button inherits="UIPanelButtonTemplate" text="-" mixin="DFH_ButtonMixin">
-        <Size x="15" y="15" />
+      <Button mixin="DFH_ButtonMixin" enableMouse="true">
+        <Size x="25" y="25" />
         <Anchors>
-          <Anchor point="TOPLEFT" x="4" y="-6" />
+          <Anchor point="TOPLEFT" x="4" />
         </Anchors>
+        <Layers>
+          <Layer level="ARTWORK">
+            <Texture atlas="UI-Panel-HideButton-Up" useAtlasSize="false" parentKey="texture">
+              <Size x="25" y="25" />
+              <Anchors>
+                <Anchor point="TOPLEFT" />
+              </Anchors>
+            </Texture>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnClick method="OnClick" />
+        </Scripts>
+      </Button>
+      <Button mixin="DFH_LockButtonMixin" enableMouse="true">
+        <Size x="25" y="25" />
+        <Anchors>
+          <Anchor point="TOPLEFT" x="24" y="1" />
+        </Anchors>
+        <Layers>
+          <Layer level="ARTWORK">
+            <Texture atlas="QuestSharing-Padlock" useAtlasSize="false" parentKey="texture">
+              <Size x="25" y="25" />
+              <Anchors>
+                <Anchor point="TOPLEFT" />
+              </Anchors>
+            </Texture>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnClick method="OnClick" />
+          <OnEnter method="OnEnter" />
+          <OnLeave method="OnLeave" />
+        </Scripts>
+      </Button>
+      <Button mixin="DFH_ConfigButtonMixin" enableMouse="true">
+        <Size x="25" y="25" />
+        <Anchors>
+          <Anchor point="TOPRIGHT" y="6" />
+
+        </Anchors>
+        <Layers>
+          <Layer level="ARTWORK">
+            <Texture atlas="common-icon-rotateright" useAtlasSize="false" parentKey="texture">
+              <Size x="15" y="15" />
+              <Anchors>
+                <Anchor point="TOPLEFT" y="-10" />
+              </Anchors>
+            </Texture>
+          </Layer>
+        </Layers>
         <Scripts>
           <OnClick method="OnClick" />
         </Scripts>

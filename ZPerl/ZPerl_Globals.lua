@@ -236,7 +236,7 @@ function XPerl_SetModuleRevision(rev)
 end
 local AddRevision = XPerl_SetModuleRevision
 
-XPerl_SetModuleRevision("$Revision: 9f6c75eeab82c0b47de6b403dca2b68407247c11 $")
+XPerl_SetModuleRevision("$Revision: 622ab1f8aebd021111f667b2de0adca45dd07d93 $")
 
 function XPerl_Notice(...)
 	if (DEFAULT_CHAT_FRAME) then
@@ -619,14 +619,14 @@ function XPerl_Globals_OnEvent(self, event, arg1, ...)
 		self:UnregisterEvent(event)
 		startupCheckSettings(self, event)
 		ZPerl_MinimapButton_Init(ZPerl_MinimapButton_Frame)
-		-- Load the player's layout, will be profile dependent later.
-		local layout = format("%s(%s)", GetRealmName(), UnitName("player"))
-		XPerl_LoadFrameLayout(layout)
 	elseif (event == "PLAYER_ENTERING_WORLD") then
 		self:UnregisterEvent(event)
 		self:UnregisterAllEvents()
 		self:RegisterEvent("PLAYER_REGEN_ENABLED")
 		self:SetScript("OnEvent", onEventPostSetup)
+		-- Load the player's layout, will be profile dependent later.
+		local layout = format("%s(%s)", GetRealmName(), UnitName("player"))
+		XPerl_LoadFrameLayout(layout)
 		XPerl_Globals_OnEvent = nil
 	end
 end

@@ -107,7 +107,7 @@ end
 
 function ConRO.Warlock.Under10(_, timeShift, currentSpell, gcd)
 	wipe(ConRO.SuggestedSpells)
-	local Racial, Ability, Passive, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Warlock_Ability, ids.Warlock_Passive, ids.Warlock_Form, ids.Warlock_Buff, ids.Warlock_Debuff, ids.Warlock_PetAbility, ids.Warlock_PvPTalent, ids.Glyph;
+	local Racial, Ability, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Warlock_Ability, ids.Warlock_Form, ids.Warlock_Buff, ids.Warlock_Debuff, ids.Warlock_PetAbility, ids.Warlock_PvPTalent, ids.Glyph;
 --Info
 	local _Player_Level																					= UnitLevel("player");
 	local _Player_Percent_Health 																		= ConRO:PercentHealth('player');
@@ -160,7 +160,7 @@ end
 
 function ConRO.Warlock.Under10Def(_, timeShift, currentSpell, gcd)
 	wipe(ConRO.SuggestedDefSpells)
-	local Racial, Ability, Passive, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Warlock_Ability, ids.Warlock_Passive, ids.Warlock_Form, ids.Warlock_Buff, ids.Warlock_Debuff, ids.Warlock_PetAbility, ids.Warlock_PvPTalent, ids.Glyph;
+	local Racial, Ability, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Warlock_Ability, ids.Warlock_Form, ids.Warlock_Buff, ids.Warlock_Debuff, ids.Warlock_PetAbility, ids.Warlock_PvPTalent, ids.Glyph;
 --Info
 	local _Player_Level																					= UnitLevel("player");
 	local _Player_Percent_Health 																		= ConRO:PercentHealth('player');
@@ -221,7 +221,7 @@ end
 
 function ConRO.Warlock.Affliction(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 	wipe(ConRO.SuggestedSpells)
-	local Racial, Ability, Passive, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Aff_Ability, ids.Aff_Passive, ids.Aff_Form, ids.Aff_Buff, ids.Aff_Debuff, ids.Aff_PetAbility, ids.Aff_PvPTalent, ids.Glyph;
+	local Racial, Ability, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Aff_Ability, ids.Aff_Form, ids.Aff_Buff, ids.Aff_Debuff, ids.Aff_PetAbility, ids.Aff_PvPTalent, ids.Glyph;
 --Info
 	local _Player_Level = UnitLevel("player");
 	local _Player_Percent_Health = ConRO:PercentHealth('player');
@@ -255,8 +255,6 @@ function ConRO.Warlock.Affliction(_, timeShift, currentSpell, gcd, tChosen, pvpC
 	local _GrimoireofSacrifice, _GrimoireofSacrifice_RDY = ConRO:AbilityReady(Ability.GrimoireofSacrifice, timeShift);
 		local _GrimoireofSacrifice_BUFF = ConRO:Aura(Buff.GrimoireofSacrifice, timeShift);
 	local _Haunt, _Haunt_RDY = ConRO:AbilityReady(Ability.Haunt, timeShift);
-	local _InquisitorsGaze, _InquisitorsGaze_RDY = ConRO:AbilityReady(Ability.InquisitorsGaze, timeShift);
-		local _InquisitorsGaze_BUFF = ConRO:Aura(Buff.InquisitorsGaze, timeShift);
 	local _MaleficRapture, _MaleficRapture_RDY = ConRO:AbilityReady(Ability.MaleficRapture, timeShift);
 		local _MaleficAffliction_DEBUFF, _MaleficAffliction_COUNT = ConRO:Form(Debuff.MaleficAffliction);
 		local _DreadTouch_DEBUFF = ConRO:TargetAura(Debuff.DreadTouch, timeShift);
@@ -295,7 +293,7 @@ function ConRO.Warlock.Affliction(_, timeShift, currentSpell, gcd, tChosen, pvpC
 	local _Pet_Percent_Health = ConRO:PercentHealth('pet');
 	local _Void_out	= IsSpellKnown(PetAbility.ThreateningPresence.spellID, true);
 
-	if tChosen[Passive.AbsoluteCorruption.talentID] then
+	if tChosen[Ability.AbsoluteCorruption.talentID] then
 		_Corruption_DEBUFF = ConRO:PersistentDebuff(Debuff.Corruption);
 		_Corruption_DUR = 10000;
 	end
@@ -383,7 +381,7 @@ function ConRO.Warlock.Affliction(_, timeShift, currentSpell, gcd, tChosen, pvpC
 			_SummonDarkglare_RDY = false;
 		end
 
-		if _MaleficRapture_RDY and _SoulShards >= 1 and _MaleficAffliction_COUNT < 3 and tChosen[Passive.DoomBlossom.talentID] then
+		if _MaleficRapture_RDY and _SoulShards >= 1 and _MaleficAffliction_COUNT < 3 and tChosen[Ability.DoomBlossom.talentID] then
 			tinsert(ConRO.SuggestedSpells, _MaleficRapture);
 			_SoulShards = _SoulShards - 1;
 			_MaleficAffliction_COUNT = _MaleficAffliction_COUNT + 1
@@ -425,7 +423,7 @@ function ConRO.Warlock.Affliction(_, timeShift, currentSpell, gcd, tChosen, pvpC
 			_SiphonLife_RDY = false;
 		end
 
-		if tChosen[Passive.ShadowEmbrace.talentID] and (_ShadowEmbrace_COUNT < 3 or _ShadowEmbrace_DUR <= 2) then
+		if tChosen[Ability.ShadowEmbrace.talentID] and (_ShadowEmbrace_COUNT < 3 or _ShadowEmbrace_DUR <= 2) then
 			if _DrainSoul_RDY and tChosen[Ability.DrainSoul.talentID] then
 				tinsert(ConRO.SuggestedSpells, _DrainSoul);
 			elseif _ShadowBolt_RDY and not tChosen[Ability.DrainSoul.talentID] then
@@ -476,7 +474,7 @@ end
 
 function ConRO.Warlock.AfflictionDef(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 	wipe(ConRO.SuggestedDefSpells)
-	local Racial, Ability, Passive, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Aff_Ability, ids.Aff_Passive, ids.Aff_Form, ids.Aff_Buff, ids.Aff_Debuff, ids.Aff_PetAbility, ids.Aff_PvPTalent, ids.Glyph;
+	local Racial, Ability, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Aff_Ability, ids.Aff_Form, ids.Aff_Buff, ids.Aff_Debuff, ids.Aff_PetAbility, ids.Aff_PvPTalent, ids.Glyph;
 --Info
 	local _Player_Level = UnitLevel("player");
 	local _Player_Percent_Health = ConRO:PercentHealth('player');
@@ -550,7 +548,7 @@ end
 
 function ConRO.Warlock.Demonology(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 	wipe(ConRO.SuggestedSpells)
-	local Racial, Ability, Passive, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Demo_Ability, ids.Demo_Passive, ids.Demo_Form, ids.Demo_Buff, ids.Demo_Debuff, ids.Demo_PetAbility, ids.Demo_PvPTalent, ids.Glyph;
+	local Racial, Ability, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Demo_Ability, ids.Demo_Form, ids.Demo_Buff, ids.Demo_Debuff, ids.Demo_PetAbility, ids.Demo_PvPTalent, ids.Glyph;
 --Info
 	local _Player_Level = UnitLevel("player");
 	local _Player_Percent_Health = ConRO:PercentHealth('player');
@@ -584,8 +582,6 @@ function ConRO.Warlock.Demonology(_, timeShift, currentSpell, gcd, tChosen, pvpC
 	local _Guillotine, _Guillotine_RDY = ConRO:AbilityReady(Ability.Guillotine, timeShift);
 	local _HandofGuldan, _HandofGuldan_RDY = ConRO:AbilityReady(Ability.HandofGuldan, timeShift);
 	local _Implosion, _Implosion_RDY = ConRO:AbilityReady(Ability.Implosion, timeShift);
-	local _InquisitorsGaze, _InquisitorsGaze_RDY = ConRO:AbilityReady(Ability.InquisitorsGaze, timeShift);
-		local _InquisitorsGaze_BUFF = ConRO:Aura(Buff.InquisitorsGaze, timeShift);
 	local _NetherPortal, _NetherPortal_RDY, _NetherPortal_CD = ConRO:AbilityReady(Ability.NetherPortal, timeShift);
 		local _NetherPortal_BUFF = ConRO:Aura(Buff.NetherPortal, timeShift);
 	local _PowerSiphon, _PowerSiphon_RDY = ConRO:AbilityReady(Ability.PowerSiphon, timeShift);
@@ -781,7 +777,7 @@ end
 
 function ConRO.Warlock.DemonologyDef(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 	wipe(ConRO.SuggestedDefSpells)
-	local Racial, Ability, Passive, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Demo_Ability, ids.Demo_Passive, ids.Demo_Form, ids.Demo_Buff, ids.Demo_Debuff, ids.Demo_PetAbility, ids.Demo_PvPTalent, ids.Glyph;
+	local Racial, Ability, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Demo_Ability, ids.Demo_Form, ids.Demo_Buff, ids.Demo_Debuff, ids.Demo_PetAbility, ids.Demo_PvPTalent, ids.Glyph;
 --Info
 	local _Player_Level = UnitLevel("player");
 	local _Player_Percent_Health = ConRO:PercentHealth('player');
@@ -855,7 +851,7 @@ end
 
 function ConRO.Warlock.Destruction(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 	wipe(ConRO.SuggestedSpells)
-	local Racial, Ability, Passive, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Dest_Ability, ids.Dest_Passive, ids.Dest_Form, ids.Dest_Buff, ids.Dest_Debuff, ids.Dest_PetAbility, ids.Dest_PvPTalent, ids.Glyph;
+	local Racial, Ability, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Dest_Ability, ids.Dest_Form, ids.Dest_Buff, ids.Dest_Debuff, ids.Dest_PetAbility, ids.Dest_PvPTalent, ids.Glyph;
 --Info
 	local _Player_Level = UnitLevel("player");
 	local _Player_Percent_Health = ConRO:PercentHealth('player');
@@ -898,8 +894,6 @@ function ConRO.Warlock.Destruction(_, timeShift, currentSpell, gcd, tChosen, pvp
 	local _Immolate, _Immolate_RDY = ConRO:AbilityReady(Ability.Immolate, timeShift);
 		local _Immolate_DEBUFF = ConRO:TargetAura(Debuff.Immolate, timeShift + 3);
 	local _Incinerate, _Incinerate_RDY = ConRO:AbilityReady(Ability.Incinerate, timeShift);
-	local _InquisitorsGaze, _InquisitorsGaze_RDY = ConRO:AbilityReady(Ability.InquisitorsGaze, timeShift);
-		local _InquisitorsGaze_BUFF = ConRO:Aura(Buff.InquisitorsGaze, timeShift);
 	local _RainofFire, _RainofFire_RDY = ConRO:AbilityReady(Ability.RainofFire, timeShift);
 		local _MadnessoftheAzjAqirRoF_BUFF = ConRO:Aura(Buff.MadnessoftheAzjAqirRoF, timeShift);
 	local _Shadowburn, _Shadowburn_RDY = ConRO:AbilityReady(Ability.Shadowburn, timeShift);
@@ -1039,7 +1033,7 @@ function ConRO.Warlock.Destruction(_, timeShift, currentSpell, gcd, tChosen, pvp
 			_Havoc_RDY = false;
 		end
 
-		if _ChaosBolt_RDY and _SoulShards >= 2 and ((tChosen[Passive.Eradication.talentID] and not _Eradication_DEBUFF) or _SoulShards >= 4.5) and ((ConRO_AutoButton:IsVisible() and ((_enemies_in_40yrds < 5 and _Havoc_DEBUFF) or (_enemies_in_40yrds < 3 and not _Havoc_DEBUFF))) or ConRO_SingleButton:IsVisible()) then
+		if _ChaosBolt_RDY and _SoulShards >= 2 and ((tChosen[Ability.Eradication.talentID] and not _Eradication_DEBUFF) or _SoulShards >= 4.5) and ((ConRO_AutoButton:IsVisible() and ((_enemies_in_40yrds < 5 and _Havoc_DEBUFF) or (_enemies_in_40yrds < 3 and not _Havoc_DEBUFF))) or ConRO_SingleButton:IsVisible()) then
 			tinsert(ConRO.SuggestedSpells, _ChaosBolt);
 			_SoulShards = _SoulShards - 2;
 		end
@@ -1073,7 +1067,7 @@ end
 
 function ConRO.Warlock.DestructionDef(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 	wipe(ConRO.SuggestedDefSpells)
-	local Racial, Ability, Passive, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Dest_Ability, ids.Dest_Passive, ids.Dest_Form, ids.Dest_Buff, ids.Dest_Debuff, ids.Dest_PetAbility, ids.Dest_PvPTalent, ids.Glyph;
+	local Racial, Ability, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Dest_Ability, ids.Dest_Form, ids.Dest_Buff, ids.Dest_Debuff, ids.Dest_PetAbility, ids.Dest_PvPTalent, ids.Glyph;
 --Info
 	local _Player_Level = UnitLevel("player");
 	local _Player_Percent_Health = ConRO:PercentHealth('player');

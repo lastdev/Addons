@@ -185,17 +185,17 @@ local buildingTypes = {
 
 -- https://wowpedia.fandom.com/wiki/Enum.GarrisonFollowerType
 local availableMissionsStorage = {
-	[Enum.GarrisonFollowerType.FollowerType_6_0] = GARRISON_MISSIONS_STORAGE,
-	[Enum.GarrisonFollowerType.FollowerType_7_0] = ORDERHALL_MISSIONS_STORAGE,
-	[Enum.GarrisonFollowerType.FollowerType_8_0] = WARCAMPAIGN_MISSIONS_STORAGE,
-	[Enum.GarrisonFollowerType.FollowerType_9_0] = COVENANT_MISSIONS_STORAGE,
+	[Enum.GarrisonFollowerType.FollowerType_6_0_GarrisonFollower] = GARRISON_MISSIONS_STORAGE,
+	[Enum.GarrisonFollowerType.FollowerType_7_0_GarrisonFollower] = ORDERHALL_MISSIONS_STORAGE,
+	[Enum.GarrisonFollowerType.FollowerType_8_0_GarrisonFollower] = WARCAMPAIGN_MISSIONS_STORAGE,
+	[Enum.GarrisonFollowerType.FollowerType_9_0_GarrisonFollower] = COVENANT_MISSIONS_STORAGE,
 }
 
 local activeMissionsStorage = {
-	[Enum.GarrisonFollowerType.FollowerType_6_0] = GARRISON_ACTIVE_MISSIONS_STORAGE,
-	[Enum.GarrisonFollowerType.FollowerType_7_0] = ORDERHALL_ACTIVE_MISSIONS_STORAGE,
-	[Enum.GarrisonFollowerType.FollowerType_8_0] = WARCAMPAIGN_ACTIVE_MISSIONS_STORAGE,
-	[Enum.GarrisonFollowerType.FollowerType_9_0] = COVENANT_ACTIVE_MISSIONS_STORAGE,
+	[Enum.GarrisonFollowerType.FollowerType_6_0_GarrisonFollower] = GARRISON_ACTIVE_MISSIONS_STORAGE,
+	[Enum.GarrisonFollowerType.FollowerType_7_0_GarrisonFollower] = ORDERHALL_ACTIVE_MISSIONS_STORAGE,
+	[Enum.GarrisonFollowerType.FollowerType_8_0_GarrisonFollower] = WARCAMPAIGN_ACTIVE_MISSIONS_STORAGE,
+	[Enum.GarrisonFollowerType.FollowerType_9_0_GarrisonFollower] = COVENANT_ACTIVE_MISSIONS_STORAGE,
 }
 
 -- *** Utility functions ***
@@ -308,7 +308,7 @@ end
 
 -- *** Scanning functions ***
 local function ScanBuildings()
-	local plots = C_Garrison.GetPlots(Enum.GarrisonFollowerType.FollowerType_6_0)
+	local plots = C_Garrison.GetPlots(Enum.GarrisonFollowerType.FollowerType_6_0_GarrisonFollower)
 
 	-- to avoid deleting previously saved data when the game is not ready to deliver information
 	-- exit if no data is available
@@ -318,7 +318,7 @@ local function ScanBuildings()
 	wipe(buildings)
 	
 	-- Scan Town Hall
-	local level = C_Garrison.GetGarrisonInfo(Enum.GarrisonFollowerType.FollowerType_6_0)
+	local level = C_Garrison.GetGarrisonInfo(Enum.GarrisonFollowerType.FollowerType_6_0_GarrisonFollower)
 	
 	buildings[BUILDING_TOWN_HALL] = { id = 0, rank = level }
 	
@@ -342,7 +342,7 @@ local function ScanBuildings()
 end
 	
 local function ScanFollowers()
-	local followersList = C_Garrison.GetFollowers(Enum.GarrisonFollowerType.FollowerType_6_0)
+	local followersList = C_Garrison.GetFollowers(Enum.GarrisonFollowerType.FollowerType_6_0_GarrisonFollower)
 	if not followersList then return end
 
 	local followers = addon.ThisCharacter.Followers
@@ -505,7 +505,7 @@ local function ScanFollowers()
 end
 
 local function ScanOrderHallFollowers()
-	local followersList = C_Garrison.GetFollowers(Enum.GarrisonFollowerType.FollowerType_7_0)
+	local followersList = C_Garrison.GetFollowers(Enum.GarrisonFollowerType.FollowerType_7_0_GarrisonFollower)
 	if not followersList then return end
 
 	local followers = addon.ThisCharacter.Followers
@@ -637,7 +637,7 @@ end
 local function ScanNextArtifactResearch()
 	-- scan the remaining time until the next artifact research notes are complete
 	
-	local shipments = C_Garrison.GetLooseShipments(Enum.GarrisonType.Type_7_0)
+	local shipments = C_Garrison.GetLooseShipments(Enum.GarrisonType.Type_7_0_Garrison)
 	local char = addon.ThisCharacter
 
 	-- reset values 
@@ -835,7 +835,7 @@ local function OnGarrisonMissionStarted(event, followerType, missionID)
 end
 
 local function OnGarrisonMissionFinished()
-	ScanAvailableMissions(Enum.GarrisonFollowerType.FollowerType_6_0, GARRISON_MISSIONS_STORAGE)
+	ScanAvailableMissions(Enum.GarrisonFollowerType.FollowerType_6_0_GarrisonFollower, GARRISON_MISSIONS_STORAGE)
 end
 
 local function OnAddonLoaded(event, addonName)

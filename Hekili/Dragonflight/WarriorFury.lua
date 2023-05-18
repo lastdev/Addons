@@ -7,8 +7,10 @@ local addon, ns = ...
 local Hekili = _G[ addon ]
 local class = Hekili.Class
 local state = Hekili.State
-local FindPlayerAuraByID = ns.FindPlayerAuraByID
 
+local strformat = string.format
+
+local FindPlayerAuraByID = ns.FindPlayerAuraByID
 local IsActiveSpell = ns.IsActiveSpell
 
 local spec = Hekili:NewSpecialization( 72 )
@@ -130,7 +132,7 @@ spec:RegisterTalents( {
     leeching_strikes          = { 90344, 382258, 1 }, -- Leech increased by 5%.
     menace                    = { 90383, 275338, 1 }, -- Intimidating Shout will knock back all nearby enemies except your primary target, and cause them all to cower in fear for 15 sec instead of fleeing.
     overwhelming_rage         = { 90378, 382767, 2 }, -- Maximum Rage increased by 15.
-    pain_and_gain             = { 90353, 382549, 1 }, -- When you take any damage, heal for 4.50% of your maximum health. This can only occur once every 10 sec.
+    pain_and_gain             = { 90353, 382549, 1 }, -- When you take any damage, heal for 3.50% of your maximum health. This can only occur once every 10 sec.
     piercing_howl             = { 90348, 12323 , 1 }, -- Snares all enemies within 12 yards, reducing their movement speed by 70% for 8 sec.
     piercing_verdict          = { 90379, 382948, 1 }, -- Spear of Bastion's instant damage increased by 50% and its Rage generation is increased by 100%.
     rallying_cry              = { 90331, 97462 , 1 }, -- Lets loose a rallying cry, granting all party or raid members within 40 yards 15% temporary and maximum health for 10 sec.
@@ -188,7 +190,7 @@ spec:RegisterTalents( {
     improved_execute          = { 90430, 316402, 1 }, -- Execute no longer costs Rage and now generates 20 Rage.
     improved_raging_blow      = { 90390, 383854, 1 }, -- Raging Blow has 2 charges and has a 20% chance to instantly reset its own cooldown.
     improved_whirlwind        = { 90427, 12950 , 1 }, -- Whirlwind causes your next 2 single-target attacks to strike up to 4 additional targets for 50% damage. Whirlwind generates 3 Rage, plus an additional 1 per target hit. Maximum 8 Rage.
-    invigorating_fury         = { 90393, 383468, 1 }, -- Enraged Regeneration lasts 3 sec longer and instantly heals for 20% of your maximum health.
+    invigorating_fury         = { 90393, 383468, 1 }, -- Enraged Regeneration lasts 3 sec longer and instantly heals for 15% of your maximum health.
     massacre                  = { 90410, 206315, 1 }, -- Execute is now usable on targets below 35% health, and its cooldown is reduced by 1.5 sec.
     meat_cleaver              = { 90391, 280392, 1 }, -- Whirlwind deals 25% more damage and now affects your next 4 single-target melee attacks, instead of the next 2 attacks.
     odyns_fury                = { 90418, 385059, 1 }, -- Unleashes your power, dealing 4,578 Physical damage and an additional 1,720 Physical damage over 4 sec to all enemies within 12 yards. Generates 15 Rage.
@@ -481,6 +483,16 @@ spec:RegisterGear( "tier29", 200426, 200428, 200423, 200425, 200427 )
 spec:RegisterSetBonuses( "tier29_2pc", 393708, "tier29_4pc", 393709 )
 -- 2-Set - Execute’s chance to critically strike increased by 10%.
 -- 4-Set - Sudden Death’s chance to reset the cooldown of Execute and make it usable on any target, regardless of health, is greatly increased.
+
+spec:RegisterGear( "tier30", 202446, 202444, 202443, 202442, 202441 )
+spec:RegisterSetBonuses( "tier30_2pc", 405579, "tier30_4pc", 405580 )
+--(2) Rampage damage and critical strike chance increased by 10%.
+--(4) Rampage causes your next Bloodthirst to have a 10% increased critical strike chance, deal 25% increased damage and generate 2 additional Rage. Stacking up to 10 times.
+spec:RegisterAura( "merciless_assault", {
+    id = 409983,
+    duration = 14,
+    max_stack = 10
+} )
 
 spec:RegisterGear( 'tier20', 147187, 147188, 147189, 147190, 147191, 147192 )
     spec:RegisterAura( "raging_thirst", {
@@ -860,7 +872,7 @@ spec:RegisterAbilities( {
         cooldown = function () return ( 3 - talent.deft_experience.rank * 0.75 ) * haste end,
         gcd = "spell",
 
-        spend = -8,
+        spend = function() return -8 - ( 2 * buff.merciless_assault.stack ) + ( talent.seethe.enabled and action.bloodbath.crit_pct_current >= 100 and -2 or 0 ) end,
         spendType = "rage",
 
         cycle = function () return talent.fresh_meat.enabled and "hit_by_fresh_meat" or nil end,
@@ -870,22 +882,32 @@ spec:RegisterAbilities( {
         buff = "reckless_abandon",
         bind = "bloodthirst",
 
+        critical = function()
+            return stat.crit + ( 15 * buff.bloodcraze.stack ) + ( 10 * buff.merciless_assault.stack ) + ( 20 * buff.recklessness.stack )
+        end,
+
         handler = function ()
             removeStack( "whirlwind" )
             removeStack( "reckless_abandon" )
 
-            gain( health.max * ( buff.enraged_regeneration.up and 0.23 or 0.03 ) , "health" )
-
-            if talent.bloodcraze.enabled then addStack( "bloodcraze" ) end
             if talent.cold_steel_hot_blood.enabled and stat.crit >= 100 then
                 applyDebuff( "target", "gushing_wound" )
                 gain( 4, "rage" )
             end
+
+            removeBuff( "merciless_assault" )
+            if talent.bloodcraze.enabled then
+                if action.bloodthirst.crit_pct_current >= 100 then removeBuff( "bloodcraze" )
+                else addStack( "bloodcraze" ) end
+            end
+
+            gain( health.max * ( buff.enraged_regeneration.up and 0.23 or 0.03 ) , "health" )
+
             if talent.fresh_meat.enabled and debuff.hit_by_fresh_meat.down then
                 applyBuff( "enrage" )
                 applyDebuff( "target", "hit_by_fresh_meat" )
             end
-            if talent.invigorating_fury.enabled then gain ( health.max * 0.2 , "health" ) end
+            if talent.invigorating_fury.enabled then gain ( health.max * 0.15 , "health" ) end
 
             if legendary.cadence_of_fujieda.enabled then
                 if buff.cadence_of_fujieda.stack < 5 then stat.haste = stat.haste + 0.01 end
@@ -920,7 +942,7 @@ spec:RegisterAbilities( {
         cooldown = function () return ( 4.5 - talent.deft_experience.rank * 0.75 ) * haste end,
         gcd = "spell",
 
-        spend = -8,
+        spend = function() return -8 - ( 2 * buff.merciless_assault.stack ) + ( talent.seethe.enabled and action.bloodthirst.crit_pct_current >= 100 and -2 or 0 ) end,
         spendType = "rage",
 
         cycle = function () return talent.fresh_meat.enabled and "hit_by_fresh_meat" or nil end,
@@ -931,26 +953,37 @@ spec:RegisterAbilities( {
         startsCombat = true,
         bind = "bloodbath",
 
+        critical = function()
+            return stat.crit + ( 15 * buff.bloodcraze.stack ) + ( 10 * buff.merciless_assault.stack ) + ( 20 * buff.recklessness.stack )
+        end,
+
         handler = function ()
             removeStack( "whirlwind" )
-            gain( health.max * ( buff.enraged_regeneration.up and 0.23 or 0.03 ) , "health" )
 
-            if talent.bloodcraze.enabled then addStack( "bloodcraze" ) end
-            if talent.cold_steel_hot_blood.enabled and stat.crit >= 100 then
+            if talent.cold_steel_hot_blood.enabled and action.bloodthirst.crit_pct_current >= 100 then
                 applyDebuff( "target", "gushing_wound" )
                 gain( 4, "rage" )
             end
+
+            removeBuff( "merciless_assault" )
+            if talent.bloodcraze.enabled then
+                if action.bloodthirst.crit_pct_current >= 100 then removeBuff( "bloodcraze" )
+                else addStack( "bloodcraze" ) end
+            end
+
+            gain( health.max * ( buff.enraged_regeneration.up and 0.23 or 0.03 ) , "health" )
+
             if talent.fresh_meat.enabled and debuff.hit_by_fresh_meat.down then
                 applyBuff( "enrage" )
                 applyDebuff( "target", "hit_by_fresh_meat" )
             end
+
             if talent.invigorating_fury.enabled then gain ( health.max * 0.2 , "health" ) end
 
             if legendary.cadence_of_fujieda.enabled then
                 if buff.cadence_of_fujieda.stack < 5 then stat.haste = stat.haste + 0.01 end
                 addStack( "cadence_of_fujieda" )
             end
-
         end,
 
         auras = {
@@ -1434,6 +1467,7 @@ spec:RegisterAbilities( {
             removeStack( "whirlwind" )
             if talent.frenzy.enabled then addStack( "frenzy" ) end
             if talent.reckless_abandon.enabled then addStack( "reckless_abandon", nil, 2 ) end
+            if set_bonus.tier30_4pc > 0 then addStack( "merciless_assault" ) end
         end,
     },
 
@@ -1718,6 +1752,27 @@ spec:RegisterSetting( "shockwave_interrupt", true, {
     width = "full"
 } )
 
+
+spec:RegisterSetting( "t30_bloodthirst_crit", 95, {
+    name = strformat( "%s Critical Threshold (Tier 30)", Hekili:GetSpellLinkWithTexture( spec.abilities.bloodthirst.id ) ),
+    desc = strformat( "By default, if you have four pieces of Tier 30 equipped, |W%s|w and |W%s|w will be recommended when their chance to crit is |cFFFFD10095%%|r or higher.\n\n"
+            .. "Your tier set, %s, and %s can bring you over the 95%% threshold. If |W%s|w is talented, these crits will proc a %s for additional damage. "
+            .. "Lowering this percentage slightly may be helpful if your base Critical Strike chance is very low. However, if set too low, you may use these abilities but "
+            .. "fail to crit.",
+            spec.abilities.bloodthirst.name, spec.abilities.bloodbath.name, Hekili:GetSpellLinkWithTexture( spec.talents.recklessness[2] ),
+            Hekili:GetSpellLinkWithTexture( spec.talents.bloodcraze[2] ), Hekili:GetSpellLinkWithTexture( spec.talents.cold_steel_hot_blood[2] ),
+            Hekili:GetSpellLinkWithTexture( spec.auras.gushing_wound.id ) ),
+    type = "range",
+    min = 0,
+    max = 100,
+    step = 1,
+    width = "full",
+} )
+
+spec:RegisterStateExpr( "bloodthirst_crit_threshold", function()
+    return settings.t30_bloodthirst_crit or 95
+end )
+
 spec:RegisterSetting( "heroic_charge", false, {
     name = "Use Heroic Charge Combo",
     desc = "If checked, the default priority will check |cFFFFD100settings.heroic_charge|r to determine whether to use Heroic Leap + Charge together.\n\n" ..
@@ -1727,4 +1782,4 @@ spec:RegisterSetting( "heroic_charge", false, {
 } )
 
 
-spec:RegisterPack( "Fury", 20230326, [[Hekili:TV16Vnooo8)wkwG0gCZMg7(CMRnF4wGd3uSy(WL5Z2wXwjX34hzLTBNzqG)B)OSDSLK1dNx9WTyXIDXwBAsQFKIKIIXXY5RoZdq5yNVyp1(MP3yF)eRhSNo9JoZZ)XgSZ8ni)VHwb)pjOy4)(pli)G(WFeLIcOFCwAbXhEX688nzF66RxfMVUyXe)04RZcJlIq5HPj(e0YC6F7FTZ8ffHr5FoXzHCj)OZCur(6uIZ85HX)gW5WGaCn54mFN5uY)1P38R23)PsVsVpN4hveGl9MVbhfv69VXlJW(uP(3l9i440xH39VWK0q)sVFhJ2mXzEuywEwL2hMSkc7MJiRW5Wd(sfGGtqlIWbo)dN5(KWCmjebKszFdLztEBDij6TWKGsVzLEwLEJk9Yrr4K8jHXBiGqdCBPzsddRO6IsVfflxojgJYD9JWOxXKjfBk92Uf0xuyGl(vkBqbbztctk9EQ0Z(45pGQvGIZ82pZjhWELR3kMGYwJtC)pfRwHjjGzPsrh1iHEVeqBuyswLkVYpysm67DIf)DSFbyUbHEJEHItiGh3orDvPNbOxfWrF7DLEJ70bW1mjaCfkYCjPicvxU99vx2XMgBzakXhCbDxeHaNBo7yL4fEplaFxTWUWiVyw)Pb)ijZDjDpmS0Vt5sVHJOeWY6gJsaiiM(aw97QgvKG9)weollb(3w)ywStIxXoCcE7g)8k05rElfbfVHg2buZ7hOfsQR2dd8JR1OM1DoM6Le(t8UfmdcMKfHkwToNY8hnbGVrq5RDrjbvyEFZReD3NuKTU2mM(gviF0Kq2zaCrlajLM8)gRK1ut6PkVj5SRkqSObLH)uAme8IFV7qqRUntYTCDAeyDsdwa0uPidlGwq6Bj1yAxaauss46qilzkrAu8E2TXc6qoebkRYB0sDOm)104vz9ZvzAzc6nRVOL6qghSi65WBnSn8DO5HA1gESbZUp6wpQdtSNAoJTwDubodHslP9u29x724XV)YwDXqQ9E7ykeOmUIn2SIQZeiiSB4vOoTvGUBzPJhSfO8UEYTbafO7Ew66QosGQh4OI6hqLB(AsFb)ilPza4e7UinsqUWFUb4sAmagTvE2QTysgM8niEzwoKwVNLHJwuEoudB260cXLMyCP6A4rrqTlGxI7MIF(t4lxKYuMMSxQTmPoF48qqxZCPRxPH3rVIYRl6sDyKl2JDASXgRb0a8surKHc5ZdJHte80ZLEtN0uef9qcv6CqynExNSJXpRAtvpOFtrCmosgO3A9RkxK0EMebA5CM3KkHcoNy)0K)OaQFLK5cGscMiqS6iN(PPr0iM8juyt6Ft)utAQ(RLF1gvron2OdLHGVc596yxijmad1VVecrq1khT1HvFoLAvKQUD8bwxH(URiH4LGdRFvgbnbv1dF0qTthq9wPzzvuTmeQG0LfZSS0tciH75R9AfuMFinYl1xiGTiSDuuKHDHfqCMyDtQ3Bmy3e9gjca5GZJJ(I0OPxR45Tt1vZdJReXhLGPbyinwEtvEXXkEhGikaNbhFnO1pstfu6vSMW1qcbN2QK4s8uFMlbZaxEhAuNSCckY1hfjgsXIl5ZYqcUIRIuz88iYJql58ivpsZ5y5l7sdBp09d2t5dI0M6qtLpx0xLXFN2PhHdDRQMBDX0A2EQKKz1EX84sdrTYWumaB(dxXNERPKTdyLFH(vUrTsJkPosI8UNy4SOna2a9pOKq1SxXU4eCCy3PpgR3)Ll9mKzkDjecnR6jT1RkDrjrA20k8iH(uxtMe1WEy36)WL2SX6wo6wx)vmuIs4UEo2w6lJahex4BDzv5pCmwBnqg2AlhvpghL9bs5o(yvSfitDLJKqKfTTsvQdLPJuZ3Gm1jx(ZzZGnK(780my1NfqEiKJSbSD6GKMbRU(zLUP7tEtv(zQRf(e2hrdfjRVnQQt6Ekw)A6D4r28YRQ7FzT8BkrVbtHDnK3wJJIPGeF0LX9)4hNkKkv3NZwi8F1rZZshnnutJKnMhq)9phT7uSJQAoY(HkI(DGCyD6847O6qJXme3xDRhTNbyF08oFnnvx3ziEwBlv52GROLQQ3GVxTu9MENWuwlvVLxHu2sv(EmPRLQdPvPvLIcrhZOevF5(205j4nejb4BMZ8VUgcQcvUKsYHcjtjLExYvn7L0lU)pkGJ5cBLZsPTRdQOingLtFayosaZXKYx(9We4vwFQ073stajw96lvwzeW28uDeSdWbcVY67JFhLWTYLa)v6kWD53377hNVtoNfBBOaVv1vrrU)GCU3g6wGT9cPlYVhLZp(OecmvEiero)r5CwmUMaVvf2RNV30ZkmBzFE1EfS)ea7w3OcyAdG2dt6fAThtvSD5uOVk2VCky99NpwRyF4PY)48TT0wru7d0)O8fjzTyB4YL7vslf7ly72HyeojncrCnRylXjmr15xckC4obEeQcL27OCcCx5r9E)fWFfTEirRplm9GR84pxb(pfSwrq)tLxSIcYobAUTInihOdN0CknZWWL7v6ef(bNQIevyW4V3pX9fsVuW3twRWp4anwgyA1fniYpU7)RNZKYk7pi9tQZu7egTFUtQcbE8gffXcp6T(LV85QfoLP3wFbwPjLEvd6p86QBSX35lpytN6Q0LHr4D9XiBsli93E(AXbVQ8fPuXmYvYPy3Sx8b6L19SKzGr(Nv7X8HWLpFHuyv(xX2sv2Vve2OWuZ3dFvDBTO0tNiQNEE6K72UT3Kqn7XYx(LFzhIs)U1v)wkCJWOn0p(kM293)RTVBKS3hMm727gZQn1Jsf7tehDkoQtfFsVrJI9LsWFQQRDAxE6MTBVsrGYrkMdGNUHBnjoRsuzkTh4mFJ4Cj1(nmtXel9IJbKX11mRPJUsMwSDl9YDhXDXUpzzj7XZUN341oPrSpSziGmQquG2eQWp5puwslt(PBNo6ctFQWC(i3giIQDd0ZqSzDJ4dNoZnrpSVPDaEe3ATaTIomc05j4BzQ10rcDtNvOTbqKg)q4lh1)Q6MzbrbKh8zpCBSNY5F0laL8Pvz0v9t0PCRg4yQ4vZUDA3sO(vY9TTpiL8I(kPc2lenJBstATUDgdvWl3GmOaU3ULkQUBOEM1y5gxUyMcZxsDYk2MA8H6zB5zlQ6kibBZSIRR(mzFMWkdjqVc3sXLOjyxumD36SKLJ1iwN(MgTm6QlKn)esmksmDJvQiTnbHQhkgOHofQFVtgPqR6JBpzVVCrPs3CL1DjK6poiJK)IDMMv(bk5UW0yiB7HsGs2chCyuJ)gCegsqsL8M7(ZyceZFctvHWnb6M)c(12rTuAUdtvPaB865NbdQrgkCI(OzwqPgnR(ET4A8oIECABe1(ezcxu((27evciOO64w1G3sPxe1xGSOqOjLyRESlBM0Yv04OUBCeylRNLF8lTTB3fdBxtP0yBxX6K2Ch3DbDgii0ZB)qzKsdwnwUN2MEQ1WCbgQTEp1gfy9ZwM25P890bbGj2cJhHzaEiQ5WawZ53yZ5ZvmW)3KeuuRpXzbfz)5nnOO00MRy)fuB978dqqnEi)NY(tmN2GNcnQntEjvhqxxT0Ysyv9Kn(5ZEuhEnGSX9Gy2i4dpATiBoYQkmJG9YgEEqqZMoJOVAcohj9LkJtDw)(O0HLC2OxZbZPJm9SrfBywRbBw2x9rfGB0rwnbdjfTsuEqA6aH3bbAdinTgsO2jQ4Q(1qRbsYB)Pqt)hN)7p]] )
+spec:RegisterPack( "Fury", 20230514, [[Hekili:TZ1xVTnos8plbloNeCTosY2PP9AcWDlWHRbl6dN79QLPLOT1vzjVsujTfg6Z(nuYsIKIJOSJD29wSpSlIfhoZW5V)iPQMzp7lZM6ty0zF2XYzK1e7XdThp69JE3SPSVVLoB6wI3xjRG)iISb())ZSKVZF43dJj(8jNgNL4bdSMX2M(HBUzvaBD2IHEXBUjnytwiHfeh5LqwY4)27MztxKfeY(u0Sf6L8TZMsYyRJtMnDAWMFg4CGVpTKCAQ3SPCYFR1K3Ap(d5ZZN)399ZNNgg4ttYNVmg(FFjG)NJSYN7LeWYN)xGXPmwq0QH5pM)y18TkN))zlxlsZNNqbLLcmJf3Wd5z4imJ9cZ2AOTarJERZTfe9PiVWmFGQPBPHH5Z)30LHupUX4VXf1M4NGX(x0K4aV85)cLSDiywtIxgecgtsbHPd3Mqbd5cc7VE)nlOjP0KVstCtzKipA(JAPIWyHu301Xzm9uKLsDdy0nVH7qVNeUIYwtsC3M9JFatCr830pnYtegj5nblV)cgjKgXgYca9i1LfNSb(P(zb)5xdPPPrW)jo3QN7swqI8JJ4gW9ZhMLhOqROC6zbBOF8ERHt2TJBX4cAOFqPb4H7YF8N(P85nZBDH50neSM8jFvcjW3L(eFsTNTZKb6gpi6HXtUwuB2MTzdnu8jPCxQBsThvI6y1N4fh9RzGMLK6cl2iiUsyqn2FUQ7fhh6h)C0qrdi8JnKGO0poA3UR2BijrRGiInKiihLR)dQNzPdRzosRPGeiFjl1DzczfFACzUiB5sz5LTvCoGqaJ7QKa6sWN7TUEo7LexQI0VkK4hqyLRB)s)zNRRhSTgCLoTy3UfXPPdwgSAnZTAbzBR7XpCRSZRkApv8HjGgdMnJke3qBYQqs8iruEwqYE7iysPFCS1Glmn1qUIN6(FZ87WhOAv3xgakM1hF2IW4yF3LqrBjDgI)tzjKqxpsOuK9YGeAXCutTwqw5gV0LLe491uCnDqXJPrCBGQHQUaI26hkZum3K47NYZlTHQa6l(CaHnowsXhTkqPkx63GcgPdAY3IcwheYdRrt1GatKHEySvZsOCi9X2ohLsErBLeH9kvZG6pGZDbjL)SAVBJZaZ8kK9JAU3TJlQNOU0i6MakKLFTENRuntiU0T8NUHWARSzfaNGf4Y4nhyVjLhlYU3MRUksWXmRsHeiOCBjVe6(muugAm9iHLQlrtMDvXe7)DiAMNNQz5ypqmOhQbZDldUQS(YgkH56bT8EIMO3POX1DnQI886GKWNdI856rzFUYXshwpuJcfSbGS8e13TESbiAvB72hDouUGQ00Vr9Yy0MgsPRPrqD1vqr(iamjpew)avUMvE(OChWZgbGlJH2LjXLvWutpqnu6w4qadU93qGqFksIY7Ic7aUSIo3aIyaSruwkevrtgz5oER3GYjoSGqgSkszd5qOD36b(HSIoCpCVWOUfJYwNqbaNH4MqHP8QlBVKS01q2Ulm3NfA)8CcyjCb0NfwBSgxMc1mpdzp6lYbMq2SLSII14FFU(EUleAdWf5p6bBaG1(vpKVL88AA4gULHp41veDNvDFK2ezYU0VypfJaYEcQvdzpvFdYefcVvSiM5ME4AbP1r6zuAijdkQlUzgr(jV02TRQYnLxcj4h4giygIbPLBbsO2FpncTI2pwgH6WkTLhOVPLA1VqG(6RpqTbXwFVTPmp0XHOInc1weIimBG7JA2pdR5U6IiDKGa9)nT(v16tCVFv2FEB(RkTo7vC4cQExl(Wo(kdsi(00s7H8ZQTgc7XsMIouBH(syhlrx7GqxdRINaT(F4UUSxVIiA0k6xlinMc61GcPvOLyNR(3LsLnVq0uMJCAHc48e5yoK1O1VNHL9RtNrWogI)onODABLooqjgJAoAo9cHLyuX6N3Q3ULdvFWm4gdKXjOpqtqTY9st7P5TxgTEapPds4(jU4GsODjVu(XgcLRdzZMc4lsbIQUfkRXZM(mjjcMr6SPFznnFoGrjoHT)6EUuIxxYVkNFnliHFTrPXBaQbKfXBkVhjW7b1ushM)4Veebdz)H85)CCeiXIHVefd0LL3bfobqekzriLt4v2F76xrjmwVeKHkOWDfKgV6CEIEoRwWxH3QdJX93RN719svyB9Zr9Hw6zOCjefUkpikRrIpulVPWC1HrzVZz1qBJeHCQ0Ee2FkS7OrG11IBztQhbLP3E(033D(y9DNpwJKjEIIpCoF5LoJoPXh5pQPVL4jcC5b12cjRw8YiuRXjme2AgzjFcBvD(Lasa3jiIaRuARtKvH7Tg)3ob8NvR7t16ZctpESh)HQW)jG1yf9prrXoiaYofAoscYrgWPTNIpDjbARC5b1obnr40asejmt(9frnVqAWFlynse8r6SmW0I3nav(v(cdCGPbhP(PnyQ(1g8WcNqcZpbofK2aV4u)8h)uXcNZ0XvVJv5Z5VBk8L1SPf)vX7wR4znap4ZfVUU7z4S)XSP8ZlgkOtas1F3a5ZFaceYNpauYs9dhDtbvxKpx79VmF3oWT06wgYN)ri64LZ)Qx51ztRN2m2Sp7GUEXURNcH0599uOYR88hUH8TgXU)mD5cDu3cT5uT5I6kieTBtpMHJp6K85x3Odk31exxg)6QlvSzVVu)XR0yI1Ffsfg4jLc7cJ8sy93C7x8L(e0LUHwcvlcDN1DPwP5UdeJkQStL3JqH15ozp1(dDLRM3INsQ5kHk0TECTqGqVh0t0RgQrvQpQwUY8UFpOmL0WvN76z0R20W33Zjx6TQQSRIWvi6Q6cW4m32Yu0LEuwnX(AuEPt7Uqk41Rn0T41ng2gVoRHCn9SROcQQlvG)CAoOkB9XA1uQrVRdjLXgVoJ61lvAtBkpQbJJupUw(TRrZuSXlJS)oGA3j30Yu4gAkebEXHJweTJ47xkFJ18y9A9V6G5WNowpo41joqnVXx7GxvqYrG6jDCeZVQs8KZVCWrXGh92Wu(LgwWMXIIQXfOiSjYkuJ2Qq3TI0jBSvO8DTK7EdOcD3jsxd2rfQEVevs3sOcPJSejv8Icfjd(P45P2n08oaCXZa4YQ5D8vePg)viVi(v61iVOkpuXUXEluMPBqZ6fvtcIUZTTQtuNBmOeWD17CUWZ6QeOmCp841)yU1gd9)opBTPF96ozBNOrh0S1g8oEOHPAusuXJfN97ciYvTXW7w(kQmnDMWBQEkbfJ3sTh7kOdi1NIOJoqc)cHIFvjA8s5BBjwxb9ovk2rU6KVZsbUBxt)pXNF2XNFHr5Dk2V6za8U6(dWlgD0IODYF)WT)I3Fqh42p8W3owpDGL)a1CH9hGxdQXrCFNBqyup2GaEc(bTbHj9Adc32Zni8UEVbH(a8NX)KruCfvDJqN)vgaQyd2uRH7rL367fqzTxbLRWvuJ3U6XLFSauuwj3H6hpafAL2Wv5htafkKS4T(4cOqChNRqx)lFVO)1O2fu74exr(N8CfNeQTQ5BEq3iZ0vTUHDQFld6gyL4wv4QBdFu)(g0nIidMpELsRECkEDSfpd7ceKWTYGSv)Gl0G2QII6VgcQD774ij6Bys3oP9FYfmGXQeKdWZXwD1Pwius6RVqd4MEggjhaO89yOpWGqvSMptdnGyKQswc5uXnivMu(R0GkPsvkR)SnOsfEEG4w(BDvOh8UTuBw3bBp28bhl5IifPWgWuCrBvU8tLqLMya5wx102NEIsYdLrXY2f5Rz34A22rgdV6j905Pt2Xk3aMvJAvhQ0bT)mZ3WH6Hk1D8b(5PDDF3pO6xdddiY0inh(5gY)2uWHC00Ow5Zqr5187w(v1s6WezAo92EXf5xxGc4p1Vuf1aGukqv)5KsfFLeTcFuP0bTrqrl1eDD4n1(hVsRPYk6kkGVRXloa8(kr3fMuiaXdaR4u8Rz)V)]] )

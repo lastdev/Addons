@@ -123,4 +123,114 @@ ns.points = {
             ["desc"] = "",
         },
     },
+    -- Brackenhide Hollow (BH entrance)
+    [2096] = {
+        [9733430] = {
+            ["cont"] = false,
+            ["icon"] = 12,
+            ["title"] = L["BH_skip"],
+            ["desc"] = L["BH_skip_desc"],
+        },
+        [28503637] = {
+            ["cont"] = false,
+            ["icon"] = 1,
+            ["title"] = L["BH_cauldron"],
+            ["desc"] = L["BH_cauldron_desc"],
+        },
+        [17863978] = {
+            ["cont"] = false,
+            ["icon"] = 1,
+            ["title"] = L["BH_cauldron"],
+            ["desc"] = L["BH_cauldron_desc"],
+        },
+        [21623021] = {
+            ["cont"] = false,
+            ["icon"] = 1,
+            ["title"] = L["BH_cauldron"],
+            ["desc"] = L["BH_cauldron_desc"],
+        },
+        [11413935] = {
+            ["cont"] = false,
+            ["icon"] = 19,
+            ["title"] = L["BH_gen_cauldron"],
+            ["desc"] = L["BH_gen_cauldron_desc"],
+        },
+        [47636607] = {
+            ["cont"] = false,
+            ["icon"] = 1,
+            ["title"] = L["BH_cauldron"],
+            ["desc"] = L["BH_cauldron_desc"],
+        },
+        [40944319] = {
+            ["cont"] = false,
+            ["icon"] = 1,
+            ["title"] = L["BH_cauldron"],
+            ["desc"] = L["BH_cauldron_desc"],
+        },
+    },
+    -- Freehold (FH)
+    [936] = {
+        [39744706] = {
+            ["icon"] = 12,
+            ["title"] = L["FH_percentage"],
+            ["cont"] = false,
+            ["desc"] = "",
+        },
+    },
+    -- Halls of Infusion (HOI)
+    [2082] = {
+    },
+    -- Neltharion's Lair (NL)
+    [731] = {
+    },
+    -- Neltharus (NELT)
+    [2080] = {
+        [52065674] = {
+            ["title"] = L["NELT_percentage"],
+            ["cont"] = false,
+            ["icon"] = 12,
+            ["desc"] = L["NELT_percentage_desc"],
+        },
+    },
+    -- Uldaman: Legacy of Tyr (ULD)
+    [2071] = {
+        [25751879] = {
+            ["title"] = L["ULD_percentage"],
+            ["cont"] = false,
+            ["icon"] = 12,
+            ["desc"] = "",
+        },
+    },
+    -- The Underrot (UNDR)
+    [1041] = {
+    },
+    -- The Vortex Pinnacle (VP)
+    [325] = {
+        [31018095] = {
+            ["icon"] = 4,
+            ["title"] = L["VP_slipstream"],
+            ["cont"] = false,
+            ["desc"] = L["VP_slipstream_desc2"],
+        },
+        [52532141] = {
+            ["icon"] = 4,
+            ["title"] = L["VP_slipstream"],
+            ["cont"] = false,
+            ["desc"] = L["VP_slipstream_desc2"],
+        },
+        [63535843] = {
+            ["icon"] = 3,
+            ["title"] = L["VP_slipstream"],
+            ["cont"] = false,
+            ["desc"] = L["VP_slipstream_desc1"],
+        },
+        [56601539] = {
+            ["icon"] = 3,
+            ["title"] = L["VP_slipstream"],
+            ["cont"] = false,
+            ["desc"] = L["VP_slipstream_desc1"],
+        },
+
+    },
+
 }

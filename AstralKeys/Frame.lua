@@ -17,7 +17,7 @@ local COLOR_BLUE_BNET = 'ff82c5ff'
 local SCROLL_TEXTURE_ALPHA_MIN = 0.25
 local SCROLL_TEXTURE_ALPHA_MAX = 0.6
 
-local FRAME_WIDTH_MINIMIZED = 500
+local FRAME_WIDTH_MINIMIZED = 575
 local CHARACTER_INFO_FRAME_SIZE = 275
 local FRAME_WIDTH_EXPANDED = FRAME_WIDTH_MINIMIZED + CHARACTER_INFO_FRAME_SIZE
 
@@ -91,9 +91,11 @@ function AstralKeysListMixin:SetUnit(unit, class, mapID, keyLevel, weekly_best, 
 	self.unitID = addon.UnitID(unit)
 	self.levelString:SetText(keyLevel)
 	self.dungeonString:SetText(addon.GetMapName(mapID))
+	self.dungeonString:SetWidth(200)
 	if weekly_best and weekly_best > 1 then
 		local color_code = addon.GetDifficultyColour(weekly_best)
 		self.bestString:SetText(WrapTextInColorCode(weekly_best, color_code))
+		self.bestString:SetWidth(self.bestString:GetUnboundedStringWidth() + 15)
 	else
 		self.bestString:SetText(nil)
 	end
@@ -451,9 +453,13 @@ reportButton:GetNormalTexture():SetVertexColor(.8, .8, .8, 0.8)
 reportButton:SetPoint('TOP', divider, 'BOTTOM', 0, -20)
 reportButton:SetScript('OnEnter', function(self)
 	self:GetNormalTexture():SetVertexColor(126/255, 126/255, 126/255, 0.8)
+	AstralKeyToolTip:SetOwner(self, 'ANCHOR_BOTTOMLEFT', 7, -2)
+	AstralKeyToolTip:AddLine('Report', 1, 1, 1)
+	AstralKeyToolTip:Show()
 end)
 reportButton:SetScript('OnLeave', function(self)
 	self:GetNormalTexture():SetVertexColor(0.8, 0.8, 0.8, 0.8)
+	AstralKeyToolTip:Hide()
 end)
 reportButton:SetScript('OnClick', function(self)
 	AstralMenuFrameUnit1:Hide()
@@ -470,9 +476,13 @@ settingsButton:GetNormalTexture():SetVertexColor(.8, .8, .8, 0.8)
 settingsButton:SetPoint('TOP', reportButton, 'BOTTOM', 0, -20)
 settingsButton:SetScript('OnEnter', function(self)
 	self:GetNormalTexture():SetVertexColor(126/255, 126/255, 126/255, 0.8)
+	AstralKeyToolTip:SetOwner(self, 'ANCHOR_BOTTOMLEFT', 7, -2)
+	AstralKeyToolTip:AddLine('Settings', 1, 1, 1)
+	AstralKeyToolTip:Show()
 end)
 settingsButton:SetScript('OnLeave', function(self)
 	self:GetNormalTexture():SetVertexColor(0.8, 0.8, 0.8, 0.8)
+	AstralKeyToolTip:Hide()
 end)
 settingsButton:SetScript('OnClick', function()
 	AstralMenuFrameUnit1:Hide()
@@ -487,9 +497,13 @@ greatVaultButton:GetNormalTexture():SetVertexColor(.8, .8, .8, 0.8)
 greatVaultButton:SetPoint('TOP', settingsButton, 'BOTTOM', 0, -20)
 greatVaultButton:SetScript('OnEnter', function(self)
 	self:GetNormalTexture():SetVertexColor(126/255, 126/255, 126/255, 0.8)
+	AstralKeyToolTip:SetOwner(self, 'ANCHOR_BOTTOMLEFT', 7, -2)
+	AstralKeyToolTip:AddLine('Vault', 1, 1, 1)
+	AstralKeyToolTip:Show()
 end)
 greatVaultButton:SetScript('OnLeave', function(self)
 	self:GetNormalTexture():SetVertexColor(0.8, 0.8, 0.8, 0.8)
+	AstralKeyToolTip:Hide()
 end)
 greatVaultButton:SetScript('OnClick', function()
 	ToggleGreatVault()
@@ -502,6 +516,25 @@ function ToggleGreatVault()
 	else WeeklyRewardsFrame:Show()
 	end
 end
+
+local refreshButton = CreateFrame('BUTTON', '$parentRefreshButton', menuBar)
+refreshButton:SetNormalTexture('Interface\\AddOns\\AstralKeys\\Media\\Texture\\sync')
+refreshButton:SetSize(24, 24)
+refreshButton:GetNormalTexture():SetVertexColor(.6, .6, .6, .8)
+refreshButton:SetPoint('TOP', greatVaultButton, 'BOTTOM', 0, -20)
+refreshButton:SetScript('OnEnter', function(self)
+	self:GetNormalTexture():SetVertexColor(126/255, 126/255, 126/255, 0.8)
+	AstralKeyToolTip:SetOwner(self, 'ANCHOR_BOTTOMLEFT', 7, -2)
+	AstralKeyToolTip:AddLine('Refresh', 1, 1, 1)
+	AstralKeyToolTip:Show()
+end)
+refreshButton:SetScript('OnLeave', function(self)
+	self:GetNormalTexture():SetVertexColor(.6, .6, .6, .8)
+	AstralKeyToolTip:Hide()
+end)
+refreshButton:SetScript('OnClick', function()
+	StaticPopup_Show('ASTRAL_KEYS_REFRESH_CONFIRM_DIALOG')
+end)
 
 local logo_Astral = CreateFrame('BUTTON', nil, menuBar)
 logo_Astral:SetSize(32, 32)
@@ -556,8 +589,8 @@ end)
 -- Middle Frame CHARACTER_INFO_FRAME_SIZEpx
 tabFrame = CreateFrame('FRAME', '$parentTabFrame', AstralKeyFrame)
 tabFrame.offSet = 0
-tabFrame:SetSize(420, 45)
-tabFrame:SetPoint('TOPRIGHT', AstralKeyFrame, 'TOPRIGHT', -30, 10)
+tabFrame:SetSize(460, 45)
+tabFrame:SetPoint('TOPRIGHT', AstralKeyFrame, 'TOPRIGHT', -60, 10)
 tabFrame.buttons = {}
 
 local newTabButton = CreateFrame('BUTTON', '$parentNewListButton', tabFrame)
@@ -607,7 +640,7 @@ function UpdateTabs()
 	local buttons = AstralKeyFrameTabFrame.buttons
 	local offSet = AstralKeyFrameTabFrame.offSet
 
-	local maxPossibleWidth = 410 - 15 - 20 -- Tab frame, close button, new tab button width
+	local maxPossibleWidth = 450 - 15 - 20 -- Tab frame, close button, new tab button width
 	local usedWidth = 0 -- initialize at 10 for padding on the left
 	local buttonsUsed = 0
 
@@ -880,8 +913,10 @@ do
 
 		function frame:UpdateInfo()
 			self.affixID = addon.GetAffixID(self.id, self.weekOffset)
-			local _, _, texture = C_ChallengeMode.GetAffixInfo(self.affixID)
-			self.texture:SetTexture(texture)
+			if self.affixID and self.affixID ~= 0 then
+				local _, _, texture = C_ChallengeMode.GetAffixInfo(self.affixID)
+				self.texture:SetTexture(texture)
+			end
 		end
 
 		frame:SetScript('OnEnter', function(self)
@@ -1104,7 +1139,7 @@ local function CharacterScrollFrame_OnLeave()
 end
 
 local characterScrollFrame = CreateFrame('ScrollFrame', '$parentCharacterContainer', AstralKeyFrameCharacterFrame, 'HybridScrollFrameTemplate')
-characterScrollFrame:SetSize(CHARACTER_INFO_FRAME_SIZE, 315)
+characterScrollFrame:SetSize(CHARACTER_INFO_FRAME_SIZE - 40, 315)
 characterScrollFrame:SetPoint('TOPLEFT', characterTitle, 'TOPLEFT', 0, -25)
 characterScrollFrame:SetScript('OnEnter',  CharacterScrollFrame_OnEnter)
 characterScrollFrame:SetScript('OnLeave', CharacterScrollFrame_OnLeave)
@@ -1125,7 +1160,7 @@ _G[characterScrollBar:GetName() .. 'ScrollUpButton']:Hide()
 
 local scrollButton = _G[characterScrollBar:GetName() .. 'ThumbTexture']
 scrollButton:SetHeight(50)
-scrollButton:SetWidth(4)
+scrollButton:SetWidth(8)
 scrollButton:SetColorTexture(204/255, 204/255, 204/255, SCROLL_TEXTURE_ALPHA_MAX)
 
 characterScrollFrame.buttonHeight = 45
@@ -1147,6 +1182,7 @@ function ListScrollFrame_Update()
 	for _ in pairs(selectedUnits) do
 		selectCount = selectCount + 1
 	end
+
 	for i = 1, math.min(sortTable.num_shown, #buttons) do
 		for j = lastIndex, #sortTable do
 			if sortTable[j+offset] and sortTable[j+offset].isShown then
@@ -1180,7 +1216,7 @@ local function ListScrollFrame_OnLeave()
 end
 
 local listScrollFrame = CreateFrame('ScrollFrame', '$parentListContainer', AstralKeyFrame, 'HybridScrollFrameTemplate')
-listScrollFrame:SetSize(415, 375)
+listScrollFrame:SetSize(485, 375)
 listScrollFrame:SetPoint('TOPLEFT', tabFrame, 'BOTTOMLEFT', 10, -35)
 listScrollFrame.update = ListScrollFrame_Update
 listScrollFrame:SetScript('OnEnter',  ListScrollFrame_OnEnter)
@@ -1189,7 +1225,7 @@ listScrollFrame:SetScript('OnLeave', ListScrollFrame_OnLeave)
 local listScrollBar = CreateFrame('Slider', '$parentScrollBar', listScrollFrame, 'HybridScrollBarTemplate')
 listScrollBar:SetWidth(10)
 listScrollBar:SetPoint('TOPLEFT', listScrollFrame, 'TOPRIGHT')
-listScrollBar:SetPoint('BOTTOMLEFT', listScrollFrame, 'BOTTOMRIGHT', 1, 0)
+listScrollBar:SetPoint('BOTTOMLEFT', listScrollFrame, 'BOTTOMRIGHT', -10, 0)
 listScrollBar:SetScript('OnEnter', ListScrollFrame_OnEnter)
 listScrollBar:SetScript('OnLeave', ListScrollFrame_OnLeave)
 
@@ -1201,13 +1237,13 @@ _G[listScrollBar:GetName() .. 'ScrollUpButton']:Hide()
 
 local listScrollButton = _G[listScrollBar:GetName() .. 'ThumbTexture']
 listScrollButton:SetHeight(50)
-listScrollButton:SetWidth(4)
+listScrollButton:SetWidth(8)
 listScrollButton:SetColorTexture(204/255, 204/255, 204/255, SCROLL_TEXTURE_ALPHA_MIN)
 listScrollButton:SetAlpha(SCROLL_TEXTURE_ALPHA_MIN)
 listScrollFrame.buttonHeight = 15
 
 local contentFrame = CreateFrame('FRAME', 'AstralContentFrame', AstralKeyFrame)
-contentFrame:SetSize(410, 390)
+contentFrame:SetSize(485, 390)
 contentFrame:SetPoint('TOPLEFT', tabFrame, 'BOTTOMLEFT', 0, -30)
 
 local function ListButton_OnClick(self)
@@ -1347,7 +1383,7 @@ keyLevelSearchCloseButton:SetScript('OnClick', function(self)
 
 local dungeonButton = CreateFrame('BUTTON', '$parentDungeonButton', contentFrame)
 dungeonButton.sortMethod = 'dungeon_name'
-dungeonButton:SetSize(155, 20)
+dungeonButton:SetSize(200, 20)
 dungeonButton:SetNormalFontObject(InterUIBlack_Small)
 dungeonButton:GetNormalFontObject():SetJustifyH('LEFT')
 dungeonButton:SetText(L['DUNGEON'])
@@ -1576,7 +1612,7 @@ characterSearchCloseButton:SetScript('OnClick', function(self)
 
 local weeklyBestButton = CreateFrame('BUTTON', '$parentWeeklyBestButton', contentFrame)
 weeklyBestButton.sortMethod = 'weekly_best'
-weeklyBestButton:SetSize(40, 20)
+weeklyBestButton:SetSize(70, 20)
 weeklyBestButton:SetNormalFontObject(InterUIBlack_Small)
 characterButton:GetNormalFontObject():SetJustifyH('CENTER')
 weeklyBestButton:SetText(L['WEEKLY_BEST'])
@@ -1824,14 +1860,36 @@ function addon.AddUnitToTable(unit, class, faction, listType, mapID, level, week
 	end
 end
 
+function addon.Console(msg)
+	print(string.format('%s %s', WrapTextInColorCode('[AK]', '008888FF'), msg))
+end
+
+function addon.AstralMain(arg)
+	if arg and (arg == 'sync' or arg == 'refresh') then
+		addon.Console('Refreshing key data.')
+		local refresh = addon.RefreshData()
+		if refresh then
+			addon.Console('Done.')
+		else
+			addon.Console('You need to wait more than 30 seconds before refreshing again.')
+		end
+		return
+	end
+	addon.AstralToggle()
+end
+
 function addon.AstralToggle()
 	if not init then InitializeFrame() end
 	AstralKeyFrame:SetShown(not AstralKeyFrame:IsShown())
+end
+
+function OpenAstralKeysWindow()
+	addon.AstralToggle()
 end
 
 SLASH_ASTRALKEYS1 = '/astralkeys'
 SLASH_ASTRALKEYS2 = '/ak'
 SLASH_ASTRALKEYSV1 = '/akv'
 
-SlashCmdList['ASTRALKEYS'] = addon.AstralToggle;
+SlashCmdList['ASTRALKEYS'] = addon.AstralMain;
 SlashCmdList['ASTRALKEYSV'] = addon.CheckGuildVersion

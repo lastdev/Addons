@@ -1,6 +1,7 @@
-## Interface: 100002
-## Version: 1.14
+## Interface: 100100
+## Version: 1.20
 ## Author: Taraezor
+## IconTexture: Interface\Icons\Inv_misc_shadowegg
 ## Title: Netherwing Eggs
 ## Title-deDE: Eier der Netherschwingen
 ## Title-esES: Huevos de Ala Abisal
@@ -30,6 +31,7 @@
 ## X-WoWI-ID: 24013
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_NetherwingEggsDB
+## AddonCompartmentFunc: HandyNotes_NetherwingEggs_OnAddonCompartmentClick
 
 Core.lua
 Data.lua

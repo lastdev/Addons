@@ -99,11 +99,12 @@ local function IsInShadowlands()
 	local mapID = C_Map and C_Map.GetBestMapForUnit("player")
 	if mapID then
 		local mapInfo = C_Map.GetMapInfo(mapID)
-		while mapInfo.mapType > 2 do
-			mapID = mapInfo.parentMapID
-			mapInfo =  C_Map.GetMapInfo(mapID)
+		while mapInfo do
+			if mapInfo.mapType == 2 then
+				return mapInfo.mapID == 1550
+			end
+			mapInfo = C_Map.GetMapInfo(mapInfo.parentMapID)
 		end
-		return mapID == 1550
 	end
 end
 
@@ -133,7 +134,7 @@ local function UpdateRosterInfo(force)
 	P.disabled = not P.isInTestMode and (P.disabledZone or size == 0
 		or (size == 1 and P.isUserDisabled)
 		or (GetNumGroupMembers(LE_PARTY_CATEGORY_HOME) == 0 and not E.profile.Party.visibility.finder)
-		or (size > E.profile.Party.visibility.size))
+		or (size > E.profile.Party.groupSize[P.zone]))
 
 	if P.disabled then
 		if oldDisabled == false then
@@ -166,6 +167,7 @@ local function UpdateRosterInfo(force)
 
 			P.groupInfo[guid] = nil
 			info.bar:Hide()
+
 
 			local capGUID = info.auras.capTotemGUID
 			if capGUID then
@@ -340,7 +342,7 @@ end
 
 
 
-function P:GROUP_JOINED(arg1,arg2)
+function P:GROUP_JOINED()
 	if self.isInTestMode then
 		self:Test()
 	end
@@ -381,9 +383,9 @@ function P:PLAYER_ENTERING_WORLD(isInitialLogin, isReloadingUi, isRefresh)
 		return
 	end
 
-	local key = self.isInTestMode and self.testZone or instanceType
-	key = key == "none" and E.profile.Party.noneZoneSetting or (key == "scenario" and E.profile.Party.scenarioZoneSetting) or key
-	E.db = E.profile.Party[key]
+	local zone = self.isInTestMode and self.testZone or instanceType
+	zone = zone == "none" and E.profile.Party.noneZoneSetting or (zone == "scenario" and E.profile.Party.scenarioZoneSetting) or zone
+	E.db = E.profile.Party[zone]
 	self.db = E.db
 
 	for key, frame in pairs(self.extraBars) do
@@ -455,8 +457,7 @@ function P:PLAYER_FLAGS_CHANGED(unitTarget)
 	local oldpvp = self.isPvP
 	self.isPvP = C_PvP.IsWarModeDesired()
 	if oldpvp ~= self.isPvP then
-		self:UpdateBars()
-		self:UpdateExBars()
+		self:UpdateAllBars()
 		CM:EnqueueInspect(true)
 	end
 end

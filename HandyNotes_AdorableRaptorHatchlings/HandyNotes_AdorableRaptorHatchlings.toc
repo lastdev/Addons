@@ -1,0 +1,37 @@
+## Interface: 100100
+## Version: 1.18
+## Author: Taraezor
+## IconTexture: Interface\Icons\Ability_mount_raptor
+## Title: Adorable Raptor Hatchlings
+## Title-deDE: Entzückende Velociraptor-Jungtiere
+## Title-esES: Adorables crías de Velociraptor
+## Title-esMX: Adorables crías de Velociraptor
+## Title-frFR: Adorables vélociraptors petits
+## Title-itIT: Adorabili cuccioli di velociraptor
+## Title-koKR: 사랑스러운 작은 랩터
+## Title-ptBR: Adoráveis ​​filhotes velociraptores
+## Title-ptPT: Adoráveis ​​filhotes velociraptores
+## Title-ruRU: Очаровательные Mаленькие Велоцирапторы
+## Title-zhCN: 可爱的迅猛龙宝宝
+## Title-zhTW: 可愛的迅猛龍寶寶
+## Notes: Helps you find the nests of the adorable little |cFF8258FAvelociraptors
+## Notes-deDE: Hilft Ihnen, die Nester der entzückenden kleinen |cFF8258FAVelociraptoren|r zu finden
+## Notes-esES: Te ayuda a encontrar los nidos de los adorables |cFF8258FAvelociraptores
+## Notes-esMX: Te ayuda a encontrar los nidos de los adorables |cFF8258FAvelociraptores
+## Notes-frFR: Vous aide à trouver les nids des adorables petits |cFF8258FAvélociraptors
+## Notes-itIT: Ti aiuta a trovare i nidi degli adorabili piccoli |cFF8258FAvelociraptor
+## Notes-koKR: 사랑스러운 작은 벨로시 랩터의 둥지를 찾도록 도와줍니다.
+## Notes-ptBR: Ajuda você a encontrar os ninhos dos adoráveis ​​pequenos |cFF8258FAvelociraptors
+## Notes-ptPT: Ajuda você a encontrar os ninhos dos adoráveis ​​pequenos |cFF8258FAvelociraptors
+## Notes-ruRU: Помогает найти гнезда очаровательных маленьких |cFF8258FAвелоцирапторов
+## Notes-zhCN: 帮助您找到可爱的小|cFF8258FA迅猛龙的巢.
+## Notes-zhTW: 幫助您找到可愛的小|cFF8258FA迅猛龍的巢.
+## X-Category: Map & Minimap
+## X-Curse-Project-ID: 487934
+## X-WoWI-ID: 26045
+## RequiredDeps: HandyNotes
+## SavedVariables: HandyNotes_AdorableRaptorHatchlingsDB
+## AddonCompartmentFunc: HandyNotes_AdorableRaptorHatchlings_OnAddonCompartmentClick
+
+Core.lua
+Data.lua

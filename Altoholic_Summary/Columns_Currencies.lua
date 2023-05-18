@@ -766,7 +766,7 @@ Columns.RegisterColumn("Cur_CosmicFlux", {
 Columns.RegisterColumn("Cur_DragonIslesSupplies", {
 	-- Header
 	headerWidth = 100,
-	headerLabel = format("   %s", Formatter.Texture18("Interface\\Icons\\inv_faction_warresources")),
+	headerLabel = format("             %s", Formatter.Texture18("Interface\\Icons\\inv_faction_warresources")),
 	headerOnEnter = function(frame, tooltip) CurrencyHeader_OnEnter(frame, enum.DragonIslesSupplies)	end,
 	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("Cur_DragonIslesSupplies") end,
 	headerSort = function(self, character) return GetTotals(character, enum.DragonIslesSupplies) end,
@@ -779,28 +779,70 @@ Columns.RegisterColumn("Cur_DragonIslesSupplies", {
 
 Columns.RegisterColumn("Cur_ElementalOverflow", {
 	-- Header
-	headerWidth = 100,
-	headerLabel = format("   %s", Formatter.Texture18("Interface\\Icons\\inv_misc_powder_thorium")),
+	headerWidth = 75,
+	headerLabel = format("        %s", Formatter.Texture18("Interface\\Icons\\inv_misc_powder_thorium")),
 	headerOnEnter = function(frame, tooltip) CurrencyHeader_OnEnter(frame, enum.ElementalOverflow)	end,
 	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("Cur_ElementalOverflow") end,
 	headerSort = function(self, character) return GetTotals(character, enum.ElementalOverflow) end,
 	
 	-- Content
-	Width = 100,
+	Width = 75,
 	JustifyH = "CENTER",
 	GetText = function(character)	return GetCurrencyText(character, enum.ElementalOverflow) end,
 })
 
 Columns.RegisterColumn("Cur_StormSigil", {
 	-- Header
-	headerWidth = 100,
-	headerLabel = format("   %s", Formatter.Texture18("Interface\\Icons\\inv_cloudserpent_egg_yellow")),
+	headerWidth = 75,
+	headerLabel = format("        %s", Formatter.Texture18("Interface\\Icons\\inv_cloudserpent_egg_yellow")),
 	headerOnEnter = function(frame, tooltip) CurrencyHeader_OnEnter(frame, enum.StormSigil)	end,
 	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("Cur_StormSigil") end,
 	headerSort = function(self, character) return GetTotals(character, enum.StormSigil) end,
 	
 	-- Content
-	Width = 100,
+	Width = 75,
 	JustifyH = "CENTER",
 	GetText = function(character)	return GetCurrencyText(character, enum.StormSigil) end,
+})
+
+Columns.RegisterColumn("Cur_ConquestPoints", {
+	-- Header
+	headerWidth = 75,
+	headerLabel = format("        %s", Formatter.Texture18("Interface\\Icons\\achievement_legionpvp2tier3")),
+	headerOnEnter = function(frame, tooltip) CurrencyHeader_OnEnter(frame, enum.Conquest) end,
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("Cur_ConquestPoints") end,
+	headerSort = function(self, character) return GetTotals(character, enum.Conquest) end,
+	
+	-- Content
+	Width = 75,
+	JustifyH = "CENTER",
+	GetText = function(character) return GetCurrencyText(character, enum.Conquest) end,
+})
+
+Columns.RegisterColumn("Cur_Honor", {
+	-- Header
+	headerWidth = 75,
+	headerLabel = format("        %s", Formatter.Texture18("Interface\\Icons\\achievement_legionpvptier4")),
+	headerOnEnter = function(frame, tooltip) CurrencyHeader_OnEnter(frame, enum.Honor) end,
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("Cur_Honor") end,
+	headerSort = function(self, character) return GetTotals(character, enum.Honor) end,
+	
+	-- Content
+	Width = 75,
+	JustifyH = "CENTER",
+	GetText = function(character) return GetCurrencyText(character, enum.Honor) end,
+})
+
+Columns.RegisterColumn("Cur_Flightstones", {
+	-- Header
+	headerWidth = 100,
+	headerLabel = format("             %s", Formatter.Texture18("Interface\\Icons\\flightstone-dragonflight")),
+	headerOnEnter = function(frame, tooltip) CurrencyHeader_OnEnter(frame, enum.Flightstones) end,
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("Cur_Flightstones") end,
+	headerSort = function(self, character) return GetTotals(character, enum.Flightstones) end,
+	
+	-- Content
+	Width = 100,
+	JustifyH = "CENTER",
+	GetText = function(character) return GetCurrencyTextWithMax(character, enum.Flightstones) end,
 })

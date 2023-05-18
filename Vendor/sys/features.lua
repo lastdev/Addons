@@ -18,7 +18,7 @@ local function callFeature(feature, method, ...)
 end
 
 --[[ Startup our features ]]
-function Features:Startup()
+function Features:Startup(onready)
 
 
     self.features = {}
@@ -38,23 +38,13 @@ function Features:Startup()
         end
     end
 
-    Addon:RegisterEvent("PLAYER_ENTERING_WORLD", function()
-        if Addon.Systems.Info.IsClassicEra then
-            -- Classic has a saved variables race condition that does not occur on live where
-            -- the variables are not yet loaded. This is a dirty hack to delay the feature init
-            -- by 2s to let that nonsense settle.
-            C_Timer.NewTimer(2, function() Features:BeginInit() end)
-        else
-            Features:BeginInit()
-        end
-    end)
-
-    return { "GetFeature", "IsFeatureEnabled", "EnableFeature", "DisableFeature",  "WithFeature" }
+    onready({ "GetFeature", "IsFeatureEnabled", "EnableFeature", "DisableFeature",  "WithFeature" })
 end
 
 --[[ Called to handle shutting down the features ]]
 function Features:Shutdown()
     for _, feature in pairs(self.features) do
+        feature.onready = nil
         callFeature(feature.instance, "OnTerminate")
     end
 end
@@ -211,6 +201,7 @@ function Features:WithFeature(name, callback)
 
     -- todo handle enabled
 
+
     if (feature.ready) then
         callback(feature.object)
     else
@@ -263,6 +254,8 @@ function Features:OnAllSystemsReady()
 
         self:AddTarget(feature, feature.name, dependencies)
     end
+
+    C_Timer.After(0.001, function() self:BeginInit() end)
 end
 
 Addon.Features = {}

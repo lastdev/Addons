@@ -3,13 +3,13 @@
 
                                              Winter Veil
 
-                                      v1.08 - 26th January 2023
+                                        v1.12 - 6th May 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
 ]]
 
-local myName, ns = ...
+local addonName, ns = ...
 ns.db = {}
 -- From Data.lua
 ns.points = {}
@@ -387,13 +387,6 @@ else
 	end
 	L["AddOn Description"] = "Help for the Winter Veil achievements"
 	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
-end
-
-local function printPC( message )
-	if message then
-		DEFAULT_CHAT_FRAME:AddMessage( ns.colour.prefix .."WinterVeil" ..": " ..ns.colour.plaintext
-			..message.. "\124r" )
-	end
 end
 
 -- Plugin handler for HandyNotes
@@ -941,12 +934,14 @@ ns.options = {
 	},
 }
 
+function HandyNotes_WinterVeil_OnAddonCompartmentClick( addonName, buttonName )
+	Settings.OpenToCategory( "HandyNotes" )
+	LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "WinterVeil" )
+ end
+
 function pluginHandler:OnEnable()
 	local HereBeDragons = LibStub("HereBeDragons-2.0", true)
-	if not HereBeDragons then
-		printPC("HandyNotes is out of date")
-		return
-	end
+	if not HereBeDragons then return end
 	
 	for continentMapID in next, continents do
 		local children = C_Map.GetMapChildrenInfo(continentMapID, nil, true)

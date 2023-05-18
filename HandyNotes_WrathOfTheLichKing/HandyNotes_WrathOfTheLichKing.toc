@@ -1,8 +1,8 @@
-## Interface: 100007
+## Interface: 100100
 ## Title: HandyNotes: Wrath of the Lich King
 ## Notes: Where are the interesting things in Northrend?
 ## Author: Kemayo
-## Version: v11
+## Version: v12.1
 ## DefaultState: enabled
 ## X-Category: Map
 ## X-eMail: kemayo @ gmail DOT com

@@ -482,7 +482,11 @@ local function _GetReputationInfo(character, faction)
 		currentLevel, repEarned, nextLevel = strsplit(",", earned)
 	end
 	
-	rate = repEarned / nextLevel * 100
+	if nextLevel == "0" then
+		rate = 100
+	else
+		rate = repEarned / nextLevel * 100
+	end
 	
 	-- is it a major faction ? (4 Dragonflight renown)
 	local isMajorFaction = factionID and C_Reputation.IsMajorFaction(factionID)

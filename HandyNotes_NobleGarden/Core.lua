@@ -3,13 +3,13 @@
 
                                              Noblegarden
 
-                                       v2.03 - 17th April 2023
+                                        v2.06 - 6th May 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
 ]]
 
-local myName, ns = ...
+local addonName, ns = ...
 ns.db = {}
 -- From Data.lua
 ns.points = {}
@@ -926,12 +926,14 @@ ns.options = {
 	},
 }
 
+function HandyNotes_NobleGarden_OnAddonCompartmentClick( addonName, buttonName )
+	Settings.OpenToCategory( "HandyNotes" )
+	LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "NobleGarden" )
+ end
+
 function pluginHandler:OnEnable()
 	local HereBeDragons = LibStub("HereBeDragons-2.0", true)
-	if not HereBeDragons then
-		printPC("HandyNotes is out of date")
-		return
-	end
+	if not HereBeDragons then return end
 	
 	for continentMapID in next, continents do
 		local children = C_Map.GetMapChildrenInfo(continentMapID, nil, true)

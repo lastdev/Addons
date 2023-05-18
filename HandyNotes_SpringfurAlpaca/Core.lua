@@ -3,13 +3,13 @@
 
                                           Springfur Alpaca
 
-                                      v1.10 - 26th January 2023
+                                        v1.14 - 6th May 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
 ]]
 
-local myName, ns = ...
+local addonName, ns = ...
 ns.db = {}
 -- From Data.lua
 ns.points = {}
@@ -346,14 +346,6 @@ else
 	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
 end
 
--- I use this for debugging
-local function printPC( message )
-	if message then
-		DEFAULT_CHAT_FRAME:AddMessage( ns.colour.prefix ..L["Springfur Alpaca"] ..": " ..ns.colour.plaintext
-			..message .."\124r" )
-	end
-end
-
 -- Plugin handler for HandyNotes
 local function infoFromCoord(mapFile, coord)
 	local point = ns.points[mapFile] and ns.points[mapFile][coord]
@@ -492,12 +484,15 @@ ns.options = {
 	},
 }
 
+function HandyNotes_SpringfurAlpaca_OnAddonCompartmentClick( addonName, buttonName )
+	Settings.OpenToCategory( "HandyNotes" )
+	LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "SpringfurAlpaca" )
+ end
+
 function pluginHandler:OnEnable()
 	local HereBeDragons = LibStub("HereBeDragons-2.0", true)
-	if not HereBeDragons then
-		printPC("HandyNotes is out of date")
-		return
-	end
+	if not HereBeDragons then return end
+	
 	for continentMapID in next, continents do
 		local children = C_Map.GetMapChildrenInfo(continentMapID, nil, true)
 		for _, map in next, children do
@@ -515,7 +510,7 @@ function pluginHandler:OnEnable()
 		end
 	end
 	HandyNotes:RegisterPluginDB("SpringfurAlpaca", pluginHandler, ns.options)
-	ns.db = LibStub("AceDB-3.0"):New("HandyNotes_AlpacaDB", defaults, "Default").profile
+	ns.db = LibStub("AceDB-3.0"):New("HandyNotes_SpringfurAlpacaDB", defaults, "Default").profile
 	pluginHandler:Refresh()
 end
 
@@ -523,4 +518,4 @@ function pluginHandler:Refresh()
 	self:SendMessage("HandyNotes_NotifyUpdate", "SpringfurAlpaca")
 end
 
-LibStub("AceAddon-3.0"):NewAddon(pluginHandler, "HandyNotes_AlpacaDB", "AceEvent-3.0")
+LibStub("AceAddon-3.0"):NewAddon(pluginHandler, "HandyNotes_SpringfurAlpacaDB", "AceEvent-3.0")

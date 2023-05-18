@@ -1,10 +1,10 @@
-lightweight tag ca142a12646f21597a2cbdbc8ca6a71787b35b7d 10.0.7-04
+lightweight tag 13d071deeabb5f9a0b05b5cce15879b682a4ae53 10.1.0-01
 Author:	Dave Hendler <sollaires@gmail.com>
-Date:	Sat Apr 1 11:54:54 2023 -0700
+Date:	Tue Apr 25 11:18:59 2023 -0700
 
-commit ca142a12646f21597a2cbdbc8ca6a71787b35b7d
+commit 13d071deeabb5f9a0b05b5cce15879b682a4ae53
 Author: Dave Hendler <sollaires@gmail.com>
-Date:   Sat Apr 1 11:54:54 2023 -0700
+Date:   Tue Apr 25 11:18:59 2023 -0700
 
-    Forward compatibility with 10.1 GetAddOnMetadata API change
+    Add crafting quality, bump to 10.1 release
 

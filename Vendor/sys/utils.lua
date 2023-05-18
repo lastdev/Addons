@@ -2,14 +2,14 @@
 local AddonName, Addon = ...
 
 function Addon:IsShadowlands()
-    return select(4, GetBuildInfo()) >= 90000
+    return Info.Build.InterfaceVersion >= 90000
 end
 
 -- Gets the version of the addon
 function Addon:GetVersion()
     local version = GetAddOnMetadata(AddonName, "version")
     --[===[@debug@
-    if version == "6.1.2" then version = "Debug" end
+    if version == "6.2.0" then version = "Debug" end
     --@end-debug@]===]
     return version
 end

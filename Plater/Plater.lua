@@ -78,8 +78,12 @@ local LibRangeCheck = LibStub:GetLibrary ("LibRangeCheck-2.0") -- https://www.cu
 local LibTranslit = LibStub:GetLibrary ("LibTranslit-1.0") -- https://github.com/Vardex/LibTranslit
 local LDB = LibStub ("LibDataBroker-1.1", true)
 local LDBIcon = LDB and LibStub ("LibDBIcon-1.0", true)
-local _, platerInternal = ...
+
+local addonId, platerInternal = ...
 _ = nil
+
+--localization
+local LOC = DF.Language.GetLanguageTable(addonId)
 
 local Plater = DF:CreateAddOn ("Plater", "PlaterDB", PLATER_DEFAULT_SETTINGS, InterfaceOptionsFrame and { --options table --TODO: DISABLED FOR DRAGONFLIGHT FOR NOW!
 	name = "Plater Nameplates",
@@ -101,12 +105,12 @@ local Plater = DF:CreateAddOn ("Plater", "PlaterDB", PLATER_DEFAULT_SETTINGS, In
 		},
 	}
 })
-
-Plater.versionString = GetAddOnMetadata("Plater_dev", "Version") or GetAddOnMetadata("Plater", "Version")
+local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
+Plater.versionString = GetAddOnMetadata("Plater", "Version")
 Plater.fullVersionInfo = Plater.versionString .. " - DF v" .. select(2,LibStub:GetLibrary("DetailsFramework-1.0")) .. " - " .. GetBuildInfo()
 function Plater.GetVersionInfo(printOut)
 	-- update, just in case...
-	Plater.versionString = GetAddOnMetadata("Plater_dev", "Version") or GetAddOnMetadata("Plater", "Version")
+	Plater.versionString = GetAddOnMetadata("Plater", "Version")
 	Plater.fullVersionInfo = Plater.versionString .. " - DF v" .. select(2,LibStub:GetLibrary("DetailsFramework-1.0")) .. " - " .. GetBuildInfo()
 	if printOut then print("Plater version info:\n" .. Plater.fullVersionInfo) end
 	return Plater.fullVersionInfo
@@ -992,6 +996,38 @@ local class_specs_coords = {
 	[1468] = {320/512, 384/512, 256/512, 320/512}, --> evoker preservation
 }
 
+Plater.AnchorNames = {
+	LOC["OPTIONS_ANCHOR_TOPLEFT"],
+	LOC["OPTIONS_ANCHOR_LEFT"],
+	LOC["OPTIONS_ANCHOR_BOTTOMLEFT"],
+	LOC["OPTIONS_ANCHOR_BOTTOM"],
+	LOC["OPTIONS_ANCHOR_BOTTOMRIGHT"],
+	LOC["OPTIONS_ANCHOR_RIGHT"],
+	LOC["OPTIONS_ANCHOR_TOPRIGHT"],
+	LOC["OPTIONS_ANCHOR_TOP"],
+	LOC["OPTIONS_ANCHOR_CENTER"],
+	LOC["OPTIONS_ANCHOR_INNERLEFT"],
+	LOC["OPTIONS_ANCHOR_INNERRIGHT"],
+	LOC["OPTIONS_ANCHOR_INNERTOP"],
+	LOC["OPTIONS_ANCHOR_INNERBOTTOM"],
+}
+
+Plater.AnchorNamesByPhraseId = {
+	"OPTIONS_ANCHOR_TOPLEFT",
+	"OPTIONS_ANCHOR_LEFT",
+	"OPTIONS_ANCHOR_BOTTOMLEFT",
+	"OPTIONS_ANCHOR_BOTTOM",
+	"OPTIONS_ANCHOR_BOTTOMRIGHT",
+	"OPTIONS_ANCHOR_RIGHT",
+	"OPTIONS_ANCHOR_TOPRIGHT",
+	"OPTIONS_ANCHOR_TOP",
+	"OPTIONS_ANCHOR_CENTER",
+	"OPTIONS_ANCHOR_INNERLEFT",
+	"OPTIONS_ANCHOR_INNERRIGHT",
+	"OPTIONS_ANCHOR_INNERTOP",
+	"OPTIONS_ANCHOR_INNERBOTTOM",
+}
+
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --> cached value ~cache
 --Plater allocate several values in memory to save performance (cpu), this may increase memory usage
@@ -1208,6 +1244,7 @@ local class_specs_coords = {
 				type = "data source",
 				icon = [[Interface\AddOns\Plater\images\cast_bar]],
 				text = "Plater",
+				showInCompartment = true,
 				
 				HotCornerIgnore = true,
 				
@@ -1232,7 +1269,7 @@ local class_specs_coords = {
 						GameCooltip:SetOption ("TextSize", 10)
 						
 						--> disable minimap icon
-						local disable_minimap = function()
+						local toggle_minimap = function()
 							PlaterDBChr.minimap.hide = not PlaterDBChr.minimap.hide
 							
 							if (PlaterDBChr.minimap.hide) then
@@ -1243,6 +1280,14 @@ local class_specs_coords = {
 							LDBIcon:Refresh ("Plater", PlaterDBChr.minimap)
 						end
 						
+						local toggle_compartment = function()
+							if LDBIcon:IsButtonInCompartment("Plater") then
+								LDBIcon:RemoveButtonFromCompartment("Plater")
+							else
+								LDBIcon:AddButtonToCompartment("Plater")
+							end
+						end
+						
 						GameCooltip:AddMenu (1, function() Plater.EnableProfiling(true) end, true, nil, nil, "Start profiling", nil, true)
 						GameCooltip:AddIcon ([[Interface\Addons\Plater\media\sphere_full_64]], 1, 1, 14, 14, 0, 1, 0, 1, "red")
 						GameCooltip:AddMenu (1, function() Plater.DisableProfiling() end, true, nil, nil, "Stop profiling", nil, true)
@@ -1250,7 +1295,9 @@ local class_specs_coords = {
 						GameCooltip:AddMenu (1, function() Plater.ShowPerfData() end, true, nil, nil, "Show profiling data", nil, true)
 						GameCooltip:AddIcon ([[Interface\Addons\Plater\media\eye_64]], 1, 1, 14, 14, 0, 1, 0, 1, "green")
 						GameCooltip:AddLine ("$div")
-						GameCooltip:AddMenu (1, disable_minimap, true, nil, nil, "Hide/Show Minimap Icon", nil, true)
+						GameCooltip:AddMenu (1, toggle_minimap, true, nil, nil, "Hide/Show Minimap Icon", nil, true)
+						GameCooltip:AddIcon ([[Interface\Buttons\UI-Panel-HideButton-Disabled]], 1, 1, 14, 14, 7/32, 24/32, 8/32, 24/32, "gray")
+						GameCooltip:AddMenu (1, toggle_compartment, true, nil, nil, "Hide/Show Compartment Entry", nil, true)
 						GameCooltip:AddIcon ([[Interface\Buttons\UI-Panel-HideButton-Disabled]], 1, 1, 14, 14, 7/32, 24/32, 8/32, 24/32, "gray")
 						
 						--GameCooltip:SetBackdrop (1, _detalhes.tooltip_backdrop, nil, _detalhes.tooltip_border_color)
@@ -1272,6 +1319,9 @@ local class_specs_coords = {
 			if (databroker and not LDBIcon:IsRegistered ("Plater")) then
 				PlaterDBChr.minimap = PlaterDBChr.minimap or {}
 				LDBIcon:Register ("Plater", databroker, PlaterDBChr.minimap)
+				if not PlaterDBChr.minimap.showInCompartment == true then
+					--LDBIcon:AddButtonToCompartment("Plater") -- this is opt-in in LDBIcon (for now)
+				end
 			end
 			
 			Plater.databroker = databroker
@@ -1932,13 +1982,9 @@ local class_specs_coords = {
 	function Plater.RunScheduledUpdate (timerObject) --private
 		Plater.StartLogPerformanceCore("Plater-Core", "Update", "RunScheduledUpdate")
 
-		local unitGUID = timerObject.GUID
 		local unitId = timerObject.unitId
 		local plateFrame = C_NamePlate.GetNamePlateForUnit (unitId)
 		
-		
-		--checking the serial of the unit is the same in case this nameplate is being used on another unit
-		--if (plateFrame and (unitGUID == plateFrame [MEMBER_GUID])) then
 		if (plateFrame) then
 			--save user input data (usualy set from scripts) before call the unit added event
 				local unitFrame = plateFrame.unitFrame
@@ -1988,12 +2034,14 @@ local class_specs_coords = {
 
 	--run a delayed update on the namepalte, this is used when the client receives an information from the server but does not update the state immediately
 	--this usualy happens with faction and flag changes
-	function Plater.ScheduleUpdateForNameplate (plateFrame) --private
+	function Plater.ScheduleUpdateForNameplate (plateFrame, passedUnitId, scheduleTime) --private
 	
-		if not plateFrame.unitFrame.PlaterOnScreen and not unitId then
+		local unitId = passedUnitId or plateFrame [MEMBER_UNITID]
+		if not unitId then -- well... fuck.
+			plateFrame.HasUpdateScheduled:Cancel()
 			return
 		end
-	
+		
 		--check if there's already an update scheduled for this unit
 		if (plateFrame.HasUpdateScheduled and not plateFrame.HasUpdateScheduled._cancelled) then
 			if unitId and (not plateFrame.HasUpdateScheduled.unitId or plateFrame.HasUpdateScheduled.unitId ~= unitId) then
@@ -2003,9 +2051,8 @@ local class_specs_coords = {
 			end
 		end
 		
-		plateFrame.HasUpdateScheduled = C_Timer.NewTimer (0, Plater.RunScheduledUpdate) --next frame
-		plateFrame.HasUpdateScheduled.GUID = plateFrame [MEMBER_GUID]
-		plateFrame.HasUpdateScheduled.unitId = plateFrame [MEMBER_UNITID]
+		plateFrame.HasUpdateScheduled = C_Timer.NewTimer (scheduleTime or 0, Plater.RunScheduledUpdate) --scheduleTime or next frame
+		plateFrame.HasUpdateScheduled.unitId = unitId
 	
 	end
 
@@ -2048,6 +2095,7 @@ local class_specs_coords = {
 		["nameplateLargerScale"] = true,
 		["nameplateLargeTopInset"] = true,
 		["nameplateMaxDistance"] = true,
+		["nameplatePlayerMaxDistance"] = true,
 		["nameplateMinScale"] = true,
 		["nameplateMotion"] = true,
 		["nameplateMotionSpeed"] = true,
@@ -2162,16 +2210,18 @@ local class_specs_coords = {
 		elseif cvars_to_store [cvar] then
 			cvarTable [cvar] = Plater.ParseCVarValue(value)
 			local callstack = debugstack(2) -- starts at "SetCVar" or caller
-			local caller, line = callstack:match("\"@([^\"]+)\"%]:(%d+)")
-			if not caller then
-				caller, line = callstack:match("in function <([^:%[>]+):(%d+)>")
+			if callstack then
+				local caller, line = callstack:match("\"@([^\"]+)\"%]:(%d+)")
+				if not caller then
+					caller, line = callstack:match("in function <([^:%[>]+):(%d+)>")
+				end
 			end
 
 			--print((caller and caller .. ":" .. line) or callstack)
 			
 			local isCVarUtil = (caller and caller:lower():find("[\\/]sharedxml[\\/]cvarutil%.lua"))
 			
-			cvarLastChangedTable [cvar] = not isCVarUtil and (caller and (caller .. ":" .. line)) or callstack
+			cvarLastChangedTable [cvar] = not isCVarUtil and (caller and (caller .. ":" .. line)) or callstack or "N/A"
 		end
 		
 	end
@@ -2391,18 +2441,29 @@ local class_specs_coords = {
 	function Plater.ApplyPatches() --private ~updates ~scriptupdates
 		if (PlaterPatchLibrary) then
 			local currentPatch = Plater.db.profile.patch_version
-			for i = currentPatch+1, #PlaterPatchLibrary do
-			
-				local patch = PlaterPatchLibrary [i]
-				Plater:Msg ("Applied Patch #" .. i .. ":")
-				
-				for o = 1, #patch.Notes do
-					print (patch.Notes [o])
+			local bSkipNonEssentialPatches = PlaterDB.SkipNonEssentialPatches
+			for patchId = currentPatch+1, #PlaterPatchLibrary do
+				local bCanInstallPatch = true
+
+				if (bSkipNonEssentialPatches) then
+					if (PlaterPatchLibrary[patchId].NotEssential) then
+						print(LOC["OPTIONS_NOESSENTIAL_SKIP_ALERT"], PlaterPatchLibrary[patchId].Notes[1]) --"Skipped non-essential patch:"
+						bCanInstallPatch = false
+					end
+				end
+
+				if (bCanInstallPatch) then
+					local patch = PlaterPatchLibrary [patchId]
+					Plater:Msg ("Applied Patch #" .. patchId .. ":")
+					
+					for o = 1, #patch.Notes do
+						print (patch.Notes [o])
+					end
+					
+					DF:Dispatch (patch.Func)
 				end
 				
-				DF:Dispatch (patch.Func)
-				
-				Plater.db.profile.patch_version = i
+				Plater.db.profile.patch_version = patchId
 			end
 			
 			--do not clear patch library, when creating a new profile it'll need to re-apply patches
@@ -2632,13 +2693,12 @@ local class_specs_coords = {
 				end
 
 				--can the user attack or no longer attack?
-				local attackableChanged = plateFrame.PlayerCannotAttack ~= UnitCanAttack ("player", unit)
-				
+				local attackableChanged = plateFrame.PlayerCannotAttack ~= not UnitCanAttack ("player", unit)
 				if (reactionChanged or attackableChanged or not plateFrame.unitFrame.PlaterOnScreen) then
 					--print ("UNIT_FLAG", plateFrame, issecure(), unit, unit and UnitName (unit))
-					--Plater.ScheduleUpdateForNameplate (plateFrame)
+					--Plater.ScheduleUpdateForNameplate (plateFrame, unit)
 					
-					Plater.RunScheduledUpdate({unitId = unit, GUID = plateFrame [MEMBER_GUID]}) -- do this now
+					Plater.RunScheduledUpdate({unitId = unit}) -- do this now
 				end
 			end
 		end,
@@ -2831,13 +2891,16 @@ local class_specs_coords = {
 				if (plateFrame and plateFrame.unitFrame.PlaterOnScreen) then
 					local unitFrame = plateFrame.unitFrame
 					local unitName = UnitName (unitID)
+					local unitNameTranslit = unitName
 					if DB_USE_NAME_TRANSLIT then
-						unitName = LibTranslit:Transliterate(unitName, TRANSLIT_MARK)
+						unitNameTranslit = LibTranslit:Transliterate(unitName, TRANSLIT_MARK)
 					end
-					plateFrame [MEMBER_NAME] = unitName
+					plateFrame [MEMBER_NAME] = unitNameTranslit
 					plateFrame [MEMBER_NAMELOWER] = lower (plateFrame [MEMBER_NAME])
+					plateFrame.unitNameInternal = unitName
 					unitFrame [MEMBER_NAME] = plateFrame [MEMBER_NAME]
 					unitFrame [MEMBER_NAMELOWER] = plateFrame [MEMBER_NAMELOWER]
+					unitFrame.unitNameInternal = unitName
 					
 					if (plateFrame.IsSelf) then
 						--name isn't shown in the personal bar
@@ -3095,13 +3158,7 @@ local class_specs_coords = {
 			for _, plateFrame in ipairs (Plater.GetAllShownPlates()) do
 				if plateFrame.unitFrame.PlaterOnScreen then
 					if plateFrame [MEMBER_GUID] == arg1 or plateFrame [MEMBER_GUID] == arg2 then
-						if plateFrame.IsNpcWithoutHealthBar then
-							local isSoftInteract = UnitIsUnit(plateFrame [MEMBER_UNITID], "softinteract")
-							plateFrame.isSoftInteract = isSoftInteract
-							plateFrame.unitFrame.isSoftInteract = isSoftInteract
-							Plater.UpdatePlateText (plateFrame, DB_PLATE_CONFIG [plateFrame.unitFrame.ActorType], false)
-							--Plater.UpdatePlateFrame (plateFrame)
-						end
+						Plater.UpdateSoftInteractTarget(plateFrame, true)
 					end
 				end
 			end
@@ -3186,6 +3243,9 @@ local class_specs_coords = {
 				hooksecurefunc(newUnitFrame.castBar, "OnTick", Plater.CastBarOnTick_Hook)
 				
 				newUnitFrame.HasHooksRegistered = true
+				
+				--to ensure all applies
+				newUnitFrame:UpdateTargetOverlay()
 				
 				--backup the unit frame address so we can restore it in case a script messes up and override the unit frame
 				plateFrame.unitFramePlater = newUnitFrame
@@ -3405,6 +3465,7 @@ local class_specs_coords = {
 
 				--raid target outside the health bar
 				plateFrame.unitFrame.PlaterRaidTargetFrame = CreateFrame ("frame", nil, plateFrame.unitFrame, BackdropTemplateMixin and "BackdropTemplate")
+				--plateFrame.unitFrame.PlaterRaidTargetFrame = CreateFrame ("frame", nil, plateFrame.unitFrame.healthBar, BackdropTemplateMixin and "BackdropTemplate")
 				local targetFrame = plateFrame.unitFrame.PlaterRaidTargetFrame
 				targetFrame:SetSize (22, 22)
 				PixelUtil.SetPoint (targetFrame, "right", healthBar, "left", -15, 0)
@@ -3692,6 +3753,26 @@ local class_specs_coords = {
 				plateFrame.unitFrame.aggroGlowLower:SetHeight (4)
 				plateFrame.unitFrame.aggroGlowLower:Hide()
 
+			--> soft-interact icon
+				plateFrame.unitFrame.softInteractIconFrame = CreateFrame ("frame",plateFrame.unitFrame:GetName() .. "softInteractIconFrame", plateFrame, BackdropTemplateMixin and "BackdropTemplate")
+				plateFrame.unitFrame.softInteractIcon = plateFrame.unitFrame.softInteractIconFrame:CreateTexture("$parentIcon", "OVERLAY")
+				plateFrame.unitFrame.softInteractIcon:SetParent(plateFrame)
+				plateFrame.unitFrame.softInteractIcon:SetTexture(136243)
+				plateFrame.unitFrame.softInteractIcon:Show()
+				plateFrame.unitFrame.softInteractIconFrame:SetFrameLevel(plateFrame.unitFrame.healthBar:GetFrameLevel() + 25)
+				plateFrame.unitFrame.softInteractIconFrame.Mask = plateFrame.unitFrame.softInteractIconFrame:CreateMaskTexture(nil, "OVERLAY", nil, 1)
+				plateFrame.unitFrame.softInteractIconFrame.Mask:Show()
+				plateFrame.unitFrame.softInteractIconFrame.Mask:SetAtlas("CircleMaskScalable", true)
+				--plateFrame.unitFrame.softInteractIconFrame.Mask:SetScale(1)
+				plateFrame.unitFrame.softInteractIcon:AddMaskTexture(plateFrame.unitFrame.softInteractIconFrame.Mask)
+				plateFrame.unitFrame.softInteractIconFrame.Mask:ClearAllPoints()
+				PixelUtil.SetPoint(plateFrame.unitFrame.softInteractIconFrame.Mask, "CENTER", plateFrame.unitFrame.softInteractIconFrame, "CENTER", 0, 0)
+				plateFrame.unitFrame.softInteractIconFrame.Mask:SetAllPoints(plateFrame.unitFrame.softInteractIcon)
+				plateFrame.unitFrame.softInteractIconFrame:Hide()
+				plateFrame.unitFrame.softInteractIcon.anchor = { side = 8, x = 0, y = 18, }
+				plateFrame.unitFrame.softInteractIcon.size = 24
+				--Plater.SetAnchor(plateFrame.unitFrame.softInteractIconFrame, plateFrame.unitFrame.softInteractIcon.anchor or { side = 8, x = 0, y = 18, }, plateFrame.unitFrame.healthBar)
+				--Plater.SetAnchor(plateFrame.unitFrame.softInteractIconFrame, plateFrame.unitFrame.softInteractIcon.anchor or { side = 8, x = 0, y = 18, }, plateFrame.unitFrame.PlateFrame)
 			
 			--> name plate created hook
 				if (HOOK_NAMEPLATE_CREATED.ScriptAmount > 0) then
@@ -3753,9 +3834,10 @@ local class_specs_coords = {
 			end
 			
 			--get and format the reaction to always be the value of the constants, then cache the reaction in some widgets for performance
-			local isSoftInteract = UnitIsUnit(unitID, "softinteract")
+			Plater.UpdateSoftInteractTarget(plateFrame)
 			local reaction = UnitReaction (unitID, "player")
-			local isObject = (IS_WOW_PROJECT_MAINLINE and UnitIsGameObject(unitID)) or reaction == nil
+			local isSoftInteract = plateFrame.isSoftInteract
+			local isObject = plateFrame.isObject
 			local isSoftInteractObject = isObject and isSoftInteract
 			reaction = reaction or isSoftInteract and Plater.UnitReaction.UNITREACTION_NEUTRAL or Plater.UnitReaction.UNITREACTION_HOSTILE
 			reaction = reaction <= Plater.UnitReaction.UNITREACTION_HOSTILE and Plater.UnitReaction.UNITREACTION_HOSTILE or reaction >= Plater.UnitReaction.UNITREACTION_FRIENDLY and Plater.UnitReaction.UNITREACTION_FRIENDLY or Plater.UnitReaction.UNITREACTION_NEUTRAL
@@ -3769,8 +3851,7 @@ local class_specs_coords = {
 			plateFrame.unitFrame [MEMBER_NPCID] = nil
 			plateFrame [MEMBER_GUID] = UnitGUID (unitID) or ""
 			plateFrame.unitFrame [MEMBER_GUID] = plateFrame [MEMBER_GUID]
-			plateFrame.isSoftInteract = isSoftInteract
-			plateFrame.unitFrame.isSoftInteract = isSoftInteract
+			
 			if (not isPlayer) then
 				Plater.GetNpcID (plateFrame)
 			end
@@ -3829,10 +3910,13 @@ local class_specs_coords = {
 				
             end
 			
+			-- we should clear stuff here, tbh...
+			
 			if isPlateEnabled then
 				ENABLED_BLIZZARD_PLATEFRAMES[blizzardPlateFrameID] = false
 				
 			else
+				plateFrame.unitFrame.PlaterOnScreen = false
 				ENABLED_BLIZZARD_PLATEFRAMES[blizzardPlateFrameID] = true
 				plateFrame.unitFrame:Hide()
 				
@@ -3848,9 +3932,12 @@ local class_specs_coords = {
 				return
 			end
 			
+			local requiresScheduledUpdate = false
 			if not NAMEPLATES_ON_SCREEN_CACHE[unitID] then
 				NAMEPLATES_ON_SCREEN_CACHE[unitID] = true
 				NUM_NAMEPLATES_ON_SCREEN = NUM_NAMEPLATES_ON_SCREEN + 1
+			else
+				requiresScheduledUpdate = true
 			end
 			
 			--hide blizzard namepaltes
@@ -3862,6 +3949,8 @@ local class_specs_coords = {
 			plateFrame.unitFrame.PlaterOnScreen = true
 			
 			Plater.AddToAuraUpdate(unitID)
+			-- update DBM and BigWigs nameplate auras
+			Plater.EnsureUpdateBossModAuras(plateFrame [MEMBER_GUID])
 			
 			--save the last unit type shown in this plate
 			plateFrame.PreviousUnitType = plateFrame.actorType
@@ -3994,7 +4083,7 @@ local class_specs_coords = {
 			
 			unitFrame.IsInRange = nil
 			
-			--check if this nameplate has an update scheduled
+			--check if this nameplate has an update scheduled and cancel it in any case
 			if (plateFrame.HasUpdateScheduled) then
 				if (not plateFrame.HasUpdateScheduled._cancelled) then
 					plateFrame.HasUpdateScheduled:Cancel()
@@ -4002,14 +4091,20 @@ local class_specs_coords = {
 				plateFrame.HasUpdateScheduled = nil
 			end
 			
+			if requiresScheduledUpdate then --this COULD counter some rare issues with feign death instant cancel where nameplate hide/show is weird
+				Plater.ScheduleUpdateForNameplate (plateFrame, unitID, 0.5) --half second enough maybe
+			end
+			
 			--cache values
 			local unitName = UnitName (unitID) or ""
+			local unitNameTranslit = unitName
 			if DB_USE_NAME_TRANSLIT then
-				unitName = LibTranslit:Transliterate(unitName, TRANSLIT_MARK)
+				unitNameTranslit = LibTranslit:Transliterate(unitName, TRANSLIT_MARK)
 			end
-			plateFrame [MEMBER_NAME] = unitName
+			plateFrame [MEMBER_NAME] = unitNameTranslit
 			plateFrame [MEMBER_NAMELOWER] = lower (plateFrame [MEMBER_NAME])
 			plateFrame ["namePlateClassification"] = UnitClassification (unitID)
+			plateFrame.unitNameInternal = unitName
 			
 			--clear name schedules
 			unitFrame.ScheduleNameUpdate = nil
@@ -4020,6 +4115,7 @@ local class_specs_coords = {
 			unitFrame [MEMBER_NAME] = plateFrame [MEMBER_NAME]
 			unitFrame [MEMBER_NAMELOWER] = plateFrame [MEMBER_NAMELOWER]
 			unitFrame ["namePlateClassification"] = plateFrame ["namePlateClassification"]
+			unitFrame.unitNameInternal = unitName
 			unitFrame [MEMBER_UNITID] = unitID
 			unitFrame.namePlateThreatPercent = 0
 			unitFrame.namePlateThreatIsTanking = nil
@@ -4073,6 +4169,8 @@ local class_specs_coords = {
 					unitFrame.IsSelf = true --this is the value exposed to scripts
 					castBar.IsSelf = true --this is the value exposed to scripts
 					plateFrame.NameAnchor = 0
+					plateFrame.PlayerCannotAttack = true
+					unitFrame.PlayerCannotAttack = true
 					
 					--do not allow the framework to show the unit name
 					unitFrame.Settings.ShowUnitName = false
@@ -4156,7 +4254,7 @@ local class_specs_coords = {
 							--add the npc in the npcid cache
 							if (not DB_NPCIDS_CACHE [plateFrame [MEMBER_NPCID]] and (Plater.ZoneInstanceType == "raid" or Plater.ZoneInstanceType == "party" or Plater.ZoneInstanceType == "scenario") and plateFrame [MEMBER_NPCID]) then
 								if (UNKNOWN ~= plateFrame [MEMBER_NAME]) then --UNKNOWN is the global string from blizzard
-									DB_NPCIDS_CACHE [plateFrame [MEMBER_NPCID]] = {plateFrame [MEMBER_NAME], Plater.ZoneName or "UNKNOWN"}
+									DB_NPCIDS_CACHE [plateFrame [MEMBER_NPCID]] = {plateFrame [MEMBER_NAME], Plater.ZoneName or "UNKNOWN", Plater.Locale or "enGB"}
 								end
 							end
 							
@@ -4300,8 +4398,12 @@ local class_specs_coords = {
 			plateFrame.unitFrame.QuestInfo = {}
 			plateFrame [MEMBER_TARGET] = nil
 			
+			plateFrame.isObject = nil
+			plateFrame.unitFrame.isObject = nil
 			plateFrame.isSoftInteract = nil
 			plateFrame.unitFrame.isSoftInteract = nil
+			plateFrame.isSoftInteractObject = nil
+			plateFrame.unitFrame.isSoftInteractObject = nil
 			
 			local healthBar = plateFrame.unitFrame.healthBar
 			if (healthBar.TargetHeight) then
@@ -4483,6 +4585,22 @@ function Plater.InitializeSavedVariables()
 end
 
 function Plater.OnInit() --private --~oninit ~init
+	do
+		local languageCurrentVersion = 1
+		if (not PlaterLanguage) then
+			PlaterLanguage = {
+				language = GetLocale(), 
+				version = languageCurrentVersion,
+			}
+		end
+
+		if (PlaterLanguage.version < languageCurrentVersion) then
+			--do stuff in the future
+		end
+
+		DF.Language.SetCurrentLanguage(addonId, PlaterLanguage.language)
+	end
+
 	Plater.InitializeSavedVariables()
 	Plater.RefreshDBUpvalues()
 	
@@ -4591,6 +4709,9 @@ function Plater.OnInit() --private --~oninit ~init
 			SetCVar ("nameplateRemovalAnimation", DB_USE_QUICK_HIDE and 0 or 1)
 			SetCVar ("nameplateShowFriendlyBuffs", 0)
 			SetCVar ("nameplateShowPersonalCooldowns", 0)
+			if IS_WOW_PROJECT_MAINLINE and not GetCVar("nameplatePlayerMaxDistance") then -- this is 10.1 workaround.
+				SetCVar ("nameplatePlayerMaxDistance", 60)
+			end
 		end
 	
 	--schedule data update
@@ -6436,6 +6557,8 @@ end
 			local isSoftInteract = UnitIsUnit(tickFrame.unit, "softinteract")
 			unitFrame.isSoftInteract = isSoftInteract
 			unitFrame.PlateFrame.isSoftInteract = isSoftInteract
+			unitFrame.isSoftInteractObject = isSoftInteract and (unitFrame.PlateFrame.isObject or unitFrame.isObject)
+			unitFrame.PlateFrame.isSoftInteractObject = isSoftInteract and (unitFrame.PlateFrame.isObject or unitFrame.isObject)
 			
 			local wasCombat = unitFrame.InCombat
 			unitFrame.InCombat = UnitAffectingCombat (tickFrame.unit) or (Plater.ForceInCombatUnits[unitFrame [MEMBER_NPCID]] and PLAYER_IN_COMBAT) or false
@@ -6956,6 +7079,45 @@ end
 		Plater.EndLogPerformanceCore("Plater-Core", "Update", "UpdateNameplateThreat")
 	end	
 	
+	function Plater.UpdateSoftInteractTarget(plateFrame, updateText)
+		local unitFrame = plateFrame.unitFrame
+		
+		local isSoftInteract = UnitIsUnit(plateFrame [MEMBER_UNITID], "softinteract")
+		local reaction = UnitReaction (plateFrame [MEMBER_UNITID], "player")
+		local isObject = (IS_WOW_PROJECT_MAINLINE and UnitIsGameObject(plateFrame [MEMBER_UNITID])) or reaction == nil
+		local isSoftInteractObject = isObject and isSoftInteract
+		plateFrame.isSoftInteract = isSoftInteract
+		unitFrame.isSoftInteract = isSoftInteract
+		plateFrame.isObject = isObject
+		unitFrame.isObject = isObject
+		plateFrame.isSoftInteractObject = isSoftInteractObject
+		unitFrame.isSoftInteractObject = isSoftInteractObject
+		
+		if plateFrame.IsNpcWithoutHealthBar and updateText then
+			Plater.UpdatePlateText (plateFrame, DB_PLATE_CONFIG [plateFrame.unitFrame.ActorType], false)
+		end
+		
+		if isSoftInteract and Plater.db.profile.show_softinteract_icons then
+			--re-anchor
+			Plater.SetAnchor(unitFrame.softInteractIcon, unitFrame.softInteractIcon.anchor or { side = 8, x = 0, y = 18, }, plateFrame)
+			
+			local size = unitFrame.softInteractIcon.size or 24
+			unitFrame.softInteractIconFrame:SetSize(size, size)
+			unitFrame.softInteractIcon:SetDesaturated(false)
+			unitFrame.softInteractIcon:SetIgnoreParentAlpha(true)
+			unitFrame.softInteractIcon:SetSize(size, size)
+			unitFrame.softInteractIconFrame:Show()
+			unitFrame.softInteractIcon:Show()
+			
+			local hasTexture =  SetUnitCursorTexture(unitFrame.softInteractIcon, plateFrame [MEMBER_UNITID], nil, true)
+			if not hasTexture then
+				unitFrame.softInteractIcon:SetTexture(136243)
+			end
+		else
+			unitFrame.softInteractIconFrame:Hide()
+		end
+	end
+	
 	-- ~target ~selection
 	function Plater.UpdateTarget (plateFrame) --private
 
@@ -7192,7 +7354,7 @@ end
 					
 				elseif (i == 2) then
 					--PixelUtil.SetPoint (texture, "right", plateFrame.unitFrame.healthBar, "right", x * scale, -y * scale)
-					texture:SetPoint ("right", plateFrame.unitFrame.healthBar, "right", x * scale, -y * scale)
+					texture:SetPoint ("right", plateFrame.unitFrame.healthBar, "right", x * scale, y * scale)
 				end
 			end
 			
@@ -7290,7 +7452,7 @@ end
 				DF:SetFontColor (nameFontString, unpack(Plater.db.profile.plate_config [ACTORTYPE_FRIENDLY_PLAYER].actorname_guild_color))
 				plateFrame.isFriend = true
 				
-			elseif (Plater.db.profile.plate_config [ACTORTYPE_FRIENDLY_PLAYER].actorname_use_friends_color and Plater.FriendsCache [plateFrame [MEMBER_NAME]]) then
+			elseif (Plater.db.profile.plate_config [ACTORTYPE_FRIENDLY_PLAYER].actorname_use_friends_color and Plater.FriendsCache [plateFrame.unitNameInternal]) then
 				--is regular friend
 				DF:SetFontColor (nameFontString, unpack(Plater.db.profile.plate_config [ACTORTYPE_FRIENDLY_PLAYER].actorname_friend_color))
 				--DF:SetFontOutline (nameFontString, plateConfigs.actorname_text_shadow)
@@ -7332,7 +7494,11 @@ end
 			--there's two ways of showing this for friendly npcs (selected from the options panel): show all names or only npcs with profession names
 			--enemy npcs always show all
 			if (plateConfigs.all_names or (plateFrame.isSoftInteract and Plater.db.profile.show_healthbars_on_softinteract)) then
-				plateFrame.ActorNameSpecial:Show()
+				if not plateFrame.isObject or (plateFrame.isObject and not Plater.db.profile.hide_name_on_game_objects) then
+					plateFrame.ActorNameSpecial:Show()
+				else
+					plateFrame.ActorNameSpecial:Hide()
+				end
 				plateFrame.CurrentUnitNameString = plateFrame.ActorNameSpecial
 				Plater.UpdateUnitName (plateFrame)
 				
@@ -7481,7 +7647,7 @@ end
 			DF:SetFontColor (guildString, unpack(Plater.db.profile.plate_config [ACTORTYPE_FRIENDLY_PLAYER].actorname_guild_color))
 			plateFrame.isFriend = true
 		
-		elseif (Plater.db.profile.plate_config [ACTORTYPE_FRIENDLY_PLAYER].actorname_use_friends_color and Plater.FriendsCache [plateFrame [MEMBER_NAME]]) then
+		elseif (Plater.db.profile.plate_config [ACTORTYPE_FRIENDLY_PLAYER].actorname_use_friends_color and Plater.FriendsCache [plateFrame.unitNameInternal]) then
 			--is regular friend
 			DF:SetFontColor (nameString, unpack(Plater.db.profile.plate_config [ACTORTYPE_FRIENDLY_PLAYER].actorname_friend_color))
 			DF:SetFontColor (guildString, unpack(Plater.db.profile.plate_config [ACTORTYPE_FRIENDLY_PLAYER].actorname_friend_color))
@@ -8019,7 +8185,7 @@ end
 			plateFrame.IsFriendlyPlayerWithoutHealthBar = false
 			
 			--check if this is an enemy npc but the player cannot attack it
-			if (plateFrame.PlayerCannotAttack and not DB_SHOW_HEALTHBARS_FOR_NOT_ATTACKABLE) then
+			if (plateFrame.PlayerCannotAttack and not DB_SHOW_HEALTHBARS_FOR_NOT_ATTACKABLE and not unitFrame.IsSelf) or unitFrame.isSoftInteractObject then
 				healthBar:Hide()
 				buffFrame:Hide()
 				buffFrame2:Hide()
@@ -8176,6 +8342,7 @@ end
 		--update options in the extra icons row frame
 		if (unitFrame.ExtraIconFrame.RefreshID < PLATER_REFRESH_ID) then
 			Plater.SetAnchor (unitFrame.ExtraIconFrame, Plater.db.profile.extra_icon_anchor)
+			unitFrame.ExtraIconFrame:SetOption ("anchor", Plater.db.profile.extra_icon_anchor)
 			unitFrame.ExtraIconFrame:SetOption ("show_text", Plater.db.profile.extra_icon_show_timer)
 			unitFrame.ExtraIconFrame:SetOption ("text_font", Plater.db.profile.extra_icon_timer_font)
 			unitFrame.ExtraIconFrame:SetOption ("text_size", Plater.db.profile.extra_icon_timer_size)
@@ -8854,7 +9021,7 @@ end
 		highlightOverlay.HighlightTexture:SetAllPoints()
 		highlightOverlay.HighlightTexture:SetColorTexture (1, 1, 1, 1)
 		highlightOverlay.HighlightTexture:SetAlpha (1)
-		highlightOverlay:Hide()
+		highlightOverlay.HighlightTexture:Hide()
 		
 		plateFrame.unitFrame.HighlightFrame = highlightOverlay
 	end
@@ -9363,11 +9530,18 @@ end
 		end,
 		
 		SPELL_CAST_SUCCESS = function (time, token, hidding, sourceGUID, sourceName, sourceFlag, sourceFlag2, targetGUID, targetName, targetFlag, targetFlag2, spellID, spellName, spellType, amount, overKill, school, resisted, blocked, absorbed, isCritical)
-			if (not DB_CAPTURED_SPELLS[spellID]) then
+			if (not DB_CAPTURED_SPELLS[spellID] or DB_CAPTURED_SPELLS[spellID].isChanneled == nil) then -- check isChanneled to ensure update of already existing data
 				if (not sourceFlag or bit.band(sourceFlag, 0x00000400) == 0) then --not a player
 					local npcId = Plater:GetNpcIdFromGuid(sourceGUID or "")
+					local isChanneled = false
+					if sourceGUID and UnitTokenFromGUID then -- this is the only proper way to check for channeled spells...
+						local unit = UnitTokenFromGUID(sourceGUID)
+						if unit and UnitChannelInfo (unit) then
+							isChanneled = true
+						end 
+					end
 					if (npcId and npcId ~= 0) then
-						DB_CAPTURED_SPELLS[spellID] = {event = token, source = sourceName, npcID = npcId, encounterID = Plater.CurrentEncounterID, encounterName = Plater.CurrentEncounterName}
+						DB_CAPTURED_SPELLS[spellID] = {event = token, source = sourceName, npcID = npcId, encounterID = Plater.CurrentEncounterID, encounterName = Plater.CurrentEncounterName, isChanneled = isChanneled}
 					end
 				end
 			end
@@ -9474,14 +9648,12 @@ end
 		local cbMode = tonumber(GetCVar("colorblindMode")) or 0
 		if IS_WOW_PROJECT_MAINLINE then
 			local tooltipData = C_TooltipInfo.GetHyperlink ("unit:" .. serial or "")
-			TooltipUtil.SurfaceArgs(tooltipData)
-			local lines = tooltipData.lines
-			for _, line in ipairs(lines) do
-				TooltipUtil.SurfaceArgs(line)
+			if tooltipData then
+				local lines = tooltipData.lines
+				
+				petName = lines and lines[1] and lines[1].leftText
+				text1 = lines and lines[2 + cbMode] and lines[2 + cbMode].leftText
 			end
-			
-			petName = lines[1] and lines[1].leftText
-			text1 = lines[2 + cbMode] and lines[2 + cbMode].leftText
 			
 		else
 			local tooltipFrame = PlaterPetOwnerFinder or CreateFrame ("GameTooltip", "PlaterPetOwnerFinder", nil, "GameTooltipTemplate")
@@ -9618,8 +9790,8 @@ function Plater.SetCVarsOnFirstRun()
 	--> make the selection be a little bigger
 	SetCVar ("nameplateSelectedScale", "1.15")
 
-	--> movement speed of nameplates when using stacking, going above this isn't recommended
-	SetCVar ("nameplateMotionSpeed", "0.05")
+	--> movement speed of nameplates when using stacking, going above 0.5 this isn't recommended
+	SetCVar ("nameplateMotionSpeed", "0.025")
 
 	--> make the personal bar hide very fast
 	SetCVar ("nameplatePersonalHideDelaySeconds", 0.2)
@@ -9661,13 +9833,10 @@ end
 		local subTitle = ""
 		if IS_WOW_PROJECT_MAINLINE then
 			local tooltipData = C_TooltipInfo.GetHyperlink("unit:" .. (plateFrame [MEMBER_GUID] or ""))
-			TooltipUtil.SurfaceArgs(tooltipData)
-			for _, line in ipairs(tooltipData.lines) do
-				TooltipUtil.SurfaceArgs(line)
+			if tooltipData then
+				local line = tooltipData.lines and tooltipData.lines[2 + cbMode]
+				subTitle = line and line.leftText or ""
 			end
-			
-			local line = tooltipData.lines[2 + cbMode]
-			subTitle = line and line.leftText or ""
 		else
 			local GameTooltipFrame = PlaterScanTooltip or CreateFrame ("GameTooltip", "PlaterScanTooltip", nil, "GameTooltipTemplate")
 			GameTooltipFrame:SetOwner (WorldFrame, "ANCHOR_NONE")
@@ -9715,9 +9884,7 @@ end
 			if IS_WOW_PROJECT_MAINLINE then
 				local tooltipData = C_TooltipInfo.GetHyperlink ("unit:" .. plateFrame [MEMBER_GUID])
 				if tooltipData then
-					TooltipUtil.SurfaceArgs(tooltipData)
-					for _, line in ipairs(tooltipData.lines) do
-						TooltipUtil.SurfaceArgs(line)
+					for _, line in ipairs(tooltipData.lines or {}) do
 						if line.type == Enum.TooltipDataLineType.QuestObjective or line.type == Enum.TooltipDataLineType.QuestTitle or line.type == Enum.TooltipDataLineType.QuestPlayer then
 							--only add actual quest tooltip lines
 							ScanQuestTextCache [#ScanQuestTextCache + 1] = line.leftText or ""
@@ -10181,7 +10348,7 @@ end
 	
 	--return if the unit is in the friends list
 	function Plater.IsUnitInFriendsList (unitFrame)
-		return Plater.FriendsCache [unitFrame [MEMBER_NAME]] or Plater.FriendsCache [unitFrame [MEMBER_NAMELOWER]]
+		return Plater.FriendsCache [unitFrame.unitNameInternal]
 	end
 	
 	--> api version of the tap denied function
@@ -10721,7 +10888,7 @@ end
 
 	--return true if the unit is in the tank role
 	function Plater.IsUnitTank (unitFrame)
-		return TANK_CACHE [unitFrame [MEMBER_NAME]] or TANK_CACHE [unitFrame [MEMBER_NAMELOWER]]
+		return TANK_CACHE [unitFrame.unitNameInternal] or TANK_CACHE [lower(unitFrame.unitNameInternal)]
 	end
 	
 	--check the role and the role of the specialization to return if the player is in a tank role
@@ -11382,6 +11549,7 @@ end
 			["NameplateTick"] = true,
 			["OnPlayerTargetChanged"] = true,
 			["UpdateTarget"] = true,
+			["UpdateSoftInteractTarget"] = true,
 			["UpdatePlateText"] = true,
 			["CheckLifePercentText"] = true,
 			["UpdateAllNames"] = true,
@@ -11520,6 +11688,21 @@ end
 				["GetCDEdgeBySpec"] = true,
 			},
 			["UpdateBaseNameplateOptions"] = true,
+			["BossModsTimeBarDBM"] = true,
+			["BossModsTimeBarBW"] = true,
+			["BigWigs_BarCreated"] = true,
+			["UpdateBossModAuras"] = true,
+			["EnsureUpdateBossModAuras"] = true,
+			["CreateBossModAuraFrame"] = true,
+			["UpdateBossModAuraFrameSettings"] = true,
+			["RegisterBossModAuras"] = true,
+			["GetBossModsEventTimeLeft"] = false,
+			["GetAltCastBarAltId"] = false,
+			["ClearAltCastBar"] = false,
+			["SetAltCastBar"] = false,
+			["StopAltCastBar"] = false,
+			["GetBossTimer"] = false,
+			["RegisterBossModsBars"] = false,
 		},
 		
 		["DetailsFramework"] = {
@@ -13332,7 +13515,7 @@ function SlashCmdList.PLATER (msg, editbox)
 			if (npcId) then
 				local colorDB = Plater.db.profile.npc_cache
 				if (not colorDB [npcId]) then
-					Plater.db.profile.npc_cache [npcId] = {plateFrame [MEMBER_NAME] or "UNKNOWN", Plater.ZoneName or "UNKNOWN"}
+					Plater.db.profile.npc_cache [npcId] = {plateFrame [MEMBER_NAME] or "UNKNOWN", Plater.ZoneName or "UNKNOWN", Plater.Locale or "enGB"}
 					Plater:Msg ("Unit added.")
 					
 					if (PlaterOptionsPanelFrame and PlaterOptionsPanelFrame:IsShown()) then
@@ -13408,24 +13591,37 @@ function SlashCmdList.PLATER (msg, editbox)
 		
 		return
 	
+	elseif (msg == "compartment") then
+
+		if LDBIcon:IsButtonInCompartment("Plater") then
+			LDBIcon:RemoveButtonFromCompartment("Plater")
+		else
+			LDBIcon:AddButtonToCompartment("Plater")
+		end
+		
+		return
+	
 	elseif (msg and msg:find("^cvar[s]?")) then
 		Plater.DebugCVars(msg:gsub("^cvar[s]? ?", ""))
 		return
 	
+	elseif msg ~= "" then
+		local usage = "Usage Info:"
+		usage = usage .. "\n|cffffaeae/plater|r : Open the Plater options window"
+		usage = usage .. "\n|cffffaeae/plater|r |cffffff33version|r: print Plater version information"
+		usage = usage .. "\n|cffffaeae/plater|r |cffffff33profstart|r: Start Plater profiling"
+		usage = usage .. "\n|cffffaeae/plater|r |cffffff33profstop|r: Stop Plater profiling"
+		usage = usage .. "\n|cffffaeae/plater|r |cffffff33profprint|r: Print gathered profiling information"
+		usage = usage .. "\n|cffffaeae/plater|r |cffffff33add|r: Adds the targeted unit to the NPC Cache"
+		usage = usage .. "\n|cffffaeae/plater|r |cffffff33colors|r: Opens the Plater color palette"
+		usage = usage .. "\n|cffffaeae/plater|r |cffffff33minimap|r: Toggle the Plater minimap icon"
+		usage = usage .. "\n|cffffaeae/plater|r |compartment|r: Toggle the Plater addon compartment icon"
+		usage = usage .. "\n|cffffaeae/plater|r |cffffff33cvar <cvar name>|r: Print information about a cvar value stored in the profile."
+		usage = usage .. "\n|cffffaeaeVersion:|r |cffffff33" .. Plater.GetVersionInfo() .. "|r"
+		Plater:Msg(usage)
+		return
+		
 	end
-	
-	local usage = "Usage Info:"
-	usage = usage .. "\n|cffffaeae/plater|r : Open the Plater options window"
-	usage = usage .. "\n|cffffaeae/plater|r |cffffff33version|r: print Plater version information"
-	usage = usage .. "\n|cffffaeae/plater|r |cffffff33profstart|r: Start Plater profiling"
-	usage = usage .. "\n|cffffaeae/plater|r |cffffff33profstop|r: Stop Plater profiling"
-	usage = usage .. "\n|cffffaeae/plater|r |cffffff33profprint|r: Print gathered profiling information"
-	usage = usage .. "\n|cffffaeae/plater|r |cffffff33add|r: Adds the targeted unit to the NPC Cache"
-	usage = usage .. "\n|cffffaeae/plater|r |cffffff33colors|r: Opens the Plater color palette"
-	usage = usage .. "\n|cffffaeae/plater|r |cffffff33minimap|r: Toggle the Plater minimap icon"
-	usage = usage .. "\n|cffffaeae/plater|r |cffffff33cvar <cvar name>|r: Print information about a cvar value stored in the profile."
-	usage = usage .. "\n|cffffaeaeVersion:|r |cffffff33" .. Plater.GetVersionInfo() .. "|r"
-	Plater:Msg(usage)
 	
 	Plater.OpenOptionsPanel()
 end

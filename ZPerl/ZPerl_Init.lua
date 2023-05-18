@@ -6,7 +6,7 @@ local init_done, gradient, conf, doneOptions
 local errorCount = 0
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 5a89ecaf32f24ffefbf320bef9dff40e1992eb4e $")
+end, "$Revision: 622ab1f8aebd021111f667b2de0adca45dd07d93 $")
 
 local _, _, _, clientRevision = GetBuildInfo()
 
@@ -539,7 +539,7 @@ function ZPerl_Init()
 
 	local name, title, notes, enabled = GetAddOnInfo("SupportFuncs")
 	if (name and enabled) then
-		local ver = GetAddOnMetadata(name, "Version")
+		local ver = GetAddOnMetadata and GetAddOnMetadata(name, "Version")
 		if (tonumber(ver) < 20000.2) then
 			XPerl_Notice("Out-dated version of SupportFuncs detected. This will break the X-Perl Range Finder by replacing standard Blizzard API functions.")
 		end
@@ -547,7 +547,7 @@ function ZPerl_Init()
 
 	name, title, notes, enabled = GetAddOnInfo("AutoBar")
 	if (name and enabled) then
-		local ver = GetAddOnMetadata(name, "Version")
+		local ver = GetAddOnMetadata and GetAddOnMetadata(name, "Version")
 		if (ver < "2.01.00.02") then
 			XPerl_Notice("Out-dated version of AutoBar detected. This will taint the Targetting system for all mods that use them, including X-Perl.")
 		end
@@ -555,7 +555,7 @@ function ZPerl_Init()
 
 	name, title, notes, enabled = GetAddOnInfo("TrinityBars")
 	if (name and enabled) then
-		local ver = GetAddOnMetadata(name, "Version")
+		local ver = GetAddOnMetadata and GetAddOnMetadata(name, "Version")
 		if (ver <= "20003.14") then
 			XPerl_Notice("Out-dated version of TrinityBars detected. This will taint the Targetting system for all mods that use them, including X-Perl.")
 		end

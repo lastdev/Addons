@@ -383,7 +383,7 @@ end
 
 ---Sets whether or not a craft is in progress.
 ---@param craftingType ""|"all"|"craft"|"queue" The type of craft in progress
----@param craftingQuantity number? The number being crafted
+---@param craftingQuantity? number The number being crafted
 ---@return CraftDetails
 function CraftDetails:SetState(craftingType, craftingQuantity)
 	assert(craftingType == "" or craftingType == "all" or craftingType == "craft" or craftingType == "queue")

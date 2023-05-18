@@ -109,7 +109,6 @@ E.TEXTURES = E.preCata and {
 }
 
 E.BORDERLESS_TCOORDS = { 0.07, 0.93, 0.07, 0.93 }
-E.BASE_ICON_SIZE = 36
 
 E.STR = {
 	["RELOAD_UI"] = L["Reload UI?"],

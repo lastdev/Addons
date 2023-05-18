@@ -495,11 +495,7 @@ do
         { "^!?(debuff%.[a-z0-9_]+)%.ss_buffed$"     , "%1.remains"                                                     }, -- Assassination
         { "^!?(dot%.[a-z0-9_]+)%.ss_buffed$"        , "%1.remains"                                                     }, -- Assassination
         { "^dot%.([a-z0-9_]+).haste_pct_next_tick$" , "0.01+query_time+(dot.%1.last_tick+dot.%1.tick_time)-query_time" }, -- Assassination
-        { "^!?stealthed.all$"                       , "stealthed.remains"                                              },
-        { "^!?stealthed.mantle$"                    , "stealthed.mantle_remains"                                       },
-        { "^!?stealthed.sepsis$"                    , "stealthed.sepsis_remains"                                       },
-        { "^!?stealthed.rogue$"                     , "stealthed.rogue_remains"                                        },
-        { "^!?stealthed.basic$"                     , "stealthed.basic_remains"                                        },
+        { "^!?stealthed%.(.-)$"                     , "stealthed.%1_remains"                                           },
 
         { "^!?time_to_hpg$"           , "time_to_hpg"          }, -- Retribution Paladin
         { "^!?time_to_hpg[<=]=?(.-)$" , "time_to_hpg-%1"       }, -- Retribution Paladin
@@ -1549,7 +1545,7 @@ end
 local scriptsLoaded = false
 
 local function scriptLoader()
-    if not scriptsLoaded then scripts:LoadScripts() end
+    if not Hekili.LoadingScripts and not scriptsLoaded then scripts:LoadScripts() end
 end
 
 function Hekili:ScriptsLoaded()
@@ -1619,9 +1615,13 @@ function scripts:LoadScripts()
                         if lua then
                             -- If resources are checked, it's time-sensitive.
                             for k in pairs( GetResourceInfo() ) do
-                                local resource = rawget( state, k )
-                                if lua:find( k ) and resource and ( resource.regenModel or resource.regen ~= 0 ) then script.TimeSensitive = true; break end
-                                -- if lua:find( k ) then script.TimeSensitive = true; break end
+                                local resource = specData.resources[ k ]
+                                resource = resource and resource.state
+
+                                if resource and lua:find( k ) and ( resource.regenModel or resource.regen ~= 0.001 ) then
+                                    script.TimeSensitive = true
+                                    break
+                                end
                             end
 
                             if lua:find( "rune" ) then script.TimeSensitive = true end
@@ -1658,15 +1658,19 @@ function scripts:LoadScripts()
 
                             for k in pairs( channelModifiers ) do
                                 if script.Modifiers[ k ] then
-                                    if cInfo[ k ] then
-                                        local oldfunc = cInfo[ k ]
-                                        local newfunc = script.Modifiers[ k ]
+                                    local newfunc = script.Modifiers[ k ]
 
-                                        cInfo[ k ] = setfenv( function() return ( oldfunc() ) or ( newfunc() ) end, state )
-                                        cInfo[ "_" .. k ] = "(" .. cInfo[ "_" .. k ] .. ") or ( " .. script.ModEmulates[k] .. " )"
-                                    else
-                                        cInfo[ "_" .. k ] = script.ModEmulates[ k ]
-                                        cInfo[ k ] = script.Modifiers[ k ]
+                                    if newfunc and type( newfunc ) == "function" then
+                                        local oldfunc = cInfo[ k ]
+
+                                        if oldfunc then
+                                            local oldstr = cInfo[ "_" .. k ]
+                                            cInfo[ k ] = setfenv( function() return ( oldfunc() ) or ( newfunc() ) end, state )
+                                            cInfo[ "_" .. k ] = format( "( %s ) or ( %s )", oldstr or "nil", script.ModEmulates[ k ] )
+                                        else
+                                            cInfo[ "_" .. k ] = script.ModEmulates[ k ]
+                                            cInfo[ k ] = script.Modifiers[ k ]
+                                        end
                                     end
                                 end
                             end

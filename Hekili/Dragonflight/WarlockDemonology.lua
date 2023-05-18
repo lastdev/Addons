@@ -89,7 +89,7 @@ spec:RegisterTalents( {
     fel_covenant                   = { 72000, 387432, 2 }, -- Shadow Bolt increases the damage of your Demonbolt by 7%, stacking up to 4 times. Lasts 20 sec.
     fel_might                      = { 72014, 387338, 1 }, -- Reduces the cooldown of Felstorm by 10 sec.
     fel_sunder                     = { 72010, 387399, 1 }, -- Each time Felstorm deals damage, it increases the damage the target takes from you and your pets by 1% for 8 sec, up to 5%.
-    from_the_shadows               = { 72015, 267170, 1 }, -- Dreadbite causes the target to take 20% additional Shadowflame damage from you for the next 12 sec.
+    the_houndmasters_stratagem               = { 72015, 267170, 1 }, -- Dreadbite causes the target to take 20% additional Shadowflame damage from you for the next 12 sec.
     grand_warlocks_design          = { 71991, 387084, 1 }, -- Every Soul Shard you spend reduces the cooldown of Summon Demonic Tyrant by 0.6 sec.
     grimoire_felguard              = { 72013, 111898, 1 }, -- Summons a Felguard who attacks the target for 17 sec that deals 45% increased damage. This Felguard will stun their target when summoned.
     guillotine                     = { 72005, 386833, 1 }, -- Your Felguard hurls his axe towards the target location, erupting when it lands and dealing 2,884 Shadowflame damage every 1 sec for 6 sec to nearby enemies. While unarmed, your Felguard's basic attacks deal damage to all nearby enemies and attacks 50% faster.
@@ -155,6 +155,9 @@ local demonic_tyrant_v = {}
 
 local grim_felguard = {}
 local grim_felguard_v = {}
+
+local pit_lord = {}
+local pit_lord_v = {}
 
 local other_demon = {}
 local other_demon_v = {}
@@ -239,7 +242,7 @@ spec:RegisterCombatLogEvent( function( _, subtype, _, source, _, _, _, destGUID,
             -- 267996 - Darkhound
             -- 268001 - Ur'zul
             elseif spellID >= 267986 and spellID <= 268001 then table.insert( other_demon, now + 15 )
-            elseif spellID == 387590 then table.insert( other_demon, now + 10 ) end -- Pit Lord from Gul'dan's Ambition
+            elseif spellID == 387590 then table.insert( pit_lord, now + 10 ) end -- Pit Lord from Gul'dan's Ambition
 
         elseif spellID == 387458 and imps[ destGUID ] then
             imps[ destGUID ].boss = true
@@ -327,6 +330,13 @@ spec:RegisterAura( "blazing_meteor", {
     max_stack = 1
 } )
 
+spec:RegisterGear( "tier30", 202534, 202533, 202532, 202536, 202531 )
+spec:RegisterAura( "rite_of_ruvaraad", {
+    id = 409725,
+    duration = 17,
+    max_stack = 1
+} )
+
 
 local wipe = table.wipe
 
@@ -367,7 +377,6 @@ spec:RegisterHook( "reset_precast", function()
     wipe( guldan_v )
     for n, t in ipairs( guldan ) do guldan_v[ n ] = t end
 
-
     i = 1
     while( other_demon[ i ] ) do
         if other_demon[ i ] < now then
@@ -379,6 +388,21 @@ spec:RegisterHook( "reset_precast", function()
 
     wipe( other_demon_v )
     for n, t in ipairs( other_demon ) do other_demon_v[ n ] = t end
+
+    i = 1
+    local pl_expires = 0
+    while( pit_lord[ i ] ) do
+        if pit_lord[ i ] < now then
+            table.remove( pit_lord, i )
+        elseif pit_lord[ i ] > pl_expires then
+            pl_expires = pit_lord[ i ]
+            i = i + 1
+        else
+            i = i + 1
+        end
+    end
+
+    if pl_expires > 0 then summonPet( "pit_lord", pl_expires - now ) end
 
     if #dreadstalkers_v > 0  then wipe( dreadstalkers_v ) end
     if #vilefiend_v > 0      then wipe( vilefiend_v )     end
@@ -990,10 +1014,11 @@ spec:RegisterAuras( {
     },
     -- Talent: Damage taken from the Warlock's Shadowflame damage spells increased by $s1%.
     -- https://wowhead.com/beta/spell=270569
-    from_the_shadows = {
+    the_houndmasters_stratagem = {
         id = 270569,
         duration = 12,
-        max_stack = 1
+        max_stack = 1,
+        copy = "from_the_shadows" -- name from pre-10.1
     },
     -- Summoned by a Grimoire of Service.  Damage done increased by $s1%.
     -- https://wowhead.com/beta/spell=216187
@@ -1447,7 +1472,7 @@ spec:RegisterAbilities( {
             summonPet( "dreadstalker", 12 )
             removeStack( "demonic_calling" )
 
-            if talent.from_the_shadows.enabled then applyDebuff( "target", "from_the_shadows" ) end
+            if talent.the_houndmasters_stratagem.enabled then applyDebuff( "target", "the_houndmasters_stratagem" ) end
         end,
     },
 
@@ -1491,9 +1516,15 @@ spec:RegisterAbilities( {
         handler = function ()
             removeBuff( "fel_covenant" )
             removeBuff( "stolen_power" )
-            removeStack( "demonic_core" )
+
+            if buff.demonic_core.up then
+                removeStack( "demonic_core" )
+                if set_bonus.tier30_2pc > 0 then reduceCooldown( "grimoire_felguard", 1 ) end
+            end
+
             removeStack( "power_siphon" )
             removeStack( "decimating_bolt" )
+
             gain( 2, "soul_shards" )
         end,
     },
@@ -1585,6 +1616,8 @@ spec:RegisterAbilities( {
             summon_demon( "grimoire_felguard", 17 )
             applyBuff( "grimoire_felguard" )
             summonPet( "grimoire_felguard" )
+
+            if set_bonus.tier30_4pc > 0 then applyBuff( "rite_of_ruvaraad" ) end
         end,
     },
 
@@ -1902,4 +1935,4 @@ spec:RegisterSetting( "dcon_imps", 0, {
 } )
 
 
-spec:RegisterPack( "Demonology", 20230417, [[Hekili:nVXAVTTU1Flbxa346ehlzNKBkSnW92nSDlgkgG7(QLOLOT1IKOMEKhab63(oKsIIKIuYUT3SHw06yD459BQS1A732UXhLJ3(v7z2ZNTW6(PwwZNBF)2n5VMG3Ujb59i6a8Hyue8V)fCejMeso8k9rVgsq(uuKrks9GhFmppj7t3CZHG8Jf7M6rIUjliQieLhqI9sr7ZP)S3n7cj7UXpfDGeVpm4WX8BWXhcIX34fIYYCIi(fH4SBqjH38mknK494uVKKTB2veeM)hXB3PW13o12EX9ZFa4KeSh813DhWmb((4kyXzEB3qH96zZVE(Spv6w6(VsOOO0DFkjQ0Dtq0NVQ0ni2lSWpi(a9J540yuyP7tO0a0Uq80y8l5o5VMIIZlD9qHE1s20YVu(Lk0Va(ld9)oohoFPBsAajni)1s3u8tbza0zanjWt(wnIkYafSmkULHI)AmLQLU)nqQdj5G(Pg4s3NbfmPaomZGe4bcqEkOdZpw6MJcXaV7lJYhyO83sscbwbmcxNJZaGezWcMgjt6CwvSYNdXOykea6bUolGk2mDePvqssXjOuu1JsoIYWt3UjmilpJ6JeKJJOF4RmNomt283(7nEw5br4DPyK3rq77aYajE7gKhfzgEOhW1yWYqDl2VFQFLMWjH8moDkLtF7Ts3lA0htZkIaaCAaRYmoTMpkDhv6EzPldtX48J4uarPWr1Gj5NZXW4T5GNhv4Ay7ImStLyliV5WFapY9OIWCU6O5eOxWo5KmLdiJvF8tq4Mte6qGNcCZvuTeiMjdN3E2gxz6NclWnpWGYXdLb(7GUV09JLU2LUtkDTyiXP2OXGZjb5tJzOCWcfoO1iDYMbpcj0N8SjMkfhHcIZCWVaH6mp4LcHOnCe4k6KLJsZ5wwqRwzi3tt44uJMs31FhuCCRgfsde6u9douF9kpEj9dvVCRr9sfJbmjvrdgFh)amtMSzA9dE(tJqV0sWGOKqcnpcfT3zeTNJJpK(o0j7ik1NPoSR0tgzS5ZA5gPybkhDVzbvxSvlMoII9Di7Doue6Jyc3VQGQtsLxfVbN(H(zK)piDXPjqeWdGkpwZmkqNT)lyKRjxZrvygFizRpe)e(ioLPnTuZA)D4PrvlQ(swlgKY2)COSr35Zu71YVhsdIibPyN94Wdfq0dJDvZb)JYUxE2COo7ll3DFzj1zCoB6k4txFKNccX7dWXv6gZvh4KQHgz19ZmLNOwoQQdCnOT18WBBIr7BLRHkFAL6Ow9Mxnb3s(AvbfVpHBX)oqSZ8GY0hWo7ir7A8LnNDumhmO6VTYvTswb)lWq(eCoLuqS8pspLRTO4qWACebAxGvczvJSutTkuM(zIdRUpuNPQ64SwsvlTvouJQCYEc7GJXrb4kOTyEAx26QJaCVpWd77qfXmTjaLQPznqM7Ndc9zC3uW117rgvFOdpsZdRNdTB4qlwb2H5t5Us6MLAQyVew3lA5Gm)SWJyFkYY66Kkj52MtXR19qN6xWMZosEAWJSaaBZzWR0BK0i2Cdm5Vr3Ucq5StHyvH70J(igNGtzK0CQBPAWEKuCJbtrqxOeZ24bBBonBxuxllv9uju52SvSURlMdY86eYDprvCGGFmRzcNSGKJ1guZj862ZvfJDwfjo7e0R7ViWyz1tJoe84H275T2OW6lu4Lbcq4Q2X917NTAdZCVacjsupMI3NIbMzhDOgVx9cHkyiiTlm0jmAfftMZLRguzo25EXIhIjtvhSd0MEq(EuUUjDfYYYgQINCTUOckeIWA(cMjG3IbOC4zOKABMM93NefeZM7MpSyF1U(EitTdgC8VV5mHU40m3i31t3OJNasxWsLlhVW74OnuPfMoTS1MrUL72hKM1SNNbMDZu9iR26rgYen3CwJt3HT7WTcJSVI5Dn2qc0tVtetDrKZNVvJRETXlyVEZNIJWZbXuedgTmTrj8CwsMMk3ahCygUf7sGu6EDvxTSp0jZx9AlACNoZSP6I1g2Nnc9VjPvOUDhe9XCTQJZ8OAZ2lPP71oyimxAxeDKUtQiWKMPt0bLGdmDBt2NQYXq55HfYE2yfJl4DnCQXfFvAsd5fKipMXDIa2DAszGLlbPoDLmS)QiSAgRwg6b63U7(nuxzeKPXwU25UI0y6wmIXoEaZTy22(3GrpUPGYEL0qiYgznfPKJB32)2l6LYRLsOo4oF02t3qeyw3ZUILAV3(J6zRinLdPMbsbCq1ohnPihMDxkOp6L7oNUZfTGsLO6zDbdu49cdMjZ1CLxpGy7FYXkw3DQDcY2BN6(9tiv)VeoL2UpDvb40hzz3KGAUeuHeIVZ(I0xvGAHiuqPqmdsvMJw7eOdfi(vOTDZZO0yGUq6HVDeC3bnlHoua7YQ(qaDVQFGElw)NcaT(upwAqbQiNeHydx4bochy3F0)GDxvwFQ09ZKyGsSh)H(MRbWm9QK6fMgpya2lTEz8q0rY4RGFT7KTfVLFrJgO(oBopDWI3jDWDVt05H)3sNFaBATVY7MtP97fHM)Erid(YQ7svHgMwuBh0FVE0lUEtfuRBVODqRbpjLnZPGzd7Ttf52)5hERnveFld)mtgXBMupJ2zUAvLHbS3PVwf0BCK8b0bCL6zOamguQ0RKQgWqRuIC4FWyoksVTz8Msx2l)a8y6EHi7dc5nnLnLBcNS6g5D4CvW(v0gSwpB0f811m6IExut5x0H32L2qX5piYAAm8k6WuRAgeJVbNRijRGjFVIni4kyUTtajIJQRC(ftm49nXKBJEck2NhvjORXX1wJmSPMLZ1JvEBQuu225(YBhDjDvmV9gVl5vZgBW2026OksOUt1hbaS5vcr87eFfqe)E92OQHLLvW1dGRpjeN7)O9elr8REr1I0H522tQTrN56vwAEr1nAzP3KJ1Nj(b7YV8lnHQuHli(jYJ00(5S37lhQprLaw5efeVViRo(8cD9Cm6I(K)3EJY0JeUJ1L23kQC5xfeZpTdSFeMNqeCjslYt61(ToyRT1WkZNjIB5j64XnDM6Dqxd2udddgDwjovAy8M3mJ3ERFj7sT8w7PKEY4omJ0uWuM4m9J4(DdJ5b8peThwlerxNKDNa26yIpt5sK(QjHpvYF5zstUUCI5GFz90zsajZF7liGKzVtdR1iP1Jsfc5uZMFMM3kaEHzfgNEONWs2aZfmgPPF4rgF3awAoRJ0L)d9FOEP)JQyRMlbET1KlB8cmC95JnNHtxL4hgjFh(Qe0EYLwFCiso6e2c9AR7hPVxFjDE7EG6OZvvfAIxAVnCUaR7w2xznRxSj1THU9NjKCFPuEdTD)OPnh76KO6vvqY5pohIO1VH9X9x4qSUZOlhiPXzgnV2CwIXnsuJWYVd73EtGLwiqZECwanGKysVe6RKUS5vwuHv4YOpr3idr4cTaoLvdDvZ7sCDlxDFHOFVRFwXxaBZFlNfzAAf9vvB7u(lPPb5R4S7J471SZJ4lZuKmvIWkT99kS566EFd2x397z6NDv7fnUs79mEn1ECTHBP6kpsSp7fMVASo93ujRzuym3m6eSPW)4vKcvqYPVU(Ke4G0Fteyt((pr5Ehbt7JaGXW8M)9F7Z03eF(Vdd7ky)2jaFXom7v9pjestsNmLcuoDsAGXOJNcTZsVMqn3R4uPMJRfOodyecEyGeiDsvvT58kIAvRzZeut6VDIFeocMTwKFA3LrdmnbpTpbsRQh22bt0rTFMSz3vJOYUDHOHTnE23p2xoLIkRRMWzK5Z8tGLnMtOMH7LcgJSB2uJ2q6r9IZLGlF)qyIQDQ6jEfDF5hupOjxqFs)za(FcSDe6f1e6MlIpPIe9(ohmXYUpP1qhqA4ELM1P4gAYsBH)2dj57R559SYRwcRmPMgq6Qa0HN6lX3C4QqxuRSVQ(Q(xTyMzMsUklfZ94sSCv94hDRd0b)D76SheVMBTn25JupR9HQzIWU62XNeVLRFPY6L2(i)Y23nHU0DWHg0CMtCzPxOvTzWjQUV3(Jr2UbvKFKKUDdThg2fuV9)o]] )
+spec:RegisterPack( "Demonology", 20230512, [[Hekili:vZr)VTTn2)wcgGxCDIJLItt7GTb26D4UvCy4as3VAzzjABDrsutIkFayO)2V3J6lsksz7K2SwGHUwRhFF)TO9sRLFz5D(UmYY)WEI91tUXYESLT9Tt)4Y7ypNqwExIR39UBH)sSBe8N)dsenMgs3(m(ONdPU(ikYO5PEWJ3Xyjz)YvxTnGTlF9ypA0vzbr5HUSaASxQ7gg(V9UADiD9v(PUBPXBcd2UJDfjEBqm5kVq3SmNiQFEij7k3KWRE0nnK6D)yVKKL3TopiK97XlxRNRVf4KeIh8XV)9aZe47tkHLK5T8oe2lNCZLt(WVuSQy1xsdIVNWkwLNG4kBCXNl(Cdm2Cy(t(JkwTHMwSYAYyRIvNVohoZ9essq82Ivrpdy65u3y4dFmi2N(yXkq9e4nuaFtV06go((uiXngPyXkgCMSauVuSkiMrBrtskjXn1T8rj7CZisOAYh5O6xtscbAdQZlbMNr8XdgqtdypRtKGZvYc)Zy31HGi9VavziLbkDa8mWeJ8pBhfLoUvoWRy1DSuWWW2bSRBijgOImkNYr5VrymsQi9tjpeKb8FwLQRw04esafxF51tKv0P0iGSbrF6cuT4fM7ZvZGgIKg7gwS6b30aucghtEI5WQqSNBOxLB24L3fgKXYq)Yagjc)l)b3rNWfD)L)2Y7C9qqbasd8j5zoBaFXiqaxENhibeGeOZ2MnJ9lvfoj0hjPJrd3(9fRoRwHmolpcaWPgSs(zCfLkwnaCykwXXumHTJKcikfoQgmj)8gmmSeU10Smo62GHloPKi3au9oBEXkBR6WZoIddIfmi6SGiY6uIR3oqd7a0e)WFOLEDseOaU2GcilHgeM5q34etcz7CtZZ(bxbOtIafWudkGhOb(GxIpjnZjBNlK7AljsufCMq4wjaoGoguUzLC1598Cbr)7bLi(F1Qj9YnOOUXGIIKMNWqFkO6IB6p2jlSA8wmjvGI49kkIw587mBAjEaGj)vEqscuFsnfihgra0KLOdmAcK6aJb1xh406TX9gRDVYZioLvQav)TkQ(sBvkL5bmbua25bk1NsD8PHHTOWWZb89bT4Bni)G5HrDaLRZAYZ0y)wSP9POJb0j1g38qwtj16t4(ebapltKu11EQHXN8a0MOtKl0DKcCQPOPqVEzeMqQQQ0m4FlmNu)adUzEUzmmte0qX7G8JfRgb(9CK4uvPGdNtIRp2EHUCKhMd8O0qWygBWbUhF7ecBCsaZjKM6pgX)dKJ0PhbYaDBcYxuS66jIcBCIdyn959AQllxBW9rh72Wd6bTIxCipbDJZBnDMqLIALp0MRtgZnL1KoGN2cLrL8wlEbuui(cAom0P8F4GTgw2GOKRq)j9AYNI(uyyHFaHlt2ChSTE(JJCFsORYOKqAwL6wnGwQ86rRXHjScX0hP(C1HTsIEvgd9aQ5gj)eDPeok9utcQpAwn99rHHJuGOGzdLhRj9lqQSrl635g7J1i2Mh67YT1wQZz0IRt2bgSYvSE9rvemFOiMpeafEpuAHtD1w9FbUAOkw1zYA6bPSAc8xiLn6pFIAVw(DBAqeniL4SHeUnhcF4SRA2(xi7EICLoBkV2uFPg)2OwQG)HGqYMasCPwXCHHg6utGSQfd0w2ro2SdC1OT1W0S)boTFVCNcYNwPBbREtPIvxv0dL1yf6Vbe7mpOzKTq3n0O11EXQjgBXRy6xqVFtP1OuwbplWC(aCoLez80hspTTtCahcwJYzNwtd5fISmNIL9i1H3DduIPSW4KwsvjTLUvdkD1EG4qIjrbKsOT4(BN36K7c4EtGh03ikIzAtJkvoZ(aPlFmi0NZDJbhyV75u9JD4rmBUEo0UMdT41wpmFk3qs38tsDgzDROLd7UfJnI9rKL11jvwYnNCxR7Ho1VGnNFewAW98aaBZ5Ul1B00i(c44YFTUfNNBYXqSYWD8O4MljPCsAoPTuLCpAkP2GPiOtFzDdUqY7NdETVVT5uZDzQkTqzJyIlCWO9VQvnUR11cnQlFIYiiHiaEZmozbj7QCfmNQSBJAnZO(TTWsFfrgQDFmyScm(ttRvkS(ufE5aHwnQ2H91HKTAx2nEbuQ0UNsjBsjaZSgh5Y7zVqOWNlKWMLHJEIyYCva1WrZrDFqSSJyAyPkoW)e0MEqLc32rF1NFMp0ztA5QYrUH8r8k)aUjOPTeq50KBtQ5sSUHpnki2TEUTE7U7LsMkhm44VS5WHEo1mxDJR3lB0ARP8IaYXln9Q0gQ0ctN28AZL3YDBcsZQFLb9piSXkzwTvYmKj6AZznmpGP26hstelSsJ5CVRHgsG(IIkK6)G1muSgx9kJxWg9MpfhHY3iguvYptBustoljttPBGdjmJ0IDjqkwDzzZW8)sNmFvR1PZMAoUSP6I1oSpBK7)JMwI62fx0hZ1QooXJQnBVKMUx7GHWCPfyyEzx9veyu90n6GsWbg3gN9XQCmuE(WcP5gjk5IMUgo24IY8f1ptERkYdOinmt3jqLb(wPsqQZLjdRu5knJIld9b2ut39ROUNj8Lljx7CDEAmUfLyIJhWCtNWNxX8ib94Mw(6iQCyKBuq0zzG2o00uctoQMZxMRt3lFTqkD7b3iL2o(oebM09SZ5j(hwxaVVqUdSfkZDkuxsfnL0C4GQDFAsDFyHAwJXuiSP1s2ldFAtIyOYxpB15a1ZpZG91CPClPCbIDvkhckVxJ(AWKVos1xRscT8)lHtPxQcU7cs698KMsqDTeuHuQVZM80NvGAQiuqfwchsvMdljd0bbQ6g3m5dlV7r30y8D9U8UVSdItanlfN1GFHp(5aCDX)mEtq(RCaT(ORogn5MZOrU8zw8ahHT8lPY)HFluS(LIvFIgduI)4FUVXLamJxzMEHP2PgG9CRNgEi6iz8vWV2vnRIx73i(3aDE18)1Vr8Vb68Q5)PVr8Vb68Q5)BEJ4Fd05vZ)V)nI)nqNxb)x8znzWQEv3NwoSF09nU9nIoF8Vx68QThwVvj7TERYkB9wL(0YGVC9PRFPpk0q9Xgr)h0JEX3dJcQ19cCurR9e9Ov5viOGzdVGHoi)BF4T2uCnl18Rsso1zx1ZODwJNQYWa27mgTc6nUbWdOdAuQNGcWy0VYyvQAadtDjYH)oN5qKEt98ufR43Nz4XqR65SD00L3H3qACP00nbHnJwLnUXGoA(vYlq(IGnZXXWwmzWzn7kEWz9UL4IpRdVv2rajioFLiREIYlWn5mVASY21hFbnzEgqi(wOMBzFmirCpHkNF6id(IJm5ePNGItdIkbDJxUWAGH1ep7A9yTzyweLTlgy2ndoh3d8(9nZspFYqd2M2bmvrc6CvDeaW67RN4NjE)8e)C92OYn1jRGRN)xBkPgU)D2JSmJFXBRMm2nEH72Vx70773R5I2TF)z6QZdk3EVwDlUEIilREXIevn8iTEYnp4exh9mZVyVAhdPRl3Ite)GR0p9t15AqHli(b69yDlg)RCHdQClfWs)(G4n5zvPu0QmhCwFYpyTaMEGWvzzM9nIk3Mx6op0QdSVBRNVi4sKwKN0R9BJjwyRHvog7mF3ghgmCJonzhQ5I6RfxRFOE28CdU0Av4dfzg51R1WaD2DPk)lTXp8yNOFuJF3HX8b8peThwtfrxN8Zhb26yIpr5sK(Q1nocYFIuRrloYCy)xxzQ9Iyjz070VDfoADbvHqUwI5NP52x10jHcFxMZwYcyUc3aw325hy8oynZCohPlzf0WK6LRAqjBvFzBwyn68AFadxtPHMZVPR1Hpoq(UsPsq7rNB9UdrYbhX7SBH1T1AnLrvK05TR3UJoxvvOjAP9wh1iW6UntZTM0l2KAps3Rfqi1(SPNAv2fsUdABWttNC2v5P1RCH8)V76QMt6(gmpqsBX6udo)RCsgZ5wgwlr1cBZDeA)EbwAQan7X9c0asIjEjFUq6Y8m3cfwHl7Zr64ziNGqxUJ5LPHhx)1RPQ4TY3pO3Ok0v5SL6uB2CBRdXUA(2k9DohR57o135CS2VHw8sspO)B34(9NB4jkrpFBKZHdpKez47M2FR2bRESdCpK3evhKk14xvWbN13xsqHNQXfx4Pgu(cqO1H7Ggv9Fh)o0P09D5tmljoLY8Y3ZS8hIDQ18YL7(OM3OCNh18AKfjtP1AU2DjiCncQM4pyJ6m)hxHTlAV5yZ1EXXUenSxA4AhDrZIhkxvM(REgFA5VSJKH7imf(dV8uOjxg(RXafm8r4Vsb8Dl(FDzE7aV47babL(Q)9V(j8xYGMFFd4)ss4H)GqSMW)LCije6Kd39hced3vjWy4caH5T5)yt09IInwA69kbAK6svcHGjqcKoPQQ2CJmIAvRjteutAodoz5RGJGSOI8t72IRHPofw7tGo)0dB7Mt0rTVMSz3LpRYUDHOMTnE23o2x7kVmU5GbMpZxbw2yoHkgUxkymYoytpH0d6fNZax((HWev70MT49L6ZVs9GMCb9j9Na4Fdy7i3NutOBEQHrLKO3lr6il7(KwdJCPH7v2NaIByQoTtA0EijFFnpVNxJqlHvwLKgq6Qa0HNQBLP5WvHX2MBFr1D3C(0jMzk5QSiM7XLyw9A)nDhohyOkrhQ3Di4Ei7Iw8BQfqPrO7dvteHD(ndhCw)x(YJI3z6FPF61g9XEZQ0VAVwLAyfU1RVfLO5mh5B06mTAAdELvtU3Fqh)2fU8))]] )

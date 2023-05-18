@@ -4,6 +4,41 @@ local colors = addon.Colors
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
+-- Quest Tags Copied from 10.0.7 Constants.lua as they are REMOVED from the game --TechnoHunter
+--QUEST_ICONS_FILE = "Interface\\QuestFrame\\QuestTypeIcons";
+--QUEST_ICONS_FILE_WIDTH = 128;
+--QUEST_ICONS_FILE_HEIGHT = 64;
+
+local QUEST_TAG_TCOORDS = {
+	["COMPLETED"] = { 0.140625, 0.28125, 0, 0.28125 },
+	["DAILY"] = { 0.28125, 0.421875, 0, 0.28125 },
+	["WEEKLY"] = { 0.28125, 0.421875, 0.5625, 0.84375 },
+	["FAILED"] = { 0.84375, 0.984375, 0.28125, 0.5625 },
+	["STORY"] = { 0.703125, 0.84375, 0.28125, 0.5625 },
+	["ALLIANCE"] = { 0.421875, 0.5625, 0.28125, 0.5625 },
+	["HORDE"] = { 0.5625, 0.703125, 0.28125, 0.5625 },
+	["EXPIRING_SOON"] = { 0.84375, 0.984375, 0.5625, 0.84375 },
+	["EXPIRING"] = { 0.703125, 0.84375, 0.5625, 0.84375 },
+	
+	[Enum.QuestTag.Dungeon] = { 0.421875, 0.5625, 0, 0.28125 },
+	[Enum.QuestTag.Scenario] = { 0.5625, 0.703125, 0, 0.28125 },
+	[Enum.QuestTag.Account] = { 0.84375, 0.984375, 0, 0.28125 },
+	[Enum.QuestTag.Legendary] = { 0, 0.140625, 0.28125, 0.5625 },
+	[Enum.QuestTag.Group] = { 0.140625, 0.28125, 0.28125, 0.5625 },
+	[Enum.QuestTag.PvP] = { 0.28125, 0.421875, 0.28125, 0.5625 },
+	[Enum.QuestTag.Heroic] = { 0, 0.140625, 0.5625, 0.84375 },
+	
+	-- same texture for all raids
+	[Enum.QuestTag.Raid] = { 0.703125, 0.84375, 0, 0.28125 },
+	[Enum.QuestTag.Raid10] = { 0.703125, 0.84375, 0, 0.28125 },
+	[Enum.QuestTag.Raid25] = { 0.703125, 0.84375, 0, 0.28125 },
+}
+
+local WORLD_QUEST_TYPE_TCOORDS = {
+	[Enum.QuestTagType.Dungeon] = { 0.421875, 0.5625, 0, 0.28125 },
+	[Enum.QuestTagType.Raid] = { 0.703125, 0.84375, 0, 0.28125 },
+}
+
 addon:Controller("AltoholicUI.TabCharacters.QuestLogRow", { "AltoholicUI.Formatter", function(Formatter)
 	return {
 		SetName = function(frame, name, level)
@@ -28,6 +63,7 @@ addon:Controller("AltoholicUI.TabCharacters.QuestLogRow", { "AltoholicUI.Formatt
 			local icon = frame.QuestType.Icon
 			
 			-- Use the known in-game icons, if proper coords exists
+			--local tagCoords = QUEST_TAG_ATLAS[tagID] -- future proofing --TechnoHunter																										 
 			local tagCoords = QUEST_TAG_TCOORDS[tagID]
 			if tagCoords then
 				icon:SetTexture("Interface\\QuestFrame\\QuestTypeIcons")

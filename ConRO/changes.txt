@@ -1,10 +1,10 @@
-lightweight tag 2f3ed8c42991e0581c4a34c5055de7dbffad2bf0 v10.0.32
+lightweight tag 70584ed9ee5b723798fcb6a51f409cfaa38da859 v10.1.0
 Author:	Vae <emuha17@gmail.com>
-Date:	Sat Mar 18 22:39:41 2023 -1000
+Date:	Sat May 6 18:36:12 2023 -1000
 
-commit 2f3ed8c42991e0581c4a34c5055de7dbffad2bf0
+commit 70584ed9ee5b723798fcb6a51f409cfaa38da859
 Author: Vae <emuha17@gmail.com>
-Date:   Sat Mar 18 22:39:41 2023 -1000
+Date:   Sat May 6 18:36:12 2023 -1000
 
-    Added some survival hunter spell ignores.
+    Version update for 10.1
 

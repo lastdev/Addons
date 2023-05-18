@@ -1,9 +1,11 @@
 ## Interface: 11403
 ## Title: Plater
 ## Notes: Nameplate addon designed for advanced users.
-## SavedVariables: PlaterDB
+## SavedVariables: PlaterDB, PlaterLanguage
 ## SavedVariablesPerCharacter: PlaterDBChr
-## Version: Plater-v555-Classic
+## IconTexture-blank: 982414
+## IconTexture: Interface\AddOns\Plater\images\cast_bar
+## Version: Plater-v558-Classic
 ## X-Curse-Project-ID: 100547
 ## X-Wago-ID: kRNLep6o
 
@@ -22,6 +24,7 @@ locales\ptBR.lua
 locales\ruRU.lua
 locales\zhCN.lua
 locales\zhTW.lua
+locales\arAR.lua
 
 Plater.xml
 

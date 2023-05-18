@@ -12,7 +12,6 @@ local _, Addon = ...
 local locale = Addon:GetLocale()
 local List = Mixin({}, Addon.CommonUI.Mixins.Border)
 local STATE_KEY = {}
-local SCROLLFRAME_TEMPLATE = "UIPanelScrollFrameTemplate"
 local Colors = Addon.CommonUI.Colors
 local UI = Addon.CommonUI.UI
 local Layouts = Addon.CommonUI.Layouts
@@ -46,32 +45,58 @@ local function list_callHandler(list, handler, ...)
     end
 end
 
---[[
-    Create the child scrollview which actually holds the contents
-]]
-local function _createScrollframe(list)
-    local scroller = CreateFrame("ScrollFrame", nil, list, SCROLLFRAME_TEMPLATE)
-    scroller:SetScrollChild(CreateFrame("Frame", nil, scroller))
-    scroller:SetPoint("TOPLEFT", 3, -3)
-    scroller:SetPoint("BOTTOMRIGHT", -3, 3)
-    ScrollFrame_OnLoad(scroller)
+
+--[[ Gets the padding for the list content ]]
+local function list_GetContentPadding(padding)
+    local ptype = type(padding)
+    if (ptype == "number") then
+        return padding, padding, padding, padding
+    elseif (ptype == "table") then
+        return tonumber(padding.left) or 0,
+            tonumber(padding.top) or 0,
+            tonumber(padding.right) or 0,
+            tonumber(padding.bottom) or 0
+    end
+
+    return 0, 0, 0, 0
+end
+
+--[[ Create a new 10.1+ scrollbar ]]
+local function list_CreateScrollbarRetail(self)
+    local template = "MinimalScrollBar"
+    local scrollInset = 6
+    local bottomOffset = 4
+    if ( Addon.Systems.Info.IsClassicEra) then
+        template = "WowTrimScrollBar"
+        scrollInset = 2
+        bottomOffset = 2
+    end
     
-    local scrollbar = scroller.ScrollBar
-    local up = scrollbar.ScrollUpButton
-    local down = scrollbar.ScrollDownButton
+    local scrollbar = CreateFrame("EventFrame", nil, self, template)
+    scrollbar:SetPoint("TOPRIGHT", self, "TOPRIGHT", -scrollInset, -4);
+    scrollbar:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -scrollInset, bottomOffset);
 
-    scrollbar:SetWidth(up:GetWidth())
-    up:ClearAllPoints()
-    up:SetPoint("TOPRIGHT", list, -2, -2)
+    -- Hookup to the "Scroll" callback
+    scrollbar:RegisterCallback(scrollbar.Event.OnScroll, function(_, pos)
+            local state = rawget(self, STATE_KEY)
 
-    down:ClearAllPoints()
-    down:SetPoint("BOTTOMRIGHT", list, -2, 1)
+            -- move the frame based on the perctage visible
+            local viewHeight = state.frame:GetHeight() or 0
+            local top = math.max(0, ((state.viewHeight or 0) - viewHeight)) * pos
 
-    scrollbar:ClearAllPoints()
-    scrollbar:SetPoint("TOPLEFT", up, "BOTTOMLEFT")
-    scrollbar:SetPoint("BOTTOMRIGHT", down, "TOPRIGHT")
+            state.itemOffset = top
+            state.layout = true
 
-    return scroller
+        end, self);
+
+    -- Forward mousewheel
+    self:SetScript("OnMouseWheel", function(_, ...)
+        scrollbar:OnMouseWheel(...)
+        end)
+
+    local state = rawget(self, STATE_KEY)
+    state.scrollbarWidth = math.max(scrollbar:GetWidth(), 16)
+    state.scrollbar = scrollbar
 end
 
 --[[ Discards any frames which are not currently in the view from the framses cache ]]
@@ -169,7 +194,7 @@ local function list_CreateItem(self, state, model)
     local litem = Mixin(state.itemCreator(self, model), List.ListItem)
     litem:Attach(self);
     litem:SetModel(model)
-    litem:SetParent(state.scroller:GetScrollChild())
+    litem:SetParent(state.frame)
     
     litem:SetScript("OnSizeChanged", function(_item, ...)
             state.layout = true
@@ -210,8 +235,8 @@ local function list_PopulateItems(self, state)
             --[===[@debug@
             local modelName = tostring(model)
             if (type(model) == "table") then
-                if (model.GetName) then
-                    modelName = "" --model:GetName()
+                if type(model.GetName) == "function" then
+                    modelName = model:GetName()
                 else
                     modelName = model.Name or model.Text or modelName
                 end
@@ -284,33 +309,65 @@ local function list_BuildView(self, state)
     end
 end
 
+local function list_DebugName(self)
+    return self:GetDebugName() or ("<unkown: " .. tostring(self) .. ">")
+end
+
 --[[ Layout the list ]]
 local function list_Layout(self, state)
-    local spacing = 0
-    if (type(self.ItemSpacing) == "number") then
-        spacing = self.ItemSpacing
-    end
 
-    local padding = 0
-    if (type(self.Padding) == "number") then
-        padding = self.Padding
-    end
+    local width = state.frame:GetWidth()
+    local viewHeight = 0
 
-    local scroller = state.scroller:GetScrollChild()
-    local width = scroller:GetWidth()
     if (not state.viewFrames) then
 
+        viewHeight = 0
     else
-        Layouts.Stack(scroller, state.viewFrames, padding, spacing, width)
+        local top = -(state.itemOffset or 0)
+        local windowHeight = state.frame:GetHeight()
+        local spacing = state.itemSpacing
+
+        for i, child in ipairs(state.viewFrames) do
+            local ml, mt, mr, mb = Layouts.GetMargins(child)
+            child:SetWidth(width - (ml + mr))
+
+            if (i ~= 0) then
+                top = top + spacing
+                viewHeight = viewHeight + spacing
+            end
+
+            child:SetPoint("TOPLEFT", state.frame, "TOPLEFT", 0 + ml, -(top + mt))
+            local childHeight = child:GetHeight()
+
+            if (type(child.Layout) == "function") then
+                xpcall(child.Layout, CallErrorHandler, child, width - (ml + mr))
+                childHeight = child:GetHeight()
+            end
+
+            top = top + childHeight + (mb + mt)
+            viewHeight = viewHeight + childHeight + (mb + mt)
+        end
+
+        -- Decide to hist the scrollbar? If we are tall enough with the scrollbar, we 
+        -- will certainly be wide enoough without it.
+
 
     end
+
+    state.viewHeight = viewHeight    
+    if (viewHeight <= state.frame:GetHeight()) then
+        state.scrollbar:SetScrollAllowed(false)
+    else
+        state.scrollbar:SetScrollAllowed(true)
+    end
+    state.scrollbar:SetVisibleExtentPercentage(math.min(1, state.frame:GetHeight() / viewHeight));
 end
 
 --[[ Display the empty list ]]
 local function list_showEmpty(list, show)
     local text = list.EmptyText
     local state = rawget(list, STATE_KEY)
-    local scroller = state.scroller
+    local scroller = state.frame
     local empty = list.empty
 
     if (not text or not show) then
@@ -320,6 +377,11 @@ local function list_showEmpty(list, show)
         UI.SetColor(empty, "LIST_EMPTY_TEXT")
         empty:SetText(locale[text] or text)
         empty:SetTextColor(Colors.LIST_EMPTY_TEXT:GetRGBA())
+
+        empty:ClearAllPoints()
+        local pl, pt, pr = list_GetContentPadding(state.padding)
+        empty:SetPoint("TOPLEFT", 2 * pl, -2 * pt)
+        empty:SetPoint("TOPRIGHT", state.scrollbar, "TOPLEFT", -2 * pr, -2 * pt)
     end
 
 
@@ -379,12 +441,25 @@ function List:OnLoad()
         frames = {},
         models = {},
         update = true,
+        itemSpacing = 0,
+        padding = 4,
     }
 
+    local spacing = 0
+    if (type(self.ItemSpacing) == "number") then
+        state.itemSpacing = self.ItemSpacing
+    end
+
+    if ((type(self.Padding) == "number") or (type("self.Padding") == "table")) then
+        state.padding = self.Padding
+    end
+
     rawset(self, STATE_KEY, state)
+
     self:OnBorderLoaded(nil, Colors.LIST_BORDER, Colors.LIST_BACK)
-    self:SetClipsChildren(true)
-    state.scroller = _createScrollframe(self)
+    list_CreateScrollbarRetail(self)
+    state.frame = CreateFrame("Frame", "view", self);
+    state.frame:SetClipsChildren(true)
 end
 
 --[[ Handler for show ]]
@@ -414,11 +489,28 @@ function List:OnHide()
         end)
 end
 
+function List:ScrollToTop()
+    local state = rawget(self, STATE_KEY)
+    state.scrollbar:SetScrollPercentage(0)
+end
+
 --[[ Handler for size changed ]]
 function List:OnSizeChanged(width, height)
     local state = rawget(self, STATE_KEY)
 
+
     state.layout = true
+    local paddingLeft, paddingTop, paddingRight, paddingBottom = list_GetContentPadding(state.padding)
+
+    -- Position the content
+    state.frame:SetPoint("TOPLEFT", self, "TOPLEFT", paddingLeft, -paddingTop)
+    state.frame:SetPoint("BOTTOMLEFT", self, "BOTTOMLEFT", paddingLeft, paddingBottom)
+
+    if (state.scrollbar:IsShown()) then
+        state.frame:SetPoint("RIGHT", state.scrollbar, "LEFT", -(paddingRight), 0)
+    else
+        state.frame:SetPoint("RIGHT", self, "RIGHT", -paddingRight, 0)
+    end
 end
 
 --[[
@@ -557,6 +649,7 @@ function List:Rebuild()
     state.items = nil
     state.view = nil
 
+
     self:Update()
 end
 
@@ -567,9 +660,9 @@ end
 function List:Update()
     local state = rawget(self, STATE_KEY)
     state.update = false        
-    local scroller = state.scroller
-    local container = scroller:GetScrollChild()
-    local width = self:GetWidth() - scroller.ScrollBar:GetWidth() - 6
+    local scroller = state.frame
+    local container = state.frame
+    local width = self:GetWidth() - 20 - 6
 
 
 
@@ -588,13 +681,15 @@ function List:Update()
         list_callHandler(self, "OnViewCreated", STATE_KEY)
     else
         list_showEmpty(self, false)
-        
-        if (container:GetWidth() ~= width) then
-            container:SetWidth(width)
-        end
+        --if (container:GetWidth() ~= width) then
+          --  container:SetWidth(width)
+        --end
 
         list_Layout(self, state)
         self.layout = false
+
+        state.scrollbar:SetVisibleExtentPercentage(math.max(1, self:GetHeight() / container:GetHeight()))
+        state.scrollbar:Update()
     end
 end
 

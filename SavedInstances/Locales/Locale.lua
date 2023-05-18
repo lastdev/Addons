@@ -280,6 +280,7 @@ Ld["Vision Boss + 2 Bonus Objectives"] = "Vision Boss + 2 Bonus Objectives"
 Ld["Vision Boss Only"] = "Vision Boss Only"
 Ld["Voraazka"] = "Voraazka"
 Ld["VOTW"] = "VOTW"
+Ld["VP"] = "VP"
 Ld["Warfronts"] = "Warfronts"
 Ld["Warn about instance limit"] = "Warn about instance limit"
 Ld["Warning: You've entered about %i instances recently and are approaching the %i instance per hour limit for your account. More instances should be available in %s."] = "Warning: You've entered about %i instances recently and are approaching the %i instance per hour limit for your account. More instances should be available in %s."
@@ -629,6 +630,8 @@ La["Vision Boss Only"] = "Boss de la vision uniquement"
 La["Voraazka"] = "Voraazka"
 --[[Translation missing --]]
 La["VOTW"] = "VOTW"
+--[[Translation missing --]]
+La["VP"] = "VP"
 La["Warfronts"] = "Fronts de guerre"
 La["Warn about instance limit"] = "Alerte sur la limite d'instance"
 La["Warning: You've entered about %i instances recently and are approaching the %i instance per hour limit for your account. More instances should be available in %s."] = "Attention : vous êtes entré dans %i instances récemment et approchez la limite de %i instances par heure pour ce compte. Plus d'instances seront disponibles dans environ %s."
@@ -979,6 +982,8 @@ La["Vision Boss Only"] = "nur der Visions Boss"
 La["Voraazka"] = "Voraazka"
 --[[Translation missing --]]
 La["VOTW"] = "VOTW"
+--[[Translation missing --]]
+La["VP"] = "VP"
 La["Warfronts"] = "Kriegsfronten"
 La["Warn about instance limit"] = "Vor Instanzlimit warnen"
 La["Warning: You've entered about %i instances recently and are approaching the %i instance per hour limit for your account. More instances should be available in %s."] = "Achtung: Du hast kürzlich %i Instanzen betreten und näherst Dich dem Limit von %i Instanzen pro Stunde für Deinen Account. Weitere Instanzen sollten in %s verfügbar sein."
@@ -1259,6 +1264,8 @@ La["Vision Boss + 2 Bonus Objectives"] = "주 목표+추가 목표 2"
 La["Vision Boss Only"] = "주 목표만 달성"
 La["Voraazka"] = "보라즈카"
 La["VOTW"] = "금고"
+--[[Translation missing --]]
+La["VP"] = "VP"
 La["Warfronts"] = "격전지"
 La["Warn about instance limit"] = "인스턴스 제한 경고"
 La["Warning: You've entered about %i instances recently and are approaching the %i instance per hour limit for your account. More instances should be available in %s."] = "경고 : 최근 %i 개의 인스턴스에 입장하였고, 귀하의 계정에 대해 시간 당 제한된 %i 개의 인스턴스에 근접하고 있습니다. 더 많은 인스턴스는 %s 후에 이용가능합니다."
@@ -1682,6 +1689,8 @@ La["Voraazka"] = "Voraazka"
 --[[Translation missing --]]
 La["VOTW"] = "VOTW"
 --[[Translation missing --]]
+La["VP"] = "VP"
+--[[Translation missing --]]
 La["Warfronts"] = "Warfronts"
 --[[Translation missing --]]
 La["Warn about instance limit"] = "Warn about instance limit"
@@ -1966,6 +1975,8 @@ La["Vision Boss + 2 Bonus Objectives"] = "Босс Видения + 2 Бонус
 La["Vision Boss Only"] = "Только Босс Видения"
 La["Voraazka"] = "Вораазка"
 La["VOTW"] = "КС"
+--[[Translation missing --]]
+La["VP"] = "VP"
 La["Warfronts"] = "Фронты"
 La["Warn about instance limit"] = "Предупреждать о пределе подземелий"
 La["Warning: You've entered about %i instances recently and are approaching the %i instance per hour limit for your account. More instances should be available in %s."] = "Внимание! За последнее время Вы вошли в %i подземелий и приближаетесь к ограничению в \"%i подземелий в час\" для Вашего аккаунта. Новые подземелья будут доступны через %s."
@@ -2202,10 +2213,8 @@ La["Sorting"] = "排序"
 La["SOTS"] = "风暴"
 La["Space between categories"] = "显示分类间距"
 La["Sparks of Life"] = "生命火花"
---[[Translation missing --]]
-La["Storm Surge"] = "Storm Surge"
---[[Translation missing --]]
-La["Storm's Fury"] = "Storm's Fury"
+La["Storm Surge"] = "风起云涌"
+La["Storm's Fury"] = "暴风之怒"
 La["STRT"] = "天街"
 La["TAV"] = "魔馆"
 La["TD"] = "托尔"
@@ -2240,6 +2249,8 @@ La["Vision Boss + 2 Bonus Objectives"] = "三箱"
 La["Vision Boss Only"] = "一箱"
 La["Voraazka"] = "沃拉兹卡"
 La["VOTW"] = "地窟"
+--[[Translation missing --]]
+La["VP"] = "VP"
 La["Warfronts"] = "战争前线"
 La["Warn about instance limit"] = "达到副本进入限制时警告"
 La["Warning: You've entered about %i instances recently and are approaching the %i instance per hour limit for your account. More instances should be available in %s."] = "警告：你最近已经进入 %i 次副本，并且已经接近账号每小时 %i 次的进入限制，更多的副本可以在 %s 后允许进入。"
@@ -2608,6 +2619,8 @@ La["Vision Boss Only"] = "Solo jefe de Vision"
 La["Voraazka"] = "Voraazka"
 --[[Translation missing --]]
 La["VOTW"] = "VOTW"
+--[[Translation missing --]]
+La["VP"] = "VP"
 La["Warfronts"] = "Frentes de guerra"
 La["Warn about instance limit"] = "Advertencia sobre límite de instancias"
 La["Warning: You've entered about %i instances recently and are approaching the %i instance per hour limit for your account. More instances should be available in %s."] = "Advertencia: Has entrado en %i estancias recientemente, y te estás acercando al límite de %i estancias por hora para tu cuenta. Tendrás más disponibles después de %s."
@@ -2918,6 +2931,8 @@ La["Vision Boss Only"] = "只有幻象首領"
 --[[Translation missing --]]
 La["Voraazka"] = "Voraazka"
 La["VOTW"] = "看守"
+--[[Translation missing --]]
+La["VP"] = "VP"
 La["Warfronts"] = "戰爭前線"
 La["Warn about instance limit"] = "警告副本限制"
 La["Warning: You've entered about %i instances recently and are approaching the %i instance per hour limit for your account. More instances should be available in %s."] = "警告：你最近已經進入副本 %i 次，並且已經接近每小時 %i 次的帳號進入限制。 %s 後允許進入更多副本。"
@@ -3326,6 +3341,8 @@ La["Vision Boss Only"] = "Vision Boss Only"
 La["Voraazka"] = "Voraazka"
 --[[Translation missing --]]
 La["VOTW"] = "VOTW"
+--[[Translation missing --]]
+La["VP"] = "VP"
 La["Warfronts"] = "Fronts de Guerra"
 --[[Translation missing --]]
 La["Warn about instance limit"] = "Warn about instance limit"
@@ -3752,6 +3769,8 @@ La["Vision Boss Only"] = "Vision Boss Only"
 La["Voraazka"] = "Voraazka"
 --[[Translation missing --]]
 La["VOTW"] = "VOTW"
+--[[Translation missing --]]
+La["VP"] = "VP"
 La["Warfronts"] = "Fronti di Guerra"
 --[[Translation missing --]]
 La["Warn about instance limit"] = "Warn about instance limit"

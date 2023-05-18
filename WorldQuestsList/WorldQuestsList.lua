@@ -1,4 +1,4 @@
-local VERSION = 106
+local VERSION = 107
 
 --[[
 Special icons for rares, pvp or pet battle quests in list
@@ -317,6 +317,8 @@ Bugfixes
 9.2 update
 
 toc update
+
+fixes
 
 fixes
 ]]
@@ -1622,6 +1624,7 @@ do
 	end
 	local hookQuestFunc = function(self,button)
 		if self.questID then
+			if not self:GetMap() then return end
 			local mapID = self:GetMap():GetMapID()
 			local x,y = self:GetPosition()
 			if (VWQL and not VWQL.DisableLFG and not VWQL.DisableLFG_RightClickIcon) and button == "RightButton" and not IsQuestComplete(self.questID) then
@@ -1657,6 +1660,7 @@ do
 	local hookVignetteFunc = function(self,button)
 		if self.vignetteInfo and (self.vignetteInfo.atlasName == "VignetteLoot" or self.vignetteInfo.atlasName == "VignetteLootElite") then
 			local mapID = self:GetMap():GetMapID()
+			if not self:GetMap() then return end
 			local x,y = self:GetPosition()
 			if x and y then
 				local wx,wy = WorldQuestList:GetMapCoordAdj(x,y,mapID)
@@ -4748,7 +4752,7 @@ if WQ_provider then
 	WQ_provider:GetMap():RegisterCallback("WorldQuestsUpdate", function()
 		if WorldQuestList.IconsGeneralLastMap and WorldMapFrame:GetMapID() ~= WorldQuestList.IconsGeneralLastMap then
 			for questId in pairs(WorldQuestList.WMF_activePins) do
-				if WQ_provider.pingPin and WQ_provider.pingPin:IsAttachedToQuest(questId) then
+				if WQ_provider.pingPin and WQ_provider.pingPin.questID == questId then
 					WQ_provider.pingPin:Stop()
 				end
 				local pin = WorldQuestList.WMF_activePins[questId]
@@ -5822,8 +5826,16 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 			local oppositeMapQuests = C_TaskQuest.GetQuestsForPlayerByMapID(1970)
 			for _,info in pairs(oppositeMapQuests or WorldQuestList.NULLTable) do
 				taskInfo[#taskInfo+1] = info
-				info.dX,info.dY,info.dMap = info.x,info.y,1355
+				info.dX,info.dY,info.dMap = info.x,info.y,1970
 				info.x,info.y = 0.86, 0.80
+			end
+		end
+		if (mapAreaID == 1978) then
+			local oppositeMapQuests = C_TaskQuest.GetQuestsForPlayerByMapID(2133)
+			for _,info in pairs(oppositeMapQuests or WorldQuestList.NULLTable) do
+				taskInfo[#taskInfo+1] = info
+				info.dX,info.dY,info.dMap = info.x,info.y,2133
+				info.x,info.y = 0.87, 0.81
 			end
 		end
 	end
@@ -6391,6 +6403,9 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 							RewardListType[#RewardListStrings] = (VWQL.SortPrio.curr1721 or defSortPrio.curr1721)
 						elseif currencyID == 1602 then	--Conq Points
 							RewardListType[#RewardListStrings] = (VWQL.SortPrio.honor or defSortPrio.honor) + 0.1
+						elseif currencyID == 2408 then
+							hasRewardFiltered = true
+							RewardListType[#RewardListStrings] = (VWQL.SortPrio.curr1508 or defSortPrio.curr1508)
 						elseif WorldQuestList:IsFactionCurrency(currencyID) then
 							hasRewardFiltered = true
 							if ActiveFilterType.rep then 
@@ -6615,7 +6630,7 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 						RewardListStrings[#RewardListStrings+1] = GetCoinTextureString(money)
 						RewardListSort[#RewardListStrings] = money
 						RewardListType[#RewardListStrings] = (VWQL.SortPrio.gold or defSortPrio.gold)
-						if money > 200000 then
+						if money > 400000 then
 							hasRewardFiltered = true
 
 							if bit.band(filters[5][2],ActiveFilter) == 0 then 
@@ -6868,7 +6883,7 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 			for i=1,#result do
 				local info = result[i].info
 				if info and info.questId and info.x and not result[i].showAsRegQuest then
-					if (O.generalMapType == 3 and VWQL.ArgusMap) or (mapAreaID == 619 and info.x == 0.87 and info.y == 0.165) or ((mapAreaID == 875 or mapAreaID == 876) and info.x == 0.87 and info.y == 0.12) or (mapAreaID == 1550 and info.x == 0.86 and info.y == 0.80) then
+					if (O.generalMapType == 3 and VWQL.ArgusMap) or (mapAreaID == 619 and info.x == 0.87 and info.y == 0.165) or ((mapAreaID == 875 or mapAreaID == 876) and info.x == 0.87 and info.y == 0.12) or (mapAreaID == 1550 and info.x == 0.86 and info.y == 0.80) or (mapAreaID == 1978 and info.x == 0.87 and info.y == 0.81) then
 						info = WorldQuestList:GetRadiantWQPosition(info,result)
 					end
 					pinsToRemove[info.questId] = nil
@@ -6877,7 +6892,7 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 						pin:RefreshVisuals()
 						pin:SetPosition(info.x, info.y)
 
-						if WQ_provider.pingPin and WQ_provider.pingPin:IsAttachedToQuest(info.questId) then
+						if WQ_provider.pingPin and WQ_provider.pingPin.questID == info.questId then
 							WQ_provider.pingPin:SetPosition(info.x, info.y)
 						end
 					else
@@ -6889,7 +6904,7 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 		end
 
 		for questId in pairs(pinsToRemove) do
-			if WQ_provider.pingPin and WQ_provider.pingPin:IsAttachedToQuest(questId) then
+			if WQ_provider.pingPin and WQ_provider.pingPin.questID == questId then
 				WQ_provider.pingPin:Stop()
 			end
 			local pin = WorldQuestList.WMF_activePins[questId]
@@ -7167,11 +7182,14 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 		local name,_,icon = GetCurrencyInfo(1533)
 		WorldQuestList.footer.ap:SetText((icon and "|T"..icon..":0|t " or "")..name..": "..totalWE)
 		WorldQuestList.footer.OR:SetText(format("|T%d:0|t %d",1397630,totalOR))
-	else
+	elseif WorldQuestList:IsBfaZone(mapAreaID) then
 		local az_name,_,icon = GetCurrencyInfo(1553)
 
 		WorldQuestList.footer.ap:SetText((icon and "|T"..icon..":0|t " or "")..az_name..": "..WorldQuestList:FormatAzeriteNumber(totalAzerite))
 		WorldQuestList.footer.OR:SetText(format("|T%d:0|t %d",2032600,totalORbfa))
+	else
+		WorldQuestList.footer.ap:SetText("")
+		WorldQuestList.footer.OR:SetText("")
 	end
 	WorldQuestList.footer.gold:SetText(totalG > 0 and GetCoinTextureString(totalG) or "")
 
@@ -7357,12 +7375,15 @@ local slashfunc = function(arg)
 					mapID = GetCurrentMapID()
 				end
 				if mapID then
-					local wX,wY = WorldQuestList:GetQuestWorldCoord2(-10,mapID,x / 100,y / 100,true)
+					local wX,wY --= WorldQuestList:GetQuestWorldCoord2(-10,mapID,x / 100,y / 100,true)
 					if not wX then
 						local continentID, worldPos = C_Map.GetWorldPosFromMapPos(mapID, CreateVector2D(x/100, y/100))
 						if worldPos then
 							wY,wX = worldPos:GetXY()
 						end
+					end
+					if not wX then
+						wX,wY = WorldQuestList:GetQuestWorldCoord2(-10,mapID,x / 100,y / 100,true)
 					end
 					if wX and wY then
 						local comment = argL:match("^way +[^ ]+ +[^ ]+ (.-)$")
@@ -9195,6 +9216,12 @@ do
 							ajustSize = 5
 							amount = floor(numItems * (warMode and C_QuestLog.QuestCanHaveWarModeBonus(obj.questID) and C_CurrencyInfo.DoesWarModeBonusApply(currencyID) and warModeBonus or 1))
 							break
+						elseif currencyID == 2408 then
+							iconTexture = texture
+							ajustMask = true
+							ajustSize = 8
+							amount = floor(numItems * (warMode and C_QuestLog.QuestCanHaveWarModeBonus(obj.questID) and C_CurrencyInfo.DoesWarModeBonusApply(currencyID) and warModeBonus or 1))
+							break
 						elseif WorldQuestList:IsFactionCurrency(currencyID or 0) then
 							iconAtlas = "poi-workorders"
 							amount = numItems
@@ -9286,11 +9313,11 @@ do
 							elseif itemID == 169485 then
 								iconAtlas = SlotToIcon.INVTYPE_HAND
 								ajustSize = 10
-							elseif itemID == 198048 or itemID == 198056 or itemID == 198058 or itemID == 198059 then
+							elseif itemID == 198048 or itemID == 198056 or itemID == 198058 or itemID == 198059 or itemID == 204673 then
 								iconTexture = icon
 								ajustMask = true
 								ajustSize = 4
-								amount = itemID == 198048 and "I" or itemID == 198056 and "II" or itemID == 198058 and "III" or "IV"
+								amount = itemID == 198048 and "I" or itemID == 198056 and "II" or itemID == 198058 and "III" or itemID == 204673 and "V" or "IV"
 							end
 
 							if CacheIsAnimaItem[itemID] then

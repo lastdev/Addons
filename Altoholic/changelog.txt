@@ -15,6 +15,38 @@ How to support Altoholic's development :
 If you like the addon, consider supporting it, this has been the long term effort and commitment of a single person. #ArmyOfOne
 
 
+10.1.005 (18/05/2023)
+
+- DataStore_Agenda is now generic and works will all versions of the game.
+- DataStore_Currencies is now generic and works will all versions of the game.
+- Fixed texture coordinates in the QuestLogRow template. (Technohunter)
+
+10.1.004 (12/05/2023)
+
+- Summary Tab : fixed garrison enums in the activity panel.
+- DataStore_Pets : updated scanning functions for the new API. (Technohunter)
+
+
+10.1.003 (11/05/2023)
+
+- DataStore_Quests : fixed scanning of spell rewards.
+
+10.1.002 (04/05/2023)
+
+- Updated Ace Libraries
+- DataStore_Mails : fixed the events triggered when opening the mailbox AGAIN !
+
+
+10.1.001 (03/05/2023)
+
+Many thanks to Feral & Technohunter for providing fixes on Discord during my absence !
+
+- Several fixes related to the change of the garrison enum. (Feral & Technohunter)
+- Updated the ToC to make all DataStore modules mandatory dependencies, in order to avoid issues/complaints caused by missing modules.
+- DataStore_Quests : fixed an error when scanning spell rewards of a quest (Thanks Technohunter)
+- DataStore_Mails : fixed the events triggered when opening the mailbox.
+- Summary Tab => Added support for the new 10.1 currency.
+
 10.0.011 (23/02/2023)
 
 - Grids Tab : added the Dragonflight LFR raid. (Thanks Feral !)

@@ -92,7 +92,7 @@ spec:RegisterTalents( {
     guardians_of_the_light     = { 82636, 196437, 1 }, -- Guardian Spirit also grants you 100% of its effects when used on an ally.
     halo                       = { 82682, 120517, 1 }, -- Creates a ring of Holy energy around you that quickly expands to a 30 yd radius, healing allies for 3,282 and dealing 3,082 Holy damage to enemies. Healing reduced beyond 6 targets.
     harmonious_apparatus       = { 82611, 390994, 2 }, -- Circle of Healing reduces the cooldown of Holy Word: Sanctify, Prayer of Mending reduces the cooldown of Holy Word: Serenity, and Holy Fire reduces the cooldown of Holy Word: Chastise by 4 sec.
-    healing_chorus             = { 82625, 390881, 1 }, -- Your Renew healing increases the healing done by your next Circle of Healing by 1%, stacking up to 50 times.
+    healing_chorus             = { 82625, 390881, 1 }, -- Your Renew healing increases the healing done by your next Circle of Healing by 2%, stacking up to 50 times.
     holy_mending               = { 82641, 391154, 1 }, -- When Prayer of Mending jumps to a target affected by your Renew, that target is instantly healed for 616.
     holy_word_chastise         = { 82639, 88625 , 1 }, -- Chastises the target for 2,992 Holy damage and incapacitates them for 4 sec. Cooldown reduced by 4 sec when you cast Smite.
     holy_word_salvation        = { 82610, 265202, 1 }, -- Heals all allies within 40 yards for 2,130, and applies Renew and 2 stacks of Prayer of Mending to each of them. Cooldown reduced by 30 sec when you cast Holy Word: Serenity or Holy Word: Sanctify.
@@ -257,6 +257,11 @@ spec:RegisterAuras( {
         duration = 15,
         max_stack = 1
     },
+    holy_word_chastise = {
+        id = 247587,
+        duration = 5,
+        max_stack = 1
+    },
     inspiration = {
         id = 390677,
         duration = 15,
@@ -380,6 +385,16 @@ spec:RegisterAuras( {
 } )
 
 
+spec:RegisterGear( "tier30", 202543, 202542, 202541, 202545, 202540 )
+spec:RegisterAuras( {
+    inspired_word = {
+        id = 409479,
+        duration = 3600,
+        max_stack = 15
+    }
+} )
+
+
 -- Abilities
 spec:RegisterAbilities( {
     -- Reset the cooldown of your Holy Words, and enter a pure Holy form for 20 sec, increasing the cooldown reductions to your Holy Words by 300% and reducing their cost by 100%.
@@ -412,10 +427,14 @@ spec:RegisterAbilities( {
         spend = 0.03,
         spendType = "mana",
 
+        talent = "circle_of_healing",
         startsCombat = false,
-        texture = 135887,
 
         handler = function ()
+            removeBuff( "healing_chorus" )
+            if talent.harmonious_apparatus.enabled then
+                reduceCooldown( "holy_word_sanctify", 2 * talent.harmonious_apparatus.rank * ( buff.apotheosis.up and 3 or 1 ) )
+            end
         end,
     },
 
@@ -426,8 +445,8 @@ spec:RegisterAbilities( {
         cooldown = 60,
         gcd = "off",
 
+        pvptalent = "divine_ascension",
         startsCombat = false,
-        texture = 642580,
 
         toggle = "cooldowns",
 
@@ -446,8 +465,8 @@ spec:RegisterAbilities( {
         spend = 0.04,
         spendType = "mana",
 
+        talent = "divine_hymn",
         startsCombat = false,
-        texture = 237540,
 
         toggle = "cooldowns",
 
@@ -465,8 +484,8 @@ spec:RegisterAbilities( {
         spend = 0.02,
         spendType = "mana",
 
+        talent = "divine_star",
         startsCombat = true,
-        texture = 537026,
 
         handler = function ()
         end,
@@ -479,8 +498,8 @@ spec:RegisterAbilities( {
         cooldown = 60,
         gcd = "off",
 
+        talent = "divine_word",
         startsCombat = false,
-        texture = 521584,
 
         toggle = "cooldowns",
 
@@ -498,8 +517,8 @@ spec:RegisterAbilities( {
         spend = 0.02,
         spendType = "mana",
 
+        talent = "dominate_mind",
         startsCombat = true,
-        texture = 1386549,
 
         handler = function ()
             applyDebuff( "dominate_mind" )
@@ -516,16 +535,17 @@ spec:RegisterAbilities( {
         spend = 500,
         spendType = "mana",
 
+        talent = "empyreal_blaze",
         startsCombat = false,
-        texture = 525023,
 
         toggle = "cooldowns",
 
         handler = function ()
-            applyBuff( "empyreal_blaze" )
+            applyBuff( "empyreal_blaze", nil, 3 )
             setCooldown( "holy_fire", 0 )
         end,
     },
+
     fade = {
         id = 586,
         cast = 0,
@@ -539,13 +559,17 @@ spec:RegisterAbilities( {
             applyBuff( "fade" )
         end,
     },
+
     flash_heal = {
         id = 2061,
         cast = 1.35,
         cooldown = 0,
         gcd = "spell",
 
-        spend = function() return ( 0.04 * buff.divine_favor_serenity.up and 0.8 or 1 ) end,
+        spend = function()
+            if buff.surge_of_light.up then return 0 end
+            return 0.04 * ( buff.divine_favor_serenity.up and 0.8 or 1 )
+        end,
         spendType = "mana",
 
         startsCombat = false,
@@ -553,15 +577,14 @@ spec:RegisterAbilities( {
 
         handler = function ()
             removeBuff( "resonant_words" )
-            reduceCooldown( "holy_word_serenity", 6 )
-            if buff.apotheosis.up then
-                reduceCooldown ( "holy_word_serenity", 12 )
-            end
+            removeStack( "surge_of_light" )
+            reduceCooldown( "holy_word_serenity", buff.apotheosis.up and 18 or 6 )
             if talent.lightweaver.enabled then
                 addStack( "lightweaver" )
             end
         end,
     },
+
     greater_heal = {
         id = 289666,
         cast = 3,
@@ -571,8 +594,8 @@ spec:RegisterAbilities( {
         spend = 0.04,
         spendType = "mana",
 
+        pvptalent = "greater_heal",
         startsCombat = false,
-        texture = 135915,
 
         handler = function ()
         end,
@@ -588,8 +611,8 @@ spec:RegisterAbilities( {
         spend = 0.01,
         spendType = "mana",
 
+        talent = "guardian_spirit",
         startsCombat = false,
-        texture = 237542,
 
         toggle = "defensives",
 
@@ -608,8 +631,8 @@ spec:RegisterAbilities( {
         spend = 0.03,
         spendType = "mana",
 
+        talent = "halo",
         startsCombat = true,
-        texture = 632352,
 
         handler = function ()
         end,
@@ -620,24 +643,21 @@ spec:RegisterAbilities( {
         cooldown = 0,
         gcd = "spell",
 
-        spend = function() return ( 0.02 * buff.divine_favor_serenity.up and 0.8 or 1 ) end,
+        spend = function() return 0.02 * ( buff.divine_favor_serenity.up and 0.8 or 1 ) end,
         spendType = "mana",
 
         startsCombat = false,
         texture = 135913,
 
         handler = function ()
-            reduceCooldown( "holy_word_serenity", 6 )
-            if buff.apotheosis.up then
-                reduceCooldown ( "holy_word_serenity", 12 )
-            end
+            reduceCooldown( "holy_word_serenity", buff.apotheosis.up and 18 or 6 )
             removeStack( "lightweaver" )
             removeBuff( "resonant_words" )
         end,
     },
     holy_fire = {
         id = 14914,
-        cast = 1.5,
+        cast = function() return buff.empyreal_blaze.up and 0 or 1.5 end,
         cooldown = 10,
         gcd = "spell",
 
@@ -645,10 +665,17 @@ spec:RegisterAbilities( {
         spendType = "mana",
 
         startsCombat = true,
-        texture = 135972,
+
+        cycle = "holy_fire",
 
         handler = function ()
             applyDebuff( "holy_fire" )
+            removeStack( "empyreal_blaze" )
+
+            if talent.harmonious_apparatus.enabled then
+                reduceCooldown( "holy_word_chastise", 2 * talent.harmonious_apparatus.rank * ( buff.apotheosis.up and 3 or 1 ) )
+            end
+
             if talent.manipulation.enabled then
                 reduceCooldown( "mindgames", 0.5 * talent.manipulation.rank )
             end
@@ -663,8 +690,8 @@ spec:RegisterAbilities( {
         spend = 0.02,
         spendType = "mana",
 
+        talent = "holy_nova",
         startsCombat = true,
-        texture = 135922,
 
         handler = function ()
             removeBuff( "rhapsody" )
@@ -679,8 +706,8 @@ spec:RegisterAbilities( {
         spend = 0.01,
         spendType = "mana",
 
+        pvptalent = "holy_ward",
         startsCombat = false,
-        texture = 458722,
 
         handler = function ()
             applyBuff( "holy_ward" )
@@ -695,12 +722,13 @@ spec:RegisterAbilities( {
         spend = 0.02,
         spendType = "mana",
 
+        talent = "holy_word_chastise",
         startsCombat = true,
-        texture = 135886,
 
         toggle = "cooldowns",
 
         handler = function ()
+            removeBuff( "inspired_word" )
             applyDebuff( "target", "holy_word_chastise" )
             if buff.divine_word.up then
                 applyBuff( "divine_favor_chastise" )
@@ -719,17 +747,19 @@ spec:RegisterAbilities( {
         spend = 0.06,
         spendType = "mana",
 
+        talent = "holy_word_salvation",
         startsCombat = false,
-        texture = 458225,
 
         toggle = "cooldowns",
 
         handler = function ()
+            removeBuff( "inspired_word" )
             applyBuff( "renew" )
             addStack( "prayer_of_mending", nil, 2 )
             if talent.divine_image.enabled then applyBuff( "divine_image" ) end
         end,
     },
+
     holy_word_sanctify = {
         id = 34861,
         cast = 0,
@@ -741,17 +771,19 @@ spec:RegisterAbilities( {
         spend = 0.04,
         spendType = "mana",
 
+        talent = "holy_word_sanctify",
         startsCombat = false,
-        texture = 237541,
 
         toggle = "cooldowns",
 
         handler = function ()
+            removeBuff( "inspired_word" )
             reduceCooldown( "holy_word_salvation", 30 )
             removeBuff( "divine_word" )
             if talent.divine_image.enabled then applyBuff( "divine_image" ) end
         end,
     },
+
     holy_word_serenity = {
         id = 2050,
         cast = 0,
@@ -763,12 +795,13 @@ spec:RegisterAbilities( {
         spend = 0.02,
         spendType = "mana",
 
+        talent = "holy_word_serenity",
         startsCombat = false,
-        texture = 135937,
 
         toggle = "cooldowns",
 
         handler = function ()
+            removeBuff( "inspired_word" )
             if buff.divine_word.up then
                 applyBuff( "divine_favor_serenity" )
                 removeBuff( "divine_word" )
@@ -785,8 +818,8 @@ spec:RegisterAbilities( {
         spend = 0.03,
         spendType = "mana",
 
+        talent = "leap_of_faith",
         startsCombat = false,
-        texture = 463835,
 
         toggle = "cooldowns",
 
@@ -796,6 +829,7 @@ spec:RegisterAbilities( {
             end
         end,
     },
+
     levitate = {
         id = 1706,
         cast = 0,
@@ -812,6 +846,7 @@ spec:RegisterAbilities( {
             applyBuff( "levitate" )
         end,
     },
+
     lightwell = {
         id = 372835,
         cast = 0,
@@ -821,6 +856,7 @@ spec:RegisterAbilities( {
         spend = 0.04,
         spendType = "mana",
 
+        talent = "lightwell",
         startsCombat = false,
         texture = 135980,
 
@@ -830,36 +866,7 @@ spec:RegisterAbilities( {
             addStack( "lightwell", 15 )
         end,
     },
-    mass_dispel = {
-        id = 32375,
-        cast = 0.5,
-        cooldown = 45,
-        gcd = "spell",
 
-        spend = 0.08,
-        spendType = "mana",
-
-        startsCombat = true,
-        texture = 135739,
-
-        handler = function ()
-        end,
-    },
-    mass_resurrection = {
-        id = 212036,
-        cast = 10,
-        cooldown = 0,
-        gcd = "spell",
-
-        spend = 0.01,
-        spendType = "mana",
-
-        startsCombat = false,
-        texture = 413586,
-
-        handler = function ()
-        end,
-    },
     mind_control = {
         id = 605,
         cast = 1.8,
@@ -869,6 +876,7 @@ spec:RegisterAbilities( {
         spend = 0.02,
         spendType = "mana",
 
+        talent = "mind_control",
         startsCombat = true,
         texture = 136206,
 
@@ -876,6 +884,7 @@ spec:RegisterAbilities( {
             applyDebuff( "mind_control" )
         end,
     },
+
     mind_soothe = {
         id = 453,
         cast = 0,
@@ -892,6 +901,7 @@ spec:RegisterAbilities( {
             applyDebuff( "mind_soothe" )
         end,
     },
+
     mind_vision = {
         id = 2096,
         cast = 0,
@@ -908,28 +918,33 @@ spec:RegisterAbilities( {
             applyDebuff( "mind_vision" )
         end,
     },
+
     mindgames = {
         id = 375901,
         cast = 1.5,
         cooldown = 45,
         gcd = "spell",
+        school = "shadow",
+        damage = 1,
 
         spend = 0.02,
         spendType = "mana",
 
+        talent = "mindgames",
         startsCombat = true,
-        texture = 3565723,
 
         handler = function ()
             applyDebuff( "mindgames" )
         end,
     },
+
     power_infusion = {
         id = 10060,
         cast = 0,
         cooldown = 120,
         gcd = "off",
 
+        talent = "power_infusion",
         startsCombat = false,
         texture = 135939,
 
@@ -942,6 +957,7 @@ spec:RegisterAbilities( {
             end
         end,
     },
+
     power_word_life = {
         id = 373481,
         cast = 0,
@@ -957,6 +973,7 @@ spec:RegisterAbilities( {
         handler = function ()
         end,
     },
+
     power_word_shield = {
         id = 17,
         cast = 0,
@@ -976,6 +993,7 @@ spec:RegisterAbilities( {
             end
         end,
     },
+
     prayer_of_healing = {
         id = 596,
         cast = 1.8,
@@ -985,13 +1003,14 @@ spec:RegisterAbilities( {
         spend = 0.04,
         spendType = "mana",
 
+        talent = "prayer_of_healing",
         startsCombat = false,
-        texture = 135943,
 
         handler = function ()
             reduceCooldown( "holy_word_sanctify", 6 )
         end,
     },
+
     prayer_of_mending = {
         id = 33076,
         cast = 0,
@@ -1001,16 +1020,17 @@ spec:RegisterAbilities( {
         spend = 0.02,
         spendType = "mana",
 
+        talent = "prayer_of_mending",
         startsCombat = false,
-        texture = 135944,
 
         handler = function ()
             addStack( "prayer_of_mending", 5 )
             if talent.harmonious_apparatus.enabled then
-                reduceCooldown( "holy_word_serenity", 2 )
+                reduceCooldown( "holy_word_serenity", 2 * talent.harmonious_apparatus.rank * ( buff.apotheosis.up and 3 or 1 ) )
             end
         end,
     },
+
     psychic_scream = {
         id = 8122,
         cast = 0,
@@ -1027,6 +1047,7 @@ spec:RegisterAbilities( {
             applyDebuff( "psychic_scream" )
         end,
     },
+
     purify = {
         id = 527,
         cast = 0,
@@ -1044,6 +1065,7 @@ spec:RegisterAbilities( {
         handler = function ()
         end,
     },
+
     ray_of_hope = {
         id = 197268,
         cast = 0,
@@ -1053,8 +1075,8 @@ spec:RegisterAbilities( {
         spend = 0.03,
         spendType = "mana",
 
+        pvptalent = "ray_of_hope",
         startsCombat = false,
-        texture = 1445239,
 
         toggle = "cooldowns",
 
@@ -1062,13 +1084,14 @@ spec:RegisterAbilities( {
             applyBuff( "ray_of_hope" )
         end,
     },
+
     renew = {
         id = 139,
         cast = 0,
         cooldown = 0,
         gcd = "spell",
 
-        spend = function() return ( 0.02 * buff.divine_favor_serenity.up and 0.8 or 1 ) end,
+        spend = function() return 0.02 * ( buff.divine_favor_serenity.up and 0.8 or 1 ) end,
         spendType = "mana",
 
         talent = "renew",
@@ -1077,24 +1100,10 @@ spec:RegisterAbilities( {
 
         handler = function ()
             applyBuff( "renew" )
-            reduceCooldown( "holy_word_sanctify", 2 )
+            reduceCooldown( "holy_word_sanctify", buff.apotheosis.up and 6 or 2 )
         end,
     },
-    resurrection = {
-        id = 2006,
-        cast = 10,
-        cooldown = 0,
-        gcd = "spell",
 
-        spend = 0.01,
-        spendType = "mana",
-
-        startsCombat = false,
-        texture = 135955,
-
-        handler = function ()
-        end,
-    },
     shackle_undead = {
         id = 9484,
         cast = 1.5,
@@ -1104,30 +1113,30 @@ spec:RegisterAbilities( {
         spend = 0.01,
         spendType = "mana",
 
+        talent = "shackle_undead",
         startsCombat = true,
-        texture = 136091,
 
         handler = function ()
             applyDebuff( "shackle_undead" )
         end,
     },
+
     shadow_word_death = {
         id = 32379,
         cast = 0,
-        charges = 1,
-        cooldown = 20,
-        recharge = 20,
+        cooldown = 10,
         gcd = "spell",
 
         spend = 250,
         spendType = "mana",
 
+        talent = "shadow_word_death",
         startsCombat = true,
-        texture = 136149,
 
         handler = function ()
         end,
     },
+
     shadow_word_pain = {
         id = 589,
         cast = 0,
@@ -1144,20 +1153,7 @@ spec:RegisterAbilities( {
             applyDebuff( "shadow_word_pain" )
         end,
     },
-    shadowfiend = {
-        id = 34433,
-        cast = 0,
-        cooldown = 180,
-        gcd = "spell",
 
-        startsCombat = true,
-        texture = 136199,
-
-        toggle = "cooldowns",
-
-        handler = function ()
-        end,
-    },
     smite = {
         id = 585,
         cast = 1.35,
@@ -1168,18 +1164,18 @@ spec:RegisterAbilities( {
         spendType = "mana",
 
         startsCombat = true,
-        texture = 135924,
+
+        cycle = "holy_fire",
+        cycle_to = true,
 
         handler = function ()
-            reduceCooldown( "holy_word_chastise", 4 )
-            if buff.apotheosis.up then
-                reduceCooldown( "holy_word_chastise", 8 )
-            end
+            reduceCooldown( "holy_word_chastise", buff.apotheosis.up and 12 or 4 )
             if talent.manipulation.enabled then
                 reduceCooldown( "mindgames", 0.5 * talent.manipulation.rank )
             end
         end,
     },
+
     symbol_of_hope = {
         id = 64901,
         channeled = true,
@@ -1187,8 +1183,8 @@ spec:RegisterAbilities( {
         cooldown = 180,
         gcd = "spell",
 
+        talent = "symbol_of_hope",
         startsCombat = false,
-        texture = 135982,
 
         toggle = "cooldowns",
 
@@ -1196,6 +1192,7 @@ spec:RegisterAbilities( {
             applyBuff( "symbol_of_hope_buff" )
         end,
     },
+
     thoughtsteal = {
         id = 316262,
         cast = 0,
@@ -1205,22 +1202,23 @@ spec:RegisterAbilities( {
         spend = 0.01,
         spendType = "mana",
 
+        pvptalent = "thoughtsteal",
         startsCombat = true,
-        texture = 3718862,
 
         toggle = "cooldowns",
 
         handler = function ()
         end,
     },
+
     vampiric_embrace = {
         id = 15286,
         cast = 0,
         cooldown = 120,
         gcd = "spell",
 
+        talent = "vampiric_embrace",
         startsCombat = false,
-        texture = 136230,
 
         toggle = "cooldowns",
 
@@ -1228,20 +1226,22 @@ spec:RegisterAbilities( {
             applyBuff( "vampiric_embrace" )
         end,
     },
+
     void_shift = {
         id = 108968,
         cast = 0,
         cooldown = 300,
         gcd = "off",
 
+        talent = "void_shift",
         startsCombat = false,
-        texture = 537079,
 
-        toggle = "cooldowns",
+        toggle = "defensives",
 
         handler = function ()
         end,
     },
+
     void_tendrils = {
         id = 108920,
         cast = 0,
@@ -1251,10 +1251,10 @@ spec:RegisterAbilities( {
         spend = 0.01,
         spendType = "mana",
 
+        talent = "void_tendrils",
         startsCombat = true,
-        texture = 537022,
 
-        toggle = "cooldowns",
+        toggle = "defensives",
 
         handler = function ()
             applyDebuff( "void_tendrils" )
@@ -1301,4 +1301,4 @@ spec:RegisterOptions( {
 } )
 
 
-spec:RegisterPack( "Holy Priest", 20230405, [[Hekili:DR1EVTnos8plflU8y3e1KM4(iOPaP9AVn52lTOU7T)NTySOTjQSOosQ46dg6Z(nKuuIuVtJstXHfBRR0Wz(ndNxCOMC8KVmzCasGNC9Zo6zNC0PhnY74to9KrVCYyXMy8KXXOzFfTa(reAf8N)onCtQ)NyemxiF5MqkkqYeonHndiyY4BsiHIlJMCtvo)Stp5Kxa0gJNbpEe8ZLKGaSMwmF2KXsAp8Otp8OrNL6N6)NXsweK6pNrxL6pMS6DEGyz05KqqyOzccnI7fZWZORUbj(TZFAmDnMnDnLfmDoLjiIKaC6vPx9lP()7l(8Lx82)49JtVYSYvis00Brmc6MqmhwU53hi13ZNTeXfeoE6Sa2b04Z5yXb3IctWNV3EZO0Wa66iVaYTKiSsKEmSKJ8)MM)E8veb2d)n8SebEQGScV)VE6(zW5Z)51P(x8UVC5hVUaraeyjrt1)RPHeUqJejBZw3)6IlV2vdGfndfgw)QkuVEUiJIXvs7IW1On8u)eoo1)3)qQpzEQ)A43lr3c)jEv8gggfM6Fti6)cpGYKVITIgrOjW6qXXigsi)zQ)hflXS1Gb9aGWiPRKITeHMTru4hcYSVsIwO5edpNH5lLWVc6xc(ItNty4diZpFpbkehj8m4zQcoB3M94cennhq7VD7EpjtAB3AjP9vk(FNgTlaNzGha459xN9Pu)GeMczOykOiuoPQjf4ay70(FXWJuyZI3B3Ae5(7CtY85Ef8YtA01Iw5rL6)xaxmgkJzFgkk1NVjAg8pjILP(VlZh1tAGV0zZ595BoVvAnoWDHILiqZqC5kcd9QOkw(1sTi3Fxz3vkOj8WljEhWuw)oq(6CFbSgTDwNszTsvnme8Rqm5Jfu4)zKflWGZqqMzzo6wk7mlQR1ZWbHsfqzUTdwtIva49rcj3ng9pi5o45rfijtnwRgfUVKVGJCCfyuBGCgauSjhEkYUTckDjYG3pNevcoWFrcdXmEvyRbN2Z6odpnxLOkBV1Y6TJjYQITENwuHCxChLGSckX0Sjx)67c8vROkUZy0VyLik1FbocZiZSeFVKKzzx5eXM58S3fQ9Z9lyvBB716X27L6gw17LvK3PRG7SAAV54J6nZTZcgGrIL69c2cm4WayvS0lEM41J6phxrIcwa2DEVxHstIO3IS8dylrXCAWgTlQ5F5XfqxoN7(SvOVnv98DG2vGYKA0Z9Yz7Bo)KEJLSxd8J171Sefs7nXQgnAWx8dQO4M8f1X4nM0CV28mG6HQiMdnTy4z3W0(VUTwK6co3xxOCg1LNJRbyWDyA2njxWD7DuGXMDkkSC14lCPBku78HoB9CueqY8n9Humdhre9H0gZPziTJCygYgKCwgM1BhSDEYEL7uljE7w9ZI4WXnWqVEm0gOaSURMgKyUNOusdftFW8Ahm12Y9EqvCiuyi5NDyZ)WuC3qBw1(o8QlOQjh6ckUF(Yf85hGBCHWggp4sgZFUCEla3q53APU3xxwRTDlV13LFGD4eGJvNW7tx295wmNOuqPFTGo1bXYfy(Sa(nZKvirZt4W7u6r1JfaNPUMZk06HA0hd8JQt5cweI8aaKshYvjB5J1cVjakYaMsEU4vBIPC(o5XALiWeNnNSyPyAEBka2a30a15qJ(k4EPpvQAWfAWbg7AXdqYuyxAfFOHuDctNhyobhfmz8TGNdqr2S3E2rJMmEnIfrIwWNm(llvNPkMYGJ)px2I4UUZjAx5Cx(pjeMCYBC6kGCuIGUspkoyNlAbM7LE1FOCyo(mPhyeis1RPXyDtHC9U4U3NjLTR2w3bpEA78WtgMuJsNB9Ux67UvD3nOU6B8WrslSKI9o(B7)aXtLUoNggsxRhxf0MUAkpmSYVnqVZiKKPnDP(Yd2kNwGWqNAwCZPjrouheijoajq3G44ZalR)HMChLISBWQBx19Uz4Fz9gjt1GswO8Iep(MNY50BWYi9LVBwKtQ3I428rj7sPPW1GdzdCUUXOwI)1rstsz0dg(BWx57mGQvEwTJTYwKQT01GeEvRO2eYudSvV6Nap9VJeb1orJ7wyWZhOed1cZSwUECq0p8nWEMQYzVtp4H7Mb60bYaLE1LkGjzYRCTbsHnzS6xYlO0Tfh4jxRU8Zmoo5TtgtJNmMJfMRve6IkJA5VctG)ApqUGU02uT8FQbf10osQ)(P()kO9Wp034jJeRLv(DtQe7u9TTApnTjc4)uArDy3HxYliSqlkFjFABsMekzveqhJL4CVytERusoCsBy7NMRteand2FanxTV2A1Lu)TBZjPTcCQnyjTahFILSLpY(QmLB)gdB(1ykTDN2MTRx3izj9YrQsyydlaS7OVIOYxdzb8kFHMsuoQvuMDqYFOxEPTw3(fvQu5STNU3ZB(YlD2dTYeiTppVn7Z9)(oTvw7twRseLexY1YXair3lAdDd1LHwaIs3EwtGVYybCsW0wZcsD6LTPtFNxyAVuHMBFu5O1zlGfrG1Bh0aPjlHwlKgGx1BdqFUS1Vdv3Pf06qSMXaup(O2WAB3mBlWYsEzltxW0r4Dv4052sQlmYC9i5fkRHKSRfXwkMIITex6s9P2u7M6PeLLtf3V0G5DR8MuFy7ixuwLrQjnM9wFP5lN6)A44ChP8MFIk)A1jCQZO20uoDYNwzO21L3QaodGeZNSDDztQ4ZxUH0IOy35vN6FE5NNpZA1ACMBnSDaKFYqzeZhUED5hguJxwqMCs51gGpOctoeDLuo2oir1STBSHm6hphLek6mW3(tXRFjzwPBfs(rqA(4dZLIz919PiwbIfTo3fih8X8xAJPTszz902r1UwRN7Sj6oN76o3HBrH7YLduPdJktDpZBJY5ky3X03vzjDMaVTEiYWFRN6PZlq4hjMZVwIkvACUdHYHs103rxESn8LOu6ik95lmrnCIA)ktuNI51TFQ8U6iUSVx3f66OuLt1(Isl1uK)rRktd1jgzJC786Uy)5oTZiZi7((x0DUztBAD5eLDx89ApSxTmvosDiBzQT90hHwMAU7WbqIoTm1wVIp8oZdLr0ju4bTFZsTm1ChNdGSmDm9QUdkB9C2DfP2Whb7)Vg52NyVUQb8if2u8vS2E1Gx0VQbVSJQbD74jN6EIyjf48)efNeIIiQNo5)9]] )
+spec:RegisterPack( "Holy Priest", 20230504, [[Hekili:TZvBZTTns4FlE6m2sTk6KFlnPtuMPxs71K7M2mNAN(njbrczHZue84lwX3OH)2VDxqqcccsr560lNN8LezcGf777dwqP5Np)xNpZNLYN)Zxm5IlNC9KRgpzYfxF93oFw69r85ZIyE3YUb(qiBl8V)Km4(8LFiwWtsXbVpqY8rIKiZI9GjmF2Qmrq67cNVYnLFom3iUh8yCt2i895Q5Yt8MpdN7ZMC9ZMC53LVmF5VfHKWpF56y528LZeBFZ483N)E10UcMzRtd4Uy5AraWtmVuHmmzCum3tUDfl9BM(xIK74Xl2jJ9xSwgNksZ85iL)Q8LFFWo29j5lZs45l)PFmFPyD(YDWN3WUd(x(2O7J5SG8LRcy)h4bd8LPWJ)ykpmb2NH5lLX4KJ3kdfYmGsSOiwmlf)4apGnJ5(zepvmxCdePNbdhIKYlloMhMIA6uH3TIWBgNV8xs3WJ3js4JG1eIJr83Un8qKGRJ5jByRcGhLkbwd()KSyUIXVHdufwF(Yaz4nGPlFPFgWqahKVmsMKiGfc7X7iEaukPBqgsrkpgoF(D4(O2nIsPSyIS7ebGQWxGBOeP3kwcAkWp(VYs0BSiuKkqL2gKU(STGtfSJ)omelib2gFz4zi5yH12xX2TCFbyDrjwg65YaiqJvKM7qbMHsoyUJIaLhYD3jc5KK5N)(c3bWjyd4nVyTiMpY7EVa(cLmLm98rI1thKYcaRWy92TG2T97lECL9DrP5D)(tkmy73BysgE6jdwLTETfPgNfD6apPmWxUlCSIhjpsyG97Pfu)HdpTC2eNtEVEBa9e4wGJtUVVvPivQVz)(39bYyt6bwKemgYeuHH(DA9YA2DYyisQKwommKgsB2tqpmpg5bI2trIY4P8Cid(F7nVnbCvteKnB2wrk8F(GWdRnjqCZgY)EReTuk3bCHmWaYagkdDQqMFSP9cuNG0RK7iMiKmtgk6k9)WthO40XPITGHvUa8qF9uisDSnrgRdfaZKPsNukMQ3IHRuIWZin(hahnYJdDBbFdEhQwtXXJfeSq9NlcejPJWCStDU9lqNzuCl8(mCmov7q2WL40oeh0lIy(FqXVVTGF)rCAqcfzAr6HDc0K2Q4Se3dk8ZqWIZc7RCHt7o(OK0yHxQkWRtJaXZ)ZSqlwc(pipepoPjRRyqL8EmSOIGFs0514FHY3VnnEXWQnK73xzGwwn1ADPqrwKzklSG1jc5WcmyMdTB6v8(Yz6w2j)xGi3XIfyKQA1L5d5FK7TaJuhjJMMWtfRh5jd9fifN6mp8O7ybz8PQn1oXksUSuUII0exWds4tNqcCvaC1(cU0ZsPCrBK7uLjbGagPlvL5sz3QdZvBXdsSDXaDi4vtVUqBKiQBb(3qBRzUFuaOI3VPkmgW5PbIKOQERl2aRn0VkdXVJfrl0himdSYlw5VOOHhMcNkmyQ(gCXwb88382HQDhYyxF)xJXWaiJySmp6rAVHdoxtHX9uPBO3W6eDv7mMVfQeK8ANvJlgCylfRlg(vthOTYJB6x)nLJ5Y4puv5(DeoZZqVq2kzwnCq1Y2nQevMnuiamd(CSUnIdQeuvcw9LrvLvg3qz4Z0LD1WdO62Q0L7eHGG2tfTvKjOS7wrD4GwfqMA2FfMxnuCYll5(qpD6YkpjYzDaorDotWN7hkvu)vsr1pbZG7RjvorFD6GtAbXOBSFkBU6aveWuJIQODhsDFZn9ckr3crtM1UiBb8YdNexvSgPjlqIubojhaHPat4y8PVE6f9MkfdNaRVjXmgKOjOR(viTaxdUNbhAZllGbkOvGE92iPieZCHNWtesvVW8yGBq8gwuI0)(cxdABQbK9Ej(8DBeEBW8)ObjuEhdhIHZGslLUHIrW0QgUG(YElTKDaPlLnYsZPhdevfccntpguaE3(6PN)IH733(QU09QEzNl6k3l6kyrTUMR7T8cPR9Vbk3L07vyImhoPq6gfSfcg)gi0jDZ4iV0xDXKEtXM((KJewNY4GMQt2KOoIc(eFX61C8i4gUj4ZtGqkMV2hbp4i6bGJILM((F5hWZ7KMPC(gHjuRGoOYRw5DHN0UibCFLgIdDDu12DMooA3Agafw4hyGF5IFkhVxPHEshMxkMhk6UCIhrq9xzJG0Ro8qnEfwIgHo(j02OcXu9NZeOl7oMiq1vSv81e(EcKti)JP1Bl0OcyNQdcz0GnS9gQgljsnH9QamJGFz6ECLa6dSLDBl4rt6Fi1K7Q0viona7RXr1jyvWHOl4k6EEayqJ4EagPx1jMTHhI9Bl9bDmZgyXv9rjmzheF7d4uy3dNCNoE8PN4ITtyHazxFp1ymxJJjRfPToUbknfQRaK3WoXcj0VJt5rI5pdXutb969tNbPG8WKW(wbpDh7(rky108XEDrDVc7tMmlWV4KruJqXchrXsVghPVSjOVd7PkNO1iTR0ooE(OKiSFWRybmQlAR4PWZXdK57tBCr7ZmPlv3rbD0QNFJkeNsXuhprC)owrrUGYMfxWNQMQZzu2siILw7gdCRGpevkuhIzOkBZFOPTDuHnz6l7ZIkSih1IAf3SEQ1HO3ofpQAG6v90S4xnT8tWQEA5R9YD6zCe15AJc25qlAU2bCIRMLT)R64L(17edEW4Q6QnBJJlcxp7DFAKYGB88hVL9XV(YHoLN(fcvTGNyrpww2NsbovIMJyMQbFaHlgl2osr7swDjrRfCWsHUcZOUe9H3D4RYq3CPuP822qVzUtQ7qweUodV3xYaEsZ7kWejMj0QSOdDDEkSk)cHffIafyF7ew99I4b8XkMOngnTGbjtBD(wFPkBOufa0HWBlpWR6kMPncuGoPnmLfG1yBs7KF(miQa)C57cWLZNTJfhcHjjZN9RkSgrY40cG(NvUbNHOj(3za8cmCusiRZsLBvx3pOSWRZEC(7)hKP6cWC(gziSB0WN10yCMsUCmYyEiEqbCgdo)JdPxZahCMpFnlli944RZDZx1ZxBXA2Dh1M76KYUUCAl67AkTTlx(OQx7KMnJeS57MHkTSdx)jGRBHMpIC9Z7KRjScUzBAO(6fBEiUAnm(Zfh7wcLRqIyrvZld7OmD)H4183)osVIe8fGMYtLKgVFuujnFg9j6LSYPghxWDCy8FMEtSkO)8)68zEXqs1ybJEBPSWiLV81tbnK(fBA(m8HZtHSR9KigaMAqlJXqsEPfjl3sDXF1BUvSis98plbEzQjguq9MWykuf5lpv1TwliqQHphmZdZxUFp4dCakDz3u6L9Mqx1nHUQKqDsLRrZ5vO5uBdlbOzAHHjDDRUrnaOLV8vGkBsfnBGRdj4Zn31MPcT2(VTfxoc1hWnM9)gdCApwXYYA5Q(51TaGs(lm1tfIRPQjTm8Ks23DEJ2BYg5oDc531DZ2uEvD3WTwNJbswWbTsUQYu7kLvtVen)yz9(sl8(ZPfELA65ZE5bliuZ5WELxDuzbU2C21RdBnZN3ZQEDw60oPZJqPZx8LsNpLkD(Y(u688jp21op)8ExuW8oz(cMYVey8NuGX)dXu2zDOQclnG99K8kMT8i74QJjnCx33RPB0rDnYaLNEqsxwVT7SALFDDkZLPNVRV8oDNuSwpoCLBugbSb((3wTl6xzt6tluF)NA(MDw3vUJUgGKr)I5oF2KI)uVDD92q6knSb)2y)B2leRqGhZ3aAtTJl66wF2HIOLxR5UkCyCKI6c6tT3852cXDeAwgU96dgpsLcgCOPHb2WK64LCoF53ymUlNbAZgww0WHP0gPFnZ5NDVG0M2JdR96xKUDLslquQm91ulFcFrPDkGTCgFLt0jAY1sAqvDf3Vs0f(gp4s7)bEzQB05K6xvNQKs51s1OIKXLoAb8PTgCu)wYSeKhJ7S0kxrLDXX1C0SyFDXNmUhY(RdTBllT6wiTK0J62nByKAEvJDKAP8MkTyHnh6Ip712cUhfxqDdNJd2RJl6DVoo6kGh)lasFd5nlWaEofVWh5l)A6ukotY)GoaA7NC4bFa0otW8LdG()Bha9B7ZbqT7g3F4dG(YdFcMIxwaxN3OMlhEhcDFXgd6vv1EC1(QjIfduFrPv)DTF)agAC)aTvNUdaJ6ReWrvunTpyLeR4VV8lYWt5Frg6cLK9xwFBKVpT(ToWkIVMpKDyB5P2ksFz87CGk1yN)whyeLBgNwVzj6iD9KQ9lFGl0i1SnhZVkcvgC7FteC0EdN4xpTk7xZCkMZQdXftjPELnk6NrhTqYb6MAs)J1pRcvAgRV)9qSb9L73QqrNwZEiC4oCNZZHwt8EG)cm0H085IzU46tCGsSDfWX9t4WXAs7418YLyi0Vnb2xPz9ZDL2(V6dDWGgBN(0oPkSoSS0nY45Z(7SiaCCOGE68)7p]] )

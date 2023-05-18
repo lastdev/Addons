@@ -5,7 +5,7 @@ local tremove = table.remove
 local tinsert = table.insert
 local wipe = table.wipe
 
-local Details = _G._detalhes
+local Details = _G.Details
 local _
 local addonName, Details222 = ...
 
@@ -32,7 +32,7 @@ function Details:GetCurrentCombat()
 end
 
 function Details:GetOverallCombat()
-	return _detalhes.tabela_overall
+	return Details.tabela_overall
 end
 
 function Details:GetCombat(combat)
@@ -451,7 +451,7 @@ function segmentClass:resetar_overall()
 	--	_detalhes.schedule_remove_overall = true
 	--else
 		--fecha a janela de informa��es do jogador
-		Details:FechaJanelaInfo()
+		Details:CloseBreakdownWindow()
 
 		Details.tabela_overall = combatClass:NovaTabela()
 
@@ -498,7 +498,7 @@ function segmentClass:resetar()
 	--_detalhes.schedule_remove_overall = nil
 
 	--fecha a janela de informa��es do jogador
-	Details:FechaJanelaInfo()
+	Details:CloseBreakdownWindow()
 
 	--empty temporary tables
 	Details.atributo_damage:ClearTempTables()

@@ -145,9 +145,8 @@ E.SlashHandler = function(msg)
 end
 
 function E:OpenOptionPanel()
-	self.Libs.ACD:SetDefaultSize(self.AddOn, 960, 640)
+	self.Libs.ACD:SetDefaultSize(self.AddOn, 940, 627, self.global.optionPanelScale)
 	self.Libs.ACD:Open(self.AddOn)
-	self.Libs.ACD.OpenFrames.OmniCD.frame:SetScale(self.global.optionPanelScale)
 
 	self.Libs.ACD:SelectGroup(self.AddOn, "Party")
 	self.Libs.ACD:SelectGroup(self.AddOn, "Home")
@@ -159,7 +158,7 @@ interfaceOptionPanel:Hide()
 
 interfaceOptionPanel:SetScript("OnShow", function(self)
 	local title = self:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-	title:SetPoint("TOPLEFT")
+	title:SetPoint("TOPLEFT", 16, -16)
 	title:SetText(E.AddOn)
 
 	local context = self:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -182,8 +181,9 @@ end)
 if Settings and Settings.RegisterCanvasLayoutCategory then
 	local category, layout = Settings.RegisterCanvasLayoutCategory(interfaceOptionPanel, E.AddOn)
 	Settings.RegisterAddOnCategory(category)
-	layout:AddAnchorPoint("TOPLEFT", 16, -16)
-	layout:AddAnchorPoint("BOTTOMRIGHT", -16, 16)
+
+
+
 else
 	InterfaceOptions_AddCategory(interfaceOptionPanel)
 end

@@ -18,7 +18,7 @@
 		the copyright holders.
 ]]
 
-local lib = LibStub:NewLibrary("Krowi_Util-1.0", 1);
+local lib = LibStub:NewLibrary("Krowi_Util-1.0", 2);
 
 if not lib then
 	return;
@@ -43,13 +43,13 @@ function lib.ReplaceVars(str, vars)
         vars = str;
         str = vars[1];
     end
-    return string.gsub(str, "({([^}]+)})", function(whole, i)
+    return (string.gsub(str, "({([^}]+)})", function(whole, i)
         if type(vars) == "table" then
             return vars[i] or whole;
         else
             return vars;
         end
-    end);
+    end));
 end
 
 function lib.DeepCopyTable(src, dest)
@@ -93,6 +93,15 @@ function lib.Enum(table)
     return table;
 end
 
+function lib.Enum2(table)
+    local tbl = {};
+    for i, element in next, table do
+        local tmp = element;
+        tbl[tmp] = i;
+    end
+    return tbl;
+end
+
 function lib.SplitString(sre, sep)
     sep = sep or " ";
     local fields = {};
@@ -100,4 +109,26 @@ function lib.SplitString(sre, sep)
         tinsert(fields, s);
     end
     return fields;
+end
+
+lib.DelayObjects = {};
+function lib.DelayFunction(delayObjectName, delayTime, func, ...)
+    if lib.DelayObjects[delayObjectName] ~= nil then
+        return;
+    end
+    local args = {...};
+    lib.DelayObjects[delayObjectName] = C_Timer.NewTimer(delayTime, function()
+        func(unpack(args));
+        lib.DelayObjects[delayObjectName] = nil;
+    end);
+end
+
+function lib.TableRemoveByValue(table, value)
+    for key, _value in pairs(table) do
+        if _value == value then
+            tremove(table, key);
+            return true;
+        end
+    end
+    return false;
 end

@@ -179,6 +179,72 @@ function Systems:InitComplete(target, success)
 
 end
 
+--[[ Create the callbacks for system initialization ]]
+local function createStartupCallbacks(system, complete)
+    return function(api)
+            local source = system.source
+            local name = system.name            
+
+
+            -- todo: should this be a public api, shoudl we return
+            -- both and set it up?
+            if (type(api) == "table") then
+                system.api = api
+                for _, funcname in ipairs(api) do
+
+
+
+                    Addon[funcname] = function(_, ...)
+                            local ret = { xpcall(source[funcname], CallErrorHandler, source, ...) }
+                            if (ret[1]) then
+                                table.remove(ret, 1)
+                                return unpack(ret)
+                            end
+                        end
+
+
+                end
+            end
+
+        -- Create our shutdown proxy if necessary
+        if (type(source.Shutdown) == "function") then
+            system.shutdown = function(...)
+                    xpcall(source.Shutdown, CallErrorHandler, source, ...)
+                end
+        end
+
+        -- Create the system instance itself
+        system.instance = setmetatable({}, {
+                __metatable = string.format("System:%s", name),
+                __newindex = function(_, key)
+
+                    end,
+                __index =  function(_, key)
+
+                        local value = source[key]
+                        if type(value) == "function" then
+                            return function(_, ...)
+                                local result = { xpcall(source[key], CallErrorHandler, source, ...) }
+
+                                table.remove(result, 1)
+                                return unpack(result)
+                            end
+                        else
+                            return value
+                        end
+                    end
+            })
+
+        system.ready = true
+
+        Addon:RaiseEvent("OnSystemReady", name, system.instance)
+        C_Timer.After(0.001, function() complete(true) end)
+    end,
+    function()
+        C_Timer.After(0.001, function() complete(false) end)
+    end
+end
+
 --[[ Called to start a single system ]]
 function Systems:InitTarget(system, complete)
 
@@ -186,44 +252,9 @@ function Systems:InitTarget(system, complete)
     local source = system.source
     local name = system.name
 
-    -- If there is an initiailization handler then call it
-    if (type(source.Startup) == "function") then
-        local success, api = xpcall(source.Startup, CallErrorHandler, source)
-        if (not success) then
-            complete(false)
-        end
-
-        -- todo: should this be a public api, shoudl we return
-        -- both and set it up?
-        if (type(api) == "table") then
-            system.api = api
-            for _, funcname in ipairs(api) do
-
-
-
-                Addon[funcname] = function(_, ...)
-                        local ret = { xpcall(source[funcname], CallErrorHandler, source, ...) }
-                        if (ret[1]) then
-                            table.remove(ret, 1)
-                            return unpack(ret)
-                        end
-                    end
-
-
-            end
-        end
-    end
-
-    -- Create our shutdown proxy if necessary
-    if (type(source.Shutdown) == "function") then
-        system.shutdown = function(...)
-                xpcall(source.Shutdown, CallErrorHandler, source, ...)
-            end
-    end
-
     -- Check if system generates events
     if (type(source.GetEvents) == "function") then
-        local success, events = xpcall(source.GetEvents, CallErrorHandler, source)        
+        local success, events = xpcall(source.GetEvents, CallErrorHandler, source)
         if (not success) then
 
             complete(false)
@@ -246,33 +277,18 @@ function Systems:InitTarget(system, complete)
         end
     end
 
-    -- Create the system instance itself
-    system.instance = setmetatable({}, {
-            __metatable = string.format("System:%s", name),
-            __newindex = function(_, key)
+    -- If there is an initiailization handler then call it
+    local systemReady, systemError = createStartupCallbacks(system, complete)
+    if (type(source.Startup) == "function") then
+        local success, api = xpcall(source.Startup, CallErrorHandler, source, systemReady, systemError)
 
-                end,
-            __index =  function(_, key)
+        if (not success) then
+            systemError()
+        end
+    else    
 
-                    local value = source[key]
-                    if type(value) == "function" then
-                        return function(_, ...)
-                            local result = { xpcall(source[key], CallErrorHandler, source, ...) }
-
-                            table.remove(result, 1)
-                            return unpack(result)
-                        end
-                    else
-                        return value
-                    end
-                end
-        })
-
-    system.ready = true
-
-    Addon:RaiseEvent("OnSystemReady", name, system.instance)
-
-    complete(true)
+        systemReady()
+    end
 end
 
 --[[ Called when a dependency is ready ]]
@@ -289,6 +305,7 @@ end
 function Systems:EndInit(success)
 
     self.complete = true
+    Addon:RaiseEvent("OnAllSystemsReady")
 end
 
 --[[ Get the specified system ]]
@@ -308,15 +325,6 @@ Addon:RegisterEvent("ADDON_LOADED", function(addon)
     if (addon == AddonName) then
         Systems:Init()
     end
-end)
-
---[[ When the player enters the world, check if our systems are ready ]]
-Addon:RegisterEvent("PLAYER_ENTERING_WORLD", function()
-    if (not Systems:IsReady()) then
-
-    end
-
-    Addon:RaiseEvent("OnAllSystemsReady")
 end)
 
 --[[ Terminate our systems when the player is leaving ]]

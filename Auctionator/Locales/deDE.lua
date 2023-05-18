@@ -112,12 +112,9 @@ L["CONFIG_SELLING_ALL_ITEMS_CATEGORY"] = "Verkaufen: Alle Gegenstände"
 L["CONFIG_SELLING_AUTO_SELECT_NEXT"] = "Automatisch den nächsten Gegenstand im Inventar auswählen"
 L["CONFIG_SELLING_AUTO_SELECT_NEXT_TOOLTIP_HEADER"] = "Automatische Gegenstandsauswahl"
 L["CONFIG_SELLING_AUTO_SELECT_NEXT_TOOLTIP_TEXT"] = "Beim Einstellen von Auktionen wird automatisch der nächste Gegenstand in der Inventaransicht ausgewählt."
---[[Translation missing --]]
-L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER"] = "Select any partial stacks that exist after posting all complete stacks."
---[[Translation missing --]]
-L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_HEADER"] = "Automatic partial stack selection"
---[[Translation missing --]]
-L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_TEXT"] = "When posting add the partial stack as the next item to post if it exists. This won't cause any further searches."
+L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER"] = "Wähle alle Teilstapel aus, die nach der Erstellung aller vollständigen Stapel vorhanden sind."
+L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_HEADER"] = "Automatische Teilstapelauswahl"
+L["CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_TEXT"] = "Fügt beim Erstellen den Teilstapel als nächsten Gegenstand hinzu, das du erstellen kannst, wenn er vorhanden ist. Dies veranlasst keine weiteren Suchanfragen."
 L["CONFIG_SELLING_BAG_SELECT_SHORTCUT"] = "auf einen Gegenstand im Inventar, um ihn im Verkaufenreiter zu verwenden"
 L["CONFIG_SELLING_BUY_SHORTCUT"] = "auf eine fremde Auktion, kauft diese"
 L["CONFIG_SELLING_CANCEL_SHORTCUT"] = "auf eine eigene Auktion, bricht diese ab"

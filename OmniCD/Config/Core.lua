@@ -9,7 +9,7 @@ end
 
 local fieldText = {}
 do
-	local localization = GetAddOnMetadata(E.AddOn, "X-Localizations")
+	local localization = E.Localizations
 	localization = localization:gsub("enUS", ENUS):gsub("deDE", DEDE)
 	localization = localization:gsub("esES", ESES):gsub("esMX", ESMX)
 	localization = localization:gsub("frFR", FRFR):gsub("koKR", KOKR)
@@ -27,7 +27,7 @@ do
 		end
 	end
 	fieldText.supportedUis = table.concat(t, ", ")
-	fieldText.translations = format("%s (%s), %s (%s)", RURU, "Void_OW - \"The OG\"", ZHTW, "RainbowUI")
+	fieldText.translations = format("%s (%s), %s (%s) %s (%s)", RURU, "Void_OW-\"The OG\"", ZHTW, "RainbowUI", DEDE, "drumz84")
 end
 
 local getFieldText = function(info)
@@ -55,7 +55,9 @@ local function GetOptions()
 			args = {
 				Home = {
 
-					name = format("|T%s:18|t %s", "Interface\\AddOns\\OmniCD\\Media\\omnicd-logo64", E.AddOn),
+
+
+					name = format("|T%s:18|t %s", E.Libs.OmniCDC.texture.logo, E.AddOn),
 					order = 0,
 					type = "group",
 					childGroups = "tab",
@@ -63,7 +65,7 @@ local function GetOptions()
 					set = function(info, value) E.profile[ info[#info] ] = value end,
 					args = {
 						title = {
-							image = "Interface\\AddOns\\OmniCD\\Media\\omnicd-logo64",
+							image = E.Libs.OmniCDC.texture.logo,
 							imageWidth = 64, imageHeight = 64, imageCoords = { 0, 1, 0, 1 },
 							name = E.AddOn,
 							order = 0,
@@ -130,7 +132,7 @@ local function GetOptions()
 
 						minusScale = {
 							disabled = function() return E.global.optionPanelScale < 0.84 end,
-							image = [[Interface\AddOns\OmniCD\Media\omnicd-bg-gnav2-minus]], imageWidth = 18, imageHeight = 18,
+							image = E.Libs.OmniCDC.texture.minus, imageWidth = 18, imageHeight = 18,
 							name = "",
 							order = 13,
 							type = "execute",
@@ -138,8 +140,8 @@ local function GetOptions()
 								local currScale = E.global.optionPanelScale
 								if currScale > 0.84 then
 									currScale = currScale - 0.05
-									E.Libs.ACD.OpenFrames.OmniCD.frame:SetScale(currScale)
 									E.global.optionPanelScale = currScale
+									E.Libs.ACD:SetDefaultSize(E.AddOn, nil,nil, currScale)
 								end
 							end,
 							width = 0.15,
@@ -153,7 +155,7 @@ local function GetOptions()
 						},
 						plusScale = {
 							disabled = function() return E.global.optionPanelScale == 1.5 end,
-							image = [[Interface\AddOns\OmniCD\Media\omnicd-bg-gnav2-plus]], imageWidth = 18, imageHeight = 18,
+							image = E.Libs.OmniCDC.texture.plus, imageWidth = 18, imageHeight = 18,
 							name = "",
 							order = 15,
 							type = "execute",
@@ -161,8 +163,8 @@ local function GetOptions()
 								local currScale = E.global.optionPanelScale
 								if currScale < 1.46 then
 									currScale = currScale + 0.05
-									E.Libs.ACD.OpenFrames.OmniCD.frame:SetScale(currScale)
 									E.global.optionPanelScale = currScale
+									E.Libs.ACD:SetDefaultSize(E.AddOn, nil,nil, currScale)
 								end
 							end,
 							width = 0.15,
@@ -171,7 +173,7 @@ local function GetOptions()
 							name = "\n", order = 16, type = "description",
 						},
 						notice = {
-							image = "Interface\\AddOns\\OmniCD\\Media\\omnicd-recent", imageWidth = 32, imageHeight = 16, imageCoords = { 0.13, 1.13, 0.25, 0.75 },
+							image = E.Libs.OmniCDC.texture.recent, imageWidth = 32, imageHeight = 16, imageCoords = { 0.13, 1.13, 0.25, 0.75 },
 							name = " ",
 							order = 17,
 							type = "description",
@@ -266,7 +268,7 @@ local function GetOptions()
 								},
 							}
 						},
-						plugins = not E.preCata and {
+						plugins = E.isDF and {
 							name = L["Plugins"],
 							order = 50,
 							type = "group",
@@ -329,6 +331,16 @@ local function GetOptions()
 end
 
 function E:SetupOptions()
+	self.Libs.OmniCDC.texture = self.Libs.OmniCDC.texture or {
+		logo	= [[Interface\AddOns\OmniCD\Config\Libs\Media\omnicd-logo64]],
+		recent	= [[Interface\AddOns\OmniCD\Config\Libs\Media\omnicd-recent]],
+		resizer	= [[Interface\AddOns\OmniCD\Config\Libs\Media\omnicd-bullet-resizer]],
+		plus	= [[Interface\AddOns\OmniCD\Config\Libs\Media\omnicd-bg-gnav2-plus]],
+		minus	= [[Interface\AddOns\OmniCD\Config\Libs\Media\omnicd-bg-gnav2-minus]],
+		arrow	= [[Interface\AddOns\OmniCD\Config\Libs\Media\omnicd-bg-gnav2-dn]],
+		arrowb	= [[Interface\AddOns\OmniCD\Config\Libs\Media\omnicd-bg-gnav2-dn-b]],
+	}
+	self.Libs.OmniCDC.SetOptionFontDefaults(nil, nil)
 	self.Libs.ACR:RegisterOptionsTable(self.AddOn, GetOptions, true)
 
 

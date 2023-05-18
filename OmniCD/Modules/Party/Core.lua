@@ -78,9 +78,9 @@ function P:Refresh(full)
 		return
 	end
 
-	local key = self.isInTestMode and self.testZone or self.zone
-	key = key == "none" and E.profile.Party.noneZoneSetting or (key == "scenario" and E.profile.Party.scenarioZoneSetting) or key
-	E.db = E.profile.Party[key]
+	local zone = self.isInTestMode and self.testZone or self.zone
+	zone = zone == "none" and E.profile.Party.noneZoneSetting or (zone == "scenario" and E.profile.Party.scenarioZoneSetting) or zone
+	E.db = E.profile.Party[zone]
 	self.db = E.db
 
 	for key, frame in pairs(self.extraBars) do
@@ -95,9 +95,8 @@ function P:Refresh(full)
 		E:SetActiveUnitFrameData()
 		self:UpdatePositionValues()
 		self:UpdateExBarPositionValues()
-		self:UpdateBars()
+		self:UpdateAllBars()
 		self:UpdatePosition()
-		self:UpdateExBars()
 	end
 end
 
@@ -128,8 +127,8 @@ function P:IsEnabledSpell(id, spellType, key)
 	end
 	if db.raidCDS[id] or spellType == "interrupt" then
 		for _, frame in pairs(self.extraBars) do
-			local db = frame.db
-			if db.spellType[spellType] then
+			local framedb = frame.db
+			if framedb.spellType[spellType] then
 				return frame.index
 			end
 		end
@@ -172,12 +171,13 @@ function P:UpdatePositionValues()
 	self.breakPoint = E.db.priority[db.breakPoint]
 	self.breakPoint2 = E.db.priority[db.breakPoint2]
 	self.displayInactive = db.displayInactive
+	self.maxNumIcons = db.maxNumIcons == 0 and 100 or db.maxNumIcons
 
 	local growRowsUpward = db.growUpward
 	local growY = growRowsUpward and 1 or -1
 	if db.layout == "horizontal" or db.layout == "doubleRow" or db.layout == "tripleRow" then
 		self.ofsX = 0
-		self.ofsY = growY * (E.BASE_ICON_SIZE + db.paddingY * pixel)
+		self.ofsY = growY * (E.baseIconHeight + db.paddingY * pixel)
 		if growLeft then
 			self.point2 = "TOPRIGHT"
 			self.relativePoint2 = "TOPLEFT"
@@ -190,7 +190,7 @@ function P:UpdatePositionValues()
 			self.ofsY2 = 0
 		end
 	else
-		self.ofsX = growX * (E.BASE_ICON_SIZE + db.paddingX  * pixel)
+		self.ofsX = growX * (E.baseIconHeight + db.paddingX  * pixel)
 		self.ofsY = 0
 		if growRowsUpward then
 			self.point2 = "BOTTOMRIGHT"

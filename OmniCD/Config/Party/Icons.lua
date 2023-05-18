@@ -8,100 +8,77 @@ local icons = {
 	get = P.getIcons,
 	set = P.setIcons,
 	args = {
-		showCounter = {
-			name = COUNTDOWN_FOR_COOLDOWNS_TEXT,
-			desc = format("%s\n\n|cffff2020%s",
-			L["Toggle the cooldown numbers. Spells with charges only show cooldown numbers at 0 charge"],
-			L["[Show Numbers for Cooldowns] must be enabled in Blizzard's \'Options/Action Bars\' menu when using Blizzard's cooldown numbers."]),
-			order = 1,
-			type = "toggle",
-		},
-		reverse = {
-			name = L["Reverse Swipe"],
-			desc = L["Reverse the cooldown swipe animation"],
-			order = 2,
-			type = "toggle",
-		},
-		desaturateActive = {
-			name = L["Desaturate Colors"],
-			desc = L["Desaturate colors on active icons"],
-			order = 3,
-			type = "toggle",
-		},
-
-		displayInactive = {
-			name = L["Display Inactive Icons"],
-			desc = L["Display icons not on cooldown"],
-			order = 4,
-			type = "toggle",
-			get = function(info) return E.profile.Party[ info[2] ].position.displayInactive end,
-			set = function(info, state)
-				local key = info[2]
-				E.profile.Party[key].position.displayInactive = state
-				P:ConfigBars(key, "displayInactive")
-			end,
-		},
-		lb1 = {
-			name = "\n", order = 5, type = "description",
-		},
-		scale = {
-			name = L["Icon Size"],
-			desc = L["Set the size of icons"],
+		scaleSettings = {
+			name = L["Size"],
 			order = 10,
-			type = "range",
-			min = 0.2, max = 2.0, step = 0.01, isPercent = true,
-			set = function(info, value)
-				local key = info[2]
-				local option = info[#info]
-				E.profile.Party[key].icons[option] = value
+			type = "group",
+			inline = true,
+			args = {
+				scale = {
+					name = L["Icon Size"],
+					desc = L["Set the size of icons"],
+					order = 10,
+					type = "range",
+					min = 0.2, max = 2.0, step = 0.01, isPercent = true,
+					set = function(info, value)
+						local key = info[2]
+						local option = info[#info]
+						E.profile.Party[key].icons[option] = value
 
-				P:ConfigSize(key, true)
-			end,
+						P:ConfigSize(key, true)
+					end,
+				},
+				chargeScale = {
+					name = L["Charge Size"],
+					desc = L["Set the size of charge numbers"],
+					order = 11,
+					type = "range",
+					min = 0.5, max = 1.5, step = 0.1, isPercent = true,
+				},
+				counterScale = {
+					name = L["Counter Size"],
+					desc = L["Set the size of cooldown numbers"],
+					order = 12,
+					type = "range",
+					min = 0.1, max = 1, step = 0.05, isPercent = true,
+				},
+			}
 		},
-		chargeScale = {
-			name = L["Charge Size"],
-			desc = L["Set the size of charge numbers"],
-			order = 11,
-			type = "range",
-			min = 0.5, max = 1.5, step = 0.1, isPercent = true,
+		alphaSettings = {
+			name = OPACITY,
+			order = 20,
+			type = "group",
+			inline = true,
+			args = {
+				swipeAlpha = {
+					name = L["Swipe Opacity"],
+					desc = L["Set the opacity of swipe animations"],
+					order = 13,
+					type = "range",
+					min = 0, max = 1, step = 0.1,
+				},
+				inactiveAlpha = {
+					name = L["Inactive Icon Opacity"],
+					desc = L["Set the opacity of icons not on cooldown"],
+					order = 14,
+					type = "range",
+					min = 0, max = 1, step = 0.1,
+				},
+				activeAlpha = {
+					name = L["Active Icon Opacity"],
+					desc = L["Set the opacity of icons on cooldown"],
+					order = 15,
+					type = "range",
+					min = 0, max = 1, step = 0.1,
+				},
+			}
 		},
-		counterScale = {
-			name = L["Counter Size"],
-			desc = L["Set the size of cooldown numbers"],
-			order = 12,
-			type = "range",
-			min = 0.1, max = 1, step = 0.05, isPercent = true,
-		},
-		swipeAlpha = {
-			name = L["Swipe Opacity"],
-			desc = L["Set the opacity of swipe animations"],
-			order = 13,
-			type = "range",
-			min = 0, max = 1, step = 0.1,
-		},
-		inactiveAlpha = {
-			name = L["Inactive Icon Opacity"],
-			desc = L["Set the opacity of icons not on cooldown"],
-			order = 14,
-			type = "range",
-			min = 0, max = 1, step = 0.1,
-		},
-		activeAlpha = {
-			name = L["Active Icon Opacity"],
-			desc = L["Set the opacity of icons on cooldown"],
-			order = 15,
-			type = "range",
-			min = 0, max = 1, step = 0.1,
-		},
-		lb2 = {
-			name = "\n", order = 16, type = "description",
-		},
-		border = {
+		borderSettings = {
 			disabled = function(info)
 				return not E.profile.Party[ info[2] ].icons.displayBorder
 			end,
 			name = L["Border"],
-			order = 20,
+			order = 30,
 			type = "group",
 			inline = true,
 			args = {
@@ -142,6 +119,50 @@ local icons = {
 					values = {1,2,3,4,5},
 				},
 				]]
+			}
+		},
+		miscSettings = {
+			name = MISCELLANEOUS,
+			order = 40,
+			type = "group",
+			inline = true,
+			args = {
+				showCounter = {
+					name = COUNTDOWN_FOR_COOLDOWNS_TEXT,
+					desc = format("%s\n\n|cffff2020%s",
+					L["Toggle the cooldown numbers. Spells with charges only show cooldown numbers at 0 charge"],
+					L["[Show Numbers for Cooldowns] must be enabled in Blizzard's \'Options/Action Bars\' menu when using Blizzard's cooldown numbers."]),
+					order = 1,
+					type = "toggle",
+				},
+				reverse = {
+					name = L["Reverse Swipe"],
+					desc = L["Reverse the cooldown swipe animation"],
+					order = 2,
+					type = "toggle",
+				},
+				desaturateActive = {
+					name = L["Desaturate Colors"],
+					desc = L["Desaturate colors on active icons"],
+					order = 3,
+					type = "toggle",
+				},
+
+				displayInactive = {
+					name = L["Display Inactive Icons"],
+					desc = L["Display icons not on cooldown"],
+					order = 4,
+					type = "toggle",
+					get = function(info) return E.profile.Party[ info[2] ].position.displayInactive end,
+					set = function(info, state)
+						local key = info[2]
+						E.profile.Party[key].position.displayInactive = state
+						P:ConfigBars(key, "displayInactive")
+					end,
+				},
+				lb1 = {
+					name = "\n", order = 5, type = "description",
+				},
 			}
 		},
 	}

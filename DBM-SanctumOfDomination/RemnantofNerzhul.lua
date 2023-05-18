@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2444, "DBM-SanctumOfDomination", nil, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20221206222943")
+mod:SetRevision("20230409210831")
 mod:SetCreatureID(175729)
 mod:SetEncounterID(2432)
 mod:SetUsedIcons(1, 2, 3, 4, 7, 8)
@@ -81,6 +81,7 @@ mod.vb.shatterCount = 0
 --Shatter triggers it's own ICDs handled in shatter/phase change code
 --Spell queue priority: Suffering, Malevolence, Orb, Grasp
 local function updateAllTimers(self, ICD)
+	if not self:IsInCombat() then return end
 	DBM:Debug("updateAllTimers running", 2)
 	local nextCast = 0
 	if timerSufferingCD:GetRemaining() < ICD then

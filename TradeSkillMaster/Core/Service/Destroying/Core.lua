@@ -12,6 +12,7 @@ local Container = TSM.Include("Util.Container")
 local Database = TSM.Include("Util.Database")
 local Event = TSM.Include("Util.Event")
 local SlotId = TSM.Include("Util.SlotId")
+local Table = TSM.Include("Util.Table")
 local TempTable = TSM.Include("Util.TempTable")
 local ItemString = TSM.Include("Util.ItemString")
 local Reactive = TSM.Include("Util.Reactive")
@@ -92,13 +93,19 @@ function Destroying.OnInitialize()
 		:RegisterCallback("deMaxQuality", private.UpdateBagDB)
 		:RegisterCallback("includeSoulbound", private.UpdateBagDB)
 
-	local currentTime = time()
-	for _, entries in pairs(private.settings.destroyingHistory) do
-		for i = #entries, 1, -1 do
-			local value = entries[i]
-			if value.time < currentTime - CLEANUP_THRESHOLD then
-				tremove(entries, i)
+	local cleanupTime = time() - CLEANUP_THRESHOLD
+	for spellId, entries in pairs(private.settings.destroyingHistory) do
+		-- Rely on the entries being sorted in ascending time
+		local removeThroughIndex = nil
+		for i = 1, #entries do
+			if entries[i].time > cleanupTime then
+				break
 			end
+			removeThroughIndex = i
+		end
+		if removeThroughIndex then
+			Log.Info("Removing %d old entries for %s", removeThroughIndex, tostring(spellId))
+			Table.RemoveRange(entries, 1, removeThroughIndex)
 		end
 	end
 

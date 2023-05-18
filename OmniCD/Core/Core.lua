@@ -216,45 +216,7 @@ do
 	end
 end
 
-do
-	local backdropStyle = {}
-	local textureUVs = {
-		"TopLeftCorner",
-		"TopRightCorner",
-		"BottomLeftCorner",
-		"BottomRightCorner",
-		"TopEdge",
-		"BottomEdge",
-		"LeftEdge",
-		"RightEdge",
-		"Center"
-	}
-
-	E.DisablePixelSnap = function(obj)
-		obj:SetTexelSnappingBias(0.0)
-		obj:SetSnapToPixelGrid(false)
-	end
-
-	E.BackdropTemplate = function(frame, style, bgFile, edgeFile, edgeSize, force)
-		style = style or "default"
-		local backdrop = backdropStyle[style]
-		if not backdrop or force then
-			backdrop = {
-				bgFile = bgFile or E.TEXTURES.White8x8,
-				edgeFile = edgeFile or E.TEXTURES.White8x8,
-				edgeSize = (edgeSize or 1) * E.PixelMult / (style == "ACD" and E.global.optionPanelScale or 1),
-			}
-			backdropStyle[style] = backdrop
-		end
-		frame:SetBackdrop(backdrop)
-		for _, pieceName in ipairs(textureUVs) do
-			local region = frame[pieceName]
-			if region then
-				E.DisablePixelSnap(region)
-			end
-		end
-	end
-end
+E.BackdropTemplate = E.Libs.OmniCDC.SetBackdrop
 
 E.Noop = function() end
 

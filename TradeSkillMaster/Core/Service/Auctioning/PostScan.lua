@@ -864,8 +864,7 @@ function private.GetPostBagSlot(itemString, quantity)
 		return nil, nil
 	end
 	local _, _, _, quality = Container.GetItemInfo(bag, slot)
-	assert(quality)
-	if quality == -1 then
+	if not quality or quality == -1 then
 		-- the game client doesn't have item info cached for this item, so we can't post it yet
 		TempTable.Release(removeContext)
 		private.DebugLogInsert(itemString, "No item info")

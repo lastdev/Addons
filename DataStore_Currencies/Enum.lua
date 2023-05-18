@@ -8,7 +8,7 @@ enum.CurrencyIDs = {
 	-- Miscellaneous
 	JusticePoints = 395,
 	TimewarpedBadge = 1166,
-	DarkmoonPrize = 515, 
+	DarkmoonPrize = 515,
 	EpicureansAward = 81,
 	IronpawToken = 402,
 
@@ -36,8 +36,8 @@ enum.CurrencyIDs = {
 	ApexisCrystal = 823,
 	ArtifactFragment = 944,
 	GarrisonResources = 824,
-	SealOfInevitableFate = 1129,		
-	SealOfTemperedFate = 994,		
+	SealOfInevitableFate = 1129,
+	SealOfTemperedFate = 994,
 	Oil = 1101,
 	
 	-- Legion
@@ -79,4 +79,8 @@ enum.CurrencyIDs = {
 	DragonIslesSupplies = 2003,
 	ElementalOverflow = 2118,
 	StormSigil = 2122,
+	Honor = 1792,
+	
+	-- Dragonflight 10.1
+	Flightstones = 2245,				  
 }

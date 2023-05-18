@@ -1,4 +1,4 @@
-## Interface: 100007
+## Interface: 100100
 ## X-Min-Interface: 90200
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Sepulcher of the First Ones|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0태초의 존재의 매장터|r
@@ -10,6 +10,7 @@
 ## RequiredDeps: DBM-Core
 ## SavedVariables: DBMSepulcher_AllSavedVars
 ## SavedVariablesPerCharacter: DBMSepulcher_SavedStats
+## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: SHADOWLANDS

@@ -116,12 +116,12 @@ L = {
 	["NewcomersChat"] = {
 		["As Guide"] = "As Mentor",
 		["As Newcomer"] = "Als Neuling",
-		["Guide"] = true,
-		["Guide Icon"] = true,
-		["Guide Label"] = true,
+		["Guide"] = "Mentor",
+		["Guide Icon"] = "Mentor Icon",
+		["Guide Label"] = "Mentor Label",
 		["In newcomers chat"] = "Im Neulings-Chat",
 		["In normal chat"] = "Im normalen Chat",
-		["module_desc"] = "Konfiguriert Symbole und Texte, die auf Guide und Neulinge, von und im Neulingskanal hinweisen",
+		["module_desc"] = "Konfiguriert Symbole und Texte, die auf Mentor und Neulinge, von und im Neulingskanal hinweisen",
 		["Newcomer Icon"] = "Neulingssymbol",
 		["NewcomersChat"] = "Neulings-Chat",
 	}

@@ -215,44 +215,48 @@ end )
 
 
 local stealth = {
-    rogue            = { "stealth"         , "vanish", "shadow_dance", "subterfuge"                              },
-    mantle           = { "stealth"         , "vanish"                                                            },
-    sepsis           = { "sepsis_buff"                                                                           },
-    improved_garrote = { "improved_garrote"                                                                      },
-    all              = { "stealth"         , "vanish", "shadow_dance", "subterfuge", "shadowmeld", "sepsis_buff" }
+    normal = { "stealth" },
+    vanish = { "vanish" },
+    shadowmeld = { "shadowmeld" },
+    subterfuge = { "subterfuge" },
+    shadow_dance = { "shadow_dance" },
+    sepsis = { "sepsis_buff" },
+    improved_garrote = { "improved_garrote", "sepsis_buff" },
+
+    basic = { "stealth", "vanish" },
+    mantle = { "stealth", "vanish" },
+    rogue = { "stealth", "vanish", "subterfuge", "shadow_dance" },
+    all = { "stealth", "vanish", "shadowmeld", "subterfuge", "shadow_dance", "sepsis_buff", "improved_garrote" },
 }
+
 
 spec:RegisterStateTable( "stealthed", setmetatable( {}, {
     __index = function( t, k )
-        if k == "rogue" then
-            return buff.stealth.up or buff.vanish.up or buff.shadow_dance.up or buff.subterfuge.up
-        elseif k == "rogue_remains" then
-            return max( buff.stealth.remains, buff.vanish.remains, buff.shadow_dance.remains, buff.subterfuge.remains )
+        local kRemains = k == "remains" and "all" or k:match( "^(.+)_remains$" )
 
-        elseif k == "mantle" or k == "basic" then
-            return buff.stealth.up or buff.vanish.up
-        elseif k == "mantle_remains" or k == "basic_remains" then
-            return max( buff.stealth.remains, buff.vanish.remains )
+        if kRemains then
+            local category = stealth[ kRemains ]
+            if not category then return 0 end
 
-        elseif k == "sepsis" then
-            return buff.sepsis_buff.up
-        elseif k == "sepsis_remains" then
-            return buff.sepsis_buff.remains
+            local remains = 0
+            for _, aura in ipairs( category ) do
+                remains = max( remains, buff[ aura ].remains )
+            end
 
-        elseif k == "improved_garrote" then
-            return buff.improved_garrote_buff.up
-        elseif k == "improved_garrote_remains" then
-            return buff.improved_garrote_buff.remains
+            return remains
+        end
 
-        elseif k == "all" then
-            return buff.stealth.up or buff.vanish.up or buff.shadow_dance.up or buff.subterfuge.up or buff.shadowmeld.up or buff.sepsis_buff.up
-        elseif k == "remains" or k == "all_remains" then
-            return max( buff.stealth.remains, buff.vanish.remains, buff.shadow_dance.remains, buff.subterfuge.remains, buff.shadowmeld.remains, buff.sepsis_buff.remains )
+        local category = stealth[ k ]
+        if not category then return false end
+
+        for _, aura in ipairs( category ) do
+            if buff[ aura ].up then return true end
         end
 
         return false
-    end
+    end,
 } ) )
+
 
 spec:RegisterStateExpr( "master_assassin_remains", function ()
     if not ( talent.master_assassin.enabled or legendary.mark_of_the_master_assassin.enabled ) then return 0 end
@@ -665,6 +669,21 @@ local ExpireSepsis = setfenv( function ()
 end, state )
 
 
+-- Tier 30
+spec:RegisterGear( "tier30", 202500, 202498, 202497, 202496, 202495 )
+spec:RegisterAuras( {
+    poisoned_edges = {
+        id = 409587,
+        duration = 30,
+        max_stack = 1
+    }
+} )
+
+local ExpireDeathmarkT30 = setfenv( function ()
+    applyBuff( "poisoned_edges" )
+end, state )
+
+
 -- Tier Set
 spec:RegisterGear( "tier29", 200372, 200374, 200369, 200371, 200373 )
 spec:RegisterAura( "septic_wounds", {
@@ -693,6 +712,10 @@ spec:RegisterHook( "reset_precast", function ()
 
     if debuff.sepsis.up then
         state:QueueAuraExpiration( "sepsis", ExpireSepsis, debuff.sepsis.expires )
+    end
+
+    if set_bonus.tier30_4pc > 0 and debuff.deathmark.up then
+        state:QueueAuraExpiration( "deathmark", ExpireDeathmarkT30, debuff.deathmark.expires )
     end
 
     class.abilities.apply_poison = class.abilities[ action.apply_poison_actual.next_poison ]
@@ -2386,6 +2409,11 @@ spec:RegisterAbilities( {
             if talent.premeditation.enabled then applyBuff( "premeditation" ) end
             if talent.shot_in_the_dark.enabled then applyBuff( "shot_in_the_dark" ) end
             if talent.silent_storm.enabled then applyBuff( "silent_storm" ) end
+
+            if state.spec.subtlety and set_bonus.tier30_2pc > 0 then
+                applyBuff( "symbols_of_death", 6 )
+                if debuff.rupture.up then debuff.rupture.expires = debuff.rupture.expires + 4 end
+            end
 
             if azerite.the_first_dance.enabled then
                 gain( 2, "combo_points" )

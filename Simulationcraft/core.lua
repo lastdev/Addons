@@ -504,6 +504,11 @@ local function GetItemStringFromItemLink(slotNum, itemLink, debugOutput)
     simcItemOptions[#simcItemOptions + 1] = 'crafted_stats=' .. table.concat(craftedStats, '/')
   end
 
+  local craftingQuality = C_TradeSkillUI.GetItemCraftedQualityByItemInfo(itemLink);
+  if craftingQuality then
+    simcItemOptions[#simcItemOptions + 1] = 'crafting_quality=' .. craftingQuality
+  end
+
   local itemStr = ''
   itemStr = itemStr .. (simcSlotNames[slotNum] or 'unknown') .. "=" .. table.concat(simcItemOptions, ',')
   if debugOutput then
@@ -628,6 +633,41 @@ function Simulationcraft:GetZandalariLoa()
     end
   end
   return zandalariLoa
+end
+
+function Simulationcraft:GetSlotHighWatermarks()
+  if C_ItemUpgrade and C_ItemUpgrade.GetHighWatermarkForSlot then
+    local slots = {}
+    -- These are not normal equipment slots, they are Enum.ItemRedundancySlot
+    for slot = 0, 16 do
+      local characterHighWatermark, accountHighWatermark = C_ItemUpgrade.GetHighWatermarkForSlot(slot)
+      if characterHighWatermark or accountHighWatermark then
+        slots[#slots + 1] = table.concat({  slot, characterHighWatermark, accountHighWatermark }, ':')
+      end
+    end
+    return table.concat(slots, '/')
+  end
+end
+
+function Simulationcraft:GetUpgradeCurrencies()
+  local upgradeCurrencies = {}
+  -- Collect actual currencies
+  for currencyId, currencyName in pairs(Simulationcraft.upgradeCurrencies) do
+    local currencyInfo = C_CurrencyInfo.GetCurrencyInfo(currencyId)
+    if currencyInfo and currencyInfo.quantity > 0 then
+      upgradeCurrencies[#upgradeCurrencies + 1] = table.concat({ "c", currencyId, currencyInfo.quantity }, ':')
+    end
+  end
+
+  -- Collect items that get used as currencies
+  for itemId, itemName in pairs(Simulationcraft.upgradeItems) do
+    local count = GetItemCount(itemId, true, true, true)
+    if count > 0 then
+      upgradeCurrencies[#upgradeCurrencies + 1] = table.concat({ "i", itemId, count }, ':')
+    end
+  end
+
+  return table.concat(upgradeCurrencies, '/')
 end
 
 function Simulationcraft:GetMainFrame(text)
@@ -993,6 +1033,19 @@ function Simulationcraft:PrintSimcProfile(debugOutput, noBags, showMerchant, lin
         break
       end
     end
+  end
+
+  simulationcraftProfile = simulationcraftProfile .. '\n'
+  simulationcraftProfile = simulationcraftProfile .. '### Additional Character Info\n'
+
+  local upgradeCurrenciesStr = Simulationcraft:GetUpgradeCurrencies()
+  simulationcraftProfile = simulationcraftProfile .. '#\n'
+  simulationcraftProfile = simulationcraftProfile .. '# upgrade_currencies=' .. upgradeCurrenciesStr .. '\n'
+
+  local highWatermarksStr = Simulationcraft:GetSlotHighWatermarks()
+  if highWatermarksStr then
+    simulationcraftProfile = simulationcraftProfile .. '#\n'
+    simulationcraftProfile = simulationcraftProfile .. '# slot_high_watermarks=' .. highWatermarksStr .. '\n'
   end
 
   -- sanity checks - if there's anything that makes the output completely invalid, punt!

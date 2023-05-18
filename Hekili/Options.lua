@@ -216,7 +216,8 @@ local displayTemplate = {
 
     border = {
         enabled = true,
-        width = 1,
+        thickness = 1,
+        fit = false,
         coloring = 'custom',
         color = { 0, 0, 0, 1 },
     },
@@ -332,6 +333,8 @@ local displayTemplate = {
         fontStyle = "OUTLINE",
 
         lowercase = false,
+
+        separateQueueStyle = false,
 
         queuedFont = ElvUI and "PT Sans Narrow" or "Arial Narrow",
         queuedFontSize = 12,
@@ -837,16 +840,25 @@ do
         local option = info[ n ]
 
         local conf = Hekili.DB.profile.notifications
+        local val = conf[ option ]
 
-        if option == "color" then return unpack( conf[ option ] ) end
-        return conf[ option ]
+        if option == "color" then
+            if type( val ) == "table" and #val == 4 then
+                return unpack( val )
+            else
+                local defaults = Hekili:GetDefaults()
+                return unpack( defaults.profile.notifications.color )
+            end
+        end
+        return val
     end
 
-    local function SetNotifOption( info, val )
+    local function SetNotifOption( info, ... )
         local n = #info
         local option = info[ n ]
 
         local conf = Hekili.DB.profile.notifications
+        local val = option == "color" and { ... } or select(1, ...)
 
         conf[ option ] = val
         QueueRebuildUI()
@@ -3986,7 +3998,8 @@ do
                 desc = "If set above zero, the addon will only allow " .. k .. " to be recommended, if there are at least this many detected enemies.  All other action list conditions must also be met.\nSet to zero to ignore.",
                 width = 1.5,
                 min = 0,
-                max = 15,
+                softMax = 15,
+                max = 100,
                 step = 1,
                 order = 3.1,
             },
@@ -9669,7 +9682,8 @@ do
 
                     profile.toggles[ tab ].value = to
 
-                    Hekili:ForceUpdate( "HEKILI_TOGGLE", tab )
+                    if WeakAuras and WeakAuras.ScanEvents then WeakAuras.ScanEvents( "HEKILI_TOGGLE", tab, to ) end
+                    if ns.UI.Minimap then ns.UI.Minimap:RefreshDataText() end
                     return
                 end
 
@@ -9699,6 +9713,7 @@ do
                     if args[3] then
                         Hekili:SetMode( args[3] )
                         if WeakAuras and WeakAuras.ScanEvents then WeakAuras.ScanEvents( "HEKILI_TOGGLE", "mode", args[3] ) end
+                        if ns.UI.Minimap then ns.UI.Minimap:RefreshDataText() end
                     else
                         Hekili:FireToggle( "mode" )
                     end

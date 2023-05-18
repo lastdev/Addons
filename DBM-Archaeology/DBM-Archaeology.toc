@@ -1,4 +1,4 @@
-## Interface: 100005
+## Interface: 100100
 ## X-Min-Interface: 70100
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff0055FFArchaeology|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff0055FFАрхеология|r
@@ -10,8 +10,9 @@
 ## Author: Omega
 ## X-Website: http://www.deadlybossmods.com
 ## SavedVariables: DBM_Archaeology_Settings
+## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
 ## X-Curse-Project-ID: 29493
-## Version: r49
+## Version: r52
 
 localization.en.lua
 localization.cn.lua

@@ -207,22 +207,26 @@ local enemyExclusions = {
 local FindExclusionAuraByID
 
 RegisterEvent( "NAME_PLATE_UNIT_ADDED", function( event, unit )
-    if UnitIsFriend( "player", unit ) then return end
-
     local id = UnitGUID( unit )
-    npGUIDs[unit] = id
-    npUnits[id]   = unit
+
+    if UnitIsFriend( "player", unit ) then
+        npGUIDs[ unit ] = nil
+        npUnits[ id ] = nil
+        return
+    end
+
+    npGUIDs[ unit ] = id
+    npUnits[ id ]   = unit
 end )
 
 RegisterEvent( "NAME_PLATE_UNIT_REMOVED", function( event, unit )
-    if UnitIsFriend( "player", unit ) then return end
+    local storedGUID = npGUIDs[ unit ]
+    local id = UnitGUID( unit )
 
-    local id = npGUIDs[ unit ] or UnitGUID( unit )
-    npGUIDs[unit] = nil
+    npGUIDs[ unit ] = nil
 
-    if npUnits[id] and npUnits[id] == unit then
-        npUnits[id] = nil
-    end
+    if npUnits[ id ] and npUnits[ id ] == unit then npUnits[ id ] = nil end
+    if npUnits[ storedGUID ] and npUnits[ storedGUID ] == unit then npUnits[ storedGUID ] = nil end
 end )
 
 RegisterEvent( "UNIT_FLAGS", function( event, unit )
@@ -232,13 +236,13 @@ RegisterEvent( "UNIT_FLAGS", function( event, unit )
         local id = UnitGUID( unit )
         ns.eliminateUnit( id, true )
 
-        npGUIDs[unit] = nil
-        npUnits[id]   = nil
+        npGUIDs[ unit ] = nil
+        npUnits[ id ]   = nil
     end
 end )
 
 
-local RC = LibStub("LibRangeCheck-2.0")
+local RC = LibStub( "LibRangeCheck-2.0" )
 
 local lastCount = 1
 local lastStationary = 1
@@ -250,13 +254,15 @@ local guidRanges = {}
 local chromieTime = false
 
 do
+    local IsPlayerInChromieTime = C_PlayerInfo.IsPlayerInChromieTime
+
     local function UpdateChromieTime()
-        chromieTime = C_PlayerInfo.IsPlayerInChromieTime()
+        chromieTime = IsPlayerInChromieTime()
     end
 
     local function ChromieCheck( self, event, login, reload )
         if event ~= "PLAYER_ENTERING_WORLD" or login or reload then
-            chromieTime = C_PlayerInfo.IsPlayerInChromieTime()
+            chromieTime = IsPlayerInChromieTime()
             C_Timer.After( 2, UpdateChromieTime )
         end
     end
@@ -265,6 +271,7 @@ do
         RegisterEvent( "CHROMIE_TIME_OPEN", ChromieCheck )
         RegisterEvent( "CHROMIE_TIME_CLOSE", ChromieCheck )
     end
+
     RegisterEvent( "PLAYER_ENTERING_WORLD", ChromieCheck )
 end
 
@@ -327,13 +334,18 @@ do
         local spec = state.spec.id
         spec = spec and rawget( Hekili.DB.profile.specs, spec )
 
+        local inRaid = IsInRaid()
+        local inGroup = GetNumGroupMembers() > 0
+
+        local FriendCheck = inRaid and UnitInRaid or UnitInParty
+
         if spec then
             local checkPets = showNPs and spec.petbased and Hekili:PetBasedTargetDetectionIsReady()
             local checkPlates = showNPs and spec.nameplates
 
             if checkPets or checkPlates then
                 for unit, guid in pairs( npGUIDs ) do
-                    if UnitExists( unit ) and not UnitIsDead( unit ) and UnitCanAttack( "player", unit ) and UnitInPhase( unit ) and UnitHealth( unit ) > 1 and ( UnitIsPVP( "player" ) or not UnitIsPlayer( unit ) ) then
+                    if UnitExists( unit ) and not UnitIsDead( unit ) and UnitCanAttack( "player", unit ) and UnitInPhase( unit ) and UnitHealth( unit ) > 1 and ( not inGroup or not FriendCheck( unit ) ) and ( UnitIsPVP( "player" ) or not UnitIsPlayer( unit ) ) then
                         local excluded = not UnitIsUnit( unit, "target" )
                         local npcid = guid:match( "(%d+)-%x-$" )
                         npcid = tonumber( npcid )
@@ -401,7 +413,7 @@ do
                     local guid = UnitGUID( unit )
 
                     if guid and counted[ guid ] == nil then
-                        if UnitExists( unit ) and not UnitIsDead( unit ) and UnitCanAttack( "player", unit ) and UnitInPhase( unit ) and UnitHealth( unit ) > 1 and ( UnitIsPVP( "player" ) or not UnitIsPlayer( unit ) ) then
+                        if UnitExists( unit ) and not UnitIsDead( unit ) and UnitCanAttack( "player", unit ) and UnitInPhase( unit ) and UnitHealth( unit ) > 1 and ( not inGroup or not FriendCheck( unit ) ) and ( UnitIsPVP( "player" ) or not UnitIsPlayer( unit ) ) then
                             local excluded = not UnitIsUnit( unit, "target" )
 
                             local npcid = guid:match( "(%d+)-%x-$" )
@@ -496,6 +508,11 @@ do
                             end
                         end
 
+                        if not excluded and inGroup and FriendCheck( unit ) then
+                            excluded = true
+                            if debugging then details = format( "%s\n    - Excluded by friend check.", details ) end
+                        end
+
                         if not excluded and checkPets then
                             excluded = not Hekili:TargetIsNearPet( unit )
 
@@ -541,7 +558,7 @@ do
 
         local targetGUID = UnitGUID( "target" )
         if targetGUID then
-            if counted[ targetGUID ] == nil and UnitExists("target") and not UnitIsDead("target") and UnitCanAttack("player", "target") and UnitInPhase("target") and (UnitIsPVP("player") or not UnitIsPlayer("target")) then
+            if counted[ targetGUID ] == nil and UnitExists( "target" ) and not UnitIsDead( "target" ) and UnitCanAttack( "player", "target" ) and UnitInPhase( "target" ) and ( UnitIsPVP( "player" ) or not UnitIsPlayer( "target" ) ) then
                 count = count + 1
                 counted[ targetGUID ] = true
 
@@ -844,59 +861,106 @@ ns.eliminateUnit = function(id, force)
 end
 
 
-local dmgPool = {}
+do
+    local physical = {
+        [1] = 0,
+        [5] = 0,
+        [10] = 0
+    }
 
-local incomingDamage = {}
-local incomingHealing = {}
+    local magical = {
+        [1] = 0,
+        [5] = 0,
+        [10] = 0
+    }
 
-ns.storeDamage = function(time, damage, physical)
-    if damage and damage > 0 then
-        local entry = tremove( dmgPool, 1 ) or {}
+    local healing = {
+        [1] = 0,
+        [5] = 0,
+        [10] = 0
+    }
 
-        entry.t = time
-        entry.amount = damage
-        entry.physical = physical
+    ns.storeDamage = function( _, damage, isPhysical )
+        if damage and damage > 0 then
+            local db = isPhysical and physical or magical
 
-        insert( incomingDamage, entry )
-    end
-end
-ns.storeHealing = function(time, healing)
-    if healing and healing > 0 then
-        local entry = tremove( dmgPool, 1 ) or {}
+            db[ 1 ] = db[ 1 ] + damage
+            C_Timer.After( 1, function() db[ 1 ] = db[ 1 ] - damage end )
 
-        entry.t = time
-        entry.amount = healing
-        entry.phsical = nil
+            db[ 5 ] = db[ 5 ] + damage
+            C_Timer.After( 5, function() db[ 5 ] = db[ 5 ] - damage end )
 
-        insert( incomingHealing, entry )
-    end
-end
-
-ns.damageInLast = function(t, physical)
-    local dmg = 0
-    local start = GetTime() - min(t, 15)
-
-    for k, v in pairs(incomingDamage) do
-        if v.t > start and (physical == nil or v.physical == physical) then
-            dmg = dmg + v.amount
+            db[ 10 ] = db[ 10 ] + damage
+            C_Timer.After( 10, function() db[ 10 ] = db[ 10 ] - damage end )
         end
     end
 
-    return dmg
-end
+    ns.damageInLast = function( seconds, isPhysical )
+        local db = isPhysical and physical or magical
 
-function ns.healingInLast(t)
-    local heal = 0
-    local start = GetTime() - min(t, 15)
+        if db[ seconds ] then return db[ seconds ] end
 
-    for k, v in pairs(incomingHealing) do
-        if v.t > start then
-            heal = heal + v.amount
+        if seconds < 1 then
+            return db[ 1 ] * ( seconds / 1 )
+        end
+
+        if seconds < 5 then
+            return db[ 1 ] + ( db[ 5 ] - db[ 1 ] ) * ( seconds - 1 ) / 5
+        end
+
+        if seconds < 10 then
+            return db[ 5 ] + ( db[ 10 ] - db[ 5 ] ) * ( seconds - 5 ) / 10
+        end
+
+        return db[ 10 ] * seconds / 10
+    end
+
+    ns.storeHealing = function( _, amount )
+        if amount and amount > 0 then
+            healing[ 1 ] = healing[ 1 ] + amount
+            C_Timer.After( 1, function() healing[ 1 ] = healing[ 1 ] - amount end )
+
+            healing[ 5 ] = healing[ 5 ] + amount
+            C_Timer.After( 5, function() healing[ 5 ] = healing[ 5 ] - amount end )
+
+            healing[ 10 ] = healing[ 10 ] + amount
+            C_Timer.After( 10, function() healing[ 10 ] = healing[ 10 ] - amount end )
         end
     end
 
-    return heal
+    ns.healingInLast = function( seconds )
+        if healing[ seconds ] then return healing[ seconds ] end
+
+        if seconds < 1 then
+            return healing[ 1 ] * ( seconds / 1 )
+        end
+
+        if seconds < 5 then
+            return healing[ 1 ] + ( healing[ 5 ] - healing[ 1 ] ) * ( seconds - 1 ) / 5
+        end
+
+        if seconds < 10 then
+            return healing[ 5 ] + ( healing[ 10 ] - healing[ 5 ] ) * ( seconds - 5 ) / 10
+        end
+
+        return healing[ 10 ] * seconds / 10
+    end
+
+    ns.sanitizeDamageAndHealing = function()
+        physical[ 1 ] = max( 0, physical[ 1 ] )
+        physical[ 5 ] = max( 0, physical[ 5 ] )
+        physical[ 10 ] = max( 0, physical[ 10 ] )
+
+        magical[ 1 ] = max( 0, magical[ 1 ] )
+        magical[ 5 ] = max( 0, magical[ 5 ] )
+        magical[ 10 ] = max( 0, magical[ 10 ] )
+
+        healing[ 1 ] = max( 0, healing[ 1 ] )
+        healing[ 5 ] = max( 0, healing[ 5 ] )
+        healing[ 10 ] = max( 0, healing[ 10 ] )
+    end
 end
+
 
 -- Auditor should clean things up for us.
 do
@@ -944,18 +1008,7 @@ do
             end
         end
 
-        local cutoff = now - 15
-        for i = #incomingDamage, 1, -1 do
-            local instance = incomingDamage[ i ]
-            if instance.t >= cutoff then break end
-            insert( dmgPool, remove( incomingDamage, i ) )
-        end
-
-        for i = #incomingHealing, 1, -1 do
-            local instance = incomingHealing[ i ]
-            if instance.t >= cutoff then break end
-            insert( dmgPool, remove( incomingHealing, i ) )
-        end
+        ns.sanitizeDamageAndHealing()
     end
 
     Hekili.AuditTimer = C_Timer.NewTicker( 1, ns.Audit )

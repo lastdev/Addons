@@ -119,7 +119,7 @@ function Crafting.OnInitialize()
 			private.HandleMatDBAddRow(matString)
 			professionItems[craftInfo.profession] = professionItems[craftInfo.profession] or TempTable.Acquire()
 			matCountByCraft[craftString] = (matCountByCraft[craftString] or 0) + 1
-			if matQuantity > 0 then
+			if matQuantity > 0 and MatString.GetType(matString) == MatString.TYPE.NORMAL then
 				matFirstItemString[craftString] = matString
 				matFirstQuantity[craftString] = matQuantity
 			end
@@ -177,7 +177,7 @@ function Crafting.OnInitialize()
 		:Equal("hasCD", false)
 	for _, craftString, itemString, numResult in query:Iterator() do
 		local spellId = CraftString.GetSpellId(craftString)
-		if not ProfessionInfo.IsMassMill(spellId) and matCountByCraft[craftString] == 1 then
+		if not ProfessionInfo.IsMassMill(spellId) and matCountByCraft[craftString] == 1 and matFirstItemString[craftString] then
 			Conversions.AddCraft(itemString, matFirstItemString[craftString], numResult / matFirstQuantity[craftString])
 			addedConversion = true
 		end
@@ -804,7 +804,7 @@ function private.GetRestockHelpMessage(itemString)
 		assert(profit)
 
 		if not minProfit then
-			return L["The min profit did not evalulate to a valid value for this item."]
+			return L["The min profit did not evaluate to a valid value for this item."]
 		end
 
 		if profit < minProfit then

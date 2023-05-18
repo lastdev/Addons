@@ -3,13 +3,13 @@
 
                                            Lunar Festival
 
-                                       v2.00 - 15th April 2023
+                                        v2.03 - 6th May 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
 ]]
 
-local myName, ns = ...
+local addonName, ns = ...
 ns.db = {}
 -- From Data.lua
 ns.points = {}
@@ -1007,6 +1007,11 @@ ns.options = {
 		},
 	},
 }
+
+function HandyNotes_LunarFestival_OnAddonCompartmentClick( addonName, buttonName )
+	Settings.OpenToCategory( "HandyNotes" )
+	LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "LunarFestival" )
+ end
 
 function pluginHandler:OnEnable()
 	local HereBeDragons = LibStub("HereBeDragons-2.0", true)

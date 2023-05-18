@@ -1,5 +1,7 @@
-## Interface: 100005
-## Version: 1.10
+## Interface: 100100
+## Version: 1.14
+## Author: Taraezor
+## IconTexture: Interface\Icons\Inv_alpacamount_yellow
 ## Title: Springfur Alpaca
 ## Title-deDE: Frühlingsfellalpaka
 ## Title-esES: Alpaca de pelaje primaveral
@@ -12,7 +14,6 @@
 ## Title-ruRU: Курчавая альпака
 ## Title-zhCN: 春裘羊驼
 ## Title-zhTW: 春裘羊駝
-## Author: Taraezor
 ## Notes: Helps you find the |cFFF4A460Springfur Alpaca|r in Uldum
 ## Notes-deDE: Hilft Ihnen, die |cFFF4A460Frühlingsfellalpaka|r im Uldum zu finden
 ## Notes-esES: Te ayuda a encontrar la |cFFF4A460Alpaca de pelaje primaveral|r en el Uldum
@@ -29,7 +30,8 @@
 ## X-Curse-Project-ID: 502415
 ## X-WoWI-ID: 26113
 ## RequiredDeps: HandyNotes
-## SavedVariables: HandyNotes_AlpacaDB
+## SavedVariables: HandyNotes_SpringfurAlpacaDB
+## AddonCompartmentFunc: HandyNotes_SpringfurAlpaca_OnAddonCompartmentClick
 
 Core.lua
 Data.lua

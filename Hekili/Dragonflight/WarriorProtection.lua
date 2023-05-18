@@ -93,7 +93,7 @@ spec:RegisterTalents( {
     leeching_strikes                = { 90344, 382258, 1 }, -- Leech increased by 5%.
     menace                          = { 90383, 275338, 1 }, -- Intimidating Shout will knock back all nearby enemies except your primary target, and cause them all to cower in fear for 15 sec instead of fleeing.
     overwhelming_rage               = { 90378, 382767, 2 }, -- Maximum Rage increased by 15.
-    pain_and_gain                   = { 90353, 382549, 1 }, -- When you take any damage, heal for 4.50% of your maximum health. This can only occur once every 10 sec.
+    pain_and_gain                   = { 90353, 382549, 1 }, -- When you take any damage, heal for 3.50% of your maximum health. This can only occur once every 10 sec.
     piercing_howl                   = { 90348, 12323 , 1 }, -- Snares all enemies within 12 yards, reducing their movement speed by 70% for 8 sec.
     piercing_verdict                = { 90379, 382948, 1 }, -- Spear of Bastion's instant damage increased by 50% and its Rage generation is increased by 100%.
     rallying_cry                    = { 90331, 97462 , 1 }, -- Lets loose a rallying cry, granting all party or raid members within 40 yards 15% temporary and maximum health for 10 sec.
@@ -517,6 +517,16 @@ spec:RegisterAura( "vanguards_determination", {
     max_stack = 1,
 } )
 
+spec:RegisterGear( "tier30", 202446, 202444, 202443, 202442, 202441 )
+spec:RegisterSetBonuses( "tier30_2pc", 405581, "tier30_4pc", 405582 )
+--(2) Shield Slam deals 15% increased damage and reduces the cooldown of Last Stand by 1 sec. During Last Stand these effects are doubled.
+--(4) For 10 sec after Last Stand ends, Shield Slam unleashes a wave of force dealing (45% of Attack power) Physical damage to enemies in front of you and reducing damage they deal to you by 5% for 5 sec.
+spec:RegisterAura( "earthen_tenacity", {
+    id = 410218,
+    duration = 5,
+    max_stack = 1
+} )
+
 
 local rageSpent = 0
 local gloryRage = 0
@@ -599,6 +609,16 @@ end )
 spec:RegisterStateExpr( "cycle_for_execute", function ()
     if active_enemies == 1 or target.health_pct < ( talent.massacre.enabled and 35 or 20 ) or not settings.cycle or buff.execute_ineligible.down or buff.sudden_death.up then return false end
     return Hekili:GetNumTargetsBelowHealthPct( talent.massacre.enabled and 35 or 20, false, max( settings.cycle_min, offset + delay ) ) > 0
+end )
+
+local TriggerEarthenTenacity = setfenv( function()
+    applyBuff( "earthen_tenacity" )
+end, state )
+
+spec:RegisterHook( "reset_precast", function ()
+    if set_bonus.tier30_4pc > 0 and buff.last_stand.up then
+        state:QueueAuraExpiration( "last_stand_earthen_tenacity", TriggerEarthenTenacity, buff.last_stand.expires )
+    end
 end )
 
 -- Abilities
@@ -1010,10 +1030,12 @@ spec:RegisterAbilities( {
         handler = function ()
             if buff.ignore_pain.up then
                 buff.ignore_pain.expires = query_time + class.auras.ignore_pain.duration
-                buff.ignore_pain.v1 = min( 0.3 * health.max, buff.ignore_pain.v1 + stat.attack_power * 3.5 * ( 1 + stat.versatility_atk_mod / 100 ) )
+                -- TODO: Remove retail/PTR compatibility statement post 10.1 release. (3.5 [retail] vs 4.375 [10.1 patch])
+                buff.ignore_pain.v1 = min( 0.3 * health.max, buff.ignore_pain.v1 + stat.attack_power * (Hekili.CurrentBuild > 100007 and 4.375 or 3.5) * ( 1 + stat.versatility_atk_mod / 100 ) )
             else
                 applyBuff( "ignore_pain" )
-                buff.ignore_pain.v1 = min( 0.3 * health.max, stat.attack_power * 3.5 * ( 1 + stat.versatility_atk_mod / 100 ) )
+                -- TODO: Remove retail/PTR compatibility statement post 10.1 release. (3.5 [retail] vs 4.375 [10.1 patch])
+                buff.ignore_pain.v1 = min( 0.3 * health.max, stat.attack_power * (Hekili.CurrentBuild > 100007 and 4.375 or 3.5) * ( 1 + stat.versatility_atk_mod / 100 ) )
             end
         end,
     },
@@ -1120,6 +1142,10 @@ spec:RegisterAbilities( {
 
             if talent.unnerving_focus.enabled then
                 applyBuff( "unnerving_focus" )
+            end
+
+            if set_bonus.tier30_4pc > 0 then
+                state:QueueAuraExpiration( "last_stand_earthen_tenacity", TriggerEarthenTenacity, buff.last_stand.expires )
             end
         end,
     },
@@ -1276,7 +1302,7 @@ spec:RegisterAbilities( {
         end,
 
         handler = function ()
-            if state.set_bonus.tier29_2pc > 0 then applyBuff( "vanguards_determination" ) end
+            if set_bonus.tier29_2pc > 0 then applyBuff( "vanguards_determination" ) end
             if buff.revenge.up then removeBuff( "revenge" ) end
             if talent.show_of_force.enabled then applyBuff( "show_of_force" ) end
             applyDebuff( "target", "deep_wounds" )
@@ -1411,6 +1437,10 @@ spec:RegisterAbilities( {
 
             if ( legendary.the_wall.enabled or talent.impenetrable_wall.enabled ) and cooldown.shield_wall.remains > 0 then
                 reduceCooldown( "shield_wall", 5 )
+            end
+
+            if set_bonus.tier30_2pc > 0 then
+                reduceCooldown( "last_stand", buff.last_stand.up and 4 or 2 )
             end
         end,
     },
@@ -1842,4 +1872,4 @@ spec:RegisterOptions( {
 } )
 
 
-spec:RegisterPack( "Protection Warrior", 20230326, [[Hekili:fRvBVTnos4FlbhGBmUSo(L4K2E15dxX9HTyrXI19W(njtlrBRnsIEjPCBkm8V9BgQ3iPjLTtAXbSBJT4O5DoZd54GrbFjyEmrsd(84HJNmCY47hm6HXJgokyU85T0G5BjrprwdFiNKb)7VZzsAKmHLFyXFs48eghP55ugjg5LGvWJa62iLBfV)2BxNi3uSCqel7wrswrkbF1iozLe)E0TbZxwKKk)18GLUuKHtNc8Clnk4Zpmb4AsCmTKuQikyos6VmCYVm((3FyXHfW6RKQ)qtJpS4JBi810dli56FzjBh8NFVilJMwT28T0u4Z)bDvAPTnaSjoBvskyje1ted2YPGvSKi)NZUnMUIMls2rdfssEe9MKvZwwSA1GYVoiM918dFY1Bc)RmfETnScPBkke0Wejn7g0HpJKUMkbvpCBX3)o8IlzFZ9Rr2rKeoQixjjP0C5azcOmIqjJNbF19BbF8PuQqKd)V(7w)8qYsWdbb7pD4t)Jdl(pFJgviPGlJUJYF(Wczsg4mLBqhBeiPdlseWh3rssjltPdAKkilHkSegPceOWWxE2qDs6ATTLrmDgIHTqEtutFTAVOq)HL(iLL8FfemBGTQnD5pjysaQ)RHueEoAMlbBet)siPjFNuM2lOszs(AX)c)iWJB3qFkjn5WIhH0QMThUm9VcsOjvPuzuPk73x73tYYy7qpxiB5FbmsNjltzS4WvfGFx)PuUGYFcuidlLhrYPySNRh7HvstwVrkc)RI41zwlTkHtvcXGtq(SqYjPHrO)rxYK1HSvHsEs0tgU5Tm8t2gAX297n)EpjgTLd2qjPYnd2gj)WSXgX8K15monCljrXUJO)rG(ExZHq5aylzsucWHrt7fXyPOFDqLFxKsYGuAs8Z73Bs8DdpI4YCWsY7vfwGNLTf1PWLfPFLWFAanhJsX28BC38ZM8jAKhtZyCmndcLL1hm1HLmwgU0owcuH5mKFLF2TDp9vk4EQqzkrivLaJldNk6lYZP8D4BSIfvi8PQt8OQVEopE4zeMBZjkf4UegkJqW8xwWfsnXc5B7EgQZSLYbPkufrRDdn7B3sZPW2eCRlUn3NUnTRSt)AYf7t(zO7JEOlD)0c8i(92ZGFE1U(3G14zRwfUokE2i7Q6)g4SGA7svdEvtPub7NqP92GszfkxbLEx7OY17GSuNfa7JpVANxQqs5Lr)kpeuGo6jRUg10DLBXB7A(dWl(m2WyXhXE4)u64XRKryKz7koSvFnLR)OJR)O5jDw8XceaGoc6dTecewGaaON5XuoRqeYzeUzhzWn(vYoQMSeS8KOquIMv50Byv5Ffs22TQuYvmUwvXg8tfzltr9guoiY6sV17o4ybvCUfxPrWVGRcmQDqvcKMdpffyj0uQ2MUozWyJGtrEy53ctteYkeOm6ncSjVC2iuFkrDvM5kgu5IdJsjBFC2edWCqkWXSBnSBgygcOSgqkiH2GLItOCIzyFiOwhNMb9)fGY20rsHec2Yfw9s9AGTMhFk(6TgRtdtzxtV08aBDGdWLZlb2ILaFC2ddR5HGMiYG0oKeoaMtfyAYNm1Pk2O7NReGw5ZAH8Hz3pSk4Frwl0TSlx4jnTjvDFFe76whWiC4)aReQJNKdPPToQw(vLzmtZwoAXZmpXTvBEQSwoslpvt7MTc8uMWojcS1TnAB84Jc0TStZJuQhK81feESaEvOknuoRmg7tDSnWR7yh3O9790cv5l6DLV4F)tO5xxgcVF4XG0FCCDEvf9EHY3Rmp0FFELsEgm7rvxXU0Pjtpd2aGoN(JtNMmTFDQrgriirCh7)DML5CxncHXBi51MNm7ujkxuEsmDh0SfVSM5qrleJx1T2mA8dbZHZhHBXfbZ)cEVaaaoghGITcVDG3afnEZHfC6Fxah2eGBiy4fiqkKSmI6IfGgIG9kaWe)wsoS0O3dWuy5GCul)gFTaaUkzDSEDObO76rFR)P4pwrXILQImhXLdFYHvcnHjfPYlZsFWTMyFLawAL9YETtpS3cROf39C6IZL5vatTJnLp9)Rm7vA2oJ6nxS2Lf3VZTgAE9DwkO5I(m(P(YTnVCVJYZnx2L1)Rkdhz6DQB(dbEVab5HMvWC1NWRdg2Ud)5ZQRzUInb)7G5r8eiMLqcMB39(WIpmdIAhw0duQtSvwNi9nN13zBWC9AGbsOiLx9Wx9pLm8IvsDcOPkAmriQRAErj6xpN4vp5QtX9i4JEyOUq6egPdJOUVIIvtA1KQNJkXDNqjWa19GsSFFL1)cCFipURv6ADMqnyQkfYLpstVa6U)mCxtQ002NCNHd0levx(gzW8QUHnz3UmbtT0FYxxBc8dL9LK(4cFRrAKdmUTYPcct3jhNeZRZKTPE531EsGcB2aoQmY2f(gLnEvx5P997o9NEDTE(0915twafv64y9nkTWk99gy8FCj)A3Sn6TQh0TDEbcPsT6x(sNVTmz6fjgu1Nm9NVTGYOVEYSnQCNjEp4n46PGjQ8o3s8w9Ya1sWSeW7EXz5Zo)08xuo(OH6AVgaFD9xIROq26QPUvfWYB2QCsT8KTLRDXdqu3hvsl4jg2D5un6AuQkTPU4y9JlhQOvu6oJ65wdz0IwJwundD0v)PAIkXiyrHDwOLVeV3Blp5pGbyEt3xN7rf11MyzzQ4vnB18DkKJ2x0oetxBnAOQzOMwuzMMAoLtBsnAlBn2tBAhRtBZCqTPYi1XCWO2KAKdzmPuBk935Zgszt5qByMEAFOLMRMiRsC2nZQjrBuRg7LCuQTT3uvpJ6r6uvAFAxL2jXp3ceZ8fRaK11au1lV7DOS(4)4ZH)UF1jwVQVzMAGO05OlotDtFIOE9xt)HPu1TnmgXO5HyCEI4Z1FzAo)OL24HxykLEUyNDmBvPoMRPozEhxPpnC6P3TCkn8f6l)5BBJE4CSTZrj8W)obrAX)o0((LTURMLmISbRu6RNCRN2Fl5x10NVG(YNrm(A34Lb337Q220X5p6xtrvXdJ7ARn57OztBJpW1BE1PsrvrH3Aff85XFXd1(KE7gi9AJ0wPAgqwQgST9z(h6hLAhfK1rIBxtxX2rwqungbUToyaUXAM4206)QdQVHGJgsEBAWLD9xwjbUhzUou4Qj2R0ttm6MN4W0Iob(kNdg3O8sL(5Dc7AaZ6IzJpsFvKP0r)3WWPou4eGe1W5XQwTjJMdYV8czdl)f8IxjlktFL3ShBVXlxFRxQZc2CF3UonOTBU9hgREYT5pJ2MJ11cCU9xlRvC1orTY4o(NlRgIDhlk76QSAtoDFF7hDOozxxKLwQUNByxlaQ97Yv5SbZNui3G)ARN387O(J4VJA1Ib)V)]] )
+spec:RegisterPack( "Protection Warrior", 20230508, [[Hekili:fRvBVTnos4FlbhGBm2uhz7OK0E1b4UI7dBXUflQ7H9BwMwI2MBKe1ssL2uy4F73qQ3iPjLTtBXbSBJT4W51hoZioEX4fFEX8eKaV4JtcMmnim4(rJNCZ0X3VyU45c8I5fO4hrBGpKJYG)9pyubowqO57x(NigJqzsAEoLIsK8ItlzXaDBfIc(BV(6neX2YvJIPzxZjzLPi5wJzO1c53JVEX8vLKuXVMVyLBf5oGNf44fF8UPaxjjj4ksX84fZLK(6GWxhC)B3VC)Y)vsY(LOKeIuiO09l)pFfhxkW7xsa1LtY3KIFTaX2GfWJwVF5Nald(eF)YWGFz)Yl5cskSnsgy1cmWSvpdeH5y2t4gQxtz7x(7Gi2GQCd0c5FhoA)h2)Hkf6MxpnqPqtYbEKrYLBPSqAEgun5wfv)UobGay0S9lN36TEV0Bvl3XbJgRXIPnSa8msAG)Gtbr((TsJe8f56FzfvAf)rzwgoTET5fyPb)j860QO6iiAYORjPqmePEcFubddXVviXVm76e8ACoN8eoIlq5X4RiRNTQC96rvFDuc9l57)GRDc)Rif22wAPWnfLCCerGZUsc1MHsHWeO6rfLF7BWgxr)Q7THEcbXuPICHaLIZfJeeqz4rckld(Q7DbF8XumNNd)V(EBEEeAf4HG4l4S)hTijWLHFcZauHGKbotXwPJnwiJnsyeOlKu0QuzCUwQGS4QWsuSkqifMCZZc0jPV1kQIy6mug2IyTrn91A8IC9hw5JuwY)LRGX01DWL)ePq9G(VbGiS8gKV8GhbLs(wnsNJfc4qe)Fk)iWJR3IFKKs2V8baw1MyWLP)fqcTqLkLrbv2TRXVtYYOpj9Cr0v)fWiDMSkLstIwxc(D9NIzWbZhbfYWszXOCSm2Z0J9WkPKnBf8O)QmztM1sRjmSsigCcWZCbdLgfl9p6sgTjIUosWiXpA4MlOYpzBOLf72z(9bvjHgTfJsfBhvelE3SjgXCYgiNaoQaruS7a6FaOFWLmiuocossIjahghoiMstL(1r1(DEkkdG0OKN3TZK4BcoG4kmyf5dQdlWZYkK6u0QY0VGypocNlJsj28Bs)8ZM8PAKNGZOmjmdcLv5hm1HvuAMCPNOeidZji)A)SB7o87uWduHYuexOsbMufov0xMNdvkK7ynnUK7tvN6rv)(58KGtim3HjQe4teQugrG5VQKXfAIfWBp9mKNPaZaPYvjrBCdTNBlW5y4yI8OR8yUpDlSp0PFn5S9j)m09X31NUFCbEa)U)e4NxTB4vYC801RJ2eNmBSDw9FdCwqUDHQaVQOukN(ti1ExqPkdLRGYGlDK56nak1zcWHYNxFYlLlWSQOFThcsqh)OvvJg6UWT43TdSlOZHCaEiiy20GOjfXpey7Y(e4DFwwiz57L12)PujKvlJOyZYymifWgmt)rhMxsZd7mPKvZbqxtq9PvqaYQ5aOz88emJwYJyueZSsn4E)c6jSMS40CsCKuIMz)0lKv735cArHcQcnQQLTSTVQYSvPs9guoiI7sV1RA4ybv8VRFtdqrjtfyuNSQfiohEQuGvTSI1om2ldMyeCkZJQ(wukHlQ7mLIVIll(lMnwQpvDJvHObCwLlokofv8WSPgn5bqGdz3g4uoWmzJMnnQcsOlyP4Kuojuz9jihidNb9fWbLTTsLQdj4Oyu9Mg02oBEYX4R3CVonmLDfEU4aBDGbTrNx1WRm14dZUlOHhCmHNbWojjmOjpvGPfpzQt1Sr3pxlaT0Qnc5DZUnOo4FwwlufTpx4rnTP1vLFqwnUjGHyW)bwjKFNKdW0ohvh)QrgZ0SLdw8eXjUTAZ3wRJJ4Q32P7WwP89UHtsi4OBx024XheODYoNHpq)Q8pHbNI9Dzph4gVBNNkRkxXGl8f(h6sYAHYlR0WBdoS39hM0aRQP3Bh(dQGH(l)RuYtGzpOkw2Nonn8eyd0lA4poDAA4WgKrgIZrXmhh)phurpHKVxCYSJbuolCsc(jOwR82RMd5SKT(vFnw3mnyXC41MKNW5lM)z51fa91rznxOZRGCgVA)sg(VlH3bf62GtL3RaQuqZqQ7BaQhc2lh6L43i5WsJFl0LcnhKJA5x5RcaWvbTN1BcnaDxo(Rdpg)LjuSyPkhZbCz)hCyLqnyuzQ48S07CRj23uGLwzVSx70d7TAH0I7EEPJtL519RAhBQE6)xz23Pz7mQ3EFBNxC)g3AO5T6zPGMl6Z4d9HTnVZVdW5Ml7Y6)vLHlz6nQleu239szpEsZAXC1NK3poCCh(Zhv37EnBw8VxmpMrGygbTyUDX79lF3miQTF5aqPoYrzDI0pC2CvUlMRNdCHass5vp8L)tjdVTkPEbOqfnMniQRAEBs0VEo1REYuVe3dGp6UaDH0BxKomIM6kkwnTttQFUujU5ikHmqDlOe72vB9Va3NKh30jDTktsniubHC5J00lGUBpb310AnT7j3y4a92HQlFJyX86QHTOBxMGPw6h813Ha)DY(sGpUAV1ag5Of3o5u3ct)Gdp4SwdQlaeg4K1HEz9LEWsrTNfhxfK7RvhLsCrFq2H(9S(rAxQBz32aTS6zuPJt0pZ01HPVDiHctc0CDkSX9Qh0VDEgcPwTgwTPt3wMgEwIrQ6td)5BlszmuhxB3GUZeE39sW0oHW3RNrOrcMzdEZlgLp70H5Vim(4aDTxRxFD9xixr1KRR67wjdRUJRQPyZifvRD2Jyu3hvrl4jc6pZQgDTkvT20KNS5XvJD0kkDJrQDRXqArRr1Q2Xs6QuvdrvTlyrHnk0YxkVzClp5pGrCEv)xS7bLq0MPzfu8I2JA(EHKdox0nMtxhnAPQDSNwuzctnNdQnPgvOTgmQnTt0PTDsP2uzaDmhDQnPgyiJzPAtP)kF2Dx2Mo0UJtpLp0G5Qz2QeNDXSgs0ggRXzjhPA7QnvxZOzOp1P2d7l1ok55UEYm3yDVz9nIv907EhBRp(p5u4V7To1AR(MQQrZLohIXjQB6Zm1R)k8hMs1u2WyiK67ZZlhFQ(ltZ5hT0MeCMqkDSyVvm7uPEM8PozEhOPpnm84NwoMg(c9L)8TTX3Dk22POeE4FVnrAX)E0(HvLURN2SSZgzMsF1K780(lj)DnF6ZOU8jeJV0D)YG77n1hB659pg2qrDYdJRDRd8DW0RT7pW1oV44qujtCnDBLlr1f447TIs(IiV4XFF0OrBl)Ad)wPAgT0upcC7RhiWFxS9KWwVtD7C(k2o2QfwJHLBRdgn)yn9CBA9FldnxMWbJtVdMCE3uMfiX9W11BvUE2(k90ShEZ3iX0Ios)xohHUr6NA9Z7S41ACRpMn5a9vrMsh9Fdeh7LgNcKOgJVmRwhy0CK)v3DBu1V(z5T3kLPV0F2d43yZnxqM6DfBVACxVTOTBU7NwRo428hIB7R911yD3V3wR4QnqT24o8hCRwh9owu03TE1boDF18h8sFI(UOlnOUNlJxlaQ9l7v5SbZhvk2k)LQB9RQwT4I)h]] )

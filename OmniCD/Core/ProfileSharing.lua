@@ -68,48 +68,6 @@ local function ImportEditBox_OnEnter()
 	ACD_Tooltip:SetText(L["Press Ctrl+V to paste profile"])
 end
 
-function E.CreateFlashButton(parent, text, width, height, style)
-	local Button = CreateFrame("Button", nil, parent, BackdropTemplateMixin and "BackdropTemplate" or nil)
-	Button:SetSize(width or 80, height or 20)
-	E.BackdropTemplate(Button, style)
-	Button:SetBackdropColor(0.725, 0.008, 0.008)
-	Button:SetBackdropBorderColor(0, 0, 0)
-	Button:SetScript("OnEnter", Button_OnEnter)
-	Button:SetScript("OnLeave", Button_OnLeave)
-	Button:SetNormalFontObject(E.GameFontHighlight)
-
-	Button:SetText(text or "")
-
-	Button.bg = Button:CreateTexture(nil, "BORDER")
-	if E.isClassic then
-		Button.bg:SetAllPoints()
-	else
-		E.DisablePixelSnap(Button.bg)
-		Button.bg:SetPoint("TOPLEFT", Button.TopEdge, "BOTTOMLEFT")
-		Button.bg:SetPoint("BOTTOMRIGHT", Button.BottomEdge, "TOPRIGHT")
-	end
-	Button.bg:SetColorTexture(0.0, 0.6, 0.4)
-	Button.bg:Hide()
-
-	Button.fadeIn = Button.bg:CreateAnimationGroup()
-	Button.fadeIn:SetScript("OnPlay", function() Button.bg:Show() end)
-	local fadeIn = Button.fadeIn:CreateAnimation("Alpha")
-	fadeIn:SetFromAlpha(0)
-	fadeIn:SetToAlpha(1)
-	fadeIn:SetDuration(0.4)
-	fadeIn:SetSmoothing("OUT")
-
-	Button.fadeOut = Button.bg:CreateAnimationGroup()
-	Button.fadeOut:SetScript("OnFinished", function() Button.bg:Hide() end)
-	local fadeOut = Button.fadeOut:CreateAnimation("Alpha")
-	fadeOut:SetFromAlpha(1)
-	fadeOut:SetToAlpha(0)
-	fadeOut:SetDuration(0.3)
-	fadeOut:SetSmoothing("OUT")
-
-	return Button
-end
-
 function PS:ShowProfileDialog(text)
 	if not Dialog then
 		Dialog = CreateFrame("Frame", "OmniCD_ProfileDialog", UIParent, "DialogBoxFrame")
@@ -142,14 +100,14 @@ function PS:ShowProfileDialog(text)
 
 		_G.OmniCD_ProfileDialogButton:Hide()
 
-		local CloseButton = E.CreateFlashButton(Dialog, CLOSE)
+		local CloseButton = E.Libs.OmniCDC.CreateFlashButton(Dialog, CLOSE)
 		CloseButton:SetPoint("BOTTOM", 0, 16)
 		CloseButton:SetScript("OnClick", function(self)
 			PlaySound(SOUNDKIT.IG_MAINMENU_OPTION)
 			self:GetParent():Hide()
 		end)
 
-		local DecodeButton = E.CreateFlashButton(Dialog, L["Decode"])
+		local DecodeButton = E.Libs.OmniCDC.CreateFlashButton(Dialog, L["Decode"])
 		DecodeButton:SetPoint("BOTTOMRIGHT", Dialog, "BOTTOM", -2, 16)
 		DecodeButton:SetScript("OnClick", function()
 			PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
@@ -173,7 +131,7 @@ function PS:ShowProfileDialog(text)
 
 		Resizer:SetPoint("BOTTOMRIGHT", -8, 8)
 		Resizer:SetSize(16, 16)
-		Resizer:SetNormalTexture([[Interface\AddOns\OmniCD\Media\omnicd-bullet-resizer]])
+		Resizer:SetNormalTexture(E.Libs.OmniCDC.texture.resizer)
 		local Resizer_Normal = Resizer:GetNormalTexture()
 		Resizer_Normal:SetPoint("BOTTOMRIGHT")
 		Resizer_Normal:SetPoint("TOPLEFT", Resizer, "CENTER")
@@ -239,7 +197,7 @@ function PS:ShowProfileDialog(text)
 		EditBox:SetSize(ScrollFrame:GetSize())
 		EditBox:SetMultiLine(true)
 		EditBox:SetAutoFocus(false)
-		EditBox:SetFontObject(E.GameFontHighlight)
+		EditBox:SetFontObject("GameFontHighlight-OmniCD")
 		EditBox:SetScript("OnEscapePressed", function(self)
 			self:ClearFocus()
 		end)
@@ -374,9 +332,9 @@ function PS:ImportProfile(encodedData)
 	end
 
 	if profileType == "cds" then
-		E.StaticPopup_Show("OMNICD_IMPORT_EDITOR", nil, nil, profileData)
+		E.Libs.OmniCDC.StaticPopup_Show("OMNICD_IMPORT_EDITOR", nil, nil, profileData)
 	else
-		E.StaticPopup_Show("OMNICD_IMPORT_PROFILE", format("|cffffd200%s|r", profileKey), nil, {profileType=profileType, profileKey=profileKey, profileData=profileData})
+		E.Libs.OmniCDC.StaticPopup_Show("OMNICD_IMPORT_PROFILE", format("|cffffd200%s|r", profileKey), nil, {profileType=profileType, profileKey=profileKey, profileData=profileData})
 	end
 
 	return profileType, profileKey

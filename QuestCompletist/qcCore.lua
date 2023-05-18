@@ -24,7 +24,7 @@ local qcNewDataAlertTooltip = nil
 local qcMutuallyExclusiveAlertTooltip = nil
 
 --[[ Constants ]]--
-local QCADDON_VERSION = 109.43
+local QCADDON_VERSION = 109.44
 local QCADDON_PURGE = true
 local QCDEBUG_MODE = false
 local QCADDON_CHAT_TITLE = "|CFF9482C9Quest Completist:|r "
@@ -248,6 +248,15 @@ local function qcGetCategoryQuests(categoryId, searchText) -- *
 			local questType = 4
 			for i = #qcCategoryQuests, 1, -1 do
 				if (BitBand(qcCategoryQuests[i][6], questType) == 4) then
+					tableRemove(qcCategoryQuests,i)
+			end
+		end
+	end
+--      Bitband Code for Hideing Repeatable quest	
+		if (qcSettings.QC_L_HIDE_REPEATABLEQUEST == 1) then
+			local questType = 2
+			for i = #qcCategoryQuests, 1, -1 do
+				if (BitBand(qcCategoryQuests[i][6], questType) == 2) then
 					tableRemove(qcCategoryQuests,i)
 			end
 		end
@@ -1505,9 +1514,20 @@ function qcInterfaceOptions_OnShow(self)
 			qcSettings.QC_L_HIDE_DAILYQUEST = 1
 		end
 	end)
+--  Hide Repeatable Quests
+	qcIO_L_HIDE_REPEATABLEQUEST = CreateFrame("CheckButton", "qcIO_L_HIDE_REPEATABLEQUEST", self, "InterfaceOptionsCheckButtonTemplate")
+    qcIO_L_HIDE_REPEATABLEQUEST:SetPoint("TOPLEFT", qcIO_L_HIDE_LOWLEVEL, "BOTTOMLEFT", 0, -50)
+	_G[qcIO_L_HIDE_REPEATABLEQUEST:GetName().."Text"]:SetText(qcL.HIDEREPEATABLEQUEST .. COLOUR_DEATHKNIGHT .. " ")
+	qcIO_L_HIDE_REPEATABLEQUEST:SetScript("OnClick", function(self)
+		if (qcIO_L_HIDE_REPEATABLEQUEST:GetChecked() == false) then
+			qcSettings.QC_L_HIDE_REPEATABLEQUEST = 0
+		else
+			qcSettings.QC_L_HIDE_REPEATABLEQUEST = 1
+		end
+	end)
 -- 	Hide World Quests
 	qcIO_L_HIDE_WORLDQUEST = CreateFrame("CheckButton", "qcIO_L_HIDE_WORLDQUEST", self, "InterfaceOptionsCheckButtonTemplate")
-  qcIO_L_HIDE_WORLDQUEST:SetPoint("TOPLEFT", qcIO_L_HIDE_LOWLEVEL, "BOTTOMLEFT", 0, -50)
+  qcIO_L_HIDE_WORLDQUEST:SetPoint("TOPLEFT", qcIO_L_HIDE_LOWLEVEL, "BOTTOMLEFT", 0, -75)
 	_G[qcIO_L_HIDE_WORLDQUEST:GetName().."Text"]:SetText(qcL.HIDEWORLDQUEST .. COLOUR_DEATHKNIGHT .. " ")
 	qcIO_L_HIDE_WORLDQUEST:SetScript("OnClick", function(self)
 		if (qcIO_L_HIDE_WORLDQUEST:GetChecked() == false) then
@@ -1519,7 +1539,7 @@ function qcInterfaceOptions_OnShow(self)
 
 --- Combined Map and Quest FILTERS
     qcCombinedFiltersTitle = self:CreateFontString("qcCombinedFiltersTitle", "ARTWORK", "GameFontNormal")
-    qcCombinedFiltersTitle:SetPoint("TOPLEFT", qcConfigSubtitle, "BOTTOMLEFT", 16, -345)
+    qcCombinedFiltersTitle:SetPoint("TOPLEFT", qcConfigSubtitle, "BOTTOMLEFT", 16, -375)
     qcCombinedFiltersTitle:SetText(qcL.COMBINEDMAPANDQUESTFILTERS)
 
 	qcIO_ML_HIDE_FACTION = CreateFrame("CheckButton", "qcIO_ML_HIDE_FACTION", self, "InterfaceOptionsCheckButtonTemplate")
@@ -1644,6 +1664,9 @@ local function qcCheckSettings()
 	if (qcSettings.QC_L_HIDE_DAILYQUEST == nil) then --[[ 0:No, 1:Yes ]]--
 		qcSettings.QC_L_HIDE_DAILYQUEST = 1
 	end
+	if (qcSettings.QC_L_HIDE_REPEATABLEQUEST == nil) then --[[ 0:No, 1:Yes ]]--
+		qcSettings.QC_L_HIDE_DAILYQUEST = 1
+	end
 	if (qcSettings.QC_L_HIDE_WORLDQUEST == nil) then --[[ 0:No, 1:Yes ]]--
 		qcSettings.QC_L_HIDE_WORLDQUEST = 1
 	end
@@ -1716,6 +1739,11 @@ local function qcApplySettings()
 		qcIO_L_HIDE_DAILYQUEST:SetChecked(false)
 	else
 		qcIO_L_HIDE_DAILYQUEST:SetChecked(true)
+	end
+	if (qcSettings.QC_L_HIDE_REPEATABLEQUEST == 0) then
+		qcIO_L_HIDE_REPEATABLEQUEST:SetChecked(false)
+	else
+		qcIO_L_HIDE_REPEATABLEQUEST:SetChecked(true)
 	end
 	if (qcSettings.QC_L_HIDE_WORLDQUEST == 0) then
 		qcIO_L_HIDE_WORLDQUEST:SetChecked(false)

@@ -1,6 +1,7 @@
-## Interface: 100007
-## Version: 2.00
+## Interface: 100100
+## Version: 2.03
 ## Author: Taraezor
+## IconTexture: Interface\Icons\Inv_misc_elvencoins
 ## Title: Lunar Festival
 ## Title-deDE: Mondfest
 ## Title-esES: Festival Lunar
@@ -30,6 +31,7 @@
 ## X-WoWI-ID: 00000
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_LunarFestivalDB
+## AddonCompartmentFunc: HandyNotes_LunarFestival_OnAddonCompartmentClick
 
 Core.lua
 Data.lua

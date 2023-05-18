@@ -1,8 +1,8 @@
-## Interface: 100007
+## Interface: 100100
 ## Title: RareTrackerVale
 ## Notes: Track and coordinate rare spawn timers in the Vale of Eternal Blossoms.
 ## Author: Melroy
-## Version: 7.1.16
+## Version: 7.1.17
 ## SavedVariables: RareTrackerValeDB
 ## Dependencies: RareTrackerCore
 

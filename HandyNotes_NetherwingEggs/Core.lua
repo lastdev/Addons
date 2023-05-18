@@ -3,13 +3,13 @@
 
                                            Netherwing Eggs
 
-                                      v1.14 - 18th January 2023
+                                        v1.20 - 6th May 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
 ]]
 
-local myName, ns = ...
+local addonName, ns = ...
 ns.db = {}
 -- From Data.lua
 ns.points = {}
@@ -355,14 +355,6 @@ else
 	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
 end
 
--- I use this for debugging
-local function printPC( message )
-	if message then
-		DEFAULT_CHAT_FRAME:AddMessage( ns.colour.prefix ..L["Netherwing Eggs"] ..": " ..ns.colour.plaintext 
-			..message .."\124r" )
-	end
-end
-
 -- Plugin handler for HandyNotes
 local function infoFromCoord(mapFile, coord)
 	local point = ns.points[mapFile] and ns.points[mapFile][coord]
@@ -549,12 +541,15 @@ ns.options = {
 	},
 }
 
+function HandyNotes_NetherwingEggs_OnAddonCompartmentClick( addonName, buttonName )
+	Settings.OpenToCategory( "HandyNotes" )
+	LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "NetherwingEggs" )
+ end
+
 function pluginHandler:OnEnable()
 	local HereBeDragons = LibStub("HereBeDragons-2.0", true)
-	if not HereBeDragons then
-		printPC("HandyNotes is out of date")
-		return
-	end
+	if not HereBeDragons then return end
+	
 	for continentMapID in next, continents do
 		local children = C_Map.GetMapChildrenInfo(continentMapID, nil, true)
 		for _, map in next, children do

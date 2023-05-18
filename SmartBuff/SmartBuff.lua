@@ -6,10 +6,10 @@
 -- Cast the most important buffs on you, tanks or party/raid members/pets.
 -------------------------------------------------------------------------------
 
-SMARTBUFF_DATE          = "010323";
+SMARTBUFF_DATE          = "170523";
 
-SMARTBUFF_VERSION       = "r20."..SMARTBUFF_DATE;
-SMARTBUFF_VERSIONNR     = 100005;
+SMARTBUFF_VERSION       = "r22."..SMARTBUFF_DATE;
+SMARTBUFF_VERSIONNR     = 100100;
 SMARTBUFF_TITLE         = "SmartBuff";
 SMARTBUFF_SUBTITLE      = "Supports you in casting buffs";
 SMARTBUFF_DESC          = "Cast the most important buffs on you, your tanks, party/raid members/pets";
@@ -22,7 +22,7 @@ local SmartbuffPrefix = "Smartbuff";
 local SmartbuffSession = true;
 local SmartbuffVerCheck = false;					-- for my use when checking guild users/testers versions  :)
 local buildInfo = select(4, GetBuildInfo())
-local SmartbuffRevision = 20;
+local SmartbuffRevision = 22;
 local SmartbuffVerNotifyList = {}
 
 local SG = SMARTBUFF_GLOBALS;
@@ -236,7 +236,7 @@ function SMARTBUFF_ChooseSplashSound()
   -- make the menu appear at the frame:
   dropDown:SetPoint("CENTER", UIParent, "CENTER")
   dropDown:SetScript("OnMouseUp", function (self, button, down)
-    print("mousedown")
+--    print("mousedown")
     -- EasyMenu(menu, dropDown, dropDown, 0 , 0, "MENU");
   end)
 end
@@ -356,13 +356,14 @@ local function InitBuffSettings(cBI, reset)
 end
 
 local function InitBuffOrder(reset)
-  if (B[CS()].Order == nil) then
-    B[CS()].Order = { };
-  end
+  if not B then B = {} end
+  if not B[CS()] then B[CS()] = {} end
+  if not B[CS()].Order then B[CS()].Order = {} end
 
   local b;
   local i;
   local ord = B[CS()].Order;
+
   if (reset) then
     wipe(ord);
     SMARTBUFF_AddMsgD("Reset buff order");
@@ -469,7 +470,7 @@ function SMARTBUFF_OnLoad(self)
   SLASH_SMARTBUFF1 = "/sbo";
   SLASH_SMARTBUFF2 = "/sbuff";
   SLASH_SMARTBUFF3 = "/smartbuff";
-  SLASH_SMARTBUFF3 = "/sb";
+  SLASH_SMARTBUFF4 = "/sb";
 
   SlashCmdList["SMARTBUFFMENU"] = SMARTBUFF_OptionsFrame_Toggle;
   SLASH_SMARTBUFFMENU1 = "/sbm";
@@ -1850,7 +1851,7 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
               or (bs.SelfOnly and SMARTBUFF_IsPlayer(unit))
               or (bs[uc] and (UnitIsPlayer(unit) or uct == SMARTBUFF_HUMANOID or (uc == "DRUID" and (uct == SMARTBUFF_BEAST or uct == SMARTBUFF_ELEMENTAL))))
               or (bs["HPET"] and uct == SMARTBUFF_BEAST and uc ~= "DRUID")
-              or (bs["DKPET"] and utc == SMARTBUFF_UNDEAD)
+              or (bs["DKPET"] and uct == SMARTBUFF_UNDEAD)
               or (bs["WPET"] and (uct == SMARTBUFF_DEMON or (uc ~= "DRUID" and uct == SMARTBUFF_ELEMENTAL)) and ucf ~= SMARTBUFF_DEMONTYPE)))
               or (cBuff.Type ~= SMARTBUFF_CONST_GROUP and SMARTBUFF_IsPlayer(unit))
               or SMARTBUFF_IsInList(unit, un, bs.AddList))) then
@@ -1869,7 +1870,7 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
 	                    if (sPlayerClass == "DRUID" and buffnS == SMARTBUFF_DRUID_TRACK) then
 	                      if (isShapeshifted and sShapename == SMARTBUFF_DRUID_CAT) then
                           buff = buffnS;
-                          SetTracking(n, 1);
+                          C_Minimap.SetTracking(n, 1);
                         end
                       else
                         buff = buffnS;
@@ -2111,16 +2112,6 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
 
               if (buff) then
 
-                  -- we have a buff, set the cvar - this will be reverted back
-                  -- once smartbuff has finished its work.  If we are in combat
-                  -- lockdown then keep it at 0
-
-                if not InCombatLockdown() and O.SBButtonFix then
-                  SetCVar("ActionButtonUseKeyDown",1 );
-        		    elseif O.SBButtonFix then
-                  SetCVar("ActionButtonUseKeyDown", O.SBButtonDownVal );
-                end
-
                 if (cBuff.IDS) then
                   SMARTBUFF_AddMsgD("Checking " ..i .. " - " .. cBuff.IDS .. " " .. buffnS);
                 end
@@ -2268,13 +2259,7 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
                   -- no spell selected
                   if (mode == 0) then SMARTBUFF_AddMsgD(SMARTBUFF_MSG_CHAT); end
                 end
-              else
-                -- finished
-                if O.SBButtonFix then SetCVar("ActionButtonUseKeyDown", O.SBButtonDownVal ); end
               end
-            else
-              -- target does not need this buff
-              if O.SBButtonFix then SetCVar("ActionButtonUseKeyDown", O.SBButtonDownVal ); end
             end
           else
             -- cooldown
@@ -2489,7 +2474,7 @@ function SMARTBUFF_CheckUnitBuffs(unit, buffN, buffT, buffL, buffC)
   local caster = nil;
   local count = nil;
   local icon = nil;
-  local time = GetTime();
+  -- local time = GetTime();
   local uname = UnitName(unit) or "?";
   if (buffN) then
     defBuff = buffN;
@@ -2555,7 +2540,7 @@ function SMARTBUFF_CheckUnitBuffs(unit, buffN, buffT, buffL, buffC)
             if (timeleft > 0) then
 	            timeleft = timeleft;
             else
-                timeleft = time;
+                timeleft = GetTime();
             end
             SMARTBUFF_AddMsgD("Linked buff found: "..buff..", "..timeleft..", "..icon);
             return nil, n, defBuff, timeleft, count;
@@ -2598,7 +2583,7 @@ function SMARTBUFF_CheckUnitBuffs(unit, buffN, buffT, buffL, buffC)
   if (timeleft > 0) then
 	timeleft = timeleft;
   else
-    timeleft = time;
+    timeleft = GetTime();
   end
       if (SMARTBUFF_IsPlayer(caster)) then
         SMARTBUFF_UpdateBuffDuration(defBuff, duration);
@@ -2630,7 +2615,7 @@ function SMARTBUFF_CheckBuffLink(unit, defBuff, buffT, buffL)
   if (timeleft > 0) then
 	timeleft = timeleft;
   else
-    timeleft = time;
+    timeleft = GetTime();
   end
             SMARTBUFF_AddMsgD("Linked buff found: "..buff..", "..timeleft..", "..icon);
             return nil, n, defBuff, timeleft, count;
@@ -2696,7 +2681,7 @@ function SMARTBUFF_CheckBuff(unit, buffName, isMine)
   if (timeleft > 0) then
 	timeleft = timeleft;
   else
-    timeleft = time;
+    timeleft = GetTime();
   end
       if (isMine and caster) then
         if (SMARTBUFF_IsPlayer(caster)) then
@@ -3010,7 +2995,7 @@ function SMARTBUFF_Options_Init(self)
   if (O.HideSAButton == nil) then  O.HideSAButton = false; end
 
   if (O.SBButtonFix == nil) then O.SBButtonFix = false; end
-  if (O.SBButtonDownVal == nil) then O.SBButtonDownVal = GetCVarBool("ActionButtonUseKeyDown"); end
+  if (O.SBButtonDownVal == nil or O.SBButtonDownVal == true or O.SBButtonDownVal == false) then O.SBButtonDownVal = C_CVar.GetCVar("ActionButtonUseKeyDown"); end
 
   if (O.MinCharges == nil) then
     if (sPlayerClass == "SHAMAN" or sPlayerClass == "PRIEST") then
@@ -3141,7 +3126,7 @@ function SMARTBUFF_Options_Init(self)
       OG.Tutorial = SMARTBUFF_VERSIONNR;
       SMARTBUFF_ToggleTutorial();
     end
-
+    SmartBuffOptionsCredits_lblText:SetText(SMARTBUFF_CREDITS);     -- bugfix, credits now showing at first start
     SmartBuffWNF_lblText:SetText(SMARTBUFF_WHATSNEW);
     SmartBuffWNF:Show();
 
@@ -3472,8 +3457,10 @@ function SMARTBUFF_OToggleDebug()
 end
 
 function SMARTBUFF_ToggleFixBuffing()
-    O.SBButtonFix = not O.SBButtonFix;
-	if not O.SBButtonFix then SetCVar("ActionButtonUseKeyDown", O.SBButtonDownVal ); end
+  O.SBButtonFix = not O.SBButtonFix;
+  if not O.SBButtonFix then
+    C_CVar.SetCVar("ActionButtonUseKeyDown", O.SBButtonDownVal );
+  end
 end
 
 function SMARTBUFF_OptionsFrame_Toggle()
@@ -3866,7 +3853,7 @@ function SmartBuff_SetSliderText(self, text, value, valformat, setval)
   else
     s = tostring(value);
   end
-  getglobal(self:GetName().."Text"):SetText(text.." "..WH..s.."|r");
+  _G[self:GetName().."Text"]:SetText(text.." "..WH..s.."|r");
 end
 
 function SmartBuff_BuffSetup_RBTime_OnValueChanged(self)
@@ -4191,7 +4178,7 @@ end
 
 local sScript;
 function SMARTBUFF_OnClick(obj)
-  SMARTBUFF_AddMsgD("OnClick");
+--    print("SMARTBUFF_OnClick: CVAL is "..C_CVar.GetCVar("ActionButtonUseKeyDown"));
 end
 
 
@@ -4206,7 +4193,6 @@ function SMARTBUFF_OnPreClick(self, button, down)
   end
 
   if (not InCombatLockdown()) then
-
     self:SetAttribute("type", nil);
     self:SetAttribute("unit", nil);
     self:SetAttribute("spell", nil);
@@ -4215,11 +4201,25 @@ function SMARTBUFF_OnPreClick(self, button, down)
     self:SetAttribute("target-slot", nil);
     self:SetAttribute("target-item", nil);
     self:SetAttribute("action", nil);
-
   end
 
   --sScript = self:GetScript("OnClick");
   --self:SetScript("OnClick", SMARTBUFF_OnClick);
+
+  if O.SBButtonFix then
+      -- macros really dont like the cvar set to 1 so lets test we are
+      -- actually clicking the action button rather than using the scroll
+      -- mouse to ensure buffing works for both.
+      if button == "LeftButton" or button == "RightButton" then  
+          -- clicked manually either the action button or macro
+          -- using a mouse button - crazy blizzard issues strike
+          -- again :)
+          C_CVar.SetCVar("ActionButtonUseKeyDown", 0 ); 
+      else 
+          -- assume this is a scroll mouse.
+          C_CVar.SetCVar("ActionButtonUseKeyDown", 1 );
+      end
+  end
 
   local td;
   if (lastBuffType == "") then
@@ -4292,7 +4292,9 @@ function SMARTBUFF_OnPostClick(self, button, down)
     end
   end
 
-  if (InCombatLockdown()) then return end
+  if (InCombatLockdown()) then 
+	  return 
+  end
 
   self:SetAttribute("type", nil);
   self:SetAttribute("unit", nil);
@@ -4304,6 +4306,11 @@ function SMARTBUFF_OnPostClick(self, button, down)
   self:SetAttribute("action", nil);
 
   SMARTBUFF_SetButtonTexture(SmartBuff_KeyButton, imgSB);
+
+  -- ensure we reset the cvar back to the original players setting.
+  if O.SBButtonFix then
+    C_CVar.SetCVar("ActionButtonUseKeyDown", O.SBButtonDownVal );
+  end
 
   --SMARTBUFF_AddMsgD("Button reseted, " .. button);
   --self:SetScript("OnClick", sScript);

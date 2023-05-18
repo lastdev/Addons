@@ -1398,7 +1398,7 @@ function private.StoreGetItemInfoInstant(itemString)
 			return
 		end
 		local name, texture, petTypeId = C_PetJournal.GetPetInfoBySpeciesID(id)
-		if not texture then
+		if not texture or not petTypeId then
 			return
 		end
 		-- we can now store all the info for this pet

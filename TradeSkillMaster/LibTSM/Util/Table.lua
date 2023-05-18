@@ -504,6 +504,18 @@ function Table.InsertMultiple(tbl, ...)
 	end
 end
 
+function Table.RemoveRange(tbl, startIndex, endIndex)
+	local numToRemove = endIndex - startIndex + 1
+	local newLen = #tbl - numToRemove
+	assert(numToRemove > 0)
+	for i = startIndex, newLen do
+		tbl[i] = tbl[i + numToRemove]
+	end
+	while #tbl > newLen do
+		tremove(tbl)
+	end
+end
+
 
 
 -- ============================================================================

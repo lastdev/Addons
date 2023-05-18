@@ -81,7 +81,7 @@ options_button_template = DF.table.copy({}, options_button_template)
 options_button_template.backdropcolor = {.2, .2, .2, .8}
 
 Plater.APIList = {
-	{Name = "SetNameplateColor", 		Signature = "Plater.SetNameplateColor (unitFrame, color)", 				Desc = "Set the color of the nameplate.\n\nColor formats are:\n|cFFFFFF00Just Values|r: r, g, b\n|cFFFFFF00Index Table|r: {r, g, b}\n|cFFFFFF00Hash Table|r: {r = 1, g = 1, b = 1}\n|cFFFFFF00Hex|r: '#FFFF0000' or '#FF0000'\n|cFFFFFF00Name|r: 'yellow' 'white'\n\nCalling without passing width and height reset the color to default."},
+	{Name = "SetNameplateColor", 		Signature = "Plater.SetNameplateColor (unitFrame, color)", 				Desc = "Set the color of the nameplate.\n\nColor formats are:\n|cFFFFFF00Just Values|r: r, g, b\n|cFFFFFF00Index Table|r: {r, g, b}\n|cFFFFFF00Hash Table|r: {r = 1, g = 1, b = 1}\n|cFFFFFF00Hex|r: '#FFFF0000' or '#FF0000'\n|cFFFFFF00Name|r: 'yellow' 'white'\n\nCalling without passing a color will reset the color to default."},
 	{Name = "SetNameplateSize", 		Signature = "Plater.SetNameplateSize (unitFrame, width, height)",		Desc = "Adjust the nameplate size.\n\nCalling without passing width and height reset the size to default."},
 	{Name = "SetBorderColor", 			Signature = "Plater.SetBorderColor (unitFrame, r, g, b, a)",					Desc = "Set the border color.\n\nCalling without passing any color reset the color to default."},
 	
@@ -919,12 +919,12 @@ end
 		elseif (option == "wago_slugs") then
 			import_from_wago(scriptId)
 			update_wago_slug_data()
-			mainFrame.wagoSlugFrame.ScriptSelectionScrollBox:Refresh()
+			mainFrame.ScriptSelectionScrollBox:Refresh()
 			
 		elseif (option == "wago_stash") then
 			import_from_wago(scriptId, true)
 			update_wago_stash_data()
-			mainFrame.wagoStashFrame.ScriptSelectionScrollBox:Refresh()
+			mainFrame.ScriptSelectionScrollBox:Refresh()
 			
 		end
 		

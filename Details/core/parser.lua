@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	local _detalhes = 		_G._detalhes
+	local _detalhes = 		_G.Details
 	local Loc = LibStub("AceLocale-3.0"):GetLocale ( "Details" )
 	local DetailsFramework = DetailsFramework
 
@@ -38,13 +38,13 @@
 	local container_habilidades = _detalhes.container_habilidades --details local
 
 	--localize the cooldown table from the framework
-	local defensive_cooldowns = DetailsFramework.CooldownsAllDeffensive --default from all game versions
+	local defensive_cooldowns = {}
 
 	if (LIB_OPEN_RAID_COOLDOWNS_INFO) then
 		--check if the cooldown is type 2 or 3 or 4 and add to the defensive_cooldowns table
 		for spellId, spellTable in pairs(LIB_OPEN_RAID_COOLDOWNS_INFO) do
 			if (spellTable.type == 2 or spellTable.type == 3 or spellTable.type == 4) then
-				defensive_cooldowns[spellId] = true
+				defensive_cooldowns[spellId] = spellTable
 			end
 		end
 	end
@@ -323,6 +323,11 @@
 
 			[228361] = 228360, --shadow priest void erruption
 		}
+
+		--all totem
+		--377461 382133
+		--377458 377459
+
 	end
 
 	local bitfield_debuffs = {}
@@ -1236,6 +1241,7 @@
 		end
 
 		if (_trinket_data_cache[spellId] and _in_combat) then
+			---@type trinketdata
 			local thisData = _trinket_data_cache[spellId]
 			if (thisData.lastCombatId == _global_combat_counter) then
 				if (thisData.lastPlayerName == sourceName) then
@@ -1259,6 +1265,18 @@
 				thisData.lastCombatId = _global_combat_counter
 				thisData.lastActivation = time
 				thisData.lastPlayerName = sourceName
+			end
+
+			if (_current_combat.trinketProcs) then
+				local playerTrinketData = _current_combat.trinketProcs[sourceName] or {}
+				_current_combat.trinketProcs[sourceName] = playerTrinketData
+				local trinketData = playerTrinketData[spellId] or {cooldown = 0, total = 0}
+				playerTrinketData[spellId] = trinketData
+
+				if (trinketData.cooldown < time) then
+					trinketData.cooldown = time + 20
+					trinketData.total = trinketData.total + 1
+				end
 			end
 		end
 
@@ -1849,6 +1867,7 @@
 			sourceName = "[*] " .. spellName
 		end
 
+
 		local npcId = tonumber(select(6, strsplit("-", petSerial)) or 0)
 
 		--differenciate army and apoc pets for DK
@@ -2307,6 +2326,9 @@
 			if (bIsShield) then
 				spellTable.is_shield = true
 			end
+
+			spellTable.spellschool = spellType
+
 			if (_current_combat.is_boss and sourceFlags and bitBand(sourceFlags, OBJECT_TYPE_ENEMY) ~= 0) then
 				_detalhes.spell_school_cache[spellName] = spellType
 			end
@@ -3644,110 +3666,113 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		end
 	end
 
-	--search key: ~spellcast ~castspell ~cast
-	function parser:spellcast (token, time, who_serial, who_name, who_flags, alvo_serial, alvo_name, alvo_flags, alvo_flags2, spellid, spellname, spelltype)
-
-	------------------------------------------------------------------------------------------------
-	--early checks and fixes
-
+	---search key: ~spellcast ~castspell ~cast
+	---comment: this function is called when a spell is casted
+	---@param token string
+	---@param time number
+	---@param sourceSerial string
+	---@param sourceName string
+	---@param sourceFlags number
+	---@param targetSerial string
+	---@param targetName string
+	---@param targetFlags number
+	---@param targetRaidFlags number
+	---@param spellId number
+	---@param spellName string
+	---@param spellType number
+	function parser:spellcast(token, time, sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags, targetRaidFlags, spellId, spellName, spellType)
 		--only capture if is in combat
 		if (not _in_combat) then
 			return
 		end
 
-		if (not who_name) then
-			who_name = "[*] " .. spellname
+		if (not sourceName) then
+			sourceName = "[*] " .. spellName
 		end
 
-	------------------------------------------------------------------------------------------------
-	--get actors
-
-		--main actor
-
-		local este_jogador, meu_dono = misc_cache [who_serial] or misc_cache_pets [who_serial] or misc_cache [who_name], misc_cache_petsOwners [who_serial]
-		--local este_jogador = misc_cache [who_name]
-
-		if (not este_jogador) then
-
-			este_jogador, meu_dono, who_name = _current_misc_container:PegarCombatente (who_serial, who_name, who_flags, true)
-
-			if (meu_dono) then --� um pet
-				if (who_serial ~= "") then
-					misc_cache_pets [who_serial] = este_jogador
-					misc_cache_petsOwners [who_serial] = meu_dono
+		---@type actor, actor
+		local sourceActor, ownerActor = misc_cache[sourceSerial] or misc_cache_pets[sourceSerial] or misc_cache[sourceName], misc_cache_petsOwners[sourceSerial]
+		if (not sourceActor) then
+			sourceActor, ownerActor, sourceName = _current_misc_container:PegarCombatente (sourceSerial, sourceName, sourceFlags, true)
+			if (ownerActor) then
+				if (sourceSerial ~= "") then
+					misc_cache_pets [sourceSerial] = sourceActor
+					misc_cache_petsOwners [sourceSerial] = ownerActor
 				end
-
-				--conferir se o dono j� esta no cache
-				if (not misc_cache [meu_dono.serial] and meu_dono.serial ~= "") then
-					misc_cache [meu_dono.serial] = meu_dono
+				if (not misc_cache[ownerActor.serial] and ownerActor.serial ~= "") then
+					misc_cache[ownerActor.serial] = ownerActor
 				end
 			else
-				if (who_flags) then
-					misc_cache [who_name] = este_jogador
+				if (sourceFlags) then
+					misc_cache[sourceName] = sourceActor
 				end
 			end
 		end
 
 	------------------------------------------------------------------------------------------------
 	--build containers on the fly
-		local spell_cast = este_jogador.spell_cast
-		if (not spell_cast) then
-			este_jogador.spell_cast = {[spellid] = 1}
-		else
-			spell_cast [spellid] = (spell_cast [spellid] or 0) + 1
+		--amount of casts by actors ~casts
+		local castsByPlayer = _current_combat.amountCasts[sourceName]
+		if (not castsByPlayer) then
+			castsByPlayer = {}
+			_current_combat.amountCasts[sourceName] = castsByPlayer
 		end
+		local amountOfCasts = _current_combat.amountCasts[sourceName][spellName] or 0
+		amountOfCasts = amountOfCasts + 1
+		_current_combat.amountCasts[sourceName][spellName] = amountOfCasts
+
+		--if (sourceSerial == UnitGUID("player")) then
+		--	print(sourceName, spellName, amountOfCasts)
+		--end
 
 	------------------------------------------------------------------------------------------------
-	--record cooldowns cast which can't track with buff applyed.
-
-		--foi um jogador que castou
-		if (raid_members_cache [who_serial]) then
-			--check if is a cooldown :D
-			if (defensive_cooldowns [spellid]) then
-				--usou cooldown
-				if (not alvo_name) then
-					if (DetailsFramework.CooldownsDeffense [spellid]) then
-						alvo_name = who_name
-
-					elseif (DetailsFramework.CooldownsRaid [spellid]) then
-						alvo_name = Loc ["STRING_RAID_WIDE"]
-
+	--record cooldowns cast which can't track with buff applyed
+		--a player is the caster
+		if (raid_members_cache[sourceSerial]) then
+			--check if is a cooldown
+			local cooldownInfo = defensive_cooldowns[spellId]
+			if (cooldownInfo) then
+				if (not targetName) then
+					if (cooldownInfo.type == 2 or cooldownInfo.type == 3) then
+						targetName = sourceName
+					elseif (cooldownInfo.type == 4) then
+						targetName = Loc ["STRING_RAID_WIDE"]
 					else
-						alvo_name = "--x--x--"
+						targetName = "--x--x--"
 					end
 				end
-				return parser:add_defensive_cooldown (token, time, who_serial, who_name, who_flags, alvo_serial, alvo_name, alvo_flags, alvo_flags2, spellid, spellname)
+				return parser:add_defensive_cooldown(token, time, sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags, targetRaidFlags, spellId, spellName)
 			end
-
 		else
 			--enemy successful casts (not interrupted)
-			if (bitBand(who_flags, 0x00000040) ~= 0 and who_name) then --byte 2 = 4 (enemy)
+			if (bitBand(sourceFlags, 0x00000040) ~= 0 and sourceName) then --byte 2 = 4 (enemy)
 				--damager
-				local este_jogador = damage_cache [who_serial]
-				if (not este_jogador) then
-					este_jogador = _current_damage_container:PegarCombatente (who_serial, who_name, who_flags, true)
+				---@type actor
+				local enemyActorObject = damage_cache[sourceSerial]
+				if (not enemyActorObject) then
+					enemyActorObject = _current_damage_container:PegarCombatente(sourceSerial, sourceName, sourceFlags, true)
 				end
 
-				if (este_jogador) then
+				if (enemyActorObject) then
 					--actor spells table
-					local spell = este_jogador.spells._ActorTable [spellid] --line where the actor was nil
-					if (not spell) then
-						spell = este_jogador.spells:PegaHabilidade (spellid, true, token)
+					---@type spelltable
+					local spellTable = enemyActorObject.spells._ActorTable[spellId]
+					if (not spellTable) then
+						spellTable = enemyActorObject.spells:PegaHabilidade(spellId, true, token)
 					end
-					spell.successful_casted = spell.successful_casted + 1
+					spellTable.successful_casted = spellTable.successful_casted + 1
 				end
 
 				--add the spellId in the enemy_cast_cache table to store the time the enemy successfully cast a spell
 				--check if the spell is in the table
-				local enemyName = who_name
+				local enemyName = sourceName
 
 				if (not enemy_cast_cache[time]) then
-					enemy_cast_cache[time] = {enemyName, spellid, 1}
+					enemy_cast_cache[time] = {enemyName, spellId, 1}
 				else
 					enemy_cast_cache[time][3] = enemy_cast_cache[time][3] + 1
 				end
 			end
-			return
 		end
 	end
 
@@ -5386,6 +5411,36 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		if (difficultyID == 8) then
 			_detalhes:SendEvent("COMBAT_MYTHICDUNGEON_END")
 		end
+
+		local okay, errorText = pcall(function()
+			local mapChallengeModeID, mythicLevel, time, onTime, keystoneUpgradeLevels, practiceRun, oldOverallDungeonScore, newOverallDungeonScore, IsMapRecord, IsAffixRecord, PrimaryAffix, isEligibleForScore, members = C_ChallengeMode.GetCompletionInfo()
+			if (mapChallengeModeID) then
+				local statName = "mythicdungeoncompletedDF2"
+				local mythicDungeonRuns = Details222.PlayerStats:GetStat(statName)
+				mythicDungeonRuns = mythicDungeonRuns or {}
+
+				mythicDungeonRuns[mapChallengeModeID] = mythicDungeonRuns[mapChallengeModeID] or {}
+				mythicDungeonRuns[mapChallengeModeID][mythicLevel] = mythicDungeonRuns[mapChallengeModeID][mythicLevel] or {}
+
+				local currentRun = mythicDungeonRuns[mapChallengeModeID][mythicLevel]
+				currentRun.completed = (currentRun.completed or 0) + 1
+				currentRun.totalTime = (currentRun.totalTime or 0) + time
+				if (not currentRun.minTime or time < currentRun.minTime) then
+					currentRun.minTime = time
+				end
+
+				currentRun.history = currentRun.history or {}
+				local day, month, year = tonumber(date("%d")), tonumber(date("%m")), tonumber(date("%Y"))
+				local amountDeaths = C_ChallengeMode.GetDeathCount() or 0
+				tinsert(currentRun.history, {day = day, month = month, year = year, runTime = time, onTime = onTime, deaths = amountDeaths, affix = PrimaryAffix})
+
+				Details222.PlayerStats:SetStat("mythicdungeoncompletedDF2", mythicDungeonRuns)
+			end
+		end)
+
+		if (not okay) then
+			_detalhes:Msg("something went wrong (0x7878):", errorText)
+		end
 	end
 
 	function _detalhes.parser_functions:PLAYER_REGEN_ENABLED(...)
@@ -5822,10 +5877,10 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		_detalhes.logoff_saving_data = true
 
 		--close info window
-		if (_detalhes.FechaJanelaInfo) then
+		if (_detalhes.CloseBreakdownWindow) then
 			tinsert(_detalhes_global.exit_log, "1 - Closing Janela Info.")
 			currentStep = "Fecha Janela Info"
-			xpcall(_detalhes.FechaJanelaInfo, saver_error)
+			xpcall(_detalhes.CloseBreakdownWindow, saver_error)
 		end
 
 		--do not save window pos
@@ -5890,6 +5945,10 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		xpcall(saveNicktabCache, saver_error)
 	end)
 
+	local eraNamedSpellsToID = {}
+
+	
+
 	-- ~parserstart ~startparser ~cleu ~parser
 	function _detalhes.OnParserEvent()
 		local time, token, hidding, who_serial, who_name, who_flags, who_flags2, target_serial, target_name, target_flags, target_flags2, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12 = CombatLogGetCurrentEventInfo()
@@ -5899,7 +5958,55 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			return func(nil, token, time, who_serial, who_name, who_flags, target_serial, target_name, target_flags, target_flags2, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)
 		end
 	end
-	_detalhes.parser_frame:SetScript("OnEvent", _detalhes.OnParserEvent)
+
+	function _detalhes.OnParserEventClassicEra()
+		local time, token, hidding, who_serial, who_name, who_flags, who_flags2, target_serial, target_name, target_flags, target_flags2, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12 = CombatLogGetCurrentEventInfo()
+
+		local func = token_list[token]
+		if (func) then
+			if(eraNamedSpellsToID[token]) then
+				A1 = A2
+			end
+			return func(nil, token, time, who_serial, who_name, who_flags, target_serial, target_name, target_flags, target_flags2, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)
+		end
+	end
+
+	if(DetailsFramework.IsClassicWow()) then
+		eraNamedSpellsToID = {
+		["SPELL_PERIODIC_DAMAGE"] = true,
+		["SPELL_DAMAGE"] = true,
+		["SPELL_BUILDING_DAMAGE"] = true,
+		["DAMAGE_SHIELD"] = true,
+		["DAMAGE_SPLIT"] = true,
+		["SPELL_MISSED"] = true,
+		["SPELL_PERIODIC_MISSED"] = true,
+		["SPELL_BUILDING_MISSED"] = true,
+		["DAMAGE_SHIELD_MISSED"] = true,
+
+		["SPELL_HEAL"] = true,
+		["SPELL_PERIODIC_HEAL"] = true,
+		["SPELL_HEAL_ABSORBED"] = true,
+		["SPELL_ABSORBED"] = true,
+
+		["SPELL_AURA_APPLIED"] = true,
+		["SPELL_AURA_REMOVED"] = true,
+		["SPELL_AURA_REFRESH"] = true,
+		["SPELL_AURA_APPLIED_DOSE"] = true,
+		["SPELL_ENERGIZE"] = true,
+		["SPELL_PERIODIC_ENERGIZE"] = true,
+
+		["SPELL_CAST_SUCCESS"] = true,
+		["SPELL_DISPEL"] = true,
+		["SPELL_STOLEN"] = true,
+		["SPELL_AURA_BROKEN"] = true,
+		["SPELL_AURA_BROKEN_SPELL"] = true,
+		["SPELL_RESURRECT"] = true,
+		["SPELL_INTERRUPT"] = true,
+		}
+		_detalhes.parser_frame:SetScript("OnEvent", _detalhes.OnParserEventClassicEra)
+	else
+		_detalhes.parser_frame:SetScript("OnEvent", _detalhes.OnParserEvent)
+	end
 
 	function _detalhes:UpdateParser()
 		_tempo = _detalhes._tempo
@@ -6033,6 +6140,19 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			override_spellId[403253] = nil --Raging Magma Stone
 			override_spellId[403257] = nil --Searing Smokey Stone
 		end
+
+		if (Details.combat_log.merge_critical_heals) then
+			override_spellId[94472] = 81751 --disc priest attonement and crit. Crits use separate id.
+			override_spellId[281469] = 270501 --disc priest contrition attonement and crit. Crits use separate id.
+			override_spellId[388025] = 388024 --MW monk Ancient Teachings, heals from damage, crit and normal are separate.
+			override_spellId[389325] = 389328 --MW monk Awakened Faeline, ^
+		else
+			override_spellId[94472] = nil --disc priest attonement and crit. Crits use separate id.
+			override_spellId[281469] = nil --disc priest contrition attonement and crit. Crits use separate id.
+			override_spellId[388025] = nil --MW monk Ancient Teachings, heals from damage, crit and normal are separate.
+			override_spellId[389325] = nil --MW monk Awakened Faeline, ^
+		end
+
 
 		damage_cache = setmetatable({}, _detalhes.weaktable)
 		damage_cache_pets = setmetatable({}, _detalhes.weaktable)

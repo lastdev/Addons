@@ -123,6 +123,8 @@ qcLocalize = {
 	HIDEOTHERFACTIONQUESTS = "Ocultar missões de outra facção",
 	HIDEOTHERPROFESSIONQUESTS = "Ocultar missões de outra profissão",
 	HIDEOTHERCOVENANTQUESTS = "Hide Other Covenant Quests",
+	HIDEREPEATABLEQUEST = "Hide Repeatable Quests",
+	HIDEWEEKLYQUEST = "Hide Weekly Quests",
 	HIDEWORLDQUEST = "Hide World Quests",
 	HIDEOTHERRACEANDCLASSQUESTS = "Ocultar missões de outra raça e classe",
 	HIGHMAUL = "Highmaul", -- Requires localization
@@ -513,6 +515,7 @@ qcLocalize = {
 	VALDRAKKEN = "Valdrakken",
 	VALDRAKKENACCORD = "Valdrakken Accord",
 	WHALLERSNOOK = "Whaler`s Nook",
+	ZARALEKCAVERN = "Zaralek Cavern",
 	}
 
 end
