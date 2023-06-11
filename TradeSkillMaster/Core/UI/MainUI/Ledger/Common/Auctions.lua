@@ -22,15 +22,16 @@ local private = {
 	characterFilter = {},
 	searchFilter = "",
 	groupFilter = {},
-	rarityList = {},
 	rarityFilter = {},
 	timeFrameFilter = 30 * SECONDS_PER_DAY,
 	type = nil
 }
+local RARITY_LIST = {}
+local RARITY_KEYS = { 0, 1, 2, 3, 4, 5 }
 do
-	for i = 0, 5 do
-		tinsert(private.rarityList, _G[format("ITEM_QUALITY%d_DESC", i)])
-		private.rarityFilter[i] = true
+	for _, key in ipairs(RARITY_KEYS) do
+		tinsert(RARITY_LIST, _G[format("ITEM_QUALITY%d_DESC", key)])
+		private.rarityFilter[key] = true
 	end
 end
 local TIME_LIST = { L["All Time"], L["Last 3 Days"], L["Last 7 Days"], L["Last 14 Days"], L["Last 30 Days"], L["Last 60 Days"] }
@@ -114,7 +115,7 @@ function private.DrawAuctionsPage()
 			:SetMargin(8, 8, 0, 8)
 			:AddChild(UIElements.New("MultiselectionDropdown", "rarity")
 				:SetMargin(0, 8, 0, 0)
-				:SetItems(private.rarityList)
+				:SetItems(RARITY_LIST, RARITY_KEYS)
 				:SetSettingInfo(private, "rarityFilter")
 				:SetSelectionText(L["No Rarities"], L["%d Rarities"], L["All Rarites"])
 				:SetScript("OnSelectionChanged", private.DropdownCommonOnSelectionChanged)
@@ -246,7 +247,7 @@ function private.UpdateQuery()
 	if private.searchFilter ~= "" then
 		private.query:Matches("name", String.Escape(private.searchFilter))
 	end
-	if Table.Count(private.rarityFilter) ~= #private.rarityList then
+	if Table.Count(private.rarityFilter) ~= #RARITY_LIST then
 		private.query:InTable("quality", private.rarityFilter)
 	end
 	if Table.Count(private.characterFilter) ~= #private.characters then

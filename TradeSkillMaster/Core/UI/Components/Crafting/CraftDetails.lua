@@ -13,11 +13,16 @@ local MatString = TSM.Include("Util.MatString")
 local RecipeString = TSM.Include("Util.RecipeString")
 local CraftString = TSM.Include("Util.CraftString")
 local Money = TSM.Include("Util.Money")
+local Theme = TSM.Include("Util.Theme")
 local Profession = TSM.Include("Service.Profession")
+local BagTracking = TSM.Include("Service.BagTracking")
+local ItemInfo = TSM.Include("Service.ItemInfo")
 local UIElements = TSM.Include("UI.UIElements")
 local UIUtils = TSM.Include("UI.UIUtils")
 local L = TSM.Include("Locale").GetTable()
 local private = {
+	matsTemp = {},
+	qualityMatsTemp = {},
 	optionalMatsTemp = {},
 }
 local MAX_CRAFT_RANK = 3
@@ -52,10 +57,12 @@ CraftDetails:_ExtendStateSchema()
 function CraftDetails:__init(frame)
 	self.__super:__init(frame)
 	self._craftableQuantityFunc = nil
-	self._craftingCostFunc = nil
+	self._dfCraftingOptionalMatsFunc = nil
+	self._craftStringCostsFunc = nil
 	self._onQueueButtonClick = nil
 	self._onCraftButtonMouseDown = nil
 	self._onCraftButtonClick = nil
+	BagTracking.RegisterCallback(self:__closure("_HandleInventoryUpdate"))
 end
 
 function CraftDetails:Acquire()
@@ -64,7 +71,7 @@ function CraftDetails:Acquire()
 	self:SetMargin(0, 0, 2, 0)
 	self:SetPadding(5)
 	self:SetBorderColor("ACTIVE_BG", 1)
-	self:SetBackgroundColor("PRIMARY_BG", true)
+	self:SetRoundedBackgroundColor("PRIMARY_BG")
 	self:AddChild(UIElements.New("Frame", "header")
 		:SetLayout("HORIZONTAL")
 		:SetHeight(28)
@@ -87,6 +94,13 @@ function CraftDetails:Acquire()
 			:SetFont("ITEM_BODY1")
 			:SetTextColor("INDICATOR")
 			:SetJustifyH("LEFT")
+		)
+		:AddChild(UIElements.New("Button", "qualityBtn")
+			:SetWidth("AUTO")
+			:SetHeight(20)
+			:SetMargin(4, 0, 0, 0)
+			:SetBackground("FRAME_BG")
+			:SetScript("OnClick", self:__closure("_HandleQualityBtnClick"))
 		)
 		:AddChild(UIElements.New("SelectionDropdown", "rankDropdown")
 			:SetSize(80, 20)
@@ -127,7 +141,9 @@ function CraftDetails:Acquire()
 		:AddChild(UIElements.New("Frame", "mats")
 			:SetLayout("VERTICAL")
 			:SetMargin(8, 12, 4, 4)
-			:AddChild(UIElements.New("CraftingMatList", "matList"))
+			:AddChild(UIElements.New("CraftingMatList", "matList")
+				:SetScript("OnMatQualityChanged", self:__closure("_HandleDialogRecipeStringChanged"))
+			)
 			:AddChild(UIElements.New("ActionButton", "optionalMatsBtn")
 				:SetHeight(20)
 				:SetMargin(0, 0, 4, 0)
@@ -308,11 +324,20 @@ function CraftDetails:Acquire()
 	self._state:PublisherForKeyChange("recipeString")
 		:MapWithFunction(private.RecipeStringToResultTooltip)
 		:CallMethod(name, "SetTooltip")
+
+	local qualityBtn = self:GetElement("header.qualityBtn")
+	self._state:PublisherForKeyChange("craftString")
+		:MapWithFunction(private.CraftStringToQualityBtnText)
+		:CallMethod(qualityBtn, "SetText")
+	self._state:PublisherForKeyChange("craftString")
+		:MapWithFunction(private.CraftStringToQualityBtnShown)
+		:CallMethod(qualityBtn, "SetShown")
 end
 
 function CraftDetails:Release()
 	self._craftableQuantityFunc = nil
-	self._craftingCostFunc = nil
+	self._dfCraftingOptionalMatsFunc = nil
+	self._craftStringCostsFunc = nil
 	self._onQueueButtonClick = nil
 	self._onCraftButtonMouseDown = nil
 	self._onCraftButtonClick = nil
@@ -331,14 +356,24 @@ function CraftDetails:SetCraftableQuantityFunction(func)
 	return self
 end
 
----Sets the crafting cost function.
----@param func fun(recipeString: string): number? Function which calculates the crafting cost
+---Sets the DF crafting optional mats function.
+---@param func fun(craftString: string, mats, optionalMats): boolean Function which gets the DF crafting optional mats
 ---@return CraftDetails
-function CraftDetails:SetCraftingCostFunction(func)
-	assert(func and not self._craftingCostFunc)
-	self._craftingCostFunc = func
+function CraftDetails:SetDFCraftingMatsFunction(func)
+	assert(func and not self._dfCraftingOptionalMatsFunc)
+	self._dfCraftingOptionalMatsFunc = func
+	return self
+end
+
+---Sets the crafting costs function.
+---@param recipeStringFunc fun(recipeString: string): number?, number?, number? Function which calculates the crafting cost, crafted item value, and profit for a recipe string
+---@param craftStringFunc fun(craftString: string): number?, number?, number? Function which calculates the crafting cost, crafted item value, and profit for a craft string
+---@return CraftDetails
+function CraftDetails:SetCostsFunctions(recipeStringFunc, craftStringFunc)
+	assert(recipeStringFunc and craftStringFunc and not self._craftStringCostsFunc)
+	self._craftStringCostsFunc = craftStringFunc
 	self._state:PublisherForKeyChange("recipeString")
-		:MapWithFunction(private.RecipeStringToCraftingCost, func)
+		:MapWithFunction(private.RecipeStringToCraftingCost, recipeStringFunc)
 		:AssignToTableKey(self._state, "craftingCost")
 	return self
 end
@@ -435,6 +470,14 @@ end
 -- Private Class Methods
 -- ============================================================================
 
+function CraftDetails.__private:_HandleInventoryUpdate()
+	if not self._acquired or not self._state.recipeString then
+		return
+	end
+	self._state.neededTools = private.CraftStringToNeededTools(self._state.craftString)
+	self._state.numCraftable = self._craftableQuantityFunc(self._state.recipeString)
+end
+
 function CraftDetails.__private:_UpdateRecipeString(wipeExisting)
 	if not self._state.craftString then
 		self._state.recipeString = nil
@@ -452,14 +495,24 @@ function CraftDetails.__private:_UpdateRecipeString(wipeExisting)
 			end
 		end
 	end
-	-- Make sure all the quality mats are set
+
+	-- Populate the quality mats
+	assert(not next(private.matsTemp) and not next(private.qualityMatsTemp))
+	for _, matString, quantity in Profession.MatIterator(self._state.craftString) do
+		private.matsTemp[matString] = quantity
+	end
+	if not self._dfCraftingOptionalMatsFunc(self._state.craftString, private.matsTemp, private.qualityMatsTemp) then
+		wipe(private.qualityMatsTemp)
+	end
 	for _, matString in Profession.MatIterator(self._state.craftString) do
 		if MatString.GetType(matString) == MatString.TYPE.QUALITY then
 			local slotId = MatString.GetSlotId(matString)
-			-- TODO: Set the mat quality based on the quality specified in the craftString
-			private.optionalMatsTemp[slotId] = private.optionalMatsTemp[slotId] or ItemString.ToId(MatString.GetQualityItem(matString, 1))
+			private.optionalMatsTemp[slotId] = private.optionalMatsTemp[slotId] or ItemString.ToId(private.qualityMatsTemp[slotId] or MatString.GetQualityItem(matString, 1))
 		end
 	end
+	wipe(private.matsTemp)
+	wipe(private.qualityMatsTemp)
+
 	self._state.recipeString = RecipeString.FromCraftString(self._state.craftString, private.optionalMatsTemp)
 	wipe(private.optionalMatsTemp)
 end
@@ -494,6 +547,19 @@ end
 
 function CraftDetails.__private:_GetQuantityValue()
 	return max(tonumber(self:GetElement("content.buttons.quantity.input"):GetValue()), 1)
+end
+
+function CraftDetails.__private:_HandleQualityBtnClick()
+	self:GetBaseElement():ShowDialogFrame(UIElements.New("CraftTierDialog", "dialog")
+		:SetCraftString(self._state.craftString, self._craftStringCostsFunc)
+		:SetScript("OnQualityChanged", self:__closure("_HandleQualityChanged"))
+	)
+end
+
+function CraftDetails.__private:_HandleQualityChanged(_, craftString)
+	self._state.craftString = craftString
+	self:_UpdateRecipeString(true)
+	self:GetElement("header"):Draw()
 end
 
 function CraftDetails.__private:_HandleRankDropdownSelectionChanged(dropdown)
@@ -577,7 +643,7 @@ end
 
 function private.StateToErrStr(state)
 	if not state.craftString then
-		return L["No receipe selected"]
+		return L["No recipe selected"]
 	elseif state.neededTools then
 		return REQUIRES_LABEL.." "..state.neededTools
 	elseif state.remainingCooldown then
@@ -728,7 +794,28 @@ function private.CraftStringToNameText(craftString)
 		return ""
 	end
 	local itemString, _, name = Profession.GetResultInfo(craftString)
-	return itemString and UIUtils.GetDisplayItemName(itemString) or name
+
+	local itemName = ItemInfo.GetName(itemString)
+	local quality = ItemInfo.GetQuality(itemString)
+	if not itemName or not quality then
+		return name
+	end
+	return Theme.GetItemQualityColor(quality):ColorText(itemName)
+end
+
+function private.CraftStringToQualityBtnText(craftString)
+	if not craftString then
+		return ""
+	end
+	local quality = CraftString.GetQuality(craftString)
+	if not quality then
+		return ""
+	end
+	return Professions.GetChatIconMarkupForQuality(quality)..TextureAtlas.GetTextureLink("iconPack.18x18/Chevron/Down")
+end
+
+function private.CraftStringToQualityBtnShown(craftString)
+	return craftString and CraftString.GetQuality(craftString) or false
 end
 
 function private.CraftStringToCraftType(craftString)
@@ -750,5 +837,9 @@ function private.RecipeStringToNumCraftable(recipeString, func)
 end
 
 function private.RecipeStringToCraftingCost(recipeString, func)
-	return recipeString and func(recipeString) or nil
+	if not recipeString then
+		return nil
+	end
+	local cost = func(recipeString)
+	return cost
 end

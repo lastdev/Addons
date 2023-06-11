@@ -101,7 +101,7 @@ end
 
 function ConRO.DeathKnight.Under10(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 	wipe(ConRO.SuggestedSpells)
-	local Racial, Ability, Passive, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.DeathKnight_Ability, ids.DeathKnight_Passive, ids.DeathKnight_Form, ids.DeathKnight_Buff, ids.DeathKnight_Debuff, ids.DeathKnight_PetAbility, ids.DeathKnight_PvPTalent, ids.Glyph;
+	local Racial, Ability, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.DeathKnight_Ability, ids.DeathKnight_Form, ids.DeathKnight_Buff, ids.DeathKnight_Debuff, ids.DeathKnight_PetAbility, ids.DeathKnight_PvPTalent, ids.Glyph;
 --Info
 	local _Player_Level = UnitLevel("player");
 	local _Player_Percent_Health = ConRO:PercentHealth('player');
@@ -139,7 +139,7 @@ end
 
 function ConRO.DeathKnight.Under10Def(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 	wipe(ConRO.SuggestedDefSpells)
-	local Racial, Ability, Passive, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.DeathKnight_Ability, ids.DeathKnight_Passive, ids.DeathKnight_Form, ids.DeathKnight_Buff, ids.DeathKnight_Debuff, ids.DeathKnight_PetAbility, ids.DeathKnight_PvPTalent, ids.Glyph;
+	local Racial, Ability, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.DeathKnight_Ability, ids.DeathKnight_Form, ids.DeathKnight_Buff, ids.DeathKnight_Debuff, ids.DeathKnight_PetAbility, ids.DeathKnight_PvPTalent, ids.Glyph;
 --Info
 	local _Player_Level																														= UnitLevel("player");
 	local _Player_Percent_Health 																									= ConRO:PercentHealth('player');
@@ -176,7 +176,7 @@ end
 
 function ConRO.DeathKnight.Blood(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 	wipe(ConRO.SuggestedSpells)
-	local Racial, Ability, Passive, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Blood_Ability, ids.Blood_Passive, ids.Blood_Form, ids.Blood_Buff, ids.Blood_Debuff, ids.Blood_PetAbility, ids.Blood_PvPTalent, ids.Glyph;
+	local Racial, Ability, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Blood_Ability, ids.Blood_Form, ids.Blood_Buff, ids.Blood_Debuff, ids.Blood_PetAbility, ids.Blood_PvPTalent, ids.Glyph;
 --Info
 	local _Player_Level = UnitLevel("player");
 	local _Player_Percent_Health = ConRO:PercentHealth('player');
@@ -301,10 +301,10 @@ function ConRO.DeathKnight.Blood(_, timeShift, currentSpell, gcd, tChosen, pvpCh
 				_BoneShield_COUNT = _BoneShield_COUNT - 5;
 			end
 
-			if _DeathStrike_RDY and (_RunicPower >= 75 or (tChosen[Passive.IcyTalons.talentID] and (not _IcyTalons_BUFF or (_IcyTalons_BUFF and _IcyTalons_DUR <= 1.5)))) then
+			if _DeathStrike_RDY and (_RunicPower >= 75 or (tChosen[Ability.IcyTalons.talentID] and (not _IcyTalons_BUFF or (_IcyTalons_BUFF and _IcyTalons_DUR <= 1.5)))) then
 				tinsert(ConRO.SuggestedSpells, _DeathStrike);
 				_RunicPower = _RunicPower - 40;
-				if tChosen[Passive.IcyTalons.talentID] then
+				if tChosen[Ability.IcyTalons.talentID] then
 					_IcyTalons_BUFF = true;
 					_IcyTalons_DUR = 6;
 				end
@@ -382,10 +382,10 @@ function ConRO.DeathKnight.Blood(_, timeShift, currentSpell, gcd, tChosen, pvpCh
 				_BoneShield_COUNT = _BoneShield_COUNT - 5;
 			end
 
-			if _DeathStrike_RDY and (_RunicPower >= 75 or (tChosen[Passive.IcyTalons.talentID] and (not _IcyTalons_BUFF or (_IcyTalons_BUFF and _IcyTalons_DUR <= 1.5)))) then
+			if _DeathStrike_RDY and (_RunicPower >= 75 or (tChosen[Ability.IcyTalons.talentID] and (not _IcyTalons_BUFF or (_IcyTalons_BUFF and _IcyTalons_DUR <= 1.5)))) then
 				tinsert(ConRO.SuggestedSpells, _DeathStrike);
 				_RunicPower = _RunicPower - 40;
-				if tChosen[Passive.IcyTalons.talentID] then
+				if tChosen[Ability.IcyTalons.talentID] then
 					_IcyTalons_BUFF = true;
 					_IcyTalons_DUR = 6;
 				end
@@ -417,7 +417,7 @@ end
 
 function ConRO.DeathKnight.BloodDef(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 	wipe(ConRO.SuggestedDefSpells)
-	local Racial, Ability, Passive, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Blood_Ability, ids.Blood_Passive, ids.Blood_Form, ids.Blood_Buff, ids.Blood_Debuff, ids.Blood_PetAbility, ids.Blood_PvPTalent, ids.Glyph;
+	local Racial, Ability, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Blood_Ability, ids.Blood_Form, ids.Blood_Buff, ids.Blood_Debuff, ids.Blood_PetAbility, ids.Blood_PvPTalent, ids.Glyph;
 --Info
 	local _Player_Level																														= UnitLevel("player");
 	local _Player_Percent_Health 																									= ConRO:PercentHealth('player');
@@ -504,7 +504,7 @@ end
 
 function ConRO.DeathKnight.Frost(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 	wipe(ConRO.SuggestedSpells)
-	local Racial, Ability, Passive, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Frost_Ability, ids.Frost_Passive, ids.Frost_Form, ids.Frost_Buff, ids.Frost_Debuff, ids.Frost_PetAbility, ids.Frost_PvPTalent, ids.Glyph;
+	local Racial, Ability, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Frost_Ability, ids.Frost_Form, ids.Frost_Buff, ids.Frost_Debuff, ids.Frost_PetAbility, ids.Frost_PvPTalent, ids.Glyph;
 --Info
 	local _Player_Level																														= UnitLevel("player");
 	local _Player_Percent_Health 																									= ConRO:PercentHealth('player');
@@ -582,15 +582,15 @@ function ConRO.DeathKnight.Frost(_, timeShift, currentSpell, gcd, tChosen, pvpCh
 	ConRO:AbilityBurst(_FrostwyrmsFury, _FrostwyrmsFury_RDY and _in_combat and _PillarofFrost_BUFF and _PillarofFrost_DUR <= 5);
 	ConRO:AbilityBurst(_BreathofSindragosa, _BreathofSindragosa_RDY and _Runes >= 3 and _RunicPower >= 60 and _PillarofFrost_RDY and ConRO:BurstMode(_BreathofSindragosa));
 	ConRO:AbilityBurst(_EmpowerRuneWeapon, _EmpowerRuneWeapon_RDY and _PillarofFrost_RDY and _Runes < 6 and not tChosen[Ability.BreathofSindragosa.talentID] and ConRO:BurstMode(_EmpowerRuneWeapon, 120));
-	ConRO:AbilityBurst(_HornofWinter, _HornofWinter_RDY and _Runes <= 4 and _RunicPower <= _RunicPower_Max - 25 and (not tChosen[Passive.Obliteration.talentID] and (not tChosen[Ability.BreathofSindragosa.talentID] or (tChosen[Ability.BreathofSindragosa.talentID] and _BreathofSindragosa_CD >= 40))) and ConRO:BurstMode(_HornofWinter));
+	ConRO:AbilityBurst(_HornofWinter, _HornofWinter_RDY and _Runes <= 4 and _RunicPower <= _RunicPower_Max - 25 and (not tChosen[Ability.Obliteration.talentID] and (not tChosen[Ability.BreathofSindragosa.talentID] or (tChosen[Ability.BreathofSindragosa.talentID] and _BreathofSindragosa_CD >= 40))) and ConRO:BurstMode(_HornofWinter));
 	ConRO:AbilityBurst(_PillarofFrost, _PillarofFrost_RDY and ((not tChosen[Ability.BreathofSindragosa.talentID] and _Runes <= 2) or (tChosen[Ability.BreathofSindragosa.talentID] and _BreathofSindragosa_CD >= 40)) and ConRO:BurstMode(_PillarofFrost));
 	ConRO:AbilityBurst(_RaiseDead, _RaiseDead_RDY and not _Pet_summoned and _PillarofFrost_RDY and ConRO:BurstMode(_RaiseDead));
 
 	ConRO:AbilityBurst(_AbominationLimb, _AbominationLimb_RDY and _FrostFever_DEBUFF and (_BreathofSindragosa_FORM or not tChosen[Ability.BreathofSindragosa.talentID]) and ConRO:BurstMode(_AbominationLimb));
 
 --Rotations
-		if tChosen[Passive.ColdHeart.talentID] then
-			if tChosen[Passive.Obliteration.talentID] then
+		if tChosen[Ability.ColdHeart.talentID] then
+			if tChosen[Ability.Obliteration.talentID] then
 				if _ChainsofIce_RDY and not _PillarofFrost_BUFF and (_ColdHeart_COUNT >= 20 or (_UnholyStrength_BUFF and _UnholyStrength_DUR <= 2 and _ColdHeart_COUNT >= 17)) then
 					tinsert(ConRO.SuggestedSpells, _ChainsofIce);
 				end
@@ -618,7 +618,7 @@ function ConRO.DeathKnight.Frost(_, timeShift, currentSpell, gcd, tChosen, pvpCh
 				tinsert(ConRO.SuggestedSpells, _Obliterate);
 			end
 
-			if _RemorselessWinter_RDY and tChosen[Passive.GatheringStorm.talentID] then
+			if _RemorselessWinter_RDY and tChosen[Ability.GatheringStorm.talentID] then
 				tinsert(ConRO.SuggestedSpells, _RemorselessWinter);
 			end
 
@@ -682,7 +682,7 @@ function ConRO.DeathKnight.Frost(_, timeShift, currentSpell, gcd, tChosen, pvpCh
 				end
 			end
 
-		elseif tChosen[Passive.Obliteration.talentID] and _PillarofFrost_BUFF then
+		elseif tChosen[Ability.Obliteration.talentID] and _PillarofFrost_BUFF then
 			if _DeathandDecay_RDY and not _DeathandDecay_BUFF and ((ConRO_AutoButton:IsVisible() and _enemies_in_melee >= 2) or ConRO_AoEButton:IsVisible()) then
 				tinsert(ConRO.SuggestedSpells, _DeathandDecay);
 			end
@@ -727,7 +727,7 @@ function ConRO.DeathKnight.Frost(_, timeShift, currentSpell, gcd, tChosen, pvpCh
 				tinsert(ConRO.SuggestedSpells, _AbominationLimb);
 			end
 		else
-			if tChosen[Passive.IcyTalons.talentID] and not _IcyTalons_BUFF then
+			if tChosen[Ability.IcyTalons.talentID] and not _IcyTalons_BUFF then
 				if _RunicPower < 30 and tChosen[Ability.GlacialAdvance.talentID] and ((ConRO_AutoButton:IsVisible() and _enemies_in_melee >= 2) or ConRO_AoEButton:IsVisible()) then
 					if _GlacialAdvance_RDY then
 						tinsert(ConRO.SuggestedSpells, _GlacialAdvance);
@@ -747,7 +747,7 @@ function ConRO.DeathKnight.Frost(_, timeShift, currentSpell, gcd, tChosen, pvpCh
 				tinsert(ConRO.SuggestedSpells, _EmpowerRuneWeapon);
 			end
 
-			if _RemorselessWinter_RDY and tChosen[Passive.GatheringStorm.talentID] and (_PillarofFrost_RDY or _PillarofFrost_CD >= 20) then
+			if _RemorselessWinter_RDY and tChosen[Ability.GatheringStorm.talentID] and (_PillarofFrost_RDY or _PillarofFrost_CD >= 20) then
 				tinsert(ConRO.SuggestedSpells, _RemorselessWinter);
 			end
 
@@ -759,7 +759,7 @@ function ConRO.DeathKnight.Frost(_, timeShift, currentSpell, gcd, tChosen, pvpCh
 				tinsert(ConRO.SuggestedSpells, _HowlingBlast);
 			end
 
-			if _AbominationLimb_RDY and not (tChosen[Ability.BreathofSindragosa.talentID] or (tChosen[Passive.Obliteration.talentID] and _PillarofFrost_CD >= 40)) and ConRO:FullMode(_AbominationLimb) then
+			if _AbominationLimb_RDY and not (tChosen[Ability.BreathofSindragosa.talentID] or (tChosen[Ability.Obliteration.talentID] and _PillarofFrost_CD >= 40)) and ConRO:FullMode(_AbominationLimb) then
 				tinsert(ConRO.SuggestedSpells, _AbominationLimb);
 			end
 
@@ -777,7 +777,7 @@ function ConRO.DeathKnight.Frost(_, timeShift, currentSpell, gcd, tChosen, pvpCh
 				end
 			end
 
-			if _RemorselessWinter_RDY and not tChosen[Passive.GatheringStorm.talentID] and ((ConRO_AutoButton:IsVisible() and _enemies_in_melee >= 2) or ConRO_AoEButton:IsVisible()) then
+			if _RemorselessWinter_RDY and not tChosen[Ability.GatheringStorm.talentID] and ((ConRO_AutoButton:IsVisible() and _enemies_in_melee >= 2) or ConRO_AoEButton:IsVisible()) then
 				tinsert(ConRO.SuggestedSpells, _RemorselessWinter);
 			end
 
@@ -797,7 +797,7 @@ function ConRO.DeathKnight.Frost(_, timeShift, currentSpell, gcd, tChosen, pvpCh
 				tinsert(ConRO.SuggestedSpells, _GlacialAdvance);
 			end
 
-			if _HornofWinter_RDY and _Runes <= 4 and _RunicPower <= _RunicPower_Max - 25 and not tChosen[Passive.Obliteration.talentID] and (not tChosen[Ability.BreathofSindragosa.talentID] or (tChosen[Ability.BreathofSindragosa.talentID] and _BreathofSindragosa_CD >= 40)) and ConRO:FullMode(_HornofWinter) then
+			if _HornofWinter_RDY and _Runes <= 4 and _RunicPower <= _RunicPower_Max - 25 and not tChosen[Ability.Obliteration.talentID] and (not tChosen[Ability.BreathofSindragosa.talentID] or (tChosen[Ability.BreathofSindragosa.talentID] and _BreathofSindragosa_CD >= 40)) and ConRO:FullMode(_HornofWinter) then
 				tinsert(ConRO.SuggestedSpells, _HornofWinter);
 			end
 
@@ -805,7 +805,7 @@ function ConRO.DeathKnight.Frost(_, timeShift, currentSpell, gcd, tChosen, pvpCh
 				tinsert(ConRO.SuggestedSpells, _DeathStrike);
 			end
 
-			if _FrostStrike_RDY and not tChosen[Passive.IcyTalons.talentID] then
+			if _FrostStrike_RDY and not tChosen[Ability.IcyTalons.talentID] then
 				tinsert(ConRO.SuggestedSpells, _FrostStrike);
 			end
 		end
@@ -814,7 +814,7 @@ end
 
 function ConRO.DeathKnight.FrostDef(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 	wipe(ConRO.SuggestedDefSpells)
-	local Racial, Ability, Passive, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Frost_Ability, ids.Frost_Passive, ids.Frost_Form, ids.Frost_Buff, ids.Frost_Debuff, ids.Frost_PetAbility, ids.Frost_PvPTalent, ids.Glyph;
+	local Racial, Ability, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Frost_Ability, ids.Frost_Form, ids.Frost_Buff, ids.Frost_Debuff, ids.Frost_PetAbility, ids.Frost_PvPTalent, ids.Glyph;
 --Info
 	local _Player_Level = UnitLevel("player");
 	local _Player_Percent_Health = ConRO:PercentHealth('player');
@@ -877,28 +877,28 @@ end
 
 function ConRO.DeathKnight.Unholy(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 	wipe(ConRO.SuggestedSpells)
-	local Racial, Ability, Passive, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Unholy_Ability, ids.Unholy_Passive, ids.Unholy_Form, ids.Unholy_Buff, ids.Unholy_Debuff, ids.Unholy_PetAbility, ids.Unholy_PvPTalent, ids.Glyph;
+	local Racial, Ability, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Unholy_Ability, ids.Unholy_Form, ids.Unholy_Buff, ids.Unholy_Debuff, ids.Unholy_PetAbility, ids.Unholy_PvPTalent, ids.Glyph;
 --Info
-	local _Player_Level																														= UnitLevel("player");
-	local _Player_Percent_Health 																									= ConRO:PercentHealth('player');
-	local _is_PvP																																	= ConRO:IsPvP();
-	local _in_combat 																															= UnitAffectingCombat('player');
-	local _party_size																															= GetNumGroupMembers();
+	local _Player_Level = UnitLevel("player");
+	local _Player_Percent_Health = ConRO:PercentHealth('player');
+	local _is_PvP = ConRO:IsPvP();
+	local _in_combat = UnitAffectingCombat('player');
+	local _party_size = GetNumGroupMembers();
 
-	local _is_PC																																	= UnitPlayerControlled("target");
-	local _is_Enemy 																															= ConRO:TarHostile();
-	local _Target_Health 																													= UnitHealth('target');
-	local _Target_Percent_Health 																									= ConRO:PercentHealth('target');
+	local _is_PC = UnitPlayerControlled("target");
+	local _is_Enemy = ConRO:TarHostile();
+	local _Target_Health = UnitHealth('target');
+	local _Target_Percent_Health = ConRO:PercentHealth('target');
 
 --Resources
-	local _Runes											 																						= dkrunes();
-	local _RunicPower, _RunicPower_Max																						= ConRO:PlayerPower('RunicPower');
+	local _Runes = dkrunes();
+	local _RunicPower, _RunicPower_Max = ConRO:PlayerPower('RunicPower');
 
 --Racials
-	local _AncestralCall, _AncestralCall_RDY																			= ConRO:AbilityReady(Racial.AncestralCall, timeShift);
-	local _ArcanePulse, _ArcanePulse_RDY																					= ConRO:AbilityReady(Racial.ArcanePulse, timeShift);
-	local _Berserking, _Berserking_RDY																						= ConRO:AbilityReady(Racial.Berserking, timeShift);
-	local _ArcaneTorrent, _ArcaneTorrent_RDY																			= ConRO:AbilityReady(Racial.ArcaneTorrent, timeShift);
+	local _AncestralCall, _AncestralCall_RDY = ConRO:AbilityReady(Racial.AncestralCall, timeShift);
+	local _ArcanePulse, _ArcanePulse_RDY = ConRO:AbilityReady(Racial.ArcanePulse, timeShift);
+	local _Berserking, _Berserking_RDY = ConRO:AbilityReady(Racial.Berserking, timeShift);
+	local _ArcaneTorrent, _ArcaneTorrent_RDY = ConRO:AbilityReady(Racial.ArcaneTorrent, timeShift);
 
 --Abilities
 	local _Apocalypse, _Apocalypse_RDY, _Apocalypse_CD, _Apocalypse_MaxCD = ConRO:AbilityReady(Ability.Apocalypse, timeShift);
@@ -1062,12 +1062,12 @@ function ConRO.DeathKnight.Unholy(_, timeShift, currentSpell, gcd, tChosen, pvpC
 			_RunicPower = _RunicPower - 30;
 		end
 
-		if _ScourgeStrike_RDY and tChosen[Passive.Plaguebringer.talentID] and not _Plaguebringer_BUFF then
+		if _ScourgeStrike_RDY and tChosen[Ability.Plaguebringer.talentID] and not _Plaguebringer_BUFF then
 			tinsert(ConRO.SuggestedSpells, _ScourgeStrike);
 			_Runes = _Runes - 1;
 		end
 
-		if _DeathCoil_RDY and (_SuddenDoom_BUFF or (not tChosen[Passive.RunicMastery.talentID] and _RunicPower >= 100) or _RunicPower >= 80) then
+		if _DeathCoil_RDY and (_SuddenDoom_BUFF or (not tChosen[Ability.RunicMastery.talentID] and _RunicPower >= 100) or _RunicPower >= 80) then
 			tinsert(ConRO.SuggestedSpells, _DeathCoil);
 			_RunicPower = _RunicPower - 30;
 		end
@@ -1103,7 +1103,7 @@ end
 
 function ConRO.DeathKnight.UnholyDef(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
 	wipe(ConRO.SuggestedDefSpells)
-	local Racial, Ability, Passive, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Unholy_Ability, ids.Unholy_Passive, ids.Unholy_Form, ids.Unholy_Buff, ids.Unholy_Debuff, ids.Unholy_PetAbility, ids.Unholy_PvPTalent, ids.Glyph;
+	local Racial, Ability, Form, Buff, Debuff, PetAbility, PvPTalent, Glyph = ids.Racial, ids.Unholy_Ability, ids.Unholy_Form, ids.Unholy_Buff, ids.Unholy_Debuff, ids.Unholy_PetAbility, ids.Unholy_PvPTalent, ids.Glyph;
 --Info
 	local _Player_Level																														= UnitLevel("player");
 	local _Player_Percent_Health 																									= ConRO:PercentHealth('player');

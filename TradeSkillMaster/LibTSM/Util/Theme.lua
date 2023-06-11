@@ -23,14 +23,12 @@ local private = {
 	publisherKey = {},
 	publishKeysTemp = {},
 }
-local THEME_COLOR_KEYS = {
-	PRIMARY_BG = true,
-	PRIMARY_BG_ALT = true,
-	FRAME_BG = true,
-	ACTIVE_BG = true,
-	ACTIVE_BG_ALT = true,
-}
 ---@alias ThemeColorKey
+---|'"PRIMARY_BG"'
+---|'"PRIMARY_BG_ALT"'
+---|'"FRAME_BG"'
+---|'"ACTIVE_BG"'
+---|'"ACTIVE_BG_ALT"'
 ---|'"INDICATOR"'
 ---|'"INDICATOR_ALT"'
 ---|'"INDICATOR_DISABLED"'
@@ -52,6 +50,13 @@ local THEME_COLOR_KEYS = {
 ---|'"TRANSPARENT"'
 ---|'"BLIZZARD_YELLOW"'
 ---|'"BLIZZARD_GM"'
+local THEME_COLOR_KEYS = {
+	PRIMARY_BG = true,
+	PRIMARY_BG_ALT = true,
+	FRAME_BG = true,
+	ACTIVE_BG = true,
+	ACTIVE_BG_ALT = true,
+}
 local STATIC_COLORS = {
 	INDICATOR = Color.NewFromHex("#ffd839"),
 	INDICATOR_ALT = Color.NewFromHex("#79a2ff"),
@@ -124,6 +129,13 @@ local TSM_ITEM_QUALITY_COLORS = {
 	[7] = Color.NewFromHex("#00ccff"),
 	[8] = Color.NewFromHex("#00ccff"),
 }
+local CRAFTED_QUALITY_COLORS = {
+	[1] = Color.NewFromHex("#904a3c"),
+	[2] = Color.NewFromHex("#7d7e85"),
+	[3] = Color.NewFromHex("#8f782e"),
+	[4] = Color.NewFromHex("#4b9694"),
+	[5] = Color.NewFromHex("#e2b932"),
+}
 local AUCTION_PCT_COLORS = {
 	{ -- blue
 		color = "FEEDBACK_BLUE",
@@ -188,6 +200,7 @@ Theme:OnModuleLoad(function()
 		ITEM_BODY2 = FontObject.New(FontPaths.GetItem(), 14, 20),
 		ITEM_BODY3 = FontObject.New(FontPaths.GetItem(), 12, 20),
 		TABLE_TABLE1 = FontObject.New(FontPaths.GetTable(), 12, 20),
+		TABLE_TABLE1_OUTLINE = FontObject.New(FontPaths.GetTable(), 12, 20, "OUTLINE"),
 	}
 
 	-- load the fonts
@@ -362,6 +375,13 @@ function Theme.GetAuctionPercentColor(pct)
 		end
 	end
 	return Theme.GetColor(AUCTION_PCT_COLORS.default)
+end
+
+---Gets the color for a crafted quality.
+---@param quality number The crafted quality
+---@return ColorValue
+function Theme.GetCraftedQualityColor(quality)
+	return CRAFTED_QUALITY_COLORS[quality]
 end
 
 ---Gets the font object from the current active font set.

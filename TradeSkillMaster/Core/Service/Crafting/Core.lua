@@ -9,6 +9,7 @@ local Crafting = TSM:NewPackage("Crafting")
 local Environment = TSM.Include("Environment")
 local L = TSM.Include("Locale").GetTable()
 local ProfessionInfo = TSM.Include("Data.ProfessionInfo")
+local DisenchantInfo = TSM.Include("Data.DisenchantInfo")
 local CraftString = TSM.Include("Util.CraftString")
 local MatString = TSM.Include("Util.MatString")
 local Database = TSM.Include("Util.Database")
@@ -42,6 +43,9 @@ local IGNORED_COOLDOWN_SEP = "\001"
 local PROFESSION_SEP = ","
 local BAD_CRAFTING_PRICE_SOURCES = {
 	crafting = true,
+}
+local INDIRECT_RESULT_MATERIALS = {
+	["i:194545"] = true -- Prismatic Ore
 }
 
 
@@ -669,7 +673,9 @@ end
 function Crafting.GetQualityInfo(craftString, playerFilter)
 	assert(Environment.HasFeature(Environment.FEATURES.CRAFTING_QUALITY))
 	local craftInfo = private.settings.crafts[craftString]
-	assert(craftInfo)
+	if not craftInfo then
+		return nil, nil, nil
+	end
 	local baseRecipeDifficulty, baseRecipeQuality, maxRecipeQuality = nil, nil, nil
 	for player, info in pairs(craftInfo.players) do
 		if (not playerFilter or player == playerFilter) and type(info) == "table" and info.baseRecipeQuality and (not baseRecipeQuality or info.baseRecipeQuality > baseRecipeQuality) then
@@ -679,6 +685,58 @@ function Crafting.GetQualityInfo(craftString, playerFilter)
 		end
 	end
 	return baseRecipeDifficulty, baseRecipeQuality, maxRecipeQuality
+end
+
+---Gets the conversion value for an item.
+---@param itemString string
+---@param customPrice any
+---@param method any
+---@return number
+---@return table
+function Crafting.GetConversionsValue(itemString, customPrice, method)
+	if not customPrice then
+		return
+	end
+
+	-- Calculate disenchant value first
+	if (not method or method == Conversions.METHOD.DISENCHANT) and ItemInfo.IsDisenchantable(itemString) then
+		local classId = ItemInfo.GetClassId(itemString)
+		local quality = ItemInfo.GetQuality(itemString)
+		local itemLevel = Environment.IsRetail() and ItemInfo.GetItemLevel(itemString) or ItemInfo.GetItemLevel(ItemString.GetBase(itemString))
+		local expansion = Environment.IsRetail() and ItemInfo.GetExpansion(itemString) or nil
+		local value = 0
+		if quality and itemLevel and classId then
+			for targetItemString in DisenchantInfo.TargetItemIterator() do
+				local amountOfMats = DisenchantInfo.GetTargetItemSourceInfo(targetItemString, classId, quality, itemLevel, expansion)
+				if amountOfMats then
+					local matValue = CustomPrice.GetValue(customPrice, targetItemString)
+					if not matValue or matValue == 0 then
+						return
+					end
+					value = value + matValue * amountOfMats
+				end
+			end
+		end
+
+		value = floor(value)
+		if value > 0 then
+			return value, Conversions.METHOD.DISENCHANT
+		end
+	end
+
+	-- Calculate other conversion values
+	local value = 0
+	for targetItemString, rate, _, _, _, targetQuality, sourceQuality, _, targetItemMethod in Conversions.TargetItemsByMethodIterator(itemString, method) do
+		method = method or targetItemMethod
+		local quality = sourceQuality and TSM.Crafting.DFCrafting.GetExpectedSalvageResult(method, sourceQuality)
+		if not targetQuality or targetQuality == quality then
+			local matValue = INDIRECT_RESULT_MATERIALS[targetItemString] and Crafting.GetConversionsValue(targetItemString, customPrice, method) or CustomPrice.GetValue(customPrice, targetItemString)
+			value = value + (matValue or 0) * rate
+		end
+	end
+
+	value = Math.Round(value)
+	return value > 0 and value or nil, method
 end
 
 
@@ -693,8 +751,10 @@ function private.ProcessRemovedMats(removedMats)
 		for itemString in MatString.ItemIterator(matString) do
 			if not private.numMatDBRows[itemString] then
 				local matItemRow = private.matItemDB:GetUniqueRow("itemString", itemString)
-				private.matItemDB:DeleteRow(matItemRow)
-				matItemRow:Release()
+				if matItemRow then
+					private.matItemDB:DeleteRow(matItemRow)
+					matItemRow:Release()
+				end
 			end
 		end
 	end

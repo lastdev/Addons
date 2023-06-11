@@ -5,7 +5,19 @@ local scaling = ns.scaling
 local texturesSpecial = ns.texturesSpecial
 local scalingSpecial = ns.scalingSpecial
 
-points[ns.votfw] = {
+local maxFour = "There are a maximum of\nfour spawned locations\nat any one time"
+
+points[ 418 ] = { -- Krasarang Wilds
+	[29247533] = { pinType="K", tip=maxFour },
+	[31026383] = { pinType="K", tip=maxFour },
+	[31326645] = { pinType="K", tip=maxFour },
+	[31627977] = { pinType="K", tip=maxFour },
+	[31927374] = { pinType="K", tip=maxFour },
+	[33376971] = { pinType="K", tip=maxFour },
+	[35187030] = { pinType="K", tip=maxFour },
+}
+
+points[ 376 ] = { -- Valley of the Four Winds
 	[29633445] = { pinType="D" },
 	[31085362] = { pinType="D" },
 	[31403198] = { pinType="D" },
@@ -128,8 +140,10 @@ points[ns.votfw] = {
 	[44014759] = { pinType="D", tip="Under the foliage" },
 	[44164222] = { pinType="D" },
 	[44305384] = { pinType="D" },
+	[44364555] = { pinType="D" },
 	[44442283] = { pinType="D", tip="At the entrance" },
 	[44484075] = { pinType="D" },
+	[44523852] = { pinType="D" },
 	[44571883] = { pinType="D", tip="Descend into the Springtail Crag" },
 	[44624346] = { pinType="D" },
 	[44673335] = { pinType="D", tip="Under the tree.\nIn front of Thunder" },
@@ -311,7 +325,7 @@ points[ns.votfw] = {
 	[92083907] = { pinType="B", title="Boat-Building Instructions", quest=31869, item=87524, obj=214340 },
 }
 
-points[ns.voeb] = {
+points[ 390 ] = { -- Vale of Eternal Blossoms
 	[14636578] = { pinType="V", },
 	[15766894] = { pinType="V", },
 	[15846736] = { pinType="V", tip="Same colour as the soil" },

@@ -11,6 +11,24 @@ if (not (GTFO.ClassicMode or GTFO.BurningCrusadeMode or GTFO.WrathMode)) then
 --- * Dragon Isles (World) *
 --- ************************
 
+GTFO.SpellID["408556"] = {
+  --desc = "Entangled (Season 2 Affix - Applied)";
+  applicationOnly = true;
+  soundFunction = function() 
+	GTFO_AddEvent("Entangled", 2, function() 
+		local timeLeft = GTFO_DebuffTime("player", 408556);
+		if (timeLeft >= 5) then
+			GTFO_PlaySound(2);
+		elseif (timeLeft >= 1) then
+			GTFO_PlaySound(1);
+		else
+			GTFO_RemoveEvent("Entangled");
+		end;
+		end, 2);
+	return 2;
+  end;
+};
+
 GTFO.SpellID["362970"] = {
 	--desc = "Electified Water";
 	sound = 2;
@@ -372,6 +390,17 @@ GTFO.SpellID["404824"] = {
   minimumStacks = 2;
   sound = 1;
 };
+
+GTFO.SpellID["409703"] = {
+  --desc = "Dreadfire Breath (Kretchenwrath)";
+  sound = 1;
+};
+
+GTFO.SpellID["404751"] = {
+  --desc = "Heat Wave (Fyrakk)";
+  sound = 1;
+};
+
 
 
 --- *******************
@@ -768,6 +797,26 @@ GTFO.SpellID["376325"] = {
   sound = 1;
 };
 
+--- *******************
+--- * Vortex Pinnacle *
+--- *******************
+
+GTFO.SpellID["413319"] = {
+  --desc = "Downwind of Altairus (Altairus)";
+  sound = 2;
+};
+
+GTFO.SpellID["413275"] = {
+  --desc = "Cold Front (Altairus)";
+  sound = 1;
+};
+
+GTFO.SpellID["88963"] = {
+  --desc = "Lightning Lash (Minister of Air)";
+  sound = 1;
+  test = true;
+};
+
 --- ***************************
 --- * Vault of the Incarnates *
 --- ***************************
@@ -1082,7 +1131,12 @@ GTFO.SpellID["406233"] = {
 
 GTFO.SpellID["405457"] = {
   --desc = "Disintegrate (Rionthus)";
-  sound = 4;
+  soundFunction = function() 
+	if (GTFO_HasDebuff("player", 405392) or GTFO_HasDebuff("player", 405423)) then -- Disintegrate, two types
+		return 0;
+	end
+	return 4;
+  end;
 };
 
 GTFO.SpellID["406321"] = {
@@ -1094,6 +1148,12 @@ GTFO.SpellID["405462"] = {
   --desc = "Dragonfire Traps (Zskarn)";
   applicationOnly = true;
   sound = 1;
+};
+
+GTFO.SpellID["404404"] = {
+  --desc = "Unstable Embers (Zskarn)";
+  sound = 4;
+  negatingDebuffSpellID = 404010; -- Unstable Embers
 };
 
 GTFO.SpellID["406712"] = {
@@ -1138,8 +1198,13 @@ GTFO.SpellID["404062"] = {
   sound = 1;
 };
 
+GTFO.SpellID["406989"] = {
+  --desc = "Burning Ground (Scalecommander Sarkareth)";
+  sound = 1;
+};
+
 GTFO.SpellID["402051"] = {
-  --desc = "Searing Breath (Sarkareth)";
+  --desc = "Searing Breath (Scalecommander Sarkareth)";
   applicationOnly = true;
   sound = 1;
   negatingDebuffSpellID = 401383; -- Oppressing Howl

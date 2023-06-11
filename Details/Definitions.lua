@@ -140,6 +140,7 @@
 ---@field SetPropagateKeyboardInput fun(self: frame, propagate: boolean)
 ---@field SetPropagateGamepadInput fun(self: frame, propagate: boolean)
 ---@field StartMoving fun(self: frame)
+---@field IsMovable fun(self: frame) : boolean
 ---@field StartSizing fun(self: frame, point: "top"|"topright"|"right"|"bottomright"|"bottom"|"bottomleft"|"left"|"topleft")
 ---@field StopMovingOrSizing fun(self: frame)
 ---@field GetAttribute fun(self: frame, name: string) : any
@@ -358,10 +359,11 @@
 ---@field ListActors fun(container: actorcontainer) usage: for index, actorObject in container:ListActors() do
 
 ---@class spellcontainer : table
+---@field _ActorTable table store [spellId] = spelltable
 ---@field GetSpell fun(container: spellcontainer, spellId: number) get a spell by its id
 ---@field ListActors fun(container: spellcontainer) : any, any usage: for spellId, spelltable in container:ListActors() do
 ---@field ListSpells fun(container: spellcontainer) : any, any usage: for spellId, spelltable in container:ListActors() do
----@field _ActorTable table
+---@field HasTwoOrMoreSpells fun(container: spellcontainer) : boolean return true if the container has two or more spells
 
 ---@class friendlyfiretable : table
 ---@field total number total amount of friendly fire caused by the actor
@@ -422,6 +424,7 @@
 ---@field grupo boolean
 ---@field fight_component boolean
 ---@field boss_fight_component boolean
+---@field pvp_component boolean
 ---@field boss boolean
 ---@field last_event unixtime
 ---@field total_without_pet number
@@ -435,6 +438,7 @@
 ---@field Tempo fun(actor: actor) : number get the activity or effective time of the actor
 ---@field GetPets fun(actor: actor) : table<number, string> get a table with all pet names that belong to the player
 ---@field GetSpellList fun(actor: actor) : table<number, spelltable>
+---@field GetSpellContainerNames fun(container: actorcontainer) : string[] get the table which contains the names of the spell containers
 
 ---@class actordamage : actor
 ---@field friendlyfire_total number
@@ -593,8 +597,11 @@
 ---@field expandedIndex number
 ---@field bIsExpanded boolean
 ---@field statusBarValue number
+---@field actorName string --when showing an actor header, this is the actor name
+---@field bIsActorHeader boolean is this is true, the spellbar is an actor header, which is a bar with the actor name with the actor spells nested
+---@field actorIcon texture
 
----@class bknesteddata : {spellId: number, spellTable: spelltable, petName: string, value: number}
+---@class bknesteddata : {spellId: number, spellTable: spelltable, actorName: string, value: number, bIsActorHeader: boolean} fills .nestedData table in spelltableadv, used to store the nested spells data, 'value' is set when the breakdown sort the values by the selected header
 
 ---@class breakdowntargetframe : frame
 ---@field spellId number

@@ -12,9 +12,14 @@ local MatString = TSM.Include("Util.MatString")
 local TempTable = TSM.Include("Util.TempTable")
 local Table = TSM.Include("Util.Table")
 local ProfessionInfo = TSM.Include("Data.ProfessionInfo")
+local Conversions = TSM.Include("Service.Conversions")
 local private = {
 	tempTables = {{}, {}},
 	tempTableInUse = {false, false},
+}
+local DRAGON_ISLES_SALVAGE_CRAFTSTRINGS = {
+	[Conversions.METHOD.MILL] = "c:382981",
+	[Conversions.METHOD.PROSPECT] = "c:374627",
 }
 
 
@@ -28,6 +33,9 @@ function DFCrafting.CanCraftQuality(targetQuality, recipeDifficulty, recipeQuali
 end
 
 function DFCrafting.GetOptionalMats(craftString, mats, optionalMats)
+	if not TSM.Crafting.IsQualityCraft(craftString) then
+		return false
+	end
 	local recipeDifficulty, recipeQuality, recipeMaxQuality = TSM.Crafting.GetQualityInfo(craftString)
 	if not recipeDifficulty then
 		return false
@@ -58,6 +66,11 @@ function DFCrafting.GetOptionalMats(craftString, mats, optionalMats)
 			return false
 		end
 		assert(not isFirst)
+	end
+	if totalWeight == 0 then
+		-- No quality mats
+		private.ReleaseTempTable(qualityMatCostTemp)
+		return neededSkill == 0
 	end
 
 	-- Get all combinations of quality mats
@@ -95,6 +108,31 @@ function DFCrafting.GetOptionalMats(craftString, mats, optionalMats)
 	end
 	Table.SortWithValueLookup(optionalMats, optionalMats)
 	return true
+end
+
+function DFCrafting.GetSourceMatSkill(recipeDifficulty, sourceQuality)
+	return sourceQuality == 3 and recipeDifficulty * 0.25 or (sourceQuality == 2 and recipeDifficulty * 0.125 or 0)
+end
+
+function DFCrafting.GetExpectedSalvageResult(method, sourceQuality)
+	local craftString = DRAGON_ISLES_SALVAGE_CRAFTSTRINGS[method]
+	assert(craftString)
+	local baseRecipeDifficulty, baseRecipeQuality = TSM.Crafting.GetQualityInfo(craftString)
+	-- Show quality 1 results when Dragon Isles Milling/Prospecting is not learned
+	if not baseRecipeDifficulty or not baseRecipeQuality then
+		return 1
+	end
+
+	local quality = 1
+	local sourceMatSkill = DFCrafting.GetSourceMatSkill(baseRecipeDifficulty, sourceQuality)
+	for i = 2, 3 do
+		local neededSkill = Quality.GetNeededSkill(i, baseRecipeDifficulty, baseRecipeQuality, 3, sourceQuality)
+		neededSkill = neededSkill and max(neededSkill - sourceMatSkill, 0) or nil
+		if neededSkill == 0 then
+			quality = i
+		end
+	end
+	return quality
 end
 
 

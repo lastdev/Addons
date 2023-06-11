@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2522, "DBM-Aberrus", nil, 1208)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230515080130")
+mod:SetRevision("20230531064217")
 mod:SetCreatureID(201261)
 mod:SetEncounterID(2688)
 mod:SetUsedIcons(1, 2, 3, 4, 5)
@@ -127,7 +127,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnRayofAnguish:Play("laserrun")
 			yellRayofAnguish:Yell()
 		end
-		warnDreadRayofAnguish:CombinedShow(0.5, self.vb.rayCount, args.destName)
+		warnDreadRayofAnguish:CombinedShow(1.1, self.vb.rayCount, args.destName)
 	elseif spellId == 404743 and not args:IsPlayer() then
 		specWarnTerrorClawsTaunt:Show(args.destName)
 		specWarnTerrorClawsTaunt:Play("tauntboss")

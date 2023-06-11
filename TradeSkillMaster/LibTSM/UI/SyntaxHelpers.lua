@@ -104,7 +104,7 @@ function private.PrepareContext(text, cursor)
 	private.prevTokenLength = 0
 	private.prevTokenColored = false
 	private.resultLen = 0
-	CustomString.PopulateTokenList(private.tokenList, text)
+	CustomString.PopulateTokenList(private.tokenList, strlower(text))
 	private.tokenListRow = 1
 end
 

@@ -45,7 +45,8 @@ if (not (GTFO.ClassicMode or GTFO.BurningCrusadeMode or GTFO.WrathMode)) then
 	GTFO.IgnoreSpellCategory["IcyGround"] = {
 		-- 10.0 Sennarth
 		spellID = 372055,
-		desc = "Icy Ground (Sennarth - Dragonflight)"
+		desc = "Icy Ground (Sennarth - Dragonflight)",
+		tooltip = "Icy Ground (Sennarth - Dragonflight)"
 	}
 end
 

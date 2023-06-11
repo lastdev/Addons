@@ -140,6 +140,46 @@ platerInternal.Defaults = {
 platerInternal.Comms = {}
 platerInternal.Frames = {}
 platerInternal.Data = {}
+platerInternal.Date = {}
+platerInternal.Logs = {}
+
+function platerInternal.Date.GetDateForLogs()
+	return date("%Y-%m-%d %H:%M:%S")
+end
+
+---get the table which can save logs and errors
+---@return {_general_logs: string[], _error_logs: string[]}
+function platerInternal.Logs.GetLogs()
+	---@type {_general_logs: string[], _error_logs: string[]}
+	local platerLogs = PlaterLogs
+	if (not platerLogs) then
+		PlaterLogs = { --[[GLOBAL]]
+			_general_logs = {},
+			_error_logs = {},
+		}
+		return PlaterLogs
+	end
+
+	platerLogs._error_logs = platerLogs._error_logs or {}
+	platerLogs._general_logs = platerLogs._general_logs or {}
+	return platerLogs
+end
+
+function platerInternal.Logs.Log(text)
+	if (type(text) == "string") then
+		local platerLogs = platerInternal.Logs.GetLogs()
+		table.insert(platerLogs._general_logs, 1, platerInternal.Date.GetDateForLogs() .. " | " .. text)
+		table.remove(platerLogs._general_logs, 20)
+	end
+end
+
+function platerInternal.Logs.LogError(text)
+	if (type(text) == "string") then
+		local platerLogs = platerInternal.Logs.GetLogs()
+		table.insert(platerLogs._error_logs, 1, platerInternal.Date.GetDateForLogs() .. " | " .. text)
+		table.remove(platerLogs._error_logs, 10)
+	end
+end
 
 --> namespaces:
 	--resources
@@ -776,6 +816,7 @@ Plater.SpecList = { --private
 	["EVOKER"] = {
 		[1467] = true,
 		[1468] = true,
+		[1473] = true,
 	},
 }
 
@@ -845,6 +886,7 @@ Plater.DefaultSpellRangeList = {
 	
 	[1467] = 25, --> evoker devastation
 	[1468] = 25, --> evoker preservation
+	[1473] = 25, --> evoker augmentation
 	
 	-- low-level (without spec)
 	[1444] = 40, --> Initial SHAMAN
@@ -927,6 +969,7 @@ Plater.DefaultSpellRangeListF = {
 	
 	[1467] = 25, --> evoker devastation
 	[1468] = 25, --> evoker preservation
+	[1473] = 25, --> evoker augmentation
 	
 	-- low-level (without spec)
 	[1444] = 40, --> Initial SHAMAN
@@ -994,6 +1037,7 @@ local class_specs_coords = {
 	
 	[1467] = {256/512, 320/512, 256/512, 320/512}, --> evoker devastation
 	[1468] = {320/512, 384/512, 256/512, 320/512}, --> evoker preservation
+	[1473] = {320/512, 384/512, 256/512, 320/512}, --> evoker augmentation
 }
 
 Plater.AnchorNames = {
@@ -1219,6 +1263,25 @@ Plater.AnchorNamesByPhraseId = {
 		[99922] = true,
 		[104822] = true,
 		[120651] = true, --explosives (M+)
+		[190381] = true, --Rotburst Totem
+		[130896] = true, --Blackout Barrel
+		[129758] = true, --Irontide Grenadier
+		[196712] = true, --Nullification Device
+		[195399] = true, --Curious Swoglet
+		[196043] = true, --Primalist Infuser
+		[97720] = true, --Blightshard Skitter
+		[98081] = true, --Bellowing Idol
+		[101075] = true, --Wormspeaker Devout
+		[101476] = true, --Molten Charskin
+		[192464] = true, --Raging Ember
+		[186696] = true, --Quaking Totem
+		[186107] = true, --Vault Keeper
+		[413263] = true, --Skyfall Nova
+		[202824] = true, --Erratic Remnant
+		[203230] = true, --Dragonfire Golem
+		[203812] = true, --Voice From Beyond
+		[100818] = true, -- Bellowing Idol
+		[92538] = true, -- Tarspitter Grub
 	}
 
 	--update the settings cache for scritps
@@ -1382,8 +1445,8 @@ Plater.AnchorNamesByPhraseId = {
 					if IsPlayerSpell(163201) then
 						local using_Massacre = IsPlayerSpell(281001) or IsPlayerSpell(206315)
 						lowExecute = using_Massacre and 0.35 or 0.2
-						local using_Condemn = IsPlayerSpell(317320)
-						highExecute = using_Condemn and 0.8 or nil
+						--local using_Condemn = IsPlayerSpell(317320) -- that's not really used anymore...
+						--highExecute = using_Condemn and 0.8 or nil
 					end
 					
 				elseif (class == "HUNTER") then
@@ -3107,7 +3170,7 @@ Plater.AnchorNamesByPhraseId = {
 			if (Plater.db.profile.reopoen_options_panel_on_tab) then
 				C_Timer.After (2, function()
 					Plater.OpenOptionsPanel()
-					PlaterOptionsPanelContainer:SelectIndex (Plater, Plater.db.profile.reopoen_options_panel_on_tab)
+					PlaterOptionsPanelContainer:SelectTabByIndex (Plater.db.profile.reopoen_options_panel_on_tab)
 					Plater.db.profile.reopoen_options_panel_on_tab = false
 				end)
 			end
@@ -4617,6 +4680,18 @@ function Plater.OnInit() --private --~oninit ~init
 	end
 
 	Plater.Locale =  GetLocale()
+
+	do --log initialization version
+		pcall(function()
+			local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
+			local platerVersion = GetAddOnMetadata("Plater", "Version")
+			local frameworkVersion = "Framework v" .. select(2,LibStub:GetLibrary("DetailsFramework-1.0"))
+			local gameVersion = GetBuildInfo()
+			local gameLocale = Plater.Locale
+			local charName = UnitName("player")
+			platerInternal.Logs.Log("INIT | " .. platerVersion .. " | " .. frameworkVersion .. " | " .. gameVersion .. " | " .. gameLocale .. " | " .. charName)
+		end)
+	end
 
 	--Plater:BossModsLink()
 	
@@ -8751,6 +8826,20 @@ end
 		
 		-- combat toggle
 		if (profile.auto_toggle_combat_enabled and (combat ~= nil)) then
+			local onlyNamesEnabled = GetCVarBool("nameplateShowOnlyNames")
+			local onlyNamesEnabledRaw = GetCVar("nameplateShowOnlyNames")
+			if combat then -- update this separately and only if needed
+				if onlyNamesEnabled ~= profile.auto_toggle_combat.blizz_healthbar_ic then
+					SetCVar("nameplateShowOnlyNames", profile.auto_toggle_combat.blizz_healthbar_ic and CVAR_ENABLED or CVAR_DISABLED)
+					Plater.UpdateBaseNameplateOptions()
+				end
+			else
+				if onlyNamesEnabled ~= profile.auto_toggle_combat.blizz_healthbar_ooc then
+					SetCVar("nameplateShowOnlyNames", profile.auto_toggle_combat.blizz_healthbar_ooc and CVAR_ENABLED or CVAR_DISABLED)
+					--Plater.UpdateBaseNameplateOptions()
+				end
+			end
+			
 			if combat then
 				SetCVar("nameplateShowFriends", profile.auto_toggle_combat.friendly_ic and CVAR_ENABLED or CVAR_DISABLED)
 				SetCVar("nameplateShowEnemies", profile.auto_toggle_combat.enemy_ic and CVAR_ENABLED or CVAR_DISABLED)
@@ -10785,6 +10874,9 @@ end
 		if (unitFrame.unit) then
 			if (Plater.IsUnitTapDenied (unitFrame.unit)) then
 				Plater.ChangeHealthBarColor_Internal (unitFrame.healthBar, unpack (Plater.db.profile.tap_denied_color))
+			elseif (DB_UNITCOLOR_CACHE [unitFrame [MEMBER_NPCID] or -1]) then
+				Plater.ChangeHealthBarColor_Internal (unitFrame.healthBar, unpack (DB_UNITCOLOR_CACHE [unitFrame [MEMBER_NPCID]]))
+				unitFrame.UsingCustomColor = true --exposed to scripts
 			else
 				if (InCombatLockdown()) then
 					local unitReaction = unitFrame.PlateFrame [MEMBER_REACTION]
@@ -13454,6 +13546,35 @@ function SlashCmdList.PLATER (msg, editbox)
 	if (msg == "version") then
 		Plater.GetVersionInfo(true)
 		return
+
+	elseif (msg == "showlogs") then
+		---@type {_general_logs: string[], _error_logs: string[]}
+		local logTable = platerInternal.Logs.GetLogs()
+		local generalLogs = logTable._general_logs
+		local errorLogs = logTable._error_logs
+
+		---@type string[]
+		local outputTable = {}
+
+		if (#generalLogs > 0) then
+			outputTable[#outputTable+1] = "General Logs:"
+			for i = 1, #generalLogs do
+				outputTable[#outputTable+1] = (generalLogs[i])
+			end
+		end
+
+		outputTable[#outputTable+1] = " "
+
+		if (#errorLogs > 0) then
+			outputTable[#outputTable+1] = "Error Logs:"
+			for i = 1, #errorLogs do
+				outputTable[#outputTable+1] = (errorLogs[i])
+			end
+		end
+
+		dumpt(outputTable) --this is a function from details! too buzy right now to thing on another function
+		return
+
 	elseif (msg == "dignostico" or msg == "diag" or msg == "debug") then
 		
 		print ("Plater Diagnostic:")

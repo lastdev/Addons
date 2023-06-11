@@ -1,5 +1,5 @@
 ## Title:-|cffFFFFFFConRO|r- |cffFFFFFFPriest|r
-## Version: 10.1.0
+## Version: 10.1.1
 ## Author: Vae
 ## Interface: 100100
 ## Dependencies: ConRO

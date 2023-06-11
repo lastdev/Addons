@@ -26,11 +26,13 @@ function Auctionator.CraftingInfo.DoTradeSkillReagentsSearch(schematicForm)
   local searchTerms = {}
 
   local possibleItems = {}
+  local quantities = {}
 
   local continuableContainer = ContinuableContainer:Create()
 
   local outputLink = Auctionator.CraftingInfo.GetOutputItemLink(recipeID, recipeLevel, transaction:CreateOptionalCraftingReagentInfoTbl(), transaction:GetAllocationItemGUID())
 
+  table.insert(quantities, 0)
   if outputLink then
     table.insert(possibleItems, outputLink)
     continuableContainer:AddContinuable(Item:CreateFromItemLink(outputLink))
@@ -54,20 +56,21 @@ function Auctionator.CraftingInfo.DoTradeSkillReagentsSearch(schematicForm)
         continuableContainer:AddContinuable(Item:CreateFromItemID(itemID))
 
         table.insert(possibleItems, itemID)
+        table.insert(quantities, reagentSlotSchematic.quantityRequired)
       end
     end
   end
 
   -- Go through the items one by one and get their names
   local function OnItemInfoReady()
-    for _, itemInfo in ipairs(possibleItems) do
+    for index, itemInfo in ipairs(possibleItems) do
       local itemInfo = {GetItemInfo(itemInfo)}
       if not Auctionator.Utilities.IsBound(itemInfo) then
-        table.insert(searchTerms, itemInfo[1])
+        table.insert(searchTerms, {searchString = itemInfo[1], isExact = true, quantity = quantities[index]})
       end
     end
 
-    Auctionator.API.v1.MultiSearchExact(AUCTIONATOR_L_REAGENT_SEARCH, searchTerms)
+    Auctionator.API.v1.MultiSearchAdvanced(AUCTIONATOR_L_REAGENT_SEARCH, searchTerms)
   end
 
   continuableContainer:ContinueOnLoad(OnItemInfoReady)
@@ -140,13 +143,15 @@ local function GetEnchantProfit(schematicForm)
 
   if itemID ~= nil then
     local currentAH = Auctionator.API.v1.GetAuctionPriceByItemID(AUCTIONATOR_L_REAGENT_SEARCH, itemID) or 0
+    local age = Auctionator.API.v1.GetAuctionAgeByItemID(AUCTIONATOR_L_REAGENT_SEARCH, itemID)
+    local exact = Auctionator.API.v1.IsAuctionDataExactByItemID(AUCTIONATOR_L_REAGENT_SEARCH, itemID)
 
     local vellumCost = Auctionator.API.v1.GetVendorPriceByItemID(AUCTIONATOR_L_REAGENT_SEARCH, Auctionator.Constants.EnchantingVellumID) or 0
     local toCraft = GetSkillReagentsTotal(schematicForm) + vellumCost
 
     local count = schematicForm.recipeSchematic.quantityMin
 
-    return CalculateProfitFromCosts(currentAH, toCraft, count)
+    return CalculateProfitFromCosts(currentAH, toCraft, count), age, currentAH ~= 0, exact
   else
     return nil
   end
@@ -168,12 +173,14 @@ local function GetAHProfit(schematicForm)
 
     if recipeLink ~= nil then
       local currentAH = Auctionator.API.v1.GetAuctionPriceByItemLink(AUCTIONATOR_L_REAGENT_SEARCH, recipeLink) or 0
+      local age = Auctionator.API.v1.GetAuctionAgeByItemLink(AUCTIONATOR_L_REAGENT_SEARCH, recipeLink)
+      local exact = Auctionator.API.v1.IsAuctionDataExactByItemLink(AUCTIONATOR_L_REAGENT_SEARCH, recipeLink)
 
       local toCraft = GetSkillReagentsTotal(schematicForm)
 
       local count = schematicForm.recipeSchematic.quantityMin
 
-      return CalculateProfitFromCosts(currentAH, toCraft, count)
+      return CalculateProfitFromCosts(currentAH, toCraft, count), age, currentAH ~= 0, exact
     else
       return nil
     end
@@ -216,13 +223,13 @@ function Auctionator.CraftingInfo.GetInfoText(schematicForm, showProfit)
   end
 
   if showProfit and Auctionator.Config.Get(Auctionator.Config.Options.CRAFTING_INFO_SHOW_PROFIT) then
-    local profit = GetAHProfit(schematicForm)
+    local profit, age, anyPrice, exact = GetAHProfit(schematicForm)
 
     if profit ~= nil then
       if lines > 0 then
         result = result .. "\n"
       end
-      result = result .. ProfitString(profit)
+      result = result .. ProfitString(profit) .. Auctionator.CraftingInfo.GetProfitWarning(profit, age, anyPrice, exact)
       lines = lines + 1
     end
   end

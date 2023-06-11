@@ -1,0 +1,9 @@
+## Interface: 100005
+## Title: Peta
+## Author: Scott Ingram
+## Version: v1.0
+## Notes: Shift right click a pet token you already know to cage your existing one.  Helps when you're maxed out.
+
+Debug.lua
+Peta.lua
+locales.xml

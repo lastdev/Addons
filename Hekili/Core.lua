@@ -103,7 +103,7 @@ function Hekili:OnInitialize()
                 p.toggles.interrupts.value and "|cFF00FF00" or "|cFFFF0000",
                 p.toggles.defensives.value and "|cFF00FF00" or "|cFFFF0000" )
         else
-            return format( "|c%s%s|r %sCD|r %sCov|r %sInt|r",
+            return format( "|c%s%s|r %sCD|r %smCD|r %sInt|r",
                 color,
                 m == "single" and "ST" or ( m == "aoe" and "AOE" or ( m == "dual" and "Dual" or ( m == "reactive" and "React" or "Auto" ) ) ),
                 p.toggles.cooldowns.value and "|cFF00FF00" or "|cFFFF0000",
@@ -667,6 +667,7 @@ function Hekili:GetPredictionFromAPL( dispName, packName, listName, slot, action
     if ( packName == "UseItems" ) then pack = class.itemPack
     else pack = self.DB.profile.packs[ packName ] end
 
+    local packInfo = scripts.PackInfo[ spec.package ]
     local list = pack.lists[ listName ]
 
     local debug = self.ActiveDebug
@@ -706,7 +707,7 @@ function Hekili:GetPredictionFromAPL( dispName, packName, listName, slot, action
                 if debug then self:Debug( "The current minimum delay (%.2f) is greater than the current maximum delay (%.2f). Exiting list (%s).", state.delayMin, state.delayMax, listName ) end
                 break
 
-            elseif rAction and rWait <= state.cooldown.global_cooldown.remains then -- and state.settings.gcdSync then
+            elseif rAction and not packInfo.hasOffGCD and rWait <= state.cooldown.global_cooldown.remains then -- and state.settings.gcdSync then
                 if debug then self:Debug( "The recommended action (%s) is ready within the active GCD; exiting list (%s).", rAction, listName ) end
                 break
 
@@ -1432,11 +1433,11 @@ local aoeDisplayRule = function( p )
 end
 
 local displayRules = {
-    Interrupts = { function( p ) return p.toggles.interrupts.value and p.toggles.interrupts.separate end, true , "Defensives" },
+    Interrupts = { function( p ) return p.toggles.interrupts.value and p.toggles.interrupts.separate end, false, "Defensives" },
     Defensives = { function( p ) return p.toggles.defensives.value and p.toggles.defensives.separate end, false, "Cooldowns"  },
     Cooldowns  = { function( p ) return p.toggles.cooldowns.value  and p.toggles.cooldowns.separate  end, false, "Primary"    },
     Primary    = { function(   ) return true                                                         end, true , "AOE"        },
-    AOE        = { aoeDisplayRule                                                                       , true , "Interrupts" }
+    AOE        = { aoeDisplayRule                                                                       , false, "Interrupts" }
 }
 local lastDisplay = "AOE"
 
@@ -1479,6 +1480,8 @@ function Hekili.Update( initial )
         local rule, fullReset, nextDisplay = unpack( displayRules[ dispName ] )
         local display = rawget( profile.displays, dispName )
 
+        fullReset = fullReset or state.offset > 0
+
         if debug then
             Hekili:SetupDebug( dispName )
             Hekili:Debug( "*** START OF NEW DISPLAY: %s ***", dispName )
@@ -1506,8 +1509,6 @@ function Hekili.Update( initial )
             for i = #Block, 1, -1 do tinsert( StackPool, tremove( Block, i ) ) end
 
             state.reset( dispName, fullReset )
-
-            Hekili:Yield( "Post-Reset for " .. dispName )
 
             -- Clear the stack in case we interrupted ourselves.
             wipe( InUse )
@@ -1555,7 +1556,6 @@ function Hekili.Update( initial )
                 end
 
                 while( event ) do
-                    -- Hekili:Yield( "Pre-Processing event #" .. n )
                     local eStart
 
                     if debug then
@@ -1681,7 +1681,6 @@ function Hekili.Update( initial )
 
                             repeat
                                 action, wait, depth = Hekili:GetNextPrediction( dispName, packName, slot )
-                                -- Hekili:Yield( "Events GNP " .. dispName .. " " .. packName )
 
                                 if action == "wait" then
                                     if debug then Hekili:Debug( "EXECUTING WAIT ( %.2f ) EVENT AT ( +%.2f ) AND RECHECKING RECOMMENDATIONS...", slot.waitSec, wait ) end
@@ -1698,8 +1697,6 @@ function Hekili.Update( initial )
                                     action, wait = nil, 10
 
                                     action, wait, depth = Hekili:GetNextPrediction( dispName, packName, slot )
-
-                                    -- Hekili:Yield( "Events2 GNP " .. dispName .. " " .. packName )
                                 end
 
                                 waitLoop = waitLoop + 1
@@ -1747,8 +1744,6 @@ function Hekili.Update( initial )
                     Hekili.ThreadStatus = "Processed event #" .. n .. " for " .. dispName .. "."
                 end
 
-                Hekili:Yield( "After events for " .. dispName )
-
                 if not action then
                     state.delay = 0
                     state.delayMin = 0
@@ -1780,8 +1775,6 @@ function Hekili.Update( initial )
 
                     repeat
                         action, wait, depth = Hekili:GetNextPrediction( dispName, packName, slot )
-                        -- Hekili:Yield( "Regular GNP " .. dispName .. " " .. packName )
-
 
                         if action == "wait" then
                             if debug then Hekili:Debug( "EXECUTING WAIT ( %.2f ) EVENT AT ( +%.2f ) AND RECHECKING RECOMMENDATIONS...", slot.waitSec, wait ) end
@@ -1798,8 +1791,6 @@ function Hekili.Update( initial )
                             action, wait = nil, 10
 
                             action, wait, depth = Hekili:GetNextPrediction( dispName, packName, slot )
-
-                            -- Hekili:Yield( "Regular2 GNP " .. dispName .. " " .. packName )
                         end
 
                         waitLoop = waitLoop + 1
@@ -1832,8 +1823,6 @@ function Hekili.Update( initial )
                     Hekili:Debug( "Recommendation #%d is %s at %.2fs (%.2fs).", i, action or "NO ACTION", wait or state.delayMax, state.offset + state.delay )
                 end
 
-                -- Hekili:Yield( "Pre-Action" )
-
                 if action then
                     slot.time = state.offset + wait
                     slot.exact_time = state.now + state.offset + wait
@@ -1864,28 +1853,22 @@ function Hekili.Update( initial )
                         slot.resources[ k ] = state[ k ].current
                     end
 
-                    -- Hekili:Yield( "Pre-Handle for " .. dispName .. " #" .. i .. ": " .. action )
-
                     if i < display.numIcons then
                         -- Advance through the wait time.
                         state.this_action = action
 
                         if state.delay > 0 then state.advance( state.delay ) end
-                        -- Hekili:Yield( "Post-Advance for " .. dispName .. " #" .. i .. ": " .. action )
 
                         local cast = ability.cast
 
                         if ability.gcd ~= "off" and state.cooldown.global_cooldown.remains == 0 then
                             state.setCooldown( "global_cooldown", state.gcd.execute )
                         end
-                        -- Hekili:Yield( "Post-GCD for " .. dispName .. " #" .. i .. ": " .. action )
 
                         if state.buff.casting.up and not ability.dual_cast then
                             state.stopChanneling( false, action )
                             state.removeBuff( "casting" )
                         end
-
-                        -- Hekili:Yield( "Post-Casting for " .. dispName .. " #" .. i .. ": " .. action )
 
                         if ability.cast > 0 then
                             if not ability.channeled then
@@ -1893,7 +1876,6 @@ function Hekili.Update( initial )
 
                                 state.applyBuff( "casting", ability.cast, nil, ability.id, nil, false )
                                 state:QueueEvent( action, state.query_time, state.query_time + cast, "CAST_FINISH", cast_target )
-                                -- Hekili:Yield( "Post-CastingEvent for " .. dispName .. " #" .. i .. ": " .. action )
                             else
                                 if ability.charges and ability.charges > 1 and ability.recharge > 0 then
                                     state.spendCharges( action, 1 )
@@ -1903,12 +1885,8 @@ function Hekili.Update( initial )
 
                                 end
 
-                                -- Hekili:Yield( "Post-CD for " .. dispName .. " #" .. i .. ": " .. action )
-                                -- Hekili:Yield( "Post-RunHandler for " .. dispName .. " #" .. i .. ": " .. action )
-
                                 if debug then Hekili:Debug( "Queueing %s channel finish at %.2f [%.2f+%.2f].", action, state.query_time + cast, state.offset, cast, cast_target ) end
                                 state:QueueEvent( action, state.query_time, state.query_time + cast, "CHANNEL_FINISH", cast_target )
-                                -- Hekili:Yield( "Post-Channel Finish for " .. dispName .. " #" .. i .. ": " .. action )
 
                                 -- Queue ticks because we may not have an ability.tick function, but may have resources tied to an aura.
                                 if ability.tick_time then
@@ -1936,29 +1914,35 @@ function Hekili.Update( initial )
 
                             end
 
-                            Hekili:Yield( "Post-CD for " .. dispName .. " #" .. i .. ": " .. action )
                             ns.spendResources( action )
                             state:RunHandler( action )
-                            -- Hekili:Yield( "Post-Instant RunHandler for " .. dispName .. " #" .. i .. ": " .. action )
                         end
 
                         -- Projectile spells have two handlers, effectively.  A handler (run on cast/channel finish), and then an impact handler.
                         if ability.isProjectile then
                             state:QueueEvent( action, state.query_time + cast, nil, "PROJECTILE_IMPACT", cast_target )
-                            -- Hekili:Yield( "Post-Projectile Queue for " .. dispName .. " #" .. i .. ": " .. action )
                         end
 
-                        if ability.item and not ( ability.essence or ability.no_icd ) then
-                            state.putTrinketsOnCD( state.cooldown[ action ].remains / 6 )
-                            -- Hekili:Yield( "Post-TrinketCD for " .. dispName .. " #" .. i .. ": " .. action )
+                        if state.trinket.t1.is[ action ] and state.trinket.t2.has_cooldown then
+                            local t2 = state.trinket.t2.cooldown.key
+                            local duration = ability.cooldown / 6
+                            if state.cooldown[ t2 ].remains < duration then
+                                state.setCooldown( t2, duration )
+                            end
+                        elseif state.trinket.t2.is[ action ] and state.trinket.t1.has_cooldown then
+                            local t1 = state.trinket.t1.cooldown.key
+                            local duration = ability.cooldown / 6
+                            if state.cooldown[ t1 ].remains < duration then
+                                state.setCooldown( t1, duration )
+                            end
                         end
                     end
 
                 else
-                    for n = i, numRecs do
+                    for s = i, numRecs do
                         action = action or ''
                         checkstr = checkstr and ( checkstr .. ':' .. action ) or action
-                        slot[n] = nil
+                        slot[s] = nil
                     end
 
                     state.delay = 0
@@ -2003,26 +1987,26 @@ function Hekili.Update( initial )
 
             UI:SetThreadLocked( false )
 
-            if not UI.EventPayload then
-                UI.EventPayload = {
-                    {}, -- [1]
-                }
-                setmetatable( UI.EventPayload, {
-                    __index = UI.EventPayload[ 1 ],
-                    __mode  = "kv"
-                } )
-            end
-
-            for i = 1, numRecs do
-                if UI.EventPayload[ i ] then wipe( UI.EventPayload[ i ] )
-                else UI.EventPayload[ i ] = {} end
-
-                for k, v in pairs( Queue[ i ] ) do
-                    UI.EventPayload[ i ][ k ] = v
-                end
-            end
-
             if WeakAuras and WeakAuras.ScanEvents then
+                if not UI.EventPayload then
+                    UI.EventPayload = {
+                        {}, -- [1]
+                    }
+                    setmetatable( UI.EventPayload, {
+                        __index = UI.EventPayload[ 1 ],
+                        __mode  = "kv"
+                    } )
+                end
+
+                for i = 1, numRecs do
+                    if UI.EventPayload[ i ] then wipe( UI.EventPayload[ i ] )
+                    else UI.EventPayload[ i ] = {} end
+
+                    for k, v in pairs( Queue[ i ] ) do
+                        UI.EventPayload[ i ][ k ] = v
+                    end
+                end
+
                 WeakAuras.ScanEvents( "HEKILI_RECOMMENDATION_UPDATE", dispName, Queue[ 1 ].actionID, Queue[ 1 ].indicator, Queue[ 1 ].empower_to, UI.EventPayload )
             end
 
@@ -2038,18 +2022,13 @@ function Hekili.Update( initial )
 
                     if Hekili.Config then LibStub( "AceConfigDialog-3.0" ):SelectGroup( "Hekili", "snapshots" ) end
                 end
-            -- else
-                -- We don't track debug/snapshot recommendations because the additional debug info ~40% more CPU intensive.
-                -- We don't track out of combat because who cares?
-                -- UI:UpdatePerformance( GetTime(), debugprofilestop() - actualStartTime, checkstr ~= UI.RecommendationsStr )
-                -- Hekili:Yield( "Post-Perf for " .. dispName .. ": " .. checkstr )
             end
 
             lastDisplay = dispName
             dispName = nextDisplay
             state.display = dispName
 
-            if round < 5 then Hekili:Yield( "Recommendations finished for " .. lastDisplay .. "." ) end
+            if round < 5 then Hekili:Yield( "Recommendations finished for " .. lastDisplay .. ".", nil, true ) end
         else
             if UI.RecommendationsStr then
                 UI.RecommendationsStr = nil

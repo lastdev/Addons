@@ -476,6 +476,12 @@ L.AUTO_TIMER_TEXTS = {
 	addscustom							= "Adds (%%s)",
 	roleplay							= GUILD_INTEREST_RP or "Roleplay"
 }
+--This basically clones np only bar option and display text from regular counterparts
+L.AUTO_TIMER_TEXTS.cdnp = L.AUTO_TIMER_TEXTS.cd
+L.AUTO_TIMER_TEXTS.nextnp = L.AUTO_TIMER_TEXTS.next
+L.AUTO_TIMER_TEXTS.cdcountnp = L.AUTO_TIMER_TEXTS.cdcount
+L.AUTO_TIMER_TEXTS.nextcountnp = L.AUTO_TIMER_TEXTS.nextcount
+
 
 L.AUTO_TIMER_OPTIONS = {
 	target								= "Show timer for $spell:%s debuff",
@@ -488,10 +494,14 @@ L.AUTO_TIMER_OPTIONS = {
 	ai									= "Show AI timer for $spell:%s cooldown",
 	cd									= "Show timer for $spell:%s cooldown",
 	cdcount								= "Show timer for $spell:%s cooldown",
+	cdnp								= "Show nameplate only timer for $spell:%s cooldown",
+	cdnpcount							= "Show nameplate only timer (with count) for $spell:%s cooldown",
 	cdsource							= "Show timer (with source) for $spell:%s cooldown",--Maybe better wording?
 	cdspecial							= "Show timer for special ability cooldown",
 	next								= "Show timer for next $spell:%s",
 	nextcount							= "Show timer for next $spell:%s",
+	nextnp								= "Show nameplate only timer for next $spell:%s",
+	nextnpcount							= "Show nameplate only timer (with count) for next $spell:%s",
 	nextsource							= "Show timer (with source) for next $spell:%s",--Maybe better wording?
 	nextspecial							= "Show timer for next special ability",
 	achievement							= "Show timer for %s",
@@ -557,7 +567,7 @@ L.AUTO_INFO_FRAME_OPTION_TEXT2			= "Show info frame for encounter overview"
 L.AUTO_INFO_FRAME_OPTION_TEXT3			= "Show info frame for $spell:%s (when threshold of %%s is met)"
 L.AUTO_READY_CHECK_OPTION_TEXT			= "Play ready check sound when boss is pulled (even if it's not targeted)"
 L.AUTO_SPEEDCLEAR_OPTION_TEXT			= "Show timer for fastest clear of %s"
-L.AUTO_PRIVATEAURA_OPTION_TEXT			= "Play DBM sound alerts for $spell:%s private auras on this fight. Sound Priority: Voice pack if available, Air Horn fallback"
+L.AUTO_PRIVATEAURA_OPTION_TEXT			= "Play DBM sound alerts for $spell:%s private auras on this fight."
 
 -- New special warnings
 L.MOVE_WARNING_BAR						= "Announce movable"

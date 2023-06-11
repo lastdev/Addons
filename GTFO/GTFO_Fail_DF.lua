@@ -7,19 +7,15 @@ GTFO Fail List - Dragonflight
 
 if (not (GTFO.ClassicMode or GTFO.BurningCrusadeMode or GTFO.WrathMode)) then
 
---- ****************
---- * DF Overrides *
---- ****************
-
-GTFO.SpellID["88194"] = {
-	--desc = "Chilling Blast - Now Icy Buffet (Young Storm Dragon, Vortex Pinnacle)";
-	tankSound = 0;
-	sound = 0;
-};
-
 --- ************************
 --- * Dragon Isles (World) *
 --- ************************
+
+GTFO.SpellID["408777"] = {
+  --desc = "Entangled (Season 2 Affix - Failed)";
+  applicationOnly = true;
+  sound = 3;
+};
 
 GTFO.SpellID["372139"] = {
   --desc = "Lightning Strike (Lightning Storm)";
@@ -962,10 +958,20 @@ GTFO.SpellID["375275"] = {
   sound = 3;
 };
 
+GTFO.SpellID["409501"] = {
+  --desc = "Fury of Fyrakk (Kretchenwrath)";
+  sound = 3;
+};
 
+GTFO.SpellID["411306"] = {
+  --desc = "Lithic Disgorge (Diganthor)";
+  sound = 3;
+};
 
-
-
+GTFO.SpellID["412653"] = {
+  --desc = "Explosive (Treasure Goblin)";
+  sound = 3;
+};
 
 
 
@@ -1169,7 +1175,7 @@ GTFO.SpellID["385524"] = {
   sound = 3;
 };
 
-GTFO.SpellID["385356"] = {
+GTFO.SpellID["384148"] = {
   --desc = "Ensnaring Trap (Gutshot)";
   applicationOnly = true;
   sound = 3;
@@ -1191,11 +1197,6 @@ GTFO.SpellID["377559"] = {
   --desc = "Vine Whip (Treemouth)";
   sound = 3;
   tankSound = 0;
-};
-
-GTFO.SpellID["381770"] = {
-  --desc = "Gushing Ooze (Decaying Slime)";
-  sound = 3;
 };
 
 GTFO.SpellID["383392"] = {
@@ -1221,7 +1222,6 @@ GTFO.SpellID["374075"] = {
 GTFO.SpellID["384524"] = {
   --desc = "Titanic Fist (Watcher Irideus)";
   sound = 3;
-  tankSound = 0;
 };
 
 GTFO.SpellID["389446"] = {
@@ -1702,6 +1702,32 @@ GTFO.SpellID["369409"] = {
   tankSound = 0;
 };
 
+--- *******************
+--- * Vortex Pinnacle *
+--- *******************
+
+GTFO.SpellID["88194"] = {
+	--desc = "Chilling Blast - Now Icy Buffet (Young Storm Dragon, Vortex Pinnacle)";
+	tankSound = 0;
+	sound = 0;
+};
+
+GTFO.SpellID["410999"] = {
+  --desc = "Pressurized Blast (Armored Mistral)";
+  sound = 3;
+};
+
+GTFO.SpellID["411005"] = {
+  --desc = "Bomb Cyclone (Cloud Prince)";
+  sound = 3;
+};
+
+GTFO.SpellID["413296"] = {
+  --desc = "Downburst (Altairus)";
+  applicationOnly = true;
+  sound = 3;
+};
+
 --- ***************************
 --- * Vault of the Incarnates *
 --- ***************************
@@ -2028,6 +2054,11 @@ GTFO.SpellID["408717"] = {
   sound = 3;
 };
 
+GTFO.SpellID["407611"] = {
+  --desc = "Shadows Convergence (Essence of Shadow)";
+  sound = 3;
+};
+
 GTFO.SpellID["405704"] = {
   --desc = "Swirling Shadowflame (Shadowflame Amalgamation)";
   sound = 3;
@@ -2037,6 +2068,11 @@ GTFO.SpellID["406783"] = {
   --desc = "Shadowflame Burst (Shadowflame Amalgamation)";
   sound = 3;
   tankSound = 0;
+};
+
+GTFO.SpellID["408224"] = {
+  --desc = "Convergent Orb (Shadowflame Amalgamation)";
+  sound = 3;
 };
 
 GTFO.SpellID["404472"] = {
@@ -2176,6 +2212,12 @@ GTFO.SpellID["409476"] = {
   sound = 3;
 };
 
+GTFO.SpellID["409445"] = {
+  --desc = "Pyroclastic Smash (Voracious Magma Worm)";
+  tankSound = 0;
+  sound = 3;
+};
+
 GTFO.SpellID["406581"] = {
   --desc = "Lava Eruption (Primal Lava Elemental)";
   sound = 3;
@@ -2185,6 +2227,12 @@ GTFO.SpellID["410953"] = {
   --desc = "Volcanic Heart (Neltharion)";
   applicationOnly = true;
   minimumStacks = 1;
+  sound = 3;
+};
+
+GTFO.SpellID["409616"] = {
+  --desc = "Umbral Torrent (Whisper in the Dark)";
+  applicationOnly = true;
   sound = 3;
 };
 
@@ -2255,8 +2303,17 @@ GTFO.SpellID["403520"] = {
   sound = 3;
 };
 
+GTFO.SpellID["404008"] = {
+  --desc = "Lost In Space (Scalecommander Sarkareth)";
+  sound = 3;
+};
 
-
+GTFO.SpellID["408429"] = {
+  --desc = "Void Slash (Scalecommander Sarkareth)";
+  applicationOnly = true;
+  sound = 3;
+  tankSound = 0;
+};
 
 end
 

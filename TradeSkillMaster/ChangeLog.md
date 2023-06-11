@@ -1,9 +1,7 @@
-## v4.12.37 Changes
+## v4.12.39 Changes
 
-* [Retail] Added icon in addon list
-* [Retail] Fixed error while posting
-* [Retail] Fixed taint related to the AH frame
-* [Retail] Fixed error from invalid pets in groups
-* [Retail] Fixed error after learning new Leatherworking recipes
+* [Retail] Fixed crafting cost not showing on quality crafts with no quality mats
+* [Retail] Fixed AH not hiding when walking away from auctioneer
+* [All] Fixed issue with filtering Ledger by rarity
 
 [Known Issues](https://support.tradeskillmaster.com/en_US/known_issues)

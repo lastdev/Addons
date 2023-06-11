@@ -196,6 +196,11 @@ function ListRow:DisableHighlight()
 	self._state.highlightDisabled = true
 end
 
+---Sets whether or not highlighting is enabled.
+function ListRow:SetHighlightEnabled(enabled)
+	self._state.highlightDisabled = not enabled
+end
+
 ---Adds a text element to the row.
 ---@param key string A key to identify the text element
 ---@return any

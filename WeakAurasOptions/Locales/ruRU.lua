@@ -340,6 +340,8 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["Distribute Vertically"] = "Распределить по вертикали"
 	L["Do not group this display"] = "Не группировать эту индикацию"
 	L["Do you want to ignore all future updates for this aura"] = "Вы хотите игнорировать все дальнейшие обновления для этой индикации?"
+	--[[Translation missing --]]
+	L["Do you want to stop ignoring all future updates for this aura"] = "Do you want to stop ignoring all future updates for this aura"
 	L["Documentation"] = "Документация"
 	L["Done"] = "Выполнено"
 	L["Drag to move"] = "Перетащите для перемещения"
@@ -550,6 +552,8 @@ Can use \ to escape -.]=] ] = [=[Формат записи: Имя, Имя-Иг�
 	L["Ignore out of checking range"] = "Не учитывать единицы вне зоны видимости"
 	L["Ignore Self"] = "Не учитывать себя"
 	L["Ignore updates"] = "Игнорировать обновления"
+	--[[Translation missing --]]
+	L["Ignore Wago updates"] = "Ignore Wago updates"
 	L["Ignored"] = "Не использован"
 	L["Ignored Aura Name"] = "Исключаемое название эффекта"
 	L["Ignored Exact Spell ID(s)"] = "Исключить ID заклинания"
@@ -906,7 +910,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Thickness"] = "Толщина"
 	L["This adds %raidMark as text replacements."] = "Добавляет строку %raidMark в качестве шаблона замены текста."
 	L["This adds %role, %roleIcon as text replacements. Does nothing if the unit is not a group member."] = "Добавляет строки %role, %roleIcon в качестве шаблонов замены текста. Не содержит данных, если единица не является участником группы или рейда."
-	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements and also allows filtering based on the tooltip content/values."] = "Добавляет строки %tooltip, %tooltip1, %tooltip2 и %tooltip3 в качестве шаблонов замены текста. Также позволяет выполнять фильтрацию на основе содержимого и значений подсказки."
+	--[[Translation missing --]]
+	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 and %tooltip4 as text replacements and also allows filtering based on the tooltip content/values."] = "This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 and %tooltip4 as text replacements and also allows filtering based on the tooltip content/values."
 	L[ [=[This aura contains custom Lua code.
 Make sure you can trust the person who sent it!]=] ] = [=[Индикация содержит пользовательский код Lua.
 Убедитесь, что вы можете доверять человеку, который ее отправил!]=]
@@ -1001,9 +1006,8 @@ It might not work correctly with your version!]=] ] = [=[Индикация бы
 	L["Y Rotation"] = "Поворот по Y"
 	L["Y Scale"] = "Масштаб по Y"
 	L["Yellow Rune"] = "Жёлтая руна"
-	L["Yes"] = "Да"
-	L["y-Offset"] = "Смещение по Y"
 	L["Y-Offset"] = "Смещение по Y"
+	L["y-Offset"] = "Смещение по Y"
 	L["You already have this group/aura. Importing will create a duplicate."] = "У вас уже есть эта индикация. При импорте будет создана копия."
 	L["You are about to delete %d aura(s). |cFFFF0000This cannot be undone!|r Would you like to continue?"] = [=[Вы собираетесь удалить %d |4индикацию:индикации:индикаций;.
 |cFFFF0000Это действие необратимо!|r Продолжить?]=]

@@ -27,6 +27,7 @@
 	local _UnitGroupRolesAssigned = DetailsFramework.UnitGroupRolesAssigned
 	local _GetSpellInfo = _detalhes.getspellinfo
 	local isWOTLK = DetailsFramework.IsWotLKWow()
+	local isERA = DetailsFramework.IsClassicWow()
 	local _tempo = time()
 	local _, Details222 = ...
 	_ = nil
@@ -2001,7 +2002,7 @@
 	end
 
 	function parser:heal_absorb(token, time, sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags, targetFlags2, spellId, spellName, spellSchool, shieldOwnerSerial, shieldOwnerName, shieldOwnerFlags, shieldOwnerFlags2, shieldSpellId, shieldName, shieldType, amount)
-		if (isWOTLK) then
+		if (isWOTLK or isERA) then
 			if (not amount) then
 				--melee
 				shieldOwnerSerial, shieldOwnerName, shieldOwnerFlags, shieldOwnerFlags2, shieldSpellId, shieldName, shieldType, amount = spellId, spellName, spellSchool, shieldOwnerSerial, shieldOwnerName, shieldOwnerFlags, shieldOwnerFlags2, shieldSpellId
@@ -5971,7 +5972,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		end
 	end
 
-	if(DetailsFramework.IsClassicWow()) then
+	if(isERA) then
 		eraNamedSpellsToID = {
 		["SPELL_PERIODIC_DAMAGE"] = true,
 		["SPELL_DAMAGE"] = true,
@@ -6481,6 +6482,38 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			end
 		else
 			return nil
+		end
+	end
+
+
+	function Details:GetUnitId(unitName)
+		unitName = unitName or self.nome
+		local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0", true)
+		if (openRaidLib) then
+			local unitId = openRaidLib.GetUnitID(unitName)
+			if (unitId) then
+				return unitId
+			end
+		end
+
+		if (IsInRaid()) then
+			for i = 1, GetNumGroupMembers() do
+				local unitId = "raid" .. i
+				if (GetUnitName(unitId, true) == unitName) then
+					return unitId
+				end
+			end
+
+		elseif (IsInGroup()) then
+			for i = 1, GetNumGroupMembers() -1 do
+				local unitId = "party" .. i
+				if (GetUnitName(unitId, true) == unitName) then
+					return unitId
+				end
+			end
+			if (UnitName("player") == unitName) then
+				return "player"
+			end
 		end
 	end
 

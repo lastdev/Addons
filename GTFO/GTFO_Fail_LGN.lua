@@ -848,6 +848,12 @@ GTFO.SpellID["226406"] = {
   tankSound = 0;
 };
 
+GTFO.SpellID["183100"] = {
+  --desc = "Avalanche (Mightstone Breaker)";
+  sound = 3;
+};
+
+
 -- *************
 -- * The Nexus *
 -- *************

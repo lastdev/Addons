@@ -1,6 +1,6 @@
 # Details!: Time Line (plugin)
 
-## [v10.0.7.113](https://github.com/Tercioo/TimeLine/tree/v10.0.7.113) (2023-04-06)
-[Full Changelog](https://github.com/Tercioo/TimeLine/compare/v10.0.5.112...v10.0.7.113) 
+## [v10.1.0.115](https://github.com/Tercioo/TimeLine/tree/v10.1.0.115) (2023-06-06)
+[Full Changelog](https://github.com/Tercioo/TimeLine/compare/v10.1.0.114...v10.1.0.115) 
 
-- ToC Update  
+- Fixed calling functions on an invalid combatObject; Code cleanup;  

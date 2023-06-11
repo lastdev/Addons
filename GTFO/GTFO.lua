@@ -24,10 +24,11 @@ GTFO = {
 		IgnoreOptions = { };
 		TrivialDamagePercent = 2; -- Minimum % of HP lost required for an alert to be trivial
 		SoundOverrides = { "", "", "", "" }; -- Override table for GTFO sounds
+		IgnoreSpellList = { };
 	};
-	Version = "5.1.4"; -- Version number (text format)
+	Version = "5.3"; -- Version number (text format)
 	VersionNumber = 0; -- Numeric version number for checking out-of-date clients (placeholder until client is detected)
-	RetailVersionNumber = 50104; -- Numeric version number for checking out-of-date clients (retail)
+	RetailVersionNumber = 50300; -- Numeric version number for checking out-of-date clients (retail)
 	ClassicVersionNumber = 50005; -- Numeric version number for checking out-of-date clients (Vanilla classic)
 	BurningCrusadeVersionNumber = 50000; -- Numeric version number for checking out-of-date clients (TBC classic)
 	WrathVersionNumber = 50005; -- Numeric version number for checking out-of-date clients (Wrath classic)
@@ -191,6 +192,7 @@ function GTFO_OnEvent(self, event, ...)
 			SoundChannel = GTFOData.SoundChannel or GTFO.DefaultSettings.SoundChannel;
 			IgnoreOptions = { };
 			SoundOverrides = { "", "", "", "" };
+			IgnoreSpellList = { };
 		};
 		
 		-- Load spell ignore options (player set)
@@ -215,6 +217,12 @@ function GTFO_OnEvent(self, event, ...)
 		if (GTFOData.SoundOverrides) then
 			for key, option in pairs(GTFOData.SoundOverrides) do
 				GTFO.Settings.SoundOverrides[key] = GTFOData.SoundOverrides[key] or "";
+			end
+		end
+		
+		if (GTFOData.IgnoreSpellList) then
+			for i, spellId in pairs(GTFOData.IgnoreSpellList) do
+				tinsert(GTFO.Settings.IgnoreSpellList, spellId);
 			end
 		end
 
@@ -488,6 +496,12 @@ function GTFO_OnEvent(self, event, ...)
 				end
 			end
 			if (GTFO.SpellID[SpellID]) then
+				if (tContains(GTFO.Settings.IgnoreSpellList, tonumber(SpellID))) then
+					-- Spell is on the custom ignore list
+					--GTFO_DebugPrint("Won't alert "..SpellName.." ("..SpellID..") - Player custom ignore option: "..GTFO.SpellID[SpellID].category);
+					return;						
+				end
+			
 				if (GTFO.SpellID[SpellID].category) then
 					if (GTFO.Settings.IgnoreOptions and GTFO.Settings.IgnoreOptions[GTFO.SpellID[SpellID].category]) then
 						-- Spell is being ignored completely
@@ -847,6 +861,8 @@ function GTFO_Command(arg1)
 		GTFO_Command_Vibrate();
 	elseif (Command == "HELP" or Command == "") then
 		GTFO_Command_Help();
+	elseif (Command == "IGNORE") then
+		GTFO_Command_IgnoreSpell(Description);
 	else
 		GTFO_Command_Help();
 	end
@@ -883,6 +899,53 @@ function GTFO_Command_Test(iSound)
 		end
 	end
 end
+
+function GTFO_Command_IgnoreSpell(iSpellId)
+	if (GTFO.ClassicMode) then
+		-- Classic doesn't use Spell IDs, so it's not supported
+		GTFO_ErrorPrint(GTFOLocal.UI_NotSupported_Classic);		
+		return;
+	end
+	
+	local sCommand = tostring(iSpellId):lower();
+	local spellId = tonumber(iSpellId) or 0;
+	if (sCommand == "" or sCommand == "nil") then
+		if (#GTFO.Settings.IgnoreSpellList > 0) then
+			GTFO_ChatPrint(GTFOLocal.UI_IgnoreSpell_List);
+			for i, IgnoredSpellId in pairs(GTFO.Settings.IgnoreSpellList) do
+				GTFO_ChatPrint("  "..IgnoredSpellId..": "..GetSpellLink(IgnoredSpellId));
+			end
+		else
+			GTFO_ChatPrint(GTFOLocal.UI_IgnoreSpell_None);
+		end
+		GTFO_ChatPrint(GTFOLocal.UI_IgnoreSpell_Help);
+	elseif (spellId > 0) then
+		local spellLink = GetSpellLink(spellId);
+		if (tContains(GTFO.Settings.IgnoreSpellList, spellId)) then
+			-- Remove spell ID
+			for i, IgnoredSpellId in pairs(GTFO.Settings.IgnoreSpellList) do
+				if (IgnoredSpellId == spellId) then
+					tremove(GTFO.Settings.IgnoreSpellList, i);
+					GTFO_ChatPrint(string.format(GTFOLocal.UI_IgnoreSpell_Remove,spellId,(spellLink or "")));
+					GTFO_SaveSettings();
+					return;
+				end
+			end
+		else
+			-- Add spell ID
+			if (not spellLink) then
+				GTFO_ErrorPrint(string.format(GTFOLocal.UI_IgnoreSpell_InvalidSpellId, spellId));	
+				return;
+			end
+			tinsert(GTFO.Settings.IgnoreSpellList, spellId);
+			GTFO_ChatPrint(string.format(GTFOLocal.UI_IgnoreSpell_Add,spellId,spellLink));
+			GTFO_SaveSettings();
+		end
+	else
+		GTFO_ErrorPrint("Invalid command.")
+	end
+end
+
 
 function GTFO_Command_SetCustomSound(iSound, sSound)
 	GTFO.Settings.SoundOverrides[iSound] = tostring(sSound or "");
@@ -1637,6 +1700,7 @@ function GTFO_Command_Help()
 	DEFAULT_CHAT_FRAME:AddMessage("|cFFEEEE00/gtfo test2|r -- "..GTFOLocal.Help_TestLow, 0.25, 1.0, 0.75);
 	DEFAULT_CHAT_FRAME:AddMessage("|cFFEEEE00/gtfo test3|r -- "..GTFOLocal.Help_TestFail, 0.25, 1.0, 0.75);
 	DEFAULT_CHAT_FRAME:AddMessage("|cFFEEEE00/gtfo test4|r -- "..GTFOLocal.Help_TestFriendlyFire, 0.25, 1.0, 0.75);
+	DEFAULT_CHAT_FRAME:AddMessage("|cFFEEEE00/gtfo ignore|r -- "..GTFOLocal.Help_IgnoreSpell, 0.25, 1.0, 0.75);
 end
 
 function GTFO_Option_HighTest()
@@ -2076,6 +2140,7 @@ function GTFO_SaveSettings()
 		end
 	end
 	GTFOData.SoundOverrides = { "", "", "", "" };
+	GTFOData.IgnoreSpellList = { };
 	getglobal("GTFO_HighResetButton"):Hide();
 	getglobal("GTFO_LowResetButton"):Hide();
 	getglobal("GTFO_FailResetButton"):Hide();
@@ -2105,6 +2170,12 @@ function GTFO_SaveSettings()
 		GTFO.Settings.OriginalVolume = GTFO.Settings.Volume;
 		GTFO.Settings.OriginalTrivialDamagePercent = GTFO.Settings.TrivialDamagePercent;
 		GTFO.Settings.OriginalChannelId = GTFO_GetCurrentSoundChannelId(GTFO.Settings.SoundChannel);
+	end
+	
+	if (not GTFO.ClassicMode and #GTFO.Settings.IgnoreSpellList > 0) then
+		for i, spellId in pairs(GTFO.Settings.IgnoreSpellList) do
+			tinsert(GTFOData.IgnoreSpellList, spellId);
+		end
 	end
 	
 	if (GTFO.UIRendered) then
@@ -2152,6 +2223,7 @@ function GTFO_SetDefaults()
 	end
 	GTFO.Settings.IgnoreOptions = GTFO.DefaultSettings.IgnoreOptions;
 	GTFO.Settings.SoundOverrides = GTFO.DefaultSettings.SoundOverrides;
+	GTFO.Settings.IgnoreSpellList = GTFO.DefaultSettings.IgnoreSpellList;
 	GTFO_SaveSettings();
 end
 
@@ -2221,6 +2293,24 @@ function GTFO_GetDebuffSpellIndex(target, iSpellID)
 		end
 	end
 	return nil;
+end
+
+function GTFO_BuffTime(target, iSpellID)
+	local index = GTFO_GetBuffSpellIndex(target, iSpellID);
+	if (index) then
+		return tonumber(select(6, UnitBuff(target, index)) - GetTime()) or 0;
+	else
+		return 0;
+	end
+end
+
+function GTFO_DebuffTime(target, iSpellID)
+	local index = GTFO_GetDebuffSpellIndex(target, iSpellID);
+	if (index) then
+		return tonumber(select(6, UnitDebuff(target, index)) - GetTime()) or 0;
+	else
+		return 0;
+	end
 end
 
 function GTFO_GetAlertID(alert)
@@ -2357,6 +2447,18 @@ function GTFO_AddEvent(eventName, eventTime, eventCode, eventRepeat)
 			GTFOFrame:SetScript("OnUpdate", GTFO_OnUpdate);
 			--GTFO_DebugPrint("Event update checking enabled.");
 		end
+end
+
+function GTFO_RemoveEvent(eventName)
+	if (#GTFO.Events > 0) then
+		for index, event in pairs(GTFO.Events) do
+			if (event.Name == eventName) then
+				--GTFO_DebugPrint("Removed event: "..tostring(eventName));
+				tremove(GTFO.Events, index);
+				return;
+			end
+		end
+	end
 end
 
 function GTFO_FindEvent(eventName)

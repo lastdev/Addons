@@ -45,7 +45,7 @@ function AuctionUI.OnInitialize()
 		:AddKey("global", "coreOptions", "protectAuctionHouse")
 	UIParent:UnregisterEvent("AUCTION_HOUSE_SHOW")
 	DefaultUI.RegisterAuctionHouseVisibleCallback(private.AuctionFrameInit, true)
-	DefaultUI.RegisterAuctionHouseVisibleCallback(private.HideAuctionFrame, false)
+	DefaultUI.RegisterAuctionHouseVisibleCallback(private.AuctionFrameHidden, false)
 	ItemLinked.RegisterCallback(private.ItemLinkedCallback, true)
 	local loadTimer = Delay.CreateTimer("AUCTION_UI_LOAD_BLIZZ", function() LoadAddOn(Environment.IsRetail() and "Blizzard_AuctionHouseUI" or "Blizzard_AuctionUI") end)
 	loadTimer:RunForTime(1)
@@ -198,12 +198,6 @@ function private.AuctionFrameInit()
 				self:UnregisterEvent("AUCTION_HOUSE_SHOW_FORMATTED_NOTIFICATION")
 				self:UnregisterEvent("AUCTION_HOUSE_SHOW_COMMODITY_WON_NOTIFICATION")
 			end)
-			local origOnHide = AuctionHouseFrame:GetScript("OnHide")
-			AuctionHouseFrame:SetScript("OnHide", function(self)
-				if private.settings.showDefault then
-					origOnHide(self)
-				end
-			end)
 		else
 			local tabId = private.defaultFrame.numTabs + 1
 			local tab = CreateFrame("Button", "AuctionFrameTab"..tabId, private.defaultFrame, tabTemplateName)
@@ -223,8 +217,8 @@ function private.AuctionFrameInit()
 			UIParent_OnEvent(UIParent, "AUCTION_HOUSE_SHOW")
 		end
 	else
-		if Environment.HasFeature(Environment.FEATURES.C_AUCTION_HOUSE) then
-			HideUIPanel(private.defaultFrame)
+		if Environment.IsRetail() then
+			private.defaultFrame:SetScale(0.001)
 		end
 		PlaySound(SOUNDKIT.AUCTION_WINDOW_OPEN)
 		private.ShowAuctionFrame()
@@ -243,12 +237,25 @@ function private.ShowAuctionFrame()
 	end
 end
 
+function private.AuctionFrameHidden()
+	if not private.frame then
+		return
+	end
+	if Environment.IsRetail() then
+		private.defaultFrame:SetScale(1)
+	end
+	private.HideAuctionFrame()
+end
+
 function private.HideAuctionFrame()
 	if not private.frame then
 		return
 	end
 	private.frame:Hide()
-	assert(not private.frame)
+	-- For some reason, on retail the OnHide callback isn't called immediately
+	if not Environment.IsRetail() then
+		assert(not private.frame)
+	end
 	for _, callback in ipairs(private.updateCallbacks) do
 		callback()
 	end
@@ -261,7 +268,7 @@ function private.CreateMainFrame()
 		:SetSettingsContext(private.settings, "frame")
 		:SetMinResize(MIN_FRAME_SIZE.width, MIN_FRAME_SIZE.height)
 		:SetStrata("HIGH")
-		:SetProtected(private.settings.protectAuctionHouse)
+		:SetProtected(not Environment.IsRetail() and private.settings.protectAuctionHouse)
 		:AddPlayerGold()
 		:AddAppStatusIcon()
 		:AddSwitchButton(private.SwitchBtnOnClick)
@@ -288,7 +295,8 @@ function private.BaseFrameOnHide(frame)
 	private.frame = nil
 	if not private.isSwitching then
 		PlaySound(SOUNDKIT.AUCTION_WINDOW_CLOSE)
-		if Environment.HasFeature(Environment.FEATURES.C_AUCTION_HOUSE) then
+		if Environment.IsRetail() then
+			private.defaultFrame:SetScale(1)
 			C_AuctionHouse.CloseAuctionHouse()
 		else
 			CloseAuctionHouse()
@@ -301,19 +309,20 @@ function private.SwitchBtnOnClick(button)
 	private.isSwitching = true
 	private.settings.showDefault = true
 	private.HideAuctionFrame()
+	private.defaultFrame:SetScale(1)
 	UIParent_OnEvent(UIParent, "AUCTION_HOUSE_SHOW")
 	private.isSwitching = false
 end
 
 function private.TSMTabOnClick()
 	private.settings.showDefault = false
-	if not Environment.HasFeature(Environment.FEATURES.C_AUCTION_HOUSE) then
+	if not Environment.IsRetail() then
 		ClearCursor()
 		ClickAuctionSellItemButton(AuctionsItemButton, "LeftButton")
 	end
 	ClearCursor()
-	if Environment.HasFeature(Environment.FEATURES.C_AUCTION_HOUSE) then
-		HideUIPanel(private.defaultFrame)
+	if Environment.IsRetail() then
+		private.defaultFrame:SetScale(0.001)
 	else
 		-- Replace CloseAuctionHouse() with a no-op while hiding the AH frame so we don't stop interacting with the AH NPC
 		local origCloseAuctionHouse = CloseAuctionHouse

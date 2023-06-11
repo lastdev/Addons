@@ -384,6 +384,8 @@ Off Screen]=] ] = "El aura está fuera de la pantalla"
 	--[[Translation missing --]]
 	L["Do not group this display"] = "Do not group this display"
 	L["Do you want to ignore all future updates for this aura"] = "¿Quieres ignorar todas las actualizaciones futuras para esta aura?"
+	--[[Translation missing --]]
+	L["Do you want to stop ignoring all future updates for this aura"] = "Do you want to stop ignoring all future updates for this aura"
 	L["Documentation"] = "Documentación"
 	L["Done"] = "Hecho"
 	L["Drag to move"] = "Arrastra para mover"
@@ -598,6 +600,8 @@ Con |cFF00CC00>= 0|r se activará siempre.]=]
 	L["Ignore out of checking range"] = "Ignorar fuera de rango de comprobación"
 	L["Ignore Self"] = "Ignorarse a sí mismo"
 	L["Ignore updates"] = "Ignorar actualizaciones"
+	--[[Translation missing --]]
+	L["Ignore Wago updates"] = "Ignore Wago updates"
 	L["Ignored"] = "Ignorar"
 	L["Ignored Aura Name"] = "Nombre del aura ignorado"
 	--[[Translation missing --]]
@@ -1087,7 +1091,7 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	--[[Translation missing --]]
 	L["This adds %role, %roleIcon as text replacements. Does nothing if the unit is not a group member."] = "This adds %role, %roleIcon as text replacements. Does nothing if the unit is not a group member."
 	--[[Translation missing --]]
-	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements and also allows filtering based on the tooltip content/values."] = "This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements and also allows filtering based on the tooltip content/values."
+	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 and %tooltip4 as text replacements and also allows filtering based on the tooltip content/values."] = "This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 and %tooltip4 as text replacements and also allows filtering based on the tooltip content/values."
 	--[[Translation missing --]]
 	L[ [=[This aura contains custom Lua code.
 Make sure you can trust the person who sent it!]=] ] = [=[This aura contains custom Lua code.
@@ -1245,11 +1249,9 @@ It might not work correctly with your version!]=]
 	--[[Translation missing --]]
 	L["Yellow Rune"] = "Yellow Rune"
 	--[[Translation missing --]]
-	L["Yes"] = "Yes"
+	L["Y-Offset"] = "Y-Offset"
 	--[[Translation missing --]]
 	L["y-Offset"] = "y-Offset"
-	--[[Translation missing --]]
-	L["Y-Offset"] = "Y-Offset"
 	--[[Translation missing --]]
 	L["You already have this group/aura. Importing will create a duplicate."] = "You already have this group/aura. Importing will create a duplicate."
 	--[[Translation missing --]]

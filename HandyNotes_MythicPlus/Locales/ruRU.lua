@@ -2,7 +2,6 @@ local myname, ns = ...
 
 local L = LibStub("AceLocale-3.0"):NewLocale(myname, "ruRU")
 if not L then return end
-
 L["AA_black_drake"] = "|cff00ff7f+5% к критическому удару|r"
 L["AA_black_drake_desc"] = "|cffff0025Чёрный Дракон|r"
 L["AA_blue_drake"] = "|cff00ff7f+584 к искусности|r"
@@ -21,6 +20,9 @@ L["BH_skip"] = "|cff00ff7fПропуск|r"
 L["BH_skip_desc"] = "|cffff0025Вы можете пройти пешком / плавать в воде.|r"
 L["COS_percentage"] = "|cff00ffffНужно 93.68% перед убийством Советника Меландра|r"
 L["FH_percentage"] = "|cff00ffffНужно 82.25% до моста|r"
+L["HOI_door"] = "|cff00ffffОткрывается после смерти первого босса|r"
+L["HOI_shortcut_frog"] = "|cff00ffffКратчайший путь к Голиафу-проглоту (лягушка)|r"
+L["HOI_shortcut_icelady"] = "|cff00ffffКратчайший путь к Каджин Непреклонная (ледяная леди)|r"
 L["HOV_bjorn"] = "|cff00ff7fКороль Бьорн|r"
 L["HOV_bjorn_desc"] = "|cffff0025'Гибельный кинжал' - бросает в случайно выбранную цель кинжал, нанося 37472 ед. физического урона и уменьшая исцеляющие эффекты на 50% на 15 сек.|r"
 L["HOV_haldor"] = "|cff00ff7fКороль Галдор|r"
@@ -30,10 +32,8 @@ L["HOV_ranulf"] = "|cff00ff7fКороль Ранульф|r"
 L["HOV_ranulf_desc"] = "|cffff0025'Буйный вопль' - внезапно испускает вопль, наносящий 44085 ед. физического урона и прерывающий применение заклинаний на 3 сек. Нужно прервать каст|r"
 L["HOV_tor"] = "|cff00ff7fКороль Тор|r"
 L["HOV_tor_desc"] = "|cffff0025'Зов предков' - призывает предка, который движется к заклинателю. Когда предок добирается до точки назначения, заклинатель поглощает его силу, восстанавливая 50% максимального запаса здоровья|r"
---[[Translation missing --]]
---[[ L["NELT_percentage"] = "88.57% Required before bridge"--]] 
---[[Translation missing --]]
---[[ L["NELT_percentage_desc"] = "You can compensate missing % by pulling mobs around the last boss area"--]] 
+L["NELT_percentage"] = "|cff00ffff88.57% требуется перед мостом|r"
+L["NELT_percentage_desc"] = "|cffff0025Вы можете компенсировать недостающий %, спуллив мобов вокруг области с последним боссом|r"
 L["NO_percentage"] = "|cff00ffffНужно 93.8% для прохода к Хану Балакару|r"
 L["Options"] = "Настройки"
 L["RS_firedragon"] = "|cff00ff7fОгнезев|r"
@@ -47,6 +47,9 @@ L["Settings_Icons"] = "Настройки значка"
 L["Settings_iconscale"] = "Масштаб значка"
 L["Settings_iconscale_desc"] = "Масштаб значков"
 --[[Translation missing --]]
---[[ L["ULD_percentage"] = "57.22% Before event"--]] 
---[[Translation missing --]]
---[[ L["VP_slipstream"] = "Use the slipstream to teleport to the other marker"--]] 
+--[[ L["ULD_mining"] = "A Miner with 25 skill points can mine the deposit, granting 10% out of combat movement speed per deposit (3 in total, up to 30% movement speed)"--]] 
+L["ULD_percentage"] = "|cff00ffff57.22% до события|r"
+L["UNDR_skip"] = "|cff00ffffВы можете использовать кратчайший путь после смерти второго босса|r"
+L["VP_slipstream"] = "|cff00ffffИспользуйте скользящий поток, чтобы телепортироваться к другому маркеру|r"
+L["VP_slipstream_desc1"] = "|cffff0025После поражения Эртана|r"
+L["VP_slipstream_desc2"] = "|cffff0025После поражения Альтаирия|r"

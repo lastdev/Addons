@@ -81,7 +81,7 @@ function Simulationcraft:OnInitialize()
   self.db = LibStub("AceDB-3.0"):New("SimulationCraftDB", {
     profile = {
       minimap = {
-        hide = false,
+        hide = true,
       },
       frame = {
         point = "CENTER",
@@ -96,8 +96,15 @@ function Simulationcraft:OnInitialize()
   });
   LibDBIcon:Register("SimulationCraft", SimcLDB, self.db.profile.minimap)
   Simulationcraft:UpdateMinimapButton()
-
   Simulationcraft:RegisterChatCommand('simc', 'HandleChatCommand')
+  AddonCompartmentFrame:RegisterAddon({
+    text = "SimulationCraft",
+    icon = "Interface\\AddOns\\SimulationCraft\\logo",
+    notCheckable = true,
+    func = function()
+      Simulationcraft:PrintSimcProfile(false, false, false)
+    end,
+  })
 end
 
 function Simulationcraft:OnEnable()
@@ -369,7 +376,8 @@ local function GetExportString(configID)
   if not active then
     -- comment out the talents and then prepend a comment with the loadout name
     str = '# ' .. str
-    str = '# Saved Loadout: ' .. configInfo.name .. '\n' .. str
+    -- Make sure any pipe characters get unescaped, otherwise breaks checksums
+    str = '# Saved Loadout: ' .. configInfo.name:gsub("||", "|") .. '\n' .. str
   end
 
   return str
@@ -988,7 +996,7 @@ function Simulationcraft:PrintSimcProfile(debugOutput, noBags, showMerchant, lin
               end
             end
           else
-            print("Warning: SimC was unable to retrieve an item name from your Great Vault, try again")
+            print("Warning: SimC was unable to retrieve info for item " .. rewardInfo.id .. " from your Great Vault, try again")
           end
         end
       end

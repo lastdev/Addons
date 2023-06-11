@@ -102,7 +102,6 @@ function ns.StartEventHandler()
         if Hekili.PendingSpecializationChange then
             Hekili:SpecializationChanged()
             Hekili.PendingSpecializationChange = false
-
             -- Spec updates are expensive; exit and do other work in the next frame.
             return
         end
@@ -1115,25 +1114,22 @@ RegisterUnitEvent( "UNIT_SPELLCAST_SUCCEEDED", "player", "target", function( eve
     if unit == "player" then
         local ability = class.abilities[ spellID ]
 
-        if ability and state.holds[ ability.key ] then
-            Hekili:RemoveHold( ability.key, true )
+        if ability then
+            Hekili:ForceUpdate( event, true )
+            if state.holds[ ability.key ] then Hekili:RemoveHold( ability.key, true ) end
         end
     end
-
-    Hekili:ForceUpdate( event, true )
 end )
 
 
 RegisterUnitEvent( "UNIT_SPELLCAST_START", "player", "target", function( event, unit, cast, spellID )
     if unit == "player" then
         local ability = class.abilities[ spellID ]
-
-        if ability and state.holds[ ability.key ] then
-            Hekili:RemoveHold( ability.key, true )
+        if ability then
+            Hekili:ForceUpdate( event )
+            if state.holds[ ability.key ] then Hekili:RemoveHold( ability.key, true ) end
         end
     end
-
-    Hekili:ForceUpdate( event )
 end )
 
 
@@ -1178,45 +1174,30 @@ end
 
 
 RegisterUnitEvent( "UNIT_SPELLCAST_CHANNEL_START", "player", nil, function( event, unit, cast, spellID )
-    if unit == "player" then
-        local ability = class.abilities[ spellID ]
+    local ability = class.abilities[ spellID ]
 
-        if ability then
-            if ability.special then
-
-            end
-
-            if state.holds[ ability.key ] then
-                Hekili:RemoveHold( ability.key, true )
-            end
-        end
+    if ability then
+        Hekili:ForceUpdate( event )
+        if state.holds[ ability.key ] then Hekili:RemoveHold( ability.key, true ) end
     end
-
-    Hekili:ForceUpdate( event )
 end )
 
 
-RegisterUnitEvent( "UNIT_SPELLCAST_CHANNEL_STOP", "player", "target", function( event, unit, cast, spellID )
-    if unit == "player" then
-        local ability = class.abilities[ spellID ]
-
-        if ability and state.holds[ ability.key ] then
-            Hekili:RemoveHold( ability.key, true )
-        end
+RegisterUnitEvent( "UNIT_SPELLCAST_CHANNEL_STOP", "player", nil, function( event, unit, cast, spellID )
+    local ability = class.abilities[ spellID ]
+    if ability then
+        Hekili:ForceUpdate( event )
+        if state.holds[ ability.key ] then Hekili:RemoveHold( ability.key, true ) end
     end
-    Hekili:ForceUpdate( event )
 end )
 
 
-RegisterUnitEvent( "UNIT_SPELLCAST_STOP", "player", "target", function( event, unit, cast, spellID )
-    if unit == "player" then
-        local ability = class.abilities[ spellID ]
-
-        if ability and state.holds[ ability.key ] then
-            Hekili:RemoveHold( ability.key, true )
-        end
+RegisterUnitEvent( "UNIT_SPELLCAST_STOP", "player", nil, function( event, unit, cast, spellID )
+    local ability = class.abilities[ spellID ]
+    if ability then
+        Hekili:ForceUpdate( event )
+        if state.holds[ ability.key ] then Hekili:RemoveHold( ability.key, true ) end
     end
-    Hekili:ForceUpdate( event )
 end )
 
 
@@ -1242,10 +1223,10 @@ RegisterUnitEvent( "UNIT_SPELLCAST_DELAYED", "player", nil, function( event, uni
                     travel = ability.flightTime
 
                 elseif target then
-                    local unit = Hekili:GetUnitByGUID( target ) or Hekili:GetNameplateUnitForGUID( target ) or "target"
+                    local u = Hekili:GetUnitByGUID( target ) or Hekili:GetNameplateUnitForGUID( target ) or "target"
 
-                    if unit then
-                        local _, maxR = RC:GetRange( unit )
+                    if u then
+                        local _, maxR = RC:GetRange( u )
                         maxR = maxR or state.target.distance
                         travel = maxR / ability.velocity
                     end
@@ -1263,8 +1244,6 @@ end )
 
 -- TODO:  This should be changed to stash this information and then commit it on next UNIT_SPELLCAST_START or UNIT_SPELLCAST_SUCCEEDED.
 RegisterEvent( "UNIT_SPELLCAST_SENT", function ( event, unit, target_name, castID, spellID )
-    if not UnitIsUnit( "player", unit ) then return end
-
     if target_name and UnitGUID( target_name ) then
         state.cast_target = UnitGUID( target_name )
         return
@@ -1395,14 +1374,14 @@ do
     local function StoreInstanceInfo( aura )
         local id = aura.spellId
         local model = class.auras[ id ]
-        instanceDB[ aura.auraInstanceID ] = aura.isBossAura or aura.canApplyAura or aura.isFromPlayerOrPlayerPet or ( model and model.shared )
+
+        instanceDB[ aura.auraInstanceID ] = aura.isBossAura or aura.isStealable or model and ( model.shared or model.used and aura.isFromPlayerOrPlayerPet )
     end
 
     RegisterUnitEvent( "UNIT_AURA", "player", "target", function( event, unit, data )
         local isPlayer = ( unit == "player" )
         instanceDB = isPlayer and playerInstances or targetInstances
 
-        local forceUpdateNeeded = false
 
         if data.isFullUpdate then
             wipe( instanceDB )
@@ -1415,12 +1394,14 @@ do
             return
         end
 
+        local forceUpdateNeeded = false
+
         if data.addedAuras and #data.addedAuras > 0 then
             for _, aura in ipairs( data.addedAuras ) do
                 local id = aura.spellId
                 local model = class.auras[ id ]
 
-                local ofConcern = not aura or ( aura.isBossAura or aura.canApplyAura or aura.isFromPlayerOrPlayerPet ) or ( model and model.shared )
+                local ofConcern = aura.isBossAura or aura.isStealable or model and ( model.shared or model.used and aura.isFromPlayerOrPlayerPet )
                 instanceDB[ aura.auraInstanceID ] = ofConcern
 
                 if ofConcern then
@@ -1432,12 +1413,15 @@ do
         if data.updatedAuraInstanceIDs and #data.updatedAuraInstanceIDs > 0 then
             for _, instance in ipairs( data.updatedAuraInstanceIDs ) do
                 local aura = GetAuraDataByAuraInstanceID( unit, instance )
+                local ofConcern = false
 
-                local id = aura and aura.spellId
-                local model = class.auras[ id ]
+                if aura then
+                    local id = aura.spellId
+                    local model = class.auras[ id ]
 
-                local ofConcern = not aura or ( aura.isBossAura or aura.canApplyAura or aura.isFromPlayerOrPlayerPet ) or ( model and model.shared )
-                instanceDB[ instance ] = ofConcern
+                    ofConcern = aura.isBossAura or aura.isStealable or model and ( model.shared or model.used and aura.isFromPlayerOrPlayerPet )
+                    instanceDB[ instance ] = ofConcern
+                end
 
                 if ofConcern then
                     forceUpdateNeeded = true
@@ -1452,10 +1436,9 @@ do
             end
         end
 
-        if forceUpdateNeeded then
-            state[ unit ].updated = true
-            Hekili:ForceUpdate( event )
-        end
+        state[ unit ].updated = true
+
+        if forceUpdateNeeded then Hekili:ForceUpdate( event ) end
     end )
 
     RegisterEvent( "PLAYER_TARGET_CHANGED", function( event )

@@ -410,8 +410,8 @@ local UnitAuraEventHandlerValidation = function (unit, isFullUpdate, updatedAura
 	end
 	
 	--resets buffs and debuffs if not using aura frame 2 (for now, until partial clear is implemented)
-	hasBuff = not DB_AURA_SEPARATE_BUFFS and hasDebuff or hasBuff 
-	hasDebuff = not DB_AURA_SEPARATE_BUFFS and hasBuff or hasDebuff
+	hasBuff = not DB_AURA_SEPARATE_BUFFS and (hasBuff or hasDebuff) or hasBuff 
+	hasDebuff = not DB_AURA_SEPARATE_BUFFS and (hasBuff or hasDebuff) or hasDebuff
 	
 	--ViragDevTool_AddData({unit = unit, needsUpdate=needsUpdate, hasBuff=hasBuff, hasDebuff=hasDebuff}, "Plater_UNIT_AURA return")
 	return needsUpdate, hasBuff, hasDebuff
@@ -466,7 +466,7 @@ local UnitAuraEventHandler = function (_, event, arg1, arg2, arg3, ...)
 	if event == "UNIT_AURA" then
 		if IS_NEW_UNIT_AURA_AVAILABLE then --for 10.0
 			local unit, updatedAuras = arg1, arg2
-			--ViragDevTool_AddData({unit = unit, updatedAuras = updatedAuras}, "Plater_UNIT_AURA")
+			--ViragDevTool_AddData({unit = unit, updatedAuras = updatedAuras}, "Plater_UNIT_AURA - " .. unit)
 			if unit and UnitAuraEventHandlerValidUnits[unit] then
 				UpdateUnitAuraCacheData(unit, updatedAuras)
 			end
@@ -478,7 +478,8 @@ local UnitAuraEventHandler = function (_, event, arg1, arg2, arg3, ...)
 				--ViragDevTool_AddData({unit = unit, isFullUpdate = isFullUpdate, updatedAuras = updatedAuras, needsUpdate = needsUpdate, hasBuff = hasBuff, hasDebuff = hasDebuff, existing=CopyTable(UnitAuraEventHandlerData[unit] or {})}, "Plater_UNIT_AURA_AFTER")
 				if needsUpdate then
 					local existingData = UnitAuraEventHandlerData[unit] or { hasBuff = false, hasDebuff = false }
-					UnitAuraEventHandlerData[unit] = { hasBuff = existingData.hasBuff or hasBuff, hasDebuff = existingData.hasDebuff or hasDebuff }
+					UpdateUnitAuraCacheData(unit, nil)
+					UnitAuraEventHandlerData[unit] = { hasBuff = existingData.hasBuff or hasBuff or false, hasDebuff = existingData.hasDebuff or hasDebuff or false }
 				end
 			end
 		end
@@ -492,6 +493,8 @@ UnitAuraEventHandlerFrame:RegisterEvent ("UNIT_AURA")
 function Plater.RemoveFromAuraUpdate (unit)
 	if not unit then return end
 	UnitAuraEventHandlerValidUnits[unit] = nil
+	UnitAuraCacheData[unit] = nil
+	UnitAuraEventHandlerData[unit] = nil
 end
 
 function Plater.AddToAuraUpdate (unit)
@@ -513,11 +516,14 @@ UpdateUnitAuraCacheData = function (unit, updatedAuras)
 		UnitAuraCacheData[unit] = unitCacheData
 	end
 	
-	if updatedAuras == nil or updatedAuras.isFullUpdate or unitCacheData.isFullUpdate then
+	if updatedAuras == nil or updatedAuras.isFullUpdate then
 		UnitAuraCacheData[unit] = {}
 		UnitAuraCacheData[unit].buffs = {}
 		UnitAuraCacheData[unit].debuffs = {}
-		UnitAuraCacheData[unit].isFullUpdate = true
+		UnitAuraCacheData[unit].buffsChanged = true
+		UnitAuraCacheData[unit].debuffsChanged = true
+		UnitAuraCacheData[unit].isFullUpdateHelp = (updatedAuras == nil and true) or updatedAuras.isFullUpdate or false
+		UnitAuraCacheData[unit].isFullUpdateHarm = (updatedAuras == nil and true) or updatedAuras.isFullUpdate or false
 		UnitAuraEventHandlerData[unit] = { hasBuff = true, hasDebuff = true }
 		return
 	end
@@ -556,15 +562,22 @@ UpdateUnitAuraCacheData = function (unit, updatedAuras)
 	end
 	
 	local existingData = UnitAuraEventHandlerData[unit] or { hasBuff = false, hasDebuff = false }
-	UnitAuraEventHandlerData[unit] = { hasBuff = existingData.hasBuff or unitCacheData.buffsChanged, hasDebuff = existingData.hasDebuff or unitCacheData.debuffsChanged }
+	local hasDebuff = existingData.hasDebuff or unitCacheData.debuffsChanged or not DB_AURA_SEPARATE_BUFFS or false
+	local hasBuff = existingData.hasBuff or unitCacheData.buffsChanged or not DB_AURA_SEPARATE_BUFFS or false
+	UnitAuraEventHandlerData[unit] = { hasBuff = hasBuff, hasDebuff = hasDebuff }
 end
 
 local function getUnitAuras(unit, filter)
 	if not unit then return end
 	
-	local unitCacheData = UnitAuraCacheData[unit]
+	local isHarmful = string.find(filter or "HARMFUL", "HARMFUL") and true or false
+	local isHelpful = string.find(filter or "HELPFUL", "HELPFUL") and true or false
 	
-	if unitCacheData and not unitCacheData.isFullUpdate then --new aura event
+	local unitCacheData = UnitAuraCacheData[unit]
+	--ViragDevTool_AddData({unitCacheData, filter = filter, isFullUpdateHarm = unitCacheData.isFullUpdateHarm, isFullUpdateHelp = unitCacheData.isFullUpdateHelp, update = ((isHarmful and  not unitCacheData.isFullUpdateHarm) or (isHelpful and not unitCacheData.isFullUpdateHelp))}, "getUnitAuras - " .. unit)
+	
+	if unitCacheData and ((isHarmful and  not unitCacheData.isFullUpdateHarm) or (isHelpful and not unitCacheData.isFullUpdateHelp)) then --new aura event
+		Plater.StartLogPerformanceCore("Plater-Core", "Update", "UpdateAuras - getUnitAuras - short")
 		-- debuffs
 		if unitCacheData.debuffsChanged then
 			local tmpDebuffs = {}
@@ -593,18 +606,19 @@ local function getUnitAuras(unit, filter)
 			unitCacheData.buffsChanged = false
 		end
 		
+		Plater.EndLogPerformanceCore("Plater-Core", "Update", "UpdateAuras - getUnitAuras - short")
 		return unitCacheData
 	end
 	
-	
 	if not filter then return end --old code requires this.
 	unitCacheData = unitCacheData or {debuffs = {}, buffs = {}}
+	UnitAuraCacheData[unit] = unitCacheData
 	
 	-- full updates and old way here
-	local isHarmful = string.find(filter, "HARMFUL") and true or false
-	local isHelpful = string.find(filter, "HELPFUL") and true or false
 	local filterCache = (isHarmful and unitCacheData.debuffs) or (isHelpful and unitCacheData.buffs) or nil
 	if not filterCache then return end
+	
+	Plater.StartLogPerformanceCore("Plater-Core", "Update", "UpdateAuras - getUnitAuras - long")
 	
 	local continuationToken
 	local debuffIndex = 0
@@ -668,7 +682,11 @@ local function getUnitAuras(unit, filter)
 		end
 	until continuationToken == nil
 	
+	Plater.EndLogPerformanceCore("Plater-Core", "Update", "UpdateAuras - getUnitAuras - long")
 	
+	-- done the update?
+	if unitCacheData.isFullUpdateHelp and isHelpful then unitCacheData.isFullUpdateHelp = false end
+	if unitCacheData.isFullUpdateHarm and isHarmful then unitCacheData.isFullUpdateHarm = false end
 	return unitCacheData
 end
 
@@ -843,6 +861,9 @@ end
 							auraIconFrame.InUse = true --don't play animation
 							Plater.AddAura(buffFrame, auraIconFrame, -1, spellName.."_player_ghost", spellIcon, 1, "DEBUFF", 0, 0, "player", false, false, spellId, false, false, false, false, "DEBUFF", 1)
 							auraIconFrame:EnableMouse (false) --don't use tooltips, as there is no real aura
+							if IS_WOW_PROJECT_MAINLINE then
+								auraIconFrame:EnableMouseMotion (false) --don't use tooltips, as there is no real aura
+							end
 							auraIconFrame.IsGhostAura = true
 							Plater.Auras.GhostAuras.ApplyAppearance(auraIconFrame, spellName.."_player_ghost", spellIcon, spellId)
 							nameplateGhostAuraCache[spellName.."_player_ghost"] = true --this is shown as ghost aura
@@ -1149,6 +1170,9 @@ end
 		newIcon.Cooldown:SetPoint ("center", 0, -1)
 		newIcon.Cooldown:SetAllPoints()
 		newIcon.Cooldown:EnableMouse (false)
+		if IS_WOW_PROJECT_MAINLINE then
+			newIcon.Cooldown:EnableMouseMotion (false)
+		end
 		newIcon.Cooldown:SetHideCountdownNumbers (true)
 		newIcon.Cooldown:Hide()
 
@@ -1176,6 +1200,9 @@ end
 		newIcon.CountFrame = CreateFrame ("frame", "$parentCountFrame", newIcon, BackdropTemplateMixin and "BackdropTemplate")
 		newIcon.CountFrame:SetAllPoints()
 		newIcon.CountFrame:EnableMouse (false)
+		if IS_WOW_PROJECT_MAINLINE then
+			newIcon.CountFrame:EnableMouseMotion (false)
+		end
 		newIcon.CountFrame.Count = newIcon.CountFrame:CreateFontString (nil, "artwork", "NumberFontNormalSmall")
 		newIcon.CountFrame.Count:SetJustifyH ("right")
 		newIcon.CountFrame.Count:SetPoint ("bottomright", 3, -2)
@@ -1249,6 +1276,8 @@ end
 	
 	--an aura is about to be added in the nameplate, need to get an icon for it ~geticonaura ~icon
 	function Plater.GetAuraIcon (self, isBuff)
+		Plater.StartLogPerformanceCore("Plater-Core", "Update", "UpdateAuras - GetAuraIcon")
+	
 		--self parent = NamePlate_X_UnitFrame
 		--self = BuffFrame
 		
@@ -1352,6 +1381,8 @@ end
 		auraIconFrame:SetAlpha(1)
 		auraIconFrame.Icon:SetDesaturated(false)
 		auraIconFrame.Cooldown:Show()
+		
+		Plater.EndLogPerformanceCore("Plater-Core", "Update", "UpdateAuras - GetAuraIcon")
 
 		return auraIconFrame, self, self.NextAuraIcon-1
     end
@@ -1362,6 +1393,8 @@ end
 	--dispelName is the UnitAura return value for the auraType ("" is enrage, nil/"none" for unspecified and "Disease", "Poison", "Curse", "Magic" for other types. -Continuity/Ariani
 	--self is .BuffFrame or .BuffFrame2
 	function Plater.AddAura (self, auraIconFrame, i, spellName, icon, applications, auraType, duration, expirationTime, sourceUnit, isStealable, nameplateShowPersonal, spellId, isBuff, isShowAll, isDebuff, isPersonal, dispelName, modRate) --~addaura ãddaura
+		Plater.StartLogPerformanceCore("Plater-Core", "Update", "UpdateAuras - AddAura")
+		
 		auraIconFrame:SetID (i)
 		auraIconFrame.auraInstanceID = i
 		local curBuffFrame = self.Name == "Secondary" and 2 or 1
@@ -1465,7 +1498,12 @@ end
 		end
 		
 		--ensure proper state:
-		auraIconFrame:EnableMouse (profile.aura_show_tooltip)
+		--auraIconFrame:EnableMouse (profile.aura_show_tooltip)
+		if IS_WOW_PROJECT_MAINLINE then
+			auraIconFrame:EnableMouseMotion (profile.aura_show_tooltip)
+		else
+			auraIconFrame:EnableMouse (profile.aura_show_tooltip)
+		end
 
 		--icon size repeated due to:
 		--when the size is changed in the options it doesnt change the IsPersonal flag
@@ -1602,6 +1640,7 @@ end
 		
 		--print (self:GetName(), self:GetSize(), self:IsShown())
 		
+		Plater.EndLogPerformanceCore("Plater-Core", "Update", "UpdateAuras - AddAura")
 		return true
 	end
 	
@@ -1703,6 +1742,8 @@ end
 
 	--~special ~auraspecial self is BuffFrame
 	function Plater.AddExtraIcon (self, spellName, icon, applications, debuffType, duration, expirationTime, sourceUnit, isStealable, nameplateShowPersonal, spellId, isBuff, filter, id, modRate)
+		Plater.StartLogPerformanceCore("Plater-Core", "Update", "UpdateAuras - AddExtraIcon")
+		
 		local _, sourceUnitClass = UnitClass(sourceUnit or "")
 		local sourceUnitName
 		if (sourceUnitClass and UnitPlayerControlled(sourceUnit)) then
@@ -1751,11 +1792,20 @@ end
 			iconFrame.filter = filter
 			iconFrame:SetScript ("OnEnter", Plater.OnEnterAura)
 			iconFrame:SetScript ("OnLeave", Plater.OnLeaveAura)
-			iconFrame:EnableMouse (profile.aura_show_tooltip)
+			--iconFrame:EnableMouse (profile.aura_show_tooltip)
+			if IS_WOW_PROJECT_MAINLINE then
+				iconFrame:EnableMouse (false)
+				iconFrame:EnableMouseMotion (profile.aura_show_tooltip)
+			else
+				iconFrame:EnableMouse (profile.aura_show_tooltip)
+			end
 		else
 			iconFrame:SetScript ("OnEnter", nil)
 			iconFrame:SetScript ("OnLeave", nil)
 			iconFrame:EnableMouse (false)
+			if IS_WOW_PROJECT_MAINLINE then
+				iconFrame:EnableMouseMotion (false)
+			end
 		end
 		
 		--check if Masque is enabled on Plater and reskin the aura icon
@@ -1783,10 +1833,14 @@ end
 			Plater.Masque.BuffSpecial:ReSkin(iconFrame)
 			iconFrame.Masqued = true
 		end
+		
+		Plater.EndLogPerformanceCore("Plater-Core", "Update", "UpdateAuras - AddExtraIcon")
 	end
 	
 	--> reset both buff frames to make them ready to receive an aura update
 	function Plater.ResetAuraContainer (self, resetBuffs, resetDebuffs)
+		Plater.StartLogPerformanceCore("Plater-Core", "Update", "UpdateAuras - ResetAuraContainer")
+		--ViragDevTool_AddData({resetBuffs, resetDebuffs}, "ResetAuraContainer")
 		-- ensure reset is happening if nil
 		resetBuffs = resetBuffs ~= false
 		resetDebuffs = resetDebuffs ~= false
@@ -1795,7 +1849,7 @@ end
 		self.ExtraIconFrame:ClearIcons(resetBuffs, resetDebuffs)
 		
 		--> reset auras
-		if resetDebuffs then
+		if resetDebuffs or not DB_AURA_SEPARATE_BUFFS then
 			if not DB_AURA_SEPARATE_BUFFS then
 				wipe (self.unitFrame.GhostAuraCache) -- ghost and extra are on aura frame 1, needs to be cleared.
 				platerInternal.ExtraAuras.WipeCache(self.unitFrame)
@@ -1827,6 +1881,8 @@ end
 		self.unitFrame.AuraCache = DF.table.copy(self.unitFrame.AuraCache, self.AuraCache)
 		self.unitFrame.AuraCache = DF.table.copy(self.unitFrame.AuraCache, self.BuffFrame2.AuraCache)
 		self.unitFrame.AuraCache = DF.table.copy(self.unitFrame.AuraCache, self.ExtraIconFrame.AuraCache)
+		
+		Plater.EndLogPerformanceCore("Plater-Core", "Update", "UpdateAuras - ResetAuraContainer")
 		
 	end
 
@@ -1967,7 +2023,7 @@ end
 		
 		Plater.ResetAuraContainer (self, unitAuraEventData.hasBuff, unitAuraEventData.hasDebuff)
 		local unitAuraCache = self.unitFrame.AuraCache
-		
+		--ViragDevTool_AddData({unitAuraEventData.hasBuff, unitAuraEventData.hasDebuff}, "UpdateAuras_Automatic")
 		--> debuffs
 		if unitAuraEventData.hasDebuff then
 			local unitAuras = getUnitAuras(unit, "HARMFUL") or {}
@@ -2201,6 +2257,8 @@ end
 			return
 		end
 		
+		--ViragDevTool_AddData({unitAuraEventData.hasBuff, unitAuraEventData.hasDebuff}, "UpdateAuras_Self_Automatic")
+		
 		Plater.ResetAuraContainer (self, unitAuraEventData.hasBuff, unitAuraEventData.hasDebuff)
 		local unitAuraCache = self.unitFrame.AuraCache
 		local noBuffDurationLimitation = Plater.db.profile.aura_show_all_duration_buffs_personal
@@ -2208,6 +2266,7 @@ end
 		--> debuffs
 		if (Plater.db.profile.aura_show_debuffs_personal and unitAuraEventData.hasDebuff) then
 			local unitAuras = getUnitAuras(unit, "HARMFUL") or {}
+			--ViragDevTool_AddData(unitAuras)
 			
 			for id, aura in pairs(unitAuras.debuffs or {}) do
 				--ViragDevTool_AddData({i, aura})

@@ -1,14 +1,9 @@
 # Astral Keys
 
-## [3.84](https://github.com/astralguild/AstralKeys/tree/3.84) (2023-05-17)
-[Full Changelog](https://github.com/astralguild/AstralKeys/compare/3.83...3.84) [Previous Releases](https://github.com/astralguild/AstralKeys/releases)
+## [3.87](https://github.com/astralguild/AstralKeys/tree/3.87) (2023-06-06)
+[Full Changelog](https://github.com/astralguild/AstralKeys/compare/3.86...3.87) [Previous Releases](https://github.com/astralguild/AstralKeys/releases)
 
 - Update AstralKeys.toc  
-- Merge pull request #98 from AlexSafatli/fix/weekfn  
-    Change Week() function name to fix some Lua errors  
-- Merge pull request #99 from L1nkss/ru-translate-for-s2  
-    DF season 2 ru translate  
-- fix  
-- fix  
-- added ru location for s2  
-- Change Week() function name  
+- Merge pull request #103 from AlexSafatli/fix/weekfn  
+    Add new affix rotation  
+- Add new affix rotation  

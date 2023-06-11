@@ -168,6 +168,8 @@ function P:StartCooldown(icon, cd, isRecharge, noGlow)
 			currCharges = currCharges - 1
 			icon.cooldown:SetCooldown(now, cd, modRate)
 		elseif currCharges == 0 then
+
+
 			icon.cooldown:SetCooldown(now, cd, modRate)
 		else
 			currCharges = currCharges - 1

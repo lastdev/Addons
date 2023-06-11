@@ -946,7 +946,7 @@ function ItemInfo.IsDisenchantable(item)
 	if not quality or not classId then
 		return nil
 	end
-	return quality >= (Enum.ItemQuality.Good or Enum.ItemQuality.Uncommon) and quality < Enum.ItemQuality.Legendary and (classId == Enum.ItemClass.Armor or classId == Enum.ItemClass.Weapon)
+	return quality >= (Enum.ItemQuality.Good or Enum.ItemQuality.Uncommon) and quality < Enum.ItemQuality.Legendary and (classId == Enum.ItemClass.Armor or classId == Enum.ItemClass.Weapon or classId == Enum.ItemClass.Profession)
 end
 
 ---Get whether or not the item is a commodity in WoW 8.3 (and above).

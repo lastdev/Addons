@@ -393,6 +393,8 @@ UNIT_POWER_UPDATE, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Do not group this display"] = "이 디스플레이 그룹하지 않기"
 	--[[Translation missing --]]
 	L["Do you want to ignore all future updates for this aura"] = "Do you want to ignore all future updates for this aura"
+	--[[Translation missing --]]
+	L["Do you want to stop ignoring all future updates for this aura"] = "Do you want to stop ignoring all future updates for this aura"
 	L["Documentation"] = "문서화"
 	L["Done"] = "완료"
 	L["Drag to move"] = "끌기 - 이동"
@@ -637,6 +639,8 @@ Can use \ to escape -.]=] ] = "필터 형식: '이름', '이름-서버', '-서�
 	L["Ignore Self"] = "본인 무시"
 	--[[Translation missing --]]
 	L["Ignore updates"] = "Ignore updates"
+	--[[Translation missing --]]
+	L["Ignore Wago updates"] = "Ignore Wago updates"
 	L["Ignored"] = "무시됨"
 	L["Ignored Aura Name"] = "무시된 효과 이름"
 	L["Ignored Exact Spell ID(s)"] = "무시된 정확한 주문 ID(s)"
@@ -1029,7 +1033,7 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	--[[Translation missing --]]
 	L["This adds %role, %roleIcon as text replacements. Does nothing if the unit is not a group member."] = "This adds %role, %roleIcon as text replacements. Does nothing if the unit is not a group member."
 	--[[Translation missing --]]
-	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements and also allows filtering based on the tooltip content/values."] = "This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements and also allows filtering based on the tooltip content/values."
+	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 and %tooltip4 as text replacements and also allows filtering based on the tooltip content/values."] = "This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 and %tooltip4 as text replacements and also allows filtering based on the tooltip content/values."
 	L[ [=[This aura contains custom Lua code.
 Make sure you can trust the person who sent it!]=] ] = "이 효과는 사용자 정의 Lua 코드를 포함합니다. 보낸 사람을 믿을 수 있는지 확인하세요!"
 	L[ [=[This aura was created with a different version (%s) of World of Warcraft.
@@ -1131,9 +1135,8 @@ It might not work correctly with your version!]=] ] = "이 효과는 최신 버�
 	L["Y Rotation"] = "Y 회전"
 	L["Y Scale"] = "세로 크기"
 	L["Yellow Rune"] = "노란색 룬"
-	L["Yes"] = "예"
-	L["y-Offset"] = "Y-좌표"
 	L["Y-Offset"] = "Y-좌표"
+	L["y-Offset"] = "Y-좌표"
 	L["You already have this group/aura. Importing will create a duplicate."] = "이미 이 그룹/효과가 있습니다. 가져오면 복제본이 생성됩니다."
 	L["You are about to delete %d aura(s). |cFFFF0000This cannot be undone!|r Would you like to continue?"] = "aura %d개를 삭제하려고 합니다. |cFFFF0000이는 취소할 수 없습니다!|r 계속할까요?"
 	L["You are about to delete a trigger. |cFFFF0000This cannot be undone!|r Would you like to continue?"] = "활성 조건을 삭제하려고 합니다. |cFFFF0000취소할 수 없습니다!|r 계속할까요?"

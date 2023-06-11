@@ -614,6 +614,8 @@ L["Forward"] = "Forward"
 --[[Translation missing --]]
 L["Forward, Reverse Loop"] = "Forward, Reverse Loop"
 --[[Translation missing --]]
+L["Fourth Value of Tooltip Text"] = "Fourth Value of Tooltip Text"
+--[[Translation missing --]]
 L["Frame Selector"] = "Frame Selector"
 L["Frequency"] = "빈도"
 L["Freya"] = "프레이야"
@@ -1469,6 +1471,8 @@ L["Tooltip"] = "툴팁"
 L["Tooltip Value 1"] = "툴팁 값 1"
 L["Tooltip Value 2"] = "툴팁 값 2"
 L["Tooltip Value 3"] = "툴팁 값 3"
+--[[Translation missing --]]
+L["Tooltip Value 4"] = "Tooltip Value 4"
 L["Top"] = "위"
 L["Top Left"] = "왼쪽 위"
 L["Top Right"] = "오른쪽 위"

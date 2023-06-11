@@ -77,7 +77,7 @@ end
 
 function TaskListUI.UpdateFrame()
 	local mouseOver = private.frame:_GetBaseFrame():IsMouseOver() and true or false
-	private.frame:SetBackgroundColor((mouseOver or TSM.db.global.appearanceOptions.taskListBackgroundLock) and "FRAME_BG%50" or nil, true)
+	private.frame:SetRoundedBackgroundColor((mouseOver or TSM.db.global.appearanceOptions.taskListBackgroundLock) and "FRAME_BG%50" or nil)
 	private.frame:SetBorderColor((mouseOver or TSM.db.global.appearanceOptions.taskListBackgroundLock) and "ACTIVE_BG%50" or nil, 2)
 	private.frame:Draw()
 end

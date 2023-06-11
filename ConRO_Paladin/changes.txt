@@ -1,10 +1,10 @@
-lightweight tag bd7853c47f1572a14b5670592493fa4f52897e83 v10.1.0
+lightweight tag acae27481802806b88efa6babbca322254fdaac0 v10.1.2
 Author:	Vae <emuha17@gmail.com>
-Date:	Fri May 12 17:24:12 2023 -1000
+Date:	Sat Jun 3 07:26:15 2023 -1000
 
-commit bd7853c47f1572a14b5670592493fa4f52897e83
+commit acae27481802806b88efa6babbca322254fdaac0
 Author: Vae <emuha17@gmail.com>
-Date:   Fri May 12 17:24:12 2023 -1000
+Date:   Sat Jun 3 07:26:15 2023 -1000
 
-    Update for 10.1 and Ret glitches.
+    Fixed Crusading Strikes error
 

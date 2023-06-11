@@ -1,10 +1,22 @@
-lightweight tag 13d071deeabb5f9a0b05b5cce15879b682a4ae53 10.1.0-01
+lightweight tag f0acf1d58d2c00df7348c6fb8b03c372d6c4339f 10.1.0-05
 Author:	Dave Hendler <sollaires@gmail.com>
-Date:	Tue Apr 25 11:18:59 2023 -0700
+Date:	Thu Jun 1 10:22:09 2023 -0700
 
-commit 13d071deeabb5f9a0b05b5cce15879b682a4ae53
+commit f0acf1d58d2c00df7348c6fb8b03c372d6c4339f
 Author: Dave Hendler <sollaires@gmail.com>
-Date:   Tue Apr 25 11:18:59 2023 -0700
+Date:   Thu Jun 1 10:22:09 2023 -0700
 
-    Add crafting quality, bump to 10.1 release
+    Add a bit more data to a warning message
+
+commit f3f198da8ed94f2a107b24b0c5dd6c077285cffb
+Author: Dave Hendler <sollaires@gmail.com>
+Date:   Wed May 31 13:26:13 2023 -0700
+
+    Comment on the pipe escaping
+
+commit 3d421d303081b77a90ed6d16faf76982d7d712ad
+Author: Dave Hendler <sollaires@gmail.com>
+Date:   Wed May 31 13:24:54 2023 -0700
+
+    Fix checksum when loadout name uses the pipe | character
 

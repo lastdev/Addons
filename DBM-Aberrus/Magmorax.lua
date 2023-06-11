@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2527, "DBM-Aberrus", nil, 1208)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230514171922")
+mod:SetRevision("20230605202457")
 mod:SetCreatureID(201579)
 mod:SetEncounterID(2683)
 mod:SetUsedIcons(1, 2, 3, 8)
@@ -56,7 +56,6 @@ local timerIncineratingMawsCD						= mod:NewCDCountTimer(20, 404846, nil, "Tank|
 --local berserkTimer								= mod:NewBerserkTimer(600)
 
 mod:AddInfoFrameOption(408839, true)
---mod:AddRangeFrameOption(5, 390715)
 mod:AddSetIconOption("SetIconOnMoltenSpittle", 402989, true, 0, {1, 2, 3, 8})
 mod:AddNamePlateOption("NPAuraOnTantrum", 407879)
 
@@ -165,9 +164,9 @@ function mod:SPELL_CAST_START(args)
 			--8.8, 40.0, 44.4, 28.9, 40.0, 44.5, 28.9, 40.0, 44.4
 			if self.vb.roarCount % 3 == 0 then
 				timerIngitingRoarCD:Start(28.8, self.vb.roarCount+1)
-			elseif self.vb.roarCount % 2 == 0 then
+			elseif self.vb.roarCount % 3 == 2 then
 				timerIngitingRoarCD:Start(44.4, self.vb.roarCount+1)
-			else
+			else--3 == 1
 				timerIngitingRoarCD:Start(40, self.vb.roarCount+1)
 			end
 		elseif self:IsHeroic() then
@@ -233,7 +232,7 @@ function mod:SPELL_CAST_START(args)
 			else
 				timerIncineratingMawsCD:Start(14.4, self.vb.breathCount+1)
 			end
-		else
+		else--Heroic
 			timerIncineratingMawsCD:Start(25, self.vb.mawCount+1)
 		end
 	end
@@ -266,20 +265,26 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 408955 then
 		local amount = args.amount or 1
 		if amount % 3 == 0 then--Boss applies 3 stacks per cast
-			if amount >= 6 then--And you pretty much swap every other cast
-				if args:IsPlayer() then
+			if args:IsPlayer() then
+				if amount >= 6 then--Only big alert if other tank misses a swap
 					specWarnIncineratingMaws:Show(amount)
 					specWarnIncineratingMaws:Play("stackhigh")
 				else
-					if not DBM:UnitDebuff("player", spellId) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
-						specWarnIncineratingMawsSwap:Show(args.destName)
-						specWarnIncineratingMawsSwap:Play("tauntboss")
-					else
-						warnIncineratingMaws:Show(args.destName, amount)
-					end
+					warnIncineratingMaws:Show(args.destName, amount)
 				end
 			else
-				warnIncineratingMaws:Show(args.destName, amount)
+				local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
+				local remaining
+				if expireTime then
+					remaining = expireTime-GetTime()
+				end
+				local neededTime = timerIncineratingMawsCD:GetRemaining(self.vb.mawCount+1) or 14.4
+				if (not remaining or remaining and remaining < neededTime) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
+					specWarnIncineratingMawsSwap:Show(args.destName)
+					specWarnIncineratingMawsSwap:Play("tauntboss")
+				else
+					warnIncineratingMaws:Show(args.destName, amount)
+				end
 			end
 		end
 	elseif spellId == 402994 then

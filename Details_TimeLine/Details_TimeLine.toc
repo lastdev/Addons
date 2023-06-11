@@ -1,8 +1,7 @@
-## Interface: 100007
+## Interface: 100100
 ## Title: Details!: Time Line (plugin)
 ## Notes: Show debuff, cooldown, enemy casts and enemy debuffs on a clear timeline.
 ## RequiredDeps: Details
-## OptionalDeps: Ace3
 ## SavedVariablesPerCharacter: DetailsTimeLineDB
 
 ## X-Curse-Project-ID: 70350

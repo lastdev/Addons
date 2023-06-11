@@ -11,30 +11,18 @@ L["HIGHLIGHT_HOVEROVER_ALPHA"] = "Hover Over Highlight Alpha"
 --[[Translation missing --]]
 L["HIGHLIGHT_HOVEROVER_DESC"] = "Highlight effect when the mouse is over the nameplate."
 L["OPTIONS_ALPHA"] = "Alpha"
---[[Translation missing --]]
-L["OPTIONS_ALPHABYFRAME_ALPHAMULTIPLIER"] = "Transparency multiplier."
---[[Translation missing --]]
-L["OPTIONS_ALPHABYFRAME_DEFAULT"] = "Default Transparency"
---[[Translation missing --]]
-L["OPTIONS_ALPHABYFRAME_DEFAULT_DESC"] = "Amount of transparency applyed to all the components of a single nameplate."
---[[Translation missing --]]
-L["OPTIONS_ALPHABYFRAME_ENABLE_ENEMIES"] = "Enable For Enemies"
---[[Translation missing --]]
-L["OPTIONS_ALPHABYFRAME_ENABLE_ENEMIES_DESC"] = "Apply Transparency settings to enemy units."
---[[Translation missing --]]
-L["OPTIONS_ALPHABYFRAME_ENABLE_FRIENDLY"] = "Enable For Friendly"
---[[Translation missing --]]
-L["OPTIONS_ALPHABYFRAME_ENABLE_FRIENDLY_DESC"] = "Apply Transparency settings to friendly units."
---[[Translation missing --]]
-L["OPTIONS_ALPHABYFRAME_TARGET_INRANGE"] = "Target Alpha/In-Range"
---[[Translation missing --]]
-L["OPTIONS_ALPHABYFRAME_TARGET_INRANGE_DESC"] = "Transparency for targets or in-range units."
---[[Translation missing --]]
-L["OPTIONS_ALPHABYFRAME_TITLE_ENEMIES"] = "Transparency Amount Per Frame (enemies)"
---[[Translation missing --]]
-L["OPTIONS_ALPHABYFRAME_TITLE_FRIENDLY"] = "Transparency Amount Per Frame (friendly)"
---[[Translation missing --]]
-L["OPTIONS_AMOUNT"] = "Amount"
+L["OPTIONS_ALPHABYFRAME_ALPHAMULTIPLIER"] = "Transparenz-Multiplikator."
+L["OPTIONS_ALPHABYFRAME_DEFAULT"] = "Standard-Transparenz"
+L["OPTIONS_ALPHABYFRAME_DEFAULT_DESC"] = "Höhe der Transparenz, die auf alle Komponenten eines einzelnen Namensschilds angewendet wird."
+L["OPTIONS_ALPHABYFRAME_ENABLE_ENEMIES"] = "Aktivieren für Feinde"
+L["OPTIONS_ALPHABYFRAME_ENABLE_ENEMIES_DESC"] = "Transparenz-Einstellungen auf gegnerische Einheiten anwenden."
+L["OPTIONS_ALPHABYFRAME_ENABLE_FRIENDLY"] = "Für freundliche Ziele Aktivieren"
+L["OPTIONS_ALPHABYFRAME_ENABLE_FRIENDLY_DESC"] = "Transparenzeinstellungen auf befreundete Einheiten anwenden."
+L["OPTIONS_ALPHABYFRAME_TARGET_INRANGE"] = "Ziel-Alpha/Reichweite"
+L["OPTIONS_ALPHABYFRAME_TARGET_INRANGE_DESC"] = "Transparenz für Ziele oder Einheiten in Reichweite."
+L["OPTIONS_ALPHABYFRAME_TITLE_ENEMIES"] = "Transparenzbetrag pro Frame (Feinde)"
+L["OPTIONS_ALPHABYFRAME_TITLE_FRIENDLY"] = "Transparenzbetrag pro Frame (freundlich)"
+L["OPTIONS_AMOUNT"] = "Menge"
 L["OPTIONS_ANCHOR"] = "Ankerpunkt"
 L["OPTIONS_ANCHOR_BOTTOM"] = "Unten"
 L["OPTIONS_ANCHOR_BOTTOMLEFT"] = "Unten links"

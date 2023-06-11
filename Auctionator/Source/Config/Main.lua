@@ -4,6 +4,9 @@ Auctionator.Config.Options = {
   MAILBOX_TOOLTIPS = "mailbox_tooltips",
   VENDOR_TOOLTIPS = "vendor_tooltips",
   AUCTION_TOOLTIPS = "auction_tooltips",
+  AUCTION_AGE_TOOLTIPS = "auction_age_tooltips",
+  AUCTION_MEAN_TOOLTIPS = "auction_mean_tooltips",
+  AUCTION_MEAN_DAYS_LIMIT = "auction_mean_days_limit",
   SHIFT_STACK_TOOLTIPS = "shift_stack_tooltips",
   ENCHANT_TOOLTIPS = "enchant_tooltips",
   REPLICATE_SCAN = "replicate_scan_3",
@@ -49,6 +52,7 @@ Auctionator.Config.Options = {
   CRAFTING_INFO_SHOW_COST = "crafting_info_show_cost",
 
   SHOPPING_LIST_MISSING_TERMS = "shopping_list_missing_terms",
+  SHOPPING_LAST_CONTAINER_VIEW = "shopping_last_container_view",
 }
 
 Auctionator.Config.SalesTypes = {
@@ -72,6 +76,9 @@ Auctionator.Config.Defaults = {
   [Auctionator.Config.Options.MAILBOX_TOOLTIPS] = true,
   [Auctionator.Config.Options.VENDOR_TOOLTIPS] = true,
   [Auctionator.Config.Options.AUCTION_TOOLTIPS] = true,
+  [Auctionator.Config.Options.AUCTION_AGE_TOOLTIPS] = false,
+  [Auctionator.Config.Options.AUCTION_MEAN_TOOLTIPS] = false,
+  [Auctionator.Config.Options.AUCTION_MEAN_DAYS_LIMIT] = 21,
   [Auctionator.Config.Options.SHIFT_STACK_TOOLTIPS] = true,
   [Auctionator.Config.Options.ENCHANT_TOOLTIPS] = false,
   [Auctionator.Config.Options.REPLICATE_SCAN] = false,
@@ -116,6 +123,7 @@ Auctionator.Config.Defaults = {
   [Auctionator.Config.Options.CRAFTING_INFO_SHOW_COST] = true,
 
   [Auctionator.Config.Options.SHOPPING_LIST_MISSING_TERMS] = false,
+  [Auctionator.Config.Options.SHOPPING_LAST_CONTAINER_VIEW] = Auctionator.Constants.ShoppingListViews.Lists,
 }
 
 function Auctionator.Config.IsValidOption(name)

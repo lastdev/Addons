@@ -1,16 +1,10 @@
-lightweight tag 9521701847760c6d0bd774de965ddf7faa02a6c5 v10.1.0
+lightweight tag 3971b90d054ca601e94de0d74c73247fb3ca57a6 v10.1.1
 Author:	Vae <emuha17@gmail.com>
-Date:	Sat May 6 10:04:51 2023 -1000
+Date:	Tue May 30 07:49:22 2023 -1000
 
-commit 9521701847760c6d0bd774de965ddf7faa02a6c5
+commit 3971b90d054ca601e94de0d74c73247fb3ca57a6
 Author: Vae <emuha17@gmail.com>
-Date:   Sat May 6 10:04:51 2023 -1000
+Date:   Tue May 30 07:49:22 2023 -1000
 
-    Interface version errors
-
-commit 47eaceaf4a12931bd7fdac5200bc0cd70d088d4d
-Author: Vae <emuha17@gmail.com>
-Date:   Fri May 5 15:43:51 2023 -1000
-
-    10.1 update for Shadow rotation.
+    Tweaked Shadow rotation.
 

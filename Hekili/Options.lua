@@ -382,6 +382,7 @@ local actionTemplate = {
 
     use_while_casting = 0,
     use_off_gcd = 0,
+    only_cwc = 0,
 
     wait_on_ready = 0, -- NYI
 
@@ -3981,7 +3982,7 @@ do
                     toggles.none = "None"
                     toggles.default = "Default |cffffd100(" .. t .. ")|r"
                     toggles.cooldowns = "Cooldowns"
-                    toggles.essences = "Covenants"
+                    toggles.essences = "Minor CDs"
                     toggles.defensives = "Defensives"
                     toggles.interrupts = "Interrupts"
                     toggles.potions = "Potions"
@@ -4099,7 +4100,7 @@ do
                             toggles.none = "None"
                             toggles.default = "Default |cffffd100(" .. t .. ")|r"
                             toggles.cooldowns = "Cooldowns"
-                            toggles.essences = "Covenants"
+                            toggles.essences = "Minor CDs"
                             toggles.defensives = "Defensives"
                             toggles.interrupts = "Interrupts"
                             toggles.potions = "Potions"
@@ -4321,7 +4322,7 @@ do
                     toggles.none = "None"
                     toggles.default = "Default" .. ( class.abilities[ v ].toggle and ( " |cffffd100(" .. class.abilities[ v ].toggle .. ")|r" ) or " |cffffd100(none)|r" )
                     toggles.cooldowns = "Cooldowns"
-                    toggles.essences = "Covenants"
+                    toggles.essences = "Minor CDs"
                     toggles.defensives = "Defensives"
                     toggles.interrupts = "Interrupts"
                     toggles.potions = "Potions"
@@ -4449,7 +4450,7 @@ do
                             toggles.none = "None"
                             toggles.default = "Default" .. ( class.abilities[ v ].toggle and ( " |cffffd100(" .. class.abilities[ v ].toggle .. ")|r" ) or " |cffffd100(none)|r" )
                             toggles.cooldowns = "Cooldowns"
-                            toggles.essences = "Covenants"
+                            toggles.essences = "Minor CDs"
                             toggles.defensives = "Defensives"
                             toggles.interrupts = "Interrupts"
                             toggles.potions = "Potions"
@@ -5359,7 +5360,7 @@ do
                             end,
                         }
                  } )
-                BuildToggleList( options, id, "essences",   "Covenants" )
+                BuildToggleList( options, id, "essences",   "Minor CDs" )
                 BuildToggleList( options, id, "interrupts", "Utility / Interrupts" )
                 BuildToggleList( options, id, "defensives", "Defensives",   "The defensive toggle is generally intended for tanking specializations, " ..
                                                                             "as you may want to turn on/off recommendations for damage mitigation abilities " ..
@@ -5414,9 +5415,10 @@ do
         cycle_targets = true,
         for_next = true,
         max_energy = true,
+        only_cwc = true,
         strict = true,
         use_off_gcd = true,
-        use_while_casting = true,
+        use_while_casting = true
     }
 
 
@@ -5513,6 +5515,10 @@ do
 
         if option == "use_off_gcd" and not val then
             data.use_off_gcd = nil
+        end
+
+        if option =="only_cwc" and not val then
+            data.only_cwc = nil
         end
 
         if option == "strict" and not val then
@@ -7628,22 +7634,22 @@ do
                     args = {
                         key = {
                             type = "keybinding",
-                            name = "Covenants",
-                            desc = "Set a key to toggle Covenant recommendations on/off.",
+                            name = "Minor CDs",
+                            desc = "Set a key to toggle Minor CDs recommendations on/off.",
                             order = 1,
                         },
 
                         value = {
                             type = "toggle",
-                            name = "Show Covenants",
-                            desc = "If checked, abilities from Covenants can be recommended.",
+                            name = "Show Minor CDs",
+                            desc = "If checked, abilities from Minor CDs can be recommended.",
                             order = 2,
                         },
 
                         override = {
                             type = "toggle",
                             name = "Cooldowns Override",
-                            desc = "If checked, when Cooldowns are enabled, the addon will also recommend Covenants even if Show Covenants is not checked.",
+                            desc = "If checked, when Cooldowns are enabled, the addon will also recommend Minor CDs even if Show Minor CDs is not checked.",
                             order = 3,
                         },
                     }
@@ -7728,6 +7734,13 @@ do
                             name = "Show Potions",
                             desc = "If checked, abilities marked as potions can be recommended.",
                             order = 2,
+                        },
+
+                        override = {
+                            type = "toggle",
+                            name = "Cooldowns Override",
+                            desc = "If checked, when Cooldowns are enabled, the addon will also recommend Potions even if Show Potions is not checked.",
+                            order = 3,
                         },
                     }
                 },
@@ -9485,7 +9498,7 @@ do
         [52] = { "interrupts", "Interrupts" },
         [53] = { "potions", "Potions" },
         [54] = { "defensives", "Defensives" },
-        [55] = { "essences", "Covenants" },
+        [55] = { "essences", "Minor CDs" },
         [56] = { "custom1", "Custom #1" },
         [57] = { "custom2", "Custom #2" },
     }

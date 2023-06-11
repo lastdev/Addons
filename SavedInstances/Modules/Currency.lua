@@ -90,8 +90,12 @@ local currency = {
   2118, -- Elemental Overflow
   2122, -- Storm Sigil
   2123, -- Bloody Tokens
-  2167, -- Catalyst Charges
   2245, -- Flightstones
+  2409, -- Whelpling Crest Fragment Tracker [DNT]
+  2410, -- Drake Crest Fragment Tracker [DNT]
+  2411, -- Wyrm Crest Fragment Tracker [DNT]
+  2412, -- Aspect Crest Fragment Tracker [DNT]
+  2413, -- 10.1 Professions - Personal Tracker - S2 Spark Drops (Hidden)
   2533, -- Renascent Shadowflame
 }
 SI.currency = currency
@@ -108,7 +112,6 @@ end)
 SI.currencySorted = currencySorted
 
 local hiddenCurrency = {
-  [2167] = true, -- Catalyst Charges
 }
 
 local specialCurrency = {
@@ -173,6 +176,18 @@ for _, tbl in pairs(specialCurrency) do
   end
 end
 
+Module.OverrideName = {
+  [2409] = L["Loot Whelpling Crest Fragment"], -- Whelpling Crest Fragment Tracker [DNT]
+  [2410] = L["Loot Drake Crest Fragment"], -- Drake Crest Fragment Tracker [DNT]
+  [2411] = L["Loot Wyrm Crest Fragment"], -- Wyrm Crest Fragment Tracker [DNT]
+  [2412] = L["Loot Aspect Crest Fragment"], -- Aspect Crest Fragment Tracker [DNT]
+  [2413] = L["Loot Spark of Shadowflame"], -- 10.1 Professions - Personal Tracker - S2 Spark Drops (Hidden)
+}
+
+Module.OverrideTexture = {
+  [2413] = 5088829, -- 10.1 Professions - Personal Tracker - S2 Spark Drops (Hidden)
+}
+
 function Module:OnEnable()
   self:RegisterEvent("PLAYER_MONEY", "UpdateCurrency")
   self:RegisterBucketEvent("CURRENCY_DISPLAY_UPDATE", 0.25, "UpdateCurrency")
@@ -228,9 +243,6 @@ function Module:UpdateCurrency()
           ci.covenant = ci.covenant or {}
           ci.covenant[covenantID] = ci.amount
         end
-      elseif idx == 2167 then -- Catalyst Charges
-        ci.weeklyMax = nil
-        ci.earnedThisWeek = nil
       end
       -- don't store useless info
       if ci.weeklyMax == 0 then ci.weeklyMax = nil end

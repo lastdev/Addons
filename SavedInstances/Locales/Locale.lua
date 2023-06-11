@@ -29,6 +29,7 @@ Ld["|cffffff00Click|r to open weekly rewards"] = "|cffffff00Click|r to open week
 Ld["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00Left-click|r to detach tooltip"
 Ld["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00Middle-click|r to show Blizzard's Raid Information"
 Ld["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00Right-click|r to configure SavedInstances"
+Ld["A Worthy Ally: Loamm Niffen"] = "A Worthy Ally: Loamm Niffen"
 Ld["AA"] = "AA"
 Ld["Abbreviate keystones"] = "Abbreviate keystones"
 Ld["Abbreviate Mythic keystone dungeon names"] = "Abbreviate Mythic keystone dungeon names"
@@ -49,6 +50,7 @@ Ld["Attempt to recover completed daily quests for this character. Note this may 
 Ld["Automatically shrink the tooltip to fit on the screen"] = "Automatically shrink the tooltip to fit on the screen"
 Ld["Azuregos"] = "Azuregos"
 Ld["Battleground Deserter"] = "Battleground Deserter"
+Ld["BH"] = "BH"
 Ld["Bind a key to toggle the SavedInstances tooltip"] = "Bind a key to toggle the SavedInstances tooltip"
 Ld["Bonus loot frame"] = "Bonus loot frame"
 Ld["Bonus rolls"] = "Bonus rolls"
@@ -106,6 +108,7 @@ Ld["Export"] = "Export"
 Ld["Extended Lockout - Not yet saved"] = "Extended Lockout - Not yet saved"
 Ld["Facets of Research"] = "Facets of Research"
 Ld["FH"] = "FH"
+Ld["Fighting is Its Own Reward"] = "Fighting is Its Own Reward"
 Ld["Fire"] = "Fire"
 Ld["Fire Core"] = "Fire Core"
 Ld["Fit to screen"] = "Fit to screen"
@@ -131,6 +134,7 @@ Ld["Grizzlerock"] = "Grizzlerock"
 Ld["Group"] = "Group"
 Ld["Guild"] = "Guild"
 Ld["HOA"] = "HOA"
+Ld["HOI"] = "HOI"
 Ld["Hold Alt to show all data"] = "Hold Alt to show all data"
 Ld["HOV"] = "HOV"
 Ld["Hover mouse on indicator for details"] = "Hover mouse on indicator for details"
@@ -159,6 +163,11 @@ Ld["LFG cooldown"] = "LFG cooldown"
 Ld["LFR"] = "LFR"
 Ld["List categories from the current expansion pack first"] = "List categories from the current expansion pack first"
 Ld["List raid categories before dungeon categories"] = "List raid categories before dungeon categories"
+Ld["Loot Aspect Crest Fragment"] = "Loot Aspect Crest Fragment"
+Ld["Loot Drake Crest Fragment"] = "Loot Drake Crest Fragment"
+Ld["Loot Spark of Shadowflame"] = "Loot Spark of Shadowflame"
+Ld["Loot Whelpling Crest Fragment"] = "Loot Whelpling Crest Fragment"
+Ld["Loot Wyrm Crest Fragment"] = "Loot Wyrm Crest Fragment"
 Ld["Lord Kazzak"] = "Lord Kazzak"
 Ld["LOWR"] = "LOWR"
 Ld["Manage"] = "Manage"
@@ -174,6 +183,7 @@ Ld["Mythic Key Best"] = "Mythic Key Best"
 Ld["Mythic Keystone"] = "Mythic Keystone"
 Ld["Nathanos Blightcaller"] = "Nathanos Blightcaller"
 Ld["Neela Firebane"] = "Neela Firebane"
+Ld["NELT"] = "NELT"
 Ld["Never show"] = "Never show"
 Ld["NL"] = "NL"
 Ld["NW"] = "NW"
@@ -273,6 +283,7 @@ Ld["Transmute"] = "Transmute"
 Ld["Trial of Elements"] = "Trial of Elements"
 Ld["Trial of Flood"] = "Trial of Flood"
 Ld["Type"] = "Type"
+Ld["ULD"] = "ULD"
 Ld["UNDR"] = "UNDR"
 Ld["UPPR"] = "UPPR"
 Ld["Use class color"] = "Use class color"
@@ -304,6 +315,8 @@ La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00Clic-gauche|r pour d
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00Clic-milieu|r pour afficher les Infos Raid de Blizzard."
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00Clic-droit|r pour configurer SavedInstances."
 --[[Translation missing --]]
+La["A Worthy Ally: Loamm Niffen"] = "A Worthy Ally: Loamm Niffen"
+--[[Translation missing --]]
 La["AA"] = "AA"
 La["Abbreviate keystones"] = "Noms de donjons abrégés"
 La["Abbreviate Mythic keystone dungeon names"] = "Abréger les noms des donjons de clés mythiques"
@@ -329,6 +342,8 @@ La["Attempt to recover completed daily quests for this character. Note this may 
 La["Automatically shrink the tooltip to fit on the screen"] = "Réduit automatiquement la taille de l'infobulle pour la faire tenir sur l'écran."
 La["Azuregos"] = "Azuregos"
 La["Battleground Deserter"] = "Déserteur"
+--[[Translation missing --]]
+La["BH"] = "BH"
 La["Bind a key to toggle the SavedInstances tooltip"] = "Associez une touche à l'affichage de l'infobulle de SavedInstance."
 La["Bonus loot frame"] = "Cadre de jet de butin bonus"
 La["Bonus rolls"] = "Jets de dé bonus"
@@ -405,6 +420,8 @@ La["Facets of Research"] = "Facettes de recherche"
 --[[Translation missing --]]
 La["FH"] = "FH"
 --[[Translation missing --]]
+La["Fighting is Its Own Reward"] = "Fighting is Its Own Reward"
+--[[Translation missing --]]
 La["Fire"] = "Fire"
 --[[Translation missing --]]
 La["Fire Core"] = "Fire Core"
@@ -441,6 +458,8 @@ La["Grizzlerock"] = "Grizzlerock"
 La["Group"] = "Grouper "
 La["Guild"] = "Guilde"
 La["HOA"] = "HOA"
+--[[Translation missing --]]
+La["HOI"] = "HOI"
 La["Hold Alt to show all data"] = "Maintenez Alt pour afficher toutes les données."
 --[[Translation missing --]]
 La["HOV"] = "HOV"
@@ -476,6 +495,16 @@ La["LFG cooldown"] = "Recherche de groupe"
 La["LFR"] = "RdR"
 La["List categories from the current expansion pack first"] = "Liste les catégories de l'extension actuelle en premier."
 La["List raid categories before dungeon categories"] = "Liste les catégories de raids avant celles des donjons."
+--[[Translation missing --]]
+La["Loot Aspect Crest Fragment"] = "Loot Aspect Crest Fragment"
+--[[Translation missing --]]
+La["Loot Drake Crest Fragment"] = "Loot Drake Crest Fragment"
+--[[Translation missing --]]
+La["Loot Spark of Shadowflame"] = "Loot Spark of Shadowflame"
+--[[Translation missing --]]
+La["Loot Whelpling Crest Fragment"] = "Loot Whelpling Crest Fragment"
+--[[Translation missing --]]
+La["Loot Wyrm Crest Fragment"] = "Loot Wyrm Crest Fragment"
 La["Lord Kazzak"] = "Seigneur Kazzak"
 --[[Translation missing --]]
 La["LOWR"] = "LOWR"
@@ -495,6 +524,8 @@ La["Mythic Keystone"] = "Clé Mythique"
 La["Nathanos Blightcaller"] = "Nathanos le Flétrisseur"
 --[[Translation missing --]]
 La["Neela Firebane"] = "Neela Firebane"
+--[[Translation missing --]]
+La["NELT"] = "NELT"
 La["Never show"] = "Ne jamais afficher"
 --[[Translation missing --]]
 La["NL"] = "NL"
@@ -620,6 +651,8 @@ La["Trial of Elements"] = "Trial of Elements"
 La["Trial of Flood"] = "Trial of Flood"
 La["Type"] = "Type"
 --[[Translation missing --]]
+La["ULD"] = "ULD"
+--[[Translation missing --]]
 La["UNDR"] = "UNDR"
 --[[Translation missing --]]
 La["UPPR"] = "UPPR"
@@ -660,6 +693,8 @@ La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00Linksklick|r, um den
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00Mittelklick|r , um die Blizzard-Schlachtszugsinfo anzuzeigen"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00Rechtsklick|r, um SavedInstances zu konfigurieren"
 --[[Translation missing --]]
+La["A Worthy Ally: Loamm Niffen"] = "A Worthy Ally: Loamm Niffen"
+--[[Translation missing --]]
 La["AA"] = "AA"
 La["Abbreviate keystones"] = "Schlüsselsteine abkürzen"
 La["Abbreviate Mythic keystone dungeon names"] = "Namen mythischer Schlüsselsteindungeons abkürzen"
@@ -685,6 +720,8 @@ La["Attempt to recover completed daily quests for this character. Note this may 
 La["Automatically shrink the tooltip to fit on the screen"] = "Den Tooltip automatisch verkleinern, damit dieser auf den Bildschirm passt"
 La["Azuregos"] = "Azuregos"
 La["Battleground Deserter"] = "Schlachtfelddeserteur-Abklingzeit"
+--[[Translation missing --]]
+La["BH"] = "BH"
 La["Bind a key to toggle the SavedInstances tooltip"] = "Wähle Tastenkombination zum Umschalten des SavedInstances-Tooltip"
 La["Bonus loot frame"] = "Bonusbeutefenster"
 La["Bonus rolls"] = "Bonuswürfe"
@@ -759,6 +796,8 @@ La["Facets of Research"] = "Forschungsfacetten"
 --[[Translation missing --]]
 La["FH"] = "FH"
 --[[Translation missing --]]
+La["Fighting is Its Own Reward"] = "Fighting is Its Own Reward"
+--[[Translation missing --]]
 La["Fire"] = "Fire"
 --[[Translation missing --]]
 La["Fire Core"] = "Fire Core"
@@ -795,6 +834,8 @@ La["Grizzlerock"] = "Grizzlerock"
 La["Group"] = "Gruppieren"
 La["Guild"] = "Gilde"
 La["HOA"] = "HOA"
+--[[Translation missing --]]
+La["HOI"] = "HOI"
 La["Hold Alt to show all data"] = "Halte Alt gedrückt, um alle Daten anzuzeigen"
 --[[Translation missing --]]
 La["HOV"] = "HOV"
@@ -830,6 +871,16 @@ La["LFG cooldown"] = "Dungeonbrowser-Abklingzeit"
 La["LFR"] = "LFR"
 La["List categories from the current expansion pack first"] = "Kategorien der aktuellen Erweiterung zuerst auflisten"
 La["List raid categories before dungeon categories"] = "Schlachtzugskategorien vor Dungeonkategorien auflisten"
+--[[Translation missing --]]
+La["Loot Aspect Crest Fragment"] = "Loot Aspect Crest Fragment"
+--[[Translation missing --]]
+La["Loot Drake Crest Fragment"] = "Loot Drake Crest Fragment"
+--[[Translation missing --]]
+La["Loot Spark of Shadowflame"] = "Loot Spark of Shadowflame"
+--[[Translation missing --]]
+La["Loot Whelpling Crest Fragment"] = "Loot Whelpling Crest Fragment"
+--[[Translation missing --]]
+La["Loot Wyrm Crest Fragment"] = "Loot Wyrm Crest Fragment"
 La["Lord Kazzak"] = "Lord Kazzak"
 --[[Translation missing --]]
 La["LOWR"] = "LOWR"
@@ -849,6 +900,8 @@ La["Mythic Keystone"] = "Mythischer Schlüsselstein"
 La["Nathanos Blightcaller"] = "Nathanos Pestrufer"
 --[[Translation missing --]]
 La["Neela Firebane"] = "Neela Firebane"
+--[[Translation missing --]]
+La["NELT"] = "NELT"
 La["Never show"] = "Nie anzeigen"
 --[[Translation missing --]]
 La["NL"] = "NL"
@@ -972,6 +1025,8 @@ La["Trial of Elements"] = "Trial of Elements"
 La["Trial of Flood"] = "Trial of Flood"
 La["Type"] = "Wert"
 --[[Translation missing --]]
+La["ULD"] = "ULD"
+--[[Translation missing --]]
 La["UNDR"] = "UNDR"
 --[[Translation missing --]]
 La["UPPR"] = "UPPR"
@@ -1011,6 +1066,8 @@ elseif locale == "koKR" then
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00좌-클릭|r으로 툴팁 떼어내기"
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00가운데-클릭|r 블리자드 공격대 정보 보기"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00우-클릭|r으로 SavedInstances 설정"
+--[[Translation missing --]]
+La["A Worthy Ally: Loamm Niffen"] = "A Worthy Ally: Loamm Niffen"
 La["AA"] = "대학"
 La["Abbreviate keystones"] = "쐐기명 축약"
 La["Abbreviate Mythic keystone dungeon names"] = "신화 쐐기돌 던전 이름을 짧게 표시하기"
@@ -1031,6 +1088,8 @@ La["Attempt to recover completed daily quests for this character. Note this may 
 La["Automatically shrink the tooltip to fit on the screen"] = "화면에 맞게 자동으로  툴팁을 축소합니다"
 La["Azuregos"] = "아주어고스"
 La["Battleground Deserter"] = "전장 탈영 대기시간 추적"
+--[[Translation missing --]]
+La["BH"] = "BH"
 La["Bind a key to toggle the SavedInstances tooltip"] = "SavedInstances 툴팁을 보거나 숨기는 키 설정"
 La["Bonus loot frame"] = "추가 전리품 창"
 La["Bonus rolls"] = "추가 전리품 주사위 추적"
@@ -1088,6 +1147,8 @@ La["Export"] = "내보내기"
 La["Extended Lockout - Not yet saved"] = "연장된 귀속 - 아직 저장 안됨"
 La["Facets of Research"] = "연구용 다면체"
 La["FH"] = "자유지대"
+--[[Translation missing --]]
+La["Fighting is Its Own Reward"] = "Fighting is Its Own Reward"
 La["Fire"] = "불"
 La["Fire Core"] = "화염의 핵"
 La["Fit to screen"] = "화면에 맞춤"
@@ -1113,6 +1174,8 @@ La["Grizzlerock"] = "그리즐록"
 La["Group"] = "그룹"
 La["Guild"] = "길드"
 La["HOA"] = "속죄"
+--[[Translation missing --]]
+La["HOI"] = "HOI"
 La["Hold Alt to show all data"] = "알트키를 누르고 있으면 모든 정보 표시"
 La["HOV"] = "용전"
 La["Hover mouse on indicator for details"] = "마우스를 올리면 세부 내용 표시"
@@ -1141,6 +1204,16 @@ La["LFG cooldown"] = "무작위 던전 대기시간 추적"
 La["LFR"] = "공찾"
 La["List categories from the current expansion pack first"] = "현재 확장팩을 첫번째로 목록에 나열"
 La["List raid categories before dungeon categories"] = "던전 카테고리 앞에 공격대 카테고리 나열"
+--[[Translation missing --]]
+La["Loot Aspect Crest Fragment"] = "Loot Aspect Crest Fragment"
+--[[Translation missing --]]
+La["Loot Drake Crest Fragment"] = "Loot Drake Crest Fragment"
+--[[Translation missing --]]
+La["Loot Spark of Shadowflame"] = "Loot Spark of Shadowflame"
+--[[Translation missing --]]
+La["Loot Whelpling Crest Fragment"] = "Loot Whelpling Crest Fragment"
+--[[Translation missing --]]
+La["Loot Wyrm Crest Fragment"] = "Loot Wyrm Crest Fragment"
 La["Lord Kazzak"] = "군주 카자크"
 La["LOWR"] = "카라잔:하층"
 La["Manage"] = "관리"
@@ -1156,6 +1229,8 @@ La["Mythic Key Best"] = "주차 단수"
 La["Mythic Keystone"] = "쐐기"
 La["Nathanos Blightcaller"] = "나타노스 브라이트콜러"
 La["Neela Firebane"] = "닐라 파이어베인"
+--[[Translation missing --]]
+La["NELT"] = "NELT"
 La["Never show"] = "표시하지 않음"
 La["NL"] = "넬둥"
 La["NW"] = "죽상"
@@ -1257,6 +1332,8 @@ La["Transmute"] = "변환"
 La["Trial of Elements"] = "정령의 시험"
 La["Trial of Flood"] = "홍수의 시험"
 La["Type"] = "유형"
+--[[Translation missing --]]
+La["ULD"] = "ULD"
 La["UNDR"] = "썩굴"
 La["UPPR"] = "카라잔:상층"
 La["Use class color"] = "직업 색상 사용"
@@ -1289,6 +1366,8 @@ La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00Click-Izquierdo|r pa
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00Click-Medio|r para mostrar Información de banda de Blizzard"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00Click-Derecho|r para configurar SavedInstances"
 --[[Translation missing --]]
+La["A Worthy Ally: Loamm Niffen"] = "A Worthy Ally: Loamm Niffen"
+--[[Translation missing --]]
 La["AA"] = "AA"
 --[[Translation missing --]]
 La["Abbreviate keystones"] = "Abbreviate keystones"
@@ -1320,6 +1399,8 @@ La["Automatically shrink the tooltip to fit on the screen"] = "Comprimir automá
 --[[Translation missing --]]
 La["Azuregos"] = "Azuregos"
 La["Battleground Deserter"] = "Sigue la duración del perjuicio Desertor"
+--[[Translation missing --]]
+La["BH"] = "BH"
 La["Bind a key to toggle the SavedInstances tooltip"] = "Asignar una tecla para mostrar/ocultar la descripción SavedInstances"
 --[[Translation missing --]]
 La["Bonus loot frame"] = "Bonus loot frame"
@@ -1413,6 +1494,8 @@ La["Facets of Research"] = "Facetas de investigación"
 --[[Translation missing --]]
 La["FH"] = "FH"
 --[[Translation missing --]]
+La["Fighting is Its Own Reward"] = "Fighting is Its Own Reward"
+--[[Translation missing --]]
 La["Fire"] = "Fire"
 --[[Translation missing --]]
 La["Fire Core"] = "Fire Core"
@@ -1457,6 +1540,8 @@ La["Group"] = "Grupo"
 La["Guild"] = "Guild"
 --[[Translation missing --]]
 La["HOA"] = "HOA"
+--[[Translation missing --]]
+La["HOI"] = "HOI"
 La["Hold Alt to show all data"] = "Pulse la tecla Alt para mostrar toda la información"
 --[[Translation missing --]]
 La["HOV"] = "HOV"
@@ -1501,6 +1586,16 @@ La["LFR"] = "BdB"
 La["List categories from the current expansion pack first"] = "Mostrar primero las categorías de la expansión actual"
 La["List raid categories before dungeon categories"] = "Mostrar categorías de bandas antes que categorías de mazmorras"
 --[[Translation missing --]]
+La["Loot Aspect Crest Fragment"] = "Loot Aspect Crest Fragment"
+--[[Translation missing --]]
+La["Loot Drake Crest Fragment"] = "Loot Drake Crest Fragment"
+--[[Translation missing --]]
+La["Loot Spark of Shadowflame"] = "Loot Spark of Shadowflame"
+--[[Translation missing --]]
+La["Loot Whelpling Crest Fragment"] = "Loot Whelpling Crest Fragment"
+--[[Translation missing --]]
+La["Loot Wyrm Crest Fragment"] = "Loot Wyrm Crest Fragment"
+--[[Translation missing --]]
 La["Lord Kazzak"] = "Lord Kazzak"
 --[[Translation missing --]]
 La["LOWR"] = "LOWR"
@@ -1527,6 +1622,8 @@ La["Mythic Keystone"] = "Mythic Keystone"
 La["Nathanos Blightcaller"] = "Nathanos Blightcaller"
 --[[Translation missing --]]
 La["Neela Firebane"] = "Neela Firebane"
+--[[Translation missing --]]
+La["NELT"] = "NELT"
 La["Never show"] = "Nunca mostrar"
 --[[Translation missing --]]
 La["NL"] = "NL"
@@ -1676,6 +1773,8 @@ La["Trial of Elements"] = "Trial of Elements"
 La["Trial of Flood"] = "Trial of Flood"
 La["Type"] = "Tipo"
 --[[Translation missing --]]
+La["ULD"] = "ULD"
+--[[Translation missing --]]
 La["UNDR"] = "UNDR"
 --[[Translation missing --]]
 La["UPPR"] = "UPPR"
@@ -1720,6 +1819,8 @@ elseif locale == "ruRU" then
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00ЛКМ|r, чтобы показать информацию в отдельном окне"
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "Нажмите на колёсико мышки, чтобы показать информацию о рейдах от Blizzard"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00ПКМ|r, чтобы настроить SavedInstances"
+--[[Translation missing --]]
+La["A Worthy Ally: Loamm Niffen"] = "A Worthy Ally: Loamm Niffen"
 La["AA"] = "АА"
 La["Abbreviate keystones"] = "Сокращение названия ключей"
 La["Abbreviate Mythic keystone dungeon names"] = "Сократить названия эпохальных подземелий"
@@ -1740,6 +1841,8 @@ La["Attempt to recover completed daily quests for this character. Note this may 
 La["Automatically shrink the tooltip to fit on the screen"] = "Автоматически уменьшать размер подсказки, чтобы вместить на экран"
 La["Azuregos"] = "Азурегос"
 La["Battleground Deserter"] = "Дезертир с Поля Боя"
+--[[Translation missing --]]
+La["BH"] = "BH"
 La["Bind a key to toggle the SavedInstances tooltip"] = "Клавиша для вкл./выкл. подсказок SavedInstances"
 La["Bonus loot frame"] = "Окно дополнительной добычи"
 La["Bonus rolls"] = "Отслеживать бонусные броски"
@@ -1797,6 +1900,8 @@ La["Export"] = "Экспорт"
 La["Extended Lockout - Not yet saved"] = "Продление сохранения - ещё не сохранено"
 La["Facets of Research"] = "Грань исследования (ювелирное дело)"
 La["FH"] = "ГАВАНЬ"
+--[[Translation missing --]]
+La["Fighting is Its Own Reward"] = "Fighting is Its Own Reward"
 La["Fire"] = "Огонь"
 La["Fire Core"] = "Огненное ядро"
 La["Fit to screen"] = "Подогнать под размер экрана"
@@ -1822,6 +1927,8 @@ La["Grizzlerock"] = "Седокамень"
 La["Group"] = "Группировать"
 La["Guild"] = "Гильдия"
 La["HOA"] = "ЧП"
+--[[Translation missing --]]
+La["HOI"] = "HOI"
 La["Hold Alt to show all data"] = "Удерживайте Alt для просмотра всей информации"
 La["HOV"] = "ЧД"
 La["Hover mouse on indicator for details"] = "Наведите мышкой на индикатор для детальной информации"
@@ -1850,6 +1957,16 @@ La["LFG cooldown"] = "Отслеживать время задержки Пои�
 La["LFR"] = "СПР (LFR)"
 La["List categories from the current expansion pack first"] = "Сортировать список категорий по сохраненным подземельям"
 La["List raid categories before dungeon categories"] = "Список категорий рейда до категорий подземелий"
+--[[Translation missing --]]
+La["Loot Aspect Crest Fragment"] = "Loot Aspect Crest Fragment"
+--[[Translation missing --]]
+La["Loot Drake Crest Fragment"] = "Loot Drake Crest Fragment"
+--[[Translation missing --]]
+La["Loot Spark of Shadowflame"] = "Loot Spark of Shadowflame"
+--[[Translation missing --]]
+La["Loot Whelpling Crest Fragment"] = "Loot Whelpling Crest Fragment"
+--[[Translation missing --]]
+La["Loot Wyrm Crest Fragment"] = "Loot Wyrm Crest Fragment"
 La["Lord Kazzak"] = "Владыка Каззак"
 La["LOWR"] = "НИЗ"
 La["Manage"] = "Управление"
@@ -1865,6 +1982,8 @@ La["Mythic Key Best"] = "Лучший эпохальный ключ"
 La["Mythic Keystone"] = "Эпохальный ключ"
 La["Nathanos Blightcaller"] = "Натанос Гнилостень"
 La["Neela Firebane"] = "Нила Гнев Пламени"
+--[[Translation missing --]]
+La["NELT"] = "NELT"
 La["Never show"] = "Никогда не отображать"
 La["NL"] = "ЛН"
 La["NW"] = "СТ"
@@ -1968,6 +2087,8 @@ La["Transmute"] = "Трансмутация (алхимия)"
 La["Trial of Elements"] = "Испытание стихий"
 La["Trial of Flood"] = "Испытание наводнения"
 La["Type"] = "Тип"
+--[[Translation missing --]]
+La["ULD"] = "ULD"
 La["UNDR"] = "ПОДГН"
 La["UPPR"] = "ВЕРХ"
 La["Use class color"] = "Цвет класса"
@@ -1998,6 +2119,7 @@ elseif locale == "zhCN" then
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00左键点击|r 显示独立窗口"
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00中键点击|r 显示游戏内建的团队信息"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00右键点击|r 设置SavedInstances"
+La["A Worthy Ally: Loamm Niffen"] = "强大的盟友：峈姆鼹鼠人"
 La["AA"] = "学院"
 La["Abbreviate keystones"] = "史诗钥石简称"
 La["Abbreviate Mythic keystone dungeon names"] = "显示史诗钥石的简称"
@@ -2018,6 +2140,7 @@ La["Attempt to recover completed daily quests for this character. Note this may 
 La["Automatically shrink the tooltip to fit on the screen"] = "根据屏幕大小缩放界面"
 La["Azuregos"] = "艾索雷苟斯"
 La["Battleground Deserter"] = "追踪战场逃亡者冷却"
+La["BH"] = "山谷"
 La["Bind a key to toggle the SavedInstances tooltip"] = "为显示/隐藏SavedInstances界面绑定一个按键"
 La["Bonus loot frame"] = "额外拾取提示框架"
 La["Bonus rolls"] = "额外拾取情况"
@@ -2075,6 +2198,7 @@ La["Export"] = "导出"
 La["Extended Lockout - Not yet saved"] = "已延长锁定 - 还未被储存"
 La["Facets of Research"] = "探索棱镜"
 La["FH"] = "自由镇"
+La["Fighting is Its Own Reward"] = "战斗就是最好的奖赏"
 La["Fire"] = "火焰"
 La["Fire Core"] = "原始火焰核心"
 La["Fit to screen"] = "适应屏幕大小"
@@ -2100,6 +2224,7 @@ La["Grizzlerock"] = "灰石"
 La["Group"] = "组合"
 La["Guild"] = "公会"
 La["HOA"] = "赎罪"
+La["HOI"] = "注能"
 La["Hold Alt to show all data"] = "按住Alt来显示所有信息"
 La["HOV"] = "英灵殿"
 La["Hover mouse on indicator for details"] = "鼠标悬停到指示器以显示细节"
@@ -2128,6 +2253,11 @@ La["LFG cooldown"] = "随机地下城冷却"
 La["LFR"] = "团队搜寻器"
 La["List categories from the current expansion pack first"] = "从目前的资料片开始依次向后显示"
 La["List raid categories before dungeon categories"] = "先显示团队副本，再显示地下城"
+La["Loot Aspect Crest Fragment"] = "拾取巨龙纹章碎片"
+La["Loot Drake Crest Fragment"] = "拾取幼龙纹章碎片"
+La["Loot Spark of Shadowflame"] = "拾取暗影烈焰火花"
+La["Loot Whelpling Crest Fragment"] = "拾取雏龙纹章碎片"
+La["Loot Wyrm Crest Fragment"] = "拾取魔龙纹章碎片"
 La["Lord Kazzak"] = "卡扎克"
 La["LOWR"] = "卡下"
 La["Manage"] = "管理"
@@ -2143,6 +2273,7 @@ La["Mythic Key Best"] = "每周最佳纪录"
 La["Mythic Keystone"] = "史诗钥石"
 La["Nathanos Blightcaller"] = "纳萨诺斯·凋零者"
 La["Neela Firebane"] = "妮拉·火祸"
+La["NELT"] = "奈萨鲁斯"
 La["Never show"] = "从不显示"
 La["NL"] = "巢穴"
 La["NW"] = "通灵"
@@ -2242,6 +2373,7 @@ La["Transmute"] = "转化"
 La["Trial of Elements"] = "元素试炼"
 La["Trial of Flood"] = "洪水试炼"
 La["Type"] = "类型"
+La["ULD"] = "奥达曼"
 La["UNDR"] = "孢林"
 La["UPPR"] = "卡上"
 La["Use class color"] = "使用职业颜色"
@@ -2249,8 +2381,7 @@ La["Vision Boss + 2 Bonus Objectives"] = "三箱"
 La["Vision Boss Only"] = "一箱"
 La["Voraazka"] = "沃拉兹卡"
 La["VOTW"] = "地窟"
---[[Translation missing --]]
-La["VP"] = "VP"
+La["VP"] = "云巅"
 La["Warfronts"] = "战争前线"
 La["Warn about instance limit"] = "达到副本进入限制时警告"
 La["Warning: You've entered about %i instances recently and are approaching the %i instance per hour limit for your account. More instances should be available in %s."] = "警告：你最近已经进入 %i 次副本，并且已经接近账号每小时 %i 次的进入限制，更多的副本可以在 %s 后允许进入。"
@@ -2273,6 +2404,8 @@ elseif locale == "esES" then
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00Clic|r para separar la ventana de información"
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00Clic medio|r para mostrar la Información de banda"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00Click-Derecho|r para configurar SavedInstances"
+--[[Translation missing --]]
+La["A Worthy Ally: Loamm Niffen"] = "A Worthy Ally: Loamm Niffen"
 --[[Translation missing --]]
 La["AA"] = "AA"
 La["Abbreviate keystones"] = "Abreviar piedras angulares"
@@ -2301,6 +2434,8 @@ La["Attempt to recover completed daily quests for this character. Note this may 
 La["Automatically shrink the tooltip to fit on the screen"] = "Encoger automáticamente la descripción para ajustarla a la pantalla"
 La["Azuregos"] = "Azuregos"
 La["Battleground Deserter"] = "Desertor del Campo de Batalla"
+--[[Translation missing --]]
+La["BH"] = "BH"
 La["Bind a key to toggle the SavedInstances tooltip"] = "Asignar una tecla para mostrar/ocultar la ventana de información de SavedInstances"
 --[[Translation missing --]]
 La["Bonus loot frame"] = "Bonus loot frame"
@@ -2384,6 +2519,8 @@ La["Facets of Research"] = "Facetas de investigación"
 --[[Translation missing --]]
 La["FH"] = "FH"
 --[[Translation missing --]]
+La["Fighting is Its Own Reward"] = "Fighting is Its Own Reward"
+--[[Translation missing --]]
 La["Fire"] = "Fire"
 --[[Translation missing --]]
 La["Fire Core"] = "Fire Core"
@@ -2420,6 +2557,8 @@ La["Grizzlerock"] = "Grizzlerock"
 La["Group"] = "Grupo"
 La["Guild"] = "Hermandad"
 La["HOA"] = "SdE (HOA)"
+--[[Translation missing --]]
+La["HOI"] = "HOI"
 La["Hold Alt to show all data"] = "Pulsa Alt para mostrar toda la información"
 --[[Translation missing --]]
 La["HOV"] = "HOV"
@@ -2459,6 +2598,16 @@ La["LFR"] = "BdB"
 La["List categories from the current expansion pack first"] = "Mostrar primero las categorías de la expansión actual"
 La["List raid categories before dungeon categories"] = "Mostrar categorías de bandas antes que de mazmorras"
 --[[Translation missing --]]
+La["Loot Aspect Crest Fragment"] = "Loot Aspect Crest Fragment"
+--[[Translation missing --]]
+La["Loot Drake Crest Fragment"] = "Loot Drake Crest Fragment"
+--[[Translation missing --]]
+La["Loot Spark of Shadowflame"] = "Loot Spark of Shadowflame"
+--[[Translation missing --]]
+La["Loot Whelpling Crest Fragment"] = "Loot Whelpling Crest Fragment"
+--[[Translation missing --]]
+La["Loot Wyrm Crest Fragment"] = "Loot Wyrm Crest Fragment"
+--[[Translation missing --]]
 La["Lord Kazzak"] = "Lord Kazzak"
 --[[Translation missing --]]
 La["LOWR"] = "LOWR"
@@ -2481,6 +2630,8 @@ La["Mythic Keystone"] = "Piedra angular mítica"
 La["Nathanos Blightcaller"] = "Nathanos Blightcaller"
 --[[Translation missing --]]
 La["Neela Firebane"] = "Neela Firebane"
+--[[Translation missing --]]
+La["NELT"] = "NELT"
 La["Never show"] = "No mostrar nunca"
 --[[Translation missing --]]
 La["NL"] = "NL"
@@ -2609,6 +2760,8 @@ La["Trial of Elements"] = "Trial of Elements"
 La["Trial of Flood"] = "Trial of Flood"
 La["Type"] = "Tipo"
 --[[Translation missing --]]
+La["ULD"] = "ULD"
+--[[Translation missing --]]
 La["UNDR"] = "UNDR"
 --[[Translation missing --]]
 La["UPPR"] = "UPPR"
@@ -2649,6 +2802,8 @@ elseif locale == "zhTW" then
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00左鍵|r 分離滑鼠提示"
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00中鍵|r 顯示暴雪的團隊資訊"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00右鍵|r 設定 SavedInstances"
+--[[Translation missing --]]
+La["A Worthy Ally: Loamm Niffen"] = "A Worthy Ally: Loamm Niffen"
 La["AA"] = "學院"
 La["Abbreviate keystones"] = "簡短鑰石名稱"
 La["Abbreviate Mythic keystone dungeon names"] = "傳奇鑰石的地城名稱使用簡稱"
@@ -2672,6 +2827,8 @@ La["Attempt to recover completed daily quests for this character. Note this may 
 La["Automatically shrink the tooltip to fit on the screen"] = "自動縮小滑鼠提示以符合畫面"
 La["Azuregos"] = "艾索雷苟斯"
 La["Battleground Deserter"] = "戰場逃亡者冷卻"
+--[[Translation missing --]]
+La["BH"] = "BH"
 La["Bind a key to toggle the SavedInstances tooltip"] = "綁定按鍵來切換顯示 SavedInstances 滑鼠提示"
 La["Bonus loot frame"] = "額外戰利品框架"
 La["Bonus rolls"] = "額外骰子"
@@ -2732,6 +2889,8 @@ La["Extended Lockout - Not yet saved"] = "進度即將到期 - 尚未儲存"
 La["Facets of Research"] = "研究切面"
 --[[Translation missing --]]
 La["FH"] = "FH"
+--[[Translation missing --]]
+La["Fighting is Its Own Reward"] = "Fighting is Its Own Reward"
 La["Fire"] = "火"
 La["Fire Core"] = "火核心"
 La["Fit to screen"] = "不超出畫面"
@@ -2761,6 +2920,8 @@ La["Grizzlerock"] = "Grizzlerock"
 La["Group"] = "群組"
 La["Guild"] = "公會"
 La["HOA"] = "贖罪"
+--[[Translation missing --]]
+La["HOI"] = "HOI"
 La["Hold Alt to show all data"] = "按住 Alt 顯示所有資料"
 La["HOV"] = "英靈殿"
 La["Hover mouse on indicator for details"] = "滑鼠指向顯示詳細內容"
@@ -2795,6 +2956,16 @@ La["LFG cooldown"] = "隨機隊伍冷卻"
 La["LFR"] = "隨機團隊"
 La["List categories from the current expansion pack first"] = "優先列出目前資料片中的分類"
 La["List raid categories before dungeon categories"] = "在地城分類之前列出團隊分類"
+--[[Translation missing --]]
+La["Loot Aspect Crest Fragment"] = "Loot Aspect Crest Fragment"
+--[[Translation missing --]]
+La["Loot Drake Crest Fragment"] = "Loot Drake Crest Fragment"
+--[[Translation missing --]]
+La["Loot Spark of Shadowflame"] = "Loot Spark of Shadowflame"
+--[[Translation missing --]]
+La["Loot Whelpling Crest Fragment"] = "Loot Whelpling Crest Fragment"
+--[[Translation missing --]]
+La["Loot Wyrm Crest Fragment"] = "Loot Wyrm Crest Fragment"
 La["Lord Kazzak"] = "卡扎克領主"
 La["LOWR"] = "卡拉下"
 La["Manage"] = "管理"
@@ -2814,6 +2985,8 @@ La["Mythic Keystone"] = "傳奇鑰石"
 La["Nathanos Blightcaller"] = "納撒諾斯·凋零者"
 --[[Translation missing --]]
 La["Neela Firebane"] = "Neela Firebane"
+--[[Translation missing --]]
+La["NELT"] = "NELT"
 La["Never show"] = "永不顯示"
 La["NL"] = "巢穴"
 La["NW"] = "死靈"
@@ -2923,6 +3096,8 @@ La["Trial of Elements"] = "元素的試煉"
 La["Trial of Flood"] = "洪流的試煉"
 La["Type"] = "類型"
 --[[Translation missing --]]
+La["ULD"] = "ULD"
+--[[Translation missing --]]
 La["UNDR"] = "UNDR"
 La["UPPR"] = "卡拉上"
 La["Use class color"] = "使用職業顏色"
@@ -2957,6 +3132,8 @@ La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00Botão Esquerdo | Pa
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00Botão do Meio|r para mostrar informações da Raid dadas pela Blizzard"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00Botão Direito|r Para configurar o SavedInstances"
 --[[Translation missing --]]
+La["A Worthy Ally: Loamm Niffen"] = "A Worthy Ally: Loamm Niffen"
+--[[Translation missing --]]
 La["AA"] = "AA"
 La["Abbreviate keystones"] = "Abreviar pedras-chave"
 La["Abbreviate Mythic keystone dungeon names"] = "Abreviar nomes de masmorras de pedra-chave Mítica"
@@ -2986,6 +3163,8 @@ La["Automatically shrink the tooltip to fit on the screen"] = "Encolher ajuda au
 --[[Translation missing --]]
 La["Azuregos"] = "Azuregos"
 La["Battleground Deserter"] = "Acompanhar tempo de espera de Desertor para campo de batalha"
+--[[Translation missing --]]
+La["BH"] = "BH"
 La["Bind a key to toggle the SavedInstances tooltip"] = "Vincule uma tecla para as dicas do SavedInstances"
 --[[Translation missing --]]
 La["Bonus loot frame"] = "Bonus loot frame"
@@ -3073,6 +3252,8 @@ La["Facets of Research"] = "Facetas da Pesquisa"
 --[[Translation missing --]]
 La["FH"] = "FH"
 --[[Translation missing --]]
+La["Fighting is Its Own Reward"] = "Fighting is Its Own Reward"
+--[[Translation missing --]]
 La["Fire"] = "Fire"
 --[[Translation missing --]]
 La["Fire Core"] = "Fire Core"
@@ -3110,6 +3291,8 @@ La["Group"] = "Grupo"
 La["Guild"] = "Guilda"
 --[[Translation missing --]]
 La["HOA"] = "HOA"
+--[[Translation missing --]]
+La["HOI"] = "HOI"
 La["Hold Alt to show all data"] = "Segure a tecla Alt para mostrar todos os dados"
 --[[Translation missing --]]
 La["HOV"] = "HOV"
@@ -3155,6 +3338,16 @@ La["LFR"] = "LdR"
 La["List categories from the current expansion pack first"] = "Listar primeiro o pacote de expansão atual"
 La["List raid categories before dungeon categories"] = "Categorias de raide antes de categorias de masmorras"
 --[[Translation missing --]]
+La["Loot Aspect Crest Fragment"] = "Loot Aspect Crest Fragment"
+--[[Translation missing --]]
+La["Loot Drake Crest Fragment"] = "Loot Drake Crest Fragment"
+--[[Translation missing --]]
+La["Loot Spark of Shadowflame"] = "Loot Spark of Shadowflame"
+--[[Translation missing --]]
+La["Loot Whelpling Crest Fragment"] = "Loot Whelpling Crest Fragment"
+--[[Translation missing --]]
+La["Loot Wyrm Crest Fragment"] = "Loot Wyrm Crest Fragment"
+--[[Translation missing --]]
 La["Lord Kazzak"] = "Lord Kazzak"
 --[[Translation missing --]]
 La["LOWR"] = "LOWR"
@@ -3181,6 +3374,8 @@ La["Mythic Keystone"] = "Mythic Keystone"
 La["Nathanos Blightcaller"] = "Nathanos Blightcaller"
 --[[Translation missing --]]
 La["Neela Firebane"] = "Neela Firebane"
+--[[Translation missing --]]
+La["NELT"] = "NELT"
 La["Never show"] = "Nunca mostrar"
 --[[Translation missing --]]
 La["NL"] = "NL"
@@ -3329,6 +3524,8 @@ La["Trial of Elements"] = "Trial of Elements"
 La["Trial of Flood"] = "Trial of Flood"
 La["Type"] = "Tipo"
 --[[Translation missing --]]
+La["ULD"] = "ULD"
+--[[Translation missing --]]
 La["UNDR"] = "UNDR"
 --[[Translation missing --]]
 La["UPPR"] = "UPPR"
@@ -3375,6 +3572,8 @@ La["|cffffff00Left-click|r to detach tooltip"] = " |cffffff00Click sinistro|r pe
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00Click-centrale|r permostrare le informazioni Blizzard sul raid"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00Click destro|r per configurare SavedInstances"
 --[[Translation missing --]]
+La["A Worthy Ally: Loamm Niffen"] = "A Worthy Ally: Loamm Niffen"
+--[[Translation missing --]]
 La["AA"] = "AA"
 --[[Translation missing --]]
 La["Abbreviate keystones"] = "Abbreviate keystones"
@@ -3405,6 +3604,8 @@ La["Attempt to recover completed daily quests for this character. Note this may 
 La["Automatically shrink the tooltip to fit on the screen"] = "Adatta automaticamente la finestra per adeguarsi allo schermo"
 La["Azuregos"] = "Azuregos"
 La["Battleground Deserter"] = "Disertore di campi di battaglia"
+--[[Translation missing --]]
+La["BH"] = "BH"
 La["Bind a key to toggle the SavedInstances tooltip"] = "Abbina un tasto per mostrare la finestra di SavedInstances "
 --[[Translation missing --]]
 La["Bonus loot frame"] = "Bonus loot frame"
@@ -3497,6 +3698,8 @@ La["Facets of Research"] = "Preziosi da Ricerca"
 --[[Translation missing --]]
 La["FH"] = "FH"
 --[[Translation missing --]]
+La["Fighting is Its Own Reward"] = "Fighting is Its Own Reward"
+--[[Translation missing --]]
 La["Fire"] = "Fire"
 --[[Translation missing --]]
 La["Fire Core"] = "Fire Core"
@@ -3541,6 +3744,8 @@ La["Group"] = "Gruppo"
 La["Guild"] = "Guild"
 --[[Translation missing --]]
 La["HOA"] = "HOA"
+--[[Translation missing --]]
+La["HOI"] = "HOI"
 La["Hold Alt to show all data"] = "Tieni premuto Alt per mostrare tutti i dati"
 --[[Translation missing --]]
 La["HOV"] = "HOV"
@@ -3584,6 +3789,16 @@ La["LFG cooldown"] = "Tempo rimanente ricerca delle spedizioni"
 La["LFR"] = "Ricerca spedizioni"
 La["List categories from the current expansion pack first"] = "Elenca categorie partendo dall'espansione attuale"
 La["List raid categories before dungeon categories"] = "Elenca le incursioni prima delle spedizioni"
+--[[Translation missing --]]
+La["Loot Aspect Crest Fragment"] = "Loot Aspect Crest Fragment"
+--[[Translation missing --]]
+La["Loot Drake Crest Fragment"] = "Loot Drake Crest Fragment"
+--[[Translation missing --]]
+La["Loot Spark of Shadowflame"] = "Loot Spark of Shadowflame"
+--[[Translation missing --]]
+La["Loot Whelpling Crest Fragment"] = "Loot Whelpling Crest Fragment"
+--[[Translation missing --]]
+La["Loot Wyrm Crest Fragment"] = "Loot Wyrm Crest Fragment"
 La["Lord Kazzak"] = "Sire Kazzak"
 --[[Translation missing --]]
 La["LOWR"] = "LOWR"
@@ -3610,6 +3825,8 @@ La["Mythic Keystone"] = "Mythic Keystone"
 La["Nathanos Blightcaller"] = "Nathanos Blightcaller"
 --[[Translation missing --]]
 La["Neela Firebane"] = "Neela Firebane"
+--[[Translation missing --]]
+La["NELT"] = "NELT"
 La["Never show"] = "Non mostrare mai"
 --[[Translation missing --]]
 La["NL"] = "NL"
@@ -3756,6 +3973,8 @@ La["Trial of Elements"] = "Trial of Elements"
 --[[Translation missing --]]
 La["Trial of Flood"] = "Trial of Flood"
 La["Type"] = "Tipo"
+--[[Translation missing --]]
+La["ULD"] = "ULD"
 --[[Translation missing --]]
 La["UNDR"] = "UNDR"
 --[[Translation missing --]]

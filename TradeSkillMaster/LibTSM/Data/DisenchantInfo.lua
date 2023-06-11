@@ -776,6 +776,19 @@ elseif Environment.IsRetail() then
 				{classId = Enum.ItemClass.Weapon, quality = 3, minItemLevel = 2, maxItemLevel = 999, matRate = 1.000, minAmount = 1, maxAmount = 2, amountOfMats = 1.400},
 			},
 		},
+		["i:194123"] = { -- Chromatic Dust
+			expansion = 9,
+			minLevel = 60,
+			maxLevel = 70,
+			sourceInfo = {
+				{classId = Enum.ItemClass.Armor, quality = 2, minItemLevel = 2, maxItemLevel = 999, matRate = 1.000, minAmount = 1, maxAmount = 2, amountOfMats = 1.500},
+				{classId = Enum.ItemClass.Armor, quality = 3, minItemLevel = 2, maxItemLevel = 999, matRate = 0.500, minAmount = 2, maxAmount = 3, amountOfMats = 1.2500},
+				{classId = Enum.ItemClass.Profession, quality = 2, minItemLevel = 2, maxItemLevel = 999, matRate = 1.000, minAmount = 1, maxAmount = 2, amountOfMats = 1.500},
+				{classId = Enum.ItemClass.Profession, quality = 3, minItemLevel = 2, maxItemLevel = 999, matRate = 0.500, minAmount = 2, maxAmount = 3, amountOfMats = 1.2500},
+				{classId = Enum.ItemClass.Weapon, quality = 2, minItemLevel = 2, maxItemLevel = 999, matRate = 1.000, minAmount = 1, maxAmount = 2, amountOfMats = 1.500},
+				{classId = Enum.ItemClass.Weapon, quality = 3, minItemLevel = 2, maxItemLevel = 999, matRate = 0.350, minAmount = 4, maxAmount = 5, amountOfMats = 1.575},
+			},
+		},
 
 		-- Essences
 		["i:10938"] = { -- Lesser Magic Essence
@@ -1048,6 +1061,19 @@ elseif Environment.IsRetail() then
 				{classId = Enum.ItemClass.Weapon, quality = 4, minItemLevel = 2, maxItemLevel = 999, matRate = 0.350, minAmount = 1, maxAmount = 1, amountOfMats = 0.350},
 			},
 		},
+		["i:194124"] = { -- Vibrant Shard
+			expansion = 9,
+			minLevel = 60,
+			maxLevel = 70,
+			sourceInfo = {
+				{classId = Enum.ItemClass.Armor, quality = 3, minItemLevel = 2, maxItemLevel = 999, matRate = 0.500, minAmount = 1, maxAmount = 1, amountOfMats = 0.500},
+				{classId = Enum.ItemClass.Armor, quality = 4, minItemLevel = 2, maxItemLevel = 999, matRate = 0.500, minAmount = 1, maxAmount = 2, amountOfMats = 0.750},
+				{classId = Enum.ItemClass.Profession, quality = 3, minItemLevel = 2, maxItemLevel = 999, matRate = 0.500, minAmount = 1, maxAmount = 1, amountOfMats = 0.500},
+				{classId = Enum.ItemClass.Profession, quality = 4, minItemLevel = 2, maxItemLevel = 999, matRate = 0.500, minAmount = 1, maxAmount = 2, amountOfMats = 0.750},
+				{classId = Enum.ItemClass.Weapon, quality = 3, minItemLevel = 2, maxItemLevel = 999, matRate = 0.650, minAmount = 1, maxAmount = 2, amountOfMats = 0.800},
+				{classId = Enum.ItemClass.Weapon, quality = 4, minItemLevel = 2, maxItemLevel = 999, matRate = 0.600, minAmount = 2, maxAmount = 3, amountOfMats = 1.350},
+			},
+		},
 
 		-- Crystals
 		["i:22450"] = { -- Void Crystal
@@ -1135,6 +1161,16 @@ elseif Environment.IsRetail() then
 			sourceInfo = {
 				{classId = Enum.ItemClass.Armor, quality = 4, minItemLevel = 2, maxItemLevel = 999, matRate = 1.000, minAmount = 1, maxAmount = 1, amountOfMats = 1.000},
 				{classId = Enum.ItemClass.Weapon, quality = 4, minItemLevel = 2, maxItemLevel = 999, matRate = 1.000, minAmount = 1, maxAmount = 1, amountOfMats = 1.000},
+			},
+		},
+		["i:200113"] = { -- Resonant Crystal
+			expansion = 9,
+			minLevel = 60,
+			maxLevel = 70,
+			sourceInfo = {
+				{classId = Enum.ItemClass.Armor, quality = 4, minItemLevel = 2, maxItemLevel = 999, matRate = 0.500, minAmount = 1, maxAmount = 1, amountOfMats = 0.500},
+				{classId = Enum.ItemClass.Profession, quality = 4, minItemLevel = 2, maxItemLevel = 999, matRate = 0.500, minAmount = 1, maxAmount = 1, amountOfMats = 0.500},
+				{classId = Enum.ItemClass.Weapon, quality = 4, minItemLevel = 2, maxItemLevel = 999, matRate = 0.400, minAmount = 1, maxAmount = 2, amountOfMats = 0.450},
 			},
 		},
 	}

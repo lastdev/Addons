@@ -40,6 +40,7 @@ function DC:Init()
 end
 
 function DC:AddCollectedDataToEnemyTable(dungeonIndex, ignoreSpells, ignoreCC)
+  db = MDT:GetDB()
   if not dungeonIndex then dungeonIndex = db.currentDungeonIdx end
   --add spells/characteristics from db to dungeonEnemies
   local spellsAdded = 0

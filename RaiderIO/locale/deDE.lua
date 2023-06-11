@@ -53,25 +53,20 @@ L["DISABLE_RWF_MODE_RELOAD"] = "Du deaktivierst den Wettrennen Welt 1.-Modus. Du
 L["DPS"] = "DPS"
 L["DUNGEON_SHORT_NAME_AA"] = "Akademie von Algeth'ar"
 L["DUNGEON_SHORT_NAME_AV"] = "Azurblaue Gewölbe"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_BH"] = ""--]] 
+L["DUNGEON_SHORT_NAME_BH"] = "Brackenfellhöhle"
 L["DUNGEON_SHORT_NAME_COS"] = "Hof der Sterne"
 L["DUNGEON_SHORT_NAME_DOS"] = "Die Andre Seite"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_FH"] = ""--]] 
+L["DUNGEON_SHORT_NAME_FH"] = "Freihafen"
 L["DUNGEON_SHORT_NAME_GD"] = "Das Grimmgleisdepot"
 L["DUNGEON_SHORT_NAME_GMBT"] = "Tazavesh So'leahs Schachzug"
 L["DUNGEON_SHORT_NAME_HOA"] = "Hallen der Sühne"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_HOI"] = ""--]] 
+L["DUNGEON_SHORT_NAME_HOI"] = "Hallen der Infusion"
 L["DUNGEON_SHORT_NAME_HOV"] = "Hallen der Tapferkeit"
 L["DUNGEON_SHORT_NAME_ID"] = "Die Eisendocks"
 L["DUNGEON_SHORT_NAME_LOWR"] = "Untere Rückkehr nach Karazhan"
 L["DUNGEON_SHORT_NAME_MISTS"] = "Nebel von Tirna Scithe"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_NELT"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_NL"] = ""--]] 
+L["DUNGEON_SHORT_NAME_NELT"] = "Neltharus"
+L["DUNGEON_SHORT_NAME_NL"] = "Neltharions Hort"
 L["DUNGEON_SHORT_NAME_NO"] = "Angriff der Nokhud"
 L["DUNGEON_SHORT_NAME_NW"] = "Nekrotische Schneise"
 L["DUNGEON_SHORT_NAME_PF"] = "Seuchensturz"
@@ -82,14 +77,11 @@ L["DUNGEON_SHORT_NAME_SOA"] = "Spitzen des Aufstiegs"
 L["DUNGEON_SHORT_NAME_STRT"] = "Tazavesh Wundersame Straßen"
 L["DUNGEON_SHORT_NAME_TJS"] = "Tempel der Jadeschlange"
 L["DUNGEON_SHORT_NAME_TOP"] = "Theater der Schmerzen"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_ULD"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_UNDR"] = ""--]] 
+L["DUNGEON_SHORT_NAME_ULD"] = "Uldaman"
+L["DUNGEON_SHORT_NAME_UNDR"] = "Der Tiefenpfuhl"
 L["DUNGEON_SHORT_NAME_UPPR"] = "Obere Rückkehr nach Karazhan"
 L["DUNGEON_SHORT_NAME_VOTW"] = "Verlies der Wächterinnen"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_VP"] = ""--]] 
+L["DUNGEON_SHORT_NAME_VP"] = "Der Vortexgipfel"
 L["DUNGEON_SHORT_NAME_WORK"] = "Operation Mechagon - Werkstatt"
 L["DUNGEON_SHORT_NAME_YARD"] = "Operation Mechagon - Schrottplatz"
 L["ENABLE_AUTO_FRAME_POSITION"] = "Positioniert den Raider.IO Profilrahmen automatisch"
@@ -151,24 +143,16 @@ L["PREVIOUS_SCORE"] = "Vorige M+ Wertung (%s)"
 L["PROFILE_BEST_RUNS"] = "Beste Durchläufe aller Dungeons"
 L["PROFILE_TOOLTIP_ANCHOR_TOOLTIP"] = "Sperrt den Raider.IO-Profilrahmen oder aktiviert die automatische Positionierung, um diesen Anker auszublenden."
 L["PROVIDER_NOT_LOADED"] = "|cffFF0000Warnung:|r |cffFFFFFF%s|r konnte keine Daten für die aktuelle Fraktion finden. Bitte überprüfe die |cffFFFFFF/raiderio|r Einstellungen und aktiviere die Tooltip-Daten für |cffFFFFFF%s|r."
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATSC_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATSC_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATSC_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATSC_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATSC_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATSC_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATSC_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATSC_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATSC_9"] = ""--]] 
+L["PVP_DATA_HEADER"] = "Raider.IO PvP Profil"
+L["RAID_BOSS_ATSC_1"] = "Kazzara, die Höllengeschmiedete"
+L["RAID_BOSS_ATSC_2"] = "Die Verschmelzungskammer"
+L["RAID_BOSS_ATSC_3"] = "Die vergessenen Experimente"
+L["RAID_BOSS_ATSC_4"] = "Angriff der Zaqali"
+L["RAID_BOSS_ATSC_5"] = "Ältester Rashok"
+L["RAID_BOSS_ATSC_6"] = "Der aufmerksame Verwalter, Zskarn"
+L["RAID_BOSS_ATSC_7"] = "Magmorax"
+L["RAID_BOSS_ATSC_8"] = "Echo von Neltharion"
+L["RAID_BOSS_ATSC_9"] = "Schuppenkommandant Sarkareth"
 L["RAID_BOSS_CN_1"] = "Schrillschwinge"
 L["RAID_BOSS_CN_10"] = "Graf Denathrius"
 L["RAID_BOSS_CN_2"] = "Jäger Altimor"
@@ -261,6 +245,10 @@ L["RELOAD_LATER"] = "Ich werde später neu laden"
 L["RELOAD_NOW"] = "Jetzt neu laden"
 L["RELOAD_RWF_MODE_BUTTON"] = "Speichern"
 L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = "Klicke hier, um das Protokoll in die Speicherdatei zu speichern. Dadurch wird deine Benutzeroberfläche neu geladen."
+L["REPLAY_SETTINGS_TOOLTIP"] = "Einstellungen"
+L["REPLAY_STYLE_TITLE_MDI"] = "MDI"
+L["REPLAY_STYLE_TITLE_MODERN"] = "Modern"
+L["REPLAY_STYLE_TITLE_MODERN_COMPACT"] = "Modern (Kompakt)"
 L["RWF_MINIBUTTON_TOOLTIP"] = "Klicke mit der linken Maustaste, wann immer es anstehende Beute gibt. Dadurch wird deine Benutzeroberfläche neu geladen. Klicke mit der rechten Maustaste, um das Wettrennen Welt 1.-Fenster zu öffnen."
 L["RWF_SUBTITLE_LOGGING_FILTERED_LOOT"] = "(Protokollierung relevanter Gegenstände)"
 L["RWF_SUBTITLE_LOGGING_LOOT"] = "(Protokollierung Beute)"

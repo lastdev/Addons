@@ -682,6 +682,8 @@ L["Forward"] = "Forward"
 --[[Translation missing --]]
 L["Forward, Reverse Loop"] = "Forward, Reverse Loop"
 --[[Translation missing --]]
+L["Fourth Value of Tooltip Text"] = "Fourth Value of Tooltip Text"
+--[[Translation missing --]]
 L["Frame Selector"] = "Frame Selector"
 L["Frequency"] = "Fréquence"
 --[[Translation missing --]]
@@ -1688,6 +1690,8 @@ L["Tooltip"] = "Info-bulle"
 L["Tooltip Value 1"] = "Valeur de l'info-bulle 1"
 L["Tooltip Value 2"] = "Valeur de l'info-bulle 2"
 L["Tooltip Value 3"] = "Valeur de l'info-bulle 3"
+--[[Translation missing --]]
+L["Tooltip Value 4"] = "Tooltip Value 4"
 L["Top"] = "Haut"
 L["Top Left"] = "Haut Gauche"
 L["Top Right"] = "Haut Droite"

@@ -6,7 +6,7 @@
 
 local TSM = select(2, ...) ---@type TSM
 local Environment = TSM.Include("Environment")
-local Locale = TSM.Init("Locale")
+local Locale = TSM.Init("Locale") ---@class Locale
 local private = {
 	locale = nil,
 	tbl = nil,
@@ -30,6 +30,8 @@ Locale:OnModuleLoad(function()
 	end
 end)
 
+---Gets the locale table.
+---@return table<string,string>
 function Locale.GetTable()
 	assert(private.tbl)
 	return private.tbl

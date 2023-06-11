@@ -961,7 +961,7 @@ local function applyBuff( aura, duration, stacks, value, v2, v3, applied )
         b.applied = applied or state.query_time
         b.last_application = b.applied or 0
 
-        b.duration = duration
+        -- b.duration = duration
 
         b.expires = b.applied + duration
         b.last_expiry = b.expires
@@ -1090,7 +1090,7 @@ local function applyDebuff( unit, aura, duration, stacks, value, noPandemic )
         -- state.debuff[ aura ] = state.debuff[ aura ] or {}
         if not noPandemic then duration = min( 1.3 * duration, d.remains + duration ) end
 
-        d.duration = duration
+        -- d.duration = duration
         d.expires = state.query_time + duration
 
         d.lastCount = d.count or 0
@@ -2687,6 +2687,7 @@ local mt_toggle = {
 
         if k == "cooldowns" and toggle.override and state.buff.bloodlust.up then return true end
         if k == "essences" and toggle.override and state.toggle.cooldowns then return true end
+        if k == "potions" and toggle.override and state.toggle.cooldowns then return true end
 
         if toggle then return toggle.value end
     end
@@ -3554,7 +3555,7 @@ local default_buff_values = {
     lastApplied = 0,
     expires = 0,
     applied = 0,
-    duration = 15,
+    -- duration = 15,
     caster = "nobody",
     timeMod = 1,
     v1 = 0,
@@ -3610,7 +3611,7 @@ do
         applied = 1,
         caster = 1,
         count = 1,
-        duration = 1,
+        -- duration = 1,
         expires = 1,
         last_application = 1,
         last_expiry = 1,
@@ -3705,7 +3706,7 @@ do
                     buff.id = spellID
                     buff.name = name
                     buff.count = count > 0 and count or 1
-                    buff.duration = duration
+                    -- buff.duration = duration
                     buff.expires = expires
                     buff.caster = caster
                     buff.applied = expires - duration
@@ -3752,9 +3753,9 @@ do
                     t.count = real.count
                     t.lastCount = real.lastCount or 0
                     t.lastApplied = real.lastApplied or 0
-                    t.duration = real.duration
+                    -- t.duration = real.duration
                     t.expires = real.expires
-                    t.applied = max( 0, real.expires - real.duration )
+                    t.applied = real.applied
                     t.caster = real.caster
                     t.id = real.id or class.auras[ t.key ].id
                     t.timeMod = real.timeMod
@@ -3790,8 +3791,12 @@ do
                 -- if state.IsCycling( t.key ) then return 0 end
                 return t.applied <= state.query_time and max( 0, t.expires - state.query_time ) or 0
 
+            elseif k == "duration" then
+                return aura.duration or ( t.remains > 0 and t.expires - t.applied ) or 15
+
             elseif k == "refreshable" then
-                return t.remains < 0.3 * ( aura.duration or 30 )
+                local tr = t.remains
+                return tr == 0 or tr < ( 0.3 * ( aura.duration or 30 ) )
 
             elseif k == "time_to_refresh" then
                 local remains = t.remains
@@ -3894,7 +3899,7 @@ do
         count = 0,
         lastCount = 0,
         lastApplied = 0,
-        duration = 30,
+        -- duration = 30,
         expires = 0,
         applied = 0,
         caster = "nobody",
@@ -3961,9 +3966,9 @@ do
                 buff.count = real.count
                 buff.lastCount = real.lastCount or 0
                 buff.lastApplied = real.lastApplied or 0
-                buff.duration = real.duration
+                -- buff.duration = real.duration
                 buff.expires = real.expires
-                buff.applied = max( 0, real.expires - real.duration )
+                buff.applied = real.applied
                 buff.caster = real.caster
                 buff.id = real.id
                 buff.timeMod = real.timeMod
@@ -3982,6 +3987,7 @@ do
             local aura = class.auras[ k ]
 
             if aura then
+                aura.used = true
                 if aura.meta then rawset( v, "metastack", {} ) end
                 if aura.alias then
                     rawset( t, k, setmetatable( v, mt_alias_buff ) )
@@ -4674,7 +4680,7 @@ local default_debuff_values = {
     lastApplied = 0,
     expires = 0,
     applied = 0,
-    duration = 15,
+    -- duration = 15,
     caster = "nobody",
     timeMod = 1,
     v1 = 0,
@@ -4691,7 +4697,7 @@ local cycle_debuff = {
     lastApplied = 0,
     expires = 0,
     applied = 0,
-    duration = 0,
+    -- duration = 0,
     caster = "nobody",
     timeMod = 1,
     v1 = 0,
@@ -4725,7 +4731,7 @@ do
         applied = 1,
         caster = 1,
         count = 1,
-        duration = 1,
+        -- duration = 1,
         expires = 1,
         lastApplied = 1,
         lastCount = 1,
@@ -4774,9 +4780,9 @@ do
                     t.count = real.count
                     t.lastCount = real.lastCount or 0
                     t.lastApplied = real.lastApplied or 0
-                    t.duration = real.duration
+                    -- t.duration = real.duration
                     t.expires = real.expires or 0
-                    t.applied = max( 0, real.expires - real.duration )
+                    t.applied = real.applied or 0
                     t.caster = real.caster
                     t.id = real.id
                     t.timeMod = real.timeMod
@@ -4804,11 +4810,15 @@ do
             elseif k == "down" then
                 return t.remains == 0
 
+            elseif k == "duration" then
+                return aura.duration or ( t.remains > 0 and t.expires - t.applied ) or 30
+
             elseif k == "remains" then
                 return t.applied <= state.query_time and max( 0, t.expires - state.query_time ) or 0
 
             elseif k == "refreshable" then
-                return t.remains < 0.3 * ( aura and aura.duration or t.duration or 30 )
+                local tr = t.remains
+                return tr == 0 or tr < 0.3 * ( aura.duration or 30 )
 
             elseif k == "time_to_refresh" then
                 return t.up and max( 0, 0.01 + t.remains - ( 0.3 * ( aura.duration or 30 ) ) ) or 0
@@ -4863,8 +4873,7 @@ do
             Error ( "UNK: debuff." .. t.key .. "." .. k )
         end,
         __newindex = function( t, k, v )
-            if v == nil then return end
-            if autoReset[ k ] then Mark( t, k ) end
+            if v ~= nil and autoReset[ k ] then Mark( t, k ) end
             rawset( t, k, v )
         end
     }
@@ -4877,7 +4886,7 @@ do
         count = 0,
         lastCount = 0,
         lastApplied = 0,
-        duration = 30,
+        -- duration = 30,
         expires = 0,
         applied = 0,
         caster = "nobody",
@@ -4942,9 +4951,9 @@ do
                 debuff.count = real.count
                 debuff.lastCount = real.lastCount or 0
                 debuff.lastApplied = real.lastApplied or 0
-                debuff.duration = real.duration
+                -- debuff.duration = real.duration
                 debuff.expires = real.expires
-                debuff.applied = max( 0, real.expires - real.duration )
+                debuff.applied = real.applied
                 debuff.caster = real.caster
                 debuff.id = real.id
                 debuff.timeMod = real.timeMod
@@ -4959,7 +4968,7 @@ do
                 debuff.count = 0
                 debuff.lastCount = 0
                 debuff.lastApplied = 0
-                debuff.duration = aura and aura.duration or 30
+                -- debuff.duration = aura and aura.duration or 30
                 debuff.expires = 0
                 debuff.applied = 0
                 debuff.caster = "nobody"
@@ -4980,6 +4989,7 @@ do
             local aura = class.auras[ k ]
 
             if aura then
+                aura.used = true
                 if aura.meta then rawset( v, "metastack", {} ) end
                 if aura.alias then
                     rawset( t, k, setmetatable( v, mt_alias_debuff ) )
@@ -5149,7 +5159,7 @@ local mt_default_action = {
             return state.combat > 0 and max( 0, ability.lastCast - state.combat ) or 0
 
         elseif k == "time_since" then
-            return max( 0, state.query_time - ability.lastCast )
+            return min( 3600, max( 0, state.query_time - ability.lastCast ) )
 
         elseif k == "in_range" then
             if UnitExists( "target" ) and UnitCanAttack( "player", "target" ) and LSR.IsSpellInRange( ability.rangeSpell or ability.id, "target" ) == 0 then
@@ -5397,7 +5407,7 @@ do
             a.count            = 0
             a.expires          = 0
             a.applied          = 0
-            a.duration         = aura.duration or a.duration
+            -- a.duration         = aura.duration or a.duration
             a.caster           = "nobody"
             a.timeMod          = 1
             a.v1               = 0
@@ -5424,7 +5434,7 @@ do
 
                 a.name     = name
                 a.count    = count > 0 and count or 1
-                a.duration = duration
+                -- a.duration = duration
                 a.expires  = expires
                 a.applied  = expires - duration
                 a.caster   = caster
@@ -5462,7 +5472,7 @@ do
             v.count = 0
             v.expires = 0
             v.applied = 0
-            v.duration = class.auras[ k ] and class.auras[ k ].duration or v.duration
+            -- v.duration = class.auras[ k ] and class.auras[ k ].duration or v.duration
             v.caster = "nobody"
             v.timeMod = 1
             v.v1 = 0
@@ -5478,7 +5488,7 @@ do
             v.count = 0
             v.expires = 0
             v.applied = 0
-            v.duration = class.auras[ k ] and class.auras[ k ].duration or v.duration
+            -- v.duration = class.auras[ k ] and class.auras[ k ].duration or v.duration
             v.caster = "nobody"
             v.timeMod = 1
             v.v1 = 0
@@ -5513,7 +5523,7 @@ do
                 buff.name = name
                 buff.count = count > 0 and count or 1
                 buff.expires = expires
-                buff.duration = duration
+                -- buff.duration = duration
                 buff.applied = expires - duration
                 buff.caster = caster
                 buff.timeMod = timeMod
@@ -5554,7 +5564,7 @@ do
                 debuff.name = name
                 debuff.count = count > 0 and count or 1
                 debuff.expires = expires
-                debuff.duration = duration
+                -- debuff.duration = duration
                 debuff.applied = expires - duration
                 debuff.caster = caster
                 debuff.timeMod = timeMod
@@ -5593,7 +5603,7 @@ do
                     buff.name = name
                     buff.count = count > 0 and count or 1
                     buff.expires = expires
-                    buff.duration = duration
+                    -- buff.duration = duration
                     buff.applied = expires - duration
                     buff.caster = caster
                     buff.timeMod = timeMod
@@ -5636,7 +5646,7 @@ do
                     debuff.name = name
                     debuff.count = count > 0 and count or 1
                     debuff.expires = expires
-                    debuff.duration = duration
+                    -- debuff.duration = duration
                     debuff.applied = expires - duration
                     debuff.caster = caster
                     debuff.timeMod = timeMod
@@ -6045,7 +6055,7 @@ do
 
         elseif e.type == "CHANNEL_FINISH" then
             if ability.finish then ability.finish() end
-            self.stopChanneling( false, ability.key )
+            -- self.stopChanneling( false, ability.key )
 
         elseif e.type == "PROJECTILE_IMPACT" then
             local wasCycling = self.IsCycling( nil, true )
@@ -6419,7 +6429,7 @@ do
             state.setCooldown( "ascendance", state.buff.ascendance.remains + 165 )
         end
 
-        -- Trinkets that need special handling.
+        --[[ Trinkets that need special handling.
         if state.buff.stormeaters_boon.up and state.debuff.rooted.down then
             state.applyDebuff( "player", "rooted", state.buff.stormeaters_boon.remains )
         end
@@ -6456,7 +6466,7 @@ do
                 state.buff.acquired_axe.expires = state.buff.acquired_sword.expires + 12
                 state.buff.acquired_axe.applied = state.buff.acquired_sword.expires
             end
-        end
+        end ]]
 
         state.empowerment.active = state.empowerment.hold > state.now
 
@@ -6465,7 +6475,7 @@ do
         Hekili:Yield( "Reset Pre-Casting" )
 
         if state.empowerment.active then
-            local timeDiff = state.now - state.buff.casting.applied
+            local timeDiff = state.now - state.empowerment.start
             if timeDiff > 0 then
                 if Hekili.ActiveDebug then Hekili:Debug( "Empowerment is active; turning back time by " .. timeDiff .. "s..." ) end
                 state.now = state.now - timeDiff
@@ -6875,7 +6885,7 @@ function state:IsKnown( sID )
 
     if not ability then
         Error( "IsKnown() - " .. sID .. " / " .. original .. " not found in abilities table.\n\n" .. debugstack() )
-        return false
+        return false, format( "%s / %s not found in abilities table", tostring( original ), tostring( sID ) )
     end
 
     if IsAbilityDisabled( ability ) then return false, "not usable here" end
@@ -6896,8 +6906,6 @@ function state:IsKnown( sID )
     end
 
     if IsDisabledCovenantSpell( sID ) then return false, "covenant spells are disabled" end
-
-    local profile = Hekili.DB.profile
 
     if ability.spec and not state.spec[ ability.spec ] then
         return false, "wrong specialization"
@@ -7236,8 +7244,11 @@ function state:TimeToReady( action, pool )
     local z = ability.id
 
     if z < -99 or z > 0 then
-        -- if not ability.dual_cast and ( ability.gcd ~= "off" or ( ability.item and not ability.essence ) or not ability.interrupt ) then
-        if not self.args.use_off_gcd and ( ability.gcd ~= "off" or ( ability.item and not ability.essence ) ) then
+        -- Don't use before the GCD expires, unless:
+        -- 1. The "use_off_gcd" flag is set in the priority.
+        -- 2. The ability is flagged as an interrupt or defensive.
+        local requires = ability.toggle
+        if requires ~= "interrupts" and requires ~= "defensives" and not self.safebool( self.args.use_off_gcd ) then
             wait = max( wait, self.cooldown.global_cooldown.remains )
         end
 
@@ -7453,4 +7464,4 @@ for k, v in pairs( state ) do
     ns.commitKey( k )
 end
 
-ns.attr = { "serenity", "active", "active_enemies", "my_enemies", "active_flame_shock", "adds", "agility", "air", "armor", "attack_power", "bonus_armor", "cast_delay", "cast_time", "casting", "cooldown_react", "cooldown_remains", "cooldown_up", "crit_rating", "deficit", "distance", "down", "duration", "earth", "enabled", "energy", "execute_time", "fire", "five", "focus", "four", "gcd", "hardcasts", "haste", "haste_rating", "health", "health_max", "health_pct", "intellect", "level", "mana", "mastery_rating", "mastery_value", "max_nonproc", "max_stack", "maximum_energy", "maximum_focus", "maximum_health", "maximum_mana", "maximum_rage", "maximum_runic", "melee_haste", "miss_react", "moving", "mp5", "multistrike_pct", "multistrike_rating", "one", "pct", "rage", "react", "regen", "remains", "resilience_rating", "runic", "seal", "spell_haste", "spell_power", "spirit", "stack", "stack_pct", "stacks", "stamina", "strength", "this_action", "three", "tick_damage", "tick_dmg", "tick_time", "ticking", "ticks", "ticks_remain", "time", "time_to_die", "time_to_max", "travel_time", "two", "up", "water", "weapon_dps", "weapon_offhand_dps", "weapon_offhand_speed", "weapon_speed", "single", "aoe", "cleave", "percent", "last_judgment_target", "unit", "ready", "refreshable", "pvptalent", "conduit", "legendary", "runeforge", "covenant", "soulbind", "enabled", "full_recharge_time", "time_to_max_charges", "remains_guess", "execute", "actual", "current", "cast_regen", "boss", "exists", "disabled", "fight_remains" }
+ns.attr = { "serenity", "active", "active_enemies", "my_enemies", "active_flame_shock", "adds", "agility", "air", "armor", "attack_power", "bonus_armor", "cast_delay", "cast_time", "casting", "cooldown_react", "cooldown_remains", "cooldown_up", "crit_rating", "deficit", "distance", "down", "duration", "earth", "enabled", "energy", "execute_time", "fire", "five", "focus", "four", "gcd", "hardcasts", "haste", "haste_rating", "health", "health_max", "health_pct", "intellect", "level", "mana", "mastery_rating", "mastery_value", "max_nonproc", "max_stack", "maximum_energy", "maximum_focus", "maximum_health", "maximum_mana", "maximum_rage", "maximum_runic", "melee_haste", "miss_react", "moving", "mp5", "multistrike_pct", "multistrike_rating", "one", "pct", "rage", "react", "regen", "remains", "resilience_rating", "runic", "seal", "spell_haste", "spell_power", "spirit", "stack", "stack_pct", "stacks", "stamina", "strength", "this_action", "three", "tick_damage", "tick_dmg", "tick_time", "ticking", "ticks", "ticks_remain", "time", "time_to_die", "time_to_max", "travel_time", "two", "up", "water", "weapon_dps", "weapon_offhand_dps", "weapon_offhand_speed", "weapon_speed", "single", "aoe", "cleave", "percent", "last_judgment_target", "unit", "ready", "refreshable", "pvptalent", "conduit", "legendary", "runeforge", "covenant", "soulbind", "enabled", "full_recharge_time", "time_to_max_charges", "remains_guess", "execute", "actual", "current", "cast_regen", "boss", "exists", "disabled", "fight_remains", "last_used", "time_since", "max" }

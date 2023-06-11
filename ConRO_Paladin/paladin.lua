@@ -772,7 +772,7 @@ function ConRO.Paladin.Retribution(_, timeShift, currentSpell, gcd, tChosen, pvp
 				_EmpyreanPower_BUFF = false;
 			end
 
-			if _CrusaderStrike_RDY and not tChosen[Ability.TemplarStrikes.talentID] then
+			if _CrusaderStrike_RDY and not (tChosen[Ability.TemplarStrikes.talentID] or tChosen[Ability.CrusadingStrikes.talentID]) then
 				tinsert(ConRO.SuggestedSpells, _CrusaderStrike);
 				_CrusaderStrike_CHARGES = _CrusaderStrike_CHARGES -1;
 				_HolyPower = _HolyPower + 1;

@@ -319,6 +319,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Distribute Vertically"] = "垂直分佈"
 	L["Do not group this display"] = "不要群組這個提醒效果"
 	L["Do you want to ignore all future updates for this aura"] = "是否要忽略此提醒效果未來的所有更新"
+	--[[Translation missing --]]
+	L["Do you want to stop ignoring all future updates for this aura"] = "Do you want to stop ignoring all future updates for this aura"
 	L["Documentation"] = "文件"
 	L["Done"] = "完成"
 	L["Drag to move"] = "滑鼠拖曳來移動"
@@ -511,6 +513,8 @@ Can use \ to escape -.]=] ] = "過濾器格式：'名字'，'名字-伺服器'�
 	L["Ignore out of checking range"] = "忽略超出檢查範圍"
 	L["Ignore Self"] = "忽略自己"
 	L["Ignore updates"] = "忽略更新"
+	--[[Translation missing --]]
+	L["Ignore Wago updates"] = "Ignore Wago updates"
 	L["Ignored"] = "忽略"
 	L["Ignored Aura Name"] = "忽略的光環名稱"
 	L["Ignored Exact Spell ID(s)"] = "忽略的正確法術 ID"
@@ -845,7 +849,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = [=[發生的�
 	L["Thickness"] = "粗細"
 	L["This adds %raidMark as text replacements."] = "這會加入 %raidMark 作為替換用的文字。"
 	L["This adds %role, %roleIcon as text replacements. Does nothing if the unit is not a group member."] = "這會加入%role、%roleIcon作為文字替換。如果該單位不是隊伍成員，則不執行任何操作。"
-	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements and also allows filtering based on the tooltip content/values."] = "這會加入%tooltip、%tooltip1、%tooltip2、%tooltip3作為文字替換。並且還允許基於工具提示內容/值進行過濾。"
+	--[[Translation missing --]]
+	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 and %tooltip4 as text replacements and also allows filtering based on the tooltip content/values."] = "This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 and %tooltip4 as text replacements and also allows filtering based on the tooltip content/values."
 	L[ [=[This aura contains custom Lua code.
 Make sure you can trust the person who sent it!]=] ] = "這個提醒效果包含自訂的 Lua 程式碼，請務必確定你能夠信任傳送給你的人!"
 	L[ [=[This aura was created with a different version (%s) of World of Warcraft.
@@ -936,9 +941,8 @@ It might not work correctly with your version!]=] ] = "這個提醒效果是用�
 	L["Y Rotation"] = "垂直旋轉"
 	L["Y Scale"] = "垂直縮放"
 	L["Yellow Rune"] = "黃色符文"
-	L["Yes"] = "是"
-	L["y-Offset"] = "垂直位置偏移"
 	L["Y-Offset"] = "垂直位置"
+	L["y-Offset"] = "垂直位置偏移"
 	L["You already have this group/aura. Importing will create a duplicate."] = "你已經有了這個群組/提醒效果。匯入後將會建立另一個複製版本。"
 	L["You are about to delete %d aura(s). |cFFFF0000This cannot be undone!|r Would you like to continue?"] = "你正準備要刪除 %d 個提醒效果，刪除後將|cFFFF0000無法還原!|r 請問是否要繼續?"
 	L["You are about to delete a trigger. |cFFFF0000This cannot be undone!|r Would you like to continue?"] = "你正要刪除觸發。 |cFFFF0000刪除後將無法還原!|r 是否確定要繼續?"

@@ -8,6 +8,17 @@ function Plater.GetChangelogTable()
 	if (not Plater.ChangeLogTable) then
 		Plater.ChangeLogTable = {
 			
+			{1685613078,  "Bug Fix", "June 1st, 2023", "Fixing an issue with aura updates not being done properly in some cases.", "cont1nuity"},
+			{1685613078,  "New Feature", "June 1st, 2023", "Adding auto-toggle for 'Hide Blizzard Healthbars' based on combat state.", "cont1nuity"},
+			{1685613078,  "Backend Change", "May 31st, 2023", "Fixing some issues on aura updates to increase performance.", "cont1nuity"},
+			{1685613078,  "Backend Change", "May 31st, 2023", "More detailed profiling.", "cont1nuity"},
+			{1685613078,  "Backend Change", "May 27th, 2023", "Refreshing healthbar colors now takes NPC colors into account.", "cont1nuity"},
+			{1685613078,  "Backend Change", "May 26th, 2023", "Adding more DF S2 units to be forced in combat.", "cont1nuity"},
+			{1685613078,  "Bug Fix", "May 26th, 2023", "Aura tooltips no longer block camera movement.", "cont1nuity"},
+			
+			{1683636158,  "Backend Change", "May 20th, 2023", "Fixed 'Ultra Important Cast' script showing red color for interruptible casts.", "Terciob"},
+			{1683636158,  "Backend Change", "May 12th, 2023", "Support new evoker spec.", "cont1nuity"},
+			
 			{1683636158,  "Backend Change", "May 9th, 2023", "Move addon compartment support to LibDBIcon.", "cont1nuity"},
 			{1683636158,  "Backend Change", "May 9th, 2023", "Updates to Plater default scripts for season 2.", "Terciob"},
 			{1683636158,  "Backend Change", "May 9th, 2023", "Additional work on DBM Boss-Mod-Icon-Bars.", "cont1nuity"},

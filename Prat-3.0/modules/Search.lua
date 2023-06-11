@@ -19,6 +19,8 @@ Prat:AddModuleToLoad(function()
     module_name = "Search",
     module_desc = "Adds the ability to search the chatframes.",
     module_info = "This module adds search boxes on the chat frames, and the /find commands to search the chat history\n\nUsage:\n\n /find <text>",
+    used_alpha = "Used search box alpha",
+    unused_alpha = "Unused search box alpha",
     err_tooshort = "Search term is too short",
     err_notfound = "Not Found",
     find_results = "Find Results:",
@@ -46,6 +48,8 @@ Usage:
 
  /find <text>]=],
 		["module_name"] = "Search",
+		["unused_alpha"] = "Unused search box alpha",
+		["used_alpha"] = "Used search box alpha",
 	}
 }
 
@@ -72,6 +76,10 @@ Usage:
  /find <text>]=],
 		--[[Translation missing --]]
 		["module_name"] = "Search",
+		--[[Translation missing --]]
+		["unused_alpha"] = "Unused search box alpha",
+		--[[Translation missing --]]
+		["used_alpha"] = "Used search box alpha",
 	}
 }
 
@@ -98,6 +106,10 @@ Benutzung:
 
 Suche]=],
 		["module_name"] = "Suche",
+		--[[Translation missing --]]
+		["unused_alpha"] = "Unused search box alpha",
+		--[[Translation missing --]]
+		["used_alpha"] = "Used search box alpha",
 	}
 }
 
@@ -120,6 +132,10 @@ L = {
 
 /findall <문자열>]=],
 		["module_name"] = "검색 [Search]",
+		--[[Translation missing --]]
+		["unused_alpha"] = "Unused search box alpha",
+		--[[Translation missing --]]
+		["used_alpha"] = "Used search box alpha",
 	}
 }
 
@@ -147,6 +163,10 @@ Usage:
  /find <text>]=],
 		--[[Translation missing --]]
 		["module_name"] = "Search",
+		--[[Translation missing --]]
+		["unused_alpha"] = "Unused search box alpha",
+		--[[Translation missing --]]
+		["used_alpha"] = "Used search box alpha",
 	}
 }
 
@@ -169,6 +189,10 @@ L = {
 
 /findall <текст>]=],
 		["module_name"] = "Поиск",
+		--[[Translation missing --]]
+		["unused_alpha"] = "Unused search box alpha",
+		--[[Translation missing --]]
+		["used_alpha"] = "Used search box alpha",
 	}
 }
 
@@ -192,6 +216,10 @@ L = {
 
  /findall <文字>]=],
 		["module_name"] = "搜索",
+		--[[Translation missing --]]
+		["unused_alpha"] = "Unused search box alpha",
+		--[[Translation missing --]]
+		["used_alpha"] = "Used search box alpha",
 	}
 }
 
@@ -217,6 +245,10 @@ Usage:
  /find <text>]=],
 		--[[Translation missing --]]
 		["module_name"] = "Search",
+		--[[Translation missing --]]
+		["unused_alpha"] = "Unused search box alpha",
+		--[[Translation missing --]]
+		["used_alpha"] = "Used search box alpha",
 	}
 }
 
@@ -240,6 +272,10 @@ Usage:
 
  /find <text>]=],
 		["module_name"] = "尋找",
+		--[[Translation missing --]]
+		["unused_alpha"] = "Unused search box alpha",
+		--[[Translation missing --]]
+		["used_alpha"] = "Used search box alpha",
 	}
 }
 
@@ -269,7 +305,24 @@ Usage:
       info = {
         name = PL.module_info,
         type = "description",
-      }
+        order = 10,
+      },
+      searchinactivealpha = {
+        name = PL["unused_alpha"],
+        type = "range",
+        order = 20,
+        min = 0,
+        max = 1.0,
+        step = 0.1,
+      },
+      searchactivealpha = {
+        name = PL["used_alpha"],
+        type = "range",
+        order = 30,
+        min = 0,
+        max = 1.0,
+        step = 0.1,
+      },
     }
   })
 

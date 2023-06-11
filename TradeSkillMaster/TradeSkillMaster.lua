@@ -33,7 +33,7 @@ local private = {
 local LOGOUT_TIME_WARNING_THRESHOLD = 0.02
 do
 	-- show a message if we were updated
-	if GetAddOnMetadata("TradeSkillMaster", "Version") ~= "v4.12.37" then
+	if GetAddOnMetadata("TradeSkillMaster", "Version") ~= "v4.12.39" then
 		Wow.ShowBasicMessage("TSM was just updated and may not work properly until you restart WoW.")
 	end
 end
@@ -82,7 +82,7 @@ function TSM.OnInitialize()
 	CustomPrice.RegisterSource("TSM", "VendorBuy", L["Buy from Vendor"], ItemInfo.GetVendorBuy)
 	CustomPrice.RegisterSource("TSM", "VendorSell", L["Sell to Vendor"], ItemInfo.GetVendorSell)
 	local function GetDestroyValue(itemString)
-		return CustomPrice.GetConversionsValue(itemString, private.settings.destroyValueSource)
+		return TSM.Crafting.GetConversionsValue(itemString, private.settings.destroyValueSource)
 	end
 	CustomPrice.RegisterSource("TSM", "Destroy", L["Destroy Value"], GetDestroyValue)
 	CustomPrice.RegisterSource("TSM", "ItemQuality", L["Item Quality"], ItemInfo.GetQuality)

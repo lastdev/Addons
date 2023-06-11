@@ -740,7 +740,7 @@ function DeathGraphs:OnEvent(_, event, ...)
 
 				--Install
 				local pluginName = Loc["STRING_PLUGIN_NAME"]
-				local install, saveddata = _G.Details:InstallPlugin("TOOLBAR", "Advanced Death Analytics", "Interface\\AddOns\\Details_DeathGraphs\\icon", DeathGraphs, "DETAILS_PLUGIN_DEATH_GRAPHICS", MINIMAL_DETAILS_VERSION_REQUIRED, "Details! Team", DeathGraphs.version_string, defaults)
+				local install, saveddata = _G.Details:InstallPlugin("TOOLBAR", "Advanced Death Logs", "Interface\\AddOns\\Details_DeathGraphs\\icon", DeathGraphs, "DETAILS_PLUGIN_DEATH_GRAPHICS", MINIMAL_DETAILS_VERSION_REQUIRED, "Details! Team", DeathGraphs.version_string, defaults)
 				if (type (install) == "table" and install.error) then
 					print (install.error)
 				end

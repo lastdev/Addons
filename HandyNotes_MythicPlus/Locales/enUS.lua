@@ -56,13 +56,18 @@ L["BH_cauldron_desc"] = "Pick the cauldron then use the extra button to clean an
 -- Freehold (FH)
 L["FH_percentage"] = "82.25% Before Bridge"
 -- Halls of Infusion (HOI)
+L["HOI_door"] = "Opens after death of first boss"
+L["HOI_shortcut_frog"] = "Shortcut to Gulping Goliath (frog)"
+L["HOI_shortcut_icelady"] = "Shortcut to Khajin the Unyielding (ice lady)"
 -- Neltharion's Lair (NL)
 -- Neltharus (NELT)
 L["NELT_percentage"] = "88.57% Required before bridge"
 L["NELT_percentage_desc"] = "You can compensate missing % by pulling mobs around the last boss area"
 -- Uldaman: Legacy of Tyr (ULD)
 L["ULD_percentage"] = "57.22% Before event"
+L["ULD_mining"] = "A Miner with 25 skill points can mine the deposit, granting 10% out of combat movement speed per deposit (3 in total, up to 30% movement speed)"
 -- The Underrot (UNDR)
+L["UNDR_skip"] = "You can use the shortcut after the death of the second boss"
 -- The Vortex Pinnacle (VP)
 L["VP_slipstream"] = "Use the slipstream to teleport to the other marker"
 L["VP_slipstream_desc1"] = "After defeat of Ertan"

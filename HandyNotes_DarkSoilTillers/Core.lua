@@ -3,7 +3,7 @@
 
                                           Dark Soil Tillers
 
-                                        v3.08 - 18th May 2023
+                                        v3.10 - 31st May 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -20,8 +20,6 @@ ns.colour.highlight = "\124cFFF4A460"	-- X11SandyBrown
 ns.colour.plaintext = "\124cFFDEB887"	-- X11BurlyWood
 -- Map IDs
 ns.pandaria = 424
-ns.votfw = 376
-ns.voeb = 390
 
 --ns.author = true
 
@@ -841,7 +839,7 @@ do
 						return coord, nil, ns.texturesSpecial[ns.db.icon_choiceBonus],
 							ns.db.icon_scale * ns.scaling[ns.db.icon_choiceBonus], ns.db.icon_alpha
 					end
-				elseif ( ( pin.pinType == "D" ) or ( pin.pinType == "V" ) ) 
+				elseif ( ( pin.pinType == "D" ) or ( pin.pinType == "V" ) or ( pin.pinType == "K" ) ) 
 						and ( ns.db.icon_darkSoil == true ) then
 					if pin.authorOnly then
 						if ns.author then
@@ -923,7 +921,7 @@ ns.options = {
 			name = L["Icon Selection"],
 			inline = true,
 			args = {
-				icon_choice = {				-- D/V
+				icon_choice = {				-- D/V/K
 					type = "range",
 					name = L["Dark Soil"],
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 

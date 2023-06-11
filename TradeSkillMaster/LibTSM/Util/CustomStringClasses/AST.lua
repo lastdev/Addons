@@ -154,11 +154,25 @@ function TokenProcessor:Execute(tokenList, tree)
 			elseif value == "convert" then
 				-- Extra validation for convert()
 				local child1Node, child2Node = tree:GetChildren(node)
-				if tree:GetData(child1Node, "type") ~= Types.NODE.VARIABLE or Types.IsItemParam(tree:GetData(child1Node, "value")) then
+				if tree:GetData(child1Node, "type") ~= Types.NODE.VARIABLE then
+					self:_HandleErrorForNode(Types.ERROR.INVALID_CONVERT_ARG, child1Node)
+					-- First argument is not a variable
+					isValid = false
+				elseif Types.IsItemParam(tree:GetData(child1Node, "value")) then
+					-- First argument is an item
 					self:_HandleErrorForNode(Types.ERROR.INVALID_CONVERT_ARG, child1Node)
 					isValid = false
-				elseif child2Node and (tree:GetData(child2Node, "type") ~= Types.NODE.VARIABLE or not Types.IsItemParam(tree:GetData(child2Node, "value"))) then
+				elseif tree:GetData(child1Node, "value") == "matprice" then
+					-- Can't use "matprice" as a source for convert()
 					self:_HandleErrorForNode(Types.ERROR.INVALID_CONVERT_ARG, child1Node)
+					isValid = false
+				elseif child2Node and tree:GetData(child2Node, "type") ~= Types.NODE.VARIABLE then
+					-- Second argument is not a variable
+					self:_HandleErrorForNode(Types.ERROR.INVALID_CONVERT_ARG, child2Node)
+					isValid = false
+				elseif child2Node and not Types.IsItemParam(tree:GetData(child2Node, "value")) then
+					-- Second argument is not an item
+					self:_HandleErrorForNode(Types.ERROR.INVALID_CONVERT_ARG, child2Node)
 					isValid = false
 				end
 			end

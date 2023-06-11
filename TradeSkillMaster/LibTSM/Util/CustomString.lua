@@ -6,6 +6,7 @@
 
 local TSM = select(2, ...) ---@type TSM
 local CustomString = TSM.Init("Util.CustomString") ---@class Util.CustomString
+local String = TSM.Include("Util.CustomStringClasses.String")
 local Types = TSM.Include("Util.CustomStringClasses.Types")
 local Tokenizer = TSM.Include("Util.CustomStringClasses.Tokenizer")
 CustomString.TOKEN_TYPE = Types.TOKEN
@@ -27,4 +28,17 @@ end
 ---@param str string The custom string
 function CustomString.PopulateTokenList(tokenList, str)
 	Tokenizer.GetTokens(str, tokenList)
+end
+
+---Sets the function used to lookup a price value.
+---@param priceFunc fun(itemString: string, key: string): number? The function
+function CustomString.SetPriceFunc(priceFunc)
+	String.SetPriceFunc(priceFunc)
+end
+
+---Creates a custom string for the specified text.
+---@param text string The custom string text
+---@return CustomStringObject
+function CustomString.Parse(text)
+	return String.Create(text)
 end

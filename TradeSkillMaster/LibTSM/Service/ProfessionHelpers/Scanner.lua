@@ -222,9 +222,10 @@ function Scanner.GetRecipeQualityInfo(craftString)
 	local info = C_TradeSkillUI.GetRecipeSchematic(spellId, false, 1)
 	local isItem = info.recipeType == Enum.TradeskillRecipeType.Item
 	local isEnchant = info.recipeType == Enum.TradeskillRecipeType.Enchant
+	local isSalvage = info.recipeType == Enum.TradeskillRecipeType.Salvage
 	if not info.hasCraftingOperationInfo or info.hasGatheringOperationInfo then
 		return nil, nil
-	elseif not isItem and not isEnchant then
+	elseif not isItem and not isEnchant and not isSalvage then
 		return nil, nil
 	elseif isItem and not info.outputItemID then
 		return nil, nil
@@ -642,9 +643,7 @@ function private.ScanProfession()
 							end
 						end
 					end
-					if info.isSalvageRecipe then
-						-- Just ignore this craft for now
-					elseif not info.supportsQualities then
+					if not info.supportsQualities or info.isSalvageRecipe then
 						assert(numResultItems == 1)
 						local recipeScanResult, matScanResult = private.BulkInsertRecipe(craftString, index, info.name, info.categoryID, info.relativeDifficulty, rank, numSkillUps, 1, info.currentRecipeExperience or -1, info.nextLevelRecipeExperience or -1)
 						haveInvalidRecipes = haveInvalidRecipes or not recipeScanResult
@@ -858,19 +857,21 @@ function private.BulkInsertMats(craftString)
 				for _, craftingReagent in ipairs(data.reagents) do
 					tinsert(private.matStringItemsTemp, craftingReagent.itemID)
 				end
-				local matStringType = nil
+				local matStringType, slotText = nil, nil
 				if data.reagentType == Enum.CraftingReagentType.Basic and data.dataSlotType == Enum.TradeskillSlotDataType.ModifiedReagent then
 					matStringType = MatString.TYPE.QUALITY
+					slotText = ItemInfo.GetName("i:"..data.reagents[1].itemID) or ""
 				elseif data.reagentType == Enum.CraftingReagentType.Optional or data.reagentType == Enum.CraftingReagentType.Modifying then
 					matStringType = MatString.TYPE.OPTIONAL
+					slotText = data.slotInfo.slotText or OPTIONAL_REAGENT_POSTFIX
 				elseif data.reagentType == Enum.CraftingReagentType.Finishing then
 					matStringType = MatString.TYPE.FINISHING
+					slotText = data.slotInfo.slotText or OPTIONAL_REAGENT_POSTFIX
 				else
 					error("Unexpected optional mat type: "..tostring(data.reagentType)..", "..tostring(data.dataSlotType))
 				end
 				local matString = MatString.Create(matStringType, data.dataSlotIndex, private.matStringItemsTemp)
 				wipe(private.matStringItemsTemp)
-				local slotText = data.slotInfo.slotText or OPTIONAL_REAGENT_POSTFIX
 				private.matDB:BulkInsertNewRow(craftString, matString, data.quantityRequired, slotText)
 			end
 		end

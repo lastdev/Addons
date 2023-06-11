@@ -143,6 +143,8 @@ L["PREVIOUS_SCORE"] = "之前的大秘境分数 (%s)"
 L["PROFILE_BEST_RUNS"] = "按地下城显示最佳记录"
 L["PROFILE_TOOLTIP_ANCHOR_TOOLTIP"] = "锁定Raider.IO主页框架，或开启自动定位来隐藏这个锚点。"
 L["PROVIDER_NOT_LOADED"] = "|cffFF0000警告:|r |cffFFFFFF%s|r无法找到你目前阵营的数据。请检查你|cffFFFFFF/raiderio|r 的设置 并且开启鼠标提示数据 |cffFFFFFF%s|r."
+--[[Translation missing --]]
+--[[ L["PVP_DATA_HEADER"] = ""--]] 
 L["RAID_BOSS_ATSC_1"] = "狱铸者卡扎拉"
 L["RAID_BOSS_ATSC_2"] = "融合体密室"
 L["RAID_BOSS_ATSC_3"] = "被遗忘的实验体"
@@ -244,6 +246,14 @@ L["RELOAD_LATER"] = "我一会儿再重载界面（Reload）"
 L["RELOAD_NOW"] = "现在重载界面（Reload）"
 L["RELOAD_RWF_MODE_BUTTON"] = "保存"
 L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = "点击保存到储存文件，这将需要重新加载您的界面。"
+--[[Translation missing --]]
+--[[ L["REPLAY_SETTINGS_TOOLTIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MDI"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MODERN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MODERN_COMPACT"] = ""--]] 
 L["RWF_MINIBUTTON_TOOLTIP"] = "每当有待处理的战利品时左键单击。 这将会重新加载你的界面。 右键单击以打开冲击世界首杀框架。"
 L["RWF_SUBTITLE_LOGGING_FILTERED_LOOT"] = "（记录相关项目）"
 L["RWF_SUBTITLE_LOGGING_LOOT"] = "（记录战利品）"

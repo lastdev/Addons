@@ -396,6 +396,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED
 	L["Distribute Vertically"] = "Distribuer verticalement"
 	L["Do not group this display"] = "Ne pas grouper cet affichage"
 	L["Do you want to ignore all future updates for this aura"] = "Voulez-vous ignorer toutes les futures mises à jour de cette aura ?"
+	--[[Translation missing --]]
+	L["Do you want to stop ignoring all future updates for this aura"] = "Do you want to stop ignoring all future updates for this aura"
 	L["Documentation"] = "Documentation"
 	L["Done"] = "Terminé"
 	L["Drag to move"] = "Glisser pour déplacer"
@@ -657,6 +659,8 @@ Si cette case est cochée, ce séparateur inclura du texte. Sinon, ce sera juste
 	L["Ignore out of checking range"] = "Ignorer hors de la plage de vérification"
 	L["Ignore Self"] = "Ignorer soi-même"
 	L["Ignore updates"] = "Ignorer les mises à jours"
+	--[[Translation missing --]]
+	L["Ignore Wago updates"] = "Ignore Wago updates"
 	L["Ignored"] = "Ignoré"
 	L["Ignored Aura Name"] = "Ignorer par nom d'aura"
 	L["Ignored Exact Spell ID(s)"] = "Ignorer par ID(s) de sort exact(s)"
@@ -1091,7 +1095,7 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	--[[Translation missing --]]
 	L["This adds %role, %roleIcon as text replacements. Does nothing if the unit is not a group member."] = "This adds %role, %roleIcon as text replacements. Does nothing if the unit is not a group member."
 	--[[Translation missing --]]
-	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements and also allows filtering based on the tooltip content/values."] = "This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements and also allows filtering based on the tooltip content/values."
+	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 and %tooltip4 as text replacements and also allows filtering based on the tooltip content/values."] = "This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 and %tooltip4 as text replacements and also allows filtering based on the tooltip content/values."
 	--[[Translation missing --]]
 	L[ [=[This aura contains custom Lua code.
 Make sure you can trust the person who sent it!]=] ] = [=[This aura contains custom Lua code.
@@ -1212,9 +1216,8 @@ It might not work correctly with your version!]=]
 	L["Y Rotation"] = "Rotation Y"
 	L["Y Scale"] = "Echelle Y"
 	L["Yellow Rune"] = "Rune jaune"
-	L["Yes"] = "Oui"
-	L["y-Offset"] = "y-Décalage"
 	L["Y-Offset"] = "Décalage Y"
+	L["y-Offset"] = "y-Décalage"
 	--[[Translation missing --]]
 	L["You already have this group/aura. Importing will create a duplicate."] = "You already have this group/aura. Importing will create a duplicate."
 	L["You are about to delete %d aura(s). |cFFFF0000This cannot be undone!|r Would you like to continue?"] = "Vous êtes sur le point de supprimer %d aura(s). |cFFFF0000Cela ne peut pas être annulé !|r Voulez-vous continuer ?"

@@ -25,8 +25,8 @@ local SecureMacroActionButton = UIElements.Define("SecureMacroActionButton", "Ac
 function SecureMacroActionButton:__init(name)
 	self.__super:__init(name, true)
 	local frame = self:_GetBaseFrame()
-	frame:SetAttribute("type1", "macro")
-	frame:SetAttribute("macrotext1", "")
+	frame:SetAttribute("*type1", "macro")
+	frame:SetAttribute("*macrotext1", "")
 end
 
 function SecureMacroActionButton:Acquire()
@@ -38,7 +38,7 @@ end
 function SecureMacroActionButton:Release()
 	local frame = self:_GetBaseFrame()
 	frame:TSMSetScript("PreClick", nil)
-	frame:SetAttribute("macrotext1", "")
+	frame:SetAttribute("*macrotext1", "")
 	self.__super:Release()
 end
 
@@ -59,6 +59,6 @@ end
 ---@param text string The macro text
 ---@return SecureMacroActionButton @The secure macro action button object
 function SecureMacroActionButton:SetMacroText(text)
-	self:_GetBaseFrame():SetAttribute("macrotext1", text)
+	self:_GetBaseFrame():SetAttribute("*macrotext1", text)
 	return self
 end

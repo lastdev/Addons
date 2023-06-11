@@ -782,13 +782,6 @@ GTFO.SpellID["258673"] = {
   sound = 3;
 };
 
-GTFO.SpellID["256106"] = {
-  --desc = "Azerite Powder Shot (Skycap'n Kragg)";
-  sound = 3;
-  tankSound = 0;
-  test = true;
-};
-
 GTFO.SpellID["258773"] = {
   --desc = "Charrrrrge (Skycap'n Kragg)";
   sound = 3;
@@ -854,6 +847,7 @@ GTFO.SpellID["257902"] = {
 GTFO.SpellID["258352"] = {
   --desc = "Grapeshot (Captain Eudora)";
   sound = 3;
+  applicationOnly = true;
 };
 
 -- *************
@@ -929,12 +923,10 @@ GTFO.SpellID["259720"] = {
   sound = 3;
 };
 
-GTFO.SpellID["273226"] = {
+GTFO.SpellID["259714"] = {
   --desc = "Decaying Spores (Sporecaller Zancha)";
   applicationOnly = true;
   sound = 3;
-  minimumStacks = 3;
-  test = true;
 };
 
 GTFO.SpellID["265511"] = {

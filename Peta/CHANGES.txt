@@ -1,0 +1,78 @@
+commit aa01cacd6c83bf1ffa764878da3c8370d4fab0a0
+Author: Scott Ingram <github@scottingram.org>
+Date:   Sun May 14 16:46:16 2023 -0700
+
+    found and eliminated source of taint - OpenBag(frame, force=true)
+
+commit fab4133e9e6f24794c558b74faad93de665a2c43
+Author: Scott Ingram <github@scottingram.org>
+Date:   Sun May 14 11:16:57 2023 -0700
+
+    fix for bank bag bug throwing nil
+
+commit 50903d83e4c7b0cabbd9da6401048921a05ab619
+Author: Scott Ingram <github@scottingram.org>
+Date:   Wed May 10 13:56:42 2023 -0700
+
+    renamed Pita to PETA
+
+commit 72b4b434235a62edccc0892f045a63813eb63ccc
+Author: Scott Ingram <github@scottingram.org>
+Date:   Wed May 10 13:56:33 2023 -0700
+
+    renamed Pita to PETA
+
+commit d9652cd23d2f6ecf8e664106ea730e4752025aa8
+Author: Scott Ingram <github@scottingram.org>
+Date:   Wed May 10 00:09:37 2023 -0700
+
+    improved dumpKeys() by improving asString.  created new out() with useful header & arg formatting
+
+commit 3bddfa78cb744c04251f37d80c353e8550233fd4
+Author: Scott Ingram <github@scottingram.org>
+Date:   Wed May 10 00:07:43 2023 -0700
+
+    IT WORKS! I crafted work-arounds for numerous BLIZ API bugs
+
+commit 0eeff29651668e1acb0c0a7c71c963049051ea84
+Author: Scott Ingram <github@scottingram.org>
+Date:   Tue May 9 17:28:12 2023 -0700
+
+    checkpoint: cleaning up and still working... fingers crossed
+
+commit 42ab1d1d9f6d23ecc42313ae0577fe7758922e42
+Author: Scott Ingram <github@scottingram.org>
+Date:   Tue May 9 16:23:56 2023 -0700
+
+    checkpoint: success? using C_Timer.After to reopen the bag
+
+commit 98998ecb8f9c1837ead3e259e6e1ca0f389e1328
+Author: Scott Ingram <github@scottingram.org>
+Date:   Mon May 8 15:47:47 2023 -0700
+
+    checkpoint: still fails BUT i've finally found the cause: the BagFrame objects shift position between when I attach the click-handlers and when the use clicks / triggers those handlers.  Thus, the lexically scoped variables contain stale data.  ALSO, the slots onto which I hook handlers may no longer actually contain the pet, and it may have moved into a slot that was previously empty and thus was never hooked.
+
+commit 057369fcb62700eb05fd5c82f0613536f2118910
+Author: Scott Ingram <github@scottingram.org>
+Date:   Sat May 6 18:40:32 2023 -0700
+
+    still works - now slightly cleaner
+
+commit 5efbf4bb64005db022cf24cefe12d43e4fe15b3f
+Author: Scott Ingram <github@scottingram.org>
+Date:   Sat May 6 17:31:33 2023 -0700
+
+    "god help me" checkpoint: it's mostly working and all of my hair has fallen out
+
+commit 28e88c187e52149ea1215327c545d4a707432e25
+Author: Scott Ingram <github@scottingram.org>
+Date:   Sat May 6 17:30:59 2023 -0700
+
+    compensating for Lua error-prone OO syntax by enforcing the presence of a valid self
+
+commit 2b9118adec5ce4808cb09c4fc708e306f7a9f1f6
+Author: Scott Ingram <github@scottingram.org>
+Date:   Mon May 1 15:09:18 2023 -0700
+
+    initial addon files and namespace structure
+

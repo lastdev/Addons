@@ -1,20 +1,23 @@
 ## Interface: 100100
 ## Title: HandyNotes: MythicPlus
 ## Title-ruRU: HandyNotes: Подземелья М+
-## Version: V100100-3
+## Title-frFR: HandyNotes: MythicPlus
+## Version: V100100-6
 ## Notes: Dragonflight MythicPlus Notes
 ## Notes-ruRU: Заметки к подземельям М+
+## Notes-frFR: Dragonflight: Aides pour Mythic+
 ## OptionalDeps: Ace3
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_MythicPlusDB
 ## X-Curse-Project-ID: 785031
-
+## IconTexture: 525134
 
 # Locale files
 Locales\enUS.lua
 Locales\frFR.lua
 Locales\ruRU.lua
 Locales\esES.lua
+Locales\zhCN.lua
 
 core.lua
 config.lua

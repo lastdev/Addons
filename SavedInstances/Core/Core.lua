@@ -30,6 +30,8 @@ local currency = SI.currency
 local QuestExceptions = SI.QuestExceptions
 local TimewalkingItemQuest = SI.TimewalkingItemQuest
 
+local CurrencyModule = SI:GetModule('Currency')
+
 SI.Indicators = {
   ICON_STAR = ICON_LIST[1] .. "16:16:0:0|t",
   ICON_CIRCLE = ICON_LIST[2] .. "16:16:0:0|t",
@@ -625,7 +627,7 @@ SI.transInstance = {
   [1530] = 1353, -- The Nighthold: issue #186 frFR
   [585] = 1154, -- Magisters' Terrace: issue #293 frFR
   [2235] = 1911, -- Caverns of Time - Anniversary: issue #315 (fake LFDID used by Escape from Tol Dagor)
-  [725] = 1148, -- The Stonecore: issue #328 frFR
+  [725] = 320, -- The Stonecore: issue #328 frFR
   [2515] = 2335, -- The Azure Vault: issue #630 deDE
   [550] = 193, -- Tempest Keep: issue #612 ruRU
 }
@@ -1885,7 +1887,8 @@ hoverTooltip.ShowEmissaryTooltip = function (cell, arg, ...)
       text = GetMoneyString(info.questReward.money)
     elseif info.questReward.currencyID then
       local data = C_CurrencyInfo.GetCurrencyInfo(info.questReward.currencyID)
-      text = "\124T" .. data.iconFileID .. ":0\124t " .. info.questReward.quantity
+      local iconID = CurrencyModule.OverrideTexture[info.questReward.currencyID] or data.iconFileID
+      text = "\124T" .. iconID .. ":0\124t " .. info.questReward.quantity
     end
     indicatortip:AddLine()
     indicatortip:SetCell(3, 1, text, "RIGHT", 2)
@@ -1997,7 +2000,7 @@ hoverTooltip.ShowBonusTooltip = function (cell, arg, ...)
   for i,roll in ipairs(t.BonusRoll) do
     if i > 10 then break end
     local line = indicatortip:AddLine()
-    local icon = roll.costCurrencyID and C_CurrencyInfo.GetCurrencyInfo(roll.costCurrencyID).iconFileID
+    local icon = roll.costCurrencyID and (CurrencyModule.OverrideTexture[roll.costCurrencyID] or C_CurrencyInfo.GetCurrencyInfo(roll.costCurrencyID).iconFileID)
     if icon then
       indicatortip:SetCell(line,1, " \124T"..icon..":0\124t ")
     end
@@ -2008,7 +2011,7 @@ hoverTooltip.ShowBonusTooltip = function (cell, arg, ...)
       indicatortip:SetCell(line,3,roll.item)
     elseif roll.currencyID then
       local data = C_CurrencyInfo.GetCurrencyInfo(roll.currencyID)
-      local currencyIcon = data.iconFileID
+      local currencyIcon = CurrencyModule.OverrideTexture[roll.currencyID] or data.iconFileID
       local str = "\124T" .. currencyIcon .. ":0\124t "
       if roll.money then
         str = str .. roll.money
@@ -2373,7 +2376,8 @@ hoverTooltip.ShowCurrencySummary = function (cell, arg, ...)
   local idx = arg
   if not idx then return end
   local data = C_CurrencyInfo.GetCurrencyInfo(idx)
-  local name, tex = data.name, data.iconFileID
+  local name = CurrencyModule.OverrideName[idx] or data.name
+  local tex = CurrencyModule.OverrideTexture[idx] or data.iconFileID
   tex = " \124T"..tex..":0\124t"
   local itemFlag, itemIcon
   if SI.specialCurrency[idx] and SI.specialCurrency[idx].relatedItem then
@@ -2756,7 +2760,7 @@ end
 function SI:OnInitialize()
   local versionString = GetAddOnMetadata("SavedInstances", "version")
   --[==[@debug@
-  if versionString == "10.1.1" then
+  if versionString == "10.1.2" then
     versionString = "Dev"
   end
   --@end-debug@]==]
@@ -4600,7 +4604,8 @@ function SI:ShowTooltip(anchorframe)
           end
           if not show and (gotThisWeek or gotSome) and columns[toon .. 1] then
             local data = C_CurrencyInfo.GetCurrencyInfo(idx)
-            local name, tex = data.name, data.iconFileID
+            local name = CurrencyModule.OverrideName[idx] or data.name
+            local tex = CurrencyModule.OverrideTexture[idx] or data.iconFileID
             show = format(" \124T%s:0\124t%s", tex, name)
           end
         end

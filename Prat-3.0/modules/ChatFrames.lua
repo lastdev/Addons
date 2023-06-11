@@ -60,6 +60,8 @@ Prat:AddModuleToLoad(function()
     ["mainchatonload_desc"] = "Automatically select the first chat frame and make it active on load.",
     ["framealphastatic_name"] = "Static Chatframe Alpha",
     ["framealphastatic_desc"] = "Set the transparency of the chatframe to always match the configured transparency",
+    ["defaultframealpha_name"] = "Default alpha on mouseover",
+    ["defaultframealpha_desc"] = "Sets minimum alpha for the chat on mouseover when the static chatframe alpha setting is disabled AND the default alpha is greater than the custom alpha set to the chat window.",
   })
   --@end-debug@]==]
 
@@ -74,6 +76,8 @@ do
 L = {
 	["Frames"] = {
 		["Chat window frame parameter options"] = true,
+		["defaultframealpha_desc"] = "Sets minimum alpha for the chat on mouseover when the static chatframe alpha setting is disabled AND the default alpha is greater than the custom alpha set to the chat window.",
+		["defaultframealpha_name"] = "Default alpha on mouseover",
 		["framealpha_desc"] = "Conrols the transparency of the chatframe when you hover over it with your mouse.",
 		["framealpha_name"] = "Set Chatframe Alpha",
 		["framealphastatic_desc"] = "Set the transparency of the chatframe to always match the configured transparency",
@@ -102,6 +106,10 @@ L = {
 	["Frames"] = {
 		--[[Translation missing --]]
 		["Chat window frame parameter options"] = "Chat window frame parameter options",
+		--[[Translation missing --]]
+		["defaultframealpha_desc"] = "Sets minimum alpha for the chat on mouseover when the static chatframe alpha setting is disabled AND the default alpha is greater than the custom alpha set to the chat window.",
+		--[[Translation missing --]]
+		["defaultframealpha_name"] = "Default alpha on mouseover",
 		--[[Translation missing --]]
 		["framealpha_desc"] = "Conrols the transparency of the chatframe when you hover over it with your mouse.",
 		--[[Translation missing --]]
@@ -150,6 +158,10 @@ L = {
 		--[[Translation missing --]]
 		["Chat window frame parameter options"] = "Chat window frame parameter options",
 		--[[Translation missing --]]
+		["defaultframealpha_desc"] = "Sets minimum alpha for the chat on mouseover when the static chatframe alpha setting is disabled AND the default alpha is greater than the custom alpha set to the chat window.",
+		--[[Translation missing --]]
+		["defaultframealpha_name"] = "Default alpha on mouseover",
+		--[[Translation missing --]]
 		["framealpha_desc"] = "Conrols the transparency of the chatframe when you hover over it with your mouse.",
 		--[[Translation missing --]]
 		["framealpha_name"] = "Set Chatframe Alpha",
@@ -195,6 +207,10 @@ PL:AddLocale(PRAT_MODULE, "ptBR", L)
 L = {
 	["Frames"] = {
 		["Chat window frame parameter options"] = "Options de la fenêtre de discussion",
+		--[[Translation missing --]]
+		["defaultframealpha_desc"] = "Sets minimum alpha for the chat on mouseover when the static chatframe alpha setting is disabled AND the default alpha is greater than the custom alpha set to the chat window.",
+		--[[Translation missing --]]
+		["defaultframealpha_name"] = "Default alpha on mouseover",
 		["framealpha_desc"] = "Définit la transparence de la fenêtre de discussion quand la souris passe par dessus.",
 		["framealpha_name"] = "Transparence",
 		--[[Translation missing --]]
@@ -229,6 +245,10 @@ PL:AddLocale(PRAT_MODULE, "frFR", L)
 L = {
 	["Frames"] = {
 		["Chat window frame parameter options"] = "Optionen für Parameter des Chatfenster-Rahmens",
+		--[[Translation missing --]]
+		["defaultframealpha_desc"] = "Sets minimum alpha for the chat on mouseover when the static chatframe alpha setting is disabled AND the default alpha is greater than the custom alpha set to the chat window.",
+		--[[Translation missing --]]
+		["defaultframealpha_name"] = "Default alpha on mouseover",
 		["framealpha_desc"] = "Steuert die Transparenz des Chatfensters, wenn du die Maus darüberlegst.",
 		["framealpha_name"] = "Transparenz für Chatfenster einstellen",
 		["framealphastatic_desc"] = "Stelle die Transparenz des Chatrahmens so ein, dass sie immer der konfigurierten Transparenz entspricht",
@@ -256,6 +276,10 @@ PL:AddLocale(PRAT_MODULE, "deDE", L)
 L = {
 	["Frames"] = {
 		["Chat window frame parameter options"] = "대화창 프레임 한도 옵션",
+		--[[Translation missing --]]
+		["defaultframealpha_desc"] = "Sets minimum alpha for the chat on mouseover when the static chatframe alpha setting is disabled AND the default alpha is greater than the custom alpha set to the chat window.",
+		--[[Translation missing --]]
+		["defaultframealpha_name"] = "Default alpha on mouseover",
 		["framealpha_desc"] = "마우스를 올렸을 때 대화창의 투명도를 조절합니다.",
 		["framealpha_name"] = "대화창 투명도 설정",
 		--[[Translation missing --]]
@@ -286,6 +310,10 @@ L = {
 	["Frames"] = {
 		--[[Translation missing --]]
 		["Chat window frame parameter options"] = "Chat window frame parameter options",
+		--[[Translation missing --]]
+		["defaultframealpha_desc"] = "Sets minimum alpha for the chat on mouseover when the static chatframe alpha setting is disabled AND the default alpha is greater than the custom alpha set to the chat window.",
+		--[[Translation missing --]]
+		["defaultframealpha_name"] = "Default alpha on mouseover",
 		--[[Translation missing --]]
 		["framealpha_desc"] = "Conrols the transparency of the chatframe when you hover over it with your mouse.",
 		--[[Translation missing --]]
@@ -332,6 +360,10 @@ PL:AddLocale(PRAT_MODULE, "esMX", L)
 L = {
 	["Frames"] = {
 		["Chat window frame parameter options"] = "Параметры окна чата",
+		--[[Translation missing --]]
+		["defaultframealpha_desc"] = "Sets minimum alpha for the chat on mouseover when the static chatframe alpha setting is disabled AND the default alpha is greater than the custom alpha set to the chat window.",
+		--[[Translation missing --]]
+		["defaultframealpha_name"] = "Default alpha on mouseover",
 		["framealpha_desc"] = "Настройка прозрачности окна чата при наведении на него курсора мыши.",
 		["framealpha_name"] = "Прозрачность окна чата",
 		--[[Translation missing --]]
@@ -361,6 +393,10 @@ PL:AddLocale(PRAT_MODULE, "ruRU", L)
 L = {
 	["Frames"] = {
 		["Chat window frame parameter options"] = "聊天窗口参数选项",
+		--[[Translation missing --]]
+		["defaultframealpha_desc"] = "Sets minimum alpha for the chat on mouseover when the static chatframe alpha setting is disabled AND the default alpha is greater than the custom alpha set to the chat window.",
+		--[[Translation missing --]]
+		["defaultframealpha_name"] = "Default alpha on mouseover",
 		["framealpha_desc"] = "控制鼠标移过时聊天框架的透明度.",
 		["framealpha_name"] = "设定聊天框架透明度",
 		--[[Translation missing --]]
@@ -391,6 +427,10 @@ L = {
 	["Frames"] = {
 		--[[Translation missing --]]
 		["Chat window frame parameter options"] = "Chat window frame parameter options",
+		--[[Translation missing --]]
+		["defaultframealpha_desc"] = "Sets minimum alpha for the chat on mouseover when the static chatframe alpha setting is disabled AND the default alpha is greater than the custom alpha set to the chat window.",
+		--[[Translation missing --]]
+		["defaultframealpha_name"] = "Default alpha on mouseover",
 		--[[Translation missing --]]
 		["framealpha_desc"] = "Conrols the transparency of the chatframe when you hover over it with your mouse.",
 		--[[Translation missing --]]
@@ -436,6 +476,10 @@ PL:AddLocale(PRAT_MODULE, "esES",  L)
 L = {
 	["Frames"] = {
 		["Chat window frame parameter options"] = "聊天視窗框架參數選項",
+		--[[Translation missing --]]
+		["defaultframealpha_desc"] = "Sets minimum alpha for the chat on mouseover when the static chatframe alpha setting is disabled AND the default alpha is greater than the custom alpha set to the chat window.",
+		--[[Translation missing --]]
+		["defaultframealpha_name"] = "Default alpha on mouseover",
 		--[[Translation missing --]]
 		["framealpha_desc"] = "Conrols the transparency of the chatframe when you hover over it with your mouse.",
 		["framealpha_name"] = "設定聊天欄透明度",
@@ -493,6 +537,7 @@ end
       mainchatonload = true,
       removeclamp = true,
       framealphastatic = false,
+      defaultframealpha = 0.25,
       framemetrics = {
         ['*'] = {
           width = 430,
@@ -532,6 +577,15 @@ end
           order = 130,
           name = PL.framealphastatic_name,
           desc = PL.framealphastatic_desc,
+        },
+        defaultframealpha = {
+          name = PL["defaultframealpha_name"],
+          desc = PL["defaultframealpha_desc"],
+          type = "range",
+          order = 140,
+          min = 0.0,
+          max = 1,
+          step = 0.01,
         },
       }
     })
@@ -722,6 +776,8 @@ end
         self:HidePratTextures(cf)
       end
 
+      DEFAULT_CHATFRAME_ALPHA = prof.defaultframealpha
+
       minWidth, minHeight = prof.minchatwidth, prof.minchatheight
       maxWidth, maxHeight = prof.maxchatwidth, prof.maxchatheight
 
@@ -737,8 +793,13 @@ end
           end, cf)
         end
       end
+
+      if not Prat.IsClassic then
+        cf.ScrollBar:SetAlpha(0)
+      end
     else
       self:HidePratTextures(cf)
+      DEFAULT_CHATFRAME_ALPHA = 0.25
 
       minWidth, minHeight = prof.minchatwidthdefault, prof.minchatheightdefault
       maxWidth, maxHeight = prof.maxchatwidthdefault, prof.maxchatheightdefault

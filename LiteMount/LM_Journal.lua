@@ -120,8 +120,8 @@ function LM.Journal:Get(id, isUsable)
     -- else and made more generic.
     if m.mountID == 1656 then
         m.castActions = {}
-        local item = Item:CreateFromItemID(202042)
-        item:ContinueOnItemLoad(
+         local item = Item:CreateFromItemID(202042)
+         item:ContinueOnItemLoad(
             function ()
                 m.castActions[1] = "/use " .. item:GetItemName()
             end)
@@ -177,6 +177,12 @@ function LM.Journal:GetCastAction(context)
 
     if self.castActions then
         castActions = CopyTable(self.castActions)
+    elseif self.mountID == 1727 then
+        -- You can't cast Tarecgosa's Visage by name. But you also can't always SummonByID
+        castActions = { format("/run C_MountJournal.SummonByID(%d)", self.mountID) }
+        if LM.Environment:IsCantSummonForm() then
+            table.insert(castActions, 1, "/cancelform")
+        end
     end
 
     if context and context.preCast then

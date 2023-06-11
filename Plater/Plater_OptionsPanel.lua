@@ -144,7 +144,9 @@ Plater.UpdateOptionsTabUpdateState = update_wago_update_icons
 function Plater.CheckOptionsTab()
 	if (Plater.LatestEncounter) then
 		if (Plater.LatestEncounter + 60 > time()) then
-			PlaterOptionsPanelContainer:SelectIndex (Plater, CONST_LASTEVENTS_TAB_INDEX)
+			---@type df_tabcontainer
+			local tabContainer = _G["PlaterOptionsPanelContainer"]
+			tabContainer:SelectTabByIndex(CONST_LASTEVENTS_TAB_INDEX)
 		end
 	end
 	update_wago_update_icons()
@@ -189,13 +191,15 @@ function Plater.OpenOptionsPanel()
 	local SliderRightClickDesc = "\n\n" .. ImportantText .. "right click to type the value."
 	
 	local hookList = {
-		OnSelectIndex = function(mainFrame, tabButton)
+		---@param tabContainer df_tabcontainer
+		---@param tabButton df_tabcontainerbutton
+		OnSelectIndex = function(tabContainer, tabButton)
 			if (not tabButton.leftSelectionIndicator) then
 				return
 			end
 
-			for index, frame in ipairs(mainFrame.AllFrames) do
-				local tabButton = mainFrame.AllButtons[index]
+			for index, frame in ipairs(tabContainer.AllFrames) do
+				local tabButton = tabContainer.AllButtons[index]
 				tabButton.leftSelectionIndicator:SetColorTexture(.4, .4, .4)
 			end
 
@@ -225,39 +229,41 @@ function Plater.OpenOptionsPanel()
 	local mainFrame = DF:CreateTabContainer (f, "Plater Options", "PlaterOptionsPanelContainer", 
 	{
 		--when chaging these indexes also need to change the function f.CopySettings
-		{name = "FrontPage",				title = "OPTIONS_TABNAME_GENERALSETTINGS"},
-		{name = "ThreatConfig",				title = "OPTIONS_TABNAME_THREAT"},
-		{name = "TargetConfig",				title = "OPTIONS_TABNAME_TARGET"},
-		{name = "CastBarConfig",			title = "OPTIONS_TABNAME_CASTBAR"},
-		{name = "LevelStrataConfig",		title = "OPTIONS_TABNAME_STRATA"},
-		{name = "Scripting",				title = "OPTIONS_TABNAME_SCRIPTING"},
-		{name = "AutoRunCode",				title = "OPTIONS_TABNAME_MODDING"},
-		{name = "PersonalBar",				title = "OPTIONS_TABNAME_PERSONAL"},
+		{name = "FrontPage",				text = "OPTIONS_TABNAME_GENERALSETTINGS"},
+		{name = "ThreatConfig",				text = "OPTIONS_TABNAME_THREAT"},
+		{name = "TargetConfig",				text = "OPTIONS_TABNAME_TARGET"},
+		{name = "CastBarConfig",			text = "OPTIONS_TABNAME_CASTBAR"},
+		{name = "LevelStrataConfig",		text = "OPTIONS_TABNAME_STRATA"},
+		{name = "Scripting",				text = "OPTIONS_TABNAME_SCRIPTING"},
+		{name = "AutoRunCode",				text = "OPTIONS_TABNAME_MODDING"},
+		{name = "PersonalBar",				text = "OPTIONS_TABNAME_PERSONAL"},
 		
-		{name = "DebuffConfig",				title = "OPTIONS_TABNAME_BUFF_SETTINGS"},
-		{name = "DebuffBlacklist",			title = "OPTIONS_TABNAME_BUFF_TRACKING"},
-		{name = "DebuffSpecialContainer",	title = "OPTIONS_TABNAME_BUFF_SPECIAL"},
-		{name = "GhostAurasFrame",			title = "Ghost Auras"}, --localize-me
-		{name = "EnemyNpc",					title = "OPTIONS_TABNAME_NPCENEMY"},
-		{name = "EnemyPlayer",				title = "OPTIONS_TABNAME_PLAYERENEMY"},
-		{name = "FriendlyNpc",				title = "OPTIONS_TABNAME_NPCFRIENDLY"},
-		{name = "FriendlyPlayer",			title = "OPTIONS_TABNAME_PLAYERFRIENDLY"},
+		{name = "DebuffConfig",				text = "OPTIONS_TABNAME_BUFF_SETTINGS"},
+		{name = "DebuffBlacklist",			text = "OPTIONS_TABNAME_BUFF_TRACKING"},
+		{name = "DebuffSpecialContainer",	text = "OPTIONS_TABNAME_BUFF_SPECIAL"},
+		{name = "GhostAurasFrame",			text = "Ghost Auras"}, --localize-me
+		{name = "EnemyNpc",					text = "OPTIONS_TABNAME_NPCENEMY"},
+		{name = "EnemyPlayer",				text = "OPTIONS_TABNAME_PLAYERENEMY"},
+		{name = "FriendlyNpc",				text = "OPTIONS_TABNAME_NPCFRIENDLY"},
+		{name = "FriendlyPlayer",			text = "OPTIONS_TABNAME_PLAYERFRIENDLY"},
 
-		{name = "ColorManagement",			title = "OPTIONS_TABNAME_NPC_COLORNAME"},
-		{name = "CastColorManagement",		title = "OPTIONS_TABNAME_CASTCOLORS"},
-		{name = "DebuffLastEvent",			title = "OPTIONS_TABNAME_BUFF_LIST"},
-		{name = "AnimationPanel",			title = "OPTIONS_TABNAME_ANIMATIONS"},
-		{name = "Automation",				title = "OPTIONS_TABNAME_AUTO"},
-		{name = "ProfileManagement",		title = "OPTIONS_TABNAME_PROFILES"},
-		{name = "AdvancedConfig",			title = "OPTIONS_TABNAME_ADVANCED"},
-		{name = "resourceFrame",			title = "OPTIONS_TABNAME_COMBOPOINTS"},
+		{name = "ColorManagement",			text = "OPTIONS_TABNAME_NPC_COLORNAME"},
+		{name = "CastColorManagement",		text = "OPTIONS_TABNAME_CASTCOLORS"},
+		{name = "DebuffLastEvent",			text = "OPTIONS_TABNAME_BUFF_LIST"},
+		{name = "AnimationPanel",			text = "OPTIONS_TABNAME_ANIMATIONS"},
+		{name = "Automation",				text = "OPTIONS_TABNAME_AUTO"},
+		{name = "ProfileManagement",		text = "OPTIONS_TABNAME_PROFILES"},
+		{name = "AdvancedConfig",			text = "OPTIONS_TABNAME_ADVANCED"},
+		{name = "resourceFrame",			text = "OPTIONS_TABNAME_COMBOPOINTS"},
 
-		{name = "WagoIo", title = "Wago Imports"}, --wago_imports --localize-me
-		{name = "SearchFrame", title = "OPTIONS_TABNAME_SEARCH"},
-		{name = "PluginsFrame", title = "Plugins"}, --localize-me
+		{name = "WagoIo", text = "Wago Imports"}, --wago_imports --localize-me
+		{name = "SearchFrame", text = "OPTIONS_TABNAME_SEARCH"},
+		{name = "PluginsFrame", text = "Plugins"}, --localize-me
 		
 	}, 
 	frame_options, hookList, languageInfo)
+
+	mainFrame:SetAllPoints()
 
 	--> when any setting is changed, call this function
 	local globalCallback = function()
@@ -377,10 +383,10 @@ function Plater.OpenOptionsPanel()
 	end
 	--]=]
 
-	Plater.Resources.BuildResourceOptionsTab(resourceFrame)
-	Plater.Auras.BuildGhostAurasOptionsTab(ghostAuras)
-	Plater.CreateCastColorOptionsFrame(castColorsFrame)
-	platerInternal.Plugins.CreatePluginsOptionsTab(pluginsFrame)
+	C_Timer.After(0.1, function() Plater.Resources.BuildResourceOptionsTab(resourceFrame) end)
+	C_Timer.After(0.1, function() Plater.Auras.BuildGhostAurasOptionsTab(ghostAuras) end)
+	C_Timer.After(0.1, function() Plater.CreateCastColorOptionsFrame(castColorsFrame) end)
+	C_Timer.After(0.1, function() platerInternal.Plugins.CreatePluginsOptionsTab(pluginsFrame) end)
 	
 	local generalOptionsAnchor = CreateFrame ("frame", "$parentOptionsAnchor", frontPageFrame, BackdropTemplateMixin and "BackdropTemplate")
 	generalOptionsAnchor:SetSize (1, 1)
@@ -768,111 +774,133 @@ function Plater.OpenOptionsPanel()
 				end
 			end
 			
-			function profilesFrame.DoProfileImport(profileName, profile, isUpdate, keepModsNotInUpdate)
+			---@param profileName string
+			---@param profile table
+			---@param bIsUpdate boolean
+			---@param bKeepModsNotInUpdate boolean
+			function profilesFrame.DoProfileImport(profileName, profile, bIsUpdate, bKeepModsNotInUpdate)
 				profilesFrame.HideStringField()
 				
 				profile.profile_name = nil --no need to import
 				
-				local wasUsingUIParent = Plater.db.profile.use_ui_parent
+				local bWasUsingUIParent = Plater.db.profile.use_ui_parent
+				local scriptDataBackup = (bIsUpdate or bKeepModsNotInUpdate) and DF.table.copy({}, Plater.db.profile.script_data) or {}
+				local hookDataBackup = (bIsUpdate or bKeepModsNotInUpdate) and DF.table.copy({}, Plater.db.profile.hook_data) or {}
 				
-				local script_data_backup = (isUpdate or keepModsNotInUpdate) and DF.table.copy ({}, Plater.db.profile.script_data) or {}
-				local hook_data_backup = (isUpdate or keepModsNotInUpdate) and DF.table.copy ({}, Plater.db.profile.hook_data) or {}
+				--switch to profile
+				Plater.db:SetProfile(profileName)
 				
-				-- switch to profile
-				Plater.db:SetProfile (profileName)
-				
-				-- cleanup profile -> reset to defaults
+				--cleanup profile -> reset to defaults
 				Plater.db:ResetProfile(false, true)
 				
-				-- import new profile settings
-				DF.table.copy (Plater.db.profile, profile)
+				--import new profile settings
+				DF.table.copy(Plater.db.profile, profile)
 				
 				--make the option reopen after the reload
 				Plater.db.profile.reopoen_options_panel_on_tab = TAB_INDEX_PROFILES
-								
+
 				--check if parent to UIParent is enabled and calculate the new scale
 				if (Plater.db.profile.use_ui_parent) then
-					if not isUpdate or not wasUsingUIParent then -- only update if necessary
+					if (not bIsUpdate or not bWasUsingUIParent) then --only update if necessary
 						Plater.db.profile.ui_parent_scale_tune = 1 / UIParent:GetEffectiveScale()
 					end
 				else
 					Plater.db.profile.ui_parent_scale_tune = 0
 				end
 				
-				if isUpdate or keepModsNotInUpdate then
-					-- copy user settings for mods/scripts and keep mods/scripts which are not part of the profile
-					for index, oldScriptObject in ipairs(script_data_backup) do
+				if (bIsUpdate or bKeepModsNotInUpdate) then
+					--copy user settings for mods/scripts and keep mods/scripts which are not part of the profile
+					for index, oldScriptObject in ipairs(scriptDataBackup) do
 						local scriptDB = Plater.db.profile.script_data or {}
-						local found = false
+						local bFound = false
 						for i = 1, #scriptDB do
-							local scriptObject = scriptDB [i]
+							local scriptObject = scriptDB[i]
 							if (scriptObject.Name == oldScriptObject.Name) then
-								if isUpdate then
+								if (bIsUpdate) then
 									Plater.UpdateOptionsForModScriptImport(scriptObject, oldScriptObject)
 								end
-								found = true
+
+								bFound = true
 								break
 							end
 						end
-						if not found and keepModsNotInUpdate then
-							tinsert (scriptDB, oldScriptObject)
+
+						if (not bFound and bKeepModsNotInUpdate) then
+							table.insert(scriptDB, oldScriptObject)
 						end
 					end
 					
-					for index, oldScriptObject in ipairs(hook_data_backup) do
+					for index, oldScriptObject in ipairs(hookDataBackup) do
 						local scriptDB = Plater.db.profile.hook_data or {}
-						local found = false
+						local bFound = false
 						for i = 1, #scriptDB do
-							local scriptObject = scriptDB [i]
+							local scriptObject = scriptDB[i]
 							if (scriptObject.Name == oldScriptObject.Name) then
-								if isUpdate then
+								if (bIsUpdate) then
 									Plater.UpdateOptionsForModScriptImport(scriptObject, oldScriptObject)
 								end
-								found = true
+
+								bFound = true
 								break
 							end
 						end
-						if not found and keepModsNotInUpdate then
-							tinsert (scriptDB, oldScriptObject)
+
+						if (not bFound and bKeepModsNotInUpdate) then
+							table.insert(scriptDB, oldScriptObject)
 						end
 					end
 				end
 				
-				-- cleanup NPC cache/colors
+				--cleanup NPC cache/colors
+				---@type table<number, string[]> [1] npcname [2] zonename [3] language
 				local cache = Plater.db.profile.npc_cache
-				local cacheTemp = DetailsFramework.table.copy({},cache)
-				for n, v in pairs(cacheTemp) do
-					if tonumber(n) then 
-						cache[n] = nil
-						cache[tonumber(n)] = v 
+
+				local cacheTemp = DetailsFramework.table.copy({}, cache)
+				for npcId, npcData in pairs(cacheTemp) do
+					---@cast npcData table{key1: string, key2: string, key3: string|nil}
+					if (tonumber(npcId)) then
+						cache[npcId] = nil
+						cache[tonumber(npcId)] = npcData 
 					end
 				end
 				
+				--cleanup npc colors
+				---@type npccolordb
 				local colors = Plater.db.profile.npc_colors
-				local colorsTemp = DetailsFramework.table.copy({},colors)
-				for n, v in pairs(colorsTemp) do
-					if tonumber(n) then 
-						colors[n] = nil
-						colors[tonumber(n)] = v 
+				---@type npccolordb
+				local colorsTemp = DetailsFramework.table.copy({}, colors)
+
+				---@type number, npccolortable
+				for npcId, npcColorTable in pairs(colorsTemp) do
+					if tonumber(npcId) then 
+						colors[npcId] = nil
+						colors[tonumber(npcId)] = npcColorTable 
 					end
 				end
 				
-				-- cleanup cast colors/sounds
+				--cleanup cast colors/sounds
+				---@type castcolordb
 				local castColors = Plater.db.profile.cast_colors
+				---@type castcolordb
 				local castColorsTemp = DetailsFramework.table.copy({}, castColors)
-				for n, v in pairs(castColorsTemp) do
-					if tonumber(n) then 
-						castColors[n] = nil
-						castColors[tonumber(n)] = v 
+
+				---@type number, castcolortable
+				for spellId, castColorTable in pairs(castColorsTemp) do
+					if tonumber(spellId) then 
+						castColors[spellId] = nil
+						castColors[tonumber(spellId)] = castColorTable 
 					end
 				end
 				
+				---@type audiocuedb
 				local audioCues = Plater.db.profile.cast_audiocues
+				---@type audiocuedb
 				local audioCuesTemp = DetailsFramework.table.copy({}, audioCues)
-				for n, v in pairs(audioCuesTemp) do
-					if tonumber(n) then 
-						audioCues[n] = nil
-						audioCues[tonumber(n)] = v 
+
+				for spellId, audioCuePath in pairs(audioCuesTemp) do
+					if tonumber(spellId) then 
+						audioCues[spellId] = nil
+						audioCues[tonumber(spellId)] = audioCuePath 
 					end
 				end
 				
@@ -894,8 +922,8 @@ function Plater.OpenOptionsPanel()
 					Plater:OpenInterfaceProfile()
 				end
 				C_Timer.After (.5, function()
-					mainFrame:SetIndex (1)
-					mainFrame:SelectIndex (_, 1)
+					mainFrame:SetIndex(1)
+					mainFrame:SelectTabByIndex(1)
 				end)
 			end
 			
@@ -1471,7 +1499,9 @@ function Plater.CreateGoToTabFrame(parent, text, index)
 	labelgoToTab:SetPoint("center", goToTab, "center", 0, 0)
 
 	local goTo = function()
-		PlaterOptionsPanelContainer:SelectIndex (Plater, index)
+		---@type df_tabcontainer
+		local platerOptionsPanelContainer = PlaterOptionsPanelContainer
+		platerOptionsPanelContainer:SelectTabByIndex(index)
 	end
 
 	local buttonGo = DF:CreateButton (parent, goTo, 20, 1, "", false, false, "", false, false, false, options_button_template)
@@ -7467,26 +7497,28 @@ local relevance_options = {
 		local playerSpecs = Plater.SpecList [select (2, UnitClass ("player"))]
 		for specID, _ in pairs (playerSpecs) do
 			local specId, specName, specDescription, specIcon, specBackground, specRole, specClass = GetSpecializationInfoByID(specID)
-			tinsert (options_table1, {
-				type = "select",
-				get = function() return PlaterDBChr.spellRangeCheckRangeEnemy [specID] end,
-				values = function() 
-					local onSelectFunc = function (_, _, range)
-						PlaterDBChr.spellRangeCheckRangeEnemy [specID] = range
-						PlaterDBChr.spellRangeCheckRangeEnemy [1444] = range -- workaround for "DAMAGER" (level 1-10) spec
-						Plater.GetSpellForRangeCheck()
-					end
-					local t = {}
-					local checkers = LibRangeCheck:GetHarmCheckers()
-					for range, checker in checkers do
-						tinsert (t, {label = range, onclick = onSelectFunc, value = range})
-					end
-					return t
-				end,
-				--the string between two '@' make the framework to consider it a PhraseID for the language system
-				name = "|T" .. specIcon .. ":16:16|t " .. "@OPTIONS_GENERALSETTINGS_TRANSPARENCY_RANGECHECK@",
-				desc = "OPTIONS_GENERALSETTINGS_TRANSPARENCY_RANGECHECK_SPEC_DESC",
-			})
+			if specId then
+				tinsert (options_table1, {
+					type = "select",
+					get = function() return PlaterDBChr.spellRangeCheckRangeEnemy [specID] end,
+					values = function() 
+						local onSelectFunc = function (_, _, range)
+							PlaterDBChr.spellRangeCheckRangeEnemy [specID] = range
+							PlaterDBChr.spellRangeCheckRangeEnemy [1444] = range -- workaround for "DAMAGER" (level 1-10) spec
+							Plater.GetSpellForRangeCheck()
+						end
+						local t = {}
+						local checkers = LibRangeCheck:GetHarmCheckers()
+						for range, checker in checkers do
+							tinsert (t, {label = range, onclick = onSelectFunc, value = range})
+						end
+						return t
+					end,
+					--the string between two '@' make the framework to consider it a PhraseID for the language system
+					name = "|T" .. specIcon .. ":16:16|t " .. "@OPTIONS_GENERALSETTINGS_TRANSPARENCY_RANGECHECK@",
+					desc = "OPTIONS_GENERALSETTINGS_TRANSPARENCY_RANGECHECK_SPEC_DESC",
+				})
+			end
 		end
 	else
 		local playerClass = select (3, UnitClass ("player"))
@@ -7526,25 +7558,27 @@ local relevance_options = {
 		local playerSpecs = Plater.SpecList [select (2, UnitClass ("player"))]
 		for specID, _ in pairs (playerSpecs) do
 			local spec_id, spec_name, spec_description, spec_icon, spec_background, spec_role, spec_class = GetSpecializationInfoByID (specID)
-			tinsert (options_table1, {
-				type = "select",
-				get = function() return PlaterDBChr.spellRangeCheckRangeFriendly [specID] end,
-				values = function() 
-					local onSelectFunc = function (_, _, range)
-						PlaterDBChr.spellRangeCheckRangeFriendly [specID] = range
-						PlaterDBChr.spellRangeCheckRangeFriendly [1444] = range -- workaround for "DAMAGER" (level 1-10) spec
-						Plater.GetSpellForRangeCheck()
-					end
-					local t = {}
-					local checkers = LibRangeCheck:GetFriendCheckers()
-					for range, checker in checkers do
-						tinsert (t, {label = range, onclick = onSelectFunc, value = range})
-					end
-					return t
-				end,
-				name = "|T" .. spec_icon .. ":16:16|t " .. "@OPTIONS_GENERALSETTINGS_TRANSPARENCY_RANGECHECK@",
-				desc = "OPTIONS_GENERALSETTINGS_TRANSPARENCY_RANGECHECK_SPEC_DESC",
-			})
+			if spec_id then
+				tinsert (options_table1, {
+					type = "select",
+					get = function() return PlaterDBChr.spellRangeCheckRangeFriendly [specID] end,
+					values = function() 
+						local onSelectFunc = function (_, _, range)
+							PlaterDBChr.spellRangeCheckRangeFriendly [specID] = range
+							PlaterDBChr.spellRangeCheckRangeFriendly [1444] = range -- workaround for "DAMAGER" (level 1-10) spec
+							Plater.GetSpellForRangeCheck()
+						end
+						local t = {}
+						local checkers = LibRangeCheck:GetFriendCheckers()
+						for range, checker in checkers do
+							tinsert (t, {label = range, onclick = onSelectFunc, value = range})
+						end
+						return t
+					end,
+					name = "|T" .. spec_icon .. ":16:16|t " .. "@OPTIONS_GENERALSETTINGS_TRANSPARENCY_RANGECHECK@",
+					desc = "OPTIONS_GENERALSETTINGS_TRANSPARENCY_RANGECHECK_SPEC_DESC",
+				})
+			end
 		end
 	else
 		local playerClass = select (3, UnitClass ("player"))
@@ -12521,6 +12555,26 @@ end
 			end,
 			name = "Friendly Nameplates out of combat",
 			desc = "Automatically enable / disable friendly nameplates out of combat.",
+		},
+		{
+			type = "toggle",
+			get = function() return Plater.db.profile.auto_toggle_combat.blizz_healthbar_ic end,
+			set = function (self, fixedparam, value) 
+				Plater.db.profile.auto_toggle_combat.blizz_healthbar_ic = value
+				Plater.RefreshAutoToggle()
+			end,
+			name = "Hide Blizzard Healthbars in combat",
+			desc = "Automatically enable / disable showing blizzard nameplate healthbars in combat.",
+		},
+		{
+			type = "toggle",
+			get = function() return Plater.db.profile.auto_toggle_combat.blizz_healthbar_ooc end,
+			set = function (self, fixedparam, value) 
+				Plater.db.profile.auto_toggle_combat.blizz_healthbar_ooc = value
+				Plater.RefreshAutoToggle()
+			end,
+			name = "Hide Blizzard Healthbars out of combat",
+			desc = "Automatically enable / disable showing blizzard nameplate healthbars out of combat.",
 		},
 		
 		{type = "breakline"},

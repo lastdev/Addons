@@ -7,8 +7,31 @@ function Timer:GetHeight()
 	return self.frame.title:GetStringHeight()
 end
 
+function Timer:GetTitleWidth()
+	return self.frame.title:GetStringWidth()
+end
+
 function Timer:New(parentFrame)
 	self.frame = Templates.CreateTimerRow(parentFrame)
+	self.frame:SetScript("OnEnter", function()
+		GameTooltip:SetOwner(self.frame, "ANCHOR_PRESERVE")
+		if (self.tooltipFunction) then
+			self.tooltipFunction()
+		else
+			GameTooltip:SetText(self.tooltipText)
+		end
+		GameTooltip:Show()
+		local mX, mY = GetCursorPosition()
+		local scale = UIParent:GetEffectiveScale()
+		mX = mX / scale
+		mY = (mY + 30) / scale
+		local tooltipWidth = GameTooltip:GetWidth()
+		GameTooltip:ClearAllPoints()
+		GameTooltip:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", mX - (tooltipWidth / 2), mY)
+	end)
+	self.frame:SetScript("OnLeave", function()
+		GameTooltip:Hide()
+	end)
 end
 
 function Timer:Reset()
@@ -18,7 +41,7 @@ function Timer:Reset()
 	self:SetShown(false)
 end
 
-function Timer:SetIcon(icon, desaturated)
+function Timer:SetIcon(icon, desaturated, scale)
 	self.frame.icon:SetAtlas(icon)
 	self.frame.icon:SetDesaturated(desaturated == true)
 end
@@ -31,12 +54,40 @@ function Timer:SetTitle(text)
 	self.frame.title:SetText(text)
 end
 
+function Timer:SetTooltipText(text)
+	self.tooltipText = text
+end
+
+function Timer:SetStartTime(val, gracePeriod)
+	self.endTime = nil
+	self.startTime = val
+	self.gracePeriod = gracePeriod
+	if (self.startTime == nil) then
+		self.frame.timer:SetText("---")
+	elseif (type(self.startTime) == "number") then
+		local remaining = self.startTime - GetServerTime()
+		if (remaining < 0 and -remaining < gracePeriod) then
+			self.frame.timer:SetText("NOW")
+		else
+			self.frame.timer:SetText(Time.FormatRemainingTime(self.startTime - GetServerTime(), "---"))
+		end
+	else
+		self.frame.timer:SetText(self.endTime or "---")
+	end
+end
+
 function Timer:SetTimer(val)
 	self.endTime = val
+	self.startTime = nil
+	self.gracePeriod = nil
 	if (self.endTime == nil) then
 		self.frame.timer:SetText("---")
 	elseif (type(self.endTime) == "number") then
-		self.frame.timer:SetText(Time.FormatRemainingTime(self.endTime - GetServerTime(), "---"))
+		if (self.endTime < 0) then
+			self.frame.timer:SetText("NOW")
+		else
+			self.frame.timer:SetText(Time.FormatRemainingTime(self.endTime - GetServerTime(), "---"))
+		end
 	else
 		self.frame.timer:SetText(self.endTime or "---")
 	end
@@ -44,7 +95,21 @@ end
 
 function Timer:Update()
 	if (self.endTime) then
-		self.frame.timer:SetText(Time.FormatRemainingTime(self.endTime - GetServerTime(), "---"))
+		if (self.endTime < 0) then
+			self.frame.timer:SetText("NOW")
+		else
+			self.frame.timer:SetText(Time.FormatRemainingTime(self.endTime - GetServerTime(), "---"))
+		end
+	elseif (self.startTime) then
+		local remaining = self.startTime - GetServerTime()
+		if (remaining <= 0) then
+			self.frame.timer:SetText("NOW")
+			if (remaining < -self.gracePeriod) then
+				OSD:Refresh()
+			end
+		else
+			self.frame.timer:SetText(Time.FormatRemainingTime(self.startTime - GetServerTime(), "---"))
+		end
 	end
 end
 
@@ -54,6 +119,10 @@ Timers = {
 
 function Timers:GetHeight()
 	return self.frame:GetHeight()
+end
+
+function Timers:GetWidth()
+	return self.width or 100
 end
 
 function Timers:GetTimerRow(idx)
@@ -77,21 +146,50 @@ function Timers:New(parent)
 end
 
 function Timers:Refresh()
-	local elementalStorms = GetElementalStorms()
 	local height = 0
-	for idx, elementalStorm in ipairs(elementalStorms) do
+	local idx = 0
+	local minWidth = 100
+	if (IsElementalStormsVisible()) then
+		local elementalStorms = GetElementalStorms()
+		for _, elementalStorm in ipairs(elementalStorms) do
+			idx = idx + 1
+			local timerRow = self:GetTimerRow(idx)
+			timerRow:SetIcon(elementalStorm.icon, elementalStorm.desaturated)
+			timerRow:SetTitle(elementalStorm.title)
+			timerRow:SetTimer(elementalStorm.endTime)
+			timerRow.tooltipFunction = nil
+			timerRow:SetTooltipText("Elemental Storms (ends)")
+			height = height + timerRow:GetHeight() + 4
+			timerRow:SetShown(true)
+		end
+	end
+	if (IsGreedyEmissaryVisible()) then
+		local greedyEmissaryZone, greedyEmissaryStartTime = GreedyEmissary.GetEvent()
+		idx = idx + 1
 		local timerRow = self:GetTimerRow(idx)
-		timerRow:SetIcon(elementalStorm.icon, elementalStorm.desaturated)
-		timerRow:SetTitle(elementalStorm.title)
-		timerRow:SetTimer(elementalStorm.endTime)
+		local mapInfo = C_Map.GetMapInfo(greedyEmissaryZone)
+		--timerRow:SetIcon("WarlockPortal-Yellow-32x32")
+		timerRow:SetIcon("BuildanAbomination-32x32")
+		timerRow:SetTitle(string.format("Treasure Goblin: %s", mapInfo.name))
+		timerRow:SetStartTime(greedyEmissaryStartTime, GreedyEmissary.GetGracePeriod())
+		timerRow.tooltipFunction = function()
+			GameTooltip:SetText("Special Event: A Greedy Emissary (starts)")
+			local text = GreedyEmissary.LootInfo()
+			for _, v in ipairs(text) do
+				GameTooltip:AddLine(v,1,1,1,true)
+			end
+		end
 		height = height + timerRow:GetHeight() + 4
 		timerRow:SetShown(true)
 	end
-	for idx = #elementalStorms + 1, #self.children do
-		self:GetTimerRow(idx):Reset()
+	for idx_ = 1, idx do
+		minWidth = math.max(minWidth, self:GetTimerRow(idx_):GetTitleWidth())
 	end
-	-- todo: set fixed height for widget
+	for idx_ = idx + 1, #self.children do
+		self:GetTimerRow(idx_):Reset()
+	end
 	self.frame:SetHeight(height)
+	self.width = minWidth + 100
 end
 
 function Timers:Update(elapsed)

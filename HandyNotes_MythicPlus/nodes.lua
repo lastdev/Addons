@@ -179,6 +179,24 @@ ns.points = {
     },
     -- Halls of Infusion (HOI)
     [2082] = {
+        [39504892] = {
+            ["cont"] = false,
+            ["icon"] = 12,
+            ["title"] = L["HOI_door"],
+            ["desc"] = "",
+        },
+        [50387403] = {
+            ["cont"] = false,
+            ["icon"] = 4,
+            ["title"] = L["HOI_shortcut_frog"],
+            ["desc"] = "",
+        },
+        [28387360] = {
+            ["cont"] = false,
+            ["icon"] = 6,
+            ["title"] = L["HOI_shortcut_icelady"],
+            ["desc"] = "",
+        },
     },
     -- Neltharion's Lair (NL)
     [731] = {
@@ -200,9 +218,33 @@ ns.points = {
             ["icon"] = 12,
             ["desc"] = "",
         },
+        [57686786] = {
+            ["title"] = L["ULD_mining"],
+            ["cont"] = false,
+            ["icon"] = 18,
+            ["desc"] = "",
+        },
+        [80874419] = {
+            ["title"] = L["ULD_mining"],
+            ["cont"] = false,
+            ["icon"] = 18,
+            ["desc"] = "",
+        },
+        [73708867] = {
+            ["title"] = L["ULD_mining"],
+            ["cont"] = false,
+            ["icon"] = 18,
+            ["desc"] = "",
+        },
     },
     -- The Underrot (UNDR)
     [1041] = {
+        [55525341] = {
+            ["title"] = L["UNDR_skip"],
+            ["cont"] = false,
+            ["icon"] = 12,
+            ["desc"] = "",
+        },
     },
     -- The Vortex Pinnacle (VP)
     [325] = {

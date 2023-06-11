@@ -478,7 +478,7 @@ do
         },
 
         {
-            text = "Covenants",
+            text = "Minor CDs",
             func = function() Hekili:FireToggle( "essences" ); ns.UI.Minimap:RefreshDataText() end,
             checked = function () return Hekili.DB.profile.toggles.essences.value end,
         },
@@ -2012,7 +2012,7 @@ do
 
         dPool[ id ] = dPool[ id ] or CreateFrame( "Frame", "HekiliDisplay" .. id, UIParent )
         local d = dPool[ id ]
-        self:ProfileFrame( "HekiliDisplay" .. id, d)
+        self:ProfileFrame( "HekiliDisplay" .. id, d )
 
         d.id = id
 
@@ -2253,30 +2253,39 @@ do
         self.activeThreadTime = 0
     end
 
+
+    local frameSpans = {}
+
     Hekili.Engine:SetScript( "OnUpdate", function( self, elapsed )
         if not self.activeThread then
             self.refreshTimer = self.refreshTimer + elapsed
+            insert( frameSpans, elapsed )
         end
 
-        if not Hekili.Pause then
-            self.refreshRate = self.refreshRate or 5
-            self.combatRate = self.combatRate or 0.25
+        if Hekili.DB.profile.enabled and not Hekili.Pause then
+            self.refreshRate = self.refreshRate or 0.5
+            self.combatRate = self.combatRate or 0.2
 
             local thread = self.activeThread
 
             local firstDisplay = nil
             local superUpdate = self.firstThreadCompleted and self.superUpdate
 
-            if superUpdate and thread and coroutine.status( thread ) == "suspended" then
-                -- We're going to break the thread and start over from the current display in progress.
-                firstDisplay = state.display
-                self:UpdatePerformance( true )
-            end
+            -- Don't initiate a thread in a frame that's already dirty.
+            if self.usedFrame then
+                self.usedFrame = nil
 
-            -- If there's no thread, then see if we have a reason to update.
-            if superUpdate or ( not thread and self.refreshTimer > ( self.criticalUpdate and self.combatRate or self.refreshRate ) ) then
+                -- If there's no thread, then see if we have a reason to update.
+            elseif superUpdate or ( not thread and self.refreshTimer > ( self.criticalUpdate and self.combatRate or self.refreshRate ) ) then
+                if superUpdate and thread and coroutine.status( thread ) == "suspended" then
+                    -- We're going to break the thread and start over from the current display in progress.
+                    firstDisplay = state.display
+                    self:UpdatePerformance( true )
+                end
+
                 self.criticalUpdate = false
                 self.superUpdate = false
+                self.refreshTimer = 0
 
                 self.activeThread = coroutine.create( Hekili.Update )
                 self.activeThreadTime = 0
@@ -2286,11 +2295,27 @@ do
 
                 if not self.firstThreadCompleted then
                     Hekili.maxFrameTime = 100
+                else
+                    if #frameSpans > 0 then
+                        local averageSpan = 0
+                        for _, span in ipairs( frameSpans ) do
+                            averageSpan = averageSpan + span
+                        end
+                        averageSpan = 1000 * averageSpan / #frameSpans
+                        wipe( frameSpans )
+
+                        Hekili.maxFrameTime = Clamp( 0.6 * averageSpan, 3, 20 ) -- Dynamically adjust to 60% of (seemingly) average frame rate between updates.
+                    else
+                        Hekili.maxFrameTime = Hekili.maxFrameTime or 10
+                    end
+                end
+
+                --[[
                 elseif Hekili:GetActiveSpecOption( "throttleTime" ) then
                     Hekili.maxFrameTime = Hekili:GetActiveSpecOption( "maxTime" ) or 15
                 else
                     Hekili.maxFrameTime = 15
-                end
+                end ]]
 
                 thread = self.activeThread
             end
@@ -2319,14 +2344,13 @@ do
 
                 if coroutine.status( thread ) == "dead" or err then
                     self.activeThread = nil
-                    self.refreshTimer = 0
 
                     if Hekili:GetActiveSpecOption( "throttleRefresh" ) then
                         self.refreshRate = Hekili:GetActiveSpecOption( "regularRefresh" )
                         self.combatRate = Hekili:GetActiveSpecOption( "combatRefresh" )
                     else
                         self.refreshRate = 0.5
-                        self.combatRate = 0.1
+                        self.combatRate = 0.2
                     end
 
                     if ok then
@@ -2350,8 +2374,11 @@ do
 
 
     function Hekili:ForceUpdate( event, super )
+        self.Engine.usedFrame = true
         self.Engine.criticalUpdate = true
-        if super then self.Engine.superUpdate = true end
+        if super then
+            self.Engine.superUpdate = true
+        end
         if self.Engine.firstForce == 0 then self.Engine.firstForce = GetTime() end
 
         if event then
@@ -2736,8 +2763,8 @@ do
         b.EmpowerLevel:SetText( empText )
 
         -- Mover Stuff.
-        b:SetScript("OnMouseDown", Button_OnMouseDown)
-        b:SetScript("OnMouseUp", Button_OnMouseUp)
+        b:SetScript( "OnMouseDown", Button_OnMouseDown )
+        b:SetScript( "OnMouseUp", Button_OnMouseUp )
 
         b:SetScript( "OnEnter", function( self )
             local H = Hekili

@@ -73,7 +73,7 @@ local function showRealDate(curseDate)
 end
 
 DBM = {
-	Revision = parseCurseDate("20230518033743"),
+	Revision = parseCurseDate("20230606101623"),
 }
 
 local fakeBWVersion, fakeBWHash
@@ -81,23 +81,23 @@ local bwVersionResponseString = "V^%d^%s"
 local PForceDisable
 -- The string that is shown as version
 if isRetail then
-	DBM.DisplayVersion = "10.1.9"
-	DBM.ReleaseRevision = releaseDate(2023, 5, 17) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	DBM.DisplayVersion = "10.1.12"
+	DBM.ReleaseRevision = releaseDate(2023, 6, 6) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	PForceDisable = 4--When this is incremented, trigger force disable regardless of major patch
 	fakeBWVersion, fakeBWHash = 278, "6d6db52"
 elseif isClassic then
-	DBM.DisplayVersion = "1.14.38 alpha"
-	DBM.ReleaseRevision = releaseDate(2023, 4, 10) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	DBM.DisplayVersion = "1.14.38"
+	DBM.ReleaseRevision = releaseDate(2023, 6, 6) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	PForceDisable = 1--When this is incremented, trigger force disable regardless of major patch
 	fakeBWVersion, fakeBWHash = 48, "9581348"
 elseif isBCC then
 	DBM.DisplayVersion = "2.6.0 alpha"--When TBC returns (and it will one day). It'll probably be game version 2.6
-	DBM.ReleaseRevision = releaseDate(2023, 4, 10) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	DBM.ReleaseRevision = releaseDate(2023, 6, 6) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	PForceDisable = 1--When this is incremented, trigger force disable regardless of major patch
 	fakeBWVersion, fakeBWHash = 48, "9581348"
 elseif isWrath then
-	DBM.DisplayVersion = "3.4.40 alpha"
-	DBM.ReleaseRevision = releaseDate(2023, 4, 14) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	DBM.DisplayVersion = "3.4.41"
+	DBM.ReleaseRevision = releaseDate(2023, 6, 6) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	PForceDisable = 1--When this is incremented, trigger force disable regardless of major patch
 	fakeBWVersion, fakeBWHash = 48, "9581348"
 end
@@ -150,12 +150,12 @@ DBM.DefaultOptions = {
 		{r = 1.00, g = 0.50, b = 0.00}, -- Color 3 - #FF8000 - Orange
 		{r = 1.00, g = 0.10, b = 0.10}, -- Color 4 - #FF1A1A - Red
 	},
-	RaidWarningSound = isRetail and 11742 or 6674,--"Sound\\Doodad\\BellTollNightElf.ogg"
-	SpecialWarningSound = 8174,--"Sound\\Spells\\PVPFlagTaken.ogg"
-	SpecialWarningSound2 = isRetail and 15391 or "Interface\\AddOns\\DBM-Core\\sounds\\ClassicSupport\\UR_Algalon_BHole01.ogg",--"Sound\\Creature\\AlgalonTheObserver\\UR_Algalon_BHole01.ogg"
+	RaidWarningSound = 566558,--"Sound\\Doodad\\BellTollNightElf.ogg"
+	SpecialWarningSound = 569200,--"Sound\\Spells\\PVPFlagTaken.ogg"
+	SpecialWarningSound2 = isRetail and 543587 or "Interface\\AddOns\\DBM-Core\\sounds\\ClassicSupport\\UR_Algalon_BHole01.ogg",--"Sound\\Creature\\AlgalonTheObserver\\UR_Algalon_BHole01.ogg"
 	SpecialWarningSound3 = "Interface\\AddOns\\DBM-Core\\sounds\\AirHorn.ogg",
-	SpecialWarningSound4 = not isClassic and 9278 or "Interface\\AddOns\\DBM-Core\\sounds\\ClassicSupport\\HoodWolfTransformPlayer01.ogg",--"Sound\\Creature\\HoodWolf\\HoodWolfTransformPlayer01.ogg"
-	SpecialWarningSound5 = isRetail and 128466 or 8826,--"Sound\\Creature\\Loathstare\\Loa_Naxx_Aggro02.ogg"
+	SpecialWarningSound4 = not isClassic and 552035 or "Interface\\AddOns\\DBM-Core\\sounds\\ClassicSupport\\HoodWolfTransformPlayer01.ogg",--"Sound\\Creature\\HoodWolf\\HoodWolfTransformPlayer01.ogg"
+	SpecialWarningSound5 = 554236,--"Sound\\Creature\\Loathstare\\Loa_Naxx_Aggro02.ogg"
 	ModelSoundValue = "Short",
 	CountdownVoice = "Corsica",
 	CountdownVoice2 = "Kolt",
@@ -167,6 +167,7 @@ DBM.DefaultOptions = {
 	VPReplacesSA2 = true,
 	VPReplacesSA3 = true,
 	VPReplacesSA4 = true,
+	VPReplacesGTFO = true,
 	VPReplacesCustom = false,
 	AlwaysPlayVoice = false,
 	VPDontMuteSounds = false,
@@ -346,6 +347,8 @@ DBM.DefaultOptions = {
 	SpamSpecRoleswitch = false,
 	SpamSpecRolegtfo = false,
 	DontShowBossTimers = false,
+	DontShowTrashTimers = false,
+	DontShowEventTimers = false,
 	DontShowUserTimers = false,
 	DontShowFarWarnings = true,
 	DontSetIcons = false,
@@ -356,7 +359,7 @@ DBM.DefaultOptions = {
 	DontShowHudMap2 = false,
 	DontShowNameplateIcons = false,
 	DontSendBossGUIDs = false,
---	DontShowTimersWithNameplates = false,
+	DontShowTimersWithNameplates = true,
 	UseNameplateHandoff = true,
 	NPAuraSize = 40,
 	DontPlayCountdowns = false,
@@ -456,11 +459,45 @@ local bannedMods = { -- a list of "banned" (meaning they are replaced by another
 	"DBM-BattlefieldBarrens",--Apparently people are still running this
 	"DBM-RaidLeadTools", -- Killed plugin
 	"DBM-Party-Classic", -- Renamed to DBM-Party-Vanilla
+	--The Culling
+    "DBM-Ulduar",--Combined into DBM-Raids-WoTLK
+    "DBM-VoA",--Combined into DBM-Raids-WoTLK
+    "DBM-ChamberOfAspects",--Combined into DBM-Raids-WoTLK
+    "DBM-Coliseum",--Combined into DBM-Raids-WoTLK
+    "DBM-EyeOfEternity",--Combined into DBM-Raids-WoTLK
+
+	"DBM-Karazhan",--Combined into DBM-Raids-BC
+	"DBM-BlackTemple",--Combined into DBM-Raids-BC
+	"DBM-Hyjal",--Combined into DBM-Raids-BC
+	"DBM-Sunwell",--Combined into DBM-Raids-BC
+	"DBM-TheEye",--Combined into DBM-Raids-BC
+	"DBM-Serpentshrine",--Combined into DBM-Raids-BC
+	"DBM-ZulAman", -- Part of Cataclysm party mods on retail, and merged into DBM-Raids-BC on classic
+
+	"DBM-BaradinHold",--Combined into DBM-Raids-Cata
+	"DBM-BastionTwilight",--Combined into DBM-Raids-Cata
+	"DBM-BlackwingDescent",--Combined into DBM-Raids-Cata
+	"DBM-DragonSoul",--Combined into DBM-Raids-Cata
+	"DBM-Firelands",--Combined into DBM-Raids-Cata
+	"DBM-ThroneFourWinds",--Combined into DBM-Raids-Cata
+
+	"DBM-Highmaul",--Combined into DBM-Raids-WoD
+	"DBM-BlackrockFoundry",--Combined into DBM-Raids-WoD
+	"DBM-HellfireCitadel",--Combined into DBM-Raids-WoD
 }
 if isRetail then
-	table.insert(bannedMods, "DBM-ZulAman") -- Part of Cataclysm party mods
-	table.insert(bannedMods, "DBM-ZG") -- Part of Cataclysm party mods
+	--Retail doesn't use this folder, classic era, bc, and wrath still do
 	table.insert(bannedMods, "DBM-Azeroth")--Merged into DBM-Core events mod.
+end
+if not isClassic then
+	--The Culling (classic era still uses split modules, BC and later use unified)
+	table.insert(bannedMods, "DBM-Onyxia")--Combined into DBM-Raids-WoTLK
+	table.insert(bannedMods, "DBM-Naxx")--Combined into DBM-Raids-WoTLK
+	table.insert(bannedMods, "DBM-ZG") -- Part of Cataclysm party mods on retail, and part on DBM-Raids-BC on classic
+	table.insert(bannedMods, "DBM-AQ20")--Combined into DBM-Raids-Vanilla
+	table.insert(bannedMods, "DBM-AQ40")--Combined into DBM-Raids-Vanilla
+	table.insert(bannedMods, "DBM-BWL")--Combined into DBM-Raids-Vanilla
+	table.insert(bannedMods, "DBM-MC")--Combined into DBM-Raids-Vanilla
 end
 
 --[InstanceID]={level,zoneType}
@@ -498,7 +535,7 @@ if isRetail then
 		[1501]={45, 2},[1466]={45, 2},[1456]={45, 2},[1477]={45, 2},[1458]={45, 2},[1516]={45, 2},[1571]={45, 2},[1492]={45, 2},[1544]={45, 2},[1493]={45, 2},[1651]={45, 2},[1677]={45, 2},[1753]={45, 2},--Legion Dungeons
 		[1763]={50, 2},[1754]={50, 2},[1762]={50, 2},[1864]={50, 2},[1822]={50, 2},[1877]={50, 2},[1594]={50, 2},[1841]={50, 2},[1771]={50, 2},[1862]={50, 2},[2097]={50, 2},--Bfa Dungeons
 		[2286]={60, 2},[2289]={60, 2},[2290]={60, 2},[2287]={60, 2},[2285]={60, 2},[2293]={60, 2},[2291]={60, 2},[2284]={60, 2},[2441]={60, 2},--Shadowlands Dungeons
-		[2520]={70, 2},[2451]={70, 2},[2516]={70, 2},[2519]={70, 2},[2526]={70, 2},[2515]={70, 2},[2521]={70, 2},[2527]={70, 2},--Dragonflight Dungeons
+		[2520]={70, 2},[2451]={70, 2},[2516]={70, 2},[2519]={70, 2},[2526]={70, 2},[2515]={70, 2},[2521]={70, 2},[2527]={70, 2},[2579]={70, 2},--Dragonflight Dungeons
 	}
 elseif isWrath then--Since naxx is moved to northrend, wrath can't use tbc/classics table
 	instanceDifficultyBylevel = {
@@ -578,7 +615,7 @@ local GetInstanceInfo = GetInstanceInfo
 local GetSpecialization, GetSpecializationInfo, GetSpecializationInfoByID = GetSpecialization, GetSpecializationInfo, GetSpecializationInfoByID
 local UnitDetailedThreatSituation = UnitDetailedThreatSituation
 local UnitIsGroupLeader, UnitIsGroupAssistant = UnitIsGroupLeader, UnitIsGroupAssistant
-local PlaySoundFile, PlaySound = PlaySoundFile, PlaySound
+local PlaySoundFile = PlaySoundFile
 local Ambiguate = Ambiguate
 local C_TimerNewTicker, C_TimerAfter = C_Timer.NewTicker, C_Timer.After
 local IsQuestFlaggedCompleted = C_QuestLog.IsQuestFlaggedCompleted
@@ -2758,6 +2795,27 @@ function DBM:AddDefaultOptions(t1, t2)
 	end
 end
 
+local soundMigrationtable = {
+	[8174] = 569200,--PVPFlagTaken
+	[15391] = 543587,--UR_Algalon_BHole01
+	[9278] = 552035,--HoodWolfTransformPlayer01
+	[6674] = 566558,--BellTollNightElf
+	[11742] = 566558,--BellTollNightElf
+	[8585] = 546633,--CThunYouWillDIe
+	[11965] = 551703,--Horseman_Laugh_01
+	[37666] = 876098,--Blizzard Raid Emote
+	[11466] = 552503,--BLACK_Illidan_04
+	[68563] = 1412178,--VO_703_Illidan_Stormrage_03
+	[11052] = 553050,--CAV_Kaz_Mark02
+	[12506] = 553193,--KILJAEDEN02
+	[11482] = 553566,--BLCKTMPLE_LadyMal_Aggro01
+	[8826] = 554236,--Loa_Naxx_Aggro02
+	[128466] = 554236,--Loa_Naxx_Aggro02
+	[49764] = 555337,--TEMPEST_Millhouse_Pyro01
+	[11213] = 563787,--TEMPEST_VoidRvr_Aggro01
+	[15757] = 564859,--UR_YoggSaron_Slay01
+}
+
 function DBM:LoadModOptions(modId, inCombat, first)
 	local oldSavedVarsName = modId:gsub("-", "").."_SavedVars"
 	local savedVarsName = modId:gsub("-", "").."_AllSavedVars"
@@ -2827,14 +2885,12 @@ function DBM:LoadModOptions(modId, inCombat, first)
 							savedOptions[id][profileNum][option] = mod.DefaultOptions[option]
 							self:Debug("Migrated "..option.." to option defaults")
 						end
-					--Fix options for custom special warning sounds not in addons folder that are not using soundkit IDs
+					--Fix options for custom special warning sounds not in addons folder that are using soundkit Ids not and File Data Ids
 					elseif option:find("SWSound") then
-						if savedOptions[id][profileNum][option] and (type(savedOptions[id][profileNum][option]) == "string") and (savedOptions[id][profileNum][option] ~= "") and (savedOptions[id][profileNum][option] ~= "None") then
-							local searchMsg = (savedOptions[id][profileNum][option]):lower()
-							if not searchMsg:find("addons") then
-								savedOptions[id][profileNum][option] = mod.DefaultOptions[option]
-								self:Debug("Migrated "..option.." to option defaults")
-							end
+						local checkedOption = savedOptions[id][profileNum][option]
+						if checkedOption and (type(checkedOption) == "number") and soundMigrationtable[checkedOption] then
+							savedOptions[id][profileNum][option] = soundMigrationtable[checkedOption]
+							self:Debug("Migrated "..option.." to file data Id")
 						end
 					end
 				end
@@ -3228,7 +3284,7 @@ do
 			self.Options.ChosenVoicePack2 = self.Options.ChosenVoicePack
 			self.Options.ChosenVoicePack = nil
 		end
-		-- Migrate ElvUI changes
+
 		for _, setting in ipairs({
 			-- Sounds
 			"RaidWarningSound", "SpecialWarningSound", "SpecialWarningSound2", "SpecialWarningSound3", "SpecialWarningSound4", "SpecialWarningSound5", "EventSoundVictory2",
@@ -3236,8 +3292,13 @@ do
 			-- Fonts
 			"InfoFrameFont", "WarningFont", "SpecialWarningFont"
 		}) do
+			-- Migrate ElvUI changes
 			if type(self.Options[setting]) == "string" and self.Options[setting]:lower() ~= "none" then
 				FixElv(setting)
+			end
+			-- Migrate soundkit to FileData ID changes
+			if type(self.Options[setting]) == "number" and soundMigrationtable[self.Options[setting]] then
+				self.Options[setting] = soundMigrationtable[self.Options[setting]]
 			end
 		end
 	end
@@ -3248,20 +3309,20 @@ do
 	function DBM:LFG_ROLE_CHECK_SHOW()
 		if not UnitIsGroupLeader("player") and self.Options.LFDEnhance and GetTime() - lastLFGAlert > 5 then
 			self:FlashClientIcon()
-			self:PlaySound(8960, true)--Because regular sound uses SFX channel which is too low of volume most of time
+			self:PlaySoundFile(567478, true)--Because regular sound uses SFX channel which is too low of volume most of time
 			lastLFGAlert = GetTime()
 		end
 	end
 end
 
 function DBM:LFG_PROPOSAL_SHOW()
-	if self.Options.ShowQueuePop and not self.Options.DontShowBossTimers then
+	if self.Options.ShowQueuePop and not self.Options.DontShowEventTimers then
 		DBT:CreateBar(40, L.LFG_INVITE, 237538)
 		fireEvent("DBM_TimerStart", "DBMLFGTimer", L.LFG_INVITE, 40, "237538", "extratimer", nil, 0)
 	end
 	if self.Options.LFDEnhance then
 		self:FlashClientIcon()
-		self:PlaySound(8960, true)--Because regular sound uses SFX channel which is too low of volume most of time
+		self:PlaySoundFile(567478, true)--Because regular sound uses SFX channel which is too low of volume most of time
 	end
 end
 
@@ -3279,7 +3340,7 @@ function DBM:READY_CHECK()
 	if self.Options.RLReadyCheckSound then--readycheck sound, if ora3 not installed (bad to have 2 mods do it)
 		self:FlashClientIcon()
 		if not BINDING_HEADER_oRA3 then
-			DBM:PlaySound(8960, true)--Because regular sound uses SFX channel which is too low of volume most of time
+			DBM:PlaySoundFile(567478, true)--Because regular sound uses SFX channel which is too low of volume most of time
 		end
 	end
 	self:TransitionToDungeonBGM(false, true)
@@ -3345,7 +3406,7 @@ end
 function DBM:UPDATE_BATTLEFIELD_STATUS(queueID)
 	for i = 1, 2 do
 		if GetBattlefieldStatus(i) == "confirm" then
-			if self.Options.ShowQueuePop and not self.Options.DontShowBossTimers then
+			if self.Options.ShowQueuePop and not self.Options.DontShowEventTimers then
 				queuedBattlefield[i] = select(2, GetBattlefieldStatus(i))
 				local expiration = GetBattlefieldPortExpiration(queueID)
 				local timerIcon = (isRetail and GetPlayerFactionGroup("player") or UnitFactionGroup("player")) == "Alliance" and 132486 or 132485
@@ -3354,7 +3415,7 @@ function DBM:UPDATE_BATTLEFIELD_STATUS(queueID)
 				fireEvent("DBM_TimerStart", "DBMBFSTimer", queuedBattlefield[i], expiration or 85, tostring(timerIcon), "extratimer", nil, 0)
 			end
 			if self.Options.LFDEnhance then
-				self:PlaySound(8960, true)--Because regular sound uses SFX channel which is too low of volume most of time
+				self:PlaySoundFile(567478, true)--Because regular sound uses SFX channel which is too low of volume most of time
 			end
 		elseif queuedBattlefield[i] then
 			DBT:CancelBar(queuedBattlefield[i])
@@ -3399,9 +3460,9 @@ do
 			if not self:IsTrivial() then
 				if instanceDifficultyBylevel[LastInstanceMapID] and instanceDifficultyBylevel[LastInstanceMapID][2] == 2 and not GetAddOnInfo("DBM-Party-Dragonflight") then
 					AddMsg(self, L.MOD_AVAILABLE:format("DBM Dungeon mods"))
-				elseif (classicZones[LastInstanceMapID] or bcZones[LastInstanceMapID]) and not GetAddOnInfo("DBM-BlackTemple") then
+				elseif (classicZones[LastInstanceMapID] or bcZones[LastInstanceMapID]) and not GetAddOnInfo("DBM-Raids-BC") then
 					AddMsg(self, L.MOD_AVAILABLE:format("DBM BC/Vanilla mods"))
-				elseif wrathZones[LastInstanceMapID] and not GetAddOnInfo("DBM-Ulduar") then
+				elseif wrathZones[LastInstanceMapID] and not GetAddOnInfo("DBM-Raids-WoTLK") then
 					AddMsg(self, L.MOD_AVAILABLE:format("DBM Wrath of the Lich King mods"))
 				elseif cataZones[LastInstanceMapID] and not GetAddOnInfo("DBM-Firelands") then
 					AddMsg(self, L.MOD_AVAILABLE:format("DBM Cataclysm mods"))
@@ -4169,12 +4230,16 @@ do
 		revision, version = tonumber(revision), tonumber(version)
 		if protocol >= 2 then
 			forceDisable = tonumber(forceDisable) or 0
+		else
+			-- Protocol 1 did not send forceDisable, VPVersion was in that position
+			VPVersion = forceDisable
+			forceDisable = 0
 		end
 		if revision and version and displayVersion and raid[sender] then
 			raid[sender].revision = revision
 			raid[sender].version = version
 			raid[sender].displayVersion = displayVersion
-			raid[sender].VPVersion = protocol == 2 and VPVersion or forceDisable--If protocol 1, there is no forceDisable arg
+			raid[sender].VPVersion = VPVersion
 			raid[sender].locale = locale
 			raid[sender].enabledIcons = iconEnabled or "false"
 			DBM:Debug("Received version info from "..sender.." : Rev - "..revision..", Ver - "..version..", Rev Diff - "..(revision - DBM.Revision), 3)
@@ -4333,7 +4398,7 @@ do
 			local factionText = faction == "Alliance" and FACTION_ALLIANCE or faction == "Horde" and FACTION_HORDE or CL.BOTH
 			local buffName, _, buffIcon = DBM:GetSpellInfo(tonumber(spellId) or 0)
 			DBM:AddMsg(L.WORLDBUFF_STARTED:format(buffName or CL.UNKNOWN, factionText, sender))
-			DBM:PlaySound(DBM.Options.RaidWarningSound, true)
+			DBM:PlaySoundFile(DBM.Options.RaidWarningSound, true)
 			time = tonumber(time)
 			if time then
 				DBT:CreateBar(time, buffName or CL.UNKNOWN, buffIcon or 136106)
@@ -4389,7 +4454,7 @@ do
 			local factionText = faction == "Alliance" and FACTION_ALLIANCE or faction == "Horde" and FACTION_HORDE or L.BOTH
 			local buffName, _, buffIcon = DBM:GetSpellInfo(tonumber(spellId) or 0)
 			DBM:AddMsg(L.WORLDBUFF_STARTED:format(buffName or CL.UNKNOWN, factionText, sender))
-			DBM:PlaySound(DBM.Options.RaidWarningSound, true)
+			DBM:PlaySoundFile(DBM.Options.RaidWarningSound, true)
 			time = tonumber(time)
 			if time then
 				DBT:CreateBar(time, buffName or CL.UNKNOWN, buffIcon or 136106)
@@ -4627,11 +4692,11 @@ do
 		if self.Options.AFKHealthWarning and not IsEncounterInProgress() and UnitIsAFK("player") and self:AntiSpam(5, "AFK") then--You are afk and losing health, some griever is trying to kill you while you are afk/tabbed out.
 			self:FlashClientIcon()
 			local voice = DBM.Options.ChosenVoicePack2
-			local path = 8585--"Sound\\Creature\\CThun\\CThunYouWillDIe.ogg"
+			local path = 546633--"Sound\\Creature\\CThun\\CThunYouWillDIe.ogg"
 			if not voiceSessionDisabled and voice ~= "None" then
 				path = "Interface\\AddOns\\DBM-VP"..voice.."\\checkhp.ogg"
 			end
-			self:PlaySound(path)
+			self:PlaySoundFile(path)
 			if UnitHealthMax("player") ~= 0 then
 				local health = UnitHealth("player") / UnitHealthMax("player") * 100
 				self:AddMsg(L.AFK_WARNING:format(health))
@@ -4723,9 +4788,9 @@ do
 			local v = inCombat[i]
 			if not v.combatInfo then return end
 			if v.noEEDetection then return end
-			if (isRetail or v.respawnTime) and success == 0 and self.Options.ShowRespawn and not self.Options.DontShowBossTimers then--No special hacks needed for bad wrath ENCOUNTER_END. Only mods that define respawnTime have a timer, since variable per boss.
+			if (isRetail or v.respawnTime) and success == 0 and self.Options.ShowRespawn and not self.Options.DontShowEventTimers then--No special hacks needed for bad wrath ENCOUNTER_END. Only mods that define respawnTime have a timer, since variable per boss.
 				name = string.split(",", name)
-				DBT:CreateBar(v.respawnTime, L.TIMER_RESPAWN:format(name), isRetail and 237538 or 136106)--Interface\\Icons\\Spell_Holy_BorrowedTime, Spell_nature_timestop
+				DBT:CreateBar(v.respawnTime or 29, L.TIMER_RESPAWN:format(name), isRetail and 237538 or 136106)--Interface\\Icons\\Spell_Holy_BorrowedTime, Spell_nature_timestop
 				fireEvent("DBM_TimerStart", "DBMRespawnTimer", L.TIMER_RESPAWN:format(name), v.respawnTime or 29, isRetail and "237538" or "136106", "extratimer", nil, 0, v.id)
 			end
 			if v.multiEncounterPullDetection then
@@ -4789,7 +4854,7 @@ do
 						scanForCombat(v.mod, v.mob, 0)
 						if v.mod.readyCheckQuestId and (self.Options.WorldBossNearAlert or v.mod.Options.ReadyCheck) and not IsQuestFlaggedCompleted(v.mod.readyCheckQuestId) and v.mod.readyCheckMaxLevel >= playerLevel then
 							self:FlashClientIcon()
-							self:PlaySound(8960, true)
+							self:PlaySoundFile(567478, true)
 						end
 					end
 				end
@@ -5079,7 +5144,6 @@ do
 			mod.engagedDiffText = difficultyText
 			mod.engagedDiffIndex = difficultyIndex
 			mod.inCombat = true
-			mod.blockSyncs = nil
 			mod.combatInfo.pull = GetTime() - (delay or 0)
 			bossuIdFound = event == "IEEU"
 			if mod.minCombatTime then
@@ -5332,7 +5396,12 @@ do
 				end
 			end
 			if self.Options.AFKHealthWarning and UnitIsUnit(uId, "player") and (health < 85) and not IsEncounterInProgress() and UnitIsAFK("player") and self:AntiSpam(5, "AFK") then--You are afk and losing health, some griever is trying to kill you while you are afk/tabbed out.
-				self:PlaySound(8585)--So fire an alert sound to save yourself from this person's behavior.
+				local voice = DBM.Options.ChosenVoicePack2
+				local path = 546633--"Sound\\Creature\\CThun\\CThunYouWillDIe.ogg"
+				if not voiceSessionDisabled and voice ~= "None" then
+					path = "Interface\\AddOns\\DBM-VP"..voice.."\\checkhp.ogg"
+				end
+				self:PlaySoundFile(path)
 				self:AddMsg(L.AFK_WARNING:format(health))
 			end
 		end
@@ -5373,7 +5442,6 @@ do
 				twipe(mod.iconRestore)
 			end
 			mod.inCombat = false
-			mod.blockSyncs = true
 			if mod.combatInfo.killMobs then
 				for i, _ in pairs(mod.combatInfo.killMobs) do
 					mod.combatInfo.killMobs[i] = true
@@ -5949,7 +6017,7 @@ do
 	end
 
 	function DBM:ValidateSound(path, log, ignoreCustom)
-		-- Ignore build in sounds
+		-- Ignore built in sounds
 		if type(path) == "number" or string.find(path:lower(), "^sound[\\/]+") then
 			return true
 		end
@@ -5999,26 +6067,26 @@ do
 		return true
 	end
 
-	local function playSound(self, path, ignoreSFX, validate)
+	function DBM:PlaySoundFile(path, ignoreSFX, validate)
 		if self.Options.SilentMode or path == "" or path == "None" then
 			return
 		end
 		local soundSetting = self.Options.UseSoundChannel
-		if type(path) == "number" then
-			self:Debug("PlaySound playing with media " .. path, 3)
+		if type(path) == "number" then--Build in media using FileDataID
+			self:Debug("PlaySoundFile playing with FileDataID " .. path, 3)
 			if soundSetting == "Dialog" then
-				PlaySound(path, "Dialog", false)
+				PlaySoundFile(path, "Dialog")
 			elseif ignoreSFX or soundSetting == "Master" then
-				PlaySound(path, "Master", false)
+				PlaySoundFile(path, "Master")
 			else
-				PlaySound(path) -- Using SFX channel, leave forceNoDuplicates on.
+				PlaySoundFile(path) -- Using SFX channel, leave forceNoDuplicates on.
 			end
 			fireEvent("DBM_PlaySound", path)
-		else
+		else--External media, which needs path validation to avoid lua errors
 			if validate and not self:ValidateSound(path, true, true) then
 				return
 			end
-			self:Debug("PlaySoundFile playing with media " .. path, 3)
+			self:Debug("PlaySoundFile playing with file path " .. path, 3)
 			if soundSetting == "Dialog" then
 				PlaySoundFile(path, "Dialog")
 			elseif ignoreSFX or soundSetting == "Master" then
@@ -6028,14 +6096,6 @@ do
 			end
 			fireEvent("DBM_PlaySound", path)
 		end
-	end
-
-	function DBM:PlaySoundFile(path, ignoreSFX, validate)
-		playSound(self, path, ignoreSFX, validate)
-	end
-
-	function DBM:PlaySound(path, ignoreSFX, validate)
-		playSound(self, path, ignoreSFX, validate)
 	end
 end
 
@@ -6145,7 +6205,12 @@ function DBM:UNIT_DIED(args)
 	----GUIDIsPlayer
 	if self.Options.AFKHealthWarning and GUID == UnitGUID("player") and not IsEncounterInProgress() and UnitIsAFK("player") and self:AntiSpam(5, "AFK") then--You are afk and losing health, some griever is trying to kill you while you are afk/tabbed out.
 		self:FlashClientIcon()
-		self:PlaySound(8585)--So fire an alert sound to save yourself from this person's behavior.
+		local voice = DBM.Options.ChosenVoicePack2
+		local path = 546633--"Sound\\Creature\\CThun\\CThunYouWillDIe.ogg"
+		if not voiceSessionDisabled and voice ~= "None" then
+			path = "Interface\\AddOns\\DBM-VP"..voice.."\\checkhp.ogg"
+		end
+		self:PlaySoundFile(path)
 		self:AddMsg(L.AFK_WARNING:format(0))
 	end
 end
@@ -6421,7 +6486,7 @@ do
 		if msg:find(chatPrefixShort) and not InCombatLockdown() and DBM:AntiSpam(60, "Ogron") and DBM.Options.AutoReplySound then
 			--Might need more validation if people figure out they can just whisper people with chatPrefix to trigger it.
 			--However if I have to add more validation it probably won't work in most languages :\ So lets hope antispam and combat check is enough
-			DBM:PlaySound(41928)--"sound\\creature\\aggron1\\VO_60_HIGHMAUL_AGGRON_1_AGGRO_1.ogg"
+			DBM:PlaySoundFile(997890)--"sound\\creature\\aggron1\\VO_60_HIGHMAUL_AGGRON_1_AGGRO_1.ogg"
 		elseif msg == "status" and #inCombat > 0 and DBM.Options.AutoRespond then
 			if not difficultyText then -- prevent error when timer recovery function worked and etc (StartCombat not called)
 				savedDifficulty, difficultyText, difficultyIndex, LastGroupSize, difficultyModifier = DBM:GetCurrentInstanceDifficulty()
@@ -9160,9 +9225,14 @@ do
 	end
 
 	local function canVoiceReplace(self, soundId)
+		if voiceSessionDisabled or DBM.Options.ChosenVoicePack2 == "None" then
+			return false
+		end
 		soundId = soundId or self.option and self.mod.Options[self.option .. "SWSound"] or self.flash
 		local isVoicePackUsed
-		if type(soundId) == "number" then
+		if self.announceType == "gtfo" then
+			isVoicePackUsed = DBM.Options.VPReplacesGTFO
+		elseif type(soundId) == "number" and soundId < 5 then--Value 1-4 are SW1 defaults, otherwise it's file data ID and handled by Custom
 			isVoicePackUsed = DBM.Options["VPReplacesSA"..soundId]
 		else
 			isVoicePackUsed = DBM.Options.VPReplacesCustom
@@ -9327,7 +9397,7 @@ do
 			if self.sound and not DBM.Options.DontPlaySpecialWarningSound and (not self.option or self.mod.Options[self.option.."SWSound"] ~= "None") then
 				local soundId = self.option and self.mod.Options[self.option .. "SWSound"] or self.flash
 				if noteHasName and type(soundId) == "number" then soundId = noteHasName end--Change number to 5 if it's not a custom sound, else, do nothing with it
-				if self.hasVoice and DBM.Options.ChosenVoicePack2 ~= "None" and not voiceSessionDisabled and not DBM.Options.VPDontMuteSounds and canVoiceReplace(self, soundId) and self.hasVoice <= SWFilterDisabled then return end
+				if self.hasVoice and not DBM.Options.VPDontMuteSounds and canVoiceReplace(self, soundId) and self.hasVoice <= SWFilterDisabled then return end
 				DBM:PlaySpecialWarningSound(soundId or 1)
 			end
 		else
@@ -9418,7 +9488,7 @@ do
 		local always = DBM.Options.AlwaysPlayVoice
 		local voice = DBM.Options.ChosenVoicePack2
 		local soundId = self.option and self.mod.Options[self.option .. "SWSound"] or self.flash
-		if voiceSessionDisabled or voice == "None" or not canVoiceReplace(self, soundId) then return end
+		if not canVoiceReplace(self, soundId) then return end
 		if self.mod:IsEasyDungeon() and self.mod.isTrashMod and DBM.Options.FilterTrashWarnings2 then return end
 		if specTypeFilterTable[self.announceType] then
 			--Filtered warning, filtered voice
@@ -9439,19 +9509,19 @@ do
 	end
 
 	function specialWarningPrototype:ScheduleVoice(t, ...)
-		if voiceSessionDisabled or DBM.Options.ChosenVoicePack2 == "None" or not canVoiceReplace(self) then return end
+		if not canVoiceReplace(self) then return end
 		DBMScheduler:Unschedule(self.Play, self.mod, self)--Allow ScheduleVoice to be used in same way as CombinedShow
 		return DBMScheduler:Schedule(t, self.Play, self.mod, self, ...)
 	end
 
 	--Object Permits scheduling voice multiple times for same object
 	function specialWarningPrototype:ScheduleVoiceOverLap(t, ...)
-		if voiceSessionDisabled or DBM.Options.ChosenVoicePack2 == "None" or not canVoiceReplace(self) then return end
+		if not canVoiceReplace(self) then return end
 		return DBMScheduler:Schedule(t, self.Play, self.mod, self, ...)
 	end
 
 	function specialWarningPrototype:CancelVoice(...)
-		if voiceSessionDisabled or DBM.Options.ChosenVoicePack2 == "None" or not canVoiceReplace(self) then return end
+		if not canVoiceReplace(self) then return end
 		return DBMScheduler:Unschedule(self.Play, self.mod, self, ...)
 	end
 
@@ -9802,13 +9872,19 @@ do
 			local activeVP = self.Options.ChosenVoicePack2
 			--Check if voice pack out of date
 			if activeVP ~= "None" and activeVP == value then
-				if self.VoiceVersions[value] < minVoicePackVersion then--Version will be bumped when new voice packs released that contain new voices.
-					if self.Options.ShowReminders then
-						self:AddMsg(L.VOICE_PACK_OUTDATED)
+				-- User might reselect "missing" entry shown in GUI if previously selected voice pack is uninstalled or disabled
+				if self.VoiceVersions[value] then
+					voiceSessionDisabled = false
+					if self.VoiceVersions[value] < minVoicePackVersion then--Version will be bumped when new voice packs released that contain new voices.
+						if self.Options.ShowReminders then
+							self:AddMsg(L.VOICE_PACK_OUTDATED)
+						end
+						SWFilterDisabled = self.VoiceVersions[value]--Set disable to version on current voice pack
+					else
+						SWFilterDisabled = minVoicePackVersion
 					end
-					SWFilterDisabled = self.VoiceVersions[value]--Set disable to version on current voice pack
 				else
-					SWFilterDisabled = minVoicePackVersion
+					voiceSessionDisabled = true
 				end
 			end
 		end
@@ -9889,14 +9965,15 @@ do
 		end
 	end
 
-	local function playCountSound(_, path) -- timerId, path
+	local function playCountSound(_, path, requiresCombat) -- timerId, path
+		if requiresCombat and not (InCombatLockdown() or UnitAffectingCombat("player")) then return end
 		DBM:PlaySoundFile(path)
 	end
 
-	local function playCountdown(timerId, timer, voice, count)
+	local function playCountdown(timerId, timer, voice, count, requiresCombat)
 		if DBM.Options.DontPlayCountdowns then return end
 		timer = timer or 10
-		count = count or 5
+		count = count or 4
 		voice = voice or 1
 		if timer <= count then count = floor(timer) end
 		if not countpath1 or not countpath2 or not countpath3 then
@@ -9927,20 +10004,21 @@ do
 		if count == 0 then--If a count of 0 is passed,then it's a "Countout" timer, not "Countdown"
 			for i = 1, timer do
 				if i < maxCount then
-					DBM:Schedule(i, playCountSound, timerId, path..i..".ogg")
+					DBM:Schedule(i, playCountSound, timerId, path..i..".ogg", requiresCombat)
 				end
 			end
 		else
 			for i = count, 1, -1 do
 				if i <= maxCount then
-					DBM:Schedule(timer-i, playCountSound, timerId, path..i..".ogg")
+					DBM:Schedule(timer-i, playCountSound, timerId, path..i..".ogg", requiresCombat)
 				end
 			end
 		end
 	end
 
 	function timerPrototype:Start(timer, ...)
-		if DBM.Options.DontShowBossTimers then return end
+		if DBM.Options.DontShowBossTimers and not self.mod.isTrashMod then return end
+		if DBM.Options.DontShowTrashTimers and self.mod.isTrashMod then return end
 		if timer and type(timer) ~= "number" then
 			return self:Start(nil, timer, ...) -- first argument is optional!
 		end
@@ -10055,7 +10133,7 @@ do
 			if self.option then
 				countVoice = self.mod.Options[self.option .. "CVoice"]
 				if not self.fade and (type(countVoice) == "string" or countVoice > 0) then--Started without faded and has count voice assigned
-					playCountdown(id, timer, countVoice, countVoiceMax)--timerId, timer, voice, count
+					playCountdown(id, timer, countVoice, countVoiceMax, self.requiresCombat)--timerId, timer, voice, count
 				end
 			end
 			local bar = DBT:CreateBar(timer, id, self.icon, nil, nil, nil, nil, colorId, nil, self.keep, self.fade, countVoice, countVoiceMax)
@@ -10149,7 +10227,7 @@ do
 					local countVoice = self.mod.Options[self.option .. "CVoice"] or 0
 					if (type(countVoice) == "string" or countVoice > 0) then--Unfading bar, start countdown
 						DBM:Unschedule(playCountSound, id)
-						playCountdown(id, bar.timer, countVoice, bar.countdownMax)--timerId, timer, voice, count
+						playCountdown(id, bar.timer, countVoice, bar.countdownMax, bar.requiresCombat)--timerId, timer, voice, count
 						DBM:Debug("Re-enabling a countdown on bar ID: "..id.." after a SetFade disable call")
 					end
 				end
@@ -10177,7 +10255,7 @@ do
 					local countVoice = self.mod.Options[self.option .. "CVoice"] or 0
 					if (type(countVoice) == "string" or countVoice > 0) then--Unfading bar, start countdown
 						DBM:Unschedule(playCountSound, id)
-						playCountdown(id, bar.timer, countVoice, bar.countdownMax)--timerId, timer, voice, count
+						playCountdown(id, bar.timer, countVoice, bar.countdownMax, bar.requiresCombat)--timerId, timer, voice, count
 						DBM:Debug("Re-enabling a countdown on bar ID: "..id.." after a SetSTFade disable call")
 					end
 				end
@@ -10300,7 +10378,8 @@ do
 	end
 
 	function timerPrototype:Update(elapsed, totalTime, ...)
-		if DBM.Options.DontShowBossTimers then return end
+		if DBM.Options.DontShowBossTimers and not self.mod.isTrashMod then return end
+		if DBM.Options.DontShowTrashTimers and self.mod.isTrashMod then return end
 		if self:GetTime(...) == 0 then
 			self:Start(totalTime, ...)
 		end
@@ -10320,7 +10399,7 @@ do
 					DBM:Unschedule(playCountSound, id)
 					if not bar.fade then--Don't start countdown voice if it's faded bar
 						if newRemaining > 2 then
-							playCountdown(id, newRemaining, countVoice, bar.countdownMax)--timerId, timer, voice, count
+							playCountdown(id, newRemaining, countVoice, bar.countdownMax, bar.requiresCombat)--timerId, timer, voice, count
 							DBM:Debug("Updating a countdown after a timer Update call for timer ID:"..id)
 						end
 					end
@@ -10331,7 +10410,8 @@ do
 	end
 
 	function timerPrototype:AddTime(extendAmount, ...)
-		if DBM.Options.DontShowBossTimers then return end
+		if DBM.Options.DontShowBossTimers and not self.mod.isTrashMod then return end
+		if DBM.Options.DontShowTrashTimers and self.mod.isTrashMod then return end
 		if self:GetTime(...) == 0 then
 			return self:Start(extendAmount, ...)
 		else
@@ -10351,7 +10431,7 @@ do
 						if (type(countVoice) == "string" or countVoice > 0) then
 							DBM:Unschedule(playCountSound, id)
 							if not bar.fade then--Don't start countdown voice if it's faded bar
-								playCountdown(id, newRemaining, countVoice, bar.countdownMax)--timerId, timer, voice, count
+								playCountdown(id, newRemaining, countVoice, bar.countdownMax, bar.requiresCombat)--timerId, timer, voice, count
 								DBM:Debug("Updating a countdown after a timer AddTime call for timer ID:"..id)
 							end
 						end
@@ -10364,7 +10444,8 @@ do
 	end
 
 	function timerPrototype:RemoveTime(reduceAmount, ...)
-		if DBM.Options.DontShowBossTimers then return end
+		if DBM.Options.DontShowBossTimers and not self.mod.isTrashMod then return end
+		if DBM.Options.DontShowTrashTimers and self.mod.isTrashMod then return end
 		if self:GetTime(...) == 0 then
 			return--Do nothing
 		else
@@ -10388,7 +10469,7 @@ do
 							if (type(countVoice) == "string" or countVoice > 0) then
 								if not bar.fade then--Don't start countdown voice if it's faded bar
 									if newRemaining > 2 then
-										playCountdown(id, newRemaining, countVoice, bar.countdownMax)--timerId, timer, voice, count
+										playCountdown(id, newRemaining, countVoice, bar.countdownMax, bar.requiresCombat)--timerId, timer, voice, count
 										DBM:Debug("Updating a countdown after a timer RemoveTime call for timer ID:"..id)
 									end
 								end
@@ -10432,7 +10513,7 @@ do
 				if self.option and not bar.fade then
 					local countVoice = self.mod.Options[self.option .. "CVoice"] or 0
 					if (type(countVoice) == "string" or countVoice > 0) then
-						playCountdown(id, remaining, countVoice, bar.countdownMax)--timerId, timer, voice, count
+						playCountdown(id, remaining, countVoice, bar.countdownMax, bar.requiresCombat)--timerId, timer, voice, count
 						DBM:Debug("Updating a countdown after a timer Resume call for timer ID:"..id)
 					end
 				end
@@ -10491,7 +10572,7 @@ do
 	end
 
 	--If a new countdown default is added to a NewTimer object, change optionName of timer to reset a new default
-	function bossModPrototype:NewTimer(timer, name, texture, optionDefault, optionName, colorType, inlineIcon, keep, countdown, countdownMax, r, g, b, spellId)
+	function bossModPrototype:NewTimer(timer, name, texture, optionDefault, optionName, colorType, inlineIcon, keep, countdown, countdownMax, r, g, b, spellId, requiresCombat)
 		if r and type(r) == "string" then
 			DBM:Debug("|cffff0000r probably has inline icon in it and needs to be fixed for |r"..name..r)
 			r = nil--Fix it for users
@@ -10515,6 +10596,7 @@ do
 				r = r,
 				g = g,
 				b = b,
+				requiresCombat = requiresCombat,
 				startedTimers = {},
 				mod = self,
 			},
@@ -10528,7 +10610,7 @@ do
 	-- new constructor for the new auto-localized timer types
 	-- note that the function might look unclear because it needs to handle different timer types, especially achievement timers need special treatment
 	-- If a new countdown is added to an existing timer that didn't have one before, use optionName (number) to force timer to reset defaults by assigning it a new variable
-	local function newTimer(self, timerType, timer, spellId, timerText, optionDefault, optionName, colorType, texture, inlineIcon, keep, countdown, countdownMax, r, g, b)
+	local function newTimer(self, timerType, timer, spellId, timerText, optionDefault, optionName, colorType, texture, inlineIcon, keep, countdown, countdownMax, r, g, b, requiresCombat)
 		if type(timer) == "string" and timer:match("OptionVersion") then
 			DBM:Debug("|cffff0000OptionVersion hack depricated, remove it from: |r"..spellId)
 			return
@@ -10605,6 +10687,7 @@ do
 				r = r,
 				g = g,
 				b = b,
+				requiresCombat = requiresCombat,
 				allowdouble = allowdouble,
 				startedTimers = {},
 				mod = self,
@@ -10725,6 +10808,22 @@ do
 
 	function bossModPrototype:NewAddsCustomTimer(...)
 		return newTimer(self, "addscustom", ...)
+	end
+
+	function bossModPrototype:NewCDNPTimer(...)
+		return newTimer(self, "cdnp", ...)
+	end
+
+	function bossModPrototype:NewNextNPTimer(...)
+		return newTimer(self, "nextnp", ...)
+	end
+
+	function bossModPrototype:NewCDCountNPTimer(...)
+		return newTimer(self, "cdcountnp", ...)
+	end
+
+	function bossModPrototype:NewNextCountNPTimer(...)
+		return newTimer(self, "nextcountnp", ...)
 	end
 
 	function bossModPrototype:NewAITimer(...)
@@ -10888,12 +10987,15 @@ end
 
 --auraspellId must match debuff ID so EnablePrivateAuraSound function can call right option key and right debuff ID
 --groupSpellId is used if a diff option key is used in all other options with spell (will be quite common)
-function bossModPrototype:AddPrivateAuraSoundOption(auraspellId, default, groupSpellId)
+--defaultSound is used to set default Special announce sound (1-4) just like regular special announce objects
+function bossModPrototype:AddPrivateAuraSoundOption(auraspellId, default, groupSpellId, defaultSound)
 	self.DefaultOptions["PrivateAuraSound"..auraspellId] = (default == nil) or default
+	self.DefaultOptions["PrivateAuraSound"..auraspellId.."SWSound"] = defaultSound or 1
 	if default and type(default) == "string" then
 		default = self:GetRoleFlagValue(default)
 	end
 	self.Options["PrivateAuraSound"..auraspellId] = (default == nil) or default
+	self.Options["PrivateAuraSound"..auraspellId.."SWSound"] = defaultSound or 1
 	self.localization.options["PrivateAuraSound"..auraspellId] = L.AUTO_PRIVATEAURA_OPTION_TEXT:format(auraspellId)
 	self:GroupSpells(groupSpellId or auraspellId, "PrivateAuraSound"..auraspellId)
 	self:SetOptionCategory("PrivateAuraSound"..auraspellId, "misc")
@@ -10906,20 +11008,42 @@ end
 function bossModPrototype:EnablePrivateAuraSound(auraspellId, voice, voiceVersion)
 	if self.Options["PrivateAuraSound"..auraspellId] then
 		if not self.paSounds then self.paSounds = {} end
+		local soundId = self.Options["PrivateAuraSound"..auraspellId.."SWSound"] or DBM.Options.SpecialWarningSound--Shouldn't be nil value, but just in case options fail to load, fallback to default SW1 sound
 		local mediaPath
 		--Check valid voice pack sound
-		if (voiceVersion <= SWFilterDisabled) then
-			local chosenVoice = DBM.Options.ChosenVoicePack2
-			mediaPath = "Interface\\AddOns\\DBM-VP"..chosenVoice.."\\"..voice..".ogg"
+		local chosenVoice = DBM.Options.ChosenVoicePack2
+		if chosenVoice ~= "None" and not voiceSessionDisabled and voiceVersion <= SWFilterDisabled then
+			local isVoicePackUsed
+			--Vet if user has voice pack enabled by sound ID
+			if type(soundId) == "number" and soundId < 5 then--Value 1-4 are SW1 defaults, otherwise it's file data ID and handled by Custom
+				isVoicePackUsed = DBM.Options["VPReplacesSA"..soundId]
+			else
+				isVoicePackUsed = DBM.Options.VPReplacesCustom
+			end
+			if isVoicePackUsed then
+				mediaPath = "Interface\\AddOns\\DBM-VP"..chosenVoice.."\\"..voice..".ogg"
+			else
+				mediaPath = type(soundId) == "number" and DBM.Options["SpecialWarningSound" .. (soundId == 1 and "" or soundId)] or soundId
+			end
 		else
-			mediaPath = "Interface\\AddOns\\DBM-Core\\sounds\\AirHorn.ogg"
+			mediaPath = type(soundId) == "number" and DBM.Options["SpecialWarningSound" .. (soundId == 1 and "" or soundId)] or soundId
 		end
-		self.paSounds[#self.paSounds + 1] = C_UnitAuras.AddPrivateAuraAppliedSound({
-			spellID = auraspellId,
-			unitToken = "player",
-			soundFileName = mediaPath,
-			outputChannel = "master",
-		})
+		--Absolute media path is still a number, so at this point we know it's file data Id, we need to set soundFileID
+		if type(mediaPath) == "number" then
+			self.paSounds[#self.paSounds + 1] = C_UnitAuras.AddPrivateAuraAppliedSound({
+				spellID = auraspellId,
+				unitToken = "player",
+				soundFileID = mediaPath,
+				outputChannel = "master",
+			})
+		else--It's a string, so it's not an ID, we need to set soundFileName instead
+			self.paSounds[#self.paSounds + 1] = C_UnitAuras.AddPrivateAuraAppliedSound({
+				spellID = auraspellId,
+				unitToken = "player",
+				soundFileName = mediaPath,
+				outputChannel = "master",
+			})
+		end
 	end
 end
 
@@ -11510,7 +11634,7 @@ end
 function bossModPrototype:ReceiveSync(event, sender, revision, ...)
 	local spamId = self.id .. event .. strjoin("\t", ...)
 	local time = GetTime()
-	if (not private.modSyncSpam[spamId] or (time - private.modSyncSpam[spamId]) > self.SyncThreshold) and self.OnSync and (not (self.blockSyncs and sender)) and (not sender or (not self.minSyncRevision or revision >= self.minSyncRevision)) then
+	if (not private.modSyncSpam[spamId] or (time - private.modSyncSpam[spamId]) > self.SyncThreshold) and self.OnSync and (not self.minSyncRevision or revision >= self.minSyncRevision) then
 		private.modSyncSpam[spamId] = time
 		-- we have to use the sender as last argument for compatibility reasons (stupid old API...)
 		-- avoid table allocations for frequently used number of arguments

@@ -283,6 +283,29 @@ local function GetOptions()
 								},
 							}
 						} or nil,
+						otherAddOns = E.isDF and {
+							name = ADDONS,
+							order = 60,
+							type = "group",
+							args = {
+								omniauras = {
+									name = "OmniAuras",
+									desc = "Track important buffs and debuffs on any Blizzard frame",
+									order = 1,
+									type = "input",
+									dialogControl = "Link-OmniCD",
+									get = function() return "https://www.curseforge.com/wow/addons/omniauras" end,
+								},
+								omnisort = {
+									name = "OmniSort",
+									desc = "Party group sorter with auto-adjusting keybinds and macros",
+									order = 2,
+									type = "input",
+									dialogControl = "Link-OmniCD",
+									get = function() return "https://www.curseforge.com/wow/addons/omnisort" end,
+								},
+							}
+						} or nil,
 					}
 				},
 			},

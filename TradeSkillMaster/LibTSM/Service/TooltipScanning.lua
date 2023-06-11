@@ -7,6 +7,7 @@
 local TSM = select(2, ...) ---@type TSM
 local TooltipScanning = TSM.Init("Service.TooltipScanning") ---@class Service.TooltipScanning
 local Environment = TSM.Include("Environment")
+local ItemInfo = TSM.Include("Service.ItemInfo")
 local ItemString = TSM.Include("Util.ItemString")
 local Container = TSM.Include("Util.Container")
 local private = {
@@ -35,8 +36,17 @@ function TooltipScanning.IsSoulbound(bag, slot)
 		return false, nil, nil
 	end
 
+	local recipeTargetItemName = nil
+	if Environment.HasFeature(Environment.FEATURES.C_TOOLTIP_INFO) and info.hyperlink and ItemString.ToId(info.hyperlink) ~= itemId then
+		recipeTargetItemName = ItemInfo.GetName(info.hyperlink)
+	end
+
 	local isBOP, isBOA = false, false
 	for i, text in private.TooltipLineIterator(info) do
+		if recipeTargetItemName and strtrim(text) == recipeTargetItemName then
+			-- This is a recipe and we've reached the target item within the tooltip, so stop scanning so we don't get confused by soulbound info of the target item
+			break
+		end
 		if text == PROFESSIONS_MODIFIED_CRAFTING_REAGENT_BASIC then
 			break
 		elseif (text == ITEM_BIND_ON_PICKUP and i < 4) or text == ITEM_SOULBOUND or text == ITEM_BIND_QUEST then

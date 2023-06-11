@@ -105,7 +105,7 @@ function private.GetItemQueryInfo(itemString)
 	local classId = ItemInfo.GetClassId(itemString) or 0
 	local subClassId = ItemInfo.GetSubClassId(itemString) or 0
 	-- Ignoring level because level can now vary
-	if itemString == ItemString.GetBase(itemString) and (classId == Enum.ItemClass.Weapon or classId == Enum.ItemClass.Armor or (classId == Enum.ItemClass.Gem and subClassId == Enum.ItemGemSubclass.Artifactrelic)) then
+	if itemString == ItemString.GetBase(itemString) and (classId == Enum.ItemClass.Weapon or classId == Enum.ItemClass.Armor or classId == Enum.ItemClass.Profession or (classId == Enum.ItemClass.Gem and subClassId == Enum.ItemGemSubclass.Artifactrelic)) then
 		level = nil
 	end
 	return name, level, level, quality, classId, subClassId

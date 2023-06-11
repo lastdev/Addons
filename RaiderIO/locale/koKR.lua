@@ -175,6 +175,8 @@ L["PROFILE_BEST_RUNS"] = "던전별 최고 기록"
 --[[Translation missing --]]
 --[[ L["PROFILE_TOOLTIP_ANCHOR_TOOLTIP"] = ""--]] 
 L["PROVIDER_NOT_LOADED"] = "|cffFF0000경고:|r |cffFFFFFF%s|r은(는) 현재 진영에 대한 데이터를 찾을 수 없습니다. |cffFFFFFF/raiderio|r 설정을 확인하고 |cffFFFFFF%s|r에 대한 툴팁 데이터를 활성화하십시오."
+--[[Translation missing --]]
+--[[ L["PVP_DATA_HEADER"] = ""--]] 
 L["RAID_BOSS_ATSC_1"] = "지옥벼림 카자라"
 L["RAID_BOSS_ATSC_2"] = "융합체의 방"
 L["RAID_BOSS_ATSC_3"] = "잊힌 실험체"
@@ -281,6 +283,14 @@ L["RELOAD_NOW"] = "지금 다시 불러오기"
 --[[ L["RELOAD_RWF_MODE_BUTTON"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_SETTINGS_TOOLTIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MDI"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MODERN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MODERN_COMPACT"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RWF_MINIBUTTON_TOOLTIP"] = ""--]] 
 --[[Translation missing --]]

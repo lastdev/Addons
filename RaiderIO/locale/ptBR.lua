@@ -142,6 +142,8 @@ L["PREVIOUS_SCORE"] = "Pontuação anterior de M+ (%s)"
 L["PROFILE_BEST_RUNS"] = "Melhores Runs por Masmorra"
 L["PROFILE_TOOLTIP_ANCHOR_TOOLTIP"] = "Tranque o Quadro de Perfil do Raider.IO ou ative o Posicionamento Automático para ocultar esta âncora."
 L["PROVIDER_NOT_LOADED"] = "|cffFF0000Warning:|r |cffFFFFFF%s|r não pode encontrar dados para sua facção atual. Verifique suas configurações |cffFFFFFF/raiderio|r e ative os dados da ferramenta para |cffFFFFFF%s|r."
+--[[Translation missing --]]
+--[[ L["PVP_DATA_HEADER"] = ""--]] 
 L["RAID_BOSS_ATSC_1"] = "Kazzara, a Forjada no Inferno"
 L["RAID_BOSS_ATSC_2"] = "A Câmara da Amalgamação"
 L["RAID_BOSS_ATSC_3"] = "Os Experimentos Esquecidos"
@@ -243,6 +245,14 @@ L["RELOAD_LATER"] = "Recarregarei depois."
 L["RELOAD_NOW"] = "Recarregar agora."
 L["RELOAD_RWF_MODE_BUTTON"] = "Salvar"
 L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = "Clique para salvar o log no arquivo de armazenamento. Isso fará com que sua interface seja recarregada."
+--[[Translation missing --]]
+--[[ L["REPLAY_SETTINGS_TOOLTIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MDI"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MODERN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MODERN_COMPACT"] = ""--]] 
 L["RWF_MINIBUTTON_TOOLTIP"] = "Clique com o botão esquerdo sempre que houver saque pendente. Isso fará com que sua interface seja recarregada. Clique com o botão direito para abrir o quadro do Race World First."
 L["RWF_SUBTITLE_LOGGING_FILTERED_LOOT"] = "(registrando itens relevantes)"
 L["RWF_SUBTITLE_LOGGING_LOOT"] = "(registrando saque)"

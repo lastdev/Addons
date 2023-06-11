@@ -23,6 +23,7 @@ LM.MOUNTFAMILY["Alpaca"] = {
 LM.MOUNTFAMILY["Aqir Drone"] = {
     [316337] = true, -- Malevolent Drone
     [316339] = true, -- Shadowbarb Drone
+    [414986] = true, -- Royal Swarmer
     [316340] = true, -- Wicked Swarmer
 }
 
@@ -332,7 +333,6 @@ LM.MOUNTFAMILY["Dragon Turtle"] = {
     [120395] = true, -- Green Dragon Turtle
     [127289] = true, -- Purple Dragon Turtle
     [127290] = true, -- Red Dragon Turtle
-    [367826] = true, -- Savage Green Battle Turtle
     [232525] = true, -- Vicious War Turtle
     [232523] = true, -- Vicious War Turtle
 }
@@ -372,7 +372,8 @@ LM.MOUNTFAMILY["Drake"] = {
     [101821] = true, -- Ruthless Gladiator's Twilight Drake
     [326390] = true, -- Steamscale Incinerator
     [290132] = true, -- Sylverian Dreamer
-    [101641] = true, -- Tarecgosa's Visage
+    [101641] = true, -- Tarecgosa's Visage (Item)
+    [407555] = true, -- Tarecgosa's Visage (Mount)
     [359843] = true, -- Tangled Dreamweaver
     [279466] = true, -- Twilight Avenger
     [ 59571] = true, -- Twilight Drake
@@ -777,6 +778,7 @@ LM.MOUNTFAMILY["Mammoth"] = {
     [374194] = true, -- Mossy Mammoth
     [374196] = true, -- Plainswalker Bearer
     [374275] = true, -- Raging Magmammoth
+    [371176] = true, -- Subterranean Magmammoth
     [ 61447] = true, -- Traveler's Tundra Mammoth
     [ 61425] = true, -- Traveler's Tundra Mammoth
     [ 59791] = true, -- Wooly Mammoth
@@ -1341,6 +1343,7 @@ LM.MOUNTFAMILY["Toad"] = {
 
 LM.MOUNTFAMILY["Turtle"] = {
     [ 30174] = true, -- Riding Turtle
+    [367826] = true, -- Savage Green Battle Turtle
     [ 64731] = true, -- Sea Turtle
 }
 

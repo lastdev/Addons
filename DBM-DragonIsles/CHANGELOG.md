@@ -1,22 +1,43 @@
 # <DBM> World Bosses (Dragonflight)
 
-## [10.1.9](https://github.com/DeadlyBossMods/DBM-Retail/tree/10.1.9) (2023-05-18)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Retail/compare/10.1.8...10.1.9) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Retail/releases)
+## [10.1.12](https://github.com/DeadlyBossMods/DBM-Retail/tree/10.1.12) (2023-06-06)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Retail/compare/10.1.11...10.1.12) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Retail/releases)
 
-- Fix a bug that caused cast announcements to use wrong cast time to appear if alert was using short text name (alternate spellID)  
-- adjust sunder reality to just always use the 29.1 timer, since it can be that short on any cast, it's just ALWAYS that short on first cast (and rest are usually 30.4). However, it's clear it's not accurate to ASSUME the rest are always 30.4, cause I've gotten evidence that sometimes they can be 29.1 as well  
-- Don't nag about motes if you're getting hit by them on purpose with void fracture  
-- Rashok Update:  
-     - Fixed bug causing tank taunt logic not to work correctly  
-     - Fixed bug causing tank timer not to start correctly after first cast each rotation  
-     - Fixed bug that caused searing slam timer not to work after first cast each rotation  
-- Merge branch 'master' of https://github.com/DeadlyBossMods/DBM-Retail  
-- Fix even more places that can fail maybe?  
-- Change this function. it expects a string, so it should just explicitely refuse anything that's not one.  
-- Fix possible error on rashok?  
-- Echo of Neltharian Update:  
-     - De-emphasize ebon destructoin initial warning since the move warnings are already empahsized. resolves what feels like double alert on cast start.  
-     - Changed how adds left warning work to say how many left alive as opposed to how many left hidden, and fixed count  
-- Merge branch 'master' of https://github.com/DeadlyBossMods/DBM-Retail  
-- Filter non tank specs getting hit by cudgel  
+- Prep new tags for all flavors to start the new week with soundkit to file data Id migration and better private auras code for retail players  
+- extra unschedules for good measure  
+- Revert "tweaks to afflicted timer"  
+- tweaks to afflicted timer  
+- tweak last to account for niche cases (like player clicking off the timer)  
+- Further enhance testing of afflicted and incorp timers for users in debug mode til proper testing can be done on it. the rest seems sound for now to do general release  
+- Massively improve afflicted alert and timer  
+     - Alert now uses new voice like "help spirit" for voice packs  
+     - timer now pauses when leaving combat and resumes when entering combat. In addition, timer will loop in combat if a set of ghosts is skipped (ie the 60 second timer insteadof 30)  
+- Further refine Magmorax code  
+- Improve swap code for Magmorax to swap every 1 as long as debuff is expiring before next cast  
+- Work around niche case doubel soak can cause problem from it's intended behavior  
+- timer option too  
+- disable trash timer for now, something is wrong with it and needs more investigating  
+    tweak a basrikron timer too  
+- Fix at least one case that'd cause private aura sound not to play  
+- Update localization.ru.lua (#227)  
+- Update localization.cn.lua (#904)  
+- honor voice pack global disables by sound ID in the private aura object  
+- Cleanup some minor warnings on namings  
+- change option text since sound now configurable  
+- fix alignment.  
+- fix lua errors but not actual alignment issues  
+- add some default sound Ids  
+- Completely switch over to file data Id from soundkit. There may be bugs.  
+- A little post tier cleanup  
+- Improve taunt tech on rashok to not show two taunt warnings at same time if two conditions are met within 1 second of one another (ie spell aura applied event and spell cast start event 0.01ms apart). both conditional checks still run, but if both pass "this is a taunt" only one of them will be shown.  
+- Just some tuesday reset Aberrus updates  
+     - Fixed bug causing infused stacks to not alert on Experiments  
+     - Increased aggregation window for rays of anguish to 1.1 seconds to try to get all targets bundled together  
+     - Added knockback voice pack alert to Opressing Howl on Scale commander  
+     - Changed tank voice pack sound on Echo of Nelth from "defensive" to "knockback" alert  
+     - Refixed P3 timers again for echo, which seem to have reverted whatever they did last week. Plus they tweaked some other timers to reduce spell queues slightly.  
+     - Added Dark binding personal alerts and chat bubbles to Trash mod  
+     - Added Brutal Cauterization interrupt warning to trash mod  
+     - Added Brutal cauterization CD timer (with plater nameplate aura support) to trash mod.  
+- Fix bug causing afflicted timer to get stuck due to args in wrong order in timer object  
 - bump alpha  

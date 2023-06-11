@@ -56,7 +56,18 @@ function Tokenizer.GetTokens(text, tokenList)
 	local moneyStr = gsub(text, String.Escape(LARGE_NUMBER_SEPERATOR), "")
 	for _, pattern in ipairs(CURRENCY_PATTERNS) do
 		if strmatch(moneyStr, "%s*%d+"..pattern.."%s*") == moneyStr then
-			tokenList:InsertRow(Types.TOKEN.MONEY, text, 1, #text)
+			local leadingWhitespace, tokenStr, trailingWhitespace = strmatch(moneyStr, "(%s*)(%d+"..pattern..")(%s*)")
+			local pos = 1
+			if leadingWhitespace ~= "" then
+				tokenList:InsertRow(Types.TOKEN.WHITESPACE, leadingWhitespace, pos, pos + #leadingWhitespace - 1)
+				pos = pos + #leadingWhitespace
+			end
+			tokenList:InsertRow(Types.TOKEN.MONEY, tokenStr, pos, pos + #tokenStr - 1)
+			pos = pos + #tokenStr
+			if trailingWhitespace ~= "" then
+				tokenList:InsertRow(Types.TOKEN.WHITESPACE, trailingWhitespace, pos, pos + #trailingWhitespace - 1)
+				pos = pos + #trailingWhitespace
+			end
 			return
 		end
 	end

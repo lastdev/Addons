@@ -30,7 +30,7 @@ end
 
 function CollapsibleContainer.Acquire(self)
 	self.__super:Acquire()
-	self:SetBackgroundColor("PRIMARY_BG_ALT", true)
+	self:SetRoundedBackgroundColor("PRIMARY_BG_ALT")
 	self.__super:SetLayout("VERTICAL")
 	self.__super:SetPadding(12, 12, 8, 8)
 	self.__super:AddChild(UIElements.New("Frame", "heading")

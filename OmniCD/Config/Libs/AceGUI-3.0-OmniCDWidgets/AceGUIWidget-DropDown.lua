@@ -5,11 +5,11 @@
 ---------------------------------------------------------------------------------
 -- Parameters for dropdown with disable item support:
 -- type = "select",
--- disabledItem = function() return key end, -- must be a function
+-- disabledItem = function() return key end, -- wrap in a function if key is a string, else you can return func, number, table keys(multiple items)
 
 -- type = "multiselect",
 -- dialogControl = "Dropdown-OmniCD",
--- disabledItem = function() return key end, -- key can be a string or table(multiple items)
+-- disabledItem = function() return key end,
 
 -- Add disabledItem to AceConfigregistery-3.0 typedkeys to validate
 ---------------------------------------------------------------------------------

@@ -555,6 +555,8 @@ L["Formats |cFFFF0000%unit|r"] = "Формат |cFFFF0000%unit|r для игро
 L["Formats Player's |cFFFF0000%guid|r"] = "Формат |cFFFF0000%GUID|r для игрока"
 L["Forward"] = "Воспроизвести"
 L["Forward, Reverse Loop"] = "Повторять (в прям. и обр. порядке)"
+--[[Translation missing --]]
+L["Fourth Value of Tooltip Text"] = "Fourth Value of Tooltip Text"
 L["Frame Selector"] = "Выбор кадра"
 L["Frequency"] = "Частота"
 L["Freya"] = "Фрейя"
@@ -1323,6 +1325,8 @@ L["Tooltip"] = "Подсказка"
 L["Tooltip Value 1"] = "1 значение из подсказки"
 L["Tooltip Value 2"] = "2 значение из подсказки"
 L["Tooltip Value 3"] = "3 значение из подсказки"
+--[[Translation missing --]]
+L["Tooltip Value 4"] = "Tooltip Value 4"
 L["Top"] = "Сверху"
 L["Top Left"] = "Сверху слева"
 L["Top Right"] = "Сверху справа"

@@ -217,12 +217,12 @@ end
 -- ============================================================================
 
 function private.OnClick(self)
-	self:GetBaseElement():ShowDialogFrame(UIElements.New("Frame", "frame", "DIALOG")
+	self:GetBaseElement():ShowDialogFrame(UIElements.New("Frame", "frame")
 		:SetLayout("VERTICAL")
 		:SetSize(464, 500)
 		:SetPadding(8)
 		:AddAnchor("CENTER")
-		:SetBackgroundColor("FRAME_BG", true)
+		:SetRoundedBackgroundColor("FRAME_BG")
 		:SetMouseEnabled(true)
 		:AddChild(UIElements.New("Frame", "header")
 			:SetLayout("HORIZONTAL")

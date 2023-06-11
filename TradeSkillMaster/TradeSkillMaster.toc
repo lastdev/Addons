@@ -3,7 +3,7 @@
 ## IconTexture: Interface\Addons\TradeSkillMaster\Media\Logo
 ## Notes: Auction house and gold making addon.
 ## Author: TradeSkillMaster Team
-## Version: v4.12.37
+## Version: v4.12.39
 ## SavedVariables: TradeSkillMasterDB, TSMItemInfoDB
 ## OptionalDeps: ArkInventory, Auc-Advanced, Auctionator, TheUndermineJournal, BootyBayGazette, AuctionDB
 ## X-Embeds: Ace3, LibDataBroker-1.1, LibDBIcon-1.0, LibRealmInfo, LibDeflate, LibSerialize, LibAHTab
@@ -114,12 +114,13 @@ LibTSM\Util\CustomStringClasses\Types.lua
 LibTSM\Util\CustomStringClasses\Tokenizer.lua
 LibTSM\Util\CustomStringClasses\Optimizer.lua
 LibTSM\Util\CustomStringClasses\AST.lua
+LibTSM\Util\CustomStringClasses\CodeGen.lua
+LibTSM\Util\CustomStringClasses\String.lua
 LibTSM\Util\CustomString.lua
 
 # LibTSM service files
 LibTSM\Service\ErrorHandler.lua
 LibTSM\Service\DefaultUI.lua
-LibTSM\Service\TooltipScanning.lua
 LibTSM\Service\Threading.lua
 LibTSM\Service\SlashCommands.lua
 LibTSM\Service\Settings.lua
@@ -127,6 +128,7 @@ LibTSM\Service\PlayerInfo.lua
 LibTSM\Service\ItemInfo.lua
 LibTSM\Service\ItemLinked.lua
 LibTSM\Service\ItemFilter.lua
+LibTSM\Service\TooltipScanning.lua
 LibTSM\Service\Conversions.lua
 LibTSM\Service\CustomPrice.lua
 LibTSM\Service\AuctionHouseWrapper.lua
@@ -212,6 +214,7 @@ Core\UI\Components\Controls\RangeInput.lua
 Core\UI\Components\Controls\Toggle.lua
 Core\UI\Components\Controls\ToggleYesNo.lua
 Core\UI\Components\Controls\SyntaxInput.lua
+Core\UI\Components\Controls\ItemButton.lua
 
 Core\UI\Components\List\ListRow.lua
 Core\UI\Components\List\List.lua
@@ -263,6 +266,9 @@ Core\UI\Elements\SniperScrollingTable.lua
 Core\UI\Elements\ProfessionScrollingTable.lua
 
 Core\UI\Components\Crafting\CraftDetails.lua
+Core\UI\Components\Crafting\CraftTierButton.lua
+Core\UI\Components\Crafting\ItemSelector.lua
+Core\UI\Components\Crafting\CraftTierDialog.lua
 Core\UI\Components\Crafting\OptionalMatsDialog.lua
 
 Core\UI\Support\TexturePacks.lua

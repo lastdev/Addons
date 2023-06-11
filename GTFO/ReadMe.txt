@@ -1891,3 +1891,18 @@ Change Log:
 5.1.4
 * Added Dragonflight spells (world)
 * Added Dragonflight spells for Aberrus, the Shadowed Crucible
+
+5.2
+* Added Dragonflight spells (world)
+* Added Dragonflight spells for Aberrus, the Shadowed Crucible
+* Fixed Dragonflight spells for Aberrus, the Shadowed Crucible (thanks astrocamptv)
+* Fixed Dragonflight spells for Brackenhide Hollow
+* Added Dragonflight spells for Vortex Pinnacle
+* Fixed BFA spells for Freehold (thanks aisenfaire)
+* Added BFA spells for The Underrot
+* Added Legion spells for Neltharion's Lair
+
+5.3
+* Added support for custom ignoring spells
+* Added Dragonflight spells (world)
+* Added Dragonflight spells for Aberrus, the Shadowed Crucible

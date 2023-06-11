@@ -1,21 +1,9 @@
-@Terciob:
-- Updates to Plater default scripts for season 2.
-- Details Framework updates.
-
-@kitsunekyo:
-- Add addon compartment support
-
 @cont1nuity:
-- Move addon compartment support to LibDBIcon.
-- Additional work on DBM Boss-Mod-Icon-Bars.
-- Do not print usage info by default.
-- Fixing an issue with internal default cast color handling.
-- Fixing an issue internal unit names.
-- Fixing an issue with the Tooltip API.
-- Ensure that no artifacts are shown on soft-interact objects.
-- Further support for DBM Timer Icons.
-- Export/Import of audio cues from the Cast Colors and Names tab.
-- Add options to show soft-interact icons and hide names on soft-interact objects.
-- Allow opt-out of auto-accepting NPC colors sent by raid-leaders.
-- Allow lower scaling range for personal resources, especially targeted at Blizzard Combo Points.
+- Fixing an issue with aura updates not being done properly in some cases.
+- Adding auto-toggle for 'Hide Blizzard Healthbars' based on combat state.
+- Fixing some issues on aura updates to increase performance.
+- More detailed profiling.
+- Refreshing healthbar colors now takes NPC colors into account.
+- Adding more DF S2 units to be forced in combat.
+- Aura tooltips no longer block camera movement.
 

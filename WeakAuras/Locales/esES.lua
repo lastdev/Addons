@@ -584,6 +584,8 @@ L["Formats Player's |cFFFF0000%guid|r"] = "Formats Player's |cFFFF0000%guid|r"
 L["Forward"] = "Adelante"
 L["Forward, Reverse Loop"] = "Adelante, bucle inverso"
 --[[Translation missing --]]
+L["Fourth Value of Tooltip Text"] = "Fourth Value of Tooltip Text"
+--[[Translation missing --]]
 L["Frame Selector"] = "Frame Selector"
 L["Frequency"] = "Frecuencia"
 L["Freya"] = "Freya"
@@ -1649,6 +1651,8 @@ L["Tooltip Value 1"] = "Tooltip Value 1"
 L["Tooltip Value 2"] = "Tooltip Value 2"
 --[[Translation missing --]]
 L["Tooltip Value 3"] = "Tooltip Value 3"
+--[[Translation missing --]]
+L["Tooltip Value 4"] = "Tooltip Value 4"
 L["Top"] = "Superior"
 L["Top Left"] = "Superior Izquierda"
 L["Top Right"] = "Superior Derecha"

@@ -458,6 +458,201 @@ elseif Environment.IsRetail() then
 			["i:171833"] = {matRate = 0.3333, minAmount = 2, maxAmount = 4, amountOfMats = 0.2000}, -- Elethium Ore
 			["i:187700"] = {matRate = 1.0000, minAmount = 1, maxAmount = 3, amountOfMats = 0.4000}, -- Progenium Ore
 		},
+		["i:192837"] = { -- Queen's Ruby *
+			["i:190395"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 1, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 1, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 1, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 1, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 1, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 1, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 1, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 1, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 1, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.2500, minAmount = 1, maxAmount = 4, amountOfMats = 0.0712, targetQuality = 1, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.1400, minAmount = 1, maxAmount = 2, amountOfMats = 0.0281, targetQuality = 1, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192838"] = { -- Queen's Ruby **
+			["i:190395"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 2, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 2, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 2, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 2, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 2, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 2, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 2, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 2, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 2, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.2500, minAmount = 1, maxAmount = 4, amountOfMats = 0.0712, targetQuality = 2, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.1400, minAmount = 1, maxAmount = 2, amountOfMats = 0.0281, targetQuality = 2, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192839"] = { -- Queen's Ruby ***
+			["i:190395"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 3, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 3, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 3, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 3, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 3, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 3, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 3, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 3, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 3, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.2500, minAmount = 1, maxAmount = 4, amountOfMats = 0.0712, targetQuality = 3, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.1400, minAmount = 1, maxAmount = 2, amountOfMats = 0.0281, targetQuality = 3, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192840"] = { -- Mystic Sapphire *
+			["i:190395"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 1, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 1, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 1, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 1, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 1, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 1, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 1, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 1, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 1, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.2500, minAmount = 1, maxAmount = 4, amountOfMats = 0.0712, targetQuality = 1, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.1400, minAmount = 1, maxAmount = 2, amountOfMats = 0.0281, targetQuality = 1, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192841"] = { -- Mystic Sapphire **
+			["i:190395"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 2, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 2, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 2, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 2, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 2, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 2, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 2, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 2, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 2, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.2500, minAmount = 1, maxAmount = 4, amountOfMats = 0.0712, targetQuality = 2, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.1400, minAmount = 1, maxAmount = 2, amountOfMats = 0.0281, targetQuality = 2, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192842"] = { -- Mystic Sapphire ***
+			["i:190395"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 3, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 3, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 3, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 3, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 3, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 3, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 3, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 3, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 3, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.2500, minAmount = 1, maxAmount = 4, amountOfMats = 0.0712, targetQuality = 3, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.1400, minAmount = 1, maxAmount = 2, amountOfMats = 0.0281, targetQuality = 3, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192843"] = { -- Vibrant Emerald *
+			["i:190395"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 1, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 1, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 1, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 1, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 1, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 1, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 1, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 1, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 1, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.2500, minAmount = 1, maxAmount = 4, amountOfMats = 0.0712, targetQuality = 1, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.1400, minAmount = 1, maxAmount = 2, amountOfMats = 0.0281, targetQuality = 1, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192844"] = { -- Vibrant Emerald **
+			["i:190395"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 2, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 2, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 2, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 2, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 2, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 2, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 2, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 2, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 2, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.2500, minAmount = 1, maxAmount = 4, amountOfMats = 0.0712, targetQuality = 2, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.1400, minAmount = 1, maxAmount = 2, amountOfMats = 0.0281, targetQuality = 2, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192845"] = { -- Vibrant Emerald ***
+			["i:190395"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 3, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 3, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 3, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 3, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 3, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 3, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 3, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 3, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 3, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.2500, minAmount = 1, maxAmount = 4, amountOfMats = 0.0712, targetQuality = 3, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.1400, minAmount = 1, maxAmount = 2, amountOfMats = 0.0281, targetQuality = 3, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192846"] = { -- Sundered Onyx *
+			["i:190395"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 1, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 1, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 1, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 1, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 1, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 1, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 1, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 1, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 1, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.2500, minAmount = 1, maxAmount = 4, amountOfMats = 0.0712, targetQuality = 1, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.1400, minAmount = 1, maxAmount = 2, amountOfMats = 0.0281, targetQuality = 1, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192847"] = { -- Sundered Onyx **
+			["i:190395"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 2, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 2, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 2, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 2, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 2, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 2, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 2, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 2, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 2, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.2500, minAmount = 1, maxAmount = 4, amountOfMats = 0.0712, targetQuality = 2, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.1400, minAmount = 1, maxAmount = 2, amountOfMats = 0.0281, targetQuality = 2, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192848"] = { -- Sundered Onyx ***
+			["i:190395"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 3, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 3, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.1250, minAmount = 1, maxAmount = 2, amountOfMats = 0.0252, targetQuality = 3, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 3, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 3, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.1900, minAmount = 1, maxAmount = 3, amountOfMats = 0.0401, targetQuality = 3, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 3, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 3, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.1300, minAmount = 1, maxAmount = 3, amountOfMats = 0.0260, targetQuality = 3, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.2500, minAmount = 1, maxAmount = 4, amountOfMats = 0.0712, targetQuality = 3, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.1400, minAmount = 1, maxAmount = 2, amountOfMats = 0.0281, targetQuality = 3, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192849"] = { -- Eternity Amber *
+			["i:190395"] = {matRate = 0.3500, minAmount = 1, maxAmount = 3, amountOfMats = 0.0772, targetQuality = 1, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.3500, minAmount = 1, maxAmount = 3, amountOfMats = 0.0772, targetQuality = 1, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.3500, minAmount = 1, maxAmount = 3, amountOfMats = 0.0772, targetQuality = 1, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.4550, minAmount = 1, maxAmount = 4, amountOfMats = 0.1100, targetQuality = 1, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.4550, minAmount = 1, maxAmount = 4, amountOfMats = 0.1100, targetQuality = 1, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.4550, minAmount = 1, maxAmount = 4, amountOfMats = 0.1100, targetQuality = 1, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.3450, minAmount = 1, maxAmount = 4, amountOfMats = 0.0760, targetQuality = 1, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.3450, minAmount = 1, maxAmount = 4, amountOfMats = 0.0760, targetQuality = 1, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.3450, minAmount = 1, maxAmount = 4, amountOfMats = 0.0760, targetQuality = 1, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.4600, minAmount = 1, maxAmount = 5, amountOfMats = 0.1226, targetQuality = 1, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.3850, minAmount = 1, maxAmount = 2, amountOfMats = 0.0844, targetQuality = 1, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192850"] = { -- Eternity Amber **
+			["i:190395"] = {matRate = 0.3500, minAmount = 1, maxAmount = 3, amountOfMats = 0.0772, targetQuality = 2, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.3500, minAmount = 1, maxAmount = 3, amountOfMats = 0.0772, targetQuality = 2, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.3500, minAmount = 1, maxAmount = 3, amountOfMats = 0.0772, targetQuality = 2, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.4550, minAmount = 1, maxAmount = 4, amountOfMats = 0.1100, targetQuality = 2, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.4550, minAmount = 1, maxAmount = 4, amountOfMats = 0.1100, targetQuality = 2, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.4550, minAmount = 1, maxAmount = 4, amountOfMats = 0.1100, targetQuality = 2, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.3450, minAmount = 1, maxAmount = 4, amountOfMats = 0.0760, targetQuality = 2, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.3450, minAmount = 1, maxAmount = 4, amountOfMats = 0.0760, targetQuality = 2, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.3450, minAmount = 1, maxAmount = 4, amountOfMats = 0.0760, targetQuality = 2, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.4600, minAmount = 1, maxAmount = 5, amountOfMats = 0.1226, targetQuality = 2, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.3850, minAmount = 1, maxAmount = 2, amountOfMats = 0.0844, targetQuality = 2, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192851"] = { -- Eternity Amber ***
+			["i:190395"] = {matRate = 0.3500, minAmount = 1, maxAmount = 3, amountOfMats = 0.0772, targetQuality = 3, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.3500, minAmount = 1, maxAmount = 3, amountOfMats = 0.0772, targetQuality = 3, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.3500, minAmount = 1, maxAmount = 3, amountOfMats = 0.0772, targetQuality = 3, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.4550, minAmount = 1, maxAmount = 4, amountOfMats = 0.1100, targetQuality = 3, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.4550, minAmount = 1, maxAmount = 4, amountOfMats = 0.1100, targetQuality = 3, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.4550, minAmount = 1, maxAmount = 4, amountOfMats = 0.1100, targetQuality = 3, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.3450, minAmount = 1, maxAmount = 4, amountOfMats = 0.0760, targetQuality = 3, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.3450, minAmount = 1, maxAmount = 4, amountOfMats = 0.0760, targetQuality = 3, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.3450, minAmount = 1, maxAmount = 4, amountOfMats = 0.0760, targetQuality = 3, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.4600, minAmount = 1, maxAmount = 5, amountOfMats = 0.1226, targetQuality = 3, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.3850, minAmount = 1, maxAmount = 2, amountOfMats = 0.0844, targetQuality = 3, sourceQuality = 1}, -- Magma Thresher
+		},
 		-- ========================================== Rare Gems ========================================
 		["i:23440"] = { -- Dawnstone
 			["i:23424"] = {matRate = 0.0150, minAmount = 1, maxAmount = 1, amountOfMats = 0.0030}, -- Fel Iron Ore
@@ -633,6 +828,201 @@ elseif Environment.IsRetail() then
 			["i:152579"] = {matRate = 0.0750, minAmount = 1, maxAmount = 2, amountOfMats = 0.0152}, -- Storm Silver Ore
 			["i:152513"] = {matRate = 0.1150, minAmount = 1, maxAmount = 2, amountOfMats = 0.0237}, -- Platinum Ore
 		},
+		["i:192852"] = { -- Alexstraszite *
+			["i:190395"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 1, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 1, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 1, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 1, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 1, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 1, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 1, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 1, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 1, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.6075, minAmount = 1, maxAmount = 5, amountOfMats = 0.1510, targetQuality = 1, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.0225, minAmount = 1, maxAmount = 1, amountOfMats = 0.0045, targetQuality = 1, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192853"] = { -- Alexstraszite **
+			["i:190395"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 2, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 2, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 2, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 2, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 2, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 2, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 2, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 2, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 2, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.6075, minAmount = 1, maxAmount = 5, amountOfMats = 0.1510, targetQuality = 2, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.0225, minAmount = 1, maxAmount = 1, amountOfMats = 0.0045, targetQuality = 2, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192855"] = { -- Alexstraszite ***
+			["i:190395"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 3, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 3, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 3, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 3, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 3, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 3, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 3, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 3, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 3, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.6075, minAmount = 1, maxAmount = 5, amountOfMats = 0.1510, targetQuality = 3, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.0225, minAmount = 1, maxAmount = 1, amountOfMats = 0.0045, targetQuality = 3, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192856"] = { -- Malygite *
+			["i:190395"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 1, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 1, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 1, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 1, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 1, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 1, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 1, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 1, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 1, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.6075, minAmount = 1, maxAmount = 5, amountOfMats = 0.1510, targetQuality = 1, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.0225, minAmount = 1, maxAmount = 1, amountOfMats = 0.0045, targetQuality = 1, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192857"] = { -- Malygite **
+			["i:190395"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 2, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 2, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 2, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 2, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 2, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 2, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 2, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 2, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 2, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.6075, minAmount = 1, maxAmount = 5, amountOfMats = 0.1510, targetQuality = 2, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.0225, minAmount = 1, maxAmount = 1, amountOfMats = 0.0045, targetQuality = 2, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192858"] = { -- Malygite ***
+			["i:190395"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 3, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 3, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 3, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 3, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 3, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 3, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 3, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 3, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 3, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.6075, minAmount = 1, maxAmount = 5, amountOfMats = 0.1510, targetQuality = 3, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.0225, minAmount = 1, maxAmount = 1, amountOfMats = 0.0045, targetQuality = 3, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192859"] = { -- Ysemerald *
+			["i:190395"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 1, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 1, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 1, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 1, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 1, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 1, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 1, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 1, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 1, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.6075, minAmount = 1, maxAmount = 5, amountOfMats = 0.1510, targetQuality = 1, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.0225, minAmount = 1, maxAmount = 1, amountOfMats = 0.0045, targetQuality = 1, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192860"] = { -- Ysemerald **
+			["i:190395"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 2, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 2, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 2, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 2, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 2, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 2, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 2, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 2, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 2, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.6075, minAmount = 1, maxAmount = 5, amountOfMats = 0.1510, targetQuality = 2, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.0225, minAmount = 1, maxAmount = 1, amountOfMats = 0.0045, targetQuality = 2, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192861"] = { -- Ysemerald ***
+			["i:190395"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 3, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 3, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 3, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 3, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 3, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 3, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 3, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 3, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 3, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.6075, minAmount = 1, maxAmount = 5, amountOfMats = 0.1510, targetQuality = 3, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.0225, minAmount = 1, maxAmount = 1, amountOfMats = 0.0045, targetQuality = 3, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192862"] = { -- Neltharite *
+			["i:190395"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 1, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 1, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 1, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 1, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 1, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 1, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 1, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 1, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 1, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.6075, minAmount = 1, maxAmount = 5, amountOfMats = 0.1510, targetQuality = 1, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.0225, minAmount = 1, maxAmount = 1, amountOfMats = 0.0045, targetQuality = 1, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192863"] = { -- Neltharite **
+			["i:190395"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 2, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 2, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 2, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 2, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 2, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 2, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 2, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 2, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 2, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.6075, minAmount = 1, maxAmount = 5, amountOfMats = 0.1510, targetQuality = 2, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.0225, minAmount = 1, maxAmount = 1, amountOfMats = 0.0045, targetQuality = 2, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192865"] = { -- Neltharite ***
+			["i:190395"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 3, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 3, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.0425, minAmount = 1, maxAmount = 2, amountOfMats = 0.0085, targetQuality = 3, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 3, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 3, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.1350, minAmount = 1, maxAmount = 3, amountOfMats = 0.0279, targetQuality = 3, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 3, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 3, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.2000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0409, targetQuality = 3, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.6075, minAmount = 1, maxAmount = 5, amountOfMats = 0.1510, targetQuality = 3, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.0225, minAmount = 1, maxAmount = 1, amountOfMats = 0.0045, targetQuality = 3, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192866"] = { -- Nozdorite *
+			["i:190395"] = {matRate = 0.1500, minAmount = 1, maxAmount = 3, amountOfMats = 0.0310, targetQuality = 1, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.1500, minAmount = 1, maxAmount = 3, amountOfMats = 0.0310, targetQuality = 1, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.1500, minAmount = 1, maxAmount = 3, amountOfMats = 0.0310, targetQuality = 1, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.2750, minAmount = 1, maxAmount = 4, amountOfMats = 0.0602, targetQuality = 1, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.2750, minAmount = 1, maxAmount = 4, amountOfMats = 0.0602, targetQuality = 1, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.2750, minAmount = 1, maxAmount = 4, amountOfMats = 0.0602, targetQuality = 1, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.3250, minAmount = 1, maxAmount = 4, amountOfMats = 0.0725, targetQuality = 1, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.3250, minAmount = 1, maxAmount = 4, amountOfMats = 0.0725, targetQuality = 1, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.3250, minAmount = 1, maxAmount = 4, amountOfMats = 0.0725, targetQuality = 1, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.7125, minAmount = 1, maxAmount = 4, amountOfMats = 0.1815, targetQuality = 1, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.0900, minAmount = 1, maxAmount = 2, amountOfMats = 0.0180, targetQuality = 1, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192867"] = { -- Nozdorite **
+			["i:190395"] = {matRate = 0.1500, minAmount = 1, maxAmount = 3, amountOfMats = 0.0310, targetQuality = 2, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.1500, minAmount = 1, maxAmount = 3, amountOfMats = 0.0310, targetQuality = 2, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.1500, minAmount = 1, maxAmount = 3, amountOfMats = 0.0310, targetQuality = 2, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.2750, minAmount = 1, maxAmount = 4, amountOfMats = 0.0602, targetQuality = 2, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.2750, minAmount = 1, maxAmount = 4, amountOfMats = 0.0602, targetQuality = 2, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.2750, minAmount = 1, maxAmount = 4, amountOfMats = 0.0602, targetQuality = 2, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.3250, minAmount = 1, maxAmount = 4, amountOfMats = 0.0725, targetQuality = 2, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.3250, minAmount = 1, maxAmount = 4, amountOfMats = 0.0725, targetQuality = 2, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.3250, minAmount = 1, maxAmount = 4, amountOfMats = 0.0725, targetQuality = 2, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.7125, minAmount = 1, maxAmount = 4, amountOfMats = 0.1815, targetQuality = 2, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.0900, minAmount = 1, maxAmount = 2, amountOfMats = 0.0180, targetQuality = 2, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192868"] = { -- Nozdorite ***
+			["i:190395"] = {matRate = 0.1500, minAmount = 1, maxAmount = 3, amountOfMats = 0.0310, targetQuality = 3, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.1500, minAmount = 1, maxAmount = 3, amountOfMats = 0.0310, targetQuality = 3, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.1500, minAmount = 1, maxAmount = 3, amountOfMats = 0.0310, targetQuality = 3, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.2750, minAmount = 1, maxAmount = 4, amountOfMats = 0.0602, targetQuality = 3, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.2750, minAmount = 1, maxAmount = 4, amountOfMats = 0.0602, targetQuality = 3, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.2750, minAmount = 1, maxAmount = 4, amountOfMats = 0.0602, targetQuality = 3, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.3250, minAmount = 1, maxAmount = 4, amountOfMats = 0.0725, targetQuality = 3, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.3250, minAmount = 1, maxAmount = 4, amountOfMats = 0.0725, targetQuality = 3, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.3250, minAmount = 1, maxAmount = 4, amountOfMats = 0.0725, targetQuality = 3, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.7125, minAmount = 1, maxAmount = 4, amountOfMats = 0.1815, targetQuality = 3, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.0900, minAmount = 1, maxAmount = 2, amountOfMats = 0.0180, targetQuality = 3, sourceQuality = 1}, -- Magma Thresher
+		},
 		-- ========================================== Epic Gems ========================================
 		["i:36931"] = { -- Ametrine
 			["i:36910"] = {matRate = 0.0450, minAmount = 1, maxAmount = 2, amountOfMats = 0.0091}, -- Titanium Ore
@@ -696,6 +1086,45 @@ elseif Environment.IsRetail() then
 		["i:168635"] = { -- Leviathan's Eye
 			["i:168185"] = {matRate = 0.1500, minAmount = 1, maxAmount = 1, amountOfMats = 0.0300}, -- Osmenite Ore
 		},
+		["i:192869"] = { -- Illimited Diamond *
+			["i:190395"] = {matRate = 0.0055, minAmount = 1, maxAmount = 2, amountOfMats = 0.0011, targetQuality = 1, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.0055, minAmount = 1, maxAmount = 2, amountOfMats = 0.0011, targetQuality = 1, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.0055, minAmount = 1, maxAmount = 2, amountOfMats = 0.0011, targetQuality = 1, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.0142, minAmount = 1, maxAmount = 2, amountOfMats = 0.0028, targetQuality = 1, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.0142, minAmount = 1, maxAmount = 2, amountOfMats = 0.0028, targetQuality = 1, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.0142, minAmount = 1, maxAmount = 2, amountOfMats = 0.0028, targetQuality = 1, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.0300, minAmount = 1, maxAmount = 2, amountOfMats = 0.0060, targetQuality = 1, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.0300, minAmount = 1, maxAmount = 2, amountOfMats = 0.0060, targetQuality = 1, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.0300, minAmount = 1, maxAmount = 2, amountOfMats = 0.0060, targetQuality = 1, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.0700, minAmount = 1, maxAmount = 2, amountOfMats = 0.0140, targetQuality = 1, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.0035, minAmount = 1, maxAmount = 2, amountOfMats = 0.0007, targetQuality = 1, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192870"] = { -- Illimited Diamond **
+			["i:190395"] = {matRate = 0.0055, minAmount = 1, maxAmount = 2, amountOfMats = 0.0011, targetQuality = 2, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.0055, minAmount = 1, maxAmount = 2, amountOfMats = 0.0011, targetQuality = 2, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.0055, minAmount = 1, maxAmount = 2, amountOfMats = 0.0011, targetQuality = 2, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.0142, minAmount = 1, maxAmount = 2, amountOfMats = 0.0028, targetQuality = 2, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.0142, minAmount = 1, maxAmount = 2, amountOfMats = 0.0028, targetQuality = 2, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.0142, minAmount = 1, maxAmount = 2, amountOfMats = 0.0028, targetQuality = 2, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.0300, minAmount = 1, maxAmount = 2, amountOfMats = 0.0060, targetQuality = 2, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.0300, minAmount = 1, maxAmount = 2, amountOfMats = 0.0060, targetQuality = 2, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.0300, minAmount = 1, maxAmount = 2, amountOfMats = 0.0060, targetQuality = 2, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.0700, minAmount = 1, maxAmount = 2, amountOfMats = 0.0140, targetQuality = 2, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.0035, minAmount = 1, maxAmount = 2, amountOfMats = 0.0007, targetQuality = 2, sourceQuality = 1}, -- Magma Thresher
+		},
+		["i:192871"] = { -- Illimited Diamond ***
+			["i:190395"] = {matRate = 0.0055, minAmount = 1, maxAmount = 2, amountOfMats = 0.0011, targetQuality = 3, sourceQuality = 1}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.0055, minAmount = 1, maxAmount = 2, amountOfMats = 0.0011, targetQuality = 3, sourceQuality = 2}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.0055, minAmount = 1, maxAmount = 2, amountOfMats = 0.0011, targetQuality = 3, sourceQuality = 3}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.0142, minAmount = 1, maxAmount = 2, amountOfMats = 0.0028, targetQuality = 3, sourceQuality = 1}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.0142, minAmount = 1, maxAmount = 2, amountOfMats = 0.0028, targetQuality = 3, sourceQuality = 2}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.0142, minAmount = 1, maxAmount = 2, amountOfMats = 0.0028, targetQuality = 3, sourceQuality = 3}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.0300, minAmount = 1, maxAmount = 2, amountOfMats = 0.0060, targetQuality = 3, sourceQuality = 1}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.0300, minAmount = 1, maxAmount = 2, amountOfMats = 0.0060, targetQuality = 3, sourceQuality = 2}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.0300, minAmount = 1, maxAmount = 2, amountOfMats = 0.0060, targetQuality = 3, sourceQuality = 3}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.0700, minAmount = 1, maxAmount = 2, amountOfMats = 0.0140, targetQuality = 3, sourceQuality = 1}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.0035, minAmount = 1, maxAmount = 2, amountOfMats = 0.0007, targetQuality = 3, sourceQuality = 1}, -- Magma Thresher
+		},
 		-- ========================================== Essences =========================================
 		["i:173170"] = { -- Essence of Rebirth
 			["i:171828"] = {matRate = 0.0265, minAmount = 1, maxAmount = 2, amountOfMats = 0.0080}, -- Laestrite Ore
@@ -721,6 +1150,45 @@ elseif Environment.IsRetail() then
 			["i:171833"] = {matRate = 0.2550, minAmount = 1, maxAmount = 2, amountOfMats = 0.0765}, -- Elethium Ore
 			["i:187700"] = {matRate = 0.0450, minAmount = 1, maxAmount = 3, amountOfMats = 0.0180}, -- Progenium Ore
 		},
+		-- ========================================== Other ============================================
+		["i:192880"] = { -- Crumbled Stone
+			["i:190395"] = {matRate = 0.5700, minAmount = 1, maxAmount = 3, amountOfMats = 0.2848}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.5700, minAmount = 1, maxAmount = 3, amountOfMats = 0.2848}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.5700, minAmount = 1, maxAmount = 3, amountOfMats = 0.2848}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.5700, minAmount = 1, maxAmount = 3, amountOfMats = 0.2848}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.5700, minAmount = 1, maxAmount = 3, amountOfMats = 0.2848}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.5700, minAmount = 1, maxAmount = 3, amountOfMats = 0.2848}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.5700, minAmount = 1, maxAmount = 3, amountOfMats = 0.2848}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.5700, minAmount = 1, maxAmount = 3, amountOfMats = 0.2848}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.5700, minAmount = 1, maxAmount = 3, amountOfMats = 0.2848}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.5700, minAmount = 1, maxAmount = 3, amountOfMats = 0.2848}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.5700, minAmount = 1, maxAmount = 3, amountOfMats = 0.2848}, -- Magma Thresher
+		},
+		["i:192872"] = { -- Fractured Glass
+			["i:190395"] = {matRate = 0.4250, minAmount = 1, maxAmount = 4, amountOfMats = 0.2507}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.4250, minAmount = 1, maxAmount = 4, amountOfMats = 0.2507}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.4250, minAmount = 1, maxAmount = 4, amountOfMats = 0.2507}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.4250, minAmount = 1, maxAmount = 4, amountOfMats = 0.2507}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.4250, minAmount = 1, maxAmount = 4, amountOfMats = 0.2507}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.4250, minAmount = 1, maxAmount = 4, amountOfMats = 0.2507}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.4250, minAmount = 1, maxAmount = 4, amountOfMats = 0.2507}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.4250, minAmount = 1, maxAmount = 4, amountOfMats = 0.2507}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.4250, minAmount = 1, maxAmount = 4, amountOfMats = 0.2507}, -- Khaz'gorite Ore ***
+			["i:194545"] = {matRate = 0.4250, minAmount = 1, maxAmount = 4, amountOfMats = 0.2507}, -- Prismatic Ore
+			["i:199344"] = {matRate = 0.4250, minAmount = 1, maxAmount = 4, amountOfMats = 0.2507}, -- Magma Thresher
+		},
+		["i:194545"] = { -- Prismatic Ore
+			["i:190395"] = {matRate = 0.0300, minAmount = 1, maxAmount = 6, amountOfMats = 0.0060}, -- Serevite Ore *
+			["i:190396"] = {matRate = 0.0300, minAmount = 1, maxAmount = 6, amountOfMats = 0.0060}, -- Serevite Ore **
+			["i:190394"] = {matRate = 0.0300, minAmount = 1, maxAmount = 6, amountOfMats = 0.0060}, -- Serevite Ore ***
+			["i:189143"] = {matRate = 0.0300, minAmount = 1, maxAmount = 6, amountOfMats = 0.0060}, -- Draconium Ore *
+			["i:188658"] = {matRate = 0.0300, minAmount = 1, maxAmount = 6, amountOfMats = 0.0060}, -- Draconium Ore **
+			["i:190311"] = {matRate = 0.0300, minAmount = 1, maxAmount = 6, amountOfMats = 0.0060}, -- Draconium Ore ***
+			["i:190312"] = {matRate = 0.0300, minAmount = 1, maxAmount = 6, amountOfMats = 0.0060}, -- Khaz'gorite Ore *
+			["i:190313"] = {matRate = 0.0300, minAmount = 1, maxAmount = 6, amountOfMats = 0.0060}, -- Khaz'gorite Ore **
+			["i:190314"] = {matRate = 0.0300, minAmount = 1, maxAmount = 6, amountOfMats = 0.0060}, -- Khaz'gorite Ore ***
+			["i:199344"] = {matRate = 0.0300, minAmount = 1, maxAmount = 6, amountOfMats = 0.0060}, -- Magma Thresher
+		},
 	}
 else
 	error("Invalid game version")
@@ -741,7 +1209,7 @@ function Prospect.SourceItemIterator(targetItemString)
 end
 
 function Prospect.GetRate(targetItemString, sourceItemString)
-	return DATA[targetItemString][sourceItemString].amountOfMats, DATA[targetItemString][sourceItemString].matRate, DATA[targetItemString][sourceItemString].minAmount, DATA[targetItemString][sourceItemString].maxAmount, DATA[targetItemString][sourceItemString].requiredSkill
+	return DATA[targetItemString][sourceItemString].amountOfMats, DATA[targetItemString][sourceItemString].matRate, DATA[targetItemString][sourceItemString].minAmount, DATA[targetItemString][sourceItemString].maxAmount, DATA[targetItemString][sourceItemString].requiredSkill, DATA[targetItemString][sourceItemString].targetQuality, DATA[targetItemString][sourceItemString].sourceQuality
 end
 
 
