@@ -192,6 +192,12 @@ L["CONFIG_SELLING_SPLIT_PANELS_TOOLTIP_HEADER"] = "Vue des panneaux divisés"
 L["CONFIG_SELLING_SPLIT_PANELS_TOOLTIP_TEXT"] = "Normalement, les prix historiques se trouvent dans un onglet à l'intérieur de l'onglet Vente, mais les prix actuels sont toujours visibles, et les prix historiques s'affichent dans un panneau en dessous."
 L["CONFIG_SELLING_TBC_ALL_ITEMS"] = "Options liées à la vente des objets."
 L["CONFIG_SELLING_TEXT"] = "Options liées à l'onglet Vente."
+--[[Translation missing --]]
+L["CONFIG_SHOPPING_ALWAYS_CONFIRM_QUANTITY"] = "Always type quantity twice when purchasing commodities from the shopping tab"
+--[[Translation missing --]]
+L["CONFIG_SHOPPING_ALWAYS_CONFIRM_QUANTITY_TOOLTIP_HEADER"] = "Confirm quantity every time"
+--[[Translation missing --]]
+L["CONFIG_SHOPPING_ALWAYS_CONFIRM_QUANTITY_TOOLTIP_TEXT"] = "By default the quantity is confirmed just once, this makes it so you have to type it a second time to confirm the purchase."
 L["CONFIG_SHOPPING_ALWAYS_LOAD_MORE"] = "Chargez toujours tous les résultats disponibles."
 L["CONFIG_SHOPPING_ALWAYS_LOAD_MORE_TOOLTIP_HEADER"] = "Toujours charger davantage"
 L["CONFIG_SHOPPING_ALWAYS_LOAD_MORE_TOOLTIP_TEXT"] = "Tout en obtenant un prix minimum précis, certaines pages sont ignorées pour accélérer la recherche d'achat. Cela empêche toute page d'être ignorée et garantit l'affichage de tous les résultats possibles."
@@ -369,6 +375,8 @@ L["PRICE_HISTORY"] = "Historique des prix"
 L["PRICE_INCREASE_WARNING"] = "Prix augmenté de %s, attente de %ss"
 L["PRICE_INCREASE_WARNING_2"] = "Le prix a augmenté de %s. Souhaitez-vous continuer ?"
 --[[Translation missing --]]
+L["PRICE_INCREASED"] = "The price has increased!"
+--[[Translation missing --]]
 L["PRICE_INCREASED_X_X"] = "The price has increased: %s (%s each)"
 --[[Translation missing --]]
 L["PRICE_VARIES_WARNING"] = "The prices varies a lot between items."
@@ -411,6 +419,8 @@ L["SAVE_THIS_LIST_AS"] = "Enregistrer la liste sous..."
 L["SCANNING_PAGE_X"] = "Analyse de la page %s..."
 L["SEARCH"] = "Scan"
 L["SEARCH_ALL"] = "Scanner"
+--[[Translation missing --]]
+L["SEARCH_OPTIONS"] = "Search Options"
 L["SEARCH_TERM"] = "Mot-clé"
 --[[Translation missing --]]
 L["SEARCH_TERM_COLON"] = "Search Term:"

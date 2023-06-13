@@ -8,7 +8,7 @@ With Handynotes and this module, you can check on the instance map all the impor
 
 Useful for new and experienced pushers alike.
 
-Available in English, French, Spanish and Russian, looking for translators: [Curseforge](https://legacy.curseforge.com/wow/addons/handynotes_mythicplus/localization)
+Available in English, French, Spanish, Simplified Chinese and Russian, looking for translators: [Curseforge](https://legacy.curseforge.com/wow/addons/handynotes_mythicplus/localization)
 
 ## Mythic Dungeons Season 2
 
@@ -25,6 +25,7 @@ Available in English, French, Spanish and Russian, looking for translators: [Cur
 - Percentage required before last bridge
 ### Uldaman: Legacy of Tyr (ULD)
 - Percentage required before time event
+- Location of mining nodes
 ### The Underrot (UNDR)
 - Skip location
 ### The Vortex Pinnacle (VP)

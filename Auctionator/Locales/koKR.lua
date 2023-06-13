@@ -222,6 +222,12 @@ L["CONFIG_SELLING_SPLIT_PANELS_TOOLTIP_HEADER"] = "분할 패널 보기"
 L["CONFIG_SELLING_SPLIT_PANELS_TOOLTIP_TEXT"] = "Normally the historical prices are on a tab inside the Selling tab, instead this makes the current prices always visible, but the historical prices show as a panel below them."
 L["CONFIG_SELLING_TBC_ALL_ITEMS"] = "모든 아이템에 대한 기본 게시 설정을 지정하는 옵션입니다."
 L["CONFIG_SELLING_TEXT"] = "판매하기 탭의 설정을 변경합니다."
+--[[Translation missing --]]
+L["CONFIG_SHOPPING_ALWAYS_CONFIRM_QUANTITY"] = "Always type quantity twice when purchasing commodities from the shopping tab"
+--[[Translation missing --]]
+L["CONFIG_SHOPPING_ALWAYS_CONFIRM_QUANTITY_TOOLTIP_HEADER"] = "Confirm quantity every time"
+--[[Translation missing --]]
+L["CONFIG_SHOPPING_ALWAYS_CONFIRM_QUANTITY_TOOLTIP_TEXT"] = "By default the quantity is confirmed just once, this makes it so you have to type it a second time to confirm the purchase."
 L["CONFIG_SHOPPING_ALWAYS_LOAD_MORE"] = "항상 사용 가능한 모든 결과를 불러옵니다."
 L["CONFIG_SHOPPING_ALWAYS_LOAD_MORE_TOOLTIP_HEADER"] = "항상 더 불러오기"
 --[[Translation missing --]]
@@ -412,6 +418,8 @@ L["PRICE_INCREASE_WARNING"] = "가격 %s 오름, %s초 대기 중"
 --[[Translation missing --]]
 L["PRICE_INCREASE_WARNING_2"] = "Price increased by %s. Do you want to continue?"
 --[[Translation missing --]]
+L["PRICE_INCREASED"] = "The price has increased!"
+--[[Translation missing --]]
 L["PRICE_INCREASED_X_X"] = "The price has increased: %s (%s each)"
 --[[Translation missing --]]
 L["PRICE_VARIES_WARNING"] = "The prices varies a lot between items."
@@ -457,6 +465,8 @@ L["SAVE_THIS_LIST_AS"] = "이 목록을 저장..."
 L["SCANNING_PAGE_X"] = "%s 페이지 검색중..."
 L["SEARCH"] = "검색"
 L["SEARCH_ALL"] = "전체 검색"
+--[[Translation missing --]]
+L["SEARCH_OPTIONS"] = "Search Options"
 L["SEARCH_TERM"] = "이름 추가"
 --[[Translation missing --]]
 L["SEARCH_TERM_COLON"] = "Search Term:"

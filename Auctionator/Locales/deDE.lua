@@ -192,6 +192,12 @@ L["CONFIG_SELLING_SPLIT_PANELS_TOOLTIP_HEADER"] = "Geteilte Tafelansicht"
 L["CONFIG_SELLING_SPLIT_PANELS_TOOLTIP_TEXT"] = "Normalerweise stehen die historischen Preise auf einer Registerkarte innerhalb der Registerkarte \"Verkaufen\", stattdessen sind die aktuellen Preise immer sichtbar, aber die historischen Preise zeigen sich als Tafel darunter."
 L["CONFIG_SELLING_TBC_ALL_ITEMS"] = "Optionen, um die Standard-Aushangseinstellungen für alle Gegenstände festzulegen."
 L["CONFIG_SELLING_TEXT"] = "Optionen zum Ändern des Verhaltens des Verkaufen-Reiters"
+--[[Translation missing --]]
+L["CONFIG_SHOPPING_ALWAYS_CONFIRM_QUANTITY"] = "Always type quantity twice when purchasing commodities from the shopping tab"
+--[[Translation missing --]]
+L["CONFIG_SHOPPING_ALWAYS_CONFIRM_QUANTITY_TOOLTIP_HEADER"] = "Confirm quantity every time"
+--[[Translation missing --]]
+L["CONFIG_SHOPPING_ALWAYS_CONFIRM_QUANTITY_TOOLTIP_TEXT"] = "By default the quantity is confirmed just once, this makes it so you have to type it a second time to confirm the purchase."
 L["CONFIG_SHOPPING_ALWAYS_LOAD_MORE"] = "Ladet immer alle verfügbaren Ergebnisse."
 L["CONFIG_SHOPPING_ALWAYS_LOAD_MORE_TOOLTIP_HEADER"] = "Ladet immer mehr"
 L["CONFIG_SHOPPING_ALWAYS_LOAD_MORE_TOOLTIP_TEXT"] = "Während du immer noch einen genauen Mindestpreis erhältst, werden einige Seiten übersprungen, um die Einkaufssuche zu beschleunigen. Dies verhindert, dass alle Seiten übersprungen werden und sorgt dafür, dass alle möglichen Ergebnisse angezeigt werden."
@@ -366,6 +372,8 @@ L["PRICE_HISTORY"] = "Preisentwicklung"
 L["PRICE_INCREASE_WARNING"] = "Preis um %s erhöht, warte auf %ss"
 L["PRICE_INCREASE_WARNING_2"] = "Der Preis erhöhte sich um %s. Möchtest du weiter machen?"
 --[[Translation missing --]]
+L["PRICE_INCREASED"] = "The price has increased!"
+--[[Translation missing --]]
 L["PRICE_INCREASED_X_X"] = "The price has increased: %s (%s each)"
 --[[Translation missing --]]
 L["PRICE_VARIES_WARNING"] = "The prices varies a lot between items."
@@ -408,6 +416,8 @@ L["SAVE_THIS_LIST_AS"] = "Speichere diese Liste als..."
 L["SCANNING_PAGE_X"] = "Scannen der Seite %s..."
 L["SEARCH"] = "Suchen"
 L["SEARCH_ALL"] = "Suche alles"
+--[[Translation missing --]]
+L["SEARCH_OPTIONS"] = "Search Options"
 L["SEARCH_TERM"] = "Suchbegriff"
 --[[Translation missing --]]
 L["SEARCH_TERM_COLON"] = "Search Term:"

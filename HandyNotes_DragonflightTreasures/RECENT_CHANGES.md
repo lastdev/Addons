@@ -1,4 +1,5 @@
-## Changed in v48
+## Changed in v49
 
-* Even more Zaralek Cavern data
+* Profession treasure questids added to Zaralek Cavern (thanks to chris-merritt!)
+* Skornak's Lava Ball wasn't available off the PTR
 

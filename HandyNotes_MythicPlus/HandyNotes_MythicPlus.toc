@@ -2,7 +2,7 @@
 ## Title: HandyNotes: MythicPlus
 ## Title-ruRU: HandyNotes: Подземелья М+
 ## Title-frFR: HandyNotes: MythicPlus
-## Version: V100100-6
+## Version: V100100-7
 ## Notes: Dragonflight MythicPlus Notes
 ## Notes-ruRU: Заметки к подземельям М+
 ## Notes-frFR: Dragonflight: Aides pour Mythic+
@@ -10,6 +10,7 @@
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_MythicPlusDB
 ## X-Curse-Project-ID: 785031
+## X-Wago-ID: 5NRe8wG3
 ## IconTexture: 525134
 
 # Locale files

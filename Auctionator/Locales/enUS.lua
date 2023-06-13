@@ -179,7 +179,7 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["ADD_ITEM"] = "Add Item"
   L["EDIT_ITEM"] = "Edit Item"
   L["SEARCH"] = "Search"
-  L["MORE"] = "More"
+  L["SEARCH_OPTIONS"] = "Search Options"
   L["ADD_TO_LIST"] = "Add To List"
   L["SEARCH_ALL"] = "Search All"
   L["EXPORT"] = "Export"
@@ -516,7 +516,7 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["CAREFUL_CAPS"] = "CAREFUL"
   L["PRICE_VARIES_WARNING"] = "The prices varies a lot between items."
   L["UNIT_PRICE_RANGE"] = "Unit price: %s - %s"
-  L["PRICE_INCREASED_X_X"] = "The price has increased: %s (%s each)"
+  L["PRICE_INCREASED"] = "The price has increased!"
   L["ENTER_QUANTITY_TO_CONFIRM_PURCHASE"] = "Enter the quantity of %s to confirm purchase:"
   L["BUY_NOW"] = "Buy Now"
   L["CONFIRM_PURCHASE_OF_X_FOR_X"] = "Confirm purchase of %s for %s?"
@@ -684,6 +684,10 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["CONFIG_SELLING_GREY_POST_BUTTON"] = "Grey (disable) the post button when a post may fail"
   L["CONFIG_SELLING_GREY_POST_BUTTON_TOOLTIP_HEADER"] = "Grey post button"
   L["CONFIG_SELLING_GREY_POST_BUTTON_TOOLTIP_TEXT"] = "When a post may fail the post button will be greyed out (disabled). Turn this option off to avoid waiting for the button to enable so you can attempt to post sooner."
+
+  L["CONFIG_SHOPPING_ALWAYS_CONFIRM_QUANTITY"] = "Always type quantity twice when purchasing commodities from the shopping tab"
+  L["CONFIG_SHOPPING_ALWAYS_CONFIRM_QUANTITY_TOOLTIP_HEADER"] = "Confirm quantity every time"
+  L["CONFIG_SHOPPING_ALWAYS_CONFIRM_QUANTITY_TOOLTIP_TEXT"] = "By default the quantity is confirmed just once, this makes it so you have to type it a second time to confirm the purchase."
 
   return L
 end

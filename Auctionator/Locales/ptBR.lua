@@ -220,6 +220,12 @@ L["CONFIG_SELLING_SPLIT_PANELS_TOOLTIP_TEXT"] = "Normalmente, os preços histór
 L["CONFIG_SELLING_TBC_ALL_ITEMS"] = [=[Opções para definir as configurações de lançamento padrão para todos os itens.
 ]=]
 L["CONFIG_SELLING_TEXT"] = "Opções para alterar o comportamento da guia Venda"
+--[[Translation missing --]]
+L["CONFIG_SHOPPING_ALWAYS_CONFIRM_QUANTITY"] = "Always type quantity twice when purchasing commodities from the shopping tab"
+--[[Translation missing --]]
+L["CONFIG_SHOPPING_ALWAYS_CONFIRM_QUANTITY_TOOLTIP_HEADER"] = "Confirm quantity every time"
+--[[Translation missing --]]
+L["CONFIG_SHOPPING_ALWAYS_CONFIRM_QUANTITY_TOOLTIP_TEXT"] = "By default the quantity is confirmed just once, this makes it so you have to type it a second time to confirm the purchase."
 L["CONFIG_SHOPPING_ALWAYS_LOAD_MORE"] = [=[Sempre carregue todos os resultados disponíveis.
 ]=]
 L["CONFIG_SHOPPING_ALWAYS_LOAD_MORE_TOOLTIP_HEADER"] = [=[Sempre carregue mais
@@ -433,6 +439,8 @@ L["PRICE_INCREASE_WARNING"] = [=[Preço aumentado em %s, aguardando %ss
 ]=]
 L["PRICE_INCREASE_WARNING_2"] = "Preço aumentado em %s. Deseja continuar?"
 --[[Translation missing --]]
+L["PRICE_INCREASED"] = "The price has increased!"
+--[[Translation missing --]]
 L["PRICE_INCREASED_X_X"] = "The price has increased: %s (%s each)"
 --[[Translation missing --]]
 L["PRICE_VARIES_WARNING"] = "The prices varies a lot between items."
@@ -483,6 +491,8 @@ L["SCANNING_PAGE_X"] = [=[Digitalizando página %s...
 L["SEARCH"] = "Procurar"
 L["SEARCH_ALL"] = [=[Pesquisar tudo
 ]=]
+--[[Translation missing --]]
+L["SEARCH_OPTIONS"] = "Search Options"
 L["SEARCH_TERM"] = "Procurar Termo"
 --[[Translation missing --]]
 L["SEARCH_TERM_COLON"] = "Search Term:"

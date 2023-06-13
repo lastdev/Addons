@@ -3,7 +3,7 @@
 
                                           Dark Soil Tillers
 
-                                        v3.10 - 31st May 2023
+                                       v3.12 - 11th June 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -44,6 +44,9 @@ local select = _G.select
 local match = string.match
 
 local HandyNotes = _G.HandyNotes
+
+ns.faction = UnitFactionGroup( "player" )
+ns.aWitnessToHistory = ( ns.faction == "Alliance" ) and 31512 or ( ( ns.faction == "Horde" ) and 31511 or 0 )
 
 -- Localisation
 ns.locale = GetLocale()
@@ -673,6 +676,7 @@ function pluginHandler:OnEnter(mapFile, coord)
 	end
 
 	local pin = ns.points[ mapFile ] and ns.points[ mapFile ][ coord ]
+	local showCoordinates = true
 	
 	if ( pin.pinType == "N" ) then
 		GameTooltip:SetText(ns.colour.prefix ..L[ pin.name ])
@@ -722,6 +726,14 @@ function pluginHandler:OnEnter(mapFile, coord)
 				GameTooltip:AddLine( ns.colour.plaintext ..L[ pin.tip ] )
 			end
 		end
+	elseif ( pin.pinType == "P" ) then
+		if pin.title then
+			GameTooltip:SetText( ns.colour.prefix ..L[ pin.title ] )
+		end
+		if pin.tip then
+			GameTooltip:AddLine( ns.colour.plaintext ..L[ pin.tip ] )
+		end
+		showCoordinates = false
 	elseif ( pin.pinType == "O" ) then
 		-- Dynamically show the next NPC to visit to continue the chain?
 		-- This will show Farmer Yoon only
@@ -752,6 +764,7 @@ function pluginHandler:OnEnter(mapFile, coord)
 			GameTooltip:SetText( ns.colour.prefix ..L[ pin.title ] )
 			GameTooltip:AddLine( ns.colour.plaintext ..L[ pin.tip ] )
 		end
+		showCoordinates = false
 	else
 		GameTooltip:SetText( ns.colour.prefix ..L[ "Dark Soil" ] )
 		if pin.tip then
@@ -759,7 +772,7 @@ function pluginHandler:OnEnter(mapFile, coord)
 		end
 	end
 
-	if ( ns.db.showCoords == true ) and ( pin.pinType ~= "O" ) then
+	if ( ns.db.showCoords == true ) and ( showCoordinates == true ) then
 		local mX, mY = HandyNotes:getXY(coord)
 		mX, mY = mX*100, mY*100
 		GameTooltip:AddLine( ns.colour.highlight .."(" ..format( "%.02f", mX ) .."," ..format( "%.02f", mY ) ..")" )
@@ -839,7 +852,17 @@ do
 						return coord, nil, ns.texturesSpecial[ns.db.icon_choiceBonus],
 							ns.db.icon_scale * ns.scaling[ns.db.icon_choiceBonus], ns.db.icon_alpha
 					end
-				elseif ( ( pin.pinType == "D" ) or ( pin.pinType == "V" ) or ( pin.pinType == "K" ) ) 
+				elseif ( pin.pinType == "P" ) then
+					if pin.quest then
+						if IsQuestFlaggedCompleted( pin.quest ) == false then
+							-- Pre-requisite satisfied so don't show the warning message
+						else
+							return coord, nil, ns.textures[ns.db.icon_choice],
+									ns.db.icon_scale * ns.scaling[ns.db.icon_choice], ns.db.icon_alpha
+						end
+					end
+				elseif ( ( pin.pinType == "KS" ) or ( pin.pinType == "KW" ) or ( pin.pinType == "TJF" )
+							or ( pin.pinType == "TS" ) or ( pin.pinType == "VEB" ) or ( pin.pinType == "VFW" ) ) 
 						and ( ns.db.icon_darkSoil == true ) then
 					if pin.authorOnly then
 						if ns.author then
