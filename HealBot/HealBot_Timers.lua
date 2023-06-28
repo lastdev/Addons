@@ -210,7 +210,7 @@ function HealBot_Timers_EnableHealBot()
     HealBot_Timers_Set("INIT","RefreshPartyNextRecalcAll")
     HealBot_Timers_Set("SKINS","PartyUpdateCheckSkin")
     HealBot_Timers_ToggleBlizzardFrames()
-    HealBot_AddChat(HEALBOT_CHAT_ADDONID..HEALBOT_CHAT_ENABLED)
+    HealBot_AddChat(HEALBOT_CHAT_ENABLED)
 end
 
 function HealBot_Timers_DisableHealBot()
@@ -222,7 +222,7 @@ function HealBot_Timers_DisableHealBot()
         HealBot_Action_HidePanel(j)
     end
     HealBot_Timers_ToggleBlizzardFrames()
-    HealBot_AddChat(HEALBOT_CHAT_ADDONID..HEALBOT_CHAT_DISABLED)
+    HealBot_AddChat(HEALBOT_CHAT_DISABLED)
 end
 
 function HealBot_Timers_SpellsLoaded()
@@ -286,6 +286,7 @@ function HealBot_Timer_BarsTextUpdate()
     HealBot_Timers_Set("SKINS","TextUpdateNames")
     HealBot_Timers_Set("SKINS","TextUpdateHealth")
     HealBot_Timers_Set("SKINS","TextUpdateState")
+    HealBot_Timers_Set("SKINS","UpdateTextButtons")
 end
 
 function HealBot_Timers_SetPlayerRestingState()
@@ -439,7 +440,7 @@ function HealBot_Timers_InitExtraOptions()
 end
 
 function HealBot_Timers_Loaded()
-    HealBot_AddChat("["..HEALBOT_HEALBOT .. "] " .. _G["GREEN_FONT_COLOR_CODE"]..HEALBOT_VERSION.._G["FONT_COLOR_CODE_CLOSE"] .. HEALBOT_LOADED .. " " .. HEALBOT_FORHELP .. _G["YELLOW_FONT_COLOR_CODE"].." /hb o".._G["FONT_COLOR_CODE_CLOSE"]);
+    HealBot_AddChat(_G["GREEN_FONT_COLOR_CODE"]..HEALBOT_VERSION.._G["FONT_COLOR_CODE_CLOSE"] .. HEALBOT_LOADED .. " " .. HEALBOT_FORHELP .. _G["YELLOW_FONT_COLOR_CODE"].." /hb o".._G["FONT_COLOR_CODE_CLOSE"]);
 end
 
 local hbTimerFuncs={["INIT"]={
@@ -663,10 +664,18 @@ local hbTimerFuncs={["INIT"]={
                         ["SendClassicAuraData"]=HealBot_Aura_SendClassicData,
                         ["LoadTips"]=HealBot_Options_LoadTips,
                         ["SetPlayerData"]=HealBot_SetPlayerData,
+                        ["SetInHealAbsorbMax"]=HealBot_Aux_setInHealAbsorbMax,
                         ["UpdateButtonGlow"]=HealBot_Timer_UpdateGlow,
+                        ["ClearClassGuidData"]=HealBot_clearClassGuidData,
                         ["DisableAllButtonGlow"]=HealBot_Action_DisableGlow,
                         ["TalentsLookupImproved"]=HealBot_Timers_TalentsLookupImproved,
                         ["UpdateFramesOpacity"]=HealBot_Action_UpdateFramesOpacity,
+                        ["ClassColourUpdate"]=HealBot_Options_ClassColourUpdate,
+                        ["RoleColourUpdate"]=HealBot_Options_RoleColourUpdate,
+                        ["PowerColourUpdate"]=HealBot_Options_PowerColourUpdate,
+                        ["OverrideClassColourUseToggle"]=HealBot_Options_Override_ColoursClassUse_Toggle,
+                        ["OverrideRoleColourUseToggle"]=HealBot_Options_Override_ColoursRoleUse_Toggle,
+                        ["OverridePowerColourUseToggle"]=HealBot_Options_Override_ColoursPowerUse_Toggle,
                     },
                    }
 

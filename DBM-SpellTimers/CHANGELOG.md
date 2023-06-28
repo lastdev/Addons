@@ -1,7 +1,6 @@
 # <DBM> Spell Timers
 
-## [r147](https://github.com/DeadlyBossMods/DBM-SpellTimers/tree/r147) (2023-05-02)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-SpellTimers/compare/r146...r147) [Previous Releases](https://github.com/DeadlyBossMods/DBM-SpellTimers/releases)
+## [r148](https://github.com/DeadlyBossMods/DBM-SpellTimers/tree/r148) (2023-06-20)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-SpellTimers/compare/r147...r148) [Previous Releases](https://github.com/DeadlyBossMods/DBM-SpellTimers/releases)
 
-- bump toc  
-- Add IconTexture  
+- wrath toc bump  

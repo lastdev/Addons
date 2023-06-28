@@ -8,7 +8,7 @@ local L = MDT.L
 -- Additional dungeon lists just need to be added to seasonList and dungeonSelectionToIndex.
 
 -- How to find the dungeon map files:
--- Add launch option "- console" to wow
+-- Add launch option "-console" to wow
 -- Unsync your Config.wtf from wow servers: SET synchronizeConfig "0"
 -- Add the following to the Config.wtf: SET ConsoleKey "F10" (or whatever key you want)
 -- Go to character selection screen and press your console key
@@ -39,7 +39,7 @@ end
 if MDT:IsWrath() then
   tinsert(MDT.seasonList, L["Wrath of the Lich King"])
   tinsert(MDT.dungeonSelectionToIndex,
-    { 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76 })
+    { 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 80, 81 })
 end
 
 local seasonList = MDT.seasonList

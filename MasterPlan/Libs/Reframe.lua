@@ -1,5 +1,6 @@
 local _, T = ...
-local E = T.Evie
+local EV = T.Evie
+local GameTooltip = T.NotGameTooltip or GameTooltip
 
 function T.GetMouseFocus()
 	local f = GetMouseFocus()
@@ -122,7 +123,7 @@ local CreateLazyItemButton do
 		f:SetPushedTexture("Interface\\Buttons\\UI-Quickslot-Depress")
 		return f,f
 	end
-	function E:BAG_UPDATE_DELAYED()
+	function EV:BAG_UPDATE_DELAYED()
 		for k in pairs(itemIDs) do
 			if k:IsVisible() then
 				OnShow(k)
@@ -151,7 +152,7 @@ do -- SetModifierSensitiveTooltip
 		if watching then
 			owner = watching:GetOwner()
 			if not owatching then
-				E.MODIFIER_STATE_CHANGED = watch
+				EV.MODIFIER_STATE_CHANGED = watch
 			end
 		end
 	end

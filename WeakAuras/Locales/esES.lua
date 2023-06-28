@@ -819,6 +819,8 @@ L["Jin'do the Hexxer"] = "Jin'do the Hexxer"
 L["Journal Stage"] = "Journal Stage"
 L["Keep Inside"] = "Mantener en el interior"
 L["Kel'Thuzad"] = "Kel'Thuzad"
+--[[Translation missing --]]
+L["Key"] = "Key"
 L["Kologarn"] = "Kologarn"
 L["Koralon the Flame Watcher"] = "Koralon el Vigía de las Llamas"
 L["Kurinnaxx"] = "Kurinnaxx"
@@ -1591,6 +1593,8 @@ L["The effective level differs from the level in e.g. Time Walking dungeons."] =
 L["The Eye of Eternity"] = "The Eye of Eternity"
 --[[Translation missing --]]
 L["The Four Horsemen"] = "The Four Horsemen"
+--[[Translation missing --]]
+L["The 'Key' value can be found in the BigWigs options of a specific spell"] = "The 'Key' value can be found in the BigWigs options of a specific spell"
 --[[Translation missing --]]
 L["The Lich King"] = "The Lich King"
 --[[Translation missing --]]

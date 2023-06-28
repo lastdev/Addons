@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2529, "DBM-Aberrus", nil, 1208)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230531074715")
+mod:SetRevision("20230620070249")
 mod:SetCreatureID(201774, 201773, 201934)--Krozgoth, Moltannia, Molgoth
 mod:SetEncounterID(2687)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -514,7 +514,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			timerShadowandFlameCD:Start(29.6, 1)
 			timerConvergentEruptionCD:Start(35.7, 1)
 		elseif self:IsHeroic() then
-			timerConvergentEruptionCD:Start(33.6, 1)
+			timerConvergentEruptionCD:Start(32.4, 1)
 		end
 		--Same in all
 		timerWitheringVulnerabilityCD:Start(15.8, 1)

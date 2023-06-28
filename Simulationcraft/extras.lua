@@ -60,7 +60,8 @@ Simulationcraft.RegionString = {
   [2] = 'kr',
   [3] = 'eu',
   [4] = 'tw',
-  [5] = 'cn'
+  [5] = 'cn',
+  [72] = 'tr'
 }
 
 -- non-localized profession names from ids
@@ -97,6 +98,7 @@ Simulationcraft.SpecNames = {
   [104] = 'Guardian',
   [105] = 'Restoration',
 -- Evoker
+  [1473] = 'Augmentation',
   [1467] = 'Devastation',
   [1468] = 'Preservation',
 -- Hunter 

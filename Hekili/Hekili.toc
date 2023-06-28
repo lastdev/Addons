@@ -1,5 +1,5 @@
 ## Interface: 100100
-## Version: v10.1.0-1.0.1o
+## Version: v10.1.0-1.0.2
 ## Title: Hekili
 ## Author: Hekili
 ## AddonCompartmentFunc: Hekili_OnAddonCompartmentClick

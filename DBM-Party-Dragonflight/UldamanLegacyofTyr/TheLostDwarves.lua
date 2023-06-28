@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2475, "DBM-Party-Dragonflight", 2, 1197)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230511021050")
+mod:SetRevision("20230613190412")
 mod:SetCreatureID(184580, 184581, 184582)
 mod:SetEncounterID(2555)
 --mod:SetUsedIcons(1, 2, 3)
@@ -149,7 +149,7 @@ function mod:SPELL_CAST_START(args)
 			timerDefensiveBulwarkCD:Stop(args.sourceGUID)
 			if bossPower == 100 then--Alive, restart timers
 				timerRicochetingShieldCD:Start(30, args.sourceGUID)
-				timerDefensiveBulwarkCD:Start(35, args.sourceGUID)
+				timerDefensiveBulwarkCD:Start(34.1, args.sourceGUID)
 			end
 		elseif cid == 184582 then--Eric "The Swift"
 			timerSkullcrackerCD:Stop(args.sourceGUID)

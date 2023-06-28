@@ -401,6 +401,26 @@ GTFO.SpellID["404751"] = {
   sound = 1;
 };
 
+GTFO.SpellID["398370"] = {
+  --desc = "Petrifying Bite (Calcifying Crawler)";
+  sound = 2;
+};
+
+GTFO.SpellID["412411"] = {
+  --desc = "Magma Spit (Flowfy)";
+  sound = 1;
+};
+
+GTFO.SpellID["411473"] = {
+  --desc = "Foul Smell (Calibrating Scent Matrix)";
+  sound = 1;
+};
+
+GTFO.SpellID["412490"] = {
+  --desc = "Volcanic Overload (Colossian)";
+  sound = 1;
+};
+
 
 
 --- *******************
@@ -547,7 +567,7 @@ GTFO.SpellID["377807"] = {
 GTFO.SpellID["377830"] = {
   --desc = "Bladestorm (Rira Hackclaw)";
   sound = 1;
-  test = true; -- Need more info about this one
+  tankSound = 2;
 };
 
 GTFO.SpellID["374245"] = {
@@ -629,6 +649,22 @@ GTFO.SpellID["385168"] = {
   --desc = "Thunderstorm (Primalist Galesinger)";
   sound = 1;
 };
+
+GTFO.SpellID["374389"] = {
+  --desc = "Gulp Swog Toxin (Curious Swoglet)";
+  applicationOnly = true;
+  soundFunction = function() 
+	local stacks = GTFO_DebuffStackCount("player", 374389);
+	if (stacks == 10) then
+		return 3;
+	elseif (stacks >= 7) then
+		return 1;
+	elseif (stacks >= 4) then
+		return 2;
+	end
+  end;
+};
+
 
 --- *********************
 --- * Algeth'ar Academy *
@@ -803,6 +839,16 @@ GTFO.SpellID["376325"] = {
 
 GTFO.SpellID["413319"] = {
   --desc = "Downwind of Altairus (Altairus)";
+  ignoreEvent = "Downwind";
+  soundFunction = function() -- Reduce spamming
+	GTFO_AddEvent("Downwind", 1.1);
+	return 2;
+  end
+};
+
+GTFO.SpellID["88286"] = {
+  --desc = "Downwind of Altairus (Altairus)";
+  applicationOnly = true;
   sound = 2;
 };
 
@@ -811,11 +857,11 @@ GTFO.SpellID["413275"] = {
   sound = 1;
 };
 
-GTFO.SpellID["88963"] = {
-  --desc = "Lightning Lash (Minister of Air)";
+GTFO.SpellID["413386"] = {
+  --desc = "Overload Grounding Field (Minister of Air)";
   sound = 1;
-  test = true;
 };
+
 
 --- ***************************
 --- * Vault of the Incarnates *

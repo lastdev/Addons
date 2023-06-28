@@ -112,7 +112,7 @@ local function UpdateCdByReducer(info, t, isHolyPriest)
 				P:UpdateCooldown(icon, isHolyPriest and priestHolyWordSpells[target] and GetHolyWordReducedTime(info, duration) or duration)
 			end
 		end
-	elseif talent == 340080 then
+	elseif talent == 382523 or talent == 340080 then
 		if talentRank then
 			duration = type(duration) == "table" and (duration[talentRank] or duration[1]) or duration
 			for spellID, icon in pairs(info.spellIcons) do
@@ -2070,6 +2070,22 @@ registeredEvents['SPELL_INTERRUPT'][2139] = function(info, _, spellID, _,_,_, ex
 	AppendInterruptExtras(info, nil, spellID, nil,nil,nil, extraSpellId, extraSpellName, nil,nil, destRaidFlags)
 end
 
+registeredEvents['SPELL_CAST_SUCCESS'][2139] = function(info, _, spellID, destGUID)
+	if info.talentData[382297] then
+		local icon = info.spellIcons[spellID]
+		if icon and icon.active then
+			local unit = UnitTokenFromGUID(destGUID)
+			local _,_,_,_,_,_, notInterruptable, channelID = UnitChannelInfo(unit)
+			if notInterruptable ~= false then
+				return
+			end
+			if channelID == 47758 then
+				P:UpdateCooldown(icon, 4)
+			end
+		end
+	end
+end
+
 
 registeredEvents['SPELL_DAMAGE'][383479] = function(info, _,_,_,_,_,_,_,_,_,_, timestamp)
 	if info.talentData[383476] then
@@ -3265,7 +3281,7 @@ removeVoidForm = function(srcGUID, spellID, destGUID)
 	local info = groupInfo[srcGUID]
 	if info and info.callbackTimers.isVoidForm then
 		local duration = P:GetBuffDuration(info.unit, spellID)
-		if duration then
+		if duration and duration > 0 then
 			info.callbackTimers.isVoidForm = E.TimerAfter(duration + 1, removeVoidForm, srcGUID, spellID, destGUID)
 			return
 		end
@@ -4527,7 +4543,7 @@ OnFlowStateTimerEnd = function(srcGUID, spellID)
 	local info = groupInfo[srcGUID]
 	if info and info.callbackTimers[spellID] then
 		local duration = P:GetBuffDuration(info.unit, spellID)
-		if duration then
+		if duration and duration > 0 then
 			info.callbackTimers[spellID] = E.TimerAfter(duration + 0.1, OnFlowStateTimerEnd, srcGUID, spellID)
 			return
 		end
@@ -4706,7 +4722,7 @@ local function OnUrhTimerEnd(destGUID)
 	local destInfo = groupInfo[destGUID]
 	if destInfo and destInfo.callbackTimers[368239] then
 		local duration = P:GetDebuffDuration(destInfo.unit, 368239)
-		if duration then
+		if duration and duration > 0 then
 			destInfo.callbackTimers[368239] = E.TimerAfter(duration + 0.5, destGUID)
 			return
 		end

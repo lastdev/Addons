@@ -21,6 +21,10 @@ L["BH_skip_desc"] = "你可以在水中游泳/水上行走"
 L["COS_percentage"] = "在击杀塔丽克萨·火冠后进入化妆舞会之前最好达到93.68%的进度 。"
 L["FH_percentage"] = "桥前最好达到82.25%的进度。"
 L["HOI_door"] = "第一个首领击杀后激活"
+--[[Translation missing --]]
+--[[ L["HOI_mushroom"] = "Mushroom"--]] 
+--[[Translation missing --]]
+--[[ L["HOI_mushroom_desc"] = "A herbalist with 25 skill points can collect the mushroom. This gives the party a 30 minute buff that will heal a poison or disease effect every 15 seconds."--]] 
 L["HOI_shortcut_frog"] = "去吞喉巨蛙的捷径（青蛙）"
 L["HOI_shortcut_icelady"] = "去不屈者卡金的捷径（冰女）"
 L["HOV_bjorn"] = "布约恩国王"

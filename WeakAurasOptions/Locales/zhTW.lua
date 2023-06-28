@@ -318,9 +318,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Distribute Horizontally"] = "水平分佈"
 	L["Distribute Vertically"] = "垂直分佈"
 	L["Do not group this display"] = "不要群組這個提醒效果"
-	L["Do you want to ignore all future updates for this aura"] = "是否要忽略此提醒效果未來的所有更新"
-	--[[Translation missing --]]
-	L["Do you want to stop ignoring all future updates for this aura"] = "Do you want to stop ignoring all future updates for this aura"
+	L["Do you want to enable updates for this aura"] = "你想為此光環啟用更新嗎"
+	L["Do you want to ignore updates for this aura"] = "您想忽略此光環的更新嗎"
 	L["Documentation"] = "文件"
 	L["Done"] = "完成"
 	L["Drag to move"] = "滑鼠拖曳來移動"
@@ -513,8 +512,7 @@ Can use \ to escape -.]=] ] = "過濾器格式：'名字'，'名字-伺服器'�
 	L["Ignore out of checking range"] = "忽略超出檢查範圍"
 	L["Ignore Self"] = "忽略自己"
 	L["Ignore updates"] = "忽略更新"
-	--[[Translation missing --]]
-	L["Ignore Wago updates"] = "Ignore Wago updates"
+	L["Ignore Wago updates"] = "忽略Wago更新"
 	L["Ignored"] = "忽略"
 	L["Ignored Aura Name"] = "忽略的光環名稱"
 	L["Ignored Exact Spell ID(s)"] = "忽略的正確法術 ID"
@@ -626,7 +624,7 @@ Can use \ to escape -.]=] ] = "過濾器格式：'名字'，'名字-伺服器'�
 	L["Note: Automated Messages to SAY and YELL are blocked outside of Instances."] = "注意: 副本外面無法在 '說' 和 '大喊' 頻道自動發送訊息，會被阻擋。"
 	L["Npc ID"] = "NPC ID"
 	L["Number of Entries"] = "項目數量"
-	L[ [=[Occurence of the event, reset when aura is unloaded
+	L[ [=[Occurrence of the event, reset when aura is unloaded
 Can be a range of values
 Can have multiple values separated by a comma or a space
 
@@ -635,16 +633,16 @@ Examples:
 2nd to 6th: 2-6
 every 2 events: /2
 every 3 events starting from 2nd: 2/3
-every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = [=[發生的事件，卸載提醒效果時會重置
-可以是範圍的值
-可以有多個值，使用逗號或空白分隔。
+every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = [=[事件發生的次數，光環不再加載時重置
+可以為值的範圍
+可以有多個條目，由英文逗號或空格分隔
 
-範例:
-第2、第5、第6 個事件: 2, 5, 6
-第2到第6個: 2-6
-每2個事件: /2
-從第2個事件開始每3個事件: 2/3
-第2個到第11個事件中每3個事件: 2-11/3]=]
+例如：
+第二、第五和第六次事件：2, 5, 6
+第二到第六次事件：2-6
+每兩次事件：/2
+從第二次開始每三次事件：2/3
+從第二到第十一次事件開始每三次事件：2-11/3]=]
 	L["Offer a guided way to create auras for your character"] = "用步驟導引的方式替角色建立提醒效果"
 	L["Offset by |cFFFF0000%s|r/|cFFFF0000%s|r"] = "偏移 |cFFFF0000%s|r/|cFFFF0000%s|r"
 	L["Offset by 1px"] = "偏移 1px"
@@ -849,8 +847,7 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = [=[發生的�
 	L["Thickness"] = "粗細"
 	L["This adds %raidMark as text replacements."] = "這會加入 %raidMark 作為替換用的文字。"
 	L["This adds %role, %roleIcon as text replacements. Does nothing if the unit is not a group member."] = "這會加入%role、%roleIcon作為文字替換。如果該單位不是隊伍成員，則不執行任何操作。"
-	--[[Translation missing --]]
-	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 and %tooltip4 as text replacements and also allows filtering based on the tooltip content/values."] = "This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 and %tooltip4 as text replacements and also allows filtering based on the tooltip content/values."
+	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 and %tooltip4 as text replacements and also allows filtering based on the tooltip content/values."] = "這加入了 %tooltip, %tooltip1, %tooltip2, %tooltip3 以及 %tooltip4 作為文本替換，還允許根據工具提示內容/值進行過濾。"
 	L[ [=[This aura contains custom Lua code.
 Make sure you can trust the person who sent it!]=] ] = "這個提醒效果包含自訂的 Lua 程式碼，請務必確定你能夠信任傳送給你的人!"
 	L[ [=[This aura was created with a different version (%s) of World of Warcraft.

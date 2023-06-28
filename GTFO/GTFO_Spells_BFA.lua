@@ -490,11 +490,6 @@ GTFO.SpellID["256546"] = {
   sound = 1;
 };
 
-GTFO.SpellID["257737"] = {
-  --desc = "Thundering Squall (Irontide Stormcaller)";
-  sound = 1;
-};
-
 GTFO.SpellID["257871"] = {
   --desc = "Blade Barrage (Irontide Buccaneer)";
   sound = 1;

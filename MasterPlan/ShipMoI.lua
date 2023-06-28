@@ -1,6 +1,7 @@
 local _, T = ...
 if T.Mark ~= 50 then return end
 local L, G, EV, api = T.L, T.Garrison, T.Evie, T.MissionsUI
+local GameTooltip = T.NotGameTooltip or GameTooltip
 
 local function dismissTooltip(self)
 	if GameTooltip:IsOwned(self) then

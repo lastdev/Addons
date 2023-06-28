@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2530, "DBM-Aberrus", nil, 1208)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230601065204")
+mod:SetRevision("20230620070249")
 mod:SetCreatureID(200912, 200913, 200918)
 mod:SetEncounterID(2693)
 mod:SetUsedIcons(1, 2, 3)
@@ -95,6 +95,7 @@ local allTimers = {
 }
 
 function mod:OnCombatStart(delay)
+	self:SetStage(1)
 	table.wipe(bossActive)
 	--Neldris
 	self.vb.rendingCount = 0
@@ -314,6 +315,7 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 			bossActive[GUID] = true
 			local cid = self:GetCIDFromGUID(GUID)
 			if cid == 200918 then--Rionthus
+				self:SetStage(3)--Rare exception of stage not matching journal but it should have
 				if self:IsMythic() then
 					--Boss gains 2 energy per second, but +5 seconds after hitting 100 before restarting
 					--Temporal Anomaly is cast at 17 mythic
@@ -359,6 +361,7 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 					timerDeepBreathCD:Start(30.4, 1)
 				end
 			elseif cid == 200913 then--Thadrion
+				self:SetStage(2)--Rare exception of stage not matching journal but it should have
 				if self:IsMythic() then
 					--Boss gains 2 energy per second, but +5 seconds after hitting 100 before restarting
 					--Volatile Spew is cast at 30 and 75 Energy on mythic

@@ -3,6 +3,17 @@ local Config = GatherMate:GetModule("Config")
 
 local L = LibStub("AceLocale-3.0"):GetLocale("GatherMate2", true)
 
+local isRetail = (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE)
+
+--------------------------------------------------------------------------
+
+local zone_fix = isRetail and {
+	[1951] = 107, -- 301
+	[1946] = 102, -- 302
+	[1953] = 109, -- 303
+	[1948] = 104, -- 304
+} or {}
+
 --------------------------------------------------------------------------
 
 local function GetGasNodeTypeForZone(zone)
@@ -58,7 +69,7 @@ end
 --------------------------------------------------------------------------
 
 local importStyle = 'Merge'
-Config:RegisterImportModule('GatherMate2_GasData', {
+Config:RegisterImportModule('GatherMate2_GasClouds', {
 	type = "group",
 	name = L["Gas Clouds"] .. " <by MiCHaEL>",
 	args = {
@@ -87,18 +98,19 @@ Config:RegisterImportModule('GatherMate2_GasData', {
 				for zoneID, node_table in pairs(GatherMateData2GasCloudsDB) do
 					if not zoneFilter or zoneFilter[zoneID] then
 						for coord, nodeID in pairs(node_table) do
-							GatherMate:InjectNode2(zoneID,coord,"Extract Gas", nodeID)
+							GatherMate:InjectNode2(zone_fix[zoneID] or zoneID,coord,"Extract Gas", nodeID)
 						end
 					end
 				end
 				print("GatherMate2: Gas Clouds Database has been imported.")
 				Config:SendMessage("GatherMate2ConfigChanged")
 			end,
-		},
+		},		
 		separator = {
 			order = 4,
 			type = "description",
-			name = "\nGas Clouds Database Maintenance"
+			name = "\nGas Clouds Database Maintenance",
+			hidden = function() return isRetail end,
 		},
 		repair = {
 			order = 5,
@@ -116,6 +128,7 @@ Config:RegisterImportModule('GatherMate2_GasData', {
 			end,
 			confirm = true,
 			confirmText = "Are you sure you want to verify and repair the Gas Clouds Database ?",
+			hidden = function() return isRetail end,
 		},
 		autorepair = {
 			order = 6,
@@ -130,6 +143,7 @@ Config:RegisterImportModule('GatherMate2_GasData', {
 				GatherMate.db.global.__GasCloudsAutoFixDisabled = (not value) or nil
 				UpdateDatabaseAutoRepair()
 			end,
+			hidden = function() return isRetail end,			
 		},
 	},
 })

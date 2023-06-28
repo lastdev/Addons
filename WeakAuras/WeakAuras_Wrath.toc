@@ -1,7 +1,7 @@
-## Interface: 30401
+## Interface: 30402
 ## Title: WeakAuras
 ## Author: The WeakAuras Team
-## Version: 5.5.4
+## Version: 5.5.6
 ## X-Flavor: Wrath
 ## Notes: A powerful, comprehensive utility for displaying graphics and information based on buffs, debuffs, and other triggers.
 ## Notes-esES: Potente y completa aplicación que te permitirá mostrar por pantalla múltiples diseños, basados en beneficios, perjuicios y otros activadores.

@@ -5,13 +5,7 @@ getmetatable(L).__call = function(_,k) if T.L then L = T.L return L(k) end retur
 local FOLLOWER_ITEM_LEVEL_CAP, MENTOR_FOLLOWER, INF = T.FOLLOWER_ITEM_LEVEL_CAP, T.MENTOR_FOLLOWER, math.huge
 local FOLLOWER_LEVEL_CAP, FOLLOWER_LEVEL_BASE = T.FOLLOWER_LEVEL_CAP, T.FOLLOWER_LEVEL_BASE
 local unfreeStatusOrder = {[GARRISON_FOLLOWER_WORKING]=2, [GARRISON_FOLLOWER_INACTIVE]=1}
-
-local function getShoppingTooltips(tip)
-	local GameTooltip = _G.GameTooltip
-	if tip[0] == GameTooltip[0] and not GameTooltip:IsForbidden() then
-		return GameTooltip.shoppingTooltips
-	end
-end
+local GameTooltip = T.NotGameTooltip or GameTooltip
 
 hooksecurefunc(C_Garrison, "MarkMissionComplete", function(mid)
 	EV("MP_MARK_MISSION_COMPLETE", mid)
@@ -407,7 +401,7 @@ local function SetFollowerInfo(t)
 	if um > 10 then T.config.goldRewardThreshold = 0 end
 	for k,v in pairs(dropFollowers) do
 		local f = ft[k]
-		if not f.missionEndTime then
+		if f and not f.missionEndTime then
 			f.status, f.missionEndTime = GARRISON_FOLLOWER_ON_MISSION, missionEndTime[v]
 		end
 	end
@@ -2794,14 +2788,14 @@ local prefixTip do
 	end
 end
 function api.SetItemTooltip(tip, id)
-	local cs = T.TokenSlots[id]
+	local cs = T.TokenSlots[id] or C_Item.GetItemInventoryTypeByID(id)
 	tip:SetItemByID(id)
-	local sta = getShoppingTooltips(tip)
-	if cs and sta then
+	local sta = cs and cs ~= 0 and tip.shoppingTooltips
+	if sta then
 		T.SetModifierSensitiveTip(api.SetItemTooltip, tip, id)
 		local st1, st2 = sta[1], sta[2]
 		if IsModifiedClick("COMPAREITEMS") or GetCVarBool("alwaysCompareItems") then
-			local ofsFrame, oy = GameTooltip, -8
+			local ofsFrame, oy = tip, -8
 			if GetInventoryItemID("player", cs) then
 				st1:SetOwner(tip, "ANCHOR_NONE")
 				st1:SetPoint("TOPRIGHT", tip, "TOPLEFT", -2, oy)
@@ -2837,7 +2831,7 @@ local function doSetCurrencyTraitTip(owner, id, tip)
 end
 function api.SetCurrencyTraitTip(tip, id, ftype)
 	local ts = T[ftype == 2 and "ShipTraitStack" or "TraitStack"][id]
-	local sta = getShoppingTooltips(tip)
+	local sta = tip.shoppingTooltips
 	if ts and sta and sta[1] then
 		doSetCurrencyTraitTip(tip, ts, sta[1])
 	end

@@ -1,7 +1,9 @@
 # <DBM> World Bosses (Legion)
 
-## [r40](https://github.com/DeadlyBossMods/DBM-Legion/tree/r40) (2023-05-02)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Legion/compare/r39...r40) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Legion/releases)
+## [r41](https://github.com/DeadlyBossMods/DBM-Legion/tree/r41) (2023-06-18)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Legion/compare/r40...r41) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Legion/releases)
 
-- bump tocs  
-- Add IconTexture  
+- maybe this was intent of this check? I have no idea 🤷‍♂️  
+- Legion raids fully culled  
+- Update RU locale and .toc files (#16)  
+- Fix invalid energy event  

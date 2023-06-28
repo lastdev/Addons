@@ -973,8 +973,83 @@ GTFO.SpellID["412653"] = {
   sound = 3;
 };
 
+GTFO.SpellID["411114"] = {
+  --desc = "Scent Bomb (Calibrating Scent Matrix)";
+  sound = 3;
+};
 
+GTFO.SpellID["399662"] = {
+  --desc = "Shadowlava Geyser (Igneous Darkness)";
+  sound = 3;
+};
 
+GTFO.SpellID["412383"] = {
+  --desc = "Demolish (Colossian)";
+  sound = 3;
+};
+
+GTFO.SpellID["382780"] = {
+  --desc = "Charged Slam (Obsidian Tyrant)";
+  sound = 3;
+};
+
+GTFO.SpellID["411399"] = {
+  --desc = "Briny Burst (Bogg)";
+  sound = 3;
+};
+
+GTFO.SpellID["411396"] = {
+  --desc = "Entangling Kelp (Bogg)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["404759"] = {
+  --desc = "Mana Detonation (Sundered Flame Manaweaver)";
+  sound = 3;
+};
+
+GTFO.SpellID["404220"] = {
+  --desc = "Arcane Gust (Lieutenant Narlena)";
+  sound = 3;
+};
+
+GTFO.SpellID["412284"] = {
+  --desc = "Arcane Upheaval (Captain Reykal)";
+  sound = 3;
+};
+
+GTFO.SpellID["398978"] = {
+  --desc = "Arcane Eruption (Memory of an Attacker)";
+  sound = 3;
+};
+
+GTFO.SpellID["406426"] = {
+  --desc = "Tomb of Tears (Remnants of Sindragosa)";
+  sound = 3;
+};
+
+GTFO.SpellID["406345"] = {
+  --desc = "Arcane Breath (Remnants of Sindragosa)";
+  sound = 3;
+};
+
+GTFO.SpellID["411720"] = {
+  --desc = "Fire Blast";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["411719"] = {
+  --desc = "Frost Blast";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["411643"] = {
+  --desc = "Bubble Burst";
+  sound = 3;
+};
 
 
 --- *******************
@@ -1728,6 +1803,23 @@ GTFO.SpellID["413296"] = {
   sound = 3;
 };
 
+GTFO.SpellID["88308"] = {
+  --desc = "Chilling Breath (Altairus)";
+  sound = 3;
+};
+
+GTFO.SpellID["411012"] = {
+  --desc = "Chilling Breath (Young Storm Dragon)";
+  sound = 3;
+};
+
+GTFO.SpellID["413165"] = {
+  --desc = "Lost in the Clouds";
+  applicationOnly = true;
+  sound = 3;
+};
+
+
 --- ***************************
 --- * Vault of the Incarnates *
 --- ***************************
@@ -1995,6 +2087,11 @@ GTFO.SpellID["408619"] = {
   sound = 3;
 };
 
+GTFO.SpellID["411873"] = {
+  --desc = "Dread Landing (Kazzara, the Hellforged)";
+  sound = 3;
+};
+
 GTFO.SpellID["402461"] = {
   --desc = "Hellsteel Fragment (Kazzara, the Hellforged)";
   sound = 3;
@@ -2103,6 +2200,11 @@ GTFO.SpellID["408462"] = {
 GTFO.SpellID["406233"] = {
   --desc = "Deep Breath (Rionthus)";
   applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["411755"] = {
+  --desc = "Eradicate (Conduit Guardian)";
   sound = 3;
 };
 
@@ -2227,6 +2329,22 @@ GTFO.SpellID["410953"] = {
   --desc = "Volcanic Heart (Neltharion)";
   applicationOnly = true;
   minimumStacks = 1;
+  sound = 3;
+};
+
+GTFO.SpellID["409598"] = {
+  --desc = "Crumbling Facade (Neltharion)";
+  sound = 3;
+};
+
+GTFO.SpellID["407220"] = {
+  --desc = "Rushing Darkness (Neltharion)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["402120"] = {
+  --desc = "Collapsed Earth (Neltharion)";
   sound = 3;
 };
 

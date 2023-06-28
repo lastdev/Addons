@@ -4,8 +4,7 @@ AUCTIONATOR_LOCALES.esES = function()
   L["ADD_FAVOURITE"] = "Añadir favorito"
 L["ADD_ITEM"] = "Añadir objeto"
 L["ADD_TERM_TO_LIST_DIALOG"] = "Ingrese el término de búsqueda para añadir"
---[[Translation missing --]]
-L["ADD_TO_LIST"] = "Add To List"
+L["ADD_TO_LIST"] = "Añadir a lista"
 L["ALREADY_PURCHASED_X"] = "Ya compró %s"
 L["ALT_LEFT_CLICK"] = "Alt Clic Izquierdo"
 L["ALT_RIGHT_CLICK"] = "Alt Clic Derecho"
@@ -37,8 +36,7 @@ L["BUG_REPORT"] = "Reportar un error"
 L["BUG_TOOLTIP_HEADER"] = "Reportar un error en Github"
 L["BUG_TOOLTIP_TEXT"] = "Si encuentras un error mientras estás usando Auctionator, por favor reportarlo en Github. ¡Por favor proporciona suficientes detalles, así podremos reproducir el error! Usando los addons !BugGrabber y !BugSack también nos ayudaras."
 L["BUY"] = "Comprar"
---[[Translation missing --]]
-L["BUY_NOW"] = "Buy Now"
+L["BUY_NOW"] = "Comprar ahora"
 L["BUY_STACK"] = "Comprar pila"
 L["BUYING"] = "Comprando"
 L["BUYING_X_FOR_X"] = "Comprando %s por %s"
@@ -96,10 +94,8 @@ L["CONFIG_CHAT_LOG_TOOLTIP_TEXT"] = "Si esta opción está desactivada, tus suba
 L["CONFIG_CRAFTING_INFO_SHOW"] = "Mostrar los costes de artesanía en la vista de artesanía"
 --[[Translation missing --]]
 L["CONFIG_CRAFTING_INFO_SHOW_CHEAPEST_QUALITIES_COST"] = "Show reagent costs using the cheapest quality from auction house"
---[[Translation missing --]]
-L["CONFIG_CRAFTING_INFO_SHOW_CHEAPEST_QUALITIES_COST_TOOLTIP_HEADER"] = "Crafting Info Show Cheapest Qualities Cost"
---[[Translation missing --]]
-L["CONFIG_CRAFTING_INFO_SHOW_CHEAPEST_QUALITIES_COST_TOOLTIP_TEXT"] = "Enable this option to see the cost of crafting a specific recipe using the cheapest quality reagents when viewing it. By default Auctionator prioritises the reagents in your bags, but this value will ignore them."
+L["CONFIG_CRAFTING_INFO_SHOW_CHEAPEST_QUALITIES_COST_TOOLTIP_HEADER"] = "La info de fabricación muestra el coste con los materiales de peor calidad"
+L["CONFIG_CRAFTING_INFO_SHOW_CHEAPEST_QUALITIES_COST_TOOLTIP_TEXT"] = "Activa esta opción para ver el coste de fabricación de una receta usando los componentes de peor calidad. Por defecto Auctionator prioriza los componentes de tus bolsas, pero esta opción los ignorará."
 L["CONFIG_CRAFTING_INFO_SHOW_COST"] = "Mostrar los costes de materiales en la casa de subastas y en los vendedores"
 L["CONFIG_CRAFTING_INFO_SHOW_COST_TOOLTIP_HEADER"] = "Información sobre el coste de fabricación"
 L["CONFIG_CRAFTING_INFO_SHOW_COST_TOOLTIP_TEXT"] = "Activa esta opción para ver el coste de elaboración de una receta específica al visualizarla."
@@ -200,8 +196,7 @@ L["CONFIG_SELLING_TEXT"] = "Opciones para cambiar el comportamiento de la pesta�
 L["CONFIG_SHOPPING_ALWAYS_CONFIRM_QUANTITY"] = "Always type quantity twice when purchasing commodities from the shopping tab"
 --[[Translation missing --]]
 L["CONFIG_SHOPPING_ALWAYS_CONFIRM_QUANTITY_TOOLTIP_HEADER"] = "Confirm quantity every time"
---[[Translation missing --]]
-L["CONFIG_SHOPPING_ALWAYS_CONFIRM_QUANTITY_TOOLTIP_TEXT"] = "By default the quantity is confirmed just once, this makes it so you have to type it a second time to confirm the purchase."
+L["CONFIG_SHOPPING_ALWAYS_CONFIRM_QUANTITY_TOOLTIP_TEXT"] = "Por defecto la cantidad se confirma una sola vez, esta opción hace que tengas que escribirla una segunda vez para confirmar la compra."
 L["CONFIG_SHOPPING_ALWAYS_LOAD_MORE"] = "Cargar siempre todos los resultados disponibles."
 L["CONFIG_SHOPPING_ALWAYS_LOAD_MORE_TOOLTIP_HEADER"] = "Cargar siempre más"
 L["CONFIG_SHOPPING_ALWAYS_LOAD_MORE_TOOLTIP_TEXT"] = "Mientras se sigue obteniendo un precio mínimo exacto, algunas páginas se omiten para acelerar la búsqueda de compras. Esto evita que se salten páginas y garantiza que se muestren todos los resultados posibles."
@@ -303,14 +298,13 @@ L["GEAR_VENDOR_PRICE_MULTIPLIER"] = "Multiplicador de precio de vendedor de equi
 L["HIDE"] = "Ocultar"
 L["HISTORY"] = "Historial"
 L["IMPORT"] = "Importar"
---[[Translation missing --]]
-L["IMPORTED"] = "Imported"
+L["IMPORTED"] = "Importado"
 L["INFO_TAB_HEADER"] = "Auctionator - Información"
 L["IS_TOP_COLUMN"] = "¿Parte superior?"
 L["IS_UNDERCUT"] = "¿Descontar?"
 L["ITEM_CLASS"] = "Clase de objeto"
 L["ITEM_LEVEL"] = "Nivel de objeto"
-L["ITEM_LEVEL_COLUMN"] = "Nivel de objeto"
+L["ITEM_LEVEL_COLUMN"] = "Nv. de objeto"
 L["ITEM_PRICE_HISTORY"] = "Historial de precio"
 L["LEFT_CLICK"] = "Clic Izquierdo"
 L["LEVEL"] = "Nivel"
@@ -330,8 +324,7 @@ L["LOAD_MORE_RESULTS"] = "Cargar más resultados"
 L["MAIL_TOOLTIP_TOOLTIP_HEADER"] = "Información sobre el buzón"
 L["MAIL_TOOLTIP_TOOLTIP_TEXT"] = [=[Muestra la información de Auctionator de los objetos en tu buzón al pasar el ratón por encima.
 ]=]
---[[Translation missing --]]
-L["MAKE_PERMANENT"] = "Make Permanent"
+L["MAKE_PERMANENT"] = "Hacer permanente"
 --[[Translation missing --]]
 L["MAKE_PERMANENT_CONFIRM"] = "To make '%s' permanent choose a new name for it:"
 L["MAX"] = "Máximo"
@@ -353,12 +346,10 @@ L["MONTH_6"] = "Junio"
 L["MONTH_7"] = "Julio"
 L["MONTH_8"] = "Agosto"
 L["MONTH_9"] = "Septiembre"
---[[Translation missing --]]
-L["MORE"] = "More"
+L["MORE"] = "Más"
 L["MULTIPLE_STACKS_AUCTION_INFO"] = "%s %s, totalizando %s"
 L["NAME"] = "Nombre"
---[[Translation missing --]]
-L["NEW_LIST"] = "New List"
+L["NEW_LIST"] = "Nueva lista"
 L["NEW_SHOPPING_LIST"] = "+ Nueva lista de compras"
 L["NEXT_SCAN_MESSAGE"] = [=[Se podrá iniciar un escaneo completo en %s minutos y %s segundos.
 ]=]
@@ -372,8 +363,7 @@ L["NUMBER_SEPARATOR"] = "."
 L["OPEN_ADDON_OPTIONS"] = "Abrir las opciones del addon"
 L["OPEN_IN_SHOPPING_TAB"] = "Abrir en la pestaña Compras"
 L["OWNED_COLUMN"] = "¿Propiedad?"
---[[Translation missing --]]
-L["PAYING_X"] = "Paying %s for one item"
+L["PAYING_X"] = "Pagando %s por un objeto"
 L["PERCENTAGE"] = "Porcentaje"
 L["PERCENTAGE_SUFFIX"] = "% Socavado"
 L["PERCENTAGE_TOOLTIP_HEADER"] = "Porcentaje de socavado"
@@ -388,19 +378,14 @@ L["PRICE"] = "Precio"
 L["PRICE_HISTORY"] = "Historial de precios"
 L["PRICE_INCREASE_WARNING"] = "Precio aumentado en %s, esperando %ss"
 L["PRICE_INCREASE_WARNING_2"] = "El precio ha aumentado %s. ¿Quieres continuar?"
---[[Translation missing --]]
-L["PRICE_INCREASED"] = "The price has increased!"
---[[Translation missing --]]
-L["PRICE_INCREASED_X_X"] = "The price has increased: %s (%s each)"
---[[Translation missing --]]
-L["PRICE_VARIES_WARNING"] = "The prices varies a lot between items."
+L["PRICE_INCREASED"] = "¡El precio ha incrementado!"
+L["PRICE_INCREASED_X_X"] = "El precio ha incrementado: %s (%s cada uno)"
+L["PRICE_VARIES_WARNING"] = "Los precios varían mucho entre objetos."
 L["PROFILE_TOGGLE_TOOLTIP_HEADER"] = "Habilitar la configuración por personaje"
 L["PROFILE_TOGGLE_TOOLTIP_TEXT"] = "Los cambios en la configuración de Auctionator solo afectan a este personaje."
 L["PROFIT_COLON"] = "Ganancia:"
---[[Translation missing --]]
-L["PROFIT_WARNING_AGE"] = "(price data at least 10 days old)"
---[[Translation missing --]]
-L["PROFIT_WARNING_MISSING"] = "(no price data)"
+L["PROFIT_WARNING_AGE"] = "(los datos de los precios tienen al menos 10 días)"
+L["PROFIT_WARNING_MISSING"] = "(no hay datos de precios)"
 --[[Translation missing --]]
 L["PROFIT_WARNING_NOT_EXACT_ITEM"] = "(price data not exact match for item)"
 L["PROSPECT"] = "Prospectar"
@@ -434,11 +419,9 @@ L["SAVE_THIS_LIST_AS"] = "Guardar esta lista como..."
 L["SCANNING_PAGE_X"] = "Escaneando página %s..."
 L["SEARCH"] = "Buscar"
 L["SEARCH_ALL"] = "Busca todo"
---[[Translation missing --]]
-L["SEARCH_OPTIONS"] = "Search Options"
+L["SEARCH_OPTIONS"] = "Opciones de búsqueda"
 L["SEARCH_TERM"] = "Buscar termino"
---[[Translation missing --]]
-L["SEARCH_TERM_COLON"] = "Search Term:"
+L["SEARCH_TERM_COLON"] = "Término de búsqueda:"
 L["SELECT_ALL"] = "Seleccionar todo"
 L["SELECT_SHOPPING_LIST"] = "Seleccionar lista de la compra..."
 L["SELLERS_COLUMN"] = "Vendedor(es)"
@@ -452,8 +435,7 @@ L["SET_VALUE_SUFFIX"] = [=[Vender a menor precio que
 L["SHIFT_LEFT_CLICK"] = "Shift Clic Izquierdo"
 L["SHIFT_RIGHT_CLICK"] = "Shift Clic Derecho"
 L["SHOPPING_LIST"] = "Lista de compra"
---[[Translation missing --]]
-L["SHOPPING_LISTS"] = "Shopping Lists"
+L["SHOPPING_LISTS"] = "Listas de compra"
 L["SHOPPING_TAB"] = "Compras"
 L["SHOPPING_TAB_HEADER_2"] = "Auctionator - Compras"
 L["SKIP"] = "Omitir"

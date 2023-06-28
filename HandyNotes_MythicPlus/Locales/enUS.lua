@@ -59,6 +59,8 @@ L["FH_percentage"] = "82.25% Before Bridge"
 L["HOI_door"] = "Opens after death of first boss"
 L["HOI_shortcut_frog"] = "Shortcut to Gulping Goliath (frog)"
 L["HOI_shortcut_icelady"] = "Shortcut to Khajin the Unyielding (ice lady)"
+L["HOI_mushroom"] = "Mushroom"
+L["HOI_mushroom_desc"] = "A herbalist with 25 skill points can collect the mushroom. This gives the party a 30 minute buff that will heal a poison or disease effect every 15 seconds."
 -- Neltharion's Lair (NL)
 -- Neltharus (NELT)
 L["NELT_percentage"] = "88.57% Required before bridge"

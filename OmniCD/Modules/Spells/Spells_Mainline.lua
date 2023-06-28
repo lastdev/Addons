@@ -349,7 +349,7 @@ E.spell_db = {
 		{ ["class"]="DRUID",["type"]="dispel",["buff"]=88423,["duration"]=8,["name"]="Nature's Cure",["icon"]=236288,["spellID"]=88423, },
 		{ ["class"]="DRUID",["type"]="other",["buff"]=5215,["duration"]=6,["name"]="Prowl",["icon"]=514640,["spellID"]=5215, },
 		{ ["class"]="DRUID",["type"]="offensive",["buff"]=50334,["spec"]=104,["duration"]=180,["name"]="Berserk",["icon"]=236149,["spellID"]=50334,["talent"]=102558, },
-		{ ["class"]="DRUID",["type"]="defensive",["buff"]=22812,["duration"]=60,["name"]="Barkskin",["icon"]=136097,["spellID"]=22812, },
+		{ ["class"]="DRUID",["type"]="defensive",["buff"]=22812,["duration"]={[104]=45,["default"]=60},["name"]="Barkskin",["icon"]=136097,["spellID"]=22812, },
 		{ ["class"]="DRUID",["type"]="other",["buff"]=6795,["duration"]=8,["name"]="Growl",["icon"]=132270,["spellID"]=6795,["talent"]=207017, },
 		{ ["class"]="DRUID",["type"]="other",["buff"]=132158,["spec"]=true,["name"]="Nature's Swiftness",["duration"]=60,["icon"]=136076,["spellID"]=132158, },
 		{ ["class"]="DRUID",["type"]="offensive",["buff"]=102351,["spec"]=true,["name"]="Cenarion Ward",["duration"]=30,["icon"]=132137,["spellID"]=102351, },

@@ -324,9 +324,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Distribute Horizontally"] = "横向分布"
 	L["Distribute Vertically"] = "纵向分布"
 	L["Do not group this display"] = "不要将此图示编组"
-	L["Do you want to ignore all future updates for this aura"] = "你想忽略此光环未来的所有更新吗"
-	--[[Translation missing --]]
-	L["Do you want to stop ignoring all future updates for this aura"] = "Do you want to stop ignoring all future updates for this aura"
+	L["Do you want to enable updates for this aura"] = "你想启用这个光环的更新吗"
+	L["Do you want to ignore updates for this aura"] = "你想忽略这个光环的更新吗"
 	L["Documentation"] = "文档"
 	L["Done"] = "完成"
 	L["Drag to move"] = "拖拽来移动"
@@ -522,8 +521,7 @@ Can use \ to escape -.]=] ] = [=[过滤格式：'名称'，'名称-服务器'，
 	L["Ignore out of checking range"] = "忽略超出检查范围"
 	L["Ignore Self"] = "忽略自身"
 	L["Ignore updates"] = "忽略更新"
-	--[[Translation missing --]]
-	L["Ignore Wago updates"] = "Ignore Wago updates"
+	L["Ignore Wago updates"] = "忽略Wago更新"
 	L["Ignored"] = "被忽略"
 	L["Ignored Aura Name"] = "忽略光环名称"
 	L["Ignored Exact Spell ID(s)"] = "忽略精确法术 ID"
@@ -635,7 +633,7 @@ Can use \ to escape -.]=] ] = [=[过滤格式：'名称'，'名称-服务器'，
 	L["Note: Automated Messages to SAY and YELL are blocked outside of Instances."] = "注意：无法在副本外自动发送“说”与“大喊”信息。"
 	L["Npc ID"] = "NPC ID"
 	L["Number of Entries"] = "条目数"
-	L[ [=[Occurence of the event, reset when aura is unloaded
+	L[ [=[Occurrence of the event, reset when aura is unloaded
 Can be a range of values
 Can have multiple values separated by a comma or a space
 
@@ -858,8 +856,7 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = [=[事件发�
 	L["Thickness"] = "粗细"
 	L["This adds %raidMark as text replacements."] = "这将添加 %raidMark 作为文本替换。"
 	L["This adds %role, %roleIcon as text replacements. Does nothing if the unit is not a group member."] = "这将添加 %role, %roleIcon 作为文本替换。如果单位不是队伍成员，则不产生效果。"
-	--[[Translation missing --]]
-	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 and %tooltip4 as text replacements and also allows filtering based on the tooltip content/values."] = "This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 and %tooltip4 as text replacements and also allows filtering based on the tooltip content/values."
+	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 and %tooltip4 as text replacements and also allows filtering based on the tooltip content/values."] = "这将添加 %tooltip, %tooltip1, %tooltip2, %tooltip3, %tooltip4 作为文本替换，同时允许根据这些内容/值进行过滤。"
 	L[ [=[This aura contains custom Lua code.
 Make sure you can trust the person who sent it!]=] ] = "此光环包含自定义Lua代码。请确认你可以信任发送它的人！"
 	L[ [=[This aura was created with a different version (%s) of World of Warcraft.

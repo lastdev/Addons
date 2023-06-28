@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1687, "DBM-Party-Legion", 5, 767)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230521191921")
+mod:SetRevision("20230611223339")
 mod:SetCreatureID(91007)
 mod:SetEncounterID(1793)
 mod.sendMainBossGUID = true
@@ -14,6 +14,10 @@ mod:RegisterEventsInCombat(
 	"CHAT_MSG_RAID_BOSS_EMOTE"
 )
 
+--[[
+(ability.id = 200732 or ability.id = 200551 or ability.id = 200637 or ability.id = 200700 or ability.id = 200404) and type = "begincast"
+ or type = "dungeonencounterstart" or type = "dungeonencounterend"
+--]]
 local warnCrystalSpikes				= mod:NewSpellAnnounce(200551, 2)
 local warnBurningHatred				= mod:NewTargetAnnounce(200154, 2)
 
@@ -36,7 +40,7 @@ function mod:OnCombatStart(delay)
 	timerMagmaSculptorCD:Start(7.3-delay)
 	timerLandSlideCD:Start(15.5-delay)
 	timerMoltenCrashCD:Start(18.7-delay)
-	timerMagmaWaveCD:Start(65-delay)
+	timerMagmaWaveCD:Start(60.7-delay)
 end
 
 function mod:SPELL_CAST_START(args)

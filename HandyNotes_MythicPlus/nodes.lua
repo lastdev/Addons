@@ -198,6 +198,14 @@ ns.points = {
             ["desc"] = "",
         },
     },
+    [2083] = {
+        [45369179] = {
+            ["title"] = L["HOI_mushroom"],
+            ["cont"] = false,
+            ["icon"] = 4,
+            ["desc"] = L["HOI_mushroom_desc"],
+        },
+    },
     -- Neltharion's Lair (NL)
     [731] = {
     },

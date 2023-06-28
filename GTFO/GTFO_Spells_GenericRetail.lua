@@ -85,6 +85,11 @@ GTFO.SpellID["81297"] = {
 	sound = 2;
 };
 
+GTFO.SpellID["204242"] = {
+	--desc = "Consecration (PvP)";
+	sound = 2;
+};
+
 -- Mage
 GTFO.SpellID["2120"] = {
 	--desc = "Flamestrike (PvP)";

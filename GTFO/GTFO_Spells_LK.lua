@@ -261,6 +261,7 @@ GTFO.SpellID["67640"] = {
 GTFO.SpellID["66320"] = {
 	--desc = "Fire Bomb (Northrend Beasts 10 Normal)";
 	sound = 1;
+	applicationOnly = true;
 };
 
 GTFO.SpellID["67473"] = {
@@ -272,6 +273,7 @@ GTFO.SpellID["67473"] = {
 GTFO.SpellID["67472"] = {
 	--desc = "Fire Bomb (Northrend Beasts 25 Normal)";
 	sound = 1;
+	applicationOnly = true;
 };
 
 GTFO.SpellID["67475"] = {

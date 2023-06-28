@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2493, "DBM-VaultoftheIncarnates", nil, 1200)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230423184458")
+mod:SetRevision("20230620074543")
 mod:SetCreatureID(190245)
 mod:SetEncounterID(2614)
 mod:SetUsedIcons(8, 7, 6, 5, 4)

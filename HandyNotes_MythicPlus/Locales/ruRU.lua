@@ -21,6 +21,10 @@ L["BH_skip_desc"] = "|cffff0025Вы можете пройти пешком / п�
 L["COS_percentage"] = "|cff00ffffНужно 93.68% перед убийством Советника Меландра|r"
 L["FH_percentage"] = "|cff00ffffНужно 82.25% до моста|r"
 L["HOI_door"] = "|cff00ffffОткрывается после смерти первого босса|r"
+--[[Translation missing --]]
+--[[ L["HOI_mushroom"] = "Mushroom"--]] 
+--[[Translation missing --]]
+--[[ L["HOI_mushroom_desc"] = "A herbalist with 25 skill points can collect the mushroom. This gives the party a 30 minute buff that will heal a poison or disease effect every 15 seconds."--]] 
 L["HOI_shortcut_frog"] = "|cff00ffffКратчайший путь к Голиафу-проглоту (лягушка)|r"
 L["HOI_shortcut_icelady"] = "|cff00ffffКратчайший путь к Каджин Непреклонная (ледяная леди)|r"
 L["HOV_bjorn"] = "|cff00ff7fКороль Бьорн|r"

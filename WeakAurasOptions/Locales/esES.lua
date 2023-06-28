@@ -383,9 +383,10 @@ Off Screen]=] ] = "El aura está fuera de la pantalla"
 	L["Distribute Vertically"] = "Distribución Vertical"
 	--[[Translation missing --]]
 	L["Do not group this display"] = "Do not group this display"
-	L["Do you want to ignore all future updates for this aura"] = "¿Quieres ignorar todas las actualizaciones futuras para esta aura?"
 	--[[Translation missing --]]
-	L["Do you want to stop ignoring all future updates for this aura"] = "Do you want to stop ignoring all future updates for this aura"
+	L["Do you want to enable updates for this aura"] = "Do you want to enable updates for this aura"
+	--[[Translation missing --]]
+	L["Do you want to ignore updates for this aura"] = "Do you want to ignore updates for this aura"
 	L["Documentation"] = "Documentación"
 	L["Done"] = "Hecho"
 	L["Drag to move"] = "Arrastra para mover"
@@ -753,7 +754,7 @@ Sólo un valor coincidente puede ser escogido.]=]
 	L["Npc ID"] = "ID de pnj"
 	L["Number of Entries"] = "Número de entradas"
 	--[[Translation missing --]]
-	L[ [=[Occurence of the event, reset when aura is unloaded
+	L[ [=[Occurrence of the event, reset when aura is unloaded
 Can be a range of values
 Can have multiple values separated by a comma or a space
 
@@ -762,7 +763,7 @@ Examples:
 2nd to 6th: 2-6
 every 2 events: /2
 every 3 events starting from 2nd: 2/3
-every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = [=[Occurence of the event, reset when aura is unloaded
+every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = [=[Occurrence of the event, reset when aura is unloaded
 Can be a range of values
 Can have multiple values separated by a comma or a space
 

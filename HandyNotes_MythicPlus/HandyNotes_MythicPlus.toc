@@ -2,7 +2,7 @@
 ## Title: HandyNotes: MythicPlus
 ## Title-ruRU: HandyNotes: Подземелья М+
 ## Title-frFR: HandyNotes: MythicPlus
-## Version: V100100-7
+## Version: V100100-8
 ## Notes: Dragonflight MythicPlus Notes
 ## Notes-ruRU: Заметки к подземельям М+
 ## Notes-frFR: Dragonflight: Aides pour Mythic+

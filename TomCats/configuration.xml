@@ -25,7 +25,7 @@
 								<Anchor point="RIGHT" relativeKey="$parent.$parent" relativePoint="RIGHT" x="-4" />
 							</Anchors>
 						</FontString>
-						<FontString parentKey="VersionText" font="GameFontNormal" text="Version: 2.4.80">
+						<FontString parentKey="VersionText" font="GameFontNormal" text="Version: 2.4.85">
 							<Anchors>
 								<Anchor point="TOPLEFT" relativeKey="$parent.Text" relativePoint="BOTTOMLEFT" />
 								<Anchor point="TOPRIGHT" relativeKey="$parent.Text" relativePoint="BOTTOMRIGHT" />
@@ -207,6 +207,11 @@
 				</Scripts>
 			</Slider>
 			<CheckButton parentKey="checkBox_lunarFestivalMinimapButton" parentArray="components" inherits="InterfaceOptionsCheckButtonTemplate" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.checkBox_mapIconAnimation" relativePoint="BOTTOMLEFT" x="0" y="2"/>
+				</Anchors>
+			</CheckButton>
+			<CheckButton parentKey="checkBox_midsummerMinimapButton" parentArray="components" inherits="InterfaceOptionsCheckButtonTemplate" hidden="true">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.checkBox_mapIconAnimation" relativePoint="BOTTOMLEFT" x="0" y="2"/>
 				</Anchors>

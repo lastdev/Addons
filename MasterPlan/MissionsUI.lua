@@ -1,6 +1,7 @@
 local _, T = ...
 if T.Mark ~= 50 then return end
 local L, EV, G, api = T.L, T.Evie, T.Garrison, {}
+local GameTooltip = T.NotGameTooltip or GameTooltip
 
 local function HookOnShow(self, OnShow)
 	self:HookScript("OnShow", OnShow)
@@ -1954,21 +1955,21 @@ do -- CreateMissionButton
 	local CreateRewards do
 		local function Reward_OnEnter(self)
 			if self.itemID then
-				GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
+				GameTooltip:SetOwner(self, "ANCHOR_LEFT")
 				G.SetItemTooltip(GameTooltip, self.itemID)
 			elseif self.tooltipTitle and self.tooltipText then
-				GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
+				GameTooltip:SetOwner(self, "ANCHOR_LEFT")
 				GameTooltip:AddLine(self.tooltipTitle)
 				GameTooltip:AddLine(self.tooltipText, 1,1,1,1)
 				if self.tooltipTitle == GARRISON_REWARD_MONEY then
 					G.SetCurrencyTraitTip(GameTooltip, 0, self.followerType)
 				end
 			elseif self.currencyID then
-				GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
+				GameTooltip:SetOwner(self, "ANCHOR_LEFT")
 				GameTooltip:SetCurrencyByID(self.currencyID)
 				G.SetCurrencyTraitTip(GameTooltip, self.currencyID, self.followerType)
 			elseif self.bonusAbilityID and self.bonusInfo then
-				GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
+				GameTooltip:SetOwner(self, "ANCHOR_LEFT")
 				GameTooltip:SetText(self.bonusInfo.name)
 				GameTooltip:AddLine(self.bonusInfo.description, 1,1,1,1)
 				GameTooltip:AddLine(" ")

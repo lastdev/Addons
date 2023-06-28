@@ -43,6 +43,8 @@ local OFFSET_SUFFIX_ID = 7
 -- local OFFSET_CONTEXT = 12
 local OFFSET_BONUS_ID = 13
 
+local OFFSET_GEM_BONUS_FROM_MODS = 2
+
 local ITEM_MOD_TYPE_DROP_LEVEL = 9
 -- 28 shows frequently but is currently unknown
 local ITEM_MOD_TYPE_CRAFT_STATS_1 = 29
@@ -81,7 +83,7 @@ function Simulationcraft:OnInitialize()
   self.db = LibStub("AceDB-3.0"):New("SimulationCraftDB", {
     profile = {
       minimap = {
-        hide = true,
+        hide = false,
       },
       frame = {
         point = "CENTER",
@@ -174,6 +176,18 @@ local function GetItemSplit(itemLink)
   end
 
   return itemSplit
+end
+
+local function GetItemName(itemLink)
+  local name = string.match(itemLink, '|h%[(.*)%]|')
+  local removeIcons = gsub(name, '|%a.+|%a', '')
+  local trimmed = string.match(removeIcons, '^%s*(.*)%s*$')
+  -- check for empty string or only spaces
+  if string.match(trimmed, '^%s*$') then
+    return nil
+  end
+
+  return trimmed
 end
 
 -- char size for utf8 strings
@@ -402,34 +416,6 @@ local function TranslateRole(spec_id, str)
 end
 
 -- =================== Item Information =========================
-local function GetGemItemID(itemLink, index)
-  local _, gemLink = GetItemGem(itemLink, index)
-  if gemLink ~= nil then
-    local itemIdStr = string.match(gemLink, "item:(%d+)")
-    if itemIdStr ~= nil then
-      return tonumber(itemIdStr)
-    end
-  end
-
-  return 0
-end
-
-local function GetGemBonuses(itemLink, index)
-  local bonuses = {}
-  local _, gemLink = GetItemGem(itemLink, index)
-  if gemLink ~= nil then
-    local gemSplit = GetItemSplit(gemLink)
-    for i=1, gemSplit[OFFSET_BONUS_ID] do
-      bonuses[#bonuses + 1] = gemSplit[OFFSET_BONUS_ID + i]
-    end
-  end
-
-  if #bonuses > 0 then
-    return table.concat(bonuses, ':')
-  end
-
-  return 0
-end
 
 local function GetItemStringFromItemLink(slotNum, itemLink, debugOutput)
   local itemSplit = GetItemSplit(itemLink)
@@ -452,10 +438,9 @@ local function GetItemStringFromItemLink(slotNum, itemLink, debugOutput)
     gems[gemIndex] = 0
     gemBonuses[gemIndex] = 0
     if itemSplit[gemOffset] > 0 then
-      local gemId = GetGemItemID(itemLink, gemIndex)
+      local gemId = itemSplit[gemOffset]
       if gemId > 0 then
         gems[gemIndex] = gemId
-        gemBonuses[gemIndex] = GetGemBonuses(itemLink, gemIndex)
       end
     end
   end
@@ -464,16 +449,9 @@ local function GetItemStringFromItemLink(slotNum, itemLink, debugOutput)
   while #gems > 0 and gems[#gems] == 0 do
     table.remove(gems, #gems)
   end
-  -- Remove any trailing zeros from the gem bonuses
-  while #gemBonuses > 0 and gemBonuses[#gemBonuses] == 0 do
-    table.remove(gemBonuses, #gemBonuses)
-  end
 
   if #gems > 0 then
     simcItemOptions[#simcItemOptions + 1] = 'gem_id=' .. table.concat(gems, '/')
-    if #gemBonuses > 0 then
-      simcItemOptions[#simcItemOptions + 1] = 'gem_bonus_id=' .. table.concat(gemBonuses, '/')
-    end
   end
 
   -- New style item suffix, old suffix style not supported
@@ -512,6 +490,19 @@ local function GetItemStringFromItemLink(slotNum, itemLink, debugOutput)
     simcItemOptions[#simcItemOptions + 1] = 'crafted_stats=' .. table.concat(craftedStats, '/')
   end
 
+  -- gem bonuses
+  local gemBonusOffset = linkOffset + (2 * numPairs) + OFFSET_GEM_BONUS_FROM_MODS
+  local numGemBonuses = itemSplit[gemBonusOffset]
+  local gemBonuses = {}
+  for index=1, numGemBonuses do
+    local offset = gemBonusOffset + index
+    gemBonuses[index] = itemSplit[offset]
+  end
+
+  if #gemBonuses > 0 then
+    simcItemOptions[#simcItemOptions + 1] = 'gem_bonus_id=' .. table.concat(gemBonuses, '/')
+  end
+
   local craftingQuality = C_TradeSkillUI.GetItemCraftedQualityByItemInfo(itemLink);
   if craftingQuality then
     simcItemOptions[#simcItemOptions + 1] = 'crafting_quality=' .. craftingQuality
@@ -534,7 +525,8 @@ function Simulationcraft:GetItemStrings(debugOutput)
 
     -- if we don't have an item link, we don't care
     if itemLink then
-      local name = GetItemInfo(itemLink)
+      -- In theory, this should always be loaded/cached
+      local name = GetItemName(itemLink)
 
       -- get correct level for scaling gear
       local level, _, _ = GetDetailedItemLevelInfo(itemLink)
@@ -554,75 +546,41 @@ function Simulationcraft:GetItemStrings(debugOutput)
   return items
 end
 
+-- Iterate through all container slots looking for gear that can be equipped.
+-- Item name and item level may not be available if other addons are causing lookups to be throttled but
+-- item links and IDs should always be available
 function Simulationcraft:GetBagItemStrings(debugOutput)
   local bagItems = {}
 
-  for slotNum=1, #slotNames do
-    local slotName = slotNames[slotNum]
-    -- Ignore "double" slots, results in doubled output which isn't useful
-    if slotName and slotName ~= 'Trinket1Slot' and slotName ~= 'Finger1Slot' then
-      local slotItems = {}
-      local slotId, _, _ = GetInventorySlotInfo(slotNames[slotNum])
-      GetInventoryItemsForSlot(slotId, slotItems)
-      for locationBitstring, _ in pairs(slotItems) do
-        local _, bank, bags, _, slot, bag = EquipmentManager_UnpackLocation(locationBitstring)
-        if ItemLocation then
-          if bag == nil then
-            -- this is a default bank slot (not a bank bag). these exist on the character equipment, not a bag
-            itemLoc = ItemLocation:CreateFromEquipmentSlot(slot)
-          else
-            itemLoc = ItemLocation:CreateFromBagAndSlot(bag, slot)
-          end
-        end
-        if bags or bank then
-          local container
-          if bags then
-            container = bag
-          elseif bank then
-            -- Default bank slots (the innate ones, not ones from bags-in-the-bank) are weird
-            -- slot starts at 39, I believe that is based on some older location values
-            -- GetContainerItemInfo uses a 0-based slot index
-            -- So take the slot from the unpack and subtract 39 to get the right index for GetContainerItemInfo.
-            --
-            -- 2018/01/17 - Change magic number to 47 to account for new backpack slots. Not sure why it went up by 8
-            -- instead of 4, possible blizz is leaving the door open to more expansion in the future?
-            --
-            -- 2020/01/24 - Change magic number to 51. Not sure why this changed again but it did! See y'all in 2022?
-            --
-            -- 2022/10/02 - Oh hai, GetContainerItemInfo is no longer global and is now on C_Container. The 2022
-            -- comment above was an actual joke in 2020. And here we are. See y'all in 2024?
-            container = BANK_CONTAINER
-            slot = slot - 51
-          end
+  for bag=0, NUM_TOTAL_EQUIPPED_BAG_SLOTS + NUM_BANKBAGSLOTS do
+    for slot=1, C_Container.GetContainerNumSlots(bag) do
+      local itemId = C_Container.GetContainerItemID(bag, slot)
 
-          local itemLink
-          if C_Container and C_Container.GetContainerItemLink then
-            -- Dragonflight
-            itemLink = C_Container.GetContainerItemLink(container, slot)
-          else
-            -- Shadowlands
-            local _, _, _, _, _, _, il, _, _, _ = GetContainerItemInfo(container, slot)
-            itemLink = il
-          end
+      -- something is in the bag slot
+      if itemId then
+        local _, _, _, itemEquipLoc = GetItemInfoInstant(itemId)
+        local slotNum = Simulationcraft.invTypeToSlotNum[itemEquipLoc]
 
-          if itemLink then
-            local name, _, quality, _, _, _, _, _, _, _, _ = GetItemInfo(itemLink)
-
-            -- get correct level for scaling gear
-            local level, _, _ = GetDetailedItemLevelInfo(itemLink)
-
-            -- find all equippable, non-artifact items
-            if IsEquippableItem(itemLink) and quality ~= 6 then
-              bagItems[#bagItems + 1] = {
-                string = GetItemStringFromItemLink(slotNum, itemLink, debugOutput),
-                name = name .. (level and ' (' .. level .. ')' or '')
-              }
-            end
+        -- item can be equipped
+        if slotNum then
+          local info = C_Container.GetContainerItemInfo(bag, slot)
+          local itemLink = C_Container.GetContainerItemLink(bag, slot)
+          bagItems[#bagItems + 1] = {
+            string = GetItemStringFromItemLink(slotNum, itemLink, debugOutput),
+            slotNum = slotNum
+          }
+          local itemName = GetItemName(itemLink)
+          local level, _, _ = GetDetailedItemLevelInfo(itemLink)
+          if itemName and level then
+            bagItems[#bagItems].name = itemName .. ' (' .. level .. ')'
           end
         end
       end
     end
   end
+
+  -- order results by paper doll slot, not bag slot
+  table.sort(bagItems, function (a, b) return a.slotNum < b.slotNum end)
 
   return bagItems
 end
@@ -801,8 +759,7 @@ local function adler32(s)
   return (bit.lshift(s2, 16)) + s1
 end --adler32()
 
--- This is the workhorse function that constructs the profile
-function Simulationcraft:PrintSimcProfile(debugOutput, noBags, showMerchant, links)
+function Simulationcraft:GetSimcProfile(debugOutput, noBags, showMerchant, links)
   -- addon metadata
   local versionComment = '# SimC Addon ' .. GetAddOnMetadata('Simulationcraft', 'Version')
   local wowVersion, wowBuild, _, wowToc = GetBuildInfo()
@@ -822,7 +779,7 @@ function Simulationcraft:PrintSimcProfile(debugOutput, noBags, showMerchant, lin
 
   -- Try region from LibRealmInfo first, then use default API
   -- Default API can be wrong for region-switching players
-  local playerRegion = region or regionString[GetCurrentRegion()]
+  local playerRegion = region or GetCurrentRegionName() or regionString[GetCurrentRegion()]
 
   -- Race info
   local _, playerRace = UnitRace('player')
@@ -945,7 +902,11 @@ function Simulationcraft:PrintSimcProfile(debugOutput, noBags, showMerchant, lin
 
   -- output gear
   for slotNum=1, #slotNames do
-    if items[slotNum] then
+    local item = items[slotNum]
+    if item then
+      if item.name then
+        simulationcraftProfile = simulationcraftProfile .. '# ' .. item.name .. '\n'
+      end
       simulationcraftProfile = simulationcraftProfile .. items[slotNum].string .. '\n'
     end
   end
@@ -959,7 +920,7 @@ function Simulationcraft:PrintSimcProfile(debugOutput, noBags, showMerchant, lin
       simulationcraftProfile = simulationcraftProfile .. '### Gear from Bags\n'
       for i=1, #bagItems do
         simulationcraftProfile = simulationcraftProfile .. '#\n'
-        if bagItems[i].name then
+        if bagItems[i].name and bagItems[i].name ~= '' then
           simulationcraftProfile = simulationcraftProfile .. '# ' .. bagItems[i].name .. '\n'
         end
         simulationcraftProfile = simulationcraftProfile .. '# ' .. bagItems[i].string .. '\n'
@@ -975,31 +936,24 @@ function Simulationcraft:PrintSimcProfile(debugOutput, noBags, showMerchant, lin
       local activities = WeeklyRewards.GetActivities()
       for _, activityInfo in ipairs(activities) do
         for _, rewardInfo in ipairs(activityInfo.rewards) do
-          local itemName, _, _, _, _, _, _, _, itemEquipLoc = GetItemInfo(rewardInfo.id);
+          local _, _, _, itemEquipLoc = GetItemInfoInstant(rewardInfo.id)
           local itemLink = WeeklyRewards.GetItemHyperlink(rewardInfo.itemDBID)
-          if itemName then
-            if itemEquipLoc ~= "" then
-              local slotNum = Simulationcraft.invTypeToSlotNum[itemEquipLoc]
-              local itemStr = GetItemStringFromItemLink(slotNum, itemLink, debugOutput)
-              simulationcraftProfile = simulationcraftProfile .. '#\n'
-              simulationcraftProfile = simulationcraftProfile .. '# ' .. itemName .. '\n'
-              simulationcraftProfile = simulationcraftProfile .. '# ' .. itemStr .. "\n"
-            else
-              local _, _, _, _, _, _, _, _, _, _, _, classId, subClassId = GetItemInfo(itemLink)
-              -- Shadowlands weapon tokens
-              if classId == 5 and subClassId == 2 then
-                local level, _, _ = GetDetailedItemLevelInfo(itemLink)
-                local itemStr = GetItemStringFromItemLink(nil, itemLink, debugOutput)
-                simulationcraftProfile = simulationcraftProfile .. '#\n'
-                simulationcraftProfile = simulationcraftProfile .. '# ' .. itemName .. ' ' .. (level or '') .. '\n'
-                simulationcraftProfile = simulationcraftProfile .. '# ' .. itemStr .. "\n"
-              end
+          local itemName = GetItemName(itemLink);
+          local slotNum = Simulationcraft.invTypeToSlotNum[itemEquipLoc]
+          if slotNum then
+            local itemStr = GetItemStringFromItemLink(slotNum, itemLink, debugOutput)
+            local level, _, _ = GetDetailedItemLevelInfo(itemLink)
+            simulationcraftProfile = simulationcraftProfile .. '#\n'
+            if itemName and level then
+              itemNameComment = itemName .. ' ' .. '(' .. level .. ')'
+              simulationcraftProfile = simulationcraftProfile .. '# ' .. itemNameComment .. '\n'
             end
-          else
-            print("Warning: SimC was unable to retrieve info for item " .. rewardInfo.id .. " from your Great Vault, try again")
+            simulationcraftProfile = simulationcraftProfile .. '# ' .. itemStr .. "\n"
           end
         end
       end
+      simulationcraftProfile = simulationcraftProfile .. '#\n'
+      simulationcraftProfile = simulationcraftProfile .. '### End of Weekly Reward Choices\n'
     end
   end
 
@@ -1017,7 +971,9 @@ function Simulationcraft:PrintSimcProfile(debugOutput, noBags, showMerchant, lin
         -- local level, _, _ = GetDetailedItemLevelInfo(itemLink)
         local itemStr = GetItemStringFromItemLink(slotNum, link, false)
         simulationcraftProfile = simulationcraftProfile .. '#\n'
-        simulationcraftProfile = simulationcraftProfile .. '# ' .. name .. '\n'
+        if name then
+          simulationcraftProfile = simulationcraftProfile .. '# ' .. name .. '\n'
+        end
         simulationcraftProfile = simulationcraftProfile .. '# ' .. itemStr .. "\n"
       end
     end
@@ -1068,6 +1024,12 @@ function Simulationcraft:PrintSimcProfile(debugOutput, noBags, showMerchant, lin
 
   simulationcraftProfile = simulationcraftProfile .. '# Checksum: ' .. string.format('%x', checksum)
 
+  return simulationcraftProfile
+end
+
+-- This is the workhorse function that constructs the profile
+function Simulationcraft:PrintSimcProfile(debugOutput, noBags, showMerchant, links)
+  local simulationcraftProfile = Simulationcraft:GetSimcProfile(debugOutput, noBags, showMerchant, links)
 
   local f = Simulationcraft:GetMainFrame(simcPrintError or simulationcraftProfile)
   f:Show()

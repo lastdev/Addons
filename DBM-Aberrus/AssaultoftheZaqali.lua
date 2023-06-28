@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2524, "DBM-Aberrus", nil, 1208)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230531074715")
+mod:SetRevision("20230620070750")
 mod:SetCreatureID(199659)--Warlord Kagni
 mod:SetEncounterID(2682)
 mod:SetHotfixNoticeRev(20230526000000)
@@ -64,7 +64,7 @@ local timerHeavyCudgelCD							= mod:NewCDCountTimer(21.0, 401258, nil, nil, nil
 local timerDevastatingLeapCD						= mod:NewCDCountTimer(29.9, 408959, 67382, nil, nil, 3)--"Leap"
 local timerMagmaMysticCD							= mod:NewCDCountTimer(29.9, "ej26217", nil, nil, nil, 1, 397383)--Molten Barrier Icon
 local timerWallClimberCD							= mod:NewCDCountTimer(29.9, "ej26221", nil, false, 2, 1, 163789)--Ladder Icon
-local timerGuardsandHuntsmanCD						= mod:NewTimer(30, "timerGuardsandHuntsmanCD", 285849, nil, nil, 1)--Random guard banner
+local timerGuardsandHuntsmanCD						= mod:NewTimer(30, "timerGuardsandHuntsmanCD", 285849, nil, nil, 1, nil, nil, nil, nil, nil, nil, nil, 404382)--Random guard banner
 ----Magma Mystic
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26217))
 local warnMoltenBarrier								= mod:NewCastAnnounce(397383, 4)
@@ -174,7 +174,7 @@ function mod:OnCombatStart(delay)
 	timerWallClimberCD:Start(30, 1)
 	self:Schedule(30, climberLoop, self)
 	timerGuardsandHuntsmanCD:Start(40-delay, 1 .. "-" .. DBM_COMMON_L.SOUTH)
-	timerDevastatingLeapCD:Start(98.3-delay, 1)
+	timerDevastatingLeapCD:Start(95.9-delay, 1)
 	if self:IsMythic() then
 		timerVigorousGaleCD:Start(71.9, 1)--71-75
 		timerPhoenixRushCD:Start(90.1, 1)--90-94

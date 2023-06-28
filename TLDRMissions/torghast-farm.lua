@@ -1,6 +1,6 @@
 -- a mini-addon I decided to work on to speed up the button clicking when farming Torghast for the Torghast-exclusive followers
 -- bundling it with TLDR Missions cause its not really big or important enough to release separately
-addon = {}
+local addon = {}
     
 SlashCmdList["TLDRMISSIONS_TFF_SLASHCMD"] = function(msg)
     if msg then msg = tonumber(msg) end
@@ -82,6 +82,7 @@ local badMapIDs = {
 
 local sayOnce
 function addon:Init(layer)
+    layer = layer or 5
     frame:RegisterEvent("GOSSIP_SHOW")
     frame:RegisterEvent("CHAT_MSG_MONSTER_SAY")
     frame:RegisterEvent("VIGNETTE_MINIMAP_UPDATED")
@@ -93,15 +94,35 @@ function addon:Init(layer)
             local arg1 = ...
             if not arg1 then return end
             if not torghastWings[arg1] then return end
-            --C_GossipInfo.SelectOption(layer or 5)
+            
+            TorghastLevelPickerFrame.Pager.PreviousPage:Click()
+            TorghastLevelPickerFrame.Pager.PreviousPage:Click()
+            
+            local layerAsString = layer..""
+            
+            if layer > 6 then
+                TorghastLevelPickerFrame.Pager.NextPage:Click()
+            end
+            
+            if layer > 12 then
+                TorghastLevelPickerFrame.Pager.NextPage:Click()
+            end
             
             for l in TorghastLevelPickerFrame.gossipOptionsPool:EnumerateActive() do 
-        		if (l.index == (layer or 5)) then 
-        			TorghastLevelPickerFrame:SelectLevel(l);
-        			l:SetState(TorghastLevelPickerFrame.gossipOptions[layer or 5].status); 
+        		if l.optionInfo.name == layerAsString then 
+        			TorghastLevelPickerFrame:SelectLevel(l) 
                     break
         		end 
         	end
+            
+            if not TorghastLevelPickerFrame.currentSelectedButton then
+                for l in TorghastLevelPickerFrame.gossipOptionsPool:EnumerateInactive() do
+                    if l.optionInfo.name == layerAsString then 
+            			TorghastLevelPickerFrame:SelectLevel(l) 
+                        break
+            		end
+                end
+            end
             
             if TorghastLevelPickerFrame.currentSelectedButton then
                 C_GossipInfo.SelectOption(TorghastLevelPickerFrame.currentSelectedButton.optionInfo.gossipOptionID)

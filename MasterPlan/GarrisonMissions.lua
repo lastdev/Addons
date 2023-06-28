@@ -1,6 +1,7 @@
 local _, T = ...
 if T.Mark ~= 50 then return end
 local EV, G, L = T.Evie, T.Garrison, T.L
+local GameTooltip = T.NotGameTooltip or GameTooltip
 
 local roamingParty, easyDrop = T.MissionsUI.roamingParty, T.MissionsUI.easyDrop
 local MISSION_PAGE_FRAME = GarrisonMissionFrame.MissionTab.MissionPage
@@ -1116,10 +1117,11 @@ do
 	EV.CURRENCY_DISPLAY_UPDATE = sync
 	ctlContainer:SetScript("OnShow", sync)
 	ctlContainer:SetScript("OnEnter", function(self)
+		local tl1 = _G[GameTooltip:GetName() .. "TextLeft1"]
 		GameTooltip:SetOwner(self, "ANCHOR_NONE")
 		GameTooltip:SetPoint("BOTTOM", self, "TOP")
 		GameTooltip:SetText("!")
-		GameTooltipTextLeft1:SetText("")
+		if tl1 then tl1:SetText("") end
 		for i=1, 2 do
 			local ci = C_CurrencyInfo.GetCurrencyInfo(i == 1 and 1101 or 824)
 			GameTooltip:AddDoubleLine(("|T%s:0:0:0:0:64:64:6:58:6:58|t %s"):format(ci.iconFileID, ci.name), NORMAL_FONT_COLOR_CODE .. BreakUpLargeNumbers(ci.quantity), 1,1,1)

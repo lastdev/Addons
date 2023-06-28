@@ -15,6 +15,12 @@ v3.4.1.2755
 	Added arena season 7, 8 equip bonus items
 ]=]
 else E.changelog = [=[
+v10.1.0.2757
+	Fixed Quick Witted CDR when interrupting Penance
+	Fixed Invigorating Shadowdust CDR
+	Fixed nil error on Flow State removal
+	Fixed Ironbark CD 60>45s (Guardian, APRIL 5, 2023 hotfixes)
+
 v10.1.0.2756
 	JUNE 5, 2023 hotfixes
 		Amplify Curse CD 30>60s

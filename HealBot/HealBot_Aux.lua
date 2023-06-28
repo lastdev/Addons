@@ -18,16 +18,39 @@ HealBot_Aux_luVars["AuxFluidBarFreq"]=0.088
 HealBot_Aux_luVars["FluidBarSmoothAdj"]=5
 HealBot_Aux_luVars["TestBarsOn"]=false
 
-if HEALBOT_GAME_VERSION>9 then
-    HealBot_Aux_luVars["InHealAbsorbMax"]=12000
-else
-    HealBot_Aux_luVars["InHealAbsorbMax"]=3000
+local hbCustomRoleCols={}
+function HealBot_Aux_SetCustomRoleCols()
+    if HealBot_Globals.OverrideColours["USEROLE"]==1 then
+        hbCustomRoleCols["TANK"]=HealBot_Options_copyTable(Healbot_Config_Skins.CustomCols[Healbot_Config_Skins.Current_Skin]["TANK"])
+        hbCustomRoleCols["HEALER"]=HealBot_Options_copyTable(Healbot_Config_Skins.CustomCols[Healbot_Config_Skins.Current_Skin]["HEALER"])
+        hbCustomRoleCols["DAMAGER"]=HealBot_Options_copyTable(Healbot_Config_Skins.CustomCols[Healbot_Config_Skins.Current_Skin]["DAMAGER"])
+    else
+        hbCustomRoleCols["TANK"]=HealBot_Options_copyTable(HealBot_Globals.OverrideColours["TANK"])
+        hbCustomRoleCols["HEALER"]=HealBot_Options_copyTable(HealBot_Globals.OverrideColours["HEALER"])
+        hbCustomRoleCols["DAMAGER"]=HealBot_Options_copyTable(HealBot_Globals.OverrideColours["DAMAGER"])
+    end
 end
-function HealBot_Aux_setInHealAbsorbMax(maxHealth)
-    HealBot_Aux_luVars["InHealAbsorbMax"]=ceil((maxHealth/HealBot_Globals.InHealAbsorbDiv)/1000)
-    HealBot_Aux_luVars["InHealAbsorbMax"]=HealBot_Aux_luVars["InHealAbsorbMax"]*1000
-    HealBot_Timers_Set("AUX","UpdateAllAuxInHealsBars")
-    HealBot_Timers_Set("AUX","UpdateAllAuxAbsorbBars")
+
+if HEALBOT_GAME_VERSION>9 then
+    HealBot_Aux_luVars["AbsorbMax"]=12000
+    HealBot_Aux_luVars["InHealMax"]=12000
+else
+    HealBot_Aux_luVars["AbsorbMax"]=3000
+    HealBot_Aux_luVars["InHealMax"]=3000
+end
+function HealBot_Aux_setInHealAbsorbMax()
+    local maxHlth=UnitHealthMax("player")
+    if maxHlth and maxHlth>1 then
+        HealBot_Aux_luVars["AbsorbMax"]=ceil((maxHlth/HealBot_Globals.AbsorbDiv)/1000)
+        HealBot_Aux_luVars["InHealMax"]=ceil((maxHlth/HealBot_Globals.InHealDiv)/1000)
+        HealBot_Aux_luVars["AbsorbMax"]=HealBot_Aux_luVars["AbsorbMax"]*1000
+        HealBot_Aux_luVars["InHealMax"]=HealBot_Aux_luVars["InHealMax"]*1000
+        
+        HealBot_Timers_Set("AUX","UpdateAllAuxInHealsBars")
+        HealBot_Timers_Set("AUX","UpdateAllAuxAbsorbBars")
+    else
+        HealBot_Timers_Set("LAST", "SetInHealAbsorbMax", 5)
+    end
 end
 
 function HealBot_Aux_setLuVars(vName, vValue)
@@ -123,6 +146,10 @@ local function HealBot_Aux_setBar(button, id, value, isFluid, text, endTime, Cas
             button.aux[id]["G"]=button.text.g
             button.aux[id]["B"]=button.text.b
         elseif Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][id][button.frame]["COLOUR"]==3 then
+            button.aux[id]["R"]=hbCustomRoleCols[button.roletxt].r
+            button.aux[id]["G"]=hbCustomRoleCols[button.roletxt].g
+            button.aux[id]["B"]=hbCustomRoleCols[button.roletxt].b
+        elseif Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][id][button.frame]["COLOUR"]==4 then
             button.aux[id]["R"]=Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][id][button.frame]["R"]
             button.aux[id]["G"]=Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][id][button.frame]["G"]
             button.aux[id]["B"]=Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][id][button.frame]["B"]
@@ -187,6 +214,10 @@ local function HealBot_Aux_setBar(button, id, value, isFluid, text, endTime, Cas
             button.auxtxt[id]["G"]=button.text.g
             button.auxtxt[id]["B"]=button.text.b
         elseif Healbot_Config_Skins.AuxBarText[Healbot_Config_Skins.Current_Skin][id][button.frame]["COLTYPE"]==3 then
+            button.auxtxt[id]["R"]=hbCustomRoleCols[button.roletxt].r
+            button.auxtxt[id]["G"]=hbCustomRoleCols[button.roletxt].g
+            button.auxtxt[id]["B"]=hbCustomRoleCols[button.roletxt].b
+        elseif Healbot_Config_Skins.AuxBarText[Healbot_Config_Skins.Current_Skin][id][button.frame]["COLTYPE"]==4 then
             button.auxtxt[id]["R"]=Healbot_Config_Skins.AuxBarText[Healbot_Config_Skins.Current_Skin][id][button.frame]["COLR"]
             button.auxtxt[id]["G"]=Healbot_Config_Skins.AuxBarText[Healbot_Config_Skins.Current_Skin][id][button.frame]["COLG"]
             button.auxtxt[id]["B"]=Healbot_Config_Skins.AuxBarText[Healbot_Config_Skins.Current_Skin][id][button.frame]["COLB"]
@@ -823,7 +854,7 @@ function HealBot_Aux_UpdateAbsorbBar(button)
                 button.aux[id]["B"]=button.health.absorbb
             end
             if button.health.auxabsorbs>0 then
-                hbAuxHlth10=floor(1000/(HealBot_Aux_luVars["InHealAbsorbMax"]/button.health.auxabsorbs))
+                hbAuxHlth10=floor(1000/(HealBot_Aux_luVars["AbsorbMax"]/button.health.auxabsorbs))
                 if hbAuxHlth10>1000 then hbAuxHlth10=1000 end
             else
                 hbAuxHlth10=0
@@ -861,7 +892,7 @@ function HealBot_Aux_UpdateHealInBar(button)
                 button.aux[id]["B"]=button.health.inhealb
             end
             if button.health.auxincoming>0 then
-                hbAuxHlth10=floor(1000/(HealBot_Aux_luVars["InHealAbsorbMax"]/button.health.auxincoming))
+                hbAuxHlth10=floor(1000/(HealBot_Aux_luVars["InHealMax"]/button.health.auxincoming))
                 if hbAuxHlth10>1000 then hbAuxHlth10=1000 end
             else
                 hbAuxHlth10=0
@@ -1870,7 +1901,6 @@ function HealBot_Aux_UpdateAllAuxByType(frame, id)
             end
         end
     end
-    
 end
 
 

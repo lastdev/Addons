@@ -1,7 +1,8 @@
+if DBM:GetTOC() < 100105 then return end
 local mod	= DBM:NewMod(2521, "DBM-Party-Dragonflight", 9, 1209)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230521001802")
+mod:SetRevision("20230610193006")
 --mod:SetCreatureID(194181)
 mod:SetEncounterID(2666)
 --mod:SetUsedIcons(1, 2, 3)

@@ -1,7 +1,8 @@
+if DBM:GetTOC() < 100105 then return end
 local mod	= DBM:NewMod("DawnoftheInfiniteTrash", "DBM-Party-Dragonflight", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230521001802")
+mod:SetRevision("20230610193006")
 --mod:SetModelID(47785)
 mod:SetZone(2579)
 

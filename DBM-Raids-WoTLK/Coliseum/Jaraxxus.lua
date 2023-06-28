@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,normal25,heroic,heroic25"
 
-mod:SetRevision("20230523072605")
+mod:SetRevision("20230626100908")
 mod:SetCreatureID(34780)
 mod:SetEncounterID(mod:IsClassic() and 633 or 1087)
 mod:SetModelID(29615)
@@ -120,7 +120,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnFlame:Show()
 			specWarnFlame:Play("runout")
-			specWarnFlame:SheduleVoice(1.5, "keepmove")
+			specWarnFlame:ScheduleVoice(1.5, "keepmove")
 		else
 			warnFlame:Show(args.destName)
 		end

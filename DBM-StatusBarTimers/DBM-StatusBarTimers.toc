@@ -20,7 +20,7 @@
 ## LoadOnDemand: 0
 ## DefaultState: enabled
 ## Author: MysticalOS, QartemisT
-## Version: abd1a2e
+## Version: 5f3cb47
 ## X-Website: https://deadlybossmods.com
 
 DBT.lua

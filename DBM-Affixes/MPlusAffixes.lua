@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("MPlusAffixes", "DBM-Affixes")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230606100810")
+mod:SetRevision("20230624050639")
 --mod:SetModelID(47785)
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)--Stays active in all zones for zone change handlers, but registers events based on dungeon ids
 
@@ -82,14 +82,12 @@ local function checkForCombat(self)
 		if combatFound and not incorporealCounting then
 			incorporealCounting = true
 			timerIncorporealCD:Resume()
-			if DBM.Options.DebugMode then
-				local incorpRemaining = timerIncorporealCD:GetRemaining()
-				local afflictRemaining = timerAfflictedCD:GetRemaining()
-				if incorpRemaining and incorpRemaining > 0 then--Shouldn't be 0, unless a player clicked it off, in which case we can't reschedule
-					self:Unschedule(checkIncorp)
-					self:Schedule(incorpRemaining+5, checkIncorp, self)
-					DBM:Debug("Experimental reschedule of checkIncorp running because you're in debug mode")
-				end
+			local incorpRemaining = timerIncorporealCD:GetRemaining()
+			local afflictRemaining = timerAfflictedCD:GetRemaining()
+			if incorpRemaining and incorpRemaining > 0 then--Shouldn't be 0, unless a player clicked it off, in which case we can't reschedule
+				self:Unschedule(checkIncorp)
+				self:Schedule(incorpRemaining+5, checkIncorp, self)
+				DBM:Debug("Experimental reschedule of checkIncorp running because you're in debug mode")
 			end
 		elseif not combatFound and incorporealCounting then
 			incorporealCounting = false
@@ -101,13 +99,11 @@ local function checkForCombat(self)
 		if combatFound and not afflictedCounting then
 			afflictedCounting = true
 			timerAfflictedCD:Resume()
-			if DBM.Options.DebugMode then
-				local afflictRemaining = timerAfflictedCD:GetRemaining()
-				if afflictRemaining and afflictRemaining > 0 then--Shouldn't be 0, unless a player clicked it off, in which case we can't reschedule
-					self:Unschedule(checkAfflicted)
-					self:Schedule(afflictRemaining+5, checkAfflicted, self)
-					DBM:Debug("Experimental reschedule of checkAfflicted running because you're in debug mode")
-				end
+			local afflictRemaining = timerAfflictedCD:GetRemaining()
+			if afflictRemaining and afflictRemaining > 0 then--Shouldn't be 0, unless a player clicked it off, in which case we can't reschedule
+				self:Unschedule(checkAfflicted)
+				self:Schedule(afflictRemaining+5, checkAfflicted, self)
+				DBM:Debug("Experimental reschedule of checkAfflicted running because you're in debug mode")
 			end
 		elseif not combatFound and afflictedCounting then
 			afflictedCounting = false

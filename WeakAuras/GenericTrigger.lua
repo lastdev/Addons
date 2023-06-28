@@ -1674,10 +1674,10 @@ function GenericTrigger.Add(data, region)
   end
 
   if warnAboutCLEUEvents then
-    Private.AuraWarnings.UpdateWarning(data.uid, "spamy_event_warning", "warning",
+    Private.AuraWarnings.UpdateWarning(data.uid, "spammy_event_warning", "warning",
                 L["COMBAT_LOG_EVENT_UNFILTERED without a filter is generally advised against as it’s very performance costly.\nFind more information:\nhttps://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events"])
   else
-    Private.AuraWarnings.UpdateWarning(data.uid, "spamy_event_warning")
+    Private.AuraWarnings.UpdateWarning(data.uid, "spammy_event_warning")
   end
 end
 
@@ -2988,7 +2988,7 @@ do
     spellCdsCharges:HandleSpell(id, startTimeCharges, durationCharges, modRateCharges)
 
     if spellDetails[id].override then
-      -- If this spell is overriden and the option is on, track the overriden spell too
+      -- If this spell is overridden and the option is on, track the overridden spell too
       if spellDetails[id].override ~= id then
         WeakAuras.WatchSpellCooldown(spellDetails[id].override, false, false)
       end
@@ -3364,11 +3364,8 @@ do
         end
       end
       WeakAuras.ScanEvents("DBM_TimerUpdate", id)
-    elseif event == "DBM_SetStage" then
-      local mod, modId, stage, encounterId, stageTotal = ...
-      currentStage = stage
-      currentStageTotal = stageTotal
-      WeakAuras.ScanEvents("DBM_SetStage", ...)
+    elseif event == "DBM_SetStage" or event == "DBM_Pull" or event == "DBM_Wipe" or event == "DBM_Kill" then
+      WeakAuras.ScanEvents("DBM_SetStage")
     else -- DBM_Announce
       WeakAuras.ScanEvents(event, ...)
     end
@@ -3414,7 +3411,10 @@ do
   end
 
   function WeakAuras.GetDBMStage()
-    return currentStage, currentStageTotal
+    if DBM then
+      return DBM:GetStage()
+    end
+    return 0, 0
   end
 
   function WeakAuras.GetDBMTimerById(id)
@@ -3603,6 +3603,9 @@ do
       local addon, stage = ...
       currentStage = stage
       WeakAuras.ScanEvents("BigWigs_SetStage", ...)
+    elseif event == "BigWigs_OnBossWipe" or event == "BigWigs_OnBossWin" then
+      currentStage = 0
+      WeakAuras.ScanEvents("BigWigs_SetStage", ...)
     end
   end
 
@@ -3613,6 +3616,18 @@ do
     if BigWigsLoader then
       BigWigsLoader.RegisterMessage(WeakAuras, event, bigWigsEventCallback)
       registeredBigWigsEvents[event] = true
+      if event == "BigWigs_SetStage" then
+        -- on init of BigWigs_SetStage callback, we want to fetch currentStage in case we are already in an encounter when this is run
+        if BigWigs and BigWigs.IterateBossModules then
+          local stage = 0
+          for _, module in BigWigs:IterateBossModules() do
+            if module:IsEngaged() then
+              stage = math.max(stage, module:GetStage() or 1)
+            end
+          end
+          currentStage = stage
+        end
+      end
     end
   end
 

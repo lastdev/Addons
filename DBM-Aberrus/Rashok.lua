@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2525, "DBM-Aberrus", nil, 1208)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230605200222")
+mod:SetRevision("20230620070249")
 mod:SetCreatureID(201320)
 mod:SetEncounterID(2680)
 mod:SetUsedIcons(1)
@@ -77,6 +77,7 @@ mod.vb.shadowflameCount = 0
 local overchargedStacks = {}
 
 function mod:OnCombatStart(delay)
+	self:SetStage(1)
 	table.wipe(overchargedStacks)
 	self.vb.slamCount = 0
 	self.vb.doomCount = 0
@@ -272,6 +273,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			DBM.InfoFrame:UpdateTable(overchargedStacks)
 		end
 	elseif spellId == 401419 then
+		self:SetStage(0)--I don't nessesarily agree with this, but needed for WA compatability.
 		warnSiphonEnergyRemoved:Show(args.destName)
 		self.vb.slamCount = 0
 		self.vb.doomCount = 0

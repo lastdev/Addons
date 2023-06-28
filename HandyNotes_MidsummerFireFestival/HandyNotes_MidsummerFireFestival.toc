@@ -1,0 +1,37 @@
+## Interface: 100100
+## Version: 1.07
+## Author: Taraezor
+## IconTexture: Interface\Icons\Inv_summerfest_firespirit
+## Title: Midsummer Fire Festival
+## Title-deDE: Sonnenwendfest
+## Title-esES: Festival del Fuego del Solsticio de Verano
+## Title-esMX: Festival del Fuego del Solsticio de Verano
+## Title-frFR: Fête du Feu du solstice d'été
+## Title-itIT: Fuochi di Mezza Estate
+## Title-koKR: 한여름 불꽃축제
+## Title-ptBR: Festival da Lua
+## Title-ptPT: Festival da Lua
+## Title-ruRU: Огненный Солнцеворот
+## Title-zhCN: 仲夏火焰节
+## Title-zhTW: 仲夏火焰節
+## Notes: Helps you with the |cFFFDBD01Midsummer Fire Festival|r world event
+## Notes-deDE: Hilft bei der |cFFFDBD01Sonnenwendfest|r 
+## Notes-esES: Ayuda con el suceso mundial |cFFFDBD01Festival del Fuego del Solsticio de Verano|r
+## Notes-esMX: Ayuda con el suceso mundial |cFFFDBD01Festival del Fuego del Solsticio de Verano|r
+## Notes-frFR: Aide à l'événement mondial |cFFFDBD01Fête du Feu du solstice d'été|r
+## Notes-itIT: Assiste con l'evento mondiale |cFFFDBD01Fuochi di Mezza Estate|r
+## Notes-koKR: |cFFFDBD01한여름 불꽃축제|r 대규모 이벤트 지원
+## Notes-ptBR: Auxilia no evento mundial |cFFFDBD01Festival do Fogo do Solstício|r
+## Notes-ptPT: Auxilia no evento mundial |cFFFDBD01Festival do Fogo do Solstício|r
+## Notes-ruRU: Помогает с игровое событие |cFFFDBD01Огненный Солнцеворот|r
+## Notes-zhCN: 协助 |cFFFDBD01仲夏火焰节|r 活动
+## Notes-zhTW: 協助 |cFFFDBD01仲夏火焰節|r 活動
+## X-Category: Map & Minimap
+## X-Curse-Project-ID: 878385
+## X-WoWI-ID: 00000
+## RequiredDeps: HandyNotes
+## SavedVariables: HandyNotes_MidsummerFireFestivalDB
+## AddonCompartmentFunc: HandyNotes_MidsummerFireFestival_OnAddonCompartmentClick
+
+Core.lua
+Data.lua

@@ -772,4 +772,5 @@ scaling[11] = 0.6
 scaling[12] = 0.6
 scaling[13] = 0.6
 scaling[14] = 0.6
+scaling[15] = 0.6
 scaling[16] = 0.6

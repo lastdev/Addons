@@ -827,6 +827,12 @@ GTFO.SpellID["192708"] = {
 -- * Neltharion's Lair *
 -- *********************
 
+GTFO.SpellID["188169"] = {
+  --desc = "Razor Shards (Rokmora)";
+  sound = 3;
+  tankSound = 0;
+};
+
 GTFO.SpellID["202089"] = {
   --desc = "Scorch (Burning Geode)";
   sound = 3;
@@ -851,6 +857,13 @@ GTFO.SpellID["226406"] = {
 GTFO.SpellID["183100"] = {
   --desc = "Avalanche (Mightstone Breaker)";
   sound = 3;
+};
+
+GTFO.SpellID["226296"] = {
+  --desc = "Piercing Shards (Vileshard Hulk)";
+  applicationOnly = true;
+  sound = 3;
+  tankSound = 0;
 };
 
 

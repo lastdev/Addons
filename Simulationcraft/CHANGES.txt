@@ -1,22 +1,10 @@
-lightweight tag f0acf1d58d2c00df7348c6fb8b03c372d6c4339f 10.1.0-05
+lightweight tag 334ce98d228877b94e5ddd8363ac99ac1518e361 10.1.0-10
 Author:	Dave Hendler <sollaires@gmail.com>
-Date:	Thu Jun 1 10:22:09 2023 -0700
+Date:	Sun Jun 25 21:56:10 2023 -0700
 
-commit f0acf1d58d2c00df7348c6fb8b03c372d6c4339f
+commit 334ce98d228877b94e5ddd8363ac99ac1518e361
 Author: Dave Hendler <sollaires@gmail.com>
-Date:   Thu Jun 1 10:22:09 2023 -0700
+Date:   Sun Jun 25 21:56:10 2023 -0700
 
-    Add a bit more data to a warning message
-
-commit f3f198da8ed94f2a107b24b0c5dd6c077285cffb
-Author: Dave Hendler <sollaires@gmail.com>
-Date:   Wed May 31 13:26:13 2023 -0700
-
-    Comment on the pipe escaping
-
-commit 3d421d303081b77a90ed6d16faf76982d7d712ad
-Author: Dave Hendler <sollaires@gmail.com>
-Date:   Wed May 31 13:24:54 2023 -0700
-
-    Fix checksum when loadout name uses the pipe | character
+    Handle some region changes for PTR
 

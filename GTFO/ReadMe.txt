@@ -1906,3 +1906,24 @@ Change Log:
 * Added support for custom ignoring spells
 * Added Dragonflight spells (world)
 * Added Dragonflight spells for Aberrus, the Shadowed Crucible
+
+5.3.1
+* Added Dragonflight spells (world)
+* Added Dragonflight spells for Aberrus, the Shadowed Crucible
+* Added Dragonflight spells for Vortex Pinnacle
+* Added Dragonflight spells for Brackenhide Hollow
+* Fixed BFA spells for The Underrot
+* Added BFA spells for The Underrot
+* Fixed BFA spells for Freehold
+
+5.3.2
+* Added Dragonflight spells (world)
+* Added Dragonflight spells for Aberrus, the Shadowed Crucible
+* Added Dragonflight spells for Vortex Pinnacle
+* Added Dragonflight spells for Halls of Infusion
+* Fixed BFA spells for The Underrot
+* Added Legion spells for Neltharion's Lair
+
+5.3.3
+* Added Dragonflight spells (world)
+* Fixed Wrath spells for Trial of the Grand Crusader (thanks jorvanus)

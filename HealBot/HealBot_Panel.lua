@@ -363,12 +363,12 @@ function HealBot_Panel_SethbTopRole(Role)
         hbRole[HEALBOT_WORD_HEALER]=2
         hbRole[HEALBOT_WORD_DPS]=7
     else
-        HealBot_AddChat(HEALBOT_CHAT_ADDONID..Role..HEALBOT_CHAT_TOPROLEERR)
+        HealBot_AddChat(Role..HEALBOT_CHAT_TOPROLEERR)
         return
     end
     if HealBot_Globals.TopRole~=Role then
         HealBot_Globals.TopRole=Role
-        HealBot_AddChat(HEALBOT_CHAT_ADDONID..HEALBOT_CHAT_NEWTOPROLE..Role)
+        HealBot_AddChat(HEALBOT_CHAT_NEWTOPROLE..Role)
         HealBot_Timers_Set("INIT","RefreshPartyNextRecalcAll")
     end
 end
@@ -598,6 +598,14 @@ function HealBot_Panel_UnitRole(unit,guid)
         hbPanel_dataRoles[unit]=role
     end
     return role
+end
+
+function HealBot_Panel_UnitRoleDefault(unit)
+    if hbPanel_dataRoles[unit] and (hbPanel_dataRoles[unit]=="TANK" or hbPanel_dataRoles[unit]=="HEALER") then
+        return hbPanel_dataRoles[unit]
+    else
+        return "DAMAGER"
+    end
 end
 
 function HealBot_Action_SetClassIconTexture(button)
@@ -895,7 +903,7 @@ function HealBot_Panel_ToggleTestBars()
     HealBot_Action_setLuVars("resetSkin", true)
     HealBot_Action_setLuVars("resetIndicator", true)
     HealBot_Action_setLuVars("resetText", true)
-    HealBot_Action_setLuVars("resetAux", true)
+    --HealBot_Action_setLuVars("resetAux", true)
     HealBot_Action_ResetSkinAllButtons()
     if HealBot_setTestBars then
         HealBot_setTestBars=false

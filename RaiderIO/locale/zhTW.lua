@@ -147,8 +147,7 @@ L["PREVIOUS_SCORE"] = "過往賽季最佳分數 (%s)"
 L["PROFILE_BEST_RUNS"] = "地城最高紀錄"
 L["PROFILE_TOOLTIP_ANCHOR_TOOLTIP"] = "鎖定Raider.IO設定檔框架或啟用自動定位以隱藏此定位點。"
 L["PROVIDER_NOT_LOADED"] = "|cffFF0000警告：|r |cffFFFFFF%s|r無法找到當前陣營的數據。請檢查您的|cffFFFFFF/raiderio|r設置並啟用|cffFFFFFF%s|r的數據提示。"
---[[Translation missing --]]
---[[ L["PVP_DATA_HEADER"] = ""--]] 
+L["PVP_DATA_HEADER"] = "Raider.IO PvP 設定檔"
 L["RAID_BOSS_ATSC_1"] = "『地獄鍛造者』卡扎拉"
 L["RAID_BOSS_ATSC_2"] = "融合體之室"
 L["RAID_BOSS_ATSC_3"] = "被遺忘的實驗"
@@ -250,14 +249,10 @@ L["RELOAD_LATER"] = "等會才重載"
 L["RELOAD_NOW"] = "現在就重載"
 L["RELOAD_RWF_MODE_BUTTON"] = "儲存"
 L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = "單擊以將日誌保存到儲存檔。這將導致您的界面重新載入。"
---[[Translation missing --]]
---[[ L["REPLAY_SETTINGS_TOOLTIP"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_STYLE_TITLE_MDI"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_STYLE_TITLE_MODERN"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_STYLE_TITLE_MODERN_COMPACT"] = ""--]] 
+L["REPLAY_SETTINGS_TOOLTIP"] = "設定"
+L["REPLAY_STYLE_TITLE_MDI"] = "MDI"
+L["REPLAY_STYLE_TITLE_MODERN"] = "現在"
+L["REPLAY_STYLE_TITLE_MODERN_COMPACT"] = "現在 (精簡)"
 L["RWF_MINIBUTTON_TOOLTIP"] = "每當有未決戰利品時左鍵點擊。這將導致您的界面重新載入。右鍵點擊以打開競賽世界第一框架。"
 L["RWF_SUBTITLE_LOGGING_FILTERED_LOOT"] = "（記錄相關項目）"
 L["RWF_SUBTITLE_LOGGING_LOOT"] = "（記錄戰利品）"

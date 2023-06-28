@@ -1,11 +1,11 @@
 ## Interface: 11403
-## Version: v10.1.0
+## Version: v10.1.1
 ## Title: BadBoy_Ignore
 ## Notes: A simple and infinite ignore list to block chat from players.
 ## Notes-frFR: A simple and infinite ignore list to block chat from players.
 ## Notes-deDE: A simple and infinite ignore list to block chat from players.
 ## Notes-ptBR: A simple and infinite ignore list to block chat from players.
-## Notes-ruRU: A simple and infinite ignore list to block chat from players.
+## Notes-ruRU: Простой и бесконечный список игнорирования для блокировки чата от игроков.
 ## Notes-zhCN: A simple and infinite ignore list to block chat from players.
 ## Notes-zhTW: A simple and infinite ignore list to block chat from players.
 ## Notes-koKR: A simple and infinite ignore list to block chat from players.
