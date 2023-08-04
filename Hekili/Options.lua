@@ -36,6 +36,7 @@ local NewFeature = "|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0|
 local GreenPlus = "Interface\\AddOns\\Hekili\\Textures\\GreenPlus"
 local RedX = "Interface\\AddOns\\Hekili\\Textures\\RedX"
 local BlizzBlue = "|cFF00B4FF"
+local Bullet = AtlasToString( "characterupdate_arrow-bullet-point" )
 local ClassColor = C_ClassColor.GetClassColor( class.file )
 
 
@@ -234,7 +235,7 @@ local displayTemplate = {
         coloring = "default",
         color = { 0.95, 0.95, 0.32, 1 },
 
-        highlight = true,
+        highlight = true
     },
 
     flash = {
@@ -271,6 +272,7 @@ local displayTemplate = {
     empowerment = {
         enabled = true,
         queued = true,
+        glow = true,
 
         align = "CENTER",
         anchor = "BOTTOM",
@@ -2318,7 +2320,7 @@ do
                                 desc = "If enabled, the addon will apply the default highlight when the first recommended item/ability is currently queued.",
                                 width = "full",
                                 order = 11
-                            }
+                            },
                         },
                     },
 
@@ -2598,7 +2600,7 @@ do
                     empowerment = {
                         type = "group",
                         name = NewFeature .. "Empowerment",
-                        desc = "Empowerment stages are shown with additional text placed on the recommendation icon.",
+                        desc = "Empowerment stages are shown with additional text placed on the recommendation icon and can glow upon reaching the desired stage.",
                         order = 9.1,
                         hidden = function()
                             return class.file ~= "EVOKER"
@@ -2621,10 +2623,18 @@ do
                                 disabled = function () return data.empowerment.enabled == false end,
                             },
 
+                            glow = {
+                                type = "toggle",
+                                name = "Glow when Empowered",
+                                desc = "If enabled, the ability will glow upon reaching the desired empowerment stage.",
+                                order = 2.5,
+                                width = "full",
+                            },
+
                             position = {
                                 type = "group",
                                 inline = true,
-                                name = function( info ) rangeIcon( info ); return "Position" end,
+                                name = function( info ) rangeIcon( info ); return "Text Position" end,
                                 order = 3,
                                 args = {
                                     anchor = {
@@ -6187,7 +6197,7 @@ do
                                         -- Hekili:EmbedPackOptions()
                                         ACD:SelectGroup( "Hekili", "packs" )
                                     end,
-                                    hidden = data.builtIn
+                                    hidden = function() return data.builtIn and not Hekili.Version:sub(1, 3) == "Dev" end
                                 },
 
                                 lb02 = {
@@ -6560,7 +6570,11 @@ do
                                                 end
 
                                                 if entry.empower_to then
-                                                    action = action .. " (" .. entry.empower_to .. ")"
+                                                    if entry.empower_to == "max_empower" then
+                                                        action = action .. "(Max)"
+                                                    else
+                                                        action = action .. " (" .. entry.empower_to .. ")"
+                                                    end
                                                 end
 
                                                 if desc then
@@ -6732,9 +6746,11 @@ do
                                                         local list = {}
 
                                                         for k, v in pairs( class.abilityList ) do
-                                                            insert( list, {
-                                                                k, class.abilities[ k ].name or v or k
-                                                            } )
+                                                            if class.abilities[ k ] then
+                                                                insert( list, {
+                                                                    k, class.abilities[ k ].name or v or k
+                                                                } )
+                                                            end
                                                         end
 
                                                         sort( list, function( a, b ) return a[2] < b[2] end )
@@ -6851,7 +6867,7 @@ do
                                                         [2] = "II",
                                                         [3] = "III",
                                                         [4] = "IV",
-                                                        maximum = "Max"
+                                                        max_empower = "Max"
                                                     },
                                                     hidden = function ()
                                                         local e = GetListEntry( pack )
@@ -7507,7 +7523,7 @@ do
         local self = Hekili
         local p = self.DB.profile
         local n = #info
-        local bind, option = info[ 2 ], info[ n ]
+        local bind, option = info[ n - 1 ], info[ n ]
 
         local toggle = p.toggles[ bind ]
         if not toggle then return end
@@ -7547,7 +7563,7 @@ do
         local self = Hekili
         local p = Hekili.DB.profile
         local n = #info
-        local bind, option = info[2], info[ n ]
+        local bind, option = info[ n - 1 ], info[ n ]
 
         local toggle = bind and p.toggles[ bind ]
         if not toggle then return end
@@ -7562,55 +7578,69 @@ do
         if not db then return end
 
         db.args.toggles = db.args.toggles or {
-            type = 'group',
-            name = 'Toggles',
+            type = "group",
+            name = "Toggles",
+            desc = "Toggles are keybindings that can be used to control which abilities may be recommended and where they are displayed.",
             order = 20,
+            childGroups = "tab",
             get = GetToggle,
             set = SetToggle,
             args = {
-                info = {
-                    type = "description",
-                    name = "Toggles are keybindings that you can use to direct the addon's recommendations and how they are presented.",
-                    order = 0.5,
-                    fontSize = "medium",
-                },
-
                 cooldowns = {
                     type = "group",
-                    name = "",
-                    inline = true,
+                    name = "Damage Cooldowns",
+                    desc = "Toggle Major and Minor Cooldowns to ensure they are recommended at ideal times.",
                     order = 2,
                     args = {
                         key = {
                             type = "keybinding",
-                            name = "Cooldowns",
-                            desc = "Set a key to toggle cooldown recommendations on/off.",
+                            name = "Major Cooldowns",
+                            desc = "Set a key to toggle recommendations of Major Cooldowns on or off.",
                             order = 1,
                         },
 
                         value = {
                             type = "toggle",
-                            name = "Show Cooldowns",
-                            desc = "If checked, abilities marked as cooldowns can be recommended.",
+                            name = "Enable Major Cooldowns",
+                            desc = "If checked, abilities and items that require the |cFFFFD100Major Cooldowns|r toggle can be recommended.\n\n"
+                                .. "This toggle generally applies to major damage abilities with cooldowns of 60 seconds or greater.\n\n"
+                                .. "Abilities may be added/removed from this toggle in |cFFFFD100Abilities|r and/or |cFFFFD100Gear and Items|r sections.",
                             order = 2,
+                            width = 2,
+                        },
+
+                        cdLineBreak1 = {
+                            type = "description",
+                            name = "",
+                            width = "full",
+                            order = 2.1
+                        },
+
+                        cdIndent1 = {
+                            type = "description",
+                            name = "",
+                            width = 1,
+                            order = 2.2
                         },
 
                         separate = {
                             type = "toggle",
-                            name = "Show Separately",
-                            desc = "If checked, cooldown abilities will be shown separately in your Cooldowns Display.\n\n" ..
-                                "This is an experimental feature and may not work well for some specializations.",
+                            name = format( "Show in Separate %s Cooldowns Display", AtlasToString( "chromietime-32x32" ) ),
+                            desc = format( "If checked, abilities controlled by this toggle will be shown separately in your |W%s |cFFFFD100Major Cooldowns|r|w display "
+                                .. "when the toggle is enabled.\n\n"
+                                .. "This is an experimental feature and may not work well for some specializations.", AtlasToString( "chromietime-32x32" ) ),
+                            width = 2,
                             order = 3,
                         },
 
-                        lineBreak = {
+                        cdLineBreak2 = {
                             type = "description",
                             name = "",
                             width = "full",
                             order = 3.1,
                         },
 
-                        indent = {
+                        cdIndent2 = {
                             type = "description",
                             name = "",
                             width = 1,
@@ -7619,394 +7649,639 @@ do
 
                         override = {
                             type = "toggle",
-                            name = "Bloodlust Override",
-                            desc = "If checked, when Bloodlust (or similar effects) are active, the addon will recommend cooldown abilities even if Show Cooldowns is not checked.",
+                            name = format( "Active During %s", Hekili:GetSpellLinkWithTexture( 2825 ) ),
+                            desc = format( "If checked, when any %s effect is active, the |cFFFFD100Major Cooldowns|r toggle will be treated as enabled, even if unchecked.", Hekili:GetSpellLinkWithTexture( 2825 ) ),
+                            width = 2,
                             order = 4,
-                        }
-                    }
-                },
-
-                essences = {
-                    type = "group",
-                    name = "",
-                    inline = true,
-                    order = 2.1,
-                    args = {
-                        key = {
-                            type = "keybinding",
-                            name = "Minor CDs",
-                            desc = "Set a key to toggle Minor CDs recommendations on/off.",
-                            order = 1,
                         },
 
-                        value = {
+                        cdLineBreak3 = {
+                            type = "description",
+                            name = "",
+                            width = "full",
+                            order = 4.1,
+                        },
+
+                        cdIndent3 = {
+                            type = "description",
+                            name = "",
+                            width = 1,
+                            order = 4.2
+                        },
+
+                        infusion = {
                             type = "toggle",
-                            name = "Show Minor CDs",
-                            desc = "If checked, abilities from Minor CDs can be recommended.",
-                            order = 2,
+                            name = format( "Active During %s", Hekili:GetSpellLinkWithTexture( 10060 ) ),
+                            desc = format( "If checked, when %s is active, the |cFFFFD100Major Cooldowns|r toggle will be treated as enabled, even if unchecked.", Hekili:GetSpellLinkWithTexture( 10060 ) ),
+                            width = 2,
+                            order = 5
                         },
 
-                        override = {
-                            type = "toggle",
-                            name = "Cooldowns Override",
-                            desc = "If checked, when Cooldowns are enabled, the addon will also recommend Minor CDs even if Show Minor CDs is not checked.",
-                            order = 3,
-                        },
-                    }
-                },
+                        essences = {
+                            type = "group",
+                            name = "",
+                            inline = true,
+                            order = 6,
+                            args = {
+                                key = {
+                                    type = "keybinding",
+                                    name = "Minor Cooldowns",
+                                    desc = "Set a key to toggle recommendations of Minor Cooldowns on or off.",
+                                    width = 1,
+                                    order = 1,
+                                },
 
-                defensives = {
-                    type = "group",
-                    name = "",
-                    inline = true,
-                    order = 5,
-                    args = {
-                        key = {
-                            type = "keybinding",
-                            name = "Defensives",
-                            desc = "Set a key to toggle defensive/mitigation recommendations on/off.\n" ..
-                                "\nThis applies only to tanking specializations.",
-                            order = 1,
+                                value = {
+                                    type = "toggle",
+                                    name = "Enable Minor Cooldowns",
+                                    desc = "If checked, abilities that require the |cFFFFD100Minor Cooldowns|r toggle can be recommended.\n\n"
+                                        .. "This toggle generally applies to damage-boosting abilities with a cooldown of 30 to 60 seconds, or abilities that you may "
+                                        .. "want to control separately from your major cooldowns.\n\n"
+                                        .. "Abilities may be added/removed from this toggle in |cFFFFD100Abilities|r and/or |cFFFFD100Gear and Items|r sections.",
+                                    width = 2,
+                                    order = 2,
+                                },
+
+                                --[[ essLineBreak1 = {
+                                    type = "description",
+                                    name = "",
+                                    width = "full",
+                                    order = 2.1
+                                },
+
+                                essIndent1 = {
+                                    type = "description",
+                                    name = "",
+                                    width = 1,
+                                    order = 2.2
+                                },
+
+                                separate = {
+                                    type = "toggle",
+                                    name = format( "Show in Separate %s Cooldowns Display", AtlasToString( "chromietime-32x32" ) ),
+                                    desc = format( "If checked, abilities that require the |cFFFFD100Minor Cooldowns|r toggle will be shown separately in your |W%s "
+                                        .. "|cFFFFD100Cooldowns|r|w display when the toggle is enabled.\n\n"
+                                        .. "This is an experimental feature and may not work well for some specializations.", AtlasToString( "chromietime-32x32" ) ),
+                                    width = 2,
+                                    order = 3,
+                                }, ]]
+
+                                essLineBreak2 = {
+                                    type = "description",
+                                    name = "",
+                                    width = "full",
+                                    order = 3.1,
+                                },
+
+                                essIndent2 = {
+                                    type = "description",
+                                    name = "",
+                                    width = 1,
+                                    order = 3.2
+                                },
+
+                                override = {
+                                    type = "toggle",
+                                    name = "Auto-Enable when |cFFFFD100Major Cooldowns|r Active",
+                                    desc = "If checked, when |cFFFFD100Major Cooldowns|r are enabled (or auto-enabled), your |cFFFFD100Minor Cooldowns|r may be recommended even if the toggle itself is not checked.",
+                                    width = 2,
+                                    order = 4,
+                                },
+                            }
                         },
 
-                        value = {
-                            type = "toggle",
-                            name = "Show Defensives",
-                            desc = "If checked, abilities marked as defensives can be recommended.\n" ..
-                                "\nThis applies only to tanking specializations.",
-                            order = 2,
-                        },
+                        potions = {
+                            type = "group",
+                            name = "",
+                            inline = true,
+                            order = 7,
+                            args = {
+                                key = {
+                                    type = "keybinding",
+                                    name = "Potions",
+                                    desc = "Set a key to toggle recommendations of Potions on or off.",
+                                    order = 1,
+                                },
 
-                        separate = {
-                            type = "toggle",
-                            name = "Show Separately",
-                            desc = "If checked, defensive/mitigation abilities will be shown separately in your Defensives Display.\n" ..
-                                "\nThis applies only to tanking specializations.",
-                            order = 3,
-                        }
+                                value = {
+                                    type = "toggle",
+                                    name = "Enable Potions",
+                                    desc = "If checked, abilities that require the |cFFFFD100Potions|r toggle can be recommended.",
+                                    width = 2,
+                                    order = 2,
+                                },
+
+                                --[[ potLineBreak1 = {
+                                    type = "description",
+                                    name = "",
+                                    width = "full",
+                                    order = 2.1
+                                },
+
+                                potIndent1 = {
+                                    type = "description",
+                                    name = "",
+                                    width = 1,
+                                    order = 2.2
+                                },
+
+                                separate = {
+                                    type = "toggle",
+                                    name = format( "Show in Separate %s Cooldowns Display", AtlasToString( "chromietime-32x32" ) ),
+                                    desc = format( "If checked, abilities that require the |cFFFFD100Potions|r toggle will be shown separately in your |W%s "
+                                        .. "|cFFFFD100Cooldowns|r|w display when the toggle is enabled.\n\n"
+                                        .. "This is an experimental feature and may not work well for some specializations.", AtlasToString( "chromietime-32x32" ) ),
+                                    width = 2,
+                                    order = 3,
+                                }, ]]
+
+                                potLineBreak2 = {
+                                    type = "description",
+                                    name = "",
+                                    width = "full",
+                                    order = 3.1
+                                },
+
+                                potIndent3 = {
+                                    type = "description",
+                                    name = "",
+                                    width = 1,
+                                    order = 3.2
+                                },
+
+                                override = {
+                                    type = "toggle",
+                                    name = "Auto-Enable when |cFFFFD100Major Cooldowns|r Active",
+                                    desc = "If checked, when |cFFFFD100Major Cooldowns|r are enabled (or auto-enabled), your |cFFFFD100Potions|r may be recommended even if the toggle itself is not checked.",
+                                    width = 2,
+                                    order = 4,
+                                },
+                            }
+                        },
                     }
                 },
 
                 interrupts = {
                     type = "group",
-                    name = "",
-                    inline = true,
+                    name = "Interrupts and Defensives",
+                    desc = "Toggle Interrupts (and other utility) and Defensives as needed.",
                     order = 4,
                     args = {
                         key = {
                             type = "keybinding",
                             name = "Interrupts",
-                            desc = "Set a key to use for toggling interrupts on/off.",
+                            desc = "Set a key to toggle recommendations of Interrupts (or utility abilities) on or off.",
                             order = 1,
                         },
 
                         value = {
                             type = "toggle",
-                            name = "Show Interrupts",
-                            desc = "If checked, abilities marked as interrupts can be recommended.",
+                            name = "Enable Interrupts",
+                            desc = "If checked, abilities that require the |cFFFFD100Interrupts|r toggle can be recommended",
                             order = 2,
+                        },
+
+                        lb1 = {
+                            type = "description",
+                            name = "",
+                            width = "full",
+                            order = 2.1
+                        },
+
+                        indent1 = {
+                            type = "description",
+                            name = "",
+                            width = 1,
+                            order = 2.2,
                         },
 
                         separate = {
                             type = "toggle",
-                            name = "Show Separately",
-                            desc = "If checked, interrupt abilities will be shown separately in the Interrupts Display only (if enabled).",
+                            name = format( "Show in Separate %s Interrupts Display", AtlasToString( "voicechat-icon-speaker-mute" ) ),
+                            desc = format( "If checked, abilities that require the |cFFFFD100Interrupts|r toggle will be shown separately in your %s Interrupts display.",
+                                AtlasToString( "voicechat-icon-speaker-mute" ) ),
+                            width = 2,
                             order = 3,
-                        }
-                    }
-                },
-
-                potions = {
-                    type = "group",
-                    name = "",
-                    inline = true,
-                    order = 6,
-                    args = {
-                        key = {
-                            type = "keybinding",
-                            name = "Potions",
-                            desc = "Set a key to toggle potion recommendations on/off.",
-                            order = 1,
                         },
 
-                        value = {
-                            type = "toggle",
-                            name = "Show Potions",
-                            desc = "If checked, abilities marked as potions can be recommended.",
-                            order = 2,
-                        },
+                        defensives = {
+                            type = "group",
+                            name = "",
+                            inline = true,
+                            order = 4,
+                            args = {
+                                key = {
+                                    type = "keybinding",
+                                    name = "Defensives",
+                                    desc = "Set a key to toggle recommendations of Defensives on or off.\n\n"
+                                        .. "This toggle applies primarily to Tank specializations.",
+                                    order = 1,
+                                },
 
-                        override = {
-                            type = "toggle",
-                            name = "Cooldowns Override",
-                            desc = "If checked, when Cooldowns are enabled, the addon will also recommend Potions even if Show Potions is not checked.",
-                            order = 3,
+                                value = {
+                                    type = "toggle",
+                                    name = "Enable Defensives",
+                                    desc = "If checked, abilities that require the |cFFFFD100Defensives|r toggle can be recommended.\n\n"
+                                        .. "This toggle applies primarily to Tank specializations.",
+                                    order = 2,
+                                },
+
+                                lb1 = {
+                                    type = "description",
+                                    name = "",
+                                    width = "full",
+                                    order = 2.1
+                                },
+
+                                indent1 = {
+                                    type = "description",
+                                    name = "",
+                                    width = 1,
+                                    order = 2.2,
+                                },
+
+                                separate = {
+                                    type = "toggle",
+                                    name = format( "Show in Separate %s Defensives Display", AtlasToString( "nameplates-InterruptShield" ) ),
+                                    desc = format( "If checked, defensive/mitigation abilities will be shown separately in your |W%s |cFFFFD100Defensives|r|w display.\n\n"
+                                        .. "This toggle applies primarily to Tank specializations.", AtlasToString( "nameplates-InterruptShield" ) ),
+                                    width = 2,
+                                    order = 3,
+                                }
+                            }
                         },
                     }
                 },
 
                 displayModes = {
-                    type = "header",
-                    name = "Display Modes",
-                    order = 10,
-                },
-
-                mode = {
                     type = "group",
-                    inline = true,
-                    name = "",
-                    order = 10.1,
+                    name = "Display Control",
+                    desc = "Cycle through your preferred Display Modes using the keybinding you select.",
+                    order = 10,
                     args = {
-                        key = {
-                            type = 'keybinding',
-                            name = 'Display Mode',
-                            desc = "Pressing this binding will cycle your Display Mode through the options checked below.",
-                            order = 1,
-                            width = 1,
-                        },
+                        mode = {
+                            type = "group",
+                            inline = true,
+                            name = "",
+                            order = 10.1,
+                            args = {
+                                key = {
+                                    type = 'keybinding',
+                                    name = 'Display Mode',
+                                    desc = "Pressing this binding will cycle your Display Mode through the options checked below.",
+                                    order = 1,
+                                    width = 1,
+                                },
 
-                        value = {
-                            type = "select",
-                            name = "Current Display Mode",
-                            desc = "Select your current Display Mode.",
-                            values = {
-                                automatic = "Automatic",
-                                single = "Single-Target",
-                                aoe = "AOE (Multi-Target)",
-                                dual = "Fixed Dual Display",
-                                reactive = "Reactive Dual Display"
+                                value = {
+                                    type = "select",
+                                    name = "Select Display Mode",
+                                    desc = "Select your Display Mode.",
+                                    values = {
+                                        automatic = "Automatic",
+                                        single = "Single-Target",
+                                        aoe = "AOE (Multi-Target)",
+                                        dual = "Fixed Dual Display",
+                                        reactive = "Reactive Dual Display"
+                                    },
+                                    width = 1,
+                                    order = 1.02,
+                                },
+
+                                modeLB2 = {
+                                    type = "description",
+                                    name = "Select the |cFFFFD100Display Modes|r that you wish to use.  Each time you press your |cFFFFD100Display Mode|r keybinding, the addon will switch to the next checked mode.",
+                                    fontSize = "medium",
+                                    width = "full",
+                                    order = 2
+                                },
+
+                                automatic = {
+                                    type = "toggle",
+                                    name = "Automatic " .. BlizzBlue .. "(Default)|r",
+                                    desc = "If checked, the Display Mode toggle can select Automatic mode.\n\nThe Primary display shows recommendations based upon the detected number of enemies (based on your specialization's options).",
+                                    width = "full",
+                                    order = 3,
+                                },
+
+                                autoIndent = {
+                                    type = "description",
+                                    name = "",
+                                    width  = 0.15,
+                                    order = 3.1,
+                                },
+
+                                --[[ autoDesc = {
+                                    type = "description",
+                                    name = "Automatic mode uses the Primary display and makes recommendations based on the number of enemies automatically detected.",
+                                    width = 2.85,
+                                    order = 3.2,
+                                }, ]]
+
+                                autoDesc = {
+                                    type = "description",
+                                    name = format( "%s Uses Primary Display\n"
+                                        .. "%s Recommendations based on Targets Detected", Bullet, Bullet ),
+                                    fontSize = "medium",
+                                    width = 2.85,
+                                    order = 3.2
+                                },
+
+                                single = {
+                                    type = "toggle",
+                                    name = "Single-Target",
+                                    desc = "If checked, the Display Mode toggle can select Single-Target mode.\n\nThe Primary display shows recommendations as though you have one target (even if more targets are detected).",
+                                    width = "full",
+                                    order = 4,
+                                },
+
+                                singleIndent = {
+                                    type = "description",
+                                    name = "",
+                                    width  = 0.15,
+                                    order = 4.1,
+                                },
+
+                                --[[ singleDesc = {
+                                    type = "description",
+                                    name = "Single-Target mode uses the Primary display and makes recommendations as though you have a single target.  This mode can be useful when focusing down an enemy inside a larger group.",
+                                    width = 2.85,
+                                    order = 4.2,
+                                }, ]]
+
+                                singleDesc = {
+                                    type = "description",
+                                    name = format( "%s Uses Primary Display\n"
+                                        .. "%s Recommendations based on 1 Target\n"
+                                        .. "%s Useful when Focusing Damage on a High-Priority Enemy", Bullet, Bullet, Bullet ),
+                                    fontSize = "medium",
+                                    width = 2.85,
+                                    order = 4.2
+                                },
+
+                                aoe = {
+                                    type = "toggle",
+                                    name = "AOE (Multi-Target)",
+                                    desc = function ()
+                                        return format( "If checked, the Display Mode toggle can select AOE mode.\n\nThe Primary display shows recommendations as though you have at least |cFFFFD100%d|r targets (even if fewer are detected).\n\n" ..
+                                                        "The number of targets is set in your specialization's options.", self.DB.profile.specs[ state.spec.id ].aoe or 3 )
+                                    end,
+                                    width = "full",
+                                    order = 5,
+                                },
+
+                                aoeIndent = {
+                                    type = "description",
+                                    name = "",
+                                    width  = 0.15,
+                                    order = 5.1,
+                                },
+
+                                --[[ aoeDesc = {
+                                    type = "description",
+                                    name = function ()
+                                        return format( "AOE mode uses the Primary display and makes recommendations as though you have |cFFFFD100%d|r (or more) targets.", self.DB.profile.specs[ state.spec.id ].aoe or 3 )
+                                    end,
+                                    width = 2.85,
+                                    order = 5.2,
+                                }, ]]
+
+                                aoeDesc = {
+                                    type = "description",
+                                    name = function()
+                                        return format( "%s Uses Primary Display\n"
+                                        .. "%s Recommendations based on at least |cFFFFD100%d|r Targets\n", Bullet, Bullet, self.DB.profile.specs[ state.spec.id ].aoe or 3 )
+                                    end,
+                                    fontSize = "medium",
+                                    width = 2.85,
+                                    order = 5.2
+                                },
+
+                                dual = {
+                                    type = "toggle",
+                                    name = "Dual",
+                                    desc = function ()
+                                        return format( "If checked, the Display Mode toggle can select Dual mode.\n\nThe Primary display shows single-target recommendations and the AOE display shows recommendations for |cFFFFD100%d|r or more targets (even if fewer are detected).\n\n" ..
+                                                        "The number of AOE targets is set in your specialization's options.", self.DB.profile.specs[ state.spec.id ].aoe or 3 )
+                                    end,
+                                    width = "full",
+                                    order = 6,
+                                },
+
+                                dualIndent = {
+                                    type = "description",
+                                    name = "",
+                                    width  = 0.15,
+                                    order = 6.1,
+                                },
+
+                                --[[ dualDesc = {
+                                    type = "description",
+                                    name = function ()
+                                        return format( "Dual mode shows single-target recommendations in the Primary display and multi-target (|cFFFFD100%d|r or more enemies) recommendations in the AOE display.  Both displays are shown at all times.", self.DB.profile.specs[ state.spec.id ].aoe or 3 )
+                                    end,
+                                    width = 2.85,
+                                    order = 6.2,
+                                }, ]]
+
+                                dualDesc = {
+                                    type = "description",
+                                    name = function()
+                                        return format( "%s Uses Two Displays: Primary and AOE\n"
+                                        .. "%s Primary Display's Recommendations based on 1 Target\n"
+                                        .. "%s AOE Display's Recommendations based on at least |cFFFFD100%d|r Targets\n"
+                                        .. "%s Useful for Ranged Specializations using Damage-Based Target Detection\n", Bullet, Bullet, Bullet, self.DB.profile.specs[ state.spec.id ].aoe or 3, Bullet )
+                                    end,
+                                    fontSize = "medium",
+                                    width = 2.85,
+                                    order = 6.2
+                                },
+
+                                reactive = {
+                                    type = "toggle",
+                                    name = "Reactive Dual Display",
+                                    desc = function ()
+                                        return format( "If checked, the Display Mode toggle can select Reactive mode.\n\nThe Primary display shows single-target recommendations, while the AOE display remains hidden until/unless |cFFFFD100%d|r or more targets are detected.", self.DB.profile.specs[ state.spec.id ].aoe or 3 )
+                                    end,
+                                    width = "full",
+                                    order = 7,
+                                },
+
+                                reactiveIndent = {
+                                    type = "description",
+                                    name = "",
+                                    width  = 0.15,
+                                    order = 7.1,
+                                },
+
+                                --[[ reactiveDesc = {
+                                    type = "description",
+                                    name = function ()
+                                        return format( "Dual mode shows single-target recommendations in the Primary display and multi-target recommendations in the AOE display.  The Primary display is always active, while the AOE display activates only when |cFFFFD100%d|r or more targets are detected.", self.DB.profile.specs[ state.spec.id ].aoe or 3 )
+                                    end,
+                                    width = 2.85,
+                                    order = 7.2,
+                                },]]
+
+                                reactiveDesc = {
+                                    type = "description",
+                                    name = function() return format( "%s Uses Two Displays: Primary and AOE\n"
+                                        .. "%s Primary Display's Recommendations based on 1 Target\n"
+                                        .. "%s AOE Display Shown when |cFFFFD100%d|r+ Targets Detected", Bullet, Bullet, Bullet, self.DB.profile.specs[ state.spec.id ].aoe or 3 )
+                                    end,
+                                    fontSize = "medium",
+                                    width = 2.85,
+                                    order = 7.2
+                                },
                             },
-                            width = 2,
-                            order = 1.02,
-                        },
-
-                        modeLB2 = {
-                            type = "description",
-                            name = "Select the |cFFFFD100Display Modes|r that you wish to use.  Each time you press your |cFFFFD100Display Mode|r keybinding, the addon will switch to the next checked mode.",
-                            fontSize = "medium",
-                            width = "full",
-                            order = 1.03
-                        },
-
-                        automatic = {
-                            type = "toggle",
-                            name = "Automatic",
-                            desc = "If checked, the Display Mode toggle can select Automatic mode.\n\nThe Primary display shows recommendations based upon the detected number of enemies (based on your specialization's options).",
-                            width = 1.5,
-                            order = 1.1,
-                        },
-
-                        single = {
-                            type = "toggle",
-                            name = "Single-Target",
-                            desc = "If checked, the Display Mode toggle can select Single-Target mode.\n\nThe Primary display shows recommendations as though you have one target (even if more targets are detected).",
-                            width = 1.5,
-                            order = 1.2,
-                        },
-
-                        aoe = {
-                            type = "toggle",
-                            name = "AOE (Multi-Target)",
-                            desc = function ()
-                                return format( "If checked, the Display Mode toggle can select AOE mode.\n\nThe Primary display shows recommendations as though you have at least |cFFFFD100%d|r targets (even if fewer are detected).\n\n" ..
-                                                "The number of targets is set in your specialization's options.", self.DB.profile.specs[ state.spec.id ].aoe or 3 )
-                            end,
-                            width = 1.5,
-                            order = 1.3,
-                        },
-
-                        dual = {
-                            type = "toggle",
-                            name = "Fixed Dual Display",
-                            desc = function ()
-                                return format( "If checked, the Display Mode toggle can select Dual Display mode.\n\nThe Primary display shows single-target recommendations and the AOE display shows recommendations for |cFFFFD100%d|r or more targets (even if fewer are detected).\n\n" ..
-                                                "The number of AOE targets is set in your specialization's options.", self.DB.profile.specs[ state.spec.id ].aoe or 3 )
-                            end,
-                            width = 1.5,
-                            order = 1.4,
-                        },
-
-                        reactive = {
-                            type = "toggle",
-                            name = "Reactive Dual Display",
-                            desc = function ()
-                                return format( "If checked, the Display Mode toggle can select Reactive mode.\n\nThe Primary display shows single-target recommendations, while the AOE display remains hidden until/unless |cFFFFD100%d|r or more targets are detected.", self.DB.profile.specs[ state.spec.id ].aoe or 3 )
-                            end,
-                            width = 1.5,
-                            order = 1.5,
-                        },
-
-                        --[[ type = {
-                            type = "select",
-                            name = "Modes",
-                            desc = "Select the Display Modes that can be cycled using your Display Mode key.\n\n" ..
-                                "|cFFFFD100Auto vs. Single|r - Using only the Primary display, toggle between automatic target counting and single-target recommendations.\n\n" ..
-                                "|cFFFFD100Single vs. AOE|r - Using only the Primary display, toggle between single-target recommendations and AOE (multi-target) recommendations.\n\n" ..
-                                "|cFFFFD100Auto vs. Dual|r - Toggle between one display using automatic target counting and two displays, with one showing single-target recommendations and the other showing AOE recommendations.  This will use additional CPU.\n\n" ..
-                                "|cFFFFD100Reactive AOE|r - Use the Primary display for single-target recommendations, and when additional enemies are detected, show the AOE display.  (Disables Mode Toggle)",
-                            values = {
-                                AutoSingle = "Auto vs. Single",
-                                SingleAOE = "Single vs. AOE",
-                                AutoDual = "Auto vs. Dual",
-                                ReactiveDual = "Reactive AOE",
-                            },
-                            order = 2,
-                        }, ]]
-                    },
+                        }
+                    }
                 },
 
                 troubleshooting = {
-                    type = "header",
+                    type = "group",
                     name = "Troubleshooting",
+                    desc = "These keybindings help provide critical information when troubleshooting or reporting issues.",
                     order = 20,
-                },
-
-                pause = {
-                    type = "group",
-                    name = "",
-                    inline = true,
-                    order = 20.1,
                     args = {
-                        key = {
-                            type = 'keybinding',
-                            name = function () return Hekili.Pause and "Unpause" or "Pause" end,
-                            desc =  "Set a key to pause processing of your action lists. Your current display(s) will freeze, " ..
-                                    "and you can mouseover each icon to see information about the displayed action.\n\n" ..
-                                    "This will also create a Snapshot that can be used for troubleshooting and error reporting.",
+                        pause = {
+                            type = "group",
+                            name = "",
+                            inline = true,
                             order = 1,
+                            args = {
+                                key = {
+                                    type = 'keybinding',
+                                    name = function () return Hekili.Pause and "Unpause" or "Pause" end,
+                                    desc =  "Set a key to pause processing of your action lists. Your current display(s) will freeze, " ..
+                                            "and you can mouseover each icon to see information about the displayed action.\n\n" ..
+                                            "This will also create a Snapshot that can be used for troubleshooting and error reporting.",
+                                    order = 1,
+                                },
+                                value = {
+                                    type = 'toggle',
+                                    name = 'Pause',
+                                    order = 2,
+                                },
+                            }
                         },
-                        value = {
-                            type = 'toggle',
-                            name = 'Pause',
+
+                        snapshot = {
+                            type = "group",
+                            name = "",
+                            inline = true,
                             order = 2,
+                            args = {
+                                key = {
+                                    type = 'keybinding',
+                                    name = 'Snapshot',
+                                    desc = "Set a key to make a snapshot (without pausing) that can be viewed on the Snapshots tab.  This can be useful information for testing and debugging.",
+                                    order = 1,
+                                },
+                            }
                         },
                     }
                 },
 
-                snapshot = {
+                custom = {
                     type = "group",
-                    name = "",
-                    inline = true,
-                    order = 20.2,
-                    args = {
-                        key = {
-                            type = 'keybinding',
-                            name = 'Snapshot',
-                            desc = "Set a key to make a snapshot (without pausing) that can be viewed on the Snapshots tab.  This can be useful information for testing and debugging.",
-                            order = 1,
-                        },
-                    }
-                },
-
-                customHeader = {
-                    type = "header",
-                    name = "Custom",
+                    name = "Custom Toggles",
+                    desc = "These toggles allow for the creation of custom keybindings to control specific abilities.",
                     order = 30,
-                },
-
-                custom1 = {
-                    type = "group",
-                    name = "",
-                    inline = true,
-                    order = 30.1,
                     args = {
-                        key = {
-                            type = "keybinding",
-                            name = "Custom #1",
-                            desc = "Set a key to toggle your first custom set.",
+                        custom1 = {
+                            type = "group",
+                            name = "",
+                            inline = true,
                             order = 1,
-                        },
+                            args = {
+                                key = {
+                                    type = "keybinding",
+                                    name = "Custom #1",
+                                    desc = "Set a key to toggle your first custom set.",
+                                    width = 1,
+                                    order = 1,
+                                },
 
-                        value = {
-                            type = "toggle",
-                            name = "Show Custom #1",
-                            desc = "If checked, abilities linked to Custom #1 can be recommended.",
-                            order = 2,
-                        },
+                                value = {
+                                    type = "toggle",
+                                    name = "Enable Custom #1",
+                                    desc = "If checked, abilities linked to Custom #1 can be recommended.",
+                                    width = 2,
+                                    order = 2,
+                                },
 
-                        name = {
-                            type = "input",
-                            name = "Custom #1 Name",
-                            desc = "Specify a descriptive name for this custom toggle.",
-                            order = 3
-                        }
-                    }
-                },
+                                lb1 = {
+                                    type = "description",
+                                    name = "",
+                                    width = "full",
+                                    order = 2.1
+                                },
 
-                custom2 = {
-                    type = "group",
-                    name = "",
-                    inline = true,
-                    order = 30.2,
-                    args = {
-                        key = {
-                            type = "keybinding",
-                            name = "Custom #2",
-                            desc = "Set a key to toggle your second custom set.",
-                            order = 1,
-                        },
+                                indent1 = {
+                                    type = "description",
+                                    name = "",
+                                    width = 1,
+                                    order = 2.2
+                                },
 
-                        value = {
-                            type = "toggle",
-                            name = "Show Custom #2",
-                            desc = "If checked, abilities linked to Custom #2 can be recommended.",
-                            order = 2,
-                        },
-
-                        name = {
-                            type = "input",
-                            name = "Custom #2 Name",
-                            desc = "Specify a descriptive name for this custom toggle.",
-                            order = 3
-                        }
-                    }
-                },
-
-                --[[ specLinks = {
-                    type = "group",
-                    inline = true,
-                    name = "",
-                    order = 10,
-                    args = {
-                        header = {
-                            type = "header",
-                            name = "Specializations",
-                            order = 1,
-                        },
-
-                        specsInfo = {
-                            type = "description",
-                            name = "There may be additional toggles or settings for your specialization(s).  Use the buttons below to jump to that section.",
-                            order = 2,
-                            fontSize = "medium",
-                        },
-                    },
-                    hidden = function( info )
-                        local hide = true
-
-                        for i = 1, 4 do
-                            local id, name, desc = GetSpecializationInfo( i )
-                            if not id then break end
-
-                            local sName = lower( name )
-
-                            if db.plugins.specializations[ sName ] then
-                                db.args.toggles.args.specLinks.args[ sName ] = db.args.toggles.args.specLinks.args[ sName ] or {
-                                    type = "execute",
-                                    name = name,
-                                    desc = desc,
-                                    order = 5 + i,
-                                    func = function ()
-                                        ACD:SelectGroup( "Hekili", sName )
-                                    end,
+                                name = {
+                                    type = "input",
+                                    name = "Custom #1 Name",
+                                    desc = "Specify a descriptive name for this custom toggle.",
+                                    width = 2,
+                                    order = 3
                                 }
-                                hide = false
-                            end
-                        end
+                            }
+                        },
 
-                        return hide
-                    end,
-                } ]]
+                        custom2 = {
+                            type = "group",
+                            name = "",
+                            inline = true,
+                            order = 30.2,
+                            args = {
+                                key = {
+                                    type = "keybinding",
+                                    name = "Custom #2",
+                                    desc = "Set a key to toggle your second custom set.",
+                                    width = 1,
+                                    order = 1,
+                                },
+
+                                value = {
+                                    type = "toggle",
+                                    name = "Enable Custom #2",
+                                    desc = "If checked, abilities linked to Custom #2 can be recommended.",
+                                    width = 2,
+                                    order = 2,
+                                },
+
+                                lb1 = {
+                                    type = "description",
+                                    name = "",
+                                    width = "full",
+                                    order = 2.1
+                                },
+
+                                indent1 = {
+                                    type = "description",
+                                    name = "",
+                                    width = 1,
+                                    order = 2.2
+                                },
+
+                                name = {
+                                    type = "input",
+                                    name = "Custom #2 Name",
+                                    desc = "Specify a descriptive name for this custom toggle.",
+                                    width = 2,
+                                    order = 3
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     end
@@ -10262,41 +10537,43 @@ do
     }
 
     local expressions = {
-        { "stealthed"                                   , "stealthed.rogue"                 },
-        { "rtb_buffs%.normal"                           , "rtb_buffs_normal"                },
-        { "rtb_buffs%.shorter"                          , "rtb_buffs_shorter"               },
-        { "rtb_buffs%.longer"                           , "rtb_buffs_longer"                },
-        { "rtb_buffs%.will_lose%.([%w_]+)"              , "rtb_buffs_will_lose_buff.%1"     },
-        { "rtb_buffs%.will_lose"                        , "rtb_buffs_will_lose"             },
-        { "rtb_buffs%.total"                            , "rtb_buffs"                       },
-        { "cooldown"                                    , "action_cooldown"                 },
-        { "covenant%.([%w_]+)%.enabled"                 , "covenant.%1"                     },
-        { "talent%.([%w_]+)"                            , "talent.%1.enabled"               },
-        { "legendary%.([%w_]+)"                         , "legendary.%1.enabled"            },
-        { "runeforge%.([%w_]+)"                         , "runeforge.%1.enabled"            },
-        { "rune_word%.([%w_]+)"                         , "buff.rune_word_%1.up"            },
-        { "rune_word%.([%w_]+)%.enabled"                , "buff.rune_word_%1.up"            },
-        { "conduit%.([%w_]+)"                           , "conduit.%1.enabled"              },
-        { "soulbind%.([%w_]+)"                          , "soulbind.%1.enabled"             },
-        { "pet.[%w_]+%.([%w_]+)%.([%w%._]+)"            , "%1.%2"                           },
-        { "essence%.([%w_]+).rank(%d)"                  , "essence.%1.rank>=%2"             },
-        { "target%.1%.time_to_die"                      , "time_to_die"                     },
-        { "time_to_pct_(%d+)%.remains"                  , "time_to_pct_%1"                  },
-        { "trinket%.(%d)%.([%w%._]+)"                   , "trinket.t%1.%2"                  },
-        { "trinket%.([%w_]+)%.cooldown"                 , "trinket.%1.cooldown.duration"    },
-        { "trinket%.([%w_]+)%.proc%.([%w_]+)%.duration" , "trinket.%1.buff_duration"        },
-        { "trinket%.([%w_]+)%.proc%.([%w_]+)%.[%w_]+"   , "trinket.%1.has_use_buff"         },
-        { "trinket%.([%w_]+)%.has_buff%.([%w_]+)"       , "trinket.%1.has_use_buff"         },
-        { "trinket%.([%w_]+)%.has_use_buff%.([%w_]+)"   , "trinket.%1.has_use_buff"         },
-        { "min:([%w_]+)"                                , "%1"                              },
-        { "position_back"                               , "true"                            },
-        { "max:(%w_]+)"                                 , "%1"                              },
-        { "incanters_flow_time_to%.(%d+)"               , "incanters_flow_time_to_%.%1.any" },
-        { "exsanguinated%.([%w_]+)"                     , "debuff.%1.exsanguinated"         },
-        { "time_to_sht%.(%d+)%.plus"                    , "time_to_sht_plus.%1"             },
-        { "target"                                      , "target.unit"                     },
-        { "player"                                      , "player.unit"                     },
-        { "gcd"                                         , "gcd.max"                         },
+        { "stealthed"                                       , "stealthed.rogue"                         },
+        { "rtb_buffs%.normal"                               , "rtb_buffs_normal"                        },
+        { "rtb_buffs%.shorter"                              , "rtb_buffs_shorter"                       },
+        { "rtb_buffs%.longer"                               , "rtb_buffs_longer"                        },
+        { "rtb_buffs%.will_lose%.([%w_]+)"                  , "rtb_buffs_will_lose_buff.%1"             },
+        { "rtb_buffs%.will_lose"                            , "rtb_buffs_will_lose"                     },
+        { "rtb_buffs%.total"                                , "rtb_buffs"                               },
+        { "hyperthread_wristwraps%.([%w_]+)%.first_remains" , "hyperthread_wristwraps.first_remains.%1" },
+        { "hyperthread_wristwraps%.([%w_]+)%.count"         , "hyperthread_wristwraps.%1"               },
+        { "cooldown"                                        , "action_cooldown"                         },
+        { "covenant%.([%w_]+)%.enabled"                     , "covenant.%1"                             },
+        { "talent%.([%w_]+)"                                , "talent.%1.enabled"                       },
+        { "legendary%.([%w_]+)"                             , "legendary.%1.enabled"                    },
+        { "runeforge%.([%w_]+)"                             , "runeforge.%1.enabled"                    },
+        { "rune_word%.([%w_]+)"                             , "buff.rune_word_%1.up"                    },
+        { "rune_word%.([%w_]+)%.enabled"                    , "buff.rune_word_%1.up"                    },
+        { "conduit%.([%w_]+)"                               , "conduit.%1.enabled"                      },
+        { "soulbind%.([%w_]+)"                              , "soulbind.%1.enabled"                     },
+        { "pet.[%w_]+%.([%w_]+)%.([%w%._]+)"                , "%1.%2"                                   },
+        { "essence%.([%w_]+).rank(%d)"                      , "essence.%1.rank>=%2"                     },
+        { "target%.1%.time_to_die"                          , "time_to_die"                             },
+        { "time_to_pct_(%d+)%.remains"                      , "time_to_pct_%1"                          },
+        { "trinket%.(%d)%.([%w%._]+)"                       , "trinket.t%1.%2"                          },
+        { "trinket%.([%w_]+)%.cooldown"                     , "trinket.%1.cooldown.duration"            },
+        { "trinket%.([%w_]+)%.proc%.([%w_]+)%.duration"     , "trinket.%1.buff_duration"                },
+        { "trinket%.([%w_]+)%.proc%.([%w_]+)%.[%w_]+"       , "trinket.%1.has_use_buff"                 },
+        { "trinket%.([%w_]+)%.has_buff%.([%w_]+)"           , "trinket.%1.has_use_buff"                 },
+        { "trinket%.([%w_]+)%.has_use_buff%.([%w_]+)"       , "trinket.%1.has_use_buff"                 },
+        { "min:([%w_]+)"                                    , "%1"                                      },
+        { "position_back"                                   , "true"                                    },
+        { "max:(%w_]+)"                                     , "%1"                                      },
+        { "incanters_flow_time_to%.(%d+)"                   , "incanters_flow_time_to_%.%1.any"         },
+        { "exsanguinated%.([%w_]+)"                         , "debuff.%1.exsanguinated"                 },
+        { "time_to_sht%.(%d+)%.plus"                        , "time_to_sht_plus.%1"                     },
+        { "target"                                          , "target.unit"                             },
+        { "player"                                          , "player.unit"                             },
+        { "gcd"                                             , "gcd.max"                                 },
 
         { "equipped%.(%d+)", nil, function( item )
             item = tonumber( item )
@@ -10600,7 +10877,7 @@ do
             if result.target_if then result.target_if = result.target_if:gsub( "min:", "" ):gsub( "max:", "" ) end
 
             -- As of 11/11/2022 (11/11/2022 in Europe), empower_to is purely a number 1-4.
-            if result.empower_to then result.empower_to = tonumber( result.empower_to ) end
+            if result.empower_to and ( result.empower_to == "max" or result.empower_to == "maximum" ) then result.empower_to = "max_empower" end
             if result.for_next then result.for_next = tonumber( result.for_next ) end
             if result.cycle_targets then result.cycle_targets = tonumber( result.cycle_targets ) end
             if result.max_energy then result.max_energy = tonumber( result.max_energy ) end

@@ -1,4 +1,4 @@
--- $Id: Handler.lua 63 2020-11-22 15:50:25Z arith $
+-- $Id: Handler.lua 85 2022-11-13 11:46:37Z arithmandar $
 -----------------------------------------------------------------------
 -- Upvalued Lua API.
 -----------------------------------------------------------------------
@@ -12,7 +12,9 @@ local GameTooltip, GetSpellInfo, CreateFrame, UnitClass = _G.GameTooltip, _G.Get
 --local UIDropDownMenu_CreateInfo, CloseDropDownMenus, UIDropDownMenu_AddButton, ToggleDropDownMenu = L_UIDropDownMenu_CreateInfo, L_CloseDropDownMenus, L_UIDropDownMenu_AddButton, L_ToggleDropDownMenu
 
 local WorldMapTooltip = GameTooltip
+local C_QuestLog = C_QuestLog
 local IsQuestFlaggedCompleted = C_QuestLog.IsQuestFlaggedCompleted
+local GetTitleForQuestID = C_QuestLog.GetTitleForQuestID
 
 -- ----------------------------------------------------------------------------
 -- AddOn namespace.
@@ -40,29 +42,15 @@ _G.HandyNotes_LegionInstanceWorldQuests = addon
 local profile
 
 -- //////////////////////////////////////////////////////////////////////////
-local cache_tooltip = CreateFrame("GameTooltip", private.addon_name.."_cacheToolTip", UIParent, "GameTooltipTemplate")
 local questTitle_cache
 local questComplete_cache
 
-function cache_tooltip:GetQuestTitle()
-	local questTitle = _G[private.addon_name.."_cacheToolTipTextLeft1"]:GetText()
-	--DEFAULT_CHAT_FRAME:AddMessage(self["message"]:format(questTitle))
-	self:SetScript("OnTooltipSetQuest", nil)
-	if (questTitle) then 
-		questTitle_cache = questTitle
-	end
-end
-
 -- activation code
 local function getQuestTitlebyID(id)
-	if IsQuestFlaggedCompleted(id) then
-		questComplete_cache = true
-	else
-		questComplete_cache = nil
+	questTitle_cache = GetTitleForQuestID(id)
+	if not questTitle_cache then
+		questTitle_cache = GetTitleForQuestID(id)
 	end
-	cache_tooltip:SetOwner(UIParent, "ANCHOR_NONE")
-	cache_tooltip:SetScript("OnTooltipSetQuest", cache_tooltip.GetQuestTitle)
-	cache_tooltip:SetHyperlink("quest:" .. id)
 end
 -- //////////////////////////////////////////////////////////////////////////
 -- get creature's name from server

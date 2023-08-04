@@ -105,11 +105,24 @@ function LM.Journal:Get(id, isUsable)
     elseif m.mountTypeID == 408 then      -- Unsuccessful Prototype Fleetpod
         m.flags['RUN'] = true
         m.flags['SLOW'] = true
-    elseif m.mountTypeID == 411 then      -- Whelpling, what on earth is this
-        -- nothing
+    elseif m.mountTypeID == 411 then      -- Whelpling, what on earth is this: ABORT
+        return
     elseif m.mountTypeID == 412 then      -- Ground + Aquatic (Ottuk etc.)
         m.flags['RUN'] = true
         m.flags['SWIM'] = true
+    elseif m.mountTypeID == 424 then      -- Flying + Dragonriding Drake
+        m.flags['FLY'] = true
+        m.mountTypeID = 248
+    elseif m.mountTypeID == 426 then      -- Dragonriding copies for Azeroth comp: ABORT
+        return
+    elseif m.mountTypeID == 428 then      -- Flying + Dragonriding Protodrake
+        m.flags['FLY'] = true
+        m.mountTypeID = 248
+    elseif m.mountTypeID == 429 then      -- Flying + Dragonriding Roc/Pterrodax
+        m.flags['FLY'] = true
+        m.mountTypeID = 248
+    elseif m.mountTypeID == 430 then      -- Literally only "Temp" right now: ABORT
+        return
 --[==[@debug@
     else
         LM.PrintError(string.format('Mount with unknown type number: %s = %d', m.name, m.mountTypeID))
@@ -187,7 +200,7 @@ function LM.Journal:GetCastAction(context)
 
     if context and context.preCast then
         castActions = castActions or { "/cast " .. GetSpellInfo(self.spellID) }
-        table.insert(castActions, 1, "/cast [@player] !" .. context.preCast)
+        table.insert(castActions, 1, "/cast [@player] " .. context.preCast)
     end
 
     if castActions then

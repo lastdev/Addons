@@ -1383,7 +1383,9 @@ all:RegisterAbilities( {
         gcd = "off",
 
         item = 202612,
-        toggle = "cooldowns", -- utility.
+        toggle = "interrupts", -- utility.
+
+        usable = function() return target.distance > 15, "only does damage if jumping 15+ yards" end,
 
         handler = function()
             setDistance( 5 )
@@ -1414,6 +1416,7 @@ all:RegisterAbilities( {
         icd = 10,
 
         item = 202610,
+        no_icd = true, -- Does not trigger trinket CD, but looks confusing next to the icd.
 
         handler = function()
             applyDebuff( "target", "dragonfire_bomb_dispenser" )
@@ -1439,10 +1442,12 @@ all:RegisterAbilities( {
         gcd = "off",
 
         item = 202617,
+        no_icd = true,
 
         handler = function()
             addStack( "anvil_strike", nil, 1 )
         end,
+
 
         auras = {
             anvil_strike = {
@@ -1753,10 +1758,19 @@ all:RegisterAbilities( {
         gcd = "off",
 
         item = 202569,
+        no_icd = true,
         toggle = "cooldowns",
 
         handler = function()
         end,
+
+        auras = {
+            seething_rage = {
+                id = 408835,
+                duration = 10,
+                max_stack = 1
+            }
+        }
     },
 
     shadowed_razing_annihilator = {
@@ -1769,6 +1783,141 @@ all:RegisterAbilities( {
 
         handler = function()
         end,
-    }
+    },
 
+    -- Patch 10.1.5
+    mirror_of_fractured_tomorrows = {
+        cast = 0,
+        cooldown = 180,
+        gcd = "off",
+
+        item = 207581,
+        toggle = "cooldowns",
+
+        handler = function()
+            applyBuff( "mirror_of_fractured_tomorrows" )
+        end,
+
+        auras = {
+            mirror_of_fractured_tomorrows = {
+                id = 418527,
+                duration = 20,
+                max_stack = 1
+            }
+        }
+    },
+
+    echoing_tyrstone = {
+        cast = 0,
+        cooldown = 120,
+        gcd = "off",
+
+        item = 207552,
+        toggle = "defensives",
+
+        handler = function()
+            applyBuff( "")
+        end,
+
+        auras = {
+            echoing_tyrstone = {
+                id = 417939,
+                duration = 10,
+                max_stack = 1
+            }
+        }
+    },
+
+
+    paracausal_fragment_of_frostmourne = {
+        cast = 2,
+        cooldown = 150,
+        gcd = "off",
+
+        item = 206983,
+        toggle = "cooldowns",
+
+        usable = function() return buff.lost_soul.stack > 9, "requires lost souls" end,
+
+        handler = function()
+            removeBuff( "lost_soul" )
+        end,
+
+        auras = {
+            lost_soul = {
+                id = 415007,
+                duration = 3600,
+                max_stack = 10
+            },
+        }
+    },
+
+
+    iridal_the_earths_master = {
+        cast = 0,
+        cooldown = 180,
+        gcd = "off",
+
+        item = 208321,
+        toggle = "cooldowns",
+
+        usable = function() return target.health_pct < 35, "requires target below 35% health" end,
+
+        handler = function()
+        end,
+    },
+
+
+    timethiefs_gambit = {
+        cast = 0,
+        cooldown = 60,
+        gcd = "off",
+
+        item = 207579,
+        toggle = "essences",
+
+        handler = function()
+            applyBuff( "timethiefs_gambit" )
+            applyDebuff( "player", "paradox" )
+        end,
+
+        auras = {
+            timethiefs_gambit = {
+                id = 417534,
+                duration = 15,
+                max_stack = 1
+            },
+            paradox = {
+                id = 417543,
+                duration = 120,
+                max_stack = 1
+            }
+        }
+    },
+
+
+    paracausal_fragment_of_doomhammer = {
+        cast = 1.5,
+        cooldown = 90,
+        gcd = "spell",
+
+        item = 206964,
+        toggle = "cooldowns",
+
+        handler = function()
+        end,
+    },
+
+
+    paracausal_fragment_of_shalamayne = {
+        cast = 1.5,
+        cooldown = 90,
+        gcd = "spell",
+
+        item = 207024,
+        toggle = "cooldowns",
+
+        handler = function()
+        end,
+    }
 } )

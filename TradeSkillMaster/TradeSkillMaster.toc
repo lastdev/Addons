@@ -1,9 +1,9 @@
-## Interface: 100100
+## Interface: 100105
 ## Title: |cff00fe00TradeSkillMaster|r
 ## IconTexture: Interface\Addons\TradeSkillMaster\Media\Logo
 ## Notes: Auction house and gold making addon.
 ## Author: TradeSkillMaster Team
-## Version: v4.12.39
+## Version: v4.13.5
 ## SavedVariables: TradeSkillMasterDB, TSMItemInfoDB
 ## OptionalDeps: ArkInventory, Auc-Advanced, Auctionator, TheUndermineJournal, BootyBayGazette, AuctionDB
 ## X-Embeds: Ace3, LibDataBroker-1.1, LibDBIcon-1.0, LibRealmInfo, LibDeflate, LibSerialize, LibAHTab
@@ -220,6 +220,7 @@ Core\UI\Components\List\ListRow.lua
 Core\UI\Components\List\List.lua
 Core\UI\Components\List\ItemList.lua
 Core\UI\Components\List\CraftingMatList.lua
+Core\UI\Components\List\SelectionList.lua
 
 Core\UI\Components\Containers\Container.lua
 Core\UI\Components\Containers\ViewContainer.lua
@@ -255,7 +256,6 @@ Core\UI\Elements\SelectionGroupTree.lua
 Core\UI\Elements\CraftingQueueList.lua
 Core\UI\Elements\SearchList.lua
 Core\UI\Elements\DropdownList.lua
-Core\UI\Elements\SelectionList.lua
 Core\UI\Elements\CommodityList.lua
 Core\UI\Elements\OperationTree.lua
 Core\UI\Elements\QueryScrollingTable.lua
@@ -269,7 +269,7 @@ Core\UI\Components\Crafting\CraftDetails.lua
 Core\UI\Components\Crafting\CraftTierButton.lua
 Core\UI\Components\Crafting\ItemSelector.lua
 Core\UI\Components\Crafting\CraftTierDialog.lua
-Core\UI\Components\Crafting\OptionalMatsDialog.lua
+Core\UI\Components\Crafting\OptionalMatsRow.lua
 
 Core\UI\Support\TexturePacks.lua
 

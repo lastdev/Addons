@@ -8,11 +8,6 @@ local function HookOnShow(self, OnShow)
 	self:HookScript("OnShow", OnShow)
 	if self:IsVisible() then OnShow(self) end
 end
-local function HideOwnedGameTooltip(self)
-	if GameTooltip:IsOwned(self) then
-		GameTooltip:Hide()
-	end
-end
 
 local mechanicsFrame = CreateFrame("Frame")
 T.mechanicsFrame = mechanicsFrame
@@ -71,7 +66,7 @@ local CreateMechanicButton, Mechanic_SetTrait do
 		f.Border:Hide()
 		f:SetScript("OnClick", Mechanic_OnClick)
 		f:SetScript("OnEnter", Mechanic_OnEnter)
-		f:SetScript("OnLeave", HideOwnedGameTooltip)
+		f:SetScript("OnLeave", T.HideOwnedGameTooltip)
 		return f
 	end
 	function Mechanic_SetTrait(self, id, info)
@@ -424,7 +419,7 @@ local CreateClassSpecButton, ClassSpecButton_Set do
 		f.Icon = f:CreateTexture()
 		f.Icon:SetAllPoints()
 		f:SetScript("OnEnter", ClassSpecButton_OnEnter)
-		f:SetScript("OnLeave", HideOwnedGameTooltip)
+		f:SetScript("OnLeave", T.HideOwnedGameTooltip)
 		return f
 	end
 	function ClassSpecButton_Set(self, info)
@@ -562,7 +557,7 @@ local SpecAffinityFrame = CreateFrame("Frame") do
 			end
 			GameTooltip:Show()
 		end)
-		f:SetScript("OnLeave", HideOwnedGameTooltip)
+		f:SetScript("OnLeave", T.HideOwnedGameTooltip)
 	end
 	local loader = T.MissionsUI.CreateLoader(SpecAffinityFrame, 6, 3, 6)
 	loader:SetPoint("TOPRIGHT", SpecAffinityFrame, "BOTTOMRIGHT", 0, -2)
@@ -687,7 +682,7 @@ for i=1,3 do
 		m.icon:SetPoint("BOTTOM")
 		m:Hide()
 		m:SetScript("OnEnter", MoIMark_OnEnter)
-		m:SetScript("OnLeave", HideOwnedGameTooltip)
+		m:SetScript("OnLeave", T.HideOwnedGameTooltip)
 		recruitMarks[i] = m
 	end
 end
@@ -836,11 +831,13 @@ local function Recruiter_ShowTraitTooltip(self)
 	GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 	G.SetTraitTooltip(GameTooltip, self.value)
 	GameTooltip:Show()
+	return T.HideOwnedGameTooltip
 end
 local function Recruiter_ShowCounterTooltip(self)
 	GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 	G.SetThreatTooltip(GameTooltip, self.value)
 	GameTooltip:Show()
+	return T.HideOwnedGameTooltip
 end
 local function Recruiter_DropDownInitHook(_, level)
 	local lf, bn
@@ -1090,7 +1087,7 @@ do -- Weapon/Armor upgrades and rerolls
 				GameTooltip:Show()
 			end
 			gear:SetScript("OnEnter", OnEnter)
-			gear:SetScript("OnLeave", HideOwnedGameTooltip)
+			gear:SetScript("OnLeave", T.HideOwnedGameTooltip)
 			for i=1,2 do
 				local b = CreateFrame("Button", nil, gear)
 				b:SetSize(62, 24)
@@ -1104,7 +1101,7 @@ do -- Weapon/Armor upgrades and rerolls
 				b:SetText("!")
 				b:GetFontString():ClearAllPoints()
 				b:SetScript("OnClick", OnClick)
-				b:SetScript("OnLeave", HideOwnedGameTooltip)
+				b:SetScript("OnLeave", T.HideOwnedGameTooltip)
 				b:SetScript("OnEnter", OnEnter)
 				b:SetMotionScriptsWhileDisabled(true)
 				b:SetPushedTextOffset(0, 2)

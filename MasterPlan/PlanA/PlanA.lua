@@ -234,5 +234,5 @@ E.ZONE_CHANGED = CheckCacheWarning
 MasterPlanA = api
 
 SLASH_MASTERPLAN1, SlashCmdList.MASTERPLAN = "/masterplan", function()
-	print("|cff0080ffMasterPlan|r v" .. GetAddOnMetadata("MasterPlan", "Version") .. " (" .. (IsAddOnLoaded("Blizzard_GarrisonUI") and "G" or "N") .. (IsAddOnLoaded("MasterPlan") and "O" or "A") .. ")")
+	print("|cff0080ffMasterPlan|r v" .. C_AddOns.GetAddOnMetadata("MasterPlan", "Version") .. " (" .. (IsAddOnLoaded("Blizzard_GarrisonUI") and "G" or "N") .. (IsAddOnLoaded("MasterPlan") and "O" or "A") .. ")")
 end

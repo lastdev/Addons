@@ -1,7 +1,7 @@
-local mod	= DBM:NewMod("DBM-LogoutTimer")
+local mod	= DBM:NewMod("LogoutTimerGeneral", "DBM-LogoutTimer")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220512070328")
+mod:SetRevision("20230706163921")
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 mod:RegisterEvents("CHAT_MSG_SYSTEM")
 

@@ -1,6 +1,7 @@
-## Interface: 100100
+## Interface: 100105
 ## X-Min-Interface: 80000
-## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Raids (Cata)|r
+## Title:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cffff6010Raids (Cata)|r
+## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cffff6010Рейды (Катаклизм)|r
 ## Author: MysticalOS
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
@@ -13,6 +14,7 @@
 ## X-DBM-StatTypes: normal,normal25,heroic,heroic25
 ## X-DBM-Mod-SubCategoriesID: 967,720,754,671,669,757
 ## X-DBM-Mod-Name: Raids (Cata)
+## X-DBM-Mod-Name-ruRU: Рейды (Катаклизм)
 ## X-DBM-Mod-Sort: 801
 ## X-DBM-Mod-MapID: 967,720,951,754,671,669,757
 ## X-DBM-Mod-MinCoreRevision: 20230525000000
@@ -20,7 +22,7 @@
 ## X-Curse-Project-ID: 43971
 ## X-WoWI-ID: 21469
 ## X-Wago-ID: RBKpErGE
-## Version: r227
+## Version: r229
 
 localization.en.lua
 localization.de.lua

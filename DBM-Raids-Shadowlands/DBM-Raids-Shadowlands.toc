@@ -1,0 +1,68 @@
+## Interface: 100105
+## X-Min-Interface: 90005
+## Title:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cffff6010Raids (SL)|r
+## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cffff6010Рейды (Темные Земли)|r
+## Author: MysticalOS
+## LoadOnDemand: 1
+## RequiredDeps: DBM-Core
+## SavedVariables: DBMRaidsShadowlands_AllSavedVars
+## SavedVariablesPerCharacter: DBMRaidsShadowlands_SavedStats
+## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
+## X-DBM-Mod: 1
+## X-DBM-Mod-Type: RAID
+## X-DBM-Mod-Category: SHADOWLANDS
+## X-DBM-StatTypes: lfr,normal,heroic,mythic
+## X-DBM-Mod-SubCategoriesID: 2481, 2450, 2296
+## X-DBM-Mod-Name: Raids (Shadowlands)
+## X-DBM-Mod-Name-ruRU: Рейды (Темные Земли)
+## X-DBM-Mod-Sort: 301
+## X-DBM-Mod-MapID: 2481, 2450, 2296
+## X-DBM-Mod-MinCoreRevision: 20230617000000
+## X-DBM-Mod-MinExpansion: 8
+## X-Curse-Project-ID: 723031
+## X-Wago-ID: RqGYOE6g
+## Version: r7
+
+localization.en.lua
+localization.kr.lua
+localization.tw.lua
+localization.cn.lua
+localization.es.lua
+localization.ru.lua
+
+Sepulcher\VigilantGuardian.lua
+Sepulcher\Skolex.lua
+Sepulcher\ArtificerXymox.lua
+Sepulcher\Dausegne.lua
+Sepulcher\PrototypePantheon.lua
+Sepulcher\Lihuvim.lua
+Sepulcher\Halondrus.lua
+Sepulcher\AnduinWrynn.lua
+Sepulcher\LordsofDread.lua
+Sepulcher\Rygelon.lua
+Sepulcher\TheJailer.lua
+# Sepulcher\SepulcherTrash.lua
+
+SanctumOfDomination\TheTarragrue.lua
+SanctumOfDomination\TheEyeoftheJailer.lua
+SanctumOfDomination\TheNine.lua
+SanctumOfDomination\RemnantofNerzhul.lua
+SanctumOfDomination\SoulrenderDormazain.lua
+SanctumOfDomination\PainsmithRaznal.lua
+SanctumOfDomination\GuardianoftheFirstOnes.lua
+SanctumOfDomination\FatescribeRohKalo.lua
+SanctumOfDomination\KelThuzad.lua
+SanctumOfDomination\SylvanasWindrunner.lua
+SanctumOfDomination\SanctumofDomTrash.lua
+
+CastleNathria\Shriekwing.lua
+CastleNathria\AltimortheHuntsman.lua
+CastleNathria\Kaelthas.lua
+CastleNathria\ArtificerXyMox.lua
+CastleNathria\HungeringDestroyer.lua
+CastleNathria\LadyInervaDarkvein.lua
+CastleNathria\TheCouncilofBlood.lua
+CastleNathria\Sludgefist.lua
+CastleNathria\StoneborneGenerals.lua
+CastleNathria\SireDenathrius.lua
+CastleNathria\CastleNathriaTrash.lua

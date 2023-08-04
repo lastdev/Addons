@@ -10,7 +10,7 @@ statPriorityStats["WARRIORArms"] = "Strength > Critical Strike > Haste > Mastery
 statPriorityStats["WARRIORFury"] = "Strength > Haste > Mastery > Critical Strike > Versatility"
 statPriorityStats["WARRIORProtection"] = "Strength > Haste > Versatility = Critical Strike > Mastery"
 
-statPriorityStats["PALADINHoly"] = "Intellect > Haste > Mastery > Versatility > Critical Strike"
+statPriorityStats["PALADINHoly"] = "Intellect > Critical Strike > Mastery = Haste > Versatility"
 statPriorityStats["PALADINProtection"] = "Haste > Mastery > Versatility > Critical Strike"
 statPriorityStats["PALADINRetribution"] = "Strength > Versatility > Critical Strike = Haste > Mastery"
 
@@ -20,7 +20,7 @@ statPriorityStats["HUNTERSurvival"] = "Haste > Critical Strike = Versatility > M
 
 statPriorityStats["ROGUEAssassination"] = "Critical Strike > Mastery > Versatility > Haste"
 statPriorityStats["ROGUEOutlaw"] = "Versatility > Critical Strike > Mastery > Haste"
-statPriorityStats["ROGUESubtlety"] = "Critical Strike > Mastery > Versatility > Haste"
+statPriorityStats["ROGUESubtlety"] = "Critical Strike > Versatility > Mastery > Haste"
 
 statPriorityStats["PRIESTDiscipline"] = "Intellect > Haste > Critical Strike > Versatility > Mastery"
 statPriorityStats["PRIESTHoly"] = "Intellect > Mastery = Critical Strike > Versatility > Haste"
@@ -39,7 +39,7 @@ statPriorityStats["WARLOCKDemonology"] = "Intellect > Haste > Critical Strike = 
 statPriorityStats["WARLOCKDestruction"] = "Intellect > Haste = Mastery > Critical Strike > Versatility"
 
 statPriorityStats["DRUIDBalance"] = "Intellect > Mastery > Haste > Critical Strike > Versatility"
-statPriorityStats["DRUIDFeral"] = "Agility > Critical Strike > Mastery > Haste > Versatility"
+statPriorityStats["DRUIDFeral"] = "Agility > Critical Strike > Mastery = Haste > Versatility"
 statPriorityStats["DRUIDGuardian"] = "Armor = Agility = Stamina > Haste > Versatility > Mastery > Critical Strike"
 statPriorityStats["DRUIDRestoration"] = "Intellect > Haste > Mastery > Critical Strike = Versatility"
 
@@ -54,6 +54,7 @@ statPriorityStats["DEATHKNIGHTUnholy"] = "Mastery > Critical Strike > Haste > Ve
 statPriorityStats["DEMONHUNTERHavoc"] = "Agility > Critical Strike > Mastery > Versatility > Haste"
 statPriorityStats["DEMONHUNTERVengeance"] = "Agility > Haste > Critical Strike > Versatility > Mastery"
 
+statPriorityStats["EVOKERAugmentation"] = "Intellect > Mastery > Haste > Critial Strike > Versatility"
 statPriorityStats["EVOKERDevastation"] = "Intellect > Mastery > Haste > Critial Strike > Versatility"
 statPriorityStats["EVOKERPreservation"] = "Intellect > Mastery > Critial Strike > Versatility > Haste"
 
@@ -178,6 +179,8 @@ function GetSpecializationName(id)
 		spec = "Devastation"
 	elseif id == 1468 then 
 		spec = "Preservation"
+	elseif id == 1473 then
+		spec = "Augmentation"
 	end
 	return spec
 end

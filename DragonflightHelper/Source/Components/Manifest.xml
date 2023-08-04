@@ -1,6 +1,0 @@
-<Ui xmlns="http://www.blizzard.com/wow/ui/">
-  <Script file="StatusBar\StatusBar.lua" />
-  <Include file="StatusBar\StatusBar.xml" />
-  <Script file="SectionTitle\SectionTitle.lua" />
-  <Include file="SectionTitle\SectionTitle.xml" />
-</Ui>

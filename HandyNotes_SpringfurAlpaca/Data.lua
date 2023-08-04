@@ -5,72 +5,78 @@ local scaling = ns.scaling
 local texturesSpecial = ns.texturesSpecial
 local scalingSpecial = ns.scalingSpecial
 
-points[ns.uldum] = {	-- "A", ["Author"], tip
-						-- "G", idRep, name, tip
-	[14806160] = { "A", "Author" },
-	[24850930] = { "A", "Author" },
-	[28204900] = { "A", "Author" },
-	[30602860] = { "A", "Author" },
-	[38800930] = { "A", "Author" },
-	[42407030] = { "A", "Author" },
-	[46204830] = { "A", "Author" },
-	[53301900] = { "A", "Author" },
-	[55407000] = { "A", "Author" },
-	[63301470] = { "A", "Author" },
-	[63505250] = { "A", "Author" },
-	[70303910] = { "A", "Author" },
-	[76406780] = { "A", "Author" },
-	[57408500] = { "G" },
-	[59008530] = { "G" },
-	[61608290] = { "G" },
-	[59107440] = { "G" },
-	[59105930] = { "G" },
-	[72207630] = { "G" },
-	[71107880] = { "G" },
-	[70007680] = { "G" },
-	[64707940] = { "G" },
-	[68907310] = { "G" },
-	[64707250] = { "G" },
-	[65006880] = { "G" },
-	[60706020] = { "G" },
-	[58504050] = { "G" },
-	[51204430] = { "G" },
-	[59607880] = { "G" },
-	[58706580] = { "G" },
-	[59305130] = { "G" },
-	[56005120] = { "G" },
-	[59603420] = { "G" },
-	[59102880] = { "G" },
-	[57302500] = { "G" },
-	[57502000] = { "G" },
-	[58601640] = { "G" },
-	[61701360] = { "G" },
-	[57804600] = { "G" },
-	[63006440] = { "G" },
-	[57805480] = { "G" },
-	[54404630] = { "G" },
-	[49303700] = { "G" },
-	[50503620] = { "G" },
-	[48803300] = { "G" },
-	[47203020] = { "G" },
-	[57601310] = { "G" },
-	[56501560] = { "G" },
-	[55901890] = { "G" },
-	[55502390] = { "G" },
-	[56802840] = { "G" },
-	[58003190] = { "G" },
-	[57703370] = { "G" },
-	[56603490] = { "G" },
-	[53503530] = { "G" },
-	[50703190] = { "G" },
-	[59508230] = { "G" },
-	[67707730] = { "G" },
-	[44102860] = { "G" },
-	[42802730] = { "G" },
-	[43602570] = { "G" },
-	[47102750] = { "G" },
-	[61807760] = { "G" },
-	[65907600] = { "G" },
+points[ 1527 ] = {
+	[14806160] = { alpaca=true },
+	[24850930] = { alpaca=true },
+	[28204900] = { alpaca=true },
+	[30602860] = { alpaca=true },
+	[38800930] = { alpaca=true },
+	[42407030] = { alpaca=true },
+	[46204830] = { alpaca=true },
+	[53301900] = { alpaca=true },
+
+	[55206973] = { alpaca=true },
+	[55257005] = { alpaca=true },
+	[55356983] = { alpaca=true },
+	[55427013] = { alpaca=true },
+	[55527039] = { alpaca=true },
+	[55687063] = { alpaca=true },
+
+	[63301470] = { alpaca=true },
+	[63505250] = { alpaca=true },
+	[70303910] = { alpaca=true },
+	[76406780] = { alpaca=true },
+	[57408500] = { gersahlGreens=true },
+	[59008530] = { gersahlGreens=true },
+	[61608290] = { gersahlGreens=true },
+	[59107440] = { gersahlGreens=true },
+	[59105930] = { gersahlGreens=true },
+	[72207630] = { gersahlGreens=true },
+	[71107880] = { gersahlGreens=true },
+	[70007680] = { gersahlGreens=true },
+	[64707940] = { gersahlGreens=true },
+	[68907310] = { gersahlGreens=true },
+	[64707250] = { gersahlGreens=true },
+	[65006880] = { gersahlGreens=true },
+	[60706020] = { gersahlGreens=true },
+	[58504050] = { gersahlGreens=true },
+	[51204430] = { gersahlGreens=true },
+	[59607880] = { gersahlGreens=true },
+	[58706580] = { gersahlGreens=true },
+	[59305130] = { gersahlGreens=true },
+	[56005120] = { gersahlGreens=true },
+	[59603420] = { gersahlGreens=true },
+	[59102880] = { gersahlGreens=true },
+	[57302500] = { gersahlGreens=true },
+	[57502000] = { gersahlGreens=true },
+	[58601640] = { gersahlGreens=true },
+	[61701360] = { gersahlGreens=true },
+	[57804600] = { gersahlGreens=true },
+	[63006440] = { gersahlGreens=true },
+	[57805480] = { gersahlGreens=true },
+	[54404630] = { gersahlGreens=true },
+	[49303700] = { gersahlGreens=true },
+	[50503620] = { gersahlGreens=true },
+	[48803300] = { gersahlGreens=true },
+	[47203020] = { gersahlGreens=true },
+	[57601310] = { gersahlGreens=true },
+	[56501560] = { gersahlGreens=true },
+	[55901890] = { gersahlGreens=true },
+	[55502390] = { gersahlGreens=true },
+	[56802840] = { gersahlGreens=true },
+	[58003190] = { gersahlGreens=true },
+	[57703370] = { gersahlGreens=true },
+	[56603490] = { gersahlGreens=true },
+	[53503530] = { gersahlGreens=true },
+	[50703190] = { gersahlGreens=true },
+	[59508230] = { gersahlGreens=true },
+	[67707730] = { gersahlGreens=true },
+	[44102860] = { gersahlGreens=true },
+	[42802730] = { gersahlGreens=true },
+	[43602570] = { gersahlGreens=true },
+	[47102750] = { gersahlGreens=true },
+	[61807760] = { gersahlGreens=true },
+	[65907600] = { gersahlGreens=true },
 }
 
 -- Choice of texture
@@ -96,21 +102,21 @@ texturesSpecial[6] = "Interface\\RaidFrame\\UI-RaidFrame-Threat"
 texturesSpecial[7] = "Interface\\PlayerFrame\\UI-PlayerFrame-DeathKnight-Frost"
 texturesSpecial[8] = "Interface\\HelpFrame\\HelpIcon-CharacterStuck"	
 
-scaling[1] = 0.85
-scaling[2] = 0.85
-scaling[3] = 0.83
-scaling[4] = 0.83
-scaling[5] = 0.83
-scaling[6] = 0.83
-scaling[7] = 0.95
-scaling[8] = 0.95
-scaling[9] = 1.2
-scaling[10] = 1.2
-scalingSpecial[1] = 0.58
-scalingSpecial[2] = 0.77
-scalingSpecial[3] = 0.77
-scalingSpecial[4] = 0.77
-scalingSpecial[5] = 0.68
-scalingSpecial[6] = 0.65
-scalingSpecial[7] = 0.62
-scalingSpecial[8] = 0.93
+scaling[1] = 0.55
+scaling[2] = 0.55
+scaling[3] = 0.55
+scaling[4] = 0.55
+scaling[5] = 0.55
+scaling[6] = 0.55
+scaling[7] = 0.65
+scaling[8] = 0.63
+scaling[9] = 0.75
+scaling[10] = 0.75
+scalingSpecial[1] = 0.38
+scalingSpecial[2] = 0.5
+scalingSpecial[3] = 0.5
+scalingSpecial[4] = 0.5
+scalingSpecial[5] = 0.46
+scalingSpecial[6] = 0.45
+scalingSpecial[7] = 0.41
+scalingSpecial[8] = 0.6

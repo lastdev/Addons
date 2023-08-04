@@ -1,7 +1,9 @@
-local ns = select(2, ...) ---@type ns @The addon namespace.
+local ns = select(2, ...) ---@class ns @The addon namespace.
 
 if ns:IsSameLocale("deDE") then
+
 	local L = ns.L or ns:NewLocale()
+	ns.L = L
 
 	L.LOCALE_NAME = "deDE"
 
@@ -325,5 +327,4 @@ L["WIPE_RWF_MODE_BUTTON"] = "Löschen"
 L["WIPE_RWF_MODE_BUTTON_TOOLTIP"] = "Klicke hier, um das Protokoll aus der Speicherdatei zu löschen. Dadurch wird deine Benutzeroberfläche neu geladen."
 
 
-	ns.L = L
 end

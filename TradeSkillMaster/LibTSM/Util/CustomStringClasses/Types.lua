@@ -37,6 +37,7 @@ Types.ERROR = EnumType.New("ERROR", {
 	TOO_MANY_VARS = EnumType.CreateValue(),
 	INVALID_ITEM_STRING = EnumType.CreateValue(),
 	INVALID_CONVERT_ARG = EnumType.CreateValue(),
+	NO_ITEM_PARAM_PARENT = EnumType.CreateValue(),
 })
 Types.FUNCTION_INFO = {
 	["+"] = {minArgs=2, maxArgs=2},

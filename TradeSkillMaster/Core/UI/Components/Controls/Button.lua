@@ -178,8 +178,8 @@ end
 ---@return Button
 function Button:SetBackgroundWithItemHighlight(background)
 	assert(background == nil or type(background) == "number" or type(background) == "string")
-	self._state.background = background ~= nil and tostring(background) or nil
-	self._state.highlightTexture = ITEM_HIGHLIGHT_TEXTURE
+	self._state.background = background and tostring(background) or nil
+	self._state.highlightTexture = background and ITEM_HIGHLIGHT_TEXTURE or nil
 	return self
 end
 

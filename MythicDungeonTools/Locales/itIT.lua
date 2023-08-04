@@ -851,6 +851,9 @@ L["Enable Minimap Button"] = "Abilita pulsante della minimappa"
 L["Enchanted Broodling"] = "Progenie Incantata"
 L["Enchanted Emissary"] = "Emissaria Incantata"
 --[[Translation missing --]]
+L["encounteredErrors"] = [=[MDT has encountered errors.
+Click to view them.]=]
+--[[Translation missing --]]
 L["Encrypted"] = "Encrypted"
 L["Enemies related to seasonal affixes are currently hidden"] = "I nemici relativi agli affissi stagionali sono attualmente nascosti"
 L["Enemy Info"] = "Informazioni nemici"

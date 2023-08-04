@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod(2523, "DBM-Aberrus", nil, 1208)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230620070249")
+mod:SetRevision("20230801185029")
 mod:SetCreatureID(201668)
 mod:SetEncounterID(2684)
 mod:SetUsedIcons(6)
-mod:SetHotfixNoticeRev(20230614000000)
+mod:SetHotfixNoticeRev(20230801000000)
 mod:SetMinSyncRevision(20230614000000)
 --mod.respawnTime = 29
 
@@ -40,7 +40,6 @@ local warnPhase									= mod:NewPhaseChangeAnnounce(2, nil, nil, nil, nil, nil,
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(26192))
 local warnTwistedEarth							= mod:NewCountAnnounce(402902, 2)
 --local warnVolcanicHeart						= mod:NewTargetCountAnnounce(410953, 2, nil, nil, nil, nil, nil, nil, true)
-local warnRushingDarkness						= mod:NewIncomingCountAnnounce(407221, 2)
 local warnRushingDarknessWallTarget				= mod:NewTargetCountAnnounce(407221, 2, nil, nil, nil, nil, nil, nil, true)
 local warnVolcanicHeart							= mod:NewCountAnnounce(410953, 3, nil, nil, 167180)--This is using count object instead of incoming count because weak auras are scanning for "Bombs (number")
 
@@ -48,20 +47,20 @@ local warnVolcanicHeart							= mod:NewCountAnnounce(410953, 3, nil, nil, 167180
 --local yellVolcanicHeart						= mod:NewShortPosYell(410953)
 --local yellVolcanicHeartFades					= mod:NewIconFadesYell(410953)
 local specWarnTwistedEarth						= mod:NewSpecialWarningDodgeCount(402902, false, nil, 2, 2, 2)--Twisted earth spawn+Dodge for Volcanic Blast
-local specWarnEchoingFissure					= mod:NewSpecialWarningDodgeCount(402116, nil, 381446, nil, 2, 2)
+local specWarnEchoingFissure					= mod:NewSpecialWarningDodgeCount(402115, nil, 381446, nil, 2, 2)
 local specWarnRushingDarkness					= mod:NewSpecialWarningDodgeCount(407221, nil, nil, nil, 2, 2)
 local yellRushingDarkness						= mod:NewYell(407221, L.WallBreaker)
 local yellRushingDarknessFades					= mod:NewIconFadesYell(407221)
-local specWarnCalamitousStrike					= mod:NewSpecialWarningDefensive(406222, nil, nil, nil, 1, 2)
-local specWarnCalamitousStrikeSwap				= mod:NewSpecialWarningTaunt(406222, nil, nil, nil, 1, 2)
+local specWarnCalamitousStrike					= mod:NewSpecialWarningDefensive(401998, nil, nil, nil, 1, 2)
+local specWarnCalamitousStrikeSwap				= mod:NewSpecialWarningTaunt(401998, nil, nil, nil, 1, 2)
 --local specWarnPyroBlast						= mod:NewSpecialWarningInterrupt(396040, "HasInterrupt", nil, nil, 1, 2)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(409058, nil, nil, nil, 1, 8)
 
 local timerVolcanicHeartCD						= mod:NewNextCountTimer(26.2, 410953, 167180, nil, nil, 3)--ShortText "Bombs" (not precise enough as next timer, but next is used to match BW string for weak aura matching)
 local timerTwistedEarthCD						= mod:NewCDCountTimer(26.2, 402902, nil, nil, nil, 3)
-local timerEchoingFissureCD						= mod:NewCDCountTimer(36.3, 402116, 381446, nil, nil, 2)
+local timerEchoingFissureCD						= mod:NewCDCountTimer(36.3, 402115, 381446, nil, nil, 2)
 local timerRushingDarknessCD					= mod:NewCDCountTimer(36.3, 407221, nil, nil, nil, 3)
-local timerCalamitousStrikeCD					= mod:NewCDCountTimer(36.3, 406222, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerCalamitousStrikeCD					= mod:NewCDCountTimer(36.3, 401998, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 --local berserkTimer							= mod:NewBerserkTimer(600)
 
 mod:AddPrivateAuraSoundOption(407182, true, 407221, 1)--Rushing Darkness
@@ -82,13 +81,13 @@ local warnHidden								= mod:NewAddsLeftAnnounce(407036, 1)--Announces how many
 local specWarnRazetheEarth						= mod:NewSpecialWarningDodge(409313, nil, nil, nil, 2, 2)
 local specWarnCorruption						= mod:NewSpecialWarningYou(401010, nil, nil, nil, 1, 2)
 local yellCorruption							= mod:NewShortYell(401010)
-local specWarnUmbralAnnihilation				= mod:NewSpecialWarningCount(404038, nil, nil, nil, 2, 2)
+local specWarnUmbralAnnihilation				= mod:NewSpecialWarningCount(405433, nil, nil, nil, 2, 2)
 local specWarnSweepingShadows					= mod:NewSpecialWarningDodgeCount(403846, nil, nil, nil, 2, 2)
 local specWarnSunderShadow						= mod:NewSpecialWarningDefensive(407790, nil, nil, nil, 1, 2)
 local specWarnSunderShadowSwap					= mod:NewSpecialWarningTaunt(407790, nil, nil, nil, 1, 2)
 
 local timerCorruptionCD							= mod:NewCDCountTimer(43.4, 401010, nil, nil, nil, 5)--Parent
-local timerUmbralAnnihilationCD					= mod:NewCDCountTimer(29.1, 404038, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
+local timerUmbralAnnihilationCD					= mod:NewCDCountTimer(29.1, 405433, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerSunderShadowCD						= mod:NewCDCountTimer(27.9, 407790, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
 --Stage Three: Reality Fractures
@@ -123,7 +122,7 @@ local realityName = DBM:GetSpellInfo(407919)
 local playerReality = false
 local mythicTwistedP1Timers = {2, 20.6, 19.4, 18.2, 18.2, 18.2, 19.5, 17.0}
 local mythicTwistedP2Timers = {41.6, 18.2, 12.1, 29.2, 13.4, 14.6}
-local volcanicP2Timers = {21.3, 15.7, 17.0, 17.0, 17.3, 16.7, 18, 14.5}
+local volcanicP2Timers = {21.3, 15.7, 17.0, 14.8, 17.3, 16.7, 18, 14.5}
 local volcanicP2LFRTimers = {21.3, 15.6, 16.9, 17, 12, 16.9, 12, 16.9, 12, 17}
 
 
@@ -241,7 +240,6 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 407207 then
 		self:Unschedule(checkForSkippedDarkness)
 		self.vb.RushingDarknessCount = self.vb.RushingDarknessCount + 1
-		warnRushingDarkness:Show(self.vb.RushingDarknessCount)
 --		self.vb.rushingIcon = 4
 		--As of May 23rd reset, stage 3 has a new darkness cast that causes the 17 second time between darkness 1 and 2 in stage 3
 		--As of May 30th reset, stage 3 no longer has new darkness that causes the 17 second time between darkness 1 and 2 in stage 3
@@ -249,7 +247,7 @@ function mod:SPELL_CAST_START(args)
 		if self:GetStage(3) and (self.vb.RushingDarknessCount == 1) and not self.vb.skippedDarkness then
 			timerRushingDarknessCD:Start(17, self.vb.RushingDarknessCount+1)
 		else
-			timerRushingDarknessCD:Start(self:GetStage(1) and 35.9 or 29, self.vb.RushingDarknessCount+1)
+			timerRushingDarknessCD:Start(self:GetStage(1) and 35.9 or 27.9, self.vb.RushingDarknessCount+1)--27.9-29.2, almost always 29 but sometimes 28 :\
 		end
 		if self:IsMythic() and self:GetStage(1) then--Mythic P1 only wall breaker strat used by all top guilds (which means everyone else will use it too and expect it in DBM)
 			self:BossTargetScanner(args.sourceGUID, "RushingDarknessTarget", 0.2, 8, true, nil, nil, nil, true)
@@ -291,7 +289,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		self.vb.volcanicCount = self.vb.volcanicCount + 1
 		warnVolcanicHeart:Show(self.vb.volcanicCount)
 		if self:GetStage(1) then
-			timerVolcanicHeartCD:Start(17, self.vb.volcanicCount+1)
+			timerVolcanicHeartCD:Start(36.4, self.vb.volcanicCount+1)
 		else
 			--21.3, 15.7, 17.0, 17.0, 17.3, 16.7, 19.4, 14.5
 			self:Unschedule(fixBrokenHeartTimer)
@@ -416,7 +414,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		self:Schedule(15.8, checkForSkippedDarkness, self)--Schedule checker to see if the normally skipped cast happened, and if not, start backup timer for second cast
 		timerSunderRealityCD:Start(19.5, 1)
 --		timerRushingDarknessCD:Start(27, 1)
-		timerCalamitousStrikeCD:Start(36, 1)
+		timerCalamitousStrikeCD:Start(35.9, 1)
 		timerEbonDestructionCD:Start(40.2, 1)
 	--elseif spellId == 407182 then
 	--	if self.Options.SetIconOnRushingDarkness then

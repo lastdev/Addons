@@ -205,7 +205,9 @@ local enemyExclusions = {
     [204560] = true       -- Incorporeal Being
 }
 
-local FindExclusionAuraByID
+local FindExclusionAuraByID = {
+    [410972]  = true,      -- Corruption aura on Echo of Neltharion mythic fight
+}
 
 RegisterEvent( "NAME_PLATE_UNIT_ADDED", function( event, unit )
     local id = UnitGUID( unit )
@@ -235,7 +237,7 @@ RegisterEvent( "UNIT_FLAGS", function( event, unit )
 
     if UnitIsFriend( "player", unit ) then
         local id = UnitGUID( unit )
-        ns.eliminateUnit( id, true )
+        ns.eliminateUnit( id )
 
         npGUIDs[ unit ] = nil
         npUnits[ id ]   = nil
@@ -846,7 +848,7 @@ ns.isWatchedDebuff = function(spell)
     return debuffs[spell] ~= nil
 end
 
-ns.eliminateUnit = function(id, force)
+ns.eliminateUnit = function( id, force )
     ns.updateMinion(id)
     ns.updateTarget(id)
 
@@ -854,7 +856,9 @@ ns.eliminateUnit = function(id, force)
 
     if force then
         for k, v in pairs( debuffs ) do
-            if v[ id ] then ns.trackDebuff( k, id ) end
+            if v[ id ] then
+                ns.trackDebuff( k, id )
+            end
         end
     end
 
@@ -1019,8 +1023,8 @@ do
         for aura, targets in pairs( debuffs ) do
             local a = class.auras[ aura ]
             local window = a and a.duration or grace
-            local expires = a and a.no_ticks or false
-            local friendly = a and a.friendly or false
+            local friendly = a and ( a.friendly or a.dot == "buff" ) or false
+            local expires = not ( a and a.no_ticks or friendly )
 
             for unit, entry in pairs( targets ) do
                 -- NYI: Check for dot vs. debuff, since debuffs won't 'tick'

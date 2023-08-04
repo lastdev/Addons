@@ -1,6 +1,6 @@
 # NugComboBar
 
-## [10.0.2](https://github.com/rgd87/NugComboBar/tree/10.0.2) (2022-10-27)
-[Full Changelog](https://github.com/rgd87/NugComboBar/compare/10.0.1...10.0.2) 
+## [10.1.2](https://github.com/rgd87/NugComboBar/tree/10.1.2) (2023-07-12)
+[Full Changelog](https://github.com/rgd87/NugComboBar/compare/10.1.1...10.1.2) [Previous Releases](https://github.com/rgd87/NugComboBar/releases)
 
-- Disabled 3D mode due to Dragonflight issues  
+- Bugfix for DF Settings Panel  

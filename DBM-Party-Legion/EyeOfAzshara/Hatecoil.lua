@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1490, "DBM-Party-Legion", 3, 716)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116042005")
+mod:SetRevision("20230726203549")
 mod:SetCreatureID(91789)
 mod:SetEncounterID(1811)
 
@@ -35,7 +35,7 @@ local timerFocusedLightningCD		= mod:NewNextTimer(15.5, 193611, nil, nil, nil, 3
 
 function mod:OnCombatStart(delay)
 	timerStaticNovaCD:Start(10.5-delay)
-	timerAddsCD:Start(19-delay)
+	timerAddsCD:Start(17.4-delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)

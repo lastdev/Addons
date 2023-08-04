@@ -1,6 +1,6 @@
-## Last updated 2022-05-31T21:42:58Z
-## Interface: 90205
-## Version: 2.0
+## Last updated 2023-07-12T1:07:42Z
+## Interface: 100105
+## Version: 2.4
 ## Title: HandyNotes_LegionMagePortals
 ## Notes: Shows Teleportation Nexus Portals
 ## Author: Tsaavik Gnoballs @Greymane (based on work by Kemayo)

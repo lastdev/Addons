@@ -111,6 +111,12 @@ do
 	-- from just splitting the processing across multiple script handlers, so we do that here.
 	local function EventHandler(self, event, arg)
 		if event == "ADDON_LOADED" and arg == "TradeSkillMaster" then
+			-- There seems to be a bug in 10.1.5 where another addon loading the Blizzard_Professions addon causes our
+			-- frames to get ADDON_LOADED in a weird order - workaround by just making sure we load after LibTSM
+			if not TSM.IsLibTSMLoaded() then
+				assert(self ~= private.eventFrames[#private.eventFrames])
+				return
+			end
 			if private.DoInitialize() then
 				-- we're done
 				for _, frame in ipairs(private.eventFrames) do

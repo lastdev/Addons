@@ -55,39 +55,44 @@ function GoldTracker.OnInitialize()
 		:AddKey("factionrealm", "internalData", "guildGoldLog")
 		:AddKey("factionrealm", "internalData", "guildGoldLogLastUpdate")
 		:AddKey("factionrealm", "internalData", "characterGuilds")
+		:AddKey("global", "coreOptions", "regionWide")
 
 	-- Get a list of known guilds and load character gold log data
 	local validGuilds = TempTable.Acquire()
-	for _, factionrealm, character in Settings.AccessibleCharacterIterator() do
-		local guild = private.settings:GetForScopeKey("characterGuilds", factionrealm)[character]
-		if guild then
-			validGuilds[guild] = true
-		end
-		local data = private.settings:GetForScopeKey("goldLog", character, factionrealm)
-		if data then
-			local lastUpdate = private.settings:GetForScopeKey("goldLogLastUpdate", character, factionrealm) or 0
-			local characterKey = Wow.FormatCharacterName(character, factionrealm, true)
-			private.LoadCharacterGoldLog(characterKey, data, lastUpdate)
+	for _, factionrealm, character, isConnected in Settings.AccessibleCharacterIterator() do
+		if isConnected or private.settings.regionWide then
+			local guild = private.settings:GetForScopeKey("characterGuilds", factionrealm)[character]
+			if guild then
+				validGuilds[guild] = true
+			end
+			local data = private.settings:GetForScopeKey("goldLog", character, factionrealm)
+			if data then
+				local lastUpdate = private.settings:GetForScopeKey("goldLogLastUpdate", character, factionrealm) or 0
+				local characterKey = Wow.FormatCharacterName(character, factionrealm, true)
+				private.LoadCharacterGoldLog(characterKey, data, lastUpdate)
+			end
 		end
 	end
 
 	-- Load guild gold log data
-	for _, guildData, factionrealm in private.settings:AccessibleValueIterator("guildGoldLog") do
-		for guild, data in pairs(guildData) do
-			local entries = {}
-			local decodeContext = CSV.DecodeStart(data, CSV_KEYS)
-			if decodeContext then
-				for minute, copper in CSV.DecodeIterator(decodeContext) do
-					tinsert(entries, { minute = tonumber(minute), copper = tonumber(copper) })
+	for _, guildData, factionrealm, isConnected in private.settings:AccessibleValueIterator("guildGoldLog") do
+		if isConnected or private.settings.regionWide then
+			for guild, data in pairs(guildData) do
+				local entries = {}
+				local decodeContext = CSV.DecodeStart(data, CSV_KEYS)
+				if decodeContext then
+					for minute, copper in CSV.DecodeIterator(decodeContext) do
+						tinsert(entries, { minute = tonumber(minute), copper = tonumber(copper) })
+					end
+					CSV.DecodeEnd(decodeContext)
 				end
-				CSV.DecodeEnd(decodeContext)
-			end
-			private.guildGoldLog[guild] = entries
-			local lastEntryTime = #entries > 0 and entries[#entries].minute * SECONDS_PER_MIN or math.huge
-			local lastUpdate = private.settings:GetForScopeKey("guildGoldLogLastUpdate", factionrealm)
-			if not validGuilds[guild] and max(lastEntryTime, lastUpdate and lastUpdate[guild] or 0) < time() - 30 * SECONDS_PER_DAY then
-				-- this guild may not be valid and the last entry is over 30 days old, so truncate the data
-				private.truncateGoldLog[guild] = lastEntryTime
+				private.guildGoldLog[guild] = entries
+				local lastEntryTime = #entries > 0 and entries[#entries].minute * SECONDS_PER_MIN or math.huge
+				local lastUpdate = private.settings:GetForScopeKey("guildGoldLogLastUpdate", factionrealm)
+				if not validGuilds[guild] and max(lastEntryTime, lastUpdate and lastUpdate[guild] or 0) < time() - 30 * SECONDS_PER_DAY then
+					-- this guild may not be valid and the last entry is over 30 days old, so truncate the data
+					private.truncateGoldLog[guild] = lastEntryTime
+				end
 			end
 		end
 	end

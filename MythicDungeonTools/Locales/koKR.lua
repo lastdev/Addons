@@ -859,6 +859,9 @@ L["Enable Minimap Button"] = "미니맵 아이콘을 켜기"
 L["Enchanted Broodling"] = "마력 깃든 무리거미"
 L["Enchanted Emissary"] = "마력에 빠진 사절"
 --[[Translation missing --]]
+L["encounteredErrors"] = [=[MDT has encountered errors.
+Click to view them.]=]
+--[[Translation missing --]]
 L["Encrypted"] = "Encrypted"
 L["Enemies related to seasonal affixes are currently hidden"] = "시즌 접두사와 관련된 적들이 숨겨지고 있습니다 "
 L["Enemy Info"] = "적의 정보"

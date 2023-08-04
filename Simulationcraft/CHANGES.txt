@@ -1,10 +1,16 @@
-lightweight tag 334ce98d228877b94e5ddd8363ac99ac1518e361 10.1.0-10
+lightweight tag e0d6f9116439452eb33c026ab24dadbbc69b6da9 10.1.5-03
 Author:	Dave Hendler <sollaires@gmail.com>
-Date:	Sun Jun 25 21:56:10 2023 -0700
+Date:	Tue Aug 1 14:13:12 2023 -0700
 
-commit 334ce98d228877b94e5ddd8363ac99ac1518e361
+commit e0d6f9116439452eb33c026ab24dadbbc69b6da9
 Author: Dave Hendler <sollaires@gmail.com>
-Date:   Sun Jun 25 21:56:10 2023 -0700
+Date:   Tue Aug 1 14:12:46 2023 -0700
 
-    Handle some region changes for PTR
+    Fixed an issue where items in the default bank inventory would not show up
+
+commit 9d1279d3547d6ca893405cf45159471308fd2f14
+Author: Dave Hendler <sollaires@gmail.com>
+Date:   Mon Jul 31 12:49:56 2023 -0700
+
+    Show the print error if detected
 

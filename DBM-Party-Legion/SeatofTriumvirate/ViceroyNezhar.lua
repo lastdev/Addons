@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1981, "DBM-Party-Legion", 13, 945)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116042005")
+mod:SetRevision("20230708234551")
 mod:SetCreatureID(124874)
 mod:SetEncounterID(2067)
 
@@ -19,7 +19,7 @@ mod:RegisterEventsInCombat(
 --TODO, special warning to switch to tentacles once know for sure how to tell empowered apart from non empowered?
 --TODO, More work on guard timers, with an english log that's actually captured properly (stared and stopped between pulls)
 local warnEternalTwilight				= mod:NewCastAnnounce(248736, 4)
-local warnAddsLeft						= mod:NewAddsLeftAnnounce("ej16424", 2)
+local warnAddsLeft						= mod:NewAddsLeftAnnounce(-16424, 2)
 local warnTentacles						= mod:NewSpellAnnounce(244769, 2)
 
 local specWarnHowlingDark				= mod:NewSpecialWarningInterrupt(244751, "HasInterrupt", nil, nil, 1, 2)

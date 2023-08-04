@@ -1,6 +1,6 @@
 --[[
 Name: ZoneInfo 2
-Revision: $Rev: 126 $
+Revision: $Rev: 127 $
 Author: Odica; based on the ZoneInfo module of Cartographer 2 by ckknight
 SVN: svn://svn.wowace.com/wow/libtourist-3-0/mainline/trunk
 Description: Addon that will show levels and other information about the zone being displayed on the World Map.

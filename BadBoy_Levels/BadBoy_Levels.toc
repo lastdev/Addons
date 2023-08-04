@@ -1,5 +1,5 @@
-## Interface: 100100
-## Version: v10.1.1
+## Interface: 100105
+## Version: v10.1.2
 ## Title: BadBoy_Levels
 ## Notes: Filter whispers by level, minimally.
 ## Notes-frFR: Filtre les chuchotements par niveau, au minimum.

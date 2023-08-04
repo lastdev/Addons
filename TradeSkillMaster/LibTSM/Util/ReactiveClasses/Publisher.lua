@@ -31,6 +31,7 @@ local STEP = EnumType.New("PUBLISHER_STEP", {
 	MAP_BOOLEAN_WITH_VALUES = EnumType.CreateValue(),
 	MAP_BOOLEAN_EQUALS = EnumType.CreateValue(),
 	MAP_BOOLEAN_NOT_EQUALS = EnumType.CreateValue(),
+	MAP_BOOLEAN_GREATER_THAN_OR_EQUALS = EnumType.CreateValue(),
 	MAP_TO_BOOLEAN = EnumType.CreateValue(),
 	MAP_TO_VALUE = EnumType.CreateValue(),
 	INVERT_BOOLEAN = EnumType.CreateValue(),
@@ -62,6 +63,7 @@ local STEP_RESULTING_STATE = {
 	[STEP.MAP_BOOLEAN_WITH_VALUES] = STATE.STEPS,
 	[STEP.MAP_BOOLEAN_EQUALS] = STATE.STEPS,
 	[STEP.MAP_BOOLEAN_NOT_EQUALS] = STATE.STEPS,
+	[STEP.MAP_BOOLEAN_GREATER_THAN_OR_EQUALS] = STATE.STEPS,
 	[STEP.MAP_TO_BOOLEAN] = STATE.STEPS,
 	[STEP.MAP_TO_VALUE] = STATE.STEPS,
 	[STEP.INVERT_BOOLEAN] = STATE.STEPS,
@@ -211,6 +213,13 @@ end
 ---@return ReactivePublisher
 function ReactivePublisher:MapBooleanNotEquals(value)
 	return self:_AddStepHelper(STEP.MAP_BOOLEAN_NOT_EQUALS, value)
+end
+
+---Map published values to a boolean based on whether or not it is greater than or equal to the specified value.
+---@param value any The value to compare with
+---@return ReactivePublisher
+function ReactivePublisher:MapBooleanGreaterThanOrEquals(value)
+	return self:_AddStepHelper(STEP.MAP_BOOLEAN_GREATER_THAN_OR_EQUALS, value)
 end
 
 ---Map published values to a boolean based on whether or not it's truthy.
@@ -471,7 +480,7 @@ function ReactivePublisher:_Commit()
 			break
 		elseif OPTIMIZATION_IGNORED_STEPS[stepType] then
 			-- Ignore these steps for optimizations
-		elseif stepType == STEP.MAP_WITH_FUNCTION or stepType == STEP.MAP_WITH_METHOD or stepType == STEP.MAP_BOOLEAN_WITH_VALUES or stepType == STEP.MAP_BOOLEAN_EQUALS or stepType == STEP.MAP_BOOLEAN_NOT_EQUALS or stepType == STEP.IGNORE_IF_NOT_KEY_IN_TABLE or stepType == STEP.IGNORE_IF_NOT_EQUALS or stepType == STEP.IGNORE_WITH_FUNCTION then
+		elseif stepType == STEP.MAP_WITH_FUNCTION or stepType == STEP.MAP_WITH_METHOD or stepType == STEP.MAP_BOOLEAN_WITH_VALUES or stepType == STEP.MAP_BOOLEAN_EQUALS or stepType == STEP.MAP_BOOLEAN_NOT_EQUALS or stepType == STEP.MAP_BOOLEAN_GREATER_THAN_OR_EQUALS or stepType == STEP.IGNORE_IF_NOT_KEY_IN_TABLE or stepType == STEP.IGNORE_IF_NOT_EQUALS or stepType == STEP.IGNORE_WITH_FUNCTION then
 			-- Not able to optimize
 			didOptimize = false
 			break
@@ -529,6 +538,8 @@ function ReactivePublisher:_HandleData(data, optimizeKey)
 			data = data == arg1
 		elseif stepType == STEP.MAP_BOOLEAN_NOT_EQUALS then
 			data = data ~= arg1
+		elseif stepType == STEP.MAP_BOOLEAN_GREATER_THAN_OR_EQUALS then
+			data = data >= arg1
 		elseif stepType == STEP.MAP_TO_BOOLEAN then
 			data = data and true or false
 		elseif stepType == STEP.MAP_TO_VALUE then

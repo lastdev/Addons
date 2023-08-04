@@ -44,6 +44,7 @@ function HealBot_Lang_Options_enALL()
                                  ["RUNCMDS"]=HEALBOT_OPTIONS_COMMANDS,
                                  ["PROFILE"]="Profile",
                                  ["SETPROFILE"]="Profile",
+                                 ["FRAMESTRATA"]=HEALBOT_OPTIONS_FRAMESTRATA,
                                  ["OPTTHEME"]=HEALBOT_OPTIONS_THEME,
                                  ["CLASSTYPES"]="Class type configuration",
                         -- Overrides tab
@@ -59,6 +60,7 @@ function HealBot_Lang_Options_enALL()
                                  ["SPELLSBUTTONCAST"]=HEALBOT_OPTIONS_BUTTONCASTMETHOD,
                                  ["SPELLSAVOIDBLUE"]="Avoid Blue Cursor",
                                  ["SPELLSAUTOTARGET"]="Auto Target",
+                                 ["SPELLSTARGETLASTTARGET"]=HEALBOT_OPTIONS_SPELLSTARGETLASTTARGET,
                                  ["SPELLSAUTOTRINKET"]=HEALBOT_OPTIONS_COMBOAUTOTRINKET,
                                  ["SPELLSBUTTONCLICK"]=HEALBOT_OPTIONS_BUTTONLEFT,
                                  ["SPELLSBUTTONSHIFTCLICK"]=HEALBOT_OPTIONS_BUTTONMIDDLE,
@@ -684,6 +686,7 @@ function HealBot_Lang_Options_enALL()
                                ["RUNCMDS"]="Run the command selected.",
                                ["PROFILE"]="Select to use Global, Class or Character for saving\nsettings related to Binds, Spells, General Buffs and General Debuffs.\n--\n".._G["GREEN_FONT_COLOR_CODE"].."Note: Global only saves Binds and Spells that are Macros, Items, Commands or Emotes\n".._G["GREEN_FONT_COLOR_CODE"].."Everything else defaults to the Class profile.",
                                ["SETPROFILE"]="Set the profile selected.",
+                               ["FRAMESTRATA"]="Set the frame strata for all healbot healing frames\nfrom the lowest (BACKGOUND) to the highest (DIALOG).\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Only LOW or MEDIUM is recommended.",
                                ["OPTTHEME"]="Set the options Title Box, Borders and Contents text Col"..HEALBOT_enWORD_COLOUR_SUFFIX..".",
                                ["CLASSTYPES"]="Classes can be grouped as Melee, Ranged, Healers and Custom.\nGroups of classes are available in options:\n- General Debuffs\n- General Buffs\n--\nThese settings date back to Classic and have little use in today's WoW.\nThey have near zero overhead and so are kept as some might find them useful.",
                         -- Overrides tab
@@ -699,6 +702,7 @@ function HealBot_Lang_Options_enALL()
                                ["SPELLSBUTTONCAST"]="Timing of the spell cast\n".._G["GREEN_FONT_COLOR_CODE"].."Cast when the button is Pressed or Released.",
                                ["SPELLSAVOIDBLUE"]="Cast an invalid spell and ended up with\na blue cursor? this option is your friend.",
                                ["SPELLSAUTOTARGET"]="Set the healers target to the character\nreceiving the current spell cast.",
+                               ["SPELLSTARGETLASTTARGET"]="Target the last target after the cast has started.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Only applies to clicks using Auto Target.",
                                ["SPELLSAUTOTRINKET"]="Attempt to use trinkets automatically when casting spells.\n".._G["ORANGE_FONT_COLOR_CODE"].."-------------\n".._G["ORANGE_FONT_COLOR_CODE"].."WARNING\n".._G["ORANGE_FONT_COLOR_CODE"].."-------------\n".._G["ORANGE_FONT_COLOR_CODE"].."Some trinkets break the cast using this method\n".._G["ORANGE_FONT_COLOR_CODE"].."ensure the trinket works with the spell selected.",
                                ["SPELLSBUTTONCLICK"]="Spell to cast on the Left Button."..hbSpellsTips1.."\n--\n".._G["GREEN_FONT_COLOR_CODE"].."NOTE: For each modifier key combination, range checking is done on the Left click.\n".._G["GREEN_FONT_COLOR_CODE"].."NOTE: On the Left click, range checking is only done when a spell is set.\n".."|cff77c8ff".."TIP: Do not set a macro, item or command on the Left click.\n".."|cff77c8ff".."TIP: Set spells with the same range on the same modifier keys combination."..hbSpellsTips3,
                                ["SPELLSBUTTONSHIFTCLICK"]="Spell to cast on the Middle Button."..hbSpellsTips1..hbSpellsTips2..hbSpellsTips3,

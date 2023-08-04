@@ -82,6 +82,14 @@ function HandyNotes_Draenor:OnInitialize()
                     Rares = true,
                     Treasures = true,
                 },
+                Frostwall = {
+                    Rares = true,
+                    Treasures = true,
+                },
+                Lunarfall = {
+                    Rares = true,
+                    Treasures = true,
+                },
             },
             Mounts = {
                 Mount_VoidTalon = true,

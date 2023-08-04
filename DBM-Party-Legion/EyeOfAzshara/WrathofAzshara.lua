@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1492, "DBM-Party-Legion", 3, 716)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230424022226")
+mod:SetRevision("20230726203549")
 mod:SetCreatureID(96028)
 mod:SetEncounterID(1814)
 
@@ -33,7 +33,7 @@ local serpMod = DBM:GetModByName(1479)
 
 function mod:OnCombatStart(delay)
 	self:SetStage(1)
-	timerMythicTornadoCD:Start(8.5-delay)
+	timerMythicTornadoCD:Start(8.2-delay)
 	timerMassiveDelugeCD:Start(12-delay)
 	timerArcaneBombCD:Start(23-delay)
 end

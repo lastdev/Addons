@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
 
-mod:SetRevision("20230424022226")
+mod:SetRevision("20230708234551")
 mod:SetCreatureID(84550)
 mod:SetEncounterID(1752)--TODO: VERIFY, "Boss 4" isn't descriptive enough
 mod:SetReCombatTime(120, 3)--this boss can quickly re-enter combat if boss reset occurs.
@@ -19,12 +19,12 @@ mod:RegisterEventsInCombat(
 )
 
 --TODO, figure out why the hell emote pull doesn't work. Text is correct.
-local warnToxicSpiderling			= mod:NewAddsLeftAnnounce("ej10492", 2, "136113")
+local warnToxicSpiderling			= mod:NewAddsLeftAnnounce(-10492, 2, "136113")
 --local warnVenomCrazedPaleOne		= mod:NewSpellAnnounce("ej10502", 3)--I can't find a way to detect these, at least not without flat out scanning all DAMAGE events but that's too much work.
 local warnInhale					= mod:NewSpellAnnounce(169233, 3)
 local warnPhase2					= mod:NewPhaseAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 
-local specWarnVenomCrazedPaleOne	= mod:NewSpecialWarningSwitch("ej10502", "-Healer", nil, nil, 1, 2)
+local specWarnVenomCrazedPaleOne	= mod:NewSpecialWarningSwitch(-10502, "-Healer", nil, nil, 1, 2)
 local specWarnGaseousVolley			= mod:NewSpecialWarningSpell(169382, nil, nil, nil, 2, 2)
 local specWarnToxicGas				= mod:NewSpecialWarningMove(169223, nil, nil, nil, 1, 8)
 

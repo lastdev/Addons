@@ -197,10 +197,13 @@ function psfj:PLAYER_LOGIN()
 
     -- add esc behavior: if dressupframe open, let esc go through to close it; otherwise close
     self.CloseButton:SetScript("OnKeyDown",function(self,key)
-        if key==GetBindingKey("TOGGLEGAMEMENU") and not DressUpFrame:IsVisible() then
-            self:SetPropagateKeyboardInput(false)
-            self:Click() -- close
-        else
+        if (key==GetBindingKey("TOGGLEGAMEMENU") and not DressUpFrame:IsVisible()) or InCombatLockdown() then
+            if not InCombatLockdown() then
+                self:SetPropagateKeyboardInput(false)
+            end
+            psfj:Toggle() --
+            --self:Click() -- close
+        elseif not InCombatLockdown() then
             self:SetPropagateKeyboardInput(true)
         end
     end)

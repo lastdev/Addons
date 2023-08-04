@@ -9,6 +9,7 @@ local L = TSM.Include("Locale").GetTable()
 local UIElements = TSM.Include("UI.UIElements")
 local Theme = TSM.Include("Util.Theme")
 local Money = TSM.Include("Util.Money")
+local Math = TSM.Include("Util.Math")
 local CraftString = TSM.Include("Util.CraftString")
 local Profession = TSM.Include("Service.Profession")
 local private = {}
@@ -26,6 +27,7 @@ CraftTierButton:_ExtendStateSchema()
 	:AddOptionalStringField("craftString")
 	:AddOptionalNumberField("cost")
 	:AddOptionalNumberField("profit")
+	:AddNumberField("percent", 100)
 	:Commit()
 
 
@@ -58,7 +60,6 @@ function CraftTierButton:Acquire()
 		:AddChild(UIElements.New("Text", "text")
 			:SetJustifyH("RIGHT")
 			:SetTextColor("PRIMARY_BG")
-			:SetText("100%")
 		)
 	)
 	self:AddChild(UIElements.New("Frame", "cost")
@@ -125,6 +126,11 @@ function CraftTierButton:Acquire()
 	self._state:PublisherForKeyChange("profit")
 		:MapWithFunction(private.ProfitToString)
 		:CallMethod(self:GetElement("profit.value"), "SetText")
+
+	-- Set the percent text
+	self._state:PublisherForKeyChange("percent")
+		:MapWithFunction(private.PercentToString)
+		:CallMethod(self:GetElement("header.text"), "SetText")
 end
 
 function CraftTierButton:Release()
@@ -134,9 +140,11 @@ end
 
 ---Sets the craft string.
 ---@param craftString string The craft string
+---@param chance number The chance of crafting this craft string as a value from 0 to 1
 ---@return CraftTierButton
-function CraftTierButton:SetCraftString(craftString)
+function CraftTierButton:SetCraftString(craftString, chance)
 	self._state.craftString = craftString
+	self._state.percent = Math.Round(chance * 100)
 	return self
 end
 
@@ -216,4 +224,8 @@ end
 
 function private.ProfitToString(profit)
 	return profit and Money.ToString(profit, Theme.GetColor(profit >= 0 and "FEEDBACK_GREEN" or "FEEDBACK_RED"):GetTextColorPrefix(), "OPT_RETAIL_ROUND") or "---"
+end
+
+function private.PercentToString(chance)
+	return format("%d%%", chance)
 end

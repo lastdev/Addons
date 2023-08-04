@@ -25,6 +25,7 @@ local private = {
 	currentModule = nil,
 	currentOperationName = nil,
 	playerList = {},
+	factionrealmList = {},
 	linkMenuEntries = {},
 }
 local DEFAULT_PRICE_INPUT_VALIDATE_CONTEXT = {}
@@ -54,8 +55,10 @@ end
 
 function Operations.GetOperationManagementElements(moduleName, operationName)
 	local operation = TSM.Operations.GetSettings(private.currentModule, private.currentOperationName)
+	wipe(private.factionrealmList)
 	wipe(private.playerList)
-	for factionrealm in TSM.db:GetConnectedRealmIterator("factionrealm") do
+	for _, factionrealm in TSM.db:ScopeKeyIterator("factionrealm") do
+		tinsert(private.factionrealmList, factionrealm)
 		for _, character in TSM.db:FactionrealmCharacterIterator(factionrealm) do
 			tinsert(private.playerList, character.." - "..factionrealm)
 		end
@@ -69,7 +72,7 @@ function Operations.GetOperationManagementElements(moduleName, operationName)
 				:SetMargin(0, 0, 0, 12)
 				:AddChild(UIElements.New("MultiselectionDropdown", "dropdown")
 					:SetHeight(24)
-					:SetItems(TSM.db:GetScopeKeys("factionrealm"), TSM.db:GetScopeKeys("factionrealm"))
+					:SetItems(private.factionrealmList, private.factionrealmList)
 					:SetSelectionText(L["No Faction-Realms"], L["%d Faction-Realms"], L["All Faction-Realms"])
 					:SetSettingInfo(operation, "ignoreFactionrealm")
 					:SetScript("OnSelectionChanged", TSM.Groups.RebuildDB)

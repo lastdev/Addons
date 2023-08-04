@@ -238,7 +238,7 @@ function private.CharacterSettingDataResponseHandler(dataType, sourceAccount, so
 		Settings.Set("sync", Settings.GetSyncScopeKeyByCharacter(data.character), data.namespace, data.settingKey, data.data)
 	end
 	for _, callback in ipairs(private.callbacks) do
-		callback()
+		callback(data.settingKey)
 	end
 end
 

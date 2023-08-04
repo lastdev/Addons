@@ -134,11 +134,13 @@ function private.GenerateListElements(category)
 			tinsert(private.listElements, character)
 		end
 	elseif category == L["Alts"] then
-		for factionrealm in TSM.db:GetConnectedRealmIterator("realm") do
-			for _, character in TSM.db:FactionrealmCharacterIterator(factionrealm) do
-				character = Ambiguate(gsub(strmatch(character, "(.*) "..String.Escape("-")).."-"..gsub(factionrealm, String.Escape("-"), ""), " ", ""), "none")
-				if character ~= UnitName("player") then
-					tinsert(private.listElements, character)
+		for factionrealm, isConnected in TSM.db:GetConnectedRealmIterator("realm") do
+			if isConnected or TSM.db.global.coreOptions.regionWide then
+				for _, character in TSM.db:FactionrealmCharacterIterator(factionrealm) do
+					character = Ambiguate(gsub(strmatch(character, "(.*) "..String.Escape("-")).."-"..gsub(factionrealm, String.Escape("-"), ""), " ", ""), "none")
+					if character ~= UnitName("player") then
+						tinsert(private.listElements, character)
+					end
 				end
 			end
 		end

@@ -13,7 +13,7 @@ local private = {
 	frameNumber = 0,
 	frame = nil,
 }
-local CALLBACK_TIME_WARNING_THRESHOLD = 20
+local CALLBACK_TIME_WARNING_THRESHOLD = 0.05
 local MIN_TIME_DURATION = 0.0001
 local MIN_FRAMES = 1
 

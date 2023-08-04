@@ -49,6 +49,23 @@ points[ 433 ] = { -- The Veiled Stair
 }
 
 points[ 388 ] = { -- Townlong Steppes
+	[18184711] = { pinType="TS", },
+	[18673934] = { pinType="TS", tip="Under the tree" },
+	[18814187] = { pinType="TS", },
+	[19881717] = { pinType="TS", },
+	[20432394] = { pinType="TS", },
+	[21603774] = { pinType="TS", },
+	[23163879] = { pinType="TS", },
+	[24804089] = { pinType="TS", tip="Under the tree" },
+	[24845669] = { pinType="TS", },
+	[26265394] = { pinType="TS", },
+	[30692585] = { pinType="TS", },
+	[33102622] = { pinType="TS", },
+	[36305558] = { pinType="TS", },
+	[41986346] = { pinType="TS", },
+	[43146654] = { pinType="TS", },
+	[43195397] = { pinType="TS", },
+	[44054950] = { pinType="TS", },
 }
 
 points[ 390 ] = { -- Vale of Eternal Blossoms
@@ -101,7 +118,9 @@ points[ 376 ] = { -- Valley of the Four Winds
 	[33125822] = { pinType="VFW" },
 	[33234843] = { pinType="VFW" },
 	[33352911] = { pinType="VFW" },
+	[33754204] = { pinType="VFW" },
 	[33834360] = { pinType="VFW" },
+	[33925661] = { pinType="VFW" },
 	[34045069] = { pinType="VFW" },
 	[34074926] = { pinType="VFW" },
 	[34574207] = { pinType="VFW" },
@@ -114,6 +133,7 @@ points[ 376 ] = { -- Valley of the Four Winds
 	[34953513] = { pinType="VFW" },
 	[35504931] = { pinType="VFW" },
 	[35545114] = { pinType="VFW" },
+	[35614877] = { pinType="VFW" },
 	[35864000] = { pinType="VFW" },
 	[36035161] = { pinType="VFW" },
 	[36344952] = { pinType="VFW" },
@@ -171,6 +191,7 @@ points[ 376 ] = { -- Valley of the Four Winds
 	[41493820] = { pinType="VFW", tip="Descend into the Springtail Warren" },
 	[41494400] = { pinType="VFW", authorOnly=true, tip="Under the foliage" },	-- *
 	[41585279] = { pinType="VFW", tip="Under the foliage" },
+	[41613866] = { pinType="VFW" },
 	[41653332] = { pinType="VFW" },
 	[41753448] = { pinType="VFW" },
 	[41784805] = { pinType="VFW", tip="Under the foliage" },
@@ -188,10 +209,13 @@ points[ 376 ] = { -- Valley of the Four Winds
 	[42443917] = { pinType="VFW", tip="Descend into the Springtail Warren" },
 	[42524691] = { pinType="VFW", tip="Under the foliage" },
 	[42615011] = { pinType="VFW" },
+	[42874566] = { pinType="VFW" },
 	[42963585] = { pinType="VFW" },
 	[42993951] = { pinType="VFW" },
+	[43074359] = { pinType="VFW" },
 	[43125391] = { pinType="VFW", tip="Under the foliage" },
 	[43143761] = { pinType="VFW" },
+	[43214595] = { pinType="VFW" },
 	[43264929] = { pinType="VFW", tip="Under the foliage" },
 	[43344986] = { pinType="VFW", tip="Under the foliage" },
 	[43435291] = { pinType="VFW", tip="Under the foliage" },

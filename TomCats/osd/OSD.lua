@@ -49,6 +49,14 @@ local function OnEvent(_, event, arg1, arg2)
 		settingsButton:SetScript("OnMouseUp", function()
 			settingsButton:GetHighlightTexture():SetTexCoord(0.5, 1, 0.5, 1)
 		end)
+		settingsButton:SetScript("OnEnter", function(self)
+			GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
+			GameTooltip:AddLine("The timers can be toggled between showing, hiding, or snoozing. Configure your settings by clicking here.", 1, 1, 1, true)
+			GameTooltip:Show()
+		end)
+		settingsButton:SetScript("OnLeave", function()
+			GameTooltip:Hide()
+		end)
 		settingsButton:SetPoint("TOPRIGHT", -6.5, -6.5)
 		frame:SetScript("OnUpdate", function(_, elapsed)
 			OSD:Update(elapsed)
@@ -58,7 +66,11 @@ local function OnEvent(_, event, arg1, arg2)
 		end
 		frame:UnregisterEvent("PLAYER_ENTERING_WORLD")
 		UpdateVisibility()
-	elseif (event == "ZONE_CHANGED" or event == "ZONE_CHANGED_INDOORS" or event == "ZONE_CHANGED_NEW_AREA") then
+	elseif (event == "ZONE_CHANGED"
+			or event == "ZONE_CHANGED_INDOORS"
+			or event == "ZONE_CHANGED_NEW_AREA"
+			or event == "NEW_PET_ADDED"
+	) then
 		UpdateVisibility()
 	end
 end
@@ -70,7 +82,10 @@ function UpdateVisibility()
 		if (level == 70) then
 			shown = shown or IsElementalStormsVisible()
         end
-        shown = shown or IsGreedyEmissaryVisible()
+        shown = shown or GreedyEmissary and GreedyEmissary.IsVisible()
+		shown = shown or TimeRifts and TimeRifts.IsVisible()
+		shown = shown or TwitchDrops and TwitchDrops.IsVisible()
+		shown = shown or PrimeGamingLoot and PrimeGamingLoot.IsVisible()
     	OSD.frame:SetShown(shown)
         if (shown) then
             OSD:Refresh()
@@ -83,4 +98,5 @@ frame:RegisterEvent("AREA_POIS_UPDATED")
 frame:RegisterEvent("ZONE_CHANGED");
 frame:RegisterEvent("ZONE_CHANGED_INDOORS");
 frame:RegisterEvent("ZONE_CHANGED_NEW_AREA");
+frame:RegisterEvent("NEW_PET_ADDED");
 frame:SetScript("OnEvent", OnEvent)

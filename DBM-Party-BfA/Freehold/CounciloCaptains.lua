@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2093, "DBM-Party-BfA", 2, 1001)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230612025442")
+mod:SetRevision("20230621232728")
 mod:SetCreatureID(126845, 126847, 126848)--Captain Jolly, Captain Raoul, Captain Eudora
 mod:SetEncounterID(2094)
 mod:DisableRegenDetection()
@@ -63,7 +63,7 @@ local specWarnBlackoutBarrel		= mod:NewSpecialWarningSwitch(258338, "-Healer", n
 
 ----Hostile
 local timerBarrelSmashCD			= mod:NewCDTimer(22.9, 256589, nil, "Melee", nil, 3)--22.9-24.5
-local timerBlackoutBarrelCD			= mod:NewCDTimer(47.2, 258338, nil, nil, nil, 3, nil, DBM_COMMON_L.DAMAGE_ICON)
+local timerBlackoutBarrelCD			= mod:NewCDTimer(46.1, 258338, nil, nil, nil, 3, nil, DBM_COMMON_L.DAMAGE_ICON)
 ----Friendly
 local timerTappedKegCD				= mod:NewNextTimer(22.3, 272884, nil, nil, nil, 5)
 --Eudora

@@ -1,8 +1,8 @@
---	01.05.2023
+--	09.07.2023
 
 local GlobalAddonName, MRT = ...
 
-MRT.V = 4740
+MRT.V = 4760
 MRT.T = "R"
 
 MRT.Slash = {}			--> функции вызова из коммандной строки
@@ -102,9 +102,17 @@ do
 		this.Load = nil
 		MRT.F.dprint(this.moduleName.."'s options loaded")
 		this.isLoaded = true
+
+		MRT.F:FireCallback("OPTIONS_LOADED", this, this.moduleName)
 	end
 	local function mod_Options_CreateTitle(self)
 		self.title = MRT.lib:Text(self,self.name,20):Point(15,6):Top()
+	end
+	local function mod_Options_OpenPage(self)
+		MRT.Options:Open(self)
+	end
+	local function mod_Options_ForceLoad(self)
+		mod_LoadOptions(self)
 	end
 	function MRT:New(moduleName,localizatedName,disableOptions)
 		if MRT.A[moduleName] then
@@ -122,6 +130,8 @@ do
 			self.options:SetScript("OnShow",mod_LoadOptions)
 			
 			self.options.CreateTilte = mod_Options_CreateTitle
+			self.options.OpenPage = mod_Options_OpenPage
+			self.options.ForceLoad = mod_Options_ForceLoad
 			
 			MRT.ModulesOptions[#MRT.ModulesOptions + 1] = self.options
 		end
@@ -460,17 +470,23 @@ function MRT.F:RegisterCallback(eventName, func)
 		callbacks[eventName] = {}
 	end
 	tinsert(callbacks[eventName], func)
+
+	MRT.F:FireCallback("CallbackRegistered", eventName, func)
 end
 function MRT.F:UnregisterCallback(eventName, func)
 	if not callbacks[eventName] then
 		return
 	end
-	for i=1,#callbacks[eventName] do
+	local count = 0
+	for i=#callbacks[eventName],1,-1 do
 		if callbacks[eventName][i] == func then
 			tremove(callbacks[eventName], i)
-			break
+		else
+			count = count + 1
 		end
 	end
+
+	MRT.F:FireCallback("CallbackUnregistered", eventName, func, count)
 end
 
 local function CallbackErrorHandler(err)

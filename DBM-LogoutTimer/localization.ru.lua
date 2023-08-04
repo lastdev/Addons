@@ -1,8 +1,8 @@
 if GetLocale() ~= "ruRU" then return end
-local L = DBM:GetModLocalization("DBM-LogoutTimer")
+local L = DBM:GetModLocalization("LogoutTimerGeneral")
 
 L:SetGeneralLocalization({
-	name	= "Таймер выхода из системы"
+	name	= "Общие настройки"
 })
 
 L:SetTimerLocalization({
@@ -11,10 +11,11 @@ L:SetTimerLocalization({
 
 L:SetOptionLocalization({
 	FlashClientIcon	= "Мигающий значок клиента при выходе из системы.",
-	PlaySound		= "Воспроизводить звуковой эффект при выходе из системы."
+	PlaySound		= "Воспроизводить звуковой эффект при выходе из системы.",
+	TimerLogout		= "Показать таймер выхода"
 })
 
 L:SetMiscLocalization({
-	IdleMessage		= "Вы сейчас отошли: AFK",
+	IdleMessage		= "Вы сейчас отошли:",
 	UnidleMessage	= "Вы снова за ПК."
 })

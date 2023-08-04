@@ -151,6 +151,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_PROTECTPVP              = "Avoid PvP";
     HEALBOT_OPTIONS_HEAL_CHATOPT            = "Chat Options";
     HEALBOT_OPTIONS_BLIZZARD_FRAMES         = "Blizzard Frames";
+    HEALBOT_OPTIONS_TOTALHEALABSORBS        = "Total Heal Absorbs";
 
     HEALBOT_OPTIONS_FRAMESCALE              = "Frame scale"
     HEALBOT_OPTIONS_STICKFRAMEOFFSETH       = "Sticky frame horizontal offset"
@@ -160,8 +161,8 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_SKINTEXTURE             = "Texture"
     HEALBOT_OPTIONS_SKINHEIGHT              = "Height"
     HEALBOT_OPTIONS_SKINWIDTH               = "Width"
-    HEALBOT_OPTIONS_SKINNUMCOLS             = "No. columns"
-    HEALBOT_OPTIONS_SKINNUMHCOLS            = "No. groups per column"
+    HEALBOT_OPTIONS_SKINNUMCOLS             = "Number of columns"
+    HEALBOT_OPTIONS_SKINNUMHCOLS            = "Number of groups per column"
     HEALBOT_OPTIONS_SKINBRSPACE             = "Row spacer"
     HEALBOT_OPTIONS_SKINBCSPACE             = "Column spacer"
     HEALBOT_SORTBY_NAME                     = "Name"
@@ -202,6 +203,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_ENABLEHEALTHY           = "Always use enabled";
     HEALBOT_OPTIONS_FADEONEXPIRE            = "Fade on expire";
     HEALBOT_OPTIONS_FADESTARTTIME           = "Fade start time";
+    HEALBOT_OPTIONS_SPELLSTARGETLASTTARGET  = "Auto Target: After cast target last target"
 
     HEALBOT_OPTIONS_CASTNOTIFY1             = "No messages";
     HEALBOT_OPTIONS_CASTNOTIFY2             = "Notify self";
@@ -1039,6 +1041,7 @@ function HealBot_Lang_enALL()
     HEALBOT_WORD_PLAYER                     = "Player"
     HEALBOT_OPTIONS_CPUUSAGE                = "CPU Usage"
     HEALBOT_OPTIONS_THEME                   = "Options theme"
+    HEALBOT_OPTIONS_FRAMESTRATA             = "Frame Strata"
     HEALBOT_OPTIONS_DONT_SHOW               = "Don't show"
     HEALBOT_OPTIONS_HAZARDONLY              = "Hazard Only"
     HEALBOT_OPTIONS_SAME_AS_HLTH_CURRENT    = "Same as health (current health)"
@@ -1351,6 +1354,8 @@ function HealBot_Lang_enALL()
     HEALBOT_PLUGIN_AURAWATCHHEALTHBELOW     = "Health below"
     HEALBOT_PLUGIN_AURAWATCHMANABELOW       = "Mana below"
     HEALBOT_PLUGIN_AURAWATCHAGGROLEVEL      = "Aggro level"
+    HEALBOT_PLUGIN_AURAWATCHRAIDTARGET      = "Raid Target"
+    HEALBOT_PLUGIN_AURAWATCHRAIDTARGETF     = "Filter raid target"
     HEALBOT_PLUGIN_TWEAKSDELETEALL          = "Delete All"
     HEALBOT_PLUGIN_TWEAKSENABLEALL          = "Enable All"
     HEALBOT_PLUGIN_TWEAKSDISABLEALL         = "Disable All"

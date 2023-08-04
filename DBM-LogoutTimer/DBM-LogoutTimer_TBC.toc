@@ -3,15 +3,16 @@
 ## Author: QartemisT
 ## LoadOnDemand: 0
 ## RequiredDeps: DBM-Core
+## Version: r16
+## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: OTHER
 ## X-DBM-Mod-Category: OTHER
 ## X-DBM-Mod-No-Statistics: 1
-## X-DBM-Mod-Name: LogoutTimer
+## X-DBM-Mod-Name: Logout Timer
 ## X-DBM-Mod-Sort: 1500
 ## X-Curse-Project-ID: 427013
 ## X-Wago-ID: anKWe4NE
-## Version: r11
 
 localization.en.lua
 localization.ru.lua

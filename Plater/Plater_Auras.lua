@@ -501,9 +501,7 @@ function Plater.AddToAuraUpdate (unit)
 	if not unit then return end
 	UnitAuraEventHandlerValidUnits[unit] = true
 	UnitAuraEventHandlerData[unit] = { hasBuff = true, hasDebuff = true } --update at least once
-	if IS_NEW_UNIT_AURA_AVAILABLE then
-		UpdateUnitAuraCacheData(unit, nil)
-	end
+	UpdateUnitAuraCacheData(unit, nil)
 end
 
 
@@ -793,7 +791,7 @@ end
 			local iconFrame = iconFrameContainer [i]
 			local icon = iconFrame.texture
 			local spellName = iconFrame.SpellName
-			local index = spellName .. icon
+			local index = spellName .. (icon or spellName or math.random(1, 1000000))
 
 			if (aurasDuplicated [index]) then
 				tinsert (aurasDuplicated [index], {iconFrame, iconFrame.RemainingTime})
@@ -973,7 +971,27 @@ end
 			--get the amount of auras shown in the frame; iterate over all if not sorting
 			local amountFramesShown = #iconFrameContainer
 			
+			
+			if IS_NEW_UNIT_AURA_AVAILABLE then
+				-- still sort by auraInstanceID for some consistency
+				local iconFrameContainerCopy = {}
+				local index = 0
+				for _, icon in pairs(iconFrameContainer) do
+					if icon:IsShown() then
+						index = index + 1
+						iconFrameContainerCopy[index] = icon
+					end
+				end
+				iconFrameContainer = iconFrameContainerCopy
+				table.sort (iconFrameContainer, function(aura1, aura2) 
+					return (aura1.auraInstanceID or 0) < (aura2.auraInstanceID or 0)
+				end)
+				--when sorted, this is reliable
+				amountFramesShown = index
+			end
+			
 			if (profile.aura_sort) then
+				-- this needs to be done in addition. the above is just to keep them consistent in order
 				local iconFrameContainerCopy = {}
 				local index = 0
 				for _, icon in pairs(iconFrameContainer) do
@@ -1850,10 +1868,9 @@ end
 		
 		--> reset auras
 		if resetDebuffs or not DB_AURA_SEPARATE_BUFFS then
-			if not DB_AURA_SEPARATE_BUFFS then
-				wipe (self.unitFrame.GhostAuraCache) -- ghost and extra are on aura frame 1, needs to be cleared.
-				platerInternal.ExtraAuras.WipeCache(self.unitFrame)
-			end
+			wipe (self.unitFrame.GhostAuraCache) -- ghost and extra are on aura frame 1, needs to be cleared.
+			platerInternal.ExtraAuras.WipeCache(self.unitFrame)
+			
 			wipe (self.AuraCache)
 			self.HasBuff = false
 			self.HasDebuff = false
@@ -1863,10 +1880,6 @@ end
 		
 		--> second buff anchor
 		if resetBuffs then
-			if DB_AURA_SEPARATE_BUFFS then
-				wipe (self.unitFrame.GhostAuraCache) -- ghost and extra are on aura frame 1, needs to be cleared.
-				platerInternal.ExtraAuras.WipeCache(self.unitFrame)
-			end
 			wipe (self.BuffFrame2.AuraCache)
 			self.BuffFrame2.HasBuff = false 
 			self.BuffFrame2.HasDebuff = false
@@ -2325,7 +2338,7 @@ end
 				unitAuraCache.hasEnrage = unitAuraCache.hasEnrage or dispelName == AURA_TYPE_ENRAGE
 				
 				--> only show buffs casted by the player it self and less than 1 minute in duration
-				if ((not DB_BUFF_BANNED [name] and not DB_BUFF_BANNED [spellId]) and (noBuffDurationLimitation or (duration and (duration > 0 and duration < 60)) and (sourceUnit and UnitIsUnit (sourceUnit, "player")))) then
+				if ((not DB_BUFF_BANNED [name] and not DB_BUFF_BANNED [spellId]) and (noBuffDurationLimitation or (duration and (duration > 0 and duration < 60))) and (sourceUnit and UnitIsUnit (sourceUnit, "player"))) then
 					local auraIconFrame, buffFrame = Plater.GetAuraIcon (self, true)
 					Plater.AddAura (buffFrame, auraIconFrame, id, name, icon, applications, auraType, duration, expirationTime, sourceUnit, isStealable, nameplateShowPersonal, spellId, true, false, false, true, dispelName, timeMod)
 
@@ -2495,6 +2508,7 @@ end
 		end
 
 		auraOptionsFrame:SetScript ("OnShow", function()
+			--Plater.DisableAuraTest = not Plater.db.profile.aura_enabled
 			if (not Plater.DisableAuraTest) then
 				auraOptionsFrame.EnableAuraTest()
 			end

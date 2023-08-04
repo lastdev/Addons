@@ -73,7 +73,7 @@ local function showRealDate(curseDate)
 end
 
 DBM = {
-	Revision = parseCurseDate("20230627010246"),
+	Revision = parseCurseDate("20230801185723"),
 }
 
 local fakeBWVersion, fakeBWHash
@@ -81,13 +81,13 @@ local bwVersionResponseString = "V^%d^%s"
 local PForceDisable
 -- The string that is shown as version
 if isRetail then
-	DBM.DisplayVersion = "10.1.13"
-	DBM.ReleaseRevision = releaseDate(2023, 6, 6) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
-	PForceDisable = 4--When this is incremented, trigger force disable regardless of major patch
+	DBM.DisplayVersion = "10.1.20"
+	DBM.ReleaseRevision = releaseDate(2023, 8, 1) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	PForceDisable = 6--When this is incremented, trigger force disable regardless of major patch
 	fakeBWVersion, fakeBWHash = 278, "6d6db52"
 elseif isClassic then
-	DBM.DisplayVersion = "1.14.39 alpha"
-	DBM.ReleaseRevision = releaseDate(2023, 6, 6) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	DBM.DisplayVersion = "1.14.43 alpha"
+	DBM.ReleaseRevision = releaseDate(2023, 7, 27) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	PForceDisable = 1--When this is incremented, trigger force disable regardless of major patch
 	fakeBWVersion, fakeBWHash = 48, "9581348"
 elseif isBCC then
@@ -96,8 +96,8 @@ elseif isBCC then
 	PForceDisable = 1--When this is incremented, trigger force disable regardless of major patch
 	fakeBWVersion, fakeBWHash = 48, "9581348"
 elseif isWrath then
-	DBM.DisplayVersion = "3.4.43"
-	DBM.ReleaseRevision = releaseDate(2023, 6, 21) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	DBM.DisplayVersion = "3.4.47 alpha"
+	DBM.ReleaseRevision = releaseDate(2023, 7, 27) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	PForceDisable = 1--When this is incremented, trigger force disable regardless of major patch
 	fakeBWVersion, fakeBWHash = 48, "9581348"
 end
@@ -255,6 +255,7 @@ DBM.DefaultOptions = {
 	GroupOptionsBySpell = true,
 	GroupOptionsExcludeIcon = false,
 	AutoExpandSpellGroups = not isRetail,
+	ShowWAKeys = true,
 	--ShowSpellDescWhenExpanded = false,
 	RangeFrameFrames = "radar",
 	RangeFrameUpdates = "Average",
@@ -929,6 +930,42 @@ end
 --Another custom server name strip function that first strips out the "><" DBM wraps around playernames
 local function stripServerName(cap)
 	return DBM:GetShortServerName(cap:sub(2, -2))
+end
+
+local function parseSpellIcon(spellId, objectType, fallbackIcon)
+	local icon
+	if objectType and objectType == "achievement" then
+		icon = select(10, GetAchievementInfo(spellId))
+	elseif type(spellId) == "string" then--Journal ID in old format
+		if spellId:match("ej%d+") then
+			icon = select(4, DBM:EJ_GetSectionInfo(string.sub(spellId, 3)))
+		else--Icon texture ID (passed as string by module so core knows it's a FDID and not spellID
+			icon = spellId
+		end
+	elseif type(spellId) == "number" then--SpellId or journal Id
+		if spellId < 0 then--Journal ID in new format
+			icon = select(4, DBM:EJ_GetSectionInfo(-spellId))
+		else--SpellId
+			icon = spellId >= 6 and GetSpellTexture(spellId)
+		end
+	end
+	return icon or fallbackIcon or 136116
+end
+
+local function parseSpellName(spellId, objectType)
+	local spellName
+	if objectType and objectType == "achievement" then
+		spellName = select(2, GetAchievementInfo(spellId))
+	elseif type(spellId) == "string" and spellId:match("ej%d+") then--Old Journal Format
+		spellName = DBM:EJ_GetSectionInfo(string.sub(spellId, 3))
+	elseif type(spellId) == "number" then
+		if spellId < 0 then--New Journal Format
+			spellName = DBM:EJ_GetSectionInfo(-spellId)
+		else
+			spellName = DBM:GetSpellInfo(spellId)
+		end
+	end
+	return spellName
 end
 
 --------------
@@ -2264,7 +2301,7 @@ do
 				end
 			end
 			for i = 1, GetNumGroupMembers() do
-				local name, rank, subgroup, _, _, className = GetRaidRosterInfo(i)
+				local name, rank, subgroup, _, _, className, _, isOnline = GetRaidRosterInfo(i)
 				-- Maybe GetNumGroupMembers() bug? Seems that GetNumGroupMembers() rarely returns bad value, causing GetRaidRosterInfo() returns to nil.
 				-- Filter name = nil to prevent nil table error.
 				if name then
@@ -2283,6 +2320,7 @@ do
 					raid[name].groupId = i
 					raid[name].guid = UnitGUID(id) or ""
 					raid[name].updated = true
+					raid[name].isOnline = isOnline
 					raidGuids[UnitGUID(id) or ""] = name
 					if rank == 2 then
 						lastGroupLeader = name
@@ -2300,7 +2338,7 @@ do
 					fireEvent("DBM_raidLeave", i)
 				else
 					v.updated = nil
-					if v.revision and v.rank > 0 and (v.enabledIcons or "") == "true" then
+					if v.revision and v.isOnline and v.rank > 0 and (v.enabledIcons or "") == "true" then
 						iconSeter[#iconSeter + 1] = v.revision.." "..v.name
 					end
 				end
@@ -2318,6 +2356,15 @@ do
 					if updateNotificationDisplayed == 0 and electedBackup and playerName == electedBackup:sub(elected:find(" ") + 1) then
 						private.enableIcons = true
 						DBM:Debug("You have been elected as one of 2 backup icon setters in raid that have assist/lead", 2)
+					end
+				end
+			end
+			--Recheck elected icon if group changed mid combat, so we don't end up in situation no icons are set because setter bounced
+			if #inCombat > 0 then--At least one boss is engaged
+				for i = #inCombat, 1, -1 do
+					local mod = inCombat[i]
+					if mod then
+						self:ElectIconSetter(mod)
 					end
 				end
 			end
@@ -2348,6 +2395,7 @@ do
 				local shortname = UnitName(id)
 				local rank = UnitIsGroupLeader(id) and 2 or 0
 				local _, className = UnitClass(id)
+				local isOnline = UnitIsConnected(id)
 				if (not raid[name]) and inRaid then
 					fireEvent("DBM_partyJoin", name)
 				end
@@ -2360,6 +2408,7 @@ do
 				raid[name].id = id
 				raid[name].groupId = i
 				raid[name].updated = true
+				raid[name].isOnline = isOnline
 				raidGuids[UnitGUID(id) or ""] = name
 				if rank >= 1 then
 					lastGroupLeader = name
@@ -2376,7 +2425,7 @@ do
 					fireEvent("DBM_partyLeave", k)
 				else
 					v.updated = nil
-					if v.revision and v.rank > 0 and (v.enabledIcons or "") == "true" then
+					if v.revision and v.isOnline and v.rank > 0 and (v.enabledIcons or "") == "true" then
 						iconSeter[#iconSeter + 1] = v.revision.." "..v.name
 					end
 				end
@@ -2386,6 +2435,15 @@ do
 				local elected = iconSeter[1]
 				if playerName == elected:sub(elected:find(" ") + 1) then
 					private.enableIcons = true
+				end
+			end
+			--Recheck elected icon if group changed mid combat, so we don't end up in situation no icons are set because setter bounced
+			if #inCombat > 0 then--At least one boss is engaged
+				for i = #inCombat, 1, -1 do
+					local mod = inCombat[i]
+					if mod then
+						self:ElectIconSetter(mod)
+					end
 				end
 			end
 		else
@@ -2838,6 +2896,17 @@ local soundMigrationtable = {
 	[49764] = 555337,--TEMPEST_Millhouse_Pyro01
 	[11213] = 563787,--TEMPEST_VoidRvr_Aggro01
 	[15757] = 564859,--UR_YoggSaron_Slay01
+	[25780] = 572130,--VO_BH_ALIZABAL_RESET_01
+	[109293] = 2016732,--VO_801_Bwonsamdi_35_M
+	[109295] = 2016734,--VO_801_Bwonsamdi_37_M
+	[109296] = 2016735,--VO_801_Bwonsamdi_38_M
+	[109308] = 2016747,--VO_801_Bwonsamdi_50_M
+	[15588] = 553345,--UR_Kologarn_Slay02
+	[15553] = 552023,--UR_Hodir_Slay01
+	[109069] = 2015891,--VO_801_Scrollsage_Nola_34_F
+	[15742] = 562111,--UR_Thorim_P1Wipe01
+	[17067] = 563333,--IC_Valithria_Berserk01
+	[16971] = 555967,--IC_Muradin_Saurfang02
 }
 
 function DBM:LoadModOptions(modId, inCombat, first)
@@ -3980,10 +4049,11 @@ do
 				local threshold = DBM.Options.PTCountThreshold2
 				threshold = floor(threshold)
 				dummyMod = DBM:NewMod("PullTimerCountdownDummy")
+				dummyMod.isDummyMod = true
 				DBM:GetModLocalization("PullTimerCountdownDummy"):SetGeneralLocalization{ name = L.MINIMAP_TOOLTIP_HEADER }
 				dummyMod.text = dummyMod:NewAnnounce("%s", 1, "132349")
 				dummyMod.geartext = dummyMod:NewSpecialWarning("  %s  ", nil, nil, nil, 3)
-				dummyMod.timer = dummyMod:NewTimer(20, "%s", "132349", nil, nil, 0, nil, nil, DBM.Options.DontPlayPTCountdown and 0 or 4, threshold)
+				dummyMod.timer = dummyMod:NewTimer(20, "%s", "132349", nil, nil, 0, nil, nil, DBM.Options.DontPlayPTCountdown and 0 or 4, threshold, nil, nil, nil, nil, nil, nil, "pull")
 			end
 			--Cancel any existing pull timers before creating new ones, we don't want double countdowns or mismatching blizz countdown text (cause you can't call another one if one is in progress)
 			if not DBM.Options.DontShowPT2 then--and DBT:GetBar(L.TIMER_PULL)
@@ -4066,9 +4136,11 @@ do
 				local threshold = DBM.Options.PTCountThreshold2
 				threshold = floor(threshold)
 				dummyMod2 = DBM:NewMod("BreakTimerCountdownDummy")
+				dummyMod2.isDummyMod = true
 				DBM:GetModLocalization("BreakTimerCountdownDummy"):SetGeneralLocalization{ name = L.MINIMAP_TOOLTIP_HEADER }
 				dummyMod2.text = dummyMod2:NewAnnounce("%s", 1, isRetail and "237538" or "136106")
-				dummyMod2.timer = dummyMod2:NewTimer(20, L.TIMER_BREAK, isRetail and "237538" or "136106", nil, nil, 0, nil, nil, DBM.Options.DontPlayPTCountdown and 0 or 1, threshold)
+				--timer, name, icon, optionDefault, optionName, colorType, inlineIcon, keep, countdown, countdownMax, r, g, b, spellId, requiresCombat, waCustomName, customType
+				dummyMod2.timer = dummyMod2:NewTimer(20, L.TIMER_BREAK, isRetail and "237538" or "136106", nil, nil, 0, nil, nil, DBM.Options.DontPlayPTCountdown and 0 or 1, threshold, nil, nil, nil, nil, nil, nil, "break")
 			end
 			--Cancel any existing break timers before creating new ones, we don't want double countdowns or mismatching blizz countdown text (cause you can't call another one if one is in progress)
 			if not DBM.Options.DontShowPT2 then--and DBT:GetBar(L.TIMER_BREAK)
@@ -4600,7 +4672,7 @@ do
 					self:Unschedule(SendVersion)
 					self:Schedule(3, SendVersion)
 				elseif bwPrefix == "B" then--Boss Mod Sync
-					for i = 1, #inCombat do
+					for i = #inCombat, 1, -1 do
 						local mod = inCombat[i]
 						if mod and mod.OnBWSync then
 							mod:OnBWSync(bwMsg, extra, correctSender)
@@ -4616,7 +4688,7 @@ do
 			end
 		elseif prefix == "Transcriptor" and msg then
 			local correctSender = GetCorrectSender(senderOne, senderTwo)
-			for i = 1, #inCombat do
+			for i = #inCombat, 1, -1 do
 				local mod = inCombat[i]
 				if mod and mod.OnTranscriptorSync then
 					mod:OnTranscriptorSync(msg, correctSender)
@@ -5216,8 +5288,16 @@ do
 			if self.Options.RecordOnlyBosses then
 				self:StartLogging(0)
 			end
-			if self.Options.HideObjectivesFrame and mod.addon.type ~= "SCENARIO" and (not isRetail or GetNumTrackedAchievements() == 0) and difficultyIndex ~= 8 and not InCombatLockdown() then
-				if isRetail then--Do nothing do to taint and breaking
+			local trackedAchievements
+			if isClassic or isBCC then
+				trackedAchievements = false
+			elseif isWrath then
+				trackedAchievements = (GetNumTrackedAchievements() > 0)
+			else
+				trackedAchievements = (C_ContentTracking and C_ContentTracking.GetTrackedIDs(2)[1])
+			end
+			if self.Options.HideObjectivesFrame and mod.addon.type ~= "SCENARIO" and not trackedAchievements and difficultyIndex ~= 8 and not InCombatLockdown() then
+				if isRetail then--Do nothing due to taint and breaking
 					--if ObjectiveTrackerFrame:IsVisible() then
 					--	ObjectiveTracker_Collapse()
 					--	watchFrameRestore = true
@@ -5274,24 +5354,8 @@ do
 				if mod.numBoss then
 					mod.vb.bossLeft = mod.numBoss
 				end
-				--elect icon person
-				if mod.findFastestComputer and not self.Options.DontSetIcons then
-					if self:GetRaidRank() > 0 then
-						for i = 1, #mod.findFastestComputer do
-							local option = mod.findFastestComputer[i]
-							if mod.Options[option] then
-								sendSync(DBMSyncProtocol, "IS", UnitGUID("player").."\t"..tostring(self.Revision).."\t"..option)
-							end
-						end
-					elseif not IsInGroup() then
-						for i = 1, #mod.findFastestComputer do
-							local option = mod.findFastestComputer[i]
-							if mod.Options[option] then
-								private.canSetIcons[option] = true
-							end
-						end
-					end
-				end
+				--Update Elected Icon Setter
+				self:ElectIconSetter(mod)
 				--call OnCombatStart
 				if mod.OnCombatStart then
 					local startEvent = syncedEvent or event
@@ -5330,7 +5394,7 @@ do
 							self:AddMsg(L.SCENARIO_STARTED:format(difficultyText..name))
 						else
 							self:AddMsg(L.COMBAT_STARTED:format(difficultyText..name))
-							local check = not private.statusGuildDisabled and (isRetail and ((difficultyIndex == 8 or difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16) and InGuildParty()) or difficultyIndex ~= 1 and DBM:GetNumGuildPlayersInZone() >= 10) -- Classic
+							local check = not private.statusGuildDisabled and (isRetail and ((difficultyIndex == 8 or difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16) and InGuildParty()) or difficultyIndex ~= 1 and DBM:GetNumGuildPlayersInZone() >= 10)
 							if check and not self.Options.DisableGuildStatus then--Only send relevant content, not guild beating down lich king or LFR.
 								self:Unschedule(delayedGCSync, modId)
 								self:Schedule(isRetail and 1.5 or 3, delayedGCSync, modId, difficultyIndex, difficultyModifier, name)
@@ -5737,7 +5801,7 @@ function DBM:OnMobKill(cId, synced)
 				sendSync(DBMSyncProtocol, "K", cId)
 			end
 			v.combatInfo.killMobs[cId] = false
-			if v.numBoss then
+			if v.numBoss and (v.vb.bossLeft or 0) > 0 then
 				v.vb.bossLeft = (v.vb.bossLeft or v.numBoss) - 1
 				self:Debug("Boss left - "..v.vb.bossLeft.."/"..v.numBoss, 2)
 			end
@@ -5748,7 +5812,7 @@ function DBM:OnMobKill(cId, synced)
 					break
 				end
 			end
-			if allMobsDown then
+			if allMobsDown and not v.multiIDSingleBoss then--More hacks. don't let combat end for mutli CID single bosses
 				self:EndCombat(v, nil, nil, "All Mobs Down")
 			end
 		elseif cId == v.combatInfo.mob and not v.combatInfo.killMobs and not v.combatInfo.multiMobPullDetection then
@@ -8441,12 +8505,7 @@ do
 		if customName then
 			spellName = customName
 		else
-			if type(spellId) == "string" and spellId:match("ej%d+") then
-				spellId = string.sub(spellId, 3)
-				spellName = DBM:EJ_GetSectionInfo(spellId) or CL.UNKNOWN
-			else
-				spellName = (spellId or 0) >= 6 and DBM:GetSpellInfo(spellId) or CL.UNKNOWN
-			end
+			spellName = parseSpellName(spellId, announceType) or CL.UNKNOWN
 		end
 		local text
 		if announceType == "cast" then
@@ -8473,6 +8532,21 @@ do
 		local text, spellName = setText(self.announceType, self.spellId, self.castTime, self.preWarnTime, customName)
 		self.text = text
 		self.spellName = spellName
+	end
+
+	--Not to be confused with SetText, which only sets the text of object.
+	--This changes actual ID so announce callback also swaps ID for WAs
+	function announcePrototype:UpdateKey(altSpellId)
+		self.spellId = altSpellId
+		self.icon = parseSpellIcon(altSpellId, self.announceType, self.icon)
+		if self.announceType then
+			--Regenerate auto localized text if it's an auto localized alert
+			local text, spellName = setText(self.announceType, self.spellId, self.castTime, self.preWarnTime)
+			self.text = text
+			self.spellName = spellName
+		else--Just regenerating spellName not message text because it's likely a custom text object such as NewSpecialWarning
+			self.spellName = parseSpellName(altSpellId)
+		end
 	end
 
 	-- TODO: this function is an abomination, it needs to be rewritten. Also: check if these work-arounds are still necessary
@@ -8638,7 +8712,7 @@ do
 	end
 
 	-- old constructor (no auto-localize)
-	function bossModPrototype:NewAnnounce(text, color, icon, optionDefault, optionName, soundOption, spellID)
+	function bossModPrototype:NewAnnounce(text, color, icon, optionDefault, optionName, soundOption, spellID, waCustomName)
 		if not text then
 			error("NewAnnounce: you must provide announce text", 2)
 			return
@@ -8653,6 +8727,7 @@ do
 		if soundOption and type(soundOption) == "boolean" then
 			soundOption = 0--No Sound
 		end
+		icon = parseSpellIcon(icon)
 		local obj = setmetatable(
 			{
 				text = self.localization.warnings[text],
@@ -8661,17 +8736,17 @@ do
 				color = DBM.Options.WarningColors[color or 1] or DBM.Options.WarningColors[1],
 				sound = soundOption or 1,
 				mod = self,
-				icon = (type(icon) == "string" and icon:match("ej%d+") and select(4, DBM:EJ_GetSectionInfo(string.sub(icon, 3))) ~= "" and select(4, DBM:EJ_GetSectionInfo(string.sub(icon, 3)))) or (type(icon) == "number" and GetSpellTexture(icon)) or tonumber(icon) or 136116,
+				icon = icon,
 				spellId = spellID,--For WeakAuras / other callbacks
 			},
 			mt
 		)
 		if optionName then
 			obj.option = optionName
-			self:AddBoolOption(obj.option, optionDefault, "announce", nil, nil, nil, spellID)
+			self:AddBoolOption(obj.option, optionDefault, "announce", nil, nil, nil, spellID, nil, waCustomName)
 		elseif optionName ~= false then
 			obj.option = text
-			self:AddBoolOption(obj.option, optionDefault, "announce", nil, nil, nil, spellID)
+			self:AddBoolOption(obj.option, optionDefault, "announce", nil, nil, nil, spellID, nil, waCustomName)
 		end
 		tinsert(self.announces, obj)
 		return obj
@@ -8698,7 +8773,7 @@ do
 			soundOption = 0--No Sound
 		end
 		local text, spellName = setText(announceType, alternateSpellId or spellId, castTime, preWarnTime, nil, spellId)
-		icon = icon or spellId
+		icon = parseSpellIcon(icon or spellId)
 		local obj = setmetatable( -- todo: fix duplicate code
 			{
 				text = text,
@@ -8707,7 +8782,7 @@ do
 				announceType = announceType,
 				color = DBM.Options.WarningColors[color or 1] or DBM.Options.WarningColors[1],
 				mod = self,
-				icon = (type(icon) == "string" and icon:match("ej%d+") and select(4, DBM:EJ_GetSectionInfo(string.sub(icon, 3))) ~= "" and select(4, DBM:EJ_GetSectionInfo(string.sub(icon, 3)))) or (type(icon) == "number" and GetSpellTexture(icon)) or tonumber(icon) or 136116,
+				icon = icon,
 				sound = soundOption or 1,
 				type = announceType,
 				spellId = spellId,
@@ -8858,10 +8933,17 @@ do
 		end
 		local displayText
 		if not yellText then
-			if type(spellId) == "string" and spellId:match("ej%d+") then
+			if type(spellId) == "string" and spellId:match("ej%d+") then--Old Format Journal
 				displayText = L.AUTO_YELL_ANNOUNCE_TEXT[yellType]:format(DBM:EJ_GetSectionInfo(string.sub(spellId, 3)) or CL.UNKNOWN)
+			elseif type(spellId) == "number" then
+				if spellId < 0 then--New format Journal
+					spellId = -spellId
+					displayText = L.AUTO_YELL_ANNOUNCE_TEXT[yellType]:format(DBM:EJ_GetSectionInfo(spellId) or CL.UNKNOWN)
+				else
+					displayText = L.AUTO_YELL_ANNOUNCE_TEXT[yellType]:format(DBM:GetSpellInfo(spellId) or CL.UNKNOWN)
+				end
 			else
-				displayText = L.AUTO_YELL_ANNOUNCE_TEXT[yellType]:format(DBM:GetSpellInfo(spellId) or CL.UNKNOWN)
+				displayText = L.AUTO_YELL_ANNOUNCE_TEXT[yellType]:format(CL.UNKNOWN)
 			end
 		end
 		--Passed spellid as yellText.
@@ -9228,11 +9310,7 @@ do
 		if customName then
 			spellName = customName
 		else
-			if type(spellId) == "string" and spellId:match("ej%d+") then
-				spellName = DBM:EJ_GetSectionInfo(string.sub(spellId, 3)) or CL.UNKNOWN
-			else
-				spellName = (spellId or 0) >= 6 and DBM:GetSpellInfo(spellId) or CL.UNKNOWN
-			end
+			spellName = parseSpellName(spellId, announceType) or CL.UNKNOWN
 		end
 		if announceType == "prewarn" then
 			if type(stacks) == "string" then
@@ -9255,6 +9333,19 @@ do
 		local text, spellName = setText(self.announceType, self.spellId, self.stacks, customName)
 		self.text = text
 		self.spellName = spellName
+	end
+
+	function specialWarningPrototype:UpdateKey(altSpellId)
+		self.spellId = altSpellId
+		self.icon = parseSpellIcon(altSpellId, self.announceType, self.icon)
+		if self.announceType then
+			--Regenerate auto localized text if it's an auto localized alert
+			local text, spellName = setText(self.announceType, self.spellId, self.stacks)
+			self.text = text
+			self.spellName = spellName
+		else--Just regenerating spellName not message text because it's likely a custom text object such as NewSpecialWarning
+			self.spellName = parseSpellName(altSpellId)
+		end
 	end
 
 	local function canVoiceReplace(self, soundId)
@@ -9561,7 +9652,7 @@ do
 		return DBMScheduler:Unschedule(self.Play, self.mod, self, ...)
 	end
 
-	function bossModPrototype:NewSpecialWarning(text, optionDefault, optionName, optionVersion, runSound, hasVoice, difficulty, texture, spellID)
+	function bossModPrototype:NewSpecialWarning(text, optionDefault, optionName, optionVersion, runSound, hasVoice, difficulty, icon, spellID, waCustomName)
 		if not text then
 			error("NewSpecialWarning: you must provide special warning text", 2)
 			return
@@ -9578,10 +9669,7 @@ do
 		if hasVoice == true then--if not a number, set it to 2, old mods that don't use new numbered system
 			hasVoice = 2
 		end
-		local seticon
-		if texture then
-			seticon = (type(texture) == "string" and texture:match("ej%d+") and select(4, DBM:EJ_GetSectionInfo(string.sub(texture, 3))) ~= "" and select(4, DBM:EJ_GetSectionInfo(string.sub(texture, 3)))) or (type(texture) == "number" and GetSpellTexture(texture)) or nil
-		end
+		icon = parseSpellIcon(icon)
 		local obj = setmetatable(
 			{
 				text = self.localization.warnings[text],
@@ -9593,7 +9681,7 @@ do
 				hasVoice = hasVoice,
 				difficulty = difficulty,
 				spellId = spellID,--For WeakAuras / other callbacks
-				icon = seticon,
+				icon = icon,
 			},
 			mt
 		)
@@ -9601,7 +9689,7 @@ do
 		if optionId then
 			obj.voiceOptionId = hasVoice and "Voice"..optionId or nil
 			obj.option = optionId..(optionVersion or "")
-			self:AddSpecialWarningOption(obj.option, optionDefault, runSound, self.NoSortAnnounce and "specialannounce" or "announce", spellID)
+			self:AddSpecialWarningOption(obj.option, optionDefault, runSound, self.NoSortAnnounce and "specialannounce" or "announce", spellID, nil, waCustomName)
 		end
 		tinsert(self.specwarns, obj)
 		return obj
@@ -9628,6 +9716,7 @@ do
 			optionName = nil
 		end
 		local text, spellName = setText(announceType, alternateSpellId or spellId, stacks)
+		local icon = parseSpellIcon(spellId)
 		local obj = setmetatable( -- todo: fix duplicate code
 			{
 				text = text,
@@ -9643,7 +9732,7 @@ do
 				spellId = spellId,
 				spellName = spellName,
 				stacks = stacks,
-				icon = (type(spellId) == "string" and spellId:match("ej%d+") and select(4, DBM:EJ_GetSectionInfo(string.sub(spellId, 3))) ~= "" and select(4, DBM:EJ_GetSectionInfo(string.sub(spellId, 3)))) or (type(spellId) == "number" and GetSpellTexture(spellId)) or nil
+				icon = icon,
 			},
 			mt
 		)
@@ -10053,9 +10142,38 @@ do
 		end
 	end
 
+	--"break" and "pull" timers have custom classifications that are straight forward and not in this table
+	local timerTypeSimplification = {
+		--All cooldown times, be they approx cd or next exact, or even AI timers, map to "CD"
+		["cdcount"] = "cd",
+		["cdsource"] = "cd",
+		["nextcount"] = "cd",
+		["nextsource"] = "cd",
+		["cdspecial"] = "cd",
+		["nextspecial"] = "cd",
+		["ai"] = "cd",
+		["adds"] = "cd",
+		["addscustom"] = "cd",
+
+		--Stages, Warmup/Combatstart, RPs all map to "stage"
+		["roleplay"] = "stage",
+		["achievement"] = "stage",
+
+		--Target Bars such as buff/debuff on another player, on self, or on the boss, RPs all map to "target"
+		["targetcount"] = "target",
+		["fades"] = "target",--Fades is usually used as a personal target timer. So like debuff on other player is "debuff (targetname)" but on self it's just "debuff fades"
+
+		--All cast bar types map to "cast"
+		["active"] = "cast",--Active bars are usually things like Whirlwind is active on the boss, or a channeled cast is being done. so effectively it's for channeled casts, as upposed to regular casts
+		["castsource"] = "cast",
+		["castcount"] = "cast",
+	}
+
 	function timerPrototype:Start(timer, ...)
-		if DBM.Options.DontShowBossTimers and not self.mod.isTrashMod then return end
-		if DBM.Options.DontShowTrashTimers and self.mod.isTrashMod then return end
+		if not self.mod.isDummyMod then--Don't apply following rulesets to pull timers and such
+			if DBM.Options.DontShowBossTimers and not self.mod.isTrashMod then return end
+			if DBM.Options.DontShowTrashTimers and self.mod.isTrashMod then return end
+		end
 		if timer and type(timer) ~= "number" then
 			return self:Start(nil, timer, ...) -- first argument is optional!
 		end
@@ -10197,7 +10315,7 @@ do
 			--msg: Timer Text (Do not use msg has an event trigger, it varies language to language or based on user timer options. Use this to DISPLAY only (such as timer replacement UI). use spellId field 99% of time
 			--timer: Raw timer value (number).
 			--Icon: Texture Path for Icon
-			--type: Timer type (Cooldowns: cd, cdcount, nextcount, nextsource, cdspecial, nextspecial, stage, ai. Durations: target, active, fades, roleplay. Casting: cast)
+			--type: Timer type, which is one of only 7 possible types: "cd" for coolodwns, "target" for target bars such as debuff on a player, "stage" for any kind of stage timer (stage ends, next stage, or even just a warmup timer like "fight begins"), and then "cast" timer which is used for both a regular cast and a channeled cast (ie boss is casting frostbolt, or boss is channeling whirlwind). Lastly, break, pull, and berserk timers are "breaK", "pull", and "berserk" respectively
 			--spellId: Raw spellid if available (most timers will have spellId or EJ ID unless it's a specific timer not tied to ability such as pull or combat start or rez timers. EJ id will be in format ej%d
 			--colorID: Type classification (1-Add, 2-Aoe, 3-targeted ability, 4-Interrupt, 5-Role, 6-Stage, 7-User(custom))
 			--Mod ID: Encounter ID as string, or a generic string for mods that don't have encounter ID (such as trash, dummy/test mods)
@@ -10224,7 +10342,8 @@ do
 			if not guid and self.mod.sendMainBossGUID and not DBM.Options.DontSendBossGUIDs and (self.type == "cd" or self.type == "next" or self.type == "cdcount" or self.type == "nextcount" or self.type == "cdspecial" or self.type == "ai") then
 				guid = UnitGUID("boss1")
 			end
-			fireEvent("DBM_TimerStart", id, msg, timer, self.icon, self.type, self.spellId, colorId, self.mod.id, self.keep, self.fade, self.name, guid, timerCount)
+			local simplifiedType = timerTypeSimplification[self.type] or self.type
+			fireEvent("DBM_TimerStart", id, msg:gsub("^~",""), timer, self.icon, simplifiedType, self.spellId, colorId, self.mod.id, self.keep, self.fade, self.name, guid, timerCount)
 			--Bssically tops bar from starting if it's being put on a plater nameplate, to give plater users option to have nameplate CDs without actually using the bars
 			--This filter will only apply to trash mods though, boss timers will always be shown due to need to have them exist for Pause, Resume, Update, and GetTime/GetRemaining methods
 			if guid and DBM.Options.DontShowTimersWithNameplates and Plater and Plater.db.profile.bossmod_support_bars_enabled and self.mod.isTrashMod then
@@ -10570,7 +10689,28 @@ do
 		local id = self.id..pformat((("\t%s"):rep(select("#", ...))), ...)
 		local bar = DBT:GetBar(id)
 		if bar then
-			return bar:SetIcon((type(icon) == "string" and icon:match("ej%d+") and select(4, DBM:EJ_GetSectionInfo(string.sub(icon, 3))) ~= "" and select(4, DBM:EJ_GetSectionInfo(string.sub(icon, 3)))) or (type(icon) == "number" and GetSpellTexture(icon)) or tonumber(icon) or 136116)
+			icon = parseSpellIcon(icon)
+			return bar:SetIcon(icon)
+		end
+	end
+
+	--This function changes the spellname and callback key (but not option key) of timer object
+	--This is needed for faction bosses where we need to swap out a spell key/name on fly after a boss is engaged
+	function timerPrototype:UpdateKey(altSpellId, ...)
+		--Check if existing bar first,
+		local id = self.id..pformat((("\t%s"):rep(select("#", ...))), ...)
+		local bar = DBT:GetBar(id)
+		self.spellId = altSpellId
+		self.icon = parseSpellIcon(altSpellId, self.type, self.icon)
+		self.name = nil--By wiping name, it becomes uncached and can get replaced by GetLocalizedTimerText in :Start
+		if bar then
+			--If a bar exists while updating key we"
+			--Get remainig, kill old timer, start new one with ID/name replacement applied
+			local remaining = bar.timer
+			self:Stop(...)
+			self:Unschedule(...)
+			DBM:Unschedule(playCountSound, id)
+			self:Start(remaining, ...)--Restart it
 		end
 	end
 
@@ -10607,15 +10747,15 @@ do
 		end
 	end
 
-	function timerPrototype:AddOption(optionDefault, optionName, colorType, countdown, spellId, optionType)
+	function timerPrototype:AddOption(optionDefault, optionName, colorType, countdown, spellId, optionType, waCustomName)
 		if optionName ~= false then
 			self.option = optionName or self.id
-			self.mod:AddBoolOption(self.option, optionDefault, "timer", nil, colorType, countdown, spellId, optionType)
+			self.mod:AddBoolOption(self.option, optionDefault, "timer", nil, colorType, countdown, spellId, optionType, waCustomName)
 		end
 	end
 
 	--If a new countdown default is added to a NewTimer object, change optionName of timer to reset a new default
-	function bossModPrototype:NewTimer(timer, name, texture, optionDefault, optionName, colorType, inlineIcon, keep, countdown, countdownMax, r, g, b, spellId, requiresCombat)
+	function bossModPrototype:NewTimer(timer, name, icon, optionDefault, optionName, colorType, inlineIcon, keep, countdown, countdownMax, r, g, b, spellId, requiresCombat, waCustomName, customType)
 		if r and type(r) == "string" then
 			DBM:Debug("|cffff0000r probably has inline icon in it and needs to be fixed for |r"..name..r)
 			r = nil--Fix it for users
@@ -10624,10 +10764,11 @@ do
 			DBM:Debug("|cffff0000spellID texture path or colorType is in inlineIcon field and needs to be fixed for |r"..name..inlineIcon)
 			inlineIcon = nil--Fix it for users
 		end
-		local icon = (type(texture) == "string" and texture:match("ej%d+") and select(4, DBM:EJ_GetSectionInfo(string.sub(texture, 3))) ~= "" and select(4, DBM:EJ_GetSectionInfo(string.sub(texture, 3)))) or (type(texture) == "number" and GetSpellTexture(texture)) or tonumber(texture) or "136116"
+		icon = parseSpellIcon(icon)
 		local obj = setmetatable(
 			{
 				text = self.localization.timers[name],
+				type = customType or "cd",--Auto assign
 				spellId = spellId,--Allows Localized timer text to still have a spellId arg weak auras can latch onto
 				timer = timer,
 				id = name,
@@ -10646,7 +10787,7 @@ do
 			},
 			mt
 		)
-		obj:AddOption(optionDefault, optionName, colorType, countdown, spellId)
+		obj:AddOption(optionDefault, optionName, colorType, countdown, spellId, nil, waCustomName)
 		tinsert(self.timers, obj)
 		return obj
 	end
@@ -10675,34 +10816,24 @@ do
 			timer = tonumber(string.sub(timer, 2))
 		end
 		local spellName, icon
+		spellName = parseSpellName(spellId, timerType)
 		local unparsedId = spellId
 		if timerType == "achievement" then
-			spellName = select(2, GetAchievementInfo(spellId))
-			icon = type(texture) == "number" and select(10, GetAchievementInfo(texture)) or tonumber(texture) or spellId and select(10, GetAchievementInfo(spellId))
+			icon = parseSpellIcon(texture or spellId, timerType)
 		elseif timerType == "cdspecial" or timerType == "nextspecial" or timerType == "stage" then
-			icon = type(texture) == "number" and GetSpellTexture(texture) or tonumber(texture) or type(spellId) == "string" and select(4, DBM:EJ_GetSectionInfo(string.sub(spellId, 3))) ~= "" and select(4, DBM:EJ_GetSectionInfo(string.sub(spellId, 3))) or (type(spellId) == "number" and GetSpellTexture(spellId)) or 136116
+			icon = parseSpellIcon(texture or spellId, timerType)
 			if timerType == "stage" then
 				colorType = 6
 			end
 		elseif timerType == "roleplay" then
-			icon = type(texture) == "number" and GetSpellTexture(texture) or tonumber(texture) or type(spellId) == "string" and select(4, DBM:EJ_GetSectionInfo(string.sub(spellId, 3))) ~= "" and select(4, DBM:EJ_GetSectionInfo(string.sub(spellId, 3))) or (type(spellId) == "number" and GetSpellTexture(spellId)) or isRetail and 237538 or 136106
+			icon = parseSpellIcon(texture or spellId, timerType, isRetail and 237538 or 136106)
 			colorType = 6
 		elseif timerType == "adds" or timerType == "addscustom" then
-			icon = type(texture) == "number" and GetSpellTexture(texture) or tonumber(texture) or type(spellId) == "string" and select(4, DBM:EJ_GetSectionInfo(string.sub(spellId, 3))) ~= "" and select(4, DBM:EJ_GetSectionInfo(string.sub(spellId, 3))) or (type(spellId) == "number" and GetSpellTexture(spellId)) or 136116
+			icon = parseSpellIcon(texture or spellId, timerType, 136116)
 			colorType = 1
 		else
-			if type(spellId) == "string" and spellId:match("ej%d+") then
-				spellName = DBM:EJ_GetSectionInfo(string.sub(spellId, 3)) or ""
-			else
-				spellName = DBM:GetSpellInfo(spellId or 0)
-			end
-			if spellName then
-				icon = type(texture) == "number" and GetSpellTexture(texture) or tonumber(texture) or type(spellId) == "string" and select(4, DBM:EJ_GetSectionInfo(string.sub(spellId, 3))) ~= "" and select(4, DBM:EJ_GetSectionInfo(string.sub(spellId, 3))) or (type(spellId) == "number" and GetSpellTexture(spellId))
-			else
-				icon = nil
-			end
+			icon = parseSpellIcon(texture or spellId, timerType)
 		end
-		--spellName = spellName or tostring(spellId)--this actually breaks stuff in 9.0 when spell info fails to return on first try
 		local timerTextValue
 		if timerText then
 			--If timertext is a number, accept it as a secondary auto translate spellid
@@ -10880,13 +11011,7 @@ do
 			spellName = Name--Pull from name stored in object
 		elseif spellId then
 			DBM:Debug("|cffff0000GetLocalizedTimerText fallback, this should not happen and is a bug. this fallback should be deleted if this message is never seen after async code is live|r")
-			if timerType == "achievement" then
-				spellName = select(2, GetAchievementInfo(spellId))
-			elseif type(spellId) == "string" and spellId:match("ej%d+") then
-				spellName = DBM:EJ_GetSectionInfo(string.sub(spellId, 3))
-			else
-				spellName = DBM:GetSpellInfo(spellId)
-			end
+			spellName = parseSpellName(spellId, timerType)
 			--Name wasn't provided, but we succeeded in getting a name, generate one into object now for caching purposes
 			--This would really only happen if GetSpellInfo failed to return spell name on first attempt (which now happens in 9.0)
 			if spellName then
@@ -10941,7 +11066,8 @@ do
 		timer = timer or 600
 		local warning1 = self:NewAnnounce(text or L.GENERIC_WARNING_BERSERK, 1, nil, "warning_berserk", false)
 		local warning2 = self:NewAnnounce(text or L.GENERIC_WARNING_BERSERK, 4, nil, "warning_berserk", false)
-		local bar = self:NewTimer(timer, barText or L.GENERIC_TIMER_BERSERK, barIcon or 28131, nil, "timer_berserk")
+		--timer, name, icon, optionDefault, optionName, colorType, inlineIcon, keep, countdown, countdownMax, r, g, b, spellId, requiresCombat, waCustomName, customType
+		local bar = self:NewTimer(timer, barText or L.GENERIC_TIMER_BERSERK, barIcon or 28131, nil, "timer_berserk", nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, "berserk")
 		local obj = setmetatable(
 			{
 				warning1 = warning1,
@@ -10954,11 +11080,11 @@ do
 		)
 		return obj
 	end
-
 	function bossModPrototype:NewCombatTimer(timer, _, barText, barIcon) -- timer, text, barText, barIcon
 		timer = timer or 10
-		--NewTimer(timer, name, texture, optionDefault, optionName, colorType, inlineIcon, keep, countdown, countdownMax, r, g, b)
-		local bar = self:NewTimer(timer, barText or L.GENERIC_TIMER_COMBAT, barIcon or "132349", nil, "timer_combat", nil, nil, nil, 1, 5)
+		--timer, name, icon, optionDefault, optionName, colorType, inlineIcon, keep, countdown, countdownMax, r, g, b, spellId, requiresCombat, waCustomName, customType
+		local bar = self:NewTimer(timer, barText or L.GENERIC_TIMER_COMBAT, barIcon or "132349", nil, "timer_combat", nil, nil, nil, 1, 5, nil, nil, nil, nil, nil, nil, "stage")
+
 		local obj = setmetatable(
 			{
 				bar = bar,
@@ -10974,7 +11100,7 @@ end
 ---------------
 --  Options  --
 ---------------
-function bossModPrototype:AddBoolOption(name, default, cat, func, extraOption, extraOptionTwo, spellId, optionType)
+function bossModPrototype:AddBoolOption(name, default, cat, func, extraOption, extraOptionTwo, spellId, optionType, waCustomName)
 	if checkDuplicateObjects[name] and name ~= "timer_berserk" then
 		DBM:Debug("|cffff0000Option already exists for: |r"..name)
 	else
@@ -10995,19 +11121,23 @@ function bossModPrototype:AddBoolOption(name, default, cat, func, extraOption, e
 		self.Options[name.."CVoice"] = extraOptionTwo or 0
 	end
 	if spellId then
-		if optionType and optionType == "achievement" then
-			spellId = "at"..spellId--"at" for achievement timer
+		if waCustomName then--Do custom shit for options using invalid spellIds as weak auras keys
+			self:GroupWASpells(waCustomName, spellId, name)
+		else
+			if optionType and optionType == "achievement" then
+				spellId = "at"..spellId--"at" for achievement timer
+			end
+			self:GroupSpells(spellId, name)
 		end
-		self:GroupSpells(spellId, name)
 	end
-	self:SetOptionCategory(name, cat, optionType)
+	self:SetOptionCategory(name, cat, optionType, waCustomName)
 	if func then
 		self.optionFuncs = self.optionFuncs or {}
 		self.optionFuncs[name] = func
 	end
 end
 
-function bossModPrototype:AddSpecialWarningOption(name, default, defaultSound, cat, spellId, optionType)
+function bossModPrototype:AddSpecialWarningOption(name, default, defaultSound, cat, spellId, optionType, waCustomName)
 	if checkDuplicateObjects[name] then
 		DBM:Debug("|cffff0000Option already exists for: |r"..name)
 	else
@@ -11024,9 +11154,13 @@ function bossModPrototype:AddSpecialWarningOption(name, default, defaultSound, c
 	self.Options[name.."SWSound"] = defaultSound or 1
 	self.Options[name.."SWNote"] = true
 	if spellId then
-		self:GroupSpells(spellId, name)
+		if waCustomName then--Do custom shit for options using invalid spellIds as weak auras keys
+			self:GroupWASpells(waCustomName, spellId, name)
+		else
+			self:GroupSpells(spellId, name)
+		end
 	end
-	self:SetOptionCategory(name, cat, optionType)
+	self:SetOptionCategory(name, cat, optionType, waCustomName)
 end
 
 --auraspellId must match debuff ID so EnablePrivateAuraSound function can call right option key and right debuff ID
@@ -11368,6 +11502,42 @@ function bossModPrototype:RemoveOption(name)
 	end
 end
 
+--This function, which will be called after all iterations of GroupWASpells/GroupSpells will just straight up say "ok now ignore keys these made and just use custom ones" for extremely niche cases
+function bossModPrototype:JustSetCustomKeys(catSpell, customKeys)
+	catSpell = tostring(catSpell)
+	if not self.groupSpells[catSpell] then
+		self.groupSpells[catSpell] = {}
+	end
+	if not self.groupOptions[catSpell] then
+		self.groupOptions[catSpell] = {}
+	end
+	self.groupOptions[catSpell].customKeys = customKeys
+end
+
+--Custom function for handling group spells where we want to group by ID, but not use that IDs name (basically a fake Id for purpose of a unified WA key)
+--This lets us group options up that aren't using valid IDs, and show the ID it is using for WA in the gui next to custom name
+function bossModPrototype:GroupWASpells(customName, ...)
+	local spells = {...}
+	local catSpell = tostring(tremove(spells, 1))
+	if not self.groupSpells[catSpell] then
+		self.groupSpells[catSpell] = {}
+	end
+	for _, spell in ipairs(spells) do
+		local sSpell = tostring(spell)
+		self.groupSpells[sSpell] = catSpell
+		if sSpell ~= catSpell and self.groupOptions[sSpell] then
+			if not self.groupOptions[catSpell] then
+				self.groupOptions[catSpell] = {}
+				self.groupOptions[catSpell].title = customName
+			end
+			for _, spell2 in ipairs(self.groupOptions[sSpell]) do
+				tinsert(self.groupOptions[catSpell], spell2)
+			end
+			self.groupOptions[sSpell] = nil
+		end
+	end
+end
+
 function bossModPrototype:GroupSpells(...)
 	local spells = {...}
 	local catSpell = tostring(tremove(spells, 1))
@@ -11389,7 +11559,7 @@ function bossModPrototype:GroupSpells(...)
 	end
 end
 
-function bossModPrototype:SetOptionCategory(name, cat, optionType)
+function bossModPrototype:SetOptionCategory(name, cat, optionType, waCustomName)
 	optionType = optionType or ""
 	for _, options in pairs(self.optionCategories) do
 		removeEntry(options, name)
@@ -11398,6 +11568,9 @@ function bossModPrototype:SetOptionCategory(name, cat, optionType)
 		local sSpell = self.groupSpells[name]
 		if not self.groupOptions[sSpell] then
 			self.groupOptions[sSpell] = {}
+		end
+		if waCustomName and not self.groupOptions[sSpell].title then
+			self.groupOptions[sSpell].title = waCustomName
 		end
 		tinsert(self.groupOptions[sSpell], name)
 	else
@@ -11510,10 +11683,14 @@ function bossModPrototype:SetCreatureID(...)
 		self.multiMobPullDetection = {...}
 		if self.combatInfo then
 			self.combatInfo.multiMobPullDetection = self.multiMobPullDetection
-			self.numBoss = #self.multiMobPullDetection
-			if self.inCombat then
-				--Called mid combat, fix some variables
-				self.vb.bossLeft = self.numBoss
+			if not self.multiIDSingleBoss then
+				self.numBoss = #self.multiMobPullDetection
+				if self.inCombat then
+					--Called mid combat, fix some variables
+					self.vb.bossLeft = self.numBoss
+				end
+			else
+				self.numBoss = 1
 			end
 		end
 		for i = 1, select("#", ...) do
@@ -11744,6 +11921,27 @@ bossModPrototype.UnscheduleEvent = bossModPrototype.UnscheduleMethod
 --  Icons  --
 -------------
 do
+	function DBM:ElectIconSetter(mod)
+		--elect icon person
+		if mod.findFastestComputer and not self.Options.DontSetIcons then
+			if self:GetRaidRank() > 0 then
+				for i = 1, #mod.findFastestComputer do
+					local option = mod.findFastestComputer[i]
+					if mod.Options[option] then
+						sendSync(DBMSyncProtocol, "IS", UnitGUID("player").."\t"..tostring(self.Revision).."\t"..option)
+					end
+				end
+			elseif not IsInGroup() then
+				for i = 1, #mod.findFastestComputer do
+					local option = mod.findFastestComputer[i]
+					if mod.Options[option] then
+						private.canSetIcons[option] = true
+					end
+				end
+			end
+		end
+	end
+
 	local iconsModule = private:GetModule("Icons")
 
 	function bossModPrototype:SetIcon(...)

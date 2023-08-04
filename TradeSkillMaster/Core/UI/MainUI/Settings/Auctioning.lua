@@ -34,6 +34,7 @@ function Auctioning.OnInitialize()
 		:AddKey("global", "auctioningOptions", "confirmCompleteSound")
 		:AddKey("global", "auctioningOptions", "matchWhitelist")
 		:AddKey("global", "coreOptions", "auctionSaleSound")
+		:AddKey("global", "coreOptions", "regionWide")
 	if not Environment.IsRetail() then
 		private.settings:AddKey("factionrealm", "auctioningOptions", "whitelist")
 	end
@@ -212,11 +213,13 @@ function private.NewPlayerOnEnterPressed(input)
 	end
 
 	local isAlt = false
-	for factionrealm in TSM.db:GetConnectedRealmIterator("factionrealm") do
-		for _, character in TSM.db:FactionrealmCharacterIterator(factionrealm) do
-			if strlower(newPlayer) == strlower(character) then
-				Log.PrintfUser(L["You do not need to add \"%s\", alts are whitelisted automatically."], newPlayer)
-				isAlt = true
+	for factionrealm, isConnected in TSM.db:GetConnectedRealmIterator("factionrealm") do
+		if isConnected or private.settings.regionWide then
+			for _, character in TSM.db:FactionrealmCharacterIterator(factionrealm) do
+				if strlower(newPlayer) == strlower(character) then
+					Log.PrintfUser(L["You do not need to add \"%s\", alts are whitelisted automatically."], newPlayer)
+					isAlt = true
+				end
 			end
 		end
 	end

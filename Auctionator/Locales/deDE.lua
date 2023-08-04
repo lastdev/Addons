@@ -181,6 +181,8 @@ L["CONFIG_SELLING_NOT_LIFO_TEXT"] = "Optionen zum Einstellen der Dauer und des p
 L["CONFIG_SELLING_POST_SHORTCUT"] = [=[Eine Tastatur-/Mauskürzel zum Erstellen des aktuellen Gegenstands ist
 ]=]
 L["CONFIG_SELLING_POST_SHORTCUT_TOOLTIP_TEXT"] = "Klicke und drücke dann die Taste, die du als Kürzel verwenden möchtest. Dieses Kürzel ist nur auf dem Verkaufenreiter aktiv und wirkt sich nicht auf andere Kürzel aus, die an der Taste gebunden sind."
+--[[Translation missing --]]
+L["CONFIG_SELLING_PREV_SHORTCUT"] = "A shortcut to go back to the previously selected item"
 L["CONFIG_SELLING_SHORTCUTS_CATEGORY"] = "Verkaufen: Tastenkombination"
 L["CONFIG_SELLING_SHORTCUTS_TEXT"] = "Optionen für Tastenkombinationen im Verkaufenreiter"
 L["CONFIG_SELLING_SHOW_BID_PRICE"] = "Gebotspreisoption beim Auflisten eines Gegenstands anzeigen (neuladen erforderlich)"
@@ -213,6 +215,10 @@ L["CONFIG_SMALL_TABS_TOOLTIP_TEXT"] = "Wenn zu viele Addons im Auktionshaus Reit
 L["CONFIG_STACK_TOOLTIP"] = "Zeige Stapelpreis, während Shift gedrückt wird, an."
 L["CONFIG_TOOLTIPS_CATEGORY"] = "Tooltips"
 L["CONFIG_TOOLTIPS_TEXT"] = "Optionen zum Anzeigen verschiedener auktionsbezogener Informationen in Tooltips."
+--[[Translation missing --]]
+L["CONFIG_UNDERCUT_ITEMS_AHEAD"] = "How many items can be ahead of your listings before they count as undercut"
+--[[Translation missing --]]
+L["CONFIG_UNDERCUT_ITEMS_AHEAD_CLASSIC"] = "How many items can be ahead of your listings before they count as undercut (max 50)"
 L["CONFIG_UNDERCUT_SCAN_MATCH_ILVL_VARIANTS"] = "Verwende für Ausrüstung die Gegenstandsstufe und den Titel, wenn du die Unterbietung nachprüfst"
 L["CONFIG_UNDERCUT_SCAN_MATCH_ILVL_VARIANTS_TOOLTIP_HEADER"] = "Verwende für Ausrüstung die Gegenstandsstufe und den Titel"
 L["CONFIG_UNDERCUT_SCAN_MATCH_ILVL_VARIANTS_TOOLTIP_TEXT"] = "Lasse dies aktiviert, um potenzielle Ausrüstungsunterbietungen nach der Gegenstandsstufe und den Titel abzugleichen, anstatt nur nach dem Gegenstandsbasistyp."
@@ -301,6 +307,8 @@ L["ITEM_CLASS"] = "Gegenstandskategorie"
 L["ITEM_LEVEL"] = "Gegenstandsstufe"
 L["ITEM_LEVEL_COLUMN"] = "ilvl"
 L["ITEM_PRICE_HISTORY"] = "Gegenstand Preisverlauf"
+--[[Translation missing --]]
+L["ITEMS_AHEAD"] = "Items Ahead"
 L["LEFT_CLICK"] = "Linksklick"
 L["LEVEL"] = "Stufe"
 L["LIMITED_FUNCTIONALITY_MESSAGE"] = "Eingeschränkte Funktionalität aufgrund von 8.3 AH-Updates."
@@ -367,6 +375,8 @@ L["PET_TOOLTIP_TOOLTIP_HEADER"] = "Haustier Tooltip Infos"
 L["PET_TOOLTIP_TOOLTIP_TEXT"] = "Zeigt den Auktionspreis für Haustierkäfige im Tooltip an."
 L["POST"] = "Auktion erstellen"
 L["POST_ATTEMPT_FAILED"] = "Dein letzter Auktionerstellungsversuch hat nicht funktioniert. Versuch es nochmal."
+--[[Translation missing --]]
+L["PREVIOUS"] = "Previous"
 L["PRICE"] = "Preis"
 L["PRICE_HISTORY"] = "Preisentwicklung"
 L["PRICE_INCREASE_WARNING"] = "Preis um %s erhöht, warte auf %ss"
@@ -416,6 +426,8 @@ L["SAVE_THIS_LIST_AS"] = "Speichere diese Liste als..."
 L["SCANNING_PAGE_X"] = "Scannen der Seite %s..."
 L["SEARCH"] = "Suchen"
 L["SEARCH_ALL"] = "Suche alles"
+--[[Translation missing --]]
+L["SEARCH_FOR_QUANTITY"] = "Search For Quantity"
 --[[Translation missing --]]
 L["SEARCH_OPTIONS"] = "Search Options"
 L["SEARCH_TERM"] = "Suchbegriff"

@@ -1,7 +1,7 @@
-## Interface: 100100
+## Interface: 100105
 ## Title: Zereth Mortis Puzzle Helper
 ## Author: Httpsx
-## Version: 1.6.5
+## Version: 1.6.6
 ## Notes: Helper for Caches of Creations and World Quest puzzles on Zereth Mortis
 ## DefaultState: Enabled
 ## SavedVariables: ZMPHSaved

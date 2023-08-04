@@ -1,7 +1,9 @@
-local ns = select(2, ...) ---@type ns @The addon namespace.
+local ns = select(2, ...) ---@class ns @The addon namespace.
 
 if ns:IsSameLocale("zhCN") then
+
 	local L = ns.L or ns:NewLocale()
+	ns.L = L
 
 	L.LOCALE_NAME = "zhCN"
 
@@ -330,5 +332,4 @@ L["WIPE_RWF_MODE_BUTTON"] = "清除"
 L["WIPE_RWF_MODE_BUTTON_TOOLTIP"] = "点击以从存储文件中清除日志。 这将需要重新加载您的界面。"
 
 
-	ns.L = L
 end

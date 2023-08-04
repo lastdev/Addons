@@ -10,6 +10,7 @@ local String = TSM.Include("Util.CustomStringClasses.String")
 local Types = TSM.Include("Util.CustomStringClasses.Types")
 local Tokenizer = TSM.Include("Util.CustomStringClasses.Tokenizer")
 CustomString.TOKEN_TYPE = Types.TOKEN
+CustomString.ERROR_TYPE = Types.ERROR
 
 
 
@@ -41,4 +42,11 @@ end
 ---@return CustomStringObject
 function CustomString.Parse(text)
 	return String.Create(text)
+end
+
+---Returns whether or not a string is a reserved word.
+---@param str string The string (must be lower case)
+---@return boolean
+function CustomString.IsReservedWord(str)
+	return (Types.FUNCTION_INFO[str] or str == "baseitem") and true or false
 end

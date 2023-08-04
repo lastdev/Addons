@@ -176,6 +176,13 @@ function TokenProcessor:Execute(tokenList, tree)
 					isValid = false
 				end
 			end
+		elseif isValid and nodeType == Types.NODE.VARIABLE and Types.IsItemParam(tree:GetData(node, "value")) and not self._tree:GetParent(node) then
+			-- Item parameter without a parent
+			self:_HandleErrorForNode(Types.ERROR.NO_ITEM_PARAM_PARENT, node)
+			isValid = false
+		elseif isValid and nodeType == Types.NODE.VARIABLE and tree:GetData(node, "value") == "convert" then
+			self:_HandleErrorForNode(Types.ERROR.INVALID_NUM_ARGS, node)
+			isValid = false
 		end
 	end
 

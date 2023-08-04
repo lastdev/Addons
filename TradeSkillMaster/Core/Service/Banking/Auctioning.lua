@@ -13,6 +13,7 @@ local AltTracking = TSM.Include("Service.AltTracking")
 local AuctionTracking = TSM.Include("Service.AuctionTracking")
 local MailTracking = TSM.Include("Service.MailTracking")
 local Settings = TSM.Include("Service.Settings")
+local ItemInfo = TSM.Include("Service.ItemInfo")
 local private = {}
 
 
@@ -69,9 +70,12 @@ function private.GetNumToMoveToBags(itemString, numHave, includeAH)
 		:SumAndRelease("quantity")
 	if includeAH then
 		numInBags = numInBags + AuctionTracking.GetQuantity(itemString) + MailTracking.GetQuantity(itemString)
-		-- include alt auctions
-		for _, factionrealm, character in Settings.ConnectedFactionrealmAltCharacterIterator() do
-			numInBags = numInBags + AltTracking.GetAuctionQuantity(itemString, character, factionrealm)
+		-- include alt auctions on connected realms
+		local isCommodity = ItemInfo.IsCommodity(itemString)
+		for _, factionrealm, character, _, isConnected in Settings.ConnectedFactionrealmAltCharacterIterator() do
+			if isCommodity or isConnected then
+				numInBags = numInBags + AltTracking.GetAuctionQuantity(itemString, character, factionrealm)
+			end
 		end
 	end
 

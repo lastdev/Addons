@@ -3,7 +3,7 @@
 
                                        Midsummer Fire Festival
 
-                                       v1.07 - 27th June 2023
+                                        v1.10 - 7th July 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -15,11 +15,11 @@ ns.db = {}
 ns.points = {}
 ns.textures = {}
 ns.scaling = {}
--- Red/Gold theme
+-- Orange/Yellow theme
 ns.colour = {}
-ns.colour.prefix	= "\124cFFC11B17" -- Chilli Pepper
-ns.colour.highlight = "\124cFFFDBD01" -- Neon Gold
-ns.colour.plaintext = "\124cFF990000" -- Crimson Red
+ns.colour.prefix	= "\124cFFFFA500" -- Orange
+ns.colour.highlight = "\124cFFF6BE00" -- Deep Yellow
+ns.colour.plaintext = "\124cFFFFF380" -- Corn Yellow
 
 local defaults = { profile = { icon_scale = 2.5, icon_alpha = 1, showCoords = true,
 								removeSeasonal = true, removeEver = false,
@@ -438,6 +438,8 @@ function pluginHandler:OnEnter(mapFile, coord)
 					( completedMe == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
 										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
 		end
+	elseif ( pin.group == "I" ) then
+		GameTooltip:SetText( ns.colour.prefix ..pin.title )
 	end
 	if ( showTip == true ) and not ( pin.tip == nil ) then
 		GameTooltip:AddLine( ns.colour.plaintext ..L[ pin.tip ] )
@@ -511,6 +513,9 @@ do
 								ns.db.icon_scale * ns.scaling[ns.db.icon_thief], ns.db.icon_alpha
 						end
 					end
+				else
+					return coord, nil, ns.textures[ns.db.icon_thief],
+						ns.db.icon_scale * ns.scaling[ns.db.icon_thief], ns.db.icon_alpha
 				end
 			end
 			coord, pin = next(t, coord)

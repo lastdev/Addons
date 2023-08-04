@@ -595,6 +595,9 @@ L["Empyrean Assassin"] = "云巅刺客"
 L["Enable Minimap Button"] = "启用小地图按钮"
 L["Enchanted Broodling"] = "魔化巢蛛"
 L["Enchanted Emissary"] = "魔力使者"
+--[[Translation missing --]]
+L["encounteredErrors"] = [=[MDT has encountered errors.
+Click to view them.]=]
 L["Encrypted"] = "加密"
 L["Enemies related to seasonal affixes are currently hidden"] = "目前已隐藏与赛季词缀相关的敌人"
 L["Enemy Info"] = "敌人信息"

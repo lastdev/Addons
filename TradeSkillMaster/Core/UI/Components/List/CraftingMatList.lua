@@ -155,7 +155,8 @@ function CraftingMatList.__private:_AddMaterial(itemString, quantity, matString)
 	tinsert(self._icon, ItemInfo.GetTexture(itemString) or ItemInfo.GetTexture(ItemString.GetUnknown()))
 	tinsert(self._quantity, quantity)
 	tinsert(self._playerQuantity, BagTracking.GetCraftingMatQuantity(itemString))
-	tinsert(self._isQualityMat, MatString.GetType(matString) == MatString.TYPE.QUALITY)
+	local matType = MatString.GetType(matString)
+	tinsert(self._isQualityMat, matType == MatString.TYPE.QUALITY or matType == MatString.TYPE.REQUIRED)
 	tinsert(self._matString, matString)
 end
 

@@ -1,5 +1,5 @@
-## Interface: 100100
-## Version: v10.1.0-1.0.2
+## Interface: 100105
+## Version: v10.1.5-1.0.10
 ## Title: Hekili
 ## Author: Hekili
 ## AddonCompartmentFunc: Hekili_OnAddonCompartmentClick
@@ -47,6 +47,7 @@ Dragonflight\DruidGuardian.lua
 Dragonflight\DruidRestoration.lua
 Dragonflight\EvokerDevastation.lua
 Dragonflight\EvokerPreservation.lua
+Dragonflight\EvokerAugmentation.lua
 Dragonflight\HunterBeastMastery.lua
 Dragonflight\HunterMarksmanship.lua
 Dragonflight\HunterSurvival.lua

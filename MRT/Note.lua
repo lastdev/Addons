@@ -527,11 +527,11 @@ function module.options:Load()
 	self:CreateTilte()
 
 	module.db.otherIconsAdditionalList = MRT.isClassic and {} or {
-		31821,62618,97462,98008,115310,64843,740,265202,108280,31884,196718,15286,64901,47536,246287,109964,33891,16191,0,
-		47788,33206,6940,102342,114030,1022,116849,633,204018,207399,0,
+		31821,62618,97462,98008,115310,64843,740,265202,108280,31884,196718,15286,64901,47536,246287,109964,33891,16191,108281,114049,51052,359816,363534,322118,325197,124974,197721,0,
+		47788,33206,6940,102342,114030,1022,116849,633,204018,207399,370960,357170,370537,0,
 		2825,32182,80353,0,
 		106898,192077,46968,119381,179057,192058,30283,0,
-		29166,32375,114018,108199,49576,0,
+		29166,32375,114018,108199,49576,116844,0,
 		0,
 		407069,408367,402461,406530,404744,407517,403326,400430,401319,408147,410511,407196,404789,0,
 		413342,409320,409328,402617,404896,408717,407640,406780,409299,409385,405704,406783,405914,403101,408193,405641,405016,405645,403699,403459,405437,408714,401809,403203,404732,408095,405083,0,
@@ -1429,8 +1429,10 @@ function module.options:Load()
 		self:SetScript("OnClick", AddTextToEditBox)
 		return self
 	end
+	self.OtherIconsFrame.CreateOtherIcon = CreateOtherIcon
 
-	do
+	self.OtherIconsFrame.OnShow = function(self)
+		self.OnShow = nil
 		local GetSpellInfo = GetSpellInfo
 		local line = 1
 		local inLine = 0
@@ -1476,7 +1478,7 @@ function module.options:Load()
 				end
 			end
 		end
-		self.OtherIconsFrame.ScrollFrame:SetNewHeight( max(self.OtherIconsFrame:GetHeight()-40 , line * 20 + 4) )
+		module.options.OtherIconsFrame.ScrollFrame:SetNewHeight( max(module.options.OtherIconsFrame:GetHeight()-40 , line * 20 + 4) )
 	end
 
 	self:SetScript("OnHide",function (self)
@@ -1966,18 +1968,80 @@ function module.frame:UpdateFont()
 	local size = VMRT and VMRT.Note and VMRT.Note.FontSize or 12
 	local outline = VMRT and VMRT.Note and VMRT.Note.Outline and "OUTLINE" or ""
 	local isValidFont = self.text:SetFont(font,size,outline)
+	local c = 2
+	while self["text"..c] do
+		self["text"..c]:SetFont(font,size,outline)
+		c = c + 1
+	end
+
 	if not isValidFont then 
 		self.text:SetFont(GameFontNormal:GetFont(),size,outline)
+
+		local c = 2
+		while self["text"..c] do
+			self["text"..c]:SetFont(GameFontNormal:GetFont(),size,outline)
+			c = c + 1
+		end
 	end
 end
 
+MRT.F:RegisterCallback("CallbackRegistered", function(_,eventName)
+	if eventName == "Note_UpdateText" then
+		module.frame:UpdateText()
+	end
+end)
+MRT.F:RegisterCallback("CallbackUnregistered", function(_,eventName,_,callbacks)
+	if callbacks ~= 0 then
+		return
+	elseif eventName == "Note_UpdateText" then
+		module.frame:UpdateText()
+	end
+end)
+
 function module.frame:UpdateText(onlyTimerUpdate)
 	module.db.glowStatus = nil
+
+	local text
 	if VMRT.Note.ShowOnlyPersonal then
-		self.text:SetText(txtWithIcons("", onlyTimerUpdate))
+		text = txtWithIcons("", onlyTimerUpdate)
 	else
-		self.text:SetText(txtWithIcons(VMRT.Note.Text1 or "", onlyTimerUpdate)) 
+		text = txtWithIcons(VMRT.Note.Text1 or "", onlyTimerUpdate)
 	end
+
+	local c = 2
+	while self["text"..c] do
+		self["text"..c]:SetText(" ")
+		c = c + 1
+	end
+	
+	if #text > 8192 then
+		local lennow = 0
+		local texts = {""}
+		local c = 1
+		for w in string.gmatch(text,"[^\n]+\n*") do
+			lennow = lennow + #w
+			if lennow > 8192 then
+				c = c + 1
+				texts[c] = ""
+				lennow = #w
+			end
+			texts[c] = texts[c] .. w
+		end
+
+		self.text:SetText(texts[1])
+
+		local anyNew = false
+		for i=2,c do
+			anyNew = module.frame.text:Add(i) or anyNew
+			module.frame["text"..i]:SetText(texts[i])
+		end
+		if anyNew then
+			module.frame:UpdateFont()
+		end
+	else
+		self.text:SetText(text)
+	end	
+
 	if module.db.glowStatus and not self.GlowShowed then
 		module.frame:ShowGlow()
 		self.GlowShowed = true
@@ -1985,6 +2049,8 @@ function module.frame:UpdateText(onlyTimerUpdate)
 		module.frame:HideGlow()
 		self.GlowShowed = false
 	end
+
+	MRT.F:FireCallback("Note_UpdateText",self)
 end
 
 local glowColor = {0,1,0,1}
@@ -2042,7 +2108,8 @@ end)
 module.frame.text = module.frame:CreateFontString(nil,"ARTWORK")
 module.frame.text:SetFont(MRT.F.defFont, 12, "")
 module.frame.text:SetPoint("TOPLEFT",5,-5)
-module.frame.text:SetPoint("BOTTOMRIGHT",-5,5)
+--module.frame.text:SetPoint("BOTTOMRIGHT",-5,5)
+module.frame.text:SetPoint("TOPRIGHT",-5,-5)
 module.frame.text:SetJustifyH("LEFT")
 module.frame.text:SetJustifyV("TOP")
 module.frame.text:SetText(" ")
@@ -2051,13 +2118,33 @@ function module.frame.text:FixLag()
 	self:SetParent(module.frame.sf.C)
 	self:ClearAllPoints()
 	self:SetPoint("TOPLEFT",5,-5)
-	self:SetPoint("BOTTOMRIGHT",-5,5)
+	--self:SetPoint("BOTTOMRIGHT",-5,5)
+	self:SetPoint("TOPRIGHT",-5,-5)
 end
 
 module.frame.sf:Show()
 module.frame.text:FixLag()
 
 module.frame.text:SetNonSpaceWrap(true)
+
+function module.frame.text:Add(c)
+	if module.frame["text"..c] then
+		return
+	end
+	local text = module.frame:CreateFontString(nil,"ARTWORK")
+	module.frame["text"..c] = text
+	text:SetParent(module.frame.sf.C)
+	text:SetFont(MRT.F.defFont, 12, "")
+	local prev = c == 2 and module.frame.text or module.frame["text"..(c-1)]
+	text:SetPoint("TOPLEFT",prev,"BOTTOMLEFT",0,0)
+	text:SetPoint("TOPRIGHT",prev,"BOTTOMRIGHT",0,0)
+	text:SetJustifyH("LEFT")
+	text:SetJustifyV("TOP")
+	text:SetText(" ")
+	text:SetNonSpaceWrap(true)
+
+	return true
+end
 
 module.frame.buttonResize = CreateFrame("Frame",nil,module.frame)
 module.frame.buttonResize:SetSize(15,15)
@@ -2076,6 +2163,8 @@ end)
 
 function module.frame:Save(blackNoteID)
 	VMRT.Note.Text1 = (blackNoteID and VMRT.Note.Black[blackNoteID] or VMRT.Note.Text1 or "")
+
+	MRT.F:FireCallback("Note_SendText",VMRT.Note.Text1)
 
 	if not blackNoteID and module.options.NoteEditBox and VMRT.Note.OptionsFormatting then
 	--	VMRT.Note.Text1 = VMRT.Note.Text1:gsub("|([Ttcr])","||%1")
@@ -2157,6 +2246,7 @@ function module:addonMessage(sender, prefix, ...)
 		end
 		module.db.msgindex = msgnowindex
 		VMRT.Note.Text1 = module.db.lasttext
+		MRT.F:FireCallback("Note_ReceivedText",VMRT.Note.Text1)
 		module.frame:UpdateText()
 		if module.options.NoteEditBox then
 			if module.options.IsMainNoteNow then

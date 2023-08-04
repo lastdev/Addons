@@ -817,39 +817,119 @@ end
 local function setTalents(setup)
 
 	if setup.Talents and not Amr.db.profile.options.disableTal then
-
-		--[[
-		-- UI needs to be opened once to create it, or else this stuff doesn't really work
-		local uiOpened = false
-		if not ClassTalentFrame then
-			ToggleTalentFrame()
-			uiOpened = true
+		
+		if setup.TalentConfigId then	
+			
+			-- load one of the player's saved loadouts... calling methods on C_ClassTalents fails miserably, leaves the UI in a broken state
+			-- and doesn't actually activate the loadout... seems going through ClassTalentHelper.SwitchToLoadoutByName is more reliable
+			local c = C_Traits.GetConfigInfo(setup.TalentConfigId)
+			if c then
+				ClassTalentHelper.SwitchToLoadoutByName(c.name)
+			end
 		else
-			ClassTalentFrame:Show()
-			uiOpened = true
-		end
-]]
 
-		-- the active config seems to always be the same and just gets modified/overwritten by loadouts?
-		local configId = C_ClassTalents.GetActiveConfigID()
-		local config = C_Traits.GetConfigInfo(configId)
-		if not config or config.type ~= Enum.TraitConfigType.Combat then 
-			Amr:Print(L.GearTalentError1)
-			return
-		end
+			-- UI needs to be opened once to create it, or else this stuff doesn't really work
+			local uiOpened = false
+			if not ClassTalentFrame then
+				ToggleTalentFrame()
+				uiOpened = true
+			--else
+			--	ClassTalentFrame:Show()
+			--	uiOpened = true
+			end
+			
+			local specPos = GetSpecialization()
+			local specId = GetSpecializationInfo(specPos)
 
-		-- get nodes and entries
-		local talMap = {}
-		local treeIds = config["treeIDs"];		
-		for i = 1, #treeIds do
-			for _, nodeId in pairs(C_Traits.GetTreeNodes(treeIds[i])) do
-				local node = C_Traits.GetNodeInfo(configId, nodeId)
-				if node.ID and node.isVisible and node.maxRanks > 0 then
-					talMap[node.ID] = node.entryIDs
+			-- janky AF way to force the "default" loadout to be active
+			if ClassTalentFrame then
+				ClassTalentFrame.TalentsTab:ClearLastSelectedConfigID()
+				ClassTalentFrame.TalentsTab:MarkTreeDirty()
+			end
+			C_ClassTalents.UpdateLastSelectedSavedConfigID(specId, 0)
+
+			-- the active config seems to always be the same and just gets modified/overwritten by loadouts?
+			local configId = C_ClassTalents.GetActiveConfigID()
+			if not configId then
+				Amr:Print(L.GearTalentError1)
+				return
+			end
+
+			local config = C_Traits.GetConfigInfo(configId)
+			if not config or config.type ~= Enum.TraitConfigType.Combat then 
+				Amr:Print(L.GearTalentError1)
+				return
+			end
+
+			-- get nodes and entries
+			local talMap = {}
+			local treeIds = config["treeIDs"];		
+			for i = 1, #treeIds do
+				for _, nodeId in pairs(C_Traits.GetTreeNodes(treeIds[i])) do
+					local node = C_Traits.GetNodeInfo(configId, nodeId)
+					if node.ID and node.isVisible and node.maxRanks > 0 then
+						talMap[node.ID] = node.entryIDs
+					end
+				end		
+			end
+
+			-- this seems to work alright now with the jank above that ensures default loadout is selected before you start
+
+			-- go in order by node ID and then entry ID, which is the same order that we export/store the talent string
+			local path = {}
+			local pos = 1
+			for nodeId, entryIds in Amr.spairs(talMap) do
+				for i, entryId in ipairs(entryIds) do
+					if setup.Talents[pos] > 0 then
+						table.insert(path, {
+							nodeId = nodeId,
+							entryId = entryId,
+							rank = setup.Talents[pos],
+							isSelection = #entryIds > 1
+						})				
+					end
+					pos = pos + 1
 				end
-			end		
-		end
+			end
 
+			-- reset the trees
+			for i = 1, #treeIds do
+				C_Traits.ResetTree(configId, treeIds[i])
+			end
+
+			-- pick all the nodes, kinda dumb but you have to "script" clicking on each node in a valid order
+			local loopSafety = 1000
+			while #path > 0 and loopSafety > 0 do
+				loopSafety = loopSafety - 1
+
+				for i = 1, #path do
+					local node = C_Traits.GetNodeInfo(configId, path[i].nodeId)
+					if node.canPurchaseRank then
+						if path[i].isSelection then
+							C_Traits.SetSelection(configId, path[i].nodeId, path[i].entryId)
+						else
+							for r = 1, path[i].rank do
+								C_Traits.PurchaseRank(configId, path[i].nodeId)
+							end
+						end
+						table.remove(path, i)
+						break
+					end
+				end
+
+			end
+
+			-- the changes don't actually take effect until this is called
+			C_Traits.CommitConfig(configId)
+
+			if uiOpened then
+				ClassTalentFrame:Hide()
+			end			
+	
+		end	
+
+		-- the below approach would create a loadout called "AMR Latest Setup" but could not reliably activate it
+		--[[
 		-- create import data required by blizz import function
 		local entries = {}
 		local pos = 1
@@ -867,8 +947,6 @@ local function setTalents(setup)
 		end
 
 		-- see if we already have an AMR Current loadout, and delete it... there is no way to import and update a loadout, only create a new one
-		local specPos = GetSpecialization()
-		local specId = GetSpecializationInfo(specPos)
 		
 		for i, c in ipairs(C_ClassTalents.GetConfigIDsBySpecID(specId)) do
 			local config = C_Traits.GetConfigInfo(c)
@@ -881,6 +959,7 @@ local function setTalents(setup)
 
 		-- import and create a new loadout
 		C_ClassTalents.ImportLoadout(configId, entries, "AMR Latest Setup")
+		]]
 
 		-- actually loading/activating the loadout does not consistently work... revisit when Blizz gets the API working better
 		--[[
@@ -900,60 +979,8 @@ local function setTalents(setup)
 		]]
 
 
-		-- this sort of worked... but ran into issues with the talent UI getting wacked out due to weird Blizz loadout behavior
 
-		--[[
-		-- go in order by node ID and then entry ID, which is the same order that we export/store the talent string
-		local path = {}
-		local pos = 1
-		for nodeId, entryIds in Amr.spairs(talMap) do
-			for i, entryId in ipairs(entryIds) do
-				if setup.Talents[pos] > 0 then
-					table.insert(path, {
-						nodeId = nodeId,
-						entryId = entryId,
-						rank = setup.Talents[pos],
-						isSelection = #entryIds > 1
-					})				
-				end
-				pos = pos + 1
-			end
-		end
 
-		-- reset the trees
-		for i = 1, #treeIds do
-			C_Traits.ResetTree(configId, treeIds[i])
-		end
-
-		-- pick all the nodes, kinda dumb but you have to "script" clicking on each node in a valid order
-		local loopSafety = 1000
-		while #path > 0 and loopSafety > 0 do
-			loopSafety = loopSafety - 1
-
-			for i = 1, #path do
-				local node = C_Traits.GetNodeInfo(configId, path[i].nodeId)
-				if node.canPurchaseRank then
-					if path[i].isSelection then
-						C_Traits.SetSelection(configId, path[i].nodeId, path[i].entryId)
-					else
-						for r = 1, path[i].rank do
-							C_Traits.PurchaseRank(configId, path[i].nodeId)
-						end
-					end
-					table.remove(path, i)
-					break
-				end
-			end
-
-		end
-
-		-- the changes don't actually take effect until this is called
-		C_Traits.CommitConfig(configId)
-
-		if uiOpened then
-			ClassTalentFrame:Hide()
-		end
-		]]
 
 		--[[
 		-- pre-dragonflight code

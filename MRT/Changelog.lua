@@ -1,6 +1,14 @@
 local GlobalAddonName, ExRT = ...
 
 ExRT.Options.Changelog = [=[
+v.4760
+* 10.1.5 Update
+* Minor updates
+* Marks: added support for multiple names
+
+v.4760-LK
+* toc update
+
 v.4740
 * 10.1 Update
 

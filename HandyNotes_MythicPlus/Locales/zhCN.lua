@@ -21,10 +21,8 @@ L["BH_skip_desc"] = "你可以在水中游泳/水上行走"
 L["COS_percentage"] = "在击杀塔丽克萨·火冠后进入化妆舞会之前最好达到93.68%的进度 。"
 L["FH_percentage"] = "桥前最好达到82.25%的进度。"
 L["HOI_door"] = "第一个首领击杀后激活"
---[[Translation missing --]]
---[[ L["HOI_mushroom"] = "Mushroom"--]] 
---[[Translation missing --]]
---[[ L["HOI_mushroom_desc"] = "A herbalist with 25 skill points can collect the mushroom. This gives the party a 30 minute buff that will heal a poison or disease effect every 15 seconds."--]] 
+L["HOI_mushroom"] = "蘑菇"
+L["HOI_mushroom_desc"] = "草药学：具有25技能点可以收集蘑菇。给队伍一个30分钟的增益，每15秒驱散一次毒药或疾病效果。"
 L["HOI_shortcut_frog"] = "去吞喉巨蛙的捷径（青蛙）"
 L["HOI_shortcut_icelady"] = "去不屈者卡金的捷径（冰女）"
 L["HOV_bjorn"] = "布约恩国王"
@@ -50,8 +48,7 @@ L["Settings_iconalpha_desc"] = "图标的透明度"
 L["Settings_Icons"] = "图标设置"
 L["Settings_iconscale"] = "图标比例"
 L["Settings_iconscale_desc"] = "图标的大小比例"
---[[Translation missing --]]
---[[ L["ULD_mining"] = "A Miner with 25 skill points can mine the deposit, granting 10% out of combat movement speed per deposit (3 in total, up to 30% movement speed)"--]] 
+L["ULD_mining"] = "采矿：具有25技能点可以开采“崩解的岩脉”，每个“岩脉”可获得10%的移动速度（总共3个，移动速度高达30%）。"
 L["ULD_percentage"] = "57.22% 进度前"
 L["UNDR_skip"] = "第二个首领被击杀后可以使用捷径"
 L["VP_slipstream"] = "使用气流传送过去。"

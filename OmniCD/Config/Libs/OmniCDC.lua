@@ -46,7 +46,8 @@ function OmniCDC.SetFontProperties(fontString, db)
 		if fontPath then -- fallbacks to default fonts
 			fontString:SetShadowOffset(ofsX, ofsY)
 			fontString:SetShadowColor(r, g, b, ofsX == 0 and ofsY == 0 and 0 or 1)
-			flag = flag == "NONE" and (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE or (WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC and select(4, GetBuildInfo()) >= 30401)) and "" or flag
+			-- DF, WOTLKC 30401, ClassicEra 11404
+			flag = flag == "NONE" and (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE or (WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC and select(4, GetBuildInfo()) >= 30401) or (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and select(4, GetBuildInfo()) >= 11404)) and "" or flag
 			fontString:SetFont(fontPath, size, flag)
 		end
 	end

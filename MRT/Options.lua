@@ -357,6 +357,10 @@ local function MiniMapIconOnClick(self, button)
 	end
 end
 
+MRT_MinimapClickFunction = function()
+	MRT.Options:Open()
+end
+
 MiniMapIcon:SetScript("OnMouseUp", MiniMapIconOnClick)
 
 MRT.Options.MiniMapDropdown = CreateFrame("Frame", "MRTMiniMapMenuFrame", nil, "UIDropDownMenuTemplate")

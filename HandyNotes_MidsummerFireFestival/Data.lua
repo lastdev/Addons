@@ -47,6 +47,10 @@ local colourPlaintext	= ns.colour.plaintext
 -- Flame Keeper of the Dragon Isles		17737	Alliance
 -- Flame Warden of the Dragon Isles		17738	Horde
 
+local teldrassil = "Speak to Zidormi in Darkshore if\nTeldrassil seems somewhat destroyed!"
+local zidormi = "Can't find the bonfire or the Warden\n"
+				.."or the Flame Keeper? Speak to Zidormi!"
+
 points[ 204 ] = { -- Abyssal Depths
 	[96834446] = { aIDA=6011, aIDH=6012, indexA=4, indexH=1, quest=29031, npc=51697, group="H" },
 }
@@ -55,6 +59,9 @@ points[ 14 ] = { -- Arathi Highlands
 	[44574615] = { aID=1031, index=1, quest=11732, object=187914, faction="Horde", group="D" },
 	[69144286] = { aID=1028, index=1, quest=11764, object=187947, faction="Alliance", group="D" },
 	[69354256] = { aID=1025, index=1, quest=11840, npc=25923, faction="Horde", group="H" },
+	[38259009] = { group="I", title="Zidormi", tip="Zidormi is at this location. If you can't\n"
+					.."find the bonfire or the Flame Keeper or the\n"
+					.."Warden then speak to her to change \"time\"!" },
 }
 points[ 63 ] = { -- Ashenvale
 	[51356615] = { aID=1026, index=1, quest=11841, npc=25884, faction="Horde", group="H" },
@@ -87,10 +94,10 @@ points[ 105 ] = { -- Blade's Edge Mountains
 	[50005901] = { aID=1030, index=1, quest=11767, object=187955, faction="Alliance", group="D" },
 }
 points[ 17 ] = { -- Blasted Lands
-	[46221378] = { aID=1025, index=3, quest=28930, npc=51603, faction="Horde", group="H" },
-	[46301414] = { aID=1028, index=3, quest=28917, object=207989, faction="Alliance", group="D" },
-	[55271506] = { aID=1031, index=3, quest=11737, object=187920, faction="Horde", group="D" },
-	[55531488] = { aID=1022, index=3, quest=11808, npc=25890, faction="Alliance", group="H" },
+	[46221378] = { aID=1025, index=3, quest=28930, npc=51603, faction="Horde", group="H", tip=zidormi },
+	[46301414] = { aID=1028, index=3, quest=28917, object=207989, faction="Alliance", group="D", tip=zidormi },
+	[55271506] = { aID=1031, index=3, quest=11737, object=187920, faction="Horde", group="D", tip=zidormi },
+	[55531488] = { aID=1022, index=3, quest=11808, npc=25890, faction="Alliance", group="H", tip=zidormi },
 }
 points[ 106 ] = { -- Bloodmyst Isle
 	[55816789] = { aID=1023, index=3, quest=11809, npc=25891, faction="Alliance", group="H" },
@@ -115,11 +122,12 @@ points[ 127 ] = { -- Crystalsong Forest
 	[80345272] = { aID=6007, index=6, quest=13457, object=194046, faction="Alliance", group="D" },
 }
 points[ 62 ] = { -- Darkshore
-	[48732265] = { aID=1023, index=4, quest=11811, npc=25893, faction="Alliance", group="H" },
-	[48922257] = { aID=1032, index=4, quest=11740, object=187923, faction="Horde", group="D" },
+	[48732265] = { aID=1023, index=4, quest=11811, npc=25893, faction="Alliance", group="H", tip=teldrassil },
+	[48922257] = { aID=1032, index=4, quest=11740, object=187923, faction="Horde", group="D", tip=teldrassil },
 }
 points[ 89 ] = { -- Darnassus
-	[63684707] = { aID=1145, quest=9332, label="Darnassus", object=181334, faction="Horde", group="T" },
+	[63684707] = { aID=1145, quest=9332, label="Darnassus", object=181334, faction="Horde",
+					group="T", tip=teldrassil },
 }
 points[ 1165 ] = { -- Dazar'alor
 	[35985713] = { aID=13340, index=1, quest=54745, npc=148944, faction="Horde", group="H" },
@@ -297,11 +305,14 @@ points[ 119 ] = { -- Sholazar Basin
 	[47886626] = { aID=6010, index=4, quest=13442, object=194035, faction="Horde", group="D" },
 	[48116605] = { aID=6008, index=4, quest=13486, npc=32802, faction="Alliance", group="H" },
 }
+
+local hugeSword = "Visit Zidormi if you see a\nhuge sword stuck into Azeroth"
+
 points[ 81 ] = { -- Silithus
-	[50864131] = { aID=1026, index=9, quest=11836, npc=25919, faction="Horde", group="H" },
-	[50864166] = { aID=1029, index=9, quest=11800, object=187950, faction="Alliance", group="D" },
-	[60313351] = { aID=1023, index=8, quest=11831, npc=25914, faction="Alliance", group="H" },
-	[60543314] = { aID=1032, index=8, quest=11760, object=187943, faction="Horde", group="D" },
+	[50864131] = { aID=1026, index=9, quest=11836, npc=25919, faction="Horde", group="H", tip=hugeSword },
+	[50864166] = { aID=1029, index=9, quest=11800, object=187950, faction="Alliance", group="D", tip=hugeSword },
+	[60313351] = { aID=1023, index=8, quest=11831, npc=25914, faction="Alliance", group="H", tip=hugeSword },
+	[60543314] = { aID=1032, index=8, quest=11760, object=187943, faction="Horde", group="D", tip=hugeSword },
 }
 points[ 110 ] = { -- Silvemoon City
 	[69264308] = { aID=1145, quest=11935, label="Silvermoon City", object=188129, faction="Alliance", group="T" },
@@ -368,8 +379,6 @@ points[ 51 ] = { -- Swamp of Sorrows
 points[ 535 ] = { -- Talador
 	[43467181] = { aIDA=11283, aIDH=11284, index=2, quest=44571, npc=114489, group="H" },
 }
-points[ 534 ] = { -- Tanaan
-}
 points[ 71 ] = { -- Tanaris
 	[49822788] = { aID=1026, index=12, quest=11838, npc=25921, faction="Horde", group="H" },
 	[49832812] = { aID=1029, index=12, quest=11802, object=187952, faction="Alliance", group="D" },
@@ -377,7 +386,8 @@ points[ 71 ] = { -- Tanaris
 	[52643006] = { aID=1032, index=11, quest=11762, object=187945, faction="Horde", group="D" },
 }
 points[ 57 ] = { -- Teldrassil
-	[34524766] = { aID=1145, quest=9332, label="Darnassus", object=181334, faction="Horde", group="T" },
+	[34524766] = { aID=1145, quest=9332, label="Darnassus", object=181334, faction="Horde",
+					group="T", tip=teldrassil },
 	[54755283] = { aID=1032, index=12, quest=11753, object=187936, faction="Horde", group="D" },
 	[54885279] = { aID=1023, index=12, quest=11824, npc=25906, faction="Alliance", group="H" },
 }
@@ -425,9 +435,9 @@ points[ 895 ] = { -- Tiragarde Sound
 	[76354988] = { aID=13341, index=1, quest=54737, npc=148917, faction="Alliance", group="H" },
 }
 points[ 18 ] = { -- Tirisfal Glades
-	[57055173] = { aID=1028, index=13, quest=11786, object=187974, faction="Alliance", group="D" },
-	[57235175] = { aID=1025, index=13, quest=11862, npc=25946, faction="Horde", group="H" },
-	[62286691] = { aID=1145, quest=9326, label="Ruins of Lordaeron", object=181335, faction="Alliance", group="T" },
+	[57055173] = { aID=1028, index=13, quest=11786, object=187974, faction="Alliance", group="D", tip=zidormi },
+	[57235175] = { aID=1025, index=13, quest=11862, npc=25946, faction="Horde", group="H", tip=zidormi },
+	[62286691] = { aID=1145, quest=9326, label="Ruins of Lordaeron", object=181335, faction="Alliance", group="T", tip=zidormi },
 }
 points[ 388 ] = { -- Townlong Steppes
 	[71525629] = { aIDA=8045, aIDH=8044, index=5, quest=32501, npc=69536, group="H" },
@@ -506,7 +516,7 @@ points[ 102 ] = { -- Zangarmarsh
 	[35445161] = { aID=1027, index=7, quest=11863, npc=25947, faction="Horde", group="H" },
 	[35565176] = { aID=1030, index=7, quest=11787, object=187975, faction="Alliance", group="D" },
 	[68635214] = { aID=1033, index=7, quest=11758, object=187941, faction="Horde", group="D" },
-	[69795195] = { aID=1024, index=7, quest=11829, npc=25912, faction="Alliance", group="H" },
+	[68795195] = { aID=1024, index=7, quest=11829, npc=25912, faction="Alliance", group="H" },
 }
 points[ 2133 ] = { -- Zaralek Cavern
 	[55175542] = { aIDA=17737, aIDH=17738, index=6, quest=75650, npc=204417, group="H" }, -- Bonfire at 55235549

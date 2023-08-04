@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1228, "DBM-Party-WoD", 8, 559)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230117063410")
+mod:SetRevision("20230708234551")
 mod:SetCreatureID(79912, 80098)--80098 is mount(Ironbarb Skyreaver), 79912 is boss
 mod:SetEncounterID(1759)
 mod:SetBossHPInfoToHighest(false)
@@ -19,7 +19,7 @@ mod:RegisterEventsInCombat(
 )
 
 --Chi blast warns very spammy. and not useful.
-local warnTharbek			= mod:NewSpellAnnounce("ej10276", 3, "134170")
+local warnTharbek			= mod:NewSpellAnnounce(-10276, 3, "134170")
 local warnIronReaver		= mod:NewTargetNoFilterAnnounce(161989, 3)
 local warnImbuedIronAxe		= mod:NewTargetAnnounce(162090, 4)
 

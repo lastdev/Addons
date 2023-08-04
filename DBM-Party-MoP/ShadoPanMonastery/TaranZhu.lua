@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,challenge,timewalker"
 
-mod:SetRevision("20220218034305")
+mod:SetRevision("20230708234551")
 mod:SetCreatureID(56884)
 mod:SetEncounterID(1306)
 
@@ -18,7 +18,7 @@ mod:RegisterEventsInCombat(
 local warnRingofMalice		= mod:NewSpellAnnounce(131521, 3)
 local warnHazeofHate		= mod:NewTargetAnnounce(107087, 4)
 
-local specWarnGrippingHatred= mod:NewSpecialWarningSwitch("ej5817", nil, nil, nil, 1, 2)
+local specWarnGrippingHatred= mod:NewSpecialWarningSwitch(-5817, nil, nil, nil, 1, 2)
 local specWarnHazeofHate	= mod:NewSpecialWarningYou(107087, nil, nil, nil, 1, 2)
 local specWarnRisingHate	= mod:NewSpecialWarningInterrupt(107356, "-Healer", nil, nil, 1, 2)
 

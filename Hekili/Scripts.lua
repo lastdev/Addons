@@ -510,6 +510,7 @@ do
 
         { "^!?action%.([a-z0-9_]+)%.in_flight$"               , "action.%1.in_flight_remains"    }, -- Fire Mage, but others too, potentially.
         { "^!?action%.([a-z0-9_]+)%.in_flight_remains<=?(.-)$", "action.%1.in_flight_remains-%2" }, -- Fire Mage, but others too, potentially.
+        { "^remaining_winters_chill"                          , "debuff.winters_chill.remains"   }, -- Frost Mage
 
         { "^!?fiery_brand_dot_primary_remains$", "fiery_brand_dot_primary_remains" }, -- Vengeance
         { "^!?fiery_brand_dot_primary_ticking$", "fiery_brand_dot_primary_remains" }, -- Vengeance
@@ -521,6 +522,8 @@ do
         { "^!?raid_events%.([a-z0-9_]+)%.up$", "raid_events.%1.up"                    },
         { "^!?(pet%.[a-z0-9_]+)%.up$", "%1.remains"                                   },
         { "^!?(pet%.[a-z0-9_]+)%.active$", "%1.remains"                               },
+
+        { "^(action%.[a-z0-9_]+)%.ready$", "%1.ready_time" }
     }
 
 
@@ -1380,7 +1383,11 @@ local function ConvertScript( node, hasModifiers, header )
                     emulated = SimToLua( scripts:EmulateSyntax( node[ m ] ) )
 
                 elseif value == 'raw' then
-                    emulated = SimToLua( scripts:EmulateSyntax( node[ m ], true ) )
+                    if m == "empower_to" and ( o == "max" or o == "maximum" ) then
+                        emulated = SimToLua( scripts:EmulateSyntax( "max_empower", true ) )
+                    else
+                        emulated = SimToLua( scripts:EmulateSyntax( node[ m ], true ) )
+                    end
 
                 else -- string
                     o = "'" .. o .. "'"
@@ -1607,6 +1614,8 @@ function scripts:LoadScripts()
                     if script.Error then
                         Hekili:Error( "Error in " .. scriptID .. " conditions:  " .. script.Error )
                     end
+
+                    script.action = data.action
 
                     local lua = script.Lua
 

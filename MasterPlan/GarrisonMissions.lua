@@ -7,11 +7,6 @@ local roamingParty, easyDrop = T.MissionsUI.roamingParty, T.MissionsUI.easyDrop
 local MISSION_PAGE_FRAME = GarrisonMissionFrame.MissionTab.MissionPage
 local SHIP_MISSION_PAGE = GarrisonShipyardFrame.MissionTab.MissionPage
 
-local function HideOwnedGameTooltip(self)
-	if GameTooltip:IsOwned(self) then
-		GameTooltip:Hide()
-	end
-end
 local function HookOnShow(self, OnShow)
 	self:HookScript("OnShow", OnShow)
 	if self:IsVisible() then OnShow(self) end
@@ -306,7 +301,7 @@ hooksecurefunc(GarrisonMissionFrame, "SetEnemies", function(_, f, enemies)
 				m[i].highlight:SetBlendMode("ADD")
 				m[i]:SetScript("OnClick", Mechanic_OnClick)
 				m[i]:SetScript("OnEnter", Mechanic_OnEnter)
-				m[i]:SetScript("OnLeave", HideOwnedGameTooltip)
+				m[i]:SetScript("OnLeave", T.HideOwnedGameTooltip)
 			end
 			m[i].hasCounter = nil
 			m[i].Check:Hide()
@@ -374,12 +369,12 @@ local lfgButton do
 		if easyDrop:IsOpen(self) then
 			CloseDropDownMenus()
 		end
-		HideOwnedGameTooltip(self)
+		T.HideOwnedGameTooltip(self)
 	end)
 	lfgButton:SetScript("OnEnter", function(self)
 		easyDrop:DelayOpenClick(self)
 	end)
-	lfgButton:SetScript("OnLeave", HideOwnedGameTooltip)
+	lfgButton:SetScript("OnLeave", T.HideOwnedGameTooltip)
 
 	lfgButton:SetScript("OnClick", function(self)
 		local PAGE_FRAME = self:GetParent():GetParent()
@@ -726,7 +721,7 @@ do -- Follower headcounts
 		end
 		GameTooltip:Show()
 	end)
-	ff:SetScript("OnLeave", HideOwnedGameTooltip)
+	ff:SetScript("OnLeave", T.HideOwnedGameTooltip)
 	for _, s in pairs({mf:GetRegions()}) do
 		if s:IsObjectType("FontString") and s:GetText() == GARRISON_YOUR_MATERIAL then
 			s:Hide()
@@ -779,7 +774,7 @@ do -- Garrison Resources in shipyard
 		GameTooltip:SetCurrencyByID(GARRISON_CURRENCY)
 		GameTooltip:Show()
 	end)
-	ff:SetScript("OnLeave", HideOwnedGameTooltip)
+	ff:SetScript("OnLeave", T.HideOwnedGameTooltip)
 	for _, s in pairs({mf:GetRegions()}) do
 		if s:IsObjectType("FontString") and s:GetText() == GARRISON_YOUR_MATERIAL then
 			s:Hide()
@@ -907,7 +902,7 @@ do -- Ship re-fitting
 				b:SetPoint("LEFT", 28*i-28, 0)
 				b:SetScript("OnClick", Equipment_OnClick)
 				b:SetScript("OnEnter", ShowMixedTooltip)
-				b:SetScript("OnLeave", HideOwnedGameTooltip)
+				b:SetScript("OnLeave", T.HideOwnedGameTooltip)
 				eq[i] = b
 			end
 			for i=1,6 do
@@ -925,7 +920,7 @@ do -- Ship re-fitting
 				b:SetPoint("LEFT", i*34-34 + math.floor(i/2-0.5)*12, 0)
 				b:SetMotionScriptsWhileDisabled(true)
 				b:SetScript("OnEnter", ShowMixedTooltip)
-				b:SetScript("OnLeave", HideOwnedGameTooltip)
+				b:SetScript("OnLeave", T.HideOwnedGameTooltip)
 				b:SetScript("PreClick", SetUpEquipmentRefit)
 				b:SetScript("PostClick", CompleteEquipmentRefit)
 				T.TenSABT(b)
@@ -1146,6 +1141,6 @@ do
 		GameTooltip:AddDoubleLine("|TInterface\\Icons\\Garrison_Build:0:0:0:0:64:64:6:58:6:58|t " .. name, tl, 1,1,1)
 		GameTooltip:Show()
 	end)
-	ctlContainer:SetScript("OnLeave", HideOwnedGameTooltip)
+	ctlContainer:SetScript("OnLeave", T.HideOwnedGameTooltip)
 	ctlContainer:Show()
 end

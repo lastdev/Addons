@@ -195,7 +195,11 @@ function module.options:Load()
 		{"Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES",0.5,0.73828125,0.5,0.75},
 		{"Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES",0.7421875,0.98828125,0,0.25},
 		{"Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES",0.7421875,0.98828125,0.5,0.75},
+		"interface/icons/classicon_evoker",
 	}
+	if ExRT.isClassic then
+		tremove(icons_list, #icons_list)
+	end
 
 	local IsDotIn
 	local LockedImgHideAll
@@ -620,10 +624,11 @@ function module.options:Load()
 		end
 	end
 
+	local ICONS_SIZE = 40
 	self.icon_selector = {}
 	for i=1,#icons_list do
 		local t = icons_list[i]
-		self.icon_selector[i] = ELib:Icon(self,type(t)=='table' and t[1] or t,floor(COLOR_SIZE / 2),true):OnClick(function()
+		self.icon_selector[i] = ELib:Icon(self,type(t)=='table' and t[1] or t,floor(ICONS_SIZE / 2),true):OnClick(function()
 			curr_icon = i
 			self.curr_color_texture:SetTexture(icons_list[i])
 		end)

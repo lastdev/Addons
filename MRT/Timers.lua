@@ -53,6 +53,7 @@ local defaultSpecTimers = {
 	[581] = 10, -- Demon Hunter: Vengeance	
 	[1467] = 10,
 	[1468] = 10,
+	[1473] = 10,
 }
 
 module.db.specIcons = ExRT.GDB.ClassSpecializationIcons

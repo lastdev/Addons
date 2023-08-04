@@ -217,7 +217,146 @@ Home:SetScript("OnShow", function(self)
 		}, accessoryWindowConfig.Label, accessoryWindowConfig.selectionPopout.Button)
 		local last = accessoryWindowConfig
 
-		if (osd.GreedyEmissary:IsEventActive()) then
+		if (osd.TimeRifts) then
+			local timeRiftsConfig = CreateFrame("Frame", nil, configurationFrame)
+			timeRiftsConfig:SetPoint("TOPLEFT", last, "BOTTOMLEFT", 0, -8)
+			last = timeRiftsConfig
+			timeRiftsConfig:SetPoint("RIGHT")
+			timeRiftsConfig:SetHeight(30)
+			timeRiftsConfig.Label = timeRiftsConfig:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+			timeRiftsConfig.Label:SetJustifyH("LEFT")
+			timeRiftsConfig.Label:SetPoint("LEFT", 32, 0)
+			timeRiftsConfig.Label:SetText("Time Rifts")
+			local timeRiftsConfigDisplayPreference = osd.TimeRifts.GetVisibilityOption()
+			local timeRiftsConfigDisplayConstants = addon.constants.accessoryDisplay
+			timeRiftsConfig.selectionPopout = Templates.CreateSelectionPopoutWithButtons(
+					timeRiftsConfig,
+					{
+						{
+							label = "Always Shown",
+							value = timeRiftsConfigDisplayConstants.ALWAYS,
+							selected = timeRiftsConfigDisplayPreference == timeRiftsConfigDisplayConstants.ALWAYS
+						},
+						{
+							label = "Never Shown",
+							value = timeRiftsConfigDisplayConstants.NEVER,
+							selected = timeRiftsConfigDisplayPreference == timeRiftsConfigDisplayConstants.NEVER
+						},
+						{
+							label = "Hide when in instances",
+							value = timeRiftsConfigDisplayConstants.NOINSTANCES,
+							selected = timeRiftsConfigDisplayPreference == timeRiftsConfigDisplayConstants.NOINSTANCES
+						},
+					},
+					function()
+						osd.TimeRifts.SetVisibilityOption(timeRiftsConfig.selectionPopout.selected.value)
+					end
+			)
+			timeRiftsConfig.selectionPopout:SetPoint("LEFT", 230, 0)
+			timeRiftsConfig.selectionPopout.Popout:Layout()
+			AttachTooltip({
+				"Time Rifts",
+				"Set when to display the Time Rifts timers within the floating window\n\n(The floating window will only be visible when you have features enabled for it)",
+			}, timeRiftsConfig.Label, timeRiftsConfig.selectionPopout.Button)
+		end
+
+		if (osd.TwitchDrops) then
+			local twitchDropsConfig = CreateFrame("Frame", nil, configurationFrame)
+			twitchDropsConfig:SetPoint("TOPLEFT", last, "BOTTOMLEFT", 0, -8)
+			last = twitchDropsConfig
+			twitchDropsConfig:SetPoint("RIGHT")
+			twitchDropsConfig:SetHeight(30)
+			twitchDropsConfig.Label = twitchDropsConfig:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+			twitchDropsConfig.Label:SetJustifyH("LEFT")
+			twitchDropsConfig.Label:SetPoint("LEFT", 32, 0)
+			twitchDropsConfig.Label:SetText("Twitch Promos")
+			local twitchDropsConfigDisplayPreference = osd.TwitchDrops.GetVisibilityOption()
+			local twitchDropsConfigDisplayConstants = addon.constants.accessoryDisplay
+			twitchDropsConfig.selectionPopout = Templates.CreateSelectionPopoutWithButtons(
+					twitchDropsConfig,
+					{
+						{
+							label = "Snooze",
+							value = twitchDropsConfigDisplayConstants.SNOOZED,
+							selected = twitchDropsConfigDisplayPreference == twitchDropsConfigDisplayConstants.SNOOZED
+						},
+						{
+							label = "Always Shown",
+							value = twitchDropsConfigDisplayConstants.ALWAYS,
+							selected = twitchDropsConfigDisplayPreference == twitchDropsConfigDisplayConstants.ALWAYS
+						},
+						{
+							label = "Never Shown",
+							value = twitchDropsConfigDisplayConstants.NEVER,
+							selected = twitchDropsConfigDisplayPreference == twitchDropsConfigDisplayConstants.NEVER
+						},
+						{
+							label = "Hide when in instances",
+							value = twitchDropsConfigDisplayConstants.NOINSTANCES,
+							selected = twitchDropsConfigDisplayPreference == twitchDropsConfigDisplayConstants.NOINSTANCES
+						},
+					},
+					function()
+						osd.TwitchDrops.SetVisibilityOption(twitchDropsConfig.selectionPopout.selected.value)
+					end
+			)
+			twitchDropsConfig.selectionPopout:SetPoint("LEFT", 230, 0)
+			twitchDropsConfig.selectionPopout.Popout:Layout()
+			AttachTooltip({
+				"Twitch Drops",
+				"Set when to display the Twitch Drops timer within the floating window\n\n|cFFFF0000PRO TIP: |r|cFFFFFFFFUse \"Snooze\" to stop displaying until the next promo begins|r\n\n(The floating window will only be visible when you have features enabled for it)",
+			}, twitchDropsConfig.Label, twitchDropsConfig.selectionPopout.Button)
+		end
+
+		if (osd.PrimeGamingLoot) then
+			local primeGamingLootConfig = CreateFrame("Frame", nil, configurationFrame)
+			primeGamingLootConfig:SetPoint("TOPLEFT", last, "BOTTOMLEFT", 0, -8)
+			last = primeGamingLootConfig
+			primeGamingLootConfig:SetPoint("RIGHT")
+			primeGamingLootConfig:SetHeight(30)
+			primeGamingLootConfig.Label = primeGamingLootConfig:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+			primeGamingLootConfig.Label:SetJustifyH("LEFT")
+			primeGamingLootConfig.Label:SetPoint("LEFT", 32, 0)
+			primeGamingLootConfig.Label:SetText("Prime Gaming Loot")
+			local primeGamingLootConfigDisplayPreference = osd.PrimeGamingLoot.GetVisibilityOption()
+			local primeGamingLootConfigDisplayConstants = addon.constants.accessoryDisplay
+			primeGamingLootConfig.selectionPopout = Templates.CreateSelectionPopoutWithButtons(
+					primeGamingLootConfig,
+					{
+						{
+							label = "Snooze",
+							value = primeGamingLootConfigDisplayConstants.SNOOZED,
+							selected = primeGamingLootConfigDisplayPreference == primeGamingLootConfigDisplayConstants.SNOOZED
+						},
+						{
+							label = "Always Shown",
+							value = primeGamingLootConfigDisplayConstants.ALWAYS,
+							selected = primeGamingLootConfigDisplayPreference == primeGamingLootConfigDisplayConstants.ALWAYS
+						},
+						{
+							label = "Never Shown",
+							value = primeGamingLootConfigDisplayConstants.NEVER,
+							selected = primeGamingLootConfigDisplayPreference == primeGamingLootConfigDisplayConstants.NEVER
+						},
+						{
+							label = "Hide when in instances",
+							value = primeGamingLootConfigDisplayConstants.NOINSTANCES,
+							selected = primeGamingLootConfigDisplayPreference == primeGamingLootConfigDisplayConstants.NOINSTANCES
+						},
+					},
+					function()
+						osd.PrimeGamingLoot.SetVisibilityOption(primeGamingLootConfig.selectionPopout.selected.value)
+					end
+			)
+			primeGamingLootConfig.selectionPopout:SetPoint("LEFT", 230, 0)
+			primeGamingLootConfig.selectionPopout.Popout:Layout()
+			AttachTooltip({
+				"Prime Gaming Loot",
+				"Set when to display the Prime Gaming Loot timer within the floating window\n\n|cFFFF0000PRO TIP: |r|cFFFFFFFFUse \"Snooze\" to stop displaying until the next promo begins|r\n\n(The floating window will only be visible when you have features enabled for it)",
+			}, primeGamingLootConfig.Label, primeGamingLootConfig.selectionPopout.Button)
+		end
+
+		if (osd.GreedyEmissary and osd.GreedyEmissary:IsEventActive()) then
 			local treasureGoblinConfig = CreateFrame("Frame", nil, configurationFrame)
 			treasureGoblinConfig:SetPoint("TOPLEFT", last, "BOTTOMLEFT", 0, -8)
 			last = treasureGoblinConfig

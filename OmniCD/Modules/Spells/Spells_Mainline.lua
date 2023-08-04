@@ -88,7 +88,7 @@ E.spell_db = {
 		{ ["class"]="ROGUE",["type"]="offensive",["buff"]=280719,["spec"]=true,["name"]="Secret Technique",["duration"]=60,["icon"]=132305,["spellID"]=280719, },
 		{ ["class"]="ROGUE",["type"]="offensive",["buff"]=277925,["spec"]=true,["name"]="Shuriken Tornado",["duration"]=60,["icon"]=236282,["spellID"]=277925, },
 		{ ["class"]="ROGUE",["type"]="offensive",["buff"]=384631,["spec"]={384631,321079},["name"]="Flagellation",["duration"]=90,["icon"]=3565724,["spellID"]=384631, },
-		{ ["class"]="ROGUE",["type"]="offensive",["buff"]=121471,["spec"]=true,["name"]="Shadow Blades",["duration"]=180,["icon"]=376022,["spellID"]=121471, },
+		{ ["class"]="ROGUE",["type"]="offensive",["buff"]=121471,["spec"]=true,["name"]="Shadow Blades",["duration"]=120,["icon"]=376022,["spellID"]=121471, },
 		{ ["class"]="ROGUE",["type"]="offensive",["buff"]=5938,["spec"]=true,["name"]="Shiv",["charges"]=1,["duration"]=25,["icon"]=135428,["spellID"]=5938, },
 		{ ["class"]="ROGUE",["type"]="cc",["buff"]=1776,["spec"]=true,["name"]="Gouge",["duration"]=20,["icon"]=132155,["spellID"]=1776, },
 		{ ["class"]="ROGUE",["type"]="defensive",["buff"]=31230,["spec"]=true,["name"]="Cheat Death",["duration"]=360,["icon"]=132285,["spellID"]=31230, },
@@ -97,7 +97,7 @@ E.spell_db = {
 		{ ["class"]="ROGUE",["type"]="offensive",["buff"]=381623,["spec"]=true,["name"]="Thistle Tea",["charges"]=3,["duration"]=60,["icon"]=132819,["spellID"]=381623, },
 		{ ["class"]="ROGUE",["type"]="defensive",["buff"]=5277,["spec"]=true,["name"]="Evasion",["duration"]=120,["icon"]=136205,["spellID"]=5277, },
 		{ ["class"]="ROGUE",["type"]="offensive",["buff"]=360194,["spec"]=true,["name"]="Deathmark",["duration"]=120,["icon"]=4667421,["spellID"]=360194, },
-		{ ["class"]="ROGUE",["type"]="offensive",["buff"]=381802,["spec"]=true,["name"]="Indiscriminate Carnage",["duration"]=60,["icon"]=4667422,["spellID"]=381802, },
+		{ ["class"]="ROGUE",["type"]="offensive",["buff"]=381802,["spec"]=true,["name"]="Indiscriminate Carnage",["duration"]=45,["icon"]=4667422,["spellID"]=381802, },
 		{ ["class"]="ROGUE",["type"]="offensive",["buff"]=200806,["spec"]=true,["name"]="Exsanguinate",["duration"]=180,["icon"]=538040,["spellID"]=200806, },
 		{ ["class"]="ROGUE",["type"]="offensive",["buff"]=385627,["spec"]=true,["name"]="Kingsbane",["duration"]=60,["icon"]=1259291,["spellID"]=385627, },
 	},
@@ -336,6 +336,13 @@ E.spell_db = {
 		{ ["class"]="EVOKER",["type"]="offensive",["buff"]=370553,["spec"]=true,["name"]="Tip the Scales",["duration"]=120,["icon"]=4622480,["spellID"]=370553, },
 		{ ["class"]="EVOKER",["type"]="other",["buff"]=360995,["spec"]=true,["name"]="Verdant Embrace",["duration"]={[1468]=18,["default"]=24},["icon"]=4622471,["spellID"]=360995, },
 		{ ["class"]="EVOKER",["type"]="dispel",["buff"]=365585,["spec"]=true,["name"]="Expunge",["duration"]=8,["icon"]=4630445,["spellID"]=365585, },
+		{ ["class"]="EVOKER",["type"]="other",["buff"]=406732,["spec"]=true,["name"]="Spatial Paradox",["duration"]=120,["icon"]=5199645,["spellID"]=406732, },
+		{ ["class"]="EVOKER",["type"]="other",["buff"]=404977,["spec"]=true,["name"]="Time Skip",["duration"]=180,["icon"]=5201905,["spellID"]=404977,["talent"]=412713, },
+		{ ["class"]="EVOKER",["type"]="defensive",["buff"]=360827,["spec"]=true,["name"]="Blistering Scales",["duration"]=30,["icon"]=5199621,["spellID"]=360827, },
+		{ ["class"]="EVOKER",["type"]="disarm",["buff"]=396286,["spec"]=true,["name"]="Upheaval",["duration"]=40,["icon"]=5199647,["spellID"]=396286, },
+		{ ["class"]="EVOKER",["type"]="offensive",["buff"]=395152,["spec"]=true,["name"]="Ebon Might",["duration"]=30,["icon"]=5061347,["spellID"]=395152, },
+		{ ["class"]="EVOKER",["type"]="offensive",["buff"]=403631,["spec"]=true,["name"]="Breath of Eons",["duration"]=120,["icon"]=5199622,["spellID"]=403631, },
+		{ ["class"]="EVOKER",["type"]="defensive",["buff"]=404381,["spec"]=404195,["name"]="Defy Fate",["duration"]=360,["icon"]=5199625,["spellID"]=404381, },
 	},
 	["DRUID"] = {
 		{ ["class"]="DRUID",["type"]="other",["buff"]=1850,["duration"]=120,["name"]="Dash",["icon"]=132120,["spellID"]=1850,["talent"]=252216, },
@@ -368,7 +375,7 @@ E.spell_db = {
 		{ ["class"]="DRUID",["type"]="defensive",["buff"]=61336,["spec"]=true,["name"]="Survival Instincts",["charges"]=1,["duration"]=180,["icon"]=236169,["spellID"]=61336, },
 		{ ["class"]="DRUID",["type"]="offensive",["buff"]=5217,["spec"]=true,["name"]="Tiger's Fury",["duration"]=30,["icon"]=132242,["spellID"]=5217, },
 		{ ["class"]="DRUID",["type"]="offensive",["buff"]=102558,["spec"]=true,["name"]="Incarnation: Guardian of Ursoc",["duration"]=180,["icon"]=571586,["spellID"]=102558, },
-		{ ["class"]="DRUID",["type"]="defensive",["buff"]=200851,["spec"]=true,["name"]="Rage of the Sleeper",["duration"]=90,["icon"]=1129695,["spellID"]=200851, },
+		{ ["class"]="DRUID",["type"]="defensive",["buff"]=200851,["spec"]=true,["name"]="Rage of the Sleeper",["duration"]=60,["icon"]=1129695,["spellID"]=200851, },
 		{ ["class"]="DRUID",["type"]="defensive",["buff"]=80313,["spec"]=true,["name"]="Pulverize",["duration"]=45,["icon"]=1033490,["spellID"]=80313, },
 		{ ["class"]="DRUID",["type"]="other",["buff"]=155835,["spec"]=true,["name"]="Bristling Fur",["duration"]=40,["icon"]=1033476,["spellID"]=155835, },
 		{ ["class"]="DRUID",["type"]="other",["buff"]=102401,["spec"]=true,["name"]="Wild Charge",["duration"]=15,["icon"]=538771,["spellID"]=102401, },
@@ -403,9 +410,9 @@ E.spell_db = {
 
 	},
 	["WARLOCK"] = {
+		{ ["class"]="WARLOCK",["type"]="offensive",["buff"]=417537,["spec"]=true,["duration"]=45,["name"]="Oblivion",["icon"]=828455,["spellID"]=417537, },
 		{ ["class"]="WARLOCK",["type"]="offensive",["buff"]=344566,["spec"]=true,["duration"]=30,["name"]="Rapid Contagion",["icon"]=237557,["spellID"]=344566, },
 
-		{ ["class"]="WARLOCK",["type"]="offensive",["buff"]=264106,["spec"]=true,["duration"]=30,["name"]="Deathbolt",["icon"]=425953,["spellID"]=264106, },
 
 		{ ["class"]="WARLOCK",["type"]="offensive",["buff"]=212459,["spec"]=true,["duration"]=120,["name"]="Call Fel Lord",["icon"]=1113433,["spellID"]=212459, },
 		{ ["class"]="WARLOCK",["type"]="offensive",["buff"]=353601,["spec"]=true,["duration"]=45,["name"]="Fel Obelisk",["icon"]=1718002,["spellID"]=353601, },
@@ -505,6 +512,7 @@ E.spell_db = {
 		{ ["class"]="PRIEST",["type"]="counterCC",["buff"]=32379,["spec"]=true,["name"]="Shadow Word: Death",["charges"]=1,["duration"]=10,["icon"]=136149,["spellID"]=32379, },
 		{ ["class"]="PRIEST",["type"]="offensive",["buff"]=34433,["spec"]=true,["name"]="Shadowfiend",["duration"]=180,["icon"]=136199,["spellID"]=34433,["talent"]=200174, },
 		{ ["class"]="PRIEST",["type"]="other",["buff"]=73325,["spec"]=true,["name"]="Leap of Faith",["duration"]=90,["icon"]=463835,["spellID"]=73325, },
+		{ ["class"]="PRIEST",["type"]="raidDefensive",["buff"]=271466,["spec"]=true,["name"]="Luminous Barrier",["duration"]=180,["icon"]=537078,["spellID"]=271466, },
 	},
 	["PALADIN"] = {
 		{ ["class"]="PALADIN",["type"]="disarm",["buff"]=410126,["spec"]=true,["duration"]=60,["name"]="Searing Glare",["icon"]=135909,["spellID"]=410126, },
@@ -533,16 +541,16 @@ E.spell_db = {
 		{ ["class"]="PALADIN",["type"]="offensive",["buff"]=231895,["spec"]=true,["name"]="Crusade",["duration"]=120,["icon"]=236262,["spellID"]=231895, },
 		{ ["class"]="PALADIN",["type"]="offensive",["buff"]=343527,["spec"]=true,["name"]="Execution Sentence",["duration"]=60,["icon"]=613954,["spellID"]=343527, },
 		{ ["class"]="PALADIN",["type"]="defensive",["buff"]=184662,["spec"]=true,["name"]="Shield of Vengeance",["duration"]=90,["icon"]=236264,["spellID"]=184662, },
-		{ ["class"]="PALADIN",["type"]="defensive",["buff"]=498,["spec"]=true,["name"]="Divine Protection",["duration"]=60,["icon"]=524353,["spellID"]=498, },
+		{ ["class"]="PALADIN",["type"]="defensive",["buff"]=498,["spec"]={65},["name"]="Divine Protection",["duration"]=60,["icon"]=524353,["spellID"]=498, },
 		{ ["class"]="PALADIN",["type"]="offensive",["buff"]=343721,["spec"]=true,["name"]="Final Reckoning",["duration"]=60,["icon"]=135878,["spellID"]=343721, },
 		{ ["class"]="PALADIN",["type"]="externalDefensive",["buff"]=148039,["spec"]=true,["name"]="Barrier of Faith",["duration"]=30,["icon"]=4067370,["spellID"]=148039, },
-		{ ["class"]="PALADIN",["type"]="other",["buff"]=214202,["spec"]=true,["name"]="Rule of Law",["charges"]=2,["duration"]=30,["icon"]=571556,["spellID"]=214202, },
+
 		{ ["class"]="PALADIN",["type"]="defensive",["buff"]=157047,["spec"]=true,["name"]="Saved by the Light",["duration"]=60,["icon"]=1030102,["spellID"]=157047, },
 		{ ["class"]="PALADIN",["type"]="raidDefensive",["buff"]=31821,["spec"]=true,["name"]="Aura Mastery",["duration"]=180,["icon"]=135872,["spellID"]=31821, },
-		{ ["class"]="PALADIN",["type"]="offensive",["buff"]=210294,["spec"]=true,["name"]="Divine Favor",["duration"]=45,["icon"]=135915,["spellID"]=210294, },
+		{ ["class"]="PALADIN",["type"]="offensive",["buff"]=210294,["spec"]=true,["name"]="Divine Favor",["duration"]=30,["icon"]=135915,["spellID"]=210294, },
 		{ ["class"]="PALADIN",["type"]="offensive",["buff"]=114165,["spec"]=true,["name"]="Holy Prism",["duration"]=20,["icon"]=613408,["spellID"]=114165, },
 		{ ["class"]="PALADIN",["type"]="offensive",["buff"]=114158,["spec"]=true,["name"]="Light's Hammer",["duration"]=60,["icon"]=613955,["spellID"]=114158, },
-		{ ["class"]="PALADIN",["type"]="offensive",["buff"]=216331,["spec"]=true,["name"]="Avenging Crusader",["duration"]=45,["icon"]=589117,["spellID"]=216331, },
+		{ ["class"]="PALADIN",["type"]="offensive",["buff"]=216331,["spec"]=true,["name"]="Avenging Crusader",["duration"]=60,["icon"]=589117,["spellID"]=216331, },
 		{ ["class"]="PALADIN",["type"]="offensive",["buff"]=200652,["spec"]=true,["name"]="Tyr's Deliverance",["duration"]=90,["icon"]=1122562,["spellID"]=200652, },
 		{ ["class"]="PALADIN",["type"]="offensive",["buff"]=388007,["spec"]={388007,321077},["name"]="Blessing of Summer",["duration"]=45,["icon"]=3636845,["spellID"]=388007, },
 		{ ["class"]="PALADIN",["type"]="defensive",["buff"]=633,["spec"]=true,["name"]="Lay on Hands",["duration"]=600,["icon"]=135928,["spellID"]=633, },
@@ -563,7 +571,7 @@ E.spell_db = {
 	},
 	["SHAMAN"] = {
 		{ ["class"]="SHAMAN",["type"]="immunity",["buff"]=409293,["spec"]=true,["name"]="Burrow",["duration"]=120,["icon"]=136025,["spellID"]=409293, },
-		{ ["class"]="SHAMAN",["type"]="other",["buff"]=2484,["name"]="Earthbind Totem",["duration"]=30,["icon"]=136102,["spellID"]=2484, },
+		{ ["class"]="SHAMAN",["type"]="other",["buff"]=2484,["name"]="Earthbind Totem",["duration"]=30,["icon"]=136102,["spellID"]=2484,["talent"]=51485, },
 
 
 		{ ["class"]="SHAMAN",["type"]="disarm",["buff"]=355580,["spec"]=true,["name"]="Static Field Totem",["duration"]=60,["icon"]=1020304,["spellID"]=355580, },
@@ -622,7 +630,6 @@ E.spell_db = {
 		{ ["class"]="MAGE",["type"]="offensive",["buff"]=353128,["spec"]=true,["duration"]=45,["name"]="Arcanosphere",["icon"]=4226155,["spellID"]=353128, },
 		{ ["class"]="MAGE",["type"]="dispel",["buff"]=198100,["spec"]=true,["duration"]=30,["name"]="Kleptomania",["icon"]=135729,["spellID"]=198100, },
 		{ ["class"]="MAGE",["type"]="defensive",["buff"]=198111,["spec"]=true,["duration"]=45,["name"]="Temporal Shield",["icon"]=610472,["spellID"]=198111, },
-		{ ["class"]="MAGE",["type"]="defensive",["buff"]=198158,["spec"]=true,["duration"]=60,["name"]="Mass Invisibility",["icon"]=1387356,["spellID"]=198158, },
 		{ ["class"]="MAGE",["type"]="cc",["buff"]=389794,["spec"]=true,["duration"]=45,["name"]="Snowdrift",["icon"]=135783,["spellID"]=389794, },
 		{ ["class"]="MAGE",["type"]="offensive",["buff"]=353082,["spec"]=true,["duration"]=30,["name"]="Ring of Fire",["icon"]=4067368,["spellID"]=353082, },
 		{ ["class"]="MAGE",["type"]="disarm",["buff"]=352278,["spec"]=true,["duration"]=90,["name"]="Ice Wall",["icon"]=4226156,["spellID"]=352278, },
@@ -648,20 +655,17 @@ E.spell_db = {
 		{ ["class"]="MAGE",["type"]="defensive",["buff"]=66,["spec"]=true,["name"]="Invisibility",["duration"]=300,["icon"]=132220,["spellID"]=66, },
 		{ ["class"]="MAGE",["type"]="defensive",["buff"]=235313,["spec"]=true,["name"]="Blazing Barrier",["duration"]=25,["icon"]=132221,["spellID"]=235313, },
 		{ ["class"]="MAGE",["type"]="defensive",["buff"]=235450,["spec"]=true,["name"]="Prismatic Barrier",["duration"]=25,["icon"]=135991,["spellID"]=235450, },
-		{ ["class"]="MAGE",["type"]="immunity",["buff"]=45438,["spec"]=true,["name"]="Ice Block",["duration"]=240,["icon"]=135841,["spellID"]=45438, },
+		{ ["class"]="MAGE",["type"]="immunity",["buff"]=45438,["spec"]=true,["name"]="Ice Block",["duration"]=240,["icon"]=135841,["spellID"]=45438,["talent"]=414659 },
 		{ ["class"]="MAGE",["type"]="defensive",["buff"]=55342,["spec"]=true,["name"]="Mirror Image",["duration"]=120,["icon"]=135994,["spellID"]=55342, },
 		{ ["class"]="MAGE",["type"]="disarm",["buff"]=157997,["spec"]=true,["name"]="Ice Nova",["duration"]=25,["icon"]=1033909,["spellID"]=157997, },
 		{ ["class"]="MAGE",["type"]="offensive",["buff"]=205025,["spec"]=true,["name"]="Presence of Mind",["duration"]=45,["icon"]=136031,["spellID"]=205025, },
 		{ ["class"]="MAGE",["type"]="other",["buff"]=12051,["spec"]=true,["name"]="Evocation",["charges"]=1,["duration"]=90,["icon"]=136075,["spellID"]=12051, },
-		{ ["class"]="MAGE",["type"]="offensive",["buff"]=205021,["spec"]=true,["name"]="Ray of Frost",["duration"]=75,["icon"]=1698700,["spellID"]=205021, },
-		{ ["class"]="MAGE",["type"]="offensive",["buff"]=12472,["spec"]=true,["name"]="Icy Veins",["duration"]=180,["icon"]=135838,["spellID"]=12472,["talent"]=198144, },
+		{ ["class"]="MAGE",["type"]="offensive",["buff"]=205021,["spec"]=true,["name"]="Ray of Frost",["duration"]=60,["icon"]=1698700,["spellID"]=205021, },
+		{ ["class"]="MAGE",["type"]="offensive",["buff"]=12472,["spec"]=true,["name"]="Icy Veins",["duration"]=120,["icon"]=135838,["spellID"]=12472,["talent"]=198144, },
 		{ ["class"]="MAGE",["type"]="other",["buff"]=31687,["spec"]=true,["name"]="Summon Water Elemental",["duration"]=30,["icon"]=135862,["spellID"]=31687, },
-		{ ["class"]="MAGE",["type"]="defensive",["buff"]=235219,["spec"]=true,["name"]="Cold Snap",["duration"]=300,["icon"]=135865,["spellID"]=235219, },
 		{ ["class"]="MAGE",["type"]="offensive",["buff"]=84714,["spec"]=true,["name"]="Frozen Orb",["duration"]=60,["icon"]=629077,["spellID"]=84714, },
 		{ ["class"]="MAGE",["type"]="offensive",["buff"]=44614,["spec"]=true,["name"]="Flurry",["charges"]=1,["duration"]=30,["icon"]=1506795,["spellID"]=44614, },
-		{ ["class"]="MAGE",["type"]="offensive",["buff"]=257537,["spec"]=true,["name"]="Ebonbolt",["duration"]=45,["icon"]=1392551,["spellID"]=257537, },
 		{ ["class"]="MAGE",["type"]="offensive",["buff"]=153595,["spec"]=true,["name"]="Comet Storm",["duration"]=30,["icon"]=2126034,["spellID"]=153595, },
-		{ ["class"]="MAGE",["type"]="defensive",["buff"]=86949,["spec"]=true,["name"]="Cauterize",["duration"]=300,["icon"]=252268,["spellID"]=86949, },
 		{ ["class"]="MAGE",["type"]="offensive",["buff"]=190319,["spec"]=true,["name"]="Combustion",["duration"]=120,["icon"]=135824,["spellID"]=190319, },
 		{ ["class"]="MAGE",["type"]="offensive",["buff"]=257541,["spec"]=true,["name"]="Phoenix Flames",["charges"]=2,["duration"]=25,["icon"]=1392549,["spellID"]=257541, },
 		{ ["class"]="MAGE",["type"]="disarm",["buff"]=157980,["spec"]=true,["name"]="Supernova",["duration"]=25,["icon"]=1033912,["spellID"]=157980, },
@@ -670,6 +674,12 @@ E.spell_db = {
 		{ ["class"]="MAGE",["type"]="offensive",["buff"]=376103,["spec"]={376103,321076},["name"]="Radiant Spark",["duration"]=30,["icon"]=3565446,["spellID"]=376103, },
 		{ ["class"]="MAGE",["type"]="offensive",["buff"]=153626,["spec"]=true,["name"]="Arcane Orb",["charges"]=1,["duration"]=20,["icon"]=1033906,["spellID"]=153626, },
 
+		{ ["class"]="MAGE",["type"]="defensive",["buff"]=414660,["spec"]=true,["name"]="Mass Barrier",["duration"]=120,["icon"]=1723997,["spellID"]=414660, },
+		{ ["class"]="MAGE",["type"]="defensive",["buff"]=414664,["spec"]=true,["duration"]=300,["name"]="Mass Invisibility",["icon"]=1387356,["spellID"]=414664, },
+		{ ["class"]="MAGE",["type"]="defensive",["buff"]=86949,["spec"]={63},["name"]="Cauterize",["duration"]=300,["icon"]=252268,["spellID"]=86949, },
+		{ ["class"]="MAGE",["type"]="defensive",["buff"]=235219,["spec"]={64},["name"]="Cold Snap",["duration"]=300,["icon"]=135865,["spellID"]=235219, },
+
+		{ ["class"]="MAGE",["type"]="defensive",["buff"]=414658,["spec"]=414659,["name"]="Ice Cold",["duration"]=240,["icon"]=135777,["spellID"]=414658, },
 	},
 	["RACIAL"] = {
 		{ ["class"]="RACIAL",["type"]="racial",["name"]="Will to Survive",["buff"]=59752,["race"]=1,["duration"]=180,["icon"]=136129,["spellID"]=59752, },
@@ -708,6 +718,7 @@ E.spell_db = {
 		{ ["class"]="PVPTRINKET",["type"]="trinket",["name"]="Gladiator's Badge",["buff"]=345228,["duration"]=60,["icon"]=135884,["spellID"]=345228,["item"]=175921, },
 	},
 	["TRINKET"] = {
+		--[[
 		{ ["class"]="TRINKET",["type"]="trinket",["name"]="Inexorable Resonator",["buff"]=386001,["duration"]=120,["icon"]=1028997,["spellID"]=386001,["item"]=193805, },
 		{ ["class"]="TRINKET",["type"]="trinket",["name"]="Slicing Maelstrom",["buff"]=214980,["duration"]=120,["icon"]=1029585,["spellID"]=214980,["item"]=137486, },
 		{ ["class"]="TRINKET",["type"]="trinket",["name"]="Storm-Eater's Boon",["buff"]=377453,["duration"]=180,["icon"]=4554454,["spellID"]=377453,["item"]=194302, },
@@ -732,8 +743,10 @@ E.spell_db = {
 		{ ["class"]="TRINKET",["type"]="trinket",["name"]="Dragon Games Equipment",["buff"]=386692,["duration"]=120,["icon"]=4641307,["spellID"]=386692,["item"]=193719, },
 		{ ["class"]="TRINKET",["type"]="trinket",["name"]="Bonemaw's Big Toe",["buff"]=397400,["duration"]=120,["icon"]=133718,["spellID"]=397400,["item"]=110012, },
 		{ ["class"]="TRINKET",["type"]="trinket",["name"]="Cataclysmic Punch",["buff"]=392359,["duration"]=120,["icon"]=133718,["spellID"]=392359,["item"]=200868, },
+		]]
 
 		{ ["class"]="TRINKET",["type"]="consumable",["name"]="Refreshing Healing Potion",["buff"]=370511,["duration"]=300,["icon"]=4497595,["spellID"]=370511,["item"]=nil, }, --["item"]=191378
+		{ ["class"]="TRINKET",["type"]="other",["buff"]=408234,["item"]=205146,["name"]="Activate Weyrnstone",["duration"]=120,["icon"]=5199618,["spellID"]=408234, },
 	},
 }
 
@@ -760,13 +773,13 @@ E.spellDefaults = {
 	59752, 7744,
 	47482, 47528, 48707, 48792, 114556, 51052,
 	183752, 196555, 198589, 209258, 187827, 196718, 191427, 205604, 740,
-	351338, 372048, 378441, 357170, 363916, 374348, 374227, 363534, 377509, 378464,
+	351338, 372048, 378441, 357170, 363916, 374348, 374227, 363534, 377509, 378464, 404381, 408234,
 	106839, 78675, 22812, 102342, 108238, 61336, 33891,
 	147362, 187707, 187650, 186265, 109304, 53480,
-	2139, 45438, 342246, 342245, 86949, 235219, 198111, 190319,
+	2139, 45438, 414658, 342246, 342245, 86949, 235219, 198111, 190319,
 	116705, 116849, 122470, 122783, 122278, 115203, 115310,
 	31935, 96231, 215652, 853, 115750, 642, 228049, 199452, 1022, 216331, 31884, 231895, 210256, 31821,
-	15487, 64044, 8122, 197268, 19236, 47585, 47788, 33206, 215982, 108968, 62618, 47536, 64843, 265202, 15286,
+	15487, 64044, 8122, 197268, 19236, 47585, 47788, 33206, 215982, 108968, 62618, 271466, 47536, 64843, 265202, 15286,
 	1766, 2094, 31230, 31224, 5277, 1856, 360194,
 	57994, 108271, 198838, 210918, 30884, 114052, 98008, 204336, 8143, 108280,
 	212619, 119898, 6789, 48020, 104773, 212295,
@@ -775,5 +788,5 @@ E.spellDefaults = {
 
 E.raidDefaults = {
 	47528, 183752, 351338, 106839, 78675, 147362, 187707, 2139, 116705, 96231, 31935, 15487, 1766, 57994, 119898, 212619, 6552, 386071,
-	51052, 196718, 740, 374227, 363534, 115310, 31821, 64843, 265202, 62618, 15286, 108280, 98008, 97462,
+	51052, 196718, 740, 374227, 363534, 115310, 31821, 64843, 265202, 62618, 271466, 15286, 108280, 98008, 97462,
 }

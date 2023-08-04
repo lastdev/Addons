@@ -16,6 +16,25 @@ local L = LM.Localize
 if LibDebug then LibDebug() end
 --@end-debug@]==]
 
+--
+-- This is the support for saving and restoring druid forms which is all done
+-- in the Dismount action. Form IDs that you put here must be cancelled
+-- automatically on mounting (otherwise trying to restore them when you are
+-- already in them will cancel them).
+--
+-- See: https://wow.gamepedia.com/API_GetShapeshiftFormID
+--
+
+local savedFormName = nil
+
+local restoreFormIDs = {
+    [1] = true,     -- Cat Form
+    [5] = true,     -- Bear Form
+    [31] = true,    -- Moonkin Form
+    [35] = true,    -- Moonkin Form
+    [36] = true,    -- Treant Form
+}
+
 local function ReplaceVars(list)
     local out = {}
     for _,l in ipairs(list) do
@@ -116,18 +135,19 @@ ACTIONS['Endlimit'] = {
 }
 
 local function GetUsableSpell(arg)
-    local spellID, name, _
-
     -- You can look up any spell from any class by number so we have to
     -- test numbers to see if we know them
-    spellID = tonumber(arg)
-    if spellID and not IsSpellKnown(spellID) then
+    local argN = tonumber(arg)
+    if argN and not IsSpellKnown(argN) then
         return
     end
 
     -- For names, GetSpellInfo returns nil if it's not in your spellbook
     -- so we don't need to call IsSpellKnown
-    name, _, _, _, _, _, spellID = GetSpellInfo(arg)
+    local name, _, _, _, _, _, spellID = GetSpellInfo(argN or arg)
+    if not name then
+        return
+    end
 
     -- Glide won't cast while mounted
     if spellID == 131347 and IsMounted() then
@@ -139,8 +159,17 @@ local function GetUsableSpell(arg)
         return
     end
 
+    -- Some spells share names (e.g., Surge Forward is both an Evoker ability
+    -- and a Dragonriding ability). If the spell has a subtext it can be
+    -- distinguished by bracketing it after the name. This only works if you
+    -- pass the spell in by ID since otherwise you'll get whichever one
+    -- GetSpellInfo(name) decides to return.
+
+    local subtext = GetSpellSubtext(argN or arg)
+    local nameWithSubtext = string.format('%s(%s)', name, subtext or "")
+
     if name and IsUsableSpell(name) and GetSpellCooldown(name) == 0 then
-        return name, spellID
+        return name, spellID, nameWithSubtext
     end
 end
 
@@ -159,10 +188,10 @@ ACTIONS['Spell'] = {
         function (args, context)
             for _, arg in ipairs(args) do
                 LM.Debug(' - trying spell: ' .. tostring(arg))
-                local name, id = GetUsableSpell(arg)
-                if name then
-                    LM.Debug(" - setting action to spell " .. name)
-                    return LM.SecureAction:Spell(name, context.unit)
+                local name, id, nameWithSubtext = GetUsableSpell(arg)
+                if nameWithSubtext then
+                    LM.Debug(" - setting action to spell " .. nameWithSubtext)
+                    return LM.SecureAction:Spell(nameWithSubtext, context.unit)
                 end
             end
         end
@@ -180,10 +209,10 @@ ACTIONS['Buff'] = {
         function (args, context)
             for _, arg in ipairs(args) do
                 LM.Debug(' - trying buff: ' .. tostring(arg))
-                local name, id = GetUsableSpell(arg)
+                local name, id, nameWithSubtext = GetUsableSpell(arg)
                 if name and not LM.UnitAura(context.unit or 'player', name) then
-                    LM.Debug(" - setting action to spell " .. name)
-                    return LM.SecureAction:Spell(name, context.unit)
+                    LM.Debug(" - setting action to spell " .. nameWithSubtext)
+                    return LM.SecureAction:Spell(nameWithSubtext, context.unit)
                 end
             end
         end
@@ -234,28 +263,61 @@ ACTIONS['LeaveVehicle'] = {
         end
 }
 
+local function GetFormNameWithSubtext()
+    local idx = GetShapeshiftForm()
+    if idx and idx > 0 then
+        local spellID = select(4, GetShapeshiftFormInfo(idx))
+        local n = GetSpellInfo(spellID)
+        local s = GetSpellSubtext(spellID) or ''
+        return format('%s(%s)', n, s)
+    end
+end
+
 -- This includes dismounting from mounts and also canceling other mount-like
--- things such as shapeshift forms
+-- things such as shapeshift forms. The logic here is torturous.
 
 ACTIONS['Dismount'] = {
     name = BINDING_NAME_DISMOUNT,
     handler =
         function (args, context)
+            local action
+
             -- Shortcut dismount from journal mounts. This has the (wanted) side
             -- effect of dismounting you even from mounts that aren't enabled,
             -- and the (wanted) side effect of dismounting while in moonkin form
             -- without cancelling it.
+
             if IsMounted() then
                 LM.Debug(" - setting action to dismount")
-                return LM.SecureAction:Macro(SLASH_DISMOUNT1)
+                action = LM.SecureAction:Macro(SLASH_DISMOUNT1)
+            else
+                -- Otherwise we look for the mount from its buff and return the cancel
+                -- actions.
+                local m = LM.MountRegistry:GetActiveMount()
+                if m and m:IsCancelable() then
+                    LM.Debug(" - setting action to cancel " .. m.name)
+                    action = m:GetCancelAction()
+                end
             end
 
-            -- Otherwise we look for the mount from its buff and return the cancel
-            -- actions.
-            local m = LM.MountRegistry:GetActiveMount()
-            if m and m:IsCancelable() then
-                LM.Debug(" - setting action to cancel " .. m.name)
-                return m:GetCancelAction()
+            if action and savedFormName then
+                -- Without the /cancelform the "Auto Dismount in Flight" setting stops
+                -- this from working.
+                LM.Debug(" - override action to restore form: " .. savedFormName)
+                local macroText = string.format("/cancelform\n/cast %s", savedFormName)
+                action = LM.SecureAction:Macro(macroText)
+            end
+
+            if action then
+                savedFormName = nil
+                return action
+            elseif LM.Options:GetOption('restoreForms') then
+                -- Save current form, if any
+                local currentFormID = GetShapeshiftFormID()
+                if currentFormID and restoreFormIDs[currentFormID] then
+                    savedFormName = GetFormNameWithSubtext()
+                    LM.Debug(" - saving current form " .. savedFormName)
+                end
             end
         end
 }
@@ -270,7 +332,7 @@ ACTIONS['CopyTargetsMount'] = {
     handler =
         function (args, context)
             local unit = context.unit or "target"
-            if LM.Options:GetCopyTargetsMount() and UnitIsPlayer(unit) then
+            if LM.Options:GetOption('copyTargetsMount') and UnitIsPlayer(unit) then
                 LM.Debug(string.format(" - trying to clone %s's mount", unit))
                 local m = LM.MountRegistry:GetMountFromUnitAura(unit)
                 if m and m:IsCastable() then
@@ -389,9 +451,9 @@ ACTIONS['Mount'] = {
 ACTIONS['Macro'] = {
     handler =
         function (args, context)
-            if LM.Options:GetUseUnavailableMacro() then
+            local macrotext = LM.Options:GetOption('unavailableMacro')
+            if macrotext ~= "" then
                 LM.Debug(" - using unavailable macro")
-                local macrotext = LM.Options:GetUnavailableMacro()
                 return LM.SecureAction:Macro(macrotext)
             end
         end
@@ -427,8 +489,8 @@ ACTIONS['Combat'] = {
             LM.Debug(" - setting action to in-combat action")
 
             local macrotext
-            if LM.Options:GetUseCombatMacro() then
-                macrotext = LM.Options:GetCombatMacro()
+            if LM.Options:GetOption('useCombatMacro') then
+                macrotext = LM.Options:GetOption('combatMacro')
             else
                 macrotext = LM.Actions:DefaultCombatMacro()
             end

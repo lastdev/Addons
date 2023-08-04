@@ -76,5 +76,5 @@ local L
 L = DBM:GetModLocalization("WarfrontArathi")
 
 L:SetGeneralLocalization({
-	name =	"WF: Арати"
+	name =	"Фронты: Арати"
 })

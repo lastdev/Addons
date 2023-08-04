@@ -1,3 +1,7 @@
+07/11/2023 version 1.3.6
+- Due to changes by Blizzard in 10.1.5 patch, while the window is on screen in combat, any key will act as the ESC key and dismiss it
+- toc update for 10.1.5 patch
+
 05/03/2023 version 1.3.5
 - Added compartment launcher support
 - toc update for icon and 10.1.0 patch

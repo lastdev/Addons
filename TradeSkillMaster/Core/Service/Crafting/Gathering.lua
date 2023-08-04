@@ -45,6 +45,7 @@ function Gathering.OnInitialize()
 		:AddKey("profile", "gatheringOptions", "sources")
 		:AddKey("factionrealm", "gatheringContext", "crafter")
 		:AddKey("factionrealm", "gatheringContext", "professions")
+		:AddKey("global", "coreOptions", "regionWide")
 	if not Environment.HasFeature(Environment.FEATURES.GUILD_BANK) then
 		Table.RemoveByValue(private.settings.sources, "guildBank")
 		Table.RemoveByValue(private.settings.sources, "altGuildBank")
@@ -421,23 +422,25 @@ function private.ProcessSource(itemString, numNeed, source, sourceList)
 		-- check alts
 		local altNum = 0
 		local altCharacters = TempTable.Acquire()
-		for factionrealm in TSM.db:GetConnectedRealmIterator("factionrealm") do
-			for _, character in TSM.db:FactionrealmCharacterIterator(factionrealm) do
-				local characterKey = nil
-				if factionrealm == Wow.GetFactionrealmName() then
-					characterKey = character
-				else
-					characterKey = character.." - "..factionrealm
-				end
-				if characterKey ~= crafter and characterKey ~= Wow.GetCharacterName() then
-					local num = 0
-					num = num + AltTracking.GetBagQuantity(itemString, character, factionrealm)
-					num = num + AltTracking.GetBankQuantity(itemString, character, factionrealm)
-					num = num + AltTracking.GetReagentBankQuantity(itemString, character, factionrealm)
-					num = num + AltTracking.GetMailQuantity(itemString, character, factionrealm)
-					if num > 0 then
-						tinsert(altCharacters, characterKey)
-						altNum = altNum + num
+		for factionrealm, isConnected in TSM.db:GetConnectedRealmIterator("factionrealm") do
+			if isConnected or private.settings.regionWide then
+				for _, character in TSM.db:FactionrealmCharacterIterator(factionrealm) do
+					local characterKey = nil
+					if factionrealm == Wow.GetFactionrealmName() then
+						characterKey = character
+					else
+						characterKey = character.." - "..factionrealm
+					end
+					if characterKey ~= crafter and characterKey ~= Wow.GetCharacterName() then
+						local num = 0
+						num = num + AltTracking.GetBagQuantity(itemString, character, factionrealm)
+						num = num + AltTracking.GetBankQuantity(itemString, character, factionrealm)
+						num = num + AltTracking.GetReagentBankQuantity(itemString, character, factionrealm)
+						num = num + AltTracking.GetMailQuantity(itemString, character, factionrealm)
+						if num > 0 then
+							tinsert(altCharacters, characterKey)
+							altNum = altNum + num
+						end
 					end
 				end
 			end

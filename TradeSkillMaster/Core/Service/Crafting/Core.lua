@@ -96,7 +96,6 @@ function Crafting.OnInitialize()
 	private.spellDB = Database.NewSchema("CRAFTING_SPELLS")
 		:AddUniqueStringField("craftString")
 		:AddStringField("itemString")
-		:AddStringField("itemName")
 		:AddStringField("name")
 		:AddStringField("profession")
 		:AddNumberField("numResult")
@@ -115,8 +114,7 @@ function Crafting.OnInitialize()
 		end
 		assert(#playersTemp > 0)
 		sort(playersTemp)
-		local itemName = ItemInfo.GetName(craftInfo.itemString) or ""
-		private.spellDB:BulkInsertNewRow(craftString, craftInfo.itemString, itemName, craftInfo.name or "", craftInfo.profession, craftInfo.numResult, playersTemp, craftInfo.hasCD and true or false)
+		private.spellDB:BulkInsertNewRow(craftString, craftInfo.itemString, craftInfo.name or "", craftInfo.profession, craftInfo.numResult, playersTemp, craftInfo.hasCD and true or false)
 
 		for matString, matQuantity in pairs(craftInfo.mats) do
 			private.matDB:BulkInsertNewRow(craftString, matString, matQuantity)
@@ -160,7 +158,7 @@ function Crafting.OnInitialize()
 			end
 		end
 		sort(professionsTemp)
-		local professionsStr = table.concat(professionsTemp)
+		local professionsStr = table.concat(professionsTemp, PROFESSION_SEP)
 		private.matItemDB:BulkInsertNewRow(itemString, professionsStr, info.customValue or "")
 	end
 	TempTable.Release(professionsTemp)
@@ -338,7 +336,7 @@ function Crafting.OptionalMatIterator(craftString)
 		:Select("itemString", "slotId")
 		:VirtualField("slotId", "number", MatString.GetSlotId, "itemString")
 		:Equal("craftString", craftString)
-		:Matches("itemString", "^[qof]:")
+		:Matches("itemString", "^[qofr]:")
 		:OrderBy("slotId", true)
 		:IteratorAndRelease()
 end
@@ -347,26 +345,9 @@ function Crafting.GetOptionalMatQuantity(craftString, matItemId)
 	local query = private.matDB:NewQuery()
 		:Select("quantity")
 		:Equal("craftString", craftString)
-		:Matches("itemString", "^[qof]:")
+		:Matches("itemString", "^[qofr]:")
 		:Contains("itemString", tostring(matItemId))
 	return query:GetFirstResultAndRelease()
-end
-
-function Crafting.QualityMatIterator(craftString)
-	return private.matDB:NewQuery()
-		:Select("itemString", "slotId")
-		:VirtualField("slotId", "number", MatString.GetSlotId, "itemString")
-		:Equal("craftString", craftString)
-		:StartsWith("itemString", "q:")
-		:OrderBy("slotId", true)
-		:IteratorAndRelease()
-end
-
-function Crafting.HasOptionalMats(craftString)
-	return private.matDB:NewQuery()
-		:Equal("craftString", craftString)
-		:Matches("itemString", "^[qof]:")
-		:IsNotEmptyAndRelease()
 end
 
 function Crafting.GetMatsAsTable(craftString, tbl)
@@ -449,39 +430,52 @@ function Crafting.SetSpellDBQueryUpdatesPaused(paused)
 	private.spellDB:SetQueryUpdatesPaused(paused)
 end
 
-function Crafting.CreateOrUpdate(craftString, itemString, profession, name, numResult, player, hasCD, baseRecipeDifficulty, baseRecipeQuality, maxRecipeQuality)
-	local row = private.spellDB:GetUniqueRow("craftString", craftString)
-	if row then
-		assert(not next(private.playerTemp))
-		Vararg.IntoTable(private.playerTemp, row:GetField("players"))
-		if not Table.KeyByValue(private.playerTemp, player) then
+function Crafting.CreateOrUpdate(craftString, itemString, profession, name, numResult, player, hasCD, baseRecipeDifficulty, baseRecipeQuality, maxRecipeQuality, inspirationAmount, inspirationChance)
+	local craftInfo = private.settings.crafts[craftString]
+	if craftInfo then
+		local row = private.spellDB:GetUniqueRow("craftString", craftString)
+		assert(row)
+		if not craftInfo.players[player] then
+			assert(not next(private.playerTemp))
+			Vararg.IntoTable(private.playerTemp, row:GetField("players"))
+			assert(not Table.KeyByValue(private.playerTemp, player))
 			assert(#private.playerTemp > 0)
 			tinsert(private.playerTemp, player)
+			row:SetField("players", private.playerTemp)
+			wipe(private.playerTemp)
 		end
-		row:SetField("itemString", itemString)
-			:SetField("profession", profession)
-			:SetField("itemName", ItemInfo.GetName(itemString) or "")
-			:SetField("name", name)
-			:SetField("numResult", numResult)
-			:SetField("players", private.playerTemp)
-			:SetField("hasCD", hasCD)
-			:Update()
+		if itemString ~= craftInfo.itemString then
+			craftInfo.itemString = itemString
+			row:SetField("itemString", itemString)
+		end
+		if profession ~= craftInfo.profession then
+			craftInfo.profession = profession
+			row:SetField("profession", profession)
+		end
+		if name ~= craftInfo.name then
+			craftInfo.name = name
+			row:SetField("name", name)
+		end
+		if numResult ~= craftInfo.numResult then
+			craftInfo.numResult = numResult
+			row:SetField("numResult", numResult)
+		end
+		if (hasCD or nil) ~= craftInfo.hasCD then
+			craftInfo.hasCD = hasCD or nil
+			row:SetField("hasCD", hasCD)
+		end
+		row:Update()
 		row:Release()
-		wipe(private.playerTemp)
-		local craftInfo = private.settings.crafts[craftString]
-		craftInfo.itemString = itemString
-		craftInfo.profession = profession
-		craftInfo.name = name
-		craftInfo.numResult = numResult
 		if Environment.HasFeature(Environment.FEATURES.CRAFTING_QUALITY) then
 			craftInfo.players[player] = type(craftInfo.players[player]) == "table" and craftInfo.players[player] or {}
 			craftInfo.players[player].baseRecipeDifficulty = baseRecipeDifficulty
 			craftInfo.players[player].baseRecipeQuality = baseRecipeQuality
 			craftInfo.players[player].maxRecipeQuality = maxRecipeQuality
+			craftInfo.players[player].inspirationAmount = inspirationAmount
+			craftInfo.players[player].inspirationChance = inspirationChance
 		else
 			craftInfo.players[player] = true
 		end
-		craftInfo.hasCD = hasCD or nil
 		local spellId = CraftString.GetSpellId(craftString)
 		local rank = CraftString.GetRank(craftString)
 		local level = CraftString.GetLevel(craftString)
@@ -502,6 +496,8 @@ function Crafting.CreateOrUpdate(craftString, itemString, profession, name, numR
 					baseRecipeDifficulty = baseRecipeDifficulty,
 					baseRecipeQuality = baseRecipeQuality,
 					maxRecipeQuality = maxRecipeQuality,
+					inspirationAmount = inspirationAmount,
+					inspirationChance = inspirationChance,
 				} or true,
 			},
 			itemString = itemString,
@@ -516,7 +512,6 @@ function Crafting.CreateOrUpdate(craftString, itemString, profession, name, numR
 			:SetField("craftString", craftString)
 			:SetField("itemString", itemString)
 			:SetField("profession", profession)
-			:SetField("itemName", ItemInfo.GetName(itemString) or "")
 			:SetField("name", name)
 			:SetField("numResult", numResult)
 			:SetField("players", private.playerTemp)
@@ -526,7 +521,7 @@ function Crafting.CreateOrUpdate(craftString, itemString, profession, name, numR
 	end
 end
 
-function Crafting.CreateOrUpdatePlayer(craftString, player, baseRecipeDifficulty, baseRecipeQuality, maxRecipeQuality)
+function Crafting.CreateOrUpdatePlayer(craftString, player, baseRecipeDifficulty, baseRecipeQuality, maxRecipeQuality, inspirationAmount, inspirationChance)
 	local craftPlayers = private.settings.crafts[craftString].players
 	if craftPlayers[player] then
 		if Environment.HasFeature(Environment.FEATURES.CRAFTING_QUALITY) then
@@ -535,6 +530,8 @@ function Crafting.CreateOrUpdatePlayer(craftString, player, baseRecipeDifficulty
 			craftPlayers[player].baseRecipeDifficulty = baseRecipeDifficulty
 			craftPlayers[player].baseRecipeQuality = baseRecipeQuality
 			craftPlayers[player].maxRecipeQuality = maxRecipeQuality
+			craftPlayers[player].inspirationAmount = inspirationAmount
+			craftPlayers[player].inspirationChance = inspirationChance
 		end
 		return
 	end
@@ -547,7 +544,13 @@ function Crafting.CreateOrUpdatePlayer(craftString, player, baseRecipeDifficulty
 		:Update()
 		:Release()
 	wipe(private.playerTemp)
-	craftPlayers[player] = Environment.HasFeature(Environment.FEATURES.CRAFTING_QUALITY) and {} or true
+	craftPlayers[player] = Environment.HasFeature(Environment.FEATURES.CRAFTING_QUALITY) and {
+		baseRecipeDifficulty = baseRecipeDifficulty,
+		baseRecipeQuality = baseRecipeQuality,
+		maxRecipeQuality = maxRecipeQuality,
+		inspirationAmount = inspirationAmount,
+		inspirationChance = inspirationChance,
+	} or true
 end
 
 function Crafting.SetMats(craftString, matQuantities)
@@ -671,20 +674,21 @@ function Crafting.IsQualityCraft(craftString)
 end
 
 function Crafting.GetQualityInfo(craftString, playerFilter)
-	assert(Environment.HasFeature(Environment.FEATURES.CRAFTING_QUALITY))
 	local craftInfo = private.settings.crafts[craftString]
-	if not craftInfo then
-		return nil, nil, nil
+	if not craftInfo or not Environment.HasFeature(Environment.FEATURES.CRAFTING_QUALITY) then
+		return nil, nil, nil, nil, nil
 	end
-	local baseRecipeDifficulty, baseRecipeQuality, maxRecipeQuality = nil, nil, nil
+	local baseRecipeDifficulty, baseRecipeQuality, maxRecipeQuality, inspirationAmount, inspirationChance = nil, nil, nil, nil
 	for player, info in pairs(craftInfo.players) do
 		if (not playerFilter or player == playerFilter) and type(info) == "table" and info.baseRecipeQuality and (not baseRecipeQuality or info.baseRecipeQuality > baseRecipeQuality) then
 			baseRecipeDifficulty = info.baseRecipeDifficulty
 			baseRecipeQuality = info.baseRecipeQuality
 			maxRecipeQuality = info.maxRecipeQuality
+			inspirationAmount = info.inspirationAmount
+			inspirationChance = info.inspirationChance
 		end
 	end
-	return baseRecipeDifficulty, baseRecipeQuality, maxRecipeQuality
+	return baseRecipeDifficulty, baseRecipeQuality, maxRecipeQuality, inspirationAmount, inspirationChance
 end
 
 ---Gets the conversion value for an item.
@@ -876,7 +880,7 @@ function private.GetRestockHelpMessage(itemString)
 end
 
 function private.GetTotalQuantity(itemString)
-	return CustomPrice.GetItemPrice(itemString, "NumInventory") or 0
+	return CustomPrice.GetSourcePrice(itemString, "NumInventory") or 0
 end
 
 function private.MatItemDBUpdateOrInsert(itemString, profession)

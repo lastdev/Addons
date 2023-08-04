@@ -1,5 +1,5 @@
-## Interface: 100100
-## Version: 1.14
+## Interface: 100105
+## Version: 1.16
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Inv_alpacamount_yellow
 ## Title: Springfur Alpaca
@@ -15,17 +15,17 @@
 ## Title-zhCN: 春裘羊驼
 ## Title-zhTW: 春裘羊駝
 ## Notes: Helps you find the |cFFF4A460Springfur Alpaca|r in Uldum
-## Notes-deDE: Hilft Ihnen, die |cFFF4A460Frühlingsfellalpaka|r im Uldum zu finden
-## Notes-esES: Te ayuda a encontrar la |cFFF4A460Alpaca de pelaje primaveral|r en el Uldum
-## Notes-esMX: Te ayuda a encontrar la |cFFF4A460Alpaca de pelaje primaveral|r en el Uldum
-## Notes-frFR: Vous aide à trouver la |cFFF4A460Alpaga toison-vernale|r dans la Uldum
-## Notes-itIT: Ti aiuta a trovare la |cFFF4A460Alpaca Primopelo|r nella Uldum
-## Notes-koKR: 울둠에서 |cFFF4A460봄털 알파카|r 찾을 수 있도록 도와줍니다.
-## Notes-ptBR: Ajude a encontrar o |cFFF4A460Alpaca Lã de Primavera|r no Uldum
-## Notes-ptPT: Ajude a encontrar o |cFFF4A460Alpaca Lã de Primavera|r no Uldum
-## Notes-ruRU: Помогите найти |cFFF4A460Курчавая альпака|r в Ульдум
-## Notes-zhCN: 帮助寻奥丹姆|cFFF4A460春裘羊驼
-## Notes-zhTW: 幫助尋奧丹姆|cFFF4A460春裘羊駝
+## Notes-deDE: Hilft Ihnen, das |cFFF4A460Frühlingsfellalpaka|r in Uldum zu erhalten
+## Notes-esES: Te ayuda a obtener el |cFFF4A460Alpaca de pelaje primaveral|r en Uldum
+## Notes-esMX: Te ayuda a obtener el |cFFF4A460Alpaca de pelaje primaveral|r en Uldum
+## Notes-frFR: Il vous aide à obtenir l'alpaga toison-vernale|r en Uldum
+## Notes-itIT: Ti aiuta a ottenere la |cFFF4A460Alpaca Primopelo|r a Uldum
+## Notes-koKR: 울둠에서 |cFFF4A460봄털 알파카|r를 얻는 데 도움이 됩니다.
+## Notes-ptBR: Ajuda você a obter o |cFFF4A460Alpaca Lã de Primavera|r em Uldum
+## Notes-ptPT: Ajuda você a obter o |cFFF4A460Alpaca Lã de Primavera|r em Uldum
+## Notes-ruRU: Помогает вам получить |cFFF4A460Курчавая альпака|r в Ульдум
+## Notes-zhCN: 帮助您获取奥丹姆中的|cFFF4A460春裘羊驼
+## Notes-zhTW: 幫助您獲取奧丹姆中的|cFFF4A460春裘羊駝
 ## X-Category: Map & Minimap
 ## X-Curse-Project-ID: 502415
 ## X-WoWI-ID: 26113

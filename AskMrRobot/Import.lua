@@ -403,6 +403,18 @@ function Amr:ImportCharacter(data, isTest, isChild)
     parts = { strsplit("@", data1[3]) }
 
     local setupId = parts[2]
+    
+    local setupTalentConfigId = nil
+
+    local idParts = { strsplit("#", setupId) }
+    setupId = idParts[1]
+    if #idParts > 1 then
+        setupTalentConfigId = idParts[2]
+        if setupTalentConfigId == "_" then
+            setupTalentConfigId = nil
+        end
+    end
+    
     local setupName = parts[3]
     local enchantInfo = {}
 
@@ -453,6 +465,7 @@ function Amr:ImportCharacter(data, isTest, isChild)
             Label = setupName,
             Gear = importData,
             Talents = talents,        
+            TalentConfigId = setupTalentConfigId,
             SoulbindId = soulbindId,
             SoulbindNodes = soulbindNodes
             --Essences = essences

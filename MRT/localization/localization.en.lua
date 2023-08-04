@@ -988,6 +988,7 @@ L.ArrowFind = "Find arrow"
 L.MarksDisable = "Disable"
 L.MarksClear = "Clear"
 PH.MarksTooltip = "Sets on players in list \"permanent\" mark\nAvailable only for targets, who are the players of group or raid"
+PH.MarksMultiplyNames = "Multiply names allowed separated by a space or comma"
 
 PH.LoggingEnable = "Enable recording combat log in zones:"
 PH.LoggingHelp1 = "Log will be saved to 'Logs\\WoWCombatLog.txt' in game's folder. You also can upload it to special analytical sites (ex www.warcraftlogs.com). Don't forget to upload/delete this file after every raid."

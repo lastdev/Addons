@@ -1,6 +1,6 @@
 -- AskMrRobot-Serializer will serialize and communicate character data between users.
 
-local MAJOR, MINOR = "AskMrRobot-Serializer", 125
+local MAJOR, MINOR = "AskMrRobot-Serializer", 128
 local Amr, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not Amr then return end -- already loaded by something else
@@ -22,7 +22,7 @@ Amr.RegionNames = {
 	[2] = "KR",
 	[3] = "EU",
 	[4] = "TW",
-	[5] = "CN"
+	[5] = "CN",	
 }
 
 -- map of the skillLine returned by profession API to the AMR profession name
@@ -59,33 +59,34 @@ Amr.SpecIds = {
     [105] = 9, -- DruidRestoration
 	[1467] = 10, -- EvokerDevastation
 	[1468] = 11, -- EvokerPreservation
-    [253] = 12, -- HunterBeastMastery
-    [254] = 13, -- HunterMarksmanship
-    [255] = 14, -- HunterSurvival
-    [62] = 15, -- MageArcane
-    [63] = 16, -- MageFire
-    [64] = 17, -- MageFrost
-    [268] = 18, -- MonkBrewmaster
-    [270] = 19, -- MonkMistweaver
-    [269] = 20, -- MonkWindwalker
-    [65] = 21, -- PaladinHoly
-    [66] = 22, -- PaladinProtection
-    [70] = 23, -- PaladinRetribution
-    [256] = 24, -- PriestDiscipline
-    [257] = 25, -- PriestHoly
-    [258] = 26, -- PriestShadow
-    [259] = 27, -- RogueAssassination
-    [260] = 28, -- RogueOutlaw
-    [261] = 29, -- RogueSubtlety
-    [262] = 30, -- ShamanElemental
-    [263] = 31, -- ShamanEnhancement
-    [264] = 32, -- ShamanRestoration
-    [265] = 33, -- WarlockAffliction
-    [266] = 34, -- WarlockDemonology
-    [267] = 35, -- WarlockDestruction
-    [71] = 36, -- WarriorArms
-    [72] = 37, -- WarriorFury
-    [73] = 38 -- WarriorProtection
+	[1473] = 12, -- EvokerAugmentation
+    [253] = 13, -- HunterBeastMastery
+    [254] = 14, -- HunterMarksmanship
+    [255] = 15, -- HunterSurvival
+    [62] = 16, -- MageArcane
+    [63] = 17, -- MageFire
+    [64] = 18, -- MageFrost
+    [268] = 19, -- MonkBrewmaster
+    [270] = 20, -- MonkMistweaver
+    [269] = 21, -- MonkWindwalker
+    [65] = 22, -- PaladinHoly
+    [66] = 23, -- PaladinProtection
+    [70] = 24, -- PaladinRetribution
+    [256] = 25, -- PriestDiscipline
+    [257] = 26, -- PriestHoly
+    [258] = 27, -- PriestShadow
+    [259] = 28, -- RogueAssassination
+    [260] = 29, -- RogueOutlaw
+    [261] = 30, -- RogueSubtlety
+    [262] = 31, -- ShamanElemental
+    [263] = 32, -- ShamanEnhancement
+    [264] = 33, -- ShamanRestoration
+    [265] = 34, -- WarlockAffliction
+    [266] = 35, -- WarlockDemonology
+    [267] = 36, -- WarlockDestruction
+    [71] = 37, -- WarriorArms
+    [72] = 38, -- WarriorFury
+    [73] = 39 -- WarriorProtection
 }
 
 Amr.ClassIds = {

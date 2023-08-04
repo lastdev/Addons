@@ -2253,7 +2253,8 @@ do
             elseif k == "recharge" then return cooldown.recharge
             elseif k == "recharge_time" then return cooldown.recharge_time
             elseif k == "travel_time" then
-                local v = ability.velocity or 0
+                local f, v = ability.flightTime or 0, ability.velocity or 0
+                if f > 0 then return f end
                 if v == 0 then return 0 end
                 return t.target.maxR / v
 
@@ -2682,7 +2683,7 @@ local mt_toggle = {
 
         local toggle = db.profile.toggles[ k ]
 
-        if k == "cooldowns" and toggle.override and state.buff.bloodlust.up then return true end
+        if k == "cooldowns" and ( toggle.override and state.buff.bloodlust.up or toggle.infusion and state.buff.power_infusion.up ) then return true end
         if k == "essences" and toggle.override and state.toggle.cooldowns then return true end
         if k == "potions" and toggle.override and state.toggle.cooldowns then return true end
 
@@ -5082,8 +5083,8 @@ local mt_default_action = {
 
         elseif k == "travel_time" then
             -- NYI: maybe capture the last travel time for the spell and use that?
-            local v = ability.velocity
-
+            local f, v = ability.flightTime, ability.velocity
+            if f then return f end
             if v and v > 0 then return state.target.maxR / v end
             return 0
 
@@ -5696,7 +5697,7 @@ function state.putTrinketsOnCD( val )
     val = val or 10
 
     for i, item in ipairs( state.items ) do
-        if ( not class.abilities[ item ].essence and not class.abilities[ item ].no_icd ) and state.cooldown[ item ].remains < val then
+        if not class.abilities[ item ].essence and not class.abilities[ item ].no_icd and state.cooldown[ item ].remains < val then
             state.setCooldown( item, val )
         end
     end
@@ -6043,7 +6044,7 @@ do
                 self.ClearCycle()
             end
 
-            if ability.item and not ability.essence then
+            if ability.item and not ( ability.essence or ability.no_icd ) then
                 self.putTrinketsOnCD( cooldown / 6 )
             end
 
@@ -6997,7 +6998,7 @@ do
 
             if ( toggle == "potion" or toggle == "essences" ) and profile.toggles[ toggle ].separate and not profile.toggles[ toggle ].value then toggle = "cooldowns" end
 
-            if toggle and toggle ~= "none" and ( not self.toggle[ toggle ] or ( profile.toggles[ toggle ].separate and state.filter ~= toggle ) ) then return true, "toggle a" end
+            if toggle and toggle ~= "none" and ( not self.toggle[ toggle ] or ( profile.toggles[ toggle ].separate and state.filter ~= toggle ) ) then return true, format( "toggle %s", toggle ) end
 
             if ability.id < -100 or ability.id > 0 or toggleSpells[ spell ] then
                 if self.empowerment.active and self.empowerment.spell and spell ~= self.empowerment.spell then return true, "empowerment: " .. self.empowerment.spell end
@@ -7037,7 +7038,7 @@ do
             if state.filter ~= "none" and state.filter ~= toggle and not ability[ state.filter ] then return true, "display"
             elseif ability.item and not ability.bagItem and not state.equipped[ ability.item ] then return false, "not equipped"
             elseif toggle and toggle ~= "none" then
-                if not self.toggle[ toggle ] or ( profile.toggles[ toggle ].separate and state.filter ~= toggle and not spec.noFeignedCooldown ) then return true, "toggle b" end
+                if not self.toggle[ toggle ] or ( profile.toggles[ toggle ].separate and state.filter ~= toggle and not spec.noFeignedCooldown ) then return true, format( "%s filtered", toggle ) end
             end
         end
 
@@ -7381,8 +7382,8 @@ function state:IsReady( action )
         if resource == "focus" or resource == "energy" or state.script.entry then
             local ttr = self:TimeToReady( action )
 
-            if ttr <= self.delayMin or ttr >= self.delayMax then return false, "not ready within our time contraint"
-            elseif ttr >= state.delay then return false, "not ready before selected action" end
+            if ttr < self.delayMin or ttr > self.delayMax then return false, format( "not ready within  time contraint ( %.2f - %.2f )", self.delayMin, self.delayMax )
+            elseif ttr >= self.selection_time then return false, format( "not ready [%.2f] before selected action %s [%.2f]", ttr, self.selected_action or "no_action", self.selection_time ) end
 
             return true
         end

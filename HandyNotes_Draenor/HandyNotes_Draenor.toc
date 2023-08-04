@@ -1,6 +1,6 @@
-## Interface: 100100
+## Interface: 100150
 ## Title: HandyNotes: Draenor
-## Version: 3.3
+## Version: 3.5
 ## Notes: Draenor Rares and Treasures simplified
 ## Author: Lorade
 ## RequiredDeps: HandyNotes
@@ -18,6 +18,8 @@ Zones\Nagrand.lua
 Zones\ShadowmoonValley.lua
 Zones\Talador.lua
 Zones\TanaanJungle.lua
+
+Zones\Garrision.lua
 
 Zones\Faction.lua
 Zones\Quests.lua

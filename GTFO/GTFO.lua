@@ -26,12 +26,12 @@ GTFO = {
 		SoundOverrides = { "", "", "", "" }; -- Override table for GTFO sounds
 		IgnoreSpellList = { };
 	};
-	Version = "5.3.3"; -- Version number (text format)
+	Version = "5.5"; -- Version number (text format)
 	VersionNumber = 0; -- Numeric version number for checking out-of-date clients (placeholder until client is detected)
-	RetailVersionNumber = 50303; -- Numeric version number for checking out-of-date clients (retail)
+	RetailVersionNumber = 50500; -- Numeric version number for checking out-of-date clients (retail)
 	ClassicVersionNumber = 50005; -- Numeric version number for checking out-of-date clients (Vanilla classic)
 	BurningCrusadeVersionNumber = 50000; -- Numeric version number for checking out-of-date clients (TBC classic)
-	WrathVersionNumber = 50005; -- Numeric version number for checking out-of-date clients (Wrath classic)
+	WrathVersionNumber = 50400; -- Numeric version number for checking out-of-date clients (Wrath classic)
 	DataLogging = nil; -- Indicate whether or not the addon needs to run the datalogging function (for hooking)
 	DataCode = "4"; -- Saved Variable versioning, change this value to force a reset to default
 	CanTank = nil; -- The active character is capable of tanking
@@ -78,6 +78,7 @@ GTFO = {
 	ClassicMode = nil; -- WoW Classic client detection
 	BurningCrusadeMode = nil; -- WoW TBC client detection
 	WrathMode = nil; -- WoW Wrath client detection
+	NewSettingsUIMode = nil; -- New WoW UI Settings system
 	SoundChannels = { 
 		{ Code = "Master", Name = _G.MASTER_VOLUME },
 		{ Code = "SFX", Name = _G.SOUND_VOLUME, CVar = "Sound_EnableSFX" },
@@ -102,15 +103,21 @@ end
 if (buildNumber <= 20000) then
 	GTFO.ClassicMode = true;
 	GTFO.VersionNumber = GTFO.ClassicVersionNumber;
+	if (buildNumber >= 11404) then
+		-- Enabled for 1.14 (Hardcore)
+		GTFO.NewSettingsUIMode = true;
+	end
 elseif (buildNumber <= 30000) then
 	GTFO.BurningCrusadeMode = true;
 	GTFO.VersionNumber = GTFO.BurningCrusadeVersionNumber;
 elseif (buildNumber <= 40000) then
 	GTFO.WrathMode = true;
 	GTFO.VersionNumber = GTFO.WrathVersionNumber;
+	GTFO.NewSettingsUIMode = true;
 else
 	GTFO.RetailMode = true;
 	GTFO.VersionNumber = GTFO.RetailVersionNumber;
+	GTFO.NewSettingsUIMode = true;
 end
 
 StaticPopupDialogs["GTFO_POPUP_MESSAGE"] = {
@@ -1147,7 +1154,7 @@ end
 
 -- Create Addon Menu options and interface
 function GTFO_RenderOptions()
-	if (GTFO.DragonflightMode) then
+	if (GTFO.NewSettingsUIMode) then
 		-- TODO: Rebuild configuration menus in new Dragonflight format
 		-- Modern version (Dragonflight)
 		local ConfigurationPanel = CreateFrame("FRAME","GTFO_MainFrame");
@@ -1888,7 +1895,7 @@ function GTFO_Option_SetVolume()
 	getglobal("GTFO_VolumeSlider"):SetValue(GTFO.Settings.Volume);
 	GTFO_GetSounds();
 	GTFO_Option_SetVolumeText(GTFO.Settings.Volume);
-	if (GTFO.DragonflightMode) then
+	if (GTFO.NewSettingsUIMode) then
 		GTFO_SaveSettings();
 	end
 end
@@ -1921,7 +1928,7 @@ function GTFO_Option_SetTrivialDamage()
 	getglobal("GTFO_TrivialDamageSlider"):SetValue(GTFO.Settings.TrivialDamagePercent);
 	GTFO_GetSounds();
 	GTFO_Option_SetTrivialDamageText(GTFO.Settings.TrivialDamagePercent);
-	if (GTFO.DragonflightMode) then
+	if (GTFO.NewSettingsUIMode) then
 		GTFO_SaveSettings();
 	end
 end
@@ -1934,7 +1941,7 @@ function GTFO_Option_SetChannel()
 	GTFO.Settings.SoundChannel = GTFO.SoundChannels[channelId].Code;
 	getglobal("GTFO_ChannelIdSlider"):SetValue(channelId);
 	GTFO_Option_SetChannelIdText(channelId);
-	if (GTFO.DragonflightMode) then
+	if (GTFO.NewSettingsUIMode) then
 		GTFO_SaveSettings();
 	end
 end
@@ -2111,7 +2118,7 @@ end
 -- Save settings to persistant storage, refresh UI options
 function GTFO_SaveSettings()
 	--GTFO_DebugPrint("Saving settings");
-	if (not GTFO.DragonflightMode) then
+	if (not GTFO.NewSettingsUIMode) then
 		GTFO_Option_SetVolume();
 	end
 
@@ -2141,10 +2148,12 @@ function GTFO_SaveSettings()
 	end
 	GTFOData.SoundOverrides = { "", "", "", "" };
 	GTFOData.IgnoreSpellList = { };
-	getglobal("GTFO_HighResetButton"):Hide();
-	getglobal("GTFO_LowResetButton"):Hide();
-	getglobal("GTFO_FailResetButton"):Hide();
-	getglobal("GTFO_FriendlyFireResetButton"):Hide();
+	if (GTFO.UIRendered) then
+		getglobal("GTFO_HighResetButton"):Hide();
+		getglobal("GTFO_LowResetButton"):Hide();
+		getglobal("GTFO_FailResetButton"):Hide();
+		getglobal("GTFO_FriendlyFireResetButton"):Hide();
+	end
 
 	if (GTFO.Settings.SoundOverrides) then
 		for key, option in pairs(GTFO.Settings.SoundOverrides) do
@@ -2166,7 +2175,7 @@ function GTFO_SaveSettings()
 		end
 	end
 
-	if (not GTFO.DragonflightMode) then
+	if (not GTFO.NewSettingsUIMode) then
 		GTFO.Settings.OriginalVolume = GTFO.Settings.Volume;
 		GTFO.Settings.OriginalTrivialDamagePercent = GTFO.Settings.TrivialDamagePercent;
 		GTFO.Settings.OriginalChannelId = GTFO_GetCurrentSoundChannelId(GTFO.Settings.SoundChannel);

@@ -11,7 +11,6 @@ local AltTracking = TSM.Include("Service.AltTracking")
 local BagTracking = TSM.Include("Service.BagTracking")
 local AuctionTracking = TSM.Include("Service.AuctionTracking")
 local MailTracking = TSM.Include("Service.MailTracking")
-local Sync = TSM.Include("Service.Sync")
 local private = {
 	callbacks = {},
 }
@@ -26,7 +25,7 @@ Inventory:OnSettingsLoad(function()
 	BagTracking.RegisterCallback(private.QuantityChangedCallback)
 	AuctionTracking.RegisterCallback(private.QuantityChangedCallback)
 	MailTracking.RegisterCallback(private.QuantityChangedCallback)
-	Sync.RegisterMirrorCallback(private.QuantityChangedCallback)
+	AltTracking.RegisterCallback(private.QuantityChangedCallback)
 end)
 
 

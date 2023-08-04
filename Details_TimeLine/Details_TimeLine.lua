@@ -8,8 +8,11 @@ local detailsFramework = _G.DetailsFramework
 local TimeLine = Details:NewPluginObject("Details_TimeLine", _G.DETAILSPLUGIN_ALWAYSENABLED)
 TimeLine:SetPluginDescription(Loc ["STRING_PLUGIN_DESC"])
 TimeLine.version_string = "v109"
+timeLine.PluginAbsoluteName = "DETAILS_PLUGIN_TIME_LINE"
 
 local timeLineFrame = TimeLine.Frame
+detailsFramework:ApplyStandardBackdrop(timeLineFrame)
+
 local debugmode = false
 local _
 
@@ -21,19 +24,35 @@ local _GetSpellInfo = Details.getspellinfo
 local GetSpellInfo = GetSpellInfo
 local myName = UnitName("player")
 local GameCooltip = GameCooltip
+local date = date
+
+local CONST_MENU_Y_POS = 24
+local CONST_TIMELINE_LABELS_Y = 55
+local CONST_LINE_START_Y = 52
 
 --event frame
 TimeLine.EventFrame = CreateFrame("frame")
 
 --table.insert(UISpecialFrames, "Details_TimeLine")
 
-local type_cooldown = "cooldowns_timeline"
-local type_debuff = "debuff_timeline"
-local type_enemy_spells = "spellcast_boss"
-local type_boss_spells = "boss_spells"
+local tabType_Cooldown = "cooldowns_timeline"
+local tabType_Debuff = "debuff_timeline"
+local tabType_EnemySpells = "spellcast_boss"
+local tabType_BossSpells = "boss_spells"
+
+local allDisplayTypes = {
+	tabType_Cooldown,
+	tabType_Debuff,
+	tabType_EnemySpells,
+	tabType_BossSpells
+}
 
 local red = {1, 0, 0, .25}
 local green = {0, 1, 0, .25}
+
+local class_icons_with_alpha = [[Interface\AddOns\Details\images\classes_small_alpha]]
+local BUTTON_BACKGROUND_COLOR = {.5, .5, .5, .3}
+local BUTTON_BACKGROUND_COLOR2 = {.4, .4, .4, .3}
 
 local combatObject
 
@@ -41,6 +60,8 @@ local combatObject
 local bIsInCombat = false
 
 local function CreatePluginFrames()
+	local DetailsPluginContainerWindow = DetailsPluginContainerWindow
+
 	TimeLine.combat_data = {} --temp avoid errors on initialization
 
 	if (not Details) then
@@ -61,27 +82,11 @@ local function CreatePluginFrames()
 
 	options_button_template = detailsFramework:GetTemplate("button", "ADL_BUTTON_TEMPLATE")
 
-	local allDisplayTypes = {
-		type_cooldown,
-		type_debuff,
-		type_enemy_spells,
-		type_boss_spells
-	}
-
 	local currentSelectedType = allDisplayTypes[2]
 	local currentSegment = 1
 
-	local class_icons_with_alpha = [[Interface\AddOns\Details\images\classes_small_alpha]]
-	local BUTTON_BACKGROUND_COLOR = {.5, .5, .5, .3}
-	local BUTTON_BACKGROUND_COLOR2 = {.4, .4, .4, .3}
-
-	local closeButton = CreateFrame("button", nil, timeLineFrame, "UIPanelCloseButton")
-	closeButton:SetWidth(20)
-	closeButton:SetHeight(20)
-	closeButton:SetPoint("topright", timeLineFrame, "topright", -2, -3)
-	closeButton:SetFrameLevel(timeLineFrame:GetFrameLevel()+1)
-	closeButton:GetNormalTexture():SetDesaturated(true)
-	closeButton:SetAlpha(1)
+	local closeButton = detailsFramework:CreateCloseButton(timeLineFrame)
+	closeButton:SetPoint("topright", timeLineFrame, "topright", -4, -6)
 
 	--title bar
 	local titleBar = CreateFrame("frame", nil, timeLineFrame, "BackdropTemplate")
@@ -155,7 +160,7 @@ local function CreatePluginFrames()
 		if (debugmode and combatObject and not combatObject.is_boss) then
 			combatObject.is_boss = {
 				index = 1,
-				name = Details:GetBossName (1098, 1),
+				name = Details:GetBossName(1098, 1),
 				zone = "Throne of Thunder",
 				mapid = 1098,
 				encounter = "Jin'Rohk the Breaker"
@@ -261,15 +266,15 @@ local function CreatePluginFrames()
 		end
 	end
 
-	function TimeLine:OnDetailsEvent (event, ...)
-		if (event == "HIDE") then --> plugin hidded, disabled
+	function TimeLine:OnDetailsEvent(event, ...)
+		if (event == "HIDE") then --plugin hidded, disabled
 			self.open = false
 
-		elseif (event == "SHOW") then --> plugin hidded, disabled
+		elseif (event == "SHOW") then --plugin hidded, disabled
 			self.open = true
 			TimeLine:RefreshScale()
 
-		elseif (event == "COMBAT_PLAYER_ENTER") then --> combat started
+		elseif (event == "COMBAT_PLAYER_ENTER") then --combat started
 			combatObject = select(1, ...)
 			if (not combatObject and Details) then
 				combatObject = Details:GetCurrentCombat()
@@ -319,56 +324,54 @@ local function CreatePluginFrames()
 		end
 	end
 
-	--> show icon on toolbar
+	--show icon on toolbar
 	function TimeLine:ShowIcon()
 		TimeLine.showing = true
-		--> [1] button to show [2] button animation: "star", "blink" or true (blink)
-		TimeLine:ShowToolbarIcon (TimeLine.ToolbarButton, "star")
+		--[1] button to show [2] button animation: "star", "blink" or true(blink)
+		TimeLine:ShowToolbarIcon(TimeLine.ToolbarButton, "star")
 	end
 
-	-->  hide icon on toolbar
+	-- hide icon on toolbar
 	function TimeLine:HideIcon()
 		TimeLine.showing = false
-		TimeLine:HideToolbarIcon (TimeLine.ToolbarButton)
+		TimeLine:HideToolbarIcon(TimeLine.ToolbarButton)
 	end
 
 	function TimeLine:DelaySegmentRefresh()
-		for index, combat in ipairs (TimeLine.combat_data) do
+		for index, combat in ipairs(TimeLine.combat_data) do
 			if (combat.name) then
-				return Details_TimeLineSegmentDropdown.MyObject:Select (currentSegment, true)
+				return Details_TimeLineSegmentDropdown.MyObject:Select(currentSegment, true)
 			end
 		end
 	end
 
 	function TimeLine.RefreshWindow()
-		--> refresh it
+		--refresh it
 		TimeLine:Refresh()
 
-		--> refresh segments dropdown
-		TimeLine:ScheduleTimer ("DelaySegmentRefresh", 2)
+		--refresh segments dropdown
+		TimeLine:ScheduleTimer("DelaySegmentRefresh", 1)
 
 		return true
 	end
 
-	--> user clicked on button, need open or close window
+	--user clicked on button, need open or close window
 	function TimeLine:OpenWindow()
 		if (TimeLine.Frame:IsShown()) then
 			return TimeLine:CloseWindow()
 		else
 			TimeLine.open = true
 		end
-		--> build all window data
 
+		--build all window data
 		TimeLine:Refresh()
 
-		TimeLine:ScheduleTimer ("DelaySegmentRefresh", 1)
+		TimeLine:ScheduleTimer("DelaySegmentRefresh", 0.5)
 
-		--> show
-		--TimeLineFrame:Show()
-		DetailsPluginContainerWindow.OpenPlugin (TimeLine)
+		DetailsPluginContainerWindow.OpenPlugin(TimeLine)
 
-		--> hide cooltip
-		GameCooltip2:Hide()
+		--hide cooltip
+		GameCooltip:Hide()
 
 		return true
 	end
@@ -395,50 +398,50 @@ local function CreatePluginFrames()
 		Details:SetTooltipMinWidth()
 
 		--build the menu options
-			--> debuffs
+			--debuffs
 			GameCooltip:AddLine("Enemy Debuff Timeline")
 			GameCooltip:AddMenu(1, function()
 				DetailsPluginContainerWindow.OpenPlugin(TimeLine)
-				currentSelectedType = type_debuff
+				currentSelectedType = tabType_Debuff
 				TimeLine:Refresh()
 				TimeLine:RefreshButtons()
-				TimeLine:ScheduleTimer("DelaySegmentRefresh", 1)
+				TimeLine:ScheduleTimer("DelaySegmentRefresh", 0.5)
 				GameCooltip:Hide()
 			end, "main")
 			GameCooltip:AddIcon([[Interface\ICONS\Spell_Shadow_ShadowWordPain]], 1, 1, 16, 16, 5/64, 59/64, 5/64, 59/64)
 
-			--> cooldowns
+			--cooldowns
 			GameCooltip:AddLine("Raid Cooldown Timeline")
 			GameCooltip:AddMenu(1, function()
 				DetailsPluginContainerWindow.OpenPlugin(TimeLine)
-				currentSelectedType = type_cooldown
+				currentSelectedType = tabType_Cooldown
 				TimeLine:Refresh()
 				TimeLine:RefreshButtons()
-				TimeLine:ScheduleTimer("DelaySegmentRefresh", 1)
+				TimeLine:ScheduleTimer("DelaySegmentRefresh", 0.5)
 				GameCooltip:Hide()
 			end, "graph")
 			GameCooltip:AddIcon([[Interface\ICONS\Spell_Holy_GuardianSpirit]], 1, 1, 16, 16, 5/64, 59/64, 5/64, 59/64)
 
-			--> enemy spells
+			--enemy spells
 			GameCooltip:AddLine("Enemy Cast Timeline")
 			GameCooltip:AddMenu(1, function()
 				DetailsPluginContainerWindow.OpenPlugin(TimeLine)
-				currentSelectedType = type_enemy_spells
+				currentSelectedType = tabType_EnemySpells
 				TimeLine:Refresh()
 				TimeLine:RefreshButtons()
-				TimeLine:ScheduleTimer("DelaySegmentRefresh", 1)
+				TimeLine:ScheduleTimer("DelaySegmentRefresh", 0.5)
 				GameCooltip:Hide()
 			end, "graph")
 			GameCooltip:AddIcon([[Interface\ICONS\Spell_Shadow_SummonVoidWalker]], 1, 1, 16, 16, 5/64, 59/64, 5/64, 59/64)
 
-			--> spell individual
+			--spell individual
 			GameCooltip:AddLine("Enemy Spells Timeline")
 			GameCooltip:AddMenu(1, function()
 				DetailsPluginContainerWindow.OpenPlugin(TimeLine)
-				currentSelectedType = type_boss_spells
+				currentSelectedType = tabType_BossSpells
 				TimeLine:Refresh()
 				TimeLine:RefreshButtons()
-				TimeLine:ScheduleTimer("DelaySegmentRefresh", 1)
+				TimeLine:ScheduleTimer("DelaySegmentRefresh", 0.5)
 				GameCooltip:Hide()
 			end, "graph")
 			GameCooltip:AddIcon([[Interface\ICONS\Spell_Shadow_Requiem]], 1, 1, 16, 16, 5/64, 59/64, 5/64, 59/64)
@@ -449,15 +452,15 @@ local function CreatePluginFrames()
 		GameCooltip:ShowCooltip()
 	end
 
-	--> create the button to show on toolbar [1] function OnClick [2] texture [3] tooltip [4] width or 14 [5] height or 14 [6] frame name or nil
+	--create the button to show on toolbar [1] function OnClick [2] texture [3] tooltip [4] width or 14 [5] height or 14 [6] frame name or nil
 	TimeLine.ToolbarButton = Details.ToolBar:NewPluginToolbarButton(TimeLine.OpenWindow, [[Interface\Addons\Details_TimeLine\icon]], Loc ["STRING_PLUGIN_NAME"], Loc ["STRING_TOOLTIP"], 12, 12, "TIMELINE_BUTTON", cooltip_menu)
 	TimeLine.ToolbarButton.shadow = true
 
-	--> setpoint anchors mod if needed
+	--setpoint anchors mod if needed
 	TimeLine.ToolbarButton.y = 0
 	TimeLine.ToolbarButton.x = 0
 
-	--> build main frame
+	--build main frame
 	timeLineFrame:SetFrameStrata("HIGH")
 	timeLineFrame:SetToplevel(true)
 
@@ -467,12 +470,10 @@ local function CreatePluginFrames()
 	timeLineFrame.Height = 575
 
 	local CONST_TOTAL_TIMELINES = 21 --timers shown in the top of the window
-	local CONST_ROW_HEIGHT = 16
+	local CONST_ROW_HEIGHT = 18
 	local CONST_VALID_WIDHT = 784
 	local CONST_PLAYERFIELD_SIZE = 96
 	local CONST_VALID_HEIGHT = 528
-
-	local CONST_MENU_Y_POS = 6
 
 	local mode_buttons_width = 120
 	local mode_buttons_height = 20
@@ -500,8 +501,8 @@ local function CreatePluginFrames()
 						end
 					end)
 
-	timeLineFrame:SetScript ("OnMouseUp",
-					function (self)
+	timeLineFrame:SetScript("OnMouseUp",
+					function(self)
 						if (self.isMoving) then
 							self:StopMovingOrSizing()
 							self.isMoving = false
@@ -526,20 +527,22 @@ local function CreatePluginFrames()
 	timeLineFrame.bg1:SetHorizTile(true)
 	timeLineFrame.bg1:SetAllPoints()
 
-	-- statusbar below the timeline chart
-	local bottom_texture = detailsFramework:NewImage(timeLineFrame, nil, timeLineFrame.Width-4, 50, "background", nil, nil, "$parentBottomTexture")
-	bottom_texture:SetColorTexture(0, 0, 0, .6)
-	bottom_texture:SetPoint("bottomleft", timeLineFrame, "bottomleft", 2, 4)
+	local gradientBelowTheLine = detailsFramework:CreateTexture(timeLineFrame, {gradient = "vertical", fromColor = {0, 0, 0, 0.2}, toColor = "transparent"}, 1, 95, "artwork", {0, 1, 0, 1}, "gradientBelowTheLine")
+	gradientBelowTheLine:SetPoint("bottoms")
 
+	-- statusbar below the timeline chart
 	TimeLine.Times = {}
 	for i = 1, CONST_TOTAL_TIMELINES do
-		local time = detailsFramework:NewLabel(timeLineFrame, nil, "$parentTime"..i, nil, "00:00")
-		time:SetPoint("topleft", timeLineFrame, "topleft",(CONST_PLAYERFIELD_SIZE-29) +(i*39), -28)
-		TimeLine.Times [i] = time
+		local timeLabel = detailsFramework:NewLabel(timeLineFrame, nil, "$parentTime"..i, nil, "00:00")
+		timeLabel:SetPoint("topleft", timeLineFrame, "topleft", (CONST_PLAYERFIELD_SIZE - 29) + (i * 39), -CONST_TIMELINE_LABELS_Y)
+		TimeLine.Times[i] = timeLabel
+		timeLabel.fontsize = 10
+		timeLabel.fontcolor = "white"
+		timeLabel.alpha = 1
 
 		local line = detailsFramework:NewImage(timeLineFrame, nil, 1, CONST_VALID_HEIGHT, "border", nil, nil, "$parentTime"..i.."Bar")
-		line:SetColorTexture(1, 1, 1, .05)
-		line:SetPoint("topleft", time, "topleft", 0, -10)
+		line:SetColorTexture(1, 1, 1, .15)
+		line:SetPoint("topleft", timeLabel, "topleft", 0, -10)
 	end
 
 	function TimeLine:UpdateTimeLine(totalTime)
@@ -561,39 +564,39 @@ local function CreatePluginFrames()
 			linha:SetText("00:" .. secondsString)
 		end
 
-		local timeDivision = totalTime / (CONST_TOTAL_TIMELINES - 1) --786 -- 49.125
+		local timeDivision = totalTime /(CONST_TOTAL_TIMELINES - 1) --786 -- 49.125
 
 		for i = 2, CONST_TOTAL_TIMELINES -1 do
-			local linha = TimeLine.Times[i]
-			local thisTime = timeDivision * (i-1)
-			local minutos, segundos = math.floor(thisTime / 60), math.floor(thisTime % 60)
+			local line = TimeLine.Times[i]
+			local thisTime = timeDivision *(i-1)
+			local amountMinutes, amountSeconds = math.floor(thisTime / 60), math.floor(thisTime % 60)
 
-			if (segundos < 10) then
-				segundos = "0" .. segundos
+			if (amountSeconds < 10) then
+				amountSeconds = "0" .. amountSeconds
 			end
 
-			if (minutos > 0) then
-				if (minutos < 10) then
-					minutos = "0" .. minutos
+			if (amountMinutes > 0) then
+				if (amountMinutes < 10) then
+					amountMinutes = "0" .. amountMinutes
 				end
-				linha:SetText(minutos .. ":" .. segundos)
+				line:SetText(amountMinutes .. ":" .. amountSeconds)
 			else
-				linha:SetText("00:" .. segundos)
+				line:SetText("00:" .. amountSeconds)
 			end
 		end
 	end
 
-	--> dropdown select type (label)
+	--dropdown select type(label)
 		local select_type_label = detailsFramework:NewLabel(timeLineFrame, nil, "$parentTypeLabel", nil, Loc ["STRING_TYPE"])
-	--> dropdown select type(dropdown)
+	--dropdown select type(dropdown)
 		local selectTypeOption = function(_, _, selected)
 			currentSelectedType = selected
 			TimeLine:Refresh()
 		end
 
 		local type_menu = {
-			{value = type_cooldown, label = Loc ["STRING_TYPE_COOLDOWN"], onclick = selectTypeOption, icon = [[Interface\ICONS\Spell_Holy_GuardianSpirit]]},
-			{value = type_debuff, label = Loc ["STRING_TYPE_DEBUFF"], onclick = selectTypeOption, icon = [[Interface\ICONS\Spell_Shadow_ShadowWordPain]]}
+			{value = tabType_Cooldown, label = Loc ["STRING_TYPE_COOLDOWN"], onclick = selectTypeOption, icon = [[Interface\ICONS\Spell_Holy_GuardianSpirit]]},
+			{value = tabType_Debuff, label = Loc ["STRING_TYPE_DEBUFF"], onclick = selectTypeOption, icon = [[Interface\ICONS\Spell_Shadow_ShadowWordPain]]}
 		}
 		local buildTypeMenu = function()
 			return type_menu
@@ -601,12 +604,7 @@ local function CreatePluginFrames()
 
 		local select_type_dropdown = detailsFramework:NewDropDown(timeLineFrame, nil, "$parentTypeDropdown", nil, 120, 20, buildTypeMenu, 1, options_dropdown_template)
 
-
-	--> dropdown select combat(label)
-		local select_segment_label = detailsFramework:NewLabel(timeLineFrame, nil, "$parentSegmentLabel", nil, Loc ["STRING_SELECT_SEGMENT"], "GameFontNormal", nil, "orange")
-		select_segment_label.textsize = 9
-
-	--> dropdown select combat(dropdown)
+	--dropdown select combat(dropdown)
 		local selectCombatOption = function(_, _, segment)
 			currentSegment = segment
 			TimeLine:Refresh()
@@ -614,74 +612,127 @@ local function CreatePluginFrames()
 
 		local buildCombatMenu = function()
 			local t = {}
-			for index, combat in ipairs (TimeLine.combat_data) do
+			for index, combat in ipairs(TimeLine.combat_data) do
+				--[=[
+					combat:
+					["date_end"] = "22:50:45",
+					["date_start"] = "22:45:04",
+					["name"] = "Echo of Neltharion",
+					["total_time"] = 340.691,
+					--]=]
 				if (combat.name) then
-					local minutos, segundos = math.floor (combat.total_time/60), math.floor (combat.total_time%60)
-					t [#t+1] = {value = index, label = combat.name .. " (" .. index .. ")", onclick = selectCombatOption, icon = [[Interface\GROUPFRAME\UI-GROUP-MAINASSISTICON]], desc = minutos .. "m " .. segundos .. "s " .. " (" .. (combat.date_start or "") .. " - " .. (combat.date_end or "") .. ")"}
+					local amountMinutes, amountSeconds = math.floor(combat.total_time/60), math.floor(combat.total_time%60)
+					local bossIcon = Details:GetBossEncounterTexture(combat.name) or ""
+					t [#t+1] = {value = index, label = combat.name, onclick = selectCombatOption, icon = bossIcon, iconsize = {32, 20}, texcoord = {0, 1, 0, 0.9}, desc = amountMinutes .. "m " .. amountSeconds .. "s " .. "(" ..(combat.date_start or "") .. " - " ..(combat.date_end or "") .. ")"}
 				end
 			end
 			return t
 		end
-		local select_segment_dropdown = detailsFramework:NewDropDown (timeLineFrame, nil, "$parentSegmentDropdown", nil, 120, 20, buildCombatMenu, nil, options_dropdown_template)
+		local selectSegmentDropdown = detailsFramework:NewDropDown(timeLineFrame, nil, "$parentSegmentDropdown", nil, 150, 20, buildCombatMenu, nil, options_dropdown_template)
 
-	--> change mode end
-		local change_mode = function (_, _, mode)
+	--select which tab is shown (cooldowns, debuffs, enemy cast, enemy spells)
+		local selectWhatToShow = function(_, _, mode)
 			currentSelectedType = mode
 			TimeLine:Refresh()
 			TimeLine:RefreshButtons()
 		end
 
-	--> select Cooldowns button
-		local show_cooldowns_button = detailsFramework:NewButton(timeLineFrame, _, "$parentModeCooldownsButton", "ModeCooldownsButton", mode_buttons_width, mode_buttons_height, change_mode, type_cooldown, nil, nil, "Cooldowns", 1)
-		show_cooldowns_button:SetPoint("bottomleft", timeLineFrame, "bottomleft", 10, CONST_MENU_Y_POS)
-		show_cooldowns_button:SetTemplate(detailsFramework:GetTemplate("button", "DETAILS_PLUGIN_BUTTON_TEMPLATE"))
-		show_cooldowns_button:SetIcon([[Interface\ICONS\Spell_Holy_GuardianSpirit]], nil, nil, nil, {5/64, 59/64, 5/64, 59/64}, nil, nil, 2)
+	--select Cooldowns button
+		local iconSize = 14
+		local leftPadding = 0
+		local textDistance = 4
 
-		local show_debuffs_button = detailsFramework:NewButton(timeLineFrame, _, "$parentModeDebuffsButton", "ModeDebuffsButton", mode_buttons_width, mode_buttons_height, change_mode, type_debuff, nil, nil, "Debuffs", 1, options_button_template)
-		show_debuffs_button:SetPoint("bottomleft", show_cooldowns_button, "bottomright", 5, 0)
-		show_debuffs_button:SetTemplate(detailsFramework:GetTemplate("button", "DETAILS_PLUGIN_BUTTON_TEMPLATE"))
-		show_debuffs_button:SetIcon([[Interface\ICONS\Spell_Shadow_ShadowWordPain]], nil, nil, nil, {5/64, 59/64, 5/64, 59/64}, nil, nil, 2)
+		--header background
+		local headerFrame = CreateFrame("frame", "EncounterDetailsHeaderFrame", timeLineFrame, "BackdropTemplate")
+		headerFrame:EnableMouse(false)
+		headerFrame:SetPoint("topleft", titleBar, "bottomleft", -1, -1)
+		headerFrame:SetPoint("topright", titleBar, "bottomright", 1, -1)
+		headerFrame:SetBackdrop({bgFile = [[Interface\AddOns\Details\images\background]], tileSize = 64, tile = true})
+		headerFrame:SetBackdropColor(.7, .7, .7, .4)
+		headerFrame:SetHeight(46)
 
-		local show_enemyspells_button = detailsFramework:NewButton(timeLineFrame, _, "$parentModeEnemyCastButton", "ModeEnemyCastButton", mode_buttons_width, mode_buttons_height, change_mode, type_enemy_spells, nil, nil, "Enemy Cast", 1, options_button_template)
-		show_enemyspells_button:SetPoint("bottomleft", show_debuffs_button, "bottomright", 5, 0)
-		show_enemyspells_button:SetTemplate(detailsFramework:GetTemplate("button", "DETAILS_PLUGIN_BUTTON_TEMPLATE"))
-		show_enemyspells_button:SetIcon([[Interface\ICONS\Spell_Shadow_SummonVoidWalker]], nil, nil, nil, {5/64, 59/64, 5/64, 59/64}, nil, nil, 2)
+		local gradientTop = detailsFramework:CreateTexture(headerFrame,
+		{gradient = "vertical", fromColor = {0, 0, 0, 0.5}, toColor = "transparent"}, 1, 48, "artwork", {0, 1, 0, 1})
+		gradientTop:SetPoint("bottoms", 1, 1)
+		timeLineFrame.gradientTop = gradientTop
 
-		local show_spellsindividual_button = detailsFramework:NewButton(timeLineFrame, _, "$parentModeEnemySpellsButton", "ModeEnemySpellsButton", mode_buttons_width, mode_buttons_height, change_mode, type_boss_spells, nil, nil, "Enemy Spells", 1, options_button_template)
-		show_spellsindividual_button:SetPoint("bottomleft", show_enemyspells_button, "bottomright", 5, 0)
-		show_spellsindividual_button:SetTemplate(detailsFramework:GetTemplate("button", "DETAILS_PLUGIN_BUTTON_TEMPLATE"))
-		show_spellsindividual_button:SetIcon([[Interface\ICONS\Spell_Shadow_Requiem]], nil, nil, nil, {5/64, 59/64, 5/64, 59/64}, nil, nil, 2)
+		local showCooldownsButton = detailsFramework:NewButton(timeLineFrame, _, "$parentModeCooldownsButton", "ModeCooldownsButton", mode_buttons_width, mode_buttons_height, selectWhatToShow, tabType_Cooldown, nil, nil, "Cooldowns", 1)
+		showCooldownsButton:SetPoint("topleft", timeLineFrame, "topleft", 2, -CONST_MENU_Y_POS)
+		showCooldownsButton:SetTemplate(detailsFramework:GetTemplate("button", "DETAILS_PLUGIN_BUTTON_TEMPLATE"))
+		showCooldownsButton:SetIcon([[Interface\ICONS\Spell_Holy_GuardianSpirit]], nil, nil, nil, {.1, .9, .1, .9}, nil, textDistance, leftPadding)
+		showCooldownsButton.icon:SetSize(iconSize, iconSize)
+			--cooldown button for the breakdown window
+			local showCooldownsButtonBreakdown = detailsFramework:NewButton(timeLineFrame, _, "$parentModeCooldownsButtonBreakdown", "ModeCooldownsButton", mode_buttons_width, mode_buttons_height, selectWhatToShow, tabType_Cooldown, nil, nil, "Cooldowns", 1)
+			showCooldownsButtonBreakdown:SetTemplate(detailsFramework:GetTemplate("button", "DETAILS_PLUGIN_BUTTON_TEMPLATE"))
+			showCooldownsButtonBreakdown:SetIcon([[Interface\ICONS\Spell_Holy_GuardianSpirit]], nil, nil, nil, {.1, .9, .1, .9}, nil, textDistance, leftPadding)
+			showCooldownsButtonBreakdown.icon:SetSize(iconSize, iconSize)
+			_G.DetailsBreakdownWindow.RegisterPluginButton(showCooldownsButtonBreakdown, TimeLine, timeLine.PluginAbsoluteName)
 
-		local all_buttons = {show_cooldowns_button, show_debuffs_button, show_enemyspells_button, show_spellsindividual_button}
+		local showDebuffsButton = detailsFramework:NewButton(timeLineFrame, _, "$parentModeDebuffsButton", "ModeDebuffsButton", mode_buttons_width, mode_buttons_height, selectWhatToShow, tabType_Debuff, nil, nil, "Debuffs", 1, options_button_template)
+		showDebuffsButton:SetPoint("bottomleft", showCooldownsButton, "bottomright", 2, 0)
+		showDebuffsButton:SetTemplate(detailsFramework:GetTemplate("button", "DETAILS_PLUGIN_BUTTON_TEMPLATE"))
+		showDebuffsButton:SetIcon([[Interface\ICONS\Spell_Shadow_ShadowWordPain]], nil, nil, nil, {.1, .9, .1, .9}, nil, textDistance, leftPadding)
+		showDebuffsButton.icon:SetSize(iconSize, iconSize)
+			--debuffs button for the breakdown window
+			local showDebuffsButtonBreakdown = detailsFramework:NewButton(timeLineFrame, _, "$parentModeDebuffsButtonBreakdown", "ModeDebuffsButton", mode_buttons_width, mode_buttons_height, selectWhatToShow, tabType_Debuff, nil, nil, "Debuffs", 1, options_button_template)
+			showDebuffsButtonBreakdown:SetTemplate(detailsFramework:GetTemplate("button", "DETAILS_PLUGIN_BUTTON_TEMPLATE"))
+			showDebuffsButtonBreakdown:SetIcon([[Interface\ICONS\Spell_Shadow_ShadowWordPain]], nil, nil, nil, {.1, .9, .1, .9}, nil, textDistance, leftPadding)
+			showDebuffsButtonBreakdown.icon:SetSize(iconSize, iconSize)
+			_G.DetailsBreakdownWindow.RegisterPluginButton(showDebuffsButtonBreakdown, TimeLine, timeLine.PluginAbsoluteName)
 
-		local set_button_as_pressed = function(button)
+		local showEnemyspellsButton = detailsFramework:NewButton(timeLineFrame, _, "$parentModeEnemyCastButton", "ModeEnemyCastButton", mode_buttons_width, mode_buttons_height, selectWhatToShow, tabType_EnemySpells, nil, nil, "Enemy Cast", 1, options_button_template)
+		showEnemyspellsButton:SetPoint("bottomleft", showDebuffsButton, "bottomright", 2, 0)
+		showEnemyspellsButton:SetTemplate(detailsFramework:GetTemplate("button", "DETAILS_PLUGIN_BUTTON_TEMPLATE"))
+		showEnemyspellsButton:SetIcon([[Interface\ICONS\Spell_Shadow_SummonVoidWalker]], nil, nil, nil, {.1, .9, .1, .9}, nil, textDistance, leftPadding)
+		showEnemyspellsButton.icon:SetSize(iconSize, iconSize)
+			--enemies button for the breakdown window
+			local showEnemyspellsButtonBreakdown = detailsFramework:NewButton(timeLineFrame, _, "$parentModeEnemyCastButtonBreakdown", "ModeEnemyCastButton", mode_buttons_width, mode_buttons_height, selectWhatToShow, tabType_EnemySpells, nil, nil, "Enemy Cast", 1, options_button_template)
+			showEnemyspellsButtonBreakdown:SetTemplate(detailsFramework:GetTemplate("button", "DETAILS_PLUGIN_BUTTON_TEMPLATE"))
+			showEnemyspellsButtonBreakdown:SetIcon([[Interface\ICONS\Spell_Shadow_SummonVoidWalker]], nil, nil, nil, {.1, .9, .1, .9}, nil, textDistance, leftPadding)
+			showEnemyspellsButtonBreakdown.icon:SetSize(iconSize, iconSize)
+			_G.DetailsBreakdownWindow.RegisterPluginButton(showEnemyspellsButtonBreakdown, TimeLine, timeLine.PluginAbsoluteName)
+
+		local showSpellsIndividualButton = detailsFramework:NewButton(timeLineFrame, _, "$parentModeEnemySpellsButton", "ModeEnemySpellsButton", mode_buttons_width, mode_buttons_height, selectWhatToShow, tabType_BossSpells, nil, nil, "Enemy Spells", 1, options_button_template)
+		showSpellsIndividualButton:SetPoint("bottomleft", showEnemyspellsButton, "bottomright", 2, 0)
+		showSpellsIndividualButton:SetTemplate(detailsFramework:GetTemplate("button", "DETAILS_PLUGIN_BUTTON_TEMPLATE"))
+		showSpellsIndividualButton:SetIcon([[Interface\ICONS\Spell_Shadow_Requiem]], nil, nil, nil, {.1, .9, .1, .9}, nil, textDistance, leftPadding)
+		showSpellsIndividualButton.icon:SetSize(iconSize, iconSize)
+			--spells button for the breakdown window
+			local showSpellsIndividualButtonBreakdown = detailsFramework:NewButton(timeLineFrame, _, "$parentModeEnemySpellsButtonBreakdown", "ModeEnemySpellsButton", mode_buttons_width, mode_buttons_height, selectWhatToShow, tabType_BossSpells, nil, nil, "Enemy Spells", 1, options_button_template)
+			showSpellsIndividualButtonBreakdown:SetTemplate(detailsFramework:GetTemplate("button", "DETAILS_PLUGIN_BUTTON_TEMPLATE"))
+			showSpellsIndividualButtonBreakdown:SetIcon([[Interface\ICONS\Spell_Shadow_Requiem]], nil, nil, nil, {.1, .9, .1, .9}, nil, textDistance, leftPadding)
+			showSpellsIndividualButtonBreakdown.icon:SetSize(iconSize, iconSize)
+			_G.DetailsBreakdownWindow.RegisterPluginButton(showSpellsIndividualButtonBreakdown, TimeLine, timeLine.PluginAbsoluteName)
+
+		local allButtons = {showCooldownsButton, showDebuffsButton, showEnemyspellsButton, showSpellsIndividualButton}
+
+		local setButtonAsPressed = function(button)
 			button:SetTemplate(detailsFramework:GetTemplate("button", "DETAILS_PLUGIN_BUTTONSELECTED_TEMPLATE"))
 		end
 
 		function TimeLine:RefreshButtons()
-			for _, button in ipairs(all_buttons) do
+			for _, button in ipairs(allButtons) do
 				button:SetTemplate(detailsFramework:GetTemplate("button", "DETAILS_PLUGIN_BUTTON_TEMPLATE"))
 			end
 
-			if (currentSelectedType == type_cooldown) then
-				set_button_as_pressed(show_cooldowns_button)
+			if (currentSelectedType == tabType_Cooldown) then
+				setButtonAsPressed(showCooldownsButton)
 
-			elseif (currentSelectedType == type_debuff) then
-				set_button_as_pressed(show_debuffs_button)
+			elseif (currentSelectedType == tabType_Debuff) then
+				setButtonAsPressed(showDebuffsButton)
 
-			elseif (currentSelectedType == type_enemy_spells) then
-				set_button_as_pressed(show_enemyspells_button)
+			elseif (currentSelectedType == tabType_EnemySpells) then
+				setButtonAsPressed(showEnemyspellsButton)
 
-			elseif (currentSelectedType == type_boss_spells) then
-				set_button_as_pressed(show_spellsindividual_button)
-
+			elseif (currentSelectedType == tabType_BossSpells) then
+				setButtonAsPressed(showSpellsIndividualButton)
 			end
 		end
 
 		TimeLine:RefreshButtons()
 
-	--> erase data button
-		local delete_button_func = function()
+	--erase data button
+		local eraseDataButton_Callback = function()
 			wipe(TimeLine.cooldowns_timeline)
 			wipe(TimeLine.combat_data)
 			wipe(TimeLine.debuff_timeline)
@@ -695,59 +746,61 @@ local function CreatePluginFrames()
 			end
 		end
 
-		local delete_button = detailsFramework:NewButton (timeLineFrame, _, "$parentDeleteButton", "DeleteButton", 100, 20, delete_button_func, nil, nil, nil, Loc ["STRING_RESET"], 1, detailsFramework:GetTemplate ("button", "DETAILS_PLUGIN_BUTTON_TEMPLATE"))
-		delete_button:SetPoint ("bottomright", timeLineFrame, "bottomright", -10, CONST_MENU_Y_POS)
-		delete_button:SetIcon ([[Interface\Buttons\UI-StopButton]], nil, nil, nil, {0, 1, 0, 1}, nil, nil, 2)
+		local eraseDataButton = detailsFramework:NewButton(timeLineFrame, _, "$parentDeleteButton", "DeleteButton", 100, 20, eraseDataButton_Callback, nil, nil, nil, Loc ["STRING_RESET"], 1, detailsFramework:GetTemplate("button", "DETAILS_PLUGIN_BUTTON_TEMPLATE"))
+		eraseDataButton:SetPoint("topright", timeLineFrame, "topright", -2, -CONST_MENU_Y_POS)
+		eraseDataButton:SetIcon([[Interface\Buttons\UI-StopButton]], nil, nil, nil, {0, 1, 0, 1}, nil, nil, 2)
 
-		local options_button = detailsFramework:NewButton (timeLineFrame, _, "$parentOptionsPanelButton", "OptionsPanelButton", 100, 20, TimeLine.OpenOptionsPanel, nil, nil, nil, Loc ["STRING_OPTIONS"], 1, detailsFramework:GetTemplate ("button", "DETAILS_PLUGIN_BUTTON_TEMPLATE"))
-		options_button:SetPoint ("right", delete_button, "left", 2, 0)
-		options_button:SetIcon ([[Interface\Buttons\UI-OptionsButton]], nil, nil, nil, {0, 1, 0, 1}, nil, nil, 2)
-		--
+		local optionsButton = detailsFramework:NewButton(timeLineFrame, _, "$parentOptionsPanelButton", "OptionsPanelButton", 100, 20, TimeLine.OpenOptionsPanel, nil, nil, nil, Loc ["STRING_OPTIONS"], 1, detailsFramework:GetTemplate("button", "DETAILS_PLUGIN_BUTTON_TEMPLATE"))
+		optionsButton:SetPoint("right", eraseDataButton, "left", 2, 0)
+		optionsButton:SetIcon([[Interface\Buttons\UI-OptionsButton]], nil, nil, nil, {0, 1, 0, 1}, nil, nil, 2)
+
+		eraseDataButton:SetWidth(75)
+		optionsButton:SetWidth(75)
+
+		do
 			local useIconsFunc = function()
 				TimeLine.db.useicons = not TimeLine.db.useicons
 				TimeLine:Refresh()
 			end
 
-			local useIconsText = detailsFramework:CreateLabel (timeLineFrame, Loc ["STRING_SPELLICONS"], 9, "orange", "GameFontNormal", "UseIconsLabel", nil, "overlay")
-			useIconsText:SetPoint ("right", options_button, "left", -4, 0)
+			local useIconsText = detailsFramework:CreateLabel(timeLineFrame, Loc ["STRING_SPELLICONS"], 9, "orange", "GameFontNormal", "UseIconsLabel", nil, "overlay")
+			useIconsText:SetPoint("right", optionsButton, "left", -4, 0)
 
-			local useIconsCheckbox = detailsFramework:CreateSwitch (timeLineFrame, useIconsFunc, false)
-			useIconsCheckbox:SetTemplate (detailsFramework:GetTemplate ("switch", "OPTIONS_CHECKBOX_TEMPLATE"))
+			local useIconsCheckbox = detailsFramework:CreateSwitch(timeLineFrame, useIconsFunc, false)
+			useIconsCheckbox:SetTemplate(detailsFramework:GetTemplate("switch", "OPTIONS_CHECKBOX_TEMPLATE"))
 			useIconsCheckbox:SetAsCheckBox()
-			useIconsCheckbox:SetSize (16, 16)
-			useIconsCheckbox:SetPoint ("right", useIconsText, "left", -2, 0)
+			useIconsCheckbox:SetSize(16, 16)
+			useIconsCheckbox:SetPoint("right", useIconsText, "left", -2, 0)
+			timeLineFrame.useIconsCheckbox = useIconsCheckbox
 
-			function TimeLine:UpdateShowSpellIconState()
-				useIconsCheckbox:SetValue (TimeLine.db.useicons)
-			end
-		--
+			useIconsText:Hide()
+			useIconsCheckbox:Hide()
+		end
 
-	--> search field ~search
-		local onPressEnter = function (_, _, text)
-			if (type (text) == "string") then
-				search = string.lower (text)
+		function TimeLine:UpdateShowSpellIconState()
+			timeLineFrame.useIconsCheckbox:SetValue(TimeLine.db.useicons)
+		end
+
+	--search field ~search
+		local onPressEnter = function(_, _, text)
+			if (type(text) == "string") then
+				search = string.lower(text)
 				TimeLine:Refresh()
 			end
 		end
 
-		local search_label = detailsFramework:NewLabel(timeLineFrame, nil, "$parentSearchLabel", nil, Loc ["STRING_SEARCH"], "GameFontNormal", nil, "orange")
-		search_label.textsize = 9
-
-		local CONST_MENU_Y_POS_SECOND_ROW = 36
-		search_label:SetPoint("bottomleft", timeLineFrame, "bottomleft", 10, CONST_MENU_Y_POS_SECOND_ROW)
-
-		local searchbox = detailsFramework:NewTextEntry(timeLineFrame, _, "$parentSearch", "searchbox", 120, 20, onPressEnter, nil, nil, nil, nil, options_button_template)
-		searchbox:SetPoint("left", search_label, "right", 2, 0)
-		searchbox:SetHook("OnEscapePressed", function() search = nil; searchbox:SetText(""); searchbox:ClearFocus(); TimeLine:Refresh() end)
-		searchbox:SetHook("OnEditFocusLost", function()
-			if (searchbox:GetText() == "") then
+		local searchTextEntry = detailsFramework:NewTextEntry(timeLineFrame, _, "$parentSearch", "searchbox", 120, 20, onPressEnter, nil, nil, nil, nil, options_button_template)
+		searchTextEntry:SetAsSearchBox()
+		searchTextEntry:SetHook("OnEscapePressed", function() search = nil; searchTextEntry:SetText(""); searchTextEntry:ClearFocus(); TimeLine:Refresh() end)
+		searchTextEntry:SetHook("OnEditFocusLost", function()
+			if (searchTextEntry:GetText() == "") then
 				search = nil
 				TimeLine:Refresh()
 			end
 		end)
-		searchbox:SetHook("OnTextChanged", function()
-			if (searchbox:GetText() ~= "") then
-				search = string.lower(searchbox:GetText())
+		searchTextEntry:SetHook("OnTextChanged", function()
+			if (searchTextEntry:GetText() ~= "") then
+				search = string.lower(searchTextEntry:GetText())
 				TimeLine:Refresh()
 			else
 				search = nil
@@ -755,20 +808,10 @@ local function CreatePluginFrames()
 			end
 		end)
 
-	--> Clear search field
-		local clearsearch = CreateFrame("button", nil, timeLineFrame, "UIPanelCloseButton")
-		clearsearch:SetPoint("left", searchbox.widget, "right", -4, 0)
-		clearsearch:SetSize(24, 24)
-		clearsearch:SetScript("OnClick", function (self)
-			searchbox:SetText("")
-			searchbox:ClearFocus()
-			search = nil
-			TimeLine:Refresh()
-		end)
 
-	--> set the point on the segment box
-	select_segment_dropdown:SetPoint("bottomright", delete_button, "topright", 0, 2)
-	select_segment_label:SetPoint("right", select_segment_dropdown, "left", -2, 0)
+	--set the point on the segment box and search box
+		searchTextEntry:SetPoint("right", selectSegmentDropdown, "left", -8, 0)
+		selectSegmentDropdown:SetPoint("right", optionsButton, "left", -2, 0)
 
 	local backdrop_row = {bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], tile = true, tileSize = 16, insets = {left = 0, right = 0, top = 0, bottom = 0}}
 
@@ -779,160 +822,123 @@ local function CreatePluginFrames()
 		end
 	end
 
-	local top_bar = detailsFramework:NewImage(timeLineFrame, nil, CONST_VALID_WIDHT + CONST_PLAYERFIELD_SIZE, 1, "overlay", nil, nil, "$parentRowTopLine")
-	top_bar:SetColorTexture(1, 1, 1, .4)
-	local bottom_bar = detailsFramework:NewImage(timeLineFrame, nil, CONST_VALID_WIDHT + CONST_PLAYERFIELD_SIZE, 1, "overlay", nil, nil, "$parentRowBottomLine")
-	bottom_bar:SetColorTexture(1, 1, 1, .4)
+	local topBar = detailsFramework:NewImage(timeLineFrame, nil, CONST_VALID_WIDHT + CONST_PLAYERFIELD_SIZE, 1, "overlay", nil, nil, "$parentRowTopLine")
+	topBar:SetColorTexture(1, 1, 1, .4)
+
+	local bottomBar = detailsFramework:NewImage(timeLineFrame, nil, CONST_VALID_WIDHT + CONST_PLAYERFIELD_SIZE, 1, "overlay", nil, nil, "$parentRowBottomLine")
+	bottomBar:SetColorTexture(1, 1, 1, .4)
 
 	local row_on_enter = function(self)
-		top_bar:Show()
-		bottom_bar:Show()
-		top_bar:SetPoint("bottomleft", self, "topleft")
-		top_bar:SetPoint("bottomright", self, "topright")
-		bottom_bar:SetPoint("topleft", self, "bottomleft")
-		bottom_bar:SetPoint("topright", self, "bottomright")
+		topBar:Show()
+		bottomBar:Show()
+		topBar:SetPoint("bottomleft", self, "topleft")
+		topBar:SetPoint("bottomright", self, "topright")
+		bottomBar:SetPoint("topleft", self, "bottomleft")
+		bottomBar:SetPoint("topright", self, "bottomright")
 		self:SetBackdropColor(0.8, 0.8, 0.8, 0.4)
 	end
 	local row_on_leave = function(self)
-		top_bar:Hide()
-		bottom_bar:Hide()
+		topBar:Hide()
+		bottomBar:Hide()
 		self:SetBackdropColor(unpack(self.backdropColor))
 	end
 
 	local block_backdrop_onenter = {bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16,
 		edgeFile = [[Interface\AddOns\Details\images\border_2]], edgeSize = 8,
 		insets = {left = 0, right = 0, top = 0, bottom = 0}}
-	local block_backdrop_cooltip_white = {1, 1, 1, 1}
 
 	local block_on_enter = function(self)
-
 		self:SetBackdrop(block_backdrop_onenter)
 		self:SetBackdropBorderColor(0, 0, 0, .9)
 		self.texture:SetBlendMode("ADD")
 
 		local parent = self:GetParent()
-		top_bar:SetPoint("bottomleft", parent, "topleft")
-		top_bar:SetPoint("bottomright", parent, "topright")
-		bottom_bar:SetPoint("topleft", parent, "bottomleft")
-		bottom_bar:SetPoint("topright", parent, "bottomright")
+		topBar:SetPoint("bottomleft", parent, "topleft")
+		topBar:SetPoint("bottomright", parent, "topright")
+		bottomBar:SetPoint("topleft", parent, "bottomleft")
+		bottomBar:SetPoint("topright", parent, "bottomright")
 
 		self:GetParent():SetBackdropColor(0.8, 0.8, 0.8, 0.4)
-		top_bar:Show()
-		bottom_bar:Show()
+		topBar:Show()
+		bottomBar:Show()
 
 		local spell = self.spell
-		local spell_name, _, spell_icon = GetSpellInfo(spell [1])
+		local spell_name, _, spell_icon = GetSpellInfo(spell[1])
 
 		GameCooltip:Reset()
 		Details:CooltipPreset(2)
 		GameCooltip:SetOption("TextSize", 10)
+		Details:SetCooltipForPlugins()
 
-		-- pegar o jogador
-		-- dar foreach nos cooldowns
-		-- ver se algum come�a antes e termina depois de come�ar este
-		local player_name = spell[4]
-		local playertable = TimeLine[currentSelectedType][currentSegment][player_name]
+		local playerName = spell[4]
+		local playerTable = TimeLine[currentSelectedType][currentSegment][playerName]
 
 		local time = spell[2]
 		local duration = spell[5]
-		--playertable � uma array com os cooldowns usados
 
-		if (currentSelectedType == type_cooldown) then
-			GameCooltip:AddLine (spell_name, nil, 1, "white")
-			GameCooltip:AddIcon (spell_icon, 1, 1, 14, 14, .1, .9, .1, .9)
+		if (currentSelectedType == tabType_Cooldown) then
+			GameCooltip:AddLine(spell_name, nil, 1, "white")
+			GameCooltip:AddIcon(spell_icon, 1, 1, 14, 14, .1, .9, .1, .9)
 
-			local minutos, segundos = math.floor (spell[2]/60), math.floor (spell[2]%60)
-			GameCooltip:AddLine (Loc ["STRING_TIME"] .. ": |cFFFFFFFF" .. minutos .. "m " .. segundos .. "s |r")
+			local amountMinutes, amountSeconds = math.floor(spell[2]/60), math.floor(spell[2]%60)
+			GameCooltip:AddLine(Loc ["STRING_TIME"] .. ": |cFFFFFFFF" .. amountMinutes .. "m " .. amountSeconds .. "s |r")
 
-			local class = TimeLine:GetClass (spell[3] or "")
-			local formatedTargetName = detailsFramework:AddClassColorToText (spell[3] or "", class)
-			GameCooltip:AddLine (Loc ["STRING_TARGET"] .. ": |cFFFFFFFF" .. formatedTargetName .. "|r")
+			local class = TimeLine:GetClass(spell[3] or "")
+			local formatedTargetName = detailsFramework:AddClassColorToText(spell[3] or "", class)
+			GameCooltip:AddLine(Loc ["STRING_TARGET"] .. ": |cFFFFFFFF" .. formatedTargetName .. "|r")
 
-			for index, spellused in ipairs (playertable) do
+			for index, spellused in ipairs(playerTable) do
 				if (spellused[3] ~= spell[1]) then --spellids diferentes
-
 					--tempo de luta que o cooldown foi usado
 					-- se ele foi usado antes		          e se foi usado a 8 seg de diferen�a
-					if ( (spellused[1] <= time and spellused[1] + 8 >= time) or (spellused[1] >= time and spellused[1] - 8 <= time) ) then
+					if ((spellused[1] <= time and spellused[1] + 8 >= time) or(spellused[1] >= time and spellused[1] - 8 <= time) ) then
+						local spellName, _, spellIcon = GetSpellInfo(spellused[3])
+						GameCooltip:AddLine(spellName, nil, 1, "silver")
+						GameCooltip:AddIcon(spellIcon, 1, 1, 14, 14, .1, .9, .1, .9)
 
-						local spellname, _, spellicon = GetSpellInfo (spellused[3])
-						GameCooltip:AddLine (spellname, nil, 1, "silver")
-						GameCooltip:AddIcon (spellicon, 1, 1, 14, 14, .1, .9, .1, .9)
+						local amountMinutes, amountSeconds = math.floor(spellused[1]/60), math.floor(spellused[1]%60)
+						GameCooltip:AddLine(Loc ["STRING_TIME"] .. ": " .. amountMinutes .. "m " .. amountSeconds .. "s ", nil, 1, "silver")
 
-						local minutos, segundos = math.floor (spellused[1]/60), math.floor (spellused[1]%60)
-						GameCooltip:AddLine (Loc ["STRING_TIME"] .. ": " .. minutos .. "m " .. segundos .. "s ", nil, 1, "silver")
-
-						local class = TimeLine:GetClass (spellused[2] or "")
-						local formatedTargetName = detailsFramework:AddClassColorToText (spellused[2] or "", class)
-						GameCooltip:AddLine (Loc ["STRING_TARGET"] .. ": |cFFFFFFFF" .. formatedTargetName .. "|r")
-						GameCooltip:AddLine (" ")
+						local class = TimeLine:GetClass(spellused[2] or "")
+						local formatedTargetName = detailsFramework:AddClassColorToText(spellused[2] or "", class)
+						GameCooltip:AddLine(Loc ["STRING_TARGET"] .. ": |cFFFFFFFF" .. formatedTargetName .. "|r")
+						GameCooltip:AddLine(" ")
 					end
 				end
 			end
 
-		elseif (currentSelectedType == type_debuff) then
-			GameCooltip:AddLine (spell_name, nil, 1, "white")
-			GameCooltip:AddIcon (spell_icon, 1, 1, 14, 14, .1, .9, .1, .9)
-
-			local minutos, segundos = math.floor (spell[2]/60), math.floor (spell[2]%60)
-			GameCooltip:AddLine (Loc ["STRING_TIME"] .. ": |cFFFFFFFF" .. minutos .. "m " .. segundos .. "s |r")
-
-			GameCooltip:AddLine (Loc ["STRING_SOURCE"] .. ": |cFFFFFFFF" .. (spell[6].source or Loc ["STRING_UNKNOWN"]) .. "|r")
-			GameCooltip:AddLine (Loc ["STRING_ELAPSED"] .. ": |cFFFFFFFF" .. string.format ("%.1f", duration) .. " " .. Loc ["STRING_SECONDS"] .. "|r")
-
-			local blocks = self:GetParent().blocks
-			for _, block in ipairs (blocks) do
-				if (block.debuff_start and block:IsShown() and block ~= self and ((block.debuff_start <= time and block.debuff_start + 8 >= time) or (block.debuff_start >= time and block.debuff_start - 8 <= time))) then
-					GameCooltip:AddLine ("")
-					local spell_name, _, spell_icon = GetSpellInfo (block.spell [1])
-					GameCooltip:AddLine (spell_name)
-					GameCooltip:AddIcon (spell_icon, 1, 1, 14, 14, .1, .9, .1, .9)
-
-					local minutos, segundos = math.floor (block.debuff_start / 60), math.floor (block.debuff_start % 60)
-					GameCooltip:AddLine (Loc ["STRING_TIME"] .. ": |cFFFFFFFF" .. minutos .. "m " .. segundos .. "s ")
-
-					GameCooltip:AddLine (Loc ["STRING_SOURCE"] .. ": |cFFFFFFFF" .. (block.spell [6].source or Loc ["STRING_UNKNOWN"]))
-					GameCooltip:AddLine (Loc ["STRING_ELAPSED"] .. ": |cFFFFFFFF" .. string.format ("%.1f", block.spell [5]) .. " " .. Loc ["STRING_SECONDS"])
-				end
-			end
-
-		elseif (currentSelectedType == type_enemy_spells) then
-			GameCooltip:AddLine (spell_name, nil, 1, "white")
-			GameCooltip:AddIcon (spell_icon, 1, 1, 14, 14, .1, .9, .1, .9)
-
-			local minutos, segundos = math.floor (spell [2]/60), math.floor (spell [2]%60)
-			GameCooltip:AddLine (Loc ["STRING_TIME"] .. ": |cFFFFFFFF" .. minutos .. "m " .. segundos .. "s |r")
-			GameCooltip:AddLine (Loc ["STRING_SOURCE"] .. ": |cFFFFFFFF" .. (spell [6].source or Loc ["STRING_UNKNOWN"]) .. "|r")
-
-			local class = TimeLine:GetClass (self.TargetName or "")
-			local formatedTargetName = detailsFramework:AddClassColorToText (self.TargetName or "", class)
-			GameCooltip:AddLine (Loc ["STRING_TARGET"] .. ": |cFFFFFFFF" .. formatedTargetName .. "|r")
-
-			local blocks = self:GetParent().blocks
-			for _, block in ipairs (blocks) do
-				if (block.cast_start and block:IsShown() and block ~= self and ((block.cast_start <= time and block.cast_start + 8 >= time) or (block.cast_start >= time and block.cast_start - 8 <= time))) then
-					GameCooltip:AddLine ("")
-					local spell_name, _, spell_icon = GetSpellInfo (block.spell [1])
-					GameCooltip:AddLine (spell_name)
-					GameCooltip:AddIcon (spell_icon, 1, 1, 14, 14, .1, .9, .1, .9)
-
-					local minutos, segundos = math.floor (block.cast_start / 60), math.floor (block.cast_start % 60)
-					GameCooltip:AddLine (Loc ["STRING_TIME"] .. ": |cFFFFFFFF" .. minutos .. "m " .. segundos .. "s ")
-					GameCooltip:AddLine (Loc ["STRING_SOURCE"] .. ": |cFFFFFFFF" .. (block.SourceName or Loc ["STRING_UNKNOWN"]))
-
-					local targetName = block.TargetName or ""
-					local class = TimeLine:GetClass (targetName)
-					local formatedTargetName = detailsFramework:AddClassColorToText (targetName, class)
-					GameCooltip:AddLine (Loc ["STRING_TARGET"] .. ": |cFFFFFFFF" .. formatedTargetName .. "|r")
-				end
-			end
-
-		elseif (currentSelectedType == type_boss_spells) then
+		elseif (currentSelectedType == tabType_Debuff) then
 			GameCooltip:AddLine(spell_name, nil, 1, "white")
 			GameCooltip:AddIcon(spell_icon, 1, 1, 14, 14, .1, .9, .1, .9)
 
-			local minutos, segundos = math.floor(spell [2]/60), math.floor(spell [2]%60)
-			GameCooltip:AddLine(Loc ["STRING_TIME"] .. ": |cFFFFFFFF" .. minutos .. "m " .. segundos .. "s |r")
+			local amountMinutes, amountSeconds = math.floor(spell[2]/60), math.floor(spell[2]%60)
+			GameCooltip:AddLine(Loc ["STRING_TIME"] .. ": |cFFFFFFFF" .. amountMinutes .. "m " .. amountSeconds .. "s |r")
+			GameCooltip:AddLine(Loc ["STRING_SOURCE"] .. ": |cFFFFFFFF" ..(spell[6].source or Loc ["STRING_UNKNOWN"]) .. "|r")
+			GameCooltip:AddLine(Loc ["STRING_ELAPSED"] .. ": |cFFFFFFFF" .. string.format("%.1f", duration) .. " " .. Loc ["STRING_SECONDS"] .. "|r")
+
+			local blocks = self:GetParent().blocks
+			for _, block in ipairs(blocks) do
+				if (block.debuff_start and block:IsShown() and block ~= self and((block.debuff_start <= time and block.debuff_start + 8 >= time) or(block.debuff_start >= time and block.debuff_start - 8 <= time))) then
+					GameCooltip:AddLine(" ")
+					local spellName, _, spellIcon = GetSpellInfo(block.spell [1])
+					GameCooltip:AddLine(spellName)
+					GameCooltip:AddIcon(spellIcon, 1, 1, 14, 14, .1, .9, .1, .9)
+
+					local amountMinutes, amountSeconds = math.floor(block.debuff_start / 60), math.floor(block.debuff_start % 60)
+					GameCooltip:AddLine(Loc ["STRING_TIME"] .. ": |cFFFFFFFF" .. amountMinutes .. "m " .. amountSeconds .. "s ")
+					GameCooltip:AddLine(Loc ["STRING_SOURCE"] .. ": |cFFFFFFFF" ..(block.spell [6].source or Loc ["STRING_UNKNOWN"]))
+					GameCooltip:AddLine(Loc ["STRING_ELAPSED"] .. ": |cFFFFFFFF" .. string.format("%.1f", block.spell [5]) .. " " .. Loc ["STRING_SECONDS"])
+				end
+			end
+
+			GameCooltip:AddLine(" ")
+
+		elseif (currentSelectedType == tabType_EnemySpells) then
+			GameCooltip:AddLine(spell_name, nil, 1, "white")
+			GameCooltip:AddIcon(spell_icon, 1, 1, 14, 14, .1, .9, .1, .9)
+
+			local amountMinutes, amountSeconds = math.floor(spell [2]/60), math.floor(spell [2]%60)
+			GameCooltip:AddLine(Loc ["STRING_TIME"] .. ": |cFFFFFFFF" .. amountMinutes .. "m " .. amountSeconds .. "s |r")
 			GameCooltip:AddLine(Loc ["STRING_SOURCE"] .. ": |cFFFFFFFF" ..(spell [6].source or Loc ["STRING_UNKNOWN"]) .. "|r")
 
 			local class = TimeLine:GetClass(self.TargetName or "")
@@ -941,15 +947,46 @@ local function CreatePluginFrames()
 
 			local blocks = self:GetParent().blocks
 			for _, block in ipairs(blocks) do
-				if (block.cast_start and block:IsShown() and block ~= self and ((block.cast_start <= time and block.cast_start + 8 >= time) or (block.cast_start >= time and block.cast_start - 8 <= time))) then
+				if (block.cast_start and block:IsShown() and block ~= self and((block.cast_start <= time and block.cast_start + 8 >= time) or(block.cast_start >= time and block.cast_start - 8 <= time))) then
 					GameCooltip:AddLine("")
 					local spell_name, _, spell_icon = GetSpellInfo(block.spell [1])
 					GameCooltip:AddLine(spell_name)
 					GameCooltip:AddIcon(spell_icon, 1, 1, 14, 14, .1, .9, .1, .9)
 
-					local minutos, segundos = math.floor(block.cast_start / 60), math.floor(block.cast_start % 60)
-					GameCooltip:AddLine(Loc ["STRING_TIME"] .. ": |cFFFFFFFF" .. minutos .. "m " .. segundos .. "s ")
-					GameCooltip:AddLine(Loc ["STRING_SOURCE"] .. ": |cFFFFFFFF" .. (block.SourceName or Loc ["STRING_UNKNOWN"]))
+					local amountMinutes, amountSeconds = math.floor(block.cast_start / 60), math.floor(block.cast_start % 60)
+					GameCooltip:AddLine(Loc ["STRING_TIME"] .. ": |cFFFFFFFF" .. amountMinutes .. "m " .. amountSeconds .. "s ")
+					GameCooltip:AddLine(Loc ["STRING_SOURCE"] .. ": |cFFFFFFFF" ..(block.SourceName or Loc ["STRING_UNKNOWN"]))
+
+					local targetName = block.TargetName or ""
+					local class = TimeLine:GetClass(targetName)
+					local formatedTargetName = detailsFramework:AddClassColorToText(targetName, class)
+					GameCooltip:AddLine(Loc ["STRING_TARGET"] .. ": |cFFFFFFFF" .. formatedTargetName .. "|r")
+				end
+			end
+
+		elseif (currentSelectedType == tabType_BossSpells) then
+			GameCooltip:AddLine(spell_name, nil, 1, "white")
+			GameCooltip:AddIcon(spell_icon, 1, 1, 14, 14, .1, .9, .1, .9)
+
+			local amountMinutes, amountSeconds = math.floor(spell [2]/60), math.floor(spell [2]%60)
+			GameCooltip:AddLine(Loc ["STRING_TIME"] .. ": |cFFFFFFFF" .. amountMinutes .. "m " .. amountSeconds .. "s |r")
+			GameCooltip:AddLine(Loc ["STRING_SOURCE"] .. ": |cFFFFFFFF" ..(spell [6].source or Loc ["STRING_UNKNOWN"]) .. "|r")
+
+			local class = TimeLine:GetClass(self.TargetName or "")
+			local formatedTargetName = detailsFramework:AddClassColorToText(self.TargetName or "", class)
+			GameCooltip:AddLine(Loc ["STRING_TARGET"] .. ": |cFFFFFFFF" .. formatedTargetName .. "|r")
+
+			local blocks = self:GetParent().blocks
+			for _, block in ipairs(blocks) do
+				if (block.cast_start and block:IsShown() and block ~= self and((block.cast_start <= time and block.cast_start + 8 >= time) or(block.cast_start >= time and block.cast_start - 8 <= time))) then
+					GameCooltip:AddLine("")
+					local spell_name, _, spell_icon = GetSpellInfo(block.spell [1])
+					GameCooltip:AddLine(spell_name)
+					GameCooltip:AddIcon(spell_icon, 1, 1, 14, 14, .1, .9, .1, .9)
+
+					local amountMinutes, amountSeconds = math.floor(block.cast_start / 60), math.floor(block.cast_start % 60)
+					GameCooltip:AddLine(Loc ["STRING_TIME"] .. ": |cFFFFFFFF" .. amountMinutes .. "m " .. amountSeconds .. "s ")
+					GameCooltip:AddLine(Loc ["STRING_SOURCE"] .. ": |cFFFFFFFF" ..(block.SourceName or Loc ["STRING_UNKNOWN"]))
 
 					local targetName = block.TargetName or ""
 					local class = TimeLine:GetClass(targetName)
@@ -968,8 +1005,8 @@ local function CreatePluginFrames()
 		self:SetBackdropBorderColor(0, 0, 0, 0)
 		self.texture:SetBlendMode("BLEND")
 
-		top_bar:Hide()
-		bottom_bar:Hide()
+		topBar:Hide()
+		bottomBar:Hide()
 
 		self:GetParent():SetBackdropColor(unpack(self:GetParent().backdropColor))
 
@@ -1003,8 +1040,7 @@ local function CreatePluginFrames()
 		return block
 	end
 
-	local SetSpellBlock = function (row, block, time_used, spellid, effect_time, target, total_time, pixel_per_sec, player_name, player_table, color, block_index)
-
+	local SetSpellBlock = function(row, block, time_used, spellid, effect_time, target, total_time, pixel_per_sec, player_name, player_table, color, block_index)
 		block.spell[1] = spellid
 		block.spell[2] = time_used
 		block.spell[3] = target
@@ -1022,27 +1058,27 @@ local function CreatePluginFrames()
 		elseif (effect_time > 20) then
 			effect_time = 20
 		end
-		block:SetWidth (effect_time * pixel_per_sec)
+		block:SetWidth(effect_time * pixel_per_sec)
 
-		block.texture:SetColorTexture (unpack (color))
+		block.texture:SetColorTexture(unpack(color))
 
 		if (TimeLine.db.useicons) then
-			local _, _, icon = GetSpellInfo (spellid)
-			block.spellicon:SetTexture (icon)
-			block.spellicon:SetTexCoord (.1, .9, .1, .9)
-			block.spellicon:SetWidth (block:GetHeight())
-			block.spellicon:SetAlpha (0.834)
+			local _, _, icon = GetSpellInfo(spellid)
+			block.spellicon:SetTexture(icon)
+			block.spellicon:SetTexCoord(.1, .9, .1, .9)
+			block.spellicon:SetWidth(block:GetHeight())
+			block.spellicon:SetAlpha(0.834)
 
 			--remove the background texture is using the icon of the spell
-			block.texture:SetColorTexture (0, 0, 0, 0)
+			block.texture:SetColorTexture(0, 0, 0, 0)
 		else
-			block.spellicon:SetTexture (nil)
+			block.spellicon:SetTexture(nil)
 		end
 
 		if (search) then
-			local spellname = GetSpellInfo (spellid)
-			spellname = string.lower (spellname)
-			if (spellname:find (search)) then
+			local spellname = GetSpellInfo(spellid)
+			spellname = string.lower(spellname)
+			if (spellname:find(search)) then
 				block:Show()
 			else
 				block:Hide()
@@ -1052,58 +1088,58 @@ local function CreatePluginFrames()
 		end
 	end
 
-	local pin_on_enter = function (self)
-		self:SetBackdrop (block_backdrop_onenter)
-		self:SetBackdropBorderColor (0, 0, 0, .9)
-		self.texture:SetBlendMode ("ADD")
+	local pin_on_enter = function(self)
+		self:SetBackdrop(block_backdrop_onenter)
+		self:SetBackdropBorderColor(0, 0, 0, .9)
+		self.texture:SetBlendMode("ADD")
 
-		top_bar:SetPoint ("bottom", self:GetParent(), "top")
-		bottom_bar:SetPoint ("top", self:GetParent(), "bottom")
-		self:GetParent():SetBackdropColor (0.8, 0.8, 0.8, 0.4)
-		top_bar:Show()
-		bottom_bar:Show()
+		topBar:SetPoint("bottom", self:GetParent(), "top")
+		bottomBar:SetPoint("top", self:GetParent(), "bottom")
+		self:GetParent():SetBackdropColor(0.8, 0.8, 0.8, 0.4)
+		topBar:Show()
+		bottomBar:Show()
 
 		GameCooltip:Reset()
-		Details:CooltipPreset (2)
-		GameCooltip:SetOption ("TextSize", 10)
+		Details:CooltipPreset(2)
+		GameCooltip:SetOption("TextSize", 10)
 
 		for i = 1, #self.table do
-			local spellname, _, spellicon = _GetSpellInfo (self.table[i][2])
-			GameCooltip:AddLine (spellname, TimeLine:ToK2 (self.table[i][3]), 1, "silver", "orange")
-			GameCooltip:AddIcon (spellicon, 1, 1, 14, 14)
+			local spellname, _, spellicon = _GetSpellInfo(self.table[i][2])
+			GameCooltip:AddLine(spellname, TimeLine:ToK2(self.table[i][3]), 1, "silver", "orange")
+			GameCooltip:AddIcon(spellicon, 1, 1, 14, 14)
 		end
 
-		GameCooltip:AddLine ("")
+		GameCooltip:AddLine("")
 
-		local minutos, segundos = math.floor (self.time/60), math.floor (self.time%60)
-		GameCooltip:AddLine (Loc ["STRING_TIME"] .. ": " .. minutos .. "m " .. segundos .. "s ")
-		GameCooltip:ShowCooltip (self, "tooltip")
+		local amountMinutes, amountSeconds = math.floor(self.time/60), math.floor(self.time%60)
+		GameCooltip:AddLine(Loc ["STRING_TIME"] .. ": " .. amountMinutes .. "m " .. amountSeconds .. "s ")
+		GameCooltip:ShowCooltip(self, "tooltip")
 	end
 
-	local pin_on_leave = function (self)
+	local pin_on_leave = function(self)
 		GameCooltip:Hide()
 	end
 
-	local PlaceDeathPins = function (row, i, death, total_time, pixel_per_sec)
+	local PlaceDeathPins = function(row, i, death, total_time, pixel_per_sec)
 		local pin = row.pins [i]
 		if (not pin) then
 			pin = CreateFrame("frame", nil, row, "BackdropTemplate")
-			pin:SetFrameLevel (12)
-			pin:SetFrameStrata ("DIALOG")
-			pin:SetScript ("OnEnter", pin_on_enter)
-			pin:SetScript ("OnLeave", pin_on_leave)
-			local texture = pin:CreateTexture (nil, "overlay")
+			pin:SetFrameLevel(12)
+			pin:SetFrameStrata("DIALOG")
+			pin:SetScript("OnEnter", pin_on_enter)
+			pin:SetScript("OnLeave", pin_on_leave)
+			local texture = pin:CreateTexture(nil, "overlay")
 			texture:SetAllPoints()
-			texture:SetColorTexture (1, 1, 1, 0.4)
+			texture:SetColorTexture(1, 1, 1, 0.4)
 			pin.texture = texture
-			pin:SetSize (4, 14)
+			pin:SetSize(4, 14)
 			pin.table = {}
 			row.pins [i] = pin
 		end
 
 		local where = pixel_per_sec * death.time
 		pin:ClearAllPoints()
-		pin:SetPoint ("left", row, "left", where + CONST_PLAYERFIELD_SIZE, 0)
+		pin:SetPoint("left", row, "left", where + CONST_PLAYERFIELD_SIZE, 0)
 		pin.time = death.time
 
 		for event = 1, #death.events do
@@ -1114,15 +1150,15 @@ local function CreatePluginFrames()
 		pin:Show()
 	end
 
-	--> player_table: [1] time [2] target [3] spellid
-	local SetPlayer = function (row, playerName, playerDataTable, elapsedTime, pixelPerSecond, deaths)
+	--player_table: [1] time [2] target [3] spellid
+	local SetPlayer = function(row, playerName, playerDataTable, elapsedTime, pixelPerSecond, deaths)
 		local spec
 		--set name and class color
-		if (type (playerName) == "string" and playerName:find("-")) then
-			row.name.text = playerName:gsub (("-.*"), "")
+		if (type(playerName) == "string" and playerName:find("-")) then
+			row.name.text = playerName:gsub(("-.*"), "")
 			spec = Details:GetSpecFromActorName(playerName)
 		else
-			if (type (playerName) == "number") then
+			if (type(playerName) == "number") then
 				row.name.text = GetSpellInfo(playerName)
 			else
 				row.name.text = playerName
@@ -1134,20 +1170,19 @@ local function CreatePluginFrames()
 
 		if (spec) then
 			row.name.color = TimeLine.class_colors[class or "PRIEST"]
-			row.icon.texture = [[Interface\AddOns\Details\images\spec_icons_normal_alpha]]
+			row.icon.texture = [[Interface\AddOns\Details\images\spec_icons_normal]]
 			row.icon.texcoord = Details.class_specs_coords[spec]
 
 		elseif (class) then
 			if (class == "UNKNOW") then
-
-				if (currentSelectedType == type_boss_spells) then
+				if (currentSelectedType == tabType_BossSpells) then
 					--use the icon spell icon as the class icon
-					local spellName, _, spellIcon = GetSpellInfo (playerName)
+					local spellName, _, spellIcon = GetSpellInfo(playerName)
 					row.icon.texture = spellIcon
 					row.icon.texcoord = {.1, .9, .1, .9}
 					row.name.color = "white"
 
-				elseif (currentSelectedType == type_enemy_spells) then
+				elseif (currentSelectedType == tabType_EnemySpells) then
 					row.name.color = "white"
 					row.icon.texture = nil
 
@@ -1162,9 +1197,9 @@ local function CreatePluginFrames()
 			end
 
 		else
-			if (currentSelectedType == type_boss_spells) then
+			if (currentSelectedType == tabType_BossSpells) then
 				--use the icon spell icon as the class icon
-				local _, _, spellIcon = GetSpellInfo (playerDataTable [3])
+				local _, _, spellIcon = GetSpellInfo(playerDataTable [3])
 				row.icon.texture = spellIcon
 				row.icon.texcoord = {.1, .9, .1, .9}
 			else
@@ -1173,28 +1208,28 @@ local function CreatePluginFrames()
 			end
 		end
 
-		--> clear all blocks
-		for _, block in ipairs (row.blocks) do
+		--clear all blocks
+		for _, block in ipairs(row.blocks) do
 			block:Hide()
 		end
 
-		--> clear all pins
-		for index, pin in ipairs (row.pins) do
+		--clear all pins
+		for index, pin in ipairs(row.pins) do
 			pin:Hide()
-			wipe (pin.table)
+			wipe(pin.table)
 		end
 
-		--> place death pins
+		--place death pins
 		if (deaths) then
-			for index, death in ipairs (deaths) do
-				PlaceDeathPins (row, index, death, elapsedTime, pixelPerSecond)
+			for index, death in ipairs(deaths) do
+				PlaceDeathPins(row, index, death, elapsedTime, pixelPerSecond)
 			end
 		end
 
-		--> if showing cooldowns:
-		if (currentSelectedType == type_cooldown and playerDataTable) then
+		--if showing cooldowns:
+		if (currentSelectedType == tabType_Cooldown and playerDataTable) then
 
-			for spell_index, spell_table in ipairs (playerDataTable) do
+			for spell_index, spell_table in ipairs(playerDataTable) do
 
 				local time_used = spell_table [1]
 				local target = spell_table [2]
@@ -1212,39 +1247,39 @@ local function CreatePluginFrames()
 
 				local block = row.blocks [spell_index]
 				if (not block) then
-					row.blocks [spell_index] = TimeLine:CreateSpellBlock (row)
+					row.blocks [spell_index] = TimeLine:CreateSpellBlock(row)
 					block = row.blocks [spell_index]
 				end
 
-				SetSpellBlock (row, block, time_used, spellid, effectTime, target, elapsedTime, pixelPerSecond, playerName, playerDataTable, green)
+				SetSpellBlock(row, block, time_used, spellid, effectTime, target, elapsedTime, pixelPerSecond, playerName, playerDataTable, green)
 			end
 
-		--> showing debuffs
-		elseif (currentSelectedType == type_debuff and playerDataTable) then
+		--showing debuffs
+		elseif (currentSelectedType == tabType_Debuff and playerDataTable) then
 
 			local o = 1
 
-			for spell_id, debuff_timers in pairs (playerDataTable) do
+			for spell_id, debuff_timers in pairs(playerDataTable) do
 
 				local start = true
 				local i = 1
 
-				for index, time in ipairs (debuff_timers) do
+				for index, time in ipairs(debuff_timers) do
 					if (start) then
 						local start_time = time
 						local end_time = debuff_timers [i+1]
 
 						local block = row.blocks [o]
 						if (not block) then
-							row.blocks [o] = TimeLine:CreateSpellBlock (row)
+							row.blocks [o] = TimeLine:CreateSpellBlock(row)
 							block = row.blocks [o]
 						end
 
-						local debuff_elapsed = (end_time or 0) - (start_time or 0)
+						local debuff_elapsed = (end_time or 0) -(start_time or 0)
 
 						block.debuff_start = start_time
 						block.debuff_end = end_time
-						SetSpellBlock (row, block, start_time, spell_id, debuff_elapsed, myName, elapsedTime, pixelPerSecond, playerName, debuff_timers, red, o)
+						SetSpellBlock(row, block, start_time, spell_id, debuff_elapsed, myName, elapsedTime, pixelPerSecond, playerName, debuff_timers, red, o)
 
 						o = o + 1
 					end
@@ -1255,54 +1290,54 @@ local function CreatePluginFrames()
 			end
 
 
-		elseif (currentSelectedType == type_enemy_spells and playerDataTable) then
+		elseif (currentSelectedType == tabType_EnemySpells and playerDataTable) then
 			local o = 1
-			for index, spellTable in ipairs (playerDataTable) do
-				local combatTime, sourceName, spellID, token, targetName = unpack (spellTable)
+			for index, spellTable in ipairs(playerDataTable) do
+				local combatTime, sourceName, spellID, token, targetName = unpack(spellTable)
 
 				local block = row.blocks [o]
 				if (not block) then
-					row.blocks [o] = TimeLine:CreateSpellBlock (row)
+					row.blocks [o] = TimeLine:CreateSpellBlock(row)
 					block = row.blocks [o]
 				end
 
 				block.cast_start = combatTime
 				block.cast_end = combatTime + 8
 
-				local spellName, _, spellIcon = GetSpellInfo (spellID)
+				local spellName, _, spellIcon = GetSpellInfo(spellID)
 
 				playerDataTable.source = sourceName or ""
 				playerDataTable.target = targetName or ""
 				block.SourceName = sourceName or ""
 				block.TargetName = targetName or ""
 
-				SetSpellBlock (row, block, combatTime, spellID, 8, spellName, elapsedTime, pixelPerSecond, playerName, playerDataTable, red, o)
+				SetSpellBlock(row, block, combatTime, spellID, 8, spellName, elapsedTime, pixelPerSecond, playerName, playerDataTable, red, o)
 				o = o + 1
 			end
 
 
-		elseif (currentSelectedType == type_boss_spells and playerDataTable) then
+		elseif (currentSelectedType == tabType_BossSpells and playerDataTable) then
 			local o = 1
-			for index, spellTable in ipairs (playerDataTable) do
-				local combatTime, sourceName, spellID, token, targetName = unpack (spellTable)
+			for index, spellTable in ipairs(playerDataTable) do
+				local combatTime, sourceName, spellID, token, targetName = unpack(spellTable)
 
 				local block = row.blocks [o]
 				if (not block) then
-					row.blocks [o] = TimeLine:CreateSpellBlock (row)
+					row.blocks [o] = TimeLine:CreateSpellBlock(row)
 					block = row.blocks [o]
 				end
 
 				block.cast_start = combatTime
 				block.cast_end = combatTime + 8
 
-				local spellName, _, spellIcon = GetSpellInfo (spellID)
+				local spellName, _, spellIcon = GetSpellInfo(spellID)
 
 				playerDataTable.source = sourceName or ""
 				playerDataTable.target = targetName or ""
 				block.SourceName = sourceName or ""
 				block.TargetName = targetName or ""
 
-				SetSpellBlock (row, block, combatTime, spellID, 8, spellName, elapsedTime, pixelPerSecond, playerName, playerDataTable, red, o)
+				SetSpellBlock(row, block, combatTime, spellID, 8, spellName, elapsedTime, pixelPerSecond, playerName, playerDataTable, red, o)
 				o = o + 1
 			end
 
@@ -1310,13 +1345,13 @@ local function CreatePluginFrames()
 
 	end
 
-	local on_row_mousedown = function (self, button)
+	local on_row_mousedown = function(self, button)
 		if (button == "LeftButton") then
 			self:GetParent():StartMoving()
 			self:GetParent().isMoving = true
 		end
 	end
-	local on_row_mouseup = function (self)
+	local on_row_mouseup = function(self)
 		if (self:GetParent().isMoving) then
 			self:GetParent():StopMovingOrSizing()
 			self:GetParent().isMoving = false
@@ -1327,46 +1362,51 @@ local function CreatePluginFrames()
 		local index = #TimeLine.rows+1
 
 		-- cria as labels e mouse overs e da o set point
-		local f = CreateFrame("frame", "DetailsTimeTimeRow"..index, timeLineFrame, "BackdropTemplate")
-		f:SetSize (timeLineFrame.Width - 15, CONST_ROW_HEIGHT)
+		local newRow = CreateFrame("frame", "DetailsTimeTimeRow" .. index, timeLineFrame, "BackdropTemplate")
+		newRow:SetSize(timeLineFrame.Width - 4, CONST_ROW_HEIGHT)
 
-		f:SetScript ("OnEnter", row_on_enter)
-		f:SetScript ("OnLeave", row_on_leave)
+		local height = (index * CONST_ROW_HEIGHT) + CONST_LINE_START_Y
+		newRow:SetPoint("topleft", timeLineFrame, "topleft", 2, -height)
 
-		f.block_frame_level = 3
+		newRow:SetScript("OnEnter", row_on_enter)
+		newRow:SetScript("OnLeave", row_on_leave)
 
-		f.icon = detailsFramework:NewImage (f, nil, CONST_ROW_HEIGHT, CONST_ROW_HEIGHT, "overlay", nil, nil, "$parentIcon")
-		f.icon:SetPoint ("left", f, "left", 2, 0)
-		f.name = detailsFramework:NewLabel (f, nil, "$parentName", nil)
-		f.name:SetPoint ("left", f.icon, "right", 2, 0)
+		newRow.block_frame_level = 3
 
-		f:SetBackdrop (backdrop_row)
+		newRow.icon = detailsFramework:NewImage(newRow, nil, CONST_ROW_HEIGHT, CONST_ROW_HEIGHT, "overlay", nil, nil, "$parentIcon")
+		newRow.icon:SetPoint("left", newRow, "left", 2, 0)
+
+		newRow.name = detailsFramework:NewLabel(newRow, nil, "$parentName", nil)
+		newRow.name:SetPoint("left", newRow.icon, "right", 2, 0)
+		newRow.name.fontsize = 11
+
+		newRow.nameBackground = detailsFramework:NewImage(newRow, nil, 1, CONST_ROW_HEIGHT, "overlay", nil, nil, "$parentNameBackground")
+		newRow.nameBackground:SetPoint("left", newRow.icon, "right", 0, 0)
+		newRow.nameBackground:SetPoint("right", newRow.icon, "right", 100, 0)
+		newRow.nameBackground.color = {.1, .1, .1, 0.7}
+
+		newRow:SetBackdrop(backdrop_row)
 		if (index%2 == 0) then
-			f.backdropColor = BUTTON_BACKGROUND_COLOR
-			f:SetBackdropColor (unpack (BUTTON_BACKGROUND_COLOR))
+			newRow.backdropColor = BUTTON_BACKGROUND_COLOR
+			newRow:SetBackdropColor(unpack(BUTTON_BACKGROUND_COLOR))
 		else
-			f.backdropColor = BUTTON_BACKGROUND_COLOR2
-			f:SetBackdropColor (unpack (BUTTON_BACKGROUND_COLOR2))
+			newRow.backdropColor = BUTTON_BACKGROUND_COLOR2
+			newRow:SetBackdropColor(unpack(BUTTON_BACKGROUND_COLOR2))
 		end
 
-		local height = (index * CONST_ROW_HEIGHT) + 32
-		f:SetPoint ("topleft", timeLineFrame, "topleft", 8, -height)
+		newRow.blocks = {}
+		newRow.pins = {}
 
-		f.blocks = {}
-		f.pins = {}
+		TimeLine.rows[index] = newRow
 
-		TimeLine.rows [index] = f
-
-		return f
+		return newRow
 	end
 
-	local sort = function (a, b)
+	local sort = function(a, b)
 		return a[2] < b[2]
 	end
 
 	function TimeLine:Refresh()
-		-- quando abrir sempre ir pro ultimo combate
-
 		TimeLine:HideRows()
 
 		if (not TimeLine.combat_data [1]) then
@@ -1380,21 +1420,21 @@ local function CreatePluginFrames()
 		local i = 0
 
 		if (not _table_to_use) then
-			TimeLine:Msg (Loc ["STRING_DATAINVALID"])
+			TimeLine:Msg(Loc ["STRING_DATAINVALID"])
 			return
 		end
 
 		local sorted = {}
-		for player_name, player_table in pairs (_table_to_use) do
+		for player_name, player_table in pairs(_table_to_use) do
 			sorted [#sorted+1] = {player_table, player_name}
 		end
-		table.sort (sorted, sort)
+		table.sort(sorted, sort)
 
 		local deaths = TimeLine.deaths_data
 		local segment_deaths = deaths [currentSegment]
 		local has_something = {}
 
-		for index, t in ipairs (sorted) do
+		for index, t in ipairs(sorted) do
 			local player_table, player_name = t [1], t [2]
 
 			i = i + 1
@@ -1406,22 +1446,22 @@ local function CreatePluginFrames()
 
 			local deaths = segment_deaths [player_name]
 
-			SetPlayer (row, player_name, player_table, total_time, pixel_per_sec, deaths)
+			SetPlayer(row, player_name, player_table, total_time, pixel_per_sec, deaths)
 			has_something [player_name] = true
 
 			row:Show()
 		end
 
-		if (currentSelectedType ~= type_boss_spells and currentSelectedType ~= type_enemy_spells) then
+		if (currentSelectedType ~= tabType_BossSpells and currentSelectedType ~= tabType_EnemySpells) then
 			local sorted = {}
-			for player_name, t in pairs (segment_deaths) do
+			for player_name, t in pairs(segment_deaths) do
 				if (not has_something [player_name]) then
 					sorted [#sorted+1] = {t, player_name}
 				end
 			end
-			table.sort (sorted, sort)
+			table.sort(sorted, sort)
 
-			for index, t in ipairs (sorted) do
+			for index, t in ipairs(sorted) do
 				i = i + 1
 				local row = TimeLine.rows [i]
 				if (not row) then
@@ -1430,14 +1470,13 @@ local function CreatePluginFrames()
 
 				local death, player_name = t [1], t [2]
 
-				SetPlayer (row, player_name, nil, total_time, pixel_per_sec, death)
+				SetPlayer(row, player_name, nil, total_time, pixel_per_sec, death)
 				row:Show()
 			end
 		end
-		TimeLine:UpdateTimeLine (total_time)
 
+		TimeLine:UpdateTimeLine(total_time)
 	end
-
 end
 
 
@@ -1455,6 +1494,7 @@ function TimeLine:OnCooldown(token, time, sourceGUID, sourceName, sourceFlag, ta
 	--we need to check this here before continue
 	if (not TimeLine.__enabled) then
 		return
+
 	elseif (not bIsInCombat) then
 		return
 	end
@@ -1508,9 +1548,9 @@ end
 function TimeLine:AuraOn(time, token, hidding, sourceGUID, sourceName, sourceFlag, sourceFlag2, targetGUID, targetName, targetFlag, targetFlag2, spellID, spellName, spelltype, auraType, amount)
 	if (auraType == "DEBUFF") then
 		--is the target a player?
-		if (bitBand (targetFlag, 0x00000400) ~= 0) then
+		if (bitBand(targetFlag, 0x00000400) ~= 0) then
 			--is the source an enemy?
-			if (bitBand (sourceFlag, 0x00000060) ~= 0 or (not sourceGUID or not sourceName)) then
+			if (bitBand(sourceFlag, 0x00000060) ~= 0 or(not sourceGUID or not sourceName)) then
 				local playerTable = TimeLine.debuff_temp_table[targetName]
 				if (not playerTable) then
 					playerTable = {}
@@ -1520,7 +1560,7 @@ function TimeLine:AuraOn(time, token, hidding, sourceGUID, sourceName, sourceFla
 				local spellTable = playerTable[spellID]
 				if (not spellTable) then
 					spellTable = {}
-					spellTable.source = sourceName or ("[*] " .. spellName)
+					spellTable.source = sourceName or("[*] " .. spellName)
 					spellTable.stacks = {}
 					playerTable[spellID] = spellTable
 				end
@@ -1542,10 +1582,13 @@ end
 
 function TimeLine:AuraOff(time, token, hidding, sourceGUID, sourceName, sourceFlag, sourceFlag2, targetGUID, targetName, targetFlag, targetFlag2, spellId, spellName, spellType, auraType, amount)
 	if (auraType == "DEBUFF") then
-		--> is the target a player?
-		if (bitBand (targetFlag, 0x00000400) ~= 0) then
-			--> is the source an enemy?
-			if (bitBand (sourceFlag, 0x00000060) ~= 0 or (not sourceGUID or not sourceName)) then
+		if (combatObject.__destroyed) then
+			return
+		end
+		--is the target a player?
+		if (bitBand(targetFlag, 0x00000400) ~= 0) then
+			--is the source an enemy?
+			if (bitBand(sourceFlag, 0x00000060) ~= 0 or(not sourceGUID or not sourceName)) then
 				local playerTable = TimeLine.debuff_temp_table[targetName]
 				if (not playerTable) then
 					return
@@ -1663,7 +1706,7 @@ end)
 
 function TimeLine:OnEvent(_, event, ...)
 	if (event == "ADDON_LOADED") then
-		local AddonName = select (1, ...)
+		local AddonName = select(1, ...)
 		if (AddonName == "Details_TimeLine") then
 			if (_G.Details) then
 				CreatePluginFrames()
@@ -1736,11 +1779,6 @@ function TimeLine:OnEvent(_, event, ...)
 
 				TimeLine:RefreshBackgroundColor()
 				TimeLine:UpdateShowSpellIconState()
-
-				--embed the plugin into the plugin window
-				if (DetailsPluginContainerWindow) then
-					DetailsPluginContainerWindow.EmbedPlugin(TimeLine, TimeLine.Frame)
-				end
 			end
 		end
 	end

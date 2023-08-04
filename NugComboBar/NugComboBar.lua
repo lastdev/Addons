@@ -101,7 +101,7 @@ local defaults = {
             SHAMAN = { "Icefury", "MaelstromWeapon", "Disabled" },
             HUNTER = { "Disabled", "Disabled", "Disabled" },
             PRIEST = { "Disabled", "Disabled", "Disabled" },
-            EVOKER = { "Essence", "Essence" },
+            EVOKER = { "Essence", "Essence", "Essence" },
         },
         specProfiles = {
             ROGUE = { "Default", "Default", "Default" },
@@ -116,7 +116,7 @@ local defaults = {
             SHAMAN = { "Default", "Default", "Default" },
             HUNTER = { "Default", "Default", "Default" },
             PRIEST = { "Default", "Default", "Default" },
-            EVOKER = { "Default", "Default" },
+            EVOKER = { "Default", "Default", "Default" },
         }
     },
     profile = {
@@ -283,7 +283,7 @@ do
             if self.db.global.disableBlizz then NugComboBar.disableBlizzFrames() end
             -- if self.db.global.disableBlizzNP then NugComboBar.disableBlizzNameplates() end
 
-            local f = CreateFrame('Frame', nil, InterfaceOptionsFrame) -- helper frame to load GUI and to watch specialization changes
+            local f = CreateFrame('Frame', nil, SettingsPanel or InterfaceOptionsFrame) -- helper frame to load GUI and to watch specialization changes
             f:SetScript('OnShow', function(self)
                 self:SetScript('OnShow', nil)
                 LoadAddOn('NugComboBarGUI')
@@ -524,6 +524,7 @@ end
 
 function NugComboBar.DisableBar(self)
     if not self.bar then return end
+    self.bar:SetScript("OnUpdate", nil)
     self.bar.enabled = false
     self.bar:Hide()
 end
@@ -1197,6 +1198,7 @@ function NugComboBar.SlashCmd(msg)
 end
 
 local HideBlizzFrame = function(frame, nosetup)
+    if not frame then return end
 	frame:UnregisterAllEvents()
 	frame:Hide()
 	hooksecurefunc(frame, "Show", function(self)
@@ -1217,6 +1219,7 @@ function NugComboBar.disableBlizzFrames()
     if APILevel >= 5 then
         if class == "ROGUE" or class == "DRUID" then
             HideBlizzFrame(ComboPointPlayerFrame)
+            HideBlizzFrame(RogueComboPointBarFrame)
         end
         if class == "WARLOCK" then
             HideBlizzFrame(WarlockPowerFrame)

@@ -22,6 +22,10 @@ local L = WeakAuras.L
 	L["%d |4aura:auras; modified"] = "%d |4aura:auras; modified"
 	L["%i auras selected"] = "%i aure selezionate"
 	--[[Translation missing --]]
+	L["%i."] = "%i."
+	--[[Translation missing --]]
+	L["%i. %s"] = "%i. %s"
+	--[[Translation missing --]]
 	L["%s - %i. Trigger"] = "%s - %i. Trigger"
 	--[[Translation missing --]]
 	L["%s - Alpha Animation"] = "%s - Alpha Animation"
@@ -115,6 +119,8 @@ local L = WeakAuras.L
 	L["%s, Offset: %0.2f;%0.2f"] = "%s, Offset: %0.2f;%0.2f"
 	--[[Translation missing --]]
 	L["%s, offset: %0.2f;%0.2f"] = "%s, offset: %0.2f;%0.2f"
+	--[[Translation missing --]]
+	L["%s, Start Animation"] = "%s, Start Animation"
 	--[[Translation missing --]]
 	L["%s|cFFFF0000custom|r texture with |cFFFF0000%s|r blend mode%s%s"] = "%s|cFFFF0000custom|r texture with |cFFFF0000%s|r blend mode%s%s"
 	L["(Right click to rename)"] = "(Tasto destro per rinominare)"
@@ -228,6 +234,8 @@ Enable this setting if you want this timer to be hidden, or when using a WeakAur
 	--[[Translation missing --]]
 	L["and"] = "and"
 	--[[Translation missing --]]
+	L["and %s"] = "and %s"
+	--[[Translation missing --]]
 	L["and aligned left"] = "and aligned left"
 	--[[Translation missing --]]
 	L["and aligned right"] = "and aligned right"
@@ -235,7 +243,6 @@ Enable this setting if you want this timer to be hidden, or when using a WeakAur
 	L["and rotated left"] = "and rotated left"
 	--[[Translation missing --]]
 	L["and rotated right"] = "and rotated right"
-	L["and Trigger %s"] = "e innesco %s"
 	--[[Translation missing --]]
 	L["and with width |cFFFF0000%s|r and %s"] = "and with width |cFFFF0000%s|r and %s"
 	L["Angle"] = "Angolo"
@@ -255,6 +262,8 @@ Enable this setting if you want this timer to be hidden, or when using a WeakAur
 	L["At a position a bit left of Left HUD position."] = "In una posizione un po' a sinistra della posizione dell'HUD sinistro."
 	L["At a position a bit left of Right HUD position"] = "In una posizione un po' a sinistra della posizione dell'HUD destro."
 	L["At the same position as Blizzard's spell alert"] = "Nella stessa posizione dell'avviso magia della Blizzard"
+	--[[Translation missing --]]
+	L["Aura"] = "Aura"
 	--[[Translation missing --]]
 	L[ [=[Aura is
 Off Screen]=] ] = [=[Aura is
@@ -379,8 +388,6 @@ Off Screen]=]
 	--[[Translation missing --]]
 	L["Compatibility Options"] = "Compatibility Options"
 	L["Compress"] = "Comprimi"
-	--[[Translation missing --]]
-	L["Condition %i"] = "Condition %i"
 	--[[Translation missing --]]
 	L["Conditions"] = "Conditions"
 	--[[Translation missing --]]
@@ -518,6 +525,8 @@ Off Screen]=]
 	--[[Translation missing --]]
 	L["Duplicate All"] = "Duplicate All"
 	--[[Translation missing --]]
+	L["Duration"] = "Duration"
+	--[[Translation missing --]]
 	L["Duration (s)"] = "Duration (s)"
 	--[[Translation missing --]]
 	L["Duration Info"] = "Duration Info"
@@ -546,7 +555,7 @@ Off Screen]=]
 	--[[Translation missing --]]
 	L["Else If"] = "Else If"
 	--[[Translation missing --]]
-	L["Else If Trigger %s"] = "Else If Trigger %s"
+	L["Else If %s"] = "Else If %s"
 	--[[Translation missing --]]
 	L["Enable \"Edge\" part of the overlay"] = "Enable \"Edge\" part of the overlay"
 	--[[Translation missing --]]
@@ -821,6 +830,8 @@ Can use \ to escape -.]=]
 	--[[Translation missing --]]
 	L["If"] = "If"
 	--[[Translation missing --]]
+	L["If %s"] = "If %s"
+	--[[Translation missing --]]
 	L["If checked, then the user will see a multi line edit box. This is useful for inputting large amounts of text."] = "If checked, then the user will see a multi line edit box. This is useful for inputting large amounts of text."
 	--[[Translation missing --]]
 	L["If checked, then this group will not merge with other group when selecting multiple auras."] = "If checked, then this group will not merge with other group when selecting multiple auras."
@@ -834,8 +845,6 @@ Can use \ to escape -.]=]
 	L["If checked, then this separator will not merge with other separators when selecting multiple auras."] = "If checked, then this separator will not merge with other separators when selecting multiple auras."
 	--[[Translation missing --]]
 	L["If checked, then this space will span across multiple lines."] = "If checked, then this space will span across multiple lines."
-	--[[Translation missing --]]
-	L["If Trigger %s"] = "If Trigger %s"
 	--[[Translation missing --]]
 	L["If unchecked, then a default color will be used (usually yellow)"] = "If unchecked, then a default color will be used (usually yellow)"
 	--[[Translation missing --]]
@@ -1089,6 +1098,8 @@ every 2 events: /2
 every 3 events starting from 2nd: 2/3
 every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	--[[Translation missing --]]
+	L["OFF"] = "OFF"
+	--[[Translation missing --]]
 	L["Offer a guided way to create auras for your character"] = "Offer a guided way to create auras for your character"
 	--[[Translation missing --]]
 	L["Offset by |cFFFF0000%s|r/|cFFFF0000%s|r"] = "Offset by |cFFFF0000%s|r/|cFFFF0000%s|r"
@@ -1096,6 +1107,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Offset by 1px"] = "Offset by 1px"
 	--[[Translation missing --]]
 	L["Okay"] = "Okay"
+	--[[Translation missing --]]
+	L["ON"] = "ON"
 	--[[Translation missing --]]
 	L["On Hide"] = "On Hide"
 	--[[Translation missing --]]
@@ -1121,7 +1134,7 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	--[[Translation missing --]]
 	L["or"] = "or"
 	--[[Translation missing --]]
-	L["or Trigger %s"] = "or Trigger %s"
+	L["or %s"] = "or %s"
 	--[[Translation missing --]]
 	L["Orange Rune"] = "Orange Rune"
 	--[[Translation missing --]]
@@ -1433,6 +1446,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	--[[Translation missing --]]
 	L["Start Angle"] = "Start Angle"
 	--[[Translation missing --]]
+	L["Start Animation"] = "Start Animation"
+	--[[Translation missing --]]
 	L["Start Collapsed"] = "Start Collapsed"
 	--[[Translation missing --]]
 	L["Start of %s"] = "Start of %s"
@@ -1577,9 +1592,9 @@ It might not work correctly with your version!]=]
 	--[[Translation missing --]]
 	L["Trigger"] = "Trigger"
 	--[[Translation missing --]]
-	L["Trigger %d"] = "Trigger %d"
+	L["Trigger %i"] = "Trigger %i"
 	--[[Translation missing --]]
-	L["Trigger %s"] = "Trigger %s"
+	L["Trigger %i: %s"] = "Trigger %i: %s"
 	--[[Translation missing --]]
 	L["Trigger Combination"] = "Trigger Combination"
 	--[[Translation missing --]]
@@ -1688,6 +1703,12 @@ It might not work correctly with your version!]=]
 	L["You are about to delete %d aura(s). |cFFFF0000This cannot be undone!|r Would you like to continue?"] = "You are about to delete %d aura(s). |cFFFF0000This cannot be undone!|r Would you like to continue?"
 	--[[Translation missing --]]
 	L["You are about to delete a trigger. |cFFFF0000This cannot be undone!|r Would you like to continue?"] = "You are about to delete a trigger. |cFFFF0000This cannot be undone!|r Would you like to continue?"
+	--[[Translation missing --]]
+	L[ [=[You can add a comma-separated list of state values here that (when changed) WeakAuras should also run the Anchor Code on.
+
+WeakAuras will always run custom anchor code if you include 'changed' in this list, or when a region is added, removed, or re-ordered.]=] ] = [=[You can add a comma-separated list of state values here that (when changed) WeakAuras should also run the Anchor Code on.
+
+WeakAuras will always run custom anchor code if you include 'changed' in this list, or when a region is added, removed, or re-ordered.]=]
 	--[[Translation missing --]]
 	L[ [=[You can add a comma-separated list of state values here that (when changed) WeakAuras should also run the Grow Code on.
 

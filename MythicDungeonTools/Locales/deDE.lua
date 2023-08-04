@@ -771,6 +771,9 @@ L["Empyrean Assassin"] = "Empyrean Assassin"
 L["Enable Minimap Button"] = "Minimap Button zeigen"
 L["Enchanted Broodling"] = "Verzauberter Brutling"
 L["Enchanted Emissary"] = "Verwunschene Abgesandte"
+--[[Translation missing --]]
+L["encounteredErrors"] = [=[MDT has encountered errors.
+Click to view them.]=]
 L["Encrypted"] = "Verschlüsselt"
 L["Enemies related to seasonal affixes are currently hidden"] = "Gegner die zum saisonalen Affix gehören sind aktuell versteckt"
 L["Enemy Info"] = "Gegnerinformation"

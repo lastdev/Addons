@@ -1,7 +1,9 @@
-local ns = select(2, ...) ---@type ns @The addon namespace.
+local ns = select(2, ...) ---@class ns @The addon namespace.
 
 if ns:IsSameLocale("ruRU") then
+
 	local L = ns.L or ns:NewLocale()
+	ns.L = L
 
 	L.LOCALE_NAME = "ruRU"
 
@@ -237,7 +239,7 @@ L["RAIDERIO_MP_BASE_SCORE"] = "[Raider.IO] Основной рейтинг М+"
 L["RAIDERIO_MP_BEST_SCORE"] = "[Raider.IO] М+ рейтинг (%s)"
 L["RAIDERIO_MP_SCORE"] = "[Raider.IO] М+ рейтинг"
 L["RAIDERIO_MYTHIC_OPTIONS"] = "Настройки аддона Raider.IO"
-L["RAIDING_DATA_HEADER"] = "Raider.IO - Рейдовый прогресс"
+L["RAIDING_DATA_HEADER"] = "[Raider.IO] Рейдовый прогресс"
 L["RAIDING_DB_MODULES"] = "Модули базы данных рейдинга"
 L["RECRUITMENT_DB_MODULES"] = "Модули базы данных рекрутинга"
 L["RELOAD_LATER"] = "Перезагрузить позже"
@@ -324,5 +326,4 @@ L["WIPE_RWF_MODE_BUTTON"] = "Вайп"
 L["WIPE_RWF_MODE_BUTTON_TOOLTIP"] = "Нажмите, чтобы стереть журнал из файла хранилища. Это приведет к перезагрузке Вашего интерфейса."
 
 
-	ns.L = L
 end

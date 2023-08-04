@@ -456,6 +456,8 @@ L["Dungeons"] = "던전"
 L["Durability Damage"] = "내구도 손상"
 L["Durability Damage All"] = "모든 내구도 손상"
 --[[Translation missing --]]
+L["Duration"] = "Duration"
+--[[Translation missing --]]
 L["Duration Function"] = "Duration Function"
 --[[Translation missing --]]
 L["Duration Function (fallback state)"] = "Duration Function (fallback state)"
@@ -1110,6 +1112,8 @@ L["Precision"] = "정밀도"
 L["Preset"] = "프리셋"
 L["Princess Huhuran"] = "공주 후후란"
 L["Print Profiling Results"] = "프로파일링 결과 출력"
+--[[Translation missing --]]
+L["Proc Glow"] = "Proc Glow"
 L["Professor Putricide"] = "교수 퓨트리사이드"
 L["Profiling already started."] = "프로파일링이 이미 시작되었습니다."
 L["Profiling automatically started."] = "프로파일링이 자동으로 시작되었습니다."
@@ -1379,6 +1383,8 @@ L["Stance/Form/Aura"] = "태세/변신/효과"
 --[[Translation missing --]]
 L["Standing"] = "Standing"
 L["Star Shake"] = "별모양 흔들림"
+--[[Translation missing --]]
+L["Start Animation"] = "Start Animation"
 L["Start Now"] = "지금 시작"
 L["Status"] = "상태"
 --[[Translation missing --]]

@@ -38,6 +38,11 @@ local IGNORED_PROFESSIONS = {
 	[193290] = true, -- Herbalism Skills
 	[278910] = true, -- Archaeology
 }
+do
+	if not IsAddOnLoaded("Blizzard_Professions") then
+		LoadAddOn("Blizzard_Professions")
+	end
+end
 
 
 
@@ -314,6 +319,9 @@ function private.FSMCreate()
 			:SetOnEnter(function(context)
 				assert(not context.frame)
 				if Environment.IsRetail() and not context.craftingPage then
+					if not IsAddOnLoaded("Blizzard_Professions") then
+						LoadAddOn("Blizzard_Professions")
+					end
 					-- Workaround to allow multi-crafting
 					local craftingPage = CreateFrame("Frame", nil, nil, "ProfessionsCraftingPageTemplate")
 					craftingPage:Hide()

@@ -102,6 +102,7 @@ function Profiling.End(minTotalTime)
 		-- profiling is not running
 		return
 	end
+	assert(#private.nodeStack == 0)
 	local totalTime = GetTimePreciseSec() - private.startTime
 	if totalTime > (minTotalTime or 0) then
 		print(format("Total: %.06f", Math.Round(totalTime, 0.000001)))
@@ -127,13 +128,13 @@ function Profiling.End(minTotalTime)
 			end
 		end
 	end
-	private.startTime = nil
-	wipe(private.nodes)
-	wipe(private.nodeRuns)
-	wipe(private.nodeStart)
-	wipe(private.nodeTotal)
-	wipe(private.nodeMaxContext)
-	wipe(private.nodeMaxTime)
+	private.Reset()
+end
+
+---Ends profiling without printing any results to chat and cleaning up any in-progress nodes.
+function Profiling.Abort()
+	wipe(private.nodeStack)
+	private.Reset()
 end
 
 ---Checks whether or not we're currently profiling.
@@ -163,4 +164,15 @@ function private.GetLevel(node)
 		node = private.nodeParent[node]
 	end
 	return level
+end
+
+function private.Reset()
+	private.startTime = nil
+	wipe(private.nodes)
+	wipe(private.nodeRuns)
+	wipe(private.nodeStart)
+	wipe(private.nodeTotal)
+	wipe(private.nodeMaxContext)
+	wipe(private.nodeMaxTime)
+	wipe(private.nodeParent)
 end

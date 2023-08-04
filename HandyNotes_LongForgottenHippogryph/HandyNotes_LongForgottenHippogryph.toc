@@ -1,5 +1,5 @@
-## Interface: 100100
-## Version: 1.16
+## Interface: 100105
+## Version: 1.17
 ## Author: Taraezor
 ## IconTexture: Interface\AddOns\HandyNotes_LongForgottenHippogryph\LFH256
 ## Title: Long-Forgotten Hippogryph

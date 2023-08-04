@@ -158,9 +158,7 @@ end
 ---@param itemString string An itemString to get the level itemString of
 ---@return string
 function ItemString.ToLevel(itemString)
-	if not ItemString.IsItem(itemString) then
-		return ItemString.GetBaseFast(itemString)
-	elseif ItemString.IsLevel(itemString) then
+	if ItemString.IsLevel(itemString) then
 		-- Already a level itemString
 		return itemString
 	end
@@ -168,6 +166,10 @@ function ItemString.ToLevel(itemString)
 	if itemString == baseItemString then
 		-- Already a base itemString
 		return itemString
+	end
+	if ItemString.IsPet(itemString) then
+		local petLevel = strmatch(itemString, "^p:%d+:(%d+):.+$")
+		return petLevel and baseItemString..":i"..petLevel or baseItemString
 	end
 	local level, isAbs = BonusIds.GetItemLevel(itemString)
 	if not level then
@@ -188,6 +190,10 @@ end
 ---@return number @The level modifier
 ---@return boolean @Whether or not it is an absolute level
 function ItemString.ParseLevel(itemString)
+	local petLevel = strmatch(itemString, "^p:[0-9]+:i([0-9]+)$")
+	if petLevel then
+		return tonumber(petLevel), true
+	end
 	local prefix, level = strmatch(itemString, "^i:[0-9]+:[0-9%-]*:([i%+%-])([0-9]+)")
 	level = level and tonumber(level) or nil
 	if not prefix or not level then
@@ -207,14 +213,19 @@ end
 ---@param itemString string An itemString to get the itemLevel of
 ---@return number|nil
 function ItemString.GetItemLevel(itemString)
-	-- check if this is a level itemString first
+	-- Check if this is a level itemString first
 	local itemLevel, isAbs = ItemString.ParseLevel(itemString)
 	if itemLevel then
 		return isAbs and itemLevel or nil
 	end
-	-- try to get the level from the bonusIds
-	itemLevel, isAbs = BonusIds.GetItemLevel(itemString)
-	return isAbs and itemLevel or nil
+	if ItemString.IsPet(itemString) then
+		local petLevel = strmatch(itemString, "^p:%d+:(%d+):.+$")
+		return petLevel and tonumber(petLevel) or nil
+	else
+		-- Try to get the level from the bonusIds
+		itemLevel, isAbs = BonusIds.GetItemLevel(itemString)
+		return isAbs and itemLevel or nil
+	end
 end
 
 ---Gets a list of stat modifier values which are present in an itemString
@@ -259,14 +270,14 @@ end
 ---@param itemString string The itemString to check
 ---@return boolean
 function ItemString.IsLevel(itemString)
-	return strmatch(itemString, "^i:[0-9]+:[0-9%-]*:[i%+%-][0-9]+$") and true or false
+	return strmatch(itemString, "^i:[0-9]+:[0-9%-]*:[i%+%-][0-9]+$") or strmatch(itemString, "^p:[0-9]+:i[0-9]+$") and true or false
 end
 
 ---Returns whether or not the itemString is for a pet
 ---@param itemString string The itemString to check
 ---@return boolean
 function ItemString.IsPet(itemString)
-	return strmatch(itemString, "^p:[%-:0-9]+$") and true or false
+	return strmatch(itemString, "^p:[%-:0-9i]+$") and true or false
 end
 
 
@@ -306,7 +317,7 @@ function private.ToItemString(item)
 	-- test if it's already (likely) an item string or battle pet string
 	if strmatch(item, "^i:([0-9%-:i%+]+)$") then
 		return private.FixItemString(item)
-	elseif strmatch(item, "^p:([0-9:]+)$") then
+	elseif strmatch(item, "^p:([i0-9:]+)$") then
 		return private.FixPet(item)
 	end
 
@@ -365,11 +376,7 @@ end
 
 function private.FixPet(itemString)
 	itemString = private.RemoveExtra(itemString)
-	local result = strmatch(itemString, "^(p:%d+:%d+:%d+)$")
-	if result then
-		return result
-	end
-	return strmatch(itemString, "^(p:%d+)")
+	return strmatch(itemString, "^(p:%d+:%d+:%d+)$") or strmatch(itemString, "^(p:%d+:i%d+)$") or strmatch(itemString, "^(p:%d+)")
 end
 
 function private.FilterBonusIdsAndModifiers(itemString, importantBonusIdsOnly, itemType, itemId, rand, numBonusIds, ...)

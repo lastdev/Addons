@@ -67,7 +67,7 @@ local visibilityFunctions = {
     end,
 }
 
-function IsGreedyEmissaryVisible()
+function GreedyEmissary.IsVisible()
     return eventActive and 	visibilityFunctions[TomCats_Account.preferences.AccessoryWindow.treasureGoblin]()
 end
 
@@ -132,4 +132,23 @@ function GreedyEmissary.LootInfo()
     table.insert(text, string.format(
             "\n|cFFFFD400There seems to be an additional chance to loot %s on characters who don't have %s due to how the trackers are working and reports from the community, but I cannot confirm this with absolute certainty.|r", mountLink, bagLink))
     return text
+end
+
+function GreedyEmissary.Render(Timers, idx)
+    local greedyEmissaryZone, greedyEmissaryStartTime = GreedyEmissary.GetEvent()
+    local timerRow = Timers:GetTimerRow(idx)
+    local mapInfo = C_Map.GetMapInfo(greedyEmissaryZone)
+    timerRow:SetIcon("BuildanAbomination-32x32")
+    timerRow:SetTitle(string.format("Treasure Goblin: %s", mapInfo.name))
+    timerRow:SetStartTime(greedyEmissaryStartTime, GreedyEmissary.GetGracePeriod())
+    timerRow.tooltipFunction = function()
+        GameTooltip:SetText("Special Event: A Greedy Emissary (starts)")
+        local text = GreedyEmissary.LootInfo()
+        for _, v in ipairs(text) do
+            GameTooltip:AddLine(v,1,1,1,true)
+        end
+    end
+    local height = timerRow:GetHeight() + 4
+    timerRow:SetShown(true)
+    return height
 end

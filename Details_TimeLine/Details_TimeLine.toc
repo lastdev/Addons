@@ -1,4 +1,4 @@
-## Interface: 100100
+## Interface: 100105
 ## Title: Details!: Time Line (plugin)
 ## Notes: Show debuff, cooldown, enemy casts and enemy debuffs on a clear timeline.
 ## RequiredDeps: Details
@@ -6,10 +6,6 @@
 
 ## X-Curse-Project-ID: 70350
 ## X-Wago-ID: 7x61vVK1
-
-#@no-lib-strip@
-embeds.xml
-#@end-no-lib-strip@
 
 locales\enUS.lua
 locales\deDE.lua

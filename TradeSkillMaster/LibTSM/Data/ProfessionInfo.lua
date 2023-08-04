@@ -347,6 +347,7 @@ local SALVAGE_SPELLIDS = {
 	[382973] = true, -- Kul Tiras and Zandalar Prospecting
 	[325248] = true, -- Shadowlands Prospecting
 	[374627] = true, -- Dragon Isles Prospecting
+	[395696] = true, -- Dragon Isles Crushing
 }
 local ENCHANTING_RECIPIES = {
 	-- Some scraped from Wowhead (http://www.wowhead.com/items/consumables/item-enhancements-permanent?filter=86;4;0) using the following javascript:

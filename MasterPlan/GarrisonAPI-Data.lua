@@ -1,6 +1,5 @@
 local _, T = ...
 if T.Mark ~= 50 then return end
-local NINE = select(4, GetBuildInfo()) > 9e4
 
 T.Affinities = {} do
 	local ht, hp = [[0˜â„Úñv.Têè†G—õT%? WÇØÎrTÃpðxÎ¨¼hëàÌçó…ñ¸²<Ï™³8Un)\zñª2¸M|¦¨®Ç#.×c7°¤åÆÂ¢ Ê€òOÑ10Ý]‘ÀñÎ–•þü›º\}‘Øâ	ûä—-»—º½¬°0HÃ¬0µ(2ì*?°h˜ÆjËƒ˜õ¬ŸÞ„–ïÕ')^jë•€ôhî™RÒ–#ùIÄm	J\ä>êŠ6ºÅ;§Æz·óT­õcÍ„‚1‹LÁ¹pt×CºE#"I1ôAH’Žt”5(bdD“âÉœïdI'"2šQDÁ:ÐH(‘„$Â:ˆE8".AÎGs‘V˜BqAÜE©qÖÖQC"¶sZÎs’kybE¡[Ð¥‘§t†ÅQe2NRm!7É3Hi5¨C—h9âQÄ’F—$-&÷Ðˆ:ÎBIYäIÌ„aÞÃ"$CW±î#Èy&4a"¶0Š†&LjÉ25/CÜÂ1.cZÅÈŽ:ÓJ,£(ô9rÓ­Ž9—=9ÜxÐñ!ÃÉ’aöEœ&™¦2"	%ÊQ„™‘K"ôÄ‘3ã'=s–Øž“KäzI3$ÇŽšDéŒÌ´@‰JÈg|´ðJNö@ôL(¦jYß­0|„°Ÿ¤Ó$t#–D.3QÜ‚ ôcÔåÍ®$ä„¢g"þ—•ˆÿÿÿÊI]], [[((­h®(nip¯qj¬krgolms]]
@@ -60,8 +59,9 @@ T.LockTraits = {[47]=1, [231]=1, [227]=1, [228]=1, [244]=1, [248]=1, [324]=1, [3
 T.XPMissions = {[5]=0, [173]=275000, [215]=0, [364]=0,}
 
 T.FOLLOWER_ITEM_LEVEL_CAP = 675
-T.FOLLOWER_LEVEL_CAP = NINE and 40 or 100
-T.FOLLOWER_LEVEL_BASE = NINE and 30 or 90
+T.FOLLOWER_LEVEL_CAP = 40
+T.FOLLOWER_LEVEL_BASE = 30
+T.XP_EFFICIENCY_FLOOR = 0.5
 T.ItemLevelUpgrades = {
 	WEAPON={114128, 675, 114129, 672, 114131, 669, 114616, 615, 114081, 630, 114622, 645, 128307, 645},
 	ARMOR={114745, 675, 114808, 672, 114822, 669, 114807, 615, 114806, 630, 114746, 645, 128308, 645}
@@ -214,8 +214,7 @@ T.TokenSlots = {} do
 	end
 end
 
-T.CrateLevels = NINE and {[118529]=44, [118530]=45, [118531]=46, [122484]=44, [122485]=45, [122486]=46}
-	or {[118529]=655, [118530]=670, [118531]=685, [122484]=670, [122485]=685, [122486]=700}
+T.CrateLevels = {[118529]=44, [118530]=45, [118531]=46, [122484]=44, [122485]=45, [122486]=46}
 
 T.StrongNavalThreats = {[73]=20, [74]=20, [75]=20, [76]=20, [87]=20}
 T.ShipAffinityMap = {[261]=281, [262]=278, [263]=279, [264]=277, [260]=280, [323]=280}

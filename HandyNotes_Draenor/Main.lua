@@ -166,6 +166,14 @@ function GetZoneByMapID(ID)
 
         return "SpiresOfArak"
 
+    elseif ID == 582 then
+
+        return "Lunarfall"
+
+    elseif ID == 590 then
+
+        return "Frostwall"
+
     end
 
     return "Unknown Zone"

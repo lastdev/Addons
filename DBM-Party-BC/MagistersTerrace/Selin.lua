@@ -3,7 +3,7 @@ local L = mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,timewalker"
 
-mod:SetRevision("20230117063410")
+mod:SetRevision("20230708234551")
 
 mod:SetCreatureID(24723)
 mod:SetEncounterID(1897)
@@ -14,9 +14,9 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 44320"
 )
 
-local specWarnChannel		= mod:NewSpecialWarningSwitch("ej5081", "-Healer", nil, 3, 1, 2)
+local specWarnChannel		= mod:NewSpecialWarningSwitch(-5081, "-Healer", nil, 3, 1, 2)
 
-local timerChannelCD		= mod:NewCDTimer(47, "ej5081", nil, nil, nil, 1, 44320)
+local timerChannelCD		= mod:NewCDTimer(47, -5081, nil, nil, nil, 1, 44320)
 
 function mod:OnCombatStart(delay)
 	timerChannelCD:Start(15-delay)

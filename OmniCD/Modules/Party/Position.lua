@@ -223,7 +223,8 @@ do
 	end
 
 	function P:CVAR_UPDATE(cvar, value)
-		if cvar == "USE_RAID_STYLE_PARTY_FRAMES" then
+		if cvar == "USE_RAID_STYLE_PARTY_FRAMES"
+			or cvar == "useCompactPartyFrames" then
 			self.useRaidStylePartyFrames = value == "1"
 			self:HookFunc()
 		end
@@ -340,12 +341,13 @@ do
 				end
 			end)
 
-			if E.isWOTLKC341 then
-				hooksecurefunc("RaidOptionsFrame_UpdatePartyFrames", function()
-					P.useRaidStylePartyFrames = C_CVar and C_CVar.GetCVarBool("useCompactPartyFrames") or GetCVarBool("useCompactPartyFrames")
-					P:HookFunc()
-				end)
-			end
+
+
+
+
+
+
+
 		end
 
 		self.hooked = true

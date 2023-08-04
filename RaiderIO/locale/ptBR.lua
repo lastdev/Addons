@@ -1,7 +1,9 @@
-local ns = select(2, ...) ---@type ns @The addon namespace.
+local ns = select(2, ...) ---@class ns @The addon namespace.
 
 if ns:IsSameLocale("ptBR") then
+
 	local L = ns.L or ns:NewLocale()
+	ns.L = L
 
 	L.LOCALE_NAME = "ptBR"
 
@@ -330,5 +332,4 @@ L["WIPE_RWF_MODE_BUTTON"] = "Limpar"
 L["WIPE_RWF_MODE_BUTTON_TOOLTIP"] = "Clique para limpar o log do arquivo de armazenamento. Isso fará com que sua interface seja recarregada."
 
 
-	ns.L = L
 end

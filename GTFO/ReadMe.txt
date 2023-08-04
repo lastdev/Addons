@@ -1927,3 +1927,22 @@ Change Log:
 5.3.3
 * Added Dragonflight spells (world)
 * Fixed Wrath spells for Trial of the Grand Crusader (thanks jorvanus)
+
+5.4
+* Fixed UI Settings for Wrath Classic (thanks prokn4h)
+* Fixed UI Settings for Hardcore Classic PTR
+* Added Dragonflight spells for Dawn of the Infinite
+
+5.4.1
+* Updated for patch 10.1.5
+* Added Dragonflight spells for Dawn of the Infinite
+* Added Battle for Azeroth spells (world)
+
+5.4.2
+* Added Dragonflight spells for Dawn of the Infinite
+
+5.5
+* Fixed a LUA error when installing the mod for the first time on a fresh account (thanks D4KiR)
+* Added Dragonflight spells (world)
+* Added Dragonflight spells for Aberrus, the Shadowed Crucible
+* Added Dragonflight spells for Dawn of the Infinite

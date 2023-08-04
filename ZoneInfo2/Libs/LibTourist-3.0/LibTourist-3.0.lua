@@ -1,6 +1,6 @@
 --[[
 Name: LibTourist-3.0
-Revision: $Rev: 294 $
+Revision: $Rev: 297 $
 Author(s): Odica (owner), originally created by ckknight and Arrowmaster
 Documentation: https://www.wowace.com/projects/libtourist-3-0/pages/api-reference
 SVN: svn://svn.wowace.com/wow/libtourist-3-0/mainline/trunk
@@ -9,7 +9,7 @@ License: MIT
 ]]
 
 local MAJOR_VERSION = "LibTourist-3.0"
-local MINOR_VERSION = 90000 + tonumber(("$Revision: 294 $"):match("(%d+)"))
+local MINOR_VERSION = 90000 + tonumber(("$Revision: 297 $"):match("(%d+)"))
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub") end
 local C_Map = C_Map
@@ -1877,6 +1877,7 @@ local MapIdLookupTable = {
 	[2134] = "Valdrakken",
 	[2135] = "Valdrakken",	
     [2146] = "The Eastern Glades",
+    [2147] = "Azeroth",
 	[2149] = "Ohn'ahran Plains",
 	[2150] = "Dragonskull Island",
 	[2151] = "The Forbidden Reach",
@@ -1896,6 +1897,23 @@ local MapIdLookupTable = {
 	[2176] = "The Maelstrom",
 	[2183] = "The Azure Vault",
 	[2184] = "Zaralek Cavern",
+    [2190] = "Sanctum of Chronology",
+    [2191] = "Millennia's Threshold",
+    [2192] = "Locus of Eternity",
+    [2193] = "Spoke of Endless Winter",
+    [2194] = "Crossroads of Fate",
+    [2195] = "Infinite Conflux",
+    [2196] = "Twisting Approach",
+    [2197] = "Immemorial Battlefield",
+    [2198] = "Dawn of the Infinite",
+    [2199] = "Tyrhold Reservoir",
+    [2201] = "Azq'roth",
+    [2202] = "Azewrath",
+    [2203] = "Azmourne",
+    [2204] = "Azmerloth",
+    [2205] = "Ulderoth",
+    [2206] = "A.Z.E.R.O.T.H.",
+    [2207] = "The Warlands",
 }
 
 
@@ -10517,6 +10535,7 @@ do
 			[BZ["Algeth'ar Academy"]] = true,
 			[BZ["Halls Of Infusion"]] = true,
 			[BZ["Vault of the Incarnates"]] = true,
+			[BZ["Dawn of the Infinite"]] = true,
 		},
 		paths = {
 			[BZ["Valdrakken"]] = true,
@@ -10524,6 +10543,7 @@ do
 			[BZ["Algeth'ar Academy"]] = true,
 			[BZ["Halls Of Infusion"]] = true,
 			[BZ["Vault of the Incarnates"]] = true,
+			[BZ["Dawn of the Infinite"]] = true,
 		},
 		flightnodes = {
 			[2810] = true,   -- Valdrakken, Thaldraszus (N)
@@ -12211,7 +12231,16 @@ do
 		entrancePortal = { BZ["Badlands"], 42.4, 18.6 }, 
 	}	
 
-
+	zones[BZ["Dawn of the Infinite"]] = {
+		low = 70,
+		high = 70,
+		continent = Dragon_Isles,
+		expansion = DragonFlight,
+		paths = BZ["Thaldraszus"],
+		groupSize = 5,
+		type = "Instance",
+		entrancePortal = { BZ["Thaldraszus"], 59.24, 60.64 },
+	}	
 
 
 	-- ==================RAIDS=====================

@@ -399,6 +399,16 @@ GTFO.SpellID["314432"] = {
   sound = 1;
 };
 
+GTFO.SpellID["272455"] = {
+  --desc = "Conductive Blades (Warlord Zothix)";
+  sound = 1;
+};
+
+GTFO.SpellID["270685"] = {
+  --desc = "Resonance (Azerite Shard)";
+  sound = 1;
+};
+
 -- ***********************
 -- * Shrine of the Storm *
 -- ***********************

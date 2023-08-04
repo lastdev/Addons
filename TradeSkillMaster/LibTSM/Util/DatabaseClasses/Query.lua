@@ -1390,8 +1390,8 @@ function DatabaseQuery:_GetQueryIndexInfo()
 	-- try to find the index with the least result rows
 	local indexField, indexFirstIndex, indexLastIndex, indexIsStrict = nil, nil, nil, false
 	local bestIndexDiff = math.huge
-	for _, field in ipairs(self._db:_GetIndexAndUniqueList()) do
-		local valueMin, valueMax = self:_IndexValueHelper(field)
+	for _, field in self._db:_IndexOrUniqueFieldIterator() do
+		local valueMin, valueMax = self._rootClause:_GetIndexValue(field)
 		if valueMin == nil and valueMax == nil then
 			-- continue
 		elseif self._db:_IsUnique(field) and valueMin == valueMax then
@@ -1400,8 +1400,17 @@ function DatabaseQuery:_GetQueryIndexInfo()
 		elseif self._db:_IsIndex(field) then
 			-- check how many rows this index results in
 			local indexList = self._db:_GetAllRowsByIndex(field)
-			local firstIndex = valueMin and self._db:_IndexListBinarySearch(field, valueMin, true) or min(1, #indexList)
-			local lastIndex = valueMax and self._db:_IndexListBinarySearch(field, valueMax, false) or #indexList
+			local firstIndex, lastIndex = nil, nil
+			if valueMin and valueMax and valueMin == valueMax then
+				firstIndex, lastIndex = self._db:_GetIndexListMatchingIndexRange(field, valueMin)
+				if not firstIndex then
+					-- there are no results within this index, so this is as good as it gets
+					return "EMPTY", field
+				end
+			else
+				firstIndex = valueMin and self._db:_IndexListBinarySearch(field, valueMin, true) or min(1, #indexList)
+				lastIndex = valueMax and self._db:_IndexListBinarySearch(field, valueMax, false) or #indexList
+			end
 			local indexDiff = lastIndex - firstIndex
 			if indexDiff < 0 then
 				-- there are no results within this index, so this is as good as it gets
@@ -1507,30 +1516,6 @@ function DatabaseQuery:_CreateResultRow(uuid)
 	row:_SetUUID(uuid)
 	self._resultRowLookup[uuid] = row
 	return row
-end
-
-function DatabaseQuery:_IndexValueHelper(...)
-	local num = select("#", ...)
-	local valueMin, valueMax = nil, nil
-	for i = 1, num do
-		local fieldPart = select(i, ...)
-		local partValueMin, partValueMax = self._rootClause:_GetIndexValue(fieldPart)
-		if partValueMin == nil and partValueMax == nil then
-			return
-		end
-		if num > 1 and (partValueMin == nil or partValueMax == nil) then
-			-- only use multi-field indexes if there's both a min and max value
-			return
-		end
-		if i > 1 then
-			valueMin = valueMin .. Constants.DB_INDEX_VALUE_SEP .. partValueMin
-			valueMax = valueMax .. Constants.DB_INDEX_VALUE_SEP .. partValueMax
-		else
-			valueMin = partValueMin
-			valueMax = partValueMax
-		end
-	end
-	return valueMin, valueMax
 end
 
 function DatabaseQuery:_PassThroughReleaseHelper(...)

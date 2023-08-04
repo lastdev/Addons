@@ -1,6 +1,7 @@
-local ns = select(2, ...) ---@type ns @The addon namespace.
+local ns = select(2, ...) ---@class ns @The addon namespace.
 
-local L = ns:NewLocale()
+local L = ns:NewLocale() ---@class Locale
+ns.L = L
 
 L.LOCALE_NAME = "enUS"
 
@@ -171,6 +172,7 @@ L.RAID_BOSS_ATSC_8 = "Echo of Neltharion"
 L.RAID_BOSS_ATSC_9 = "Scalecommander Sarkareth"
 L.RAID_ENCOUNTERS_DEFEATED_TITLE = "Raid Encounters Defeated"
 L.RAIDING_DATA_HEADER = "Raider.IO Raid Progress"
+L.PVP_DATA_HEADER = "Raider.IO PvP Profile"
 L.CONFIG_WHERE_TO_SHOW_TOOLTIPS = "Where to Show Mythic+ and Raid Progress"
 L.MAINS_RAID_PROGRESS = "Main's Progress"
 L.HIDE_OWN_PROFILE = "Hide Personal Raider.IO Profile Tooltip"
@@ -234,5 +236,21 @@ L.GUILD_LF_PVP = "Recruiting PvP Players"
 L.TEAM_LF_MPLUS_WITH_SCORE = "Recruiting %d+ Mythic+ Players"
 L.TEAM_LF_MPLUS_DEFAULT = "Recruiting Mythic+ Players"
 L.COPY_RAIDERIO_RECRUITMENT_URL = "Copy Recruitment URL"
-
-ns.L = L
+L.ENABLE_REPLAY = "Show Mythic+ Replay System"
+L.ENABLE_REPLAY_DESC = "Enabling this will allow you to race against recorded Mythic+ runs"
+L.REPLAY_SETTINGS_TOOLTIP = "Settings"
+L.REPLAY_STYLE_TITLE_MODERN = "Standard"
+L.REPLAY_STYLE_TITLE_MODERN_COMPACT = "Compact"
+L.REPLAY_STYLE_TITLE_MDI = "MDI"
+L.REPLAY_TIMING_TITLE_BOSS = "Boss Time"
+L.REPLAY_TIMING_TITLE_DUNGEON = "Dungeon Time"
+L.REPLAY_MENU_COPY_URL = "Copy Replay URL"
+L.REPLAY_MENU_REPLAY = "Replay"
+L.REPLAY_MENU_TIMING = "Timing"
+L.REPLAY_MENU_STYLE = "Style"
+L.REPLAY_MENU_POSITION = "Position"
+L.REPLAY_MENU_LOCK = "Lock"
+L.REPLAY_MENU_LOCK_DESC = "Attach to objective tracker"
+L.REPLAY_MENU_UNLOCK = "Unlock"
+L.REPLAY_MENU_UNLOCK_DESC = "Make draggable"
+L.REPLAY_SUMMARY_LOGGED = "|cffFFFFFF%s|r logged your completion of this |cffFFFFFF+%s|r in |cffFFFFFF%s|r."

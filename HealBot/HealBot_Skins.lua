@@ -445,10 +445,16 @@ function HealBot_Skins_ResetSkin(barType,button,numcols)
                                      HealBot_Skins_setEmergAnchor(Healbot_Config_Skins.Emerg[Healbot_Config_Skins.Current_Skin][b.frame]["ANCHOR"]),
                                      ceil(Healbot_Config_Skins.Emerg[Healbot_Config_Skins.Current_Skin][b.frame]["HOFFSET"]*frameScale),
                                      ceil(Healbot_Config_Skins.Emerg[Healbot_Config_Skins.Current_Skin][b.frame]["VOFFSET"]*frameScale))
+                erButton:SetFrameLevel(b:GetFrameLevel()+20)
+                erButton.bar:SetFrameLevel(b.gref["Top"]:GetFrameLevel()-1)
+                erButton:EnableMouse(true)
                 --erButton:Show()
             else
                 erButton.bar:ClearAllPoints()
                 erButton.bar:SetStatusBarColor(0,0,0,0)
+                erButton:SetFrameLevel(1)
+                erButton.bar:SetFrameLevel(1)
+                erButton:EnableMouse(false)
             end
 
             tBarsConcat[1]="f"
@@ -1385,10 +1391,7 @@ function HealBot_Skins_ResetSkin(barType,button,numcols)
         h.bar:SetPoint("CENTER",back,"CENTER",0,0)
         h:Disable();
     elseif barType=="hbfocus" then
-        tBarsConcat[1]="HealBot_Action_HealUnit"
-        tBarsConcat[2]=button.id
-        tBarsConcat[3]="Bar"
-        bar = _G[HealBot_Skins_Concat(3)]
+        bar = _G["hbExtra_HealUnit999"]
         bar:SetStatusBarTexture(LSM:Fetch('statusbar',Healbot_Config_Skins.HealBar[Healbot_Config_Skins.Current_Skin][button.frame]["TEXTURE"]));
         bar:GetStatusBarTexture():SetHorizTile(false)
 

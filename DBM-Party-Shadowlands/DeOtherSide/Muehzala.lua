@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2410, "DBM-Party-Shadowlands", 7, 1188)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220803233609")
+mod:SetRevision("20230708234551")
 mod:SetCreatureID(169769)
 mod:SetEncounterID(2396)
 
@@ -31,7 +31,7 @@ mod:RegisterEventsInCombat(
 local warnCosmicArtifice			= mod:NewTargetAnnounce(325725, 3)
 local warnShatterReality			= mod:NewCastAnnounce(326171, 4)
 --Stage 2: Shattered Reality
---local warnAddsRemaining				= mod:NewAddsLeftAnnounce("ej22186", 2, 264049)--A nice shackle icon
+--local warnAddsRemaining				= mod:NewAddsLeftAnnounce(-22186, 2, 264049)--A nice shackle icon
 
 --Stage 1: The Master of Death
 local specWarnMasterofDeath			= mod:NewSpecialWarningDodge(325258, nil, nil, nil, 2, 2)

@@ -1,6 +1,34 @@
 ------------------------------------------------------------------------------
 -- Dragonflight
 --
+v10.1.5.2763
+	Symbol of Hope will correctly increase Obsidian Scales' cd recovery rate for Augmentation spec.
+
+v10.1.5.2762
+	Oppressing Roar w/ Overawe will correctly go on cooldown when used
+	Overawe will correctly reduce Oppressing Roar's cooldown for each enrage effect dispelled
+	Upheaval w/ Font of Magic will correctly go on cooldown when used
+
+v10.1.5.2761
+	Healbot fix
+
+v10.1.5.2760
+	Patch 10.1.5 updates
+
+v10.1.0.2759
+	nil err fix
+
+v10.1.0.2758
+	Fixed Rage of the Sleeper CD 90>60s
+	Fixed Improved Mass Dispel CDR 25>20s
+	Fixed Shadow Blades CD 180>120s
+
+v10.1.0.2757
+	Fixed Quick Witted CDR when interrupting Penance
+	Fixed Invigorating Shadowdust CDR
+	Fixed nil error on Flow State removal
+	Fixed Ironbark CD 60>45s (Guardian, APRIL 5, 2023 hotfixes)
+
 v10.1.0.2756
 	JUNE 5, 2023 hotfixes
 		Amplify Curse CD 30>60s
@@ -730,6 +758,9 @@ v2.5.0
 ------------------------------------------------------------------------------
 -- WOTLKC
 --
+v3.4.2.2762
+	bump toc
+
 v3.4.1.2755
 	Fixed an issue that prevented CD bars from attaching to the party frames
 	Readiness will no longer reset Roar of Sacrifice

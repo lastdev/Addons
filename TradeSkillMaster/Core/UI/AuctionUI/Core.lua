@@ -219,6 +219,7 @@ function private.AuctionFrameInit()
 	else
 		if Environment.IsRetail() then
 			private.defaultFrame:SetScale(0.001)
+			LibAHTab:SetSelected(AH_TAB_ID)
 		end
 		PlaySound(SOUNDKIT.AUCTION_WINDOW_OPEN)
 		private.ShowAuctionFrame()
@@ -243,6 +244,7 @@ function private.AuctionFrameHidden()
 	end
 	if Environment.IsRetail() then
 		private.defaultFrame:SetScale(1)
+		private.defaultFrame:SetDisplayMode(AuctionHouseFrameDisplayMode.Buy)
 	end
 	private.HideAuctionFrame()
 end
@@ -309,7 +311,10 @@ function private.SwitchBtnOnClick(button)
 	private.isSwitching = true
 	private.settings.showDefault = true
 	private.HideAuctionFrame()
-	private.defaultFrame:SetScale(1)
+	if Environment.IsRetail() then
+		private.defaultFrame:SetScale(1)
+		private.defaultFrame:SetDisplayMode(AuctionHouseFrameDisplayMode.Buy)
+	end
 	UIParent_OnEvent(UIParent, "AUCTION_HOUSE_SHOW")
 	private.isSwitching = false
 end
@@ -323,6 +328,7 @@ function private.TSMTabOnClick()
 	ClearCursor()
 	if Environment.IsRetail() then
 		private.defaultFrame:SetScale(0.001)
+		LibAHTab:SetSelected(AH_TAB_ID)
 	else
 		-- Replace CloseAuctionHouse() with a no-op while hiding the AH frame so we don't stop interacting with the AH NPC
 		local origCloseAuctionHouse = CloseAuctionHouse

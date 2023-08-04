@@ -425,6 +425,8 @@ L["Dungeon (Timewalking)"] = "Подземелье (путешествие во 
 L["Dungeons"] = "Подземелья"
 L["Durability Damage"] = "Повреждение экипировки"
 L["Durability Damage All"] = "Повреждение всей экипировки"
+--[[Translation missing --]]
+L["Duration"] = "Duration"
 L["Duration Function"] = "Функция длительности"
 L["Duration Function (fallback state)"] = "Функция длительности (резервное состояние)"
 L["Dynamic Information"] = "Динамическая информация"
@@ -586,8 +588,7 @@ L["Gothik the Harvester"] = "Готик Жнец"
 L["Gradient"] = "Градиент HSV"
 L["Gradient Color"] = "Цвет градиента"
 L["Gradient Enabled"] = "Градиент включен"
---[[Translation missing --]]
-L["Gradient Orientation"] = "Gradient Orientation"
+L["Gradient Orientation"] = "Ориентация градиента"
 L["Gradient Pulse"] = "Градиентная пульсация HSV"
 L["Grand Widow Faerlina"] = "Великая вдова Фарлина"
 L["Grid"] = "Сетка"
@@ -1005,6 +1006,8 @@ L["Precision"] = "Точность"
 L["Preset"] = "Набор эффектов"
 L["Princess Huhuran"] = "Принцесса Хухуран"
 L["Print Profiling Results"] = "Вывести результаты профилирования"
+--[[Translation missing --]]
+L["Proc Glow"] = "Proc Glow"
 L["Professor Putricide"] = "Профессор Мерзоцид"
 L["Profiling already started."] = "Профилирование уже запущено."
 L["Profiling automatically started."] = "Профилирование автоматически запущено."
@@ -1177,7 +1180,8 @@ L["Slide to Right"] = "Сдвиг вправо"
 L["Slide to Top"] = "Сдвиг вверх"
 L["Slider"] = "Ползунок"
 L["Small"] = "Мелкий"
-L["Smart Group"] = "Рейд > Группа > Игрок"
+--[[Translation missing --]]
+L["Smart Group"] = "Smart Group"
 --[[Translation missing --]]
 L["Soft Enemy"] = "Soft Enemy"
 --[[Translation missing --]]
@@ -1240,6 +1244,8 @@ L["Stamina"] = "Выносливость"
 L["Stance/Form/Aura"] = "Стойка / Облик / Аура"
 L["Standing"] = "Отношение"
 L["Star Shake"] = "Дрожь в виде звезды"
+--[[Translation missing --]]
+L["Start Animation"] = "Start Animation"
 L["Start Now"] = "Начать сейчас"
 L["Status"] = "Статус"
 --[[Translation missing --]]
@@ -1408,8 +1414,7 @@ L["Values/Remaining Time below this value are displayed as no progress."] = "З�
 L["Vault of Archavon"] = "Склеп Аркавона"
 L["Versatility (%)"] = "Универсальность"
 L["Versatility Rating"] = "Показатель универсальности"
---[[Translation missing --]]
-L["Vertical"] = "Vertical"
+L["Vertical"] = "Вертикальная"
 L["Vesperon"] = "Весперон"
 L["Viscidus"] = "Нечистотон"
 L["Visibility"] = "Видимость"

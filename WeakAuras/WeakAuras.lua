@@ -3333,7 +3333,7 @@ function Private.HandleChatAction(message_type, message, message_dest, message_d
         message_dest = Private.ReplacePlaceHolders(message_dest, region, customFunc, useHiddenStates, formatters);
       end
       if message_dest_isunit == true then
-        message_dest = UnitName(message_dest)
+        message_dest = GetUnitName(message_dest, true)
       end
       pcall(function() SendChatMessage(message, "WHISPER", nil, message_dest) end);
     end
@@ -3371,6 +3371,8 @@ local function actionGlowStop(actions, frame, id)
     LCG.PixelGlow_Stop(frame.__WAGlowFrame, id)
   elseif actions.glow_type == "ACShine" then
     LCG.AutoCastGlow_Stop(frame.__WAGlowFrame, id)
+  elseif actions.glow_type == "Proc" then
+    LCG.ProcGlow_Stop(frame.__WAGlowFrame, id)
   end
 end
 
@@ -3412,6 +3414,8 @@ local function actionGlowStart(actions, frame, id)
       actions.glow_YOffset,
       id
     )
+  elseif actions.glow_type == "Proc" then
+    LCG.ProcGlow_Start(glow_frame, actions.startAnim)
   end
 end
 

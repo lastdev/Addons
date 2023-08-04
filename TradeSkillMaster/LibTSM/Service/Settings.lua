@@ -79,11 +79,17 @@ local DEFAULT_DB = {
 	},
 	_lastModifiedVersion = {},
 }
-local ACCESSIBLE_FACTIONS = Environment.IsRetail() and {
+local ACCESSIBLE_FACTIONS = Environment.HasFeature(Environment.FEATURES.CONNECTED_FACTION_AH) and {
 	"Horde",
 	"Alliance",
 	"Neutral"
 } or { FACTION }
+local SCOPE_TYPE_LOOKUP = {}
+do
+	for scopeType, scopeTypeShort in pairs(SCOPE_TYPES) do
+		SCOPE_TYPE_LOOKUP[scopeTypeShort] = scopeType
+	end
+end
 
 -- Changelog:
 -- [6] added 'global.locale' key
@@ -210,9 +216,11 @@ local ACCESSIBLE_FACTIONS = Environment.IsRetail() and {
 -- [115] removed global.internalData.optionalMatTextLookup
 -- [116] updated global.internalData.destroyingHistory
 -- [117] added global.storyBoardUIContext, updated global.craftingUIContext.{craftsScrollingTable,matsScrollingTable,gatheringScrollingTable}
+-- [118] updated factionrealm.internalData.crafts
+-- [119] added global.coreOptions.regionWide
 
 local SETTINGS_INFO = {
-	version = 117,
+	version = 119,
 	minVersion = 10,
 	global = {
 		debug = {
@@ -309,6 +317,7 @@ local SETTINGS_INFO = {
 			minimapIcon = { type = "table", default = { hide = false, minimapPos = 220, radius = 80 }, lastModifiedVersion = 10 },
 			destroyValueSource = { type = "string", default = "dbmarket", lastModifiedVersion = 10 },
 			groupPriceSource = { type = "string", default = "dbmarket", lastModifiedVersion = 41 },
+			regionWide = { type = "boolean", default = false, lastModifiedVersion = 119 },
 		},
 		accountingOptions = {
 			trackTrades = { type = "boolean", default = true, lastModifiedVersion = 10 },
@@ -408,7 +417,7 @@ local SETTINGS_INFO = {
 			mailDisenchantablesChar = { type = "string", default = "", lastModifiedVersion = 49 },
 			mailExcessGoldChar = { type = "string", default = "", lastModifiedVersion = 49 },
 			mailExcessGoldLimit = { type = "number", default = 10000000000, lastModifiedVersion = 49 },
-			crafts = { type = "table", default = {}, lastModifiedVersion = 114 },
+			crafts = { type = "table", default = {}, lastModifiedVersion = 118 },
 			craftingQueue = { type = "table", default = {}, lastModifiedVersion = 101 },
 			mats = { type = "table", default = {}, lastModifiedVersion = 10 },
 			guildGoldLog = { type = "table", default = {}, lastModifiedVersion = 25 },
@@ -717,17 +726,17 @@ Settings:OnSettingsLoad(function()
 			db:Set("global", upgradeObj:GetScopeKey(key), "tooltipOptions", "moduleTooltips", value)
 		end
 	end
-	if prevVersion < 114 then
+	if prevVersion < 118 then
 		if Environment.IsRetail() then
-			if prevVersion < 105 then
-				for _, key, value in upgradeObj:RemovedSettingIterator("factionrealm", nil, "internalData", "crafts") do
-					if prevVersion < 99 then
-						local newValue = {}
-						for spellId, data in pairs(value) do
-							newValue["c:"..spellId] = data
-						end
-						value = newValue
+			for _, key, value in upgradeObj:RemovedSettingIterator("factionrealm", nil, "internalData", "crafts") do
+				if prevVersion < 99 then
+					local newValue = {}
+					for spellId, data in pairs(value) do
+						newValue["c:"..spellId] = data
 					end
+					value = newValue
+				end
+				if prevVersion < 114 then
 					for _, craft in pairs(value) do
 						if craft.mats then
 							for itemString in pairs(craft.mats) do
@@ -737,21 +746,16 @@ Settings:OnSettingsLoad(function()
 							end
 						end
 					end
-					db:Set("factionrealm", upgradeObj:GetScopeKey(key), "internalData", "crafts", value)
 				end
-			else
-				for _, key, value in upgradeObj:RemovedSettingIterator("factionrealm", nil, "internalData", "crafts") do
-					for _, craft in pairs(value) do
-						if craft.mats then
-							for itemString in pairs(craft.mats) do
-								if strmatch(itemString, "^o:") then
-									craft.mats[itemString] = 1
-								end
-							end
+				for _, craft in pairs(value) do
+					for _, info in pairs(craft.players) do
+						if type(info) == "table" and info.baseRecipeDifficulty then
+							info.inspirationAmount = 0
+							info.inspirationChance = 0
 						end
 					end
-					db:Set("factionrealm", upgradeObj:GetScopeKey(key), "internalData", "crafts", value)
 				end
+				db:Set("factionrealm", upgradeObj:GetScopeKey(key), "internalData", "crafts", value)
 			end
 		else
 			if prevVersion >= 105 then
@@ -829,18 +833,18 @@ end
 
 function Settings.AccessibleCharacterIterator()
 	local result = TempTable.Acquire()
-	for realm in private.db:GetConnectedRealmIterator("realm") do
+	for realm, isConnected in private.db:GetConnectedRealmIterator("realm") do
 		for _, faction in ipairs(ACCESSIBLE_FACTIONS) do
 			local factionrealm = strjoin(SCOPE_KEY_SEP, faction, realm)
 			for scopeKey in pairs(private.context[private.db].db._syncOwner) do
 				local character = strmatch(scopeKey, "^(.+)"..String.Escape(SCOPE_KEY_SEP..factionrealm))
 				if character then
-					Table.InsertMultiple(result, factionrealm, character)
+					Table.InsertMultiple(result, factionrealm, character, isConnected)
 				end
 			end
 		end
 	end
-	return TempTable.Iterator(result, 2)
+	return TempTable.Iterator(result, 3)
 end
 
 function Settings.CharacterByFactionrealmIterator(factionrealm)
@@ -861,15 +865,15 @@ end
 
 function Settings.ConnectedFactionrealmAltCharacterIterator()
 	local result = TempTable.Acquire()
-	for factionrealm in private.db:GetConnectedRealmIterator("factionrealm") do
+	for factionrealm, isConnected in private.db:GetConnectedRealmIterator("factionrealm") do
 		for scopeKey in pairs(private.context[private.db].db._syncOwner) do
 			local character = strmatch(scopeKey, "^(.+)"..String.Escape(SCOPE_KEY_SEP..factionrealm))
 			if character and (factionrealm ~= SCOPE_KEYS.factionrealm or character ~= PLAYER) then
-				Table.InsertMultiple(result, factionrealm, character, character..SCOPE_KEY_SEP..factionrealm)
+				Table.InsertMultiple(result, factionrealm, character, character..SCOPE_KEY_SEP..factionrealm, isConnected)
 			end
 		end
 	end
-	return TempTable.Iterator(result, 3)
+	return TempTable.Iterator(result, 4)
 end
 
 function Settings.SyncAccountIterator()
@@ -1114,7 +1118,7 @@ function private.Constructor(name, rawSettingsInfo)
 			if strsub(key, 1, 1) ~= "_" then
 				local scopeTypeShort, namespace, settingKey = strmatch(key, "^(.+)"..KEY_SEP..".+"..KEY_SEP.."(.+)"..KEY_SEP.."(.+)$")
 				local settingLastModifiedVersion = scopeTypeShort and db._lastModifiedVersion[strjoin(KEY_SEP, scopeTypeShort, namespace, settingKey)]
-				local scopeType = scopeTypeShort and private.ScopeReverseLookup(scopeTypeShort)
+				local scopeType = scopeTypeShort and SCOPE_TYPE_LOOKUP[scopeTypeShort]
 				local info = settingKey and settingsInfo[scopeType] and settingsInfo[scopeType][namespace] and settingsInfo[scopeType][namespace][settingKey]
 				if not info then
 					-- this setting was removed so remove it from the db
@@ -1228,7 +1232,7 @@ private.SettingsDBUpgradeObjMT = {
 			local parts = TempTable.Acquire(strsplit(KEY_SEP, key))
 			if #parts == 4 then
 				scopeType, scopeKey, namespace, settingKey = TempTable.UnpackAndRelease(parts)
-				scopeType = private.ScopeReverseLookup(scopeType)
+				scopeType = SCOPE_TYPE_LOOKUP[scopeType]
 			else
 				error("Unknown key: "..tostring(key))
 			end
@@ -1309,16 +1313,8 @@ private.SettingsDBMethods = {
 		return private.context[self].currentScopeKeys.profile
 	end,
 
-	GetScopeKeys = function(self, scope)
-		return CopyTable(private.context[self].db._scopeKeys[scope])
-	end,
-
-	GetProfiles = function(self)
-		return self:GetScopeKeys("profile")
-	end,
-
-	ProfileIterator = function(self)
-		return ipairs(private.context[self].db._scopeKeys.profile)
+	ScopeKeyIterator = function(self, scope)
+		return ipairs(private.context[self].db._scopeKeys[scope])
 	end,
 
 	SetProfile = function(self, profileName, noCallback)
@@ -1593,34 +1589,44 @@ end
 function VIEW_METHODS:AccessibleValueIterator(key)
 	local viewInfo = private.views[self]
 	local scopeType = viewInfo.scopeLookup[key]
+	local namespace = viewInfo.namespaceLookup[key]
 	local result = TempTable.Acquire()
-	for realm in viewInfo.settingsDB:GetConnectedRealmIterator("realm") do
-		for _, faction in ipairs(ACCESSIBLE_FACTIONS) do
-			local factionrealm = strjoin(SCOPE_KEY_SEP, faction, realm)
-			if scopeType == "sync" then
-				for scopeKey in pairs(private.context[viewInfo.settingsDB].db._syncOwner) do
-					local character = strmatch(scopeKey, "^(.+)"..String.Escape(SCOPE_KEY_SEP..factionrealm))
-					if character then
-						local value = viewInfo.settingsDB:Get(viewInfo.scopeLookup[key], scopeKey, viewInfo.namespaceLookup[key], key)
-						if value ~= nil then
-							Table.InsertMultiple(result, value, character, factionrealm, scopeKey)
+	for realm, isConnected in viewInfo.settingsDB:GetConnectedRealmIterator("realm") do
+		if scopeType == "realm" then
+			local value = viewInfo.settingsDB:Get(scopeType, realm, namespace, key)
+			if value ~= nil then
+				Table.InsertMultiple(result, value, realm, isConnected)
+			end
+		else
+			for _, faction in ipairs(ACCESSIBLE_FACTIONS) do
+				local factionrealm = strjoin(SCOPE_KEY_SEP, faction, realm)
+				if scopeType == "sync" then
+					for scopeKey in pairs(private.context[viewInfo.settingsDB].db._syncOwner) do
+						local character = strmatch(scopeKey, "^(.+)"..String.Escape(SCOPE_KEY_SEP..factionrealm))
+						if character then
+							local value = viewInfo.settingsDB:Get(scopeType, scopeKey, namespace, key)
+							if value ~= nil then
+								Table.InsertMultiple(result, value, character, factionrealm, scopeKey, isConnected)
+							end
 						end
 					end
+				elseif scopeType == "factionrealm" then
+					local value = viewInfo.settingsDB:Get(scopeType, factionrealm, namespace, key)
+					if value ~= nil then
+						Table.InsertMultiple(result, value, factionrealm, isConnected)
+					end
+				else
+					error("Invalid scopeType: "..tostring(scopeType))
 				end
-			elseif scopeType == "factionrealm" then
-				local value = viewInfo.settingsDB:Get(viewInfo.scopeLookup[key], factionrealm, viewInfo.namespaceLookup[key], key)
-				if value ~= nil then
-					Table.InsertMultiple(result, value, factionrealm)
-				end
-			else
-				error("Invalid scopeType: "..tostring(scopeType))
 			end
 		end
 	end
 	if scopeType == "sync" then
-		return TempTable.Iterator(result, 4)
+		return TempTable.Iterator(result, 5)
 	elseif scopeType == "factionrealm" then
-		return TempTable.Iterator(result, 2)
+		return TempTable.Iterator(result, 3)
+	elseif scopeType == "realm" then
+		return TempTable.Iterator(result, 3)
 	else
 		error("Invalid scopeType: "..tostring(scopeType))
 	end
@@ -1637,9 +1643,14 @@ function VIEW_METHODS:GetForScopeKey(key, ...)
 	if scopeType == "sync" then
 		assert(select("#", ...) == 2)
 		scopeKey = viewInfo.settingsDB:GetSyncScopeKeyByCharacter(...)
-	else
+	elseif scopeType == "factionrealm" then
 		assert(select("#", ...) == 1)
 		scopeKey = ...
+	elseif scopeType == "realm" then
+		assert(select("#", ...) == 1)
+		scopeKey = ...
+	else
+		error("Invalid scopeType: "..tostring(scopeType))
 	end
 	return viewInfo.settingsDB:Get(viewInfo.scopeLookup[key], scopeKey, viewInfo.namespaceLookup[key], key)
 end
@@ -1715,7 +1726,7 @@ function private.SetDBKeyValue(db, key, value)
 	if not settingKey then
 		return
 	end
-	scopeType = private.ScopeReverseLookup(scopeType)
+	scopeType = SCOPE_TYPE_LOOKUP[scopeType]
 	for view, viewInfo in pairs(private.views) do
 		if viewInfo.scopeLookup[settingKey] == scopeType and viewInfo.namespaceLookup[settingKey] == namespace then
 			if viewInfo.callbacks[settingKey] then
@@ -1733,14 +1744,6 @@ function private.CopyData(data)
 		return CopyTable(data)
 	elseif VALID_TYPES[type(data)] or type(data) == nil then
 		return data
-	end
-end
-
-function private.ScopeReverseLookup(scopeTypeShort)
-	for key, value in pairs(SCOPE_TYPES) do
-		if value == scopeTypeShort then
-			return key
-		end
 	end
 end
 
@@ -1774,7 +1777,7 @@ function private.SetScopeDefaults(db, settingsInfo, searchPattern)
 	end
 
 	local scopeTypeShort = strsub(searchPattern, 1, 1)
-	local scopeType = private.ScopeReverseLookup(scopeTypeShort)
+	local scopeType = SCOPE_TYPE_LOOKUP[scopeTypeShort]
 	assert(scopeType, "Couldn't find scopeType: "..tostring(scopeTypeShort))
 	local scopeKeys = nil
 	if scopeTypeShort == SCOPE_TYPES.global then
@@ -1801,13 +1804,20 @@ end
 function private.ConnectedRealmIterator(self, prevScopeKey)
 	if not private.cachedConnectedRealms then
 		local connectedRealms = {}
-		if Environment.IsRetail() then
+		if Environment.HasFeature(Environment.FEATURES.REGION_WIDE_TRADING) then
+			for _, realm in self:ScopeKeyIterator("realm") do
+				if realm ~= REALM then
+					tinsert(connectedRealms, realm)
+				end
+			end
 			local realmId, _, _, _, _, _, _, _, connectedRealmIds = LibRealmInfo:GetRealmInfo(REALM)
 			if connectedRealmIds then
 				for _, id in ipairs(connectedRealmIds) do
 					if id ~= realmId then
 						local _, connectedRealmName = LibRealmInfo:GetRealmInfoByID(id)
-						tinsert(connectedRealms, connectedRealmName)
+						if connectedRealmName then
+							connectedRealms[connectedRealmName] = true
+						end
 					end
 				end
 			end
@@ -1832,7 +1842,7 @@ function private.ConnectedRealmIterator(self, prevScopeKey)
 		if scopeKey == prevScopeKey then
 			foundPrev = true
 		elseif foundPrev and tContains(private.context[self].db._scopeKeys[scope], scopeKey) then
-			return scopeKey
+			return scopeKey, realm == SCOPE_KEYS.realm or private.cachedConnectedRealms[realm] or false
 		end
 	end
 end

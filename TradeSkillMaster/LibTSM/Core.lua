@@ -114,6 +114,12 @@ function TSM.DebugLogout()
 	private.UnloadAll()
 end
 
+---Checks if LibTSM code has loaded.
+---@return boolean
+function TSM.IsLibTSMLoaded()
+	return private.gotAddonLoaded
+end
+
 
 
 -- ============================================================================

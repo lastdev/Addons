@@ -121,7 +121,7 @@ function CraftingTask.OnButtonClick(self)
 		private.currentlyCrafting = self
 		private.pendingSpellId = spellId
 		private.pendingItemString = TSM.Crafting.GetItemString(craftString)
-		local numCrafted = TSM.Crafting.ProfessionUtil.Craft(craftString, spellId, quantity, true, private.CraftCompleteCallback)
+		local numCrafted = TSM.Crafting.ProfessionUtil.Craft(craftString, spellId, quantity, true, nil, private.CraftCompleteCallback)
 		if numCrafted == 0 then
 			-- we're probably crafting something else already - so just bail
 			Log.Err("Failed to craft")

@@ -1152,7 +1152,7 @@ GTFO.SpellID["384186"] = {
 	end
 	GTFO_AddEvent("LSRagingTemp", 3);
 	return 0;
-  end
+  end;
 };
 
 GTFO.SpellID["391967"] = {
@@ -1438,7 +1438,7 @@ GTFO.SpellID["377009"] = {
 		end
 		GTFO_AddEvent("AADeafeningScreech", 2);
 		return 0;
-	end
+	end;
 };
 
 GTFO.SpellID["377034"] = {
@@ -1518,7 +1518,7 @@ GTFO.SpellID["372542"] = {
 		end
 		GTFO_AddEvent("ScorchingFusillade", 2);
 		return 0;
-	end
+	end;
 };
 
 GTFO.SpellID["372293"] = {
@@ -1628,7 +1628,7 @@ GTFO.SpellID["374570"] = {
 	end
 	GTFO_AddEvent("ExplosiveBrand", 3);
 	return 0;
-  end
+  end;
 };
 
 GTFO.SpellID["371352"] = {
@@ -1688,7 +1688,7 @@ GTFO.SpellID["386910"] = {
 	end
 	GTFO_AddEvent("AVFrostBomb", 3);
 	return 0;
-  end
+  end;
 };
 
 GTFO.SpellID["384699"] = {
@@ -1762,7 +1762,7 @@ GTFO.SpellID["369116"] = {
 	end
 	GTFO_AddEvent("UnstableEmbers", 3);
 	return 0;
-  end
+  end;
 };
 
 GTFO.SpellID["375727"] = {
@@ -2069,7 +2069,7 @@ GTFO.SpellID["388645"] = {
 	end
 	GTFO_AddEvent("RaszVolatile", 1);
 	return 0;
-  end
+  end;
 };
 
 GTFO.SpellID["385073"] = {
@@ -2395,7 +2395,7 @@ GTFO.SpellID["402600"] = {
 		return 0;
 	end
 	return 4;
-  end
+  end;
 };
 
 GTFO.SpellID["407521"] = {
@@ -2432,6 +2432,241 @@ GTFO.SpellID["408429"] = {
   sound = 3;
   tankSound = 0;
 };
+
+GTFO.SpellID["402746"] = {
+  --desc = "Drifting Embers (Scalecommander Sarkareth)";
+  sound = 3;
+};
+
+
+--- ************************
+--- * Dawn of the Infinite *
+--- ************************
+
+-- TODO: Blight Reclamation (Blight of Galakrond) - Non-tank fail when not afflicated with Corrosion
+-- TODO: Corrosive Explosion (Blight of Galakrond) - Application fail
+-- TODO: Extinction Blast (Iridikron the Stonescaled) - Only when not under the Timeline Protection buff/debuff?
+-- TODO: Rending Earthspikes (Iridikron the Stonescaled)
+-- TODO: Pulverizing Creations (Iridikron the Stonescaled) - Damage on spawn, Avoidable?
+-- TODO: Titanic Blow (Tyr, the Infinite Keeper) - Non-tank fail
+-- TODO: Infinite Annihilation (Tyr, the Infinite Keeper) - Avoidable?
+-- TODO: Time Statis (Morchie) - Application fail
+-- TODO: Infinite Corruption - Small bolts (Chrono-Lord Deios)
+-- TODO: Infinite Corruption - Large bolts (Chrono-Lord Deios)
+
+GTFO.SpellID["419380"] = {
+  --desc = "Timeline Conflux (Nozdormu)";
+  sound = 3;
+};
+
+GTFO.SpellID["419383"] = {
+  --desc = "Timeline Conflux (Nozdormu)";
+  sound = 3;
+};
+
+GTFO.SpellID["404650"] = {
+  --desc = "Fragments of Time (Manifested Timeways)";
+  sound = 3;
+  applicationOnly = true;
+};
+
+GTFO.SpellID["412944"] = {
+  --desc = "Withering Sandpool - Spawn (Chronikar)";
+  soundFunction = function() -- Warn only if you get hit more than once
+	if (GTFO_FindEvent("WitheringSandpool")) then
+		return 3;
+	end
+	GTFO_AddEvent("WitheringSandpool", 3);
+	return 0;
+  end;
+};
+
+GTFO.SpellID["413107"] = {
+  --desc = "Eon Shatter (Chronikar)";
+  sound = 3;
+};
+
+GTFO.SpellID["405970"] = {
+  --desc = "Eon Fragments (Chronikar)";
+  sound = 3;
+};
+
+GTFO.SpellID["414032"] = {
+  --desc = "Errant Time (Manifested Timeways)";
+  sound = 3;
+};
+
+GTFO.SpellID["415773"] = {
+  --desc = "Temporal Detonation (Interval)";
+  sound = 3;
+};
+
+GTFO.SpellID["413532"] = {
+  --desc = "Untwist (Timestream Anomaly)";
+  sound = 3;
+  tankSound = 0;
+};
+
+GTFO.SpellID["413536"] = {
+  --desc = "Untwist (Timestream Anomaly)";
+  sound = 3;
+};
+
+GTFO.SpellID["414304"] = {
+  --desc = "Unwind (Manifested Timeways)";
+  soundFunction = function() -- Warn only if you get hit more than once
+	if (GTFO_FindEvent("UnwindSmack")) then
+		return 3;
+	end
+	GTFO_AddEvent("UnwindSmack", 5);
+	if (GTFO_IsTank()) then
+		return 0;
+	end
+	return 3;
+  end;
+};
+
+GTFO.SpellID["404650"] = {
+  --desc = "Fragments of Time (Manifested Timeways)";
+  sound = 3;
+  applicationOnly = true;
+};
+
+GTFO.SpellID["413618"] = {
+  --desc = "Timeless Curse (Infinite Infiltrator)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["419526"] = {
+  --desc = "Loose Time (Loose Time)";
+  sound = 3;
+};
+
+GTFO.SpellID["412810"] = {
+  --desc = "Blight Spew (Risen Dragon)";
+  sound = 3;
+  applicationOnly = true;
+};
+
+GTFO.SpellID["408008"] = {
+  --desc = "Necrotic Winds (Ahnzon)";
+  sound = 3;
+};
+
+GTFO.SpellID["407027"] = {
+  --desc = "Corrosive Expulsion (Blight of Galakrond)";
+  sound = 3;
+  applicationOnly = true;
+};
+
+GTFO.SpellID["409642"] = {
+  --desc = "Pulverizing Exhalation (Iridikron)";
+  sound = 3;
+};
+
+GTFO.SpellID["416139"] = {
+  --desc = "Temporal Breath (Chrono-Lord Deios)";
+  sound = 3;
+  applicationOnly = true;
+};
+
+GTFO.SpellID["412131"] = {
+  --desc = "Orb of Contemplation (Lerai, Timesworn Maiden)";
+  sound = 3;
+  applicationOnly = true;
+};
+
+GTFO.SpellID["412137"] = {
+  --desc = "Temporal Strike (Valow, Timesworn Keeper)";
+  sound = 3;
+};
+
+GTFO.SpellID["419328"] = {
+  --desc = "Infinite Schism (Timeline Marauder)";
+  sound = 3;
+};
+
+GTFO.SpellID["417476"] = {
+  --desc = "Displacement";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["419351"] = {
+  --desc = "Bronze Exhalation (Infinite Saboteur)";
+  sound = 3;
+  tankSound = 0;
+  applicationOnly = true;
+};
+
+GTFO.SpellID["411610"] = {
+  --desc = "Bubbly Barrage (Time-Lost Waveshaper)";
+  sound = 3;
+};
+
+GTFO.SpellID["413208"] = {
+  --desc = "Sand Buffeted (Morchie)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["404365"] = {
+  --desc = "Dragon's Breath (Morchie)";
+  sound = 3;
+};
+
+GTFO.SpellID["404917"] = {
+  --desc = "Sand Blast (Morchie)";
+  sound = 3;
+  tankSound = 0;
+};
+
+GTFO.SpellID["401667"] = {
+  --desc = "Time Stasis (Morchie)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["413428"] = {
+  --desc = "Time Beam (Pendule)";
+  sound = 3;
+};
+
+GTFO.SpellID["408228"] = {
+  --desc = "Shockwave (Grommash Hellscream)";
+  sound = 3;
+};
+
+GTFO.SpellID["418056"] = {
+  --desc = "Shockwave (Anduin Lothar)";
+  sound = 3;
+};
+
+GTFO.SpellID["407125"] = {
+  --desc = "Sundering Slam (Alliance Knight)";
+  sound = 3;
+};
+
+GTFO.SpellID["407715"] = {
+  --desc = "Kaboom! (Goblin Sapper)";
+  sound = 3;
+  applicationOnly = true;
+};
+
+GTFO.SpellID["416139"] = {
+  --desc = "Temporal Breath (Chrono-Lord Deios)";
+  sound = 3;
+  tankSound = 0;
+  applicationOnly = true;
+};
+
+GTFO.SpellID["419517"] = {
+  --desc = "Chronal Eruption (Chronaxie)";
+  sound = 3;
+  applicationOnly = true;
+};
+
 
 end
 

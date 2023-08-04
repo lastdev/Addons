@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic"
 
-mod:SetRevision("20200912135206")
+mod:SetRevision("20230708234551")
 mod:SetCreatureID(101995)
 mod:SetEncounterID(1848)
 
@@ -16,8 +16,8 @@ mod:RegisterEventsInCombat(
 )
 
 --TODO, maybe an infoframe for oozes remaining, similar to Iron Reaver in HFC
-local specWarnOozes					= mod:NewSpecialWarningSwitch("ej12646", "-Healer", nil, nil, 1, 2)
-local specWarnBlackBile				= mod:NewSpecialWarningSwitch("ej12651", nil, nil, nil, 3, 2)
+local specWarnOozes					= mod:NewSpecialWarningSwitch(-12646, "-Healer", nil, nil, 1, 2)
+local specWarnBlackBile				= mod:NewSpecialWarningSwitch(-12651, nil, nil, nil, 3, 2)
 local specWarnOozeGTFO				= mod:NewSpecialWarningMove(202266, nil, nil, nil, 1, 2)
 
 local timerOozesCD					= mod:NewNextTimer(51, 201598, nil, nil, nil, 1, nil, nil, nil, 1, 4)

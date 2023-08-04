@@ -1,4 +1,4 @@
-## Interface: 100100
+## Interface: 100105
 ## Title: MisDirectionHelper2
 ## Notes: Use Misdirection / Tricks of the Trade with one click without losing your target. Create Smart Macros for Applying and Announcing Misdirection / Tricks of the Trade.
 ## Notes-deDE: Irreführung / Schurkenhandel benutzen ohne das Ziel zu verlieren. Erstellt Makro zum Setzen und Ansagen von Irreführung / Schurkenhandel.

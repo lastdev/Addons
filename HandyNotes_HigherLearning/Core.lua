@@ -3,7 +3,7 @@
 
                                            Higher Learning
 
-                                        v1.22 - 6th May 2023
+                                       v1.23 - 28th June 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----

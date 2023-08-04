@@ -226,16 +226,6 @@ function Table.SetReadOnly(tbl)
 	setmetatable(tbl, READ_ONLY_TABLE_MT)
 end
 
----Appends all values passed in to the end of the table.
----@param tbl table The table to insert the data into
----@param ... any The values to insert
-function Table.Append(tbl, ...)
-	local len = #tbl
-	for i = 1, select("#", ...) do
-		tbl[len + i] = select(i, ...)
-	end
-end
-
 ---Performs a binary search on a sorted table and returns the index of the search value.
 ---@generic V: number|string
 ---@param tbl V[] The table to search

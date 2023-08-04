@@ -16,7 +16,7 @@ function P:ResetCooldown(icon)
 	end
 
 
-	if spellID == 45438 and E.db.icons.showForbearanceCounter then
+	if (spellID == 45438 or spellID == 414658) and E.db.icons.showForbearanceCounter then
 		local timeLeft = self:GetDebuffDuration(info.unit, 41425)
 		if timeLeft then
 			self:StartCooldown(icon, timeLeft, nil, true)

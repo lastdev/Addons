@@ -1,10 +1,9 @@
-# <DBM> Raids (Cata)
+# <DBM Mod> Raids (Cata)
 
-## [r227](https://github.com/DeadlyBossMods/DBM-Cataclysm/tree/r227) (2023-05-26)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Cataclysm/compare/r226...r227) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Cataclysm/releases)
+## [r229](https://github.com/DeadlyBossMods/DBM-Cataclysm/tree/r229) (2023-07-25)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Cataclysm/compare/r228...r229) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Cataclysm/releases)
 
-- another bugfix  
-- Fix few bugs  
-- fix missing ,  
-- brainfark  
-- Cataclysm Culling  
+- module -- > Mod due to bad truncating  
+- Fix replace script that got too zealous  
+- Set module classifications  
+- reassign raid color  

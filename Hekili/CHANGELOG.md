@@ -1,17 +1,10 @@
 # Hekili
 
-## [v10.1.0-1.0.2](https://github.com/Hekili/hekili/tree/v10.1.0-1.0.2) (2023-06-25)
-[Full Changelog](https://github.com/Hekili/hekili/compare/v10.1.0-1.0.1o...v10.1.0-1.0.2) [Previous Releases](https://github.com/Hekili/hekili/releases)
+## [v10.1.5-1.0.10](https://github.com/Hekili/hekili/tree/v10.1.5-1.0.10) (2023-07-22)
+[Full Changelog](https://github.com/Hekili/hekili/compare/v10.1.5-1.0.9...v10.1.5-1.0.10) [Previous Releases](https://github.com/Hekili/hekili/releases)
 
-- Havoc trinket usage loosened up.  
-- ProtWar: Use Last Stand Offensively compatible with 2pc Tier 30.  
-- Fix Charred Passions spell ID.  
-- Minor Protection Paladin prioirty update.  
-- Devastation, Affliction, and Destruction priority updates.  
-- Balance, Guardian, Windwalker, Protection Paladin, Retribution, and Shadow priority updates.  
-- Frost DK, Unholy, Beast Mastery, Survival, Arcane, Assassination priority updates.  
-- Remove debug print.  
-- Destruction: Fix Chaos Bolt handler.  
-- Fix dropdown menu border.  
-    Reduce delay in starting update process.  
-    Fix /hek set.  
+- Frost Mage: Use 'freezable' in APL logic.  
+- Brewmaster: SimC update.  
+- Shadow: Use target.time\_to\_die to avoid wasting dots/CDs on low health targets.  
+- VeganHunter: Priority tweaks; some abilities were missing from Single Target.  
+- Marksmanship: Use Trueshot earlier in short fights.  

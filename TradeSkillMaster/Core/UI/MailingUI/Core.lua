@@ -156,6 +156,8 @@ function private.FSMCreate()
 			:SetOnEnter(function(context, isIgnored)
 				if Environment.IsRetail() then
 					ShowUIPanel(MailFrame)
+				elseif Environment.IsWrathClassic() then
+					MailFrame_Show()
 				else
 					MailFrame_OnEvent(MailFrame, "MAIL_SHOW")
 				end
@@ -186,7 +188,6 @@ function private.FSMCreate()
 			:AddEvent("EV_FRAME_HIDE", function(context)
 				OpenMailFrame:Hide()
 				CloseMail()
-
 				return "ST_CLOSED"
 			end)
 			:AddEventTransition("EV_MAIL_CLOSED", "ST_CLOSED")
@@ -224,7 +225,6 @@ function private.FSMCreate()
 				CancelEmote()
 				CloseAllBags()
 				CloseMail()
-
 				return "ST_CLOSED"
 			end)
 			:AddEvent("EV_MAIL_SHOW", function(context)
@@ -243,7 +243,6 @@ function private.FSMCreate()
 			:AddEvent("EV_MAIL_CLOSED", function(context)
 				CancelEmote()
 				CloseAllBags()
-
 				return "ST_CLOSED"
 			end)
 			:AddEvent("EV_SWITCH_BTN_CLICKED", function()

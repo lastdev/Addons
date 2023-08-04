@@ -24,8 +24,10 @@ Auctionator.Config.Options = {
   SELLING_FAVOURITE_KEYS = "selling_favourite_keys_2",
   SELLING_AUTO_SELECT_NEXT = "selling_auto_select_next",
   SELLING_MISSING_FAVOURITES = "selling_missing_favourites",
+  SELLING_FAVOURITES_SORT_OWNED = "selling_favourites_sort_owned",
   SELLING_POST_SHORTCUT = "selling_post_shortcut",
   SELLING_SKIP_SHORTCUT = "selling_skip_shortcut",
+  SELLING_PREV_SHORTCUT = "selling_prev_shortcut",
   SHOW_SELLING_BID_PRICE = "show_selling_bid_price",
   SELLING_CONFIRM_LOW_PRICE = "selling_confirm_low_price",
   SAVE_LAST_DURATION_AS_DEFAULT = "save_last_duration_as_default",
@@ -39,6 +41,7 @@ Auctionator.Config.Options = {
   HIDE_SPLASH_SCREEN = "hide_splash_screen",
 
   CANCEL_UNDERCUT_SHORTCUT = "cancel_undercut_shortcut",
+  UNDERCUT_ITEMS_AHEAD = "undercut_items_ahead",
 
   COLUMNS_SHOPPING = "columns_shopping",
   COLUMNS_SHOPPING_HISTORICAL_PRICES = "columns_shopping_historical_prices",
@@ -93,8 +96,10 @@ Auctionator.Config.Defaults = {
   [Auctionator.Config.Options.SELLING_FAVOURITE_KEYS] = {},
   [Auctionator.Config.Options.SELLING_AUTO_SELECT_NEXT] = false,
   [Auctionator.Config.Options.SELLING_MISSING_FAVOURITES] = true,
+  [Auctionator.Config.Options.SELLING_FAVOURITES_SORT_OWNED] = false,
   [Auctionator.Config.Options.SELLING_POST_SHORTCUT] = "SPACE",
   [Auctionator.Config.Options.SELLING_SKIP_SHORTCUT] = "SHIFT-SPACE",
+  [Auctionator.Config.Options.SELLING_PREV_SHORTCUT] = "BACKSPACE",
   [Auctionator.Config.Options.SHOW_SELLING_BID_PRICE] = false,
   [Auctionator.Config.Options.SELLING_CONFIRM_LOW_PRICE] = true,
   [Auctionator.Config.Options.SAVE_LAST_DURATION_AS_DEFAULT] = false,
@@ -108,6 +113,7 @@ Auctionator.Config.Defaults = {
   [Auctionator.Config.Options.HIDE_SPLASH_SCREEN] = false,
 
   [Auctionator.Config.Options.CANCEL_UNDERCUT_SHORTCUT] = "SPACE",
+  [Auctionator.Config.Options.UNDERCUT_ITEMS_AHEAD] = 0,
 
   [Auctionator.Config.Options.DEFAULT_TAB] = 0,
 

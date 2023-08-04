@@ -3,7 +3,7 @@
 
                                              Noblegarden
 
-                                        v2.06 - 6th May 2023
+                                       v2.07 - 28th June 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -750,7 +750,6 @@ do
 		end
 	end
 	function pluginHandler:GetNodes2(mapID)
-		ns.CurrentMap = mapID
 		return iterator, ns.points[mapID]
 	end
 end

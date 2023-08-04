@@ -1,3 +1,17 @@
+- v4.0.4.20
+  - ux improvements
+- v4.0.4.19
+  - ux improvements
+- v4.0.4.18
+  - removed zealot in halls of infusion (exists in mythic but not m+)
+- v4.0.4.17
+  - temporarily disabled the ability to drag and drop pulls
+- v4.0.4.16
+  - bugfixes
+- v4.0.4.15
+  - 10.1.5 update
+- v4.0.4.14
+  - affix week update
 - v4.0.4.13
   - affix week update
 - v4.0.4.12

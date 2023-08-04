@@ -670,7 +670,7 @@ function private.FilterSystemMsg(_, _, msg, ...)
 		local link = private.settings.auctionMessages and private.settings.auctionMessages[msg]
 		if private.lastPurchase.name and (msg == format(ERR_AUCTION_WON_S, private.lastPurchase.name) or (Environment.IsRetail() and msg == format(ERR_AUCTION_COMMODITY_WON_S, private.lastPurchase.name, private.lastPurchase.stackSize))) then
 			-- we just bought an auction
-			private.prevLineResult = format(L["You won an auction for %sx%d for %s"], private.lastPurchase.link, private.lastPurchase.stackSize, Money.ToString(private.lastPurchase.buyout, "|cffffffff"))
+			private.prevLineResult = format(L["You won an auction for %sx%d for %s"], private.lastPurchase.link, private.lastPurchase.stackSize, Money.ToString(private.lastPurchase.buyout, "|cffffffff", "OPT_83_NO_COPPER"))
 			return nil, private.prevLineResult, ...
 		elseif link then
 			-- we may have just sold an auction
@@ -685,7 +685,7 @@ function private.FilterSystemMsg(_, _, msg, ...)
 			if numAuctions == 0 then -- this was the last auction
 				private.settings.auctionMessages[msg] = nil
 			end
-			private.prevLineResult = format(L["Your auction of %s has sold for %s!"], link, Money.ToString(price, "|cffffffff"))
+			private.prevLineResult = format(L["Your auction of %s has sold for %s!"], link, Money.ToString(price, "|cffffffff", "OPT_83_NO_COPPER"))
 			Sound.PlaySound(private.settings.auctionSaleSound)
 			return nil, private.prevLineResult, ...
 		end
@@ -709,7 +709,7 @@ function private.FilterAuctionMsg(_, msg, item)
 			if numAuctions == 0 then -- this was the last auction
 				private.settings.auctionMessages[item] = nil
 			end
-			Log.PrintUserRaw(Theme.GetColor("BLIZZARD_YELLOW"):ColorText(format(L["Your auction of %s has sold for %s!"], link, Money.ToString(price, "|cffffffff"))))
+			Log.PrintUserRaw(Theme.GetColor("BLIZZARD_YELLOW"):ColorText(format(L["Your auction of %s has sold for %s!"], link, Money.ToString(price, "|cffffffff", "OPT_83_NO_COPPER"))))
 			Sound.PlaySound(private.settings.auctionSaleSound)
 		else
 			Log.PrintUserRaw(Theme.GetColor("BLIZZARD_YELLOW"):ColorText(format(L["Your auction of %s has sold!"], item)))
@@ -726,7 +726,7 @@ end
 
 function private.FilterCommodityAuctionMsg(_, msg, qty)
 	if private.lastPurchase.name then
-		Log.PrintUserRaw(Theme.GetColor("BLIZZARD_YELLOW"):ColorText(format(L["You won an auction for %sx%d for %s"], private.lastPurchase.link, qty, Money.ToString(private.lastPurchase.buyout, "|cffffffff"))))
+		Log.PrintUserRaw(Theme.GetColor("BLIZZARD_YELLOW"):ColorText(format(L["You won an auction for %sx%d for %s"], private.lastPurchase.link, qty, Money.ToString(private.lastPurchase.buyout, "|cffffffff", "OPT_83_NO_COPPER"))))
 	end
 end
 

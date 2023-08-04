@@ -1,7 +1,17 @@
-$Id: ChangeLog.txt 83 2022-11-07 13:45:50Z arithmandar $
+$Id: ChangeLog.txt 87 2023-03-20 15:20:19Z arithmandar $
 
 Revision History:
 =================
+
+* v1.36 (Mar. 20, 2023)
+-----------------------
+- Toc update to support WoW 10.0.7
+
+* v1.35 (Nov. 13, 2022)
+-----------------------
+- Toc update to support WoW 10.0.2
+- Quest query function update
+  - OnTooltipSetQuest was no longer supported
 
 * v1.34 (Nov. 07, 2022)
 -----------------------

@@ -55,8 +55,12 @@ function AuctionatorSaleItemMixin:OnShow()
 
   SetOverrideBinding(self, false, Auctionator.Config.Get(Auctionator.Config.Options.SELLING_POST_SHORTCUT), "CLICK AuctionatorPostButton:LeftButton")
   SetOverrideBinding(self, false, Auctionator.Config.Get(Auctionator.Config.Options.SELLING_SKIP_SHORTCUT), "CLICK AuctionatorSkipPostingButton:LeftButton")
+  SetOverrideBinding(self, false, Auctionator.Config.Get(Auctionator.Config.Options.SELLING_PREV_SHORTCUT), "CLICK AuctionatorPrevPostingButton:LeftButton")
 
   self.lastItemInfo = nil
+  self.nextItem = nil
+  self.prevItem = nil
+
   self:UpdateSkipButton()
   self:Reset()
 end
@@ -90,7 +94,7 @@ function AuctionatorSaleItemMixin:UnlockItem()
   if self.itemInfo ~= nil then
     --Existence check added because of a bug report from a user where (for an
     --unknown reason) the item no longer existed.
-    if self.itemInfo.count > 0 and C_Item.DoesItemExist(self.itemInfo.location) then
+    if IsValidItem(self.itemInfo) then
       C_Item.UnlockItem(self.itemInfo.location)
     end
     self.itemInfo = nil
@@ -98,7 +102,7 @@ function AuctionatorSaleItemMixin:UnlockItem()
 end
 
 function AuctionatorSaleItemMixin:LockItem()
-  if self.itemInfo.count > 0 then
+  if IsValidItem(self.itemInfo) then
     C_Item.LockItem(self.itemInfo.location)
   end
 end
@@ -164,6 +168,8 @@ function AuctionatorSaleItemMixin:ReceiveEvent(event, ...)
   if event == Auctionator.Selling.Events.BagItemClicked then
     self:UnlockItem()
     self.itemInfo = ...
+    self.nextItem = self.itemInfo and self.itemInfo.nextItem
+    self.prevItem = self.itemInfo and self.itemInfo.prevItem
     self:LockItem()
     self:Update()
 
@@ -589,7 +595,8 @@ function AuctionatorSaleItemMixin:UpdatePostButtonState()
 end
 
 function AuctionatorSaleItemMixin:UpdateSkipButtonState()
-  self.SkipButton:SetEnabled(self.SkipButton:IsShown() and IsValidItem(self.itemInfo and self.itemInfo.nextItem))
+  self.SkipButton:SetEnabled(self.SkipButton:IsShown() and self.nextItem)
+  self.PrevButton:SetEnabled(self.SkipButton:IsShown() and self.prevItem)
 end
 
 local AUCTION_DURATIONS = {
@@ -687,11 +694,11 @@ function AuctionatorSaleItemMixin:PostItem(confirmed)
   self:Reset()
 
   if (Auctionator.Config.Get(Auctionator.Config.Options.SELLING_AUTO_SELECT_NEXT) and
-      IsValidItem(self.lastItemInfo.nextItem)
+      self.nextItem
      ) then
     -- Option to automatically select the next item in the bag view
     Auctionator.EventBus:Fire(
-      self, Auctionator.Selling.Events.BagItemClicked, self.lastItemInfo.nextItem
+      self, Auctionator.Selling.Events.BagItemClicked, self.nextItem
     )
 
   else
@@ -703,7 +710,39 @@ end
 function AuctionatorSaleItemMixin:SkipItem()
   if self.SkipButton:IsEnabled() then
     Auctionator.EventBus:Fire(
-      self, Auctionator.Selling.Events.BagItemClicked, self.itemInfo.nextItem
+      self, Auctionator.Selling.Events.BagItemClicked, self.nextItem
+    )
+  end
+end
+
+local function FindItemAgain(prevItemInfo)
+  local key = Auctionator.Selling.UniqueBagKey(prevItemInfo)
+  for _, bagID in ipairs(Auctionator.Constants.BagIDs) do
+    for slot = 1, C_Container.GetContainerNumSlots(bagID) do
+      local location = ItemLocation:CreateFromBagAndSlot(bagID, slot)
+      if C_Item.DoesItemExist(location) then
+        local itemInfo = Auctionator.Utilities.ItemInfoFromLocation(location)
+        if Auctionator.Selling.UniqueBagKey(itemInfo) == key then
+          return location
+        end
+      end
+    end
+  end
+  return nil
+end
+
+function AuctionatorSaleItemMixin:PrevItem()
+  if self.PrevButton:IsEnabled() then
+    -- The item with the same ID to post again may be at a different location if
+    -- there was more than one stack, so locate the other stack
+    self.prevItem.location = FindItemAgain(self.prevItem)
+    if IsValidItem(self.prevItem) then
+      self.prevItem.count = C_AuctionHouse.GetAvailablePostCount(self.prevItem.location)
+    else
+      self.prevItem.count = 0
+    end
+    Auctionator.EventBus:Fire(
+      self, Auctionator.Selling.Events.BagItemClicked, self.prevItem
     )
   end
 end

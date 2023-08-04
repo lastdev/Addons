@@ -41,11 +41,40 @@ local private = {
 	},
 	matStringItemsTemp = {},
 	matQuantitiesTemp = {},
+	matIteratorQuery = nil,
 }
 -- Don't want to scan a bunch of times when the profession first loads so add a 10 frame debounce to update events
 local SCAN_DEBOUNCE_FRAMES = 10
 local MAX_CRAFT_LEVEL = 4
 local EMPTY_MATS_TABLE = {}
+local MAT_STRING_OPTIONAL_MATCH_STR = {
+	[MatString.TYPE.OPTIONAL] = "^o:",
+	[MatString.TYPE.FINISHING] = "^f:",
+}
+local SCAN_HASH_INFO_FIELDS = {
+	"index",
+	"previousRecipeID",
+	"nextRecipeID",
+	"categoryID",
+	"learned",
+	"unlockedRecipeLevel",
+	"relativeDifficulty",
+	"numSkillUps",
+	"name",
+	"currentRecipeExperience",
+	"nextLevelRecipeExperience",
+	"qualityIlvlBonuses",
+}
+local INSPIRATION_DESC_PATTERN = nil
+do
+	if Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) then
+		INSPIRATION_DESC_PATTERN = gsub(PROFESSIONS_CRAFTING_STAT_TT_CRIT_DESC, "%%d", "([0-9%.]+)")
+		if INSPIRATION_DESC_PATTERN == PROFESSIONS_CRAFTING_STAT_TT_CRIT_DESC then
+			-- This locale uses positional format specifiers, so we'll use a different mechanism to try to extract the inspiration
+			INSPIRATION_DESC_PATTERN = nil
+		end
+	end
+end
 
 
 
@@ -81,6 +110,9 @@ Scanner:OnModuleLoad(function()
 		:AddIndex("craftString")
 		:AddIndex("matString")
 		:Commit()
+	private.matIteratorQuery = private.matDB:NewQuery()
+		:Select("matString", "quantity", "slotText")
+		:Equal("craftString", Database.BoundQueryParam())
 	private.scanTimer = Delay.CreateTimer("PROFESSION_SCAN", private.ScanProfession)
 	State.RegisterCallback(private.ProfessionStateUpdate)
 	if Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) then
@@ -124,7 +156,8 @@ end
 
 function Scanner.GetItemStringByCraftString(craftString)
 	assert(private.dbPopulated)
-	return private.db:GetUniqueRowField("craftString", craftString, "itemString")
+	local itemString = private.db:GetUniqueRowField("craftString", craftString, "itemString")
+	return itemString ~= "" and itemString or nil
 end
 
 function Scanner.GetIndexByCraftString(craftString)
@@ -167,33 +200,33 @@ function Scanner.HasCraftString(craftString)
 end
 
 function Scanner.MatIterator(craftString)
-	return private.matDB:NewQuery()
-		:Select("matString", "quantity", "slotText")
-		:Equal("craftString", craftString)
-		:IteratorAndRelease()
+	return private.matIteratorQuery:BindParams(craftString)
+		:Iterator()
 end
 
 function Scanner.GetOptionalMatString(craftString, slotId)
 	return private.matDB:NewQuery()
 		:Select("matString")
 		:Equal("craftString", craftString)
-		:Matches("matString", "^[qof]:")
+		:Matches("matString", "^[qofr]:")
 		:Contains("matString", ":"..slotId..":")
 		:GetSingleResult()
 end
 
-function Scanner.HasOptionalMats(craftString)
+function Scanner.GetNumOptionalMats(craftString, matType)
+	local matchStr = MAT_STRING_OPTIONAL_MATCH_STR[matType]
+	assert(matchStr)
 	return private.matDB:NewQuery()
 		:Equal("craftString", craftString)
-		:Matches("matString", "^[qof]:")
-		:CountAndRelease() > 0
+		:Matches("matString", matchStr)
+		:CountAndRelease()
 end
 
 function Scanner.GetMatQuantity(craftString, matItemId)
 	local query = private.matDB:NewQuery()
 		:Select("quantity")
 		:Equal("craftString", craftString)
-		:Matches("matString", "^[qof]:")
+		:Matches("matString", "^[qofr]:")
 		:Contains("matString", tostring(matItemId))
 	return query:GetFirstResultAndRelease()
 end
@@ -215,26 +248,49 @@ end
 
 function Scanner.GetRecipeQualityInfo(craftString)
 	if not Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) then
-		return nil, nil
+		return nil, nil, nil, nil, nil
 	end
 	local spellId = CraftString.GetSpellId(craftString)
-	-- TODO: Do we need this info?
 	local info = C_TradeSkillUI.GetRecipeSchematic(spellId, false, 1)
 	local isItem = info.recipeType == Enum.TradeskillRecipeType.Item
 	local isEnchant = info.recipeType == Enum.TradeskillRecipeType.Enchant
 	local isSalvage = info.recipeType == Enum.TradeskillRecipeType.Salvage
 	if not info.hasCraftingOperationInfo or info.hasGatheringOperationInfo then
-		return nil, nil
+		return nil, nil, nil, nil, nil
 	elseif not isItem and not isEnchant and not isSalvage then
-		return nil, nil
+		return nil, nil, nil, nil, nil
 	elseif isItem and not info.outputItemID then
-		return nil, nil
+		return nil, nil, nil, nil, nil
 	end
 	local operationInfo = C_TradeSkillUI.GetCraftingOperationInfo(spellId, EMPTY_MATS_TABLE)
 	if not operationInfo then
-		return nil, nil
+		return nil, nil, nil, nil, nil
 	end
-	return operationInfo.baseDifficulty, operationInfo.quality
+	local inspirationChance, inspirationAmount = 0, 0
+	for _, statInfo in ipairs(operationInfo.bonusStats) do
+		if statInfo.bonusStatName == PROFESSIONS_CRAFTING_STAT_TT_CRIT_HEADER then
+			if INSPIRATION_DESC_PATTERN then
+				inspirationChance, inspirationAmount = strmatch(statInfo.ratingDescription, INSPIRATION_DESC_PATTERN)
+			end
+			if not inspirationChance or inspirationChance == 0 then
+				-- Try another way to parse the chance / amount
+				inspirationChance = strmatch(statInfo.ratingDescription, "([0-9%.]+)%%")
+				inspirationAmount = strmatch(statInfo.ratingDescription, "([0-9]+)[^%%%.,]")
+			end
+			inspirationChance = tonumber(inspirationChance) / 100
+			inspirationAmount = tonumber(inspirationAmount)
+			assert(inspirationChance and inspirationAmount)
+			break
+		end
+	end
+	local hasQualityMats = false
+	for _, data in ipairs(info.reagentSlotSchematics) do
+		if data.reagentType == Enum.CraftingReagentType.Basic and data.dataSlotType == Enum.TradeskillSlotDataType.ModifiedReagent then
+			hasQualityMats = true
+			break
+		end
+	end
+	return operationInfo.baseDifficulty, operationInfo.quality, hasQualityMats, inspirationAmount, inspirationChance
 end
 
 ---TODO: Should this handle indirect crafts on classic like GetResultInfo()?
@@ -386,8 +442,7 @@ function Scanner.IsEnchant(craftString)
 		if not strfind(C_TradeSkillUI.GetRecipeItemLink(spellId), "enchant:") then
 			return false
 		end
-		local recipeInfo = C_TradeSkillUI.GetRecipeInfo(spellId)
-		return recipeInfo.isEnchantingRecipe
+		return C_TradeSkillUI.GetRecipeInfo(spellId).isEnchantingRecipe
 	else
 		spellId = private.classicSpellIdLookup[spellId] or spellId
 		local itemLink = State.IsClassicCrafting() and GetCraftItemLink(spellId) or GetTradeSkillItemLink(spellId)
@@ -446,7 +501,12 @@ function Scanner.GetMatInfo(craftString, index)
 			end
 		end
 		assert(reagentSlotInfo)
-		if reagentSlotInfo.reagentType == Enum.CraftingReagentType.Basic and reagentSlotInfo.dataSlotType == Enum.TradeskillSlotDataType.Reagent then
+		if reagentSlotInfo.reagentType == Enum.CraftingReagentType.Modifying and reagentSlotInfo.required then
+			local itemLink = C_TradeSkillUI.GetRecipeQualityReagentItemLink(spellId, reagentSlotInfo.dataSlotIndex, 1)
+			local itemString = ItemString.Get(itemLink)
+			local name, quantity = ItemInfo.GetName(itemLink), reagentSlotInfo.quantityRequired
+			return itemString, quantity, name, true
+		elseif reagentSlotInfo.reagentType == Enum.CraftingReagentType.Basic and reagentSlotInfo.dataSlotType == Enum.TradeskillSlotDataType.Reagent then
 			local itemLink = C_TradeSkillUI.GetRecipeFixedReagentItemLink(spellId, reagentSlotInfo.dataSlotIndex)
 			local itemString = ItemString.Get(itemLink)
 			local name, quantity = ItemInfo.GetName(itemLink), reagentSlotInfo.quantityRequired
@@ -569,9 +629,12 @@ function private.ScanProfession()
 					prevRecipeIds[info.nextRecipeID] = spellId
 				end
 				private.recipeInfoCache[spellId] = info
+				scannedHash = Math.CalculateHash(spellId, scannedHash)
+				for _, hashField in ipairs(SCAN_HASH_INFO_FIELDS) do
+					scannedHash = Math.CalculateHash(info[hashField], scannedHash)
+				end
 			end
 		end
-		scannedHash = Math.CalculateHash(private.recipeInfoCache)
 		if scannedHash == private.prevScannedHash then
 			Log.Info("Hash hasn't changed, so not scanning")
 			private.dbPopulated = true
@@ -632,7 +695,7 @@ function private.ScanProfession()
 							numResultItems = #result
 						else
 							if ItemString.GetBase(C_TradeSkillUI.GetRecipeItemLink(spellId)) then
-								local ilvlBonuses = C_TradeSkillUI.GetRecipeInfo(spellId).qualityIlvlBonuses
+								local ilvlBonuses = info.qualityIlvlBonuses
 								if ilvlBonuses then
 									numResultItems = #ilvlBonuses
 								else
@@ -654,11 +717,11 @@ function private.ScanProfession()
 					else
 						assert(numResultItems > 1)
 						-- This is a quality craft
-						local recipeDifficulty, baseRecipeQuality = Scanner.GetRecipeQualityInfo(craftString)
+						local recipeDifficulty, baseRecipeQuality, hasQualityMats, inspirationAmount = Scanner.GetRecipeQualityInfo(craftString)
 						if baseRecipeQuality then
 							for i = 1, numResultItems do
 								local qualityCraftString = CraftString.Get(spellId, rank, nil, i)
-								if Quality.GetNeededSkill(i, recipeDifficulty, baseRecipeQuality, numResultItems) then
+								if Quality.GetNeededSkill(i, recipeDifficulty, baseRecipeQuality, numResultItems, hasQualityMats, inspirationAmount) then
 									local recipeScanResult, matScanResult = private.BulkInsertRecipe(qualityCraftString, index, info.name, info.categoryID, info.relativeDifficulty, rank, numSkillUps, 1, info.currentRecipeExperience or -1, info.nextLevelRecipeExperience or -1)
 									haveInvalidRecipes = haveInvalidRecipes or not recipeScanResult
 									haveInvalidMats = haveInvalidMats or not matScanResult
@@ -725,7 +788,6 @@ function private.ScanProfession()
 	private.db:NewQuery()
 		:Select("craftString")
 		:NotEqual("itemString", "")
-		:NotEqual("craftString", "")
 		:AsTable(craftStrings)
 		:Release()
 	local categorySkillLevelLookup = TempTable.Acquire()
@@ -849,30 +911,40 @@ function private.BulkInsertMats(craftString)
 		local categorySkillLevel = private.GetCurrentCategorySkillLevel(private.recipeInfoCache[craftString].categoryID)
 		local spellId = CraftString.GetSpellId(craftString)
 		local level = CraftString.GetLevel(craftString)
-		local mats = C_TradeSkillUI.GetRecipeSchematic(spellId, false, level).reagentSlotSchematics
+		local info = C_TradeSkillUI.GetRecipeSchematic(spellId, false, level)
 
-		for _, data in ipairs(mats) do
-			if private.IsSpecialMatValid(data, categorySkillLevel) then
-				assert(not next(private.matStringItemsTemp))
-				for _, craftingReagent in ipairs(data.reagents) do
-					tinsert(private.matStringItemsTemp, craftingReagent.itemID)
+		if info.recipeType == Enum.TradeskillRecipeType.Salvage then
+			local matString = MatString.Create(MatString.TYPE.REQUIRED, 1, C_TradeSkillUI.GetSalvagableItemIDs(CraftString.GetSpellId(craftString)))
+			private.matDB:BulkInsertNewRow(craftString, matString, info.quantityMin, "")
+		else
+			for _, data in ipairs(info.reagentSlotSchematics) do
+				if private.IsSpecialMatValid(data, categorySkillLevel) then
+					assert(not next(private.matStringItemsTemp))
+					for _, craftingReagent in ipairs(data.reagents) do
+						tinsert(private.matStringItemsTemp, craftingReagent.itemID)
+					end
+					local matStringType, slotText = nil, nil
+					if data.reagentType == Enum.CraftingReagentType.Basic and data.dataSlotType == Enum.TradeskillSlotDataType.ModifiedReagent then
+						matStringType = MatString.TYPE.QUALITY
+						slotText = ItemInfo.GetName("i:"..data.reagents[1].itemID) or ""
+					elseif data.reagentType == Enum.CraftingReagentType.Optional or data.reagentType == Enum.CraftingReagentType.Modifying then
+						if data.required then
+							matStringType = MatString.TYPE.REQUIRED
+							slotText = data.slotInfo.slotText or REQUIRED_REAGENT_TOOLTIP_CLICK_TO_ADD
+						else
+							matStringType = MatString.TYPE.OPTIONAL
+							slotText = data.slotInfo.slotText or OPTIONAL_REAGENT_POSTFIX
+						end
+					elseif data.reagentType == Enum.CraftingReagentType.Finishing then
+						matStringType = MatString.TYPE.FINISHING
+						slotText = data.slotInfo.slotText or OPTIONAL_REAGENT_POSTFIX
+					else
+						error("Unexpected optional mat type: "..tostring(data.reagentType)..", "..tostring(data.dataSlotType))
+					end
+					local matString = MatString.Create(matStringType, data.dataSlotIndex, private.matStringItemsTemp)
+					wipe(private.matStringItemsTemp)
+					private.matDB:BulkInsertNewRow(craftString, matString, data.quantityRequired, slotText)
 				end
-				local matStringType, slotText = nil, nil
-				if data.reagentType == Enum.CraftingReagentType.Basic and data.dataSlotType == Enum.TradeskillSlotDataType.ModifiedReagent then
-					matStringType = MatString.TYPE.QUALITY
-					slotText = ItemInfo.GetName("i:"..data.reagents[1].itemID) or ""
-				elseif data.reagentType == Enum.CraftingReagentType.Optional or data.reagentType == Enum.CraftingReagentType.Modifying then
-					matStringType = MatString.TYPE.OPTIONAL
-					slotText = data.slotInfo.slotText or OPTIONAL_REAGENT_POSTFIX
-				elseif data.reagentType == Enum.CraftingReagentType.Finishing then
-					matStringType = MatString.TYPE.FINISHING
-					slotText = data.slotInfo.slotText or OPTIONAL_REAGENT_POSTFIX
-				else
-					error("Unexpected optional mat type: "..tostring(data.reagentType)..", "..tostring(data.dataSlotType))
-				end
-				local matString = MatString.Create(matStringType, data.dataSlotIndex, private.matStringItemsTemp)
-				wipe(private.matStringItemsTemp)
-				private.matDB:BulkInsertNewRow(craftString, matString, data.quantityRequired, slotText)
 			end
 		end
 	end
@@ -997,6 +1069,9 @@ function private.GetCurrentCategorySkillLevel(categoryId)
 end
 
 function private.IsSpecialMatValid(data, categorySkillLevel)
+	if data.reagentType == Enum.CraftingReagentType.Modifying and data.required then
+		return true
+	end
 	if data.reagentType == Enum.CraftingReagentType.Basic and data.dataSlotType == Enum.TradeskillSlotDataType.ModifiedReagent then
 		-- pass
 	elseif data.reagentType == Enum.CraftingReagentType.Optional or data.reagentType == Enum.CraftingReagentType.Modifying or data.reagentType == Enum.CraftingReagentType.Finishing then
@@ -1007,10 +1082,13 @@ function private.IsSpecialMatValid(data, categorySkillLevel)
 	return data.slotInfo.requiredSkillRank <= categorySkillLevel
 end
 
-function private.IsRegularMat(info)
+function private.IsRegularMat(data)
 	assert(Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI))
-	if info.reagentType ~= Enum.CraftingReagentType.Basic then
+	if data.reagentType == Enum.CraftingReagentType.Modifying and data.required then
+		return true
+	end
+	if data.reagentType ~= Enum.CraftingReagentType.Basic then
 		return false
 	end
-	return info.dataSlotType == Enum.TradeskillSlotDataType.Reagent or info.dataSlotType == Enum.TradeskillSlotDataType.ModifiedReagent
+	return data.dataSlotType == Enum.TradeskillSlotDataType.Reagent or data.dataSlotType == Enum.TradeskillSlotDataType.ModifiedReagent
 end

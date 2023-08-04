@@ -33,6 +33,15 @@ do
 		end
 	end)
 end
+function T.HideOwnedGameTooltip(self)
+	local GGameTooltip = _G.GameTooltip
+	if self and GameTooltip:IsOwned(self) then
+		GameTooltip:Hide()
+	end
+	if self and GameTooltip ~= GGameTooltip and GGameTooltip:IsOwned(self) then
+		GGameTooltip:Hide()
+	end
+end
 
 do
 	local function DropDownMenuButton_OnEnter(self)

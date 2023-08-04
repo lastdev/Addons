@@ -1,9 +1,0 @@
-## Title:-|cffFFFFFFConRO|r- |cffFFF569Rogue|r
-## Version: 10.0.9
-## Author: Vae
-## Interface: 100005
-## Dependencies: ConRO
-## LoadOnDemand: 1
-
-rogue_ids.lua
-rogue.lua

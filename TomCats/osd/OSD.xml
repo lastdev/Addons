@@ -4,5 +4,8 @@
 	<Include file="osd\OSD.lua" />
 	<Include file="osd\Timers.lua" />
 	<Include file="osd\ElementalStorms.lua" />
-	<Include file="osd\GreedyEmissary.lua" />
+<!--	<Include file="osd\GreedyEmissary.lua" />-->
+	<Include file="osd\TimeRifts.lua" />
+	<Include file="osd\TwitchDrops.lua" />
+	<Include file="osd\PrimeGamingLoot.lua" />
 </Ui>

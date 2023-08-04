@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,challenge,timewalker"
 
-mod:SetRevision("20220218034305")
+mod:SetRevision("20230708234551")
 mod:SetCreatureID(61634)
 mod:SetEncounterID(1502)
 
@@ -20,7 +20,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 120789"
 )
 
-local warnCausticTar			= mod:NewSpellAnnounce("ej6278", 2)--Announce a tar is ready to be used. (may be spammy and turned off by default if it is)
+local warnCausticTar			= mod:NewSpellAnnounce(-6278, 2)--Announce a tar is ready to be used. (may be spammy and turned off by default if it is)
 local warnBombard				= mod:NewSpellAnnounce(120200, 3)
 local warnDashingStrike			= mod:NewSpellAnnounce(120789, 3)
 local warnThousandBlades		= mod:NewSpellAnnounce(120759, 4)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1878, "DBM-Party-Legion", 12, 900)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116042005")
+mod:SetRevision("20230708234551")
 mod:SetCreatureID(120793)
 mod:SetEncounterID(2039)
 
@@ -25,7 +25,7 @@ local warnDarkSolitude				= mod:NewSpellAnnounce(234817, 2)--Can't target scan s
 local warnShadowFade				= mod:NewSpellAnnounce(233206, 2)
 local warnShadowFadeEnded			= mod:NewEndAnnounce(233206, 2)
 local warnDemonicUpheaval			= mod:NewTargetAnnounce(233963, 3)
-local warnShadowAdd					= mod:NewSpellAnnounce("ej14965", 2, 233206)
+local warnShadowAdd					= mod:NewSpellAnnounce(-14965, 2, 233206)
 
 local specWarnCarrionSwarm			= mod:NewSpecialWarningSpell(233155, "Tank", nil, nil, 1, 2)
 local specWarnDemonicUpheaval		= mod:NewSpecialWarningMoveAway(233963, nil, nil, nil, 1, 2)

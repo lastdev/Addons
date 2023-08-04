@@ -381,8 +381,7 @@ L["Cathedral of Eternal Night"] = "永夜聖殿"
 L["Cavern Seeker"] = "Cavern Seeker"
 --[[Translation missing --]]
 L["Centrifuge Construct"] = "Centrifuge Construct"
---[[Translation missing --]]
-L["Chamber of Flames"] = "Chamber of Flames"
+L["Chamber of Flames"] = "烈焰之室"
 --[[Translation missing --]]
 L["Chamber Overseer"] = "Chamber Overseer"
 L["Chamber Sentinel"] = "大厅哨兵"
@@ -523,8 +522,7 @@ L["Cutwater Striker"] = "破浪打击者"
 L["Cyanigosa"] = "Cyanigosa"
 --[[Translation missing --]]
 L["Cyclone"] = "Cyclone"
---[[Translation missing --]]
-L["Cyclone Summit"] = "Cyclone Summit"
+L["Cyclone Summit"] = "漩渦尖塔"
 --[[Translation missing --]]
 L["Dalronn the Controller"] = "Dalronn the Controller"
 L["Damaged Golem"] = "损坏的傀儡"
@@ -819,6 +817,9 @@ L["Empyrean Assassin"] = "Empyrean Assassin"
 L["Enable Minimap Button"] = "啟用小地圖按鈕"
 L["Enchanted Broodling"] = "魔化巢蛛"
 L["Enchanted Emissary"] = "魔力使者"
+--[[Translation missing --]]
+L["encounteredErrors"] = [=[MDT has encountered errors.
+Click to view them.]=]
 L["Encrypted"] = "加密"
 L["Enemies related to seasonal affixes are currently hidden"] = "目前已隱藏季詞綴相關的敵人"
 L["Enemy Info"] = "敵人資訊"
@@ -1136,13 +1137,11 @@ L["Hadronox"] = "Hadronox"
 L["Hadronox's Lair"] = "Hadronox's Lair"
 L["Hakkar the Soulflayer"] = "夺灵者哈卡"
 L["Halkias"] = "哈尔吉亚斯"
---[[Translation missing --]]
-L["Hall of the Keepers"] = "Hall of the Keepers"
+L["Hall of the Keepers"] = "守衛者大廳"
 L["Hall of the Moon"] = "月之殿堂"
 L["HallOfTheKeepers"] = "守衛者大廳"
 L["Halls of Atonement"] = "贖罪之殿"
---[[Translation missing --]]
-L["Halls of Infusion"] = "Halls of Infusion"
+L["Halls of Infusion"] = "灌注迴廊"
 --[[Translation missing --]]
 L["Halls of Lightning"] = "Halls of Lightning"
 --[[Translation missing --]]
@@ -1279,11 +1278,9 @@ L["Infused Quill-feather"] = "注能的羽翎"
 L["Infused Whelp"] = "Infused Whelp"
 --[[Translation missing --]]
 L["Infuser Sariya"] = "Infuser Sariya"
---[[Translation missing --]]
-L["Infuser's Rotunda"] = "Infuser's Rotunda"
+L["Infuser's Rotunda"] = "灌注者圓形大廳"
 L["InfusersRotunda"] = "灌注者圓形大廳"
---[[Translation missing --]]
-L["Infusion Chamber"] = "Infusion Chamber"
+L["Infusion Chamber"] = "灌注室"
 L["Infusion Chambers"] = "注入之廳"
 L["InfusionChamber"] = "灌注室"
 L["Ingra Maloch"] = "英格拉·马洛克"
@@ -2483,8 +2480,7 @@ L["The Banquet Hall"] = "宴會大廳"
 L["The Brig"] = "禁閉室"
 --[[Translation missing --]]
 L["The Brood Pit"] = "The Brood Pit"
---[[Translation missing --]]
-L["The Burning Cauldron"] = "The Burning Cauldron"
+L["The Burning Cauldron"] = "燃燒大鍋"
 L["The Cellar"] = "地窖"
 --[[Translation missing --]]
 L["The Construct Quarter"] = "The Construct Quarter"
@@ -2558,14 +2554,12 @@ L["The Underrot"] = "幽腐深窟"
 L["The Underrot Sublevel"] = "幽腐深窟"
 --[[Translation missing --]]
 L["The Upper Necropolis"] = "The Upper Necropolis"
---[[Translation missing --]]
-L["The Vault of Tyr"] = "The Vault of Tyr"
+L["The Vault of Tyr"] = "提爾寶庫"
 --[[Translation missing --]]
 L["The Vestibules of Drak'Tharon"] = "The Vestibules of Drak'Tharon"
 --[[Translation missing --]]
 L["The Violet Hold"] = "The Violet Hold"
---[[Translation missing --]]
-L["The Vortex Pinnacle"] = "The Vortex Pinnacle"
+L["The Vortex Pinnacle"] = "漩渦尖塔"
 L["The Warden's Court"] = "看守者之廷"
 L["TheArcaneConservatory"] = "祕法存護所"
 L["Theater of Pain"] = "苦痛劇場"
@@ -2680,8 +2674,7 @@ L["Ukhel Deathspeaker"] = "Ukhel Deathspeaker"
 --[[Translation missing --]]
 L["Ukhel Willcrusher"] = "Ukhel Willcrusher"
 L["Ularogg Cragshaper"] = "乌拉罗格·塑山"
---[[Translation missing --]]
-L["Uldaman: Legacy of Tyr"] = "Uldaman: Legacy of Tyr"
+L["Uldaman: Legacy of Tyr"] = "奧達曼：提爾的遺產"
 L["UldamanLegacyOfTyr"] = "奧達曼：提爾的遺產"
 --[[Translation missing --]]
 L["Ulduar"] = "Ulduar"

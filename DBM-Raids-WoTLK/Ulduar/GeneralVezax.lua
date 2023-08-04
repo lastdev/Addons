@@ -5,7 +5,7 @@ if not mod:IsClassic() then--on classic, it's normal10,normal25, defined in toc,
 	mod.statTypes = "normal,timewalker"
 end
 
-mod:SetRevision("20230522065847")
+mod:SetRevision("20230709213942")
 mod:SetCreatureID(33271)
 if not mod:IsClassic() then
 	mod:SetEncounterID(1134)
@@ -131,7 +131,7 @@ end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 62660 then		-- Shadow Crash
-		self:BossTargetScanner(args.sourceGUID, "ShadowCrashTarget", 0.05, 20, nil, nil, nil, self.vb.lastMarkTarget)
+		self:BossTargetScanner(args.sourceGUID, "ShadowCrashTarget", 0.05, 20, nil, nil, nil, self.vb.lastMarkTarget, nil, nil, true)
 		local timer = 10--Blizzard confirmed it's a 10-15 second variable timer on final version of fight (ie retail)
 		if self:IsClassic() then
 			timer = self:IsDifficulty("normal25") and 7 or 10

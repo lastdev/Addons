@@ -10,7 +10,7 @@ local Table = TSM.Include("Util.Table")
 local ItemInfo = TSM.Include("Service.ItemInfo")
 local private = {
 	callbacks = {},
-	priorityLookup = {}
+	priorityLookup = {},
 }
 
 

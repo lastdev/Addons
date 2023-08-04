@@ -31,6 +31,7 @@ Environment.FEATURES = EnumType.New("FEATURES", {
 	C_TOOLTIP_INFO = EnumType.CreateValue(),
 	REAGENT_BANK = EnumType.CreateValue(),
 	BLACK_MARKET_AH = EnumType.CreateValue(),
+	REGION_WIDE_TRADING = EnumType.CreateValue(),
 })
 local private = {
 	features = nil,
@@ -80,6 +81,7 @@ Environment:OnModuleLoad(function()
 		[Environment.FEATURES.C_TOOLTIP_INFO] = Environment.IsRetail(),
 		[Environment.FEATURES.REAGENT_BANK] = Environment.IsRetail(),
 		[Environment.FEATURES.BLACK_MARKET_AH] = Environment.IsRetail(),
+		[Environment.FEATURES.REGION_WIDE_TRADING] = Environment.IsRetail(),
 	}
 end)
 

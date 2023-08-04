@@ -8,8 +8,7 @@ L["HIGHLIGHT_HOVEROVER"] = "Подсвечивание при наведении
 L["HIGHLIGHT_HOVEROVER_ALPHA"] = "Степень подсвечивания при наведении курсора"
 L["HIGHLIGHT_HOVEROVER_DESC"] = "Эффект подсвечивания при наведении курсора мыши над индикаторами здоровья"
 L["OPTIONS_ALPHA"] = "Прозрачность"
---[[Translation missing --]]
-L["OPTIONS_ALPHABYFRAME_ALPHAMULTIPLIER"] = "Transparency multiplier."
+L["OPTIONS_ALPHABYFRAME_ALPHAMULTIPLIER"] = "Множитель прозрачности."
 L["OPTIONS_ALPHABYFRAME_DEFAULT"] = "Прозрачность по умолчанию"
 --[[Translation missing --]]
 L["OPTIONS_ALPHABYFRAME_DEFAULT_DESC"] = "Amount of transparency applyed to all the components of a single nameplate."
@@ -19,8 +18,7 @@ L["OPTIONS_ALPHABYFRAME_ENABLE_FRIENDLY"] = "Включить для союзн�
 L["OPTIONS_ALPHABYFRAME_ENABLE_FRIENDLY_DESC"] = "Применять настройки прозрачности для союзных юнитов."
 --[[Translation missing --]]
 L["OPTIONS_ALPHABYFRAME_TARGET_INRANGE"] = "Target Alpha/In-Range"
---[[Translation missing --]]
-L["OPTIONS_ALPHABYFRAME_TARGET_INRANGE_DESC"] = "Transparency for targets or in-range units."
+L["OPTIONS_ALPHABYFRAME_TARGET_INRANGE_DESC"] = "Прозрачность для целей или находящихся в радиусе действия юнитов."
 --[[Translation missing --]]
 L["OPTIONS_ALPHABYFRAME_TITLE_ENEMIES"] = "Transparency Amount Per Frame (enemies)"
 --[[Translation missing --]]
@@ -70,8 +68,7 @@ L["OPTIONS_CAST_SHOW_TARGETNAME_TANK_DESC"] = "Если вы танк, то пр
 L["OPTIONS_CASTBAR_FADE_ANIM_ENABLED"] = "Включить анимации затухания"
 L["OPTIONS_CASTBAR_FADE_ANIM_ENABLED_DESC"] = "Включить анимации затухания на старте и окончании произнесения заклинаний."
 L["OPTIONS_CASTBAR_FADE_ANIM_TIME_END"] = "На окончании"
---[[Translation missing --]]
-L["OPTIONS_CASTBAR_FADE_ANIM_TIME_END_DESC"] = "When a cast ends, this is the amount of time the cast bar takes to go from 100% transparency to not be visible at all."
+L["OPTIONS_CASTBAR_FADE_ANIM_TIME_END_DESC"] = "Когда каст заканчивается, это время, которое требуется полосе каста, чтобы перейти от прозрачности 100% к полной невидимости."
 L["OPTIONS_CASTBAR_FADE_ANIM_TIME_START"] = "На старте"
 --[[Translation missing --]]
 L["OPTIONS_CASTBAR_FADE_ANIM_TIME_START_DESC"] = "When a cast starts, this is the amount of time the cast bar takes to go from zero transparency to full opaque."
@@ -360,8 +357,7 @@ L["OPTIONS_THREAT_MODIFIERS_HEALTHBARCOLOR"] = "Цвет полосы здоро
 L["OPTIONS_THREAT_MODIFIERS_NAMECOLOR"] = "Окрашивать имена"
 --[[Translation missing --]]
 L["OPTIONS_THREAT_PULL_FROM_ANOTHER_TANK"] = "Pulling From Another Tank"
---[[Translation missing --]]
-L["OPTIONS_THREAT_PULL_FROM_ANOTHER_TANK_TANK"] = "The unit has aggro on another tank and you're about to pull it."
+L["OPTIONS_THREAT_PULL_FROM_ANOTHER_TANK_TANK"] = "У юнита есть агро на другом танке, и вы собираетесь его перетянуть."
 --[[Translation missing --]]
 L["OPTIONS_THREAT_USE_AGGRO_FLASH"] = "Enable aggro flash"
 --[[Translation missing --]]

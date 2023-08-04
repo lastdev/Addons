@@ -66,7 +66,7 @@ local unitFrameData = {
 	},
 	{
 		[1] = "HealBot",
-		[2] = "HealBot_Action_HealUnit",
+		[2] = "HealBot_HealUnit",
 		[3] = "unit",
 		[4] = 2,
 		[5] = 50,

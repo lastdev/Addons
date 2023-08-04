@@ -356,7 +356,7 @@ function Operations.SetStoredGlobally(storeGlobally)
 		TSM.db.global.userData.operations = CopyTable(TSM.db.profile.userData.operations)
 		-- clear out old operations
 		local originalProfile = TSM.db:GetCurrentProfile()
-		for _, profile in TSM.db:ProfileIterator() do
+		for _, profile in TSM.db:ScopeKeyIterator("profile") do
 			TSM.db:SetProfile(profile)
 			TSM.db.profile.userData.operations = nil
 		end
@@ -364,7 +364,7 @@ function Operations.SetStoredGlobally(storeGlobally)
 	else
 		-- move global to all profiles
 		local originalProfile = TSM.db:GetCurrentProfile()
-		for _, profile in TSM.db:ProfileIterator() do
+		for _, profile in TSM.db:ScopeKeyIterator("profile") do
 			TSM.db:SetProfile(profile)
 			TSM.db.profile.userData.operations = CopyTable(TSM.db.global.userData.operations)
 		end

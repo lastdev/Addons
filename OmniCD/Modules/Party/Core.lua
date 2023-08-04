@@ -11,7 +11,7 @@ function P:Enable()
 		return
 	end
 
-	if not E.isDF and not E.isWOTLKC341 then
+	if not E.isDF then
 		self:RegisterEvent('CVAR_UPDATE')
 	end
 	self:RegisterEvent('UI_SCALE_CHANGED')
@@ -224,12 +224,12 @@ P.GetBuffDuration = E.isClassic and function(P, unit, spellID)
 		end
 	end
 
-end or function(P, unit, spellID)
+end or function(P, unit, spellID, includeNoDuration)
 	for i = 1, 40 do
 		local _,_,_,_, duration, expTime,_,_,_, id = UnitBuff(unit, i)
 		if not id then return end
 		if id == spellID then
-			return duration > 0 and expTime - GetTime()
+			return duration > 0 and expTime - GetTime() or includeNoDuration
 		end
 	end
 end

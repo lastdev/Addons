@@ -87,11 +87,11 @@ function CraftTierDialog:SetCraftString(craftString, costsFunc)
 		if Profession.GetIndexByCraftString(qualityCraftString) then
 			local isSelected = quality == selectedQuality
 			foundSelectedQuality = foundSelectedQuality or isSelected
-			local cost, _, profit = costsFunc(qualityCraftString)
+			local cost, _, profit, chance = costsFunc(qualityCraftString)
 			self:GetElement("options.inner"):AddChild(UIElements.New("CraftTierButton", "button_"..quality)
 				:SetSize(120, 80)
 				:SetMargin(0, 4, 0, 0)
-				:SetCraftString(qualityCraftString)
+				:SetCraftString(qualityCraftString, chance or 1)
 				:SetPrices(cost, profit)
 				:SetSelected(isSelected)
 				:SetScript("OnClick", self:__closure("_HandleQualityClick"))

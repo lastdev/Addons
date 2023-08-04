@@ -3,7 +3,7 @@
 
                                           Springfur Alpaca
 
-                                        v1.14 - 6th May 2023
+                                       v1.16 - 21st July 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -22,18 +22,9 @@ ns.colour = {}
 ns.colour.prefix	= "\124cFFD2691E"	-- X11Chocolate
 ns.colour.highlight = "\124cFFF4A460"	-- X11SandyBrown
 ns.colour.plaintext = "\124cFFDEB887"	-- X11BurlyWood
--- Map IDs
-ns.kalimdor = 12
---ns.kalimdor = 986
---ns.kalimdor = 1209
---ns.uldum = 249 -- That's the old Uldum
-ns.uldum = 1527 -- From about Patch 8.3
---ns.uldum = 1330
 
---ns.author = true
-
-local defaults = { profile = { icon_scale = 1.4, icon_alpha = 0.8, icon_choice = 7, icon_choiceSpecial = 4, showCoords = true } }
-local continents = {}
+local defaults = { profile = { iconScale = 2.5, iconAlpha = 0.8, iconChoice = 7, 
+							iconChoiceSpecial = 4, showCoords = true } }
 local pluginHandler = {}
 
 -- upvalues
@@ -61,15 +52,19 @@ if ns.oceania[realm] then
 end
 
 if ns.locale == "deDE" then
-	L["Springfur Alpaca"] = "Frühlingsfellalpaka"
-	L["AddOn Description"] = "Hilft dir, die " ..ns.colour.highlight .."Dunkle Erde" .."\124r zu finden"
-	L["Icon Selection"] = "Symbolauswahl"
-	L["Icon Scale"] = "Symbolskalierung"
-	L["The scale of the icons"] = "Die Skalierung der Symbole"
-	L["Icon Alpha"] = "Symboltransparenz"
-	L["The alpha transparency of the icons"] = "Die Transparenz der Symbole"
-	L["Icon"] = "Symbol"
+	L["Character"] = "Charakter"
+	L["Account"] = "Accountweiter"
+	L["Completed"] = "Abgeschlossen"
+	L["Not Completed"] = "Nicht Abgeschlossen"
 	L["Options"] = "Optionen"
+	L["Map Pin Size"] = "Pin-Größe"
+	L["The Map Pin Size"] = "Die Größe der Karten-Pins"
+	L["Map Pin Alpha"] = "Kartenpin Alpha"
+	L["The alpha transparency of the map pins"] = "Die Alpha-Transparenz der Karten-Pins"
+	L["Show Coordinates"] = "Koordinaten anzeigen"
+	L["Show Coordinates Description"] = "Zeigen sie die " ..ns.colour.highlight 
+		.."koordinaten\124r in QuickInfos auf der Weltkarte und auf der Minikarte an"
+	L["Map Pin Selections"] = "Karten-Pin-Auswahl"
 	L["Red"] = "Rot"
 	L["Blue"] = "Blau"
 	L["Green"] = "Grün"
@@ -85,21 +80,23 @@ if ns.locale == "deDE" then
 	L["Phasing"] = "Synchronisieren"
 	L["Raptor egg"] = "Raptor-Ei"
 	L["Stars"] = "Sternen"
-	L["NPC"] = "NSC"
-	L["Show Coordinates"] = "Koordinaten anzeigen"
-	L["Show Coordinates Description"] = "Zeigen sie die " ..ns.colour.highlight 
-		.."koordinaten\124r in QuickInfos auf der Weltkarte und auf der Minikarte an"
 	
 elseif ns.locale == "esES" or ns.locale == "esMX" then
-	L["Springfur Alpaca"] = "Alpaca de pelaje primaveral"
-	L["AddOn Description"] = "Ayuda a encontrar los " ..ns.colour.highlight .."Tierra Oscura"
-	L["Icon Selection"] = "Selección de iconos"
-	L["Icon Scale"] = "Escala de icono"
-	L["The scale of the icons"] = "La escala de los iconos"
+	L["Character"] = "Personaje"
+	L["Account"] = "la Cuenta"
+	L["Completed"] = "Completado"
+	L["Not Completed"] = ( ns.locale == "esES" ) and "Sin Completar" or "Incompleto"
+	L["Options"] = "Opciones"
+	L["Map Pin Size"] = "Tamaño de alfiler"
+	L["The Map Pin Size"] = "Tamaño de los pines del mapa"
+	L["Map Pin Alpha"] = "Alfa de los pines del mapa"
+	L["The alpha transparency of the map pins"] = "La transparencia alfa de los pines del mapa"
 	L["Icon Alpha"] = "Transparencia del icono"
 	L["The alpha transparency of the icons"] = "La transparencia alfa de los iconos"
-	L["Icon"] = "El icono"
-	L["Options"] = "Opciones"
+	L["Show Coordinates"] = "Mostrar coordenadas"
+	L["Show Coordinates Description"] = "Mostrar " ..ns.colour.highlight
+		.."coordenadas\124r en información sobre herramientas en el mapa del mundo y en el minimapa"
+	L["Map Pin Selections"] = "Selecciones de pines de mapa"
 	L["Gold"] = "Oro"
 	L["Red"] = "Rojo"
 	L["Blue"] = "Azul"
@@ -117,21 +114,21 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Phasing"] = "Sincronización"	
 	L["Raptor egg"] = "Huevo de raptor"	
 	L["Stars"] = "Estrellas"
-	L["NPC"] = "PNJ"
-	L["Show Coordinates"] = "Mostrar coordenadas"
-	L["Show Coordinates Description"] = "Mostrar " ..ns.colour.highlight
-		.."coordenadas\124r en información sobre herramientas en el mapa del mundo y en el minimapa"
-
+	
 elseif ns.locale == "frFR" then
-	L["Springfur Alpaca"] = "Alpaga toison-vernale"
-	L["AddOn Description"] = "Aide à trouver les " ..ns.colour.highlight .."Terre Sombre"
-	L["Icon Selection"] = "Sélection d'icônes"
-	L["Icon Scale"] = "Echelle de l’icône"
-	L["The scale of the icons"] = "L'échelle des icônes"
-	L["Icon Alpha"] = "Transparence de l'icône"
-	L["The alpha transparency of the icons"] = "La transparence des icônes"
-	L["Icon"] = "L'icône"
+	L["Character"] = "Personnage"
+	L["Account"] = "le Compte"
+	L["Completed"] = "Achevé"
+	L["Not Completed"] = "Non achevé"
 	L["Options"] = "Options"
+	L["Map Pin Size"] = "Taille des épingles"
+	L["The Map Pin Size"] = "La taille des épingles de carte"
+	L["Map Pin Alpha"] = "Alpha des épingles de carte"
+	L["The alpha transparency of the map pins"] = "La transparence alpha des épingles de la carte"
+	L["Show Coordinates"] = "Afficher les coordonnées"
+	L["Show Coordinates Description"] = "Afficher " ..ns.colour.highlight
+		.."les coordonnées\124r dans les info-bulles sur la carte du monde et la mini-carte"
+	L["Map Pin Selections"] = "Sélections de broches de carte"
 	L["Gold"] = "Or"
 	L["Red"] = "Rouge"
 	L["Blue"] = "Bleue"
@@ -149,21 +146,20 @@ elseif ns.locale == "frFR" then
 	L["Phasing"] = "Synchronisation"
 	L["Raptor egg"] = "Œuf de Rapace"
 	L["Stars"] = "Étoiles"
-	L["NPC"] = "PNJ"
-	L["Show Coordinates"] = "Afficher les coordonnées"
-	L["Show Coordinates Description"] = "Afficher " ..ns.colour.highlight
-		.."les coordonnées\124r dans les info-bulles sur la carte du monde et la mini-carte"
-
+	
 elseif ns.locale == "itIT" then
-	L["Springfur Alpaca"] = "Alpaca Primopelo"
-	L["AddOn Description"] = "Aiuta a trovare le " ..ns.colour.highlight .."Terreno Smosso"
-	L["Icon Selection"] = "Selezione dell'icona"
-	L["Icon Scale"] = "Scala delle icone"
-	L["The scale of the icons"] = "La scala delle icone"
-	L["Icon Alpha"] = "Icona alfa"
-	L["The alpha transparency of the icons"] = "La trasparenza alfa delle icone"
-	L["Icon"] = "Icona"
+	L["Character"] = "Personaggio"
+	L["Completed"] = "Completo"
+	L["Not Completed"] = "Non Compiuto"
 	L["Options"] = "Opzioni"
+	L["Map Pin Size"] = "Dimensione del pin"
+	L["The Map Pin Size"] = "La dimensione dei Pin della mappa"
+	L["Map Pin Alpha"] = "Mappa pin alfa"
+	L["The alpha transparency of the map pins"] = "La trasparenza alfa dei pin della mappa"
+	L["Show Coordinates"] = "Mostra coordinate"
+	L["Show Coordinates Description"] = "Visualizza " ..ns.colour.highlight
+		.."le coordinate\124r nelle descrizioni comandi sulla mappa del mondo e sulla minimappa"
+	L["Map Pin Selections"] = "Selezioni pin mappa"
 	L["Gold"] = "Oro"
 	L["Red"] = "Rosso"
 	L["Blue"] = "Blu"
@@ -181,21 +177,20 @@ elseif ns.locale == "itIT" then
 	L["Phasing"] = "Sincronizzazione"
 	L["Raptor egg"] = "Raptor Uovo"
 	L["Stars"] = "Stelle"
-	L["NPC"] = "PNG"
-	L["Show Coordinates"] = "Mostra coordinate"
-	L["Show Coordinates Description"] = "Visualizza " ..ns.colour.highlight
-		.."le coordinate\124r nelle descrizioni comandi sulla mappa del mondo e sulla minimappa"
-
+	
 elseif ns.locale == "koKR" then
-	L["Springfur Alpaca"] = "봄털 알파카"
-	L["AddOn Description"] = ns.colour.highlight .."검은 토양\124r 를 찾을 수 있도록 도와줍니다"
-	L["Icon Selection"] = "아이콘 선택"
-	L["Icon Scale"] = "아이콘 크기 비율"
-	L["The scale of the icons"] = "아이콘의 크기 비율입니다"
-	L["Icon Alpha"] = "아이콘 투명도"
-	L["The alpha transparency of the icons"] = "아이콘의 투명도입니다"
-	L["Icon"] = "아이콘"
+	L["Character"] = "캐릭터"
+	L["Account"] = "계정"
+	L["Completed"] = "완료"
+	L["Not Completed"] = "미완료"
+	L["Map Pin Size"] = "지도 핀의 크기"
 	L["Options"] = "설정"
+	L["The Map Pin Size"] = "지도 핀의 크기"
+	L["Map Pin Alpha"] = "지도 핀의 알파"
+	L["The alpha transparency of the map pins"] = "지도 핀의 알파 투명도"
+	L["Show Coordinates"] = "좌표 표시"
+	L["Show Coordinates Description"] = "세계지도 및 미니지도의 도구 설명에 좌표를 표시합니다."
+	L["Map Pin Selections"] = "지도 핀 선택"
 	L["Gold"] = "금"
 	L["Red"] = "빨간"
 	L["Blue"] = "푸른"
@@ -213,19 +208,21 @@ elseif ns.locale == "koKR" then
 	L["Phasing"] = "동기화 중"
 	L["Raptor egg"] = "랩터의 알"
 	L["Stars"] = "별"
-	L["Show Coordinates"] = "좌표 표시"
-	L["Show Coordinates Description"] = "세계지도 및 미니지도의 도구 설명에 좌표를 표시합니다."
-
+	
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
-	L["Springfur Alpaca"] = "Alpaca Lã de Primavera"
-	L["AddOn Description"] = "Ajuda você a localizar " ..ns.colour.highlight .."Solo Negro"
-	L["Icon Selection"] = "Seleção de ícones"
-	L["Icon Scale"] = "Escala de Ícone"
-	L["The scale of the icons"] = "A escala dos ícones"
-	L["Icon Alpha"] = "Ícone Alpha"
-	L["The alpha transparency of the icons"] = "A transparência alfa dos ícones"
-	L["Icon"] = "Ícone"
+	L["Character"] = "Personagem"
+	L["Account"] = "à Conta"
+	L["Completed"] = "Concluído"
+	L["Not Completed"] = "Não Concluído"
 	L["Options"] = "Opções"
+	L["Map Pin Size"] = "Tamanho do pino"
+	L["The Map Pin Size"] = "O tamanho dos pinos do mapa"
+	L["Map Pin Alpha"] = "Alfa dos pinos do mapa"
+	L["The alpha transparency of the map pins"] = "A transparência alfa dos pinos do mapa"
+	L["Show Coordinates"] = "Mostrar coordenadas"
+	L["Show Coordinates Description"] = "Exibir " ..ns.colour.highlight
+		.."coordenadas\124r em dicas de ferramentas no mapa mundial e no minimapa"
+	L["Map Pin Selections"] = "Seleções de pinos de mapa"
 	L["Gold"] = "Ouro"
 	L["Red"] = "Vermelho"
 	L["Blue"] = "Azul"
@@ -243,21 +240,21 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Phasing"] = "Sincronização"
 	L["Raptor egg"] = "Ovo de raptor"
 	L["Stars"] = "Estrelas"
-	L["NPC"] = "PNJ"
-	L["Show Coordinates"] = "Mostrar coordenadas"
-	L["Show Coordinates Description"] = "Exibir " ..ns.colour.highlight
-		.."coordenadas\124r em dicas de ferramentas no mapa mundial e no minimapa"
-
+	
 elseif ns.locale == "ruRU" then
-	L["Springfur Alpaca"] = "Курчавая альпака"
-	L["AddOn Description"] = "Помогает найти " ..ns.colour.highlight .."Темная Земля"
-	L["Icon Selection"] = "Выбор Значка"
-	L["Icon Scale"] = "Масштаб Значка"
-	L["The scale of the icons"] = "Масштаб для Значков"
-	L["Icon Alpha"] = "Альфа Значок"
-	L["The alpha transparency of the icons"] = "Альфа-прозрачность Значков"
-	L["Icon"] = "Альфа Значок"
+	L["Character"] = "Персонажа"
+	L["Account"] = "Счет"
+	L["Completed"] = "Выполнено"
+	L["Not Completed"] = "Не Выполнено"
 	L["Options"] = "Параметры"
+	L["Map Pin Size"] = "Размер булавки"
+	L["The Map Pin Size"] = "Размер булавок на карте"
+	L["Map Pin Alpha"] = "Альфа булавок карты"
+	L["The alpha transparency of the map pins"] = "Альфа-прозрачность булавок карты"
+	L["Show Coordinates"] = "Показать Координаты"
+	L["Show Coordinates Description"] = "Отображает " ..ns.colour.highlight
+		.."координаты\124r во всплывающих подсказках на карте мира и мини-карте"
+	L["Map Pin Selections"] = "Выбор булавки карты"
 	L["Gold"] = "Золото"
 	L["Red"] = "Красный"
 	L["Blue"] = "Синий"
@@ -275,20 +272,20 @@ elseif ns.locale == "ruRU" then
 	L["Phasing"] = "Синхронизация"
 	L["Raptor egg"] = "Яйцо ящера"
 	L["Stars"] = "Звезды"
-	L["Show Coordinates"] = "Показать Координаты"
-	L["Show Coordinates Description"] = "Отображает " ..ns.colour.highlight
-		.."координаты\124r во всплывающих подсказках на карте мира и мини-карте"
-
+	
 elseif ns.locale == "zhCN" then
-	L["Springfur Alpaca"] = "春裘羊驼"
-	L["AddOn Description"] = "帮助你找寻" ..ns.colour.highlight .."黑色泥土"
-	L["Icon Selection"] = "图标选择"
-	L["Icon Scale"] = "图示大小"
-	L["The scale of the icons"] = "图示的大小"
-	L["Icon Alpha"] = "图示透明度"
-	L["The alpha transparency of the icons"] = "图示的透明度"
-	L["Icon"] = "图示"
+	L["Character"] = "角色"
+	L["Account"] = "账号"
+	L["Completed"] = "已完成"
+	L["Not Completed"] = "未完成"
 	L["Options"] = "选项"
+	L["Map Pin Size"] = "地图图钉的大小"
+	L["The Map Pin Size"] = "地图图钉的大小"
+	L["Map Pin Alpha"] = "地图图钉的透明度"
+	L["The alpha transparency of the map pins"] = "地图图钉的透明度"
+	L["Show Coordinates"] = "显示坐标"
+	L["Show Coordinates Description"] = "在世界地图和迷你地图上的工具提示中" ..ns.colour.highlight .."显示坐标"
+	L["Map Pin Selections"] = "地图图钉选择"
 	L["Gold"] = "金子"
 	L["Red"] = "红"
 	L["Blue"] = "蓝"
@@ -306,19 +303,20 @@ elseif ns.locale == "zhCN" then
 	L["Phasing"] = "同步"
 	L["Raptor egg"] = "迅猛龙蛋"
 	L["Stars"] = "星星"
-	L["Show Coordinates"] = "显示坐标"
-	L["Show Coordinates Description"] = "在世界地图和迷你地图上的工具提示中" ..ns.colour.highlight .."显示坐标"
-
+	
 elseif ns.locale == "zhTW" then
-	L["Springfur Alpaca"] = "春裘羊駝"
-	L["AddOn Description"] = "幫助你找尋" ..ns.colour.highlight .."黑色泥土"
-	L["Icon Selection"] = "圖標選擇"
-	L["Icon Scale"] = "圖示大小"
-	L["The scale of the icons"] = "圖示的大小"
-	L["Icon Alpha"] = "圖示透明度"
-	L["The alpha transparency of the icons"] = "圖示的透明度"
-	L["Icon"] = "圖示"
+	L["Character"] = "角色"
+	L["Account"] = "賬號"
+	L["Completed"] = "完成"
+	L["Not Completed"] = "未完成"
 	L["Options"] = "選項"
+	L["Map Pin Size"] = "地圖圖釘的大小"
+	L["The Map Pin Size"] = "地圖圖釘的大小"
+	L["Map Pin Alpha"] = "地圖圖釘的透明度"
+	L["The alpha transparency of the map pins"] = "地圖圖釘的透明度"
+	L["Show Coordinates"] = "顯示坐標"
+	L["Show Coordinates Description"] = "在世界地圖和迷你地圖上的工具提示中" ..ns.colour.highlight .."顯示坐標"
+	L["Map Pin Selections"] = "地圖圖釘選擇"
 	L["Gold"] = "金子"
 	L["Red"] = "紅"
 	L["Blue"] = "藍"
@@ -335,23 +333,94 @@ elseif ns.locale == "zhTW" then
 	L["Mana Orb"] = "法力球"
 	L["Phasing"] = "同步"
 	L["Raptor egg"] = "迅猛龍蛋"
-	L["Show Coordinates"] = "顯示坐標"
-	L["Show Coordinates Description"] = "在世界地圖和迷你地圖上的工具提示中" ..ns.colour.highlight .."顯示坐標"
 	
 else
+	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
+	L["Show completed criteria"] = "Show map pins for completed criteria: "
 	if ns.locale == "enUS" then
 		L["Grey"] = "Gray"
 	end
-	L["AddOn Description"] = "Helps you find the Dark Soil"
-	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
+end
+
+ns.name = UnitName( "player" ) or "Character"
+
+if ns.locale == "deDE" then
+	L["Springfur Alpaca"] = "Frühlingsfellalpaka"
+	L["Gersahl Greens"] = "Gersahlblätter"
+	L["Daily Quest"] = "Tägliche Aufgabe"
+	L["of"] = "@ von #"
+	L["AddOn Description"] = "Hilft Ihnen, das " ..ns.colour.highlight .."Frühlingsfell-Alpaka"
+		..ns.colour.plaintext .." in Uldum zu erhalten"
+	
+elseif ns.locale == "esES" or ns.locale == "esMX" then
+	L["Springfur Alpaca"] = "Alpaca de pelaje primaveral"
+	L["Gersahl Greens"] = "Verduras Gersahl"
+	L["Daily Quest"] = "Búsqueda Diaria"
+	L["of"] = "@ de #"
+	L["AddOn Description"] = "Te ayuda a obtener " ..ns.colour.highlight
+		.."el Alpaca de pelaje primaveral" ..ns.colour.plaintext .." en Uldum"
+
+elseif ns.locale == "frFR" then
+	L["Springfur Alpaca"] = "Alpaga toison-vernale"
+	L["Gersahl Greens"] = "Légume de Gersahl"
+	L["Daily Quest"] = "Quêtes Journalières"
+	L["of"] = "@ sur #"
+	L["AddOn Description"] = "Vous aide à obtenir " ..ns.colour.highlight .."l'alpaga toison-vernale" 
+		..ns.colour.plaintext .." à Uldum"
+
+elseif ns.locale == "itIT" then
+	L["Springfur Alpaca"] = "Alpaca Primopelo"
+	L["Gersahl Greens"] = "Insalata di Gersahl"
+	L["Daily Quest"] = "Missione Giornaliera"
+	L["of"] = "@ di #"
+	L["AddOn Description"] = "Ti aiuta a ottenere " ..ns.colour.highlight .."Alpaca Primopelo"
+		..ns.colour.plaintext .." a Uldum"
+
+elseif ns.locale == "koKR" then
+	L["Springfur Alpaca"] = "봄털 알파카"
+	L["Gersahl Greens"] = "게샬 채소"
+	L["Daily Quest"] = "일일 퀘스트"
+	L["of"] = "#개 중 @개"
+	L["AddOn Description"] = "울둠에서 " ..ns.colour.highlight .."봄털 알파카" ..ns.colour.plaintext
+		.."를 얻는 데 도움이 됩니다."
+
+elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
+	L["Springfur Alpaca"] = "Alpaca Lã de Primavera"
+	L["Gersahl Greens"] = "Folhas de Gersahl"
+	L["Daily Quest"] = "Missão Diária"
+	L["of"] = "@ de #"
+	L["AddOn Description"] = "Ajuda você a obter o " ..ns.colour.highlight .."Alpaca Lã de Primavera"
+		..ns.colour.plaintext .." em Uldum"
+
+elseif ns.locale == "ruRU" then
+	L["Springfur Alpaca"] = "Курчавая альпака"
+	L["Gersahl Greens"] = "Побеги герсали"
+	L["Daily Quest"] = "Ежедневный Квест"
+	L["of"] = "@ из #"
+	L["AddOn Description"] = "Помогает вам получить " ..ns.colour.highlight .."Курчавая альпака"
+		..ns.colour.plaintext .." в Ульдум"
+
+elseif ns.locale == "zhCN" then
+	L["Springfur Alpaca"] = "春裘羊驼"
+	L["Gersahl Greens"] = "基萨尔野菜"
+	L["Daily Quest"] = "日常"
+	L["of"] = "@ 共 # 个"
+	L["AddOn Description"] = "帮助您获取奥丹姆中的" ..ns.colour.highlight .."春裘羊驼"
+
+elseif ns.locale == "zhTW" then
+	L["Springfur Alpaca"] = "春裘羊駝"
+	L["Gersahl Greens"] = "肉荳蔻蔬菜"
+	L["Daily Quest"] = "每日"
+	L["of"] = "@ 共 # 個"
+	L["AddOn Description"] = "幫助您獲取奧丹姆中的" ..ns.colour.highlight .."春裘羊駝"
+	
+else
+	L["of"] = "@ of #"
+	L["AddOn Description"] = "Helps you to obtain the " ..ns.colour.highlight .."Springfur Alpaca"
+		..ns.colour.plaintext .." in Uldum"
 end
 
 -- Plugin handler for HandyNotes
-local function infoFromCoord(mapFile, coord)
-	local point = ns.points[mapFile] and ns.points[mapFile][coord]
-	return point[1], point[2]
-end
-
 function pluginHandler:OnEnter(mapFile, coord)
 	if self:GetCenter() > UIParent:GetCenter() then
 		GameTooltip:SetOwner(self, "ANCHOR_LEFT")
@@ -359,10 +428,27 @@ function pluginHandler:OnEnter(mapFile, coord)
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 	end
 
-	local dataType = infoFromCoord(mapFile, coord)
+	local pin = ns.points[ mapFile ] and ns.points[ mapFile ][ coord ]
 	
-	if dataType == "A" then
+	if pin.alpaca then
 		GameTooltip:SetText(ns.colour.prefix ..L["Springfur Alpaca"])
+
+		local questName = QuestUtils_GetQuestName( 58879 ) 
+		local completed = C_QuestLog.IsQuestFlaggedCompleted( 58879 )
+		GameTooltip:AddLine( "\124cFF1F45FC".. L["Daily Quest"] )
+		GameTooltip:AddDoubleLine( ns.colour.highlight ..questName,
+			( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..ns.name ..")" ) 
+								or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..ns.name ..")" ) )
+		if ( completed == false ) then
+			local questText = GetQuestObjectiveInfo( 58879, 1, false )
+			GameTooltip:AddDoubleLine( " ", ns.colour.plaintext ..questText )
+		end
+		
+		local _, _, _, fulfilled, required = GetQuestObjectiveInfo( 58881, 0, false )
+		local progress = L["of"]
+		progress = string.gsub( progress, "@", fulfilled )
+		progress = string.gsub( progress, "#", required )
+		GameTooltip:AddLine( ns.colour.highlight .."(" ..progress ..")" )
 	else
 		GameTooltip:SetText( ns.colour.prefix ..L["Gersahl Greens"] )
 	end
@@ -381,25 +467,20 @@ function pluginHandler:OnLeave()
 end
 
 do
-	continents[ns.kalimdor] = true
 	local function iterator(t, prev)
-		if not t or ns.CurrentMap == ns.kalimdor then return end
-		local coord, v = next(t, prev)
-		local aId, completed, iconIndex
+		if not t then return end
+		local coord, pin = next(t, prev)
 		while coord do
-			if v then
-				if v[2] and ns.author then
-					return coord, nil, ns.textures[10],
-							ns.db.icon_scale * ns.scaling[10], ns.db.icon_alpha
-				elseif v[1] == "A" then
-					return coord, nil, ns.textures[ns.db.icon_choice],
-							ns.db.icon_scale * ns.scaling[ns.db.icon_choice], ns.db.icon_alpha
+			if pin then
+				if pin.alpaca then
+					return coord, nil, ns.textures[ns.db.iconChoice],
+							ns.db.iconScale * ns.scaling[ns.db.iconChoice], ns.db.iconAlpha
 				else
-					return coord, nil, ns.texturesSpecial[ns.db.icon_choiceSpecial],
-							ns.db.icon_scale * ns.scalingSpecial[ns.db.icon_choiceSpecial], ns.db.icon_alpha
+					return coord, nil, ns.texturesSpecial[ns.db.iconChoiceSpecial],
+							ns.db.iconScale * ns.scalingSpecial[ns.db.iconChoiceSpecial], ns.db.iconAlpha
 				end
 			end
-			coord, v = next(t, coord)
+			coord, pin = next(t, coord)
 		end
 	end
 	function pluginHandler:GetNodes2(mapID)
@@ -425,21 +506,21 @@ ns.options = {
 			name = " " ..L["Options"],
 			inline = true,
 			args = {
-				icon_scale = {
+				iconScale = {
 					type = "range",
-					name = L["Icon Scale"],
-					desc = L["The scale of the icons"],
-					min = 1, max = 3, step = 0.1,
-					arg = "icon_scale",
-					order = 2,
+					name = L["Map Pin Size"],
+					desc = L["The Map Pin Size"],
+					min = 1, max = 4, step = 0.1,
+					arg = "iconScale",
+					order = 1,
 				},
-				icon_alpha = {
+				iconAlpha = {
 					type = "range",
-					name = L["Icon Alpha"],
-					desc = L["The alpha transparency of the icons"],
+					name = L["Map Pin Alpha"],
+					desc = L["The alpha transparency of the map pins"],
 					min = 0, max = 1, step = 0.01,
-					arg = "icon_alpha",
-					order = 3,
+					arg = "iconAlpha",
+					order = 2,
 				},
 				showCoords = {
 					name = L["Show Coordinates"],
@@ -448,26 +529,26 @@ ns.options = {
 					type = "toggle",
 					width = "full",
 					arg = "showCoords",
-					order = 4,
+					order = 3,
 				},
 			},
 		},
 		icon = {
 			type = "group",
-			name = L["Icon Selection"],
+			name = L["Map Pin Selections"],
 			inline = true,
 			args = {
-				icon_choice = {
+				iconChoice = {
 					type = "range",
 					name = L["Springfur Alpaca"],
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
 							..L["Yellow"] .."\n5 = " ..L["Green"] .."\n6 = " ..L["Grey"] .."\n7 = " ..L["Mana Orb"]
 							.."\n8 = " ..L["Phasing"] .."\n9 = " ..L["Raptor egg"] .."\n10 = " ..L["Stars"],
 					min = 1, max = 10, step = 1,
-					arg = "icon_choice",
-					order = 5,
+					arg = "iconChoice",
+					order = 4,
 				},
-				icon_choiceSpecial = {
+				iconChoiceSpecial = {
 					type = "range",
 					name = L["Gersahl Greens"],
 					desc = "1 = " ..L["Ring"] .." - " ..L["Gold"] .."\n2 = " ..L["Ring"] .." - " ..L["Red"] 
@@ -476,8 +557,8 @@ ns.options = {
 							..L["Diamond"] .." - " ..L["White"] .."\n7 = " ..L["Frost"] .."\n8 = " 
 							..L["Cogwheel"],
 					min = 1, max = 8, step = 1,
-					arg = "icon_choiceSpecial",
-					order = 6,
+					arg = "iconChoiceSpecial",
+					order = 5,
 				},
 			},
 		},
@@ -492,23 +573,6 @@ function HandyNotes_SpringfurAlpaca_OnAddonCompartmentClick( addonName, buttonNa
 function pluginHandler:OnEnable()
 	local HereBeDragons = LibStub("HereBeDragons-2.0", true)
 	if not HereBeDragons then return end
-	
-	for continentMapID in next, continents do
-		local children = C_Map.GetMapChildrenInfo(continentMapID, nil, true)
-		for _, map in next, children do
-			local coords = ns.points[map.mapID]
-			if coords then
-				for coord, criteria in next, coords do			
-					local mx, my = HandyNotes:getXY(coord)
-					local cx, cy = HereBeDragons:TranslateZoneCoordinates(mx, my, map.mapID, continentMapID)
-					if cx and cy then
-						ns.points[continentMapID] = ns.points[continentMapID] or {}
-						ns.points[continentMapID][HandyNotes:getCoord(cx, cy)] = criteria
-					end
-				end
-			end
-		end
-	end
 	HandyNotes:RegisterPluginDB("SpringfurAlpaca", pluginHandler, ns.options)
 	ns.db = LibStub("AceDB-3.0"):New("HandyNotes_SpringfurAlpacaDB", defaults, "Default").profile
 	pluginHandler:Refresh()

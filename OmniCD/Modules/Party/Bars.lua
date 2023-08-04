@@ -657,6 +657,11 @@ function P:UpdateUnitBar(guid, isUpdateBarsOrGRU)
 									end
 								end
 
+
+								if info.talentData[412713] and spellID ~= 404381 then
+									cd = cd * 0.9
+								end
+
 								modData = E.spell_chmod_talents[spellID]
 								if modData then
 									for k = 1, #modData, 2 do
@@ -705,6 +710,11 @@ function P:UpdateUnitBar(guid, isUpdateBarsOrGRU)
 									if essData[1] == info.talentData["essMajorID"] then
 										ch = ch + essData[2]
 									end
+								end
+							elseif i == 2 then
+
+								if info.talentData[412713] then
+									cd = cd * 0.9
 								end
 							end
 						end

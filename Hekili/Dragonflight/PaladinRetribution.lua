@@ -15,81 +15,79 @@ spec:RegisterResource( Enum.PowerType.Mana )
 -- Talents
 spec:RegisterTalents( {
     -- Paladin
-    avenging_wrath                  = { 81606, 31884 , 1 }, -- Call upon the Light to become an avatar of retribution, allowing Hammer of Wrath to be used on any target, increasing your damage and healing by 20% for 20 sec.
+    avenging_wrath                  = { 81606, 31884 , 1 }, -- Call upon the Light to become an avatar of retribution, allowing Hammer of Wrath to be used on any target, increasing your damage, healing and critical strike chance by 20% for 23 sec.
     blessing_of_protection          = { 81616, 1022  , 1 }, -- Blesses a party or raid member, granting immunity to Physical damage and harmful effects for 10 sec. Cannot be used on a target with Forbearance. Causes Forbearance for 30 sec.
     blessing_of_sacrifice           = { 81614, 6940  , 1 }, -- Blesses a party or raid member, reducing their damage taken by 30%, but you suffer 100% of damage prevented. Last 12 sec, or until transferred damage would cause you to fall below 20% health.
-    blinding_light                  = { 81598, 115750, 1 }, -- Emits dazzling light in all directions, blinding enemies within 10 yds, causing them to wander disoriented for 6 sec. Non-Holy damage will break the disorient effect.
+    blinding_light                  = { 81598, 115750, 1 }, -- Emits dazzling light in all directions, blinding enemies within 10 yds, causing them to wander disoriented for 6 sec.
     cavalier                        = { 81605, 230332, 1 }, -- Divine Steed now has 2 charges.
     crusaders_reprieve              = { 81543, 403042, 1 }, -- Increases the range of your Crusader Strike, Rebuke and auto-attacks by 3 yds. Using Crusader Strike heals you for 2% of your maximum health.
-    divine_steed                    = { 81632, 190784, 1 }, -- Leap atop your Charger for 6 sec, increasing movement speed by 100%. Usable while indoors or in combat.
+    divine_steed                    = { 81632, 190784, 1 }, -- Leap atop your Charger for 10.2 sec, increasing movement speed by 100%. Usable while indoors or in combat.
     divine_toll                     = { 81496, 375576, 1 }, -- Instantly cast Judgment on up to 5 targets within 30 yds. Divine Toll's Judgment deals 100% increased damage.
-    fading_light                    = { 81623, 405768, 1 }, -- Blessing of Dawn: Blessing of Dawn increases the damage and healing of your next Holy Power spending ability by an additional 10%. Blessing of Dusk: Blessing of Dusk causes your Holy Power generating abilities to also grant an absorb shield for 20% of damage or healing dealt.
+    fading_light                    = { 81623, 405768, 1 }, -- Blessing of Dawn: Blessing of Dawn increases the damage and healing of your next Holy Power spending ability by an additional 10%. Blessing of Dusk: Blessing of Dusk causes your Holy Power generating abilities to also grant an absorb shield for 3% of damage or healing dealt.
     faiths_armor                    = { 81495, 406101, 1 }, -- Word of Glory grants 20% bonus armor for 4.5 sec.
     fist_of_justice                 = { 81602, 234299, 2 }, -- Each Holy Power spent reduces the remaining cooldown on Hammer of Justice by 1 sec.
-    golden_path                     = { 81610, 377128, 1 }, -- Consecration heals you and 5 allies within it for 98 every 0.9 sec.
+    golden_path                     = { 81610, 377128, 1 }, -- Consecration heals you and 5 allies within it for 101 every 0.9 sec.
     holy_aegis                      = { 81609, 385515, 2 }, -- Armor and critical strike chance increased by 2%.
     improved_blessing_of_protection = { 81617, 384909, 1 }, -- Reduces the cooldown of Blessing of Protection by 60 sec.
-    incandescence                   = { 81628, 385464, 1 }, -- Each Holy Power you spend has a 5% chance to cause your Consecration to flare up, dealing 797 Holy damage to up to 5 enemies standing within it.
-    judgment_of_light               = { 81608, 183778, 1 }, -- Judgment causes the next 5 successful attacks against the target to heal the attacker for 372.
+    incandescence                   = { 81628, 385464, 1 }, -- Each Holy Power you spend has a 5% chance to cause your Consecration to flare up, dealing 822 Holy damage to up to 5 enemies standing within it.
+    judgment_of_light               = { 81608, 183778, 1 }, -- Judgment causes the next 5 successful attacks against the target to heal the attacker for 384.
     justification                   = { 81509, 377043, 1 }, -- Judgment's damage is increased by 10%.
-    obduracy                        = { 81630, 385427, 1 }, -- Speed and Avoidance increased by 2%.
-    of_dusk_and_dawn                = { 81624, 385125, 1 }, -- When you cast 3 Holy Power generating abilities, you gain Blessing of Dawn. When you consume Blessing of Dawn, you gain Blessing of Dusk. Blessing of Dawn Your next Holy Power spending ability deals 10% additional increased damage and healing. This effect stacks. Blessing of Dusk Damage taken reduced by 5% For 10 sec.
+    obduracy                        = { 81630, 385427, 1 }, -- Speed increased by 2% and damage taken from area of effect attacks reduced by 2%.
     punishment                      = { 93165, 403530, 1 }, -- Successfully interrupting an enemy with Rebuke casts an extra Crusader Strike.
-    rebuke                          = { 81604, 96231 , 1 }, -- Interrupts spellcasting and prevents any spell in that school from being cast for 4 sec.
+    rebuke                          = { 81604, 96231 , 1 }, -- Interrupts spellcasting and prevents any spell in that school from being cast for 3 sec.
     recompense                      = { 81607, 384914, 1 }, -- After your Blessing of Sacrifice ends, 50% of the total damage it diverted is added to your next Judgment as bonus damage, or your next Word of Glory as bonus healing. This effect's bonus damage cannot exceed 30% of your maximum health and its bonus healing cannot exceed 100% of your maximum health.
-    repentance                      = { 81598, 20066 , 1 }, -- Forces an enemy target to meditate, incapacitating them for 60 sec. Usable against Humanoids, Demons, Undead, Dragonkin, and Giants.
+    repentance                      = { 81598, 20066 , 1 }, -- Forces an enemy target to meditate, incapacitating them for 1 min. Usable against Humanoids, Demons, Undead, Dragonkin, and Giants.
     sacrifice_of_the_just           = { 81607, 384820, 1 }, -- Reduces the cooldown of Blessing of Sacrifice by 60 sec.
     sanctified_plates               = { 93009, 402964, 2 }, -- Armor increased by 10%, Stamina increased by 5% and damage taken from area of effect attacks reduced by 5%.
     seal_of_alacrity                = { 81619, 385425, 2 }, -- Haste increased by 2% and Judgment cooldown reduced by 0.5 sec.
     seal_of_mercy                   = { 81611, 384897, 1 }, -- Golden Path strikes the lowest health ally within it an additional time for 100% of its effect.
     seal_of_might                   = { 81621, 385450, 2 }, -- Mastery increased by 2% and strength increased by 2%.
-    seal_of_order                   = { 81623, 385129, 1 }, -- Blessing of Dawn: Blessing of Dawn increases the damage and healing of your next Holy Power spending ability by an additional 10%. Blessing of Dusk: Blessing of Dusk increases your armor by 10% and your Holy Power generating abilities cool down 10% faster.
-    seal_of_the_crusader            = { 81626, 385728, 2 }, -- Your auto attacks deal 111 additional Holy damage.
+    seal_of_order                   = { 81623, 385129, 1 }, -- Blessing of Dawn: Blessing of Dawn increases the damage and healing of your next Holy Power spending ability by an additional 10%. Blessing of Dusk: Blessing of Dusk increases your armor by 10% and your Holy Power generating abilities cooldown 10% faster.
     seasoned_warhorse               = { 81631, 376996, 1 }, -- Increases the duration of Divine Steed by 2 sec.
     strength_of_conviction          = { 81480, 379008, 2 }, -- While in your Consecration, your Shield of the Righteous and Word of Glory have 10% increased damage and healing.
-    touch_of_light                  = { 81628, 385349, 1 }, -- Your spells and abilities have a chance to cause your target to erupt in a blinding light dealing 664 Holy damage or healing an ally for 884 health.
+    touch_of_light                  = { 81628, 385349, 1 }, -- Your spells and abilities have a chance to cause your target to erupt in a blinding light dealing 685 Holy damage or healing an ally for 911 health.
     turn_evil                       = { 93010, 10326 , 1 }, -- The power of the Light compels an Undead, Aberration, or Demon target to flee for up to 40 sec. Damage may break the effect. Lesser creatures have a chance to be destroyed. Only one target can be turned at a time.
-    unbreakable_spirit              = { 81615, 114154, 1 }, -- Reduces the cooldown of your Divine Shield, Divine Protection, and Lay on Hands by 30%.
+    unbreakable_spirit              = { 81615, 114154, 1 }, -- Reduces the cooldown of your Divine Shield, Shield of Vengeance, Divine Protection, and Lay on Hands by 30%.
 
     -- Retribution
-    adjudication                    = { 81537, 406157, 1 }, -- Critical Strike damage of your abilities increased by 5% and Hammer of Wrath critical strikes cause a Blessed Hammer to spiral outward dealing 432 Holystrike damage to enemies.
-    aegis_of_protection             = { 81550, 403654, 1 }, -- Divine Protection reduces damage you take by an additional 10% and Shield of Vengeance absorbs 20% more damage.
-    afterimage                      = { 93189, 385414, 1 }, -- After you spend 20 Holy Power, your next Word of Glory echoes onto a nearby ally at 30% effectiveness
+    adjudication                    = { 81537, 406157, 1 }, -- Critical Strike damage of your abilities increased by 5% and Hammer of Wrath critical strikes cause a Blessed Hammer to spiral outward dealing 441 Holystrike damage to enemies.
+    aegis_of_protection             = { 81550, 403654, 1 }, -- Divine Protection reduces damage you take by an additional 10% and Shield of Vengeance absorbs 10% more damage.
+    afterimage                      = { 93189, 385414, 1 }, -- After you spend 20 Holy Power, your next Word of Glory echoes onto a nearby ally at 30% effectiveness.
     art_of_war                      = { 81523, 406064, 1 }, -- Your auto attacks have a 20% chance to reset the cooldown of Blade of Justice.
     auras_of_swift_vengeance        = { 81601, 385639, 1 }, -- Learn Retribution Aura and Crusader Aura:  Retribution Aura: When any party or raid member within 40 yds takes more than 30% of their health in damage in a single hit, each member gains 5% increased damage and healing, decaying over 30 sec. This cannot occur within 30 sec of the aura being applied.  Crusader Aura: Increases mounted speed by 20% for all party and raid members within 40 yds.
     auras_of_the_resolute           = { 81599, 385633, 1 }, -- Learn Concentration Aura and Devotion Aura: Concentration Aura: Interrupt and Silence effects on party and raid members within 40 yds are 30% shorter.  Devotion Aura: Party and raid members within 40 yds are bolstered by their devotion, reducing damage taken by 3%.
-    avenging_wrath_might            = { 81525, 31884 , 1 }, -- Call upon the Light to become an avatar of retribution, increasing your critical strike chance by 20% for X sec.
-    blade_of_justice                = { 81526, 184575, 1 }, -- Pierce an enemy with a blade of light, dealing 5,019 Physical damage. Generates 1 Holy Power.
-    blade_of_vengeance              = { 81545, 403826, 1 }, -- Blade of Justice now hits nearby enemies for 3,012 Physical damage. Deals reduced damage beyond 5 targets.
+    avenging_wrath_might            = { 81525, 31884 , 1 }, -- Call upon the Light to become an avatar of retribution, allowing Hammer of Wrath to be used on any target, increasing your damage, healing and critical strike chance by 20% for 23 sec.
+    blade_of_justice                = { 81526, 184575, 1 }, -- Pierce an enemy with a blade of light, dealing 4,403 Holy damage. Generates 2 Holy Power.
+    blade_of_vengeance              = { 81545, 403826, 1 }, -- Blade of Justice now hits nearby enemies for 2,973 Holy damage. Deals reduced damage beyond 5 targets.
     blades_of_light                 = { 93164, 403664, 1 }, -- Crusader Strike, Judgment, Hammer of Wrath and your damaging single target Holy Power abilities deal Holystrike damage.
-    blessed_champion                = { 81541, 403010, 2 }, -- Crusader Strike and Judgment hit an additional 2 targets but deal 40% reduced damage to secondary targets.
+    blessed_champion                = { 81541, 403010, 2 }, -- Crusader Strike and Judgment hit an additional 2 targets but deal 50% reduced damage to secondary targets.
     blessing_of_freedom             = { 81600, 1044  , 1 }, -- Blesses a party or raid member, granting immunity to movement impairing effects for 8 sec.
     boundless_judgment              = { 81533, 405278, 1 }, -- Judgment generates 1 additional Holy Power.
-    burning_crusade                 = { 81536, 405289, 1 }, -- Divine Storm, Divine Hammer and Consecration now deal Radiant damage and your abilities that deal Radiant damage deal 10% increased damage.
+    burning_crusade                 = { 81536, 405289, 1 }, -- Divine Storm, Divine Hammer and Consecration now deal Radiant damage and your abilities that deal Radiant damage deal 5% increased damage.
     cleanse_toxins                  = { 81507, 213644, 1 }, -- Cleanses a friendly target, removing all Poison and Disease effects.
     consecrated_blade               = { 81516, 404834, 1 }, -- Blade of Justice casts Consecration at the target's location. This effect can only occur every 10 sec.
     consecrated_ground              = { 81512, 204054, 1 }, -- Your Consecration is 15% larger, and enemies within it have 50% reduced movement speed. Your Divine Hammer is 25% larger, and enemies within them have 30% reduced movement speed.
-    crusade                         = { 81525, 231895, 1 }, -- Call upon the Light and begin a crusade, increasing your haste and damage by 3% for 25 sec. Each Holy Power spent during Crusade increases haste and damage by an additional 3%. Maximum 10 stacks. Hammer of Wrath may be cast on any target. Combines with Avenging Wrath.
-    crusading_strikes               = { 93186, 404542, 1 }, -- Crusader Strike replaces your auto-attacks and deals 1,185 Physical damage, but now only generates 1 Holy Power every 2 attacks. Inherits Crusader Strike benefits but cannot benefit from Windufry.
-    divine_arbiter                  = { 81540, 404306, 1 }, -- Abilities that deal Holystrike damage deal 10% increased damage and casting abilities that deal Holystrike damage grants you a stack of Divine Arbiter. At 25 stacks your next damaging single target Holy Power ability causes 10,273 Holystrike damage to your primary target and 3,081 Holystrike damage to enemies within 6 yds.
+    crusade                         = { 81525, 231895, 1 }, -- Call upon the Light and begin a crusade, increasing your haste and damage by 3% for 30 sec. Each Holy Power spent during Crusade increases haste and damage by an additional 3%. Maximum 10 stacks. Hammer of Wrath may be cast on any target. Combines with Avenging Wrath.
+    crusading_strikes               = { 93186, 404542, 1 }, -- Crusader Strike replaces your auto-attacks and deals 1,210 Physical damage, but now only generates 1 Holy Power every 2 attacks. Inherits Crusader Strike benefits but cannot benefit from Windfury.
+    divine_arbiter                  = { 81540, 404306, 1 }, -- Abilities that deal Holystrike damage deal 5% increased damage and casting abilities that deal Holystrike damage grants you a stack of Divine Arbiter. At 25 stacks your next damaging single target Holy Power ability causes 10,825 Holystrike damage to your primary target and 2,165 Holystrike damage to enemies within 6 yds.
     divine_auxiliary                = { 81538, 406158, 1 }, -- Final Reckoning and Execution Sentence grant 3 Holy Power.
-    divine_hammer                   = { 81516, 198034, 1 }, -- Divine Hammers spin around you, damaging enemies within 8 yds for 2,587 Holy damage over 12 sec. Deals reduced damage beyond 8 targets.
+    divine_hammer                   = { 81516, 198034, 1 }, -- Divine Hammers spin around you, damaging enemies within 8 yds for 2,548 Holy damage over 12 sec. Deals reduced damage beyond 8 targets.
     divine_purpose                  = { 81618, 408459, 1 }, -- Holy Power abilities have a 10% chance to make your next Holy Power ability free and deal 10% increased damage and healing.
     divine_resonance                = { 93181, 384027, 1 }, --
-    divine_storm                    = { 81527, 53385 , 1 }, -- Unleashes a whirl of divine energy, dealing 2,362 Holy damage to all nearby enemies. Deals reduced damage beyond 5 targets.
+    divine_storm                    = { 81527, 53385 , 1 }, -- Unleashes a whirl of divine energy, dealing 2,614 Holy damage to all nearby enemies. Deals reduced damage beyond 5 targets.
     divine_wrath                    = { 93160, 406872, 1 }, -- Increases the duration of Avenging Wrath or Crusade by 3 sec.
     empyrean_legacy                 = { 81545, 387170, 1 }, -- Judgment empowers your next Single target Holy Power ability to automatically activate Divine Storm with 25% increased effectiveness. This effect can only occur every 20 sec.
     empyrean_power                  = { 92860, 326732, 1 }, -- Crusader Strike has a 15% chance to make your next Divine Storm free and deal 15% additional damage.
-    execution_sentence              = { 81539, 343527, 1 }, -- A hammer slowly falls from the sky upon the target, after 8 sec, they suffer 8,466 Holy damage, plus 20% of damage taken from your abilities in that time.
+    execution_sentence              = { 81539, 343527, 1 }, -- A hammer slowly falls from the sky upon the target, after 12 sec, they suffer 30% of the damage taken from your abilities as Holy damage during that time. Generates 3 Holy Power.
     executioners_will               = { 81548, 406940, 1 }, -- Final Reckoning and Execution Sentence's durations are increased by 4 sec.
-    expurgation                     = { 92689, 383344, 1 }, -- Your Blade of Justice causes the target to burn for 1,847 of the damage dealt as Radiant damage over 6 sec.
-    final_reckoning                 = { 81539, 343721, 1 }, -- Call down a blast of heavenly energy, dealing 7,533 Holy damage to all targets in the target area and causing them to take 30% increased damage from your Holy Power abilities for 10 sec.
-    final_verdict                   = { 81532, 383328, 1 }, -- Unleashes a powerful weapon strike that deals 3,739 Holy damage to an enemy target, Final Verdict has a 15% chance to reset the cooldown of Hammer of Wrath and make it usable on any target, regardless of their health.
+    expurgation                     = { 92689, 383344, 1 }, -- Your Blade of Justice causes the target to burn for 1,820 Radiant damage over 6 sec.
+    final_reckoning                 = { 81539, 343721, 1 }, -- Call down a blast of heavenly energy, dealing 8,335 Holy damage to all targets in the target area and causing them to take 30% increased damage from your Holy Power abilities for 16 sec. Generates 3 Holy Power.
+    final_verdict                   = { 81532, 383328, 1 }, -- Unleashes a powerful weapon strike that deals 5,177 Holy damage to an enemy target, Final Verdict has a 15% chance to reset the cooldown of Hammer of Wrath and make it usable on any target, regardless of their health.
     greater_judgment                = { 81603, 231663, 1 }, -- Judgment causes the target to take 20% increased damage from your next Holy Power ability.
-    guided_prayer                   = { 81531, 404357, 1 }, -- When your health is brought below 25%, you instantly cast a free Word of Glory at 100% effectiveness on yourself. Cannot occur more than once every 60 sec.
-    hammer_of_wrath                 = { 81510, 24275 , 1 }, -- Hurls a divine hammer that strikes an enemy for 3,835 Holy damage. Only usable on enemies that have less than 20% health, or during Avenging Wrath. Generates 1 Holy Power.
+    guided_prayer                   = { 81531, 404357, 1 }, -- When your health is brought below 25%, you instantly cast a free Word of Glory at 60% effectiveness on yourself. Cannot occur more than once every 60 sec.
+    hammer_of_wrath                 = { 81510, 24275 , 1 }, -- Hurls a divine hammer that strikes an enemy for 3,749 Holy damage. Only usable on enemies that have less than 20% health, or during Avenging Wrath. Generates 1 Holy Power.
     healing_hands                   = { 93189, 326734, 1 }, -- The cooldown of Lay on Hands is reduced up to 60%, based on the target's missing health. Word of Glory's healing is increased by up to 100%, based on the target's missing health.
-    heart_of_the_crusader           = { 93190, 406154, 1 }, -- Crusader Strike and auto-attacks deal 10% inceased damage and deal 10% increased critical strike damage.
+    heart_of_the_crusader           = { 93190, 406154, 1 }, -- Crusader Strike and auto-attacks deal 10% increased damage and deal 10% increased critical strike damage.
     highlords_judgment              = { 81534, 404512, 2 }, -- Judgment's duration is increased by 3 sec. If you have Greater Judgment, targets take 20% increased damage from your next 2 Holy Power abilities.
     holy_blade                      = { 92838, 383342, 1 }, -- Blade of Justice generates 1 additional Holy Power.
     improved_blade_of_justice       = { 92838, 403745, 1 }, -- Blade of Justice now has 2 charges.
@@ -97,47 +95,47 @@ spec:RegisterTalents( {
     inquisitors_ire                 = { 92951, 403975, 1 }, -- Every 2 sec, gain 5% increased damage to your next Divine Storm, stacking up to 10 times.
     judge_jury_and_executioner      = { 92860, 405607, 1 }, -- Increases the critical strike chance of Judgment 10%.
     judgment_of_justice             = { 93161, 403495, 1 }, -- Judgment deals 10% increased damage and increases your movement speed by 10%. If you have Greater Judgment, Judgment slows enemies by 30% for 8 sec.
-    jurisdiction                    = { 81542, 402971, 1 }, -- Templar's Verdict and Blade of Justice deal 10% increased damage. The range of Blade of Justice is increased to 20 yds.
-    justicars_vengeance             = { 81532, 215661, 1 }, -- Focuses Holy energy to deliver a powerful weapon strike that deals 3,410 Holy damage, and restores 6% of your maximum health. Damage is increased by 25% when used against a stunned target.
+    jurisdiction                    = { 81542, 402971, 1 }, -- Final Verdict and Blade of Justice deal 10% increased damage. The range of Final Verdict and Blade of Justice is increased to 20 yds.
+    justicars_vengeance             = { 81532, 215661, 1 }, -- Focuses Holy energy to deliver a powerful weapon strike that deals 4,814 Holy damage, and restores 5% of your maximum health. Damage is increased by 25% when used against a stunned target.
     lay_on_hands                    = { 81597, 633   , 1 }, -- Heals a friendly target for an amount equal to 100% your maximum health. Cannot be used on a target with Forbearance. Causes Forbearance for 30 sec.
     light_of_justice                = { 81521, 404436, 1 }, -- Reduces the cooldown of Blade of Justice by 2 sec.
-    lightforged_blessing            = { 93008, 403479, 1 }, -- Divine Storm heals you and up to 4 nearby allies for 3% of maximum health.
-    lights_celerity                 = { 81531, 403698, 1 }, -- Flash of Light casts instantly, its healing done is increased by 50%, but it now has a 6 sec cooldown.
-    penitence                       = { 92839, 403026, 1 }, -- Your damage over time effects deal 15% more damage.
+    lightforged_blessing            = { 93008, 403479, 1 }, -- Divine Storm heals you and up to 4 nearby allies for 2% of maximum health.
+    lights_celerity                 = { 81531, 403698, 1 }, -- Flash of Light casts instantly, its healing done is increased by 20%, but it now has a 6 sec cooldown.
+    of_dusk_and_dawn                = { 81624, 385125, 1 }, -- When you cast 3 Holy Power generating abilities, you gain Blessing of Dawn. When you consume Blessing of Dawn, you gain Blessing of Dusk. Blessing of Dawn Your next Holy Power spending ability deals 20% additional increased damage and healing. This effect stacks. Blessing of Dusk Damage taken reduced by 5% and your Holy Power generating abilities also grant an absorb shield for 10% of damage or healing dealt. For 10 sec.
+    penitence                       = { 92839, 403026, 1 }, -- Your damage over time effects deal 10% more damage.
     quickened_invocation            = { 93181, 379391, 1 }, -- Divine Toll's cooldown is reduced by 15 sec.
     righteous_cause                 = { 81523, 402912, 1 }, -- Templar's Verdict, Final Verdict and Justicar's Vengeance have a 20% chance to reset the cooldown of Blade of Justice.
-    rush_of_light                   = { 81512, 407067, 1 }, -- The critical strikes of you damaging single target Holy Power abilities grant you 5% Haste for 10 sec.
-    sanctify                        = { 92688, 382536, 1 }, -- Enemies hit by Divine Storm take 25% more damage from Consecration and Divine Hammers for 12 sec.
-    searing_light                   = { 81552, 404540, 1 }, -- Your abilities that deal Radiant damage have a chance to call down an explosion of Holy Fire dealing 6,848 Radiant damage to all nearby enemies and leaving a Consecration in its wake. Deals reduced damage beyond 8 targets.
-    seething_flames                 = { 81549, 405355, 1 }, -- Wake of Ashes deals significantly reduced damage to secondary targets, but now causes you to lash out 2 extra times for 4,766 Radiant damage.
-    shield_of_vengeance             = { 81544, 184662, 1 }, -- Creates a barrier of holy light that absorbs 17,463 damage for 15 sec. When the shield expires, it bursts to inflict Holy damage equal to the total amount absorbed, divided among all nearby enemies.
+    rush_of_light                   = { 81512, 407067, 1 }, -- The critical strikes of your damaging single target Holy Power abilities grant you 5% Haste for 10 sec.
+    sanctify                        = { 92688, 382536, 1 }, -- Enemies hit by Divine Storm take 20% more damage from Consecration and Divine Hammers for 12 sec.
+    seal_of_the_crusader            = { 81626, 385728, 2 }, -- Your auto attacks deal 228 additional Holy damage.
+    searing_light                   = { 81552, 404540, 1 }, -- Your abilities that deal Radiant damage have a chance to call down an explosion of Holy Fire dealing 5,196 Radiant damage to all nearby enemies and leaving a Consecration in its wake. Deals reduced damage beyond 8 targets.
+    seething_flames                 = { 81549, 405355, 1 }, -- Wake of Ashes deals significantly reduced damage to secondary targets, but now causes you to lash out 2 extra times for 4,269 Radiant damage.
+    shield_of_vengeance             = { 81544, 184662, 1 }, -- Creates a barrier of holy light that absorbs 28,542 damage for 10 sec. When the shield expires, it bursts to inflict Holy damage equal to the total amount absorbed, divided among all nearby enemies.
     swift_justice                   = { 81521, 383228, 1 }, -- Reduces the cooldown of Judgment by 2 sec and Crusader Strike by 2 sec.
-    tempest_of_the_lightbringer     = { 92951, 383396, 1 }, -- Divine Storm projects an additional wave of light, striking all enemies up to 20 yards in front of you for 20% of Divine Storm's damage.
-    templar_strikes                 = { 93186, 406646, 1 }, -- Crusader Strike becomes a 2 part combo. Templar Strike slashes an enemy for 2,739 Radiant damage. You have 3 sec to continue the combo. Templar Slash strikes an enemy for 3,287 Radiant damage and has a 100% increased chance to critically strike. Inherits Crusader Strike benefits.
-    truths_wake                     = { 92686, 403696, 1 }, -- Wake of Ashes also causes targets to burn for an additional 4,618 Radiant damage over 9 sec.
+    tempest_of_the_lightbringer     = { 92951, 383396, 1 }, -- Divine Storm projects an additional wave of light, striking all enemies up to 20 yds in front of you for 20% of Divine Storm's damage.
+    templar_strikes                 = { 93186, 406646, 1 }, -- Crusader Strike becomes a 2 part combo. Templar Strike slashes an enemy for 2,087 Radiant damage. You have 4 sec to continue the combo. Templar Slash strikes an enemy for 2,566 Radiant damage and is always a critical strike. Inherits Crusader Strike benefits.
+    truths_wake                     = { 92686, 403696, 1 }, -- Wake of Ashes also causes targets to burn for an additional 4,550 Radiant damage over 9 sec.
     unbound_freedom                 = { 93174, 305394, 1 }, -- Blessing of Freedom increases movement speed by 30%, and you gain Blessing of Freedom when cast on a friendly target.
-    vanguard_of_justice             = { 93173, 406545, 1 }, -- Your damaging Holy Power abilities cost 1 additional Holy Power and deal 25% increased damage.
+    vanguard_of_justice             = { 93173, 406545, 1 }, -- Your damaging Holy Power abilities cost 1 additional Holy Power and deal 20% increased damage.
     vanguards_momentum              = { 92688, 383314, 1 }, -- Hammer of Wrath has 1 extra charge and on enemies below 20% health generates 1 additional Holy Power.
     vengeful_wrath                  = { 93177, 406835, 1 }, -- Hammer of Wrath always critically strikes.
-    wake_of_ashes                   = { 92854, 255937, 1 }, -- Lash out at your enemies, dealing 7,944 Radiant damage to all enemies within 14 yds in front of you and reducing their movement speed by 50% for 9 sec. Demon and Undead enemies are also stunned for 5 sec. Generates 3 Holy Power.
+    wake_of_ashes                   = { 92854, 255937, 1 }, -- Lash out at your enemies, dealing 7,678 Radiant damage to all enemies within 14 yds in front of you and reducing their movement speed by 50% for 9 sec. Demon and Undead enemies are also stunned for 5 sec. Generates 3 Holy Power.
     zealots_fervor                  = { 92952, 403509, 1 }, -- Auto-attack speed increased by 20%.
 } )
 
 
 -- PvP Talents
 spec:RegisterPvpTalents( {
-    aura_of_reckoning     = 756 , -- (247675) When you or allies within your Aura are critically struck, gain Reckoning. Gain 1 additional stack if you are the victim. At 50 stacks of Reckoning, your next weapon swing deals 200% increased damage, will critically strike, and activates Avenging Wrath for 6 sec.
-    blessing_of_sanctuary = 752 , -- (210256) Instantly removes all stun, silence, fear and horror effects from the friendly target and reduces the duration of future such effects by 60% for 5 sec.
-    divine_punisher       = 755 , -- (204914) Casting two consecutive Judgments on the same enemy will generate 3 Holy Power.
-    hallowed_ground       = 5535, -- (216868) Your Consecration clears and suppresses all snare effects on allies within its area of effect.
-    judgments_of_the_pure = 5422, -- (355858) Casting Judgment on an enemy cleanses 1 Poison, Disease, and Magic effect they have caused on allies within your Aura.
-    jurisdiction          = 757 , -- (204979) Increase the range of Blade of Justice and Hammer of Justice by 10 yds, and radius of Divine Storm by 4 yds.
-    law_and_order         = 858 , -- (204934) When your Hand of Hindrance is dispelled or otherwise removed early, the cooldown is reduced by 15 sec. Your Blade of Justice applies Hand of Hindrance to the target for 3 sec.
-    lawbringer            = 754 , -- (246806) Judgment now applies Lawbringer to initial targets hit for 1 min. Casting Judgment on an enemy causes all other enemies with your Lawbringer effect to suffer up to 10% of their maximum health in Holy damage.
-    luminescence          = 81  , -- (199428) When healed by an ally, allies within your Aura gain 4% increased damage and healing for 6 sec.
-    ultimate_retribution  = 753 , -- (355614) Mark an enemy player for retribution after they kill an ally within your Retribution Aura. If the marked enemy is slain within 8 sec, cast Redemption on the fallen ally.
-    unbound_freedom       = 641 , -- (305394) Blessing of Freedom increases movement speed by 30%, and you gain Blessing of Freedom when cast on a friendly target. Unbound Freedom also causes any Blessing of Freedom applied to yourself to be undispellable.
-    vengeance_aura        = 751 , -- (210323) When a full loss of control effect is applied to you or an ally within your Aura, gain 6% critical strike chance for 8 sec. Max 2 stacks.
+    aura_of_reckoning        = 756 , -- (247675) When you or allies within your Aura are critically struck, gain Reckoning. Gain 1 additional stack if you are the victim. At 100 stacks of Reckoning, your next weapon swing deals 200% increased damage, will critically strike, and activates Avenging Wrath for 6 sec.
+    blessing_of_sanctuary    = 752 , -- (210256) Instantly removes all stun, silence, fear and horror effects from the friendly target and reduces the duration of future such effects by 60% for 5 sec.
+    blessing_of_spellwarding = 5573, -- (204018) Blesses a party or raid member, granting immunity to magical damage and harmful effects for 10 sec. Cannot be used on a target with Forbearance. Causes Forbearance for 30 sec. Shares a cooldown with Blessing of Protection.
+    hallowed_ground          = 5535, -- (216868) Your Consecration clears and suppresses all snare effects on allies within its area of effect.
+    judgments_of_the_pure    = 5422, -- (355858) Casting Judgment on an enemy cleanses 1 Poison, Disease, and Magic effect they have caused on you.
+    lawbringer               = 754 , -- (246806) Judgment now applies Lawbringer to initial targets hit for 1 min. Casting Judgment on an enemy causes all other enemies with your Lawbringer effect to suffer up to 2% of their maximum health in Holy damage.
+    luminescence             = 81  , -- (199428) When healed by an ally, allies within your Aura gain 2% increased damage and healing for 6 sec.
+    searing_glare            = 5584, -- (410126) Call upon the light to blind your enemies in a 25 yd cone, causing enemies to miss their spells and attacks for 4 sec.
+    spreading_the_word       = 5572, -- (199456) Your allies affected by your Aura gain an effect after you cast Blessing of Protection or Blessing of Freedom.  Blessing of Protection Physical damage reduced by 30% for 6 sec.  Blessing of Freedom Cleared of all movement impairing effects.
+    ultimate_retribution     = 753 , -- (355614) Mark an enemy player for retribution after they kill an ally within your Retribution Aura. If the marked enemy is slain within 12 sec, cast Redemption on the fallen ally.
 } )
 
 
@@ -1112,7 +1110,7 @@ spec:RegisterAbilities( {
         gcd = "spell",
         school = "holy",
 
-        spend = 0.065,
+        spend = 0.10,
         spendType = "mana",
 
         talent = "cleanse_toxins",
@@ -1473,7 +1471,7 @@ spec:RegisterAbilities( {
         gcd = "spell",
         school = "holy",
 
-        spend = 0.22,
+        spend = 0.10,
         spendType = "mana",
 
         startsCombat = false,
@@ -1596,24 +1594,6 @@ spec:RegisterAbilities( {
 
         handler = function ()
             applyDebuff( "target", "hand_of_reckoning" )
-        end,
-    },
-
-    -- Petition the Light on the behalf of a fallen ally, restoring spirit to body and allowing them to reenter battle with $s2% health and at least $s1% mana.
-    intercession = {
-        id = 391054,
-        cast = 2,
-        cooldown = 600,
-        gcd = "spell",
-        school = "holy",
-
-        spend = 3,
-        spendType = "holy_power",
-
-        startsCombat = false,
-
-        handler = function ()
-            -- brez.
         end,
     },
 
@@ -1998,6 +1978,7 @@ spec:RegisterAbilities( {
         startsCombat = false,
 
         handler = function ()
+            spend( 0.1 * mana.max, "mana" )
             removeBuff( "recompense" )
             if buff.divine_purpose.up then removeBuff( "divine_purpose" )
             else
@@ -2056,4 +2037,4 @@ spec:RegisterSetting( "sov_damage", 20, {
 } ) ]]
 
 
-spec:RegisterPack( "Retribution", 20230624, [[Hekili:T3XAtQTrYFlBDLXGJngPDXEZvlKkNtUQIR78hc5Q8nec0aOZcjojHxVPO43(1Zm6X8Ohjbs4Z1fxjvITMwD3t)E6z0WCR5)28zEUPK5FWEK9TJEJ9DdTEZOX2wZNL(0EY8z7Dx9r3nWFi0Dh8F)vsAS)YdP(rH0XEkiY1JIJKOdXRGXNpB5b)G0FjC(sCedGUNSA(hE7O5Z2675r4qsswnFgfYxn6nVY(U)6Pf)8NjRy050IzKWus4kYPfhsaE50cxV)9HKuI3PfRJIfaLe)8Ktl(D)GGHNE)P3ZX34xzDpGV)zum8Mpgf)XtlsJoTiGKciAPFGFQpbERKNak4j9iGRGhEAH)A4v2cVDe8FJZb5jyakq(jUldiEVonAZg6)NKUsM6VfO(VKsIbPbGcy(83)1x)J)oNICEXnii6r4b7jHEK4e(dxYMVuw6XT(buE3f4RWnztAgsKjevSbKA3(4OprKiJeCJUNbhxGynAOfqN9uDvImy2mWebqy8BFLnhn)l2iNwSpIRSGPWRIw)Q1(B2MwOWOZNvBjR(ygZVmkjrgzw5eB0W3cil2pkMjIriS1Tmy)zp)0mrvYH97JIbYT2p0pzlte6DiMjSExmWdEugmoAf881Xr7oTqWo(0IF8qSRafSZ5gjLgaF4hP2mP(7yiUpmtHHwZNnzZ3GOn(Rgme8nIJwdAT5ZCxrjsYW9XKvr7w6M(DtETB8k3qItAuCmyA)s)1tsDdG)0qG)DdCai)yuiLiVh7Tt26tc8CIw78js4gIl1ZafWp5g7tTnFj13Ds2eWXYz5H1RtE5NCdou80Hwd36MWgzyskWvBs3E8iYG7CbhV4Nqh7tGG3nL5BGo(w67IoYkqzFoZbB05GDvZb7kMd21mhSnohSV85GLZo3WdUbAkc)eGdd9x5Sj2NSgmswT9CWRnoETBlETCOrsEz0(jjKu)1zO3I))DibjKjJgo(LRIcbhtaNtYrZqflVE9lNRRIIc8IEmCi4U6sFRN9SIhTI75wm0KrhpACWN9Skqk9nBgnDPUuGNNZJWqBXjTbyQHdgCoYA7wlRTvL12xdzncsfL1vtZorwJYbNLSopxJQ02wuABjiRVXOHTjTWXJM1pvQGkhJM9AOB4toE7tkgFWl6BnC83vr8pacestnUgmyA)kDelhRj0gj)bgTTYOnnB7FjVYnAnoeiW7tSKRKSITaniTubAnwUFY1pGHNcflOoJjlp8rI4tuuWaUGCSozMVQ6xnZ7yYox)WKh(HSW5spvY1tWyilXDg0ImZkOQoh(F1jWpjLZu5unPEq3qcP1FebvZ8(sd6cemHxXfT6bgdR4QCy)XJstKd77j93tsHs7NybEB06x6XkGXjxgypgHIaNgqHkX5FFWBZUSsxGQwbUp1nEdjnzOcatNyF84nXU(EoGggeuUEEjdjFgMKGxH6Z9dN(2X6p(WECMzTpyceef51Azao(HQVD8tj74Qd3aycU1n2z)H)4pciolJ(mLU9nfRkxuoU3nYgjIrdKnrbyLbDqV(BJcEYzF0JK4PtGHHx4bqej(0BzpD64b1mlscIsZJ6zXyDCzwVAMrtVBudfRa7FJCWPCuJMJid)irlZJrpXAGyMC0attNizkFgcf7V4cfldcfRZsOypquC2XcfMLI5uE9XgIxaAM8qnfoqmzbd9jdqluPyURtKImR3Ok0nfxFQ9OCOpFTR9OZX7YgxMzBwMz3ozgM9IrD2xpYmwC1KTUWaepNy3)GIe3Wq)Tq6EiXhZF8ISlUu7jdCmYsUP8MKp1uld5mLfp03tm69Dvgtx(P25Ph88)KFiXX9WNHvQ6g)emB5dqYBfMtswtZ6vMGsFWCjIun3MbdMIhpYNIyqL3kmA4i0(ziWlkJGYigGz6TJk4cvqkybdkY8AbZlyqT2VnR8Gfj)5oiTRU8Hzn3Cxpl1ekLfSvNNhljJeV2q7Ob941XvuyINpz69)F1eSpYm0YMAXQpX7P6vrItCE0piWGoxXAKjpq81Vh1qAY9nFoOurzpdfTuVGuWvsnNJMZCbXmQrVDupn9pMoEkTmOccxKtRW3fuszQHT73mDKOCzstdjoqCrtf9fwBrIEq5xUatrFaFDHYRNjdTjq2ODSfZWMnKD7FkgsdW5c2cu(l0oQ75V2NUAwHM6)tZ0BNpHUjauBfAJOZ71lSs3WNNsbK93y9TyhDdb8OnZoRj6V7NOi2FtiDXvaQ8t3EAXpMP5oT43zQo85T4mHAzwKcuqe07g5PxazJ7QNOEX3WnXYLYXlHe4Xf14Q8yUs2(oDlvKUkLB8aHEFXTcVHIZuHzOQIUbjmOO2U2CgqzbnXTIvmwD(v8jttwrWdwILjjQWO7XL)kxiKJurhFvjsvLyFzey4YlOIY9bCXvSN)Q0VjSYewLIRYwkzSRtfs0xMa1gVkDILCfR0aW99imsL3LhwyEbqahFXWcXKKOqQ5RuNCK4LhD)iHwETlq6ezc(aeJVUMSywTQl1RoDNw2otjPknu0leQzftFhwrh0IdAqf2geJzc80OGaDH4n6ATAfSSk(nxb34RL494r5(rEVPz8Lzetl6QHopOunluJtsayWwSyIINc08JKeXfv0RYQkmqfXUSIQ8e1V3wQkwgDi0lGKu2g2bxe9xgaIcQxjpterPEwjAYEm7fUmAT1fk2jMsSIvj33mEEqiA6s6mL45ScqXEaXhpMaRNFzu4HeWXIeF7iN72VAGM0kZ3BlXnamq3VkL3SJmS(j3WnhCJHAJ2frLGh2zYc8STfAI22qlxohnUKJgflzSYzOSRvx3KPs7mC7a3((AAAiA4i8oTHSJbMk53iRbpHSkM12vMaq8b0z)L4EKbf3lrFxxAgsYMt5gLu0OgApFSHG3eG6eN1XCu5galAB4BhlR7Sft7dQYYkxunNuRfsSAHM(wLWvymjn(fAS0e)66GHj0AG3qJn8BEyYwgwRz2kgGs(Gm1ahIMyEpFg9q4aaLD2bhBD)8zp6gtlPoz(SFJU5W(7YoWx0Ti(5EK1UhcsFoDvZ)Nd(X0LmNer3jz3dPr7Cz7WmyrdRIIESZ(haToTGE82Exuiql2WpxUWKNZxVTYthsczLNaJ236ZdyhAme(P4qhCECKfohPSQcfotDnhACih33QIBZ7BFbbYajfhMog90nfGc3fG5SZZvv8DjiDlYBbxlCsZQIZLbR7jslMbSZcxv8EoaDjIBb)spHEvXUzJ3HO1eZENbSICcE0WmomDm6BbJBYHbfKUf5TGRRYrXiyDprAXma3PbbGUeXTGFrDB0hVdrRjMDSrFCKJmlINoousK4ngz8MqctqjrI3ACwuu2C(PbbzoGbZvf9xne)n((pf8D0EchIeO67qal1FCZXWF7pd0yyv8qqxdvnCcNpVtbnopmixaFHIMluY0kbtDZ5gjxQtSuytDVXWY1BSIdJKVqxJ(RgI)gF)Nc(U(yMAF2iy4VdIzwZhosnuTnXgQHhmhZSzIMluY0kbtDZ5gjxQtSuyt99DSXQIVqxJ(gGy0tmncYnbxd5)MsgQzMZ5J(MU0(k7Cq7rVPfzzcZxADHxz03ae3m9Pz4Ai)3uYCrMnnV)SxKztZrFdnB0YGDL(y8qJZAYhv5tHtXrOHFcEOvdBs9QsrRAPy(hExU4)lOC71FXLBV(ki3gMTtpRJONRt2PT0fWkyh(iHErkWpBNuBY8VErF61gaD)gpTy5H0C4cJyBt0HqjO98Oa75M6U0nH8xp9(tlE1Pf8pPC0TykFoN88ZAlM0AG2fTPxDpUm1co5VAmdPCegUHiTWIjB)JRQsIsqUIiVw0288ankDt7jtLPBm1UtRQvNAd3qKwRehfKRiYRfTnVAWgPoBpzQuDAQNExMT(vf51UM6ltH2WfSFziV2YOUmrrdRr7Yq(vcTFz4zldN0c1J2Tsom1HnLmZe61pqVkea5e)EMKOtoRiwAB6D3kEmu4Wvg9AFexMe(5JBKaAjp7w(3a6VO6Q(IGSwpXrRWT48598ZQc3U5yDvjU6eNmd4U1YYUxkyiAqxIRorIEDJA1LsHUCLtgWvNirVUbQ7gPaASJYdx6xDbp6sC1Hfu0LM3DjU0wzd)T0pW0kOvhatuqB9hCeu(roOG5YbmHrTvhKXskFOkQCSYWNj21pz3k4xhaJ55hD1f6Mib3Aq4Rvb1Ary8ZTa5wOwTm4f2HIf7RVK32GGPtSFo9(FHfhMI4XYnbLgKD(mi272O45ZM5V7DZNXEo7kiMFa(H)4hyxjXziE(FJF1ah7VNIO5Zo77lU87F15Z43wCZtN)bBfkeTF(m2fdxjW5TbM9NC4x9Xk3vxZNr7olbGdgcnug9LZVZ4MpBu2FfEV81LMdF26tpT4HFG2Q41AxljuU(wfUoNvv)4w4s1mEUOlXumC3LGHYmPaksP3RTzFAdy6knjIH6mkPT8hqsH2jFyK7DhrcIiwYuM4QsM4xPBJ5n))0IJhpT4l7GsMxCqY3ggmf2zm3SRIj(Imi2CZUCUn(YNBOh4wCrj)s1IsV3C50d903Ip9kP3BVWGmfSoDBNe9OmTFDNw0dc)kzIPTFyNw8mOwx1WoLJo50IrCLzfa9S6OrjwAoVy40OGYsgHTHC2aLaYdhxORTOQS7BNkZUEvMTbvgYMM25QmuAGOYQLx6CvwfCwDQSVVDQS8BqrrL2nNwuPRMzLkDMxNkVwT(RLaqAxzaXXPfVGHdRHq1vFxfbMlG0WwOZGa(3PACfQd0RLaOXCLAQqZCLLaxjRZTk0428kqeQiPYsqk)UyzwtJ5kO(0Fwhy1yj8bPZhs5fUJXn9YQid5Qmbm1sPFL5uMOzftv0stSYqX58haoXo36XKFvrbKOXdKgfmVXRwLrdoJB6Y7ilsrTVErGOI3Bq(mOK8MBnHY0W8nOcZ89UCUs9MubKDWIL5JMXyvCJQWS7YvIs3gnyvzwNU6gCRSgQfNsB1EDktbG(FJoL(EYxQSzcCbbPW9rdwbT4IXPGy82spVCkNjaLEg7AAHrxRrT0DuTG0sEJrrd3NhmANDPrYypZ3ld8jMDjVjDbdGvJQusjZ2tQMG3QAvyU5a5EMNbxNJcSIClz4MWw6DC5cyh1BmcSc5KyRQW9dm)xfHNH2YXHd7QMriCNbzG2D0aZD2EKkTn3YfjVmLlfcScJoFR5kStbFTkmuzeq7AvPdnwRRvG42QwnRsHgAPwTbOL5C7xrpzdZBZ5U6JAjYYILzkAsxwmMyW5IhQF7yszUwfD2YCQJBOzjLUHDo3yiIVoJyMZfCgyv(onHIwZX3vtZxX1WdNo0RIhtwn26LZ(qrk1ckz6Q2HfkQiJ2lqrhV64lfBIVN6f5dg8cg2kIhMuvnj0fyCDVyphLd3j3TrRVhfsoZidQT5GKTWnh3h3(SJT1(mqvM(XwQlUQAnfb1TIWQ0qyfqVtcTIUTkaoweqLBxiritfnfqwoz9TjS2icvfyuSPecxdVylpuzYWOGYUJ81Y9pmApWeME5lrswMuCxdNpCF5LExENdRTQCP7DyUL8DOl6uBbo1UglXyr3IItd7XH0cRmDKiuyad3FSMcjNT0mt3NXnzXH9XZXt5g5a1vSwvDreA5bvT2nAq(kxM9)hRfRwb91G2rmPJ2vsD1RR)B6TVk0BQxn28mF5Srnns9SweGb(zc3lN9krj82HR38iiTDblZ)1nR6gLw5p9ysPFbLf(pcz8H1)HiJPdE7y8HPjUZ5tfQwDySotuws)IFe0WCelQQs)3UmfV0AnjFG1c9E16px2AF5ZlHagm96OTnz6KIxJDwpEOOv(49mKd1ugudY)zRgB(J0ZVc3f(UsyPiJQOZg1k(ODQE0fOOvc6jVFp5unlAhYglj17FTDDP8NzzkTkcYyEREOIzj3wWhmikvqIH0gtfPQ9xVsvRQKQ6F4onrQARlv12wV6KQ2y9ATkB1BQzpm5tBeq4NFbbbQPmyssw(tlKO1AhIrBPDr9gC1zLLkiS21wArzZ34zDdB1(kxLHDLZrZQa7owfyYOTslKVovb2y91oxfuXpICQD8SvwNDKrErIPQ47Q70Us1tSTduuEOFW5AEtWNw0GVZpNlgu2IP9nxnEMKT(9hUN8(Ow1oepr)qPuZgkNVRQzRUU69mol0EnRfrHFnUqdeMTQfLC7ijo1CFagi1evz)UA2VcPGaIfdkUPNDBjBkTnS(nX4sIvzHv2G(IvAsWkPYjqMHTWJiFdV0pBdaDVVuuPBKwZMM8NaPwFJcol7C3wC5Qivm(vHkzQAq(BEFKqMZkbCVVbEmtmc25kPUOUeMVY1MOUvIvz80Oihr1aZuPnkLsftknlCtwVtlxxGaBwuELuO0cZRYFKczuEKUUysBZjoqCL(sX3NNw8pZ)Vd]] )
+spec:RegisterPack( "Retribution", 20230714, [[Hekili:T3XFpkUTYplRE64GR3YrcWTBRwOQVQ(K6P37(JsFQ)hHajaPBiHxsy3BRwXN93y7yhBNXjbi72tQvQQ3DXtMz88Bp2Xm3A(VoFMNBM)8pBpWE4GBSg1FWT2w2JNpl7P9(ZNT3D19UBG)sK7o4))l(zjblpKfehrg7PWyxpcosJpKScgF(SLhccZ(5O5lXr8ia29(RM)5BgmF22appFgO(PRMpJa61dU5ARrF3Xf)39K3)4I1XjhxynOVv)X9p(PJFIb0hV2Ma0p9f)vuU54Iz(rz(rRG34qkWXhx4697hsZ89YrHau)K3MECXVfegkHVXxBDlGV)tCc8MpgNC)XfzXhxe6NbiAzqyqwGp8wPpbuWt5raRdp84IG1WRSfE7y4)NWb5jyacqbPUld99(qw8MnK)0pBLk1VbO(pN5NqNZK5Z)6x(Wp8BmkY4f3WW4hHhS3pYZpjL9WL05lHLECBqiH3Db(kAt(KMIevcreBaP2Tpj(bFfYOa3GBPWXeieXpqhQgjvfmBkyYain(WRTzOHRm3hZuwWu4641xVoyZ2mHcJmFwT1F195m)Y40uvKzXj2G(3ailjioHkIriS1qkS)KxqwUOk9W(9Xja5whefKULkc9oKqfw)ycWdEegmjEf881jX7oUqYA)4IF4qIRefS5CJIsdGp6EIntwWokI7cZuyO1Szt(8nmEtWQE9bpOK41GwB(m3veIK2FFI)Q4DlDZ(MjFWnzLBKVtwCscyA)(G1tYCdH)wFG)DdDaiVpoIqKpH92PBd8d9CIx78GF0gFxINbkGp4MeqSnFpXdFs(eWXYz5H1RtF)dUHhepf8b36MshPFAgWvBY2(8ZidUZfC8sEcDShabVBg13aD8TK3fDKvGY(uMd2OZb7QMd2vmhSRzoyBCoyF(ZblNDUrhCdlPicsbomkyLZMKa)1GrYQTNcETXXR9LIxlhsKK3hVFsQFwW6C0BX(th)Wu)jd6p(9RIJahtaNt4OPVMLxNUfZ1vXXHEXpg1hCxDjV1BEJ4rRyEUIHMm45Nno4BEtfiL8MnJMUexkWZZ5ryOT4K2am1Wb9ofzT9flRT1L12VeYAeKklRRMMTISgLdojznpxJU02wwABjjRVYOHTjTWZpBw)uPcQyms2R(Urp54TpvmEV31fQD6BQi(habcPjgx96nTBLoIfJ1eAJK)aJ2w50MKT9FWRCJuJJpe49jAYv)8ITaniPubsnwUp4gesXJqXcQZe)LhU3x(jAkyaxqowNCZxD9BjZ7e)DUbrP3995HZvEQIRNKXqEI7COLzMvqvDoS)PtyqAgJP4unTEq34hrQ)igQM5tfg0cemHvXfP6bkdR5QCy)ZpRmroSVJY)ondwaWelWBJu)shAbmoCzG9yq)8pOkbvQcCBq0dX3dIIVajrjLRqWkJJ3h)OFItq06dPNgNHm9acfsyPuNF)G3MD51jbLidIQm3Kn(zP91ay6e7NF(Qe3aphWCc0kUEEP99)cirbxq9Nhen9MXLFSjMzDayVfgh7DctlCboo(Hs9DcY83XKKUHWeCRBIZ(d)XFe67Sm(le621uGrUEBCNRuTiLd9O6paWQcAVoD3gh(KdvloDcmm8c3bIi5NoK(0PJ7vZSinmoJhI1IY64YSo1mJMoAqdfRa7FLAKqoQrtiLJFKqZ8ectS6jx2aAuWPtu8BobHI9RUqXYGqX6Kek29KfNTSqHAPyo)AxSHyv7Mlp0RxaiMQGH8KEOvfjM7LjIin(v6cDtjrMApGd9PRDThCkEx24YmBZYm7ltMHzVyuN91JmJgxnDRlmGVNtI7FqqIBuuWwO2cill1F8SSlox7jdCmY67j8MIp1uRXepBw8BFE)VCsZ7ugqupFQKS8yG00aHldlvM0CfO1yTWsf1yuxIRb9jjJRtlBnwlj1q1St28uAEbpee574E4lWs5DtEIOIOfniYc6f4p9wiuw5NAjWIFrJftDEmim0GGtLBjcnzMAuLjsB4eGW)gu2DkQkarBNl6uwvLzWOQq2uedkEZoj5aq7yLeVOnckJyaMPdhi4cDqeSGbDbVAFEvA6v3VzLx)DUFPfQ1rJZO(ki69Brr6KBBOIVxHFE(uPJHQgQ39rsSQh0VKIvqmJE7dh0PuSbm))PK6qeewKurOhbt7CVVT73mDGSCzstDp6jVejrxGlTKqpO(hxGPipGTkWUQROihVPq(GD0OlvnSTOyBo7KSes1KKle83T)Pei8nJ5jHD7CL6aH(BCx9ejK6vmDQkEev1P9yMu1Eup8PSmtsmkfPFKM9LmQqA3dxpdEmVBytQ38oRbgyjY21eSYfIIQKs7LHhWzbOeG9HmoiXlyv2lj9l4GI1WBCz(cM89Pq9bRYMyPMaH4d0npBoFLUupnjqg1tXqjXpnoYLLR3aV8OlSeEOedxG0PQe8oWWUUfAAwubLEOfbP6ioLc4ykor1170KCBJWs3tIp3GeEgeJ5c8S4WWYcXRkR1QvWstaxzbwVmI3NFwTbq3AAgFEgXK8En05bLQ5EVoPHGbRi3U4PanV3pvohFNkdCBGkldbwH4vWIx5RLs)oscbU4N(y6lawMnllbBUs0r5mC1PxgzsfS1D3o)ecFkQ3Sco4o7cMg00PPWQFwbOypGyGbGLJSmo6qk4t4NmCGZO9RuQXMoPZDB267gc2w7xLXwRwowFWnAZb3ei9YUyID(HDM48twnAapYTe00kgnP4wgFiYJihe9nSxhtkOtWoPwZKMmvWcy08Prl4X2TKMgcKnaVrbin80yLpMyn4j(RsODnIkaKFaz2FoEX5qX8sk304MHK85e3OKGg9OY8X6dEtaQtDwNWqLBiuYlSEwvDNTCgBqvwSmADZjLQoSvt0303QaoHXKY4NPXst8RRdgQqRbEdn2WV5HjVWWAnZwXauQh6Jg4q0eZ75ZihybaO8tJ1hjhdRhDtilinD(SFLSrAb7YpCmKTt7TE(RDpeM92Jls8)FhcsiB(wAmzx3CpKfVZLUBCGfnuMo5i68VbADCb5Oa9JXraTOd)w1AkEl7u4O90((r0klGr7A9LE0dydc)i2G2tJJSW5iT1KRXz69sOehYW9qDCBEpofeihKmCyAz0t6PjbUZaZ5N9LQ47cqAxKFbCT0PYPkoxfS2NixWmGEUHQI35a0Mi(c4xYPzQk2nF8weTMy2rgWkYPDOeMXHPLr)fW4MCyqbPDr(fW1v5OyeS2NixWma3PbbG2eXxa)I62uE8weTMy2Xg9XroEHiE64qPqIpAKXBcjmbLcjUX4Squ2mFZSrMdyW8II(xme)389Fj4749(misHQVJaSu)rZfd)x(5ffdRYhy0AOARCIrX5HECb8zkAotjZfjyQBo3i5sDIfHn1TgdlxVXkomk(cTn6FXq8FZ3)LGVRpMzPJypg(BHyM1Ci7RHQxsSHA4bZXmBMO5mLmxKGPU5CJKl1jwe2uFBlBSQ5l02OVbig9aFIGCtW1q(VPKHyM5C6OVPlTVYohC5O30ISmH5ZTUWxy03ae3m9Pz4Ai)3uYCwMnnV)SNLztZrFdnBkLb7f6dxcnoRjFuTpBinhHg(5kHwnSj1RofTQLI8psjU4)vuU9HxD52hEbKB9Z3PN1XKpS9aYxlTlGvWo8rFYhDo7ZANytY)sVciFI1K9B84ILhY4Wfft3MOdrkq75ra2ZnZDPBQ)3D8thxC9XfSp)w0TyIpNtF7jTftLAG2zTPxTpUm1co1p6fdPCKgUHivyXKV)XvvjrbiVGiVw0288ankDZLtMkt3yQDNwvRolnCdrATsCuqEbrETOT5vd2i15LtMkvNM6P35zR)II8Axt95PqB4c2ppKxBzuNNOOH1ODEi)fcTVo8S1a8uxLpSSAzXqonTgsOzz4WCOFi)1iG(WNk6l919yAcWh3ibmC8yAl(3a6BtnGbs0khNgldf)0wIN2S2QxfKDXtC0QCfNrV3Esv5wJVh7toXahM)9Oyy63ohAmgUkD0sUaC1oQyuDqXb170ucTPO6vaxTyKN2uX2M4QuvIS3Q44CRHUIbormY4dPZCokFknUj8xQ2q27Vu7i)RHE9HprSx(mYQH)YayIcLQFjNblDCF1NbLa4ePqRPbmvQ0fy0yQ2LwuQy9Yl4TniyAfRNJF6NPXGjiESAZKibyNpJ(3OxhMSJ(m8x)m96XmhvZ)NSBPYKG9KxD(St(wjIFl)nFg7ojAE28pBRrH49ZNrV(HkaM3an6FZHDnCQDjTmFgPVw(aCWqObUiVm)MjA(Sb5)t494v0ZHpVY(JlU77jnzBDPpnAcxpuJR5SQ(NfatQMZZI(RrWWOZbdf5nbuKrU9eZpu4y6Qssed1HwqB1JEVq7Whg5cxqMGiILCLjUQKk(16tdVTPhx88Zhx86oOI5fdeEdSXuyNWCZUkM4vzqS5MDXCB85p3qpQI4Is2TPcHEF88Ph65weF6vqVBoZGmcwN0WEzpkt70XXfDGaUkMyL2jHJlEduzREyNIrNCCXaMYScGEtD0OalnNxmSp(OSKryBiN1tlGC)XcDTfrLD7LPYSRxLzBqLHSDtTUkdLgiQSA5LwxLvbNvNk7BVmvg)QZswPD1Xfv6QzwPsM51PYRvR)bfau6NniooU4DuCy1hQN6BQiWSasdB(ifc4)MwIRqDG(GcanMR0tfAMRSK4kvDULqJBZQarQIKklbP4lkKAnnMPG6sU8WP1yj9P8Ygs7fgr5Mo5vKHC)naMAzKVpxct0SIPenccRmuCo)oGtS5wpM8RefqIgpqzuW8gVAvknymUPBSG8if1(6IarI3RhFguqEZnIqBAy(AJGA(oIZv6xFeGS74IBzJMZyvCnsqT74krLRGdSQmRtxDfUvwd1IWSYACDktjG(ZrNsEp1BtWCbUKGu6s4aRGwCX4uqmoSWZJt5CbOYZO3nfu6An4cDh1liTG3Ou0WnHaL25xCvu2Z8x0oBIzxWBkFA2y1OwWcDvJoDhtcPQ7l3Ycj)UAzlUzBDDwHr16q3ifRa9VhES6JvMRvH(7OmR6uFPHwLLZSixKgsIgdc2sFb6uxo7b602CJquKbAFY7y1BE6wCvylPxzKsbou8x6oJOgbIK42y7L4I16SIkyCogi8m4d3K4dn06VA7plZfouzW7AzKkfogM3MlfOlQHinrtULOjDPym54NIhw6EaHYCxuaulZjjVIKit56d5uJvk)6uIzovYjGv1lSbcAnNfqptCf3Xim6qUNrmz1yxUIZ7ez9euY09icnsKiPZ7qrhli85In53t)wkbdEjdBnXdvQQNy7mmUUrUTGQr7uBiO1TOqYygnqnhK8cCZX9XTp5yBxEcOkZ(yBjlN01AQckBLMYQ1ZwnqhQGwz3wnahjdO2vNImKzYMciR4R(o51G6Fg2S6A0ltcF72RjolhhQaiUXj5d3vDLNf38KLwuQYTpjZkzu(6O5D8q6cMS61E(aYvsz5fVvAHc1Uwf5agdnKDQQQ7XwwbvXu9YZ(ZKLLdeu6s2S6Ld91bBRFXCYCgl2tPkB)YjvxIb(zctZtFL4uwt0kVKtYpCECwM9lVr1M4v(lvHWpppil(VzfSHl)7wbvbCZy8HjDmIZNAuTAJ4wtuwqFXVzgy2HIa9L)PUqR20ABLXD0gVHS0snl6IgcQUlRsyW0RJUqUPteVgDhIVt0aq8onWGAkfQE8F4fXM)iDkq4UW6LPLMmQIfBvR4J0FRbNHIwRJBQDjMt18YmqAhTshdl1R2IFcaj0IskfevQbXeXSIBl4dggNjjXqA(HMu1(RxPQvvs1Yhu6MivTllvlTza1jvTXAZsv2Q1TZhSPnciSD908YrzIfDjl7PcjAT2Hy0wzVxUcxDwzYsPYPVqlkBwjkLnS1BZtvg2vohnRcSBzvGjJ2kTq(6ufyJ1mmUkOIFZr0BcZfzD2sg5IetvX3v3hnTQNY3eb9Y7RBVzk6qg6pIjk1QJDeEQU)BDpp7i(UHutHK1AibLkmO)n67)sn7vJXIqgIx1HTCjnMow5YgoiBV1uX2BzyulfQy8JMqrDvwHwthk1NzJoZQUUaPexevRTBh19FRQDwCs5dZqnBej3(JjjRzVg56TQoLCL4xd)MSGYSgHf40Hdu4ut)oUCmF34flhqXfOMw(Q4fAAZYA3I216LvnTjgH2AMU32aApXiyn02fzNXlTcNofndYWQaBsyknTUX9dw120aZuzKycLetQsXXnfJEArn2sSPOuffJsHpFXppnukpOSUyYLgDPN8QMv8uMN3re3dzBjvmmly3psFY8))p]] )

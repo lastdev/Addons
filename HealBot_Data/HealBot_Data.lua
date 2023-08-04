@@ -50,7 +50,7 @@ HealBot_Font_Outline={
     [3]= "THICKOUTLINE",
 };
 
-local Version=HealBot_Global_Version()
+local Version=HealBot_Global_InitVersion()
 HealBot_ConfigDefaults = {
   LastVersionUpdate=Version,
   MyFriend="x",
@@ -130,6 +130,7 @@ HealBot_Config_SpellsDefaults = {
   EmergSpellTrinket1={},
   EmergSpellTrinket2={},
   EmergAvoidBlueCursor={},
+  SpellTargetLastTarget={},
   ButtonCastMethod = 2,
   Binds={[1]=1,[2]=1,[3]=1,[4]=1,[5]=1,[6]=1,[7]=1,[8]=1,[9]=1,[10]=1,[11]=1,[12]=1,[13]=1,[14]=1,[15]=1,[16]=1,[17]=1,[18]=1,[19]=1,[20]=1,}
 };
@@ -265,7 +266,6 @@ HealBot_HealGroupsTrans = { [HEALBOT_OPTIONS_SELFHEALS_en] = HEALBOT_OPTIONS_SEL
 HealBot_GlobalsDefaults = {}
 
 function HealBot_Data_InitVars()
-    local Version=HealBot_Global_Version()
     HealBot_GlobalsDefaults = {
         LastVersionSkinUpdate=Version,
         FirstLoad = true,
@@ -281,6 +281,7 @@ function HealBot_Data_InitVars()
         PluginRequests=true,
         PluginHealthWatch=true,
         PluginManaWatch=true,
+        FrameStrata="LOW",
         CompressExport=true,
         AllowPlayerRoles=false,
         VehicleFontSizeReduction=4,
@@ -292,6 +293,7 @@ function HealBot_Data_InitVars()
         OptionsOpacityAdj=35,
         AbsorbDiv=10,
         InHealDiv=10,
+        HealAbsorbsDiv=10,
         DebugOut=false,
         Debug01=false, -- Currently not used
         VersionResetDone={["ICONS"]="9.1.0.0",["BUFF"]="9.1.0.0",["CBUFF"]="9.1.0.0",["DEBUFF"]="9.1.0.0",["CDEBUFF"]="9.1.0.0"},
@@ -332,7 +334,6 @@ function HealBot_Data_InitVars()
         SmartCastDebuff = true,
         SmartCastBuff = true,
         SmartCastRes = true,
-        AutoCacheSize=20,
         HealBot_ButtonRadius=78,
         HealBot_ButtonPosition=300,
         MinimapIcon={hide = false, minimapPos = 220, radius = 80,},
@@ -759,6 +760,11 @@ HealBot_Unit_Status={   ["DISABLED"]=0,
                         ["RES"]=19,
                         ["DC"]=50,
                         ["RESERVED"]=99,
+}
+
+HealBot_ReadyCheckStatus={   ["WAITING"]=0,
+                             ["READY"]=1,
+                             ["NOTREADY"]=2,
 }
 
 HealBot_Spell_IDs = {};

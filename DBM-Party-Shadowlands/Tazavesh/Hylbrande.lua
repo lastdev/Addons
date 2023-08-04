@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2448, "DBM-Party-Shadowlands", 9, 1194)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230117063410")
+mod:SetRevision("20230708234551")
 mod:SetCreatureID(175663)
 mod:SetEncounterID(2426)
 mod:SetUsedIcons(1, 2)
@@ -31,8 +31,8 @@ mod:RegisterEventsInCombat(
 local warnPurgedbyFire				= mod:NewTargetNoFilterAnnounce(346959, 2)
 local warnKeepersprotection			= mod:NewEndAnnounce(347958, 1)
 local warnLightningNova				= mod:NewTargetNoFilterAnnounce(358131, 3)
-local warnVaultPurifierSoon			= mod:NewSoonAnnounce("ej23004", 2, "136116", false)
-local warnVaultPurifier				= mod:NewSpellAnnounce("ej23004", 2, "136116")
+local warnVaultPurifierSoon			= mod:NewSoonAnnounce(-23004, 2, "136116", false)
+local warnVaultPurifier				= mod:NewSpellAnnounce(-23004, 2, "136116")
 local warnPurifyingBurst			= mod:NewCountAnnounce(353312, 2)
 local warnTitanicInsight			= mod:NewTargetNoFilterAnnounce(346427, 2)
 
@@ -48,7 +48,7 @@ local timerShearingSwingsCD			= mod:NewCDTimer(10.9, 346116, nil, nil, nil, 5, n
 local timerTitanicCrashCD			= mod:NewCDTimer(23.1, 347094, nil, nil, nil, 3)
 local timerPurgedbyFireCD			= mod:NewCDTimer(17, 346959, nil, nil, nil, 3)
 local timerSanitizingCycleCD		= mod:NewCDTimer(11, 346766, nil, nil, nil, 6)
-local timerVaultPurifierCD			= mod:NewCDTimer(29.1, "ej23004", nil, nil, nil, 1, "136116", DBM_COMMON_L.DAMAGE_ICON)
+local timerVaultPurifierCD			= mod:NewCDTimer(29.1, -23004, nil, nil, nil, 1, "136116", DBM_COMMON_L.DAMAGE_ICON)
 local timerPurifyingBurstCD			= mod:NewCDTimer(23.1, 353312, nil, nil, nil, 2)
 local timerTitanicInsight			= mod:NewTargetTimer(15, 346427, nil, nil, nil, 5)
 

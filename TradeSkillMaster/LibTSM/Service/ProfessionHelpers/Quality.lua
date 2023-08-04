@@ -39,7 +39,7 @@ local SKILL_PER_TARGET_QUALITY = {
 -- Module Functions
 -- ============================================================================
 
-function Quality.GetNeededSkill(targetQuality, recipeDifficulty, recipeQuality, recipeMaxQuality)
+function Quality.GetNeededSkill(targetQuality, recipeDifficulty, recipeQuality, recipeMaxQuality, hasQualityMats, inspirationAmount)
 	if recipeMaxQuality == 1 then
 		-- This recipe has quality mats, but doesn't produce a quality item
 		return 0, math.huge, 0
@@ -62,9 +62,9 @@ function Quality.GetNeededSkill(targetQuality, recipeDifficulty, recipeQuality, 
 		maxAddedSkill = targetQuality == recipeMaxQuality and math.huge or (targetUpperBound - currentSkill)
 	end
 	assert(neededSkill >= 0 and maxAddedSkill > 0)
-	local maxQualityMatSkill = recipeDifficulty * MAX_QUALITY_MAT_DIFFICULTY_RATIO
-	if neededSkill > maxQualityMatSkill then
-		-- We can't get this much skill with just quality reagents
+	local maxQualityMatSkill = hasQualityMats and recipeDifficulty * MAX_QUALITY_MAT_DIFFICULTY_RATIO or 0
+	if neededSkill > maxQualityMatSkill + (inspirationAmount or 0) then
+		-- We can't get this much skill with just quality reagents and inspiration
 		-- TODO: We potentically could with finishing / optional(?) mats
 		return nil, nil
 	end

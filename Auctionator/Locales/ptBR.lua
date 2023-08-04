@@ -208,6 +208,8 @@ L["CONFIG_SELLING_NOT_LIFO_HEADER"] = "Vendendo Equipamento/Bichos de estimaçã
 L["CONFIG_SELLING_NOT_LIFO_TEXT"] = "Opções para definir porcentagem ou valor de subcotação e duração para equipamento e bichos de estimação em gaiolas. Essas categorias de itens são postadas individualmente e um comprador pode escolher qual ele(a) quer. Subcotação pode ser útil."
 L["CONFIG_SELLING_POST_SHORTCUT"] = "O atalho de teclado/mouse para postar o item selecionado é"
 L["CONFIG_SELLING_POST_SHORTCUT_TOOLTIP_TEXT"] = "Clique e depois pressione o botão (ou tecla) que você gostaria de usar para o atalho. Esse atalho vai apenas funcionar na aba de vendas e não vai afetar outros atalhos para a mesma tecla."
+--[[Translation missing --]]
+L["CONFIG_SELLING_PREV_SHORTCUT"] = "A shortcut to go back to the previously selected item"
 L["CONFIG_SELLING_SHORTCUTS_CATEGORY"] = "Vendas: Atalhos"
 L["CONFIG_SELLING_SHORTCUTS_TEXT"] = "Opções para atalhos de teclado e mouse para a aba de vendas"
 L["CONFIG_SELLING_SHOW_BID_PRICE"] = "Mostrar a opção de oferta quando estiver listando um item (necessita um /reload)"
@@ -247,6 +249,10 @@ L["CONFIG_SMALL_TABS_TOOLTIP_TEXT"] = "Quando há muitos addons adicionando abas
 L["CONFIG_STACK_TOOLTIP"] = "Mostrar o preço da pilha inteira quando se pressiona o shift."
 L["CONFIG_TOOLTIPS_CATEGORY"] = "Caixas de Texto"
 L["CONFIG_TOOLTIPS_TEXT"] = "Opções para apresentar diferentes informações relacionadas a leilões na caixa de texto do jogo."
+--[[Translation missing --]]
+L["CONFIG_UNDERCUT_ITEMS_AHEAD"] = "How many items can be ahead of your listings before they count as undercut"
+--[[Translation missing --]]
+L["CONFIG_UNDERCUT_ITEMS_AHEAD_CLASSIC"] = "How many items can be ahead of your listings before they count as undercut (max 50)"
 --[[Translation missing --]]
 L["CONFIG_UNDERCUT_SCAN_MATCH_ILVL_VARIANTS"] = "For gear use item level and title when doing undercut checks"
 --[[Translation missing --]]
@@ -354,6 +360,8 @@ L["ITEM_CLASS"] = "Classe de Item"
 L["ITEM_LEVEL"] = "Nível do Item"
 L["ITEM_LEVEL_COLUMN"] = "Nível do Item"
 L["ITEM_PRICE_HISTORY"] = "Histórico de Preços do Item"
+--[[Translation missing --]]
+L["ITEMS_AHEAD"] = "Items Ahead"
 L["LEFT_CLICK"] = "Clique Esquerdo"
 L["LEVEL"] = "Nível"
 L["LIMITED_FUNCTIONALITY_MESSAGE"] = "Funcionalidade limitada por causa das atualizações do patch 8.3 na casa de leilões."
@@ -433,6 +441,8 @@ L["PET_TOOLTIP_TOOLTIP_HEADER"] = "Caixa de Texto de Bichos de Estimação"
 L["PET_TOOLTIP_TOOLTIP_TEXT"] = "Mostrar informações do Auctionator para bichos de estimação em gaiolas."
 L["POST"] = "Postar"
 L["POST_ATTEMPT_FAILED"] = "Sua última tentativa de postagem não funcionou. Tente novamente."
+--[[Translation missing --]]
+L["PREVIOUS"] = "Previous"
 L["PRICE"] = "Preço"
 L["PRICE_HISTORY"] = "Histórico de Preços"
 L["PRICE_INCREASE_WARNING"] = [=[Preço aumentado em %s, aguardando %ss
@@ -491,6 +501,8 @@ L["SCANNING_PAGE_X"] = [=[Digitalizando página %s...
 L["SEARCH"] = "Procurar"
 L["SEARCH_ALL"] = [=[Pesquisar tudo
 ]=]
+--[[Translation missing --]]
+L["SEARCH_FOR_QUANTITY"] = "Search For Quantity"
 --[[Translation missing --]]
 L["SEARCH_OPTIONS"] = "Search Options"
 L["SEARCH_TERM"] = "Procurar Termo"

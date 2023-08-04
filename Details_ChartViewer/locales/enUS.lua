@@ -11,3 +11,4 @@ L["STRING_PLUGIN_DESC"] = "View data collected by Details! on simple line charts
 L["STRING_PLUGIN_NAME"] = "Chart Viewer"
 L["STRING_TOOLTIP"] = "Open Chart Viewer"
 L["STRING_TOOSHORTNAME"] = "The name is too short."
+

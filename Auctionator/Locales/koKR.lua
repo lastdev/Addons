@@ -207,6 +207,8 @@ L["CONFIG_SELLING_NOT_LIFO_TEXT"] = "장비/펫의 최저가를 %로 계산할 �
 L["CONFIG_SELLING_POST_SHORTCUT"] = "현재 아이템을 게시하는 키보드/마우스 단축키는"
 --[[Translation missing --]]
 L["CONFIG_SELLING_POST_SHORTCUT_TOOLTIP_TEXT"] = "Click and then press the buttons that you wish to use as the shortcut. This shortcut will only be active in the Selling tab and won't affect any other shortcuts bound to the buttons."
+--[[Translation missing --]]
+L["CONFIG_SELLING_PREV_SHORTCUT"] = "A shortcut to go back to the previously selected item"
 L["CONFIG_SELLING_SHORTCUTS_CATEGORY"] = "판매: 단축키"
 L["CONFIG_SELLING_SHORTCUTS_TEXT"] = "판매 탭 내 키보드 및 마우스 단축키 옵션"
 --[[Translation missing --]]
@@ -244,6 +246,10 @@ L["CONFIG_SMALL_TABS_TOOLTIP_TEXT"] = "다른 경매자 애드온을 통해 경�
 L["CONFIG_STACK_TOOLTIP"] = "쉬프트로 전체 가격 표시"
 L["CONFIG_TOOLTIPS_CATEGORY"] = "툴팁"
 L["CONFIG_TOOLTIPS_TEXT"] = "게임 내 툴팁에 대한 설정을 변경합니다."
+--[[Translation missing --]]
+L["CONFIG_UNDERCUT_ITEMS_AHEAD"] = "How many items can be ahead of your listings before they count as undercut"
+--[[Translation missing --]]
+L["CONFIG_UNDERCUT_ITEMS_AHEAD_CLASSIC"] = "How many items can be ahead of your listings before they count as undercut (max 50)"
 --[[Translation missing --]]
 L["CONFIG_UNDERCUT_SCAN_MATCH_ILVL_VARIANTS"] = "For gear use item level and title when doing undercut checks"
 --[[Translation missing --]]
@@ -341,6 +347,8 @@ L["ITEM_CLASS"] = "품목 분류"
 L["ITEM_LEVEL"] = "아이템 레벨"
 L["ITEM_LEVEL_COLUMN"] = "아이템 레벨"
 L["ITEM_PRICE_HISTORY"] = "아이템 가격 내역"
+--[[Translation missing --]]
+L["ITEMS_AHEAD"] = "Items Ahead"
 L["LEFT_CLICK"] = "클릭"
 L["LEVEL"] = "레벨"
 L["LIMITED_FUNCTIONALITY_MESSAGE"] = "8.3 경매장 업데이트로 인한 기능 제한"
@@ -412,6 +420,8 @@ L["PET_TOOLTIP_TOOLTIP_TEXT"] = "우리에 담긴 펫의 경매장 가격을 표
 L["POST"] = "경매 시작"
 --[[Translation missing --]]
 L["POST_ATTEMPT_FAILED"] = "Your last post attempt didn't work. Try again."
+--[[Translation missing --]]
+L["PREVIOUS"] = "Previous"
 L["PRICE"] = "가격"
 L["PRICE_HISTORY"] = "가격 기록"
 L["PRICE_INCREASE_WARNING"] = "가격 %s 오름, %s초 대기 중"
@@ -465,6 +475,8 @@ L["SAVE_THIS_LIST_AS"] = "이 목록을 저장..."
 L["SCANNING_PAGE_X"] = "%s 페이지 검색중..."
 L["SEARCH"] = "검색"
 L["SEARCH_ALL"] = "전체 검색"
+--[[Translation missing --]]
+L["SEARCH_FOR_QUANTITY"] = "Search For Quantity"
 --[[Translation missing --]]
 L["SEARCH_OPTIONS"] = "Search Options"
 L["SEARCH_TERM"] = "이름 추가"

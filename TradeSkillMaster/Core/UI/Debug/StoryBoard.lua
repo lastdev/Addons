@@ -284,26 +284,27 @@ function private.CreateItemSelector(id)
 	return UIElements.New("ItemSelector", id)
 		:SetSize(32, 32)
 		:SetItems(ITEM_LIST)
+		:SetScript("OnSelectionChanged", private.SelectionChanged)
 end
 
 function private.CreateCraftTierButtonPage(button)
 	private.GetAndClearContent(button)
-		:AddChild(private.CreateCraftTierButton(1, 137000, -15000))
-		:AddChild(private.CreateCraftTierButton(2, 546100, 15400))
-		:AddChild(private.CreateCraftTierButton(3, 1576400, 456400))
-		:AddChild(private.CreateCraftTierButton(4, 4610500, 640000))
-		:AddChild(private.CreateCraftTierButton(5, 8087600, -5046500))
+		:AddChild(private.CreateCraftTierButton(1, 137000, -15000, 1))
+		:AddChild(private.CreateCraftTierButton(2, 546100, 15400, 1))
+		:AddChild(private.CreateCraftTierButton(3, 1576400, 456400, 1))
+		:AddChild(private.CreateCraftTierButton(4, 4610500, 640000, 1))
+		:AddChild(private.CreateCraftTierButton(5, 8087600, -5046500, 0.15))
 		:Draw()
 end
 
-function private.CreateCraftTierButton(quality, cost, profit)
+function private.CreateCraftTierButton(quality, cost, profit, chance)
 	return UIElements.New("Frame", "q"..quality)
 		:SetLayout("HORIZONTAL")
 		:SetHeight(80)
 		:SetMargin(0, 0, 0, 16)
 		:AddChild(UIElements.New("CraftTierButton", "button")
 			:SetWidth(120)
-			:SetCraftString("c:0:q"..quality)
+			:SetCraftString("c:0:q"..quality, chance)
 			:SetPrices(cost, profit)
 			:SetScript("OnClick", private.ButtonOnClick)
 		)
@@ -321,4 +322,8 @@ end
 
 function private.ButtonOnClick()
 	print("Click!")
+end
+
+function private.SelectionChanged(_, selection)
+	print("SELECTED", selection)
 end

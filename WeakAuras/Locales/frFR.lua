@@ -505,6 +505,8 @@ L["Dungeons"] = "Donjons"
 L["Durability Damage"] = "Perte de durabilité"
 L["Durability Damage All"] = "Perte de durabilité sur tout"
 --[[Translation missing --]]
+L["Duration"] = "Duration"
+--[[Translation missing --]]
 L["Duration Function"] = "Duration Function"
 --[[Translation missing --]]
 L["Duration Function (fallback state)"] = "Duration Function (fallback state)"
@@ -1265,6 +1267,8 @@ L["Princess Huhuran"] = "Princess Huhuran"
 --[[Translation missing --]]
 L["Print Profiling Results"] = "Print Profiling Results"
 --[[Translation missing --]]
+L["Proc Glow"] = "Proc Glow"
+--[[Translation missing --]]
 L["Professor Putricide"] = "Professor Putricide"
 L["Profiling already started."] = "Le profilage a déjà commencé."
 --[[Translation missing --]]
@@ -1575,6 +1579,8 @@ L["Stance/Form/Aura"] = "Posture/Forme/Aura"
 L["Standing"] = "Standing"
 --[[Translation missing --]]
 L["Star Shake"] = "Star Shake"
+--[[Translation missing --]]
+L["Start Animation"] = "Start Animation"
 --[[Translation missing --]]
 L["Start Now"] = "Start Now"
 L["Status"] = "Statut"

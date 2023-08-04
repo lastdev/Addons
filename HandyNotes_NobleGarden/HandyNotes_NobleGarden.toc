@@ -1,5 +1,5 @@
-## Interface: 100100
-## Version: 2.06
+## Interface: 100105
+## Version: 2.07
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Achievement_noblegarden_chocolate_egg
 ## Title: Noblegarden

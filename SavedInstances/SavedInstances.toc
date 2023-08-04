@@ -3,9 +3,9 @@
 ## Notes: Tracks Raid, Instance, World Boss lockouts for all your characters, daily/weekly quests, currencies, trade cooldowns, and more!
 ## Notes-ruRU: Отслеживает прогресс в рейдах и подземельях, также блокировки мировых боссов для всех Ваших персонажей, также ежедневные/еженедельные квесты, валюту и многое другое!
 ## Author: oscarucb and the Saved Instances Community
-## Version: 10.1.2
+## Version: 10.1.5
 ## IconTexTure: Interface\AddOns\SavedInstances\Media\Icon.tga
-## X-ReleaseDate: 2023-05-11T07:52:01Z
+## X-ReleaseDate: 2023-07-15T09:20:40Z
 ## X-License: All Rights Reserved
 ## X-Category: Raid
 ## X-LoadOn-Always: delayed
@@ -23,9 +23,9 @@ Locales\Locale.lua
 # core files
 Core\Functions.lua
 Core\Time.lua
+Core\Tooltip.lua
 
 Core\Debug.lua
-Core\Config.lua
 
 # modules
 # load Quest.lua first, required by Currency.lua
@@ -42,5 +42,7 @@ Modules\Progress.lua
 Modules\TradeSkill.lua
 Modules\Warfront.lua
 Modules\WorldBoss.lua
+
+Core\Config.lua
 
 Core\Core.lua

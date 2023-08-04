@@ -101,8 +101,9 @@ local specCodeToID = {
 	["MONKHEAL"] = 270,
 	["DEMONHUNTERDPS"] = 577,
 	["DEMONHUNTERTANK"] = 581,
-	["EVOKERDPS"] = 1467,
+	["EVOKERDPS1"] = 1467,
 	["EVOKERHEAL"] = 1468,
+	["EVOKERDPS2"] = 1473,
 }
 
 local specLocalizate = {

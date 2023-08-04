@@ -1,7 +1,8 @@
-## Interface: 100007
+## Interface: 100105
 ## Title: Details_ChartViewer (plugin)
 ## Notes: Plugin for Details
 ## RequiredDeps: Details
+## SavedVariablesPerCharacter: ChartViewerDB
 
 ## X-Curse-Project-ID: 79620
 ## X-Wago-ID: RaN0oaGj
@@ -24,3 +25,7 @@ locales\zhTW.lua
 
 Details_ChartViewer.xml
 Details_ChartViewer.lua
+frames.lua
+frames_tabs.lua
+frames_charts.lua
+frames_options.lua

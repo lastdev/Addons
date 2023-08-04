@@ -149,7 +149,7 @@ end
 -- @treturn table The passed table, populated with group paths
 function TSM_API.GetProfiles(result)
 	private.CheckCallMethod(result)
-	for _, profileName in TSM.db:ProfileIterator() do
+	for _, profileName in TSM.db:ScopeKeyIterator("profile") do
 		tinsert(result, profileName)
 	end
 	return result
@@ -435,14 +435,16 @@ function TSM_API.GetPlayerTotals(itemString)
 	numPlayer = numPlayer + BagTracking.GetReagentBankQuantity(itemString)
 	numPlayer = numPlayer + MailTracking.GetQuantity(itemString)
 	numAuctions = numAuctions + AuctionTracking.GetQuantity(itemString)
-	for _, factionrealm, character in Settings.ConnectedFactionrealmAltCharacterIterator() do
-		numAlts = numAlts + AltTracking.GetBagQuantity(itemString, character, factionrealm)
-		numAlts = numAlts + AltTracking.GetBankQuantity(itemString, character, factionrealm)
-		numAlts = numAlts + AltTracking.GetReagentBankQuantity(itemString, character, factionrealm)
-		numAlts = numAlts + AltTracking.GetMailQuantity(itemString, character, factionrealm)
-		local auctionQuantity = AltTracking.GetAuctionQuantity(itemString, character, factionrealm)
-		numAltAuctions = numAltAuctions + auctionQuantity
-		numAuctions = numAuctions + auctionQuantity
+	for _, factionrealm, character, _, isConnected in Settings.ConnectedFactionrealmAltCharacterIterator() do
+		if isConnected or TSM.db.global.coreOptions.regionWide then
+			numAlts = numAlts + AltTracking.GetBagQuantity(itemString, character, factionrealm)
+			numAlts = numAlts + AltTracking.GetBankQuantity(itemString, character, factionrealm)
+			numAlts = numAlts + AltTracking.GetReagentBankQuantity(itemString, character, factionrealm)
+			numAlts = numAlts + AltTracking.GetMailQuantity(itemString, character, factionrealm)
+			local auctionQuantity = AltTracking.GetAuctionQuantity(itemString, character, factionrealm)
+			numAltAuctions = numAltAuctions + auctionQuantity
+			numAuctions = numAuctions + auctionQuantity
+		end
 	end
 	return numPlayer, numAlts, numAuctions, numAltAuctions
 end

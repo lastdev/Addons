@@ -68,7 +68,7 @@ function EV:ADDON_LOADED(addon)
 		end
 	end
 	T._SetMissionSeenTable(pc.complete)
-	conf.version = GetAddOnMetadata(addonName, "Version")
+	conf.version = C_AddOns.GetAddOnMetadata(addonName, "Version")
 	EV("MP_SETTINGS_CHANGED")
 	
 	return "remove"

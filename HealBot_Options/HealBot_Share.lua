@@ -1080,6 +1080,10 @@ function HealBot_Share_SkinLoad(sIn, internal)
     HealBot_Skins_Check_Skin(hbOptGetSkinName, true)
     Healbot_Config_Skins.General[hbOptGetSkinName]["VC"]=nil
     if not internal then
+        HealBot_Options_Set_Current_Skin(hbOptGetSkinName, nil, nil, true)
+        HealBot_SetResetFlag("SOFT")
+        HealBot_Options_NewSkin:SetText("")
+        hbWarnSharedMedia=false
         HealBot_AddChat(hbOptGetSkinName..HEALBOT_CHAT_SKINREC)
     end
 end
@@ -1260,7 +1264,6 @@ function HealBot_Share_BuildSkinRecMsg(skinName, cmd, parts, msg)
                         elseif dat=="true" then
                             Healbot_Config_Skins[varName][skinName][key][var]=true  
                         else
-                            HealBot_AddDebug("Import key="..key.." var="..var.." dat="..dat,"Import",true)
                             Healbot_Config_Skins[varName][skinName][key][var]=dat
                         end
                     end

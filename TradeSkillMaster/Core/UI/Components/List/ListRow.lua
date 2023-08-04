@@ -191,11 +191,6 @@ function ListRow:GetDataIndex()
 	return self._dataIndex
 end
 
----Disables highlighting of the row.
-function ListRow:DisableHighlight()
-	self._state.highlightDisabled = true
-end
-
 ---Sets whether or not highlighting is enabled.
 function ListRow:SetHighlightEnabled(enabled)
 	self._state.highlightDisabled = not enabled

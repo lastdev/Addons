@@ -56,6 +56,7 @@ function private.GetCraftingReportsFrame()
 	if not private.craftsQuery then
 		private.craftsQuery = TSM.Crafting.CreateCraftsQuery()
 		private.craftsQuery:VirtualField("firstOperation", "string", private.FirstOperationVirtualField, "itemString")
+		private.craftsQuery:VirtualField("itemName", "string", ItemInfo.GetName, "itemString", "?")
 	end
 	private.craftsQuery:ResetFilters()
 	private.craftsQuery:ResetOrderBy()

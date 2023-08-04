@@ -1,9 +1,0 @@
-## Title:-|cffFFFFFFConRO|r- |cffA330C9Demon Hunter|r
-## Version: 10.0.7
-## Author: Vae
-## Interface: 100005
-## Dependencies: ConRO
-## LoadOnDemand: 1
-
-demonhunter_ids.lua
-demonhunter.lua

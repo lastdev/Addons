@@ -8,6 +8,22 @@ function Plater.GetChangelogTable()
 	if (not Plater.ChangeLogTable) then
 		Plater.ChangeLogTable = {
 			
+			{1689116618,  "Bug Fix", "July 14th, 2023", "Fixing personal 'alternate power' bar anchoring/positioning (Stagger and Ebon Might).", "cont1nuity"},
+			{1689116618,  "Bug Fix", "July 12th, 2023", "Fixing 'CreateIconGlow' used in mods/scripts for 10.1.5 update.", "cont1nuity"},
+			{1689116618,  "Backend Change", "July 12th, 2023", "Toc update for 10.1.5 update.", "cont1nuity"},
+			{1689116618,  "Backend Change", "July 12th, 2023", "DetailsFramework updates.", "Terciob"},
+			
+			{1688464330,  "Bug Fix", "June 30th, 2023", "Fixing an issue with aura tracking on classic clients.", "cont1nuity"},
+			{1688464330,  "New Feature", "June 24th, 2023", "Adding support for BugSack error tacking and throttling to same error messages.", "cont1nuity"},
+			{1688464330,  "New Feature", "June 21st, 2023", "Adding option for the soft-target forced nameplate blizzard setting.", "cont1nuity"},
+			{1688464330,  "Bug Fix", "June 21st, 2023", "Fixing an issue with missing aura icons and aura consolidation in WotLK.", "cont1nuity"},
+			{1688464330,  "Bug Fix", "June 20th, 2023", "Fixing an issue with test auras not working properly when auras are being disabled.", "cont1nuity"},
+			{1688464330,  "Bug Fix", "June 13th, 2023", "Fixing an issue with Ghost Auras not working properly.", "cont1nuity"},
+			{1688464330,  "Bug Fix", "June 12th, 2023", "Fixing personal bar auras showing buffs of other players unintentionally.", "cont1nuity"},
+			{1688464330,  "Backend Change", "June 10th, 2023", "Cleanup and internal documentation.", "cont1nuity"},
+			{1688464330,  "Backend Change", "June 6th, 2023", "Keep auras in default sort order of not sorted by time.", "cont1nuity"},
+			{1688464330,  "Backend Change", "June 6th, 2023", "Possibility to change audio cues channel.", "cont1nuity"},
+			
 			{1685613078,  "Bug Fix", "June 1st, 2023", "Fixing an issue with aura updates not being done properly in some cases.", "cont1nuity"},
 			{1685613078,  "New Feature", "June 1st, 2023", "Adding auto-toggle for 'Hide Blizzard Healthbars' based on combat state.", "cont1nuity"},
 			{1685613078,  "Backend Change", "May 31st, 2023", "Fixing some issues on aura updates to increase performance.", "cont1nuity"},

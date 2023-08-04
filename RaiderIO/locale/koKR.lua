@@ -1,7 +1,9 @@
-local ns = select(2, ...) ---@type ns @The addon namespace.
+local ns = select(2, ...) ---@class ns @The addon namespace.
 
 if ns:IsSameLocale("koKR") then
+
 	local L = ns.L or ns:NewLocale()
+	ns.L = L
 
 	L.LOCALE_NAME = "koKR"
 
@@ -385,5 +387,4 @@ L["WARNING_LOCK_POSITION_FRAME_AUTO"] = "RaiderIO: 먼저 내 프로필 위치 �
 --[[ L["WIPE_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
 
 
-	ns.L = L
 end
