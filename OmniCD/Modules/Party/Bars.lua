@@ -83,13 +83,12 @@ local function CooldownBarFrame_OnEvent(self, event, ...)
 			return
 		end
 
-
-		if spellID == 384255 then
+		if P.spell_enabled[spellID] or E.spell_modifiers[spellID] then
+			E.ProcessSpell(spellID, guid)
+		elseif spellID == 384255 then
 			if not CM.syncedGroupMembers[guid] then
 				CM:EnqueueInspect(nil, guid)
 			end
-		elseif P.spell_enabled[spellID] or E.spell_modifiers[spellID] then
-			E.ProcessSpell(spellID, guid)
 		end
 	elseif event == 'UNIT_HEALTH' then
 		local unit = ...
@@ -555,7 +554,20 @@ function P:UpdateUnitBar(guid, isUpdateBarsOrGRU)
 						elseif i == 4 then
 							isValidSpell = info.talentData[spec]
 						else
-							isValidSpell = self:IsEquipped(item, guid, item2)
+
+							if info.auras.hasWeyrnstone then
+								info.itemData[205146] = true
+							else
+								local _, pairedUnit = P:GetBuffDuration(unit, 410318)
+								if pairedUnit then
+									pairedUnit = UnitGUID(pairedUnit)
+									if pairedUnit then
+										info.auras.hasWeyrnstone = pairedUnit
+										info.itemData[205146] = true
+									end
+								end
+							end
+							isValidSpell = self:IsEquipped(info, item, item2)
 						end
 					else
 						if i == 6 then
@@ -676,11 +688,9 @@ function P:UpdateUnitBar(guid, isUpdateBarsOrGRU)
 								end
 
 
-								local blessingOfTheBronze = E.majorMovementAbilitiesByIDs[spellID]
-								if blessingOfTheBronze then
-									if self:GetBuffDuration(unit, blessingOfTheBronze) then
-										info.auras["isBlessingOfTheBronze"] = true
-									end
+								modData = E.majorMovementAbilitiesByIDs[spellID]
+								if modData and not info.auras["isBlessingOfTheBronze"] and self:GetBuffDuration(unit, modData) then
+									info.auras["isBlessingOfTheBronze"] = true
 								end
 							elseif i == 5 then
 								local covData = E.covenant_cdmod_conduits[spellID]

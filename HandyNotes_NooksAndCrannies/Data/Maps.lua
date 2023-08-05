@@ -415,9 +415,21 @@ local maps = {
 
   -- Battle for Azeroth
   ['jade_forest_bfa'] = 371,
+  ['nazmir'] = 863,
+  ['tiragarde_sound'] = 895,
+  ['uldum_bfa'] = 1527,
 
   -- Dragonflight
   ['valdrakken'] = 2112,
+  ['forbidden_reach'] = 2151,
+  ['zaralek_cavern'] = 2133,
+
+  -- Minimaps.
+  ['siege_creche'] = 2100,
+  ['support_creche'] = 2101,
+  ['war_creche'] = 2102,
+  ['froststone_vault'] = 2154,
+  ['zaralek_cavern_mini'] = 2184,
 }
 
 -- Iterate all maps and assign their ids, so we can use them for our points.

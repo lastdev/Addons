@@ -32,6 +32,16 @@ Stored data are data, that are pulled from WoW API (item name, quest name etc), 
 
 Cache is automatically cleared when new World of Warcraft build is created.
 ]]
-t['waypoint'] = '<Shift-Click> on this point to create map pin.'
+t['config_name_reset_personal'] = 'Reset hidden points for this character'
+t['config_name_reset_global'] = 'Reset hidden points for all characters'
+t['navigate'] = 'Navigate'
+t['waypoint_title'] = 'Navigation'
+t['waypoint'] = 'You can also <Shift-Click> on this point to create map pin.'
+t['waypoint_fail'] = 'You cannot create waypoints on this map.'
+t['point_tooltip'] = 'You can keep this tooltip visible while holding <Alt> button.'
+t['hide_personal'] = 'Hide for this character'
+t['hide_global'] = 'Hide for all characters'
+t['hide_tooltip_title'] = 'Restoring hidden point'
+t['hide_tooltip'] = 'Hidden points can restored in Addon configuration (Options -> AddOns -> HandyNotes -> plugins -> Nooks and Crannies -> reset buttons).'
 t['fetching_data'] = 'Fetching data'
 t['flight_master'] = 'Flight Master'

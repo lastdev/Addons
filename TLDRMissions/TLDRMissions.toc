@@ -1,6 +1,6 @@
 ## Interface: 100105
 ## Title: TL;DR Missions
-## Version: 10.1-004
+## Version: 10.1-006
 ## Notes: Automates sending out Covenant Missions
 ## Author: Teelo
 ## Dependencies: Blizzard_GarrisonUI
@@ -8,6 +8,8 @@
 ## SavedVariables: TLDRMissionsProfiles, TLDRMissionsCache
 ## X-Curse-Project-ID: 602487
 ## IconTexture: Interface\Icons\Spell_AnimaBastion_Orb
+## LoadOnDemand: 1
+## LoadWith: Blizzard_GarrisonUI
 
 main.lua
 

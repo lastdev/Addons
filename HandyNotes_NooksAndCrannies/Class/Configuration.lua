@@ -7,6 +7,7 @@ local _, this = ...
 
 local Addon = this.Addon
 local Cache = this.Cache
+local Point = this.Point
 local t = this.t
 
 ---
@@ -104,6 +105,24 @@ this.options = {
       confirm = true,
       arg = 'resetCache',
       order = 20,
+    },
+    resetHiddenPersonal = {
+      name = t['config_name_reset_personal'],
+      type = 'execute',
+      func = function() Point:resetHiddenPoints() end,
+      confirm = true,
+      arg = 'resetHidden',
+      width = 'full',
+      order = 30,
+    },
+    resetHiddenGlobal = {
+      name = t['config_name_reset_global'],
+      type = 'execute',
+      func = function() Point:resetHiddenPoints(true) end,
+      confirm = true,
+      arg = 'resetHiddenGlobal',
+      width = 'full',
+      order = 40,
     },
   },
 }

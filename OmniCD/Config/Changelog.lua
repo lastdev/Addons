@@ -21,6 +21,11 @@ v3.4.1.2755
 	Added arena season 7, 8 equip bonus items
 ]=]
 else E.changelog = [=[
+v10.1.5.2764
+	JULY 24, 2023 Hotfixes
+	Fixed an issue where Bestow Weyrnstone would persist when casted on another player
+	Added Undulating Sporecloak, Well-Honed Insticts (passive procs)
+
 v10.1.5.2763
 	Symbol of Hope will correctly increase Obsidian Scales' cd recovery rate for Augmentation spec.
 

@@ -21,6 +21,7 @@ function addon:registerWorkStepCallback(callback)
 end
 
 frame:HookScript("OnUpdate", function(self, elapsed)
+    if not addon.db then return end 
     if (not C_Garrison.IsAtGarrisonMissionNPC()) and (not addon.db.profile.allowProcessingAnywhere) then return end -- player starts simulations, walks away without stopping it, makes post on reddit complaining that my addon killed their FPS in Oribos... zzzzz
     if isPaused > 0 then return end
     if not hasWork then return end

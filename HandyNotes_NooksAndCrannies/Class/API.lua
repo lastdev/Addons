@@ -7,7 +7,7 @@
 --- changes any game api.
 ---
 
-local _, this = ...
+local NAME, this = ...
 
 local API = {}
 
@@ -54,6 +54,18 @@ API.MapCanvasDataProviderMixin = MapCanvasDataProviderMixin
 --- @link https://www.townlong-yak.com/framexml/ptr/Blizzard_MapCanvas/MapCanvas_DataProviderBase.lua
 ---
 API.MapCanvasPinMixin = MapCanvasPinMixin
+
+---
+--- Blizzard settings.
+---
+--- @link https://github.com/Gethe/wow-ui-source/blob/live/Interface/SharedXML/Settings/Blizzard_Settings.lua
+---
+API.Settings = Settings
+
+---
+--- Constant with translated string for 'close' text from game client.
+---
+API.closeLabel = CLOSE
 
 ---
 --- Gets game build version for caching purposes.
@@ -243,6 +255,82 @@ end
 ---
 function API:unitFactionGroup()
   return UnitFactionGroup('player')
+end
+
+---
+--- Creates frame for contextual menu.
+---
+--- @link https://wowpedia.fandom.com/wiki/API_CreateFrame
+--- @link https://wowpedia.fandom.com/wiki/UI_Object_UIDropDownMenu
+---
+--- @return table
+---   Frame with menu display mode.
+---
+function API:prepareMenu()
+  local menu = CreateFrame('Frame', NAME .. 'ContextualMenu')
+  menu.displayMode = 'MENU'
+
+  return menu
+end
+
+---
+--- Prepares button object that will be filled with text and logic.
+---
+--- @link https://wowpedia.fandom.com/wiki/API_UIDropDownMenu_CreateInfo
+---
+--- @return table
+---   Empty table, that we need to fill with values.
+---
+function API:menuButtonPrepare()
+  return UIDropDownMenu_CreateInfo()
+end
+
+---
+--- Adds blank line 'button' to contextual menu.
+---
+--- @link https://wowpedia.fandom.com/wiki/API_UIDropDownMenu_AddButton
+---
+function API:menuAddSpacer()
+  UIDropDownMenu_AddSpace()
+end
+
+---
+--- Adds button to menu. Used in initialization function.
+---
+--- @link https://wowpedia.fandom.com/wiki/API_UIDropDownMenu_AddButton
+---
+--- @param button
+---   Table containing button data (like text, functions etc.).
+---
+function API:menuAddButton(button)
+  -- No button in contextual menu is checkbox.
+  button.notCheckable = 1
+
+  -- Add button.
+  UIDropDownMenu_AddButton(button)
+end
+
+---
+--- Closes contextual menu.
+---
+--- @link https://wowpedia.fandom.com/wiki/Using_UIDropDownMenu
+---
+function API:closeMenu()
+  CloseDropDownMenus()
+end
+
+---
+--- Opens contextual menu.
+---
+--- @link https://wowpedia.fandom.com/wiki/API_ToggleDropDownMenu
+---
+--- @param name
+---   Menu name to be opened.
+--- @param anchor
+---   Name of anchor, we are closing (eg. addon name).
+---
+function API:openMenu(name, anchor)
+  ToggleDropDownMenu(1, nil, name, anchor, 0, 0)
 end
 
 this.API = API

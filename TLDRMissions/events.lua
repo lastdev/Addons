@@ -87,6 +87,7 @@ local function eventHandler(self, event, ...)
     if event == "ADVENTURE_MAP_OPEN" then
         if arg1 ~= 123 then return end
         if C_Map.GetBestMapForUnit("player") == 2022 then return end -- this is The Waking Shores. There is an interactable "Scouting Map" that passes in 123 for some reason.
+        if C_Map.GetBestMapForUnit("player") == 2024 then return end -- same with Azure Span - from the Blue Dragon quests campaign
         adventureMapOpenHandler(arg1)
         preloadItemRewards()
         if #C_Garrison.GetCompleteMissions(123) == 0 then
@@ -94,8 +95,6 @@ local function eventHandler(self, event, ...)
         else
             addon.GUI.CompleteMissionsButton:Show()
         end
-    elseif (event == "ADDON_LOADED") and (addonName == arg1) then
-        addon:RefreshProfile()
     elseif event == "GARRISON_MISSION_COMPLETE_RESPONSE" then
         addon:logCompletedMission(...)
     elseif event == "GARRISON_MISSION_STARTED" then
@@ -107,7 +106,19 @@ end
 
 eventFrame:SetScript("OnEvent", eventHandler)
 eventFrame:RegisterEvent("ADVENTURE_MAP_OPEN")
-eventFrame:RegisterEvent("ADDON_LOADED")
 eventFrame:RegisterEvent("GARRISON_MISSION_COMPLETE_RESPONSE")
 eventFrame:RegisterEvent("GARRISON_MISSION_STARTED")
 eventFrame:RegisterEvent("GARRISON_MISSION_FINISHED")
+
+EventUtil.ContinueOnAddOnLoaded(addonName, function()
+    addon:RefreshProfile()
+    if C_Map.GetBestMapForUnit("player") == 2022 then return end -- this is The Waking Shores. There is an interactable "Scouting Map" that passes in 123 for some reason.
+    if C_Map.GetBestMapForUnit("player") == 2024 then return end -- same with Azure Span - from the Blue Dragon quests campaign
+    adventureMapOpenHandler(123)
+    preloadItemRewards()
+    if #C_Garrison.GetCompleteMissions(123) == 0 then
+        addon.GUI.CompleteMissionsButton:Hide()
+    else
+        addon.GUI.CompleteMissionsButton:Show()
+    end
+end)

@@ -1,8 +1,10 @@
-## Interface: 100002
+## Interface: 101050
 ## Title: HandyNotes: Nooks and Crannies
+## Notes: Displays cave entrances and various portals around the world.
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_NooksAndCranniesDB, HandyNotes_NooksAndCranniesCACHE
 ## DefaultState: enabled
+## AddonCompartmentFunc: HandyNotes_NooksAndCrannies_OnAddonCompartmentClick
 
 HandyNotes_NooksAndCrannies.lua
 Class\Text.lua

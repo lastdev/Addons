@@ -1,6 +1,13 @@
 ------------------------------------------------------------------------------
 -- Dragonflight
 --
+v10.1.5.2764
+	JULY 24, 2023 Hotfixes
+	- Angel's Mercy's cooldown reduction is now 25% effective in PvP Combat.
+	- Impish Instincts now reduces the cooldown of Demonic Circle by 3 seconds when triggered (was 2 seconds).
+	Fixed an issue where Bestow Weyrnstone would persist when casted on another player
+	Added Undulating Sporecloak, Well-Honed Insticts (passive procs)
+
 v10.1.5.2763
 	Symbol of Hope will correctly increase Obsidian Scales' cd recovery rate for Augmentation spec.
 

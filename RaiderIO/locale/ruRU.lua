@@ -94,6 +94,10 @@ L["ENABLE_NO_SCORE_COLORS"] = "Отключить все цвета очков M
 L["ENABLE_NO_SCORE_COLORS_DESC"] = "Отключает раскраску очков. Все очки будут отображены белым цветом."
 L["ENABLE_RAIDERIO_CLIENT_ENHANCEMENTS"] = "Расширенная информация из клиента RaiderIO"
 L["ENABLE_RAIDERIO_CLIENT_ENHANCEMENTS_DESC"] = "Включение этого параметра позволит Вам просматривать подробные данные профиля Raider.IO, загруженные из клиента Raider.IO для Ваших заявленных персонажей."
+--[[Translation missing --]]
+--[[ L["ENABLE_REPLAY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ENABLE_REPLAY_DESC"] = ""--]] 
 L["ENABLE_RWF_MODE_BUTTON"] = "Включить"
 L["ENABLE_RWF_MODE_BUTTON_TOOLTIP"] = "Нажмите, чтобы включить режим Race World First. Это приведет к перезагрузке Вашего интерфейса."
 L["ENABLE_RWF_MODE_RELOAD"] = "Вы включаете режим Race World First. Это предназначено для использования с гонкой Mythic World First и должно использоваться только для этих целей вместе с клиентом Raider.IO для загрузки данных. Нажатие кнопки Подтвердить перезагрузит Ваш интерфейс."
@@ -246,10 +250,50 @@ L["RELOAD_LATER"] = "Перезагрузить позже"
 L["RELOAD_NOW"] = "Перезагрузить сейчас"
 L["RELOAD_RWF_MODE_BUTTON"] = "Сохранить"
 L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = "Нажмите, чтобы сохранить журнал в файл хранилища. Это приведет к перезагрузке вашего интерфейса."
+--[[Translation missing --]]
+--[[ L["REPLAY_AUTO_SELECTION"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_AUTO_SELECTION_DESC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_AUTO_SELECTION_GUILD_BEST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_AUTO_SELECTION_MOST_RECENT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_AUTO_SELECTION_PERSONAL_BEST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_AUTO_SELECTION_STARRED"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_AUTO_SELECTION_TEAM_BEST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_COPY_URL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_DOCK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_LOCK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_POSITION"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_REPLAY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_STYLE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_TIMING"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_UNDOCK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_UNLOCK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_REPLAY_CHANGING"] = ""--]] 
 L["REPLAY_SETTINGS_TOOLTIP"] = "Настройки"
 L["REPLAY_STYLE_TITLE_MDI"] = "MDI"
 L["REPLAY_STYLE_TITLE_MODERN"] = "Современный"
 L["REPLAY_STYLE_TITLE_MODERN_COMPACT"] = "Современный (компактный)"
+--[[Translation missing --]]
+--[[ L["REPLAY_SUMMARY_LOGGED"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_TIMING_TITLE_BOSS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_TIMING_TITLE_DUNGEON"] = ""--]] 
 L["RWF_MINIBUTTON_TOOLTIP"] = "Щелкните ЛКМ каждый раз, когда есть ожидающая добыча. Это приведет к перезагрузке Вашего интерфейса. Щелкните ПКМ, чтобы открыть фрейм Race World First."
 L["RWF_SUBTITLE_LOGGING_FILTERED_LOOT"] = "(регистрация соответствующих элементов)"
 L["RWF_SUBTITLE_LOGGING_LOOT"] = "(регистрация добычи)"

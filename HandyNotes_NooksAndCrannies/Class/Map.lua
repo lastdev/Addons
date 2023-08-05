@@ -42,6 +42,28 @@ function Map:prepareSize(point)
 end
 
 ---
+--- Decides, if point should be shown on map.
+---
+--- @param uiMapId
+---   Map, where we want to create waypoint.
+--- @param coord
+---   Coordinates on map, where we will be placing waypoint.
+---
+--- @return boolean
+---   True, if we should display point, false otherwise.
+---
+function Map:showPoint(uiMapId, coord)
+  local show = true
+
+  -- Manually hidden points.
+  if ((this.Addon.db.global[uiMapId] and this.Addon.db.global[uiMapId][coord] == true) or (this.Addon.db.char[uiMapId] and this.Addon.db.char[uiMapId][coord] == true)) then
+    show = false
+  end
+
+  return show
+end
+
+---
 --- Renders path for point (usually where npc roams).
 ---
 --- @param paths

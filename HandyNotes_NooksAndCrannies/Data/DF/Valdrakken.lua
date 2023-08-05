@@ -30,15 +30,15 @@ points['valdrakken'] = {
   },
   [53505510] = {
     icon = 'warlockportal-yellow-32x32',
-    portal = maps['shadowmoon_valley'],
+    portal = maps['nazmir'],
   },
   [54105460] = {
     icon = 'warlockportal-yellow-32x32',
-    portal = maps['jade_forest_bfa'],
+    portal = maps['uldum_bfa'],
   },
   [54005570] = {
     icon = 'warlockportal-yellow-32x32',
-    portal = maps['dalaran_legion'],
+    portal = maps['tiragarde_sound'],
   },
 }
 

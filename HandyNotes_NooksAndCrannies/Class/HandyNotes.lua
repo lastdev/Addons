@@ -32,7 +32,7 @@ function HandyNotesPlugin:OnEnter(uiMapId, coord)
   GameTooltip:SetOwner(self, tooltipPosition)
 
   -- Pass GameTooltip object and point data to another function, that will render tooltip.
-  Point:prepareTooltip(GameTooltip, this.points[uiMapId][coord], uiMapId)
+  Point:prepareTooltip(GameTooltip, this.points[uiMapId][coord])
   -- Display tooltip.
   GameTooltip:Show()
 
@@ -80,10 +80,19 @@ function HandyNotesPlugin:OnClick(button, down, uiMapId, coord)
     if (API:IsShiftKeyDown() and down == false) then
       Point:createWaypoint(uiMapId, coord)
     end
+    -- Right button actions.
+  elseif (button == 'RightButton' and down == true) then
+    -- Each menu rewrites the previous one. If this would be an issue, we can create menu
+    -- for each separate point and store it into some variable.
+    local menu = Point:createContextualMenu(uiMapId, coord, this.points[uiMapId][coord])
+    API:openMenu(menu, self)
   end
 end
 
 do
+  -- Assign variable for map ID we are cycling.
+  local mapId = nil
+
   ---
   --- This is an iterator that is used by HandyNotes to iterate over every node in given zone.
   ---
@@ -106,12 +115,17 @@ do
     while coordinates do
       -- If we have any data for our point.
       if point then
-        local scale, opacity = Map:prepareSize(point)
+        -- Check, whether we should display point on map.
+        local show = Map:showPoint(mapId, coordinates)
 
-        -- Create icon for to display on map.
-        local icon = API:GetAtlasInfo(point.icon)
+        if (show == true) then
+          local scale, opacity = Map:prepareSize(point)
 
-        return coordinates, nil, icon, scale, opacity
+          -- Create icon for to display on map.
+          local icon = API:GetAtlasInfo(point.icon)
+
+          return coordinates, nil, icon, scale, opacity
+        end
       end
 
       -- Load next point for this map.
@@ -135,6 +149,7 @@ do
   ---   Our points table for given map.
   ---
   function HandyNotesPlugin:GetNodes2(uiMapId, _)
+    mapId = uiMapId
     -- @todo Handle minimap (second param).
     return iter, this.points[uiMapId], nil
   end
@@ -175,4 +190,14 @@ end
 ---
 function Addon:Refresh()
   self:SendMessage('HandyNotes_NotifyUpdate', NAME)
+end
+
+---
+--- Handles button click in Addon Compartment.
+---
+--- @link https://wowpedia.fandom.com/wiki/Addon_compartment
+---
+function HandyNotes_NooksAndCrannies_OnAddonCompartmentClick()
+  API.Settings.OpenToCategory('HandyNotes')
+  LibStub('AceConfigDialog-3.0'):SelectGroup('HandyNotes', 'plugins', NAME)
 end

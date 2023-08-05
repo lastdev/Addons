@@ -492,6 +492,7 @@ local function GetEquippedItemData(info, unit, specID, list)
 	local numTierSetBonus = 0
 	local foundTierSpecBonus
 	if list then list[#list + 1] = "^M" end
+	local cloak
 
 	for i = 1, NUM_INVSLOTS do
 		local slotID = INVSLOT_INDEX[i]
@@ -550,6 +551,9 @@ local function GetEquippedItemData(info, unit, specID, list)
 					elseif C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItemByID(itemLink) then
 						FindAzeritePower(info, list)
 					end
+					if i == 12 then
+						cloak = itemID
+					end
 					if InspectTooltip then
 						InspectTooltip:ClearLines()
 					end
@@ -562,13 +566,9 @@ local function GetEquippedItemData(info, unit, specID, list)
 				moveToStale = true
 			end
 		end
-		if list and i == 12 then list[#list + 1] = "^E" end
-	end
-
-
-	if info.auras.hasWeyrnstone or P:GetBuffDuration(unit, 410318, true) then
-		info.itemData[205146] = true
-		if list then list[#list + 1] = 205146 end
+		if list and i == 12 then
+			list[#list + 1] = cloak and ("^E," .. cloak) or "^E"
+		end
 	end
 
 	return moveToStale

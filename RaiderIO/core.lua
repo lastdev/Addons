@@ -634,6 +634,7 @@ do
     ---|"guild_best_replay"
     ---|"user_best_replay"
     ---|"user_recent_replay"
+    ---|"team_best_replay"
     ---|"watched_replay"
 
     ---@class Replay
@@ -1093,6 +1094,8 @@ do
     ---@field public mplusHeadlineMode HeadlineMode Defaults to `ns.HEADLINE_MODE.BEST_SEASON` (`1`)
     ---@field public replayStyle ReplayFrameStyle Defaults to `MODERN`
     ---@field public replayTiming ReplayFrameTiming Defaults to `BOSS`
+    ---@field public replaySelection ReplayFrameSelections Defaults to `user_best_replay`
+    ---@field public replayPoint ConfigProfilePoint Defaults to `{ point = nil, x = 0, y = 0 }`
     ---@field public profilePoint ConfigProfilePoint Defaults to `{ point = nil, x = 0, y = 0 }`
 
     -- fallback saved variables
@@ -1137,8 +1140,10 @@ do
         showMedalsInsteadOfText = false, -- NEW in 9.1.5
         replayStyle = "MODERN", -- NEW in 10.0.7
         replayTiming = "BOSS", -- NEW in 10.1.5
+        replaySelection = "user_best_replay", -- NEW in 10.1.5
         enableReplay = true, -- NEW in 10.1.5
-        lockReplay = true, -- NEW in 10.1.5
+        dockReplay = true, -- NEW in 10.1.5
+        lockReplay = false, -- NEW in 10.1.5
         replayPoint = { point = nil, x = 0, y = 0 }, -- NEW in 10.1.5
     }
 
@@ -2106,6 +2111,7 @@ do
     ---@field public preferredIndex? number
     ---@field public timeout? number
     ---@field public whileDead? boolean
+    ---@field public OnAcceptCallback? fun()
 
     ---@param popup InternalStaticPopupDialog
     ---@param ... any
@@ -7370,6 +7376,22 @@ do
         [2] = "DUNGEON",
     }
 
+    ---@alias ReplayFrameSelection "user_recent_replay"|"user_best_replay"|"team_best_replay"|"guild_best_replay"|"watched_replay"
+
+    ---@class ReplayFrameSelections
+    local ReplayFrameSelections = {
+        user_recent_replay = "user_recent_replay",
+        user_best_replay = "user_best_replay",
+        team_best_replay = "team_best_replay",
+        guild_best_replay = "guild_best_replay",
+        watched_replay = "watched_replay",
+        [1] = "user_recent_replay",
+        [2] = "user_best_replay",
+        [3] = "team_best_replay",
+        [4] = "guild_best_replay",
+        [5] = "watched_replay",
+    }
+
     local FRAME_UPDATE_INTERVAL = 0.5
     local FRAME_TIMER_SCALE = 1 -- always 1 for production
 
@@ -7721,8 +7743,8 @@ do
             else
                 self.InfoR:SetText("")
             end
-            self.CombatL:SetShown(liveBoss and liveBoss.combat)
-            self.CombatR:SetShown(replayBoss and replayBoss.combat)
+            self.CombatL:SetShown(not isLiveBossDead and liveBoss and liveBoss.combat)
+            self.CombatR:SetShown(not isReplayBossDead and replayBoss and replayBoss.combat)
             self.RouteSwap:SetShown(not self.CombatR:IsShown() and (not not self:HasDifferentBosses()))
         end
 
@@ -7909,19 +7931,50 @@ do
 
     do
 
+        ---@type InternalStaticPopupDialog
+        local REPLAY_CHANGE_POPUP = {
+            id = "RAIDERIO_REPLAY_CHANGE_CONFIRM",
+            text = "%s",
+            button1 = L.CONFIRM,
+            button2 = L.CANCEL,
+            hasEditBox = false,
+            preferredIndex = 3,
+            timeout = 0,
+            whileDead = true,
+            hideOnEscape = true,
+            OnShow = nil,
+            OnHide = nil,
+            OnAccept = function (self)
+                if self.OnAcceptCallback then
+                    self.OnAcceptCallback()
+                    self.OnAcceptCallback = nil
+                end
+            end,
+            OnCancel = nil
+        }
+
         function ReplayDataProviderMixin:OnLoad()
             self.replaySummary = self:CreateSummary()
             self:SetDeathPenalty(DEATH_PENALTY)
         end
 
         ---@param replay? Replay
-        function ReplayDataProviderMixin:SetReplay(replay)
+        ---@param requireConfirmation? boolean
+        function ReplayDataProviderMixin:SetReplay(replay, requireConfirmation)
             if self.replay == replay then
                 return
             end
-            self.replay = replay
-            self:SetupSummary()
-            replayFrame:OnReplayChange()
+            local function Apply()
+                self.replay = replay
+                self:SetupSummary()
+                replayFrame:OnReplayChange()
+            end
+            if requireConfirmation then
+                local popup = util:ShowStaticPopupDialog(REPLAY_CHANGE_POPUP, L.REPLAY_REPLAY_CHANGING)
+                popup.OnAcceptCallback = Apply
+                return
+            end
+            Apply()
         end
 
         ---@return Replay? replay
@@ -8197,16 +8250,18 @@ do
 
         ---@alias ReplayFrameDropDownMenuList "replay"|"style"|"timing"|"position"
 
+        ---@alias ReplayFrameDropDownPositionOption "lock"|"unlock"|"dock"|"undock"
+
         ---@class UIDropDownMenuTemplate : Frame
 
         ---@class UIDropDownMenuInfo
         ---@field public checked boolean
         ---@field public text string
         ---@field public hasArrow boolean
+        ---@field public notCheckable boolean
         ---@field public menuList ReplayFrameDropDownMenuList
         ---@field public arg1 ReplayFrameConfigButton
-        ---@field public arg2 Replay|ReplayFrameStyle
-        ---@field public value Replay|ReplayFrameStyle
+        ---@field public arg2 Replay|ReplayFrameStyle|ReplayFrameDropDownPositionOption
         ---@field public tooltipTitle? string
         ---@field public tooltipText? string
         ---@field public tooltipOnButton? boolean
@@ -8299,19 +8354,28 @@ do
                     UIDropDownMenu_AddButton(info, level)
                 end
             elseif menuList == "position" then
+                info.checked = nil
+                info.notCheckable = true
                 info.hasArrow = false
-                info.tooltipOnButton = true
                 info.func = parent.OnPositionClick
                 info.arg1 = parent
-                info.text = L.REPLAY_MENU_LOCK
-                info.checked = config:Get("lockReplay")
-                info.arg2 = true
-                info.tooltipTitle = L.REPLAY_MENU_LOCK_DESC
+                if config:Get("dockReplay") then
+                    info.text = L.REPLAY_MENU_UNDOCK
+                    info.arg2 = "undock"
+                    UIDropDownMenu_AddButton(info, level)
+                    return
+                end
+                info.text = L.REPLAY_MENU_DOCK
+                info.arg2 = "dock"
                 UIDropDownMenu_AddButton(info, level)
-                info.text = L.REPLAY_MENU_UNLOCK
-                info.checked = not config:Get("lockReplay")
-                info.arg2 = false
-                info.tooltipTitle = L.REPLAY_MENU_UNLOCK_DESC
+                if config:Get("lockReplay") then
+                    info.text = L.REPLAY_MENU_UNLOCK
+                    info.arg2 = "unlock"
+                    UIDropDownMenu_AddButton(info, level)
+                    return
+                end
+                info.text = L.REPLAY_MENU_LOCK
+                info.arg2 = "lock"
                 UIDropDownMenu_AddButton(info, level)
             end
         end
@@ -8331,7 +8395,7 @@ do
             else
                 local replay = value ---@type Replay
                 local replayDataProvider = replayFrame:GetReplayDataProvider()
-                replayDataProvider:SetReplay(replay)
+                replayDataProvider:SetReplay(replay, replayFrame:IsState("COMPLETED"))
             end
             dropDownMenu:Close()
         end
@@ -8347,8 +8411,16 @@ do
         ---@param self UIDropDownMenuInfo
         function ReplayFrameConfigButtonMixin:OnPositionClick()
             local dropDownMenu = self.arg1
-            local lock = self.arg2 ---@type boolean
-            config:Set("lockReplay", lock)
+            local action = self.arg2 ---@type ReplayFrameDropDownPositionOption
+            if action == "dock" then
+                config:Set("dockReplay", true)
+            elseif action == "undock" then
+                config:Set("dockReplay", false)
+            elseif action == "lock" then
+                config:Set("lockReplay", true)
+            elseif action == "unlock" then
+                config:Set("lockReplay", false)
+            end
             replayFrame:UpdatePosition()
             dropDownMenu:Close()
         end
@@ -9171,8 +9243,9 @@ do
 
         ---@param save? boolean
         function ReplayFrameMixin:UpdatePosition(save)
-            if config:Get("lockReplay") then
-                self:EnableMouse(false)
+            if config:Get("dockReplay") then
+                self:SetMovable(false)
+                self:SetMouseClickEnabled(false)
                 self:ClearAllPoints()
                 self:SetPoint("TOPRIGHT", ObjectiveTrackerFrame, "TOPLEFT", -32, 0)
                 return
@@ -9183,7 +9256,9 @@ do
                 config:Set("replayPoint", replayPoint)
                 replayPoint.point, replayPoint.x, replayPoint.y = point, x, y
             end
-            self:EnableMouse(true)
+            local locked = config:Get("lockReplay")
+            self:SetMovable(not locked)
+            self:SetMouseClickEnabled(not locked)
             self:ClearAllPoints()
             local replayPoint = config:Get("replayPoint") ---@type ConfigProfilePoint
             self:SetPoint(replayPoint.point or "TOPRIGHT", replayPoint.point and UIParent or ObjectiveTrackerFrame, replayPoint.point or "TOPLEFT", replayPoint.point and replayPoint.x or -32, replayPoint.point and replayPoint.y or 0)
@@ -9615,11 +9690,17 @@ do
     ---@param otherMapIDs? number[]
     ---@return Replay? replay
     local function GetReplayForMapID(mapID, otherMapIDs)
+        local replayCount = 0
+        local relevantReplays = {} ---@type Replay[]
         for _, replay in ipairs(replays) do
             local dungeon = util:GetDungeonByID(replay.dungeon.id)
             if dungeon and dungeon.keystone_instance == mapID then
-                return replay
+                replayCount = replayCount + 1
+                relevantReplays[replayCount] = replay
             end
+        end
+        if replayCount == 1 then
+            return relevantReplays[1]
         end
         if otherMapIDs then
             for _, replay in ipairs(replays) do
@@ -9627,10 +9708,32 @@ do
                 if dungeon then
                     for _, otherMapID in ipairs(otherMapIDs) do
                         if dungeon.keystone_instance == otherMapID then
-                            return replay
+                            replayCount = replayCount + 1
+                            relevantReplays[replayCount] = replay
                         end
                     end
                 end
+            end
+        end
+        if replayCount == 1 then
+            return relevantReplays[1]
+        end
+        if replayCount > 1 then
+            local replaySelection = config:Get("replaySelection") ---@type ReplayFrameSelection
+            for _, replay in ipairs(relevantReplays) do
+                local index = util:TableContains(replay.sources, replaySelection)
+                if index == #replay.sources then
+                    return replay
+                end
+            end
+            for _, replay in ipairs(relevantReplays) do
+                local index = util:TableContains(replay.sources, replaySelection)
+                if index and index > 0 then
+                    return replay
+                end
+            end
+            if relevantReplays[1] then
+                return relevantReplays[1]
             end
         end
         -- if config:Get("debugMode") then
@@ -11710,7 +11813,11 @@ do
         { icon = 442272, text = L.DB_MODULES_HEADER_RECRUITMENT, check = "checkButton3", addon = "addon3" }, -- 442272 = achievement_guildperk_everybodysfriend
     }
 
+    ---@class RaiderIOSettingsFrame : Frame, BackdropTemplate
+
     local function CreateOptions()
+
+        ---@class RaiderIOSettingsFrame
         local configParentFrame = CreateFrame("Frame", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate")
         configParentFrame:SetSize(400, 600)
         configParentFrame:SetPoint("CENTER")
@@ -11759,6 +11866,7 @@ do
         configScrollFrame:SetScrollChild(configFrame)
         configParentFrame:Hide()
 
+        ---@class RaiderIOConfigOptions
         local configOptions
 
         local function WidgetHelp_OnEnter(self)
@@ -11841,16 +11949,24 @@ do
                     end
                 end
             end
+            for i = 1, #configOptions.dropdowns do
+                local f = configOptions.dropdowns[i]
+                if f.selected then
+                    config:Set(f.cvar, f.selected.value)
+                end
+            end
             if reload then
                 util:ShowStaticPopupDialog(RELOAD_POPUP)
             end
             callback:SendEvent("RAIDERIO_SETTINGS_SAVED")
         end
 
+        ---@class RaiderIOConfigOptions
         configOptions = {
-            modules = {},
-            options = {},
-            radios = {},
+            modules = {}, ---@type RaiderIOSettingsModuleToggleWidget[]
+            options = {}, ---@type RaiderIOSettingsToggleWidget[]
+            radios = {}, ---@type RaiderIOSettingsRadioToggleWidget[]
+            dropdowns = {}, ---@type RaiderIOSettingsDropDownWidget[]
             backdrop = { -- TODO: 9.0
                 bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
                 edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16,
@@ -11888,6 +12004,28 @@ do
                     end
                 end
             end
+            for i = 1, #self.dropdowns do
+                local f = self.dropdowns[i]
+                if f.isDisabled then
+                    local disabled = f.isDisabled
+                    if type(disabled) == "function" then
+                        disabled = disabled(f)
+                    end
+                    if disabled then
+                        f.text:SetVertexColor(0.5, 0.5, 0.5)
+                        f.help.icon:SetVertexColor(0.5, 0.5, 0.5)
+                        f.toggleButton:SetEnabled(false)
+                        f.toggleButton.text:SetVertexColor(0.5, 0.5, 0.5)
+                        f.toggleButton.indicator:SetVertexColor(0.5, 0.5, 0.5)
+                    else
+                        f.text:SetVertexColor(1, 1, 1)
+                        f.help.icon:SetVertexColor(1, 1, 1)
+                        f.toggleButton:SetEnabled(true)
+                        f.toggleButton.text:SetVertexColor(1, 1, 1)
+                        f.toggleButton.indicator:SetVertexColor(1, 1, 1)
+                    end
+                end
+            end
         end
 
         function configOptions.Update(self)
@@ -11913,6 +12051,17 @@ do
                     local f = radios[i]
                     f.checkButton:SetChecked(f.valueRadio == config:Get(f.cvar))
                 end
+            end
+            for i = 1, #self.dropdowns do
+                local f = self.dropdowns[i]
+                local value = config:Get(f.cvar)
+                for _, option in ipairs(f.options) do
+                    if option.value == value then
+                        f.selected = option
+                        break
+                    end
+                end
+                f.toggleButton.text:SetText(f.selected and f.selected.text)
             end
         end
 
@@ -12022,7 +12171,7 @@ do
         ---@field public addon3? string
 
         function configOptions.CreateModuleToggle(self, name, ...)
-            ---@type RaiderIOSettingsModuleToggleWidget
+            ---@class RaiderIOSettingsModuleToggleWidget
             local frame = self:CreateWidget("Frame")
             frame.isModuleToggle = true
             frame.text:SetTextColor(1, 1, 1)
@@ -12068,7 +12217,7 @@ do
         end
 
         function configOptions.CreateOptionToggle(self, label, description, cvar, configOptions)
-            ---@type RaiderIOSettingsToggleWidget
+            ---@class RaiderIOSettingsToggleWidget
             local frame = self:CreateToggle(label, description, cvar, configOptions)
             frame.checkButton:SetScript("OnClick", function ()
                 self:UpdateWidgetStates()
@@ -12081,7 +12230,7 @@ do
         ---@field public valueRadio any
 
         function configOptions.CreateRadioToggle(self, label, description, cvar, value, configOptions)
-            ---@type RaiderIOSettingsRadioToggleWidget
+            ---@class RaiderIOSettingsRadioToggleWidget
             local frame = self:CreateToggle(label, description, cvar, configOptions)
 
             frame.valueRadio = value
@@ -12106,6 +12255,107 @@ do
                 end
             end)
 
+            return frame
+        end
+
+        ---@class RaiderIOSettingsDropDownOption
+        ---@field public text string
+        ---@field public value string|number
+
+        ---@alias RaiderIOSettingsDropDownWidgetIsDisabledCallback fun(self: RaiderIOSettingsDropDownWidget): boolean?
+
+        ---@class RaiderIOSettingsDropDownWidgetOptions
+        ---@field public options RaiderIOSettingsDropDownOption[]
+        ---@field public isDisabled? boolean|RaiderIOSettingsDropDownWidgetIsDisabledCallback
+
+        ---@class RaiderIOSettingsDropDownWidget : RaiderIOSettingsBaseWidget, RaiderIOSettingsDropDownWidgetOptions
+        ---@field public selected? RaiderIOSettingsDropDownOption
+        ---@field public isDisabled? boolean|RaiderIOSettingsDropDownWidgetIsDisabledCallback
+
+        ---@class RaiderIOSettingsDropDownWidgetToggleButton : Button
+
+        ---@param self RaiderIOSettingsDropDownWidget
+        function configOptions.DropDownOnClick(self)
+            PlaySound(SOUNDKIT.IG_CHAT_EMOTE_BUTTON)
+            if DropDownList1:IsShown() and DropDownList1.dropdown == self.toggleButton.DropDownMenu then
+                CloseDropDownMenus()
+            else
+                ToggleDropDownMenu(1, nil, self.toggleButton.DropDownMenu, self.toggleButton, 0, 0)
+            end
+        end
+
+        ---@class RaiderIOSettingsDropDownWidgetMenuInfo
+        ---@field public func fun(self: RaiderIOSettingsDropDownWidgetMenuInfo)
+        ---@field public arg1 RaiderIOSettingsDropDownWidget
+        ---@field public arg2 RaiderIOSettingsDropDownOption
+        ---@field public checked boolean
+        ---@field public text string
+
+        ---@param self RaiderIOSettingsDropDownWidget
+        ---@param dropDownList DropDownList
+        ---@param level number
+        ---@param menuList? string
+        function configOptions.DropDownOnInitialize(self, dropDownList, level, menuList)
+            local info = UIDropDownMenu_CreateInfo() ---@type RaiderIOSettingsDropDownWidgetMenuInfo
+            if level == 1 then
+                local value = self.selected and self.selected.value
+                info.func = configOptions.DropDownOnOptionClick
+                info.arg1 = self
+                for _, option in ipairs(self.options) do
+                    info.arg2 = option
+                    info.checked = option.value == value
+                    info.text = option.text
+                    UIDropDownMenu_AddButton(info, level)
+                end
+            end
+        end
+
+        ---@param self RaiderIOSettingsDropDownWidgetMenuInfo
+        function configOptions.DropDownOnOptionClick(self)
+            local parent = self.arg1
+            local option = self.arg2
+            parent.selected = option
+            parent.toggleButton.text:SetText(option.text)
+            CloseDropDownMenus()
+        end
+
+        ---@param self RaiderIOConfigOptions
+        ---@param label string
+        ---@param description string
+        ---@param cvar string
+        ---@param configOptions RaiderIOSettingsDropDownWidgetOptions
+        function configOptions.CreateDropDown(self, label, description, cvar, configOptions)
+            ---@class RaiderIOSettingsDropDownWidget
+            local frame = self:CreateWidget("Frame")
+            frame.options = configOptions.options
+            frame.isDisabled = configOptions.isDisabled
+            frame.text:SetTextColor(1, 1, 1)
+            frame.text:SetText(label)
+            frame.tooltip = description
+            frame.cvar = cvar
+            frame.help.tooltip = description
+            frame.help:Hide()
+            frame.checkButton:Hide()
+            frame.toggleButton = CreateFrame("Button", nil, frame) ---@class RaiderIOSettingsDropDownWidgetToggleButton
+            frame.toggleButton:SetSize(120, 20)
+            frame.toggleButton:SetPoint("RIGHT", frame.checkButton, "RIGHT", 0, 0)
+            frame.toggleButton.indicator = frame.toggleButton:CreateTexture(nil, "ARTWORK")
+            frame.toggleButton.indicator:SetPoint("RIGHT", frame.toggleButton, "RIGHT", -3, 0)
+            frame.toggleButton.indicator:SetSize(16, 16)
+            frame.toggleButton.indicator:SetAtlas("auctionhouse-ui-dropdown-arrow-up", false)
+            frame.toggleButton.text = frame.toggleButton:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+            frame.toggleButton.text:SetSize(120, 20)
+            frame.toggleButton.text:SetPoint("LEFT", frame.toggleButton, "LEFT", 0, 0)
+            frame.toggleButton.text:SetPoint("RIGHT", frame.toggleButton.indicator, "LEFT", -2, 0)
+            frame.toggleButton.text:SetJustifyH("RIGHT")
+            frame.toggleButton:EnableMouse(true)
+            frame.toggleButton:RegisterForClicks("LeftButtonUp")
+            frame.toggleButton:SetScript("OnClick", function(...) self.DropDownOnClick(frame, ...) end)
+            local value = config:Get(cvar)
+            local valueText = L[format("REPLAY_AUTO_SELECTION_%s", value)] ---@type string?
+            frame.toggleButton.DropDownMenu = CreateFrame("Frame", nil, frame.toggleButton, "UIDropDownMenuTemplate") ---@class UIDropDownMenuTemplate
+            UIDropDownMenu_Initialize(frame.toggleButton.DropDownMenu, function(...) self.DropDownOnInitialize(frame, ...) end, "MENU")
+            self.dropdowns[#self.dropdowns + 1] = frame
             return frame
         end
 
@@ -12214,7 +12464,19 @@ do
             configOptions:CreateHeadline(L.RAIDERIO_CLIENT_CUSTOMIZATION)
             configOptions:CreateOptionToggle(L.ENABLE_RAIDERIO_CLIENT_ENHANCEMENTS, L.ENABLE_RAIDERIO_CLIENT_ENHANCEMENTS_DESC, "enableClientEnhancements", { needReload = true })
             configOptions:CreateOptionToggle(L.SHOW_CLIENT_GUILD_BEST, L.SHOW_CLIENT_GUILD_BEST_DESC, "showClientGuildBest")
-            configOptions:CreateOptionToggle(L.ENABLE_REPLAY, L.ENABLE_REPLAY_DESC, "enableReplay")
+            local enableReplay = configOptions:CreateOptionToggle(L.ENABLE_REPLAY, L.ENABLE_REPLAY_DESC, "enableReplay")
+            configOptions:CreateDropDown(L.REPLAY_AUTO_SELECTION, L.REPLAY_AUTO_SELECTION_DESC, "replaySelection", {
+                options = {
+                    { text = L.REPLAY_AUTO_SELECTION_MOST_RECENT, value = "user_recent_replay" },
+                    { text = L.REPLAY_AUTO_SELECTION_PERSONAL_BEST, value = "user_best_replay" },
+                    { text = L.REPLAY_AUTO_SELECTION_TEAM_BEST, value = "team_best_replay" },
+                    { text = L.REPLAY_AUTO_SELECTION_GUILD_BEST, value = "guild_best_replay" },
+                    { text = L.REPLAY_AUTO_SELECTION_STARRED, value = "watched_replay" },
+                },
+                isDisabled = function()
+                    return not enableReplay.checkButton:GetChecked()
+                end,
+            })
 
             configOptions:CreatePadding()
             configOptions:CreateHeadline(L.RAIDERIO_LIVE_TRACKING)
@@ -12310,11 +12572,10 @@ do
         if settingsFrame then
             return true
         end
-        if not settings:CanLoad() then
-            return false
+        if settings:CanLoad() then
+            settings:OnLoad()
         end
-        settings:OnLoad()
-        return true
+        return settings:IsLoaded()
     end
 
     local function CreateInterfacePanel()
@@ -12323,7 +12584,7 @@ do
                 if not SmartLoad() then
                     return
                 end
-                settingsFrame:SetShown(not settingsFrame:IsShown())
+                settings:Toggle()
             end
         end
 
@@ -12390,7 +12651,7 @@ do
 
             -- resume regular routine
             if not InCombatLockdown() then
-                settingsFrame:SetShown(not settingsFrame:IsShown())
+                settings:Toggle()
             end
         end
 
@@ -12399,7 +12660,6 @@ do
 
     local function OnConfigReady()
         settings:Enable()
-        settingsFrame = CreateOptions()
     end
 
     function settings:OnLoad()
@@ -12410,6 +12670,9 @@ do
         if not self:IsEnabled() then
             return
         end
+        if not settingsFrame then
+            settingsFrame = CreateOptions()
+        end
         settingsFrame:Show()
     end
 
@@ -12417,7 +12680,21 @@ do
         if not self:IsEnabled() then
             return
         end
+        if not settingsFrame then
+            return
+        end
         settingsFrame:Hide()
+    end
+
+    function settings:Toggle()
+        if not self:IsEnabled() then
+            return
+        end
+        if not settingsFrame or not settingsFrame:IsShown() then
+            settings:Show()
+        else
+            settings:Hide()
+        end
     end
 
     -- always have the interface panel and slash commands available

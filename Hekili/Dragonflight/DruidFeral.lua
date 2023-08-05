@@ -1660,6 +1660,9 @@ spec:RegisterAbilities( {
         startsCombat = true,
         form = "cat_form",
 
+        cycle = "rip",
+        cycle_to = true,
+
         -- Use maximum damage.
         damage = function () -- TODO: Taste For Blood soulbind conduit
             return calculate_damage( 1.05 * 2 , true, true ) * ( buff.bloodtalons.up and class.auras.bloodtalons.multiplier or 1 ) * ( talent.sabertooth.enabled and 1.15 or 1 ) * ( talent.soul_of_the_forest.enabled and 1.05 or 1 ) * ( talent.lions_strength.enabled and 1.15 or 1 ) *
@@ -2629,6 +2632,10 @@ spec:RegisterSetting( "zerk_biteweave", false, {
     width = "full"
 } )
 
+spec:RegisterVariable( "zerk_biteweave", function()
+    return settings.zerk_biteweave ~= false
+end )
+
 spec:RegisterSetting( "lazy_swipe", false, {
     name = strformat( "%s: Don't %s in AOE", Hekili:GetSpellLinkWithTexture( spec.talents.wild_slashes[2] ), Hekili:GetSpellLinkWithTexture( spec.abilities.shred.id ) ),
     desc = function()
@@ -2642,7 +2649,7 @@ spec:RegisterSetting( "lazy_swipe", false, {
 } )
 
 spec:RegisterVariable( "lazy_swipe", function()
-    return settings.lazy_swipe
+    return settings.lazy_swipe ~= false
 end )
 
 spec:RegisterSetting( "regrowth", true, {

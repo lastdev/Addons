@@ -408,6 +408,7 @@ E.spell_db = {
 
 
 
+		{ ["class"]="DRUID",["type"]="defensive",["buff"]=377847,["spec"]=true,["name"]="Well-Honed Instincts",["duration"]=120,["icon"]=236169,["spellID"]=377847, },
 	},
 	["WARLOCK"] = {
 		{ ["class"]="WARLOCK",["type"]="offensive",["buff"]=417537,["spec"]=true,["duration"]=45,["name"]="Oblivion",["icon"]=828455,["spellID"]=417537, },
@@ -746,7 +747,8 @@ E.spell_db = {
 		]]
 
 		{ ["class"]="TRINKET",["type"]="consumable",["name"]="Refreshing Healing Potion",["buff"]=370511,["duration"]=300,["icon"]=4497595,["spellID"]=370511,["item"]=nil, }, --["item"]=191378
-		{ ["class"]="TRINKET",["type"]="other",["buff"]=408234,["item"]=205146,["name"]="Activate Weyrnstone",["duration"]=120,["icon"]=5199618,["spellID"]=408234, },
+		{ ["class"]="TRINKET",["type"]="other",["buff"]=408234,["name"]="Activate Weyrnstone",["duration"]=120,["icon"]=5199618,["spellID"]=408234,["item"]=205146, },
+		{ ["class"]="TRINKET",["type"]="defensive",["buff"]=410232,["name"]="Undulating Sporecloak",["duration"]=120,["icon"]=3752753,["spellID"]=410232,["item"]=205025, },
 	},
 }
 

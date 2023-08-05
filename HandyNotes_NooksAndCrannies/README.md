@@ -13,6 +13,8 @@ If you have any comment, issue or feature request, you can leave me a note on Di
 
 Configuration for this addon can be found under HandyNotes (Interface -> Addons -> HandyNotes -> Plugins -> Nooks and Crannies).
 
+Each point has its own contextual menu (right click) with options to navigate and hide.
+
 At current time, you can modify configuration for Waypoints.
 
 ### Waypoints
@@ -57,4 +59,4 @@ This adds doors and portal to map, showing you where you can travel. It can be s
 
 #### Waypoints in Dragonflight
 
-- __Valdrakken__: Mythic dungeon portals (Dalaran, Shadowmoon Valley, Jade Forest), Home City portals (Orgrimmar / Stormwind)
+- __Valdrakken__: Mythic dungeon portals (Seasonal), Home City portals (Orgrimmar / Stormwind)

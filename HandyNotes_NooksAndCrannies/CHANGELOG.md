@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2023-08-04
+
+### Added
+
+- Zaralek Cavern entrance in Zaralek Cavern (DF).
+- Addon Compartment (little addon button) support added.
+
+### Changed
+
+- Changed dungeon portals in Valdrakken to reflect Season 2 portals.
+- Updated TOC for Dragonflight (10.1.5).
+
+## [1.1.0] - 2023-05-03
+
+### Added
+
+- Added War Creche, Siege Creche, Support Creche and Froststone Vault entrances to Forbidden Reach (DF).
+- Added contextual menu on right click. Options are: navigate to point, hide point for character, hide point for whole account.
+- Added reset points to addon configuration (reset personally/globally hidden points).
+
+### Changed
+
+- Moved navigation info in tooltip to contextual menu.
+- Updated TOC for Dragonflight (10.1.0)
+
 ## [1.0.1] - 2022-12-02
 
 ### Added
@@ -28,6 +53,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added mini caves (dungeons) to Gorgrond, Talador, Shadowmoon Valley, Nagrand (WoD)
 - Added horde portal from Garrison and Ashran (WoD)
 
-[Unreleased]: https://gitlab.com/mulambo/nooks-and-crannies/-/compare/v1.0.1...master
+[Unreleased]: https://gitlab.com/mulambo/nooks-and-crannies/-/compare/v1.1.1...master
+[1.1.1]: https://gitlab.com/mulambo/nooks-and-crannies/-/releases/v1.1.1
+[1.1.0]: https://gitlab.com/mulambo/nooks-and-crannies/-/releases/v1.1.0
 [1.0.1]: https://gitlab.com/mulambo/nooks-and-crannies/-/releases/v1.0.1
 [1.0.0]: https://gitlab.com/mulambo/nooks-and-crannies/-/releases/v1.0.0
