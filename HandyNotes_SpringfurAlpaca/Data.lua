@@ -5,15 +5,37 @@ local scaling = ns.scaling
 local texturesSpecial = ns.texturesSpecial
 local scalingSpecial = ns.scalingSpecial
 
+	
+points[ 249 ] = {
+	[22004500] = { testUldum=true },	
+}
 points[ 1527 ] = {
 	[14806160] = { alpaca=true },
-	[24850930] = { alpaca=true },
+	
+	[23960988] = { alpaca=true },
+	[24290855] = { alpaca=true },
+	[24640898] = { alpaca=true },
+	[24700971] = { alpaca=true },
+	[24930956] = { alpaca=true },
+	
 	[28204900] = { alpaca=true },
+	
 	[30602860] = { alpaca=true },
+	
+	[38620969] = { alpaca=true },
 	[38800930] = { alpaca=true },
+	[38970964] = { alpaca=true },
+	[39400940] = { alpaca=true },
+	
 	[42407030] = { alpaca=true },
+	
 	[46204830] = { alpaca=true },
-	[53301900] = { alpaca=true },
+
+	[52661855] = { alpaca=true },
+	[52881946] = { alpaca=true },
+	[53111960] = { alpaca=true },
+	[53381903] = { alpaca=true },
+	[53581844] = { alpaca=true },
 
 	[55206973] = { alpaca=true },
 	[55257005] = { alpaca=true },
@@ -21,11 +43,28 @@ points[ 1527 ] = {
 	[55427013] = { alpaca=true },
 	[55527039] = { alpaca=true },
 	[55687063] = { alpaca=true },
+	
+	[63031444] = { alpaca=true },
+	[63171418] = { alpaca=true },
+	[63231551] = { alpaca=true },
+	[63501544] = { alpaca=true },
+	[63761502] = { alpaca=true },
 
-	[63301470] = { alpaca=true },
+	[63255255] = { alpaca=true },
 	[63505250] = { alpaca=true },
-	[70303910] = { alpaca=true },
+	[63765217] = { alpaca=true },
+		
+	[69955796] = { alpaca=true },
+	
+	[69883949] = { alpaca=true },
+	[69974005] = { alpaca=true },
+	[70003925] = { alpaca=true },
+	[70363963] = { alpaca=true },
+	[70413862] = { alpaca=true },
+	[70473911] = { alpaca=true },
+	
 	[76406780] = { alpaca=true },
+	
 	[57408500] = { gersahlGreens=true },
 	[59008530] = { gersahlGreens=true },
 	[61608290] = { gersahlGreens=true },

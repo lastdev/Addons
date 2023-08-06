@@ -1,0 +1,21 @@
+## Title: ItemVersion
+## Version: 2023.31.0
+## Interface: 100105
+## X-BuildDateTime: 2023-08-01T16:05:02.493697+00:00
+## X-BuildTool: wap 0.10.13
+## Author: Tim Martin
+## Notes: Shows in what version of the game an item was added in the tooltip
+## SavedVariables: ItemVersionDB
+
+libs.xml
+locales.xml
+Init.lua
+Util.lua
+Database.lua
+SlashCommand.lua
+Options.lua
+Expac.lua
+Data.lua
+Community.lua
+API.lua
+Tooltip.lua

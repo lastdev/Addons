@@ -7354,16 +7354,18 @@ do
     local config = ns:GetModule("Config") ---@type ConfigModule
     local util = ns:GetModule("Util") ---@type UtilModule
 
-    ---@alias ReplayFrameStyle "MODERN"|"MODERN_COMPACT"|"MDI"
+    ---@alias ReplayFrameStyle "MODERN"|"MODERN_COMPACT"|"MODERN_SPLITS"|"MDI"
 
     ---@class ReplayFrameStyles
     local ReplayFrameStyles = {
         MODERN = "MODERN",
         MODERN_COMPACT = "MODERN_COMPACT",
+        MODERN_SPLITS = "MODERN_SPLITS",
         MDI = "MDI",
         [1] = "MODERN",
         [2] = "MODERN_COMPACT",
-        -- [3] = "MDI",
+        [3] = "MODERN_SPLITS",
+        -- [4] = "MDI",
     }
 
     ---@alias ReplayFrameTiming "BOSS"|"DUNGEON"
@@ -7662,6 +7664,9 @@ do
 
     ---@type Replay[]
     local replays
+
+    ---@type Frame
+    local hiddenContainer
 
     ---@class ReplayFrame : Frame
     local replayFrame
@@ -8309,8 +8314,6 @@ do
                 UIDropDownMenu_AddButton(info, level)
                 info.text, info.hasArrow, info.menuList = L.REPLAY_MENU_POSITION, true, "position"
                 UIDropDownMenu_AddButton(info, level)
-                info.text, info.hasArrow = CLOSE, nil
-                UIDropDownMenu_AddButton(info)
             elseif menuList == "replay" then
                 local replayDataProvider = replayFrame:GetReplayDataProvider()
                 local currentReplay = replayDataProvider:GetReplay()
@@ -8671,6 +8674,18 @@ do
             return bossRows
         end
 
+        ---@param key "Timer"|"Boss"|"Trash"|"DeathPen"
+        ---@param shown boolean
+        local function SetReplayFrameBossRowShown(key, shown)
+            local textBlock = replayFrame.TextBlock
+            local L = textBlock[format("%sL", key)]
+            local M = textBlock[format("%sM", key)]
+            local R = textBlock[format("%sR", key)]
+            L:SetShown(shown)
+            M:SetShown(shown)
+            R:SetShown(shown)
+        end
+
         ---@alias ReplayFrameState
         ---|"NONE"
         ---|"STAGING"
@@ -8681,6 +8696,7 @@ do
             self:Hide()
             self:SetScript("OnUpdate", self.OnUpdate)
 
+            self.forceHidden = false
             self.state = "NONE" ---@type ReplayFrameState
             self.elapsedTime = 0 -- the start time as provided by the WORLD_STATE_TIMER_START event
             self.elapsedTimer = 0 -- the accumulated time assigned in the OnUpdate handler
@@ -8882,9 +8898,14 @@ do
             if save then
                 config:Set("replayStyle", style)
             end
+            local showModernTopDetails = true
             local heightOffset = 0
             self.style = style
-            if style == "MODERN_COMPACT" then
+            if style == "MODERN_SPLITS" then
+                showModernTopDetails = false
+                heightOffset = 45
+                self.textRowCount = 0
+            elseif style == "MODERN_COMPACT" then
                 self.textRowCount = 5
                 self.TextBlock.BossL:SetHeight(self.textRowHeight)
                 self.TextBlock.BossM:Show()
@@ -8892,21 +8913,22 @@ do
                 self.textRowCount = 5
                 self.TextBlock.BossL:SetHeight(self.textRowHeight)
                 self.TextBlock.BossM:Show()
-                -- self.TextBlock.BossL:SetHeight(0)
-                -- self.TextBlock.BossL:SetText(nil)
-                -- self.TextBlock.BossM:Hide()
-                -- self.TextBlock.BossR:SetText(nil)
             elseif style == "MDI" then
                 heightOffset = 180
                 self.textRowCount = 0
             end
-            local hasTextRows = self.textRowCount > 0
+            if style ~= "MDI" then
+                SetReplayFrameBossRowShown("Timer", showModernTopDetails)
+                SetReplayFrameBossRowShown("Boss", showModernTopDetails)
+                SetReplayFrameBossRowShown("Trash", showModernTopDetails)
+                SetReplayFrameBossRowShown("DeathPen", showModernTopDetails)
+            end
             self.textHeight = heightOffset + self.textRowHeight * self.textRowCount + self.contentPaddingY * (self.textRowCount - 1)
             self.TextBlock:SetPoint("BOTTOMRIGHT", self, "TOPRIGHT", -self.contentPaddingX, -self.textHeight)
-            self.Background:SetShown(hasTextRows)
-            self.TextBlock:SetShown(hasTextRows)
-            self.MDI:SetShown(not hasTextRows)
-            self:SetWidth(hasTextRows and self.width or self.widthMDI)
+            self.Background:SetShown(style ~= "MDI")
+            self.TextBlock:SetShown(style ~= "MDI")
+            self.MDI:SetShown(style == "MDI")
+            self:SetWidth(style == "MDI" and self.widthMDI or self.width)
             self:UpdateShown()
         end
 
@@ -9196,6 +9218,17 @@ do
             return self.state == state
         end
 
+        ---@return boolean forceHidden
+        function ReplayFrameMixin:IsForceHidden()
+            return self.forceHidden
+        end
+
+        ---@param hidden boolean
+        function ReplayFrameMixin:ForceHidden(hidden)
+            self.forceHidden = hidden
+            self:SetParent(hidden and hiddenContainer or UIParent)
+        end
+
         function ReplayFrameMixin:OnReplayChange()
             if self:IsState("COMPLETED") then
                 self:SetState("STAGING")
@@ -9464,7 +9497,7 @@ do
         ---@param forceUpdate? boolean
         function ReplayFrameMixin:SetUIBosses(liveBosses, replayBosses, forceUpdate)
             local pool = self.BossFramePool
-            if not self:IsStyle("MODERN") then
+            if not self:IsStyle("MODERN") and not self:IsStyle("MODERN_SPLITS") then
                 pool:ReleaseAll()
                 self.bossesHeight = 0
                 return
@@ -9543,7 +9576,7 @@ do
             local liveCount = CountDeadBosses(liveBosses)
             local replayCount = CountDeadBosses(replayBosses, replayCompletedTimer or timer)
             local totalCount = max(#liveBosses, #replayBosses)
-            if style == "MODERN_COMPACT" or style == "MODERN" then
+            if style == "MODERN" or style == "MODERN_COMPACT" or style == "MODERN_SPLITS" then
                 if isRunning then
                     self.TextBlock.BossL:SetFormattedText("|cff%s%d/%d|r", AheadColor(replayCount - liveCount, true), liveCount, totalCount)
                 else
@@ -9554,7 +9587,7 @@ do
                 self.MDI.BossL:SetFormattedText("%d/%d", liveCount, totalCount)
                 self.MDI.BossR:SetFormattedText("%d/%d", replayCount, totalCount)
             end
-            if style == "MODERN" then
+            if style == "MODERN" or style == "MODERN_SPLITS" then
                 local pool = self.BossFramePool
                 for bossFrame in pool:EnumerateActive() do
                     bossFrame:Update(replayCompletedTimer)
@@ -9566,10 +9599,11 @@ do
         ---@param replayInBossCombat boolean
         function ReplayFrameMixin:UpdateUIBossesCombat(liveInBossCombat, replayInBossCombat)
             local style = self:GetStyle()
-            local isModern = style == "MODERN_COMPACT" or style == "MODERN"
+            local isModern = style == "MODERN" or style == "MODERN_COMPACT"
+            local isMDI = style == "MDI"
             self.TextBlock.BossCombatL:SetShown(isModern and liveInBossCombat)
             self.TextBlock.BossCombatR:SetShown(isModern and replayInBossCombat)
-            self.MDI.BossCombat:SetShown(style == "MDI" and replayInBossCombat)
+            self.MDI.BossCombat:SetShown(isMDI and replayInBossCombat)
         end
 
     end
@@ -9857,6 +9891,8 @@ do
         replays = ns:GetReplays()
         util:TableSort(replays, "date", "keystone_run_id")
         SortReplaysByWeeklyAffix(replays)
+        hiddenContainer = CreateFrame("Frame")
+        hiddenContainer:SetClipsChildren(true)
         replayFrame = CreateReplayFrame()
         replayFrame:SetReplayDataProvider(CreateReplayDataProvider())
         replayFrame:SetLiveDataProvider(CreateLiveDataProvider())
@@ -9958,6 +9994,44 @@ do
         publicReplaySummary = UpdatePublicSummary(publicReplaySummary, currentReplaySummary)
         publicBossRows = UpdatePublicBossRows(publicBossRows, currentBossRows)
         return publicLiveSummary, publicReplaySummary, publicBossRows
+    end
+
+    function replay:Show()
+        if not replayFrame then
+            return
+        end
+        replayFrame:ForceHidden(false)
+        replayFrame:UpdateShown()
+    end
+
+    function replay:Hide()
+        if not replayFrame or replayFrame:IsState("NONE") then
+            return
+        end
+        replayFrame:ForceHidden(true)
+        replayFrame:UpdateShown()
+    end
+
+    function replay:Toggle()
+        if not replayFrame then
+            return
+        end
+        if replayFrame:IsForceHidden() then
+            self:Show()
+        else
+            self:Hide()
+        end
+    end
+
+    ---@param timing? ReplayFrameTiming
+    function replay:SetTiming(timing)
+        if not replayFrame or replayFrame:IsState("NONE") then
+            return
+        end
+        if not timing or not ReplayFrameTimings[timing] then
+            return
+        end
+        replayFrame:SetTiming(timing)
     end
 
 end
@@ -13343,6 +13417,12 @@ do
         GetCurrentReplay = function()
             return replay:GetCurrentReplaySummary()
         end,
+        ReplayUI_Toggle = function()
+            return replay:Toggle()
+        end,
+        ReplayUI_SetTiming = function(timing)
+            return replay:SetTiming(timing)
+        end,
     }
 
     local private = {
@@ -13381,6 +13461,18 @@ do
                 return
             end
             return pristine.GetCurrentReplay(...)
+        end,
+        ReplayUI_Toggle = function(...)
+            if not IsSafe() then
+                return
+            end
+            return pristine.ReplayUI_Toggle(...)
+        end,
+        ReplayUI_SetTiming = function(...)
+            if not IsSafe() then
+                return
+            end
+            return pristine.ReplayUI_SetTiming(...)
         end,
         -- DEPRECATED: these are here just to help mitigate the transition but do avoid using these as they will probably go away during Shadowlands
         ProfileOutput = setmetatable({}, { __index = function() return 0 end }), -- returns 0 for any query

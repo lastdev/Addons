@@ -3,7 +3,7 @@
 
                                           Springfur Alpaca
 
-                                       v1.16 - 21st July 2023
+                                       v1.17 - 5th August 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -29,12 +29,12 @@ local pluginHandler = {}
 
 -- upvalues
 local GameTooltip = _G.GameTooltip
-local IsControlKeyDown = _G.IsControlKeyDown
 local LibStub = _G.LibStub
 local UIParent = _G.UIParent
 local format = _G.format
 local next = _G.next
 local select = _G.select
+local UnitAura = UnitAura
 
 local HandyNotes = _G.HandyNotes
 
@@ -349,6 +349,8 @@ if ns.locale == "deDE" then
 	L["Gersahl Greens"] = "Gersahlblätter"
 	L["Daily Quest"] = "Tägliche Aufgabe"
 	L["of"] = "@ von #"
+	L["Speak to Zidormi"] = "Sprich mit Zidormi"
+	L["Wrong version of Uldum"] = "Falsche Version von Uldum"
 	L["AddOn Description"] = "Hilft Ihnen, das " ..ns.colour.highlight .."Frühlingsfell-Alpaka"
 		..ns.colour.plaintext .." in Uldum zu erhalten"
 	
@@ -357,6 +359,8 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Gersahl Greens"] = "Verduras Gersahl"
 	L["Daily Quest"] = "Búsqueda Diaria"
 	L["of"] = "@ de #"
+	L["Speak to Zidormi"] = "Hablar con Zidormi"
+	L["Wrong version of Uldum"] = "Versión incorrecta de Uldum"
 	L["AddOn Description"] = "Te ayuda a obtener " ..ns.colour.highlight
 		.."el Alpaca de pelaje primaveral" ..ns.colour.plaintext .." en Uldum"
 
@@ -365,6 +369,8 @@ elseif ns.locale == "frFR" then
 	L["Gersahl Greens"] = "Légume de Gersahl"
 	L["Daily Quest"] = "Quêtes Journalières"
 	L["of"] = "@ sur #"
+	L["Speak to Zidormi"] = "Parlez à Zidormi"
+	L["Wrong version of Uldum"] = "Mauvaise version de Uldum"
 	L["AddOn Description"] = "Vous aide à obtenir " ..ns.colour.highlight .."l'alpaga toison-vernale" 
 		..ns.colour.plaintext .." à Uldum"
 
@@ -373,6 +379,8 @@ elseif ns.locale == "itIT" then
 	L["Gersahl Greens"] = "Insalata di Gersahl"
 	L["Daily Quest"] = "Missione Giornaliera"
 	L["of"] = "@ di #"
+	L["Speak to Zidormi"] = "Parla con Zidormi"
+	L["Wrong version of Uldum"] = "Versione errata di Uldum"
 	L["AddOn Description"] = "Ti aiuta a ottenere " ..ns.colour.highlight .."Alpaca Primopelo"
 		..ns.colour.plaintext .." a Uldum"
 
@@ -381,6 +389,8 @@ elseif ns.locale == "koKR" then
 	L["Gersahl Greens"] = "게샬 채소"
 	L["Daily Quest"] = "일일 퀘스트"
 	L["of"] = "#개 중 @개"
+	L["Speak to Zidormi"] = "지도르미님과 대화"
+	L["Wrong version of Uldum"] = "잘못된 버전의 울둠"
 	L["AddOn Description"] = "울둠에서 " ..ns.colour.highlight .."봄털 알파카" ..ns.colour.plaintext
 		.."를 얻는 데 도움이 됩니다."
 
@@ -389,6 +399,8 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Gersahl Greens"] = "Folhas de Gersahl"
 	L["Daily Quest"] = "Missão Diária"
 	L["of"] = "@ de #"
+	L["Speak to Zidormi"] = "Fale com Zidormi"
+	L["Wrong version of Uldum"] = "Versão incorreta de Uldum"
 	L["AddOn Description"] = "Ajuda você a obter o " ..ns.colour.highlight .."Alpaca Lã de Primavera"
 		..ns.colour.plaintext .." em Uldum"
 
@@ -397,6 +409,8 @@ elseif ns.locale == "ruRU" then
 	L["Gersahl Greens"] = "Побеги герсали"
 	L["Daily Quest"] = "Ежедневный Квест"
 	L["of"] = "@ из #"
+	L["Speak to Zidormi"] = "Поговори с Зидорми"
+	L["Wrong version of Uldum"] = "Неправильная версия Ульдум"
 	L["AddOn Description"] = "Помогает вам получить " ..ns.colour.highlight .."Курчавая альпака"
 		..ns.colour.plaintext .." в Ульдум"
 
@@ -405,6 +419,8 @@ elseif ns.locale == "zhCN" then
 	L["Gersahl Greens"] = "基萨尔野菜"
 	L["Daily Quest"] = "日常"
 	L["of"] = "@ 共 # 个"
+	L["Speak to Zidormi"] = "与 希多尔米 通话"
+	L["Wrong version of Uldum"] = "奥丹姆 版本错误"
 	L["AddOn Description"] = "帮助您获取奥丹姆中的" ..ns.colour.highlight .."春裘羊驼"
 
 elseif ns.locale == "zhTW" then
@@ -412,6 +428,8 @@ elseif ns.locale == "zhTW" then
 	L["Gersahl Greens"] = "肉荳蔻蔬菜"
 	L["Daily Quest"] = "每日"
 	L["of"] = "@ 共 # 個"
+	L["Speak to Zidormi"] = "與 希多爾米 通話"
+	L["Wrong version of Uldum"] = "奧丹姆 版本錯誤"
 	L["AddOn Description"] = "幫助您獲取奧丹姆中的" ..ns.colour.highlight .."春裘羊駝"
 	
 else
@@ -431,29 +449,51 @@ function pluginHandler:OnEnter(mapFile, coord)
 	local pin = ns.points[ mapFile ] and ns.points[ mapFile ][ coord ]
 	
 	if pin.alpaca then
-		GameTooltip:SetText(ns.colour.prefix ..L["Springfur Alpaca"])
+		GameTooltip:SetText( ns.colour.prefix ..L["Springfur Alpaca"] )
 
-		local questName = QuestUtils_GetQuestName( 58879 ) 
-		local completed = C_QuestLog.IsQuestFlaggedCompleted( 58879 )
-		GameTooltip:AddLine( "\124cFF1F45FC".. L["Daily Quest"] )
+		local questName = QuestUtils_GetQuestName( 58887 ) 
+		local completed = C_QuestLog.IsQuestFlaggedCompleted( 58887 )
 		GameTooltip:AddDoubleLine( ns.colour.highlight ..questName,
 			( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..ns.name ..")" ) 
 								or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..ns.name ..")" ) )
+		
 		if ( completed == false ) then
-			local questText = GetQuestObjectiveInfo( 58879, 1, false )
-			GameTooltip:AddDoubleLine( " ", ns.colour.plaintext ..questText )
+			GameTooltip:AddLine( " " )
+			questName = QuestUtils_GetQuestName( 58879 ) 
+			completed = C_QuestLog.IsQuestFlaggedCompleted( 58879 )
+			GameTooltip:AddLine( "\124cFF1F45FC".. L["Daily Quest"] )
+			GameTooltip:AddDoubleLine( ns.colour.highlight ..questName,
+				( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..ns.name ..")" ) 
+									or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..ns.name ..")" ) )
+			if ( completed == false ) then
+				local questText = GetQuestObjectiveInfo( 58879, 1, false )
+				if questText then
+				print( questText )
+					GameTooltip:AddDoubleLine( " ", ns.colour.plaintext ..questText )
+				else
+					-- Yeah I got a nil result while thrash testing
+					GameTooltip:AddLine( "\124cFFFF0000" ..PERKS_PROGRAM_SERVER_ERROR )
+				end
+			end
+			
+			local _, _, _, fulfilled, required = GetQuestObjectiveInfo( 58881, 0, false )
+			local progress = L["of"]
+			progress = string.gsub( progress, "@", fulfilled )
+			progress = string.gsub( progress, "#", required )
+			GameTooltip:AddLine( ns.colour.highlight .."(" ..progress ..")" )
 		end
 		
-		local _, _, _, fulfilled, required = GetQuestObjectiveInfo( 58881, 0, false )
-		local progress = L["of"]
-		progress = string.gsub( progress, "@", fulfilled )
-		progress = string.gsub( progress, "#", required )
-		GameTooltip:AddLine( ns.colour.highlight .."(" ..progress ..")" )
-	else
+	elseif pin.gersahlGreens then
 		GameTooltip:SetText( ns.colour.prefix ..L["Gersahl Greens"] )
+		
+	else
+		GameTooltip:SetText( ns.colour.prefix ..L["Springfur Alpaca"] )
+		GameTooltip:AddLine( ns.colour.highlight ..L["Speak to Zidormi"] .." (56.02,35.14)" )
+		GameTooltip:AddLine( ns.colour.highlight ..L["Wrong version of Uldum"] )
 	end
 
 	if ns.db.showCoords == true then
+		GameTooltip:AddLine( " " )
 		local mX, mY = HandyNotes:getXY(coord)
 		mX, mY = mX*100, mY*100
 		GameTooltip:AddLine( ns.colour.highlight .."(" ..format( "%.02f", mX ) .."," ..format( "%.02f", mY ) ..")" )
@@ -475,16 +515,32 @@ do
 				if pin.alpaca then
 					return coord, nil, ns.textures[ns.db.iconChoice],
 							ns.db.iconScale * ns.scaling[ns.db.iconChoice], ns.db.iconAlpha
-				else
+				elseif pin.gersahlGreens then
 					return coord, nil, ns.texturesSpecial[ns.db.iconChoiceSpecial],
 							ns.db.iconScale * ns.scalingSpecial[ns.db.iconChoiceSpecial], ns.db.iconAlpha
+				else
+					local found = false
+					-- C_Map.GetBestMapForUnit( "player" ) == 249 would also work I'd think?
+					-- Memory says that patches ago when doing this I got abends when jumping
+					-- in and out of instances and trying to show a map using that code
+					for i = 1, 40 do
+						local spellID = select( 10, UnitAura( "player", i, "HELPFUL" ) )
+						if not spellID then break end
+						if ( spellID == 317785 ) then -- Zidormi buff to see the Cataclysm / Old Uldum
+							found = true
+							break
+						end
+					end
+					if ( found == true ) then
+						return coord, nil, ns.texturesSpecial[ 5 ], -- Red Cross and * 3 to make it big!
+								ns.db.iconScale * ns.scalingSpecial[ 5 ] * 3, ns.db.iconAlpha
+					end
 				end
 			end
 			coord, pin = next(t, coord)
 		end
 	end
 	function pluginHandler:GetNodes2(mapID)
-		ns.CurrentMap = mapID
 		return iterator, ns.points[mapID]
 	end
 end
