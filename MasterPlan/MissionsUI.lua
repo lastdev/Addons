@@ -43,15 +43,8 @@ local function oncePerFrame(f)
 		end
 	end
 end
-local function dismissTooltip(self)
-	if GameTooltip:IsOwned(self) then
-		GameTooltip:Hide()
-	end
-end
 local function dismissTooltipAndHighlight(self)
-	if GameTooltip:IsOwned(self) then
-		GameTooltip:Hide()
-	end
+	T.HideOwnedGameTooltip(self)
 	self:GetParent():UnlockHighlight()
 end
 local function OpenToMission(mi, f1, f2, f3, isResume)
@@ -921,7 +914,7 @@ local activeUI = CreateFrame("Frame", nil, missionList) do
 				i.Quantity = i:CreateFontString(nil, "OVERLAY", "GameFontHighlightOutline")
 				i.Quantity:SetPoint("BOTTOMRIGHT", -3, 4)
 				i:SetScript("OnEnter", OnEnter)
-				i:SetScript("OnLeave", dismissTooltip)
+				i:SetScript("OnLeave", T.HideOwnedGameTooltip)
 				i:SetScript("OnClick", OnClick)
 				self[k], i.SetIcon = i, SetIcon
 				return i
@@ -1087,7 +1080,7 @@ local availUI = CreateFrame("Frame", nil, missionList) do
 				easyDrop:Toggle(self, menu, "TOPLEFT", self, "BOTTOMLEFT", -24, -3)
 				showHint()
 			end)
-			horizon.OnEasyDropHide = dismissTooltip
+			horizon.OnEasyDropHide = T.HideOwnedGameTooltip
 			horizon:SetScript("OnEnter", function(self)
 				easyDrop:DelayOpenClick(self)
 				showHint()
@@ -1203,9 +1196,7 @@ local availUI = CreateFrame("Frame", nil, missionList) do
 		end
 		local function Roamer_OnLeave(self)
 			GarrisonFollowerTooltip:Hide()
-			if GameTooltip:IsOwned(self) then
-				GameTooltip:Hide()
-			end
+			T.HideOwnedGameTooltip(self)
 		end
 		local function RoamerMenu_OnMouse(self, _, id)
 			if self and id then
@@ -1218,9 +1209,7 @@ local availUI = CreateFrame("Frame", nil, missionList) do
 			end
 		end
 		local function Roamer_OnClick(self, button)
-			if GameTooltip:IsOwned(self) then
-				GameTooltip:Hide()
-			end
+			T.HideOwnedGameTooltip(self)
 			if button == "RightButton" then
 				Roamer_SetFollower(nil, self:GetID(), nil)
 				GarrisonFollowerTooltip:Hide()
@@ -1272,7 +1261,7 @@ local availUI = CreateFrame("Frame", nil, missionList) do
 		b:SetPoint("BOTTOM", -64, 5)
 		b:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 		b:Hide()
-		b:SetScript("OnLeave", dismissTooltip)
+		b:SetScript("OnLeave", T.HideOwnedGameTooltip)
 		b:SetScript("OnEnter", function(self)
 			if G.GetNumPendingMissionStarts() > 0 or G.GetTentativePartyCount(1) == 0 then return end
 			GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
@@ -1428,7 +1417,7 @@ local interestUI = CreateFrame("Frame", nil, missionList) do
 				GameTooltip:Show()
 				easyDrop:Close()
 			end)
-			b:SetScript("OnLeave", dismissTooltip)
+			b:SetScript("OnLeave", T.HideOwnedGameTooltip)
 		end
 		interestUI.stackMode = CreateFrame("Button", nil, ctl) do
 			local b = interestUI.stackMode
@@ -1459,7 +1448,7 @@ local interestUI = CreateFrame("Frame", nil, missionList) do
 				GameTooltip:Show()
 				easyDrop:Close()
 			end)
-			b:SetScript("OnLeave", dismissTooltip)
+			b:SetScript("OnLeave", T.HideOwnedGameTooltip)
 		end
 		interestUI.interestSet = CreateFrame("Button", nil, ctl) do
 			local b = interestUI.interestSet
@@ -1532,7 +1521,7 @@ local interestUI = CreateFrame("Frame", nil, missionList) do
 			b:SetScript("OnEnter", function(self)
 				easyDrop:DelayOpenClick(self)
 			end)
-			b:SetScript("OnLeave", dismissTooltip)
+			b:SetScript("OnLeave", T.HideOwnedGameTooltip)
 		end
 	end
 	interestUI:SetScript("OnShow", function(self)
@@ -2991,7 +2980,7 @@ do -- interestMissionsHandle
 		t:SetPoint("CENTER")
 		b.Border, b.info = t, {}
 		b:SetScript("OnEnter", Threat_OnEnter)
-		b:SetScript("OnLeave", dismissTooltip)
+		b:SetScript("OnLeave", T.HideOwnedGameTooltip)
 		return b
 	end
 	local function SetThreat(self, level, tid, _, icon)
@@ -3584,7 +3573,7 @@ do -- Ships
 		function CreateGroupButton(...)
 			local b = GroupButtonBase:New(...)
 			b:SetScript("OnEnter", ShipGroupButton_OnEnter)
-			b:SetScript("OnLeave", dismissTooltip)
+			b:SetScript("OnLeave", T.HideOwnedGameTooltip)
 			b:SetScript("OnClick", ShipGroupButton_OnClick)
 			return b
 		end

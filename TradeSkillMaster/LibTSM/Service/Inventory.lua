@@ -12,7 +12,7 @@ local BagTracking = TSM.Include("Service.BagTracking")
 local AuctionTracking = TSM.Include("Service.AuctionTracking")
 local MailTracking = TSM.Include("Service.MailTracking")
 local private = {
-	callbacks = {},
+	sources = {},
 }
 
 
@@ -22,10 +22,11 @@ local private = {
 -- ============================================================================
 
 Inventory:OnSettingsLoad(function()
-	BagTracking.RegisterCallback(private.QuantityChangedCallback)
-	AuctionTracking.RegisterCallback(private.QuantityChangedCallback)
-	MailTracking.RegisterCallback(private.QuantityChangedCallback)
-	AltTracking.RegisterCallback(private.QuantityChangedCallback)
+	tinsert(private.sources, "NumInventory")
+	BagTracking.RegisterQuantityCallback(private.QuantityChangedCallback)
+	AuctionTracking.RegisterQuantityCallback(private.QuantityChangedCallback)
+	MailTracking.RegisterQuantityCallback(private.QuantityChangedCallback)
+	AltTracking.RegisterQuantityCallback(private.QuantityChangedCallback)
 end)
 
 
@@ -34,8 +35,8 @@ end)
 -- Module Functions
 -- ============================================================================
 
-function Inventory.RegisterCallback(callback)
-	tinsert(private.callbacks, callback)
+function Inventory.RegisterDependentCustomSource(source)
+	tinsert(private.sources, source)
 end
 
 function Inventory.GetTotalQuantity(itemString)
@@ -56,9 +57,10 @@ end
 -- Private Helper Functions
 -- ============================================================================
 
-function private.QuantityChangedCallback()
-	CustomPrice.OnSourceChange("NumInventory")
-	for _, callback in ipairs(private.callbacks) do
-		callback()
+function private.QuantityChangedCallback(updatedItems)
+	for _, source in ipairs(private.sources) do
+		for itemString in pairs(updatedItems) do
+			CustomPrice.OnSourceChange(source, itemString)
+		end
 	end
 end

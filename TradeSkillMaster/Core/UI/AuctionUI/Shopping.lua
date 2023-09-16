@@ -1813,7 +1813,7 @@ function private.FSMCreate()
 		canSendAuctionQuery = true,
 	}
 	DefaultUI.RegisterAuctionHouseVisibleCallback(function() private.fsm:ProcessEvent("EV_AUCTION_HOUSE_CLOSED") end, false)
-	BagTracking.RegisterCallback(function()
+	BagTracking.RegisterQuantityCallback(function()
 		private.fsm:ProcessEvent("EV_BAG_UPDATE_DELAYED")
 	end)
 	AuctionHouseWrapper.RegisterAuctionIdUpdateCallback(function(...)

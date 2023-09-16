@@ -606,7 +606,7 @@ spec:RegisterAuras( {
     sun_kings_blessing_ready = {
         id = 383883,
         duration = 15,
-        max_stack = 5,
+        max_stack = 1,
         copy = { 333315, "fury_of_the_sun_king" },
         meta = {
             expiration_delay_remains = function()
@@ -832,16 +832,19 @@ end )
 
 Hekili:EmbedDisciplinaryCommand( spec )
 
+
+-- APL Variables from August 2023.
+
 -- # APL Variable Option: If set to a non-zero value, the Combustion action and cooldowns that are constrained to only be used when Combustion is up will not be used during the simulation.
 -- actions.precombat+=/variable,name=disable_combustion,op=reset
 spec:RegisterVariable( "disable_combustion", function ()
-    return false
+    return action.combustion.disabled -- ???
 end )
 
 -- # APL Variable Option: This variable specifies whether Combustion should be used during Firestarter.
--- actions.precombat+=/variable,name=firestarter_combustion,default=-1,value=runeforge.sun_kings_blessing|talent.sun_kings_blessing,if=variable.firestarter_combustion<0
+-- actions.precombat+=/variable,name=firestarter_combustion,default=-1,value=talent.sun_kings_blessing,if=variable.firestarter_combustion<0
 spec:RegisterVariable( "firestarter_combustion", function ()
-    return talent.sun_kings_blessing.enabled or runeforge.sun_kings_blessing.enabled
+    return talent.sun_kings_blessing.enabled
 end )
 
 -- # APL Variable Option: This variable specifies the number of targets at which Hot Streak Flamestrikes outside of Combustion should be used.
@@ -900,44 +903,28 @@ spec:RegisterVariable( "overpool_fire_blasts", function ()
     return 0
 end )
 
--- # APL Variable Option: How long before Combustion should Empyreal Ordnance be used?
--- actions.precombat+=/variable,name=empyreal_ordnance_delay,default=18,op=reset
-spec:RegisterVariable( "empyreal_ordnance_delay", function ()
-    return 18
-end )
-
--- # APL Variable Option: How much delay should be inserted after consuming an SKB proc before spending a Hot Streak? The APL will always delay long enough to prevent the SKB stack from being wasted.
--- actions.precombat+=/variable,name=skb_delay,default=-1,value=0,if=variable.skb_delay<0
-spec:RegisterVariable( "skb_delay", function ()
-    return 0
+-- # If Combustion is disabled, schedule the first Combustion far after the fight ends.
+-- actions.precombat+=/variable,name=time_to_combustion,value=fight_remains+100,if=variable.disable_combustion
+spec:RegisterVariable( "time_to_combustion", function ()
+    if action.combustion.disabled then return fight_remains + 100 end
 end )
 
 -- # The duration of a Sun King's Blessing Combustion.
--- actions.precombat+=/variable,name=skb_duration,op=set,value=5
+-- actions.precombat+=/variable,name=skb_duration,value=dbc.effect.1016075.base_value
 spec:RegisterVariable( "skb_duration", function ()
-    return 5
-end )
-
--- # The number of seconds of Fire Blast recharged by Mirrors of Torment
--- actions.precombat+=/variable,name=mot_recharge_amount,value=dbc.effect.871274.base_value
-spec:RegisterVariable( "mot_recharge_amount", function ()
     return 6
 end )
 
-
 -- # Whether a usable item used to buff Combustion is equipped.
--- actions.precombat+=/variable,name=combustion_on_use,value=equipped.gladiators_badge|equipped.macabre_sheet_music|equipped.inscrutable_quantum_device|equipped.sunblood_amethyst|equipped.empyreal_ordnance|equipped.flame_of_battle|equipped.wakeners_frond|equipped.instructors_divine_bell|equipped.shadowed_orb_of_torment|equipped.the_first_sigil|equipped.neural_synapse_enhancer|equipped.fleshrenders_meathook|equipped.enforcers_stun_grenade
+-- actions.precombat+=/variable,name=combustion_on_use,value=equipped.gladiators_badge|equipped.moonlit_prism|equipped.irideus_fragment|equipped.spoils_of_neltharus|equipped.tome_of_unstable_power|equipped.timebreaching_talon|equipped.horn_of_valor
+
 spec:RegisterVariable( "combustion_on_use", function ()
-    return equipped.gladiators_badge or equipped.macabre_sheet_music or equipped.inscrutable_quantum_device or equipped.sunblood_amethyst or equipped.empyreal_ordnance or equipped.flame_of_battle or equipped.wakeners_frond or equipped.instructors_divine_bell or equipped.shadowed_orb_of_torment or equipped.the_first_sigil or equipped.neural_synapse_enhancer or equipped.fleshrenders_meathook or equipped.enforcers_stun_grenade
+    return equipped.gladiators_badge or equipped.moonlit_prism or equipped.irideus_fragment or equipped.spoils_of_neltharus or equipped.tome_of_unstable_power or equipped.timebreaching_talon or equipped.horn_of_valor
 end )
 
 -- # How long before Combustion should trinkets that trigger a shared category cooldown on other trinkets not be used?
--- actions.precombat+=/variable,name=on_use_cutoff,op=set,value=20,if=variable.combustion_on_use
--- actions.precombat+=/variable,name=on_use_cutoff,op=set,value=25,if=equipped.macabre_sheet_music
--- actions.precombat+=/variable,name=on_use_cutoff,op=set,value=20+variable.empyreal_ordnance_delay,if=equipped.empyreal_ordnance
+-- actions.precombat+=/variable,name=on_use_cutoff,value=20,if=variable.combustion_on_use
 spec:RegisterVariable( "on_use_cutoff", function ()
-    if equipped.empyreal_ordnance then return 20 + variable.empyreal_ordnance_delay end
-    if equipped.macabre_sheet_music then return 25 end
     if variable.combustion_on_use then return 20 end
     return 0
 end )
@@ -945,125 +932,118 @@ end )
 -- # Variable that estimates whether Shifting Power will be used before the next Combustion.
 -- actions+=/variable,name=shifting_power_before_combustion,value=variable.time_to_combustion>cooldown.shifting_power.remains
 spec:RegisterVariable( "shifting_power_before_combustion", function ()
-    if variable.time_to_combustion > cooldown.shifting_power.remains then
-        return 1
-    end
-    return 0
+    return variable.time_to_combustion > cooldown.shifting_power.remains
 end )
 
-
--- actions+=/variable,name=item_cutoff_active,value=(variable.time_to_combustion<variable.on_use_cutoff|buff.combustion.remains>variable.skb_duration&!cooldown.item_cd_1141.remains)&((trinket.1.has_cooldown&trinket.1.cooldown.remains<variable.on_use_cutoff)+(trinket.2.has_cooldown&trinket.2.cooldown.remains<variable.on_use_cutoff)+(equipped.neural_synapse_enhancer&cooldown.enhance_synapses_300612.remains<variable.on_use_cutoff)>1)
+-- actions+=/variable,name=item_cutoff_active,value=(variable.time_to_combustion<variable.on_use_cutoff|buff.combustion.remains>variable.skb_duration&!cooldown.item_cd_1141.remains)&((trinket.1.has_cooldown&trinket.1.cooldown.remains<variable.on_use_cutoff)+(trinket.2.has_cooldown&trinket.2.cooldown.remains<variable.on_use_cutoff)>1)
 spec:RegisterVariable( "item_cutoff_active", function ()
-    return ( variable.time_to_combustion < variable.on_use_cutoff or buff.combustion.remains > variable.skb_duration and cooldown.hyperthread_wristwraps.remains ) and safenum( safenum( trinket.t1.has_use_buff and trinket.t1.cooldown.remains < variable.on_use_cutoff ) + safenum( trinket.t2.has_use_buff and trinket.t2.cooldown.remains < variable.on_use_cutoff ) + safenum( equipped.neural_synapse_enhancer and cooldown.neural_synapse_enhancer.remains < variable.on_use_cutoff ) > 1 )
+    return ( variable.time_to_combustion < variable.on_use_cutoff or buff.combustion.remains > variable.skb_duration and not cooldown.item_cd_1141.remains ) and ( ( trinket.t1.has_use_buff and trinket.t1.cooldown.remains < variable.on_use_cutoff ) and ( trinket.t2.has_use_buff and trinket.t2.cooldown.remains < variable.on_use_cutoff ) > 1 )
 end )
 
--- fire_blast_pooling relies on the flow of the APL for differing values before/after rop_phase.
+--[[ These are still handled in the APL because the value changes before/after calling the combustion_phase list. 
+-- # Pool as many Fire Blasts as possible for Combustion.
+-- actions+=/variable,use_off_gcd=1,use_while_casting=1,name=fire_blast_pooling,value=buff.combustion.down&action.fire_blast.charges_fractional+(variable.time_to_combustion+action.shifting_power.full_reduction*variable.shifting_power_before_combustion)%cooldown.fire_blast.duration-1<cooldown.fire_blast.max_charges+variable.overpool_fire_blasts%cooldown.fire_blast.duration-(buff.combustion.duration%cooldown.fire_blast.duration)%%1&variable.time_to_combustion<fight_remains
+
+-- # Adjust the variable that controls Fire Blast usage to save Fire Blasts while Searing Touch is active with Sun King's Blessing.
+-- actions+=/variable,use_off_gcd=1,use_while_casting=1,name=fire_blast_pooling,value=searing_touch.active&action.fire_blast.full_recharge_time>3*gcd.max,if=!variable.fire_blast_pooling&talent.sun_kings_blessing
+spec:RegisterVariable( "fire_blast_pooling", function ()
+    local val = buff.combustion.down and action.fire_blast.charges_fractional + ( variable.time_to_combustion + action.shifting_power.full_reduction * safenum( variable.shifting_power_before_combustion ) ) / cooldown.fire_blast.duration - 1 < cooldown.fire_blast.max_charges + safenum( variable.overpool_fire_blasts ) / cooldown.fire_blast.duration - ( buff.combustion.duration % cooldown.fire_blast.duration ) % 1 and variable.time_to_combustion < fight_remains
+
+    if not val and talent.sun_kings_blessing.enabled then
+        return searing_touch.active and action.fire_blast.full_recharge_time > 3 * gcd.max
+    end
+
+    return val
+end ) ]]
 
 -- # Variable that controls Phoenix Flames usage to ensure its charges are pooled for Combustion when needed. Only use Phoenix Flames outside of Combustion when full charges can be obtained during the next Combustion.
 -- actions+=/variable,name=phoenix_pooling,if=active_enemies<variable.combustion_flamestrike,value=(variable.time_to_combustion+buff.combustion.duration-5<action.phoenix_flames.full_recharge_time+cooldown.phoenix_flames.duration-action.shifting_power.full_reduction*variable.shifting_power_before_combustion&variable.time_to_combustion<fight_remains|talent.sun_kings_blessing)&!talent.alexstraszas_fury
+
 -- # When using Flamestrike in Combustion, save as many charges as possible for Combustion without capping.
 -- actions+=/variable,name=phoenix_pooling,if=active_enemies>=variable.combustion_flamestrike,value=(variable.time_to_combustion<action.phoenix_flames.full_recharge_time-action.shifting_power.full_reduction*variable.shifting_power_before_combustion&variable.time_to_combustion<fight_remains|talent.sun_kings_blessing)&!talent.alexstraszas_fury
+
 spec:RegisterVariable( "phoenix_pooling", function ()
-    local val = 0
     if active_enemies < variable.combustion_flamestrike then
-        val = ( variable.time_to_combustion + buff.combustion.duration - 5 <  action.phoenix_flames.full_recharge_time + cooldown.phoenix_flames.duration - action.shifting_power.full_reduction * variable.shifting_power_before_combustion and variable.time_to_combustion < fight_remains or talent.sun_kings_blessing.enabled ) and not talent.alexstraszas_fury.enabled
+        return ( variable.time_to_combustion + buff.combustion.duration - 5 < action.phoenix_flames.full_recharge_time + cooldown.phoenix_flames.duration - action.shifting_power.full_reduction * safenum( variable.shifting_power_before_combustion ) and variable.time_to_combustion < fight_remains or talent.sun_kings_blessing.enabled ) and not talent.alexstraszas_fury.enabled
     end
 
-    if active_enemies>=variable.combustion_flamestrike then
-        val = ( variable.time_to_combustion < action.phoenix_flames.full_recharge_time - action.shifting_power.full_reduction * variable.shifting_power_before_combustion and variable.time_to_combustion < fight_remains or ( runeforge.sun_kings_blessing.enabled or talent.sun_kings_blessing.enabled ) or time < 5 ) and not talent.alexstraszas_fury.enabled
+    return ( variable.time_to_combustion < action.phoenix_flames.full_recharge_time - action.shifting_power.full_reduction * safenum( variable.shifting_power_before_combustion ) and variable.time_to_combustion < fight_remains or talent.sun_kings_blessing.enabled ) and not talent.alexstraszas_fury.enabled
+end )
+
+-- # Helper variable that contains the actual estimated time that the next Combustion will be ready.
+-- actions.combustion_timing+=/variable,use_off_gcd=1,use_while_casting=1,name=combustion_ready_time,value=cooldown.combustion.remains*expected_kindling_reduction
+
+spec:RegisterVariable( "combustion_ready_time", function ()
+    -- return cooldown.combustion.remains * expected_kindling_reduction
+    return cooldown.combustion.remains_expected
+end )
+
+-- # The cast time of the spell that will be precast into Combustion.
+-- actions.combustion_timing+=/variable,use_off_gcd=1,use_while_casting=1,name=combustion_precast_time,value=action.fireball.cast_time*(active_enemies<variable.combustion_flamestrike)+action.flamestrike.cast_time*(active_enemies>=variable.combustion_flamestrike)-variable.combustion_cast_remains
+
+spec:RegisterVariable( "combustion_precast_time", function ()
+    return action.fireball.cast_time * safenum( active_enemies < variable.combustion_flamestrike ) + action.flamestrike.cast_time * safenum( active_enemies >= variable.combustion_flamestrike ) - variable.combustion_cast_remains
+end )
+
+-- actions.combustion_timing+=/variable,use_off_gcd=1,use_while_casting=1,name=time_to_combustion,value=variable.combustion_ready_time
+
+-- # Delay Combustion for after Firestarter unless variable.firestarter_combustion is set.
+-- actions.combustion_timing+=/variable,use_off_gcd=1,use_while_casting=1,name=time_to_combustion,op=max,value=firestarter.remains,if=talent.firestarter&!variable.firestarter_combustion
+
+-- # Delay Combustion until SKB is ready during Firestarter
+-- actions.combustion_timing+=/variable,use_off_gcd=1,use_while_casting=1,name=time_to_combustion,op=max,value=(buff.sun_kings_blessing.max_stack-buff.sun_kings_blessing.stack)*(3*gcd.max),if=talent.sun_kings_blessing&firestarter.active&buff.fury_of_the_sun_king.down
+
+-- # Delay Combustion for Gladiators Badge, unless it would be delayed longer than 20 seconds.
+-- actions.combustion_timing+=/variable,use_off_gcd=1,use_while_casting=1,name=time_to_combustion,op=max,value=cooldown.gladiators_badge_345228.remains,if=equipped.gladiators_badge&cooldown.gladiators_badge_345228.remains-20<variable.time_to_combustion
+
+-- # Delay Combustion until Combustion expires if it's up.
+-- actions.combustion_timing+=/variable,use_off_gcd=1,use_while_casting=1,name=time_to_combustion,op=max,value=buff.combustion.remains
+
+-- # Raid Events: Delay Combustion for add spawns of 3 or more adds that will last longer than 15 seconds. These values aren't necessarily optimal in all cases.
+-- actions.combustion_timing+=/variable,use_off_gcd=1,use_while_casting=1,name=time_to_combustion,op=max,value=raid_event.adds.in,if=raid_event.adds.exists&raid_event.adds.count>=3&raid_event.adds.duration>15
+
+-- # Raid Events: Always use Combustion with vulnerability raid events, override any delays listed above to make sure it gets used here.
+-- actions.combustion_timing+=/variable,use_off_gcd=1,use_while_casting=1,name=time_to_combustion,value=raid_event.vulnerable.in*!raid_event.vulnerable.up,if=raid_event.vulnerable.exists&variable.combustion_ready_time<raid_event.vulnerable.in
+
+-- # Use the next Combustion on cooldown if it would not be expected to delay the scheduled one or the scheduled one would happen less than 20 seconds before the fight ends.
+-- actions.combustion_timing+=/variable,use_off_gcd=1,use_while_casting=1,name=time_to_combustion,value=variable.combustion_ready_time,if=variable.combustion_ready_time+cooldown.combustion.duration*(1-(0.4+0.2*talent.firestarter)*talent.kindling)<=variable.time_to_combustion|variable.time_to_combustion>fight_remains-20
+
+spec:RegisterVariable( "time_to_combustion", function ()
+    local crt = variable.combustion_ready_time
+    local val = crt
+
+    if talent.firestarter.enabled and not variable.firestarter_combustion then
+        val = max( val, firestarter.remains )
+    end
+
+    if talent.sun_kings_blessing.enabled and firestarter.active and buff.fury_of_the_sun_king.down then
+        val = max( val, ( buff.sun_kings_blessing.max_stack - buff.sun_kings_blessing.stack ) * ( 3 * gcd.max ) )
+    end
+
+    if equipped.gladiators_badge and cooldown.gladiators_badge.remains - 20 < val then
+        val = max( val, cooldown.gladiators_badge.remains )
+    end    
+
+    if buff.combustion.up then
+        val = max( val, buff.combustion.remains )
+    end
+    
+    -- Raid Events are fake.
+    -- if raid_event.adds.exists and raid_event.adds.count >= 3 and raid_event.adds.duration > 15 then
+    --     val = max( val, raid_event.adds.in )
+    -- end
+    --
+    -- if raid_event.vulnerable.exists and variable.combustion_ready_time < raid_event.vulnerable.in then
+    --     val = raid_event.vulnerable.in * not raid_event.vulnerable.up
+    -- end
+
+    if crt + cooldown.combustion.duration * ( 1 - ( 0.4 + 0.2 * safenum( talent.firestarter.enabled ) ) * safenum( talent.kindling.enabled ) ) <= val or boss and val > fight_remains - 20 then
+        return crt
     end
 
     return val
 end )
 
--- # With Feel the Burn, Fire Blast use should be additionally constrained so that it is not be used unless Feel the Burn is about to expire or there are more than enough Fire Blasts to extend Feel the Burn to the end of Combustion.
--- actions.combustion_phase+=/variable,use_off_gcd=1,use_while_casting=1,name=expected_fire_blasts,value=action.fire_blast.charges_fractional+(variable.extended_combustion_remains-buff.feel_the_burn.duration)%cooldown.fire_blast.duration,if=talent.feel_the_burn|conduit.infernal_cascade
-
-spec:RegisterVariable( "expected_fire_blasts", function ()
-    if talent.feel_the_burn.enabled or conduit.infernal_cascade.enabled then
-        return action.fire_blast.charges_fractional + ( variable.extended_combustion_remains - buff.feel_the_burn.duration ) / cooldown.fire_blast.duration
-    end
-    return 0
-end )
-
--- actions.combustion_phase+=/variable,use_off_gcd=1,use_while_casting=1,name=needed_fire_blasts,value=ceil(variable.extended_combustion_remains%(buff.feel_the_burn.duration-gcd.max)),if=talent.feel_the_burn|conduit.infernal_cascade
-spec:RegisterVariable( "needed_fire_blasts", function ()
-    if talent.feel_the_burn.enabled or conduit.infernal_cascade.enabled then
-        return ceil( variable.extended_combustion_remains / ( buff.feel_the_burn.duration - gcd.max ) )
-    end
-    return 0
-end )
-
--- # Use Shifting Power during Combustion when there are not enough Fire Blasts available to fully extend Feel the Burn and only when Rune of Power is on cooldown.
--- actions.combustion_phase+=/variable,use_off_gcd=1,use_while_casting=1,name=use_shifting_power,value=firestarter.remains<variable.extended_combustion_remains&(talent.feel_the_burn&variable.expected_fire_blasts<variable.needed_fire_blasts)|active_enemies>=variable.combustion_shifting_power,if=talent.shifting_power
-spec:RegisterVariable( "use_shifting_power", function ()
-    if action.shifting_power.known then
-        return firestarter.remains < variable.extended_combustion_remains and ( ( talent.feel_the_burn.enabled or conduit.infernal_cascade.enabled ) and variable.expected_fire_blasts < variable.needed_fire_blasts ) and active_enemies >= variable.combustion_shifting_power
-    end
-    return 0
-end )
-
--- # Helper variable that contains the actual estimated time that the next Combustion will be ready.
--- actions.combustion_timing=variable,use_off_gcd=1,use_while_casting=1,name=combustion_ready_time,value=cooldown.combustion.remains*expected_kindling_reduction
-spec:RegisterVariable( "combustion_ready_time", function ()
-    return cooldown.combustion.remains_expected
-end )
-
--- # The cast time of the spell that will be precast into Combustion.
--- actions.combustion_timing+=/variable,use_off_gcd=1,use_while_casting=1,name=combustion_precast_time,value=(action.fireball.cast_time*!conduit.flame_accretion+action.scorch.cast_time+conduit.flame_accretion)*(active_enemies<variable.combustion_flamestrike)+action.flamestrike.cast_time*(active_enemies>=variable.combustion_flamestrike)-variable.combustion_cast_remains
-spec:RegisterVariable( "combustion_precast_time", function ()
-    return ( ( not conduit.flame_accretion.enabled and action.fireball.cast_time or 0 ) + action.scorch.cast_time + ( conduit.flame_accretion.enabled and 1 or 0 ) ) * ( ( active_enemies < variable.combustion_flamestrike ) and 1 or 0 ) + ( ( active_enemies >= variable.combustion_flamestrike ) and action.flamestrike.cast_time or 0 ) - variable.combustion_cast_remains
-end )
-
-spec:RegisterVariable( "time_to_combustion", function ()
-    -- # Delay Combustion for after Firestarter unless variable.firestarter_combustion is set.
-    -- actions.combustion_timing+=/variable,use_off_gcd=1,use_while_casting=1,name=time_to_combustion,value=variable.combustion_ready_time
-    local value = variable.combustion_ready_time
-
-    -- # Use the next Combustion on cooldown if it would not be expected to delay the scheduled one or the scheduled one would happen less than 20 seconds before the fight ends.
-    -- actions.combustion_timing+=/variable,use_off_gcd=1,use_while_casting=1,name=time_to_combustion,value=variable.combustion_ready_time,if=variable.combustion_ready_time+cooldown.combustion.duration*(1-(0.4+0.2*talent.firestarter)*talent.kindling)<=variable.time_to_combustion|variable.time_to_combustion>fight_remains-20
-    if variable.combustion_ready_time + cooldown.combustion.duration * ( 1 - ( 0.6 + 0.2 * ( talent.firestarter.enabled and 1 or 0 ) ) * ( talent.kindling.enabled and 1 or 0 ) ) <= value or boss and value > fight_remains - 20 then
-        return value
-    end
-
-    -- # Delay Combustion for after Firestarter unless variable.firestarter_combustion is set.
-    -- actions.combustion_timing+=/variable,use_off_gcd=1,use_while_casting=1,name=time_to_combustion,op=max,value=firestarter.remains,if=talent.firestarter&!variable.firestarter_combustion
-    if talent.firestarter.enabled and not variable.firestarter_combustion then
-        value = max( value, firestarter.remains )
-    end
-
-    -- # Delay Combustion until SKB is ready during Firestarter
-    -- actions.combustion_timing+=/variable,use_off_gcd=1,use_while_casting=1,name=time_to_combustion,op=max,value=(buff.sun_kings_blessing.max_stack-buff.sun_kings_blessing.stack)*(3*gcd.max),if=talent.sun_kings_blessing&firestarter.active&buff.sun_kings_blessing_ready.down
-    if talent.sun_kings_blessing.enabled and firestarter.active and buff.fury_of_the_sun_king.down then
-        value = max( value, ( buff.sun_kings_blessing.max_stack - buff.sun_kings_blessing.stack ) * ( 3 * gcd.max ) )
-    end
-
-    -- # Delay Combustion for Gladiators Badge, unless it would be delayed longer than 20 seconds.
-     -- actions.combustion_timing+=/variable,use_off_gcd=1,use_while_casting=1,name=time_to_combustion,op=max,value=cooldown.gladiators_badge_345228.remains,if=equipped.gladiators_badge&cooldown.gladiators_badge_345228.remains-20<variable.time_to_combustion
-    if equipped.gladiators_badge and cooldown.gladiators_badge.remains - 20 < value then
-        value = max( value, cooldown.gladiators_badge.remains )
-    end
-
-    -- # Delay Combustion until Combustion expires if it's up.
-    -- actions.combustion_timing+=/variable,use_off_gcd=1,use_while_casting=1,name=time_to_combustion,op=max,value=buff.combustion.remains
-    value = max( value, buff.combustion.remains )
-
-    -- # Delay Combustion if Disciplinary Command would not be ready for it yet.
-    -- actions.combustion_timing+=/variable,use_off_gcd=1,use_while_casting=1,name=time_to_combustion,op=max,value=cooldown.buff_disciplinary_command.remains,if=runeforge.disciplinary_command&buff.disciplinary_command.down
-    if runeforge.disciplinary_command.enabled and buff.disciplinary_command.down then
-        value = max( value, cooldown.buff_disciplinary_command.remains )
-    end
-
-    -- # Raid Events: Delay Combustion for add spawns of 3 or more adds that will last longer than 15 seconds. These values aren't necessarily optimal in all cases.
-    -- actions.combustion_timing+=/variable,use_off_gcd=1,use_while_casting=1,name=time_to_combustion,op=max,value=raid_event.adds.in,if=raid_event.adds.exists&raid_event.adds.count>=3&raid_event.adds.duration>15
-    -- Unsupported, don't bother.
-
-    -- # Raid Events: Always use Combustion with vulnerability raid events, override any delays listed above to make sure it gets used here.
-    -- actions.combustion_timing+=/variable,use_off_gcd=1,use_while_casting=1,name=time_to_combustion,value=raid_event.vulnerable.in*!raid_event.vulnerable.up,if=raid_event.vulnerable.exists&variable.combustion_ready_time<raid_event.vulnerable.in
-    -- Unsupported, don't bother.
-
-    return value
-end )
 
 local ExpireSKB = setfenv( function()
     removeBuff( "sun_kings_blessing_ready" )
@@ -1471,7 +1451,7 @@ spec:RegisterAbilities( {
             if talent.flame_accelerant.enabled then
                 applyBuff( "flame_accelerant" )
                 buff.flame_accelerant.applied = query_time + 8
-                buff.flame_accelerate.expires = query_time + 8 + 8
+                buff.flame_accelerant.expires = query_time + 8 + 8
             end
 
             if set_bonus.tier30_4pc > 0 and debuff.charring_embers.up then
@@ -1509,14 +1489,22 @@ spec:RegisterAbilities( {
         startsCombat = true,
 
         handler = function ()
-            if not hardcast then
+            if hardcast or cast_time > 0 then
+                if buff.sun_kings_blessing_ready.up then
+                    applyBuff( "combustion", 6 )
+                    if Hekili.ActiveDebug then Hekili:Debug( "Applied Combustion." ) end
+                    buff.sun_kings_blessing_ready.expires = query_time + 0.03
+                    applyBuff( "sun_kings_blessing_ready_expiration_delay" )
+                    state:QueueAuraExpiration( "sun_kings_blessing_ready_expiration_delay", ExpireSKB, buff.sun_kings_blessing_ready_expiration_delay.expires )
+                end
+            else
                 if buff.expanded_potential.up then removeBuff( "expanded_potential" )
                 else
                     if buff.hot_streak.up then
                         removeBuff( "hot_streak" )
                         if talent.firemind.enabled then applyBuff( "firemind" ) end
                     end
-                    if legendary.sun_kings_blessing.enabled then
+                    if talent.sun_kings_blessing.enabled then
                         addStack( "sun_kings_blessing" )
                         if buff.sun_kings_blessing.stack == 8 then
                             removeBuff( "sun_kings_blessing" )
@@ -1754,10 +1742,10 @@ spec:RegisterAbilities( {
         end,
 
         handler = function ()
-            if hardcast then
+            if hardcast or cast_time > 0 then
                 if buff.sun_kings_blessing_ready.up then
                     applyBuff( "combustion", 6 )
-                    -- removeBuff( "sun_kings_blessing_ready" )
+                    buff.sun_kings_blessing_ready.expires = query_time + 0.03
                     applyBuff( "sun_kings_blessing_ready_expiration_delay" )
                     state:QueueAuraExpiration( "sun_kings_blessing_ready_expiration_delay", ExpireSKB, buff.sun_kings_blessing_ready_expiration_delay.expires )
                 end
@@ -1767,9 +1755,9 @@ spec:RegisterAbilities( {
                     else
                         removeBuff( "hot_streak" )
                         if talent.firemind.enabled then applyBuff( "firemind" ) end
-                        if legendary.sun_kings_blessing.enabled then
+                        if talent.sun_kings_blessing.enabled then
                             addStack( "sun_kings_blessing" )
-                            if buff.sun_kings_blessing.stack == 12 then
+                            if buff.sun_kings_blessing.stack == 8 then
                                 removeBuff( "sun_kings_blessing" )
                                 applyBuff( "sun_kings_blessing_ready" )
                             end
@@ -1983,4 +1971,4 @@ spec:RegisterSetting( "check_explosion_range", true, {
 } )
 
 
-spec:RegisterPack( "Fire", 20230712, [[Hekili:T3t)ZTTXX(3IAhttAjtlkzzN2kPzstQtD6RPzICE53ejejOiQbbyXhswD0W)2F7U3h4(gasuUo9Lz6KArCyV92BV97BXLtU8dxEXIOQ4l)HJo8OJp8TtoA8K3EYjV(1xEr1DBIV8InrZ)y01W)ilAn8FFxsb9J3LMhTaF5Y86I5WpTQQAt5F8vV66KQv1xnEE(6xvMSUonQkjpBEr0Yk8VN)QlV4Q6K0Q3ND5vUN5JU8IO6Qv5fxEXfjR)gaYjlweZgEC58lVah(lp8TVCYr)XTZ2o7VNKLxSDgo2TZQ3GGC82VF73lh2eAy)yu18vBNn5WXtgFIZbEidE)Cz82zlIVQE5YXLWywmUEZ2zlX54dXR3KxeLUD2VevSr5Lp5Lh(vSxMaBjF84KDW2zjzZtRxKKD92zRJYUB7SBIksIUkfhx5QKLWCaVqr(6TZ2uKKxKubJPkhFXQ4ImC(MNVqfzp(LhDiBXNViz5DQVhnX)U3NvwfLv9Y)rwk8B)YQ4mCS3a4WVdMZ4Qk4FPdV3sW7NIxNFdS(VyEEbsUohiC3vKFvAuz12zRIkwmN(xLZJZGfrUcmETGa(tX3Ku6fg46A(Q45FC7S)Ao83xuveh9XXxErAszvjYrTeyXaSVaw7tX)9u6nXh9de7kmZaTBXL)5lVOUmE6TRssJNIOfSMWHqSjfjBqgVlV4xWhdtj75BNHmWxfLc0uKqjrSdqAC2nXfak9xJJyJ9N3WW3inCDpGbDod4nO3LxatjGXjrxEXEn7WJBgX0n55PeyhSDgmeIbBvE10sgfa(pZROhoeMrAcO3gr2XXFkEEDv80I41rjzLer965lgl)77Vx(sBeRj(BrZ5icYS5KT8MwVrmN7dBTsezA5M400YPjztxMMC9k45NbSYcmBoSkwKFB2yIZfHZM8BJlqqT4ogEmh4tUoMHKty)enXlJJtNwTcOh1fznO(PBND02zVGTGwh9jazVScKkySx3l67oyHwfLgNvzG0C8Pzo8VMS2EAHYXM19OJNtVkpRUCCvsCXXho9OnZzqGlvcPVf47hV(Q4IYXQmfMusKyshtYxUCk8Z0bexSVAhAE)YTZYqoE5XgqUv1k4FbNtQXd34XOTZ(ZnNPRksU(64c9tkWHmsaucaV3bukyyRWxdOvWpwkiYibnkd(p3MxNc)FXFAdb(RIbPzX8x67(MVfEs2Is2jxeKxWjKW5yKsYaz0nrjPeVbWfrlSLr1PvUeFiOdZZRrjTe)GbL4VWo4HifiCaLlNSwGrWRNBpP6mQf1z4I464XlskNNSb4qJkUBkOEeufSqWp5IFxGC4eo9wqFJbM9befkJbPwaY9bcRqTsm8PUSgeBChscXniyldguY61Xlsa9t4dYHDGn1OCWBbn2M62aiJ7PRIGxob5dYxJhObMOg(yGKevKcSOhGJeN15rz4lUogX5sCYH)KoAHZ4T5fiNdUXTiN21W542eehiMnqSpSrHQ9ac6Ifj46erOMf3WYr4CvKxF9Q86k((qCgFdC82zFT89sV7agUxUIXvfLEB0DCSIrqIAGWcCXX)RLmHbfXxd67aT0LSN9n5RVQUebocdAbWp6IljCM8ZjWfMuXjY0(PMWKHoS5GeCMJt)aUTaBYtXNoLWWPQsBOx9Q088fPaooErDredtjzPh7vwk9EBYjfhnV05ksyj(VQCKLvU83NpHn)M8LByCzqfN(x7H1(60iKFe4lMEv0c0iZgel48FUqz30gMXxUD2jWSSCz88QPmJvTGpGlN4bxGDM7GTZ0P5flYIYM3DK50ZuOwwGz6I40iM492wsTde2AKT4Sryy19gpRUYvravc4CYlUcufatEXAGHuDnoSfeuBz28GPBkIrTetzcg3NubHCU28ObbVIbkQCv0wRu1y8)QozZg44bQXf0EbtBzY1jPgkynE60JFZBp61t00t(6djnJmsPpQdqqFRpw3IK1tJNNMSPSFCkF1dG6iWtTjfqUVYdYTohu7MawevKuUUxy3jpcStFwb07p49y)DBwH05OsWLWKuUCd3g4b)26PGky0(fea3iDf1nyG5DYH(OlrZJUcm5PCvmyJ166YK59J6ixQoaeoXMgyyzufmsYAkqRemP5jOANSxswuHl0dA0sr)23Ikyws2c9)c6HqdOa1ELjlInvjbQ((haBFXTGRxhi9hm5FhlNthWIP5xvVwlMRj1yrwRfHWo66yu1E2ZRyAwtZrdoaNil4VDJwfDfSag)bYQbqvFjJKSM8l7MO06yUrL4OBeXJaW1YGCVLBtHWsK058ypGO18iojMBDugk4ewYZ5(3vwwZSQtyVdZQKglf2exG6vegojL0SD2pKxjFtg98IAye)nazEEjAHmGKm7MfZ(gqLEYvP8Ly5DzZfyn)9)B)z1nLsBlreSmGn3zFmUQCSGVCHG4m9gI209dvcHSKa4KSLuChqVQNhTiEm4oo6W(z(Eo4RXu(yqXh7rotVOoPYEOswiCGU0Na)pAXX8sEOQj0L1zt)iqmb15CYQo44wzfAyJmMypQIdzT1ZWGCm0Hfi7Jr8r4ZLqMJ1wckNW0wFn5exaMRUD27Vod35AmFTHzKSpg4wqlcymElYJlPtGeEdu8ybZuokuWbhdxCrZVGaHBhU0vo8mj4RjoNVh9(cjojyOsqd3j3cIYurScMHZrljeNc1L75xYWwcRTPjSLQHXiYZyRUdo9bg9d0XP3c6wQUTiAtPUV1TXCpsXiIUXA6MrxAwUHDk4VpYLHkMB)gwQy(4Ph)6)WxDYB1mv5en(jnkgYlzABV0Pw0MW0PiMAigODcWaHFUNknj4rkyG5PXuZDD2ren3AfmFghdqFnVtWv)E(8aYjztelMamfbK87iuqlZY0XezY0heDvZaltzZHj(5GRIbbpi0u1qkoo(pRlRu599OxM5Kj6tmk4hoEkz9HT35f1vicn9FvhLvvVgmZ)MeDppKmsM(YOjW2LfZHfXPAmptIl)iJH8rJNbV2HASJbwfiv3N3wltbAaA72vrvvP9yf3ntdnbpIk(Cn62Opc7ZWKSSaoxSRXedOJiIpxkaszvr9CAAwKCtsw80ROasTBXiFtdIA(COa0OsXwykaHQv3PhU7Dbszpbi64Zbc4ipmhW27sW0sMahynLSm2kYgEh50xtNuKZVxiIrMZ0FIUAuvdgJNHWNxsWZxCibEeWN1S8BImKpr5K6DfKP1)a84T6HC97aTIOWX3ppzUrGNAmE6AAqttyJXkq2EC6UndLSmcQvRRoTJHrqKYd2pWsjGVyKgiaUFxSiiFFRsayjr0RjVyWvpMpqmY2zmBSvrx0U8sWZwpu1qr1LOHsv9K(pNdVjba0oHRXmnQa0Nh3S1SxGbtwJ0HTV9BYZeYADvEA1yL9GZ7eY34Exx25prSt6pIK)xdTvNb()meB2QH7xeszrzCS0o14suZ5igLyA8N2aUXNWIMYrMwo90Tv1eUjfktWToIwUZ35E63xgzi0hzhiITPbtpDe72px8eqC)mroz6qr6PPvF5BaL9XvnJxaDd1g)iGLyGHeLSHs(olz)EtyCOsUqjuCiqtRJ5MGm3HIvHKaz(xhZZzoA)b9m03M9BNE2ivXiPYlRttNcEUxpNnWxOai9HoLLLvnWcUY(kLDkf8SzR5LuUYp19Wq)(KLbW(Q(tCdgxL8u1k7OBtMlFDKpVvamcdAZZeP3VnwkTi(yN)C415EYAx(bEkkfKx00W)Ee55d9h2HUCePDdUuLAOmbotbGhGOg6bG5JBziwwpSI7HtYuF7vrSezCKPJhUlSh7ZSYJZUnj3t1HSZdQOlwescqzCevPgv51ZxnwenkNsa4NyzNAA0(CSAbDyiK6RxWIcbzERyrlcJX88SQI80sJA1GhXEk0ZriYOlz7ww5sDbdV3o7diIZZSnh7deL7XTC2a3QnDQZWJnxIlhgqIPiMeAhdCTVpstjMZcVQZsivtSQ6iPCTB6TOBE5EXW2Mo1dL8u3awVLfVoHk)k1G8G1UhHatPGJGE3(rPh6kLCNktABvPg7HwvzLc7DZuzxcBGiLdhFIwjJPP(dr)JEy1VeRGh)R8YvKOIVRbvoWKP3oe74XJRXa3eHz3rPKMk55(chq8NQOchXivzu8gpoyQa)2A2PR31q3TqQOcj2WsVjf)tCExWFBTS)9De2YQ6favUtdaHwoSGMISJLAvJdsmUfqLMIZIo3BSyLZMknSCdAEjftu2CJ74vryElOx0k3IeJui9hDqiHhE4wp6OPCYxTNI7OMbFOdfF6xFdLI35rB2i3VLsILcW4YCH)ollMDM3OY2CZY3quCBdOs5FI0hh6xo1N5JvjZ)yJ5J0Y3Vh7TsIB8ZWyJRJMmG1Y8cu(vrELml)ht(LkLdtfBSkcsf)hAFcmLrnL)NHRUycZstJNxP)QERgpFjSAp32hPNmZazfAGiZrIYovHBwZCenvfcwvnB3DMBTk7IaRrfwR1guGsVPd1qJ2g16KII8IPjRPlvGgn)e1XTemPyfDVbmg1BuhLSwNT25v2eeg2wAXeWlrnhB9IrWIk9Y6I7mgvlLuNMr6kGlUOmU4JCBH0im4(jnBHOkyo9aLyug2WqDAtzCIsnLZSNkqe5SAmj2ZGywqzuMIn4gD6Nku1Qa1nLvj)1Af7z6BapngfjlIRjlgUMXUkMcRNuzxksCE2n5jPuy)b5UGvZf1LkhlC8Wkhfxeduv5SeovJx8c4rC7bBioUFELJIgIdqGAEfAq1kY)HOuvRoD9Wkh1vaduOsiGqSatdf7y61XRv8MY5JRCKAzg4wLxKHlfWfNCLvO(ptNbzQHNYy9CEbo0vHPz8QWx9ht2jKU0MIj666PxbpUxrxYkFNkaYLAIoQumGl9Qz(hoOFdE9ciD18YCOdUJoq)IASoUkoVqzz3wPy27kauJcXMUqkCwahmZZamh4GRwzA6ozL5xNg)juox5)oc9V8D1ykBywQQMBD0TuYyvg3Zby5HHWM8jLGUpJ776L9XvvCh1GCLKQbtsVxww)ouns7D1VvjIO8iJjWKtuCNv1sb5(1avEfuCECbwitKpqQx6a)X2)lV1AlRgFSxKKiBli7NWinpPBUbrMUsp07AgxtYvmTJb2hP(q27Xk1P4I1jrkul1WB3mJHL)4bEUmDQDRzchaa1h2iVGnp2xHn2o7ipiIFgYGisWB1ftEMT3Hkr3lmBoFPSzvECwYNemEs)38Tw8Nlh)Rfxbm0d49BUxq23YpELfFlJTew2KL7WzrH6frED8pa6UArhPyxsHgDgNrox7HX1FSW)mGlAKrtZl3X7sMwE2HOb6pACTfNq)KgvRMgAgrvLZNjnHi33byNbWRrBJMmhvFhWHjoj56kQQnRMJ4HpTbV5RJKsM9gPEMB5jR3uKFdO1HfObnziCpImhstTr6zagvnTNa0CSPctNbCDVMi5WaUcHLtO8ZoVxhcLRnyzVyqjVJ2(qVbQIiKsbjuO9g8rLR((aXvvW8YOkdOPsmq5HZKGhEAbzmOC2(t5)iRWr1IK6pBD)wJtyvXSiWRrnxJ8xPC12zxnE20RzwPA2tYvGdN1wMsfTKUm2P3M2Yy0PBudbijEXbS4jETWExftA5M5YcnP4k9JJtUuk1S6Dtr8n4g34jCMaLduDv4OKtsvT0PTAuLt)JBWm33u6bTFrPnVY5k0vnD8oDQUz(9juyqBYeoTDzckbIGfAtxoKRP2OtMY0MCa5gIGqyREHOmmiRg(hhuUhP3fbX12Uh)hQi8UVlQa5KcyCcMZkWHLXNOa3U3Ydcri9vg1bJAo)4Mi6lvoQb6WHFjGlv2vXS6PYqghPWn73YllSr1awZIuJO2RJYIgVb5nco2P44Aqgx17M3QowvUKRyweNHxlD8CiWwuvQCJVa9fxZY(vUqlX7uTahlNOLjPPulmidegtjpBzJwMXDM44mnVKNI(lI5WowRDuKvy9rZNhdiBewtHbCQ8iTyTlSJufjmJupRGqc6AotWUV0irN)lN(pRxid9BlUi7fuxfDnzfDrY8pwg2hzxhEAKbeaz1ILyWBOc)2AjtLXwEvEyhDl7l1PymmlMmhjEfUamQMUnnkVfJpLY8lzafF0EQ8d822Kp)bMdx1yEQ5NQEOATJj5rh6R0IAY5JdhXf4O7BwMPTpGDpnMPsvZg9Rh58xpw7x5LWWGwRFfzS1DJro82xSgYIRXm1uExgmqKhCfMJOIohkAGK)g507dyoCy3J2kJ7vfgVwUryGasYkmLO2IAAf94LgwVdqP5OyXYAQ5VGgRUzdDVKRg3jZ)2ZxiBumr4HyLOJOf8a1e3FDmVFPDOVrg8dK3ZnERxzfrRfKvAQ5UIyq(CjCQLOi0Aeyupj7OgUFarTHE52knr9PkOcsJWF50jRFTrJ8O)nGNtExxpoknEIXHg)WEr94XLo5RuBbERBou4fz7s((gOgHlNbuX1ZIDNgovLDiHq7(qROUXrW9C)0hX84lEEEE8JyMSROqZfvlLCyVMnEQt1vB45z9CwceuSM3XqhGlJ6umNte3lfncK3hPRPlo4YKSKYv0DvwExP)70IGpURK1RxkElmC6cFBNI6qqQBpGQEpHeiARQsvTczAGqI3gxS7(sexiVmcfoYB3Ghtam23BezFbTQ0AUGSsSBKq8BVJ1k6(kT1BxBNS6lVLGSY7(lRRZWydI8cLChhyJ6DI8D2y1Y4GH1WVvqxSHQ4w9ky1UEy3s36(vjO74IwJQMTp(tuBB2pOCGwllAnzs4bNM3h6u)sJB0qZelDHxjvN(tuIZqej2tkWcZkdOwBIk(OXUYpXEgSLGp0VtPrgXHUGDj0qjoelMwdkK3friUrMWmUaSszNdIxTYrv1fSUDyzm3RcZzcoHH4hf1)kwliIIxhpESySw0xebTuMF6N5CGh(i)NG7qti9OwcX2dKfZNDIpKuGAtt8bD)x4JqzwWxQO8LabFho6dQAfJmXOmULhMxo)ehLSTBXsiRoBlZmhtK8YFK5Ukp8GkLiUSr7W6jjZtIspaxyvkT6tw4DWz5RZ)lDH)DVGHLqZyvFL(WP(gH2faSBfAXiD7Ov2qTVKn(BHcbDGoC0R2k6)Sc5waj(NaPQm5d8DvBzBuXqZAAAKOL4pLuYyeSEzMalr7TDHAoorrC2BA7ApmdQFPFvgslUKw5ODn8eV4EW4QhPb(d4B)t8NQZbh7YFvRRzVeNcfGnwMhigOpC8HKcWdmfJu6RgirmIDRCAIr3FHhJoN2urx2jeKn1KjEUP082)eN1Xa1PvGRNAlPws18RwOnTPNkIa7W(hWpf9PMjiK1flAPcV8eIBxCTTKxf1qPyDN27eNcvvdwmg0wQOr9tCcgkRwfNUPT7oMJ7TgROCfTczMhNzXcgpKlzEEwzCbCcXSJzhkQUTRe5ZhtfTv0szS1jgaL)cfhBvsckYiAXqT2Mop8t(cgTA(PS1LIgxgJE0ro)jt(jTosJxwzZprwFh5GlK((DWzcjMokXPzU6NAI(pVsOUJtlJdAUJ65B5jBxkdXCEx54g82lq3q)sMhlAefuIoVbe2Gpq8bpzc2EWkYGfrjVDUNG37gHFkpx9gE1yHw5Zrti)x1juFzK1z5IQRYxhrfXdRQFaFK(()Ne06d8BYX3Wk2D8Xp31N1GNZi7oFM4OfmMHt(0i6d(HdCL3L97hUnXa3c3Iteyz3Aekn4Bq6G2vDYGo48Aqzc3jMlcFDxrbWBR7l26eeQ1fytJ8FrrADI8EvtmOtp8PiFtmZSSsM0INVN0y0eRUP2GHmlRC2dkpZ9ZKLt193VxBe(7V3)n4CWEd7cj9(7BLKmszAStvW5(B8Sp7zdzcwK52E)jhoAKyV43OC(PCUjCnCLMYg25hHp(jEcoYVmcT2(NT4bNDfqlWBsGEsfuBsS(SozUAvAgI7C2g1Sa8R)CUko5Z5K9MwKHBAJeEIBG3anPu(K7pmW5795qiyFU6fnXYOLo4YONfQFr9YjN2sxTAF5m5QJwfg4dTOq8Ne81g9SNnzqac0PAY8e7X)6yZ4vpLBgHbU3nJGV2OETx0C25R(mzlN1eTlTLZPdaYoTXZ7Lla(CpPX1hdeu5jDeZumjrwvG9djFZtKVdMW1thyWMrOfO7KmW92LxeA9Ja4zxANWnXMbp6HTI0JXe4nsqDe(g18SJnrhveTjSnv1VRXDpW)rI7ozsSUN09Jp5PMs8hCdF1KDAaAxz7(ZduTm6FxtmM8utTPVXSFMy8uestxcG(X3nXVbWYuKBlf1QojSOWMGD3Wz4JUU7248OWAhmbB)(3t7BiyFRi5VBNrF8EHhJTnN45x(dV5ym7(5ltsLbDUCS0eH9p7vMTFRTFVRrjAB(hG1r9zQn0QdswE2EHI6G3ET1GH7zBkHsOfuJ6QIjQDcbD3dSiC17NUoNWvTlz5Een9hl3pxMktCp73VDwV)qMkb7zQDxFATe2XrA6(Y5Rt6FA7SF7RtQ9xNu52lWRqoWGMsI7UUmGDWqJU(193JFysh4pMBNsd3(ds6i15L1(1WjLgTXNH0Zd5aQpV2ubV8WPslg7mZomgo7HcROGF6LN4e0emT(uC2cqpT5HE(uFgY5YZB7LdHQberfYHFfmwvtTs3FE)JU)EDoGaGB0aNXLyOxPK3FV0B8QGFCpp)1hoY)Qx9dOzR7rFvpwq(NsTVkMToNNStMtNFzm11yANKGalb7V2LTVqiTa)2N8YF7tE5t0N8s)SRMg81gJ)tv2XEezflq2WE4zb7zd1Y)fDa9)p8TMmGYqdhkKeOw(MtcB6b4Ngb6X8Zt4MFISOYqLy9MrQAenzRvuj2YxrYZpHTz)e8PvuL2Q8bN0K8ku)4JSma5Kp9eFuNoDsKPWP6Z3hYr)8vjE)OiIubVFV8gyNlc0QOqh3BucNR(HAurgH2VFwiJJy1GyU4JMyyu9HzjH(xdXNIziX9x3WNIPQ08Bw4tYK47dtO0RP2(eh6c2LTPtKom1VV6GQZtZhHjCI8uTbE8bOloJfuh4PT6QIAROKjACN9vcutGOrCtch2KbsX54Cf4R2fJU12xYUb75DyGMLGKzr2DD8HQ78oGKcRFdVjDIMKiZgXZVQixQStFEODdeHWuRwugzDeerGDfPK5pQC1eGS28DJ7XqvFkOB2uihcPE4KOWCB7eYYULy87XBM0d)dDNk1umvhu3C9JpBc9xA3xC43ywBKyE5WpG8c(mNAfeNQ(IPIv(V8Yhs3UE9wBdB)BUIUvmHDTgrOdD5HZJtrEZPsfGAf5mpVmX9)L3xqTNKZuUAjFootz3bAp)4xWVwd6wmAptdEWb0qDfRFUtAJRP4GHELhGSzbWYrCrVMxP5bD(KpX28F2VVyAkXKlXoWK02wyi9ohoGX2iUUmkUE6SNdoyp1k1IZY5H4ZKOzEnSKmO(7OlNE44tU)EBvbNF2rmTB)2hAnhFO1Ax4UAoWv0l598OJT6G8smzV7OpoAboo44aGB7aKn8Lb2Yap19RO)jsRDAQvPv1wMhp0PdYAslz3zUVx(BCIVOi)ot5g8jw7kNGN8i8a35xuNWAZvd(KbIcRfw7u6HyfHikNk37Z7VFpV6Bg0eLxJVmoHs2wpYlhtYZxAFhBcq617UV4wGV6bYtekDlwFeF0MFGxaBbqllMCYiDDeCsR03wJcj7lYfGpuTbzvS(uw9XNXQ0HWdcwxnF85AFOYpSCUesxVPvaG7e0816i1)g0bm7IY9jAXI8mwcI4SZjz3KJnsc0sgwsfqmdBnYYeuYuQTjn6oQ)2cs55Nd4Li08v55LXgHEeEP1ugklz1sZygw0cIZWMPcKrjtfmB9sYwwlc(erb1)zU43h1ejecHXSPSE9AfBCTFKU8EFtgjasu8odDv9o3FVNkhF0aJY6P1jRUlLut3HclK9gFV(65R7470xpHG7VnF9fijwFs(6jeC(D4RNWq7JWNhXqK76Nz0PS9zANFiGcDuBr2pii8qmqHuV(RK(HDWfFRbwrU6CrBfM9045QsdZ20CLJomiMyWe5m53ioy1oS33QvyVVvBWgCgZF87oRpiMN2tDBgs)gM)g7(MrDquxVBSG4ORoBYG94KgFDQ6bHBAnNEKianpawnDdPKvS1JVnthexu8N3RdLm7UC3FOc8qXzcJSu0REc1zhgmSInG2qy1zAhev7Jwb5seLP9xMKIWBKjSMiJxu)Hqhp9OGZjZL3h3msm6FE7LUHpC2iTPtXWlqRj6m3bniyG)H3repvZoU7ax)ESTtWQ6SIA6YX3FVICF9(q9a3p5baBhDT3bEE0da6o730DjYKDEgm7J0d887DgYnXF4ZDt9TvPf7SivpCp3TGpjv1Kt((7d3y(o)yP3(UKqIlVqCC2f0oiCMhvbRoXQVWGh4Cn7(oygH8xmuPpqF(HJqzNyrD(iAsY9rZ9q3ldV6fvGOcKgD)9d5u(eTUzlpsF20Vr9DkE5qhx6pzkPuNaEzX(FJn04G7SAD3z3rqAWrVW5(TBwZ9dPKkSkEntI6jNbl8m)sWIsVs046iQ6vfjX4D(cT7PXEwIK6XXo(MmIcmOaharjkYDyS1gwVwAl8S3ZnEOP39YyrUnkPzlKeIQJe4E8ccm6hLRe11kL1iwPtJB7(JcMG0IZ4bLXZp7WXhorUn3YjyNkCuZ0hBpYos7tjkLxRlzHr9LHFzsQpRH5EQUNU0nDcwhhpQ7CtUxU286DhIwTW6bopo0xsQluIQiZKVaB10HnyV1m6JAkJASgup(asttD3bQp19tvQ0gPyERCbmAGRDbD8v6t8x6Do6(O3EN5rPx1WgEaV7D90(u9Uy9SZrZgVvDBU6GWgLE6XkPsS6lWM88UiaykPT9utrdIuc2Btmo9i5vwU1aNXTMqVdphwPsOiF4JTIUDfMD45M6S)lYwZCp3F3ZDeo9Mm2NOT(oEKS9nUMsq(SUeK1EXvi1Su9fvFuUpzRXZA8uoTYu9WKGWw0SK7aG5D0IFHxzqrCDMIpwUm6G8Jz(bDVij2Rbd9ubu2XXOVrUWxjWPybKR4HDUIN(Diqe95aZztukjgJICImcxwHDNpriR01N16gjQJKm3KWg5ouu2DeV2b2rFYib)ABkTDfTzYxAkFoMwkHTsAU09D4vlf8QIFybbPLX0E6tgDNLOj0wTXm8G2ReDVg19Gbb2w04CcUrpyOtj4YyN5rv65nB8JuZ5SvfVDMHHOETFuHcy7OP5zN7VVNbjyuau0ThJ2FmL6le8uYRQ)mB3YNCauHq)rCRPnaVfMZyZY40V3tYyS70VShpM6QK1dd0UYC1DNtc6(qxCjOBR9)to3DKURuk1KCubW3otwnRcX0TKxHgBq5DPiuwi5mmkq(NY)rMKzTsU(NTuweNuTsnWhrnQ)FLuZVimRSPxt3V6TXixbo8tBYROH2L4yCl8F9nbh2h3g0U2cVPNyWWHEmIaF32SVGvj975kK4bZ02qppRla2JTkycbCEHv8N0hpUrZ6BaEEOsl8WrnFlthKvK8eXQYodtEmTBp3WXdygSxar0J45N4VNVizzs8I)KOviY9EtlfbK9TSASFf)MQGJtE8OSf(5ofNZUi(WBWpDRMVfSQBrvORo)hEYEOXVH4RoTngV(Uq97iTpopjLwamDrjAr8OVytFrMWvTWWEHRoVZph55Uanz8jHmpw1RLquGUvcvHGGDzQRFWq1d5WCJ934ixxWEJzVXcjZbpyDuw04nZRcmMP4yucxPmqg4(rvPsZGc0vFnfqs6(lqAOvU8CBP7C8YK0uYxSmqOfDdNw2OHVn9WD0oqNxBTEis0DT)Zz)9fUVGiEI8JYv1Lx()b]] )
+spec:RegisterPack( "Fire", 20230827, [[Hekili:T3tAZTTrw(BrtQWiAjttrzz7mlL2k3XE3KjvCYKVjqiWMIymiahCiBnLk(BF73RpqFdajkpj7KQMjLf7g9XRF3hDF5jx(lx(2LX1Kl)XztND60xn7Lto50N)QzZU8T13ULC5B3gN8U4RP)J84n0)73MwI)4TzfXlHpUQOPmH(tRRR3w9xF2ZUoTEDZvtsk28SQ0nnzX1Pf5jLXRQH)o5zx(2RAsZQFD(Lx5EMp5Y3g3uVUO8Y3(20nFfDKtxUKW6oPk5Y3cD)PtF1tN9Y)6Uf7w82BZt2TOz7Uf1f7wCY0jNm5SN9Yj7EZU3i65uwp)H08Is6hqhv4dGjVA3I4RJtZv6(lF6jZ81D9UDc2TFkUozTyID2XPSX7xRi7wSKCvZQvtQO9z5eyrVcMJFHSzBrzC2Uf)wC5wLp(m6YN9XILl2FyYoE3I08KSMLP5xVBXM48B3T4M4Y04RYG(vToDfDoOFqzXMDl2wMwuMwFldkLMxtkZH5lPyP6I90NoBkBZxSmD1TQFhoX)LxNxvhNx)0)wEg93(T1KCOV3qxd)f6CsQRP)l9XJb7)zYMIBO7)3MuucGRlOaUBllUklUQE3I1XLltW)vvcjNUjkugJNlaG)m5M0kVJbSVswtsE3UfFFb9VFBDjj(DtU8TzPv1vaQkfN8QMkaFmA764kc93(rKaGoLuG2Yl)sAFOBwcficOP0ZP2pzYYI3NtrntG)ag0Rxxxf9pAwE9gsE9L1u0475qDv81rfRIQlttExfmqN6DGGp5gsejNSjfoKPqGt2Ty0UfDTyHdOOROTdJ)ZngFGSQmDlRV)T61KsaVOidge6KuVogoywx0KrrNUIEa0ubiwVNsPVBXxjN02(uGihM9mM2d6kQbq7u)k2bFCoTJ5WbhV30tWgAR)p0v(NrxfFjfRUcr13wwKmPDZLeNLfX(Ji4OoeGVKSHsSZaCcALjvV7QOLnLXSvZD3rr1Hd3izNNVBXSPm8OigxqfmjjGcGSNzazfRX1uwPL1RPiKlJEFjDCEFz82k1v62sYnugiROSxJ4i0hbBv6VoZ5VEQ2VEX501iIjWMsLgNKqPUUgWwO9zQGpUNveDp8cp7HCcfgLfvDBoTJao4648esP6MqcsRt3qIQlIsuoMPG8xiNEFdgD(FPN5F76csE6hIwLrhHkdS2xtNGVIUplrmeYMRiL0nCAfhLcy0EfHYbJOI6DmW28D0FQQbAayGeVDlG6MwpPl6xeytz4rPQYBQO7ys5PtJMTnbB4a5bH(YEsAo9FbOxy34sds4R8i2cFIkM3Z3T4j7wCDYYjBI)GySXVADrDufJjh9)KG8GELhGNnrIc2mNRsDCgLtgId85Egg2MGYP6DeZdGv6e1aOhathJORCE7fBi1RXtiXHbo1X14V1xGo2WQMYBrUMRjrvn5rVdK7ahZb7Gk9pSMIae1o(gYh2MYyoeTKKfFBlFbGEc)ybpaNSAMBovwmXp3GzKkuMEyCY0bjy53FWifAyH4ACFnmzV7bi9Cbtskju6gQCKBilJQqTjMW6RcQoLb6vuQgCLomr7dBL2oLSvcoHMQaqLJg9(1PzKi47OGCqZfLLrlVGOQTKSSQifgns8uVl2GmUNl)(dLC14anYhijnmQ3rUBJOjgvopQcqbaHStG4xfryWjG7zXO1hW8irkDprMn)aMjfcBpBkRo8aMnkZwsrPHehpTnWzzmdJSy1QiQKjexukPr(ngsiCPOOIkIOLeuMkkYlaziXzBkG)9Q080Q1qpbZqy9(hWnbVFxv0WnciJQk5eKkYur3UOIoqzV3Qav0wkPS4G6Wamp0G(2uiqJCb(MFVkpxdb(JftRFUVmY4UWOh7KfaxCGuNcMAHKYnPXmTkcQYb2yqEphj(sckLpQzR4lFcURG9P6UFkUqbg1(rXApAmqX(nQLdiAW3sizCSPVSPeuc5F0ayrnG5JGlma7jOFFLcIhvTV3xK)z0ETPjhmVeWlQ4gMW6f8Lv1fLBA1VHHO5tVF)6l92TeyCvSufgWgM(RQKkGTxRPWYwtX10s6WqNmb10qH4wzzIGFav6qfKoX2wm0q7ErxgF)N6NIZzztoOD41eLjMdBztntrv9jx2HXa3j4mXNDmLXltJZPqRTXLVZ4u5NzTrpsGg9B0BS2jhDjtnJI7AfeflDZgcDKQjGXeXRQblQrSrgJnoZSQj7w8lRbmP3NMrXxZJRbRIGVHAybZQfZzIsHbRp0zm4ishlWG6Q6yWZhfu1W13eb1PMt9pdPg9Gh5Nc(OoO9bBsXJctt6SrFhikMpnknn)XyN7KiXgM4B0nTks36DGnf1c(kUZPg5fS5wX0ojogYsDMPjdIEHEfewoBlEpy7Ug2)VY8VYB59z3IFc6KB2saQo7itNJkNF5pXS6L2eSfahZX9brc4fiGC6k6MFvAsAC2XWgdzo3Wq(zUpcMLVO4B6d(7bbD7HMIRgMJl70CF9Gkeos2lfUp0)7hOhnXv)R4QiqSSglOrUpq1b)mvR1XfWtVommAFBxxqE1ggKUNme0We3zDyG1(Eh)W3a6KBMMRfRBrNoz2pqhVA6)F3IxZvdS1L2m9mqFwXvrLtcXGvvGR7vje1Oo8PvkJaOlvpT91KBj5DZRcbjM6ElbCHCJ3VHsxr5A)YPtrXGhBYmPYLyzGD0gjCT1tGFd3tGo1ScyuHdj4F5VLInW8TSXeGsC1GZE96hLDWnKmoA2CB(1syTFHdDjtv6cJdVpEpukvLb9z8T4QoWILGZEauAOsvZmv0TFUA3fXhm8rXjjKmsjvBfUlmD6(Lz(uLliUegUnluh8qxqTPtlXWIwtYO72RPO7u2aetn0BTdO1cIy4pqs24BItZGvjZk1CIa1eWJskYRiLukVjgMCgYjYDlS5JhAhEu4xvU(JaO8xGOgo2Pl)GnRdf66A68Gp5Z92QXjZ292GsOGU9vOrIK8IgWQm2(iJSQ2gFc1sp2bwigxzosiI0LIFDv6scthETGuGMuO48CswfjOArQCauJCGLGEkj)LGem6MDvCtwTRiIQbh(gMtPO4DKBiadt22h5ythDP3yeecQXPRObI6mIB5kCPI(HUG89XLBnM6FbMJkcLmIo7)coTqWYztOu3XRiC78xAyfgCESTbmZIzcNEi3b4RisNWzbfyINtRw16jx6EoUmJsIEm0ZuHYS4btk2DuCbsXKHEtOeTfCf4Pa8GdMdUPEa7cQ(ZuyodTjE5YuyFclO2n3HvJH5Qeq1y(3cacKCoSKA)4xi)USBpMT2fcVIZEF8TvQsjJBhHLm8mUjKinEj564YLqywnXbHXa3aC7CHTeIXACu3IrALMdJK8YQ5aE8mwJp2HWsbmQiUe2CXkovdtyHTfzW4fzhEwCYUkROyzgDfpPnAUJdhpD872wGenTF0fD4q8JSzXk(yfzt4O6kC7IECDgyOoLMPk6Q4Lqk2K07iPYgJOwuZNUBXz0zz1ksIiSEwJFGautptULE4MfvuUmhcfBVxmZvnwWAyykrRBpKNTu3dcBpY2C2l4aHUUADmfkrXCkkVc14VOetAdDhr0)TPIAVCNvZfNDeQDM7uii4W725SY4ZW86m5F2KUDlLGcSyHsPqN2Q0RtZyZOmGtgTgD6lE5SNFIUpMNIorHbk9bDcel(Rlt3ersYs3wnmmLxDpGoI1P2Kgiw3BkkYZsRPhnPvBg0Q7ShWQtFwded9RZUD7AaohxvLUjnJZ3iXzuiO)2MiQexWn4m(HsOHZHXv4ILWL4K4RkP26UMq14CttvAYWGoYTQJbYv8CT0GQH5GPyWDLKYIumvHEkZJP0n6XTYSWF7RbXnRqDT)7uPsGl9PcbDPKevqiM3sVpTICS0t5P)lICoDmw25VeZXtG0nJaiWe1jLvHgredJD81ezyda5SzyWQO2xlCpBRufDXTsx)sf8xXajBIbndUjoRHW0kK5XyjlEyaCTnqts4Ayi0ljlHN5LWYkjMdI56kLdmoPB5e20qrGAykXj0(HPJsREdBjLGCfHAuson7w8Jf1YVKbpDM0wh3o7BlO)Yvz8TyfM8M1CNGJF))ZxQEOuzRxIaLPMA077i1vte4LlfaNOBqyt)jQemzzEijFfMCKqqctIxsegiFUV2bxeY7dW(4a0wVLnP12DvlogUKNq)F4MJz(Nw0qe(OIkoNdwDgwKqDBSXe7ruCiTT(uitmp0HgihbPLkp(lsEowhjUYMc9aJrvED3IxFDEkg1eBx9GAltXwancyiEllimBYW19k0kngYurnMmJwymC2fT)cmiCTYP)01xtygUrfnwcZ5R)QVMH6Nc(JcuJhnsq4lB2cRKPgnpCpy(46E(LiSv09wukBRAOmIKgZDI6nrlG)DHCpwrjI(HA6grhuKx2QHB4h7srfZJFdnvmBo60N)5V6SxQPQYzA4tAqmxjkJ0AtqNWSiyLAWgOBaWiHzTZLQe8azmWS0iY8uNrIOzKRa5ZGmaS88wbw9R5ZdLpjBIutkcK)DCLmnkCNje6IMPOmvTetC6awaAQDNHVSWP3I77rUmZKtWczGXFAElQp94nPSPgwqr)ZM486Mnu18Vjv3YdjIKPTmAmSDPXCywCQkZZ44Yjzm4pA0glrOuqhdSl6mTaaD3UkUUoBa74(PAO5WhkA4Vp(DGRoRIwvsPl23ReJr3vSGvaL1Lnj40Se8dhj6kWtr75vKVPXv0JLmDAYrFlefdUG7w9umFFSOSNaxHBwUCsIPZb94Df4HAKHde3LvelpB4TNrpNxHa8537i6kwY9vPQ2vmqdbT7o6MsQIYciLKlUj2LN8)2su16FK2mx7ybRYVJkveyo(6K0ed3q1Q801yNIsz9rLvFiJU7srjlLG6u7kprpZYncIS)J9dJDgKuPSovpRQd6(oIWLFFDAvs62S08yWTTuw0BqRyGDpKPjGBMZz6yRUCb9YRkmIZyluDPYGcBtym1aUsr9O8pNDN7trXjHR(efxsLNtApAoiqNfUBSRJVJKr8hr8UQiREIAKj61IxVUr66K)mXjPFps()BGT6iW)7byRfdnaYc84WuVqXKOw6igKiI8HTuZ4tzEtXko2pEhvTUBYr8sDE0HWY9(j3J)5YydM(a6qhHxEFdS7MU4ra4(rcCYKH6kW5fBXSxOT)Ir3qSXprxLGJHe1vQraV1CJdgKtTmsbDHvGsJqWjWkxTa9pW2aBBoQB4zlxf9eRAYQMSSiQL7njSo(eLbsVRrSkrsByPMY(mLtkL1z7rZtXSLyU7UPLZyhPApXnGFvkYIA7Cv)Mmx26iBVZbym40MpvuSODHsP5Xh70WM(5ClzTZrEp5yF4mhOtppp1VBh6djs3kCPY1qzc6QOiuhevxpeOw7u)ASgKDLLdURtbBAwj5SBvY9ucdD6Nqxh5ifDfjgt0O6Ig90lZMIMtbYOcALMCQA(izW05lwY8QaQUQytiClrsrEDzrwLrYMY9ap6k5yyXyMC)PWq8w26E3IFbw484wZx9b8A9KoW1DLkjjEtkdv7k8Ybu4Jbn0AxNJQUBlu1O0vw)PNCokmuz9tNgrid0B6yowRBot36EZhwn8TAjTmerFtBs3dv2txsUNkX09MRSW1yaRsPmZy2dCNAdDbSKv3HVKiVO7AgB6eUpmDjKLx34bQNl)fBd6UXVNFZnKAKPQhBsk6oNn9LNDOTPqhiFOgtwfJaYHE180GbC8R5P8532c3TwuyQ7XwnSGOIEzfMx7egDYUfFhUAzzAdRIHugGqBhMRzb0XkTmacagVNUuKbvKXnYU8LyZMEAPckXIEEDNr6VIFOvemrePqsP6bRlp4WDs6Ojcuzqu1dcprnDXHB6ADXg3GbsojE7w55Tu(GKTkxsa9VZZjmAEJ6CWnkFlqXTMM6LXPlPEZ9PKADAY7Avsf3((9lqNG4wRzmo46PIjW16YsG)vzrTmxcofT(vYhMNn7Tlqm3bbTGOtzCB2dk(aUb1qy5YYiq69Q(PEZaqFHf7a3AHPhY0aXEskWKRbKk2S0asljVcuvnleCgbVA7unRvewNzGuGe8PhzQJ2b1M0YYIYO0n4f3Kgm3Vf2HLS1MCWA10OKKrp7)FH6QPTujmXC8XjWrwO2dgb)gNexknkLLYVSOJjVPGogvMKAigL9W3t439e)k)6JsVC7oOlEc9qTIUKVROkO7Yz)cJIKfqq5Fux157WZZ7Zf2iQgcAd(wCNNOOsHDXdqG8rNIeFfiRwvBKzgLyIl(adc(Uh2Oc2bAlARqe4FpzD80bKtYhYDM)RO2U3s74cBi59tloiTS0l3O48BX8m)y7YL2iWlQukDM8umGCRIomnzWYTIStEFWGF03bzBbvRVkgLlmKw1KOrQhJSt4CWe3JnbVDVS42f6M0AWo3tPqcgK78ScWSXn3LFkL(mUU8HIkgLwDKWZRKoDwGf3c(vlr72URCFDWPCPgeInDHK9USm(6IC6kNIOwBwmESko7lARVM2AbJP0U5LAeRqFqSNJH8XdgB0Pb4O7ZoN(kXrloB9Q4FcLee(L9yCRsOXAt4wnPtBo5S(5VHXUm1vT4JAXNGIaGuczxgRkBfhB12Pl)F0HhDSJ9HMIC0SvkFym16wfoD3mybxG9TeQKoOA0xpUegvhAyVMzpEU0M0bjV54e0NkQn2Y3XN(yStFF38a(rAdUqcQIcJVO76HPxKccTe9uY7(2lDuJNo3lU8mSNH3mMu9e9Dy1HEN1gEFRZBdex)bXiqXx3LpyN7qHEDNYEM1LayNB9dmDLReZYYG(A7APW4m)XfgRHE0Hd1FOyFwvhrp8CSFp32lJtcCNnX4cCyadbfJuFSuu1zVTIA9En50LHKAZA4BbTHmTbTpT9YhYBSMU3X8OnBD90bJ843JZ8o1uBbNoN3I8Z4IalOBboi0i7DyzFyqrkJV32jk8MoAGMqTKDle6LCSW(pttgR0VHTARvEEfLculaIbMfb)CXpXm5tZR7)QLvOKuwE1lCsFCRZEEMYncDc(FztVME3QX)RqzC4O2YGcQf2qwIu7l5fvCYL(L9bCpANswEmZ3Zxlmiq7sDcTdG5gBXnHn0p5wPsZSGqx2q9L7OetY3n7Hhh(v7O8n2xYaFUESHTfszLS)d30Gd6YBp3hxy1IeOFFuu7iX7BxYEV2h6Y3p2lHr(5NeCX5xtVHFsYzCoVBURopA9Rv4b9uB3U4OkrTfacBb1Ax5jbHC(1d8HVw7YVLtvqMh6MkqKGPyvbJum1U3jNTpPJo1LdmdaZ3t3T1bUg3mziI3pg(nqpuQXhwLuLB4K7P18M5QkEWSjopEYwankyFJG(1UyCM2R(InNw0FC4jn51IcGbvxPu4NuH0xZcpDHq083QAphKvHRsZYqV7MtLaIr3EvRO9j9g44mpmWTvNsq84MgnQ2UU7I0VBW0ImNq5DRqHPepZ2xuaZ4PYVtj0(wMVue9GvgjaXUrV6WtjAzvNYWrf8qkbdwU0mgJ4obMnJj6m1obfHhWfekjoZnDahbC4UoUSqaUlTzeSNonwvCL4MiPDTH(vgVNzCyxVOt23rhDEfByYMIx3rLPljnilv2dgICkSAXHrW8W)UTindRtNCswnfjVPsHLIJgDzVlBOQlyviwd8CUqBsCFqkboUB3LgW8bKcnbgJjRrUEXz4XVcO2SrxAsYgkqrykGyju3ySiEFnzt7G5UzxQhYgU1fL5Ww5g60QSd1)5Agv4n0bfAL)Ken9LqjSvMtx1v8lGOuavRMBVYN5ja2Fgu06)ZMuS2Hzv)yCdfKgJQ1ZSdOAYU38)MMtBcECB(kw8bGM)mxcw)mgBtNTjW4P95Wt(Wy8LZXXALFfpTxwBAuCgRnNuJTRn24IVDsQdSVQYvm4Dv1UDobHQJEXK0NATVZjYBeZmGt3)POylH5wTkw1W)zhiL8LAvfEJoKPnUZAx(C3Tjvv)U7oOla)D35pNCgDWH9bKE3DDcsgRmn2be8c)xybF6NEix1qHy1Joz64XIZI)eY5hY5gW1IvAYByVtcF6J8emZppcTYf1M9GZQj1A4nbqHRHj7zjuLoznzMaRpQtMRsSZGDNZYVZAGF(hZDXzFmNSx0bpCt1WbkUrmkWWvk1rhgG((i(ieS(OEsVZj)XFAO6m6PNmVJQH6i5m5QsOcp4hAbH4Te8Zg)PF6jJcaGMRXZtCg)hJdJN9yEyeEW9Eye8ZgpOZIwANx9iQILtDLLP08ErBzfRem1Jp1kdK7yL5YpbdBr(Ihjv6nhxp2NBZgTJr3jyG7(hUB9ggaWZP0EbBIndEepA5tyJjWRpJ754B47khhIo8SL5yBkbEFV29m(pW1UtKeRSNAy4jp2qItM6EcuJCUXy7kO6FSg2hBKAFtWdWpi8b2dhV93k)L)BAcEWGgFkY)yqnQi5cR85HrmEIFL1L5L4NzjAPnLf9bznh29dXYmp0G7nmctZj2JtWU38A8Cdg2xks3KDlWxrBAZq(huSkntgnRQjsTLo68NzwYx7EZN8j7wq)FFXp9)UBXFNR83Uf)nmQr0nbuac4RDfSmJHKdj)P)lszbeoNSgcR2hH9ABAylwsyHei1cAhVsXXumbESfOBtkSAjBKTEsQDMC3qasnkptw3xQL(lY31(jSTNlaHqp3JbVqFo1ur4puu294ITNtrojDdHy3tS3iBOAljbYPewQ1WYeMWpUIlTlf2EVYvDXTYQN7n5ZF6jhJNtNZrWSvs640vNRLNC2J28PpeGaEMK3azjb)w2Lf7XD4Lp47xNcziJw(2O)I649Ul0eq2ByM7KNrdq4UlNpLdnp9jc24ySg3gxNS(Op)Z)8NCG9V)4d7Wu96Rmdz7qaDQH3T)GrxHXvhk6QhsGifE94dB8JxPuB4UQM8EceueB6dk4Ul)(exshe5Tyzy3i1S6WrEXzlVKo6nWZiPX1GAgT1cUE0HbFbkJC3IVPn5n6nHuV36Mz1H2E3SX9kjdv9OekAfEXSaBhiBtGnqwX7dbcCi39EVzXmCrkJ65thIW2ECaAvnI4nb9(Kux33F(O2171apeP)flNMz(Bdx0Owv6joRkYOXfEn43A2dYt19zpI8T5o7tEwnDYPd5WQ)eI8fABkf1wtROAJQeAIKsEBS8(iIV(OBXnWTTzV3VUCTA7M1ER(6v2ALYvEeYH4QK1KLnSRfjcwzcWku7nNkgU8XvEYz5VUpKHCkz7BwoQLMhAp6KPt1qnT1YvUVq8n9hdHypx7s3lAhGBUy45R1LxLmHLTotoz6jVy6lpBYvu7oJyVWcIf2VjuHM9EoG4rqSGvfibo72(yrEBn031OcUplkV8fQ3Rq47Ut2K2ZlIYVBM9qkn5iJGuA1Dg(O2b7K2rPvT0Nrcm)EGfpTJxVtwr3UeMvlV19z0E1oUY9tIRjxxaY)BVDDrmNAJlUFnjg)399Sq7M9MFomBQpgT8RyK34ACB4xUXC8qLleey0oW)Wn6aV3vjJouQBwRbtkbY3TzuJ71c09DicUw9(ad5CCvVLrC3ddvV4oTNNZMx0LXqUhtzYvcEQ4tanig4lsNCypx9EtghRF)8eZ9Fb98pFI58E2rreK5VjGAzKLNJu8uPm0sJounCBmKX7UZFcWmhhs7xvUXQRcwk5clbS3gVLCxirXDenyFHqvD4L0UkPD65MIj04A5ihFeyxp9mNdnoMwVNADmOZBB0Z71wOi9ErxFCOLAaoyHI((CNC2vVcppA2D3PJbey4gpYzscCOxMO3DNm041bFH2U45th7F3R(kO15z0RgWgY)uQP7rNZ5z7L505ZBMUav7m2lWwW(jlR7nckt4pF3Y04H)NVBz4CVxE3Y8JUAQpyxi(pwPQ6difvdKAQ3)us9tpulzurc0)t4bdlGWqd7nKaOoE4WOh6bWNgtLJ5hNWn(uZwElkIeB2owvIOjATIiXoEkWU4m2H9JW7JLkSv5vdZe8ke)4dSmcWKNFMpOtVOezcCQ)49AC5hVk17lBfaf86XIr2jgiOvuiY9wHWA2KRWJq73ppKYrSiziF5RcVuVFAsO)Kw9ymdPUFIQEmMkRhEQhLjX3RlL0QPUENQCn2vDjtejMg2thL680(sAatKNu)3Jna9XySGYaN3PPkQxlvmwJ7TN6jngIkUirho4k53hjzNdZvGNEfgCRRNJOrh4TBGn(9jvRD8AdDrpwKcTFdFiDMgNixbC7pmGlv0PpoWUrcpCQvyiJTibHfW(cuYShvUBcawBF8FEiq1hd4MneYbtQ7pikm22EbSSFbgFcee27)RvKk0umvh30E7iD(j4FPDdHr)nzQrPFPFXdKGtPccQQF3u(i))8A5rxVE9RieR4XHzKANEeAQllCEycYBPkvgulpN55JrS)F)9S58Oqt56cvXbnL9L22fN(e(DmJUgJ2Z0iVESqDhzNAgUvc0l9oGgfyvawm7(6x6U7cFlADrR6HcwfgVIpCU2EUohhZB28wjAuV5PGiK)79HHrt8Oe42d0VUqocjrB6i2jKRyB6kffhDGDOO8b8z8knVkaLO(TdQ5nZ48Pto7U7SfYCX5ZyYn)ZxihhVqoDl2qn47Qz1JpobooQdIlX4QVNEvBcqo4GaWTggY7yYr2CxN7(t0FBB6gMAvQwDftZPon9wJpn7Ur8nYFJd8ffn45k3T(oYoHtEa2278()pSEcQU1YyHs3lSl5(7J(jcrdk3T)3D3bEf0nQ1)Xg3J)HcJ3aI4hJZZV3U19da61V13GJaFLsJhFF6MT(yEVnVQ5V7ouNLtoZVAaJ1LEWb6s7PnQoR)GT18TjA3gk6clR9NZz5Dr4or3XTxpAD3v5vFMlg7nB7CaGZiC(6SN63sASmydtfP4LllYzHRItcKMFtbCz5bA)WcXbSYGRzpz4szcc3MfFlpZKf0o80xkzDrrfXWrO0pAdgV0kwE(yKtJEw4SvtKyXOe3eM(HP5RAeUcdHG6)mNL9dAIemUa1zRA2SrrJC7M0Lr4BYqMwIel6qxzs0D35P61hpYirK6CYA6tc(0)rHfabJCcDGFUJ8gDGJG7ClDOdsQv(NoWrW5nf3ahdJ8C15xJop4CmP8QI(hnlVwKosbvrXAeaMoXi2kLSm5DEvOm4iCFuQbfjZJVTesi8GGTKv78pr0hRISe7je0Bg7hZQja0LfvQhzrX7T3ScNkWizsWnFNU5rU7CbBfQk1ATRsoLBQIZSPbxjgirodfpSgG7Y7jNOyU5r4VmZ6xov5xOgW53BINpKfwoPbyDvDBoD9aOjRbzrDPO5fVGzJYRbf143s1urs41uTI6AqX0ANf4hd2HbIWQAk5sHO24G5VuD4tx9ReyVMB56E1E0bC4LXBHI8IvEu4lD75px4djp68CpqlJ1uhtMRzwf)bDpDSmBf45c86u1uShhjUcUDbensjBNqWq(ikqJwEHkqF990GC(0GoeTDOnyS5TS(cJrjFti)DjOi8bzk7Me27s)(ahNpBKhnZdUwy98HTsqcGWLqS8HKqHCa9jD2gma)RsZtRwJjaJmDF(b0kwE)Us6kOmiitHjAB5y1lFhg4wB)C3oRiyOmOFJWdYMV0hJC97eBJVvL7f3wQD3DNISd9xAMrUB5Em2oEqzg5PP7XOB70t1fFapI27zG78Jw5dE(9EpYT(9aXbT9FjlionHF(u4zS7MMCiEmCVLYClk2lMNClk30k7OdXb7tpK7pUfEWK7mGgsXUsFk4IdkSndH5zNQ(uM3C54wV0C(CdFa6BwLCy6H(NCOY7c7fthpFglDv3IHTq3732(sNLRERtH7sFEAHF7GKSFO7THx5MkJOYin(U7oKd5t1E9)4EA0g(nEOtXtp0X91Jm7HvNaEc)(ZGXX5a4BBC578BHsSXTZqjRYIa2)izMwTBPwXSmjlCPjvYmENhvI46MsMNuWRTgqlxZzIIGaRpmxdQzPop6Rg(BKcKvM6BIWNSLS(sX7OD1T3Ogn7jopVDJAEuiHvZ6VktdeZG5QNFly62dFbzN4bJ4QYucuBBGErT67wRDzqOBKi)qgwcSrHsacCwKNWSlxcPUYlEnxjcwc2MKcNtakY7JtBpcrMP6lc4mEjom6KY1Im2fJAflPWHJD)EutaAHz84ksY5tNm9e5XChuWof8OgPr2zKTN(JqiLxTpzoR9PH)yK7p7jCEUUvZynCr3hNoU)ytU3U2469Fe3A(sznYj5WqbPUwsyUMM6kaCozUdyjmQgIrS9qP5)eZmvEGZvc4NSccArxbF)2uRuFQmVWaZYxu8nH5S0DUmaskJB1ku3xdsvuD)eJo3DRk5qKKnVvehgpY1PG(6DUH7T29MJAfW67UJH5hPQbjlDVzfOxrJgwTU)nx0MsBFSFUFlt6H0pidf)R5Q(rpI4pMDmvz1Fu61V2GsZDNdFHTn1TYPJomSoOZv0bDy8juI0jIc(lNof1z4yt6BVjbtBcl06MTVH7MnNQmIi(Wq2gpveB3mXii5d2xBoDRMsuLNBY5qexYbRbY8zYZKoDhhxzd2YKDHgIsBV4ehT0SnS0OqUuXhUpwWjMpfuTLEG1bnEejW0tZTLkSMKTTR0KXrk6WcYNOq5zEajNiVatimfFiL3q6WVh2N8h42JQEJv8JesrpPY7(GRnRSpx84ZT3WkKUXvQhlAWU8vrd6YImYQA7dFuvZyhOmWVlWyqmeSKuZDvHxhZnTrXjXKSks4tCJqg5zpox4aCdzyNWVho(nEQij5yZbBS1V8Pm94(Nvgh0UQ9KYv2oWyOUSWxo3POYJlhHDHIP99WZddbr)8tuYbhJSQc16wMsFT84C9eloFMuULePuxMAC(TioYX2UDYi7a0ou6QAZz8fAZxpMChMvcg2W9DqvYsy3kxLSH0s7zpxai9hLO1NwDHmCVoRe3tpQNbJcCSOH5e8GE0Ho58kDAMhHJx0EWpwnG1wPy35pSRNNrU9W0D3nqVcmoWs0TjIwJXGhbp5yR6pZoT8XhayKp8fU10ga3cc4S9TvJxHUXHme7HVsD(gshCq7lYv)T8jOTj9XSixlZonpOdRdS493Md(NjJzCW9KW8A(a3(w)oWZSpEWS7n(IsoNJ8)R(pY3r(oOBgAezCKE5DlLZBCugD4HEu(b(2U0lIvYbh4Y39bdn4HEARpdShDSGix4SMHgC11WU6g66vnNYV2o54pDSVY3WGQxjKyEuj9a3JJNHz0bbeTmMhiLFOyjCBPU8)Ah)5wGBTOwSmq9YzfJWAEj9a9tsEu1b(CVCiBFyF417lDD7b(yW2x6aIo28wgt7pdRpWLMK9wd)HTkCArFh(CzwVtbQ9jahPTM3fX3q3)(DEHpQpj2MXdTVIBGKEzAORMHUycNQjhoO1QZceBMNch7KjNDFWtpv1GKqGM(LOCHgb7sAqNRb4UI(HMoCnEDDbqym7(Vb2hTH)29hOp4TAUIxLFmFR93pk37S4hhG8c3vdIOkw9471Gl8uX7VpCxHF5p(ItXh(7l))o]] )

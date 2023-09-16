@@ -882,11 +882,13 @@ GTFO.SpellID["70305"] = {
 GTFO.SpellID["54251"] = {
 	--desc = "Lava Burn (Lavanthor - VH)";
 	sound = 2;
+	applicationOnly = true;
 };
 
 GTFO.SpellID["59470"] = {
 	--desc = "Lava Burn (Lavanthor - VH)";
 	sound = 1;
+	applicationOnly = true;
 };
 
 GTFO.SpellID["71045"] = {

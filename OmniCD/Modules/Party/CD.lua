@@ -1774,17 +1774,11 @@ registeredEvents['SPELL_CAST_SUCCESS'][108853] = function(info)
 
 	local talentRank = info.talentData[387807]
 	if talentRank then
-		for i = 1, 50 do
-			local _,_,_,_,_,_,_,_,_, id = UnitDebuff(info.unit, i)
-			if not id then break end
-			if mageLossOfControlAbilities[id] then
-				for k in pairs(mageLossOfControlAbilities) do
-					local icon = info.spellIcons[k]
-					if icon and icon.active and (k ~= 120 or info.talentData[386763]) then
-						P:UpdateCooldown(icon, talentRank)
-					end
-				end
-				break
+		for k in pairs(mageLossOfControlAbilities) do
+			local icon = info.spellIcons[k]
+			if icon and icon.active and (k ~= 120 or info.talentData[386763]) then
+
+				P:UpdateCooldown(icon, 2)
 			end
 		end
 	end
@@ -1797,6 +1791,7 @@ registeredEvents['SPELL_CAST_SUCCESS'][108853] = function(info)
 	end
 end
 
+--[[ removed?
 local function OnFireBlastCCBreak(info, _,_,_,_,_, extraSpellId)
 	if extraSpellId == 108853 then
 		local talentRank = info.talentData[387807]
@@ -1804,7 +1799,8 @@ local function OnFireBlastCCBreak(info, _,_,_,_,_, extraSpellId)
 			for id in pairs(mageLossOfControlAbilities) do
 				local icon = info.spellIcons[id]
 				if icon and icon.active and (id ~= 120 or info.talentData[386763]) then
-					P:UpdateCooldown(icon, talentRank)
+
+					P:UpdateCooldown(icon, 2)
 				end
 			end
 		end
@@ -1814,6 +1810,7 @@ end
 for k in pairs(mageLossOfControlAbilities) do
 	registeredEvents['SPELL_AURA_BROKEN_SPELL'][k] = OnFireBlastCCBreak
 end
+]]
 
 
 registeredEvents['SPELL_AURA_REMOVED'][44544] = function(info)
@@ -3420,14 +3417,14 @@ local function ReduceDesperatePrayerCD(destInfo, _,_, amount, overkill)
 end
 local function ReduceVoidEruptionDesperatePrayerCD(destInfo, _,_, amount, overkill, _, timestamp)
 	ReduceVoidEruptionCD(destInfo, nil,nil,nil,nil,nil, timestamp)
-	ReduceDesperatePrayerCD(destInfo, nil, nil, amount, overkill)
+
 end
 
 registeredHostileEvents['SWING_DAMAGE']['PRIEST'] = function(destInfo, _, spellID, _,_,_, timestamp) ReduceVoidEruptionDesperatePrayerCD(destInfo,nil,nil,spellID,nil,nil,timestamp) end
 registeredHostileEvents['RANGE_DAMAGE']['PRIEST'] = ReduceVoidEruptionDesperatePrayerCD
 registeredHostileEvents['SPELL_DAMAGE']['PRIEST'] = ReduceVoidEruptionDesperatePrayerCD
 registeredHostileEvents['SPELL_ABSORBED']['PRIEST'] = ReduceVoidEruptionCD
-registeredHostileEvents['SPELL_PERIODIC_DAMAGE']['PRIEST'] = ReduceDesperatePrayerCD
+
 
 
 registeredEvents['SPELL_AURA_APPLIED'][322431] = function(info)
@@ -4647,7 +4644,8 @@ OnFlowStateTimerEnd = function(srcGUID, spellID)
 			info.callbackTimers[spellID] = E.TimerAfter(duration + 0.1, OnFlowStateTimerEnd, srcGUID, spellID)
 			return
 		end
-		UpdateCDRR(info, info.auras.flowStateRankValue, 370960, spaghettiFix)
+
+		UpdateCDRR(info, info.auras.flowStateRankValue, nil, spaghettiFix)
 		info.auras.flowStateRankValue = nil
 		info.callbackTimers[spellID] = nil
 	end
@@ -4658,7 +4656,7 @@ registeredEvents['SPELL_AURA_REMOVED'][390148] = function(info, srcGUID, spellID
 		if srcGUID ~= userGUID then
 			info.callbackTimers[spellID]:Cancel()
 		end
-		UpdateCDRR(info, info.auras.flowStateRankValue, 370960, spaghettiFix)
+		UpdateCDRR(info, info.auras.flowStateRankValue, nil, spaghettiFix)
 		info.callbackTimers[spellID] = nil
 		info.auras.flowStateRankValue = nil
 	end
@@ -4676,7 +4674,7 @@ registeredEvents['SPELL_AURA_APPLIED'][390148] = function(info, srcGUID, spellID
 		local talentValue = info.talentData[385696] == 2 and 1.1 or 1.05
 		info.auras.flowStateRankValue = talentValue
 		info.callbackTimers[spellID] = srcGUID == userGUID or E.TimerAfter(10.1, OnFlowStateTimerEnd, srcGUID, spellID)
-		UpdateCDRR(info, 1/talentValue, 370960, spaghettiFix)
+		UpdateCDRR(info, 1/talentValue, nil, spaghettiFix)
 	end
 end
 
@@ -5501,26 +5499,6 @@ end
 registeredEvents['SPELL_AURA_APPLIED'][315573] = function(info)
 	info.glimpseOfClarity = true
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 setmetatable(registeredEvents, nil)
 setmetatable(registeredUserEvents, nil)

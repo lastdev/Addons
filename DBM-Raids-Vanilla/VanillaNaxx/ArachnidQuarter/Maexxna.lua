@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Maexxna", "DBM-Raids-Vanilla", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525041212")
+mod:SetRevision("20230814031337")
 mod:SetCreatureID(15952)
 mod:SetEncounterID(1116)
 mod:SetModelID(15928)
@@ -35,7 +35,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 28622 then
+	if args:IsSpell(28622) then
 		warnWebWrap:CombinedShow(0.5, args.destName)
 		if args.destName == UnitName("player") then
 			specWarnWebWrap:Cancel()
@@ -50,8 +50,7 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	--if args:IsSpellID(29484, 54125) then -- Web Spray
-	if args.spellId == 29484 then -- Web Spray
+	if args:IsSpell(29484)then -- Web Spray
 		warnWebSprayNow:Show()
 		warnWebSpraySoon:Schedule(35.5)
 		timerWebSpray:Start()

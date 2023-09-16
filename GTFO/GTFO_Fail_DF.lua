@@ -1051,6 +1051,43 @@ GTFO.SpellID["411643"] = {
   sound = 3;
 };
 
+GTFO.SpellID["417242"] = {
+  --desc = "Fish of Gill'dan (Gill'dan)";
+  sound = 3;
+};
+
+GTFO.SpellID["413894"] = {
+  --desc = "Wall of Flame";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["412837"] = {
+  --desc = "Scorching Revelation";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["417674"] = {
+  --desc = "Massive Tentacle (Massive Tentacle)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["417706"] = {
+  --desc = "Madness Bomb";
+  sound = 3;
+};
+
+GTFO.SpellID["414795"] = {
+  --desc = "Molten Slagnamite (Slagnaros)";
+  sound = 3;
+};
+
+GTFO.SpellID["417419"] = {
+  --desc = "Remorseless Winter (The Lich King)";
+  sound = 3;
+};
 
 --- *******************
 --- * Ruby Life Pools *

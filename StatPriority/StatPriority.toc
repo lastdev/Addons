@@ -1,8 +1,8 @@
-## Interface: 100105
+## Interface: 100107
 ## Title: Stat Priority
 ## Notes: Displays stat priority based on Icy-Veins
 ## Author: Vampyr78
-## Version: 2.5
+## Version: 2.6
 ## SavedVariablesPerCharacter: statPriorityStoredStats
 ## IconTexture: Interface\Icons\inv_misc_clipboard01.blp
 StatPriority.lua

@@ -97,8 +97,8 @@ L["Both"] = "同时显示"
 L["config_picons"] = "显示专业图标"
 L["config_picons_vendor_desc"] = "显示专业图标而不是商人图标"
 L["config_picons_trainer_desc"] = "显示专业图标而不是训练师图标"
--- L["config_use_old_picons"] = "Show the old profession symbols"
--- L["config_use_old_picons_desc"] = "Show the old profession icons again instead of the new ones (before Dragonflight)."
+L["config_use_old_picons"] = "显示旧职业图标"
+L["config_use_old_picons_desc"] = "显示旧职业图标而不是新的图标 (巨龙时代之前的)."
 
 L["config_restore_nodes"] = "恢复被隐藏的图标"
 L["config_restore_nodes_desc"] = "恢复被你隐藏掉的图标"
@@ -124,7 +124,7 @@ L["dev_config_show_prints_desc"] = "在聊天窗口中显示标记()的信息"
 
 L["handler_context_menu_addon_name"] = "HandyNotes: 奥利波斯"
 L["handler_context_menu_add_tomtom"] = "添加到 TomTom"
-L['handler_context_menu_add_map_pin'] = "设置地图航点"
+L["handler_context_menu_add_map_pin"] = "设置地图航点"
 L["handler_context_menu_hide_node"] = "隐藏这个图标"
 
 --============================================TOOLTIPS============================================--

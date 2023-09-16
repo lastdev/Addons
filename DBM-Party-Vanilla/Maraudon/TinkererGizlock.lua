@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(425, "DBM-Party-Vanilla", 6, 232)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20221029204017")
+mod:SetRevision("20230903141705")
 mod:SetCreatureID(13601)
 mod:SetEncounterID(427)
 
@@ -18,7 +18,7 @@ local warningGoblinDragonGun		= mod:NewSpellAnnounce(21833, 2)
 local timerGoblinDragonGunCD		= mod:NewCDTimer(20.7, 21833, nil, nil, nil, 3)
 
 function mod:OnCombatStart(delay)
-	timerGoblinDragonGunCD:Start(12.8-delay)
+	timerGoblinDragonGunCD:Start(9.7-delay)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)

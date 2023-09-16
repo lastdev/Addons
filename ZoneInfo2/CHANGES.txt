@@ -1,13 +1,12 @@
-tag 4418488d8a4e83039efe447b268fe7bd83549d90 WoW-10.1.5-release1
+tag be3181b16d77be2c38040ed57c54a67244e4f766 WoW-10.1.7-release1
 Author:	Odica Jaedenar <odica.jaedenar@gmail.com>
-Date:	Fri Jul 14 22:02:06 2023 +0200
+Date:	Wed Sep 13 23:02:32 2023 +0200
 
-Tagged as WoW-10.1.5-release1
+Tagged as WoW-10.1.7-release1
 
-commit ab183d2a84fc4a5d5604f1839bcc75d1112c2979
+commit fd7974fe68f8842aa9bf3e08d28a1ea7b8a1563a
 Author: Odica Jaedenar <odica.jaedenar@gmail.com>
-Date:   Fri Jul 14 22:01:06 2023 +0200
+Date:   Wed Sep 13 23:01:51 2023 +0200
 
-    Updated version inn TOC to 100105
-    Included latest version of LibTourist-3.0
+    Updated version in TOC to 100107
 

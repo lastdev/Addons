@@ -472,6 +472,23 @@ function Table.GetDiffOrdered(old, new, inserted, removed)
 	return true
 end
 
+---Gets the keys which were changed between two tables.
+---@param old table<string, any> The old table
+---@param new table<string, any> The new table
+---@param result table<string, true> A result table to store the keys which were changed (with a value of true)
+function Table.GetChangedKeys(old, new, result)
+	for key, value in pairs(old) do
+		if new[key] ~= value then
+			result[key] = true
+		end
+	end
+	for key in pairs(new) do
+		if not old[key] then
+			result[key] = true
+		end
+	end
+end
+
 ---Iterates over a table with a stride.
 ---
 ---**NOTE:** This iterator must be run to completion and not be interrupted (i.e. with a `break` or `return`).

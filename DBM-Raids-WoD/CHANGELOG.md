@@ -1,11 +1,8 @@
 # <DBM Mod> Raids (WoD)
 
-## [r75](https://github.com/DeadlyBossMods/DBM-WoD/tree/r75) (2023-07-25)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-WoD/compare/r74...r75) [Previous Releases](https://github.com/DeadlyBossMods/DBM-WoD/releases)
+## [r76](https://github.com/DeadlyBossMods/DBM-WoD/tree/r76) (2023-09-05)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-WoD/compare/r75...r76) [Previous Releases](https://github.com/DeadlyBossMods/DBM-WoD/releases)
 
-- module -- > Mod due to bad truncating  
-- Fix missed world boss module  
-- Fix replace script that got too zealous  
-- Set module classifications  
-- Assign world boss difficult color  
-- reassign raid color  
+- Toc Bumps for retail  
+- First lua error was fixed in core with range check on Margok, but second lua error with voice packs is fixed with this commit directly to Margok mod  
+- Update .toc files (#20)  

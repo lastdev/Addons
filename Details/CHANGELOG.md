@@ -1,13 +1,16 @@
 # Details! Damage Meter
 
-## [Details.20230731.11774.155](https://github.com/Tercioo/Details-Damage-Meter/tree/Details.20230731.11774.155) (2023-07-31)
-[Full Changelog](https://github.com/Tercioo/Details-Damage-Meter/compare/Details.20230730.11773.155...Details.20230731.11774.155) 
+## [Details.20230913.11914.155](https://github.com/Tercioo/Details-Damage-Meter/tree/Details.20230913.11914.155) (2023-09-13)
+[Full Changelog](https://github.com/Tercioo/Details-Damage-Meter/compare/Details.20230909.11902.155...Details.20230913.11914.155) 
 
-- Version Bump  
-- Merge pull request #575 from Flamanis/Combine-non-combat-starting-spell-lists  
-    Use single table for spell lookup when avoiding starting combat  
-- Merge pull request #581 from Flamanis/Flamanis-patch-1  
-    Add nil check for Time Type in startup  
-- Add nil check for Time Type in startup  
-- Use single table for spell lookup when avoiding starting combat  
-    This is to avoid triggers like SPELL\_PERIODIC\_MISSED triggering a combat when an absorb happens.  
+- Change Logs  
+- Merge branch 'master' of https://github.com/Tercioo/Details-Damage-Meter  
+- parser debugs  
+- Toc Updates and More  
+    - Added a secondary bar to augmented evoker, which when hover over show the uptime of buffs.  
+- Merge pull request #605 from Flamanis/Add-era-check-for-hits-to-avoid-error-comparing-string  
+    Add isERA check for HITS  
+- Added Evoker Buff Uptime Bar  
+    - Added an extra bar within the evoker damage bar, this new bar when hovered over shows the buff uptime of Ebon Might and Prescience on all players.  
+- Updated ToC file  
+- Add isERA check for HITS  

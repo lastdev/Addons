@@ -768,8 +768,6 @@ Can use \ to escape -.]=]
 	--[[Translation missing --]]
 	L["Ignore Self"] = "Ignore Self"
 	--[[Translation missing --]]
-	L["Ignore updates"] = "Ignore updates"
-	--[[Translation missing --]]
 	L["Ignore Wago updates"] = "Ignore Wago updates"
 	L["Ignored"] = "Ignorado"
 	--[[Translation missing --]]
@@ -1247,6 +1245,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Soft Min"] = "Soft Min"
 	L["Sort"] = "Ordenar"
 	L["Sound"] = "Som"
+	--[[Translation missing --]]
+	L["Sound by Kit ID"] = "Sound by Kit ID"
 	L["Sound Channel"] = "Canal de som"
 	L["Sound File Path"] = "Caminho do arquivo de som"
 	--[[Translation missing --]]

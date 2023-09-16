@@ -1,8 +1,8 @@
---	09.07.2023
+--	25.08.2023
 
 local GlobalAddonName, MRT = ...
 
-MRT.V = 4760
+MRT.V = 4770
 MRT.T = "R"
 
 MRT.Slash = {}			--> функции вызова из коммандной строки
@@ -39,10 +39,16 @@ end
 if MRT.clientVersion < 20000 then
 	MRT.isClassic = true
 	MRT.T = "Classic"
+	if MRT.clientVersion >= 11404 then
+		MRT.isLK1 = true
+	end	
 elseif MRT.clientVersion < 30000 then
 	MRT.isClassic = true
 	MRT.isBC = true
 	MRT.T = "BC"
+	if MRT.clientVersion >= 20505 then
+		MRT.isLK1 = true
+	end
 elseif MRT.clientVersion < 40000 then
 	MRT.isClassic = true
 	MRT.isBC = true
@@ -55,6 +61,7 @@ elseif MRT.clientVersion < 50000 then
 	MRT.isClassic = true
 	MRT.isBC = true
 	MRT.isLK = true
+	MRT.isLK1 = true
 	MRT.isCata = true
 	MRT.T = "Cataclysm"
 elseif MRT.clientVersion >= 100000 then

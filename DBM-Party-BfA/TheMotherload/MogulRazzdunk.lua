@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2116, "DBM-Party-BfA", 7, 1001)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220209045257")
+mod:SetRevision("20230901191532")
 mod:SetCreatureID(129232)
 mod:SetEncounterID(2108)
 
@@ -41,11 +41,13 @@ local timerHomingMissileCD			= mod:NewCDTimer(21, 260811, nil, nil, nil, 3)
 --Stage Two: Drill
 local timerDrillSmashCD				= mod:NewCDTimer(8.4, 271456, nil, nil, nil, 3)--8.4--9.9
 
+local rocket = DBM:GetSpellInfo(166493)
+
 function mod:DrillTarget(targetname)
 	if not targetname then return end
 	if self:AntiSpam(4, targetname) then--Antispam to lock out redundant later warning from firing if this one succeeds
 		if targetname == UnitName("player") then
-			specWarnDrillSmash:Show()
+			specWarnDrillSmash:Show(rocket)
 			specWarnDrillSmash:Play("targetyou")
 			yellDrillSmash:Yell()
 		else

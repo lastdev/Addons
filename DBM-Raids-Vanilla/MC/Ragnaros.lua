@@ -12,7 +12,7 @@ end
 local mod	= DBM:NewMod("Ragnaros-Classic", "DBM-Raids-Vanilla", catID)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525045438")
+mod:SetRevision("20230814031337")
 mod:SetCreatureID(11502)
 mod:SetEncounterID(672)
 if not mod:IsClassic() then
@@ -99,17 +99,17 @@ local function emerged(self)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args.spellId == 19774 and self:AntiSpam(5, 4) then
+	if args:IsSpell(19774) and self:AntiSpam(5, 4) then
 		--This is still going to use a sync event because someone might start this RP from REALLY REALLY far away
 		self:SendSync("SummonRag")
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 20566 then
+	if args:IsSpell(20566) then
 		warnWrathRag:Show()
 		timerWrathRag:Start()
-	elseif args.spellId == 19773 then
+	elseif args:IsSpell(19773) then
 		--This is still going to use a sync event because someone might start this RP from REALLY REALLY far away
 		self:SendSync("DomoDeath")
 	end

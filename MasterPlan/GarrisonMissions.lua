@@ -75,15 +75,13 @@ do
 				GameTooltip:AddLine("|n|TInterface\\TUTORIALFRAME\\UI-TUTORIAL-FRAME:14:12:0:-1:512:512:10:70:330:410|t " .. GARRISON_MISSION_ADD_FOLLOWER, 0.5, 0.8, 1)
 			end
 			GameTooltip:Show()
-		elseif GameTooltip:IsOwned(self) then
-			GameTooltip:Hide()
+		else
+			T.HideOwnedGameTooltip(self)
 		end
 	end
 	local function FollowerButton_OnLeave(self)
 		GarrisonFollowerTooltip:Hide()
-		if GameTooltip:IsOwned(self) then
-			GameTooltip:Hide()
-		end
+		T.HideOwnedGameTooltip(self)
 	end
 	T.RegisterCallback_OnInitializedFrame(GarrisonMissionFrame.FollowerList.ScrollBox, function(f, d)
 		local b, fid = f.Follower, d.follower and d.follower.followerID

@@ -3,7 +3,7 @@
 
                                      Adorable Raptor Hatchlings
 
-                                       v1.19 - 28th June 2023
+                                      v1.20 - 26th August 2023
                                 Copyright (C) Taraezor / Chris Birch
 								
                                 ----o----(||)----oo----(||)----o----
@@ -43,6 +43,7 @@ local _, _, _, version = GetBuildInfo()
 -- The Wetlands implementation between (W) and (R) is also different
 ns.kalimdor = (version < 40000) and 1414 or 12
 ns.easternKingdom = (version < 40000) and 1415 or 13
+ns.dalaran = (version < 40000) and 125 or 125
 ns.dustwallowMarsh = (version < 40000) and 1445 or 70
 ns.northernBarrens = (version < 40000) and 1413 or 10
 ns.unGoroCrater = (version < 40000) and 1449 or 78

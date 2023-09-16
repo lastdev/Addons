@@ -7,6 +7,7 @@ config.misdirectSpells = {
 	["HUNTER"] = 34477,
 	["ROGUE"] = 57934,
 	["DRUID"] = 29166,
+	["EVOKER"] = 360827,
 }
 
 -- Key is the target's index (first target found, second target found, etc.)
@@ -32,4 +33,5 @@ config.targets = {
 	["HUNTER"] = "TANK",
 	["ROGUE"] = "TANK",
 	["DRUID"] = "HEALER",
+	["EVOKER"] = "TANK",
 }

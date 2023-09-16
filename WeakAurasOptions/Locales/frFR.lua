@@ -15,7 +15,6 @@ local L = WeakAuras.L
 	L["%d |4aura:auras; deleted"] = "%d |4aura:auras; supprimée(s)"
 	L["%d |4aura:auras; modified"] = "%d |4aura:auras; modifiée(s)"
 	L["%i auras selected"] = "%i auras sélectionnées"
-	--[[Translation missing --]]
 	L["%i."] = "%i."
 	--[[Translation missing --]]
 	L["%i. %s"] = "%i. %s"
@@ -43,8 +42,7 @@ local L = WeakAuras.L
 	L["%s - Start"] = "%s - Commencer"
 	L["%s - Start Action"] = "%s - Commencer une action"
 	L["%s - Start Custom Text"] = "%s - Commencer un texte personnalisé"
-	--[[Translation missing --]]
-	L["%s - Translate Animation"] = "%s - Translate Animation"
+	L["%s - Translate Animation"] = "%s - Traduire l'animation"
 	--[[Translation missing --]]
 	L["%s - Trigger Logic"] = "%s - Trigger Logic"
 	L["%s %s, Lines: %d, Frequency: %0.2f, Length: %d, Thickness: %d"] = "%s %s, Lignes : %d, Fréquence : %0.2f, Longueur : %d, Épaisseur : %d"
@@ -55,23 +53,20 @@ local L = WeakAuras.L
 	L["%s Custom Variables"] = "%s Variables personnalisées"
 	--[[Translation missing --]]
 	L["%s Default Alpha, Zoom, Icon Inset, Aspect Ratio"] = "%s Default Alpha, Zoom, Icon Inset, Aspect Ratio"
-	--[[Translation missing --]]
-	L["%s Duration Function"] = "%s Duration Function"
+	L["%s Duration Function"] = "%s Durée de la fonction"
 	--[[Translation missing --]]
 	L["%s Icon Function"] = "%s Icon Function"
 	L["%s Inset: %d%%"] = "%s Insérer : %d%%"
 	--[[Translation missing --]]
 	L["%s is not a valid SubEvent for COMBAT_LOG_EVENT_UNFILTERED"] = "%s is not a valid SubEvent for COMBAT_LOG_EVENT_UNFILTERED"
 	L["%s Keep Aspect Ratio"] = "%s Conserver les proportions"
-	--[[Translation missing --]]
-	L["%s Name Function"] = "%s Name Function"
+	L["%s Name Function"] = "%s Nom de la fonction"
 	--[[Translation missing --]]
 	L["%s Stacks Function"] = "%s Stacks Function"
 	--[[Translation missing --]]
 	L["%s stores around %s KB of data"] = "%s stores around %s KB of data"
 	L["%s Texture"] = "%s texture"
-	--[[Translation missing --]]
-	L["%s Texture Function"] = "%s Texture Function"
+	L["%s Texture Function"] = "%s Texture de la fonction"
 	L["%s total auras"] = "%s auras au total"
 	--[[Translation missing --]]
 	L["%s Trigger Function"] = "%s Trigger Function"
@@ -566,17 +561,13 @@ Can use \ to escape -.]=]
 	L["Frequency"] = "Fréquence"
 	L["Full Circle"] = "Cercle Complet"
 	L["Global Conditions"] = "Conditions globales"
-	--[[Translation missing --]]
-	L["Glow %s"] = "Glow %s"
-	L["Glow Action"] = "Action de l'éclat"
-	--[[Translation missing --]]
-	L["Glow Anchor"] = "Glow Anchor"
-	L["Glow Color"] = "Couleur de la surbrillance"
-	--[[Translation missing --]]
-	L["Glow External Element"] = "Glow External Element"
-	--[[Translation missing --]]
-	L["Glow Frame Type"] = "Glow Frame Type"
-	L["Glow Type"] = "Type de la surbrillance"
+	L["Glow %s"] = "Faire briller %s"
+	L["Glow Action"] = "Action de la brillance"
+	L["Glow Anchor"] = "Ancre de la brillance"
+	L["Glow Color"] = "Couleur de la brillance"
+	L["Glow External Element"] = "Élément externe brillant"
+	L["Glow Frame Type"] = "Type de cadre brillant"
+	L["Glow Type"] = "Type de la brillance"
 	--[[Translation missing --]]
 	L["Gradient End"] = "Gradient End"
 	--[[Translation missing --]]
@@ -628,8 +619,7 @@ Si le nombre entré est decimal (ex. 0.5), une fraction (ex. 1/2), ou un pourcen
 	L["Hide"] = "Cacher"
 	--[[Translation missing --]]
 	L["Hide Background"] = "Hide Background"
-	--[[Translation missing --]]
-	L["Hide Glows applied by this aura"] = "Hide Glows applied by this aura"
+	L["Hide Glows applied by this aura"] = "Cacher les brillances appliquées par cette aura"
 	L["Hide on"] = "Cacher à"
 	L["Hide this group's children"] = "Cacher les enfants de ce groupe"
 	L["Hide Timer Text"] = "Masquer le texte du minuteur"
@@ -670,7 +660,6 @@ Si cette case est cochée, ce séparateur inclura du texte. Sinon, ce sera juste
 	L["Ignore Disconnected"] = "Ignorer les déconnectés"
 	L["Ignore out of checking range"] = "Ignorer hors de la plage de vérification"
 	L["Ignore Self"] = "Ignorer soi-même"
-	L["Ignore updates"] = "Ignorer les mises à jours"
 	--[[Translation missing --]]
 	L["Ignore Wago updates"] = "Ignore Wago updates"
 	L["Ignored"] = "Ignoré"
@@ -990,7 +979,7 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Show Border"] = "Afficher l'encadrement"
 	--[[Translation missing --]]
 	L["Show Debug Logs"] = "Show Debug Logs"
-	L["Show Glow"] = "Surbrillance"
+	L["Show Glow"] = "Brillance"
 	L["Show Icon"] = "Afficher l'icône"
 	--[[Translation missing --]]
 	L["Show If Unit Does Not Exist"] = "Show If Unit Does Not Exist"
@@ -1010,8 +999,7 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Shows a 3D model from the game files"] = "Affiche un modèle 3D tiré du jeu"
 	L["Shows a border"] = "Affiche un encadrement"
 	L["Shows a custom texture"] = "Affiche une texture personnalisée"
-	--[[Translation missing --]]
-	L["Shows a glow"] = "Shows a glow"
+	L["Shows a glow"] = "Afficher les brillantes"
 	L["Shows a model"] = "Affiche un modèle"
 	L["Shows a progress bar with name, timer, and icon"] = "Affiche une barre de progression avec nom, temps, et icône"
 	L["Shows a spell icon with an optional cooldown overlay"] = "Affiche une icône de sort avec optionnellement la durée ou le temps de recharge intégré"
@@ -1041,6 +1029,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Soft Min"] = "Soft Min"
 	L["Sort"] = "Trier"
 	L["Sound"] = "Son"
+	--[[Translation missing --]]
+	L["Sound by Kit ID"] = "Sound by Kit ID"
 	L["Sound Channel"] = "Canal sonore"
 	L["Sound File Path"] = "Chemin fichier son"
 	L["Sound Kit ID"] = "ID Kit Son"

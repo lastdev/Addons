@@ -100,11 +100,6 @@ local CreateLazyItemButton do
 		GameTooltip:Show()
 		self:SetScript("OnUpdate", OnUpdateSync)
 	end
-	local function OnLeave(self)
-		if GameTooltip:IsOwned(self) then
-			GameTooltip:Hide()
-		end
-	end
 	local function OnShow(self)
 		self.Count:SetText((GetItemCount(itemIDs[self])))
 	end
@@ -125,7 +120,7 @@ local CreateLazyItemButton do
 		f:SetAttribute("type", "macro")
 		f:SetAttribute("macrotext", SLASH_STOPSPELLTARGET1 .. "\n" .. SLASH_USE1 .. " item:" .. itemID)
 		f:SetScript("OnEnter", OnEnter)
-		f:SetScript("OnLeave", OnLeave)
+		f:SetScript("OnLeave", T.HideOwnedGameTooltip)
 		f:SetScript("PreClick", OnClick)
 		T.TenSABT(f)
 		f:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square")

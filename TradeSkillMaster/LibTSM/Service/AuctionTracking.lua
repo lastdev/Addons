@@ -14,6 +14,7 @@ local Event = TSM.Include("Util.Event")
 local Log = TSM.Include("Util.Log")
 local ItemString = TSM.Include("Util.ItemString")
 local TempTable = TSM.Include("Util.TempTable")
+local Table = TSM.Include("Util.Table")
 local Sound = TSM.Include("Util.Sound")
 local Money = TSM.Include("Util.Money")
 local Theme = TSM.Include("Util.Theme")
@@ -29,6 +30,7 @@ local private = {
 	baseItemQuantityQuery = nil,
 	updateQuery = nil, -- luacheck: ignore 1004 - just stored for GC reasons
 	callbacks = {},
+	quantityCallbacks = {},
 	expiresCallbacks = {},
 	indexUpdates = {
 		list = {},
@@ -248,6 +250,10 @@ end)
 
 function AuctionTracking.RegisterCallback(callback)
 	tinsert(private.callbacks, callback)
+end
+
+function AuctionTracking.RegisterQuantityCallback(callback)
+	tinsert(private.quantityCallbacks, callback)
 end
 
 function AuctionTracking.RegisterExpiresCallback(callback)
@@ -529,15 +535,40 @@ end
 -- ============================================================================
 
 function private.RebuildQuantityDB()
-	private.quantityDB:TruncateAndBulkInsertStart()
+	-- Sanitize the settings table
 	for levelItemString, quantity in pairs(private.settings.auctionQuantity) do
-		if quantity > 0 then
-			private.quantityDB:BulkInsertNewRow(levelItemString, quantity)
-		else
+		if quantity <= 0 then
 			private.settings.auctionQuantity[levelItemString] = nil
 		end
 	end
+	local prevQuantities = TempTable.Acquire()
+	private.quantityDB:NewQuery()
+		:Select("levelItemString", "auctionQuantity")
+		:AsTable(prevQuantities)
+		:Release()
+	private.quantityDB:TruncateAndBulkInsertStart()
+	for levelItemString, quantity in pairs(private.settings.auctionQuantity) do
+		private.quantityDB:BulkInsertNewRow(levelItemString, quantity)
+	end
 	private.quantityDB:BulkInsertEnd()
+	local updatedItems = TempTable.Acquire()
+	Table.GetChangedKeys(prevQuantities, private.settings.auctionQuantity, updatedItems)
+	TempTable.Release(prevQuantities)
+	if next(updatedItems) then
+		-- Add the base items
+		local baseItemStrings = TempTable.Acquire()
+		for levelItemString in pairs(updatedItems) do
+			baseItemStrings[ItemString.GetBaseFast(levelItemString)] = true
+		end
+		for baseItemString in pairs(baseItemStrings) do
+			updatedItems[baseItemString] = true
+		end
+		TempTable.Release(baseItemStrings)
+		for _, callback in ipairs(private.quantityCallbacks) do
+			callback(updatedItems)
+		end
+	end
+	TempTable.Release(updatedItems)
 end
 
 function private.GetNumOwnedAuctions()

@@ -519,13 +519,13 @@ function addon:CreateWorldMapClickHandler()
 
         local modKey = TomTom.db.profile.worldmap.create_modifier
         if modKey and verifyFuncs[modKey] and verifyFuncs[modKey](alt, ctrl, shift) then
-            if self.SetPassThroughButtons then
+            if self.SetPassThroughButtons and not InCombatLockdown() then
                 self:SetPassThroughButtons("LeftButton", "MiddleButton", "Button4", "Button5")
             end
 
             self:Show()
         else
-            if self.SetPassThroughButtons then
+            if self.SetPassThroughButtons and not InCombatLockdown() then
                 self:SetPassThroughButtons("LeftButton", "RightButton", "MiddleButton", "Button4", "Button5")
             end
 

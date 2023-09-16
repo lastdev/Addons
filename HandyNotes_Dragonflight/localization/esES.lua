@@ -58,14 +58,6 @@ L['tuskarr_tacklebox'] = 'Cajas de Pesca Colmillar'
 L['options_icons_tuskarr_tacklebox'] = 'Cajas de Pesca Colmillar'
 L['options_icons_tuskarr_tacklebox_desc'] = 'Muestra dónde pueden haber {object:Caja de Pesca Colmillar}.'
 
-L['dr_best'] = 'Tu mejor tiempo:\n - Normal: %.3fs\n - Avanzado: %.3fs\n - Inverso: %.3fs'
-L['dr_best_dash'] = 'Tu mejor tiempo:\n - %.3fs'
-L['dr_note'] = 'Objetivo de tiempo:\n - Normal: %ss / %ss\n - Avanzado: %ss / %ss\n - Inverso: %ss / %ss'
-L['dr_note_dash'] = 'Objetivo de tiempo:\n - %ss / %ss'
-L['dr_bronze'] = '\n\nAcaba la carrera para conseguir el ' .. ns.color.Bronze('Bronce') .. '..'
-L['options_icons_dragonrace'] = 'Carreras de Dragones'
-L['options_icons_dragonrace_desc'] = 'Muestra dónde están todas las Carreras de Dragones de la zona.'
-
 L['squirrels_note'] = 'Has de teclear {emote:/amor} mientras seleccionas alimañas que no sean mascotas de combate.'
 L['options_icons_squirrels'] = '{achievement:16729}'
 L['options_icons_squirrels_desc'] = 'Muestra dónde están las alimañas para el logro {achievement:16729}.'
@@ -587,6 +579,7 @@ Aparecerá una babosa llamada {npc:198590} y huirá a una rama detrás de {npc:1
 Vuelve con {npc:198062}, que está sentado en un banco, y entrega la misión para conseguir tu {item:200872}.
 ]]
 
+L['little_scales_daycare_note'] = 'Necesitas hacer una serie de misiones durante varios días, comenzando con {quest:72664} que te da el {npc:197478}, para conseguir el logro y la mascota.'
 L['naszuro_veiled_ossuary'] = nil
 L['naszuro_algethar_academy'] = nil
 L['naszuro_vault_of_the_incarnates'] = nil
@@ -741,7 +734,7 @@ Lo vende {npc:88045} {dot:Gold} en las {location:Cumbres de Arak}. Si {npc:88045
 Necesitarás los siguientes objetos para comprarlo:]]
 L['phoenix_wishwing_phoenix_ember'] = '%s {item:199099}\nEs botín de {npc:52530} en el {location:Paseo en el tiempo: Tierras de Fuego}.'
 L['phoenix_wishwing_sacred_ash'] = '%s {item:199097}\nSe pueden encontrar dentro de {object:Ollas}, alrededor de las {location:Cumbres de Arak}.'
-L['phoenix_wishwing_inert_ash'] = '%s {item:199092}\nEs un botín raro de los {npc:6520} que hay en el centro del {location:Cráter de Un\'Goro} {dot:Gray}. Estos comparten punto de aparición (pero no su botín) con las {npc:6521}. Asegúrate de matar a todo.'
+L['phoenix_wishwing_inert_ash'] = '%s {item:199092}\nEs un botín raro de los {npc:6520} y de las {npc:6521} que hay en el centro del {location:Cráter de Un\'Goro}. {dot:Gray}'
 L['phoenix_wishwing_smoldering_ash'] = [[
 %s {item:199080}
 
@@ -769,7 +762,7 @@ L['naszuro_dragonheart_outpost'] = 'En la rama del árbol.'
 
 L['in_deepflayer_nest'] = 'Dentro del {location:Nido de los Despellejadores}.'
 
-L['brulsef_the_stronk_note'] = 'Despoja tus recompensas del {object:Cofre de Enormes Beneficios}.\n\n{bug:No le dejes ir muy lejos de la posición inicial o no habrá ningún cofre tras derrotarlo.}'
+L['brulsef_the_stronk_note'] = 'Despoja tus recompensas del {object:Cofre de Enormes Beneficios}.\n\n{bug:No le derrotes mientras esté canalizando {spell:412495} o lanzando {spell:412492}, o no habrá ningún cofre tras derrotarlo.}'
 
 L['ancient_zaqali_chest_note'] = 'Usa el {object:Magma Embotellado} cercano para abrir el cofre.'
 L['blazing_shadowflame_chest_note'] = 'Equipa la {item:15138}, que se puede comprar en la Casa de Subastas o crease por un peletero, para despojar el cofre.'
@@ -808,6 +801,10 @@ L['ponzo_note'] = 'Cambia {item:204985} por personalizaciones para el draco, mas
 L['smelly_trash_pile_label'] = 'Montón de Basura Maloliente'
 L['options_icons_smelly_trash_pile'] = 'Montón de Basura Maloliente'
 L['options_icons_smelly_trash_pile_desc'] = 'Muestra dónde puede haber {object:Montón de Basura Maloliente}.'
+
+L['smelly_treasure_chest_label'] = 'Arqueta Olorosa'
+L['options_icons_smelly_treasure_chest'] = 'Arqueta Olorosa'
+L['options_icons_smelly_treasure_chest_desc'] = 'Muestra dónde puede haber {object:Arqueta Olorosa}.'
 
 L['seething_cache_treasure_note'] = 'Para poder ver el {object:Alijo Hirviente} y despojar la {item:192779} necesitarás coger 3 acumulaciones del debuff {spell:399342} de los {object:Orbe Hirviente} que hay en la zona de la {location:Caldera Zaqali} en la {location:Caverna Zaralek}.'
 L['chest_of_the_flights_treasure_note'] = 'Para abrir el cofre necesitarás hacer click en las {object:Gema Potenciada} en el orden {note:Rojo > Negro > Azul > Amarillo > Verde}.'

@@ -206,7 +206,6 @@ function private.FSMCreate()
 
 	local fsmContext = {
 		frame = nil,
-		craftingPage = nil,
 	}
 	local function UpdateDefaultCraftButton()
 		if CraftFrame and CraftCreateButton and private.craftOpen then
@@ -216,8 +215,6 @@ function private.FSMCreate()
 			CraftCreateButton:SetFrameLevel(2)
 			CraftCreateButton:EnableDrawLayer("BACKGROUND")
 			CraftCreateButton:EnableDrawLayer("ARTWORK")
-			CraftCreateButton:SetHighlightTexture("Interface\\Buttons\\UI-Panel-Button-Highlight")
-			CraftCreateButton:GetHighlightTexture():SetTexCoord(0, 0.625, 0, 0.6875)
 		end
 	end
 	local function DefaultFrameOnHide()
@@ -318,21 +315,6 @@ function private.FSMCreate()
 		:AddState(FSM.NewState("ST_FRAME_OPEN")
 			:SetOnEnter(function(context)
 				assert(not context.frame)
-				if Environment.IsRetail() and not context.craftingPage then
-					if not IsAddOnLoaded("Blizzard_Professions") then
-						LoadAddOn("Blizzard_Professions")
-					end
-					-- Workaround to allow multi-crafting
-					local craftingPage = CreateFrame("Frame", nil, nil, "ProfessionsCraftingPageTemplate")
-					craftingPage:Hide()
-					craftingPage:SetParent(nil)
-					EventRegistry:UnregisterCallback("ProfessionsRecipeListMixin.Event.OnRecipeSelected", craftingPage)
-					EventRegistry:UnregisterCallback("Professions.ProfessionSelected", craftingPage)
-					EventRegistry:UnregisterCallback("Professions.ReagentClicked", craftingPage)
-					EventRegistry:UnregisterCallback("Professions.TransactionUpdated", craftingPage)
-					craftingPage:RegisterEvent("UPDATE_TRADESKILL_CAST_COMPLETE")
-					context.craftingPage = craftingPage
-				end
 				context.frame = private.CreateMainFrame()
 				context.frame:Show()
 				if Profession.GetSkillLine() then

@@ -287,6 +287,7 @@ GTFO.SpellID["236338"] = {
 
 GTFO.SpellID["244954"] = {
   --desc = "Wailing Wall (Death Metal Knight - Darkmoon Faire)";
+  alwaysAlert = true;
   sound = 3;
 };
 

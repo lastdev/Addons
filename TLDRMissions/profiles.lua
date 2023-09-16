@@ -82,6 +82,14 @@ function addon:RefreshProfile()
             LevelRestriction = 3,
             AnimaCostLimit = 300,
             sacrificeRemaining = false,
+            blockCompletion = false,
+            blockCompletionFilters = {
+                noQuest = true,
+                questFinished = true,
+                questPreviouslyFinished = true,
+            },
+            guiX = nil,
+            guiY = nil,
         }
     }
     
@@ -463,6 +471,29 @@ function addon:RefreshProfile()
         end
     end)
     
+    LibDD:UIDropDownMenu_Initialize(TLDRMissionsBlockCompletionDropDown, function(self, level, menuList)
+        local info = LibDD:UIDropDownMenu_CreateInfo()
+        
+        info.text = L["BlockCompletionOption1Label"]
+        info.checked = addon.db.profile.blockCompletionFilters.noQuest
+        info.func = function(self)
+            addon.db.profile.blockCompletionFilters.noQuest = not addon.db.profile.blockCompletionFilters.noQuest
+        end
+        LibDD:UIDropDownMenu_AddButton(info)
+        info.text = L["BlockCompletionOption2Label"]
+        info.checked = addon.db.profile.blockCompletionFilters.questFinished
+        info.func = function(self)
+            addon.db.profile.blockCompletionFilters.questFinished = not addon.db.profile.blockCompletionFilters.questFinished
+        end
+        LibDD:UIDropDownMenu_AddButton(info)
+        info.text = L["BlockCompletionOption3Label"]
+        info.checked = addon.db.profile.blockCompletionFilters.questPreviouslyFinished
+        info.func = function(self)
+            addon.db.profile.blockCompletionFilters.questPreviouslyFinished = not addon.db.profile.blockCompletionFilters.questPreviouslyFinished
+        end
+        LibDD:UIDropDownMenu_AddButton(info)
+    end)
+    
     --preload the items
     for categoryName, category in pairs(addon.sanctumFeatureItems) do
         for itemID in pairs(category) do
@@ -543,6 +574,13 @@ function addon:ProfileChanged()
     addon.GUI.AllowProcessingAnywhereButton:SetChecked(addon.db.profile.allowProcessingAnywhere)
     
     addon.GUI.AutoStartButton:SetChecked(addon.db.profile.autoStart)
+    
+    addon.GUI.BlockCompletionButton:SetChecked(addon.db.profile.blockCompletion)
+    
+    if addon.db.profile.guiX and addon.db.profile.guiY then
+        addon.GUI:ClearAllPoints()
+        addon.GUI:SetPoint("TOPLEFT", CovenantMissionFrame, "TOPLEFT", addon.db.profile.guiX, addon.db.profile.guiY)
+    end
     
     TLDRMissionsFrameDurationLowerSliderText:SetText(L["DurationTimeSelectedLabel"]:format(addon.db.profile.durationLower, addon.db.profile.durationHigher))
     TLDRMissionsFrameDurationLowerSlider:SetValue(addon.db.profile.durationLower)

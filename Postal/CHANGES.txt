@@ -1,8 +1,0 @@
-------------------------------------------------------------------------
-r587 | Zimzarina | 2023-07-31 20:11:56 +0000 (Mon, 31 Jul 2023) | 1 line
-Changed paths:
-   M /trunk/Postal.lua
-
-Adds the ability to have one default profile used for all characters across all realms.  The default profile option only works on characters that do not previously have a Postal profile.  This way no previous profiles are lost unless the user takes specific action to delete the profile.
-------------------------------------------------------------------------
-

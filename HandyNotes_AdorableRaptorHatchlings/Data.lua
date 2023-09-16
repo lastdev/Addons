@@ -5,6 +5,10 @@ local scaling = ns.scaling
 
 -- The EggID was used in my original AddOn to provide am item link in chat
 
+points[ns.dalaran] = {	-- Dalaran
+	[58853896] = { "Breanni", "Obsidian Hatchling", 48118 },
+}
+
 points[ns.dustwallowMarsh] = {	-- Dustwallow Marsh
 	[46511716] = { "Dart's Nest", "Darting Hatchling", 48118 },
 	[47981907] = { "Dart's Nest", "Darting Hatchling", 48118 },

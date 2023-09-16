@@ -1,6 +1,8 @@
 # <DBM Extra> Spell Timers
 
-## [r150](https://github.com/DeadlyBossMods/DBM-SpellTimers/tree/r150) (2023-07-25)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-SpellTimers/compare/r149...r150) [Previous Releases](https://github.com/DeadlyBossMods/DBM-SpellTimers/releases)
+## [r151](https://github.com/DeadlyBossMods/DBM-SpellTimers/tree/r151) (2023-09-05)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-SpellTimers/compare/r150...r151) [Previous Releases](https://github.com/DeadlyBossMods/DBM-SpellTimers/releases)
 
-- classify module type, tweak color  
+- Toc Bumps for retail  
+- classic toc update  
+- Update DBM-SpellTimers.toc (#13)  

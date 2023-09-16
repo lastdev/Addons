@@ -6,7 +6,6 @@
 
 local TSM = select(2, ...) ---@type TSM
 local L = TSM.Include("Locale").GetTable()
-local Environment = TSM.Include("Environment")
 local TableRow = TSM.Include("LibTSMClass").DefineClass("TableRow")
 local Table = TSM.Include("Util.Table")
 local Math = TSM.Include("Util.Math")
@@ -650,11 +649,7 @@ function TableRow._LayoutHeaderRow(self)
 			end
 			-- the minimum header width is either our header icon width or the minimum text width
 			local minHeaderWidth = iconTexture and TextureAtlas.GetWidth(iconTexture) or MIN_TEXT_WIDTH
-			if Environment.HasFeature(Environment.FEATURES.REGION_SET_RESIZE_BOUNDS) then
-				button:SetResizeBounds(max(minContentWidth, minHeaderWidth), 0)
-			else
-				button:SetMinResize(max(minContentWidth, minHeaderWidth), 0)
-			end
+			button:SetResizeBounds(max(minContentWidth, minHeaderWidth), 0)
 
 			-- layout the resizer button
 			local resizerButton = self._buttons["_resizer_"..id]

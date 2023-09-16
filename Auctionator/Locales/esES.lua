@@ -168,9 +168,21 @@ L["CONFIG_SELLING_MISSING_FAVOURITES_TOOLTIP_HEADER"] = "Favoritos que faltan vi
 L["CONFIG_SELLING_MISSING_FAVOURITES_TOOLTIP_TEXT"] = "Muestra los objetos favoritos en la vista de bolsa incluso cuando no están en tu bolsa."
 L["CONFIG_SELLING_NOT_LIFO_HEADER"] = "Venta: Equipo/Mascotas"
 L["CONFIG_SELLING_NOT_LIFO_TEXT"] = "Opciones para establecer porcentajes de descuento o valores y duración del equipo y mascotas enjauladas. Estas categorías de objetos se enumeran individualmente y un comprador puede elegir cuál quiere. El descuento puede ser útil."
+--[[Translation missing --]]
+L["CONFIG_SELLING_POSSESSED_FAVOURITES_FIRST"] = "In favourites item list place favourites you have in your bag first"
+--[[Translation missing --]]
+L["CONFIG_SELLING_POSSESSED_FAVOURITES_FIRST_TOOLTIP_HEADER"] = "Possessed favourites first"
+--[[Translation missing --]]
+L["CONFIG_SELLING_POSSESSED_FAVOURITES_FIRST_TOOLTIP_TEXT"] = "Set the favourites ordering to force any items in your bag to be at the start of the list."
 L["CONFIG_SELLING_POST_SHORTCUT"] = "Atajo del teclado/ratón para publicar el objeto actual es"
 L["CONFIG_SELLING_POST_SHORTCUT_TOOLTIP_TEXT"] = "Haga clic y luego presione los botones que desea utilizar como atajo. Este atajo solo estará activo en la pestaña Venta y no afectará a ningún otro atajo vinculado a los botones."
 L["CONFIG_SELLING_PREV_SHORTCUT"] = "Atajo para volver al objeto seleccionado previamente"
+--[[Translation missing --]]
+L["CONFIG_SELLING_RESELECT_ITEM"] = "Select the last item selected for posting when opening the Selling tab"
+--[[Translation missing --]]
+L["CONFIG_SELLING_RESELECT_ITEM_TOOLTIP_HEADER"] = "Reselect previous item"
+--[[Translation missing --]]
+L["CONFIG_SELLING_RESELECT_ITEM_TOOLTIP_TEXT"] = "After closing the Selling tab and reopening it either during the current session or a later one (including logging out and back in) restore the item selected for posting."
 L["CONFIG_SELLING_SHORTCUTS_CATEGORY"] = "Venta: Atajos"
 L["CONFIG_SELLING_SHORTCUTS_TEXT"] = "Opciones para atajos de teclado y ratón dentro de la pestaña Venta"
 L["CONFIG_SELLING_SHOW_BID_PRICE"] = "Mostrar la opción de precio de puja al publicar un objeto (se requiere recargar) "
@@ -392,6 +404,8 @@ L["RENAME"] = "Renombrar"
 L["RENAME_LIST_CONFIRM"] = "Introduce el nuevo nombre para '%s':"
 L["RENAME_LIST_DIALOG"] = "Ingrese el nombre de la nueva lista de compras:"
 L["RESET_ALL"] = "Resetear todo"
+--[[Translation missing --]]
+L["RESET_COLOR"] = "Reset color"
 L["RESTORE_ALL"] = "Restaurar todos"
 L["RESULTS_AVAILABLE_COLUMN"] = "Disponible"
 L["RESULTS_NAME_COLUMN"] = "Nombre"
@@ -420,6 +434,8 @@ L["SELLERS_OVERFLOW_TEXT"] = "%s y %s más"
 L["SELLING_TAB"] = "Venta"
 L["SELLING_TAB_HEADER"] = "Auctionator - Venta"
 L["SERVER_TOOK_TOO_LONG"] = "El servidor tardó demasiado en responder. Es posible que su acción no haya tenido efecto."
+--[[Translation missing --]]
+L["SET_BAG_ITEM_SELECTION_COLOR"] = "Set bag item selection color"
 L["SET_VALUE"] = "Establecer valor"
 L["SET_VALUE_SUFFIX"] = "Descuento"
 L["SHIFT_LEFT_CLICK"] = "Mayús clic izquierdo"

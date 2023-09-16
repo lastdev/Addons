@@ -201,8 +201,13 @@ function private.DependantSourceIterator(sources, source)
 		source = next(sources, source)
 		if not source then
 			return
-		elseif not strmatch(source, DEPENDENCY_SEP) then
-			return source
+		elseif not strmatch(source, DEPENDENCY_SEP) and source ~= "convert" then
+			return source, source
+		else
+			local convertArg = strmatch(source, "^convert"..DEPENDENCY_SEP.."([a-z]+)")
+			if convertArg then
+				return source, "convert", convertArg
+			end
 		end
 	end
 end

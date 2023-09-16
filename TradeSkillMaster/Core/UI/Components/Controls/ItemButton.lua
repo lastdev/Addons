@@ -37,7 +37,7 @@ function ItemButton:__init()
 	local frame = UIElements.CreateFrame(self, "Button")
 	self.__super:__init(frame)
 
-	BagTracking.RegisterCallback(self:__closure("_HandleBagUpdate"))
+	BagTracking.RegisterQuantityCallback(self:__closure("_HandleBagUpdate"))
 
 	self._highlight = UIElements.CreateTexture(self, frame, "HIGHLIGHT")
 	self._highlight:SetAllPoints()
@@ -116,11 +116,12 @@ end
 -- Private Helper Functions
 -- ============================================================================
 
-function ItemButton.__private:_HandleBagUpdate()
-	if not self._acquired or not self._state.itemString then
+function ItemButton.__private:_HandleBagUpdate(itemsChanged)
+	local itemString = self._acquired and self._state.itemString
+	if not itemString or not itemsChanged[self._state.itemString] then
 		return
 	end
-	self._quantity:SetText(BagTracking.GetBagQuantity(self._state.itemString))
+	self._quantity:SetText(BagTracking.GetBagQuantity(itemString))
 end
 
 

@@ -1,7 +1,8 @@
-## Interface: 100100
+## Interface: 100107
 ## Author: Teelo
 ## Title: Underlight Angler Auto
 ## X-Curse-Project-ID: 724426
 ## IconTexture: 1053367
+## Dependencies: Blizzard_Professions
 
 UnderlightAnglerAuto.lua

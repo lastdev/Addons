@@ -43,6 +43,11 @@ gui:SetScript("OnDragStop", function(self)
             self:SetPoint("RIGHT", CovenantMissionFrame, "LEFT")
         end
     end
+    
+    tldrTop = gui:GetTop()
+    
+    addon.db.profile.guiX = gui:GetLeft() - covLeft
+    addon.db.profile.guiY = tldrTop - covTop
   end)
 
 gui.CloseButton = CreateFrame("Button", "TLDRMissionsFrameCloseButton", gui, "UIPanelCloseButton")
@@ -575,6 +580,22 @@ gui.AutoStartButton:HookScript("OnClick", function()
     addon.db.profile.allowProcessingAnywhere = false
     gui.AllowProcessingAnywhereButton:SetChecked(false)
 end)
+
+gui.BlockCompletionButton = CreateFrame("CheckButton", "TLDRMissionsFrameBlockCompletionButton", gui.AdvancedTabPanel, "UICheckButtonTemplate")
+gui.BlockCompletionButton:SetPoint("TOPLEFT", gui.AutoStartButton, 0, -25)
+gui.BlockCompletionButton.Text:SetText(L["BlockCompletion"])
+gui.BlockCompletionButton.Text:SetWordWrap(true)
+gui.BlockCompletionButton.Text:SetWidth(250)
+gui.BlockCompletionButton.Text:SetJustifyH("LEFT")
+
+gui.BlockCompletionButton:HookScript("OnClick", function()
+    addon.db.profile.blockCompletion = gui.BlockCompletionButton:GetChecked()
+end)
+
+gui.BlockCompletionDropDown = LibDD:Create_UIDropDownMenu("TLDRMissionsBlockCompletionDropDown", gui.AdvancedTabPanel)
+gui.BlockCompletionDropDown:SetPoint("TOPLEFT", TLDRMissionsFrameBlockCompletionButtonText, "TOPRIGHT", -10, 8)
+LibDD:UIDropDownMenu_SetWidth(gui.BlockCompletionDropDown, 10)
+LibDD:UIDropDownMenu_SetText(gui.BlockCompletionDropDown, "")
 
 --
 -- Tab 3

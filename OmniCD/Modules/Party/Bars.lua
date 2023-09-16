@@ -85,8 +85,8 @@ local function CooldownBarFrame_OnEvent(self, event, ...)
 
 		if P.spell_enabled[spellID] or E.spell_modifiers[spellID] then
 			E.ProcessSpell(spellID, guid)
-		elseif spellID == 384255 then
-			if not CM.syncedGroupMembers[guid] then
+		elseif spellID == 384255 or (E.isWOTLKC and (spellID == 63644 or spellID == 63645)) then
+			if guid ~= E.userGUID and not CM.syncedGroupMembers[guid] then
 				CM:EnqueueInspect(nil, guid)
 			end
 		end

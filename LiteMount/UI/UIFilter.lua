@@ -64,7 +64,7 @@ end
 local function FilterSort(a, b)
     if a.isCollected and not b.isCollected then return true end
     if not a.isCollected and b.isCollected then return false end
-    if LM.Environment:CanDragonRide() then
+    if LM.Environment:CanDragonride() then
         if a.dragonRiding and not b.dragonRiding then return true end
     end
     if not a.dragonRiding and b.dragonRiding then return false end
@@ -277,7 +277,7 @@ end
 
 function LM.UIFilter.GetFlagText(f)
     -- "FAVORITES -> _G.FAVORITES
-    return _G[f] or L[f]
+    return L[f] or f
 end
 
 

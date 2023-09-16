@@ -3,12 +3,6 @@ if T.Mark ~= 50 then return end
 local L, G, EV, api = T.L, T.Garrison, T.Evie, T.MissionsUI
 local GameTooltip = T.NotGameTooltip or GameTooltip
 
-local function dismissTooltip(self)
-	if GameTooltip:IsOwned(self) then
-		GameTooltip:Hide()
-	end
-end
-
 local moiContainer, core, loader = CreateFrame("Frame", "MPShipMoI", GarrisonShipyardFrame, "GarrisonBaseInfoBoxTemplate") do
 	moiContainer:SetPoint("TOPLEFT", 33, -64)
 	moiContainer:SetPoint("BOTTOMRIGHT", -35, 34)
@@ -61,7 +55,7 @@ local moiHandle do
 		t:SetPoint("CENTER")
 		b.Border, b.info = t, {}
 		b:SetScript("OnEnter", Threat_OnEnter)
-		b:SetScript("OnLeave", dismissTooltip)
+		b:SetScript("OnLeave", T.HideOwnedGameTooltip)
 		return b
 	end
 	local function SetThreat(self, level, tid, _, icon)

@@ -1,14 +1,24 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("Details_ChartViewer", "itIT") 
 if not L then return end 
 
-L["STRING_ADDEDOKAY"] = "Aggiunto con successo."
-L["STRING_CONFIRM"] = "Confermare"
-L["STRING_NEWTAB"] = "Nuova scheda"
-L["STRING_OPTIONS"] = "Opzioni di visualizzazione grafico"
-L["STRING_OPTIONS_SHOWICON"] = "Mostra icona"
-L["STRING_OPTIONS_WINDOWSCALE"] = "Scala della finestra"
-L["STRING_PLUGIN_DESC"] = "Visualizza i dati raccolti da Details! su semplici grafici a linee."
-L["STRING_PLUGIN_NAME"] = "Visualizzatore di grafici"
-L["STRING_TOOLTIP"] = "Apri Visualizzatore grafici"
-L["STRING_TOOSHORTNAME"] = "Il nome è troppo corto"
+--[[Translation missing --]]
+--[[ L["STRING_ADDEDOKAY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_CONFIRM"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_NEWTAB"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_SHOWICON"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_WINDOWSCALE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_PLUGIN_DESC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_PLUGIN_NAME"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_TOOLTIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_TOOSHORTNAME"] = ""--]] 
 

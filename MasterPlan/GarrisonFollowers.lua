@@ -1143,9 +1143,7 @@ do -- Weapon/Armor upgrades and rerolls
 				if SpellCanTargetGarrisonFollower() then
 					GarrisonFollower_AttemptUpgrade(items.followerID)
 				end
-				if GameTooltip:IsOwned(self) then
-					GameTooltip:Hide()
-				end
+				T.HideOwnedGameTooltip(self)
 			end
 			local buttons = {}
 			for i in ("122274 122273 122272 118354 118475 118474 122275 122584 122580 122582 122583 128314"):gmatch("%d+") do

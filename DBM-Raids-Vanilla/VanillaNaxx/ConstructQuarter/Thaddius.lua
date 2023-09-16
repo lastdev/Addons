@@ -2,7 +2,7 @@
 local mod	= DBM:NewMod("Thaddius", "DBM-Raids-Vanilla", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230713192250")
+mod:SetRevision("20230822035819")
 mod:SetCreatureID(15928)
 mod:SetEncounterID(1120)
 mod:SetModelID(16137)
@@ -29,9 +29,6 @@ local timerNextShift		= mod:NewCDTimer(25.9, 28089, nil, nil, nil, 2, nil, DBM_C
 local timerShiftCast		= mod:NewCastTimer(3, 28089, nil, nil, nil, 5)
 local timerThrow			= mod:NewCDTimer(20.6, 28338, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
-if not DBM.Options.GroupOptionsBySpell then
-	mod:AddMiscLine(DBM_CORE_L.OPTION_CATEGORY_DROPDOWNS)
-end
 mod:AddDropdownOption("AirowsEnabled", {"Never", "TwoCamp", "ArrowsRightLeft", "ArrowsInverse"}, "Never", "misc", nil, 28089)
 
 local currentCharge
@@ -54,7 +51,7 @@ function mod:OnCombatEnd(wipe, isSecondRun)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args.spellId == 28089 then
+	if args:IsSpell(28089) then
 		self:SetStage(2)
 		timerNextShift:Start()
 		timerShiftCast:Start()

@@ -12,7 +12,7 @@ end
 local mod	= DBM:NewMod("Golemagg", "DBM-Raids-Vanilla", catID)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525045438")
+mod:SetRevision("20230814031337")
 mod:SetCreatureID(11988)--, 11672
 mod:SetEncounterID(670)
 if not mod:IsClassic() then
@@ -28,7 +28,7 @@ mod:RegisterEventsInCombat(
 local warnQuake		= mod:NewSpellAnnounce(20553)
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 20553 then
+	if args:IsSpell(20553) then
 		warnQuake:Show()
 	end
 end

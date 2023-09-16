@@ -20,7 +20,7 @@ L["Hide all Pandaria nodes from the map"] = "Versteckt alle Knoten von Pandaria 
 L["Hide all Vanilla nodes from the map"] = "Versteckt alle Knoten von Vanilla auf der Karte"
 L["Hide Dragonflight"] = "Dragonflight ausblenden"
 L["Hide Shadowlands"] = "Schattenlande ausblenden"
-L["Hide Battle for Azeroth"] = "Battle for Atzeroth ausblenden"
+L["Hide Battle for Azeroth"] = "Battle for Azeroth ausblenden"
 L["Hide Broken Isles"] = "Verheerte Inseln Ausblenden"
 L["Hide Cataclysm"] = "Cataclysm ausblenden"
 L["Hide Draenor"] = "Draenor ausblenden"
@@ -57,3 +57,4 @@ L["Use gray icon for dungeons and raids that are locked to any extent"] = "Verwe
 L["Use Lockout Alpha"] = "Sperrdeckkraft verwenden"
 L["Zone Alpha"] = "Deckkraft auf Zone"
 L["Zone Scale"] = "Größe auf Zone"
+

@@ -30,6 +30,10 @@ local internal = {
 	exportText = "",
 }
 
+
+local timeFormatter = CreateFromMixins(SecondsFormatterMixin);
+timeFormatter:Init(1, SecondsFormatter.Abbreviation.Truncate);
+
 hooksecurefunc(C_CVar, "SetCVar", function(cvar, value)
 	if internal.cvarsChanged then return end
 	if cvar == "nameplateShowFriends" then
@@ -137,8 +141,8 @@ function AlertFrame:Create()
 
 	self.clickAnimation = self:CreateAnimationGroup()
 	local alpha = self.clickAnimation:CreateAnimation("Alpha")
-	alpha:SetFromAlpha(0,0)
-	alpha:SetToAlpha(1,1)
+	alpha:SetFromAlpha(0)
+	alpha:SetToAlpha(1)
 	alpha:SetDuration(0.3)
 	alpha:SetScript("OnUpdate", function(self)
 		local p = self:GetSmoothProgress()
@@ -167,9 +171,13 @@ end
 function CS:SetCVars()
 	if not internal.recentlyDisplayedEntry then
 		internal.recentlyDisplayedEntry = true
-		AddMessage("|cffEEE4AE|Hlr4Dedes|hCamel Spotter:|h|r Friendly nameplates have been activated for this zone.")
+		local displayText = "Camel Spotter"
+		local link = LinkUtil.FormatLink("addon", displayText, "CamelSpotter", "help")
+		AddMessage(format("|cffEEE4AE%s:|r %s", link, "Friendly nameplates have been activated for this zone."))
 		if TomTom then
-			AddMessage("|cffEEE4AECamel Spotter:|r |cff85DBF3|HlgDIWxxS|h[Click here]|h|r for TomTom waypoints.")
+			displayText = "[Click Here]"
+			link = LinkUtil.FormatLink("addon", displayText, "CamelSpotter", "setloc")
+			AddMessage(format("|cffEEE4AE%s:|r |cff85DBF3%s|r %s", "Camel Spotter", link, "for TomTom waypoints."))
 		end
 		C_Timer.After(60, function() internal.recentlyDisplayedEntry = false end)
 	end
@@ -243,7 +251,7 @@ function CS:ReportLastSeen()
 		if info.mode == mode then
 			local time = GetServerTime() - info.time
 			local warmodeText, timewalkingText = self:GetWarmodeAndTimewalkingText()
-			AddMessage(string.format("|cffEEE4AE%s:|r %s|cff37DB33 %s|r |cff37DB33(%s%s)|r", "Camel Spotter", "Mysterious Camel Figurine last seen:", SecondsToTime(time), timewalkingText, warmodeText))
+			AddMessage(string.format("|cffEEE4AE%s:|r %s|cff37DB33 %s|r |cff37DB33(%s%s)|r", "Camel Spotter", "Mysterious Camel Figurine last seen:", timeFormatter:Format(time, false, false), timewalkingText, warmodeText))
 			internal.recentlyDisplayed = true
 			break;
 		end
@@ -312,7 +320,7 @@ function CS:Announce(unitID, spawnTime)
 		AlertFrame.animationGroup.Transition:Play()
 		AlertFrame:Show()
 	end
-	local formattedTime = SecondsToTime(ceil(GetServerTime() - spawnTime))
+	local formattedTime = timeFormatter:Format(GetServerTime() - spawnTime, false, true)
 	formattedTime = formattedTime == "" and SECONDS_ABBR:format(0) or formattedTime
 	AddMessage(string.format("|cffEEE4AE%s|r %s %s %s", "Camel Spotter:", "Figurine has been up for", formattedTime, date("(%H:%M %d.%m)", spawnTime)))
 
@@ -481,14 +489,15 @@ function CS:SetWaypoints()
 				worldmap_icon_size = icon_size
 			})
 		end
-		AddMessage("|cffEEE4AECamel Spotter:|r Waypoints added to "..mapInfo.name..".")
+		AddMessage(format("|cffEEE4AE%s:|r %s %s.", "Camel Spotter", "Waypoints added to", mapInfo.name))
 		if currentUIMapID == internal.uldumMapID then
 			TomTom:SetClosestWaypoint()
 		end
-
-		AddMessage("|cffEEE4AECamel Spotter:|r |cff85DBF3|HlgDgRxxS|h[Set Closest Waypoint when needed]|h|r")
+		local displayText = "[Set Closest Waypoint when needed]"
+		local link = LinkUtil.FormatLink("addon", displayText, "CamelSpotter", "closest")
+		AddMessage(format("|cffEEE4AE%s:|r |cff85DBF3%s|r", "Camel Spotter", link))
 	else
-		AddMessage("|cffEEE4AECamel Spotter:|r You need TomTom for this feature.")
+		AddMessage(format("|cffEEE4AE%s:|r |cff85DBF3%s|r", "Camel Spotter", "You need TomTom for this feature."))
 	end
 end
 
@@ -505,7 +514,7 @@ function CS:CreateExportDialog()
 	frame.Text:SetText("Export as CSV, CTRL+C to copy")
 	frame:EnableMouse(true)
 	frame:SetSize(400,200)
-	frame:SetPoint("Center", 0 , 0)
+	frame:SetPoint("CENTER", 0 , 0)
 	--frame:SetMovable(false)
 	frame.EditBox = CreateFrame("EditBox", nil, frame)
 	local offset = 40
@@ -656,22 +665,25 @@ SlashCmdList["CAMELSPOTTER"] = function(...)
 	CS:Help(...)
 end
 
-local SetHyperlink = ItemRefTooltip.SetHyperlink
-function ItemRefTooltip:SetHyperlink(data, ...)
-	if (data):sub(1, 8) == "lgDIWxxS" then
-		if not internal.recentlyClicked then
-			internal.recentlyClicked = true
-			C_Timer.After(5, function() internal.recentlyClicked = false end)
-			CS:SetWaypoints()
+function CS:HandleClick(link)
+	local linkType, linkData = LinkUtil.SplitLinkData(link);
+	if linkType and linkType == "addon" then
+		local addon, type = strsplit(":", linkData)
+		if addon ~= "CamelSpotter" then return end
+		if type == "setloc" then
+			if not internal.recentlyClicked then
+				internal.recentlyClicked = true
+				C_Timer.After(5, function() internal.recentlyClicked = false end)
+				CS:SetWaypoints()
+			end
+		elseif type == "help" then
+			CS:Help("help")
+		elseif type == "closest" then
+			TomTom:SetClosestWaypoint()
 		end
-	elseif (data):sub(1, 8) == "lr4Dedes" then
-		CS:Help("help")
-	elseif (data):sub(1, 8) == "lgDgRxxS" then
-		TomTom:SetClosestWaypoint()
-	else
-		SetHyperlink(self, data, ...)
 	end
 end
 
+EventRegistry:RegisterCallback("SetItemRef", CS.HandleClick, CS)
 CS:SetScript("OnEvent", CS.OnEvent)
 RegisterEvents(CS, internal.events)

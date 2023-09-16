@@ -2076,7 +2076,6 @@ local iconFrame_OnEnter = function(self)
 
 
 		elseif (actor.nome) then --ensure it's an actor table
-
 			local serial = actor.serial
 			local name = actor:name()
 			local class = actor:class()
@@ -2255,6 +2254,7 @@ local iconFrame_OnEnter = function(self)
 				GameCooltip:AddLine("Evoker Predicted Damage:", Details:Format(damageDone) .. " (" .. Details:Format(damageDone / Details:GetCurrentCombat():GetCombatTime()) .. ")", 1, "white")
 				GameCooltip:AddIcon([[]], 1, 1, 1, 20)
 				Details:AddTooltipBackgroundStatusbar()
+				height = height + 19
 			end
 
 			GameCooltip:SetOption("FixedHeight", height)
@@ -3585,12 +3585,7 @@ function gump:CriaJanelaPrincipal (ID, instancia, criando)
 		baseframe:EnableMouseWheel(false)
 		baseframe:EnableMouse(true)
 
-		if (not DetailsFramework.IsDragonflight() and not DetailsFramework.IsWotLKWowWithRetailAPI()) then
-			baseframe:SetMinResize (150, 7)
-			baseframe:SetMaxResize (Details.max_window_size.width, Details.max_window_size.height)
-		else
-			--baseframe:SetResizeBounds(150, 7, _detalhes.max_window_size.width, _detalhes.max_window_size.height)
-		end
+	    baseframe:SetResizeBounds(150, 7, _detalhes.max_window_size.width, _detalhes.max_window_size.height)
 
 		baseframe:SetBackdrop(defaultBackdropSt)
 		baseframe:SetBackdropColor(instancia.bg_r, instancia.bg_g, instancia.bg_b, instancia.bg_alpha)
@@ -4085,9 +4080,12 @@ function gump:CreateNewLine(instance, index)
 	newLine.extraStatusbar:SetMinMaxValues(0, 100)
 	newLine.extraStatusbar.texture = newLine.extraStatusbar:CreateTexture(nil, "overlay")
 	newLine.extraStatusbar:SetStatusBarTexture(newLine.extraStatusbar.texture)
+
 	--by default painting the extraStatusbar with the evoker color
 	local evokerColor = Details.class_colors["EVOKER"]
+	--newLine.extraStatusbar.texture:SetTexture([[Interface\AddOns\Details\images\bar_textures\bar_of_bars.png]]) --setColorTexture is very expensive, so set the color once and use vertex color to change it
 	newLine.extraStatusbar.texture:SetColorTexture(1, 1, 1, 1) --setColorTexture is very expensive, so set the color once and use vertex color to change it
+
 	newLine.extraStatusbar.texture:SetVertexColor(unpack(evokerColor))
 	newLine.extraStatusbar:SetAlpha(0.7)
 	newLine.extraStatusbar.defaultAlpha = 0.7

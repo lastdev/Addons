@@ -1,8 +1,13 @@
+@weswigham:
+- Properly account for timeMod on aura timers.
+
 @cont1nuity:
-- Fixing personal 'alternate power' bar anchoring/positioning (Stagger and Ebon Might).
-- Fixing 'CreateIconGlow' used in mods/scripts for 10.1.5 update.
-- Toc update for 10.1.5 update.
+- BugFix on Lib Update.
+- Fixing code template for 'Options Changed' hook.
 
 @Terciob:
-- DetailsFramework updates.
+- Library updates.
+- Fixing Audi Cues not playing when nameplate was off screen.
+- Fixing mouse scroll lag on Cast Colors an Names tab.
+- Adding 'Options Changed' hook for mods.
 

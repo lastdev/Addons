@@ -92,11 +92,6 @@ local ui, core, handle = CreateFrame("Frame", "MPLandingPageAlts", GarrisonLandi
 			T.SetRecruitTooltip(GameTooltip, self.recruitTime)
 		end
 	end
-	local function Timer_OnLeave(self)
-		if GameTooltip:IsOwned(self) then
-			GameTooltip:Hide()
-		end
-	end
 	local function Timer_OnDone(self)
 		self:GetParent().AltDone:Show()
 	end
@@ -189,7 +184,7 @@ local ui, core, handle = CreateFrame("Frame", "MPLandingPageAlts", GarrisonLandi
 			t:SetScale(42/64)
 			t:SetPoint("RIGHT", (40 -55*i)/t:GetScale(), 0)
 			t:SetScript("OnEnter", Timer_OnEnter)
-			t:SetScript("OnLeave", Timer_OnLeave)
+			t:SetScript("OnLeave", T.HideOwnedGameTooltip)
 			t.Swipe:SetScript("OnCooldownDone", Timer_OnDone)
 			t.Done:Hide()
 			t.BG:Show()

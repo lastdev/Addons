@@ -410,10 +410,10 @@ function HealBot_Text_DeadColours(button)
             dG=Healbot_Config_Skins.BarTextCol[Healbot_Config_Skins.Current_Skin][button.frame]["NDCG"]
             dB=Healbot_Config_Skins.BarTextCol[Healbot_Config_Skins.Current_Skin][button.frame]["NDCB"]
         else
-            dR,dG,dB=0.5, 0.5, 0.5
+            dR,dG,dB=0.58, 0.58, 0.58
         end
     else
-        dR,dG,dB=0.4, 0.4, 0.4
+        dR,dG,dB=0.5, 0.5, 0.5
     end
     return dR,dG,dB
 end
@@ -1146,7 +1146,7 @@ function HealBot_Text_setNameText(button)
         if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["CLASSONBAR"] then
             vSetNameTextClass=UnitClass(button.unit) or ""
             if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["SHOWROLE"] then
-                vSetNameTextRole=HealBot_Panel_UnitRole(button.unit)
+                vSetNameTextRole=HealBot_Panel_UnitRole(button.unit,button.guid)
                 if vSetNameTextRole=="DAMAGER" then
                     vSetNameTextClass=Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["ROLEDPS"] or HEALBOT_WORD_DAMAGER
                 elseif vSetNameTextRole=="HEALER" then
@@ -1445,7 +1445,7 @@ function HealBot_Text_UpdateText(button)
         if button.status.current<HealBot_Unit_Status["DC"] then
             button.text.nr, button.text.ng, button.text.nb = HealBot_Text_TextNameColours(button)
         else
-            button.text.nr, button.text.ng, button.text.nb= 0.5, 0.5, 0.5
+            button.text.nr, button.text.ng, button.text.nb= 0.58, 0.58, 0.58
         end
         if button.status.enabled or button.status.summons then
             button.text.na=HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarTextCol[Healbot_Config_Skins.Current_Skin][button.frame]["NCA"], 1)

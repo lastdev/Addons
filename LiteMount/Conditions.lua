@@ -232,7 +232,7 @@ CONDITIONS["dragonridable"] = {
     name = L.LM_DRAGONRIDING_AREA,
     handler =
         function (cond, context)
-            return LM.Environment:CanDragonRide(context.mapPath)
+            return LM.Environment:CanDragonride(context.mapPath)
         end,
 }
 
@@ -240,8 +240,7 @@ CONDITIONS["dragonriding"] = {
     -- name = MOUNT_JOURNAL_FILTER_DRAGONRIDING,
     handler =
         function (cond, context)
-            local m = LM.MountRegistry:GetActiveMount()
-            return m and m.dragonRiding == true
+            return LM.Environment:IsDragonriding()
         end,
 }
 
@@ -570,8 +569,9 @@ CONDITIONS["known"] = {
     handler =
         function (cond, context, v)
             if v then
-                if tonumber(v) ~= nil then
-                else
+                local spellID = select(7, GetSpellInfo(v))
+                if spellID then
+                    return IsSpellKnown(spellID) or IsPlayerSpell(spellID)
                 end
             end
         end
@@ -579,8 +579,23 @@ CONDITIONS["known"] = {
 
 -- GetMaxLevelForLatestExpansion()
 CONDITIONS["level"] = {
-    name = GUILD_RECRUITMENT_MAXLEVEL,
+    name = LEVEL,
     args = true,
+    menu = {
+        nosort = true,
+        { val = "level" },
+    },
+    toDisplay =
+        function (l1, l2)
+            local maxLevel = GetMaxLevelForLatestExpansion()
+            if l1 == nil then
+                return string.format('%s (%d)', GUILD_RECRUITMENT_MAXLEVEL, maxLevel)
+            elseif l2 == nil then
+                return l1
+            else
+                return string.format("%d - %d", l1, l2)
+            end
+        end,
     handler =
         function (cond, context, l1, l2)
             local level = UnitLevel('player')
@@ -624,6 +639,7 @@ CONDITIONS["loadout"] = {
             end
         end
 }
+
 CONDITIONS["location"] = {
 --  name = LOCATION_COLON:gsub(":", ""),
     toDisplay =
@@ -1150,11 +1166,9 @@ local function IsTransmogSetActive(setID)
     for key, slotInfo in pairs(TRANSMOG_SLOTS) do
         if not slotInfo.location:IsSecondary() then
             local sourceIDs = C_TransmogSets.GetSourceIDsForSlot(setID, slotInfo.location.slotID)
-            if #sourceIDs > 0 then
-                local activeSourceID = GetTransmogLocationSourceID(slotInfo.location)
-                if not tContains(sourceIDs, activeSourceID) then
-                    return false
-                end
+            local activeSourceID = GetTransmogLocationSourceID(slotInfo.location)
+            if not tContains(sourceIDs, activeSourceID) then
+                return false
             end
         end
     end
@@ -1163,6 +1177,10 @@ end
 
 -- This makes me want to kill myself instantly.
 -- See WardrobeOutfitDropDownMixin:IsOutfitDressed()
+
+local ExcludeOutfitSlot = {
+    [INVSLOT_MAINHAND] = true, [INVSLOT_OFFHAND] = true, [INVSLOT_RANGED] = true,
+}
 
 local function IsTransmogOutfitActive(outfitID)
     local outfitInfoList = C_TransmogCollection.GetOutfitItemTransmogInfoList(outfitID)
@@ -1173,7 +1191,7 @@ local function IsTransmogOutfitActive(outfitID)
 
     for slotID, info in ipairs(currentInfoList) do
         if info.appearanceID ~= Constants.Transmog.NoTransmogID then
-            if not info:IsEqual(outfitInfoList[slotID]) then
+            if not ExcludeOutfitSlot[slotID] and not info:IsEqual(outfitInfoList[slotID]) then
                 return false
             end
         end
@@ -1182,7 +1200,7 @@ local function IsTransmogOutfitActive(outfitID)
 end
 
 local function GetTransmogOutfitsMenu()
-    local outfits = { text = L.LM_OUTFITS }
+    local outfits = { text = TRANSMOG_OUTFIT_HYPERLINK_TEXT:match("|t(.*)") }
     for _, id in ipairs(C_TransmogCollection.GetOutfits()) do
         local name = C_TransmogCollection.GetOutfitInfo(id)
         table.insert(outfits, { val = "xmog:"..name, text = name })
@@ -1199,7 +1217,11 @@ local function GetTransmogSetsMenu()
             local name = EJ_GetTierInfo(expansion) or NONE
             byExpansion[expansion] = { text = name }
         end
-        table.insert(byExpansion[expansion], { val = "xmog:"..info.setID, text = info.name })
+        local text = info.name
+        if info.description then
+            text = text .. " (" .. info.description .. ")"
+        end
+        table.insert(byExpansion[expansion], { val = "xmog:"..info.setID, text = text })
     end
     local sets = { nosort = true, text = WARDROBE_SETS }
     for _,t in LM.PairsByKeys(byExpansion) do
@@ -1213,18 +1235,20 @@ end
 
 CONDITIONS["xmog"] = {
     args = true,
+    name = PERKS_VENDOR_CATEGORY_TRANSMOG,
     toDisplay =
         function (v)
             if tonumber(v) then
                 local info = C_TransmogSets.GetSetInfo(v)
-                if info then return
-                    info.name
-                else
-                    return v
+                if info then
+                    if info.description then
+                        return string.format("%s (%s)", info.name, info.description)
+                    else
+                        return info.name
+                    end
                 end
-            else
-                return v
             end
+            return v
         end,
     menu =
         function ()

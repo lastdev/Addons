@@ -95,10 +95,8 @@ L["ENABLE_NO_SCORE_COLORS"] = "关闭所有大秘境分数颜色"
 L["ENABLE_NO_SCORE_COLORS_DESC"] = "关闭分数颜色，所有分数会显示为白色。"
 L["ENABLE_RAIDERIO_CLIENT_ENHANCEMENTS"] = "允许启用Raider.IO客户端增强功能"
 L["ENABLE_RAIDERIO_CLIENT_ENHANCEMENTS_DESC"] = "开启这个将会从Raider.IO客户端下载你的角色具体的Raider.IO大秘境个人信息。"
---[[Translation missing --]]
---[[ L["ENABLE_REPLAY"] = ""--]] 
---[[Translation missing --]]
---[[ L["ENABLE_REPLAY_DESC"] = ""--]] 
+L["ENABLE_REPLAY"] = "显示大秘境回放系统"
+L["ENABLE_REPLAY_DESC"] = "开启此功能后 你将可以与已完成的大秘境记录比赛。"
 L["ENABLE_RWF_MODE_BUTTON"] = "禁用"
 L["ENABLE_RWF_MODE_BUTTON_TOOLTIP"] = "点击以开启冲击世界首杀模式。需要重新加载你的界面。 "
 L["ENABLE_RWF_MODE_RELOAD"] = "你正在开启冲击世界首杀模式。这是为了与大秘境世界首杀比赛一起使用并且只能用于此，并通过Raider.IO客户端上传数据。点击确认重新加载你的界面。"
@@ -149,8 +147,7 @@ L["PREVIOUS_SCORE"] = "之前的大秘境分数 (%s)"
 L["PROFILE_BEST_RUNS"] = "按地下城显示最佳记录"
 L["PROFILE_TOOLTIP_ANCHOR_TOOLTIP"] = "锁定Raider.IO主页框架，或开启自动定位来隐藏这个锚点。"
 L["PROVIDER_NOT_LOADED"] = "|cffFF0000警告:|r |cffFFFFFF%s|r无法找到你目前阵营的数据。请检查你|cffFFFFFF/raiderio|r 的设置 并且开启鼠标提示数据 |cffFFFFFF%s|r."
---[[Translation missing --]]
---[[ L["PVP_DATA_HEADER"] = ""--]] 
+L["PVP_DATA_HEADER"] = "Raider.IO PvP 个人资料"
 L["RAID_BOSS_ATSC_1"] = "狱铸者卡扎拉"
 L["RAID_BOSS_ATSC_2"] = "融合体密室"
 L["RAID_BOSS_ATSC_3"] = "被遗忘的实验体"
@@ -252,54 +249,31 @@ L["RELOAD_LATER"] = "我一会儿再重载界面（Reload）"
 L["RELOAD_NOW"] = "现在重载界面（Reload）"
 L["RELOAD_RWF_MODE_BUTTON"] = "保存"
 L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = "点击保存到储存文件，这将需要重新加载您的界面。"
---[[Translation missing --]]
---[[ L["REPLAY_AUTO_SELECTION"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_AUTO_SELECTION_DESC"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_AUTO_SELECTION_GUILD_BEST"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_AUTO_SELECTION_MOST_RECENT"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_AUTO_SELECTION_PERSONAL_BEST"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_AUTO_SELECTION_STARRED"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_AUTO_SELECTION_TEAM_BEST"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_COPY_URL"] = ""--]] 
+L["REPLAY_AUTO_SELECTION"] = "首选回放类型"
+L["REPLAY_AUTO_SELECTION_DESC"] = "选择你希望自动选择的回放类型。"
+L["REPLAY_AUTO_SELECTION_GUILD_BEST"] = "公会最佳记录"
+L["REPLAY_AUTO_SELECTION_MOST_RECENT"] = "最近记录"
+L["REPLAY_AUTO_SELECTION_PERSONAL_BEST"] = "个人最佳记录"
+L["REPLAY_AUTO_SELECTION_STARRED"] = "星标记录"
+L["REPLAY_AUTO_SELECTION_TEAM_BEST"] = "队伍最佳记录"
+L["REPLAY_MENU_COPY_URL"] = "复制回放URL链接"
 --[[Translation missing --]]
 --[[ L["REPLAY_MENU_DOCK"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_LOCK"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_POSITION"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_REPLAY"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_STYLE"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_TIMING"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_UNDOCK"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_UNLOCK"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_REPLAY_CHANGING"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_SETTINGS_TOOLTIP"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_STYLE_TITLE_MDI"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_STYLE_TITLE_MODERN"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_STYLE_TITLE_MODERN_COMPACT"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_SUMMARY_LOGGED"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_TIMING_TITLE_BOSS"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_TIMING_TITLE_DUNGEON"] = ""--]] 
+L["REPLAY_MENU_LOCK"] = "锁定"
+L["REPLAY_MENU_POSITION"] = "位置"
+L["REPLAY_MENU_REPLAY"] = "回放"
+L["REPLAY_MENU_STYLE"] = "样式"
+L["REPLAY_MENU_TIMING"] = "时间"
+L["REPLAY_MENU_UNDOCK"] = "解锁"
+L["REPLAY_MENU_UNLOCK"] = "解锁"
+L["REPLAY_REPLAY_CHANGING"] = "改变你的回放将重置实时数据"
+L["REPLAY_SETTINGS_TOOLTIP"] = "设置"
+L["REPLAY_STYLE_TITLE_MDI"] = "MDI"
+L["REPLAY_STYLE_TITLE_MODERN"] = "标准"
+L["REPLAY_STYLE_TITLE_MODERN_COMPACT"] = "紧凑"
+L["REPLAY_SUMMARY_LOGGED"] = "|cffFFFFFF%s|r 上传了你用时 |cffFFFFFF%s|r. 完成了 |cffFFFFFF+%s|r 的记录。"
+L["REPLAY_TIMING_TITLE_BOSS"] = "首领时间"
+L["REPLAY_TIMING_TITLE_DUNGEON"] = "地下城时间"
 L["RWF_MINIBUTTON_TOOLTIP"] = "每当有待处理的战利品时左键单击。 这将会重新加载你的界面。 右键单击以打开冲击世界首杀框架。"
 L["RWF_SUBTITLE_LOGGING_FILTERED_LOOT"] = "（记录相关项目）"
 L["RWF_SUBTITLE_LOGGING_LOOT"] = "（记录战利品）"

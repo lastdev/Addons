@@ -426,6 +426,25 @@ GTFO.SpellID["417288"] = {
   sound = 1;
 };
 
+GTFO.SpellID["417574"] = {
+  --desc = "Fel Gurrbllluurrbbblluurrr (Gill'dan)";
+  sound = 1;
+};
+
+GTFO.SpellID["418480"] = {
+  --desc = "Fel Beam (Illidan Stormrage)";
+  sound = 1;
+};
+
+GTFO.SpellID["422376"] = {
+  --desc = "Wildfire";
+  sound = 1;
+};
+
+GTFO.SpellID["422604"] = {
+  --desc = "Lingering Flames (Larodar, Keeper of the Flame)";
+  sound = 1;
+};
 
 --- *******************
 --- * Ruby Life Pools *

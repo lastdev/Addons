@@ -1,7 +1,7 @@
 --- AceDBOptions-3.0 provides a universal AceConfig options screen for managing AceDB-3.0 profiles.
 -- @class file
 -- @name AceDBOptions-3.0
--- @release $Id: AceDBOptions-3.0.lua 1303 2023-05-16 15:05:10Z nevcairiel $
+-- @release $Id: AceDBOptions-3.0.lua 1304 2023-05-19 19:50:10Z nevcairiel $
 local ACEDBO_MAJOR, ACEDBO_MINOR = "AceDBOptions-3.0", 15
 local AceDBOptions = LibStub:NewLibrary(ACEDBO_MAJOR, ACEDBO_MINOR)
 
@@ -175,13 +175,13 @@ elseif LOCALE == "ruRU" then
 	L["delete_confirm"] = "Вы уверены, что хотите удалить выбранный профиль?"
 	L["delete_desc"] = "Удаление существующего и неиспользуемого профиля из базы данных для сохранения места, и очистка файла SavedVariables."
 	L["delete_sub"] = "Удаление профиля из базы данных."
-	L["intro"] = "Изменяя активный профиль, вы можете задать разные настройки для каждого персонажа."
+	L["intro"] = "Изменяя активный профиль, Вы можете задать разные настройки для каждого персонажа."
 	L["new"] = "Новый"
 	L["new_sub"] = "Создание нового чистого профиля."
 	L["profiles"] = "Профили"
 	L["profiles_sub"] = "Управление профилями"
 	L["reset"] = "Сбросить профиль"
-	L["reset_desc"] = "Сброс текущего профиля к стандартным настройкам, если ваша конфигурация испорчена или вы хотите настроить все заново."
+	L["reset_desc"] = "Сброс текущего профиля к стандартным настройкам, если Ваша конфигурация испорчена или Вы хотите настроить все заново."
 	L["reset_sub"] = "Сброс текущего профиля на стандартный"
 elseif LOCALE == "itIT" then
 	L["choose"] = "Profili Esistenti"

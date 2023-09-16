@@ -58,14 +58,6 @@ L['tuskarr_tacklebox'] = 'Boîte d\'appâts de pêche roharts'
 L['options_icons_tuskarr_tacklebox'] = 'Boîtes d\'appâts de pêche roharts'
 L['options_icons_tuskarr_tacklebox_desc'] = 'Afficher les emplacements possibles des {object:Boîtes d\'appâts de pêche roharts}.'
 
-L['dr_best'] = 'Votre meilleur temps :\n - Normal : %.3fs\n - Avancé : %.3fs\n - Inversé : %.3fs'
-L['dr_best_dash'] = 'Votre meilleur temps :\n - %.3fs'
-L['dr_note'] = 'Temps imparti :\n - Normal : %ss / %ss\n - Avancé : %ss / %ss\n - Inversé : %ss / %ss'
-L['dr_note_dash'] = 'Temps imparti :\n - %ss / %ss'
-L['dr_bronze'] = '\n\nTerminez la course pour obtenir ' .. ns.color.Bronze('Bronze') .. '.'
-L['options_icons_dragonrace'] = 'Courses du Vol à dos de dragon'
-L['options_icons_dragonrace_desc'] = 'Afficher les emplacements de toutes les courses dans la zone.'
-
 L['squirrels_note'] = 'Vous devez utiliser l\'émote /amour sur les bestioles, pas sur les familiers de combat.'
 L['options_icons_squirrels'] = '{achievement:16729}'
 L['options_icons_squirrels_desc'] = 'Afficher les emplacements des bestioles pour le haut-fait {achievement:16729}.'
@@ -587,6 +579,7 @@ Un petit slime nommé {npc:198590} apparaîtra et s'enfuira vers une branche sit
 Revenez voir {npc:198062}, assis sur un banc, et rendez la quête pour obtenir votre {item:200872}.
 ]]
 
+L['little_scales_daycare_note'] = 'Vous devez réaliser une suite de quêtes sur plusieurs jours, en commençant par {quest:72664} donnée par le {npc:197478}, pour obtenir ce haut-fait et cette mascotte.'
 L['naszuro_veiled_ossuary'] = 'A côté du petit sanctuaire.'
 L['naszuro_algethar_academy'] = 'Sur le rebord au sommet de la tour.'
 L['naszuro_vault_of_the_incarnates'] = 'Au pied de la statue.'
@@ -740,7 +733,7 @@ Il est vendu par {npc:88045} {dot:Gold} aux {location:Flèches d’Arak}. Si {np
 Vous avez besoin des objets suivants pour l'acheter :]]
 L['phoenix_wishwing_phoenix_ember'] = '%s {item:199099}\nRécupérée sur {npc:52530} aux {location:Terres de Feu} en mode {location:Marcheurs du temps}'
 L['phoenix_wishwing_sacred_ash'] = '%s {item:199097}\nPeuvent être trouvées dans des {object:Marmites}, situées dans la zone des {location:Flèches d’Arak}.'
-L['phoenix_wishwing_inert_ash'] = '%s {item:199092}\nLâchées rarement sur les {npc:6520} au centre du {location:Cratère d’Un’Goro} {dot:Gray}. Ils partagent leurs points d\'apparition avec les {npc:6521} (qui ne donnent pas l\'objet), assurez-vous donc de tuer chaque sorte.'
+L['phoenix_wishwing_inert_ash'] = '%s {item:199092}\nLâchées rarement sur les {npc:6520} et les {npc:6521} au centre du {location:Cratère d’Un’Goro} {dot:Gray}.'
 L['phoenix_wishwing_smoldering_ash'] = [[
 %s {item:199080}
 Tuez des {npc:Phénix} {dot:Yellow} tels que les {npc:181764} ou les {npc:195448} présents sur les {location:Îles aux Dragons}.
@@ -766,7 +759,7 @@ L['naszuro_dragonheart_outpost'] = 'Sur les branches de l\'arbre.'
 
 L['in_deepflayer_nest'] = 'A l\'intérieur du {location:Nid de flagellants des profondeurs}'
 
-L['brulsef_the_stronk_note'] = 'Récupérez vos récompenses à partir du {object:Coffre de gains massifs}.\n\n{bug:Ne le laissez pas trop s\'éloigner de sa position initiale, sinon le coffre ne sera pas disponible après l\'avoir vaincu.}'
+L['brulsef_the_stronk_note'] = 'Récupérez vos récompenses à partir du {object:Coffre de gains massifs}.\n\n{bug:Ne le vainquez pas pendant qu\'il canalise {spell:412495} ou lance {spell:412492}, sinon le coffre ne sera pas disponible après l\'avoir vaincu.}'
 
 L['ancient_zaqali_chest_note'] = 'Utilisez un {object:Magma en bouteille} à proximité pour ouvrir le coffre.'
 L['blazing_shadowflame_chest_note'] = 'Équipez la {item:15138}, qui peut être achetée à l\'hôtel des ventes ou fabriquée par un travailleur du cuir, pour pouvoir ouvrir le coffre.'
@@ -805,6 +798,10 @@ L['ponzo_note'] = 'Échangez vos {item:204985} et vos {item:205188} contre des p
 L['smelly_trash_pile_label'] = 'Tas de déchets kifouette'
 L['options_icons_smelly_trash_pile'] = 'Tas de déchets kifouette'
 L['options_icons_smelly_trash_pile_desc'] = 'Afficher les emplacements possibles des {object:Tas de déchets kifouette}.'
+
+L['smelly_treasure_chest_label'] = 'Coffre au trésor kifouette'
+L['options_icons_smelly_treasure_chest'] = 'Coffres au trésor kifouette'
+L['options_icons_smelly_treasure_chest_desc'] = 'Afficher les emplacements possibles des {object:Coffres au trésor kifouette}.'
 
 L['seething_cache_treasure_note'] = 'Pour pouvoir voir la {object:Cache bouillonnante} et récupérer le {item:192779}, vous devrez obtenir 3x charges du debuff {spell:399342}, récupéré sur les {object:Orbes bouillonnants} situés à la {location:Caldeira Zaqali} dans la {location:Grotte de Zaralek}.'
 L['chest_of_the_flights_treasure_note'] = 'Pour ouvrir le coffre au trésor, vous devez cliquer sur les {object:Gemmes renforcées} dans l\'ordre {note:Rouge > Noire > Bleue > Jaune > Verte}.'

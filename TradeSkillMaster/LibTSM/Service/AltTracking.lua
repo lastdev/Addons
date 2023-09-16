@@ -20,7 +20,7 @@ local private = {
 	quantityDB = nil,
 	baseItemQuantityQuery = nil,
 	characterFactionrealmCache = {},
-	callbacks = {},
+	quantityCallbacks = {},
 }
 local CACHE_SEP = "\001"
 local MIRROR_SETTING_KEYS = {
@@ -74,8 +74,8 @@ end)
 -- Module Functions
 -- ============================================================================
 
-function AltTracking.RegisterCallback(callback)
-	tinsert(private.callbacks, callback)
+function AltTracking.RegisterQuantityCallback(callback)
+	tinsert(private.quantityCallbacks, callback)
 end
 
 function AltTracking.QuantityIterator()
@@ -225,6 +225,11 @@ function private.UpdateDB()
 		end
 	end
 	sort(private.characterFactionrealmCache)
+	local prevQuantities = TempTable.Acquire()
+	private.quantityDB:NewQuery()
+		:Select("levelItemString", "total")
+		:AsTable(prevQuantities)
+		:Release()
 	private.quantityDB:TruncateAndBulkInsertStart()
 	for levelItemString, quantity in pairs(totalQuantity) do
 		local auction = (auctionQuantity[levelItemString] or 0)
@@ -232,11 +237,26 @@ function private.UpdateDB()
 		private.quantityDB:BulkInsertNewRow(levelItemString, quantity, quantity - auction, auction)
 	end
 	private.quantityDB:BulkInsertEnd()
+	local updatedItems = TempTable.Acquire()
+	Table.GetChangedKeys(prevQuantities, totalQuantity, updatedItems)
+	TempTable.Release(prevQuantities)
 	TempTable.Release(totalQuantity)
 	TempTable.Release(auctionQuantity)
-	for _, callback in ipairs(private.callbacks) do
-		callback()
+	if next(updatedItems) then
+		-- Add the base items
+		local baseItemStrings = TempTable.Acquire()
+		for levelItemString in pairs(updatedItems) do
+			baseItemStrings[ItemString.GetBaseFast(levelItemString)] = true
+		end
+		for baseItemString in pairs(baseItemStrings) do
+			updatedItems[baseItemString] = true
+		end
+		TempTable.Release(baseItemStrings)
+		for _, callback in ipairs(private.quantityCallbacks) do
+			callback(updatedItems)
+		end
 	end
+	TempTable.Release(updatedItems)
 end
 
 function private.GetInventoryValue(itemString, settingKey, character, factionrealm)

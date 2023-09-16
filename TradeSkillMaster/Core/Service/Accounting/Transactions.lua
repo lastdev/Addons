@@ -141,7 +141,7 @@ function Transactions.OnInitialize()
 		:NotEqual("source", "Vendor")
 	private.syncHashesThread = Threading.New("TRANSACTIONS_SYNC_HASHES", private.SyncHashesThread)
 
-	Inventory.RegisterCallback(private.InventoryCallback)
+	Inventory.RegisterDependentCustomSource("SmartAvgBuy")
 end
 
 function Transactions.OnDisable()
@@ -327,8 +327,13 @@ function Transactions.GetAverageSalePrice(itemString)
 	return Math.Round(totalPrice / totalNum), totalNum
 end
 
-function Transactions.GetAverageBuyPrice(itemString, isSmart)
-	local totalPrice, totalNum = Transactions.GetBuyStats(itemString, isSmart)
+function Transactions.GetAverageBuyPrice(itemString)
+	local totalPrice, totalNum = Transactions.GetBuyStats(itemString, false)
+	return totalPrice and Math.Round(totalPrice / totalNum) or nil
+end
+
+function Transactions.GetSmartAverageBuyPrice(itemString)
+	local totalPrice, totalNum = Transactions.GetBuyStats(itemString, true)
 	return totalPrice and Math.Round(totalPrice / totalNum) or nil
 end
 
@@ -859,10 +864,6 @@ function private.CalculateSyncHashesThreaded(player)
 	end
 	private.syncHashDayCacheIsInvalid[player] = nil
 	Log.Info("Updated sync hashes for player (%s)", player)
-end
-
-function private.InventoryCallback()
-	CustomPrice.OnSourceChange("SmartAvgBuy")
 end
 
 function private.GetItemQuery(itemString)

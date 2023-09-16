@@ -3,7 +3,7 @@
 
                                           Dark Soil Tillers
 
-                                       v3.22 - 31st July 2023
+                                      v3.27 - 25th August 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----

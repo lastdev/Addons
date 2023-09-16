@@ -63,8 +63,7 @@ function BagToBankMoveContext.GetEmptySlotsThreaded(self, emptySlotIds)
 		private.GetEmptySlotsHelper(REAGENTBANK_CONTAINER, emptySlotIds, sortValue)
 	end
 	private.GetEmptySlotsHelper(BANK_CONTAINER, emptySlotIds, sortValue)
-	local firstBankBag, lastBankBag = Container.GetBankBagIndexes()
-	for bag = firstBankBag, lastBankBag do
+	for _, bag in Container.BankBagIterator() do
 		private.GetEmptySlotsHelper(bag, emptySlotIds, sortValue)
 	end
 	Table.SortWithValueLookup(emptySlotIds, sortValue)

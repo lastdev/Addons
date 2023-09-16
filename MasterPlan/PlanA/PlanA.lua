@@ -196,6 +196,15 @@ if (GARRISON_LANDING_COVIEW_PATCH_VERSION or 0) < 3 then
 	end)
 end
 
+local function FixBuildingsInMissionList(items)
+	for i=#items,1,-1 do
+		i = items[i]
+		if i.isBuilding then
+			i.followerTypeID, i.level, i.isMaxLevel, i.iLevel, i.durationSeconds, i.missionID = 1, 40, true, 900, 0, 0
+		end
+	end
+end
+
 function E:ADDON_LOADED(addon)
 	if addon == addonName then
 		cdata = gett(_G, "MasterPlanAG", GetRealmName(), UnitName("player"))
@@ -208,6 +217,7 @@ function E:ADDON_LOADED(addon)
 end
 function E:ADDON_LOADED(addon)
 	if addon == "Blizzard_GarrisonUI" then
+		hooksecurefunc("GarrisonLandingPageReportMission_FilterOutCombatAllyMissions", FixBuildingsInMissionList)
 		LoadMPOnShow(GarrisonMissionFrame)
 		LoadMPOnShow(GarrisonShipyardFrame)
 		LoadMPOnShow(GarrisonRecruiterFrame)

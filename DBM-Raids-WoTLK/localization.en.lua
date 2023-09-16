@@ -1174,7 +1174,8 @@ L:SetOptionLocalization{
 }
 
 L:SetMiscLocalization{
-	YellReanimatedFanatic	= "Arise, and exult in your pure form!"
+	YellReanimatedFanatic		= "Arise, and exult in your pure form!",
+	ReanimatedAdd				= "Reanimated Add"
 }
 
 ----------------------
@@ -1238,7 +1239,6 @@ L:SetGeneralLocalization{
 }
 
 L:SetOptionLocalization{
-	AnnounceSporeIcons	= "Announce icons for $spell:69279 targets to raid chat<br/>(requires raid leader)",
 	AchievementCheck	= "Announce 'Flu Shot Shortage' achievement failure to raid<br/>(requires promoted status)"
 }
 
@@ -1349,14 +1349,16 @@ L:SetTimerLocalization{
 L:SetOptionLocalization{
 	SetIconOnBlazingSkeleton	= "Set icon on Blazing Skeleton (skull)",
 	WarnPortalOpen				= "Show warning when Nightmare Portals are opened up",
-	TimerPortalsOpen			= "Show timer when Nightmare Portals are opened up",
-	TimerPortalsClose			= "Show timer when Nightmare Portals are closed",
+	TimerPortalsOpen			= "Show cast timer for when Nightmare Portals open",
+	TimerPortalsClose			= "Show timer for when Nightmare Portals close",
 	TimerBlazingSkeleton		= "Show timer for next Blazing Skeleton spawn",
 	TimerAbom					= "Show timer for next Gluttonous Abomination spawn (Experimental)"
 }
 
 L:SetMiscLocalization{
-	YellPortals		= "I have opened a portal into the Dream. Your salvation lies within, heroes..."
+	YellPortals					= "I have opened a portal into the Dream. Your salvation lies within, heroes...",
+	BlazingSkeleton				= "Blazing Skeleton",
+	GluttonousAbomination		= "Gluttonous Abomination"
 }
 
 ------------------
@@ -1385,7 +1387,7 @@ L:SetOptionLocalization{
 	TimerNextAirphase		= "Show timer for next air phase",
 	TimerNextGroundphase	= "Show timer for next ground phase",
 	AnnounceFrostBeaconIcons= "Announce icons for $spell:70126 targets to raid chat<br/>(requires raid leader)",
-	ClearIconsOnAirphase	= "Clear all icons before air phase",
+	ClearIconsOnAir			= "Clear all icons before air phase",
 	AchievementCheck		= "Announce 'All You Can Eat' achievement warnings to raid<br/>(requires promoted status)"
 }
 

@@ -152,7 +152,7 @@ function Postal:OnInitialize()
 	end
 
 	-- Register events
-	if Postal.WOWClassic or Postal.WOWBCClassic then
+	if Postal.WOWBCClassic then
 		self:RegisterEvent("MAIL_CLOSED")
 	else
 		self:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE")

@@ -83,6 +83,18 @@ L["Action Button Glow"] = "동작 버튼 반짝임"
 L["Action Usable"] = "사용 가능"
 L["Actions"] = "동작"
 L["Active"] = "활성화"
+--[[Translation missing --]]
+L[ [=[Active boss mod addon: |cFFffcc00BigWigs|r
+
+Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=] ] = [=[Active boss mod addon: |cFFffcc00BigWigs|r
+
+Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=]
+--[[Translation missing --]]
+L[ [=[Active boss mod addon: |cFFffcc00DBM|r
+
+Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=] ] = [=[Active boss mod addon: |cFFffcc00DBM|r
+
+Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=]
 L["Add"] = "추가"
 L["Add Missing Auras"] = "없어진 효과 추가"
 L["Additional Trigger Replacements"] = "추가 활성 조건 교체"
@@ -222,6 +234,14 @@ L["Blood-Queen Lana'thel"] = "피의 여왕 라나텔"
 L["Border"] = "테두리"
 L["Boss"] = "우두머리"
 L["Boss Emote"] = "우두머리 감정 표현"
+--[[Translation missing --]]
+L["Boss Mod Announce"] = "Boss Mod Announce"
+--[[Translation missing --]]
+L["Boss Mod Stage"] = "Boss Mod Stage"
+--[[Translation missing --]]
+L["Boss Mod Stage (Event)"] = "Boss Mod Stage (Event)"
+--[[Translation missing --]]
+L["Boss Mod Timer"] = "Boss Mod Timer"
 L["Boss Whisper"] = "우두머리 귓속말"
 L["Bottom"] = "하단"
 L["Bottom Left"] = "좌측 하단"
@@ -566,6 +586,8 @@ L["Expertise Rating"] = "숙련도"
 L["Extend Outside"] = "외부 확장"
 L["Extra Amount"] = "추가 수치"
 L["Extra Attacks"] = "추가 공격"
+--[[Translation missing --]]
+L["Extra Spell Id"] = "Extra Spell Id"
 L["Extra Spell Name"] = "추가 주문 이름"
 L["Faction"] = "진영"
 L["Faction Champions"] = "진영 용사"
@@ -785,6 +807,8 @@ L["Is Death Rune"] = "Is Death Rune"
 L["Is Exactly"] = "정확할 때"
 L["Is Moving"] = "이동 중일 때"
 L["Is Off Hand"] = "보조장비일 때"
+--[[Translation missing --]]
+L["Is Paused"] = "Is Paused"
 L["is useable"] = "사용 가능할 때"
 L["Island Expedition (Heroic)"] = "군도 탐험 (영웅)"
 L["Island Expedition (Mythic)"] = "군도 탐험 (신화)"
@@ -947,6 +971,12 @@ L["Neutral"] = "중립"
 L["Never"] = "절대 안 함"
 L["Next Combat"] = "다음 전투"
 L["Next Encounter"] = "다음 교전"
+--[[Translation missing --]]
+L[ [=[No active boss mod addon detected.
+
+Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=] ] = [=[No active boss mod addon detected.
+
+Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=]
 --[[Translation missing --]]
 L["No Extend"] = "No Extend"
 L["No Instance"] = "인스턴스가 아닐 때"

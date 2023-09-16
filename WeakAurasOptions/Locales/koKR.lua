@@ -648,8 +648,6 @@ Can use \ to escape -.]=] ] = "필터 형식: '이름', '이름-서버', '-서�
 	L["Ignore out of checking range"] = "Ignore out of checking range"
 	L["Ignore Self"] = "본인 무시"
 	--[[Translation missing --]]
-	L["Ignore updates"] = "Ignore updates"
-	--[[Translation missing --]]
 	L["Ignore Wago updates"] = "Ignore Wago updates"
 	L["Ignored"] = "무시됨"
 	L["Ignored Aura Name"] = "무시된 효과 이름"
@@ -985,6 +983,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Soft Min"] = "Soft Min"
 	L["Sort"] = "정렬"
 	L["Sound"] = "소리"
+	--[[Translation missing --]]
+	L["Sound by Kit ID"] = "Sound by Kit ID"
 	L["Sound Channel"] = "소리 채널"
 	L["Sound File Path"] = "소리 파일 경로"
 	L["Sound Kit ID"] = "소리 Kit ID"

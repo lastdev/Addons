@@ -1,6 +1,24 @@
 ------------------------------------------------------------------------------
 -- Dragonflight
 --
+v10.1.7.2769
+	Ultimate Sacrifice will correctly go on cooldown when used.
+	Ultimate Sacrifice CD fixed to 2min and benefits from Sacrifice of the Just.
+
+v10.1.7.2768
+	Patch 10.1.7 spell updates
+	PRIEST Angel's Mercy has been redesigned – Now reduces the cooldown of Desperate Prayer by 20 seconds.
+	AUGUST 21, 2023 Hotfixes - Dead of Winter now increases the cooldown of Remorseless Winter by 10 seconds (was 25 seconds).
+
+v10.1.5.2767
+	AUGUST 7, 2023 Hotfixes - San’layn now reduces the cooldown of Vampiric Embrace by 30 seconds (was 45 seconds)
+	AUGUST 3, 2023 Hotfixes - Fixed an issue where Flow State would not increase the cooldown recovery rate of Emerald Communion.
+	Undulating Sporecloak will correctly show for the player and non-synced units
+	Casting Fire Blast will correctly reduce the cooldown of cc abilities with Time Manipulation
+
+v10.1.5.2765
+	Undulating Sporecloak will correctly show for the player and non-synced units
+
 v10.1.5.2764
 	JULY 24, 2023 Hotfixes
 	- Angel's Mercy's cooldown reduction is now 25% effective in PvP Combat.
@@ -765,6 +783,9 @@ v2.5.0
 ------------------------------------------------------------------------------
 -- WOTLKC
 --
+v3.4.2.2768
+	Cooldowns will correctly update when non-synced units change specialization
+
 v3.4.2.2762
 	bump toc
 
@@ -887,6 +908,9 @@ v2.6.01-bcc
 ------------------------------------------------------------------------------
 -- classic era
 --
+v1.14.4.2768
+	bump toc
+
 v1.14.3.2754
 	Fixed a critical error that caused all CD modifiers to be ignored. Incompatible table format after merging with retail wow
 

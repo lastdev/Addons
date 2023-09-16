@@ -1,35 +1,42 @@
-# [5.6.0](https://github.com/WeakAuras/WeakAuras2/tree/5.6.0) (2023-07-10)
+# [5.7.1](https://github.com/WeakAuras/WeakAuras2/tree/5.7.1) (2023-09-06)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/5.5.7...5.6.0)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/5.7.0...5.7.1)
 
 ## Highlights
 
- - Support new specialization and patch features
-- Fixes for DBM/BW triggers
-- Condition titles are now dynamic and pretty 
+ - Improvements to triggers
+- Sound previews on dropdown selections
+- Bug fixes 
 
 ## Commits
 
 InfusOnWoW (4):
 
-- BT2: Fix GROUP_ROSTER_UPDATE handling
-- Fix Item Set equipped trigger
-- Fix delayed anchoring of dynamic groups
-- Change SpinBox to emit MouseUp/OnValueChanged
+- Templates: Add Grove Guardins
+- BT2: Fix tooltip parsing for negative numbers
+- BT2: Update auras 2s after initial login
+- Add a paused condition for timed durations (#4573)
 
-Stanzilla (1):
+Jods (1):
 
-- Update TOC for retail patch 10.1.5
+- fix #4575
 
-mrbuds (9):
+Stanzilla (2):
 
-- Add new type of glow called "Proc Glow"
-- DBM Triggers: use count from callback instead of parsing text
-- Action - Chat message: fix sending to a unit on an other server #4517
-- Fix error with bogus update data #4518
-- add Augmentation spec templates
-- Fix error in DBM Timer trigger when extending timer
-- Change WeakAurasOptions background to match PANEL_BACKGROUND_COLOR
-- Pretty condition titles
-- Give triggers titles slightly more descriptive names
+- Bump TOC for Retail
+- Bump TOC for Era
+
+mrbuds (11):
+
+- Fix spell fields focus for non-aura triggers and load options
+- Fix anchor to screen for auras in a group
+- Bossmod Timer fix (#4584)
+- Sub Text Element: Show formatting options for all %-replacements
+- Condition of Text type auras can edit text
+- Combat Log trigger: add extraSpellId for apropriate subEvents
+- Add sound preview on sound selection dropdowns
+- Delay & Duration fields show time converted to [[HH:]MM:]ss format
+- tune "spell" option width & alignment
+- On Aura trigger, show spell name when typing spell id
+- For Combat Log, DBM Timer, BigWigs Timer triggers, spellId field show icon & name of spell
 

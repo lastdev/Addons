@@ -9,7 +9,7 @@ end
 local mod	= DBM:NewMod("Arlokk", "DBM-Raids-Vanilla", catID)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525041212")
+mod:SetRevision("20230814031337")
 mod:SetCreatureID(14515)
 mod:SetEncounterID(791)
 mod:RegisterCombat("combat")
@@ -27,21 +27,21 @@ local specWarnMark	= mod:NewSpecialWarningYou(24210, nil, nil, nil, 1, 2)
 local timerPain		= mod:NewTargetTimer(18, 24212, nil, "RemoveMagic|Healer", nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 24210 then
+	if args:IsSpell(24210) then
 		if args:IsPlayer() then
 			specWarnMark:Show()
 			specWarnMark:Play("targetyou")
 		else
 			warnMark:Show(args.destName)
 		end
-	elseif args.spellId == 24212 and args:IsDestTypePlayer() then
+	elseif args:IsSpell(24212) and args:IsDestTypePlayer() then
 		warnPain:Show(args.destName)
 		timerPain:Start(args.destName)
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 24212 and args:IsDestTypePlayer() then
+	if args:IsSpell(24212) and args:IsDestTypePlayer() then
 		timerPain:Stop(args.destName)
 	end
 end

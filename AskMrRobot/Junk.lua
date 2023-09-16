@@ -85,12 +85,10 @@ end
 --
 local function findMatchingBagItem(item, usedItems)
 
-    local matchItem = scanBag(BACKPACK_CONTAINER, item, usedItems) -- backpack
-    if not matchItem then
-        for bagId = 1, NUM_BAG_SLOTS do
-            matchItem = scanBag(bagId, item, usedItems)
-            if matchItem then break end
-        end
+    local matchItem
+    for bagId = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
+        matchItem = scanBag(bagId, item, usedItems)
+        if matchItem then break end
     end
     
     return matchItem
@@ -221,7 +219,7 @@ doBankWithdraw = function()
 
     local bagList = {}
 	table.insert(bagList, BANK_CONTAINER)
-	for bagId = NUM_BAG_SLOTS + 1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS do
+	for bagId = NUM_TOTAL_EQUIPPED_BAG_SLOTS + 1, NUM_TOTAL_EQUIPPED_BAG_SLOTS + NUM_BANKBAGSLOTS do
 		table.insert(bagList, bagId)
 	end
 

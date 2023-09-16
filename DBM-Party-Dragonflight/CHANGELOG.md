@@ -1,8 +1,12 @@
 # <DBM Mod> Dungeons (DF)
 
-## [r97](https://github.com/DeadlyBossMods/DBM-Dungeons/tree/r97) (2023-07-27)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Dungeons/compare/r96...r97) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Dungeons/releases)
+## [r100](https://github.com/DeadlyBossMods/DBM-Dungeons/tree/r100) (2023-09-05)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Dungeons/compare/r99...r100) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Dungeons/releases)
 
-- Fix wrong spell for corrosive infusion  
-    Was using "Mana Bombs" spellID, rather than corrosive infusion.  
-- miner timer fixes for timewalking legion dungeons  
+- Toc Bumps for retail  
+- timer tweak on Nokgar  
+- Update initial dragon gun timer  
+- timer tweaks for rezan  
+- fix drill smash message  
+- use getstage properly  
+- Adjust mass res timer for cataclysm durand. Also update to modern stage apis  

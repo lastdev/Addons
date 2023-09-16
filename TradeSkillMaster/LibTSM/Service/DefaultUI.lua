@@ -6,7 +6,6 @@
 
 local TSM = select(2, ...) ---@type TSM
 local DefaultUI = TSM.Init("Service.DefaultUI")
-local Environment = TSM.Include("Environment")
 local Event = TSM.Include("Util.Event")
 local private = {
 	visible = {},
@@ -33,34 +32,21 @@ DefaultUI:OnModuleLoad(function()
 		private.callbacks[frame] = {}
 		private.callbackFilter[frame] = {}
 	end
-	if Environment.HasFeature(Environment.FEATURES.PLAYER_INTERACTION_MANAGER) then
-		Event.Register("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", private.PlayerInteractionShowHandler)
-		hooksecurefunc(PlayerInteractionFrameManager, "ShowFrame", private.PlayerInteractionShowHandler)
-		Event.Register("PLAYER_INTERACTION_MANAGER_FRAME_HIDE", function(_, frameType)
-			if frameType == Enum.PlayerInteractionType.MailInfo then
-				private.HandleEvent(FRAMES.MAIL, false)
-			elseif frameType == Enum.PlayerInteractionType.Auctioneer then
-				private.HandleEvent(FRAMES.AUCTION_HOUSE, false)
-			elseif frameType == Enum.PlayerInteractionType.Banker then
-				private.HandleEvent(FRAMES.BANK, false)
-			elseif frameType == Enum.PlayerInteractionType.GuildBanker then
-				private.HandleEvent(FRAMES.GUILDBANK, false)
-			elseif frameType == Enum.PlayerInteractionType.Merchant then
-				private.HandleEvent(FRAMES.MERCHANT, false)
-			end
-		end)
-	else
-		Event.Register("MAIL_SHOW", function() private.HandleEvent(FRAMES.MAIL, true) end)
-		Event.Register("MAIL_CLOSED", function() private.HandleEvent(FRAMES.MAIL, false) end)
-		Event.Register("AUCTION_HOUSE_SHOW", function() private.HandleEvent(FRAMES.AUCTION_HOUSE, true) end)
-		Event.Register("AUCTION_HOUSE_CLOSED", function() private.HandleEvent(FRAMES.AUCTION_HOUSE, false) end)
-		Event.Register("BANKFRAME_OPENED", function() private.HandleEvent(FRAMES.BANK, true) end)
-		Event.Register("BANKFRAME_CLOSED", function() private.HandleEvent(FRAMES.BANK, false) end)
-		Event.Register("GUILDBANKFRAME_OPENED", function() private.HandleEvent(FRAMES.GUILDBANK, true) end)
-		Event.Register("GUILDBANKFRAME_CLOSED", function() private.HandleEvent(FRAMES.GUILDBANK, false) end)
-		Event.Register("MERCHANT_SHOW", function() private.HandleEvent(FRAMES.MERCHANT, true) end)
-		Event.Register("MERCHANT_CLOSED", function() private.HandleEvent(FRAMES.MERCHANT, false) end)
-	end
+	Event.Register("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", private.PlayerInteractionShowHandler)
+	hooksecurefunc(PlayerInteractionFrameManager, "ShowFrame", private.PlayerInteractionShowHandler)
+	Event.Register("PLAYER_INTERACTION_MANAGER_FRAME_HIDE", function(_, frameType)
+		if frameType == Enum.PlayerInteractionType.MailInfo then
+			private.HandleEvent(FRAMES.MAIL, false)
+		elseif frameType == Enum.PlayerInteractionType.Auctioneer then
+			private.HandleEvent(FRAMES.AUCTION_HOUSE, false)
+		elseif frameType == Enum.PlayerInteractionType.Banker then
+			private.HandleEvent(FRAMES.BANK, false)
+		elseif frameType == Enum.PlayerInteractionType.GuildBanker then
+			private.HandleEvent(FRAMES.GUILDBANK, false)
+		elseif frameType == Enum.PlayerInteractionType.Merchant then
+			private.HandleEvent(FRAMES.MERCHANT, false)
+		end
+	end)
 end)
 
 

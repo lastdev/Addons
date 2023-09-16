@@ -6,7 +6,7 @@
 
 local TSM = select(2, ...) ---@type TSM
 local Constants = TSM.Init("Service.SyncClasses.Constants") ---@class Service.SyncClasses.Constants
-Constants.VERSION = 17
+Constants.VERSION = 18
 Constants.DATA_TYPES = {
 	-- New connection types (40-49)
 	WHOAMI_ACCOUNT = strchar(40),

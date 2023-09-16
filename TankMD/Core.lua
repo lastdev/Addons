@@ -26,7 +26,16 @@ function addon:CreateButtons()
 	local _, class = UnitClass("player")
 	local spell = self.config.misdirectSpells[class]
 	local role = self.config.targets[class]
-	local targetMatcher = class == "HUNTER" and addon:CreateRoleOrPetTargetMatcher(role) or addon:CreateRoleTargetMatcher(role)
+
+	local targetMatcher
+	if class == "HUNTER" then
+		targetMatcher = addon:CreateRoleOrPetTargetMatcher(role)
+	elseif class == "EVOKER" then
+		targetMatcher = addon:CreateRoleOrSelfTargetMatcher(role)
+	else
+		targetMatcher = addon:CreateRoleTargetMatcher(role)
+	end
+
 	for i, buttonName in pairs(self.config.misdirectButtons) do
 		local button = self:CreateMisdirectButton(buttonName, spell, i, targetMatcher)
 		tinsert(self.buttons, button)

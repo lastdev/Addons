@@ -2,7 +2,7 @@
 local mod	= DBM:NewMod("Thaddius", "DBM-Raids-WoTLK", 8)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230713192530")
+mod:SetRevision("20230818023925")
 mod:SetCreatureID(15928)
 mod:SetEncounterID(1120)
 mod:SetModelID(16137)
@@ -28,9 +28,6 @@ local timerNextShift		= mod:NewNextTimer(30, 28089, nil, nil, nil, 2, nil, DBM_C
 local timerShiftCast		= mod:NewCastTimer(3, 28089, nil, nil, nil, 2)
 local timerThrow			= mod:NewNextTimer(20.6, 28338, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
-if not DBM.Options.GroupOptionsBySpell then
-	mod:AddMiscLine(DBM_CORE_L.OPTION_CATEGORY_DROPDOWNS)
-end
 mod:AddDropdownOption("AirowEnabled", {"Never", "TwoCamp", "ArrowsRightLeft", "ArrowsInverse"}, "Never", "misc", nil, 28089)
 
 local currentCharge

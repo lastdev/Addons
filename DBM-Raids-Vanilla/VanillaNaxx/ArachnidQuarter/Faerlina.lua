@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Faerlina", "DBM-Raids-Vanilla", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525041212")
+mod:SetRevision("20230814031337")
 mod:SetCreatureID(15953)
 mod:SetEncounterID(1110)
 mod:SetModelID(15940)
@@ -33,8 +33,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	--if args:IsSpellID(28798, 54100) then -- Frenzy
-	if args.spellId == 28798 and args:IsDestTypeHostile() then -- Frenzy
+	if args:IsSpell(28798) and args:IsDestTypeHostile() then -- Frenzy
 		self.vb.enraged = true
 		--if self:IsTanking("player", "boss1", nil, true) then
 		if self:IsTanking("player", nil, nil, nil, args.destGUID) then--Basically, HAS to be bosses current target
@@ -43,8 +42,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			warnEnrageNow:Show()
 		end
-	--elseif args:IsSpellID(28732, 54097) and args:GetDestCreatureID() == 15953 and self:AntiSpam(5) then
-	elseif args.spellId == 28732 and args:GetDestCreatureID() == 15953 and self:AntiSpam(5) then
+	elseif args:IsSpell(28732) and args:GetDestCreatureID() == 15953 and self:AntiSpam(5) then
 		warnEmbraceExpire:Cancel()
 		warnEmbraceExpired:Cancel()
 		warnEnrageSoon:Cancel()
@@ -58,8 +56,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnEmbraceExpire:Schedule(25)
 		warnEmbraceExpired:Schedule(30)
 		self.vb.enraged = false
-	--elseif args:IsSpellID(28794, 54099) and args:IsPlayer() then--Rain of Fire
-	elseif args.spellId == 28794 and args:IsPlayer() then--Rain of Fire
+	elseif args:IsSpell(28794) and args:IsPlayer() then--Rain of Fire
 		specWarnGTFO:Show(args.spellName)
 		specWarnGTFO:Play("watchfeet")
 	end

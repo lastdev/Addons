@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2155, "DBM-Party-BfA", 4, 1001)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220920232426")
+mod:SetRevision("20230802234034")
 mod:SetCreatureID(134060)
 mod:SetEncounterID(2132)
 
@@ -36,7 +36,7 @@ function mod:OnCombatStart(delay)
 	self.vb.interruptCount = 0
 	timerMindRendCD:Start(16-delay)
 	--timerWakentheVoidCD:Start(13.1-delay)
-	timerAncientMindbenderCD:Start(19.6-delay)--SUCCESS
+	timerAncientMindbenderCD:Start(18.3-delay)--SUCCESS
 end
 
 function mod:SPELL_AURA_APPLIED(args)

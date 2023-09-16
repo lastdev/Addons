@@ -203,7 +203,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_ENABLEHEALTHY           = "Always use enabled";
     HEALBOT_OPTIONS_FADEONEXPIRE            = "Fade on expire";
     HEALBOT_OPTIONS_FADESTARTTIME           = "Fade start time";
-    HEALBOT_OPTIONS_SPELLSTARGETLASTTARGET  = "Auto Target: After cast target last target"
+    HEALBOT_OPTIONS_SPELLSTARGETLASTTARGET  = "Auto Target: After cast, target last target"
 
     HEALBOT_OPTIONS_CASTNOTIFY1             = "No messages";
     HEALBOT_OPTIONS_CASTNOTIFY2             = "Notify self";
@@ -570,6 +570,7 @@ function HealBot_Lang_enALL()
     HEALBOT_ICONPREVSET                     = "Icon set prev";
     
     HEALBOT_OPTIONS_SHOWMINIMAPBUTTON       = "Show minimap button";
+    HEALBOT_OPTIONS_ULTRAPERF               = "Ultra performance"
     HEALBOT_OPTIONS_BARBUTTONSHOWRAIDICON   = "Show Raid Target";
     HEALBOT_OPTIONS_HOTONBAR                = "On bar";
     HEALBOT_OPTIONS_HOTOFFBAR               = "Off bar";
@@ -602,7 +603,8 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTION_USEHEALTHDROP            = "Show on Health bar"
     HEALBOT_OPTION_HEALTHDROPPCT            = "Alert threshold "
     HEALBOT_OPTION_HOTBARHEALTHPCT          = "Min Health+Absorbs threshold "
-    HEALBOT_OPTION_HEALTHDROPSPEED          = "Flash speed"
+    HEALBOT_OPTION_HEALTHDROPSPEED          = "Time in seconds"
+    HEALBOT_OPTION_HEALTHDROPCANCEL         = "Cancel threshold"
     HEALBOT_OPTION_USEFOCUSGROUPS           = "Use focus groups"
     HEALBOT_OPTION_FOCUSGROUPDIMMING        = "Unfocused groups - Opacity reduction"
     HEALBOT_OPTION_NONHOTBARSDIMMING        = "Non Hot Bars - Opacity reduction"

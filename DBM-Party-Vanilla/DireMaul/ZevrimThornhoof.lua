@@ -1,9 +1,10 @@
 local mod	= DBM:NewMod(402, "DBM-Party-Vanilla", 3, 230)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20221029204017")
+mod:SetRevision("20230813211435")
 mod:SetCreatureID(11490)
 --mod:SetEncounterID(1443)
+mod:SetMinSyncRevision(20190917000000)--2019, 9, 17
 
 mod:RegisterCombat("combat")
 
@@ -14,10 +15,6 @@ mod:RegisterEventsInCombat(
 local warnSacrifice				= mod:NewTargetNoFilterAnnounce(22651, 4)
 
 local yellSacrifice				= mod:NewYell(22651)
-
---function mod:OnCombatStart(delay)
-
---end
 
 function mod:SacTarget(targetname, uId)
 	if not targetname then return end

@@ -1624,6 +1624,7 @@ function HealBot_Options_InitBuffSpellsClassList(tClass)
         Buff_Spells_List = {
             HEALBOT_BLESSING_OF_THE_BRONZE,
             HEALBOT_SOURCE_OF_MAGIC,
+            HEALBOT_BLISTERING_SCALES,
         }
     elseif tClass=="HUNT" then
         Buff_Spells_List = {
@@ -5187,8 +5188,20 @@ function HealBot_Options_OverrideHealthDropSpeed_OnValueChanged(self)
     local val=floor(self:GetValue()+0.5)
     if val~=self:GetValue() then
         self:SetValue(val) 
-    elseif HealBot_Globals.OverrideEffects["HEALTHDROPSPEED"]~=val then
-        HealBot_Globals.OverrideEffects["HEALTHDROPSPEED"] = val;
+    elseif HealBot_Globals.OverrideEffects["HEALTHDROPTIME"]~=val then
+        HealBot_Globals.OverrideEffects["HEALTHDROPTIME"] = val;
+        HealBot_Options_SetText(HealBot_Options_OverrideHealthDropSpeed, HEALBOT_OPTION_HEALTHDROPSPEED..": "..HealBot_Globals.OverrideEffects["HEALTHDROPTIME"].." "..HEALBOT_WORDS_SEC)
+        HealBot_Timers_Set("SKINS","FluidFlashInUse")
+    end
+end
+
+function HealBot_Options_OverrideHealthDropCancel_OnValueChanged(self)
+    local val=floor(self:GetValue()+0.5)
+    if val~=self:GetValue() then
+        self:SetValue(val) 
+    elseif HealBot_Globals.OverrideEffects["HEALTHDROPCANCEL"]~=val then
+        HealBot_Globals.OverrideEffects["HEALTHDROPCANCEL"] = val;
+        HealBot_Options_SetText(HealBot_Options_OverrideHealthDropCancel, HEALBOT_OPTION_HEALTHDROPCANCEL..": "..floor(HealBot_Globals.OverrideEffects["HEALTHDROPCANCEL"]/10).."%")
         HealBot_Timers_Set("SKINS","FluidFlashInUse")
     end
 end
@@ -5208,8 +5221,20 @@ function HealBot_Options_HealthDropSpeed_OnValueChanged(self)
     local val=floor(self:GetValue()+0.5)
     if val~=self:GetValue() then
         self:SetValue(val) 
-    elseif Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HEALTHDROPSPEED"]~=val then
-        Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HEALTHDROPSPEED"] = val;
+    elseif Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HEALTHDROPTIME"]~=val then
+        Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HEALTHDROPTIME"] = val;
+        HealBot_Options_SetText(HealBot_Options_HealthDropSpeed, HEALBOT_OPTION_HEALTHDROPSPEED..": "..Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HEALTHDROPTIME"].." "..HEALBOT_WORDS_SEC)
+        HealBot_Timers_Set("SKINS","FluidFlashInUse")
+    end
+end
+
+function HealBot_Options_HealthDropCancel_OnValueChanged(self)
+    local val=floor(self:GetValue()+0.5)
+    if val~=self:GetValue() then
+        self:SetValue(val) 
+    elseif Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HEALTHDROPCANCEL"]~=val then
+        Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HEALTHDROPCANCEL"] = val;
+        HealBot_Options_SetText(HealBot_Options_HealthDropCancel, HEALBOT_OPTION_HEALTHDROPCANCEL..": "..floor(Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HEALTHDROPCANCEL"]/10).."%")
         HealBot_Timers_Set("SKINS","FluidFlashInUse")
     end
 end
@@ -5786,7 +5811,8 @@ function HealBot_Options_FluidFlashInUse()
             HealBot_Text_setLuVars("FluidAlphaInUse", Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["FLUIDALPHA"])
             HealBot_Aux_setLuVars("FluidAlphaInUse", Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["FLUIDALPHA"])
             HealBot_setLuVars("UseHealthDrop", Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HEALTHDROP"])
-            HealBot_Action_setLuVars("HealthDropSpeed", (Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HEALTHDROPSPEED"]/750))
+            HealBot_Action_setLuVars("HealthDropTime", Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HEALTHDROPTIME"])
+            HealBot_setLuVars("HealthDropCancelPct", Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HEALTHDROPCANCEL"])
         else
             HealBot_Aux_setLuVars("FluidInUse", HealBot_Globals.OverrideEffects["FLUIDBARS"])
             HealBot_Action_setLuVars("FluidInUse", HealBot_Globals.OverrideEffects["FLUIDBARS"])
@@ -5794,7 +5820,8 @@ function HealBot_Options_FluidFlashInUse()
             HealBot_Text_setLuVars("FluidAlphaInUse", HealBot_Globals.OverrideEffects["FLUIDALPHA"])
             HealBot_Aux_setLuVars("FluidAlphaInUse", HealBot_Globals.OverrideEffects["FLUIDALPHA"])
             HealBot_setLuVars("UseHealthDrop", HealBot_Globals.OverrideEffects["HEALTHDROP"])
-            HealBot_Action_setLuVars("HealthDropSpeed", (HealBot_Globals.OverrideEffects["HEALTHDROPSPEED"]/750))
+            HealBot_Action_setLuVars("HealthDropTime", HealBot_Globals.OverrideEffects["HEALTHDROPTIME"])
+            HealBot_setLuVars("HealthDropCancelPct", HealBot_Globals.OverrideEffects["HEALTHDROPCANCEL"])
         end
     else
         HealBot_Aux_setLuVars("FluidInUse", false)
@@ -6776,6 +6803,16 @@ function HealBot_Options_ShowMinimapButton_OnClick(self)
         HealBot_Globals.MinimapIcon.hide=true
     end
     HealBot_MMButton_Toggle()
+end
+
+function HealBot_Options_UltraPerf_OnClick(self)
+    if self:GetChecked() then
+        HealBot_Globals.UltraPerf=true
+    else
+        HealBot_Globals.UltraPerf=false
+    end
+    HealBot_Comms_PerfLevel()
+    HealBot_Timers_Set("LAST","UpdateMaxUnitsAdj")
 end
 
 function HealBot_Options_ShowTooltip_OnClick(self)
@@ -9434,6 +9471,7 @@ function HealBot_Options_Override_EffectsUse_Toggle()
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_OverrideHealthDropPct",false)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_OverrideHotBarHealthThres",false)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_OverrideHealthDropSpeed",false)
+        HealBot_Options_ObjectsEnableDisable("HealBot_Options_OverrideHealthDropCancel",false)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_OverrideFocusGroupDimming",false)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_OverrideHotBarDimming",false)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_OverrideAuxBarFlashFreq",false)
@@ -9455,6 +9493,7 @@ function HealBot_Options_Override_EffectsUse_Toggle()
         end
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_HealthDropPct",true)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_HealthDropSpeed",true)
+        HealBot_Options_ObjectsEnableDisable("HealBot_Options_HealthDropCancel",true)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_HotBarHealthThres",true)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_BarUpdateFreq",true)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_FocusGroupDimming",true)
@@ -9499,6 +9538,7 @@ function HealBot_Options_Override_EffectsUse_Toggle()
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_OverrideHealthDropPct",true)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_OverrideHotBarHealthThres",true)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_OverrideHealthDropSpeed",true)
+        HealBot_Options_ObjectsEnableDisable("HealBot_Options_OverrideHealthDropCancel",true)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_OverrideFocusGroupDimming",true)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_OverrideHotBarDimming",true)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_OverrideAuxBarFlashFreq",true)
@@ -9520,6 +9560,7 @@ function HealBot_Options_Override_EffectsUse_Toggle()
         end
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_HealthDropPct",false)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_HealthDropSpeed",false)
+        HealBot_Options_ObjectsEnableDisable("HealBot_Options_HealthDropCancel",false)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_HotBarHealthThres",false)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_BarUpdateFreq",false)
         HealBot_Options_ObjectsEnableDisable("HealBot_Options_FocusGroupDimming",false)
@@ -12782,6 +12823,7 @@ function HealBot_Options_Class_HoTctlIDMethod_DropDown()
                         UIDropDownMenu_SetText(HealBot_Options_Class_HoTctlIDMethod,HealBot_Options_Class_HoTctlIDMethod_List[j])
                         HealBot_Timers_Set("AURA","ConfigClassHoT")
                         HealBot_Timers_Set("AURA","ResetBuffCache")
+                        HealBot_Timers_Set("AURA","BuffTagNames")
                     end
         info.checked = false;
         local sId=HealBot_Options_CDebuffGetId(HealBot_Options_luVars["HoTname"]) or 0
@@ -15076,6 +15118,7 @@ function HealBot_Options_CDCIDMethod_DropDown()
                         UIDropDownMenu_SetText(HealBot_Options_CDCIDMethod,HealBot_Options_Class_HoTctlIDMethod_List[j])
                         HealBot_Timers_Set("AURA","ConfigDebuffs")
                         HealBot_Timers_Set("AURA","DebuffPriority")
+                        HealBot_Timers_Set("AURA","DebuffTagNames")
                     end
         info.checked = false;
         if (HealBot_Globals.CustomDebuffIDMethod[HealBot_Options_luVars["CDebuffcustomSpellID"]] or 3)==j then info.checked = true; end 
@@ -15142,6 +15185,7 @@ function HealBot_Options_CDebuffTag_OnTextChanged(self)
         HealBot_Globals.CDCTag[HealBot_Options_luVars["CDebuffcustomSpellID"]]=nil
     end
     HealBot_Timers_Set("AURA","CustomDebuffListPrep")
+    HealBot_Timers_Set("AURA","DebuffTagNames",0.5)
 end
 
 function HealBot_Options_HoTBuffTag_OnTextChanged(self)
@@ -15153,6 +15197,7 @@ function HealBot_Options_HoTBuffTag_OnTextChanged(self)
         HealBot_Globals.CustomBuffTag[sId]=nil
     end
     HealBot_Timers_Set("AURA","CustomBuffListPrep")
+    HealBot_Timers_Set("AURA","BuffTagNames",0.5)
 end
 
 function HealBot_Options_BuffResetList()
@@ -19805,6 +19850,7 @@ function HealBot_Options_GeneralTab(tab)
         local mmButtonShown=false
         if HealBot_Globals.MinimapIcon.hide==false then mmButtonShown=true end
         HealBot_Options_ShowMinimapButton:SetChecked(mmButtonShown)
+        HealBot_Options_UltraPerf:SetChecked(HealBot_Globals.UltraPerf)
         HealBot_Options_HideOptions:SetChecked(HealBot_Globals.HideOptions)
         HealBot_Options_HideUnlocked:SetChecked(HealBot_Globals.HideUnlockedTag)
         HealBot_Options_RightButtonOptions:SetChecked(HealBot_Globals.RightButtonOptions)
@@ -19819,6 +19865,7 @@ function HealBot_Options_GeneralTab(tab)
         UIDropDownMenu_SetText(HealBot_Options_FrameStrata, HealBot_Globals.FrameStrata)
         HealBot_Options_SetText(HealBot_Options_NoAuraWhenRested,HEALBOT_OPTION_IGNORE_AURA_RESTED)
         HealBot_Options_SetText(HealBot_Options_ShowMinimapButton,HEALBOT_OPTIONS_SHOWMINIMAPBUTTON)
+        HealBot_Options_SetText(HealBot_Options_UltraPerf,HEALBOT_OPTIONS_ULTRAPERF)
         HealBot_Options_SetText(HealBot_Options_HideOptions,HEALBOT_OPTIONS_HIDEOPTIONS)
         HealBot_Options_SetText(HealBot_Options_HideUnlocked,HEALBOT_OPTIONS_HIDEUNLOCKEDTAG)
         HealBot_Options_SetText(HealBot_Options_RightButtonOptions,HEALBOT_OPTIONS_RIGHTBOPTIONS)
@@ -19882,15 +19929,18 @@ function HealBot_Options_OverridesEffectsTab(tab)
         HealBot_Options_sliderlabels_Init(HealBot_Options_OverrideBarUpdateFreq,HEALBOT_OPTION_BARUPDFREQ,1,19,1,2,HEALBOT_OPTIONS_WORD_SLOWER,HEALBOT_OPTIONS_WORD_FASTER)
         HealBot_Options_OverrideBarUpdateFreq:SetValue(HealBot_Globals.OverrideEffects["FLUIDFREQ"] or 10)
         HealBot_Options_SetText(HealBot_Options_OverrideBarUpdateFreq, HEALBOT_OPTION_BARUPDFREQ)
-        HealBot_Options_sliderlabels_Init(HealBot_Options_OverrideHealthDropPct,HEALBOT_OPTION_HEALTHDROPPCT,50,500,10,5,"5%","50%")
-        HealBot_Options_OverrideHealthDropPct:SetValue(HealBot_Globals.OverrideEffects["HEALTHDROPPCT"] or 350)
+        HealBot_Options_sliderlabels_Init(HealBot_Options_OverrideHealthDropPct,HEALBOT_OPTION_HEALTHDROPPCT,250,750,10,5,"25%","75%")
+        HealBot_Options_OverrideHealthDropPct:SetValue(HealBot_Globals.OverrideEffects["HEALTHDROPPCT"] or 500)
         HealBot_Options_SetText(HealBot_Options_OverrideHealthDropPct, HEALBOT_OPTION_HEALTHDROPPCT..floor(HealBot_Globals.OverrideEffects["HEALTHDROPPCT"]/10).."%")
         HealBot_Options_sliderlabels_Init(HealBot_Options_OverrideHotBarHealthThres,HEALBOT_OPTION_HOTBARHEALTHPCT,0,50,1,5,"0%","50%")
         HealBot_Options_OverrideHotBarHealthThres:SetValue(HealBot_Globals.OverrideEffects["HOTBARHLTH"] or 10)
         HealBot_Options_SetText(HealBot_Options_OverrideHotBarHealthThres, HEALBOT_OPTION_HOTBARHEALTHPCT..HealBot_Globals.OverrideEffects["HOTBARHLTH"].."%")            
-        HealBot_Options_sliderlabels_Init(HealBot_Options_OverrideHealthDropSpeed,HEALBOT_OPTION_HEALTHDROPSPEED,5,75,5,2,HEALBOT_OPTIONS_WORD_SLOWER,HEALBOT_OPTIONS_WORD_FASTER)
-        HealBot_Options_OverrideHealthDropSpeed:SetValue(HealBot_Globals.OverrideEffects["HEALTHDROPSPEED"] or 40)
-        HealBot_Options_SetText(HealBot_Options_OverrideHealthDropSpeed, HEALBOT_OPTION_HEALTHDROPSPEED)
+        HealBot_Options_sliderlabels_Init(HealBot_Options_OverrideHealthDropSpeed,HEALBOT_OPTION_HEALTHDROPSPEED,1,30,1,2,1,30)
+        HealBot_Options_OverrideHealthDropSpeed:SetValue(HealBot_Globals.OverrideEffects["HEALTHDROPTIME"])
+        HealBot_Options_SetText(HealBot_Options_OverrideHealthDropSpeed, HEALBOT_OPTION_HEALTHDROPSPEED..": "..HealBot_Globals.OverrideEffects["HEALTHDROPTIME"].." "..HEALBOT_WORDS_SEC)
+        HealBot_Options_sliderlabels_Init(HealBot_Options_OverrideHealthDropCancel,HEALBOT_OPTION_HEALTHDROPCANCEL,100,500,10,5,"10%","50%")
+        HealBot_Options_OverrideHealthDropCancel:SetValue(HealBot_Globals.OverrideEffects["HEALTHDROPCANCEL"])
+        HealBot_Options_SetText(HealBot_Options_OverrideHealthDropCancel, HEALBOT_OPTION_HEALTHDROPCANCEL..": "..floor(HealBot_Globals.OverrideEffects["HEALTHDROPCANCEL"]/10).."%")
         HealBot_Options_sliderlabels_Init(HealBot_Options_OverrideAuxBarFlashFreq,HEALBOT_OPTIONS_AGGROFLASHFREQ,2,20,1,2,HEALBOT_OPTIONS_WORD_SLOWER,HEALBOT_OPTIONS_WORD_FASTER)
         HealBot_Options_OverrideAuxBarFlashFreq:SetValue(HealBot_Globals.OverrideEffects["OFREQ"]*100)
         HealBot_Options_SetText(HealBot_Options_OverrideAuxBarFlashFreq, HEALBOT_OPTIONS_AGGROFLASHFREQ) 
@@ -20371,12 +20421,15 @@ function HealBot_Options_SkinsEffectsTab(tab)
         HealBot_Options_sliderlabels_Init(HealBot_Options_HotBarHealthThres,HEALBOT_OPTION_HOTBARHEALTHPCT,0,50,1,5,"0%","50%")
         HealBot_Options_HotBarHealthThres:SetValue(Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HOTBARHLTH"] or 10)
         HealBot_Options_SetText(HealBot_Options_HotBarHealthThres, HEALBOT_OPTION_HOTBARHEALTHPCT..Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HOTBARHLTH"].."%")
-        HealBot_Options_sliderlabels_Init(HealBot_Options_HealthDropPct,HEALBOT_OPTION_HEALTHDROPPCT,50,500,10,5,"5%","50%")
-        HealBot_Options_HealthDropPct:SetValue(Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HEALTHDROPPCT"] or 350)
+        HealBot_Options_sliderlabels_Init(HealBot_Options_HealthDropPct,HEALBOT_OPTION_HEALTHDROPPCT,250,750,10,5,"25%","75%")
+        HealBot_Options_HealthDropPct:SetValue(Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HEALTHDROPPCT"] or 500)
         HealBot_Options_SetText(HealBot_Options_HealthDropPct, HEALBOT_OPTION_HEALTHDROPPCT..floor(Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HEALTHDROPPCT"]/10).."%")
-        HealBot_Options_sliderlabels_Init(HealBot_Options_HealthDropSpeed,HEALBOT_OPTION_HEALTHDROPSPEED,5,75,5,2,HEALBOT_OPTIONS_WORD_SLOWER,HEALBOT_OPTIONS_WORD_FASTER)
-        HealBot_Options_HealthDropSpeed:SetValue(Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HEALTHDROPSPEED"] or 40)
-        HealBot_Options_SetText(HealBot_Options_HealthDropSpeed, HEALBOT_OPTION_HEALTHDROPSPEED)
+        HealBot_Options_sliderlabels_Init(HealBot_Options_HealthDropSpeed,HEALBOT_OPTION_HEALTHDROPSPEED,1,30,1,2,1,30)
+        HealBot_Options_HealthDropSpeed:SetValue(Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HEALTHDROPTIME"])
+        HealBot_Options_SetText(HealBot_Options_HealthDropSpeed, HEALBOT_OPTION_HEALTHDROPSPEED..": "..Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HEALTHDROPTIME"].." "..HEALBOT_WORDS_SEC)
+        HealBot_Options_sliderlabels_Init(HealBot_Options_HealthDropCancel,HEALBOT_OPTION_HEALTHDROPCANCEL,100,500,10,5,"10%","50%")
+        HealBot_Options_HealthDropCancel:SetValue(Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HEALTHDROPCANCEL"])
+        HealBot_Options_SetText(HealBot_Options_HealthDropCancel, HEALBOT_OPTION_HEALTHDROPCANCEL..": "..floor(Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HEALTHDROPCANCEL"]/10).."%")
         HealBot_Options_sliderlabels_Init(HealBot_Options_AuxBarFlashFreq,HEALBOT_OPTIONS_AGGROFLASHFREQ,2,20,1,2,HEALBOT_OPTIONS_WORD_SLOWER,HEALBOT_OPTIONS_WORD_FASTER)
         HealBot_Options_Pct_OnLoad_MinMax(HealBot_Options_AuxBarFlashAlphaMax,HEALBOT_OPTIONS_MAXALPHA,0.2,1,0.05,2)
         HealBot_Options_AuxBarFlashAlphaMax:SetValue(Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["OMAX"])

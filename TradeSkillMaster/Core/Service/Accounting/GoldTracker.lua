@@ -203,7 +203,7 @@ function private.LoadCharacterGoldLog(characterKey, data, lastUpdate)
 end
 
 function private.UpdateGoldLog(goldLog, copper)
-	copper = Math.Round(copper, COPPER_PER_GOLD * (Environment.IsRetail() and 1000 or 100))
+	copper = Math.Round(copper, COPPER_PER_GOLD * ((Environment.IsRetail() and 1000) or (Environment.IsVanillaClassic() and 1) or 100))
 	local currentMinute = floor(time() / SECONDS_PER_MIN)
 	local prevRecord = goldLog[#goldLog]
 

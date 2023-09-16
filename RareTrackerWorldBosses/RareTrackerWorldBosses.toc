@@ -1,9 +1,10 @@
-## Interface: 100100
+## Interface: 100105
 ## Title: RareTrackerWorldBosses
 ## Notes: Track and coordinate rare spawn timers for world bosses that drop mounts.
 ## Author: Melroy
-## Version: 7.1.18
+## Version: 7.1.19
 ## Dependencies: RareTrackerCore
+## IconTexture: Interface\AddOns\RareTrackerCore\Icons\RareTrackerIcon
 
 Locales\enUS.lua
 Locales\deDE.lua

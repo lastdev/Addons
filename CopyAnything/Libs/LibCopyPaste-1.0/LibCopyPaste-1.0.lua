@@ -3,7 +3,7 @@
 -- @module LibCopyPaste
 -- @usage local LibCopyPaste = LibStub("LibCopyPaste-1.0")
 
-local LibCopyPaste = LibStub:NewLibrary("LibCopyPaste-1.0", 8)
+local LibCopyPaste = LibStub:NewLibrary("LibCopyPaste-1.0", 9)
 if not LibCopyPaste then return end
 
 local IsControlKeyDown = IsControlKeyDown
@@ -59,7 +59,7 @@ function CopyPasteFrame:Create()
 	title:SetTextColor(1, 1, 1, 1)
 	title:Show()
 
-	local scrollFrame = CreateFrame("ScrollFrame", nil, frame, "UIPanelScrollFrameTemplate")
+	local scrollFrame = CreateFrame("ScrollFrame", nil, frame, "ScrollFrameTemplate")
 	scrollFrame:SetPoint("TOP", 0, -30)
 	scrollFrame:SetSize(650, 370)
 	scrollFrame:Show()
@@ -185,7 +185,8 @@ local frame
 -- @param text Text to display in the window. This is what will be copied.
 -- @param options Table of options. Keys are: readOnly (boolean)
 function LibCopyPaste:Copy(title, text, options)
-	assert(type(title) == "string" and type(text) == "string", "title and text are required and must be strings. Usage: Copy(title, text)")
+	assert(type(title) == "string" and type(text) == "string",
+		"title and text are required and must be strings. Usage: Copy(title, text)")
 	if not frame then frame = CopyPasteFrame:Create() end
 	frame:Hide()
 	frame:SetTitle(title)
@@ -201,7 +202,8 @@ end
 -- @param callback Function that will be run when the paste window is closed. The function will be passed the pasted text as an argument.
 -- @param options Table of options. No options exist yet.
 function LibCopyPaste:Paste(title, callback, options)
-	assert(type(title) == "string" and type(callback) == "function", "title and callback are required. title must be a string and callback must be a function. Usage: Copy(title, callback)")
+	assert(type(title) == "string" and type(callback) == "function",
+		"title and callback are required. title must be a string and callback must be a function. Usage: Copy(title, callback)")
 	if not frame then frame = CopyPasteFrame:Create() end
 	frame:Hide()
 	frame:SetTitle(title)

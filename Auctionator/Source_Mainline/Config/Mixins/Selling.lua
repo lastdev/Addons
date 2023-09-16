@@ -9,7 +9,7 @@ function AuctionatorConfigSellingFrameMixin:OnLoad()
   self:SetupPanel()
 end
 
-function AuctionatorConfigSellingFrameMixin:OnShow()
+function AuctionatorConfigSellingFrameMixin:ShowSettings()
   self.AuctionChatLog:SetChecked(Auctionator.Config.Get(Auctionator.Config.Options.AUCTION_CHAT_LOG))
   self.ShowBidPrice:SetChecked(Auctionator.Config.Get(Auctionator.Config.Options.SHOW_SELLING_BID_PRICE))
   self.ConfirmPostLowPrice:SetChecked(Auctionator.Config.Get(Auctionator.Config.Options.SELLING_CONFIRM_LOW_PRICE))
@@ -19,9 +19,12 @@ function AuctionatorConfigSellingFrameMixin:OnShow()
   self.IconSize:SetNumber(Auctionator.Config.Get(Auctionator.Config.Options.SELLING_ICON_SIZE))
   self.BagCollapsed:SetChecked(Auctionator.Config.Get(Auctionator.Config.Options.SELLING_BAG_COLLAPSED))
   self.AutoSelectNext:SetChecked(Auctionator.Config.Get(Auctionator.Config.Options.SELLING_AUTO_SELECT_NEXT))
+  self.ReselectItem:SetChecked(Auctionator.Config.Get(Auctionator.Config.Options.SELLING_SHOULD_RESELECT_ITEM))
   self.MissingFavourites:SetChecked(Auctionator.Config.Get(Auctionator.Config.Options.SELLING_MISSING_FAVOURITES))
+  self.PossessedFavouritesFirst:SetChecked(Auctionator.Config.Get(Auctionator.Config.Options.SELLING_FAVOURITES_SORT_OWNED))
 
   self.UnhideAll:SetEnabled(#(Auctionator.Config.Get(Auctionator.Config.Options.SELLING_IGNORED_KEYS)) ~= 0)
+  self:UpdateSellingSelectionColor()
 end
 
 function AuctionatorConfigSellingFrameMixin:Save()
@@ -36,12 +39,35 @@ function AuctionatorConfigSellingFrameMixin:Save()
   Auctionator.Config.Set(Auctionator.Config.Options.SELLING_ICON_SIZE, math.min(50, math.max(10, self.IconSize:GetNumber())))
   Auctionator.Config.Set(Auctionator.Config.Options.SELLING_BAG_COLLAPSED, self.BagCollapsed:GetChecked())
   Auctionator.Config.Set(Auctionator.Config.Options.SELLING_AUTO_SELECT_NEXT, self.AutoSelectNext:GetChecked())
+  Auctionator.Config.Set(Auctionator.Config.Options.SELLING_SHOULD_RESELECT_ITEM, self.ReselectItem:GetChecked())
   Auctionator.Config.Set(Auctionator.Config.Options.SELLING_MISSING_FAVOURITES, self.MissingFavourites:GetChecked())
+  Auctionator.Config.Set(Auctionator.Config.Options.SELLING_FAVOURITES_SORT_OWNED, self.PossessedFavouritesFirst:GetChecked())
 end
 
 function AuctionatorConfigSellingFrameMixin:UnhideAllClicked()
   Auctionator.Config.Set(Auctionator.Config.Options.SELLING_IGNORED_KEYS, {})
   self.UnhideAll:Disable()
+end
+
+function AuctionatorConfigSellingFrameMixin:UpdateSellingSelectionColor()
+  local color = Auctionator.Config.Get(Auctionator.Config.Options.SELLING_BAG_SELECTION_COLOR)
+  self.SetSelectionColor.Color:SetColorTexture(color.r, color.g, color.b)
+end
+
+function AuctionatorConfigSellingFrameMixin:ResetSelectionColorClicked()
+  Auctionator.Config.Set(Auctionator.Config.Options.SELLING_BAG_SELECTION_COLOR, Auctionator.Config.Defaults[Auctionator.Config.Options.SELLING_BAG_SELECTION_COLOR])
+  self:UpdateSellingSelectionColor()
+end
+
+function AuctionatorConfigSellingFrameMixin:SetSelectionColorClicked()
+  ShowUIPanel(ColorPickerFrame)
+  local color = Auctionator.Config.Get(Auctionator.Config.Options.SELLING_BAG_SELECTION_COLOR)
+  ColorPickerFrame:SetColorRGB(color.r, color.g, color.b)
+  ColorPickerFrame.func = function()
+    local r, g, b = ColorPickerFrame:GetColorRGB()
+    Auctionator.Config.Set(Auctionator.Config.Options.SELLING_BAG_SELECTION_COLOR, {r = r, g = g, b = b})
+    self:UpdateSellingSelectionColor()
+  end
 end
 
 function AuctionatorConfigSellingFrameMixin:Cancel()

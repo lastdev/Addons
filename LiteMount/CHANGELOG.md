@@ -1,8 +1,6 @@
 # LiteMount
 
-## [10.1.5-3](https://github.com/xod-wow/LiteMount/tree/10.1.5-3) (2023-07-16)
-[Full Changelog](https://github.com/xod-wow/LiteMount/compare/10.1.5-2...10.1.5-3) [Previous Releases](https://github.com/xod-wow/LiteMount/releases)
+## [10.1.7-2](https://github.com/xod-wow/LiteMount/tree/10.1.7-2) (2023-09-08)
+[Full Changelog](https://github.com/xod-wow/LiteMount/compare/10.1.7-1...10.1.7-2) [Previous Releases](https://github.com/xod-wow/LiteMount/releases)
 
-- Use blizzard mount journal texts directly in type menu  
-- Force flying+future dragonriding mounts to type 248 (flying)  
-- Mount family info for 10.1.5 mounts  
+- Add mount families for 10.1.7  

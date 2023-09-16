@@ -2,6 +2,7 @@ local f = CreateFrame("Frame")
 f:RegisterEvent("BAG_UPDATE")
 f:RegisterEvent("MOUNT_JOURNAL_USABILITY_CHANGED")
 f:RegisterEvent("PLAYER_REGEN_ENABLED")
+f:RegisterEvent("CHAT_MSG_LOOT")
 
 local bagID, slotID
 
@@ -52,15 +53,11 @@ f:SetScript("OnEvent", function(self, event, ...)
         if bagID and slotID then
             reequipUA()
         end
-    elseif (event == "MOUNT_JOURNAL_USABILITY_CHANGED") or (event == "PLAYER_REGEN_ENABLED") then
+    elseif (event == "MOUNT_JOURNAL_USABILITY_CHANGED") then
         -- IsSwimming returns false during the MOUNT_JOURNAL_USABILITY_CHANGED event, so add a small delay
         C_Timer.After(0.1, function()
-            
             -- the MOUNT_JOURNAL_USABILITY_CHANGED event fires twice when entering water; only trigger on the first one
             if (throttle + 1) > GetTime() then return end
-            
-            -- cannot change items while in combat
-            if InCombatLockdown() then return end
             
             -- only do something if the player has Underlight Angler equipped
             if GetInventoryItemID("player", ProfessionsFrame.CraftingPage.FishingToolSlot:GetID()) ~= 133755 then return end
@@ -73,5 +70,11 @@ f:SetScript("OnEvent", function(self, event, ...)
                 throttle = GetTime()
             end
         end)
+    elseif (event == "PLAYER_REGEN_ENABLED") or (event == "CHAT_MSG_LOOT") then
+        if GetInventoryItemID("player", ProfessionsFrame.CraftingPage.FishingToolSlot:GetID()) ~= 133755 then return end
+        if C_UnitAuras.GetPlayerAuraBySpellID(394009) then return end
+        if IsSwimming() then
+            unequipUA()
+        end
     end
 end)

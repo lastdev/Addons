@@ -12,7 +12,7 @@ end
 local mod	= DBM:NewMod("Broodlord", "DBM-Raids-Vanilla", catID)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525041212")
+mod:SetRevision("20230814031337")
 mod:SetCreatureID(12017)
 mod:SetEncounterID(612)
 mod:SetModelID(14308)
@@ -36,22 +36,22 @@ local timerMortal		= mod:NewTargetTimer(5, 24573, nil, "Tank|Healer", 3, 5, nil,
 --end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 23331 and args:IsSrcTypeHostile() then
+	if args:IsSpell(23331) and args:IsSrcTypeHostile() then
 		warnBlastWave:Show()
-	elseif args.spellId == 18670 then
+	elseif args:IsSpell(18670) then
 		warnKnockAway:Show()
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 24573 and args:IsDestTypePlayer() then
+	if args:IsSpell(24573) and args:IsDestTypePlayer() then
 		warnMortal:Show(args.destName)
 		timerMortal:Start(args.destName)
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 24573 and args:IsDestTypePlayer() then
+	if args:IsSpell(24573) and args:IsDestTypePlayer() then
 		timerMortal:Stop(args.destName)
 	end
 end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Gluth", "DBM-Raids-Vanilla", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525041212")
+mod:SetRevision("20230814031601")
 mod:SetCreatureID(15932)
 mod:SetEncounterID(1108)
 mod:SetModelID(16064)
@@ -32,14 +32,14 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 29685 then
+	if args:IsSpell(29685) then
 		warnRoar:Show()
 		timerRoarCD:Start()
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 28371 and args:IsDestTypeHostile() then
+	if args:IsSpell(28371) and args:IsDestTypeHostile() then
 		if self.Options.SpecWarn19451dispel then
 			specWarnEnrage:Show(args.destName)
 			specWarnEnrage:Play("enrage")
@@ -51,15 +51,18 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 28371 and args:IsDestTypeHostile()  then
+	if args:IsSpell(28371) and args:IsDestTypeHostile()  then
 		timerEnrage:Stop()
 	end
 end
 
-function mod:SPELL_DAMAGE(_, _, _, _, _, _, _, _, spellId)
-	if spellId == 28375 and self:AntiSpam(20) then
-		warnDecimateNow:Show()
-		--timerDecimate:Start()
-		--warnDecimateSoon:Schedule(96)
+do
+	local Decimate = DBM:GetSpellInfo(28375)--Classic Note
+	function mod:SPELL_DAMAGE(_, _, _, _, _, _, _, _, spellId, spellName)
+		if (spellId == 28375 or spellName == Decimate) and self:AntiSpam(20) then
+			warnDecimateNow:Show()
+			--timerDecimate:Start()
+			--warnDecimateSoon:Schedule(96)
+		end
 	end
 end

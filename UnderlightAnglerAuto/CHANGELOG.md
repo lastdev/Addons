@@ -1,6 +1,6 @@
 # Underlight Angler Auto
 
-## [r6](https://github.com/teelolws/UnderlightAnglerAuto/tree/r6) (2023-05-31)
-[Full Changelog](https://github.com/teelolws/UnderlightAnglerAuto/compare/r5...r6) [Previous Releases](https://github.com/teelolws/UnderlightAnglerAuto/releases)
+## [r9](https://github.com/teelolws/UnderlightAnglerAuto/tree/r9) (2023-09-05)
+[Full Changelog](https://github.com/teelolws/UnderlightAnglerAuto/compare/r8...r9) [Previous Releases](https://github.com/teelolws/UnderlightAnglerAuto/releases)
 
-- Disable addon during a Mythic+  
+- Update UnderlightAnglerAuto.toc  

@@ -331,7 +331,8 @@ local function render_string(s, context)
         elseif variant == "quest" or variant == "worldquest" or variant == "questname" then
             local name = C_QuestLog.GetTitleForQuestID(id)
             if not (name and name ~= "") then
-                name = tostring(id)
+                -- we bypass the normal fallback mechanism because we want the quest completion status
+                name = fallback ~= "" and fallback or (variant .. ':' .. id)
             end
             if variant == "questname" then return name end
             local completed = C_QuestLog.IsQuestFlaggedCompleted(id)

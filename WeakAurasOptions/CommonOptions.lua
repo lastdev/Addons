@@ -721,6 +721,11 @@ local function replaceNameDescFuncs(intable, data, subOption)
                       if(type(display) == "number") then
                         display = math.floor(display * 100) / 100;
                       else
+                        local nullBytePos = display:find("\0", nil, true)
+                        if nullBytePos then
+                          display = display:sub(1, nullBytePos - 1)
+                        end
+
                         if #display > 50 then
                           display = display:sub(1, 50) .. "..."
                         end
@@ -1161,7 +1166,7 @@ local function PositionOptions(id, data, _, hideWidthHeight, disableSelfPoint, g
           if IsParentDynamicGroup() then
             return true
           end
-          return data.anchorFrameType == "SCREEN" or data.anchorFrameType == "UIPARENT" or data.anchorFrameType == "MOUSE";
+          return data.anchorFrameType == "SCREEN" or data.anchorFrameType == "MOUSE";
         else
           return data.anchorFrameType == "MOUSE";
         end
@@ -1178,7 +1183,7 @@ local function PositionOptions(id, data, _, hideWidthHeight, disableSelfPoint, g
         if IsGroupByFrame() then
           return true
         end
-        if (data.anchorFrameType ~= "SCREEN" and data.anchorFrameType ~= "UIPARENT") then
+        if (data.anchorFrameType ~= "SCREEN") then
           return true;
         end
         if (data.parent) then

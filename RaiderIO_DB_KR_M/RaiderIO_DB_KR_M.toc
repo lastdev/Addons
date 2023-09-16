@@ -1,4 +1,4 @@
-## Interface: 100105
+## Interface: 100107
 ## Title: Raider.IO |cffFFFFFFMythic Plus|r (Korea)
 ## Author: Vladinator (Vladinator-TarrenMill), Aspyr (Aspyrox-Skullcrusher) and Isak (Isak-Sargeras)
 ## Dependencies: RaiderIO

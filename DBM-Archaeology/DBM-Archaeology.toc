@@ -1,7 +1,7 @@
-## Interface: 100105
+## Interface: 100107
 ## X-Min-Interface: 70100
 ## Title:|cffffe00a<|r|cffff7d0aDBM Extra|r|cffffe00a>|r |cff69ccf0Archaeology|r
-## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM Extra|r|cffffe00a>|r |cff69ccf0Археология|r
+## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM Дополнение|r|cffffe00a>|r |cff69ccf0Археология|r
 ## Notes: Gives archaeology a little more flavor
 ## Notes-ruRU: Придает археологии дополнительный колорит
 ## LoadOnDemand: 0
@@ -12,7 +12,7 @@
 ## SavedVariables: DBM_Archaeology_Settings
 ## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
 ## X-Curse-Project-ID: 29493
-## Version: r54
+## Version: r56
 
 localization.en.lua
 localization.cn.lua

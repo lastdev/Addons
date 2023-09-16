@@ -4110,7 +4110,7 @@ function module:Enable()
 	module:ReloadAllSplits()
 
 	module:RegisterTimer()
-	module:RegisterEvents('SCENARIO_UPDATE','GROUP_ROSTER_UPDATE','COMBAT_LOG_EVENT_UNFILTERED','UNIT_PET','PLAYER_LOGOUT','CHALLENGE_MODE_RESET','PLAYER_REGEN_DISABLED','PLAYER_REGEN_ENABLED','ENCOUNTER_START','ENCOUNTER_END')
+	module:RegisterEvents('SCENARIO_UPDATE','GROUP_ROSTER_UPDATE','COMBAT_LOG_EVENT_UNFILTERED','UNIT_PET','PLAYER_LOGOUT','CHALLENGE_MODE_RESET','PLAYER_REGEN_DISABLED','PLAYER_REGEN_ENABLED','ENCOUNTER_START','ENCOUNTER_END','PLAYER_SPECIALIZATION_CHANGED')
 
 	module:CreateSpellDB()
 
@@ -4135,7 +4135,7 @@ function module:Disable()
 	end
 
 	module:UnregisterTimer()
-	module:UnregisterEvents('SCENARIO_UPDATE','GROUP_ROSTER_UPDATE','COMBAT_LOG_EVENT_UNFILTERED','UNIT_PET','PLAYER_LOGOUT','CHALLENGE_MODE_RESET','PLAYER_REGEN_DISABLED','PLAYER_REGEN_ENABLED','ENCOUNTER_START','ENCOUNTER_END','ARENA_COOLDOWNS_UPDATE','UNIT_AURA')
+	module:UnregisterEvents('SCENARIO_UPDATE','GROUP_ROSTER_UPDATE','COMBAT_LOG_EVENT_UNFILTERED','UNIT_PET','PLAYER_LOGOUT','CHALLENGE_MODE_RESET','PLAYER_REGEN_DISABLED','PLAYER_REGEN_ENABLED','ENCOUNTER_START','ENCOUNTER_END','PLAYER_SPECIALIZATION_CHANGED','ARENA_COOLDOWNS_UPDATE','UNIT_AURA')
 
 	module:UnregisterAddonMessage()
 end
@@ -4363,6 +4363,24 @@ do
 		end
 	end
 	module.main.LOADING_SCREEN_DISABLED = module.main.ZONE_CHANGED_NEW_AREA
+end
+
+function module.main:PLAYER_SPECIALIZATION_CHANGED(unit)
+	if unit ~= "player" or not GetSpecialization then
+		return
+	end
+
+	local spec = GetSpecialization()
+	if not spec then
+		return
+	end
+
+	local class = (select(2,UnitClass'player')) or ""
+
+	local key = "Spec" .. spec .. class
+	if VMRT.ExCD2.Profiles[key] then
+		module:SelectProfile(VMRT.ExCD2.Profiles[key])
+	end
 end
 
 do
@@ -4963,10 +4981,11 @@ do
 		SPELL_AURA_APPLIED = {main=[[
 			blessingcdr = {}
 			symbolofhope = {}
-			symbolofhopeSpells = {
+			symbolofhopeSpells = {	--SpellLabel LabelID 1284
 				[22812]=true,[198589]=true,[48792]=true,[204021]=true,[109304]=true,[55342]=true,
 				[115203]=true,[19236]=true,[108271]=true,[104773]=true,[871]=true,[118038]=true,
-				[184364]=true,[498]=true,[31850]=true,[184662]=true,
+				[184364]=true,[498]=true,[31850]=true,[185311]=true,[212800]=true,
+				[403876]=true,[363916]=true,[243435]=true,
 			}
 			thundercharge = {}
 			faerie = {}
@@ -9745,18 +9764,18 @@ function module.options:Load()
 		return VMRT.ExCD2.Profiles.Now=="default" and L.ProfilesDefault or VMRT.ExCD2.Profiles.Now
 	end
 
-	profilesTab.currentText = ELib:Text(profilesTab,L.ProfilesCurrent,11):Size(650,200):Point(15,-20):Top():Color()
-	profilesTab.currentName = ELib:Text(profilesTab,"",14):Size(650,200):Point(210,-20):Top():Color(1,1,0)
+	profilesTab.currentText = ELib:Text(profilesTab,L.ProfilesCurrent,11):Size(650,200):Point(15,-15):Top():Color()
+	profilesTab.currentName = ELib:Text(profilesTab,"",14):Size(650,200):Point(210,-15):Top():Color(1,1,0)
 
 	profilesTab.currentName.UpdateText = function(self)
 		self:SetText(GetCurrentProfileName())
 	end
 	profilesTab.currentName:UpdateText()
 
-	profilesTab.choseText = ELib:Text(profilesTab,L.ProfilesChooseDesc,11):Size(650,200):Point(15,-60):Top():Color()
+	profilesTab.choseText = ELib:Text(profilesTab,L.ProfilesChooseDesc,11):Size(650,200):Point(15,-40):Top():Color()
 
-	profilesTab.choseNewText = ELib:Text(profilesTab,L.ProfilesNew,11):Size(650,200):Point(15,-88):Top()
-	profilesTab.choseNew = ELib:Edit(profilesTab):Size(170,20):Point(10,-100)
+	profilesTab.choseNewText = ELib:Text(profilesTab,L.ProfilesNew,11):Size(650,200):Point(15,-75+12):Top()
+	profilesTab.choseNew = ELib:Edit(profilesTab):Size(170,20):Point(10,-75)
 
 	profilesTab.choseNewButton = ELib:Button(profilesTab,L.ProfilesAdd):Size(70,20):Point("LEFT",profilesTab.choseNew,"RIGHT",0,0):OnClick(function (self)
 		local text = profilesTab.choseNew:GetText()
@@ -9781,8 +9800,8 @@ function module.options:Load()
 		StaticPopup_Show("EXRT_EXCD_ACTIVATENEW")
 	end)
 
-	profilesTab.choseSelectText = ELib:Text(profilesTab,L.ProfilesSelect,11):Size(605,200):Point(335,-88):Top()
-	profilesTab.choseSelectDropDown = ELib:DropDown(profilesTab,220,10):Point(330,-100):Size(235):SetText(LFG_LIST_SELECT)
+	profilesTab.choseSelectText = ELib:Text(profilesTab,L.ProfilesSelect,11):Size(605,200):Point(335,-75+12):Top()
+	profilesTab.choseSelectDropDown = ELib:DropDown(profilesTab,220,10):Point(330,-75):Size(235):SetText(LFG_LIST_SELECT)
 
 	local function GetCurrentProfilesList(func)
 		local list = {
@@ -9816,8 +9835,8 @@ function module.options:Load()
 			print(L.cd2ProfileCopySuccess:format(name))
 		end
 	end
-	profilesTab.copyText = ELib:Text(profilesTab,L.ProfilesCopy,11):Size(605,200):Point(15,-138):Top()
-	profilesTab.copyDropDown = ELib:DropDown(profilesTab,220,10):Point(10,-150):Size(235)
+	profilesTab.copyText = ELib:Text(profilesTab,L.ProfilesCopy,11):Size(605,200):Point(15,-120+12):Top()
+	profilesTab.copyDropDown = ELib:DropDown(profilesTab,220,10):Point(10,-120):Size(235)
 	function profilesTab.copyDropDown:ToggleUpadte()
 		self.List = GetCurrentProfilesList(function(_,arg1)
 			ELib:DropDownClose()
@@ -9847,8 +9866,8 @@ function module.options:Load()
 		}
 		StaticPopup_Show("EXRT_EXCD_PROFILES_REMOVE")
 	end
-	profilesTab.deleteText = ELib:Text(profilesTab,L.ProfilesDelete,11):Size(605,200):Point(15,-188):Top()
-	profilesTab.deleteDropDown = ELib:DropDown(profilesTab,220,10):Point(10,-200):Size(235)
+	profilesTab.deleteText = ELib:Text(profilesTab,L.ProfilesDelete,11):Size(605,200):Point(15,-160+12):Top()
+	profilesTab.deleteDropDown = ELib:DropDown(profilesTab,220,10):Point(10,-160):Size(235)
 	function profilesTab.deleteDropDown:ToggleUpadte()
 		self.List = GetCurrentProfilesList(function(_,arg1)
 			ELib:DropDownClose()
@@ -9886,7 +9905,7 @@ function module.options:Load()
 		profilesTab:TextToProfile(str:sub(headerLen+1),header:sub(headerLen,headerLen)=="0")
 	end
 
-	profilesTab.exportButton = ELib:Button(profilesTab,L.ProfilesExport):Size(235,25):Point(10,-250):OnClick(function (self)
+	profilesTab.exportButton = ELib:Button(profilesTab,L.ProfilesExport):Size(235,25):Point(10,-200):OnClick(function (self)
 		profilesTab.exportWindow:NewPoint("CENTER",UIParent,0,0)
 		profilesTab:ProfileToText()
 	end)
@@ -10052,7 +10071,7 @@ function module.options:Load()
 	end
 
 
-	profilesTab.autoText = ELib:Text(profilesTab,L.cd2AutoChangeTooltip,12):Size(605,200):Point(10,-300):Top():Color()
+	profilesTab.autoText = ELib:Text(profilesTab,L.cd2AutoChangeTooltip,12):Size(605,200):Point(10,-240):Top():Color()
 
 	local function GetTextProfileName(profileName)
 		if not profileName then
@@ -10075,6 +10094,10 @@ function module.options:Load()
 		self.autoArenaDown:SetText(GetTextProfileName(VMRT.ExCD2.Profiles.Arena) or "|cff999999"..L.cd2DontChange)
 		self.autoBGDown:SetText(GetTextProfileName(VMRT.ExCD2.Profiles.BG) or "|cff999999"..L.cd2DontChange)
 		self.autoOtherDown:SetText(GetTextProfileName(VMRT.ExCD2.Profiles.Other) or "|cff999999"..L.cd2DontChange)
+
+		for _,dd in pairs({self.autoSpec1Down,self.autoSpec2Down,self.autoSpec3Down,self.autoSpec4Down}) do
+			dd:SetText(GetTextProfileName(VMRT.ExCD2.Profiles[dd.OptKey]) or "|cff999999"..L.cd2DontChange)
+		end
 	end
 
 	local function AutoDropDown_ToggleUpadte(self)
@@ -10087,7 +10110,7 @@ function module.options:Load()
 		tinsert(self.List,1,{text = L.cd2DontChange, func = func})
 	end
 
-	profilesTab.autoRaidDown = ELib:DropDown(profilesTab,220,10):Point(10,-335):Size(235):AddText(RAID,11,function(self)self:NewPoint("TOPLEFT",'x',5,12):Color(1,.82,0,1) end)
+	profilesTab.autoRaidDown = ELib:DropDown(profilesTab,220,10):Point(10,-270):Size(235):AddText(RAID,11,function(self)self:NewPoint("TOPLEFT",'x',5,12):Color(1,.82,0,1) end)
 	profilesTab.autoRaidDown.OptKey = "Raid"
 	profilesTab.autoRaidDown.ToggleUpadte = AutoDropDown_ToggleUpadte
 
@@ -10106,6 +10129,46 @@ function module.options:Load()
 	profilesTab.autoOtherDown = ELib:DropDown(profilesTab,220,10):Point("TOPLEFT",profilesTab.autoDungDown,0,-40):Size(235):AddText(OTHER,11,function(self)self:NewPoint("TOPLEFT",'x',5,12):Color(1,.82,0,1) end)
 	profilesTab.autoOtherDown.OptKey = "Other"
 	profilesTab.autoOtherDown.ToggleUpadte = AutoDropDown_ToggleUpadte
+
+	local class = (select(2,UnitClass'player')) or ""
+
+	profilesTab.autoTextSpec = ELib:Text(profilesTab,L.cd2AutoChangeSpecTooltip,12):Size(605,200):Point(10,-380):Top():Color()
+
+	profilesTab.autoSpec1Down = ELib:DropDown(profilesTab,220,10):Point(10,-410):Size(235)
+	profilesTab.autoSpec1Down.OptKey = "Spec1" .. class
+	profilesTab.autoSpec1Down.ToggleUpadte = AutoDropDown_ToggleUpadte
+
+	profilesTab.autoSpec2Down = ELib:DropDown(profilesTab,220,10):Point("TOPLEFT",profilesTab.autoSpec1Down,0,-40):Size(235)
+	profilesTab.autoSpec2Down.OptKey = "Spec2" .. class
+	profilesTab.autoSpec2Down.ToggleUpadte = AutoDropDown_ToggleUpadte
+
+	profilesTab.autoSpec3Down = ELib:DropDown(profilesTab,220,10):Point("TOPLEFT",profilesTab.autoSpec1Down,320,0):Size(235)
+	profilesTab.autoSpec3Down.OptKey = "Spec3" .. class
+	profilesTab.autoSpec3Down.ToggleUpadte = AutoDropDown_ToggleUpadte
+
+	profilesTab.autoSpec4Down = ELib:DropDown(profilesTab,220,10):Point("TOPLEFT",profilesTab.autoSpec2Down,320,0):Size(235)
+	profilesTab.autoSpec4Down.OptKey = "Spec4" .. class
+	profilesTab.autoSpec4Down.ToggleUpadte = AutoDropDown_ToggleUpadte
+
+	if not GetSpecializationInfo then
+		profilesTab.autoTextSpec:Hide()
+		profilesTab.autoSpec1Down:Hide()
+		profilesTab.autoSpec2Down:Hide()
+		profilesTab.autoSpec3Down:Hide()
+		profilesTab.autoSpec4Down:Hide()
+	else
+		for i=1,4 do
+			local _, name = GetSpecializationInfo(i)
+			--if not name then
+			--	_, name = ExRT.Classic.GetSpecializationInfoByID(ExRT.GDB.ClassSpecializationList[class][i])
+			--end
+			if name then
+				profilesTab["autoSpec"..i.."Down"]:AddText(name,11,function(self)self:NewPoint("TOPLEFT",'x',5,12):Color(1,.82,0,1) end)
+			else
+				profilesTab["autoSpec"..i.."Down"]:Hide()
+			end
+		end
+	end
 
 	profilesTab:UpdateAutoTexts()
 
@@ -12568,9 +12631,9 @@ module.db.AllSpells = {
 				end
 			end
 		]]},
-	{31661,	"MAGE",3,--Дыхание дракона
-		{31661,45,0},
-		isTalent=true},
+	{31661,    "MAGE",3,--Дыхание дракона
+       		{31661,45,0},
+        	isTalent=true,reduceCdAfterCast={{5143,387807,nil,263725},-2,{108853,387807},-2,{30455,387807},-2}},
 	{12051,	"MAGE",3,--Прилив сил
 		nil,{12051,90,6},nil,nil,
 		isTalent=true,hasCharges=273330,changeDurWithHaste=true},
@@ -12705,6 +12768,12 @@ module.db.AllSpells = {
 	{212653,"MAGE,MOVE",4,--Мерцание
 		{212653,25,0},nil,nil,nil,
 		isTalent=true,hasCharges=1,cdDiff={382268,{-1,-2},336636,{-2,-2.2,-2.4,-2.6,-2.8,-3,-3.2,-3.4,-3.6,-3.8,-4,-4.2,-4.4,-4.6,-4.8}},ignoreUseWithAura=375240,changeCdWithAura={381750,"*0.85"}},
+	{414660,"MAGE",3,--Массовая преграда
+		{414660,120,0},
+		isTalent=true},
+	{414664,"MAGE",3,--Массовая невидимость
+		{414664,300,12},
+		isTalent=true},
 
 
 	{104316,"WARLOCK",3,--Призыв зловещих охотников

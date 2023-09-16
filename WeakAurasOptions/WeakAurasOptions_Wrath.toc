@@ -1,7 +1,7 @@
 ## Interface: 30402
 ## Title: WeakAuras Options
 ## Author: The WeakAuras Team
-## Version: 5.6.0
+## Version: 5.7.1
 ## Notes: Options for WeakAuras
 ## Notes-esES: Opciones para WeakAuras
 ## Notes-deDE: Optionen für WeakAuras
@@ -95,3 +95,5 @@ AceGUI-Widgets\AceGuiWidget-WeakAurasProgressBar.lua
 AceGUI-Widgets\AceGUIWidget-WeakAurasSpinBox.lua
 AceGUI-Widgets\AceGUIWidget-WeakAurasMiniTalent_Wrath.lua
 AceGUI-Widgets\AceGUIWidget-WeakAurasScrollArea.lua
+AceGUI-Widgets\AceGUIWidget-WeakAurasInputFocus.lua
+AceGUI-Widgets\AceGuiWidget-WeakAurasMediaSound.lua

@@ -204,11 +204,23 @@ L["CONFIG_SELLING_MISSING_FAVOURITES_TOOLTIP_HEADER"] = "누락된 즐겨찾기 
 L["CONFIG_SELLING_MISSING_FAVOURITES_TOOLTIP_TEXT"] = "Show favourite items in the bag view even when they aren't in your bag."
 L["CONFIG_SELLING_NOT_LIFO_HEADER"] = "판매: 장비/펫"
 L["CONFIG_SELLING_NOT_LIFO_TEXT"] = "장비/펫의 최저가를 %로 계산할 지 골드로 계산할 지 설정합니다. 해당 카테고리는 목록이 개인화되며 최저가를 설정할 수 있습니다."
+--[[Translation missing --]]
+L["CONFIG_SELLING_POSSESSED_FAVOURITES_FIRST"] = "In favourites item list place favourites you have in your bag first"
+--[[Translation missing --]]
+L["CONFIG_SELLING_POSSESSED_FAVOURITES_FIRST_TOOLTIP_HEADER"] = "Possessed favourites first"
+--[[Translation missing --]]
+L["CONFIG_SELLING_POSSESSED_FAVOURITES_FIRST_TOOLTIP_TEXT"] = "Set the favourites ordering to force any items in your bag to be at the start of the list."
 L["CONFIG_SELLING_POST_SHORTCUT"] = "현재 아이템을 게시하는 키보드/마우스 단축키는"
 --[[Translation missing --]]
 L["CONFIG_SELLING_POST_SHORTCUT_TOOLTIP_TEXT"] = "Click and then press the buttons that you wish to use as the shortcut. This shortcut will only be active in the Selling tab and won't affect any other shortcuts bound to the buttons."
 --[[Translation missing --]]
 L["CONFIG_SELLING_PREV_SHORTCUT"] = "A shortcut to go back to the previously selected item"
+--[[Translation missing --]]
+L["CONFIG_SELLING_RESELECT_ITEM"] = "Select the last item selected for posting when opening the Selling tab"
+--[[Translation missing --]]
+L["CONFIG_SELLING_RESELECT_ITEM_TOOLTIP_HEADER"] = "Reselect previous item"
+--[[Translation missing --]]
+L["CONFIG_SELLING_RESELECT_ITEM_TOOLTIP_TEXT"] = "After closing the Selling tab and reopening it either during the current session or a later one (including logging out and back in) restore the item selected for posting."
 L["CONFIG_SELLING_SHORTCUTS_CATEGORY"] = "판매: 단축키"
 L["CONFIG_SELLING_SHORTCUTS_TEXT"] = "판매 탭 내 키보드 및 마우스 단축키 옵션"
 --[[Translation missing --]]
@@ -460,6 +472,8 @@ L["RENAME"] = "목록명 변경"
 L["RENAME_LIST_CONFIRM"] = "'%s'의 새 이름 입력:"
 L["RENAME_LIST_DIALOG"] = "목록의 이름을 변경합니다."
 L["RESET_ALL"] = "모두 삭제"
+--[[Translation missing --]]
+L["RESET_COLOR"] = "Reset color"
 L["RESTORE_ALL"] = "모두 복원"
 L["RESULTS_AVAILABLE_COLUMN"] = "경매 수량"
 L["RESULTS_NAME_COLUMN"] = "이름"
@@ -489,6 +503,8 @@ L["SELLERS_OVERFLOW_TEXT"] = "%s, %s 추가"
 L["SELLING_TAB"] = "판매하기"
 L["SELLING_TAB_HEADER"] = "옥셔네이터 - 판매하기"
 L["SERVER_TOOK_TOO_LONG"] = "서버가 응답하는데 오래 걸렸습니다. 적용되지 않았을 수 있습니다."
+--[[Translation missing --]]
+L["SET_BAG_ITEM_SELECTION_COLOR"] = "Set bag item selection color"
 L["SET_VALUE"] = "가격별 설정"
 L["SET_VALUE_SUFFIX"] = "최저가"
 L["SHIFT_LEFT_CLICK"] = "쉬프트 + 클릭"

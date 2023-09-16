@@ -1,4 +1,4 @@
-local MAJOR, MINOR = "OmniCDC", 3
+local MAJOR, MINOR = "OmniCDC", 4
 local OmniCDC, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 if not OmniCDC then
 	return

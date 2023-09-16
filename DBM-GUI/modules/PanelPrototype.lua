@@ -517,12 +517,21 @@ function PanelPrototype:CreateArea(name)
 	})
 end
 
+local function handleWAKeyHyperlink(self, link)
+	local _, linkType, arg1, arg2 = strsplit(":", link)
+	if linkType == "DBM" and arg1 == "wacopy" then
+		DBM:ShowUpdateReminder(nil, nil, DBM_CORE_L.COPY_WA_DIALOG, arg2)
+	end
+end
+
 function PanelPrototype:CreateAbility(titleText, icon, spellID)
 	local area = CreateFrame("Frame", "DBM_GUI_Option_" .. self:GetNewID(), self.frame, "TooltipBorderBackdropTemplate")
 	area.mytype = "ability"
 	area.hidden = not DBM.Options.AutoExpandSpellGroups
 	area:SetBackdropColor(0.15, 0.15, 0.15, 0.2)
 	area:SetBackdropBorderColor(0.4, 0.4, 0.4)
+	area:SetHyperlinksEnabled(true)
+	area:SetScript("OnHyperlinkClick", handleWAKeyHyperlink)
 	if select("#", self.frame:GetChildren()) == 1 then
 		area:SetPoint("TOPLEFT", self.frame, 5, -20)
 	else
@@ -560,7 +569,7 @@ function PanelPrototype:CreateAbility(titleText, icon, spellID)
 		button.toggle:SetPushedTexture(area.hidden and 130836 or 130820) -- "Interface\\Buttons\\UI-PlusButton-DOWN", "Interface\\Buttons\\UI-MinusButton-DOWN"
 		_G["DBM_GUI_OptionsFrame"]:DisplayFrame(DBM_GUI.currentViewing)
 	end
-	if not isModernAPI then
+	if not isModernAPI then--TODO, see if this work around is needed anymore in 1.14.4
 		button:RegisterForClicks('')
 	end
 	--

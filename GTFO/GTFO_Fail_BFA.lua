@@ -528,6 +528,28 @@ GTFO.SpellID["314306"] = {
   sound = 3;
 };
 
+GTFO.SpellID["271038"] = {
+  --desc = "Soul Barrage (Zak'rajan the Undying)";
+  sound = 3;
+};
+
+GTFO.SpellID["256202"] = {
+  --desc = "Call Lightning (Fangcaller Hrillik)";
+  sound = 3;
+};
+
+GTFO.SpellID["260883"] = {
+  --desc = "Cascade (Emperor Korthek)";
+  sound = 3;
+};
+
+GTFO.SpellID["292148"] = {
+  --desc = "Impact (Mirror Image)";
+  sound = 3;
+  vehicle = true;
+};
+
+
 -- ***********************
 -- * Shrine of the Storm *
 -- ***********************

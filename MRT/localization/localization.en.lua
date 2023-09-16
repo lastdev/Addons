@@ -585,6 +585,7 @@ L.cd2ProfileCopySuccess = "Profile copied from %s"
 PH.cd2OtherSetOnlyNotOnCD = "Show only without cd"
 L.cd2ColSetIconMasque = "Enable Masque support"
 PH.cd2ColSetRightToLeft = "Anchor from right to left"
+L.cd2AutoChangeSpecTooltip = "Autochange profile for spec"
 
 L.sallspellsEggClear = "Clear"
 L.sallspellsEgg = "Combat log"

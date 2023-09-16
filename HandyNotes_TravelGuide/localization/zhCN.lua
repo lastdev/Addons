@@ -3,7 +3,7 @@ local L = LibStub("AceLocale-3.0"):NewLocale("HandyNotes_TravelGuide", "zhCN", f
 if not L then return end
 -- Simplified Chinese translation by mmk5 ( https://www.curseforge.com/members/mmk5 )
 --  zhCN client: (NGA-男爵凯恩)
---  Last update: 2022/11/29
+--  Last update: 2023/05/12
 if L then
 ----------------------------------------------------------------------------------------------------
 -----------------------------------------------CONFIG-----------------------------------------------
@@ -61,7 +61,7 @@ L["config_note_desc"] = "当图标（船/传送点）可用时，显示相关的
 
 L["config_remove_unknown"] = "删除未知的目的地"
 L["config_remove_unknown"] = "这将删除在世界地图上没有满足要求的目的地。"
-  
+
 L["config_remove_AreaPois"] = "删除暴雪在地图上的标注"
 L["config_remove_AreaPois_desc"] = "这将删除暴雪在世界地图上为目的地设置的标注点（POI）。"
 
@@ -106,7 +106,7 @@ L["dev_config_show_prints_desc"] = "在聊天窗口中显示标记() 的信息."
 
 L["handler_context_menu_addon_name"] = "HandyNotes: 旅行指南"
 L["handler_context_menu_add_tomtom"] = "添加到TomTom"
-L['handler_context_menu_add_map_pin'] = "设置航点"
+L["handler_context_menu_add_map_pin"] = "设置航点"
 L["handler_context_menu_hide_node"] = "隐藏图标"
 
 --============================================TOOLTIPS============================================--
@@ -134,6 +134,9 @@ L["Portal to Valdrakken"] = "通往瓦德拉肯的传送门"
 L["Boat to Dragon Isle"] = "前往巨龙群岛的船"
 L["Zeppelin to Dragon Isle"] = "前往巨龙群岛的飞艇"
 L["Teleport to Seat of the Aspects"] = "传送到守护巨龙之座"
+L["Portal to Nazmir"] = "通往纳兹米尔的传送门"
+L["Portal to Tiragarde Sound"] = "通往提拉加德海峡的传送门"
+L["Portal to Badlands"] = "通往荒芜之地的传送门"
 
 --==========================================SHADOWLANDS===========================================--
 
@@ -158,7 +161,7 @@ L["Anima Gateway to Hero's rest"] = "通往英雄之眠传送门"
 L["Portal to Zuldazar"] = "通往祖达萨"
 L["Boat to Zuldazar"] = "前往祖达萨的船"
 L["Return to Zuldazar"] = "返回祖达萨"
-L["Boat to Vol'Dun"] = "前往沃顿的船"
+L["Boat to Vol'dun"] = "前往沃顿的船"
 L["Boat to Nazmir"] = "前往纳兹米尔的船"
 L["Portal to Nazjatar"] = "通往纳沙塔尔"
 L["Submarine to Mechagon"] = "前往麦卡贡的潜艇"
@@ -231,9 +234,9 @@ L["Boat to Howling Fjord"] = "前往嚎风峡湾的船"
 L["Boat to Kamagua"] = "前往卡玛古（嚎风峡湾）的船"
 L["Portal to Howling Fjord"] = "通往嚎风峡湾"
 L["Boat to Borean Tundra"] = "前往北风苔原的船"
-L["Boat to Unu'Pe"] = "前往乌努比（北风苔原）的船"
+L["Boat to Unu'pe"] = "前往乌努比（北风苔原）的船"
 L["Zeppelin to Borean Tundra"] = "前往北风苔原的飞艇"
-L["Boat to Moa'Ki Harbor"] = "前往莫亚基港口（龙骨荒野）的船"
+L["Boat to Moa'ki Harbor"] = "前往莫亚基港口（龙骨荒野）的船"
 L["Waygate to Sholazar Basin"] = "通往索拉查盆地"
 
 -------------------------------------------------BC-------------------------------------------------

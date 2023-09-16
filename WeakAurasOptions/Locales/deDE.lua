@@ -13,12 +13,9 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L[" rotated |cFFFF0000%s|r degrees"] = " rotated |cFFFF0000%s|r degrees"
 	L["% of Progress"] = "Fortschritt in %"
-	--[[Translation missing --]]
-	L["%d |4aura:auras; added"] = "%d |4aura:auras; added"
-	--[[Translation missing --]]
-	L["%d |4aura:auras; deleted"] = "%d |4aura:auras; deleted"
-	--[[Translation missing --]]
-	L["%d |4aura:auras; modified"] = "%d |4aura:auras; modified"
+	L["%d |4aura:auras; added"] = "%d |4aura:auras; hinzugefügt"
+	L["%d |4aura:auras; deleted"] = "%d |4aura:auras; gelöscht"
+	L["%d |4aura:auras; modified"] = "%d |4aura:auras; geändert"
 	L["%i auras selected"] = "%i Auren ausgew\\195\\164hlt"
 	--[[Translation missing --]]
 	L["%i."] = "%i."
@@ -776,8 +773,6 @@ Falls die Zahl als Dezimalzahl (z.B. 0.5), Bruch (z.B. 1/2) oder Prozentsatz (z.
 	--[[Translation missing --]]
 	L["Ignore Self"] = "Ignore Self"
 	--[[Translation missing --]]
-	L["Ignore updates"] = "Ignore updates"
-	--[[Translation missing --]]
 	L["Ignore Wago updates"] = "Ignore Wago updates"
 	L["Ignored"] = "Ignoriert"
 	--[[Translation missing --]]
@@ -1210,6 +1205,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Soft Min"] = "Soft Min"
 	L["Sort"] = "Sortieren"
 	L["Sound"] = "Sound"
+	--[[Translation missing --]]
+	L["Sound by Kit ID"] = "Sound by Kit ID"
 	L["Sound Channel"] = "Soundkanal"
 	L["Sound File Path"] = "Sound Dateipfad"
 	L["Sound Kit ID"] = "Sound Kit ID"

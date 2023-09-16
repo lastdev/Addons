@@ -12,7 +12,7 @@ end
 local mod	= DBM:NewMod("Garr-Classic", "DBM-Raids-Vanilla", catID)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525041212")
+mod:SetRevision("20230814031337")
 mod:SetCreatureID(12057)--, 12099
 mod:SetEncounterID(666)
 mod:SetModelID(12110)
@@ -36,13 +36,13 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 15732 and args:IsDestTypePlayer() then
+	if args:IsSpell(15732) and args:IsDestTypePlayer() then
 		warnImmolate:CombinedShow(1, args.destName)
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 19492 then
+	if args:IsSpell(19492) then
 		warnAntiMagicPulse:Show()
 		timerAntiMagicPulseCD:Start()
 	end

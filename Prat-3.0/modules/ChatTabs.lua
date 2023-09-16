@@ -330,48 +330,35 @@ L = {
 		["Active Alpha"] = "Aktive Transparenz",
 		["All"] = "Alle",
 		["Always"] = "Immer",
-		--[[Translation missing --]]
-		["Change Font Color On Message"] = "Change Font Color On Message",
-		--[[Translation missing --]]
-		["Chat Alert Timeout"] = "Chat Alert Timeout",
+		["Change Font Color On Message"] = "Ändert die Schriftfarbe der Nachricht",
+		["Chat Alert Timeout"] = "Zeitüberschreitung bei Chat-Benachrichtigung",
 		["Chat window tab options."] = "Optionen für Chatfensterreiter",
 		["Default"] = "Standard",
 		["disableflash_desc"] = "Deaktiviert das Blinken der Chat-Tabs.",
 		["disableflash_name"] = "Blinken ausschalten",
-		--[[Translation missing --]]
-		["disablewhisperflash_desc"] = "Disable flashing of the chat tabs for whispers.",
-		--[[Translation missing --]]
-		["disablewhisperflash_name"] = "Disable Flash for Whispers",
-		--[[Translation missing --]]
-		["Flash Color"] = "Flash Color",
-		--[[Translation missing --]]
-		["Font Color"] = "Font Color",
-		--[[Translation missing --]]
-		["foreveralert_desc"] = "With this turned off the highlight/flash will persist until the timer elapses",
-		--[[Translation missing --]]
-		["foreveralert_name"] = "Keep highlighting until tab button clicked",
+		["disablewhisperflash_desc"] = "Deaktiviert das Blitzen beim Chat-Fenster für Flüsternachrichten.",
+		["disablewhisperflash_name"] = "Deaktiviert das Blitzen für Flüsternachrichten",
+		["Flash Color"] = "Blitzfarbe",
+		["Font Color"] = "Schriftfarbe",
+		["foreveralert_desc"] = "Wenn diese Option ausgeschaltet ist, bleibt die Beleuchtung/das Blitzen solange bestehen, bis der Timer abläuft",
+		["foreveralert_name"] = "Haltet die Beleuchtung, bis du die Tab-Taste klickst",
 		["Hidden"] = "Verborgen",
-		--[[Translation missing --]]
-		["Highlighting/Flashing"] = "Highlighting/Flashing",
-		--[[Translation missing --]]
-		["How long any highlights/flashes should last"] = "How long any highlights/flashes should last",
+		["Highlighting/Flashing"] = "Beleuchtung/das Blitzen",
+		["How long any highlights/flashes should last"] = "Wie lange sollte die Beleuchtung/das Blitzen dauern",
 		["Individual"] = "Individuell",
 		["Not Active Alpha"] = "Inaktive Transparenz",
 		["preventdrag_desc"] = "Verhindert das Verschieben der Chattabs mit der Maus.",
 		["preventdrag_name"] = "Ziehen verhindern",
 		["Set ChatFrame%d Display Mode"] = "Darstellungsmodus von Chatfenster%d einstellen",
 		["Set Display Mode"] = "Darstellungsmodus einstellen",
-		--[[Translation missing --]]
-		["Set Flash Color"] = "Set Flash Color",
-		--[[Translation missing --]]
-		["Set Flash On Message"] = "Set Flash On Message",
+		["Set Flash Color"] = "Lege die Blitzfarbe fest",
+		["Set Flash On Message"] = "Lege das Blitzen bei Nachricht fest",
 		["Set tab display mode for each chat window."] = "Reiterdarstellungsmodus für jedes Chatfenster einstellen: markiert (an), nicht markiert (aus), grau markiert (standard)",
 		["Set tab display to always, hidden or the Blizzard default."] = "Reiterdarstellung einstellen: immer, verbergen oder Blizzards Standard",
 		["Sets alpha of chat tab for active chat frame."] = "Transparenz der Chatreiter von aktiven Chatfenstern einstellen.",
 		["Sets alpha of chat tab for not active chat frame."] = "Transparenz der Chatreiter von inaktiven Chatfenstern einstellen.",
 		["Tabs"] = "Reiter (Reiter der Chatfenster)",
-		--[[Translation missing --]]
-		["Visibility"] = "Visibility",
+		["Visibility"] = "Sichtbarkeit",
 	}
 }
 
@@ -994,9 +981,9 @@ end
     CHAT_FRAME_TAB_NORMAL_NOMOUSE_ALPHA = self.db.profile.notactivealpha;
     for k, v in pairs(Prat.Frames) do
       local tabButton = _G[k .. "Tab"]
-      tabButton:Show()
-      tabButton:Hide()
       if FCF_IsValidChatFrame(v) then
+        tabButton:Show()
+        tabButton:Hide()
         FCFTab_UpdateAlpha(v)
       end
     end

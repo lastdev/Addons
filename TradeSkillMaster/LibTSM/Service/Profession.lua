@@ -14,7 +14,6 @@ local ItemString = TSM.Include("Util.ItemString")
 local CraftString = TSM.Include("Util.CraftString")
 local ItemInfo = TSM.Include("Service.ItemInfo")
 local private = {
-	classicSpellIdLookup = {},
 	categoryInfoTemp = {},
 }
 local EMPTY_TABLE = {}
@@ -145,7 +144,7 @@ function Profession.HasCooldown(craftString)
 	if Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) then
 		return select(2, C_TradeSkillUI.GetRecipeCooldown(spellId)) and true or false
 	else
-		spellId = private.classicSpellIdLookup[spellId] or spellId
+		spellId = Scanner.GetClassicSpellId(spellId) or spellId
 		return GetTradeSkillCooldown(spellId) and true or false
 	end
 end
@@ -163,7 +162,7 @@ function Profession.GetRemainingCooldown(craftString)
 		end
 		cooldown = cooldownTime
 	else
-		spellId = private.classicSpellIdLookup[spellId] or spellId
+		spellId = Scanner.GetClassicSpellId(spellId) or spellId
 		cooldown = GetTradeSkillCooldown(spellId)
 	end
 	return cooldown and floor(cooldown) or nil
@@ -245,7 +244,7 @@ function Profession.GetResultInfo(craftString)
 			local name, _, icon = GetSpellInfo(indirectSpellId)
 			return nil, icon, name
 		else
-			local name, _, icon = GetSpellInfo(Profession.IsClassicCrafting() and GetCraftInfo(not Environment.IsRetail() and private.classicSpellIdLookup[spellId] or spellId) or spellId)
+			local name, _, icon = GetSpellInfo(Profession.IsClassicCrafting() and GetCraftInfo(not Environment.IsRetail() and Scanner.GetClassicSpellId(spellId) or spellId) or spellId)
 			return nil, icon, name
 		end
 	elseif strfind(resultItem, "item:") then
@@ -267,7 +266,7 @@ end
 ---@param craftString string The craft string for the recipe
 ---@return boolean
 function Profession.IsSalvage(craftString)
-	return ProfessionInfo.IsSalvage(CraftString.GetSpellId(craftString))
+	return Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) and Scanner.GetRecipeTypeByCraftString(craftString) == Enum.TradeskillRecipeType.Salvage
 end
 
 ---Returns whether or not a recipe is a tinker.
@@ -291,7 +290,7 @@ function Profession.NeededTools(craftString)
 		return nil
 	else
 		local toolsStr, hasTools = nil, nil
-		spellId = private.classicSpellIdLookup[spellId] or spellId
+		spellId = Scanner.GetClassicSpellId(spellId) or spellId
 		if Profession.IsClassicCrafting() then
 			toolsStr, hasTools = GetCraftSpellFocus(spellId)
 		else
@@ -319,7 +318,7 @@ function Profession.GetRecipeLink(craftString)
 	if Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) then
 		return C_TradeSkillUI.GetRecipeLink(spellId)
 	else
-		spellId = private.classicSpellIdLookup[spellId] or spellId
+		spellId = Scanner.GetClassicSpellId(spellId) or spellId
 		if Profession.IsClassicCrafting() then
 			return GetCraftRecipeLink(spellId)
 		else

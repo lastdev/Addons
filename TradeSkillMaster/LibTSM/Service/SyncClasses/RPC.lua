@@ -79,8 +79,7 @@ end
 -- Message Handlers
 -- ============================================================================
 
-function private.HandleCall(dataType, _, sourcePlayer, data)
-	assert(dataType == Constants.DATA_TYPES.RPC_CALL)
+function private.HandleCall(_, sourcePlayer, data)
 	if type(data) ~= "table" or type(data.name) ~= "string" or type(data.seq) ~= "number" or type(data.args) ~= "table" then
 		return
 	end
@@ -116,8 +115,7 @@ function private.HandleCall(dataType, _, sourcePlayer, data)
 	end
 end
 
-function private.HandleReturn(dataType, _, character, data)
-	assert(dataType == Constants.DATA_TYPES.RPC_RETURN)
+function private.HandleReturn(_, character, data)
 	if type(data.seq) ~= "number" or type(data.result) ~= "table" then
 		return
 	end
@@ -136,8 +134,7 @@ function private.HandleReturn(dataType, _, character, data)
 	private.pendingRPC[data.seq] = nil
 end
 
-function private.HandlePreamble(dataType, _, _, data)
-	assert(dataType == Constants.DATA_TYPES.RPC_PREAMBLE)
+function private.HandlePreamble(_, _, data)
 	if type(data.seq) ~= "number" or type(data.transferTime) ~= "number" then
 		return
 	elseif not private.pendingRPC[data.seq] then

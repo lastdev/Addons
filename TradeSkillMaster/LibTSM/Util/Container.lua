@@ -9,8 +9,8 @@ local Container = TSM.Init("Util.Container") ---@class Util.Container
 local Environment = TSM.Include("Environment")
 local SlotId = TSM.Include("Util.SlotId")
 local private = {
-	useCTable = nil,
 	numBagSlots = nil,
+	bankBags = nil,
 }
 
 
@@ -20,8 +20,11 @@ local private = {
 -- ============================================================================
 
 Container:OnModuleLoad(function()
-	private.useCTable = Environment.HasFeature(Environment.FEATURES.C_CONTAINER)
 	private.numBagSlots = NUM_BAG_SLOTS + (Environment.HasFeature(Environment.FEATURES.REAGENT_BAG) and NUM_REAGENTBAG_SLOTS or 0)
+	private.bankBags = {}
+	for bag = private.numBagSlots + 1, private.numBagSlots + NUM_BANKBAGSLOTS do
+		tinsert(private.bankBags, bag)
+	end
 end)
 
 
@@ -43,12 +46,7 @@ function Container.GetBagItemFamily(bag)
 	if bag == BACKPACK_CONTAINER then
 		return 0
 	end
-	local inventoryId = nil
-	if private.useCTable then
-		inventoryId = C_Container.ContainerIDToInventoryID(bag)
-	else
-		inventoryId = ContainerIDToInventoryID(bag)
-	end
+	local inventoryId = C_Container.ContainerIDToInventoryID(bag)
 	return GetItemFamily(GetInventoryItemLink("player", inventoryId)) or 0
 end
 
@@ -76,33 +74,31 @@ function Container.GetNumBags()
 	return private.numBagSlots
 end
 
----Returns the indexes for the fist and last bank bag slots.
----@return number @The index of the first bank bag
----@return number @The index of the last bank bag
-function Container.GetBankBagIndexes()
-	return private.numBagSlots + 1, private.numBagSlots + NUM_BANKBAGSLOTS
+---Returns whether or not the specified bag is a bank bag.
+---@param bag number The bag to check
+---@return boolean
+function Container.IsBankBag(bag)
+	return bag >= (private.numBagSlots + 1) and bag <= (private.numBagSlots + NUM_BANKBAGSLOTS)
+end
+
+---Iterates over the bank bags.
+---@return fun(): number, number
+function Container.BankBagIterator()
+	return ipairs(private.bankBags)
 end
 
 ---Returns the total number of slots in the bag specified by the index.
 ---@param bag number The index of the bag
 ---@return number
 function Container.GetNumSlots(bag)
-	if private.useCTable then
-		return C_Container.GetContainerNumSlots(bag)
-	else
-		return GetContainerNumSlots(bag)
-	end
+	return C_Container.GetContainerNumSlots(bag)
 end
 
 ---Returns the number of free slots in a bag.
 ---@param bag number The index of the bag
 ---@return number
 function Container.GetNumFreeSlots(bag)
-	if private.useCTable then
-		return C_Container.GetContainerNumFreeSlots(bag)
-	else
-		return GetContainerNumFreeSlots(bag)
-	end
+	return C_Container.GetContainerNumFreeSlots(bag)
 end
 
 ---Returns the item ID in a container slot.
@@ -110,11 +106,7 @@ end
 ---@param slot number The index of the slot whitin the bag
 ---@return number
 function Container.GetItemId(bag, slot)
-	if private.useCTable then
-		return C_Container.GetContainerItemID(bag, slot)
-	else
-		return GetContainerItemID(bag, slot)
-	end
+	return C_Container.GetContainerItemID(bag, slot)
 end
 
 ---Returns info for an item in a container slot.
@@ -132,15 +124,11 @@ end
 ---@return number itemId The unique identifier for the item in the bag slot
 ---@return boolean isBound Whether the item is bound of the character
 function Container.GetItemInfo(bag, slot)
-	if private.useCTable then
-		local info = C_Container.GetContainerItemInfo(bag, slot)
-		if not info then
-			return
-		end
-		return info.iconFileID, info.stackCount, info.isLocked, info.quality, info.isReadable, info.hasLoot, info.hyperlink, info.isFiltered, info.hasNoValue, info.itemID, info.isBound
-	else
-		return GetContainerItemInfo(bag, slot)
+	local info = C_Container.GetContainerItemInfo(bag, slot)
+	if not info then
+		return
 	end
+	return info.iconFileID, info.stackCount, info.isLocked, info.quality, info.isReadable, info.hasLoot, info.hyperlink, info.isFiltered, info.hasNoValue, info.itemID, info.isBound
 end
 
 ---Returns a link of the object located in the specified slot of a specified bag.
@@ -148,33 +136,21 @@ end
 ---@param slot number The index of the slot whitin the bag
 ---@return string
 function Container.GetItemLink(bag, slot)
-	if private.useCTable then
-		return C_Container.GetContainerItemLink(bag, slot)
-	else
-		return GetContainerItemLink(bag, slot)
-	end
+	return C_Container.GetContainerItemLink(bag, slot)
 end
 
 ---Uses an item from given bag slot.
 ---@param bag number The index of the bag
 ---@param slot number The index of the slot whitin the bag
 function Container.UseItem(bag, slot)
-	if private.useCTable then
-		return C_Container.UseContainerItem(bag, slot)
-	else
-		return UseContainerItem(bag, slot)
-	end
+	C_Container.UseContainerItem(bag, slot)
 end
 
 ---Pick up an item from given bag slot.
 ---@param bag number The index of the bag
 ---@param slot number The index of the slot whitin the bag
 function Container.PickupItem(bag, slot)
-	if private.useCTable then
-		return C_Container.PickupContainerItem(bag, slot)
-	else
-		return PickupContainerItem(bag, slot)
-	end
+	C_Container.PickupContainerItem(bag, slot)
 end
 
 ---Places part of a stack of items from a container onto the cursor.
@@ -182,21 +158,13 @@ end
 ---@param slot number The index of the slot whitin the bag
 ---@param count number The quantity to split
 function Container.SplitItem(bag, slot, count)
-	if private.useCTable then
-		return C_Container.SplitContainerItem(bag, slot, count)
-	else
-		return SplitContainerItem(bag, slot, count)
-	end
+	C_Container.SplitContainerItem(bag, slot, count)
 end
 
 ---Register a secure hook function for when a container item is used.
 ---@param func function
 function Container.SecureHookUseItem(func)
-	if private.useCTable then
-		hooksecurefunc(C_Container, "UseContainerItem", func)
-	else
-		hooksecurefunc("UseContainerItem", func)
-	end
+	hooksecurefunc(C_Container, "UseContainerItem", func)
 end
 
 

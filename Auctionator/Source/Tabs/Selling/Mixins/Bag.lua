@@ -31,19 +31,23 @@ function AuctionatorSellingBagFrameMixin:OnLoad()
     prevFrame = frame
   end
 
-  self:SetWidth(self.frameMap[FAVOURITE]:GetRowWidth())
+  self.highlightedKey = {}
 
-  -- Used to preserve scroll position relative to top when contents change
-  self.ScrollBox.ItemListingFrame.OnSettingDirty = function(listing)
-    listing.oldHeight = listing:GetHeight() -- Used to get absolute offset from top
+  self.itemMap = {}
+  for _, classID in ipairs(self.orderedClassIds) do
+    self.itemMap[classID] = {}
   end
 
-  self.ScrollBox.ItemListingFrame.OnCleaned = function(listing)
-    local oldOffset = self.ScrollBox:GetDerivedScrollOffset()
+  self:SetWidth(self.frameMap[FAVOURITE]:GetRowWidth())
 
+  self.ScrollBox.ItemListingFrame.OnCleaned = function(listing)
     self.ScrollBox:FullUpdate(ScrollBoxConstants.UpdateImmediately);
 
-    self.ScrollBox:SetScrollTargetOffset(oldOffset)
+    -- If an item has just been selected make sure it scrolls into view
+    if self.selectedButton ~= nil then
+      self:ScrollButtonIntoView(self.selectedButton)
+      self.selectedButton = nil
+    end
   end
 
   local view = CreateScrollBoxLinearView()
@@ -51,20 +55,66 @@ function AuctionatorSellingBagFrameMixin:OnLoad()
   ScrollUtil.InitScrollBoxWithScrollBar(self.ScrollBox, self.ScrollBar, view);
 
 
+  Auctionator.EventBus:RegisterSource(self, "AuctionatorSellingBagFrameMixin")
   Auctionator.EventBus:Register(self, {
-    Auctionator.Selling.Events.BagItemClicked
+    Auctionator.Selling.Events.BagItemClicked,
+    Auctionator.Selling.Events.BagItemRequest,
+    Auctionator.Selling.Events.ClearBagItem,
+    Auctionator.Selling.Events.BagReady,
   })
 end
 
 function AuctionatorSellingBagFrameMixin:OnHide()
-  self.highlightedKey = nil
+  self.highlightedKey = {}
+  self.isInitialViewReady = false
 end
 
 function AuctionatorSellingBagFrameMixin:ReceiveEvent(event, ...)
-  if event == Auctionator.Selling.Events.BagItemClicked then
+  if event == Auctionator.Selling.Events.BagItemRequest then
+    local key = ...
+
+    if not self.isInitialViewReady then
+      C_Timer.After(0, function()
+        Auctionator.EventBus:Fire(self, Auctionator.Selling.Events.BagItemRequest, key)
+      end)
+      return
+    end
+
+    local item = self.itemMap[key.classID][key.key]
+
+    if item == nil then
+      Auctionator.EventBus:Fire(self, Auctionator.Selling.Events.ClearBagItem)
+      return
+    end
+
+    -- Items are left in the map even after they are removed from the bag so
+    -- that the previous/next links don't break
+    if item.location ~= nil and (not C_Item.DoesItemExist(item.location) or Auctionator.Selling.UniqueBagKey(Auctionator.Utilities.ItemInfoFromLocation(item.location)) ~= item.key.key) then
+      item.location = nil
+      item.count = 0
+    end
+
+    Auctionator.EventBus:Fire(self, Auctionator.Selling.Events.BagItemClicked, item)
+
+  elseif event == Auctionator.Selling.Events.BagItemClicked then
     local itemInfo = ...
-    self.highlightedKey = Auctionator.Selling.UniqueBagKey(itemInfo)
+    self.highlightedKey = itemInfo.key or {}
     self:Update()
+
+    self.selectedButton = nil
+    for _, container in pairs(self.frameMap) do
+      self.selectedButton = container:GetSelectedButton()
+      if self.selectedButton ~= nil then
+        break
+      end
+    end
+
+  elseif event == Auctionator.Selling.Events.ClearBagItem then
+    self.highlightedKey = {}
+    self:Update()
+
+  elseif event == Auctionator.Selling.Events.BagReady then
+    self.isInitialViewReady = true
   end
 end
 
@@ -108,6 +158,25 @@ function AuctionatorSellingBagFrameMixin:AggregateItemsByClass()
       Auctionator.Debug.Message("AuctionatorSellingBagFrameMixin:AggregateItemsByClass Missing item class table", entry.classId)
     end
   end
+end
+
+function AuctionatorSellingBagFrameMixin:ScrollButtonIntoView(button)
+  local buttonTop = button:GetTop()
+  local buttonBottom = button:GetBottom()
+  local regionTop = self:GetTop()
+  local regionBottom = self:GetBottom()
+
+  local offset = self.ScrollBox:GetDerivedScrollOffset()
+
+  local scrollY = 0
+  if buttonBottom < regionBottom then
+    scrollY = buttonBottom - regionBottom
+  elseif buttonTop > regionTop then
+    scrollY = buttonTop - regionTop
+  end
+  local wantedOffset = offset - scrollY
+  local range = self.ScrollBox:GetDerivedScrollRange()
+  self.ScrollBox:SetScrollPercentage(wantedOffset/range)
 end
 
 function AuctionatorSellingBagFrameMixin:SetupFavourites()
@@ -158,36 +227,44 @@ end
 
 function AuctionatorSellingBagFrameMixin:Update()
   Auctionator.Debug.Message("AuctionatorSellingBagFrameMixin:Update()")
-  self.ScrollBox.ItemListingFrame.oldHeight = self.ScrollBox.ItemListingFrame:GetHeight()
 
   local lastItem = nil
+  local lastClassID = nil
 
   for _, classId in ipairs(self.orderedClassIds) do
     local frame = self.frameMap[classId]
     local items = self.items[classId]
+    local map = self.itemMap[classId]
+
     frame:Reset()
 
     local classItems = {}
 
     for _, item in ipairs(items) do
       if item.auctionable then
+        local key = {
+          key = Auctionator.Selling.UniqueBagKey(item),
+          classID = classId,
+        }
+        item.key = key
+        map[key.key] = item
         table.insert(classItems, item)
-        item.selected = self.highlightedKey == Auctionator.Selling.UniqueBagKey(item)
+        item.selected = self.highlightedKey.key == key.key and self.highlightedKey.classID == key.classID
         if lastItem then
-          lastItem.nextItem = item
-          item.prevItem = lastItem
+          lastItem.nextItem = key
+          item.prevItem = lastItem.key
         else
           -- Necessary as sometimes favourites get copied around and may have a
           -- prevItem field set
           item.prevItem = nil
         end
         lastItem = item
+        lastClassID = classId
       end
     end
 
     frame:AddItems(classItems)
   end
 
-  self.ScrollBox.ItemListingFrame:OnSettingDirty()
   self.ScrollBox.ItemListingFrame:MarkDirty()
 end

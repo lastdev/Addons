@@ -1,7 +1,8 @@
-## Interface: 100007
+## Interface: 100107
 ## Title: |cffEEE4AEKaty Stampwhistle|r
 ## Notes: |cff58C6FAOpen the Mailbox when interacting with Katy Stampwhistle.|r
 ## Author: Yuyuli
-## Version: 1.1.7
+## Version: 1.1.8
+## IconTexture: 443375
 
 KatyStampwhistle.lua

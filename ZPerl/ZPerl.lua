@@ -8,8 +8,8 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: 147632cd0a118fa9bce359554d7fa46027aa62f8 $")
-XPerl_SetModuleRevision("$Revision: 147632cd0a118fa9bce359554d7fa46027aa62f8 $")
+end, "$Revision: 65cc0eb2f0a1c4e7220000311b60bff4301390e2 $")
+XPerl_SetModuleRevision("$Revision: 65cc0eb2f0a1c4e7220000311b60bff4301390e2 $")
 
 local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
@@ -488,11 +488,11 @@ local function DoRangeCheck(unit, opt)
 				end
 			end
 			-- CheckInteractDistance
-			-- 1 = Inspect = 28 yards (BCC = 28y) (Vanilla = 10 yards)
-			-- 2 = Trade = 8 yards (BCC = 8y) (Vanilla = 11 yards)
-			-- 3 = Duel = 7 yards (BCC = 7y) (Vanilla = 10 yards)
-			-- 4 = Follow = 28 yards (BCC = 28y) (Vanilla = 21 yards)
-			-- 5 = ??? = 7 yards (BCC = 7y) (Vanilla = 10 yards)
+			-- 1 = Inspect = 28 yards (BCC = 28 yards) (Vanilla = 10 yards)
+			-- 2 = Trade = 8 yards (BCC = 8 yards) (Vanilla = 11 yards)
+			-- 3 = Duel = 7 yards (BCC = 7 yards) (Vanilla = 10 yards)
+			-- 4 = Follow = 28 yards (BCC = 28 yards) (Vanilla = 21 yards)
+			-- 5 = Pet-battle Duel = 7 yards (BCC = 7 yards) (Vanilla = 10 yards)
 		elseif (opt.spell) then
 			if UnitCanAssist("player", unit) then
 				range = IsSpellInRange(opt.spell, unit)

@@ -12,7 +12,7 @@ end
 local mod	= DBM:NewMod("Nefarian-Classic","DBM-Raids-Vanilla", catID)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525045438")
+mod:SetRevision("20230814031337")
 mod:SetCreatureID(11583)
 mod:SetEncounterID(617)
 if not mod:IsClassic() then
@@ -84,21 +84,21 @@ function mod:OnCombatEnd(wipe)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args.spellId == 22539 then
+	if args:IsSpell(22539) then
 		warnShadowFlame:Show()
-	elseif args.spellId == 22686 then
+	elseif args:IsSpell(22686) then
 		warnFear:Show()
 		timerFearNext:Start()
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 22687 then
+	if args:IsSpell(22687) then
 		if self:CheckDispelFilter("curse") then
 			specwarnVeilShadow:Show(args.destName)
 			specwarnVeilShadow:Play("dispelnow")
 		end
-	elseif args.spellId == 22667 then
+	elseif args:IsSpell(22667) then
 		specwarnShadowCommand:Show(args.destName)
 		specwarnShadowCommand:Play("findmc")
 	end
@@ -151,6 +151,8 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		self:SendSync("ClassCall", "WARRIOR")
 	elseif msg == L.YellMonk or msg:find(L.YellMonk) then
 		self:SendSync("ClassCall", "MONK")
+--	elseif msg == L.YellEvoker or msg:find(L.YellEvoker) then
+--		self:SendSync("ClassCall", "EVOKER")
 	elseif msg == L.YellP2 or msg:find(L.YellP2) then
 		self:SendSync("Phase", 2)
 	elseif msg == L.YellP3 or msg:find(L.YellP3) then

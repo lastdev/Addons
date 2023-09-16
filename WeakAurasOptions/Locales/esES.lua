@@ -611,7 +611,6 @@ Con |cFF00CC00>= 0|r se activará siempre.]=]
 	L["Ignore Disconnected"] = "Ignorar desconectados"
 	L["Ignore out of checking range"] = "Ignorar fuera de rango de comprobación"
 	L["Ignore Self"] = "Ignorarse a sí mismo"
-	L["Ignore updates"] = "Ignorar actualizaciones"
 	--[[Translation missing --]]
 	L["Ignore Wago updates"] = "Ignore Wago updates"
 	L["Ignored"] = "Ignorar"
@@ -1020,6 +1019,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Soft Min"] = "Soft Min"
 	L["Sort"] = "Ordenar"
 	L["Sound"] = "Sonido"
+	--[[Translation missing --]]
+	L["Sound by Kit ID"] = "Sound by Kit ID"
 	L["Sound Channel"] = "Canal de Sonido"
 	L["Sound File Path"] = "Ruta al Fichero de Sonido"
 	--[[Translation missing --]]

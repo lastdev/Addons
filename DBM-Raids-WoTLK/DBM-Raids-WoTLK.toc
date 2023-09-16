@@ -1,4 +1,4 @@
-## Interface: 100105
+## Interface: 100107
 ## X-Min-Interface: 80000
 ## X-Min-Interface-Wrath: 30400
 ## Title:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cffff6010Raids (WoTLK)|r
@@ -25,7 +25,7 @@
 ## X-Curse-Project-ID: 43970
 ## X-WoWI-ID: 21522
 ## X-Wago-ID: WqKQg7Nx
-## Version: r318
+## Version: r319
 
 localization.en.lua
 localization.tw.lua
@@ -34,13 +34,13 @@ localization.de.lua
 localization.es.lua
 localization.kr.lua
 localization.ru.lua
+localization.fr.lua
 
 RubySanctum\Baltharus.lua
 RubySanctum\Saviana.lua
 RubySanctum\Zarithrian.lua
 RubySanctum\Halion.lua
 
-Icecrown\Trash.lua
 Icecrown\TheLowerSpire\LordMarrowgar.lua
 Icecrown\TheLowerSpire\Deathwhisper.lua
 Icecrown\TheLowerSpire\GunshipBattle.lua
@@ -53,6 +53,7 @@ Icecrown\TheCrimsonHall\Lanathel.lua
 Icecrown\FrostwingHalls\Valithria.lua
 Icecrown\FrostwingHalls\Sindragosa.lua
 Icecrown\TheFrozenThrone\LichKing.lua
+Icecrown\Trash.lua
 
 Coliseum\NorthrendBeasts.lua
 Coliseum\Jaraxxus.lua

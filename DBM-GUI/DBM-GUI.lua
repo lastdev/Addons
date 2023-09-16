@@ -405,13 +405,13 @@ function DBM_GUI:CreateBossModPanel(mod)
 		mod:Toggle()
 	end)
 
-	if mod.addon and not mod.addon.oldOptions and DBM.Options.GroupOptionsBySpell then
+	if mod.addon then
 		for spellID, options in getmetatable(mod.groupOptions).__pairs(mod.groupOptions) do
 			if spellID:find("^line") then
 				panel:CreateLine(options)
 			else
 				local title, desc, _, icon
-				local usedSpellID = "|cff69ccf0"..spellID.."|r"--Color code spellId here
+				local usedSpellID
 				if mod.groupOptions[spellID] and mod.groupOptions[spellID].customKeys then
 					usedSpellID = mod.groupOptions[spellID].customKeys--Color coding would be done in customKeys, not here
 				end
@@ -436,6 +436,9 @@ function DBM_GUI:CreateBossModPanel(mod)
 					_, title, _, _, _, _, _, desc, _, icon = GetAchievementInfo(spellID)
 				else
 					title = spellID
+				end
+				if not usedSpellID then
+					usedSpellID = "|Hgarrmission:DBM:wacopy:"..spellID.."|h|cff69ccf0"..spellID.."|r|h"
 				end
 				local catpanel = panel:CreateAbility(title, icon, usedSpellID)
 				if desc then

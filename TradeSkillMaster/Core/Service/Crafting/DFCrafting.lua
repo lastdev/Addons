@@ -13,6 +13,7 @@ local TempTable = TSM.Include("Util.TempTable")
 local Table = TSM.Include("Util.Table")
 local ProfessionInfo = TSM.Include("Data.ProfessionInfo")
 local Conversions = TSM.Include("Service.Conversions")
+local CustomPrice = TSM.Include("Service.CustomPrice")
 local private = {
 	tempTables = {{}, {}},
 	tempTableInUse = {false, false},
@@ -66,7 +67,7 @@ function DFCrafting.GetOptionalMats(craftString, mats, optionalMats)
 		local isFirst = true
 		local hasValidCost = false
 		for matItemString in MatString.ItemIterator(matString) do
-			qualityMatCostTemp[matItemString] = TSM.Crafting.Cost.GetMatCost(matItemString)
+			qualityMatCostTemp[matItemString] = CustomPrice.GetSourcePrice(matItemString, "MatPrice")
 			hasValidCost = hasValidCost or qualityMatCostTemp[matItemString] ~= nil
 			if isFirst then
 				isFirst = false

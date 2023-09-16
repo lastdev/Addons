@@ -6,6 +6,7 @@
 	local _tempo = time()
 	local _
 	local addonName, Details222 = ...
+	local detailsFramework = DetailsFramework
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --local pointers
@@ -1066,6 +1067,13 @@
 		Details.tabela_vigente.is_arena = {name = Details.zone_name, zone = Details.zone_name, mapid = Details.zone_id}
 
 		Details:SendEvent("COMBAT_ARENA_START")
+
+		local bOrderDpsByRealTime = Details.CurrentDps.CanSortByRealTimeDps()
+		if (bOrderDpsByRealTime) then
+			local bNoSave = true
+			local nTimeIntervalBetweenUpdates = 0.1
+			Details:SetWindowUpdateSpeed(nTimeIntervalBetweenUpdates, bNoSave)
+		end
 	end
 
 	--return the GetTime() of the current or latest arena match
@@ -1122,6 +1130,9 @@
 		Details:TimeDataUnregister ("Enemy Team Healing")
 
 		Details:SendEvent("COMBAT_ARENA_END")
+
+		--reset the update speed, as it could have changed when the arena started.
+		Details:SetWindowUpdateSpeed(Details.update_speed)
 	end
 
 	local validSpells = {
@@ -1619,7 +1630,7 @@
 		GameCooltip:AddStatusBar (100, 1, 0, 0, 0, 0.8)
 	end
 
-	function Details:AddTooltipBackgroundStatusbar (side, value, useSpark)
+	function Details:AddTooltipBackgroundStatusbar (side, value, useSpark, statusBarColor)
 		Details.tooltip.background [4] = 0.8
 		Details.tooltip.icon_size.W = Details.tooltip.line_height
 		Details.tooltip.icon_size.H = Details.tooltip.line_height
@@ -1651,6 +1662,9 @@
 
 		if (not side) then
 			local r, g, b, a = unpack(Details.tooltip.bar_color)
+			if (statusBarColor) then
+				r, g, b, a = detailsFramework:ParseColors(statusBarColor)
+			end
 			local rBG, gBG, bBG, aBG = unpack(Details.tooltip.background)
 			GameCooltip:AddStatusBar (value, 1, r, g, b, a, useSpark, {value = 100, color = {rBG, gBG, bBG, aBG}, texture = [[Interface\AddOns\Details\images\bar_serenity]]})
 
@@ -1733,6 +1747,10 @@
 		end
 	end
 
+	---@param self instance
+	---@param frame table
+	---@param whichRowLine number
+	---@param keydown string
 	function Details:MontaTooltip(frame, whichRowLine, keydown)
 		self:BuildInstanceBarTooltip(frame)
 
@@ -1763,6 +1781,9 @@
 		if (not object.ToolTip) then
 			if (object.__destroyed) then
 				Details:Msg("object:ToolTip() is invalid.", object.__destroyedBy)
+				self:ResetWindow()
+				self:RefreshWindow(true)
+				return
 			end
 		end
 
@@ -1882,7 +1903,7 @@
 		dumpt(t)
 	end
 
-	function Details:ForceRefresh()
+	function Details:ForceRefresh() --getting deprecated soon
 		self:RefreshMainWindow(true)
 	end
 

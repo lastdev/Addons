@@ -1235,7 +1235,19 @@ gui.SkipMissionButton:SetScript("OnClick", function(self, button)
 end)
 
 local oncePerLogin = true
+local showBlockCompletionErrorOncePerLogin = true
 gui.CompleteMissionsButton:SetScript("OnClick", function(self, button)
+    local blockCompletionReason 
+    if addon.db.profile.blockCompletion then
+        if addon.db.profile.blockCompletionFilters.noQuest and (not (C_QuestLog.IsOnQuest(61981) or C_QuestLog.IsOnQuest(61982) or C_QuestLog.IsOnQuest(61983) or C_QuestLog.IsOnQuest(61984))) then
+            blockCompletionReason = L["BlockCompletionErrorNoQuest"]
+        end
+        
+        if addon.db.profile.blockCompletionFilters.questPreviouslyFinished and (C_QuestLog.IsQuestFlaggedCompleted(61981) or C_QuestLog.IsQuestFlaggedCompleted(61982) or C_QuestLog.IsQuestFlaggedCompleted(61983) or C_QuestLog.IsQuestFlaggedCompleted(61984)) then
+            blockCompletionReason = L["BlockCompletionErrorQuestComplete"]
+        end
+    end
+
     local i = 0
     local missions = C_Garrison.GetCompleteMissions(123)
     
@@ -1277,8 +1289,30 @@ gui.CompleteMissionsButton:SetScript("OnClick", function(self, button)
                         end
                     end)
                 end
-                C_Garrison.MarkMissionComplete(mission.missionID)
-                C_Garrison.MissionBonusRoll(mission.missionID)
+                
+                local skipThis = false
+                
+                if (not blockCompletionReason) and addon.db.profile.blockCompletion and addon.db.profile.blockCompletionFilters.questFinished and (C_QuestLog.IsComplete(61981) or C_QuestLog.IsComplete(61982) or C_QuestLog.IsComplete(61983) or C_QuestLog.IsComplete(61984)) then
+                    blockCompletionReason = L["BlockCompletionErrorQuestPendingTurnin"]
+                end
+                
+                if blockCompletionReason then
+                    for _, reward in ipairs(mission.rewards) do
+                        if reward.itemID and C_Item.IsAnimaItemByID(reward.itemID) then
+                            skipThis = true
+                            if showBlockCompletionErrorOncePerLogin then
+                                showBlockCompletionErrorOncePerLogin = false
+                                print(blockCompletionReason)
+                            end
+                            break
+                        end
+                    end
+                end
+                
+                if not skipThis then
+                    C_Garrison.MarkMissionComplete(mission.missionID)
+                    C_Garrison.MissionBonusRoll(mission.missionID)
+                end
             end)
         end)
         i = i + 0.1

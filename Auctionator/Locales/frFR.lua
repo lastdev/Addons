@@ -11,12 +11,9 @@ L["ALT_RIGHT_CLICK"] = "Alt+Clic droit"
 L["ANY_LOWER"] = "n'importe"
 L["ANY_UPPER"] = "Tout"
 L["AUCTION"] = "Enchère"
---[[Translation missing --]]
-L["AUCTION_AGE"] = "Auction Age"
---[[Translation missing --]]
-L["AUCTION_AGE_TOOLTIP_TOOLTIP_HEADER"] = "Auction Age Tooltip"
---[[Translation missing --]]
-L["AUCTION_AGE_TOOLTIP_TOOLTIP_TEXT"] = "Show auction information age in days for a given item's price in a tooltip (up to 21 days)."
+L["AUCTION_AGE"] = "Âge de l'enchère"
+L["AUCTION_AGE_TOOLTIP_TOOLTIP_HEADER"] = "Infobulle sur l'âge des enchères"
+L["AUCTION_AGE_TOOLTIP_TOOLTIP_TEXT"] = "Afficher dans une info-bulle l'âge de l'enchère en jours pour le prix d'un objet donné (jusqu'à 21 jours)."
 L["AUCTION_DURATION_12"] = "12 heures"
 L["AUCTION_DURATION_24"] = "24 heures"
 L["AUCTION_DURATION_48"] = "48 heures"
@@ -51,8 +48,7 @@ L["CAREFUL_CAPS"] = "ATTENTION"
 L["CHAIN_BUY"] = "Achats en chaîne"
 L["CHAIN_BUY_TOOLTIP_HEADER"] = "Achats multiples en chaîne"
 L["CHAIN_BUY_TOOLTIP_TEXT"] = "Une fois l'achat terminé au prix et à la taille de la pile actuels, sélectionnez le prix et la taille de la pile suivants."
---[[Translation missing --]]
-L["CHEAPEST_QUALITY_COST_COLON"] = "Cheapest Quality Cost:"
+L["CHEAPEST_QUALITY_COST_COLON"] = "Coût de la qualité la moins chère."
 L["CLASSIC_SUPPORT_ERROR"] = "Cette version d'Auctionator N'EST PAS faite pour Classic. Certaines fonctions peuvent ne pas fonctionner."
 L["CLOSE"] = "Fermer"
 L["CONFIG_ADVANCED_CATEGORY"] = "Avancé"
@@ -60,14 +56,13 @@ L["CONFIG_ADVANCED_TEXT"] = "Ne regardez ici que si vous savez ce que vous faite
 L["CONFIG_ALTERNATE_SCAN"] = "Utiliser par défaut un autre mode d'analyse plus lent"
 L["CONFIG_ALTERNATE_SCAN_HEADER"] = "Mode d'analyse alternatif"
 L["CONFIG_ALTERNATE_SCAN_TEXT"] = "Le mode d'analyse rapide peut provoquer des déconnexions sur les serveurs occupés. Ce paramètre utilise une méthode d'analyse plus lente et moins susceptible de provoquer des déconnexions."
---[[Translation missing --]]
-L["CONFIG_AUCTION_AGE_TOOLTIP"] = "Show the number of days since a price was seen on the AH"
+L["CONFIG_AUCTION_AGE_TOOLTIP"] = "Indiquer le nombre de jours écoulés depuis que le prix d'un objet a a été vu à l'HdV"
 L["CONFIG_AUCTION_TOOLTIP"] = "Afficher les infobulles des prix à la revente"
 L["CONFIG_AUTO_LIST_SEARCH"] = "Analyser automatiquement les objets de la liste d'achat"
 L["CONFIG_AUTO_LIST_SEARCH_TOOLTIP_HEADER"] = "Recherche automatique de la liste"
 L["CONFIG_AUTO_LIST_SEARCH_TOOLTIP_TEXT"] = "Lorsqu'une liste est sélectionnée, l'hôtel des ventes recherche automatiquement les entrées de la liste. Lorsque cette option est désactivée, vous pouvez rechercher la liste entière en cliquant sur le bouton \"Recherche\" dans la barre latérale de la liste des achats."
 L["CONFIG_AUTOSCAN"] = "Lancer une analyse automatique lorsque l'hôtel des ventes est ouvert"
-L["CONFIG_AUTOSCAN_INTERVAL"] = "Définis le nombre de minutes avant de lancer une nouvelle analyse automatique"
+L["CONFIG_AUTOSCAN_INTERVAL"] = "Définit le nombre de minutes avant de lancer une nouvelle analyse automatique"
 L["CONFIG_AUTOSCAN_INTERVAL_HEADER"] = "Intervalle entre les analyses automatiques"
 L["CONFIG_AUTOSCAN_INTERVAL_TOOLTIP_HEADER"] = "Délais d'intervalle pour les analyses automatiques"
 L["CONFIG_AUTOSCAN_INTERVAL_TOOLTIP_TEXT"] = "Par défaut, l'analyse ne se fait pas à chaque fois que vous ouvrez l'hôtel des ventes. Il attend qu'un temps déterminé se soit écoulé depuis le dernier scan."
@@ -90,8 +85,7 @@ L["CONFIG_CHAT_LOG"] = "Afficher vos mises en vente dans la fenêtre de discussi
 L["CONFIG_CHAT_LOG_TOOLTIP_HEADER"] = "Notification de mise en vente dans la fenêtre de discussion"
 L["CONFIG_CHAT_LOG_TOOLTIP_TEXT"] = "Un message résumant les informations de vos mises en vente sera ajouté dans la fenêtre de discussion."
 L["CONFIG_CRAFTING_INFO_SHOW"] = "Afficher les coûts de fabrication dans la vue de fabrication"
---[[Translation missing --]]
-L["CONFIG_CRAFTING_INFO_SHOW_CHEAPEST_QUALITIES_COST"] = "Show reagent costs using the cheapest quality from auction house"
+L["CONFIG_CRAFTING_INFO_SHOW_CHEAPEST_QUALITIES_COST"] = "Montrer les coûts des réactifs en utilisant la qualité la moins chère de la hôtel des ventes."
 --[[Translation missing --]]
 L["CONFIG_CRAFTING_INFO_SHOW_CHEAPEST_QUALITIES_COST_TOOLTIP_HEADER"] = "Crafting Info Show Cheapest Qualities Cost"
 --[[Translation missing --]]
@@ -113,10 +107,8 @@ L["CONFIG_ENCHANT_TOOLTIP"] = "Afficher le prix du désenchantement (WoD, Legion
 L["CONFIG_FULL_SCAN_STEP_SIZE"] = "Taille de l'analyse complète"
 L["CONFIG_LIFO_CATEGORY"] = "Vente"
 L["CONFIG_MAIL_TOOLTIP"] = "Afficher le prix à la consultation du courrier"
---[[Translation missing --]]
-L["CONFIG_MATCHING"] = "Choose how the item price is automatically selected"
---[[Translation missing --]]
-L["CONFIG_MATCHING_ITEM_ID"] = "Same item/pet id"
+L["CONFIG_MATCHING"] = "Choisissez comment le prix de l'article est automatiquement sélectionné"
+L["CONFIG_MATCHING_ITEM_ID"] = "Même article/id familier"
 --[[Translation missing --]]
 L["CONFIG_MATCHING_ITEM_ID_AND_LEVEL"] = "Same item/pet level with the same item/pet id"
 --[[Translation missing --]]
@@ -175,10 +167,22 @@ L["CONFIG_SELLING_MISSING_FAVOURITES_TOOLTIP_HEADER"] = "Favoris toujours visibl
 L["CONFIG_SELLING_MISSING_FAVOURITES_TOOLTIP_TEXT"] = "Affiche toujours les objets favoris dans l'aperçu de l'inventaire, même quand ils ne s'y trouvent pas."
 L["CONFIG_SELLING_NOT_LIFO_HEADER"] = "Vente : Équipement / Mascottes"
 L["CONFIG_SELLING_NOT_LIFO_TEXT"] = "Options permettant de fixer le pourcentage de sous-cotation ou les valeurs et la durée de l'équipement et des mascottes. Ces catégories d'objets sont répertoriées individuellement et l'acheteur peut choisir celle qu'il souhaite. La sous-cotation peut être utile."
+--[[Translation missing --]]
+L["CONFIG_SELLING_POSSESSED_FAVOURITES_FIRST"] = "In favourites item list place favourites you have in your bag first"
+--[[Translation missing --]]
+L["CONFIG_SELLING_POSSESSED_FAVOURITES_FIRST_TOOLTIP_HEADER"] = "Possessed favourites first"
+--[[Translation missing --]]
+L["CONFIG_SELLING_POSSESSED_FAVOURITES_FIRST_TOOLTIP_TEXT"] = "Set the favourites ordering to force any items in your bag to be at the start of the list."
 L["CONFIG_SELLING_POST_SHORTCUT"] = "Mettre en vente l'objet sélectionné avec :"
 L["CONFIG_SELLING_POST_SHORTCUT_TOOLTIP_TEXT"] = "Cliquez puis appuyez sur les boutons que vous souhaitez utiliser comme raccourci. Ce raccourci ne sera actif que dans l'onglet Vente et n'affectera pas les autres raccourcis liés aux boutons."
 --[[Translation missing --]]
 L["CONFIG_SELLING_PREV_SHORTCUT"] = "A shortcut to go back to the previously selected item"
+--[[Translation missing --]]
+L["CONFIG_SELLING_RESELECT_ITEM"] = "Select the last item selected for posting when opening the Selling tab"
+--[[Translation missing --]]
+L["CONFIG_SELLING_RESELECT_ITEM_TOOLTIP_HEADER"] = "Reselect previous item"
+--[[Translation missing --]]
+L["CONFIG_SELLING_RESELECT_ITEM_TOOLTIP_TEXT"] = "After closing the Selling tab and reopening it either during the current session or a later one (including logging out and back in) restore the item selected for posting."
 L["CONFIG_SELLING_SHORTCUTS_CATEGORY"] = "Vente : Raccourcis"
 L["CONFIG_SELLING_SHORTCUTS_TEXT"] = "Options des raccourcis de l'onglet Vente."
 L["CONFIG_SELLING_SHOW_BID_PRICE"] = "Afficher le prix d'enchère lors de la mise en vente d'un objet (/reload requis)"
@@ -205,16 +209,14 @@ L["CONFIG_SHOPPING_LIST_MISSING_TERMS"] = "Afficher les objets introuvables d'un
 L["CONFIG_SHOPPING_LIST_MISSING_TERMS_TOOLTIP_HEADER"] = "Recherches sans résultat"
 L["CONFIG_SHOPPING_LIST_MISSING_TERMS_TOOLTIP_TEXT"] = "Lorsqu'un objet est introuvable, il sera quand même affiché dans les résultats et indiquera une quantité disponible de 0."
 L["CONFIG_SHOPPING_TEXT"] = "Options liées à l'onglet Achat."
-L["CONFIG_SMALL_TABS"] = "Utiliser de petits onglets pour l'hôtel des ventes (rouvrir l'hôtel des ventes pour appliquer)"
+L["CONFIG_SMALL_TABS"] = "Réduire la taille des onglets de l'hôtel des ventes (relancer l'HdV pour prendre effet)"
 L["CONFIG_SMALL_TABS_TOOLTIP_HEADER"] = "Petits onglets"
-L["CONFIG_SMALL_TABS_TOOLTIP_TEXT"] = "Lorsque trop d'addons ajoutent des onglets à l'hôtel des ventes, ils peuvent finir par déborder au-delà de la fin de la fenêtre de l'hôtel des ventes. Ce paramètre permet de réduire la taille des onglets pour qu'ils s'adaptent mieux."
+L["CONFIG_SMALL_TABS_TOOLTIP_TEXT"] = "Lorsque trop d'addons ajoutent des onglets à l'hôtel des ventes, ils peuvent finir par déborder au-delà de la fenêtre de l'hôtel des ventes. Ce paramètre permet de réduire la taille des onglets pour qu'ils s'adaptent au mieux."
 L["CONFIG_STACK_TOOLTIP"] = "Maintenir la touche Maj affichera le prix par pile"
 L["CONFIG_TOOLTIPS_CATEGORY"] = "Infobulles"
 L["CONFIG_TOOLTIPS_TEXT"] = "Options liées à l'affichage des informations disponibles sur les prix dans les infobulles du jeu."
---[[Translation missing --]]
-L["CONFIG_UNDERCUT_ITEMS_AHEAD"] = "How many items can be ahead of your listings before they count as undercut"
---[[Translation missing --]]
-L["CONFIG_UNDERCUT_ITEMS_AHEAD_CLASSIC"] = "How many items can be ahead of your listings before they count as undercut (max 50)"
+L["CONFIG_UNDERCUT_ITEMS_AHEAD"] = "Combien d'articles peuvent être en avance sur vos listes avant qu'ils ne soient considérés comme sous-cotés ?"
+L["CONFIG_UNDERCUT_ITEMS_AHEAD_CLASSIC"] = "Combien d'articles peuvent précéder vos listes avant qu'ils ne soient considérés comme sous-cotés (max. 50) ?"
 --[[Translation missing --]]
 L["CONFIG_UNDERCUT_SCAN_MATCH_ILVL_VARIANTS"] = "For gear use item level and title when doing undercut checks"
 L["CONFIG_UNDERCUT_SCAN_MATCH_ILVL_VARIANTS_TOOLTIP_HEADER"] = "Niveau et titre de l'objet d'utilisation de l'équipement"
@@ -258,7 +260,7 @@ L["DEFAULT_LIST_HEADER"] = "Liste d'achats par défaut"
 L["DEFAULT_QUANTITY"] = "Quantité par défaut"
 L["DEFAULT_STACK_SIZES"] = "Taille des piles par défaut"
 L["DEFAULT_TAB"] = "Onglet par défaut"
-L["DEFAULT_TAB_TEXT"] = "sera utilisé comme onglet par défaut"
+L["DEFAULT_TAB_TEXT"] = "sera utilisé comme l'onglet par défaut"
 L["DELETE"] = "Supprimer"
 L["DELETE_LIST_CONFIRM"] = "Êtes-vous sûr de vouloir supprimer '%s' ?"
 L["DELETE_LIST_NONE_SELECTED"] = "Vous devez sélectionner une liste à supprimer."
@@ -369,18 +371,14 @@ L["PET_TOOLTIP_TOOLTIP_HEADER"] = "Prix des mascottes"
 L["PET_TOOLTIP_TOOLTIP_TEXT"] = "Inclus les prix des mascottes dans les infobulles."
 L["POST"] = "Mettre en vente"
 L["POST_ATTEMPT_FAILED"] = "Votre dernière tentative de post n'a pas fonctionné. Essayez à nouveau."
---[[Translation missing --]]
-L["PREVIOUS"] = "Previous"
+L["PREVIOUS"] = "Précédent"
 L["PRICE"] = "Prix"
 L["PRICE_HISTORY"] = "Historique des prix"
 L["PRICE_INCREASE_WARNING"] = "Prix augmenté de %s, attente de %ss"
 L["PRICE_INCREASE_WARNING_2"] = "Le prix a augmenté de %s. Souhaitez-vous continuer ?"
---[[Translation missing --]]
-L["PRICE_INCREASED"] = "The price has increased!"
---[[Translation missing --]]
-L["PRICE_INCREASED_X_X"] = "The price has increased: %s (%s each)"
---[[Translation missing --]]
-L["PRICE_VARIES_WARNING"] = "The prices varies a lot between items."
+L["PRICE_INCREASED"] = "Le prix a augmenté !"
+L["PRICE_INCREASED_X_X"] = "Le prix a augmenté : %s (%s de chaque)"
+L["PRICE_VARIES_WARNING"] = "Les prix varient beaucoup d'un article à l'autre."
 L["PROFILE_TOGGLE_TOOLTIP_HEADER"] = "Activer les paramètres par personnage"
 L["PROFILE_TOGGLE_TOOLTIP_TEXT"] = "Les modifications apportées aux paramètres d'Auctionator affecteront uniquement ce personnage."
 L["PROFIT_COLON"] = "Gains :"
@@ -405,6 +403,8 @@ L["RENAME"] = "Renommer"
 L["RENAME_LIST_CONFIRM"] = "Entrer le nouveau nom pour '%s' :"
 L["RENAME_LIST_DIALOG"] = "Entrer le nouveau nom pour la liste d'achats :"
 L["RESET_ALL"] = "Réinitialiser"
+--[[Translation missing --]]
+L["RESET_COLOR"] = "Reset color"
 L["RESTORE_ALL"] = "Restaurer"
 L["RESULTS_AVAILABLE_COLUMN"] = "Disponible"
 L["RESULTS_NAME_COLUMN"] = "Nom"
@@ -434,6 +434,8 @@ L["SELLERS_OVERFLOW_TEXT"] = "%s, et %s de plus"
 L["SELLING_TAB"] = "Vente"
 L["SELLING_TAB_HEADER"] = "Auctionator - Vente"
 L["SERVER_TOOK_TOO_LONG"] = "Le serveur a mis trop de temps à répondre. Vos actions peuvent ne pas avoir eu d'effet."
+--[[Translation missing --]]
+L["SET_BAG_ITEM_SELECTION_COLOR"] = "Set bag item selection color"
 L["SET_VALUE"] = "Définir un montant"
 L["SET_VALUE_SUFFIX"] = "en moins"
 L["SHIFT_LEFT_CLICK"] = "Maj+Clic gauche"

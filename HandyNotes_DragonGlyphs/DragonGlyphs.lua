@@ -125,6 +125,19 @@ local points = {
         [77295510] = {17402}, -- Dragon Glyphs: Stormsunder Mountain -- complete
 
     },
+
+    --10.1.0
+    [2133] = {
+        [71974840] = {17515}, -- Dragon Glyphs: The Throughway
+        [55352784] = {17514}, -- Dragon Glyphs: Slitherdrake Roost
+        [47413701] = {17516}, -- Dragon Glyphs: Acidbite Ravine
+        [54715458] = {17512}, -- Dragon Glyphs: Loamm
+        [41658036] = {17510}, -- Dragon Glyphs: Glimmerogg
+        [30454531] = {17513}, -- Dragon Glyphs: Zaqali Caldera
+        [48050436] = {17517}, -- Dragon Glyphs: Aberrus Approach
+        [62717030] = {17511}, -- Dragon Glyphs: Nal Ks'kol
+
+    },
 }
 
 local info_from_coord = function(uiMapId, coord)

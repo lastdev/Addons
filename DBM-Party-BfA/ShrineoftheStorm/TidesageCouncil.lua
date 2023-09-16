@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2154, "DBM-Party-BfA", 4, 1001)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220217031102")
+mod:SetRevision("20230802234034")
 mod:SetCreatureID(134063, 134058)
 mod:SetEncounterID(2131)
 mod:SetBossHPInfoToHighest()
@@ -35,7 +35,7 @@ local specWarnHinderingCleave		= mod:NewSpecialWarningDefensive(267899, "Tank", 
 
 local timerReinforcingWardCD		= mod:NewCDTimer(30.2, 267905, nil, nil, nil, 5, nil, DBM_COMMON_L.IMPORTANT_ICON)
 local timerBlessingofIronsidesCD	= mod:NewCDTimer(32.4, 267901, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerHinderingCleaveCD		= mod:NewCDTimer(18.2, 267899, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerHinderingCleaveCD		= mod:NewCDTimer(17.6, 267899, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
 mod.vb.bossTempest = false
 
@@ -44,9 +44,9 @@ function mod:OnCombatStart(delay)
 	if not self:IsNormal() then
 		timerBlessingofIronsidesCD:Start(5-delay)
 	end
-	timerHinderingCleaveCD:Start(5.8-delay)
-	timerSwiftnessWardCD:Start(16.1-delay)
-	timerReinforcingWardCD:Start(30.1-delay)
+	timerHinderingCleaveCD:Start(5.4-delay)
+	timerSwiftnessWardCD:Start(10.9-delay)
+	timerReinforcingWardCD:Start(21.3-delay)--21-30
 end
 
 function mod:SPELL_AURA_APPLIED(args)

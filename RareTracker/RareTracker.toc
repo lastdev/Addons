@@ -1,7 +1,8 @@
-## Interface: 100100
+## Interface: 100107
 ## Title: RareTracker
 ## Author: Melroy
-## Version: 1.0.15
+## Version: 1.0.17
 ## OptionalDeps: RareTrackerCore
+## IconTexture: Interface\AddOns\RareTrackerCore\Icons\RareTrackerIcon
 
 RareTracker.lua

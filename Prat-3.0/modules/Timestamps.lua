@@ -73,6 +73,13 @@ Prat:AddModuleToLoad(function()
     ["Pre-Timestamp"] = true,
     ["Timestamp Text Format"] = true,
     ["Other Formatting Options"] = true,
+    ["Date Format"] = true,
+    ["Set the format for the day/month/year"] = true,
+    ["dd/mm/yy"] = true,
+    ["mm/dd/yy"] = true,
+    ["mm/dd"] = true,
+    ["dd/mm"] = true,
+    ["None"] = true,
   })
   --@end-debug@]==]
 
@@ -88,6 +95,9 @@ L = {
 		["Chat window timestamp options."] = true,
 		["colortimestamp_desc"] = "Toggle coloring the timestamp on and off.",
 		["colortimestamp_name"] = "Color Timestamp",
+		["Date Format"] = true,
+		["dd/mm"] = true,
+		["dd/mm/yy"] = true,
 		["Format All Timestamps"] = true,
 		["HH:MM (12-hour)"] = true,
 		["HH:MM (24-hour)"] = true,
@@ -97,10 +107,14 @@ L = {
 		["HH:MM:SS AM (12-hour)"] = true,
 		["localtime_desc"] = "Toggle using local time on and off.",
 		["localtime_name"] = "Use Local Time",
+		["mm/dd"] = true,
+		["mm/dd/yy"] = true,
 		["MM:SS"] = true,
+		["None"] = true,
 		["Other Formatting Options"] = true,
 		["Post-Timestamp"] = true,
 		["Pre-Timestamp"] = true,
+		["Set the format for the day/month/year"] = true,
 		["Set the timestamp format"] = true,
 		["Set Timestamp Color"] = true,
 		["Sets the color of the timestamp."] = true,
@@ -127,6 +141,12 @@ L = {
 		["Chat window timestamp options."] = "Options de l'heure des messages.",
 		["colortimestamp_desc"] = "Active/Désactive la couleur de l'heure des messages.",
 		["colortimestamp_name"] = "Couleur de l'heure",
+		--[[Translation missing --]]
+		["Date Format"] = "Date Format",
+		--[[Translation missing --]]
+		["dd/mm"] = "dd/mm",
+		--[[Translation missing --]]
+		["dd/mm/yy"] = "dd/mm/yy",
 		["Format All Timestamps"] = "Formatage de l'heure",
 		["HH:MM (12-hour)"] = "HH:MM (12 heures)",
 		["HH:MM (24-hour)"] = "HH:MM (24 heures)",
@@ -137,11 +157,19 @@ L = {
 		["HH:MM:SS AM (12-hour)"] = "HH:MM:SS AM (12 heures)",
 		["localtime_desc"] = "Active/Désactive l'utilisation de l'heure locale.",
 		["localtime_name"] = "Utiliser l'heure locale",
+		--[[Translation missing --]]
+		["mm/dd"] = "mm/dd",
+		--[[Translation missing --]]
+		["mm/dd/yy"] = "mm/dd/yy",
 		["MM:SS"] = true,
+		--[[Translation missing --]]
+		["None"] = "None",
 		--[[Translation missing --]]
 		["Other Formatting Options"] = "Other Formatting Options",
 		["Post-Timestamp"] = "Après l'heure",
 		["Pre-Timestamp"] = "Avant l'heure",
+		--[[Translation missing --]]
+		["Set the format for the day/month/year"] = "Set the format for the day/month/year",
 		["Set the timestamp format"] = "Définit le format de l'heure.",
 		["Set Timestamp Color"] = "Configurer la couleur",
 		["Sets the color of the timestamp."] = "Définit la couleur de l'heure des messages.",
@@ -169,6 +197,9 @@ L = {
 		["Chat window timestamp options."] = "Optionen für Zeitstempel in Chatfenstern.",
 		["colortimestamp_desc"] = "Färbung des Zeitstempels ein- und ausschalten.",
 		["colortimestamp_name"] = "Zeitstempel färben",
+		["Date Format"] = "Datumsformat",
+		["dd/mm"] = "tt/mm",
+		["dd/mm/yy"] = "tt/mm/jj",
 		["Format All Timestamps"] = "Formatiert alle Zeitstempel",
 		["HH:MM (12-hour)"] = "HH:MM (12-Stunden)",
 		["HH:MM (24-hour)"] = "HH:MM (24-Stunden)",
@@ -178,10 +209,14 @@ L = {
 		["HH:MM:SS AM (12-hour)"] = "HH:MM:SS AM (12-Stunden)",
 		["localtime_desc"] = "Verwendung der Ortszeit ein- und ausschalten.",
 		["localtime_name"] = "Ortszeit verwenden",
+		["mm/dd"] = "mm/tt",
+		["mm/dd/yy"] = "mm/tt/jj",
 		["MM:SS"] = true,
+		["None"] = "Keines",
 		["Other Formatting Options"] = "Andere Formatierungsoptionen",
 		["Post-Timestamp"] = "Nach-Zeitstempel",
 		["Pre-Timestamp"] = "Vor-Zeitstempel",
+		["Set the format for the day/month/year"] = "Lege das Format für Tag/Monat/Jahr fest",
 		["Set the timestamp format"] = "Format für Zeitstempel einstellen",
 		["Set Timestamp Color"] = "Farbe für Zeitstempel einstellen",
 		["Sets the color of the timestamp."] = "Stellt die Farbe des Zeitstempels ein.",
@@ -208,6 +243,12 @@ L = {
 		["Chat window timestamp options."] = "대화창 대화 시각 옵션입니다.",
 		["colortimestamp_desc"] = "대화 시각에 색상을 입히거나 입히지 않습니다.",
 		["colortimestamp_name"] = "대화 시각 색상 지정",
+		--[[Translation missing --]]
+		["Date Format"] = "Date Format",
+		--[[Translation missing --]]
+		["dd/mm"] = "dd/mm",
+		--[[Translation missing --]]
+		["dd/mm/yy"] = "dd/mm/yy",
 		["Format All Timestamps"] = "모든 대화 시각 형식",
 		["HH:MM (12-hour)"] = "시:분 (12시간)",
 		["HH:MM (24-hour)"] = "시:분 (24시간)",
@@ -217,10 +258,18 @@ L = {
 		["HH:MM:SS AM (12-hour)"] = "시:분:초 오전 (12시간)",
 		["localtime_desc"] = "시스템 시간 사용을 켜고 끕니다.",
 		["localtime_name"] = "시스템 시간 사용",
+		--[[Translation missing --]]
+		["mm/dd"] = "mm/dd",
+		--[[Translation missing --]]
+		["mm/dd/yy"] = "mm/dd/yy",
 		["MM:SS"] = "분:초",
+		--[[Translation missing --]]
+		["None"] = "None",
 		["Other Formatting Options"] = "다른 형식 옵션",
 		["Post-Timestamp"] = "뒤-대화 시각",
 		["Pre-Timestamp"] = "앞-대화 시각",
+		--[[Translation missing --]]
+		["Set the format for the day/month/year"] = "Set the format for the day/month/year",
 		["Set the timestamp format"] = "대화 시각 형식을 설정합니다.",
 		["Set Timestamp Color"] = "대화 시각 색상 설정",
 		["Sets the color of the timestamp."] = "대화 시각의 색상을 설정합니다.",
@@ -251,6 +300,12 @@ L = {
 		--[[Translation missing --]]
 		["colortimestamp_name"] = "Color Timestamp",
 		--[[Translation missing --]]
+		["Date Format"] = "Date Format",
+		--[[Translation missing --]]
+		["dd/mm"] = "dd/mm",
+		--[[Translation missing --]]
+		["dd/mm/yy"] = "dd/mm/yy",
+		--[[Translation missing --]]
 		["Format All Timestamps"] = "Format All Timestamps",
 		--[[Translation missing --]]
 		["HH:MM (12-hour)"] = "HH:MM (12-hour)",
@@ -269,13 +324,21 @@ L = {
 		--[[Translation missing --]]
 		["localtime_name"] = "Use Local Time",
 		--[[Translation missing --]]
+		["mm/dd"] = "mm/dd",
+		--[[Translation missing --]]
+		["mm/dd/yy"] = "mm/dd/yy",
+		--[[Translation missing --]]
 		["MM:SS"] = "MM:SS",
+		--[[Translation missing --]]
+		["None"] = "None",
 		--[[Translation missing --]]
 		["Other Formatting Options"] = "Other Formatting Options",
 		--[[Translation missing --]]
 		["Post-Timestamp"] = "Post-Timestamp",
 		--[[Translation missing --]]
 		["Pre-Timestamp"] = "Pre-Timestamp",
+		--[[Translation missing --]]
+		["Set the format for the day/month/year"] = "Set the format for the day/month/year",
 		--[[Translation missing --]]
 		["Set the timestamp format"] = "Set the timestamp format",
 		--[[Translation missing --]]
@@ -315,6 +378,12 @@ L = {
 		["Chat window timestamp options."] = "Настройки времени в окне чата.",
 		["colortimestamp_desc"] = "Вкл/Выкл окрасу времени.",
 		["colortimestamp_name"] = "Окраска времени",
+		--[[Translation missing --]]
+		["Date Format"] = "Date Format",
+		--[[Translation missing --]]
+		["dd/mm"] = "dd/mm",
+		--[[Translation missing --]]
+		["dd/mm/yy"] = "dd/mm/yy",
 		["Format All Timestamps"] = "Формат всего времени",
 		["HH:MM (12-hour)"] = "HH:MM (12-ч)",
 		["HH:MM (24-hour)"] = "HH:MM (24-ч)",
@@ -324,10 +393,18 @@ L = {
 		["HH:MM:SS AM (12-hour)"] = "HH:MM:SS AM (12-ч)",
 		["localtime_desc"] = "Вкл/Выкл использование местного времени.",
 		["localtime_name"] = "Местное время",
+		--[[Translation missing --]]
+		["mm/dd"] = "mm/dd",
+		--[[Translation missing --]]
+		["mm/dd/yy"] = "mm/dd/yy",
 		["MM:SS"] = true,
+		--[[Translation missing --]]
+		["None"] = "None",
 		["Other Formatting Options"] = "Другие параметры форматирования",
 		["Post-Timestamp"] = "Перед-временем",
 		["Pre-Timestamp"] = "После-времени",
+		--[[Translation missing --]]
+		["Set the format for the day/month/year"] = "Set the format for the day/month/year",
 		["Set the timestamp format"] = "Установите формат времени ",
 		["Set Timestamp Color"] = "Цвет времени",
 		["Sets the color of the timestamp."] = "Установка цвета времени.",
@@ -354,6 +431,12 @@ L = {
 		["Chat window timestamp options."] = "聊天窗口时间戳选项",
 		["colortimestamp_desc"] = "时间戳着色开关",
 		["colortimestamp_name"] = "彩色时间戳",
+		--[[Translation missing --]]
+		["Date Format"] = "Date Format",
+		--[[Translation missing --]]
+		["dd/mm"] = "dd/mm",
+		--[[Translation missing --]]
+		["dd/mm/yy"] = "dd/mm/yy",
 		["Format All Timestamps"] = "所有时间戳格式",
 		["HH:MM (12-hour)"] = "时:分 (12-小时)",
 		["HH:MM (24-hour)"] = "时:分 (24-小时)",
@@ -364,10 +447,18 @@ L = {
 		["HH:MM:SS AM (12-hour)"] = "时:分:秒 上午(12-小时)",
 		["localtime_desc"] = "本地时间使用开关",
 		["localtime_name"] = "使用本地时间",
+		--[[Translation missing --]]
+		["mm/dd"] = "mm/dd",
+		--[[Translation missing --]]
+		["mm/dd/yy"] = "mm/dd/yy",
 		["MM:SS"] = "分:秒",
+		--[[Translation missing --]]
+		["None"] = "None",
 		["Other Formatting Options"] = "其他设置",
 		["Post-Timestamp"] = "后缀-时间戳",
 		["Pre-Timestamp"] = "前缀-时间戳",
+		--[[Translation missing --]]
+		["Set the format for the day/month/year"] = "Set the format for the day/month/year",
 		["Set the timestamp format"] = "设置时间戳格式",
 		["Set Timestamp Color"] = "设置时间戳颜色",
 		["Sets the color of the timestamp."] = "设置时间戳颜色",
@@ -394,6 +485,12 @@ L = {
 		["Chat window timestamp options."] = "Opciones de MáscaraTiempo de la ventana de chat.",
 		["colortimestamp_desc"] = "Alterna activación de colorear máscara de tiempo.",
 		["colortimestamp_name"] = "Color Máscara de Tiempo",
+		--[[Translation missing --]]
+		["Date Format"] = "Date Format",
+		--[[Translation missing --]]
+		["dd/mm"] = "dd/mm",
+		--[[Translation missing --]]
+		["dd/mm/yy"] = "dd/mm/yy",
 		["Format All Timestamps"] = "Formatear Todas las Mascaras de Tiempo",
 		["HH:MM (12-hour)"] = "HH:MM (12-horas)",
 		["HH:MM (24-hour)"] = "HH:MM (24-horas)",
@@ -404,11 +501,19 @@ L = {
 		["HH:MM:SS AM (12-hour)"] = "HH:MM:SS AM (12-horas)",
 		["localtime_desc"] = "Activa o desactiva el uso de la hora local.",
 		["localtime_name"] = "Utilizar Hora Local",
+		--[[Translation missing --]]
+		["mm/dd"] = "mm/dd",
+		--[[Translation missing --]]
+		["mm/dd/yy"] = "mm/dd/yy",
 		["MM:SS"] = true,
+		--[[Translation missing --]]
+		["None"] = "None",
 		--[[Translation missing --]]
 		["Other Formatting Options"] = "Other Formatting Options",
 		["Post-Timestamp"] = "Post-MáscaraTiempo",
 		["Pre-Timestamp"] = "Pre-MáscaraTiempo",
+		--[[Translation missing --]]
+		["Set the format for the day/month/year"] = "Set the format for the day/month/year",
 		["Set the timestamp format"] = "Establecer el formato de la Máscara de Tiempo",
 		["Set Timestamp Color"] = "Establecer Color MáscaraTiempo",
 		["Sets the color of the timestamp."] = "Establece el Color de la Máscara de Tiempo.",
@@ -436,6 +541,12 @@ L = {
 		["Chat window timestamp options."] = "聊天視窗時間戳選項",
 		["colortimestamp_desc"] = "切換是否為時間戳著色。",
 		["colortimestamp_name"] = "時間戳色彩",
+		--[[Translation missing --]]
+		["Date Format"] = "Date Format",
+		--[[Translation missing --]]
+		["dd/mm"] = "dd/mm",
+		--[[Translation missing --]]
+		["dd/mm/yy"] = "dd/mm/yy",
 		["Format All Timestamps"] = "所有時間戳格式",
 		["HH:MM (12-hour)"] = "HH:MM (12時制)",
 		["HH:MM (24-hour)"] = "HH:MM (24時制)",
@@ -446,10 +557,18 @@ L = {
 		["HH:MM:SS AM (12-hour)"] = "HH:MM:SS AM (12時制)",
 		["localtime_desc"] = "切換是否使用本地時間",
 		["localtime_name"] = "使用本地時間",
+		--[[Translation missing --]]
+		["mm/dd"] = "mm/dd",
+		--[[Translation missing --]]
+		["mm/dd/yy"] = "mm/dd/yy",
 		["MM:SS"] = true,
+		--[[Translation missing --]]
+		["None"] = "None",
 		["Other Formatting Options"] = "其他设置",
 		["Post-Timestamp"] = "貼出時間戳",
 		["Pre-Timestamp"] = "時間標籤",
+		--[[Translation missing --]]
+		["Set the format for the day/month/year"] = "Set the format for the day/month/year",
 		["Set the timestamp format"] = "設定時間戳格式",
 		["Set Timestamp Color"] = "設定時間戳色彩",
 		["Sets the color of the timestamp."] = "設定時間戳色彩。",
@@ -478,7 +597,7 @@ L = {
   module.pluginopts = {}
 
   -- Chatter (Antiarc)
-  local FORMATS = {
+  local TIME_FORMATS = {
     ["%I:%M:%S %p"] = PL["HH:MM:SS AM (12-hour)"],
     ["%I:%M:%S"] = PL["HH:MM:SS (12-hour)"],
     ["%X"] = PL["HH:MM:SS (24-hour)"],
@@ -487,12 +606,20 @@ L = {
     ["%H:%M"] = PL["HH:MM (24-hour)"],
     ["%M:%S"] = PL["MM:SS"],
   }
+  local DATE_FORMATS = {
+    [""] = PL["None"],
+    ["%d/%m/%y"] = PL["dd/mm/yy"],
+    ["%m/%d/%y"] = PL["mm/dd/yy"],
+    ["%d/%m"] = PL["dd/mm"],
+    ["%m/%d"] = PL["mm/dd"],
+  }
 
   Prat:SetModuleDefaults(module.name, {
     profile = {
       on = true,
       show = { ["*"] = true },
       formatcode = "%X",
+      formatdate = "",
       formatpre = "[",
       formatpost = "]",
       ["timestampcolor"] = {
@@ -540,14 +667,21 @@ L = {
         desc = PL["Set the timestamp format"],
         type = "select",
         order = 131,
-        values = FORMATS,
+        values = TIME_FORMATS,
       },
       formatpost = {
         name = PL["Post-Timestamp"],
         desc = PL["Post-Timestamp"],
         type = "input",
-        order = 132,
+        order = 145,
         usage = "<string>",
+      },
+      formatdate = {
+        name = PL["Date Format"],
+        desc = PL["Set the format for the day/month/year"],
+        type = "select",
+        order = 150,
+        values = DATE_FORMATS,
       },
       colortimestamp = {
         name = PL["colortimestamp_name"],
@@ -674,7 +808,11 @@ L = {
     if type(text) == "string" then
       local db = self.db.profile
       local space = db.space
-      local fmt = db.formatpre .. db.formatcode .. db.formatpost
+      local code = db.formatcode
+      if db.formatdate ~= "" then
+        code = db.formatdate .. " " .. code
+      end
+      local fmt = db.formatpre .. code .. db.formatpost
 
       if cf and cf:GetJustifyH() == "RIGHT" then
         text = text .. (space and " " or "") .. Timestamp(self:GetTime(fmt))

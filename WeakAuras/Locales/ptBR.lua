@@ -96,6 +96,18 @@ L["Action Button Glow"] = "Brilho do botão de ação"
 L["Action Usable"] = "Ação Usável"
 L["Actions"] = "Ações"
 L["Active"] = "Ativo"
+--[[Translation missing --]]
+L[ [=[Active boss mod addon: |cFFffcc00BigWigs|r
+
+Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=] ] = [=[Active boss mod addon: |cFFffcc00BigWigs|r
+
+Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=]
+--[[Translation missing --]]
+L[ [=[Active boss mod addon: |cFFffcc00DBM|r
+
+Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=] ] = [=[Active boss mod addon: |cFFffcc00DBM|r
+
+Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=]
 L["Add"] = "Adicionar"
 L["Add Missing Auras"] = "Adicionar auras faltantes"
 L["Additional Trigger Replacements"] = "Substitutos de gatilho adicionais"
@@ -258,6 +270,14 @@ L["Blood-Queen Lana'thel"] = "Blood-Queen Lana'thel"
 L["Border"] = "Borda"
 L["Boss"] = "Chefe"
 L["Boss Emote"] = "Emote do Chefe"
+--[[Translation missing --]]
+L["Boss Mod Announce"] = "Boss Mod Announce"
+--[[Translation missing --]]
+L["Boss Mod Stage"] = "Boss Mod Stage"
+--[[Translation missing --]]
+L["Boss Mod Stage (Event)"] = "Boss Mod Stage (Event)"
+--[[Translation missing --]]
+L["Boss Mod Timer"] = "Boss Mod Timer"
 L["Boss Whisper"] = "Sussurro do Chefe"
 L["Bottom"] = "Embaixo"
 L["Bottom Left"] = "Embaixo à esquerda"
@@ -725,6 +745,8 @@ L["Expertise Rating"] = "Expertise Rating"
 L["Extend Outside"] = "Extend Outside"
 L["Extra Amount"] = "Quantidade Extra"
 L["Extra Attacks"] = "Ataques Extras"
+--[[Translation missing --]]
+L["Extra Spell Id"] = "Extra Spell Id"
 L["Extra Spell Name"] = "Nome da Magia Extra"
 --[[Translation missing --]]
 L["Faction"] = "Faction"
@@ -1076,6 +1098,8 @@ L["Is Moving"] = "Is Moving"
 --[[Translation missing --]]
 L["Is Off Hand"] = "Is Off Hand"
 --[[Translation missing --]]
+L["Is Paused"] = "Is Paused"
+--[[Translation missing --]]
 L["is useable"] = "is useable"
 --[[Translation missing --]]
 L["Island Expedition (Heroic)"] = "Island Expedition (Heroic)"
@@ -1340,6 +1364,12 @@ L["Never"] = "Nunca"
 L["Next Combat"] = "Next Combat"
 --[[Translation missing --]]
 L["Next Encounter"] = "Next Encounter"
+--[[Translation missing --]]
+L[ [=[No active boss mod addon detected.
+
+Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=] ] = [=[No active boss mod addon detected.
+
+Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=]
 --[[Translation missing --]]
 L["No Extend"] = "No Extend"
 L["No Instance"] = "Fora da instância"

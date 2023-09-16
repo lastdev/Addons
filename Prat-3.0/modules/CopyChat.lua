@@ -283,8 +283,7 @@ PL:AddLocale(PRAT_MODULE, "frFR",L)
 L = {
 	["CopyChat"] = {
 		[" Text"] = "Text",
-		--[[Translation missing --]]
-		["activealpha"] = "Alpha when mouseover",
+		["activealpha"] = "Transparenz, wenn mit der Maus darüber gefahren wird",
 		["BBCode"] = true,
 		["BOTTOMLEFT"] = "Unten, links",
 		["BOTTOMRIGHT"] = "Unten, rechts",
@@ -300,8 +299,7 @@ L = {
 		["copytimestamps_desc"] = "Kopiert die Chat-Zeile, wenn du auf den Zeitstempel klickst",
 		["copytimestamps_name"] = "Zeitstempel kopieren",
 		["HTML"] = true,
-		--[[Translation missing --]]
-		["inactivealpha"] = "Alpha when mouseout",
+		["inactivealpha"] = "Transparenz, wenn mit der Maus nicht darüber gefahren wird",
 		["Message From : %s"] = "Nachricht von : %s",
 		["Plain"] = "Einfach",
 		["Should the copied text be plain, or formatted so you can see the colors."] = "Soll der kopierte Text einfach oder formattiert mit farbiger Darstellung kopiert werden?",

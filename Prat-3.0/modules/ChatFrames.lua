@@ -245,10 +245,8 @@ PL:AddLocale(PRAT_MODULE, "frFR", L)
 L = {
 	["Frames"] = {
 		["Chat window frame parameter options"] = "Optionen für Parameter des Chatfenster-Rahmens",
-		--[[Translation missing --]]
-		["defaultframealpha_desc"] = "Sets minimum alpha for the chat on mouseover when the static chatframe alpha setting is disabled AND the default alpha is greater than the custom alpha set to the chat window.",
-		--[[Translation missing --]]
-		["defaultframealpha_name"] = "Default alpha on mouseover",
+		["defaultframealpha_desc"] = "Legt die minimale Transparenz für den Chat fest, wenn du mit der Maus darüber fährst und die statische Chatfrahmen-Transparenzeinstellung deaktiviert ist UND die Standard Transparenz größer ist als die benutzerdefinierte Transparenz, die für das Chatfenster festgelegt ist.",
+		["defaultframealpha_name"] = "Standard Transparenz beim darüber fahren mit der Maus",
 		["framealpha_desc"] = "Steuert die Transparenz des Chatfensters, wenn du die Maus darüberlegst.",
 		["framealpha_name"] = "Transparenz für Chatfenster einstellen",
 		["framealphastatic_desc"] = "Stelle die Transparenz des Chatrahmens so ein, dass sie immer der konfigurierten Transparenz entspricht",

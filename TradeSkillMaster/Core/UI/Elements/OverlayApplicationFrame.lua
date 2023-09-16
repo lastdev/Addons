@@ -5,7 +5,6 @@
 -- ------------------------------------------------------------------------------ --
 
 local TSM = select(2, ...) ---@type TSM
-local Environment = TSM.Include("Environment")
 local Theme = TSM.Include("Util.Theme")
 local UIElements = TSM.Include("UI.UIElements")
 local OverlayApplicationFrame = TSM.Include("LibTSMClass").DefineClass("OverlayApplicationFrame", TSM.UI.Frame)
@@ -64,11 +63,7 @@ function OverlayApplicationFrame.Release(self)
 	self._contentFrame = nil
 	self._contextTable = nil
 	self._defaultContextTable = nil
-	if Environment.HasFeature(Environment.FEATURES.REGION_SET_RESIZE_BOUNDS) then
-		self:_GetBaseFrame():SetResizeBounds(0, 0)
-	else
-		self:_GetBaseFrame():SetMinResize(0, 0)
-	end
+	self:_GetBaseFrame():SetResizeBounds(0, 0)
 	self.__super:Release()
 end
 

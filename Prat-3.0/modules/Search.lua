@@ -106,10 +106,8 @@ Benutzung:
 
 Suche]=],
 		["module_name"] = "Suche",
-		--[[Translation missing --]]
-		["unused_alpha"] = "Unused search box alpha",
-		--[[Translation missing --]]
-		["used_alpha"] = "Used search box alpha",
+		["unused_alpha"] = "Unbenutzte Suchfeld Transparenz",
+		["used_alpha"] = "Benutzte Suchfeld Transparenz",
 	}
 }
 

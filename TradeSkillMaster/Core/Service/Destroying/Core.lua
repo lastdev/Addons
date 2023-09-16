@@ -18,7 +18,6 @@ local ItemString = TSM.Include("Util.ItemString")
 local Reactive = TSM.Include("Util.Reactive")
 local Future = TSM.Include("Util.Future")
 local Log = TSM.Include("Util.Log")
-local ProfessionInfo = TSM.Include("Data.ProfessionInfo")
 local Threading = TSM.Include("Service.Threading")
 local ItemInfo = TSM.Include("Service.ItemInfo")
 local CustomPrice = TSM.Include("Service.CustomPrice")
@@ -145,9 +144,6 @@ function Destroying.OnInitialize()
 
 	if Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) then
 		hooksecurefunc(C_TradeSkillUI, "CraftSalvage", function(spellId, _, itemLocation)
-			if not ProfessionInfo.IsSalvage(spellId) then
-				return
-			end
 			private.destroySpellId = spellId
 			private.itemSpellId = Container.GetItemId(itemLocation.bagID, itemLocation.slotIndex)
 		end)
@@ -383,7 +379,7 @@ function private.SpellCastEventHandler(event, unit, _, spellId)
 	if unit ~= "player" then
 		return
 	end
-	if Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) and event == "UNIT_SPELLCAST_START" and not ProfessionInfo.IsSalvage(spellId) then
+	if Environment.HasFeature(Environment.FEATURES.C_TRADE_SKILL_UI) and event == "UNIT_SPELLCAST_START" then
 		private.destroySpellId = nil
 		private.itemSpellId = nil
 	end

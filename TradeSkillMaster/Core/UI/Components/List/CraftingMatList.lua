@@ -40,7 +40,7 @@ local CraftingMatList = UIElements.Define("CraftingMatList", "List") ---@class C
 
 function CraftingMatList:__init()
 	self.__super:__init()
-	BagTracking.RegisterCallback(self:__closure("_HandleBagUpdate"))
+	BagTracking.RegisterQuantityCallback(self:__closure("_HandleBagUpdate"))
 	self._recipeString = nil
 	self._onMatQualityChanged = nil
 	self._itemString = {}
@@ -136,11 +136,10 @@ end
 -- Protected/Private Class Methods
 -- ============================================================================
 
-function CraftingMatList.__private:_HandleBagUpdate()
-	for i, prevQuantity in ipairs(self._playerQuantity) do
-		local playerQuantity = BagTracking.GetCraftingMatQuantity(self._itemString[i])
-		if prevQuantity ~= playerQuantity then
-			self._playerQuantity[i] = playerQuantity
+function CraftingMatList.__private:_HandleBagUpdate(itemsChanged)
+	for i, itemString in ipairs(self._itemString) do
+		if itemsChanged[itemString] then
+			self._playerQuantity[i] = BagTracking.GetCraftingMatQuantity(itemString)
 			local row = self:_GetRow(i)
 			if row then
 				self:_DrawRowQty(row, self._playerQuantity[i], self._quantity[i])

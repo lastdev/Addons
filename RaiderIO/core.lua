@@ -136,6 +136,8 @@ do
     ---@class ns
     ---@field public DUNGEONS Dungeon[]
     ---@field public dungeons Dungeon[] @DEPRECATED
+    ---@field public EXPANSION_DUNGEONS Dungeon[]
+    ---@field public expansionDungeons Dungeon[] @DEPRECATED
     ---@field public RAIDS DungeonRaid[]
     ---@field public raids DungeonRaid[] @DEPRECATED
     ---@field public REALMS RealmCollection<string, string>
@@ -172,6 +174,7 @@ do
         r, g, b = r or 1, g or 1, b or 0
         DEFAULT_CHAT_FRAME:AddMessage(tostring(text), r, g, b, ...)
     end
+
     ns.EXPANSION = max(GetServerExpansionLevel(), GetMinimumExpansionLevel(), GetExpansionLevel()) - 1
     ns.MAX_LEVEL = GetMaxLevelForExpansionLevel(ns.EXPANSION)
     ns.REGION_TO_LTD = { "us", "kr", "eu", "tw", "cn" }
@@ -186,6 +189,38 @@ do
     ns.LOOKUP_MAX_SIZE = floor(2^18-1) -- the maximum index we can use in a table before we start to get errors
     ns.CURRENT_SEASON = 1 -- the current mythic keystone season. dynamically assigned once keystone data is loaded.
     ns.RAIDERIO_ADDON_DOWNLOAD_URL = "https://rio.gg/addon"
+
+    ns.EASTER_EGG = {
+        ["eu"] = {
+            ["TarrenMill"] = {
+                ["Vladinator"] = "Raider.IO AddOn Author"
+            },
+            ["Ysondre"] = {
+                ["Isakem"] = "Raider.IO Developer"
+            }
+        },
+        ["us"] = {
+            ["Skullcrusher"] = {
+                ["Aspyrio"] = "Raider.IO Creator",
+                ["Ulsoga"] = "Raider.IO Creator",
+                ["Mccaffrey"] = "Killing Keys Since 1977!",
+                ["Oscassey"] = "Master of dis guys",
+                ["Rhoma"] = "Plays an MDI Champion on TV"
+            },
+            ["Thrall"] = {
+                ["Firstclass"] = "Author of mythicpl.us"
+            },
+            ["Tichondrius"] = {
+                ["Johnsamdi"] = "Raider.IO Developer"
+            }
+        }
+    }
+
+    -- Special servers for keystones, PvP, etc. That we do not wish to consider a live server.
+    ns.IGNORED_REALMS = {
+        ["EU Mythic Dungeons"] = true,
+        ["EUMythicDungeons"] = true,
+    }
 
     ---@class HeadlineMode
     ns.HEADLINE_MODE = {
@@ -681,11 +716,20 @@ do
     ---@field public shortNameLocale string @Assigned dynamically based on the user preference regarding the short dungeon names.
     ---@field public index number @Assigned dynamically based on the index of the dungeon/raid in the table.
 
+    ---@alias DungeonType "SEASON"|"EXPANSION"
+
     ---@class Dungeon : DungeonInstance
+    ---@field public type DungeonType
     ---@field public keystone_instance number
     ---@field public timers number[]
 
+    ---@alias DungeonRaidType "RAID"
+
     ---@class DungeonRaid : DungeonInstance
+    ---@field public type DungeonRaidType
+
+    ---@type Dungeon[]
+    local ALL_DUNGEONS = {}
 
     ---@type Dungeon[]
     local DUNGEONS = ns.DUNGEONS or ns.dungeons -- DEPRECATED: ns.dungeons
@@ -693,6 +737,18 @@ do
     for i = 1, #DUNGEONS do
         local dungeon = DUNGEONS[i] ---@type Dungeon
         dungeon.index = i
+        dungeon.type = "SEASON"
+        ALL_DUNGEONS[#ALL_DUNGEONS + 1] = dungeon
+    end
+
+    ---@type Dungeon[]
+    local EXPANSION_DUNGEONS = ns.EXPANSION_DUNGEONS or ns.expansionDungeons -- DEPRECATED: ns.expansionDungeons
+
+    for i = 1, #EXPANSION_DUNGEONS do
+        local dungeon = EXPANSION_DUNGEONS[i] ---@type Dungeon
+        dungeon.index = i
+        dungeon.type = "EXPANSION"
+        ALL_DUNGEONS[#ALL_DUNGEONS + 1] = dungeon
     end
 
     ---@type DungeonRaid[]
@@ -701,11 +757,12 @@ do
     for i = 1, #RAIDS do
         local raid = RAIDS[i] ---@type DungeonRaid
         raid.index = i
+        raid.type = "RAID"
     end
 
-    ---@return Dungeon[]
+    ---@return Dungeon[] dungeons, Dungeon[] expansionDungeons, Dungeon[] allDungeons
     function ns:GetDungeonData()
-        return DUNGEONS
+        return DUNGEONS, EXPANSION_DUNGEONS, ALL_DUNGEONS
     end
 
     ---@return DungeonRaid[]
@@ -1097,6 +1154,7 @@ do
     ---@field public replaySelection ReplayFrameSelections Defaults to `user_best_replay`
     ---@field public replayPoint ConfigProfilePoint Defaults to `{ point = nil, x = 0, y = 0 }`
     ---@field public profilePoint ConfigProfilePoint Defaults to `{ point = nil, x = 0, y = 0 }`
+    ---@field public replayBackground ConfigReplayColor Defaults to `{ r = 0, g = 0, b = 0, a = 0.5 }`
 
     -- fallback saved variables
     ---@class FallbackConfig
@@ -1141,6 +1199,8 @@ do
         replayStyle = "MODERN", -- NEW in 10.0.7
         replayTiming = "BOSS", -- NEW in 10.1.5
         replaySelection = "user_best_replay", -- NEW in 10.1.5
+        replayBackground = { r = 0, g = 0, b = 0, a = 0.5 }, -- NEW in 10.1.5
+        replayAlpha = 1, -- NEW in 10.1.5
         enableReplay = true, -- NEW in 10.1.5
         dockReplay = true, -- NEW in 10.1.5
         lockReplay = false, -- NEW in 10.1.5
@@ -1218,7 +1278,7 @@ do
     local callback =  ns:GetModule("Callback") ---@type CallbackModule
     local config = ns:GetModule("Config") ---@type ConfigModule
 
-    local DUNGEONS = ns:GetDungeonData()
+    local DUNGEONS, _, ALL_DUNGEONS = ns:GetDungeonData()
     local RAIDS = ns:GetDungeonRaidData()
 
     local SORTED_DUNGEONS = {} ---@type Dungeon[]
@@ -1280,8 +1340,8 @@ do
 
     ---@return Dungeon|nil
     function util:GetDungeonByLFDActivityID(id)
-        for i = 1, #DUNGEONS do
-            local dungeon = DUNGEONS[i]
+        for i = 1, #ALL_DUNGEONS do
+            local dungeon = ALL_DUNGEONS[i]
             for j = 1, #dungeon.lfd_activity_ids do
                 local activityID = dungeon.lfd_activity_ids[j]
                 if activityID == id then
@@ -1293,8 +1353,8 @@ do
 
     ---@return Dungeon|nil
     function util:GetDungeonByKeyValue(key, value)
-        for i = 1, #DUNGEONS do
-            local dungeon = DUNGEONS[i]
+        for i = 1, #ALL_DUNGEONS do
+            local dungeon = ALL_DUNGEONS[i]
             if dungeon[key] == value then
                 return dungeon
             end
@@ -1532,6 +1592,21 @@ do
         return time({ year = year, month = month, day = day, hour = hours, min = minutes, sec = seconds }) ---@diagnostic disable-line: missing-fields
     end
 
+    -- Servers that are **not** `IsOnTournamentRealm`, `IsTestBuild`, or part of `ns.IGNORED_REALMS` are considered retail realms.
+    -- We will use this function to avoid complaining or printing warnings to the user about these special realms.
+    function util:IsOnRetailRealm()
+        if IsOnTournamentRealm() then
+            return false
+        end
+        if IsTestBuild() then
+            return false
+        end
+        if ns.IGNORED_REALMS[ns.PLAYER_REALM] or ns.IGNORED_REALMS[ns.PLAYER_REALM_SLUG] then
+            return false
+        end
+        return true
+    end
+
     local REGION = ns:GetRegionData()
 
     ---@return boolean|string|nil, number|nil @arg1 can be nil (no data), false (server is unknown), string (the ltd). arg2 can be nil (no data), or region ID.
@@ -1544,8 +1619,11 @@ do
         local regionId = REGION[serverId]
         if not regionId then
             regionId = GetCurrentRegion()
-            if not IsOnTournamentRealm() then
+            if util:IsOnRetailRealm() then
                 ns.Print(format(L.UNKNOWN_SERVER_FOUND, addonName, guid or "N/A", GetNormalizedRealmName() or "N/A"))
+            end
+            if not regionId or regionId > #ns.REGION_TO_LTD then
+                regionId = 1
             end
         end
         if not regionId then
@@ -1868,23 +1946,28 @@ do
         return util:GetDungeonByInstanceMapID(instanceMapID) or util:GetRaidByInstanceMapID(instanceMapID)
     end
 
-    function util:GetLFDStatusForCurrentActivity(activityID)
+    ---@param activityID number
+    ---@param includeExpansionDungeons? boolean
+    function util:GetLFDStatusForCurrentActivity(activityID, includeExpansionDungeons)
         ---@type Dungeon|DungeonRaid|nil
         local focusDungeon
         if activityID then
             focusDungeon = util:GetDungeonByLFDActivityID(activityID) or util:GetRaidByLFDActivityID(activityID)
         end
-        if not focusDungeon then
+        if not focusDungeon or (not includeExpansionDungeons and focusDungeon.type == "EXPANSION") then
             local lfd = util:GetLFDStatus()
             if lfd then
                 focusDungeon = lfd.dungeon
             end
         end
-        if not focusDungeon then
+        if not focusDungeon or (not includeExpansionDungeons and focusDungeon.type == "EXPANSION") then
             local instanceDungeon = util:GetInstanceStatus()
             if instanceDungeon then
                 focusDungeon = instanceDungeon
             end
+        end
+        if focusDungeon and (not includeExpansionDungeons and focusDungeon.type == "EXPANSION") then
+            focusDungeon = nil
         end
         return focusDungeon
     end
@@ -2115,6 +2198,7 @@ do
 
     ---@param popup InternalStaticPopupDialog
     ---@param ... any
+    ---@return InternalStaticPopupDialog
     function util:ShowStaticPopupDialog(popup, ...)
         local id = popup.id
         if not StaticPopupDialogs[id] then
@@ -2304,6 +2388,73 @@ do
             return tostring(a) < tostring(b)
         end)
         return tbl
+    end
+
+    ---@class AnimationGroupFadeScaleInOut : AnimationGroup
+
+    ---@param group AnimationGroupFadeScaleInOut
+    ---@param shown? boolean
+    local function AnimationGroupFadeScaleInOutSetShown(group, shown)
+        local targetShown = group.Target:IsShown()
+        if targetShown and not shown then
+            group.SkipPause = true
+            if not group:IsPlaying() then
+                group:Play()
+            end
+        elseif not targetShown and shown then
+            if not group:IsPlaying() then
+                group:Play()
+            end
+        end
+    end
+
+    ---@param parent Region
+    ---@param target Region
+    ---@param duration? number
+    function util:CreateAnimationGroupFadeScaleInOut(parent, target, duration)
+        duration = duration or 0.25
+        ---@class AnimationGroupFadeScaleInOut
+        local group = parent:CreateAnimationGroup()
+        group.SkipPause = false
+        group.Target = target
+        group.Alpha1 = group:CreateAnimation("Alpha")
+        group.Alpha1:SetTarget(target)
+        group.Alpha1:SetOrder(1)
+        group.Alpha1:SetSmoothing("IN_OUT")
+        group.Alpha1:SetStartDelay(0)
+        group.Alpha1:SetDuration(duration)
+        group.Alpha1:SetFromAlpha(0)
+        group.Alpha1:SetToAlpha(1)
+        group.Alpha2 = group:CreateAnimation("Alpha")
+        group.Alpha2:SetTarget(target)
+        group.Alpha2:SetOrder(2)
+        group.Alpha2:SetSmoothing("IN_OUT")
+        group.Alpha2:SetStartDelay(duration)
+        group.Alpha2:SetDuration(duration)
+        group.Alpha2:SetFromAlpha(1)
+        group.Alpha2:SetToAlpha(0)
+        group.Scale1 = group:CreateAnimation("Scale")
+        group.Scale1:SetTarget(target)
+        group.Scale1:SetOrder(1)
+        group.Scale1:SetSmoothing("IN_OUT")
+        group.Scale1:SetStartDelay(0)
+        group.Scale1:SetDuration(duration)
+        group.Scale1:SetScaleFrom(0, 0) ---@diagnostic disable-line: undefined-field
+        group.Scale1:SetScaleTo(1, 1) ---@diagnostic disable-line: undefined-field
+        group.Scale2 = group:CreateAnimation("Scale")
+        group.Scale2:SetTarget(target)
+        group.Scale2:SetOrder(2)
+        group.Scale2:SetSmoothing("IN_OUT")
+        group.Scale2:SetStartDelay(duration)
+        group.Scale2:SetDuration(duration)
+        group.Scale2:SetScaleFrom(1, 1) ---@diagnostic disable-line: undefined-field
+        group.Scale2:SetScaleTo(0, 0) ---@diagnostic disable-line: undefined-field
+        group:HookScript("OnPlay", function() target:Show() end)
+        group:HookScript("OnStop", function() group.SkipPause = false target:Hide() end)
+        group.Alpha1:HookScript("OnFinished", function() if not group.SkipPause then group:Pause() end end)
+        group.Alpha2:HookScript("OnFinished", function() group:Stop() end)
+        group.SetShown = AnimationGroupFadeScaleInOutSetShown
+        return group
     end
 
 end
@@ -2763,10 +2914,8 @@ do
             ns.Print(format(L.OUT_OF_SYNC_DATABASE_S, addonName))
         elseif blocked or outdated then
             ns.Print(format(L.OUTDATED_EXPIRED_ALERT, addonName, ns.RAIDERIO_ADDON_DOWNLOAD_URL))
-        elseif not providers[1] then
-            if not IsOnTournamentRealm() then
-                ns.Print(format(L.PROVIDER_NOT_LOADED, addonName, ns.PLAYER_FACTION_TEXT))
-            end
+        elseif not providers[1] and util:IsOnRetailRealm() then
+            ns.Print(format(L.PROVIDER_NOT_LOADED, addonName, ns.PLAYER_FACTION_TEXT))
         end
     end
 
@@ -2776,7 +2925,7 @@ do
     end
 
     local function OnPlayerLogin()
-        if IsTestBuild() and config:Get("debugMode") then
+        if config:Get("debugMode") and not util:IsOnRetailRealm() then
             InjectTestBuildData()
         end
         CheckQueuedProviders()
@@ -4423,10 +4572,10 @@ do
     end
 
     local function OnPlayerLogin()
-        ns.PLAYER_REGION, ns.PLAYER_REGION_ID = util:GetRegion() ---@diagnostic disable-line: assign-type-mismatch
         ns.PLAYER_FACTION, ns.PLAYER_FACTION_TEXT = util:GetFaction("player") ---@diagnostic disable-line: assign-type-mismatch
         ns.PLAYER_NAME, ns.PLAYER_REALM = util:GetNameRealm("player")
         ns.PLAYER_REALM_SLUG = util:GetRealmSlug(ns.PLAYER_REALM)
+        ns.PLAYER_REGION, ns.PLAYER_REGION_ID = util:GetRegion() ---@diagnostic disable-line: assign-type-mismatch
         _G.RaiderIO_LastCharacter = format("%s-%s-%s", ns.PLAYER_REGION, ns.PLAYER_NAME, ns.PLAYER_REALM_SLUG or ns.PLAYER_REALM)
         _G.RaiderIO_MissingCharacters = {}
         _G.RaiderIO_MissingServers = {}
@@ -4679,32 +4828,6 @@ do
     local function Has(flag, mask)
         return band(flag, mask) == mask
     end
-
-    local EASTER_EGG = {
-        ["eu"] = {
-            ["TarrenMill"] = {
-                ["Vladinator"] = "Raider.IO AddOn Author"
-            },
-            ["Ysondre"] = {
-                ["Isakem"] = "Raider.IO Developer"
-            }
-        },
-        ["us"] = {
-            ["Skullcrusher"] = {
-                ["Aspyrio"] = "Raider.IO Creator",
-                ["Ulsoga"] = "Raider.IO Creator",
-                ["Mccaffrey"] = "Killing Keys Since 1977!",
-                ["Oscassey"] = "Master of dis guys",
-                ["Rhoma"] = "Plays an MDI Champion on TV"
-            },
-            ["Thrall"] = {
-                ["Firstclass"] = "Author of mythicpl.us"
-            },
-            ["Tichondrius"] = {
-                ["Johnsamdi"] = "Raider.IO Developer"
-            }
-        }
-    }
 
     local function GetSeasonLabel(label, seasonId)
         if not seasonId then
@@ -5268,7 +5391,7 @@ do
                     -- TODO: NYI
                 end
                 if showFooter then
-                    local easterEgg = EASTER_EGG[ns.PLAYER_REGION]
+                    local easterEgg = ns.EASTER_EGG[ns.PLAYER_REGION]
                     if easterEgg then
                         easterEgg = easterEgg[profile.realm]
                         if easterEgg then
@@ -5326,7 +5449,7 @@ do
                     end
                     if keystone.instance then
                         local dungeon = util:GetDungeonByKeystoneID(keystone.instance)
-                        if dungeon then
+                        if dungeon and dungeon.type == "SEASON" then
                             AppendGroupLevelsToTooltip(tooltip, keystone, dungeon)
                         end
                     end
@@ -6062,7 +6185,7 @@ do
             return
         end
         local dungeon = util:GetDungeonByKeystoneID(bannerData.mapID)
-        if not dungeon then
+        if not dungeon or dungeon.type ~= "SEASON" then
             return
         end
         local _, _, timeLimit = C_ChallengeMode.GetMapUIInfo(bannerData.mapID)
@@ -7394,6 +7517,33 @@ do
         [5] = "watched_replay",
     }
 
+    ---@class ConfigReplayColor
+    ---@field public r number
+    ---@field public g number
+    ---@field public b number
+    ---@field public a number
+
+    ---@param texture Texture
+    ---@param color1 ConfigReplayColor
+    ---@param color2? ConfigReplayColor
+    ---@return boolean? success
+    local function ApplyColorToTexture(texture, color1, color2)
+        if not color1 or type(color1) ~= "table" then
+            return
+        end
+        if type(color2) ~= "table" then
+            color2 = nil
+        end
+        if color1 and not color2 then
+            texture:SetColorTexture(color1.r, color1.g, color1.b, color1.a)
+            return true
+        elseif color1 and color2 then
+            texture:SetGradient("VERTICAL", color1, color2)
+            return true
+        end
+        return false
+    end
+
     local FRAME_UPDATE_INTERVAL = 0.5
     local FRAME_TIMER_SCALE = 1 -- always 1 for production
 
@@ -7474,7 +7624,11 @@ do
         [657] = 438,
     }
 
-    ---@type table<number, boolean>
+    --- For any given `encounterID` the value returned will be
+    --- - `true` when the boss is engaged in combat
+    --- - `nil` the boss is not engaged and is out of combat
+    --- - `false` the boss is not engaged and is out of combat - but we never had the `ENCOUNTER_START` called so this helps us track that situation (this bug will be resolved in 10.1.7)
+    ---@type table<number, boolean?>
     local ActiveEncounters = {}
 
     ---@param ... FontString
@@ -7671,15 +7825,22 @@ do
     ---@class ReplayFrame : Frame
     local replayFrame
 
+    ---@class BossFrameBackgroundTexture : Texture
+    ---@field public ColorTop ColorMixin
+    ---@field public ColorBottom ColorMixin
+
     ---@class BossFrame : Frame
     ---@field public bossRows ReplayBossRow[]
     ---@field public Name FontString
     ---@field public InfoL FontString
     ---@field public InfoR FontString
-    ---@field public Background Texture
+    ---@field public Background BossFrameBackgroundTexture
     ---@field public CombatL Texture
     ---@field public CombatR Texture
     ---@field public RouteSwap Texture
+    ---@field public CombatLAnim AnimationGroupFadeScaleInOut
+    ---@field public CombatRAnim AnimationGroupFadeScaleInOut
+    ---@field public RouteSwapAnim AnimationGroupFadeScaleInOut
 
     ---@class BossFramePool
     ---@field public Acquire fun(self: BossFramePool): BossFrame
@@ -7702,6 +7863,7 @@ do
             self.Name:SetText(self.index)
             self.InfoL:SetText("")
             self.InfoR:SetText("")
+            self:SetBackgroundColor(replayFrame:GetBackgroundColor())
             self:Show()
             self:Update()
         end
@@ -7725,7 +7887,12 @@ do
                     delta = ConvertMillisecondsToSeconds(liveBoss.killed - (prevLiveBoss and prevLiveBoss.killed or 0))
                     comparisonDelta = ConvertMillisecondsToSeconds(replayBoss.killed - (prevReplayBoss and prevReplayBoss.killed or 0))
                 end
-                self.InfoL:SetFormattedText("%s\n%s", liveBoss.killedText, SecondsToTimeTextCompared(delta, comparisonDelta, "PARENTHESIS"))
+                -- HOTFIX: handles the special case where `ENCOUNTER_START` was never called, but we know about it because the value is `false`, and that means that the boss was defeated (this bug will be resolved in 10.1.7)
+                if timing == "BOSS" and delta <= 0 then
+                    self.InfoL:SetText(liveBoss.killedText)
+                else
+                    self.InfoL:SetFormattedText("%s\n%s", liveBoss.killedText, SecondsToTimeTextCompared(delta, comparisonDelta, "PARENTHESIS"))
+                end
             elseif liveBoss and liveBoss.combat then
                 local delta = ConvertMillisecondsToSeconds(timerMS - liveBoss.combatStart)
                 self.InfoL:SetText(SecondsToTimeText(delta, "NONE_YELLOW"))
@@ -7748,9 +7915,9 @@ do
             else
                 self.InfoR:SetText("")
             end
-            self.CombatL:SetShown(not isLiveBossDead and liveBoss and liveBoss.combat)
-            self.CombatR:SetShown(not isReplayBossDead and replayBoss and replayBoss.combat)
-            self.RouteSwap:SetShown(not self.CombatR:IsShown() and (not not self:HasDifferentBosses()))
+            self.CombatLAnim:SetShown(not isLiveBossDead and liveBoss and liveBoss.combat)
+            self.CombatRAnim:SetShown(not isReplayBossDead and replayBoss and replayBoss.combat)
+            self.RouteSwapAnim:SetShown(not self.CombatR:IsShown() and (not not self:HasDifferentBosses()))
         end
 
         ---@param index number? Defaults to the current rows bosses.
@@ -7834,12 +8001,26 @@ do
             GameTooltip_Hide()
         end
 
+        ---@param color ConfigReplayColor
+        function BossFrameMixin:SetBackgroundColor(color)
+            local bottom = CreateColor(color.r, color.g, color.b, color.a)
+            local top = CreateColor(color.r, color.g, color.b, color.a > 0.1 and color.a - 0.1 or 0)
+            self.Background.ColorBottom = bottom
+            self.Background.ColorTop = top
+            self.Background:SetGradient("VERTICAL", bottom, top)
+        end
+
+        ---@return ColorMixin colorBottom, ColorMixin colorTop
+        function BossFrameMixin:GetBackgroundColor()
+            return self.Background.ColorBottom, self.Background.ColorTop
+        end
+
     end
 
     ---@param obj BossFrame
     local function BossFrameOnInit(obj)
         Mixin(obj, BossFrameMixin)
-        obj:SetSize(320, 32)
+        obj:SetSize(200 - 5*2, 32)
         obj.Name = obj:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
         obj.Name:SetSize(16 + 4, 32 - 4*2)
         obj.Name:SetPoint("CENTER")
@@ -7856,21 +8037,24 @@ do
         obj.InfoR:SetJustifyH("LEFT")
         obj.InfoR:SetJustifyV("MIDDLE")
         obj.Background = obj:CreateTexture(nil, "BACKGROUND")
-        obj.Background:SetPoint("TOPLEFT", 1, -1)
-        obj.Background:SetPoint("BOTTOMRIGHT", -1, 1)
-        obj.Background:SetColorTexture(0, 0, 0, 0.5)
+        obj.Background:SetAllPoints()
+        obj.Background:SetColorTexture(1, 1, 1, 1)
+        obj:SetBackgroundColor(replayFrame:GetBackgroundColor())
         obj.CombatL = util:CreateTextureFromIcon(obj, ns.CUSTOM_ICONS.replay.COMBAT, "ARTWORK")
         obj.CombatL:SetPoint("LEFT", obj.InfoL, "LEFT", 4, 0)
         obj.CombatL:SetSize(14, 14)
         obj.CombatL:Hide()
+        obj.CombatLAnim = util:CreateAnimationGroupFadeScaleInOut(obj, obj.CombatL)
         obj.CombatR = util:CreateTextureFromIcon(obj, ns.CUSTOM_ICONS.replay.COMBAT, "ARTWORK")
         obj.CombatR:SetPoint("RIGHT", obj.InfoR, "RIGHT", -4, 0)
         obj.CombatR:SetSize(14, 14)
         obj.CombatR:Hide()
+        obj.CombatRAnim = util:CreateAnimationGroupFadeScaleInOut(obj, obj.CombatR)
         obj.RouteSwap = util:CreateTextureFromIcon(obj, ns.CUSTOM_ICONS.replay.ROUTE, "ARTWORK")
         obj.RouteSwap:SetPoint("RIGHT", obj.InfoR, "RIGHT", -4, 0)
         obj.RouteSwap:SetSize(16, 16)
         obj.RouteSwap:Hide()
+        obj.RouteSwapAnim = util:CreateAnimationGroupFadeScaleInOut(obj, obj.RouteSwap)
         obj:HookScript("OnEnter", obj.OnEnter)
         obj:HookScript("OnLeave", obj.OnLeave)
         obj:SetMouseClickEnabled(false)
@@ -7897,25 +8081,21 @@ do
                 bossFrames[bossIndex] = bossFrame
             end
             table.sort(bossFrames, function(a, b) return a.index < b.index end)
-            local offsetX, offsetY = 0, replayFrame.contentPaddingY
+            local bossFrameWidth = replayFrame.width - replayFrame.contentPaddingX*2
+            local bossFrameHeight = 32 -- BossFrameOnInit
+            local offsetX, offsetY = 0, 0
             local prevBossFrame
-            local bossesHeight = 0
             for _, bossFrame in ipairs(bossFrames) do
-                local height = bossFrame:GetHeight()
-                bossesHeight = bossesHeight + height
+                bossFrame:SetWidth(bossFrameWidth)
                 bossFrame:ClearAllPoints()
                 if prevBossFrame then
-                    bossFrame:SetPoint("TOPLEFT", prevBossFrame, "BOTTOMLEFT", 0, 0)
-                    bossFrame:SetPoint("BOTTOMRIGHT", prevBossFrame, "BOTTOMRIGHT", 0, -height)
+                    bossFrame:SetPoint("TOPLEFT", prevBossFrame, "BOTTOMLEFT", 0, -offsetY)
                 else
-                    bossFrame:SetPoint("TOPLEFT", replayFrame.TextBlock, "BOTTOMLEFT", offsetX, -offsetY)
-                    bossFrame:SetPoint("BOTTOMRIGHT", replayFrame.TextBlock, "BOTTOMRIGHT", -offsetX, -height-offsetY)
+                    bossFrame:SetPoint("TOPLEFT", replayFrame.TextBlock, "BOTTOMLEFT", offsetX, -offsetY) -- -replayFrame.contentPaddingY
                 end
                 prevBossFrame = bossFrame
             end
-            if bossesHeight > 0 then
-                bossesHeight = bossesHeight + replayFrame.contentPaddingY
-            end
+            local bossesHeight = #bossFrames * (bossFrameHeight + offsetY)
             return bossesHeight
         end
 
@@ -7948,7 +8128,9 @@ do
             whileDead = true,
             hideOnEscape = true,
             OnShow = nil,
-            OnHide = nil,
+            OnHide = function (self)
+                self.OnAcceptCallback = nil
+            end,
             OnAccept = function (self)
                 if self.OnAcceptCallback then
                     self.OnAcceptCallback()
@@ -8224,6 +8406,15 @@ do
                                     boss.combat = false
                                 end
                             end
+                            -- HOTFIX: handles the special case where `ENCOUNTER_START` was never called, but we know about it because the value is `false`, and that means that the boss was defeated (this bug will be resolved in 10.1.7)
+                            if completed and not boss.dead then
+                                local encounterID = boss.encounter and boss.encounter.encounter_id or 0
+                                local combat = ActiveEncounters[encounterID]
+                                if combat == false then
+                                    boss.combatStart = liveSummary.timer
+                                    boss.pulls = boss.pulls + 1
+                                end
+                            end
                             if completed and not boss.dead then
                                 boss.combat = false
                                 boss.pulls = max(1, boss.pulls)
@@ -8253,6 +8444,30 @@ do
 
     do
 
+        ---@type InternalStaticPopupDialog
+        local DISABLE_REPLAY_POPUP = {
+            id = "RAIDERIO_REPLAY_DISABLE_CONFIRM",
+            text = "%s",
+            button1 = L.CONFIRM,
+            button2 = L.CANCEL,
+            hasEditBox = false,
+            preferredIndex = 3,
+            timeout = 0,
+            whileDead = true,
+            hideOnEscape = true,
+            OnShow = nil,
+            OnHide = function (self)
+                self.OnAcceptCallback = nil
+            end,
+            OnAccept = function (self)
+                if self.OnAcceptCallback then
+                    self.OnAcceptCallback()
+                    self.OnAcceptCallback = nil
+                end
+            end,
+            OnCancel = nil
+        }
+
         ---@alias ReplayFrameDropDownMenuList "replay"|"style"|"timing"|"position"
 
         ---@alias ReplayFrameDropDownPositionOption "lock"|"unlock"|"dock"|"undock"
@@ -8277,8 +8492,6 @@ do
             self:SetPoint("TOPRIGHT", parent, "TOPRIGHT", 0, 0)
             self:RegisterForClicks("LeftButtonUp")
             self:SetScript("OnClick", self.OnClick)
-            -- self:SetScript("OnEnter", self.OnEnter)
-            -- self:SetScript("OnLeave", self.OnLeave)
             self.Texture = self:CreateTexture(nil, "ARTWORK")
             self.Texture:SetAllPoints()
             self.Texture:SetTexture(851903)
@@ -8314,6 +8527,10 @@ do
                 UIDropDownMenu_AddButton(info, level)
                 info.text, info.hasArrow, info.menuList = L.REPLAY_MENU_POSITION, true, "position"
                 UIDropDownMenu_AddButton(info, level)
+                info.func = parent.OnDisableClick
+                info.arg1 = parent
+                info.text, info.hasArrow, info.menuList = L.REPLAY_MENU_DISABLE, false, nil
+                UIDropDownMenu_AddButton(info, level)
             elseif menuList == "replay" then
                 local replayDataProvider = replayFrame:GetReplayDataProvider()
                 local currentReplay = replayDataProvider:GetReplay()
@@ -8327,12 +8544,9 @@ do
                     local showDungeon = info.checked or (dungeon and (dungeon.keystone_instance == mapID or (otherMapIDs and util:TableContains(otherMapIDs, dungeon.keystone_instance))))
                     if showDungeon then
                         local affixesText = util:TableMapConcat(replay.affixes, function(affix) return format("|Tinterface\\icons\\%s:16:16|t", affix.icon) end, "")
-                        local members = {strsplit(",", replay.title)} ---@type string[]
-                        members = format(" - %s", util:TableMapConcat(members, function(name) return strtrim(name) end, "\n - ")) ---@diagnostic disable-line: cast-local-type
                         info.text = replay.title
                         info.arg2 = replay
                         info.tooltipTitle = affixesText
-                        info.tooltipText = format("|cffFFFFFF%s|r", members)
                         UIDropDownMenu_AddButton(info, level)
                     end
                 end
@@ -8428,6 +8642,17 @@ do
             dropDownMenu:Close()
         end
 
+        ---@param self UIDropDownMenuInfo
+        function ReplayFrameConfigButtonMixin:OnDisableClick()
+            local dropDownMenu = self.arg1
+            local popup = util:ShowStaticPopupDialog(DISABLE_REPLAY_POPUP, L.REPLAY_DISABLE_CONFIRM)
+            popup.OnAcceptCallback = function()
+                config:Set("enableReplay", false)
+                replay:Disable()
+            end
+            dropDownMenu:Close()
+        end
+
         function ReplayFrameConfigButtonMixin:Open()
             ToggleDropDownMenu(1, nil, self.DropDownMenu, "cursor", 2, 2)
         end
@@ -8445,18 +8670,22 @@ do
         end
 
         function ReplayFrameConfigButtonMixin:OnClick()
-            PlaySound(SOUNDKIT.IG_CHAT_EMOTE_BUTTON)
+            if self:HideCogwheelTextureIfModifyClicked() then
+                return
+            end
+            if self.Texture:IsShown() then
+                PlaySound(SOUNDKIT.IG_CHAT_EMOTE_BUTTON)
+            end
             self:Toggle()
         end
 
-        function ReplayFrameConfigButtonMixin:OnEnter()
-            GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-            GameTooltip_SetTitle(GameTooltip, L.REPLAY_SETTINGS_TOOLTIP)
-            GameTooltip:Show()
-        end
-
-        function ReplayFrameConfigButtonMixin:OnLeave()
-            GameTooltip:Hide()
+        ---@return boolean? textureWasHidden
+        function ReplayFrameConfigButtonMixin:HideCogwheelTextureIfModifyClicked()
+            if not IsShiftKeyDown() or not IsControlKeyDown() or not IsAltKeyDown() then
+                return
+            end
+            self.Texture:Hide()
+            return true
         end
 
     end
@@ -8696,6 +8925,9 @@ do
             self:Hide()
             self:SetScript("OnUpdate", self.OnUpdate)
 
+            self.backgroundColor = { r = 0, g = 0, b = 0, a = 0.5 } ---@type ConfigReplayColor
+            self.frameAlpha = 1
+
             self.forceHidden = false
             self.state = "NONE" ---@type ReplayFrameState
             self.elapsedTime = 0 -- the start time as provided by the WORLD_STATE_TIMER_START event
@@ -8714,7 +8946,22 @@ do
             self.textHeight = self.textRowHeight * self.textRowCount + self.contentPaddingY * (self.textRowCount - 1) ---@type number
             self.bossesHeight = 0
 
-            self:SetPoint("TOPRIGHT", ObjectiveTrackerFrame, "TOPLEFT", -32, 0)
+            self.trackerFrameParent = UIParentRightManagedFrameContainer ---@type Region
+            self.trackerFramePoint = "TOPRIGHT"
+            self.trackerFrame = ObjectiveTrackerFrame ---@type Region
+            self.trackerFrameRelativePoint = "TOPLEFT"
+            self.trackerFrameOffsetX = -32
+            self.trackerFrameOffsetY = 0
+
+            hooksecurefunc(self.trackerFrameParent, "Layout", function()
+                if not config:Get("dockReplay") then
+                    return
+                end
+                self:UpdatePosition()
+            end)
+
+            self:SetAlpha(self.frameAlpha)
+            self:SetPoint(self:GetTrackerPoint())
             self:SetSize(self.width, 0)
             self:SetFrameStrata("LOW")
             self:SetClampedToScreen(true)
@@ -8730,7 +8977,7 @@ do
 
             self.Background = self:CreateTexture(nil, "BACKGROUND", nil, 1)
             self.Background:SetAllPoints()
-            self.Background:SetColorTexture(0, 0, 0, 0.5)
+            ApplyColorToTexture(self.Background, self.backgroundColor)
 
             self.BossFramePool = CreateBossFramePool(self)
 
@@ -8741,7 +8988,7 @@ do
             self.TextBlock.Background = self:CreateTexture(nil, "BACKGROUND", nil, 1)
             self.TextBlock.Background:SetPoint("TOPLEFT", self.TextBlock, "TOPLEFT", 0, 0)
             self.TextBlock.Background:SetPoint("BOTTOMRIGHT", self.TextBlock, "BOTTOMRIGHT", 0, 0)
-            self.TextBlock.Background:SetColorTexture(0, 0, 0, 0.5)
+            ApplyColorToTexture(self.TextBlock.Background, self.backgroundColor)
 
             ---@param previous? Region
             ---@param middleText? string
@@ -8789,8 +9036,10 @@ do
             self.TextBlock.BossCombatR:SetSize(14, 14)
             self.TextBlock.BossCombatR:Hide()
 
-            ---@param self ReplayFrame
-            local function ShowReplayRunTooltip(self)
+            self.TextBlock.BossCombatLAnim = util:CreateAnimationGroupFadeScaleInOut(self.TextBlock, self.TextBlock.BossCombatL)
+            self.TextBlock.BossCombatRAnim = util:CreateAnimationGroupFadeScaleInOut(self.TextBlock, self.TextBlock.BossCombatR)
+
+            local function ShowReplayRunTooltip()
                 local currentReplay = self.replayDataProvider:GetReplay()
                 if not currentReplay then
                     return
@@ -8800,8 +9049,15 @@ do
                 GameTooltip:Show()
             end
 
+            local function HideReplayRunTooltip()
+                if GameTooltip:GetOwner() ~= self then
+                    return
+                end
+                GameTooltip:Hide()
+            end
+
             self:SetScript("OnEnter", ShowReplayRunTooltip)
-            self:SetScript("OnLeave", GameTooltip_Hide)
+            self:SetScript("OnLeave", HideReplayRunTooltip)
 
             self.TextBlock.TrashL, self.TextBlock.TrashM, self.TextBlock.TrashR = CreateTextRow(self.TextBlock.BossL, ns.CUSTOM_ICONS.replay.TRASH("TextureMarkup"))
             self.TextBlock.DeathPenL, self.TextBlock.DeathPenM, self.TextBlock.DeathPenR = CreateTextRow(self.TextBlock.TrashL, ns.CUSTOM_ICONS.replay.DEATH("TextureMarkup"))
@@ -8889,6 +9145,15 @@ do
             self.MDI.DeathPenR.Background:SetColorTexture(0, 0, 0, 0.85)
         end
 
+        ---@return AnchorPoint point, Region relativeTo, AnchorPoint relativePoint, number offsetX, number offsetY
+        function ReplayFrameMixin:GetTrackerPoint()
+            if self.trackerFrame:GetParent() ~= self.trackerFrameParent or self.trackerFrame == self.trackerFrameParent then
+                local offsetX = -32 - self.trackerFrameParent:GetWidth()
+                self.trackerFramePoint, self.trackerFrame, self.trackerFrameRelativePoint, self.trackerFrameOffsetX, self.trackerFrameOffsetY = "TOPRIGHT", self.trackerFrameParent, "TOPRIGHT", offsetX, 0
+            end
+            return self.trackerFramePoint, self.trackerFrame, self.trackerFrameRelativePoint, self.trackerFrameOffsetX, self.trackerFrameOffsetY
+        end
+
         ---@param style ReplayFrameStyle
         ---@param save? boolean
         function ReplayFrameMixin:SetStyle(style, save)
@@ -8961,6 +9226,30 @@ do
         ---@param timing ReplayFrameTiming
         function ReplayFrameMixin:IsTiming(timing)
             return self.timing == timing
+        end
+
+        ---@param color ConfigReplayColor
+        function ReplayFrameMixin:SetBackgroundColor(color)
+            self.backgroundColor = color
+            ApplyColorToTexture(self.Background, color)
+            ApplyColorToTexture(self.TextBlock.Background, color)
+            for bossFrame in self.BossFramePool:EnumerateActive() do
+                bossFrame:SetBackgroundColor(color)
+            end
+        end
+
+        function ReplayFrameMixin:GetBackgroundColor()
+            return self.backgroundColor
+        end
+
+        ---@param alpha number
+        function ReplayFrameMixin:SetFrameAlpha(alpha)
+            self.frameAlpha = alpha
+            self:SetAlpha(alpha)
+        end
+
+        function ReplayFrameMixin:GetFrameAlpha()
+            return self.frameAlpha
         end
 
         ---@param replayDataProvider ReplayDataProvider
@@ -9142,7 +9431,7 @@ do
 
         ---@param forceTimer? number
         ---@param killBosses? boolean
-        function ReplayFrameMixin:StartDebug(forceTimer, killBosses)
+        function ReplayFrameMixin:StartDebug(forceTimer, killBosses, zeroBossTimer)
             if not config:Get("debugMode") then
                 return
             end
@@ -9185,6 +9474,9 @@ do
                         boss.killedStart = max(0, timerMS - ((count - i) * 240000))
                         boss.combatStart = nil
                         boss.killed = boss.killedStart + (30000 * random(1, 20))
+                        if zeroBossTimer then
+                            boss.killedStart = boss.killed
+                        end
                         local delta = ConvertMillisecondsToSeconds(boss.killed)
                         boss.killedText = SecondsToTimeText(delta, "NONE_COLORLESS")
                     end
@@ -9193,7 +9485,7 @@ do
             self:SetState("PLAYING")
             self:Update()
             C_Timer.After(0.25, function() self:UpdateShown() end)
-            C_Timer.After(0.50, function() self:UpdateShown() end)
+            C_Timer.After(0.75, function() self:UpdateShown() end)
         end
 
         function ReplayFrameMixin:StopDebug()
@@ -9280,7 +9572,7 @@ do
                 self:SetMovable(false)
                 self:SetMouseClickEnabled(false)
                 self:ClearAllPoints()
-                self:SetPoint("TOPRIGHT", ObjectiveTrackerFrame, "TOPLEFT", -32, 0)
+                self:SetPoint(self:GetTrackerPoint())
                 return
             end
             if save then
@@ -9294,7 +9586,8 @@ do
             self:SetMouseClickEnabled(not locked)
             self:ClearAllPoints()
             local replayPoint = config:Get("replayPoint") ---@type ConfigProfilePoint
-            self:SetPoint(replayPoint.point or "TOPRIGHT", replayPoint.point and UIParent or ObjectiveTrackerFrame, replayPoint.point or "TOPLEFT", replayPoint.point and replayPoint.x or -32, replayPoint.point and replayPoint.y or 0)
+            local point, relativeTo, relativePoint, offsetX, offsetY = self:GetTrackerPoint()
+            self:SetPoint(replayPoint.point or point, replayPoint.point and UIParent or relativeTo, replayPoint.point or relativePoint, replayPoint.point and replayPoint.x or offsetX, replayPoint.point and replayPoint.y or offsetY)
         end
 
         function ReplayFrameMixin:UpdateShown()
@@ -9601,8 +9894,8 @@ do
             local style = self:GetStyle()
             local isModern = style == "MODERN" or style == "MODERN_COMPACT"
             local isMDI = style == "MDI"
-            self.TextBlock.BossCombatL:SetShown(isModern and liveInBossCombat)
-            self.TextBlock.BossCombatR:SetShown(isModern and replayInBossCombat)
+            self.TextBlock.BossCombatLAnim:SetShown(isModern and liveInBossCombat)
+            self.TextBlock.BossCombatRAnim:SetShown(isModern and replayInBossCombat)
             self.MDI.BossCombat:SetShown(isMDI and replayInBossCombat)
         end
 
@@ -9778,13 +10071,17 @@ do
     ---@param event? WowEvent
     local function OnEvent(event, ...)
         -- handle updating the active encounter state
-        if event == "ENCOUNTER_START" or event == "ENCOUNTER_END" then
+        if event == "PLAYER_ENTERING_WORLD" then
+            table.wipe(ActiveEncounters)
+        elseif event == "ENCOUNTER_START" or event == "ENCOUNTER_END" then
             ---@type number, string, number, number, boolean
             local encounterID, _, _, _, success = ...
             if success == nil then -- it's nil when it's the start event, otherwise 0 for wipe, and 1 for success
                 ActiveEncounters[encounterID] = true
-            else
+            elseif ActiveEncounters[encounterID] then
                 ActiveEncounters[encounterID] = nil
+            else
+                ActiveEncounters[encounterID] = false
             end
             return
         end
@@ -9873,10 +10170,23 @@ do
         end)
     end
 
-    local function OnSettingsChanged()
+    local function OnSettingsChanged(event, ...)
+        if event == "RAIDERIO_SETTINGS_WIDGET_UPDATE" then
+            if replayFrame:IsShown() then
+                local cvar, value = ...
+                if cvar == "replayBackground" then
+                    replayFrame:SetBackgroundColor(value)
+                elseif cvar == "replayAlpha" then
+                    replayFrame:SetFrameAlpha(value)
+                end
+            end
+            return
+        end
         if config:Get("enableReplay") then
             replay:Enable()
             replayFrame:UpdatePosition()
+            replayFrame:SetBackgroundColor(config:Get("replayBackground"))
+            replayFrame:SetFrameAlpha(config:Get("replayAlpha"))
         else
             replay:Disable()
         end
@@ -9898,9 +10208,13 @@ do
         replayFrame:SetLiveDataProvider(CreateLiveDataProvider())
         replayFrame:SetStyle(config:Get("replayStyle"))
         replayFrame:SetTiming(config:Get("replayTiming"))
+        replayFrame:SetBackgroundColor(config:Get("replayBackground"))
+        replayFrame:SetFrameAlpha(config:Get("replayAlpha"))
         OnSettingsChanged()
         callback:RegisterEvent(OnSettingsChanged, "RAIDERIO_CONFIG_READY")
         callback:RegisterEvent(OnSettingsChanged, "RAIDERIO_SETTINGS_SAVED")
+        callback:RegisterEvent(OnSettingsChanged, "RAIDERIO_SETTINGS_CLOSED")
+        callback:RegisterEvent(OnSettingsChanged, "RAIDERIO_SETTINGS_WIDGET_UPDATE")
     end
 
     function replay:OnEnable()
@@ -11967,11 +12281,12 @@ do
         end
 
         local function Close_OnClick()
-            configParentFrame:SetShown(not configParentFrame:IsShown())
+            configParentFrame:Hide()
+            callback:SendEvent("RAIDERIO_SETTINGS_CLOSED")
         end
 
         local function Save_OnClick()
-            Close_OnClick()
+            configParentFrame:Hide()
             local reload
             for i = 1, #configOptions.modules do
                 local f = configOptions.modules[i]
@@ -12029,6 +12344,20 @@ do
                     config:Set(f.cvar, f.selected.value)
                 end
             end
+            for i = 1, #configOptions.colors do
+                local f = configOptions.colors[i]
+                local value = config:Get(f.cvar)
+                if f.selected then
+                    value.r, value.g, value.b, value.a = f.selected.r, f.selected.g, f.selected.b, f.selected.a
+                    config:Set(f.cvar, value)
+                end
+            end
+            for i = 1, #configOptions.sliders do
+                local f = configOptions.sliders[i]
+                if f.selected then
+                    config:Set(f.cvar, f.selected)
+                end
+            end
             if reload then
                 util:ShowStaticPopupDialog(RELOAD_POPUP)
             end
@@ -12041,6 +12370,8 @@ do
             options = {}, ---@type RaiderIOSettingsToggleWidget[]
             radios = {}, ---@type RaiderIOSettingsRadioToggleWidget[]
             dropdowns = {}, ---@type RaiderIOSettingsDropDownWidget[]
+            colors = {}, ---@type RaiderIOSettingsColorPickerWidget[]
+            sliders = {}, ---@type RaiderIOSettingsSliderWidget[]
             backdrop = { -- TODO: 9.0
                 bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
                 edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16,
@@ -12080,7 +12411,7 @@ do
             end
             for i = 1, #self.dropdowns do
                 local f = self.dropdowns[i]
-                if f.isDisabled then
+                if f.isDisabled ~= nil then
                     local disabled = f.isDisabled
                     if type(disabled) == "function" then
                         disabled = disabled(f)
@@ -12097,6 +12428,48 @@ do
                         f.toggleButton:SetEnabled(true)
                         f.toggleButton.text:SetVertexColor(1, 1, 1)
                         f.toggleButton.indicator:SetVertexColor(1, 1, 1)
+                    end
+                end
+            end
+            for i = 1, #self.colors do
+                local f = self.colors[i]
+                if f.isDisabled ~= nil then
+                    local disabled = f.isDisabled
+                    if type(disabled) == "function" then
+                        disabled = disabled(f)
+                    end
+                    if disabled then
+                        f.text:SetVertexColor(0.5, 0.5, 0.5)
+                        f.help.icon:SetVertexColor(0.5, 0.5, 0.5)
+                        f.colorButton:SetEnabled(false)
+                        f.colorButton.text:SetVertexColor(0.5, 0.5, 0.5)
+                        f.colorButton.indicator:SetDesaturated(true)
+                    else
+                        f.text:SetVertexColor(1, 1, 1)
+                        f.help.icon:SetVertexColor(1, 1, 1)
+                        f.colorButton:SetEnabled(true)
+                        f.colorButton.text:SetVertexColor(1, 1, 1)
+                        f.colorButton.indicator:SetDesaturated(false)
+                    end
+                end
+            end
+            for i = 1, #self.sliders do
+                local f = self.sliders[i]
+                if f.isDisabled ~= nil then
+                    local disabled = f.isDisabled
+                    if type(disabled) == "function" then
+                        disabled = disabled(f)
+                    end
+                    if disabled then
+                        f.text:SetVertexColor(0.5, 0.5, 0.5)
+                        f.help.icon:SetVertexColor(0.5, 0.5, 0.5)
+                        f.sliderFrame:SetEnabled(false)
+                        f.sliderFrame.text:SetVertexColor(0.5, 0.5, 0.5)
+                    else
+                        f.text:SetVertexColor(1, 1, 1)
+                        f.help.icon:SetVertexColor(1, 1, 1)
+                        f.sliderFrame:SetEnabled(true)
+                        f.sliderFrame.text:SetVertexColor(1, 1, 1)
                     end
                 end
             end
@@ -12136,6 +12509,16 @@ do
                     end
                 end
                 f.toggleButton.text:SetText(f.selected and f.selected.text)
+            end
+            for i = 1, #self.colors do
+                local f = self.colors[i]
+                f.selected = nil
+                self.ColorPickerUpdate(f)
+            end
+            for i = 1, #self.sliders do
+                local f = self.sliders[i]
+                f.selected = nil
+                self.SliderUpdate(f)
             end
         end
 
@@ -12344,7 +12727,6 @@ do
 
         ---@class RaiderIOSettingsDropDownWidget : RaiderIOSettingsBaseWidget, RaiderIOSettingsDropDownWidgetOptions
         ---@field public selected? RaiderIOSettingsDropDownOption
-        ---@field public isDisabled? boolean|RaiderIOSettingsDropDownWidgetIsDisabledCallback
 
         ---@class RaiderIOSettingsDropDownWidgetToggleButton : Button
 
@@ -12430,6 +12812,196 @@ do
             frame.toggleButton.DropDownMenu = CreateFrame("Frame", nil, frame.toggleButton, "UIDropDownMenuTemplate") ---@class UIDropDownMenuTemplate
             UIDropDownMenu_Initialize(frame.toggleButton.DropDownMenu, function(...) self.DropDownOnInitialize(frame, ...) end, "MENU")
             self.dropdowns[#self.dropdowns + 1] = frame
+            return frame
+        end
+
+        ---@alias RaiderIOSettingsColorPickerWidgetIsDisabledCallback fun(self: RaiderIOSettingsColorPickerWidget): boolean?
+
+        ---@class RaiderIOSettingsColorPickerWidgetOptions
+        ---@field public isDisabled? boolean|RaiderIOSettingsColorPickerWidgetIsDisabledCallback
+
+        ---@class RaiderIOSettingsColorPickerWidget : RaiderIOSettingsBaseWidget, RaiderIOSettingsColorPickerWidgetOptions
+        ---@field public selected? ConfigReplayColor
+
+        ---@param self RaiderIOSettingsColorPickerWidget
+        ---@param setValue? ConfigReplayColor
+        function configOptions.ColorPickerUpdate(self, setValue)
+            local value = self.selected or util:TableCopy(config:Get(self.cvar))
+            if setValue then
+                value = setValue
+            end
+            self.selected = value
+            self.colorButton.indicator:SetColorTexture(value.r, value.g, value.b, value.a)
+            self.colorButton.text:SetFormattedText("%d %d %d (%d)", value.r * 255, value.g * 255, value.b * 255, value.a * 100)
+            callback:SendEvent("RAIDERIO_SETTINGS_WIDGET_UPDATE", self.cvar, self.selected)
+        end
+
+        ---@class OpenColorPickerColorOptions
+        ---@field public r number
+        ---@field public g number
+        ---@field public b number
+        ---@field public opacity number
+
+        ---@class OpenColorPickerOptions : OpenColorPickerColorOptions
+        ---@field public hasOpacity boolean
+        ---@field public swatchFunc fun()
+        ---@field public opacityFunc fun()
+        ---@field public cancelFunc fun(previousValues: OpenColorPickerColorOptions)
+        ---@field public extraInfo? any
+
+        ---@alias OpenColorPicker fun(options: OpenColorPickerOptions)
+        local OpenColorPicker = OpenColorPicker ---@type OpenColorPicker
+
+        ---@param self RaiderIOSettingsColorPickerWidget
+        function configOptions.ColorPickerOnClick(self)
+            if ColorPickerFrame:IsShown() then
+                return
+            end
+            local value = self.selected or util:TableCopy(config:Get(self.cvar)) ---@type ConfigReplayColor
+            ---@param applyPreviousValues? OpenColorPickerColorOptions
+            local function update(applyPreviousValues)
+                if applyPreviousValues then
+                    value.r, value.g, value.b = applyPreviousValues.r, applyPreviousValues.g, applyPreviousValues.b
+                    if 1 + applyPreviousValues.opacity > 1 then
+                        value.a = 1 - applyPreviousValues.opacity
+                    else
+                        value.a = 1 + applyPreviousValues.opacity
+                    end
+                else
+                    value.r, value.g, value.b = ColorPickerFrame:GetColorRGB()
+                    value.a = 1 - OpacitySliderFrame:GetValue()
+                end
+                configOptions.ColorPickerUpdate(self, value)
+            end
+            OpenColorPicker({
+                r = value.r,
+                g = value.g,
+                b = value.b,
+                opacity = 1 - value.a,
+                hasOpacity = true,
+                swatchFunc = function() update() end,
+                opacityFunc = function() update() end,
+                cancelFunc = function(previousValues) update(previousValues) end,
+                -- extraInfo = {},
+            })
+        end
+
+        ---@param self RaiderIOConfigOptions
+        ---@param label string
+        ---@param description string
+        ---@param cvar string
+        ---@param configOptions RaiderIOSettingsColorPickerWidgetOptions
+        function configOptions.CreateColorPicker(self, label, description, cvar, configOptions)
+            ---@class RaiderIOSettingsColorPickerWidget
+            local frame = self:CreateWidget("Frame")
+            frame.isDisabled = configOptions.isDisabled
+            frame.text:SetTextColor(1, 1, 1)
+            frame.text:SetText(label)
+            frame.tooltip = description
+            frame.cvar = cvar
+            frame.help.tooltip = description
+            frame.help:Hide()
+            frame.checkButton:Hide()
+            frame.colorButton = CreateFrame("Button", nil, frame) ---@class RaiderIOSettingsDropDownWidgetToggleButton
+            frame.colorButton:SetSize(120, 20)
+            frame.colorButton:SetPoint("RIGHT", frame.checkButton, "RIGHT", 0, 0)
+            frame.colorButton.indicator = frame.colorButton:CreateTexture(nil, "ARTWORK")
+            frame.colorButton.indicator:SetPoint("RIGHT", frame.colorButton, "RIGHT", -3, 0)
+            frame.colorButton.indicator:SetSize(16, 16)
+            frame.colorButton.indicator:SetColorTexture(1, 1, 1, 1)
+            frame.colorButton.text = frame.colorButton:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+            frame.colorButton.text:SetSize(120, 20)
+            frame.colorButton.text:SetPoint("LEFT", frame.colorButton, "LEFT", 0, 0)
+            frame.colorButton.text:SetPoint("RIGHT", frame.colorButton.indicator, "LEFT", -2, 0)
+            frame.colorButton.text:SetJustifyH("RIGHT")
+            frame.colorButton:EnableMouse(true)
+            frame.colorButton:RegisterForClicks("LeftButtonUp")
+            frame.colorButton:SetScript("OnClick", function(...) self.ColorPickerOnClick(frame, ...) end)
+            self.ColorPickerUpdate(frame)
+            self.colors[#self.colors + 1] = frame
+            return frame
+        end
+
+        ---@alias RaiderIOSettingsSliderWidgetIsDisabledCallback fun(self: RaiderIOSettingsSliderWidget): boolean?
+
+        ---@class RaiderIOSettingsSliderWidgetOptions
+        ---@field public isDisabled? boolean|RaiderIOSettingsSliderWidgetIsDisabledCallback
+        ---@field public pctl? boolean
+        ---@field public from? number
+        ---@field public to? number
+        ---@field public step? number
+
+        ---@class RaiderIOSettingsSliderWidget : RaiderIOSettingsBaseWidget, RaiderIOSettingsSliderWidgetOptions
+        ---@field public selected? number
+
+        ---@class RaiderIOSettingsSliderWidgetSliderFrame : Slider
+        ---@field public obeyStepOnDrag boolean
+        ---@field public Left Texture
+        ---@field public Right Texture
+        ---@field public Middle Texture
+        ---@field public Thumb Texture
+
+        ---@param self RaiderIOSettingsSliderWidget
+        ---@param setValue? number
+        function configOptions.SliderUpdate(self, setValue)
+            local value = self.selected or config:Get(self.cvar)
+            if setValue then
+                value = setValue
+            end
+            self.selected = value
+            local pctl = self.pctl
+            local pctlMod = pctl and 100 or 1
+            local from = self.from * pctlMod
+            local to = self.to * pctlMod
+            local step = self.step * pctlMod
+            local displayValue = value * pctlMod
+            self.sliderFrame:SetMinMaxValues(from, to)
+            self.sliderFrame:SetValue(displayValue)
+            self.sliderFrame:SetValueStep(step)
+            self.sliderFrame.text:SetFormattedText("%d", displayValue)
+            callback:SendEvent("RAIDERIO_SETTINGS_WIDGET_UPDATE", self.cvar, self.selected)
+        end
+
+        ---@param self RaiderIOConfigOptions
+        ---@param label string
+        ---@param description string
+        ---@param cvar string
+        ---@param configOptions RaiderIOSettingsSliderWidgetOptions
+        function configOptions.CreateSlider(self, label, description, cvar, configOptions)
+            ---@class RaiderIOSettingsSliderWidget
+            local frame = self:CreateWidget("Frame")
+            frame.isDisabled = configOptions.isDisabled
+            frame.pctl = configOptions.pctl or false
+            frame.from = configOptions.from or 0
+            frame.to = configOptions.to or 1
+            frame.step = configOptions.step or (frame.to - frame.from)/100
+            frame.text:SetTextColor(1, 1, 1)
+            frame.text:SetText(label)
+            frame.tooltip = description
+            frame.cvar = cvar
+            frame.help.tooltip = description
+            frame.help:Hide()
+            frame.checkButton:Hide()
+            frame.sliderFrame = CreateFrame("Slider", nil, frame, "MinimalSliderTemplate") ---@class RaiderIOSettingsSliderWidgetSliderFrame
+            frame.sliderFrame:SetSize(120, 20)
+            frame.sliderFrame:SetPoint("RIGHT", frame.checkButton, "RIGHT", 0, 0)
+            frame.sliderFrame.text = frame.sliderFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+            frame.sliderFrame.text:SetSize(120, 20)
+            frame.sliderFrame.text:SetAllPoints()
+            frame.sliderFrame.text:SetJustifyH("CENTER")
+            ---@param value number
+            ---@param userInput boolean
+            frame.sliderFrame:SetScript("OnValueChanged", function(_, value, userInput)
+                if not userInput then
+                    return
+                end
+                if frame.pctl then
+                    value = value / (frame.to * 100)
+                end
+                self.SliderUpdate(frame, value)
+            end)
+            self.SliderUpdate(frame)
+            self.sliders[#self.sliders + 1] = frame
             return frame
         end
 
@@ -12539,6 +13111,9 @@ do
             configOptions:CreateOptionToggle(L.ENABLE_RAIDERIO_CLIENT_ENHANCEMENTS, L.ENABLE_RAIDERIO_CLIENT_ENHANCEMENTS_DESC, "enableClientEnhancements", { needReload = true })
             configOptions:CreateOptionToggle(L.SHOW_CLIENT_GUILD_BEST, L.SHOW_CLIENT_GUILD_BEST_DESC, "showClientGuildBest")
             local enableReplay = configOptions:CreateOptionToggle(L.ENABLE_REPLAY, L.ENABLE_REPLAY_DESC, "enableReplay")
+            local function isReplayDisabled()
+                return not enableReplay.checkButton:GetChecked()
+            end
             configOptions:CreateDropDown(L.REPLAY_AUTO_SELECTION, L.REPLAY_AUTO_SELECTION_DESC, "replaySelection", {
                 options = {
                     { text = L.REPLAY_AUTO_SELECTION_MOST_RECENT, value = "user_recent_replay" },
@@ -12547,10 +13122,10 @@ do
                     { text = L.REPLAY_AUTO_SELECTION_GUILD_BEST, value = "guild_best_replay" },
                     { text = L.REPLAY_AUTO_SELECTION_STARRED, value = "watched_replay" },
                 },
-                isDisabled = function()
-                    return not enableReplay.checkButton:GetChecked()
-                end,
+                isDisabled = isReplayDisabled,
             })
+            configOptions:CreateColorPicker(L.REPLAY_BACKGROUND_COLOR, L.REPLAY_BACKGROUND_COLOR_DESC, "replayBackground", { isDisabled = isReplayDisabled })
+            configOptions:CreateSlider(L.REPLAY_FRAME_ALPHA, L.REPLAY_FRAME_ALPHA_DESC, "replayAlpha", { pctl = true, from = 0, to = 1, step = 0.01, isDisabled = isReplayDisabled })
 
             configOptions:CreatePadding()
             configOptions:CreateHeadline(L.RAIDERIO_LIVE_TRACKING)
@@ -12828,7 +13403,7 @@ do
             return mapID
         end
         local raidMapID = getLowestMapIdForInstances(ns:GetDungeonRaidData())
-        local keystoneMapID = getLowestMapIdForInstances(ns:GetDungeonData())
+        local keystoneMapID = getLowestMapIdForInstances(select(3, ns:GetDungeonData()))
         if raidMapID and keystoneMapID then
             autoLogFromMapID = keystoneMapID > raidMapID and raidMapID or keystoneMapID
         elseif raidMapID then

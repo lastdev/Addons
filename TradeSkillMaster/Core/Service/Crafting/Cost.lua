@@ -14,9 +14,10 @@ local CraftString = TSM.Include("Util.CraftString")
 local RecipeString = TSM.Include("Util.RecipeString")
 local MatString = TSM.Include("Util.MatString")
 local CustomPrice = TSM.Include("Service.CustomPrice")
+local Settings = TSM.Include("Service.Settings")
 local private = {
+	settings = nil,
 	matsVisited = {},
-	matCostCache = {},
 	matsTemp = {},
 	matsTempInUse = false,
 	currentMatProfession = nil,
@@ -28,40 +29,27 @@ local private = {
 -- Module Functions
 -- ============================================================================
 
+function Cost.OnInitialize()
+	private.settings = Settings.NewView()
+		:AddKey("factionrealm", "internalData", "mats")
+		:AddKey("global", "craftingOptions", "defaultCraftPriceMethod")
+		:AddKey("global", "craftingOptions", "defaultMatCostMethod")
+end
+
 function Cost.GetMatCost(itemString)
 	itemString = ItemString.GetBaseFast(itemString)
-	if not TSM.db.factionrealm.internalData.mats[itemString] then
+	if not private.settings.mats[itemString] then
 		return
 	end
 	if private.matsVisited[itemString] then
 		-- there's a loop in the mat cost, so bail
 		return
 	end
-	local prevHash = private.matsVisited.hash
-	local hash = nil
-	if prevHash == nil then
-		-- this is a top-level mat, so just use the itemString as the hash
-		hash = itemString
-	else
-		if type(prevHash) == "string" then
-			-- this is a second-level mat where the previous hash is the itemString which needs to be hashed itself
-			prevHash = Math.CalculateHash(prevHash)
-		end
-		hash = Math.CalculateHash(itemString, prevHash)
-	end
-	private.matsVisited.hash = hash
 	private.matsVisited[itemString] = true
-	if private.matCostCache.lastUpdate ~= GetTime() then
-		wipe(private.matCostCache)
-		private.matCostCache.lastUpdate = GetTime()
-	end
-	if not private.matCostCache[hash] then
-		local priceStr = TSM.db.factionrealm.internalData.mats[itemString].customValue or TSM.db.global.craftingOptions.defaultMatCostMethod
-		private.matCostCache[hash] = CustomPrice.GetValue(priceStr, itemString)
-	end
+	local priceStr = private.settings.mats[itemString].customValue or private.settings.defaultMatCostMethod
+	local result = CustomPrice.GetValue(priceStr, itemString)
 	private.matsVisited[itemString] = nil
-	private.matsVisited.hash = prevHash
-	return private.matCostCache[hash]
+	return result
 end
 
 function Cost.GetCraftingCostByCraftString(craftString, optionalMats, qualityMats)
@@ -82,7 +70,7 @@ function Cost.GetCraftedItemValue(itemString)
 	if hasCraftPriceMethod then
 		return craftPrice
 	end
-	return CustomPrice.GetValue(TSM.db.global.craftingOptions.defaultCraftPriceMethod, itemString)
+	return CustomPrice.GetValue(private.settings.defaultCraftPriceMethod, itemString)
 end
 
 function Cost.GetProfitByCraftString(craftString)
@@ -320,7 +308,7 @@ function private.GetCraftingCostHelper(craftString, recipeString, optionalMats, 
 	for itemString, quantity in pairs(mats) do
 		if MatString.GetType(itemString) == MatString.TYPE.NORMAL then
 			hasMats = true
-			local matCost = Cost.GetMatCost(itemString)
+			local matCost = CustomPrice.GetSourcePrice(itemString, "MatPrice")
 			if not matCost then
 				cost = nil
 			elseif cost then

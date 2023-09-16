@@ -1,5 +1,5 @@
 ## Interface: 100105
-## Version: v10.1.2
+## Version: v10.1.3
 ## Title: BadBoy_Ignore
 ## Notes: A simple and infinite ignore list to block chat from players.
 ## Notes-frFR: A simple and infinite ignore list to block chat from players.

@@ -66,7 +66,7 @@ function Gathering.OnEnable()
 		:SetUpdateCallback(private.OnQueuedCraftsUpdated)
 	private.OnQueuedCraftsUpdated()
 	private.dbUpdateTimer = Delay.CreateTimer("GATHERING_DB_UPDATE", private.UpdateDB)
-	BagTracking.RegisterCallback(function()
+	BagTracking.RegisterQuantityCallback(function()
 		private.dbUpdateTimer:RunForTime(1)
 	end)
 end

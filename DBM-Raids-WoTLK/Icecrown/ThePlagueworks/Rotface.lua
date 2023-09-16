@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,normal25,heroic,heroic25"
 
-mod:SetRevision("20230522065847")
+mod:SetRevision("20230813052417")
 mod:SetCreatureID(36627)
 mod:SetEncounterID(mod:IsClassic() and 850 or 1104)
 mod:SetModelID(31005)
@@ -22,7 +22,7 @@ mod:RegisterEventsInCombat(
 local warnSlimeSpray			= mod:NewSpellAnnounce(69508, 2)
 local warnMutatedInfection		= mod:NewTargetNoFilterAnnounce(69674, 4)
 local warnRadiatingOoze			= mod:NewSpellAnnounce(69760, 3)
-local warnOozeSpawn				= mod:NewAnnounce("WarnOozeSpawn", 1)
+local warnOozeSpawn				= mod:NewAnnounce("WarnOozeSpawn", 1, 25163, nil, nil, nil, 25163, DBM_COMMON_L.ADD)
 local warnStickyOoze			= mod:NewSpellAnnounce(69774, 1)
 local warnUnstableOoze			= mod:NewStackAnnounce(69558, 2)
 local warnVileGas				= mod:NewTargetAnnounce(72272, 3)

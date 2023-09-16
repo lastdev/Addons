@@ -321,8 +321,8 @@ function CraftDetails:Acquire()
 		:MapBooleanEquals("SALVAGE")
 		:CallMethod(self:GetElement("content.selection"), "SetShown")
 
-	self._state:PublisherForKeyChange("craftString")
-		:CallMethod(self:GetElement("content.selection.content.itemSelector"), "SetSalvageTargetItems")
+	self._state:PublisherForKeyChange("recipeString")
+		:CallFunction(self:__closure("_HandleInventoryUpdate"))
 
 	self._state:PublisherForKeyChange("craftString")
 		:MapWithFunction(Profession.GetRecipeDescription)
@@ -458,7 +458,6 @@ function CraftDetails:SetState(craftingType, craftingQuantity)
 		CraftCreateButton:SetFrameLevel(200)
 		CraftCreateButton:DisableDrawLayer("BACKGROUND")
 		CraftCreateButton:DisableDrawLayer("ARTWORK")
-		CraftCreateButton:SetHighlightTexture(nil)
 		if self._state.canCraft then
 			CraftCreateButton:Enable()
 		else
@@ -501,8 +500,12 @@ function CraftDetails.__private:_HandleInventoryUpdate()
 		return
 	end
 
-	self:GetElement("content.selection.content.itemSelector")
-		:SetSalvageTargetItems(self._state.craftString)
+	if Profession.IsSalvage(self._state.craftString) then
+		local matString = Profession.GetOptionalMatString(self._state.craftString, 1)
+		local requiredQty = Profession.GetCraftedQuantityRange(self._state.craftString)
+		self:GetElement("content.selection.content.itemSelector")
+			:SetMatString(matString, requiredQty)
+	end
 
 	self._state.neededTools = private.CraftStringToNeededTools(self._state.craftString)
 	self._state.numCraftable = self:_GetSalvageCraftNum() or self._craftableQuantityFunc(self._state.recipeString)
@@ -598,25 +601,33 @@ function CraftDetails.__private:_HandleItemSelectionChanged(itemSelector)
 end
 
 function CraftDetails.__private:_GetSalvageCraftNum()
-	local itemGUID = self:GetElement("content.selection.content.itemSelector"):GetSelection()
-	local location = itemGUID and C_Item.GetItemLocation(itemGUID)
-	if not location or not pcall(C_Item.DoesItemExist, location) then
+	if not Profession.IsSalvage(self._state.craftString) then
+		return false
+	end
+	local slotId = self:GetElement("content.selection.content.itemSelector"):GetNextSalvageSlotId()
+	if not slotId then
 		return false
 	end
 	local requiredQty = Profession.GetCraftedQuantityRange(self._state.craftString)
-	return floor(C_Item.GetStackCount(location) / requiredQty)
+	local craftable = floor(BagTracking.GetQuantityBySlotId(slotId) / requiredQty)
+	if craftable > 0 then
+		self:GetElement("content.buttons.quantity.input")
+			:SetValue(craftable)
+			:Draw()
+	end
+	return craftable
 end
 
 function CraftDetails.__private:_HandleCraftButtonMouseDown(button)
 	local isVellum = button == self:GetElement("content.buttons.content.craftVellumBtn")
-	self:_onCraftButtonMouseDown(self._state.recipeString, self:_GetQuantityValue(), isVellum, self:GetElement("content.selection.content.itemSelector"):GetSelection())
+	self:_onCraftButtonMouseDown(self._state.recipeString, self:_GetQuantityValue(), isVellum, self:GetElement("content.selection.content.itemSelector"):GetNextSalvageSlotId())
 end
 
 function CraftDetails.__private:_HandleCraftButtonClick(button)
 	button:SetPressed(true)
 	button:Draw()
 	local isVellum = button == self:GetElement("content.buttons.content.craftVellumBtn")
-	self:_onCraftButtonClick(self._state.recipeString, self:_GetQuantityValue(), isVellum, self:GetElement("content.selection.content.itemSelector"):GetSelection())
+	self:_onCraftButtonClick(self._state.recipeString, self:_GetQuantityValue(), isVellum, self:GetElement("content.selection.content.itemSelector"):GetNextSalvageSlotId())
 end
 
 function CraftDetails.__private:_HandleDialogRecipeStringChanged(_, recipeString)

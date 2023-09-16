@@ -6,16 +6,14 @@
 
 local TSM = select(2, ...) ---@type TSM
 local MatString = TSM.Include("Util.MatString")
+local SlotId = TSM.Include("Util.SlotId")
 local ItemInfo = TSM.Include("Service.ItemInfo")
-local Profession = TSM.Include("Service.Profession")
 local Rectangle = TSM.Include("UI.Rectangle")
 local Tooltip = TSM.Include("UI.Tooltip")
+local BagTracking = TSM.Include("Service.BagTracking")
 local UIElements = TSM.Include("UI.UIElements")
-local ItemString = TSM.Include("Util.ItemString")
 local L = TSM.Include("Locale").GetTable()
-local private = {
-	salvageMatsTemp = {},
-}
+local private = {}
 local CORNER_RADIUS = 6
 
 
@@ -58,11 +56,20 @@ function ItemSelector:__init(button)
 	self._quality:SetPoint("TOPLEFT", -2, 10)
 	self._quality:SetJustifyH("LEFT")
 
+	self._quantity = UIElements.CreateFontString(self, frame)
+	self._quantity:SetHeight(16)
+	self._quantity:TSMSetFont("TABLE_TABLE1_OUTLINE")
+	self._quantity:SetPoint("BOTTOMLEFT", 1, 1)
+	self._quantity:SetPoint("BOTTOMRIGHT", -1, 1)
+	self._quantity:SetJustifyH("RIGHT")
+
 	self._addIcon = UIElements.CreateTexture(self, frame, "ARTWORK")
 	self._addIcon:SetPoint("BOTTOMRIGHT", -2, 2)
 	self._addIcon:TSMSetTextureAndSize("iconPack.14x14/Add/Default")
 
 	self._items = {}
+	self._selectionSlotId = nil
+	self._requiredQty = nil
 	self._onSelectionChanged = nil
 end
 
@@ -73,7 +80,6 @@ function ItemSelector:Acquire()
 
 	-- Set our own state
 	self._state:PublisherForKeyChange("selection")
-		:MapWithFunction(private.SelectionToItemString)
 		:Share(2)
 		:CallMethod(self, "SetTooltip")
 		:CallMethod(self, "SetBackgroundWithItemHighlight")
@@ -105,6 +111,8 @@ function ItemSelector:Release()
 	self._backgroundOverlay:CancelAll()
 
 	wipe(self._items)
+	self._selectionSlotId = nil
+	self._requiredQty = nil
 	self._onSelectionChanged = nil
 end
 
@@ -113,50 +121,29 @@ end
 ---@return ItemSelector
 function ItemSelector:SetItems(items)
 	wipe(self._items)
+	self:SetDisabled(not next(items))
 	for _, itemString in ipairs(items) do
 		tinsert(self._items, itemString)
 	end
 	return self
 end
 
----SEts the list of items from a salvage crafting recipe.
----@param craftString string The craft string of the salvage recipe
----@return ItemSelector
-function ItemSelector:SetSalvageTargetItems(craftString)
-	wipe(self._items)
-	if not craftString or not Profession.IsSalvage(craftString) then
-		return self
-	end
-	assert(not next(private.salvageMatsTemp))
-	for _, matString in Profession.MatIterator(craftString) do
-		for matItemString in MatString.ItemIterator(matString) do
-			tinsert(private.salvageMatsTemp, ItemString.ToId(matItemString))
-		end
-	end
-	local targetItems = Profession.GetTargetItems(private.salvageMatsTemp)
-	wipe(private.salvageMatsTemp)
-
-	local requiredQty = Profession.GetCraftedQuantityRange(craftString)
-	for _, targetItem in ipairs(targetItems) do
-		local location = C_Item.GetItemLocation(targetItem.itemGUID)
-		local stackCount = location and C_Item.GetStackCount(location) or 0
-		if stackCount >= requiredQty then
-			tinsert(self._items, targetItem.itemGUID)
-		end
-	end
-	return self
-end
-
 ---Sets the list of items from a mat string.
 ---@param matString string The mat string
+---@param requiredQuantity? number The required stack size for this mat
 ---@return ItemSelector
-function ItemSelector:SetMatString(matString)
+function ItemSelector:SetMatString(matString, requiredQty)
 	wipe(self._items)
+	self._requiredQty = requiredQty
 	if matString then
 		for itemString in MatString.ItemIterator(matString) do
-			tinsert(self._items, itemString)
+			if not requiredQty or private.GetBagSlotId(itemString, requiredQty) then
+				tinsert(self._items, itemString)
+			end
 		end
 	end
+	self:SetDisabled(not next(self._items))
+	self:SetSelection(self._state.selection, true)
 	return self
 end
 
@@ -166,12 +153,24 @@ function ItemSelector:GetSelection()
 	return self._state.selection
 end
 
+---Get the next targetable salvage slot id
+---@return ItemLocation
+function ItemSelector:GetNextSalvageSlotId()
+	if not self._state.selection then
+		return nil
+	end
+	return self:IsSelectionSlotValid() and self._selectionSlotId or private.GetBagSlotId(self._state.selection, self._requiredQty)
+end
+
 ---Sets the current selection of the ItemSelector.
 ---@param selection? string The item to select or nil to clear the selection
 ---@return ItemSelector
-function ItemSelector:SetSelection(selection)
+function ItemSelector:SetSelection(selection, silent)
 	self._state.selection = selection
-	if self._onSelectionChanged then
+	local slotId = self:IsSelectionSlotValid() and self._selectionSlotId or private.GetBagSlotId(self._state.selection, self._requiredQty)
+	self._selectionSlotId = slotId
+	self._quantity:SetText(slotId and BagTracking.GetQuantityBySlotId(slotId) or "")
+	if not silent and self._onSelectionChanged then
 		self:_onSelectionChanged(selection)
 	end
 	return self
@@ -281,15 +280,7 @@ function ItemSelector.__private:_HandleButtonOnClick(button)
 end
 
 function ItemSelector.__private:_CreateItems(frame)
-	for _, item in ipairs(self._items) do
-		local itemString = nil
-		if ItemString.IsItem(item) then
-			itemString = item
-		elseif strmatch(item, "^Item-") then
-			itemString = ItemString.Get(C_Item.GetItemIDByGUID(item))
-		else
-			error("Invalid item")
-		end
+	for _, itemString in ipairs(self._items) do
 		local craftQuality = ItemInfo.GetCraftedQuality(itemString)
 		frame:AddChild(UIElements.New("Frame", "content")
 			:SetLayout("HORIZONTAL")
@@ -297,7 +288,7 @@ function ItemSelector.__private:_CreateItems(frame)
 				:SetSize(30, 30)
 				:SetPadding(0, 0, 0, 0)
 				:SetMargin(2, 2, 2, 2)
-				:SetContext(item)
+				:SetContext(itemString)
 				:SetBackgroundWithItemHighlight(itemString)
 				:SetTooltip(itemString)
 				:SetScript("OnClick", self:__closure("_HandleButtonOnClick"))
@@ -310,6 +301,15 @@ function ItemSelector.__private:_CreateItems(frame)
 			)
 		)
 	end
+end
+
+function ItemSelector.__private:IsSelectionSlotValid()
+	if not self._state.selection or not self._selectionSlotId then
+		return false
+	end
+	local selectionQuantity = BagTracking.GetQuantityBySlotId(self._selectionSlotId)
+	local salvageItemLocation = ItemLocation:CreateFromBagAndSlot(SlotId.Split(self._selectionSlotId))
+	return pcall(C_Item.DoesItemExist, salvageItemLocation) and self._requiredQty and selectionQuantity and selectionQuantity >= self._requiredQty
 end
 
 
@@ -330,20 +330,22 @@ function private.StateToBackgroundColorKey(state)
 	end
 end
 
-function private.SelectionToItemString(selection)
-	if selection and strmatch(selection, "^Item-") then
-		selection = ItemString.Get(C_Item.GetItemIDByGUID(selection))
-	end
-	return selection
-end
-
 function private.SelectionToQualityText(selection)
-	if selection and strmatch(selection, "^Item-") then
-		selection = ItemString.Get(C_Item.GetItemIDByGUID(selection))
-	end
 	local itemQuality = selection and ItemInfo.GetCraftedQuality(selection)
 	if not itemQuality then
 		return ""
 	end
 	return Professions.GetChatIconMarkupForQuality(itemQuality, true)
+end
+
+function private.GetBagSlotId(itemString, requiredQuantity)
+	if not itemString or not requiredQuantity then
+		return nil
+	end
+	return BagTracking.CreateQueryBagsBank()
+		:Select("slotId")
+		:GreaterThanOrEqual("quantity", requiredQuantity)
+		:Equal("itemString", itemString)
+		:OrderBy("quantity", false)
+		:GetFirstResultAndRelease()
 end

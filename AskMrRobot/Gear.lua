@@ -660,8 +660,7 @@ local beginEquipGearSet, processCurrentGearOp, nextGearOp
 local function findFirstEmptyBagSlot(usedBagSlots)
 	
 	local bagIds = {}
-	table.insert(bagIds, BACKPACK_CONTAINER)
-	for bagId = 1, NUM_BAG_SLOTS do
+	for bagId = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
 		table.insert(bagIds, bagId)
 	end
 	
@@ -741,8 +740,7 @@ local function findCurrentGearOpItem()
 	local bestDiff = 10000
 	
 	-- inventory
-	bestItem, bestDiff, bestLink = scanBagForItem(item, BACKPACK_CONTAINER, bestItem, bestDiff, bestLink)
-	for bagId = 1, NUM_BAG_SLOTS do
+	for bagId = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
 		bestItem, bestDiff, bestLink = scanBagForItem(item, bagId, bestItem, bestDiff, bestLink)
 	end
 
@@ -771,7 +769,7 @@ local function findCurrentGearOpItem()
 	-- bank
 	if bestDiff > 0 then
 		bestItem, bestDiff, bestLink = scanBagForItem(item, BANK_CONTAINER, bestItem, bestDiff, bestLink)
-		for bagId = NUM_BAG_SLOTS + 1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS do
+		for bagId = NUM_TOTAL_EQUIPPED_BAG_SLOTS + 1, NUM_TOTAL_EQUIPPED_BAG_SLOTS + NUM_BANKBAGSLOTS do
 			bestItem, bestDiff, bestLink = scanBagForItem(item, bagId, bestItem, bestDiff, bestLink)
 		end
 	end
@@ -1100,7 +1098,7 @@ function processCurrentGearOp()
 			Amr:Print(L.GearEquipErrorNotFound2)
 			disposeGearOp()
 			
-		elseif bestItem and bestItem.bag and (bestItem.bag == BANK_CONTAINER or bestItem.bag >= NUM_BAG_SLOTS + 1 and bestItem.bag <= NUM_BAG_SLOTS + NUM_BANKBAGSLOTS) then
+		elseif bestItem and bestItem.bag and (bestItem.bag == BANK_CONTAINER or bestItem.bag >= NUM_TOTAL_EQUIPPED_BAG_SLOTS + 1 and bestItem.bag <= NUM_TOTAL_EQUIPPED_BAG_SLOTS + NUM_BANKBAGSLOTS) then
 			-- find first empty bag slot
 			local invBag, invSlot = findFirstEmptyBagSlot()
 			if not invBag then

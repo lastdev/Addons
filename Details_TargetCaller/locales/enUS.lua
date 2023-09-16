@@ -7,3 +7,4 @@ L["STRING_PLUGIN_DESC"] = [=[Plugin for Target Caller on PvP, can also be used b
 
 When you select a new target, tells how much damage each raid member inflicted since you changed the target.]=]
 L["STRING_PLUGIN_NAME"] = "Target Caller"
+

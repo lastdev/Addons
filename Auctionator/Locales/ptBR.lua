@@ -206,10 +206,22 @@ L["CONFIG_SELLING_MISSING_FAVOURITES_TOOLTIP_HEADER"] = "Favoritos não disponí
 L["CONFIG_SELLING_MISSING_FAVOURITES_TOOLTIP_TEXT"] = "Mostrar os itens favoritos na amostra da bolsa mesmo quando eles não estão na sua bolsa."
 L["CONFIG_SELLING_NOT_LIFO_HEADER"] = "Vendendo Equipamento/Bichos de estimação"
 L["CONFIG_SELLING_NOT_LIFO_TEXT"] = "Opções para definir porcentagem ou valor de subcotação e duração para equipamento e bichos de estimação em gaiolas. Essas categorias de itens são postadas individualmente e um comprador pode escolher qual ele(a) quer. Subcotação pode ser útil."
+--[[Translation missing --]]
+L["CONFIG_SELLING_POSSESSED_FAVOURITES_FIRST"] = "In favourites item list place favourites you have in your bag first"
+--[[Translation missing --]]
+L["CONFIG_SELLING_POSSESSED_FAVOURITES_FIRST_TOOLTIP_HEADER"] = "Possessed favourites first"
+--[[Translation missing --]]
+L["CONFIG_SELLING_POSSESSED_FAVOURITES_FIRST_TOOLTIP_TEXT"] = "Set the favourites ordering to force any items in your bag to be at the start of the list."
 L["CONFIG_SELLING_POST_SHORTCUT"] = "O atalho de teclado/mouse para postar o item selecionado é"
 L["CONFIG_SELLING_POST_SHORTCUT_TOOLTIP_TEXT"] = "Clique e depois pressione o botão (ou tecla) que você gostaria de usar para o atalho. Esse atalho vai apenas funcionar na aba de vendas e não vai afetar outros atalhos para a mesma tecla."
 --[[Translation missing --]]
 L["CONFIG_SELLING_PREV_SHORTCUT"] = "A shortcut to go back to the previously selected item"
+--[[Translation missing --]]
+L["CONFIG_SELLING_RESELECT_ITEM"] = "Select the last item selected for posting when opening the Selling tab"
+--[[Translation missing --]]
+L["CONFIG_SELLING_RESELECT_ITEM_TOOLTIP_HEADER"] = "Reselect previous item"
+--[[Translation missing --]]
+L["CONFIG_SELLING_RESELECT_ITEM_TOOLTIP_TEXT"] = "After closing the Selling tab and reopening it either during the current session or a later one (including logging out and back in) restore the item selected for posting."
 L["CONFIG_SELLING_SHORTCUTS_CATEGORY"] = "Vendas: Atalhos"
 L["CONFIG_SELLING_SHORTCUTS_TEXT"] = "Opções para atalhos de teclado e mouse para a aba de vendas"
 L["CONFIG_SELLING_SHOW_BID_PRICE"] = "Mostrar a opção de oferta quando estiver listando um item (necessita um /reload)"
@@ -481,6 +493,8 @@ L["RENAME_LIST_CONFIRM"] = [=[Digite o novo nome para '%s':
 ]=]
 L["RENAME_LIST_DIALOG"] = "Escreve o novo nome para a lista de compras:"
 L["RESET_ALL"] = "Resetar Tudo"
+--[[Translation missing --]]
+L["RESET_COLOR"] = "Reset color"
 L["RESTORE_ALL"] = "Restaurar Tudo"
 L["RESULTS_AVAILABLE_COLUMN"] = "Disponível"
 L["RESULTS_NAME_COLUMN"] = "Nome"
@@ -518,6 +532,8 @@ L["SELLING_TAB"] = "Vendas"
 L["SELLING_TAB_HEADER"] = "Auctionator - Vendas"
 L["SERVER_TOOK_TOO_LONG"] = [=[O servidor demorou muito para responder. Sua ação pode não ter surtido efeito.
 ]=]
+--[[Translation missing --]]
+L["SET_BAG_ITEM_SELECTION_COLOR"] = "Set bag item selection color"
 L["SET_VALUE"] = "Estabelecer Valor"
 L["SET_VALUE_SUFFIX"] = "Desconto"
 L["SHIFT_LEFT_CLICK"] = "Shift Clique Esquerdo"

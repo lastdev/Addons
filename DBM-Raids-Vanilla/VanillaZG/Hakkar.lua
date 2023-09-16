@@ -9,7 +9,7 @@ end
 local mod	= DBM:NewMod("Hakkar", "DBM-Raids-Vanilla", catID)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525041212")
+mod:SetRevision("20230814031337")
 mod:SetCreatureID(14834)
 mod:SetEncounterID(793)
 mod:SetHotfixNoticeRev(20200419000000)--2020, 04, 19
@@ -119,29 +119,29 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 24324 then
+	if args:IsSpell(24324) then
 		warnSiphonSoon:Cancel()
 		warnSiphonSoon:Schedule(80)
 		timerSiphon:Start()
-	elseif args.spellId == 24686 then
+	elseif args:IsSpell(24686) then
 		timerAspectOfMarliCD:Start()
-	elseif args.spellId == 24687 then
+	elseif args:IsSpell(24687) then
 		timerAspectOfJeklikCD:Start()
-	elseif args.spellId == 24688 then
+	elseif args:IsSpell(24688) then
 		timerAspectOfVenoxisCD:Start()
-	elseif args.spellId == 24689 then
+	elseif args:IsSpell(24689) then
 		timerAspectOfThekalCD:Start()
-	elseif args.spellId == 24690 then
+	elseif args:IsSpell(24690) then
 		timerAspectOfArlokkCD:Start()
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 24327 then
+	if args:IsSpell(24327) then
 		warnInsanity:Show(args.destName)
 		timerInsanity:Start(args.destName)
 		timerInsanityCD:Start()
-	elseif args.spellId == 24328 then
+	elseif args:IsSpell(24328) then
 		if args:IsPlayer() then
 			specWarnBlood:Show()
 			specWarnBlood:Play("runout")
@@ -152,12 +152,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			warnBlood:Show(args.destName)
 		end
-	elseif args.spellId == 24686 then
+	elseif args:IsSpell(24686) then
 		warnAspectOfMarli:Show(args.destName)
 		timerAspectOfMarli:Start(args.destName)
-	elseif args.spellId == 24687 then
+	elseif args:IsSpell(24687) then
 		timerAspectOfJeklik:Start(args.destName)
-	elseif args.spellId == 24689 and args:IsDestTypeHostile() then
+	elseif args:IsSpell(24689) and args:IsDestTypeHostile() then
 		if self.Options.SpecWarn24689dispel then
 			specWarnAspectOfThekal:Show()
 			specWarnAspectOfThekal:Play("enrage")
@@ -165,20 +165,20 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnAspectOfThekal:Show()
 		end
 		timerAspectOfThekal:Start()
-	elseif args.spellId == 24690 then
+	elseif args:IsSpell(24690) then
 		warnAspectOfArlokk:Show(args.destName)
 		timerAspectOfArlokk:Start(args.destName)
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 24328 then
+	if args:IsSpell(24328) then
 		if args:IsPlayer() then
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Hide()
 			end
 		end
-	elseif args:IsSpellID(24689) and args:IsDestTypeHostile() then
+	elseif args:IsSpell(24689) and args:IsDestTypeHostile() then
 		timerAspectOfThekal:Stop()
 	end
 end

@@ -1946,3 +1946,15 @@ Change Log:
 * Added Dragonflight spells (world)
 * Added Dragonflight spells for Aberrus, the Shadowed Crucible
 * Added Dragonflight spells for Dawn of the Infinite
+
+5.5.1
+* Updated for patch 10.1.7
+* Added Dragonflight spells (world)
+* Added Legion spells (world)
+* Added Battle for Azeroth spells (world)
+
+5.5.2
+* Fixed Pandaria spells for Darkmoon Faire
+* Added Dragonflight spells (world)
+* Added Battle for Azeroth spells (world)
+* Fixed Wrath spells for Violet Hold (thanks Jirachimon)

@@ -14,14 +14,13 @@ end
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 5a89ecaf32f24ffefbf320bef9dff40e1992eb4e $")
+end, "$Revision: 8c2ee354c22c703a5dd4fcc236c0c7d3bbfbc4c2 $")
 
 
 local _, _, _, clientRevision = GetBuildInfo()
 
 local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
-local IsWrathClassicPTR = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC and clientRevision >= 30401
 local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 
 local min = min
@@ -127,7 +126,9 @@ local function overrideToggle(value)
 						if IsRetail then
 							PlayerCastingBarFrame:RegisterEvent(event)
 						else
-							CastingBarFrame:RegisterEvent(event)
+							if event ~= "UNIT_SPELLCAST_INTERRUPTIBLE" and event ~= "UNIT_SPELLCAST_NOT_INTERRUPTIBLE" then
+								CastingBarFrame:RegisterEvent(event)
+							end
 						end
 					end
 				end
@@ -545,11 +546,7 @@ local function XPerl_MakePreCast(self)
 	self.precast:SetWidth(1)
 	self.precast:Hide()
 	self.precast:SetBlendMode("ADD")
-	if IsRetail or IsWrathClassicPTR then
-		self.precast:SetGradient("HORIZONTAL", CreateColor(0, 0, 1, 1), CreateColor(1, 0, 0, 1))
-	else
-		self.precast:SetGradient("HORIZONTAL", 0, 0, 1, 1, 0, 0)
-	end
+	self.precast:SetGradient("HORIZONTAL", CreateColor(0, 0, 1, 1), CreateColor(1, 0, 0, 1))
 end
 
 -- XPerl_ArcaneBar_RegisterFrame

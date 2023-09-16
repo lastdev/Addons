@@ -70,6 +70,10 @@ L["Alpha Eagle"] = "Alphaadler"
 --[[Translation missing --]]
 L["Altairus"] = "Altairus"
 L["AltarOfShadow"] = "Altar des Schattens"
+--[[Translation missing --]]
+L["altKeyDownStatusText"] = "Showing enemy group numbers"
+--[[Translation missing --]]
+L["altKeyGroupsTip"] = "Hold ALT to show enemy group numbers on all enemies"
 L["Amalgam of Souls"] = "Amalgam der Seelen"
 --[[Translation missing --]]
 L["Amanitar"] = "Amanitar"
@@ -313,6 +317,8 @@ L[ [=[Bounty stacks
 after this pull]=] ] = [=[這波拉怪後
 連帶幾堆]=]
 --[[Translation missing --]]
+L["Bounty stacks after this pull"] = ""
+--[[Translation missing --]]
 L["Bracken Warscourge"] = "Bracken Warscourge"
 --[[Translation missing --]]
 L["Brackenhide Shaper"] = "Brackenhide Shaper"
@@ -471,6 +477,10 @@ L["Crystalline Protector"] = "Crystalline Protector"
 L["Crystalline Shardling"] = "Crystalline Shardling"
 --[[Translation missing --]]
 L["Crystalline Tender"] = "Crystalline Tender"
+--[[Translation missing --]]
+L["ctrlKeyCountTip"] = "Hold CTRL to show enemy forces on all enemies"
+--[[Translation missing --]]
+L["ctrlKeyDownStatusText"] = "Showing enemy forces"
 --[[Translation missing --]]
 L["Curious Swoglet"] = "Curious Swoglet"
 L["Cursed Falke"] = "Verfluchter Falke"
@@ -1102,6 +1112,8 @@ L["Hardened Steel Berserker"] = "Hardened Steel Berserker"
 L["Hardened Steel Reaver"] = "Hardened Steel Reaver"
 --[[Translation missing --]]
 L["Hardened Steel Skycaller"] = "Hardened Steel Skycaller"
+--[[Translation missing --]]
+L["hardResetButton"] = "Reset MDT"
 L["hardResetPrompt"] = "Wirklich alle Einstellungen zurücksetzen? Dadurch wird das UI neu geladen."
 L["hardResetPromptTitle"] = "ALLE Einstellungen Zurücksetzen"
 L["Harlan Sweete"] = "Harlan der Schmierige"
@@ -1451,6 +1463,8 @@ L["MDT Error"] = "MDT Error"
 L["MDT: Error importing preset"] = "MDT: Fehler beim importieren der Route"
 L["MDT: Spells for %s:"] = "Zauber für %s:"
 L["MDT: Use /mdt minimap to show the minimap icon again"] = "MDT: Verwenden Sie /mdt minimap, um das Minimap-Icon wieder anzuzeigen"
+--[[Translation missing --]]
+L["MDTGuideNote"] = "MDTGuide is not affiliated with Mythic Dungeon Tools and is a seperate AddOn."
 --[[Translation missing --]]
 L["Meathook"] = "Meathook"
 L["Mech Jockey"] = "Mechjockey"
@@ -2545,6 +2559,8 @@ L["Unyielding Contender"] = "Unerschütterlicher Streiter"
 --[[Translation missing --]]
 L["Unyielding Garrison"] = "Unyielding Garrison"
 L["Update"] = "Aktualisieren"
+--[[Translation missing --]]
+L["updateNote"] = "Please update this AddOn to the latest version or remove it"
 L["Upper Broken Stair"] = "Obere Eingestürzte Treppe"
 L["Upper Library"] = "Obere Bibliothek"
 L["Upper Livery Stables"] = "Obere Nobelställe"

@@ -487,12 +487,12 @@ function private.QueueBtnOnClick(_, recipeString, quantity)
 	private.fsm:ProcessEvent("EV_QUEUE_BUTTON_CLICKED", recipeString, quantity)
 end
 
-function private.CraftBtnOnMouseDown(_, recipeString, quantity, isVellum, salvageItem)
-	private.fsm:ProcessEvent("EV_CRAFT_BUTTON_MOUSE_DOWN", recipeString, isVellum and math.huge or quantity, salvageItem)
+function private.CraftBtnOnMouseDown(_, recipeString, quantity, isVellum, salvageItemLocation)
+	private.fsm:ProcessEvent("EV_CRAFT_BUTTON_MOUSE_DOWN", recipeString, isVellum and math.huge or quantity, salvageItemLocation)
 end
 
-function private.CraftBtnOnClick(_, recipeString, quantity, isVellum, salvageItem)
-	private.fsm:ProcessEvent("EV_CRAFT_BUTTON_CLICKED", recipeString, isVellum and math.huge or quantity, salvageItem)
+function private.CraftBtnOnClick(_, recipeString, quantity, isVellum, salvageItemLocation)
+	private.fsm:ProcessEvent("EV_CRAFT_BUTTON_CLICKED", recipeString, isVellum and math.huge or quantity, salvageItemLocation)
 end
 
 function private.QueueTooltipFunc()
@@ -624,10 +624,9 @@ function private.FSMCreate()
 		success = nil,
 		isDone = nil,
 	}
-	local function BagTrackingCallback()
+	BagTracking.RegisterQuantityCallback(function()
 		private.fsm:ProcessEvent("EV_BAG_UPDATE_DELAYED")
-	end
-	BagTracking.RegisterCallback(BagTrackingCallback)
+	end)
 	fsmPrivate.craftTimer = Delay.CreateTimer("CRAFTING_CRAFT", function()
 		private.fsm:ProcessEvent("EV_SPELLCAST_COMPLETE", fsmPrivate.success, fsmPrivate.isDone)
 		fsmPrivate.success = nil
@@ -763,9 +762,9 @@ function private.FSMCreate()
 			:SetPressed(context.recipeString and context.craftingType == "queue")
 			:Draw()
 	end
-	function fsmPrivate.StartCraft(context, recipeString, quantity, salvageItem)
+	function fsmPrivate.StartCraft(context, recipeString, quantity, salvageItemLocation)
 		local craftString = CraftString.FromRecipeString(recipeString)
-		local numCrafted = TSM.Crafting.ProfessionUtil.Craft(craftString, recipeString, quantity, context.craftingType ~= "craft", salvageItem, fsmPrivate.CraftCallback)
+		local numCrafted = TSM.Crafting.ProfessionUtil.Craft(craftString, recipeString, quantity, context.craftingType ~= "craft", salvageItemLocation, fsmPrivate.CraftCallback)
 		Log.Info("Crafting %d (requested %s) of %s", numCrafted, quantity == math.huge and "all" or quantity, recipeString)
 		if numCrafted == 0 then
 			return
@@ -924,14 +923,14 @@ function private.FSMCreate()
 			:AddEvent("EV_SKILL_UPDATE", function(context)
 				fsmPrivate.UpdateSkills(context)
 			end)
-			:AddEvent("EV_CRAFT_BUTTON_MOUSE_DOWN", function(context, recipeString, quantity, salvageItem)
+			:AddEvent("EV_CRAFT_BUTTON_MOUSE_DOWN", function(context, recipeString, quantity, salvageItemLocation)
 				context.craftingType = quantity == math.huge and "all" or "craft"
 				local craftString = CraftString.FromRecipeString(recipeString)
-				TSM.Crafting.ProfessionUtil.PrepareToCraft(craftString, recipeString, quantity, RecipeString.GetLevel(recipeString), salvageItem)
+				TSM.Crafting.ProfessionUtil.PrepareToCraft(craftString, recipeString, quantity, RecipeString.GetLevel(recipeString), salvageItemLocation)
 			end)
-			:AddEvent("EV_CRAFT_BUTTON_CLICKED", function(context, recipeString, quantity, salvageItem)
+			:AddEvent("EV_CRAFT_BUTTON_CLICKED", function(context, recipeString, quantity, salvageItemLocation)
 				context.craftingType = quantity == math.huge and "all" or "craft"
-				fsmPrivate.StartCraft(context, recipeString, quantity, salvageItem)
+				fsmPrivate.StartCraft(context, recipeString, quantity, salvageItemLocation)
 			end)
 			:AddEvent("EV_CRAFT_NEXT_BUTTON_CLICKED", function(context, craftString, recipeString, quantity)
 				if context.recipeString then

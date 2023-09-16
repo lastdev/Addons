@@ -14,17 +14,26 @@ local Log = TSM.Include("Util.Log")
 local Theme = TSM.Include("Util.Theme")
 local SmartMap = TSM.Include("Util.SmartMap")
 local CustomString = TSM.Include("Util.CustomString")
+local EnumType = TSM.Include("Util.EnumType")
 local Settings = TSM.Include("Service.Settings")
 local Conversions = TSM.Include("Service.Conversions")
+CustomPrice.SOURCE_TYPE = EnumType.New("SOURCE_TYPE", {
+	PRICE_DB = EnumType.CreateValue(), -- Changes infrequently and all at once (communicated via CustomPrice.OnSourceChange)
+	NORMAL = EnumType.CreateValue(), -- Changes are communicated via CustomPrice.OnSourceChange
+	VOLATILE = EnumType.CreateValue(), -- Changes without calling CustomPrice.OnSourceChange
+})
 local private = {
 	sanitizeMap = nil,
 	sanitizeMapReader = nil,
 	customStrings = {}, ---@type table<string,CustomStringObject>
+	customStringSourcesValidated = {},
 	priceSourceKeys = {},
 	priceSourceInfo = {},
 	settings = nil,
 	sanitizeCache = {},
 	customSourceCallbacks = {},
+	lastRegisteredSourceChange = 0,
+	convertCache = {},
 }
 
 
@@ -52,6 +61,7 @@ CustomPrice:OnSettingsLoad(function()
 			CustomPrice.DeleteCustomPriceSource(name)
 		end
 	end
+	private.lastRegisteredSourceChange = GetTime()
 end)
 
 
@@ -65,17 +75,18 @@ end)
 ---@param key string The key for this price source (i.e. DBMarket)
 ---@param label string The label which describes this price source for display to the user
 ---@param callback function The price source callback
----@param isVolatile? booolean Should be set if the price source may change without CustomPrice.OnSourceChange being called
-function CustomPrice.RegisterSource(moduleName, key, label, callback, isVolatile)
+---@param sourceType CustomPrice.SOURCE_TYPE The type of the source
+function CustomPrice.RegisterSource(moduleName, key, label, callback, sourceType)
 	tinsert(private.priceSourceKeys, strlower(key))
 	private.priceSourceInfo[strlower(key)] = {
 		moduleName = moduleName,
 		key = key,
 		label = label,
 		callback = callback,
-		isVolatile = isVolatile,
+		sourceType = sourceType,
 		cache = {},
 	}
+	private.lastRegisteredSourceChange = GetTime()
 end
 
 ---Register a callback when custom sources change.
@@ -94,6 +105,7 @@ function CustomPrice.CreateCustomPriceSource(name, value)
 	value = private.SanitizeCustomPriceString(value)
 	private.settings.customPriceSources[name] = value
 	private.CallCustomSourceCallbacks()
+	private.lastRegisteredSourceChange = GetTime()
 end
 
 ---Rename a custom price source.
@@ -110,6 +122,7 @@ function CustomPrice.RenameCustomPriceSource(oldName, newName)
 	CustomPrice.OnSourceChange(oldName)
 	CustomPrice.OnSourceChange(newName)
 	private.CallCustomSourceCallbacks()
+	private.lastRegisteredSourceChange = GetTime()
 end
 
 ---Delete a custom price source.
@@ -119,6 +132,7 @@ function CustomPrice.DeleteCustomPriceSource(name)
 	private.settings.customPriceSources[name] = nil
 	CustomPrice.OnSourceChange(name)
 	private.CallCustomSourceCallbacks()
+	private.lastRegisteredSourceChange = GetTime()
 end
 
 ---Sets the value of a custom price source.
@@ -129,6 +143,7 @@ function CustomPrice.SetCustomPriceSource(name, value)
 	value = private.SanitizeCustomPriceString(value)
 	private.settings.customPriceSources[name] = value
 	CustomPrice.OnSourceChange(name)
+	private.lastRegisteredSourceChange = GetTime()
 end
 
 ---Bulk creates custom price sources from a group import.
@@ -144,6 +159,7 @@ function CustomPrice.BulkCreateCustomPriceSourcesFromImport(customSources, repla
 			CustomPrice.CreateCustomPriceSource(name, value)
 		end
 	end
+	private.lastRegisteredSourceChange = GetTime()
 end
 
 ---Print built-in price sources to chat.
@@ -251,7 +267,7 @@ function CustomPrice.GetSourcePrice(itemString, key)
 	if not itemString or not info then
 		return nil
 	end
-	if info.isVolatile then
+	if info.sourceType == CustomPrice.SOURCE_TYPE.VOLATILE then
 		local currentFrame = GetTime()
 		if (info.cache.frame or currentFrame) ~= currentFrame then
 			wipe(info.cache)
@@ -306,7 +322,16 @@ function CustomPrice.OnSourceChange(key, itemString)
 	if not info then
 		return
 	end
-	assert(not info.isVolatile)
+	if info.sourceType == CustomPrice.SOURCE_TYPE.PRICE_DB then
+		assert(not itemString)
+	elseif info.sourceType == CustomPrice.SOURCE_TYPE.NORMAL then
+		-- pass
+	else
+		error("Source cannot change: "..key)
+	end
+	if private.convertCache[key] then
+		wipe(private.convertCache[key])
+	end
 	if itemString then
 		info.cache[itemString] = nil
 	else
@@ -337,22 +362,27 @@ end
 -- Helper Functions
 -- ============================================================================
 
-function private.PriceFunc(itemString, key, extraArg)
+function private.PriceFunc(itemString, key, convertSource)
 	local value = nil
 	if key == "convert" then
-		local conversions = Conversions.GetSourceItems(itemString)
-		if not conversions then
-			return nil
-		end
-		local minPrice = nil
-		for sourceItemString, rate in pairs(conversions) do
-			local price = CustomPrice.GetSourcePrice(sourceItemString, extraArg)
-			if price then
-				price = price / rate
-				minPrice = min(minPrice or price, price)
+		private.convertCache[convertSource] = private.convertCache[convertSource] or {}
+		if not private.convertCache[convertSource][itemString] then
+			local conversions = Conversions.GetSourceItems(itemString)
+			if conversions then
+				local minPrice = nil
+				for sourceItemString, rate in pairs(conversions) do
+					local price = CustomPrice.GetSourcePrice(sourceItemString, convertSource)
+					if price then
+						price = price / rate
+						minPrice = min(minPrice or price, price)
+					end
+				end
+				private.convertCache[convertSource][itemString] = minPrice or -1
+			else
+				private.convertCache[convertSource][itemString] = -1
 			end
 		end
-		value = minPrice
+		value = private.convertCache[convertSource][itemString]
 	else
 		local customPriceSourceStr = private.settings.customPriceSources[key]
 		if customPriceSourceStr then
@@ -438,10 +468,17 @@ function private.GetObject(str)
 			error("Invalid error type: "..tostring(errType))
 		end
 	end
-	for source in obj:DependantSourceIterator() do
-		if source ~= "convert" and not private.priceSourceInfo[source] and not private.settings.customPriceSources[source] then
-			return nil, format(L["%s is not a valid source."], source)
+	if (private.customStringSourcesValidated[str] or 0) < private.lastRegisteredSourceChange then
+		for _, source, convertArg in obj:DependantSourceIterator() do
+			if source == "convert" then
+				if not private.priceSourceInfo[convertArg] or private.priceSourceInfo[convertArg].sourceType ~= CustomPrice.SOURCE_TYPE.PRICE_DB then
+					return nil, format(L["'%s' is not a valid argument for convert()."], convertArg)
+				end
+			elseif not private.priceSourceInfo[source] and not private.settings.customPriceSources[source] then
+				return nil, format(L["%s is not a valid source."], source)
+			end
 		end
+		private.customStringSourcesValidated[str] = GetTime()
 	end
 	return obj, nil
 end

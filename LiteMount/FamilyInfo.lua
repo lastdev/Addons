@@ -200,6 +200,7 @@ LM.MOUNTFAMILY["Charhound"] = {
 }
 
 LM.MOUNTFAMILY["Clefthoof"] = {
+    [417245] = true, -- Ancestral Clefthoof
     [171620] = true, -- Bloodhoof Bull
     [171621] = true, -- Ironhoof Destroyer
     [171617] = true, -- Trained Icehoof
@@ -355,6 +356,7 @@ LM.MOUNTFAMILY["Dragonhawk"] = {
 LM.MOUNTFAMILY["Drake"] = {
     [ 60025] = true, -- Albino Drake
     [ 59567] = true, -- Azure Drake
+    [420097] = true, -- Azure Worldchiller
     [ 59650] = true, -- Black Drake
     [107842] = true, -- Blazing Drake
     [ 59568] = true, -- Blue Drake
@@ -405,6 +407,7 @@ LM.MOUNTFAMILY["Dreadsteed"] = {
 }
 
 LM.MOUNTFAMILY["Eagle"] = {
+    [385262] = true, -- Duskwing Ohuna
     [395644] = true, -- Divine Kiss of Ohn'ahra
 }
 
@@ -764,11 +767,12 @@ LM.MOUNTFAMILY["Larion"] = {
 LM.MOUNTFAMILY["Magic"] = {
     [229376] = true, -- Archmage's Prismatic Disc
     [353263] = true, -- Cartel Master's Gearglider
-    [346554] = true, -- Tazavesh Gearglider
+    [419345] = true, -- Eve's Ghastly Rider
     [ 42667] = true, -- Flying Broom
     [ 47977] = true, -- Magic Broom
     [130092] = true, -- Red Flying Cloud
     [359318] = true, -- Soaring Spelltome
+    [346554] = true, -- Tazavesh Gearglider
     [334352] = true, -- Wildseed Cradle
 }
 
@@ -787,6 +791,7 @@ LM.MOUNTFAMILY["Mammoth"] = {
     [374194] = true, -- Mossy Mammoth
     [374196] = true, -- Plainswalker Bearer
     [374275] = true, -- Raging Magmammoth
+    [374278] = true, -- Renewed Magmammoth
     [371176] = true, -- Subterranean Magmammoth
     [ 61447] = true, -- Traveler's Tundra Mammoth
     [ 61425] = true, -- Traveler's Tundra Mammoth
@@ -831,6 +836,7 @@ LM.MOUNTFAMILY["Mechanical"] = {
     [ 55531] = true, -- Mechano-Hog
     [ 60424] = true, -- Mekgineer's Chopper
     [ 63796] = true, -- Mimiron's Head
+    [424082] = true, -- Mimiron's Jumpjets
     [245725] = true, -- Orgrimmar Interceptor
     [400733] = true, -- Rocket Shredder 9001
     [299170] = true, -- Rustbolt Resistor
@@ -880,6 +886,7 @@ LM.MOUNTFAMILY["Moth"] = {
 
 LM.MOUNTFAMILY["Murloc"] = {
     [315132] = true, -- Gargantuan Grrloc
+    [419567] = true, -- Ginormous Grrloc
 }
 
 LM.MOUNTFAMILY["Mushan Beast"] = {
@@ -1159,11 +1166,12 @@ LM.MOUNTFAMILY["Serpent"] = {
 
 LM.MOUNTFAMILY["Shalewing"] = {
     [408627] = true, -- Igneous Shalewing
-    [408647] = true, -- Cobalt Shalewing
-    [408649] = true, -- Shadowflame Shalewing
     [408651] = true, -- Catalogued Shalewing
+    [408647] = true, -- Cobalt Shalewing
     [408653] = true, -- Boulder Hauler
     [408655] = true, -- Morsel Sniffer
+    [408654] = true, -- Sandy Shalewing
+    [408649] = true, -- Shadowflame Shalewing
 }
 
 LM.MOUNTFAMILY["Shapeshift"] = {

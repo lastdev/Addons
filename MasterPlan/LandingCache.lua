@@ -73,6 +73,7 @@ local function Ship_SetCache(ship)
 	local cv, mv, st, md = G.GetResourceCacheInfo()
 	if not (ship and cv) then return end
 	ship:SetScript("OnEnter", Ship_OnEnter)
+	ship:SetScript("OnLeave", T.HideOwnedGameTooltip)
 	ship.Done:SetShown(cv == mv)
 	ship.Border:SetShown(cv < mv)
 	ship.BG:SetShown(cv < mv)
@@ -93,6 +94,7 @@ local function Ship_SetRecruit(ship)
 	local dt, lim = G.GetRecruitInfo()
 	if not (ship and dt and G.HasLevelTwoInn()) then return end
 	ship:SetScript("OnEnter", Ship_OnEnter)
+	ship:SetScript("OnLeave", T.HideOwnedGameTooltip)
 	local done = dt >= lim
 	ship.Done:SetShown(done)
 	ship.Border:SetShown(not done)

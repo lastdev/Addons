@@ -585,6 +585,7 @@ L.cd2ProfileCopySuccess = "Скопирован профиль из %s"
 L.cd2OtherSetOnlyNotOnCD = "Показывать, только если нет кд"
 L.cd2ColSetIconMasque = "Включить поддержку Masque"
 L.cd2ColSetRightToLeft = "Рост полос в колонке справа налево"
+L.cd2AutoChangeSpecTooltip = "Автосмена профиля для специализации"
 
 L.sallspellsEggClear = "Очистить"
 L.sallspellsEgg = "Лог заклинаний"

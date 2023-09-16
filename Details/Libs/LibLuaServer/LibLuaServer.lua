@@ -181,8 +181,39 @@
 ---| "Minimap"
 ---| "GameTooltip"
 
+---@alias audiochannels
+---| "Master"
+---| "SFX"
+---| "Music"
+---| "Ambience"
+---| "Dialog"
+
+---@class aurainfo : table
+---@field applications number
+---@field auraInstanceID number
+---@field canApplyAura boolean
+---@field dispelName string if not dispellable, doesn't have this key
+---@field duration number
+---@field expirationTime number based on GetTime, if zero, it's a permanent aura (usually weekly buffs)
+---@field icon number
+---@field isBossAura boolean
+---@field isFromPlayerOrPlayerPet boolean
+---@field isHelpful boolean true for buffs, false for debuffs
+---@field isHarmful boolean true for debuffs, false for buffs
+---@field isNameplateOnly boolean
+---@field isRaid boolean player can cast this aura or the player can dispel this aura
+---@field isStealable boolean
+---@field nameplateShowPersonal boolean
+---@field nameplateShowAll boolean
+---@field points table
+---@field spellId number
+---@field timeMod number
+---@field name string aura name
+---@field sourceUnit string unitid
+
 ---@alias width number property that represents the horizontal size of a UI element, such as a frame or a texture. Gotten from the first result of GetWidth() or from the first result of GetSize(). It is expected a GetWidth() or GetSize() when the type 'height' is used.
 ---@alias height number property that represents the vertical size of a UI element, such as a frame or a texture. Gotten from the first result of GetHeight() or from the second result of GetSize(). It is expected a GetHeight() or GetSize() when the type 'height' is used.
+---@alias framelevel number represent how high a frame is placed within its strata. The higher the frame level, the more likely it is to appear in front of other frames. The frame level is a number between 0 and 65535. The default frame level is 0. The frame level is set with the SetFrameLevel() function.
 ---@alias red number color value representing the red component of a color, the value must be between 0 and 1. To retrieve a color from a string or table use: local red, green, blue, alpha = DetailsFramework:ParseColors(color)
 ---@alias green number color value representing the green component of a color, the value must be between 0 and 1. To retrieve a color from a string or table use: local red, green, blue, alpha = DetailsFramework:ParseColors(color)
 ---@alias blue number color value representing the blue component of a color, the value must be between 0 and 1. To retrieve a color from a string or table use: local red, green, blue, alpha = DetailsFramework:ParseColors(color)
@@ -193,6 +224,8 @@
 ---@alias encounterejid number encounter ID number used by the encounter journal
 ---@alias encountername string encounter name received by the event ENCOUNTER_START and ENCOUNTER_END also used by the encounter journal
 ---@alias spellid number each spell in the game has a unique spell id, this id can be used to identify a spell.
+---@alias unitname string name of a unit
+---@alias unitguid string unique id of a unit (GUID)
 ---@alias actorname string name of a unit
 ---@alias petname string refers to a pet's name
 ---@alias ownername string refers to the pet's owner name
@@ -203,7 +236,7 @@
 ---@alias guid string unique id of a unit (GUID)
 ---@alias specializationid number the ID of a class specialization
 ---@alias controlflags number flags telling what unit type the is (player, npc, pet, etc); it's relatiotionship to the player (friendly, hostile, etc); who controls the unit (controlled by the player, controlled by the server, etc)
----@alias color table, string @table(r: red|number, g: green|number, b: blue|number, a: alpha|number) @string(color name) @hex (000000-ffffff) value representing a color, the value must be a table with the following fields: r, g, b, a. r, g, b are numbers between 0 and 1, a is a number between 0 and 1. To retrieve a color from a string or table use: local red, green, blue, alpha = DetailsFramework:ParseColors(color)
+---@alias color table @table(r: red|number, g: green|number, b: blue|number, a: alpha|number) @table(number, number, number, number) @string(color name) @hex (000000-ffffff) value representing a color, the value must be a table with the following fields: r, g, b, a. r, g, b are numbers between 0 and 1, a is a number between 0 and 1. To retrieve a color from a string or table use: local red, green, blue, alpha = DetailsFramework:ParseColors(color)
 ---@alias scale number @number(0.65-2.40) value representing the scale factor of the UIObject, the value must be between 0.65 and 2.40, the width and height of the UIObject will be multiplied by this value.
 ---@alias script string, function is a piece of code that is executed in response to a specific event, such as a button click or a frame update. Scripts can be used to implement behavior and logic for UI elements.
 ---@alias event string is a notification that is sent to a frame when something happens, such as a button click or a frame update. Events can be used to trigger scripts.
@@ -211,6 +244,7 @@
 ---@alias npcid number a number that identifies a specific npc in the game.
 ---@alias textureid number each texture from the game client has an id.
 ---@alias texturepath string access textures from addons.
+---@alias atlasname string a name of an atlas, an atlas name is used with the SetAtlas() function to display a texture from the game client.
 ---@alias valueamount number used to represent a value, such as a damage amount, a healing amount, or a resource amount.
 ---@alias unixtime number a number that represents the number of seconds that have elapsed since 00:00:00 Coordinated Universal Time (UTC), Thursday, 1 January 1970, not counting leap seconds.
 ---@alias timestring string refers to a string showing a time value, such as "1:23" or "1:23:45".
@@ -221,6 +255,9 @@
 ---@alias coordright number
 ---@alias coordtop number
 ---@alias coordbottom number
+---@alias addonname string name of an addon, same as the name of the ToC file.
+---@alias profile table a table containing the settings of an addon, usually saved in the SavedVariables file.
+---@alias profilename string name of a profile.
 
 ---@class _G
 ---@field RegisterAttributeDriver fun(statedriver: frame, attribute: string, conditional: string)
@@ -254,6 +291,7 @@
 ---@field Show fun(self: uiobject) make the object be shown on the user screen
 ---@field Hide fun(self: uiobject) make the object be hidden from the user screen
 ---@field SetShown fun(self: uiobject, state: boolean) show or hide the object
+---@field IsVisible fun(self: uiobject) : boolean return if the object is visible or not, visibility accounts for the object parent's be not shown
 ---@field IsShown fun(self: uiobject) : boolean return if the object is shown or not
 ---@field SetAllPoints fun(self: uiobject, target: uiobject|nil) set the object to be the same size as its parent or the target object
 ---@field SetParent fun(self: uiobject, parent: frame) set the parent object of the object
@@ -311,7 +349,7 @@
 ---@field SetDuration fun(self: animation, duration: number)
 ---@field SetEndDelay fun(self: animation, delay: number)
 ---@field SetOrder fun(self: animation, order: number)
----@field SetScript fun(self: animation, event: string, handler: function|nil)
+---@field SetScript fun(self: animation, event: string, handler: function?)
 ---@field SetSmoothing fun(self: animation, smoothing: string)
 ---@field Stop fun(self: animation)
 
@@ -319,16 +357,16 @@
 ---@field GetEndPoint fun(self: line) : relativePoint: anchorpoint, relativeTo: anchorpoint, offsetX: number, offsetY: number
 ---@field GetStartPoint fun(self: line) : relativePoint: anchorpoint, relativeTo: anchorpoint, offsetX: number, offsetY: number
 ---@field GetThickness fun(self: line) : number
----@field SetStartPoint fun(self: line, point: anchorpoint, relativeFrame: uiobject|number, relativePoint: anchorpoint|number, xOffset: number|nil, yOffset: number|nil)
----@field SetEndPoint fun(self: line, point: anchorpoint, relativeFrame: uiobject|number, relativePoint: anchorpoint|number, xOffset: number|nil, yOffset: number|nil)
----@field SetColorTexture fun(self: line, red: number, green: number, blue: number, alpha: number)
+---@field SetStartPoint fun(self: line, point: anchorpoint, relativeFrame: uiobject|number, relativePoint: anchorpoint|number, xOffset: number?, yOffset: number?)
+---@field SetEndPoint fun(self: line, point: anchorpoint, relativeFrame: uiobject|number, relativePoint: anchorpoint|number, xOffset: number?, yOffset: number?)
+---@field SetColorTexture fun(self: line, red: number, green: number, blue: number, alpha: number?)
 ---@field SetThickness fun(self: line, thickness: number)
 
 ---@class frame : uiobject
----@field CreateLine fun(self: frame, name: string|nil, drawLayer: drawlayer, templateName: string|nil, subLevel: number|nil) : line
+---@field CreateLine fun(self: frame, name: string?, drawLayer: drawlayer, templateName: string?, subLevel: number?) : line
 ---@field SetID fun(self: frame, id: number) set an ID for the frame
 ---@field SetAttribute fun(self: frame, name: string, value: any)
----@field SetScript fun(self: frame, event: string, handler: function|nil)
+---@field SetScript fun(self: frame, event: string, handler: function?)
 ---@field GetScript fun(self: frame, event: string) : function
 ---@field SetFrameStrata fun(self: frame, strata: framestrata)
 ---@field SetFrameLevel fun(self: frame, level: number)
@@ -337,8 +375,8 @@
 ---@field SetMovable fun(self: frame, movable: boolean)
 ---@field SetUserPlaced fun(self: frame, userPlaced: boolean)
 ---@field SetBackdrop fun(self: frame, backdrop: backdrop|table)
----@field SetBackdropColor fun(self: frame, red: red|number, green: green|number, blue: blue|number, alpha: alpha|number)
----@field SetBackdropBorderColor fun(self: frame, red: red|number, green: green|number, blue: blue|number, alpha: alpha|number)
+---@field SetBackdropColor fun(self: frame, red: red|number, green: green|number, blue: blue|number, alpha: alpha|number?)
+---@field SetBackdropBorderColor fun(self: frame, red: red|number, green: green|number, blue: blue|number, alpha: alpha|number?)
 ---@field GetBackdrop fun(self: frame) : backdrop
 ---@field GetBackdropColor fun(self: frame) : red|number, green|number, blue|number, alpha|number
 ---@field GetBackdropBorderColor fun(self: frame) : red|number, green|number, blue|number, alpha|number
@@ -348,7 +386,7 @@
 ---@field SetPropagateGamepadInput fun(self: frame, propagate: boolean)
 ---@field StartMoving fun(self: frame)
 ---@field IsMovable fun(self: frame) : boolean
----@field StartSizing fun(self: frame, sizingpoint: sizingpoint|nil)
+---@field StartSizing fun(self: frame, sizingpoint: sizingpoint?)
 ---@field StopMovingOrSizing fun(self: frame)
 ---@field GetAttribute fun(self: frame, name: string) : any
 ---@field GetFrameLevel fun(self: frame) : number
@@ -359,16 +397,50 @@
 ---@field GetName fun(self: frame) : string
 ---@field GetChildren fun(self: frame) : frame[]
 ---@field GetRegions fun(self: frame) : region[]
----@field CreateTexture fun(self: frame, name: string|nil, layer: drawlayer, inherits: string|nil, subLayer: number|nil) : texture
----@field CreateMaskTexture fun(self: frame, name: string|nil, layer: drawlayer, inherits: string|nil, subLayer: number|nil) : texture
----@field CreateFontString fun(self: frame, name: string|nil, layer: drawlayer, inherits: string|nil, subLayer: number|nil) : fontstring
+---@field CreateTexture fun(self: frame, name: string?, layer: drawlayer, inherits: string?, subLayer: number?) : texture
+---@field CreateMaskTexture fun(self: frame, name: string?, layer: drawlayer, inherits: string?, subLayer: number?) : texture
+---@field CreateFontString fun(self: frame, name: string?, layer: drawlayer, inherits: string?, subLayer: number?) : fontstring
 ---@field EnableMouse fun(self: frame, enable: boolean) enable mouse interaction
 ---@field SetResizable fun(self: frame, enable: boolean) enable resizing of the frame
 ---@field EnableMouseWheel fun(self: frame, enable: boolean) enable mouse wheel scrolling
 ---@field RegisterForDrag fun(self: frame, button: string) register the frame for drag events, allowing it to be dragged by the mouse
 ---@field SetResizeBounds fun(self: frame, minWidth: number, minHeight: number, maxWidth: number, maxHeight: number) set the minimum and maximum size of the frame
 ---@field RegisterEvent fun(self: frame, event: string) register for an event, trigers "OnEvent" script when the event is fired
+---@field RegisterUnitEvent fun(self: frame, event: string, unitId: unit) register for an event, trigers "OnEvent" only if the event occurred for the registered unit
+---@field UnregisterEvent fun(self: frame, event: string) unregister for an event
 ---@field HookScript fun(self: frame, event: string, handler: function) run a function after the frame's script has been executed, carrying the same arguments
+
+---@class cooldown : frame
+---@field Clear fun(self: cooldown)
+---@field GetCooldownDuration fun(self: cooldown) : number @returns duration
+---@field GetCooldownTimes fun(self: cooldown) : number, number @returns startTime, duration
+---@field GetCooldownDisplayDuration fun(self: cooldown) : number @returns duration
+---@field GetDrawBling fun(self: cooldown) : boolean @returns drawBling
+---@field GetDrawEdge fun(self: cooldown) : boolean @returns drawEdge
+---@field GetDrawSwipe fun(self: cooldown) : boolean @returns drawSwipe
+---@field GetEdgeScale fun(self: cooldown) : number @returns scale
+---@field GetReverse fun(self: cooldown) : boolean @returns reverse
+---@field GetRotation fun(self: cooldown) : number @returns radians
+---@field IsPaused fun(self: cooldown) : boolean
+---@field Pause fun(self: cooldown)
+---@field Resume fun(self: cooldown)
+---@field SetBlingTexture fun(self: cooldown, texture: textureid|texturepath, r: red|number?, g: green|number?, b: blue|number?, a: alpha|number?)
+---@field SetCooldown fun(self: cooldown, startTime: gametime, duration: number, modRate: number?) set the cooldown to start at startTime and last for duration seconds
+---@field SetCooldownDuration fun(self: cooldown, duration: number, modRate: number?)
+---@field SetCooldownUNIX fun(self: cooldown, startTime: unixtime, duration: number, modRate: number?)
+---@field SetCountdownAbbrevThreshold fun(self: cooldown, seconds: number)
+---@field SetCountdownFont fun(self: cooldown, font: string)
+---@field SetDrawBling fun(self: cooldown, draw: boolean)
+---@field SetDrawEdge fun(self: cooldown, draw: boolean)
+---@field SetDrawSwipe fun(self: cooldown, draw: boolean)
+---@field SetEdgeScale fun(self: cooldown, scale: number)
+---@field SetEdgeTexture fun(self: cooldown, texture: textureid|texturepath, r: red|number?, g: green|number?, b: blue|number?, a: alpha|number?)
+---@field SetHideCountdownNumbers fun(self: cooldown, hide: boolean)
+---@field SetReverse fun(self: cooldown, reverse: boolean)
+---@field SetRotation fun(self: cooldown, radians: number)
+---@field SetSwipeColor fun(self: cooldown, r: red|number, g: green|number, b: blue|number, a: alpha|number?)
+---@field SetSwipeTexture fun(self: cooldown, texture: textureid|texturepath, r: red|number?, g: green|number?, b: blue|number?, a: alpha|number?)
+---@field SetUseCircularEdge fun(self: cooldown, use: boolean)
 
 ---@class button : frame
 ---@field Click fun(self: button)
@@ -384,20 +456,20 @@
 ---@field GetText fun(self: button) : string
 ---@field SetTextInsets fun(self: button, left: number, right: number, top: number, bottom: number)
 ---@field GetTextInsets fun(self: button) : number, number, number, number
----@field SetDisabledTextColor fun(self: button, r: red|number, g: green|number, b: blue|number, a: alpha|number)
+---@field SetDisabledTextColor fun(self: button, r: red|number, g: green|number, b: blue|number, a: alpha|number?)
 ---@field GetDisabledTextColor fun(self: button) : number, number, number, number
 ---@field SetFontString fun(self: button, fontString: fontstring)
 ---@field GetFontString fun(self: button) : fontstring
 ---@field SetButtonState fun(self: button, state: string, enable: boolean)
 ---@field GetButtonState fun(self: button, state: string) : boolean
----@field RegisterForClicks fun(self: button, button1: nil|buttontype, button2: nil|buttontype, button3: nil|buttontype, button4: nil|buttontype)
+---@field RegisterForClicks fun(self: button, button1: buttontype?, button2: buttontype?, button3: buttontype?, button4: buttontype?)
 ---@field GetNormalTexture fun(self: button) : texture
 ---@field GetPushedTexture fun(self: button) : texture
 ---@field GetHighlightTexture fun(self: button) : texture
 ---@field GetDisabledTexture fun(self: button) : texture
 
 ---@class statusbar : frame
----@field SetStatusBarColor fun(self: statusbar, r: red|number, g: green|number, b: blue|number, a: alpha|number)
+---@field SetStatusBarColor fun(self: statusbar, r: red|number, g: green|number, b: blue|number, a: alpha|number?)
 ---@field SetStatusBarTexture fun(self: statusbar, path: string|texture)
 ---@field GetStatusBarTexture fun(self: statusbar) : texture
 ---@field SetMinMaxValues fun(self: statusbar, minValue: number, maxValue: number)
@@ -424,17 +496,17 @@
 ---@class region : uiobject
 
 ---@class fontstring : region
----@field SetDrawLayer fun(self: fontstring, layer: drawlayer, subLayer: number|nil)
+---@field SetDrawLayer fun(self: fontstring, layer: drawlayer, subLayer: number?)
 ---@field SetFont fun(self: fontstring, font: string, size: number, flags: string)
 ---@field SetText fun(self: fontstring, text: string|number)
 ---@field GetText fun(self: fontstring) : string
 ---@field GetFont fun(self: fontstring) : string, number, string
 ---@field GetStringWidth fun(self: fontstring) : number return the width of the string in pixels
----@field SetShadowColor fun(self: fontstring, r: red|number, g: green|number, b: blue|number, a: alpha|number)
+---@field SetShadowColor fun(self: fontstring, r: red|number, g: green|number, b: blue|number, a: alpha|number?)
 ---@field GetShadowColor fun(self: fontstring) : number, number, number, number
 ---@field SetShadowOffset fun(self: fontstring, offsetX: number, offsetY: number)
 ---@field GetShadowOffset fun(self: fontstring) : number, number
----@field SetTextColor fun(self: fontstring, r: red|number, g: green|number, b: blue|number, a: alpha|number)
+---@field SetTextColor fun(self: fontstring, r: red|number, g: green|number, b: blue|number, a: alpha|number?)
 ---@field GetTextColor fun(self: fontstring) : number, number, number, number
 ---@field SetJustifyH fun(self: fontstring, justifyH: justifyh)
 ---@field GetJustifyH fun(self: fontstring) : string
@@ -458,11 +530,11 @@
 ---@field GetTextInsets fun(self: fontstring) : number, number, number, number
 ---@field SetTextJustification fun(self: fontstring, justifyH: string, justifyV: string)
 ---@field GetTextJustification fun(self: fontstring) : string, string
----@field SetTextShadowColor fun(self: fontstring, r: red|number, g: green|number, b: blue|number, a: alpha|number)
+---@field SetTextShadowColor fun(self: fontstring, r: red|number, g: green|number, b: blue|number, a: alpha|number?)
 ---@field GetTextShadowColor fun(self: fontstring) : number, number, number, number
 ---@field SetTextShadowOffset fun(self: fontstring, offsetX: number, offsetY: number)
 ---@field GetTextShadowOffset fun(self: fontstring) : number, number
----@field SetTextShadow fun(self: fontstring, offsetX: number, offsetY: number, r: red|number, g: green|number, b: blue|number, a: alpha|number)
+---@field SetTextShadow fun(self: fontstring, offsetX: number, offsetY: number, r: red|number, g: green|number, b: blue|number, a: alpha|number?)
 ---@field SetTextTruncate fun(self: fontstring, truncate: string)
 ---@field GetTextTruncate fun(self: fontstring) : string
 ---@field SetTextTruncateWidth fun(self: fontstring, width: number)
@@ -471,13 +543,14 @@
 ---@field GetTextTruncateLines fun(self: fontstring) : number
 
 ---@class texture : region
----@field SetDrawLayer fun(self: texture, layer: drawlayer, subLayer: number|nil)
----@field SetTexture fun(self: texture, path: textureid|texturepath, horizontalWrap: texturewrap|nil, verticalWrap: texturewrap|nil, filter: texturefilter|nil)
+---@field SetDrawLayer fun(self: texture, layer: drawlayer, subLayer: number?)
+---@field SetTexture fun(self: texture, path: textureid|texturepath, horizontalWrap: texturewrap?, verticalWrap: texturewrap?, filter: texturefilter?)
 ---@field SetAtlas fun(self: texture, atlas: string)
----@field SetColorTexture fun(self: texture, r: red|number, g: green|number, b: blue|number, a: alpha|number|nil)
+---@field SetColorTexture fun(self: texture, r: red|number, g: green|number, b: blue|number, a: alpha|number?)
 ---@field SetDesaturated fun(self: texture, desaturate: boolean)
+---@field SetDesaturation fun(self: texture, desaturation: number)
 ---@field SetBlendMode fun(self: texture, mode: blendmode)
----@field SetVertexColor fun(self: texture, r: red|number, g: green|number, b: blue|number, a: alpha|number|nil)
+---@field SetVertexColor fun(self: texture, r: red|number, g: green|number, b: blue|number, a: alpha|number?)
 ---@field GetPoint fun(self: texture, index: number) : string, table, string, number, number
 ---@field SetShown fun(self: texture, state: boolean)
 ---@field IsShown fun(self: texture) : boolean

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Grobbulus", "DBM-Raids-Vanilla", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525041212")
+mod:SetRevision("20230814031337")
 mod:SetCreatureID(15931)
 mod:SetEncounterID(1111)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -58,7 +58,7 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 28169 then
+	if args:IsSpell(28169) then
 		timerInjection:Start(args.destName)
 		if self.Options.SetIconOnInjectionTarget then
 			table.insert(mutateIcons, args.destName)
@@ -75,7 +75,7 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 28169 then
+	if args:IsSpell(28169) then
 		timerInjection:Stop(args.destName)--Cancel timer if someone is dumb and dispels it.
 		if self.Options.SetIconOnInjectionTarget then
 			removeIcon(self, args.destName)
@@ -84,7 +84,7 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 28240 then
+	if args:IsSpell(28240) then
 		warnCloud:Show()
 		timerCloud:Start()
 	end

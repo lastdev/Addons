@@ -3,4 +3,5 @@
 	<Script file="TargetMatcher.lua"/>
 	<Script file="RoleTargetMatcher.lua"/>
 	<Script file="RoleOrPetTargetMatcher.lua"/>
+	<Script file="RoleOrSelfTargetMatcher.lua"/>
 </Ui>

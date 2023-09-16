@@ -9,7 +9,7 @@ end
 local mod	= DBM:NewMod("Buru", "DBM-Raids-Vanilla", catID)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525041212")
+mod:SetRevision("20230814031337")
 mod:SetCreatureID(15370)
 mod:SetEncounterID(721)
 mod:SetModelID(15654)
@@ -44,7 +44,7 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 96 then
+	if args:IsSpell(96) then
 		local amount = args.amount or 1
 		timerDismember:Start(args.destName)
 		if amount >= 5 then
@@ -65,7 +65,7 @@ end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 96 then
+	if args:IsSpell(96) then
 		timerDismember:Stop(args.destName)
 	end
 end

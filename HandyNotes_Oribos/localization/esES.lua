@@ -74,6 +74,7 @@ L["dev_config_force_nodes_desc"] = "Fuerza la visualización de todos los puntos
 L["dev_config_show_prints"] = "Mostrar print()"
 L["dev_config_show_prints_desc"] = "Muestra print() mensajes en la ventana de chat."
 L["dev_config_tab"] = "DEV"
+L["handler_context_menu_add_map_pin"] = "Añadir al mapa punto de ruta"
 L["handler_context_menu_add_tomtom"] = "Añadir a TomTom"
 L["handler_context_menu_addon_name"] = "HandyNotes: Oribos"
 L["handler_context_menu_hide_node"] = "Oculta este punto"

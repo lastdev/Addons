@@ -3216,7 +3216,12 @@ local addonMsgFrame = CreateFrame'Frame'
 local addonMsgAttack_AntiSpam = 0
 addonMsgFrame:SetScript("OnEvent",function (self, event, ...)
 	local prefix, message, channel, sender = ...
-	if message and ((prefix == "BigWigs" and message:find("^T:BWPull")) or (prefix == "D4" and message:find("^PT"))) then
+	if message and (
+		(prefix == "BigWigs" and message:find("^T:BWPull")) or 
+		(prefix == "BigWigs" and message:find("^P^Pull")) or 
+		(prefix == "D4" and message:find("^PT")) or
+		((prefix == "D5" or prefix == "D5WC" or prefix == "D5C") and message and select(3,strsplit("\t",message)) == "PT")
+	) then
 		if VMRT.RaidCheck.OnAttack and not ExRT.isClassic then
 			local _time = GetTime()
 			if (_time - addonMsgAttack_AntiSpam) < 2 then

@@ -169,7 +169,7 @@ function Plater.OpenOptionsPanel()
 	Plater.db.profile.OptionsPanelDB = Plater.db.profile.OptionsPanelDB or {}
 	
 	--controi o menu principal
-	local f = DF:CreateSimplePanel (UIParent, optionsWidth, optionsHeight, "Plater: professional nameplate addon for hardcore gamers", "PlaterOptionsPanelFrame", {UseScaleBar = true}, Plater.db.profile.OptionsPanelDB)
+	local f = DF:CreateSimplePanel (UIParent, optionsWidth, optionsHeight, "Plater |cFFFF8822[|r|cFFFFFFFFNameplates|r|cFFFF8822]|r: professional addon for hardcore gamers", "PlaterOptionsPanelFrame", {UseScaleBar = true}, Plater.db.profile.OptionsPanelDB)
 	f.Title:SetAlpha (.75)
 	f:SetFrameStrata ("HIGH")
 	DF:ApplyStandardBackdrop (f)
@@ -270,6 +270,9 @@ function Plater.OpenOptionsPanel()
 		Plater.IncreaseRefreshID()
 		Plater.RefreshDBUpvalues()
 		Plater.UpdateAllPlates()
+
+		--trigger the event "Options Changed" for mods
+		platerInternal.OnOptionChanged()
 	end
 
 	--make the tab button's text be aligned to left and fit the button's area
@@ -889,6 +892,18 @@ function Plater.OpenOptionsPanel()
 					if tonumber(spellId) then 
 						castColors[spellId] = nil
 						castColors[tonumber(spellId)] = castColorTable 
+					end
+				end
+				
+				---@type renamednpcsdb
+				local renamedNPCs = Plater.db.profile.npcs_renamed
+				---@type renamednpcsdb
+				local renamedNPCsTemp = DetailsFramework.table.copy({}, renamedNPCs)
+				
+				for npcId, renamedName in pairs(renamedNPCsTemp) do
+					if tonumber(npcId) then 
+						renamedNPCs[npcId] = nil
+						renamedNPCs[tonumber(npcId)] = renamedName 
 					end
 				end
 				
@@ -3110,6 +3125,7 @@ Plater.CreateAuraTesting()
 							local selectedColorName = DB_NPCID_COLORS[npcID] and DB_NPCID_COLORS[npcID][3]
 						
 							if (
+								(tostring(npcID) or ""):find(IsSearchingFor) or
 								npcName:lower():find(IsSearchingFor) or
 							 	zoneName:lower():find(IsSearchingFor) or
 							 	(rename and rename:find(IsSearchingFor)) or
@@ -6734,6 +6750,34 @@ local targetOptions = {
 			usedecimals = true,
 			name = "TARGET_CVAR_LOCKTOSCREEN",
 			desc = "TARGET_CVAR_LOCKTOSCREEN_DESC",
+			nocombat = true,
+		},
+		
+		{
+			type = "range",
+			get = function() return tonumber (GetCVar ("nameplateOtherBottomInset")) end,
+			set = function (self, fixedparam, value) 
+				if (not InCombatLockdown()) then
+					if (value == 0) then
+						SetCVar ("nameplateOtherBottomInset", -1)
+						SetCVar ("nameplateLargeBottomInset", -1)
+						
+					else
+						SetCVar ("nameplateOtherBottomInset", value)
+						SetCVar ("nameplateLargeBottomInset", value)
+						
+					end
+				else
+					Plater:Msg (L["OPTIONS_ERROR_CVARMODIFY"])
+				end
+			end,
+			min = 0.000,
+			max = 0.1,
+			step = 0.005,
+			thumbscale = 1.7,
+			usedecimals = true,
+			name = "Lock to Screen (Bottom Side)|cFFFF7700*|r",
+			desc = "Min space between the nameplate and the bottom of the screen. Increase this if some part of the nameplate are going out of the screen.\n\n|cFFFFFFFFDefault: 0.065|r\n\n|cFFFFFF00 Important |r: if you're having issue, manually set using these macros:\n/run SetCVar ('nameplateOtherBottomInset', '0.1')\n/run SetCVar ('nameplateLargeBottomInset', '0.15')\n\n|cFFFFFF00 Important |r: setting to 0 disables this feature.\n\n|cFFFF7700[*]|r |cFFa0a0a0CVar, saved within Plater profile and restored when loading the profile.|r",
 			nocombat = true,
 		},
 		
@@ -13746,6 +13790,34 @@ end
 			usedecimals = true,
 			name = "Lock to Screen (Top Side)" .. CVarIcon,
 			desc = "Min space between the nameplate and the top of the screen. Increase this if some part of the nameplate are going out of the screen.\n\n|cFFFFFFFFDefault: 0.065|r\n\n" .. ImportantText .. "if you're having issue, manually set using these macros:\n/run SetCVar ('nameplateOtherTopInset', '0.065')\n/run SetCVar ('nameplateLargeTopInset', '0.065')\n\n" .. ImportantText .. "setting to 0 disables this feature." .. CVarDesc,
+			nocombat = true,
+		},
+		
+		{
+			type = "range",
+			get = function() return tonumber (GetCVar ("nameplateOtherBottomInset")) end,
+			set = function (self, fixedparam, value) 
+				if (not InCombatLockdown()) then
+					if (value == 0) then
+						SetCVar ("nameplateOtherBottomInset", -1)
+						SetCVar ("nameplateLargeBottomInset", -1)
+						
+					else
+						SetCVar ("nameplateOtherBottomInset", value)
+						SetCVar ("nameplateLargeBottomInset", value)
+						
+					end
+				else
+					Plater:Msg (L["OPTIONS_ERROR_CVARMODIFY"])
+				end
+			end,
+			min = 0.000,
+			max = 0.1,
+			step = 0.005,
+			thumbscale = 1.7,
+			usedecimals = true,
+			name = "Lock to Screen (Bottom Side)|cFFFF7700*|r",
+			desc = "Min space between the nameplate and the bottom of the screen. Increase this if some part of the nameplate are going out of the screen.\n\n|cFFFFFFFFDefault: 0.065|r\n\n|cFFFFFF00 Important |r: if you're having issue, manually set using these macros:\n/run SetCVar ('nameplateOtherBottomInset', '0.1')\n/run SetCVar ('nameplateLargeBottomInset', '0.15')\n\n|cFFFFFF00 Important |r: setting to 0 disables this feature.\n\n|cFFFF7700[*]|r |cFFa0a0a0CVar, saved within Plater profile and restored when loading the profile.|r",
 			nocombat = true,
 		},
 		

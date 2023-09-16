@@ -8,10 +8,6 @@ local TSM = select(2, ...) ---@type TSM
 local Environment = TSM.Init("Environment") ---@class Environment
 local EnumType = TSM.Include("Util.EnumType")
 Environment.FEATURES = EnumType.New("FEATURES", {
-	TEXTURE_SET_GRADIENT = EnumType.CreateValue(),
-	REGION_SET_RESIZE_BOUNDS = EnumType.CreateValue(),
-	PLAYER_INTERACTION_MANAGER = EnumType.CreateValue(),
-	C_CONTAINER = EnumType.CreateValue(),
 	REAGENT_BAG = EnumType.CreateValue(),
 	CONNECTED_FACTION_AH = EnumType.CreateValue(),
 	HONOR_POINTS = EnumType.CreateValue(),
@@ -58,10 +54,6 @@ end
 
 Environment:OnModuleLoad(function()
 	private.features = {
-		[Environment.FEATURES.TEXTURE_SET_GRADIENT] = not Environment.IsVanillaClassic(),
-		[Environment.FEATURES.REGION_SET_RESIZE_BOUNDS] = not Environment.IsVanillaClassic(),
-		[Environment.FEATURES.PLAYER_INTERACTION_MANAGER] = not Environment.IsVanillaClassic(),
-		[Environment.FEATURES.C_CONTAINER] = not Environment.IsVanillaClassic(),
 		[Environment.FEATURES.REAGENT_BAG] = Environment.IsRetail(),
 		[Environment.FEATURES.CONNECTED_FACTION_AH] = Environment.IsRetail(),
 		[Environment.FEATURES.HONOR_POINTS] = Environment.IsWrathClassic(),
@@ -125,6 +117,10 @@ end
 ---@return boolean
 function Environment.IsWrathClassic()
 	return GAME_VERSION == "WRATH"
+end
+
+function Environment.IsClassicHardcore()
+	return Environment.IsVanillaClassic() and C_Seasons.HasActiveSeason() and C_Seasons.GetActiveSeason() == Enum.SeasonID.Hardcore
 end
 
 ---Checks whether or not a features is available in the current game version.

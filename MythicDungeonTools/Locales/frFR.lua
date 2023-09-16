@@ -81,6 +81,10 @@ L["Alpha Eagle"] = "Alpha Eagle"
 L["Altairus"] = "Altairus"
 --[[Translation missing --]]
 L["AltarOfShadow"] = "Altar of Shadow"
+--[[Translation missing --]]
+L["altKeyDownStatusText"] = "Showing enemy group numbers"
+--[[Translation missing --]]
+L["altKeyGroupsTip"] = "Hold ALT to show enemy group numbers on all enemies"
 L["Amalgam of Souls"] = "Amalgame d’âmes"
 --[[Translation missing --]]
 L["Amanitar"] = "Amanitar"
@@ -343,6 +347,8 @@ L[ [=[Bounty stacks
 after this pull]=] ] = [=[這波拉怪後
 連帶幾堆]=]
 --[[Translation missing --]]
+L["Bounty stacks after this pull"] = ""
+--[[Translation missing --]]
 L["Bracken Warscourge"] = "Bracken Warscourge"
 --[[Translation missing --]]
 L["Brackenhide Shaper"] = "Brackenhide Shaper"
@@ -443,7 +449,7 @@ L["Commerce Enforcer"] = "Massacreur du marché"
 --[[Translation missing --]]
 L["conflictPrompt"] = [=[MDT has detected that you have certain AddOns installed that are conflicting with MDT.
 
-Please remove the following AddOns:
+Please remove or update the following AddOns:
 
 ]=]
 L["Congealed Slime"] = "Gelée figée"
@@ -519,6 +525,10 @@ L["Crystalline Protector"] = "Crystalline Protector"
 L["Crystalline Shardling"] = "Crystalline Shardling"
 --[[Translation missing --]]
 L["Crystalline Tender"] = "Crystalline Tender"
+--[[Translation missing --]]
+L["ctrlKeyCountTip"] = "Hold CTRL to show enemy forces on all enemies"
+--[[Translation missing --]]
+L["ctrlKeyDownStatusText"] = "Showing enemy forces"
 --[[Translation missing --]]
 L["Curious Swoglet"] = "Curious Swoglet"
 L["Cursed Falke"] = "Gerfaut maudit"
@@ -1187,7 +1197,10 @@ L["Hardened Steel Reaver"] = "Hardened Steel Reaver"
 --[[Translation missing --]]
 L["Hardened Steel Skycaller"] = "Hardened Steel Skycaller"
 --[[Translation missing --]]
+L["hardResetButton"] = "Reset MDT"
+--[[Translation missing --]]
 L["hardResetPrompt"] = [=[Do you really want to reset all settings to default?
+|cFFFF0000Only do this if MDT is not loading at all and is in a broken state.|r
 This will reload the UI!]=]
 --[[Translation missing --]]
 L["hardResetPromptTitle"] = "Delete ALL settings"
@@ -1560,6 +1573,8 @@ L["MDT: Error importing preset"] = "MDT : une erreur est survenue dans l'import 
 L["MDT: Spells for %s:"] = "MDT : Sorts pour %s : "
 --[[Translation missing --]]
 L["MDT: Use /mdt minimap to show the minimap icon again"] = "MDT: Use /mdt minimap to show the minimap icon again"
+--[[Translation missing --]]
+L["MDTGuideNote"] = "MDTGuide is not affiliated with Mythic Dungeon Tools and is a seperate AddOn."
 --[[Translation missing --]]
 L["Meathook"] = "Meathook"
 L["Mech Jockey"] = "Jockey mécanique"
@@ -2777,6 +2792,8 @@ L["Unyielding Contender"] = "Belligérant inflexible"
 --[[Translation missing --]]
 L["Unyielding Garrison"] = "Unyielding Garrison"
 L["Update"] = "Mise à jour "
+--[[Translation missing --]]
+L["updateNote"] = "Please update this AddOn to the latest version or remove it"
 L["Upper Broken Stair"] = "Partie supérieure de l'escalier brisé "
 L["Upper Library"] = "Bibliothèque supérieure "
 L["Upper Livery Stables"] = "Écuries supérieures "

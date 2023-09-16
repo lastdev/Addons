@@ -13,7 +13,7 @@ local playerFaction = GetPlayerFactionGroup("player")
 local DBM5Protocol = "1" -- DBM protocol version
 local DBM5Prefix = UnitName("player") .. "-" .. GetRealmName() .. "\t" .. DBM5Protocol .. "\t" -- Name-Realm\tProtocol version\t
 
-mod:SetRevision("20230216215139")
+mod:SetRevision("20230822133031")
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 mod:RegisterEvents(
 	"ZONE_CHANGED_NEW_AREA",
@@ -90,8 +90,7 @@ do
 		local _, instanceType = IsInInstance()
 		if instanceType == "pvp" or instanceType == "arena" then
 			if not bgzone then
-				SendAddonMessage(isWrath and "D4WC" or isBCC and "D4BC" or isClassic and "D4C" or "D4", "H", "INSTANCE_CHAT")
-				SendAddonMessage(isWrath and "D5WC" or isBCC and "D5BC" or isClassic and "D5C" or "D5", DBM5Prefix .. "H", "INSTANCE_CHAT")
+				SendAddonMessage(isWrath and "D5WC" or isClassic and "D5C" or "D5", DBM5Prefix .. "H", "INSTANCE_CHAT")
 				self:Schedule(3, DBM.RequestTimers, DBM)
 				if self.Options.HideBossEmoteFrame then
 					DBM:HideBlizzardEvents(1, true)

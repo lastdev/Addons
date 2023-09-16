@@ -58,14 +58,6 @@ L['tuskarr_tacklebox'] = 'Клыкаррские рыболовные снаст
 L['options_icons_tuskarr_tacklebox'] = 'Клыкаррские рыболовные снасти'
 L['options_icons_tuskarr_tacklebox_desc'] = 'Показать возможные места {object:Клыкаррских рыболовных снастей}.'
 
-L['dr_best'] = 'Ваше лучшее время:\n - Обычный: %.3fс\n - Сложный: %.3fс\n - Обратный маршрут: %.3fс'
-L['dr_best_dash'] = 'Ваше лучшее время:\n - %.3fс'
-L['dr_note'] = 'Отведенное время:\n - Обычный: %sс / %sс\n - Сложный: %sс / %sс\n - Обратный маршрут: %sс / %sс'
-L['dr_note_dash'] = 'Отведенное время:\n - %sс / %sс'
-L['dr_bronze'] = '\n\nЗавершите гонку, чтобы получить ' .. ns.color.Bronze('Бронзу') .. '.'
-L['options_icons_dragonrace'] = 'Гонка на драконах'
-L['options_icons_dragonrace_desc'] = 'Отображение местоположения гонок на драконах.'
-
 L['squirrels_note'] = 'Вы должны использовать эмоцию {emote:/любовь} на зверьках, а не на боевых питомцах.'
 L['options_icons_squirrels'] = '{achievement:16729}'
 L['options_icons_squirrels_desc'] = 'Места появления зверьков для {achievement:16729}'
@@ -588,6 +580,7 @@ L['living_mud_mask_note'] = [[
 Вернитесь к {npc:198062}, сидящему на скамейке, и сдайте задание получив {item:200872}.
 ]]
 
+L['little_scales_daycare_note'] = 'Вы должны сделать линейку заданий в течение нескольких дней, начиная с {quest:72664} у {npc:197478}, чтобы заработать это достижение и питомца.'
 L['naszuro_veiled_ossuary'] = 'Кроме маленькой святыни.'
 L['naszuro_algethar_academy'] = 'На выступе вершины башни.'
 L['naszuro_vault_of_the_incarnates'] = 'У подножия статуи.'
@@ -741,7 +734,7 @@ L['phoenix_wishwing_talisman'] = [[
 Вам нужны следующие предметы, чтобы купить:]]
 L['phoenix_wishwing_phoenix_ember'] = '%s {item:199099}\nВыпадает из {npc:52530} в {location:Огненных Просторах в режиме Путешествия во времени}'
 L['phoenix_wishwing_sacred_ash'] = '%s {item:199097}\nМожно найти в {object:Кучках пепла}, в {location:Пиках Арака}.'
-L['phoenix_wishwing_inert_ash'] = '%s {item:199092}\nРедко падает с {npc:6520} в центре {location:Кратера Ун\'Горо} {dot:Gray}. Они имеют общие точки возрождения с {npc:6521} (но не выпадают из них), поэтому убедитесь, что вы убили обоих.'
+L['phoenix_wishwing_inert_ash'] = '%s {item:199092}\nРедко падает с {npc:6520} в центре {location:Кратера Ун\'Горо} {dot:Gray}. Они имеют общие точки возрождения с {npc:6521} (но не выпадают из них), поэтому убедитесь, что вы убили обоих.' -- edit
 L['phoenix_wishwing_smoldering_ash'] = [[
 %s {item:199080}
 
@@ -808,6 +801,10 @@ L['ponzo_note'] = 'Обменяйте {item:204985} на манускрипты 
 L['smelly_trash_pile_label'] = 'Пахучая куча мусора'
 L['options_icons_smelly_trash_pile'] = 'Пахучая куча мусора'
 L['options_icons_smelly_trash_pile_desc'] = 'Показать возможные местоположения {object:Пахучих куч мусора}.'
+
+L['smelly_treasure_chest_label'] = nil
+L['options_icons_smelly_treasure_chest'] = nil
+L['options_icons_smelly_treasure_chest_desc'] = nil
 
 L['seething_cache_treasure_note'] = 'Чтобы иметь возможность увидеть {object:Дымящийся тайник} и получить {item:192779}, вам нужно собрать 3 стака {spell:399342} дебаффа от {object:Дымящихся сфер}, расположенных в области {location:Кальдера Закали} в {location:пещере Заралек}.'
 L['chest_of_the_flights_treasure_note'] = 'Чтобы открыть сундук с сокровищами, вам нужно нажать на {object:Усиленные самоцветы} в следующем порядке {note:Красный > Черный > Синий > Желтый > Зеленый}.'

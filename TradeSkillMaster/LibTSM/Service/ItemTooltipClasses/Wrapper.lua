@@ -312,11 +312,7 @@ do
 			reg.quantity = lNum == hNum and lNum or 1
 		end,
 		SetBagItem = function(self, ...)
-			if Environment.HasFeature(Environment.FEATURES.C_CONTAINER) then
-				PreHookHelper(self, C_Container.GetContainerItemInfo, "stackCount", ...)
-			else
-				PreHookHelper(self, GetContainerItemInfo, 2, ...)
-			end
+			PreHookHelper(self, C_Container.GetContainerItemInfo, "stackCount", ...)
 		end,
 		SetGuildBankItem = function(self, ...)
 			local reg = PreHookHelper(self, GetGuildBankItemInfo, 2, ...)

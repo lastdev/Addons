@@ -68,8 +68,7 @@ local L = WeakAuras.L
 	L["%s, Border"] = "%s; Граница"
 	L["%s, Offset: %0.2f;%0.2f"] = "%s; Смещение (%.4g, %.4g)"
 	L["%s, offset: %0.2f;%0.2f"] = "%s; Смещение (%.4g, %.4g)"
-	--[[Translation missing --]]
-	L["%s, Start Animation"] = "%s, Start Animation"
+	L["%s, Start Animation"] = "%s, Запуск анимации"
 	L["%s|cFFFF0000custom|r texture with |cFFFF0000%s|r blend mode%s%s"] = "Своя %sтекстура; Режим наложения |cFFE6CC80%s|r%s%s"
 	L["(Right click to rename)"] = "(Правый клик для смены названия)"
 	L["|c%02x%02x%02x%02xCustom Color|r"] = "Свечение |c%02x%02x%02x%02xO|r цвета"
@@ -81,8 +80,7 @@ local L = WeakAuras.L
 	L["|cFFFF0000default|r texture"] = "Текстура по умолчанию"
 	L["|cFFFF0000desaturated|r "] = "обесцвеченная "
 	L["|cFFFF0000Note:|r The unit '%s' is not a trackable unit."] = "|cFFFFCC00Предупреждение.|r Единица |cFFE6CC80%s|r не поддерживается."
-	--[[Translation missing --]]
-	L["|cFFFF0000Note:|r The unit '%s' requires soft target cvars to be enabled."] = "|cFFFF0000Note:|r The unit '%s' requires soft target cvars to be enabled."
+	L["|cFFFF0000Note:|r The unit '%s' requires soft target cvars to be enabled."] = "|cFFFF0000Примечание:|r Для юнита '%s' необходимо включить гибкие целевые переменные."
 	L["|cFFffcc00Anchors:|r Anchored |cFFFF0000%s|r to frame's |cFFFF0000%s|r"] = "|cFFFFCC00Крепление.|r Элемент с точкой крепления |cFFE6CC80%s|r привязан к кадру в точке |cFFE6CC80%s|r"
 	L["|cFFffcc00Anchors:|r Anchored |cFFFF0000%s|r to frame's |cFFFF0000%s|r with offset |cFFFF0000%s/%s|r"] = "|cFFFFCC00Крепление.|r Элемент с точкой крепления |cFFE6CC80%s|r привязан к кадру в точке |cFFE6CC80%s|r со смещением (%s, %s)"
 	L["|cFFffcc00Anchors:|r Anchored to frame's |cFFFF0000%s|r"] = "|cFFFFCC00Крепление.|r Элемент привязан к кадру в точке |cFFE6CC80%s|r"
@@ -154,8 +152,7 @@ Enable this setting if you want this timer to be hidden, or when using a WeakAur
 	L["Anchored To"] = "Прикрепить к"
 	L["And "] = "И "
 	L["and"] = "и"
-	--[[Translation missing --]]
-	L["and %s"] = "and %s"
+	L["and %s"] = "и %s"
 	L["and aligned left"] = "Выранивание по левому краю;"
 	L["and aligned right"] = "Выранивание по правому краю;"
 	L["and rotated left"] = "Текст повернут вверх;"
@@ -560,7 +557,6 @@ Can use \ to escape -.]=] ] = [=[Формат записи: Имя, Имя-Иг�
 	L["Ignore Disconnected"] = "Не учитывать игроков не в сети"
 	L["Ignore out of checking range"] = "Не учитывать единицы вне зоны видимости"
 	L["Ignore Self"] = "Не учитывать себя"
-	L["Ignore updates"] = "Игнорировать обновления"
 	L["Ignore Wago updates"] = "Игнорировать обновления Wago"
 	L["Ignored"] = "Не использован"
 	L["Ignored Aura Name"] = "Исключаемое название эффекта"
@@ -583,8 +579,7 @@ Can use \ to escape -.]=] ] = [=[Формат записи: Имя, Имя-Иг�
 	L["Indent Size"] = "Размер отступа"
 	L["Information"] = "Информация"
 	L["Inner"] = "Внутри"
-	--[[Translation missing --]]
-	L["Invalid Item ID"] = "Invalid Item ID"
+	L["Invalid Item ID"] = "Неверный ID предмета"
 	L["Invalid Item Name/ID/Link"] = "Неверное название, ссылка или ID"
 	L["Invalid Spell ID"] = "Неверный ID"
 	L["Invalid Spell Name/ID/Link"] = "Неверное название, ссылка или ID"
@@ -609,8 +604,7 @@ Can use \ to escape -.]=] ] = [=[Формат записи: Имя, Имя-Иг�
 	L["Length"] = "Длина"
 	L["Length of |cFFFF0000%s|r"] = "Длина %s"
 	L["Limit"] = "Лимит"
-	--[[Translation missing --]]
-	L["Line"] = "Line"
+	L["Line"] = "Линия"
 	L["Lines & Particles"] = "Линии или частицы"
 	L["Linked aura: "] = "Связанная индикация: "
 	L["Load"] = "Загрузка"
@@ -669,8 +663,7 @@ Can use \ to escape -.]=] ] = [=[Формат записи: Имя, Имя-Иг�
 	L["Nameplates"] = "Индикаторы здоровья"
 	L["Negator"] = "Не"
 	L["New Aura"] = "Новая индикация"
-	--[[Translation missing --]]
-	L["New Template"] = "New Template"
+	L["New Template"] = "Новый шаблон"
 	L["New Value"] = "Новое значение"
 	L["No Children"] = "Нет индикаций"
 	L["No Logs saved."] = "Нет записей"
@@ -701,14 +694,12 @@ Examples:
 every 2 events: /2
 every 3 events starting from 2nd: 2/3
 every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
-	--[[Translation missing --]]
-	L["OFF"] = "OFF"
+	L["OFF"] = "ВЫКЛ."
 	L["Offer a guided way to create auras for your character"] = "Предлагаем пошаговый способ создания индикаций для вашего персонажа"
 	L["Offset by |cFFFF0000%s|r/|cFFFF0000%s|r"] = "; Смещение (%.4g, %.4g)"
 	L["Offset by 1px"] = "Смещение на 1 пиксель"
 	L["Okay"] = "Ок"
-	--[[Translation missing --]]
-	L["ON"] = "ON"
+	L["ON"] = "ВКЛ."
 	L["On Hide"] = "При скрытии"
 	L["On Init"] = "При инициализации"
 	L["On Show"] = "При появлении"
@@ -864,6 +855,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Soft Min"] = "Мин. значение ползунка"
 	L["Sort"] = "Сортировка"
 	L["Sound"] = "Звук"
+	--[[Translation missing --]]
+	L["Sound by Kit ID"] = "Sound by Kit ID"
 	L["Sound Channel"] = "Звуковой канал"
 	L["Sound File Path"] = "Путь к звуковому файлу"
 	L["Sound Kit ID"] = "ID набора звуков (см. ru.wowhead.com/sounds)"
@@ -911,8 +904,7 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Texture Y Offset"] = "Смещение текстуры Y"
 	--[[Translation missing --]]
 	L["The addon ElvUI is enabled. It might add cooldown numbers to the swipe. You can configure these in the ElvUI settings"] = "The addon ElvUI is enabled. It might add cooldown numbers to the swipe. You can configure these in the ElvUI settings"
-	--[[Translation missing --]]
-	L["The addon OmniCC is enabled. It might add cooldown numbers to the swipe. You can configure these in the OmniCC settings"] = "The addon OmniCC is enabled. It might add cooldown numbers to the swipe. You can configure these in the OmniCC settings"
+	L["The addon OmniCC is enabled. It might add cooldown numbers to the swipe. You can configure these in the OmniCC settings"] = "Аддон OmniCC включен. Это может добавить цифры времени восстановления при пролистывании. Вы можете настроить их в настройках OmniCC."
 	L["The duration of the animation in seconds."] = "Длительность анимации в секундах."
 	L["The duration of the animation in seconds. The finish animation does not start playing until after the display would normally be hidden."] = [=[Длительность анимации в секундах.
 Конечная анимация не начнет отображаться, пока индикация не будет нормально скрыта  (должен сработать детриггер).]=]

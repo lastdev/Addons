@@ -57,14 +57,6 @@ L['tuskarr_tacklebox'] = '巨牙海民釣具箱'
 L['options_icons_tuskarr_tacklebox'] = '巨牙海民釣具箱'
 L['options_icons_tuskarr_tacklebox_desc'] = '顯示 {object:巨牙海民釣具箱} 可能的位置.'
 
-L['dr_best'] = '你的最快時間:\n - 普通: %.3fs\n - 進階: %.3fs\n - 反向: %.3fs'
-L['dr_best_dash'] = '你的最佳時間:\n - %.3fs'
-L['dr_note'] = '目標時間:\n - 普通: %ss / %ss\n - 進階: %ss / %ss\n - 反向: %ss / %ss'
-L['dr_note_dash'] = '目標時間:\n - %ss / %ss'
-L['dr_bronze'] = '\n\n完成賽事來取得 ' .. ns.color.Bronze('銅牌') .. '.'
-L['options_icons_dragonrace'] = '飛龍競速'
-L['options_icons_dragonrace_desc'] = '顯示區域內所有飛龍競速的位置.'
-
 L['squirrels_note'] = '你必須對小動物而不是戰寵使用表情 {emote:/love}.'
 L['options_icons_squirrels'] = '{achievement:16729}'
 L['options_icons_squirrels_desc'] = '顯示 {achievement:16729} 成就中小動物的位置.'
@@ -135,7 +127,7 @@ L['options_icons_grand_hunts_desc'] = '顯示 {object:大狩獵} 的位置和獎
 
 L['ancient_stone_label'] = '遠古石頭'
 L['options_icons_ancient_stones'] = '{achievement:17560}'
-L['options_icons_ancient_stones_desc'] = '顯示 {achievement:17560} 所需的 {object:遠古石頭} 位置.'
+L['options_icons_ancient_stones_desc'] = '顯示 {achievement:17560} 成就所需的 {object:遠古石頭} 位置.'
 
 L['reed_chest'] = '蘆葦箱子'
 L['options_icons_reed_chest'] = '蘆葦箱子'
@@ -247,7 +239,7 @@ L['options_icons_tuskarr_chest'] = '巨牙海民寶箱'
 L['options_icons_tuskarr_chest_desc'] = '顯示 {object:巨牙海民寶箱} 可能的位置.'
 
 L['community_feast_label'] = '{spell:388961}'
-L['tasks_completed_suffix'] = nil
+L['tasks_completed_suffix'] = '烹飪任務已完成'
 L['options_icons_community_feast'] = '{spell:388961}'
 L['options_icons_community_feast_desc'] = '顯示 {spell:388961} 的位置和獎勵.'
 
@@ -268,7 +260,7 @@ L['naszuro_imbu'] = '在樹樁上.'
 L['naszuro_azure_archives'] = '在山的側邊一個小石頭上.'
 L['naszuro_hudsons_rock'] = '在小石丘的頂端.'
 
-L['ferry_to_iskaara'] = nil
+L['ferry_to_iskaara'] = '乘船到伊斯凱拉'
 
 -------------------------------------------------------------------------------
 ------------------ FORBIDDEN REACH (DRACTHYR STARTING ZONE) -------------------
@@ -586,6 +578,7 @@ L['living_mud_mask_note'] = [[
 回到坐在長凳上的 {npc:197232} 處, 並回報任務來取得 {item:200872}.
 ]]
 
+L['little_scales_daycare_note'] = '你必須要完成橫跨多天的任務線來獲得成就和寵物, 此任務線從 {npc:197478} 所取得的任務 {quest:72664} 所開始.'
 L['naszuro_veiled_ossuary'] = '在小祭壇旁邊.'
 L['naszuro_algethar_academy'] = '在塔頂的邊柱旁.'
 L['naszuro_vault_of_the_incarnates'] = '在雕像的腳邊.'
@@ -740,7 +733,7 @@ L['phoenix_wishwing_talisman'] = [[
 你需要下列物品來購買它:]]
 L['phoenix_wishwing_phoenix_ember'] = '%s {item:199099}\n在 {location:時光漫遊火源之界} 的 {npc:52530} 掉落.'
 L['phoenix_wishwing_sacred_ash'] = '%s {item:199097}\n可以在 {location:阿拉卡山} 附近的 {object:烹飪鍋} 找到.'
-L['phoenix_wishwing_inert_ash'] = '%s {item:199092}\n由 {location:安戈洛環形山} {dot:Gray} 中間的 {npc:6520} 稀有掉落. 和 {npc:6521} 共享重生點(但是不會掉落物品), 所以請殺掉兩者.'
+L['phoenix_wishwing_inert_ash'] = '%s {item:199092}\n由 {location:安戈洛環形山} {dot:Gray} 中間的 {npc:6520} 稀有掉落. 和 {npc:6521} 共享重生點(但是不會掉落物品), 所以請殺掉兩者.' -- edit
 L['phoenix_wishwing_smoldering_ash'] = [[
 %s {item:199080}
 
@@ -807,6 +800,10 @@ L['ponzo_note'] = '用 {item:204985} 和 {item:205903} 交換飛龍自訂, 寵�
 L['smelly_trash_pile_label'] = '臭臭垃圾堆'
 L['options_icons_smelly_trash_pile'] = '臭臭垃圾堆'
 L['options_icons_smelly_trash_pile_desc'] = '顯示 {object:臭臭垃圾堆} 可能的位置.'
+
+L['smelly_treasure_chest_label'] = nil
+L['options_icons_smelly_treasure_chest'] = nil
+L['options_icons_smelly_treasure_chest_desc'] = nil
 
 L['seething_cache_treasure_note'] = '要能夠看到 {object:沸騰貯藏箱} 並拾取 {item:192779}. 你需要在 {location:扎拉萊克洞窟} 的 {location:薩克利火山口} 內, 從 {object:沸騰寶珠} 上取得3層 {spell:399342} 減益.'
 L['chest_of_the_flights_treasure_note'] = '要開啟寶箱你必須按照順序點選 {object:Empowered Gems} {note:紅> 黑 > 藍 > 黃 > 綠}.'

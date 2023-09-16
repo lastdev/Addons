@@ -11,6 +11,7 @@ local Database = TSM.Include("Util.Database")
 local Delay = TSM.Include("Util.Delay")
 local Event = TSM.Include("Util.Event")
 local TempTable = TSM.Include("Util.TempTable")
+local Table = TSM.Include("Util.Table")
 local Log = TSM.Include("Util.Log")
 local ItemString = TSM.Include("Util.ItemString")
 local DefaultUI = TSM.Include("Service.DefaultUI")
@@ -24,7 +25,7 @@ local private = {
 	itemDB = nil,
 	quantityDB = nil,
 	baseItemQuantityQuery = nil,
-	callbacks = {},
+	quantityCallbacks = {},
 	expiresCallbacks = {},
 	cancelAuctionQuery = nil,
 	scanTimer = nil,
@@ -191,8 +192,8 @@ end)
 -- Module Functions
 -- ============================================================================
 
-function MailTracking.RegisterCallback(callback)
-	tinsert(private.callbacks, callback)
+function MailTracking.RegisterQuantityCallback(callback)
+	tinsert(private.quantityCallbacks, callback)
 end
 
 function MailTracking.RegisterExpiresCallback(callback)
@@ -294,11 +295,19 @@ function private.MailInboxUpdateDelayed()
 
 		private.mailDB:BulkInsertNewRow(i, mailType, sender or UNKNOWN, subject or "--", firstItemString or "", itemCount or 0, money or 0, cod or 0, daysLeft)
 	end
+	local prevQuantities = TempTable.Acquire()
+	private.quantityDB:NewQuery()
+		:Select("levelItemString", "mailQuantity")
+		:AsTable(prevQuantities)
+		:Release()
 	private.quantityDB:TruncateAndBulkInsertStart()
 	for levelItemString, quantity in pairs(private.settings.mailQuantity) do
 		private.quantityDB:BulkInsertNewRow(levelItemString, quantity)
 	end
 	private.quantityDB:BulkInsertEnd()
+	local updatedItems = TempTable.Acquire()
+	Table.GetChangedKeys(prevQuantities, private.settings.mailQuantity, updatedItems)
+	TempTable.Release(prevQuantities)
 	private.itemDB:BulkInsertEnd()
 	private.mailDB:BulkInsertEnd()
 
@@ -306,9 +315,21 @@ function private.MailInboxUpdateDelayed()
 	for _, callback in ipairs(private.expiresCallbacks) do
 		callback()
 	end
-	for _, callback in ipairs(private.callbacks) do
-		callback()
+	if next(updatedItems) then
+		-- Add the base items
+		local baseItemStrings = TempTable.Acquire()
+		for levelItemString in pairs(updatedItems) do
+			baseItemStrings[ItemString.GetBaseFast(levelItemString)] = true
+		end
+		for baseItemString in pairs(baseItemStrings) do
+			updatedItems[baseItemString] = true
+		end
+		TempTable.Release(baseItemStrings)
+		for _, callback in ipairs(private.quantityCallbacks) do
+			callback(updatedItems)
+		end
 	end
+	TempTable.Release(updatedItems)
 end
 
 
@@ -317,32 +338,39 @@ end
 -- Private Helper Functions
 -- ============================================================================
 
-function private.ChangePendingMailQuantity(levelItemString, quantity)
-	assert(quantity ~= 0)
-	private.settings.pendingMail[PLAYER_NAME][levelItemString] = (private.settings.pendingMail[PLAYER_NAME][levelItemString] or 0) + quantity
-	if not private.quantityDB:HasUniqueRow("levelItemString", levelItemString) then
-		-- create a new row
-		private.quantityDB:NewRow()
-			:SetField("levelItemString", levelItemString)
-			:SetField("mailQuantity", quantity)
-			:Create()
-	else
-		local row = private.quantityDB:GetUniqueRow("levelItemString", levelItemString)
-		local newValue = row:GetField("mailQuantity") + quantity
+function private.ChangePendingMailQuantity(levelItemString, changeQuantity)
+	assert(changeQuantity ~= 0)
+	private.settings.pendingMail[PLAYER_NAME][levelItemString] = (private.settings.pendingMail[PLAYER_NAME][levelItemString] or 0) + changeQuantity
+	local row = private.quantityDB:GetUniqueRow("levelItemString", levelItemString)
+	local newValue = nil
+	if row then
+		newValue = row:GetField("mailQuantity") + changeQuantity
 		assert(newValue >= 0)
 		if newValue == 0 then
-			-- remove this row
+			-- Remove this row
 			private.quantityDB:DeleteRow(row)
 		else
-			-- update this row
+			-- Update this row
 			row:SetField("mailQuantity", newValue)
 				:Update()
 		end
 		row:Release()
+	else
+		-- Create a new row
+		assert(changeQuantity > 0)
+		newValue = changeQuantity
+		private.quantityDB:NewRow()
+			:SetField("levelItemString", levelItemString)
+			:SetField("mailQuantity", changeQuantity)
+			:Create()
 	end
-	for _, callback in ipairs(private.callbacks) do
-		callback()
+	local updatedItems = TempTable.Acquire()
+	updatedItems[levelItemString] = true
+	updatedItems[ItemString.GetBaseFast(levelItemString)] = true
+	for _, callback in ipairs(private.quantityCallbacks) do
+		callback(updatedItems)
 	end
+	TempTable.Release(updatedItems)
 end
 
 function private.ValidateCharacter(character)

@@ -76,6 +76,8 @@ L["Alpha Eagle"] = "Alpha Eagle"
 --[[Translation missing --]]
 L["Altairus"] = "Altairus"
 L["AltarOfShadow"] = "暗影祭壇"
+L["altKeyDownStatusText"] = "顯示敵群數量"
+L["altKeyGroupsTip"] = "在所有敵人上面按住 ALT 不放來顯示敵方群組數量"
 L["Amalgam of Souls"] = "融合之魂"
 --[[Translation missing --]]
 L["Amanitar"] = "Amanitar"
@@ -336,6 +338,7 @@ after this pull]=] ] = [=[這波拉怪後
 L[ [=[Bounty stacks 
 after this pull]=] ] = [=[這波拉怪後
 連帶幾堆]=]
+L["Bounty stacks after this pull"] = "此次拉怪也會引到"
 --[[Translation missing --]]
 L["Bracken Warscourge"] = "Bracken Warscourge"
 --[[Translation missing --]]
@@ -506,6 +509,8 @@ L["Crystalline Protector"] = "Crystalline Protector"
 L["Crystalline Shardling"] = "Crystalline Shardling"
 --[[Translation missing --]]
 L["Crystalline Tender"] = "Crystalline Tender"
+L["ctrlKeyCountTip"] = "在所有敵人上面按住 CTRL 不放來顯示敵方部隊進度"
+L["ctrlKeyDownStatusText"] = "顯示敵方部隊"
 --[[Translation missing --]]
 L["Curious Swoglet"] = "Curious Swoglet"
 L["Cursed Falke"] = "被诅咒的飞鹰"
@@ -1161,6 +1166,7 @@ L["Hardened Steel Berserker"] = "Hardened Steel Berserker"
 L["Hardened Steel Reaver"] = "Hardened Steel Reaver"
 --[[Translation missing --]]
 L["Hardened Steel Skycaller"] = "Hardened Steel Skycaller"
+L["hardResetButton"] = "重置 MDT"
 L["hardResetPrompt"] = "是否確定要重置所有設定，恢復成預設值? 將會需要重新載入介面!"
 L["hardResetPromptTitle"] = "刪除所有設定"
 L["Harlan Sweete"] = "哈兰·斯威提"
@@ -1526,6 +1532,7 @@ L["MDT Error"] = "MDT Error"
 L["MDT: Error importing preset"] = "MDT: 匯入路線時發生錯誤"
 L["MDT: Spells for %s:"] = "MDT: %s 的技能:"
 L["MDT: Use /mdt minimap to show the minimap icon again"] = "MDT: 輸入 /mdt minimap 再次顯示小地圖按鈕。"
+L["MDTGuideNote"] = "MDT 導覽視窗不是 M+ 地城規劃工具 Mythic Dungeon Tools 的一部分，是另一個獨立的插件。"
 --[[Translation missing --]]
 L["Meathook"] = "Meathook"
 L["Mech Jockey"] = "机甲驾驶员"
@@ -2725,6 +2732,7 @@ L["Unyielding Contender"] = "不屈的参赛者"
 --[[Translation missing --]]
 L["Unyielding Garrison"] = "Unyielding Garrison"
 L["Update"] = "更新"
+L["updateNote"] = "請將此插件更新到最新版本，或是刪除。"
 L["Upper Broken Stair"] = "破碎樓梯上層"
 L["Upper Library"] = "圖書館上層"
 L["Upper Livery Stables"] = "獸欄上層"

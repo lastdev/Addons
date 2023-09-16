@@ -73,6 +73,16 @@ L["Action Button Glow"] = "动作条按钮发光"
 L["Action Usable"] = "动作可以使用"
 L["Actions"] = "动作"
 L["Active"] = "活跃"
+L[ [=[Active boss mod addon: |cFFffcc00BigWigs|r
+
+Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=] ] = [=[活跃Boss模块插件：|cFFffcc00BigWigs|r
+
+注意：此触发器会依序使用BigWigs或DBM。]=]
+L[ [=[Active boss mod addon: |cFFffcc00DBM|r
+
+Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=] ] = [=[活跃Boss模块插件：|cFFffcc00DBM|r
+
+注意：此触发器会依序使用BigWigs或DBM。]=]
 L["Add"] = "添加"
 L["Add Missing Auras"] = "添加缺少的光环"
 L["Additional Trigger Replacements"] = "额外触发器动态文字"
@@ -201,6 +211,10 @@ L["Blood-Queen Lana'thel"] = "兰娜瑟尔女王"
 L["Border"] = "边框"
 L["Boss"] = "首领"
 L["Boss Emote"] = "首领表情"
+L["Boss Mod Announce"] = "Boss模块通报"
+L["Boss Mod Stage"] = "Boss模块阶段"
+L["Boss Mod Stage (Event)"] = "Boss模块阶段 (事件)"
+L["Boss Mod Timer"] = "Boss模块计时条"
 L["Boss Whisper"] = "首领密语"
 L["Bottom"] = "下"
 L["Bottom Left"] = "左下"
@@ -469,6 +483,7 @@ L["Expertise Rating"] = "精准等级"
 L["Extend Outside"] = "扩展外侧"
 L["Extra Amount"] = "额外数量"
 L["Extra Attacks"] = "额外攻击"
+L["Extra Spell Id"] = "额外法术ID"
 L["Extra Spell Name"] = "额外法术名称"
 L["Faction"] = "阵营"
 L["Faction Champions"] = "阵营冠军"
@@ -652,6 +667,7 @@ L["Is Death Rune"] = "是死亡符文"
 L["Is Exactly"] = "完全匹配"
 L["Is Moving"] = "移动中"
 L["Is Off Hand"] = "副手"
+L["Is Paused"] = "已暂停"
 L["is useable"] = "可用的"
 L["Island Expedition (Heroic)"] = "海岛探险（英雄）"
 L["Island Expedition (Mythic)"] = "海岛探险（史诗）"
@@ -796,6 +812,11 @@ L["Neutral"] = "中立"
 L["Never"] = "从不"
 L["Next Combat"] = "下次战斗"
 L["Next Encounter"] = "下次首领战斗"
+L[ [=[No active boss mod addon detected.
+
+Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=] ] = [=[未检测到活跃Boss模块插件。
+
+注意：此触发器会依序使用BigWigs或DBM。]=]
 L["No Extend"] = "不伸展"
 L["No Instance"] = "野外"
 L["No Profiling information saved."] = "没有已保存的性能分析信息。"

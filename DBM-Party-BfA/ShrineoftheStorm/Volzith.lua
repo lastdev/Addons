@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2156, "DBM-Party-BfA", 4, 1001)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20221016053021")
+mod:SetRevision("20230802234034")
 mod:SetCreatureID(134069)
 mod:SetEncounterID(2133)
 
@@ -27,7 +27,7 @@ local timerGraspCD					= mod:NewNextTimer(50, 267360, nil, nil, nil, 6, nil, nil
 
 
 function mod:OnCombatStart(delay)
-	timerYawningGateCD:Start(13-delay)
+	timerYawningGateCD:Start(12.1-delay)
 	timerGraspCD:Start(20.5-delay)
 	--if not self:IsNormal() then
 		--timerCalltheAbyssCD:Start(73-delay)

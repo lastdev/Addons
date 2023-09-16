@@ -9,7 +9,7 @@ end
 local mod	= DBM:NewMod("Moam", "DBM-Raids-Vanilla", catID)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525041212")
+mod:SetRevision("20230814031337")
 mod:SetCreatureID(15340)
 mod:SetEncounterID(720)
 mod:SetModelID(15392)
@@ -34,14 +34,14 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 25685 then
+	if args:IsSpell(25685) then
 		warnStoneform:Show()
 		timerStoneformDur:Start()
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 25685 then
+	if args:IsSpell(25685) then
 		timerStoneformDur:Stop()
 		timerStoneform:Start()
 	end

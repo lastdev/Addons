@@ -5,8 +5,8 @@ local L = LibStub("AceLocale-3.0"):GetLocale("HandyNotes_DungeonLocations")
 icons = { }
 icons["Dungeon"] = "Interface\\MINIMAP\\Dungeon"
 icons["Raid"] = "Interface\\MINIMAP\\Raid"
-icons["Mixed"] = "Interface\\Addons\\HandyNotes_DungeonLocations\\merged.tga"
-icons["Locked"] = "Interface\\Addons\\HandyNotes_DungeonLocations\\gray.tga"
+icons["Mixed"] = "Interface\\Addons\\HandyNotes_DungeonLocations\\images\\merged.tga"
+icons["Locked"] = "Interface\\Addons\\HandyNotes_DungeonLocations\\imgaes\\gray.tga"
 
 local db
 local mapToContinent = { }
@@ -281,6 +281,7 @@ function pluginHandler:OnClick(button, pressed, uiMapId, coord)
   local difficulty = string.match(link, 'journal:.-:.-:(.-)|h') 
   if (not dungeonID or not difficulty) then return end
   EncounterJournal_OpenJournal(difficulty, dungeonID)
+  _G.EncounterJournal:SetScript("OnShow", FixEncounterJournal_OnShow) --line to fix Blizzard error on EncounterJournal
  end
 end
 
@@ -613,11 +614,14 @@ nodes[63] = { -- Ashenvale
 }
 nodes[15] = { -- Badlands
  [41801130] = { 
-  id = 239,
+  id = 1197,
   type = "Dungeon",
- }, -- Uldaman
+  hideOnMinimap = true,
+  showInZone = true,
+ }, -- Uldaman & Legacy of Tyr Dragonflight Dungeon
  [58463690] = { 
   id = 239,
+  name = "Uldaman back entrance",
   type = "Dungeon",
   hideOnMinimap = true,
   showInZone = true,
@@ -676,6 +680,7 @@ nodes[70] = { -- Dustwallow
  [52907770] = {
   id = 760,
   type = "Raid",
+  showInZone = true,
  }, -- Onyxia's Lair
 }
 nodes[23] = { -- EasternPlaguelands
@@ -690,7 +695,14 @@ nodes[23] = { -- EasternPlaguelands
   type = "Dungeon", -- Stratholme Service Entrance
   showInZone = true,
  },
+ [35722310] = { -- Old Naxxramas - Secret Entrance - Wards of the Dread Citadel
+   type = "Raid",
+   id =  754, 
+   hideOnContinent = false,
+   showInZone = true,  
+ },
 }
+
 nodes[69] = { -- Feralas
  [65503530] = {
   id = 230,
@@ -725,7 +737,7 @@ nodes[69] = { -- Feralas
  }, -- Dire Maul (at Lariss Pavillion)
 }
 nodes[85] = { -- Orgrimmar
- [52405800] = {
+ [51685848] = {
   id = 226,
   type = "Dungeon",
  }, -- Ragefire Chasm Cleft of Shadow 70104880
@@ -827,10 +839,16 @@ nodes[64] = { -- ThousandNeedles
  }, -- Razorfen Downs
 }
 nodes[22] = { -- WesternPlaguelands
- [69007290] = {
+ [69007290] = { 
   id = 246,
   type = "Dungeon",
- }, -- Scholomance World 50903650
+ }, -- Scholomance World 50903650m
+ [69777181] = {
+  type = "Dungeon",
+  name = "Old Scholomance - Secret Entrance - Memory of Scholomance",
+  hideOnContinent = false,
+  showInZone = true,
+ }, -- Old Scholomance - Memory of Scholomance - Secret Entrance Vanilla Scholomance
 }
 nodes[52] = { -- Westfall
  --[38307750] = { 63,  type = "Dungeon" }, -- Deadmines 43707320  May look more accurate
@@ -1340,11 +1358,10 @@ nodes[1527] = { -- Uldum
   id = 70,
   type = "Dungeon",
  }, -- Halls of Origination
- --[[[38308060] = {
+[38308060] = {
   id = 74,
   type = "Raid",
  }, -- Throne of the Four Winds
- ]]--
 }
 nodes[203] = { -- Vashjir
  [48204040] =  {
@@ -1619,21 +1636,20 @@ else
   hideOnMinimap = true,
  }
 end
-if (not legionInstancesDiscovered[875]) then -- Tomb of Sargeras
+
  nodes[646] = { }
  nodes[646][64602070] = {
   id = 875,
   type = "Raid",
   hideOnContinent = true,
  }
-else
  minimap[619] = {
   [64602070] = {
    id = 875,
    type = "Raid",
   },
  }
-end
+
 if (not legionInstancesDiscovered[900]) then
  if (not nodes[646]) then -- BrokenShore
   nodes[646] = { }
@@ -1807,7 +1823,7 @@ if (not legionInstancesDiscovered[762]) then
  if (not nodes[641]) then
   nodes[641] = { }
  end
- nodes[641][59003120] = {
+ nodes[641][59143135] = {
   id = 762,
   type = "Dungeon",
   hideOnContinent = true,
@@ -1816,7 +1832,7 @@ else
  if (not minimap[641]) then
   minimap[641] = { }
  end
- minimap[641][59003120] = {
+ minimap[641][59143135] = {
   id = 762,
   type = "Dungeon",
  }
@@ -1826,7 +1842,7 @@ if (not legionInstancesDiscovered[768]) then
  if (not nodes[641]) then
   nodes[641] = { }
  end
- nodes[641][56303680] = {
+ nodes[641][56673746] = {
   id = 768,
   type = "Raid",
   hideOnContinent = true,
@@ -1835,7 +1851,7 @@ else
 if (not minimap[641]) then
   minimap[641] = { }
  end
- minimap[641][56303680] = {
+ minimap[641][56673746] = {
   id = 768,
   type = "Raid",
  }
@@ -1970,7 +1986,7 @@ nodes[1161][71961540] = {
 
 -- Shadowlands
 
-if (not self.db.profile.hideDF) then
+if (not self.db.profile.hideSL) then
 nodes[1533] = { } -- Bastion
 nodes[1536] = { } -- Maldraxxus
 nodes[1565] = { } -- Ardenweald
@@ -2044,23 +2060,25 @@ nodes[1543][68688540] = {
 -- Dragonflight
 
 if (not self.db.profile.hideDF) then
+
 nodes[2022] = { } -- The Waking Shores
 nodes[2023] = { } -- Ohn'ahran Plains
 nodes[2024] = { } -- The Azure Span
 nodes[2025] = { } -- Thaldraszus
 nodes[2026] = { } -- The Forbidden Reach
+nodes[2133] = { } -- Zaralek Cavern
 
 nodes[2022][60007577] = {
 	id = 1202,
 	type = "Dungeon",
 } -- Ruby Life Pools 
 
-nodes[2022][25575695] = {
+nodes[2022][25735629] = {
    id = 1199,
    type = "Dungeon",
 } -- Neltharus
 
-nodes[2023][62014244] = {
+nodes[2023][60853900] = {
 	id = 1198,
 	type = "Dungeon",
 } -- The Nokhud Offensive
@@ -2085,15 +2103,21 @@ nodes[2025][59246064] = {
 	type = "Dungeon",
 } -- Halls of Infusion
 
+nodes[2025][61118443] = {
+	id = 1209,
+	type = "Dungeon",
+} -- Dawn of the Infinite
+
 nodes[2025][73145560] = {
 	id = 1200,
 	type = "Raid",
 } -- Vault of the Incarnates
 
-nodes[15][41801130] = {
-   id = { 1197, 239 },
-	type = "Dungeon",
-} -- Legacy of Tyr - Dragonflight \ Uldaman - Vanilla
+nodes[2133][48461004] = {
+	id = 1208,
+	type = "Raid",
+} -- Aberrus, the Shadowed Crucible
+
    end
 end
 end
