@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("AtalDazarTrash", "DBM-Party-BfA", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220920232426")
+mod:SetRevision("20231002213503")
 --mod:SetModelID(47785)
+mod:SetZone(1763)
 
 mod.isTrashMod = true
 
@@ -32,8 +33,11 @@ local specWarnVenomfangStrikeDispel	= mod:NewSpecialWarningDispel(252687, "Remov
 
 local taintedBlood = DBM:GetSpellInfo(255558)
 
+--Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 off interrupt, 8 gtfo
+
 function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end
+	if not self:IsValidWarning(args.sourceGUID) then return end
 	local spellId = args.spellId
 	if spellId == 255824 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnFanaticsRage:Show(args.sourceName)
@@ -56,6 +60,17 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 252781 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnUnstableHex:Show(args.sourceName)
 		specWarnUnstableHex:Play("kickcast")
+	end
+end
+
+function mod:SPELL_CAST_SUCCESS(args)
+	if not self.Options.Enabled then return end
+	local spellId = args.spellId
+	if spellId == 253583 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
+		specWarnFieryEnchant:Show(args.sourceName)
+		specWarnFieryEnchant:Play("kickcast")
+	elseif spellId == 253721 and self:AntiSpam(3, 1) then
+		warnBulwarkofJuju:Show()
 	end
 end
 
@@ -83,16 +98,5 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnVenomfangStrikeDispel:Show(args.destName)
 			specWarnVenomfangStrikeDispel:Play("helpdispel")
 		end
-	end
-end
-
-function mod:SPELL_CAST_SUCCESS(args)
-	if not self.Options.Enabled then return end
-	local spellId = args.spellId
-	if spellId == 253583 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
-		specWarnFieryEnchant:Show(args.sourceName)
-		specWarnFieryEnchant:Play("kickcast")
-	elseif spellId == 253721 and self:AntiSpam(3, 1) then
-		warnBulwarkofJuju:Show()
 	end
 end

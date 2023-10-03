@@ -199,6 +199,8 @@ L["CONFIG_SELLING_GREY_POST_BUTTON_TOOLTIP_TEXT"] = "Quando uma postagem pode fa
 L["CONFIG_SELLING_ICON_SIZE"] = "Tamanho do ícone da bolsa (necessário recarregar)"
 L["CONFIG_SELLING_ICON_SIZE_TOOLTIP_HEADER"] = "Tamanho dos ícones"
 L["CONFIG_SELLING_ICON_SIZE_TOOLTIP_TEXT"] = "Isso permite aumentar os ícones dos itens da bolsa na aba de vendas (até 50) ou menores (até 10). O tamanho padrão é 42."
+--[[Translation missing --]]
+L["CONFIG_SELLING_IGNORE_ITEM_LEVEL"] = "Ignore item level when searching for matching auctions"
 L["CONFIG_SELLING_LIFO_HEADER"] = "Vendendo"
 L["CONFIG_SELLING_LIFO_TEXT"] = "Opções para definir porcentagem ou valor de subcotação e duração da maioria dos itens. Sem subcotação, essas categorias são agrupadas com o último item adicionado sendo o primeiro a vender. Subcotação pode não ser necessária."
 L["CONFIG_SELLING_MISSING_FAVOURITES"] = "Sempre mostrar os itens favoritos, mesmo se não houver nenhum na sua bolsa."

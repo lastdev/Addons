@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("BRHTrash", "DBM-Party-Legion", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142123")
+mod:SetRevision("20231002213503")
 --mod:SetModelID(47785)
+mod:SetZone(1501)
 
 mod.isTrashMod = true
 
@@ -28,6 +29,7 @@ local specWarnDarkMending			= mod:NewSpecialWarningInterrupt(225573, "HasInterru
 
 function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end
+	if not self:IsValidWarning(args.sourceGUID) then return end
 	local spellId = args.spellId
 	if spellId == 200261 and self:AntiSpam(2, 1) then
 		specWarnBonebreakingStrike:Show()

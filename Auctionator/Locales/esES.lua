@@ -159,6 +159,8 @@ L["CONFIG_SELLING_GREY_POST_BUTTON_TOOLTIP_TEXT"] = "Cuando una publicación pue
 L["CONFIG_SELLING_ICON_SIZE"] = "Tamaño de los iconos de las bolsas (se requiere recargar)"
 L["CONFIG_SELLING_ICON_SIZE_TOOLTIP_HEADER"] = "Tamaño de iconos"
 L["CONFIG_SELLING_ICON_SIZE_TOOLTIP_TEXT"] = "Esto le permite hacer que los iconos de los objetos de las bolsas en la pestaña de venta sean más grandes (hasta 50) o más pequeños (hasta 10). El tamaño predeterminado es 42."
+--[[Translation missing --]]
+L["CONFIG_SELLING_IGNORE_ITEM_LEVEL"] = "Ignore item level when searching for matching auctions"
 L["CONFIG_SELLING_LIFO_HEADER"] = "Venta: Objetos"
 L["CONFIG_SELLING_LIFO_TEXT"] = [=[Opciones para establecer porcentajes de descuento o valores y duración de la mayoría de los objetos. Sin un descuento, estas categorías de objetos se agrupan y el último objeto añadido es el primero en venderse. Puede que no sea necesario descontar.
 

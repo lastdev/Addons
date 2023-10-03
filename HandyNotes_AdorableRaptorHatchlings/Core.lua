@@ -3,7 +3,7 @@
 
                                      Adorable Raptor Hatchlings
 
-                                      v1.20 - 26th August 2023
+                                     v1.21 - 18th September 2023
                                 Copyright (C) Taraezor / Chris Birch
 								
                                 ----o----(||)----oo----(||)----o----
@@ -583,7 +583,7 @@ do
 					if ns.insideCave == false then
 						return coord, nil, ns.textures[ns.db.icon_choice], ns.db.icon_scale * ns.scaling[ns.db.icon_choice], ns.db.icon_alpha
 					end
-				elseif v[1] == "Takk's Nest" then
+				elseif ( (v[4] == "R") or (v[4] == "W") ) then			
 					if (version < 40000) then
 						if (v[4] == "W") then
 							return coord, nil, ns.textures[ns.db.icon_choice], ns.db.icon_scale * ns.scaling[ns.db.icon_choice], ns.db.icon_alpha

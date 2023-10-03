@@ -516,7 +516,7 @@ points[ 102 ] = { -- Zangarmarsh
 	[35445161] = { aID=1027, index=7, quest=11863, npc=25947, faction="Horde", group="H" },
 	[35565176] = { aID=1030, index=7, quest=11787, object=187975, faction="Alliance", group="D" },
 	[68635214] = { aID=1033, index=7, quest=11758, object=187941, faction="Horde", group="D" },
-	[68795195] = { aID=1024, index=7, quest=11829, npc=25912, faction="Alliance", group="H" },
+	[69795195] = { aID=1024, index=7, quest=11829, npc=25912, faction="Alliance", group="H" },
 }
 points[ 2133 ] = { -- Zaralek Cavern
 	[55175542] = { aIDA=17737, aIDH=17738, index=6, quest=75650, npc=204417, group="H" }, -- Bonfire at 55235549

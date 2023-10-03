@@ -3,7 +3,7 @@
 
                                              Noblegarden
 
-                                       v2.07 - 28th June 2023
+                                     v2.08 - 18th September 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----

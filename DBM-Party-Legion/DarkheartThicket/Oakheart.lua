@@ -1,9 +1,10 @@
 local mod	= DBM:NewMod(1655, "DBM-Party-Legion", 2, 762)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116042005")
+mod:SetRevision("20230907220903")
 mod:SetCreatureID(103344)
 mod:SetEncounterID(1837)
+mod.sendMainBossGUID = true
 
 mod:RegisterCombat("combat")
 

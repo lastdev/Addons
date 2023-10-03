@@ -3,7 +3,7 @@
 
                                            Lunar Festival
 
-                                       v2.05 - 28th June 2023
+                                     v2.06 - 18th September 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----

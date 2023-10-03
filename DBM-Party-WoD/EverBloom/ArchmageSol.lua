@@ -3,9 +3,10 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
 
-mod:SetRevision("20220116042005")
+mod:SetRevision("20230907220903")
 mod:SetCreatureID(82682)
 mod:SetEncounterID(1751)--TODO: Verify, Label was "Boss 3"
+mod.sendMainBossGUID = true
 
 mod:RegisterCombat("combat")
 

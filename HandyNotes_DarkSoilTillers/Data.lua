@@ -34,10 +34,12 @@ points[ 418 ] = { -- Krasarang Wilds
 }
 
 points[ 371 ] = { -- The Jade Forest
+	[52075827] = { pinType="TJF" },
 	[53866024] = { pinType="TJF" },
 	[54746046] = { pinType="TJF" },
 	[55005078] = { pinType="TJF" },
 	[57435333] = { pinType="TJF" },
+	[57926249] = { pinType="TJF" },
 	[61402442] = { pinType="TJF" },
 	[61472274] = { pinType="TJF" },
 	[63542417] = { pinType="TJF" },
@@ -62,6 +64,7 @@ points[ 388 ] = { -- Townlong Steppes
 	[18814187] = { pinType="TS", },
 	[19881717] = { pinType="TS", },
 	[20432394] = { pinType="TS", },
+	[20501434] = { pinType="TS", },
 	[21603774] = { pinType="TS", },
 	[22505788] = { pinType="TS", },
 	[23163879] = { pinType="TS", },
@@ -83,6 +86,7 @@ points[ 390 ] = { -- Vale of Eternal Blossoms
 	[08173911] = { pinType="VEB", },
 	[10544245] = { pinType="VEB", },
 	[14636578] = { pinType="VEB", },
+	[15102716] = { pinType="VEB", },
 	[15766894] = { pinType="VEB", },
 	[15846736] = { pinType="VEB", tip="Same colour as the soil" },
 	[16604562] = { pinType="VEB", },
@@ -352,7 +356,7 @@ points[ 376 ] = { -- Valley of the Four Winds
 	[53575257] = { pinType="N", friendID=1273, name="Jogu the Drunk" }, -- 4
 	[53165180] = { pinType="N", friendID=1281, name="Gina Mudclaw" },
 
-	[52254894] = { pinType="O", quest=30526, "Dog", -- Reminder: See core for how I treat 30526
+	[52254894] = { pinType="O", quest=30526, title="Dog", -- Reminder: See core for how I treat 30526
 					tip="Please see my \"Loose Pebble\" AddOn for\n"
 					.."allowing Dog to visit (Broken Isles) Dalaran!" },
 	[42395000] = { pinType="O", quest=30526, title="Lost Dog",

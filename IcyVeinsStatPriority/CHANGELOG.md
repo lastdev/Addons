@@ -1,6 +1,6 @@
 # Icy Veins Stat Priority
 
-## [2023-05-06](https://github.com/enderneko/IcyVeinsStatPriority/tree/2023-05-06) (2023-05-06)
-[Full Changelog](https://github.com/enderneko/IcyVeinsStatPriority/compare/2023-04-19...2023-05-06) [Previous Releases](https://github.com/enderneko/IcyVeinsStatPriority/releases)
+## [2023-09-18](https://github.com/enderneko/IcyVeinsStatPriority/tree/2023-09-18) (2023-09-18)
+[Full Changelog](https://github.com/enderneko/IcyVeinsStatPriority/compare/2023-07-13...2023-09-18) [Previous Releases](https://github.com/enderneko/IcyVeinsStatPriority/releases)
 
-- Update for 10.1  
+- Update for 10.1.7  

@@ -3,7 +3,7 @@
 
                                           Springfur Alpaca
 
-                                       v1.17 - 5th August 2023
+                                     v1.19 - 27th September 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -451,7 +451,7 @@ function pluginHandler:OnEnter(mapFile, coord)
 	if pin.alpaca then
 		GameTooltip:SetText( ns.colour.prefix ..L["Springfur Alpaca"] )
 
-		local questName = QuestUtils_GetQuestName( 58887 ) 
+		local questName = QuestUtils_GetQuestName( 58887 ) or "Alpaca It In"
 		local completed = C_QuestLog.IsQuestFlaggedCompleted( 58887 )
 		GameTooltip:AddDoubleLine( ns.colour.highlight ..questName,
 			( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..ns.name ..")" ) 
@@ -459,7 +459,7 @@ function pluginHandler:OnEnter(mapFile, coord)
 		
 		if ( completed == false ) then
 			GameTooltip:AddLine( " " )
-			questName = QuestUtils_GetQuestName( 58879 ) 
+			questName = QuestUtils_GetQuestName( 58879 ) or "Alpaca It Up"
 			completed = C_QuestLog.IsQuestFlaggedCompleted( 58879 )
 			GameTooltip:AddLine( "\124cFF1F45FC".. L["Daily Quest"] )
 			GameTooltip:AddDoubleLine( ns.colour.highlight ..questName,
@@ -468,7 +468,6 @@ function pluginHandler:OnEnter(mapFile, coord)
 			if ( completed == false ) then
 				local questText = GetQuestObjectiveInfo( 58879, 1, false )
 				if questText then
-				print( questText )
 					GameTooltip:AddDoubleLine( " ", ns.colour.plaintext ..questText )
 				else
 					-- Yeah I got a nil result while thrash testing

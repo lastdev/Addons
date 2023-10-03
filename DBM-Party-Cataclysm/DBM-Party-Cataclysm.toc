@@ -45,7 +45,7 @@
 ## X-DBM-Mod-MinExpansion: 3
 ## X-Curse-Project-ID: 314994
 ## X-WoWI-ID: 24904
-## Version: r100
+## Version: r101
 
 localization.en.lua
 localization.de.lua
@@ -97,10 +97,12 @@ TheStonecore\Corborus.lua
 TheStonecore\Slabhide.lua
 TheStonecore\Ozruk.lua
 TheStonecore\HighPriestessAzil.lua
+TheStonecore\StonecoreTrash.lua
 ThroneOfTides\LadyNazjar.lua
 ThroneOfTides\CommanderUlthok.lua
 ThroneOfTides\ErunakStonespeaker.lua
 ThroneOfTides\Ozumat.lua
+ThroneOfTides\ThroneofTidesTrash.lua
 ZulAman\Akilzon5.lua
 ZulAman\Nalorakk5.lua
 ZulAman\Janalai5.lua

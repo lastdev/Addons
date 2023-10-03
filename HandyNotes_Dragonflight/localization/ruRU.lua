@@ -146,6 +146,12 @@ L['frostbound_chest'] = 'Скованный льдом сундук'
 L['options_icons_frostbound_chest'] = 'Скованный льдом сундук'
 L['options_icons_frostbound_chest_desc'] = 'Показать возможные места {object:Скованный льдом сундуков}.'
 
+L['fyrakk_assault_label'] = 'Налеты Фиракка'
+
+L['dreamsurge_sublabel'] = '{note:Доступно только в то время как {location: Прилив Снов} активно в этой локации.}'
+L['celestine_vendor_note'] = 'Обмен {item: 207026} на средства передвижения, игрушки, питомцев и трансмогрификацию.'
+L['renewed_magmammoth_note'] = 'Соберите 20x {item: 209419} с финальных боссов {location: Прилива Снов} и соберите из них {item: 192807}.'
+
 -------------------------------------------------------------------------------
 ------------------------------- THE AZURE SPAN --------------------------------
 -------------------------------------------------------------------------------
@@ -587,6 +593,9 @@ L['naszuro_vault_of_the_incarnates'] = 'У подножия статуи.'
 L['naszuro_thaldraszus_peak'] = 'На второстепенной вершине горы.'
 L['naszuro_temporal_conflux'] = 'На голове статуи дракона.'
 
+L['revival_catalyst_label'] = 'Катализатор возрождения'
+L['revival_catalyst_note'] = 'Преобразование не сетового снаряжения в предмет эквивалентного уровня но сетового качества.'
+
 -------------------------------------------------------------------------------
 ------------------------------ THE WAKING SHORE -------------------------------
 -------------------------------------------------------------------------------
@@ -756,13 +765,18 @@ L['naszuro_obsidian_throne'] = 'С левой стороны трона, где 
 L['naszuro_ruby_lifeshrine'] = 'Под когтем статуи дракона.'
 L['naszuro_dragonheart_outpost'] = 'В ветвях дерева.'
 
+L['box_of_rocks_label'] = 'Ящик с камнями'
+L['box_of_rocks_note'] = '{object:Ящики с камнями} можно найти в локациях {location:Берега Пробуждения} или {location:Зкерское Хранилище} или купить на аукционе.'
+L['options_icons_many_boxes'] = '{achievement:18559}'
+L['options_icons_many_boxes_desc'] = 'Показать возможные местоположения {object:Ящиков с камнями} для {achievement:18559}..'
+
 -------------------------------------------------------------------------------
 ------------------------------- Zaralek Cavern --------------------------------
 -------------------------------------------------------------------------------
 
 L['in_deepflayer_nest'] = 'В пределах {location:Гнезда глубинных живодеров}'
 
-L['brulsef_the_stronk_note'] = 'Соберите свои награды из {object:Сундука силача}.\n\n{bug:Не позволяйте ему уйти из начальной позиции далеко, иначе после победы над ним не будет сундука.}'
+L['brulsef_the_stronk_note'] = 'Соберите свои награды из {object:Сундука силача}.\n\n{bug:Не побеждайте его, пока он использует {spell:412495} или произносит {spell:412492}, иначе после победы над ним сундука не будет.}'
 
 L['ancient_zaqali_chest_note'] = 'Используйте ближайшую {object:Бутылку с магмой}, чтобы открыть сундук.'
 L['blazing_shadowflame_chest_note'] = 'Наденьте {item:15138}, который можно купить на аукционе или изготовить у кожевника, чтобы открыть сундук.'
@@ -802,13 +816,19 @@ L['smelly_trash_pile_label'] = 'Пахучая куча мусора'
 L['options_icons_smelly_trash_pile'] = 'Пахучая куча мусора'
 L['options_icons_smelly_trash_pile_desc'] = 'Показать возможные местоположения {object:Пахучих куч мусора}.'
 
-L['smelly_treasure_chest_label'] = nil
-L['options_icons_smelly_treasure_chest'] = nil
-L['options_icons_smelly_treasure_chest_desc'] = nil
+L['smelly_treasure_chest_label'] = 'Пахучий сундук с сокровищами'
+L['options_icons_smelly_treasure_chest'] = 'Пахучий сундук с сокровищами'
+L['options_icons_smelly_treasure_chest_desc'] = 'Отобразить возможные местоположения {object:Пахучих сундуков с сокровищами}.'
 
 L['seething_cache_treasure_note'] = 'Чтобы иметь возможность увидеть {object:Дымящийся тайник} и получить {item:192779}, вам нужно собрать 3 стака {spell:399342} дебаффа от {object:Дымящихся сфер}, расположенных в области {location:Кальдера Закали} в {location:пещере Заралек}.'
 L['chest_of_the_flights_treasure_note'] = 'Чтобы открыть сундук с сокровищами, вам нужно нажать на {object:Усиленные самоцветы} в следующем порядке {note:Красный > Черный > Синий > Желтый > Зеленый}.'
 L['curious_top_hat_note'] = 'Взаимодействуйте с {npc:205010}, пока у вас есть бафф {spell:410288}, чтобы получить {item:205021}. Если у вас нет баффа и вы подойдете к нему, он убежит.'
+
+L['the_gift_of_cheese_note_1'] = 'Нажмите на {object:Скрипящий сыр} внутри {location:Обсидиановых покоев}, и {item:204871} упадет в вашу сумку.'
+L['the_gift_of_cheese_note_2'] = 'Взаимодействуйте с {item:204871}, чтобы получить {item:204872}. {note:(5-минутная перезарядка)}'
+L['the_gift_of_cheese_note_3'] = 'Как только у вас получится 30x {item:204872}, объедините обрезки, чтобы получить рецепт.'
+L['the_gift_of_cheese_note_4'] = '{note:Эта крыса любит сыр и будет съедать по одному {item:3927} примерно каждые три минуты. Планируйте соответственно!}'
+L['the_gift_of_cheese_note_5'] = 'Как только вы сможете создать {item:204848}, просто накормите 50 {npc:4075}, найденных в окрестностях Азерота, чтобы завершить достижение.'
 
 L['zaralek_rare_active'] = ns.color.Blue('Этот редкий монстр может появиться сегодня.')
 L['zaralek_rare_inactive'] = ns.color.Orange('Этот редкий монстр не появится сегодня, приходите завтра.')
@@ -817,3 +837,183 @@ L['zaralek_event_inactive'] = ns.color.Orange('Это событие не нач
 
 L['options_icons_zone_event'] = 'События'
 L['options_icons_zone_event_desc'] = 'Отображение мест для событий.'
+
+-------------------------------------------------------------------------------
+----------------------------- SECRETS OF AZEROTH ------------------------------
+-------------------------------------------------------------------------------
+
+-- Secrets of Azeroth: Clue 1
+L['soa_01_rlabel'] = '(Загадка 1)'
+L['soa_01_golden_chalice_note'] = 'Поместите {item:208056} в {location:Сокровищнице Вальдраккена} в {location:Вальдраккене}.'
+
+-- Secrets of Azeroth: Clue 2
+L['soa_02_rlabel'] = '(Загадка 2)'
+L['soa_02_kathos_note'] = 'Поговорите с {npc: 206864}, чтобы получить {item: 207105}.\n\nОтнесите {item:207105} к {npc:186448} в {location:Искару} в {location:Лазурный Простор}.'
+L['soa_02_shomko_note_a'] = 'Поговорите с {npc:186448}, чтобы получить {item:207580}.'
+L['soa_02_shomko_note_b'] = 'Поместите {item:207580} на {object:Ритуальное копье} в {location:Терзающем Биче} в локации {location:Борейская тундра} в {location:Нордсколе}.'
+L['soa_02_shomko_note_c'] = '{note:Обязательно останьтесь и убейте {npc: 208182}, чтобы получить {item:207594}.}'
+
+-- Secrets of Azeroth: Clue 3
+L['soa_03_rlabel'] = '(Загадка 3)'
+L['soa_03_fangli_hoot_note_a'] = nil
+L['soa_03_fangli_hoot_note_b'] = nil
+L['soa_03_fangli_hoot_note_c'] = nil
+L['soa_03_fangli_hoot_note_d'] = nil
+L['soa_03_fangli_hoot_note_e'] = nil
+L['soa_03_fangli_clue_label'] = nil
+L['soa_03_fangli_clue'] = nil
+L['soa_03_erugosa_note_a'] = nil
+L['soa_03_erugosa_note_b'] = nil
+L['soa_03_erugosa_note_c'] = nil
+L['soa_03_erugosa_note_d'] = nil
+L['soa_03_clinkyclick_note_a'] = nil
+L['soa_03_clinkyclick_note_b'] = nil
+L['soa_03_gryffin_note_a'] = nil
+L['soa_03_gryffin_note_b'] = nil
+L['soa_03_shakey_note_a'] = nil
+L['soa_03_shakey_note_b'] = nil
+L['soa_03_shakey_note_c'] = nil
+
+-- Secrets of Azeroth: Clue 4
+L['soa_04_rlabel'] = '(Загадка 4)'
+L['soa_04_locker_label'] = 'Сундук реставратора'
+L['soa_04_sazsel_note_a'] = 'Добудьте {item:208130} из {object:Сундука реставратора} на верхнем этаже {location:Жареного барашка} и отнесите до {npc:208620} в {location:Вальдраккене}.'
+L['soa_04_sazsel_note_b'] = 'После оценки верните знамя обратно в сундук и вернитесь к {npc:207697}.'
+
+-- Secrets of Azeroth: Clue 5
+L['soa_05_rlabel'] = '(Загадка 5)'
+L['soa_05_torch_of_pyrreth_note_a'] = nil
+L['soa_05_torch_of_pyrreth_note_b'] = nil
+L['soa_05_torch_of_pyrreth_note_c'] = nil
+L['soa_05_ancient_lever_label'] = nil
+L['soa_05_ancient_lever_note_a'] = nil
+L['soa_05_ancient_lever_note_b'] = nil
+L['soa_05_ancient_lever_note_c'] = nil
+L['soa_05_enchanted_box_label'] = nil
+
+-- Secrets of Azeroth: Clue 6
+L['soa_06_rlabel'] = '(Загадка 6)'
+L['soa_06_unvieled_tablet_label'] = nil
+L['soa_06_unvieled_tablet_note_a'] = nil
+L['soa_06_unvieled_tablet_note_b'] = nil
+L['soa_06_unvieled_tablet_note_c'] = nil
+
+-- Secrets of Azeroth: Clue 7
+L['soa_07_rlabel'] = '(Загадка 7)'
+L['soa_07_brazier_label'] = 'Древняя жаровня для благовоний'
+L['soa_07_brazier_note_a'] = 'Поговорите с {npc:185562}, чтобы завершить задание {quest:77303} и получить {item:208144}.\n\nОтправляйтесь в {location:Равнины Он\'ары} в местность под названием {location:Вечные курганы}.'
+L['soa_07_brazier_note_b'] = 'Используйте {item:208135}, чтобы зажечь {object:Древнюю жаровню для благовоний} в древнем кургане.'
+L['soa_07_idol_note'] = 'Заберите {item:207730} рядом с {object:Древней жаровней для благовоний} и вернитесь в {location:Вальдраккен}.'
+
+-- Secrets of Azeroth: Clue 8
+L['soa_08_rlabel'] = '(Загадка 8)'
+L['soa_08_kathos_note'] = nil
+L['soa_08_time_lost_fragment_note'] = nil
+L['soa_08_tl_fragment_location_a'] = nil
+L['soa_08_tl_fragment_location_b'] = nil
+L['soa_08_tl_fragment_location_c'] = nil
+
+-- Secrets of Azeroth: Clue 9
+L['soa_09_rlabel'] = '(Загадка 9)'
+L['soa_09_bobby_note'] = nil
+L['soa_09_hastily_scrawled_stone_label'] = nil
+L['soa_09_hastily_scrawled_stone_note'] = nil
+L['soa_09_ancient_key_mold_label'] = nil
+L['soa_09_ancient_key_mold_note'] = nil
+
+-- Secrets of Azeroth: Clue 10
+L['soa_10_rlabel'] = '(Загадка 10)'
+L['soa_10_tyrs_titan_key_note'] = nil
+L['soa_10_rose_gold_dust_note'] = nil
+L['soa_10_igneous_flux_note'] = nil
+L['soa_10_weaponsmith_koref_note'] = nil
+
+-- Secrets of Azeroth: Clue 11
+L['soa_11_rlabel'] = '(Загадка 11)'
+L['soa_11_rlabel_optional'] = nil
+L['soa_11_kathos_note'] = nil
+L['soa_11_sansok_khan_note'] = nil
+L['soa_11_jhara_note'] = nil
+L['soa_11_marker_1_label'] = nil
+L['soa_11_marker_2_label'] = nil
+L['soa_11_marker_3_label'] = nil
+L['soa_11_marker_4_label'] = nil
+L['soa_11_marker_4_note'] = nil
+L['soa_11_marker_5_label'] = nil
+L['soa_11_marker_5_note'] = nil
+L['soa_11_burial_banner_note'] = nil
+
+-- Secrets of Azeroth: Clue 12
+L['soa_12_rlabel'] = '(Загадка 12)'
+L['soa_12_bobby_note'] = 'Поговорите с {npc:207696}, чтобы получить {item:208888}.\n\nОтправляйтесь в {location:Старый Каражан} и расчистите себе путь до {npc:15691}, чтобы попасть в {location:Библиотеку хранителя}. Вам нужно будет найти там том. Используйте {item:207730}, чтобы найти его.'
+L['soa_12_ancient_tome_note'] = 'Ищите тома с помощью {item:207730}, пока не найдете {item:208889}, и верните его {npc:207696} в {location:Вальдраккен}.'
+
+-- Secrets of Azeroth: Clue 13
+L['soa_13_rlabel'] = '(Загадка 13)'
+L['soa_13_bobby_note'] = nil
+L['soa_13_great_place_a_label'] = nil
+L['soa_13_great_place_a_note'] = nil
+L['soa_13_great_place_b_label'] = nil
+L['soa_13_great_place_b_note'] = nil
+L['soa_13_great_place_c_label'] = nil
+L['soa_13_great_place_c_note'] = nil
+L['soa_13_great_place_d_label'] = nil
+L['soa_13_great_place_d_note'] = nil
+L['soa_13_great_place_e_label'] = nil
+L['soa_13_great_place_e_note'] = nil
+L['soa_13_great_place_f_label'] = nil
+L['soa_13_great_place_f_note'] = nil
+
+-- Secrets of Azeroth: Clue 14
+L['soa_14_rlabel'] = '(Загадка 14)'
+L['soa_14_tithris_note'] = 'Поговорите с {npc:185562}, он даст вам {item:208942}. После этого отправляйтесь в {location:Пик Грозового Покрова} в {location:Тальдразусе}.'
+L['soa_14_buried_object_label'] = 'Закопанный предмет (%d)'
+L['soa_14_tablet_label'] = 'Табличка с письменами титанов (%d)'
+L['soa_14_tablet_note'] = 'Используйте {item: 208092}, чтобы открыть {object:Табличку с письменами титанов}. Следуйте по координатам с помощью {item: 206696} к {object:Закопанному предмету} и выкопайте {item: 209795}.'
+
+-- Secrets of Azeroth: Clue 15
+L['soa_15_rlabel'] = '(Загадка 15)'
+L['soa_15_kathos_note'] = nil
+L['soa_15_tyrhold_statue_label'] = nil
+L['soa_15_tyrhold_statue_note'] = nil
+L['soa_15_tyrhold_forge_label'] = nil
+L['soa_15_tyrhold_forge_note'] = nil
+L['soa_15_broken_urn_note'] = nil
+L['soa_15_broken_urn_location'] = nil
+L['soa_15_titan_power_relay_label'] = nil
+L['soa_15_tpr_note'] = nil
+L['soa_15_orb_label'] = nil
+L['soa_15_orb_location'] = nil
+L['soa_15_orb_note'] = nil
+
+-- Community Rumor Mill
+L['buried_satchel_note'] = 'Выкопайте {item: 208142} из {object:Кучи рыхлой земли}.'
+L['buried_satchel_sublabel'] = '{note:Это НЕ местоположение {item:208142}.}'
+
+L['bs_epl_location'] = 'За зданием в {location:Перекрестке Корина}.'
+L['bs_fel_location'] = 'Под водой в центре {location:Оскверненного леса}.'
+L['bs_tho_location'] = 'В подводной пещере под названием {location:оплот Треснувшего Копыта}.'
+L['bs_smv_location'] = 'Внутри пустого дерева в {location:пике Лунной Ивы}.'
+L['bs_net_location'] = nil
+L['bs_vfw_location'] = nil
+L['bs_tas_location'] = nil
+L['bs_dbt_location'] = nil
+L['bs_bar_location'] = nil
+L['bs_nag_location'] = nil
+L['bs_gri_location'] = nil
+L['bs_hmt_location'] = nil
+L['bs_wpl_location'] = nil
+L['bs_tli_location'] = nil
+L['bs_tir_location'] = nil
+
+L['bs_emerald_dragonshrine'] = 'Изумрудное святилище драконов'
+L['bs_bronze_dragonshrine'] = 'Бронзовое святилище драконов'
+
+L['options_icons_secrets_of_azeroth'] = 'Тайны Азерота'
+L['options_icons_secrets_of_azeroth_desc'] = 'Отображать места подсказок для {location:Тайн Азерота}.'
+
+-- Mimiron's Jumpjets Mount
+L['soa_mjj_list_note'] = nil
+L['soa_mjj_part1_note'] = nil
+L['soa_mjj_part2_note'] = nil
+L['soa_mjj_part3_note'] = nil

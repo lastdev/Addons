@@ -22,17 +22,20 @@ points[ 1527 ] = {
 	
 	[30602860] = { alpaca=true },
 	
+	[38480909] = { alpaca=true },
 	[38620969] = { alpaca=true },
-	[38800930] = { alpaca=true },
-	[38970964] = { alpaca=true },
+	[38860892] = { alpaca=true },
+	[38940974] = { alpaca=true },
+	[39140890] = { alpaca=true },
 	[39400940] = { alpaca=true },
+	[38621018] = { alpaca=true },
 	
 	[42407030] = { alpaca=true },
 	
 	[46204830] = { alpaca=true },
 
 	[52661855] = { alpaca=true },
-	[52881946] = { alpaca=true },
+	[52841952] = { alpaca=true },
 	[53111960] = { alpaca=true },
 	[53381903] = { alpaca=true },
 	[53581844] = { alpaca=true },

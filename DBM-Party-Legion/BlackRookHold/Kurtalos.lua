@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1672, "DBM-Party-Legion", 1, 740)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230424022226")
+mod:SetRevision("20230907220903")
 mod:SetCreatureID(98965, 98970)
 mod:SetEncounterID(1835)
 mod:SetBossHPInfoToHighest()
@@ -17,6 +17,7 @@ mod:RegisterEventsInCombat(
 )
 
 --TODO, figure out swarm warnings, how many need to switch and kill?
+--TODO, boss guids for nameplate aura timers, i'm feeling lazy about this right now cause it'd require scanning at different timings
 local warnCloud						= mod:NewSpellAnnounce(199143, 2)
 local warnSwarm						= mod:NewTargetAnnounce(201733, 2)
 

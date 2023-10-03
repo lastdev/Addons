@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("WaycrestTrash", "DBM-Party-BfA", 10)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20201116014239")
+mod:SetRevision("20231002213503")
 --mod:SetModelID(47785)
+mod:SetZone(1862)
 
 mod.isTrashMod = true
 
@@ -32,6 +33,7 @@ local yellRunicMarkFades			= mod:NewShortFadesYell(264105)
 
 function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end
+	if not self:IsValidWarning(args.sourceGUID) then return end
 	local spellId = args.spellId
 	if spellId == 263959 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnSoulVolley:Show(args.sourceName)

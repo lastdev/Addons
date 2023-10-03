@@ -321,6 +321,15 @@ L= DBM:GetModLocalization(112)
 ------------------------
 L= DBM:GetModLocalization(113)
 
+---------
+--Trash--
+---------
+L = DBM:GetModLocalization("StonecoreTrash")
+
+L:SetGeneralLocalization({
+	name =	"Stonecore Trash"
+})
+
 ---------------------------
 --  The Vortex Pinnacle  --
 ---------------------------
@@ -380,6 +389,15 @@ L:SetTimerLocalization{
 L:SetOptionLocalization{
 	TimerPhase		= "Show timer for Phase 2"
 }
+
+---------
+--Trash--
+---------
+L = DBM:GetModLocalization("ThroneofTidesTrash")
+
+L:SetGeneralLocalization({
+	name =	"Throne of Tides Trash"
+})
 
 ----------------
 --  Zul'Aman  --

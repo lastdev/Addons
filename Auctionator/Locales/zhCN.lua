@@ -154,6 +154,8 @@ L["CONFIG_SELLING_GREY_POST_BUTTON_TOOLTIP_TEXT"] = "当拍卖可能失败时，
 L["CONFIG_SELLING_ICON_SIZE"] = "背包图示大小 (需要重新载入介面)"
 L["CONFIG_SELLING_ICON_SIZE_TOOLTIP_HEADER"] = "图示大小"
 L["CONFIG_SELLING_ICON_SIZE_TOOLTIP_TEXT"] = "让销售标签页面中的背包物品图示大一点 (最大 50) 或小一点 (最小 10)。预设大小是 42。"
+L["CONFIG_SELLING_IGNORE_ITEM_LEVEL"] = [=[搜索匹配拍卖物品时忽略等级
+]=]
 L["CONFIG_SELLING_LIFO_HEADER"] = "销售: 物品"
 L["CONFIG_SELLING_LIFO_TEXT"] = "设定大部分物品的压低价格百分比或数值，以及拍卖有效时限的选项。不压低价格时，这些类别中价格相同的物品会组合在一起，最后加入的物品会第一个卖出，所以不一定要压低价格。"
 L["CONFIG_SELLING_MISSING_FAVOURITES"] = "总是显示收藏物品，包括不在你背包中的时候。"
@@ -339,7 +341,7 @@ L["NONE_LEFT"] = "没有了"
 L["NUMBER_SEPARATOR"] = ","
 L["OPEN_ADDON_OPTIONS"] = "打开插件设定选项"
 L["OPEN_IN_SHOPPING_TAB"] = "在购物标签页中打开"
-L["OWNED_COLUMN"] = "我卖的?"
+L["OWNED_COLUMN"] = "我的售品？"
 L["PAYING_X"] = "为一件商品支付 %s "
 L["PERCENTAGE"] = "百分比"
 L["PERCENTAGE_SUFFIX"] = "% 压低价格"

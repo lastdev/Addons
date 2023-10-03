@@ -72,7 +72,7 @@ local function showRealDate(curseDate)
 end
 
 DBM = {
-	Revision = parseCurseDate("20230914115223"),
+	Revision = parseCurseDate("20231003163141"),
 }
 
 local fakeBWVersion, fakeBWHash = 290, "894cc27"
@@ -80,20 +80,20 @@ local bwVersionResponseString = "V^%d^%s"
 local PForceDisable
 -- The string that is shown as version
 if isRetail then
-	DBM.DisplayVersion = "10.1.27"
-	DBM.ReleaseRevision = releaseDate(2023, 9, 14) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	DBM.DisplayVersion = "10.1.28"
+	DBM.ReleaseRevision = releaseDate(2023, 10, 3) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	PForceDisable = 6--When this is incremented, trigger force disable regardless of major patch
 elseif isClassic then
-	DBM.DisplayVersion = "1.14.47 alpha"
+	DBM.DisplayVersion = "1.14.47"
 	DBM.ReleaseRevision = releaseDate(2023, 8, 29) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	PForceDisable = 3--When this is incremented, trigger force disable regardless of major patch
 elseif isBCC then
 	DBM.DisplayVersion = "2.6.0 alpha"--When TBC returns (and it will one day). It'll probably be game version 2.6
-	DBM.ReleaseRevision = releaseDate(2023, 8, 21) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	DBM.ReleaseRevision = releaseDate(2023, 10, 3) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	PForceDisable = 2--When this is incremented, trigger force disable regardless of major patch
 elseif isWrath then
-	DBM.DisplayVersion = "3.4.51 alpha"
-	DBM.ReleaseRevision = releaseDate(2023, 8, 29) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	DBM.DisplayVersion = "3.4.51"
+	DBM.ReleaseRevision = releaseDate(2023, 10, 3) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	PForceDisable = 2--When this is incremented, trigger force disable regardless of major patch
 end
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
@@ -460,6 +460,7 @@ local bannedMods = { -- a list of "banned" (meaning they are replaced by another
     "DBM-ChamberOfAspects",--Combined into DBM-Raids-WoTLK
     "DBM-Coliseum",--Combined into DBM-Raids-WoTLK
     "DBM-EyeOfEternity",--Combined into DBM-Raids-WoTLK
+    "DBM-Icecrown",--Combined into DBM-Raids-WoTLK
 
 	"DBM-Onyxia",--Combined into DBM-Raids-WoTLK
 	"DBM-Naxx",--Combined into DBM-Raids-WoTLK
@@ -6907,8 +6908,9 @@ do
 		local currentSubZone = GetSubZoneText() or ""
 		if not currentMapID then return end--Protection from map failures in zones that have no maps yet
 		if self.Options.MovieFilter2 == "Block" or (self.Options.MovieFilter2 == "AfterFirst" or self.Options.MovieFilter2 == "OnlyFight") and self.Options.MoviesSeen[currentMapID..currentSubZone] then
-			CinematicFrame_CancelCinematic()
-			self:AddMsg(L.MOVIE_SKIPPED)
+--			CinematicFrame_CancelCinematic()
+--			self:AddMsg(L.MOVIE_SKIPPED)
+			self:AddMsg(L.MOVIE_NOTSKIPPED)
 		else
 			self.Options.MoviesSeen[currentMapID..currentSubZone] = true
 		end

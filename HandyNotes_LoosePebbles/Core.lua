@@ -3,7 +3,7 @@
 
                                             Loose Pebbles
 
-                                       v1.17 - 28th June 2023
+                                     v1.18 - 18th September 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----

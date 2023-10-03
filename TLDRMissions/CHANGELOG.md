@@ -1,6 +1,6 @@
 # TL;DR Missions
 
-##  (2023-09-05)
+##  (2023-09-24)
  
 
-- Update TLDRMissions.toc  
+- Add (empty) .toc files for other versions of the game  

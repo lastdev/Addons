@@ -1000,6 +1000,20 @@ map.nodes[26239233] = PetBattle({
     }
 }) -- Swog
 
+map.nodes[51887233] = PetBattle({
+    id = 201849,
+    rewards = {
+        Achievement({id = 17406, criteria = 58212}) -- Battle on the Dragon Isles II
+    }
+}) -- Adinakon
+
+map.nodes[69014673] = PetBattle({
+    id = 201802,
+    rewards = {
+        Achievement({id = 17406, criteria = 58216}) -- Battle on the Dragon Isles II
+    }
+}) -- Sharp as Flint
+
 -------------------------------------------------------------------------------
 ----------------------------- PROFESSION TREASURES ----------------------------
 -------------------------------------------------------------------------------
@@ -1873,6 +1887,28 @@ map.nodes[57856680] = Collectible({
 }) -- Veritistrasz
 
 -------------------------------------------------------------------------------
+-------------------------- MANY BOXES, MANY ROCKSES ---------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[57505870] = Collectible({
+    label = L['box_of_rocks_label'],
+    group = ns.groups.MANY_BOXES,
+    note = L['box_of_rocks_note'],
+    icon = 132762,
+    rewards = {Achievement({id = 18559, criteria = {id = 1, qty = true}})},
+    pois = {
+        POI({
+            20004000, 23405850, 24605550, 26005530, 27605920, 28305780,
+            28605000, 29206060, 29804740, 30005910, 30504930, 32005870,
+            34304810, 35004530, 35005060, 35606840, 39305500, 42403900,
+            42806740, 42806750, 45107320, 51603610, 52803540, 53403430,
+            53503440, 58805470, 62305040, 68205590, 70004530, 73703750,
+            74503720, 75403400, 75503410, 78204290, 79204530, 79604380
+        })
+    }
+}) -- Many Boxes, Many Rockses
+
+-------------------------------------------------------------------------------
 ------------------------------ A LEGENDARY ALBUM ------------------------------
 -------------------------------------------------------------------------------
 
@@ -2111,7 +2147,8 @@ map.nodes[54705860] = ElusiveCreature({
     rewards = {
         Item({item = 193224}), -- Lustrous Scaled Hide
         Item({item = 193215}), -- Adamant Scales
-        Item({item = 193252}) -- Salamanther Scales
+        Item({item = 193252}), -- Salamanther Scales
+        Achievement({id = 18832, criteria = 61475}) -- Elusive Legend of the Dragon Isles
     }
 }) -- Elusive Deepwater Salamanther
 
@@ -2120,7 +2157,8 @@ map.nodes[45007700] = ElusiveCreature({
     rewards = {
         Item({item = 193224}), -- Lustrous Scaled Hide
         Item({item = 193215}), -- Adamant Scales
-        Item({item = 193259}) -- Flawless Proto Dragon Scale
+        Item({item = 193259}), -- Flawless Proto Dragon Scale
+        Achievement({id = 18832, criteria = 61481}) -- Elusive Legend of the Dragon Isles
     }
 }) -- Elusive Proto Skyterror
 

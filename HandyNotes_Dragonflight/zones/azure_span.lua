@@ -14,6 +14,7 @@ local Rare = ns.node.Rare
 local Treasure = ns.node.Treasure
 
 local AncientStone = ns.node.AncientStone
+local Celestine = ns.node.Celestine
 local Disturbeddirt = ns.node.Disturbeddirt
 local Dragonglyph = ns.node.Dragonglyph
 local ElementalStorm = ns.node.ElementalStorm
@@ -32,6 +33,7 @@ local Scoutpack = ns.node.Scoutpack
 local SignalTransmitter = ns.node.SignalTransmitter
 local Squirrel = ns.node.Squirrel
 local TuskarrTacklebox = ns.node.TuskarrTacklebox
+local RenewedMagmammoth = ns.node.RenewedMagmammoth
 
 local Achievement = ns.reward.Achievement
 local Currency = ns.reward.Currency
@@ -846,6 +848,20 @@ map.nodes[13884986] = PetBattle({
     }
 }) -- Patchu
 
+map.nodes[23415356] = PetBattle({
+    id = 202440,
+    rewards = {
+        Achievement({id = 17406, criteria = 58214}) -- Battle on the Dragon Isles II
+    }
+}) -- Enok the Stinky
+
+map.nodes[19522460] = PetBattle({
+    id = 201899,
+    rewards = {
+        Achievement({id = 17406, criteria = 58218}) -- Battle on the Dragon Isles II
+    }
+}) -- A New Vocation
+
 -------------------------------------------------------------------------------
 ----------------------------- PROFESSION TREASURES ----------------------------
 -------------------------------------------------------------------------------
@@ -1626,7 +1642,8 @@ map.nodes[65002900] = ElusiveCreature({
     label = '{npc:194491}',
     rewards = {
         Item({item = 193211}), -- Resilient Leather
-        Item({item = 193218}) -- Dense Hide
+        Item({item = 193218}), -- Dense Hide
+        Achievement({id = 18832, criteria = 61479}) -- Elusive Legend of the Dragon Isles
     }
 }) -- Elusive Elder Frigidpelt
 
@@ -2000,6 +2017,8 @@ local Kazzi = Class('Kazzi', Collectible, {
         Item({item = 202287, note = '100'}), -- Paw-Made Winterpelt Reagent Bag
         Transmog({item = 204355, slot = L['cosmetic'], note = '500'}), -- Hollowed Winterpelt Food Pack
         Toy({item = 203734, note = '200'}), -- Snow Blanket
+        Recipe({item = 204678, profession = 197, note = '200'}), -- Pattern: Paw-Made Winterpelt Reagent Bag
+        Recipe({item = 202289, profession = 185, note = '750'}), -- Recipe: Firewater Sorbet
         -- NOT IN DC
         Item({item = 202279, quest = 73056, note = '100'}), -- Renewed Proto-Drake: Malevolent Horns
         Item({item = 197629, quest = 69835, note = '100'}), -- Windborne Velocidrake: Spiked Neck
@@ -2023,5 +2042,28 @@ function Kazzi.getters:note()
 end
 
 map.nodes[65801269] = Kazzi()
+
+-------------------------------------------------------------------------------
+------------------------------- FYRAKK ASSAULT --------------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[58512618] = Collectible({
+    label = L['fyrakk_assault_label'],
+    icon = 4914672,
+    rewards = {
+        Achievement({id = 17506}), -- Still Standing in the Fire
+        Achievement({id = 17735, criteria = {id = 1, qty = true}}), -- We Didn't Start the Fire
+        Pet({item = 205002, id = 3511}), -- Blaise
+        Pet({item = 205003, id = 3512}), -- Ambre
+        Toy({item = 206043}) -- Fyrakk's Frenzy
+    }
+}) -- Fyrakk Assault
+
+------------------------------------------------------------------------------
+--------------------------------- DREAMSURGE ---------------------------------
+------------------------------------------------------------------------------
+
+map.nodes[45603972] = Celestine()
+map.nodes[32663964] = RenewedMagmammoth()
 
 -- STOP: DO NOT ADD NEW NODES HERE UNLESS THEY BELONG IN MISCELLANEOUS

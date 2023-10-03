@@ -13,6 +13,7 @@ local Rare = ns.node.Rare
 local Treasure = ns.node.Treasure
 
 local AncientStone = ns.node.AncientStone
+local Celestine = ns.node.Celestine
 local Disturbeddirt = ns.node.Disturbeddirt
 local Dragonglyph = ns.node.Dragonglyph
 local ElementalStorm = ns.node.ElementalStorm
@@ -29,6 +30,7 @@ local Scoutpack = ns.node.Scoutpack
 local SignalTransmitter = ns.node.SignalTransmitter
 local Squirrel = ns.node.Squirrel
 local TuskarrTacklebox = ns.node.TuskarrTacklebox
+local RenewedMagmammoth = ns.node.RenewedMagmammoth
 
 local Achievement = ns.reward.Achievement
 local Currency = ns.reward.Currency
@@ -990,6 +992,20 @@ map.nodes[61964159] = PetBattle({
     }
 }) -- Bakhushek
 
+map.nodes[73386799] = PetBattle({
+    id = 201858,
+    rewards = {
+        Achievement({id = 17406, criteria = 58213}) -- Battle on the Dragon Isles II
+    }
+}) -- Lyver
+
+map.nodes[36165256] = PetBattle({
+    id = 201878,
+    rewards = {
+        Achievement({id = 17406, criteria = 58217}) -- Battle on the Dragon Isles II
+    }
+}) -- Paws of Thunder
+
 -------------------------------------------------------------------------------
 ----------------------------- PROFESSION TREASURES ----------------------------
 -------------------------------------------------------------------------------
@@ -1848,7 +1864,8 @@ map.nodes[55005500] = ElusiveCreature({
     rewards = {
         Item({item = 193224}), -- Lustrous Scaled Hide
         Item({item = 193215}), -- Adamant Scales
-        Item({item = 193253}) -- Cacophonous Thunderscale
+        Item({item = 193253}), -- Cacophonous Thunderscale
+        Achievement({id = 18832, criteria = 61474}) -- Elusive Legend of the Dragon Isles
     }
 }) -- Elusive Tempest Lizard
 
@@ -1857,7 +1874,8 @@ map.nodes[24005600] = ElusiveCreature({
     rewards = {
         Item({item = 193218}), -- Dense Hide
         Item({item = 193211}), -- Resilient Leather
-        Item({item = 193251}) -- Crystalspine Fur
+        Item({item = 193251}), -- Crystalspine Fur
+        Achievement({id = 18832, criteria = 61482}) -- Elusive Legend of the Dragon Isles
     }
 }) -- Elusive Flourishing Quillbloom
 
@@ -2098,5 +2116,30 @@ map.nodes[47037119] = Collectible({
         POI({47037037}) -- Entrance
     }
 }) -- Initiate Kittileg
+
+-------------------------------------------------------------------------------
+------------------------------- FYRAKK ASSAULT --------------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[76156952] = Collectible({
+    label = L['fyrakk_assault_label'],
+    icon = 4914672,
+    rewards = {
+        Achievement({id = 17506}), -- Still Standing in the Fire
+        Achievement({id = 17735, criteria = {id = 1, qty = true}}), -- We Didn't Start the Fire
+        Pet({item = 205002, id = 3511}), -- Blaise
+        Pet({item = 205003, id = 3512}), -- Ambre
+        Toy({item = 206043}) -- Fyrakk's Frenzy
+    }
+}) -- Fyrakk Assault
+
+------------------------------------------------------------------------------
+--------------------------------- DREAMSURGE ---------------------------------
+------------------------------------------------------------------------------
+
+map.nodes[64164161] = Celestine()
+map.nodes[24496126] = RenewedMagmammoth()
+
+-------------------------------------------------------------------------------
 
 -- STOP: DO NOT ADD NEW NODES HERE UNLESS THEY BELONG IN MISCELLANEOUS

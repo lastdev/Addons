@@ -154,6 +154,8 @@ L["CONFIG_SELLING_GREY_POST_BUTTON_TOOLTIP_TEXT"] = "Wenn eine Auktionerstellung
 L["CONFIG_SELLING_ICON_SIZE"] = "Symbolgröße (benötigt reload)"
 L["CONFIG_SELLING_ICON_SIZE_TOOLTIP_HEADER"] = "Größe der Symbole"
 L["CONFIG_SELLING_ICON_SIZE_TOOLTIP_TEXT"] = "Dies ermöglicht die Größe der Gegenstandsymbole im Verkaufen-Reiter von 10 bis 50 einzustellen. Die Standardgröße ist 42."
+--[[Translation missing --]]
+L["CONFIG_SELLING_IGNORE_ITEM_LEVEL"] = "Ignore item level when searching for matching auctions"
 L["CONFIG_SELLING_LIFO_HEADER"] = "Gegenstände verkaufen"
 L["CONFIG_SELLING_LIFO_TEXT"] = "Optionen zum Einstellen der Dauer und des prozentualen oder fixen unterbietens von den meisten Gegenständen. Ohne eine Unterbietung, werden die Gegenstände mit dem ersten im Auktionshaus gefundenen Gegenstand gruppiert, wobei der zuletzt hinzugefügte Gegenstand der ist, der als erstes verkauft wird. Möglicherweis ist eine Unterbietung nicht erforderlich."
 L["CONFIG_SELLING_MISSING_FAVOURITES"] = "Favorisierte Gegenstände immer anzeigen, auch wenn sie sich nicht im Inventar befindet."

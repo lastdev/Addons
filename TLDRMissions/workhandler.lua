@@ -22,7 +22,7 @@ end
 
 frame:HookScript("OnUpdate", function(self, elapsed)
     if not addon.db then return end 
-    if (not C_Garrison.IsAtGarrisonMissionNPC()) and (not addon.db.profile.allowProcessingAnywhere) then return end -- player starts simulations, walks away without stopping it, makes post on reddit complaining that my addon killed their FPS in Oribos... zzzzz
+    if (not C_Garrison.IsAtGarrisonMissionNPC()) and (not addon.db.profile.allowProcessingAnywhere) then return end -- pause if player walked away from the mission table, unless override option selected
     if isPaused > 0 then return end
     if not hasWork then return end
     if alreadyWorking then return end

@@ -154,6 +154,7 @@ L["CONFIG_SELLING_GREY_POST_BUTTON_TOOLTIP_TEXT"] = "Quando la creazione di un'a
 L["CONFIG_SELLING_ICON_SIZE"] = "Dimensione icona zaino (riavvio richiesto)"
 L["CONFIG_SELLING_ICON_SIZE_TOOLTIP_HEADER"] = "Dimensione delle icone"
 L["CONFIG_SELLING_ICON_SIZE_TOOLTIP_TEXT"] = "Permette di impostare l'icona delle sacche nella scheda vendita più grande (fino a 50) o più piccola (fino a 10). La grandezza predefinita è 42"
+L["CONFIG_SELLING_IGNORE_ITEM_LEVEL"] = "Ignora livello oggetto quando esegui ricerche sulle aste."
 L["CONFIG_SELLING_LIFO_HEADER"] = "Vendita"
 L["CONFIG_SELLING_LIFO_TEXT"] = "Opzioni per impostare la percentuale,i valori di ribasso e la durata di molti oggetti. Senza un ribasso impostato, queste categorie verranno popolate con gli ultimi oggetti inclusi che saranno venduti per primi. Il ribasso potrebbe non essere necessario."
 L["CONFIG_SELLING_MISSING_FAVOURITES"] = "Mostra sempre oggetti preferiti, anche se non sono presenti nelle tue sacche."
@@ -172,8 +173,7 @@ L["CONFIG_SELLING_POST_SHORTCUT_TOOLTIP_TEXT"] = "Clicca e poi premi i pulsanti 
 L["CONFIG_SELLING_PREV_SHORTCUT"] = "Scorciatoia per tornare indietro all'oggetto precedentemente selezionato"
 --[[Translation missing --]]
 L["CONFIG_SELLING_RESELECT_ITEM"] = "Select the last item selected for posting when opening the Selling tab"
---[[Translation missing --]]
-L["CONFIG_SELLING_RESELECT_ITEM_TOOLTIP_HEADER"] = "Reselect previous item"
+L["CONFIG_SELLING_RESELECT_ITEM_TOOLTIP_HEADER"] = "Riseleziona oggetto precedente"
 --[[Translation missing --]]
 L["CONFIG_SELLING_RESELECT_ITEM_TOOLTIP_TEXT"] = "After closing the Selling tab and reopening it either during the current session or a later one (including logging out and back in) restore the item selected for posting."
 L["CONFIG_SELLING_SHORTCUTS_CATEGORY"] = "Vendi: Scorciatoie"
@@ -384,8 +384,7 @@ L["RENAME"] = "Rinomina"
 L["RENAME_LIST_CONFIRM"] = "Inserisci nuovo nome per '%s':"
 L["RENAME_LIST_DIALOG"] = "Inserisci un nuovo nome per la shopping list."
 L["RESET_ALL"] = "Resetta tutto"
---[[Translation missing --]]
-L["RESET_COLOR"] = "Reset color"
+L["RESET_COLOR"] = "Reimposta colore"
 L["RESTORE_ALL"] = "Ripristina Tutto"
 L["RESULTS_AVAILABLE_COLUMN"] = "Disponibile"
 L["RESULTS_NAME_COLUMN"] = "Nome"

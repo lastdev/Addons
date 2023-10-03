@@ -322,6 +322,15 @@ L= DBM:GetModLocalization(112)
 ------------------------
 L= DBM:GetModLocalization(113)
 
+---------
+--Trash--
+---------
+L = DBM:GetModLocalization("StonecoreTrash")
+
+L:SetGeneralLocalization({
+	name =	"Трэш мобы Каменные Недра"
+})
+
 ---------------------------
 --  The Vortex Pinnacle  --
 ---------------------------
@@ -381,6 +390,15 @@ L:SetTimerLocalization{
 L:SetOptionLocalization{
 	TimerPhase		= "Показывать таймер для 2-й фазы"
 }
+
+---------
+--Trash--
+---------
+L = DBM:GetModLocalization("ThroneofTidesTrash")
+
+L:SetGeneralLocalization({
+	name =	"Трэш мобы Трон Приливов"
+})
 
 ----------------
 --  Zul'Aman  --

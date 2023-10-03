@@ -25,6 +25,10 @@ points[ns.northernBarrens] = {	-- Northern Barrens / Barrens (WotLK Classic)
 	[59470851] = { "Takk's Nest", "Leaping Hatchling", 48112, "W" },
 	[60281011] = { "Takk's Nest", "Leaping Hatchling", 48112, "W" },
 	[60711330] = { "Takk's Nest", "Leaping Hatchling", 48112, "W" },
+	[38966932] = { "Deviate Guardians & Ravagers", "Deviate Hatchling", 48114, "R",
+					"Wailing Caverns dungeon.\n1 in 500 chance" },
+	[46003645] = { "Deviate Guardians & Ravagers", "Deviate Hatchling", 48114, "W",
+					"Wailing Caverns dungeon.\n1 in 3500 chance" },
 }
 
 points[ns.unGoroCrater] = {	-- Un'Goro Crater
@@ -33,6 +37,15 @@ points[ns.unGoroCrater] = {	-- Un'Goro Crater
 	[62976308] = { "Ravasaur Matriarch's Nest", "Ravasaur Hatchling", 48122, "Under the foliage" }, -- Classic matches
 	[68836679] = { "Ravasaur Matriarch's Nest", "Ravasaur Hatchling", 48122, "Under the foliage" },
 	[68956106] = { "Ravasaur Matriarch's Nest", "Ravasaur Hatchling", 48122, "Under the foliage" }, -- Classic matches
+}
+
+points[ 11 ] = { -- Wailing Caverns
+	[53607050] = { "Deviate Guardians & Ravagers", "Deviate Hatchling", 48114, "R",
+					"Wailing Caverns dungeon.\n1 in 500 chance" },
+}
+points[ 279 ] = { -- Wailing Caverns
+	[37704020] = { "Deviate Guardians & Ravagers", "Deviate Hatchling", 48114, "R",
+					"1 in 500 chance to drop from a\nDeviate Guardian or Ravager" },
 }
 
 -- A code hack will differentiate between the two. The first is for general use, the others are for inside the cave

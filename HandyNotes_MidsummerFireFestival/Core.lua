@@ -3,7 +3,7 @@
 
                                        Midsummer Fire Festival
 
-                                        v1.10 - 7th July 2023
+                                     v1.11 - 18th September 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----

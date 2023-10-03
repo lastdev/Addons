@@ -1,7 +1,17 @@
 local ADDON_NAME, ADDON_VARS = ...
 
-local ERR_MSG = "DEBUGGER SYNTAX ERROR: invoke via:func() not via.func()"
-local CONSTANTS = {
+-------------------------------------------------------------------------------
+-- Module Loading / Exporting
+-------------------------------------------------------------------------------
+
+---@class Debuggers -- IntelliJ-EmmyLua annotation
+---@field error Debug always shown, highest priority messages
+---@field warn Debug end user visible messages
+---@field info Debug dev dev messages
+---@field trace Debug tedious dev messages
+
+---@class DebugLevel -- IntelliJ-EmmyLua annotation
+local DEBUG_LEVEL = {
     ALL_MSGS = 0,
     ALL = 0,
     TRACE = 2,
@@ -10,32 +20,53 @@ local CONSTANTS = {
     ERROR = 8,
     NONE = 10,
 }
-ADDON_VARS.DEBUG = CONSTANTS
+
+---@class Debug -- IntelliJ-EmmyLua annotation
 local Debug = { }
 
+ADDON_VARS.Debug = Debug
+ADDON_VARS.DEBUG_LEVEL = DEBUG_LEVEL
+
+-------------------------------------------------------------------------------
+-- Constants
+-------------------------------------------------------------------------------
+
+
+local ERR_MSG = "DEBUGGER SYNTAX ERROR: invoke as debugInfo:func() not debugInfo.func()"
+
+-------------------------------------------------------------------------------
+-- Functions / Methods
+-------------------------------------------------------------------------------
+
 local function isDebuggerObj(zelf)
-    return zelf and zelf.DEBUGGER
+    return zelf and zelf.isDebug
 end
 
 local function newInstance(isSilent)
     local newInstance = {
         isSilent = isSilent,
-        DEBUGGER = true
+        isDebug = true
     }
     setmetatable(newInstance, { __index = Debug })
     return newInstance
 end
 
-function CONSTANTS.newDebugger(showOnlyMessagesAtOrAbove)
+---@return Debuggers -- IntelliJ-EmmyLua annotation
+function Debug:newDebugger(showOnlyMessagesAtOrAbove)
     local isValidNoiseLevel = type(showOnlyMessagesAtOrAbove) == "number"
     assert(isValidNoiseLevel, "Debugger:newDebugger() Invalid Noise Level: '".. tostring(showOnlyMessagesAtOrAbove) .."'")
 
     local debugger = { }
-    debugger.error = newInstance(showOnlyMessagesAtOrAbove > CONSTANTS.ERROR)
-    debugger.warn = newInstance(showOnlyMessagesAtOrAbove > CONSTANTS.WARN)
-    debugger.info = newInstance(showOnlyMessagesAtOrAbove > CONSTANTS.INFO)
-    debugger.trace = newInstance(showOnlyMessagesAtOrAbove > CONSTANTS.TRACE)
+    debugger.error = newInstance(showOnlyMessagesAtOrAbove > DEBUG_LEVEL.ERROR)
+    debugger.warn = newInstance(showOnlyMessagesAtOrAbove  > DEBUG_LEVEL.WARN)
+    debugger.info = newInstance(showOnlyMessagesAtOrAbove  > DEBUG_LEVEL.INFO)
+    debugger.trace = newInstance(showOnlyMessagesAtOrAbove > DEBUG_LEVEL.TRACE)
     return debugger
+end
+
+function Debug:new(...)
+    local d = self:newDebugger(...)
+    return d.trace, d.info, d.warn, d.error
 end
 
 function Debug:isMute()
@@ -68,10 +99,10 @@ end
 function Debug:out(indentChar, indentWidth, label, ...)
     assert(isDebuggerObj(self), ERR_MSG)
     if self.isSilent then return end
-    local indent = string.rep(indentChar,indentWidth)
+    local indent = string.rep(indentChar or "#", indentWidth or 40)
     --local args = { ... } -- this may be where the nils are getting shortchanged
     local args = table.pack(...)
-    local out = { indent, " ", label, " " }
+    local out = { indent, " ", label or "", " " }
     --for i,v in ipairs(args) do
     for i=1,args.n do
         local v = args[i]
@@ -124,6 +155,11 @@ end
 function Debug:dumpKeys(object)
     assert(isDebuggerObj(self), ERR_MSG)
     if self.isSilent then return end
+    if not object then
+        self:print("NiL")
+        return
+    end
+
     local isNumeric = true
     for k,v in pairs(object) do
         if (type(k) ~= "number") then isNumeric = false end

@@ -844,6 +844,20 @@ map.nodes[56274924] = PetBattle({
     }
 }) -- Setimothes
 
+map.nodes[60645974] = PetBattle({
+    id = 202452,
+    rewards = {
+        Achievement({id = 17406, criteria = 58215}) -- Battle on the Dragon Isles II
+    }
+}) -- Right Twice a Day
+
+map.nodes[55974053] = PetBattle({
+    id = 202458,
+    rewards = {
+        Achievement({id = 17406, criteria = 58219}) -- Battle on the Dragon Isles II
+    }
+}) -- They're Full of Stars
+
 -------------------------------------------------------------------------------
 ----------------------------- PROFESSION TREASURES ----------------------------
 -------------------------------------------------------------------------------
@@ -1503,7 +1517,8 @@ map.nodes[56007100] = ElusiveCreature({
     rewards = {
         Item({item = 193224}), -- Lustrous Scaled Hide
         Item({item = 193215}), -- Adamant Scales
-        Item({item = 193255}) -- Pristine Vorquin Horn
+        Item({item = 193255}), -- Pristine Vorquin Horn
+        Achievement({id = 18832, criteria = 61476}) -- Elusive Legend of the Dragon Isles
     }
 }) -- Elusive Cliffdweller Vorquin
 
@@ -1512,7 +1527,8 @@ map.nodes[48005100] = ElusiveCreature({
     rewards = {
         Item({item = 193218}), -- Dense Hide
         Item({item = 193211}), -- Resilient Leather
-        Item({item = 193254}) -- Rockfang Leather
+        Item({item = 193254}), -- Rockfang Leather
+        Achievement({id = 18832, criteria = 61480}) -- Elusive Legend of the Dragon Isles
     }
 }) -- Elusive Ferocious Titanfang
 
@@ -1651,6 +1667,14 @@ map.nodes[62618507] = ns.node.MoteOfNaszuro({
     quest = 76193,
     note = L['naszuro_temporal_conflux']
 }) -- Temporal Conflux
+
+-------------------------------------------------------------------------------
+
+map.nodes[59735374] = ns.node.Node({
+    label = L['revival_catalyst_label'],
+    icon = 4914678,
+    note = L['revival_catalyst_note']
+}) -- Revival Catalyst
 
 ----------------------------- MISCELLANEOUS NPCs ------------------------------
 
