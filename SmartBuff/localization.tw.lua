@@ -108,7 +108,9 @@ SMARTBUFF_OFT_RESETALL       = "重置設定";
 SMARTBUFF_OFT_RESETLIST      = "重置法術清單";
 SMARTBUFF_OFT_YES            = "是";
 SMARTBUFF_OFT_NO             = "否";
-SMARTBUFF_OFT_PURGE_DATA     = "你確定要重置Smartbuff 所有的資料嗎? 這個動作將會重啟你的UI介面!";
+SMARTBUFF_OFT_OKAY			 = "继续"
+SMARTBUFF_OFT_PURGE_DATA     = "您确定要重置所有 SmartBuff 数据吗？\n此操作将强制重新加载 UI！";
+SMARTBUFF_OFT_REQ_RELOAD     = "新版本需要重新加载 GUI\n准备就绪后单击继续。";
 SMARTBUFF_OFT_SPLASHICON     = "顯示圖示";
 SMARTBUFF_OFT_SPLASHMSGSHORT = "簡短訊息";
 

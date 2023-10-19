@@ -17,7 +17,7 @@ local OmniCDC =	 LibStub("OmniCDC")
 --[[ s r
 local MAJOR, MINOR = "AceConfigDialog-3.0", 85
 ]]
-local MAJOR, MINOR = "AceConfigDialog-3.0-OmniCD", 91 -- 82 DF -- 87 backdrop
+local MAJOR, MINOR = "AceConfigDialog-3.0-OmniCD", 93 -- 82 DF -- 87 backdrop
 -- e
 local AceConfigDialog, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
@@ -626,7 +626,7 @@ local function OptionOnMouseOver(widget, event)
 		if linktype then
 			tooltip:SetHyperlink(desc)
 			--local spellID = strmatch(desc, "spell:(%d+):")
-			local spellID = opt.arg -- == GetOptionsMemberValue("arg", opt, options, path, appName)
+			local spellID = opt.arg -- get it directly vs GetOptionsMemberValue("arg", opt, options, path, appName)
 			if type(spellID) == "number" then
 				tooltip:AddLine("\nID: " .. spellID, 1, 1, 1, true)
 			end
@@ -1362,9 +1362,9 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 					end
 
 					-- s b (edit/dnd) not using dnd. find a better way to get function for alt things.
-					local arg = GetOptionsMemberValue("arg", v, options, path, appName)
-					if type(arg) == "number" then --or type(arg) == "function" then
-						control:SetArg(arg)
+					local arg = v.arg -- get it directly vs GetOptionsMemberValue("arg", v, options, path, appName)
+					if type(arg) == "number" then
+						control:SetArg(arg, appName)
 					end
 					-- e
 				elseif v.type == "range" then
@@ -1517,7 +1517,7 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 							control:SetLayout("Flow-Nowrap-OmniCD") -- fixed width
 							-- set title, tooltip, class
 							local desc = GetOptionsMemberValue("desc", v, options, path, appName)
-							local class = v.arg -- get it directly, since re're just returning
+							local class = v.arg -- get it directly, since we're just returning
 							control:SetTitle(name, desc, class)
 							control.width = "fill"
 
@@ -2171,7 +2171,7 @@ function AceConfigDialog:SetDefaultSize(appName, width, height, scale)
 	-- backward compatible: old direct scaling by self.Libs.ACD.OpenFrames.OmniSort.frame:SetScale will be
 	-- overridden by the current method (option>ActivateControl>ACD:Open(...)>SetStatusTable>ApplyStatus)
 	if type(scale) == "number" or scale == nil then
-		status.scale = scale or OmniCD[1].global.optionPanelScale or 1
+		status.scale = scale or 1
 		OmniCDC.globalPanelScale = status.scale
 		OmniCDC.pixelMult = OmniCDC.GetPixelMult()
 		OmniCDC.ACDPixelMult = OmniCDC.pixelMult / OmniCDC.globalPanelScale -- basis for all of our backdrop

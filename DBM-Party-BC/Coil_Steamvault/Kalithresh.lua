@@ -1,9 +1,18 @@
 local mod	= DBM:NewMod(575, "DBM-Party-BC", 6, 261)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230708234551")
+mod:SetRevision("20231014053250")
 mod:SetCreatureID(17798)
 mod:SetEncounterID(1944)
+
+local channelId
+if not mod:IsRetail() then
+	mod:SetModelID(20235)
+	mod:SetModelScale(0.95)
+	channelId = 31543
+else
+	channelId = -6001
+end
 
 mod:RegisterCombat("combat")
 
@@ -12,7 +21,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 31534"
 )
 
-local WarnChannel		= mod:NewSpellAnnounce(-6001, 2, 31543)
+local WarnChannel		= mod:NewSpellAnnounce(channelId, 2, 31543)
 
 local specWarnReflect	= mod:NewSpecialWarningReflect(31534, "-Melee", nil, nil, 1, 2)--CasterDps after new core
 

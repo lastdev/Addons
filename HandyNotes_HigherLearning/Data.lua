@@ -1,30 +1,18 @@
 local _, ns = ...
 local points = ns.points
-local pointsWrath = ns.pointsWrath
 local textures = ns.textures
 local scaling = ns.scaling
 local language = ns.language
 
-points[ns.dalaran] = {	-- Achievement ID, criteria ID, short title, tip
-	[26505221] = { 4, 7239, "Divination", "divTip" },
-	[30764591] = { 3, 7238, "Conjuration", "conjTip" },
-	[43554671] = { 5, 7240, "Enchantment", "enchTip" },
-	[46733904] = { 7, 7242, "Necromancy", "necroTip" },
-	[46744012] = { 8, 7243, "Transmutation", "transTip" },
-	[52325479] = { 2, 7237, "Abjuration", "abjTip" },
-	[56684560] = { 1, 7236, "Introduction", "intTip" },
-	[64435237] = { 6, 7241, "Illusion", "illTip" },
-}
-
-pointsWrath[ns.dalaran] = {	-- Achievement ID, criteria ID, short title, tip
-	[26505221] = { 1, 7239, "Divination", "divTip" },
-	[30764591] = { 2, 7238, "Conjuration", "conjTip" },
-	[43554671] = { 7, 7240, "Enchantment", "enchTip" },
-	[46733904] = { 5, 7242, "Necromancy", "necroTip" },
-	[46744012] = { 8, 7243, "Transmutation", "transTip" },
-	[52325479] = { 3, 7237, "Abjuration", "abjTip" },
-	[56684560] = { 4, 7236, "Introduction", "intTip" },
-	[64435237] = { 6, 7241, "Illusion", "illTip" },
+points[ 125 ] = {	-- Achievement ID, criteria ID, short title, tip
+	[26505221] = { aIndexR=4, aIndexC=1, 7239, shortTitle="Divination", tip="divTip" },
+	[30764591] = { aIndexR=3, aIndexC=2, 7238, shortTitle="Conjuration", tip="conjTip" },
+	[43554671] = { aIndexR=5, aIndexC=7, 7240, shortTitle="Enchantment", tip="enchTip" },
+	[46733904] = { aIndexR=7, aIndexC=5, 7242, shortTitle="Necromancy", tip="necroTip" },
+	[46744012] = { aIndexR=8, aIndexC=8, 7243, shortTitle="Transmutation", tip="transTip" },
+	[52325479] = { aIndexR=2, aIndexC=3, 7237, shortTitle="Abjuration", tip="abjTip" },
+	[56684560] = { aIndexR=1, aIndexC=4, 7236, shortTitle="Introduction", tip="intTip" },
+	[64435237] = { aIndexR=6, aIndexC=6, 7241, shortTitle="Illusion", tip="illTip" },
 }
 
 -- Choice of texture
@@ -41,13 +29,13 @@ textures[8] = "Interface\\TargetingFrame\\UI-PhasingIcon"
 textures[9] = "Interface\\Store\\Category-icon-pets"
 textures[10] = "Interface\\Store\\Category-icon-featured"
 
-scaling[1] = 0.85
-scaling[2] = 0.85
-scaling[3] = 0.83
-scaling[4] = 0.83
-scaling[5] = 0.83
-scaling[6] = 0.83
-scaling[7] = 0.95
-scaling[8] = 0.95
-scaling[9] = 1.2
-scaling[10] = 1.2
+scaling[1] = 0.55
+scaling[2] = 0.55
+scaling[3] = 0.55
+scaling[4] = 0.55
+scaling[5] = 0.55
+scaling[6] = 0.55
+scaling[7] = 0.65
+scaling[8] = 0.62
+scaling[9] = 0.75
+scaling[10] = 0.75

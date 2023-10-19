@@ -106,7 +106,9 @@ SMARTBUFF_OFT_RESETALL       = "Reset All";
 SMARTBUFF_OFT_RESETLIST      = "Reset List";
 SMARTBUFF_OFT_YES            = "Oui";
 SMARTBUFF_OFT_NO             = "No";
-SMARTBUFF_OFT_PURGE_DATA     = "Are you sure you want to reset ALL SmartBuff data?\nThis action will force a reload of the UI!";
+SMARTBUFF_OFT_OKAY			 = "Continuer"
+SMARTBUFF_OFT_PURGE_DATA     = "Voulez-vous vraiment réinitialiser TOUTES les données SmartBuff ?\nCette action forcera un rechargement de l'interface utilisateur !";
+SMARTBUFF_OFT_REQ_RELOAD     = "Les nouvelles versions nécessitent un rechargement de l'interface graphique\nCliquez sur Continuer lorsque vous êtes prêt.";
 
 -- Options Frame Tooltip Text
 SMARTBUFF_OFTT               = "ON/OFF SmartBuff";

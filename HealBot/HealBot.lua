@@ -594,20 +594,20 @@ function HealBot_SlashCmd(cmd)
             x=string.lower(x)
             HealBot_ToggleSuppressSetting(x)
         elseif (HBcmd=="atd" and x) then
-            if (tonumber(x)>3) and (tonumber(x)<62) then
+            if (tonumber(x)>3) and (tonumber(x)<122) then
                 HealBot_Config_Cures.ShowTimeMaxDuration=tonumber(x)
                 HealBot_Lang_Options_enALL()
                 HealBot_AddChat("Auto Timed Debuff Duration set to "..x.."s")
             else
-                HealBot_AddChat("Invalid Value for Auto Timed Debuff Duration. valid range from 4 to 61")
+                HealBot_AddChat("Invalid Value for Auto Timed Debuff Duration. valid range from 4 to 121")
             end
         elseif (HBcmd=="atb" and x) then
-            if (tonumber(x)>3) and (tonumber(x)<62) then
+            if (tonumber(x)>3) and (tonumber(x)<122) then
                 HealBot_Config_Buffs.AutoBuffExpireTime=tonumber(x)
                 HealBot_Lang_Options_enALL()
                 HealBot_AddChat("Auto Timed Buff Duration set to "..x.."s")
             else
-                HealBot_AddChat("Invalid Value for Auto Timed Buff Duration. valid range from 4 to 61")
+                HealBot_AddChat("Invalid Value for Auto Timed Buff Duration. valid range from 4 to 121")
             end
         elseif (HBcmd=="test") then
             HealBot_TestBars()
@@ -1284,6 +1284,31 @@ function HealBot_updAllStateIconNotInCombat()
     end
     for _,xButton in pairs(HealBot_Extra_Button) do
        HealBot_UnitAffectingCombat(xButton)
+    end
+      --HealBot_setCall("HealBot_updAllStateIconNotInCombat")
+end
+
+function HealBot_updAllStateIconHostile()
+    for _,xButton in pairs(HealBot_Unit_Button) do
+       HealBot_OnEvent_ClassificationChanged(xButton)
+    end
+    for _,xButton in pairs(HealBot_Private_Button) do
+       HealBot_OnEvent_ClassificationChanged(xButton)
+    end
+    for _,xButton in pairs(HealBot_Pet_Button) do
+       HealBot_OnEvent_ClassificationChanged(xButton)
+    end
+    for _,xButton in pairs(HealBot_Vehicle_Button) do
+       HealBot_OnEvent_ClassificationChanged(xButton)
+    end
+    for _,xButton in pairs(HealBot_Extra_Button) do
+       HealBot_OnEvent_ClassificationChanged(xButton)
+    end
+    for _,xButton in pairs(HealBot_Extra_Button) do
+       HealBot_OnEvent_ClassificationChanged(xButton)
+    end
+    for _,xButton in pairs(HealBot_Enemy_Button) do
+        HealBot_OnEvent_ClassificationChanged(xButton)
     end
       --HealBot_setCall("HealBot_updAllStateIconNotInCombat")
 end
@@ -2402,19 +2427,13 @@ end
 
 function HealBot_FullReload()
     if not InCombatLockdown() then
-        HealBot_luVars["AddonLoaded"]=false
-        HealBot_luVars["VarsLoaded"]=false
-        HealBot_luVars["Loaded"]=false
-        HealBot_OnEvent_AddOnLoaded("HealBot")
-        HealBot_VariablesLoaded()
+        HealBot_ReloadAddon()
     else
         HealBot_Timers_Set("LAST","FullReload",1) -- All recall require a delay
     end
 end
 
 function HealBot_Reload()
-    HealBot_luVars["Loaded"]=false
-    HealBot_Timers_Set("INIT","AddonLoaded")
     HealBot_Timers_Set("RESET","Quick")
 end
 
@@ -2493,7 +2512,6 @@ function HealBot_EndAggro()
 end
 
 function HealBot_Reset_Full()
-    HealBot_luVars["Loaded"]=false
     HealBot_UnRegister_Events()
     HealBot_Panel_ClearBlackList()
     HealBot_Panel_ClearHealTargets()
@@ -2502,7 +2520,6 @@ function HealBot_Reset_Full()
     HealBot_Timers_Set("SKINS","AllFramesChanged")
     HealBot_Timers_Set("LAST","ZoneUpdate")
     HealBot_Timers_AuraReset()
-    HealBot_Timers_Set("INIT","AddonLoaded")
     HealBot_Timers_Set("INIT","RegEvents")
       --HealBot_setCall("HealBot_Reset_Full")
 end
@@ -3274,6 +3291,18 @@ function HealBot_SetPlayerData()
     end
     HealBot_Data["PGUID"]=UnitGUID("player")
     HealBot_Timers_Set("LAST", "SetInHealAbsorbMax")
+end
+
+function HealBot_ReloadAddon()
+    if HealBot_luVars["VarsLoaded"] then
+        HealBot_luVars["Loaded"]=false
+        HealBot_luVars["AddonLoaded"]=false
+        HealBot_luVars["VarsLoaded"]=false
+        HealBot_OnEvent_AddOnLoaded("HealBot")
+        HealBot_VariablesLoaded()
+    else
+        C_Timer.After(1, HealBot_ReloadAddon)
+    end
 end
 
 function HealBot_OnEvent_AddOnLoaded(addonName)

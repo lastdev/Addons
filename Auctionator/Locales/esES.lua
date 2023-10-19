@@ -5,6 +5,8 @@ AUCTIONATOR_LOCALES.esES = function()
 L["ADD_ITEM"] = "Añadir objeto"
 L["ADD_TERM_TO_LIST_DIALOG"] = "Ingrese el término de búsqueda para añadir"
 L["ADD_TO_LIST"] = "Añadir a lista"
+--[[Translation missing --]]
+L["ADD_TO_X"] = "Add to %s"
 L["ALREADY_PURCHASED_X"] = "Ya compró %s"
 L["ALT_LEFT_CLICK"] = "Alt clic izquierdo"
 L["ALT_RIGHT_CLICK"] = "Alt clic derecho"
@@ -248,6 +250,10 @@ L["CREATE_LIST_DIALOG"] = "Ingrese el nombre de la nueva lista de compras:"
 L["CURRENT"] = "Actual"
 L["CURRENT_PRICES"] = "Precios actuales"
 L["CUSTOM_KEYBOARD_SHORTCUTS"] = "Atajos de teclado personalizados"
+--[[Translation missing --]]
+L["CUSTOMISE"] = "Customise"
+--[[Translation missing --]]
+L["CUSTOMISE_BAG_GROUPS"] = "Customise Bag Groups"
 L["DATE"] = "Fecha"
 L["DAY_1"] = "Domingo"
 L["DAY_2"] = "Lunes"
@@ -256,6 +262,8 @@ L["DAY_4"] = "Miércoles"
 L["DAY_5"] = "Jueves"
 L["DAY_6"] = "Viernes"
 L["DAY_7"] = "Sábado"
+--[[Translation missing --]]
+L["DEFAULT"] = "default"
 L["DEFAULT_AUCTION_DURATION"] = "Duración predeterminada de la subasta"
 L["DEFAULT_LIST_HEADER"] = "Lista de compras predeterminada"
 L["DEFAULT_QUANTITY"] = "Cantidad predeterminada"
@@ -263,6 +271,8 @@ L["DEFAULT_STACK_SIZES"] = "Tamaños de montón predeterminados"
 L["DEFAULT_TAB"] = "Pestaña predeterminada"
 L["DEFAULT_TAB_TEXT"] = "se muestra como la pestaña predeterminada"
 L["DELETE"] = "Eliminar"
+--[[Translation missing --]]
+L["DELETE_GROUP_DIALOG"] = "Are you sure you want to delete group \"%s\"?"
 L["DELETE_LIST_CONFIRM"] = "¿Está SEGURO de que desea eliminar '%s'?"
 L["DELETE_LIST_NONE_SELECTED"] = "Debe seleccionar una lista para eliminar."
 L["DEPOSIT"] = "Depósito:"
@@ -289,8 +299,12 @@ L["EXPORT_WHISPER"] = "Susurrar a"
 --[[Translation missing --]]
 L["EXTENDED_SEARCH_ACTIVE_TEXT"] = "%extended search active%"
 L["FAVOURITES"] = "Favoritos"
+--[[Translation missing --]]
+L["FAVOURITES_GROUP"] = "Favourites Group"
 L["FETCHING_ITEM_INFO"] = "Obteniendo información del objeto ..."
 L["FINISHED_PROCESSING"] = "Finalizado el procesamiento de %s objetos."
+--[[Translation missing --]]
+L["FOCUS"] = "Focus"
 L["FULL_SCAN_ALTERNATE_FAILED"] = "No se pudo completar el escaneo completo (modo alternativo)."
 L["FULL_SCAN_BUTTON"] = "Escaneo completo"
 L["FULL_SCAN_FAILED"] = "No se pudo completar el escaneo completo."
@@ -298,6 +312,8 @@ L["FULL_SCAN_FAILED_REPLICATE"] = "No se pudo completar el escaneo completo (mod
 L["FULL_SCAN_FAILED_SUMMARY"] = "No se pudo completar el escaneo completo (modo resumen)."
 L["FULL_SCAN_IN_PROGRESS"] = "Escaneo completo en progreso."
 L["GEAR_VENDOR_PRICE_MULTIPLIER"] = "Multiplicador de precio de vendedor de equipo"
+--[[Translation missing --]]
+L["GROUP_EXISTS_ALREADY"] = "That group name is already in use"
 L["HIDE"] = "Ocultar"
 L["HISTORY"] = "Historial"
 L["IMPORT"] = "Importar"
@@ -308,6 +324,8 @@ L["IS_UNDERCUT"] = "¿Descuento?"
 L["ITEM_CLASS"] = "Clase de objeto"
 L["ITEM_LEVEL"] = "Nivel de objeto"
 L["ITEM_LEVEL_COLUMN"] = "Nv. de objeto"
+--[[Translation missing --]]
+L["ITEM_NAME_X_ITEM_LEVEL_X"] = "%s (%s)"
 L["ITEM_PRICE_HISTORY"] = "Historial de precio"
 L["ITEMS_AHEAD"] = "Objs. delante"
 L["LEFT_CLICK"] = "Clic izquierdo"
@@ -352,6 +370,10 @@ L["MONTH_9"] = "Septiembre"
 L["MORE"] = "Más "
 L["MULTIPLE_STACKS_AUCTION_INFO"] = "%s %s, totalizando %s"
 L["NAME"] = "Nombre"
+--[[Translation missing --]]
+L["NEW_GROUP"] = "New Group"
+--[[Translation missing --]]
+L["NEW_GROUP_DIALOG"] = "Enter the name to be used for the new group"
 L["NEW_LIST"] = "Nueva lista"
 L["NEW_SHOPPING_LIST"] = "+ Nueva lista de compras"
 L["NEXT_SCAN_MESSAGE"] = [=[Se podrá iniciar un escaneo completo en %s minutos y %s segundos.
@@ -376,6 +398,8 @@ L["PET_TOOLTIP_TOOLTIP_HEADER"] = "Descripciones emergentes de mascotas"
 L["PET_TOOLTIP_TOOLTIP_TEXT"] = "Muestra información de Auctionator para mascotas enjauladas."
 L["POST"] = "Publicar"
 L["POST_ATTEMPT_FAILED"] = "Tu último intento de publicación no funcionó. Inténtalo de nuevo."
+--[[Translation missing --]]
+L["POSTING_SETTINGS_COLON"] = "Posting Settings:"
 --[[Translation missing --]]
 L["PREVIOUS"] = "Previous"
 L["PRICE"] = "Precio"
@@ -402,7 +426,11 @@ L["REALM_HISTORY"] = "Historial del reino"
 L["RECENT_SEARCHES"] = "Búsquedas recientes"
 L["REFRESH"] = "Actualizar"
 L["REMOVE_FAVOURITE"] = "Eliminar favorito"
+--[[Translation missing --]]
+L["REMOVE_FROM_X"] = "Remove from %s"
 L["RENAME"] = "Renombrar"
+--[[Translation missing --]]
+L["RENAME_GROUP_DIALOG"] = "Choose a new name for \"%s\""
 L["RENAME_LIST_CONFIRM"] = "Introduce el nuevo nombre para '%s':"
 L["RENAME_LIST_DIALOG"] = "Ingrese el nombre de la nueva lista de compras:"
 L["RESET_ALL"] = "Resetear todo"
@@ -440,8 +468,12 @@ L["SERVER_TOOK_TOO_LONG"] = "El servidor tardó demasiado en responder. Es posib
 L["SET_BAG_ITEM_SELECTION_COLOR"] = "Set bag item selection color"
 L["SET_VALUE"] = "Establecer valor"
 L["SET_VALUE_SUFFIX"] = "Descuento"
+--[[Translation missing --]]
+L["SHIFT_DOWN"] = "Shift Down"
 L["SHIFT_LEFT_CLICK"] = "Mayús clic izquierdo"
 L["SHIFT_RIGHT_CLICK"] = "Mayús clic derecho"
+--[[Translation missing --]]
+L["SHIFT_UP"] = "Shift Up"
 L["SHOPPING_LIST"] = "Lista de compras"
 L["SHOPPING_LISTS"] = "Listas de compras"
 L["SHOPPING_TAB"] = "Compras"

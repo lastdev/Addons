@@ -66,6 +66,7 @@ L.TRANSCRIPTOR_LOG_START		= "Transcriptor 기록이 시작됐습니다."
 L.TRANSCRIPTOR_LOG_END		= "Transcriptor 기록이 종료됐습니다."
 
 L.MOVIE_SKIPPED				= L.DBM .. "이 동영상 자동 생략 기능을 작동시켰습니다."
+L.MOVIE_NOTSKIPPED				= L.DBM .. "이 생략할 수 있는 동영상을 감지했으나 블리자드 버그로 인해 생략하지 못했습니다. 버그가 고쳐지면 생략 기능은 다시 활성화될 예정입니다."
 L.BONUS_SKIPPED				= L.DBM .. "이 자동으로 추가 전리품 주사위 굴림 창을 닫았습니다. 창을 열고 싶으면 3분 안에 /dbmbonusroll 명령어를 입력하세요"
 L.BONUS_EXPIRED				= "/dbmbonusroll 명령어를 사용해 추가 전리품 주사위 굴림 창을 열려고 했으나 현재 굴릴 수 있는 추가 전리품 주사위가 없습니다."
 
@@ -193,6 +194,7 @@ L.DBMLDB							= "경고: DBM-LDB는 이제 DBM-Core에 편입되었습니다. �
 L.DBMLOOTREMINDER				= "경고: 써드파티 모드인 DBM-LootReminder가 설치되었습니다. 이 애드온은 최신 WoW 클라이언트에 더이상 호환되지 않으며 " .. L.DBM .. "이 오작동하여 풀링 타이머를 전송하지 못하게 될 수 있습니다. 애드온 삭제를 권장합니다"
 L.UPDATE_REQUIRES_RELAUNCH		= "경고: 지금 업데이트한 " .. L.DBM .. "은 게임 클라이언트를 완전히 재시작하기 전까진 정상 작동하지 않습니다. 이 업데이트엔 새 파일이 포함되어 있거나 UI 재시작으로는 로딩할 수 없는 .toc 파일의 변경 사항이 있습니다. 클라이언트 재시작 없이 사용할 경우 오류가 발생하거나 작동하지 않을 수 있습니다."
 L.OUT_OF_DATE_NAG				= "현재 사용중인 " .. L.DBM .. " 버전이 오래되었습니다. 이 전투에 대응하는 모듈은 새로운 기능을 탑재했거나 버그가 수정된 상태입니다. 향상된 레이드 경험을 누리고 싶다면 업데이트를 권장합니다."
+L.PLATER_NP_AURAS_MSG					= "DBM엔 이름표에 적들의 쿨타임 타이머를 아이콘으로 표시해주는 진보된 기능이 있습니다. 대부분의 사용자에게 기본적으로 활성화되어 있으나, Plater 사용자는 옵션에서 활성화하기 전까지는 기본적으로 작동하지 않습니다. DBM(및 Plater)을 최대한 활용하려면 Plater 내 'Buff Special' 설정에서 이 기능을 활성화 하는걸 권장합니다. 이 메시지를 다시 보고싶지 않다면 DBM 기능 켜고 끄기 또는 이름표 설정 메뉴에 '이름표에 쿨타임 아이콘' 설정을 비활성화하세요"
 
 L.MOVABLE_BAR				= "드래그 하세요!"
 
@@ -444,6 +446,10 @@ L.AUTO_TIMER_TEXTS.nextcount		= "다음 %s (%%s)"
 L.AUTO_TIMER_TEXTS.nextsource		= "다음 %s: %%s"
 L.AUTO_TIMER_TEXTS.nextspecial		= "특수 능력"
 L.AUTO_TIMER_TEXTS.stage			= "단계"
+L.AUTO_TIMER_TEXTS.stagecount			= "%%s단계"
+L.AUTO_TIMER_TEXTS.stagecountcycle		= "%%s단계 (%%s)"--Example: Stage 2 (3) for a fight that alternates stage 1 and stage 2, but also tracks total cycles
+L.AUTO_TIMER_TEXTS.Intermission			= "사잇 단계"
+L.AUTO_TIMER_TEXTS.Intermissioncount		= "사잇 단계 %%s"
 L.AUTO_TIMER_TEXTS.adds				= "쫄"
 L.AUTO_TIMER_TEXTS.addscustom		= "쫄 (%%s)"
 L.AUTO_TIMER_TEXTS.roleplay		= "NPC 대사"
@@ -470,6 +476,11 @@ L.AUTO_TIMER_OPTIONS.nextsource		= "다음 $spell:%s 타이머 바 보기 (시�
 L.AUTO_TIMER_OPTIONS.nextspecial		= "다음 특수 능력 타이머 바 보기"
 L.AUTO_TIMER_OPTIONS.achievement		= "%s 업적의 타이머 바 보기"
 L.AUTO_TIMER_OPTIONS.stage		= "다음 단계 타이머 바 보기"
+L.AUTO_TIMER_OPTIONS.stagecount			= "다음 단계 타이머 바 보기 (단계 번호 포함)"
+L.AUTO_TIMER_OPTIONS.stagecountcycle		= "다음 단계 타이머 바 보기 (단계 번호와 반복 횟수 포함)"
+L.AUTO_TIMER_OPTIONS.intermission		= "다음 사잇 단계 타이머 바 보기"
+L.AUTO_TIMER_OPTIONS.intermissioncount		= "다음 사잇 단계 타이머 바 보기 (횟수 포함)"
+
 L.AUTO_TIMER_OPTIONS.adds		= "쫄 등장 타이머 바 보기"
 L.AUTO_TIMER_OPTIONS.addscustom		= "쫄 등장 타이머 바 보기"
 L.AUTO_TIMER_OPTIONS.roleplay		= "NPC 대사 지속 시간 타이머 바 보기"

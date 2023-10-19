@@ -1,54 +1,20 @@
 # <DBM Mod> Raids (DF)
 
-## [10.1.28](https://github.com/DeadlyBossMods/DBM-Retail/tree/10.1.28) (2023-10-03)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Retail/compare/10.1.27...10.1.28) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Retail/releases)
+## [10.1.30](https://github.com/DeadlyBossMods/DBM-Retail/tree/10.1.30) (2023-10-19)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Retail/compare/10.1.29...10.1.30) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Retail/releases)
 
-- pre new tags  
-- Update localization.ru.lua (#270)  
-- Added cinematic messaging  
-- Push mythic updates since they're BW public  
-- Update Gnarlroot mythic marking code  
-    Update Nymue non mythic code (mythic work still WIP, since not needed yet)  
-- Retire Cinematic auto canceling. Blizzard decided to make this a protected function in a hotfix binary this week. While the actual cinematic skip still worked before execution tainted. It's not desirable to have users get action blocked errors on cinematics. Fixes https://github.com/DeadlyBossMods/DBM-Retail/issues/937  
-- Mythic drycodes for Gnarlroot  
-- Start mythic prep with Smolderon  
-- one option key bugfix  
-    added missing chat yells for coiling flames  
-- Added some missing messages to Larodar  
-- Update option keys for first 3 bosses for universal weak aura parity  
-- Extended Laradar timers  
-- Do tank claws same way BW does, to ensure parity between counts and weak aura usage  
-    Fixed bug on Smolderon  
-    Added unit target scan to volcoross  
-- Remove polymorph initial applied yell  
-    Fixed toxic javs yells showing on heroic, it's mythic only now  
-    Some normal mode timer fixes for Igiria  
-    Changed how moonkin and tree form ability timers work on tindral to better support users who might turn the actual form timers off  
-    Turned fiery growth icon option to off by default.  
-- Full larodar mod from drycode to completion on normal at least. subject to improvement with longer normal pulls, or heroic testing when it happens.  
-- Forgot to set these to heroic values  
-- Gnarlroot update from both heroic and normal testing  
-- Change event for blinding rage interrupt since weakened defenses not always visible in combat log  
-- UPdate tindral with the changed P1 timers for normal (heroic might be changed too but until confirmed normal and heroic will use different tables)  
-- Fix typos  
-- Igira fixes and updates, post testing  
-- Update Nymue from testing  
-- Tindral updated from test data  
-- Fixed some bugs in council mod as well as follow same count increment rules as BW  
-- Fix  
-- Vocoross post testing update  
-- Update localization.ru.lua (#936)  
-- Somehow missed a lot of spellids  
-- Push the Nymue drycode  
-- One more fix, plus improve staging code  
-- Forgot to uncomment a line  
-- Tindral Sageswift drycode  
-- Update localization.ru.lua (#269) Minor changes  
-- Update localization.tw.lua (#935)  
-- PUsh the volcoross drycode  
-- Fixed issue wehre old ICC module could still be allowed to load and conflict with new unified module  
-- tweak  
-- Add post testing Smolderon and Council works  
-- forgot pres  
-- Fixed evoker specs not getting flagged with interrupt options on by default. spec roll now identifies when specced into interrupt spell  
+- prep new retail only tag to add support for 2023+ hollowed end  
+- cleanup  
+- Add remaining gossip IDs  
+- Add some auto gossip options for headless horseman (WIP)  
+- First horseman update with better timer support, since it seems fight is fully sequenced script  
+- copy and paste is hard apparently  
+- Push headless horseman rework update  
+- Fix missing spellid  
+- Prep laradar and nymue for retests and private aura changes  
+- SOme more nymue changes for rework  
+- actually just go all out hybrid it against any possible chance of failures  
+- Actually do last an even better way, by just using DBMs internal zone/alive check function to still stay a precise as possible (so object type lives up to it's nature) and still warn with no delay once either max total or max viable are reached as early as possible  
+- prevent precise object from breaking if less people are alive or present than the expected max by still using scheduling fallback  
+- Add new combined object that allows using total count instead of scheduling for aggregating targets. many mods know the count, but use scheduling pointlessly and this can be done better going forward by using correct object based on condition.  
 - bump alpha  

@@ -213,7 +213,11 @@ L:SetGeneralLocalization({
 ---------------------------
 --  Igira the Cruel --
 ---------------------------
---L= DBM:GetModLocalization(2554)
+L= DBM:GetModLocalization(2554)
+
+L:SetMiscLocalization({
+	HealAbsorb	= "Heal Absorb (%s)"--Might be common localized later
+})
 
 ---------------------------
 --  Volcoross --
@@ -223,7 +227,11 @@ L:SetGeneralLocalization({
 ---------------------------
 --  Council of Dreams --
 ---------------------------
---L= DBM:GetModLocalization(2555)
+L= DBM:GetModLocalization(2555)
+
+L:SetMiscLocalization({
+	Ducks		= "Ducks (%s)"
+})
 
 ---------------------------
 --  Larodar, Keeper of the Flame --
@@ -232,7 +240,9 @@ L= DBM:GetModLocalization(2553)
 
 L:SetMiscLocalization({
 	currentHealth		= "%d%%",
-	currentHealthIcon	= "{rt%d}%d%%"
+	currentHealthIcon	= "{rt%d}%d%%",
+	Roots				= "Roots (%s)",
+	HealAbsorb			= "Heal Absorb (%s)"--Might be common localized later
 })
 
 ---------------------------

@@ -1,7 +1,7 @@
 ## Interface: 100107
 ## Title: WeakAuras Options
 ## Author: The WeakAuras Team
-## Version: 5.7.1
+## Version: 5.8.3
 ## IconTexture: Interface\AddOns\WeakAuras\Media\Textures\icon.blp
 ## Notes: Options for WeakAuras
 ## Notes-esES: Opciones para WeakAuras
@@ -82,6 +82,7 @@ AceGUI-Widgets\AceGUIWidget-WeakAurasPendingUpdateButton.lua
 AceGUI-Widgets\AceGUIWidget-WeakAurasTextureButton.lua
 AceGUI-Widgets\AceGUIWidget-WeakAurasIconButton.lua
 AceGUI-Widgets\AceGUIWidget-WeakAurasMultiLineEditBox.lua
+AceGUI-Widgets\AceGUIWidget-WeakAurasMultiLineEditBoxWithEnter.lua
 AceGUI-Widgets\AceGUIWidget-WeakAurasNewButton.lua
 AceGUI-Widgets\AceGUIWidget-WeakAurasImportButton.lua
 AceGUI-Widgets\AceGUIWidget-WeakAurasToolbarButton.lua

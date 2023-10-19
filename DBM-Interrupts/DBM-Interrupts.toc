@@ -1,10 +1,10 @@
-## Interface: 100200
-## X-Min-Interface: 100200
-## X-Min-Interface-Classic: 11404
+## Interface: 100007
+## X-Min-Interface: 100007
+## X-Min-Interface-Classic: 11403
 ## X-Min-Interface-BCC: 20504
-## X-Min-Interface-Wrath: 30402
+## X-Min-Interface-Wrath: 30401
 ## Title: |cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Interrupts|r
-## Version: 10.2.0
+## Version: 2.5.4b
 ## Author: Tristan Maxson
 ## Notes: Adds Interrupt Timers To DBM
 ## X-DBM-Mod-Category: General

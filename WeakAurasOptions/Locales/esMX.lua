@@ -221,6 +221,8 @@ Enable this setting if you want this timer to be hidden, or when using a WeakAur
 	--[[Translation missing --]]
 	L["and with width |cFFFF0000%s|r and %s"] = "and with width |cFFFF0000%s|r and %s"
 	L["Angle"] = "Ángulo"
+	--[[Translation missing --]]
+	L["Angle Between Auras"] = "Angle Between Auras"
 	L["Animate"] = "Animar"
 	L["Animated Expand and Collapse"] = "Expansión y contracción animada"
 	--[[Translation missing --]]
@@ -457,6 +459,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Delete children and group"] = "Eliminar dependientes y grupo"
 	--[[Translation missing --]]
 	L["Delete Entry"] = "Delete Entry"
+	--[[Translation missing --]]
+	L["Deleting auras: "] = "Deleting auras: "
 	L["Desaturate"] = "Desaturar"
 	--[[Translation missing --]]
 	L["Description"] = "Description"
@@ -631,6 +635,8 @@ Can use \ to escape -.]=]
 	--[[Translation missing --]]
 	L["Find Auras"] = "Find Auras"
 	L["Finish"] = "Completar"
+	--[[Translation missing --]]
+	L["Finishing..."] = "Finishing..."
 	L["Fire Orb"] = "Orbe de fuego"
 	L["Font"] = "Font"
 	L["Font Size"] = "Tamaño de las banderas"
@@ -786,6 +792,8 @@ Con |cFF00CC00>= 0|r se activará siempre.]=]
 	--[[Translation missing --]]
 	L["Ignore Disconnected"] = "Ignore Disconnected"
 	--[[Translation missing --]]
+	L["Ignore out of casting range"] = "Ignore out of casting range"
+	--[[Translation missing --]]
 	L["Ignore out of checking range"] = "Ignore out of checking range"
 	--[[Translation missing --]]
 	L["Ignore Self"] = "Ignore Self"
@@ -936,6 +944,8 @@ Con |cFF00CC00>= 0|r se activará siempre.]=]
 	L["Move this display down in its group's order"] = "Bajar esta aura conservando el orden de su grupo"
 	L["Move this display up in its group's order"] = "Subir esta aura conservando el orden de su grupo"
 	L["Move Up"] = "Subir"
+	--[[Translation missing --]]
+	L["Moving auras: "] = "Moving auras: "
 	L["Multiple Displays"] = "Múltiples auras"
 	L["Multiselect ignored tooltip"] = [=[|cFFFF0000Ignorado|r - |cFF777777Único|r - |cFF777777Múltiple|r
 Ésta opción no se usará al determinar cuándo se mostrará el aura]=]
@@ -1074,6 +1084,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Premade Auras"] = "Premade Auras"
 	--[[Translation missing --]]
 	L["Premade Snippets"] = "Premade Snippets"
+	--[[Translation missing --]]
+	L["Preparing auras: "] = "Preparing auras: "
 	L["Preset"] = "Predefinido"
 	--[[Translation missing --]]
 	L["Press Ctrl+C to copy"] = "Press Ctrl+C to copy"
@@ -1344,8 +1356,8 @@ It might not work correctly!]=] ] = [=[This aura was created with a different ve
 It might not work correctly!]=]
 	--[[Translation missing --]]
 	L[ [=[This aura was created with a newer version of WeakAuras.
-It might not work correctly with your version!]=] ] = [=[This aura was created with a newer version of WeakAuras.
-It might not work correctly with your version!]=]
+Upgrade your version of WeakAuras or wait for next release before installing this aura.]=] ] = [=[This aura was created with a newer version of WeakAuras.
+Upgrade your version of WeakAuras or wait for next release before installing this aura.]=]
 	L["This display is currently loaded"] = "Esta aura está cargada"
 	L["This display is not currently loaded"] = "Esta aura no está cargada"
 	--[[Translation missing --]]
@@ -1442,7 +1454,9 @@ It might not work correctly with your version!]=]
 	--[[Translation missing --]]
 	L["Uses Texture Coordinates to rotate the texture."] = "Uses Texture Coordinates to rotate the texture."
 	--[[Translation missing --]]
-	L["Uses UnitIsVisible() to check if in range. This is polled every second."] = "Uses UnitIsVisible() to check if in range. This is polled every second."
+	L["Uses UnitInRange() to check if in range. Matches default raid frames out of range behavior, which is between 25 to 40 yards depending on your class and spec."] = "Uses UnitInRange() to check if in range. Matches default raid frames out of range behavior, which is between 25 to 40 yards depending on your class and spec."
+	--[[Translation missing --]]
+	L["Uses UnitIsVisible() to check if game client has loaded a object for this unit. This distance is around 100 yards. This is polled every second."] = "Uses UnitIsVisible() to check if game client has loaded a object for this unit. This distance is around 100 yards. This is polled every second."
 	--[[Translation missing --]]
 	L["Value %i"] = "Value %i"
 	--[[Translation missing --]]

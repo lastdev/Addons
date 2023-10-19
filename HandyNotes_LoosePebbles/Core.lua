@@ -3,7 +3,7 @@
 
                                             Loose Pebbles
 
-                                     v1.18 - 18th September 2023
+                                     v1.19 - 14th October 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -20,11 +20,8 @@ ns.colour = {}
 ns.colour.prefix	= "\124cFF8258FA"
 ns.colour.highlight = "\124cFFB19EFF"
 ns.colour.plaintext = "\124cFF819FF7"
--- Map IDs
-ns.brokenisles = 619	-- Broken Isles
-ns.dalaran = 627		-- Dalaran
 
-local defaults = { profile = { icon_scale = 1.4, icon_alpha = 0.8, icon_choice = 1, showCoords = true } }
+local defaults = { profile = { iconScale = 2.5, iconAlpha = 1 , showCoords = true, iconChoice = 1 } }
 local continents = {}
 local pluginHandler = {}
 
@@ -53,16 +50,19 @@ if ns.oceania[realm] then
 end
 
 if ns.locale == "deDE" then
-	L["Loose Pebble"] = "Loser Stein"
-	L["Loose Pebbles"] = "Loser Steine"
-	L["AddOn Description"] = "Hilft dir, die " ..ns.colour.highlight .."Loser Steine" .."\124r zu finden"
-	L["Icon Selection"] = "Symbolauswahl"
-	L["Icon Scale"] = "Symbolskalierung"
-	L["The scale of the icons"] = "Die Skalierung der Symbole"
-	L["Icon Alpha"] = "Symboltransparenz"
-	L["The alpha transparency of the icons"] = "Die Transparenz der Symbole"
-	L["Icon"] = "Symbol"
+	L["Character"] = "Charakter"
+	L["Account"] = "Accountweiter"
+	L["Completed"] = "Abgeschlossen"
+	L["Not Completed"] = "Nicht Abgeschlossen"
 	L["Options"] = "Optionen"
+	L["Map Pin Size"] = "Pin-Größe"
+	L["The Map Pin Size"] = "Die Größe der Karten-Pins"
+	L["Map Pin Alpha"] = "Kartenpin Alpha"
+	L["The alpha transparency of the map pins"] = "Die Alpha-Transparenz der Karten-Pins"
+	L["Show Coordinates"] = "Koordinaten anzeigen"
+	L["Show Coordinates Description"] = "Zeigen sie die " ..ns.colour.highlight 
+		.."koordinaten\124r in QuickInfos auf der Weltkarte und auf der Minikarte an"
+	L["Map Pin Selections"] = "Karten-Pin-Auswahl"
 	L["Red"] = "Rot"
 	L["Blue"] = "Blau"
 	L["Green"] = "Grün"
@@ -78,22 +78,24 @@ if ns.locale == "deDE" then
 	L["Phasing"] = "Synchronisieren"
 	L["Raptor egg"] = "Raptor-Ei"
 	L["Stars"] = "Sternen"
-	L["NPC"] = "NSC"
-	L["Show Coordinates"] = "Koordinaten anzeigen"
-	L["Show Coordinates Description"] = "Zeigen sie die " ..ns.colour.highlight 
-		.."koordinaten\124r in QuickInfos auf der Weltkarte und auf der Minikarte an"
+	L["Screw"] = "Schraube"
 	
 elseif ns.locale == "esES" or ns.locale == "esMX" then
-	L["Loose Pebble"] = "Guijarro Suelto"
-	L["Loose Pebbles"] = "Guijarros Sueltos"
-	L["AddOn Description"] = "Ayuda a encontrar los " ..ns.colour.highlight .."Guijarros Sueltos"
-	L["Icon Selection"] = "Selección de iconos"
-	L["Icon Scale"] = "Escala de icono"
-	L["The scale of the icons"] = "La escala de los iconos"
+	L["Character"] = "Personaje"
+	L["Account"] = "la Cuenta"
+	L["Completed"] = "Completado"
+	L["Not Completed"] = ( ns.locale == "esES" ) and "Sin Completar" or "Incompleto"
+	L["Options"] = "Opciones"
+	L["Map Pin Size"] = "Tamaño de alfiler"
+	L["The Map Pin Size"] = "Tamaño de los pines del mapa"
+	L["Map Pin Alpha"] = "Alfa de los pines del mapa"
+	L["The alpha transparency of the map pins"] = "La transparencia alfa de los pines del mapa"
 	L["Icon Alpha"] = "Transparencia del icono"
 	L["The alpha transparency of the icons"] = "La transparencia alfa de los iconos"
-	L["Icon"] = "El icono"
-	L["Options"] = "Opciones"
+	L["Show Coordinates"] = "Mostrar coordenadas"
+	L["Show Coordinates Description"] = "Mostrar " ..ns.colour.highlight
+		.."coordenadas\124r en información sobre herramientas en el mapa del mundo y en el minimapa"
+	L["Map Pin Selections"] = "Selecciones de pines de mapa"
 	L["Gold"] = "Oro"
 	L["Red"] = "Rojo"
 	L["Blue"] = "Azul"
@@ -111,22 +113,22 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Phasing"] = "Sincronización"	
 	L["Raptor egg"] = "Huevo de raptor"	
 	L["Stars"] = "Estrellas"
-	L["NPC"] = "PNJ"
-	L["Show Coordinates"] = "Mostrar coordenadas"
-	L["Show Coordinates Description"] = "Mostrar " ..ns.colour.highlight
-		.."coordenadas\124r en información sobre herramientas en el mapa del mundo y en el minimapa"
-
+	L["Screw"] = "Tornillo"
+	
 elseif ns.locale == "frFR" then
-	L["Loose Pebble"] = "Caillou déchaussé"
-	L["Loose Pebbles"] = "Cailloux déchaussé"
-	L["AddOn Description"] = "Aide à trouver les " ..ns.colour.highlight .."Cailloux déchaussé"
-	L["Icon Selection"] = "Sélection d'icônes"
-	L["Icon Scale"] = "Echelle de l’icône"
-	L["The scale of the icons"] = "L'échelle des icônes"
-	L["Icon Alpha"] = "Transparence de l'icône"
-	L["The alpha transparency of the icons"] = "La transparence des icônes"
-	L["Icon"] = "L'icône"
+	L["Character"] = "Personnage"
+	L["Account"] = "le Compte"
+	L["Completed"] = "Achevé"
+	L["Not Completed"] = "Non achevé"
 	L["Options"] = "Options"
+	L["Map Pin Size"] = "Taille des épingles"
+	L["The Map Pin Size"] = "La taille des épingles de carte"
+	L["Map Pin Alpha"] = "Alpha des épingles de carte"
+	L["The alpha transparency of the map pins"] = "La transparence alpha des épingles de la carte"
+	L["Show Coordinates"] = "Afficher les coordonnées"
+	L["Show Coordinates Description"] = "Afficher " ..ns.colour.highlight
+		.."les coordonnées\124r dans les info-bulles sur la carte du monde et la mini-carte"
+	L["Map Pin Selections"] = "Sélections de broches de carte"
 	L["Gold"] = "Or"
 	L["Red"] = "Rouge"
 	L["Blue"] = "Bleue"
@@ -144,22 +146,21 @@ elseif ns.locale == "frFR" then
 	L["Phasing"] = "Synchronisation"
 	L["Raptor egg"] = "Œuf de Rapace"
 	L["Stars"] = "Étoiles"
-	L["NPC"] = "PNJ"
-	L["Show Coordinates"] = "Afficher les coordonnées"
-	L["Show Coordinates Description"] = "Afficher " ..ns.colour.highlight
-		.."les coordonnées\124r dans les info-bulles sur la carte du monde et la mini-carte"
-
+	L["Screw"] = "Vis"
+	
 elseif ns.locale == "itIT" then
-	L["Loose Pebble"] = "Ciottolo Sciolto"
-	L["Loose Pebbles"] = "Ciottoli Sciolti"
-	L["AddOn Description"] = "Aiuta a trovare le " ..ns.colour.highlight .."Ciottoli Sciolti"
-	L["Icon Selection"] = "Selezione dell'icona"
-	L["Icon Scale"] = "Scala delle icone"
-	L["The scale of the icons"] = "La scala delle icone"
-	L["Icon Alpha"] = "Icona alfa"
-	L["The alpha transparency of the icons"] = "La trasparenza alfa delle icone"
-	L["Icon"] = "Icona"
+	L["Character"] = "Personaggio"
+	L["Completed"] = "Completo"
+	L["Not Completed"] = "Non Compiuto"
 	L["Options"] = "Opzioni"
+	L["Map Pin Size"] = "Dimensione del pin"
+	L["The Map Pin Size"] = "La dimensione dei Pin della mappa"
+	L["Map Pin Alpha"] = "Mappa pin alfa"
+	L["The alpha transparency of the map pins"] = "La trasparenza alfa dei pin della mappa"
+	L["Show Coordinates"] = "Mostra coordinate"
+	L["Show Coordinates Description"] = "Visualizza " ..ns.colour.highlight
+		.."le coordinate\124r nelle descrizioni comandi sulla mappa del mondo e sulla minimappa"
+	L["Map Pin Selections"] = "Selezioni pin mappa"
 	L["Gold"] = "Oro"
 	L["Red"] = "Rosso"
 	L["Blue"] = "Blu"
@@ -177,22 +178,21 @@ elseif ns.locale == "itIT" then
 	L["Phasing"] = "Sincronizzazione"
 	L["Raptor egg"] = "Raptor Uovo"
 	L["Stars"] = "Stelle"
-	L["NPC"] = "PNG"
-	L["Show Coordinates"] = "Mostra coordinate"
-	L["Show Coordinates Description"] = "Visualizza " ..ns.colour.highlight
-		.."le coordinate\124r nelle descrizioni comandi sulla mappa del mondo e sulla minimappa"
+	L["Screw"] = "Vite"
 
 elseif ns.locale == "koKR" then
-	L["Loose Pebble"] = "거리의 자갈"
-	L["Loose Pebbles"] = "거리의 자갈"
-	L["AddOn Description"] = ns.colour.highlight .."거리의 자갈\124r 를 찾을 수 있도록 도와줍니다"
-	L["Icon Selection"] = "아이콘 선택"
-	L["Icon Scale"] = "아이콘 크기 비율"
-	L["The scale of the icons"] = "아이콘의 크기 비율입니다"
-	L["Icon Alpha"] = "아이콘 투명도"
-	L["The alpha transparency of the icons"] = "아이콘의 투명도입니다"
-	L["Icon"] = "아이콘"
+	L["Character"] = "캐릭터"
+	L["Account"] = "계정"
+	L["Completed"] = "완료"
+	L["Not Completed"] = "미완료"
+	L["Map Pin Size"] = "지도 핀의 크기"
 	L["Options"] = "설정"
+	L["The Map Pin Size"] = "지도 핀의 크기"
+	L["Map Pin Alpha"] = "지도 핀의 알파"
+	L["The alpha transparency of the map pins"] = "지도 핀의 알파 투명도"
+	L["Show Coordinates"] = "좌표 표시"
+	L["Show Coordinates Description"] = "세계지도 및 미니지도의 도구 설명에 좌표를 표시합니다."
+	L["Map Pin Selections"] = "지도 핀 선택"
 	L["Gold"] = "금"
 	L["Red"] = "빨간"
 	L["Blue"] = "푸른"
@@ -210,19 +210,22 @@ elseif ns.locale == "koKR" then
 	L["Phasing"] = "동기화 중"
 	L["Raptor egg"] = "랩터의 알"
 	L["Stars"] = "별"
-	L["Show Coordinates"] = "좌표 표시"
-	L["Show Coordinates Description"] = "세계지도 및 미니지도의 도구 설명에 좌표를 표시합니다."
+	L["Screw"] = "나사"
+	
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
-	L["Loose Pebble"] = "Cascalho Solto"
-	L["Loose Pebbles"] = "Cascalho Solto"
-	L["AddOn Description"] = "Ajuda você a localizar " ..ns.colour.highlight .."Cascalho Solto"
-	L["Icon Selection"] = "Seleção de ícones"
-	L["Icon Scale"] = "Escala de Ícone"
-	L["The scale of the icons"] = "A escala dos ícones"
-	L["Icon Alpha"] = "Ícone Alpha"
-	L["The alpha transparency of the icons"] = "A transparência alfa dos ícones"
-	L["Icon"] = "Ícone"
+	L["Character"] = "Personagem"
+	L["Account"] = "à Conta"
+	L["Completed"] = "Concluído"
+	L["Not Completed"] = "Não Concluído"
 	L["Options"] = "Opções"
+	L["Map Pin Size"] = "Tamanho do pino"
+	L["The Map Pin Size"] = "O tamanho dos pinos do mapa"
+	L["Map Pin Alpha"] = "Alfa dos pinos do mapa"
+	L["The alpha transparency of the map pins"] = "A transparência alfa dos pinos do mapa"
+	L["Show Coordinates"] = "Mostrar coordenadas"
+	L["Show Coordinates Description"] = "Exibir " ..ns.colour.highlight
+		.."coordenadas\124r em dicas de ferramentas no mapa mundial e no minimapa"
+	L["Map Pin Selections"] = "Seleções de pinos de mapa"
 	L["Gold"] = "Ouro"
 	L["Red"] = "Vermelho"
 	L["Blue"] = "Azul"
@@ -240,22 +243,22 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Phasing"] = "Sincronização"
 	L["Raptor egg"] = "Ovo de raptor"
 	L["Stars"] = "Estrelas"
-	L["NPC"] = "PNJ"
-	L["Show Coordinates"] = "Mostrar coordenadas"
-	L["Show Coordinates Description"] = "Exibir " ..ns.colour.highlight
-		.."coordenadas\124r em dicas de ferramentas no mapa mundial e no minimapa"
+	L["Screw"] = "Parafuso"
 
 elseif ns.locale == "ruRU" then
-	L["Loose Pebble"] = "Шатающийся Камушк"
-	L["Loose Pebbles"] = "Шатающийся Камушк"
-	L["AddOn Description"] = "Помогает найти " ..ns.colour.highlight .."Шатающийся Камушк"
-	L["Icon Selection"] = "Выбор Значка"
-	L["Icon Scale"] = "Масштаб Значка"
-	L["The scale of the icons"] = "Масштаб для Значков"
-	L["Icon Alpha"] = "Альфа Значок"
-	L["The alpha transparency of the icons"] = "Альфа-прозрачность Значков"
-	L["Icon"] = "Альфа Значок"
+	L["Character"] = "Персонажа"
+	L["Account"] = "Счет"
+	L["Completed"] = "Выполнено"
+	L["Not Completed"] = "Не Выполнено"
 	L["Options"] = "Параметры"
+	L["Map Pin Size"] = "Размер булавки"
+	L["The Map Pin Size"] = "Размер булавок на карте"
+	L["Map Pin Alpha"] = "Альфа булавок карты"
+	L["The alpha transparency of the map pins"] = "Альфа-прозрачность булавок карты"
+	L["Show Coordinates"] = "Показать Координаты"
+	L["Show Coordinates Description"] = "Отображает " ..ns.colour.highlight
+		.."координаты\124r во всплывающих подсказках на карте мира и мини-карте"
+	L["Map Pin Selections"] = "Выбор булавки карты"
 	L["Gold"] = "Золото"
 	L["Red"] = "Красный"
 	L["Blue"] = "Синий"
@@ -273,21 +276,21 @@ elseif ns.locale == "ruRU" then
 	L["Phasing"] = "Синхронизация"
 	L["Raptor egg"] = "Яйцо ящера"
 	L["Stars"] = "Звезды"
-	L["Show Coordinates"] = "Показать Координаты"
-	L["Show Coordinates Description"] = "Отображает " ..ns.colour.highlight
-		.."координаты\124r во всплывающих подсказках на карте мира и мини-карте"
+	L["Screw"] = "Винт"
 
 elseif ns.locale == "zhCN" then
-	L["Loose Pebble"] = "松动的卵石"
-	L["Loose Pebbles"] = "松动的卵石"
-	L["AddOn Description"] = "帮助你找寻" ..ns.colour.highlight .."松动的卵石"
-	L["Icon Selection"] = "图标选择"
-	L["Icon Scale"] = "图示大小"
-	L["The scale of the icons"] = "图示的大小"
-	L["Icon Alpha"] = "图示透明度"
-	L["The alpha transparency of the icons"] = "图示的透明度"
-	L["Icon"] = "图示"
+	L["Character"] = "角色"
+	L["Account"] = "账号"
+	L["Completed"] = "已完成"
+	L["Not Completed"] = "未完成"
 	L["Options"] = "选项"
+	L["Map Pin Size"] = "地图图钉的大小"
+	L["The Map Pin Size"] = "地图图钉的大小"
+	L["Map Pin Alpha"] = "地图图钉的透明度"
+	L["The alpha transparency of the map pins"] = "地图图钉的透明度"
+	L["Show Coordinates"] = "显示坐标"
+	L["Show Coordinates Description"] = "在世界地图和迷你地图上的工具提示中" ..ns.colour.highlight .."显示坐标"
+	L["Map Pin Selections"] = "地图图钉选择"
 	L["Gold"] = "金子"
 	L["Red"] = "红"
 	L["Blue"] = "蓝"
@@ -305,20 +308,21 @@ elseif ns.locale == "zhCN" then
 	L["Phasing"] = "同步"
 	L["Raptor egg"] = "迅猛龙蛋"
 	L["Stars"] = "星星"
-	L["Show Coordinates"] = "显示坐标"
-	L["Show Coordinates Description"] = "在世界地图和迷你地图上的工具提示中" ..ns.colour.highlight .."显示坐标"
-
+	L["Screw"] = "拧"
+	
 elseif ns.locale == "zhTW" then
-	L["Loose Pebble"] = "鬆動的卵石"
-	L["Loose Pebbles"] = "鬆動的卵石"
-	L["AddOn Description"] = "幫助你找尋" ..ns.colour.highlight .."鬆動的卵石"
-	L["Icon Selection"] = "圖標選擇"
-	L["Icon Scale"] = "圖示大小"
-	L["The scale of the icons"] = "圖示的大小"
-	L["Icon Alpha"] = "圖示透明度"
-	L["The alpha transparency of the icons"] = "圖示的透明度"
-	L["Icon"] = "圖示"
+	L["Character"] = "角色"
+	L["Account"] = "賬號"
+	L["Completed"] = "完成"
+	L["Not Completed"] = "未完成"
 	L["Options"] = "選項"
+	L["Map Pin Size"] = "地圖圖釘的大小"
+	L["The Map Pin Size"] = "地圖圖釘的大小"
+	L["Map Pin Alpha"] = "地圖圖釘的透明度"
+	L["The alpha transparency of the map pins"] = "地圖圖釘的透明度"
+	L["Show Coordinates"] = "顯示坐標"
+	L["Show Coordinates Description"] = "在世界地圖和迷你地圖上的工具提示中" ..ns.colour.highlight .."顯示坐標"
+	L["Map Pin Selections"] = "地圖圖釘選擇"
 	L["Gold"] = "金子"
 	L["Red"] = "紅"
 	L["Blue"] = "藍"
@@ -335,22 +339,66 @@ elseif ns.locale == "zhTW" then
 	L["Mana Orb"] = "法力球"
 	L["Phasing"] = "同步"
 	L["Raptor egg"] = "迅猛龍蛋"
-	L["Show Coordinates"] = "顯示坐標"
-	L["Show Coordinates Description"] = "在世界地圖和迷你地圖上的工具提示中" ..ns.colour.highlight .."顯示坐標"
-	
+	L["Stars"] = "星星"
+	L["Screw"] = "擰"
+
 else
+	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
 	if ns.locale == "enUS" then
 		L["Grey"] = "Gray"
 	end
-	L["AddOn Description"] = "Helps you find the " ..ns.colour.prefix .."Loose Pebbles"
-	L["Show Coordinates Description"] = "Display " ..ns.colour.prefix .."coordinates" 
-		.."\124r in tooltips on the world map and the mini map"
 end
 
--- Plugin handler for HandyNotes
-local function infoFromCoord(mapFile, coord)
-	local point = ns.points[mapFile] and ns.points[mapFile][coord]
-	return point[1], point[2], point[3]
+ns.name = UnitName( "player" ) or "Character"
+
+
+if ns.locale == "deDE" then
+	L["Loose Pebble"] = "Loser Stein"
+	L["Loose Pebbles"] = "Loser Steine"
+	L["AddOn Description"] = "Hilft dir, die " ..ns.colour.highlight .."Loser Steine" .."\124r zu finden"
+	
+elseif ns.locale == "esES" or ns.locale == "esMX" then
+	L["Loose Pebble"] = "Guijarro Suelto"
+	L["Loose Pebbles"] = "Guijarros Sueltos"
+	L["AddOn Description"] = "Ayuda a encontrar los " ..ns.colour.highlight .."Guijarros Sueltos"
+
+elseif ns.locale == "frFR" then
+	L["Loose Pebble"] = "Caillou déchaussé"
+	L["Loose Pebbles"] = "Cailloux déchaussé"
+	L["AddOn Description"] = "Aide à trouver les " ..ns.colour.highlight .."Cailloux déchaussé"
+
+elseif ns.locale == "itIT" then
+	L["Loose Pebble"] = "Ciottolo Sciolto"
+	L["Loose Pebbles"] = "Ciottoli Sciolti"
+	L["AddOn Description"] = "Aiuta a trovare le " ..ns.colour.highlight .."Ciottoli Sciolti"
+
+elseif ns.locale == "koKR" then
+	L["Loose Pebble"] = "거리의 자갈"
+	L["Loose Pebbles"] = "거리의 자갈"
+	L["AddOn Description"] = ns.colour.highlight .."거리의 자갈\124r 를 찾을 수 있도록 도와줍니다"
+
+elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
+	L["Loose Pebble"] = "Cascalho Solto"
+	L["Loose Pebbles"] = "Cascalho Solto"
+	L["AddOn Description"] = "Ajuda você a localizar " ..ns.colour.highlight .."Cascalho Solto"
+
+elseif ns.locale == "ruRU" then
+	L["Loose Pebble"] = "Шатающийся Камушк"
+	L["Loose Pebbles"] = "Шатающийся Камушк"
+	L["AddOn Description"] = "Помогает найти " ..ns.colour.highlight .."Шатающийся Камушк"
+
+elseif ns.locale == "zhCN" then
+	L["Loose Pebble"] = "松动的卵石"
+	L["Loose Pebbles"] = "松动的卵石"
+	L["AddOn Description"] = "帮助你找寻" ..ns.colour.highlight .."松动的卵石"
+
+elseif ns.locale == "zhTW" then
+	L["Loose Pebble"] = "鬆動的卵石"
+	L["Loose Pebbles"] = "鬆動的卵石"
+	L["AddOn Description"] = "幫助你找尋" ..ns.colour.highlight .."鬆動的卵石"
+	
+else
+	L["AddOn Description"] = "Helps you find the " ..ns.colour.prefix .."Loose Pebbles"
 end
 
 function pluginHandler:OnEnter(mapFile, coord)
@@ -359,8 +407,6 @@ function pluginHandler:OnEnter(mapFile, coord)
 	else
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 	end
-
---	local note = infoFromCoord(mapFile, coord) -- nothing to get
 
 	GameTooltip:SetText( ns.colour.prefix ..L["Loose Pebble"] )
 	
@@ -378,8 +424,6 @@ function pluginHandler:OnLeave()
 end
 
 do
-	continents[ns.brokenisles] = true
-
     local bucket = CreateFrame("Frame")
     bucket.elapsed = 0
     bucket:SetScript("OnUpdate", function(self, elapsed)
@@ -401,13 +445,13 @@ do
 	end
 
 	local function iterator(t, prev)
-		if not t or ns.CurrentMap == ns.brokenisles then return end
+		if not t then return end
 		local coord, v = next(t, prev)
 		while coord do
 			if ns.indoors == false then
 				if v then
-					return coord, nil, ns.textures[ns.db.icon_choice],
-						ns.db.icon_scale * ns.scaling[ns.db.icon_choice], ns.db.icon_alpha
+					return coord, nil, ns.textures[ns.db.iconChoice],
+						ns.db.iconScale * ns.scaling[ns.db.iconChoice], ns.db.iconAlpha
 				end
 			end
 			coord, v = next(t, coord)
@@ -436,21 +480,21 @@ ns.options = {
 			name = " " ..L["Options"],
 			inline = true,
 			args = {
-				icon_scale = {
+				iconScale = {
 					type = "range",
-					name = L["Icon Scale"],
-					desc = L["The scale of the icons"],
-					min = 1, max = 3, step = 0.1,
-					arg = "icon_scale",
-					order = 2,
+					name = L["Map Pin Size"],
+					desc = L["The Map Pin Size"],
+					min = 1, max = 4, step = 0.1,
+					arg = "iconScale",
+					order = 1,
 				},
-				icon_alpha = {
+				iconAlpha = {
 					type = "range",
-					name = L["Icon Alpha"],
-					desc = L["The alpha transparency of the icons"],
+					name = L["Map Pin Alpha"],
+					desc = L["The alpha transparency of the map pins"],
 					min = 0, max = 1, step = 0.01,
-					arg = "icon_alpha",
-					order = 3,
+					arg = "iconAlpha",
+					order = 2,
 				},
 				showCoords = {
 					name = L["Show Coordinates"],
@@ -459,24 +503,24 @@ ns.options = {
 					type = "toggle",
 					width = "full",
 					arg = "showCoords",
-					order = 4,
+					order = 3,
 				},
 			},
 		},
 		icon = {
 			type = "group",
-			name = L["Icon Selection"],
+			name = L["Map Pin Selections"],
 			inline = true,
 			args = {
-				icon_choice = {
+				iconChoice = {
 					type = "range",
-					name = L["Icon"],
+					name = L["Loose Pebble"],
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
 							..L["Yellow"] .."\n5 = " ..L["Green"] .."\n6 = " ..L["Grey"] .."\n7 = " ..L["Mana Orb"]
 							.."\n8 = " ..L["Phasing"] .."\n9 = " ..L["Raptor egg"] .."\n10 = " ..L["Stars"],
 					min = 1, max = 10, step = 1,
-					arg = "icon_choice",
-					order = 5,
+					arg = "iconChoice",
+					order = 4,
 				},
 			},
 		},
@@ -491,23 +535,6 @@ function HandyNotes_LoosePebbles_OnAddonCompartmentClick( addonName, buttonName 
 function pluginHandler:OnEnable()
 	local HereBeDragons = LibStub("HereBeDragons-2.0", true)
 	if not HereBeDragons then return end
-	
-	for continentMapID in next, continents do
-		local children = C_Map.GetMapChildrenInfo(continentMapID, nil, true)
-		for _, map in next, children do
-			local coords = ns.points[map.mapID]
-			if coords then
-				for coord, criteria in next, coords do			
-					local mx, my = HandyNotes:getXY(coord)
-					local cx, cy = HereBeDragons:TranslateZoneCoordinates(mx, my, map.mapID, continentMapID)
-					if cx and cy then
-						ns.points[continentMapID] = ns.points[continentMapID] or {}
-						ns.points[continentMapID][HandyNotes:getCoord(cx, cy)] = criteria
-					end
-				end
-			end
-		end
-	end
 	HandyNotes:RegisterPluginDB("LoosePebbles", pluginHandler, ns.options)
 	ns.db = LibStub("AceDB-3.0"):New("HandyNotes_LoosePebblesDB", defaults, "Default").profile
 	pluginHandler:Refresh()

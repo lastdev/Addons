@@ -102,9 +102,11 @@ SMARTBUFF_OFT_LINKGRPBUFFCHECK  = "Grp link";
 SMARTBUFF_OFT_LINKSELFBUFFCHECK = "Self link";
 SMARTBUFF_OFT_RESETALL       = "Reset All";
 SMARTBUFF_OFT_RESETLIST      = "Reset List";
-SMARTBUFF_OFT_YES            = "Yes";
-SMARTBUFF_OFT_NO             = "No";
-SMARTBUFF_OFT_PURGE_DATA     = "Are you sure you want to reset ALL SmartBuff data?\nThis action will force a reload of the UI!";
+SMARTBUFF_OFT_YES            = "Да";
+SMARTBUFF_OFT_NO             = "Нет";
+SMARTBUFF_OFT_OKAY			 = "Продолжать"
+SMARTBUFF_OFT_PURGE_DATA     = "Вы уверены, что хотите сбросить ВСЕ данные SmartBuff?\nЭто действие приведет к перезагрузке пользовательского интерфейса!";
+SMARTBUFF_OFT_REQ_RELOAD     = "Новые версии требуют перезагрузки графического интерфейса.\nНажмите «Продолжить», когда будете готовы.";
 
 -- Options Frame Tooltip Text
 SMARTBUFF_OFTT               = "Включает-выключает SmartBuff.";

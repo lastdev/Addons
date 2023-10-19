@@ -22,10 +22,10 @@ L["/wa pstart - Start profiling. Optionally include a duration in seconds after 
 [encounter] - запуск процесса при следующем сражении с боссом.]=]
 L["/wa pstop - Finish profiling"] = "/wa pstop - завершить профилирование"
 L["/wa repair - Repair tool"] = "/wa repair - средство восстановления данных"
-L["|cffeda55fLeft-Click|r to toggle showing the main window."] = "|cFFEDA55FЛевый клик|r - показать или скрыть окно параметров."
-L["|cffeda55fMiddle-Click|r to toggle the minimap icon on or off."] = "|cFFEDA55FСредняя кнопка мыши|r - скрыть иконку на миникарте."
-L["|cffeda55fRight-Click|r to toggle performance profiling window."] = "|cFFEDA55FПравый клик|r - показать или скрыть окно профилирования."
-L["|cffeda55fShift-Click|r to pause addon execution."] = "|cFFEDA55FShift-клик|r - приостановить выполнение аддона."
+L["|cffeda55fLeft-Click|r to toggle showing the main window."] = "|cFFEDA55FЛКМ|r - показать или скрыть окно параметров."
+L["|cffeda55fMiddle-Click|r to toggle the minimap icon on or off."] = "|cFFEDA55FСКМ|r - включить или выключить значок миникарты."
+L["|cffeda55fRight-Click|r to toggle performance profiling window."] = "|cFFEDA55FПКМ|r - показать или скрыть окно профилирования."
+L["|cffeda55fShift-Click|r to pause addon execution."] = "|cFFEDA55FShift+ЛКМ|r - приостановить выполнение аддона."
 L["|cFFFF0000Not|r Item Bonus Id Equipped"] = "ID бонуса надетого предмета |cFFFF0000НЕ|r"
 L["|cFFFF0000Not|r Player Name/Realm"] = "Имя / Игровой мир игрока |cFFFF0000НЕ|r"
 --[[Translation missing --]]
@@ -46,22 +46,16 @@ L[ [=[• |cff00ff00Player|r, |cff00ff00Target|r, |cff00ff00Focus|r, and |cff00f
 • |cffffff00Smart Group|r adjusts to your current group type, matching just the "player" when solo, "party" units (including "player") in a party or "raid" units in a raid.
 
 |cffffff00*|r Yellow Unit settings will create clones for each matching unit while this trigger is providing Dynamic Info to the Aura.]=]
---[[Translation missing --]]
-L["1. Profession 1. Accessory"] = "1. Profession 1. Accessory"
---[[Translation missing --]]
-L["1. Profession 2. Accessory"] = "1. Profession 2. Accessory"
---[[Translation missing --]]
-L["1. Professsion Tool"] = "1. Professsion Tool"
+L["1. Profession 1. Accessory"] = "1. Профессия 1. Аксессуар"
+L["1. Profession 2. Accessory"] = "1. Профессия 2. Аксессуар"
+L["1. Professsion Tool"] = "1. Инструмент профессии"
 L["10 Man Raid"] = "Рейд на 10 игроков"
 L["10 Player Raid"] = "Рейд на 10 игроков"
 L["10 Player Raid (Heroic)"] = "Рейд на 10 игроков (героический)"
 L["10 Player Raid (Normal)"] = "Рейд на 10 игроков (обычный)"
---[[Translation missing --]]
-L["2. Profession 1. Accessory"] = "2. Profession 1. Accessory"
---[[Translation missing --]]
-L["2. Profession 2. Accessory"] = "2. Profession 2. Accessory"
---[[Translation missing --]]
-L["2. Professsion Tool"] = "2. Professsion Tool"
+L["2. Profession 1. Accessory"] = "2. Профессия 1. Аксессуар"
+L["2. Profession 2. Accessory"] = "2. Профессия 2. Аксессуар"
+L["2. Professsion Tool"] = "2. Инструмент профессии"
 L["20 Man Raid"] = "Рейд на 20 игроков"
 L["20 Player Raid"] = "Рейд на 20 игроков"
 L["25 Man Raid"] = "Рейд на 25 игроков"
@@ -126,6 +120,8 @@ L["Amount"] = "Количество"
 --[[Translation missing --]]
 L["Anchoring"] = "Anchoring"
 L["And Talent"] = "И талант"
+--[[Translation missing --]]
+L["Angle and Radius"] = "Angle and Radius"
 L["Animations"] = "Анимация"
 L["Anticlockwise"] = "Против часовой стрелки"
 L["Anub'arak"] = "Ануб'арак"
@@ -322,14 +318,10 @@ L["Clone per Match"] = "Клонировать для каждого совпа�
 L["Color"] = "Цвет"
 L["Color Animation"] = "Анимация цвета"
 L["Combat Log"] = "Журнал боя"
---[[Translation missing --]]
 L[ [=[COMBAT_LOG_EVENT_UNFILTERED without a filter is generally advised against as it’s very performance costly.
 Find more information:
-https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events]=] ] = [=[COMBAT_LOG_EVENT_UNFILTERED without a filter is generally advised against as it’s very performance costly.
-Find more information:
-https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events]=]
---[[Translation missing --]]
-L["Condition Custom Text"] = "Condition Custom Text"
+https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events]=] ] = "COMBAT_LOG_EVENT_UNFILTERED без фильтра обычно не рекомендуется, так как это очень сильно снижает производительность. Дополнительную информацию можно найти здесь: https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events"
+L["Condition Custom Text"] = "Пользовательский текст условия"
 L["Conditions"] = "Условия"
 L["Contains"] = "Содержит"
 L["Continuously update Movement Speed"] = "Непрерывно обновлять данные о скорости передвижения"
@@ -353,8 +345,7 @@ L["Critical Rating"] = "Показатель крит. удара"
 L["Crowd Controlled"] = "Потеря контроля над персонажем"
 L["Crushing"] = "Сокрушительный удар"
 L["C'thun"] = "К'Тун"
---[[Translation missing --]]
-L["Current Essence"] = "Current Essence"
+L["Current Essence"] = "Текущая сущность"
 L["Current Experience"] = "Текущее количество опыта"
 L["Current Movement Speed (%)"] = "Текущая скорость движения"
 L["Current Stage"] = "Текущий этап"
@@ -370,16 +361,13 @@ L["Custom Action"] = "Свое действие"
 L["Custom Anchor"] = "Свое крепление"
 L["Custom Check"] = "Своя проверка"
 L["Custom Color"] = "Цвет"
---[[Translation missing --]]
-L["Custom Condition Code"] = "Custom Condition Code"
+L["Custom Condition Code"] = "Пользовательский код условия"
 L["Custom Configuration"] = "Конфигурация пользователя"
---[[Translation missing --]]
-L["Custom Fade Animation"] = "Custom Fade Animation"
+L["Custom Fade Animation"] = "Пользовательская анимация затухания"
 L["Custom Function"] = "Своя функция"
 L["Custom Grow"] = "Свой способ заполнения"
 L["Custom Sort"] = "Свой критерий сортировки"
---[[Translation missing --]]
-L["Custom Text Function"] = "Custom Text Function"
+L["Custom Text Function"] = "Пользовательская текстовая функция"
 L["Custom Trigger Combination"] = "Комбинация триггеров"
 L["Custom Variables"] = "Пользовательские переменные"
 L["Damage"] = "Урон"
@@ -445,8 +433,7 @@ L["Dungeon (Timewalking)"] = "Подземелье (путешествие во 
 L["Dungeons"] = "Подземелья"
 L["Durability Damage"] = "Повреждение экипировки"
 L["Durability Damage All"] = "Повреждение всей экипировки"
---[[Translation missing --]]
-L["Duration"] = "Duration"
+L["Duration"] = "Продолжительность"
 L["Duration Function"] = "Функция длительности"
 L["Duration Function (fallback state)"] = "Функция длительности (резервное состояние)"
 L["Dynamic Information"] = "Динамическая информация"
@@ -496,6 +483,7 @@ L["Entering/Leaving Encounter"] = "Entering/Leaving Encounter"
 L["Entry Order"] = "Порядок записей"
 L["Environment Type"] = "Тип окружения"
 L["Environmental"] = "Окружающий мир"
+L["Equipment"] = "Экипировка"
 L["Equipment Set"] = "Комплект экипировки"
 L["Equipment Set Equipped"] = "Комплект экипировки надет"
 L["Equipment Slot"] = "Ячейка экипировки"
@@ -525,8 +513,9 @@ L["Event"] = "Событие"
 L["Event(s)"] = "События"
 L["Every Frame"] = "Каждый кадр"
 L["Every Frame (High CPU usage)"] = "Каждый кадр (высокая загрузка ЦП)"
+L["Evoker Essence"] = "Эссенция Пробудителя"
 --[[Translation missing --]]
-L["Evoker Essence"] = "Evoker Essence"
+L["Exact Spell ID(s)"] = "Exact Spell ID(s)"
 L["Experience (%)"] = "Опыт (%)"
 L["Expertise Bonus"] = "Бонус мастерства"
 L["Expertise Rating"] = "Рейтинг мастерства"
@@ -597,9 +586,13 @@ L["Gahz'ranka"] = "Газ'ранка"
 L["Gained"] = "Получен"
 L["Garr"] = "Гарр"
 L["Gehennas"] = "Гееннас"
+--[[Translation missing --]]
+L["General"] = "General"
 L["General Rajaxx"] = "Генерал Раджакс"
 L["General Vezax"] = "Генерал Везакс"
 L["General Zarithrian"] = "Генерал Заритриан"
+--[[Translation missing --]]
+L["GetNameAndIcon Function (fallback state)"] = "GetNameAndIcon Function (fallback state)"
 L["Glancing"] = "Скользящий удар"
 L["Global Cooldown"] = "Общее время восстановления (GCD)"
 L["Glow"] = "Свечение"
@@ -617,8 +610,7 @@ L["Grid"] = "Сетка"
 L["Grobbulus"] = "Гроббулус"
 L["Group"] = "Группа"
 L["Group Arrangement"] = "Порядок и позиции индикаций в группе"
---[[Translation missing --]]
-L["Group Finder Eye"] = "Group Finder Eye"
+L["Group Finder Eye"] = "Глаз поиска группы"
 --[[Translation missing --]]
 L["Group Finder Eye Initial"] = "Group Finder Eye Initial"
 --[[Translation missing --]]
@@ -634,6 +626,8 @@ L["Group Finder Poke End"] = "Group Finder Poke End"
 --[[Translation missing --]]
 L["Group Finder Poke Initial"] = "Group Finder Poke Initial"
 L["Group Leader/Assist"] = "Лидер/Помощник группы"
+--[[Translation missing --]]
+L["Group Size"] = "Group Size"
 L["Group Type"] = "Тип группы"
 L["Grow"] = "Рост"
 L["GTFO Alert"] = "Предупреждение GTFO"
@@ -698,7 +692,9 @@ L["In Group"] = "В группе или рейде"
 L["In Party"] = "В группе"
 L["In Pet Battle"] = "В битве питомцев"
 L["In Raid"] = "В рейде"
+L["In Range"] = "В диапазоне"
 L["In Vehicle"] = "На транспорте"
+L["In War Mode"] = "В режиме войны"
 L["Include Bank"] = "Учитывать банк"
 L["Include Charges"] = "Учитывать заряды"
 L["Include Death Runes"] = "Учитывать руны смерти"
@@ -728,8 +724,7 @@ L["Is Death Rune"] = "Руна смерти"
 L["Is Exactly"] = "Точное совпадение"
 L["Is Moving"] = "Двигается"
 L["Is Off Hand"] = "Левая рука"
---[[Translation missing --]]
-L["Is Paused"] = "Is Paused"
+L["Is Paused"] = "Приостановлено"
 L["is useable"] = "Можно использовать"
 L["Island Expedition (Heroic)"] = "Островная экспедиция (героическая)"
 L["Island Expedition (Mythic)"] = "Островная экспедиция (эпохальная)"
@@ -754,8 +749,7 @@ L["Jin'do the Hexxer"] = "Джин'до Проклинатель"
 L["Journal Stage"] = "Фаза"
 L["Keep Inside"] = "Только внутри"
 L["Kel'Thuzad"] = "Кел'Тузад"
---[[Translation missing --]]
-L["Key"] = "Key"
+L["Key"] = "Ключ"
 L["Kologarn"] = "Кологарн"
 L["Koralon the Flame Watcher"] = "Коралон Страж Огня"
 L["Kurinnaxx"] = "Куриннакс"
@@ -777,7 +771,6 @@ L["Left, then Up"] = "Влево, затем вверх"
 L["Legacy Looking for Raid"] = "Поиск рейда (до патча 5.4)"
 L["Legacy RGB Gradient"] = "Градиент RGB"
 L["Legacy RGB Gradient Pulse"] = "Градиентная пульсация RGB"
-L["Legacy Spellname"] = "Название заклинания (устаревший)"
 L["Legion"] = "Legion"
 L["Length"] = "Длина"
 L["Level"] = "Уровень"
@@ -785,6 +778,7 @@ L["Limited"] = "Ограниченное"
 L["Lines & Particles"] = "Линии или частицы"
 L["Load Conditions"] = "Условия загрузки"
 L["Loatheb"] = "Лотхиб"
+L["Location"] = "Расположение"
 L["Looking for Raid"] = "Поиск рейда"
 L["Loop"] = "Повторять"
 L["Lord Jaraxxus"] = "Лорд Джараксус"
@@ -866,6 +860,7 @@ L["Name"] = "Название"
 L["Name Function"] = "Функция названия"
 L["Name Function (fallback state)"] = "Функция названия (резервное состояние)"
 L["Name of Caster's Target"] = "Имя цели заклинателя"
+L["Name(s)"] = "Имя (имена)"
 L["Name/Realm of Caster's Target"] = "Имя / Игр. мир цели заклинателя"
 L["Nameplate"] = "Индикатор здоровья"
 L["Nameplate Type"] = "Тип индикатора здоровья"
@@ -879,12 +874,9 @@ L["Neutral"] = "Нейтральный"
 L["Never"] = "Никогда"
 L["Next Combat"] = "Режим боя"
 L["Next Encounter"] = "Сражение с боссом"
---[[Translation missing --]]
 L[ [=[No active boss mod addon detected.
 
-Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=] ] = [=[No active boss mod addon detected.
-
-Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=]
+Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=] ] = "Активный мод босса не обнаружен. Примечание. Этот триггер будет использовать BigWigs или DBM (в том порядке, если оба они установлены)."
 L["No Extend"] = "Без расширения"
 L["No Instance"] = "Не в подземелье (instance)"
 L["No Profiling information saved."] = "Нет данных профилирования."
@@ -902,8 +894,7 @@ L["Note, that cross realm transmission is possible if you are on the same group"
 L["Note: Due to how complicated the swing timer behavior is and the lack of APIs from Blizzard, results are inaccurate in edge cases."] = "|cFFFFCC00Примечание.|r Из-за сложности поведения таймера Swing и отсутствия API со стороны Blizzard результаты в крайних случаях неточны."
 L["Note: 'Hide Alone' is not available in the new aura tracking system. A load option can be used instead."] = "|cFFFFCC00Предупреждение.|r Параметр \"Скрыть когда не в группе\" недоступен в новой версии триггера. Вместо него может быть использовано соответствующее условие на вкладке Загрузка."
 L["Note: The available text replacements for multi triggers match the normal triggers now."] = "|cFFFFCC00Примечение.|r Теперь для данного варианта триггера (несколько целей) доступны такие же шаблоны замены текста, как и для остальных."
---[[Translation missing --]]
-L["Note: This trigger relies on the WoW API, which returns incorrect information in some cases."] = "Note: This trigger relies on the WoW API, which returns incorrect information in some cases."
+L["Note: This trigger relies on the WoW API, which returns incorrect information in some cases."] = "Примечание. Этот триггер использует API WoW, который в некоторых случаях возвращает неверную информацию."
 L["Note: This trigger type estimates the range to the hitbox of a unit. The actual range of friendly players is usually 3 yards more than the estimate. Range checking capabilities depend on your current class and known abilities as well as the type of unit being checked. Some of the ranges may also not work with certain NPCs.|n|n|cFFAAFFAAFriendly Units:|r %s|n|cFFFFAAAAHarmful Units:|r %s|n|cFFAAAAFFMiscellanous Units:|r %s"] = "|cFFFFCC00Примечание.|r Триггер оценивает (определяет приближённо) расстояние до хитбокса единицы. Фактическое расстояние до дружественных игроков обычно на 3 метра больше оценки. Возможности проверки дистанции зависят от вашего текущего класса, имеющихся способностей и от типа проверяемой единицы. Некоторые диапазоны могут не работать с отдельными NPC. |n|n|cFFAAFFAACоюзники:|r %s|n|cFFFFAAAAПротивники:|r %s|n|cFFAAAAFFПрочие цели:|r %s"
 L["Noth the Plaguebringer"] = "Нот Чумной"
 L["NPC"] = "NPC"
@@ -911,6 +902,30 @@ L["Npc ID"] = "ID NPC"
 L["Number"] = "Число"
 L["Number Affected"] = "Количество задействованных"
 L["Object"] = "Объект"
+--[[Translation missing --]]
+L[ [=[Occurrence of the event
+Can be a range of values
+Can have multiple values separated by a comma or a space
+
+Examples:
+2nd 5th and 6th events: 2, 5, 6
+2nd to 6th: 2-6
+every 2 events: /2
+every 3 events starting from 2nd: 2/3
+every 3 events starting from 2nd and ending at 11th: 2-11/3
+
+Works only if Boss Mod addon show counter]=] ] = [=[Occurrence of the event
+Can be a range of values
+Can have multiple values separated by a comma or a space
+
+Examples:
+2nd 5th and 6th events: 2, 5, 6
+2nd to 6th: 2-6
+every 2 events: /2
+every 3 events starting from 2nd: 2/3
+every 3 events starting from 2nd and ending at 11th: 2-11/3
+
+Works only if Boss Mod addon show counter]=]
 --[[Translation missing --]]
 L[ [=[Occurrence of the event, reset when aura is unloaded
 Can be a range of values
@@ -1036,8 +1051,7 @@ L["Precision"] = "Точность"
 L["Preset"] = "Набор эффектов"
 L["Princess Huhuran"] = "Принцесса Хухуран"
 L["Print Profiling Results"] = "Вывести результаты профилирования"
---[[Translation missing --]]
-L["Proc Glow"] = "Proc Glow"
+L["Proc Glow"] = "Эффект свечения"
 L["Professor Putricide"] = "Профессор Мерзоцид"
 L["Profiling already started."] = "Профилирование уже запущено."
 L["Profiling automatically started."] = "Профилирование автоматически запущено."
@@ -1170,7 +1184,7 @@ L["Shadowlands"] = "Shadowlands"
 L["Shadron"] = "Шадрон"
 L["Shake"] = "Дрожь"
 L["Shazzrah"] = "Шаззрах"
-L["Shift-Click to resume addon execution."] = "Shift-клик возобновит выполнение аддона."
+L["Shift-Click to resume addon execution."] = "Shift+ЛКМ, чтобы возобновить выполнение дополнения."
 L["Show"] = "Показать"
 L["Show Absorb"] = "Показать поглощение (наложение)"
 L["Show CD of Charge"] = "Показать восстановление заряда"
@@ -1255,6 +1269,7 @@ L["Spell Name"] = "Название заклинания"
 L["Spell Peneration Percent"] = "Процент проникающей способности заклинаний"
 L["Spell School"] = "Школа магии"
 L["Spell Usable"] = "Заклинание доступно"
+L["Spellname"] = "Имя заклинания"
 L["Spin"] = "Вращение"
 L["Spiral"] = "Спираль"
 L["Spiral In And Out"] = "Спираль (вперед-назад)"
@@ -1274,8 +1289,7 @@ L["Stamina"] = "Выносливость"
 L["Stance/Form/Aura"] = "Стойка / Облик / Аура"
 L["Standing"] = "Отношение"
 L["Star Shake"] = "Дрожь в виде звезды"
---[[Translation missing --]]
-L["Start Animation"] = "Start Animation"
+L["Start Animation"] = "Старт анимации"
 L["Start Now"] = "Начать сейчас"
 L["Status"] = "Статус"
 --[[Translation missing --]]
@@ -1433,6 +1447,8 @@ L["Use /wa minimap to show the minimap icon again."] = "Используйте �
 L["Use Custom Color"] = "Использовать свой цвет"
 L["Use Legacy floor rounding"] = "Использовать метод округления Floor"
 L["Use Watched Faction"] = "Использовать фракцию, репутацию с которой вы сейчас отслеживаете"
+--[[Translation missing --]]
+L["Uses UnitInRange() to check if in range. Matches default raid frames out of range behavior, which is between 25 to 40 yards depending on your class and spec."] = "Uses UnitInRange() to check if in range. Matches default raid frames out of range behavior, which is between 25 to 40 yards depending on your class and spec."
 L["Using WeakAuras.clones is deprecated. Use WeakAuras.GetRegion(id, cloneId) instead."] = "Использование WeakAuras.clones устарело. Вместо этого используйте WeakAuras.GetRegion(id, cloneId)."
 L["Using WeakAuras.regions is deprecated. Use WeakAuras.GetRegion(id) instead."] = "Использование WeakAuras.regions устарело. Вместо этого используйте WeakAuras.GetRegion(id)."
 L["Vaelastrasz the Corrupt"] = "Валестраз Порочный"
@@ -1449,7 +1465,6 @@ L["Vesperon"] = "Весперон"
 L["Viscidus"] = "Нечистотон"
 L["Visibility"] = "Видимость"
 L["Visions of N'Zoth"] = "Видения Н'Зота"
-L["War Mode Active"] = "Включен режим войны"
 L["Warfront (Heroic)"] = "Фронт (героический)"
 L["Warfront (Normal)"] = "Фронт (обычный)"
 L["Warlords of Draenor"] = "Warlords of Draenor"
@@ -1461,14 +1476,18 @@ L["Warning: Full Scan auras checking for both name and spell id can't be convert
 L["Warning: Name info is now available via %affected, %unaffected. Number of affected group members via %unitCount. Some options behave differently now. This is not automatically adjusted."] = "|cFFFFCC00Примечение.|r Теперь имена задействованных и незадействованных игроков доступны посредством %affected и %unaffected; количество задействованных участников группы - %unitCount. Некоторые параметры работают иначе. Эти изменения автоматически не применяются."
 L["Warning: Tooltip values are now available via %tooltip1, %tooltip2, %tooltip3 instead of %s. This is not automatically adjusted."] = "|cFFFFCC00Примечение.|r Теперь значения из текста подсказки доступны посредством %tooltip1, %tooltip2 и %tooltip3. Это изменение автоматически не применяется."
 L["WeakAuras Built-In (63:42 | 3:07 | 10 | 2.4)"] = "WeakAuras (встроенный):  63:42 | 3:07 | 10 | 2.4"
+--[[Translation missing --]]
 L[ [=[WeakAuras has detected that it has been downgraded.
 Your saved auras may no longer work properly.
 Would you like to run the |cffff0000EXPERIMENTAL|r repair tool? This will overwrite any changes you have made since the last database upgrade.
-Last upgrade: %s]=] ] = [=[WeakAuras обнаружил, что версия аддона была понижена (осуществлен downgrade). Ваши индикации могут больше не работать должным образом.
+Last upgrade: %s
 
-Запустить |cFFFF0000ЭКСПЕРИМЕНТАЛЬНОЕ|r средство восстановления данных? Все изменения, выполненные вами с момента последнего обновления базы данных, будут утеряны.
+|cffff0000You should BACKUP your WTF folder BEFORE pressing this button.|r]=] ] = [=[WeakAuras has detected that it has been downgraded.
+Your saved auras may no longer work properly.
+Would you like to run the |cffff0000EXPERIMENTAL|r repair tool? This will overwrite any changes you have made since the last database upgrade.
+Last upgrade: %s
 
-Дата последнего обновления: %s]=]
+|cffff0000You should BACKUP your WTF folder BEFORE pressing this button.|r]=]
 L["WeakAuras has encountered an error during the login process. Please report this issue at https://github.com/WeakAuras/Weakauras2/issues/new."] = "Во время процесса входа в игру возникла ошибка. Пожалуйста, сообщите об этой проблеме по адресу https://github.com/WeakAuras/Weakauras2/issues/new."
 L["WeakAuras Profiling"] = "Профилирование WeakAuras"
 L["WeakAuras Profiling Report"] = "Отчёт профилирования"

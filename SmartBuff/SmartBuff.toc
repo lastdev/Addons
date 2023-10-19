@@ -1,6 +1,6 @@
-## Interface: 100100
-## Title: SmartBuff |cffffffff(Retail)|r by |cff00ff00Codermik & Aeldra|r
-## Version: 20.100100
+## Interface: 100107
+## Title: |TInterface\Addons\Smartbuff\Icons\IconEnabled:0|t SmartBuff |cffffffff|r by |cff00ff00Codermik & Aeldra|r
+## Version: 23.100107
 ## Author: |cff20d2ffCodermik & Aeldra|r (EU-Proudmoore)
 ## Contributing Author: |cff20d2ffSpeedwaystar
 ## Notes: Cast the most important buffs on you or party/raid members/pets. Use /sbm for options menu.

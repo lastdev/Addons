@@ -1,56 +1,35 @@
 # <DBM Mod> Raids (WoTLK)
 
-## [r319](https://github.com/DeadlyBossMods/DBM-WotLK/tree/r319) (2023-09-05)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-WotLK/compare/r318...r319) [Previous Releases](https://github.com/DeadlyBossMods/DBM-WotLK/releases)
+## [r320](https://github.com/DeadlyBossMods/DBM-WotLK/tree/r320) (2023-10-14)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-WotLK/compare/r319...r320) [Previous Releases](https://github.com/DeadlyBossMods/DBM-WotLK/releases)
 
-- Toc Bumps for retail  
-- Forgot to push this. Koralon bugfixes  
-- fixed a bug where the blistering timer started where it shouldn't.  
-- one of those changes were not intended  
-- Made defile scan time out much slower if boss is still staring at tank. this will fix it announce tank for late target swaps, but also make it slower for warning the tank when it's actually on tank. it's not a great tradeoff but I feel announcing correct target is more important than speed. Very unideal situation  
-- update (#45)  
-    Co-authored-by: Adam <MysticalOS@users.noreply.github.com>  
-- Shorten P2 timer for KT, across board in fact cause pretty sure it's just variable based on killing of final wave of adds fast enough.  
-- Protect defile and trap target scans from failing if lich king casts another instant cast ability in same frame. Should hopefully solve remaining niche cases of detecting wrong target  
-    Fixed a bug where target scan on iron council never worked in classic, because it was only scanning boss unit IDs and blizzard decided those shouldn't exist in ulduar because nochanges and they weren't added to ulduar until later.  
-- Make shadowtrap scanner more robust by using filter tech to filter out plague target except only as a fallback. Should solve any inaccuracies for starting scanning sooner than other mods.  
-- Make shadowtrap scanner more robust by using filter tech to filter out plague target except only as a fallback. Should solve any inaccuracies for starting scanning sooner than other mods.  
-- Update koKR (WotLK) (#43)  
-- Fixed 3 gtfos not using spell name to describe the spell  
-- add missing french file, fixes https://github.com/DeadlyBossMods/DBM-WotLK/issues/42  
-- remove deprecated code from thaddius  
-- Disable icon restore code as it causes pcold icons to bug out if applied/removed occur close enough together.  
-    Also don't remove icons at all by SPELL AURA REMOVED, and remove on combat end instead, matching BW behavior.  
-- Revert "try a new way of doing pcold icons, and while at it, since a delay had to be added, re-add support for prioritizing those icons by raid roster index"  
-- Revert "try a new way of doing pcold icons, and while at it, since a delay had to be added, re-add support for prioritizing those icons by raid roster index"  
-- Revert "try a new way of doing pcold icons, and while at it, since a delay had to be added, re-add support for prioritizing those icons by raid roster index"  
-- try a new way of doing pcold icons, and while at it, since a delay had to be added, re-add support for prioritizing those icons by raid roster index  
-- try a new way of doing pcold icons, and while at it, since a delay had to be added, re-add support for prioritizing those icons by raid roster index  
-- try a new way of doing pcold icons, and while at it, since a delay had to be added, re-add support for prioritizing those icons by raid roster index  
-- Sync EOF fix.  
-- Update localization.ru.lua (#41)  
-- option text improvement  
-- ICC Update again:  
-     - Fixed some portal options not grouped with other portal options  
-     - Blazing Skeleton and Gluttonous Abom timers now have weak aura keys  
-- Tweak to grouping  
-- More ICC work:  
-     - Target switch alerts and timer now grouped up and weak aura keyed for Blood Prince Council  
-     - Changed achievevment option to use achievement text instead of being grouped up with the mechanic involved, for clarity of option.  
-     - Ooze spawn option now weak aura keyed on Rotface  
-- Proper Fix sindragosa achievement check option grouping.  
-- Another ICC prep update:  
-     - Use cores new tech to assign custom weak aura keys to adds alerts and timers for deathwhisper and gunship battle, visible in GUI and everything.  
-     - Sort trash mod to bottom like modern modules  
-- Revert "fix achievement matching"  
-- fix achievement matching  
-- more fixes  
-- Fix last, and rip nice commit message for classic repo  
-- Sindragosa Update:  
-     - Fixed a bug where announce icon on beacon didn't work if the raid leader wasn't elected as icon setter. Now raid leader can announce icon set even if someone else is actually setting the icons.  
-     - Tweaked icon usage in stage 2 for magic debuff so it doesn't overwrite tomb icon and vica versa  
-     - Added chat bubbles (with icons) for both applied and countdown for tomb targetting debuffs  
-     - Changed clear icons on air phase to off by default  
-    Festergut Update:  
-     - Scrapped spore target announcing to chat option, since it's a bit over engineered for the mechanic  
-- Update localization.cn.lua (#40)  
+- re-enable 10 man goo timer, it was right, note wa wrong  
+- Scope ooze spawn to only show if you are tank, or are the one spawning it to further reduce rotface spam  
+    Turned radiating ooze alert off by default to further reduce rotface spam  
+    reverted change on sticky, it still should be on for tank, but with other changes in this push should feel better  
+- more antispam tweaks for rotface  
+- Fixed a bug that caused sindragosa and valithria to not show heroic kill stats in GUI  
+- use modern conventions and make spore use yell and not say, and add spore fading countdown  
+- Rotface update  
+     - significantly reduce alert spam on rotface by fixing a bug where vile gas alert showed multiple times and added throttle to sticky ooze alert and made it tank only by default.  
+     - Also made sticky ooze timer a nameplate only timer that'll use plater now (and in future built in DBM features)  
+     - also fixed a bug that caused vile gas timer to keep restarting.  
+- alliance rp also longer by 3 seconds on classic  
+- tweak option default on wounding strike and fix it showing double messages if two adds strike same target in same global  
+- Improve ICC trash module voice pack support  
+    fixed a bug that could cause slow icon clear on trash module, but also make icon option off by default too  
+    also fixed stop casting warning on marrowgar trash to only be on for actual casters by default  
+- adjust horde combat start timer for deathbringer to be slower than retail by 2.5 seconds.  
+- adjust up sindragosa stack anounce from 4 to 5  
+- also improve gunship battle win detection on classic  
+- Fix malleable goo cast detection on festergut because of "nochanges"  
+- Minor antispam fix for rotface  
+- bump wrath toc  
+- Also reset icons on new impales, no reason to keep descending icon for brand new sets. make it consistently always start at skull for new impales going out  
+- Also reset icons on new impales, no reason to keep descending icon for brand new sets. make it consistently always start at skull for new impales going out  
+- Changed to use 7 icons on LordMarrowgar instead of 8, leaving star fr… (#50)  
+    Co-authored-by: David Groves <git@fibrecat.org>  
+- Stage change tweaks for ICC to better improve WA stuff and fit retail conventions  
+- All icon options are now off by default for blood queen, with a force option default reset. In modern era on this fight, these particular mechanics don't need icons, positional stuff does like bites  
+- Middling concession on LK defile on tank scan that gets best of fix while still not hindering tank with slower warnings  
+- Update DBM-Raids-WoTLK.toc (#47)  

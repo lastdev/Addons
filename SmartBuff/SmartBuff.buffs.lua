@@ -113,9 +113,9 @@ function SMARTBUFF_InitItemList()
   _,SMARTBUFF_SafeRockets_q1      = GetItemInfo(198160); -- Completely Safe Rockets (Quality 1)
   _,SMARTBUFF_SafeRockets_q2      = GetItemInfo(198161); -- Completely Safe Rockets (Quality 2)
   _,SMARTBUFF_SafeRockets_q3      = GetItemInfo(198162); -- Completely Safe Rockets (Quality 3)
-  _,SMARTBUFF_BuzzingRune_q1      = GetItemInfo(194817); -- Buzzing Rune (Quality 1)
-  _,SMARTBUFF_BuzzingRune_q2      = GetItemInfo(194818); -- Buzzing Rune (Quality 2)
-  _,SMARTBUFF_BuzzingRune_q3      = GetItemInfo(194819); -- Buzzing Rune (Quality 3)
+  _,SMARTBUFF_BuzzingRune_q1      = GetItemInfo(194821); -- Buzzing Rune (Quality 1)
+  _,SMARTBUFF_BuzzingRune_q2      = GetItemInfo(194822); -- Buzzing Rune (Quality 2)
+  _,SMARTBUFF_BuzzingRune_q3      = GetItemInfo(194823); -- Buzzing Rune (Quality 3)
   _,SMARTBUFF_ChirpingRune_q1     = GetItemInfo(194824); -- Buzzing Rune (Quality 1)
   _,SMARTBUFF_ChirpingRune_q2     = GetItemInfo(194825); -- Buzzing Rune (Quality 2)
   _,SMARTBUFF_ChirpingRune_q3     = GetItemInfo(194826); -- Buzzing Rune (Quality 3)
@@ -211,6 +211,7 @@ function SMARTBUFF_InitItemList()
   _,SMARTBUFF_FatedFortuneCookie  = GetItemInfo(197792); -- Fated Fortune Cookie (76 primary stat)
   _,SMARTBUFF_KaluakBanquet       = GetItemInfo(197794); -- Feast: Grand Banquet of the Kalu'ak (76 primary stat)
   _,SMARTBUFF_HoardOfDelicacies   = GetItemInfo(197795); -- Feast: Hoard of Draconic Delicacies (76 primary stat)
+  _,SMARTBUFF_DeviouslyDeviledEgg = GetItemInfo(204072); -- Deviously Deviled Eggs
 
   -- Food item IDs
   S.FoodItems = GetItems({
@@ -693,6 +694,11 @@ function SMARTBUFF_InitSpellIDs()
   SMARTBUFF_BRONZEBLESSING  = GetSpellInfo(364342);   --"Blessing of the Bronze"
   SMARTBUFF_Visage          = GetSpellInfo(351239);   --"Visage"
 
+  SMARTBUFF_SourceOfMagic   = GetSpellInfo(369459);   --"Source of Magic"
+  SMARTBUFF_EbonMight       = GetSpellInfo(395152);   --"Ebon Might"
+  SMARTBUFF_BlisteringScale = GetSpellInfo(360827);   --"Blistering Scales"
+  SMARTBUFF_Timelessness    = GetSpellInfo(412710);   --"Timelessness"
+
   -- Demon Hunter
 
 
@@ -1171,7 +1177,11 @@ function SMARTBUFF_InitSpellList()
   if (SMARTBUFF_PLAYERCLASS == "EVOKER") then
     SMARTBUFF_BUFFLIST = {
       {SMARTBUFF_BRONZEBLESSING, 60, SMARTBUFF_CONST_SELF},
-      {SMARTBUFF_Visage, -1, SMARTBUFF_CONST_SELF}
+      {SMARTBUFF_Visage, -1, SMARTBUFF_CONST_SELF},
+      {SMARTBUFF_Timelessness, 30, SMARTBUFF_CONST_GROUP, {1}, "WARRIOR;DRUID;SHAMAN;HUNTER;ROGUE;MAGE;PRIEST;PALADIN;WARLOCK;DEATHKNIGHT;MONK;DEMONHUNTER;EVOKER"},
+      {SMARTBUFF_BlisteringScale, -1, SMARTBUFF_CONST_GROUP, {1}, "WARRIOR;DRUID;SHAMAN;HUNTER;ROGUE;MAGE;PRIEST;PALADIN;WARLOCK;DEATHKNIGHT;MONK;DEMONHUNTER;EVOKER"},
+      {SMARTBUFF_SourceOfMagic, 30, SMARTBUFF_CONST_GROUP, {1}, "SHAMAN;PRIEST;PALADIN;MONK;EVOKER"},
+      {SMARTBUFF_EbonMight, -1, SMARTBUFF_CONST_SELF},
     };
   end
 
@@ -1334,6 +1344,7 @@ function SMARTBUFF_InitSpellList()
     {SMARTBUFF_FatedFortuneCookie, 60, SMARTBUFF_CONST_FOOD},
     {SMARTBUFF_KaluakBanquet, 60, SMARTBUFF_CONST_FOOD},
     {SMARTBUFF_HoardOfDelicacies, 60, SMARTBUFF_CONST_FOOD},
+    {SMARTBUFF_DeviouslyDeviledEgg, 60, SMARTBUFF_CONST_FOOD},
   };
 
   for n, name in pairs(S.FoodItems) do

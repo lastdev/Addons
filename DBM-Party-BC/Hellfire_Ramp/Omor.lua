@@ -1,10 +1,15 @@
 local mod	= DBM:NewMod(528, "DBM-Party-BC", 1, 248)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210401044640")
+mod:SetRevision("20231014053250")
 mod:SetCreatureID(17308)
 mod:SetEncounterID(1891)
 mod:SetUsedIcons(8)
+
+if not mod:IsRetail() then
+	mod:SetModelID(18237)
+	mod:SetModelOffset(-2, 0.8, -1)
+end
 
 mod:RegisterCombat("combat")
 
@@ -21,7 +26,7 @@ local yellBane		= mod:NewYell(37566)
 local timerBane     = mod:NewTargetTimer(15, 37566, nil, nil, nil, 3)
 
 mod:AddSetIconOption("SetIconOnBaneTarget", 37566, true, false, {8})
-mod:AddBoolOption("RangeFrame")
+mod:AddRangeFrameOption(37566, 15)
 
 function mod:OnCombatEnd()
 	if self.Options.RangeFrame then

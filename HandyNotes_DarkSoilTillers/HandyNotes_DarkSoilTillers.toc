@@ -1,5 +1,5 @@
 ## Interface: 100107
-## Version: 3.30
+## Version: 3.32
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Achievement_faction_tillers
 ## Title: Dark Soil Tillers

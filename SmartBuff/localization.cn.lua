@@ -333,6 +333,11 @@ SMARTBUFF_OFT_ANTIDAZE       = "自动切换守护";
 SMARTBUFF_OFT_HIDESABUTTON   = "隐藏动作按钮";
 SMARTBUFF_OFT_INCOMBAT       = "战斗中触发";
 SMARTBUFF_OFT_SMARTDEBUFF    = "SmartDebuff";
+SMARTBUFF_OFT_PURGE_DATA     = "您确定要重置所有 SmartBuff 数据吗？\n此操作将强制重新加载 UI！";
+SMARTBUFF_OFT_REQ_RELOAD     = "新版本需要重新加载 GUI\n准备就绪后单击继续。";
+SMARTBUFF_OFT_YES            = "是的";
+SMARTBUFF_OFT_NO             = "不";
+SMARTBUFF_OFT_OKAY			 = "继续"
 
 -- 设置信息提示
 SMARTBUFF_OFTT               = "启用智能施法";

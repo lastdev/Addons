@@ -722,6 +722,18 @@ function P:UpdateUnitBar(guid, isUpdateBarsOrGRU)
 									end
 								end
 							elseif i == 2 then
+								local modData = E.spell_cdmod_talents[spellID]
+								if modData then
+									for k = 1, #modData, 2 do
+										local tal = modData[k]
+										local rank = self:IsSpecAndTalentForPvpStatus(tal, info)
+										if rank then
+											local rt = modData[k+1]
+											rt = type(rt) == "table" and (rt[rank] or rt[1]) or rt
+											cd = cd - rt
+										end
+									end
+								end
 
 								if info.talentData[412713] then
 									cd = cd * 0.9

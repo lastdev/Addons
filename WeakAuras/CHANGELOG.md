@@ -1,42 +1,27 @@
-# [5.7.1](https://github.com/WeakAuras/WeakAuras2/tree/5.7.1) (2023-09-06)
+# [5.8.3](https://github.com/WeakAuras/WeakAuras2/tree/5.8.3) (2023-10-15)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/5.7.0...5.7.1)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/5.8.2...5.8.3)
 
 ## Highlights
 
- - Improvements to triggers
-- Sound previews on dropdown selections
+ - Add new angle-based constant factor for circular dynamic group grow styles
+- Add new "Group Size" load option
 - Bug fixes 
 
 ## Commits
 
-InfusOnWoW (4):
+InfusOnWoW (3):
 
-- Templates: Add Grove Guardins
-- BT2: Fix tooltip parsing for negative numbers
-- BT2: Update auras 2s after initial login
-- Add a paused condition for timed durations (#4573)
+- Add a "Group Size" load option
+- Fix onCooldown condition with "Show GCD" enabled
+- Fix Bonus Id load options to not consier item ids bonus ids
 
-Jods (1):
+Weston Odom (1):
 
-- fix #4575
+- Add new angle-based constant factor for circular dynamic group grow styles (#4646)
 
-Stanzilla (2):
+mrbuds (2):
 
-- Bump TOC for Retail
-- Bump TOC for Era
-
-mrbuds (11):
-
-- Fix spell fields focus for non-aura triggers and load options
-- Fix anchor to screen for auras in a group
-- Bossmod Timer fix (#4584)
-- Sub Text Element: Show formatting options for all %-replacements
-- Condition of Text type auras can edit text
-- Combat Log trigger: add extraSpellId for apropriate subEvents
-- Add sound preview on sound selection dropdowns
-- Delay & Duration fields show time converted to [[HH:]MM:]ss format
-- tune "spell" option width & alignment
-- On Aura trigger, show spell name when typing spell id
-- For Combat Log, DBM Timer, BigWigs Timer triggers, spellId field show icon & name of spell
+- Dynamic Group: fix group scaling when parent is not group itself
+- Fix error when converting a combat log trigger to a spell cooldown trigger
 

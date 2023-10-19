@@ -107,7 +107,9 @@ SMARTBUFF_OFT_RESETALL       = "Reset Alles";
 SMARTBUFF_OFT_RESETLIST      = "Reset Liste";
 SMARTBUFF_OFT_YES            = "Ja";
 SMARTBUFF_OFT_NO             = "Nein";
-SMARTBUFF_OFT_PURGE_DATA     = "Bist du sicher, dass du ALLE SmartBuff Daten zurücksetzen willst?\nDiese Aktion wird ein neu Laden des UI's durchführen!";
+SMARTBUFF_OFT_OKAY			 = "Neu laden"
+SMARTBUFF_OFT_PURGE_DATA     = "Sind Sie sicher, dass Sie ALLE SmartBuff-Daten zurücksetzen möchten?\nDiese Aktion erzwingt ein Neuladen der Benutzeroberfläche!";
+SMARTBUFF_OFT_REQ_RELOAD     = "Neue Versionen erfordern ein Neuladen der GUI\nKlicke um Fortzufahren";
 SMARTBUFF_OFT_SPLASHICON     = "Symbol anzeigen";
 SMARTBUFF_OFT_SPLASHMSGSHORT = "Kurze Meldung";
 

@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,normal25,heroic,heroic25"
 
-mod:SetRevision("20230522065847")
+mod:SetRevision("20231013020938")
 mod:SetCreatureID(37813)
 mod:SetEncounterID(mod:IsClassic() and 848 or 1096)
 mod:SetModelID(30790)
@@ -165,8 +165,8 @@ end
 
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg:find(L.PullAlliance, 1, true) then
-		timerCombatStart:Start()
+		timerCombatStart:Start(self:IsRetail() and 45 or 48)
 	elseif msg:find(L.PullHorde, 1, true) then
-		timerCombatStart:Start(94.5)
+		timerCombatStart:Start(self:IsRetail() and 94.5 or 97.5)--Retail has been confirmed 94.5 more than once, but classic is a little slower
 	end
 end

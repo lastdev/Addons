@@ -385,8 +385,8 @@ local function ProcessSpell(spellID, guid)
 end
 
 
+--[[
 local _t = {}
-
 local mt = {
 	__index = function(t, k)
 		local e = {}
@@ -414,7 +414,7 @@ local mt = {
 		return e
 	end
 }
-
+]]
 local mt = {
 	__index = function(t, k)
 		t[k] = {}
@@ -514,7 +514,7 @@ local function AppendInterruptExtras(info, _, spellID, _,_,_, extraSpellId, extr
 
 			local mark = db.showRaidTargetMark and E.RAID_TARGET_MARKERS[destRaidFlags]
 			if mark then
-				statusBar.CastingBar.Text:SetText(format("%s %s", statusBar.name, mark))
+				statusBar.CastingBar.Text:SetFormattedText("%s %s", statusBar.name, mark)
 			end
 		end
 	end

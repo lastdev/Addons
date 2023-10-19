@@ -9,7 +9,7 @@
 -- dialogControl = "InlineGroupList-OmniCD",
 -- image (optional)
 -- imageCoords (optional)
--- arg = class (optional -  display class color on bg)
+-- arg = classFileName (optional -  display class color on bg)
 
 ---------------------------------------------------------------------------------
 

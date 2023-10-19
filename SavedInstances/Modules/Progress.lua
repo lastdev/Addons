@@ -451,6 +451,7 @@ local presets = {
       75860, -- Aiding the Accord: Researchers Under Fire
       75861, -- Aiding the Accord: Suffusion Camp
       77254, -- Aiding the Accord: Time Rift
+      77976, -- Aiding the Accord: Dreamsurge
     },
     reset = 'weekly',
     persists = true,
@@ -687,6 +688,28 @@ local presets = {
     persists = false,
     fullObjective = false,
   },
+  -- Time Rift
+  ['df-time-rift'] = {
+    type = 'single',
+    expansion = 9,
+    index = 16,
+    name = L["Time Rift"],
+    questID = 77836,
+    reset = 'weekly',
+    persists = false,
+    fullObjective = false
+  },
+  -- Dreamsurge
+  ['df-dreamsurge'] = {
+    type = 'single',
+    expansion = 9,
+    index = 17,
+    name = L["Shaping the Dreamsurge"],
+    questID = 77251,
+    reset = 'weekly',
+    persists = false,
+    fullObjective = false
+  }
 }
 
 ---update the progress of quest to the store

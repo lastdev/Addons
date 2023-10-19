@@ -40,21 +40,23 @@ points[ 1527 ] = {
 	[53381903] = { alpaca=true },
 	[53581844] = { alpaca=true },
 
-	[55206973] = { alpaca=true },
-	[55257005] = { alpaca=true },
-	[55356983] = { alpaca=true },
-	[55427013] = { alpaca=true },
-	[55527039] = { alpaca=true },
+	[55006992] = { alpaca=true },
+	[55036926] = { alpaca=true },
+	[55327034] = { alpaca=true },
+	[55566983] = { alpaca=true },
 	[55687063] = { alpaca=true },
+	[55817028] = { alpaca=true },
 	
 	[63031444] = { alpaca=true },
-	[63171418] = { alpaca=true },
+	[63131413] = { alpaca=true },
 	[63231551] = { alpaca=true },
 	[63501544] = { alpaca=true },
 	[63761502] = { alpaca=true },
 
-	[63255255] = { alpaca=true },
+	[63125259] = { alpaca=true },
+	[63375298] = { alpaca=true },
 	[63505250] = { alpaca=true },
+	[63625258] = { alpaca=true },
 	[63765217] = { alpaca=true },
 		
 	[69955796] = { alpaca=true },
@@ -143,6 +145,7 @@ texturesSpecial[5] = "Interface\\PetBattles\\DeadPetIcon"
 texturesSpecial[6] = "Interface\\RaidFrame\\UI-RaidFrame-Threat"
 texturesSpecial[7] = "Interface\\PlayerFrame\\UI-PlayerFrame-DeathKnight-Frost"
 texturesSpecial[8] = "Interface\\HelpFrame\\HelpIcon-CharacterStuck"	
+texturesSpecial[9] = "Interface\\Vehicles\\UI-Vehicles-Raid-Icon"
 
 scaling[1] = 0.55
 scaling[2] = 0.55
@@ -162,3 +165,4 @@ scalingSpecial[5] = 0.46
 scalingSpecial[6] = 0.45
 scalingSpecial[7] = 0.41
 scalingSpecial[8] = 0.6
+scalingSpecial[9] = 0.43

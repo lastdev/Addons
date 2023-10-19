@@ -1,25 +1,24 @@
 # <DBM Mod> Dungeons (DF)
 
-## [r101](https://github.com/DeadlyBossMods/DBM-Dungeons/tree/r101) (2023-10-03)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Dungeons/compare/r100...r101) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Dungeons/releases)
+## [r102](https://github.com/DeadlyBossMods/DBM-Dungeons/tree/r102) (2023-10-14)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Dungeons/compare/r101...r102) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Dungeons/releases)
 
-- Update localization.ru.lua (#143)  
-- Scope Season 3 dungeon trash mods with zone checks  
-- fixes and cleanups, closes https://github.com/DeadlyBossMods/DBM-Dungeons/issues/141  
-- Disable flarecore cd timer, it's not accurate (maybe health based?) Closes https://github.com/DeadlyBossMods/DBM-Dungeons/issues/140  
-- Update crystalize timer, closes https://github.com/DeadlyBossMods/DBM-Dungeons/issues/137  
-- Fix lua error, closes https://github.com/DeadlyBossMods/DBM-Dungeons/issues/138  
-- Add a stonecore trash module with prio interrupt/announce for force of earth, since it's still a sore spot of timewalking dungeons. Still need to remmeber to log the imp portal, the other fail point.  
-- downgrade alerts on morchie to lower emphasis  
-- Attempt to fix council of captains re-engaging due to friendly captain being dragged into combat with trash after boss is defeated  
-- enable backup event  
-- note confirmed, closes https://github.com/DeadlyBossMods/DBM-Dungeons/issues/139  
-- Update localization.tw.lua (#136)  
-- update localization.cn (#132)  
-- Update koKR (Dungeon) (#135)  
-- Update localization.ru.lua (#134)  
-- Update localization.ru.lua (#133)  
-- Some more tech updates for S3 dungeons, including support for nameplate aura timers, trash filters, and another blank trash mod for everbloom  
-- Also upgrade throne of tides to modern mythic+ stats type  
-- Also stub in throne of tides trash module for localizers to get started  
-- Some technical updates to throne of the tides  
+- now that packaging works, retire BCC packaging for now, it's not needed, it just needed testing  
+- how did those get renamed. i literally copied and pasted them, I swear  
+- maybe fix ignore  
+- Trying to read this source code, gonna have to take pot shots until i figure out how to get it to just ignore the irrelevant toc files for each flavor  
+- packager documentation is such horseshit, it doesn't say . is required but maybe it is  
+- Maybe this?  
+- lets see what this does  
+- lets try this  
+- This will either work or explode i guess :D  
+- fix typo  
+- Updated tocs for wrath tbc and classic dungeon multi packaging  
+- Revert "template tocs as expected for wow flavors"  
+- template tocs as expected for wow flavors  
+- fix errors  
+- Unify TBC dungeon mods between classic and retail  
+- Retail vanilla dungeon mods and classic vanilla dungeon mods completely unified into a single hybrid module  
+- bump wrath toc  
+- notes  
+- Update koKR (#142)  

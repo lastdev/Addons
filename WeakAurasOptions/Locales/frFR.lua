@@ -179,6 +179,8 @@ Enable this setting if you want this timer to be hidden, or when using a WeakAur
 	--[[Translation missing --]]
 	L["and with width |cFFFF0000%s|r and %s"] = "and with width |cFFFF0000%s|r and %s"
 	L["Angle"] = "Angle"
+	--[[Translation missing --]]
+	L["Angle Between Auras"] = "Angle Between Auras"
 	L["Animate"] = "Animer"
 	L["Animated Expand and Collapse"] = "Expansion et réduction animés"
 	L["Animates progress changes"] = "Animer les changement de progression"
@@ -382,6 +384,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED
 	L["Delete all"] = "Supprimer tout"
 	L["Delete children and group"] = "Supprimer enfants et groupe"
 	L["Delete Entry"] = "Supprimer l'entrée"
+	--[[Translation missing --]]
+	L["Deleting auras: "] = "Deleting auras: "
 	L["Desaturate"] = "Dé-saturer"
 	L["Description"] = "Description"
 	L["Description Text"] = "Texte de Description"
@@ -537,6 +541,8 @@ Can use \ to escape -.]=]
 	--[[Translation missing --]]
 	L["Find Auras"] = "Find Auras"
 	L["Finish"] = "Finir"
+	--[[Translation missing --]]
+	L["Finishing..."] = "Finishing..."
 	L["Fire Orb"] = "Orbe de feu"
 	L["Font"] = "Police"
 	L["Font Size"] = "Taille de Police"
@@ -658,6 +664,8 @@ Si cette case est cochée, ce séparateur inclura du texte. Sinon, ce sera juste
 	L["If unchecked, then this space will fill the entire line it is on in User Mode."] = "Si cette case n'est pas cochée, cet espace remplira toute la ligne sur laquelle il se trouve en mode utilisateur."
 	L["Ignore Dead"] = "Ignorer la mort"
 	L["Ignore Disconnected"] = "Ignorer les déconnectés"
+	--[[Translation missing --]]
+	L["Ignore out of casting range"] = "Ignore out of casting range"
 	L["Ignore out of checking range"] = "Ignorer hors de la plage de vérification"
 	L["Ignore Self"] = "Ignorer soi-même"
 	--[[Translation missing --]]
@@ -776,6 +784,8 @@ Si cette case est cochée, ce séparateur inclura du texte. Sinon, ce sera juste
 	L["Move this display down in its group's order"] = "Déplacer cet affichage vers le bas dans l'ordre de son groupe"
 	L["Move this display up in its group's order"] = "Déplacer cet affichage vers le haut dans l'ordre de son groupe"
 	L["Move Up"] = "Déplacer vers le haut"
+	--[[Translation missing --]]
+	L["Moving auras: "] = "Moving auras: "
 	L["Multiple Displays"] = "Affichages multiples"
 	L["Multiselect ignored tooltip"] = "Infobulle ignorée de la sélection multiple"
 	L["Multiselect multiple tooltip"] = [=[
@@ -887,6 +897,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Premade Auras"] = "Premade Auras"
 	--[[Translation missing --]]
 	L["Premade Snippets"] = "Premade Snippets"
+	--[[Translation missing --]]
+	L["Preparing auras: "] = "Preparing auras: "
 	L["Preset"] = "Préréglé"
 	L["Press Ctrl+C to copy"] = "Appuyer sur Ctrl+C pour copier"
 	L["Press Ctrl+C to copy the URL"] = "Appuyer sur Ctrl+C pour copier l'URL"
@@ -1115,8 +1127,8 @@ It might not work correctly!]=] ] = [=[This aura was created with a different ve
 It might not work correctly!]=]
 	--[[Translation missing --]]
 	L[ [=[This aura was created with a newer version of WeakAuras.
-It might not work correctly with your version!]=] ] = [=[This aura was created with a newer version of WeakAuras.
-It might not work correctly with your version!]=]
+Upgrade your version of WeakAuras or wait for next release before installing this aura.]=] ] = [=[This aura was created with a newer version of WeakAuras.
+Upgrade your version of WeakAuras or wait for next release before installing this aura.]=]
 	L["This display is currently loaded"] = "Cet affichage est actuellement chargé"
 	L["This display is not currently loaded"] = "Cet affichage n'est pas chargé"
 	--[[Translation missing --]]
@@ -1195,7 +1207,9 @@ It might not work correctly with your version!]=]
 	--[[Translation missing --]]
 	L["Uses Texture Coordinates to rotate the texture."] = "Uses Texture Coordinates to rotate the texture."
 	--[[Translation missing --]]
-	L["Uses UnitIsVisible() to check if in range. This is polled every second."] = "Uses UnitIsVisible() to check if in range. This is polled every second."
+	L["Uses UnitInRange() to check if in range. Matches default raid frames out of range behavior, which is between 25 to 40 yards depending on your class and spec."] = "Uses UnitInRange() to check if in range. Matches default raid frames out of range behavior, which is between 25 to 40 yards depending on your class and spec."
+	--[[Translation missing --]]
+	L["Uses UnitIsVisible() to check if game client has loaded a object for this unit. This distance is around 100 yards. This is polled every second."] = "Uses UnitIsVisible() to check if game client has loaded a object for this unit. This distance is around 100 yards. This is polled every second."
 	L["Value %i"] = "Valeur %i"
 	L["Values are in normalized rgba format."] = "Les valeurs sont normalisées dans le format rvba"
 	L["Values:"] = "Valeurs:"

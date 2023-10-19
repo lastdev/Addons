@@ -1,5 +1,5 @@
 local mod = DBM:NewMod("Displays the CDs of interrupts to you (and your raid in some configurations).", "DBM-Interrupts")
-mod:SetRevision("Revision 2.20.2019")
+mod:SetRevision("Revision 10.13.2023")
 mod:RegisterEvents("SPELL_CAST_SUCCESS")
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
@@ -10,9 +10,11 @@ function mod:SPELL_CAST_SUCCESS(args)
         SkullBash={       "SkullBash",  106839,  15},
         SolarBeam={       "SolarBeam",  78675,   60},
         CounterShot={     "CounterSh",  147362,  24},
+        Muzzle={          "Muzzle",     187707,  15},
         SilencingShot={   "SilenceSh",  34490,   24},
         CounterSpell={    "CounterSp",  2139,    24},
         AvengersShield={  "AvengerSd",  31935,   15},
+        Quell={           "Quell",      351338,  40},
         Rebuke={          "Rebuke",     96231,   15},
         Silence={         "Silence",    15487,   45},
         WindShear={       "WindShear",  57994,   12},

@@ -48,14 +48,6 @@ points[ 371 ] = { -- The Jade Forest
 	[64822874] = { pinType="TJF" },
 	[65283239] = { pinType="TJF", author=true },
 	[65653041] = { pinType="TJF" },
-	[23206046] = { pinType="B", title="Forgotten Lockbox", quest=31867,
-					tip="Second floor of the \"Tavern in the Mists\"" },
-	[34187689] = { pinType="B", title="Boat-Building Instructions", quest=31869, item=87524, obj=214340 },
-}
-
-points[ 433 ] = { -- The Veiled Stair
-	[54667122] = { pinType="B", title="Forgotten Lockbox", quest=31867,
-					tip="Second floor of the \"Tavern in the Mists\"" },
 }
 
 points[ 388 ] = { -- Townlong Steppes
@@ -90,13 +82,19 @@ points[ 390 ] = { -- Vale of Eternal Blossoms
 	[15766894] = { pinType="VEB", },
 	[15846736] = { pinType="VEB", tip="Same colour as the soil" },
 	[16604562] = { pinType="VEB", },
+	[16613506] = { pinType="VEB", },
 	[17466291] = { pinType="VEB", },
 	[18212859] = { pinType="VEB", tip="Under the foliage" },
 	[18377238] = { pinType="VEB", tip="Same colour as the soil" },
+	[19062047] = { pinType="VEB", },
 	[19075114] = { pinType="VEB", tip="Under the foliage" },
+	[20504254] = { pinType="VEB", },
+	[21043159] = { pinType="VEB", },
 	[21686610] = { pinType="VEB", tip="Same colour as the soil" },
 	[22012846] = { pinType="VEB", tip="Under the foliage" },
+	[24642629] = { pinType="VEB", },
 	[25227070] = { pinType="VEB", },
+	[25603127] = { pinType="VEB", },
 	[28467707] = { pinType="VEB", },
 	[30946553] = { pinType="VEB", },
 	[31911724] = { pinType="VEB", },
@@ -109,6 +107,7 @@ points[ 390 ] = { -- Vale of Eternal Blossoms
 	[45336677] = { pinType="VEB", },
 	[47417268] = { pinType="VEB", },
 	[49156710] = { pinType="VEB", },
+	[50632273] = { pinType="VEB", },
 	[51515546] = { pinType="VEB", tip="Under the foliage" },
 	[52166977] = { pinType="VEB", tip="Under the foliage" },
 	[52596639] = { pinType="VEB", },
@@ -410,24 +409,6 @@ points[ 376 ] = { -- Valley of the Four Winds
 					.."These award a nice chunk of reputation.\n\n"
 					.."Tina's quests are actually items dropped by\n"
 					.."mobs and which are then turned in to her" },
-
-	[14933373] = { pinType="B", quest=31407, item=86218 }, -- Staff of the Hidden Master
-	[15422917] = { pinType="B", quest=31407, item=86218 },
-	[17473586] = { pinType="B", quest=31407, item=86218 },
-	[18944247] = { pinType="B", quest=31407, item=86218 },
-	[19183773] = { pinType="B", quest=31407, item=86218 },
-	[32886269] = { pinType="B", title="Blackhoof", item="Battle Horn" },
-	[34545922] = { pinType="B", title="Blackhoof", item="Battle Horn"  },
-	[36962575] = { pinType="B", title="Sulik'shor", item="Crystal of Insanity" },
-	[37826040] = { pinType="B", title="Blackhoof", item="Battle Horn", },
-	[39635765] = { pinType="B", title="Blackhoof", item="Battle Horn"  }, 
-	[43613748] = { pinType="B", title="Cache of Pilfered Goods", quest=31406,
-					tip="Descend into the Springtail Warren" },
-	[45403838] = { pinType="B", title="Ghostly Pandaren Craftsman", quest=31292, tip="Standing under a tree" },
-	[46802440] = { pinType="B", title="Ghostly Pandaren Fisherman", quest=31284, },
-	[72540985] = { pinType="B", title="Forgotten Lockbox", quest=31867,
-					tip="Second floor of the \"Tavern in the Mists\"" },
-	[92083907] = { pinType="B", title="Boat-Building Instructions", quest=31869, item=87524, obj=214340 },
 }
 
 -- Choice of texture
@@ -452,22 +433,26 @@ texturesSpecial[5] = "Interface\\PetBattles\\DeadPetIcon"
 texturesSpecial[6] = "Interface\\RaidFrame\\UI-RaidFrame-Threat"
 texturesSpecial[7] = "Interface\\PlayerFrame\\UI-PlayerFrame-DeathKnight-Frost"
 texturesSpecial[8] = "Interface\\HelpFrame\\HelpIcon-CharacterStuck"	
+texturesSpecial[9] = "Interface\\Vehicles\\UI-Vehicles-Raid-Icon"
 
-scaling[1] = 0.68
-scaling[2] = 0.68
-scaling[3] = 0.66
-scaling[4] = 0.66
-scaling[5] = 0.66
-scaling[6] = 0.66
-scaling[7] = 0.76
-scaling[8] = 0.76
-scaling[9] = 0.96
-scaling[10] = 0.96
-scalingSpecial[1] = 0.46
-scalingSpecial[2] = 0.62
-scalingSpecial[3] = 0.62
-scalingSpecial[4] = 0.62
-scalingSpecial[5] = 0.54
-scalingSpecial[6] = 0.52
-scalingSpecial[7] = 0.5
-scalingSpecial[8] = 0.74
+scaling[1] = 0.55
+scaling[2] = 0.55
+scaling[3] = 0.55
+scaling[4] = 0.55
+scaling[5] = 0.55
+scaling[6] = 0.55
+scaling[7] = 0.65
+scaling[8] = 0.62
+scaling[9] = 0.75
+scaling[10] = 0.75
+scalingSpecial[1] = 0.37
+scalingSpecial[2] = 0.49
+scalingSpecial[3] = 0.49
+scalingSpecial[4] = 0.49
+scalingSpecial[5] = 0.43
+scalingSpecial[6] = 0.41
+scalingSpecial[7] = 0.395
+scalingSpecial[8] = 0.57
+scalingSpecial[9] = 0.43
+
+

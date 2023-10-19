@@ -1,9 +1,14 @@
 local mod	= DBM:NewMod(574, "DBM-Party-BC", 6, 261)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230708234551")
+mod:SetRevision("20231014053250")
 mod:SetCreatureID(17796)
 mod:SetEncounterID(1943)
+
+if not mod:IsRetail() then
+	mod:SetModelID(18638)
+	mod:SetModelOffset(-10, 0, 1)
+end
 
 mod:RegisterCombat("combat")
 
@@ -15,7 +20,7 @@ mod:RegisterEventsInCombat(
 
 local WarnNet			= mod:NewTargetAnnounce(35107, 2)
 
-local specWarnSummon	= mod:NewSpecialWarningSwitch(-5999, "-Healer", nil, nil, 1, 2)
+local specWarnSummon	= mod:NewSpecialWarning("warnSummon", "-Healer", nil, nil, 1, 2)--(-5999)
 
 local timerNet			= mod:NewTargetTimer(6, 35107, nil, nil, nil, 3)
 

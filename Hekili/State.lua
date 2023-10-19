@@ -2987,6 +2987,11 @@ do
                 end
             end
 
+            -- We don't cache IDs in cooldown tables to avoid issues with ID and specialization changes.
+            if k == "id" then
+                return id
+            end
+
             local noFeignCD = rawget( profile.specs, state.spec.id )
             noFeignCD = noFeignCD and noFeignCD.noFeignedCooldown
 
@@ -2997,10 +3002,8 @@ do
                 raw = true
             end
 
-            if k == "duration" or k == "expires" or k == "next_charge" or k == "charge" or k == "recharge_began" then
-                -- Refresh the ID in case we changed specs and ability is spec dependent.
-                t.id = ability.id
 
+            if k == "duration" or k == "expires" or k == "next_charge" or k == "charge" or k == "recharge_began" then
                 local start, duration = 0, 0
 
                 if id > 0 then
@@ -3047,7 +3050,8 @@ do
                 t.true_expires = start and ( start + true_duration ) or 0
 
                 if ability.charges and ability.charges > 1 then
-                    local charges, maxCharges, start, duration = GetSpellCharges( t.id )
+                    local charges, maxCharges
+                    charges, maxCharges, start, duration = GetSpellCharges( id )
 
                     --[[ if class.abilities[ t.key ].toggle and not state.toggle[ class.abilities[ t.key ].toggle ] then
                         charges = 1
@@ -3230,14 +3234,17 @@ end
 
 
 local mt_dot = {
-    __index = function(t, k)
+    __index = function( t, k )
         local a = class.auras[ k ]
+        local dotType = a and a.dot
+        if not dotType then return state.debuff[ k ] end
 
-        if a and a.dot == "buff" then
-            return state.buff[ k ]
+        if dotType == "both" then
+            if state.buff[ k ].up then return state.buff[ k ] end
+            return state.debuff[ k ]
         end
 
-        return state.debuff[ k ]
+        return state[ dotType ][ k ]
     end,
 }
 ns.metatables.mt_dot = mt_dot
@@ -4245,9 +4252,24 @@ local mt_active_dot = {
 
         if aura then
             if rawget( t, aura.key ) then return t[ aura.key ] end
-            t[ k ] = ns.numDebuffs( aura.id )
-            return t[ k ]
+            local id = aura.id
+            local count = ns.numDebuffs( id )
 
+            if aura.copy then
+                if type( aura.copy ) == "table" then
+                    for _, v in ipairs( aura.copy ) do
+                        if type(v) == "number" and v > 0 and v ~= id then
+
+                            count = count + ns.numDebuffs( v )
+                        end
+                    end
+                elseif type( aura.copy ) == "number" and aura.copy > 0 and aura.copy ~= id then
+                    count = count + ns.numDebuffs( aura.copy )
+                end
+            end
+
+            t[ k ] = count
+            return t[ k ]
         else
             return 0
 

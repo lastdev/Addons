@@ -29,6 +29,7 @@ local wowVersionString, wowBuild, _, wowTOC = GetBuildInfo()
 local testBuild = IsTestBuild()
 local isRetail = WOW_PROJECT_ID == (WOW_PROJECT_MAINLINE or 1)
 local isClassic = WOW_PROJECT_ID == (WOW_PROJECT_CLASSIC or 2)
+local isHardcoreServer = C_GameRules and C_GameRules.IsHardcoreActive and C_GameRules.IsHardcoreActive()
 local isBCC = WOW_PROJECT_ID == (WOW_PROJECT_BURNING_CRUSADE_CLASSIC or 5)
 local isWrath = WOW_PROJECT_ID == (WOW_PROJECT_WRATH_CLASSIC or 11)
 --local isCata = WOW_PROJECT_ID == (WOW_PROJECT_CATA_CLASSIC or 99)
@@ -72,7 +73,7 @@ local function showRealDate(curseDate)
 end
 
 DBM = {
-	Revision = parseCurseDate("20231003163141"),
+	Revision = parseCurseDate("20231019035947"),
 }
 
 local fakeBWVersion, fakeBWHash = 290, "894cc27"
@@ -80,21 +81,21 @@ local bwVersionResponseString = "V^%d^%s"
 local PForceDisable
 -- The string that is shown as version
 if isRetail then
-	DBM.DisplayVersion = "10.1.28"
-	DBM.ReleaseRevision = releaseDate(2023, 10, 3) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	DBM.DisplayVersion = "10.1.30"
+	DBM.ReleaseRevision = releaseDate(2023, 10, 18) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	PForceDisable = 6--When this is incremented, trigger force disable regardless of major patch
 elseif isClassic then
-	DBM.DisplayVersion = "1.14.47"
-	DBM.ReleaseRevision = releaseDate(2023, 8, 29) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	DBM.DisplayVersion = "1.14.50 alpha"
+	DBM.ReleaseRevision = releaseDate(2023, 10, 14) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	PForceDisable = 3--When this is incremented, trigger force disable regardless of major patch
 elseif isBCC then
 	DBM.DisplayVersion = "2.6.0 alpha"--When TBC returns (and it will one day). It'll probably be game version 2.6
-	DBM.ReleaseRevision = releaseDate(2023, 10, 3) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	DBM.ReleaseRevision = releaseDate(2023, 10, 10) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	PForceDisable = 2--When this is incremented, trigger force disable regardless of major patch
 elseif isWrath then
-	DBM.DisplayVersion = "3.4.51"
-	DBM.ReleaseRevision = releaseDate(2023, 10, 3) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
-	PForceDisable = 2--When this is incremented, trigger force disable regardless of major patch
+	DBM.DisplayVersion = "3.4.54 alpha"
+	DBM.ReleaseRevision = releaseDate(2023, 10, 14) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	PForceDisable = 3--When this is incremented, trigger force disable regardless of major patch
 end
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -237,7 +238,7 @@ DBM.DefaultOptions = {
 	LFDEnhance = true,
 	WorldBossNearAlert = false,
 	RLReadyCheckSound = true,
-	AFKHealthWarning = false,
+	AFKHealthWarning2 = isHardcoreServer and true or false,
 	AutoReplySound = true,
 	HideObjectivesFrame = true,
 	HideGarrisonToasts = true,
@@ -352,11 +353,15 @@ DBM.DefaultOptions = {
 	DontRestoreRange = false,
 	DontShowInfoFrame = false,
 	DontShowHudMap2 = false,
+	UseNameplateHandoff = true,--Power user setting, no longer shown in GUI
 	DontShowNameplateIcons = false,
+	DontShowNameplateIconsCD = false,
 	DontSendBossGUIDs = false,
 	DontShowTimersWithNameplates = true,
-	UseNameplateHandoff = true,
+	NPAuraText = true,
 	NPAuraSize = 40,
+	NPIconXOffset = 0,
+	NPIconYOffset = 0,
 	DontPlayCountdowns = false,
 	DontSendYells = false,
 	BlockNoteShare = false,
@@ -967,7 +972,7 @@ do
 	end
 
 	function argsMT.__index:IsPlayer()
-		-- If blizzard ever removes sourceFlags, this will automatically switch to fallback
+		-- If blizzard ever removes destFlags, this will automatically switch to fallback
 		if args.destFlags and COMBATLOG_OBJECT_AFFILIATION_MINE then
 			return bband(args.destFlags, COMBATLOG_OBJECT_AFFILIATION_MINE) ~= 0 and bband(args.destFlags, COMBATLOG_OBJECT_TYPE_PLAYER) ~= 0
 		else
@@ -1578,6 +1583,10 @@ do
 					self:Schedule(15, infniteLoopNotice, self, L.OUTDATEDSPELLTIMERS)
 					return
 				end
+			end
+			--DBM plater nameplate cooldown icons are enabled, but platers are not. Inform user feature is not fully enabled or fully disabled
+			if Plater and not Plater.db.profile.bossmod_support_bars_enabled and not DBM.Options.DontShowNameplateIconsCD then
+				C_TimerAfter(15, function() AddMsg(self, L.PLATER_NP_AURAS_MSG) end)
 			end
 			if GetAddOnEnableState(playerName, "DPMCore") >= 1 then
 				self:Disable(true)
@@ -3551,6 +3560,10 @@ do
 			elseif challengeScenarios[LastInstanceMapID] and not GetAddOnInfo("DBM-Challenges") then--No trivial check on challenge scenarios
 				AddMsg(self, L.MOD_AVAILABLE:format("DBM-Challenges"))
 			end
+		else--Classic
+			if instanceDifficultyBylevel[LastInstanceMapID] and instanceDifficultyBylevel[LastInstanceMapID][2] == 2 and not GetAddOnInfo("DBM-Party-Vanilla") then
+				AddMsg(self, L.MOD_AVAILABLE:format("DBM Dungeon mods"))
+			end
 		end
 		if pvpZones[LastInstanceMapID] and not GetAddOnInfo("DBM-PvP") and not pvpShown then
 			AddMsg(self, L.MOD_AVAILABLE:format("DBM-PvP"))
@@ -4751,7 +4764,7 @@ do
 				end
 			end
 		end
-		if self.Options.AFKHealthWarning and not IsEncounterInProgress() and UnitIsAFK("player") and self:AntiSpam(5, "AFK") then--You are afk and losing health, some griever is trying to kill you while you are afk/tabbed out.
+		if self.Options.AFKHealthWarning2 and not IsEncounterInProgress() and UnitIsAFK("player") and self:AntiSpam(5, "AFK") then--You are afk and losing health, some griever is trying to kill you while you are afk/tabbed out.
 			self:FlashClientIcon()
 			local voice = DBM.Options.ChosenVoicePack2
 			local path = 546633--"Sound\\Creature\\CThun\\CThunYouWillDIe.ogg"
@@ -5449,7 +5462,7 @@ do
 					end
 				end
 			end
-			if self.Options.AFKHealthWarning and UnitIsUnit(uId, "player") and (health < 85) and not IsEncounterInProgress() and UnitIsAFK("player") and self:AntiSpam(5, "AFK") then--You are afk and losing health, some griever is trying to kill you while you are afk/tabbed out.
+			if self.Options.AFKHealthWarning2 and UnitIsUnit(uId, "player") and (health < (isHardcoreServer and 95 or 85)) and not IsEncounterInProgress() and UnitIsAFK("player") and self:AntiSpam(5, "AFK") then--You are afk and losing health, some griever is trying to kill you while you are afk/tabbed out.
 				local voice = DBM.Options.ChosenVoicePack2
 				local path = 546633--"Sound\\Creature\\CThun\\CThunYouWillDIe.ogg"
 				if not voiceSessionDisabled and voice ~= "None" then
@@ -6258,7 +6271,8 @@ function DBM:UNIT_DIED(args)
 		self:OnMobKill(self:GetCIDFromGUID(GUID))
 	end
 	----GUIDIsPlayer
-	if self.Options.AFKHealthWarning and GUID == UnitGUID("player") and not IsEncounterInProgress() and UnitIsAFK("player") and self:AntiSpam(5, "AFK") then--You are afk and losing health, some griever is trying to kill you while you are afk/tabbed out.
+	--no point in playing alert on death itself on hardcore. if you're dead it's over, no reason to salt the wound
+	if not isHardcoreServer and self.Options.AFKHealthWarning2 and GUID == UnitGUID("player") and not IsEncounterInProgress() and UnitIsAFK("player") and self:AntiSpam(5, "AFK") then--You are afk and losing health, some griever is trying to kill you while you are afk/tabbed out.
 		self:FlashClientIcon()
 		local voice = DBM.Options.ChosenVoicePack2
 		local path = 546633--"Sound\\Creature\\CThun\\CThunYouWillDIe.ogg"
@@ -7228,10 +7242,16 @@ function DBM:IsFated()
 end
 bossModPrototype.IsFated = DBM.IsFated
 
---Catch all to basically allow encounter mods to use pre retail changes within mods
-function bossModPrototype:IsClassic()
+--Catch alls to basically allow encounter mods to use pre retail changes within mods
+function DBM:IsClassic()
 	return not isRetail
 end
+bossModPrototype.IsClassic = DBM.IsClassic
+
+function DBM:IsRetail()
+	return isRetail
+end
+bossModPrototype.IsRetail = DBM.IsRetail
 
 --Pretty much ANYTHING that has a heroic mode
 function bossModPrototype:IsHeroic()
@@ -8613,6 +8633,7 @@ do
 		end
 	end
 
+	--Object that's used when precision isn't possible (number of targets variable or unknown
 	function announcePrototype:CombinedShow(delay, ...)
 		if self.option and not self.mod.Options[self.option] then return end
 		if DBM.Options.DontShowBossAnnounces then return end	-- don't show the announces if the spam filter option is set
@@ -8631,6 +8652,32 @@ do
 		end
 		DBMScheduler:Unschedule(self.Show, self.mod, self)
 		DBMScheduler:Schedule(delay or 0.5, self.Show, self.mod, self, ...)
+	end
+
+	--New object that allows defining count instead of scheduling for more efficient and immediate warnings when precise count is known
+	function announcePrototype:PreciseShow(maxTotal, ...)
+		if self.option and not self.mod.Options[self.option] then return end
+		if DBM.Options.DontShowBossAnnounces then return end	-- don't show the announces if the spam filter option is set
+		if DBM.Options.DontShowTargetAnnouncements and (self.announceType == "target" or self.announceType == "targetcount") and not self.noFilter then return end--don't show announces that are generic target announces
+		local argTable = {...}
+		for i = 1, #argTable do
+			if type(argTable[i]) == "string" then
+				if #self.combinedtext < 7 then--Throttle spam. We may not need more than 6 targets..
+					if not checkEntry(self.combinedtext, argTable[i]) then
+						self.combinedtext[#self.combinedtext + 1] = argTable[i]
+					end
+				else
+					self.combinedcount = self.combinedcount + 1
+				end
+			end
+		end
+		DBMScheduler:Unschedule(self.Show, self.mod, self)
+		local viableTotal = DBM:NumRealAlivePlayers()
+		if (maxTotal == #self.combinedtext) or (viableTotal == #self.combinedtext) then--All targets gathered, show immediately
+			self:Show(...)--Does this need self or mod? will it have this bug? https://github.com/DeadlyBossMods/DBM-Unified/issues/153
+		else--And even still, use scheduling backup in case counts still fail
+			DBMScheduler:Schedule(1.2, self.Show, self.mod, self, ...)
+		end
 	end
 
 	function announcePrototype:Schedule(t, ...)
@@ -9498,6 +9545,7 @@ do
 		end
 	end
 
+	--Object that's used when precision isn't possible (number of targets variable or unknown
 	function specialWarningPrototype:CombinedShow(delay, ...)
 		--Check if option for this warning is even enabled
 		if self.option and not self.mod.Options[self.option] then return end
@@ -9519,6 +9567,35 @@ do
 		end
 		DBMScheduler:Unschedule(self.Show, self.mod, self)
 		DBMScheduler:Schedule(delay or 0.5, self.Show, self.mod, self, ...)
+	end
+
+	--New object that allows defining count instead of scheduling for more efficient and immediate warnings when precise count is known
+	function specialWarningPrototype:PreciseShow(maxTotal, ...)
+		--Check if option for this warning is even enabled
+		if self.option and not self.mod.Options[self.option] then return end
+		--Now, check if all special warning filters are enabled to save cpu and abort immediately if true.
+		if DBM.Options.DontPlaySpecialWarningSound and DBM.Options.DontShowSpecialWarningFlash and DBM.Options.DontShowSpecialWarningText then return end
+		--Next, we check if trash mod warning and if so check the filter trash warning filter for trivial difficulties
+		if self.mod:IsEasyDungeon() and self.mod.isTrashMod and DBM.Options.FilterTrashWarnings2 then return end
+		local argTable = {...}
+		for i = 1, #argTable do
+			if type(argTable[i]) == "string" then
+				if #self.combinedtext < 6 then--Throttle spam. We may not need more than 5 targets..
+					if not checkEntry(self.combinedtext, argTable[i]) then
+						self.combinedtext[#self.combinedtext + 1] = argTable[i]
+					end
+				else
+					self.combinedcount = self.combinedcount + 1
+				end
+			end
+		end
+		DBMScheduler:Unschedule(self.Show, self.mod, self)
+		local viableTotal = DBM:NumRealAlivePlayers()
+		if (maxTotal == #self.combinedtext) or (viableTotal == #self.combinedtext) then--All targets gathered, show immediately
+			self:Show(...)--Does this need self or mod? will it have this bug? https://github.com/DeadlyBossMods/DBM-Unified/issues/153
+		else--And even still, use scheduling backup in case counts still fail
+			DBMScheduler:Schedule(1.2, self.Show, self.mod, self, ...)
+		end
 	end
 
 	function specialWarningPrototype:DelayedShow(delay, ...)
@@ -10123,6 +10200,10 @@ do
 		--Stages, Warmup/Combatstart, RPs all map to "stage"
 		["roleplay"] = "stage",
 		["achievement"] = "stage",
+		["stagecount"] = "stage",
+		["stagecountcycle"] = "stage",
+		["intermission"] = "stage",
+		["intermissioncount"] = "stage",
 
 		--Target Bars such as buff/debuff on another player, on self, or on the boss, RPs all map to "target"
 		["targetcount"] = "target",
@@ -10144,7 +10225,7 @@ do
 		end
 		if not self.option or self.mod.Options[self.option] then
 			local isCountTimer = false
-			if self.type and (self.type == "cdcount" or self.type == "nextcount") then
+			if self.type and (self.type == "cdcount" or self.type == "nextcount" or self.type == "stagecount" or self.type == "stagecountcycle" or self.type == "intermissioncount") then
 				isCountTimer = true
 			end
 			if isCountTimer and not self.allowdouble then--remove previous timer.
@@ -10311,7 +10392,7 @@ do
 			fireEvent("DBM_TimerStart", id, msg, timer, self.icon, self.simpType, self.spellId, colorId, self.mod.id, self.keep, self.fade, self.name, guid, timerCount)
 			--Bssically tops bar from starting if it's being put on a plater nameplate, to give plater users option to have nameplate CDs without actually using the bars
 			--This filter will only apply to trash mods though, boss timers will always be shown due to need to have them exist for Pause, Resume, Update, and GetTime/GetRemaining methods
-			if guid and DBM.Options.DontShowTimersWithNameplates and Plater and Plater.db.profile.bossmod_support_bars_enabled and self.mod.isTrashMod then
+			if guid and (not DBM.Options.DontShowNameplateIconsCD and DBM.Options.DontShowTimersWithNameplates) and Plater and Plater.db.profile.bossmod_support_bars_enabled and self.mod.isTrashMod then
 				DBT:CancelBar(id)--Cancel bar without stop callback
 				return false, "disabled"
 			end
@@ -10786,9 +10867,9 @@ do
 		local unparsedId = spellId
 		if timerType == "achievement" then
 			icon = parseSpellIcon(texture or spellId, timerType)
-		elseif timerType == "cdspecial" or timerType == "nextspecial" or timerType == "stage" then
+		elseif timerType == "cdspecial" or timerType == "nextspecial" or timerType == "stage" or timerType == "stagecount" or timerType == "stagecountcycle" or timerType == "intermission" or timerType == "intermissioncount" then
 			icon = parseSpellIcon(texture or spellId, timerType)
-			if timerType == "stage" then
+			if timerType == "stage" or timerType == "stagecount" or timerType == "stagecountcycle" or timerType == "intermission" or timerType == "intermissioncount" then
 				colorType = 6
 			end
 		elseif timerType == "roleplay" then
@@ -10803,11 +10884,22 @@ do
 		local timerTextValue
 		if timerText then
 			--If timertext is a number, accept it as a secondary auto translate spellid
-			if DBM.Options.ShortTimerText and type(timerText) == "number" then
-				timerTextValue = timerText
-				spellName = DBM:GetSpellInfo(timerText or 0)--Override Cached spell Name
-			else
-				timerTextValue = self.localization.timers[timerText] or timerText--Check timers table first, otherwise accept it as literal timer text
+			--First check if it's shorttext
+			if DBM.Options.ShortTimerText then
+				if type(timerText) == "number" then
+					timerTextValue = timerText
+					spellName = DBM:GetSpellInfo(timerText or 0)--Override Cached spell Name
+				else
+					timerTextValue = self.localization.timers[timerText] or timerText--Check timers table first, otherwise accept it as literal timer text
+				end
+			else--Short text is off, we want to be more aggressive in non setting short text if auto localize non short text available
+				if spellId and type(spellId) == "number" then
+					--Still use fully localized timer object text if there, cause that's not short text
+					timerTextValue = self.localization.timers[timerText]
+				else
+					--if spellId isn't valid, we need to accept timerText in any form as fallback
+					timerTextValue = self.localization.timers[timerText] or timerText
+				end
 			end
 		end
 		local id = "Timer"..(spellId or 0)..timerType..(optionVersion or "")
@@ -10842,7 +10934,7 @@ do
 		-- todo: move the string creation to the GUI with SetFormattedString...
 		if timerType == "achievement" then
 			self.localization.options[id] = L.AUTO_TIMER_OPTIONS[timerType]:format(GetAchievementLink(spellId):gsub("%[(.+)%]", "%1"))
-		elseif timerType == "cdspecial" or timerType == "nextspecial" or timerType == "stage" or timerType == "roleplay" then--Timers without spellid, generic
+		elseif timerType == "cdspecial" or timerType == "nextspecial" or timerType == "stage" or timerType == "stagecount" or timerType == "stagecountcycle" or timerType == "intermission" or timerType == "intermissioncount" or timerType == "roleplay" then--Timers without spellid, generic
 			self.localization.options[id] = L.AUTO_TIMER_OPTIONS[timerType]--Using more than 1 stage timer or more than 1 special timer will break this, fortunately you should NEVER use more than 1 of either in a mod
 		else
 			self.localization.options[id] = L.AUTO_TIMER_OPTIONS[timerType]:format(unparsedId)
@@ -10937,8 +11029,25 @@ do
 		return newTimer(self, "nextspecial", ...)
 	end
 
-	function bossModPrototype:NewPhaseTimer(...)
+	function bossModPrototype:NewStageTimer(...)
 		return newTimer(self, "stage", ...)
+	end
+	bossModPrototype.NewPhaseTimer = bossModPrototype.NewStageTimer--Deprecated naming, once all mods are converted over, NewPhaseTimer will be wiped out for NewStageTimer
+
+	function bossModPrototype:NewStageCountTimer(...)
+		return newTimer(self, "stagecount", ...)
+	end
+
+	function bossModPrototype:NewStageCountCycleTimer(...)
+		return newTimer(self, "stagecountcycle", ...)
+	end
+
+	function bossModPrototype:NewIntermissionTimer(...)
+		return newTimer(self, "intermission", ...)
+	end
+
+	function bossModPrototype:NewIntermissionCountTimer(...)
+		return newTimer(self, "intermissioncount", ...)
 	end
 
 	function bossModPrototype:NewRPTimer(...)
@@ -11151,10 +11260,11 @@ end
 --auraspellId: Private aura spellId
 --voice: voice pack media path
 --voiceVersion: Required voice pack verion (if not met, falls back to airhorn
-function bossModPrototype:EnablePrivateAuraSound(auraspellId, voice, voiceVersion)
-	if self.Options["PrivateAuraSound"..auraspellId] then
+function bossModPrototype:EnablePrivateAuraSound(auraspellId, voice, voiceVersion, altOptionId)
+	local optionId = altOptionId or auraspellId
+	if self.Options["PrivateAuraSound"..optionId] then
 		if not self.paSounds then self.paSounds = {} end
-		local soundId = self.Options["PrivateAuraSound"..auraspellId.."SWSound"] or DBM.Options.SpecialWarningSound--Shouldn't be nil value, but just in case options fail to load, fallback to default SW1 sound
+		local soundId = self.Options["PrivateAuraSound"..optionId.."SWSound"] or DBM.Options.SpecialWarningSound--Shouldn't be nil value, but just in case options fail to load, fallback to default SW1 sound
 		local mediaPath
 		--Check valid voice pack sound
 		local chosenVoice = DBM.Options.ChosenVoicePack2

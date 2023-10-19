@@ -1,7 +1,6 @@
 # Auctionator
 
-## [10.1.23](https://github.com/Auctionator/Auctionator/tree/10.1.23) (2023-09-27)
-[Full Changelog](https://github.com/Auctionator/Auctionator/compare/10.1.22...10.1.23) 
+## [10.1.30](https://github.com/Auctionator/Auctionator/tree/10.1.30) (2023-10-15)
+[Full Changelog](https://github.com/Auctionator/Auctionator/compare/10.1.29...10.1.30) 
 
-- [Fixes #1435] Autoscan retries indefinitely if TSM has hidden AH frame  
-- Classic: Selling: Option to ignore item level when finding competing auctions  
+- [Fix #1443] Bag/Groups: Fix using wrong part of modifiers for bag key  

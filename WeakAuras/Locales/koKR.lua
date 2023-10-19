@@ -126,6 +126,8 @@ L["Amount"] = "수량"
 --[[Translation missing --]]
 L["Anchoring"] = "Anchoring"
 L["And Talent"] = "및 특성"
+--[[Translation missing --]]
+L["Angle and Radius"] = "Angle and Radius"
 L["Animations"] = "애니메이션"
 L["Anticlockwise"] = "반시계 방향"
 L["Anub'arak"] = "아눕아락"
@@ -541,6 +543,8 @@ L["Entering/Leaving Encounter"] = "Entering/Leaving Encounter"
 L["Entry Order"] = "항목 순서"
 L["Environment Type"] = "환경 종류"
 L["Environmental"] = "환경"
+--[[Translation missing --]]
+L["Equipment"] = "Equipment"
 L["Equipment Set"] = "장비 구성"
 L["Equipment Set Equipped"] = "장비 구성 착용"
 L["Equipment Slot"] = "장비 칸"
@@ -580,6 +584,8 @@ L["Every Frame"] = "매 프레임"
 L["Every Frame (High CPU usage)"] = "매 프레임 (CPU 사용량 높음)"
 --[[Translation missing --]]
 L["Evoker Essence"] = "Evoker Essence"
+--[[Translation missing --]]
+L["Exact Spell ID(s)"] = "Exact Spell ID(s)"
 L["Experience (%)"] = "경험치 (%)"
 L["Expertise Bonus"] = "숙련 보너스"
 L["Expertise Rating"] = "숙련도"
@@ -662,9 +668,13 @@ L["Gahz'ranka"] = "가즈란카"
 L["Gained"] = "획득"
 L["Garr"] = "가르"
 L["Gehennas"] = "게헨나스"
+--[[Translation missing --]]
+L["General"] = "General"
 L["General Rajaxx"] = "장군 라작스"
 L["General Vezax"] = "장군 베작스"
 L["General Zarithrian"] = "장군 자리스리안"
+--[[Translation missing --]]
+L["GetNameAndIcon Function (fallback state)"] = "GetNameAndIcon Function (fallback state)"
 L["Glancing"] = "빗맞음"
 L["Global Cooldown"] = "전역 재사용 대기시간"
 L["Glow"] = "반짝임"
@@ -703,6 +713,8 @@ L["Group Finder Poke End"] = "Group Finder Poke End"
 L["Group Finder Poke Initial"] = "Group Finder Poke Initial"
 --[[Translation missing --]]
 L["Group Leader/Assist"] = "Group Leader/Assist"
+--[[Translation missing --]]
+L["Group Size"] = "Group Size"
 L["Group Type"] = "그룹 유형"
 L["Grow"] = "성장"
 L["GTFO Alert"] = "GTFO 경보"
@@ -773,7 +785,11 @@ L["In Group"] = "그룹 중"
 L["In Party"] = "파티 중"
 L["In Pet Battle"] = "애완동물 대전 중"
 L["In Raid"] = "공격대 중"
+--[[Translation missing --]]
+L["In Range"] = "In Range"
 L["In Vehicle"] = "차량 탑승 중"
+--[[Translation missing --]]
+L["In War Mode"] = "In War Mode"
 L["Include Bank"] = "은행 포함"
 L["Include Charges"] = "충전량 포함"
 L["Include Death Runes"] = "죽음의 룬 포함"
@@ -861,8 +877,6 @@ L["Left, then Up"] = "왼쪽으로, 위로"
 L["Legacy Looking for Raid"] = "낭만 공격대 찾기"
 L["Legacy RGB Gradient"] = "과거의 RGB 그라디언트"
 L["Legacy RGB Gradient Pulse"] = "과거의 RGB 그라디언트 맥박"
---[[Translation missing --]]
-L["Legacy Spellname"] = "Legacy Spellname"
 L["Legion"] = "군단"
 L["Length"] = "길이"
 L["Level"] = "레벨"
@@ -871,6 +885,8 @@ L["Limited"] = "Limited"
 L["Lines & Particles"] = "라인 & 입자"
 L["Load Conditions"] = "조건 불러오기"
 L["Loatheb"] = "로데브"
+--[[Translation missing --]]
+L["Location"] = "Location"
 L["Looking for Raid"] = "공격대 찾기"
 L["Loop"] = "반복"
 L["Lord Jaraxxus"] = "군주 자락서스"
@@ -958,6 +974,8 @@ L["Name Function"] = "Name Function"
 --[[Translation missing --]]
 L["Name Function (fallback state)"] = "Name Function (fallback state)"
 L["Name of Caster's Target"] = "시전자 대상의 이름"
+--[[Translation missing --]]
+L["Name(s)"] = "Name(s)"
 L["Name/Realm of Caster's Target"] = "시전자 대상의 이름/서버"
 L["Nameplate"] = "이름표"
 L["Nameplate Type"] = "이름표 유형"
@@ -1006,6 +1024,30 @@ L["Npc ID"] = "NPC ID"
 L["Number"] = "횟수"
 L["Number Affected"] = "영향 받은 횟수"
 L["Object"] = "객체"
+--[[Translation missing --]]
+L[ [=[Occurrence of the event
+Can be a range of values
+Can have multiple values separated by a comma or a space
+
+Examples:
+2nd 5th and 6th events: 2, 5, 6
+2nd to 6th: 2-6
+every 2 events: /2
+every 3 events starting from 2nd: 2/3
+every 3 events starting from 2nd and ending at 11th: 2-11/3
+
+Works only if Boss Mod addon show counter]=] ] = [=[Occurrence of the event
+Can be a range of values
+Can have multiple values separated by a comma or a space
+
+Examples:
+2nd 5th and 6th events: 2, 5, 6
+2nd to 6th: 2-6
+every 2 events: /2
+every 3 events starting from 2nd: 2/3
+every 3 events starting from 2nd and ending at 11th: 2-11/3
+
+Works only if Boss Mod addon show counter]=]
 --[[Translation missing --]]
 L[ [=[Occurrence of the event, reset when aura is unloaded
 Can be a range of values
@@ -1389,6 +1431,8 @@ L["Spell Name"] = "주문 이름"
 L["Spell Peneration Percent"] = "Spell Peneration Percent"
 L["Spell School"] = "주문 갈래"
 L["Spell Usable"] = "주문 사용 가능"
+--[[Translation missing --]]
+L["Spellname"] = "Spellname"
 L["Spin"] = "회전"
 L["Spiral"] = "소용돌이"
 L["Spiral In And Out"] = "회전 소용돌이"
@@ -1594,6 +1638,8 @@ L["Use Custom Color"] = "사용자 정의 색상 사용"
 L["Use Legacy floor rounding"] = "Use Legacy floor rounding"
 --[[Translation missing --]]
 L["Use Watched Faction"] = "Use Watched Faction"
+--[[Translation missing --]]
+L["Uses UnitInRange() to check if in range. Matches default raid frames out of range behavior, which is between 25 to 40 yards depending on your class and spec."] = "Uses UnitInRange() to check if in range. Matches default raid frames out of range behavior, which is between 25 to 40 yards depending on your class and spec."
 L["Using WeakAuras.clones is deprecated. Use WeakAuras.GetRegion(id, cloneId) instead."] = "WeakAuras.clones는 더 이상 사용되지 않습니다. 대신 WeakAuras.GetRegion(id, cloneId)를 사용하세요."
 L["Using WeakAuras.regions is deprecated. Use WeakAuras.GetRegion(id) instead."] = "WeakAuras.regions는 더 이상 사용되지 않습니다. 대신 WeakAuras.GetRegion(id)를 사용하세요."
 L["Vaelastrasz the Corrupt"] = "타락한 밸라스트라즈"
@@ -1611,7 +1657,6 @@ L["Vesperon"] = "베스페론"
 L["Viscidus"] = "비시디우스"
 L["Visibility"] = "표시"
 L["Visions of N'Zoth"] = "느조스의 환영"
-L["War Mode Active"] = "전쟁 모드 활성화"
 L["Warfront (Heroic)"] = "격전지 (영웅)"
 L["Warfront (Normal)"] = "격전지 (일반)"
 L["Warlords of Draenor"] = "드레노어의 전쟁군주"
@@ -1623,10 +1668,18 @@ L["Warning: Full Scan auras checking for both name and spell id can't be convert
 L["Warning: Name info is now available via %affected, %unaffected. Number of affected group members via %unitCount. Some options behave differently now. This is not automatically adjusted."] = "경고: %affected, %unaffected 를 통해 이름 정보를 사용할 수 있습니다. 영향을 받은 구성원의 수는 %unitCount 로 통합니다. 일부 옵션은 다르게 동작합니다. 이것은 자동으로 조정되지 않습니다."
 L["Warning: Tooltip values are now available via %tooltip1, %tooltip2, %tooltip3 instead of %s. This is not automatically adjusted."] = "경고: 툴팁 값은 이제 %s 대신 %tooltip1, %tooltip2, %tooltip3으로 사용할 수 있습니다. 이것은 자동으로 조정되지 않습니다."
 L["WeakAuras Built-In (63:42 | 3:07 | 10 | 2.4)"] = "WeakAuras 내장 (63:42 | 3:07 | 10 | 2.4)"
+--[[Translation missing --]]
 L[ [=[WeakAuras has detected that it has been downgraded.
 Your saved auras may no longer work properly.
 Would you like to run the |cffff0000EXPERIMENTAL|r repair tool? This will overwrite any changes you have made since the last database upgrade.
-Last upgrade: %s]=] ] = "WeakAuras가 다운그레이드 되었음을 감지했습니다. 저장된 효과가 더 이상 제대로 작동하지 않을 수 있습니다. |cffff0000실험용|r 복구 도구를 실행할까요? 이는 마지막 DB 업그레이드 이후에 수행한 모든 변경 사항을 덮어씁니다. 마지막 업그레이드: %s"
+Last upgrade: %s
+
+|cffff0000You should BACKUP your WTF folder BEFORE pressing this button.|r]=] ] = [=[WeakAuras has detected that it has been downgraded.
+Your saved auras may no longer work properly.
+Would you like to run the |cffff0000EXPERIMENTAL|r repair tool? This will overwrite any changes you have made since the last database upgrade.
+Last upgrade: %s
+
+|cffff0000You should BACKUP your WTF folder BEFORE pressing this button.|r]=]
 L["WeakAuras has encountered an error during the login process. Please report this issue at https://github.com/WeakAuras/Weakauras2/issues/new."] = "로그인 과정 중 WeakAuras에 문제가 발생했습니다. 이 문제를 https://github.com/WeakAuras/Weakauras2/issues/new 에 보고해주세요."
 L["WeakAuras Profiling"] = "WeakAuras 프로파일링"
 L["WeakAuras Profiling Report"] = "WeakAuras 프로파일링 보고서"

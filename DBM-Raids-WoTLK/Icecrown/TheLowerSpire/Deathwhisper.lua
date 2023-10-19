@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,normal25,heroic,heroic25"
 
-mod:SetRevision("20230830231251")
+mod:SetRevision("20231007034029")
 mod:SetCreatureID(36855)
 mod:SetEncounterID(mod:IsClassic() and 846 or 1100)
 mod:SetModelID(30893)
@@ -76,6 +76,7 @@ local function addsTimer(self)
 end
 
 function mod:OnCombatStart(delay)
+	self:SetStage(1)
 	berserkTimer:Start(-delay)
 	timerAdds:Start(7)
 	warnAddsSoon:Schedule(4)			-- 3sec pre-warning on start
@@ -136,6 +137,7 @@ mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 70842 then
+		self:SetStage(2)
 		warnPhase2:Show()
 		warnPhase2:Play("ptwo")
 		if self:IsDifficulty("normal10", "normal25") then

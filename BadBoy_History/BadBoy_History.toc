@@ -1,5 +1,5 @@
 ## Interface: 100107
-## Version: v10.1.4
+## Version: v10.1.5
 ## Title: BadBoy_History
 ## Notes: Log all chat that's removed by the various BadBoy addons.
 ## Notes-deDE: Log all chat that's removed by the various BadBoy addons.

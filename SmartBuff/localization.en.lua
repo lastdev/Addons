@@ -4,11 +4,15 @@
 
 -- Whats new info
 SMARTBUFF_WHATSNEW = "\n\n|cffffffff         Whats new:|r\n\n"
-  .."          |cffffffffDragonflight version by Codermik & Speedwaystar.\n"
+  .."          |cffffffffDragonflight version by Codermik, additional\n"
+  .."          retail programming by Speedwaystar.\n"
   .."\n\n"
-  .."          Changes in r22.170523:\n\n"
-  .."             * Fixed macro casting and various LUA errors, \n"
-  .."                thanks to srtzero for the report.\n\n"
+  .."          Changes in r23.081023:\n"
+  .."             * Fixed buff order not saving.\n"
+  .."             * Fixed Buzzing Rune.\n"
+  .."             * Added various Augmentation Evoker\n"
+  .."               buffs and abilities.\n"
+  .."             * Resolved no prompts until reloadui bug\n"
   .."\n\n"
   .."          |c0000FF96Many thanks to Chris S., Samantha R. and\n"
   .."          Twilight's Sundries for their kind donations.\n"
@@ -110,7 +114,9 @@ SMARTBUFF_OFT_RESETALL       = "Reset All";
 SMARTBUFF_OFT_RESETLIST      = "Reset List";
 SMARTBUFF_OFT_YES            = "Yes";
 SMARTBUFF_OFT_NO             = "No";
+SMARTBUFF_OFT_OKAY			 = "Continue"
 SMARTBUFF_OFT_PURGE_DATA     = "Are you sure you want to reset ALL SmartBuff data?\nThis action will force a reload of the UI!";
+SMARTBUFF_OFT_REQ_RELOAD     = "New versions require a reload of the GUI\nClick Continue when ready.";
 SMARTBUFF_OFT_SPLASHICON     = "Show Icon";
 SMARTBUFF_OFT_SPLASHMSGSHORT = "Short Message";
 SMARTBUFF_OFT_FONTSTYLE      = "Font";

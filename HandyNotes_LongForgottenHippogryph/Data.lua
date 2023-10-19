@@ -15,7 +15,7 @@ local scalingSpecial = ns.scalingSpecial
 -- myself. I've included one or two from other sources which seem plausible, as well as an obvious
 -- error. Some errors have come about due to Blizzard switching coordinate systems once inside a cave.
 
-points[ns.azsuna] = {
+points[ 630 ] = { -- Azsuna
 
 -- "C" = Cave Crystals. The x/y Min/Max are for my "lines" to indicate whether the player is inside or
 -- outside the cave. This affects whether to show the cave entrance or the actual crystal location
@@ -225,7 +225,8 @@ points[ns.azsuna] = {
 	[69702951] = { dt = "CE", name = "Felblaze Ingress", tip = "Submerged", ecCount = "?" },
 }
 
-points[ns.oceanusCove] = {
+points[ 632 ] = { -- Oceanus Cove sub-zone within Azsuna
+
 	[45442989] = { dt = "O", tip = "Sitting on some gold which has spilt from a\n"
 								.."chest. Not visible from the northern entrance" },
 	[50767741] = { dt = "O", tip = "Inside a wrecked ship. Visible\nfrom all approaches" },
@@ -255,22 +256,24 @@ texturesSpecial[5] = "Interface\\PetBattles\\DeadPetIcon"
 texturesSpecial[6] = "Interface\\RaidFrame\\UI-RaidFrame-Threat"
 texturesSpecial[7] = "Interface\\PlayerFrame\\UI-PlayerFrame-DeathKnight-Frost"
 texturesSpecial[8] = "Interface\\HelpFrame\\HelpIcon-CharacterStuck"	
+texturesSpecial[9] = "Interface\\Vehicles\\UI-Vehicles-Raid-Icon"
 
-scaling[1] = 0.85
-scaling[2] = 0.85
-scaling[3] = 0.83
-scaling[4] = 0.83
-scaling[5] = 0.83
-scaling[6] = 0.83
-scaling[7] = 0.95
-scaling[8] = 0.95
-scaling[9] = 1.2
-scaling[10] = 1.2
-scalingSpecial[1] = 0.58
-scalingSpecial[2] = 0.77
-scalingSpecial[3] = 0.77
-scalingSpecial[4] = 0.77
-scalingSpecial[5] = 0.68
-scalingSpecial[6] = 0.65
-scalingSpecial[7] = 0.62
-scalingSpecial[8] = 0.93
+scaling[1] = 0.55
+scaling[2] = 0.55
+scaling[3] = 0.55
+scaling[4] = 0.55
+scaling[5] = 0.55
+scaling[6] = 0.55
+scaling[7] = 0.65
+scaling[8] = 0.62
+scaling[9] = 0.75
+scaling[10] = 0.75
+scalingSpecial[1] = 0.37
+scalingSpecial[2] = 0.49
+scalingSpecial[3] = 0.49
+scalingSpecial[4] = 0.49
+scalingSpecial[5] = 0.43
+scalingSpecial[6] = 0.41
+scalingSpecial[7] = 0.395
+scalingSpecial[8] = 0.57
+scalingSpecial[9] = 0.43

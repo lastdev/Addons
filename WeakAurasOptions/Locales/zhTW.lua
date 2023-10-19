@@ -144,6 +144,8 @@ Enable this setting if you want this timer to be hidden, or when using a WeakAur
 	L["and rotated right"] = "和向右旋轉"
 	L["and with width |cFFFF0000%s|r and %s"] = "、寬度 |cFFFF0000%s|r 和 %s"
 	L["Angle"] = "角度"
+	--[[Translation missing --]]
+	L["Angle Between Auras"] = "Angle Between Auras"
 	L["Animate"] = "閃爍"
 	L["Animated Expand and Collapse"] = "展開和收合的動畫效果"
 	L["Animates progress changes"] = "進度變化動畫效果"
@@ -307,6 +309,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Delete all"] = "全部刪除"
 	L["Delete children and group"] = "刪除子項目和群組"
 	L["Delete Entry"] = "刪除項目"
+	L["Deleting auras: "] = "正在刪除提醒效果: "
 	L["Desaturate"] = "去色"
 	L["Description"] = "說明"
 	L["Description Text"] = "說明文字"
@@ -392,7 +395,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Fade In"] = "淡入"
 	L["Fade Out"] = "淡出"
 	L["Fallback"] = "Fallback"
-	L["Fallback Icon"] = "缺少圖示時要顯示的圖示"
+	L["Fallback Icon"] = "備用圖示"
 	L["False"] = "否 (False)"
 	L["Fetch Affected/Unaffected Names"] = "取得受影響/未受影響的名字"
 	L["Fetch Raid Mark Information"] = "獲取團隊標記訊息"
@@ -416,6 +419,7 @@ Can use \ to escape -.]=] ] = "過濾器格式：'名字'，'名字-伺服器'�
 	L["Filter to only dispellable de/buffs of the given type(s)"] = "只過濾給予類型的可驅散增減益"
 	L["Find Auras"] = "尋找提醒效果"
 	L["Finish"] = "結束"
+	L["Finishing..."] = "快完成了..."
 	L["Fire Orb"] = "火球"
 	L["Font"] = "文字"
 	L["Font Size"] = "文字大小"
@@ -513,6 +517,7 @@ Can use \ to escape -.]=] ] = "過濾器格式：'名字'，'名字-伺服器'�
 	L["If unchecked, then this space will fill the entire line it is on in User Mode."] = "取消勾選時，會用這個空格填滿使用者模式中的整行。"
 	L["Ignore Dead"] = "忽略死者"
 	L["Ignore Disconnected"] = "忽略離線者"
+	L["Ignore out of casting range"] = "忽略超出施法範圍"
 	L["Ignore out of checking range"] = "忽略超出檢查範圍"
 	L["Ignore Self"] = "忽略自己"
 	L["Ignore Wago updates"] = "忽略 Wago 的更新"
@@ -600,6 +605,7 @@ Can use \ to escape -.]=] ] = "過濾器格式：'名字'，'名字-伺服器'�
 	L["Move this display down in its group's order"] = "將這個提醒效果在群組中的順序往下移動"
 	L["Move this display up in its group's order"] = "將這個提醒效果在群組中的順序往上移動"
 	L["Move Up"] = "往上移動"
+	L["Moving auras: "] = "正在移動提醒效果: "
 	L["Multiple Displays"] = "多個提醒效果"
 	L["Multiselect ignored tooltip"] = [=[|cFFFF0000忽略|r - |cFF777777單一|r - |cFF777777多個|r
 這個選項將不會用來決定何時該載入這個顯示效果]=]
@@ -691,6 +697,7 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = [=[事件發�
 	L["Preferred Match"] = "優先選擇符合"
 	L["Premade Auras"] = "現成的提醒效果"
 	L["Premade Snippets"] = "現成的程式碼片段"
+	L["Preparing auras: "] = "正在準備提醒效果: "
 	L["Preset"] = "預設配置"
 	L["Press Ctrl+C to copy"] = "按下 Ctrl+C 複製"
 	L["Press Ctrl+C to copy the URL"] = "按 Ctrl+C 複製 URL"
@@ -800,7 +807,7 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = [=[事件發�
 	L["Soft Min"] = "最小軟上限"
 	L["Sort"] = "排序"
 	L["Sound"] = "音效"
-	L["Sound by Kit ID"] = "聲音根據套件ID"
+	L["Sound by Kit ID"] = "音效 Sound Kit ID"
 	L["Sound Channel"] = "音效頻道"
 	L["Sound File Path"] = "音效檔案路徑"
 	L["Sound Kit ID"] = "Sound Kit ID"
@@ -860,7 +867,8 @@ Make sure you can trust the person who sent it!]=] ] = "這個提醒效果包含
 	L[ [=[This aura was created with a different version (%s) of World of Warcraft.
 It might not work correctly!]=] ] = "這個提醒效果是由不同版本 (%s) 的魔獸世界建立的，可能無法正常運作!"
 	L[ [=[This aura was created with a newer version of WeakAuras.
-It might not work correctly with your version!]=] ] = "這個提醒效果是用較新版本的 WeakAuras 建立的，可能不適用於您的版本!"
+Upgrade your version of WeakAuras or wait for next release before installing this aura.]=] ] = [=[這個提醒效果是用較新版本的 WeakAuras 建立的。
+安裝這個提醒效果之前，請先升級你的 WeakAuras 版本，或是等待下次發佈更新。]=]
 	L["This display is currently loaded"] = "這個提醒效果已經載入"
 	L["This display is not currently loaded"] = "這個提醒效果尚未載入"
 	L["This enables the collection of debug logs. Custom code can add debug information to the log through the function DebugPrint."] = "這會啟用蒐集除錯記錄，自訂程式碼可以透過 DebugPrint 函數將除錯資訊加入到記錄中。"
@@ -920,7 +928,8 @@ It might not work correctly with your version!]=] ] = "這個提醒效果是用�
 	L["Used in Auras:"] = "使用的提醒效果:"
 	L["Used in auras:"] = "使用的提醒效果:"
 	L["Uses Texture Coordinates to rotate the texture."] = "使用材質坐標來旋轉材質。"
-	L["Uses UnitIsVisible() to check if in range. This is polled every second."] = "使用 UnitIsVisible() 來檢查是否在範圍內，每秒都會檢查一次。"
+	L["Uses UnitInRange() to check if in range. Matches default raid frames out of range behavior, which is between 25 to 40 yards depending on your class and spec."] = "使用 UnitInRange() 來檢查是否在範圍內。符合團隊框架預設的超出範圍行為時，範圍是在 25 到 40 碼之間，具體取決於您的職業和專精。"
+	L["Uses UnitIsVisible() to check if game client has loaded a object for this unit. This distance is around 100 yards. This is polled every second."] = "使用 UnitIsVisible() 來檢查遊戲是否已經載入該單位的物件，距離為 100碼，每秒都會檢查一次。"
 	L["Value %i"] = "數值 %i"
 	L["Values are in normalized rgba format."] = "數值為標準化的 rgba  格式。"
 	L["Values:"] = "數值:"

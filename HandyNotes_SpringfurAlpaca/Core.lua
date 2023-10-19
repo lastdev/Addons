@@ -3,7 +3,7 @@
 
                                           Springfur Alpaca
 
-                                     v1.19 - 27th September 2023
+                                     v1.20 - 9th October 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -34,6 +34,7 @@ local UIParent = _G.UIParent
 local format = _G.format
 local next = _G.next
 local select = _G.select
+local gsub = string.gsub
 local UnitAura = UnitAura
 
 local HandyNotes = _G.HandyNotes
@@ -80,6 +81,7 @@ if ns.locale == "deDE" then
 	L["Phasing"] = "Synchronisieren"
 	L["Raptor egg"] = "Raptor-Ei"
 	L["Stars"] = "Sternen"
+	L["Screw"] = "Schraube"
 	
 elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Character"] = "Personaje"
@@ -114,6 +116,7 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Phasing"] = "Sincronización"	
 	L["Raptor egg"] = "Huevo de raptor"	
 	L["Stars"] = "Estrellas"
+	L["Screw"] = "Tornillo"
 	
 elseif ns.locale == "frFR" then
 	L["Character"] = "Personnage"
@@ -146,6 +149,7 @@ elseif ns.locale == "frFR" then
 	L["Phasing"] = "Synchronisation"
 	L["Raptor egg"] = "Œuf de Rapace"
 	L["Stars"] = "Étoiles"
+	L["Screw"] = "Vis"
 	
 elseif ns.locale == "itIT" then
 	L["Character"] = "Personaggio"
@@ -177,7 +181,8 @@ elseif ns.locale == "itIT" then
 	L["Phasing"] = "Sincronizzazione"
 	L["Raptor egg"] = "Raptor Uovo"
 	L["Stars"] = "Stelle"
-	
+	L["Screw"] = "Vite"
+
 elseif ns.locale == "koKR" then
 	L["Character"] = "캐릭터"
 	L["Account"] = "계정"
@@ -208,6 +213,7 @@ elseif ns.locale == "koKR" then
 	L["Phasing"] = "동기화 중"
 	L["Raptor egg"] = "랩터의 알"
 	L["Stars"] = "별"
+	L["Screw"] = "나사"
 	
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Character"] = "Personagem"
@@ -240,7 +246,8 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Phasing"] = "Sincronização"
 	L["Raptor egg"] = "Ovo de raptor"
 	L["Stars"] = "Estrelas"
-	
+	L["Screw"] = "Parafuso"
+
 elseif ns.locale == "ruRU" then
 	L["Character"] = "Персонажа"
 	L["Account"] = "Счет"
@@ -272,7 +279,8 @@ elseif ns.locale == "ruRU" then
 	L["Phasing"] = "Синхронизация"
 	L["Raptor egg"] = "Яйцо ящера"
 	L["Stars"] = "Звезды"
-	
+	L["Screw"] = "Винт"
+
 elseif ns.locale == "zhCN" then
 	L["Character"] = "角色"
 	L["Account"] = "账号"
@@ -303,6 +311,7 @@ elseif ns.locale == "zhCN" then
 	L["Phasing"] = "同步"
 	L["Raptor egg"] = "迅猛龙蛋"
 	L["Stars"] = "星星"
+	L["Screw"] = "拧"
 	
 elseif ns.locale == "zhTW" then
 	L["Character"] = "角色"
@@ -333,10 +342,11 @@ elseif ns.locale == "zhTW" then
 	L["Mana Orb"] = "法力球"
 	L["Phasing"] = "同步"
 	L["Raptor egg"] = "迅猛龍蛋"
-	
+	L["Stars"] = "星星"
+	L["Screw"] = "擰"
+
 else
 	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
-	L["Show completed criteria"] = "Show map pins for completed criteria: "
 	if ns.locale == "enUS" then
 		L["Grey"] = "Gray"
 	end
@@ -345,6 +355,8 @@ end
 ns.name = UnitName( "player" ) or "Character"
 
 if ns.locale == "deDE" then
+	L["Alpaca It In"] = "Wir alpaken's dann mal"
+	L["Alpaca It Up"] = "Rackern fürs Alpaka"
 	L["Springfur Alpaca"] = "Frühlingsfellalpaka"
 	L["Gersahl Greens"] = "Gersahlblätter"
 	L["Daily Quest"] = "Tägliche Aufgabe"
@@ -355,6 +367,8 @@ if ns.locale == "deDE" then
 		..ns.colour.plaintext .." in Uldum zu erhalten"
 	
 elseif ns.locale == "esES" or ns.locale == "esMX" then
+	L["Alpaca It In"] = "Hay una alpaca en ti"
+	L["Alpaca It Up"] = "Una alpaca de traca"
 	L["Springfur Alpaca"] = "Alpaca de pelaje primaveral"
 	L["Gersahl Greens"] = "Verduras Gersahl"
 	L["Daily Quest"] = "Búsqueda Diaria"
@@ -365,6 +379,8 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 		.."el Alpaca de pelaje primaveral" ..ns.colour.plaintext .." en Uldum"
 
 elseif ns.locale == "frFR" then
+	L["Alpaca It In"] = "Alpaga alpagué"
+	L["Alpaca It Up"] = "Alpaga gavé"
 	L["Springfur Alpaca"] = "Alpaga toison-vernale"
 	L["Gersahl Greens"] = "Légume de Gersahl"
 	L["Daily Quest"] = "Quêtes Journalières"
@@ -375,6 +391,8 @@ elseif ns.locale == "frFR" then
 		..ns.colour.plaintext .." à Uldum"
 
 elseif ns.locale == "itIT" then
+	L["Alpaca It In"] = "Alpaca 1, Alpaca 2"
+	L["Alpaca It Up"] = "Io sono Alpaca"
 	L["Springfur Alpaca"] = "Alpaca Primopelo"
 	L["Gersahl Greens"] = "Insalata di Gersahl"
 	L["Daily Quest"] = "Missione Giornaliera"
@@ -385,6 +403,8 @@ elseif ns.locale == "itIT" then
 		..ns.colour.plaintext .." a Uldum"
 
 elseif ns.locale == "koKR" then
+	L["Alpaca It In"] = "알파카 출동!"
+	L["Alpaca It Up"] = "알파카만 믿으라고"
 	L["Springfur Alpaca"] = "봄털 알파카"
 	L["Gersahl Greens"] = "게샬 채소"
 	L["Daily Quest"] = "일일 퀘스트"
@@ -395,6 +415,8 @@ elseif ns.locale == "koKR" then
 		.."를 얻는 데 도움이 됩니다."
 
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
+	L["Alpaca It In"] = "Alpaca pacas"
+	L["Alpaca It Up"] = "Alpaca papa"
 	L["Springfur Alpaca"] = "Alpaca Lã de Primavera"
 	L["Gersahl Greens"] = "Folhas de Gersahl"
 	L["Daily Quest"] = "Missão Diária"
@@ -405,6 +427,8 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 		..ns.colour.plaintext .." em Uldum"
 
 elseif ns.locale == "ruRU" then
+	L["Alpaca It In"] = "Альпачиный взгляд"
+	L["Alpaca It Up"] = "Добряк среди альпак"
 	L["Springfur Alpaca"] = "Курчавая альпака"
 	L["Gersahl Greens"] = "Побеги герсали"
 	L["Daily Quest"] = "Ежедневный Квест"
@@ -415,6 +439,8 @@ elseif ns.locale == "ruRU" then
 		..ns.colour.plaintext .." в Ульдум"
 
 elseif ns.locale == "zhCN" then
+	L["Alpaca It In"] = "Alpaca It In" -- No Translation available at Wowhead
+	L["Alpaca It Up"] = "羊驼要吃饱"
 	L["Springfur Alpaca"] = "春裘羊驼"
 	L["Gersahl Greens"] = "基萨尔野菜"
 	L["Daily Quest"] = "日常"
@@ -424,6 +450,8 @@ elseif ns.locale == "zhCN" then
 	L["AddOn Description"] = "帮助您获取奥丹姆中的" ..ns.colour.highlight .."春裘羊驼"
 
 elseif ns.locale == "zhTW" then
+	L["Alpaca It In"] = "Alpaca It In" -- See for simplified. Traditional is a direct translation of that
+	L["Alpaca It Up"] = "羊駝要吃飽"
 	L["Springfur Alpaca"] = "春裘羊駝"
 	L["Gersahl Greens"] = "肉荳蔻蔬菜"
 	L["Daily Quest"] = "每日"
@@ -439,11 +467,11 @@ else
 end
 
 -- Plugin handler for HandyNotes
-function pluginHandler:OnEnter(mapFile, coord)
+function pluginHandler:OnEnter( mapFile, coord )
 	if self:GetCenter() > UIParent:GetCenter() then
-		GameTooltip:SetOwner(self, "ANCHOR_LEFT")
+		GameTooltip:SetOwner( self, "ANCHOR_LEFT" )
 	else
-		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+		GameTooltip:SetOwner( self, "ANCHOR_RIGHT" )
 	end
 
 	local pin = ns.points[ mapFile ] and ns.points[ mapFile ][ coord ]
@@ -451,18 +479,16 @@ function pluginHandler:OnEnter(mapFile, coord)
 	if pin.alpaca then
 		GameTooltip:SetText( ns.colour.prefix ..L["Springfur Alpaca"] )
 
-		local questName = QuestUtils_GetQuestName( 58887 ) or "Alpaca It In"
 		local completed = C_QuestLog.IsQuestFlaggedCompleted( 58887 )
-		GameTooltip:AddDoubleLine( ns.colour.highlight ..questName,
+		GameTooltip:AddDoubleLine( ns.colour.highlight ..L["Alpaca It In"],
 			( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..ns.name ..")" ) 
 								or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..ns.name ..")" ) )
 		
 		if ( completed == false ) then
 			GameTooltip:AddLine( " " )
-			questName = QuestUtils_GetQuestName( 58879 ) or "Alpaca It Up"
 			completed = C_QuestLog.IsQuestFlaggedCompleted( 58879 )
 			GameTooltip:AddLine( "\124cFF1F45FC".. L["Daily Quest"] )
-			GameTooltip:AddDoubleLine( ns.colour.highlight ..questName,
+			GameTooltip:AddDoubleLine( ns.colour.highlight ..L["Alpaca It Up"],
 				( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..ns.name ..")" ) 
 									or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..ns.name ..")" ) )
 			if ( completed == false ) then
@@ -610,8 +636,8 @@ ns.options = {
 							.."\n3 = " ..L["Ring"] .." - " ..L["Blue"] .."\n4 = " ..L["Ring"] .." - " 
 							..L["Green"] .."\n5 = " ..L["Cross"] .." - " ..L["Red"] .."\n6 = "
 							..L["Diamond"] .." - " ..L["White"] .."\n7 = " ..L["Frost"] .."\n8 = " 
-							..L["Cogwheel"],
-					min = 1, max = 8, step = 1,
+							..L["Cogwheel"] .."\n9 = " ..L["Screw"],
+					min = 1, max = 9, step = 1,
 					arg = "iconChoiceSpecial",
 					order = 5,
 				},

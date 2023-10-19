@@ -3,8 +3,6 @@ if GetLocale() == "ruRU" then
 	BINDING_NAME_GOGOBINDING = "Оседлать/Спешиться"
 	BINDING_NAME_GOGOBINDING2 = "Оседлать/Спешиться (наземный транспорт)"
 	BINDING_NAME_GOGOBINDING3 = "Оседлать/Спешиться (транспорт с пассажирами)"
-	BINDING_NAME_GOGOBINDING4 = "Mount/Dismount Seller Mounts" -- Requires localization
-	BINDING_NAME_GOGOBINDING5 = "Mount/Dismount Herbalism Mounts" -- Requires localization
 	GoGo_Variables.Localize = {
 	Skill = {
 		Engineering = "Инженерное дело", -- Needs review
@@ -42,8 +40,6 @@ if GetLocale() == "ruRU" then
 		GlobalZoneDescription = "Preferred mounts defined here will only take effect if there are no zone specific mount favorites set for the current zone you are in.", -- Requires localization
 		HunterOptions = "Настройки для охотников", -- Needs review
 		NewVersionFound = "Доступна новая версия GoGoMount.",
-		NightFaeOptions = "Night Fae Options", -- Requires localization
-		NightFaeSingleClick = "Single click mount from Soulshape instead of dismounting", -- Requires localization
 		NoShapeInRandom = "Не использовать облики друида при выборе случайного средства передвижения", -- Needs review
 		PaladinOptions = "Paladin Options", -- Requires localization
 		RemoveBuffs = "Снять положительные эффекты, не позволяющие сесть верхом", -- Needs review

@@ -3,7 +3,7 @@
 
                                             Hallow's End
 
-                                       v2.10 - 28th June 2023
+                                      v2.14 - 15th October 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -23,9 +23,9 @@ ns.colour.prefix	= "\124cFFF87217" -- Pumpkin Orange
 ns.colour.highlight = "\124cFFFFA500" -- Orange W3C
 ns.colour.plaintext = "\124cFFFDD017" -- Bright Gold
 
-local defaults = { profile = { icon_scale = 1.7, icon_alpha = 1, showCoords = true,
+local defaults = { profile = { iconScale = 2.5, iconAlpha = 1, showCoords = true,
 								removeDailies = true, removeSeasonal = true, removeEver = false,
-								icon_tricksTreat = 11, icon_dailies = 10, icon_special = 15 } }
+								iconTricksTreat = 11, iconDailies = 10, iconSpecial = 15 } }
 local continents = {}
 local pluginHandler = {}
 
@@ -33,6 +33,7 @@ local pluginHandler = {}
 local GameTooltip = _G.GameTooltip
 local GetAchievementCriteriaInfo = GetAchievementCriteriaInfo
 local GetAchievementInfo = GetAchievementInfo
+local IsQuestFlaggedCompleted = C_QuestLog.IsQuestFlaggedCompleted
 --local GetMapInfo = C_Map.GetMapInfo -- phase checking during testing
 local LibStub = _G.LibStub
 local UIParent = _G.UIParent
@@ -43,7 +44,6 @@ local HandyNotes = _G.HandyNotes
 
 local _, _, _, version = GetBuildInfo()
 ns.faction = UnitFactionGroup( "player" )
-ns.name = UnitName( "player" ) or "Character"
 
 continents[ 12 ] = true -- Kalimdor
 continents[ 13 ] = true -- Eastern Kingdoms
@@ -56,6 +56,7 @@ continents[ 619 ] = true -- Broken Isles
 continents[ 875 ] = true -- Zandalar
 continents[ 876 ] = true -- Kul Tiras
 continents[ 947 ] = true -- Azeroth
+continents[ 1978 ] = true -- Dragon Isles
 
 -- Localisation
 ns.locale = GetLocale()
@@ -71,19 +72,19 @@ if ns.oceania[realm] then
 end
 
 if ns.locale == "deDE" then
-	L["Hallow's End"] = "Schlotternächte"
-	L["AddOn Description"] = "Hilfe für Erfolge und Quests in Schlotternächte"	
 	L["Character"] = "Charakter"
 	L["Account"] = "Accountweiter"
 	L["Completed"] = "Abgeschlossen"
 	L["Not Completed"] = "Nicht Abgeschlossen"
-	L["Icon Selection"] = "Symbolauswahl"
-	L["Icon Scale"] = "Symbolskalierung"
-	L["The scale of the icons"] = "Die Skalierung der Symbole"
-	L["Icon Alpha"] = "Symboltransparenz"
-	L["The alpha transparency of the icons"] = "Die Transparenz der Symbole"
-	L["Icon"] = "Symbol"
 	L["Options"] = "Optionen"
+	L["Map Pin Size"] = "Pin-Größe"
+	L["The Map Pin Size"] = "Die Größe der Karten-Pins"
+	L["Map Pin Alpha"] = "Kartenpin Alpha"
+	L["The alpha transparency of the map pins"] = "Die Alpha-Transparenz der Karten-Pins"
+	L["Show Coordinates"] = "Koordinaten anzeigen"
+	L["Show Coordinates Description"] = "Zeigen sie die " ..ns.colour.highlight 
+		.."koordinaten\124r in QuickInfos auf der Weltkarte und auf der Minikarte an"
+	L["Map Pin Selections"] = "Karten-Pin-Auswahl"
 	L["Red"] = "Rot"
 	L["Blue"] = "Blau"
 	L["Green"] = "Grün"
@@ -99,25 +100,24 @@ if ns.locale == "deDE" then
 	L["Phasing"] = "Synchronisieren"
 	L["Raptor egg"] = "Raptor-Ei"
 	L["Stars"] = "Sternen"
-	L["NPC"] = "NSC"
-	L["Show Coordinates"] = "Koordinaten anzeigen"
-	L["Show Coordinates Description"] = "Zeigen sie die " ..ns.colour.highlight 
-		.."koordinaten\124r in QuickInfos auf der Weltkarte und auf der Minikarte an"
-
+	L["Screw"] = "Schraube"
+	
 elseif ns.locale == "esES" or ns.locale == "esMX" then
-	L["Hallow's End"] = "Halloween"
-	L["AddOn Description"] = "Ayuda para logros y misiones en Halloween"
 	L["Character"] = "Personaje"
 	L["Account"] = "la Cuenta"
 	L["Completed"] = "Completado"
-	L["Not Completed"] = ns.locale == "esES" and "Sin Completar" or "Incompleto"
-	L["Icon Selection"] = "Selección de iconos"
-	L["Icon Scale"] = "Escala de icono"
-	L["The scale of the icons"] = "La escala de los iconos"
+	L["Not Completed"] = ( ns.locale == "esES" ) and "Sin Completar" or "Incompleto"
+	L["Options"] = "Opciones"
+	L["Map Pin Size"] = "Tamaño de alfiler"
+	L["The Map Pin Size"] = "Tamaño de los pines del mapa"
+	L["Map Pin Alpha"] = "Alfa de los pines del mapa"
+	L["The alpha transparency of the map pins"] = "La transparencia alfa de los pines del mapa"
 	L["Icon Alpha"] = "Transparencia del icono"
 	L["The alpha transparency of the icons"] = "La transparencia alfa de los iconos"
-	L["Icon"] = "El icono"
-	L["Options"] = "Opciones"
+	L["Show Coordinates"] = "Mostrar coordenadas"
+	L["Show Coordinates Description"] = "Mostrar " ..ns.colour.highlight
+		.."coordenadas\124r en información sobre herramientas en el mapa del mundo y en el minimapa"
+	L["Map Pin Selections"] = "Selecciones de pines de mapa"
 	L["Gold"] = "Oro"
 	L["Red"] = "Rojo"
 	L["Blue"] = "Azul"
@@ -135,25 +135,22 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Phasing"] = "Sincronización"	
 	L["Raptor egg"] = "Huevo de raptor"	
 	L["Stars"] = "Estrellas"
-	L["NPC"] = "PNJ"
-	L["Show Coordinates"] = "Mostrar coordenadas"
-	L["Show Coordinates Description"] = "Mostrar " ..ns.colour.highlight
-		.."coordenadas\124r en información sobre herramientas en el mapa del mundo y en el minimapa"
-
+	L["Screw"] = "Tornillo"
+	
 elseif ns.locale == "frFR" then
-	L["Hallow's End"] = "Sanssaint"
-	L["AddOn Description"] = "Aide pour les réalisations et les quêtes dans Sanssaint"
 	L["Character"] = "Personnage"
 	L["Account"] = "le Compte"
 	L["Completed"] = "Achevé"
 	L["Not Completed"] = "Non achevé"
-	L["Icon Selection"] = "Sélection d'icônes"
-	L["Icon Scale"] = "Echelle de l’icône"
-	L["The scale of the icons"] = "L'échelle des icônes"
-	L["Icon Alpha"] = "Transparence de l'icône"
-	L["The alpha transparency of the icons"] = "La transparence des icônes"
-	L["Icon"] = "L'icône"
 	L["Options"] = "Options"
+	L["Map Pin Size"] = "Taille des épingles"
+	L["The Map Pin Size"] = "La taille des épingles de carte"
+	L["Map Pin Alpha"] = "Alpha des épingles de carte"
+	L["The alpha transparency of the map pins"] = "La transparence alpha des épingles de la carte"
+	L["Show Coordinates"] = "Afficher les coordonnées"
+	L["Show Coordinates Description"] = "Afficher " ..ns.colour.highlight
+		.."les coordonnées\124r dans les info-bulles sur la carte du monde et la mini-carte"
+	L["Map Pin Selections"] = "Sélections de broches de carte"
 	L["Gold"] = "Or"
 	L["Red"] = "Rouge"
 	L["Blue"] = "Bleue"
@@ -171,24 +168,21 @@ elseif ns.locale == "frFR" then
 	L["Phasing"] = "Synchronisation"
 	L["Raptor egg"] = "Œuf de Rapace"
 	L["Stars"] = "Étoiles"
-	L["NPC"] = "PNJ"
-	L["Show Coordinates"] = "Afficher les coordonnées"
-	L["Show Coordinates Description"] = "Afficher " ..ns.colour.highlight
-		.."les coordonnées\124r dans les info-bulles sur la carte du monde et la mini-carte"
-
+	L["Screw"] = "Vis"
+	
 elseif ns.locale == "itIT" then
-	L["Hallow's End"] = "Veglia delle Ombre"
-	L["AddOn Description"] = "Aiuto per obiettivi e missioni in Veglia delle Ombre"
 	L["Character"] = "Personaggio"
 	L["Completed"] = "Completo"
 	L["Not Completed"] = "Non Compiuto"
-	L["Icon Selection"] = "Selezione dell'icona"
-	L["Icon Scale"] = "Scala delle icone"
-	L["The scale of the icons"] = "La scala delle icone"
-	L["Icon Alpha"] = "Icona alfa"
-	L["The alpha transparency of the icons"] = "La trasparenza alfa delle icone"
-	L["Icon"] = "Icona"
 	L["Options"] = "Opzioni"
+	L["Map Pin Size"] = "Dimensione del pin"
+	L["The Map Pin Size"] = "La dimensione dei Pin della mappa"
+	L["Map Pin Alpha"] = "Mappa pin alfa"
+	L["The alpha transparency of the map pins"] = "La trasparenza alfa dei pin della mappa"
+	L["Show Coordinates"] = "Mostra coordinate"
+	L["Show Coordinates Description"] = "Visualizza " ..ns.colour.highlight
+		.."le coordinate\124r nelle descrizioni comandi sulla mappa del mondo e sulla minimappa"
+	L["Map Pin Selections"] = "Selezioni pin mappa"
 	L["Gold"] = "Oro"
 	L["Red"] = "Rosso"
 	L["Blue"] = "Blu"
@@ -206,25 +200,21 @@ elseif ns.locale == "itIT" then
 	L["Phasing"] = "Sincronizzazione"
 	L["Raptor egg"] = "Raptor Uovo"
 	L["Stars"] = "Stelle"
-	L["NPC"] = "PNG"
-	L["Show Coordinates"] = "Mostra coordinate"
-	L["Show Coordinates Description"] = "Visualizza " ..ns.colour.highlight
-		.."le coordinate\124r nelle descrizioni comandi sulla mappa del mondo e sulla minimappa"
+	L["Screw"] = "Vite"
 
 elseif ns.locale == "koKR" then
-	L["Hallow's End"] = "할로윈 축제"
-	L["AddOn Description"] = "할로윈 축제의 업적 및 퀘스트에 대한 도움말"	
 	L["Character"] = "캐릭터"
 	L["Account"] = "계정"
 	L["Completed"] = "완료"
 	L["Not Completed"] = "미완료"
-	L["Icon Selection"] = "아이콘 선택"
-	L["Icon Scale"] = "아이콘 크기 비율"
-	L["The scale of the icons"] = "아이콘의 크기 비율입니다"
-	L["Icon Alpha"] = "아이콘 투명도"
-	L["The alpha transparency of the icons"] = "아이콘의 투명도입니다"
-	L["Icon"] = "아이콘"
+	L["Map Pin Size"] = "지도 핀의 크기"
 	L["Options"] = "설정"
+	L["The Map Pin Size"] = "지도 핀의 크기"
+	L["Map Pin Alpha"] = "지도 핀의 알파"
+	L["The alpha transparency of the map pins"] = "지도 핀의 알파 투명도"
+	L["Show Coordinates"] = "좌표 표시"
+	L["Show Coordinates Description"] = "세계지도 및 미니지도의 도구 설명에 좌표를 표시합니다."
+	L["Map Pin Selections"] = "지도 핀 선택"
 	L["Gold"] = "금"
 	L["Red"] = "빨간"
 	L["Blue"] = "푸른"
@@ -242,23 +232,22 @@ elseif ns.locale == "koKR" then
 	L["Phasing"] = "동기화 중"
 	L["Raptor egg"] = "랩터의 알"
 	L["Stars"] = "별"
-	L["Show Coordinates"] = "좌표 표시"
-	L["Show Coordinates Description"] = "세계지도 및 미니지도의 도구 설명에 좌표를 표시합니다."
-		
+	L["Screw"] = "나사"
+	
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
-	L["Hallow's End"] = "Noturnália"
-	L["AddOn Description"] = "Ajuda para conquistas e missões em Noturnália"
 	L["Character"] = "Personagem"
 	L["Account"] = "à Conta"
 	L["Completed"] = "Concluído"
 	L["Not Completed"] = "Não Concluído"
-	L["Icon Selection"] = "Seleção de ícones"
-	L["Icon Scale"] = "Escala de Ícone"
-	L["The scale of the icons"] = "A escala dos ícones"
-	L["Icon Alpha"] = "Ícone Alpha"
-	L["The alpha transparency of the icons"] = "A transparência alfa dos ícones"
-	L["Icon"] = "Ícone"
 	L["Options"] = "Opções"
+	L["Map Pin Size"] = "Tamanho do pino"
+	L["The Map Pin Size"] = "O tamanho dos pinos do mapa"
+	L["Map Pin Alpha"] = "Alfa dos pinos do mapa"
+	L["The alpha transparency of the map pins"] = "A transparência alfa dos pinos do mapa"
+	L["Show Coordinates"] = "Mostrar coordenadas"
+	L["Show Coordinates Description"] = "Exibir " ..ns.colour.highlight
+		.."coordenadas\124r em dicas de ferramentas no mapa mundial e no minimapa"
+	L["Map Pin Selections"] = "Seleções de pinos de mapa"
 	L["Gold"] = "Ouro"
 	L["Red"] = "Vermelho"
 	L["Blue"] = "Azul"
@@ -276,25 +265,22 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Phasing"] = "Sincronização"
 	L["Raptor egg"] = "Ovo de raptor"
 	L["Stars"] = "Estrelas"
-	L["NPC"] = "PNJ"
-	L["Show Coordinates"] = "Mostrar coordenadas"
-	L["Show Coordinates Description"] = "Exibir " ..ns.colour.highlight
-		.."coordenadas\124r em dicas de ferramentas no mapa mundial e no minimapa"
+	L["Screw"] = "Parafuso"
 
 elseif ns.locale == "ruRU" then
-	L["Hallow's End"] = "Тыквовин"
-	L["AddOn Description"] = "Справка по достижениям и квестам в Тыквовине"
 	L["Character"] = "Персонажа"
 	L["Account"] = "Счет"
 	L["Completed"] = "Выполнено"
 	L["Not Completed"] = "Не Выполнено"
-	L["Icon Selection"] = "Выбор Значка"
-	L["Icon Scale"] = "Масштаб Значка"
-	L["The scale of the icons"] = "Масштаб для Значков"
-	L["Icon Alpha"] = "Альфа Значок"
-	L["The alpha transparency of the icons"] = "Альфа-прозрачность Значков"
-	L["Icon"] = "Альфа Значок"
 	L["Options"] = "Параметры"
+	L["Map Pin Size"] = "Размер булавки"
+	L["The Map Pin Size"] = "Размер булавок на карте"
+	L["Map Pin Alpha"] = "Альфа булавок карты"
+	L["The alpha transparency of the map pins"] = "Альфа-прозрачность булавок карты"
+	L["Show Coordinates"] = "Показать Координаты"
+	L["Show Coordinates Description"] = "Отображает " ..ns.colour.highlight
+		.."координаты\124r во всплывающих подсказках на карте мира и мини-карте"
+	L["Map Pin Selections"] = "Выбор булавки карты"
 	L["Gold"] = "Золото"
 	L["Red"] = "Красный"
 	L["Blue"] = "Синий"
@@ -312,24 +298,21 @@ elseif ns.locale == "ruRU" then
 	L["Phasing"] = "Синхронизация"
 	L["Raptor egg"] = "Яйцо ящера"
 	L["Stars"] = "Звезды"
-	L["Show Coordinates"] = "Показать Координаты"
-	L["Show Coordinates Description"] = "Отображает " ..ns.colour.highlight
-		.."координаты\124r во всплывающих подсказках на карте мира и мини-карте"
+	L["Screw"] = "Винт"
 
 elseif ns.locale == "zhCN" then
-	L["Hallow's End"] = "万圣节"
-	L["AddOn Description"] = "帮助万圣节的成就和任务"
 	L["Character"] = "角色"
 	L["Account"] = "账号"
 	L["Completed"] = "已完成"
 	L["Not Completed"] = "未完成"
-	L["Icon Selection"] = "图标选择"
-	L["Icon Scale"] = "图示大小"
-	L["The scale of the icons"] = "图示的大小"
-	L["Icon Alpha"] = "图示透明度"
-	L["The alpha transparency of the icons"] = "图示的透明度"
-	L["Icon"] = "图示"
 	L["Options"] = "选项"
+	L["Map Pin Size"] = "地图图钉的大小"
+	L["The Map Pin Size"] = "地图图钉的大小"
+	L["Map Pin Alpha"] = "地图图钉的透明度"
+	L["The alpha transparency of the map pins"] = "地图图钉的透明度"
+	L["Show Coordinates"] = "显示坐标"
+	L["Show Coordinates Description"] = "在世界地图和迷你地图上的工具提示中" ..ns.colour.highlight .."显示坐标"
+	L["Map Pin Selections"] = "地图图钉选择"
 	L["Gold"] = "金子"
 	L["Red"] = "红"
 	L["Blue"] = "蓝"
@@ -347,23 +330,21 @@ elseif ns.locale == "zhCN" then
 	L["Phasing"] = "同步"
 	L["Raptor egg"] = "迅猛龙蛋"
 	L["Stars"] = "星星"
-	L["Show Coordinates"] = "显示坐标"
-	L["Show Coordinates Description"] = "在世界地图和迷你地图上的工具提示中" ..ns.colour.highlight .."显示坐标"
-
+	L["Screw"] = "拧"
+	
 elseif ns.locale == "zhTW" then
-	L["Hallow's End"] = "萬聖節"
-	L["AddOn Description"] = "幫助萬聖節的成就和任務"
 	L["Character"] = "角色"
 	L["Account"] = "賬號"
 	L["Completed"] = "完成"
 	L["Not Completed"] = "未完成"
-	L["Icon Selection"] = "圖標選擇"
-	L["Icon Scale"] = "圖示大小"
-	L["The scale of the icons"] = "圖示的大小"
-	L["Icon Alpha"] = "圖示透明度"
-	L["The alpha transparency of the icons"] = "圖示的透明度"
-	L["Icon"] = "圖示"
 	L["Options"] = "選項"
+	L["Map Pin Size"] = "地圖圖釘的大小"
+	L["The Map Pin Size"] = "地圖圖釘的大小"
+	L["Map Pin Alpha"] = "地圖圖釘的透明度"
+	L["The alpha transparency of the map pins"] = "地圖圖釘的透明度"
+	L["Show Coordinates"] = "顯示坐標"
+	L["Show Coordinates Description"] = "在世界地圖和迷你地圖上的工具提示中" ..ns.colour.highlight .."顯示坐標"
+	L["Map Pin Selections"] = "地圖圖釘選擇"
 	L["Gold"] = "金子"
 	L["Red"] = "紅"
 	L["Blue"] = "藍"
@@ -380,23 +361,122 @@ elseif ns.locale == "zhTW" then
 	L["Mana Orb"] = "法力球"
 	L["Phasing"] = "同步"
 	L["Raptor egg"] = "迅猛龍蛋"
-	L["Show Coordinates"] = "顯示坐標"
-	L["Show Coordinates Description"] = "在世界地圖和迷你地圖上的工具提示中" ..ns.colour.highlight .."顯示坐標"
-	
+	L["Stars"] = "星星"
+	L["Screw"] = "擰"
+
 else
+	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
 	if ns.locale == "enUS" then
 		L["Grey"] = "Gray"
 	end
+end
+
+ns.name = UnitName( "player" ) or "Character"
+
+if ns.locale == "deDE" then
+	L["Hallow's End"] = "Schlotternächte"
+	L["AddOn Description"] = "Hilfe für Erfolge und Quests in Schlotternächte"	
+	L["Candy Swirl"] = "Süßigkeitenwirbel"
+	L["Pumpkin"] = "Kürbis"
+	L["Evil Pumpkin"] = "Böser Kürbis"
+	L["Bat"] = "Schläger"
+	L["Cat"] = "Katze"
+	L["Ghost"] = "Geist"
+	L["Witch"] = "Hexe"
+
+elseif ns.locale == "esES" or ns.locale == "esMX" then
+	L["Hallow's End"] = "Halloween"
+	L["AddOn Description"] = "Ayuda para logros y misiones en Halloween"
+	L["Candy Swirl"] = "Remolino de caramelo"
+	L["Pumpkin"] = "Calabaza"
+	L["Evil Pumpkin"] = "Calabaza diabolica"
+	L["Bat"] = "Murciélago"
+	L["Cat"] = "Gata"
+	L["Ghost"] = "Fantasma"
+	L["Witch"] = "Bruja"
+
+elseif ns.locale == "frFR" then
+	L["Hallow's End"] = "Sanssaint"
+	L["AddOn Description"] = "Aide pour les réalisations et les quêtes dans Sanssaint"
+	L["Candy Swirl"] = "Tourbillon de bonbons"
+	L["Pumpkin"] = "Citrouille"
+	L["Evil Pumpkin"] = "Citrouille maléfique"
+	L["Bat"] = "Chauve souris"
+	L["Cat"] = "Chatte"
+	L["Ghost"] = "Fantôme"
+	L["Witch"] = "Sorcière"
+
+elseif ns.locale == "itIT" then
+	L["Hallow's End"] = "Veglia delle Ombre"
+	L["AddOn Description"] = "Aiuto per obiettivi e missioni in Veglia delle Ombre"
+	L["Candy Swirl"] = "Vortice di caramelle"
+	L["Pumpkin"] = "Zucca"
+	L["Evil Pumpkin"] = "Zucca cattiva"
+	L["Bat"] = "Pipistrello"
+	L["Cat"] = "Gatta"
+	L["Ghost"] = "Fantasma"
+	L["Witch"] = "Strega"
+
+elseif ns.locale == "koKR" then
+	L["Hallow's End"] = "할로윈 축제"
+	L["AddOn Description"] = "할로윈 축제의 업적 및 퀘스트에 대한 도움말"	
+	L["Candy Swirl"] = "캔디 소용돌이"
+	L["Pumpkin"] = "호박"
+	L["Evil Pumpkin"] = "사악한 호박"
+	L["Bat"] = "박쥐"
+	L["Cat"] = "고양이"
+	L["Ghost"] = "귀신"
+	L["Witch"] = "마녀"
+		
+elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
+	L["Hallow's End"] = "Noturnália"
+	L["AddOn Description"] = "Ajuda para conquistas e missões em Noturnália"
+	L["Candy Swirl"] = "redemoinho de doces"
+	L["Pumpkin"] = "Abóbora"
+	L["Evil Pumpkin"] = "Abóbora Malvada"
+	L["Bat"] = "Bastão"
+	L["Cat"] = "Gata"
+	L["Ghost"] = "Fantasma"
+	L["Witch"] = "Bruxa"
+
+elseif ns.locale == "ruRU" then
+	L["Hallow's End"] = "Тыквовин"
+	L["AddOn Description"] = "Справка по достижениям и квестам в Тыквовине"
+	L["Candy Swirl"] = "Конфетный вихрь"
+	L["Pumpkin"] = "Тыква"
+	L["Evil Pumpkin"] = "Злая тыква"
+	L["Bat"] = "Летучая мышь"
+	L["Cat"] = "Кот"
+	L["Ghost"] = "Призрак"
+	L["Witch"] = "Ведьма"
+
+elseif ns.locale == "zhCN" then
+	L["Hallow's End"] = "万圣节"
+	L["AddOn Description"] = "帮助万圣节的成就和任务"
+	L["Candy Swirl"] = "糖果漩涡"
+	L["Pumpkin"] = "南瓜"
+	L["Evil Pumpkin"] = "邪恶的南瓜"
+	L["Bat"] = "蝙蝠"
+	L["Cat"] = "猫"
+	L["Ghost"] = "鬼"
+	L["Witch"] = "巫婆"
+
+elseif ns.locale == "zhTW" then
+	L["Hallow's End"] = "萬聖節"
+	L["AddOn Description"] = "幫助萬聖節的成就和任務"
+	L["Candy Swirl"] = "糖果漩渦"
+	L["Pumpkin"] = "南瓜"
+	L["Evil Pumpkin"] = "邪惡的南瓜"
+	L["Bat"] = "蝙蝠"
+	L["Cat"] = "貓"
+	L["Ghost"] = "鬼"
+	L["Witch"] = "巫婆"
+	
+else
 	L["AddOn Description"] = "Help for Hallow's End achievements and quests"
-	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
 end
 
 -- Plugin handler for HandyNotes
-local function infoFromCoord(mapFile, coord)
-	local point = ns.points[mapFile] and ns.points[mapFile][coord]
-	return point[1], point[2], point[3], point[4]
-end
-
 function pluginHandler:OnEnter(mapFile, coord)
 	if self:GetCenter() > UIParent:GetCenter() then
 		GameTooltip:SetOwner(self, "ANCHOR_LEFT")
@@ -404,54 +484,51 @@ function pluginHandler:OnEnter(mapFile, coord)
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 	end
 
-	local aID, aIndex, aQuest, tip = infoFromCoord(mapFile, coord)
+	local pin = ns.points[ mapFile ] and ns.points[ mapFile ][ coord ]
 	local completed, aName, completedMe;
-	local pName = UnitName( "player" ) or "Character"
 	local bypassCoords = false
-	
-	if ( aID == "A" ) or ( aID == "N" ) or ( aID == "H" ) then
-		GameTooltip:SetText( ns.colour.prefix ..aIndex )
-		if ( aQuest == 0 ) then
-			bypassCoords = true
-		else
-			completed = C_QuestLog.IsQuestFlaggedCompleted( math.abs( aQuest ) )
-			if ( aQuest < 0 ) then
+
+	if pin.achievement then
+		_, aName, _, completed = GetAchievementInfo( pin.achievement )
+		GameTooltip:AddDoubleLine( ns.colour.prefix ..aName ..ns.colour.highlight .." (" ..ns.faction ..")",
+					( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..L["Account"] ..")" ) 
+										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..L["Account"] ..")" ) )
+		if pin.index then
+			aName, _, completed = GetAchievementCriteriaInfo( pin.achievement, pin.index )
+			GameTooltip:AddDoubleLine( ns.colour.highlight.. aName,
+						( completed == true ) and ( "\124cFF00FF00" ..L["Ever Completed"] .." (" ..ns.name ..")" ) 
+											or ( "\124cFFFF0000" ..L["Not Ever Completed"] .." (" ..ns.name ..")" ) )
+		end
+		if pin.quest then
+			completed = IsQuestFlaggedCompleted( pin.quest )
+			if pin.daily then
 				GameTooltip:AddDoubleLine( "\124cFF1F45FC".. "Daily Quest",
-							( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
-												or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
+							( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..ns.name ..")" ) 
+												or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..ns.name ..")" ) )
 			else
 				GameTooltip:AddDoubleLine( "\124cFF1F45FC".. "This Season",
-							( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
-												or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
+							( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..ns.name ..")" ) 
+												or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..ns.name ..")" ) )
 			end
-		end	
-	elseif ( aQuest == 0 ) then
-		_, aName, _, completed, _, _, _, _, _, _, _, _, completedMe = GetAchievementInfo( aID )
-		GameTooltip:AddDoubleLine( ns.colour.prefix ..aName ..ns.colour.highlight .." (" ..ns.faction ..")",
-					( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..L["Account"] ..")" ) 
-										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..L["Account"] ..")" ) )
-		GameTooltip:AddDoubleLine( " ",
-					( completedMe == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
-										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )										
-	else
-		_, aName, _, completed = GetAchievementInfo( aID )
-		GameTooltip:AddDoubleLine( ns.colour.prefix ..aName ..ns.colour.highlight .." (" ..ns.faction ..")",
-					( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..L["Account"] ..")" ) 
-										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..L["Account"] ..")" ) )
-		aName, _, completed = GetAchievementCriteriaInfo( aID, aIndex )
-		GameTooltip:AddDoubleLine( ns.colour.highlight.. aName,
-					( completed == true ) and ( "\124cFF00FF00" ..L["Ever Completed"] .." (" ..pName ..")" ) 
-										or ( "\124cFFFF0000" ..L["Not Ever Completed"] .." (" ..pName ..")" ) )
-		completed = C_QuestLog.IsQuestFlaggedCompleted( math.abs( aQuest ) )
-		if ( aQuest < 0 ) then
-			GameTooltip:AddDoubleLine( "\124cFF1F45FC".. "Daily Quest",
-						( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
-											or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
-		else
-			GameTooltip:AddDoubleLine( "\124cFF1F45FC".. "This Season",
-						( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
-											or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
 		end
+	else
+		if pin.title then
+			GameTooltip:SetText( ns.colour.prefix ..pin.title )
+		end
+		if pin.quest then
+			completed = IsQuestFlaggedCompleted( pin.quest )
+			if pin.daily then
+				GameTooltip:AddDoubleLine( "\124cFF1F45FC".. "Daily Quest",
+							( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..ns.name ..")" ) 
+												or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..ns.name ..")" ) )
+			else
+				GameTooltip:AddDoubleLine( "\124cFF1F45FC".. "This Season",
+							( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..ns.name ..")" ) 
+												or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..ns.name ..")" ) )
+			end
+		else
+			bypassCoords = true
+		end	
 	end
 
  	if ( ( mapFile == 17 ) and ( C_Map.GetMapArtID( mapFile ) ~= 18 ) ) or -- Blasted Lands Testing was 18 or 628 
@@ -461,8 +538,8 @@ function pluginHandler:OnEnter(mapFile, coord)
 		-- Theramore gave the same mapArtID
 		GameTooltip:AddLine( "\124cFFFF0000Wrong map/quest phase. Speak to Zidormi" )
 	end
-	if ( tip ~= "" ) then
-		GameTooltip:AddLine( ns.colour.plaintext ..tip )
+	if pin.tip then
+		GameTooltip:AddLine( ns.colour.plaintext ..pin.tip )
 	end	
 	if ( ns.db.showCoords == true ) and ( bypassCoords == false ) then
 		local mX, mY = HandyNotes:getXY(coord)
@@ -477,15 +554,25 @@ function pluginHandler:OnLeave()
 	GameTooltip:Hide()
 end
 
-local function ShowConditionallyC( v1, v2, v3 )
+local function ShowConditionallyE( aID, aIndex )
+	local completed;
+	if ( ns.db.removeEver == true ) then
+		if ( aIndex > 0 ) then
+			_, _, completed = GetAchievementCriteriaInfo( aID, aIndex )
+		else
+			_, _, _, completed = GetAchievementInfo( aID )
+		end
+		if ( completed == true ) then
+			return false
+		end
+	end
+	return true
+end
+
+local function ShowConditionallyS( quest )
 	local completed;
 	if ( ns.db.removeSeasonal == true ) then
-		completed = C_QuestLog.IsQuestFlaggedCompleted( v3 )
-		if ( completed == true ) then
-			return false
-		end
-	elseif ( ns.db.removeEver == true ) then
-		_, _, completed = GetAchievementCriteriaInfo( v1, v2 )
+		completed = IsQuestFlaggedCompleted( quest )
 		if ( completed == true ) then
 			return false
 		end
@@ -493,32 +580,10 @@ local function ShowConditionallyC( v1, v2, v3 )
 	return true
 end
 
-local function ShowConditionallyA( v1 )
-	local completedMe;
-	if ( ns.db.removeSeasonal == true ) then
-		_, _, _, _, _, _, _, _, _, _, _, _, completedMe = GetAchievementInfo( v1 )
-		if ( completedMe == true ) then
-			return false
-		end
-	end
-	return true
-end
-
-local function ShowConditionallyS( v2 )
-	local completed;
-	if ( ns.db.removeSeasonal == true ) then
-		completed = C_QuestLog.IsQuestFlaggedCompleted( v2 )
-		if ( completed == true ) then
-			return false
-		end
-	end
-	return true
-end
-
-local function ShowConditionallyD( v3 )
+local function ShowConditionallyD( quest )
 	local completed;
 	if ( ns.db.removeDailies == true ) then
-		completed = C_QuestLog.IsQuestFlaggedCompleted( v3 )
+		completed = IsQuestFlaggedCompleted( quest )
 		if ( completed == true ) then
 			return false
 		end
@@ -532,54 +597,82 @@ do
 		local coord, v = next(t, prev)
 		while coord do
 			if v then
-				if ( v[1] == "A" ) or ( v[1] == "N" ) or ( v[1] == "H" ) then
-					if ( ( ns.faction == "Horde" ) and ( ( v[1] == "N" ) or ( v[1] == "H" ) ) ) or
-					   ( ( ns.faction == "Alliance" ) and ( ( v[1] == "N" ) or ( v[1] == "A" ) ) ) then
-						if ( v[3] == 0 ) then
-							-- Permanent map marker with no related quest or achievement
-							return coord, nil, ns.texturesS[ns.db.icon_special],
-								ns.db.icon_scale * ns.scalingS[ns.db.icon_special], ns.db.icon_alpha
-						elseif ( v[3] > 0 ) then
-							if ShowConditionallyS( v[3] ) == true then
-								return coord, nil, ns.texturesS[ns.db.icon_special],
-									ns.db.icon_scale * ns.scalingS[ns.db.icon_special], ns.db.icon_alpha
-							end
-						else
-							if ShowConditionallyD( -1*v[3] ) == true then
-								return coord, nil, ns.texturesS[ns.db.icon_dailies],
-									ns.db.icon_scale * ns.scalingS[ns.db.icon_dailies], ns.db.icon_alpha
-							end
-						end
-					end
-				elseif ( v[3] == 0 ) then -- Achievement with no relevant criteria to be bothered with
-					if ShowConditionallyA( v[1] ) == true then
-						return coord, nil, ns.texturesS[ns.db.icon_special],
-							ns.db.icon_scale * ns.scalingS[ns.db.icon_special], ns.db.icon_alpha
-					end
-				elseif ( v[3] > 0 ) then -- Achievement with seasonal criteria
-					if ( v[1] == 963 ) or ( v[1] == 966 ) or ( v[1] == 969 ) or
-						( v[1] == 5836 ) or ( v[1] == 5837 ) or ( v[1] == 7601 ) then -- Tricks & Treats Alliance
+				if v.achievement then
+					if ( v.achievement == 963 ) or ( v.achievement == 966 ) or ( v.achievement == 969 ) or
+						( v.achievement == 5836 ) or ( v.achievement == 5837 ) or ( v.achievement == 7601 ) or
+						( v.achievement == 75681 ) then -- Tricks & Treats Alliance
 						if ns.faction == "Alliance" then
-							if ShowConditionallyC( v[1], v[2], v[3] ) == true then
-								return coord, nil, ns.texturesL[ns.db.icon_tricksTreat], 
-									ns.db.icon_scale * ns.scalingL[ns.db.icon_tricksTreat], ns.db.icon_alpha
+							if ShowConditionallyE( v.achievement ) == true then
+								if ShowConditionallyS( v.quest ) == true then
+									return coord, nil, ns.texturesL[ns.db.iconTricksTreat], 
+										ns.db.iconScale * ns.scalingL[ns.db.iconTricksTreat], ns.db.iconAlpha
+								end
 							end
 						end
-					elseif ( v[1] == 965 ) or ( v[1] == 967 ) or ( v[1] == 968 ) or
-							( v[1] == 5835 ) or ( v[1] == 5838 ) or ( v[1] == 7602 ) then -- Tricks & Treats Horde
+					elseif ( v.achievement == 965 ) or ( v.achievement == 967 ) or ( v.achievement == 968 ) or
+							( v.achievement == 5835 ) or ( v.achievement == 5838 ) or ( v.achievement == 7602 ) or
+							( v.achievement == 75682 ) then -- Tricks & Treats Horde
 						if ns.faction == "Horde" then
-							if ShowConditionallyC( v[1], v[2], v[3] ) == true then
-								return coord, nil, ns.texturesL[ns.db.icon_tricksTreat], 
-									ns.db.icon_scale * ns.scalingL[ns.db.icon_tricksTreat], ns.db.icon_alpha
+							if ShowConditionallyE( v.achievement ) == true then
+								if ShowConditionallyS( v.quest ) == true then
+									return coord, nil, ns.texturesL[ns.db.iconTricksTreat], 
+										ns.db.iconScale * ns.scalingL[ns.db.iconTricksTreat], ns.db.iconAlpha
+								end
+							end
+						end
+					elseif v.achievement == 1040 then -- Alliance Dailies with an Achievement
+						if ns.faction == "Alliance" then
+							if ShowConditionallyE( v.achievement ) == true then
+								if ShowConditionallyD( v.quest ) == true then
+									return coord, nil, ns.texturesS[ns.db.iconDailies],
+										ns.db.iconScale * ns.scalingS[ns.db.iconDailies], ns.db.iconAlpha
+								end
+							end
+						end
+					elseif v.achievement == 1041 then -- Horde Dailies with an Achievement
+						if ns.faction == "Horde" then
+							if ShowConditionallyE( v.achievement ) == true then
+								if ShowConditionallyD( v.quest ) == true then
+									return coord, nil, ns.texturesS[ns.db.iconDailies],
+										ns.db.iconScale * ns.scalingS[ns.db.iconDailies], ns.db.iconAlpha
+								end
+							end
+						end													
+					else
+						if v.achievement == 18360 then -- Non-faction Dragon Isles buckets
+							if ShowConditionallyE( v.achievement, v.index ) == true then
+								if ShowConditionallyS( v.quest ) == true then
+									return coord, nil, ns.texturesL[ns.db.iconTricksTreat], 
+										ns.db.iconScale * ns.scalingL[ns.db.iconTricksTreat], ns.db.iconAlpha
+								end
+							end
+						else -- Some other Achievement - Check Your Head etc				
+							if ShowConditionallyE( v.achievement, v.index ) == true then
+								return coord, nil, ns.texturesS[ns.db.iconSpecial],
+									ns.db.iconScale * ns.scalingS[ns.db.iconSpecial], ns.db.iconAlpha
+							end
+						end
+					end					
+				elseif v.faction and v.quest then
+					-- Actually, so far all quests have a faction field
+					if ( ( ns.faction == "Horde" ) and ( ( v.faction == "Neutral" ) or ( v.faction == "Horde" ) ) ) or
+					   ( ( ns.faction == "Alliance" ) and ( ( v.faction == "Neutral" ) or ( v.faction == "Alliance" ) ) ) then
+						-- That logic excludes new Pandas but shouldn't be a problem
+						if ShowConditionallyE( v.achievement ) == true then
+							if v.daily then -- Mainly Garrison
+								if ShowConditionallyD( v.quest ) == true then
+									return coord, nil, ns.texturesS[ns.db.iconDailies],
+										ns.db.iconScale * ns.scalingS[ns.db.iconDailies], ns.db.iconAlpha
+								end
+							elseif ShowConditionallyS( v.quest ) == true then -- Mainly extra candy buckets plus extra help pins
+								return coord, nil, ns.texturesS[ns.db.iconSpecial],
+									ns.db.iconScale * ns.scalingS[ns.db.iconSpecial], ns.db.iconAlpha
 							end
 						end
 					end
-				elseif ( ( v[1] == 1040 ) and ( ns.faction == "Alliance" ) ) or
-						( ( v[1] == 1041 ) and ( ns.faction == "Horde" ) ) then
-					if ShowConditionallyD( -1*v[3] ) == true then
-						return coord, nil, ns.texturesS[ns.db.icon_dailies],
-								ns.db.icon_scale * ns.scalingS[ns.db.icon_dailies], ns.db.icon_alpha
-					end
+				else -- Permanent map markers with no associated Achievement or Quest
+					return coord, nil, ns.texturesS[ns.db.iconSpecial],
+						ns.db.iconScale * 2.5 * ns.scalingS[ns.db.iconSpecial], ns.db.iconAlpha
 				end
 			end
 			coord, v = next(t, coord)
@@ -607,21 +700,21 @@ ns.options = {
 			name = " " ..L["Options"],
 			inline = true,
 			args = {
-				icon_scale = {
+				iconScale = {
 					type = "range",
-					name = L["Icon Scale"],
-					desc = L["The scale of the icons"],
-					min = 1, max = 3, step = 0.1,
-					arg = "icon_scale",
-					order = 2,
+					name = L["Map Pin Size"],
+					desc = L["The Map Pin Size"],
+					min = 1, max = 4, step = 0.1,
+					arg = "iconScale",
+					order = 1,
 				},
-				icon_alpha = {
+				iconAlpha = {
 					type = "range",
-					name = L["Icon Alpha"],
-					desc = L["The alpha transparency of the icons"],
+					name = L["Map Pin Alpha"],
+					desc = L["The alpha transparency of the map pins"],
 					min = 0, max = 1, step = 0.01,
-					arg = "icon_alpha",
-					order = 3,
+					arg = "iconAlpha",
+					order = 2,
 				},
 				showCoords = {
 					name = L["Show Coordinates"],
@@ -630,7 +723,7 @@ ns.options = {
 					type = "toggle",
 					width = "full",
 					arg = "showCoords",
-					order = 4,
+					order = 3,
 				},
 				removeDailies = {
 					name = "Remove dailies if completed today by " ..ns.name,
@@ -638,36 +731,32 @@ ns.options = {
 					type = "toggle",
 					width = "full",
 					arg = "removeDailies",
-					order = 5,
+					order = 4,
 				},
 				removeSeasonal = {
-					name = "Remove T&T marker if completed this season by " ..ns.name,
-					desc = "Achievement Candy Buckets are repeatable each season.\n"
-							.."Note that there are miscellaneous buckets and quests\n"
-							.."which are also seasonal and they are included here.",
+					name = "Remove marker if completed this season by " ..ns.name,
+					desc = "Candy Buckets, for example, are repeatable each season",
 					type = "toggle",
 					width = "full",
 					arg = "removeSeasonal",
-					order = 6,
+					order = 5,
 				},
 				removeEver = {
-					name = "Remove T&T marker if ever completed on this account",
-					desc = "Achievement Candy Buckets are repeatable each season.\n"
-							.."Note that there are miscellaneous buckets and quests\n"
-							.."which are also seasonal and they are included here.",
+					name = "Remove marker if ever completed on this account",
+					desc = "This if for all Achievement based pins",
 					type = "toggle",
 					width = "full",
 					arg = "removeEver",
-					order = 7,
+					order = 6,
 				},
 			},
 		},
 		icon = {
 			type = "group",
-			name = L["Icon Selection"],
+			name = L["Map Pin Selections"],
 			inline = true,
 			args = {
-				icon_tricksTreat = {
+				iconTricksTreat = {
 					type = "range",
 					name = L["Tricks and Treats"],
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
@@ -677,10 +766,10 @@ ns.options = {
 							.."\n14 = " ..L["Bat"] .."\n15 = " ..L["Cat"] .."\n16 = " ..L["Ghost"] 
 							.."\n17 = " ..L["Witch"], 
 					min = 1, max = 17, step = 1,
-					arg = "icon_tricksTreat",
-					order = 8,
+					arg = "iconTricksTreat",
+					order = 7,
 				},
-				icon_dailies = {
+				iconDailies = {
 					type = "range",
 					name = L["Rotten Hallow Dailies"],
 					desc = "1 = " ..L["Ring"] .." - " ..L["Gold"] .."\n2 = " ..L["Ring"] .." - " ..L["Red"] 
@@ -691,10 +780,10 @@ ns.options = {
 							.."\n12 = " ..L["Bat"] .."\n13 = " ..L["Cat"] .."\n14 = " ..L["Ghost"] 
 							.."\n15 = " ..L["Witch"], 
 					min = 1, max = 15, step = 1,
-					arg = "icon_dailies",
-					order = 9,
+					arg = "iconDailies",
+					order = 8,
 				},
-				icon_special = {
+				iconSpecial = {
 					type = "range",
 					name = L["Extra Candy Buckets"],
 					desc = "1 = " ..L["Ring"] .." - " ..L["Gold"] .."\n2 = " ..L["Ring"] .." - " ..L["Red"] 
@@ -705,8 +794,8 @@ ns.options = {
 							.."\n12 = " ..L["Bat"] .."\n13 = " ..L["Cat"] .."\n14 = " ..L["Ghost"] 
 							.."\n15 = " ..L["Witch"], 
 					min = 1, max = 15, step = 1,
-					arg = "icon_special",
-					order = 10,
+					arg = "iconSpecial",
+					order = 9,
 				},
 			},
 		},
@@ -728,20 +817,18 @@ function pluginHandler:OnEnable()
 			local coords = ns.points[map.mapID]
 			-- Maps here will not propagate upwards. Mostly for cities as I used lots of
 			-- extra helpful markers which would unnecessarily clutter a continent map
-			if ( map.mapID == 84 ) or -- Stormwind City
+			if ( map.mapID == 57 ) or -- Teldrassil
+				( map.mapID == 84 ) or -- Stormwind City
 				( map.mapID == 85 ) or -- Orgrimmar
 				( map.mapID == 87 ) or -- Ironforge
 				( map.mapID == 89 ) or -- Darnassus
 				( map.mapID == 90 ) or -- Undercity
+				( map.mapID == 97 ) or -- Azuremyst Isle
 				( map.mapID == 110 ) or -- Silvermoon City
 				-- I wanted a set of Dalaran pins to appear in Crystalsong thus I need to
 				-- avoid duplication on the Northrend map
 				( map.mapID == 127 ) or -- Crystalsong Forest
-				-- Necessary as they seem to be special cases
-				( map.mapID == 97 ) or -- Azuremyst Isle
-				( map.mapID == 57 ) then -- Teldrassil
-			elseif (version < 40000) and ( map.mapID < 1400 ) then
-			elseif (version >= 40000) and ( map.mapID >= 1400 ) then
+				( map.mapID == 2112 ) then -- Valdrakken
 			elseif coords then
 				for coord, v in next, coords do
 					local function AddToContinent()
@@ -752,46 +839,74 @@ function pluginHandler:OnEnable()
 							ns.points[continentMapID][HandyNotes:getCoord(cx, cy)] = v
 						end
 					end
-					if ( v[1] == "A" ) or ( v[1] == "N" ) or ( v[1] == "H" ) then
-						if ( ( ns.faction == "Horde" ) and ( ( v[1] == "N" ) or ( v[1] == "H" ) ) ) or
-						   ( ( ns.faction == "Alliance" ) and ( ( v[1] == "N" ) or ( v[1] == "A" ) ) ) then
-							if ( v[3] == 0 ) then
-								AddToContinent()
-							elseif ( v[3] > 0 ) then
-								if ShowConditionallyS( v[3] ) == true then
-									AddToContinent()
-								end
-							else
-								if ShowConditionallyD( -1*v[3] ) == true then
-									AddToContinent()
-								end
-							end
-						end
-					elseif ( v[3] == 0 ) then -- Achievement with no relevant criteria to be bothered with
-						if ShowConditionallyA( v[1] ) == true then
-							AddToContinent()
-						end
-					elseif ( v[3] > 0 ) then -- Achievement with seasonal criteria
-						if ( v[1] == 963 ) or ( v[1] == 966 ) or ( v[1] == 969 ) or
-							( v[1] == 5836 ) or ( v[1] == 5837 ) or ( v[1] == 7601 ) then -- Tricks & Treats Alliance
+					
+					if v.achievement then
+						if ( v.achievement == 963 ) or ( v.achievement == 966 ) or ( v.achievement == 969 ) or
+							( v.achievement == 5836 ) or ( v.achievement == 5837 ) or ( v.achievement == 7601 ) or
+							( v.achievement == 75681 ) then -- Tricks & Treats Alliance
 							if ns.faction == "Alliance" then
-								if ShowConditionallyC( v[1], v[2], v[3] ) == true then
-									AddToContinent()
+								if ShowConditionallyE( v.achievement ) == true then
+									if ShowConditionallyS( v.quest ) == true then
+										AddToContinent()
+									end
 								end
 							end
-						elseif ( v[1] == 965 ) or ( v[1] == 967 ) or ( v[1] == 968 ) or
-								( v[1] == 5835 ) or ( v[1] == 5838 ) or ( v[1] == 7602 ) then -- Tricks & Treats Horde
+						elseif ( v.achievement == 965 ) or ( v.achievement == 967 ) or ( v.achievement == 968 ) or
+								( v.achievement == 5835 ) or ( v.achievement == 5838 ) or ( v.achievement == 7602 ) or
+								( v.achievement == 75682 ) then -- Tricks & Treats Horde
 							if ns.faction == "Horde" then
-								if ShowConditionallyC( v[1], v[2], v[3] ) == true then
+								if ShowConditionallyE( v.achievement ) == true then
+									if ShowConditionallyS( v.quest ) == true then
+										AddToContinent()
+									end
+								end
+							end
+						elseif v.achievement == 1040 then -- Alliance Dailies with an Achievement
+							if ns.faction == "Alliance" then
+								if ShowConditionallyE( v.achievement ) == true then
+									if ShowConditionallyD( v.quest ) == true then
+										AddToContinent()
+									end
+								end
+							end
+						elseif v.achievement == 1041 then -- Horde Dailies with an Achievement
+							if ns.faction == "Horde" then
+								if ShowConditionallyE( v.achievement ) == true then
+									if ShowConditionallyD( v.quest ) == true then
+										AddToContinent()
+									end
+								end
+							end													
+						else
+							if v.achievement == 18360 then -- Non-faction Dragon Isles buckets
+								if ShowConditionallyE( v.achievement, v.index ) == true then
+									if ShowConditionallyS( v.quest ) == true then
+										AddToContinent()
+									end
+								end
+							else -- Some other Achievement - Check Your Head etc				
+								if ShowConditionallyE( v.achievement, v.index ) == true then
+									AddToContinent()
+								end
+							end
+						end					
+					elseif v.faction and v.quest then
+						-- Actually, so far all quests have a faction field
+						if ( ( ns.faction == "Horde" ) and ( ( v.faction == "Neutral" ) or ( v.faction == "Horde" ) ) ) or
+						   ( ( ns.faction == "Alliance" ) and ( ( v.faction == "Neutral" ) or ( v.faction == "Alliance" ) ) ) then
+							-- That logic excludes new Pandas but shouldn't be a problem
+							if ShowConditionallyE( v.achievement ) == true then
+								if v.daily then -- Mainly Garrison
+									if ShowConditionallyD( v.quest ) == true then
+										AddToContinent()
+									end
+								elseif ShowConditionallyS( v.quest ) == true then -- Mainly extra candy buckets plus extra help pins
 									AddToContinent()
 								end
 							end
 						end
-					elseif ( ( v[1] == 1040 ) and ( ns.faction == "Alliance" ) ) or
-							( ( v[1] == 1041 ) and ( ns.faction == "Horde" ) ) then
-						if ShowConditionallyD( -1*v[3] ) == true then
-							AddToContinent()
-						end
+					else -- Permanent map markers with no associated Achievement or Quest
+						AddToContinent()
 					end
 				end
 			end

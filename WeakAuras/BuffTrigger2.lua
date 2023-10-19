@@ -77,8 +77,8 @@ local watched_trigger_events = Private.watched_trigger_events
 
 local UnitGroupRolesAssigned = WeakAuras.IsWrathOrRetail() and UnitGroupRolesAssigned or function() return "DAMAGER" end
 
+-- Active scan functions used to quickly check which apply to a aura instance
 -- keyed on unit, debuffType, spellname, with a scan object value
--- scan object: id, triggernum, scanFunc
 local scanFuncName = {}
 local scanFuncSpellId = {}
 local scanFuncGeneral = {}
@@ -102,6 +102,8 @@ local groupScanFuncs = {}
 local activeGroupScanFuncs = {}
 
 local raidMarkScanFuncs = {}
+
+local rangeScanFuncs = {}
 
 -- Multi Target tracking
 local scanFuncNameMulti = {}
@@ -258,6 +260,117 @@ local function MatchesTriggerInfoMulti(triggerInfo, sourceGUID)
   end
 end
 
+local function CheckScanFuncs(scanFuncs, unit, filter, key)
+  if scanFuncs then
+    for triggerInfo in pairs(scanFuncs) do
+      if triggerInfo.fetchTooltip then
+        local md = matchData[unit][filter][key]
+        md:UpdateTooltip(GetTime())
+      end
+      if not triggerInfo.scanFunc or triggerInfo.scanFunc(time, matchData[unit][filter][key]) then
+        local id = triggerInfo.id
+        local triggernum = triggerInfo.triggernum
+        ReferenceMatchData(id, triggernum, unit, filter, key)
+        matchDataChanged[id] = matchDataChanged[id] or {}
+        matchDataChanged[id][triggernum] = true
+      end
+    end
+  end
+end
+
+local TooltipHelper
+if newAPI then
+  ---@class TooltipHelper
+  ---@field count number
+  ---@field tracks table<string, table<fun(data: any), any>>
+  TooltipHelper = {
+    count = 0,
+    frame = CreateFrame("Frame"),
+    tracks = {
+
+    },
+    --- @type fun(self: TooltipHelper, dataInstanceId: number, matchData: table)
+    Track = function(self, dataInstanceID, matchData)
+      self.tracks[dataInstanceID] = self.tracks[dataInstanceID] or {}
+      if not self.tracks[dataInstanceID][matchData] then
+        self.count = self.count + 1
+        self.tracks[dataInstanceID][matchData] = true
+        if self.count == 1 then
+          self.frame:RegisterEvent("TOOLTIP_DATA_UPDATE")
+        end
+      end
+    end,
+    --- @type fun(self: TooltipHelper, dataInstanceId: number, matchData: table)
+    Untrack = function(self, dataInstanceID, matchData)
+      if self.tracks[dataInstanceID] then
+        if self.tracks[dataInstanceID][matchData] then
+          self.count = self.count - 1
+          self.tracks[dataInstanceID][matchData] = nil
+          if not next(self.tracks[dataInstanceID]) then
+            self.tracks[dataInstanceID] = nil
+          end
+          if self.count == 0 then
+            self.frame:UnregisterEvent("TOOLTIP_DATA_UPDATE")
+          end
+        end
+      end
+    end,
+    --- @type fun(self: TooltipHelper)
+    Clear = function(self)
+      self.tracks = {}
+      self.frame:UnregisterEvent("TOOLTIP_DATA_UPDATE")
+      self.count = 0
+    end,
+
+    --- @type fun(self: TooltipHelper, matchData: table)
+    HandleMatchData = function(self, matchData)
+      if matchData:UpdateTooltip(GetTime()) then
+        local unit = matchData.unit
+        local key = matchData.auraInstanceID
+        local filter = matchData.filter
+        for id, triggerData in pairs(matchData.auras) do
+          for triggernum in pairs(triggerData) do
+            local matchDataByTriggerAndUnit = GetSubTable(matchDataByTrigger, id, triggernum, unit)
+            if matchDataByTriggerAndUnit and matchDataByTriggerAndUnit[key] then
+              matchDataByTriggerAndUnit[key] = nil
+              matchDataChanged[id] = matchDataChanged[id] or {}
+              matchDataChanged[id][triggernum] = true
+            end
+          end
+        end
+        wipe(matchData.auras)
+
+        local sfn = GetSubTable(scanFuncName, unit, filter, matchData.name)
+        local sfng = GetSubTable(scanFuncNameGroup, unit, filter, matchData.name)
+        local sfs = GetSubTable(scanFuncSpellId, unit, filter, matchData.spellId)
+        local sfsg = GetSubTable(scanFuncSpellIdGroup, unit, filter, matchData.spellId)
+        local sfg = GetSubTable(scanFuncGeneral, unit, filter)
+        local sfgg = GetSubTable(scanFuncGeneralGroup, unit, filter)
+
+        CheckScanFuncs(sfn, unit, filter, key)
+        CheckScanFuncs(sfng, unit, filter, key)
+        CheckScanFuncs(sfs, unit, filter, key)
+        CheckScanFuncs(sfsg, unit, filter, key)
+        CheckScanFuncs(sfg, unit, filter, key)
+        CheckScanFuncs(sfgg, unit, filter, key)
+      end
+    end,
+
+    --- @type fun(self: TooltipHelper, dataInstanceID: number)
+    HandleEvent = function(self, dataInstanceID)
+      if self.tracks[dataInstanceID] then
+        for callbackData in pairs(self.tracks[dataInstanceID]) do
+          self:HandleMatchData(callbackData)
+        end
+      end
+    end
+  }
+
+  TooltipHelper.frame:SetScript("OnEvent", function(frame, event, dataInstanceID)
+    TooltipHelper:HandleEvent(dataInstanceID)
+  end)
+end
+
 local function UpdateToolTipDataInMatchData(matchData, time)
   if matchData.tooltipUpdated == time then
     return
@@ -265,10 +378,21 @@ local function UpdateToolTipDataInMatchData(matchData, time)
   local changed = false
 
   if matchData.unit and matchData.auraInstanceID then
-    local tooltip, _, tooltip1, tooltip2, tooltip3, tooltip4 = WeakAuras.GetAuraInstanceTooltipInfo(matchData.unit, matchData.auraInstanceID, matchData.filter)
+    local dataInstanceID, tooltip, _, tooltip1, tooltip2, tooltip3, tooltip4 = WeakAuras.GetAuraInstanceTooltipInfo(matchData.unit, matchData.auraInstanceID, matchData.filter)
     changed = matchData.tooltip ~= tooltip or matchData.tooltip1 ~= tooltip1
       or matchData.tooltip2 ~= tooltip2 or matchData.tooltip3 ~= tooltip3 or matchData.tooltip4 ~= tooltip4
     matchData.tooltip, matchData.tooltip1, matchData.tooltip2, matchData.tooltip3, matchData.tooltip4 = tooltip, tooltip1, tooltip2, tooltip3, tooltip4
+
+    local oldDataInstanceId = matchData.dataInstanceID
+    matchData.dataInstanceID = dataInstanceID
+    if dataInstanceID ~= oldDataInstanceId then
+      if dataInstanceID then
+        TooltipHelper:Track(dataInstanceID, matchData)
+      end
+      if oldDataInstanceId then
+        TooltipHelper:Untrack(oldDataInstanceId, matchData)
+      end
+    end
   elseif matchData.unit and matchData.index and matchData.filter then
     local tooltip, _, tooltip1, tooltip2, tooltip3, tooltip4 = WeakAuras.GetAuraTooltipInfo(matchData.unit, matchData.index, matchData.filter)
     changed = matchData.tooltip ~= tooltip or matchData.tooltip1 ~= tooltip1
@@ -1268,6 +1392,10 @@ local function TriggerInfoApplies(triggerInfo, unit)
     return false
   end
 
+  if triggerInfo.inRange and not UnitInRange(unit) then
+    return false
+  end
+
   return true
 end
 
@@ -1634,6 +1762,9 @@ local function CleanUpOutdatedMatchData(removeIndex, unit, filter)
             matchDataChanged[id][triggernum] = true
           end
         end
+        if data.dataInstanceID then
+          TooltipHelper:Untrack(data.dataInstanceID, data)
+        end
         matchData[unit][filter][auraInstanceID] = nil
       end
     end
@@ -1673,6 +1804,9 @@ local function CleanUpMatchDataForUnit(unit, filter)
           end
         end
       end
+      if data.dataInstanceID then
+        TooltipHelper:Untrack(data.dataInstanceID, data)
+      end
     end
   end
 end
@@ -1695,22 +1829,7 @@ local function DeactivateScanFuncs(toDeactivate)
   end
 end
 
-local function CheckScanFuncs(scanFuncs, unit, filter, key)
-  if scanFuncs then
-    for triggerInfo in pairs(scanFuncs) do
-      if triggerInfo.fetchTooltip then
-        matchData[unit][filter][key]:UpdateTooltip(GetTime())
-      end
-      if not triggerInfo.scanFunc or triggerInfo.scanFunc(time, matchData[unit][filter][key]) then
-        local id = triggerInfo.id
-        local triggernum = triggerInfo.triggernum
-        ReferenceMatchData(id, triggernum, unit, filter, key)
-        matchDataChanged[id] = matchDataChanged[id] or {}
-        matchDataChanged[id][triggernum] = true
-      end
-    end
-  end
-end
+
 
 local ScanUnitWithFilter
 do
@@ -1788,6 +1907,9 @@ do
                       matchDataChanged[id] = matchDataChanged[id] or {}
                       matchDataChanged[id][triggernum] = true
                     end
+                  end
+                  if data.dataInstanceID then
+                    TooltipHelper:Untrack(data.dataInstanceID, data)
                   end
                 end
               end
@@ -1920,20 +2042,24 @@ local function ScanGroupUnit(time, matchDataChanged, unitType, unit, unitAuraUpd
   end
 end
 
-local function ScanUnit(time, unit, unitAuraUpdateInfo)
+local function UnitToUnitType(unit)
   if (Private.multiUnitUnits.raid[unit] and IsInRaid()) then
-    ScanGroupUnit(time, matchDataChanged, "group", unit, unitAuraUpdateInfo)
+    return "group"
   elseif (Private.multiUnitUnits.party[unit] and not IsInRaid()) then
-    ScanGroupUnit(time, matchDataChanged, "group", unit, unitAuraUpdateInfo)
+    return "group"
   elseif Private.multiUnitUnits.boss[unit] then
-    ScanGroupUnit(time, matchDataChanged, "boss", unit, unitAuraUpdateInfo)
+    return "boss", unit
   elseif Private.multiUnitUnits.arena[unit] then
-    ScanGroupUnit(time, matchDataChanged, "arena", unit, unitAuraUpdateInfo)
+    return "arena"
   elseif unit:sub(1, 9) == "nameplate" then
-    ScanGroupUnit(time, matchDataChanged, "nameplate", unit, unitAuraUpdateInfo)
+    return "nameplate"
   else
-    ScanGroupUnit(time, matchDataChanged, nil, unit, unitAuraUpdateInfo)
+    return nil
   end
+end
+
+local function ScanUnit(time, unit, unitAuraUpdateInfo)
+  ScanGroupUnit(time, matchDataChanged, UnitToUnitType(unit), unit, unitAuraUpdateInfo)
 end
 
 local function AddScanFuncs(triggerInfo, filter, unit, scanFuncName, scanFuncSpellId, scanFuncGeneral)
@@ -2143,13 +2269,16 @@ local function EventHandler(frame, event, arg1, arg2, ...)
     end
 
     if arg1 then
-      -- Initial login has a bug where the tooltip information is not available,
-      -- so update tooltips 2s after login
-      C_Timer.After(2, function()
-        for unit, matchtDataPerUnit in pairs(matchData) do
-          EventHandler(frame, "UNIT_AURA", unit)
-        end
-      end)
+      -- Initial login has an where the tooltip information is not available,
+      -- so update tooltips 2s after login.
+      -- With newApi we have TOOLTIP_DATA_UPDATE to update the tooltips
+      if not newAPI then
+        C_Timer.After(3, function()
+          for unit, matchtDataPerUnit in pairs(matchData) do
+            EventHandler(frame, "UNIT_AURA", unit)
+          end
+        end)
+      end
     end
 
   elseif event == "RAID_TARGET_UPDATE" then
@@ -2160,6 +2289,13 @@ local function EventHandler(frame, event, arg1, arg2, ...)
       tinsert(unitsToRemove, arg1)
     else
       ScanUnit(time, arg1)
+    end
+  elseif event == "UNIT_IN_RANGE_UPDATE" then
+    local unitType = UnitToUnitType(arg1)
+    if rangeScanFuncs[unitType] then
+      for _, triggerInfo in ipairs(rangeScanFuncs[unitType]) do
+        RecheckActive(triggerInfo, arg1, deactivatedTriggerInfos)
+      end
     end
   end
 
@@ -2220,6 +2356,99 @@ Buff2Frame:RegisterEvent("PARTY_MEMBER_DISABLE")
 Buff2Frame:RegisterEvent("PARTY_MEMBER_ENABLE")
 Buff2Frame:RegisterEvent("UNIT_TARGETABLE_CHANGED")
 Buff2Frame:SetScript("OnEvent", EventHandler)
+
+-- For UNIT_IN_RANGE_UPDATE Blizzard apparently checks whether anyone
+-- has called RegisterUnitEvent() for it. They probably do that so that they
+-- don't have to check in the background
+-- We register if we have a trigger with InRange checking enabled loaded
+--- @class perUnitFrames
+local PerUnitFrames = {
+  --- @type table<string, frame>
+  frames = {
+
+  },
+  --- @type table<string, table<string, {player: number?, pet: number?}>>
+  unitTypePetMode = {
+
+  },
+  --- @type fun(self: perUnitFrames, unitType: string, event: string, petMode: "PlayersAndPets"|"PetsOnly"|nil)
+  Register = function(self, unitType, event, petMode)
+    -- We check whether we are already registered for the given pet mode,
+    -- and unregister as needed by tracking the number of calls to Register with different
+    -- petModes
+    -- All of the dancing is to not register for UNIT_IN_RANGE_UPDATE for pets unless explictly asked for
+    local unitTypePetMode = GetOrCreateSubTable(self.unitTypePetMode, event, unitType)
+    --- @type any
+    local mode = false
+    unitTypePetMode.player = unitTypePetMode.player or 0
+    unitTypePetMode.pet = unitTypePetMode.pet or 0
+    if petMode == nil then
+      if unitTypePetMode.player == 0 then
+        mode = nil -- Because that's the value GetAllUnits expects
+      end
+      unitTypePetMode.player = unitTypePetMode.player + 1
+    elseif petMode == "PetsOnly" then
+      if unitTypePetMode.pet == 0 then
+        mode = "PetsOnly"
+      end
+      unitTypePetMode.pet = unitTypePetMode.pet + 1
+    elseif petMode == "PlayersAndPets" then
+      self:Register(unitType, event, nil)
+      self:Register(unitType, event, "PetsOnly")
+      return
+    end
+
+    if mode ~= false then
+      for unit in GetAllUnits(unitType, true, mode) do
+        if not self.frames[unit] then
+          self.frames[unit] = CreateFrame("Frame")
+          self.frames[unit]:SetScript("OnEvent", EventHandler)
+        end
+        self.frames[unit]:RegisterUnitEvent(event, unit)
+      end
+    end
+  end,
+  --- @type fun(self: perUnitFrames, unitType: string, event: string, petMode: "PlayersAndPets"|"PetsOnly"|nil)
+  Unregister = function(self, unitType, event, petMode)
+    local unitTypePetMode = GetSubTable(self.unitTypePetMode, event, unitType)
+    if not unitTypePetMode then
+      -- Shouldn't happen
+      return
+    end
+    --- @type any
+    local mode = false
+    if petMode == nil then
+      unitTypePetMode.player = unitTypePetMode.player - 1
+      if unitTypePetMode.player == 0 then
+        mode = nil
+      end
+    elseif petMode == "PetsOnly" then
+      unitTypePetMode.pet = unitTypePetMode.pet - 1
+      if unitTypePetMode.pet == 0 then
+        mode = "PetsOnly"
+      end
+    elseif petMode == "PlayersAndPets" then
+      self:Unregister(unitType, event, nil)
+      self:Unregister(unitType, event, "PetsOnly")
+      return
+    end
+
+    if mode ~= false then
+      for unit in GetAllUnits(unitType, true, mode) do
+        if self.frames[unit] then
+          self.frames[unit]:UnregisterEvent(event)
+        end
+      end
+    end
+  end,
+  --- @type fun(self: perUnitFrames)
+  UnregisterAll = function(self)
+    for _, frame in pairs(self.frames) do
+      frame:UnregisterAllEvents()
+    end
+    self.unitTypePetMode = {}
+  end
+}
 
 Buff2Frame:SetScript("OnUpdate", function()
   if WeakAuras.IsPaused() then
@@ -2299,6 +2528,15 @@ function BuffTrigger.UnloadAll()
     end
   end
 
+  if WeakAuras.IsRetail() then
+    -- TODO change this when more events are handled by system, or when range check will be supported on other version than Retail
+    PerUnitFrames:UnregisterAll()
+  end
+
+  if newAPI then
+    TooltipHelper:Clear()
+  end
+
   wipe(scanFuncName)
   wipe(scanFuncSpellId)
   wipe(scanFuncGeneral)
@@ -2310,6 +2548,7 @@ function BuffTrigger.UnloadAll()
   wipe(unitExistScanFunc)
   wipe(groupRoleScanFunc)
   wipe(groupScanFuncs)
+  wipe(rangeScanFuncs)
   wipe(raidMarkScanFuncs)
   wipe(matchDataByTrigger)
   wipe(matchDataMulti)
@@ -2373,6 +2612,12 @@ local function LoadAura(id, triggernum, triggerInfo)
     tinsert(groupScanFuncs[triggerInfo.unit], triggerInfo)
   end
 
+  if triggerInfo.inRange then
+    rangeScanFuncs[triggerInfo.unit] = rangeScanFuncs[triggerInfo.unit] or {}
+    PerUnitFrames:Register(triggerInfo.unit, "UNIT_IN_RANGE_UPDATE", triggerInfo.includePets)
+    tinsert(rangeScanFuncs[triggerInfo.unit], triggerInfo)
+  end
+
   matchDataChanged[id] = matchDataChanged[id] or {}
   matchDataChanged[id][triggernum] = true
 end
@@ -2428,10 +2673,18 @@ function BuffTrigger.UnloadDisplays(toUnload)
     matchDataChanged[id] = nil
   end
 
-
   for unitType, funcs in pairs(groupScanFuncs) do
     for i = #funcs, 1, -1 do
       if toUnload[funcs[i].id] then
+        tremove(funcs, i)
+      end
+    end
+  end
+
+  for unitType, funcs in pairs(rangeScanFuncs) do
+    for i = #funcs, 1, -1 do
+      if toUnload[funcs[i].id] then
+        PerUnitFrames:Unregister(unitType, "UNIT_IN_RANGE_UPDATE", funcs[i].includePets)
         tremove(funcs, i)
       end
     end
@@ -2444,6 +2697,7 @@ function BuffTrigger.UnloadDisplays(toUnload)
       end
     end
   end
+
 end
 
 function BuffTrigger.FinishLoadUnload()
@@ -2879,6 +3133,7 @@ function BuffTrigger.Add(data)
       local effectiveIgnoreInvisible = groupTrigger and trigger.ignoreInvisible
       local effectiveNameCheck = groupTrigger and trigger.useUnitName and trigger.unitName
       local effectiveNpcId = trigger.unit == "nameplate" and trigger.useNpcId and trigger.npcId
+      local effectiveInRange = WeakAuras.IsRetail() and groupTrigger and trigger.inRange
 
       if trigger.unit == "multi" then
         BuffTrigger.InitMultiAura()
@@ -2934,6 +3189,7 @@ function BuffTrigger.Add(data)
         ignoreDead = effectiveIgnoreDead,
         ignoreDisconnected = effectiveIgnoreDisconnected,
         ignoreInvisible = effectiveIgnoreInvisible,
+        inRange = effectiveInRange,
         groupRole = effectiveGroupRole,
         raidRole = effectiveRaidRole,
         specId = effectiveSpecId,
@@ -3007,9 +3263,9 @@ function BuffTrigger.SetToolTip(trigger, state)
       return false
     end
     if state.filter == "HELPFUL" then
-      GameTooltip:SetUnitBuff(state.unit, state.index)
+      GameTooltip:SetUnitBuff(state.unit, state.index, state.filter)
     elseif state.filter == "HARMFUL" then
-      GameTooltip:SetUnitDebuff(state.unit, state.index)
+      GameTooltip:SetUnitDebuff(state.unit, state.index, state.filter)
     end
   end
   return true

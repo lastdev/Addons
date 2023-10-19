@@ -15,7 +15,7 @@ Checkbox Widget
 --[[ s r
 local Type, Version = "CheckBox", 26
 ]]
-local Type, Version = "CheckBox-OmniCD", 30 --26 by OA, 28 backdrop 29 text right align -- v30: temp
+local Type, Version = "CheckBox-OmniCD", 31 --26 by OA, 28 backdrop 29 text right align -- v30: temp
 -- e
 local AceGUI = LibStub and LibStub("AceGUI-3.0", true)
 if not AceGUI or (AceGUI:GetWidgetVersion(Type) or 0) >= Version then return end
@@ -140,14 +140,21 @@ local function delButton_OnLeave(self)
 end
 
 local function delButton_OnClick(self)
-	if not OmniAuras then return end
 	local frame = self:GetParent()
 	local arg = math.abs(frame.obj.arg)
-	local sId = tostring(arg)
-	OmniAuras[1].blacklist[sId] = nil
-	OmniAuras[1].global.auraBlacklist[arg] = nil
-	OmniAuras[1]:ACR_NotifyChange()
-	OmniAuras[1]:Refresh()
+	if OmniAuras and OmniAuras[1] then
+		local sId = tostring(arg)
+		OmniAuras[1].blacklist[sId] = nil
+		OmniAuras[1].global.auraBlacklist[arg] = nil
+		OmniAuras[1]:ACR_NotifyChange()
+		OmniAuras[1]:Refresh()
+	else -- v31
+		local app = _G[frame.obj.appName]
+		app = type(app) == "table" and (app[1] or app)
+		if app and type(app.delButton_OnClick) == "function" then
+			app.delButton_OnClick(arg)
+		end
+	end
 end
 
 local function GetDeleteButton()
@@ -237,8 +244,14 @@ local function CheckBox_OnMouseDown(frame)
 		if arg and arg > 0 then
 			--cursorArg = arg
 			local isCtrlKey = IsControlKeyDown()
-			if isCtrlKey and OmniCD and OmniCD[1] and OmniCD[1].EditSpell then
-				OmniCD[1].EditSpell(nil, tostring(arg))
+			if isCtrlKey then
+				local app = _G[self.appName] -- v31
+				app = type(app) == "table" and (app[1] or app)
+				if app and type(app.EditSpell) == "function" then
+					app.EditSpell(nil, tostring(arg))
+				elseif OmniCD and OmniCD[1] and OmniCD[1].EditSpell then
+					OmniCD[1].EditSpell(nil, tostring(arg))
+				end
 			end
 		end
 		--]]
@@ -293,6 +306,7 @@ local methods = {
 		self:SetDisabled(nil)
 		self:SetDescription(nil)
 		self.arg = nil
+		self.appName = nil
 	end,
 
 	-- ["OnRelease"] = nil,
@@ -491,8 +505,9 @@ local methods = {
 
 	-- s b (edit/dnd)
 	---[[
-	["SetArg"] = function(self, arg)
+	["SetArg"] = function(self, arg, appName) -- arg is number
 		self.arg = arg
+		self.appName = appName
 	end
 	--]]
 }

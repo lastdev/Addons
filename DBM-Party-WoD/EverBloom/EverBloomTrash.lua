@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("EverBloomTrash", "DBM-Party-WoD", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230907220903")
+mod:SetRevision("20231009234728")
 --mod:SetModelID(47785)
 mod:SetZone(1279)
 
@@ -17,6 +17,8 @@ mod:RegisterEvents(
 )
 
 --TODO, everything
+--TODO, nameplate timer for Bounding Whirl mandatory for Melded Berserker
+--TODO, Choking Vines interrupt
 --[[
 
 --]]

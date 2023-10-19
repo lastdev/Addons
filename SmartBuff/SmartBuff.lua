@@ -6,10 +6,10 @@
 -- Cast the most important buffs on you, tanks or party/raid members/pets.
 -------------------------------------------------------------------------------
 
-SMARTBUFF_DATE          = "170523";
+SMARTBUFF_DATE          = "081023";
 
-SMARTBUFF_VERSION       = "r22."..SMARTBUFF_DATE;
-SMARTBUFF_VERSIONNR     = 100100;
+SMARTBUFF_VERSION       = "r23."..SMARTBUFF_DATE;
+SMARTBUFF_VERSIONNR     = 100107;
 SMARTBUFF_TITLE         = "SmartBuff";
 SMARTBUFF_SUBTITLE      = "Supports you in casting buffs";
 SMARTBUFF_DESC          = "Cast the most important buffs on you, your tanks, party/raid members/pets";
@@ -22,7 +22,7 @@ local SmartbuffPrefix = "Smartbuff";
 local SmartbuffSession = true;
 local SmartbuffVerCheck = false;					-- for my use when checking guild users/testers versions  :)
 local buildInfo = select(4, GetBuildInfo())
-local SmartbuffRevision = 22;
+local SmartbuffRevision = 23;
 local SmartbuffVerNotifyList = {}
 
 local SG = SMARTBUFF_GLOBALS;
@@ -33,7 +33,6 @@ local _;
 
 BINDING_HEADER_SMARTBUFF = "SmartBuff";
 SMARTBUFF_BOOK_TYPE_SPELL = "spell";
-
 
 local GlobalCd = 1.5;
 local maxSkipCoolDown = 3;
@@ -184,6 +183,16 @@ StaticPopupDialogs["SMARTBUFF_DATA_PURGE"] = {
   button1 = SMARTBUFF_OFT_YES,
   button2 = SMARTBUFF_OFT_NO,
   OnAccept = function() SMARTBUFF_ResetAll() end,
+  timeout = 0,
+  whileDead = 1,
+  hideOnEscape = 1
+}
+
+-- Popup to reloadui
+StaticPopupDialogs["SMARTBUFF_GUI_RELOAD"] = {
+  text = SMARTBUFF_OFT_REQ_RELOAD,
+  button1 = SMARTBUFF_OFT_OKAY,
+  OnAccept = function() ReloadUI() end,
   timeout = 0,
   whileDead = 1,
   hideOnEscape = 1
@@ -1075,7 +1084,7 @@ function SMARTBUFF_SetBuffs()
   wipe(cBuffsCombat);
   SMARTBUFF_SetInCombatBuffs();
 
-  InitBuffOrder();
+  InitBuffOrder(false);
 
   numBuffs = n - 1;
   isSetBuffs = false;
@@ -3110,18 +3119,19 @@ function SMARTBUFF_Options_Init(self)
   end
   SMARTBUFF_AddMsg("Upgraded SmartBuff to " .. SMARTBUFF_VERSION);
 
-  if (SMARTBUFF_OptionsGlobal == nil) then SMARTBUFF_OptionsGlobal = { }; end
+  if (SMARTBUFF_OptionsGlobal == nil) then 
+	  SMARTBUFF_OptionsGlobal = { }; 
+      SMARTBUFF_BuffOrderReset();
+  end
   OG = SMARTBUFF_OptionsGlobal;
   if (OG.SplashIcon == nil) then OG.SplashIcon = true; end
   if (OG.SplashMsgShort == nil) then OG.SplashMsgShort = false; end
   if (OG.FirstStart == nil) then OG.FirstStart = "V0";  end
 
   SMARTBUFF_Splash_ChangeFont(0);
-  SMARTBUFF_BuffOrderReset();
-  if (OG.FirstStart ~= SMARTBUFF_VERSION) then
-    OG.FirstStart = SMARTBUFF_VERSION;
-    SMARTBUFF_OptionsFrame_Open(true);
 
+  if (OG.FirstStart ~= SMARTBUFF_VERSION) then
+    SMARTBUFF_OptionsFrame_Open(true);
     if (OG.Tutorial == nil) then
       OG.Tutorial = SMARTBUFF_VERSIONNR;
       SMARTBUFF_ToggleTutorial();
@@ -3129,7 +3139,6 @@ function SMARTBUFF_Options_Init(self)
     SmartBuffOptionsCredits_lblText:SetText(SMARTBUFF_CREDITS);     -- bugfix, credits now showing at first start
     SmartBuffWNF_lblText:SetText(SMARTBUFF_WHATSNEW);
     SmartBuffWNF:Show();
-
   else
     SMARTBUFF_SetBuffs();
   end
@@ -3473,6 +3482,12 @@ function SMARTBUFF_OptionsFrame_Toggle()
       SmartBuff_PlayerSetup:Hide();
     end
     SmartBuffOptionsFrame:Hide();
+    -- if we were a new build then request a reloadui.
+    if (OG.FirstStart ~= SMARTBUFF_VERSION) then
+        print("getting here")
+        OG.FirstStart = SMARTBUFF_VERSION;
+        StaticPopup_Show("SMARTBUFF_GUI_RELOAD");
+	end
   else
     SmartBuffOptionsCredits_lblText:SetText(SMARTBUFF_CREDITS);
     SmartBuffOptionsFrame:Show();

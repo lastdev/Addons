@@ -3,7 +3,7 @@
 
                                            Higher Learning
 
-                                     v1.24 - 18th September 2023
+                                      v1.26 - 17th October 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -12,36 +12,28 @@
 local addonName, ns = ...
 ns.db = {}
 -- From Data.lua
-ns.points, ns.pointsWrath, ns.textures, ns.scaling = {}, {}, {}, {}
+ns.points, ns.textures, ns.scaling = {}, {}, {}, {}
 -- Purple theme
 ns.colour = {}
 ns.colour.prefix	= "\124cFF8258FA"
 ns.colour.highlight = "\124cFFB19EFF"
 ns.colour.plaintext = "\124cFF819FF7"
 
-local defaults = { profile = { icon_scale = 1.4, icon_alpha = 0.8, icon_choice = 11, showCoords = true,
-								language = 2 } }
-local continents = {}
+local defaults = { profile = { iconScale = 2.5, iconAlpha = 1, showCoords = true,
+								iconChoice = 11 } }
 local pluginHandler = {}
 
 -- upvalues
 local GameTooltip = _G.GameTooltip
 local GetAchievementCriteriaInfo = GetAchievementCriteriaInfo
-local IsControlKeyDown = _G.IsControlKeyDown
 local LibStub = _G.LibStub
 local UIParent = _G.UIParent
 local UnitName = UnitName
-local format = _G.format
-local next = _G.next
-local select = _G.select
+local format, next, select = format, next, select
 
 local HandyNotes = _G.HandyNotes
-local TomTom = _G.TomTom
 
-local _, _, _, version = GetBuildInfo()
--- Map IDs
-ns.northrend = 113
-ns.dalaran = 125
+ns.classic = (WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE)
 
 -- Localisation
 ns.locale = GetLocale()
@@ -55,6 +47,308 @@ ns.oceania = { AmanThul = true, Barthilas = true, Caelestrasz = true, DathRemar 
 if ns.oceania[realm] then
 	ns.locale = "enGB"
 end
+
+if ns.locale == "deDE" then
+	L["Character"] = "Charakter"
+	L["Account"] = "Accountweiter"
+	L["Completed"] = "Abgeschlossen"
+	L["Not Completed"] = "Nicht Abgeschlossen"
+	L["Options"] = "Optionen"
+	L["Map Pin Size"] = "Pin-Größe"
+	L["The Map Pin Size"] = "Die Größe der Karten-Pins"
+	L["Map Pin Alpha"] = "Kartenpin Alpha"
+	L["The alpha transparency of the map pins"] = "Die Alpha-Transparenz der Karten-Pins"
+	L["Show Coordinates"] = "Koordinaten anzeigen"
+	L["Show Coordinates Description"] = "Zeigen sie die " ..ns.colour.highlight 
+		.."koordinaten\124r in QuickInfos auf der Weltkarte und auf der Minikarte an"
+	L["Map Pin Selections"] = "Karten-Pin-Auswahl"
+	L["Red"] = "Rot"
+	L["Blue"] = "Blau"
+	L["Green"] = "Grün"
+	L["Cross"] = "Kreuz"
+	L["Diamond"] = "Diamant"
+	L["Frost"] = "Frost"
+	L["Cogwheel"] = "Zahnrad"
+	L["White"] = "Weiß"
+	L["Purple"] = "Lila"
+	L["Yellow"] = "Gelb"
+	L["Grey"] = "Grau"
+	L["Mana Orb"] = "Manakugel"
+	L["Phasing"] = "Synchronisieren"
+	L["Raptor egg"] = "Raptor-Ei"
+	L["Stars"] = "Sternen"
+	L["Screw"] = "Schraube"
+	
+elseif ns.locale == "esES" or ns.locale == "esMX" then
+	L["Character"] = "Personaje"
+	L["Account"] = "la Cuenta"
+	L["Completed"] = "Completado"
+	L["Not Completed"] = ( ns.locale == "esES" ) and "Sin Completar" or "Incompleto"
+	L["Options"] = "Opciones"
+	L["Map Pin Size"] = "Tamaño de alfiler"
+	L["The Map Pin Size"] = "Tamaño de los pines del mapa"
+	L["Map Pin Alpha"] = "Alfa de los pines del mapa"
+	L["The alpha transparency of the map pins"] = "La transparencia alfa de los pines del mapa"
+	L["Icon Alpha"] = "Transparencia del icono"
+	L["The alpha transparency of the icons"] = "La transparencia alfa de los iconos"
+	L["Show Coordinates"] = "Mostrar coordenadas"
+	L["Show Coordinates Description"] = "Mostrar " ..ns.colour.highlight
+		.."coordenadas\124r en información sobre herramientas en el mapa del mundo y en el minimapa"
+	L["Map Pin Selections"] = "Selecciones de pines de mapa"
+	L["Gold"] = "Oro"
+	L["Red"] = "Rojo"
+	L["Blue"] = "Azul"
+	L["Green"] = "Verde"
+	L["Ring"] = "Anillo"
+	L["Cross"] = "Cruz"
+	L["Diamond"] = "Diamante"
+	L["Frost"] = "Escarcha"
+	L["Cogwheel"] = "Rueda dentada"
+	L["White"] = "Blanco"
+	L["Purple"] = "Púrpura"
+	L["Yellow"] = "Amarillo"
+	L["Grey"] = "Gris"
+	L["Mana Orb"] = "Orbe de maná"
+	L["Phasing"] = "Sincronización"	
+	L["Raptor egg"] = "Huevo de raptor"	
+	L["Stars"] = "Estrellas"
+	L["Screw"] = "Tornillo"
+	
+elseif ns.locale == "frFR" then
+	L["Character"] = "Personnage"
+	L["Account"] = "le Compte"
+	L["Completed"] = "Achevé"
+	L["Not Completed"] = "Non achevé"
+	L["Options"] = "Options"
+	L["Map Pin Size"] = "Taille des épingles"
+	L["The Map Pin Size"] = "La taille des épingles de carte"
+	L["Map Pin Alpha"] = "Alpha des épingles de carte"
+	L["The alpha transparency of the map pins"] = "La transparence alpha des épingles de la carte"
+	L["Show Coordinates"] = "Afficher les coordonnées"
+	L["Show Coordinates Description"] = "Afficher " ..ns.colour.highlight
+		.."les coordonnées\124r dans les info-bulles sur la carte du monde et la mini-carte"
+	L["Map Pin Selections"] = "Sélections de broches de carte"
+	L["Gold"] = "Or"
+	L["Red"] = "Rouge"
+	L["Blue"] = "Bleue"
+	L["Green"] = "Vert"
+	L["Ring"] = "Bague"
+	L["Cross"] = "Traverser"
+	L["Diamond"] = "Diamant"
+	L["Frost"] = "Givre"
+	L["Cogwheel"] = "Roue dentée"
+	L["White"] = "Blanc"
+	L["Purple"] = "Violet"
+	L["Yellow"] = "Jaune"
+	L["Grey"] = "Gris"
+	L["Mana Orb"] = "Orbe de mana"
+	L["Phasing"] = "Synchronisation"
+	L["Raptor egg"] = "Œuf de Rapace"
+	L["Stars"] = "Étoiles"
+	L["Screw"] = "Vis"
+	
+elseif ns.locale == "itIT" then
+	L["Character"] = "Personaggio"
+	L["Completed"] = "Completo"
+	L["Not Completed"] = "Non Compiuto"
+	L["Options"] = "Opzioni"
+	L["Map Pin Size"] = "Dimensione del pin"
+	L["The Map Pin Size"] = "La dimensione dei Pin della mappa"
+	L["Map Pin Alpha"] = "Mappa pin alfa"
+	L["The alpha transparency of the map pins"] = "La trasparenza alfa dei pin della mappa"
+	L["Show Coordinates"] = "Mostra coordinate"
+	L["Show Coordinates Description"] = "Visualizza " ..ns.colour.highlight
+		.."le coordinate\124r nelle descrizioni comandi sulla mappa del mondo e sulla minimappa"
+	L["Map Pin Selections"] = "Selezioni pin mappa"
+	L["Gold"] = "Oro"
+	L["Red"] = "Rosso"
+	L["Blue"] = "Blu"
+	L["Green"] = "Verde"
+	L["Ring"] = "Squillo"
+	L["Cross"] = "Attraverso"
+	L["Diamond"] = "Diamante"
+	L["Frost"] = "Gelo"
+	L["Cogwheel"] = "Ruota dentata"
+	L["White"] = "Bianca"
+	L["Purple"] = "Viola"
+	L["Yellow"] = "Giallo"
+	L["Grey"] = "Grigio"
+	L["Mana Orb"] = "Globo di Mana"
+	L["Phasing"] = "Sincronizzazione"
+	L["Raptor egg"] = "Raptor Uovo"
+	L["Stars"] = "Stelle"
+	L["Screw"] = "Vite"
+
+elseif ns.locale == "koKR" then
+	L["Character"] = "캐릭터"
+	L["Account"] = "계정"
+	L["Completed"] = "완료"
+	L["Not Completed"] = "미완료"
+	L["Map Pin Size"] = "지도 핀의 크기"
+	L["Options"] = "설정"
+	L["The Map Pin Size"] = "지도 핀의 크기"
+	L["Map Pin Alpha"] = "지도 핀의 알파"
+	L["The alpha transparency of the map pins"] = "지도 핀의 알파 투명도"
+	L["Show Coordinates"] = "좌표 표시"
+	L["Show Coordinates Description"] = "세계지도 및 미니지도의 도구 설명에 좌표를 표시합니다."
+	L["Map Pin Selections"] = "지도 핀 선택"
+	L["Gold"] = "금"
+	L["Red"] = "빨간"
+	L["Blue"] = "푸른"
+	L["Green"] = "녹색"
+	L["Ring"] = "반지"
+	L["Cross"] = "십자가"
+	L["Diamond"] = "다이아몬드"
+	L["Frost"] = "냉기"
+	L["Cogwheel"] = "톱니 바퀴"
+	L["White"] = "화이트"
+	L["Purple"] = "보라색"
+	L["Yellow"] = "노랑"
+	L["Grey"] = "회색"
+	L["Mana Orb"] = "마나 보주"
+	L["Phasing"] = "동기화 중"
+	L["Raptor egg"] = "랩터의 알"
+	L["Stars"] = "별"
+	L["Screw"] = "나사"
+	
+elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
+	L["Character"] = "Personagem"
+	L["Account"] = "à Conta"
+	L["Completed"] = "Concluído"
+	L["Not Completed"] = "Não Concluído"
+	L["Options"] = "Opções"
+	L["Map Pin Size"] = "Tamanho do pino"
+	L["The Map Pin Size"] = "O tamanho dos pinos do mapa"
+	L["Map Pin Alpha"] = "Alfa dos pinos do mapa"
+	L["The alpha transparency of the map pins"] = "A transparência alfa dos pinos do mapa"
+	L["Show Coordinates"] = "Mostrar coordenadas"
+	L["Show Coordinates Description"] = "Exibir " ..ns.colour.highlight
+		.."coordenadas\124r em dicas de ferramentas no mapa mundial e no minimapa"
+	L["Map Pin Selections"] = "Seleções de pinos de mapa"
+	L["Gold"] = "Ouro"
+	L["Red"] = "Vermelho"
+	L["Blue"] = "Azul"
+	L["Green"] = "Verde"
+	L["Ring"] = "Anel"
+	L["Cross"] = "Cruz"
+	L["Diamond"] = "Diamante"
+	L["Frost"] = "Gélido"
+	L["Cogwheel"] = "Roda dentada"
+	L["White"] = "Branco"
+	L["Purple"] = "Roxa"
+	L["Yellow"] = "Amarelo"
+	L["Grey"] = "Cinzento"
+	L["Mana Orb"] = "Orbe de Mana"
+	L["Phasing"] = "Sincronização"
+	L["Raptor egg"] = "Ovo de raptor"
+	L["Stars"] = "Estrelas"
+	L["Screw"] = "Parafuso"
+
+elseif ns.locale == "ruRU" then
+	L["Character"] = "Персонажа"
+	L["Account"] = "Счет"
+	L["Completed"] = "Выполнено"
+	L["Not Completed"] = "Не Выполнено"
+	L["Options"] = "Параметры"
+	L["Map Pin Size"] = "Размер булавки"
+	L["The Map Pin Size"] = "Размер булавок на карте"
+	L["Map Pin Alpha"] = "Альфа булавок карты"
+	L["The alpha transparency of the map pins"] = "Альфа-прозрачность булавок карты"
+	L["Show Coordinates"] = "Показать Координаты"
+	L["Show Coordinates Description"] = "Отображает " ..ns.colour.highlight
+		.."координаты\124r во всплывающих подсказках на карте мира и мини-карте"
+	L["Map Pin Selections"] = "Выбор булавки карты"
+	L["Gold"] = "Золото"
+	L["Red"] = "Красный"
+	L["Blue"] = "Синий"
+	L["Green"] = "Зеленый"
+	L["Ring"] = "Звенеть"
+	L["Cross"] = "Крест"
+	L["Diamond"] = "Ромб"
+	L["Frost"] = "Лед"
+	L["Cogwheel"] = "Зубчатое колесо"
+	L["White"] = "белый"
+	L["Purple"] = "Пурпурный"
+	L["Yellow"] = "Желтый"
+	L["Grey"] = "Серый"
+	L["Mana Orb"] = "Cфера маны"
+	L["Phasing"] = "Синхронизация"
+	L["Raptor egg"] = "Яйцо ящера"
+	L["Stars"] = "Звезды"
+	L["Screw"] = "Винт"
+
+elseif ns.locale == "zhCN" then
+	L["Character"] = "角色"
+	L["Account"] = "账号"
+	L["Completed"] = "已完成"
+	L["Not Completed"] = "未完成"
+	L["Options"] = "选项"
+	L["Map Pin Size"] = "地图图钉的大小"
+	L["The Map Pin Size"] = "地图图钉的大小"
+	L["Map Pin Alpha"] = "地图图钉的透明度"
+	L["The alpha transparency of the map pins"] = "地图图钉的透明度"
+	L["Show Coordinates"] = "显示坐标"
+	L["Show Coordinates Description"] = "在世界地图和迷你地图上的工具提示中" ..ns.colour.highlight .."显示坐标"
+	L["Map Pin Selections"] = "地图图钉选择"
+	L["Gold"] = "金子"
+	L["Red"] = "红"
+	L["Blue"] = "蓝"
+	L["Green"] = "绿色"
+	L["Ring"] = "戒指"
+	L["Cross"] = "叉"
+	L["Diamond"] = "钻石"
+	L["Frost"] = "冰霜"
+	L["Cogwheel"] = "齿轮"
+	L["White"] = "白色"
+	L["Purple"] = "紫色"
+	L["Yellow"] = "黄色"
+	L["Grey"] = "灰色"
+	L["Mana Orb"] = "法力球"
+	L["Phasing"] = "同步"
+	L["Raptor egg"] = "迅猛龙蛋"
+	L["Stars"] = "星星"
+	L["Screw"] = "拧"
+	
+elseif ns.locale == "zhTW" then
+	L["Character"] = "角色"
+	L["Account"] = "賬號"
+	L["Completed"] = "完成"
+	L["Not Completed"] = "未完成"
+	L["Options"] = "選項"
+	L["Map Pin Size"] = "地圖圖釘的大小"
+	L["The Map Pin Size"] = "地圖圖釘的大小"
+	L["Map Pin Alpha"] = "地圖圖釘的透明度"
+	L["The alpha transparency of the map pins"] = "地圖圖釘的透明度"
+	L["Show Coordinates"] = "顯示坐標"
+	L["Show Coordinates Description"] = "在世界地圖和迷你地圖上的工具提示中" ..ns.colour.highlight .."顯示坐標"
+	L["Map Pin Selections"] = "地圖圖釘選擇"
+	L["Gold"] = "金子"
+	L["Red"] = "紅"
+	L["Blue"] = "藍"
+	L["Green"] = "綠色"
+	L["Ring"] = "戒指"
+	L["Cross"] = "叉"
+	L["Diamond"] = "钻石"
+	L["Frost"] = "霜"
+	L["Cogwheel"] = "齒輪"
+	L["White"] = "白色"
+	L["Purple"] = "紫色"
+	L["Yellow"] = "黃色"
+	L["Grey"] = "灰色"
+	L["Mana Orb"] = "法力球"
+	L["Phasing"] = "同步"
+	L["Raptor egg"] = "迅猛龍蛋"
+	L["Stars"] = "星星"
+	L["Screw"] = "擰"
+	
+else
+	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
+	if ns.locale == "enUS" then
+		L["Grey"] = "Gray"
+	end
+end
+
+ns.name = UnitName( "player" ) or "Character"
 
 if ns.locale == "deDE" then
 	L["Higher Learning"] = "Höheres Studium"
@@ -79,38 +373,7 @@ if ns.locale == "deDE" then
 	L["intTip"] = "Auf dem Boden an der Unterseite\ndes Bücherregals auf der rechten\nSeite des Zimmers"
 	L["Illusion"] = "Illusion"
 	L["illTip"] = "Auf einer Kiste mit\nnichts drauf. In der Ecke"
-	L["Go to Dalaran"] = "Gehe zu Dalaran"
 	L["AddOn Description"] = "Helfen Sie, die Bücher zu finden"
-	L["Character"] = "Charakter"
-	L["Account"] = "Accountweiter"
-	L["Completed"] = "Abgeschlossen"
-	L["Not Completed"] = "Nicht Abgeschlossen"
-	L["Icon Selection"] = "Symbolauswahl"
-	L["Icon Scale"] = "Symbolskalierung"
-	L["The scale of the icons"] = "Die Skalierung der Symbole"
-	L["Icon Alpha"] = "Symboltransparenz"
-	L["The alpha transparency of the icons"] = "Die Transparenz der Symbole"
-	L["Icon"] = "Symbol"
-	L["Options"] = "Optionen"
-	L["Red"] = "Rot"
-	L["Blue"] = "Blau"
-	L["Green"] = "Grün"
-	L["Cross"] = "Kreuz"
-	L["Diamond"] = "Diamant"
-	L["Frost"] = "Frost"
-	L["Cogwheel"] = "Zahnrad"
-	L["White"] = "Weiß"
-	L["Purple"] = "Lila"
-	L["Yellow"] = "Gelb"
-	L["Grey"] = "Grau"
-	L["Mana Orb"] = "Manakugel"
-	L["Phasing"] = "Synchronisieren"
-	L["Raptor egg"] = "Raptor-Ei"
-	L["Stars"] = "Sternen"
-	L["NPC"] = "NSC"
-	L["Show Coordinates"] = "Koordinaten anzeigen"
-	L["Show Coordinates Description"] = "Zeigen sie die " ..ns.colour.highlight 
-		.."koordinaten\124r in QuickInfos auf der Weltkarte und auf der Minikarte an"
 
 elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Higher Learning"] = "Conocimiento Superior"
@@ -133,40 +396,7 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["intTip"] = "En el piso en la base\nde la estantería en el lado\nderecho de la habitación"
 	L["Illusion"] = "Ilusión"
 	L["illTip"] = "En una caja con nada\nsobre ella. En la esquina"
-	L["Go to Dalaran"] = "Ir a Dalaran"	
 	L["AddOn Description"] = "Ayudarle a encontrar los libros"
-	L["Character"] = "Personaje"
-	L["Account"] = "la Cuenta"
-	L["Completed"] = "Completado"
-	L["Not Completed"] = ns.locale == "esES" and "Sin Completar" or "Incompleto"
-	L["Icon Selection"] = "Selección de iconos"
-	L["Icon Scale"] = "Escala de icono"
-	L["The scale of the icons"] = "La escala de los iconos"
-	L["Icon Alpha"] = "Transparencia del icono"
-	L["The alpha transparency of the icons"] = "La transparencia alfa de los iconos"
-	L["Icon"] = "El icono"
-	L["Options"] = "Opciones"
-	L["Gold"] = "Oro"
-	L["Red"] = "Rojo"
-	L["Blue"] = "Azul"
-	L["Green"] = "Verde"
-	L["Ring"] = "Anillo"
-	L["Cross"] = "Cruz"
-	L["Diamond"] = "Diamante"
-	L["Frost"] = "Escarcha"
-	L["Cogwheel"] = "Rueda dentada"
-	L["White"] = "Blanco"
-	L["Purple"] = "Púrpura"
-	L["Yellow"] = "Amarillo"
-	L["Grey"] = "Gris"
-	L["Mana Orb"] = "Orbe de maná"
-	L["Phasing"] = "Sincronización"	
-	L["Raptor egg"] = "Huevo de raptor"	
-	L["Stars"] = "Estrellas"
-	L["NPC"] = "PNJ"
-	L["Show Coordinates"] = "Mostrar coordenadas"
-	L["Show Coordinates Description"] = "Mostrar " ..ns.colour.highlight
-		.."coordenadas\124r en información sobre herramientas en el mapa del mundo y en el minimapa"
 
 elseif ns.locale == "frFR" then
 	L["Higher Learning"] = "Lectures Studieuses"
@@ -189,40 +419,7 @@ elseif ns.locale == "frFR" then
 	L["intTip"] = "Sur le sol à la base\nde la bibliothèque à\ndroite de la pièce"
 	L["Illusion"] = "Illusion"
 	L["illTip"] = "Sur une caisse sans\nrien dessus. Au coin"
-	L["Go to Dalaran"] = "Aller à Dalaran"	
 	L["AddOn Description"] = "Vous aider à trouver les livres"
-	L["Character"] = "Personnage"
-	L["Account"] = "le Compte"
-	L["Completed"] = "Achevé"
-	L["Not Completed"] = "Non achevé"
-	L["Icon Selection"] = "Sélection d'icônes"
-	L["Icon Scale"] = "Echelle de l’icône"
-	L["The scale of the icons"] = "L'échelle des icônes"
-	L["Icon Alpha"] = "Transparence de l'icône"
-	L["The alpha transparency of the icons"] = "La transparence des icônes"
-	L["Icon"] = "L'icône"
-	L["Options"] = "Options"
-	L["Gold"] = "Or"
-	L["Red"] = "Rouge"
-	L["Blue"] = "Bleue"
-	L["Green"] = "Vert"
-	L["Ring"] = "Bague"
-	L["Cross"] = "Traverser"
-	L["Diamond"] = "Diamant"
-	L["Frost"] = "Givre"
-	L["Cogwheel"] = "Roue dentée"
-	L["White"] = "Blanc"
-	L["Purple"] = "Violet"
-	L["Yellow"] = "Jaune"
-	L["Grey"] = "Gris"
-	L["Mana Orb"] = "Orbe de mana"
-	L["Phasing"] = "Synchronisation"
-	L["Raptor egg"] = "Œuf de Rapace"
-	L["Stars"] = "Étoiles"
-	L["NPC"] = "PNJ"
-	L["Show Coordinates"] = "Afficher les coordonnées"
-	L["Show Coordinates Description"] = "Afficher " ..ns.colour.highlight
-		.."les coordonnées\124r dans les info-bulles sur la carte du monde et la mini-carte"
 
 elseif ns.locale == "itIT" then
 	L["Higher Learning"] = "Conoscenza Superiore"
@@ -244,39 +441,7 @@ elseif ns.locale == "itIT" then
 	L["intTip"] = "Sul pavimento alla base\ndella libreria sul lato\ndestro della stanza"
 	L["Illusion"] = "Illusione"
 	L["illTip"] = "Su una cassa senza\nniente sopra. All'angolo"
-	L["Go to Dalaran"] = "Vai alla Dalaran"	
 	L["AddOn Description"] = "Aiutarti a trovare i libri"
-	L["Character"] = "Personaggio"
-	L["Completed"] = "Completo"
-	L["Not Completed"] = "Non Compiuto"
-	L["Icon Selection"] = "Selezione dell'icona"
-	L["Icon Scale"] = "Scala delle icone"
-	L["The scale of the icons"] = "La scala delle icone"
-	L["Icon Alpha"] = "Icona alfa"
-	L["The alpha transparency of the icons"] = "La trasparenza alfa delle icone"
-	L["Icon"] = "Icona"
-	L["Options"] = "Opzioni"
-	L["Gold"] = "Oro"
-	L["Red"] = "Rosso"
-	L["Blue"] = "Blu"
-	L["Green"] = "Verde"
-	L["Ring"] = "Squillo"
-	L["Cross"] = "Attraverso"
-	L["Diamond"] = "Diamante"
-	L["Frost"] = "Gelo"
-	L["Cogwheel"] = "Ruota dentata"
-	L["White"] = "Bianca"
-	L["Purple"] = "Viola"
-	L["Yellow"] = "Giallo"
-	L["Grey"] = "Grigio"
-	L["Mana Orb"] = "Globo di Mana"
-	L["Phasing"] = "Sincronizzazione"
-	L["Raptor egg"] = "Raptor Uovo"
-	L["Stars"] = "Stelle"
-	L["NPC"] = "PNG"
-	L["Show Coordinates"] = "Mostra coordinate"
-	L["Show Coordinates Description"] = "Visualizza " ..ns.colour.highlight
-		.."le coordinate\124r nelle descrizioni comandi sulla mappa del mondo e sulla minimappa"
 
 elseif ns.locale == "koKR" then
 	L["Higher Learning"] = "고등 학습"
@@ -296,38 +461,7 @@ elseif ns.locale == "koKR" then
 	L["intTip"] = "방의 오른쪽에있는 책꽂이 바닥에있는 바닥에"
 	L["Illusion"] = "환상"
 	L["illTip"] = "그 위에 아무 것도없는 상자에.\n구석에"
-	L["Go to Dalaran"] = "달라 란으로 이동"
 	L["AddOn Description"] = "책 찾기"
-	L["Character"] = "캐릭터"
-	L["Account"] = "계정"
-	L["Completed"] = "완료"
-	L["Not Completed"] = "미완료"
-	L["Icon Selection"] = "아이콘 선택"
-	L["Icon Scale"] = "아이콘 크기 비율"
-	L["The scale of the icons"] = "아이콘의 크기 비율입니다"
-	L["Icon Alpha"] = "아이콘 투명도"
-	L["The alpha transparency of the icons"] = "아이콘의 투명도입니다"
-	L["Icon"] = "아이콘"
-	L["Options"] = "설정"
-	L["Gold"] = "금"
-	L["Red"] = "빨간"
-	L["Blue"] = "푸른"
-	L["Green"] = "녹색"
-	L["Ring"] = "반지"
-	L["Cross"] = "십자가"
-	L["Diamond"] = "다이아몬드"
-	L["Frost"] = "냉기"
-	L["Cogwheel"] = "톱니 바퀴"
-	L["White"] = "화이트"
-	L["Purple"] = "보라색"
-	L["Yellow"] = "노랑"
-	L["Grey"] = "회색"
-	L["Mana Orb"] = "마나 보주"
-	L["Phasing"] = "동기화 중"
-	L["Raptor egg"] = "랩터의 알"
-	L["Stars"] = "별"
-	L["Show Coordinates"] = "좌표 표시"
-	L["Show Coordinates Description"] = "세계지도 및 미니지도의 도구 설명에 좌표를 표시합니다."
 
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Higher Learning"] = "Letrado nas artes arcanas"
@@ -350,40 +484,7 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["intTip"] = "No chão, na base da estante\ndo lado direito da sala"
 	L["Illusion"] = "Ilusão"
 	L["illTip"] = "Em uma caixa sem\nnada. Na esquina"
-	L["Go to Dalaran"] = "Vá para Dalaran"	
 	L["AddOn Description"] = "Te ajudar a encontrar os livros"
-	L["Character"] = "Personagem"
-	L["Account"] = "à Conta"
-	L["Completed"] = "Concluído"
-	L["Not Completed"] = "Não Concluído"
-	L["Icon Selection"] = "Seleção de ícones"
-	L["Icon Scale"] = "Escala de Ícone"
-	L["The scale of the icons"] = "A escala dos ícones"
-	L["Icon Alpha"] = "Ícone Alpha"
-	L["The alpha transparency of the icons"] = "A transparência alfa dos ícones"
-	L["Icon"] = "Ícone"
-	L["Options"] = "Opções"
-	L["Gold"] = "Ouro"
-	L["Red"] = "Vermelho"
-	L["Blue"] = "Azul"
-	L["Green"] = "Verde"
-	L["Ring"] = "Anel"
-	L["Cross"] = "Cruz"
-	L["Diamond"] = "Diamante"
-	L["Frost"] = "Gélido"
-	L["Cogwheel"] = "Roda dentada"
-	L["White"] = "Branco"
-	L["Purple"] = "Roxa"
-	L["Yellow"] = "Amarelo"
-	L["Grey"] = "Cinzento"
-	L["Mana Orb"] = "Orbe de Mana"
-	L["Phasing"] = "Sincronização"
-	L["Raptor egg"] = "Ovo de raptor"
-	L["Stars"] = "Estrelas"
-	L["NPC"] = "PNJ"
-	L["Show Coordinates"] = "Mostrar coordenadas"
-	L["Show Coordinates Description"] = "Exibir " ..ns.colour.highlight
-		.."coordenadas\124r em dicas de ferramentas no mapa mundial e no minimapa"
 
 elseif ns.locale == "ruRU" then
 	L["Higher Learning"] = "Ученье – свет!"
@@ -406,39 +507,7 @@ elseif ns.locale == "ruRU" then
 	L["intTip"] = "На полу у основания книжной\nполки с правой стороны комнаты"
 	L["Illusion"] = "Иллюзия"
 	L["illTip"] = "На ящике, на котором\nничего нет. В углу"
-	L["Go to Dalaran"] = "Иди в Даларан"	
 	L["AddOn Description"] = "Помогите найти книги"
-	L["Character"] = "Персонажа"
-	L["Account"] = "Счет"
-	L["Completed"] = "Выполнено"
-	L["Not Completed"] = "Не Выполнено"
-	L["Icon Selection"] = "Выбор Значка"
-	L["Icon Scale"] = "Масштаб Значка"
-	L["The scale of the icons"] = "Масштаб для Значков"
-	L["Icon Alpha"] = "Альфа Значок"
-	L["The alpha transparency of the icons"] = "Альфа-прозрачность Значков"
-	L["Icon"] = "Альфа Значок"
-	L["Options"] = "Параметры"
-	L["Gold"] = "Золото"
-	L["Red"] = "Красный"
-	L["Blue"] = "Синий"
-	L["Green"] = "Зеленый"
-	L["Ring"] = "Звенеть"
-	L["Cross"] = "Крест"
-	L["Diamond"] = "Ромб"
-	L["Frost"] = "Лед"
-	L["Cogwheel"] = "Зубчатое колесо"
-	L["White"] = "белый"
-	L["Purple"] = "Пурпурный"
-	L["Yellow"] = "Желтый"
-	L["Grey"] = "Серый"
-	L["Mana Orb"] = "Cфера маны"
-	L["Phasing"] = "Синхронизация"
-	L["Raptor egg"] = "Яйцо ящера"
-	L["Stars"] = "Звезды"
-	L["Show Coordinates"] = "Показать Координаты"
-	L["Show Coordinates Description"] = "Отображает " ..ns.colour.highlight
-		.."координаты\124r во всплывающих подсказках на карте мира и мини-карте"
 
 elseif ns.locale == "zhCN" then
 	L["Higher Learning"] = "进修"
@@ -458,38 +527,7 @@ elseif ns.locale == "zhCN" then
 	L["intTip"] = "在房间右侧书架底部的地板上"
 	L["Illusion"] = "幻象"
 	L["illTip"] = "在没有任何东西的箱子上。\n在角落"
-	L["Go to Dalaran"] = "去达拉然"	
 	L["AddOn Description"] = "帮你找书"
-	L["Character"] = "角色"
-	L["Account"] = "账号"
-	L["Completed"] = "已完成"
-	L["Not Completed"] = "未完成"
-	L["Icon Selection"] = "图标选择"
-	L["Icon Scale"] = "图示大小"
-	L["The scale of the icons"] = "图示的大小"
-	L["Icon Alpha"] = "图示透明度"
-	L["The alpha transparency of the icons"] = "图示的透明度"
-	L["Icon"] = "图示"
-	L["Options"] = "选项"
-	L["Gold"] = "金子"
-	L["Red"] = "红"
-	L["Blue"] = "蓝"
-	L["Green"] = "绿色"
-	L["Ring"] = "戒指"
-	L["Cross"] = "叉"
-	L["Diamond"] = "钻石"
-	L["Frost"] = "冰霜"
-	L["Cogwheel"] = "齿轮"
-	L["White"] = "白色"
-	L["Purple"] = "紫色"
-	L["Yellow"] = "黄色"
-	L["Grey"] = "灰色"
-	L["Mana Orb"] = "法力球"
-	L["Phasing"] = "同步"
-	L["Raptor egg"] = "迅猛龙蛋"
-	L["Stars"] = "星星"
-	L["Show Coordinates"] = "显示坐标"
-	L["Show Coordinates Description"] = "在世界地图和迷你地图上的工具提示中" ..ns.colour.highlight .."显示坐标"
 
 elseif ns.locale == "zhTW" then
 	L["Higher Learning"] = "進修"
@@ -509,37 +547,7 @@ elseif ns.locale == "zhTW" then
 	L["intTip"] = "在房間右側書架底部的地板上"
 	L["Illusion"] = "幻象"
 	L["illTip"] = "在沒有任何東西的箱子上。\n在角落"
-	L["Go to Dalaran"] = "去達拉然"	
 	L["AddOn Description"] = "幫你找書"
-	L["Character"] = "角色"
-	L["Account"] = "賬號"
-	L["Completed"] = "完成"
-	L["Not Completed"] = "未完成"
-	L["Icon Selection"] = "圖標選擇"
-	L["Icon Scale"] = "圖示大小"
-	L["The scale of the icons"] = "圖示的大小"
-	L["Icon Alpha"] = "圖示透明度"
-	L["The alpha transparency of the icons"] = "圖示的透明度"
-	L["Icon"] = "圖示"
-	L["Options"] = "選項"
-	L["Gold"] = "金子"
-	L["Red"] = "紅"
-	L["Blue"] = "藍"
-	L["Green"] = "綠色"
-	L["Ring"] = "戒指"
-	L["Cross"] = "叉"
-	L["Diamond"] = "钻石"
-	L["Frost"] = "霜"
-	L["Cogwheel"] = "齒輪"
-	L["White"] = "白色"
-	L["Purple"] = "紫色"
-	L["Yellow"] = "黃色"
-	L["Grey"] = "灰色"
-	L["Mana Orb"] = "法力球"
-	L["Phasing"] = "同步"
-	L["Raptor egg"] = "迅猛龍蛋"
-	L["Show Coordinates"] = "顯示坐標"
-	L["Show Coordinates Description"] = "在世界地圖和迷你地圖上的工具提示中" ..ns.colour.highlight .."顯示坐標"
 	
 else
 	L["divTip"] = "At the top of the stairs, look\nleft. The book is on the floor\nbetween the two bookshelves"
@@ -551,24 +559,10 @@ else
 	L["abjTip"] = "Downstairs. On the right side. On the\nfloor next to a stool with books upon it"
 	L["intTip"] = "On the floor at the base of the bookshelf\non the right side of the room"
 	L["illTip"] = "On a crate with nothing\nupon it. In the corner"
-	if ns.locale == "enUS" then
-		L["Grey"] = "Gray"
-	end
 	L["AddOn Description"] = "Helps you find the books"
-	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
 end
 
 -- Plugin handler for HandyNotes
-local function infoFromCoord(mapFile, coord)
-	local point = {}
-	if ( version < 40000 ) then
-		point = ns.pointsWrath[mapFile] and ns.pointsWrath[mapFile][coord]
-	else
-		point = ns.points[mapFile] and ns.points[mapFile][coord]
-	end
-	return point[1], point[2], point[3], point[4]
-end
-
 function pluginHandler:OnEnter(mapFile, coord)
 	if self:GetCenter() > UIParent:GetCenter() then
 		GameTooltip:SetOwner(self, "ANCHOR_LEFT")
@@ -576,23 +570,22 @@ function pluginHandler:OnEnter(mapFile, coord)
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 	end
 
-	local aID, _, shortTitle, tip = infoFromCoord(mapFile, coord)
+	local pin = ns.points[ mapFile ] and ns.points[ mapFile ][ coord ]
 	local aName, completed, completedMe = "", false, false
-	local pName = UnitName( "player" ) or L["Character"]
 	
 	_, aName, _, completed, _, _, _, _, _, _, _, _, completedMe = GetAchievementInfo( 1956 )
 	GameTooltip:AddDoubleLine( ns.colour.prefix ..aName ..ns.colour.highlight,
 			( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..L["Account"] ..")" ) 
 								or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..L["Account"] ..")" ) )
 	GameTooltip:AddDoubleLine( " ",
-			( completedMe == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
-								or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
+			( completedMe == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..ns.name ..")" ) 
+								or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..ns.name ..")" ) )
 
-	_, _, completed = GetAchievementCriteriaInfo( 1956, aID )
-	GameTooltip:AddDoubleLine( ns.colour.highlight.. L[shortTitle],
-			( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
-								or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
-	GameTooltip:AddLine( ns.colour.plaintext ..L[tip] )
+	_, _, completed = GetAchievementCriteriaInfo( 1956, ( ( ns.classic == true ) and pin.aIndexC or pin.aIndexR ) )
+	GameTooltip:AddDoubleLine( ns.colour.highlight.. L[ pin.shortTitle ],
+			( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..ns.name ..")" ) 
+								or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..ns.name ..")" ) )
+	GameTooltip:AddLine( ns.colour.plaintext ..L[ pin.tip] )
 
 	if ns.db.showCoords == true then
 		local mX, mY = HandyNotes:getXY(coord)
@@ -607,65 +600,26 @@ function pluginHandler:OnLeave()
 	GameTooltip:Hide()
 end
 
-local function createWaypoint(mapID, coord)
-	local x, y = HandyNotes:getXY(coord)
-	TomTom:AddWaypoint(mapID, x, y, { title = L["Higher Learning"], persistent = nil, minimap = true, world = true })
-end
-
-local function createAllWaypoints()
-	for mapFile, coords in next, ns.points do
-	-- Note re v1.10 - left as is given that only accessing the coords and they are the same between Retail and Wrath
-		if not continents[mapFile] then
-			for coord in next, coords do
-				if coord then
-					createWaypoint(mapFile, coord)
-				end
-			end
-		end
-	end
-	TomTom:SetClosestWaypoint()
-end
-
-function pluginHandler:OnClick(button, down, mapFile, coord)
-	if TomTom and button == "RightButton" and not down then
-		if IsControlKeyDown() then
-			createAllWaypoints()
-		else
-			createWaypoint(mapFile, coord)
-		end
-	end
-end
-
 do
-	continents[ns.northrend] = true
 	local function iterator(t, prev)
-		if not t or ns.CurrentMap == ns.northrend then return end
+		if not t then return end
 		local coord, v = next(t, prev)
-		local aId, completed, iconIndex
+		local completed, iconIndex
 		while coord do
 			if v then
-				if ns.db.icon_choice == 11 then
-					aId = infoFromCoord(ns.CurrentMap, coord)
-					completed = select( 3, GetAchievementCriteriaInfo( 1956, aId ))
+				if ns.db.iconChoice == 11 then
+					completed = select( 3, GetAchievementCriteriaInfo( 1956, ( ( ns.classic == true ) and v.aIndexC or v.aIndexR ) ) )
 					iconIndex = (completed == true) and 5 or 3
 				else
-					iconIndex = ns.db.icon_choice
+					iconIndex = ns.db.iconChoice
 				end
-				return coord, nil, ns.textures[iconIndex], ns.db.icon_scale * ns.scaling[iconIndex], ns.db.icon_alpha
+				return coord, nil, ns.textures[iconIndex], ns.db.iconScale * ns.scaling[iconIndex], ns.db.iconAlpha
 			end
 			coord, v = next(t, coord)
 		end
 	end
-	if ( version < 40000 ) then
-		function pluginHandler:GetNodes2(mapID)
-			ns.CurrentMap = mapID
-			return iterator, ns.pointsWrath[mapID]
-		end
-	else
-		function pluginHandler:GetNodes2(mapID)
-			ns.CurrentMap = mapID
-			return iterator, ns.points[mapID]
-		end
+	function pluginHandler:GetNodes2(mapID)
+		return iterator, ns.points[mapID]
 	end
 end
 
@@ -686,21 +640,21 @@ ns.options = {
 			name = " " ..L["Options"],
 			inline = true,
 			args = {
-				icon_scale = {
+				iconScale = {
 					type = "range",
-					name = L["Icon Scale"],
-					desc = L["The scale of the icons"],
-					min = 1, max = 3, step = 0.1,
-					arg = "icon_scale",
-					order = 2,
+					name = L["Map Pin Size"],
+					desc = L["The Map Pin Size"],
+					min = 1, max = 4, step = 0.1,
+					arg = "iconScale",
+					order = 1,
 				},
-				icon_alpha = {
+				iconAlpha = {
 					type = "range",
-					name = L["Icon Alpha"],
-					desc = L["The alpha transparency of the icons"],
+					name = L["Map Pin Alpha"],
+					desc = L["The alpha transparency of the map pins"],
 					min = 0, max = 1, step = 0.01,
-					arg = "icon_alpha",
-					order = 3,
+					arg = "iconAlpha",
+					order = 2,
 				},
 				showCoords = {
 					name = L["Show Coordinates"],
@@ -709,25 +663,25 @@ ns.options = {
 					type = "toggle",
 					width = "full",
 					arg = "showCoords",
-					order = 4,
+					order = 3,
 				},
 			},
 		},
 		icon = {
 			type = "group",
-			name = L["Icon Selection"],
+			name = L["Map Pin Selections"],
 			inline = true,
 			args = {
-				icon_choice = {
+				iconChoice = {
 					type = "range",
-					name = L["Icon"],
+					name = L["Higher Learning"],
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
 							..L["Yellow"] .."\n5 = " ..L["Green"] .."\n6 = " ..L["Grey"] .."\n7 = " ..L["Mana Orb"]
 							.."\n8 = " ..L["Phasing"] .."\n9 = " ..L["Raptor egg"] .."\n10 = " ..L["Stars"]
 							.."\n11 = " ..L["Red"] .."/" ..L["Green"],
 					min = 1, max = 11, step = 1,
-					arg = "icon_choice",
-					order = 5,
+					arg = "iconChoice",
+					order = 4,
 				},
 			},
 		},
@@ -742,28 +696,6 @@ function HandyNotes_HigherLearning_OnAddonCompartmentClick( addonName, buttonNam
 function pluginHandler:OnEnable()
 	local HereBeDragons = LibStub("HereBeDragons-2.0", true)
 	if not HereBeDragons then return end
-	
-	for continentMapID in next, continents do
-		local children = C_Map.GetMapChildrenInfo(continentMapID, nil, true)
-		for _, map in next, children do
-			local coords = ( version < 40000 ) and ns.pointsWrath[map.mapID] or ns.points[map.mapID]
-			if coords then
-				for coord, criteria in next, coords do			
-					local mx, my = HandyNotes:getXY(coord)
-					local cx, cy = HereBeDragons:TranslateZoneCoordinates(mx, my, map.mapID, continentMapID)
-					if cx and cy then
-						if ( version < 40000 ) then
-							ns.pointsWrath[continentMapID] = ns.pointsWrath[continentMapID] or {}
-							ns.pointsWrath[continentMapID][HandyNotes:getCoord(cx, cy)] = criteria
-						else
-							ns.points[continentMapID] = ns.points[continentMapID] or {}
-							ns.points[continentMapID][HandyNotes:getCoord(cx, cy)] = criteria
-						end
-					end
-				end
-			end
-		end
-	end
 	HandyNotes:RegisterPluginDB("HigherLearning", pluginHandler, ns.options)
 	ns.db = LibStub("AceDB-3.0"):New("HandyNotes_HigherLearningDB", defaults, "Default").profile
 	pluginHandler:Refresh()

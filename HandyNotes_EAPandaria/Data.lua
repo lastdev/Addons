@@ -131,15 +131,17 @@ points[ 422 ] = { -- Dread Wastes
 	-- Glorious
 	[25212840] = { aID=7439, aIndex=55, }, -- Dak the Breaker
 	[34742323] = { aID=7439, aIndex=41, }, -- Ai-Li Skymirror
+	[35623053] = { aID=7439, aIndex=20, }, -- Gar'lok
 	[35996227] = { aID=7439, aIndex=48, }, -- Omnis Grinlock
 	[36176406] = { aID=7439, aIndex=48, }, -- Omnis Grinlock
 	[36376089] = { aID=7439, aIndex=48, }, -- Omnis Grinlock
 	[37015960] = { aID=7439, aIndex=48, }, -- Omnis Grinlock
 	[37016411] = { aID=7439, aIndex=48, }, -- Omnis Grinlock
-	[37682957] = { aID=7439, aIndex=20 }, -- Gar'lok
+	[37682957] = { aID=7439, aIndex=20, }, -- Gar'lok
 	[38046366] = { aID=7439, aIndex=48, }, -- Omnis Grinlock
 	[38275807] = { aID=7439, aIndex=48, }, -- Omnis Grinlock
 	[39006255] = { aID=7439, aIndex=48, }, -- Omnis Grinlock
+	[39174182] = { aID=7439, aIndex=20, }, -- Gar'lok
 	[39235834] = { aID=7439, aIndex=48, }, -- Omnis Grinlock
 	[39486099] = { aID=7439, aIndex=48, }, -- Omnis Grinlock
 	[39805946] = { aID=7439, aIndex=48, }, -- Omnis Grinlock
@@ -148,10 +150,13 @@ points[ 422 ] = { -- Dread Wastes
 	[55260586] = { aID=7439, aIndex=12, }, -- Eshelon
 	[55346355] = { aID=7439, aIndex=6, }, -- Ik-Ik the Nimble
 	[56490769] = { aID=7439, aIndex=12, }, -- Eshelon
+	[66378676] = { aID=7439, aIndex=12, }, -- Eshelon
 	[64255846] = { aID=7439, aIndex=13, }, -- Nalash Verdantis
 	[71893769] = { aID=7439, aIndex=27, }, -- Karr the Darkener
-	[72982204] = { aID=7439, aIndex=34 }, -- Krol the Blade
-	[73162020] = { aID=7439, aIndex=34 }, -- Krol the Blade
+	[72982204] = { aID=7439, aIndex=34, }, -- Krol the Blade
+	[73162020] = { aID=7439, aIndex=34, }, -- Krol the Blade
+	[74102054] = { aID=7439, aIndex=34, }, -- Krol the Blade
+	[74462290] = { aID=7439, aIndex=34, }, -- Krol the Blade
 	[54846581] = { aID=7439, aIndex=6, tip="Enter the burrow" }, -- Ik-Ik The Nimble
 
 	-- Zul Again
@@ -279,9 +284,11 @@ points[ 418 ] = { -- Krasarang Wilds
 	[39335533] = { aID=7439, aIndex=38, }, -- Ruun Ghostpaw
 	[39392899] = { aID=7439, aIndex=52, }, -- Go-Kan
 	[52308890] = { aID=7439, aIndex=3, tip="Small patrol area on the deck" }, -- Spriggin
-	[53513889] = { aID=7439, aIndex=24, tip="Spawns in four locations", author="Four? V" }, -- Gaarn the Toxic
+	[53513889] = { aID=7439, aIndex=24, tip="Spawns in four locations" }, -- Gaarn the Toxic
+	[53883216] = { aID=7439, aIndex=24, tip="Spawns in four locations" }, -- Gaarn the Toxic
 	[56184695] = { aID=7439, aIndex=45, }, -- Arness the Scale
-	[56223797] = { aID=7439, aIndex=24, tip="Spawns in four locations", author="Four? V" }, -- Gaarn the Toxic
+	[56223797] = { aID=7439, aIndex=24, tip="Spawns in four locations" }, -- Gaarn the Toxic
+	[56313511] = { aID=7439, aIndex=24, tip="Spawns in four locations" }, -- Gaarn the Toxic
 	[67182326] = { aID=7439, aIndex=31, }, -- Qu'nas
 
 	-- I'm In Your Base Killing Your Dudes
@@ -408,12 +415,15 @@ points[ 379 ] = { -- Kun-Lai Summit
 	[55444397] = { aID=7439, aIndex=25, }, -- Borginn Darkfist
 	[55634345] = { aID=7439, aIndex=25, }, -- Borginn Darkfist
 	[56064321] = { aID=7439, aIndex=25, }, -- Borginn Darkfist
-	[57047600] = { aID=7439, aIndex=32, author="V. More?" }, -- Havak
-	[57497494] = { aID=7439, aIndex=32, author="V. More?" }, -- Havak
-	[59357376] = { aID=7439, aIndex=32, author="V. More?" }, -- Havak
+	[57047600] = { aID=7439, aIndex=32, }, -- Havak
+	[57497494] = { aID=7439, aIndex=32, }, -- Havak
+	[58717395] = { aID=7439, aIndex=32, }, -- Havak
+	[59357376] = { aID=7439, aIndex=32, }, -- Havak
 	[63911374] = { aID=7439, aIndex=46, }, -- Nessos the Oracle
+	[73387625] = { aID=7439, aIndex=11, author="V. More?" }, -- Zai the Outcast
 	[73867724] = { aID=7439, aIndex=11, author="V. More?" }, -- Zai the Outcast
 	[74137880] = { aID=7439, aIndex=11, author="V. More?" }, -- Zai the Outcast
+	[74377929] = { aID=7439, aIndex=11, author="V. More?" }, -- Zai the Outcast
 	
 	-- Riches of Pandaria
 	[36747983] = { aID=7997, item="Lost Adventurer's Belongings", aQuest=31418 },
@@ -597,7 +607,9 @@ points[ 371 ] = { -- The Jade Forest
 	[44017509] = { aID=7439, aIndex=22, tip="Patrol path" },
 	[44037578] = { aID=7439, aIndex=22, tip="Patrol path" },
 	[46301990] = { aID=7439, aIndex=29, tip="Possible bottommost spawn" },
-	[54234231] = { aID=7439, aIndex=50, },
+	[47951843] = { aID=7439, aIndex=29, tip="Confirmed spawn" }, -- Morgrinn Crackfang
+	[53584965] = { aID=7439, aIndex=50, }, -- Ferdinand
+	[54234231] = { aID=7439, aIndex=50, }, -- Ferdinand
 	[57387169] = { aID=7439, aIndex=36, }, -- Urobi the Walker
 	[66007420] = { aID=7439, aIndex=43, }, -- Sarnak
 
@@ -1862,6 +1874,7 @@ points[ 388 ] = { -- Townlong Steppes
 	[41887849] = { aID=7439, aIndex=19 }, -- Lith'ik the Stalker
 	[46317445] = { aID=7439, aIndex=19 }, -- Lith'ik the Stalker
 	[47818426] = { aID=7439, aIndex=19 }, -- Lith'ik the Stalker
+	[47868855] = { aID=7439, aIndex=19 }, -- Lith'ik the Stalker
 	[53896348] = { aID=7439, aIndex=26, }, -- Norlaxx
 	[59358537] = { aID=7439, aIndex=47, }, -- Siltriss the Sharpener
 	[62863540] = { aID=7439, aIndex=33, }, -- Kah'tir
@@ -1908,9 +1921,9 @@ points[ 388 ] = { -- Townlong Steppes
 	[52065872] = { aID=7997, item=86517, aQuest=31424, author="V" }, -- Hardened Sap of Kri'vess
 	[52505770] = { aID=7997, item=86517, aQuest=31424, author="?" }, -- Hardened Sap of Kri'vess
 	[52565553] = { aID=7997, item=86517, aQuest=31424, author="V" }, -- Hardened Sap of Kri'vess
+	[53786129] = { aID=7997, item=86517, aQuest=31424, author="V" }, -- Hardened Sap of Kri'vess
 	[52805620] = { aID=7997, item=86517, aQuest=31424, author="?" }, -- Hardened Sap of Kri'vess
 	[53806000] = { aID=7997, item=86517, aQuest=31424, author="?" }, -- Hardened Sap of Kri'vess
-	[53806140] = { aID=7997, item=86517, aQuest=31424, author="?" }, -- Hardened Sap of Kri'vess
 	[53905840] = { aID=7997, item=86517, aQuest=31424, author="?" }, -- Hardened Sap of Kri'vess
 	[55526100] = { aID=7997, item=86517, aQuest=31424, author="V" }, -- Hardened Sap of Kri'vess
 	[55615413] = { aID=7997, item=86517, aQuest=31424, author="V" }, -- Hardened Sap of Kri'vess
@@ -2084,16 +2097,32 @@ points[ 376 ] = { -- Valley of the Four Winds
 	[12304964] = { aID=7439, aIndex=16, }, -- Nal'lak the Ripper
 	[13953847] = { aID=7439, aIndex=2, author="V. need five" }, -- Bonobos
 	[15383220] = { aID=7439, aIndex=2, author="V. need five" }, -- Bonobos
+	[16494092] = { aID=7439, aIndex=2, author="V. need five" }, -- Bonobos
 	[18597770] = { aID=7439, aIndex=30, }, -- Jonn-Dar
+	[19133566] = { aID=7439, aIndex=2, author="V. need five" }, -- Bonobos
 	[32886269] = { aID=7439, aIndex=51, }, -- Blackhoof
 	[34545922] = { aID=7439, aIndex=51, }, -- Blackhoof
 	[36942575] = { aID=7439, aIndex=23, }, -- Sulik'shor
 	[37826040] = { aID=7439, aIndex=51, }, -- Blackhoof
 	[39635765] = { aID=7439, aIndex=51, }, -- Blackhoof
 	[52132787] = { aID=7439, aIndex=9, author="Look for more", -- Sele'na
-					tip="Bugged location. Head of the body still visible.\n\nLots of other locations" },		
+					tip="Bugged location. Head of the body still visible.\n\nLots of other locations" },
+	[52142832] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
+	[52552915] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
+	[52832757] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
+	[52992916] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
+	[53152776] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
+	[53402889] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
+					
+	[53663226] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
+	[53803165] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
+	[54073159] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
+	[54223269] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
+	[54283235] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
+	[54293197] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
+
 	[53973577] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
-	[54173663] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
+	[54113668] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
 	[54233631] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
 	[54543576] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
 	[54543717] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
@@ -2101,6 +2130,16 @@ points[ 376 ] = { -- Valley of the Four Winds
 	[55093679] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
 	[54963622] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
 
+	[57173330] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
+	[57233398] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
+	[57243364] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
+	[57343292] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
+	[57543403] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
+	[57603322] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
+	[57763357] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
+	[57873394] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
+	[57893375] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
+	
 	[67246025] = { aID=7439, aIndex=44, }, -- Salyin Warscout
 	[67665912] = { aID=7439, aIndex=44, }, -- Salyin Warscout
 	[68235825] = { aID=7439, aIndex=44, }, -- Salyin Warscout
@@ -2163,11 +2202,11 @@ textures[7] = "Interface\\Common\\Friendship-ManaOrb"
 textures[8] = "Interface\\TargetingFrame\\UI-PhasingIcon"
 textures[9] = "Interface\\Store\\Category-icon-pets"
 textures[10] = "Interface\\Store\\Category-icon-featured"
-textures[11] = "Interface\\AddOns\\HandyNotes_EA-Pandaria\\EAPandariaGold"
-textures[12] = "Interface\\AddOns\\HandyNotes_EA-Pandaria\\EAPandariaBlue"
-textures[13] = "Interface\\AddOns\\HandyNotes_EA-Pandaria\\EAPandariaPink"
-textures[14] = "Interface\\AddOns\\HandyNotes_EA-Pandaria\\EAPandariaOriginal"
-textures[15] = "Interface\\AddOns\\HandyNotes_EA-Pandaria\\Love"
+textures[11] = "Interface\\AddOns\\HandyNotes_EAPandaria\\EAPandariaGold"
+textures[12] = "Interface\\AddOns\\HandyNotes_EAPandaria\\EAPandariaBlue"
+textures[13] = "Interface\\AddOns\\HandyNotes_EAPandaria\\EAPandariaPink"
+textures[14] = "Interface\\AddOns\\HandyNotes_EAPandaria\\EAPandariaOriginal"
+textures[15] = "Interface\\AddOns\\HandyNotes_EAPandaria\\Love"
 
 scaling[1] = 0.68
 scaling[2] = 0.68

@@ -1,6 +1,11 @@
 ------------------------------------------------------------------------------
 -- Dragonflight
 --
+v10.1.7.2770
+	Shield Charge will correctly go on CD when used out of melee range.
+	Heavy Wingbests/Cloberring Sweep will correctly reduce the CD of Wing Buffet/Tail Swipe.
+	Accretion will correctly reduce Upheaval's remaining CD whenever you cast Eruption.
+
 v10.1.7.2769
 	Ultimate Sacrifice will correctly go on cooldown when used.
 	Ultimate Sacrifice CD fixed to 2min and benefits from Sacrifice of the Just.

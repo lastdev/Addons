@@ -60,14 +60,17 @@ end
 
 -- Fetch -----------------------------------------------------------------------
 
+-- Don't call CanDragonRide thousands of times for no reason
+local dragonRidingSort = false
+
 -- Show all the collected mounts before the uncollected mounts, then by name
 local function FilterSort(a, b)
     if a.isCollected and not b.isCollected then return true end
     if not a.isCollected and b.isCollected then return false end
-    if LM.Environment:CanDragonride() then
+    if dragonRidingSort then
         if a.dragonRiding and not b.dragonRiding then return true end
+        if not a.dragonRiding and b.dragonRiding then return false end
     end
-    if not a.dragonRiding and b.dragonRiding then return false end
     return a.name < b.name
 end
 
@@ -77,6 +80,7 @@ function LM.UIFilter.UpdateCache()
             tinsert(LM.UIFilter.filteredMountList, m)
         end
     end
+    dragonRidingSort = LM.Environment:CanDragonride()
     sort(LM.UIFilter.filteredMountList, FilterSort)
 end
 
@@ -366,6 +370,25 @@ function LM.UIFilter.GetPriorityText(p)
            c:WrapTextInColorCode(L['LM_PRIORITY_DESC'..p])
 end
 
+
+-- Rarities --------------------------------------------------------------------
+
+-- 0 <= r <= 1
+
+function LM.UIFilter.GetRarityColor(r)
+    r = r or 50
+    if r <= 1 then
+        return PriorityColors[4]
+    elseif r <= 5 then
+        return PriorityColors[3]
+    elseif r <= 20 then
+        return PriorityColors[2]
+    elseif r <= 50 then
+        return PriorityColors[1]
+    else
+        return PriorityColors['']
+    end
+end
 
 -- Other -----------------------------------------------------------------------
 

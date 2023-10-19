@@ -1,16 +1,10 @@
-lightweight tag e0d6f9116439452eb33c026ab24dadbbc69b6da9 10.1.5-03
+lightweight tag 15449674c849366a75df0277b712035f932aa5fa 10.1.7-02
 Author:	Dave Hendler <sollaires@gmail.com>
-Date:	Tue Aug 1 14:13:12 2023 -0700
+Date:	Tue Oct 10 15:36:37 2023 -0700
 
-commit e0d6f9116439452eb33c026ab24dadbbc69b6da9
+commit 15449674c849366a75df0277b712035f932aa5fa
 Author: Dave Hendler <sollaires@gmail.com>
-Date:   Tue Aug 1 14:12:46 2023 -0700
+Date:   Tue Oct 10 15:36:37 2023 -0700
 
-    Fixed an issue where items in the default bank inventory would not show up
-
-commit 9d1279d3547d6ca893405cf45159471308fd2f14
-Author: Dave Hendler <sollaires@gmail.com>
-Date:   Mon Jul 31 12:49:56 2023 -0700
-
-    Show the print error if detected
+    Add upgrade currency/items for 10.2
 
