@@ -1,8 +1,10 @@
-if GetLocale() == "deDE" then
+﻿if GetLocale() == "deDE" then
 	BINDING_HEADER_GOGOHEADER = "GoGoMount"
 	BINDING_NAME_GOGOBINDING = "Aufsitzen/Absitzen"
 	BINDING_NAME_GOGOBINDING2 = "Aufsitzen/Absitzen (nicht fliegend)"
 	BINDING_NAME_GOGOBINDING3 = "Aufsitzen/Absitzen bei Fahrgast-Mounts"
+	BINDING_NAME_GOGOBINDING4 = "Mount/Dismount Seller Mounts" -- Requires localization
+	BINDING_NAME_GOGOBINDING5 = "Mount/Dismount Herbalism Mounts" -- Requires localization
 	GoGo_Variables.Localize = {
 	Skill = {
 		Engineering = "Ingenieurskunst",
@@ -40,6 +42,8 @@ if GetLocale() == "deDE" then
 		GlobalZoneDescription = "Die hier definierten bevorzugten Reittiere werden nur verwendet, wenn keine zonenspezifischen Favoriten für die Zone definiert sind, in der du dich gerade befindest.",
 		HunterOptions = "Jäger-Optionen",
 		NewVersionFound = "Eine aktualisierte Version von GoGoMount ist verfügbar und wird verwendet von ",
+		NightFaeOptions = "Night Fae Options", -- Requires localization
+		NightFaeSingleClick = "Single click mount from Soulshape instead of dismounting", -- Requires localization
 		NoShapeInRandom = "Gestaltwandlung und Reittiere nicht gemeinsam in einer Zufallsliste verwenden.",
 		PaladinOptions = "Paladin-Einstellungen",
 		RemoveBuffs = "Entferne Buffs, die das Aufsitzen verhindern",

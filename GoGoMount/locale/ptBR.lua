@@ -3,6 +3,8 @@ if GetLocale() == "ptBR" then
 	BINDING_NAME_GOGOBINDING = "Montar / Desmontar" -- Needs review
 	BINDING_NAME_GOGOBINDING2 = "Montar / Desmontar (não voadora)" -- Needs review
 	BINDING_NAME_GOGOBINDING3 = "Montar / Desmontar Montaria de passageiros" -- Needs review
+	BINDING_NAME_GOGOBINDING4 = "Mount/Dismount Seller Mounts" -- Requires localization
+	BINDING_NAME_GOGOBINDING5 = "Mount/Dismount Herbalism Mounts" -- Requires localization
 	GoGo_Variables.Localize = {
 	Skill = {
 		Engineering = "Engenharia", -- Needs review
@@ -40,6 +42,8 @@ if GetLocale() == "ptBR" then
 		GlobalZoneDescription = "Preferred mounts defined here will only take effect if there are no zone specific mount favorites set for the current zone you are in.", -- Requires localization
 		HunterOptions = "Hunter Options", -- Requires localization
 		NewVersionFound = "A versão mais recente do GoGoMount está disponível.", -- Needs review
+		NightFaeOptions = "Night Fae Options", -- Requires localization
+		NightFaeSingleClick = "Single click mount from Soulshape instead of dismounting", -- Requires localization
 		NoShapeInRandom = "Do not randomize shape forms with mounts", -- Requires localization
 		PaladinOptions = "Paladin Options", -- Requires localization
 		RemoveBuffs = "Remove buffs that can prevent mounting", -- Requires localization

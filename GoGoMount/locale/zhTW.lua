@@ -3,6 +3,8 @@ if GetLocale() == "zhTW" then
 	BINDING_NAME_GOGOBINDING = "坐騎/解除坐騎"
 	BINDING_NAME_GOGOBINDING2 = "坐騎/解除坐騎(無飛行)"
 	BINDING_NAME_GOGOBINDING3 = "坐騎/解除有乘客的坐騎"
+	BINDING_NAME_GOGOBINDING4 = "Mount/Dismount Seller Mounts" -- Requires localization
+	BINDING_NAME_GOGOBINDING5 = "Mount/Dismount Herbalism Mounts" -- Requires localization
 	GoGo_Variables.Localize = {
 	Skill = {
 		Engineering = "工程學",
@@ -40,6 +42,8 @@ if GetLocale() == "zhTW" then
 		GlobalZoneDescription = "Preferred mounts defined here will only take effect if there are no zone specific mount favorites set for the current zone you are in.", -- Requires localization
 		HunterOptions = "獵人選項",
 		NewVersionFound = "已有GoGoMount的更新版本",
+		NightFaeOptions = "Night Fae Options", -- Requires localization
+		NightFaeSingleClick = "Single click mount from Soulshape instead of dismounting", -- Requires localization
 		NoShapeInRandom = "Do not randomize shape forms with mounts", -- Requires localization
 		PaladinOptions = "聖騎士選項", -- Needs review
 		RemoveBuffs = "自動移除讓你無法上坐騎的BUFF", -- Needs review

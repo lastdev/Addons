@@ -3,6 +3,8 @@ if GetLocale() == "zhCN" then
 	BINDING_NAME_GOGOBINDING = "召唤坐骑/解散坐骑 按键绑定" -- Needs review
 	BINDING_NAME_GOGOBINDING2 = "召唤/解散坐骑 (非飞行坐骑) 按键绑定" -- Needs review
 	BINDING_NAME_GOGOBINDING3 = "召唤/解散多人坐骑 按键绑定" -- Needs review
+	BINDING_NAME_GOGOBINDING4 = "Mount/Dismount Seller Mounts" -- Requires localization
+	BINDING_NAME_GOGOBINDING5 = "Mount/Dismount Herbalism Mounts" -- Requires localization
 	GoGo_Variables.Localize = {
 	Skill = {
 		Engineering = "工程学",
@@ -40,6 +42,8 @@ if GetLocale() == "zhCN" then
 		GlobalZoneDescription = "此处定义的优先坐骑将只在你所在当前区域未设置区域收藏时有效。", -- Needs review
 		HunterOptions = "猎人选项",
 		NewVersionFound = "GoGoMount 有新版本可更新",
+		NightFaeOptions = "Night Fae Options", -- Requires localization
+		NightFaeSingleClick = "Single click mount from Soulshape instead of dismounting", -- Requires localization
 		NoShapeInRandom = "不使用随机变身形态", -- Needs review
 		PaladinOptions = "圣骑士选项",
 		RemoveBuffs = "移除会影响召唤坐骑的Buffs",

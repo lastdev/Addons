@@ -3,6 +3,8 @@ if GetLocale() == "itIT" then
 	BINDING_NAME_GOGOBINDING = "Montare / Smontare" -- Needs review
 	BINDING_NAME_GOGOBINDING2 = "Montare / Smontare (senza volo)" -- Needs review
 	BINDING_NAME_GOGOBINDING3 = "Montare / Smontare Monti passeggeri" -- Needs review
+	BINDING_NAME_GOGOBINDING4 = "Mount/Dismount Seller Mounts" -- Requires localization
+	BINDING_NAME_GOGOBINDING5 = "Mount/Dismount Herbalism Mounts" -- Requires localization
 	GoGo_Variables.Localize = {
 	Skill = {
 		Engineering = "Ingegneria", -- Needs review
@@ -18,7 +20,7 @@ if GetLocale() == "itIT" then
 		Clear = "Cancella", -- Needs review
 		ClearGlobalFavoriteMounts = "Cancella supporti globali preferiti", -- Needs review
 		CurrentZone = "Zona di corrente", -- Needs review
-		CurrentZoneDescription = "Monti contrassegnato qui come preferiti di zona sar� l'unica GoGoMount monti utilizzer� in questa zona. Tutti i supporti e altre forme di forma saranno ignorati. La deselezione di questa lista permette di utilizzare tutte GoGoMount supporti (o preferiti globali se impostato).", -- Needs review
+		CurrentZoneDescription = "Monti contrassegnato qui come preferiti di zona sarà l'unica GoGoMount monti utilizzerà in questa zona. Tutti i supporti e altre forme di forma saranno ignorati. La deselezione di questa lista permette di utilizzare tutte GoGoMount supporti (o preferiti globali se impostato).", -- Needs review
 		CurrentZoneExclusions = "Esclusioni zona corrente", -- Needs review
 		CurrentZoneFavorites = "Preferiti zona corrente", -- Needs review
 		DisableFlyingFromWater = "Disattivare volo da acqua", -- Needs review
@@ -34,22 +36,24 @@ if GetLocale() == "itIT" then
 		ExtraPassengerMountsDescription = "This list of passenger mounts is used to add passenger mounts to the random selection only when the Passenger Mount button is pressed.  This will allow you to set preferred mount lists excluding passenger mounts but still have them available when using the Passenger Mount button.  These mounts will not be used if they are marked as excluded mounts globally or for the current zone you are in.", -- Requires localization
 		Favorites = "Preferiti", -- Needs review
 		GlobalExclusions = "Esclusioni globali", -- Needs review
-		GlobalExclusionsDescription = "Monti sar� sempre ignorato. Anche se il montaggio qui selezionati sono impostati come preferiti, non saranno utilizzati.", -- Needs review
+		GlobalExclusionsDescription = "Monti sarà sempre ignorato. Anche se il montaggio qui selezionati sono impostati come preferiti, non saranno utilizzati.", -- Needs review
 		GlobalFavorites = "Preferiti globali", -- Needs review
 		GlobalPreferences = "Preferenze globali", -- Needs review
 		GlobalZoneDescription = "Supporti preferiti qui definiti effetto solo se non ci sono particolari preferenze montaggio di zona previsti per la zona corrente in cui ti trovi", -- Needs review
 		HunterOptions = "Hunter Opzioni", -- Needs review
-		NewVersionFound = "Una versione pi� recente di GoGoMount � disponibile.", -- Needs review
+		NewVersionFound = "Una versione più recente di GoGoMount è disponibile.", -- Needs review
+		NightFaeOptions = "Night Fae Options", -- Requires localization
+		NightFaeSingleClick = "Single click mount from Soulshape instead of dismounting", -- Requires localization
 		NoShapeInRandom = "Non casuale forme forma con i monti", -- Needs review
 		PaladinOptions = "Opzioni Paladin", -- Needs review
 		RemoveBuffs = "Rimuovere gli appassionati che possono prevenire il montaggio", -- Needs review
 		RemoveBuffs_Long = "GoGoMount cercheranno di rimuovere buff e shapeforms che provengono da incantesimi e oggetti che impediscono il montaggio. Questo funziona solo per gli appassionati di note e, in alcuni casi richiedono 2 clic del tuo pulsante GoGoMount da montare.", -- Needs review
 		ShamanOptions = "Shaman Options", -- Requires localization
 		ShamanSingleClick = "Single click mount from Ghost Wolf Form instead of dismounting", -- Requires localization
-		UnknownMountFound = "Un supporto sconosciuto � stato trovato in te nell'elenco dei monti. Si prega di segnalare questo in modo che pu� essere aggiunto alle future versioni di GoGoMount.", -- Needs review
+		UnknownMountFound = "Un supporto sconosciuto è stato trovato in te nell'elenco dei monti. Si prega di segnalare questo in modo che può essere aggiunto alle future versioni di GoGoMount.", -- Needs review
 		UseAspectOfThePackInstead = "Utilizzare Aspect of the Pack invece di Aspect Of The Cheeta", -- Needs review
-		UseAspectOfThePackInstead_Long = "Quando � abilitato, GoGoMount lancer� Aspect of the Pack invece di Aspect of the Cheetah. Zona locale o le impostazioni globali ignorare questa impostazione. Se questo � impostato per utilizzare Aspect of the Pack e si ha Aspect of the Cheetah come preferito zona, Aspect of the Cheetah verr� utilizzato.", -- Needs review
-		ZoneExclusionsDescription = "Esclusioni di zona specifiche funzionano come esclusioni globali ma specifiche per questa zona. Ogni montatura contrassegnato qui sotto come esclusione per la zona si sta lavorando nella non verr� mai convocato.", -- Needs review
+		UseAspectOfThePackInstead_Long = "Quando è abilitato, GoGoMount lancerà Aspect of the Pack invece di Aspect of the Cheetah. Zona locale o le impostazioni globali ignorare questa impostazione. Se questo è impostato per utilizzare Aspect of the Pack e si ha Aspect of the Cheetah come preferito zona, Aspect of the Cheetah verrà utilizzato.", -- Needs review
+		ZoneExclusionsDescription = "Esclusioni di zona specifiche funzionano come esclusioni globali ma specifiche per questa zona. Ogni montatura contrassegnato qui sotto come esclusione per la zona si sta lavorando nella non verrà mai convocato.", -- Needs review
 	},
 	Talent = {
 		AncestralSwiftness = "Ancestral Swiftness", -- Requires localization
