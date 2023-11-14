@@ -20,6 +20,7 @@ local Money = TSM.Include("Util.Money")
 local Log = TSM.Include("Util.Log")
 local ItemString = TSM.Include("Util.ItemString")
 local Vararg = TSM.Include("Util.Vararg")
+local GroupPath = TSM.Include("Util.GroupPath")
 local ItemInfo = TSM.Include("Service.ItemInfo")
 local CustomPrice = TSM.Include("Service.CustomPrice")
 local Conversions = TSM.Include("Service.Conversions")
@@ -820,7 +821,7 @@ function private.GetRestockHelpMessage(itemString)
 
 	-- check that there's a crafting operation applied
 	if not TSM.Operations.Crafting.HasOperation(itemString) then
-		return format(L["There is no Crafting operation applied to this item's TSM group (%s)."], TSM.Groups.Path.Format(groupPath))
+		return format(L["There is no Crafting operation applied to this item's TSM group (%s)."], GroupPath.Format(groupPath))
 	end
 
 	-- check if it's an invalid operation

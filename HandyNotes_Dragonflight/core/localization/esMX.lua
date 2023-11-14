@@ -45,7 +45,7 @@ L['requirement_not_found'] = nil
 L['multiple_spawns'] = nil
 L['shared_drops'] = nil
 
-L['Requires'] = nil
+L['requires'] = nil
 L['ranked_research'] = nil
 
 L['focus'] = nil
@@ -61,12 +61,14 @@ L['weekly'] = 'Semanal'
 L['normal'] = 'Normal'
 L['hard'] = 'Difícil'
 L['heirloom'] = nil
+L['item'] = nil
 L['mount'] = 'Montura'
 L['pet'] = 'Mascota'
 L['recipe'] = nil
 L['spell'] = nil
 L['title'] = nil
 L['toy'] = 'Juguete'
+L['currency'] = nil
 L['rep'] = nil
 L['completed'] = 'Terminado'
 L['incomplete'] = 'Incompleto'
@@ -77,6 +79,9 @@ L['unlearnable'] = 'No se puede aprender'
 L['defeated'] = nil
 L['undefeated'] = nil
 L['elite'] = nil
+L['quest'] = nil
+L['quest_repeatable'] = nil
+L['achievement'] = nil
 
 L['follower_type_follower'] = nil
 L['follower_type_champion'] = nil
@@ -93,11 +98,18 @@ L['time_format_24hrs'] = '%H:%M - %d/%m heure locale'
 --------------------------------- DRAGONRACES ---------------------------------
 -------------------------------------------------------------------------------
 
-L['dr_best'] = nil
-L['dr_best_dash'] = nil
-L['dr_note'] = nil
-L['dr_note_dash'] = nil
+L['dr_your_best_time'] = nil
+L['dr_your_target_time'] = nil
+L['dr_best_time'] = nil
+L['dr_target_time'] = nil
+L['dr_normal'] = nil
+L['dr_advanced'] = nil
+L['dr_reverse'] = nil
+L['dr_challenge'] = nil
+L['dr_reverse_challenge'] = nil
+L['dr_storm_race'] = nil
 L['dr_bronze'] = nil
+L['dr_vendor_note'] = nil
 L['options_icons_dragonrace'] = nil
 L['options_icons_dragonrace_desc'] = nil
 

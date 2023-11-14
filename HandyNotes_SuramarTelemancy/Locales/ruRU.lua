@@ -7,17 +7,17 @@ local myname, ns = ...
 local L = LibStub("AceLocale-3.0"):NewLocale(myname, "ruRU")
 if not L then return end
 
-L["Astravar Harbor"] = "Порт Астравар"
+L["Astravar Harbor"] = "Гавань Астравар"
 L["Evermoon Terrace"] = "Терраса Вечной Луны"
-L["Falanaar"] = "Фаланар"
+L["Falanaar"] = "Фаланаар"
 L["Felsoul Hold"] = "Оплот Оскверненной Души"
 L["Lunastre Estate"] = "Поместье Лунархов"
-L["Moon Guard (entrance)"] = "Лунные стражи (Вход)"
-L["Moon Guard Stronghold"] = "Лунные стражи"
-L["Ruins of Elune'eth"] = "Руины Элуны"
-L["Sanctum of Order"] = "Святилище порядка"
-L["Sanctum of Order (entrance)"] = "Святилище порядка (Вход)"
+L["Moon Guard (entrance)"] = "Лунные стражи (вход)"
+L["Moon Guard Stronghold"] = "Цитадель Лунных стражей"
+L["Ruins of Elune'eth"] = "Руины Элун'ета"
+L["Sanctum of Order"] = "Святилище Порядка"
+L["Sanctum of Order (entrance)"] = "Святилище Порядка (вход)"
 L["Tel'anor"] = "Тел'анор"
 L["Twilight Vineyards"] = "Сумеречные виноградники"
-L["Waning Crescent"] = "Лунный полумрак"
+L["Waning Crescent"] = "\"Лунный полумрак\""
 

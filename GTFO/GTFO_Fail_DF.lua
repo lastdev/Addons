@@ -1089,6 +1089,34 @@ GTFO.SpellID["417419"] = {
   sound = 3;
 };
 
+GTFO.SpellID["421867"] = {
+  --desc = "Devastating Blow";
+  sound = 3;
+};
+
+GTFO.SpellID["427659"] = {
+  --desc = "Primal Smash (Nuoberon)";
+  sound = 3;
+};
+
+GTFO.SpellID["427664"] = {
+  --desc = "Banana Barrage (Nuoberon)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["427762"] = {
+  --desc = "Winter's Surge (Envoy of Winter)";
+  sound = 3;
+};
+
+GTFO.SpellID["427758"] = {
+  --desc = "Frost Blast (Envoy of Winter)";
+  sound = 3;
+};
+
+
+
 --- *******************
 --- * Ruby Life Pools *
 --- *******************
@@ -2703,6 +2731,76 @@ GTFO.SpellID["419517"] = {
   sound = 3;
   applicationOnly = true;
 };
+
+
+
+--- *********************************
+--- * Amirdrassil, The Dream's Hope *
+--- *********************************
+
+GTFO.SpellID["422039"] = {
+  --desc = "Shadowflame Cleave (Gnarlroot)";
+  sound = 3;
+  test = true;
+};
+
+-- TODO: Doom Roots (Gnarlroot) - Brown swirl
+-- TODO: Flaming Pestilence (Gnarlroot) - Red swirl - Spawn of dormant lashers
+
+-- TODO: Shared Agony/Drenched Blades (Igira the Cruel) - Non-Tank melee was-too-close fail, applies Drenched Blades?
+-- TODO: Twisting Blade (Igira the Cruel) - Giant missile from boss, everyone can avoid
+-- TODO: Searing Sparks (Igira the Cruel) - Fire swirls during intermission
+-- TODO: Smashing Viscera (Igira the Cruel) - Giant circle boss leaps to (players take damage outside of the circle too, see if they're different spell IDs)
+-- TODO: Devastation (Igira the Cruel) - Fire swirls after the boss leaps and lands (heroic)
+-- TODO: Vital Rupture (Igira the Cruel) - Friendly-fire fail of standing in someone else's circle (applies debuff)
+-- TODO: Umbral Destruction (Igira the Cruel) - Fail if a player with the Brutalized debuff soaks this
+-- TODO: Spawning Weapon (Igira the Cruel) - Unknown ability, fire-tornado when the boss completes forging a weapon
+
+-- TODO: Scorchtail Crash (Volcoross) - Giant tail smash from shadow
+-- TODO: Volcanic Disgorge (Volcoross) - Fire swirls that spawn bad pools
+
+-- TODO: Agonizing Claws (Urctos) - Non-Tank fail, or tank fail if debuffed 
+-- TODO: Barreling Charge (Urctos) - Bear charges and knocks everyone in his path but does more damage if he doesn't hit anyone, fail if debuffed by Trampled (Heroic)
+-- TODO: Whimsical Gust (Pip) - Tornados (Heroic)
+-- TODO: Poisonous Javelin (Aerwynn) - Fail if you're not the target (may not be detectable by addons) or get hit multiple times
+
+-- TODO: Blazing Thorns (Larodar) - Fire swirls that spawn bad pools
+-- TODO: Explosive Bark (Larodar) - Fire swirls when treants die
+-- TODO: Smoldering Backdraft (Larodar) - Non-tank fail or tank fail if debuffed with Smoldering Suffocation
+-- TODO: Flash Fire (Larodar) - Giant circle around player, fail if you're not the target or get hit multiple times
+-- TODO: Green Swirls (Larodar) - Unknown ability, green swirls? Probably Avoid
+
+-- TODO: Weaver's Burden (Nymue) - Giant circle around player, fail if you're not the target or get hit multiple times
+-- TODO: Full Bloom (Nymue) - Non-tank fail
+-- TODO: Lumbering Slam (Cycle Warden) - Avoidable brown cone from giant tree add
+-- TODO: Radial Flourish (Cycle Warden) - Green swirl from giant tree add
+
+-- TODO: Flame Waves (Smolderon) - Moving fire pillars to avoid (Heroic)
+-- TODO: Cauterized Explosion (Smolderon) - Dropped circle on the ground after a Cauterizing Wound is healed off a player
+-- TODO: Lava Geysers (Smolderon) - Fire swirl that spawn bad pools
+-- TODO: Lingering Burn (Smolderon) - Ticking fire debuff from standing in the fire ring during P2, fail on application
+
+-- TODO: Mass Entanglement (Tindral Sageswift) - Small circles around players, fail if hit more than once
+-- TODO: Falling Stars (Tindral Sageswift) - Giant blue circle around player, fail if you're not the target or get hit multiple times
+-- TODO: Star Fragments (Tindral Sageswift) - Blue swirls after Falling Stars explodes
+-- TODO: Fire Beam (Tindral Sageswift) - This is the initial giant swirl spawn, not the individual beams
+-- TODO: Scorching Plume (Tindral Sageswift) - Fire balls during dragonriding phase
+-- TODO: Seed of Flame (Tindral Sageswift) - Stepping on a seed while debuffed with vulnerability (don't know how many stacks is acceptable or not, might use low damage alert)
+-- TODO: Flare Bomb (Tindral Sageswift) - Flying into a Flare Bomb while debuffed with vulnerability (Mythic)
+-- TODO: Fire Swirls (Tindral Sageswift) - Unknown ability, fire swirls that show up throughout the fight
+
+-- TODO: Fyr'alath's Flame (Fyrakk) - Fireball that does damage to players
+-- TODO: Firestorm (Fyrakk) - Fire Swirls of two different sizes?
+-- TODO: Wildfire (Fyrakk) - Fire Swirls after cast?
+-- TODO: Flame Orbs (Fyrakk) - Fail taking an orb while debuffed with too many stacks of Flamebound or 1 stack of Shadowbound
+-- TODO: Shadow Orbs (Fyrakk) - Fail taking an orb while debuffed with too many stacks of Shadowbound or 1 stack of Flamebound
+-- TODO: Molten Eruption (Fyrakk) - Timebomb circles?
+-- TODO: Blaze (Fyrakk)
+-- TODO: Blazing Seed (Fyrakk)
+-- TODO: Shadowflame Breath (Fyrakk) - Cone attack, but needed to ignite seeds?
+-- TODO: Swirling Firestorm (Fyrakk)
+
+
 
 
 end

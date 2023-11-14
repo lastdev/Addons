@@ -3,7 +3,7 @@
 
                                        Midsummer Fire Festival
 
-                                     v1.11 - 18th September 2023
+                                      v1.12 - 2nd November 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -21,9 +21,9 @@ ns.colour.prefix	= "\124cFFFFA500" -- Orange
 ns.colour.highlight = "\124cFFF6BE00" -- Deep Yellow
 ns.colour.plaintext = "\124cFFFFF380" -- Corn Yellow
 
-local defaults = { profile = { icon_scale = 2.5, icon_alpha = 1, showCoords = true,
+local defaults = { profile = { iconScale = 2.5, iconAlpha = 1, showCoords = true,
 								removeSeasonal = true, removeEver = false,
-								icon_honor = 7, icon_desecrate = 10, icon_thief = 11 } }
+								iconHonor = 7, iconDesecrate = 10, iconThief = 11 } }
 local continents = {}
 local pluginHandler = {}
 
@@ -43,12 +43,7 @@ local format = _G.format
 local gsub = string.gsub
 local next = _G.next
 local pairs = _G.pairs
-
 local HandyNotes = _G.HandyNotes
-
-local _, _, _, version = GetBuildInfo()
-ns.faction = UnitFactionGroup( "player" )
-ns.name = UnitName( "player" ) or "Character"
 
 continents[ 12 ] = true -- Kalimdor
 continents[ 13 ] = true -- Eastern Kingdoms
@@ -62,7 +57,6 @@ continents[ 875 ] = true -- Zandalar
 continents[ 876 ] = true -- Kul Tiras
 continents[ 947 ] = true -- Azeroth
 continents[ 1978 ] = true -- Dragon Isles
-
 
 -- Localisation
 ns.locale = GetLocale()
@@ -78,19 +72,19 @@ if ns.oceania[realm] then
 end
 
 if ns.locale == "deDE" then
-	L["Midsummer Fire Festival"] = "Sonnenwendfest"
-	L["AddOn Description"] = "Hilfe für Erfolge und Quests in Sonnenwendfest"
 	L["Character"] = "Charakter"
 	L["Account"] = "Accountweiter"
 	L["Completed"] = "Abgeschlossen"
 	L["Not Completed"] = "Nicht Abgeschlossen"
-	L["Icon Selection"] = "Symbolauswahl"
-	L["Icon Scale"] = "Symbolskalierung"
-	L["The scale of the icons"] = "Die Skalierung der Symbole"
-	L["Icon Alpha"] = "Symboltransparenz"
-	L["The alpha transparency of the icons"] = "Die Transparenz der Symbole"
-	L["Icon"] = "Symbol"
 	L["Options"] = "Optionen"
+	L["Map Pin Size"] = "Pin-Größe"
+	L["The Map Pin Size"] = "Die Größe der Karten-Pins"
+	L["Map Pin Alpha"] = "Kartenpin Alpha"
+	L["The alpha transparency of the map pins"] = "Die Alpha-Transparenz der Karten-Pins"
+	L["Show Coordinates"] = "Koordinaten anzeigen"
+	L["Show Coordinates Description"] = "Zeigen sie die " ..ns.colour.highlight 
+		.."koordinaten\124r in QuickInfos auf der Weltkarte und auf der Minikarte an"
+	L["Map Pin Selections"] = "Karten-Pin-Auswahl"
 	L["Red"] = "Rot"
 	L["Blue"] = "Blau"
 	L["Green"] = "Grün"
@@ -106,26 +100,24 @@ if ns.locale == "deDE" then
 	L["Phasing"] = "Synchronisieren"
 	L["Raptor egg"] = "Raptor-Ei"
 	L["Stars"] = "Sternen"
-	L["NPC"] = "NSC"
-	L["Show Coordinates"] = "Koordinaten anzeigen"
-	L["Show Coordinates Description"] = "Zeigen sie die " ..ns.colour.highlight 
-		.."koordinaten\124r in QuickInfos auf der Weltkarte und auf der Minikarte an"
-
+	L["Screw"] = "Schraube"
+	
 elseif ns.locale == "esES" or ns.locale == "esMX" then
-	L["Midsummer Fire Festival"] = "Festival del Fuego del Solsticio de Verano"
-	L["AddOn Description"] = "Ayuda con el suceso mundial"
-		.."Festival del Fuego del Solsticio de Verano"
 	L["Character"] = "Personaje"
 	L["Account"] = "la Cuenta"
 	L["Completed"] = "Completado"
-	L["Not Completed"] = ns.locale == "esES" and "Sin Completar" or "Incompleto"
-	L["Icon Selection"] = "Selección de iconos"
-	L["Icon Scale"] = "Escala de icono"
-	L["The scale of the icons"] = "La escala de los iconos"
+	L["Not Completed"] = ( ns.locale == "esES" ) and "Sin Completar" or "Incompleto"
+	L["Options"] = "Opciones"
+	L["Map Pin Size"] = "Tamaño de alfiler"
+	L["The Map Pin Size"] = "Tamaño de los pines del mapa"
+	L["Map Pin Alpha"] = "Alfa de los pines del mapa"
+	L["The alpha transparency of the map pins"] = "La transparencia alfa de los pines del mapa"
 	L["Icon Alpha"] = "Transparencia del icono"
 	L["The alpha transparency of the icons"] = "La transparencia alfa de los iconos"
-	L["Icon"] = "El icono"
-	L["Options"] = "Opciones"
+	L["Show Coordinates"] = "Mostrar coordenadas"
+	L["Show Coordinates Description"] = "Mostrar " ..ns.colour.highlight
+		.."coordenadas\124r en información sobre herramientas en el mapa del mundo y en el minimapa"
+	L["Map Pin Selections"] = "Selecciones de pines de mapa"
 	L["Gold"] = "Oro"
 	L["Red"] = "Rojo"
 	L["Blue"] = "Azul"
@@ -143,25 +135,22 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Phasing"] = "Sincronización"	
 	L["Raptor egg"] = "Huevo de raptor"	
 	L["Stars"] = "Estrellas"
-	L["NPC"] = "PNJ"
-	L["Show Coordinates"] = "Mostrar coordenadas"
-	L["Show Coordinates Description"] = "Mostrar " ..ns.colour.highlight
-		.."coordenadas\124r en información sobre herramientas en el mapa del mundo y en el minimapa"
-
+	L["Screw"] = "Tornillo"
+	
 elseif ns.locale == "frFR" then
-	L["Midsummer Fire Festival"] = "Fête du Feu du solstice d'été"
-	L["AddOn Description"] = "Aide à l'événement mondial Fête du Feu du solstice d'été"
 	L["Character"] = "Personnage"
 	L["Account"] = "le Compte"
 	L["Completed"] = "Achevé"
 	L["Not Completed"] = "Non achevé"
-	L["Icon Selection"] = "Sélection d'icônes"
-	L["Icon Scale"] = "Echelle de l’icône"
-	L["The scale of the icons"] = "L'échelle des icônes"
-	L["Icon Alpha"] = "Transparence de l'icône"
-	L["The alpha transparency of the icons"] = "La transparence des icônes"
-	L["Icon"] = "L'icône"
 	L["Options"] = "Options"
+	L["Map Pin Size"] = "Taille des épingles"
+	L["The Map Pin Size"] = "La taille des épingles de carte"
+	L["Map Pin Alpha"] = "Alpha des épingles de carte"
+	L["The alpha transparency of the map pins"] = "La transparence alpha des épingles de la carte"
+	L["Show Coordinates"] = "Afficher les coordonnées"
+	L["Show Coordinates Description"] = "Afficher " ..ns.colour.highlight
+		.."les coordonnées\124r dans les info-bulles sur la carte du monde et la mini-carte"
+	L["Map Pin Selections"] = "Sélections de broches de carte"
 	L["Gold"] = "Or"
 	L["Red"] = "Rouge"
 	L["Blue"] = "Bleue"
@@ -179,24 +168,21 @@ elseif ns.locale == "frFR" then
 	L["Phasing"] = "Synchronisation"
 	L["Raptor egg"] = "Œuf de Rapace"
 	L["Stars"] = "Étoiles"
-	L["NPC"] = "PNJ"
-	L["Show Coordinates"] = "Afficher les coordonnées"
-	L["Show Coordinates Description"] = "Afficher " ..ns.colour.highlight
-		.."les coordonnées\124r dans les info-bulles sur la carte du monde et la mini-carte"
-
+	L["Screw"] = "Vis"
+	
 elseif ns.locale == "itIT" then
-	L["Midsummer Fire Festival"] = "Fuochi di Mezza Estate"
-	L["AddOn Description"] = "Assiste con l'evento mondiale Fuochi di Mezza Estate"
 	L["Character"] = "Personaggio"
 	L["Completed"] = "Completo"
 	L["Not Completed"] = "Non Compiuto"
-	L["Icon Selection"] = "Selezione dell'icona"
-	L["Icon Scale"] = "Scala delle icone"
-	L["The scale of the icons"] = "La scala delle icone"
-	L["Icon Alpha"] = "Icona alfa"
-	L["The alpha transparency of the icons"] = "La trasparenza alfa delle icone"
-	L["Icon"] = "Icona"
 	L["Options"] = "Opzioni"
+	L["Map Pin Size"] = "Dimensione del pin"
+	L["The Map Pin Size"] = "La dimensione dei Pin della mappa"
+	L["Map Pin Alpha"] = "Mappa pin alfa"
+	L["The alpha transparency of the map pins"] = "La trasparenza alfa dei pin della mappa"
+	L["Show Coordinates"] = "Mostra coordinate"
+	L["Show Coordinates Description"] = "Visualizza " ..ns.colour.highlight
+		.."le coordinate\124r nelle descrizioni comandi sulla mappa del mondo e sulla minimappa"
+	L["Map Pin Selections"] = "Selezioni pin mappa"
 	L["Gold"] = "Oro"
 	L["Red"] = "Rosso"
 	L["Blue"] = "Blu"
@@ -214,25 +200,21 @@ elseif ns.locale == "itIT" then
 	L["Phasing"] = "Sincronizzazione"
 	L["Raptor egg"] = "Raptor Uovo"
 	L["Stars"] = "Stelle"
-	L["NPC"] = "PNG"
-	L["Show Coordinates"] = "Mostra coordinate"
-	L["Show Coordinates Description"] = "Visualizza " ..ns.colour.highlight
-		.."le coordinate\124r nelle descrizioni comandi sulla mappa del mondo e sulla minimappa"
+	L["Screw"] = "Vite"
 
 elseif ns.locale == "koKR" then
-	L["Midsummer Fire Festival"] = "한여름 불꽃축제"
-	L["AddOn Description"] = "한여름 불꽃축제 대규모 이벤트 지원"	
 	L["Character"] = "캐릭터"
 	L["Account"] = "계정"
 	L["Completed"] = "완료"
 	L["Not Completed"] = "미완료"
-	L["Icon Selection"] = "아이콘 선택"
-	L["Icon Scale"] = "아이콘 크기 비율"
-	L["The scale of the icons"] = "아이콘의 크기 비율입니다"
-	L["Icon Alpha"] = "아이콘 투명도"
-	L["The alpha transparency of the icons"] = "아이콘의 투명도입니다"
-	L["Icon"] = "아이콘"
+	L["Map Pin Size"] = "지도 핀의 크기"
 	L["Options"] = "설정"
+	L["The Map Pin Size"] = "지도 핀의 크기"
+	L["Map Pin Alpha"] = "지도 핀의 알파"
+	L["The alpha transparency of the map pins"] = "지도 핀의 알파 투명도"
+	L["Show Coordinates"] = "좌표 표시"
+	L["Show Coordinates Description"] = "세계지도 및 미니지도의 도구 설명에 좌표를 표시합니다."
+	L["Map Pin Selections"] = "지도 핀 선택"
 	L["Gold"] = "금"
 	L["Red"] = "빨간"
 	L["Blue"] = "푸른"
@@ -250,23 +232,22 @@ elseif ns.locale == "koKR" then
 	L["Phasing"] = "동기화 중"
 	L["Raptor egg"] = "랩터의 알"
 	L["Stars"] = "별"
-	L["Show Coordinates"] = "좌표 표시"
-	L["Show Coordinates Description"] = "세계지도 및 미니지도의 도구 설명에 좌표를 표시합니다."
-		
+	L["Screw"] = "나사"
+	
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
-	L["Midsummer Fire Festival"] = "Festival do Fogo do Solstício"
-	L["AddOn Description"] = "Auxilia no evento mundial Festival do Fogo do Solstício"
 	L["Character"] = "Personagem"
 	L["Account"] = "à Conta"
 	L["Completed"] = "Concluído"
 	L["Not Completed"] = "Não Concluído"
-	L["Icon Selection"] = "Seleção de ícones"
-	L["Icon Scale"] = "Escala de Ícone"
-	L["The scale of the icons"] = "A escala dos ícones"
-	L["Icon Alpha"] = "Ícone Alpha"
-	L["The alpha transparency of the icons"] = "A transparência alfa dos ícones"
-	L["Icon"] = "Ícone"
 	L["Options"] = "Opções"
+	L["Map Pin Size"] = "Tamanho do pino"
+	L["The Map Pin Size"] = "O tamanho dos pinos do mapa"
+	L["Map Pin Alpha"] = "Alfa dos pinos do mapa"
+	L["The alpha transparency of the map pins"] = "A transparência alfa dos pinos do mapa"
+	L["Show Coordinates"] = "Mostrar coordenadas"
+	L["Show Coordinates Description"] = "Exibir " ..ns.colour.highlight
+		.."coordenadas\124r em dicas de ferramentas no mapa mundial e no minimapa"
+	L["Map Pin Selections"] = "Seleções de pinos de mapa"
 	L["Gold"] = "Ouro"
 	L["Red"] = "Vermelho"
 	L["Blue"] = "Azul"
@@ -284,25 +265,22 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Phasing"] = "Sincronização"
 	L["Raptor egg"] = "Ovo de raptor"
 	L["Stars"] = "Estrelas"
-	L["NPC"] = "PNJ"
-	L["Show Coordinates"] = "Mostrar coordenadas"
-	L["Show Coordinates Description"] = "Exibir " ..ns.colour.highlight
-		.."coordenadas\124r em dicas de ferramentas no mapa mundial e no minimapa"
+	L["Screw"] = "Parafuso"
 
 elseif ns.locale == "ruRU" then
-	L["Midsummer Fire Festival"] = "Огненный Солнцеворот"
-	L["AddOn Description"] = "Помогает с игровое событие Огненный Солнцеворот"
 	L["Character"] = "Персонажа"
 	L["Account"] = "Счет"
 	L["Completed"] = "Выполнено"
 	L["Not Completed"] = "Не Выполнено"
-	L["Icon Selection"] = "Выбор Значка"
-	L["Icon Scale"] = "Масштаб Значка"
-	L["The scale of the icons"] = "Масштаб для Значков"
-	L["Icon Alpha"] = "Альфа Значок"
-	L["The alpha transparency of the icons"] = "Альфа-прозрачность Значков"
-	L["Icon"] = "Альфа Значок"
 	L["Options"] = "Параметры"
+	L["Map Pin Size"] = "Размер булавки"
+	L["The Map Pin Size"] = "Размер булавок на карте"
+	L["Map Pin Alpha"] = "Альфа булавок карты"
+	L["The alpha transparency of the map pins"] = "Альфа-прозрачность булавок карты"
+	L["Show Coordinates"] = "Показать Координаты"
+	L["Show Coordinates Description"] = "Отображает " ..ns.colour.highlight
+		.."координаты\124r во всплывающих подсказках на карте мира и мини-карте"
+	L["Map Pin Selections"] = "Выбор булавки карты"
 	L["Gold"] = "Золото"
 	L["Red"] = "Красный"
 	L["Blue"] = "Синий"
@@ -320,24 +298,21 @@ elseif ns.locale == "ruRU" then
 	L["Phasing"] = "Синхронизация"
 	L["Raptor egg"] = "Яйцо ящера"
 	L["Stars"] = "Звезды"
-	L["Show Coordinates"] = "Показать Координаты"
-	L["Show Coordinates Description"] = "Отображает " ..ns.colour.highlight
-		.."координаты\124r во всплывающих подсказках на карте мира и мини-карте"
+	L["Screw"] = "Винт"
 
 elseif ns.locale == "zhCN" then
-	L["Midsummer Fire Festival"] = "仲夏火焰节"
-	L["AddOn Description"] = "协助 仲夏火焰节 活动"
 	L["Character"] = "角色"
 	L["Account"] = "账号"
 	L["Completed"] = "已完成"
 	L["Not Completed"] = "未完成"
-	L["Icon Selection"] = "图标选择"
-	L["Icon Scale"] = "图示大小"
-	L["The scale of the icons"] = "图示的大小"
-	L["Icon Alpha"] = "图示透明度"
-	L["The alpha transparency of the icons"] = "图示的透明度"
-	L["Icon"] = "图示"
 	L["Options"] = "选项"
+	L["Map Pin Size"] = "地图图钉的大小"
+	L["The Map Pin Size"] = "地图图钉的大小"
+	L["Map Pin Alpha"] = "地图图钉的透明度"
+	L["The alpha transparency of the map pins"] = "地图图钉的透明度"
+	L["Show Coordinates"] = "显示坐标"
+	L["Show Coordinates Description"] = "在世界地图和迷你地图上的工具提示中" ..ns.colour.highlight .."显示坐标"
+	L["Map Pin Selections"] = "地图图钉选择"
 	L["Gold"] = "金子"
 	L["Red"] = "红"
 	L["Blue"] = "蓝"
@@ -355,23 +330,21 @@ elseif ns.locale == "zhCN" then
 	L["Phasing"] = "同步"
 	L["Raptor egg"] = "迅猛龙蛋"
 	L["Stars"] = "星星"
-	L["Show Coordinates"] = "显示坐标"
-	L["Show Coordinates Description"] = "在世界地图和迷你地图上的工具提示中" ..ns.colour.highlight .."显示坐标"
-
+	L["Screw"] = "拧"
+	
 elseif ns.locale == "zhTW" then
-	L["Midsummer Fire Festival"] = "仲夏火焰節"
-	L["AddOn Description"] = "協助 仲夏火焰節 活動"
 	L["Character"] = "角色"
 	L["Account"] = "賬號"
 	L["Completed"] = "完成"
 	L["Not Completed"] = "未完成"
-	L["Icon Selection"] = "圖標選擇"
-	L["Icon Scale"] = "圖示大小"
-	L["The scale of the icons"] = "圖示的大小"
-	L["Icon Alpha"] = "圖示透明度"
-	L["The alpha transparency of the icons"] = "圖示的透明度"
-	L["Icon"] = "圖示"
 	L["Options"] = "選項"
+	L["Map Pin Size"] = "地圖圖釘的大小"
+	L["The Map Pin Size"] = "地圖圖釘的大小"
+	L["Map Pin Alpha"] = "地圖圖釘的透明度"
+	L["The alpha transparency of the map pins"] = "地圖圖釘的透明度"
+	L["Show Coordinates"] = "顯示坐標"
+	L["Show Coordinates Description"] = "在世界地圖和迷你地圖上的工具提示中" ..ns.colour.highlight .."顯示坐標"
+	L["Map Pin Selections"] = "地圖圖釘選擇"
 	L["Gold"] = "金子"
 	L["Red"] = "紅"
 	L["Blue"] = "藍"
@@ -388,15 +361,58 @@ elseif ns.locale == "zhTW" then
 	L["Mana Orb"] = "法力球"
 	L["Phasing"] = "同步"
 	L["Raptor egg"] = "迅猛龍蛋"
-	L["Show Coordinates"] = "顯示坐標"
-	L["Show Coordinates Description"] = "在世界地圖和迷你地圖上的工具提示中" ..ns.colour.highlight .."顯示坐標"
-	
+	L["Stars"] = "星星"
+	L["Screw"] = "擰"
+
 else
+	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
 	if ns.locale == "enUS" then
 		L["Grey"] = "Gray"
 	end
+end
+
+ns.name = UnitName( "player" ) or "Character"
+ns.faction = UnitFactionGroup( "player" )
+
+if ns.locale == "deDE" then
+	L["Midsummer Fire Festival"] = "Sonnenwendfest"
+	L["AddOn Description"] = "Hilfe für Erfolge und Quests in Sonnenwendfest"
+
+elseif ns.locale == "esES" or ns.locale == "esMX" then
+	L["Midsummer Fire Festival"] = "Festival del Fuego del Solsticio de Verano"
+	L["AddOn Description"] = "Ayuda con el suceso mundial"
+		.."Festival del Fuego del Solsticio de Verano"
+
+elseif ns.locale == "frFR" then
+	L["Midsummer Fire Festival"] = "Fête du Feu du solstice d'été"
+	L["AddOn Description"] = "Aide à l'événement mondial Fête du Feu du solstice d'été"
+
+elseif ns.locale == "itIT" then
+	L["Midsummer Fire Festival"] = "Fuochi di Mezza Estate"
+	L["AddOn Description"] = "Assiste con l'evento mondiale Fuochi di Mezza Estate"
+
+elseif ns.locale == "koKR" then
+	L["Midsummer Fire Festival"] = "한여름 불꽃축제"
+	L["AddOn Description"] = "한여름 불꽃축제 대규모 이벤트 지원"	
+		
+elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
+	L["Midsummer Fire Festival"] = "Festival do Fogo do Solstício"
+	L["AddOn Description"] = "Auxilia no evento mundial Festival do Fogo do Solstício"
+
+elseif ns.locale == "ruRU" then
+	L["Midsummer Fire Festival"] = "Огненный Солнцеворот"
+	L["AddOn Description"] = "Помогает с игровое событие Огненный Солнцеворот"
+
+elseif ns.locale == "zhCN" then
+	L["Midsummer Fire Festival"] = "仲夏火焰节"
+	L["AddOn Description"] = "协助 仲夏火焰节 活动"
+
+elseif ns.locale == "zhTW" then
+	L["Midsummer Fire Festival"] = "仲夏火焰節"
+	L["AddOn Description"] = "協助 仲夏火焰節 活動"
+	
+else
 	L["AddOn Description"] = "Help for the Midsummer Fire Festival achievements"
-	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
 end
 
 -- Plugin handler for HandyNotes
@@ -409,7 +425,6 @@ function pluginHandler:OnEnter(mapFile, coord)
 
 	local pin = ns.points[ mapFile ] and ns.points[ mapFile ][ coord ]
 
-	local pName = UnitName( "player" ) or "Character"
 	local completed, aName, completedMe;
 	local bypassCoords = false
 	local showTip = true
@@ -421,8 +436,8 @@ function pluginHandler:OnEnter(mapFile, coord)
 					( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..L["Account"] ..")" ) 
 										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..L["Account"] ..")" ) )
 		GameTooltip:AddDoubleLine( " ",
-					( completedMe == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
-										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
+					( completedMe == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..ns.name ..")" ) 
+										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..ns.name ..")" ) )
 		completedMe = IsQuestFlaggedCompleted( pin.quest )
 		if (pin.index or pin.indexA or pin.indexH) then
 			aName = GetAchievementCriteriaInfo( (pin.aID or pin.aIDA or pin.aIDH), (pin.index or pin.indexA or pin.indexH) )
@@ -432,11 +447,11 @@ function pluginHandler:OnEnter(mapFile, coord)
 							or ( (completedMe == true ) and ( "\124cFF00FF00" ..L["Completed"] )
 														or ( "\124cFFFF0000" ..L["Not Completed"] ) )
 			aName = GetTitleForQuestID( pin.quest ) or pin.label		
-			GameTooltip:AddDoubleLine( ns.colour.highlight.. aName, ( status .." (" ..pName ..")" ) )
+			GameTooltip:AddDoubleLine( ns.colour.highlight.. aName, ( status .." (" ..ns.name ..")" ) )
 		else
 			GameTooltip:AddDoubleLine( ns.colour.highlight.. aName,
-					( completedMe == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
-										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
+					( completedMe == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..ns.name ..")" ) 
+										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..ns.name ..")" ) )
 		end
 	elseif ( pin.group == "I" ) then
 		GameTooltip:SetText( ns.colour.prefix ..pin.title )
@@ -493,29 +508,29 @@ do
 					if ( ShowConditionallyE( (pin.aID or pin.aIDA or pin.aIDH), 
 											(pin.index or pin.indexA or pin.indexH) ) == true ) then
 						if ( ShowConditionallyS( pin.quest ) == true ) then
-							return coord, nil, ns.textures[ns.db.icon_honor],
-								ns.db.icon_scale * ns.scaling[ns.db.icon_honor], ns.db.icon_alpha
+							return coord, nil, ns.textures[ns.db.iconHonor],
+								ns.db.iconScale * ns.scaling[ns.db.iconHonor], ns.db.iconAlpha
 						end
 					end
 				elseif ( pin.group == "D" ) then
 					if ( ShowConditionallyE( (pin.aID or pin.aIDA or pin.aIDH), 
 											(pin.index or pin.indexA or pin.indexH) ) == true ) then
 						if ( ShowConditionallyS( pin.quest ) == true ) then
-							return coord, nil, ns.textures[ns.db.icon_desecrate],
-								ns.db.icon_scale * ns.scaling[ns.db.icon_desecrate], ns.db.icon_alpha
+							return coord, nil, ns.textures[ns.db.iconDesecrate],
+								ns.db.iconScale * ns.scaling[ns.db.iconDesecrate], ns.db.iconAlpha
 						end
 					end
 				elseif ( pin.group == "T" ) then
 					if ( ShowConditionallyE( (pin.aID or pin.aIDA or pin.aIDH), 
 											(pin.index or pin.indexA or pin.indexH) ) == true ) then
 						if ( ShowConditionallyS( pin.quest ) == true ) then
-							return coord, nil, ns.textures[ns.db.icon_thief],
-								ns.db.icon_scale * ns.scaling[ns.db.icon_thief], ns.db.icon_alpha
+							return coord, nil, ns.textures[ns.db.iconThief],
+								ns.db.iconScale * ns.scaling[ns.db.iconThief], ns.db.iconAlpha
 						end
 					end
 				else
-					return coord, nil, ns.textures[ns.db.icon_thief],
-						ns.db.icon_scale * ns.scaling[ns.db.icon_thief], ns.db.icon_alpha
+					return coord, nil, ns.textures[ns.db.iconThief],
+						ns.db.iconScale * ns.scaling[ns.db.iconThief], ns.db.iconAlpha
 				end
 			end
 			coord, pin = next(t, coord)
@@ -543,21 +558,21 @@ ns.options = {
 			name = " " ..L["Options"],
 			inline = true,
 			args = {
-				icon_scale = {
+				iconScale = {
 					type = "range",
-					name = L["Icon Scale"],
-					desc = L["The scale of the icons"],
+					name = L["Map Pin Size"],
+					desc = L["The Map Pin Size"],
 					min = 1, max = 4, step = 0.1,
-					arg = "icon_scale",
-					order = 2,
+					arg = "iconScale",
+					order = 1,
 				},
-				icon_alpha = {
+				iconAlpha = {
 					type = "range",
-					name = L["Icon Alpha"],
-					desc = L["The alpha transparency of the icons"],
+					name = L["Map Pin Alpha"],
+					desc = L["The alpha transparency of the map pins"],
 					min = 0, max = 1, step = 0.01,
-					arg = "icon_alpha",
-					order = 3,
+					arg = "iconAlpha",
+					order = 2,
 				},
 				showCoords = {
 					name = L["Show Coordinates"],
@@ -566,7 +581,7 @@ ns.options = {
 					type = "toggle",
 					width = "full",
 					arg = "showCoords",
-					order = 4,
+					order = 3,
 				},
 				removeSeasonal = {
 					name = "Remove Bonfire / Flame Keeper markers if completed this season by " ..ns.name,
@@ -574,7 +589,7 @@ ns.options = {
 					type = "toggle",
 					width = "full",
 					arg = "removeSeasonal",
-					order = 5,
+					order = 4,
 				},
 				removeEver = {
 					name = "Remove marker if ever completed on this account",
@@ -582,16 +597,16 @@ ns.options = {
 					type = "toggle",
 					width = "full",
 					arg = "removeEver",
-					order = 6,
+					order = 5,
 				},
 			},
 		},
 		icon = {
 			type = "group",
-			name = L["Icon Selection"],
+			name = L["Map Pin Selections"],
 			inline = true,
 			args = {
-				icon_honor = {
+				iconHonor = {
 					type = "range",
 					name = L["Honor the Flames"],
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"]
@@ -600,10 +615,10 @@ ns.options = {
 							..L["Fire Flower"] .."\n9 = " ..L["Fire Potion"] .."\n10 = "
 							..L["MFF Symbol Blue"] .."\n11 = " ..L["MFF Symbol Brown"], 
 					min = 1, max = 11, step = 1,
-					arg = "icon_honor",
-					order = 7,
+					arg = "iconHonor",
+					order = 6,
 				},
-				icon_desecrate = {
+				iconDesecrate = {
 					type = "range",
 					name = L["Desecrate/Extinguish"],
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"]
@@ -612,10 +627,10 @@ ns.options = {
 							..L["Fire Flower"] .."\n9 = " ..L["Fire Potion"] .."\n10 = "
 							..L["MFF Symbol Blue"] .."\n11 = " ..L["MFF Symbol Brown"], 
 					min = 1, max = 11, step = 1,
-					arg = "icon_desecrate",
-					order = 8,
+					arg = "iconDesecrate",
+					order = 7,
 				},
-				icon_thief = {
+				iconThief = {
 					type = "range",
 					name = L["Thief's Reward"],
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"]
@@ -624,8 +639,8 @@ ns.options = {
 							..L["Fire Flower"] .."\n9 = " ..L["Fire Potion"] .."\n10 = "
 							..L["MFF Symbol Blue"] .."\n11 = " ..L["MFF Symbol Brown"], 
 					min = 1, max = 11, step = 1,
-					arg = "icon_thief",
-					order = 9,
+					arg = "iconThief",
+					order = 8,
 				},
 			},
 		},

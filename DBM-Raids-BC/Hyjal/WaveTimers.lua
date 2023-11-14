@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("HyjalWaveTimers", "DBM-Raids-BC", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230803073048")
+mod:SetRevision("20230913090658")
 
 mod:RegisterEvents(
 	"GOSSIP_SHOW",
@@ -37,7 +37,7 @@ function mod:GOSSIP_SHOW()
 		local selection
 		if table and table[1] then
 			selection = table[1].name or nil
-		else
+		elseif GetGossipOptions then
 			selection = GetGossipOptions()
 		end
 		if selection then

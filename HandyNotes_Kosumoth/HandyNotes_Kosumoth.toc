@@ -1,8 +1,8 @@
-## Interface: 100002
+## Interface: 100200
 ## Title: HandyNotes: Kosumoth
 ## Notes: You want to find the orbs to enable Kosumoth? Sure, why not?
 ## Author: Kemayo
-## Version: v7
+## Version: v8
 ## DefaultState: enabled
 ## X-Category: Achievements
 ## X-eMail: kemayo @ gmail DOT com

@@ -1272,4 +1272,14 @@ GTFO.SpellID["398140"] = {
 	ignoreApplication = true;
 };
 
+GTFO.SpellID["392731"] = {
+	--desc = "Glaciate (UP/UK - Heroic+)";
+	sound = 1;
+}
+
+GTFO.SpellID["412964"] = {
+	--desc = "Glaciate (UP/UK - Heroic+)";
+	sound = 1;
+}
+
 end

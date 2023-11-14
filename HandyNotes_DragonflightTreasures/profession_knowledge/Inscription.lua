@@ -110,3 +110,22 @@ ns.RegisterPoints(ns.ZARALEKCAVERN, {
         vignette=5741,
     },
 }, dfinsknowledge)
+
+ns.RegisterPoints(ns.EMERALDDREAM, {
+    [63507152] = {
+        hide_before=ns.conditions.QuestComplete(76320), -- Wild Gods in Our Midst
+        loot={210459}, -- Grove Keeper's Pillar
+        quest=78412,
+        vignette=5944,
+    },
+    [55642749] = {
+        loot={210458}, -- Winnie's Notes on Flora and Fauna
+        quest=78411,
+        vignette=5943,
+    },
+    [36044664] = {
+        loot={210460}, -- Primalist Shadowbinding Rune
+        quest=78413,
+        vignette=5945,
+    },
+}, dfinsknowledge)

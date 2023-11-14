@@ -38,40 +38,40 @@ local TNRank            = L["handler_tooltip_TNTIER"]
 
 local areaPoisToRemove = {
     -- Alliance
-    [5846] = true, -- Vol'dun
-    [5847] = true, -- Nazmir
-    [5848] = true, -- Zuldazar
-    [5873] = true, -- Dustwallow Marsh, Boat to Menethil Harbor, Wetlands
-    [5874] = true, -- Wetlands, Boat to Theramore Isle, Dustwallow Marsh
-    [5875] = true, -- Wetlands, Boat to Daggercap Bay, Howling Fjord
-    [5876] = true, -- Howling Fjord, Boat to Menethil Harbor, Wetlands
-    [5877] = true, -- Borean Tundra, Boat to Stormwind City
-    [5878] = true, -- Stormwind, Boat to Valiance Keep, Borean Tundra
-    [5879] = true, -- Stormwind, Boat to Boralus Harbor, Tiragarde Sound
-    [5880] = true, -- Tiragarde Sound, Boat to Stormwind City
-    [5892] = true, -- The Jade Forest, Portal to Stormwind City
-    [6014] = true, -- Stormwind Portal Room
-    [7340] = true, -- Thaldraszus, Boat to Stormwind
+    5846, -- Vol'dun
+    5847, -- Nazmir
+    5848, -- Zuldazar
+    5873, -- Dustwallow Marsh, Boat to Menethil Harbor, Wetlands
+    5874, -- Wetlands, Boat to Theramore Isle, Dustwallow Marsh
+    5875, -- Wetlands, Boat to Daggercap Bay, Howling Fjord
+    5876, -- Howling Fjord, Boat to Menethil Harbor, Wetlands
+    5877, -- Borean Tundra, Boat to Stormwind City
+    5878, -- Stormwind, Boat to Valiance Keep, Borean Tundra
+    5879, -- Stormwind, Boat to Boralus Harbor, Tiragarde Sound
+    5880, -- Tiragarde Sound, Boat to Stormwind City
+    5892, -- The Jade Forest, Portal to Stormwind City
+    6014, -- Stormwind Portal Room
+    7340, -- Thaldraszus, Boat to Stormwind
 
     -- Horde
-    [5843] = true, -- Drustvar
-    [5844] = true, -- Tiragarde Sound
-    [5845] = true, -- Stormsong Valley
-    [5883] = true, -- Northern Stranglethorn, Zeppelin to Orgrimmar
-    [5884] = true, -- Orgrimmar, Zeppelin to Grom'gol, Schlingendorntal
-    [5885] = true, -- Orgrimmar, Zeppelin to Warsong Hold, Borean Tundra
-    [5886] = true, -- Borean Tundra, Zeppelin to Orgrimmar
-    [5887] = true, -- Echo Isles, Boat to Dazar'alor, Zuldazar
-    [5888] = true, -- Zuldazar, Boat to Echo Isles, Durotar
-    [5890] = true, -- The Jade Forest, Portal to Orgrimmar
-    [6015] = true, -- Orgrimmar Portal Room
-    [6138] = true, -- Mechagon
-    [7339] = true, -- Thaldraszus, Zeppelin to Orgrimmar
-    [7341] = true, -- Durotar, Zeppelin to the Waking Shores, Dragon Isles
+    5843, -- Drustvar
+    5844, -- Tiragarde Sound
+    5845, -- Stormsong Valley
+    5883, -- Northern Stranglethorn, Zeppelin to Orgrimmar
+    5884, -- Orgrimmar, Zeppelin to Grom'gol, Schlingendorntal
+    5885, -- Orgrimmar, Zeppelin to Warsong Hold, Borean Tundra
+    5886, -- Borean Tundra, Zeppelin to Orgrimmar
+    5887, -- Echo Isles, Boat to Dazar'alor, Zuldazar
+    5888, -- Zuldazar, Boat to Echo Isles, Durotar
+    5890, -- The Jade Forest, Portal to Orgrimmar
+    6015, -- Orgrimmar Portal Room
+    6138, -- Mechagon
+    7339, -- Thaldraszus, Zeppelin to Orgrimmar
+    7341, -- Durotar, Zeppelin to the Waking Shores, Dragon Isles
 
     -- Neutral
-    [5881] = true, -- The Cape of Stranglethorn, Boat to Ratschet
-    [5882] = true -- Northern Barrens, Boat to Booty Bay
+    5881, -- The Cape of Stranglethorn, Boat to Ratschet
+    5882 -- Northern Barrens, Boat to Booty Bay
 }
 
 ----------------------------------------------------------------------------------------------------
@@ -81,21 +81,25 @@ local areaPoisToRemove = {
 -- This will remove specified AreaPois on the WorldMapFrame
 local function RemoveAreaPOIs()
     if (not private.db.remove_AreaPois) then return end
+
     for pin in WorldMapFrame:EnumeratePinsByTemplate("AreaPOIPinTemplate") do
-        if (areaPoisToRemove[pin.areaPoiID]) then
-            WorldMapFrame:RemovePin(pin)
-            addon:debugmsg("removed AreaPoi " .. pin.areaPoiID .. " " .. pin.name)
+        for _, poiID in ipairs(areaPoisToRemove) do
+            local poi = C_AreaPoiInfo.GetAreaPOIInfo(WorldMapFrame:GetMapID(), pin.areaPoiID)
+            if (poi ~= nil and poi.areaPoiID == poiID) then
+                WorldMapFrame:RemovePin(pin)
+                addon:debugmsg("removed AreaPoi "..poiID.." "..poi.name)
+            end
         end
     end
 end
 
-do
-    for dataProvider in pairs(WorldMapFrame.dataProviders) do
-        if (dataProvider.RefreshAllData == AreaPOIDataProviderMixin.RefreshAllData) then
-            hooksecurefunc(dataProvider, "RefreshAllData", RemoveAreaPOIs)
-        end
-    end
-end
+hooksecurefunc(WorldMapFrame, "OnMapChanged", function()
+    RemoveAreaPOIs()
+end)
+
+WorldMapFrame:HookScript("OnShow", function()
+    RemoveAreaPOIs()
+end)
 
 ----------------------------------------------------------------------------------------------------
 ----------------------------------------------FUNCTIONS---------------------------------------------
@@ -397,7 +401,7 @@ local function closeAllDropdowns()
 end
 
 local function addTomTomWaypoint(button, uMapID, coord)
-    if (IsAddOnLoaded("TomTom")) then
+    if (C_AddOns.IsAddOnLoaded("TomTom")) then
         local x, y = HandyNotes:getXY(coord)
         TomTom:AddWaypoint(uMapID, x, y, {
             title = GetPointInfoByCoord(uMapID, coord),
@@ -439,7 +443,7 @@ do
             }, level)
 
             -- TomTom waypoint menu item
-            if (IsAddOnLoaded("TomTom")) then
+            if (C_AddOns.IsAddOnLoaded("TomTom")) then
                 UIDropDownMenu_AddButton({
                     text = L["handler_context_menu_add_tomtom"],
                     notCheckable = true,
@@ -482,7 +486,7 @@ do
     HL_Dropdown.initialize = generateMenu
 
     function PluginHandler:OnClick(button, down, uMapID, coord)
-        local TomTom = select(2, IsAddOnLoaded('TomTom'))
+        local TomTom = select(2, C_AddOns.IsAddOnLoaded('TomTom'))
         local dropdown = private.db.easy_waypoint_dropdown
 
         if (down or button ~= "RightButton") then return end

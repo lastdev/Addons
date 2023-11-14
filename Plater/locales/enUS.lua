@@ -5,8 +5,16 @@ do
 
     --add to curseforge
 
-
     --on curseforge
+    L["OPTIONS_NOTHING_TO_EXPORT"] = "There's nothing to export."
+    L["IMPORT"] = "Import"
+    L["EXPORT"] = "Export"
+    L["IMPORT_CAST_COLORS"] = "Import Colors"
+    L["EXPORT_CAST_COLORS"] = "Export Colors"
+    L["OPTIONS_SHOWOPTIONS"] = "Show Options"
+    L["OPTIONS_SHOWSCRIPTS"] = "Show Scripts"
+    L["OPTIONS_CASTCOLORS_DISABLECOLORS"] = "Disable All Colors"
+
     L["OPTIONS_NOESSENTIAL_TITLE"] = "Skip Non Essential Script Patches"
     L["OPTIONS_NOESSENTIAL_NAME"] = "Disable non-essential script updates during Plater version upgrades."
     L["OPTIONS_NOESSENTIAL_DESC"] = "On updating Plater, it is common for the new version to also update scripts from the scripts tab.\nThis may sometimes overwrite changes made by the creator of the profile. The option below prevents Plater from modifying scripts when the addon receives an update.\n\nNote: During major patches and bug fixes, Plater may still update scripts."
@@ -366,9 +374,13 @@ do
 
 
 ------------------------------------------------------------
+L["EXPORT"] = "Export"
+L["EXPORT_CAST_COLORS"] = "Export Colors"
 L["HIGHLIGHT_HOVEROVER"] = "Hover Over Highlight"
 L["HIGHLIGHT_HOVEROVER_ALPHA"] = "Hover Over Highlight Alpha"
 L["HIGHLIGHT_HOVEROVER_DESC"] = "Highlight effect when the mouse is over the nameplate."
+L["IMPORT"] = "Import"
+L["IMPORT_CAST_COLORS"] = "Import Colors"
 L["OPTIONS_ALPHA"] = "Alpha"
 L["OPTIONS_ALPHABYFRAME_ALPHAMULTIPLIER"] = "Transparency multiplier."
 L["OPTIONS_ALPHABYFRAME_DEFAULT"] = "Default Transparency"
@@ -443,6 +455,7 @@ L["OPTIONS_CASTBAR_SPARK_HIDE_INTERRUPT"] = "Hide Spark On Interrupt"
 L["OPTIONS_CASTBAR_TOGGLE_TEST"] = "Toggle Cast Bar Test"
 L["OPTIONS_CASTBAR_TOGGLE_TEST_DESC"] = "Start cast bar test, press again to stop."
 L["OPTIONS_CASTBAR_WIDTH"] = "Width of the cast bar."
+L["OPTIONS_CASTCOLORS_DISABLECOLORS"] = "Disable All Colors"
 L["OPTIONS_CLICK_SPACE_HEIGHT"] = "The height of the are area which accepts mouse clicks to select the target"
 L["OPTIONS_CLICK_SPACE_WIDTH"] = "The width of the are area which accepts mouse clicks to select the target"
 L["OPTIONS_COLOR"] = "Color"
@@ -555,6 +568,7 @@ Note: During major patches and bug fixes, Plater may still update scripts.]=]
 L["OPTIONS_NOESSENTIAL_NAME"] = "Disable non-essential script updates during Plater version upgrades."
 L["OPTIONS_NOESSENTIAL_SKIP_ALERT"] = "Skipped non-essential patch:"
 L["OPTIONS_NOESSENTIAL_TITLE"] = "Skip Non Essential Script Patches"
+L["OPTIONS_NOTHING_TO_EXPORT"] = "There's nothing to export."
 L["OPTIONS_OKAY"] = "Okay"
 L["OPTIONS_OUTLINE"] = "Outline"
 L["OPTIONS_PERSONAL_HEALTHBAR_HEIGHT"] = "Height of the health bar."
@@ -604,6 +618,8 @@ L["OPTIONS_SHADOWCOLOR"] = "Shadow Color"
 L["OPTIONS_SHIELD_BAR"] = "Shield Bar"
 L["OPTIONS_SHOW_CASTBAR"] = "Show cast bar"
 L["OPTIONS_SHOW_POWERBAR"] = "Show power bar"
+L["OPTIONS_SHOWOPTIONS"] = "Show Options"
+L["OPTIONS_SHOWSCRIPTS"] = "Show Scripts"
 L["OPTIONS_SHOWTOOLTIP"] = "Show Tooltip"
 L["OPTIONS_SHOWTOOLTIP_DESC"] = "Show tooltip when hovering over the aura icon."
 L["OPTIONS_SIZE"] = "Size"

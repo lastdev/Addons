@@ -5,11 +5,19 @@ do
 
 ------------------------------------------------------------
 --[[Translation missing --]]
+L["EXPORT"] = "Export"
+--[[Translation missing --]]
+L["EXPORT_CAST_COLORS"] = "Export Colors"
+--[[Translation missing --]]
 L["HIGHLIGHT_HOVEROVER"] = "Hover Over Highlight"
 --[[Translation missing --]]
 L["HIGHLIGHT_HOVEROVER_ALPHA"] = "Hover Over Highlight Alpha"
 --[[Translation missing --]]
 L["HIGHLIGHT_HOVEROVER_DESC"] = "Highlight effect when the mouse is over the nameplate."
+--[[Translation missing --]]
+L["IMPORT"] = "Import"
+--[[Translation missing --]]
+L["IMPORT_CAST_COLORS"] = "Import Colors"
 L["OPTIONS_ALPHA"] = "Alfa"
 --[[Translation missing --]]
 L["OPTIONS_ALPHABYFRAME_ALPHAMULTIPLIER"] = "Transparency multiplier."
@@ -142,6 +150,8 @@ L["OPTIONS_CASTBAR_TOGGLE_TEST"] = "Toggle Cast Bar Test"
 L["OPTIONS_CASTBAR_TOGGLE_TEST_DESC"] = "Start cast bar test, press again to stop."
 --[[Translation missing --]]
 L["OPTIONS_CASTBAR_WIDTH"] = "Width of the cast bar."
+--[[Translation missing --]]
+L["OPTIONS_CASTCOLORS_DISABLECOLORS"] = "Disable All Colors"
 --[[Translation missing --]]
 L["OPTIONS_CLICK_SPACE_HEIGHT"] = "The height of the are area which accepts mouse clicks to select the target"
 --[[Translation missing --]]
@@ -314,6 +324,8 @@ L["OPTIONS_NOESSENTIAL_NAME"] = "Disable non-essential script updates during Pla
 L["OPTIONS_NOESSENTIAL_SKIP_ALERT"] = "Skipped non-essential patch:"
 --[[Translation missing --]]
 L["OPTIONS_NOESSENTIAL_TITLE"] = "Skip Non Essential Script Patches"
+--[[Translation missing --]]
+L["OPTIONS_NOTHING_TO_EXPORT"] = "There's nothing to export."
 L["OPTIONS_OKAY"] = "Okay"
 L["OPTIONS_OUTLINE"] = "Contorno"
 --[[Translation missing --]]
@@ -383,6 +395,10 @@ L["OPTIONS_SHIELD_BAR"] = "Shield Bar"
 L["OPTIONS_SHOW_CASTBAR"] = "Show cast bar"
 --[[Translation missing --]]
 L["OPTIONS_SHOW_POWERBAR"] = "Show power bar"
+--[[Translation missing --]]
+L["OPTIONS_SHOWOPTIONS"] = "Show Options"
+--[[Translation missing --]]
+L["OPTIONS_SHOWSCRIPTS"] = "Show Scripts"
 --[[Translation missing --]]
 L["OPTIONS_SHOWTOOLTIP"] = "Show Tooltip"
 --[[Translation missing --]]

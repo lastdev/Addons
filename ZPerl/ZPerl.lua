@@ -8,8 +8,8 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: 65cc0eb2f0a1c4e7220000311b60bff4301390e2 $")
-XPerl_SetModuleRevision("$Revision: 65cc0eb2f0a1c4e7220000311b60bff4301390e2 $")
+end, "$Revision: 263d2ae491ffccc9c43a03f9bea2545213f07b9c $")
+XPerl_SetModuleRevision("$Revision: 263d2ae491ffccc9c43a03f9bea2545213f07b9c $")
 
 local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC

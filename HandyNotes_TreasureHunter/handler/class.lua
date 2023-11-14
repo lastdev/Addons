@@ -6,8 +6,6 @@ local Base = {
 }
 ns.Class = function(def)
     local class = def or {}
-    -- avoid needing to care about rawget later:
-    class.__get = class.__get or {}
     local class_meta = {
         __index = function(self, index)
             local class_walked = class
@@ -27,8 +25,11 @@ ns.Class = function(def)
             return self
         end,
         -- inheritance, this is it:
-        __index = def.__parent or Base,
+        __index = def.__parent,
     })
+    -- avoid needing to care about rawget later:
+    class.Initialize = class.Initialize or Base.Initialize
+    class.__get = class.__get or Base.__get
 
     return class
 end

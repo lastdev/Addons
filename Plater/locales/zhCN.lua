@@ -4,9 +4,17 @@ do
     local L = languageTable
 
 ------------------------------------------------------------
+--[[Translation missing --]]
+L["EXPORT"] = "Export"
+--[[Translation missing --]]
+L["EXPORT_CAST_COLORS"] = "Export Colors"
 L["HIGHLIGHT_HOVEROVER"] = "鼠标悬停高亮"
 L["HIGHLIGHT_HOVEROVER_ALPHA"] = "鼠标悬停高亮透明度"
 L["HIGHLIGHT_HOVEROVER_DESC"] = "鼠标放在姓名版上时的高亮效果."
+--[[Translation missing --]]
+L["IMPORT"] = "Import"
+--[[Translation missing --]]
+L["IMPORT_CAST_COLORS"] = "Import Colors"
 L["OPTIONS_ALPHA"] = "透明度"
 L["OPTIONS_ALPHABYFRAME_ALPHAMULTIPLIER"] = "透明度倍数."
 L["OPTIONS_ALPHABYFRAME_DEFAULT"] = "整体透明度"
@@ -81,6 +89,8 @@ L["OPTIONS_CASTBAR_SPARK_HIDE_INTERRUPT"] = "打断时隐藏火花"
 L["OPTIONS_CASTBAR_TOGGLE_TEST"] = "施法条测试开关"
 L["OPTIONS_CASTBAR_TOGGLE_TEST_DESC"] = "点一次开始测试, 再点一次停止."
 L["OPTIONS_CASTBAR_WIDTH"] = "施法条宽度"
+--[[Translation missing --]]
+L["OPTIONS_CASTCOLORS_DISABLECOLORS"] = "Disable All Colors"
 L["OPTIONS_CLICK_SPACE_HEIGHT"] = "接受鼠标点击以选择目标的区域的高度"
 L["OPTIONS_CLICK_SPACE_WIDTH"] = "接受鼠标点击来选择目标的区域的宽度"
 L["OPTIONS_COLOR"] = "颜色"
@@ -186,6 +196,8 @@ L["OPTIONS_NOESSENTIAL_DESC"] = "在更新 Plater 时,新版本通常也会从�
 L["OPTIONS_NOESSENTIAL_NAME"] = "在 Plater 版本升级期间禁用非必要的脚本更新."
 L["OPTIONS_NOESSENTIAL_SKIP_ALERT"] = "跳过非必要的补丁:"
 L["OPTIONS_NOESSENTIAL_TITLE"] = "跳过非必要的脚本Script补丁"
+--[[Translation missing --]]
+L["OPTIONS_NOTHING_TO_EXPORT"] = "There's nothing to export."
 L["OPTIONS_OKAY"] = "确定"
 L["OPTIONS_OUTLINE"] = "轮廓"
 --[[Translation missing --]]
@@ -258,6 +270,10 @@ L["OPTIONS_SHIELD_BAR"] = "Shield Bar"
 L["OPTIONS_SHOW_CASTBAR"] = "Show cast bar"
 --[[Translation missing --]]
 L["OPTIONS_SHOW_POWERBAR"] = "Show power bar"
+--[[Translation missing --]]
+L["OPTIONS_SHOWOPTIONS"] = "Show Options"
+--[[Translation missing --]]
+L["OPTIONS_SHOWSCRIPTS"] = "Show Scripts"
 --[[Translation missing --]]
 L["OPTIONS_SHOWTOOLTIP"] = "Show Tooltip"
 --[[Translation missing --]]

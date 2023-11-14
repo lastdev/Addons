@@ -18,9 +18,17 @@ points[ 1527 ] = {
 	[24700971] = { alpaca=true },
 	[24930956] = { alpaca=true },
 	
-	[28204900] = { alpaca=true },
+	[27374909] = { alpaca=true },
+	[27574936] = { alpaca=true },
+	[27984805] = { alpaca=true },
+	[28164848] = { alpaca=true },
+	[28224957] = { alpaca=true },
+	[28364936] = { alpaca=true },
 	
+	[30262896] = { alpaca=true },
+	[30322822] = { alpaca=true },
 	[30602860] = { alpaca=true },
+	[30842830] = { alpaca=true },
 	
 	[38480909] = { alpaca=true },
 	[38620969] = { alpaca=true },
@@ -31,14 +39,17 @@ points[ 1527 ] = {
 	[38621018] = { alpaca=true },
 	
 	[42407030] = { alpaca=true },
-	
-	[46204830] = { alpaca=true },
+		
+	[45804815] = { alpaca=true },
+	[46354906] = { alpaca=true },
+	[46454771] = { alpaca=true },
+	[46494879] = { alpaca=true },	
 
 	[52661855] = { alpaca=true },
 	[52841952] = { alpaca=true },
 	[53111960] = { alpaca=true },
 	[53381903] = { alpaca=true },
-	[53581844] = { alpaca=true },
+	[53581838] = { alpaca=true },
 
 	[55006992] = { alpaca=true },
 	[55036926] = { alpaca=true },
@@ -47,11 +58,11 @@ points[ 1527 ] = {
 	[55687063] = { alpaca=true },
 	[55817028] = { alpaca=true },
 	
-	[63031444] = { alpaca=true },
-	[63131413] = { alpaca=true },
+	[62841464] = { alpaca=true },
+	[63161400] = { alpaca=true },
 	[63231551] = { alpaca=true },
 	[63501544] = { alpaca=true },
-	[63761502] = { alpaca=true },
+	[64281476] = { alpaca=true },
 
 	[63125259] = { alpaca=true },
 	[63375298] = { alpaca=true },
@@ -64,11 +75,15 @@ points[ 1527 ] = {
 	[69883949] = { alpaca=true },
 	[69974005] = { alpaca=true },
 	[70003925] = { alpaca=true },
+	
 	[70363963] = { alpaca=true },
 	[70413862] = { alpaca=true },
 	[70473911] = { alpaca=true },
 	
-	[76406780] = { alpaca=true },
+	[76006798] = { alpaca=true },
+	[76036747] = { alpaca=true },
+	[76296708] = { alpaca=true },
+	[76666833] = { alpaca=true },
 	
 	[57408500] = { gersahlGreens=true },
 	[59008530] = { gersahlGreens=true },
@@ -154,15 +169,15 @@ scaling[4] = 0.55
 scaling[5] = 0.55
 scaling[6] = 0.55
 scaling[7] = 0.65
-scaling[8] = 0.63
+scaling[8] = 0.62
 scaling[9] = 0.75
 scaling[10] = 0.75
-scalingSpecial[1] = 0.38
-scalingSpecial[2] = 0.5
-scalingSpecial[3] = 0.5
-scalingSpecial[4] = 0.5
-scalingSpecial[5] = 0.46
-scalingSpecial[6] = 0.45
-scalingSpecial[7] = 0.41
-scalingSpecial[8] = 0.6
+scalingSpecial[1] = 0.37
+scalingSpecial[2] = 0.49
+scalingSpecial[3] = 0.49
+scalingSpecial[4] = 0.49
+scalingSpecial[5] = 0.43
+scalingSpecial[6] = 0.41
+scalingSpecial[7] = 0.395
+scalingSpecial[8] = 0.57
 scalingSpecial[9] = 0.43

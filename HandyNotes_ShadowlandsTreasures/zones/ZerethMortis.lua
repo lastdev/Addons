@@ -455,7 +455,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     [60002585] = {},
     [60853785] = {},
     [61401765] = {},
-    [63202605] = {},
+    [63202607] = {},
     [65952695] = {},
 }, {
     quest=65611,
@@ -781,7 +781,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     [53106385] = makeSchematic(65680, 190585, MOUNT, { -- Schematic: Heartbond Lupine
         note="Drops from {npc:179939} inside the Choral Residium",
     }),
-    [61402800] = makeSchematic(65391, 189459, MOUNT, { -- Schematic: Mawdapted Raptora
+    [61402800] = makeSchematic(65382, 189459, MOUNT, { -- Schematic: Mawdapted Raptora
         note="Drops from {npc:181412} in this area",
     }),
 }, schematic)

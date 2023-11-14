@@ -1,8 +1,7 @@
--- Spanish Translation by (EU) Krovikan-Minahonda
 local ADDON_NAME, ns = ...
 local L = ns.NewLocale('esES')
 if not L then return end
-
+-- Spanish Translation by Krovikan EU-Minahonda
 -------------------------------------------------------------------------------
 ------------------------------------ GEAR -------------------------------------
 -------------------------------------------------------------------------------
@@ -46,7 +45,7 @@ L['requirement_not_found'] = '¡Requerimiento de localización desconocido!'
 L['multiple_spawns'] = 'Puede aparecer en varios sitios.'
 L['shared_drops'] = 'Botín Compartido'
 
-L['Requires'] = 'Requiere'
+L['requires'] = 'Requiere'
 L['ranked_research'] = '%s (Rango %d/%d)'
 
 L['focus'] = 'Foco'
@@ -62,12 +61,14 @@ L['weekly'] = 'Semanal'
 L['normal'] = 'Normal'
 L['hard'] = 'Difícil'
 L['heirloom'] = 'Reliquia'
+L['item'] = 'Objeto'
 L['mount'] = 'Montura'
 L['pet'] = 'Mascota'
 L['recipe'] = 'Receta'
 L['spell'] = 'Hechizo'
 L['title'] = 'Título'
 L['toy'] = 'Juguete'
+L['currency'] = 'Moneda'
 L['rep'] = 'Reputación'
 L['completed'] = 'Terminado'
 L['incomplete'] = 'Incompleto'
@@ -78,6 +79,9 @@ L['unlearnable'] = 'No se puede aprender'
 L['defeated'] = 'Derrotado'
 L['undefeated'] = 'Sin derrotar'
 L['elite'] = 'Élite'
+L['quest'] = 'Misión'
+L['quest_repeatable'] = 'Misión Repetible'
+L['achievement'] = 'Logro'
 
 L['follower_type_follower'] = 'Seguidor'
 L['follower_type_champion'] = 'Campeón'
@@ -94,11 +98,18 @@ L['time_format_24hrs'] = '%H:%M - %d/%m Hora local'
 --------------------------------- DRAGONRACES ---------------------------------
 -------------------------------------------------------------------------------
 
-L['dr_best'] = 'Tu mejor tiempo:\n - Normal: %.3fs\n - Avanzado: %.3fs\n - Inverso: %.3fs'
-L['dr_best_dash'] = 'Tu mejor tiempo:\n - %.3fs'
-L['dr_note'] = 'Objetivo de tiempo:\n - Normal: %ss / %ss\n - Avanzado: %ss / %ss\n - Inverso: %ss / %ss'
-L['dr_note_dash'] = 'Objetivo de tiempo:\n - %ss / %ss'
-L['dr_bronze'] = '\n\nAcaba la carrera para conseguir el ' .. ns.color.Bronze('Bronce') .. '.'
+L['dr_your_best_time'] = 'Tu mejor tiempo:'
+L['dr_your_target_time'] = 'Tu mejor tiempo:'
+L['dr_best_time'] = ' - %s: %.3fs'
+L['dr_target_time'] = ' - %s: %ss / %ss'
+L['dr_normal'] = 'Normal'
+L['dr_advanced'] = 'Avanzado'
+L['dr_reverse'] = 'Inverso'
+L['dr_challenge'] = 'Desafío'
+L['dr_reverse_challenge'] = 'Desafío Inverso'
+L['dr_storm_race'] = 'Carrera de la Tormenta'
+L['dr_bronze'] = 'Acaba la carrera para conseguir el ' .. ns.color.Bronze('Bronce') .. '.'
+L['dr_vendor_note'] = 'Intercambia {currency:2588} por manuscritos de dracovigía y transfiguraciones.'
 L['options_icons_dragonrace'] = 'Carreras de Dragones'
 L['options_icons_dragonrace_desc'] = 'Muestra dónde están todas las Carreras de Dragones de la zona.'
 

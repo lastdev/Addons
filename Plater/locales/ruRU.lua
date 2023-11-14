@@ -4,9 +4,17 @@ do
     local L = languageTable
 
 ------------------------------------------------------------
+--[[Translation missing --]]
+L["EXPORT"] = "Export"
+--[[Translation missing --]]
+L["EXPORT_CAST_COLORS"] = "Export Colors"
 L["HIGHLIGHT_HOVEROVER"] = "Подсвечивание при наведении курсора"
 L["HIGHLIGHT_HOVEROVER_ALPHA"] = "Степень подсвечивания при наведении курсора"
 L["HIGHLIGHT_HOVEROVER_DESC"] = "Эффект подсвечивания при наведении курсора мыши над индикаторами здоровья"
+--[[Translation missing --]]
+L["IMPORT"] = "Import"
+--[[Translation missing --]]
+L["IMPORT_CAST_COLORS"] = "Import Colors"
 L["OPTIONS_ALPHA"] = "Прозрачность"
 L["OPTIONS_ALPHABYFRAME_ALPHAMULTIPLIER"] = "Множитель прозрачности."
 L["OPTIONS_ALPHABYFRAME_DEFAULT"] = "Прозрачность по умолчанию"
@@ -86,6 +94,8 @@ L["OPTIONS_CASTBAR_SPARK_HIDE_INTERRUPT"] = "Скрыть искру при пр
 L["OPTIONS_CASTBAR_TOGGLE_TEST"] = "Тест полосы заклинаний"
 L["OPTIONS_CASTBAR_TOGGLE_TEST_DESC"] = "Активировать тестовую полосу заклинаний, нажмите снова для остановки теста"
 L["OPTIONS_CASTBAR_WIDTH"] = "Ширина полосы заклинаний."
+--[[Translation missing --]]
+L["OPTIONS_CASTCOLORS_DISABLECOLORS"] = "Disable All Colors"
 L["OPTIONS_CLICK_SPACE_HEIGHT"] = "Высота области допустимая при выборе цели кликом мышью."
 L["OPTIONS_CLICK_SPACE_WIDTH"] = "Ширина области допустимая при выборе цели кликом мышью."
 L["OPTIONS_COLOR"] = "Цвет"
@@ -222,6 +232,8 @@ L["OPTIONS_NOESSENTIAL_NAME"] = "Disable non-essential script updates during Pla
 L["OPTIONS_NOESSENTIAL_SKIP_ALERT"] = "Skipped non-essential patch:"
 --[[Translation missing --]]
 L["OPTIONS_NOESSENTIAL_TITLE"] = "Skip Non Essential Script Patches"
+--[[Translation missing --]]
+L["OPTIONS_NOTHING_TO_EXPORT"] = "There's nothing to export."
 L["OPTIONS_OKAY"] = "Ок"
 L["OPTIONS_OUTLINE"] = "Контур"
 L["OPTIONS_PERSONAL_HEALTHBAR_HEIGHT"] = "Высота полосы здоровья."
@@ -279,6 +291,10 @@ L["OPTIONS_SHIELD_BAR"] = "Полоса Щита"
 L["OPTIONS_SHOW_CASTBAR"] = "Показывать полосу заклинаний"
 --[[Translation missing --]]
 L["OPTIONS_SHOW_POWERBAR"] = "Show power bar"
+--[[Translation missing --]]
+L["OPTIONS_SHOWOPTIONS"] = "Show Options"
+--[[Translation missing --]]
+L["OPTIONS_SHOWSCRIPTS"] = "Show Scripts"
 L["OPTIONS_SHOWTOOLTIP"] = "Показывать описание"
 --[[Translation missing --]]
 L["OPTIONS_SHOWTOOLTIP_DESC"] = "Show tooltip when hovering over the aura icon."

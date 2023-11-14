@@ -1,6 +1,6 @@
 # TL;DR Missions
 
-##  (2023-09-24)
+##  (2023-11-08)
  
 
-- Add (empty) .toc files for other versions of the game  
+- 10.2 update  

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2436, "DBM-Party-Shadowlands", 9, 1194)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220803233609")
+mod:SetRevision("20231020041658")
 mod:SetCreatureID(175646)
 mod:SetEncounterID(2424)
 mod:SetHotfixNoticeRev(20220405000000)
@@ -36,7 +36,7 @@ local timerHazardousLiquidsCD		= mod:NewCDTimer(52.1, 346286, nil, nil, nil, 3)
 local timerFanMailCD				= mod:NewCDTimer(25.1, 346293, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)
 local timerMoneyOrderCD				= mod:NewCDTimer(50.6, 346962, nil, nil, nil, 3)
 
-mod:GroupSpells(369133, 346947)--Unstable goods, one for spawn and one for holdin it, two diff icons so separated on purpose
+--mod:GroupSpells(369133, 346947)--Unstable goods, one for spawn and one for holdin it, two diff icons so separated on purpose
 
 mod.vb.goodPhase = 0
 mod.vb.fanCount = 0

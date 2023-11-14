@@ -15,6 +15,23 @@ How to support Altoholic's development :
 If you like the addon, consider supporting it, this has been the long term effort and commitment of a single person. #ArmyOfOne
 
 
+10.2.003 (11/11/2023)
+
+- DataStore_Currencies: Added the Dream Infusion currency.
+
+10.2.002 (08/11/2023)
+
+- DataStore_Currencies: Added the Emerald Dewrop currency.
+- Summary Tab : Added the Emerald Dewrop currency (Thanks Feral!)
+
+10.2.001 (08/11/2023)
+
+- DataStore_Crafts & DataStore_Currencies: Fixed a lua error related to artifacts.
+- Added new 10.2 currencies & reputations (Thanks Feral !)
+- DataStore_Auctions is now generic and works will all versions of the game.
+- DataStore_Inventory is now generic and works will all versions of the game.
+
+
 10.1.005 (18/05/2023)
 
 - DataStore_Agenda is now generic and works will all versions of the game.

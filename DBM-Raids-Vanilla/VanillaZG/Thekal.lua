@@ -9,7 +9,7 @@ end
 local mod = DBM:NewMod("Thekal", "DBM-Raids-Vanilla", catID)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision("20230814031337")
+mod:SetRevision("20231109031436")
 mod:SetCreatureID(14509, 11348, 11347)
 mod:SetEncounterID(789)
 mod:SetBossHPInfoToHighest()
@@ -70,7 +70,7 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:SPELL_SUMMON(args)
-	if args:IsSpell(24183) then
+	if args:IsSpell(24183) and self:AntiSpam(3, 1) then
 		warnAdds:Show()
 	end
 end
@@ -90,7 +90,7 @@ end
 function mod:OnSync(msg)
 	if not self:IsInCombat() then return end
 	if msg == "PriestDied" then
-		if self:AntiSpam(20, 1) then
+		if self:AntiSpam(20, 2) then
 			warnSimulKill:Show()
 			timerSimulKill:Start()
 		end

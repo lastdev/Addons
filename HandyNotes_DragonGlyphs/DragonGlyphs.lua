@@ -138,6 +138,18 @@ local points = {
         [62717030] = {17511}, -- Dragon Glyphs: Nal Ks'kol
 
     },
+
+    --10.2.0
+    [2200] = {
+        [49956427] = {19301}, -- Dragon Glyphs: Amirdrassil
+        [31858062] = {19302}, -- Dragon Glyphs: Whorlwing Basin
+        [33794558] = {19298}, -- Dragon Glyphs: Smoldering Copse
+        [61677541] = {19303}, -- Dragon Glyphs: Wakeful Vista
+        [45494577] = {19300}, -- Dragon Glyphs: Dreamsurge Basin
+        [29862119] = {19299}, -- Dragon Glyphs: Cinder Summit
+        [21202674] = {19297}, -- Dragon Glyphs: Smoldering Ascent
+        [60363013] = {19296}, -- Dragon Glyphs: Eye of Ysera
+    },
 }
 
 local info_from_coord = function(uiMapId, coord)

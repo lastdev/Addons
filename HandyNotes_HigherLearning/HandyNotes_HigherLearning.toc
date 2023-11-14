@@ -1,5 +1,5 @@
-## Interface: 100107
-## Version: 1.26
+## Interface: 100200
+## Version: 1.28
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Inv_misc_book_11
 ## Title: Higher Learning
@@ -26,12 +26,11 @@
 ## Notes-ruRU: Помогает найти книги |cFF8258FAУченье – свет!|r в Даларан 
 ## Notes-zhCN: 帮助您在达拉然中找到|cFF8258FA进修|r书籍
 ## Notes-zhTW: 幫助您在達拉然中找到|cFF8258FA進修|r書籍
-## X-Category: Map & Minimap
-## X-Curse-Project-ID: 490701
-## X-WoWI-ID: 26070
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_HigherLearningDB
 ## AddonCompartmentFunc: HandyNotes_HigherLearning_OnAddonCompartmentClick
+## AddonCompartmentFuncOnEnter: HandyNotes_HigherLearning_OnAddonCompartmentEnter
+## AddonCompartmentFuncOnLeave: HandyNotes_HigherLearning_OnAddonCompartmentLeave
 
 Core.lua
 Data.lua

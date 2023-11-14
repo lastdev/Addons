@@ -29,6 +29,7 @@ Ld["|cffffff00Click|r to open weekly rewards"] = "|cffffff00Click|r to open week
 Ld["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00Left-click|r to detach tooltip"
 Ld["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00Middle-click|r to show Blizzard's Raid Information"
 Ld["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00Right-click|r to configure SavedInstances"
+Ld["A Worthy Ally: Dream Wardens"] = "A Worthy Ally: Dream Wardens"
 Ld["A Worthy Ally: Loamm Niffen"] = "A Worthy Ally: Loamm Niffen"
 Ld["AA"] = "AA"
 Ld["Abbreviate keystones"] = "Abbreviate keystones"
@@ -100,6 +101,7 @@ Ld["Dump quest debugging information"] = "Dump quest debugging information"
 Ld["Dump time debugging information"] = "Dump time debugging information"
 Ld["Earth"] = "Earth"
 Ld["Earth Core"] = "Earth Core"
+Ld["EB"] = "EB"
 Ld["Emblazion"] = "Emblazion"
 Ld["Emissary Missing"] = "Emissary Missing"
 Ld["Emissary of War"] = "Emissary of War"
@@ -111,6 +113,7 @@ Ld["Expired Lockout - Can be extended"] = "Expired Lockout - Can be extended"
 Ld["Export"] = "Export"
 Ld["Extended Lockout - Not yet saved"] = "Extended Lockout - Not yet saved"
 Ld["Facets of Research"] = "Facets of Research"
+Ld["FALL"] = "FALL"
 Ld["FH"] = "FH"
 Ld["Fighting is Its Own Reward"] = "Fighting is Its Own Reward"
 Ld["Fire"] = "Fire"
@@ -170,6 +173,7 @@ Ld["List categories from the current expansion pack first"] = "List categories f
 Ld["List raid categories before dungeon categories"] = "List raid categories before dungeon categories"
 Ld["Loot Aspect Crest Fragment"] = "Loot Aspect Crest Fragment"
 Ld["Loot Drake Crest Fragment"] = "Loot Drake Crest Fragment"
+Ld["Loot Spark of Dreams"] = "Loot Spark of Dreams"
 Ld["Loot Spark of Shadowflame"] = "Loot Spark of Shadowflame"
 Ld["Loot Whelpling Crest Fragment"] = "Loot Whelpling Crest Fragment"
 Ld["Loot Wyrm Crest Fragment"] = "Loot Wyrm Crest Fragment"
@@ -217,6 +221,7 @@ Ld["Report instance resets to group"] = "Report instance resets to group"
 Ld["Researchers Under Fire"] = "Researchers Under Fire"
 Ld["Reset Characters"] = "Reset Characters"
 Ld["Reverse ordering"] = "Reverse ordering"
+Ld["RISE"] = "RISE"
 Ld["RLP"] = "RLP"
 Ld["Roll Bonus"] = "Roll Bonus"
 Ld["Rouen Icewind"] = "Rouen Icewind"
@@ -289,6 +294,7 @@ Ld["Tooltip Scale"] = "Tooltip Scale"
 Ld["TOP"] = "TOP"
 Ld["Tormentors of Torghast"] = "Tormentors of Torghast"
 Ld["TOS"] = "TOS"
+Ld["TOTT"] = "TOTT"
 Ld["Track Mythic keystone acquisition"] = "Track Mythic keystone acquisition"
 Ld["Track Mythic keystone best run"] = "Track Mythic keystone best run"
 Ld["Track Timeworn Mythic keystone acquisition"] = "Track Timeworn Mythic keystone acquisition"
@@ -330,6 +336,8 @@ if locale == "frFR" then
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00Clic-gauche|r pour détacher l'infobulle."
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00Clic-milieu|r pour afficher les Infos Raid de Blizzard."
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00Clic-droit|r pour configurer SavedInstances."
+--[[Translation missing --]]
+La["A Worthy Ally: Dream Wardens"] = "A Worthy Ally: Dream Wardens"
 --[[Translation missing --]]
 La["A Worthy Ally: Loamm Niffen"] = "A Worthy Ally: Loamm Niffen"
 --[[Translation missing --]]
@@ -428,6 +436,8 @@ La["Earth"] = "Earth"
 --[[Translation missing --]]
 La["Earth Core"] = "Earth Core"
 --[[Translation missing --]]
+La["EB"] = "EB"
+--[[Translation missing --]]
 La["Emblazion"] = "Emblazion"
 La["Emissary Missing"] = "Émissaire manquant"
 --[[Translation missing --]]
@@ -441,6 +451,8 @@ La["Expired Lockout - Can be extended"] = "Verrouillage expiré - Peut être ét
 La["Export"] = "Exporter"
 La["Extended Lockout - Not yet saved"] = "Verrouillage étendu - Pas encore sauvegardé"
 La["Facets of Research"] = "Facettes de recherche"
+--[[Translation missing --]]
+La["FALL"] = "FALL"
 --[[Translation missing --]]
 La["FH"] = "FH"
 --[[Translation missing --]]
@@ -526,6 +538,8 @@ La["Loot Aspect Crest Fragment"] = "Loot Aspect Crest Fragment"
 --[[Translation missing --]]
 La["Loot Drake Crest Fragment"] = "Loot Drake Crest Fragment"
 --[[Translation missing --]]
+La["Loot Spark of Dreams"] = "Loot Spark of Dreams"
+--[[Translation missing --]]
 La["Loot Spark of Shadowflame"] = "Loot Spark of Shadowflame"
 --[[Translation missing --]]
 La["Loot Whelpling Crest Fragment"] = "Loot Whelpling Crest Fragment"
@@ -592,6 +606,8 @@ La["Report instance resets to group"] = "Indiquer les réinitialisations d'insta
 La["Researchers Under Fire"] = "Researchers Under Fire"
 La["Reset Characters"] = "Remise à zéro des personnages"
 La["Reverse ordering"] = "Ordre inversé"
+--[[Translation missing --]]
+La["RISE"] = "RISE"
 --[[Translation missing --]]
 La["RLP"] = "RLP"
 La["Roll Bonus"] = "Jets de dé bonus"
@@ -686,6 +702,8 @@ La["TOP"] = "TOP"
 La["Tormentors of Torghast"] = "Tourmenteurs de Tourment"
 --[[Translation missing --]]
 La["TOS"] = "TOS"
+--[[Translation missing --]]
+La["TOTT"] = "TOTT"
 La["Track Mythic keystone acquisition"] = "Suivre l'acquisition de clé de donjon mythique"
 La["Track Mythic keystone best run"] = "Suivre le meilleur temps pour la clé de donjon mythique"
 --[[Translation missing --]]
@@ -742,6 +760,8 @@ elseif locale == "deDE" then
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00Linksklick|r, um den Tooltip zu lösen"
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00Mittelklick|r , um die Blizzard-Schlachtszugsinfo anzuzeigen"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00Rechtsklick|r, um SavedInstances zu konfigurieren"
+--[[Translation missing --]]
+La["A Worthy Ally: Dream Wardens"] = "A Worthy Ally: Dream Wardens"
 La["A Worthy Ally: Loamm Niffen"] = "Ein würdiger Verbündeter: Die Niffen von Loamm"
 La["AA"] = "AA"
 La["Abbreviate keystones"] = "Schlüsselsteine abkürzen"
@@ -813,6 +833,8 @@ La["Dump quest debugging information"] = "Quest Debugging Information"
 La["Dump time debugging information"] = "Zeit Debugging Informationen"
 La["Earth"] = "Erde"
 La["Earth Core"] = "Erdkern"
+--[[Translation missing --]]
+La["EB"] = "EB"
 La["Emblazion"] = "Emblazion"
 La["Emissary Missing"] = "Abgesandte Truhe fehlt"
 La["Emissary of War"] = "Abgesandter des Krieges"
@@ -824,6 +846,8 @@ La["Expired Lockout - Can be extended"] = "Abgelaufene ID – Kann fortgesetzt w
 La["Export"] = "exportieren"
 La["Extended Lockout - Not yet saved"] = "Verlängerte IDs – noch nicht gesichert"
 La["Facets of Research"] = "Forschungsfacetten"
+--[[Translation missing --]]
+La["FALL"] = "FALL"
 La["FH"] = "FH"
 La["Fighting is Its Own Reward"] = "Kampf ist eine Belohnung in sich"
 La["Fire"] = "Feuer"
@@ -883,6 +907,8 @@ La["List categories from the current expansion pack first"] = "Kategorien der ak
 La["List raid categories before dungeon categories"] = "Schlachtzugskategorien vor Dungeonkategorien auflisten"
 La["Loot Aspect Crest Fragment"] = "Schattenflammenwappenbruchstück des Aspekts"
 La["Loot Drake Crest Fragment"] = "Schattenflammenwappenbruchstück des Drachen"
+--[[Translation missing --]]
+La["Loot Spark of Dreams"] = "Loot Spark of Dreams"
 La["Loot Spark of Shadowflame"] = "Funke der Schattenflamme"
 La["Loot Whelpling Crest Fragment"] = "Schattenflammenwappenbruchstück des Welplings"
 La["Loot Wyrm Crest Fragment"] = "Schattenflammenwappenbruchstück des Wyrms"
@@ -930,6 +956,8 @@ La["Report instance resets to group"] = "Instanzzurücksetzungen an die Gruppe b
 La["Researchers Under Fire"] = "Forscher unter Feuer"
 La["Reset Characters"] = "Charaktere zurücksetzen"
 La["Reverse ordering"] = "Umgekehrte Anordung"
+--[[Translation missing --]]
+La["RISE"] = "RISE"
 La["RLP"] = "RLP"
 La["Roll Bonus"] = "Bonuswürfe"
 La["Rouen Icewind"] = "Rouen Eiswind"
@@ -939,8 +967,7 @@ La["SD"] = "SD"
 La["SEAT"] = "SEAT"
 La["Secured Shipment"] = "Gesicherte Lieferung"
 La["Set All"] = "Alle festlegen"
---[[Translation missing --]]
-La["Shaping the Dreamsurge"] = "Shaping the Dreamsurge"
+La["Shaping the Dreamsurge"] = "Den Traumsprung formen"
 La["Show all emissary names"] = "Zeige alle Namen der Abgesandten"
 La["Show both factions' emissay name"] = "Zeige den Namen beider Fraktionen der Abgesandten"
 La["Show calling line when all quests completed"] = "Zeige Berufungenzeile wenn alle Quests abgeschlossen sind."
@@ -1003,6 +1030,8 @@ La["Tooltip Scale"] = "Tooltip-Skalierung"
 La["TOP"] = "TOP"
 La["Tormentors of Torghast"] = "Peiniger von Torghast"
 La["TOS"] = "TOS"
+--[[Translation missing --]]
+La["TOTT"] = "TOTT"
 La["Track Mythic keystone acquisition"] = "Verfolge die erhaltenen Schlüsselsteine"
 La["Track Mythic keystone best run"] = "Verfolge den besten mythischen Durchlauf"
 La["Track Timeworn Mythic keystone acquisition"] = "Verfolge die erhaltenen Mythischen Schlüsselsteine"
@@ -1043,6 +1072,8 @@ elseif locale == "koKR" then
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00좌-클릭|r으로 툴팁 떼어내기"
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00가운데-클릭|r 블리자드 공격대 정보 보기"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00우-클릭|r으로 SavedInstances 설정"
+--[[Translation missing --]]
+La["A Worthy Ally: Dream Wardens"] = "A Worthy Ally: Dream Wardens"
 La["A Worthy Ally: Loamm Niffen"] = "가치 있는 동맹: 로암 니펜"
 La["AA"] = "대학"
 La["Abbreviate keystones"] = "쐐기명 축약"
@@ -1114,6 +1145,8 @@ La["Dump quest debugging information"] = "퀘스트 디버그 정보 덤프하�
 La["Dump time debugging information"] = "시간 디버깅 정보 덤프하기"
 La["Earth"] = "대지"
 La["Earth Core"] = "대지 핵"
+--[[Translation missing --]]
+La["EB"] = "EB"
 La["Emblazion"] = "엠블라지온"
 La["Emissary Missing"] = "사절 없음"
 La["Emissary of War"] = "전쟁의 사절"
@@ -1125,6 +1158,8 @@ La["Expired Lockout - Can be extended"] = "만료된 귀속 - 연장 가능"
 La["Export"] = "내보내기"
 La["Extended Lockout - Not yet saved"] = "연장된 귀속 - 아직 저장 안됨"
 La["Facets of Research"] = "연구용 다면체"
+--[[Translation missing --]]
+La["FALL"] = "FALL"
 La["FH"] = "자유지대"
 La["Fighting is Its Own Reward"] = "전투의 보람"
 La["Fire"] = "불"
@@ -1187,6 +1222,8 @@ La["Loot Aspect Crest Fragment"] = "Loot Aspect Crest Fragment"
 --[[Translation missing --]]
 La["Loot Drake Crest Fragment"] = "Loot Drake Crest Fragment"
 --[[Translation missing --]]
+La["Loot Spark of Dreams"] = "Loot Spark of Dreams"
+--[[Translation missing --]]
 La["Loot Spark of Shadowflame"] = "Loot Spark of Shadowflame"
 --[[Translation missing --]]
 La["Loot Whelpling Crest Fragment"] = "Loot Whelpling Crest Fragment"
@@ -1237,6 +1274,8 @@ La["Report instance resets to group"] = "던전 초기화를 파티에 알림"
 La["Researchers Under Fire"] = "위기의 연구원들"
 La["Reset Characters"] = "캐릭터 초기화"
 La["Reverse ordering"] = "순서를 거꾸로"
+--[[Translation missing --]]
+La["RISE"] = "RISE"
 La["RLP"] = "루비"
 La["Roll Bonus"] = "추가 보상"
 La["Rouen Icewind"] = "루엔 아이스윈드"
@@ -1310,6 +1349,8 @@ La["Tooltip Scale"] = "툴팁 크기"
 La["TOP"] = "투기장"
 La["Tormentors of Torghast"] = "토르가스트의 고문관"
 La["TOS"] = "세스.사원"
+--[[Translation missing --]]
+La["TOTT"] = "TOTT"
 La["Track Mythic keystone acquisition"] = "쐐기돌 추적"
 La["Track Mythic keystone best run"] = "쐐기 단수 기록"
 La["Track Timeworn Mythic keystone acquisition"] = "시간에 바랜 쐐기돌 추적"
@@ -1351,6 +1392,8 @@ La["|cffffff00Click|r to open weekly rewards"] = "|cffffff00Click|r to open week
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00Click-Izquierdo|r para separar la descripción"
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00Click-Medio|r para mostrar Información de banda de Blizzard"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00Click-Derecho|r para configurar SavedInstances"
+--[[Translation missing --]]
+La["A Worthy Ally: Dream Wardens"] = "A Worthy Ally: Dream Wardens"
 --[[Translation missing --]]
 La["A Worthy Ally: Loamm Niffen"] = "A Worthy Ally: Loamm Niffen"
 --[[Translation missing --]]
@@ -1468,6 +1511,8 @@ La["Earth"] = "Earth"
 --[[Translation missing --]]
 La["Earth Core"] = "Earth Core"
 --[[Translation missing --]]
+La["EB"] = "EB"
+--[[Translation missing --]]
 La["Emblazion"] = "Emblazion"
 --[[Translation missing --]]
 La["Emissary Missing"] = "Emissary Missing"
@@ -1485,6 +1530,8 @@ La["Expired Lockout - Can be extended"] = "Registro expirado - puede extenderse"
 La["Export"] = "Export"
 La["Extended Lockout - Not yet saved"] = "Registro extendido - no se ha guardado"
 La["Facets of Research"] = "Facetas de investigación"
+--[[Translation missing --]]
+La["FALL"] = "FALL"
 --[[Translation missing --]]
 La["FH"] = "FH"
 --[[Translation missing --]]
@@ -1586,6 +1633,8 @@ La["Loot Aspect Crest Fragment"] = "Loot Aspect Crest Fragment"
 --[[Translation missing --]]
 La["Loot Drake Crest Fragment"] = "Loot Drake Crest Fragment"
 --[[Translation missing --]]
+La["Loot Spark of Dreams"] = "Loot Spark of Dreams"
+--[[Translation missing --]]
 La["Loot Spark of Shadowflame"] = "Loot Spark of Shadowflame"
 --[[Translation missing --]]
 La["Loot Whelpling Crest Fragment"] = "Loot Whelpling Crest Fragment"
@@ -1666,6 +1715,8 @@ La["Report instance resets to group"] = "Informar de reinicializaciones de insta
 La["Researchers Under Fire"] = "Researchers Under Fire"
 La["Reset Characters"] = "Reinicializar personajes"
 La["Reverse ordering"] = "Invertir orden"
+--[[Translation missing --]]
+La["RISE"] = "RISE"
 --[[Translation missing --]]
 La["RLP"] = "RLP"
 La["Roll Bonus"] = "Bonos de tirada"
@@ -1775,6 +1826,8 @@ La["Tormentors of Torghast"] = "Tormentors of Torghast"
 --[[Translation missing --]]
 La["TOS"] = "TOS"
 --[[Translation missing --]]
+La["TOTT"] = "TOTT"
+--[[Translation missing --]]
 La["Track Mythic keystone acquisition"] = "Track Mythic keystone acquisition"
 --[[Translation missing --]]
 La["Track Mythic keystone best run"] = "Track Mythic keystone best run"
@@ -1837,6 +1890,8 @@ elseif locale == "ruRU" then
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00ЛКМ|r, чтобы показать информацию в отдельном окне"
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "Нажмите на колёсико мышки, чтобы показать информацию о рейдах от Blizzard"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00ПКМ|r, чтобы настроить SavedInstances"
+--[[Translation missing --]]
+La["A Worthy Ally: Dream Wardens"] = "A Worthy Ally: Dream Wardens"
 La["A Worthy Ally: Loamm Niffen"] = "Достойный союзник: лоаммские ниффы"
 La["AA"] = "АА"
 La["Abbreviate keystones"] = "Сокращение названия ключей"
@@ -1908,6 +1963,8 @@ La["Dump quest debugging information"] = "Сохранить отладочну�
 La["Dump time debugging information"] = "Вывести информацию о времени для отладки"
 La["Earth"] = "Земля"
 La["Earth Core"] = "Земляное ядро"
+--[[Translation missing --]]
+La["EB"] = "EB"
 La["Emblazion"] = "Пламенион"
 La["Emissary Missing"] = "Посланники отсутствуют"
 La["Emissary of War"] = "Посланник войны"
@@ -1919,6 +1976,8 @@ La["Expired Lockout - Can be extended"] = "Сохранение с истекш�
 La["Export"] = "Экспорт"
 La["Extended Lockout - Not yet saved"] = "Продление сохранения - ещё не сохранено"
 La["Facets of Research"] = "Грань исследования (ювелирное дело)"
+--[[Translation missing --]]
+La["FALL"] = "FALL"
 La["FH"] = "ГАВАНЬ"
 La["Fighting is Its Own Reward"] = "Славный бой – это уже награда"
 La["Fire"] = "Огонь"
@@ -1978,6 +2037,8 @@ La["List categories from the current expansion pack first"] = "Сортиров�
 La["List raid categories before dungeon categories"] = "Список категорий рейда до категорий подземелий"
 La["Loot Aspect Crest Fragment"] = "Добыча Фрагмента гребня Аспекта из пламени Тьмы"
 La["Loot Drake Crest Fragment"] = "Добыча Фрагмента гребня дракона из пламени Тьмы"
+--[[Translation missing --]]
+La["Loot Spark of Dreams"] = "Loot Spark of Dreams"
 La["Loot Spark of Shadowflame"] = "Добыча Искры пламени Тьмы"
 La["Loot Whelpling Crest Fragment"] = "Добыча Фрагмента гребня дракончика из пламени Тьмы"
 La["Loot Wyrm Crest Fragment"] = "Добыча Фрагмента гребня змея из пламени Тьмы"
@@ -2025,6 +2086,8 @@ La["Report instance resets to group"] = "Сообщать группе об об
 La["Researchers Under Fire"] = "Исследователи под огнем"
 La["Reset Characters"] = "Сброс персонажей"
 La["Reverse ordering"] = "Обратный порядок"
+--[[Translation missing --]]
+La["RISE"] = "RISE"
 La["RLP"] = "РОЖ"
 La["Roll Bonus"] = "Бонусный бросок"
 La["Rouen Icewind"] = "Руан Ледяной Ветер"
@@ -2098,6 +2161,8 @@ La["Tooltip Scale"] = "Масштаб подсказки"
 La["TOP"] = "Театр"
 La["Tormentors of Torghast"] = "Мучители из Торгаста"
 La["TOS"] = "ХС"
+--[[Translation missing --]]
+La["TOTT"] = "TOTT"
 La["Track Mythic keystone acquisition"] = "Отслеживать полученные эпохальные ключи"
 La["Track Mythic keystone best run"] = "Отслеживать лучший заход на эпохальный ключ"
 La["Track Timeworn Mythic keystone acquisition"] = "Отслеживать полученные старые ключи"
@@ -2138,6 +2203,8 @@ elseif locale == "zhCN" then
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00左键点击|r 显示独立窗口"
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00中键点击|r 显示游戏内建的团队信息"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00右键点击|r 设置SavedInstances"
+--[[Translation missing --]]
+La["A Worthy Ally: Dream Wardens"] = "A Worthy Ally: Dream Wardens"
 La["A Worthy Ally: Loamm Niffen"] = "强大的盟友：峈姆鼹鼠人"
 La["AA"] = "学院"
 La["Abbreviate keystones"] = "史诗钥石简称"
@@ -2209,6 +2276,8 @@ La["Dump quest debugging information"] = "打印任务调试信息"
 La["Dump time debugging information"] = "打印时间调试信息"
 La["Earth"] = "大地"
 La["Earth Core"] = "原始大地核心"
+--[[Translation missing --]]
+La["EB"] = "EB"
 La["Emblazion"] = "恩布拉基昂"
 La["Emissary Missing"] = "大使任务缺失"
 La["Emissary of War"] = "战争的使者"
@@ -2220,6 +2289,8 @@ La["Expired Lockout - Can be extended"] = "到期锁定 - 可以延长"
 La["Export"] = "导出"
 La["Extended Lockout - Not yet saved"] = "已延长锁定 - 还未被储存"
 La["Facets of Research"] = "探索棱镜"
+--[[Translation missing --]]
+La["FALL"] = "FALL"
 La["FH"] = "自由镇"
 La["Fighting is Its Own Reward"] = "战斗就是最好的奖赏"
 La["Fire"] = "火焰"
@@ -2279,6 +2350,8 @@ La["List categories from the current expansion pack first"] = "从目前的资�
 La["List raid categories before dungeon categories"] = "先显示团队副本，再显示地下城"
 La["Loot Aspect Crest Fragment"] = "拾取巨龙纹章碎片"
 La["Loot Drake Crest Fragment"] = "拾取幼龙纹章碎片"
+--[[Translation missing --]]
+La["Loot Spark of Dreams"] = "Loot Spark of Dreams"
 La["Loot Spark of Shadowflame"] = "拾取暗影烈焰火花"
 La["Loot Whelpling Crest Fragment"] = "拾取雏龙纹章碎片"
 La["Loot Wyrm Crest Fragment"] = "拾取魔龙纹章碎片"
@@ -2326,6 +2399,8 @@ La["Report instance resets to group"] = "报告副本重置"
 La["Researchers Under Fire"] = "研究员遇袭"
 La["Reset Characters"] = "重置角色"
 La["Reverse ordering"] = "反转排序"
+--[[Translation missing --]]
+La["RISE"] = "RISE"
 La["RLP"] = "红玉"
 La["Roll Bonus"] = "额外拾取情况"
 La["Rouen Icewind"] = "鲁恩·冰风"
@@ -2399,6 +2474,8 @@ La["Tooltip Scale"] = "提示框缩放"
 La["TOP"] = "剧场"
 La["Tormentors of Torghast"] = "托加斯特的折磨者"
 La["TOS"] = "神庙"
+--[[Translation missing --]]
+La["TOTT"] = "TOTT"
 La["Track Mythic keystone acquisition"] = "追踪史诗钥石"
 La["Track Mythic keystone best run"] = "追踪史诗钥石每周最佳记录"
 La["Track Timeworn Mythic keystone acquisition"] = "追踪时空漫游史诗钥石"
@@ -2440,6 +2517,8 @@ elseif locale == "esES" then
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00Clic|r para separar la ventana de información"
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00Clic medio|r para mostrar la Información de banda"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00Click-Derecho|r para configurar SavedInstances"
+--[[Translation missing --]]
+La["A Worthy Ally: Dream Wardens"] = "A Worthy Ally: Dream Wardens"
 --[[Translation missing --]]
 La["A Worthy Ally: Loamm Niffen"] = "A Worthy Ally: Loamm Niffen"
 --[[Translation missing --]]
@@ -2544,6 +2623,8 @@ La["Earth"] = "Earth"
 --[[Translation missing --]]
 La["Earth Core"] = "Earth Core"
 --[[Translation missing --]]
+La["EB"] = "EB"
+--[[Translation missing --]]
 La["Emblazion"] = "Emblazion"
 --[[Translation missing --]]
 La["Emissary Missing"] = "Emissary Missing"
@@ -2560,6 +2641,8 @@ La["Expired Lockout - Can be extended"] = "Registro expirado - puede extenderse"
 La["Export"] = "Exportar"
 La["Extended Lockout - Not yet saved"] = "Registro extendido - no se ha guardado"
 La["Facets of Research"] = "Facetas de investigación"
+--[[Translation missing --]]
+La["FALL"] = "FALL"
 --[[Translation missing --]]
 La["FH"] = "FH"
 --[[Translation missing --]]
@@ -2648,6 +2731,8 @@ La["Loot Aspect Crest Fragment"] = "Loot Aspect Crest Fragment"
 --[[Translation missing --]]
 La["Loot Drake Crest Fragment"] = "Loot Drake Crest Fragment"
 --[[Translation missing --]]
+La["Loot Spark of Dreams"] = "Loot Spark of Dreams"
+--[[Translation missing --]]
 La["Loot Spark of Shadowflame"] = "Loot Spark of Shadowflame"
 --[[Translation missing --]]
 La["Loot Whelpling Crest Fragment"] = "Loot Whelpling Crest Fragment"
@@ -2719,6 +2804,8 @@ La["Report instance resets to group"] = "Informar de reinicios de estancia al gr
 La["Researchers Under Fire"] = "Researchers Under Fire"
 La["Reset Characters"] = "Reiniciar personajes"
 La["Reverse ordering"] = "Invertir orden"
+--[[Translation missing --]]
+La["RISE"] = "RISE"
 --[[Translation missing --]]
 La["RLP"] = "RLP"
 La["Roll Bonus"] = "Bonos de tirada"
@@ -2815,6 +2902,8 @@ La["TOP"] = "TdD (TOP)"
 La["Tormentors of Torghast"] = "Tormentos de Torghast"
 --[[Translation missing --]]
 La["TOS"] = "TOS"
+--[[Translation missing --]]
+La["TOTT"] = "TOTT"
 La["Track Mythic keystone acquisition"] = "Rastrear adquisicion de piedra angular mítica"
 La["Track Mythic keystone best run"] = "Rastrear mejor incursión de piedra angular mítica"
 --[[Translation missing --]]
@@ -2872,6 +2961,8 @@ elseif locale == "zhTW" then
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00左鍵|r 分離滑鼠提示"
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00中鍵|r 顯示暴雪的團隊資訊"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00右鍵|r 設定 SavedInstances"
+--[[Translation missing --]]
+La["A Worthy Ally: Dream Wardens"] = "A Worthy Ally: Dream Wardens"
 La["A Worthy Ally: Loamm Niffen"] = "寶貴的盟友：洛姆鼴鼠人"
 La["AA"] = "學院"
 La["Abbreviate keystones"] = "簡短鑰石名稱"
@@ -2946,6 +3037,8 @@ La["Dump quest debugging information"] = "傾印任務偵錯資訊"
 La["Dump time debugging information"] = "傾印時間偵錯資訊"
 La["Earth"] = "地"
 La["Earth Core"] = "地核心"
+--[[Translation missing --]]
+La["EB"] = "EB"
 La["Emblazion"] = "紋章"
 La["Emissary Missing"] = "沒有特使"
 --[[Translation missing --]]
@@ -2958,6 +3051,8 @@ La["Expired Lockout - Can be extended"] = "進度已過期 - 可以延展"
 La["Export"] = "輸出"
 La["Extended Lockout - Not yet saved"] = "進度即將到期 - 尚未儲存"
 La["Facets of Research"] = "研究切面"
+--[[Translation missing --]]
+La["FALL"] = "FALL"
 La["FH"] = "自由"
 La["Fighting is Its Own Reward"] = "戰鬥本身就是獎勵"
 La["Fire"] = "火"
@@ -3027,6 +3122,8 @@ La["List categories from the current expansion pack first"] = "優先列出目�
 La["List raid categories before dungeon categories"] = "在地城分類之前列出團隊分類"
 La["Loot Aspect Crest Fragment"] = "拾取守護巨龍紋章碎片"
 La["Loot Drake Crest Fragment"] = "拾取飛龍紋章碎片"
+--[[Translation missing --]]
+La["Loot Spark of Dreams"] = "Loot Spark of Dreams"
 La["Loot Spark of Shadowflame"] = "拾取暗焰火花"
 La["Loot Whelpling Crest Fragment"] = "拾取幼龍紋章碎片"
 La["Loot Wyrm Crest Fragment"] = "拾取巨龍紋章碎片"
@@ -3081,6 +3178,8 @@ La["Report instance resets to group"] = "重置副本時通報團隊"
 La["Researchers Under Fire"] = "被攻擊的研究員"
 La["Reset Characters"] = "重置角色"
 La["Reverse ordering"] = "反向排序"
+--[[Translation missing --]]
+La["RISE"] = "RISE"
 La["RLP"] = "晶紅"
 La["Roll Bonus"] = "使用額外骰子"
 --[[Translation missing --]]
@@ -3163,6 +3262,8 @@ La["TOP"] = "劇場"
 La["Tormentors of Torghast"] = "托迦司的折磨者"
 --[[Translation missing --]]
 La["TOS"] = "TOS"
+--[[Translation missing --]]
+La["TOTT"] = "TOTT"
 La["Track Mythic keystone acquisition"] = "追蹤獲得的傳奇鑰石"
 La["Track Mythic keystone best run"] = "追蹤傳奇鑰石最佳紀錄"
 La["Track Timeworn Mythic keystone acquisition"] = "追蹤時光漫遊傳奇鑰石獲取"
@@ -3206,6 +3307,8 @@ elseif locale == "ptBR" then
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00Botão Esquerdo | Para destacar as Dicas"
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00Botão do Meio|r para mostrar informações da Raid dadas pela Blizzard"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00Botão Direito|r Para configurar o SavedInstances"
+--[[Translation missing --]]
+La["A Worthy Ally: Dream Wardens"] = "A Worthy Ally: Dream Wardens"
 --[[Translation missing --]]
 La["A Worthy Ally: Loamm Niffen"] = "A Worthy Ally: Loamm Niffen"
 --[[Translation missing --]]
@@ -3320,6 +3423,8 @@ La["Earth"] = "Earth"
 --[[Translation missing --]]
 La["Earth Core"] = "Earth Core"
 --[[Translation missing --]]
+La["EB"] = "EB"
+--[[Translation missing --]]
 La["Emblazion"] = "Emblazion"
 La["Emissary Missing"] = "Emissários Faltando"
 --[[Translation missing --]]
@@ -3333,6 +3438,8 @@ La["Expired Lockout - Can be extended"] = "Bloqueio de expirado - Pode ser esten
 La["Export"] = "Exportar"
 La["Extended Lockout - Not yet saved"] = "Bloqueiar de Extensão - Ainda não salva"
 La["Facets of Research"] = "Facetas da Pesquisa"
+--[[Translation missing --]]
+La["FALL"] = "FALL"
 --[[Translation missing --]]
 La["FH"] = "FH"
 --[[Translation missing --]]
@@ -3428,6 +3535,8 @@ La["Loot Aspect Crest Fragment"] = "Loot Aspect Crest Fragment"
 --[[Translation missing --]]
 La["Loot Drake Crest Fragment"] = "Loot Drake Crest Fragment"
 --[[Translation missing --]]
+La["Loot Spark of Dreams"] = "Loot Spark of Dreams"
+--[[Translation missing --]]
 La["Loot Spark of Shadowflame"] = "Loot Spark of Shadowflame"
 --[[Translation missing --]]
 La["Loot Whelpling Crest Fragment"] = "Loot Whelpling Crest Fragment"
@@ -3508,6 +3617,8 @@ La["Report instance resets to group"] = "Redefinir relatório da Instância para
 La["Researchers Under Fire"] = "Researchers Under Fire"
 La["Reset Characters"] = "Reiniciar personagens"
 La["Reverse ordering"] = "Ordem inversa"
+--[[Translation missing --]]
+La["RISE"] = "RISE"
 --[[Translation missing --]]
 La["RLP"] = "RLP"
 La["Roll Bonus"] = "Rolar saque de bônus"
@@ -3616,6 +3727,8 @@ La["Tormentors of Torghast"] = "Tormentors of Torghast"
 --[[Translation missing --]]
 La["TOS"] = "TOS"
 --[[Translation missing --]]
+La["TOTT"] = "TOTT"
+--[[Translation missing --]]
 La["Track Mythic keystone acquisition"] = "Track Mythic keystone acquisition"
 --[[Translation missing --]]
 La["Track Mythic keystone best run"] = "Track Mythic keystone best run"
@@ -3679,6 +3792,8 @@ La["|cffffff00Click|r to open weekly rewards"] = "|cffffff00Click|r to open week
 La["|cffffff00Left-click|r to detach tooltip"] = " |cffffff00Click sinistro|r per sganciare la finestra"
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00Click-centrale|r permostrare le informazioni Blizzard sul raid"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00Click destro|r per configurare SavedInstances"
+--[[Translation missing --]]
+La["A Worthy Ally: Dream Wardens"] = "A Worthy Ally: Dream Wardens"
 --[[Translation missing --]]
 La["A Worthy Ally: Loamm Niffen"] = "A Worthy Ally: Loamm Niffen"
 --[[Translation missing --]]
@@ -3794,6 +3909,8 @@ La["Earth"] = "Earth"
 --[[Translation missing --]]
 La["Earth Core"] = "Earth Core"
 --[[Translation missing --]]
+La["EB"] = "EB"
+--[[Translation missing --]]
 La["Emblazion"] = "Emblazion"
 --[[Translation missing --]]
 La["Emissary Missing"] = "Emissary Missing"
@@ -3811,6 +3928,8 @@ La["Expired Lockout - Can be extended"] = "Salvataggio scaduto - puo' essere est
 La["Export"] = "Export"
 La["Extended Lockout - Not yet saved"] = "Salvataggio esteso - non ancora salvato"
 La["Facets of Research"] = "Preziosi da Ricerca"
+--[[Translation missing --]]
+La["FALL"] = "FALL"
 --[[Translation missing --]]
 La["FH"] = "FH"
 --[[Translation missing --]]
@@ -3912,6 +4031,8 @@ La["Loot Aspect Crest Fragment"] = "Loot Aspect Crest Fragment"
 --[[Translation missing --]]
 La["Loot Drake Crest Fragment"] = "Loot Drake Crest Fragment"
 --[[Translation missing --]]
+La["Loot Spark of Dreams"] = "Loot Spark of Dreams"
+--[[Translation missing --]]
 La["Loot Spark of Shadowflame"] = "Loot Spark of Shadowflame"
 --[[Translation missing --]]
 La["Loot Whelpling Crest Fragment"] = "Loot Whelpling Crest Fragment"
@@ -3991,6 +4112,8 @@ La["Report instance resets to group"] = "Informa il gruppo del ripristino dell'i
 La["Researchers Under Fire"] = "Researchers Under Fire"
 La["Reset Characters"] = "Azzera personaggi"
 La["Reverse ordering"] = "Ordinamento inverso"
+--[[Translation missing --]]
+La["RISE"] = "RISE"
 --[[Translation missing --]]
 La["RLP"] = "RLP"
 La["Roll Bonus"] = "Tiro bonus"
@@ -4097,6 +4220,8 @@ La["TOP"] = "TOP"
 La["Tormentors of Torghast"] = "Tormentors of Torghast"
 --[[Translation missing --]]
 La["TOS"] = "TOS"
+--[[Translation missing --]]
+La["TOTT"] = "TOTT"
 --[[Translation missing --]]
 La["Track Mythic keystone acquisition"] = "Track Mythic keystone acquisition"
 --[[Translation missing --]]

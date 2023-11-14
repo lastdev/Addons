@@ -1,0 +1,119 @@
+== v1.24 - 11th November 2023
+* Translations for Obsidian and Deviate added
+
+== v1.23 - 28th October 2023
+* TOC bump for 10.2.0
+
+== v1.22 - 24th October 2023
+* Updated to be dual Retail/Wrath
+
+== v1.21 W - 17th October 2023
+* TOC bump for 3.4.3
+
+== v1.21 - 18th September 2023
+* Deviate Hatchling added - drops from Deviate Guardians and Deviate Ravagers,
+  both found in Wailing Caverns in the first large cave inside the instance
+* TOC version bump to 10.1.7
+
+== v1.20 - 26th August 2023
+* Added Breanni's purchasable Obsidian raptor hatchling.
+  Just a little easter egg of sorts, beyond the core four I cover in this AddOn!
+
+== v1.20 W - 26th August 2023
+* Added Breanni's purchasable Obsidian raptor hatchling.
+  Just a little easter egg of sorts, beyond the core four I cover in this AddOn!
+
+== v1.19 W - 15th July 2023
+* TOC bump to 3.4.2
+
+== v1.18 - 6th May 2023
+* Now supports the new AddOn Compartment introduced in 10.1.0.
+  Clicking the drop down for this AddOn takes you directly to the configuration panel!
+
+== v1.17 - 3rd May 2023
+* Added an icon to the TOC file - thus removing the annoying "?" from the AddOn list in game
+* Removed unnecessary print to console code
+
+== v1.16 - 24th April 2023
+* TOC bump to 10.1.0
+
+== v1.15 - 21st March 2023
+* TOC bump to 10.0.7
+
+== v1.14 - 26th January 2023
+* TOC bump to 10.0.5
+
+== v1.14 W - 18th January 2023
+* TOC bump to 3.4.1
+
+== v1.13 - 7th December 2022
+* TOC bump to 10.0.2
+
+== v1.12 - 26th October 2022
+* TOC bump to 10.0.0
+
+== v1.11 - 9th October 2022
+* Wrath: The Barrens coordinates are all confirmed now for the Barrens and slightly adjusted as necessary
+- previously the coordinates were based on a hunch - I was only out by 100ths lol!!!
+
+== v1.10 - 9th October 2022
+* Wrath: The Barrens coordinates are all confirmed now for the Barrens and slightly adjusted as necessary
+- previously the coordinates were based on a hunch - I was only out by 100ths lol!!!
+
+== v1.09 - 23rd September 2022
+* Reworked the Interface Configuration - standardising across my AddOns
+* This had the effect of removing a fatal bug on selecting a non-present icon
+* Fixed a bug introduced in about v1.07 or v1.08 which caused Un'Goro and Dustwallow icons to not appear sometimes
+
+== v1.09 W - 23rd September 2022
+* Reworked the Interface Configuration - standardising across my AddOns
+* This had the effect of removing a fatal bug on selecting a non-present icon
+* Fixed a bug introduced in about v1.07 or v1.08 which caused Un'Goro and Dustwallow icons to not appear sometimes
+
+== v1.08 - 19th September 2022
+* Converted to include 8 new nest coordinates for Wrath
+* Code selects coordinates based upon the game version
+* Some code titdy ups
+
+== v1.07 - 15th September 2022
+* Convert code to dual use for Wrath and Retail: This requires different MapIDs for both game versions.
+* Found and fixed a bug preventing continent pins from showing when inside the Wetlands cave.
+
+== v1.07 W - 15th September 2022
+* Convert code to dual use for Wrath and Retail: This requires different MapIDs for both game versions.
+* Found and fixed a bug preventing continent pins from showing when inside the Wetlands cave.
+
+== v1.06 W - 11th September 2022
+* TOC bump for 3.4.0
+
+== v1.06 - 4th September 2022
+* TOC bump for 9.2.7
+
+== v1.05 - 20th March 2022
+* TOC bump for 9.2.0
+
+== v1.04 - 8th November 2021
+* TOC bump for 9.1.5
+
+== v1.03 - 13th August 2021
+* Switched tooltip labels for Darting/Leaping Hatchlings. Doh!
+
+== v1.02 - 12th July 2021
+* Version number update for Patch 9.1.0
+* enGB language support for players on Oceania realms (i.e. spelling)
+* ptBR support
+
+== v1.01 - 6th June 2021
+* Localisation enhancements
+
+== v1.00 - 30th May 2021
+* Initial release for 9.1.0
+
+
+
+
+
+
+
+
+

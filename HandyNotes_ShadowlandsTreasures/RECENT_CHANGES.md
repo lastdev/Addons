@@ -1,9 +1,9 @@
-## Changed in v73
+## Changed in v74
 
-* A few data fixes in Bastion
-* Bring in updates to the handler code from [HandyNotes: Dragonflight Treasures](https://www.curseforge.com/wow/addons/handynotes-dragonflight-treasures):
-    * Avoid some unusual errors when checking achievement criteria
-    * Use Blizzard waypoints if they're available and TomTom isn't installed
-    * New menu item: make a waypoint for all related points
-    * Routes can now appear on the minimap
+* Updated for 10.2.0
+* Fix from Machou for the questid associated with Schematic: Mawdapted Raptora in Zereth Mortis
+* Handler updates:
+    * Avoid some possible tooltip errors with other addons
+    * Minimap routes should respect display settings
+    * New config "only show notable NPCs": enable and rares will only be shown if they've got something for you (achievements or transmogs)
 

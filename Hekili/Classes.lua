@@ -36,7 +36,6 @@ local specTemplate = {
     cycle = false,
     cycle_min = 6,
     gcdSync = true,
-    enhancedRecheck = false,
 
     nameplates = true,
     nameplateRange = 8,
@@ -4737,7 +4736,9 @@ do
         { "crimson_aspirants_badge_of_ferocity", 201449 },
         { "crimson_gladiators_badge_of_ferocity", 201807 },
         { "obsidian_aspirants_badge_of_ferocity", 205778 },
-        { "obsidian_gladiator_badge_of_ferocity", 205708 }
+        { "obsidian_gladiator_badge_of_ferocity", 205708 },
+        { "verdant_aspirants_badge_of_ferocity", 209763 },
+        { "verdant_gladiators_badget_of_ferocity", 209343 }
     }
 
     local pvp_badges_copy = {}
@@ -4833,6 +4834,9 @@ do
         obsidian_combatants_emblem = 204166,
         obsidian_aspirants_emblem = 205781,
         obsidian_gladiators_emblem = 205710,
+        verdant_aspirants_emblem = 209766,
+        verdant_combatants_emblem = 208309,
+        verdant_gladiators_emblem = 209345
     }
 
     local pvp_emblems_copy = {}
@@ -6347,7 +6351,12 @@ do
         CHALLENGE_MODE_RESET = 1,
         CHALLENGE_MODE_COMPLETED = 1,
         PLAYER_ALIVE = 1,
-        ZONE_CHANGED_NEW_AREA = 1
+        ZONE_CHANGED_NEW_AREA = 1,
+        QUEST_SESSION_CREATED = 1,
+        QUEST_SESSION_DESTROYED = 1,
+        QUEST_SESSION_ENABLED_STATE_CHANGED = 1,
+        QUEST_SESSION_JOINED = 1,
+        QUEST_SESSION_LEFT = 1
     }
 
     local WipeCovenantCache = ns.WipeCovenantCache

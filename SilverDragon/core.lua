@@ -129,6 +129,16 @@ function addon:RegisterMobData(source, data, updated)
 	end
 	if not addon.datasources[source] then addon.datasources[source] = {} end
 	MergeTable(addon.datasources[source], data)
+	-- pick up achievements if needed
+	for mobid, mobdata in pairs(data) do
+		if mobdata.achievement and mobdata.criteria then
+			if not ns.achievements[mobdata.achievement] then
+				ns.achievements[mobdata.achievement] = {}
+			end
+			ns.achievements[mobdata.achievement][mobid] = mobdata.criteria
+			ns.mobs_to_achievement[mobid] = mobdata.achievement
+		end
+	end
 end
 function addon:RegisterTreasureData(source, data, updated)
 	if not updated then return end
@@ -159,7 +169,13 @@ do
 					requires=point.require or point.hide_before,
 					vignette=point.vignette,
 					quest=point.quest,
+					hidden=point.hidden,
 				}
+				if point.additional then
+					for _,acoord in pairs(point.additional) do
+						table.insert(data.locations[uiMapID], acoord)
+					end
+				end
 				if point.route and type(point.route) == "table" then
 					data.routes = {[uiMapID] = {point.route}}
 				end
@@ -167,12 +183,17 @@ do
 					data.routes = {[uiMapID] = point.routes}
 				end
 				if point.npc then
-					addon.datasources[source][point.npc] = data
+					if not addon.datasources[source][point.npc] then
+						addon.datasources[source][point.npc] = data
+					else
+						addon.datasources[source][point.npc].locations[uiMapID] = data.locations[uiMapID]
+					end
 					if point.achievement and point.criteria then
 						if not ns.achievements[point.achievement] then
 							ns.achievements[point.achievement] = {}
 						end
 						ns.achievements[point.achievement][point.npc] = point.criteria
+						ns.mobs_to_achievement[point.npc] = point.achievement
 					end
 				else
 					addon.treasuresources[source][point.vignette] = data

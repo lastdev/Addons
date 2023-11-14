@@ -3,7 +3,7 @@
 
                                            Higher Learning
 
-                                      v1.26 - 17th October 2023
+                                      v1.28 - 8th November 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -351,6 +351,8 @@ end
 ns.name = UnitName( "player" ) or "Character"
 
 if ns.locale == "deDE" then
+	L["AddOn Description"] = "Helfen Sie, die Bücher zu finden"
+	L["Dalaran Map"] = "Zeigt die Karte von Dalaran"
 	L["Higher Learning"] = "Höheres Studium"
 	L["Divination"] = "Weissagung"
 	L["divTip"] = "Nach oben schauen Sie nach links.\nDas Buch liegt auf dem Boden zwischen\n"
@@ -373,9 +375,10 @@ if ns.locale == "deDE" then
 	L["intTip"] = "Auf dem Boden an der Unterseite\ndes Bücherregals auf der rechten\nSeite des Zimmers"
 	L["Illusion"] = "Illusion"
 	L["illTip"] = "Auf einer Kiste mit\nnichts drauf. In der Ecke"
-	L["AddOn Description"] = "Helfen Sie, die Bücher zu finden"
 
 elseif ns.locale == "esES" or ns.locale == "esMX" then
+	L["AddOn Description"] = "Ayudarle a encontrar los libros"
+	L["Dalaran Map"] = "Mostrar el mapa de Dalaran"
 	L["Higher Learning"] = "Conocimiento Superior"
 	L["Divination"] = "Adivinación"
 	L["divTip"] = "En la parte superior de las escaleras,\nmira a la izquierda. El libro está en\n"
@@ -396,9 +399,10 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["intTip"] = "En el piso en la base\nde la estantería en el lado\nderecho de la habitación"
 	L["Illusion"] = "Ilusión"
 	L["illTip"] = "En una caja con nada\nsobre ella. En la esquina"
-	L["AddOn Description"] = "Ayudarle a encontrar los libros"
 
 elseif ns.locale == "frFR" then
+	L["AddOn Description"] = "Vous aider à trouver les livres"
+	L["Dalaran Map"] = "Afficher la carte de Dalaran"
 	L["Higher Learning"] = "Lectures Studieuses"
 	L["Divination"] = "Divination"
 	L["divTip"] = "En haut des escaliers, regardez à gauche.\n"
@@ -419,9 +423,10 @@ elseif ns.locale == "frFR" then
 	L["intTip"] = "Sur le sol à la base\nde la bibliothèque à\ndroite de la pièce"
 	L["Illusion"] = "Illusion"
 	L["illTip"] = "Sur une caisse sans\nrien dessus. Au coin"
-	L["AddOn Description"] = "Vous aider à trouver les livres"
 
 elseif ns.locale == "itIT" then
+	L["AddOn Description"] = "Aiutarti a trovare i libri"
+	L["Dalaran Map"] = "Mostra la mappa di Dalaran"
 	L["Higher Learning"] = "Conoscenza Superiore"
 	L["Divination"] = "Divinazione"
 	L["divTip"] = "In cima alle scale, guarda a sinistra.\nIl libro è sul pavimento tra i due scaffali"
@@ -441,9 +446,10 @@ elseif ns.locale == "itIT" then
 	L["intTip"] = "Sul pavimento alla base\ndella libreria sul lato\ndestro della stanza"
 	L["Illusion"] = "Illusione"
 	L["illTip"] = "Su una cassa senza\nniente sopra. All'angolo"
-	L["AddOn Description"] = "Aiutarti a trovare i libri"
 
 elseif ns.locale == "koKR" then
+	L["AddOn Description"] = "책 찾기"
+	L["Dalaran Map"] = "달라란 지도를 보여주세요"
 	L["Higher Learning"] = "고등 학습"
 	L["Divination"] = "예지"
 	L["divTip"] = "계단 꼭대기에서 왼쪽을보세요.\n이 책은 두 책꽂이 사이의 바닥에 있습니다."
@@ -461,9 +467,10 @@ elseif ns.locale == "koKR" then
 	L["intTip"] = "방의 오른쪽에있는 책꽂이 바닥에있는 바닥에"
 	L["Illusion"] = "환상"
 	L["illTip"] = "그 위에 아무 것도없는 상자에.\n구석에"
-	L["AddOn Description"] = "책 찾기"
 
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
+	L["AddOn Description"] = "Te ajudar a encontrar os livros"
+	L["Dalaran Map"] = "Mostrar o mapa de Dalaran"
 	L["Higher Learning"] = "Letrado nas artes arcanas"
 	L["Divination"] = "Divinação"
 	L["divTip"] = "No topo da escada, olhe para a esquerda.\n"
@@ -484,9 +491,10 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["intTip"] = "No chão, na base da estante\ndo lado direito da sala"
 	L["Illusion"] = "Ilusão"
 	L["illTip"] = "Em uma caixa sem\nnada. Na esquina"
-	L["AddOn Description"] = "Te ajudar a encontrar os livros"
 
 elseif ns.locale == "ruRU" then
+	L["AddOn Description"] = "Помогите найти книги"
+	L["Dalaran Map"] = "Покажите карту Даларана"
 	L["Higher Learning"] = "Ученье – свет!"
 	L["Divination"] = "Предсказание"
 	L["divTip"] = "Наверху лестницы посмотрите налево.\n"
@@ -507,9 +515,10 @@ elseif ns.locale == "ruRU" then
 	L["intTip"] = "На полу у основания книжной\nполки с правой стороны комнаты"
 	L["Illusion"] = "Иллюзия"
 	L["illTip"] = "На ящике, на котором\nничего нет. В углу"
-	L["AddOn Description"] = "Помогите найти книги"
 
 elseif ns.locale == "zhCN" then
+	L["AddOn Description"] = "帮你找书"
+	L["Dalaran Map"] = "显示达拉然的地图"
 	L["Higher Learning"] = "进修"
 	L["Divination"] = "占卜"
 	L["divTip"] = "在楼梯的顶部，向左看。\n这本书位于两个书架之间"
@@ -527,9 +536,10 @@ elseif ns.locale == "zhCN" then
 	L["intTip"] = "在房间右侧书架底部的地板上"
 	L["Illusion"] = "幻象"
 	L["illTip"] = "在没有任何东西的箱子上。\n在角落"
-	L["AddOn Description"] = "帮你找书"
 
 elseif ns.locale == "zhTW" then
+	L["AddOn Description"] = "幫你找書"
+	L["Dalaran Map"] = "顯示達拉然的地圖"
 	L["Higher Learning"] = "進修"
 	L["Divination"] = "占卜"
 	L["divTip"] = "在樓梯的頂部，向左看。\n這本書位於兩個書架之間"
@@ -547,9 +557,10 @@ elseif ns.locale == "zhTW" then
 	L["intTip"] = "在房間右側書架底部的地板上"
 	L["Illusion"] = "幻象"
 	L["illTip"] = "在沒有任何東西的箱子上。\n在角落"
-	L["AddOn Description"] = "幫你找書"
 	
 else
+	L["AddOn Description"] = "Helps you find the books"
+	L["Dalaran Map"] = "Show me the map of Dalaran"
 	L["divTip"] = "At the top of the stairs, look\nleft. The book is on the floor\nbetween the two bookshelves"
 	L["conjTip"] = "On the right side of the room as you\nenter. Stand in front of the bookshelves.\n"..
 		"The book is in the empty space on the\nbottom shelf of the left hand bookshelf"
@@ -559,7 +570,6 @@ else
 	L["abjTip"] = "Downstairs. On the right side. On the\nfloor next to a stool with books upon it"
 	L["intTip"] = "On the floor at the base of the bookshelf\non the right side of the room"
 	L["illTip"] = "On a crate with nothing\nupon it. In the corner"
-	L["AddOn Description"] = "Helps you find the books"
 end
 
 -- Plugin handler for HandyNotes
@@ -689,9 +699,30 @@ ns.options = {
 }
 
 function HandyNotes_HigherLearning_OnAddonCompartmentClick( addonName, buttonName )
-	Settings.OpenToCategory( "HandyNotes" )
-	LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "HigherLearning" )
- end
+	if buttonName and buttonName == "RightButton" then
+		OpenWorldMap( 125 )
+		if WorldMapFrame:IsVisible() ~= true then
+			print( ns.colour.prefix	..L["Higher Learning"] ..": " ..ns.colour.plaintext
+					.."Not possible at this time. Try later" )
+		end
+	else
+		Settings.OpenToCategory( "HandyNotes" )
+		LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "HigherLearning" )
+	end
+end
+ 
+function HandyNotes_HigherLearning_OnAddonCompartmentEnter( ... )
+	GameTooltip:SetOwner( DropDownList1, "ANCHOR_LEFT" )	
+	GameTooltip:AddLine( ns.colour.prefix ..L["Higher Learning"] )
+	GameTooltip:AddLine( ns.colour.highlight .." " )
+	GameTooltip:AddDoubleLine( ns.colour.highlight .."Left", ns.colour.plaintext ..L["Options"] )
+	GameTooltip:AddDoubleLine( ns.colour.highlight .."Right", ns.colour.plaintext ..L["Dalaran Map"] )
+	GameTooltip:Show()
+end
+
+function HandyNotes_HigherLearning_OnAddonCompartmentLeave( ... )
+	GameTooltip:Hide()
+end
 
 function pluginHandler:OnEnable()
 	local HereBeDragons = LibStub("HereBeDragons-2.0", true)

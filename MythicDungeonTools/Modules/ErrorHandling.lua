@@ -6,10 +6,6 @@ local tinsert, slen = table.insert, string.len
 -- handle most mdt errors internally and provide an easy way for users to report these errors
 
 local caughtErrors = {}
-local DESTINATIONS = {
-  { name = "GitHub",  url = "https://github.com/Nnoggie/MythicDungeonTools/issues" },
-  { name = "Discord", url = "https://discord.gg/tdxMPb3" },
-}
 
 local function getDiagnostics()
   local presetExport = MDT:TableToString(MDT:GetCurrentPreset(), true, 5)
@@ -30,7 +26,7 @@ local function getDiagnostics()
   local region = regions[regionId]
   local combatState = InCombatLockdown() and "In combat" or "Out of combat"
   local mapID = C_Map.GetBestMapForUnit("player");
-  local zoneInfo = format("Zone: %s (%d)", C_Map.GetMapInfo(C_Map.GetMapInfo(mapID).parentMapID).name, mapID)
+  local zoneInfo = format("Zone: %s (%d)", C_Map.GetMapInfo(C_Map.GetMapInfo(mapID or 0).parentMapID).name, mapID)
   return {
     presetExport = presetExport,
     addonVersion = addonVersion,
@@ -89,7 +85,7 @@ function MDT:DisplayErrors(force)
     errorFrame.label:SetText(L["errorLabel1"].."\n"..L["errorLabel2"])
     errorFrame:AddChild(errorFrame.label)
 
-    for _, dest in ipairs(DESTINATIONS) do
+    for _, dest in ipairs(MDT.externalLinks) do
       errorFrame[dest.name.."EditBox"] = AceGUI:Create("EditBox")
       local editBox = errorFrame[dest.name.."EditBox"]
       local copyButton
@@ -183,21 +179,9 @@ function MDT:DisplayErrors(force)
       MDT:ToggleToolbarTooltip(false)
     end)
 
-    local errorButtonGroup = AceGUI:Create("SimpleGroup")
-    errorButtonGroup.frame:ClearAllPoints()
-    if not errorButtonGroup.frame.SetBackdrop then
-      Mixin(errorButtonGroup.frame, BackdropTemplateMixin)
-    end
-    errorButtonGroup.frame:SetBackdropColor(0, 0, 0, 0)
-    errorButtonGroup:SetWidth(40)
-    errorButtonGroup:SetHeight(40)
-    errorButtonGroup:SetPoint("LEFT", MDT.main_frame.bottomLeftPanelString, "RIGHT", -5, -1)
-    errorButtonGroup:SetLayout("Flow")
-    errorButtonGroup.frame:SetFrameStrata("High")
-    errorButtonGroup.frame:SetFrameLevel(7)
-    errorButtonGroup.frame:ClearBackdrop()
-    errorButtonGroup:AddChild(errorButton)
-    MDT:FixAceGUIShowHide(errorButtonGroup, MDT.main_frame)
+    local externalButtonGroup = MDT.main_frame.externalButtonGroup
+    externalButtonGroup:AddChild(errorButton)
+    MDT:FixAceGUIShowHide(externalButtonGroup, MDT.main_frame)
   end
 
   for _, error in ipairs(caughtErrors) do

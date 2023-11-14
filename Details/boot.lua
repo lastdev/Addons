@@ -13,8 +13,8 @@
 		local addonName, Details222 = ...
 		local version, build, date, tocversion = GetBuildInfo()
 
-		Details.build_counter = 11914
-		Details.alpha_build_counter = 11914 --if this is higher than the regular counter, use it instead
+		Details.build_counter = 12037
+		Details.alpha_build_counter = 12037 --if this is higher than the regular counter, use it instead
 		Details.dont_open_news = true
 		Details.game_version = version
 		Details.userversion = version .. " " .. Details.build_counter
@@ -103,6 +103,7 @@
 			Schedules = {},
 		}
 		Details222.TimeMachine = {}
+		Details222.OnUseItem = {Trinkets = {}}
 
 		Details222.Date = {
 			GetDateForLogs = function()
@@ -137,18 +138,34 @@ do
 
 	--change logs
 	--[=[
-
-
 	--]=]
 
 	local news = {
-		{"v10.1.0.11914.151", "September 13th, 2023"},
+		{"v10.2.0.12023.155", "November 08th, 2023"},
+		"Several fixes to make the addon work with the combat log changes done on patch 10.2.0.",
+		"Added trinket data for patch 10.2.0.",
+		"Fixed an issue with death tooltips going off-screen when the window is too close to a screen border.",
+		"Fixed a spam of errors during battlegrounds when an enemy player heal with a dot spell.",
+
+		{"v10.1.7.12012.155", "October 27th, 2023"},
+		"Implemented [Pip's Emerald Friendship Badge] trinket buffs.",
+		"Implemented the amount of times 'On Use' trinkets are used.",
+		"10.2 trinket damage spells renamed to the item name.",
+		"Framework Upgrade",
+		"Lib OpenRaid Upgrade.",
+		"Fixed the issue 'Segment Not Found' while resetting data.",
+		"Fixed Rogue icon",
+		"Fixed an issue with the healing merge amount on death tooltips (Flamanis).",
+		"Fixed 'extraStatusbar' showing in wrong views (non-player-dmg) (Continuity).",
+		"Removed LibCompress (Flamanis).",
+
+		{"v10.1.7.11914.155", "September 13th, 2023"},
 		"Added an extra bar within the evoker damage bar, this new bar when hovered over shows the buff uptime of Ebon Might and Prescience on all players.",
 		"ToC Files of all plugins got updated.",
 		"Fixed the error 'Attempt to compare string with number' on vanilla (Flamanis).",
 		"Fixed the error 'object:ToolTip() is invalid'.",
 
-		{"v10.1.0.11901.151", "September 09th, 2023"},
+		{"v10.1.7.11901.155", "September 09th, 2023"},
 		"Evoker Predicted Damage improvements.",
 		"Improved spellId check for first hit when entering a combat (Flamanis).",
 		"Replaced Classic Era deprecated functions (Flamanis).",
@@ -157,11 +174,11 @@ do
 		"Attempt to fix death log healing spam where a spell has multiple heals in the same millisecond.",
 		"Fixed an error with the old comparison window.",
 
-		{"v10.1.5.11856.151", "August 13th, 2023"},
+		{"v10.1.7.11856.155", "August 13th, 2023"},
 		"Fixed an issue with importing a profile with a corrupted time type.",
 		"Added Elemental Shaman overload spells (WillowGryph).",
 
-		{"v10.1.5.11855.151", "August 12th, 2023"},
+		{"v10.1.5.11855.155", "August 12th, 2023"},
 		"Forcing update interval to 0.1 on arenas matches using the real-time dps feature.",
 		"More parser cleanups and code improvements.",
 		"Auras tab now ignores regular 'world auras' (those weekly buffs of reputation, etc)",
@@ -409,29 +426,6 @@ do
 		"/details auras: show a panel with your current auras, spell ids and spell payload.",
 		"/details perf: show performance issues when you get a warning about freezes due to UpdateAddOnMemoryUsage().",
 		"/details npcid: get the npc id of your target (a box is shown with the number ready to be copied).",
-
-		{"v9.2.0.10001.146", "Aug 10th, 2022"},
-		"New feature: Arena DPS Bar, can be enabled at the Broadcaster Tools section, shows a bar in 'kamehameha' style showing which team is doing more damage in the latest 3 seconds.",
-		"/keystone now has more space for the dungeon name.",
-		"Revamp on the options section for Broadcaster tools.",
-		"Added 'Icon Size Offset' under Options > Bars: General, this new option allow to adjust the size of the class/spec icon shown on each bar.",
-		"Added 'Show Faction Icon' under Options > Bars: General, with this new option, you can choose to not show the faction icon, this icon is usually shown during battlegrounds.",
-		"Added 'Faction Icon Size Offset' under Options > Bars: General, new option to adjust the size of the faction icon.",
-		"Added 'Show Arena Role Icon' under Options > Bars: General, new option to hide or show the role icon of players during an arena match.",
-		"Added 'Clear On Start PVP' overall data option (Flamanis).",
-		"Added 'Arena Role Icon Size Offset' under Options > Bars: General, new option which allow to control the size of the arena role icon.",
-		"Added 'Level' option to Wallpapers, the wallpaper can now be placed on different levels which solves issues where the wallpaper is too low of certain configuration.",
-		"Streamer! plugin got updates, now it is more clear to pick which mode to use.",
-		"WotLK classic compatibility (Flamanis, Daniel Henry).",
-		"Fixed Grimrail Depot cannon and granades damage be added to players (dios-david).",
-		"Fixed the title bar text not showing when using the Custom Title Bar feature.",
-		"Fixed an issue with Dynamic Overall Damage printing errors into the chat window (Flamanis).",
-		"Role detection in classic versions got improvements.",
-		"New API: Details:GetTop5Actors(attributeId), return the top 5 actors from the selected attribute.",
-		"New API: Details:GetActorByRank(attributeId, rankIndex), return an actor from the selected attribute and rankIndex.",
-		"Major cleanup and code improvements on dropdowns for library Details! Framework.",
-		"Cleanup on NickTag library.",
-		"Removed LibGroupInSpecT, LibItemUpgradeInfo and LibCompress. These libraries got replaced by OpenRaidLib and LibDeflate.",
 	}
 
 	local newsString = "|cFFF1F1F1"
@@ -490,7 +484,7 @@ do
 
 		--current instances of the exp (need to maintain)
 			_detalhes.InstancesToStoreData = { --mapId
-				[2522] = true, --sepulcher of the first ones
+				[2549] = true, --amirdrassil
 			}
 
 		--store shield information for absorbs
@@ -1364,6 +1358,21 @@ if (select(4, GetBuildInfo()) >= 100000) then
 			StaticPopup1.button2:Click()
 		end
 	end)
+end
+
+local classCacheName = Details222.ClassCache.ByName
+local classCacheGUID = Details222.ClassCache.ByGUID
+
+function Details222.ClassCache.GetClassFromCache(value)
+	return classCacheName[value] or classCacheGUID[value]
+end
+
+function Details222.ClassCache.AddClassToCache(value, whichCache)
+	if (whichCache == "name") then
+		classCacheName[value] = true
+	elseif (whichCache == "guid") then
+		classCacheGUID[value] = true
+	end
 end
 
 function Details222.ClassCache.GetClass(value)

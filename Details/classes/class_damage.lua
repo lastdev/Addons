@@ -2994,8 +2994,8 @@ end
 ---@param onEnterFunc function?
 ---@param onLeaveFunc function?
 function Details:ShowExtraStatusbar(thisLine, amount, extraAmount, totalAmount, topAmount, instanceObject, onEnterFunc, onLeaveFunc)
-	if (extraAmount and extraAmount > 0) then
-		local extraStatusbar = thisLine.extraStatusbar
+	local extraStatusbar = thisLine.extraStatusbar
+	if (extraAmount and extraAmount > 0 and instanceObject.atributo == 1 and instanceObject.sub_atributo == 1) then
 		local initialOffset = 0
 		local icon_offset_x, icon_offset_y = unpack(instanceObject.row_info.icon_offset)
 
@@ -3034,6 +3034,8 @@ function Details:ShowExtraStatusbar(thisLine, amount, extraAmount, totalAmount, 
 			extraStatusbar.defaultAlpha = 0.1
 		end
 		extraStatusbar:Show()
+	else
+		extraStatusbar:Hide()
 	end
 end
 
@@ -5043,6 +5045,7 @@ function damageClass:MontaInfoDamageDone() --I guess this fills the list of spel
 
 		---@type string
 		local spellName = _GetSpellInfo(spellId)
+
 		if (spellName) then
 			---@type number in which index the spell with the same name was stored
 			local index = alreadyAdded[spellName]
@@ -5756,6 +5759,9 @@ function damageClass:BuildSpellDetails(spellBar, spellBlockContainer, blockIndex
 					blockLine1.leftText:SetText("Procs: " .. trinketProc.total)
 				end
 			end
+
+		elseif (Details.GetItemSpellInfo(spellId)) then
+			blockLine1.leftText:SetText("Uses: " .. totalCasts)
 		end
 
 		blockLine1.rightText:SetText(Loc ["STRING_HITS"]..": " .. totalHits) --hits and uptime

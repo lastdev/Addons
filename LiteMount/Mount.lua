@@ -33,18 +33,20 @@ function LM.Mount:Get(className, ...)
     local m = class:Get(...)
     if not m then return end
 
-    for familyName, familyMounts in pairs(LM.MOUNTFAMILY) do
-        if familyMounts[m.spellID] then
-            m.family = familyName
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+        for familyName, familyMounts in pairs(LM.MOUNTFAMILY) do
+            if familyMounts[m.spellID] then
+                m.family = familyName
+            end
         end
-    end
 
-    if not m.family then
-        m.family = UNKNOWN
-        LM.MOUNTFAMILY["Unknown"][m.spellID] = true
---[==[@debug@
-        LM.PrintError(format('No family: %s (%d)', m.name, m.spellID))
---@end-debug@]==]
+        if not m.family then
+            m.family = UNKNOWN
+            LM.MOUNTFAMILY["Unknown"][m.spellID] = true
+            --[==[@debug@
+            LM.PrintError(format('No family: %s (%d)', m.name, m.spellID))
+            --@end-debug@]==]
+        end
     end
 
     return m
@@ -77,7 +79,7 @@ function LM.Mount:FilterToDisplay(f)
         return L.LM_FAMILY .. ' : ' .. L[family]
     elseif f:match('^mt:%d+$') then
         local _, id = string.split(':', f, 2)
-        return TYPE .. " : " .. LM.MOUNT_TYPES[tonumber(id)]
+        return TYPE .. " : " .. ( LM.MOUNT_TYPES[tonumber(id)] or id )
     elseif LM.Options:IsGroup(f) then
         return L.LM_GROUP .. ' : ' .. f
     elseif LM.Options:IsFlag(f) then
@@ -183,6 +185,14 @@ function LM.Mount:IsCastable()
 end
 
 function LM.Mount:IsCancelable()
+    return true
+end
+
+function LM.Mount:IsUsable()
+    return true
+end
+
+function LM.Mount:IsMountable()
     return true
 end
 

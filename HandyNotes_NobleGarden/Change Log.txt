@@ -1,0 +1,144 @@
+== v2.09 - 28th October 2023
+* Bump to 10.2.0
+* Multi version. Wrath 3.4.3 TOC now included
+
+== v2.08 - 18th September 2023
+* Reposition the Stormwind egg so as to not conflict with an upcoming unannounced AddOn
+* TOC version bump to 10.1.7
+
+== v2.07 W - 15th July 2023
+* Support for WoW 3.4.2
+
+== v2.07 - 28th June 2023
+* Support WoW 10.1.5
+
+== v2.06 - 6th May 2023
+* Now supports the new AddOn Compartment introduced in 10.1.0.
+  Clicking the drop down for this AddOn takes you directly to the configuration panel!
+  
+== v2.05 - 3rd May 2023
+* Added an icon to the TOC file - thus removing the annoying "?" from the AddOn list in game
+* Removed unnecessary print to console code
+
+== v2.04 - 29th April 2023
+* TOC bump to 10.1.0
+
+== v2.03 - 17th April 2023
+* (46.78,55.36) removed from Dun Morogh Classic
+* Added (46.82,53.66) to Dun Morogh Classic
+* Added (50.76,42.70), (52.68,41.22), (53.01,40.94), and (53.81,41.75) in Durotar / Razor Hill (Retail and Classic)
+
+== v2.02 - 16th April 2023
+* Bug fixes, typos and... Brightly Colored Eggs...
+* Elwynn Forest / Goldshire at (39.97,64.65), (39.99,64.85), (41.29,63.69)
+* Durotar / Razor Hill at (54.48,41.94)
+* Eversong / Falconwing Square at (46.38,46.46)
+
+== v2.02 W - 16th April 2023
+* Bug fixes, typos and... Brightly Colored Eggs...
+* Elwynn Forest / Goldshire at (39.97,64.65), (39.99,64.85), (41.29,63.69)
+* Durotar / Razor Hill at (54.48,41.94)
+* Eversong / Falconwing Square at (46.38,46.46)
+
+== v2.01 - 14th April 2023
+* All Classic and Retail zones have been farmed extensively. At least 50 pins per zone.
+* Lots of coordinate tweaks, code tweaks, etc
+
+== v2.01 W - 14th April 2023
+* All Classic and Retail zones have been farmed extensively. At least 50 pins per zone.
+* Lots of coordinate tweaks, code tweaks, etc
+
+== v2.00 - 12th April 2023
+* Lots of changes. Hundreds of pins added as Brightly Colored Eggs are now supported (Classic is complete, Retail almost)
+* Daily tracking
+* New pin textures
+
+== v2.00 W - 12th April 2023
+* Lots of changes. Hundreds of pins added as Brightly Colored Eggs are now supported (Classic is complete, Retail almost)
+* Daily tracking
+* New pin textures
+
+== v1.12 - 9th April 2023
+* New pin texture added - bright orange!
+* Now support the dailies with a pin in each quest hub
+* Egg-centric Discovery dailies supported
+
+== v1.12 W - 12th April 2023
+* New pin texture added - bright orange!
+* Now support the dailies with a pin in each quest hub
+* Egg-centric Discovery dailies supported
+
+== v1.11 - 7th April 2023
+* Desert Rose description is now more helpful
+* Rewrite data file structure and related code to add more flexibility
+* Remove redundant translations
+
+== v1.11 W - 7th April 2023
+* Desert Rose description is now more helpful
+* Rewrite data file structure and related code to add more flexibility
+* Remove redundant translations
+
+== v1.10 - 21st March 2023
+* For 10.0.7
+
+== v1.09 - 8th March 2023
+* Pins now appear on the Azeroth map
+
+== v1.09 W - 8th March 2023
+* Pins now appear on the Azeroth map
+
+== v1.08 - 12th February 2023
+* Better selection of icons
+* Tooltip says the character name and not just "character"
+
+== v1.08 W - 12th February 2023
+* Better selection of icons
+* Tooltip says the character name and not just "character"
+
+== v1.07 - 26th January 2023
+* For 10.0.5
+
+== v1.06 - 18th January 2023
+* Fix for TOC Highlight (prefix colour) now matches the prefix used by the AddOn
+
+== v1.04 W - 18th January 2023
+* For 3.4.1
+
+== v1.05 - 7th December 2022
+* For 10.0.2
+
+== v1.04 - 26th October 2022
+* For 10.0.0
+
+== v1.03 - 16th October 2022
+* Italian translation of Cenarion Hold added
+* Accidentally left debug code live
+
+== v1.03 W - 16th October 2022
+* Italian translation of Cenarion Hold added
+* Accidentally left debug code live
+
+== v1.02 - 16th October 2022
+* Added code to ensure that maps for Retail are skipped for Wrath and visa-versa
+* Correction to achievement criteria indexing as I've become aware that for Wrath, Wowhead is not correct
+* Change Icon Settings label to Icon Selection for consistency
+* Added a couple more translations
+* Titivation with the intertnal transalation ordering to standardise across my AddOns
+* For 9.2.7
+
+== v1.02 W - 16th October 2022
+* Added code to ensure that maps for Retail are skipped for Wrath and visa-versa
+* Correction to achievement criteria indexing as I've become aware that for Wrath, Wowhead is not correct
+* Change Icon Settings label to Icon Selection for consistency
+* Added a couple more translations
+* Titivation with the intertnal transalation ordering to standardise across my AddOns
+* For 3.4.0
+
+== v1.01 - Never existed. Presume numbering stuff up
+
+== v1.00 - 22nd September 2022
+* Initial release for 9.2.7
+
+== v1.00 W - 22nd September 2022
+* Initial release for 3.4.0
+

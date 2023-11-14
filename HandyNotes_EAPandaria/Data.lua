@@ -2102,7 +2102,7 @@ points[ 376 ] = { -- Valley of the Four Winds
 	[19133566] = { aID=7439, aIndex=2, author="V. need five" }, -- Bonobos
 	[32886269] = { aID=7439, aIndex=51, }, -- Blackhoof
 	[34545922] = { aID=7439, aIndex=51, }, -- Blackhoof
-	[36942575] = { aID=7439, aIndex=23, }, -- Sulik'shor
+	[36942575] = { aID=7439, aIndex=23, item=86569 }, -- Sulik'shor
 	[37826040] = { aID=7439, aIndex=51, }, -- Blackhoof
 	[39635765] = { aID=7439, aIndex=51, }, -- Blackhoof
 	[52132787] = { aID=7439, aIndex=9, author="Look for more", -- Sele'na
@@ -2208,18 +2208,18 @@ textures[13] = "Interface\\AddOns\\HandyNotes_EAPandaria\\EAPandariaPink"
 textures[14] = "Interface\\AddOns\\HandyNotes_EAPandaria\\EAPandariaOriginal"
 textures[15] = "Interface\\AddOns\\HandyNotes_EAPandaria\\Love"
 
-scaling[1] = 0.68
-scaling[2] = 0.68
-scaling[3] = 0.66
-scaling[4] = 0.66
-scaling[5] = 0.66
-scaling[6] = 0.66
-scaling[7] = 0.76
-scaling[8] = 0.76
-scaling[9] = 0.96
-scaling[10] = 0.96
-scaling[11] = 0.5
-scaling[12] = 0.5
-scaling[13] = 0.5
-scaling[14] = 0.5
-scaling[15] = 0.44
+scaling[1] = 0.55
+scaling[2] = 0.55
+scaling[3] = 0.55
+scaling[4] = 0.55
+scaling[5] = 0.55
+scaling[6] = 0.55
+scaling[7] = 0.65
+scaling[8] = 0.62
+scaling[9] = 0.75
+scaling[10] = 0.75
+scaling[11] = 0.4
+scaling[12] = 0.4
+scaling[13] = 0.4
+scaling[14] = 0.4
+scaling[15] = 0.35

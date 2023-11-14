@@ -1,4 +1,4 @@
-## Interface: 100107
+## Interface: 100200
 ## Title:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10World Bosses (BfA)|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10World Bosses (BfA)|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10아제로스 (격아)|r
@@ -7,8 +7,8 @@
 ## Author: MysticalOS
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
-## SavedVariables: DBMAzerothBfA_AllSavedVars
-## SavedVariablesPerCharacter: DBMAzerothBfA_SavedStats
+## SavedVariables: DBMBfA_AllSavedVars
+## SavedVariablesPerCharacter: DBMBfA_SavedStats
 ## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: RAID
@@ -28,7 +28,7 @@
 ## X-Curse-Project-ID: 420275
 ## X-WoWI-ID: 25779
 ## X-Wago-ID: RXKqxj6y
-## Version: r22
+## Version: r23
 localization.en.lua
 localization.ru.lua
 localization.de.lua

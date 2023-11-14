@@ -12,6 +12,7 @@ local DisenchantInfo = TSM.Include("Data.DisenchantInfo")
 local TempTable = TSM.Include("Util.TempTable")
 local ItemString = TSM.Include("Util.ItemString")
 local Wow = TSM.Include("Util.Wow")
+local GroupPath = TSM.Include("Util.GroupPath")
 local ItemInfo = TSM.Include("Service.ItemInfo")
 local CustomPrice = TSM.Include("Service.CustomPrice")
 local Conversions = TSM.Include("Service.Conversions")
@@ -122,7 +123,7 @@ function private.PopulateGroupLine(tooltip, itemString)
 		else
 			leftText = GROUP.." ("..L["Base Item"]..")"
 		end
-		tooltip:AddTextLine(leftText, TSM.Groups.Path.Format(groupPath))
+		tooltip:AddTextLine(leftText, GroupPath.Format(groupPath))
 	end
 end
 

@@ -249,7 +249,7 @@ function LiteMountMountButtonMixin:Update(bitFlags, mount)
     end
 
     local rarity = mount:GetRarity()
-    if rarity then
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and rarity then
         self.Rarity:SetFormattedText(L.LM_RARITY_FORMAT, rarity)
         self.Rarity.toolTip = format(L.LM_RARITY_FORMAT_LONG, rarity)
     else
@@ -261,7 +261,13 @@ function LiteMountMountButtonMixin:Update(bitFlags, mount)
         self.Name:SetFontObject("GameFontDisable")
         self.Icon:GetNormalTexture():SetVertexColor(1, 1, 1)
         self.Icon:GetNormalTexture():SetDesaturated(true)
-    elseif mount.isUsable == false then
+    elseif not mount:IsUsable() then
+        -- In retail mounts are made red if you can't use them ever
+        self.Name:SetFontObject("GameFontNormal")
+        self.Icon:GetNormalTexture():SetDesaturated(true)
+        self.Icon:GetNormalTexture():SetVertexColor(0.6, 0.2, 0.2)
+    elseif WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC and not mount:IsMountable() then
+        -- In classic mounts are made red if you can't use them right now
         self.Name:SetFontObject("GameFontNormal")
         self.Icon:GetNormalTexture():SetDesaturated(true)
         self.Icon:GetNormalTexture():SetVertexColor(0.6, 0.2, 0.2)
@@ -387,6 +393,8 @@ function LiteMountMountsPanelMixin:OnLoad()
         end
     end
 
+    self:SetScript('OnEvent', function () self.MountScroll:Update() end)
+
     -- We are using the MountScroll SetControl to do ALL the updating.
 
     LiteMountOptionsPanel_RegisterControl(self.MountScroll)
@@ -414,12 +422,15 @@ function LiteMountMountsPanelMixin:OnShow()
             )
         )
 
+    self:RegisterEvent('MOUNT_JOURNAL_USABILITY_CHANGED')
+
     LiteMountOptionsPanel_OnShow(self)
 end
 
 function LiteMountMountsPanelMixin:OnHide()
     LM.UIFilter.UnregisterAllCallbacks(self)
     LM.MountRegistry.UnregisterAllCallbacks(self)
+    self:UnregisterAllEvents()
     LiteMountOptionsPanel_OnHide(self)
 end
 

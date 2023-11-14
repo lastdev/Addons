@@ -21,6 +21,7 @@ LM.Environment:RegisterEvent("PLAYER_LOGIN")
 function LM.Environment:Initialize()
     self.combatTravelForm = nil
 
+    self:InitializeHolidays()
     self:UpdateSwimTimes()
 
     self.startedFalling = 0
@@ -263,6 +264,7 @@ end
 -- Journeyman Riding (100% ground) = IsSpellKnown(33391)
 -- Expert Riding     (150% flying) = IsSpellKnown(34090)
 -- Artisan Riding    (280% flying) = IsSpellKnown(34091) - removed but characters can still have it
+-- Cold Weather Flying             = IsSpellKnown(54197) - wotlk classic
 -- Master Riding     (320% flying) = IsSpellKnown(90265)
 
 -- These are in this order because it's more likely you are high level and
@@ -271,6 +273,7 @@ end
 
 function LM.Environment:KnowsRidingSkill()
     return IsSpellKnown(90265)
+        or IsSpellKnown(54197)
         or IsSpellKnown(34091)
         or IsSpellKnown(34090)
         or IsSpellKnown(33391)
@@ -279,6 +282,7 @@ end
 
 function LM.Environment:KnowsFlyingSkill()
     return IsSpellKnown(90265)
+        or IsSpellKnown(54197)
         or IsSpellKnown(34091)
         or IsSpellKnown(34090)
 end
@@ -339,18 +343,29 @@ local InstanceFlyableOverride = {
     [2464] = false,         -- Battle of Ardenweald (9.1)
 }
 
+local InstanceDragonridableOverride = {
+    -- Stricly speaking this is the debuff "Hostile Airways" (406608)
+    [2597] = false,         -- Zaralek Caverns - Chapter 1 Scenario
+}
+
 function LM.Environment:ForceFlyable(instanceID)
     instanceID = instanceID or select(8, GetInstanceInfo())
     InstanceFlyableOverride[instanceID] = true
 end
 
 function LM.Environment:CanDragonride(mapPath)
-    if IsSpellKnown(376777) then
-        return IsUsableSpell(368896) == true
-        -- return select(8, GetInstanceInfo()) == 2444
-    else
+    if not IsSpellKnown(376777) then
         return false
     end
+
+    local instanceID = select(8, GetInstanceInfo())
+
+    if InstanceDragonridableOverride[instanceID] ~= nil then
+        return InstanceDragonridableOverride[instanceID]
+    end
+
+    return IsUsableSpell(368896) == true
+    -- return select(8, GetInstanceInfo()) == 2444
 end
 
 -- Can't fly if you haven't learned a flying skill. Various expansion
@@ -381,7 +396,7 @@ function LM.Environment:CanFly()
     end
 
     -- Can't fly in Warfronts
-    if C_Scenario.IsInScenario() then
+    if C_Scenario and C_Scenario.IsInScenario() then
         local scenarioType = select(10, C_Scenario.GetInfo())
         if scenarioType == LE_SCENARIO_TYPE_WARFRONT then
             return false
@@ -462,8 +477,14 @@ local function ValidDisplayMap(info, group, seenGroups)
         return false
     end
 
-    if info.mapType <= Enum.UIMapType.Zone then
-        return C_Map.IsMapValidForNavBarDropDown(info.mapID)
+    if C_Map.IsMapValidForNavBarDropDown then
+        if info.mapType <= Enum.UIMapType.Zone then
+            return C_Map.IsMapValidForNavBarDropDown(info.mapID)
+        end
+    else
+        if info.mapType > Enum.UIMapType.Zone then
+            return false
+        end
     end
 
     if group then
@@ -526,7 +547,7 @@ local ShowMapOverride = {
 
 local function FillChildren(info)
     for _, child in ipairs(C_Map.GetMapChildrenInfo(info.mapID)) do
-        if ShowMapOverride[child.mapID] or C_Map.IsMapValidForNavBarDropDown(child.mapID) then
+        if ShowMapOverride[child.mapID] or ValidDisplayMap(child) then
             FillChildren(child)
             table.insert(info, child)
         end
@@ -588,4 +609,86 @@ function LM.Environment:GetEJInstances()
     EncounterJournal:RegisterEvent("EJ_DIFFICULTY_UPDATE")
 
     return out
+end
+
+local CALENDAR_FILTER_CVARS = {
+    ["calendarShowHolidays"] = 1,
+    ["calendarShowDarkmoon"] = 1,
+    ["calendarShowLockouts"] = 0,
+    ["calendarShowWeeklyHolidays"] = 0,
+    ["calendarShowBattlegrounds"] = 0,
+    ["calendarShowResets"] = 0,
+};
+
+
+function LM.Environment:InitializeHolidays()
+    self.holidaysByID = {}
+
+    local savedCVars = {}
+    for cvar, value in pairs(CALENDAR_FILTER_CVARS) do
+        savedCVars[cvar] = GetCVar(cvar)
+        SetCVar(cvar, value)
+    end
+
+    local now = C_DateAndTime.GetCurrentCalendarTime()
+    local saved = C_Calendar.GetMonthInfo()
+
+    local holidaysByTitle = {}
+
+    C_Calendar.SetAbsMonth(now.month, now.year)
+    for monthDelta = 1, 12 do
+        -- Advance by one, easier than doing our own date arithmetic
+        C_Calendar.SetMonth(1)
+        local monthInfo = C_Calendar.GetMonthInfo()
+        for monthDay = 1, monthInfo.numDays do
+            for i = 1, C_Calendar.GetNumDayEvents(0, monthDay) do
+                local eventInfo = C_Calendar.GetDayEvent(0, monthDay, i)
+                if eventInfo.calendarType == 'HOLIDAY' and not self.holidaysByID[eventInfo.eventID] then
+                    self.holidaysByID[eventInfo.eventID] = eventInfo.title
+                    holidaysByTitle[eventInfo.title] = holidaysByTitle[eventInfo.title] or {}
+                    table.insert(holidaysByTitle[eventInfo.title], eventInfo.eventID)
+                end
+            end
+        end
+    end
+
+    -- if we see the same titled event with different IDs delete them all
+    -- as they're probably something dumb like Turbulent Timeways and not real
+    -- holidays
+    for _, IDs in pairs(holidaysByTitle) do
+        if #IDs > 1 then
+            for _, id in ipairs(IDs) do self.holidaysByID[id] = nil end
+        end
+    end
+
+    -- Restore settings
+    for cvar, value in pairs(savedCVars) do SetCVar(cvar, value) end
+    C_Calendar.SetAbsMonth(saved.month, saved.year)
+end
+
+function LM.Environment:IsHolidayActive(idOrTitle)
+    -- The calendar API is stateful so this is going to mess up the UI. We
+    -- could save and restore the current month but the user might be editing
+    -- or viewing something which will be lost.
+    if CalendarFrame and CalendarFrame:IsShown() then return end
+
+    local now = C_DateAndTime.GetCurrentCalendarTime()
+    C_Calendar.SetAbsMonth(now.month, now.year)
+
+    for i = 1, C_Calendar.GetNumDayEvents(0, now.monthDay) do
+        local eventInfo = C_Calendar.GetDayEvent(0, now.monthDay, i)
+        if eventInfo.eventID == idOrTitle or eventInfo.title == idOrTitle then
+            return
+                C_DateAndTime.CompareCalendarTime(eventInfo.startTime, now) >= 0 and
+                C_DateAndTime.CompareCalendarTime(eventInfo.endTime, now) < 0
+        end
+    end
+end
+
+function LM.Environment:GetHolidays()
+    return CopyTable(self.holidaysByID)
+end
+
+function LM.Environment:GetHolidayName(id)
+    return self.holidaysByID[id]
 end

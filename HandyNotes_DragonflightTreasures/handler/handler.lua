@@ -180,6 +180,18 @@ function ns.RegisterPoints(zone, points, defaults)
                 end
             end
         end
+        if point.additional then
+            -- Extra coordinates to register. This is equivalent to just
+            -- registering the same table multiple times on the input, and
+            -- should only be used for simple cases -- related points are
+            -- going to fall apart here.
+            for _,acoord in pairs(point.additional) do
+                if ns.DEBUG and ns.points[zone][acoord] then
+                    print(myname, "point collision", zone, acoord)
+                end
+                ns.points[zone][acoord] = point
+            end
+        end
     end
 end
 function ns.RegisterVignettes(zone, vignettes, defaults)

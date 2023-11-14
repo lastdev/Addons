@@ -331,8 +331,8 @@ addon:Controller("AltoholicUI.TabGridsCategoriesList", {
 				}},
 				{ text = EXPANSION_NAME8, callback = faction_OnClick, xPackID = 9, factionID = 1 },
 				{ text = EXPANSION_NAME9, callback = faction_OnClick, xPackID = 10, factionID = 1 },
-				{ text = format("%s%s", colors.green, GUILD), callback = faction_OnClick, xPackID = 10, factionID = 1 },
-				{ text = format("%s%s", colors.cyan, L["All-in-one"]), callback = faction_OnClick, xPackID = 11, factionID = 1 },
+				{ text = format("%s%s", colors.green, GUILD), callback = faction_OnClick, xPackID = 11, factionID = 1 },
+				{ text = format("%s%s", colors.cyan, L["All-in-one"]), callback = faction_OnClick, xPackID = 12, factionID = 1 },
 			}},
 			{ text = L["Currencies"], subMenu = {} },
 			{ text = QUESTS_LABEL, subMenu = {

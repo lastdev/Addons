@@ -1,35 +1,22 @@
 # <DBM Mod> Raids (WoTLK)
 
-## [r320](https://github.com/DeadlyBossMods/DBM-WotLK/tree/r320) (2023-10-14)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-WotLK/compare/r319...r320) [Previous Releases](https://github.com/DeadlyBossMods/DBM-WotLK/releases)
+## [r321](https://github.com/DeadlyBossMods/DBM-WotLK/tree/r321) (2023-11-07)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-WotLK/compare/r320...r321) [Previous Releases](https://github.com/DeadlyBossMods/DBM-WotLK/releases)
 
-- re-enable 10 man goo timer, it was right, note wa wrong  
-- Scope ooze spawn to only show if you are tank, or are the one spawning it to further reduce rotface spam  
-    Turned radiating ooze alert off by default to further reduce rotface spam  
-    reverted change on sticky, it still should be on for tank, but with other changes in this push should feel better  
-- more antispam tweaks for rotface  
-- Fixed a bug that caused sindragosa and valithria to not show heroic kill stats in GUI  
-- use modern conventions and make spore use yell and not say, and add spore fading countdown  
-- Rotface update  
-     - significantly reduce alert spam on rotface by fixing a bug where vile gas alert showed multiple times and added throttle to sticky ooze alert and made it tank only by default.  
-     - Also made sticky ooze timer a nameplate only timer that'll use plater now (and in future built in DBM features)  
-     - also fixed a bug that caused vile gas timer to keep restarting.  
-- alliance rp also longer by 3 seconds on classic  
-- tweak option default on wounding strike and fix it showing double messages if two adds strike same target in same global  
-- Improve ICC trash module voice pack support  
-    fixed a bug that could cause slow icon clear on trash module, but also make icon option off by default too  
-    also fixed stop casting warning on marrowgar trash to only be on for actual casters by default  
-- adjust horde combat start timer for deathbringer to be slower than retail by 2.5 seconds.  
-- adjust up sindragosa stack anounce from 4 to 5  
-- also improve gunship battle win detection on classic  
-- Fix malleable goo cast detection on festergut because of "nochanges"  
-- Minor antispam fix for rotface  
-- bump wrath toc  
-- Also reset icons on new impales, no reason to keep descending icon for brand new sets. make it consistently always start at skull for new impales going out  
-- Also reset icons on new impales, no reason to keep descending icon for brand new sets. make it consistently always start at skull for new impales going out  
-- Changed to use 7 icons on LordMarrowgar instead of 8, leaving star fr… (#50)  
-    Co-authored-by: David Groves <git@fibrecat.org>  
-- Stage change tweaks for ICC to better improve WA stuff and fit retail conventions  
-- All icon options are now off by default for blood queen, with a force option default reset. In modern era on this fight, these particular mechanics don't need icons, positional stuff does like bites  
-- Middling concession on LK defile on tank scan that gets best of fix while still not hindering tank with slower warnings  
-- Update DBM-Raids-WoTLK.toc (#47)  
+- Bump tocs  
+- throttle shadow prison  
+- throttle shadow. prison  
+- also disavble green ooze soak warnings if you're gas variable on heroic.  
+- also disavble green ooze soak warnings if you're gas variable on heroic.  
+- fix option name  
+- Tweak defaults on putricicde to reduce spam based on common strats, plague just gets dumped in melee and allowed to bounce around. Although DBM has a throttle for target warning, it's still annoying so now off by default  
+    In addition, volatile ooze adhesive "help soak" alert is also off by default to reduce the screen flashing when green ooze is out. Target announce will still be present but the "help soak" and flash is gone by default now.  
+- Remove support for shield health tracking in wrath classic, since API for getting amount doesn't exist there. To re-add it would require knowing all 4 OG values and that's not something I have off hand.  
+- change blood prince council to use 13 instead of 12 since 12 isn't valid in classic but 13 is. according to https://www.wowhead.com/spell=72037/shock-vortex it should have been 13 all along anyways  
+- Fix gui display issue with festergut  
+- Change infest to healer only by default and add voice pack support that's more healer centric  
+- fix a bug that caused defensive alert to warn all tanks and not just the correct tank on Faerlina  
+- Forgot to push this, increase range of rangecheck on festergut from 8 to 10 to give a little buffer for the movement vile gas causes  
+- sync  
+- Fix kinetic bomb announce and timer in classic because it too fell victim of "nochanges" and intentional regression of api.  
+    Added count to the objects while at it  

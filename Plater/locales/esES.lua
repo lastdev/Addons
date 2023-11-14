@@ -5,10 +5,18 @@ do
 
 ------------------------------------------------------------
 --[[Translation missing --]]
+L["EXPORT"] = "Export"
+--[[Translation missing --]]
+L["EXPORT_CAST_COLORS"] = "Export Colors"
+--[[Translation missing --]]
 L["HIGHLIGHT_HOVEROVER"] = "Hover Over Highlight"
 --[[Translation missing --]]
 L["HIGHLIGHT_HOVEROVER_ALPHA"] = "Hover Over Highlight Alpha"
 L["HIGHLIGHT_HOVEROVER_DESC"] = "Efecto de resaltado cuando el ratón está sobre la placa."
+--[[Translation missing --]]
+L["IMPORT"] = "Import"
+--[[Translation missing --]]
+L["IMPORT_CAST_COLORS"] = "Import Colors"
 L["OPTIONS_ALPHA"] = "Alfa"
 L["OPTIONS_ALPHABYFRAME_ALPHAMULTIPLIER"] = "Multiplicador de transparencia."
 L["OPTIONS_ALPHABYFRAME_DEFAULT"] = "Transparencia por defecto"
@@ -84,6 +92,8 @@ L["OPTIONS_CASTBAR_SPARK_HIDE_INTERRUPT"] = "Ocultar chispa al interrumpir"
 L["OPTIONS_CASTBAR_TOGGLE_TEST"] = "Activar la barra de lanzamiento de prueba"
 L["OPTIONS_CASTBAR_TOGGLE_TEST_DESC"] = "Inicia la prueba de la barra de lanzamiento, pulsa de nuevo para detenerla."
 L["OPTIONS_CASTBAR_WIDTH"] = "Anchura de la barra de lanzamiento."
+--[[Translation missing --]]
+L["OPTIONS_CASTCOLORS_DISABLECOLORS"] = "Disable All Colors"
 L["OPTIONS_CLICK_SPACE_HEIGHT"] = "La altura del área que acepta clics del ratón para seleccionar al objetivo"
 L["OPTIONS_CLICK_SPACE_WIDTH"] = "La anchura del área que acepta clics del ratón para seleccionar al objetivo"
 L["OPTIONS_COLOR"] = "Color"
@@ -241,6 +251,8 @@ L["OPTIONS_NOESSENTIAL_NAME"] = "Disable non-essential script updates during Pla
 L["OPTIONS_NOESSENTIAL_SKIP_ALERT"] = "Skipped non-essential patch:"
 --[[Translation missing --]]
 L["OPTIONS_NOESSENTIAL_TITLE"] = "Skip Non Essential Script Patches"
+--[[Translation missing --]]
+L["OPTIONS_NOTHING_TO_EXPORT"] = "There's nothing to export."
 L["OPTIONS_OKAY"] = "Okay"
 L["OPTIONS_OUTLINE"] = "Contorno"
 --[[Translation missing --]]
@@ -310,6 +322,10 @@ L["OPTIONS_SHIELD_BAR"] = "Shield Bar"
 L["OPTIONS_SHOW_CASTBAR"] = "Show cast bar"
 --[[Translation missing --]]
 L["OPTIONS_SHOW_POWERBAR"] = "Show power bar"
+--[[Translation missing --]]
+L["OPTIONS_SHOWOPTIONS"] = "Show Options"
+--[[Translation missing --]]
+L["OPTIONS_SHOWSCRIPTS"] = "Show Scripts"
 --[[Translation missing --]]
 L["OPTIONS_SHOWTOOLTIP"] = "Show Tooltip"
 --[[Translation missing --]]

@@ -1,0 +1,240 @@
+--[[
+                                ----o----(||)----oo----(||)----o----
+
+                                        A Path Less Travelled
+
+                                      v1.22 - 28th October 2023
+                                Copyright (C) Taraezor / Chris Birch
+
+                                ----o----(||)----oo----(||)----o----
+]]
+
+local myName, ns = ...
+ns.db = {}
+-- From Data.lua
+ns.points = {}
+ns.textures = {}
+ns.scaling = {}
+-- Cyan theme
+ns.colour = {}
+ns.colour.prefix	= "\124cFF00FFFF" -- Cyan
+ns.colour.highlight = "\124cFF00CED1" -- Dark Turquoise
+ns.colour.plaintext = "\124cFF6495ED" -- Cornflower Blue
+
+local defaults = { profile = { iconScale = 2.5, iconAlpha = 1, showCoords = false,
+								iconChoice = 7 } }
+local continents = {}
+local pluginHandler = {}
+
+-- upvalues
+local GameTooltip = _G.GameTooltip
+local GetItemNameByID = C_Item.GetItemNameByID
+local IsIndoors = IsIndoors
+local IsQuestFlaggedCompleted = C_QuestLog.IsQuestFlaggedCompleted
+local LibStub = _G.LibStub
+local UIParent = _G.UIParent
+local format, next = format, next
+
+local HandyNotes = _G.HandyNotes
+ns.name = UnitName( "player" ) or "Character"
+
+continents[ 12 ] = true -- Kalimdor
+continents[ 13 ] = true -- Eastern Kingdoms
+continents[ 101 ] = true -- Outland
+continents[ 113 ] = true -- Northrend
+continents[ 424 ] = true -- Pandaria
+
+function pluginHandler:OnEnter(mapFile, coord)
+	if self:GetCenter() > UIParent:GetCenter() then
+		GameTooltip:SetOwner(self, "ANCHOR_LEFT")
+	else
+		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+	end
+
+	local pin = ns.points[mapFile] and ns.points[mapFile][coord]
+	local setTextDone, itemName;
+	
+	if pin.name then
+		GameTooltip:SetText( ns.colour.prefix ..pin.name )
+		setTextDone = true
+		if pin.quest or pin.item or pin.tip then
+			GameTooltip:AddLine( "\n" )
+		end
+	end
+	
+	if pin.item then
+		itemName = GetItemNameByID( pin.item ) or pin.item
+	end
+	
+	if pin.quest then
+		local completed = IsQuestFlaggedCompleted( pin.quest )
+		if setTextDone then
+			GameTooltip:AddLine( ns.colour.highlight .."! " ..( pin.questName or itemName or " " ) )
+		else
+			GameTooltip:SetText( ns.colour.prefix .."! " ..( pin.questName or itemName or " " ) )
+			setTextDone = true
+		end
+		GameTooltip:AddLine( ( completed == true )
+					and ( "\124cFF00FF00" .."Completed" .." (" ..ns.name ..")" ) 
+					or ( "\124cFFFF0000" .."Not Completed" .." (" ..ns.name ..")" ) )
+		if pin.tip then
+			GameTooltip:AddLine( "\n" )
+		end
+				
+	elseif pin.item then
+		if setTextDone then
+			GameTooltip:AddLine( ns.colour.highlight ..itemName )
+		else
+			GameTooltip:SetText( ns.colour.prefix ..itemName )
+		end
+		if pin.tip then
+			GameTooltip:AddLine( "\n" )
+		end
+	end
+	
+	if pin.tip then
+		GameTooltip:AddLine( ns.colour.plaintext ..pin.tip )
+	end	
+	if ( ns.db.showCoords == true ) then
+		local mX, mY = HandyNotes:getXY(coord)
+		mX, mY = mX*100, mY*100
+		GameTooltip:AddLine( ns.colour.highlight .."(" ..format( "%.02f", mX ) .."," ..format( "%.02f", mY ) ..")" )
+	end
+
+	GameTooltip:Show()
+end
+
+function pluginHandler:OnLeave()
+	GameTooltip:Hide()
+end
+
+do	
+	local function iterator(t, prev)
+		if not t then return end
+		local coord, pin = next(t, prev)
+		while coord do
+			if pin then
+				if ( ns.CurrentMap == 42 ) then -- Deadwind Pass	
+					local mX, mY = HandyNotes:getXY(coord)
+					mX, mY = mX*100, mY*100
+					if ( mX > 24 ) and ( mX < 39 ) and ( mY > 69 ) and ( mY < 82 ) then
+						if IsIndoors( "player" ) then
+							return coord, nil, ns.textures[ns.db.iconChoice],
+								ns.db.iconScale * ns.scaling[ns.db.iconChoice], ns.db.iconAlpha
+						end
+					else
+						return coord, nil, ns.textures[ns.db.iconChoice],
+							ns.db.iconScale * ns.scaling[ns.db.iconChoice], ns.db.iconAlpha
+					end
+				else
+					return coord, nil, ns.textures[ns.db.iconChoice],
+						ns.db.iconScale * ns.scaling[ns.db.iconChoice], ns.db.iconAlpha
+				end
+			end
+			coord, v = next(t, coord)
+		end
+	end
+	function pluginHandler:GetNodes2(mapID)
+		ns.CurrentMap = mapID
+		return iterator, ns.points[mapID]
+	end
+end
+
+-- Interface -> Addons -> Handy Notes -> Plugins -> A Path Less Travelled options
+ns.options = {
+	type = "group",
+	name = "A Path Less Travelled",
+	desc = "Travel with me and discover the amazing!",
+	get = function(info) return ns.db[info[#info]] end,
+	set = function(info, v)
+		ns.db[info[#info]] = v
+		pluginHandler:Refresh()
+	end,
+	args = {
+		options = {
+			type = "group",
+			name = " Options",
+			inline = true,
+			args = {
+				iconScale = {
+					type = "range",
+					name = "Map Pin Size",
+					desc = "The Map Pin Size",
+					min = 1, max = 4, step = 0.1,
+					arg = "iconScale",
+					order = 1,
+				},
+				iconAlpha = {
+					type = "range",
+					name = "Map Pin Alpha",
+					desc = "The alpha transparency of the map pins",
+					min = 0, max = 1, step = 0.01,
+					arg = "iconAlpha",
+					order = 2,
+				},
+				showCoords = {
+					name = "Show Coordinates",
+					desc = "Display coordinates in tooltips on the world map and the mini map" 
+							..ns.colour.highlight .."\n(xx.xx,yy.yy)",
+					type = "toggle",
+					width = "full",
+					arg = "showCoords",
+					order = 3,
+				},
+			},
+		},
+		icon = {
+			type = "group",
+			name = "Map Pin Selections",
+			inline = true,
+			args = {
+				iconChoice = {
+					type = "range",
+					name = "Pin Choice",
+					desc = "White\n2 = Purple\n3 = Red\n4 = Yellow\n5 = Green\n6 = Grey"
+							.."\n7 = Mana Orb\n8 = Phasing\n9 = Raptor egg\n10 = Stars"
+							.."\n11 = Cogwheel\n12 = Frost\n13 = Diamond\n14 = Screw",
+					min = 1, max = 14, step = 1,
+					arg = "iconChoice",
+					order = 4,
+				},
+			},
+		},
+	},
+}
+
+function HandyNotes_APathLessTravelled_OnAddonCompartmentClick( addonName, buttonName )
+	Settings.OpenToCategory( "HandyNotes" )
+	LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "APathLessTravelled" )
+ end
+
+function pluginHandler:OnEnable()
+	local HereBeDragons = LibStub("HereBeDragons-2.0", true)
+	if not HereBeDragons then return end
+	
+	for continentMapID in next, continents do
+		local children = C_Map.GetMapChildrenInfo(continentMapID, nil, true)
+		for _, map in next, children do
+			local coords = ns.points[map.mapID]
+			if coords then
+				for coord, criteria in next, coords do
+					local mx, my = HandyNotes:getXY(coord)
+					local cx, cy = HereBeDragons:TranslateZoneCoordinates(mx, my, map.mapID, continentMapID)
+					if cx and cy then
+						ns.points[continentMapID] = ns.points[continentMapID] or {}
+						ns.points[continentMapID][HandyNotes:getCoord(cx, cy)] = criteria
+					end
+				end
+			end
+		end
+	end
+	HandyNotes:RegisterPluginDB("APathLessTravelled", pluginHandler, ns.options)
+	ns.db = LibStub("AceDB-3.0"):New("HandyNotes_APathLessTravelledDB", defaults, "Default").profile
+	pluginHandler:Refresh()
+end
+
+function pluginHandler:Refresh()
+	self:SendMessage("HandyNotes_NotifyUpdate", "APathLessTravelled")
+end
+
+LibStub("AceAddon-3.0"):NewAddon(pluginHandler, "HandyNotes_APathLessTravelledDB", "AceEvent-3.0")

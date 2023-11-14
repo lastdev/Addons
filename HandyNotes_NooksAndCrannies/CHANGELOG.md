@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2023-11-08
+
+### Added
+
+- Barrows of Reverie and Sor'theril Barrow Den entrances in Emerald Dream (DF).
+
+### Changed
+
+- Updated TOC for Dragonflight (10.2.0).
+
 ## [1.1.1] - 2023-08-04
 
 ### Added
@@ -53,7 +63,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added mini caves (dungeons) to Gorgrond, Talador, Shadowmoon Valley, Nagrand (WoD)
 - Added horde portal from Garrison and Ashran (WoD)
 
-[Unreleased]: https://gitlab.com/mulambo/nooks-and-crannies/-/compare/v1.1.1...master
+[Unreleased]: https://gitlab.com/mulambo/nooks-and-crannies/-/compare/v1.2.0...master
+[1.2.0]: https://gitlab.com/mulambo/nooks-and-crannies/-/releases/v1.2.0
 [1.1.1]: https://gitlab.com/mulambo/nooks-and-crannies/-/releases/v1.1.1
 [1.1.0]: https://gitlab.com/mulambo/nooks-and-crannies/-/releases/v1.1.0
 [1.0.1]: https://gitlab.com/mulambo/nooks-and-crannies/-/releases/v1.0.1

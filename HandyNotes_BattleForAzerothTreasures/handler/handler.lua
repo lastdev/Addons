@@ -106,6 +106,9 @@ function ns.RegisterPoints(zone, points, defaults)
             point.routes = {point.route}
             point.route = nil
         end
+        if point.atlas and point.color then
+            point.texture = ns.atlas_texture(point.atlas, point.color)
+        end
         local proxy_meta
         if point.path or point.nearby or point.related then
             proxy_meta = {__index=point}
@@ -177,6 +180,18 @@ function ns.RegisterPoints(zone, points, defaults)
                 end
             end
         end
+        if point.additional then
+            -- Extra coordinates to register. This is equivalent to just
+            -- registering the same table multiple times on the input, and
+            -- should only be used for simple cases -- related points are
+            -- going to fall apart here.
+            for _,acoord in pairs(point.additional) do
+                if ns.DEBUG and ns.points[zone][acoord] then
+                    print(myname, "point collision", zone, acoord)
+                end
+                ns.points[zone][acoord] = point
+            end
+        end
     end
 end
 function ns.RegisterVignettes(zone, vignettes, defaults)
@@ -186,10 +201,15 @@ function ns.RegisterVignettes(zone, vignettes, defaults)
     for vignetteID, point in pairs(vignettes) do
         point._coord = point._coord or 0
         point._uiMapID = zone
+        point.vignette = vignetteID
         point.always = true
         point.label = false
 
-        ns.VignetteIDsToPoints[vignetteID] = defaults and defaults(point) or point
+        point = defaults and defaults(point) or point
+
+        intotable(ns.POIsToPoints, point.areaPoi, point)
+        intotable(ns.VignetteIDsToPoints, point.vignette, point)
+        intotable(ns.WorldQuestsToPoints, point.worldquest, point)
     end
 end
 
@@ -323,7 +343,8 @@ local function render_string(s, context)
         elseif variant == "quest" or variant == "worldquest" or variant == "questname" then
             local name = C_QuestLog.GetTitleForQuestID(id)
             if not (name and name ~= "") then
-                name = tostring(id)
+                -- we bypass the normal fallback mechanism because we want the quest completion status
+                name = fallback ~= "" and fallback or (variant .. ':' .. id)
             end
             if variant == "questname" then return name end
             local completed = C_QuestLog.IsQuestFlaggedCompleted(id)
@@ -915,6 +936,7 @@ local function handle_tooltip(tooltip, point, skip_label)
         local comparison = _G[myname.."ComparisonTooltip"]
         if not comparison then
             comparison = CreateFrame("GameTooltip", myname.."ComparisonTooltip", UIParent, "ShoppingTooltipTemplate")
+            if _G.GameTooltipDataMixin then Mixin(comparison, GameTooltipDataMixin) end
             comparison:SetFrameStrata("TOOLTIP")
             comparison:SetClampedToScreen(true)
         end

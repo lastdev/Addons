@@ -19,12 +19,13 @@ local DefaultFilterList = {
     other = { HIDDEN=true, UNUSABLE=true },
     priority = { },
     source = { },
-    typeid = { },
+    typeid = { }
 }
 
 LM.UIFilter = {
         filteredMountList = LM.MountList:New(),
         searchText = nil,
+        sortKey = 'default',
         filterList = CopyTable(DefaultFilterList),
     }
 
@@ -58,21 +59,52 @@ function LM.UIFilter.IsFiltered()
     return not tCompare(LM.UIFilter.filterList, DefaultFilterList, 2)
 end
 
--- Fetch -----------------------------------------------------------------------
+-- Sorting ---------------------------------------------------------------------
 
--- Don't call CanDragonRide thousands of times for no reason
-local dragonRidingSort = false
+local SortKeysByProject = {
+    [1] = {
+        'default',
+        'name',
+        'rarity',
+        'summons'
+    },
+    [11] = {
+        'default',
+        'name',
+        'summons'
+    }
+}
 
--- Show all the collected mounts before the uncollected mounts, then by name
-local function FilterSort(a, b)
-    if a.isCollected and not b.isCollected then return true end
-    if not a.isCollected and b.isCollected then return false end
-    if dragonRidingSort then
-        if a.dragonRiding and not b.dragonRiding then return true end
-        if not a.dragonRiding and b.dragonRiding then return false end
-    end
-    return a.name < b.name
+local SortKeyTexts = {
+    ['default']     = DEFAULT,
+    ['name']        = NAME,
+    ['rarity']      = RARITY,
+    ['summons']     = SUMMONS,
+}
+
+function LM.UIFilter.GetSortKey()
+    return LM.UIFilter.sortKey
 end
+
+function LM.UIFilter.SetSortKey(k)
+    if LM.UIFilter.sortKey == k then
+        return
+    else
+        LM.UIFilter.sortKey = ( k or 'default' )
+        LM.UIFilter.ClearCache()
+        callbacks:Fire('OnFilterChanged')
+    end
+end
+
+function LM.UIFilter.GetSortKeys()
+    return SortKeysByProject[WOW_PROJECT_ID]
+end
+
+function LM.UIFilter.GetSortKeyText(k)
+    return SortKeyTexts[k] or UNKNOWN
+end
+
+-- Fetch -----------------------------------------------------------------------
 
 function LM.UIFilter.UpdateCache()
     for _,m in ipairs(LM.MountRegistry.mounts) do
@@ -80,8 +112,7 @@ function LM.UIFilter.UpdateCache()
             tinsert(LM.UIFilter.filteredMountList, m)
         end
     end
-    dragonRidingSort = LM.Environment:CanDragonride()
-    sort(LM.UIFilter.filteredMountList, FilterSort)
+    LM.UIFilter.filteredMountList:Sort(LM.UIFilter.sortKey)
 end
 
 function LM.UIFilter.ClearCache()
@@ -466,9 +497,13 @@ function LM.UIFilter.IsFilteredMount(m)
         return true
     end
 
-    -- isUsable is only set for journal mounts so nil is true
-    if LM.UIFilter.filterList.other.UNUSABLE and m.isUsable == false then
-        return true
+    if LM.UIFilter.filterList.other.UNUSABLE then
+        -- We can't find out the usability of filtered mounts and they are all
+        -- set to be unusable but we want to display them or not with just the
+        -- HIDDEN filter and not UNUSABLE.
+        if not m.isFiltered and not m:IsUsable() then
+            return true
+        end
     end
 
     -- Priority Filters

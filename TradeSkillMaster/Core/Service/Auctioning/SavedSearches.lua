@@ -12,6 +12,7 @@ local String = TSM.Include("Util.String")
 local Database = TSM.Include("Util.Database")
 local TempTable = TSM.Include("Util.TempTable")
 local Theme = TSM.Include("Util.Theme")
+local GroupPath = TSM.Include("Util.GroupPath")
 local Settings = TSM.Include("Service.Settings")
 local UIUtils = TSM.Include("UI.UIUtils")
 local private = {
@@ -173,7 +174,7 @@ function private.GetSearchName(filter, searchType)
 	end
 	if searchType == "postGroups" or searchType == "cancelGroups" then
 		for groupPath in gmatch(filter, "[^"..FILTER_SEP.."]+") do
-			local groupName = TSM.Groups.Path.GetName(groupPath)
+			local groupName = GroupPath.GetName(groupPath)
 			local level = select('#', strsplit(TSM.CONST.GROUP_SEP, groupPath))
 			tinsert(filters, Theme.GetGroupColor(level):ColorText(groupName))
 		end

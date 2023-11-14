@@ -1,12 +1,15 @@
-﻿## Interface: 100107
+## Interface: 100200
 ## Title: HandyNotes_NaxxFrozenRunes
 ## Notes: Frozen Rune locations in Naxxramas
 ## IconTexture: Interface/Addons/HandyNotes_NaxxFrozenRunes/HandyNotes_NaxxFrozenRunes.blp
 ## Author: Keyboardturner
-## Version: 4
+## Version: 5
 ## DefaultState: enabled
 ## SavedVariables: HandyNotes_NaxxFrozenRunesDB
 ## RequiredDeps: HandyNotes
+## X-Curse-Project-ID: 888364
+## X-WoWI-ID: 26607
+## X-Wago-ID: ZKbex961
 
 handler.lua
 config.lua

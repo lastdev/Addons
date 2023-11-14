@@ -1,0 +1,148 @@
+== v2.03 - 29th October 2023
+* Remove dodgy beta code which was causing problems
+
+== v2.02 - 28th October 2023
+* Ready for 10.2.0
+* Now Muli-TOC with Wrath 3.4.3 included
+
+== v2.01 - 16th October 2023
+* Added better scaling for pins to ensure uniformity of size when switching between pin textures
+* Fix to 10th/11th row of pin options popup text formatting
+* Pin alpha default is now 1.0
+
+== v2.00 Beta - 12th October 2023
+* Netherwing faction quest tracking!!!
+* Known bug: Minimap does not update after quest completion.
+  Solution (for the time being) toggle the World Map or AddOn options. Simple.
+  How to trivially implement this in code I don't really know at the moment.
+* That's the only known bug
+
+== v1.22 - 18th September 2023
+* TOC version bump to 10.1.7
+
+== v1.21 - 28th June 2023
+* TOC version bump to 10.1.5
+
+== v1.21 W - 15th June 2023
+* TOC version bump to 3.4.2
+
+== v1.20 - 6th May 2023
+* Now supports the new AddOn Compartment introduced in 10.1.0.
+  Clicking the drop down for this AddOn takes you directly to the configuration panel!
+
+== v1.19 - 3rd May 2023
+* Added an icon to the TOC file - thus removing the annoying "?" from the AddOn list in game
+* Removed unnecessary print to console code
+
+== v1.18 - 24th April 2023
+* TOC version bump to 10.1.0
+
+== v1.17 - 21st March 2023
+* TOC version bump to 10.0.7
+
+== v1.16 - 26th January 2023
+* TOC version bump to 10.0.5
+
+== v1.15 - Numbering stuffup
+
+== v1.14 - 18th January 2023
+* Added translations for Netherwing Egg
+
+== v1.14 W - 18th January 2023
+* Added translations for Netherwing Egg
+
+== v1.13 - 11th January 2023
+* Added a new icon type: Netherwing Egg
+
+== v1.13 W - 11th January 2023
+* Added a new icon type: Netherwing Egg
+
+== v1.12 - 7th December 2022
+* TOC version bump to 10.0.2
+
+== v1.11 - 26th October 2022
+* TOC version bump to 10.0.0
+
+== v1.10 W - 14th September 2022
+* Replace game version "3" test with a "4" in two places.
+* Remove an old defunct Oceania server
+
+== v1.09 - 4th September 2022
+* TOC version bump to 9.2.7
+
+== v1.09 W - 4th September 2022
+* TOC version bump to 3.4.0
+
+== v1.08 TBC - 22nd March 2022
+* TOC version bump to 2.5.3
+
+== v1.08 - 20th March 2022
+* TOC version bump to 9.2.0
+
+== v1.07 - 8th November 2021
+* TOC version bump to 9.1.5
+
+== v1.07 TBC - 8th November 2021
+* TOC version bump to 2.5.2
+
+== v1.06 - 14th August 2021
+* enGB Support for Oceania players added
+* Removed annoying continent display of the pins
+
+== v1.05 - 10th July 2021
+* Version update for Patch 9.1.0
+* Correction to a coordinate typo
+
+== v1.05 TBC - 10th July 2021
+* Correction to a coordinate typo
+
+== v1.04 - 22nd June 2021
+* Last two eggs needing double precision adjustments finally completed and adjusted
+* 63958605 -> 63948604
+* fix zhTW localisation
+* localised printPC
+* add ptPT support
+* grey icon added to data
+
+== v1.04 TBC - 22nd June 2021
+* Last two eggs needing double precision adjustments finally completed and adjusted
+* 63958605 -> 63948604
+* fix zhTW localisation
+* localised printPC
+* add ptPT support
+* grey icon added to data
+
+== v1.03 - 6th June 2021
+* Localisation enhancements
+
+== v1.03 TBC - 6th June 2021
+* Localisation enhancements
+
+== v1.02 - 27th May 2021
+* Added Localisation, a bit of code titivation, and improved wording for the configuration options
+
+== v1.02 TBC - 27th May 2021
+* Added Localisation, a bit of code titivation, and improved wording for the configuration options
+
+== v1.01 - 26th May 2021
+* Fixed Map IDs. Code now tests for Retail 9.1.0 vs TBC 2.5.1
+
+== v1.01 TBC - 26th May 2021
+* Fixed Map IDs. Code now tests for Retail 9.1.0 vs TBC 2.5.1
+
+== v1.00 - 25th May 2021
+* Initial release. Dual version!
+
+
+
+
+
+
+
+
+
+
+
+
+
+

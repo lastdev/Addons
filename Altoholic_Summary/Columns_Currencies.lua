@@ -833,6 +833,7 @@ Columns.RegisterColumn("Cur_Honor", {
 	GetText = function(character) return GetCurrencyText(character, enum.Honor) end,
 })
 
+-- ** Dragonflight / 10.1 **
 Columns.RegisterColumn("Cur_Flightstones", {
 	-- Header
 	headerWidth = 100,
@@ -845,4 +846,117 @@ Columns.RegisterColumn("Cur_Flightstones", {
 	Width = 100,
 	JustifyH = "CENTER",
 	GetText = function(character) return GetCurrencyTextWithMax(character, enum.Flightstones) end,
+})
+
+Columns.RegisterColumn("Cur_ParacausalFlakes", {
+	-- Header
+	headerWidth = 60,
+	headerLabel = format("     %s", Formatter.Texture18("Interface\\Icons\\ability_essence_reapingflames")),
+	headerOnEnter = function(frame, tooltip) CurrencyHeader_OnEnter(frame, enum.ParacausalFlakes) end,
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("Cur_ParacausalFlakes") end,
+	headerSort = function(self, character) return GetTotals(character, enum.ParacausalFlakes) end,
+
+	-- Content
+	Width = 60,
+	JustifyH = "CENTER",
+	GetText = function(character) return GetCurrencyText(character, enum.ParacausalFlakes) end
+})
+
+Columns.RegisterColumn("Cur_RidersofAzerothBadge", {
+	-- Header
+	headerWidth = 60,
+	headerLabel = format("     %s", Formatter.Texture18("Interface\\Icons\\inv_10_fishing_dragonislescoins_bronze")),
+	headerOnEnter = function(frame, tooltip) CurrencyHeader_OnEnter(frame, enum.RidersofAzerothBadge) end,
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("Cur_RidersofAzerothBadge") end,
+	headerSort = function(self, character) return GetTotals(character, enum.RidersofAzerothBadge) end,
+
+	-- Content
+	Width = 60,
+	JustifyH = "CENTER",
+	GetText = function(character) return GetCurrencyText(character, enum.RidersofAzerothBadge) end
+})
+
+-- ** Dragonflight / 10.2 **
+Columns.RegisterColumn("Cur_WhelplingsDreamingCrest", {
+	-- Header
+	headerWidth = 60,
+	headerLabel = format("     %s", Formatter.Texture18("Interface\\Icons\\inv_10_gearupgrade_whelplingsdreamingcrest")),
+	headerOnEnter = function(frame, tooltip) CurrencyHeader_OnEnter(frame, enum.WhelplingsDreamingCrest) end,
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("Cur_WhelplingsDreamingCrest") end,
+	headerSort = function(self, character) return GetTotals(character, enum.WhelplingsDreamingCrest) end,
+
+	-- Content
+	Width = 60,
+	JustifyH = "CENTER",
+	GetText = function(character) return GetCurrencyText(character, enum.WhelplingsDreamingCrest) end,
+})
+
+Columns.RegisterColumn("Cur_DrakesDreamingCrest", {
+	-- Header
+	headerWidth = 60,
+	headerLabel = format("     %s", Formatter.Texture18("Interface\\Icons\\inv_10_gearupgrade_drakesdreamingcrest")),
+	headerOnEnter = function(frame, tooltip) CurrencyHeader_OnEnter(frame, enum.DrakesDreamingCrest) end,
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("Cur_DrakesDreamingCrest") end,
+	headerSort = function(self, character) return GetTotals(character, enum.DrakesDreamingCrest) end,
+
+	-- Content
+	Width = 60,
+	JustifyH = "CENTER",
+	GetText = function(character) return GetCurrencyText(character, enum.DrakesDreamingCrest) end,
+})
+
+Columns.RegisterColumn("Cur_WyrmsDreamingCrest", {
+	-- Header
+	headerWidth = 60,
+	headerLabel = format("     %s", Formatter.Texture18("Interface\\Icons\\inv_10_gearupgrade_wyrmsdreamingcrest")),
+	headerOnEnter = function(frame, tooltip) CurrencyHeader_OnEnter(frame, enum.WyrmsDreamingCrest) end,
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("Cur_WyrmsDreamingCrest") end,
+	headerSort = function(self, character) return GetTotals(character, enum.WyrmsDreamingCrest) end,
+
+	-- Content
+	Width = 60,
+	JustifyH = "CENTER",
+	GetText = function(character) return GetCurrencyText(character, enum.WyrmsDreamingCrest) end,
+})
+
+Columns.RegisterColumn("Cur_AspectsDreamingCrest", {
+	-- Header
+	headerWidth = 60,
+	headerLabel = format("     %s", Formatter.Texture18("Interface\\Icons\\inv_10_gearupgrade_aspectsdreamingcrest")),
+	headerOnEnter = function(frame, tooltip) CurrencyHeader_OnEnter(frame, enum.AspectsDreamingCrest) end,
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("Cur_AspectsDreamingCrest") end,
+	headerSort = function(self, character) return GetTotals(character, enum.AspectsDreamingCrest) end,
+
+	-- Content
+	Width = 60,
+	JustifyH = "CENTER",
+	GetText = function(character) return GetCurrencyText(character, enum.AspectsDreamingCrest) end,
+})
+
+Columns.RegisterColumn("Cur_EmeraldDewdrop", {
+	-- Header
+	headerWidth = 60,
+	headerLabel = format("     %s", Formatter.Texture18("Interface\\Icons\\inv_misc_shadowdew")),
+	headerOnEnter = function(frame, tooltip) CurrencyHeader_OnEnter(frame, enum.EmeraldDewdrop) end,
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("Cur_EmeraldDewdrop") end,
+	headerSort = function(self, character) return GetTotals(character, enum.EmeraldDewdrop) end,
+
+	-- Content
+	Width = 60,
+	JustifyH = "CENTER",
+	GetText = function(character) return GetCurrencyText(character, enum.EmeraldDewdrop) end,
+})
+
+Columns.RegisterColumn("Cur_DreamInfusion", {
+	-- Header
+	headerWidth = 60,
+	headerLabel = format("     %s", Formatter.Texture18("Interface\\Icons\\inv_legion_faction_dreamweavers")),
+	headerOnEnter = function(frame, tooltip) CurrencyHeader_OnEnter(frame, enum.DreamInfusion) end,
+	headerOnClick = function() AltoholicFrame.TabSummary:SortBy("Cur_DreamInfusion") end,
+	headerSort = function(self, character) return GetTotals(character, enum.DreamInfusion) end,
+
+	-- Content
+	Width = 60,
+	JustifyH = "CENTER",
+	GetText = function(character) return GetCurrencyText(character, enum.DreamInfusion) end,
 })

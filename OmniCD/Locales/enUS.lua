@@ -412,3 +412,5 @@ L["You must manually enable either the 'Party Frames' or 'Raid Frames' in Blizza
 L["Cooldown Timer"] = "Cooldown Timer"
 L["Use ElvUI Timer"] = "Use ElvUI Timer"
 L["[Show Numbers for Cooldowns] must be disabled in Blizzard's \'Options/Action Bars\' menu."] = "[Show Numbers for Cooldowns] must be disabled in Blizzard's \'Options/Action Bars\' menu."
+L["Attach to Raid Frame"] = "Attach to Raid Frame"
+L["Convert to additional CD bars that attach to each unit's raid frame."] = "Convert to additional CD bars that attach to each unit's raid frame."

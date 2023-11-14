@@ -1,5 +1,5 @@
-## Interface: 100107
-## Version: 1.11
+## Interface: 100200
+## Version: 1.12
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Inv_summerfest_firespirit
 ## Title: Midsummer Fire Festival

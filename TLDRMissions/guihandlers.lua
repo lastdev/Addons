@@ -1303,6 +1303,10 @@ gui.CompleteMissionsButton:SetScript("OnClick", function(self, button)
                             if showBlockCompletionErrorOncePerLogin then
                                 showBlockCompletionErrorOncePerLogin = false
                                 print(blockCompletionReason)
+                                AceEvent:SendMessage("TLDRMISSIONS_MISSION_BLOCKED_ANIMA_QUEST")
+                                if WeakAuras then
+                                    WeakAuras.ScanEvents("TLDRMISSIONS_MISSION_BLOCKED_ANIMA_QUEST")
+                                end
                             end
                             break
                         end

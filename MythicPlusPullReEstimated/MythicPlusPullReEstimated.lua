@@ -1,7 +1,7 @@
 -- upvalue the globals
 local _G = getfenv(0)
 local LibStub = _G.LibStub
-local GetAddOnMetadata = _G.GetAddOnMetadata
+local GetAddOnMetadata = _G.GetAddOnMetadata or _G.C_AddOns.GetAddOnMetadata
 local pairs = _G.pairs
 local GetTime = _G.GetTime
 local select = _G.select

@@ -469,7 +469,8 @@ Off Screen]=] ] = "El aura está fuera de la pantalla"
 	L["Fallback"] = "Respuesta"
 	L["Fallback Icon"] = "Icono de respuesta"
 	L["False"] = "Falso"
-	L["Fetch Affected/Unaffected Names"] = "Buscar nombres afectados/no afectados"
+	--[[Translation missing --]]
+	L["Fetch Affected/Unaffected Names and Units"] = "Fetch Affected/Unaffected Names and Units"
 	L["Fetch Raid Mark Information"] = "Obtener información sobre la marca de banda"
 	L["Fetch Role Information"] = "Obtener información del rol"
 	L["Fetch Tooltip Information"] = "Obtener información del tooltip"
@@ -1081,6 +1082,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Sub Elements"] = "Sub Elements"
 	--[[Translation missing --]]
 	L["Sub Option %i"] = "Sub Option %i"
+	--[[Translation missing --]]
+	L["Supports multiple entries, separated by commas"] = "Supports multiple entries, separated by commas"
 	--[[Translation missing --]]
 	L["Swipe Overlay Settings"] = "Swipe Overlay Settings"
 	--[[Translation missing --]]

@@ -95,7 +95,6 @@ L['elemental_storm_snowstorm'] = 'Snowstorm'
 
 L['elemental_storm_brakenhide_hollow'] = 'Brackenhide Hollow'
 L['elemental_storm_cobalt_assembly'] = 'Cobalt Assembly'
-L['elemental_storm_dragonbane_keep'] = 'Dragonbane Keep'
 L['elemental_storm_imbu'] = 'Imbu'
 L['elemental_storm_nokhudon_hold'] = 'Nokhudon Hold'
 L['elemental_storm_ohniri_springs'] = 'Ohn\'iri Springs'
@@ -146,6 +145,22 @@ L['options_icons_frostbound_chest'] = 'Frostbound Chest'
 L['options_icons_frostbound_chest_desc'] = 'Display possible locations of {object:Frostbound Chests}.'
 
 L['fyrakk_assault_label'] = 'Fyrakk Assault'
+L['fyrakk_secured_shipment'] = 'Secured Shipment'
+
+L['shadowflame_forge_label'] = 'Shadowflame Forge'
+L['shadowflame_forge_note'] = 'Required when crafting this recipe:\n{spell:408282}'
+L['shadowflame_blacksmithing_anvil_label'] = 'Shadowflame Blacksmithing Anvil'
+L['shadowflame_blacksmithing_anvil_note'] = 'Required when crafting these recipes:\n{spell:408288}\n{spell:408326}\n{spell:408283}\n{spell:408052}'
+L['shadowflame_leatherworking_table_label'] = 'Shadowflame Leatherworking Table'
+L['shadowflame_leatherworking_table_note'] = 'Required when crafting this recipe:\n{spell:406275}'
+L['shadowflame_incantation_table_label'] = 'Shadowflame Incantation Table'
+L['shadowflame_incantation_table_note'] = 'Required when crafting this recipe:\n{spell:405076}'
+L['azure_loom_label'] = 'Azure Loom'
+L['azure_loom_note'] = 'Required when crafting this recipe:\n{spell:376556}'
+L['temporal_loom_label'] = 'Temporal Loom'
+L['temporal_loom_note'] = 'Required when crafting this recipe:\n{spell:376557}'
+L['earthwarders_forge_label'] = 'The Earth-Warder\'s Forge'
+L['earthwarders_forge_note'] = 'Required when crafting this recipe:\n{spell:367713}'
 
 L['dreamsurge_sublabel'] = '{note:Only available while a {location:Dreamsurge} is active in this zone.}'
 L['celestine_vendor_note'] = 'Exchange {item:207026} for a mount, toys, pets, and transmog.'
@@ -331,7 +346,7 @@ L['options_icons_forbidden_hoard'] = 'Forbidden Hoard'
 L['options_icons_forbidden_hoard_desc'] = 'Display possible locations of {object:Forbidden Hoard} chests.'
 
 L['froststone_vault_storm_label'] = 'Froststone Vault Primal Storm'
-L['gooey_snailemental_note'] = 'Combine x50 {item:204352} collected from {object:Froststone Vault Primal Storm} bosses to create {item:192785}.'
+L['gooey_snailemental_note'] = 'Combine 50x {item:204352} collected from {object:Froststone Vault Primal Storm} bosses to create {item:192785}.'
 
 L['options_icons_froststone_vault_storm'] = 'Froststone Vault Primal Storm'
 L['options_icons_froststone_vault_storm_desc'] = 'Display location and rewards for {object:Froststone Vault Primal Storm}'
@@ -514,7 +529,7 @@ L['ancient_protector_note'] = 'Kill nearby {npc:193244} to get {item:197708}. Co
 L['blightpaw_note'] = 'Talk to {npc:193222} nearby and agree to help him.'
 L['corrupted_proto_dragon_note'] = 'Inspect the {object:Corrupted Dragon Egg} to spawn the rare.'
 L['lord_epochbrgl_note'] = 'Click {npc:193257} to spawn the rare.'
-L['the_great_shellkhan_note'] = 'Collect {item:200949} from {location:Kauriq Gleamlet} in {location:The Azure Span}, go back to {npc:191416} within 3 minutes to return the item to activate the rare and get the achievement. \n\n{note:Make sure {npc:191416} and {npc:191305} are acutally there before you start. Only one character can pick up and return the item once a week to activate the rare, after which {npc:191416} will only thank you.}'
+L['the_great_shellkhan_note'] = 'Collect {item:200949} from {location:Kauriq Gleamlet} in {location:The Azure Span}, go back to {npc:191416} within 3 minutes to return the item to activate the rare and get the achievement.\n\n{note:Make sure {npc:191416} and {npc:191305} are acutally there before you start. Only one character can pick up and return the item once a week to activate the rare, after which {npc:191416} will only thank you.}'
 L['weeping_vilomah_note'] = 'Talk to {npc:193206} to summon the rare.'
 L['woofang_note'] = 'Pet {npc:193156} to spawn the rare.'
 
@@ -534,6 +549,7 @@ L['pt_jewel_painters_pretty_jewel_note'] = 'Inside a lantern.'
 L['pt_leath_decayed_scales_note'] = 'Inside a basket.'
 L['pt_script_counterfeit_darkmoon_deck_note'] = 'Speak to {npc:194856} and offer to help her with the {object:Darkmoon Deck} scattered at her feet. Click the cards in the correct order (Ace through 8) then speak to her again.'
 L['pt_script_forgetful_apprentices_tome_note'] = 'On a table near a big telescope.'
+L['pt_script_forgetful_apprentices_tome_algethera_note'] = 'Click on the {object:Curious Glyph} to get the buff {spell:384818}. Cross the bridge and loot {item:198672} from {npc:194880} and bring it back to the Glyph.'
 L['pt_script_how_to_train_your_whelpling_note'] = 'Little brown book lying in the sandbox.'
 L['pt_smith_draconic_flux_note'] = 'Inside a building.'
 L['pt_tailor_ancient_dragonweave_bolt_note'] = 'Click on the {object:Ancient Dragonweave Loom} to complete a minigame where you connect the spools of thread to the center gem.'
@@ -799,6 +815,7 @@ L['options_icons_ritual_offering_desc'] = 'Display possible locations of {object
 L['nal_kskol_reliquary_label'] = 'Nal ks\'kol Reliquary'
 L['nal_kskol_reliquary_note'] = 'Use the {object:Reliquary Access Console} and solve the puzzle to open the {object:Nal ks\'kol Reliquary}.'
 
+L['busted_wyrmhole_generator_note'] = '{item:205954} also looted from {object:Busted Wyrmhole Generator}.\nOn use to unlock {location:Zaralek Cavern} wormhole option for {item:198156}.'
 L['molten_scoutbot_note'] = 'Open the {object:Molten Scoutbot} and loot the {item:204855}.'
 L['bolts_and_brass_note'] = 'Open the {object:Bolts and Brass} and loot the {item:204850}.'
 
@@ -836,6 +853,174 @@ L['zaralek_event_inactive'] = ns.color.Orange('This Zone Event will not start to
 
 L['options_icons_zone_event'] = 'Zone Event'
 L['options_icons_zone_event_desc'] = 'Display locations for zone events.'
+
+-------------------------------------------------------------------------------
+------------------------------- Emerald Dream ---------------------------------
+-------------------------------------------------------------------------------
+
+L['options_icons_emerald_dream_safari'] = '{achievement:19401}'
+L['options_icons_emerald_dream_safari_desc'] = 'Display battle pet locations for the {achievement:19401} achievement.'
+
+L['envoy_of_winter_note'] = 'Gather {item:208881} and use {spell:421658} near the well until {npc:209929} spawns.'
+L['fruitface_note'] = 'Offer {npc:209950} {dot:Pink} your help to get {spell:421446}, then {item:208837s} become visible on the ground. Pick them up to let {npc:209980} {dot:Yellow} appear. Attack and follow him until he jumps in the water {dot:Red} and summons {npc:209966} and {npc:209913}.'
+L['greedy_gessie_note'] = 'You need to collect {object:Wild Greens}, {object:Rubyscale Melon} and {object:Orangeroot} from the surrounding area and put them in the baskets near the {npc:210285s} to start the encounter.'
+L['nuoberon_note'] = 'Chase turtles, throw food at monkeys, or fight dream monsters to help {npc:209101} have a fun Dream!'
+L['reefbreaker_moruud_note'] = 'Connect all 6 of the nearby {npc:210089} to attack {npc:209898}.'
+L['surging_lasher_note'] = 'Can spawn during the {location:Emerald Frenzy} event in this area.'
+
+L['in_a_tree'] = 'Up in a tree.'
+L['inside_building'] = 'In the building.'
+
+L['hidden_moonkin_stash_label'] = 'Hidden Moonkin Stash'
+L['magical_bloom_note'] = 'Chase the {npc:210544} until he reveals the treasure.'
+L['pineshrew_cache_note'] = 'Next to a few rocks.'
+L['reliquary_of_ashamane_note'] = '{note:If the world quest {wq:Dryad Fire Drill} is active you need to complete it before you can see the treasure.}\n\nFind a {object:Mark of Ashamane} {dot:Green} nearby to get the buff {spell:425426} and go to the {npc:212009}.'
+L['reliquary_of_aviana_note'] = 'Find a {object:Mark of Aviana} {dot:Green} nearby to get the buff {spell:425432} and go to the {npc:212011}.'
+L['reliquary_of_goldrinn_note'] = 'Find a {object:Mark of Goldrinn} {dot:Green} nearby to get the buff {spell:425408} and go to the {npc:212012}.'
+L['reliquary_of_ursol_note'] = 'Find a {object:Mark of Ursol} {dot:Green} nearby to get the buff {spell:423306} and go to the {npc:210732}.'
+L['triflesnatchs_roving_trove_note'] = 'Follow the {npc:210060} as it flys from branch to branch.'
+
+L['unwaking_echo_label'] = 'Unwaking Echo'
+L['unwaking_echo_note'] = '{note:You can only open this chest in your dreams.}\n\nSleep {emote:/sleep} next to the chest to open it.'
+
+L['amirdrassil_defenders_shield_note'] = 'On the table next to {npc:211328}.'
+L['dreamtalon_claw_note'] = 'At the bottom of the tree trunk.'
+L['essence_of_dreams_note'] = 'Up in a floating, circular tree branch.'
+L['exceedingly_soft_wildercloth_note'] = 'Inside the building behind a chair.'
+L['experimental_dreamcatcher_note'] = 'In the floating tree.'
+L['grove_keepers_pillar_note'] = 'In front of the cave entrance.'
+L['handful_of_pebbles_note'] = 'On the statue\'s right shoulder.'
+L['molted_faerie_dragon_scales_note'] = 'On the ground in some flowers.'
+L['petrified_hope_note'] = 'Up in the tree stump.'
+L['plush_pillow_note'] = 'Inside the little hut on a table.'
+L['snuggle_buddy_note'] = 'Inside a small boat.'
+
+L['dreamseed_soil_label'] = 'Dreamseed Soil'
+L['dreamseed_soil_note'] = [[
+The quality of the {object:Emerald Bloom Rewards} and the chances of finding {item:210059} in the {object:Dreamseed Cache} depend on how much {currency:2650} you contribute.
+
+{item:210224} (Contribute {currency:2650} at least once)
+{item:210225} (Progress: 50%)
+{item:210226} (Progress: 100%)
+
+Quality of the contributed {object:Dreamseed} defines the kind of reward:
+{item:208066}: A transmog or crafting materials.
+{item:208067}: A pet or crafting materials.
+{item:208047}: A mount or crafting materials.
+
+{note:For a list of rewards take a look at {npc:211265} on the island in the north, she also sells most of the rewards.}
+]]
+L['dreamseed_cache'] = 'Dreamseed Cache'
+
+L['options_icons_dream_of_seeds'] = '{achievement:19013}'
+L['options_icons_dream_of_seeds_desc'] = 'Display {object:Dreamseed Soil} locations for {achievement:19013}.'
+
+L['bloom_man_group_suffix'] = 'times the Feral Overflow power used'
+L['dream_chaser_suffix'] = 'errant Dreams gathered'
+L['dreamfruit_label'] = 'Dreamfruit'
+L['dreamfruit_note_1'] = 'Appears when the {location:Superbloom} event begins. The event start on every full hour.'
+L['dreamfruit_note_2'] = 'Appears after the first stop of the {location:Superbloom} event. The event start on every full hour near {location:Amirdrassil}.'
+L['options_icons_dreamfruit'] = '{achievement:19310}'
+L['options_icons_dreamfruit_desc'] = 'Display Dreamfruit locations for {achievement:19310}.'
+
+L['options_icons_moonkin_hatchling'] = '{achievement:19293}'
+L['options_icons_moonkin_hatchling_desc'] = 'Display moonkin hatchling locations for {achievement:19293}.'
+L['moonkin_hatchling_note'] = 'Requires Worldquest {wq:Claws for Concern} to be active.'
+
+L['druid_glyphs_label'] = 'Druid Glyphs'
+L['druid_glyphs_sublabel'] = '{note:This is NOT a Druid Glyph. Just a checklist!}'
+L['druid_glyphs_note'] = 'Collect {note:Druid Glyphs} from various activities around the {location:Emerald Dream}.'
+
+L['pollenfused_bristlebruin_fur_sample_note'] = 'Loot the {object:Pollenfused Bristlebruin Fur Sample} found near the bottom of the tree in {location:The Char}.'
+
+L['mbc_note_start'] = 'Loot the {object:Small Box of Vials} to recieve the {item:210991}.\n\nYou will recieve 6x {item:210839} that need to be filled with moonwell water from each continent.'
+L['mbc_note_end'] = 'Combine all 6x {item:210876} to create {item:210977} and bring it to the {object:Feral Dreamstone} near {location:Amirdrassil}.\n\nUse the {item:210977} and loot the {object:Moon-Blessed Claw} to receive the {item:210728}.'
+
+L['mbc_vial_b'] = 'B'
+L['mbc_vial_d'] = 'D'
+L['mbc_vial_e'] = 'E'
+L['mbc_vial_k'] = 'K'
+L['mbc_vial_n'] = 'N'
+L['mbc_vial_o'] = 'O'
+
+L['mbc_vial_d_location'] = 'Starfall Outpost'
+L['mbc_vial_e_location'] = 'Twighlight Gove'
+L['mbc_vial_k_location'] = 'Stormrage Barrow Den'
+L['mbc_vial_n_location'] = 'Star\'s Rest'
+L['mbc_vial_o_location'] = 'Cenarion Refuge'
+
+L['mbc_vial_location'] = 'Fill the {item:%d} with water from the moonwell in {location:%s} in {location:%s} in {location:%s} to recieve {item:%d}.'
+
+L['mbc_moonwell_label'] = 'Moonwell'
+L['mbc_feral_dreamstone_label'] = 'Feral Dreamstone'
+
+L['azure_somnowl_note'] = 'Complete the short druid-only quest chain which starts with {quest:78065} given by {npc:209318} to receive the {item:210645}.'
+
+L['slumbering_somnowl_note_a'] = 'Collect 5x {item:210565} by putting various {npc:Somnowl} to sleep with {spell:2637} throughout the {location:Emerald Dream}.'
+L['slumbering_somnowl_note_b'] = 'Purchase 1x {item:4291} from any trade supplies vendor.'
+L['slumbering_somnowl_note_c'] = 'Combine 5x {item:210565} and 1x {item:4291} to create {item:210566}.'
+L['slumbering_somnowl_note_d'] = 'Collect 1x {item:194864}.'
+L['slumbering_somnowl_note_e'] = 'Combine 1x {item:210566} and 1x {item:194864} to create {item:210535}.'
+
+L['thaelishar_vendor_note'] = 'Exchange gold for Druid glyphs.'
+L['silent_mark_label'] = 'Lushdream Crags'
+L['silent_mark_note'] = 'Target the correct animal and channel the matching item until {spell:426910} appears. {note:You must attune with 10+ animals.}\n\nChannel {item:210764} onto {npc:210892}.\n\nChannel {item:210767} onto {npc:211347}, {npc:211283}, or {npc:210894}.\n\nChannel {item:210755} onto {npc:210594}.\n\nChannel {item:210766} onto {npc:209494}, {npc:212028}, or {npc:212024}.'
+
+L['amirdrassil'] = 'Amirdrassil, the Dream\'s Hope'
+L['prismatic_location'] = 'Inside {location:Amirdrassil, the Dream\'s Hope} raid.'
+L['prismatic_note_1'] = '1. Fish up 10x {item:210782} from the pools in the {location:Wellspring Atrium}.'
+L['prismatic_note_2'] = '2. Fish up 10x {item:210783} from the lava pools in {location:The Scorched Hall}.'
+L['prismatic_note_3'] = '3. Throw all 20x fish into the largest pool in the {location:Wellspring Atrium} to receive the {spell:427145} buff for 30 minutes.'
+L['prismatic_note_4'] = '4. Fish from the {object:Prismatic Whiskerfish} fishing pool in the {location:Wellspring Atrium} until you catch {item:210784}.'
+L['prismatic_note_5'] = '5. Release {npc:Xena} back into the water in the {location:Wellspring Atrium} to receive {item:210753}.'
+
+L['options_icons_druid_glyph'] = 'Druid Glyphs'
+L['options_icons_druid_glyph_desc'] = 'Display locations for {note:Druid Glyphs}.'
+
+L['elianna_vendor_note'] = 'Completing activities around the {location:Emerald Dream} will reward %s (a hidden currency).\n\nEarning 7,000 %s will unlock {quest:78598} from {npc:211209} which rewards 1x {currency:2777}.\n\nExchange {currency:2777} for pets and mounts.'
+L['dream_energy_name'] = 'Dream Energy'
+L['dream_energy_info'] = '%s: %d/%d (%.1f%%)'
+
+L['sylvia_vendor_note'] = 'Exchange {currency:2651} for pets, mounts, and transmog. You can also get them from Dreemseeds.'
+
+L['somnut'] = 'Somnut'
+L['options_icons_somnut'] = 'Somnut'
+L['options_icons_somnut_desc'] = 'Display possible locations of {object:Somnuts}.'
+
+L['improvised_leafbed_note'] = 'Complete the quest chain beginning with {quest:77896} to receive the {item:210864} from {npc:210164}.'
+L['kalandu_note'] = 'Complete the quest chain beginning with {quest:77948} to receive {item:210633} from {npc:210196}.'
+
+L['renewed_dream'] = '{note:Here is not a treasure!}\n{item:201437} drops from all over {location:Emerald Dream}.\nCombine 5 {item:201437s} to restore a {item:201439}.'
+
+L['ochre_note'] = 'Talk to {npc:209253} to begin the quest line, {npc:209571} will offer the next stages.'
+L['ochre_note_stage1'] = '{quest:77677}. {note:5 days to grow.}'
+L['ochre_note_stage2'] = '{quest:78398}. {note:5 days to grow.}'
+L['ochre_note_stage3'] = '{npc:209571} will let you to collect 5x {item:4537} {dot:Yellow}, 3x {item:209416} {dot:Green}, and 5x {item:208644} {dot:Red}, combine them into {item:208646}. {note:Wait 3 days} for it to become {item:208647}, before finishing {quest:77697}. {note:5 days to grow.}'
+L['ochre_note_stage4'] = '{quest:77711}. {note:5 days to grow.}'
+L['ochre_note_stage5'] = '{quest:77762}.'
+
+L['thorn_beast_stag'] = '{item:%d} ({npc:Stag})'
+L['thorn_beast_saber'] = '{item:%d} ({npc:Saber})'
+L['thorn_beast_bear'] = '{item:%d} ({npc:Bear})'
+
+L['thornbeast_disclaimer'] = '{note:Reminder, each beast type has a unique {item:%s} and will lead to a matching thornbeast.}'
+
+L['thorn_laden_heart_note_1'] = 'Loot a {item:209860} from any {npc:stag}, {npc:saber}, or {npc:bear} in the {location:Emerald Dream}.'
+L['thorn_laden_heart_note_2'] = 'Once you have a {item:209860}, go and find a doe named {npc:140044} in {location:Drustvar} in {location:Kul Tiras}.'
+
+L['athainne_note_1'] = '{note:{npc:140044} walks with {npc:129771} at night, and rests in {location:Ulfar\'s Den} during the day.}\n\nAsk {npc:140044} to use {item:209860} to create {item:209863}.'
+L['athainne_note_2'] = 'Once you have spoken to {npc:140044} and received the {item:209863}, go to {location:Ulfar\'s Den} for {npc:141159} help.'
+
+L['ulfar_note_1'] = 'Ask {npc:149386} to use {item:209863} to create {item:209866}.'
+L['ulfar_note_2'] = 'Once you have the {item:209866}, go back to the {location:Emerald Dream} to find a suitable target for the transformation ritual.'
+
+L['thorn_stag_note'] = '1. Kill {npc:210976}, then use {item:209866} on the corpse. The stag will respawn as {npc:210984} {npc:<Thornborn Spirit>}.\n\n2. Cast {spell:1515} on it.\n\n3. Three color are available for {npc:210984}: black, brown, and green.'
+L['thorn_saber_note'] = '1. Kill {npc:210975}, then use {item:209867} on the corpse. The saber will respawn as {npc:210981} {npc:<Thornborn Spirit>}.\n\n2. Cast {spell:1515} on it.\n\n3. Three color are available for {npc:210981}: black, green, and pale.'
+L['thorn_bear_note'] = '1. Kill {npc:210977}, then use {item:209868} on the corpse. The bear will respawn as {npc:210988} {npc:<Thornborn Spirit>}.\n\n2. Cast {spell:1515} on it.\n\n3. Three color are available for {npc:210988}: brown, dark, and green.'
+
+L['nahqi_note'] = 'It requires the {item:211314} to use {spell:1515} with {npc:210908}, that is obtained from the mount {item:210061}.\n\n{npc:210908}{npc:<Ember of Regrowth>} flies in the sky around {location:Amirdrassil} in a {note:counter clockwise} route, taking 17:30 minutes to complete a lap.\nIt has a minimum respawn timer of 30 minutes.\n\n{note:It is a {npc:Spirit Beast}. Only Beast Mastery Hunters can tame it.}'
+
+L['sulraka_note'] = '{npc:210868}{npc:<Daughter of Kimbul>} patrols the area to the east of {location:Amirdrassil} in a {note:counter clockwise} route, taking 17 minutes to complete a lap.\nIt has a minimum respawn timer of 30 minutes.\n\nIt leaves behind {object:Heavy Tracks} while walking which lasts 3 minutes.\nWalks always in stealth, so you will need to use {spell:1543} in front of a freshly {object:Heavy Tracks} to reveal her.\nCast {spell:257284} and/or {spell:187650} and attempt to {spell:1515}.\n\n{note:It is important to trap it or to reveal her because {npc:210868} will not stop moving, even when attacked. Can get out of range of the {spell:1543} cancelling the skill.}\n\n{note:It is a {npc:Spirit Beast}. Only Beast Mastery Hunters can tame it.}'
 
 -------------------------------------------------------------------------------
 ----------------------------- SECRETS OF AZEROTH ------------------------------
@@ -1025,3 +1210,34 @@ In {location:Irontree Woods}, you will find a giant {npc:210417} and a {object:M
 
 Once the elemental sucks 4 people in, it will explode and drop {item:209781}! Anyone in the area can loot it.]]
 L['soa_mjj_part3_note'] = '{item:209055} will be waiting for you right in front of the {object:Dark Portal} in the {location:Blasted Lands}! Be careful of {npc:23082} and NPCs in the area, as it does take a 12-second cast to loot the part.'
+
+-------------------------------------------------------------------------------
+------------------------------- WARCRAFT RUMBLE -------------------------------
+-------------------------------------------------------------------------------
+
+L['rumble_coin_bag'] = 'Rumble Coin Bag'
+L['rumble_foil_bag'] = 'Rumble Foil Bag'
+L['rumble_both_bags'] = 'Rumble Coin and Foil Bag'
+L['warcraft_rumble_machine'] = 'Warcraft Rumble Machine'
+
+L['wr_ohn_both_01'] = 'Inside of a ruined building in {location:Lunedane}.'
+L['wr_ohn_foil_02'] = 'By a rock near the waterfall.'
+L['wr_sto_coin_01'] = 'Behind the storage crate.'
+L['wr_sto_foil_01'] = 'Near a pile of cannonballs.'
+L['wr_sto_foil_02'] = 'Near the ramp down to the docks.'
+L['wr_tas_both_01'] = 'Behind a tree overlooking {location:Whaler\'s Nook}.'
+L['wr_tas_foil_01'] = 'Near a massive broken tree.'
+L['wr_tha_both_01'] = 'On a floating island near {location:Tyrhold Reservoir}.'
+L['wr_tha_foil_01'] = 'On top of a giant plant vase.'
+L['wr_tws_both_01'] = 'At the top of the stone tower overlooking the water.'
+L['wr_tws_foil_01'] = 'On the mountain overlooking the lava.'
+L['wr_tws_foil_02'] = 'On a small stone tower overlooking the water.'
+L['wr_val_coin_01'] = 'On the first floor of {location:The Roasted Ram} near the {object:Cooking Oven}.'
+L['wr_val_foil_01'] = 'On the second floor of {location:The Roasted Ram} on the bed.'
+L['wr_val_machine'] = 'On the second floor of {location:The Roasted Ram}.'
+L['wr_org_coin_01'] = 'On the second floor of {location:The Broken Tusk}.'
+L['wr_org_foil_01'] = 'Behind the {location:Auction House}.'
+L['wr_dur_foil_01'] = 'Behind some supply crates.'
+
+L['options_icons_warcraft_rumble'] = 'Warcraft Rumble'
+L['options_icons_warcraft_rumble_desc'] = 'Display {object:Rumble Coin Bag} and {object:Rumble Foil Bag} locations for the {object:Warcraft Rumble} crossover promotion.'

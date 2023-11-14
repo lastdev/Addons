@@ -13,6 +13,7 @@ local Theme = TSM.Include("Util.Theme")
 local TextureAtlas = TSM.Include("Util.TextureAtlas")
 local Money = TSM.Include("Util.Money")
 local TempTable = TSM.Include("Util.TempTable")
+local GroupPath = TSM.Include("Util.GroupPath")
 local Settings = TSM.Include("Service.Settings")
 local CustomPrice = TSM.Include("Service.CustomPrice")
 local UIElements = TSM.Include("UI.UIElements")
@@ -522,7 +523,7 @@ function private.AddOperationGroups(frame)
 end
 
 function private.CreateGroupOperationLine(groupPath)
-	local groupName = groupPath == TSM.CONST.ROOT_GROUP_PATH and L["Base Group"] or TSM.Groups.Path.GetName(groupPath)
+	local groupName = groupPath == TSM.CONST.ROOT_GROUP_PATH and L["Base Group"] or GroupPath.GetName(groupPath)
 	local level = select('#', strsplit(TSM.CONST.GROUP_SEP, groupPath))
 	return UIElements.New("Frame", "group")
 		:SetLayout("HORIZONTAL")
@@ -709,10 +710,10 @@ function private.GroupSelectionChanged(groupSelector)
 			if numOperations == TSM.Operations.GetMaxNumber(private.currentModule) then
 				-- replace the last operation since we're already at the max number of operations
 				TSM.Groups.RemoveOperation(groupPath, private.currentModule, numOperations, true)
-				Log.PrintfUser(L["%s previously had the max number of operations, so removed %s."], Log.ColorUserAccentText(TSM.Groups.Path.Format(groupPath)), Log.ColorUserAccentText(lastOperationName))
+				Log.PrintfUser(L["%s previously had the max number of operations, so removed %s."], Log.ColorUserAccentText(GroupPath.Format(groupPath)), Log.ColorUserAccentText(lastOperationName))
 			end
 			TSM.Groups.AppendOperation(groupPath, private.currentModule, private.currentOperationName, true)
-			Log.PrintfUser(L["Added %s to %s."], Log.ColorUserAccentText(private.currentOperationName), Log.ColorUserAccentText(groupPath == TSM.CONST.ROOT_GROUP_PATH and L["Base Group"] or TSM.Groups.Path.Format(groupPath)))
+			Log.PrintfUser(L["Added %s to %s."], Log.ColorUserAccentText(private.currentOperationName), Log.ColorUserAccentText(groupPath == TSM.CONST.ROOT_GROUP_PATH and L["Base Group"] or GroupPath.Format(groupPath)))
 			parentElement:AddChild(private.CreateGroupOperationLine(groupPath))
 		end
 	end

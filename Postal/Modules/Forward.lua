@@ -131,7 +131,11 @@ function Postal_Forward_OpenMail_Forward()
 		subject = prefix..subject
 	end
 	if subject then SendMailSubjectEditBox:SetText(subject) end
-	if bodyText then SendMailBodyEditBox:SetText(bodyText) end
+	if Postal.WOWWotLKClassic or Postal.WOWClassic then
+		if bodyText then MailEditBox.ScrollBox.EditBox:SetText(bodyText) end
+	else
+		if bodyText then SendMailBodyEditBox:SetText(bodyText) end
+	end
 	SendMailNameEditBox:SetFocus()
 	Postal_Forward_ForwardMailItems(1)
 end

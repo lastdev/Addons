@@ -1,8 +1,8 @@
-## Interface: 100107
+## Interface: 100200
 ## Title: RareTrackerMaw
 ## Notes: Track and coordinate rare spawn timers in The Maw.
 ## Author: Melroy
-## Version: 7.1.19
+## Version: 7.1.20
 ## Dependencies: RareTrackerCore
 ## IconTexture: Interface\AddOns\RareTrackerCore\Icons\RareTrackerIcon
 

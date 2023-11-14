@@ -310,6 +310,10 @@ local Factions = {
 			{ name = DataStore:GetFactionName(2550), icon = "inv_artifact_stolenpower" },      			-- Cobalt Assembly
 			{ name = DataStore:GetFactionName(2517), icon = "inv_crown_02" },      							-- Sabellian
 			{ name = DataStore:GetFactionName(2518), icon = "ui_majorfaction_valdrakken" },      		-- inv_crown_02
+			{ name = DataStore:GetFactionName(2553), icon = "ability_essence_reapingflames" },      	-- Soridormi
+			{ name = DataStore:GetFactionName(2564), icon = "ui_majorfaction_niffen" },      			-- Loamm Niffen
+			{ name = DataStore:GetFactionName(2568), icon = "inv_snailrockmount_pink" }, 					-- Glimmerogg Racer Unknown icon
+			{ name = DataStore:GetFactionName(2574), icon = "ui_majorfaction_denizens" }, 				-- Dream Wardens 10.2
 		},
 	},
 	{	-- [11]
@@ -418,7 +422,8 @@ tab:RegisterGrid(2, {
 				AddGuildsToFactionsTable(tab:GetRealm())
 				
 			elseif (currentXPack == CAT_ALLINONE) then
-				tab:SetStatus(format("%s%s|r / %s%s", colors.white, L["Reputations"], colors.green, L["All-in-one"]))
+				tab:SetStatus(format("%s%s|r / %s%s", colors.white, L["Reputations"], colors.cyan, L["All-in-one"]))
+				
 			else
 				tab:SetStatus(format("%s%s|r / %s%s|r / %s%s", 
 					colors.white, L["Reputations"], 

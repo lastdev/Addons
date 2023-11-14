@@ -1,10 +1,10 @@
-lightweight tag 15449674c849366a75df0277b712035f932aa5fa 10.1.7-02
+lightweight tag 793d7e5251b88ea2354206083da46f5c04e742d1 10.2.0-01
 Author:	Dave Hendler <sollaires@gmail.com>
-Date:	Tue Oct 10 15:36:37 2023 -0700
+Date:	Tue Nov 7 08:02:13 2023 -0800
 
-commit 15449674c849366a75df0277b712035f932aa5fa
+commit 793d7e5251b88ea2354206083da46f5c04e742d1
 Author: Dave Hendler <sollaires@gmail.com>
-Date:   Tue Oct 10 15:36:37 2023 -0700
+Date:   Tue Nov 7 08:02:13 2023 -0800
 
-    Add upgrade currency/items for 10.2
+    TOC bump for 10.2
 

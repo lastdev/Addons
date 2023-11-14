@@ -51,10 +51,10 @@ local oneTimeFixes = {
         end
     end,
 
-    forceEnableEnhancedRecheckBoomkin_20210712 = function( p )
+    --[[ forceEnableEnhancedRecheckBoomkin_20210712 = function( p )
         local s = rawget( p.specs, 102 )
         if s then s.enhancedRecheck = true end
-    end,
+    end, ]]
 
     updateMaxRefreshToNewSpecOptions_20220222 = function( p )
         for id, spec in pairs( p.specs ) do
@@ -5298,7 +5298,7 @@ do
                                     order = 4,
                                 }, ]]
 
-                                enhancedRecheck = {
+                                --[[ enhancedRecheck = {
                                     type = "toggle",
                                     name = "Enhanced Recheck",
                                     desc = "When the addon cannot recommend an ability at the present time, it rechecks action conditions at a few points in the future.  "
@@ -5306,7 +5306,7 @@ do
                                         .. "This may use slightly more CPU, but can reduce the likelihood that the addon will fail to make a recommendation.",
                                     width = "full",
                                     order = 5,
-                                },
+                                }, ]]
                             }
                         }
                     },
@@ -10539,6 +10539,7 @@ do
     local expressions = {
         { "stealthed"                                       , "stealthed.rogue"                         },
         { "rtb_buffs%.normal"                               , "rtb_buffs_normal"                        },
+        { "rtb_buffs%.max_remains"                          , "rtb_buffs_max_remains"                   },
         { "rtb_buffs%.shorter"                              , "rtb_buffs_shorter"                       },
         { "rtb_buffs%.longer"                               , "rtb_buffs_longer"                        },
         { "rtb_buffs%.will_lose%.([%w_]+)"                  , "rtb_buffs_will_lose_buff.%1"             },

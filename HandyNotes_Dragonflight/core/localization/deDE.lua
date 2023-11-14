@@ -1,7 +1,7 @@
 local ADDON_NAME, ns = ...
 local L = ns.NewLocale('deDE')
 if not L then return end
--- German translation by Dathwada EU-Eredar
+-- German Translation by Dathwada EU-Eredar and Ioney EU-Blackrock
 -------------------------------------------------------------------------------
 ------------------------------------ GEAR -------------------------------------
 -------------------------------------------------------------------------------
@@ -45,7 +45,7 @@ L['requirement_not_found'] = 'Voraussetzungsort unbekannt!'
 L['multiple_spawns'] = 'Kann an mehreren Orten erscheinen.'
 L['shared_drops'] = 'Geteilte Beute'
 
-L['Requires'] = 'Benötigt'
+L['requires'] = 'Benötigt'
 L['ranked_research'] = '%s (Rang %d/%d)'
 
 L['focus'] = 'fokussieren'
@@ -61,12 +61,14 @@ L['weekly'] = 'Wöchentlich'
 L['normal'] = 'Normal'
 L['hard'] = 'Schwer'
 L['heirloom'] = 'Erbstück'
+L['item'] = 'Gegenstand'
 L['mount'] = 'Reittier'
 L['pet'] = 'Haustier'
 L['recipe'] = 'Rezept'
 L['spell'] = 'Fähigkeit'
 L['title'] = 'Titel'
 L['toy'] = 'Spielzeug'
+L['currency'] = 'Währung'
 L['rep'] = 'Ruf'
 L['completed'] = 'Abgeschlossen'
 L['incomplete'] = 'Unvollständig'
@@ -77,6 +79,9 @@ L['unlearnable'] = 'Nicht erlernbar'
 L['defeated'] = 'Besiegt'
 L['undefeated'] = 'Unbesiegt'
 L['elite'] = 'Elite'
+L['quest'] = 'Quest'
+L['quest_repeatable'] = 'Wiederholbare Quest'
+L['achievement'] = 'Erfolg'
 
 L['follower_type_follower'] = 'Anhänger'
 L['follower_type_champion'] = 'Champion'
@@ -93,11 +98,18 @@ L['time_format_24hrs'] = '%d.%m - %H:%M'
 --------------------------------- DRAGONRACES ---------------------------------
 -------------------------------------------------------------------------------
 
-L['dr_best'] = 'Deine beste Zeit:\n - Normal: %.3fs\n - Fortgeschritten: %.3fs\n - Rückwärts: %.3fs'
-L['dr_best_dash'] = 'Deine beste Zeit:\n - %.3fs'
-L['dr_note'] = 'Vorgabezeit:\n - Normal: %ss / %ss\n - Fortgeschritten: %ss / %ss\n - Rückwärts: %ss / %ss'
-L['dr_note_dash'] = 'Vorgabezeit:\n - %ss / %ss'
-L['dr_bronze'] = '\n\nBeende das Rennen um ' .. ns.color.Bronze('Bronze') .. ' zu erhalten.'
+L['dr_your_best_time'] = 'Deine beste Zeit:'
+L['dr_your_target_time'] = 'Vorgabezeit:'
+L['dr_best_time'] = ' - %s: %.3fs'
+L['dr_target_time'] = ' - %s: %ss / %ss'
+L['dr_normal'] = 'Normal'
+L['dr_advanced'] = 'Fortgeschritten'
+L['dr_reverse'] = 'Umgekehrt'
+L['dr_challenge'] = 'Herausforderung'
+L['dr_reverse_challenge'] = 'Umgekehrte Herausforderung'
+L['dr_storm_race'] = 'Sturmrennen'
+L['dr_bronze'] = 'Beende das Rennen um ' .. ns.color.Bronze('Bronze') .. ' zu erhalten.'
+L['dr_vendor_note'] = 'Tausche {currency:2588} gegen Drachenanpassungen und Ausrüstungsvorlagen ein.'
 L['options_icons_dragonrace'] = 'Drachenrennen'
 L['options_icons_dragonrace_desc'] = 'Zeigt die Positionen der Drachenrennen an.'
 

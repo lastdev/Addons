@@ -30,6 +30,8 @@ L["|cffeda55fShift-Click|r to pause addon execution."] = "|cffeda55fShift Click|
 --[[Translation missing --]]
 L["|cFFFF0000Not|r Item Bonus Id Equipped"] = "|cFFFF0000Not|r Item Bonus Id Equipped"
 --[[Translation missing --]]
+L["|cFFFF0000Not|r Item Equipped"] = "|cFFFF0000Not|r Item Equipped"
+--[[Translation missing --]]
 L["|cFFFF0000Not|r Player Name/Realm"] = "|cFFFF0000Not|r Player Name/Realm"
 --[[Translation missing --]]
 L["|cFFFF0000Not|r Spell Known"] = "|cFFFF0000Not|r Spell Known"
@@ -728,6 +730,8 @@ L["Encounter ID(s)"] = "Encounter ID(s)"
 L["Energize"] = "Energize"
 --[[Translation missing --]]
 L["Enrage"] = "Enrage"
+--[[Translation missing --]]
+L["Enter a name or a spellId"] = "Enter a name or a spellId"
 --[[Translation missing --]]
 L["Enter static or relative values with %"] = "Enter static or relative values with %"
 --[[Translation missing --]]
@@ -2477,6 +2481,10 @@ L["Unit Name"] = "Unit Name"
 L["Unit Name/Realm"] = "Unit Name/Realm"
 --[[Translation missing --]]
 L["Units Affected"] = "Units Affected"
+--[[Translation missing --]]
+L["Units of affected Players in a table format"] = "Units of affected Players in a table format"
+--[[Translation missing --]]
+L["Units of unaffected Players in a table format"] = "Units of unaffected Players in a table format"
 --[[Translation missing --]]
 L["unknown location"] = "unknown location"
 --[[Translation missing --]]

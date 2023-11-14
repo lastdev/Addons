@@ -5,9 +5,9 @@ tinsert(ns.data, data)
 
 function data:GetPatchVersion()
     return {
-        timestamp = 1683375700,
-        version = '10.1.0',
-        build = 49444,
+        timestamp = 1698486716,
+        version = '10.2.0',
+        build = 51851,
     }
 end
 
@@ -51,6 +51,13 @@ function data:GetNPCData()
         [81407] = { ["name"] = "Grimrail Bombardier", ["count"] = 12 },
         [81432] = { ["name"] = "Grom'kar Technician", ["count"] = 4 },
         [81603] = { ["name"] = "Champion Druna", ["count"] = 9 },
+        [81819] = { ["name"] = "Everbloom Naturalist", ["count"] = 5 },
+        [81820] = { ["name"] = "Everbloom Mender", ["count"] = 5 },
+        [81864] = { ["name"] = "Dreadpetal", ["count"] = 2 },
+        [81983] = { ["name"] = "Verdant Mandragora", ["count"] = 15 },
+        [81984] = { ["name"] = "Gnarlroot", ["count"] = 25 },
+        [81985] = { ["name"] = "Everbloom Tender", ["count"] = 3 },
+        [82039] = { ["name"] = "Rockspine Stinger", ["count"] = 3 },
         [82579] = { ["name"] = "Grom'kar Far Seer", ["count"] = 12 },
         [82590] = { ["name"] = "Grimrail Scout", ["count"] = 12 },
         [82594] = { ["name"] = "Grimrail Loader", ["count"] = 1 },
@@ -70,9 +77,16 @@ function data:GetNPCData()
         [83765] = { ["name"] = "Grom'kar Footsoldier", ["count"] = 2 },
         [84028] = { ["name"] = "Siegemaster Rokra", ["count"] = 9 },
         [84520] = { ["name"] = "Pitwarden Gwarnok", ["count"] = 9 },
+        [84767] = { ["name"] = "Twisted Abomination", ["count"] = 8 },
+        [84957] = { ["name"] = "Putrid Pyromancer", ["count"] = 5 },
+        [84989] = { ["name"] = "Infested Icecaller", ["count"] = 5 },
+        [84990] = { ["name"] = "Addled Arcanomancer", ["count"] = 5 },
+        [85232] = { ["name"] = "Infested Venomfang", ["count"] = 8 },
+        [86372] = { ["name"] = "Melded Berserker", ["count"] = 5 },
         [86526] = { ["name"] = "Grom'kar Chainmaster", ["count"] = 9 },
         [86809] = { ["name"] = "Grom'kar Incinerator", ["count"] = 5 },
         [87252] = { ["name"] = "Unruly Ogron", ["count"] = 9 },
         [88163] = { ["name"] = "Grom'kar Cinderseer", ["count"] = 8 },
+        [212981] = { ["name"] = "Hapless Assistant", ["count"] = 3 },
     }
 end

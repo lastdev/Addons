@@ -1,0 +1,47 @@
+== v1.12 - 2nd November 2023
+* TOC bump to 10.2.0
+* Updated data structure and pin scaling
+
+== v1.11 - 18th September 2023
+* TOC version bump to 10.1.7
+
+== v1.10 - 18th September 2023
+* TOC version bump to 10.1.7
+(short lived. I immediately noticed an omission)
+
+== v1.09 - 4th July 2023
+* TOC version bump to 10.1.5
+
+== v1.08 - 1st July 2023
+* Zidormi suggestions and help throughout
+* Improved colour scheme for text. Now an Orange/Yellow theme instead of teh difficult to read red
+
+== v1.07 - 27th June 2023
+* Suramar bug found and fixed
+* While there accuracy of the other locations was boosted to double precision
+
+== v1.06 - 27th June 2023
+* Updates to Cataclysm, Northrend, Outland, King/Thief achievement, Draenor, Zandalar, Kul Tiras
+
+== v1.05 - 25th June 2023
+* I've added all the Extinguish in Eastern Kingdoms and Kalimdor so both continents are complete and checked
+* Dragon Isles has one mapID fix
+
+== v1.04 - 25th June 2023
+* More updates
+
+== v1.03 - 24th June 2023
+* Various bug fixes.
+  In particular Dragon Isles and Pandaria fixed - these attract Traveler's Log rewards this month!
+  
+== v1.02 - 23rd June 2023
+* Fix for pins not appearing
+
+== v1.01 - 23rd June 2023
+Kalimdor sweep:
+* Adding in Horde desecration.
+* Double precision coordinates
+* A few miscellaneous bug fixes
+
+== v1.00 - 22nd June 2023
+Initial release

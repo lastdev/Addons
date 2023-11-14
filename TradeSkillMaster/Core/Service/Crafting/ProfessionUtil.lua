@@ -196,7 +196,7 @@ function ProfessionUtil.PrepareToCraft(craftString, recipeString, quantity, leve
 	if quantity == 0 then
 		return
 	end
-	if Profession.IsEnchant(craftString) or (recipeString and RecipeString.HasOptionalMats(recipeString)) then
+	if Profession.IsEnchant(craftString) then
 		quantity = 1
 	end
 	private.preparedSpellId = spellId
@@ -206,13 +206,11 @@ end
 function ProfessionUtil.Craft(craftString, recipeId, quantity, useVellum, salvageSlotId, callback)
 	local spellId = nil
 	local level = nil
-	local hasOptionalMats = false
 	if salvageSlotId then
 		spellId = RecipeString.GetSpellId(recipeId)
 	elseif type(recipeId) == "string" then
 		spellId = RecipeString.GetSpellId(recipeId)
 		level = RecipeString.GetLevel(recipeId)
-		hasOptionalMats = RecipeString.HasOptionalMats(recipeId)
 		quantity = min(quantity, ProfessionUtil.GetNumCraftableRecipeString(recipeId))
 	else
 		spellId = recipeId
@@ -229,7 +227,7 @@ function ProfessionUtil.Craft(craftString, recipeId, quantity, useVellum, salvag
 	end
 	local isEnchant = Profession.IsEnchant(craftString)
 	local vellumable = isEnchant and not Environment.IsVanillaClassic()
-	if isEnchant or hasOptionalMats then
+	if isEnchant then
 		quantity = 1
 	elseif spellId ~= private.preparedSpellId or private.preparedTime == GetTime() then
 		-- We can only craft one of this item due to a bug on Blizzard's end

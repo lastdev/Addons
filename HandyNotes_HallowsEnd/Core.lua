@@ -3,7 +3,7 @@
 
                                             Hallow's End
 
-                                      v2.14 - 15th October 2023
+                                     v2.25 - 12th November 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -33,30 +33,36 @@ local pluginHandler = {}
 local GameTooltip = _G.GameTooltip
 local GetAchievementCriteriaInfo = GetAchievementCriteriaInfo
 local GetAchievementInfo = GetAchievementInfo
+local GetMapArtID = C_Map.GetMapArtID
 local IsQuestFlaggedCompleted = C_QuestLog.IsQuestFlaggedCompleted
 --local GetMapInfo = C_Map.GetMapInfo -- phase checking during testing
 local LibStub = _G.LibStub
 local UIParent = _G.UIParent
 local format = _G.format
 local next = _G.next
-
 local HandyNotes = _G.HandyNotes
 
 local _, _, _, version = GetBuildInfo()
-ns.faction = UnitFactionGroup( "player" )
-
-continents[ 12 ] = true -- Kalimdor
-continents[ 13 ] = true -- Eastern Kingdoms
-continents[ 101 ] = true -- Outland
-continents[ 113 ] = true -- Northrend
-continents[ 203 ] = true -- Vashj'ir
-continents[ 424 ] = true -- Pandaria
-continents[ 572 ] = true -- Draenor
-continents[ 619 ] = true -- Broken Isles
-continents[ 875 ] = true -- Zandalar
-continents[ 876 ] = true -- Kul Tiras
-continents[ 947 ] = true -- Azeroth
-continents[ 1978 ] = true -- Dragon Isles
+if version < 40000 then
+	continents[ 1414 ] = true -- Kalimdor
+	continents[ 1415 ] = true -- Eastern Kingdoms
+	continents[ 1945 ] = true -- Outland
+	continents[ 113 ] = true -- Northrend
+	continents[ 947 ] = true -- Azeroth
+else
+	continents[ 12 ] = true -- Kalimdor
+	continents[ 13 ] = true -- Eastern Kingdoms
+	continents[ 101 ] = true -- Outland
+	continents[ 113 ] = true -- Northrend
+	continents[ 203 ] = true -- Vashj'ir
+	continents[ 424 ] = true -- Pandaria
+	continents[ 572 ] = true -- Draenor
+	continents[ 619 ] = true -- Broken Isles
+	continents[ 875 ] = true -- Zandalar
+	continents[ 876 ] = true -- Kul Tiras
+	continents[ 947 ] = true -- Azeroth
+	continents[ 1978 ] = true -- Dragon Isles
+end
 
 -- Localisation
 ns.locale = GetLocale()
@@ -372,10 +378,14 @@ else
 end
 
 ns.name = UnitName( "player" ) or "Character"
+ns.faction = UnitFactionGroup( "player" )
 
 if ns.locale == "deDE" then
 	L["Hallow's End"] = "Schlotternächte"
-	L["AddOn Description"] = "Hilfe für Erfolge und Quests in Schlotternächte"	
+	L["AddOn Description"] = "Hilfe für Erfolge und Quests in Schlotternächte"
+	L["Tricks and Treats"] = "Süßes oder Saures"
+	L["Rotten Hallow Dailies"] = "Tägliche Quests für Fauliges Schlottern"
+	L["Other Candy Buckets"] = "Andere Süßigkeiteneimer"
 	L["Candy Swirl"] = "Süßigkeitenwirbel"
 	L["Pumpkin"] = "Kürbis"
 	L["Evil Pumpkin"] = "Böser Kürbis"
@@ -387,6 +397,9 @@ if ns.locale == "deDE" then
 elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Hallow's End"] = "Halloween"
 	L["AddOn Description"] = "Ayuda para logros y misiones en Halloween"
+	L["Tricks and Treats"] = "Truco o trato"
+	L["Rotten Hallow Dailies"] = "Misiones diarias de Santificación Podrida"
+	L["Other Candy Buckets"] = "Otros cubos de caramelos"
 	L["Candy Swirl"] = "Remolino de caramelo"
 	L["Pumpkin"] = "Calabaza"
 	L["Evil Pumpkin"] = "Calabaza diabolica"
@@ -398,6 +411,9 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 elseif ns.locale == "frFR" then
 	L["Hallow's End"] = "Sanssaint"
 	L["AddOn Description"] = "Aide pour les réalisations et les quêtes dans Sanssaint"
+	L["Tricks and Treats"] = "Bonbons et blagues"
+	L["Rotten Hallow Dailies"] = "Quêtes quotidiennes de Sanssaint Ruinée"
+	L["Other Candy Buckets"] = "Autres seaux à bonbons"
 	L["Candy Swirl"] = "Tourbillon de bonbons"
 	L["Pumpkin"] = "Citrouille"
 	L["Evil Pumpkin"] = "Citrouille maléfique"
@@ -409,6 +425,9 @@ elseif ns.locale == "frFR" then
 elseif ns.locale == "itIT" then
 	L["Hallow's End"] = "Veglia delle Ombre"
 	L["AddOn Description"] = "Aiuto per obiettivi e missioni in Veglia delle Ombre"
+	L["Tricks and Treats"] = "Dolcetti o scherzetti"
+	L["Rotten Hallow Dailies"] = "Missioni giornaliere di Il guastafeste"
+	L["Other Candy Buckets"] = "Altri secchielli per caramelle Secchi delle Caramelle"
 	L["Candy Swirl"] = "Vortice di caramelle"
 	L["Pumpkin"] = "Zucca"
 	L["Evil Pumpkin"] = "Zucca cattiva"
@@ -420,6 +439,9 @@ elseif ns.locale == "itIT" then
 elseif ns.locale == "koKR" then
 	L["Hallow's End"] = "할로윈 축제"
 	L["AddOn Description"] = "할로윈 축제의 업적 및 퀘스트에 대한 도움말"	
+	L["Tricks and Treats"] = "할로윈"
+	L["Rotten Hallow Dailies"] = "부패한 할로윈 일일 퀘스트"
+	L["Other Candy Buckets"] = "기타 사탕 바구니"
 	L["Candy Swirl"] = "캔디 소용돌이"
 	L["Pumpkin"] = "호박"
 	L["Evil Pumpkin"] = "사악한 호박"
@@ -431,6 +453,9 @@ elseif ns.locale == "koKR" then
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Hallow's End"] = "Noturnália"
 	L["AddOn Description"] = "Ajuda para conquistas e missões em Noturnália"
+	L["Tricks and Treats"] = "Gostosuras e Travessuras"
+	L["Rotten Hallow Dailies"] = "Missões diárias do Arruinando Noturnália"
+	L["Other Candy Buckets"] = "Outras cestas de doces"
 	L["Candy Swirl"] = "redemoinho de doces"
 	L["Pumpkin"] = "Abóbora"
 	L["Evil Pumpkin"] = "Abóbora Malvada"
@@ -442,6 +467,9 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 elseif ns.locale == "ruRU" then
 	L["Hallow's End"] = "Тыквовин"
 	L["AddOn Description"] = "Справка по достижениям и квестам в Тыквовине"
+	L["Tricks and Treats"] = "Конфета или жизнь"
+	L["Rotten Hallow Dailies"] = "Ежедневные задания Подпорченный Праздник"
+	L["Other Candy Buckets"] = "Другие корзины конфет"
 	L["Candy Swirl"] = "Конфетный вихрь"
 	L["Pumpkin"] = "Тыква"
 	L["Evil Pumpkin"] = "Злая тыква"
@@ -453,6 +481,9 @@ elseif ns.locale == "ruRU" then
 elseif ns.locale == "zhCN" then
 	L["Hallow's End"] = "万圣节"
 	L["AddOn Description"] = "帮助万圣节的成就和任务"
+	L["Tricks and Treats"] = "的糖果"
+	L["Rotten Hallow Dailies"] = "糟糕的万圣节每日任务"
+	L["Other Candy Buckets"] = "其他糖果篮"
 	L["Candy Swirl"] = "糖果漩涡"
 	L["Pumpkin"] = "南瓜"
 	L["Evil Pumpkin"] = "邪恶的南瓜"
@@ -464,6 +495,9 @@ elseif ns.locale == "zhCN" then
 elseif ns.locale == "zhTW" then
 	L["Hallow's End"] = "萬聖節"
 	L["AddOn Description"] = "幫助萬聖節的成就和任務"
+	L["Tricks and Treats"] = "的糖果"
+	L["Rotten Hallow Dailies"] = "糟糕的萬聖節每日任務"
+	L["Other Candy Buckets"] = "其他糖果籃"
 	L["Candy Swirl"] = "糖果漩渦"
 	L["Pumpkin"] = "南瓜"
 	L["Evil Pumpkin"] = "邪惡的南瓜"
@@ -486,15 +520,41 @@ function pluginHandler:OnEnter(mapFile, coord)
 
 	local pin = ns.points[ mapFile ] and ns.points[ mapFile ][ coord ]
 	local completed, aName, completedMe;
-	local bypassCoords = false
+	local bypassCoords, theramoreCheck = false, false
 
-	if pin.achievement then
-		_, aName, _, completed = GetAchievementInfo( pin.achievement )
+	if ( pin.achievement or pin.aIDA or pin.aIDH ) and not pin.iabc then
+		if pin.aIDA or pin.aIDH then
+			if pin.aIDA then
+				if ns.faction == "Alliance" then
+					_, aName, _, completed = GetAchievementInfo( pin.aIDA )
+				end
+			end
+			if pin.aIDH then
+				if ns.faction == "Horde" then
+					_, aName, _, completed = GetAchievementInfo( pin.aIDH )
+				end
+			end		
+		elseif pin.achievement then
+			_, aName, _, completed = GetAchievementInfo( pin.achievement )
+		end
 		GameTooltip:AddDoubleLine( ns.colour.prefix ..aName ..ns.colour.highlight .." (" ..ns.faction ..")",
 					( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..L["Account"] ..")" ) 
 										or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..L["Account"] ..")" ) )
-		if pin.index then
-			aName, _, completed = GetAchievementCriteriaInfo( pin.achievement, pin.index )
+		if pin.index or pin.indexA or pin.indexH then
+			if pin.indexA or pin.indexH then
+				if pin.indexA then
+					if ns.faction == "Alliance" then
+						aName, _, completed = GetAchievementCriteriaInfo( pin.aIDA, pin.indexA )
+					end
+				end
+				if pin.indexH then
+					if ns.faction == "Horde" then
+						aName, _, completed = GetAchievementCriteriaInfo( pin.aIDH, pin.indexH )
+					end
+				end		
+			elseif pin.index then
+				aName, _, completed = GetAchievementCriteriaInfo( pin.achievement, pin.index )
+			end
 			GameTooltip:AddDoubleLine( ns.colour.highlight.. aName,
 						( completed == true ) and ( "\124cFF00FF00" ..L["Ever Completed"] .." (" ..ns.name ..")" ) 
 											or ( "\124cFFFF0000" ..L["Not Ever Completed"] .." (" ..ns.name ..")" ) )
@@ -514,6 +574,8 @@ function pluginHandler:OnEnter(mapFile, coord)
 	else
 		if pin.title then
 			GameTooltip:SetText( ns.colour.prefix ..pin.title )
+		elseif pin.location and pin.iabc then
+			GameTooltip:SetText( ns.colour.prefix ..pin.location )
 		end
 		if pin.quest then
 			completed = IsQuestFlaggedCompleted( pin.quest )
@@ -525,18 +587,41 @@ function pluginHandler:OnEnter(mapFile, coord)
 				GameTooltip:AddDoubleLine( "\124cFF1F45FC".. "This Season",
 							( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..ns.name ..")" ) 
 												or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..ns.name ..")" ) )
+												
+				if mapFile == 70 and ns.faction == "Alliance" and not completed then
+					theramoreCheck = true
+				end
 			end
 		else
 			bypassCoords = true
 		end	
 	end
 
- 	if ( ( mapFile == 17 ) and ( C_Map.GetMapArtID( mapFile ) ~= 18 ) ) or -- Blasted Lands Testing was 18 or 628 
-		( ( mapFile == 18 ) and ( C_Map.GetMapArtID( mapFile ) ~= 19 ) ) or -- Tirisfal Glades Testing was 19 or 628 
-		( ( mapFile == 81 ) and ( C_Map.GetMapArtID( mapFile ) ~= 86 ) ) or -- Silithus Testing was 86 or 962 
-		( ( mapFile == 62 ) and ( C_Map.GetMapArtID( mapFile ) ~= 67 ) ) then -- Darkshore Testing was 67 or 1176
-		-- Theramore gave the same mapArtID
-		GameTooltip:AddLine( "\124cFFFF0000Wrong map/quest phase. Speak to Zidormi" )
+ 	if ( ( mapFile == 17 ) and ( GetMapArtID( mapFile ) ~= 18 ) ) or -- Blasted Lands Testing was 18 or 628 
+		( ( mapFile == 18 ) and ( GetMapArtID( mapFile ) ~= 19 ) ) or -- Tirisfal Glades Testing was 19 or 628 
+		( ( mapFile == 81 ) and ( GetMapArtID( mapFile ) ~= 86 ) ) or -- Silithus Testing was 86 or 962 
+		( ( mapFile == 62 ) and ( GetMapArtID( mapFile ) ~= 67 ) ) then -- Darkshore Testing was 67 or 1176
+		-- Theramore gave the same mapArtID but a Time Travelling debuff 123979 when correct
+		-- Darkshore, when correct, gave a Time Travelling buff (not debuff) 290246
+		-- Tirisfal, when correct, gave a Time Travelling buff (not debuff) 276827
+		-- Blasted Lands, when correct, gave a Time Travelling buff (not debuff) 176111
+		if not pin.neighbour then
+			GameTooltip:AddLine( "\124cFFFF0000Wrong map/quest phase. Speak to Zidormi" )
+		end
+	elseif theramoreCheck then
+		_, _, _, _, _, _, _, _, _, _, _, _, _, completed = GetAchievementInfo( 7523 )
+		if not completed then _, _, _, _, _, _, _, _, _, _, _, _, _, completed = GetAchievementInfo( 7467 ) end
+		if completed == true then
+			local found = false
+			for i=1,40 do
+				local n,_,_,_,_,_,_,_,_,id=UnitDebuff("player",i)
+				if not id then break end
+				if id == 123979 then found = true break end
+			end
+			if found == false then
+				GameTooltip:AddLine( "\124cFFFF0000Wrong map/quest phase. Speak to Zidormi" )
+			end
+		end
 	end
 	if pin.tip then
 		GameTooltip:AddLine( ns.colour.plaintext ..pin.tip )
@@ -557,7 +642,7 @@ end
 local function ShowConditionallyE( aID, aIndex )
 	local completed;
 	if ( ns.db.removeEver == true ) then
-		if ( aIndex > 0 ) then
+		if aIndex then
 			_, _, completed = GetAchievementCriteriaInfo( aID, aIndex )
 		else
 			_, _, _, completed = GetAchievementInfo( aID )
@@ -597,78 +682,89 @@ do
 		local coord, v = next(t, prev)
 		while coord do
 			if v then
-				if v.achievement then
-					if ( v.achievement == 963 ) or ( v.achievement == 966 ) or ( v.achievement == 969 ) or
-						( v.achievement == 5836 ) or ( v.achievement == 5837 ) or ( v.achievement == 7601 ) or
-						( v.achievement == 75681 ) then -- Tricks & Treats Alliance
+				if ( v.aIDA or v.aIDH ) then
+					if v.aIDA then
 						if ns.faction == "Alliance" then
-							if ShowConditionallyE( v.achievement ) == true then
-								if ShowConditionallyS( v.quest ) == true then
-									return coord, nil, ns.texturesL[ns.db.iconTricksTreat], 
-										ns.db.iconScale * ns.scalingL[ns.db.iconTricksTreat], ns.db.iconAlpha
+							if v.daily then
+								if ShowConditionallyE( v.aIDA ) == true then
+									if ShowConditionallyD( v.quest ) == true then
+										return coord, nil, ns.texturesS[ns.db.iconDailies],
+											ns.db.iconScale * ns.scalingS[ns.db.iconDailies], ns.db.iconAlpha
+									end
+								end
+							else
+								if ( ( version < 40000 ) and v.iabc ) or ( ShowConditionallyE( v.aIDA ) == true ) then
+									if ( ( version < 40000 ) and not v.ibc ) or ( version >= 40000 ) then
+										if ShowConditionallyS( v.quest ) == true then
+											return coord, nil, ns.texturesL[ns.db.iconTricksTreat], 
+												ns.db.iconScale * ns.scalingL[ns.db.iconTricksTreat], ns.db.iconAlpha
+										end
+									end
 								end
 							end
 						end
-					elseif ( v.achievement == 965 ) or ( v.achievement == 967 ) or ( v.achievement == 968 ) or
-							( v.achievement == 5835 ) or ( v.achievement == 5838 ) or ( v.achievement == 7602 ) or
-							( v.achievement == 75682 ) then -- Tricks & Treats Horde
+					end
+					if v.aIDH then
 						if ns.faction == "Horde" then
-							if ShowConditionallyE( v.achievement ) == true then
-								if ShowConditionallyS( v.quest ) == true then
-									return coord, nil, ns.texturesL[ns.db.iconTricksTreat], 
-										ns.db.iconScale * ns.scalingL[ns.db.iconTricksTreat], ns.db.iconAlpha
+							if v.daily then
+								if ShowConditionallyE( v.aIDH ) == true then
+									if ShowConditionallyD( v.quest ) == true then
+										return coord, nil, ns.texturesS[ns.db.iconDailies],
+											ns.db.iconScale * ns.scalingS[ns.db.iconDailies], ns.db.iconAlpha
+									end
+								end
+							else
+								if ( ( version < 40000 ) and v.iabc ) or ( ShowConditionallyE( v.aIDH ) == true ) then
+									if ( ( version < 40000 ) and not v.ibc ) or ( version >= 40000 ) then
+										if ShowConditionallyS( v.quest ) == true then
+											return coord, nil, ns.texturesL[ns.db.iconTricksTreat], 
+												ns.db.iconScale * ns.scalingL[ns.db.iconTricksTreat], ns.db.iconAlpha
+										end
+									end
 								end
 							end
 						end
-					elseif v.achievement == 1040 then -- Alliance Dailies with an Achievement
-						if ns.faction == "Alliance" then
-							if ShowConditionallyE( v.achievement ) == true then
-								if ShowConditionallyD( v.quest ) == true then
-									return coord, nil, ns.texturesS[ns.db.iconDailies],
-										ns.db.iconScale * ns.scalingS[ns.db.iconDailies], ns.db.iconAlpha
-								end
+					end
+					
+				elseif v.achievement then
+					if v.achievement == 18360 then -- Non-faction Dragon Isles buckets
+						if ShowConditionallyE( v.achievement, v.index ) == true then
+							if ShowConditionallyS( v.quest ) == true then
+								return coord, nil, ns.texturesL[ns.db.iconTricksTreat], 
+									ns.db.iconScale * ns.scalingL[ns.db.iconTricksTreat], ns.db.iconAlpha
 							end
 						end
-					elseif v.achievement == 1041 then -- Horde Dailies with an Achievement
-						if ns.faction == "Horde" then
-							if ShowConditionallyE( v.achievement ) == true then
-								if ShowConditionallyD( v.quest ) == true then
-									return coord, nil, ns.texturesS[ns.db.iconDailies],
-										ns.db.iconScale * ns.scalingS[ns.db.iconDailies], ns.db.iconAlpha
-								end
-							end
-						end													
-					else
-						if v.achievement == 18360 then -- Non-faction Dragon Isles buckets
-							if ShowConditionallyE( v.achievement, v.index ) == true then
-								if ShowConditionallyS( v.quest ) == true then
-									return coord, nil, ns.texturesL[ns.db.iconTricksTreat], 
-										ns.db.iconScale * ns.scalingL[ns.db.iconTricksTreat], ns.db.iconAlpha
-								end
-							end
-						else -- Some other Achievement - Check Your Head etc				
-							if ShowConditionallyE( v.achievement, v.index ) == true then
-								return coord, nil, ns.texturesS[ns.db.iconSpecial],
-									ns.db.iconScale * ns.scalingS[ns.db.iconSpecial], ns.db.iconAlpha
-							end
+					else -- Some other Achievement - Check Your Head etc				
+						if ShowConditionallyE( v.achievement, v.index ) == true then
+							return coord, nil, ns.texturesS[ns.db.iconSpecial],
+								ns.db.iconScale * ns.scalingS[ns.db.iconSpecial], ns.db.iconAlpha
 						end
-					end					
+					end
+
 				elseif v.faction and v.quest then
 					-- Actually, so far all quests have a faction field
 					if ( ( ns.faction == "Horde" ) and ( ( v.faction == "Neutral" ) or ( v.faction == "Horde" ) ) ) or
 					   ( ( ns.faction == "Alliance" ) and ( ( v.faction == "Neutral" ) or ( v.faction == "Alliance" ) ) ) then
 						-- That logic excludes new Pandas but shouldn't be a problem
-						if ShowConditionallyE( v.achievement ) == true then
-							if v.daily then -- Mainly Garrison
-								if ShowConditionallyD( v.quest ) == true then
-									return coord, nil, ns.texturesS[ns.db.iconDailies],
-										ns.db.iconScale * ns.scalingS[ns.db.iconDailies], ns.db.iconAlpha
-								end
-							elseif ShowConditionallyS( v.quest ) == true then -- Mainly extra candy buckets plus extra help pins
-								return coord, nil, ns.texturesS[ns.db.iconSpecial],
-									ns.db.iconScale * ns.scalingS[ns.db.iconSpecial], ns.db.iconAlpha
+						if v.daily then -- Mainly Garrison
+							if ShowConditionallyD( v.quest ) == true then
+								return coord, nil, ns.texturesS[ns.db.iconDailies],
+									ns.db.iconScale * ns.scalingS[ns.db.iconDailies], ns.db.iconAlpha
 							end
+						elseif ShowConditionallyS( v.quest ) == true then -- Mainly extra candy buckets plus extra help pins
+							return coord, nil, ns.texturesS[ns.db.iconSpecial],
+								ns.db.iconScale * ns.scalingS[ns.db.iconSpecial], ns.db.iconAlpha
 						end
+					end
+				elseif v.quest then
+					if v.daily then -- Mainly Garrison
+						if ShowConditionallyD( v.quest ) == true then
+							return coord, nil, ns.texturesS[ns.db.iconDailies],
+								ns.db.iconScale * ns.scalingS[ns.db.iconDailies], ns.db.iconAlpha
+						end
+					elseif ShowConditionallyS( v.quest ) == true then -- Mainly extra candy buckets plus extra help pins
+						return coord, nil, ns.texturesS[ns.db.iconSpecial],
+							ns.db.iconScale * ns.scalingS[ns.db.iconSpecial], ns.db.iconAlpha
 					end
 				else -- Permanent map markers with no associated Achievement or Quest
 					return coord, nil, ns.texturesS[ns.db.iconSpecial],
@@ -785,7 +881,7 @@ ns.options = {
 				},
 				iconSpecial = {
 					type = "range",
-					name = L["Extra Candy Buckets"],
+					name = L["Other Candy Buckets"],
 					desc = "1 = " ..L["Ring"] .." - " ..L["Gold"] .."\n2 = " ..L["Ring"] .." - " ..L["Red"] 
 							.."\n3 = " ..L["Ring"] .." - " ..L["Blue"] .."\n4 = " ..L["Ring"] .." - " 
 							..L["Green"] .."\n5 = " ..L["Cross"] .." - " ..L["Red"] .."\n6 = "
@@ -828,6 +924,10 @@ function pluginHandler:OnEnable()
 				-- I wanted a set of Dalaran pins to appear in Crystalsong thus I need to
 				-- avoid duplication on the Northrend map
 				( map.mapID == 127 ) or -- Crystalsong Forest
+				( map.mapID == 1453 ) or -- Stormwind City
+				( map.mapID == 1455 ) or -- Ironforge
+				( map.mapID == 1457 ) or -- Darnassus
+				( map.mapID == 1947 ) or -- The Exodar
 				( map.mapID == 2112 ) then -- Valdrakken
 			elseif coords then
 				for coord, v in next, coords do
@@ -838,72 +938,81 @@ function pluginHandler:OnEnable()
 							ns.points[continentMapID] = ns.points[continentMapID] or {}
 							ns.points[continentMapID][HandyNotes:getCoord(cx, cy)] = v
 						end
-					end
-					
-					if v.achievement then
-						if ( v.achievement == 963 ) or ( v.achievement == 966 ) or ( v.achievement == 969 ) or
-							( v.achievement == 5836 ) or ( v.achievement == 5837 ) or ( v.achievement == 7601 ) or
-							( v.achievement == 75681 ) then -- Tricks & Treats Alliance
+					end				
+
+					if ( v.aIDA or v.aIDH ) and not v.iabc then
+						if v.aIDA then
 							if ns.faction == "Alliance" then
-								if ShowConditionallyE( v.achievement ) == true then
-									if ShowConditionallyS( v.quest ) == true then
-										AddToContinent()
+								if v.daily then
+									if ShowConditionallyE( v.aIDA ) == true then
+										if ShowConditionallyD( v.quest ) == true then
+											AddToContinent()
+										end
+									end
+								else
+									if ( ( version < 40000 ) and v.iabc ) or ( ShowConditionallyE( v.aIDA ) == true ) then
+										if ( ( version < 40000 ) and not v.ibc ) or ( version >= 40000 ) then
+											if ShowConditionallyS( v.quest ) == true then
+												AddToContinent()
+											end
+										end
 									end
 								end
 							end
-						elseif ( v.achievement == 965 ) or ( v.achievement == 967 ) or ( v.achievement == 968 ) or
-								( v.achievement == 5835 ) or ( v.achievement == 5838 ) or ( v.achievement == 7602 ) or
-								( v.achievement == 75682 ) then -- Tricks & Treats Horde
+						end
+						if v.aIDH then
 							if ns.faction == "Horde" then
-								if ShowConditionallyE( v.achievement ) == true then
-									if ShowConditionallyS( v.quest ) == true then
-										AddToContinent()
+								if v.daily then
+									if ShowConditionallyE( v.aIDH ) == true then
+										if ShowConditionallyD( v.quest ) == true then
+											AddToContinent()
+										end
+									end
+								else
+									if ( ( version < 40000 ) and v.iabc ) or ( ShowConditionallyE( v.aIDH ) == true ) then
+										if ( ( version < 40000 ) and not v.ibc ) or ( version >= 40000 ) then
+											if ShowConditionallyS( v.quest ) == true then
+												AddToContinent()
+											end
+										end
 									end
 								end
 							end
-						elseif v.achievement == 1040 then -- Alliance Dailies with an Achievement
-							if ns.faction == "Alliance" then
-								if ShowConditionallyE( v.achievement ) == true then
-									if ShowConditionallyD( v.quest ) == true then
-										AddToContinent()
-									end
-								end
-							end
-						elseif v.achievement == 1041 then -- Horde Dailies with an Achievement
-							if ns.faction == "Horde" then
-								if ShowConditionallyE( v.achievement ) == true then
-									if ShowConditionallyD( v.quest ) == true then
-										AddToContinent()
-									end
-								end
-							end													
-						else
-							if v.achievement == 18360 then -- Non-faction Dragon Isles buckets
-								if ShowConditionallyE( v.achievement, v.index ) == true then
-									if ShowConditionallyS( v.quest ) == true then
-										AddToContinent()
-									end
-								end
-							else -- Some other Achievement - Check Your Head etc				
-								if ShowConditionallyE( v.achievement, v.index ) == true then
+						end
+						
+					elseif v.achievement then
+						if v.achievement == 18360 then -- Non-faction Dragon Isles buckets
+							if ShowConditionallyE( v.achievement, v.index ) == true then
+								if ShowConditionallyS( v.quest ) == true then
 									AddToContinent()
 								end
 							end
-						end					
+						else -- Some other Achievement - Check Your Head etc				
+							if ShowConditionallyE( v.achievement, v.index ) == true then
+								AddToContinent()
+							end
+						end
+						
 					elseif v.faction and v.quest then
 						-- Actually, so far all quests have a faction field
 						if ( ( ns.faction == "Horde" ) and ( ( v.faction == "Neutral" ) or ( v.faction == "Horde" ) ) ) or
 						   ( ( ns.faction == "Alliance" ) and ( ( v.faction == "Neutral" ) or ( v.faction == "Alliance" ) ) ) then
 							-- That logic excludes new Pandas but shouldn't be a problem
-							if ShowConditionallyE( v.achievement ) == true then
-								if v.daily then -- Mainly Garrison
-									if ShowConditionallyD( v.quest ) == true then
-										AddToContinent()
-									end
-								elseif ShowConditionallyS( v.quest ) == true then -- Mainly extra candy buckets plus extra help pins
+							if v.daily then -- Mainly Garrison
+								if ShowConditionallyD( v.quest ) == true then
 									AddToContinent()
 								end
+							elseif ShowConditionallyS( v.quest ) == true then -- Mainly extra candy buckets plus extra help pins
+								AddToContinent()
 							end
+						end
+					elseif v.quest then
+						if v.daily then -- Mainly Garrison
+							if ShowConditionallyD( v.quest ) == true then
+								AddToContinent()
+							end
+						elseif ShowConditionallyS( v.quest ) == true then -- Mainly extra candy buckets plus extra help pins
+							AddToContinent()
 						end
 					else -- Permanent map markers with no associated Achievement or Quest
 						AddToContinent()

@@ -48,6 +48,34 @@ function NameResolver:Resolve(link)
 end
 
 -------------------------------------------------------------------------------
+------------------------------- CALENDAR EVENTS -------------------------------
+-------------------------------------------------------------------------------
+
+local activeCalenderEvents = {}
+local function UpdateActiveCalendarEvents()
+    -- set Calendar to current month
+    local current = C_DateAndTime.GetCurrentCalendarTime()
+    C_Calendar.SetAbsMonth(current.month, current.year)
+
+    wipe(activeCalenderEvents)
+    local day = current.monthDay
+    for i = 1, C_Calendar.GetNumDayEvents(0, day) do
+        local event = C_Calendar.GetDayEvent(0, day, i)
+        activeCalenderEvents[event.eventID] = true
+    end
+
+    -- hours until midnight + minutes unit midnight + 5 extra seconds
+    local nextDay = (((23 - current.hour) * 60) + (60 - current.minute)) * 60 +
+                        5
+    -- this will call UpdateActiveCalendarEvents after midnight
+    C_Timer.After(nextDay, UpdateActiveCalendarEvents)
+end
+
+local function IsCalendarEventActive(eventID)
+    return activeCalenderEvents[eventID] and true or false
+end
+
+-------------------------------------------------------------------------------
 -------------------------------- LINK RENDERER --------------------------------
 -------------------------------------------------------------------------------
 
@@ -109,7 +137,7 @@ local function RenderLinks(str, nameOnly)
             local name = C_QuestLog.GetTitleForQuestID(id)
             if name then
                 if nameOnly then return name end
-                local icon = (type == 'daily') and 'quest_ab' or 'quest_ay'
+                local icon = type == 'daily' and 'quest_ab' or 'quest_ay'
                 return ns.GetIconLink(icon, 12) ..
                            ns.color.Yellow('[' .. name .. ']')
             end
@@ -124,7 +152,7 @@ local function RenderLinks(str, nameOnly)
     end)
     -- render commonly colored text
     local function renderNonNumeric(str)
-        local result = str:gsub('{(%l+):([^}]+)}', function(type, text)
+        local result = str:gsub('{(%l+):([^{}]+)}', function(type, text)
             if type == 'bug' then return ns.color.Red(text) end
             if type == 'emote' then return ns.color.Orange(text) end
             if type == 'location' then return ns.color.Yellow(text) end
@@ -153,19 +181,6 @@ local function RenderLinks(str, nameOnly)
     end
     links = renderNonNumeric(links)
     return links
-end
-
--------------------------------------------------------------------------------
---------------------------------- NOTE STATUS ---------------------------------
--------------------------------------------------------------------------------
-
-local function NoteStatus(itemID, numNeed, note)
-    local numHave = GetItemCount(itemID, true)
-    local status = format('%d/%d', numHave, numNeed)
-    if numHave >= numNeed then
-        return '\n\n' .. ns.status.Green(status) .. ' ' .. note
-    end
-    return '\n\n' .. ns.status.Red(status) .. ' ' .. note
 end
 
 -------------------------------------------------------------------------------
@@ -257,10 +272,11 @@ end
 ns.AsIDTable = AsIDTable
 ns.AsTable = AsTable
 ns.GetDatabaseTable = GetDatabaseTable
+ns.IsCalendarEventActive = IsCalendarEventActive
 ns.NameResolver = NameResolver
 ns.NewLocale = NewLocale
-ns.NoteStatus = NoteStatus
 ns.PlayerHasItem = PlayerHasItem
 ns.PlayerHasProfession = PlayerHasProfession
 ns.PrepareLinks = PrepareLinks
 ns.RenderLinks = RenderLinks
+ns.UpdateActiveCalendarEvents = UpdateActiveCalendarEvents

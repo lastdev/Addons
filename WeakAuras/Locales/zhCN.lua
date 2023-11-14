@@ -25,6 +25,8 @@ L["|cffeda55fMiddle-Click|r to toggle the minimap icon on or off."] = "|cffeda55
 L["|cffeda55fRight-Click|r to toggle performance profiling window."] = "|cffeda55f右键|r显示/隐藏性能分析窗口。"
 L["|cffeda55fShift-Click|r to pause addon execution."] = "|cffeda55fShift + 左键|r暂停插件执行。"
 L["|cFFFF0000Not|r Item Bonus Id Equipped"] = "|cFFFF0000非|r 已装备物品增益ID"
+--[[Translation missing --]]
+L["|cFFFF0000Not|r Item Equipped"] = "|cFFFF0000Not|r Item Equipped"
 L["|cFFFF0000Not|r Player Name/Realm"] = "|cFFFF0000非|r 玩家名字/服务器"
 L["|cFFFF0000Not|r Spell Known"] = "|cFFFF0000未|r学会的法术"
 L["|cFFffcc00Extra Options:|r %s"] = "|cFFffcc00额外选项：|r%s"
@@ -445,6 +447,8 @@ L["Enchanting Cast Bar"] = "附魔施法条"
 L["Encounter ID(s)"] = "首领战 ID"
 L["Energize"] = "能量值恢复"
 L["Enrage"] = "激怒"
+--[[Translation missing --]]
+L["Enter a name or a spellId"] = "Enter a name or a spellId"
 L["Enter static or relative values with %"] = "输入绝对值或者是带有%的相对值"
 L["Entering"] = "进入"
 L["Entering/Leaving Combat"] = "进入/离开战斗"
@@ -1357,6 +1361,10 @@ L["Unit is Unit"] = "同一单位"
 L["Unit Name"] = "单位名称"
 L["Unit Name/Realm"] = "单位名称/服务器"
 L["Units Affected"] = "受影响的单位"
+--[[Translation missing --]]
+L["Units of affected Players in a table format"] = "Units of affected Players in a table format"
+--[[Translation missing --]]
+L["Units of unaffected Players in a table format"] = "Units of unaffected Players in a table format"
 L["unknown location"] = "未知位置"
 L["Unlimited"] = "无限制"
 L["Untrigger %s"] = "取消触发器 %s"

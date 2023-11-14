@@ -9,12 +9,14 @@ ns.FORBIDDENREACH = 2151 -- was 2026 before 10.0.7 (but was also unreachable)
 ns.FORBIDDENREACHINTRO = 2118 -- Dracthyr
 ns.PRIMALISTFUTURE = 2085
 ns.ZARALEKCAVERN = 2133
+ns.EMERALDDREAM = 2200
 
 ns.FACTION_MARUUK = 2503
 ns.FACTION_DRAGONSCALE = 2507
 ns.FACTION_VALDRAKKEN = 2510
 ns.FACTION_ISKAARA = 2511
 ns.FACTION_LOAMM = 2564
+ns.FACTION_DREAMWARDENS = 2574
 
 -- 67030 completes alongside 66221 (moving on) and 72366; it's then also completed on any alts, unlike the others
 -- (It's what's in the vignettes as a condition for visibility)

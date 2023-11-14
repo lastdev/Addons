@@ -2,4 +2,5 @@
   <Script file='Valdrakken.lua'/>
   <Script file='ForbiddenReach.lua'/>
   <Script file='ZaralekCavern.lua'/>
+  <Script file='EmeraldDream.lua'/>
 </Ui>

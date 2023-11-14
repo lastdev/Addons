@@ -415,7 +415,8 @@ local function readTalentConfig(configId)
     	for _, nodeId in pairs(C_Traits.GetTreeNodes(treeIds[i])) do
       		local node = C_Traits.GetNodeInfo(configId, nodeId)
 			if node.ID and node.isVisible and node.maxRanks > 0 then
-				if #node.entryIDs > 1 then
+				-- need to check node type b/c blizz abandoned a few selection node entries in the data which still show up in a scan here... super annoying and gross
+				if #node.entryIDs > 1  and node.type == 2 then
 					talMap[node.ID] = {}
 					for e = 1, #node.entryIDs do
 						if node.activeEntry and node.entryIDs[e] == node.activeEntry.entryID then

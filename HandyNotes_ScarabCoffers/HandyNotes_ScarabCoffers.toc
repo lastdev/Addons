@@ -1,0 +1,16 @@
+## Interface: 100200
+## Title: HandyNotes_ScarabCoffers
+## Notes: Scarab Coffer locations in AQ40/20
+## IconTexture: Interface/Addons/HandyNotes_ScarabCoffers/HandyNotes_ScarabCoffers.blp
+## Author: Keyboardturner
+## Version: 10
+## DefaultState: enabled
+## SavedVariables: HandyNotes_ScarabCoffersDB
+## RequiredDeps: HandyNotes
+## X-Curse-Project-ID: 358246
+## X-WoWI-ID: 26487
+## X-Wago-ID: rkGrMlKy
+
+handler.lua
+config.lua
+nodes.lua

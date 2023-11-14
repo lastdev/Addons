@@ -460,11 +460,11 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED
 	--[[Translation missing --]]
 	L["Enter a Spell ID. You can use the addon idTip to determine spell ids."] = "Enter a Spell ID. You can use the addon idTip to determine spell ids."
 	L["Enter an Aura Name, partial Aura Name, or Spell ID. A Spell ID will match any spells with the same name."] = "Saisissez un nom d'aura, un nom d'aura partiel ou un ID de sort. L'ID d'un sort correspondra à tous les sorts portant le même nom."
-	L["Enter Author Mode"] = "Entrer en Mode Auteur"
+	L["Enter Author Mode"] = "Entrer en mode auteur"
 	--[[Translation missing --]]
 	L["Enter in a value for the tick's placement."] = "Enter in a value for the tick's placement."
-	L["Enter User Mode"] = "Entrer en Mode Utilisateur."
-	L["Enter user mode."] = "Entrer en Mode Utilisateur."
+	L["Enter User Mode"] = "Entrer en mode utilisateur"
+	L["Enter user mode."] = "Entrer en mode utilisateur"
 	--[[Translation missing --]]
 	L["Entry %i"] = "Entry %i"
 	--[[Translation missing --]]
@@ -503,7 +503,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED
 	--[[Translation missing --]]
 	L["Fallback Icon"] = "Fallback Icon"
 	L["False"] = "Faux"
-	L["Fetch Affected/Unaffected Names"] = "chercher concerné/Noms non-concernés"
+	--[[Translation missing --]]
+	L["Fetch Affected/Unaffected Names and Units"] = "Fetch Affected/Unaffected Names and Units"
 	--[[Translation missing --]]
 	L["Fetch Raid Mark Information"] = "Fetch Raid Mark Information"
 	--[[Translation missing --]]
@@ -918,8 +919,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Ready for Install"] = "Ready for Install"
 	--[[Translation missing --]]
 	L["Ready for Update"] = "Ready for Update"
-	L["Re-center X"] = "Recentrer X"
-	L["Re-center Y"] = "Recentrer Y"
+	L["Re-center X"] = "Re-centrer X"
+	L["Re-center Y"] = "Rec-entrer Y"
 	--[[Translation missing --]]
 	L["Reciprocal TRIGGER:# requests will be ignored!"] = "Reciprocal TRIGGER:# requests will be ignored!"
 	L["Regions of type \"%s\" are not supported."] = "Les régions de type \"%s\" ne sont pas prises en charge."
@@ -1082,6 +1083,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Sub Elements"] = "Sub Elements"
 	--[[Translation missing --]]
 	L["Sub Option %i"] = "Sub Option %i"
+	--[[Translation missing --]]
+	L["Supports multiple entries, separated by commas"] = "Supports multiple entries, separated by commas"
 	L["Swipe Overlay Settings"] = "Paramètres de la superposition des balayages"
 	--[[Translation missing --]]
 	L["Templates could not be loaded, the addon is %s"] = "Templates could not be loaded, the addon is %s"

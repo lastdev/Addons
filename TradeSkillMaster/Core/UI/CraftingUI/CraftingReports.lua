@@ -15,6 +15,7 @@ local Money = TSM.Include("Util.Money")
 local String = TSM.Include("Util.String")
 local ItemString = TSM.Include("Util.ItemString")
 local Theme = TSM.Include("Util.Theme")
+local GroupPath = TSM.Include("Util.GroupPath")
 local ItemInfo = TSM.Include("Service.ItemInfo")
 local Settings = TSM.Include("Service.Settings")
 local CustomPrice = TSM.Include("Service.CustomPrice")
@@ -585,7 +586,7 @@ function private.CraftsMenuClickHandler(scrollingTable, index1, index2)
 		local numCreated, numAdded = 0, 0
 		for _, row in private.craftsQuery:Iterator() do
 			local itemString = row:GetField("itemString")
-			local groupPath = TSM.Groups.Path.Join(L["Crafted Items"], row:GetField("profession"))
+			local groupPath = GroupPath.Join(L["Crafted Items"], row:GetField("profession"))
 			if not TSM.Groups.Exists(groupPath) then
 				TSM.Groups.Create(groupPath)
 				numCreated = numCreated + 1

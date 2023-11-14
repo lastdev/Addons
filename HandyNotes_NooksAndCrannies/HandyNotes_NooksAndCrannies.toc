@@ -1,4 +1,4 @@
-## Interface: 101050
+## Interface: 102000
 ## Title: HandyNotes: Nooks and Crannies
 ## Notes: Displays cave entrances and various portals around the world.
 ## RequiredDeps: HandyNotes

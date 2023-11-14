@@ -48,8 +48,7 @@ local colourPlaintext	= ns.colour.plaintext
 -- Flame Warden of the Dragon Isles		17738	Horde
 
 local teldrassil = "Speak to Zidormi in Darkshore if\nTeldrassil seems somewhat destroyed!"
-local zidormi = "Can't find the bonfire or the Warden\n"
-				.."or the Flame Keeper? Speak to Zidormi!"
+local zidormi = "Can't find the bonfire or the Warden\nor the Flame Keeper? Speak to Zidormi!"
 
 points[ 204 ] = { -- Abyssal Depths
 	[96834446] = { aIDA=6011, aIDH=6012, indexA=4, indexH=1, quest=29031, npc=51697, group="H" },
@@ -561,14 +560,14 @@ textures[9] = "Interface\\AddOns\\HandyNotes_MidsummerFireFestival\\FirePotion"
 textures[10] = "Interface\\AddOns\\HandyNotes_MidsummerFireFestival\\SymbolHigh"
 textures[11] = "Interface\\AddOns\\HandyNotes_MidsummerFireFestival\\SymbolLow"
 
-scaling[1] = 0.45
-scaling[2] = 0.45
-scaling[3] = 0.44
-scaling[4] = 0.44
-scaling[5] = 0.44
-scaling[6] = 0.44
-scaling[7] = 0.3
-scaling[8] = 0.32
-scaling[9] = 0.3
-scaling[10] = 0.34
-scaling[11] = 0.34
+scaling[1] = 0.55
+scaling[2] = 0.55
+scaling[3] = 0.55
+scaling[4] = 0.55
+scaling[5] = 0.55
+scaling[6] = 0.55
+scaling[7] = 0.40
+scaling[8] = 0.44
+scaling[9] = 0.36
+scaling[10] = 0.45
+scaling[11] = 0.45

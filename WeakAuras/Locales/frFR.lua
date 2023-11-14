@@ -22,6 +22,8 @@ L["|cffeda55fMiddle-Click|r to toggle the minimap icon on or off."] = "|cffeda55
 L["|cffeda55fRight-Click|r to toggle performance profiling window."] = "|cffeda55fClic-Droit|r pour basculer la fenêtre de profilage des performances."
 L["|cffeda55fShift-Click|r to pause addon execution."] = "|cffeda55fMaj-Clic|r Pour suspendre l'exécution de l'addon."
 L["|cFFFF0000Not|r Item Bonus Id Equipped"] = "ID du bonus de l'objet |cFFFF0000non|r équipé"
+--[[Translation missing --]]
+L["|cFFFF0000Not|r Item Equipped"] = "|cFFFF0000Not|r Item Equipped"
 L["|cFFFF0000Not|r Player Name/Realm"] = "|cFFFF0000Not|r Nom du joueur / serveur"
 --[[Translation missing --]]
 L["|cFFFF0000Not|r Spell Known"] = "|cFFFF0000Not|r Spell Known"
@@ -301,21 +303,14 @@ L["Caster's Target"] = "Cible du Lanceur de sort"
 L["Cataclysm"] = "Cataclysm"
 L["Ceil"] = "Cellule"
 L["Center"] = "Centre"
---[[Translation missing --]]
-L["Center, then alternating bottom and top"] = "Center, then alternating bottom and top"
---[[Translation missing --]]
-L["Center, then alternating left and right"] = "Center, then alternating left and right"
---[[Translation missing --]]
-L["Center, then alternating right and left"] = "Center, then alternating right and left"
---[[Translation missing --]]
-L["Center, then alternating top and bottom"] = "Center, then alternating top and bottom"
-L["Centered Horizontal"] = "Centré horizontalement"
---[[Translation missing --]]
-L["Centered Horizontal, then Centered Vertical"] = "Centered Horizontal, then Centered Vertical"
---[[Translation missing --]]
-L["Centered Horizontal, then Down"] = "Centered Horizontal, then Down"
---[[Translation missing --]]
-L["Centered Horizontal, then Up"] = "Centered Horizontal, then Up"
+L["Center, then alternating bottom and top"] = "Centrer, puis alterner bas et haut"
+L["Center, then alternating left and right"] = "Centrer, puis alterner gauche et droite"
+L["Center, then alternating right and left"] = "Centrer, puis alterner droite et gauche"
+L["Center, then alternating top and bottom"] = "Centrer, puis alterner haut et bas"
+L["Centered Horizontal"] = "Centrer horizontalement"
+L["Centered Horizontal, then Centered Vertical"] = "Centrer horizontalement, puis centrer verticalement"
+L["Centered Horizontal, then Down"] = "Centrer horizontalement, puis vers le haut"
+L["Centered Horizontal, then Up"] = "Centrer horizontalement, puis vers le bas"
 L["Centered Vertical"] = "Centré verticalement"
 --[[Translation missing --]]
 L["Centered Vertical, then Centered Horizontal"] = "Centered Vertical, then Centered Horizontal"
@@ -583,9 +578,11 @@ L["Encounter ID(s)"] = "ID de la Rencontre"
 L["Energize"] = "Gain d'énergie"
 L["Enrage"] = "Enrager"
 --[[Translation missing --]]
+L["Enter a name or a spellId"] = "Enter a name or a spellId"
+--[[Translation missing --]]
 L["Enter static or relative values with %"] = "Enter static or relative values with %"
 L["Entering"] = "Entrer"
-L["Entering/Leaving Combat"] = "Entrer/Sortir de Combat"
+L["Entering/Leaving Combat"] = "Entrer / sortir de combat"
 --[[Translation missing --]]
 L["Entering/Leaving Encounter"] = "Entering/Leaving Encounter"
 --[[Translation missing --]]
@@ -1430,8 +1427,7 @@ L["Resting"] = "Repos"
 L["Resurrect"] = "Résurrection"
 L["Right"] = "Droite"
 L["Right to Left"] = "Droite à Gauche"
---[[Translation missing --]]
-L["Right, then Centered Vertical"] = "Right, then Centered Vertical"
+L["Right, then Centered Vertical"] = "Droite, puis centrer verticalement"
 L["Right, then Down"] = "Droite, puis bas"
 L["Right, then Up"] = "Droite, puis haut"
 L["Role"] = "Rôle"
@@ -1850,13 +1846,16 @@ L["Unit Name"] = "Nom de l'Unité"
 L["Unit Name/Realm"] = "Unit Name/Realm"
 L["Units Affected"] = "Unités Concernés"
 --[[Translation missing --]]
+L["Units of affected Players in a table format"] = "Units of affected Players in a table format"
+--[[Translation missing --]]
+L["Units of unaffected Players in a table format"] = "Units of unaffected Players in a table format"
+--[[Translation missing --]]
 L["unknown location"] = "unknown location"
 L["Unlimited"] = "Illimité"
 --[[Translation missing --]]
 L["Untrigger %s"] = "Untrigger %s"
 L["Up"] = "Haut"
---[[Translation missing --]]
-L["Up, then Centered Horizontal"] = "Up, then Centered Horizontal"
+L["Up, then Centered Horizontal"] = "Haut, puis centrer horizontalement"
 L["Up, then Left"] = "Haut, puis gauche"
 L["Up, then Right"] = "Haut, puis droite"
 --[[Translation missing --]]

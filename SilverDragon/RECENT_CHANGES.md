@@ -1,6 +1,6 @@
-## Changed in v2023.7
+## Changed in v2023.9
 
-* Updated for 10.1.5 and then 10.1.7
-* Fixed error in classic_era (Vanilla)
-* Fixed some errors causing permission errors in combat (10.1.5 protected SetPassThroughButtons)
+* More loot and ids for Emerald Dream rares
+* Fix Primal Scythid Queen's location in Waking Shores
+* Remove a stray Lost Gilnean Wardog from Thunder Bluff
 

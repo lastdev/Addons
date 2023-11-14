@@ -2,7 +2,14 @@ local AddonName, Addon = ...
 
 Addon.ReleaseNotes = {
 {
-Release ="6.2 (May 1, 2022)",
+Release ="6.2.1 (November 6, 2023)",
+Notes = [[
+# Dragonflight 10.2 Support
+
+This release only has minor fixes for Dragonflight 10.2 Support.
+]]},
+{
+Release ="6.2 (May 1, 2023)",
 Notes = [[
 # Dragonflight 10.1 Support
 

@@ -84,7 +84,9 @@ L.Editbox_WindowWidth		= "설정 창 너비"
 L.Editbox_WindowHeight		= "설정 창 높이"
 
 L.UIGroupingOptions			= "UI 그룹 설정 (이미 로딩이 된 모드는 UI 재시작을 해야 변경됩니다)"
-L.GroupOptionsExcludeIcon	= "주문별로 형성된 그룹에서 '공격대 징표 설정'은 제외 (이전처럼 관련 설정은 '공격대 징표' 카테고리에 배치됩니다)"
+L.GroupOptionsExcludeIcon	= "주문별로 형성된 그룹에서 '공격대 징표' 설정은 제외 (대신 '공격대 징표' 카테고리로 배치됩니다)"
+L.GroupOptionsExcludePAura			= "주문별로 형성된 그룹에서 '비공개 오라 효과음 재생' 설정은 제외 (대신 '비공개 오라' 카테고리로 배치됩니다)"
+
 L.AutoExpandSpellGroups		= "주문별로 그룹이 형성된 설정들을 자동으로 펼치기"
 L.ShowWAKeys				= "보스 모드 활성 조건을 이용한 WeakAuras 제작을 지원하기 위해 주문 이름 옆에 WeakAuras 키를 표시합니다."
 --L.ShowSpellDescWhenExpanded	= "설정 그룹이 펼쳐진 상태에서도 주문 설명 계속 표시"--Might not be used
@@ -397,6 +399,7 @@ L.SpamBlockNoSpecWarnText	= "특수 알림 텍스트 표시 안함"
 L.SpamBlockNoSpecWarnFlash	= "특수 알림에 화면 점멸 사용 안함"
 L.SpamBlockNoSpecWarnVibrate		= "특수 알림에 컨트롤러 진동 안함"
 L.SpamBlockNoSpecWarnSound	= "특수 알림 효과음 재생 안함 (음성 경고 메뉴에서 설정했다면 음성팩은 계속 작동)"
+L.SpamBlockNoPrivateAuraSound		= "비공개 오라 효과음 등록 안함"
 
 L.Area_SpamFilter_Timers	= "타이머 관련 기능 끄기 및 필터 설정"
 L.SpamBlockNoShowBossTimers		= "던전/레이드 보스 타이머 표시 안함"
@@ -408,8 +411,7 @@ L.SpamBlockNoCountdowns		= "초읽기 음성 재생 안함"
 L.Area_SpamFilter_Nameplates		= "이름표 전체적인 기능 끄기 및 필터 설정"
 L.SpamBlockNoNameplate				= "특수한 보스 패턴에선 이름표 아이콘을 표시 안함"
 L.SpamBlockNoNameplateCD			= "스킬 쿨타임 타이머의 이름표 아이콘을 표시 안함"
-L.SpamBlockNoBossGUIDs				= "단일 보스 전투시엔 스킬 쿨타임 타이머의 이름표 아이콘을 표시 안함\n(이 기능을 활성화 했어도 일반몹이나 다중 대상 보스 전투에선 아이콘이 표시됩니다)"
-L.SpamBlockTimersWithNameplates		= "'스킬 쿨타임 이름표 아이콘'을 활성화하면 일반몹 타이머 바는 표시 안함 (보스 전투에선 적용되지 않으며 항상 타이머 바가 표시됩니다)"
+L.SpamBlockNoBossGUIDs				= "단일 보스 전투시엔 스킬 쿨타임 이름표 아이콘을 표시 안함\n(이 설정을 활성화했어도 일반몹이나 다중 대상 보스 전투에선 아이콘이 표시됩니다)"
 
 L.Area_SpamFilter_Misc		= "기타 여러 기능 끄기 및 필터 설정"
 L.SpamBlockNoSetIcon		= "대상에 공격대 징표를 설정하지 않음"
@@ -544,6 +546,8 @@ L.NPAuraText					= "이름표 아이콘에 타이머 텍스트 표시"
 L.NPAuraSize				= "아이콘 픽셀 크기 (정사각형): %d"
 L.NPIcon_BarOffSetX 				= "아이콘 위치 조정 X: %d"
 L.NPIcon_BarOffSetY 				= "아이콘 위치 조정 Y: %d"
+L.NPIcon_GrowthDirection 			= "아이콘 생성 방향"
+L.NPDemo							= "테스트 (이름표 근처에서 실행)"
 
 -- Misc
 L.Area_General				= "일반"

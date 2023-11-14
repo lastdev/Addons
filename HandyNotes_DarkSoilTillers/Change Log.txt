@@ -1,0 +1,308 @@
+== v3.37 - 8th November 2023
+* New Vale of Eternal Blossoms @ (22.26,17.30), (31.43,20.44), (35.54,31.03)
+
+== v3.36 - 8th November 2023
+* New Vale of Eternal Blossoms @ (34.56,22.56)
+
+== v3.35 - 29th October 2023
+* TOC bump to 10.2.0
+
+== v3.34 - 24th October 2023
+* New Vale of Eternal Blossoms @ (26.51,18.47)
+
+== v3.33 - 21st October 2023
+* New Vale of Eternal Blossoms @ (29.43,25.87), (38.31,33.53)
+
+== v3.32 - 15th October 2023
+* New Vale of Eternal Blossoms @ (25.60,31.27), (24.64,26.29), (50.63,22.73)
+* Reworked icon scaling and options
+* Removed some pins that are covered by other of my AddOns
+
+== v3.31 - 8th October 2023
+* New Vale of Eternal Blossoms @ (16.61,35.06), (19.06,20.47), (20.50,42.54), (21.04,31.59)
+
+== v3.30 - 29th September 2023
+* New The Jade Forest at (57.92,62.49)
+
+== v3.29 - 24th September 2023
+* Fixed Dog pin
+* New Townlong Steppes at (20.50,14.34)
+* New Vale of Eternal Blossoms at (15.10,27.16)
+
+== v3.28 - 19th September 2023
+* New The Jade Forest @ (52.07,58.27)
+* TOC update for 10.1.7
+
+== v3.24 - 16th August 2023
+* New Krasarang Wilds at (36.20,74.45) and (33.01,67.86)
+
+== v3.23 - 5th August 2023
+* New Townlong Steppes at (22.50,57.88), (26.87,18.42), (25.26,16.84)
+
+== v3.22 - 31st July 2023
+* New dirt at (42.87,45.66), (43.07,43.59), (43.21,45.95)
+
+== v3.21 - 27th July 2023
+* New dirt at (33.75,42.04), (33.92,56.61), (35.61,48.77)
+
+== v3.20 - 21st July 2023
+* New Townlong Stepes at (20.43,23.94), (26.26,53.94), (30.69,25.85)
+
+== v3.19 - 19th July 2023
+* New dirt at (41.61,38.66) in VotFW
+
+== v3.18 - 12th July 2023
+* New soil at (43.19,53.97), (44.05,49.50) in Townlong Steppes
+
+== v3.17 - 7th July 2023
+* New Townlong Steppes at (19.88,17.17), (21.60,37.74), (24.84,56.69), (36.30,55.58)
+
+== v3.16 - 2nd July 2023
+* Update for WoW 10.1.5
+* New Townlong Steppes at (18.18,47.11), (18.81,41.87), (23.16,38.79)
+
+== v3.15 - 28th June 2023
+* Town long Steppes added!!!! Five new locations!
+
+== v3.14 - 21st June 2023
+* The Jade Forest added. Six new locations!
+
+== v3.13 - 18th June 2023
+* New Krasarang Wilds at (33.18,76.64), (34.06,66.91), (36.89,76.54)
+
+== v3.12 - 11th June 2023
+* New Krasarang Wilds at (36.03,71.53), (36.36,70.40), (36.98,78.98)
+
+== v3.11 - 7th June 2023
+* New Krasarang Wilds soil at (29.16,70.12), (31.28,69.75),
+  (33.31,79.07), (35.69,66.93), (35.79,78.59)
+
+== v3.10 - 1st June 2023
+* Krasarang Wilds added
+
+== v3.09 - 26th May 2023
+* New dirt at (44.36,45.55)
+* New dirt at (44.52,38.52)
+
+== v3.08 - 18th May 2023
+* Four new locations in the Vale added, all well hidden under foliage!
+    (27.35,28.63), (30.18,30.39), (33.56,34.81), and (36.36,18.82)
+	
+== v3.07 - 11th May 2023
+* New dirt at (32.56,23.77) in TS
+* New dirt at (22.01,28.46) in VoEB
+
+== v3.05 - 6th May 2023
+* Now supports the new AddOn Compartment introduced in 10.1.0.
+  Clicking the drop down for this AddOn takes you directly to the configuration panel!
+(Misnamed. Should have been called v3.06)
+
+== v3.05 - 3rd May 2023
+* New dirt at (46.83,41.59)
+* New dirt at (18.21,28.59) in VOEB, "Under the foliage". Sneaky!
+* New dirt at (31.91,17.24) in VOEB
+* Added an icon to the TOC file - thus removing the annoying "?" from the AddOn list in game
+
+== v3.04 - 29th April 2023
+* TOC bump to 10.1.0
+
+== v3.03 - 24th April 2023
+* New dirt at (45.16,19.08) "Inside the Springtail Crag"
+
+== v3.02 - 20th April 2023
+* New dirt at (39.25,17.00) "Inside the Springtail Crag"
+* New dirt at (43.94,20.11) "Inside the Springtail Crag"
+* New dirt at (16.60,45.62) in the Vale of Eternal Blossoms
+
+== v3.01 - 16th April 2023
+* New soil at (48.98,18.75) - in the Springtail Crag!
+
+== v3.00 - 12th April 2023
+* Finally complete - the transition to multiple zones and cross-AddOn ready!
+* Big release of 23 new pins along the northern border of the Valley of the Four Winds
+* Pins are replicated in the Vale of Eternal Blossoms
+
+== v2.17 - 6th April 2023
+* New dirt at (48.32,18.39) "Inside the Springtail Crag"
+* Code rewrite to add flexibility etc for the future
+* Localised some API calls
+* Resize default pin size down by 0.8 - map is so cluttered now
+* If the player has my HandyNotes_EA-Pandaria AddOn then NPCs/items will not be duplicated
+* If the player has my HandyNotes_APathLessTravelled AddOn then NPCs/items will not be duplicated
+* Ghostly Pandaren Fisherman added
+* Staff of the Hidden Master added
+* Boat-Building Instructions added
+* Two very dubious dirt locations are now removed
+* HandyNotes_APathLessTravelled, HandyNotes_EA-Pandaria are now optional dependancies
+
+== v2.16 - 1st April 2023
+* New dirt at (43.39,37.03) - inside the Sprintail warren!
+
+== v2.15 - 26th March 2023
+* New dirt at (42.44,39.17) "Inside the Springtail Warren"
+
+== v2.14 - 21st March 2023
+* 10.0.07 TOC file update
+
+== v2.13 - 16th March 2023
+* New dirt at (39.74,43.40) and marked as under foliage - it’s well concealed!
+
+== v2.12 - 10th March 2023
+* New dirt at (44.44,22.83) near the entrance to the Springtail Crag
+* Code to support my new Exploration Achievements - Pandaria AddOn
+
+== v2.11 - 1st March 2023
+* (42.09,39.67) confirmed / double checked
+* "Forgotten Lockbox" translation added
+* "Same colour as the ground" translation added
+* "At the entrance" translation added
+* New dirt at (39.17,20.73) - entrance to the springtail crag
+* New dirt at (47.33,21.16) -- Entrance to the Springtail Crag
+
+== v2.10 - 20th February 2023
+* (41,41,39,92) double confirmed
+* New dirt at (32.39,57.27)
+* Added Forgotten Lockbox
+
+== v2.09 - 16th February 2023
+* Double confirmed (40.83,35.29)
+* Double confirmed (43.91,50.48)
+* Preparation code for v3.0 upcoming (still not sure if I'll call it v3.0) - the main reason for this upload
+* (38.94,41.65) added comment "Same colour as the soil"
+* (46.99,37.85) added comment "Same colour as the soil"
+
+== v2.08 - 12th February 2023
+* Cough... accidentally uploaded partially enabled private beta code for an
+  unannounced feature. Oh dear. This version removes it. Sorry my bad
+
+== v2.07 - 12th February 2023
+* THREE new locations! One each inside the three Springtail Crag warrens/burrows
+
+== v2.06 - 31st January 2023
+* New dirt at (40.31,36.99)
+
+== v2.05 - 26th January 2023
+* Trivial update to 10.0.5
+
+== v2.04 - 21st January 2023
+* Fix for post-quest Dog icon so it appears at your farm. In v2.03... I broke it sorry
+* TOC highlight (prefix) colour now matches the AddOn prefix
+
+== v2.03 - 17th January 2023
+* Added One-off Quests Guide
+* (46.63,52.83) double checked
+* Further enhancement for Dog
+
+== v2.02 - 13th January 2023
+* Added Dog, whom we all love!
+* Improved translations in the TOC file
+* Added translations for The Tillers etc in the Core file
+* New dirt at (41.49,38.20) - Descend into the Springtail Warren
+* (40.03,47.54) double checked
+* (39.94,48.45) double checked
+
+== v2.01 - 9th January 2023
+* Translations in the TOC file changed to reflect the Tillers too, not just Dark Soil
+* (37.73,46.23) double checked
+
+== v2.00 - 2nd January 2023
+* Added the option to not show the Dark Soil - for those focusing on Tillers
+* Added the Cache of Pilfered Goods rare as a bonus
+* Updated the code and description for Ghostly Pandaren Fisherman
+* New icon for "Tillers Quests"
+* More translations
+* (31.40,33.96) double checked
+* (32.84,49.76) double checked
+* (39.63,40.81) double checked
+* (46.74,32.95) double checked
+* (51.19,29.38) double checked
+* New dirt at (40.57,43.62)
+* There are now markers pointing you to start The Tillers and guiding through the first quests
+* There are now sticky markers near your farm which give a brief guide to Dark Soil and Dailies
+
+== v1.21 - 25th December 2022
+* New dirt at (40.82,47.19)
+* (40.91,40.21) double checked
+
+== v1.20 - 7th December 2022
+* Update TOC to 10.0.2
+
+== v1.19 - 26th November 2022
+* Blackhoof position adjusted at (39.63,57.65)
+
+== v1.18 - 19th November 2022
+* New dirt at (46.38,36.31)
+
+== v1.17 - 14th November 2022
+* New dirt at (45.84,39.58)
+
+== v1.16 - 10th November 2022
+* New dirt at (40.03,47.53)
+
+== v1.15 - 29th October 2022
+* Fixed a problem with tooltips for friendship status as Blizzard changed the API, sigh.
+* Took the opportunity to enhance it. You are now informed of the food that the NPC likes.
+* Rather than a couple of words, I use the actual text of the friendship level as returned by the new API.
+
+== v1.14 - 26th October 2022
+* Update game version to 10.0.0
+
+== v1.13 - 25th October 2022
+* New dirt at (43.14,37.61)
+
+== v1.12 - 16th October 2022
+* New dirt at (38.24,50.42), (40.88,36.64)
+
+== v1.11 - 9th October 2022
+* Ghostly Pandaren Craftsman now translated for zhTW and zhCN
+* New dirt at (36.03,51.61)
+
+== v1.10 - 4th October 2022
+* Reworked the Interface Configuration - standardising across my AddOns
+* Minor translation changes
+
+== v1.09 - 23rd September 2022
+* Blackhoof all four coordinate sets confirmed to hundredth of a decimal place with the addition of (37.82,60.40)
+* Oceania server list updated
+
+== v1.08 - 15th September 2022
+* New location at (34.84,49.34)
+
+== v1.07 - 4th September 2022
+* Support TOC 90207
+
+== v1.06 - 20th March 2022
+* Update to Game version 9.2.0
+
+== v1.05 - 8th November 2021
+* Update the TOC file tp 9.1.5
+
+== v1.04 - 14th August 2022
+* TWO new dirt locations
+* Added Blackhoof, Sulik'shor, Ghostly Pandaren Craftsman
+* Ghostly Pandaren Craftsman not shown if completed on that toon (as it won't show anyway)
+* Separate configurable icon for these rares
+* On the second line of the tooltip for Blackhoof and Sulik'shor I add the item people are farming
+* corrected range limit error with the existing icon selections
+* Some more coordinates were able to be double precision checked too
+
+== v1.03 - 12th July 2022
+* Version number update for Patch 9.1.0
+* enGB language support for players on Oceania realms (i.e. spelling)
+
+== v1.02 - 25th June 2022
+* Lots of new locations
+* Fix to personal author logic
+* ptPT in TOC now
+* "under the foliage" added to (45.28,53.35)
+
+== v1.01 - 16th June 2022
+* Far fewer author (i.e. not double precision coordinate checked)
+* New locations
+* Fix to personal checking logic
+* ptPT added to TOC localisation
+* "Under the foliage" added to (45.28,53.35)
+* for 9.0.5
+
+== v1.00 - 6th June 2022
+* Initial release for 9.1.0

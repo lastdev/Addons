@@ -446,6 +446,21 @@ GTFO.SpellID["422604"] = {
   sound = 1;
 };
 
+GTFO.SpellID["395016"] = {
+  --desc = "Lava Dispersion (Massive Magmashell)";
+  sound = 1;
+};
+
+GTFO.SpellID["422266"] = {
+  --desc = "Fire Patch";
+  sound = 1;
+};
+
+GTFO.SpellID["420339"] = {
+  --desc = "Dripping Embers (Flamebound Sentinel)";
+  sound = 1;
+};
+
 --- *******************
 --- * Ruby Life Pools *
 --- *******************
@@ -1427,6 +1442,97 @@ GTFO.SpellID["417026"] = {
   --desc = "Blizzard (Alliance Conjuror)";
   sound = 1;
 };
+
+
+
+--- *********************************
+--- * Amirdrassil, The Dream's Hope *
+--- *********************************
+
+GTFO.SpellID["422023"] = {
+  --desc = "Shadow-Scorched Earth (Gnarlroot)";
+  sound = 1;
+};
+
+GTFO.SpellID["424970"] = {
+  --desc = "Toxic Loam (Gnarlroot)";
+  sound = 1;
+  negatingDebuffSpellID = 421038; -- Ember-Charred
+};
+
+-- TODO: Controlled Burn (Gnarlroot) - Friendly-Fire warning - Giant circle around players
+
+-- TODO: Gathering Torment (Igira the Cruel) - Only alert when afflicted by Flesh Mortification Debuff
+
+GTFO.SpellID["421082"] = {
+  --desc = "Hellboil (Volcoross)";
+  sound = 1;
+};
+
+GTFO.SpellID["423494"] = {
+  --desc = "Tidal Blaze (Volcoross)";
+  sound = 1;
+};
+
+-- TODO: Lava (Volcoross) - Test if lava in and around boss area has its own spell ID
+-- TODO: Coiling Flames (Volcoross) - Friendly-Fire warning - Giant but shrinking circle around players
+-- TODO: Combusting Rage (Volcoross) - Tank-only warning - Tanks out of range
+
+GTFO.SpellID["426390"] = {
+  --desc = "Corrosive Pollen (Aerwynn)";
+  sound = 1;
+  test = true; -- Alert only when not polymorphed as a duck, duck may count as a vehicle?
+};
+
+-- TODO: Poisonous Javelin (Aerwynn) - Residual effect after the javelin is thrown?
+
+GTFO.SpellID["417632"] = {
+  --desc = "Burning Ground (Larodar)";
+  sound = 1;
+};
+
+-- TODO: Consuming Flame (Larodar) - Fire damage when within 3 yards - Melee is too close? (like H. Horseman heroic version)
+
+GTFO.SpellID["428474"] = {
+  --desc = "Lucid Miasma (Nymue)";
+  sound = 1;
+  affirmingDebuffSpellID = 428479; -- Lucid Vulnerability
+};
+
+-- TODO: Verdant Matrix (Nymue) - Green lines on the floor that put a stacking debuff when you cross them, Inflorescence debuff negates this
+-- TODO: Impending Loom (Nymue) - Green lasers that move across the room
+
+GTFO.SpellID["421532"] = {
+  --desc = "Smoldering Ground (Smolderon)";
+  sound = 1;
+};
+
+-- TODO: Overheated (Smolderon) - Friendly-Fire warning - Small circles around players
+
+GTFO.SpellID["423649"] = {
+  --desc = "Fire Beam (Tindral Sageswift)";
+  sound = 1;
+};
+
+GTFO.SpellID["424499"] = {
+  --desc = "Scorching Ground (Tindral Sageswift)";
+  sound = 1;
+};
+
+GTFO.SpellID["419504"] = {
+  --desc = "Raging Flames (Fyrakk)";
+  sound = 1;
+  test = true; -- Multiple spell IDs?
+};
+
+GTFO.SpellID["425483"] = {
+  --desc = "Incinerated (Fyrakk)";
+  sound = 1;
+  test = true;
+};
+
+-- TODO: Pulsing Core (Fyrakk) - Ranged alert only?
+
 
 end
 

@@ -1,0 +1,135 @@
+== v1.27 - 28th October 2023
+* Ready for 10.2.0
+* Multi-TOC - includes wrath 3.4.3
+
+== v1.26 - 17th October 2023
+* Added better scaling for pins to ensure uniformity of size when switching between pin textures
+* I set the alpha to 1.0 by default
+* Removed unused code
+* Plus a typo in v1.25
+
+== v1.25 - 17th October 2023
+* Added better scaling for pins to ensure uniformity of size when switching between pin textures
+* I set the alpha to 1.0 by default
+* Removed unused code
+
+== v1.24 - 18th September 2023
+* TOC version bump to 10.1.7
+
+== v1.23 W - 15th July 2023
+* Support for WoW 3.4.2
+
+== v1.23 - 15th July 2023
+* Support for WoW 10.1.5
+
+== v1.22 - 6th May 2023
+* Now supports the new AddOn Compartment introduced in 10.1.0.
+  Clicking the drop down for this AddOn takes you directly to the configuration panel!
+
+== v1.21 - 3rd May 2023
+* Added an icon to the TOC file - thus removing the annoying "?" from the AddOn list in game
+* Removed unnecessary print to console code
+
+== v1.20 - 24th April 2023
+* TOC bump to 10.1.0
+
+== v1.19 - 21st March 2023
+* 10.0.07 TOC file update
+
+== v1.18 - 3rd March 2023
+* I localised Character
+* The "character" text changed into the actual player name
+
+== v1.18 W - 3rd March 2023
+* I localised Character
+* The "character" text changed into the actual player name
+
+== v1.17 - 12th February 2023
+* Altered the account/character completion statuses - now identical to Lunar Festival, which players liked
+
+== v1.17 W - 12th February 2023
+* Altered the account/character completion statuses - now identical to Lunar Festival, which players liked
+
+== v1.16 - 26th January 2023
+* 10.0.5
+
+== v1.16 W - 26th January 2023
+* 3.4.1
+
+== v1.15 - 18th January 2023
+* Fix for TOC Highlight (prefix colour) now matches the prefix used by the AddOn
+
+== v1.15 W - 18th January 2023
+* Fix for TOC Highlight (prefix colour) now matches the prefix used by the AddOn
+
+== v1.14 - 12th January 2023
+* Remove old redundant code
+
+== v1.14 W - 12th January 2023
+* Remove old redundant code
+
+== v1.13 - 7th December 2022
+* Update TOC to 10.0.2
+* Fix broken bug fix bug checking for icon indexes >10. Should now be > 11
+
+== v1.12 - 26th October 2022
+* Change game version to 10.0.0
+
+== v1.11 - 16th October 2022
+* Fix (again) for Wrath mapping of criteria. Different to Retail. I blame Wowhead for reversing the order. Grrrr!
+* Added "character" to completion status to make it clear I am tracking per character and not by account, just in case.
+
+== v1.11 W - 16th October 2022
+* Fix (again) for Wrath mapping of criteria. Different to Retail. I blame Wowhead for reversing the order. Grrrr!
+* Added "character" to completion status to make it clear I am tracking per character and not by account, just in case.
+
+== v1.10 - 4th October 2022
+* Re-enable Red/Green option. Previously made accidentally unavailable, doh!
+* Fix for the different way that Wrath maps the achievement criteria.
+
+== v1.10 W - 4th October 2022
+* Re-enable Red/Green option. Previously made accidentally unavailable, doh!
+* Fix for the different way that Wrath maps the achievement criteria.
+
+== v1.09 - 24th September 2022
+* Fix to default icon of 15 - it did not exist.
+* While at it I took the opportunity to homogenise the icon configuration with my other AddOns - with a view to future plans
+
+
+== v1.09 W - 24th September 2022
+* Fix to default icon of 15 - it did not exist.
+* While at it I took the opportunity to homogenise the icon configuration with my other AddOns - with a view to future plans
+
+== v1.08 - 15th September 2022
+* Updated Oceania server list
+
+== v1.08 W - 15th September 2022
+* Updated Oceania server list
+
+== v1.07 - 4th September 2022
+* v1.07 supports TOC 90207
+
+== v1.07 W - 4th September 2022
+* v1.07 supports WotLK 30400
+
+== v1.06 - 20th March 2022
+* Update to Game version 9.2.0
+
+== v1.05 - 8th November 2021
+* Update to Game version 9.1.5
+
+== v1.04 - 12th July 2021
+* Version number update for Patch 9.1.0
+* enGB language support for players on Oceania realms (i.e. spelling)
+
+== v1.03 - 25th June 2021
+* ptPT support in TOC file
+
+== v1.02 - 6th June 2021
+* Localisation enhancements
+
+== v1.01 - 5th June 2021
+* file naming stuff ups when uploading - moved to v1.02
+
+== v1.00 - 5th June 2021
+* Initial release

@@ -262,7 +262,7 @@ function Details.ShowDeathTooltip(instance, lineFrame, combatObject, deathTable)
 								gameCooltip:AddStatusBar(healthPercent, 1, barTypeColors.heal, showSpark, statusBarBackgroundTable_ForDeathTooltip)
 							end
 						else
-							gameCooltip:AddLine("" .. format("%.1f", eventTime - timeOfDeath) .. "s " .. spellName .. " (|c" .. healingSourceColor .. source .. "|r)", (event[11] and ("x" .. amount .. " ") or ("")) .. "|c" .. healingAmountColor .. "+" .. Details:ToK(amount) .. " (" .. healthPercent .. "%)", 1, "white", "white")
+							gameCooltip:AddLine("" .. format("%.1f", eventTime - timeOfDeath) .. "s " .. spellName .. " (|c" .. healingSourceColor .. source .. "|r)", (event[11] and ("x" .. event[11] .. " ") or "") .. "|c" .. healingAmountColor .. "+" .. Details:ToK(amount) .. " (" .. healthPercent .. "%)", 1, "white", "white")
 							gameCooltip:AddIcon(spellIcon, nil, nil, lineHeight, lineHeight, .1, .9, .1, .9)
 							gameCooltip:AddStatusBar(healthPercent, 1, barTypeColors.heal, showSpark, statusBarBackgroundTable_ForDeathTooltip)
 						end
@@ -929,6 +929,7 @@ function atributo_misc:RefreshLine(instancia, barras_container, whichRowLine, lu
 	end
 
 	--local porcentagem = meu_total / total * 100
+	local porcentagem = ""
 	if (not percentage_type or percentage_type == 1) then
 		porcentagem = _cstr ("%.1f", meu_total / total * 100)
 	elseif (percentage_type == 2) then
@@ -1513,10 +1514,10 @@ function _detalhes:CatchRaidBuffUptime (in_or_out)
 
 			for playername, potspellid in pairs(pot_usage) do
 				local name, _, icon = _GetSpellInfo(potspellid)
-				local _, class = UnitClass(playername)
+				local unitClass = Details:GetUnitClass(playername)
 				local class_color = ""
-				if (class and RAID_CLASS_COLORS [class]) then
-					class_color = RAID_CLASS_COLORS [class].colorStr
+				if (unitClass and RAID_CLASS_COLORS[unitClass]) then
+					class_color = RAID_CLASS_COLORS[unitClass].colorStr
 				end
 				string_output = string_output .. "|c" .. class_color .. playername .. "|r |T" .. icon .. ":14:14:0:0:64:64:0:64:0:64|t "
 			end
@@ -1564,7 +1565,7 @@ function _detalhes:CatchRaidBuffUptime (in_or_out)
 		for buffIndex = 1, 41 do
 			local name, _, _, _, _, _, unitCaster, _, _, spellid  = _UnitAura ("player", buffIndex, nil, "HELPFUL")
 			if (name and unitCaster and UnitExists(unitCaster) and UnitIsUnit(unitCaster, "player")) then
-				local playerName = _UnitName ("player")
+				local playerName = Details.playername
 				local playerGUID = UnitGUID("player")
 				if (playerGUID) then
 					if (in_or_out == "BUFF_UPTIME_IN") then
@@ -1585,10 +1586,10 @@ function _detalhes:CatchRaidBuffUptime (in_or_out)
 
 			for playername, potspellid in pairs(pot_usage) do
 				local name, _, icon = _GetSpellInfo(potspellid)
-				local _, class = UnitClass(playername)
+				local unitClass = Details:GetUnitClass(playername)
 				local class_color = ""
-				if (class and RAID_CLASS_COLORS [class]) then
-					class_color = RAID_CLASS_COLORS [class].colorStr
+				if (unitClass and RAID_CLASS_COLORS[unitClass]) then
+					class_color = RAID_CLASS_COLORS[unitClass].colorStr
 				end
 				string_output = string_output .. "|c" .. class_color .. playername .. "|r |T" .. icon .. ":14:14:0:0:64:64:0:64:0:64|t "
 			end
@@ -1605,7 +1606,7 @@ function _detalhes:CatchRaidBuffUptime (in_or_out)
 		for buffIndex = 1, 41 do
 			local name, _, _, _, _, _, unitCaster, _, _, spellid  = _UnitAura ("player", buffIndex, nil, "HELPFUL")
 			if (name and unitCaster and UnitExists(unitCaster) and UnitIsUnit(unitCaster, "player")) then
-				local playerName = _UnitName ("player")
+				local playerName = Details.playername
 				local playerGUID = UnitGUID("player")
 
 				if (playerGUID) then
@@ -1626,10 +1627,10 @@ function _detalhes:CatchRaidBuffUptime (in_or_out)
 			local string_output = "pre-potion: "
 			for playername, potspellid in pairs(pot_usage) do
 				local name, _, icon = _GetSpellInfo(potspellid)
-				local _, class = UnitClass(playername)
+				local unitClass = Details:GetUnitClass(playername)
 				local class_color = ""
-				if (class and RAID_CLASS_COLORS [class]) then
-					class_color = RAID_CLASS_COLORS [class].colorStr
+				if (unitClass and RAID_CLASS_COLORS[unitClass]) then
+					class_color = RAID_CLASS_COLORS[unitClass].colorStr
 				end
 				string_output = string_output .. "|c" .. class_color .. playername .. "|r |T" .. icon .. ":14:14:0:0:64:64:0:64:0:64|t "
 			end

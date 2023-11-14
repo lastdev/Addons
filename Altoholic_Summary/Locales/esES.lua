@@ -29,6 +29,8 @@ L["Currencies"] = "Monedas"
 L["PATCH_X.0"] = "Expansión base"
 L["PATCH_9.1"] = "Cadenas de dominación"
 L["PATCH_9.2"] = "Fin de la eternidad"
+L["PATCH_10.1"] = "Embers of Neltharion"
+L["PATCH_10.2"] = "Guardians of the Dream"
 
 -- ** Filter Icons **
 L["FILTER_REALMS"] = "Filtro de reinos"

@@ -1,0 +1,145 @@
+== v1.33 - 11th November 2023
+* Translations for Riches, Legends, Treasure added
+
+== v1.32 - 28th October 2023
+* Remove author only code (sorry)
+* Recalibrated icon sizing
+
+== v1.31 - 28th October 2023
+* Bump to TOC 10.2.0
+
+== v1.30 - 10th October 2023
+* Bug fix. The collectable items across Pandaria will no longer give a LUA error
+
+== v1.29 - 19th September 2023
+* TOC update for 10.1.7
+
+== v1.28 - 1st August 2023
+* Morgrinn Crackfang (47.95,18.43) Jade Forest
+
+== v1.27 - 27th July 2023
+* New Gar'lok added at (39.17,41.82)
+
+== v1.26 - 23rd July 2023
+* New Lith'ik the Stalker at (47.86,88.55)
+
+== v1.25 - 19th July 2023
+* New Gar'lok added at (35.62,30.53)
+
+== v1.24 - 13th July 2023
+* New Sele'na pat zone centred around (57.48,33.54) add
+
+== v1.23 - 12th July 2023
+* New Havac location at (58.71,73.95)
+
+== v1.22 - 28th June 2023
+* Bump up a version to 10.1.5
+
+== v1.21 - 25th June 2023
+* New Sele'na pat zone centred around (52.81,28.38) added
+
+== v1.20 - 21st June 2023
+* New Eshelon at (66.37,86.76)
+
+== v1.19 - 18th June 2023
+* New Sele'na pat zone centred around (54.02,32.14) added
+
+== v1.18 - 11th June 2023
+* New Zai the Outcast location added at (73.38,76.25) in Kun-Lai Summit
+* New Zai the Outcast location added at (74.37,79.29) in Kun-Lai Summit
+* Hardened Sap of Kri'vess - another location verified/adjusted
+
+== v1.17 - 26th May 2023
+* New Krol the Blade added at (74.10,20.54)
+* New Krol the Blade added at (74.46,22.90)
+
+== v1.16 - 19th May 2023
+* Bonobos added at (16.49,40.92). Usual personally verified
+* Bonobos added at (19.13,35.66). Usual personally verified
+
+== v1.15 - 12th May 2023
+* Fix. I broke the custom icons due to file name changes. Apologies - I'm an incessant tinkerer
+* New Gaarn the Toxic locations at (56.31,35.11) and (53.88,32.16) - for a total of four, all of which are verified
+
+== v1.14 - NUMBER SKIPPED
+
+== v1.13 - 6th May 2023
+* Now supports the new AddOn Compartment introduced in 10.1.0.
+  Clicking the drop down for this AddOn takes you directly to the configuration panel!
+
+== v1.12 - 3rd May 2023
+* Added an icon to the TOC file - thus removing the annoying "?" from the AddOn list in game
+* Removed unnecessary print to console code
+
+== v1.11 - 29th April 2023
+* TOC bump to 10.1.0
+
+== v1.10 - 23rd April 2023
+* Pandaren Cuisine improved advice
+* New Zandalari Warscout path in Dread Wastes for Zul Again
+* Removed erroneous pin (45.03,98.11) in the Dread Wastes
+* Small tweak to one Zandalari Warscout coordinate in Dread Wastes too
+* Small tweak to one Zandalari Warscout coordinate in Kun-Lai Summit too
+
+== v1.09 - 19th April 2023
+* I'm In Your Base Killing Your Dudes added
+* Removed redundant translations. What remains will have to do. This project is now too huge
+* Pandaren Cuisine Added
+* Summary / intro pin sizes altered for better visibility
+* Added a summary pin to the Timeless Isle
+* New Krasarang Wilds Zandalari Warscout pathing added for Zul Again
+* New The Jade Forest Zandalari Warscout pathing added for Zul Again
+* Removed unnecessary GetBuildInfo callout
+* Sele'na pat zone broadened around (54.6,36.5)
+
+== v1.08 - 14th April 2023
+* Zul Again added
+
+== v1.07 - 7th April 2023
+* Verified another Hardened Sap of Kri'vess location
+* The second Stash of Yaungol Weapons location personally confirmed (finally!)
+* Jade Infused Blade - added note about quest phasing
+* Ancient Jinyu Staff location personally verified and adjusted at (44.92,64.67)
+* Added an additional helpful pin for Wanders, Dreamers, and You
+
+== v1.06 - 5th April 2023
+* Killing Time is now live. Added several hundred pins! Over 1,000 total now in Timeless Isle alone!
+* Small adjustment to the default pin size. Due mainly to Timeless Isle having over 1,000 pins
+* Rolo's Riddle and Pilgrimage were missing from the summary popup
+* Timeless Champion was not tracking each element individually
+* Bug with pin parsing fixed
+
+== v1.05 - 4th April 2023
+*Sulik'shor index corrected for Glorious. Was 40. Now 23
+* Renamed "a" field to "aID" throughout
+* Is Another Man's Treasure excess items will still appear on the map
+* A note to that effect was added in the AddOns options panel
+* New option to continue displaying weekly/daily quests when they become available again, even after the achievement/crietria has been completed
+* Timeless Isle:
+-- Celestial Challenge
+-- Timeless Champion
+-- Pilgrimage
+-- Eyes on the Ground
+-- Extreme Treasure Hunter
+
+== v1.04 - 29th March 2023
+* Added Glorious
+* New internal data format as the old format was holding me back
+* New Ancient Pandaren Mining Pick location
+* Pandaren Ritual Stone duplicate entry removed
+* Several other slightly adjusted coordinates
+* Have begun /love - The Jade Forest. Other zones not yet
+* Private author notes added. Set ns.author == true if you really want to see them lol
+
+== v1.03 - 21st March 2023
+* Bump the TOC file to 10.0.7
+
+== v1.02 - 9th March 2023
+* Added Treasures and Riches - all of mainland Pandaria and Isle of Thunder too
+* Small text etc tweaks
+
+== v1.01 - 7th March 2023
+* Isle of Thunder
+
+== v1.00 - 4th March 2023
+* Initial release

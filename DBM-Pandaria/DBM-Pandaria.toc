@@ -1,4 +1,4 @@
-## Interface: 100107
+## Interface: 100200
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10World Bosses (MoP)|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10판다리아|r
@@ -29,7 +29,7 @@
 ## X-Curse-Project-ID: 85688
 ## X-WoWI-ID: 23199
 ## X-Wago-ID: 0mNwz4Go
-## Version: r159
+## Version: r160
 
 localization.en.lua
 localization.de.lua

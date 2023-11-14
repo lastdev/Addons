@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(637, "DBM-Party-WotLK", 13, 284)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220221000356")
+mod:SetRevision("20231020041658")
 mod:SetCreatureID(35451)
 mod:SetEncounterID(2021)
 mod:SetUsedIcons(8)
@@ -32,7 +32,7 @@ local timerExplode			= mod:NewCastTimer(4, 67729, nil, nil, nil, 2)
 
 mod:AddSetIconOption("SetIconOnMarkedTarget", 67823, false, false, {8})
 mod:AddBoolOption("AchievementCheck", false, "announce")
-mod:GroupSpells(67751, 67729)
+--mod:GroupSpells(67751, 67729)
 
 local warnedfailed = false
 

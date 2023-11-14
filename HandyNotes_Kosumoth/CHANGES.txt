@@ -1,12 +1,12 @@
-tag 5dc127dcbffbe5c96619b531f2ab0d35da1b9ebe v7
+tag 9e26104f97e7da282e5bf335b45f931dc3245f87 v8
 Author:	David Lynch <kemayo@gmail.com>
-Date:	Sat Nov 19 19:04:58 2022 -0600
+Date:	Thu Nov 9 23:57:02 2023 -0600
 
-Tagging v7
+Tagging v8
 
-commit c5bc240bf0d6025e8702369e81de7e9e956d58f2
+commit 681d2e9cea87d18425895d9c31dc80b726f5a656
 Author: David Lynch <kemayo@gmail.com>
-Date:   Sat Nov 19 19:04:51 2022 -0600
+Date:   Thu Nov 9 23:55:59 2023 -0600
 
-    Update for 10.0.2
+    TOC for 10.2.0
 

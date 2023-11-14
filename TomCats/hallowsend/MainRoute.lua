@@ -1,8 +1,8 @@
 local _, addon = ...
 if (not addon.hallowsend.IsEventActive()) then return end
 
-local D = addon.TomCatsLibs.Data
-local tcl = addon.TomCatsLibs
+local D = addon.hallowsend.TomCatsLibs.Data
+local tcl = addon.hallowsend.TomCatsLibs
 
 local tour
 local groupID
@@ -96,8 +96,8 @@ local function switchTour(newGroupID)
     end
 end
 
-local function setupArrow(location)
-    if (not TomCats_Account.hallowsend.arrowsEnabled) then
+local function setupArrow()
+    if (not TomCats_Account.hallowsend.arrowEnabled) then
         if (arrow) then
             arrow:ClearTarget()
         end
@@ -109,7 +109,7 @@ local function setupArrow(location)
     end
     if (tour) then
         if (not arrow) then
-            arrow = addon.CreateArrow(1.0,0.25,0)
+            arrow = addon.hallowsend.CreateArrow(1.0,0.25,0)
             --arrow = tcl.Arrows:CreateArrow("ORANGERED")
             arrow:SetScript("OnEnter", function()
                 GameTooltip:SetOwner(Minimap, "ANCHOR_CURSOR")
@@ -141,12 +141,12 @@ end
 
 local function checkTreats()
     for bagId = 0, 4 do
-        for slot = 1, GetContainerNumSlots(bagId) do
-            local itemLink = GetContainerItemLink(bagId, slot)
+        for slot = 1, C_Container.GetContainerNumSlots(bagId) do
+            local itemLink = C_Container.GetContainerItemLink(bagId, slot)
             if (itemLink) then
                 local itemId = GetItemInfoInstant(itemLink)
                 if (itemId == 37586) then
-                    UseContainerItem(bagId, slot)
+                    C_Container.UseContainerItem(bagId, slot)
                     return true
                 end
             end
@@ -195,6 +195,15 @@ local function bagUpdate()
     questLogUpdate()
 end
 
+-- Manual overrides as Dalaran coordinates do not map back to coordinates to its parent map
+-- note: It will be difficult for the player to distinguish the underbelly location
+local overrides = {
+    [97] = CreateVector2D(0.4921, 0.410),
+    [106] = CreateVector2D(0.4803, 0.4243),
+    [107] = CreateVector2D(0.4803, 0.4271),
+    [108] = CreateVector2D(0.5753, 0.3917)
+}
+
 function addon:PLAYER_LOGIN(event, ...)
     tcl.Events.UnregisterEvent("PLAYER_LOGIN", self)
     tcl.Events.RegisterEvent("ZONE_CHANGED", zoneChanged)
@@ -210,10 +219,21 @@ function addon:PLAYER_LOGIN(event, ...)
     for _, location in pairs(D["Locations"].records) do
         location["Group ID"] = findLocationGroupID(location["Map ID"])
         -- todo: handle this in the data lib via type definitions
-        location["Map Position"] = CreateVector2D(location["Map Position"][1], location["Map Position"][2])
-        local continentID, worldPosition = C_Map.GetWorldPosFromMapPos(location["Map ID"], location["Map Position"])
-        local oid, mapPosition = C_Map.GetMapPosFromWorldPos(continentID, worldPosition, location["Group ID"])
-        location["Group Position"] = mapPosition
+        local override = overrides[location["Location ID"]]
+        -- Override for Westfall location
+        if (location["Location ID"] == 10 and C_QuestLog.IsQuestFlaggedCompleted(26322)) then
+            location["Map Position"] = CreateVector2D(location["Map Position"][3], location["Map Position"][4])
+            D["Quests"][location["Quest ID"]]["Location"] = location["Map Position"]
+        else
+            location["Map Position"] = CreateVector2D(location["Map Position"][1], location["Map Position"][2])
+        end
+        if (override) then
+            location["Group Position"] = override
+        else
+            local continentID, worldPosition = C_Map.GetWorldPosFromMapPos(location["Map ID"], location["Map Position"])
+            local oid, mapPosition = C_Map.GetMapPosFromWorldPos(continentID, worldPosition, location["Group ID"])
+            location["Group Position"] = mapPosition
+        end
     end
     switchTour(findLocationGroupID(C_Map.GetBestMapForUnit("player")))
     setupArrow()
@@ -223,7 +243,7 @@ end
 --    TomCats:Register(
 --        {
 --            name = "@shortName@",
---            version = "2.5.01",
+--            version = "2.5.05",
 --        }
 --    )
 --end

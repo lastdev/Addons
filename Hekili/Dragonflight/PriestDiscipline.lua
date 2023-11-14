@@ -28,16 +28,16 @@ spec:RegisterTalents( {
     dominate_mind              = { 82710, 205364, 1 }, -- Controls a mind up to 1 level above yours for 30 sec while still controlling your own mind. Does not work versus Demonic, Mechanical, or Undead beings or players. This spell shares diminishing returns with other disorienting effects.
     essence_devourer           = { 82674, 415479, 1 }, -- Attacks from your Shadowfiend siphon life from enemies, healing a nearby injured ally for 1,808. Attacks from your Mindbender siphon life from enemies, healing a nearby injured ally for 986.
     focused_mending            = { 82719, 372354, 1 }, -- Prayer of Mending does 45% increased healing to the initial target.
-    from_darkness_comes_light  = { 82707, 390615, 1 }, -- Each time Shadow Word: Pain or Purge the Wicked deals damage, the healing of your next Flash Heal is increased by 1%, up to a maximum of 50%.
+    from_darkness_comes_light  = { 82707, 390615, 1 }, -- Each time Shadow Word: Pain$?s137032[ or Purge the Wicked][] deals damage, the healing of your next Flash Heal is increased by $s1%, up to a maximum of $?a137033&$?a134735[$390617s2][${$s1*$390617u}]%.
     holy_nova                  = { 82701, 132157, 1 }, -- An explosion of holy light around you deals up to 980 Holy damage to enemies and up to 517 healing to allies within 12 yds, reduced if there are more than 5 targets.
     improved_fade              = { 82686, 390670, 2 }, -- Reduces the cooldown of Fade by 5 sec.
     improved_flash_heal        = { 82714, 393870, 1 }, -- Increases healing done by Flash Heal by 15%.
-    improved_mass_dispel       = { 82698, 341167, 1 }, -- Reduces the cooldown of Mass Dispel by 20 sec and reduces its cast time by 0.5 sec.
     inspiration                = { 82696, 390676, 1 }, -- Reduces your target's physical damage taken by 5% for 15 sec after a critical heal with Flash Heal or Penance.
     leap_of_faith              = { 82716, 73325 , 1 }, -- Pulls the spirit of a party or raid member, instantly moving them directly in front of you.
     lights_inspiration         = { 82679, 373450, 2 }, -- Increases the maximum health gained from Desperate Prayer by 8%.
-    manipulation               = { 82672, 390996, 2 }, -- Your Smite, Power Word: Solace, Mind Blast, and Penance casts reduce the cooldown of Mindgames by 0.5 sec.
+    manipulation               = { 82672, 390996, 2 }, -- Your $?a137033[Mind Blast, Mind Flay, and Mind Spike]?a137031[Smite and Holy Fire][Smite, Mind Blast, and Penance] casts reduce the cooldown of Mindgames by ${$s1/2}.1 sec.
     mass_dispel                = { 82699, 32375 , 1 }, -- Dispels magic in a 15 yard radius, removing all harmful Magic from 5 friendly targets and 1 beneficial Magic effect from 5 enemy targets. Potent enough to remove Magic that is normally undispellable.
+    mental_agility             = { 82698, 341167, 1 }, -- Reduces the mana cost of $?a137033[Purify Disease][Purify] and Mass Dispel by $s1% and Dispel Magic by $s2%.;
     mind_control               = { 82710, 605   , 1 }, -- Controls a mind up to 1 level above yours for 30 sec. Does not work versus Demonic, Undead, or Mechanical beings. Shares diminishing returns with other disorienting effects.
     mindgames                  = { 82687, 375901, 1 }, -- Assault an enemy's mind, dealing 3,285 Shadow damage and briefly reversing their perception of reality. For 5 sec, the next 4,932 damage they deal will heal their target, and the next 4,932 healing they deal will damage their target.
     move_with_grace            = { 82702, 390620, 1 }, -- Reduces the cooldown of Leap of Faith by 30 sec.
@@ -70,32 +70,31 @@ spec:RegisterTalents( {
     -- Discipline
     abyssal_reverie            = { 82583, 373054, 2 }, -- Atonement heals for 10% more when activated by Shadow spells.
     aegis_of_wrath             = { 86730, 238135, 1 }, -- Power Word: Shield absorbs 30% additional damage, but the absorb amount decays by 3% every 1 sec.
-    atonement                  = { 82594, 81749 , 1 }, -- Power Word: Shield applies Atonement to your target for 30 sec. Your spell damage heals all targets affected by Atonement for 36% of the damage done.
-    blaze_of_light             = { 82568, 215768, 2 }, -- The damage of your Smite, Power Word: Solace, and Penance is increased by 8%, and Penance increases or decreases your target's movement speed by 25% for 2 sec.
+    atonement                  = { 82594, 81749 , 1 }, -- $?s214205[Power Word: Shield applies Atonement to your target for $214206d.; Your spell damage heals all targets
+    blaze_of_light             = { 82568, 215768, 2 }, -- The damage of Smite and Penance is increased by $m1%, and Penance increases or decreases your target's movement
     borrowed_time              = { 82600, 390691, 2 }, -- Casting Power Word: Shield increases your Haste by 4% for 4 sec.
     bright_pupil               = { 82591, 390684, 1 }, -- Reduces the cooldown of Power Word: Radiance by 5 sec.
     castigation                = { 82577, 193134, 1 }, -- Penance fires one additional bolt of holy light over its duration.
     contrition                 = { 82599, 197419, 2 }, -- When you heal with Penance, everyone with your Atonement is healed for 153.
-    dark_indulgence            = { 82596, 372972, 1 }, -- Mind Blast gains an additional charge and its Mana cost is reduced by 40%.
-    divine_aegis               = { 82602, 47515 , 2 }, -- Critical heals create a protective shield on the target, absorbing 3% of the amount healed. Lasts 15 sec. Critical heals with Power Word: Shield absorb 5% additional damage.
+    dark_indulgence            = { 82596, 372972, 1 }, -- Mind Blast has a $s1% chance to grant Power of the Dark Side and its mana cost is reduced by $s2%.
+    divine_aegis               = { 82602, 47515 , 1 }, -- Critical heals create a protective shield on the target, absorbing $s1% of the amount healed. Lasts $47753d.; Critical heals with Power Word: Shield absorb $s2% additional damage.
     divine_star                = { 82682, 110744, 1 }, -- Throw a Divine Star forward 27 yds, healing allies in its path for 1,151 and dealing 1,340 Holy damage to enemies. After reaching its destination, the Divine Star returns to you, healing allies and damaging enemies in its path again. Healing reduced beyond 6 targets.
-    embrace_shadow             = { 82582, 372985, 1 }, -- Shadow Covenant lasts an additional 8 sec.
     enduring_luminescence      = { 82591, 390685, 1 }, -- Reduces the cast time of Power Word: Radiance by 30% and causes it to apply Atonement at an additional 10% of its normal duration.
     evangelism                 = { 82567, 246287, 1 }, -- Extends the duration of all of your active Atonements by 6 sec.
     exaltation                 = { 82576, 373042, 1 }, -- Increases the duration of Rapture by 5 sec.
     expiation                  = { 82585, 390832, 2 }, -- Increases the damage of Mind Blast and Shadow Word: Death by 10%. Mind Blast and Shadow Word: Death consume 3 sec of Shadow Word: Pain or Purge the Wicked, instantly dealing that damage.
     halo                       = { 82682, 120517, 1 }, -- Creates a ring of Holy energy around you that quickly expands to a 30 yd radius, healing allies for 2,647 and dealing 3,451 Holy damage to enemies. Healing reduced beyond 6 targets.
-    harsh_discipline           = { 82572, 373180, 2 }, -- Your next Penance fires an additional 3 bolts and costs no Mana after 10 casts of Smite, Power Word: Solace, or Mind Blast.
+    harsh_discipline           = { 82572, 373180, 2 }, -- Power Word: Radiance causes your next Penance to fire $s2 additional $Lbolt:bolts;, stacking up to $373183u times.
+    heavens_wrath              = { 82574, 421558, 2 }, -- Each Penance bolt you fire reduces the cooldown of Ultimate Penitence by $s1 sec.
     improved_purify            = { 82705, 390632, 1 }, -- Purify additionally removes all Disease effects.
     indemnity                  = { 82576, 373049, 1 }, -- Atonements granted by Power Word: Shield last an additional 2 sec.
-    inescapable_torment        = { 82586, 373427, 2 }, -- Mind Blast and Shadow Word: Death cause your Mindbender to teleport behind your target, slashing up to 5 nearby enemies for 1,483 Shadow damage and increasing the duration of Mindbender by 0.7 sec.
+    inescapable_torment        = { 82586, 373427, 1 }, -- $?a137032[Penance, ][]Mind Blast and Shadow Word: Death cause your Mindbender or Shadowfiend to teleport behind your target, slashing up to $s1 nearby enemies for $<value> Shadow damage and extending its duration by ${$s2/1000}.1 sec.
     lenience                   = { 82567, 238063, 1 }, -- Atonement reduces damage taken by 3%.
     lights_promise             = { 82592, 322115, 1 }, -- Power Word: Radiance gains an additional charge.
-    lights_wrath               = { 82575, 373178, 1 }, -- Invoke the Light's wrath, dealing 5,236 Radiant damage to the target, increased by 6% per ally affected by your Atonement.
-    luminous_barrier           = { 82564, 271466, 1 }, -- Create a shield on all allies within 40 yards, absorbing 3,123 damage on each of them for 10 sec. Absorption increased by 100% when not in a raid.
-    make_amends                = { 92225, 391079, 1 }, -- When your Penance deals damage, the duration of Atonement on yourself is increased by 1 sec and when your Penance heals, the duration of Atonement on your target is increased by 1 sec.
+    luminous_barrier           = { 82564, 271466, 1 }, -- Create a shield on all allies within $A1 yards, absorbing $s1 damage on each of them for $d.; Absorption increased by $s2% when not in a raid.
     malicious_intent           = { 82580, 372969, 1 }, -- Increases the duration of Schism by 6 sec.
     mindbender                 = { 82584, 123040, 1 }, -- Summons a Mindbender to attack the target for 12 sec. Generates 0.2% Mana each time the Mindbender attacks.
+    overloaded_with_light      = { 82573, 421557, 1 }, -- Ultimate Penitence emits an explosion of light, healing up to $s2 allies around you for $421676s1 and applying Atonement at $s1% of normal duration.
     pain_and_suffering         = { 82578, 390689, 2 }, -- Increases the damage of Shadow Word: Pain and Purge the Wicked by 8%.
     pain_suppression           = { 82587, 33206 , 1 }, -- Reduces all damage taken by a friendly target by 40% for 8 sec. Castable while stunned.
     pain_transformation        = { 82588, 372991, 1 }, -- Pain Suppression also heals your target for 25% of their maximum health and applies Atonement.
@@ -103,25 +102,21 @@ spec:RegisterTalents( {
     power_of_the_dark_side     = { 82595, 198068, 1 }, -- Shadow Word: Pain and Purge the Wicked have a chance to empower your next Penance with Shadow, increasing its effectiveness by 50%.
     power_word_barrier         = { 82564, 62618 , 1 }, -- Summons a holy barrier to protect all allies at the target location for 10 sec, reducing all damage taken by 25% and preventing damage from delaying spellcasting.
     power_word_radiance        = { 82593, 194509, 1 }, -- A burst of light heals the target and 4 injured allies within 30 yards for 6,732, and applies Atonement for 70% of its normal duration.
-    power_word_solace          = { 82589, 129250, 1 }, -- Strikes an enemy with heavenly power, dealing 1,628 Holy damage and restoring 1% of your maximum mana.
     prayer_of_mending          = { 82718, 33076 , 1 }, -- Places a ward on an ally that heals them for 1,002 the next time they take damage, and then jumps to another ally within 30 yds. Jumps up to 4 times and lasts 30 sec after each jump.
     protector_of_the_frail     = { 82588, 373035, 1 }, -- Pain Suppression gains an additional charge. Power Word: Shield reduces the cooldown of Pain Suppression by 3 sec.
     purge_the_wicked           = { 82590, 204197, 1 }, -- Cleanses the target with fire, causing 644 Radiant damage and an additional 4,414 Radiant damage over 20 sec. Spreads to a nearby enemy when you cast Penance on the target.
     rapture                    = { 82598, 47536 , 1 }, -- Immediately Power Word: Shield your target, and for the next 8 sec, Power Word: Shield has no cooldown and absorbs an additional 40%.
     renew                      = { 82717, 139   , 1 }, -- Fill the target with faith in the light, healing for 4,706 over 15 sec.
-    resplendent_light          = { 82574, 390765, 2 }, -- Light's Wrath deals an additional 2% damage per ally affected by your Atonement.
     revel_in_purity            = { 82566, 373003, 1 }, -- Purge the Wicked deals 5% additional damage and spreads to 1 additional target when casting Penance.
-    schism                     = { 82579, 214621, 1 }, -- Attack the enemy's soul with a surge of Shadow energy, dealing 3,590 Shadow damage and increasing your spell damage to the target by 15% for 9 sec.
-    shadow_covenant            = { 82581, 314867, 1 }, -- Make a shadowy pact, healing the target and 4 other injured allies within 30 yds for 2,712. For 7 sec, your Shadow spells deal 25% increased damage and healing, and Halo, Divine Star, and Penance are converted to Shadow spells.
-    shadow_word_death          = { 82712, 32379 , 1 }, -- A word of dark binding that inflicts 2,034 Shadow damage to the target. If the target is not killed by Shadow Word: Death, the caster takes damage equal to the damage inflicted upon the target. Damage increased by 150% to targets below 20% health.
-    shadowfiend                = { 82713, 34433 , 1 }, -- Summons a shadowy fiend to attack the target for 15 sec. Generates 0.5% Mana each time the Shadowfiend attacks.
-    shield_discipline          = { 82589, 197045, 1 }, -- When your Power Word: Shield is completely absorbed, you restore 0.5% of your maximum mana.
-    train_of_thought           = { 82601, 390693, 1 }, -- Your Flash Heal and Renew casts reduce the cooldown of Power Word: Shield by 1.0 sec. Your Smite and Power Word: Solace casts reduce the cooldown of Penance by 0.5 sec.
+    sanctuary                  = { 92225, 231682, 1 }, -- Smite prevents the next $<shield> damage dealt by the enemy.
+    schism                     = { 82579, 424509, 1 }, -- Mind Blast fractures the enemy's mind, increasing your spell damage to the target by $214621s1% for $214621d.
+    shadow_covenant            = { 82581, 314867, 1 }, -- $?s123040[Mindbender][Shadowfiend] enters you into a shadowy pact, transforming Halo, Divine Star, and Penance into Shadow spells and increasing the damage and healing of your Shadow spells by $?s123040[$<mindbender>][$<shadowfiend>]% while active.    shield_discipline          = { 82589, 197045, 1 }, -- When your Power Word: Shield is completely absorbed, you restore 0.5% of your maximum mana.
+    train_of_thought           = { 82601, 390693, 1 }, -- Flash Heal and Renew casts reduce the cooldown of Power Word: Shield by ${$s1/-1000}.1 sec.; Smite reduces the cooldown of Penance by ${$s2/-1000}.1 sec.
     twilight_corruption        = { 82582, 373065, 1 }, -- Shadow Covenant increases Shadow spell damage and healing by an additional 10%.
     twilight_equilibrium       = { 82571, 390705, 1 }, -- Your damaging Shadow spells increase the damage of your next Holy spell cast within 6 sec by 15%. Your damaging Holy spells increase the damage of your next Shadow spell cast within 6 sec by 15%.
-    void_summoner              = { 82570, 390770, 1 }, -- Your Smite, Power Word: Solace, Mind Blast, and Penance casts reduce the cooldown of Mindbender by 2 sec.
-    weal_and_woe               = { 82569, 390786, 1 }, -- Your Penance bolts increase the damage of your next Smite or Power Word: Solace by 12%, or the absorb of your next Power Word: Shield by 5%. Stacks up to 7 times.
-    wrath_unleashed            = { 82573, 390781, 1 }, -- Reduces the cast time of Light's Wrath by 1 sec and increases its critical strike chance by 15%. Smite and Power Word: Solace deal 40% additional damage for 15 sec after casting Light's Wrath.
+    ultimate_penitence         = { 82575, 421453, 1 }, -- Ascend into the air and unleash a massive barrage of Penance bolts, causing $<penancedamage> Holy damage to enemies or $<penancehealing> healing to allies over $421434d.; While ascended, gain a shield for $s1% of your health. In addition, you are unaffected by knockbacks or crowd control effects.
+    void_summoner              = { 82570, 390770, 1 }, -- Your Smite, Mind Blast, and Penance casts reduce the cooldown of $?s123040[Mindbender by ${$s2/-1000}.1][Shadowfiend by ${$s1/-1000}.1 sec.]
+    weal_and_woe               = { 82569, 390786, 1 }, -- Your Penance bolts increase the damage of your next Smite by $390787s1%, or the absorb of your next Power Word: Shield by $390787s2%.; Stacks up to $390787U times.
 } )
 
 
@@ -131,6 +126,7 @@ spec:RegisterPvpTalents( {
     archangel              = 123 , -- (197862) Refreshes the duration of your Atonement on all allies when cast. Increases your healing and absorption effects by 20% for 15 sec.
     catharsis              = 5487, -- (391297) 15% of all damage you take is stored. The stored amount cannot exceed 12% of your maximum health. The initial damage of your next Purge the Wicked deals this stored damage to your target.
     dark_archangel         = 126 , -- (197871) Increases your damage, and the damage of all allies with your Atonement by 15% for 8 sec.
+    improved_mass_dispel   = 5635, -- (426438) Reduces the cooldown of Mass Dispel by ${$s1/-1000} sec.
     inner_light_and_shadow = 5416, -- (356085) Inner Light: Healing spells cost 10% less mana. Inner Shadow: Spell damage and Atonement healing increased by 10%. Activate to swap from one effect to the other, incurring a 6 sec cooldown.
     phase_shift            = 5570, -- (408557) Step into the shadows when you cast Fade, avoiding all attacks and spells for 1 sec. Interrupt effects are not affected by Phase Shift.
     purification           = 100 , -- (196439) Purify now has a maximum of 2 charges. Removing harmful effects with Purify grants your target an absorption shield equal to 5% of their maximum health. Lasts 8 sec.
@@ -327,7 +323,7 @@ spec:RegisterAuras( {
     },
     shadow_covenant = {
         id = 322105,
-        duration = function() return 7 + ( 8 * talent.embrace_shadow.rank ) end,
+        duration = 7,
         max_stack = 1
     },
     shadow_word_pain = {
@@ -369,6 +365,11 @@ spec:RegisterAuras( {
     twist_of_fate = {
         id = 390978,
         duration = 8,
+        max_stack = 1
+    },
+    ultimate_penitence = {
+        id = 421453,
+        duration = 6,
         max_stack = 1
     },
     vampiric_embrace = {
@@ -414,6 +415,9 @@ spec:RegisterAuras( {
         max_stack = 2
     }
 } )
+
+spec:RegisterGear( "tier31", 207279, 207280, 207281, 207282, 207284 )
+
 
 spec:RegisterStateTable( "priest", {
     self_power_infusion = true
@@ -571,7 +575,39 @@ spec:RegisterAbilities( {
         copy = { 120644, 120517 }
     },
 
-    lights_wrath = {
+    -- Embrace the light, reducing the mana cost of healing spells by $s1%.
+    inner_light_and_shadow = {
+        id = 356085,
+        cast = 0,
+        cooldown = 6,
+        gcd = "spell",
+
+        spend = 0.010,
+        spendType = "mana",
+
+        pvptalent = "inner_light_and_shadow",
+        startsCombat = false,
+
+        handler = function()
+            if buff.inner_shadow.up then
+                removeBuff( "inner_shadow" )
+                applyBuff( "inner_light" )
+            else
+                removeBuff( "inner_light" )
+                applyBuff( "inner_shadow" )
+            end
+        end,
+
+        copy = { "inner_light", "inner_shadow", 355897, 355898 }
+
+        -- Effects:
+        -- #0: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER, 'points': -10.0, 'target': TARGET_UNIT_CASTER, 'modifies': POWER_COST, }
+        -- #1: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER, 'points': -10.0, 'target': TARGET_UNIT_CASTER, 'modifies': IGNORE_SHAPESHIFT, }
+        -- #2: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER, 'points': -10.0, 'target': TARGET_UNIT_CASTER, 'modifies': POWER_COST, }
+        -- #3: { 'type': APPLY_AURA, 'subtype': OVERRIDE_ACTIONBAR_SPELLS_TRIGGERED, 'points': 355898.0, 'value': 355897, 'schools': ['physical', 'nature', 'frost', 'shadow'], 'value1': 2, 'target': TARGET_UNIT_CASTER, }
+    },
+
+    --[[ lights_wrath = {
         id = 373178,
         cast = function() return talent.wrath_unleashed.enabled and 1.5 or 2.5 end,
         cooldown = 90,
@@ -587,9 +623,9 @@ spec:RegisterAbilities( {
 
         handler = function ()
         end,
-    },
+    }, ]]
 
-    -- Create a shield on all allies within $A1 yards, absorbing $<shield> damage on each of them for $d.; Absorption increased by $s2% when not in a raid.
+    -- Talent: Create a shield on all allies within $A1 yards, absorbing $s1 damage on each of them for $d.; Absorption increased by $s2% when not in a raid.
     luminous_barrier = {
         id = 271466,
         cast = 0.0,
@@ -610,14 +646,8 @@ spec:RegisterAbilities( {
 
     mind_blast = {
         id = 8092,
-        cast = function() return 1.5 * haste end,
-        charges = function()
-            if talent.dark_indulgence.enabled then return 2 end
-        end,
+        cast = 1.5,
         cooldown = 9,
-        recharge = function()
-            if talent.dark_indulgence.enabled then return 9 * haste end
-        end,
         hasteCD = true,
         gcd = "spell",
         school = "shadow",
@@ -666,6 +696,30 @@ spec:RegisterAbilities( {
         end,
     },
 
+-- Reduces all damage taken by a friendly target by $s1% for $d. Castable while stunned.
+    pain_suppression = {
+        id = 33206,
+        cast = 0.0,
+        cooldown = 1.5,
+        gcd = "off",
+
+        spend = 0.016,
+        spendType = 'mana',
+
+        talent = "pain_suppression",
+        startsCombat = false,
+
+        handler = function()
+            applyBuff( "pain_suppression" )
+        end,
+
+        -- Effects:
+        -- #0: { 'type': APPLY_AURA, 'subtype': MOD_DAMAGE_PERCENT_TAKEN, 'points': -40.0, 'schools': ['physical', 'holy', 'fire', 'nature', 'frost', 'shadow', 'arcane'], 'target': TARGET_UNIT_TARGET_ALLY, }
+
+        -- Affected by:
+        -- protector_of_the_frail[373035] #2: { 'type': APPLY_AURA, 'subtype': MOD_MAX_CHARGES, 'points': 1.0, 'target': TARGET_UNIT_CASTER, }
+    },
+
     penance = {
         id = function() return buff.shadow_covenant.up and 400169 or 47540 end,
         known = 47540,
@@ -678,12 +732,16 @@ spec:RegisterAbilities( {
         school = function() return buff.shadow_covenant.up and "shadow" or "holy" end,
         damage = 1,
 
-        spend = function() return buff.harsh_discipline_ready.up and 0 or 0.02 end,
+        spend = function()
+            if buff.harsh_discipline_ready.up then return 0 end
+            return 0.016 * ( buff.inner_light.up and 0.9 or 1 )
+        end,
         spendType = "mana",
 
         startsCombat = true,
         texture = function() return buff.shadow_covenant.up and 1394892 or 237545 end,
 
+        -- TODO: Could implement Heaven's Wrath if APL suggests breaking Penance channel.
         start = function ()
             removeBuff( "power_of_the_dark_side" )
             removeBuff( "harsh_discipline_ready" )
@@ -713,6 +771,13 @@ spec:RegisterAbilities( {
         end,
 
         copy = { 47540, 186720, 400169, "dark_reprimand" }
+
+        -- Effects:
+        -- #0: { 'type': DUMMY, 'subtype': NONE, 'target': TARGET_UNIT_TARGET_ANY, }
+
+        -- Affected by:
+        -- inner_light[355897] #0: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER, 'points': -10.0, 'target': TARGET_UNIT_CASTER, 'modifies': POWER_COST, }
+        -- trinity[290793] #0: { 'type': APPLY_AURA, 'subtype': ADD_FLAT_MODIFIER, 'points': 30.0, 'target': TARGET_UNIT_CASTER, 'modifies': CRIT_CHANCE, }
     },
 
 
@@ -722,13 +787,37 @@ spec:RegisterAbilities( {
         cooldown = 120,
         gcd = "off",
         school = "holy",
+
         talent = "power_infusion",
         startsCombat = false,
         indicator = function () return group and ( talent.twins_of_the_sun_priestess.enabled or legendary.twins_of_the_sun_priestess.enabled ) and "cycle" or nil end,
+
         handler = function ()
             applyBuff( "power_infusion" )
             stat.haste = stat.haste + 0.25
         end,
+    },
+
+    -- Summons a holy barrier to protect all allies at the target location for $d, reducing all damage taken by $81782s2% and preventing damage from delaying spellcasting.
+    power_word_barrier = {
+        id = 62618,
+        cast = 0,
+        cooldown = 180,
+        gcd = "spell",
+        school = "holy",
+
+        spend = 0.04,
+        spendType = "mana",
+
+        talent = "power_word_barrier",
+        startsCombat = false,
+
+        handler = function()
+            applyBuff( "power_word_barrier" )
+        end,
+
+        -- Effects:
+        -- #0: { 'type': CREATE_AREATRIGGER, 'subtype': NONE, 'value': 1489, 'schools': ['physical', 'frost', 'arcane'], 'radius': 8.0, 'target': TARGET_UNIT_DEST_AREA_ALLY, }
     },
 
 
@@ -758,7 +847,7 @@ spec:RegisterAbilities( {
         end,
     },
 
-    power_word_solace = {
+    --[[ power_word_solace = {
         id = 129250,
         cast = 0,
         cooldown = 15,
@@ -772,9 +861,6 @@ spec:RegisterAbilities( {
 
         handler = function ()
             gain( 0.01 * mana.max, "mana" )
-            if talent.manipulation.enabled then
-                reduceCooldown( "mindgames", 0.5 * talent.manipulation.rank )
-            end
             if talent.train_of_thought.enabled then
                 reduceCooldown( "penance", 0.5 )
             end
@@ -793,7 +879,7 @@ spec:RegisterAbilities( {
                 reduceCooldown( "mindbender", 2 )
             end
         end,
-    },
+    }, ]]
 
 
     purge_the_wicked = {
@@ -863,47 +949,6 @@ spec:RegisterAbilities( {
     },
 
 
-    schism = {
-        id = 214621,
-        cast = function() return 1.5 * haste end,
-        cooldown = 24,
-        gcd = "spell",
-        school = "shadow",
-        damage = 1,
-
-        spend = 1250,
-        spendType = "mana",
-
-        talent = "schism",
-        startsCombat = true,
-        texture = 463285,
-
-        handler = function ()
-            applyDebuff( "target", "schism" )
-        end,
-    },
-
-
-    shadow_covenant = {
-        id = 314867,
-        cast = 0,
-        cooldown = 30,
-        gcd = "spell",
-        school = "shadow",
-
-        spend = 0.045,
-        spendType = "mana",
-
-        talent = "shadow_covenant",
-        startsCombat = false,
-        texture = 136221,
-
-        handler = function ()
-            applyBuff( "shadow_covenant" )
-        end,
-    },
-
-
     shadow_word_pain = {
         id = 589,
         cast = 0,
@@ -962,6 +1007,26 @@ spec:RegisterAbilities( {
             end
         end,
     },
+
+    -- Ascend into the air and unleash a massive barrage of Penance bolts, causing $<penancedamage> Holy damage to enemies or $<penancehealing> healing to allies over $421434d.; While ascended, gain a shield for $s1% of your health. In addition, you are unaffected by knockbacks or crowd control effects.
+    ultimate_penitence = {
+        id = 421453,
+        cast = 1.5,
+        cooldown = 240,
+        gcd = "spell",
+
+        talent = "ultimate_penitence",
+        startsCombat = true,
+
+        handler = function()
+            applyBuff( "ultimate_penitence" )
+        end,
+
+        -- Effects:
+        -- #0: { 'type': DUMMY, 'subtype': NONE, 'target': TARGET_UNIT_TARGET_ANY, }
+        -- #1: { 'type': UNKNOWN, 'subtype': NONE, 'points': 2.0, 'value': 852, 'schools': ['fire', 'frost', 'arcane'], 'target': TARGET_UNIT_CASTER, 'target2': TARGET_DEST_CASTER, }
+        -- #2: { 'type': APPLY_AURA, 'subtype': SCHOOL_ABSORB, 'value': 127, 'schools': ['physical', 'holy', 'fire', 'nature', 'frost', 'shadow', 'arcane'], 'target': TARGET_UNIT_CASTER, }
+    },
 } )
 
 
@@ -1001,4 +1066,4 @@ spec:RegisterSetting( "sw_death_protection", 50, {
     width = "full",
 } )
 
-spec:RegisterPack( "Discipline", 20230603, [[Hekili:T3Z(VTTrA(3sqXzlLe7AlBz72l2a31S92MRB3GvDrbUFqs0I0rCRePo(Wo5GH(B)MV59BoKIsjz3cu0Kio8B(EnFphoZ0ZN(RtNehvLm9xgD2Olo7QZU40rJo)YX3mDs1N2KmDYMOf)E0hq)LSO1O))BtlxKUzvAg(rFAvEumaIY86IfOFA6K7Rtxv9tztV3oCVgn2njlq)84RMozzACCczSjLlMobg7jND1jNDX3VD(pM(XTZJ2oFDAzzs825VpjlkBrY25jzvfF60TVB77iJFm6vqJ)VKMLxSDE9gyEl3oVizf6VGEXQ8TZ)ZrfLl3oxG(QVpmFBN)3zV6df5R3oFs66Fy78bjFSkjRm9r0mxxI(F5pSD(JrfPr3VkP8FhHFrFA78LrWZry7MKIhYlwtW0LPvdpfXOkYFiDfI9eTOknpR80nfjlYxFFu1RU9B3K)usXSNYlINHEXQ0Q64ea3OJfnIfrRwnJ8pNTkTS61GO42f55RIZFkRuEOm8ImKQKzz5zjVoFZTLjvV(XOv1j3(I7RF4HtREkDv6hwwnl5)fjWsVViTE9SL5R(0SO1BoTEZrEgw5Yi0eth4239nBN)R0HTD(FsmUTZtrSsamPzFy7CYBTDEC0AK(KxKMmuv0oq055Nzq7uk1hmccuFqOhmWqrojwQdu7NZHjFcL7Si)rqnVIGBO)kA4XUXMvOxEwj6LuXNQOvOfjNs5mmyEe9NtwFFr0cgBgJetwIu9eYOwIfLWBhoA8c34bDzAmFzkSYcesjjzi0RczmcwrhLftqTIKOyKq7byHVoYFkSK()jPiN(IL0XLLBJqr2BQxTsBOLe2srsz9Qk0pMIqcqUn)p)wyLo1E0GlbBmiIAOjyE125NJ4GFSQisdovpLRah0ppymhqo51lJNrG9ScqpRijwLNFwhE10hE9I8S4u41ULRKkjvjG(sYFolzvzYTJdzEwuxuGK0wwSSee0ZeY5tXVXRgy)HRJ(ibKV06ZNHvdiGWhRZ6RPzDKQBQp2NFEaNXyqF3DRLNX4XdXk2)nIIAfrz0(ATnivDpwEweLndnziNfMR0gW8gOVydmLlqoRmGHp)mMRA(M(wXJhlYv(QvLZIRlIWENqYPG1g9dIO4ykiiV)PLlwMwU(0KpMSOgz(SkDDYRtFGBIb)umNMTSCNN4r7oiO4(60S4z3VkQSsb)33WxI)ehv87ZqJQE1hs6fMdtQqgoo6L4KOQLofq6d8lauG5pe)pMH8PGMJ4SKYs0dk(qcYiqs0ke82SO6nJ6pnzqA9b07v6cr5dO3MY40hHL7GLhNAiIH0Bt7YOv5UMp4z41RdaRzix(uGTD(jcBJKjs8qKd2VD78)RFa51eVaA(TiFRLO)kkSDsG5KG4yV3tjyF41RqHlKLWYfahfpcK4O(QwMap7JGfzmI8eI7dZnlYmYVM8ruqCRsqPjm48XyC88reS58thJXJryeRKAJhzfkgIvqhJeHAPd2RTc1tU40lccWdGak948dCHkf76dRYZlyopSA(NXZprkGaxs)H)BFyrm4Lglr)H86SkmZLJcm(C967tkiske(EYdfe0nAfeC06O0mPiXxGSNHiSOhJsxbaXnTXF1zwJo3ZsxRVPqpMt6sCps(e)13(x)EHE5SKpIsQfNSjjLIp8HpresuVrFlyagOXnfiL1S4xdAHyAnchqqv6c4PX1liRbGyEjpjl(eiArAKRp5MuyOWm6uoJdoBr5rxfIclnnBw(dZQqRsq5UWC9jhP3zeHA0Qf1RWRZwclpwxVyjrgXwlImSImRJLT6RFFkHLHmnIjq(YfSOa1)nwY121Xi6(XjOGFwJtki9bzGsMFyipLG)bGJfL9j91iWiq5IVac(MLpOuYAN2wdFgQzqMu0irApKcnKhrOEKNdzwoq)hjk2LVX6sB6djrM((UfVKwSskigvdKGzdm(z60lmS4w1DyaeWFPRUlBP3zoDigIkRx87u8JBwiaQawbeT6POpH0trXEqny(qAbSaBYV99VTxOUMdwsprcPHQPOz88W15MKawIO0fYojSi9PLqk(e7s8C8jbIHwhJJeJSWMIXi7Lrz(QutVYw8r39cFz4rdSf15Zpt)varMvLpd9ZZgD2BAE6g6m8wSi4)ioMAJ8jKrsWY8syIkjgWbvzKFmiLIEHblLHcDEEzZ5U48DV72Z1Ob5ajmieczGwqfvbH3TchSbzu0sX0HKXAImnuGg4KCMjWEeLDuiJ7nJq6ldgC(jbb1toF4ql8BgtaJJnyPDiyjpK56nNtXSqg8oJvy1G3ItDbznPd5U060L4l8KhKQfa5Ne0AFAPpHeI6bS3AwxCKd)uv8f)tHJOV1vyyjzqmKSuBibLjfvVE8zoIcd9eeD8iM(qrg(t0Piop74k2m9R)jHNIxl8B(qekEv0783jHwxUoTk54sMhJ08m5qfHyXtktGcVfHdETS6Kfr4yqxGO6I0CVXdcjvIsjWxS1w6hG3mUmIlYUqF4DmVwa9PkPvdB3f2VefPfI8jVIfc4fnuXqnNNgOXlTvRuw9qpXYZOzfm0mTJFKeaenxqwU8mb(9j0sOJOMtUJXip5osqWNCh8mTmVCZvGIaWJavI1qPwNvyLk2ELmDXzVVsncd(ljZU4JXmEFmp4N8SkJBjaXuWEdLZEUXmEAjZqyQHMUpyzHt2g5sF3z0sFJcMhH451fq1U1RnqltoVS(EkoCU)sLtrEx1jNLmIzzo8LncFqg8hAB0i59(BOOX(EWsjuOZ5S4CXLgiPQcQackyeOxsOG8le5NYmNgvKOfQlU1aEShHrNYNITO36gLF1OpVQxY47xCQwFdibWPZbcqqQbCiKOfVtbadkzhd)jwcr7szg8drpc)lqkdCZIfjBiEEG8CoM84pUjf4QDI9ifWK90uhmqVmYhjkaogTanBgEvcb2z8c8o0sX0SHdnRj(D3o6mEc4SKfSOKtv(f62yh5YQ37iFWzRpCHWS0pLsoql7ZdigDKRw0OhzljJyCDZjwiAlBMaaLaP4c4DHIBx3fSRizQYTlyutnEy3XbWddcf8hIGus5gvkwZvcJC4lOO6Lk)J24aXu63q7LXOHq59Rkpjwq7VeDOGRxH860JT7OFxOw14n92vuB94KxvfKCtPiDQP6rAHlXGcVQsheKUvDSLrnIoQQrhPvgLCSt2hdH6cVVV2mejA60VUeSdKs6q0Q0QkO6D3dusz66nWgemDXRHauG8TWQV3NdclN1flNKiLOrBZJy1FED(ACgYYfJMv5mOHQLIxVUmjgL79e6I3Cu4fRt))OTVHL4gmWn5LLPWIq)wxfSuBPOA6S1AX0yH9BP0vql9OVtFwfnvJK66fg53kAEXCL)bv8YS2NtdIS9w93nDAm28vNRavS(lrpbUsiu2qLHBbe)c6cCEDvzACczDSMJdUUGIeNh4pE7jZI8h6tDfmYDxXOtwYT1SJb6g(4McTN8YE2H1EHk93xMgsMYPNSEu45ndgl(L210P6xuYz(un5SbJcocOx47UPa5vjMw0Fc8BlLN0xvwDTH3FDy3ToBfS0ZVvvI6SqRhdbeQfM(TFMZozlbApSLvK7hlI7r6OL2ef1)hle7b0Ufgy6fBE9eszROr6rrUx4vHLiJFJUstMdZUYvwIz)sZERoglpLf1zMF3uG1qC)zSTBxK328dAQnyYFtaIpwIJ4fGDtnoTGLjZEkf(Uvoko38h5nED0zqPyFHV3vET1g0lj)UdhoSzsx8fDiBkwc35)M6hBqJqw8Dijdy(VgcC1Pyj9jdMXaTnftCAYDdo70lEPvomVXPdrYuuYX)oYjbIvxK8qrcILIqRJe8De)8H6vZ2uNLwUes(veuQ5ZoAGxr6UT13gQlt1f)ahYP(IxwKHI0(Mf5uZTVzr4wOkZy0wy7IFID8GBFIJxu6R3Jw7xlTer7ZeG1cYWbl9ni518Jq2EV99tqrS9ZqaziJ4pvGDABRp414pswLWyOBODSFPpLxdoN(9eoqGiFIkxY2v8Oa0Gc2KS1CRAJ7WFjPAzWoxOe2xgKTWbYqiSDQIsJHOnQGG1EnDYWFxSpH)YMa4tcZeabV6s3N8H0mYMdbMMiggV4tlGQqH3ZZiVp4k(atdWOrJwPWr4qvlNHPjjtg4)9mbjk9gsfwYTEIMCr8o6qIK1q4sy(7m0BB56z9uTuK0noq2uHG9HXVmGMyOUMBh5cEtWxEEGg3e4kB5ilchPKElfcu6l0UmFvKAUK7SWPxLf4vQWxpoY8X7rX4G7tiS6d7ZDR5hDi7DpLhwKdxXmVcD23R9PsBXydrCDutlkvjdD5witHDqH5RD)1TXq7oFKUvtWFgrSDCYpi9HmdBLCHDx8Nvbs8NwKG)wiOVG83ebTw9SSUXHrp)PuWjbXonYMVeHXdxuO(BrFszuQFueQpKTUgJrZiCLsCBAV72lC8oAlWBZRAvwiI5rkKhZ1MHlJ8XSuTv4lDyZI6PrlKWf6aJDu3zSUE1GPohVVQPGa5akoFcYtsqiDy(lByVY6hH9i0AKb1SWRnKBpsDYrJ5sN1P3unuvYvM6zKXpyySHNOPplskdsZGK8ZylBKY)NVDF1s5N8JcVsvSdZcuEunytsEgncxPhNyjy7C(TBsSlibu3v1Ci7z7PwK0nBWXsaWDI6ySyhCr5S92fWFKVd5cPtLHdLw7OpZAToM)Wf)7gQzF297TAVnLb5RBVm7b6PCNM5D0rRtM1UHvHOaSpMH(zj9byXBluy2TjQh1p0RBu3qmI)oh(dSL(z)pn8ut3nqJIY6Fuxs39qKVdkOxHf1z4Ik6476xKJy0954VVF2o0Q0RtYgwZ20kUav4Au1396UafPEej4qx)giAv(50hSxai7lhCs5BsGs6gtpisy8wEGR0tIKYxdzZxsAdo(GaHpN8JaqoX)qAsgTCnIwXDp63skonHCmUrpz)0xTihxHmCfaqYEFRG63G3ObXBN)(FsQIeevhtI2y)zAfRiccOxdLONjtW6yaf)eTOWXaoY3rOLZtil6kNYpLTa2yJaIYine16a1ROOmgMQucJHrayfsZ43Xkj(bjIHodPXTU0nuF(zrJwuFg1m5D8EHoDYJjfWJONDNJp7QPtEkQakuF50j)kSApD9gC5NWLO)44KhIQxvDmBtNcTuOmhkIuuDv(AYPW5ILWNRF5PBF3pJ3nmJ)EyTrgAUWp(y7INJjQmoEkt4DmCS88XHnbB1dCqnqR(qxq(Q9iw7a29awF(z2bTEogAa34C4Zf4VWbxbNLToZG(vo6auoycAB0bnyQ9uNa)AVspHJd7Yp590IJj4MpttGX(MrNbP)CNtW3zFc4UM1aS0EbXoah5q1tYlSoUk)5e5aON7sFEvUHom8Pa5amJubtokhQisWl4WGoUhpzSyOvpaYVLbsbH4WGN(X7KgVr)XU4tx4GD3BADx4yvVTpHEDAWYqCnnx6Gn1zLBxaS0ww5MR5nhtBNOEhZ5zYRbq(V7eGoST2lgUV0LzVDXiIlG2DwGdBNT0QKlW0z8ASdzDVT8DSJLVDw70fa7ml4khwW6Da27R8VA0Ew4DLJG36oR5Ydea7ftlx13R2U2vap9La76(wx(AxQy9b)9AhQxD22W1oSMP3(in4A0DPptG3HtN9n4n2xM6tGXa(Cofowt2xmjxG)aqb93uCJd7m9sPiUXT7TEa4oS30pa3H9gTneQgW1EQtG7Wtu)G57ZkI5b49B8k3SpRqMlG3zxF34VIq7i26g49mp3FzN2rQWHPSEb4F3(XoZ23zPk18o0CCRQtDFRYDEFh(25UnN2VQzUkZBhWCRcOs(2)6pKqFbiH(jSWbaZvBNtA7eCEJuwbC(PtW)n81hhP7pO)6VGVo5OGA6)j7(oB6e9BWmYBpd(0XqpK1jRPvt)LrAqiFZ0jLjvcqXkqk83wvJ(Jxq2FYnE9BTD(rBN7DWuZkKHJNjkgwrUUUa87IwJFboFBN)8ZIpZz2neg5IXRiDdb4HCnMrGk7ImtJmipeiKl7rcrHl3tKb5Bt3krapciHXTMe87)aRHWwzyTVAA0raxDBYOo3beG8xTpq(x0o8pKB9nzcqyGgOGRBnfCM28)h32BeajZJnpWCbE9n251PpyNB7bytqSFK)K0iXBCQKCDI4ekA6KXCj3Las8DTwGBDJSsUN2WmRbuZXUVW32o)LogJ8L(225o4H0dwya7p)SwJ(ILtU6eoXC3ajlEgZ9253DR1NlIWrf5TsNykq39AZuWaqP352AbBZqGz2)GMMpKqKo2bmAlPd(EUtMKv)OWXKA7Jd4mvlvy80s3tXq3Mx8O4ypqN8aBhrZYROyMOv2IdTaVS5u2pEnsJ)tnV0I50Mx0G4fITJNg)i4P2MpWDBQnefoQsDlqsBU5ccjPW1XjHIn1gZxO1yRnhfhySvomkNn1GoiTnR)25Vb2XiTGET5tki6vQpd(PtJgseo2nYMlNGWoxhPU20Wn70DlWqBUuccdnoIDTGAYD5Uf4KnB)47Ro)o68UXAWxUEp28MRb7U7B3oNUfB0SU(h3vH94DvOSgH09RhwfO9PzRNBXE6siugPnoXXWOE79HZvlL5cnopoY(fsjWyHORn6LEE5FUUvdLP2eNh3lozH00voJZrhH5qTpfBdLO)f4spSzdZyMzRcdQb4jPGkYoHDzgYtPs)r0nQoogbFFWp48PuRZbgagr8yjwEGsBviuDGsf3oICsvMA1ohKuDC5EXb2XvR5mVxKUG0cNwfuvh4aIqQSjUfpLI2s2HAnbYpm80L(oI)dkXBRIARdKVzKZw16ngv3xa04LlPXAd)zdaCPwf5y4Cj)SGENrH)VJWa0v2iKz06hEiEeHGiddkPiDZw93TKzhKV2IcVhKVMzWZpx6H6KDUgpi4RPsBRV1NGxY6JLZciaeERkou4eoXmVtSBMCyOyobwLjSX)gCi9CnzY)Do21rWZ5j43GSGWkJs5GUpq3n8Qh2gQ)nmmXKAcda9mf4uLC3V1r9O1AOx2QelcxV06HTQn7SwUwldHbQX9KpmS1PENv9ai)wvNYoq(0lgtt6w(6XSdemCVEQtOMfpbOqh5RypJopF2l6C8)L5(6uvYt)A3dpRrx1qYAK4UYzdzW4oUThZRgtSG2rNtdOBE87vszvIx0ytCCrXortSbu7T1s02Qt832RHyA1rNl9KeUZgwXLdVsDI5mf8tuJWr0MCfQtAC26OJY6NE)kivwMACs(JzADkbmtqzRxVgftcRVQx4J93fjaxmZQWkIEV0ARzRV3JsIECInCTbiZNSwoTl3TERQFBI22S25d1Iq8rL(KYAWhGZTVjPUNh8Ac9UjUNVptn0Ez3cEyQRtXHRcMVAwayD3yDyxa0P4RCYUhqtP2El0KZgU03gCuo)bVatANpPVNgLYY3sk(qQwJ0L(0PyVDZVQ7a2DXOUSv9iVrXsOmGD9kD1gb6iVMl7uLLBpfQubgx7kaR1FrkBo1YV0gQStvv2dv6Q3V(1ZBATINK12UxV)z1zL(sf8YwfE0U006DLz6X9242VD0c40axTu5QE7f6rQruG(Dmc1(iGAz0e7XR1wdwTyPOGJ3PkAAfAFTexXyR9r)GgxX4ov2QM46U35qMLQlGlCxD7enxE8XDpCjVK1oTRPSuMYTT9oaRdSIUhIsZSIwhTNnUahi60FWx)V280BpGTXEkUZIM7cIzBaSVhn(NMlbyDVrcwItJu2kCN1MliDf)Ei6fIQ7qBEGAFXW6GlwQM(b)6e26QB88lyaTkYnFa7RfpWx95V0wx1Po13at3FZYh4lBCf73nL9VEkzFrFVj3EFNxTBXK2wzt73dchSOiUQ7L7ZhNiOGe257CzBHh4OqaxTBXd3o68ZBnpUQ9FGMw2eyHKARoNXmKcYEadqQ2VRqBPpy9oCRid1VUsXOu3RaMb4(QXVO1qHoS(f7EWi(y7nTnYcYI0(5EQU9wLVUt7fYDGh9fShQR7ECu(5fbPr0WDGDlmlFD3J5ia64W7M56Uh5qa0JrbiCNXvysf7Ln462FEmyDJzjAaTHtstIv1nP0ZXyKU37fo3jZ6FsXdWr4ZNDxFyX6F60IpdDPT(hvm46SDdpsFxcZCllIgj(IWHQSvb57TyzOoKTlbzskTBiBLd7eG6WByfmlwpweloV1yk8Fx7BMoSjx98BqpSdlZo)iRy3NCLt)IR1D)BSUZROrSBTbfz6njgoQg0tod(k0EPdTcLnQ1qjTv6fwgxjr6EltEuuKlY1P0NE(V(gjbQnQ8ABFM0LpoKH21w1NBS4rp0OfYB2SEvczSc7ltjKxdb7zjK(CdsOB0dmZMeYypWX8GXHm5dJcGNEWnlK3khncsTJ9hABf9STlODSWgjIJ(cJt6bQSZ4e)qCrw)pHVHQUrpsc2yKVSO03DG)XL0(wRxs7wSP74u2eZ61J)Pf6Zwe026IG0VbtO7WB6OYLuzIgg8gCsf94vP4g3rg0rStz5ONQfzA4M9PoXSDpgB7oGnJGp7yIf5UJcPJuQHCiWQn7su4ouLgXobiHDvcgAU9S2rYv(6mtMBRfo)3HDyWn6PFrMjJtWO3NUdo0QyF3izshBNuLCRKJl3ZXyOrOsQUcc5c3xx9HfttBczQHGAbs2TNZqsmtpu)MTMQ74SnZNpTYkZdQWUbAIuVY8qdurXUF4)(cTUAQ05DPhvnCHrW3WE6vxE3VabTBctmJk(dEHJpkM6n(1Z6muTXcSOHPQZWUn70yw7W9oyRSZRNtHZHDKAYc2QFINZAnX6B9ffcUrLjxW(TtOmbA)od02Yf2eXVYbToxMxCHnpBekVHBPqYEIHwIb(fwiEzLO(cwwwPGJ2Vn5nCIWnzZ0Z1YAs1JPBlGduRgg)dtZAbWyps2eCf7y8ukLy8M1q5E6MWAUWmKd3gqpayMs0jAiOweknfq(UHNK(v5RKck1tWvKk7bxcghfSYgrBUpjodJFNzzYI2gcXQPG47peb)qFhiOYUqKZT)WIHUwFoYC9ztzeSxXmJ1NJCU(04aunq90(MkAqv04us1iMKd9kg1qLnoAtnWpVzPEaWvEQVgNtQFMyLnN1yJFs((vzoCUiDXP3Vo)csVSPsoTpqbMnqJtz1dXKRBF7a7IyFQqVF9PiILsGhkLiVYYzF6(hfSw(aJt409pEWR1GXjzQsAi)J6s6URMCmwazFwuNHBpGJtuqCYu4QYhDFo(KfmpJu59sRb9qohnnT4OM6c5iR0IvbTHnwjjid9oTrFL8OLxQPnURLhh2EG2aUrEanv4sYzxNQKqzevkTbVPufPhaQ65kc7UE4mvt04eCTfqEetlsWh(IAsoyi0pgIe6owJS)bLePWs(9wsO9s(IbaKwMt3)uMawi5kPVyvvo62tuVKxraaz3J9VjxuTpm99ue19FWV7n36ggQTzo)8Xnyr98RcYE)5xhMfC)XnT34fkg6vBqVQhHw14ls4c(9FSPizr(67Jex5vwG(dihhPv1XgVouOX6QLWPz()D0M6vrzP4FD6))p]] )
+spec:RegisterPack( "Discipline", 20231111, [[Hekili:T3tAZTTrw(BXvQvI0wswKsuYjRLQAx7jBs2mzCnYPsv7hijibOi2acWfh6ylv83(2V(c9nojT9oZuUMyt041V7RUr3thn9ZtVZ3lpy6Vn(8Xxmc9)o78RV8Ql((P3L)82GP3T1B5F6Dp6Ve7Tb9))XWSLHBJcJXp65OepFaezjfPlr)007wuegL)ZXtxygUVdn2Tblr)8KRME36qF)aYydYwo9oySNoAe6p)WU53T2Zp5XDZ)qYdbXEX57MhMTBEEA493hKg4VB(IN3n)Vgg7Vii2pi9SD)YUFHbGZNGaWN8YxUE38rNF2y07ghMh6fTBUN))Drw(MG48SYx58Ro98lqVYpg(eAe7MVjmldMIpbZ8YGDZrdp9zHXpb9k)aE6ts3nVylqRiSlnic9xqVyEYU5)KxAgA(lzzYVpmF7M)7SxDvAYgerhU5d7Mpi4P8G4SWhqZCrg6)lz1U5p4Lg6Tiki7FfHFEiAFTh8Ce2UniDvs6gcMUomF4ziHtAYQWiKiXBzEysC2zBtdwMSzHx(BU5TBtEmiD2JjP(ZqVyEyEHFaGB0XIgXsVOOzK)5SOWS8taX)nltsIqYK4mXHYWlYqYdMfNehCsY2BYcYp5bVOIGBE1IIvRol)XWOW7xNpl4)bPKeUinSyZS1jrppZBZ2Zk2EKJHLHvgOdC3V8D7M)z6W2n)VuooIocaMW473npJQc57TbPd7ePjdvgTRj68YlmODgL6RnccuFTqpyG1f5eyPwqTFnbMCMb2sjdm0FfnCF7yte6LNLHEjz8j3lczKCgLZWG5r0FoyZIuVLm2mgjOMh(CZdqJgyobbXirxoYXdyj5f7tqS0apFeZAfyWLPG6NbMs)xbPj0xmJoU4e9Xcd9hlIIugA2AKLamlzfr5zGddKzhGu)0hblmQFGbxc22iIAOoyEdYxdI)9uEQNcCYFmrcoOFEWeoGSYPx7pJa7zPG8f50tMLpPoV6YI0uKeWGYZAqamRK)Fg(nEZaZpCJ3teq(AJpFgw8qaHlsY4RP4TGQZOo2xEzaxBwJ(U9gdpJX2gIv4(7efOCIsciS1vn2IubDyjU0lEgAYqop1nagW8osTbwfIIlbU1krmJe)WxEbZrvSCW(5SHh0XIcLgfLnZVi1d7PgjJKXPZreoIYBhy889PGH8(NLTCDy2MZcEkyzbYDsE4MGtcxXT8XpTT4C5KnU7GGIVBqjhmBrKxwUeoJvgyw0755sG)47L(NZqJQi6(G(CMPdhhn3pWlFTvbK6a)kafyXhW)JziF9O5Wpoild9G07dqobc8IqWB7Y83p(8EdHbP19O3lZgIYhqVnL(HpaM8GNhRAiLdP3M21Erj2Mp4zyJHbG3muOykW2n)0sFJKjQ8HOaFVD38)JpGIMHnMMFdkMxg6VIsJLKOkjPg279yao2ArekmECal3yCwTiqIZckFDa8SNapYye5re3hMBwMkKFn4jusnrbO0MhmAcghhnMGnJoBcgpgJrSmQpEKjUpedxfJGmFWX61a71gH6PxC2f1cWdGeSCe8dcHkKl3QOKKuwWdJHay88t5HqSl9h(VC)sFiknwI(HKI4CmZLJcm(CXMfbPejfcFpDvkbDHAJsd24HkuQmZ0Li)zicZ7bVWiai2Pn(RoZy2QomDn(ML6XCsxG7rYV(V9X)2puQxol4juHL4IViPyF)9ptesux9VfCad042uKYAS)jGwiMw9WjeKhUeEQFXsInaKlk5jX(NczXrZO8r7KcdfMrNYzCWr5gHRozzsSFi8tmRqu6IHXZswnlhzLGYLNfgK8FNfeLrIJJeQErllIW2zRbZJnfq9TGmIzlICSICRJLTQ2VpgWQyKMXeiF5cwuc0)bRytZ6yeDF)auYpBWjRhUseOK5hgYJb4Fa4yEXpRAJaJavB6siPyw9rcfVCwtD8PNVdY8MMjsZt9PjP9uMUh55q1wdu)rIYD27nAEtFij70p1UesuYDscXOAHemBG2ptN(sNl2vFhwdc4V22qMnmcnNokhImRV83P4h31qnOcWkWl6rVNr6QO8pOonxfMcgz39h)Wh7fQR6eMukMqCOkkAApV(6C3faEJO0fYxjyO(4AO8BIVjE93KKXq2Y4SXig3umg5Z0l2v3l6v2Il6Ux4ldpAGPmpF5f6VciYS8KzOFE24ZFF1t3qRP4Ifb)B((u)KpICucENxdtugXjoOkJILbLv0lmyHQuOZZRRU(fRV7T3msHgetMqJqiKbYGYlhsXlcNWbzu02KGloRFjtnfObwjNzLypIYoQoJ79Jr6ldgm60Ab1thnCOb(nJjGXXk80oe8KxN569JOywDgCNXkSAWhXLVG8M0I6xACjtCdpXbj7bq8j1Y2N2wsOOOEa7nw5fh5WpvgFX)u9r0pAlvSGyipsw5nKeZeYSxnhnlzIrsD6bm9HYo8NPtHFs8X5Sz6Z)LYifNug3CLhkNv0787K0RZ2eMhCCglIrysSy6Iq(4bzbqZ38WjWMLF6spCEOlruDAyIZCcHclrLf4k)Ad9i3zvxA5fzwOp8wwulG(KL0YPUBd7xJY0cr(KxXab8Qk6COsWtn041M6xkRNONA4z0kdgQx6XpssaIwpiREEMaFraT92iQ50BzmYtVLKe8P3cptP6l7CfOra8mqfynuQ1yxwPIS3istCw7BKYUG8cA9d8NDycXnZHvp0hRNwwECLL00qkT0pcTEEWTbNU0kw(2ZP92gLPocXtksH2zRw8FdR(oRybfhg5Ux4uK3wJWzvAO3hdxLAWhKg)HK0kTW2)aLQ1paUbHozoNLelU2)G8COfhOmnGfXbLbFAzbOmFLEPbk5XI79VdNny0j7rFdkL2r53m(lR6Li((vNQ13bsaCTAGaeKAahcjAXlno4Ti(y4)ILq0Lhmg(bVhG)fiLbUz6YGTKWkqrmhtE8tBdbUARypczdzUg0bdu7t8rLD4gJwGMndVYGS20Eb2YCfqX04Hd1B69T3m(CE11SkbmOKtv(l1TXrPfvV7iFW6ABydHz1wkK5VsPLhqm6iBRbJAARKYDXngN4HOPSzcaKYsIlG7cf3SLpWSIKUkxxWOQwzHUJdqegek4m(Vyf3ATcwjucJC4guu9sP)rtcGOl9Ry9JXOrPY73ursmG2Fngqb3mcr70JnhOVluRucLUx2ttlIjVLji5Muh4KRJJSgTehk8wgDqq6gTKSmQPCjtvOJWCT(j2k)J1H6Q)c7AYru5Qk951GFGqYsaffMNdTMBbqjzHB2c7iUWLNajOaftHvFxKaclRn9kHuLu5kPn3J1C5njBWL)k2PzwBXGvmnR81lYc8rfwFh14nbLEXMW)x66ZWQkdg42KSSqWi0T31swQP6p1d2AStzS0(n0xkyn7OVtF2ImzNKQ6fAfVwUYeZL(huXlZBFcnjYM71VB60yS5BUqbYy9xJrcSvqOOJkTWci(fSmVjf5zH(be7yLahCDbjjopXF8(XLL5pSq05Wi7UIrR8KBALmgO64J7k0CXl75aw7fQ09IUurXuwJK1JcpNvWyiUuxlNQFrjR1tvvWgmkyjH(Yy3vLiVmX0GfFa)2c1j9nLxxt493g(DlIJatp3EvjQZLA9yiGqT6PF7M50jFjWA)AWIC)4rCpshn0NyzZ9XcXEaTBGdMEXNxpHuMAAKAwK7fEv9kKXTtxHjZIBxXolX8FP4VvfJfNY0Iy9puiWBiEbyeqyLLz7ij)(0VHl4JaIp1Mx0RDkBRlZZpSbpj7rFr)HL)C5MYxEl9xjLv(1Vicy(Vwh4UTaxjZ6GzpgcFJlc8i1hX3mkaxh22j(Hb3o48ZU41(j6JMl(GDXYRqvO(Nip1O89sdwLgGy)i0c(D6uHCKVQiA22I4WS1qfOLzgQ)SJgyCczRwD32Cz4)Nihs0)gGlah6vTIfPcP9olsBc7vwKSQpz5vfzok2y24P4ia41XWYlk8DJrBcRH1Mqzd5ZwlW6dw6BqPl0F(rO0Rp(P7qPp9Rq2ripQpMIJGAAfNlWFIMs5uq3(44GepNuark(ZaoqG0q8YwZ2d6OSLGUNeStFJrJxl9msRRG9iqgSdiiBwcKtiyJl5f6dH(ZHmNoHoz4VkZhXFhra8j58bGG3QNfb3hgt2ggW04XW4LpVeAjeEhgJcfGB)cmnaZgn6ZuL84ChZMHPlb3h4)9SsYuq6i0Ph76lkYNY3rfsK04RVKM)odDUoz9S(QsnlQokiBHpWxXKxxJvvq2fvh5coR4wCEGvsPMw4IH6Rpsj8wAoye(oHZsI8KlWRZcOEvEGTyHVHzeb8juIh4fVdScXXG3P)P(XE3Z45Qyj0mlkrRJfBEQumiRiRNJSAykiXKjfvzxDMgZOkM32(x3etT98sSew(dy(dAYuE(yugnj9szML4yu(2fLEgZcCWReZJKSTZe)Ku5)yPSkN9bpJY2a3i5zeYodVaP3EZfMNrnd5ECIfGT153OaRvib0Ia5mTes0s3dq91cmken5qYvHWcHgAf1XyXw4II5d1fWFKRp4AHVs4dLw74VWATwM)6l(7gQz3ltP78dIcMukiUYNyVm7wy39kDBlfHk2C0vYS6gwvhfG9Xm0pM0haJ3gOW0TjQL6h2YcqTQQ2HCKyE2NfJjM1TPYi7ML0w3anIiGZljYsLs2x(q7TtlIXLEB5Bnnek3gxXR3Ie83CkBtfK5myzf2Uvz5vtfVknbSB)zb7TwNKUibNb73bjTYplLGLVISuY4V)2TbqJpyFC8AfUq)64Zob61qgzLBWFC685KFmnXjE8MExSmsHEUgqoWFON(sQwnI5xic3sai43Vrq97WRnMpQCTFEx5zcar1rNO12srgXkIGa6mxg6zoQBMHFLn0ZYaoY2X6I1tTfQvt2ZXlH9HdGKmYcrPwq7Ck6IHPmvWyweaMJ0k(tScIBqIyMZqABBYSd1xEPSLKYpJ6Q8w(Iem9UhcsHhXop3oFY07E0lfALv207(myPhUzl(uva3eRJ9dw5veLFmBpsbnDllb2O3Ef5jBiNsAlxdF6OW5W2VIx8w4uB7djXO5c)4JnlAoMOUy5Pmb3XWXeXtdRc2YhmvkGw(H2G87mdz1e2vGT2bSKfOp6cZGxzvPuGUYtTc8lDYXlDzAMNlUaKwMa3I093eOTiNQmi1NBDcUY8eWdkPayHfUZcaV2cgxg)rfxf373waQvLWOenfpyFBBbmFVmysqvr4rcBJta44E8CkHHw9aiFldKCcz8yZ8d1dBdfEJ6JTXNgBtg2xADxyd)n8XmQsdggITP5Yr9SYTnaMzQUuDBE9X00jQ3XCETSQXgy)UvaUpDCFPfh3DYjInG2EwGfNZn0RKnW0A8AIfzDVz(oXI5BR1oTbW2ZcS4bR3byVB5pXsOU(t4999mR5QZpqaSxCTCvFBTDLLmO6nb2v9TU8v2uX6f(Rf1Rw7B4A7XC7EztxBjkM6QZOaDTfVPPGxB71OobAd4l5uyjWzFXKSb(daf0JtX(S6(RT4JPFaU9qB9aWT4RzFd8(nO81wCQ1purFhq(DwIF2lyRdG3V883Tp97)oljC2pa3Il5oc8D)IHgrYBa)X9rRiBTk3O(ohWrhQkTh13LEmg4T)ECwXwqobGK0aBei0wiLJXI1FEdBKtkhmSNSb5107W)n8nzcPPZO)6VHVztOiW0)D21GX07uVyliV9myVDJEiRb6tZN(BJvGqY2P3LfKxckwNPG)wub6)8kYMfTYBLHDZpA3CNdMQQtgoEMOyyo5wCaWVlAm(vZ5B38xEP8JbIDXrqUJwsd3saEDUDliqLD)wOqgKhceYL9iHiXL7jYG8fCzKiGhbKWKgtcU9PH1qy2tgxecf6Og3OhIOo3PiG8x1yKFIYS)pVkpiasKfRFIRb86RBmV2Xv1bgphq9Jy)c7y38xBzmIxAh7MBb9PhkCa2)UgJ9VIRgBB9UiMPdeSu1M6DZV9gJpVmEUmUBKmbc47Bmbma02mUaWyB0sKY8gID(qc9zzTIvSJQ9nuIi1k)Hgbu5OZBmzEUieP4PHvAbdD1qRa0989Da9Xna6Mc76g6Khy7d5RbtTPiQwN6AaZ7qswKCj0J7U3slIuudOUwQlbcOUPyO1IRrrFlFkPgibdVGE8Lky0McxEGXwXiSwB0iDqkBH0DZFpkj2MyXykcBTOxHE)5Mo1AsydWotXKQf2z7mjZKIV(Qp1am0uCNAHHANrzgqnXvEQb4KPqj4B0d3btCUy34RFKhQEbVXHvE7U50L9wX9X)82CPhVnxe1ieUbsWfi2QWSsIQ9010IisRDKnGr9MhdNRwkYfQCESueD4kdgI228fQLS9L6EFrKAT)P6ALfIprQOzArZkc4qnVmEnLO)b4AHPAhZyMzJsdQc4jOGQ9PBZ6UWa8FS9LDl7o3Ukd2D(7TeBGdRHkI9pPKLirDQrPw1coqzIgc8adpLI2cwNnMa5NXg1mRiG8BuMwTG81ZN0eBqFuCISXCHkVqAu5ovKJmWLAugF1Nl5Mf07mk8FocdqB5OtMrJFKi4ruhezyTkvqrQ1J3SoTq(2O8LRV8vVou(XDj0GMrk8GAF12yY(wDcEnRX)UkdESPKY7bcN4M3k2ntm5mmNaRYuVX)ECIUCnzYFgHdDu758u8BqmimYOKo)mRz4gEVRAc1)EgMOtn1da9mfyvLS73uro0Av1lVWuLc9GEPXZWjt(znCv4uhgOc3t8m2tL6T2laG8Bu1gTG8PxMo60T4vQtliy4UasLq1BPaqHnQohhBqBvo()WCh)il5PFrI1VwkBDwXyM42QKb5W4wUVh9RthSG2s5AGG2LYS49rJOkXRQCjeSrXwrtSduZRNs56LCQ71BziMwB(cZACPs4YG3ipPCgc(jsz3OFj9Oyy073hrIclTt(tm3OvvwPdkbHpNzO17eSIOAD(7VdEuU8J1qrGEnUSWflCi9vtaSIJzur(KXUhDrZxTutvJBU7QvxooFOgeIpiT8BSfSbW5MVgP2NhSHXy1slODWzpD)hPP9YU1mWuxRsWwgmFRyaCPX27EqnaUSvjozLDpGwRS5vmsSm3mxBqmXcdCcSYf)xBpHju(UHA3HAOgRk9PtXE7MIsnYQ9UmDzJwJ6kfl1Lb01RakteOLcwUSvlfEZPqPwRuR1gVYZe4MqLTQDXoOsBl1PB98QSvCuf2U969vLkR0vnEx2O0J6YA02vMPJWBx28TcxnoOcL7bUC0(s9i5mkq)ogHAEgqnmBI941GLgRU0uSKJ3QwvAeAFZKxHXnH2bnVIjTQFuvX1TVrz07bxnUGUu9tuDFVN0(0LCswDAtczO)J7A6DgqlyfTpfLQzfnoBptCboqmC2(uVRlmtr6nNW2ehDTzz1lVHE)9nVLe()nxAyQrJkzjwDszQJCgx1aHReSdXICiho0qeOjnVlxTielvt)GF9Jz06gp)LmGgL5MlG9Tse4jF5BT1KwTe8vW0DVk4dCvnUK)7QQ(xTKSVQVN1ArSZULtAtLnnFZfC4YIO9T7ZfNOwjj057OntPhyPrax1T8HBgD(LTNhxzkh5AwIBzcw1P0wvoJEkfKn3fGun)BTSHXGvx6AjzO61BegLAFhW0a33kXfVYyQqh04Ix1(KrCX2RA)Hvlps7N71UM7v(QwTjh7ap6R4iux1(8OCZlQLgrf3zEnXTC7Z5Og0XxGWmTpZHAqpAnGWEfx1tQyUTbx38pWdJ74QYfGwliPoXkhMu45ymsn6TgRrDdWiM0HuGC(nUhl5FoIzBFOWiAL7fpPtqbi0eEJDGXw1W6gIdY)s0L)CAv(OwR1Cl9rTFTA8BnoLTtFjL9umivO3nj4q0ONCo8fe9AOAdh3sjYBqzO4kYvGcVymHBcfXrrropBhRsQfZ5AKeO66M7dRsAAtt0MpHbP)ukZuNBS4rnvJLIBjQEvcjger6ka8RljKgAEaLqQZnwcPMj2sX9rGuZcm7Wr603GUMwowZFA7YnHs4q)yCsnZNoJt8tdcr91a(U55A10lmPMw)zZuFuf(nycvZdOZuOqHYdR9w8qg941PDTAu9oJDs6eoQxw3AN9vCWm4NGn4RXYX6s5NRP9o1q)DMs1Kd1SFBwefVZEMavIDLGewxDm0ShPULKR4TPHi3wjHM3zpmDlNybnQdUsdoOgFiWoZvK2adCHeKCCivPfXuo926C)gQQqWcT1KiNvKBdqY21BQoJs9m(Q2)OD1LQNpvrtU(rpLK2x)WKCLgu(uHJCmh6dL5RR2wRUFTXy2ZHqfcIUHFLLTzFXw3kdTgQMybgud48yP7XefMvhUTzAK7v18)Cvs2anVpLhVqoo3Gknav1Gl5e56CaZ3jnIeN5BkgyIuthKnr8lAgJZL(1vt1ZgHYR4UPHSq80sb5xtnytQY6anysjHJMVgrTP0vvmsU7h(3VI(zBLWJeD(LZoE3eQjbV0Vsx9IeA(c9W3vfeDVIzsr6vqqLO9oD32z8K09Bx10jvqNTCe2d(51mEw2OUUAnL4oZYefTvKCtvLE1Fic(HUoV6eJliwS2HfdTzFo2q61FjXmn7ZXwTpTxENt10(MiQqtu74TtlpJdTbJCoQAhqEA4NZc(oa4kVksTtBVVqSYQlxRYpCx3QmhUiK24073yF1sVSQo6TpqbMlqTZaVdXKR4Et7KUB)Hd7Df69BiLYuPmu0S2rFNuo197TfRXa9KdEnDZmPETqpJZmykOmSXIdtNzRm6lehTO(LY4KAfe2iqzatehG25EU6OVscjn2zPTPblt2SWR84p3a0xLKMhMx4R96qvpf5RHJVW)tVTfrEXH4FD6)3d]] )

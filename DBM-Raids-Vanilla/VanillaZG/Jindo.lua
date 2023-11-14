@@ -9,14 +9,14 @@ end
 local mod	= DBM:NewMod("Jindo", "DBM-Raids-Vanilla", catID)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230814031337")
+mod:SetRevision("20231109032614")
 mod:SetCreatureID(11380)
 mod:SetEncounterID(792)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 24306 17172 24261",
-	"SPELL_AURA_REMOVED 17172",
+	"SPELL_AURA_REMOVED 17172 24306",
 	"SPELL_CAST_SUCCESS 24466",
 	"SPELL_SUMMON 24309 24262"
 )
@@ -53,6 +53,8 @@ end
 function mod:SPELL_AURA_REMOVED(args)
 	if args:IsSpell(17172) and args:IsDestTypePlayer() then
 		timerHex:Stop(args.destName)
+	elseif args:IsSpell(24306) then
+		timerDelusion:Stop(args.destName)
 	end
 end
 

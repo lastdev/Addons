@@ -1,5 +1,5 @@
-## Interface: 100107
-## Version: 1.19
+## Interface: 100200
+## Version: 1.21
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Spell_arcane_teleportdalaran
 ## Title: Loose Pebbles
@@ -26,12 +26,11 @@
 ## Notes-ruRU: Помогает найти |cFF8258FAШатающийся камушек
 ## Notes-zhCN: 帮助你找寻|cFF8258FA松动的卵石
 ## Notes-zhTW: 幫助你找尋|cFF8258FA鬆動的卵石
-## X-Category: Map & Minimap
-## X-Curse-Project-ID: 487213
-## X-WoWI-ID: 26041
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_LoosePebblesDB
 ## AddonCompartmentFunc: HandyNotes_LoosePebbles_OnAddonCompartmentClick
+## AddonCompartmentFuncOnEnter: HandyNotes_LoosePebbles_OnAddonCompartmentEnter
+## AddonCompartmentFuncOnLeave: HandyNotes_LoosePebbles_OnAddonCompartmentLeave
 
 Core.lua
 Data.lua

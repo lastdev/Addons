@@ -95,7 +95,6 @@ L['elemental_storm_snowstorm'] = nil
 
 L['elemental_storm_brakenhide_hollow'] = nil
 L['elemental_storm_cobalt_assembly'] = nil
-L['elemental_storm_dragonbane_keep'] = nil
 L['elemental_storm_imbu'] = nil
 L['elemental_storm_nokhudon_hold'] = nil
 L['elemental_storm_ohniri_springs'] = nil
@@ -146,6 +145,22 @@ L['options_icons_frostbound_chest'] = '서리결속 보관함'
 L['options_icons_frostbound_chest_desc'] = nil
 
 L['fyrakk_assault_label'] = nil
+L['fyrakk_secured_shipment'] = nil
+
+L['shadowflame_forge_label'] = nil
+L['shadowflame_forge_note'] = nil
+L['shadowflame_blacksmithing_anvil_label'] = nil
+L['shadowflame_blacksmithing_anvil_note'] = nil
+L['shadowflame_leatherworking_table_label'] = nil
+L['shadowflame_leatherworking_table_note'] = nil
+L['shadowflame_incantation_table_label'] = nil
+L['shadowflame_incantation_table_note'] = nil
+L['azure_loom_label'] = nil
+L['azure_loom_note'] = nil
+L['temporal_loom_label'] = nil
+L['temporal_loom_note'] = nil
+L['earthwarders_forge_label'] = nil
+L['earthwarders_forge_note'] = nil
 
 L['dreamsurge_sublabel'] = nil
 L['celestine_vendor_note'] = nil
@@ -507,6 +522,7 @@ L['pt_jewel_painters_pretty_jewel_note'] = '등불 안에 있음'
 L['pt_leath_decayed_scales_note'] = '바구니 안에 있음'
 L['pt_script_counterfeit_darkmoon_deck_note'] = nil
 L['pt_script_forgetful_apprentices_tome_note'] = '큰 망원경 근처 탁자 위에 있음'
+L['pt_script_forgetful_apprentices_tome_algethera_note'] = nil
 L['pt_script_how_to_train_your_whelpling_note'] = nil
 L['pt_smith_draconic_flux_note'] = '건물 내에 있음'
 L['pt_tailor_ancient_dragonweave_bolt_note'] = '모래밭에 놓여있는 작은 갈색 책'
@@ -735,6 +751,7 @@ L['options_icons_ritual_offering_desc'] = nil
 L['nal_kskol_reliquary_label'] = nil
 L['nal_kskol_reliquary_note'] = nil
 
+L['busted_wyrmhole_generator_note'] = nil
 L['molten_scoutbot_note'] = nil
 L['bolts_and_brass_note'] = nil
 
@@ -772,6 +789,161 @@ L['zaralek_event_inactive'] = nil
 
 L['options_icons_zone_event'] = nil
 L['options_icons_zone_event_desc'] = nil
+
+-------------------------------------------------------------------------------
+------------------------------- Emerald Dream ---------------------------------
+-------------------------------------------------------------------------------
+
+L['options_icons_emerald_dream_safari'] = '{achievement:19401}'
+L['options_icons_emerald_dream_safari_desc'] = nil
+
+L['envoy_of_winter_note'] = nil
+L['fruitface_note'] = nil
+L['greedy_gessie_note'] = nil
+L['nuoberon_note'] = nil
+L['reefbreaker_moruud_note'] = nil
+L['surging_lasher_note'] = nil
+
+L['in_a_tree'] = nil
+L['inside_building'] = nil
+
+L['hidden_moonkin_stash_label'] = nil
+L['magical_bloom_note'] = nil
+L['pineshrew_cache_note'] = nil
+L['reliquary_of_ashamane_note'] = nil
+L['reliquary_of_aviana_note'] = nil
+L['reliquary_of_goldrinn_note'] = nil
+L['reliquary_of_ursol_note'] = nil
+L['triflesnatchs_roving_trove_note'] = nil
+
+L['unwaking_echo_label'] = nil
+L['unwaking_echo_note'] = nil
+
+L['amirdrassil_defenders_shield_note'] = nil
+L['dreamtalon_claw_note'] = nil
+L['essence_of_dreams_note'] = nil
+L['exceedingly_soft_wildercloth_note'] = nil
+L['experimental_dreamcatcher_note'] = nil
+L['grove_keepers_pillar_note'] = nil
+L['handful_of_pebbles_note'] = nil
+L['molted_faerie_dragon_scales_note'] = nil
+L['petrified_hope_note'] = nil
+L['plush_pillow_note'] = nil
+L['snuggle_buddy_note'] = nil
+
+L['dreamseed_soil_label'] = nil
+L['dreamseed_soil_note'] = nil
+L['dreamseed_cache'] = nil
+
+L['options_icons_dream_of_seeds'] = '{achievement:19013}'
+L['options_icons_dream_of_seeds_desc'] = nil
+
+L['bloom_man_group_suffix'] = nil
+L['dream_chaser_suffix'] = nil
+L['dreamfruit_label'] = nil
+L['dreamfruit_note_1'] = nil
+L['dreamfruit_note_2'] = nil
+L['options_icons_dreamfruit'] = nil
+L['options_icons_dreamfruit_desc'] = nil
+
+L['options_icons_moonkin_hatchling'] = nil
+L['options_icons_moonkin_hatchling_desc'] = nil
+L['moonkin_hatchling_note'] = nil
+
+L['druid_glyphs_label'] = nil
+L['druid_glyphs_sublabel'] = nil
+L['druid_glyphs_note'] = nil
+
+L['pollenfused_bristlebruin_fur_sample_note'] = nil
+
+L['mbc_note_start'] = nil
+L['mbc_note_end'] = nil
+
+L['mbc_vial_b'] = nil
+L['mbc_vial_d'] = nil
+L['mbc_vial_e'] = nil
+L['mbc_vial_k'] = nil
+L['mbc_vial_n'] = nil
+L['mbc_vial_o'] = nil
+
+L['mbc_vial_d_location'] = nil
+L['mbc_vial_e_location'] = nil
+L['mbc_vial_k_location'] = nil
+L['mbc_vial_n_location'] = nil
+L['mbc_vial_o_location'] = nil
+
+L['mbc_vial_location'] = nil
+
+L['mbc_moonwell_label'] = nil
+L['mbc_feral_dreamstone_label'] = nil
+
+L['azure_somnowl_note'] = nil
+
+L['slumbering_somnowl_note_a'] = nil
+L['slumbering_somnowl_note_b'] = nil
+L['slumbering_somnowl_note_c'] = nil
+L['slumbering_somnowl_note_d'] = nil
+L['slumbering_somnowl_note_e'] = nil
+
+L['thaelishar_vendor_note'] = nil
+L['silent_mark_label'] = nil
+L['silent_mark_note'] = nil
+
+L['amirdrassil'] = nil
+L['prismatic_location'] = nil
+L['prismatic_note_1'] = nil
+L['prismatic_note_2'] = nil
+L['prismatic_note_3'] = nil
+L['prismatic_note_4'] = nil
+L['prismatic_note_5'] = nil
+
+L['options_icons_druid_glyph'] = nil
+L['options_icons_druid_glyph_desc'] = nil
+
+L['elianna_vendor_note'] = nil
+L['dream_energy_name'] = nil
+L['dream_energy_info'] = '%s: %d/%d (%.1f%%)'
+
+L['sylvia_vendor_note'] = nil
+
+L['somnut'] = nil
+L['options_icons_somnut'] = nil
+L['options_icons_somnut_desc'] = nil
+
+L['improvised_leafbed_note'] = nil
+L['kalandu_note'] = nil
+
+L['renewed_dream'] = nil
+
+L['ochre_note'] = nil
+L['ochre_note_stage1'] = nil
+L['ochre_note_stage2'] = nil
+L['ochre_note_stage3'] = nil
+L['ochre_note_stage4'] = nil
+L['ochre_note_stage5'] = nil
+
+L['thorn_beast_stag'] = nil
+L['thorn_beast_saber'] = nil
+L['thorn_beast_bear'] = nil
+
+L['thornbeast_disclaimer'] = nil
+
+L['thorn_laden_heart_note_1'] = nil
+L['thorn_laden_heart_note_2'] = nil
+
+L['athainne_note_1'] = nil
+L['athainne_note_2'] = nil
+
+L['ulfar_note_1'] = nil
+L['ulfar_note_2'] = nil
+
+L['thorn_stag_note'] = nil
+L['thorn_saber_note'] = nil
+L['thorn_bear_note'] = nil
+
+L['nahqi_note'] = nil
+
+L['sulraka_note'] = nil
 
 -------------------------------------------------------------------------------
 ----------------------------- SECRETS OF AZEROTH ------------------------------
@@ -952,3 +1124,34 @@ L['soa_mjj_list_note'] = nil
 L['soa_mjj_part1_note'] = nil
 L['soa_mjj_part2_note'] = nil
 L['soa_mjj_part3_note'] = nil
+
+-------------------------------------------------------------------------------
+------------------------------- WARCRAFT RUMBLE -------------------------------
+-------------------------------------------------------------------------------
+
+L['rumble_coin_bag'] = nil
+L['rumble_foil_bag'] = nil
+L['rumble_both_bags'] = nil
+L['warcraft_rumble_machine'] = nil
+
+L['wr_ohn_both_01'] = nil
+L['wr_ohn_foil_02'] = nil
+L['wr_sto_coin_01'] = nil
+L['wr_sto_foil_01'] = nil
+L['wr_sto_foil_02'] = nil
+L['wr_tas_both_01'] = nil
+L['wr_tas_foil_01'] = nil
+L['wr_tha_both_01'] = nil
+L['wr_tha_foil_01'] = nil
+L['wr_tws_both_01'] = nil
+L['wr_tws_foil_01'] = nil
+L['wr_tws_foil_02'] = nil
+L['wr_val_coin_01'] = nil
+L['wr_val_foil_01'] = nil
+L['wr_val_machine'] = nil
+L['wr_org_coin_01'] = nil
+L['wr_org_foil_01'] = nil
+L['wr_dur_foil_01'] = nil
+
+L['options_icons_warcraft_rumble'] = nil
+L['options_icons_warcraft_rumble_desc'] = nil

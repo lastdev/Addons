@@ -263,8 +263,12 @@ local factions = {
 	{ id = 2526, name = GetFactionInfoByID(2526) },     -- Winterpelt Furbolg
 	{ id = 2544, name = GetFactionInfoByID(2544) },     -- Artisan's Consortium - Dragon Isles Branch
 	{ id = 2550, name = GetFactionInfoByID(2550) },     -- Cobalt Assembly
-	{ id = 2517, name = GetFactionInfoByID(2517) },     -- Sabellian
-	{ id = 2518, name = GetFactionInfoByID(2518) },     -- Wrathion
+	{ id = 2517, name = GetFactionInfoByID(2517) },     -- Wrathion
+	{ id = 2518, name = GetFactionInfoByID(2518) },     -- Sabellian
+	{ id = 2553, name = GetFactionInfoByID(2553) },     -- Soridormi
+	{ id = 2564, name = GetFactionInfoByID(2564) },     -- Loamm Niffen
+	{ id = 2568, name = GetFactionInfoByID(2568) },     -- Glimmerogg Racer
+	{ id = 2574, name = GetFactionInfoByID(2574) },     -- Dream Wardens	
 }
 
 local FactionUIDsRev = {}

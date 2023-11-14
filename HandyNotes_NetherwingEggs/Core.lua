@@ -3,7 +3,7 @@
 
                                            Netherwing Eggs
 
-                                      v2.01 - 16th October 2023
+                                      v2.03 - 29th October 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -896,7 +896,7 @@ local function OnEventHandler( self, event, questID )
 		-- will just used the old cached data
 		-- Solution: A hack of course. Save the quest ID. Beware that a couple of
 		-- dailies are grouped
-		ns.questCompleted = true
+	--	ns.questCompleted = true
 
 --		pluginHandler:GetNodes2( ns.CurrentMap )
 --		pluginHandler:Refresh()
@@ -920,19 +920,21 @@ do
     bucket.elapsed = 0
     bucket:SetScript("OnUpdate", function(self, elapsed)
 		if ns.questCompleted then
+		--	UIParentLoadAddOn( "NetherwingEggs" )
 			ns.questCompleted = nil
 			self.elapsed = 0
 			-- All of this code has no effect whatsoever. Still searching for a solution
-			for i = 1, 500 do
+		--[[	for i = 1, 500 do
 				if _G["HandyNotesPin"..tostring(i)] and _G["HandyNotesPin"..tostring(i)].pluginName == "NetherwingEggs" then
 					_G["HandyNotesPin"..tostring(i)]:Hide()
 					_G["HandyNotesPin"..tostring(i)] = nil
-					print("Hide/nill for pin #"..i)
+			--		print("Hide/nill for pin #"..i)
 				end
 			end
-			pluginHandler:GetNodes2( ns.CurrentMap )
-			pluginHandler:Refresh()
+			pluginHandler:GetNodes2( ns.CurrentMap )]]
+--			pluginHandler:Refresh()
 --			Minimap:UpdateBlips()
+--			HandyNotes:UpdateMinimapPlugin( "NetherwingEggs" )
 		else
 			self.elapsed = self.elapsed + elapsed
 			if self.elapsed > 1.5 then

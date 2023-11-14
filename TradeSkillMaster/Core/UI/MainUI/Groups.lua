@@ -16,6 +16,7 @@ local TextureAtlas = TSM.Include("Util.TextureAtlas")
 local ItemString = TSM.Include("Util.ItemString")
 local Database = TSM.Include("Util.Database")
 local SmartMap = TSM.Include("Util.SmartMap")
+local GroupPath = TSM.Include("Util.GroupPath")
 local CustomPrice = TSM.Include("Service.CustomPrice")
 local ItemInfo = TSM.Include("Service.ItemInfo")
 local ItemFilter = TSM.Include("Service.ItemFilter")
@@ -370,7 +371,7 @@ function private.GetGroupsPage(_, button)
 	elseif button == L["Items"] then
 		UIUtils.AnalyticsRecordPathChange("main", "groups", "items")
 		assert(private.currentGroupPath ~= TSM.CONST.ROOT_GROUP_PATH)
-		local hasParent = TSM.Groups.Path.GetParent(private.currentGroupPath) ~= TSM.CONST.ROOT_GROUP_PATH
+		local hasParent = GroupPath.GetParent(private.currentGroupPath) ~= TSM.CONST.ROOT_GROUP_PATH
 		local frame = UIElements.New("Frame", "items")
 			:SetLayout("VERTICAL")
 			:SetPadding(8)
@@ -726,7 +727,7 @@ function private.GroupSearchOnValueChanged(input)
 		else
 			titleFrame:GetElement("text")
 				:SetTextColor(Theme.GetGroupColorKey(select('#', strsplit(TSM.CONST.GROUP_SEP, private.currentGroupPath))))
-				:SetText(TSM.Groups.Path.GetName(private.currentGroupPath))
+				:SetText(GroupPath.GetName(private.currentGroupPath))
 		end
 		titleFrame:GetElement("renameBtn"):Show()
 		titleFrame:GetElement("exportBtn"):Show()
@@ -950,7 +951,7 @@ function private.ImportInputOnValueChanged(input)
 	private.importExportGroupDB:TruncateAndBulkInsertStart()
 	local importGroupName = TSM.Groups.ImportExport.GetPendingImportGroupName()
 	for groupPath in TSM.Groups.ImportExport.PendingImportGroupIterator() do
-		groupPath = groupPath == TSM.CONST.ROOT_GROUP_PATH and importGroupName or TSM.Groups.Path.Join(importGroupName, groupPath)
+		groupPath = groupPath == TSM.CONST.ROOT_GROUP_PATH and importGroupName or GroupPath.Join(importGroupName, groupPath)
 		local orderStr = gsub(groupPath, TSM.CONST.GROUP_SEP, "\001")
 		orderStr = strlower(orderStr)
 		private.importExportGroupDB:BulkInsertNewRow(groupPath, orderStr)
@@ -1028,19 +1029,19 @@ function private.ImportGroupTreeOnGroupSelectionChanged(groupTree)
 	groupTree:SetGroupSelected(importGroupName, true)
 	-- make sure the parent of any selected groups are also selected
 	for relativeGroupPath in TSM.Groups.ImportExport.PendingImportGroupIterator() do
-		local groupPath = relativeGroupPath == TSM.CONST.ROOT_GROUP_PATH and importGroupName or TSM.Groups.Path.Join(importGroupName, relativeGroupPath)
+		local groupPath = relativeGroupPath == TSM.CONST.ROOT_GROUP_PATH and importGroupName or GroupPath.Join(importGroupName, relativeGroupPath)
 		local isSelected = groupTree:IsGroupSelected(groupPath)
 		TSM.Groups.ImportExport.SetGroupFiltered(relativeGroupPath, not isSelected)
 		if isSelected then
-			local tempGroupPath = TSM.Groups.Path.Split(groupPath)
+			local tempGroupPath = GroupPath.Split(groupPath)
 			while tempGroupPath do
 				groupTree:SetGroupSelected(tempGroupPath, true)
-				tempGroupPath = TSM.Groups.Path.Split(tempGroupPath)
+				tempGroupPath = GroupPath.Split(tempGroupPath)
 			end
 		end
 	end
 	for relativeGroupPath in TSM.Groups.ImportExport.PendingImportGroupIterator() do
-		local groupPath = relativeGroupPath == TSM.CONST.ROOT_GROUP_PATH and importGroupName or TSM.Groups.Path.Join(importGroupName, relativeGroupPath)
+		local groupPath = relativeGroupPath == TSM.CONST.ROOT_GROUP_PATH and importGroupName or GroupPath.Join(importGroupName, relativeGroupPath)
 		local isSelected = groupTree:IsGroupSelected(groupPath)
 		TSM.Groups.ImportExport.SetGroupFiltered(relativeGroupPath, not isSelected)
 	end
@@ -1094,7 +1095,7 @@ function private.GroupTreeOnGroupSelected(groupTree, path)
 			:SetTextureAndSize(TextureAtlas.GetColoredKey("iconPack.18x18/Folder", groupColorKey))
 		titleFrame:GetElement("text")
 			:SetTextColor(groupColorKey)
-			:SetText(TSM.Groups.Path.GetName(path))
+			:SetText(GroupPath.GetName(path))
 			:SetEditing(false)
 		titleFrame:GetElement("renameBtn"):Show()
 		titleFrame:GetElement("exportBtn"):Show()
@@ -1135,7 +1136,7 @@ end
 
 function private.GroupNameChanged(text, newValue)
 	newValue = strtrim(newValue)
-	local parent = TSM.Groups.Path.GetParent(private.currentGroupPath)
+	local parent = GroupPath.GetParent(private.currentGroupPath)
 	local newPath = parent and parent ~= TSM.CONST.ROOT_GROUP_PATH and (parent..TSM.CONST.GROUP_SEP..newValue) or newValue
 	if newPath == private.currentGroupPath then
 		-- didn't change
@@ -1173,8 +1174,8 @@ function private.ExportBtnOnClick(button)
 	private.importExportGroupDB:TruncateAndBulkInsertStart()
 	for _, groupPath in TSM.Groups.GroupIterator() do
 		local relGroupPath = nil
-		if TSM.Groups.Path.IsChild(groupPath, private.currentGroupPath) then
-			relGroupPath = TSM.Groups.Path.GetRelative(groupPath, private.currentGroupPath)
+		if GroupPath.IsChild(groupPath, private.currentGroupPath) then
+			relGroupPath = GroupPath.GetRelative(groupPath, private.currentGroupPath)
 		end
 		if relGroupPath then
 			private.exportSubGroups[relGroupPath] = true
@@ -1186,7 +1187,7 @@ function private.ExportBtnOnClick(button)
 	private.importExportGroupDB:BulkInsertEnd()
 
 	local str, numItems, numSubGroups, numOperations, numCustomSources = TSM.Groups.ImportExport.GenerateExport(private.currentGroupPath, private.exportSubGroups, false, false)
-	local coloredGroupName = Theme.GetGroupColor(select('#', strsplit(TSM.CONST.GROUP_SEP, private.currentGroupPath))):ColorText(TSM.Groups.Path.GetName(private.currentGroupPath))
+	local coloredGroupName = Theme.GetGroupColor(select('#', strsplit(TSM.CONST.GROUP_SEP, private.currentGroupPath))):ColorText(GroupPath.GetName(private.currentGroupPath))
 	button:GetBaseElement():ShowDialogFrame(UIElements.New("Frame", "frame")
 		:SetLayout("VERTICAL")
 		:SetSize(658, 408)
@@ -1498,7 +1499,7 @@ end
 function private.GroupedItemsOnSelectionChanged(itemList)
 	local button = itemList:GetElement("__parent.__parent.btn")
 	local numSelected = itemList:GetNumSelected()
-	local parentGroup = TSM.Groups.Path.GetParent(private.currentGroupPath)
+	local parentGroup = GroupPath.GetParent(private.currentGroupPath)
 	parentGroup = parentGroup ~= TSM.CONST.ROOT_GROUP_PATH and parentGroup or nil
 	if parentGroup then
 		button:SetModifierText(numSelected == 0 and L["Move to Parent Group"] or format(L["Move %d |4Item:Items"], numSelected), "SHIFT")
@@ -1550,7 +1551,7 @@ end
 
 function private.RemoveItemsOnClick(button)
 	local itemList = button:GetElement("__parent.content.itemList")
-	local parentGroup = TSM.Groups.Path.GetParent(private.currentGroupPath)
+	local parentGroup = GroupPath.GetParent(private.currentGroupPath)
 	parentGroup = parentGroup ~= TSM.CONST.ROOT_GROUP_PATH and parentGroup or nil
 	local targetGroup = IsShiftKeyDown() and parentGroup or nil
 	local removedItems = TempTable.Acquire()
@@ -1770,7 +1771,7 @@ function private.CreateUngroupedBagItemQuery()
 end
 
 function private.CreateParentGroupItemQuery()
-	local parentGroupPath = TSM.Groups.Path.GetParent(private.currentGroupPath)
+	local parentGroupPath = GroupPath.GetParent(private.currentGroupPath)
 	return TSM.Groups.CreateItemsQuery(parentGroupPath, false)
 		:Select("itemString", "texture", "coloredItemName")
 		:VirtualField("name", "string", ItemInfo.GetName, "itemString", "?")

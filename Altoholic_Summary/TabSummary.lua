@@ -751,7 +751,11 @@ addon:Controller("AltoholicUI.TabSummaryCategoriesList", {
 					{ text = format("%s9.1|r %s", colors.green, L["PATCH_9.1"]), profile = 17 },
 					{ text = format("%s9.2|r %s", colors.green, L["PATCH_9.2"]), profile = 23 },
 				}},
-				{ text = EXPANSION_NAME9, profile = 27 },
+				{ text = EXPANSION_NAME9, subMenu = {
+					{ text = format("%s10.0|r %s", colors.green, L["PATCH_X.0"]), profile = 27 },
+					{ text = format("%s10.1|r %s", colors.green, L["PATCH_10.1"]), profile = 28 },
+					{ text = format("%s10.2|r %s", colors.green, L["PATCH_10.2"]), profile = 29 },
+				}},				
 			}},
 			-- Expansion Features
 			{ text = GetCategoryInfo(15301), subMenu = {
@@ -791,7 +795,7 @@ addon:Controller("AltoholicUI.TabSummaryCategoriesList", {
 				-- Weekly Best
 				{ text = L["Mythic+ Keystone"], profile = 22 },
 				-- Weekly Best Runs per dungeon
-				{ text = CHALLENGE_MODE_WEEKLY_BEST, profile = 28 },
+				{ text = CHALLENGE_MODE_WEEKLY_BEST, profile = 30 },
 				-- Weekly Rewards
 				{ text = REWARDS, profile = 26 },
 			}},

@@ -423,6 +423,7 @@ local maps = {
   ['valdrakken'] = 2112,
   ['forbidden_reach'] = 2151,
   ['zaralek_cavern'] = 2133,
+  ['emerald_dream'] = 2200,
 
   -- Minimaps.
   ['siege_creche'] = 2100,
@@ -430,6 +431,8 @@ local maps = {
   ['war_creche'] = 2102,
   ['froststone_vault'] = 2154,
   ['zaralek_cavern_mini'] = 2184,
+  ['sortheril_barrow_den'] = 2253,
+  ['barrows_of_reverie'] = 2254,
 }
 
 -- Iterate all maps and assign their ids, so we can use them for our points.

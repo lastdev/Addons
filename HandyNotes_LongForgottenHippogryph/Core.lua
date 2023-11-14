@@ -3,7 +3,7 @@
 
                                       Long-Forgotten Hippogryph
 
-                                      v1.19 - 14th October 2023
+                                      v1.20 - 28th October 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----

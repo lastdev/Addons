@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("StonecoreTrash", "DBM-Party-Cataclysm", 7)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231002202545")
+mod:SetRevision("20231026112110")
 --mod:SetModelID(47785)
 mod:SetZone(725)
 
@@ -29,7 +29,7 @@ local warnForceofEarth							= mod:NewCastAnnounce(81459, 4)
 
 local specWarnForceofEarth						= mod:NewSpecialWarningInterrupt(81459, "HasInterrupt", nil, nil, 1, 2)
 
---local timerForceofEarthCD						= mod:NewCDTimer(14.1, 81459, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+--local timerForceofEarthCD						= mod:NewCDNPTimer(14.1, 81459, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 
 
 --local playerName = UnitName("player")

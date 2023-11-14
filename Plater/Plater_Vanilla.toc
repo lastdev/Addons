@@ -1,11 +1,11 @@
-## Interface: 11403
+## Interface: 11404
 ## Title: Plater
 ## Notes: Nameplate addon designed for advanced users.
 ## SavedVariables: PlaterDB, PlaterLanguage, PlaterLogs
 ## SavedVariablesPerCharacter: PlaterDBChr
 ## IconTexture-blank: 982414
 ## IconTexture: Interface\AddOns\Plater\images\cast_bar
-## Version: Plater-v564.2-Classic
+## Version: Plater-v565.1-Classic
 ## X-Curse-Project-ID: 100547
 ## X-Wago-ID: kRNLep6o
 
@@ -32,6 +32,9 @@ Definitions.lua
 
 Plater_DefaultSettings.lua
 
+Plater_Data.lua
+Plater_Logs.lua
+Plater_PerformanceUnits.lua
 Plater.lua
 Plater_Comms.lua
 Plater_Auras.lua

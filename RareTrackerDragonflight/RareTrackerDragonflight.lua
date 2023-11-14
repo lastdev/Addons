@@ -597,7 +597,7 @@ RareTracker.RegisterRaresForModule({
         [203593] = {L[203593], 75297, {57.78, 69.10}}, --"Underlight Queen"
     },
     ["FindMatchForText"] = function(self, text)
-        -- Check if any of the drill rig designations is contained in the broadcast text.
+        -- Check whether the chat message matches one of the known annoucements.
         for designation, npc_id in pairs(zaralek_rare_announcements) do
             if text:find(designation) then
                 self:ProcessEntityAlive(npc_id, npc_id, nil, nil, false)
@@ -605,4 +605,40 @@ RareTracker.RegisterRaresForModule({
             end
         end
     end
+})
+
+RareTracker.RegisterRaresForModule({
+    -- Define the zone(s) in which the rares are present.
+    ["target_zones"] = {2200, 2254},
+    ["zone_name"] = "Emerald Dream",
+    ["plugin_name"] = "Emerald Dream",
+    ["plugin_name_abbreviation"] = "Dragonflight",
+    ["entities"] = {
+        --npc_id = {name, quest_id, coordinates}
+        [209113] = {L[209113], 77570, {61.7, 71.6}}, --"Nuoberon"
+        [209898] = {L[209898], 77532, {64.27, 83.87}}, --"Reefbreaker Moruud"
+        [209929] = {L[209929], 77878, {34.6, 63.2}}, --"Envoy of Winter"
+        [209365] = {L[209365], 77863, {61.8, 52.7}}, --"Splinterlimb"
+        [209909] = {L[209909], 77862, {65.8, 62.5}}, --"Crabtankerous"
+        [209911] = {L[209911], 77990, {26.0, 27.0}}, --"The Apostle"
+        [210111] = {L[210111], 78263, {57.0, 51.7}}, --"Surging Lasher"
+        [210046] = {L[210046], 78211, {40.3, 49.2}}, --"Keen-eyed Cian"
+        [210050] = {L[210050], 77942, {51.1, 31.6}}, --"Bloodstripe Great Ray"
+        [208658] = {L[208658], 77941, {45.7, 19.2}}, --"Moltenbinder's Disciple"
+        [210070] = {L[210070], 77940, {54.5, 37.0}}, --"Mosa Umbramane"
+        [210161] = {L[210161], 77890, {44.7, 39.1}}, --"Ristar the Rabid"
+        [209893] = {L[209893], 78015, {30.0, 21.2}}, --"Firebrand Fystia"
+        [209936] = {L[209936], 77982, {54.0, 41.1}}, --"Greedy Gessie"
+        [209902] = {L[209902], 77994, nil}, --"Talthonei Ashwhisper"
+        [209620] = {L[209620], 77864, {58.6, 51.2}}, --"Ignit the Firebranded"
+        [209913] = {L[209913], 77846, {63.4, 71.6}}, --"Fruitface"
+        [209919] = {L[209919], 77989, {37.6, 31.8}}, --"Isaqa"
+        [210045] = {L[210045], 78210, {40.4, 72.2}}, --"Moragh the Slothful"
+        [210047] = {L[210047], 78212, {43.48, 46.96}}, --"Somnambulant Ori"
+        [210051] = {L[210051], 78213, {41.6, 73.2}}, --"Matriarch Keevah"
+        [210064] = {L[210064], 77943, {63.8, 36.2}}, --"Molten Leadspike"
+        [210075] = {L[210075], 77944, {47.5, 30.5}}, --"Henri Snufftail"
+        [210508] = {L[210508], 78214, {38.2, 61.7}}, --"Voracious Mikanji"
+        [210559] = {L[210559], 78039, {22.9, 32.4}}, --"Balboan"
+    }
 })

@@ -3,8 +3,10 @@
 
                                           Springfur Alpaca
 
-                                     v1.20 - 9th October 2023
+                                      v1.23 - 8th November 2023
                                 Copyright (C) Taraezor / Chris Birch
+								
+								TESTING PINS in DATA for shadowmoon valley
 
                                 ----o----(||)----oo----(||)----o----
 ]]
@@ -23,17 +25,15 @@ ns.colour.prefix	= "\124cFFD2691E"	-- X11Chocolate
 ns.colour.highlight = "\124cFFF4A460"	-- X11SandyBrown
 ns.colour.plaintext = "\124cFFDEB887"	-- X11BurlyWood
 
-local defaults = { profile = { iconScale = 2.5, iconAlpha = 0.8, iconChoice = 7, 
-							iconChoiceSpecial = 4, showCoords = true } }
+local defaults = { profile = { iconScale = 2.5, iconAlpha = 1, showCoords = true, 
+								iconChoice = 7, iconChoiceSpecial = 4 } }
 local pluginHandler = {}
 
 -- upvalues
 local GameTooltip = _G.GameTooltip
 local LibStub = _G.LibStub
 local UIParent = _G.UIParent
-local format = _G.format
-local next = _G.next
-local select = _G.select
+local format, next, select = format, next, select
 local gsub = string.gsub
 local UnitAura = UnitAura
 

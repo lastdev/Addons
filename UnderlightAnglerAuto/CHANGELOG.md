@@ -1,6 +1,6 @@
 # Underlight Angler Auto
 
-## [r9](https://github.com/teelolws/UnderlightAnglerAuto/tree/r9) (2023-09-05)
-[Full Changelog](https://github.com/teelolws/UnderlightAnglerAuto/compare/r8...r9) [Previous Releases](https://github.com/teelolws/UnderlightAnglerAuto/releases)
+## [r11](https://github.com/teelolws/UnderlightAnglerAuto/tree/r11) (2023-11-08)
+[Full Changelog](https://github.com/teelolws/UnderlightAnglerAuto/compare/r10...r11) [Previous Releases](https://github.com/teelolws/UnderlightAnglerAuto/releases)
 
 - Update UnderlightAnglerAuto.toc  

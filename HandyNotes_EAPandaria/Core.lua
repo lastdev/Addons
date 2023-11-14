@@ -3,7 +3,7 @@
 
                                              EA Pandaria
 
-                                      v1.30 - 10th October 2023
+                                     v1.33 - 11th November 2023								  
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -23,11 +23,11 @@ ns.colour.plaintext = "\124cFFFFCBA4" -- Deep Peach
 
 --ns.author = true
 
-local defaults = { profile = { icon_scale = 1.7, icon_alpha = 1, showCoords = true,
+local defaults = { profile = { iconScale = 2.5, iconAlpha = 1, showCoords = true,
 							removeChar = true, removeEver = false, showWeekly = false,
-							icon_EAPandaria = 11, icon_EATreasure = 12, icon_EARiches = 13,
-							icon_EAGlorious = 14, icon_EALove = 15, icon_champion = 9,
-							icon_eyesGround = 10, icon_pilgrimage = 8, icon_killingTime = 6, } }
+							iconEAPandaria = 11, iconEATreasure = 12, iconEARiches = 13,
+							iconEAGlorious = 14, iconEALove = 15, iconChampion = 9,
+							icon_EyesGround = 10, iconPilgrimage = 8, iconKillingTime = 6, } }
 local continents = {}
 local pluginHandler = {}
 
@@ -80,20 +80,19 @@ if ns.oceania[realm] then
 end
 
 if ns.locale == "deDE" then
-	L["Achievement"] = "Erfolg"
-	L["Pink"] = "Rosa"
-	L["AddOn Description"] = "Alle Fundorte der Erkundungserfolge von Pandaria"
 	L["Character"] = "Charakter"
 	L["Account"] = "Accountweiter"
 	L["Completed"] = "Abgeschlossen"
 	L["Not Completed"] = "Nicht Abgeschlossen"
-	L["Icon Selection"] = "Symbolauswahl"
-	L["Icon Scale"] = "Symbolskalierung"
-	L["The scale of the icons"] = "Die Skalierung der Symbole"
-	L["Icon Alpha"] = "Symboltransparenz"
-	L["The alpha transparency of the icons"] = "Die Transparenz der Symbole"
-	L["Icon"] = "Symbol"
 	L["Options"] = "Optionen"
+	L["Map Pin Size"] = "Pin-Größe"
+	L["The Map Pin Size"] = "Die Größe der Karten-Pins"
+	L["Map Pin Alpha"] = "Kartenpin Alpha"
+	L["The alpha transparency of the map pins"] = "Die Alpha-Transparenz der Karten-Pins"
+	L["Show Coordinates"] = "Koordinaten anzeigen"
+	L["Show Coordinates Description"] = "Zeigen sie die " ..ns.colour.highlight 
+		.."koordinaten\124r in QuickInfos auf der Weltkarte und auf der Minikarte an"
+	L["Map Pin Selections"] = "Karten-Pin-Auswahl"
 	L["Red"] = "Rot"
 	L["Blue"] = "Blau"
 	L["Green"] = "Grün"
@@ -109,27 +108,24 @@ if ns.locale == "deDE" then
 	L["Phasing"] = "Synchronisieren"
 	L["Raptor egg"] = "Raptor-Ei"
 	L["Stars"] = "Sternen"
-	L["NPC"] = "NSC"
-	L["Show Coordinates"] = "Koordinaten anzeigen"
-	L["Show Coordinates Description"] = "Zeigen sie die " ..ns.colour.highlight 
-		.."koordinaten\124r in QuickInfos auf der Weltkarte und auf der Minikarte an"
-
+	L["Screw"] = "Schraube"
+	
 elseif ns.locale == "esES" or ns.locale == "esMX" then
-	L["Achievement"] = "Logro"
-	L["Gold"] = "Oro"
-	L["Pink"] = "Rosa"
-	L["AddOn Description"] = "Todas las ubicaciones de logros de exploración de Pandaria"
 	L["Character"] = "Personaje"
 	L["Account"] = "la Cuenta"
 	L["Completed"] = "Completado"
-	L["Not Completed"] = ns.locale == "esES" and "Sin Completar" or "Incompleto"
-	L["Icon Selection"] = "Selección de iconos"
-	L["Icon Scale"] = "Escala de icono"
-	L["The scale of the icons"] = "La escala de los iconos"
+	L["Not Completed"] = ( ns.locale == "esES" ) and "Sin Completar" or "Incompleto"
+	L["Options"] = "Opciones"
+	L["Map Pin Size"] = "Tamaño de alfiler"
+	L["The Map Pin Size"] = "Tamaño de los pines del mapa"
+	L["Map Pin Alpha"] = "Alfa de los pines del mapa"
+	L["The alpha transparency of the map pins"] = "La transparencia alfa de los pines del mapa"
 	L["Icon Alpha"] = "Transparencia del icono"
 	L["The alpha transparency of the icons"] = "La transparencia alfa de los iconos"
-	L["Icon"] = "El icono"
-	L["Options"] = "Opciones"
+	L["Show Coordinates"] = "Mostrar coordenadas"
+	L["Show Coordinates Description"] = "Mostrar " ..ns.colour.highlight
+		.."coordenadas\124r en información sobre herramientas en el mapa del mundo y en el minimapa"
+	L["Map Pin Selections"] = "Selecciones de pines de mapa"
 	L["Gold"] = "Oro"
 	L["Red"] = "Rojo"
 	L["Blue"] = "Azul"
@@ -147,28 +143,22 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Phasing"] = "Sincronización"	
 	L["Raptor egg"] = "Huevo de raptor"	
 	L["Stars"] = "Estrellas"
-	L["NPC"] = "PNJ"
-	L["Show Coordinates"] = "Mostrar coordenadas"
-	L["Show Coordinates Description"] = "Mostrar " ..ns.colour.highlight
-		.."coordenadas\124r en información sobre herramientas en el mapa del mundo y en el minimapa"
-
+	L["Screw"] = "Tornillo"
+	
 elseif ns.locale == "frFR" then
-	L["Pandaria"] = "Pandarie"
-	L["Achievement"] = "Haut fait"
-	L["Gold"] = "Or"
-	L["Pink"] = "Rose"
-	L["AddOn Description"] = "Tous les emplacements des réalisations d'exploration de Pandarie"
 	L["Character"] = "Personnage"
 	L["Account"] = "le Compte"
 	L["Completed"] = "Achevé"
 	L["Not Completed"] = "Non achevé"
-	L["Icon Selection"] = "Sélection d'icônes"
-	L["Icon Scale"] = "Echelle de l’icône"
-	L["The scale of the icons"] = "L'échelle des icônes"
-	L["Icon Alpha"] = "Transparence de l'icône"
-	L["The alpha transparency of the icons"] = "La transparence des icônes"
-	L["Icon"] = "L'icône"
 	L["Options"] = "Options"
+	L["Map Pin Size"] = "Taille des épingles"
+	L["The Map Pin Size"] = "La taille des épingles de carte"
+	L["Map Pin Alpha"] = "Alpha des épingles de carte"
+	L["The alpha transparency of the map pins"] = "La transparence alpha des épingles de la carte"
+	L["Show Coordinates"] = "Afficher les coordonnées"
+	L["Show Coordinates Description"] = "Afficher " ..ns.colour.highlight
+		.."les coordonnées\124r dans les info-bulles sur la carte du monde et la mini-carte"
+	L["Map Pin Selections"] = "Sélections de broches de carte"
 	L["Gold"] = "Or"
 	L["Red"] = "Rouge"
 	L["Blue"] = "Bleue"
@@ -186,26 +176,21 @@ elseif ns.locale == "frFR" then
 	L["Phasing"] = "Synchronisation"
 	L["Raptor egg"] = "Œuf de Rapace"
 	L["Stars"] = "Étoiles"
-	L["NPC"] = "PNJ"
-	L["Show Coordinates"] = "Afficher les coordonnées"
-	L["Show Coordinates Description"] = "Afficher " ..ns.colour.highlight
-		.."les coordonnées\124r dans les info-bulles sur la carte du monde et la mini-carte"
-
+	L["Screw"] = "Vis"
+	
 elseif ns.locale == "itIT" then
-	L["Achievement"] = "Impresa"
-	L["Gold"] = "Oro"
-	L["Pink"] = "Rosa"
-	L["AddOn Description"] = "Tutte le posizioni degli obiettivi di esplorazione di Pandaria"
 	L["Character"] = "Personaggio"
 	L["Completed"] = "Completo"
 	L["Not Completed"] = "Non Compiuto"
-	L["Icon Selection"] = "Selezione dell'icona"
-	L["Icon Scale"] = "Scala delle icone"
-	L["The scale of the icons"] = "La scala delle icone"
-	L["Icon Alpha"] = "Icona alfa"
-	L["The alpha transparency of the icons"] = "La trasparenza alfa delle icone"
-	L["Icon"] = "Icona"
 	L["Options"] = "Opzioni"
+	L["Map Pin Size"] = "Dimensione del pin"
+	L["The Map Pin Size"] = "La dimensione dei Pin della mappa"
+	L["Map Pin Alpha"] = "Mappa pin alfa"
+	L["The alpha transparency of the map pins"] = "La trasparenza alfa dei pin della mappa"
+	L["Show Coordinates"] = "Mostra coordinate"
+	L["Show Coordinates Description"] = "Visualizza " ..ns.colour.highlight
+		.."le coordinate\124r nelle descrizioni comandi sulla mappa del mondo e sulla minimappa"
+	L["Map Pin Selections"] = "Selezioni pin mappa"
 	L["Gold"] = "Oro"
 	L["Red"] = "Rosso"
 	L["Blue"] = "Blu"
@@ -223,28 +208,21 @@ elseif ns.locale == "itIT" then
 	L["Phasing"] = "Sincronizzazione"
 	L["Raptor egg"] = "Raptor Uovo"
 	L["Stars"] = "Stelle"
-	L["NPC"] = "PNG"
-	L["Show Coordinates"] = "Mostra coordinate"
-	L["Show Coordinates Description"] = "Visualizza " ..ns.colour.highlight
-		.."le coordinate\124r nelle descrizioni comandi sulla mappa del mondo e sulla minimappa"
+	L["Screw"] = "Vite"
 
 elseif ns.locale == "koKR" then
-	L["Pandaria"] = "판다리아"
-	L["Achievement"] = "업적"
-	L["Gold"] = "금"
-	L["Pink"] = "분홍색"
-	L["AddOn Description"] = "모든 판다리아 탐험 업적 위치"
 	L["Character"] = "캐릭터"
 	L["Account"] = "계정"
 	L["Completed"] = "완료"
 	L["Not Completed"] = "미완료"
-	L["Icon Selection"] = "아이콘 선택"
-	L["Icon Scale"] = "아이콘 크기 비율"
-	L["The scale of the icons"] = "아이콘의 크기 비율입니다"
-	L["Icon Alpha"] = "아이콘 투명도"
-	L["The alpha transparency of the icons"] = "아이콘의 투명도입니다"
-	L["Icon"] = "아이콘"
+	L["Map Pin Size"] = "지도 핀의 크기"
 	L["Options"] = "설정"
+	L["The Map Pin Size"] = "지도 핀의 크기"
+	L["Map Pin Alpha"] = "지도 핀의 알파"
+	L["The alpha transparency of the map pins"] = "지도 핀의 알파 투명도"
+	L["Show Coordinates"] = "좌표 표시"
+	L["Show Coordinates Description"] = "세계지도 및 미니지도의 도구 설명에 좌표를 표시합니다."
+	L["Map Pin Selections"] = "지도 핀 선택"
 	L["Gold"] = "금"
 	L["Red"] = "빨간"
 	L["Blue"] = "푸른"
@@ -262,26 +240,22 @@ elseif ns.locale == "koKR" then
 	L["Phasing"] = "동기화 중"
 	L["Raptor egg"] = "랩터의 알"
 	L["Stars"] = "별"
-	L["Show Coordinates"] = "좌표 표시"
-	L["Show Coordinates Description"] = "세계지도 및 미니지도의 도구 설명에 좌표를 표시합니다."
-		
+	L["Screw"] = "나사"
+	
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
-	L["Pandaria"] = "Pandária"
-	L["Achievement"] = "Conquista"
-	L["Gold"] = "Ouro"
-	L["Pink"] = "Rosa"
-	L["AddOn Description"] = "Todos os locais de conquistas da exploração de Pandária"
 	L["Character"] = "Personagem"
 	L["Account"] = "à Conta"
 	L["Completed"] = "Concluído"
 	L["Not Completed"] = "Não Concluído"
-	L["Icon Selection"] = "Seleção de ícones"
-	L["Icon Scale"] = "Escala de Ícone"
-	L["The scale of the icons"] = "A escala dos ícones"
-	L["Icon Alpha"] = "Ícone Alpha"
-	L["The alpha transparency of the icons"] = "A transparência alfa dos ícones"
-	L["Icon"] = "Ícone"
 	L["Options"] = "Opções"
+	L["Map Pin Size"] = "Tamanho do pino"
+	L["The Map Pin Size"] = "O tamanho dos pinos do mapa"
+	L["Map Pin Alpha"] = "Alfa dos pinos do mapa"
+	L["The alpha transparency of the map pins"] = "A transparência alfa dos pinos do mapa"
+	L["Show Coordinates"] = "Mostrar coordenadas"
+	L["Show Coordinates Description"] = "Exibir " ..ns.colour.highlight
+		.."coordenadas\124r em dicas de ferramentas no mapa mundial e no minimapa"
+	L["Map Pin Selections"] = "Seleções de pinos de mapa"
 	L["Gold"] = "Ouro"
 	L["Red"] = "Vermelho"
 	L["Blue"] = "Azul"
@@ -299,28 +273,22 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Phasing"] = "Sincronização"
 	L["Raptor egg"] = "Ovo de raptor"
 	L["Stars"] = "Estrelas"
-	L["NPC"] = "PNJ"
-	L["Show Coordinates"] = "Mostrar coordenadas"
-	L["Show Coordinates Description"] = "Exibir " ..ns.colour.highlight
-		.."coordenadas\124r em dicas de ferramentas no mapa mundial e no minimapa"
+	L["Screw"] = "Parafuso"
 
 elseif ns.locale == "ruRU" then
-	L["Pandaria"] = "Пандарии"
-	L["Achievement"] = "Достижение"
-	L["Gold"] = "Золото"
-	L["Pink"] = "Розовый"
-	L["AddOn Description"] = "Все локации достижений исследования Пандарии"
 	L["Character"] = "Персонажа"
 	L["Account"] = "Счет"
 	L["Completed"] = "Выполнено"
 	L["Not Completed"] = "Не Выполнено"
-	L["Icon Selection"] = "Выбор Значка"
-	L["Icon Scale"] = "Масштаб Значка"
-	L["The scale of the icons"] = "Масштаб для Значков"
-	L["Icon Alpha"] = "Альфа Значок"
-	L["The alpha transparency of the icons"] = "Альфа-прозрачность Значков"
-	L["Icon"] = "Альфа Значок"
 	L["Options"] = "Параметры"
+	L["Map Pin Size"] = "Размер булавки"
+	L["The Map Pin Size"] = "Размер булавок на карте"
+	L["Map Pin Alpha"] = "Альфа булавок карты"
+	L["The alpha transparency of the map pins"] = "Альфа-прозрачность булавок карты"
+	L["Show Coordinates"] = "Показать Координаты"
+	L["Show Coordinates Description"] = "Отображает " ..ns.colour.highlight
+		.."координаты\124r во всплывающих подсказках на карте мира и мини-карте"
+	L["Map Pin Selections"] = "Выбор булавки карты"
 	L["Gold"] = "Золото"
 	L["Red"] = "Красный"
 	L["Blue"] = "Синий"
@@ -338,27 +306,21 @@ elseif ns.locale == "ruRU" then
 	L["Phasing"] = "Синхронизация"
 	L["Raptor egg"] = "Яйцо ящера"
 	L["Stars"] = "Звезды"
-	L["Show Coordinates"] = "Показать Координаты"
-	L["Show Coordinates Description"] = "Отображает " ..ns.colour.highlight
-		.."координаты\124r во всплывающих подсказках на карте мира и мини-карте"
+	L["Screw"] = "Винт"
 
 elseif ns.locale == "zhCN" then
-	L["Pandaria"] = "潘达利"
-	L["Achievement"] = "成就"
-	L["Gold"] = "金子"
-	L["Pink"] = "粉色的"
-	L["AddOn Description"] = "潘达利亚所有探索成就地点"
 	L["Character"] = "角色"
 	L["Account"] = "账号"
 	L["Completed"] = "已完成"
 	L["Not Completed"] = "未完成"
-	L["Icon Selection"] = "图标选择"
-	L["Icon Scale"] = "图示大小"
-	L["The scale of the icons"] = "图示的大小"
-	L["Icon Alpha"] = "图示透明度"
-	L["The alpha transparency of the icons"] = "图示的透明度"
-	L["Icon"] = "图示"
 	L["Options"] = "选项"
+	L["Map Pin Size"] = "地图图钉的大小"
+	L["The Map Pin Size"] = "地图图钉的大小"
+	L["Map Pin Alpha"] = "地图图钉的透明度"
+	L["The alpha transparency of the map pins"] = "地图图钉的透明度"
+	L["Show Coordinates"] = "显示坐标"
+	L["Show Coordinates Description"] = "在世界地图和迷你地图上的工具提示中" ..ns.colour.highlight .."显示坐标"
+	L["Map Pin Selections"] = "地图图钉选择"
 	L["Gold"] = "金子"
 	L["Red"] = "红"
 	L["Blue"] = "蓝"
@@ -376,26 +338,21 @@ elseif ns.locale == "zhCN" then
 	L["Phasing"] = "同步"
 	L["Raptor egg"] = "迅猛龙蛋"
 	L["Stars"] = "星星"
-	L["Show Coordinates"] = "显示坐标"
-	L["Show Coordinates Description"] = "在世界地图和迷你地图上的工具提示中" ..ns.colour.highlight .."显示坐标"
-
+	L["Screw"] = "拧"
+	
 elseif ns.locale == "zhTW" then
-	L["Pandaria"] = "潘達利"
-	L["Achievement"] = "成就"
-	L["Gold"] = "金子"
-	L["Pink"] = "粉色的"
-	L["AddOn Description"] = "潘達利亞所有探索成就地點"
 	L["Character"] = "角色"
 	L["Account"] = "賬號"
 	L["Completed"] = "完成"
 	L["Not Completed"] = "未完成"
-	L["Icon Selection"] = "圖標選擇"
-	L["Icon Scale"] = "圖示大小"
-	L["The scale of the icons"] = "圖示的大小"
-	L["Icon Alpha"] = "圖示透明度"
-	L["The alpha transparency of the icons"] = "圖示的透明度"
-	L["Icon"] = "圖示"
 	L["Options"] = "選項"
+	L["Map Pin Size"] = "地圖圖釘的大小"
+	L["The Map Pin Size"] = "地圖圖釘的大小"
+	L["Map Pin Alpha"] = "地圖圖釘的透明度"
+	L["The alpha transparency of the map pins"] = "地圖圖釘的透明度"
+	L["Show Coordinates"] = "顯示坐標"
+	L["Show Coordinates Description"] = "在世界地圖和迷你地圖上的工具提示中" ..ns.colour.highlight .."顯示坐標"
+	L["Map Pin Selections"] = "地圖圖釘選擇"
 	L["Gold"] = "金子"
 	L["Red"] = "紅"
 	L["Blue"] = "藍"
@@ -412,17 +369,140 @@ elseif ns.locale == "zhTW" then
 	L["Mana Orb"] = "法力球"
 	L["Phasing"] = "同步"
 	L["Raptor egg"] = "迅猛龍蛋"
-	L["Show Coordinates"] = "顯示坐標"
-	L["Show Coordinates Description"] = "在世界地圖和迷你地圖上的工具提示中" ..ns.colour.highlight .."顯示坐標"
-	
+	L["Stars"] = "星星"
+	L["Screw"] = "擰"
+
 else
+	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
 	if ns.locale == "enUS" then
 		L["Grey"] = "Gray"
 	end
-	L["Treasure"] = "Is another Man's Treasure"
-	L["Riches"] = "Riches of Pandaria"
+end
+
+ns.name = UnitName( "player" ) or "Character"
+
+if ns.locale == "deDE" then
+	L["Achievement"] = "Erfolg"
+	L["AddOn Description"] = "Alle Fundorte der Erkundungserfolge von Pandaria"
+	L["Pink"] = "Rosa"
+	L["Legends"] = "Zeitlose Legenden"
+	L["Riches"] = "Reichtümer von Pandaria"
+	L["Riches / Legends"] = "Reichtümer / Legenden"
+	L["Treasure"] = "...ist des anderen Brot"
+	L["Treasure Everywhere"] = "Meine Schätze!"
+	L["Treasure Title"] = "Schatz"
+	
+elseif ns.locale == "esES" or ns.locale == "esMX" then
+	L["Achievement"] = "Logro"
+	L["AddOn Description"] = "Todas las ubicaciones de logros de exploración de Pandaria"
+	L["Gold"] = "Oro"
+	L["Pink"] = "Rosa"
+	L["Legends"] = "Leyendas intemporales"
+	L["Riches"] = "Riquezas de Pandaria"
+	L["Riches / Legends"] = "Riquezas / Leyendas"
+	L["Treasure"] = "Más vale tesoro en mano que enterrado"
+	L["Treasure Everywhere"] = "¡Tesoros! ¡Tesoros por todas partes!"
+	L["Treasure Title"] = "Tesoro"
+
+elseif ns.locale == "frFR" then
+	L["Achievement"] = "Haut fait"
+	L["AddOn Description"] = "Tous les emplacements des réalisations d'exploration de Pandarie"
+	L["Gold"] = "Or"
+	L["Pandaria"] = "Pandarie"
+	L["Pink"] = "Rose"
+	L["Legends"] = "Les légendes du Temps figé"
+	L["Riches"] = "Les richesses de la Pandarie"
+	L["Riches / Legends"] = "Les richesses / légendes"
+	L["Treasure"] = "…Est un trésor pour d’autres"
+	L["Treasure Everywhere"] = "Des trésors, encore des trésors"
+	L["Treasure Title"] = "Trésor"
+
+elseif ns.locale == "itIT" then
+	L["Achievement"] = "Impresa"
+	L["AddOn Description"] = "Tutte le posizioni degli obiettivi di esplorazione di Pandaria"
+	L["Gold"] = "Oro"
+	L["Pink"] = "Rosa"
+	L["Legends"] = "Leggende senza tempo"
+	L["Riches"] = "Le ricchezze di Pandaria"
+	L["Riches / Legends"] = "Le ricchezze / Leggende"
+	L["Treasure"] = "...è il tesoro di un altro"
+	L["Treasure Everywhere"] = "Tesori, tesori ovunque"
+	L["Treasure Title"] = "Tesoro"
+
+elseif ns.locale == "koKR" then
+	L["Achievement"] = "업적"
+	L["AddOn Description"] = "모든 판다리아 탐험 업적 위치"
+	L["Gold"] = "금"
+	L["Pandaria"] = "판다리아"
+	L["Pink"] = "분홍색"
+	L["Legends"] = "영원한 전설"
+	L["Riches"] = "흔한 판다리아의 금은보화"
+	L["Riches / Legends"] = "보화 / 전설"
+	L["Treasure"] = "나에겐 보물"
+	L["Treasure Everywhere"] = "보물이 차올라서 가방을 들어"
+	L["Treasure Title"] = "보물"
+		
+elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
+	L["Achievement"] = "Conquista"
+	L["AddOn Description"] = "Todos os locais de conquistas da exploração de Pandária"
+	L["Gold"] = "Ouro"
+	L["Pandaria"] = "Pandária"
+	L["Pink"] = "Rosa"
+	L["Legends"] = "Lendas Perenes"
+	L["Riches"] = "Riqueza de Pandária"
+	L["Riches / Legends"] = "Riqueza / Lendas"
+	L["Treasure"] = "... tesouro pra outro"
+	L["Treasure Everywhere"] = "Tesouro, tesouro em toda a parte"
+	L["Treasure Title"] = "Tesouro"
+
+elseif ns.locale == "ruRU" then
+	L["Achievement"] = "Достижение"
+	L["AddOn Description"] = "Все локации достижений исследования Пандарии"
+		.."координаты\124r во всплывающих подсказках на карте мира и мини-карте"
+	L["Gold"] = "Золото"
+	L["Pandaria"] = "Пандарии"
+	L["Pink"] = "Розовый"
+	L["Legends"] = "Легенды вне времени"
+	L["Riches"] = "Богатства Пандарии"
+	L["Riches / Legends"] = "Богатства / Легенды"
+	L["Treasure"] = "...то другому прибыль"
+	L["Treasure Everywhere"] = "Сокровища, везде сокровища!"
+	L["Treasure Title"] = "Сокровище"
+
+elseif ns.locale == "zhCN" then
+	L["Achievement"] = "成就"
+	L["AddOn Description"] = "潘达利亚所有探索成就地点"
+	L["Gold"] = "金子"
+	L["Pandaria"] = "潘达利"
+	L["Pink"] = "粉色的"
+	L["Legends"] = "永恒的传奇"
+	L["Riches"] = "潘达利亚的财富"
+	L["Riches / Legends"] = "财富 / 传奇"
+	L["Treasure"] = "我之蜜糖"
+	L["Treasure Everywhere"] = "宝藏，到处都是宝藏"
+	L["Treasure Title"] = "宝藏"
+
+elseif ns.locale == "zhTW" then
+	L["Achievement"] = "成就"
+	L["AddOn Description"] = "潘達利亞所有探索成就地點"
+	L["Gold"] = "金子"
+	L["Pandaria"] = "潘達利"
+	L["Pink"] = "粉色的"
+	L["Legends"] = "永恆的傳奇"
+	L["Riches"] = "潘達利亞的財富"
+	L["Riches / Legends"] = "財富 / 傳奇"
+	L["Treasure"] = "我之蜜糖"
+	L["Treasure Everywhere"] = "寶藏，到處都是寶藏"
+	L["Treasure Title"] = "寶藏"
+	
+else
 	L["AddOn Description"] = "All Pandaria exploration achievement locations"
-	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
+	L["Legends"] = "Timeless Legends"
+	L["Riches"] = "Riches of Pandaria"
+	L["Riches / Legends"] = "Riches / Legends"
+	L["Treasure"] = "Is another Man's Treasure"
+	L["Treasure Everywhere"] = "Treasure, Treasure Everywhere"
+	L["Treasure Title"] = "Treasure"
 end
 
 -- Plugin handler for HandyNotes
@@ -435,7 +515,6 @@ function pluginHandler:OnEnter(mapFile, coord)
 
 	local pin = ns.points[mapFile] and ns.points[mapFile][coord]
 
-	local pName = UnitName( "player" ) or L["Character"]
 	local completed, aName, completedMe, quantity, reqQuantity;
 	local bypassCoords = false
 	local showTip = true
@@ -452,7 +531,7 @@ function pluginHandler:OnEnter(mapFile, coord)
 				notYet = notYet ..aName .."\n"
 			end
 		end
-		GameTooltip:AddLine( "\124cFF00FF00" ..L[ "Completed" ] .." (" ..pName ..")"
+		GameTooltip:AddLine( "\124cFF00FF00" ..L[ "Completed" ] .." (" ..ns.name ..")"
 						..ns.colour.plaintext ..compC .."\n")
 		GameTooltip:AddLine( "\124cFF00FF00" ..L[ "Completed" ] .." (" ..L[ "Account" ] ..")"
 						..ns.colour.plaintext ..compA .."\n")
@@ -469,28 +548,28 @@ function pluginHandler:OnEnter(mapFile, coord)
 			( completed == true ) and ( "\124cFF00FF00" ..L[ "Completed" ] .." (" ..L[ "Account" ] ..")" ) 
 								or ( "\124cFFFF0000" ..L[ "Not Completed" ] .." (" ..L[ "Account" ] ..")" ) )
 		GameTooltip:AddDoubleLine( " ",
-			( completedMe == true ) and ( "\124cFF00FF00" ..L[ "Completed" ] .." (" ..pName ..")" ) 
-								or ( "\124cFFFF0000" ..L[ "Not Completed" ] .." (" ..pName ..")" ) )
+			( completedMe == true ) and ( "\124cFF00FF00" ..L[ "Completed" ] .." (" ..ns.name ..")" ) 
+								or ( "\124cFFFF0000" ..L[ "Not Completed" ] .." (" ..ns.name ..")" ) )
 		if ( pin.aID == 8078 ) then -- Zul Again
 			for i = 1, 2 do
 				aName, _, completed, quantity, reqQuantity = GetAchievementCriteriaInfo( pin.aID, i )
 				GameTooltip:AddDoubleLine( ns.colour.highlight ..quantity .."/" ..reqQuantity .." " ..aName,
-					( completed == true ) and ( "\124cFF00FF00" ..L[ "Completed" ] .." (" ..pName ..")" ) 
-										or ( "\124cFFFF0000" ..L[ "Not Completed" ] .." (" ..pName ..")" ) )
+					( completed == true ) and ( "\124cFF00FF00" ..L[ "Completed" ] .." (" ..ns.name ..")" ) 
+										or ( "\124cFFFF0000" ..L[ "Not Completed" ] .." (" ..ns.name ..")" ) )
 			end
 		elseif ( pin.aID == 8784 ) or ( pin.aID == 8724 ) then -- Timeless Legends & Pilgrimage
 			for i = 1, 4 do
 				aName, _, completed = GetAchievementCriteriaInfo( pin.aID, i )
 				GameTooltip:AddDoubleLine( ns.colour.highlight ..aName,
-					( completed == true ) and ( "\124cFF00FF00" ..L[ "Completed" ] .." (" ..pName ..")" ) 
-										or ( "\124cFFFF0000" ..L[ "Not Completed" ] .." (" ..pName ..")" ) )
+					( completed == true ) and ( "\124cFF00FF00" ..L[ "Completed" ] .." (" ..ns.name ..")" ) 
+										or ( "\124cFFFF0000" ..L[ "Not Completed" ] .." (" ..ns.name ..")" ) )
 			end
 		end
 		if pin.aIndex then
 			aName, _, completed = GetAchievementCriteriaInfo( pin.aID, pin.aIndex )
 			GameTooltip:AddDoubleLine( ns.colour.highlight ..aName,
-				( completed == true ) and ( "\124cFF00FF00" ..L[ "Completed" ] .." (" ..pName ..")" ) 
-									or ( "\124cFFFF0000" ..L[ "Not Completed" ] .." (" ..pName ..")" ) )
+				( completed == true ) and ( "\124cFF00FF00" ..L[ "Completed" ] .." (" ..ns.name ..")" ) 
+									or ( "\124cFFFF0000" ..L[ "Not Completed" ] .." (" ..ns.name ..")" ) )
 			if ( pin.aID == 7932 ) then -- I'm In Your Base Killing Your Dudes
 				completed = IsQuestFlaggedCompleted( ( ns.faction == "Alliance" ) and 32246 or 32249 )
 				if ( completed == false ) then
@@ -527,8 +606,8 @@ function pluginHandler:OnEnter(mapFile, coord)
 			completed = IsQuestFlaggedCompleted( pin.aQuest )
 			local itemName = pin.item and ( GetItemNameByID( pin.item ) or pin.item ) or ( pin.qName or " " )
 			GameTooltip:AddDoubleLine( ns.colour.highlight ..itemName,
-				( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..pName ..")" ) 
-									or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..pName ..")" ) )
+				( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] .." (" ..ns.name ..")" ) 
+									or ( "\124cFFFF0000" ..L["Not Completed"] .." (" ..ns.name ..")" ) )
 		end
 	end
 	
@@ -599,109 +678,109 @@ do
 			if pin then
 				if ns.author and pin.author then
 					return coord, nil, ns.textures[ 4 ],
-						ns.db.icon_scale * ns.scaling[ 4 ], ns.db.icon_alpha
+						ns.db.iconScale * ns.scaling[ 4 ], ns.db.iconAlpha
 				elseif pin.aList then
-					return coord, nil, ns.textures[ ns.db.icon_EAPandaria ],
-						ns.db.icon_scale * ns.scaling[ns.db.icon_EAPandaria ] * 2, ns.db.icon_alpha
+					return coord, nil, ns.textures[ ns.db.iconEAPandaria ],
+						ns.db.iconScale * ns.scaling[ns.db.iconEAPandaria ] * 2, ns.db.iconAlpha
 				elseif not pin.aID then
-					return coord, nil, ns.textures[ ns.db.icon_EAPandaria ],
-						ns.db.icon_scale * ns.scaling[ ns.db.icon_EAPandaria ] *2, ns.db.icon_alpha
+					return coord, nil, ns.textures[ ns.db.iconEAPandaria ],
+						ns.db.iconScale * ns.scaling[ ns.db.iconEAPandaria ] *2, ns.db.iconAlpha
 				elseif ( ShowConditionallyE( pin.aID ) == true ) then
 					if ( pin.aID == 6350 ) then -- To All the Squirrels I Once Caressed?
 						if ( ShowConditionallyC( pin.aID, pin.aIndex ) == true ) then
-							return coord, nil, ns.textures[ ns.db.icon_EALove ],
-								ns.db.icon_scale * ns.scaling[ ns.db.icon_EALove ], ns.db.icon_alpha
+							return coord, nil, ns.textures[ ns.db.iconEALove ],
+								ns.db.iconScale * ns.scaling[ ns.db.iconEALove ], ns.db.iconAlpha
 						end
 					elseif ( pin.aID == 7284 ) or ( pin.aID == 8729 ) then
 						-- Is Another Man's Treasure and Treasure, Treasure Everywhere
 						if ( ShowConditionallyQ( pin.aQuest ) == true ) then
-							return coord, nil, ns.textures[ ns.db.icon_EATreasure ],
-								ns.db.icon_scale * ns.scaling[ ns.db.icon_EATreasure ], ns.db.icon_alpha
+							return coord, nil, ns.textures[ ns.db.iconEATreasure ],
+								ns.db.iconScale * ns.scaling[ ns.db.iconEATreasure ], ns.db.iconAlpha
 						end
 					elseif ( pin.aID == 7439 ) then -- Glorious
 						if ( ShowConditionallyC( pin.aID, pin.aIndex ) == true ) then
-							return coord, nil, ns.textures[ ns.db.icon_EAGlorious ],
-								ns.db.icon_scale * ns.scaling[ ns.db.icon_EAGlorious ], ns.db.icon_alpha
+							return coord, nil, ns.textures[ ns.db.iconEAGlorious ],
+								ns.db.iconScale * ns.scaling[ ns.db.iconEAGlorious ], ns.db.iconAlpha
 						end
 					elseif ( pin.aID == 7932 ) then -- I'm In Your Base Killing Your Dudes
 						if ( ShowConditionallyC( pin.aID, pin.aIndex ) == true ) 
 								and ( ns.faction == pin.faction ) then
 							if pin.aQuest then
 								if ( ShowConditionallyQ( pin.aQuest ) == true ) then
-									return coord, nil, ns.textures[ ns.db.icon_killingTime ],
-										ns.db.icon_scale * ns.scaling[ ns.db.icon_killingTime ], ns.db.icon_alpha
+									return coord, nil, ns.textures[ ns.db.iconKillingTime ],
+										ns.db.iconScale * ns.scaling[ ns.db.iconKillingTime ], ns.db.iconAlpha
 								end
 							else
-								return coord, nil, ns.textures[ ns.db.icon_killingTime ],
-									ns.db.icon_scale * ns.scaling[ ns.db.icon_killingTime ], ns.db.icon_alpha
+								return coord, nil, ns.textures[ ns.db.iconKillingTime ],
+									ns.db.iconScale * ns.scaling[ ns.db.iconKillingTime ], ns.db.iconAlpha
 							end
 						end
 					elseif ( pin.aID == 7997 ) then --  Riches of Pandaria
 						if ( ShowConditionallyQ( pin.aQuest ) == true ) then
-							return coord, nil, ns.textures[ ns.db.icon_EARiches ],
-								ns.db.icon_scale * ns.scaling[ ns.db.icon_EARiches ], ns.db.icon_alpha
+							return coord, nil, ns.textures[ ns.db.iconEARiches ],
+								ns.db.iconScale * ns.scaling[ ns.db.iconEARiches ], ns.db.iconAlpha
 						end
 					elseif ( pin.aID == 8712 ) then -- KillingTime
 						if ( ShowConditionallyC( pin.aID, pin.aIndex ) == true ) then
-							return coord, nil, ns.textures[ ns.db.icon_killingTime ],
-								ns.db.icon_scale * ns.scaling[ ns.db.icon_killingTime ], ns.db.icon_alpha
+							return coord, nil, ns.textures[ ns.db.iconKillingTime ],
+								ns.db.iconScale * ns.scaling[ ns.db.iconKillingTime ], ns.db.iconAlpha
 						end
 					elseif ( pin.aID == 8714 ) then -- Timeless Champion
 						if ( ShowConditionallyC( pin.aID, pin.aIndex ) == true ) then
-							return coord, nil, ns.textures[ ns.db.icon_champion ],
-								ns.db.icon_scale * ns.scaling[ ns.db.icon_champion ], ns.db.icon_alpha
+							return coord, nil, ns.textures[ ns.db.iconChampion ],
+								ns.db.iconScale * ns.scaling[ ns.db.iconChampion ], ns.db.iconAlpha
 						end
 					elseif ( pin.aID == 8724 ) then -- Pilgrimage / Time-Lost Shrines
 						if ( ShowConditionallyC( pin.aID ) == true ) then
-							return coord, nil, ns.textures[ ns.db.icon_pilgrimage ],
-								ns.db.icon_scale * ns.scaling[ ns.db.icon_pilgrimage ], ns.db.icon_alpha
+							return coord, nil, ns.textures[ ns.db.iconPilgrimage ],
+								ns.db.iconScale * ns.scaling[ ns.db.iconPilgrimage ], ns.db.iconAlpha
 						end
 					elseif ( pin.aID == 8725 ) then -- Eyes on the Ground
 						if ( ShowConditionallyC( pin.aID, pin.aIndex ) == true ) then
-							return coord, nil, ns.textures[ ns.db.icon_eyesGround ],
-								ns.db.icon_scale * ns.scaling[ ns.db.icon_eyesGround ], ns.db.icon_alpha
+							return coord, nil, ns.textures[ ns.db.icon_EyesGround ],
+								ns.db.iconScale * ns.scaling[ ns.db.icon_EyesGround ], ns.db.iconAlpha
 						end
 					elseif ( pin.aID == 8726 ) or ( pin.aID == 8727 ) or ( pin.aID == 8743 ) then
 						-- Extreme Treasure Hunter, Where There's Pirates, There's Booty, Zarhym Altogether
 						if ( ns.db.showWeekly == true ) then
 							if ( ShowConditionallyQ( pin.aQuest ) == true ) then
-								return coord, nil, ns.textures[ ns.db.icon_EAGlorious ],
-									ns.db.icon_scale * ns.scaling[ ns.db.icon_EAGlorious ], ns.db.icon_alpha
+								return coord, nil, ns.textures[ ns.db.iconEAGlorious ],
+									ns.db.iconScale * ns.scaling[ ns.db.iconEAGlorious ], ns.db.iconAlpha
 							end
 						elseif ( ShowConditionallyC( pin.aID, pin.aIndex ) == true ) then
-							return coord, nil, ns.textures[ ns.db.icon_EAGlorious ],
-								ns.db.icon_scale * ns.scaling[ ns.db.icon_EAGlorious ], ns.db.icon_alpha
+							return coord, nil, ns.textures[ ns.db.iconEAGlorious ],
+								ns.db.iconScale * ns.scaling[ ns.db.iconEAGlorious ], ns.db.iconAlpha
 						end
 					elseif ( pin.aID == 8730 ) then -- Rolo's Riddle
 						if ( ShowConditionallyQ( pin.aQuest ) == true ) then
-							return coord, nil, ns.textures[ ns.db.icon_EAPandaria ],
-								ns.db.icon_scale * ns.scaling[ ns.db.icon_EAPandaria ], ns.db.icon_alpha
+							return coord, nil, ns.textures[ ns.db.iconEAPandaria ],
+								ns.db.iconScale * ns.scaling[ ns.db.iconEAPandaria ], ns.db.iconAlpha
 						end
 					elseif ( pin.aID == 8535 ) then -- Celestial Challenge
 						if ( ShowConditionallyC( pin.aID, pin.aIndex ) == true ) then
-							return coord, nil, ns.textures[ ns.db.icon_EAGlorious ],
-								ns.db.icon_scale * ns.scaling[ ns.db.icon_EAGlorious ], ns.db.icon_alpha
+							return coord, nil, ns.textures[ ns.db.iconEAGlorious ],
+								ns.db.iconScale * ns.scaling[ ns.db.iconEAGlorious ], ns.db.iconAlpha
 						elseif ( ns.db.showWeekly == true ) then
 							if ( ShowConditionallyQ( pin.aQuest ) == true ) then
-								return coord, nil, ns.textures[ ns.db.icon_EAGlorious ],
-									ns.db.icon_scale * ns.scaling[ ns.db.icon_EAGlorious ], ns.db.icon_alpha
+								return coord, nil, ns.textures[ ns.db.iconEAGlorious ],
+									ns.db.iconScale * ns.scaling[ ns.db.iconEAGlorious ], ns.db.iconAlpha
 							end
 						end
 					elseif ( pin.aID == 8784 ) then -- Timeless Legends
 						if ( ShowConditionallyC( pin.aID ) == true ) then
-							return coord, nil, ns.textures[ ns.db.icon_EARiches ],
-								ns.db.icon_scale * ns.scaling[ ns.db.icon_EARiches ], ns.db.icon_alpha
+							return coord, nil, ns.textures[ ns.db.iconEARiches ],
+								ns.db.iconScale * ns.scaling[ ns.db.iconEARiches ], ns.db.iconAlpha
 						end
 					elseif ( ShowConditionallyC( pin.aID, pin.aIndex ) == true ) then
 						-- 8078 Zul Again, 7329 Pandaren Cuisine, etc
 						if pin.faction then
 							if ( ns.faction == pin.faction ) then
-								return coord, nil, ns.textures[ ns.db.icon_EAPandaria ],
-									ns.db.icon_scale * ns.scaling[ ns.db.icon_EAPandaria ], ns.db.icon_alpha
+								return coord, nil, ns.textures[ ns.db.iconEAPandaria ],
+									ns.db.iconScale * ns.scaling[ ns.db.iconEAPandaria ], ns.db.iconAlpha
 							end
 						else
-							return coord, nil, ns.textures[ ns.db.icon_EAPandaria ],
-								ns.db.icon_scale * ns.scaling[ ns.db.icon_EAPandaria ], ns.db.icon_alpha
+							return coord, nil, ns.textures[ ns.db.iconEAPandaria ],
+								ns.db.iconScale * ns.scaling[ ns.db.iconEAPandaria ], ns.db.iconAlpha
 						end
 					end
 				end
@@ -731,21 +810,21 @@ ns.options = {
 			name = " " ..L["Options"],
 			inline = true,
 			args = {
-				icon_scale = {
+				iconScale = {
 					type = "range",
-					name = L["Icon Scale"],
-					desc = L["The scale of the icons"],
-					min = 1, max = 3, step = 0.1,
-					arg = "icon_scale",
-					order = 2,
+					name = L["Map Pin Size"],
+					desc = L["The Map Pin Size"],
+					min = 1, max = 4, step = 0.1,
+					arg = "iconScale",
+					order = 1,
 				},
-				icon_alpha = {
+				iconAlpha = {
 					type = "range",
-					name = L["Icon Alpha"],
-					desc = L["The alpha transparency of the icons"],
+					name = L["Map Pin Alpha"],
+					desc = L["The alpha transparency of the map pins"],
 					min = 0, max = 1, step = 0.01,
-					arg = "icon_alpha",
-					order = 3,
+					arg = "iconAlpha",
+					order = 2,
 				},
 				showCoords = {
 					name = L["Show Coordinates"],
@@ -754,7 +833,7 @@ ns.options = {
 					type = "toggle",
 					width = "full",
 					arg = "showCoords",
-					order = 4,
+					order = 3,
 				},
 				removeChar = {
 					name = "Remove the pin if the criteria has been completed by " ..ns.name,
@@ -765,7 +844,7 @@ ns.options = {
 					type = "toggle",
 					width = "full",
 					arg = "removeChar",
-					order = 5,
+					order = 4,
 				},
 				showWeekly = {
 					name = "But allow the pin to reappear if it is a repeatable quest objective",
@@ -775,7 +854,7 @@ ns.options = {
 					type = "toggle",
 					width = "full",
 					arg = "showWeekly",
-					order = 6,
+					order = 5,
 				},
 				removeEver = {
 					name = "Remove the pin if ever fully completed on this account",
@@ -785,7 +864,7 @@ ns.options = {
 					type = "toggle",
 					width = "full",
 					arg = "removeEver",
-					order = 7,
+					order = 6,
 				},
 			},
 		},
@@ -794,7 +873,7 @@ ns.options = {
 			name = L["Icon Selection"],
 			inline = true,
 			args = {
-				icon_EAPandaria = {
+				iconEAPandaria = {
 					type = "range",
 					name = L["Zul Again, Summary, Etc"],
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
@@ -804,40 +883,40 @@ ns.options = {
 							.."\n12 = " ..L["Achievement"] .." - " ..L["Blue"] .."\n13 = "
 							..L["Achievement"] .." - " ..L["Pink"] .."\n14 = " ..L["Achievement"], 
 					min = 1, max = 14, step = 1,
-					arg = "icon_EAPandaria",
+					arg = "iconEAPandaria",
+					order = 7,
+				},
+				iconEATreasure = {
+					type = "range",
+					name = L["Treasure Title"],
+					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
+							..L["Yellow"] .."\n5 = " ..L["Green"] .."\n6 = " ..L["Grey"] .."\n7 = "
+							..L["Mana Orb"] .."\n8 = " ..L["Phasing"] .."\n9 = " ..L["Raptor egg"] 
+							.."\n10 = " ..L["Stars"] .."\n11 = " ..L["Achievement"] .." - " ..L["Gold"]
+							.."\n12 = " ..L["Achievement"] .." - " ..L["Blue"] .."\n13 = "
+							..L["Achievement"] .." - " ..L["Pink"] .."\n14 = " ..L["Achievement"] .."\n\n"
+							..ns.colour.highlight .."\"" ..L["Treasure"] .."\"" ..ns.colour.plaintext
+							.." and\n" ..ns.colour.highlight .."\"" ..L["Treasure Everywhere"] .."\"", 
+					min = 1, max = 14, step = 1,
+					arg = "iconEATreasure",
 					order = 8,
 				},
-				icon_EATreasure = {
+				iconEARiches = {
 					type = "range",
-					name = L["Treasure"],
+					name = L["Riches / Legends"],
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
 							..L["Yellow"] .."\n5 = " ..L["Green"] .."\n6 = " ..L["Grey"] .."\n7 = "
 							..L["Mana Orb"] .."\n8 = " ..L["Phasing"] .."\n9 = " ..L["Raptor egg"] 
 							.."\n10 = " ..L["Stars"] .."\n11 = " ..L["Achievement"] .." - " ..L["Gold"]
 							.."\n12 = " ..L["Achievement"] .." - " ..L["Blue"] .."\n13 = "
 							..L["Achievement"] .." - " ..L["Pink"] .."\n14 = " ..L["Achievement"] .."\n\n"
-							..ns.colour.highlight .."\"Is Another Man's Treasure\"" ..ns.colour.plaintext
-							.." and\n" ..ns.colour.highlight .."\"Treasure, Treasure Everywhere\"", 
+							..ns.colour.highlight .."\"" ..L["Riches"] .."\"" ..ns.colour.plaintext
+							.." and\n" ..ns.colour.highlight .."\"" ..L["Legends"] .."\"", 
 					min = 1, max = 14, step = 1,
-					arg = "icon_EATreasure",
+					arg = "iconEARiches",
 					order = 9,
 				},
-				icon_EARiches = {
-					type = "range",
-					name = L["Riches & Legends"],
-					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
-							..L["Yellow"] .."\n5 = " ..L["Green"] .."\n6 = " ..L["Grey"] .."\n7 = "
-							..L["Mana Orb"] .."\n8 = " ..L["Phasing"] .."\n9 = " ..L["Raptor egg"] 
-							.."\n10 = " ..L["Stars"] .."\n11 = " ..L["Achievement"] .." - " ..L["Gold"]
-							.."\n12 = " ..L["Achievement"] .." - " ..L["Blue"] .."\n13 = "
-							..L["Achievement"] .." - " ..L["Pink"] .."\n14 = " ..L["Achievement"] .."\n\n"
-							..ns.colour.highlight .."\"Riches of Pandaria\"" ..ns.colour.plaintext
-							.." and\n" ..ns.colour.highlight .."\"Timeless Legends\"", 
-					min = 1, max = 14, step = 1,
-					arg = "icon_EARiches",
-					order = 10,
-				},
-				icon_EAGlorious = {
+				iconEAGlorious = {
 					type = "range",
 					name = L["Glorious & TI Repeatables"],
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
@@ -853,10 +932,10 @@ ns.options = {
 							.."\"Zarhym Altogether\"" ..ns.colour.plaintext .." and\n"
 							..ns.colour.highlight .."\"Celestial Challenge\"", 
 					min = 1, max = 14, step = 1,
-					arg = "icon_EAGlorious",
-					order = 11,
+					arg = "iconEAGlorious",
+					order = 10,
 				},
-				icon_EALove = {
+				iconEALove = {
 					type = "range",
 					name = L["Squirrel /Love"],
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
@@ -867,10 +946,10 @@ ns.options = {
 							..L["Achievement"] .." - " ..L["Pink"] .."\n14 = " ..L["Achievement"]
 							.."\n15 = " ..L["Love"], 
 					min = 1, max = 15, step = 1,
-					arg = "icon_EALove",
-					order = 12,
+					arg = "iconEALove",
+					order = 11,
 				},
-				icon_champion = {
+				iconChampion = {
 					type = "range",
 					name = L["Timeless Champion"],
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
@@ -880,10 +959,10 @@ ns.options = {
 							.."\n12 = " ..L["Achievement"] .." - " ..L["Blue"] .."\n13 = "
 							..L["Achievement"] .." - " ..L["Pink"] .."\n14 = " ..L["Achievement"], 
 					min = 1, max = 14, step = 1,
-					arg = "icon_champion",
-					order = 13,
+					arg = "iconChampion",
+					order = 12,
 				},
-				icon_eyesGround = {
+				icon_EyesGround = {
 					type = "range",
 					name = L["Eyes on the Ground"],
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
@@ -893,10 +972,10 @@ ns.options = {
 							.."\n12 = " ..L["Achievement"] .." - " ..L["Blue"] .."\n13 = "
 							..L["Achievement"] .." - " ..L["Pink"] .."\n14 = " ..L["Achievement"], 
 					min = 1, max = 14, step = 1,
-					arg = "icon_eyesGround",
-					order = 14,
+					arg = "icon_EyesGround",
+					order = 13,
 				},
-				icon_pilgrimage = {
+				iconPilgrimage = {
 					type = "range",
 					name = L["Pilgrimage / Shrines"],
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
@@ -906,10 +985,10 @@ ns.options = {
 							.."\n12 = " ..L["Achievement"] .." - " ..L["Blue"] .."\n13 = "
 							..L["Achievement"] .." - " ..L["Pink"] .."\n14 = " ..L["Achievement"], 
 					min = 1, max = 14, step = 1,
-					arg = "icon_pilgrimage",
-					order = 15,
+					arg = "iconPilgrimage",
+					order = 14,
 				},
-				icon_killingTime = {
+				iconKillingTime = {
 					type = "range",
 					name = L["Killing Time & Base"],
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
@@ -921,8 +1000,8 @@ ns.options = {
 							..ns.colour.highlight .."\"Killing Time\"" ..ns.colour.plaintext
 							.." and\n" ..ns.colour.highlight .."\"I'm In Your Base Killing...\"",  
 					min = 1, max = 14, step = 1,
-					arg = "icon_killingTime",
-					order = 16,
+					arg = "iconKillingTime",
+					order = 15,
 				},
 			},
 		},

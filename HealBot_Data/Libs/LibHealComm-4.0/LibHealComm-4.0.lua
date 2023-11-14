@@ -1,5 +1,5 @@
 local major = "LibHealComm-4.0"
-local minor = 108
+local minor = 109
 assert(LibStub, format("%s requires LibStub.", major))
 
 local HealComm = LibStub:NewLibrary(major, minor)
@@ -2058,7 +2058,7 @@ end
 -- Keep track of where all the data should be going
 local instanceType
 local function updateDistributionChannel()
-    if (IsInInstance() and (IsInGroup(LE_PARTY_CATEGORY_INSTANCE) or IsInRaid(LE_PARTY_CATEGORY_INSTANCE))) or ( instanceType == "pvp" or instanceType == "arena" ) then
+    if HEALBOT_GAME_VERSION>2 and (IsInGroup(LE_PARTY_CATEGORY_INSTANCE) or IsInRaid(LE_PARTY_CATEGORY_INSTANCE) or instanceType == "pvp" or instanceType == "arena" or HasLFGRestrictions()) then
 		distribution = "INSTANCE_CHAT"
 	elseif( IsInRaid() ) then
 		distribution = "RAID"
@@ -2668,7 +2668,7 @@ function HealComm:COMBAT_LOG_EVENT_UNFILTERED(...)
 	local _, spellName = select(12, ...)
 	local destUnit = guidToUnit[destGUID]
 	local spellID = destUnit and select(10, unitHasAura(destUnit, spellName)) or select(7, GetSpellInfo(spellName))
-
+    if spellID==70664 then spellID=48441 end
 	-- Heal or hot ticked that the library is tracking
 	-- It's more efficient/accurate to have the library keep track of this locally, spamming the comm channel would not be a very good thing especially when a single player can have 4 - 8 hots/channels going on them.
 	if( eventType == "SPELL_HEAL" or eventType == "SPELL_PERIODIC_HEAL" ) then

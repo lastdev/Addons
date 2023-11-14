@@ -1,0 +1,82 @@
+== v2.07 - 3rd November 2023
+* TOC bump to 10.2.0
+* Reworked pin scaling
+
+== v2.06 - 18th September 2023
+* TOC version bump to 10.1.7
+
+== v2.05 - 28th June 2023
+* TOC bump to 10.1.5
+
+== v2.04 - 21st June 2023
+* Bug fix. Just noticed a missing scaling paramter for the 15th selectable icon
+
+== v2.03 - 6th May 2023
+* Now supports the new AddOn Compartment introduced in 10.1.0
+  Clicking the drop down for this AddOn takes you directly to the configuration panel!
+
+== v2.02 - 3rd May 2023
+* Added an icon to the TOC file
+
+== v2.01 - 24th April 2023
+* TOC bump to 10.1.0
+
+== v2.00 - 15th April 2022
+* All flowers, quests, achievement pins are now visible in adjacent zones of a World Mao's zone!
+* Complete data/core overhaul to facilitate going forward ;)
+
+== v1.12 - 21st Mar 2023
+* 10.0.7 TOC file update
+
+== v1.11 - 23rd February 2023
+* Localised / up values for a couple of Quest Log calls
+
+== v1.10 - 15th February 2023
+* Icons now appear on the Azeroth map. Previously on so far as the continent maps
+* Localized the use of "character" in case I couldn't pull the character name and also the upvalue of UnitName while I was at it
+
+== v1.09 - 7th February 2023
+* Changed tooltip for Lunar Preservation from "nine" to "eight" - there is no secret ninth!
+* Also now Lunar Preservation appears on the continent maps
+
+== v1.08 - 3rd February 2023
+* Added translations for the 12 flowers, 3 for each of the four cosmetic crowns.
+  I had a bit of trouble with a few so I used Google translate.
+  Please DM me any corrections, thanks!
+
+== v1.07 - 31st January 2023
+* Lunar Preservation is now fully supported
+* The four option follow on quests for "Crown of ..." cosmetics are also fully supprted too
+
+== v1.06 - 29th January 2023
+* Swapped the coordinates of the two Elders in the Ohn'ahran Plains. Thankyou again to hexpinLIVE
+* Finished tweaking / visiting every non Dragon Isles Elder with any outstanding Northrend Elders also included in this update
+
+== v1.05 - 28th January 2023
+* Added Dragon Flight
+* Tweak to some Northrend Dungeons and locations
+* Especially added a lot more help to do the Wintergrasp glitch
+
+== v1.04 - 27th January 2023
+* Every location in Kalimdor and the Eastern Kingdoms (and Cataclysm locations too) have been slightly tweeked.
+* This includes the big location fix reported by Megalithe for the Elder in Bloodhoof Village.
+* Added intermediate map locations to Vashj'ir and Stranglethron Vale.
+* Reversed the logic of the Uldum Elder markers - I had no way of knowing in advance which map would be used. It was 50/50 and I guessed wrong lol.
+
+== v1.03 - 26th January 2023
+* Fix submitted by hexpinLIVE for Elder Meadowrun. Thank you!
+* Code for toggling SEASONAL completion now included and it is working
+
+== v1.02 - 26th January 2023
+* Trivial update to 10.0.5
+
+== v1.01 - 17th January 2023
+* This marks the completion of this new AddOn.
+* I've polished the help for the opposite faction Elders
+* Added oustanding translations
+* Fixed copy/paste oversights ( i based this off my Hallow's End AddOn)
+* Finalised icon choices for configuration
+* Play tested on opposite factions to ensure the hlp was... helpful
+
+== v1.00 - 25th December 2022
+* Initial release.

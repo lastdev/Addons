@@ -1,6 +1,8 @@
-## Changed in v50
+## Changed in v52
 
-* Updated for 10.1.7 (and also 10.1.5)
-* Better fallback for unknown quest names
-* Make the revival catalyst more visible
+* Show the portal to the Emerald Dream in Valdrakken
+* Added much loot to rares in Emerald Dream
+* Improved the explanations for the wild god statue treasures
+* Zenet Avis finally has a questid added in Ohn'ahran Plains
+* Primal Scythid Queen's location fixed in Waking Shores
 

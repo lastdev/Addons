@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(new)
 	for k, v in pairs(PartyFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 5a89ecaf32f24ffefbf320bef9dff40e1992eb4e $")
+end, "$Revision: da55462768ecd09cb5ab02efcc8fbb98c830846e $")
 
 local percD = "%d"..PERCENT_SYMBOL
 
@@ -76,8 +76,9 @@ local UnitPower = UnitPower
 local UnitPowerMax = UnitPowerMax
 local UnregisterUnitWatch = UnregisterUnitWatch
 
-local CombatFeedback_OnUpdate = CombatFeedback_OnUpdate
+local CombatFeedback_Initialize = CombatFeedback_Initialize
 local CombatFeedback_OnCombatEvent = CombatFeedback_OnCombatEvent
+local CombatFeedback_OnUpdate = CombatFeedback_OnUpdate
 
 local partyHeader
 local partyAnchor

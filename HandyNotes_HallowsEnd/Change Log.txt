@@ -1,0 +1,147 @@
+== v2.25 - 12th November 2023
+* Neighbouring zone project: Outland and Pandaria completed
+
+== v2.24 - 1st November 2023
+* Neighbouring zones added. Kalimdor and Eastern Kingdoms completed for Horde and Alliance
+* Code to allow for phased map testing with neighbouring zones present
+* This version 10.2.0
+
+== v2.23 - 31st October 2023
+* Neighbouring zones added. this completes the Alliance sweep of Kalimdor and Eastern Kingdoms
+
+== v2.22 - 28th October 2023
+* I added more translations
+* Some neighbouring zone locations added to make navigation between buckets easier
+* Theramore test for map phase and warning to the player
+
+== v2.21 - 26th October 2023
+* Now with Spooky Pepe
+
+== v2.20 - 23rd October 2023
+* Combined Retail and Wrath version
+* Retail added pins for neighbouring zones so as to help with navigation: Eastern Kingdoms
+* Some minor coord tweaks of a hundredth of a point or two
+
+== v2.19 W - 23rd October 2023
+* Wrath version
+
+== v2.18 - 21st October 2023
+* Horde side fix that prevented pins appearing. For the Horde! Sometimes...
+
+== v2.17 - 20th October 2023
+* Fix fatal crash bug as reported by f_lambda
+
+== v2.16 - 19th October 2023
+All changes are for DF
+* Bloodhoof Outpost quest number fixed. So now tracks completion for your toon correctly
+* Wild Coast. Horde and Alliance now correctly shown. Correct Alliance is (81.31,31.96)
+* Skytop location fixed
+* Weyrnrest location fixed
+* Miniscule/fussy changes of a hundredth decimal place or two to several others.
+
+== v2.15 - 19th October 2023
+* Bug fix and took the opportunity to tidy up data
+
+== v2.14 - 15th October 2023
+* Dragon Isles added!
+* Translation for pins added
+* Garrison tips not appearing
+* Better tooltip logic
+* Increased size of the macro suggestion on the Azeroth and Outland maps
+* Improved description for configuration options
+
+== v2.13 - 13th October 2023
+* Adjustment to the default pin sizes. They were way too large
+
+== v2.12 - 11th October 2023
+* First update for the new season (I'll keep updating throughout the event)
+* Transaltions improved
+* Pin scaling and adjustments improved
+
+== v2.11 - 18th September 2023
+* TOC version bump to 10.1.7
+
+== v2.10 - 28th June 2023
+* Support 10.1.5
+
+== v2.09 - 6th May 2023
+* Now supports the new AddOn Compartment introduced in 10.1.0.
+  Clicking the drop down for this AddOn takes you directly to the configuration panel!
+
+== v2.08 - 3rd May 2023
+* Added an icon to the TOC file - thus removing the annoying "?" from the AddOn list in game
+* Removed unnecessary print to console code
+
+== v2.07 - 24th April 2023
+* TOC bump to 10.1.0
+
+== v2.06 - 21st March 2023
+* TOC bump to 10.0.7
+
+== v2.05 - 26th January 2023
+* TOC bump to 10.0.5
+
+== v2.04 - 18th January 2023
+* Fix for TOC Highlight (prefix colour) now matches the prefix used by the AddOn
+
+== v2.03 - 7th December 2022
+* Update TOC to 10.0.2
+
+== v2.02 - 10th November 2022
+* Remove left over references to "Noble Garden" due to me doing cut and paste between AddOns, sigh
+* Updated the TOC title and the AddOn description so that there will be nice popup text if mousing over the AddOn
+
+== v2.01 - 31st October 2022
+* The base HN tools don't really seem to allow for duplicate coordinates. This poses a problem for me as my data structure has duplicate coordinates - one for Alliance, one for Horde. One manifestation of the problem is missing continent markers for one faction. Zones too but that was fixed in v2.00. I've now overcome the continent problem. I still need to ensure there are no duplicates at the zone level though. I'll live with that.
+* With the above work I now need not fear missing markers on the Azeroth map, as has happened although I doubt anyone noticed as there were so many anyway already lol.
+* Stranglethorn Vale "sub-continent" has been added back in. It was dumb to have removed it.
+* The Garrison mission for Hallow's End has been added. I've never seen it myself but apparently it's still in the game.
+* A typo for Refuge Pointe.
+* I removed localisation of most API calls to avoid taint.
+
+== v2.00 - 30th October 2022
+* You now have the option to
+(1) remove a marker if your account has ever completed it
+(2) remove a marker if your character has ever completed it
+(3) remove a marker if completed this season
+* Numerous changes to the data file - corections to quest ID, tweaking coordinates, tooltip help tweaking, new data format for dailies / non-achievement buckets.
+* World map displays now complete - data fully passed up from zones and continents
+* With the inclusion of the mysterious Stonetalon Mountains crate (not part of an achievement), Theramore, Boralus, Garrison seasonal and dailies, etc the AddOn has literally 100% of all the Candy Buckets
+
+== v1.06 - 26th October 2022
+* Added Old Theramore
+* Updated the game version to 10.0.0
+* Several other titivations of which I don't recall the details. Slight position movements mostly.
+
+== v1.06 - 25th October 2022
+* As usual, lot's of refinements.
+* The marker for Boralus in map 1161 was missing. It's there now!
+
+== v1.05 - 23rd October 2022
+* So many changes.... the main ones:
+* Added a 3rd icon for "Other" or "miscellany". Specifically those candy buckets which are not a part of any achievement.
+* Help for Draenor and Broken Isles now included for those completionists.
+* Some Northrend Horde were rough as based off memory (lol). I've now completed a sweep of all achievement continents for both factions.
+
+== v1.04 - 23rd October 2022
+* So many changes.... the main ones:
+* Added a 3rd icon for "Other" or "miscellany". Specifically those candy buckets which are not a part of any achievement.
+* Help for Draenor and Broken Isles now included for those completionists.
+* Some Northrend Horde were rough as based off memory (lol). I've now completed a sweep of all achievement continents for both factions.
+
+== v1.03 - 21st October 2022
+* Way to many tweaks and polishes to note. I'd say I'm pretty much done with Cataclysm, Eastern Kingdoms and Kalimdor for both factions for the time being.
+* For example I made notes about how to easily access Deepholm and Vashj'ir. Added a bit of fun trivia.
+* Almost every Azeroth location has had its coordinates adjusted a hundredth of a point or two because I'm like that lol.
+
+== v1.02 - 20th October 2022
+* Pandaria and Northrend have been polished
+* Coordinate tweaking
+* comments too
+
+== v1.01 - 18th October 2022
+* Vashj'ir help needed a bit of polish
+* Likewise the Daily quests
+
+== v1.00 - 18th October 2022
+* Initial release. Wooo!

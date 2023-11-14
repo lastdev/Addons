@@ -9,9 +9,9 @@ local LOCALE = GetLocale()
 local patternIlvl = ITEM_UPGRADE_ITEM_LEVEL_STAT_FORMAT
 
 if LOCALE == "ruRU" then
-	patternIlvl = "^" .. patternIlvl:gsub("%%1%$d", "[0-9]+") .. "$" -- For some godawful reason, russian and russian alone is a different format.
+	patternIlvl = "^" .. patternIlvl:gsub("%%1%$d", "([0-9]+)") .. "$" -- For some godawful reason, russian and russian alone is a different format.
 else
-	patternIlvl = "^" .. patternIlvl:gsub("%%d", "[0-9]+") .. "$" -- Our actual proper pattern matching.
+	patternIlvl = "^" .. patternIlvl:gsub("%%d", "([0-9]+)") .. "$" -- Our actual proper pattern matching.
 end
 
 
@@ -140,18 +140,20 @@ end
 
 -- Item category data
 local categoryDataTab = {
-	[categoryEnum.Explorer] = {minLevel = 376, maxLevel = 398, color = ITEM_POOR_COLOR, icon = "|A:Professions-ChatIcon-Quality-Tier1:20:20|a "},
-	[categoryEnum.Adventurer] = {minLevel = 389, maxLevel = 411, color = WHITE_FONT_COLOR, icon = "|A:Professions-ChatIcon-Quality-Tier2:20:20|a "},
-	[categoryEnum.Veteran] = {minLevel = 402, maxLevel = 424, color = UNCOMMON_GREEN_COLOR, icon = "|A:Professions-ChatIcon-Quality-Tier3:20:20|a "},
-	[categoryEnum.Champion] = {minLevel = 415, maxLevel = 437, color = RARE_BLUE_COLOR, icon = "|A:Professions-ChatIcon-Quality-Tier4:20:20|a "},
-	[categoryEnum.Hero] = {minLevel = 428, maxLevel = 441, color = ITEM_EPIC_COLOR, icon = "|A:Professions-ChatIcon-Quality-Tier5:20:20|a "},
-	[categoryEnum.Myth] = {minLevel = 441, maxLevel = 447, color = ITEM_LEGENDARY_COLOR, icon = "|TInterface\\AddOns\\ItemUpgradeQualityIcons\\Professions-Icon-Quality-Tier6:20:20:0:0:64:64:14:50:14:50|t "}, -- Thanks to Peterodox for supplying this new texture!
+	[categoryEnum.Explorer] = {minLevel = 415, maxLevel = 437, color = ITEM_POOR_COLOR, icon = "|A:Professions-ChatIcon-Quality-Tier1:20:20|a ", iconObsolete = "|TInterface\\AddOns\\ItemUpgradeQualityIcons\\ProfessionsQualityIcons.tga:20:20:0:0:128:128:1:31:73:107|t "},
+	[categoryEnum.Adventurer] = {minLevel = 428, maxLevel = 450, color = WHITE_FONT_COLOR, icon = "|A:Professions-ChatIcon-Quality-Tier2:20:20|a ", iconObsolete = "|TInterface\\AddOns\\ItemUpgradeQualityIcons\\ProfessionsQualityIcons.tga:20:20:0:0:128:128:1:47:1:35|t "},
+	[categoryEnum.Veteran] = {minLevel = 441, maxLevel = 463, color = UNCOMMON_GREEN_COLOR, icon = "|A:Professions-ChatIcon-Quality-Tier3:20:20|a ", iconObsolete = "|TInterface\\AddOns\\ItemUpgradeQualityIcons\\ProfessionsQualityIcons.tga:20:20:0:0:128:128:49:85:1:35|t "},
+	[categoryEnum.Champion] = {minLevel = 454, maxLevel = 476, color = RARE_BLUE_COLOR, icon = "|A:Professions-ChatIcon-Quality-Tier4:20:20|a ", iconObsolete = "|TInterface\\AddOns\\ItemUpgradeQualityIcons\\ProfessionsQualityIcons.tga:20:20:0:0:128:128:87:121:1:35|t "},
+	[categoryEnum.Hero] = {minLevel = 467, maxLevel = 483, color = ITEM_EPIC_COLOR, icon = "|A:Professions-ChatIcon-Quality-Tier5:20:20|a ", iconObsolete = "|TInterface\\AddOns\\ItemUpgradeQualityIcons\\ProfessionsQualityIcons.tga:20:20:0:0:128:128:1:35:37:71|t "},
+	[categoryEnum.Myth] = {minLevel = 480, maxLevel = 489, color = ITEM_LEGENDARY_COLOR, icon = "|TInterface\\AddOns\\ItemUpgradeQualityIcons\\ProfessionsQualityIcons:20:20:0:0:128:128:86:122:42:78|t ", iconObsolete = "|TInterface\\AddOns\\ItemUpgradeQualityIcons\\ProfessionsQualityIcons:20:20:0:0:128:128:42:78:42:78|t "}, -- Thanks to Peterodox for supplying this new texture!
 }
 
 local function SearchAndReplaceTooltipLine(tooltip, category)
-	-- Editing the upgrade line (need to do first because of fallback detection)
+
 	local categoryData;
 
+	-- Retrieving the upgrade line (need to do first because of fallback detection)
+	local upgradeLevelLine;
 	for i = 1, tooltip:NumLines() do
 		local line = _G[tooltip:GetName().."TextLeft"..i]
 		local text
@@ -170,12 +172,8 @@ local function SearchAndReplaceTooltipLine(tooltip, category)
 
 			if not categoryData then return end -- Invalid/non-existent category
 
-			-- Replacing the line
-			text = text:gsub(patternUpgradeLevel, "%1" .. categoryData.icon .. "%2%3")
-			
-			line:SetText(text)
-			line:Show()
-			
+			upgradeLevelLine = line
+
 			break
 		end
 	end
@@ -184,7 +182,9 @@ local function SearchAndReplaceTooltipLine(tooltip, category)
 	if not categoryData then
 		return
 	end
-	
+
+	local isCurrentSeason;
+
 	-- Editing the ilvl line
 	for i = 1, tooltip:NumLines() do
 		local line = _G[tooltip:GetName().."TextLeft"..i]
@@ -193,15 +193,45 @@ local function SearchAndReplaceTooltipLine(tooltip, category)
 			text = line:GetText()
 		end
 
-		if text and text:match(patternIlvl) and not text:match(".*" .. categoryData.maxLevel .. "$") then
-			text = text .. "/" .. categoryData.maxLevel
+		if text then
+			-- Checking if ilvl line and retrieving the ilvl value
+			local ilvl = tonumber(text:match(patternIlvl));
+			if ilvl then
+				-- Checking if the ilvl is in the right range (otherwise it's a previous season item)
+				if ilvl >= categoryData.minLevel and ilvl <= categoryData.maxLevel then
 
-			line:SetText(text)
-			line:Show()
+					isCurrentSeason = true;
 
-			break
+					-- Not showing ilvl range on a max upgraded item
+					if ilvl ~= categoryData.maxLevel then
+						text = text .. "/" .. categoryData.maxLevel
+
+						line:SetText(text)
+						line:Show()
+					end
+
+					break
+				end
+			end
 		end
 	end
+
+	-- Editing the upgrade line
+	if categoryData and upgradeLevelLine then
+		local text = upgradeLevelLine:GetText()
+
+		if isCurrentSeason then
+			-- Current season
+			text = text:gsub(patternUpgradeLevel, "%1" .. categoryData.icon .. "%2%3")
+		else
+			-- Previous season
+			text = text:gsub(patternUpgradeLevel, "%1" .. categoryData.iconObsolete .. "%2%3")
+		end
+
+		upgradeLevelLine:SetText(text)
+		upgradeLevelLine:Show()
+	end
+
 end
 
 TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, function(tooltip)

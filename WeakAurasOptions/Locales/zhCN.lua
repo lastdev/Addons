@@ -403,7 +403,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Fallback"] = "后备"
 	L["Fallback Icon"] = "后备图标"
 	L["False"] = "假"
-	L["Fetch Affected/Unaffected Names"] = "获取受影响的/未受影响的名称"
+	--[[Translation missing --]]
+	L["Fetch Affected/Unaffected Names and Units"] = "Fetch Affected/Unaffected Names and Units"
 	L["Fetch Raid Mark Information"] = "获取团队标记信息"
 	L["Fetch Role Information"] = "获取职责信息"
 	L["Fetch Tooltip Information"] = "获取鼠标提示信息"
@@ -846,6 +847,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = [=[事件发�
 	L["Stop Sound"] = "停止播放声音"
 	L["Sub Elements"] = "子元素"
 	L["Sub Option %i"] = "子选项 %i"
+	--[[Translation missing --]]
+	L["Supports multiple entries, separated by commas"] = "Supports multiple entries, separated by commas"
 	L["Swipe Overlay Settings"] = "冷却刷覆盖层设置"
 	L["Templates could not be loaded, the addon is %s"] = "无法载入Templates：%s"
 	L["Temporary Group"] = "临时组"

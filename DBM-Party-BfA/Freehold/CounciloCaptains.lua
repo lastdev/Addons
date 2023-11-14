@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2093, "DBM-Party-BfA", 2, 1001)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230922070058")
+mod:SetRevision("20231020041658")
 mod:SetCreatureID(126845, 126847, 126848)--Captain Jolly, Captain Raoul, Captain Eudora
 mod:SetEncounterID(2094)
 mod:DisableRegenDetection()
@@ -38,7 +38,7 @@ local specWarnBrewOnBoss			= mod:NewSpecialWarning("specWarnBrewOnBoss", "Tank",
 
 local timerTendingBarCD				= mod:NewNextTimer(8, 264605, nil, nil, nil, 3)
 
-mod:GroupSpells(264605, 265168)--Group good brew and bad brew with "tending Bar"
+--mod:GroupSpells(264605, 265168)--Group good brew and bad brew with "tending Bar"
 --Jolly
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(17025))
 local warnLuckySevens				= mod:NewSpellAnnounce(257117, 1)

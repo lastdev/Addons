@@ -1,6 +1,6 @@
 
 
-local dversion = 466
+local dversion = 479
 local major, minor = "DetailsFramework-1.0", dversion
 local DF, oldminor = LibStub:NewLibrary(major, minor)
 
@@ -11,6 +11,8 @@ end
 
 _G["DetailsFramework"] = DF
 
+---@cast DF detailsframework
+
 DetailsFrameworkCanLoad = true
 local SharedMedia = LibStub:GetLibrary("LibSharedMedia-3.0")
 
@@ -19,7 +21,7 @@ local type = type
 local unpack = unpack
 local upper = string.upper
 local string_match = string.match
-local tinsert = _G.tinsert
+local tinsert = table.insert
 local abs = _G.abs
 local tremove = _G.tremove
 
@@ -1093,6 +1095,14 @@ function DF:AddClassColorToText(text, className)
 	return text
 end
 
+---returns the class icon texture coordinates and texture file path
+---@param class string
+---@return number, number, number, number, string
+function DF:GetClassTCoordsAndTexture(class)
+	local l, r, t, b = unpack(CLASS_ICON_TCOORDS[class])
+	return l, r, t, b, [[Interface\WORLDSTATEFRAME\Icons-Classes]]
+end
+
 ---create a string with the spell icon and the spell name using |T|t scape codes to add the icon inside the string
 ---@param self table
 ---@param spellId any
@@ -1103,14 +1113,6 @@ function DF:MakeStringFromSpellId(spellId)
 		return "|T" .. spellIcon .. ":16:16:0:0:64:64:4:60:4:60|t " .. spellName
 	end
 	return ""
-end
-
----returns the class icon texture coordinates and texture file path
----@param class string
----@return number, number, number, number, string
-function DF:GetClassTCoordsAndTexture(class)
-	local l, r, t, b = unpack(CLASS_ICON_TCOORDS[class])
-	return l, r, t, b, [[Interface\WORLDSTATEFRAME\Icons-Classes]]
 end
 
 ---wrap 'text' with the class icon of 'playerName' using |T|t scape codes
@@ -1157,6 +1159,58 @@ function DF:AddClassIconToText(text, playerName, englishClassName, useSpec, icon
 	end
 
 	return text
+end
+
+---create a table with information about a texture
+---@param texture any
+---@param textureWidth any
+---@param textureHeight any
+---@param imageWidth any
+---@param imageHeight any
+---@param left any
+---@param right any
+---@param top any
+---@param bottom any
+---@return table
+function DF:CreateTextureInfo(texture, textureWidth, textureHeight, left, right, top, bottom, imageWidth, imageHeight)
+	local textureInfo = {
+		texture = texture,
+		width = textureWidth or 16,
+		height = textureHeight or 16,
+		coords = {left or 0, right or 1, top or 0, bottom or 1},
+	}
+
+	textureInfo.imageWidth = imageWidth or textureInfo.width
+	textureInfo.imageHeight = imageHeight or textureInfo.height
+
+	return textureInfo
+end
+
+---add a texture to the start or end of a string
+---@param text string
+---@param textureInfo table
+---@param bAddSpace any
+---@param bAddAfterText any
+---@return string
+function DF:AddTextureToText(text, textureInfo, bAddSpace, bAddAfterText)
+	local texture = textureInfo.texture
+	local textureWidth = textureInfo.width
+	local textureHeight = textureInfo.height
+	local imageWidth = textureInfo.imageWidth or textureWidth
+	local imageHeight = textureInfo.imageHeight or textureHeight
+	local left, right, top, bottom = unpack(textureInfo.coords)
+	left = left or 0
+	right = right or 1
+	top = top or 0
+	bottom = bottom or 1
+
+	if (bAddAfterText) then
+		local newString = text .. (bAddSpace and " " or "") .. "|T" .. texture .. ":" .. textureWidth .. ":" .. textureHeight .. ":0:0:" .. imageWidth .. ":" .. imageHeight .. ":" .. (left * imageWidth) .. ":" .. (right * imageWidth) .. ":" .. (top * imageHeight) .. ":" .. (bottom * imageHeight) .. "|t"
+		return newString
+	else
+		local newString = "|T" .. texture .. ":" .. textureWidth .. ":" .. textureHeight .. ":0:0:" .. imageWidth .. ":" .. imageHeight .. ":" .. (left * imageWidth) .. ":" .. (right * imageWidth) .. ":" .. (top * imageHeight) .. ":" .. (bottom * imageHeight) .. "|t" .. (bAddSpace and " " or "") .. text
+		return newString
+	end
 end
 
 ---return the size of a fontstring
@@ -1380,6 +1434,157 @@ function DF:GetSpellBookSpells()
     end
 
     return spellNamesInSpellBook, spellIdsInSpellBook
+end
+
+---return a table of passive talents, format: [spellId] = true
+---@return {Name: string, ID: number, Texture: any, IsSelected: boolean}[]
+function DF:GetAllTalents()
+	local allTalents = {}
+
+	local configId = C_ClassTalents.GetActiveConfigID()
+	if (configId) then
+		local configInfo = C_Traits.GetConfigInfo(configId)
+		--get the spells from the SPEC from talents
+		for treeIndex, treeId in ipairs(configInfo.treeIDs) do
+			local treeNodes = C_Traits.GetTreeNodes(treeId)
+			for nodeIdIndex, treeNodeID in ipairs(treeNodes) do
+				local traitNodeInfo = C_Traits.GetNodeInfo(configId, treeNodeID)
+				if (traitNodeInfo) then
+					local activeEntry = traitNodeInfo.activeEntry
+					local entryIds = traitNodeInfo.entryIDs
+					for i = 1, #entryIds do
+						local entryId = entryIds[i] --number
+						local traitEntryInfo = C_Traits.GetEntryInfo(configId, entryId)
+						local borderTypes = Enum.TraitNodeEntryType
+						if (traitEntryInfo.type) then -- == borderTypes.SpendCircle
+							local definitionId = traitEntryInfo.definitionID
+							local traitDefinitionInfo = C_Traits.GetDefinitionInfo(definitionId)
+							local spellId = traitDefinitionInfo.overriddenSpellID or traitDefinitionInfo.spellID
+							local spellName, _, spellTexture = GetSpellInfo(spellId)
+							if (spellName) then
+								local talentInfo = {Name = spellName, ID = spellId, Texture = spellTexture, IsSelected = (activeEntry and activeEntry.rank and activeEntry.rank > 0) or false}
+								allTalents[#allTalents+1] = talentInfo
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+
+	return allTalents
+end
+
+---return a table where keys are spellIds (number) and the value is true
+---@return table<number, boolean>
+function DF:GetAvailableSpells()
+    local completeListOfSpells = {}
+
+    --this line might not be compatible with classic
+    --local specId, specName, _, specIconTexture = GetSpecializationInfo(GetSpecialization())
+    --local classNameLoc, className, classId = UnitClass("player") --not in use
+    local locPlayerRace, playerRace, playerRaceId = UnitRace("player")
+
+    --get racials from the general tab
+	local generalTabIndex = 1
+    local tabName, tabTexture, offset, numSpells, isGuild, offspecId = GetSpellTabInfo(generalTabIndex)
+    offset = offset + 1
+    local tabEnd = offset + numSpells
+    for entryOffset = offset, tabEnd - 1 do
+        local spellType, spellId = GetSpellBookItemInfo(entryOffset, "player")
+        local spellData = LIB_OPEN_RAID_COOLDOWNS_INFO[spellId]
+        if (spellData) then
+            local raceId = spellData.raceid
+            if (raceId) then
+                if (type(raceId) == "table") then
+                    if (raceId[playerRaceId]) then
+                        spellId = C_SpellBook.GetOverrideSpell(spellId)
+                        local spellName = GetSpellInfo(spellId)
+                        local bIsPassive = IsPassiveSpell(spellId, "player")
+                        if (spellName and not bIsPassive) then
+                            completeListOfSpells[spellId] = true
+                        end
+                    end
+
+                elseif (type(raceId) == "number") then
+                    if (raceId == playerRaceId) then
+                        spellId = C_SpellBook.GetOverrideSpell(spellId)
+                        local spellName = GetSpellInfo(spellId)
+                        local bIsPassive = IsPassiveSpell(spellId, "player")
+                        if (spellName and not bIsPassive) then
+                            completeListOfSpells[spellId] = true
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+	--get spells from the Spec spellbook
+	local amountOfTabs = GetNumSpellTabs()
+    for i = 2, amountOfTabs-1 do --starting at index 2 to ignore the general tab
+        local tabName, tabTexture, offset, numSpells, isGuild, offSpecId, shouldHide, specID = GetSpellTabInfo(i)
+		local bIsOffSpec = offSpecId ~= 0
+		offset = offset + 1
+		local tabEnd = offset + numSpells
+		for entryOffset = offset, tabEnd - 1 do
+			local spellType, spellId = GetSpellBookItemInfo(entryOffset, "player")
+			if (spellId) then
+				if (spellType == "SPELL") then
+					spellId = C_SpellBook.GetOverrideSpell(spellId)
+					local spellName = GetSpellInfo(spellId)
+					local bIsPassive = IsPassiveSpell(spellId, "player")
+					if (spellName and not bIsPassive) then
+						completeListOfSpells[spellId] = bIsOffSpec == false
+					end
+				end
+			end
+		end
+    end
+
+    --get class shared spells from the spell book
+	--[=[
+    local tabName, tabTexture, offset, numSpells, isGuild, offSpecId = GetSpellTabInfo(2)
+	local bIsOffSpec = offSpecId ~= 0
+    offset = offset + 1
+    local tabEnd = offset + numSpells
+    for entryOffset = offset, tabEnd - 1 do
+        local spellType, spellId = GetSpellBookItemInfo(entryOffset, "player")
+        if (spellId) then
+            if (spellType == "SPELL") then
+                spellId = C_SpellBook.GetOverrideSpell(spellId)
+                local spellName = GetSpellInfo(spellId)
+                local bIsPassive = IsPassiveSpell(spellId, "player")
+
+				if (spellName and not bIsPassive) then
+                    completeListOfSpells[spellId] = bIsOffSpec == false
+                end
+            end
+        end
+    end
+	--]=]
+
+    local getNumPetSpells = function()
+        --'HasPetSpells' contradicts the name and return the amount of pet spells available instead of a boolean
+        return HasPetSpells()
+    end
+
+    --get pet spells from the pet spellbook
+    local numPetSpells = getNumPetSpells()
+    if (numPetSpells) then
+        for i = 1, numPetSpells do
+            local spellName, _, unmaskedSpellId = GetSpellBookItemName(i, "pet")
+            if (unmaskedSpellId) then
+                unmaskedSpellId = C_SpellBook.GetOverrideSpell(unmaskedSpellId)
+                local bIsPassive = IsPassiveSpell(unmaskedSpellId, "pet")
+                if (spellName and not bIsPassive) then
+                    completeListOfSpells[unmaskedSpellId] = true
+                end
+            end
+        end
+    end
+
+    return completeListOfSpells
 end
 
 
@@ -1608,7 +1813,7 @@ end
 	--add a new color name, the color can be query using DetailsFramework:ParseColors(colorName)
 	function DF:NewColor(colorName, red, green, blue, alpha)
 		assert(type(colorName) == "string", "DetailsFramework:NewColor(): colorName must be a string.")
-		assert(not DF.alias_text_colors[colorName], "DetailsFramework:NewColor(): colorName already exists.")
+		--assert(not DF.alias_text_colors[colorName], "DetailsFramework:NewColor(): colorName already exists.")
 
 		red, green, blue, alpha = DetailsFramework:ParseColors(red, green, blue, alpha)
 		local colorTable = DetailsFramework:FormatColor("table", red, green, blue, alpha)
@@ -1894,8 +2099,47 @@ end
 		return descPhraseId or widgetTable.descPhraseId or widgetTable.desc or widgetTable.name or "-?-"
 	end
 
-	local getNamePhraseText = function(languageTable, widgetTable, useColon)
-		local namePhrase = languageTable and (languageTable[widgetTable.namePhraseId] or languageTable[widgetTable.name])
+	local getNamePhraseID = function(widgetTable, languageAddonId, languageTable, bIgnoreEmbed)
+		if (widgetTable.namePhraseId) then
+			return widgetTable.namePhraseId
+		end
+
+		if (not languageTable) then
+			return
+		end
+
+		local keyName = widgetTable.name
+
+		if (widgetTable.type == "label" and widgetTable.get) then
+			local key = widgetTable.get()
+			if (key and type(key) == "string") then
+				keyName = key
+			end
+		end
+
+		--embed key is when the phraseId is inside a string surounded by @
+    	local embedPhraseId = keyName:match("@(.-)@")
+
+		local hasValue = DF.Language.DoesPhraseIDExistsInDefaultLanguage(languageAddonId, embedPhraseId or keyName)
+		if (not hasValue) then
+			return
+		end
+
+		if (embedPhraseId and not bIgnoreEmbed) then
+			return embedPhraseId, true
+		else
+			return keyName
+		end
+	end
+
+	local getNamePhraseText = function(languageTable, widgetTable, useColon, languageAddonId)
+		local namePhraseId, bWasEmbed = getNamePhraseID(widgetTable, languageAddonId, languageTable)
+		local namePhrase = languageTable and (languageTable[namePhraseId] or languageTable[widgetTable.namePhraseId] or languageTable[widgetTable.name])
+
+		if (bWasEmbed and widgetTable.name) then
+			namePhrase = widgetTable.name:gsub("@" .. namePhraseId .. "@", namePhrase)
+		end
+
 		return namePhrase or formatOptionNameWithColon(widgetTable.name, useColon) or widgetTable.namePhraseId or widgetTable.name or "-?-"
 	end
 
@@ -1976,7 +2220,8 @@ end
 						local label = getMenuWidgetVolative(parent, "label", widgetIndexes)
 						widgetCreated = label
 
-						local namePhrase = (languageTable and (languageTable[widgetTable.namePhraseId] or languageTable[widgetTable.name])) or (widgetTable.get and widgetTable.get()) or widgetTable.text or (widgetTable.namePhraseId) or ""
+						local namePhraseId = getNamePhraseID(widgetTable, languageAddonId, languageTable)
+						local namePhrase = (languageTable and (languageTable[namePhraseId] or languageTable[widgetTable.namePhraseId] or languageTable[widgetTable.name])) or (widgetTable.get and widgetTable.get()) or widgetTable.text or (widgetTable.namePhraseId) or ""
 						label.text = namePhrase
 						label.color = widgetTable.color
 
@@ -2015,7 +2260,7 @@ end
 						dropdown._get = widgetTable.get
 						dropdown.widget_type = "select"
 
-						local namePhrase = getNamePhraseText(languageTable, widgetTable, useColon)
+						local namePhrase = getNamePhraseText(languageTable, widgetTable, useColon, languageAddonId)
 						dropdown.hasLabel.text = namePhrase
 
 						dropdown.hasLabel:SetTemplate(widgetTable.text_template or textTemplate)
@@ -2078,7 +2323,7 @@ end
 							switch:SetHeight(widgetTable.height)
 						end
 
-						local namePhrase = getNamePhraseText(languageTable, widgetTable, useColon)
+						local namePhrase = getNamePhraseText(languageTable, widgetTable, useColon, languageAddonId)
 						switch.hasLabel.text = namePhrase
 						switch.hasLabel:SetTemplate(widgetTable.text_template or textTemplate)
 
@@ -2150,7 +2395,7 @@ end
 							end
 						end
 
-						local namePhrase = getNamePhraseText(languageTable, widgetTable, useColon)
+						local namePhrase = getNamePhraseText(languageTable, widgetTable, useColon, languageAddonId)
 						slider.hasLabel.text = namePhrase
 						slider.hasLabel:SetTemplate(widgetTable.text_template or textTemplate)
 
@@ -2200,7 +2445,7 @@ end
 
 						local label = colorpick.hasLabel
 
-						local namePhrase = getNamePhraseText(languageTable, widgetTable, useColon)
+						local namePhrase = getNamePhraseText(languageTable, widgetTable, useColon, languageAddonId)
 						label.text = namePhrase
 						label:SetTemplate(widgetTable.text_template or textTemplate)
 
@@ -2239,7 +2484,7 @@ end
 						button.textfont = textTemplate.font
 						button.textsize = textTemplate.size
 
-						local namePhrase = getNamePhraseText(languageTable, widgetTable, useColon)
+						local namePhrase = getNamePhraseText(languageTable, widgetTable, useColon, languageAddonId)
 						button.text = namePhrase
 
 						if (widgetTable.inline) then
@@ -2310,7 +2555,7 @@ end
 							end
 						end)
 
-						local namePhrase = getNamePhraseText(languageTable, widgetTable, useColon)
+						local namePhrase = getNamePhraseText(languageTable, widgetTable, useColon, languageAddonId)
 						textentry.hasLabel.text = namePhrase
 						textentry.hasLabel:SetTemplate(widgetTable.text_template or textTemplate)
 						textentry:SetPoint("left", textentry.hasLabel, "right", 2)
@@ -2381,35 +2626,6 @@ end
 		end
 
 		return widgetTable.desc
-	end
-
-	local getNamePhraseID = function(widgetTable, languageAddonId, languageTable)
-		if (widgetTable.namePhraseId) then
-			return widgetTable.namePhraseId
-		end
-
-		if (not languageTable) then
-			return
-		end
-
-		local keyName = widgetTable.name
-
-		if (widgetTable.type == "label" and widgetTable.get) then
-			local key = widgetTable.get()
-			if (key and type(key) == "string") then
-				keyName = key
-			end
-		end
-
-		--embed key is when the phraseId is inside a string surounded by @
-    	local embedPhraseId = keyName:match("@(.-)@")
-
-		local hasValue = DF.Language.DoesPhraseIDExistsInDefaultLanguage(languageAddonId, embedPhraseId or keyName)
-		if (not hasValue) then
-			return
-		end
-
-		return keyName
 	end
 
 	function DF:BuildMenu(parent, menuOptions, xOffset, yOffset, height, useColon, textTemplate, dropdownTemplate, switchTemplate, switchIsCheckbox, sliderTemplate, buttonTemplate, valueChangeHook)
@@ -2508,7 +2724,7 @@ end
 					dropdown.widget_type = "select"
 
 					local label = DF:NewLabel(parent, nil, "$parentLabel" .. index, nil, "", "GameFontNormal", widgetTable.text_template or textTemplate or 12)
-					local namePhraseId = getNamePhraseID(widgetTable, languageAddonId, languageTable)
+					local namePhraseId = getNamePhraseID(widgetTable, languageAddonId, languageTable, true, true)
 					DetailsFramework.Language.RegisterObjectWithDefault(languageAddonId, label.widget, namePhraseId, formatOptionNameWithColon(widgetTable.name, useColon))
 
 					dropdown.addonId = languageAddonId
@@ -2583,7 +2799,7 @@ end
 
 					local label = DF:NewLabel(parent, nil, "$parentLabel" .. index, nil, "", "GameFontNormal", widgetTable.text_template or textTemplate or 12)
 
-					local namePhraseId = getNamePhraseID(widgetTable, languageAddonId, languageTable)
+					local namePhraseId = getNamePhraseID(widgetTable, languageAddonId, languageTable, true)
 					DetailsFramework.Language.RegisterObjectWithDefault(languageAddonId, label.widget, namePhraseId, formatOptionNameWithColon(widgetTable.name, useColon))
 
 					if (widgetTable.boxfirst or useBoxFirstOnAllWidgets) then
@@ -2648,7 +2864,7 @@ end
 					end
 
 					local label = DF:NewLabel(parent, nil, "$parentLabel" .. index, nil, "", "GameFontNormal", widgetTable.text_template or textTemplate or 12)
-					local namePhraseId = getNamePhraseID(widgetTable, languageAddonId, languageTable)
+					local namePhraseId = getNamePhraseID(widgetTable, languageAddonId, languageTable, true)
 					DetailsFramework.Language.RegisterObjectWithDefault(languageAddonId, label.widget, namePhraseId, formatOptionNameWithColon(widgetTable.name, useColon))
 
 					slider:SetPoint("left", label, "right", 2)
@@ -2697,7 +2913,7 @@ end
 					end
 
 					local label = DF:NewLabel(parent, nil, "$parentLabel" .. index, nil, "", "GameFontNormal", widgetTable.text_template or textTemplate or 12)
-					local namePhraseId = getNamePhraseID(widgetTable, languageAddonId, languageTable)
+					local namePhraseId = getNamePhraseID(widgetTable, languageAddonId, languageTable, true)
 					DetailsFramework.Language.RegisterObjectWithDefault(languageAddonId, label.widget, namePhraseId, formatOptionNameWithColon(widgetTable.name, useColon))
 
 					if (widgetTable.boxfirst or useBoxFirstOnAllWidgets) then
@@ -2730,7 +2946,7 @@ end
 				elseif (widgetTable.type == "execute") then
 					local button = DF:NewButton(parent, nil, "$parentWidget" .. index, nil, 120, 18, widgetTable.func, widgetTable.param1, widgetTable.param2, nil, "", nil, buttonTemplate, textTemplate)
 
-					local namePhraseId = getNamePhraseID(widgetTable, languageAddonId, languageTable)
+					local namePhraseId = getNamePhraseID(widgetTable, languageAddonId, languageTable, true)
 					DetailsFramework.Language.RegisterObjectWithDefault(languageAddonId, button.widget, namePhraseId, widgetTable.name)
 
 					if (not buttonTemplate) then
@@ -2804,7 +3020,7 @@ end
 
 					local label = DF:NewLabel(parent, nil, "$parentLabel" .. index, nil, "", "GameFontNormal", widgetTable.text_template or textTemplate or 12)
 
-					local namePhraseId = getNamePhraseID(widgetTable, languageAddonId, languageTable)
+					local namePhraseId = getNamePhraseID(widgetTable, languageAddonId, languageTable, true)
 					DetailsFramework.Language.RegisterObjectWithDefault(languageAddonId, label.widget, namePhraseId, formatOptionNameWithColon(widgetTable.name, useColon))
 
 					textentry:SetPoint("left", label, "right", 2)
@@ -3311,6 +3527,12 @@ DF.button_templates["OPTIONS_BUTTON_TEMPLATE"] = {
 	backdropbordercolor = {0, 0, 0, 1},
 }
 
+DF.button_templates["OPTIONS_BUTTON_GOLDENBORDER_TEMPLATE"] = {
+	backdrop = {edgeFile = [[Interface\Buttons\WHITE8X8]], edgeSize = 1, bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], tileSize = 64, tile = true},
+	backdropcolor = {1, 1, 1, .5},
+	backdropbordercolor = {1, 0.785, 0, 1},
+}
+
 --sliders
 DF.slider_templates = DF.slider_templates or {}
 DF.slider_templates["OPTIONS_SLIDER_TEMPLATE"] = {
@@ -3325,6 +3547,12 @@ DF.slider_templates["OPTIONS_SLIDER_TEMPLATE"] = {
 	thumbcolor = {0, 0, 0, 0.5},
 }
 
+---install a template
+---@param widgetType string
+---@param templateName string
+---@param template table
+---@param parentName any
+---@return table
 function DF:InstallTemplate(widgetType, templateName, template, parentName)
 	local newTemplate = {}
 
@@ -4597,12 +4825,27 @@ function DF:ReskinSlider(slider, heightOffset)
 	end
 end
 
+function DF:GetCurrentClassName()
+	local className = UnitClass("player")
+	return className
+end
+
+function DF:GetCurrentSpecName()
+	local specIndex = DF.GetSpecialization()
+	if (specIndex) then
+		local specId, specName = DF.GetSpecializationInfo(specIndex)
+		if (specId and specId ~= 0) then
+			return specName
+		end
+	end
+end
+
 function DF:GetCurrentSpec()
 	local specIndex = DF.GetSpecialization()
 	if (specIndex) then
-		local specID = DF.GetSpecializationInfo(specIndex)
-		if (specID and specID ~= 0) then
-			return specID
+		local specId = DF.GetSpecializationInfo(specIndex)
+		if (specId and specId ~= 0) then
+			return specId
 		end
 	end
 end
@@ -4627,15 +4870,19 @@ local specs_per_class = {
 	["EVOKER"] = {1467, 1468, 1473},
 }
 
-function DF:GetClassSpecIDs(class)
-	return specs_per_class [class]
+
+function DF:GetClassSpecIDs(engClass)
+	return specs_per_class[engClass]
+end
+function DF:GetClassSpecIds(engClass) --naming conventions
+	return DF:GetClassSpecIDs(engClass)
 end
 
 local dispatch_error = function(context, errortext)
 	DF:Msg( (context or "<no context>") .. " |cFFFF9900error|r: " .. (errortext or "<no error given>"))
 end
 
---safe call an external func with payload and without telling who is calling
+--call a function with payload, if the callback doesn't exists, quit silently
 function DF:QuickDispatch(func, ...)
 	if (type(func) ~= "function") then
 		return
@@ -4678,7 +4925,7 @@ end
 
 --[=[
 	DF:CoreDispatch(func, context, ...)
-	safe call a function making a error window with what caused, the context and traceback of the error
+	safe call a function making an error window with what caused, context and traceback of the error
 	this func is only used inside the framework for sensitive calls where the func must run without errors
 	@func = the function which will be called
 	@context = what made the function be called
@@ -4721,44 +4968,42 @@ DF.ClassIndexToFileName = {
 
 
 DF.ClassFileNameToIndex = {
-	["DEATHKNIGHT"] = 6,
 	["WARRIOR"] = 1,
-	["ROGUE"] = 4,
-	["MAGE"] = 8,
-	["PRIEST"] = 5,
-	["HUNTER"] = 3,
-	["WARLOCK"] = 9,
-	["DEMONHUNTER"] = 12,
-	["SHAMAN"] = 7,
-	["DRUID"] = 11,
-	["MONK"] = 10,
 	["PALADIN"] = 2,
+	["HUNTER"] = 3,
+	["ROGUE"] = 4,
+	["PRIEST"] = 5,
+	["DEATHKNIGHT"] = 6,
+	["SHAMAN"] = 7,
+	["MAGE"] = 8,
+	["WARLOCK"] = 9,
+	["MONK"] = 10,
+	["DRUID"] = 11,
+	["DEMONHUNTER"] = 12,
 	["EVOKER"] = 13,
 }
 DF.ClassCache = {}
 
 function DF:GetClassList()
-
 	if (next (DF.ClassCache)) then
 		return DF.ClassCache
 	end
 
 	for className, classIndex in pairs(DF.ClassFileNameToIndex) do
-		local classTable = C_CreatureInfo.GetClassInfo (classIndex)
+		local classTable = C_CreatureInfo.GetClassInfo(classIndex)
 		if classTable then
 			local t = {
 				ID = classIndex,
 				Name = classTable.className,
 				Texture = [[Interface\GLUES\CHARACTERCREATE\UI-CharacterCreate-Classes]],
-				TexCoord = CLASS_ICON_TCOORDS [className],
+				TexCoord = CLASS_ICON_TCOORDS[className],
 				FileString = className,
 			}
-			tinsert(DF.ClassCache, t)
+			table.insert(DF.ClassCache, t)
 		end
 	end
 
 	return DF.ClassCache
-
 end
 
 --hardcoded race list
@@ -4822,13 +5067,13 @@ function DF:GetCharacterRaceList()
 	end
 
 	for i = 1, 100 do
-		local raceInfo = C_CreatureInfo.GetRaceInfo (i)
+		local raceInfo = C_CreatureInfo.GetRaceInfo(i)
 		if (raceInfo and DF.RaceList [raceInfo.raceID]) then
 			tinsert(DF.RaceCache, {Name = raceInfo.raceName, FileString = raceInfo.clientFileString, ID = raceInfo.raceID})
 		end
 
 		if IS_WOW_PROJECT_MAINLINE then
-			local alliedRaceInfo = C_AlliedRaces.GetRaceInfoByID (i)
+			local alliedRaceInfo = C_AlliedRaces.GetRaceInfoByID(i)
 			if (alliedRaceInfo and DF.AlliedRaceList [alliedRaceInfo.raceID]) then
 				tinsert(DF.RaceCache, {Name = alliedRaceInfo.maleName, FileString = alliedRaceInfo.raceFileString, ID = alliedRaceInfo.raceID})
 			end
@@ -4841,24 +5086,72 @@ end
 --get a list of talents for the current spec the player is using
 --if onlySelected return an index table with only the talents the character has selected
 --if onlySelectedHash return a hash table with [spelID] = true
-function DF:GetCharacterTalents (onlySelected, onlySelectedHash)
+function DF:GetCharacterTalents(bOnlySelected, bOnlySelectedHash)
 	local talentList = {}
+	local version, build, date, tocversion = GetBuildInfo()
 
-	for i = 1, 7 do
-		for o = 1, 3 do
-			local talentID, name, texture, selected, available = GetTalentInfo (i, o, 1)
-			if (onlySelectedHash) then
-				if (selected) then
-					talentList [talentID] = true
-					break
+	if (tocversion >= 70000 and tocversion <= 99999) then
+		for i = 1, 7 do
+			for o = 1, 3 do
+				local talentID, name, texture, selected, available = GetTalentInfo(i, o, 1)
+				if (bOnlySelectedHash) then
+					if (selected) then
+						talentList[talentID] = true
+						break
+					end
+				elseif (bOnlySelected) then
+					if (selected) then
+						table.insert(talentList, {Name = name, ID = talentID, Texture = texture, IsSelected = selected})
+						break
+					end
+				else
+					table.insert(talentList, {Name = name, ID = talentID, Texture = texture, IsSelected = selected})
 				end
-			elseif (onlySelected) then
-				if (selected) then
-					tinsert(talentList, {Name = name, ID = talentID, Texture = texture, IsSelected = selected})
-					break
+			end
+		end
+
+	elseif (tocversion >= 100000) then
+		if (not bOnlySelected) then
+			return DF:GetAllTalents()
+		end
+
+		local configId = C_ClassTalents.GetActiveConfigID()
+		if (configId) then
+			local configInfo = C_Traits.GetConfigInfo(configId)
+			--get the spells from the SPEC from talents
+			for treeIndex, treeId in ipairs(configInfo.treeIDs) do
+				local treeNodes = C_Traits.GetTreeNodes(treeId)
+
+				for nodeIdIndex, treeNodeID in ipairs(treeNodes) do
+					local traitNodeInfo = C_Traits.GetNodeInfo(configId, treeNodeID)
+
+					if (traitNodeInfo) then
+						local activeEntry = traitNodeInfo.activeEntry
+						local entryIds = traitNodeInfo.entryIDs
+
+						for i = 1, #entryIds do
+							local entryId = entryIds[i] --number
+							local traitEntryInfo = C_Traits.GetEntryInfo(configId, entryId)
+							local borderTypes = Enum.TraitNodeEntryType
+
+							if (traitEntryInfo.type) then -- == borderTypes.SpendCircle
+								local definitionId = traitEntryInfo.definitionID
+								local traitDefinitionInfo = C_Traits.GetDefinitionInfo(definitionId)
+								local spellId = traitDefinitionInfo.overriddenSpellID or traitDefinitionInfo.spellID
+								local spellName, _, spellTexture = GetSpellInfo(spellId)
+								local bIsSelected = (activeEntry and activeEntry.rank and activeEntry.rank > 0) or false
+								if (spellName and bIsSelected) then
+									local talentInfo = {Name = spellName, ID = spellId, Texture = spellTexture, IsSelected = true}
+									if (bOnlySelectedHash) then
+										talentList[spellId] = talentInfo
+									else
+										table.insert(talentList, talentInfo)
+									end
+								end
+							end
+						end
+					end
 				end
-			else
-				tinsert(talentList, {Name = name, ID = talentID, Texture = texture, IsSelected = selected})
 			end
 		end
 	end
@@ -4866,7 +5159,7 @@ function DF:GetCharacterTalents (onlySelected, onlySelectedHash)
 	return talentList
 end
 
-function DF:GetCharacterPvPTalents (onlySelected, onlySelectedHash)
+function DF:GetCharacterPvPTalents(onlySelected, onlySelectedHash)
 	if (onlySelected or onlySelectedHash) then
 		local talentsSelected = C_SpecializationInfo.GetAllSelectedPvpTalentIDs()
 		local talentList = {}
@@ -5129,6 +5422,15 @@ DF.SpecListByClass = {
 		1473,
 	},
 }
+
+---return if the specId is a valid spec, it'll return false for specIds from the tutorial area
+---@param self table
+---@param specId number
+function DF:IsValidSpecId(specId)
+	local _, class = UnitClass("player")
+	local specs = DF.ClassSpecs[class]
+	return specs and specs[specId] and true or false
+end
 
 --given a class and a  specId, return if the specId is a spec from the class passed
 function DF:IsSpecFromClass(class, specId)
@@ -5633,6 +5935,8 @@ function DF:DebugVisibility(UIObject)
 	local bIsShown = UIObject:IsShown()
 	print("Is Shown:", bIsShown and "|cFF00FF00true|r" or "|cFFFF0000false|r")
 
+	print("Alpha > 0:", UIObject:GetAlpha() > 0 and "|cFF00FF00true|r" or "|cFFFF0000false|r")
+
 	local bIsVisible = UIObject:IsVisible()
 	print("Is Visible:", bIsVisible and "|cFF00FF00true|r" or "|cFFFF0000false|r")
 
@@ -5643,3 +5947,23 @@ function DF:DebugVisibility(UIObject)
 	local numPoints = UIObject:GetNumPoints()
 	print("Num Points:", numPoints > 0 and "|cFF00FF00" .. numPoints .. "|r" or "|cFFFF00000|r")
 end
+
+local benchmarkTime = 0
+local bBenchmarkEnabled = false
+function _G.__benchmark(bNotPrintResult)
+	if (not bBenchmarkEnabled) then
+		bBenchmarkEnabled = true
+		benchmarkTime = debugprofilestop()
+	else
+		local elapsed = debugprofilestop() - benchmarkTime
+		bBenchmarkEnabled = false
+
+		if (bNotPrintResult) then
+			return elapsed
+		end
+
+		print("Elapsed Time:", elapsed)
+		return elapsed
+	end
+end
+

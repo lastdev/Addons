@@ -1,0 +1,64 @@
+== v1.15 - 29th October 2023
+* TOC bump to 10.2.0
+* Data structure redesign
+* Synchronise pin sizes
+
+== v1.14 - 18th September 2023
+* TOC bump to 10.1.7
+
+== v1.13 - 28th June 2023
+* TOC bump to 10.1.5
+
+== v1.12 - 6th May 2023
+* Now supports the new AddOn Compartment introduced in 10.1.0.
+  Clicking the drop down for this AddOn takes you directly to the configuration panel!
+
+== v1.11 - 3rd May 2023
+* Added an icon to the TOC file - thus removing the annoying "?" from the AddOn list in game
+* Removed unnecessary print to console code
+
+== v1.10 - 24th April 2023
+* TOC bump to 10.1.0
+
+== v1.09 - 21st March 2023
+* TOC bump to 10.0.7
+
+== v1.08 - 26th January 2023
+* TOC bump to 10.0.5
+
+== v1.07 - 18th January 2023
+* Fix for TOC Highlight (prefix colour) now matches the prefix used by the AddOn
+
+== v1.06 - 23rd December 2022
+* Updated Almie/Pizzle to talk about the Minion of Grumpus
+* Added Iron Armada progress to your garrison
+
+== v1.05 - 19th December 2022
+* Iron Armada added.
+* I've added more icons for several achievements and I've ensured that they are duplicated between IF and SW.
+* Org was updated too but being Horde duplication into another city is not necessary
+
+== v1.04 - 19th December 2022
+* BB King added
+
+== v1.03 - 17th December 2022
+* At this stage the AddOn is where I want it to be. I'll continue using it in order to find any bugs I missed.
+  Maybe add BB Gun achievement later, not sure
+
+== v1.02 - 17th December 2022
+* Various fixes, improvements, etc
+
+== v1.01 - 17th December 2022
+* Various improvements and additions alliance side
+
+== v1.00 - 17th December 2022
+* Initial release for 10.0.2
+
+
+
+
+
+
+
+
+

@@ -41,7 +41,7 @@ shared.achievementData = {
         {
           id = 69471,
           index = 1,
-          description = 'Needs 3x Shan\'ze Ritual Stone to summon',
+          description = 'Inside a cave in the wall near coast to the West. \nNeeds 3x Shan\'ze Ritual Stone to summon',
         },
         {
           id = 69633,

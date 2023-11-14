@@ -144,13 +144,51 @@ end
 
 
 -- *** Scanning functions ***
+local handleItemInfo
+
 local function ScanAverageItemLevel()
-	local overallAiL, AiL = GetAverageItemLevel()
-	if overallAiL and AiL and overallAiL > 0 and AiL > 0 then
-		local character = addon.ThisCharacter
-		character.overallAIL = overallAiL
-		character.averageItemLvl = AiL
+
+	-- GetAverageItemLevel only exists in retail
+	if type(GetAverageItemLevel) == "function" then
+
+		local overallAiL, AiL = GetAverageItemLevel()
+		if overallAiL and AiL and overallAiL > 0 and AiL > 0 then
+			local character = addon.ThisCharacter
+			character.overallAIL = overallAiL
+			character.averageItemLvl = AiL
+		end
+		return
 	end
+	
+	-- if we get here, GetAverageItemLevel does not exist, we must calculate manually.
+	local totalItemLevel = 0
+	local itemCount = 0
+	
+	for i = 1, NUM_EQUIPMENT_SLOTS do
+		local link = GetInventoryItemLink("player", i)
+		if link then
+		
+			local itemName = GetItemInfo(link)
+			if not itemName then
+				--print("Waiting for equipment slot "..i) --debug
+				handleItemInfo = true
+				-- addon:RegisterEvent("GET_ITEM_INFO_RECEIVED", OnGetItemInfoReceived)
+				return -- wait for GET_ITEM_INFO_RECEIVED (will be triggered by non-cached itemInfo request)
+			end
+
+			if (i ~= 4) and (i ~= 19) then		-- InventorySlotId 4 = shirt, 19 = tabard, skip them
+				itemCount = itemCount + 1
+				totalItemLevel = totalItemLevel + tonumber(((select(4, GetItemInfo(link))) or 0))
+			end
+		end
+	end
+	
+	-- Found by qwarlocknew on 6/04/2021
+	-- On an alt with no gear, the "if link" in the loop could always be nil, and thus the itemCount could be zero
+	-- leading to a division by zero, so intercept this case
+	--print(format("total: %d, count: %d, ail: %d",totalItemLevel, itemCount, totalItemLevel / itemCount)) --DAC
+	addon.ThisCharacter.averageItemLvl = totalItemLevel / math.max(itemCount, 1) -- math.max fixes divide by zero (bug credit: qwarlocknew)
+	addon.ThisCharacter.lastUpdate = time()	
 end
 
 local function ScanInventorySlot(slot)
@@ -282,7 +320,10 @@ end
 local function OnPlayerAlive()
 	ScanInventory()
 	ScanAverageItemLevel()
-	ScanTransmogSets()
+	
+	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+		ScanTransmogSets()
+	end
 end
 
 local function OnPlayerEquipmentChanged(event, slot)
@@ -305,6 +346,13 @@ local function OnTransmogCollectionUpdated()
 	ScanTransmogSets()
 end
 
+local function OnGetItemInfoReceived(event, itemID, success)
+	-- ignore calls unless otherwise specified
+	if handleItemInfo then
+		ScanAverageItemLevel()
+		handleItemInfo = nil
+	end
+end
 
 -- ** Mixins **
 local function _GetInventory(character)
@@ -448,15 +496,19 @@ local PublicMethods = {
 	GetInventoryItem = _GetInventoryItem,
 	GetInventoryItemCount = _GetInventoryItemCount,
 	GetAverageItemLevel = _GetAverageItemLevel,
-	IterateInventory = _IterateInventory,
 	RequestGuildMemberEquipment = _RequestGuildMemberEquipment,
 	GetGuildMemberInventoryItem = _GetGuildMemberInventoryItem,
 	GetGuildMemberAverageItemLevel = _GetGuildMemberAverageItemLevel,
-	GetSetIcon = _GetSetIcon,
-	IsSetCollected = _IsSetCollected,
-	IsSetItemCollected = _IsSetItemCollected,
-	GetCollectedSetInfo = _GetCollectedSetInfo,
 }
+
+if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+	PublicMethods.IterateInventory = _IterateInventory
+	PublicMethods.GetSetIcon = _GetSetIcon
+	PublicMethods.IsSetCollected = _IsSetCollected
+	PublicMethods.IsSetItemCollected = _IsSetItemCollected
+	PublicMethods.GetCollectedSetInfo = _GetCollectedSetInfo
+end
+
 
 -- *** Guild Comm ***
 local function OnGuildAltsReceived(self, sender, alts)
@@ -509,7 +561,11 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetInventoryItem")
 	DataStore:SetCharacterBasedMethod("GetInventoryItemCount")
 	DataStore:SetCharacterBasedMethod("GetAverageItemLevel")
-	DataStore:SetCharacterBasedMethod("IterateInventory")
+	
+	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+		DataStore:SetCharacterBasedMethod("IterateInventory")
+	end
+	
 	DataStore:SetGuildBasedMethod("GetGuildMemberInventoryItem")
 	DataStore:SetGuildBasedMethod("GetGuildMemberAverageItemLevel")
 	
@@ -520,9 +576,14 @@ end
 function addon:OnEnable()
 	addon:RegisterEvent("PLAYER_ALIVE", OnPlayerAlive)
 	addon:RegisterEvent("PLAYER_EQUIPMENT_CHANGED", OnPlayerEquipmentChanged)
-	-- addon:RegisterEvent("PLAYER_AVG_ITEM_LEVEL_READY", OnPlayerAilReady)
-	-- addon:RegisterEvent("TRANSMOG_COLLECTION_LOADED", OnTransmogCollectionLoaded)
-	addon:RegisterEvent("TRANSMOG_COLLECTION_UPDATED", OnTransmogCollectionUpdated)
+	
+	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+		-- addon:RegisterEvent("PLAYER_AVG_ITEM_LEVEL_READY", OnPlayerAilReady)
+		-- addon:RegisterEvent("TRANSMOG_COLLECTION_LOADED", OnTransmogCollectionLoaded)
+		addon:RegisterEvent("TRANSMOG_COLLECTION_UPDATED", OnTransmogCollectionUpdated)
+	else
+		addon:RegisterEvent("GET_ITEM_INFO_RECEIVED", OnGetItemInfoReceived)
+	end
 	
 	addon:SetupOptions()
 	

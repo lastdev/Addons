@@ -3,7 +3,7 @@
 
                                             Loose Pebbles
 
-                                     v1.19 - 14th October 2023
+                                      v1.21 - 8th November 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -27,7 +27,6 @@ local pluginHandler = {}
 
 -- upvalues
 local GameTooltip = _G.GameTooltip
-local IsControlKeyDown = _G.IsControlKeyDown
 local IsIndoors = _G.IsIndoors
 local LibStub = _G.LibStub
 local UIParent = _G.UIParent
@@ -351,54 +350,63 @@ end
 
 ns.name = UnitName( "player" ) or "Character"
 
-
 if ns.locale == "deDE" then
+	L["AddOn Description"] = "Hilft dir, die " ..ns.colour.highlight .."Loser Steine" .."\124r zu finden"
+	L["Dalaran Map"] = "Zeigt die Karte von Dalaran"
 	L["Loose Pebble"] = "Loser Stein"
 	L["Loose Pebbles"] = "Loser Steine"
-	L["AddOn Description"] = "Hilft dir, die " ..ns.colour.highlight .."Loser Steine" .."\124r zu finden"
 	
 elseif ns.locale == "esES" or ns.locale == "esMX" then
+	L["AddOn Description"] = "Ayuda a encontrar los " ..ns.colour.highlight .."Guijarros Sueltos"
+	L["Dalaran Map"] = "Mostrar el mapa de Dalaran"
 	L["Loose Pebble"] = "Guijarro Suelto"
 	L["Loose Pebbles"] = "Guijarros Sueltos"
-	L["AddOn Description"] = "Ayuda a encontrar los " ..ns.colour.highlight .."Guijarros Sueltos"
 
 elseif ns.locale == "frFR" then
+	L["AddOn Description"] = "Aide à trouver les " ..ns.colour.highlight .."Cailloux déchaussé"
+	L["Dalaran Map"] = "Afficher la carte de Dalaran"
 	L["Loose Pebble"] = "Caillou déchaussé"
 	L["Loose Pebbles"] = "Cailloux déchaussé"
-	L["AddOn Description"] = "Aide à trouver les " ..ns.colour.highlight .."Cailloux déchaussé"
 
 elseif ns.locale == "itIT" then
+	L["AddOn Description"] = "Aiuta a trovare le " ..ns.colour.highlight .."Ciottoli Sciolti"
+	L["Dalaran Map"] = "Mostra la mappa di Dalaran"
 	L["Loose Pebble"] = "Ciottolo Sciolto"
 	L["Loose Pebbles"] = "Ciottoli Sciolti"
-	L["AddOn Description"] = "Aiuta a trovare le " ..ns.colour.highlight .."Ciottoli Sciolti"
 
 elseif ns.locale == "koKR" then
+	L["AddOn Description"] = ns.colour.highlight .."거리의 자갈\124r 를 찾을 수 있도록 도와줍니다"
+	L["Dalaran Map"] = "달라란 지도를 보여주세요"
 	L["Loose Pebble"] = "거리의 자갈"
 	L["Loose Pebbles"] = "거리의 자갈"
-	L["AddOn Description"] = ns.colour.highlight .."거리의 자갈\124r 를 찾을 수 있도록 도와줍니다"
 
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
+	L["AddOn Description"] = "Ajuda você a localizar " ..ns.colour.highlight .."Cascalho Solto"
+	L["Dalaran Map"] = "Mostrar o mapa de Dalaran"
 	L["Loose Pebble"] = "Cascalho Solto"
 	L["Loose Pebbles"] = "Cascalho Solto"
-	L["AddOn Description"] = "Ajuda você a localizar " ..ns.colour.highlight .."Cascalho Solto"
 
 elseif ns.locale == "ruRU" then
+	L["AddOn Description"] = "Помогает найти " ..ns.colour.highlight .."Шатающийся Камушк"
+	L["Dalaran Map"] = "Покажите карту Даларана"
 	L["Loose Pebble"] = "Шатающийся Камушк"
 	L["Loose Pebbles"] = "Шатающийся Камушк"
-	L["AddOn Description"] = "Помогает найти " ..ns.colour.highlight .."Шатающийся Камушк"
 
 elseif ns.locale == "zhCN" then
+	L["AddOn Description"] = "帮助你找寻" ..ns.colour.highlight .."松动的卵石"
+	L["Dalaran Map"] = "显示达拉然的地图"
 	L["Loose Pebble"] = "松动的卵石"
 	L["Loose Pebbles"] = "松动的卵石"
-	L["AddOn Description"] = "帮助你找寻" ..ns.colour.highlight .."松动的卵石"
 
 elseif ns.locale == "zhTW" then
+	L["AddOn Description"] = "幫助你找尋" ..ns.colour.highlight .."鬆動的卵石"
+	L["Dalaran Map"] = "顯示達拉然的地圖"
 	L["Loose Pebble"] = "鬆動的卵石"
 	L["Loose Pebbles"] = "鬆動的卵石"
-	L["AddOn Description"] = "幫助你找尋" ..ns.colour.highlight .."鬆動的卵石"
 	
 else
 	L["AddOn Description"] = "Helps you find the " ..ns.colour.prefix .."Loose Pebbles"
+	L["Dalaran Map"] = "Show me the map of Dalaran"
 end
 
 function pluginHandler:OnEnter(mapFile, coord)
@@ -528,9 +536,30 @@ ns.options = {
 }
 
 function HandyNotes_LoosePebbles_OnAddonCompartmentClick( addonName, buttonName )
-	Settings.OpenToCategory( "HandyNotes" )
-	LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "LoosePebbles" )
+	if buttonName and buttonName == "RightButton" then
+		OpenWorldMap( 627 )
+		if WorldMapFrame:IsVisible() ~= true then
+			print( ns.colour.prefix	..L["Loose Pebbles"] ..": " ..ns.colour.plaintext
+					.."Not possible at this time. Try later" )
+		end
+	else
+		Settings.OpenToCategory( "HandyNotes" )
+		LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "LoosePebbles" )
+	end
  end
+ 
+ function HandyNotes_LoosePebbles_OnAddonCompartmentEnter( ... )
+	GameTooltip:SetOwner( DropDownList1, "ANCHOR_LEFT" )	
+	GameTooltip:AddLine( ns.colour.prefix ..L["Loose Pebbles"] )
+	GameTooltip:AddLine( ns.colour.highlight .." " )
+	GameTooltip:AddDoubleLine( ns.colour.highlight .."Left", ns.colour.plaintext ..L["Options"] )
+	GameTooltip:AddDoubleLine( ns.colour.highlight .."Right", ns.colour.plaintext ..L["Dalaran Map"] )
+	GameTooltip:Show()
+end
+
+function HandyNotes_LoosePebbles_OnAddonCompartmentLeave( ... )
+	GameTooltip:Hide()
+end
 
 function pluginHandler:OnEnable()
 	local HereBeDragons = LibStub("HereBeDragons-2.0", true)

@@ -95,6 +95,7 @@ local lower = string.lower
 
 --db upvalues
 local DB_CAPTURED_SPELLS
+local DB_CAPTURED_CASTS
 local DB_NPCID_CACHE
 local DB_NPCID_COLORS
 local DB_AURA_ALPHA
@@ -104,6 +105,7 @@ local DB_AURA_SEPARATE_BUFFS
 local on_refresh_db = function()
 	local profile = Plater.db.profile
 	DB_CAPTURED_SPELLS = PlaterDB.captured_spells
+	DB_CAPTURED_CASTS = PlaterDB.captured_casts
 	DB_NPCID_CACHE = profile.npc_cache
 	DB_NPCID_COLORS = profile.npc_colors
 	DB_AURA_ALPHA = profile.aura_alpha
@@ -154,6 +156,7 @@ end
 
 local TAB_INDEX_UIPARENTING = 5
 local TAB_INDEX_PROFILES = 22
+local TAB_INDEX_SEARCH = 26
 
 -- ~options �ptions
 function Plater.OpenOptionsPanel()
@@ -175,6 +178,19 @@ function Plater.OpenOptionsPanel()
 	DF:ApplyStandardBackdrop (f)
 	f:ClearAllPoints()
 	PixelUtil.SetPoint (f, "center", UIParent, "center", 2, 2, 1, 1)
+
+	--over the top frame
+	local OTTFrame = CreateFrame("frame", "PlaterNameplatesOverTheTopFrame", f)
+	OTTFrame:SetFrameLevel(2000)
+	OTTFrame:SetSize(1, 1)
+	OTTFrame:SetPoint("topright", f, "topright", -22, -110)
+
+	f:HookScript("OnShow", function()
+		OTTFrame:Show()
+	end)
+	f:HookScript("OnHide", function()
+		OTTFrame:Hide()
+	end)
 
 	-- version text
 	local versionText = DF:CreateLabel (f, Plater.fullVersionInfo, 11, "white")
@@ -460,8 +476,8 @@ function Plater.OpenOptionsPanel()
 		local currentLanguage = PlaterLanguage.language
 
 		--addonId, parent, callback, defaultLanguage
-		local languageSelectorDropdown = DF.Language.CreateLanguageSelector(addonId, frontPageFrame, onLanguageChangedCallback, currentLanguage)
-		languageSelectorDropdown:SetPoint("topright", -21, -108)
+		local languageSelectorDropdown = DF.Language.CreateLanguageSelector(addonId, OTTFrame, onLanguageChangedCallback, currentLanguage)
+		languageSelectorDropdown:SetPoint("topright", 0, 0)
 	--end of languages
 
 	--> on profile change
@@ -555,28 +571,6 @@ function Plater.OpenOptionsPanel()
 				profilesFrame.ImportingProfileAlert:Show()
 				
 				C_Timer.After (.1, function()
-					--do not export cache data, these data can be rebuild at run time
-					local captured_spells = Plater.db.profile.captured_spells
-					local aura_cache_by_name = Plater.db.profile.aura_cache_by_name
-					local captured_casts = Plater.db.profile.captured_casts -- ? local DB ?
-					local npc_cache = Plater.db.profile.npc_cache
-					local cvars_caller_cache = Plater.db.profile.saved_cvars_last_change
-
-					Plater.db.profile.captured_spells = {}
-					Plater.db.profile.aura_cache_by_name = {}
-					Plater.db.profile.captured_casts = {}
-					Plater.db.profile.npc_cache = {}
-					Plater.db.profile.saved_cvars_last_change = {}
-					
-					--retain npc_cache for set npc_colors
-					for npcID, _ in pairs (Plater.db.profile.npc_colors) do
-						Plater.db.profile.npc_cache [npcID] = npc_cache [npcID]
-					end
-					--retain npc_cache for set npc_colors
-					for npcID, _ in pairs (Plater.db.profile.npcs_renamed) do
-						Plater.db.profile.npc_cache [npcID] = npc_cache [npcID]
-					end
-					
 					--save mod/script editing
 					local hookFrame = mainFrame.AllFrames [7]
 					local scriptObject = hookFrame.GetCurrentScriptObject()
@@ -590,16 +584,69 @@ function Plater.OpenOptionsPanel()
 						scriptingFrame.SaveScript()
 						scriptingFrame.CancelEditing()
 					end
+				
+					Plater.db.profile.captured_spells = {} -- cleanup, although it should be empty, stored in PlaterDB
+					Plater.db.profile.captured_casts = {} -- cleanup, although it should be empty, stored in PlaterDB
+					
+					--create a modifiable copy, do not modify "in use" profile for safety
+					local profile = DF.table.copy(Plater.db.profile, {})
+					local npc_cacheOrig = Plater.db.profile.npc_cache
+					
+					--do not export cache data, these data can be rebuild at run time
+					profile.npc_cache = {}
+					profile.saved_cvars_last_change = {}
+					profile.script_data_trash = {}
+					profile.hook_data_trash = {}
+					profile.plugins_data = {} -- it might be good to remove those to ensure no addon dependencies break anything
+					--profile.spell_animation_list = nil -- nil -> default will be used. but this should be part of the profile?!
+					
+					--retain npc_cache for set npc_colors
+					for npcID, _ in pairs (profile.npc_colors) do
+						profile.npc_cache [npcID] = npc_cacheOrig [npcID]
+					end
+					--retain npc_cache for set npcs_renamed
+					for npcID, _ in pairs (profile.npcs_renamed) do
+						profile.npc_cache [npcID] = npc_cacheOrig [npcID]
+					end
+					--retain npc_cache, captured_spells and captured_casts for set cast_colors
+					for spellId, _ in pairs (profile.cast_colors) do
+						profile.captured_spells[spellId] = DB_CAPTURED_SPELLS[spellId]
+						profile.captured_casts[spellId] = DB_CAPTURED_CASTS[spellId]
+						local capturedSpell = DB_CAPTURED_SPELLS[spellId] or DB_CAPTURED_CASTS[spellId]
+						if capturedSpell and capturedSpell.npcID then
+							local npcID = capturedSpell.npcID
+							profile.npc_cache [npcID] = npc_cacheOrig [npcID]
+						end
+					end
+					--retain npc_cache, captured_spells and captured_casts for set cast_colors
+					for spellId, _ in pairs (profile.cast_audiocues) do
+						profile.captured_spells[spellId] = DB_CAPTURED_SPELLS[spellId]
+						profile.captured_casts[spellId] = DB_CAPTURED_CASTS[spellId]
+						local capturedSpell = DB_CAPTURED_SPELLS[spellId] or DB_CAPTURED_CASTS[spellId]
+						if capturedSpell and capturedSpell.npcID then
+							local npcID = capturedSpell.npcID
+							profile.npc_cache [npcID] = npc_cacheOrig [npcID]
+						end
+					end
+					
+					--cleanup mods HooksTemp (for good)
+					for i = #profile.hook_data, 1, -1 do
+						local scriptObject = profile.hook_data [i]
+						scriptObject.HooksTemp = {}
+					end
+					
+					--store current profile name
+					profile.profile_name = Plater.db:GetCurrentProfile()
+					profile.tocversion = select(4, GetBuildInfo()) -- provide export toc
+					
+					--convert the profile to string
+					local data = Plater.CompressData (profile, "print")
+					if (not data) then
+						Plater:Msg ("failed to compress the profile")
+					end
 					
 					--export to string
-					profilesFrame.ImportStringField:SetText (Plater.ExportProfileToString() or L["OPTIONS_ERROR_EXPORTSTRINGERROR"])
-					
-					--set back again the cache data
-					Plater.db.profile.captured_spells = captured_spells
-					Plater.db.profile.aura_cache_by_name = aura_cache_by_name
-					Plater.db.profile.captured_casts = captured_casts
-					Plater.db.profile.npc_cache = npc_cache
-					Plater.db.profile.saved_cvars_last_change = cvars_caller_cache
+					profilesFrame.ImportStringField:SetText (data or L["OPTIONS_ERROR_EXPORTSTRINGERROR"])
 				end)
 				
 				C_Timer.After (.3, function()
@@ -918,6 +965,17 @@ function Plater.OpenOptionsPanel()
 						audioCues[tonumber(spellId)] = audioCuePath 
 					end
 				end
+				
+				-- cleanup captured_spells
+				for spellId, data in pairs(Plater.db.profile.captured_spells) do
+					DB_CAPTURED_SPELLS[spellId] = DB_CAPTURED_SPELLS[spellId] or data --retain original
+				end
+				Plater.db.profile.captured_spells = nil --this does belong into PlaterDB
+				-- cleanup captured_casts
+				for spellId, data in pairs(Plater.db.profile.captured_casts) do
+					DB_CAPTURED_CASTS[spellId] = DB_CAPTURED_CASTS[spellId] or data --retain original
+				end
+				Plater.db.profile.captured_casts = nil --this does belong into PlaterDB
 				
 				--restore CVars of the profile
 				Plater.RestoreProfileCVars()
@@ -2612,12 +2670,13 @@ Plater.CreateAuraTesting()
 -- ~aura ~bufftracking ~debuff ~tracking
 	
 	local aura_options = {
-		height = 330, 
-		row_height = 16,
 		width = 200,
+		height = 343, 
+		row_height = 16,
 		button_text_template = "PLATER_BUTTON", --text template
+		font_size = 11,
 	}
-	
+	 
 	local method_change_callback = function()
 		Plater.RefreshDBUpvalues()
 	end
@@ -2633,6 +2692,13 @@ Plater.CreateAuraTesting()
 	}
 	
 	auraFilterFrame:SetSize (f:GetWidth(), f:GetHeight() + startY)
+
+	auraFilterFrame:SetScript("OnShow", function()
+		DF:LoadSpellCache(Plater.SpellHashTable, Plater.SpellIndexTable, Plater.SpellSameNameTable)
+	end)
+	auraFilterFrame:SetScript("OnHide", function()
+		--DF:UnloadSpellCache()
+	end)
 	
 	local auraConfigPanel = DF:CreateAuraConfigPanel (auraFilterFrame, "$parentAuraConfig", Plater.db.profile, method_change_callback, aura_options, debuff_panel_texts)
 	auraConfigPanel:SetPoint ("topleft", auraFilterFrame, "topleft", 10, startY)
@@ -3482,7 +3548,7 @@ Plater.CreateAuraTesting()
 						colorsFrame.ImportEditor.editbox:SetFocus (true)
 					end)
 				end
-				local import_button = DF:CreateButton (colorsFrame, import_func, 70, 20, "import", -1, nil, nil, nil, nil, nil, DF:GetTemplate ("button", "OPTIONS_BUTTON_TEMPLATE"), DF:GetTemplate ("font", "PLATER_BUTTON"))
+				local import_button = DF:CreateButton (colorsFrame, import_func, 70, 20, L["IMPORT"], -1, nil, nil, nil, nil, nil, DF:GetTemplate ("button", "OPTIONS_BUTTON_TEMPLATE"), DF:GetTemplate ("font", "PLATER_BUTTON"))
 				import_button:SetPoint ("right", refresh_button, "left", -2, 0)
 				import_button:SetFrameLevel (colorsFrame.Header:GetFrameLevel() + 20)
 				
@@ -3547,7 +3613,7 @@ Plater.CreateAuraTesting()
 					
 					--check if there's at least 1 npc
 					if (#exportedTable < 1) then
-						Plater:Msg ("There's nothing to export.")
+						Plater:Msg(L["OPTIONS_NOTHING_TO_EXPORT"])
 						return
 					end
 					
@@ -3568,9 +3634,9 @@ Plater.CreateAuraTesting()
 					end)
 				end
 				
-				local export_button = DF:CreateButton (colorsFrame, export_func, 70, 20, "export", -1, nil, nil, nil, nil, nil, DF:GetTemplate ("button", "OPTIONS_BUTTON_TEMPLATE"), DF:GetTemplate ("font", "PLATER_BUTTON"))
-				export_button:SetPoint ("right", import_button, "left", -2, 0)
-				export_button:SetFrameLevel (colorsFrame.Header:GetFrameLevel() + 20)
+				local exportButton = DF:CreateButton(colorsFrame, export_func, 70, 20, L["EXPORT"], -1, nil, nil, nil, nil, nil, DF:GetTemplate ("button", "OPTIONS_BUTTON_TEMPLATE"), DF:GetTemplate ("font", "PLATER_BUTTON"))
+				exportButton:SetPoint("right", import_button, "left", -2, 0)
+				exportButton:SetFrameLevel(colorsFrame.Header:GetFrameLevel() + 20)
 			
 			--disable all button
 				local disableAllColors = function()
@@ -4416,16 +4482,6 @@ Plater.CreateAuraTesting()
 		specialAuraFrame:SetPoint ("topright", auraSpecialFrame, "topright", -10, startY)
 		--DF:ApplyStandardBackdrop (specialAuraFrame, false, 0.6)
 		
-		local LoadGameSpellsCalled = false
-		function specialAuraFrame.LoadGameSpells()
-			if (not next (Plater.SpellHashTable) and not LoadGameSpellsCalled) then
-				--load all spells in the game
-				DF:LoadAllSpells (Plater.SpellHashTable, Plater.SpellIndexTable)
-				LoadGameSpellsCalled = true
-				return true
-			end
-		end
-		
 		local scroll_width = 280
 		local scroll_height = 442
 		local scroll_lines = 21
@@ -4434,25 +4490,24 @@ Plater.CreateAuraTesting()
 		local backdrop_color_on_enter = {.8, .8, .8, 0.4}
 		local y = startY
 		
-		local showSpellWithSameName = function (self, spellID) 
-			local spellName = GetSpellInfo (spellID)
+		local showSpellWithSameName = function (self, spellId) 
+			local spellName = GetSpellInfo(spellId)
 			if (spellName) then
-				local spellsWithSameName = Plater.db.profile.aura_cache_by_name [lower (spellName)]
-				if (not spellsWithSameName) then
-					DF.AddSpellWithSameName (spellID, Plater.db.profile.aura_cache_by_name)
-					spellsWithSameName = Plater.db.profile.aura_cache_by_name [lower (spellName)]
-				end
+				--replace here with the cache
+				local spellNameLower = spellName:lower()
+				local spellsWithSameNameCache = Plater.SpellSameNameTable
+				local spellsWithSameName = spellsWithSameNameCache[spellNameLower]
 				
 				if (spellsWithSameName) then
-					GameCooltip2:Preset (2)
-					GameCooltip2:SetOwner (self, "left", "right", 2, 0)
-					GameCooltip2:SetOption ("TextSize", 10)
+					GameCooltip2:Preset(2)
+					GameCooltip2:SetOwner(self, "left", "right", 2, 0)
+					GameCooltip2:SetOption("TextSize", 10)
 					
-					for i, spellID in ipairs (spellsWithSameName) do
-						local spellName, _, spellIcon = GetSpellInfo (spellID)
+					for i, spellID in ipairs(spellsWithSameName) do
+						local spellName, _, spellIcon = GetSpellInfo(spellID)
 						if (spellName) then
-							GameCooltip2:AddLine (spellName .. " (" .. spellID .. ")")
-							GameCooltip2:AddIcon (spellIcon, 1, 1, 14, 14, .1, .9, .1, .9)
+							GameCooltip2:AddLine(spellName .. " (" .. spellID .. ")")
+							GameCooltip2:AddIcon(spellIcon, 1, 1, 14, 14, .1, .9, .1, .9)
 						end
 					end
 					
@@ -4551,6 +4606,7 @@ Plater.CreateAuraTesting()
 		end
 
 		local scroll_refresh = function (self, data, offset, total_lines)
+			local needsRefresh
 			for i = 1, total_lines do
 				local index = i + offset
 				local aura = data [index]
@@ -4562,14 +4618,6 @@ Plater.CreateAuraTesting()
 					if not spellName then
 						-- if the player class does not know the spell, try checking the cache
 						-- avoids "unknown spell" in this case
-
-						if (not next (Plater.SpellHashTable)) then
-							local loaded = specialAuraFrame.LoadGameSpells()
-							if loaded then
-								DF.LoadingAuraAlertFrame:HookScript("OnHide", function() self:Refresh() end)
-							end
-							--C_Timer.After (1, function() self:Refresh() end)
-						end
 						local id = Plater.SpellHashTable[lower(aura)]
 						spellName, _, spellIcon = GetSpellInfo (id)
 					end
@@ -4584,8 +4632,12 @@ Plater.CreateAuraTesting()
 						line.name:SetText ("unknown aura")
 						line.icon:SetTexture ("")
 						line.icon:SetTexture ([[Interface\InventoryItems\WoWUnknownItem01]])
+						needsRefresh = true
 					end
 				end
+			end
+			if needsRefresh then
+				C_Timer.After(1, function() self:Refresh() end)
 			end
 		end
 		
@@ -4619,7 +4671,6 @@ Plater.CreateAuraTesting()
 		new_buff_entry:SetJustifyH ("left")
 		
 		new_buff_entry:SetHook ("OnEditFocusGained", function (self, capsule)
-			specialAuraFrame.LoadGameSpells()
 			new_buff_entry.SpellAutoCompleteList = Plater.SpellIndexTable
 			new_buff_entry:SetAsAutoComplete ("SpellAutoCompleteList", nil, true)
 		end)
@@ -5274,44 +5325,10 @@ Plater.CreateAuraTesting()
 		
 		specialAuraFrame:SetScript ("OnShow", function()
 			special_auras_added:Refresh()
-			
-			--not working properly, auras stay "flying" in the screen
-			
-			--[=[
-			fff:SetScript ("OnUpdate", function()
-				
-				for _, plateFrame in ipairs (Plater.GetAllShownPlates()) do
-					plateFrame.unitFrame.ExtraIconFrame:ClearIcons()
-					plateFrame.unitFrame.ExtraIconFrame:SetIcon (248441, false, GetTime() - 2, 8)
-					plateFrame.unitFrame.ExtraIconFrame:SetIcon (273769, false, GetTime() - 3, 12)
-					plateFrame.unitFrame.ExtraIconFrame:SetIcon (206589, false, GetTime() - 6, 16)
-					plateFrame.unitFrame.ExtraIconFrame:SetIcon (279565, false, GetTime() - 180, 360)
-
-					local spellName, _, spellIcon = GetSpellInfo (248441)
-					local auraIconFrame = Plater.GetAuraIcon (plateFrame.unitFrame.BuffFrame, 1)
-					Plater.AddAura (auraIconFrame, 1, spellName, spellIcon, 1, "BUFF", 8, GetTime()+5, "player", false, false, 248441, false, false, false, false)
-					auraIconFrame.InUse = true
-					
-					local spellName, _, spellIcon = GetSpellInfo (273769)
-					local auraIconFrame = Plater.GetAuraIcon (plateFrame.unitFrame.BuffFrame, 1)
-					Plater.AddAura (auraIconFrame, 2, spellName, spellIcon, 1, "BUFF", 12, GetTime()+2, "player", false, false, 273769, false, false, false, false)
-					auraIconFrame.InUse = true
-				end
-			end)
-			--]=]
+			DF:LoadSpellCache(Plater.SpellHashTable, Plater.SpellIndexTable, Plater.SpellSameNameTable)
 		end)
-		
 		specialAuraFrame:SetScript ("OnHide", function()
-			--[=[
-			fff:SetScript ("OnUpdate", nil)
-			
-			
-			for _, plateFrame in ipairs (Plater.GetAllShownPlates()) do
-				plateFrame.unitFrame.ExtraIconFrame:ClearIcons()
-				hide_non_used_auraFrames (plateFrame.unitFrame.BuffFrame, 1)
-			end
-			--]=]
-			
+			--DF:UnloadSpellCache()
 		end)
 		
 		--create the description
@@ -13719,8 +13736,8 @@ end
 					Plater:Msg (L["OPTIONS_ERROR_CVARMODIFY"])
 				end
 			end,
-			name = "Force nameplates on soft-interact target",
-			desc = "Force show the nameplate on your soft-interact target.",
+			name = "Force nameplates on soft-interact target" .. CVarIcon,
+			desc = "Force show the nameplate on your soft-interact target." .. CVarDesc,
 		},
 		{
 			type = "toggle",
@@ -14715,16 +14732,20 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	--~search panel
-	local searchLabel = DF:CreateLabel(searchFrame, "Search:")
 	local searchBox = DF:CreateTextEntry (searchFrame, function()end, 156, 20, "serachTextEntry", _, _, DF:GetTemplate ("dropdown", "PLATER_DROPDOWN_OPTIONS"))
+	searchBox:SetAsSearchBox()
 	searchBox:SetJustifyH("left")
+	searchBox:SetPoint(10, -145)
 
-	searchLabel:SetPoint(10, -130)
-	searchBox:SetPoint(10, -140)
+	--create a search box in the main tab
+	local mainSearchBox = DF:CreateTextEntry(OTTFrame, function()end, 156, 20, "mainSearchTextEntry", _, _, DF:GetTemplate("dropdown", "PLATER_DROPDOWN_OPTIONS"))
+	mainSearchBox:SetAsSearchBox()
+	mainSearchBox:SetJustifyH("left")
+	mainSearchBox:SetPoint("topright", -220, 0)
 
 	local optionsWildCardFrame = CreateFrame("frame", "$parentWildCardOptionsFrame", searchFrame, BackdropTemplateMixin and "BackdropTemplate")
 	optionsWildCardFrame:SetAllPoints()
-	
+
 	--all settings tables
 	local allTabSettings = {
 		--interface_options, -- general
@@ -14797,52 +14818,39 @@ end
 
 		local lastTab = nil
 		local lastLabel = nil
-		for i = 1, #allOptions do
-			local optionData = allOptions[i]
-			local optionName = string.lower(optionData.setting.name)
-			if (optionName:find(searchingText)) then
-				if optionData.header ~= lastTab then
-					if lastTab ~= nil then
-						options[#options+1] = {type = "label", get = function() return "" end, text_template = DF:GetTemplate ("font", "OPTIONS_FONT_TEMPLATE")} -- blank
+		if searchingText and searchingText ~= "" then
+			for i = 1, #allOptions do
+				local optionData = allOptions[i]
+				local optionName = string.lower(optionData.setting.name)
+				if (optionName:find(searchingText)) then
+					if optionData.header ~= lastTab then
+						if lastTab ~= nil then
+							options[#options+1] = {type = "label", get = function() return "" end, text_template = DF:GetTemplate("font", "OPTIONS_FONT_TEMPLATE")} -- blank
+						end
+						options[#options+1] = {type = "label", get = function() return optionData.header end, text_template = {color = "gold", size = 14, font = DF:GetBestFontForLanguage()}}
+						lastTab = optionData.header
+						lastLabel = nil
 					end
-					options[#options+1] = {type = "label", get = function() return optionData.header end, text_template = {color = "gold", size = 14, font = DF:GetBestFontForLanguage()}}
-					lastTab = optionData.header
-					lastLabel = nil
+					if optionData.label ~= lastLabel then
+						options[#options+1] = optionData.label
+						lastLabel = optionData.label
+					end
+					options[#options+1] = optionData.setting
 				end
-				if optionData.label ~= lastLabel then
-					options[#options+1] = optionData.label
-					lastLabel = optionData.label
-				end
-				options[#options+1] = optionData.setting
 			end
 		end
 
 		options.always_boxfirst = true
 		options.language_addonId = addonId
-		DF:BuildMenuVolatile (searchFrame, options, startX, startY-30, heightSize+40, false, options_text_template, options_dropdown_template, options_switch_template, true, options_slider_template, options_button_template, globalCallback)
-
-		--[=[
-		if (searchFrame.widget_list) then
-			for i = 1, #searchFrame.widget_list do
-				searchFrame.widget_list[i]:Hide()
-				if (searchFrame.widget_list[i].hasLabel) then
-					searchFrame.widget_list[i].hasLabel:Hide()
-				end
-			end
-			wipe(searchFrame.widget_list)
-			searchFrame.widget_list = nil
-		end
-
-		if (searchFrame.widgetids) then
-			wipe(searchFrame.widgetids)
-			searchFrame.widgetids = nil
-		end
-
-		DF:BuildMenu (searchFrame, options, startX, startY-30, heightSize+40, true, options_text_template, options_dropdown_template, options_switch_template, true, options_slider_template, options_button_template, globalCallback)
-		--]=]
+		DF:BuildMenuVolatile(searchFrame, options, startX, startY-30, heightSize+40, false, options_text_template, options_dropdown_template, options_switch_template, true, options_slider_template, options_button_template, globalCallback)
 	end)
 
-
+	mainSearchBox:SetHook("OnEnterPressed", function(self)
+		local searchText = mainSearchBox.text
+		searchBox:SetText(searchText)
+		searchBox:RunHooksForWidget("OnEnterPressed")
+		_G["PlaterOptionsPanelContainer"]:SelectTabByIndex(TAB_INDEX_SEARCH)
+	end)
 
 	--
 	Plater.CheckOptionsTab()

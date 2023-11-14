@@ -1,4 +1,4 @@
-## Interface: 100107
+## Interface: 100200
 ## Title:|cffffe00a<|r|cffff7d0aDBM Core|r|cffffe00a>|r |cff69ccf0Status Bar Timers|r
 ## Title-esES:|cffffe00a<|r|cffff7d0aDBM Core|r|cffffe00a>|r |cff69ccf0Temporizadores de Estado|r
 ## Title-esMX:|cffffe00a<|r|cffff7d0aDBM Core|r|cffffe00a>|r |cff69ccf0Temporizadores de Estado|r
@@ -20,7 +20,7 @@
 ## LoadOnDemand: 0
 ## DefaultState: enabled
 ## Author: MysticalOS, QartemisT
-## Version: 4cf6eb6
+## Version: 259b02b
 ## X-Website: https://deadlybossmods.com
 
 DBT.lua

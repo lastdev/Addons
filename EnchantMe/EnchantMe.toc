@@ -1,0 +1,9 @@
+## Interface: 100200
+## Title: EnchantMe
+## Version: 1.2.5
+## Author: romdeau23
+## Notes: Check equipped items for missing enchants and gems
+## IconTexture: Interface\AddOns\EnchantMe\icon
+## X-Website: https://github.com/romdeau23/wow-enchant-me
+
+EnchantMe.lua

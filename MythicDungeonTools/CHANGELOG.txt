@@ -1,10 +1,12 @@
-- v4.1.0.8
-  - fix route duplciation check on import
-  - UX improvements for importing from text string
-- v4.1.0.7
-- v4.1.0.6
-  - disable WagoAnalytics for now
-- v4.1.0.5
-  - bugfix
-- v4.1.0.4
-  - patch 10.1.7 update
+- v4.2.0.4
+  - count updates Everbloom + Waycrest Manor
+- v4.2.0.3
+  - offseason affixes
+- v4.2.0.2
+- v4.2.0.2
+  - fix visual bug of discord and github buttons
+- v4.2.0.1
+  - external link buttons
+- v4.2.0.0
+  - Season 3 dungeons
+  - improved pull outlines performance

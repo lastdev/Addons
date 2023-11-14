@@ -1,4 +1,4 @@
-## Interface: 100107
+## Interface: 100200
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10World Bosses (Legion)|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10Verheerten Inseln|r
@@ -29,7 +29,7 @@
 ## X-Curse-Project-ID: 301324
 ## X-WoWI-ID: 24905
 ## X-Wago-ID: lQNlbaKe
-## Version: r44
+## Version: r45
 localization.en.lua
 localization.ru.lua
 localization.cn.lua

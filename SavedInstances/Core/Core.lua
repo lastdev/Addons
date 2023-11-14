@@ -365,9 +365,18 @@ SI.defaultDB = {
     AugmentBonus = true,
     CurrencyValueColor = true,
     Currency2003 = true, -- Dragon Isles Supplies
-    Currency2123 = true, -- Bloody Tokens
     Currency2245 = true, -- Flightstones
-    Currency2533 = true, -- Renascent Shadowflame
+    Currency2123 = true, -- Bloody Tokens
+    Currency2797 = true, -- Trophy of Strife
+    Currency2650 = true, -- Emerald Dewdrop
+    Currency2651 = true, -- Seedbloom
+    Currency2777 = true, -- Dream Infusion
+    Currency2796 = true, -- Renascent Dream
+    Currency2706 = true, -- Whelpling's Dreaming Crest
+    Currency2707 = true, -- Drake's Dreaming Crest
+    Currency2708 = true, -- Wyrm's Dreaming Crest
+    Currency2709 = true, -- Aspect's Dreaming Crest
+    Currency2774 = true, -- Loot Spark of Dreams
     CurrencyMax = false,
     CurrencyEarned = true,
     CurrencySortName = false,
@@ -2413,7 +2422,7 @@ end
 function SI:OnInitialize()
   local versionString = GetAddOnMetadata("SavedInstances", "version")
   --[==[@debug@
-  if versionString == "10.1.6" then
+  if versionString == "10.2.0" then
     versionString = "Dev"
   end
   --@end-debug@]==]

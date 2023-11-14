@@ -87,8 +87,6 @@ local AURA_TYPE_POISON = "Poison"
 local AURA_TYPE_CURSE = "Curse"
 local AURA_TYPE_UNKNOWN = nil
 
-local MEMBER_UNITID = "namePlateUnitToken"
-
 local PLATER_REFRESH_ID = 1
 function Plater.IncreaseRefreshID_Auras()
     PLATER_REFRESH_ID = PLATER_REFRESH_ID + 1
@@ -329,6 +327,82 @@ end
 
 local NamePlateTooltip = _G.NamePlateTooltip -- can be removed later
 local PlaterNamePlateAuraTooltip = CreatePlaterNamePlateAuraTooltip()
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Private Aura handling
+
+function Plater.HandlePrivateAuraAnchors(unitFrame, maxIndex)
+	if true then return end -- disable for now...
+	if not unitFrame then return end
+	if not C_UnitAuras or not C_UnitAuras.RemovePrivateAuraAnchor then return end
+
+	if unitFrame.privateAuraAnchors then
+		for index, anchorID in pairs(unitFrame.privateAuraAnchors) do
+			C_UnitAuras.RemovePrivateAuraAnchor(anchorID)
+		end
+		table.wipe(unitFrame.privateAuraAnchors)
+	else
+		unitFrame.privateAuraAnchors = {}
+	end
+	
+	if not unitFrame.PlaterOnScreen then return end
+	
+	--anchor building
+	local anchorSide = Plater.db.profile.aura_frame1_anchor.side
+	local rowGrowthDirectionUp = (anchorSide < 3 or anchorSide > 5)
+	local maxIndex = maxIndex or 2
+	local relIconPoint = "bottom"
+	local relIconPointTo = "top"
+	local paddingMult = 1
+	
+	-- --> left to right
+	if (DB_AURA_GROW_DIRECTION == 3) then
+		relIconPoint = rowGrowthDirectionUp and "bottomleft" or "topleft"
+		relIconPointTo = rowGrowthDirectionUp and "topleft" or "bottomleft"
+		paddingMult = 1
+		
+	-- <-- right to left
+	elseif (DB_AURA_GROW_DIRECTION == 1) then
+		relIconPoint = rowGrowthDirectionUp and "bottomright" or "topright"
+		relIconPointTo = rowGrowthDirectionUp and "topright" or "bottomright"
+		paddingMult = -1
+	end
+	
+	local unit = unitFrame.IsSelf and "player" or unitFrame[MEMBER_UNITID]
+	
+	for index = 1, maxIndex do
+		local privateAnchorArgs = {
+			unitToken = unit,
+			auraIndex = index,
+			parent = unitFrame,
+			showCountdownFrame = true,
+			showCountdownNumbers = true,
+			iconInfo = {
+				iconAnchor = {
+					point = relIconPoint,
+					relativeTo = unitFrame.BuffFrame,
+					relativePoint = relIconPointTo,
+					offsetX = ((Plater.db.profile.aura_width * (index - 1)) + DB_AURA_PADDING * (index -1)) * paddingMult, --((Plater.db.profile.aura_width * Plater.db.profile.ui_parent_scale_tune * (index - 1)) + DB_AURA_PADDING * (index -1)) * paddingMult,
+					offsetY = Plater.db.profile.aura_breakline_space,
+				},
+				iconWidth = Plater.db.profile.aura_width, -- * Plater.db.profile.ui_parent_scale_tune,
+				iconHeight = Plater.db.profile.aura_height, -- * Plater.db.profile.ui_parent_scale_tune,
+			},
+			durationAnchor = {
+				point = relIconPoint,
+				relativeTo = unitFrame.BuffFrame,
+				relativePoint = relIconPointTo,
+				offsetX = ((Plater.db.profile.aura_width * (index - 1)) + DB_AURA_PADDING * (index -1)) * paddingMult, --((Plater.db.profile.aura_width * Plater.db.profile.ui_parent_scale_tune * (index - 1)) + DB_AURA_PADDING * (index -1)) * paddingMult,
+				offsetY = Plater.db.profile.aura_breakline_space,
+			},
+		}
+		
+		unitFrame.privateAuraAnchors[index] = C_UnitAuras.AddPrivateAuraAnchor(privateAnchorArgs)
+	end
+	--anchored, so we should 'show' the buffframe as anchor point. TODO: how to handle this for name only and other stuff?... might need separate anchor frame
+	unitFrame.BuffFrame:Show()
+	unitFrame.BuffFrame:SetSize(1,1)
+end
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --> UNIT_AURA event handling
@@ -857,13 +931,13 @@ end
 							local spellIcon, spellId = spellTable[1], spellTable[2]
 							local auraIconFrame = Plater.GetAuraIcon(buffFrame) -- show on debuff frame
 							auraIconFrame.InUse = true --don't play animation
-							Plater.AddAura(buffFrame, auraIconFrame, -1, spellName.."_player_ghost", spellIcon, 1, "DEBUFF", 0, 0, "player", false, false, spellId, false, false, false, false, "DEBUFF", 1)
+							Plater.AddAura(buffFrame, auraIconFrame, -1, spellName.."_player_ghost", spellIcon, 1, "DEBUFF", 0, 0, "player", false, false, -spellId, false, false, false, false, "DEBUFF", 1)
 							auraIconFrame:EnableMouse (false) --don't use tooltips, as there is no real aura
 							if IS_WOW_PROJECT_MAINLINE then
 								auraIconFrame:EnableMouseMotion (false) --don't use tooltips, as there is no real aura
 							end
 							auraIconFrame.IsGhostAura = true
-							Plater.Auras.GhostAuras.ApplyAppearance(auraIconFrame, spellName.."_player_ghost", spellIcon, spellId)
+							Plater.Auras.GhostAuras.ApplyAppearance(auraIconFrame, spellName.."_player_ghost", spellIcon, -spellId)
 							nameplateGhostAuraCache[spellName.."_player_ghost"] = true --this is shown as ghost aura
 						end
 					else
@@ -1129,16 +1203,12 @@ end
 				
 			end
 			
-			if (not firstIcon) then
-				return
-			end
-			
 			if curRowLength > horizontalLength then
 				horizontalLength = curRowLength
 			end
 			
 			--remove 1 icon padding value
-			horizontalLength = horizontalLength - DB_AURA_PADDING
+			horizontalLength = (horizontalLength > 1) and (horizontalLength - DB_AURA_PADDING) or 1
 			--set the size of the buff frame
 			self:SetWidth (horizontalLength)
 			self:SetHeight (verticalHeight)

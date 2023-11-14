@@ -953,15 +953,15 @@
 		for i = 1, aliados-1 do
 			local role = UnitGroupRolesAssigned and UnitGroupRolesAssigned("party" .. i) or "DAMAGER"
 			if (role ~= "NONE" and UnitExists("party" .. i)) then
-				local name = GetUnitName("party" .. i, true)
-				Details.arena_table [name] = {role = role}
+				local unitName = Details:GetFullName("party" .. i)
+				Details.arena_table [unitName] = {role = role}
 			end
 		end
 
 		local role = UnitGroupRolesAssigned and UnitGroupRolesAssigned("player") or "DAMAGER"
 		if (role ~= "NONE") then
-			local name = GetUnitName("player", true)
-			Details.arena_table [name] = {role = role}
+			local playerName = Details:GetFullName("player")
+			Details.arena_table [playerName] = {role = role}
 		end
 
 		--enemies
@@ -969,7 +969,7 @@
 		Details:Destroy(_detalhes.arena_enemies)
 
 		for i = 1, enemiesAmount do
-			local enemyName = _G.GetUnitName("arena" .. i, true)
+			local enemyName = Details:GetFullName("arena" .. i)
 			if (enemyName) then
 				_detalhes.arena_enemies[enemyName] = "arena" .. i
 			end
@@ -977,10 +977,11 @@
 	end
 
 	--attempt to get the arena unitId for an actor
+	--this function is called from containerActors while reading the actor flag and parser when managing deathlog
 	function Details:GuessArenaEnemyUnitId(unitName)
 		for i = 1, 5 do
 			local unitId = "arena" .. i
-			local enemyName = _G.GetUnitName(unitId, true)
+			local enemyName = Details:GetFullName(unitId)
 			if (enemyName == unitName) then
 				_detalhes.arena_enemies[enemyName] = unitId
 				return unitId
@@ -1247,106 +1248,8 @@
 	end
 
 	function Details:MakeEqualizeOnActor (player, realm, receivedActor)
-
 		if (true) then --disabled for testing
 			return
-		end
-
-		local combat = Details:GetCombat("current")
-		local damage, heal, energy, misc = Details:GetAllActors("current", player)
-
-		if (not damage and not heal and not energy and not misc) then
-
-			--try adding server name
-			damage, heal, energy, misc = Details:GetAllActors("current", player.."-"..realm)
-
-			if (not damage and not heal and not energy and not misc) then
-				--not found any actor object, so we need to create
-
-				local actorName
-
-				if (realm ~= GetRealmName()) then
-					actorName = player.."-"..realm
-				else
-					actorName = player
-				end
-
-				local guid = Details:FindGUIDFromName (player)
-
-				-- 0x512 normal party
-				-- 0x514 normal raid
-
-				if (guid) then
-					damage = combat [1]:PegarCombatente (guid, actorName, 0x514, true)
-					heal = combat [2]:PegarCombatente (guid, actorName, 0x514, true)
-					energy = combat [3]:PegarCombatente (guid, actorName, 0x514, true)
-					misc = combat [4]:PegarCombatente (guid, actorName, 0x514, true)
-
-					if (Details.debug) then
-						Details:Msg("(debug) equalize received actor:", actorName, damage, heal)
-					end
-				else
-					if (Details.debug) then
-						Details:Msg("(debug) equalize couldn't get guid for player ",player)
-					end
-				end
-			end
-		end
-
-		combat[1].need_refresh = true
-		combat[2].need_refresh = true
-		combat[3].need_refresh = true
-		combat[4].need_refresh = true
-
-		if (damage) then
-			if (damage.total < receivedActor [1][1]) then
-				if (Details.debug) then
-					Details:Msg(player .. " damage before: " .. damage.total .. " damage received: " .. receivedActor [1][1])
-				end
-				damage.total = receivedActor [1][1]
-			end
-			if (damage.damage_taken < receivedActor [1][2]) then
-				damage.damage_taken = receivedActor [1][2]
-			end
-			if (damage.friendlyfire_total < receivedActor [1][3]) then
-				damage.friendlyfire_total = receivedActor [1][3]
-			end
-		end
-
-		if (heal) then
-			if (heal.total < receivedActor [2][1]) then
-				heal.total = receivedActor [2][1]
-			end
-			if (heal.totalover < receivedActor [2][2]) then
-				heal.totalover = receivedActor [2][2]
-			end
-			if (heal.healing_taken < receivedActor [2][3]) then
-				heal.healing_taken = receivedActor [2][3]
-			end
-		end
-
-		if (energy) then
-			if (energy.mana and (receivedActor [3][1] > 0 and energy.mana < receivedActor [3][1])) then
-				energy.mana = receivedActor [3][1]
-			end
-			if (energy.e_rage and (receivedActor [3][2] > 0 and energy.e_rage < receivedActor [3][2])) then
-				energy.e_rage = receivedActor [3][2]
-			end
-			if (energy.e_energy and (receivedActor [3][3] > 0 and energy.e_energy < receivedActor [3][3])) then
-				energy.e_energy = receivedActor [3][3]
-			end
-			if (energy.runepower and (receivedActor [3][4] > 0 and energy.runepower < receivedActor [3][4])) then
-				energy.runepower = receivedActor [3][4]
-			end
-		end
-
-		if (misc) then
-			if (misc.interrupt and (receivedActor [4][1] > 0 and misc.interrupt < receivedActor [4][1])) then
-				misc.interrupt = receivedActor [4][1]
-			end
-			if (misc.dispell and (receivedActor [4][2] > 0 and misc.dispell < receivedActor [4][2])) then
-				misc.dispell = receivedActor [4][2]
-			end
 		end
 	end
 

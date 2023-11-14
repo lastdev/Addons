@@ -34,6 +34,8 @@ L["Activity"] = "Активность"
 L["PATCH_X.0"] = "Expansion Patch"
 L["PATCH_9.1"] = "Chains of Domination"
 L["PATCH_9.2"] = "Eternity's End"
+L["PATCH_10.1"] = "Embers of Neltharion"
+L["PATCH_10.2"] = "Guardians of the Dream"
 
 -- ** Filter Icons **
 L["FILTER_CLASSES"] = "Фильтр классов"

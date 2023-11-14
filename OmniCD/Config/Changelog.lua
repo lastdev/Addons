@@ -1,6 +1,9 @@
 local E, L, C = select(2, ...):unpack()
 
 if E.isClassic then E.changelog = [=[
+v1.14.4.2771
+	Extra Bars can now be used as additional CD bars that attach to each unit's raid frame.
+
 v1.14.4.2768
 	bump toc
 
@@ -15,6 +18,10 @@ v2.5.4.2722
 	Fixed sync for cross realm group members
 ]=]
 elseif E.isWOTLKC then E.changelog = [=[
+v3.4.3.2771
+	Extra Bars can now be used as additional CD bars that attach to each unit's raid frame.
+	bump toc
+
 v3.4.2.2768
 	Cooldowns will correctly update when non-synced units change specialization
 
@@ -27,6 +34,9 @@ v3.4.1.2755
 	Added arena season 7, 8 equip bonus items
 ]=]
 else E.changelog = [=[
+v10.1.7.2771
+	Extra Bars can now be used as additional CD bars that attach to each unit's raid frame.
+
 v10.1.7.2770
 	Shield Charge will correctly go on CD when used out of melee range.
 	Heavy Wingbests/Cloberring Sweep will correctly reduce the CD of Wing Buffet/Tail Swipe.

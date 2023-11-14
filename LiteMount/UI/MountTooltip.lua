@@ -56,10 +56,10 @@ function LiteMountTooltipMixin:SetupPreview(m)
         if mountActor then
             mountActor:SetModelByCreatureDisplayID(m.modelID)
             if m.isSelfMount then
-                mountActor:SetAnimationBlendOperation(LE_MODEL_BLEND_OPERATION_NONE)
+                mountActor:SetAnimationBlendOperation(Enum.ModelBlendOperation.None)
                 mountActor:SetAnimation(618)
             else
-                mountActor:SetAnimationBlendOperation(LE_MODEL_BLEND_OPERATION_ANIM)
+                mountActor:SetAnimationBlendOperation(Enum.ModelBlendOperation.Anim)
                 mountActor:SetAnimation(0)
             end
         end
@@ -99,18 +99,20 @@ function LiteMountTooltipMixin:SetMount(m, canMount)
         self:AddLine("|cffffffff"..L.LM_FAMILY..":|r "..L[m.family])
     end
 
-    local r = m:GetRarity()
-    if r then
-        self:AddLine("|cffffffff"..RARITY..":|r "..string.format(L.LM_RARITY_FORMAT, r))
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+        local r = m:GetRarity()
+        if r then
+            self:AddLine("|cffffffff"..RARITY..":|r "..string.format(L.LM_RARITY_FORMAT, r))
+        end
     end
 
-    if m.description then
+    if m.description and m.description ~= "" then
         self:AddLine(" ")
         self:AddLine("|cffffffff" .. DESCRIPTION .. "|r")
         self:AddLine(m.description, nil, nil, nil, true)
     end
 
-    if m.sourceText then
+    if m.sourceText and m.sourceText ~= "" then
         self:AddLine(" ")
         self:AddLine("|cffffffff" .. SOURCE .. "|r")
         self:AddLine(m.sourceText, nil, nil, nil, true)

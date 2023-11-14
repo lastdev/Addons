@@ -1,4 +1,7 @@
-if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then return end
+local IS_RETAIL = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
+local IS_CLASSIC = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+local IS_WRATH = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
+if not IS_RETAIL and not IS_CLASSIC and not IS_WRATH then return end
 
 local addonName = ... ---@type string @The name of the addon.
 local ns = select(2, ...) ---@class ns @The addon namespace.
@@ -189,6 +192,13 @@ do
     ns.LOOKUP_MAX_SIZE = floor(2^18-1) -- the maximum index we can use in a table before we start to get errors
     ns.CURRENT_SEASON = 1 -- the current mythic keystone season. dynamically assigned once keystone data is loaded.
     ns.RAIDERIO_ADDON_DOWNLOAD_URL = "https://rio.gg/addon"
+    ns.RAIDERIO_DOMAIN = "raider.io"
+
+    if IS_CLASSIC then
+        ns.RAIDERIO_DOMAIN = "era.raider.io"
+    elseif IS_WRATH then
+        ns.RAIDERIO_DOMAIN = "classic.raider.io"
+    end
 
     ns.EASTER_EGG = {
         ["eu"] = {
@@ -612,6 +622,7 @@ do
     ---@field public clear_time string
     ---@field public party GuildMythicKeystoneRunMember[]
     ---@field public dungeon Dungeon
+    ---@field public dungeonName string
 
     ---@class GuildCollection
     ---@field public profile GuildProfile
@@ -1026,7 +1037,7 @@ do
                 return module
             end
         end
-        assert(silent, "Raider.IO Module expects GetModule(id) where id is a string, and the module must exists, or the silent param must be set to avoid this throw.")
+        assert(silent, format("Raider.IO Module expects GetModule(\"%s\") but the module doesn't exist and the silent flag is not set.", tostring(id)))
     end
 
 end
@@ -1601,6 +1612,9 @@ do
         if IsTestBuild() then
             return false
         end
+        if GetCurrentRegion() == 72 then
+            return false
+        end
         if ns.IGNORED_REALMS[ns.PLAYER_REALM] or ns.IGNORED_REALMS[ns.PLAYER_REALM_SLUG] then
             return false
         end
@@ -2165,7 +2179,7 @@ do
         local realmSlug = util:GetRealmSlug(realm, true)
         local region = select(3, ...)
         region = region and type(region) == "string" and region:len() > 0 and region or ns.PLAYER_REGION
-        return format("https://raider.io/characters/%s/%s/%s?utm_source=addon", region, realmSlug, name), name, realm, realmSlug
+        return format("https://%s/characters/%s/%s/%s?utm_source=addon", ns.RAIDERIO_DOMAIN, region, realmSlug, name), name, realm, realmSlug
     end
 
     ---@param urlSuffix string
@@ -2173,7 +2187,7 @@ do
     function util:GetRaiderIORecruitmentProfileUrl(urlSuffix, ...)
         local name, realm = util:GetNameRealm(...)
         local realmSlug = util:GetRealmSlug(realm, true)
-        return format("https://raider.io/characters/%s/%s/%s/%s?utm_source=addon", ns.PLAYER_REGION, realmSlug, name, urlSuffix), name, realm, realmSlug
+        return format("https://%s/characters/%s/%s/%s/%s?utm_source=addon", ns.RAIDERIO_DOMAIN, ns.PLAYER_REGION, realmSlug, name, urlSuffix), name, realm, realmSlug
     end
 
     ---@class InternalStaticPopupDialog : Frame
@@ -2287,7 +2301,12 @@ do
         return texture, info
     end
 
-    ---@param button Button
+    ---@class ButtonWithTextures : Button
+    ---@field public normalTexture? Texture
+    ---@field public pushedTexture? Texture
+    ---@field public disabledTexture? Texture
+
+    ---@param button Button|ButtonWithTextures
     ---@param icon CustomIcon
     function util:SetButtonTextureFromIcon(button, icon)
         local info = icon("Texture") ---@type CustomIconTexture
@@ -2700,7 +2719,7 @@ do
     end
 
     local function CreateExportButton()
-        local button = CreateFrame("Button", addonName .. "_ExportButton", LFGListFrame)
+        local button = CreateFrame("Button", addonName .. "_ExportButton", LFGListFrame) ---@class RaiderIOExportButton : Button
         button:SetPoint("BOTTOMRIGHT", button:GetParent(), "BOTTOM", -12, 7) ---@diagnostic disable-line: param-type-mismatch
         button:SetSize(16, 16)
         -- script handlers
@@ -2929,7 +2948,9 @@ do
             InjectTestBuildData()
         end
         CheckQueuedProviders()
-        RequestMythicPlusData()
+        if IS_RETAIL then
+            RequestMythicPlusData()
+        end
         provider:Enable()
     end
 
@@ -4491,11 +4512,11 @@ do
         for _, mapID in ipairs(mapIDs) do
             local affixScores ---@type MythicPlusAffixScoreInfo[]?
             local bestOverAllScore ---@type number?
-            local mapRun ---@type MythicPlusRatingMapSummary?
+            local mapRun ---@type MythicPlusRatingMapSummaryRaiderIOExtended?
             for _, run in ipairs(bioSummary.runs) do
                 if mapID == run.challengeModeID then
                     affixScores, bestOverAllScore = C_MythicPlus.GetSeasonBestAffixScoreInfoForMap(mapID)
-                    mapRun = run
+                    mapRun = run ---@diagnostic disable-line: cast-local-type
                     break
                 end
             end
@@ -4521,15 +4542,20 @@ do
     end
 
     local function OnPlayerEnteringWorld()
-        table.wipe(mythicKeystoneProfileCache)
         table.wipe(raidProfileCache)
         table.wipe(pvpProfileCache)
         table.wipe(profileCache)
-        OverridePlayerData()
+        if IS_RETAIL then
+            table.wipe(mythicKeystoneProfileCache)
+            OverridePlayerData()
+        end
     end
 
     callback:RegisterEvent(OnPlayerEnteringWorld, "PLAYER_ENTERING_WORLD")
-    callback:RegisterEvent(OverridePlayerData, "CHALLENGE_MODE_MAPS_UPDATE", "MYTHIC_PLUS_CURRENT_AFFIX_UPDATE")
+
+    if IS_RETAIL then
+        callback:RegisterEvent(OverridePlayerData, "CHALLENGE_MODE_MAPS_UPDATE", "MYTHIC_PLUS_CURRENT_AFFIX_UPDATE")
+    end
 
     function provider:WipeCache()
         OnPlayerEnteringWorld()
@@ -4756,6 +4782,7 @@ do
     ---@field public region string @"us","kr","eu","tw","cn"
     ---@field public options number @render.Flags
     ---@field public args table @Assigned dynamically and can contain any kind of data, depending on the usage.
+    ---@field public success? boolean
 
     ---@class TooltipStates
 
@@ -5563,10 +5590,12 @@ do
             return
         end
         if util:IsUnitMaxLevel(unit) then
-            local bioSummary = C_PlayerInfo.GetPlayerMythicPlusRatingSummary(unit)
-            if bioSummary and bioSummary.currentSeasonScore then
-                local name, realm = util:GetNameRealm(unit)
-                provider:OverrideProfile(name, realm, bioSummary.currentSeasonScore, bioSummary.runs)
+            if IS_RETAIL then
+                local bioSummary = C_PlayerInfo.GetPlayerMythicPlusRatingSummary(unit)
+                if bioSummary and bioSummary.currentSeasonScore then
+                    local name, realm = util:GetNameRealm(unit)
+                    provider:OverrideProfile(name, realm, bioSummary.currentSeasonScore, bioSummary.runs)
+                end
             end
             render:ShowProfile(self, unit)
         end
@@ -5783,7 +5812,7 @@ end
 
 -- fanfare.lua (requires debug mode)
 -- dependencies: module, config, util, provider
-do
+if IS_RETAIL then
 
     ---@class FanfareModule : Module
     local fanfare = ns:NewModule("Fanfare") ---@type FanfareModule
@@ -6000,6 +6029,7 @@ do
         self.Sparks:Hide()
     end
 
+    ---@param self RaiderIOFanFareDecorationFrameAnimInSparks
     local function DecorationFrame_AnimIn_Sparks_OnFinished(self)
         self.frame.Sparks:Hide()
     end
@@ -6058,7 +6088,7 @@ do
     ---@field public SetScaleTo fun(x, y)
 
     local function CreateDecorationFrame()
-        local frame = CreateFrame("Frame")
+        local frame = CreateFrame("Frame") ---@class RaiderIOFanFareDecorationFrame : Frame
         frame:Hide()
         frame:SetScript("OnShow", DecorationFrame_OnShow)
         frame:SetScript("OnHide", DecorationFrame_OnHide)
@@ -6101,7 +6131,7 @@ do
             scale:SetDuration(0.25)
             scale:SetScaleFrom(5, 5)
             scale:SetScaleTo(1, 1)
-            local sparks = frame.AnimIn:CreateAnimation("Scale") ---@type Animation|Scale|ScalePolyfill
+            local sparks = frame.AnimIn:CreateAnimation("Scale") ---@class RaiderIOFanFareDecorationFrameAnimInSparks : Animation, Scale, ScalePolyfill
             sparks:SetOrder(1)
             sparks:SetStartDelay(0)
             sparks:SetDuration(LEVEL_UP_EFFECT.duration)
@@ -6114,7 +6144,7 @@ do
     end
 
     local frameHooks = {}
-    local frames = {}
+    local frames = {} ---@type table<string, RaiderIOFanFareDecorationFrame?>
 
     local function OnFrameHidden()
         for _, frame in pairs(frames) do
@@ -6310,7 +6340,7 @@ do
     local fallbackFrame = _G.UIParent
     local fallbackStrata = "LOW"
 
-    local tooltipAnchor ---@type Frame
+    local tooltipAnchor ---@type RaiderIOProfileTooltipAnchorFrame
     local tooltip ---@type GameTooltip
 
     local tooltipAnchorPriority = {
@@ -6470,7 +6500,7 @@ do
     end
 
     local function CreateTooltipAnchor()
-        local frame = CreateFrame("Frame", addonName .. "_ProfileTooltipAnchor", fallbackFrame)
+        local frame = CreateFrame("Frame", addonName .. "_ProfileTooltipAnchor", fallbackFrame) ---@class RaiderIOProfileTooltipAnchorFrame : Frame
         frame:SetFrameStrata(fallbackStrata)
         frame:SetFrameLevel(100)
         frame:SetClampedToScreen(true)
@@ -6524,7 +6554,7 @@ do
     end
 
     function profile:CanLoad()
-        return not tooltip and config:IsEnabled() and PVEFrame
+        return not tooltip and config:IsEnabled() -- and PVEFrame
     end
 
     function profile:OnLoad()
@@ -6611,7 +6641,7 @@ end
 
 -- lfgtooltip.lua
 -- dependencies: module, config, util, render, profile
-do
+if IS_RETAIL then
 
     ---@class LfgTooltipModule : Module
     local tooltip = ns:NewModule("LfgTooltip") ---@type LfgTooltipModule
@@ -6622,8 +6652,9 @@ do
     local provider = ns:GetModule("Provider") ---@type ProviderModule
 
     ---@class LfgResult
-    ---@field public activityID number|nil
+    ---@field public activityID? number
     ---@field public leaderName string
+    ---@field public leaderFaction number
     ---@field public keystoneLevel number
 
     ---@type LfgResult
@@ -6816,7 +6847,7 @@ end
 
 -- communitytooltip.lua
 -- dependencies: module, config, util, render
-do
+if IS_RETAIL then
 
     ---@class CommunityTooltipModule : Module
     local tooltip = ns:NewModule("CommunityTooltip") ---@type CommunityTooltipModule
@@ -6944,7 +6975,7 @@ end
 
 -- keystonetooltip.lua
 -- dependencies: module, config, render
-do
+if IS_RETAIL then
 
     ---@class KeystoneTooltipModule : Module
     local tooltip = ns:NewModule("KeystoneTooltip") ---@type KeystoneTooltipModule
@@ -7054,7 +7085,7 @@ end
 
 -- guildweekly.lua
 -- dependencies: module, callback, config, util
-do
+if IS_RETAIL then
 
     ---@class GuildWeeklyModule : Module
     local guildweekly = ns:NewModule("GuildWeekly") ---@type GuildWeeklyModule
@@ -7469,7 +7500,7 @@ end
 
 -- replay.lua
 -- dependencies: module, callback, config, util
-do
+if IS_RETAIL then
 
     ---@class ReplayModule : Module
     local replay = ns:NewModule("Replay") ---@type ReplayModule
@@ -7631,11 +7662,14 @@ do
     ---@type table<number, boolean?>
     local ActiveEncounters = {}
 
+    ---@class AutoScalingFontStringMixin : FontString
+    ---@field public minLineHeight number
+
     ---@param ... FontString
     local function SetupAutoScalingFontStringMixin(...)
         local temp = {...}
         for _, fontString in ipairs(temp) do
-            Mixin(fontString, AutoScalingFontStringMixin)
+            fontString = Mixin(fontString, AutoScalingFontStringMixin) ---@type AutoScalingFontStringMixin
             fontString.minLineHeight = 1
         end
     end
@@ -8480,6 +8514,7 @@ do
         ---@field public hasArrow boolean
         ---@field public notCheckable boolean
         ---@field public menuList ReplayFrameDropDownMenuList
+        ---@field public func? fun(self: UIDropDownMenuInfo)
         ---@field public arg1 ReplayFrameConfigButton
         ---@field public arg2 Replay|ReplayFrameStyle|ReplayFrameDropDownPositionOption
         ---@field public tooltipTitle? string
@@ -9062,7 +9097,14 @@ do
             self.TextBlock.TrashL, self.TextBlock.TrashM, self.TextBlock.TrashR = CreateTextRow(self.TextBlock.BossL, ns.CUSTOM_ICONS.replay.TRASH("TextureMarkup"))
             self.TextBlock.DeathPenL, self.TextBlock.DeathPenM, self.TextBlock.DeathPenR = CreateTextRow(self.TextBlock.TrashL, ns.CUSTOM_ICONS.replay.DEATH("TextureMarkup"))
 
-            self.MDI = CreateFrame("Frame", nil, self, BackdropTemplateMixin and "BackdropTemplate") ---@class ReplayFrameMDI : Frame, BackdropTemplate
+            ---@class FontStringWithBackground : FontString
+            ---@field public Background Texture
+
+            ---@class ReplayFrameMDI : Frame, BackdropTemplate
+            ---@field public DeathPenL FontStringWithBackground
+            ---@field public DeathPenR FontStringWithBackground
+
+            self.MDI = CreateFrame("Frame", nil, self, BackdropTemplateMixin and "BackdropTemplate") ---@class ReplayFrameMDI
             self.MDI:SetPoint("TOPLEFT", self, "TOPLEFT", 0, 0)
             self.MDI:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, 0)
 
@@ -10522,8 +10564,11 @@ do
         return temp
     end
 
+    ---@class RaiderIOSearchAutoCompleteEditBox : EditBox
+    ---@field public autoCompleteFunction fun(text: string, maxResults: number, cursorPosition: number)
+
     local function CreateEditBox()
-        local f = CreateFrame("EditBox", nil, UIParent, "AutoCompleteEditBoxTemplate")
+        local f = CreateFrame("EditBox", nil, UIParent, "AutoCompleteEditBoxTemplate") ---@class RaiderIOSearchAutoCompleteEditBox
         -- autocomplete
         f.autoComplete = AutoCompleteBox
         f.autoCompleteParams = { include = AUTOCOMPLETE_FLAG_ALL, exclude = AUTOCOMPLETE_FLAG_NONE }
@@ -10596,7 +10641,7 @@ do
         realmBox.autoCompleteFunction = GetRealms
         nameBox.autoCompleteFunction = GetNames
 
-        local Frame = CreateFrame("Frame", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate")
+        local Frame = CreateFrame("Frame", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate") ---@class RaiderIOSearchFrame : Frame, BackdropTemplate
         do
             Frame:Hide()
             Frame:EnableMouse(true)
@@ -10802,6 +10847,9 @@ do
     end
 
     function search:SearchAndShowProfile(region, realm, name)
+        if not self:IsEnabled() then
+            return
+        end
         searchRegionBox:SetText(region)
         searchRealmBox:SetText(realm)
         searchNameBox:SetText(name)
@@ -10834,6 +10882,9 @@ do
     end
 
     function search:IsShown()
+        if not self:IsEnabled() then
+            return
+        end
         return searchFrame:IsShown()
     end
 
@@ -10856,6 +10907,7 @@ do
         CHAT_ROSTER = true,
         COMMUNITIES_GUILD_MEMBER = true,
         COMMUNITIES_WOW_MEMBER = true,
+        ENEMY_PLAYER = true,
         FOCUS = true,
         FRIEND = true,
         GUILD = true,
@@ -10866,7 +10918,7 @@ do
         RAID_PLAYER = true,
         SELF = true,
         TARGET = true,
-        WORLD_STATE_SCORE = true
+        WORLD_STATE_SCORE = true,
     }
 
     -- if the dropdown is a valid type of dropdown then we mark it as acceptable to check for a unit on it
@@ -11049,7 +11101,7 @@ end
 
 -- rwf.lua (requires rwf mode)
 -- dependencies: module, callback, config, util
-do
+if IS_RETAIL then
 
     ---@class RaceWorldFirstModule : Module
     local rwf = ns:NewModule("RaceWorldFirst") ---@type RaceWorldFirstModule
@@ -11058,7 +11110,7 @@ do
     local util = ns:GetModule("Util") ---@type UtilModule
 
     local LOCATION = {}
-    local LOOT_FRAME
+    local LOOT_FRAME ---@type RaiderIORWFLootFrame
 
     local TRACKING_EVENTS = {
         -- TODO: disable these loot related events since we currently only support the guild news related loot events
@@ -11497,7 +11549,7 @@ do
             end
         end
 
-        local frame = CreateFrame("Frame", addonName .. "_RWFFrame", UIParent, "ButtonFrameTemplate") ---@class ButtonFramePolyfill
+        local frame = CreateFrame("Frame", addonName .. "_RWFFrame", UIParent, "ButtonFrameTemplate") ---@class RaiderIORWFLootFrame : ButtonFramePolyfill
         frame:SetSize(400, 250)
         frame:SetPoint("CENTER")
         frame:SetFrameStrata("HIGH")
@@ -11527,7 +11579,7 @@ do
         frame.TitleBar:SetPoint("TOPRIGHT", 0, 0)
         frame.TitleBar:Init(frame)
 
-        frame.Log = CreateFrame("Frame", nil, frame) ---@diagnostic disable-line: param-type-mismatch
+        frame.Log = CreateFrame("Frame", nil, frame) ---@class RaiderIORWFLootFrameLog : Frame
         frame.Log:SetPoint("TOPLEFT", frame.TitleBar, "BOTTOMLEFT", 8, -32 + 24) ---@diagnostic disable-line: param-type-mismatch
         frame.Log:SetPoint("BOTTOMRIGHT", -9, 28)
 
@@ -11536,18 +11588,18 @@ do
         frame.Log.Bar:SetPoint("TOPLEFT", 0, 0)
         frame.Log.Bar:SetPoint("TOPRIGHT", 0, 0)
 
-        frame.Log.Events = CreateFrame("Frame", nil, frame.Log)
+        frame.Log.Events = CreateFrame("Frame", nil, frame.Log) ---@class RaiderIORWFLootFrameLogEvents : Frame
         frame.Log.Events:SetPoint("TOPLEFT", frame.Log.Bar, "BOTTOMLEFT", 0, -2)
         frame.Log.Events:SetPoint("BOTTOMRIGHT", 0, 0)
 
-        frame.Log.Events.ScrollBox = CreateFrame("Frame", nil, frame.Log.Events, "WowScrollBoxList") ---@type WowScrollBoxListPolyfill
+        frame.Log.Events.ScrollBox = CreateFrame("Frame", nil, frame.Log.Events, "WowScrollBoxList") ---@class RaiderIORWFLootFrameLogEventsScrollBox : WowScrollBoxListPolyfill
         frame.Log.Events.ScrollBox:OnLoad()
         frame.Log.Events.ScrollBox:SetPoint("TOPLEFT", 0, -8) -- 0, 0
         frame.Log.Events.ScrollBox:SetPoint("BOTTOMRIGHT", -25, 0)
         frame.Log.Events.ScrollBox.bgTexture = frame.Log.Events.ScrollBox:CreateTexture(nil, "BACKGROUND")
         frame.Log.Events.ScrollBox.bgTexture:SetColorTexture(0.03, 0.03, 0.03)
 
-        frame.Log.Events.ScrollBar = CreateFrame("EventFrame", nil, frame.Log.Events, "WowTrimScrollBar") ---@type WowTrimScrollBarPolyfill
+        frame.Log.Events.ScrollBar = CreateFrame("EventFrame", nil, frame.Log.Events, "WowTrimScrollBar") ---@class RaiderIORWFLootFrameLogEventsScrollBar : WowTrimScrollBarPolyfill
         frame.Log.Events.ScrollBar:OnLoad()
         frame.Log.Events.ScrollBar:SetPoint("TOPLEFT", frame.Log.Events.ScrollBox, "TOPRIGHT", 0, 3) -- 0, -3
         frame.Log.Events.ScrollBar:SetPoint("BOTTOMLEFT", frame.Log.Events.ScrollBox, "BOTTOMRIGHT", 0, 0)
@@ -11559,7 +11611,11 @@ do
         frame.SubTitle:SetPoint("TOPLEFT", frame.TitleBar, "BOTTOMLEFT", 0, 0) ---@diagnostic disable-line: param-type-mismatch
         frame.SubTitle:SetPoint("BOTTOMRIGHT", frame.Log.Events, "TOPRIGHT", 0, 0)
 
-        frame.EnableModule = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate") ---@diagnostic disable-line: param-type-mismatch
+        ---@class RaiderIORWFLootFrameButton : Button
+        ---@field public tooltip string
+        ---@field public GetAppropriateTooltip fun()
+
+        frame.EnableModule = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate") ---@type RaiderIORWFLootFrameButton
         frame.EnableModule:SetSize(80, 22)
         frame.EnableModule:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -5, 3) ---@diagnostic disable-line: param-type-mismatch
         frame.EnableModule:SetScript("OnClick", function() config:Set("rwfMode", true) ReloadUI() end)
@@ -11569,7 +11625,7 @@ do
         frame.EnableModule:SetScript("OnEnter", UIButtonMixin.OnEnter)
         frame.EnableModule:SetScript("OnLeave", UIButtonMixin.OnLeave)
 
-        frame.DisableModule = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate") ---@diagnostic disable-line: param-type-mismatch
+        frame.DisableModule = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate") ---@type RaiderIORWFLootFrameButton
         frame.DisableModule:SetSize(80, 22)
         frame.DisableModule:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -5, 3) ---@diagnostic disable-line: param-type-mismatch
         frame.DisableModule:SetScript("OnClick", function() config:Set("rwfMode", false) _G.RaiderIO_RWF = {} ReloadUI() end)
@@ -11579,7 +11635,7 @@ do
         frame.DisableModule:SetScript("OnEnter", UIButtonMixin.OnEnter)
         frame.DisableModule:SetScript("OnLeave", UIButtonMixin.OnLeave)
 
-        frame.ReloadUI = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate") ---@diagnostic disable-line: param-type-mismatch
+        frame.ReloadUI = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate") ---@type RaiderIORWFLootFrameButton
         frame.ReloadUI:SetSize(80, 22)
         frame.ReloadUI:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 5, 3) ---@diagnostic disable-line: param-type-mismatch
         frame.ReloadUI:SetScript("OnClick", ReloadUI)
@@ -11589,7 +11645,7 @@ do
         frame.ReloadUI:SetScript("OnEnter", UIButtonMixin.OnEnter)
         frame.ReloadUI:SetScript("OnLeave", UIButtonMixin.OnLeave)
 
-        frame.WipeLog = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate") ---@diagnostic disable-line: param-type-mismatch
+        frame.WipeLog = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate") ---@type RaiderIORWFLootFrameButton
         frame.WipeLog:SetSize(80, 22)
         frame.WipeLog:SetPoint("RIGHT", frame.DisableModule, "LEFT", 2, 0) ---@diagnostic disable-line: param-type-mismatch
         frame.WipeLog:SetScript("OnClick", function() _G.RaiderIO_RWF = {} ReloadUI() end)
@@ -11599,7 +11655,7 @@ do
         frame.WipeLog:SetScript("OnEnter", UIButtonMixin.OnEnter)
         frame.WipeLog:SetScript("OnLeave", UIButtonMixin.OnLeave)
 
-        frame.MiniFrame = CreateFrame("Button", addonName .. "_RWFMiniFrame", UIParent, "UIPanelButtonTemplate") ---@type UIPanelButtonTemplatePolyfill
+        frame.MiniFrame = CreateFrame("Button", addonName .. "_RWFMiniFrame", UIParent, "UIPanelButtonTemplate") ---@class RaiderIORWFLootFrameMiniFrame : UIPanelButtonTemplatePolyfill
         frame.MiniFrame:SetFrameLevel(100)
         frame.MiniFrame:SetClampedToScreen(true)
         frame.MiniFrame:SetSize(32, 32)
@@ -11637,11 +11693,11 @@ do
         util:SetButtonTextureFromIcon(frame.MiniFrame, ns.CUSTOM_ICONS.icons.RAIDERIO_COLOR_CIRCLE) ---@diagnostic disable-line: param-type-mismatch
         frame.MiniFrame:Hide()
 
-        frame.MiniFrame.Spinner = CreateFrame("Button", nil, frame.MiniFrame) ---@diagnostic disable-line: param-type-mismatch
+        frame.MiniFrame.Spinner = CreateFrame("Button", nil, frame.MiniFrame) ---@class RaiderIORWFLootFrameMiniFrameSpinner : Button
         frame.MiniFrame.Spinner:SetAllPoints()
         util:SetButtonTextureFromIcon(frame.MiniFrame.Spinner, ns.CUSTOM_ICONS.icons.RAIDERIO_COLOR_CIRCLE)
         frame.MiniFrame.Spinner:Hide()
-        frame.MiniFrame.Spinner.Anim = frame.MiniFrame.Spinner:CreateAnimationGroup()
+        frame.MiniFrame.Spinner.Anim = frame.MiniFrame.Spinner:CreateAnimationGroup() ---@class RaiderIORWFLootFrameMiniFrameSpinnerAnim : AnimationGroup
         frame.MiniFrame.Spinner.Anim.Rotation = frame.MiniFrame.Spinner.Anim:CreateAnimation("Rotation")
         frame.MiniFrame.Spinner.Anim.Rotation:SetDuration(1)
         frame.MiniFrame.Spinner.Anim.Rotation:SetOrder(1)
@@ -11715,7 +11771,7 @@ do
         end
 
         local function CreateArrow(parent)
-            local arrow = CreateFrame("Frame", nil, parent)
+            local arrow = CreateFrame("Frame", nil, parent) ---@class RaiderIORWFLootFrameMiniFrameArrowFrame : Frame
             arrow.SetArrowDir = SetArrowDir
             arrow:Hide()
             arrow:SetAlpha(0)
@@ -11725,7 +11781,7 @@ do
             arrow.arrowGlow:SetAllPoints()
             arrow.arrowGlow:SetAlpha(0.75)
             arrow.arrowGlow:SetBlendMode("ADD")
-            arrow.Anim = arrow:CreateAnimationGroup()
+            arrow.Anim = arrow:CreateAnimationGroup() ---@class RaiderIORWFLootFrameMiniFrameArrowFrameAnim : AnimationGroup
             arrow.Anim.Translation = arrow.Anim:CreateAnimation("Translation")
             arrow.Anim.Translation:SetDuration(1)
             arrow.Anim.Translation:SetOrder(1)
@@ -12116,7 +12172,7 @@ do
 end
 
 -- settings.lua
--- dependencies: module, callback, json, config, util, profile, search
+-- dependencies: module, callback, json, config, util, profile, search, rwf?
 do
 
     ---@class SettingsModule : Module
@@ -12127,7 +12183,7 @@ do
     local util = ns:GetModule("Util") ---@type UtilModule
     local profile = ns:GetModule("Profile") ---@type ProfileModule
     local search = ns:GetModule("Search") ---@type SearchModule
-    local rwf = ns:GetModule("RaceWorldFirst") ---@type RaceWorldFirstModule
+    local rwf = ns:GetModule("RaceWorldFirst", true) ---@type RaceWorldFirstModule?
 
     ---@type InternalStaticPopupDialog
     local RELOAD_POPUP = {
@@ -12210,12 +12266,14 @@ do
         configParentFrame:SetSize(400, 600)
         configParentFrame:SetPoint("CENTER")
 
-        local configHeaderFrame = CreateFrame("Frame", nil, configParentFrame) ---@diagnostic disable-line: param-type-mismatch
+        ---@class RaiderIOSettingsFrameHeaderFrame : Frame
+        local configHeaderFrame = CreateFrame("Frame", nil, configParentFrame)
         configHeaderFrame:SetPoint("TOPLEFT", 00, -30)
         configHeaderFrame:SetPoint("TOPRIGHT", 00, 30)
         configHeaderFrame:SetHeight(40)
 
-        local configScrollFrame = CreateFrame("ScrollFrame", nil, configParentFrame) ---@diagnostic disable-line: param-type-mismatch
+        ---@class RaiderIOSettingsFrameScrollFrame : ScrollFrame
+        local configScrollFrame = CreateFrame("ScrollFrame", nil, configParentFrame)
         configScrollFrame:SetPoint("TOPLEFT", configHeaderFrame, "BOTTOMLEFT")
         configScrollFrame:SetPoint("TOPRIGHT", configHeaderFrame, "BOTTOMRIGHT")
         configScrollFrame:SetHeight(475)
@@ -12223,11 +12281,13 @@ do
         configScrollFrame:SetClampedToScreen(true)
         configScrollFrame:SetClipsChildren(true)
 
-        local configButtonFrame = CreateFrame("Frame", nil, configParentFrame) ---@diagnostic disable-line: param-type-mismatch
+        ---@class RaiderIOSettingsFrameButtonFrame : Frame
+        local configButtonFrame = CreateFrame("Frame", nil, configParentFrame)
         configButtonFrame:SetPoint("TOPLEFT", configScrollFrame, "BOTTOMLEFT", 0, -10)
         configButtonFrame:SetPoint("TOPRIGHT", configScrollFrame, "BOTTOMRIGHT")
         configButtonFrame:SetHeight(50)
 
+        ---@class RaiderIOSettingsFrameSliderFrame : Slider
         local configSliderFrame = CreateFrame("Slider", nil, configScrollFrame, "UIPanelScrollBarTemplate")
         configSliderFrame:SetPoint("TOPLEFT", configScrollFrame, "TOPRIGHT", -35, -18)
         configSliderFrame:SetPoint("BOTTOMLEFT", configScrollFrame, "BOTTOMRIGHT", -35, 18)
@@ -12366,6 +12426,7 @@ do
 
         ---@class RaiderIOConfigOptions
         configOptions = {
+            lastWidget = nil, ---@type RaiderIOSettingsBaseWidget?
             modules = {}, ---@type RaiderIOSettingsModuleToggleWidget[]
             options = {}, ---@type RaiderIOSettingsToggleWidget[]
             radios = {}, ---@type RaiderIOSettingsRadioToggleWidget[]
@@ -12522,13 +12583,15 @@ do
             end
         end
 
+        ---@class RaiderIOSettingsBaseWidgetCheckButton : CheckButton
+        ---@field public fakeCheck Texture
+
         ---@class RaiderIOSettingsBaseWidget : Button, BackdropTemplate
         ---@field public bg Texture
         ---@field public text FontString
-        ---@field public checkButton CheckButton
-        ---@field public checkButton2 CheckButton
-        ---@field public checkButton3 CheckButton
-        ---@field public help Frame
+        ---@field public checkButton RaiderIOSettingsBaseWidgetCheckButton
+        ---@field public checkButton2 RaiderIOSettingsBaseWidgetCheckButton
+        ---@field public checkButton3 RaiderIOSettingsBaseWidgetCheckButton
         ---@field public tooltip? string
 
         function configOptions.CreateWidget(self, widgetType, height, parentFrame)
@@ -12573,7 +12636,7 @@ do
             widget.checkButton.fakeCheck:SetTexture("Interface\\Buttons\\UI-CheckBox-Check")
             widget.checkButton.fakeCheck:SetAllPoints()
 
-            widget.help = CreateFrame("Frame", nil, widget) ---@diagnostic disable-line: param-type-mismatch
+            widget.help = CreateFrame("Frame", nil, widget) ---@class RaiderIOSettingsBaseWidgetHelpFrame : Frame
             widget.help:Hide()
             widget.help:SetPoint("LEFT", widget.checkButton, "LEFT", -20, 0)
             widget.help:SetSize(16, 16)
@@ -12581,6 +12644,7 @@ do
             widget.help.icon = widget.help:CreateTexture()
             widget.help.icon:SetAllPoints()
             widget.help.icon:SetTexture("Interface\\GossipFrame\\DailyActiveQuestIcon")
+            widget.help.tooltip = nil ---@type string?
 
             widget.help:SetScript("OnEnter", WidgetHelp_OnEnter)
             widget.help:SetScript("OnLeave", GameTooltip_Hide)
@@ -12598,7 +12662,7 @@ do
             end
 
             if not parentFrame then
-                self.lastWidget = widget
+                self.lastWidget = widget ---@diagnostic disable-line: inject-field
             end
 
             return widget
@@ -13174,7 +13238,7 @@ do
             cancel:SetScript("OnClick", Close_OnClick)
 
             -- adjust frame height dynamically
-            local children = {configFrame:GetChildren()}
+            local children = {configFrame:GetChildren()} ---@type Region[]
             local height = 0
             for i = 1, #children do
                 height = height + children[i]:GetHeight() + 3.5
@@ -13237,7 +13301,7 @@ do
             end
         end
 
-        local panel = CreateFrame("Frame", addonName .. "_SettingsPanel")
+        local panel = CreateFrame("Frame", addonName .. "_SettingsPanel") ---@class RaiderIOConfigSettingsPanelFrame : Frame
         panel.name = addonName
         panel:Hide()
 
@@ -13271,7 +13335,7 @@ do
                     return
                 end
 
-                if text:find("^%s*[Rr][Ww][Ff]") then
+                if rwf and text:find("^%s*[Rr][Ww][Ff]") then
                     if rwf:IsLoaded() and config:Get("rwfMode") then
                         rwf:ToggleFrame()
                     else
@@ -13915,13 +13979,13 @@ do
 end
 
 -- public.lua (global)
--- dependencies: module, util, provider, render, replay
+-- dependencies: module, util, provider, render, replay?
 do
 
     local util = ns:GetModule("Util") ---@type UtilModule
     local provider = ns:GetModule("Provider") ---@type ProviderModule
     local render = ns:GetModule("Render") ---@type RenderModule
-    local replay = ns:GetModule("Replay") ---@type ReplayModule
+    local replay = ns:GetModule("Replay", true) ---@type ReplayModule?
 
     -- TODO: we have a long road a head of us... debugstack(0)
     local function IsSafeCall()
@@ -13946,6 +14010,7 @@ do
         return ns.PLAYER_REGION ~= nil -- GetProfile will fail if called too early before the player info is properly loaded so we avoid doing that by safely checking if we're loaded ready
     end
 
+    ---@class RaiderIOPublicAPIPristine
     local pristine = {
         AddProvider = function(...)
             return provider:AddProvider(...)
@@ -13989,17 +14054,21 @@ do
             local average = util:GetKeystoneAverageScoreForLevel(level)
             return base, average
         end,
-        GetCurrentReplay = function()
-            return replay:GetCurrentReplaySummary()
-        end,
-        ReplayUI_Toggle = function()
-            return replay:Toggle()
-        end,
-        ReplayUI_SetTiming = function(timing)
-            return replay:SetTiming(timing)
-        end,
     }
 
+    if replay then
+        pristine.GetCurrentReplay = function()
+            return replay:GetCurrentReplaySummary()
+        end
+        pristine.ReplayUI_Toggle = function()
+            return replay:Toggle()
+        end
+        pristine.ReplayUI_SetTiming = function(timing)
+            return replay:SetTiming(timing)
+        end
+    end
+
+    ---@class RaiderIOPublicAPIPrivate
     local private = {
         AddProvider = function(...)
             if not IsSafe() then
@@ -14031,24 +14100,6 @@ do
             end
             return pristine.GetScoreForKeystone(...)
         end,
-        GetCurrentReplay = function(...)
-            if not IsSafe() then
-                return
-            end
-            return pristine.GetCurrentReplay(...)
-        end,
-        ReplayUI_Toggle = function(...)
-            if not IsSafe() then
-                return
-            end
-            return pristine.ReplayUI_Toggle(...)
-        end,
-        ReplayUI_SetTiming = function(...)
-            if not IsSafe() then
-                return
-            end
-            return pristine.ReplayUI_SetTiming(...)
-        end,
         -- DEPRECATED: these are here just to help mitigate the transition but do avoid using these as they will probably go away during Shadowlands
         ProfileOutput = setmetatable({}, { __index = function() return 0 end }), -- returns 0 for any query
         TooltipProfileOutput = setmetatable({}, { __index = function() return 0 end }), -- returns 0 for any query
@@ -14059,6 +14110,27 @@ do
         GetRaidDifficultyColor = function(difficulty) local rd = ns.RAID_DIFFICULTY[difficulty] local t if rd then t = { rd.color[1], rd.color[2], rd.color[3], rd.color.hex } end return t end, -- returns the color table for the queried raid difficulty
         GetScore = function() end, -- deprecated early BfA so we just return nothing
     }
+
+    if replay then
+        private.GetCurrentReplay = function(...)
+            if not IsSafe() then
+                return
+            end
+            return pristine.GetCurrentReplay(...)
+        end
+        private.ReplayUI_Toggle = function(...)
+            if not IsSafe() then
+                return
+            end
+            return pristine.ReplayUI_Toggle(...)
+        end
+        private.ReplayUI_SetTiming = function(...)
+            if not IsSafe() then
+                return
+            end
+            return pristine.ReplayUI_SetTiming(...)
+        end
+    end
 
     ---@class RaiderIOInterface
     ---@field public AddProvider fun() For internal RaiderIO use only. Please do not call this function.

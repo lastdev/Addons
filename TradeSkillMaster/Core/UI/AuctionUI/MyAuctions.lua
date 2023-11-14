@@ -15,6 +15,7 @@ local Math = TSM.Include("Util.Math")
 local TempTable = TSM.Include("Util.TempTable")
 local ItemString = TSM.Include("Util.ItemString")
 local Theme = TSM.Include("Util.Theme")
+local GroupPath = TSM.Include("Util.GroupPath")
 local ItemInfo = TSM.Include("Service.ItemInfo")
 local Settings = TSM.Include("Service.Settings")
 local UIElements = TSM.Include("UI.UIElements")
@@ -691,7 +692,7 @@ end
 
 function private.AuctionsGetGroupNameText(row)
 	local groupPath = row:GetField("group")
-	local groupName = TSM.Groups.Path.GetName(groupPath)
+	local groupName = GroupPath.GetName(groupPath)
 	local level = select('#', strsplit(TSM.CONST.GROUP_SEP, groupPath))
 	return Theme.GetGroupColor(level):ColorText(groupName)
 end

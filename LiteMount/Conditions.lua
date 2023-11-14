@@ -16,6 +16,8 @@ if LibDebug then LibDebug() end
 
 local L = LM.Localize
 
+local ANY_TEXT = CLUB_FINDER_ANY_FLAG or SPELL_TARGET_TYPE1_DESC:upper()
+
 --[[
 
     <conditions>    :=  <condition> |
@@ -55,9 +57,10 @@ CONDITIONS["achievement"] = {
 }
 
 CONDITIONS["advflyable"] = {
+    disabled = ( IsAdvancedFlyableArea == nil ),
     handler =
         function (cond, context)
-            return IsAdvancedFlyableArea()
+            return IsAdvancedFlyableArea and IsAdvancedFlyableArea()
         end,
 }
 
@@ -154,6 +157,7 @@ CONDITIONS["combat"] = {
 
 CONDITIONS["covenant"] = {
     name = L.LM_COVENANT,
+    disabled = ( C_Covenants == nil ),
     toDisplay =
         function (v)
             local id = tonumber(v)
@@ -230,6 +234,7 @@ CONDITIONS["difficulty"] = {
 
 CONDITIONS["dragonridable"] = {
     name = L.LM_DRAGONRIDING_AREA,
+    disabled = ( IsAdvancedFlyableArea == nil ),
     handler =
         function (cond, context)
             return LM.Environment:CanDragonride(context.mapPath)
@@ -238,6 +243,7 @@ CONDITIONS["dragonridable"] = {
 
 CONDITIONS["dragonriding"] = {
     -- name = MOUNT_JOURNAL_FILTER_DRAGONRIDING,
+    disabled = ( IsAdvancedFlyableArea == nil ),
     handler =
         function (cond, context)
             return LM.Environment:IsDragonriding()
@@ -305,9 +311,11 @@ CONDITIONS["equipped"] = {
                 return true
             end
 
-            local id = C_MountJournal.GetAppliedMountEquipmentID()
-            if id and id == v then
-                return true
+            if C_MountJournal.GetAppliedMountEquipmentID then
+                local id = C_MountJournal.GetAppliedMountEquipmentID()
+                if id and id == v then
+                    return true
+                end
             end
         end
 }
@@ -323,7 +331,7 @@ CONDITIONS["exists"] = {
 CONDITIONS["extra"] = {
     handler =
         function (cond, context, v)
-            if HasExtraActionBar() and HasAction(169) then
+            if HasExtraActionBar and HasExtraActionBar() and HasAction(169) then
                 if v then
                     local aType, aID = GetActionInfo(169)
                     if aType == "spell" and aID == tonumber(v) then
@@ -415,7 +423,7 @@ CONDITIONS["gather"] = {
     toDisplay =
         function (v)
             if not v or v == "any" then
-                return CLUB_FINDER_ANY_FLAG
+                return ANY_TEXT
             elseif v == "ore" then
                 return L.LM_ORE
             elseif v == "herb" then
@@ -469,16 +477,22 @@ CONDITIONS["group"] = {
             elseif v == "crossfaction" then
                 return CROSS_FACTION_CLUB_FINDER_SEARCH_OPTION
             elseif not v then
-                return CLUB_FINDER_ANY_FLAG
+                return ANY_TEXT
             end
         end,
-    menu = {
-        nosort = true,
-        { val = "group" },
-        { val = "group:party" },
-        { val = "group:raid" },
-        { val = "group:crossfaction" },
-    },
+    menu =
+        function ()
+            local out = {
+                nosort = true,
+                { val = "group" },
+                { val = "group:party" },
+                { val = "group:raid" },
+            }
+            if CROSS_FACTION_CLUB_FINDER_SEARCH_OPTION then
+                table.insert(out, { val = "group:crossfaction" })
+            end
+            return out
+        end,
     handler =
         function (cond, context, groupType)
             if not groupType then
@@ -504,6 +518,28 @@ CONDITIONS["help"] = {
     handler =
         function (cond, context)
             return UnitIsFriend("player", context.unit or "target")
+        end
+}
+
+CONDITIONS["holiday"] = {
+    name = L.LM_HOLIDAY,
+    toDisplay =
+        function (v)
+            return LM.Environment:GetHolidayName(tonumber(v)) or v
+        end,
+    menu =
+        function ()
+            local out = {}
+            for id, title in pairs(LM.Environment:GetHolidays()) do
+                table.insert(out, { val="holiday:"..id, text=string.format("%s (%d)", title, id) })
+            end
+            return out
+        end,
+    handler =
+        function (cond, context, v)
+            if v then
+                return LM.Environment:IsHolidayActive(tonumber(v) or v)
+            end
         end
 }
 
@@ -577,7 +613,8 @@ CONDITIONS["known"] = {
         end
 }
 
--- GetMaxLevelForLatestExpansion()
+local MAXLEVEL = GetMaxLevelForExpansionLevel(LE_EXPANSION_LEVEL_CURRENT)
+
 CONDITIONS["level"] = {
     name = LEVEL,
     args = true,
@@ -587,9 +624,8 @@ CONDITIONS["level"] = {
     },
     toDisplay =
         function (l1, l2)
-            local maxLevel = GetMaxLevelForLatestExpansion()
             if l1 == nil then
-                return string.format('%s (%d)', GUILD_RECRUITMENT_MAXLEVEL, maxLevel)
+                return string.format('%s (%d)', GUILD_RECRUITMENT_MAXLEVEL, MAXLEVEL)
             elseif l2 == nil then
                 return l1
             else
@@ -600,7 +636,7 @@ CONDITIONS["level"] = {
         function (cond, context, l1, l2)
             local level = UnitLevel('player')
             if not l1 then
-                return level == GetMaxLevelForLatestExpansion()
+                return level == MAXLEVEL
             elseif not l2 then
                 return level == tonumber(l1)
             elseif l2 then
@@ -609,8 +645,10 @@ CONDITIONS["level"] = {
         end
 }
 
+
 CONDITIONS["loadout"] = {
     name = L["Talent loadout"],
+    disabled = ( C_ClassTalents == nil ),
     toDisplay =
         function (v)
             return v
@@ -665,7 +703,7 @@ local function MapTreeToMenu(node)
 end
 
 CONDITIONS["map"] = {
-    name = WORLD_MAP,
+    name = BRAWL_TOOLTIP_MAP,
     toDisplay =
         function (v)
             local info = C_Map.GetMapInfo(tonumber(v))
@@ -703,7 +741,7 @@ CONDITIONS["mod"] = {
             elseif v == "shift" then
                 return SHIFT_KEY_TEXT
             elseif not v then
-                return CLUB_FINDER_ANY_FLAG
+                return ANY_TEXT
             end
         end,
     menu = {
@@ -838,6 +876,7 @@ CONDITIONS["pet"] = {
 }
 
 CONDITIONS["profession"] = {
+    disabled = ( GetProfessions == nil ),
     handler =
         function (cond, context, v)
             if not v then return end
@@ -936,6 +975,7 @@ CONDITIONS["sameunit"] = {
 
 CONDITIONS["season"] = {
     name = L.LM_SEASON,
+    disabled = ( C_MountJournal.GetMountInfoExtraByID(1458) == nil ),
     toDisplay =
         function (v)
             if v == "spring" then
@@ -1016,6 +1056,7 @@ CONDITIONS["shapeshift"] = {
 
 CONDITIONS["spec"] = {
     name = SPECIALIZATION,
+    disabled = ( GetSpecializationInfoByID == nil ),
     toDisplay =
         function (v)
             local _, name, _, _, _, _, class = GetSpecializationInfoByID(v)
@@ -1085,6 +1126,7 @@ CONDITIONS["submerged"] = {
 }
 
 CONDITIONS["tracking"] = {
+    disabled = not ( C_Minimap and C_Minimap.GetNumTrackingTypes ),
     handler =
         function (cond, context, v)
             local name, active, _
@@ -1108,11 +1150,13 @@ CONDITIONS["true"] = {
 CONDITIONS["waterwalking"] = {
     handler =
         function (cond, context)
-            -- Anglers Waters Striders (168416) or Inflatable Mount Shoes (168417)
-            if not C_MountJournal.AreMountEquipmentEffectsSuppressed() then
-                local id = C_MountJournal.GetAppliedMountEquipmentID()
-                if id == 168416 or id == 168417 then
-                    return true
+            if C_MountJournal.AreMountEquipmentEffectsSuppressed then
+                -- Anglers Waters Striders (168416) or Inflatable Mount Shoes (168417)
+                if not C_MountJournal.AreMountEquipmentEffectsSuppressed() then
+                    local id = C_MountJournal.GetAppliedMountEquipmentID()
+                    if id == 168416 or id == 168417 then
+                        return true
+                    end
                 end
             end
 
@@ -1236,6 +1280,7 @@ end
 CONDITIONS["xmog"] = {
     args = true,
     name = PERKS_VENDOR_CATEGORY_TRANSMOG,
+    disabled = not ( C_TransmogSets and C_Transmog ),
     toDisplay =
         function (v)
             if tonumber(v) then
@@ -1276,6 +1321,7 @@ CONDITIONS["xmog"] = {
         end
 }
 
+
 do
     for c, info in pairs(CONDITIONS) do
         info.condition = c
@@ -1305,7 +1351,7 @@ end
 function LM.Conditions:GetConditions()
     local out = { }
     for _, info in pairs(CONDITIONS) do
-        if info.name then
+        if not info.disabled and info.name then
             table.insert(out, info)
         end
     end
@@ -1328,7 +1374,7 @@ end
 
 function LM.Conditions:ArgsMenu(cond)
     local c = CONDITIONS[cond]
-    if not c then return end
+    if not c or c.disabled then return end
     if type(c.menu) == 'table' then
         return FillMenuTextsRecursive(c.menu)
     elseif type(c.menu) == 'function' then
@@ -1339,7 +1385,7 @@ end
 function LM.Conditions:IsValidCondition(text)
     if text then
         local cond, valuestr = strsplit(':', text)
-        if cond and CONDITIONS[cond] then
+        if cond and CONDITIONS[cond] and not CONDITIONS[cond].disabled then
             return true
         end
     end
@@ -1349,7 +1395,7 @@ function LM.Conditions:ToDisplay(text)
     local cond, valuestr = strsplit(':', text)
 
     local c = CONDITIONS[cond]
-    if not c then return end
+    if not c or c.disabled then return end
 
     if not c.name then
         return ADVANCED_LABEL, text

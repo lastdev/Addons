@@ -96,7 +96,6 @@ L['elemental_storm_snowstorm'] = 'Tempêtes de neige'
 
 L['elemental_storm_brakenhide_hollow'] = 'Creux des Fougerobes'
 L['elemental_storm_cobalt_assembly'] = 'Assemblée de Cobalt'
-L['elemental_storm_dragonbane_keep'] = 'Donjon du Fléau-des-Dragons'
 L['elemental_storm_imbu'] = 'Imbou'
 L['elemental_storm_nokhudon_hold'] = 'Bastion Nokhudon'
 L['elemental_storm_ohniri_springs'] = 'Sources des Ohn’irs'
@@ -147,6 +146,22 @@ L['options_icons_frostbound_chest'] = 'Coffre lié par le givre'
 L['options_icons_frostbound_chest_desc'] = 'Afficher les emplacements possibles des {object:Coffres liés par le givre}.'
 
 L['fyrakk_assault_label'] = 'Assaut de Fyrakka'
+L['fyrakk_secured_shipment'] = 'Cargaison sécurisée'
+
+L['shadowflame_forge_label'] = 'Forge d\'ombreflamme'
+L['shadowflame_forge_note'] = 'Requis pour la fabrication de la recette :\n{spell:408282}'
+L['shadowflame_blacksmithing_anvil_label'] = 'Enclume d’ombreflamme'
+L['shadowflame_blacksmithing_anvil_note'] = 'Requis pour la fabrication des recettes :\n{spell:408288}\n{spell:408326}\n{spell:408283}\n{spell:408052}'
+L['shadowflame_leatherworking_table_label'] = 'Table de travail du cuir d’ombreflamme'
+L['shadowflame_leatherworking_table_note'] = 'Requis pour la fabrication de la recette :\n{spell:406275}'
+L['shadowflame_incantation_table_label'] = 'Table d’incantation d’ombreflamme'
+L['shadowflame_incantation_table_note'] = 'Requis pour la fabrication de la recette :\n{spell:405076}'
+L['azure_loom_label'] = 'Métier à tisser d’azur'
+L['azure_loom_note'] = 'Requis pour la fabrication de la recette :\n{spell:376556}'
+L['temporal_loom_label'] = 'Métier à tisser temporel'
+L['temporal_loom_note'] = 'Requis pour la fabrication de la recette :\n{spell:376557}'
+L['earthwarders_forge_label'] = 'Forge du Gardeterre'
+L['earthwarders_forge_note'] = 'Requis pour la fabrication de la recette :\n{spell:367713}'
 
 L['dreamsurge_sublabel'] = '{note:Uniquement disponible lorsqu\'un événement de {location:Poussée onirique} est actif dans cette zone.}'
 L['celestine_vendor_note'] = 'Échangez vos {item:207026} contre une monture, des jouets, des mascottes et des objets de transmogrification.'
@@ -332,7 +347,7 @@ L['options_icons_forbidden_hoard'] = 'Provisions interdites'
 L['options_icons_forbidden_hoard_desc'] = 'Afficher les emplacements possibles des coffres de {object:Provisions interdites}.'
 
 L['froststone_vault_storm_label'] = 'Tempête primordiale du caveau Givre-Pierre'
-L['gooey_snailemental_note'] = 'Combinez x50 {item:204352} récupérés sur les boss des {object:Tempêtes primordiales du caveau Givre-Pierre} pour créer la monture {item:192785}.'
+L['gooey_snailemental_note'] = 'Combinez 50x {item:204352} récupérés sur les boss des {object:Tempêtes primordiales du caveau Givre-Pierre} pour créer la monture {item:192785}.'
 
 L['options_icons_froststone_vault_storm'] = 'Tempêtes primordiales du caveau Givre-Pierre'
 L['options_icons_froststone_vault_storm_desc'] = 'Afficher les emplacements et les récompenses pour les {object:Tempêtes primordiales du caveau Givre-Pierre}'
@@ -535,6 +550,7 @@ L['pt_jewel_painters_pretty_jewel_note'] = 'A l\'intérieur d\'une lanterne.'
 L['pt_leath_decayed_scales_note'] = 'Dans un panier.'
 L['pt_script_counterfeit_darkmoon_deck_note'] = 'Parlez à {npc:194856} et proposez-lui de l\'aider avec la {object:Suite de Sombrelune} éparpillée à ses pieds. Cliquez sur les cartes dans le bon ordre (de l\'As au 8), puis parlez-lui à nouveau.'
 L['pt_script_forgetful_apprentices_tome_note'] = 'Sur une table près d\'un grand télescope.'
+L['pt_script_forgetful_apprentices_tome_algethera_note'] = 'Cliquez sur le {object:Glyphe étrange} pour obtenir le buff {spell:384818}. Traversez le pont, récupérez la {item:198672} sur le {npc:194880} et rapportez-la au Glyphe.'
 L['pt_script_how_to_train_your_whelpling_note'] = 'Un petit livre marron posé dans le bac à sable.'
 L['pt_smith_draconic_flux_note'] = 'A l\'intérieur d\'un bâtiment.'
 L['pt_tailor_ancient_dragonweave_bolt_note'] = 'Cliquez sur le {object:Rouet tisse-dragon ancien} pour effectuer un mini-jeu où vous devez relier les bobines de fil à la gemme centrale.'
@@ -797,6 +813,7 @@ L['options_icons_ritual_offering_desc'] = 'Afficher les emplacements possibles d
 L['nal_kskol_reliquary_label'] = 'Reliquaire de Nak Ks\'sol'
 L['nal_kskol_reliquary_note'] = 'Utilisez la {object:Console d\'accès au reliquaire} et résolvez l\'énigme pour ouvrir le {object:Reliquaire de Nak Ks\'sol}.'
 
+L['busted_wyrmhole_generator_note'] = 'La {item:205954} peut aussi être récupérée sur le {object:Générateur de trou de wyrm cassé}.\nUtilisez-la pour débloquer l\'option de trou de wyrm vers la {location:Grotte de Zaralek} au sein du {item:198156}.'
 L['molten_scoutbot_note'] = 'Examinez l\'{object:Explorobot fondu} et récupérez le {item:204855}.'
 L['bolts_and_brass_note'] = 'Examinez les {object:Boulons et cuivre} et récupérez la {item:204850}.'
 
@@ -834,6 +851,174 @@ L['zaralek_event_inactive'] = ns.color.Orange('Cet Événement bonus n\'apparaî
 
 L['options_icons_zone_event'] = 'Événements bonus'
 L['options_icons_zone_event_desc'] = 'Afficher les emplacements des événements bonus.'
+
+-------------------------------------------------------------------------------
+------------------------------- Emerald Dream ---------------------------------
+-------------------------------------------------------------------------------
+
+L['options_icons_emerald_dream_safari'] = '{achievement:19401}'
+L['options_icons_emerald_dream_safari_desc'] = 'Afficher les emplacements des mascottes pour le haut-fait {achievement:19401}.'
+
+L['envoy_of_winter_note'] = 'Ramassez des {item:208881} et utilisez le {spell:421658} près du puits jusqu\'à ce que l\'{npc:209929} apparaisse.'
+L['fruitface_note'] = 'Offrez votre aide à {npc:209950} {dot:Pink} pour recevoir la {spell:421446}, les {item:208837} au sol deviendront alors visibles. Ramassez-les pour faire apparaître le {npc:209980} {dot:Yellow}. Attaquez-le et suivez-le jusqu\'à ce qu\'il saute dans l\'eau {dot:Red} et invoque {npc:209913} et un {npc:209966}.'
+L['greedy_gessie_note'] = 'Vous devez récupérer les objets {object:Légumes sauvages}, {object:Melon écaille de rubis} et {object:Racine orange} aux alentours et les mettre dans les paniers près des {npc:210285} pour commencer le combat.'
+L['nuoberon_note'] = 'Pourchassez les tortues, jetez de la nourriture aux singes ou combattez les monstres des rêves pour aider {npc:209101} à passer un rêve amusant !'
+L['reefbreaker_moruud_note'] = 'Connectez les 6 {npc:210089} proches pour attaquer {npc:209898}.'
+L['surging_lasher_note'] = 'Peut apparaître pendant l\'événement {location:Frénésie d\'émeraude} dans cette zone.'
+
+L['in_a_tree'] = 'En haut d\'un arbre.'
+L['inside_building'] = 'A l\'intérieur du bâtiment.'
+
+L['hidden_moonkin_stash_label'] = 'Magot de boguelin dissimulé'
+L['magical_bloom_note'] = 'Poursuivez le {npc:210544} jusqu\'à ce qu\'il révèle le trésor.'
+L['pineshrew_cache_note'] = 'A côté de quelques rochers.'
+L['reliquary_of_ashamane_note'] = '{note:Si l\'expédition {wq:Exercice des Dryades} est active, vous devez la terminer avant de pouvoir voir le trésor.}\n\nTrouvez une {object:Marque d\'Ashamane} {dot:Green} à proximité pour obtenir le buff {spell:425426} et rendez-vous à la {npc:212009}.'
+L['reliquary_of_aviana_note'] = 'Trouvez une {object:Marque d\'Aviana} {dot:Green} à proximité pour obtenir le buff {spell:425432} et rendez-vous à la {npc:212011}.'
+L['reliquary_of_goldrinn_note'] = 'Trouvez une {object:Marque de Goldrinn} {dot:Green} à proximité pour obtenir le buff {spell:425408} et rendez-vous à la {npc:212012}.'
+L['reliquary_of_ursol_note'] = 'Trouvez une {object:Marque d\'Ursol} {dot:Green} à proximité pour obtenir le buff {spell:423306} et rendez-vous à la {npc:210732}.'
+L['triflesnatchs_roving_trove_note'] = 'Suivez le {npc:210060} tandis qu\'il vole de branche en branche.'
+
+L['unwaking_echo_label'] = 'Écho non réveillé'
+L['unwaking_echo_note'] = '{note:Vous ne pouvez ouvrir ce coffre que dans vos rêves.}\n\nEndormez-vous avec l\'emote {emote:/sleep} à côté du coffre pour l\'ouvrir.'
+
+L['amirdrassil_defenders_shield_note'] = 'Sur la table à côté de {npc:211328}.'
+L['dreamtalon_claw_note'] = 'A la base du tronc d\'arbre.'
+L['essence_of_dreams_note'] = 'En haut d\'une branche d\'arbre flottante circulaire.'
+L['exceedingly_soft_wildercloth_note'] = 'A l\'intérieur du bâtiment, derrière une chaise.'
+L['experimental_dreamcatcher_note'] = 'Dans l\'arbre flottant.'
+L['grove_keepers_pillar_note'] = 'Devant l\'entrée de la grotte.'
+L['handful_of_pebbles_note'] = 'Sur l\'épaule droite de la statue.'
+L['molted_faerie_dragon_scales_note'] = 'Au sol parmi quelques fleurs.'
+L['petrified_hope_note'] = 'Dans la souche d\'arbre.'
+L['plush_pillow_note'] = 'A l\'intérieur de la petite cabane, sur une table.'
+L['snuggle_buddy_note'] = 'A l\'intérieur d\'un petit bateau.'
+
+L['dreamseed_soil_label'] = 'Sol pour graine onirique'
+L['dreamseed_soil_note'] = [[
+La qualité des {object:Récompenses de Floraison émeraude} et les chances de trouver les {item:210059} dans la {object:Cache de graine onirique} dépendent du nombre de {currency:2650} que vous contribuez.
+
+{item:210224} (Contribuez avec au moins une {currency:2650})
+{item:210225} (Progression : 50%)
+{item:210226} (Progression : 100%)
+
+La qualité de la {object:Graine onirique} contribuée détermine le type de récompense :
+{item:208066}: Un objet de transmogrification ou des composants d'artisanat.
+{item:208067}: Une mascotte ou des composants d'artisanat.
+{item:208047}: Une monture ou des composants d'artisanat.
+
+{note:Pour voir la liste des récompenses, allez voir {npc:211265} sur l'île au nord, elle vend aussi la plupart des récompenses.}
+]]
+L['dreamseed_cache'] = 'Cache de graine onirique'
+
+L['options_icons_dream_of_seeds'] = '{achievement:19013}'
+L['options_icons_dream_of_seeds_desc'] = 'Afficher les emplacements des {object:Sol pour graine onirique} pour le haut-fait {achievement:19013}.'
+
+L['bloom_man_group_suffix'] = 'fois que le pouvoir Débordement farouche à été utilisé'
+L['dream_chaser_suffix'] = 'rêves errants récupérés'
+L['dreamfruit_label'] = 'Fruit du Rêve'
+L['dreamfruit_note_1'] = 'Apparaît lorsque l\'événement {location:Superfloraison} commence. L\'événement démarre toutes les heures.'
+L['dreamfruit_note_2'] = 'Apparaît après le premier arrêt de l\'événement {location:Superfloraison}. L\'événement démarre toutes les heures près d\'{location:Amirdrassil}.'
+L['options_icons_dreamfruit'] = '{achievement:19310}'
+L['options_icons_dreamfruit_desc'] = 'Afficher les emplacements des Fruits du Rêve pour le haut-fait {achievement:19310}.'
+
+L['options_icons_moonkin_hatchling'] = '{achievement:19293}'
+L['options_icons_moonkin_hatchling_desc'] = 'Afficher les emplacements des bébés séléniens pour le haut-fait {achievement:19293}.'
+L['moonkin_hatchling_note'] = 'Nécessite que l\'expédition {wq:Griffes d’inquiétude} soit active.'
+
+L['druid_glyphs_label'] = 'Glyphes de druide'
+L['druid_glyphs_sublabel'] = '{note:Ceci n\'est PAS un glyphe de druide. Il s\'agit simplement d\'une liste !}'
+L['druid_glyphs_note'] = 'Récupérez des {note:Glyphes de druide} grâce à diverses activités au sein du {location:Rêve d\'Émeraude}.'
+
+L['pollenfused_bristlebruin_fur_sample_note'] = 'Récupérez l\'{object:Échantillon de fourrure d\'hoursute amalgamée de pollen} trouvé au pied de l\'arbre à {location:La Calcination}.'
+
+L['mbc_note_start'] = 'Récupérez la {object:Petite boite de fioles} pour recevoir la {item:210991}.\n\nVous obtiendrez 6x {item:210839} qui doivent être remplies avec de l\'eau du puits de lune provenant de chaque continent.'
+L['mbc_note_end'] = 'Combinez les 6x {item:210876} pour créer la {item:210977} et apportez-la jusqu\'à la {object:Pierre onirique farouche} près d\'{location:Amirdrassil}.\n\nUtilisez la {item:210977} et récupérez la {object:Griffe bénie par la Lune} pour recevoir la {item:210728}.'
+
+L['mbc_vial_b'] = 'B'
+L['mbc_vial_d'] = 'D'
+L['mbc_vial_e'] = 'E'
+L['mbc_vial_k'] = 'K'
+L['mbc_vial_n'] = 'N'
+L['mbc_vial_o'] = 'O'
+
+L['mbc_vial_d_location'] = 'Avant-poste de Pluie-d’Étoiles'
+L['mbc_vial_e_location'] = 'Bosquet crépusculaire'
+L['mbc_vial_k_location'] = 'Refuge des saisons de Malfurion'
+L['mbc_vial_n_location'] = 'Repos des étoiles'
+L['mbc_vial_o_location'] = 'Refuge Cénarien'
+
+L['mbc_vial_location'] = 'Remplissez la {item:%d} avec de l\'eau du puits de lune au {location:%s} dans la zone {location:%s} du continent {location:%s} pour recevoir la {item:%d}.'
+
+L['mbc_moonwell_label'] = 'Puits de lune'
+L['mbc_feral_dreamstone_label'] = 'Pierre onirique farouche'
+
+L['azure_somnowl_note'] = 'Terminez la courte suites de quêtes réservée aux druides commençant par {quest:78065} et donnée par {npc:209318} pour recevoir les {item:210645}.'
+
+L['slumbering_somnowl_note_a'] = 'Récupérez 5x {item:210565} en utilisant le sort {spell:2637} pour endormir diverses {npc:Somnichouettes} présentes au sein du {location:Rêve d\'émeraude}.'
+L['slumbering_somnowl_note_b'] = 'Achetez 1x {item:4291} auprès de n\'importe quel vendeur de fournitures d’artisanat.'
+L['slumbering_somnowl_note_c'] = 'Combinez 5x {item:210565} et 1x {item:4291} pour créer un {item:210566}.'
+L['slumbering_somnowl_note_d'] = 'Récupérez 1x {item:194864}.'
+L['slumbering_somnowl_note_e'] = 'Combinez 1x {item:210566} et 1x {item:194864} pour créer une {item:210535}.'
+
+L['thaelishar_vendor_note'] = 'Échangez de l\'or contre des glyphes de druide.'
+L['silent_mark_label'] = 'Combes des Songes florissants'
+L['silent_mark_note'] = 'Ciblez le bon animal et canalisez l\'objet correspondant jusqu\'à ce que l\'{spell:426910} apparaisse. {note:Vous devez vous harmoniser avec au moins 10 animaux.}\n\nCanalisez la {item:210764} sur les {npc:210892}.\n\nCanalisez la {item:210767} sur les {npc:211347}, {npc:211283}, ou {npc:210894}.\n\nCanalisez la {item:210755} sur les {npc:210594}.\n\nCanalisez la {item:210766} sur les {npc:209494}, {npc:212028}, ou {npc:212024}.'
+
+L['amirdrassil'] = 'Amirdrassil, l\'Espoir du Rêve'
+L['prismatic_location'] = 'À l\'intérieur du raid {location:Amirdrassil, l\'Espoir du Rêve}.'
+L['prismatic_note_1'] = '1. Pêchez 10x {item:210782} dans les bassins de l\'{location:Atrium de l’Afflux}.'
+L['prismatic_note_2'] = '2. Pêchez 10x {item:210783} dans les bassins de lave de la {location:Salle incendiée}.'
+L['prismatic_note_3'] = '3. Jetez les 20x poissons dans le plus grand bassin de l\'{location:Atrium de l’Afflux} pour recevoir le buff {spell:427145} pendant 30 minutes.'
+L['prismatic_note_4'] = '4. Pêchez dans le banc de {object:Moustanches prismatiques} à l\'{location:Atrium de l’Afflux} jusqu\'à ce que vous attrapiez {item:210784}.'
+L['prismatic_note_5'] = '5. Relâchez {npc:Xena} dans l\'eau de l\'{location:Atrium de l’Afflux} pour recevoir une {item:210753}.'
+
+L['options_icons_druid_glyph'] = 'Glyphes de druide'
+L['options_icons_druid_glyph_desc'] = 'Afficher les emplacements des {note:Glyphes de druide}.'
+
+L['elianna_vendor_note'] = 'Terminer des activités au sein du {location:Rêve d\'Émeraude} vous rapportera de l\'%s (une monnaie cachée).\n\nAtteindre 7 000 %s débloquera la quête {quest:78598} donnée par {npc:211209} qui vous récompensera par une 1x {currency:2777}.\n\nEchangez vos {currency:2777} contre des mascottes et des montures.'
+L['dream_energy_name'] = 'Énergie du rêve' -- PH Name
+L['dream_energy_info'] = '%s: %d/%d (%.1f%%)'
+
+L['sylvia_vendor_note'] = 'Échangez vos {currency:2651} contre des mascottes, des montures et des objets de transmogrification. Vous pouvez également obtenir ces récompenses grâce aux Graines oniriques.'
+
+L['somnut'] = 'Somninoix'
+L['options_icons_somnut'] = 'Somninoix'
+L['options_icons_somnut_desc'] = 'Afficher les emplacements possibles des {object:Somninoix}.'
+
+L['improvised_leafbed_note'] = 'Terminez la suite de quêtes commençant par {quest:77896} pour recevoir le {item:210864} de la part de {npc:210164}.'
+L['kalandu_note'] = 'Terminez la suite de quêtes commençant par {quest:77948} pour recevoir {item:210633} de la part de {npc:210196}.'
+
+L['renewed_dream'] = '{note:Ceci n\'est pas un trésor !}\nLes {item:201437} sont récupérés un peu partout au sein du {location:Rêve d\'Émeraude}.\nCombinez 5x {item:201437} pour reconstituer un {item:201439}.'
+
+L['ochre_note'] = 'Parlez à la {npc:209253} pour commencer la suite de la quête, le {npc:209571} vous indiquera les étapes suivantes.'
+L['ochre_note_stage1'] = '{quest:77677}. {note:Prends 5 jours à pousser.}'
+L['ochre_note_stage2'] = '{quest:78398}. {note:Prends 5 jours à pousser.}'
+L['ochre_note_stage3'] = 'Le {npc:209571} vous enverra récupérer 5x {item:4537} {dot:Yellow}, 3x {item:209416} {dot:Green}, et 5x {item:208644} {dot:Red}, combinez-les en {item:208646}. Attendez 3 jours qu\'ils se transforment en {item:208647}, et terminez la quête {quest:77697}. {note:Prends 5 jours à pousser.}'
+L['ochre_note_stage4'] = '{quest:77711}. {note:Prends 5 jours à pousser.}'
+L['ochre_note_stage5'] = '{quest:77762}.'
+
+L['thorn_beast_stag'] = '{item:%d} ({npc:Cerf})'
+L['thorn_beast_saber'] = '{item:%d} ({npc:Sabre})'
+L['thorn_beast_bear'] = '{item:%d} ({npc:Ours})'
+
+L['thornbeast_disclaimer'] = '{note:Pour rappel, chaque type de bête possèdent leurs {item:%s} uniques qui mèneront à une bête à épines correspondante.}' -- review
+
+L['thorn_laden_heart_note_1'] = 'Récupérez un {item:209860} sur n\'importe quel {npc:cerf}, {npc:sabre} ou {npc:ours} au sein du {location:Rêve d\'Émeraude}.'
+L['thorn_laden_heart_note_2'] = 'Une fois que vous avez un {item:209860}, allez trouver une biche nommée {npc:140044} à {location:Drustvar} à {location:Kul Tiras}.'
+
+L['athainne_note_1'] = '{note:{npc:140044} accompagne {npc:129771} la nuit, et se repose à la {location:Tanière d\'Ulfar} le jour.}\n\nDemandez à {npc:140044} d\'utiliser le {item:209860} pour créer les {item:209863}.'
+L['athainne_note_2'] = 'Après avoir parlé à {npc:140044} et reçu les {item:209863}, allez à la {location:Tanière d\'Ulfar} pour obtenir l\'aide d\'{npc:141159}.'
+
+L['ulfar_note_1'] = 'Demandez à {npc:149386} d\'utiliser les {item:209863} pour créer un {item:209866}.'
+L['ulfar_note_2'] = 'Après avoir obtenu le {item:209866}, retournez au {location:Rêve d\'Émeraude} pour trouver une cible propice au rituel de transformation.'
+
+L['thorn_stag_note'] = '1. Tuez un {npc:210976}, puis utilisez le {item:209866} sur le cadavre. Le cerf réapparaîtra sous la forme d\'{npc:210984} {npc:<Esprit né-des-ronces>}.\n\n2. Lancez le sort {spell:1515} sur lui.\n\n3. Trois teintes sont disponibles pour {npc:210984} : noir, marron et vert.'
+L['thorn_saber_note'] = '1. Tuez un {npc:210975}, puis utilisez le {item:209867} sur le cadavre. Le sabre réapparaîtra sous la forme de {npc:210981} {npc:<Esprit né-des-ronces>}.\n\n2. Lancez le sort {spell:1515} sur lui.\n\n3. Trois teintes sont disponibles pour {npc:210981} : noir, vert et pâle.'
+L['thorn_bear_note'] = '1. Tuez un {npc:210977}, puis utilisez le {item:209868} sur le cadavre. L\'ours réapparaîtra sous la forme d\'{npc:210988} {npc:<Esprit né-des-ronces>}.\n\n2. Lancez le sort {spell:1515} sur lui.\n\n3. Trois teintes sont disponibles pour {npc:210988} : marron, foncé et vert.'
+
+L['nahqi_note'] = 'La {item:211314} est nécessaire afin d\'utiliser {spell:1515} sur {npc:210908}, cet objet est obtenu grâce à la monture {item:210061}.\n\n{npc:210908} {npc:<Braise de rétablissement>} vole dans le ciel autour d\'{location:Amirdrassil} sur un trajet en {note:sens inverse des aiguilles d\'une montre}, prenant 17min et 30sec pour faire un tour complet.\nIl possède un temps de réapparition minimum de 30 minutes.\n\n{note:Il s\'agit d\'un {npc:Esprit de bête}. Seuls les Chasseurs Maîtrise des bêtes peuvent l\'apprivoiser}.'
+
+L['sulraka_note'] = '{npc:210868} {npc:<Fille de Kimbul>} patrouille dans la zone à l\'est d\'{location:Amirdrassil} sur un trajet en {note:sens inverse des aiguilles d\'une montre}, prenant 17 minutes pour compléter un tour.\nElle possède un temps de réapparition minimum de 30 minutes.\n\nElle laisse derrière elle des {object:Empreintes profondes} en marchant, qui durent 3 minutes.\nElle se déplace toujours furtivement, vous devrez donc utiliser le sort {spell:1543} devant des {object:Empreintes profondes} fraîchement apparues pour la révéler.\nUtilisez votre {spell:257284} et/ou un {spell:187650} et tentez d\'utiliser le sort {spell:1515}.\n\n{note:Il est important de la piéger ou de la révéler car {npc:210868} ne s\'arrêtera pas de bouger, même lorsqu\'elle est attaquée. Elle peut sortir de la portée du sort {spell:1543}, ce qui l\'annule.}\n\n{note:Il s\'agit d\'un {npc:Esprit de bête}. Seuls les Chasseurs Maîtrise des bêtes peuvent l\'apprivoiser}.'
 
 -------------------------------------------------------------------------------
 ----------------------------- SECRETS OF AZEROTH ------------------------------
@@ -1024,3 +1209,34 @@ Aux {location:Bois d'Arbrefer}, vous trouverez un {npc:210417} ainsi qu'une {obj
 Une fois que l'élémentaire aura aspiré 4 personnes, il explosera et laissera tomber la {item:209781} ! Tous ceux qui se trouvent dans la zone peuvent le récupérer.
 ]]
 L['soa_mjj_part3_note'] = 'La {item:209055} vous attendra juste devant la {object:Porte des ténèbres} aux {location:Terres foudroyées} ! Faites attention aux {npc:23082} et aux PNJ dans la zone, car il faut 12 secondes d\'incantation pour récupérer la pièce.'
+
+-------------------------------------------------------------------------------
+------------------------------- WARCRAFT RUMBLE -------------------------------
+-------------------------------------------------------------------------------
+
+L['rumble_coin_bag'] = 'Sac de pièces Rumble'
+L['rumble_foil_bag'] = 'Sac de Rumble métallisé'
+L['rumble_both_bags'] = 'Sac de Rumble métallisé et Pièces Rumble'
+L['warcraft_rumble_machine'] = 'Borne Warcraft Rumble'
+
+L['wr_ohn_both_01'] = 'À l\'intérieur d\'un bâtiment en ruine à {location:Lunedane}.'
+L['wr_ohn_foil_02'] = 'Sur un rocher près de la cascade.'
+L['wr_sto_coin_01'] = 'Derrière la caisse de rangement.'
+L['wr_sto_foil_01'] = 'Près d\'une pile de boulets de canon.'
+L['wr_sto_foil_02'] = 'Près de la rampe d\'accès aux quais.'
+L['wr_tas_both_01'] = 'Derrière un arbre surplombant la {location:Crique du Baleinier}.'
+L['wr_tas_foil_01'] = 'Près d\'un grand arbre brisé.'
+L['wr_tha_both_01'] = 'Sur une île flottante près du {location:Réservoir du Bastion de Tyr}.'
+L['wr_tha_foil_01'] = 'Au-dessus d\'un grand vase de plantes.'
+L['wr_tws_both_01'] = 'Au sommet de la tour de pierre surplombant l\'eau.'
+L['wr_tws_foil_01'] = 'Sur la montagne surplombant la lave.'
+L['wr_tws_foil_02'] = 'Sur une petite tour de pierre surplombant l\'eau.'
+L['wr_val_coin_01'] = 'Au premier étage du {location:Bélier rôti}, près du {object:Four}.'
+L['wr_val_foil_01'] = 'Au deuxième étage du {location:Bélier rôti} sur le lit.'
+L['wr_val_machine'] = 'Au deuxième étage du {location:Bélier rôti}.'
+L['wr_org_coin_01'] = 'Au deuxième étage de {location:La Broche Rompue}.'
+L['wr_org_foil_01'] = 'Derrière l\'{location:Hôtel des Ventes}.'
+L['wr_dur_foil_01'] = 'Derrière des caisses de fournitures.'
+
+L['options_icons_warcraft_rumble'] = 'Warcraft Rumble'
+L['options_icons_warcraft_rumble_desc'] = 'Afficher les emplacements des {object:Sac de pièces Rumble} et des {object:Sac de Rumble métallisé} liés à la campagne promotionnelle de {object:Warcraft Rumble}.'

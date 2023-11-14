@@ -13,6 +13,7 @@ local Table = TSM.Include("Util.Table")
 local Log = TSM.Include("Util.Log")
 local String = TSM.Include("Util.String")
 local ItemString = TSM.Include("Util.ItemString")
+local GroupPath = TSM.Include("Util.GroupPath")
 local CustomPrice = TSM.Include("Service.CustomPrice")
 local Settings = TSM.Include("Service.Settings")
 local AceSerializer = LibStub("AceSerializer-3.0")
@@ -95,7 +96,7 @@ end
 
 function ImportExport.GenerateExport(exportGroupPath, includeSubGroups, excludeOperations, excludeCustomSources)
 	assert(exportGroupPath ~= TSM.CONST.ROOT_GROUP_PATH)
-	local exportGroupName = TSM.Groups.Path.GetName(exportGroupPath)
+	local exportGroupName = GroupPath.GetName(exportGroupPath)
 
 	-- collect the items and sub groups
 	local items = TempTable.Acquire()
@@ -109,8 +110,8 @@ function ImportExport.GenerateExport(exportGroupPath, includeSubGroups, excludeO
 	assert(not next(private.isOperationSettingsTable))
 	for _, groupPath in TSM.Groups.GroupIterator() do
 		local relGroupPath = nil
-		if TSM.Groups.Path.IsChild(groupPath, exportGroupPath) then
-			relGroupPath = TSM.Groups.Path.GetRelative(groupPath, exportGroupPath)
+		if GroupPath.IsChild(groupPath, exportGroupPath) then
+			relGroupPath = GroupPath.GetRelative(groupPath, exportGroupPath)
 			if not includeSubGroups[relGroupPath] then
 				relGroupPath = nil
 			end
@@ -400,13 +401,13 @@ function private.DecodeNewImport(str)
 		end
 	end
 	for groupPath in pairs(groups) do
-		local parentPath = TSM.Groups.Path.Split(groupPath)
+		local parentPath = GroupPath.Split(groupPath)
 		while parentPath do
 			if not groups[parentPath] then
 				Log.Err("Orphaned group (%s)", groupPath)
 				return false
 			end
-			parentPath = TSM.Groups.Path.Split(parentPath)
+			parentPath = GroupPath.Split(parentPath)
 		end
 	end
 
@@ -633,7 +634,7 @@ function private.DecodeGroupExportHelper(str)
 			-- create the groups all the way up to the root
 			while groupPath do
 				groups[groupPath] = true
-				groupPath = TSM.Groups.Path.GetParent(groupPath)
+				groupPath = GroupPath.GetParent(groupPath)
 			end
 		elseif itemString then
 			items = items or {}
@@ -802,7 +803,7 @@ function private.GetCommonTopLevelGroup(items, groups, groupOperations)
 		if groupPath == TSM.CONST.ROOT_GROUP_PATH then
 			return nil
 		end
-		local topLevelGroup = TSM.Groups.Path.GetTopLevel(groupPath)
+		local topLevelGroup = GroupPath.GetTopLevel(groupPath)
 		if not commonTopLevelGroup then
 			commonTopLevelGroup = topLevelGroup
 		elseif topLevelGroup ~= commonTopLevelGroup then
@@ -813,7 +814,7 @@ function private.GetCommonTopLevelGroup(items, groups, groupOperations)
 	-- check the groups
 	for groupPath in pairs(groups) do
 		if groupPath ~= TSM.CONST.ROOT_GROUP_PATH then
-			local topLevelGroup = TSM.Groups.Path.GetTopLevel(groupPath)
+			local topLevelGroup = GroupPath.GetTopLevel(groupPath)
 			if not commonTopLevelGroup then
 				commonTopLevelGroup = topLevelGroup
 			elseif topLevelGroup ~= commonTopLevelGroup then
@@ -827,7 +828,7 @@ function private.GetCommonTopLevelGroup(items, groups, groupOperations)
 		if groupPath == TSM.CONST.ROOT_GROUP_PATH then
 			return nil
 		end
-		local topLevelGroup = TSM.Groups.Path.GetTopLevel(groupPath)
+		local topLevelGroup = GroupPath.GetTopLevel(groupPath)
 		if not commonTopLevelGroup then
 			commonTopLevelGroup = topLevelGroup
 		elseif topLevelGroup ~= commonTopLevelGroup then
@@ -841,14 +842,14 @@ end
 function private.UpdateTopLevelGroup(topLevelGroup, items, groups, groupOperations)
 	-- update items
 	for itemString, groupPath in pairs(items) do
-		items[itemString] = TSM.Groups.Path.GetRelative(groupPath, topLevelGroup)
+		items[itemString] = GroupPath.GetRelative(groupPath, topLevelGroup)
 	end
 
 	-- update groups
 	local newGroups = TempTable.Acquire()
 	groups[TSM.CONST.ROOT_GROUP_PATH] = nil
 	for groupPath in pairs(groups) do
-		newGroups[TSM.Groups.Path.GetRelative(groupPath, topLevelGroup)] = true
+		newGroups[GroupPath.GetRelative(groupPath, topLevelGroup)] = true
 	end
 	wipe(groups)
 	for groupPath in pairs(newGroups) do
@@ -859,7 +860,7 @@ function private.UpdateTopLevelGroup(topLevelGroup, items, groups, groupOperatio
 	-- update groupOperations
 	local newGroupOperations = TempTable.Acquire()
 	for groupPath, groupOperationsTable in pairs(groupOperations) do
-		newGroupOperations[TSM.Groups.Path.GetRelative(groupPath, topLevelGroup)] = groupOperationsTable
+		newGroupOperations[GroupPath.GetRelative(groupPath, topLevelGroup)] = groupOperationsTable
 	end
 	wipe(groupOperations)
 	for groupPath, groupOperationsTable in pairs(newGroupOperations) do

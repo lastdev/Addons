@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2389, "DBM-Party-Shadowlands", 6, 1187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220920232426")
+mod:SetRevision("20231020041658")
 mod:SetCreatureID(162309)
 mod:SetEncounterID(2364)
 
@@ -38,7 +38,7 @@ local timerDrawSoulCD				= mod:NewCDTimer(20.5, 319521, nil, nil, nil, 3, nil, D
 local timerPhantasmalParasiteCD		= mod:NewCDTimer(25.5, 319626, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.MAGIC_ICON)
 local timerGraspingHandsCD			= mod:NewCDTimer(20.6, 319589, nil, nil, nil, 3)
 
-mod:GroupSpells(319521, 333567)--Draw soul is mechanic, possession is screwing up mechanic
+--mod:GroupSpells(319521, 333567)--Draw soul is mechanic, possession is screwing up mechanic
 
 function mod:OnCombatStart(delay)
 	timerPhantasmalParasiteCD:Start(3.3-delay)--SUCCESS

@@ -1,27 +1,40 @@
-# [5.8.3](https://github.com/WeakAuras/WeakAuras2/tree/5.8.3) (2023-10-15)
+# [5.8.4](https://github.com/WeakAuras/WeakAuras2/tree/5.8.4) (2023-11-07)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/5.8.2...5.8.3)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/5.8.3...5.8.4)
 
 ## Highlights
 
- - Add new angle-based constant factor for circular dynamic group grow styles
-- Add new "Group Size" load option
+ - Template updates for 10.2.0
+- More options for Buff Triggers
+- Improvements to profiling UI
 - Bug fixes 
 
 ## Commits
 
-InfusOnWoW (3):
+InfusOnWoW (8):
 
-- Add a "Group Size" load option
-- Fix onCooldown condition with "Show GCD" enabled
-- Fix Bonus Id load options to not consier item ids bonus ids
+- Template updates for 10.2
+- Dynamic Group: Fix frame strata setting
+- Totem Trigger: Add a tooltip that a spell id can be entered
+- IconPicker: Fix error for spells that don't have an icon
+- Work around UnitInRange being wonky
+- Model: Remove HasAnimation check
+- BT2: Allow for multiple npcIds in npcId check
+- IconPicker: If a spell id is entered, show the icon for that spell id
 
-Weston Odom (1):
+Stanzilla (2):
 
-- Add new angle-based constant factor for circular dynamic group grow styles (#4646)
+- Update TOC for Retail Patch 10.2.0
+- Update PayPal link in README.md
 
-mrbuds (2):
+mrbuds (8):
 
-- Dynamic Group: fix group scaling when parent is not group itself
-- Fix error when converting a combat log trigger to a spell cooldown trigger
+- Profiling: improve system profiling readability by regrouping multiUnits
+- Theat Situation trigger: add nam/realm and npcId filters
+- Colorize "Class and Specialization" options fixes #4657
+- FontInstance:SetFont flags seems to break with "None"
+- BT2: add affectedUnits and unaffectedUnits tables when Fetch affected names option is toggle
+- Add "Not Item Equipped" load option, and make both Item Equipped option take multiple inputs
+- Workaround fonts not loading correctly on first login
+- Fix keybinding display
 

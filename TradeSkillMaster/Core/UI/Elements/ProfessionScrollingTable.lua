@@ -14,6 +14,7 @@ local Theme = TSM.Include("Util.Theme")
 local Log = TSM.Include("Util.Log")
 local ScriptWrapper = TSM.Include("Util.ScriptWrapper")
 local Event = TSM.Include("Util.Event")
+local GroupPath = TSM.Include("Util.GroupPath")
 local ItemInfo = TSM.Include("Service.ItemInfo")
 local Profession = TSM.Include("Service.Profession")
 local ProfessionScrollingTable = TSM.Include("LibTSMClass").DefineClass("ProfessionScrollingTable", TSM.UI.ScrollingTable)
@@ -433,7 +434,7 @@ function private.GetCategoryGroupPath(categoryId)
 	end
 	local name = Profession.GetSkillLine()
 	tinsert(parts, 1, name)
-	return TSM.Groups.Path.Join(TempTable.UnpackAndRelease(parts))
+	return GroupPath.Join(TempTable.UnpackAndRelease(parts))
 end
 
 function private.GetNameCellText(self, data)

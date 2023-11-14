@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2402, "DBM-Party-Shadowlands", 3, 1184)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230708234551")
+mod:SetRevision("20231020041658")
 mod:SetCreatureID(164501)
 mod:SetEncounterID(2392)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -41,7 +41,7 @@ local timerPattyCakeCD				= mod:NewCDTimer(20.6, 321828, nil, nil, nil, 3)--20-2
 
 mod:AddNamePlateOption("NPAuraOnFixate", 321891)
 mod:AddSetIconOption("SetIconOnAdds2", -21691, false, true, {1, 2, 3, 4})
-mod:GroupSpells(321873, 321891)--Freeze Tag and associated fixate
+--mod:GroupSpells(321873, 321891)--Freeze Tag and associated fixate
 
 local seenAdds = {}
 mod.vb.addIcon = 1

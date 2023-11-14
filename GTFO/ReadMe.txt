@@ -1958,3 +1958,16 @@ Change Log:
 * Added Dragonflight spells (world)
 * Added Battle for Azeroth spells (world)
 * Fixed Wrath spells for Violet Hold (thanks Jirachimon)
+
+5.5.3
+* Added Dragonflight spells (world)
+* Added Dragonflight spells for Headless Horseman
+* Added Wrath spells (Heroic+) (thanks daevert)
+
+5.5.4
+* Added Dragonflight spells for Headless Horseman
+
+5.5.5
+* Updated for patch 10.2
+* Added Dragonflight spells (world)
+* Added Dragonflight spells for Amirdrassil, The Dream's Hope

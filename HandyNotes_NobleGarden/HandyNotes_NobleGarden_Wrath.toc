@@ -1,0 +1,37 @@
+## Interface: 30403
+## Version: 2.09
+## Author: Taraezor
+## IconTexture: Interface\Icons\Achievement_noblegarden_chocolate_egg
+## Title: Noblegarden
+## Title-deDE: Nobelgarten Erfolge
+## Title-esES: Jardín Noble
+## Title-esMX: Jardín Noble
+## Title-frFR: Jardin des nobles
+## Title-itIT: Festa di Nobiluova
+## Title-koKR: 귀족의 정원
+## Title-ptBR: Jardinova
+## Title-ptPT: Jardinova
+## Title-ruRU: Сад Чудес
+## Title-zhCN: 贵族的花园
+## Title-zhTW: 貴族的花園
+## Notes: Helps you with the |cFFE641EFNoble Garden|r world event
+## Notes-deDE: Hilft bei der |cFFE641EFNobelgarten Erfolge|r-Weltereignis 
+## Notes-esES: Ayuda con el suceso mundial |cFFE641EFJardín Noble|r
+## Notes-esMX: Ayuda con el suceso mundial |cFFE641EFJardín Noble|r
+## Notes-frFR: Aide à l'événement mondial |cFFE641EFJardin des nobles|r
+## Notes-itIT: Assiste con l'evento mondiale |cFFE641EFFesta di Nobiluova|r
+## Notes-koKR: |cFFE641EF귀족의 정원|r 대규모 이벤트 지원
+## Notes-ptBR: Auxilia no evento mundial |cFFE641EFJardinova|r
+## Notes-ptPT: Auxilia no evento mundial |cFFE641EFJardinova|r
+## Notes-ruRU: Помогает с игровое событие |cFFE641EFСад Чудес|r
+## Notes-zhCN: 协助 |cFFE641EF贵族的花园|r 活动
+## Notes-zhTW: 協助 |cFFE641EF貴族的花園|r 活動
+## X-Category: Map & Minimap
+## X-Curse-Project-ID: 678724
+## X-WoWI-ID: 00000
+## RequiredDeps: HandyNotes
+## SavedVariables: HandyNotes_NobleGardenDB
+## AddonCompartmentFunc: HandyNotes_NobleGarden_OnAddonCompartmentClick
+
+Core.lua
+Data.lua

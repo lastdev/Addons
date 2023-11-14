@@ -1,4 +1,4 @@
-## Interface: 100107
+## Interface: 100200
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cffff6010Raids (WoD)|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM Мод|r|cffffe00a>|r |cffff6010Рейды (Дренор)|r
@@ -22,7 +22,7 @@
 ## X-Curse-Project-ID: 101956
 ## X-WoWI-ID: 24535
 ## X-Wago-ID: LvNAkBKo
-## Version: r76
+## Version: r77
 
 localization.en.lua
 localization.br.lua

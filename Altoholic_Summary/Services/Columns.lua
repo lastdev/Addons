@@ -81,11 +81,18 @@ addon:Service("AltoholicUI.TabSummaryColumnProfiles",  function()
 		-- Weekly Rewards
 		[26] = { "Name", "Level", "RewardMythic", "RewardRaid", "RewardPvP" },
 
-		-- Currencies / Dragonflight 10.0 & 10.1
-		[27] = { "Name", "Level", "Cur_DragonIslesSupplies", "Cur_ElementalOverflow", "Cur_StormSigil", "Cur_ConquestPoints", "Cur_Honor", "Cur_Flightstones" },
+		-- Currencies / Dragonflight 10.0
+		[27] = { "Name", "Level", "Cur_DragonIslesSupplies", "Cur_ElementalOverflow", "Cur_StormSigil", "Cur_ConquestPoints", "Cur_Honor" },
+
+		-- Currencies / Dragonflight 10.1
+		[28] = { "Name", "Level", "Cur_Flightstones", "Cur_ParacausalFlakes", "Cur_RidersofAzerothBadge" },
+
+		-- Currencies / Dragonflight 10.2
+		[29] = { "Name", "Level", "Cur_EmeraldDewdrop","Cur_WhelplingsDreamingCrest", "Cur_DrakesDreamingCrest", "Cur_WyrmsDreamingCrest", "Cur_AspectsDreamingCrest", "Cur_DreamInfusion" },
 		
 		-- Weekly Best Runs per dungeon
-		[28] = { "Name", "Level", "MPlus1", "MPlus2", "MPlus3", "MPlus4", "MPlus5", "MPlus6", "MPlus7", "MPlus8" },
+		[30] = { "Name", "Level", "MPlus1", "MPlus2", "MPlus3", "MPlus4", "MPlus5", "MPlus6", "MPlus7", "MPlus8" }		
+		
 	}
 
 	return {

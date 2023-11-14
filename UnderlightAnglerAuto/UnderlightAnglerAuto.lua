@@ -70,6 +70,8 @@ f:SetScript("OnEvent", function(self, event, ...)
                 throttle = GetTime()
             end
         end)
+    elseif (event == "PLAYER_REGEN_ENABLED") and bagID and slotID then
+        reequipUA()
     elseif (event == "PLAYER_REGEN_ENABLED") or (event == "CHAT_MSG_LOOT") then
         if GetInventoryItemID("player", ProfessionsFrame.CraftingPage.FishingToolSlot:GetID()) ~= 133755 then return end
         if C_UnitAuras.GetPlayerAuraBySpellID(394009) then return end

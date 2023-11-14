@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Horsemen", "DBM-Raids-Vanilla", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230814031337")
+mod:SetRevision("20231015033054")
 mod:SetCreatureID(16062, 16063, 16064, 16065)--30549
 mod:SetEncounterID(1121)
 mod:SetModelID(10729)
@@ -30,7 +30,7 @@ local specWarnMarkOnPlayer		= mod:NewSpecialWarning("SpecialWarningMarkOnPlayer"
 local specWarnVoidZone			= mod:NewSpecialWarningYou(28863, nil, nil, nil, 1, 2)
 local yellVoidZone				= mod:NewYell(28863)
 
-local timerMarkCD				= mod:NewTimer(12.9, "timerMark", 28835, nil, nil, 3)-- 12.9
+local timerMarkCD				= mod:NewTimer(12.9, "timerMark", 28835, nil, nil, 2)-- 12.9
 local timerMeteorCD				= mod:NewCDTimer(12.9, 28884, nil, nil, nil, 3)-- 12.9-14.6
 local timerVoidZoneCD			= mod:NewCDTimer(12.9, 28863, nil, nil, nil, 3)-- 12.9-16
 local timerHolyWrathCD			= mod:NewCDTimer(11.3, 28883, nil, nil, nil, 3)-- 11.3-14.5
